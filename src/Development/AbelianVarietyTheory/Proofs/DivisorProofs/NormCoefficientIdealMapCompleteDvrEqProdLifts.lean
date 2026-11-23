@@ -3,9 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormIdeal
 public import Mathlib.RingTheory.DiscreteValuationRing.Basic
 public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteAlgebraSplittingNormFormStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLiftToCompleteDvrOfFiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanCoeffProdLinearStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteAlgebraSplittingNormForm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLiftToCompleteDvrOfFinite
+public import Mathlib.Algebra.MvPolynomial.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanCoeffProdLinear
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -69,8 +70,8 @@ theorem GlobalTheory.NormSheaf.normIdeal_map_eq_prod_lifts : ∀ (A B K L : Type
       Function.Injective f ∧ IsLocalHom f ∧ (∀ j, (ψ j).comp φ = f.comp h) ∧
       (GlobalTheory.NormSheaf.normIdeal A K L B J).map (f.comp h) = ∏ j, J.map (ψ j) := by
   intro A B K L _ _ _ _ _ _ _ _ _ _ _ _ _ _ φ hφ hcomp J V _ _ _ _ hV h
-  obtain ⟨R, _, _, hinj, hfin, σ, hσ, hP⟩ := GlobalTheory.T.exists_finite_algebra_splitting_normForm A B K L φ hφ hcomp
-  obtain ⟨V', _, _, _, _, f, ρ, hV', hf, hloc, hρ⟩ := GlobalTheory.T.exists_lift_to_complete_dvr_of_finite' A R hinj hfin V hV h
+  obtain ⟨R, _, _, hinj, hfin, σ, hσ, hP⟩ := _root_.GlobalTheory.NormSheaf.exists_finite_split_normForm A B K L φ hφ hcomp
+  obtain ⟨V', _, _, _, _, f, ρ, hV', hf, hloc, hρ⟩ := _root_.GlobalTheory.exists_lift_to_complete_dvr_of_finite A R hinj hfin V hV h
   let ψ : Fin (Module.finrank K L) → (B →+* V') := fun j => ρ.comp (σ j)
   refine ⟨V', inferInstance, inferInstance, inferInstance, inferInstance, f, ψ, hV', hf, hloc, ?_, ?_⟩
   · intro j
@@ -81,7 +82,7 @@ theorem GlobalTheory.NormSheaf.normIdeal_map_eq_prod_lifts : ∀ (A B K L : Type
       Ideal.span (Set.range fun s => (f.comp h) (P.coeff s)) =
         ∏ j, Ideal.span (Set.range fun i => ψ j (g i)) := by
     intro m g P hPR
-    rw [← GlobalTheory.T.span_coeff_prod_linear_eq_prod_span V' _ m (fun j i => ψ j (g i))]
+    rw [← _root_.GlobalTheory.GaussContentLinearForms.span_coeff_prod_linear V' _ m (fun j i => ψ j (g i))]
     have hE : (∏ j, ∑ i, C (ψ j (g i)) * X i : MvPolynomial (Fin m) V') = (P.map (algebraMap A R)).map ρ := by
       set_option synthInstance.maxHeartbeats 100000 in
         rw [hPR]; simp [map_prod, map_sum, ψ]

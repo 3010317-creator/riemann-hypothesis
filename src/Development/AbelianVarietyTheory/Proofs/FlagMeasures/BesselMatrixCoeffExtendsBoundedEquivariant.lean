@@ -1,14 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AeEqOfDenseOfLocalSqBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselFormConvergesEquivariantHermitianStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupRepTwistedIsUnitaryRepStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupsClosedUnitaryWCompactStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExtendAeLinearOfLocalSqBoundDenseStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsUnimodularBesselModelUnitaryGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralBesselCoefficientCompactLeStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SmoothVectorsDenseInvariantStatement
+public import Mathlib.Analysis.Complex.Basic
+public import Mathlib.MeasureTheory.Function.StronglyMeasurable.AEStronglyMeasurable
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AeEqOfDenseOfLocalSqBound
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselFormConvergesEquivariantHermitian
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExtendAeLinearOfLocalSqBoundDense
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsUnimodularBesselModelUnitaryGroup
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralBesselCoefficientCompactLe
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupRepTwistedIsUnitaryRep
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupsClosedUnitaryWCompact
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SmoothVectorsDenseInvariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,10 +69,10 @@ theorem afun_add (hStd : Std σ w a μG d) (hSide : Side z π μS) {v : H} (hv :
     {u u' : H} (hu : u ∈ DD σ w) (hu' : u' ∈ DD σ w) {x : Mat k r} (hx : x ∈ GG k r) :
     Afun (psiGen k r z c) π μS σ (u + u') v ξ x =
       Afun (psiGen k r z c) π μS σ u v ξ x + Afun (psiGen k r z c) π μS σ u' v ξ x := by
-  have hst := (GlobalTheory.T.smooth_vectors_dense_invariant k r σ w hStd.2.1).1
-  have h1 := (GlobalTheory.T.besselForm_converges_equivariant_hermitian k r σ w a μG d z c π μS hStd hSide (DD σ w) hst hStd.2.2.2.2.2.2.2.1
+  have hst := (_root_.GlobalTheory.SgInfDD.DD_stable_dense k r σ w hStd.2.1).1
+  have h1 := (_root_.GlobalTheory.SgInf.BeForm.be_converges_equivariant_hermitian_continuous k r σ w a μG d z c π μS hStd hSide (DD σ w) hst hStd.2.2.2.2.2.2.2.1
     (σ x u) (hst x hx u hu) v hv).1
-  have h2 := (GlobalTheory.T.besselForm_converges_equivariant_hermitian k r σ w a μG d z c π μS hStd hSide (DD σ w) hst hStd.2.2.2.2.2.2.2.1
+  have h2 := (_root_.GlobalTheory.SgInf.BeForm.be_converges_equivariant_hermitian_continuous k r σ w a μG d z c π μS hStd hSide (DD σ w) hst hStd.2.2.2.2.2.2.2.1
     (σ x u') (hst x hx u' hu') v hv).1
   simp only [Afun, be, map_add (f := _), coef_add_left, add_smul]
   rw [integral_add h1 h2, ContinuousLinearMap.add_apply]
@@ -89,8 +92,8 @@ theorem afun_mul_left (hStd : Std σ w a μG d) (hSide : Side z π μS) {v : H} 
     (hSG : Sset k r z ⊆ GG k r) :
     Afun (psiGen k r z c) π μS σ u v ξ (s * x) =
       PiS (psiGen k r z c) π s (Afun (psiGen k r z c) π μS σ u v ξ x) := by
-  have hst := (GlobalTheory.T.smooth_vectors_dense_invariant k r σ w hStd.2.1).1
-  have h := ((GlobalTheory.T.besselForm_converges_equivariant_hermitian k r σ w a μG d z c π μS hStd hSide (DD σ w) hst hStd.2.2.2.2.2.2.2.1
+  have hst := (_root_.GlobalTheory.SgInfDD.DD_stable_dense k r σ w hStd.2.1).1
+  have h := ((_root_.GlobalTheory.SgInf.BeForm.be_converges_equivariant_hermitian_continuous k r σ w a μG d z c π μS hStd hSide (DD σ w) hst hStd.2.2.2.2.2.2.2.1
     (σ x u) (hst x hx u hu) v hv).2.1 s hs).1
   simp only [Afun]
   rw [hStd.2.1.1.2 s (hSG hs) x hx, ContinuousLinearMap.comp_apply, h, ContinuousLinearMap.comp_apply]
@@ -127,9 +130,9 @@ theorem GlobalTheory.SgInf.bessel_ext_bounded : ∀ (k r : ℕ) {H : Type} [Norm
   have hHaar : IsHaarOn (GG k r) μG := hStd.2.2.2.2.1
   have hw0 : w ≠ 0 := by
     intro h; have h1 := hStd.2.2.2.1; rw [h, norm_zero] at h1; exact zero_ne_one h1
-  have hcl := GlobalTheory.T.bessel_subgroups_closed_unitaryW_compact k r z hSide.1 hSide.2.1
+  have hcl := _root_.GlobalTheory.SgInf.closedSub_groups k r z hSide.1 hSide.2.1
   have hSG : Sset k r z ⊆ GG k r := hcl.2.2.2.1.1
-  have hDD := GlobalTheory.T.smooth_vectors_dense_invariant k r σ w hσ
+  have hDD := _root_.GlobalTheory.SgInfDD.DD_stable_dense k r σ w hσ
   have hst : ∀ g ∈ GG k r, ∀ u ∈ DD σ w, σ g u ∈ DD σ w := hDD.1
   have hdense : Dense (DD σ w : Set H) := hDD.2.1 hStd.2.2.1 hw0
   have hconc : ∀ᵐ x ∂μG, Matrix.of x ∈ GG k r := by
@@ -151,8 +154,8 @@ theorem GlobalTheory.SgInf.bessel_ext_bounded : ∀ (k r : ℕ) {H : Type} [Norm
     exact afun_add hStd hSide hv ξ hu hu' hx
   have hsmul : ∀ (b : ℂ), ∀ u ∈ DD σ w, F (b • u) =ᵐ[μG] fun x => b • F u x :=
     fun b u _ => Filter.Eventually.of_forall fun x => afun_smul b u v ξ _
-  obtain ⟨T0, hT0D, hT0add, hT0smul, hT0b⟩ := GlobalTheory.T.extend_ae_linear_of_local_sq_bound_dense μG K hKm hcov (DD σ w) hdense F hadd hsmul
-    (fun n => GlobalTheory.T.lintegral_besselCoefficient_compact_le k r σ w a μG d z c π μS hStd hSide v hv ξ (K n) (hKc n))
+  obtain ⟨T0, hT0D, hT0add, hT0smul, hT0b⟩ := _root_.GlobalTheory.extend_ae_linear_of_local_sq μG K hKm hcov (DD σ w) hdense F hadd hsmul
+    (fun n => _root_.GlobalTheory.SgInf.lint_Afun_compact_le k r σ w a μG d z c π μS hStd hSide v hv ξ (K n) (hKc n))
   have hT0m : ∀ u, AEStronglyMeasurable (T0 u) μG := by
     intro u
     have h : AEStronglyMeasurable (T0 u) (μG.restrict (⋃ n, K n)) :=
@@ -182,8 +185,8 @@ theorem GlobalTheory.SgInf.bessel_ext_bounded : ∀ (k r : ℕ) {H : Type} [Norm
       (lintegral_mono_set hn).trans (hC u).2⟩⟩
   · intro y hy u
     have hmp : MeasurePreserving (rmulM y) μG μG :=
-      ⟨(continuous_rmulM y).measurable, (GlobalTheory.T.isUnimodular_besselModelUnitaryGroup k r μG hHaar).1 y hy⟩
-    refine GlobalTheory.T.ae_eq_of_dense_of_local_sq_bound_alt μG K hKm hcov (DD σ w : Set H) hdense
+      ⟨(continuous_rmulM y).measurable, (_root_.GlobalTheory.SgInf.isUnimod_GG k r μG hHaar).1 y hy⟩
+    refine _root_.GlobalTheory.ae_eq_of_dense_of_local_sq_bound μG K hKm hcov (DD σ w : Set H) hdense
       (fun u x => T0 (σ y u) x) (fun u x => T0 u (rmulM y x)) ?_ ?_ ?_ ?_ ?_ u
     · intro u u'
       filter_upwards [hT0sub (σ y u) (σ y u')] with x hx
@@ -205,13 +208,13 @@ theorem GlobalTheory.SgInf.bessel_ext_bounded : ∀ (k r : ℕ) {H : Type} [Norm
   · intro s hs u
     have hmp : MeasurePreserving (lmulM s : Mt k r → Mt k r) μG μG :=
       ⟨(continuous_lmulM' s).measurable, hHaar.2.2.2 s (hSG hs)⟩
-    have hPi := GlobalTheory.T.besselSubgroupRepTwisted_isUnitaryRep k r z c π hSide.1 hSide.2.1 hSide.2.2.1
+    have hPi := _root_.GlobalTheory.SgInf.PiUnitary.piS_unitary k r z c π hSide.1 hSide.2.1 hSide.2.2.1
     have hPin : ‖PiS (psiGen k r z c) π s‖ ≤ 1 := (hPi.2.2.1 s hs).1
     have hnorm : ∀ e : Wp, ‖PiS (psiGen k r z c) π s e‖₊ ≤ ‖e‖₊ := fun e => by
       rw [← NNReal.coe_le_coe, coe_nnnorm, coe_nnnorm]
       exact ((PiS (psiGen k r z c) π s).le_opNorm e).trans
         (mul_le_of_le_one_left (norm_nonneg _) hPin)
-    refine GlobalTheory.T.ae_eq_of_dense_of_local_sq_bound_alt μG K hKm hcov (DD σ w : Set H) hdense
+    refine _root_.GlobalTheory.ae_eq_of_dense_of_local_sq_bound μG K hKm hcov (DD σ w : Set H) hdense
       (fun u x => T0 u (lmulM s x)) (fun u x => PiS (psiGen k r z c) π s (T0 u x)) ?_ ?_ ?_ ?_ ?_ u
     · intro u u'; exact hmp.quasiMeasurePreserving.ae (hT0sub u u')
     · intro u u'

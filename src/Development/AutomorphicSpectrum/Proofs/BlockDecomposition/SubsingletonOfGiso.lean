@@ -5,9 +5,10 @@ public import Development.WeilBound.RepresentationTheoryGL.GenericUnitaryGL.Leib
 public import Mathlib.Algebra.Order.PUnit
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsSmoothSmInd
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MirabolicPhiMinusExactStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MirabolicPsiMinusExactStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothPhiMinusStatement
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.TwistedKernels.ExPhiPlusOnto
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MirabolicPhiMinusExact
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MirabolicPsiMinusExact
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothPhiMinus
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothPsiMinusStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -135,8 +136,8 @@ theorem isSmooth_punit {G : Type} [Group G] [TopologicalSpace G] : IsSmooth (Rep
 theorem ses_phiN (ψ : AddChar k Circle) (hc : Continuous ψ) {n : ℕ} {A B C : MRep k (n + 1)} (hA : IsSmooth A.ρ) (hB : IsSmooth B.ρ)
     (hC : IsSmooth C.ρ) (h : Ses A.ρ B.ρ C.ρ) : Ses (phiN ψ A).ρ (phiN ψ B).ρ (phiN ψ C).ρ := by
   obtain ⟨f, g, hf, hg, hi, hs, he⟩ := h
-  refine ses_twist _ (ses_twAct (MirUin k (n + 1)) (mirChar k ψ n) _ (levi_stab ψ n) f g hf hg hs ?_ (GlobalTheory.T.mirabolic_phi_minus_exact k ψ hc n _ _ _ _ _ _ hA hB hC f g hf hg he))
-  have h0 := GlobalTheory.T.mirabolic_phi_minus_exact k ψ hc n PUnit _ _ (Representation.trivial ℂ _ PUnit) A.ρ B.ρ isSmooth_punit hA hB 0 f
+  refine ses_twist _ (ses_twAct (MirUin k (n + 1)) (mirChar k ψ n) _ (levi_stab ψ n) f g hf hg hs ?_ (_root_.GlobalTheory.CompanionTheory.BZMir.exPhiMinus k ψ hc n _ _ _ _ _ _ hA hB hC f g hf hg he))
+  have h0 := _root_.GlobalTheory.CompanionTheory.BZMir.exPhiMinus k ψ hc n PUnit _ _ (Representation.trivial ℂ _ PUnit) A.ρ B.ρ isSmooth_punit hA hB 0 f
     (fun _ _ => by simp) hf (by rw [LinearMap.range_zero, LinearMap.ker_eq_bot.2 hi])
   rw [← h0, LinearMap.range_eq_bot]
   ext x
@@ -145,15 +146,15 @@ theorem ses_phiN (ψ : AddChar k Circle) (hc : Continuous ψ) {n : ℕ} {A B C :
 theorem ses_psiN {n : ℕ} {A B C : MRep k n} (hA : IsSmooth A.ρ) (hB : IsSmooth B.ρ)
     (hC : IsSmooth C.ρ) (h : Ses A.ρ B.ρ C.ρ) : Ses (psiN A).ρ (psiN B).ρ (psiN C).ρ := by
   obtain ⟨f, g, hf, hg, hi, hs, he⟩ := h
-  refine ses_twist _ (ses_twAct (MirUin k n) 1 (levi k n) (levi_normalises n) f g hf hg hs ?_ (GlobalTheory.T.mirabolic_psi_minus_exact k n _ _ _ _ _ _ hA hB hC f g hf hg he))
-  have h0 := GlobalTheory.T.mirabolic_psi_minus_exact k n PUnit _ _ (Representation.trivial ℂ _ PUnit) A.ρ B.ρ isSmooth_punit hA hB 0 f
+  refine ses_twist _ (ses_twAct (MirUin k n) 1 (levi k n) (levi_normalises n) f g hf hg hs ?_ (_root_.GlobalTheory.CompanionTheory.BZMir.exPsiMinus k n _ _ _ _ _ _ hA hB hC f g hf hg he))
+  have h0 := _root_.GlobalTheory.CompanionTheory.BZMir.exPsiMinus k n PUnit _ _ (Representation.trivial ℂ _ PUnit) A.ρ B.ρ isSmooth_punit hA hB 0 f
     (fun _ _ => by simp) hf (by rw [LinearMap.range_zero, LinearMap.ker_eq_bot.2 hi])
   rw [← h0, LinearMap.range_eq_bot]
   ext x
   simp [twMap]
 
 theorem isSmooth_phiN (ψ : AddChar k Circle) {n : ℕ} {A : MRep k (n + 1)} (hA : IsSmooth A.ρ) : IsSmooth (phiN ψ A).ρ :=
-  isSmooth_twist (GlobalTheory.T.smooth_phi_minus k ψ n _ A.ρ hA)
+  isSmooth_twist (_root_.GlobalTheory.CompanionTheory.BZMirSmooth.smPhiMinus k ψ n _ A.ρ hA)
     (IsSmoothChar.comp (IsSmoothChar.detChar (GlobalTheory.LocGL.isSmoothChar_absPow _)) _ continuous_subtype_val)
 
 theorem isSmooth_psiN {n : ℕ} {A : MRep k n} (hA : IsSmooth A.ρ) : IsSmooth (psiN A).ρ :=

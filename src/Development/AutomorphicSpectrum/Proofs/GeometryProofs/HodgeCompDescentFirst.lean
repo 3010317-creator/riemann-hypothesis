@@ -2,12 +2,17 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsSmoothHermTrivLine
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenMapStalkMap
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptAwayFromPrimesStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptInteriorGenericStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeInnerProductMapIffStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptAwayFromPrimes
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.HodgeIPIffHodgeFormConj
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeInnerProductMapIff
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeDominantCompat
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelDominantHodgeStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelDominantHodge
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.MemAbLocusIff
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenMapFromSpecStalk
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptInteriorGeneric
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,7 +49,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenMapFromSpecStalk
 import GroundTheory.HeightsAndTheta.Heights.Intersections.IsSmoothHermFubiniStudyO1
 
 @[expose] public section
@@ -164,7 +168,7 @@ theorem lie_of_cover : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
   intro E _ _ _ H D l Xo c O _ β Y S₀ S Ω₀ Ω _ _ K₀ K _ _ J₀ J _ _ y₀ y 𝔐₀ 𝔐 i h hd Fl₀ Fl hβ hcov hfl
   obtain ⟨-, hf, hcst⟩ := hcov
   obtain ⟨m₀, hφ⟩ := exists_sabMap 𝔐₀ 𝔐 h hf
-  obtain ⟨j, hpt, hsemi, hind, -, hpull⟩ := GlobalTheory.T.lie_model_dominant_hodge E H 𝔐₀.X 𝔐₀.t 𝔐.X 𝔐.t h m₀ Ω₀ Ω 𝔐₀.ξ 𝔐.ξ i 𝔐₀.Li 𝔐.Li 𝔐₀.M 𝔐.M
+  obtain ⟨j, hpt, hsemi, hind, -, hpull⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LiePullSab.lie_pull_lat E H 𝔐₀.X 𝔐₀.t 𝔐.X 𝔐.t h m₀ Ω₀ Ω 𝔐₀.ξ 𝔐.ξ i 𝔐₀.Li 𝔐.Li 𝔐₀.M 𝔐.M
     𝔐₀.tie.gen 𝔐.tie.gen hd
   have hact : ∀ a e, 𝔐.ρ a (j e) = j (𝔐₀.ρ a e) := fun a e => pt_inj_of_pull m₀.cart 𝔐.M (by
     have e1 := congrArg CommaMorphism.left (𝔐.act a (j e))
@@ -192,9 +196,9 @@ theorem lie_of_cover : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     exact e1.trans (hfl s a).symm
   · have hq₀ : ∀ r : ℕ, r.Prime → ¬ InFibre 𝔐₀.ξ r (pushCpt hd q) :=
       fun r hr => not_inFibre_push 𝔐.tie.gen hd q (hq r hr)
-    obtain ⟨hV, -, -⟩ := GlobalTheory.T.hodge_cpt_away_from_primes E H D l Xo c O β Y S Ω K J y 𝔐 hβ q hq
-    obtain ⟨hV₀, -, hlat₀⟩ := GlobalTheory.T.hodge_cpt_away_from_primes E H D l Xo c O β Y S₀ Ω₀ K₀ J₀ y₀ 𝔐₀ hβ (pushCpt hd q) hq₀
-    obtain ⟨-, -, -, -, -, -, hindep, -⟩ := GlobalTheory.T.hodge_cpt_interior_generic E H D l Xo c O β Y S Ω K J y 𝔐 hβ
+    obtain ⟨hV, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HodgeChar0.lattices_of_char_zero E H D l Xo c O β Y S Ω K J y 𝔐 hβ q hq
+    obtain ⟨hV₀, -, hlat₀⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HodgeChar0.lattices_of_char_zero E H D l Xo c O β Y S₀ Ω₀ K₀ J₀ y₀ 𝔐₀ hβ (pushCpt hd q) hq₀
+    obtain ⟨-, -, -, -, -, -, hindep, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HodgeCpt.basic E H D l Xo c O β Y S Ω K J y 𝔐 hβ
     rw [hV s, hV₀ s]
     let N : (CMType H ⊕ CMType H) → Submodule (regAt 𝔐.ξ q) 𝔐.Li := fun s' =>
       Submodule.span (regAt 𝔐.ξ q) (j '' (𝔐₀.dR s' (pushCpt hd q) : Set 𝔐₀.Li))
@@ -220,7 +224,7 @@ theorem lie_of_cover : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     exact mem_of_mem_iSup _ 𝔐.Vgen hindep N (fun s' x hx => (hle s' hx).2) s (htop he.1) he.2
   · obtain ⟨v₀, hv₀, hIP⟩ := hΓ
     choose v hv hvφ using fun k => exists_value_up m₀ 𝔐.all hd hpt z (hv₀ k)
-    exact ⟨v, hv, fun p q => (GlobalTheory.T.hodge_inner_product_map_iff E H 𝔐₀.X 𝔐₀.t 𝔐.X 𝔐.t h m₀ z (v p) (v q) (v₀ p) (v₀ q) (Γ p q) (hvφ p) (hvφ q)).2 (hIP p q)⟩
+    exact ⟨v, hv, fun p q => (_root_.GlobalTheory.CompanionTheory.Ar.hodgeInnerProduct_tripleMap_iff E H 𝔐₀.X 𝔐₀.t 𝔐.X 𝔐.t h m₀ z (v p) (v q) (v₀ p) (v₀ q) (Γ p q) (hvφ p) (hvφ q)).2 (hIP p q)⟩
 
 end Main
 

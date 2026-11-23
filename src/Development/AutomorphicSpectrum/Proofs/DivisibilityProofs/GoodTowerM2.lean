@@ -1,7 +1,11 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptGlobalNefBoundStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.Birational
+public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptGlobalNefBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,7 +60,7 @@ theorem m2_of_good_tower : Given → ∀ (E : Type) [Field E] [NumberField E] [I
     hpbad ((o.toTowerOrigin.bad_iff p).2 ⟨hpr, dvd_mul_of_dvd_left (dvd_mul_of_dvd_right hd 2) _⟩)
   have hpS : p ∉ o.toTowerOrigin.S B := fun h => hnS ((o.toTowerOrigin.S_iff B p).1 h)
   rw [o.toTowerOrigin.j_eq] at hnef
-  exact GlobalTheory.T.hodge_cpt_global_nef_bound E H D Xo Yl
+  exact _root_.GlobalTheory.CompanionTheory.Ar.Conj.hodge_cpt_global_nefness E H D Xo Yl
     (fun p W hp hW i => ⟨((hloc p W hp hW).2 i).1, ((hloc p W hp hW).2 i).2.1⟩)
     l c hg Y hdom hp hq (o.toTowerOrigin.S B) (T.M B a) (o.toTowerOrigin.Or B a).𝔐
     (o.toTowerOrigin.Or B a).Fl (o.toTowerOrigin.Or B a).e (o.toTowerOrigin.Or B a).lines

@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HzUnit
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationTwoVariableModelAndLineExte
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralIndicatorGivesLocalVacuumSplitPlaceStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCombAt
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralIndicatorGivesLocalVacuumSplitPlace
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WithMuEq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -60,10 +61,10 @@ theorem supp_ctr : ∀ {D : D7} {c : Comm D} {v : VCom c}, c.Is → v.Is → Glo
   have a₂ : j + 1 + 1 + (2 * σ + 1) = Gi.s + 1 := by omega
   have b₀ : j + (2 * σ + 1 + 1) = Gi.s := by omega
   have b₁ : j + 1 + (2 * σ + 1) = Gi.s := by omega
-  obtain ⟨T₁, hT₁, hO₁⟩ := (GlobalTheory.T.integralIndicator_gives_localVacuum_splitPlace D Gi.k Gi.q Gi.unit _ _ (c.V j) (c.V (j + 1)) (Gi.FY j _ a₀) (Gi.FY (j + 1) _ a₁)
+  obtain ⟨T₁, hT₁, hO₁⟩ := (_root_.GlobalTheory.LocMod.indicator_vac D Gi.k Gi.q Gi.unit _ _ (c.V j) (c.V (j + 1)) (Gi.FY j _ a₀) (Gi.FY (j + 1) _ a₁)
     c.ψ Gi.S.ψ hc.std Gi.char Gi.S.cond (v.N j) (v.N (j + 1)) (hv.sd j (by omega)) (hv.sd (j + 1) (by omega))
     (Gi.latY j _ a₀) (Gi.latY (j + 1) _ a₁)).2 F₁ hF₁
-  obtain ⟨T₂, hT₂, hO₂⟩ := (GlobalTheory.T.integralIndicator_gives_localVacuum_splitPlace D Gi.k Gi.q Gi.unit _ _ (c.V (j + 1)) (c.V (j + 1 + 1)) (Gi.FY (j + 1) _ a₁)
+  obtain ⟨T₂, hT₂, hO₂⟩ := (_root_.GlobalTheory.LocMod.indicator_vac D Gi.k Gi.q Gi.unit _ _ (c.V (j + 1)) (c.V (j + 1 + 1)) (Gi.FY (j + 1) _ a₁)
     (Gi.FY (j + 1 + 1) _ a₂) c.ψ Gi.S.ψ hc.std Gi.char Gi.S.cond (v.N (j + 1)) (v.N (j + 1 + 1)) (hv.sd (j + 1) (by omega))
     (hv.sd (j + 1 + 1) (by omega)) (Gi.latY (j + 1) _ a₁) (Gi.latY (j + 1 + 1) _ a₂)).2 F₂ hF₂
   obtain ⟨O₁, h1⟩ := GlobalTheory.BiComb.exists_isOne (k := Gi.k) (GlobalTheory.StepData.XIx (Fin D.R.k) (Fin D.R.t) (j + 1) ⊕ Fin (2 * σ + 1 + 1))

@@ -1,10 +1,12 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.StrictDominance.UnitaryExtremality.SatPowNonvan
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DominantUnipotentContractionStatement
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.StrictDominance.JointGeneralisedEigenvectors.CasselmanStrictlyDominantExample
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DominantUnipotentContraction
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsStrictDom
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IwahoriUnipotentDatumStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetLemmaHoldsStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IwahoriUnipotentDatum
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.StrictDominance.JointGeneralisedEigenvectors.IsJointGenEig
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetLemmaHolds
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MemIwGLOfDiag
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -59,6 +61,6 @@ theorem eigU_complete :
     (∀ k ∈ KU σ n, IsDiagM (k : GL (Fin n) L) → ρ k y - y ∈ jacU ρ) →
     ∃ (y' : V) (ξ : GU σ n → ℂ), y' ∉ jacU ρ ∧ (∀ t : GU σ n, IsDiagM (t : GL (Fin n) L) → ρ t y' - ξ t • y' ∈ jacU ρ) ∧
       ∀ k ∈ KU σ n, IsDiagM (k : GL (Fin n) L) → ξ k = 1 :=
-  eigU_of GlobalTheory.T.iwahori_unipotent_datum GlobalTheory.T.dominant_unipotent_contraction GlobalTheory.CompanionTheory.KUFactsU.kuFacts (fun G _ _ _ => GlobalTheory.T.jacquet_lemma_holds G)
+  eigU_of _root_.GlobalTheory.CompanionTheory.IwUnit.iwahoriU _root_.GlobalTheory.CompanionTheory.DomUnitary.domU GlobalTheory.CompanionTheory.KUFactsU.kuFacts (fun G _ _ _ => _root_.GlobalTheory.CompanionTheory.Cass.sphericalProduct_A4 G)
 
 end GlobalTheory.CompanionTheory.EigTorus

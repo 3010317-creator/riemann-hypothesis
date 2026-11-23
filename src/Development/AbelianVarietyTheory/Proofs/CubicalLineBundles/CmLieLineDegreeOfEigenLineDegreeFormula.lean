@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Statements.PrincipalLattices.ConclusionsAtIdentity
 public import Development.AbelianVarietyTheory.Definitions.CMLattices.LamLetters
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CmHostRootNegDiscriminantNeNegSelf
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.NormalisedDegreeCmEigenLineEqStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.NormalisedDegreeCmEigenLineEq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,9 +51,9 @@ theorem lamDegSt_of_degSt : DegSt → ThetaUnifAV → Out.Laws → ∀ (E : Type
   intro hD hU hL E _ _ _ H _ χ hχ _ l c hstar nΨ n' f o La ho
   obtain ⟨-, -, -, -, hΨ, h', -, -, -, tΨ, t', -, -, -, -, -, vΨ, v', -⟩ := ho
   obtain ⟨hb, -, -, ρ, hρ, h1, h2, -⟩ := labK_spec E H l c o.K₁
-  exact ⟨fun k => GlobalTheory.T.normalisedDegree_cmEigenLine_eq hD hU hL E H χ hχ hstar o.K₁ o.AΨ o.oaΨ o.xΨ o.φΨg (psiSet H) o.τΨ (labK c o.K₁) ρ
+  exact ⟨fun k => _root_.GlobalTheory.LamF.ndeg_vecLine_eq hD hU hL E H χ hχ hstar o.K₁ o.AΨ o.oaΨ o.xΨ o.φΨg (psiSet H) o.τΨ (labK c o.K₁) ρ
       hΨ hb.1 hρ h1 tΨ k _ (vΨ k),
-    fun k => GlobalTheory.T.normalisedDegree_cmEigenLine_eq hD hU hL E H χ hχ hstar o.K₁ o.A' o.oa' o.x' o.φ'g (psiSet H)ᶜ o.τ' (labK c o.K₁) (-ρ)
+    fun k => _root_.GlobalTheory.LamF.ndeg_vecLine_eq hD hU hL E H χ hχ hstar o.K₁ o.A' o.oa' o.x' o.φ'g (psiSet H)ᶜ o.τ' (labK c o.K₁) (-ρ)
       h' hb.1 (by rw [neg_sq, hρ]) h2 t' k _ (v' k)⟩
 
 end GlobalTheory.LamF

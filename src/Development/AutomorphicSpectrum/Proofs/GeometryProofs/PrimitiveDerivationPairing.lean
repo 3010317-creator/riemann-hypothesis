@@ -2,11 +2,17 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.MemPrimitiveTensorsIffIsPrimitiveElem
 public import Mathlib.RingTheory.HopfAlgebra.Quotient
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrobeniusStableSubspaceElementStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.MultiplicativeDerivationRankStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NilpotentDerivationRankStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrimitiveElementPowersIndepStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SubspaceContainsUnitStatement
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrobeniusStableSubspaceElement
+public import Mathlib.RingTheory.Derivation.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.MultiplicativeDerivationRank
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NilpotentDerivationRank
+public import Mathlib.Algebra.CharP.Defs
+public import Mathlib.RingTheory.HopfAlgebra.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrimitiveElementPowersIndep
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SubspaceContainsUnit
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -156,13 +162,13 @@ theorem key (k : Type) [Field k] [IsAlgClosed k] (p : ℕ) [hp : Fact p.Prime] [
         rw [dualDer_iter, hc]; simp
       have hnz : f ^ (p - 1) ≠ 0 := by
         intro hz
-        have := GlobalTheory.T.primitive_element_powers_indep k p A f hf h0 (fun i => if i = p - 1 then 1 else 0) (by
+        have := _root_.GlobalTheory.CompanionTheory.HopfPrim.powers_indep_of_primitive k p A f hf h0 (fun i => if i = p - 1 then 1 else 0) (by
           rw [Finset.sum_eq_single (p - 1)]
           · simp [hz]
           · intro b _ hb; simp [hb]
           · intro h; simp at h; omega) (p - 1) (by omega)
         simp at this
-      obtain ⟨w, hw, hwu⟩ := GlobalTheory.T.subspace_contains_unit k (CartierDual k A)
+      obtain ⟨w, hw, hwu⟩ := _root_.GlobalTheory.CompanionTheory.FiniteAlgebraUnit.exists_isUnit_mem_of_forall_point k (CartierDual k A)
         (LinearMap.range (((D : CartierDual k A →ₗ[k] CartierDual k A)) ^ (p - 1))) (by
         intro x
         obtain ⟨g, hgu, hg⟩ := point_eval x
@@ -171,7 +177,7 @@ theorem key (k : Type) [Field k] [IsAlgClosed k] (p : ℕ) [hp : Fact p.Prime] [
         rw [hg, Module.End.pow_apply]
         exact (dualDer_iter f hf (p - 1) w g).symm ▸ hw)
       obtain ⟨t, rfl⟩ := hw
-      exact GlobalTheory.T.nilpotent_derivation_rank k p _ D ε hD t (by simpa [Module.End.pow_apply] using hwu)
+      exact _root_.GlobalTheory.CompanionTheory.Ggeo.DerivFree.finrank_and_vanishing k p _ D ε hD t (by simpa [Module.End.pow_apply] using hwu)
     · have hD : ∀ a, (⇑D)^[p] a = D a := fun a => CartierDual.ext_apply fun c => by
         rw [dualDer_iter, hc]; rfl
       let u0 : A := ∑ i ∈ Finset.Ico 1 p, f ^ i
@@ -182,7 +188,7 @@ theorem key (k : Type) [Field k] [IsAlgClosed k] (p : ℕ) [hp : Fact p.Prime] [
         linear_combination h'
       have hu0 : u0 ≠ 0 := by
         intro hz
-        have := GlobalTheory.T.primitive_element_powers_indep k p A f hf h0 (fun i => if i = 0 then 0 else 1) (by
+        have := _root_.GlobalTheory.CompanionTheory.HopfPrim.powers_indep_of_primitive k p A f hf h0 (fun i => if i = 0 then 0 else 1) (by
           rw [Finset.range_eq_Ico, Finset.sum_eq_sum_Ico_succ_bot (by omega)]
           simp only [if_true, zero_smul, zero_add]
           rw [← hz]
@@ -190,7 +196,7 @@ theorem key (k : Type) [Field k] [IsAlgClosed k] (p : ℕ) [hp : Fact p.Prime] [
           have : i ≠ 0 := by have := (Finset.mem_Ico.1 hi).1; omega
           simp [this]) 1 (by omega)
         simp at this
-      obtain ⟨w, hw, hwu⟩ := GlobalTheory.T.subspace_contains_unit k (CartierDual k A)
+      obtain ⟨w, hw, hwu⟩ := _root_.GlobalTheory.CompanionTheory.FiniteAlgebraUnit.exists_isUnit_mem_of_forall_point k (CartierDual k A)
         (LinearMap.ker ((D : CartierDual k A →ₗ[k] CartierDual k A) - LinearMap.id)) (by
         intro x
         obtain ⟨g, hgu, hg⟩ := point_eval x
@@ -203,7 +209,7 @@ theorem key (k : Type) [Field k] [IsAlgClosed k] (p : ℕ) [hp : Fact p.Prime] [
         · rw [hg]; exact hw)
       have hw' : D w = w := by
         simpa [sub_eq_zero] using hw
-      exact GlobalTheory.T.multiplicative_derivation_rank k p _ D ε hD w hwu hw'
+      exact _root_.GlobalTheory.CompanionTheory.PowerDerivation.finrank_eq_and_derivation_eq_zero k p _ D ε hD w hwu hw'
   obtain ⟨hdim, z, hz, hu⟩ := hG
   refine ⟨?_, ?_⟩
   · let Ik : Submodule k A := (Ideal.span {f}).restrictScalars k
@@ -362,7 +368,7 @@ theorem stepP (k : Type) [Field k] [IsAlgClosed k] (p : ℕ) [hp : Fact p.Prime]
     · obtain ⟨q, rfl⟩ : ∃ q, p = q + 1 := ⟨p - 1, by omega⟩
       rw [pow_succ, hW v hv, h2 v hv, hcf]
       simp
-  obtain ⟨f, hfQ, hf0, hfc⟩ := GlobalTheory.T.frobenius_stable_subspace_element k p A Q hQ0 hfrob
+  obtain ⟨f, hfQ, hf0, hfc⟩ := _root_.GlobalTheory.CompanionTheory.HopfFrob.exists_frobenius_fixed_or_killed k p A Q hQ0 hfrob
   obtain ⟨hfp, hfW⟩ := (memQ f).1 hfQ
   obtain ⟨hdim, hker⟩ := key k p A f hfp hf0 hfc
   have : (Ideal.span {f}).IsHopfIdeal k := isHopfIdeal_span hfp

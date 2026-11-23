@@ -2,16 +2,21 @@ module
 
 public import Development.WeilBound.CoreStatements.VolumeEquality.BaseUnifDefs
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsDifferentiableOnTransfer
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.CongruenceSubgroupOfFormAutomorphismsStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsFundSet
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.CongruenceSubgroupOfFormAutomorphisms
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BoundaryChartHolomorphic
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FamilyPeriodRiemannLatticeStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUniqueLeftBasisCoordsAdicCompletion
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FamilyPeriodRiemannLattice
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FamilyUniformisationLocalPeriod
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FibreLatticeBaseChangeConjStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BallDomainOpenConvexZeroStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsRiemannLatticeOfPeriodStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LocalHolomorphicPeriodFamilyStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FibreLatticeBaseChangeConj
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BallDomainOpenConvexZero
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsEigFrames
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsRiemannLatticeOfPeriod
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LocalHolomorphicPeriodFamily
 public import Development.WeilBound.CoreStatements.VolumeEquality.BaseUnifSig
 public import Development.WeilBound.CoreStatements.VolumeEquality.BaseUnifUnivC
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.HolPair
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +54,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.HolPair
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.HolPairA
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.UnLocal
 
@@ -150,7 +154,7 @@ theorem kUnif_good (hV : VecOfPeriods) (Y : Model Xo c (algebraMap (𝓞 c.F) c.
     fun R => hasSig_iff κ ρ hρ hκ D.p D.q sm j j' hs R
   have hriem : ∀ i P, IsPeriod (FU.Di i) ty P → ∃ R : RiemLat E g (FU.Di i).La, R.P = P ∧ R.form = (FU.Di i).EF ∧
       R.HasSig (fun τ => κ.comp (labelEmb c (sm τ))) j j' := fun i P hP => by
-    obtain ⟨R, h₁, h₂, -, h₄⟩ := GlobalTheory.T.exists_riemann_lattice_of_period E H (FU.Di i) g ty P (htyi i) hP
+    obtain ⟨R, h₁, h₂, -, h₄⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.riemLat_of_period E H (FU.Di i) g ty P (htyi i) hP
     rw [(FU.sig i).1, (FU.sig i).2] at h₄
     exact ⟨R, h₁, h₂, (hsig R).2 h₄⟩
   have hF : ∀ k : ι, ∃ F : UnivFam E (CMType H) j j' n g (FU.Di k.1).La, F.q = q ∧
@@ -164,20 +168,20 @@ theorem kUnif_good (hV : VecOfPeriods) (Y : Model Xo c (algebraMap (𝓞 c.F) c.
   have hΓ : ∀ k : ι, ∃ Γ : Subgroup ((FU.Di k.1).La ≃ₗ[𝓞 E] (FU.Di k.1).La), (F k).IsArith Γ ∧
       ∀ γ, γ ∈ Γ ↔ InLevel l (FU.Di k.1) γ := fun k => by
     haveI := ((F k).R 0).fin
-    obtain ⟨Γ, a₁, a₂, a₃⟩ := GlobalTheory.T.congruence_subgroup_of_form_automorphisms E (FU.Di k.1).La (FU.Di k.1).EF (l.Mb.map (H.bar : 𝓞 E →+* 𝓞 E)) l.M l.A
+    obtain ⟨Γ, a₁, a₂, a₃⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.levelGrp_finite_index E (FU.Di k.1).La (FU.Di k.1).EF (l.Mb.map (H.bar : 𝓞 E →+* 𝓞 E)) l.M l.A
       (by have := l.three_le; omega) l.A_pos
     refine ⟨Γ, ?_, a₃⟩
     unfold UnivFam.IsArith
     rw [hform]
     exact ⟨a₁, a₂⟩
   choose Γ hΓa hΓm using hΓ
-  have hO : IsOpen (ballDom q) := (GlobalTheory.T.ball_domain_open_convex_zero _ j j' n q).1
+  have hO : IsOpen (ballDom q) := (_root_.GlobalTheory.CompanionTheory.Ar.Cusp.BallConvex.ballDom_open_convex_zero _ j j' n q).1
   have hRf : ∀ k t, ((F k).R t).form = (FU.Di k.1).EF := fun k t => ((F k).form_eq t).trans (hform k)
   have hloc : ∀ k : ι, ∀ t₀ ∈ ballDom q, ∃ (V' : Set (Fin n → ℂ)) (P : (Fin n → ℂ) → ((FU.Di k.1).La →+ (Fin g → ℂ)))
       (h : (Fin n → ℂ) → Matrix (Fin g) (Fin g) ℂ), IsOpen V' ∧ t₀ ∈ V' ∧ V' ⊆ ballDom q ∧
       IsHolPeriods (FU.Di k.1) ty V' P ∧ (∀ a b, DifferentiableOn ℂ (fun t => h t a b) V') ∧
       ∀ t ∈ V', IsUnit (h t).det ∧ ∀ x, P t x = h t *ᵥ ((F k).R t).P x := fun k =>
-    GlobalTheory.T.local_holomorphic_period_family E H (FU.Di k.1) g n ty (ballDom q) (F k).R (htyi _) hO (hq k ▸ (F k).hol) fun t ht => ⟨hRf k t, by
+    _root_.GlobalTheory.CompanionTheory.Ar.Cusp.period_of_riem E H (FU.Di k.1) g n ty (ballDom q) (F k).R (htyi _) hO (hq k ▸ (F k).hol) fun t ht => ⟨hRf k t, by
       rw [(FU.sig _).1, (FU.sig _).2]
       refine (hsig _).1 ?_
       rw [← hσ k]
@@ -274,11 +278,11 @@ theorem kUnif_good (hV : VecOfPeriods) (Y : Model Xo c (algebraMap (𝓞 c.F) c.
     · rw [hx₂, hxs]
   · obtain ⟨V', P, h, -, hm, -, hP, -, hh⟩ := hloc k t ht
     have h₁ : FibreLat Xo.univ.t (FU.u k.1 (P t)) ((F k).R t) :=
-      GlobalTheory.T.family_period_riemann_lattice E H D l Xo _ g ty FU k.1 ((F k).R t) (P t) (h t) (hP.1 t hm) (hRf k t) (hh t hm).1 (hh t hm).2 Empty _ _
+      _root_.GlobalTheory.CompanionTheory.Ar.Cusp.FibreAtPeriod.fibreLatVec_of_period E H D l Xo _ g ty FU k.1 ((F k).R t) (P t) (h t) (hP.1 t hm) (hRf k t) (hh t hm).1 (hh t hm).2 Empty _ _
         fun a => a.elim
     rw [← hum k t ht _ (hP.1 t hm) _ (hh t hm).1 (hh t hm).2, ← hx₁] at h₁
-    have h₂ := ((GlobalTheory.T.fibre_lattice_base_change_conj E H _ _ Xo.univ.t Y.oF.t _ g _ ((F k).R t) ((F k).R t) (xF k t)).1 ⟨Y.m0.toSABMap⟩).2 h₁
-    exact ((GlobalTheory.T.fibre_lattice_base_change_conj E H _ _ Y.t Y.oF.t _ g _ ((F k).R t) ((F k).R t) (xF k t)).1 ⟨Y.m⟩).1 h₂
+    have h₂ := ((_root_.GlobalTheory.CompanionTheory.Ar.Cusp.FibreMove.fibreLat_move E H _ _ Xo.univ.t Y.oF.t _ g _ ((F k).R t) ((F k).R t) (xF k t)).1 ⟨Y.m0.toSABMap⟩).2 h₁
+    exact ((_root_.GlobalTheory.CompanionTheory.Ar.Cusp.FibreMove.fibreLat_move E H _ _ Y.t Y.oF.t _ g _ ((F k).R t) ((F k).R t) (xF k t)).1 ⟨Y.m⟩).1 h₂
   · obtain ⟨V', P, h, hVo', hm, hsub, hP, hd, hh⟩ := hloc k t₀ (hVs ht₀)
     have hW : IsOpen (V ∩ V') := hVo.inter hVo'
     refine hV E H D l Xo c Y S Ω K J y 𝔐 κ _ g ty FU k.1 n (V ∩ V') z (xF k) (F k).R P h hW

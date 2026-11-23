@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HermSysHypOneLeLambdaZero
 public import Development.AbelianVarietyTheory.Definitions.Divisors.WellChosen
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BertiniSimpleZerosGenericSectionsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BertiniSimpleZerosGenericSections
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,6 +53,6 @@ theorem bertiniNF_of_bertini (h : Bertini) : BertiniNF := by
   exact ⟨hδ, Q, hQ, fun E _ _ _ s hsQ => hs E s hsQ⟩
 
 theorem bertiniNumberField_of_hilbertSamuel : GlobalTheory.HSCore.Quoted → BertiniNF :=
-  fun hq => bertiniNF_of_bertini (GlobalTheory.T.bertini_simple_zeros_generic_sections hq)
+  fun hq => bertiniNF_of_bertini (_root_.GlobalTheory.BertiniTop.bertini hq)
 
 end GlobalTheory.HSShort

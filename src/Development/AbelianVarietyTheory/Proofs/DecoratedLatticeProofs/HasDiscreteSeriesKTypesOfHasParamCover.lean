@@ -2,8 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.AdmissibleDiscreteSeriesOfHasParam
 public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.DiscreteSpectrumKFiniteDecomposition
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HasDiscreteSeriesKTypesCoverOfFactorsThroughCoveStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HasDiscreteSeriesKTypesOfSqrtDetTwistStatement
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.RhoCompactTwiceEqOfSignBlockOrdered
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HasDiscreteSeriesKTypesCoverOfFactorsThroughCove
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.NotTrivialAndTwist
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HasDiscreteSeriesKTypesOfSqrtDetTwist
+public import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.IsotypicSignedParameters
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -39,7 +42,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.IsotypicSignedParameters
 
 @[expose] public section
 
@@ -57,10 +59,10 @@ theorem hasTypes_of_hasParam_of_group : GlobalTheory.Dec.LowKMultOne → GlobalT
   obtain ⟨P, e, -, hB, hcase⟩ := isParam_cases hlam
   rcases hcase with rfl | rfl
   · obtain ⟨σ, hf, hds⟩ := (hasParam_iff_factors R hn P hB).1 hR
-    exact GlobalTheory.T.hasDiscreteSeriesKTypes_cover_of_factorsThroughCovering hL hK hD p q (p + q) e P T R σ hB hf hds
+    exact _root_.GlobalTheory.CoverDS.hasTypes_of_factors hL hK hD p q (p + q) e P T R σ hB hf hds
   · obtain ⟨σ, hπ, hds⟩ := (hasParam_half_iff R hn P hB).1 hR
     have hf : Factors (Cover.twist R).U e σ := (factors_twist_iff R σ).2 hπ
-    exact GlobalTheory.T.hasDiscreteSeriesKTypes_of_sqrtDetTwist p q T R (blockPar P e)
-      (GlobalTheory.T.hasDiscreteSeriesKTypes_cover_of_factorsThroughCovering hL hK hD p q (p + q) e P T (Cover.twist R) σ hB hf hds)
+    exact _root_.GlobalTheory.CoverDS.TwistTypes.hasTypes_of_twist p q T R (blockPar P e)
+      (_root_.GlobalTheory.CoverDS.hasTypes_of_factors hL hK hD p q (p + q) e P T (Cover.twist R) σ hB hf hds)
 
 end GlobalTheory.CoverDS

@@ -2,11 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.FamilyGroupSumFactorsWeightAmplitude
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.InVolumesAtOfSWS
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DifferentLocalIdentityFamiliesLemmaHStatement
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FamDefs
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DifferentLocalIdentityFamiliesLemmaH
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagNormsCongrModLevelSqStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GenericMassLeHeightPowMulGluedCountStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GluedLatticeWeightedCountLeExplicitStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramInvariantPowLeHaarWeightStatement
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RowsConc
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramInvariantPowLeHaarWeight
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MatchedFamilyMassLawBaseSituationStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeanCountConstantEqUnscaledMainConstantStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormsInvariantsGenericRationalFramePairStatement
@@ -58,7 +60,7 @@ namespace GlobalTheory.WeightsFamPf
 
 theorem weightsFam_of (hS : PI.VolStabS.MassDataS.SWXS) : GlobalTheory.SnFam.WeightsFam := by
   intro Cg cb Cw cT CT C0
-  obtain ⟨aH, bH, hH⟩ := GlobalTheory.T.differentLocalIdentity_familiesLemmaH Cg cb Cw cT CT C0
+  obtain ⟨aH, bH, hH⟩ := _root_.GlobalTheory.HTieLeaf.main Cg cb Cw cT CT C0
   refine ⟨max aH 2, bH, fun C' Cl e1 e2 D large₂ X Y u u' hc hb X0 ψ hT sd C Th F0 what₂ vR Q i0 i0' νq Irat Ire _hBk
     K S TS cls hFQ γ _hγ Fm hFT _hRel _hTerm hG5 => ?_⟩
   have hC' : (2 : ℝ) ≤ C' := le_trans (le_max_right _ _) e1
@@ -136,7 +138,7 @@ theorem weightsFam_of (hS : PI.VolStabS.MassDataS.SWXS) : GlobalTheory.SnFam.Wei
     rw [hHPdef]
     unfold HPt
     exact le_mul_of_one_le_left hND0 h1
-  have hhaar := GlobalTheory.T.gram_invariant_pow_le_haar_weight D.host.E D.R.rS D.R.k (Tu D u * Tu D u') D.host.rdE HP (toPts w) hrd hDl hND
+  have hhaar := _root_.GlobalTheory.HaarWeight.gram_pow_le_haar D.host.E D.R.rS D.R.k (Tu D u * Tu D u') D.host.rdE HP (toPts w) hrd hDl hND
   rw [← hHT] at hngen
   have hY0 : 0 ≤ NGPt D.host.rdE (Tu D u * Tu D u') (toPts w) ^ (D.R.k - 1) := by
     apply pow_nonneg

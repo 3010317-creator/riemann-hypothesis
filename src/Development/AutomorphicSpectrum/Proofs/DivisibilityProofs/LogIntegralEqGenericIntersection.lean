@@ -1,12 +1,13 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.LocalAtPlaces
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FiniteVerticalRecursionStatement
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FiniteVerticalRecursion
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FractionRingRingEquiv
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.IsMultiProjPrimeExtTo
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.LogIntegralCongrSmul
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.UniformizerDivisorCycleNumberStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.VerticalNumberLocalCycleStatement
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.BundleChernComparison
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.UniformizerDivisorCycleNumber
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.VerticalNumberLocalCycle
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -142,8 +143,8 @@ theorem ptsIntegral_one_eq_vertAt (P : Ideal (MRing ι ℤ)) (D : ℕ) (hP : IsA
   have f2 : IsMultiHomog (C (2 : ℤ) : MRing ι ℤ) (0 : K → ℕ) := isWeightedHomogeneous_C _ _
   have e1 := hI.2.2 P D L (trivLine ι) 1 0 hP hL hA (fun k => by simp [trivLine]) g1 nm1
   have e2 := hI.2.2 P D L (trivLine ι) (C 2) 0 hP hL hA (fun k => by simp [trivLine]) g2 nm2
-  rw [(GlobalTheory.T.finite_vertical_recursion K ι P D hP I 0 1 f1 nm1 L (trivLine ι)).2] at e1
-  rw [(GlobalTheory.T.finite_vertical_recursion K ι P D hP I 0 (C 2) f2 nm2 L (trivLine ι)).2] at e2
+  rw [(_root_.GlobalTheory.CompanionTheory.Ar.Num.RecSplit.recR_split K ι P D hP I 0 1 f1 nm1 L (trivLine ι)).2] at e1
+  rw [(_root_.GlobalTheory.CompanionTheory.Ar.Num.RecSplit.recR_split K ι P D hP I 0 (C 2) f2 nm2 L (trivLine ι)).2] at e2
   have a1 : arInt P (1 : MRing ι ℤ) (trivLine ι) L = 0 := by
     unfold arInt
     rw [hc.1 _ (fun _ => (0 : ℝ) * 1) (fun z _ => by simp [ReciprocityTheory.ChartRestriction.G.Geo.logNorm, trivLine]),
@@ -203,8 +204,8 @@ theorem vertAt_self_eq_intNum (P : Ideal (MRing ι ℤ)) (D : ℕ) (hP : IsArith
     rw [show P.comap (C : ℤ →+* MRing ι ℤ) = ⊥ from hP.2.2.1] at h2
     have := p.2.ne_zero
     simp_all
-  rw [GlobalTheory.T.vertical_number_local_cycle K ι P D hP p 0 (C ((p : ℕ) : ℤ)) f2 nm2 (List.ofFn b) hlen]
-  have hcy := GlobalTheory.T.uniformizer_divisor_cycle_number (ZP p) (((p : ℕ) : ZP p)) hm.1 K ι (extTo (ZP p) P) D hm.2.1 1 1
+  rw [_root_.GlobalTheory.CompanionTheory.Ar.Num.vertAt_eq_cycList K ι P D hP p 0 (C ((p : ℕ) : ℤ)) f2 nm2 (List.ofFn b) hlen]
+  have hcy := _root_.GlobalTheory.CompanionTheory.Ar.Num.cycNum_divCycle_const (ZP p) (((p : ℕ) : ZP p)) hm.1 K ι (extTo (ZP p) P) D hm.2.1 1 1
     Empty Empty.elim 1 0 (MvPolynomial.isHomogeneous_one _ _) (List.ofFn b) (by simp)
   have hg := genNum_zp_eq_rat K ι P p Empty Empty.elim 1 (List.ofFn b)
   have hcN : ∀ Z : Ideal (MRing ι (ZP p)) → ℤ,

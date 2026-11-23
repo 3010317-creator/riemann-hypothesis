@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasLevelStd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaguerreSignedBinomCoeffMulStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaguerreSignedBinomCoeffMul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,7 +66,7 @@ theorem lag_add : ∀ (k n : ℕ) (c s y : ℂ), lag k n (c + s) y =
     Finset.mul_sum, Finset.sum_mul]
   refine Finset.sum_congr rfl fun p hp ↦ ?_
   have hp' : p ≤ n - j := Nat.lt_succ_iff.mp (Finset.mem_range.mp hp)
-  have h := GlobalTheory.T.laguerreSignedBinomCoeff_mul k n (j + p) j (by omega) (by omega)
+  have h := _root_.GlobalTheory.HilbFam.rco_mul_rco k n (j + p) j (by omega) (by omega)
   have e1 : j + p - j = p := by omega
   have e2 : n - (j + p) = n - j - p := by omega
   rw [e1] at h

@@ -2,8 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasQIff
 public import ReciprocityTheory.ReductiveGroups.UnramifiedIntegrals.ModDefs
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EsymmPowTwelveDivDiscriminantMemSubringStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralOfEsymmMemSubringStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EsymmPowTwelveDivDiscriminantMemSubring
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.RingTheory.IntegralClosure.IsIntegral.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralOfEsymmMemSubring
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,9 +55,9 @@ theorem isIntegral_value_div (ι : Type) [Fintype ι] (act : ι → SL(2, ℤ) �
   have hq' : ∀ i, QAll (· ∈ (integralClosure R ℂ).toSubring) N (f i) := fun i => by
     obtain ⟨a, ha, haR⟩ := hq i
     exact ⟨a, ha, fun n => (integralClosure R ℂ).algebraMap_mem ⟨a n, haR n⟩⟩
-  have hs := GlobalTheory.T.esymm_pow_twelve_div_discriminant_mem_subring ι act w N f (integralClosure R ℂ).toSubring τ₀ hN hact hf hq' hj
+  have hs := _root_.GlobalTheory.QFam.esymm_pow_twelve_div_mem ι act w N f (integralClosure R ℂ).toSubring τ₀ hN hact hf hq' hj
   have h1 : IsIntegral (integralClosure R ℂ) (f i τ₀ ^ 12 / DD τ₀ ^ w) :=
-    GlobalTheory.T.isIntegral_of_esymm_mem_subring ι (integralClosure R ℂ).toSubring (fun i => f i τ₀ ^ 12 / DD τ₀ ^ w) hs i
+    _root_.GlobalTheory.QFam.isIntegral_of_esymm_mem ι (integralClosure R ℂ).toSubring (fun i => f i τ₀ ^ 12 / DD τ₀ ^ w) hs i
   have h2 : IsIntegral R (f i τ₀ ^ 12 / DD τ₀ ^ w) := isIntegral_trans _ h1
   have h3 : (f i τ₀ / Ω ^ w) ^ 12 = f i τ₀ ^ 12 / DD τ₀ ^ w := by
     rw [div_pow, ← hΩ, ← pow_mul, ← pow_mul, mul_comm]

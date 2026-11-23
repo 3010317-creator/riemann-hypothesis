@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableSetHsBall
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GaugeMeasureMatrixAlgebraSubgroupLocalAsymptoticStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TendstoRescaledMeasureGaugeUnitBodyStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.VagueLimitRescaledMeasuresProdStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DefClassNum
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GaugeMeasureMatrixAlgebraSubgroupLocalAsymptotic
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TendstoRescaledMeasureGaugeUnitBody
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.VagueLimitRescaledMeasuresProd
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,7 +54,7 @@ theorem local_vag {n d : ℕ} {ε : Fin n → Bool} {S : Set (Formalism.REAL.UJ 
       IsFiniteMeasure (μ.restrict {g | nrm (uMat g - 1) < t}) ∧
       Vag (μ.restrict {g | nrm (uMat g - 1) < t}) (fun g => crd E (uMat g - 1)) volume d := by
   obtain ⟨A, hA, hON, hspan, rfl⟩ := h
-  obtain ⟨hσ, hcpt, -, r₀, hr₀, hlim⟩ := GlobalTheory.T.gaugeMeasure_matrixAlgebraSubgroup_local_asymptotics n ε A d E hA hON hspan μ hμ
+  obtain ⟨hσ, hcpt, -, r₀, hr₀, hlim⟩ := _root_.GlobalTheory.GaugeSubLoc.gauge_local_asymptotics n ε A d E hA hON hspan μ hμ
   refine ⟨hσ, Real.sqrt r₀, Real.sqrt_pos.2 hr₀, fun t ht htt => ⟨?_, ?_⟩⟩
   ·
     refine isFiniteMeasure_restrict.2 (ne_of_lt ?_)
@@ -93,9 +94,9 @@ theorem prod_gauge_body : ∀ (n : ℕ) (ε : Fin n → Bool) (SN SM MainNotions
       Measurable fun g : Formalism.REAL.UJ ε => crd E (uMat g - 1) :=
     fun E => (continuous_crd_uMat ε E).measurable
 
-  have vMK := GlobalTheory.T.vague_limit_rescaled_measures_prod _ _ _ _ (μM.restrict s) (μK.restrict s) (fun g => crd EM (uMat g - 1))
+  have vMK := _root_.GlobalTheory.IwConst.vag_prod _ _ _ _ (μM.restrict s) (μK.restrict s) (fun g => crd EM (uMat g - 1))
     (fun g => crd EK (uMat g - 1)) volume volume dM dK (mc EM) (mc EK) vM vK
-  have vNMK := GlobalTheory.T.vague_limit_rescaled_measures_prod _ _ _ _ (μN.restrict s) ((μM.restrict s).prod (μK.restrict s))
+  have vNMK := _root_.GlobalTheory.IwConst.vag_prod _ _ _ _ (μN.restrict s) ((μM.restrict s).prod (μK.restrict s))
     (fun g => crd EN (uMat g - 1)) (Prod.map (fun g => crd EM (uMat g - 1)) (fun g => crd EK (uMat g - 1)))
     volume (volume.prod volume) dN (dM + dK) (mc EN) (Measurable.prodMap (mc EM) (mc EK)) vN vMK
   have h2 : (volume.prod volume : Measure ((Fin dM → ℝ) × (Fin dK → ℝ))).IsAddHaarMeasure :=
@@ -103,7 +104,7 @@ theorem prod_gauge_body : ∀ (n : ℕ) (ε : Fin n → Bool) (SN SM MainNotions
   have h3 : (volume.prod (volume.prod volume) :
       Measure ((Fin dN → ℝ) × (Fin dM → ℝ) × (Fin dK → ℝ))).IsAddHaarMeasure :=
     Measure.prod.instIsAddHaarMeasure _ _
-  have key := GlobalTheory.T.tendsto_rescaled_measure_gauge_unit_body _ _ ((μN.restrict s).prod ((μM.restrict s).prod (μK.restrict s)))
+  have key := _root_.GlobalTheory.IwConst.VagBody.tendsto_body _ _ ((μN.restrict s).prod ((μM.restrict s).prod (μK.restrict s)))
     (Prod.map (fun g => crd EN (uMat g - 1))
       (Prod.map (fun g => crd EM (uMat g - 1)) (fun g => crd EK (uMat g - 1))))
     (volume.prod (volume.prod volume)) (dN + (dM + dK)) (gau EN EM EK EL)

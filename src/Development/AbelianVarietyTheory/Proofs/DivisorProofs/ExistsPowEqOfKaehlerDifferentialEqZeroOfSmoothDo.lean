@@ -2,7 +2,8 @@ module
 
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Mathlib.RingTheory.Smooth.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowEqOfKaehlerDEqZeroStatement
+public import Mathlib.RingTheory.Kaehler.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowEqOfKaehlerDEqZero
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsDomainAndIsIntegrallyClosedAtPrimeOfSmoothOfCo
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -60,7 +61,7 @@ theorem exists_pow_eq_of_kaehlerDifferential_eq_zero_of_smooth_domain :
       (isDomain_and_isIntegrallyClosed_atPrime_of_smooth k m _).2
   have hK : KaehlerDifferential.D k (FractionRing S) (algebraMap S (FractionRing S) f) = 0 := by
     rw [← KaehlerDifferential.map_D k k S (FractionRing S) f, hf, map_zero]
-  obtain ⟨h, hh⟩ := GlobalTheory.T.exists_pow_eq_of_kaehler_D_eq_zero' p k hk (FractionRing S) _ hK
+  obtain ⟨h, hh⟩ := _root_.GlobalTheory.exists_pow_eq_of_kaehler_D_eq_zero p k hk (FractionRing S) _ hK
   have hint : IsIntegral S h :=
     IsIntegral.of_pow hp.out.pos (by rw [hh]; exact isIntegral_algebraMap)
   obtain ⟨y, rfl⟩ := IsIntegrallyClosed.isIntegral_iff.mp hint

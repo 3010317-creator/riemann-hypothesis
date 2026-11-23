@@ -2,15 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsMemThPsiOfMemSpan
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsUnivCharWithUnivChar
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ComplexEmbeddingHermitianQuadrupleSum
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationCommFockPolynomialVectors
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaPureTensorO
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleConjugatePairPlacesEqOfTwistConditionAStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsUnitCardResidueFieldOffExceptionalPlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.QuotientRowsExteriorDetEqConstMulTopBlockDetStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnivOfNotLinearIndependent
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.QuotientRowsExteriorDetEqConstMulTopBlockDet
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ResidueCharacterTwistUniversalCharAtChosenPlaceStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ThetaSeriesIntegralSourceTranslationRightMulStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistingCharacterAdmissibleGaloisTwistGood
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ComplexEmbeddingHermitianQuadrupleSum
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaPureTensorO
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -203,7 +204,7 @@ theorem specSer_mem_span : ∀ {D : D7} {N : NData D.R D.host D.what₂} {X : NT
   have hS : (Vc D j).SigOK := D.sp.V_sig _
   haveI : ∀ PP : Pl D.host.E, Fintype (Planes (kP PP) (Wc D j).rank (Vc D j).rank) := fun PP => Fintype.ofFinite _
   choose gC cC hgc using fun (PP : Pl D.host.E) (U : Planes (kP PP) (Wc D j).rank (Vc D j).rank) =>
-    GlobalTheory.T.quotientRowsExteriorDet_eq_const_mul_topBlockDet (kP PP) (Wc D j).rank (Vc D j).rank (ρ.β j PP) U
+    _root_.GlobalTheory.dU_eq_const_mul_det_topL_translate (kP PP) (Wc D j).rank (Vc D j).rank (ρ.β j PP) U
   have key : ∀ (Q₀ : Finset (Pl D.host.E)), Q₀ = (ρ.tw i b k Q (χ.comp (Y.delU i Q M))).Q →
       ∀ (loc : ∀ PP : ↥Q₀, Matrix (Fin (Wc D j).rank) (Fin (Vc D j).rank) (kP PP.1) → ℂ)
         (a : ∀ PP : ↥Q₀, Planes (kP PP.1) (Wc D j).rank (Vc D j).rank → ℂ),

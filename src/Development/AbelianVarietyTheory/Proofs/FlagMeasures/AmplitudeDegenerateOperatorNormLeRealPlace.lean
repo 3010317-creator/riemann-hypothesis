@@ -2,14 +2,17 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsNormalFormStabilizerMeasure
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ExistsIsFolnerUWset
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplificationDegenerateSidePieceBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DyadicSummationWithDecayStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagGramNumberMulLeadingMinorLeTwoPowStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegrableAndNormAmplitudeLeOfPairingsStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeadingMinorsGramNumberLeMajorantLengthsStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableFlagGramNumberNormalizedIndicatorStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StabilizerMeasureNormalisationSymmStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TwoSidedSizeFunctionPosInvariantContinuousStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplificationDegenerateSidePieceBound
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DyadicSummationWithDecay
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagGramNumberMulLeadingMinorLeTwoPow
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegrableAndNormAmplitudeLeOfPairings
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeadingMinorsGramNumberLeMajorantLengths
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableFlagGramNumberNormalizedIndicator
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StabilizerMeasureNormalisationSymm
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TwoSidedSizeFunctionPosInvariantContinuous
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -137,7 +140,7 @@ theorem side {j : ℕ} {hj : j ≤ r} {Wq : Type} [NormedAddCommGroup Wq] [Inner
   have q2 : (2 : ℝ) ^ (i' + 1) * H₁ ≤ 2 ^ (i + i' + 1) * H₁ :=
     mul_le_mul_of_nonneg_right (pow_le_pow_right₀ one_le_two (by omega)) hH0
   have hR : (1 : ℝ) ≤ 2 ^ (i + i' + 1) * H₁ := one_le_mul_of_one_le_of_one_le (one_le_pow₀ one_le_two) hH
-  have key := (GlobalTheory.T.amplification_degenerate_side_piece_bound k r j hj z z' π' ψ' μG μW' νS' μR νR Φ' γ c κ s H₁ De q hj1 hk hκ hs hH h1 h2 h4 h5 h6).2
+  have key := (_root_.GlobalTheory.Amp.DegSide.side_bound k r j hj z z' π' ψ' μG μW' νS' μR νR Φ' γ c κ s H₁ De q hj1 hk hκ hs hH h1 h2 h4 h5 h6).2
     w hw i' _ y hR hy
   refine le_trans (lintegral_mono' (Measure.restrict_mono ?_ le_rfl) fun x => ?_) (key.trans (le_of_eq ?_))
   · rintro x ⟨a1, a2, a3, a4, a5⟩
@@ -208,7 +211,7 @@ theorem arith (k r j q : ℕ) {H₁ De D sg : ℝ} (hj : 1 ≤ j) (hH : 1 ≤ H�
 theorem deg_core : ∀ (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k + 1) → ℂ)), ∀ {Wp : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [FiniteDimensional ℂ Wp] {Wq : Type} [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wq] (π : Mat k r → (Wp →L[ℂ] Wp)) (π' : Mat k r → (Wq →L[ℂ] Wq)) (ψ ψ' : Mat k r → ℂ) (μG μW μW' νS νS' μR νR : Measure (Mt k r)) (Φ : Mat k r → Wp) (Φ' : Mat k r → Wq) (γ : Mat k r) (c κ s H₁ De : ℝ) (q : ℕ), 1 ≤ j → j + 2 ≤ k → 16 * r ^ 3 + 4 * r + 2 ≤ q → 0 < κ → 0 < s → 1 ≤ H₁ → OneSide z π ψ μG μW (ENNReal.ofReal κ • lebN k r) νS Φ c → OneSide z' π' ψ' μG μW' (ENNReal.ofReal κ • lebN k r) νS' Φ' c → TailBd z νS Φ q H₁ → TailBd z' νS' Φ' q H₁ → DeOK k r z z' γ De → IsNormalFormStabilizerMeasure k r hj z z' γ s μR → IsQuotMeas μG μR νR → Integrable (fun x => (innerSL ℂ (Φ' (Matrix.of x))).smulRight (Φ (γ * Matrix.of x))) νR ∧ ‖(haveI := FiniteDimensional.complete ℂ Wp; ampJ νR c Φ Φ' γ)‖ ≤ κ / s * degBd k r j q H₁ De (Dj k r hj z z' γ) (sgV k r z z' γ H₁) := by
   intro k r j hj z z' Wp _ _ _ Wq _ _ _ π π' ψ ψ' μG μW μW' νS νS' μR νR Φ Φ' γ c κ s H₁ De q hj1 hk hq hκ hs hH o1 o2
     m1 m2 de nr qm
-  obtain ⟨hγ, -, -, -, nr', hD, hDD, hde⟩ := GlobalTheory.T.stabilizer_measure_normalisation_symm k r j hj z z' γ s μR hs nr
+  obtain ⟨hγ, -, -, -, nr', hD, hDD, hde⟩ := _root_.GlobalTheory.Amp.StabMeas.stabilizer_measure_normalisation k r j hj z z' γ s μR hs nr
   have hr : 1 ≤ r := hj1.trans hj
   have hγ' : γ⁻¹ ∈ GG k r := isClosedSub_GG.2.2.2.2 _ hγ
   have hG : IsHaarOn (GG k r) μG := o1.2.2.2.2.2.1
@@ -219,8 +222,8 @@ theorem deg_core : ∀ (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k + 1)
   have qm' := quot_map hγ hG qm
   have hDe : (Dj k r hj z z' γ)⁻¹ ≤ De := de.2 ⟨j, by omega⟩ hj (norm_ne_zero_iff.1 hD.ne')
   have hDe1 : 1 ≤ De := de.1
-  have n1 := (GlobalTheory.T.amplification_degenerate_side_piece_bound k r j hj z z' π' ψ' μG μW' νS' μR νR Φ' γ c κ s H₁ De q hj1 hk hκ hs hH o2 m2 de nr qm).1
-  have n2 := (GlobalTheory.T.amplification_degenerate_side_piece_bound k r j hj z' z π ψ μG μW νS _ _ Φ γ⁻¹ c κ s H₁ De q hj1 hk hκ hs hH o1 m1 de' nr' qm').1
+  have n1 := (_root_.GlobalTheory.Amp.DegSide.side_bound k r j hj z z' π' ψ' μG μW' νS' μR νR Φ' γ c κ s H₁ De q hj1 hk hκ hs hH o2 m2 de nr qm).1
+  have n2 := (_root_.GlobalTheory.Amp.DegSide.side_bound k r j hj z' z π ψ μG μW νS _ _ Φ γ⁻¹ c κ s H₁ De q hj1 hk hκ hs hH o1 m1 de' nr' qm').1
   rw [MeasurableEquiv.map_apply] at n2
   have a1 : ∀ᵐ x ∂νR, Matrix.of x ∈ GG k r ∧ Yj k r hj z z' γ (Matrix.of x) ≠ 0 := by
     filter_upwards [compl_mem_ae_iff.2 n1] with x hx
@@ -237,9 +240,9 @@ theorem deg_core : ∀ (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k + 1)
     positivity
   have hsg := one_le_sgV z z' γ H₁
   have me : Measurable (lmulM γ : Mt k r → Mt k r) := (continuous_lmul γ).measurable
-  have g1 := GlobalTheory.T.two_sided_size_function_pos_invariant_continuous k r z o1.1 o1.2.1
-  have g2 := GlobalTheory.T.two_sided_size_function_pos_invariant_continuous k r z' o2.1 o2.2.1
-  have main := GlobalTheory.T.integrable_and_norm_amplitude_le_of_pairings k r νR Φ Φ' γ c (16 * (κ / s * Kc k r j De * c) * (2 * H₁) ^ (16 * r ^ 3 + 4 * r) * De ^ 2 *
+  have g1 := _root_.GlobalTheory.Amp.TwoSided.Sg2_invariant_continuousOn_one_le_bounds k r z o1.1 o1.2.1
+  have g2 := _root_.GlobalTheory.Amp.TwoSided.Sg2_invariant_continuousOn_one_le_bounds k r z' o2.1 o2.2.1
+  have main := _root_.GlobalTheory.Amp.OpNorm.integrable_and_norm_ampJ_le k r νR Φ Φ' γ c (16 * (κ / s * Kc k r j De * c) * (2 * H₁) ^ (16 * r ^ 3 + 4 * r) * De ^ 2 *
     (2 ^ j / Dj k r hj z z' γ) ^ (k - 1 - j) *
     sgV k r z z' γ H₁ ^ (-(((q : ℝ) - (16 * r ^ 3 : ℕ) - 4 * r - 1) / r))) hγ n0 cΦ cΦ' hc (by positivity) ?_
   · refine ⟨main.1, main.2.trans ?_⟩
@@ -254,9 +257,9 @@ theorem deg_core : ∀ (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k + 1)
   have mS : Measurable (ext0 (Sg2 k r z)) := measurable_amplifierAbsConvExtendByZero g1.2.2.1
   have mS' : Measurable (ext0 (Sg2 k r z')) := measurable_amplifierAbsConvExtendByZero g2.2.2.1
   have mY : Measurable (ext0 (Yj k r hj z' z γ⁻¹)) :=
-    (GlobalTheory.T.measurable_flagGramNumberNormalized_indicator k r j hj z' z γ⁻¹ o2.1 o1.1 o2.2.1 o1.2.1 hγ').1
-  have mY' : Measurable (ext0 (Yj k r hj z z' γ)) := (GlobalTheory.T.measurable_flagGramNumberNormalized_indicator k r j hj z z' γ o1.1 o2.1 o1.2.1 o2.2.1 hγ).1
-  have dy := GlobalTheory.T.dyadic_summation_with_decay (Mt k r) νR (fun x => ext0 (fun g => ‖⟪v, Φ g⟫_ℂ‖) (lmulM γ x))
+    (_root_.GlobalTheory.Amp.YMeas.yj_measurable k r j hj z' z γ⁻¹ o2.1 o1.1 o2.2.1 o1.2.1 hγ').1
+  have mY' : Measurable (ext0 (Yj k r hj z z' γ)) := (_root_.GlobalTheory.Amp.YMeas.yj_measurable k r j hj z z' γ o1.1 o2.1 o1.2.1 o2.2.1 hγ).1
+  have dy := _root_.GlobalTheory.Amp.dyadic_summation (Mt k r) νR (fun x => ext0 (fun g => ‖⟪v, Φ g⟫_ℂ‖) (lmulM γ x))
     (ext0 fun g => ‖⟪w, Φ' g⟫_ℂ‖) (fun x => ext0 (Sg2 k r z) (lmulM γ x)) (ext0 (Sg2 k r z'))
     (fun x => ext0 (Yj k r hj z' z γ⁻¹) (lmulM γ x)) (ext0 (Yj k r hj z z' γ)) r j (k - 1 - j) (16 * r ^ 3) q H₁ De
     (Dj k r hj z z' γ) _ _ _
@@ -276,8 +279,8 @@ theorem deg_core : ∀ (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k + 1)
     obtain ⟨s2, t2, -⟩ := g2.2.2.2 (Matrix.of x)
     have u1 : 0 ≤ Sg k r z (γ * Matrix.of x) := zero_le_one.trans (one_le_Sg _ _)
     have u2 : 0 ≤ Sg k r z' (Matrix.of x) := zero_le_one.trans (one_le_Sg _ _)
-    obtain ⟨b1, b2, b3, b4⟩ := GlobalTheory.T.leading_minors_gram_number_le_majorant_lengths k r j hj z z' γ o1.1 o2.1 hγ _ hx.1
-    obtain ⟨-, b5, b6, -⟩ := GlobalTheory.T.leading_minors_gram_number_le_majorant_lengths k r j hj z' z γ⁻¹ o2.1 o1.1 hγ' _ hx'
+    obtain ⟨b1, b2, b3, b4⟩ := _root_.GlobalTheory.Amp.MinorBound.minor_gram_bound k r j hj z z' γ o1.1 o2.1 hγ _ hx.1
+    obtain ⟨-, b5, b6, -⟩ := _root_.GlobalTheory.Amp.MinorBound.minor_gram_bound k r j hj z' z γ⁻¹ o2.1 o1.1 hγ' _ hx'
     rw [Matrix.nonsing_inv_mul_cancel_left γ (Matrix.of x) (isUnit_det_of_mem_GG hγ), hDD] at b6
     have pw : (Sg k r z' (Matrix.of x) * Sg k r z (γ * Matrix.of x)) ^ r ≤
         (Sg2 k r z (γ * Matrix.of x) * Sg2 k r z' (Matrix.of x)) ^ r := by
@@ -288,7 +291,7 @@ theorem deg_core : ∀ (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k + 1)
       max_bounds hD hDe u2 (t2.trans (le_max_right _ _)) b6,
       max_bounds hD hDe u1 (t1.trans (le_max_left _ _)) b3, ?_⟩
     · rw [mul_comm (Yj k r hj z' z γ⁻¹ _)]
-      exact GlobalTheory.T.flagGramNumber_mul_leadingMinor_le_two_pow k r j hj z z' γ s μR nr _ hx.1
+      exact _root_.GlobalTheory.Amp.ExtPow.gram_mul_minor_le k r j hj z z' γ s μR nr _ hx.1
     · exact (b4 H₁ hH).trans (max_le_max le_rfl (div_le_div_of_nonneg_right pw (by positivity)))
   · intro i i' y hy
     have h := side hj1 hk hκ hs hH hγ' o1 m1 de' nr' qm' v hv i' i y hy

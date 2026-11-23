@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ComplementReferenceCompactSubgroup
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDataMassEqSumFrameClassesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFramesDefectOrderShareLeStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFramesStabilizerActsOnTermsStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermExponentsNonnegAndDefectGroupBoundStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDataMassEqSumFrameClasses
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFramesDefectOrderShareLe
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermExponentsNonnegAndDefectGroupBound
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFramesStabilizerActsOnTerms
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,7 +64,7 @@ theorem mass_defect_order_le : ∀ {F : Type} [Field F] [ValuativeRel F] [Topolo
       simp [Frames.sumData, Frames.mass, this]
     rw [h0]; exact zero_le
   obtain ⟨d0, Λ0, h0⟩ := hex
-  obtain ⟨-, -, -, hq, -⟩ := GlobalTheory.T.term_exponents_nonneg_and_defect_group_bound L r k S d0 Λ0 h0
+  obtain ⟨-, -, -, hq, -⟩ := _root_.GlobalTheory.HL.Defect.exponents_and_defect L r k S d0 Λ0 h0
   have hconst : 4 * (S.q : ℝ) ^ (2 * S.a * (2 * r + 2)) * ((β : ℝ) ^ (k - 1))⁻¹ ≤
       (4 * S.Hp ^ (4 * (r + 1))) * ((β : ℝ) ^ (k - 1))⁻¹ := by
     have e : (S.q : ℝ) ^ (2 * S.a * (2 * r + 2)) = ((S.q : ℝ) ^ S.a) ^ (4 * (r + 1)) := by
@@ -75,10 +75,10 @@ theorem mass_defect_order_le : ∀ {F : Type} [Field F] [ValuativeRel F] [Topolo
     rw [e]
     have hn : (0 : ℝ) ≤ (S.q : ℝ) ^ S.a := zpow_nonneg (Nat.cast_nonneg _) _
     gcongr
-  have s1 := (GlobalTheory.T.hermitianDataMass_eq_sum_frameClasses L r k S (fun d Λ => S.be d Λ = β) (fun h hh d Λ hT hP => by
-    have := (GlobalTheory.T.hermitianFrames_stabilizer_acts_on_terms L r k S d Λ hT h hh).2.2.2.2.2.1
+  have s1 := (_root_.GlobalTheory.HL.sumData_mass_eq_sumCls L r k S (fun d Λ => S.be d Λ = β) (fun h hh d Λ hT hP => by
+    have := (_root_.GlobalTheory.FrameAct.stabiliser_acts_on_terms L r k S d Λ hT h hh).2.2.2.2.2.1
     exact this.trans hP)).1
-  have s2 := (GlobalTheory.T.hermitianDataMass_eq_sum_frameClasses L r k S (fun _ _ => True) (fun _ _ _ _ _ _ => trivial)).1
+  have s2 := (_root_.GlobalTheory.HL.sumData_mass_eq_sumCls L r k S (fun _ _ => True) (fun _ _ _ _ _ _ => trivial)).1
   unfold Frames.nn
   rw [s1, s2]
   unfold Frames.sumCls
@@ -87,7 +87,7 @@ theorem mass_defect_order_le : ∀ {F : Type} [Field F] [ValuativeRel F] [Topolo
   split_ifs with hC
   · rw [mul_left_comm]
     refine mul_le_mul_right ?_ _
-    refine (GlobalTheory.T.hermitianFrames_defectOrder_share_le L r k S hk _ hC.1 β hβ).trans ?_
+    refine (_root_.GlobalTheory.HL.DefectShare.share_le L r k S hk _ hC.1 β hβ).trans ?_
     refine mul_le_mul' (ENNReal.ofReal_le_ofReal hconst) ?_
     unfold Frames.sumData
     refine ENNReal.tsum_le_tsum fun o' => mul_le_mul' le_rfl ?_

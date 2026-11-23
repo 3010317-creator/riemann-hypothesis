@@ -2,14 +2,21 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EmbedsGeneric
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.BlowupProjections.BlowupProjStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexCoordsReindexedStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComponentGenericCharZeroStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsJoinBlocksStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsWithConstantsMapStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EmbedsGenericOfCharZeroStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsCoordsForComponentStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericCoordsDescendSubfieldStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SncModelReindexedCoordsStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+public import Mathlib.Basic.Complex.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexCoordsReindexed
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCptGen
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PushInvertible
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComponentGenericCharZero
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsJoinBlocks
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsSncModel
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsWithConstantsMap
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EmbedsGenericOfCharZero
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsCoordsForComponent
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.TowerOrigin
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericCoordsDescendSubfield
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SncModelReindexedCoords
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -87,7 +94,7 @@ variable {X : Scheme.{0}} {ξ : Spec (CommRingCat.of Ω) ⟶ X} {y : (Σ k, J k)
 
 theorem segTie (h : CoordTie ℤ ξ fun c' : (k : K) → J k => ∏ k, y ⟨k, c' k⟩) :
     CoordTie ℤ ξ fun c' : (k : K ⊕ Unit) → segJ J k => ∏ k, segY y ⟨k, c' k⟩ := by
-  have key := @GlobalTheory.T.coords_join_blocks X Ω _ ξ K _ J _ y Unit _ (fun _ => ∀ k, J k) (fun _ => Fintype.ofFinite _) (segBlock y) h
+  have key := @_root_.GlobalTheory.CompanionTheory.Ar.AddBlockMulti.add_block_multi X Ω _ ξ K _ J _ y Unit _ (fun _ => ∀ k, J k) (fun _ => Fintype.ofFinite _) (segBlock y) h
     (fun _ p => by
       obtain ⟨c, hc⟩ := h.cover p
       exact ⟨c, hc⟩)
@@ -212,14 +219,14 @@ namespace GlobalTheory.CompanionTheory.Ar
 
 theorem exists_refGeo : ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Tor.Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (Ω₀ : Type) [Field Ω₀] (ξ₀ : Spec (CommRingCat.of Ω₀) ⟶ Y.X), IsCptGen ξ₀ → ∃ G : RefGeo Y, genPt G.𝔐.ξ₀ = genPt ξ₀ := by
   intro hRes E _ _ _ H D l Xo c Y Ω₀ _ ξ₀ hgen
-  haveI : CharZero Ω₀ := GlobalTheory.T.component_generic_char_zero E H D l Xo c Y Ω₀ ξ₀ hgen
+  haveI : CharZero Ω₀ := _root_.GlobalTheory.CompanionTheory.Ar.CharZeroModel.charZero_function_field E H D l Xo c Y Ω₀ ξ₀ hgen
   obtain ⟨K₀, _, J₀, _, y₀, X₀, ξ', f₀, cst₀, t₀, m₀, Li', _, _, M', ρ', L', bd₀, h₁, h₂, h₃, h₄, h₅, h₆, h₇, h₈, h₉⟩ :=
-    GlobalTheory.T.exists_coords_for_component hRes E H D l Xo c Y Ω₀ ξ₀ hgen
+    _root_.GlobalTheory.CompanionTheory.Ar.exists_eigBase hRes E H D l Xo c Y Ω₀ ξ₀ hgen
   obtain ⟨Ω, _, _, _, K, _, J, _, y, X, ξ, f, cst, t, m, Li, _, _, M, ρ, Li₀, _, _, M₀, j, V₀, b, bd,
     hall, htie, hnorm, hdom, hcst, hact, hjpt, hV, hflag, hvb, hsnc, hbd⟩ :=
-    GlobalTheory.T.coords_with_constants_map E H D l Xo c Y Ω₀ ξ₀ K₀ J₀ y₀ X₀ ξ' f₀ cst₀ t₀ m₀ Li' M' ρ' L' bd₀ hgen h₁ h₂ h₃ h₄ h₅ h₆ h₇ h₈ h₉
+    _root_.GlobalTheory.CompanionTheory.Ar.exists_flagStep E H D l Xo c Y Ω₀ ξ₀ K₀ J₀ y₀ X₀ ξ' f₀ cst₀ t₀ m₀ Li' M' ρ' L' bd₀ hgen h₁ h₂ h₃ h₄ h₅ h₆ h₇ h₈ h₉
   obtain ⟨K', _, J', _, y', bk, bx, 𝔐, g, Fl, xdeg, e, hbk, hy, hξ, hf, hg0, hdeg, hlines, -, hreg, hinj⟩ :=
-    GlobalTheory.T.generic_coords_descend_subfield E H D l Xo c Y Ω K J y X ξ f Ω₀ ξ₀ cst t m Li M ρ Li₀ M₀ j V₀ b 1 hall htie hnorm hgen hdom hcst
+    _root_.GlobalTheory.CompanionTheory.Ar.exists_sat_model E H D l Xo c Y Ω K J y X ξ f Ω₀ ξ₀ cst t m Li M ρ Li₀ M₀ j V₀ b 1 hall htie hnorm hgen hdom hcst
       hact hjpt hV hflag hvb
   have tie₂ := segTie (y := y') 𝔐.tie
   have hy₂ : ∀ k (a : J k), segY y' ⟨Sum.inl (bk k), bx k a⟩ = y ⟨k, a⟩ := hy
@@ -228,10 +235,10 @@ theorem exists_refGeo : ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatem
             deg_one := hdeg, xdeg := fun r => Sum.elim (xdeg r) 0, e := e, lines := ?_,
             bd := bd.map (MvPolynomial.rename v), snc := ?_, bd_iff := ?_, k₀ := Sum.inr (), embeds := ?_ }, hg0⟩
   · exact fun r => segDeg (hlines r)
-  · exact GlobalTheory.T.snc_model_reindexed_coords X 𝔐.X Ω ξ 𝔐.ξ g K J y (K' ⊕ Unit) (segJ J') (segY y') (fun k => Sum.inl (bk k)) bx _ bd
+  · exact _root_.GlobalTheory.CompanionTheory.Ar.SncRefine.isSncModel_refine X 𝔐.X Ω ξ 𝔐.ξ g K J y (K' ⊕ Unit) (segJ J') (segY y') (fun k => Sum.inl (bk k)) bx _ bd
       hall 𝔐.all htie tie₂ hξ hy₂ hreg hinj hsnc
   · intro z w hw
-    have hw₁ := GlobalTheory.T.complex_coords_reindexed X 𝔐.X Ω ξ 𝔐.ξ g K J y (K' ⊕ Unit) (segJ J') (segY y') (fun k => Sum.inl (bk k)) bx z w
+    have hw₁ := _root_.GlobalTheory.CompanionTheory.Ar.CoordsDown.coordsAt_down X 𝔐.X Ω ξ 𝔐.ξ g K J y (K' ⊕ Unit) (segJ J') (segY y') (fun k => Sum.inl (bk k)) bx z w
       hall 𝔐.all 𝔐.tie.gen hξ hy₂ hreg hw
     have hne : ∀ k, ∃ i, w ⟨k, i⟩ ≠ 0 := fun k => (hw.1 k).imp fun _ h => h.ne_zero
     have hne' : ∀ k, ∃ i, w (v ⟨k, i⟩) ≠ 0 := fun k => (hw₁.1 k).imp fun _ h => h.ne_zero
@@ -243,6 +250,6 @@ theorem exists_refGeo : ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatem
       rfl
     rw [hc]
     exact not_congr hab
-  · exact GlobalTheory.T.embeds_generic_of_char_zero 𝔐.X Ω 𝔐.ξ _ _ 𝔐.tie
+  · exact _root_.GlobalTheory.CompanionTheory.Ar.EmbedsOfTie.embedsGeneric_of_coordTie 𝔐.X Ω 𝔐.ξ _ _ 𝔐.tie
 
 end GlobalTheory.CompanionTheory.Ar

@@ -1,7 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.MonodromyZeroOfWeilDeligneRepClassIff
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CharpolyEqOfTracePowersStatement
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.Charpoly.Basic
+public import Mathlib.LinearAlgebra.FreeModule.PID
+public import Mathlib.LinearAlgebra.Trace
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CharpolyEqOfTracePowers
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Mono0OfLpDimEqOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -162,7 +168,7 @@ theorem GlobalTheory.WeilDeligne.VirtualTrace.prod_zpow_eq_one_of_trace_zero :
       f (WD.mk (listSum h (L fun i => (-c i).toNat)).2) :=
     hf2 _ _ fun σ => by
       rw [WD.charPol_mk, WD.charPol_mk]
-      exact GlobalTheory.T.charpoly_eq_of_trace_powers _ _ _ _ (htr σ)
+      exact _root_.GlobalTheory.TracePowCharpoly.charpoly_eq_of_trace_pow_eq _ _ _ _ (htr σ)
   rw [hfL, hfL] at hPQ
   have hz : ∀ i, f (WD.mk (a i)) ^ c i =
       f (WD.mk (a i)) ^ (c i).toNat * (f (WD.mk (a i)) ^ (-c i).toNat)⁻¹ := fun i => by

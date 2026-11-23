@@ -4,7 +4,9 @@ public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTenso
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryAdelicCharacterTrivialOfLocal
 public import Mathlib.RingTheory.TensorProduct.Pi
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.CmAlgebraSplitInvolution
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.HermitianDarbouxSplitProductStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Mathlib.Analysis.CStarAlgebra.CStarMatrix
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.HermitianDarbouxSplitProduct
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -201,7 +203,7 @@ theorem triv_piece (hσ : IsCMExt F E σ) {β : Type} [Fintype β] [DecidableEq 
   have : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hσ.2.2.1]; omega)
   have : IsArtinianRing (Ainf F) := GlobalTheory.CompanionTheory.Ar.RT.ArchRing.isArtinian_inf
   have : IsArtinianRing (RS F S ⊗[F] E) := IsArtinianRing.of_finite (RS F S) _
-  refine GlobalTheory.T.hermitian_darboux_split_product F (AF F) (AE F E) (RS F S ⊗[F] E) ((AF F ⧸ Ideal.span {eps S}) ⊗[F] E) (cA σ)
+  refine _root_.GlobalTheory.CompanionTheory.Ar.RT.CellSplit.char_trivial_first F (AF F) (AE F E) (RS F S ⊗[F] E) ((AF F ⧸ Ideal.span {eps S}) ⊗[F] E) (cA σ)
     (Algebra.TensorProduct.map (AlgHom.id F _) σ) (Algebra.TensorProduct.map (AlgHom.id F _) σ).toRingHom
     (1 ⊗ₜ[F] (x - σ x)) (split E (splitS S)).toRingEquiv ?_ ?_ (fun z => ?_)
     (fun z => congrArg Prod.fst (split_conj (splitS S) σ z)) (fun z => congrArg Prod.snd (split_conj (splitS S) σ z))

@@ -1,7 +1,7 @@
 module
 
 public import Mathlib.RingTheory.RingHom.Flat
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ModuleFlatOfFlatAndFibreFlatStatement
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ModuleFlatOfFlatAndFibreFlat
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -176,7 +176,7 @@ theorem flat_localization_of_fibre (R P Q : Type) [CommRing R] [IsLocalRing R] [
   have hfib := fibreMap_flat_localize R (IsLocalRing.ResidueField R) P Q (Localization.AtPrime p)
     (Localization.AtPrime n) p.primeCompl n.primeCompl h
   have hBA : Module.Flat (Localization.AtPrime p) (Localization.AtPrime n) :=
-    GlobalTheory.T.module_flat_of_flat_and_fibre_flat R (Localization.AtPrime p) (Localization.AtPrime n) hfl hfib
+    _root_.GlobalTheory.CompanionTheory.Relay.module_flat_of_flat_and_fibre_flat R (Localization.AtPrime p) (Localization.AtPrime n) hfl hfib
   exact (Module.flat_iff_of_isLocalization (Localization.AtPrime p) p.primeCompl
     (Localization.AtPrime n)).mp hBA
 

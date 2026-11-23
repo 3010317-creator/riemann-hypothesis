@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.PairRowIffQdRows
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExplicitRanksBasicBoundsLargeScaleStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExplicitRanksBasicBoundsLargeScale
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SzRowNodeGap
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -49,7 +49,7 @@ namespace GlobalTheory.EX
 
 theorem szRow_sizeNodes : SzRow (fun _ _ L => SizeNodes L) := by
   intro eps he0 he1 C _
-  obtain ⟨x1, hx1⟩ := GlobalTheory.T.explicitRanks_basic_bounds_large_scale eps he0 he1
+  obtain ⟨x1, hx1⟩ := _root_.GlobalTheory.EX.rank_basic_bounds eps he0 he1
   refine ⟨0, fun cD hcD => ⟨1300 + cD, fun ch hch => ⟨max x1 200, fun D L hε hx hV => ?_⟩⟩⟩
   simp only [max_le_iff, ge_iff_le] at hx hch
   obtain ⟨hxa, hxb⟩ := hx

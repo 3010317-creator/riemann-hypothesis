@@ -2,14 +2,19 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GaugeUnfold
 public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.SameKindIsometric
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutInstDegreeRootDiscriminantRankStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutomorphicInstanceExistsFundamentalDomainStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUnitVectorOrthogonalInstanceRankThreeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GaussianQuadricDensityExistsPosContinuousStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GaussianSumStabiliserUnfoldingStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeftQuotientCovolumeEqFundamentalDomainInterStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassRatioRankFactorStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NegLogProdLValEtaLeAndPosStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DefClassNum
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutInstDegreeRootDiscriminantRank
+public import Formalism.SharpRestriction.CuspSpanNormBounds.GlobAut
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutomorphicInstanceExistsFundamentalDomain
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUnitVectorOrthogonalInstanceRankThree
+public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GaussianQuadricDensityExistsPosContinuous
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GaussianSumStabiliserUnfolding
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeftQuotientCovolumeEqFundamentalDomainInter
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsGaugeAll
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassRatioRankFactor
+public import Formalism.HermitianLattices.StatementMass
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NegLogProdLValEtaLeAndPos
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -118,25 +123,25 @@ theorem ennreal_volume_ratio_step_cancel (X Y : ENNReal) (m d t r a b ρ : ℝ) 
 
 theorem volumeStep_of_siegelMean : SiegelMean → VolumeStep := by
   intro hS I P Q hPQ hn s hs
-  obtain ⟨I', e, x, A, xf, hperp, hsig⟩ := GlobalTheory.T.exists_unit_vector_orthogonal_instance_rank_three I P Q hPQ hn s hs
+  obtain ⟨I', e, x, A, xf, hperp, hsig⟩ := _root_.GlobalTheory.PerpInst.exists_isPerpInst I P Q hPQ hn s hs
   refine ⟨I', e, x, A, hperp.1, hperp.2.1, hperp.2.2.1, hperp.2.2.2.1, hperp.2.2.2.2.1, hsig, ?_⟩
   intro c μf _ _ c' μf' _ _ hc hc'
-  obtain ⟨fund, hfund⟩ := GlobalTheory.T.automorphicInstance_exists_fundamental_domain I μf
-  have hU := GlobalTheory.T.gaussianSum_stabiliserUnfolding I I' e s x A xf hn hperp c μf c' μf' fund hc hc' hfund
+  obtain ⟨fund, hfund⟩ := _root_.GlobalTheory.FundExists.exists_isFundDom I μf
+  have hU := _root_.GlobalTheory.StabUnfold.gaugeUnfold I I' e s x A xf hn hperp c μf c' μf' fund hc hc' hfund
   obtain ⟨-, hM⟩ := hS I hn s μf fund hfund
-  have hcov := (GlobalTheory.T.leftQuotientCovolume_eq_fundamentalDomain_inter I μf fund Set.univ hfund MeasurableSet.univ
+  have hcov := (_root_.GlobalTheory.CovolRat.covol_eq_inter_fund I μf fund Set.univ hfund MeasurableSet.univ
     (fun _ _ _ _ => Set.mem_univ _)).1
   rw [Set.univ_inter] at hcov
-  have hf : Formalism.HermitianLatticesTheory.fDeg I.E = I.f := (GlobalTheory.T.autInst_degree_rootDiscriminant_rank I).1
+  have hf : Formalism.HermitianLatticesTheory.fDeg I.E = I.f := (_root_.GlobalTheory.FlagMeas.instance_numbers I).1
   have hL : 0 < Formalism.HermitianLatticesTheory.lValEta I.E I.n := by
-    have := (GlobalTheory.T.neg_log_prod_lValEta_le_and_pos I.E I.cm.cmUnram (I.n - 1) I.n (by omega)).2
+    have := (_root_.GlobalTheory.FlagMeas.LProd.neg_log_prod_le I.E I.cm.cmUnram (I.n - 1) I.n (by omega)).2
     have hI : Finset.Ioc (I.n - 1) I.n = {I.n} := by
       ext k
       simp only [Finset.mem_Ioc, Finset.mem_singleton]
       omega
     rwa [hI, Finset.prod_singleton] at this
   have hd : 0 < ∏ v, gaussDens (I.ε v) (sgn ℝ s) := by
-    refine Finset.prod_pos fun v _ => (GlobalTheory.T.gaussianQuadricDensity_exists_pos_continuous I.n (I.ε v)).2.2 s ?_
+    refine Finset.prod_pos fun v _ => (_root_.GlobalTheory.GaussMean.Density.gaussDens_spec I.n (I.ε v)).2.2 s ?_
     obtain ⟨hp, hq⟩ := hPQ v
     cases s
     · have : 0 < I.qAt v := by
@@ -149,7 +154,7 @@ theorem volumeStep_of_siegelMean : SiegelMean → VolumeStep := by
         omega
       obtain ⟨a, ha⟩ := Finset.card_pos.1 this
       exact ⟨a, (Finset.mem_filter.1 ha).2⟩
-  have hR := GlobalTheory.T.mass_ratio_rank_factor I.E I.n (by omega)
+  have hR := _root_.GlobalTheory.FlagMeas.mass_ratio_mul_unitary_volume I.E I.n (by omega)
   have hn' : I.n - 1 = I'.n := by have := hperp.2.1; omega
   rw [hf, hn'] at hR
   have hrm := rankFac_mul_meanConst I.E I.n hL

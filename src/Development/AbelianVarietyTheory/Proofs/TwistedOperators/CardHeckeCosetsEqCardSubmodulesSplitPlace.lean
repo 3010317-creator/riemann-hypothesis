@@ -5,7 +5,8 @@ public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.UnramifiedCharacter
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.RealPoints
 public import Formalism.LocalToGlobal.IndefiniteReal.FWExist
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CardStableLatticeSubgroupsEqGaussianBinomialStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.GaussianBinomialFormula
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CardStableLatticeSubgroupsEqGaussianBinomial
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitPlaceHeckeDoubleCosetCardGaussBinomStatement
 import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
 import Mathlib.Algebra.Order.Floor.Extended
@@ -83,6 +84,6 @@ theorem card_eq_latCount : ∀ (D : D7), GlobalTheory.IndefiniteRowSideFullHecke
   have hN : Ideal.absNorm J = Ideal.absNorm P.asIdeal := by
     rw [Ideal.absNorm_apply, Ideal.absNorm_apply, Submodule.cardQuot_apply, Submodule.cardQuot_apply]
     exact Nat.card_congr (Ideal.quotientEquiv P.asIdeal J T.Q.H.bar (by rw [hJdef, GlobalTheory.IndefiniteRowSideFullHecke.HeckeIsogenyKernels.conjIdeal])).toEquiv.symm
-  rw [← hN, GlobalTheory.T.card_stableLatticeSubgroups_eq_gaussianBinomial _ p J hp.pos hJm hpJ k, hrk]
+  rw [← hN, _root_.GlobalTheory.LatCountGauss.card_latCount _ p J hp.pos hJm hpJ k, hrk]
 
 end GlobalTheory.HeckeCosetCount

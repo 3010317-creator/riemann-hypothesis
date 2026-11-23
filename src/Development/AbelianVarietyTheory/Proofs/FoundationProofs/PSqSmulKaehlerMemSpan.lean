@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsTrDataGaussianIntOne
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AlmostDualTraceDerivationMemSpanValuesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DerivationOnAdjoinMemSpanImageStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsAlmostDualTraceDataTowerUnionAdjoinStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AlmostDualTraceDerivationMemSpanValues
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DerivationOnAdjoinMemSpanImage
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsAlmostDualTraceDataTowerUnionAdjoin
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -123,13 +123,13 @@ theorem p_sq_smul_kaehler_mem_span : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [F
       fun a => (𝒟).map_algebraMap a⟩
   have hgen : ∀ t : 𝒮, (p : 𝒮) ^ 2 • 𝒟 t ∈ ⨆ m, N m := by
     intro t
-    obtain ⟨C, tr, k, a, b, hF, htr⟩ := GlobalTheory.T.exists_almostDualTraceData_towerUnionAdjoin p Ω hp2 hclo T {t}
-    have h1 := GlobalTheory.T.almostDualTrace_derivation_mem_span_values (O0 p) 𝒮 _ (towerAlg T) C tr k a b _ htr (fun x => 𝒟 x) (hder C) t
+    obtain ⟨C, tr, k, a, b, hF, htr⟩ := _root_.GlobalTheory.AlmostEt.TrTower.exists_trData_towerAlg p Ω hp2 hclo T {t}
+    have h1 := _root_.GlobalTheory.AlmostEt.derOn_mem_span_of_trData (O0 p) 𝒮 _ (towerAlg T) C tr k a b _ htr (fun x => 𝒟 x) (hder C) t
       (hF (by simp))
     have h2 : Submodule.span 𝒮 ((fun x => 𝒟 x) '' (towerAlg T : Set 𝒮)) ≤ ⨆ m, N m := by
       rw [Submodule.span_le]
       rintro _ ⟨x, hx, rfl⟩
-      have h3 := GlobalTheory.T.derivationOn_adjoin_mem_span_image (O0 p) 𝒮 _ (Set.range (zS T) ∪ Set.range (qS T)) (fun x => 𝒟 x)
+      have h3 := _root_.GlobalTheory.AlmostEt.derOn_adjoin_mem_span (O0 p) 𝒮 _ (Set.range (zS T) ∪ Set.range (qS T)) (fun x => 𝒟 x)
         (hder _) x hx
       refine Submodule.span_le.2 ?_ h3
       rintro _ ⟨y, (⟨k, rfl⟩ | ⟨k, rfl⟩), rfl⟩

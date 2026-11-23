@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.ConvolutionSmoothL2
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ContinuousAutomorphicKernelDiscreteSeriesTestStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermitianFormUnitaryOneOne
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ContinuousAutomorphicKernelDiscreteSeriesTest
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DiscreteSeriesKernelSummableWithBoundStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalUnitaryPointsDiscreteFundamentalDomain
 import Mathlib.Algebra.Order.Floor.Extended
@@ -117,7 +118,7 @@ theorem kern_symm (I : AutInst) (φ : I.GA → ℂ) (hφ : ∀ x, φ x⁻¹ = st
 theorem kernelA : KernelA := by
   unfold KernelA
   intro B d h hd hn hL hH
-  refine ⟨GlobalTheory.T.discreteSeriesKernel_summable_with_bound B d h hd hn hL hH, GlobalTheory.T.continuous_automorphicKernel_discreteSeriesTest B d h hd hn hL hH, ?_, ?_⟩
+  refine ⟨GlobalTheory.T.discreteSeriesKernel_summable_with_bound B d h hd hn hL hH, _root_.GlobalTheory.Dec.continuous_kern_phe B d h hd hn hL hH, ?_, ?_⟩
   · intro γ hγ x y
     exact kern_invariant B.I (phe B d) γ hγ x y
   · intro x y

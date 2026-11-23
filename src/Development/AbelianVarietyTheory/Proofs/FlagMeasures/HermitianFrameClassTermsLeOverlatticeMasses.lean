@@ -5,7 +5,7 @@ public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoub
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetTermBasicFacts
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFramesComplementUnitaryActsOnTerms
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemSpanOfMemMof
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SumOverDataTermCountEqLatticeMassStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SumOverDataTermCountEqLatticeMass
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -67,7 +67,7 @@ theorem class_mass : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace
   have hM : ∀ d Λ, S.Fr d Λ = C → S.M d Λ = S.Mof p.1 p.2 := fun d Λ hF => M_eq_Mof S hp hF
   constructor
   · intro Q
-    refine (GlobalTheory.T.sum_over_data_term_count_eq_lattice_mass L r k S C (fun d Λ => Q (S.be d Λ)) ?_).trans_le ?_
+    refine (_root_.GlobalTheory.HL.sumData_nT_eq_mass L r k S C (fun d Λ => Q (S.be d Λ)) ?_).trans_le ?_
     · intro h hh d Λ hT hQ
       obtain ⟨-, -, -, hM', hsat', -⟩ := GlobalTheory.HL.ComplAct.main L r k S d Λ hT h hh
       show Q (S.be (h • d) (h • Λ))
@@ -103,7 +103,7 @@ theorem class_mass : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace
       · rintro ⟨hSD, hsat⟩
         obtain ⟨d, hT, hF, hB⟩ := GlobalTheory.HL.PrimTerm.term_of_primitive L r k S Λ hSD C hC p hp hsat
         exact ⟨d, hT, hB, hF⟩
-    refine (GlobalTheory.T.sum_over_data_term_count_eq_lattice_mass L r k S C (fun d Λ => S.BBzero d Λ) ?_).trans ?_
+    refine (_root_.GlobalTheory.HL.sumData_nT_eq_mass L r k S C (fun d Λ => S.BBzero d Λ) ?_).trans ?_
     · intro h hh d Λ hT hB
       obtain ⟨-, -, -, hM', hsat', -⟩ := GlobalTheory.HL.ComplAct.main L r k S d Λ hT h hh
       show S.M (h • d) (h • Λ) = S.sat (h • Λ)

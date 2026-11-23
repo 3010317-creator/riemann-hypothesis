@@ -4,10 +4,10 @@ public import Development.AbelianVarietyTheory.Definitions.CMLattices.IntegralOf
 public import Formalism.LocalToGlobal.ProjectiveLattices.L2DefiniteCuspForms
 public import Formalism.LocalToGlobal.CMDeterminantIdeals.StatementS
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.LawsFieldsSeparately
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CuspFormBoundedBySupNormAtGoodEmbeddingAllEmbeddStatement
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsMetricDataCmPointComplexEmbeddingStatement
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.FramePolynomialEquivariantAndNeZeroStatement
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.MetricChangeOfFrameStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CuspFormBoundedBySupNormAtGoodEmbeddingAllEmbedd
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsMetricDataCmPointComplexEmbedding
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.FramePolynomialEquivariantAndNeZero
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.MetricChangeOfFrame
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFramedPointBaseChangeAlgebraMap
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUniqueFrameChangeByMatrices
 import Mathlib.Algebra.Order.Floor.Extended
@@ -58,9 +58,9 @@ theorem step5Arch_cm : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
   intro E _ _ _ H Dw l Xo c _ _ r U ξ hU hξ hpq z f La hz a n hD F hF G hG σ
   obtain ⟨yσ, hy⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap GlobalTheory.lawsFieldsSeparately.2.1 E H Dw l Xo c z.K
     (CAt (σ.comp (algebraMap c.F z.K))) (embAlg σ) z.y
-  obtain ⟨Hm, hpd, hLam, hU', hmet⟩ := GlobalTheory.T.exists_metricData_cmPoint_complexEmbedding E H Dw l Xo c z f La hz σ yσ hy
+  obtain ⟨Hm, hpd, hLam, hU', hmet⟩ := _root_.GlobalTheory.LamT.CMMetric.exists_isMetric E H Dw l Xo c z f La hz σ yσ hy
   have hsec : F ∈ sec Xo c a n := Formalism.L2.Pj.cusp_le_sec Xo c U a n hF
-  refine ⟨Hm, hpd, hLam, hU', (GlobalTheory.T.framePolynomial_equivariant_and_ne_zero E H Dw l Xo c z.K z.y a n F hsec G hG).1 σ, ?_⟩
+  refine ⟨Hm, hpd, hLam, hU', (_root_.GlobalTheory.LamT.isFrPoly_equiv_and_ne_zero E H Dw l Xo c z.K z.y a n F hsec G hG).1 σ, ?_⟩
   intro Y hY
   have hdet : ∀ b, IsUnit (Y b).det := by
     intro b
@@ -71,10 +71,10 @@ theorem step5Arch_cm : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     (fun b => (Y b).transpose) 1 (fun b => by
       have := hdet b
       rwa [← Matrix.det_transpose] at this)
-  have hm' := GlobalTheory.T.metric_change_of_frame E H Dw l Xo c _ yσ y' _ _ Y 1 one_ne_zero hy' hmet
+  have hm' := _root_.GlobalTheory.MetricChange.isMetric_frChg E H Dw l Xo c _ yσ y' _ _ Y 1 one_ne_zero hy' hmet
   have e1 : (fun b => (Y b).conjTranspose * gramBlock z.e z.U Hm σ b * Y b) = fun _ => 1 := funext hY
   rw [e1, norm_one, one_pow, _root_.one_mul] at hm'
-  have hb := GlobalTheory.T.cuspForm_bounded_by_supNorm_at_good_embedding_all_embeddings E H Dw l Xo c r U ξ hU hξ hpq a n hD F hF _ y' _ hm'
+  have hb := _root_.GlobalTheory.LamT.cusp_bound_allEmb E H Dw l Xo c r U ξ hU hξ hpq a n hD F hF _ y' _ hm'
   have hev := hG _ (embAlg σ) yσ y' Y hdet hy hy'
   have hT : 0 < z.Tl.n σ := by
     obtain ⟨⟨-, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, hT, -⟩, -⟩ := hz

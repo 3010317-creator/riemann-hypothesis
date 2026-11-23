@@ -1,13 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.SameKindIsometric
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutInstDegreeRootDiscriminantRankStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DefClassNum
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutInstDegreeRootDiscriminantRank
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CanonicalFlagExistsUniqueSemistable
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CanonicalLatticeFlagIsotropicSelfDualStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagExplicitConstantLeExpNegHalfStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotropicFlagProbabilityBoundOfVolumeRatioStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralFlagSizeDensityLeOneStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SumTwoPowPredMulExpNegLeExpNegThirdStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LayerProd
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CanonicalLatticeFlagIsotropicSelfDual
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagExplicitConstantLeExpNegHalf
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotropicFlagProbabilityBoundOfVolumeRatio
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralFlagSizeDensityLeOne
+public import Mathlib.Analysis.Complex.Exponential
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SumTwoPowPredMulExpNegLeExpNegThird
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -107,7 +110,7 @@ theorem mem_typeSet (I : AutInst) (p q : ℕ) (hs : HasSig I p q) (x : I.GA) (hx
     have := (h3 i).2.1; simp only [hjdef]; omega
   have htel := telescope a (fun i => Formalism.HN.rkK (S i)) j hj2
   obtain ⟨v⟩ : Nonempty (InfinitePlace I.F) := inferInstance
-  have hr := (GlobalTheory.T.canonicalLatticeFlag_isotropic_selfDual I x).2.1 v
+  have hr := (_root_.GlobalTheory.FlagIso.flag_isotropic I x).2.1 v
   have hq : rkR (I.ε v) ≤ q := by
     rw [← (hs v).2]; exact min_le_right _ _
   have hle : ∑ i, j i ≤ q := by
@@ -125,7 +128,7 @@ theorem mem_typeSet (I : AutInst) (p q : ℕ) (hs : HasSig I p q) (x : I.GA) (hx
 
 theorem nonzeroFlagBound : VolumeStep → NonzeroFlagBound := by
   intro hV I μf _ _ fund hfund p q hs hn hq hrd hf
-  obtain ⟨hfd, hv, -, hf1, -, hpq⟩ := GlobalTheory.T.autInst_degree_rootDiscriminant_rank I
+  obtain ⟨hfd, hv, -, hf1, -, hpq⟩ := _root_.GlobalTheory.FlagMeas.instance_numbers I
   have hpq := hpq p q hs
   have hn16 : 16 ≤ I.n := by
     have hpos : (0 : ℝ) < I.n := by
@@ -148,10 +151,10 @@ theorem nonzeroFlagBound : VolumeStep → NonzeroFlagBound := by
     intro J hJ c
     obtain ⟨hJ1, hJq⟩ := Finset.mem_Icc.mp hJ
     have hsum := c.sum_blocksFun
-    have hT := (GlobalTheory.T.isotropicFlagProbabilityBound_of_volumeRatio hV I μf fund hfund p q hs h2q c.length c.blocksFun
+    have hT := (_root_.GlobalTheory.FlagMeas.Bound.flagMeasureBound hV I μf fund hfund p q hs h2q c.length c.blocksFun
       (c.length_pos_of_pos hJ1) c.one_le_blocksFun (by omega) _ (measurableSet_simplexH _) subset_rfl).2.2.2
-    have hD := GlobalTheory.T.lintegral_flagSizeDensity_le_one I.n I.f c.length c.blocksFun hf1 c.one_le_blocksFun (by omega)
-    have hK := GlobalTheory.T.flag_explicit_constant_le_exp_neg_half I.E I.cm.cmUnram p q c.length c.blocksFun c.one_le_blocksFun (by omega)
+    have hD := _root_.GlobalTheory.DensityIntegral.lintegral_dens_le_one I.n I.f c.length c.blocksFun hf1 c.one_le_blocksFun (by omega)
+    have hK := _root_.GlobalTheory.FlagMeas.constantBound I.E I.cm.cmUnram p q c.length c.blocksFun c.one_le_blocksFun (by omega)
       (by rw [hpq]; exact hn) (by rw [hpq]; exact hq) (by rw [hpq, hv]; exact hrd) (by rw [hpq, hfd]; exact hf)
     rw [hpq, hfd, hsum] at hK
     refine hT.trans ((mul_le_mul_right hD _).trans ?_)
@@ -186,7 +189,7 @@ theorem nonzeroFlagBound : VolumeStep → NonzeroFlagBound := by
           ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_pow (by norm_num)]
         simp
     _ ≤ _ := by
-        refine ENNReal.ofReal_le_ofReal ((GlobalTheory.T.sum_two_pow_pred_mul_exp_neg_le_exp_neg_third q X hX15).trans (le_of_eq ?_))
+        refine ENNReal.ofReal_le_ofReal ((_root_.GlobalTheory.sum_two_pow_pred_mul_exp_neg_le q X hX15).trans (le_of_eq ?_))
         rw [hX]; congr 1; ring
 
 end GlobalTheory.NonzeroFlag

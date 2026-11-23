@@ -1,7 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonUnitAtOfNotIsUnit
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IzumiBoundModPrincipalIdealStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NonUnitAt
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.ArithBase
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IzumiBoundModPrincipalIdeal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -106,7 +108,7 @@ theorem GlobalTheory.FibreCorr.locbound : ∀ (o Ω : Type) [CommRing o] [Field 
       split_ifs <;> simp
     rw [h00, map_zero] at hreg
     exact zero_notMem_nonZeroDivisors hreg
-  obtain ⟨C, hC⟩ := GlobalTheory.T.izumi_bound_mod_principal_ideal o Ω M hN U hU x' hc _ (RatModel.valF_mem_O hi (D.f i)) hne
+  obtain ⟨C, hC⟩ := _root_.GlobalTheory.Izumi.small_mod_principal o Ω M hN U hU x' hc _ (RatModel.valF_mem_O hi (D.f i)) hne
   refine ⟨C e, fun n hn F hF => ?_⟩
   have hF' := approxIdeal_antitone U D z hn hF
   have hFO : (F : Ω) ∈ M.O x' := mem_O_of_isHom hπ (hx ▸ F.2)

@@ -1,11 +1,13 @@
 module
 
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InducedProductDropZeroFactors
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DropHom
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.LSegJacquet
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.JordanHolderMultiplicityJacquetEqBorelJacquetOfS
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StandardBlocksReindexStrictMonoStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TensorProductDropZeroFactorsStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.LeviEmbMemNormalizerLower
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StandardBlocksReindexStrictMono
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TensorProductDropZeroFactors
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InducedProductDropZeroFactors
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -170,8 +172,8 @@ end Local
 
 theorem jm_drop : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] {r r' N : ℕ} (y : Fin r → IrrGL (k := k)) (hd : ∑ a, (y a).1 = N) (o : Fin r' → Fin r), StrictMono o → (∀ j, (y j).1 ≠ 0 → j ∈ Set.range o) → ∀ (hd' : ∑ a, (y (o a)).1 = N) {V : Type} [AddCommGroup V] [Module ℂ V] (π : Representation ℂ (GL (Fin N) k) V), jm y hd π = jm (fun a => y (o a)) hd' π := by
   intro k _ _ _ _ r r' N y hd o hm hne hd' V _ _ π
-  have he := GlobalTheory.T.standard_blocks_reindex_strictMono (fun j => (y j).1) hd o hm hne hd'
-  obtain ⟨φ⟩ := GlobalTheory.T.tensor_product_drop_zero_factors y o hm hne
+  have he := _root_.GlobalTheory.CompanionTheory.StdCompat.stdBlocks_drop_empty (fun j => (y j).1) hd o hm hne hd'
+  obtain ⟨φ⟩ := _root_.GlobalTheory.CompanionTheory.FineProd.TensorLine.piTensor_drop_equiv y o hm hne
   unfold Zc.jm
   rw [GlobalTheory.SmGL.jhMult_congr_left φ,
     GlobalTheory.SmGL.jhMult_congr_right _

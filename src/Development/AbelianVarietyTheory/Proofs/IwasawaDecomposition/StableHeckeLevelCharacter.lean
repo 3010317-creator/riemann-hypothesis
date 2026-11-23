@@ -3,7 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LowSetFinite
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ReadWMemGoodW
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemBlockTriangularTwoBlockSizesOfLe
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DescentJointEigenvectorsComplexReadingStatement
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.Eigenspace.Basic
+public import Mathlib.Order.CompletePartialOrder
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DescentJointEigenvectorsComplexReading
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -104,7 +107,7 @@ theorem spanC_core (R : RealDat3 D A3 Ks) (F : Face3 D A3) {X0 : BaseLevelRowSid
   intro v hv
   have hv' : iotaR R (idxOf D j) v ∈ ⨆ σ ∈ s, Part σ :=
     goodW_le_parts Y hI hG (idxOf D j) j hjj ((htie j hj1 hj2 v).1 hv)
-  have hd := GlobalTheory.T.descent_joint_eigenvectors_complex_reading (sg0 D A3.A) (iotaR R (idxOf D j)) (goodL D (ratDatR R cG kKs hk) θ j)
+  have hd := _root_.GlobalTheory.descent_joint_eigen (sg0 D A3.A) (iotaR R (idxOf D j)) (goodL D (ratDatR R cG kKs hk) θ j)
     (fun u _ h0 => hinj (idxOf D j) (h0.trans (map_zero _).symm)) (fun t => hL j t.1 t.2) T' I hT Part s
     (fun σ t => ((eig j σ t.1 t.2 : ↥D.LL0) : D.what₂.LL)) hPa hGa v hv'
   have hle : (⨆ σ ∈ s, goodL D (ratDatR R cG kKs hk) θ j ⊓ ⨅ t ∈ I,

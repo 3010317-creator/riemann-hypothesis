@@ -3,10 +3,10 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BrauerDegreeZero
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.MonodromyZeroOfWeilDeligneRepClassIff
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InducedRepresentationCharacterStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MultiplicativeVirtualCharacterStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeilDeligneInductionPrincipleStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeilDeligneOfFiniteImageStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InducedRepresentationCharacter
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MultiplicativeVirtualCharacter
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeilDeligneInductionPrinciple
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeilDeligneOfFiniteImage
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -109,12 +109,12 @@ theorem eq_of_induced : BrauerDegreeZero → ∀ (E Ω : Type) [Field E] [Number
       rw [this]
       exact a.smooth
     obtain ⟨r, H, χ, c, hbr⟩ := hB G (Fin n → ℂ) ρG
-    have hi1 := fun i => GlobalTheory.T.induced_representation_character G (H i) (χ i)
-    have hi2 := fun i => GlobalTheory.T.induced_representation_character G (H i) 1
+    have hi1 := fun i => _root_.GlobalTheory.InertiaEigenvalues.inducedRep_cyclic_trace G (H i) (χ i)
+    have hi2 := fun i => _root_.GlobalTheory.InertiaEigenvalues.inducedRep_cyclic_trace G (H i) 1
     choose Rχ vχ hRχ using hi1
     choose R1 v1 hR1 using hi2
-    have hp1 := fun i => GlobalTheory.T.weil_deligne_of_finite_image E Ω A w h G π hopen _ (Rχ i) μ hμ
-    have hp2 := fun i => GlobalTheory.T.weil_deligne_of_finite_image E Ω A w h G π hopen _ (R1 i) μ hμ
+    have hp1 := fun i => _root_.GlobalTheory.WeilDeligne.exists_wdRep_pull_finite_twist E Ω A w h G π hopen _ (Rχ i) μ hμ
+    have hp2 := fun i => _root_.GlobalTheory.WeilDeligne.exists_wdRep_pull_finite_twist E Ω A w h G π hopen _ (R1 i) μ hμ
     choose bχ hbχ using hp1
     choose b1 hb1 using hp2
     have span_of : ∀ (i : Fin r) (R : Representation ℂ G (Fin (H i).index → ℂ))
@@ -212,7 +212,7 @@ theorem eq_of_induced : BrauerDegreeZero → ∀ (E Ω : Type) [Field E] [Number
         ring
       rw [hs]
       linear_combination (μ σ : ℂ) * hb
-    have hv := GlobalTheory.T.multiplicative_virtual_character E Ω A w h f fmul fcp _ (fun j => (F j).1) (fun j => (F j).2) cc htr
+    have hv := _root_.GlobalTheory.WeilDeligne.VirtualTrace.prod_zpow_eq_one_of_trace_zero E Ω A w h f fmul fcp _ (fun j => (F j).1) (fun j => (F j).2) cc htr
     have hμ1' : f (WD.mk (F (Sum.inl (Sum.inr (default : Unit)))).2) = 1 := hμ1
     have hp' : ∀ i, f (WD.mk (F (Sum.inr (Sum.inl i))).2) = f (WD.mk (F (Sum.inr (Sum.inr i))).2) :=
       hpair
@@ -221,7 +221,7 @@ theorem eq_of_induced : BrauerDegreeZero → ∀ (E Ω : Type) [Field E] [Number
       mul_one, ← Finset.prod_mul_distrib, _root_.inv_mul_cancel, Finset.prod_const_one] at hv
     exact hv
   intro x
-  have hx := GlobalTheory.T.weil_deligne_induction_principle E Ω A w h (fun x => f x = 1)
+  have hx := _root_.GlobalTheory.WeilDeligne.WD.induction_lpSum_twist_finite E Ω A w h (fun x => f x = 1)
     (fun x y hx hy => by rw [fmul, hx, hy, one_mul])
     (fun x y hxy hx => by rw [← fcp x y hxy, hx]) key x
   simp only [hf] at hx

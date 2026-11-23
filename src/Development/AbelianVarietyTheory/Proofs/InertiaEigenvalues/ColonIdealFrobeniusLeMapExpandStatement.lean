@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MapMemA
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.PowerSeriesVecReduceModUMulVec
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowerSeriesExistsUniqueDecompOverFrobeniusLikeEnStatement
+public import Mathlib.RingTheory.PowerSeries.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowerSeriesExistsUniqueDecompOverFrobeniusLikeEn
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,11 +66,11 @@ theorem _root_.GlobalTheory.T.colonIdeal_frobenius_le_map_expand :
   have hl2 : 2 ≤ l := (Fact.out : l.Prime).two_le
   have decO : ∀ f : O⟦X⟧, ∃! g : Fin l → O⟦X⟧,
       f = ∑ j : Fin l, X ^ j.val * PowerSeries.expand l (Fact.out : l.Prime).ne_zero (g j) :=
-    GlobalTheory.T.powerSeries_existsUnique_decomp_over_frobeniusLike_endo l hl2 _
+    _root_.GlobalTheory.InertiaEigenvalues.PowerSeriesFree.main l hl2 _
       (fun f m => coeff_expand _ _ f)
   have uniqK : ∀ f : K⟦X⟧, ∃! g : Fin l → K⟦X⟧,
       f = ∑ j : Fin l, X ^ j.val * frob K l (g j) :=
-    GlobalTheory.T.powerSeries_existsUnique_decomp_over_frobeniusLike_endo l hl2 (frob K l)
+    _root_.GlobalTheory.InertiaEigenvalues.PowerSeriesFree.main l hl2 (frob K l)
       (fun f m => coeff_frob l f m)
   obtain ⟨b, hb, -⟩ := decO β
   have hbK := map_decomp_frob hb

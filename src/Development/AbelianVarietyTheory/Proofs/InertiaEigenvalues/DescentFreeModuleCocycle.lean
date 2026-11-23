@@ -1,7 +1,8 @@
 module
 
 public import Mathlib.RingTheory.RingHom.FaithfullyFlat
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FaithfullyFlatDescentFreeModuleCocycleStatement
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FaithfullyFlatDescentFreeModuleCocycle
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -142,6 +143,6 @@ theorem descent_free_cocycle : ∀ (A B D T : Type) [CommRing A] [CommRing B] [C
       change ψ (p (z i)) = ψ _
       rw [hmv i, hψp]
       exact congrFun h i
-  exact GlobalTheory.T.faithfullyFlat_descent_free_module_cocycle A B d ε' hε' hcoc' N hN'
+  exact _root_.GlobalTheory.CocycleDescent.descent A B d ε' hε' hcoc' N hN'
 
 end GlobalTheory

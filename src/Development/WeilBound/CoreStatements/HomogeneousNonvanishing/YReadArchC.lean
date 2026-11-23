@@ -2,18 +2,22 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LabelSigBijective
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.BcExAll
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedModuliAlgebraicLawsChartWeightIntegralityStatement
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LowerTriIsUnitDet
+public import Formalism.LocalToGlobal.ProjectiveLattices.UnitIndepOfCharts
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedModuliAlgebraicLawsChartWeightIntegrality
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CompactificationCompEquivStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptFlagXdeg
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalRingPointsExistsUniqueStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginFrameSectionBound
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HodgeCompactificationInteriorPoint
-import Development.AutomorphicSpectrum.Statements.GeometryStatements.ExistsAlgPtOff
 public import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.LeadMinorSmulOne
 public import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.YReadArchA
 public import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.YReadArchB
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LowerTriIsUnitDet
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalRingPointsExistsUnique
+import Development.AutomorphicSpectrum.Statements.GeometryStatements.ExistsAlgPtOff
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -141,7 +145,7 @@ theorem core {r : ℕ} {U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r} {h : GenFrEx 
           (Fr.rd f * (∏ r', Or.e r' ^ (-n' (some r')))) z (θ * rdU (U σ) f k y) := by
   letI := Small.cstAlg Or
   have hU := hL.unf σ hσ
-  obtain ⟨zC, ⟨hgen, hc⟩, -⟩ := (GlobalTheory.T.local_ring_points_existsUnique Or.𝔐.X RM.Ω Or.𝔐.ξ RM.K RM.ι RM.y Or.𝔐.tie ℂ).1 z
+  obtain ⟨zC, ⟨hgen, hc⟩, -⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.tie_points Or.𝔐.X RM.Ω Or.𝔐.ξ RM.K RM.ι RM.y Or.𝔐.tie ℂ).1 z
     (fun k => (hz.1 k).imp fun _ hi => IsUnit.mk0 _ hi) hz.2
   have hva : ∀ a : A, ValAt Or.𝔐.ξ zC (a : RM.Ω) (ev a) := fun a => valAt_of_hasVal hz hgen hc (hev a)
   obtain ⟨q, φ, yq, hφ, hφA⟩ := hG.2.1
@@ -199,7 +203,7 @@ theorem core {r : ℕ} {U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r} {h : GenFrEx 
       rw [dif_pos hft]
       exact hL.evalWD f hf.1 (CAt σ) _ q _ ψ _ yq y hft.choose_spec.choose_spec.choose_spec hψ
     have hbor : evR Xo c f y = ((∏ i, t i ^ exZ Dw a i : (CAt σ)ˣ) : CAt σ) * evR Xo c f ((U σ).un k x₁) :=
-      evalAt_bor_zpow (GlobalTheory.T.framedModuli_algebraicLaws_chart_weight_integrality hS E H Dw l Xo c).2.1 (exZ Dw a) hf.1
+      evalAt_bor_zpow (_root_.GlobalTheory.Frames.algebraic_laws hS E H Dw l Xo c).2.1 (exZ Dw a) hf.1
         (fun p t y y' hb => by rw [hf.2 p t y y' hb, Units.coe_prod]) (CAt σ) t _ y (hL.unTest σ hσ k x₁) hft ht
     have h1 := hev ⟨φ (f q yq), hφA _⟩
     have h2 : ev ⟨φ (f q yq), hφA _⟩ = (∏ j, toC (t j : CAt σ) ^ exZ Dw a j) * rdU (U σ) f k x₁.1 := by

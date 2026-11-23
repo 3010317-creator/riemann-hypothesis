@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.MumfordProportionality
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagSpaceIntersectionNumberAdjacentSwapNegStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearFormEqOfWeylAntisymmetrizationEqStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.InterPolyProdSum
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagSpaceIntersectionNumberAdjacentSwapNeg
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearFormEqOfWeylAntisymmetrizationEq
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FlagRelativeTangentTopChernRenameBlockPerm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -51,8 +52,8 @@ namespace GlobalTheory.FlagPushProof
 
 theorem flagPushForward : GlobalTheory.Published.FlagPushForward := by
   intro F _ _ X Y ι _ m E E' φ f gr hf hg Q R hR
-  have hswap := GlobalTheory.T.flagSpace_intersectionNumber_adjacent_swap_neg F X Y ι m E E' φ f hf gr hg
-  refine GlobalTheory.T.linearForm_eq_of_weylAntisymmetrization_eq ι m (Y.interPoly gr) hswap Q (chernRoots m R * fibrePoint m) ?_
+  have hswap := _root_.GlobalTheory.FlagPush.interPoly_swap_adjacent F X Y ι m E E' φ f hf gr hg
+  refine _root_.GlobalTheory.FlagPush.linForm_eq_of_antisymm_eq ι m (Y.interPoly gr) hswap Q (chernRoots m R * fibrePoint m) ?_
   classical
   have rename_chernRoots (ι : Type) [Fintype ι] (m : ι → ℕ) (w : ∀ τ, Equiv.Perm (Fin (m τ)))
       (R : MvPolynomial (ι × ℕ) ℝ) :

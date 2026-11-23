@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.Jets.SupWOfSup
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.OnePointBasisFundamentalDomainVolume
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsGridFiveApartOnCut
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ProdFinEqProdIcc
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.WaveGridLiftGridOfLayoutNormaliserBoundStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.WaveGridLiftGridOfLayoutNormaliserBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -84,7 +84,7 @@ theorem main : ∀ (C b c : ℝ) (P : M.Par) (Wp Wq : Type) [NormedAddCommGroup 
   have hNQ := GlobalTheory.NormaliserCutBound.main C b c P p.l0 lam (Pst lam c) Y p.hP.1 hC p.hl.1 p.hl.2.1 hc hcb hkb
     hu hu' hlam (fun s t hst _ => hgap s t (by rw [Fin.lt_def]; omega)) hint hint' hT hT'
     (fun y => ⟨(hpos y).le, le_rfl⟩) (fun y hy => (hon y hy).1)
-  exact ⟨Y, GlobalTheory.T.waveGrid_liftGrid_of_layout_normaliserBound P Wp Wq p (Pst lam c) Y _ _ 3 (3 * (P.r + 1)) hpos ⟨hsep, hcard, hon⟩ hNQ
+  exact ⟨Y, _root_.GlobalTheory.GridsFromLayout.main P Wp Wq p (Pst lam c) Y _ _ 3 (3 * (P.r + 1)) hpos ⟨hsep, hcard, hon⟩ hNQ
     (by linarith) (pow_absorb C b P.r hb3)⟩
 
 end GlobalTheory.GridAtPlace

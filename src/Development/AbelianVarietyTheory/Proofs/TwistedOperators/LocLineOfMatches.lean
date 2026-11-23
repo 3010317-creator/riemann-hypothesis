@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EqMulProdOfPartial
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HarishChandraModulesOn
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.BarMatrix
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LowestKTypesJointShapeBlockUnitaryStatement
+public import Formalism.LocalRingCardinality.DataTheta
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LowestKTypesJointShapeBlockUnitary
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CovariantPairingUniqueUpToScalarStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiscreteSeriesPureInnerProductsTensorProduct
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsCoverKFinitePairingOfRealIntertwinerStatement
@@ -190,7 +191,7 @@ theorem loc_line {X : ProvA} (hX : ChosenSeries X) (h3 : Formalism.MainNotions.S
     ∃ A₀ : LPol W.rank V.rank →ₗ[ℂ] M'.sm τ →ₗ[ℂ] M.H τ, ∀ A, LocW M M' τ aS aT A → ∃ c : ℂ, A = c • A₀ := by
   obtain ⟨hSB, hTB⟩ := hB
   have hA := hd.1
-  have hI := GlobalTheory.T.lowest_kTypes_jointShape_block_unitary t al be ga de hA
+  have hI := _root_.GlobalTheory.LowestTypes.lowest_types t al be ga de hA
   have hlen : (block t).length = t := by simp [block]
 
   have hsetS : GlobalTheory.IndefiniteRowSideFullHecke.BarMatrix.HidaSetting X (al.length + be.length) (ga.length + de.length) (al ++ be) (ga ++ de)

@@ -6,9 +6,9 @@ public import Formalism.LocalToGlobal.ProjectiveLattices.FullExists
 public import Formalism.LocalToGlobal.ProjectiveLattices.RecPJThAllNeBot
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaRuleMemSec
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsLevelChangeActionOnCuspFormsStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevelActionMemThetaSeriesStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevelActionShortThetaSeriesRootOfUnityMulStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsLevelChangeActionOnCuspForms
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevelActionMemThetaSeries
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevelActionShortThetaSeriesRootOfUnityMul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -128,15 +128,15 @@ theorem levAct_theta : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndepS
       ∀ F ∈ spanIn T.C j w s,
       ∃ F' ∈ spanIn T.C j w s, Φ ((recPJ h j hj).inc w F) = (recPJ h j hj).inc w F' := by
     intro w s hs F hF
-    obtain ⟨a, ha⟩ := GlobalTheory.T.exists_levelChangeAction_on_cuspForms D T.toTop h j hj w P ℓ
+    obtain ⟨a, ha⟩ := _root_.GlobalTheory.FormTies.exists_isLevAct D T.toTop h j hj w P ℓ
     exact ⟨a g F, map_mem_spanIn T.C j w s ψ.toLinearMap hs F _ (ha g F) hF, hΦ w F _ (ha g F)⟩
   have hone : ∀ x : T.R j, x = ((1 : 𝓞 T.Q.c.F) : T.Q.c.F) • x := fun x => coe_one_smul_eq (R := T.R) j x
   have key := theta_stable_of_algHom (recPJ h j hj) Φ Sc ka wL wF Tn
     (hspan wL (T.th j wL) fun f hf => by
       obtain ⟨_, hnab⟩ := h.nabPin j hj
-      exact ⟨1, ψ f, GlobalTheory.T.levelAction_mem_thetaSeries hC D T.toTop h j hj wL (ℓ g) f hf
+      exact ⟨1, ψ f, _root_.GlobalTheory.ThetaLevelMove.actLev_mem_th hC D T.toTop h j hj wL (ℓ g) f hf
         (GlobalTheory.thetaRule_mem_sec GlobalTheory.abelianSchemeLaws_all.1 hC _ _ _ _ _ _ _ hnab _ _ f hf), hone _⟩)
-    (fun w hw => hspan w (T.toTop.sh j w) fun f hf => GlobalTheory.T.levelAction_shortThetaSeries_rootOfUnity_mul hC D T hfull j hj hxi w (by
+    (fun w hw => hspan w (T.toTop.sh j w) fun f hf => _root_.GlobalTheory.ShortMove.actLev_short hC D T hfull j hj hxi w (by
       rcases hw with rfl | rfl | rfl
       · exact hr
       · exact hr.trans (Nat.le_add_right _ _)

@@ -3,11 +3,11 @@ module
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ShearGL
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MirabolicCoefficientContinuous
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MirabolicPairingConductorVanishingStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MirabolicPairingDepthVanishingStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MirabolicTwistedKernelNonvanishingStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MirabolicPairingConductorVanishing
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MirabolicTwistedKernelNonvanishing
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ShearOrbitFiniteStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ShearPreservesBoxMembershipStatement
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MirabolicPairingDepthVanishing
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ShearPreservesBoxMembership
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothVectorFixedSmallShearStatement
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwistedBoxIntegralIdentity
 import Mathlib.Algebra.Order.Floor.Extended
@@ -130,13 +130,13 @@ open GlobalTheory.CompanionTheory.MirPair.Nondeg in
 theorem exists_evVal_ne_zero : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (ν : Measure k) [ν.IsAddHaarMeasure] (ψ : AddChar k Circle) (c : kˣ) {n : ℕ} {V V' : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup V'] [Module ℂ V'] (T : Representation ℂ (Mir k (n + 1)) V) (T' : Representation ℂ (Mir k (n + 1)) V') (B : V →ₗ[ℂ] V' →ₗ[ℂ] ℂ) (s : ℕ), Continuous ψ → HasConductor ψ c → IsSmooth T → IsSmooth T' → TwInv T T' B s → (∀ v, v ≠ 0 → ∃ v', B v v' ≠ 0) → ∀ v : V, v ∉ twKer T (MirUin k (n + 1)) (mirChar k ψ n) → ∃ (v' : V') (A : ℂ), EvVal ν ψ T B v v' A ∧ A ≠ 0 := by
   intro k _ _ _ _ _ _ ν _ ψ c n V V' _ _ _ _ T T' B s hψ hc hT hT' hinv hnd v hv
   obtain ⟨r₁, hr₁, hfix⟩ := GlobalTheory.T.smooth_vector_fixed_small_shear T hT v
-  obtain ⟨r₂, hr₂, hlat⟩ := GlobalTheory.T.shear_preserves_box_membership (k := k) (n := n) 1
+  obtain ⟨r₂, hr₂, hlat⟩ := _root_.GlobalTheory.CompanionTheory.MirPair.ShearLat.main (k := k) (n := n) 1
   obtain ⟨r, hr, hrr₁, hrr₂⟩ : ∃ r : kˣ, valuation k (r : k) < 1 ∧
       valuation k (r : k) ≤ valuation k (r₁ : k) ∧ valuation k (r : k) ≤ valuation k (r₂ : k) := by
     rcases le_total (valuation k (r₁ : k)) (valuation k (r₂ : k)) with h | h
     · exact ⟨r₁, hr₁, le_rfl, h⟩
     · exact ⟨r₂, hr₂, h, le_rfl⟩
-  obtain ⟨t₀, ht₀⟩ := GlobalTheory.T.mirabolic_twisted_kernel_nonvanishing ν ψ T B hψ hT hnd v hv
+  obtain ⟨t₀, ht₀⟩ := _root_.GlobalTheory.CompanionTheory.MirPair.AvgBox.exists_JJ_ne_zero ν ψ T B hψ hT hnd v hv
   obtain ⟨t, htt₀, htc⟩ := exists_large_unit c r t₀
   obtain ⟨v', hv'⟩ := ht₀ t htt₀
   by_contra hno
@@ -144,7 +144,7 @@ theorem exists_evVal_ne_zero : ∀ {k : Type} [Field k] [ValuativeRel k] [Topolo
   have hev : ∀ w : V', ∃ τ : kˣ, ∀ u : kˣ, valuation k (τ : k) ≤ valuation k (u : k) →
       JJ ν ψ T B (box (n + 1) u : Set (Fin (n + 1) → k)) v w = 0 := by
     intro w
-    obtain ⟨A, hA⟩ := GlobalTheory.T.mirabolic_pairing_exists_eventual_value ν ψ c T T' B s hψ hc hT hT' hinv v w
+    obtain ⟨A, hA⟩ := _root_.GlobalTheory.CompanionTheory.MirPair.exists_evVal ν ψ c T T' B s hψ hc hT hT' hinv v w
     have h0 : A = 0 := hno w A hA
     obtain ⟨τ, hτ⟩ := hA
     exact ⟨τ, fun u hu => (hτ u hu).trans h0⟩
@@ -156,7 +156,7 @@ theorem exists_evVal_ne_zero : ∀ {k : Type} [Field k] [ValuativeRel k] [Topolo
     have hbr : b ∈ (box (n + 1) r : Set (Fin (n + 1) → k)) := box_subset_of_valuation_le htc hb
     have hlast : valuation k (b (Fin.last n)) < 1 :=
       lt_of_le_of_lt (show valuation k (b (Fin.last n)) ≤ valuation k (r : k) from hbr _) hr
-    rw [GlobalTheory.T.mirabolic_pairing_depth_vanishing ν ψ T T' B s hψ hT hinv b _ v v' hlast
+    rw [_root_.GlobalTheory.CompanionTheory.MirPair.twist_integral_eq_JJ_shear ν ψ T T' B s hψ hT hinv b _ v v' hlast
       (hfix b (box_subset_of_valuation_le hrr₁ hbr)) ?_]
     · exact hτ _ u (hu _ ⟨b, hbr, rfl⟩)
     · intro x

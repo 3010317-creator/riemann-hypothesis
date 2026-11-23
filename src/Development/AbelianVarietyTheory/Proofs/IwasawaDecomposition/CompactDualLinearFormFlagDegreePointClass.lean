@@ -2,15 +2,19 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RootToFlag
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PointPoly
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FlagRelativeTangentTopChernIsHomogeneousCmTypeStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsProbabilityMeasureMuPart
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.InterPolyProdSum
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FlagRelativeTangentTopChernIsHomogeneousCmType
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FlagRelativeTangentTopChernNeZero
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GrassmannProductIntegralEqFlagDegreeWeightStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GrassmannProductIntegralEqZeroOfMemRelIdealStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GrassmannProductIntegralPointClassEqOneStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GrassmannProductTopDegreeEqSmulPointClassStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HomogeneousComponentChernClassesOfRootsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsHomogeneousOfMulIsHomogeneousOfNeZeroRightStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemSpanOfChernClassesOfRootsEqZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GrassmannProductIntegralEqFlagDegreeWeight
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GrassmannProductIntegralEqZeroOfMemRelIdeal
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GrassmannProductIntegralPointClassEqOne
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GrassmannProductTopDegreeEqSmulPointClass
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HomogeneousComponentChernClassesOfRoots
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.RingTheory.MvPolynomial.Homogeneous
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsHomogeneousOfMulIsHomogeneousOfNeZeroRight
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemSpanOfChernClassesOfRootsEqZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -135,13 +139,13 @@ theorem grass_top : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
   have hker : ∀ Q, chernRoots Dw.mult Q = 0 → L Q = 0 := by
     intro Q hQ
     apply hL
-    refine Ideal.span_mono ?_ (GlobalTheory.T.mem_span_of_chernClassesOfRoots_eq_zero Dw.mult Q hQ)
+    refine Ideal.span_mono ?_ (_root_.GlobalTheory.GrassKernel.mem_span_of_chernRoots_eq_zero Dw.mult Q hQ)
     exact Set.subset_union_left
   set e := Fintype.card (GlobalTheory.AllWt.Psi H) * (Dw.p * Dw.q) with he
   set δ := Fintype.card (GlobalTheory.AllWt.Psi H) * (Dw.p * (Dw.p - 1) / 2 + Dw.q * (Dw.q - 1) / 2) with hδ
 
   have hRh : (chernRoots Dw.mult R).IsHomogeneous e := by
-    refine GlobalTheory.T.isHomogeneous_of_mul_isHomogeneous_of_ne_zero_right _ _ e δ (by apply GlobalTheory.GoodMetric.rootDiscr_ne_zero) (GlobalTheory.T.flagRelativeTangentTopChern_isHomogeneous_cmType H Dw) ?_
+    refine _root_.GlobalTheory.GrassTop.isHomogeneous_of_mul_isHomogeneous_right _ _ e δ (by apply GlobalTheory.GoodMetric.rootDiscr_ne_zero) (_root_.GlobalTheory.GrassTop.rootDiscr_isHomogeneous H Dw) ?_
     rw [← hR]
     have hed : e + δ = D := by
       rw [hD, he, hδ, add_mul_pred_div_two]; ring
@@ -157,11 +161,11 @@ theorem grass_top : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
   have hrest : chernRoots Dw.mult (R - Re) = 0 := by
     have hc : ∀ d, homogeneousComponent d (chernRoots Dw.mult (R - Re)) = 0 := by
       intro d
-      rw [GlobalTheory.T.homogeneousComponent_chernClassesOfRoots, map_sub]
+      rw [_root_.GlobalTheory.GrassComp.homogeneousComponent_chernRoots, map_sub]
       by_cases hd : d = e
       · rw [hd, hReW.weightedHomogeneousComponent_same]
         simp [hRe]
-      · rw [map_sub, ← GlobalTheory.T.homogeneousComponent_chernClassesOfRoots, homogeneousComponent_of_mem ((mem_homogeneousSubmodule _ _).mpr hRh), if_neg hd,
+      · rw [map_sub, ← _root_.GlobalTheory.GrassComp.homogeneousComponent_chernRoots, homogeneousComponent_of_mem ((mem_homogeneousSubmodule _ _).mpr hRh), if_neg hd,
           weightedHomogeneousComponent_of_mem ((mem_weightedHomogeneousSubmodule _ _ _ _).mpr hReW), if_neg hd,
           map_zero, sub_zero]
     rw [← sum_homogeneousComponent (chernRoots Dw.mult (R - Re))]
@@ -175,12 +179,12 @@ theorem grass_top : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
     rw [intGr_sub, sub_eq_zero] at this
     exact this
   by_cases hn : n = e
-  · obtain ⟨c, hc⟩ := GlobalTheory.T.grassmannProduct_topDegree_eq_smul_pointClass H Dw Re hReW
+  · obtain ⟨c, hc⟩ := _root_.GlobalTheory.GrassTopDim.top_eq_smul_point H Dw Re hReW
     have h1 := hL _ hc
     rw [map_sub, sub_eq_zero, C_mul', map_smul, smul_eq_mul] at h1
-    have h2 := GlobalTheory.T.grassmannProductIntegral_eq_zero_of_mem_relIdeal H Dw _ hc
-    rw [intGr_sub, intGr_C_mul, GlobalTheory.T.grassmannProductIntegral_pointClass_eq_one, mul_one, sub_eq_zero] at h2
-    rw [hLR, h1, ← h2, ← hIR, GlobalTheory.T.grassmannProductIntegral_eq_flagDegree_weight H Dw la R D hD hR]
+    have h2 := _root_.GlobalTheory.GrassTop.intGr_eq_zero_of_mem_relIdeal H Dw _ hc
+    rw [intGr_sub, intGr_C_mul, _root_.GlobalTheory.GrassTop.intGr_pointPoly, mul_one, sub_eq_zero] at h2
+    rw [hLR, h1, ← h2, ← hIR, _root_.GlobalTheory.GrassTop.intGr_eq_flagDeg H Dw la R D hD hR]
   · have h1 : L Re = 0 := hdeg Re e hReW (Ne.symm hn)
     have h2 : L (pointPoly H Dw) = 0 := hdeg _ e (pointPoly_isWeightedHomogeneous H Dw) (Ne.symm hn)
     rw [hLR, h1, h2, mul_zero]

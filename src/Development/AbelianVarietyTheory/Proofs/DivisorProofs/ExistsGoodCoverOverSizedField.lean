@@ -8,8 +8,9 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHal
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ClassNumberLeAbsDiscrOfFinrankEqTwo
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CurveOverOfRayField
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.FieldSizeSupAdd
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.WeberInvariantTorsionValuesSubsetRayClassFieldStatement
-import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.DedekindZetaEqSumRealEisenstein
+public import Development.AbelianVarietyTheory.Definitions.HeightFunctions.FiniteDimensionalOfSz
+public import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.WeberInvariantTorsionValuesSubsetRayClassField
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsGaloisRatComplexImageRayClassField
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsRayFieldInRestrictScalars
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RayClassFieldDegreeLeAndRootDiscrBound
@@ -17,6 +18,7 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RootO
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsModuliSchemePolarizedAbelianLevel
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsDeltaDatumHigherLevel
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.GeometricallyIrreducibleComponentsWeberValues
+import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.DedekindZetaEqSumRealEisenstein
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -142,7 +144,7 @@ theorem exists_ray (hRF : GlobalTheory.NT.RayField) {E : Type} [Field E] [Number
     have h5 := Real.log_le_sub_one_of_pos (show (0 : ℝ) < 2 by norm_num)
     push_cast at h1
     linarith
-  · have hW := GlobalTheory.T.weberInvariantTorsionValues_subset_rayClassField K₀ h2 (by omega) P (fun z => ?_) n hn R hR
+  · have hW := _root_.GlobalTheory.FieldSize.InRayAny.weberSet_subset K₀ h2 (by omega) P (fun z => ?_) n hn R hR
     · exact ⟨hRle (hW (Set.mem_insert _ _)), fun s hs => hRle (hW (Set.mem_insert_of_mem _
         ⟨_, (hP _).2 ⟨s, rfl⟩, hs, rfl⟩))⟩
     · rw [hP]

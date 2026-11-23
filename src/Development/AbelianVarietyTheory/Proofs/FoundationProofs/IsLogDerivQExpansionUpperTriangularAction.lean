@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsRootOfIsAlgClosed
 public import Development.AbelianVarietyTheory.Definitions.Foundations.EeProd
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HahnSeriesQDerivativeSubstUpperTriangularStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SubstUpperTriangularHahnMulAndOneStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TowerExpSlashUpperTriangularEqSubstStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HahnSeriesQDerivativeSubstUpperTriangular
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SubstUpperTriangularHahnMulAndOne
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TowerExpSlashUpperTriangularEqSubst
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -125,9 +125,9 @@ theorem isDl_sl_upper : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosed
   obtain ⟨hφ, a₀, b₀, κ, hκ, hfb, hPa, hPb, hcg⟩ := hdl
   have hpos : 0 < ent g 0 0 / ent g 1 1 := div_pos ha hd
   have hexp : ∀ u, X.exp (X.sl g u) = sub ε (ent g 0 0) (ent g 0 1) (ent g 1 1) (X.exp u) :=
-    fun u => GlobalTheory.T.tower_exp_slash_upperTriangular_eq_subst Ω ε X g h10 u
-  have hmul := GlobalTheory.T.substUpperTriangularHahn_mul_and_one Ω ε (ent g 0 0) (ent g 0 1) (ent g 1 1) hpos
-  have hqd := GlobalTheory.T.hahnSeriesQDerivative_substUpperTriangular Ω ε (ent g 0 0) (ent g 0 1) (ent g 1 1) hpos
+    fun u => _root_.GlobalTheory.CyclotomicQExpansion.exp_sl_upper Ω ε X g h10 u
+  have hmul := _root_.GlobalTheory.CyclotomicQExpansion.sub_mul_and_one Ω ε (ent g 0 0) (ent g 0 1) (ent g 1 1) hpos
+  have hqd := _root_.GlobalTheory.CyclotomicQExpansion.qD_sub Ω ε (ent g 0 0) (ent g 0 1) (ent g 1 1) hpos
   have hco := sub_coeff ε (b := ent g 0 1) hpos
   have hss : ∀ ψ χ : HahnSeries ℚ Ω, sub ε (ent g 0 0) (ent g 0 1) (ent g 1 1) (ψ - χ) =
       sub ε (ent g 0 0) (ent g 0 1) (ent g 1 1) ψ - sub ε (ent g 0 0) (ent g 0 1) (ent g 1 1) χ := by

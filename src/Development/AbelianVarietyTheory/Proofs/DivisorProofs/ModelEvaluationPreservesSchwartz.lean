@@ -7,16 +7,17 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeri
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjMapPartRightEquivariant
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DblESymmToLinearMap
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EvaluationGoodModelsIntertwine
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GoodModelEvaluationBijectiveSchwartzStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GoodModelEvaluationBijectiveSchwartz
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNegOneOfStandardTraceAdelicAddChar
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModelEvaluationBijectiveSchwartzStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModelEvaluationPreservesAdmissibleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchroedingerPreservesAdelicSchwartzStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StarMemAdelicSchwartzSpaceNumberField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModelEvaluationBijectiveSchwartz
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModelEvaluationPreservesAdmissible
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchroedingerPreservesAdelicSchwartz
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TameConjMap
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TamePartLeftStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TamePartRightStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilOperatorHaarNormProportionalStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TamePartLeft
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilOperatorHaarNormProportional
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StarMemAdelicSchwartzSpaceNumberField
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TamePartRight
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -127,10 +128,10 @@ theorem hasDbl_of_tame {F : Type} [Field F] [NumberField F] {E : Type} [CommRing
   obtain ⟨hsp, hheis, hadm, hunit⟩ := hT
   have hS : IsTame F (conjMap T.toLinearMap) := GlobalTheory.DoublingEv.isTame_conjMap F κ κ _ ht
   have hSi : IsTame F (conjMap T.symm.toLinearMap) := GlobalTheory.DoublingEv.isTame_conjMap F κ κ _ hti
-  have hR : IsTame F (partR (κ := κ) (conjMap T.toLinearMap)) := GlobalTheory.T.tame_part_right F κ κ κ _ hS
-  have hL : IsTame F (partL (κ' := κ) T.toLinearMap) := GlobalTheory.T.tame_part_left F κ κ κ _ ht
-  have hRi : IsTame F (partR (κ := κ) (conjMap T.symm.toLinearMap)) := GlobalTheory.T.tame_part_right F κ κ κ _ hSi
-  have hLi : IsTame F (partL (κ' := κ) T.symm.toLinearMap) := GlobalTheory.T.tame_part_left F κ κ κ _ hti
+  have hR : IsTame F (partR (κ := κ) (conjMap T.toLinearMap)) := _root_.GlobalTheory.TamePartR.isTame_partR F κ κ κ _ hS
+  have hL : IsTame F (partL (κ' := κ) T.toLinearMap) := _root_.GlobalTheory.DoublingEv.PartLTame.isTame_partL F κ κ κ _ ht
+  have hRi : IsTame F (partR (κ := κ) (conjMap T.symm.toLinearMap)) := _root_.GlobalTheory.TamePartR.isTame_partR F κ κ κ _ hSi
+  have hLi : IsTame F (partL (κ' := κ) T.symm.toLinearMap) := _root_.GlobalTheory.DoublingEv.PartLTame.isTame_partL F κ κ κ _ hti
   have hD : IsTame F (dblE T).toLinearMap := hR.comp hL
   have hDi : IsTame F (dblE T).symm.toLinearMap := hLi.comp hRi
   have hstar : ∀ φ : (κ → AF F) → ℂ, φ ∈ schA F κ → star φ ∈ schA F κ := fun φ hφ =>
@@ -173,8 +174,8 @@ theorem hasDbl_of_tame {F : Type} [Field F] [NumberField F] {E : Type} [CommRing
     convert this using 1
     ext φ
     simp
-  · obtain ⟨c₁, hc₁⟩ := (GlobalTheory.T.weil_operator_haar_norm_proportional F κ κ T.toLinearMap ht hTL).1 μ hμ
-    obtain ⟨c₂, hc₂⟩ := (GlobalTheory.T.weil_operator_haar_norm_proportional F κ κ (conjMap T.toLinearMap) hS hSL).2 μ hμ
+  · obtain ⟨c₁, hc₁⟩ := (_root_.GlobalTheory.DoublingEvaluationL2.main F κ κ T.toLinearMap ht hTL).1 μ hμ
+    obtain ⟨c₂, hc₂⟩ := (_root_.GlobalTheory.DoublingEvaluationL2.main F κ κ (conjMap T.toLinearMap) hS hSL).2 μ hμ
     refine ⟨c₁ * c₂, fun Φ hΦ => ?_⟩
     show ∫⁻ x, ‖partL (κ' := κ) T.toLinearMap (partR (κ := κ) (conjMap T.toLinearMap) Φ) x‖ₑ ^ 2 ∂μ = _
     rw [hc₁ _ (hR.mapsTo Φ hΦ), hc₂ Φ hΦ, mul_assoc]
@@ -198,15 +199,15 @@ theorem main : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Field F] [
   have hgood : IsGoodInt (adeleClass F) B.ψ M.co M₁.co T := by
     refine ⟨hTs, fun w Φ hΦ => ?_, fun l => ?_, fun μ hμ => ?_⟩
     · have hm : M.co.rho B.ψ w Φ ∈ schA F (Fin n × Fin d) :=
-        GlobalTheory.T.schroedinger_preserves_adelic_schwartz F B.ψ hpair.base.std _ (M.co.e w) Φ hΦ
+        _root_.GlobalTheory.SchrKeepsSchA.schr_mem_schA F B.ψ hpair.base.std _ (M.co.e w) Φ hΦ
       have := hev.Heisenberg₂ w Φ hΦ
       rw [h1, h1', Matrix.one_mul, Matrix.transpose_one, Matrix.mul_one] at this
       rw [hTe _ hm, hTe _ hΦ, this]
-    · refine (GlobalTheory.T.model_evaluation_bijective_schwartz hP F E σ B n d X W M χX χW om r s r' s' hpair M₁ hM₁ e hev hbij l).trans
+    · refine (_root_.GlobalTheory.ModelAdm.model_admissible_iff_evaluation hP F E σ B n d X W M χX χW om r s r' s' hpair M₁ hM₁ e hev hbij l).trans
         (adm_congr ?_)
       intro Φ hΦ
       simp [hTe Φ hΦ]
-    · obtain ⟨c, hc⟩ := GlobalTheory.T.model_evaluation_preserves_admissible hP F E σ B n d X W M χX χW om r s r' s' hpair M₁ hM₁ e hev hbij μ hμ
+    · obtain ⟨c, hc⟩ := _root_.GlobalTheory.ModelTrUnit.exists_const hP F E σ B n d X W M χX χW om r s r' s' hpair M₁ hM₁ e hev hbij μ hμ
       exact ⟨c, fun Φ hΦ => by rw [hTe Φ hΦ]; exact hc Φ hΦ⟩
   have ht : IsTame F T.toLinearMap := by
     intro g hg
@@ -215,7 +216,7 @@ theorem main : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Field F] [
     rw [← hPe f]
     exact hTe _ (Submodule.subset_span ⟨f, g, hg, rfl⟩)
   have hti : IsTame F T.symm.toLinearMap :=
-    GlobalTheory.T.good_model_evaluation_bijective_schwartz hP F E σ B n d X W M χX χW om r s r' s' hpair M₁ hM₁ e hev hbij T.symm.toLinearMap
+    _root_.GlobalTheory.InvTame.isTame_inv hP F E σ B n d X W M χX χW om r s r' s' hpair M₁ hM₁ e hev hbij T.symm.toLinearMap
       (fun Φ hΦ => by rw [← hTe Φ hΦ]; simp)
   exact hasDbl_of_tame (cA σ) B.ψ (GlobalTheory.StdCharFromIsStd.norm_psi hpair.base.std) (-1) _ _ M.co M₁.co T hgood ht hti
 

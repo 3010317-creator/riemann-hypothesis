@@ -2,8 +2,12 @@ module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInversionCoordinateLocalizationPolynomialStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtendAffineLineMorphismToProperAcrossPointStatement
+public import Mathlib.Algebra.Polynomial.AlgebraMap
+public import Mathlib.RingTheory.Localization.Away.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInversionCoordinateLocalizationPolynomial
+public import Mathlib.AlgebraicGeometry.Morphisms.FinitePresentation
+public import Mathlib.AlgebraicGeometry.Morphisms.Proper
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtendAffineLineMorphismToProperAcrossPoint
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProjectiveLineToAbelianVarietyConstStatement
 import Mathlib.Algebra.AffineMonoid.UniqueSums
 import Mathlib.Algebra.Order.Floor.Extended
@@ -169,7 +173,7 @@ theorem extend_to_line : ∀ (k : Type) [Field k] [IsAlgClosed k] (B : Over (Sp 
     have hn' : P'.natDegree = n := by
       rw [Polynomial.natDegree_mul hP' (Polynomial.X_sub_C_ne_zero c), Polynomial.natDegree_X_sub_C] at hn
       omega
-    obtain ⟨v', hv', ev'⟩ := GlobalTheory.T.extend_affineLine_morphism_to_proper_across_point k B P' c hP' u hu
+    obtain ⟨v', hv', ev'⟩ := _root_.GlobalTheory.AffineLineExt.extend k B P' c hP' u hu
     obtain ⟨v, hv, ev⟩ := ih P' hP' hn' v' hv'
     refine ⟨v, hv, ?_⟩
     rw [← ev', ← ev, ← Category.assoc, ← spMap_comp']
@@ -181,7 +185,7 @@ theorem maps_from_open_line_const : ∀ (k : Type) [Field k] [IsAlgClosed k] (B 
   intro k _ _ B _ hB P hP u a b hu
   haveI := hB.smooth
   haveI := hB.proper
-  obtain ⟨Q, hQ, σ, τ, h1, h2⟩ := GlobalTheory.T.exists_inversion_coordinate_localization_polynomial k P hP
+  obtain ⟨Q, hQ, σ, τ, h1, h2⟩ := _root_.GlobalTheory.localizationAway_inv_coordinate k P hP
   obtain ⟨f₀, hf₀, e₀⟩ := extend_to_line k B P hP u hu
   have hu' : (spMap σ.toRingHom ≫ u) ≫ B.hom = spMap (algebraMap k (Localization.Away Q)) := by
     rw [Category.assoc, hu, ← spMap_comp']

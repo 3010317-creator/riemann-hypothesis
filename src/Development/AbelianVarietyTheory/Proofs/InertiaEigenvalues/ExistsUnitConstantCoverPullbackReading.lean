@@ -4,10 +4,10 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IntF
 public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BaseCoverFramesDifferByRationalIsometry
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoverComponentEqImpliesBaseComponentEq
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoverFramedPointOverMovedBaseFrameStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoverFramedPointOverMovedBaseFrame
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqConstMulOfNormOne
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrameBaseEqCoverFrameMovedByArithmetic
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCoverDictionaryAdelicElementComponent
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrameBaseEqCoverFrameMovedByArithmeticStatement
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LevelCoverComponentReadingsUnitModulusScalar
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RationalIsometryMapsFlagDomainFrames
 import Mathlib.Algebra.Order.Floor.Extended
@@ -69,7 +69,7 @@ theorem rel_at : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, Formalism.L2.Pj.
     fun τ => ((hU.2.1 _).2 τ).trans ((hU₂.2.1 _).2 τ).symm
   have hx' : x' ∈ ((T.U j σ).X (T.dict j σ h₀).1).dom :=
     GlobalTheory.FrameDom.mem_dom_of_isometry _ _ _ _ γ ((hU.2.1 _).1.trans (hU₂.2.1 _).1.symm) hΨ hiso x x' hx hxx'
-  obtain ⟨o₁, o₂⟩ := GlobalTheory.T.coverFramedPoint_over_moved_base_frame D T hT j hj σ hσ C hC h₀ γ hΛ hiso hfr x x' hx hx' hxx'
+  obtain ⟨o₁, o₂⟩ := _root_.GlobalTheory.CoverFrameOver.un_over D T hT j hj σ hσ C hC h₀ γ hΛ hiso hfr x x' hx hx' hxx'
   obtain ⟨t, ht, hn, hr⟩ := GlobalTheory.CoverFrameMod.exists_scalar C hC.2.2.1 _ _ o₁ o₂
   refine ⟨hx', t, ht, fun hd => ?_, fun n a _ f hf f₂ _ hp => ?_⟩
   · have hd' : ∀ τ i, ‖dmin ((T.U j σ).X (T.dict j σ h₀).1).Gm x' τ i‖ = 1 := by
@@ -191,7 +191,7 @@ theorem cover_read_const : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, Formal
   have e₂ : (C.dict₂ h).1 = (C.dict₂ (h₀ (C.dict₂ h).1)).1 := (hh₀ _).symm
   have e₁ : (T.dict j σ (h₀ (C.dict₂ h).1)).1 = (T.dict j σ h).1 :=
     GlobalTheory.CoverRead.CompIndep.comp_eq_of_cover D T hL j hj σ hσ C hC _ h (hh₀ _)
-  obtain ⟨δ, hδ, hδrel⟩ := GlobalTheory.T.frame_base_eq_cover_frame_moved_by_arithmetic D T hL j hj σ hσ C hC h (h₀ (C.dict₂ h).1) e₂ (γ₀ _) (hΛ _) (hiso _) (hfr _)
+  obtain ⟨δ, hδ, hδrel⟩ := _root_.GlobalTheory.CoverFrameArith.frame_move_arith D T hL j hj σ hσ C hC h (h₀ (C.dict₂ h).1) e₂ (γ₀ _) (hΛ _) (hiso _) (hfr _)
   have hΨ : ∀ τ, τ ∈ (C.U₂.X (C.dict₂ h).1).Ψ ↔ τ ∈ ((T.U j σ).X (T.dict j σ h).1).Ψ :=
     fun τ => ((hU₂.2.1 _).2 τ).trans ((hU.2.1 _).2 τ).symm
   let x' : Frame ((T.U j σ).X (T.dict j σ h).1).Ψ D.R.r := fun τ =>

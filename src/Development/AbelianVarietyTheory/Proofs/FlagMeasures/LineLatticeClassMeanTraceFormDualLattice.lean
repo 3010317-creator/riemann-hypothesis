@@ -2,9 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsLatMeasurableConst
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableSetDetNormPos
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DetMatrixSandwichLinearMapStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsLatticeTraceDualAndTraceDualTraceDualStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TraceFormDualTranslatedLatticeEqInverseTransposeStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.LinearAlgebra.Determinant
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DetMatrixSandwichLinearMap
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsLatticeTraceDualAndTraceDualTraceDual
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TraceFormDualTranslatedLatticeEqInverseTranspose
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -152,7 +155,7 @@ theorem measurePreserving_mul_left (γ : MatInf E j) (hγ : 0 < detNorm E j γ) 
   · intro x hx
     have hx' : 0 < detNorm E j x := hx
     have hdet : L.det = detNorm E j γ ^ j := by
-      rw [ContinuousLinearMap.det, LinearMap.coe_toContinuousLinearMap, GlobalTheory.T.det_matrix_sandwich_linear_map _ _ _ _ _ fun _ _ => rfl]
+      rw [ContinuousLinearMap.det, LinearMap.coe_toContinuousLinearMap, _root_.GlobalTheory.MatMulDet.det_real_mul_mul _ _ _ _ _ fun _ _ => rfl]
       simp [detNorm, Finset.prod_pow]
     have hm := detNorm_mul E j γ x
     rw [hdet]
@@ -207,7 +210,7 @@ theorem measurePreserving_invT :
       change |LinearMap.det ((transp (InfinitePlace E) j).comp
         (sandwich (fun w => -(Matrix.of (x w))⁻¹) fun w => (Matrix.of (x w))⁻¹))| = _
       rw [LinearMap.det_comp, abs_mul, abs_det_transp,
-        one_mul, GlobalTheory.T.det_matrix_sandwich_linear_map _ _ _ _ _ fun _ _ => rfl, abs_of_nonneg (Finset.prod_nonneg fun _ _ => by positivity)]
+        one_mul, _root_.GlobalTheory.MatMulDet.det_real_mul_mul _ _ _ _ _ fun _ _ => rfl, abs_of_nonneg (Finset.prod_nonneg fun _ _ => by positivity)]
       simp [detNorm, Finset.prod_pow, Matrix.det_neg, Finset.prod_mul_distrib, mul_pow]
     have hm := detNorm_invT E j x
     rw [hdet]
@@ -392,10 +395,10 @@ theorem term_dual (hE : IsTotallyComplex E) {Λ : Submodule (𝓞 E) (Fin j → 
     (hm : Measurable ({g | 0 < detNorm E j g}.indicator fun g => F (latAt E j (trDual E j Λ) g))) :
     term E j (fun L => F (dualAt E j L)) Λ = term E j F (trDual E j Λ) := by
   apply le_antisymm
-  · exact covol_invT_le (GlobalTheory.T.isLattice_traceDual_and_traceDual_traceDual E j Λ hΛ).2 _ _ (fun x hx => congrArg F (GlobalTheory.T.traceFormDual_translatedLattice_eq_inverseTranspose E hE j Λ hΛ x hx)) hm
+  · exact covol_invT_le (_root_.GlobalTheory.MeanDual.Alg.isLattice_trDual_and_trDual_trDual E j Λ hΛ).2 _ _ (fun x hx => congrArg F (_root_.GlobalTheory.MeanDual.dualAt_latAt_eq_latAt_trDual E hE j Λ hΛ x hx)) hm
   · refine covol_invT_le rfl _ _ (fun x hx => ?_) ?_
     · beta_reduce
-      rw [GlobalTheory.T.traceFormDual_translatedLattice_eq_inverseTranspose E hE j Λ hΛ _ ((detNorm_invT_pos_iff E j x).2 hx), invT_invT E j hx]
+      rw [_root_.GlobalTheory.MeanDual.dualAt_latAt_eq_latAt_trDual E hE j Λ hΛ _ ((detNorm_invT_pos_iff E j x).2 hx), invT_invT E j hx]
     · have := hm.comp (measurePreserving_invT E j).measurable
       convert this using 1
       funext x
@@ -403,7 +406,7 @@ theorem term_dual (hE : IsTotallyComplex E) {Λ : Submodule (𝓞 E) (Fin j → 
       · rw [Function.comp, Set.indicator_of_mem hx,
           Set.indicator_of_mem (show invT E j x ∈ {g | 0 < detNorm E j g} from
             (detNorm_invT_pos_iff E j x).2 hx)]
-        exact congrArg F (GlobalTheory.T.traceFormDual_translatedLattice_eq_inverseTranspose E hE j Λ hΛ x hx)
+        exact congrArg F (_root_.GlobalTheory.MeanDual.dualAt_latAt_eq_latAt_trDual E hE j Λ hΛ x hx)
       · rw [Function.comp, Set.indicator_of_notMem hx, Set.indicator_of_notMem
           (show invT E j x ∉ {g | 0 < detNorm E j g} from fun h => hx ((detNorm_invT_pos_iff E j x).1 h))]
 
@@ -412,8 +415,8 @@ theorem latMean_dualAt : ∀ (E : Type) [Field E] [NumberField E], IsTotallyComp
   let X := {Λ : Submodule (𝓞 E) (Fin j → E) // Submodule.IsFullLattice E Λ}
   let r : X → X → Prop := fun Λ Λ' => ∃ γ : GL (Fin j) E,
     ∀ y, (γ : Matrix (Fin j) (Fin j) E) *ᵥ y ∈ Λ'.1 ↔ y ∈ Λ.1
-  let d : X → X := fun Λ => ⟨trDual E j Λ.1, (GlobalTheory.T.isLattice_traceDual_and_traceDual_traceDual E j Λ.1 Λ.2).1⟩
-  have hdd : ∀ Λ, d (d Λ) = Λ := fun Λ => Subtype.ext (GlobalTheory.T.isLattice_traceDual_and_traceDual_traceDual E j Λ.1 Λ.2).2
+  let d : X → X := fun Λ => ⟨trDual E j Λ.1, (_root_.GlobalTheory.MeanDual.Alg.isLattice_trDual_and_trDual_trDual E j Λ.1 Λ.2).1⟩
+  have hdd : ∀ Λ, d (d Λ) = Λ := fun Λ => Subtype.ext (_root_.GlobalTheory.MeanDual.Alg.isLattice_trDual_and_trDual_trDual E j Λ.1 Λ.2).2
   have hd : ∀ ⦃a b⦄, r a b → r (d a) (d b) := fun a b ⟨γ, h⟩ => ⟨_, Carries.trDual h⟩
   let D : Quot r → Quot r := Quot.map d hd
   have hD : Function.Involutive D := by

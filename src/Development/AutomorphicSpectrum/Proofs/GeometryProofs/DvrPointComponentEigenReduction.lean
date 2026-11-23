@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsFlatAnIffIsConstMul
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ValAtCompLocalHomStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ValAtCompLocalHom
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -177,7 +178,7 @@ theorem val_abs (ξ : Sp Ω ⟶ X) (hg : IsCptGen ξ) (s : X ⟶ Sp O) (inc : F 
     exact genMap_specializes ξ ⟨_, h₁⟩ ⟨_, h₂⟩ hsp s'
   · rintro a h ⟨s', rfl⟩
     have v : ValAt ξ z (genMap ξ ⟨_, h₂⟩ s') ((Scheme.stalkClosedPointTo z).hom s') := ⟨h₂, s', rfl, rfl⟩
-    have v' := GlobalTheory.T.valAt_comp_local_hom X Ω ξ V K (algebraMap V K) z _ _ v (by rw [hz]; exact h₁)
+    have v' := _root_.GlobalTheory.CompanionTheory.Ar.ChangeRing.valAt_change X Ω ξ V K (algebraMap V K) z _ _ v (by rw [hz]; exact h₁)
     rw [hz] at v'
     obtain ⟨h', e⟩ := c4 _ _ v'
     exact ⟨_, e.symm⟩

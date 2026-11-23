@@ -1,12 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdIPowLe
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsDescentSolutionLiftModPrismIdealStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFiniteProjectiveLiftOfIsAdicCompleteStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsBaseChangeOfIsBaseChangeQuotientStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSemilinearBaseChangeIffIsBaseChangeStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrismPushoutModAdicPowUniversalStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.StratifiedPhiModuleDescentFiniteLevelStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsDescentSolutionLiftModPrismIdeal
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.InvertibleSpanSingleton
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFiniteProjectiveLiftOfIsAdicComplete
+public import Mathlib.Algebra.Module.Projective
+public import Mathlib.RingTheory.IsTensorProduct
+public import Mathlib.RingTheory.Jacobson.Ideal
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsBaseChangeOfIsBaseChangeQuotient
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSemilinearBaseChangeIffIsBaseChange
+public import Mathlib.RingTheory.TensorProduct.IsBaseChangePi
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrismPushoutModAdicPowUniversal
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.StratifiedPhiModuleDescentFiniteLevel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -27,7 +32,6 @@ import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.HopfAlgebra.Basic
 import Mathlib.RingTheory.Radical.NatInt
-public import Mathlib.RingTheory.TensorProduct.IsBaseChangePi
 import Mathlib.Tactic.Echelon.Zsqrtd
 import Mathlib.Tactic.Inclusion.Extension.Core.Core
 import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
@@ -103,7 +107,7 @@ theorem lift_mod {l : ℕ} [Fact l.Prime] {K : FinExt l} {bk : BK K} {d : ℕ} (
     have e := congrFun hv i
     simp only [qmap_mk] at e
     exact e.trans (RingHom.map_mulVec _ _ _ i).symm
-  have H := GlobalTheory.T.exists_descent_solution_lift_mod_prism_ideal l K bk d S B C D h f p q hc hpo z₀ hyp
+  have H := _root_.GlobalTheory.BSP.lift_solution l K bk d S B C D h f p q hc hpo z₀ hyp
   exact ⟨H.choose, H.choose_spec.2, fun i => Ideal.Quotient.eq.2 (H.choose_spec.1 i)⟩
 
 
@@ -113,14 +117,14 @@ theorem exists_descent : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K)
   obtain ⟨D, p₀, q₀, hpo⟩ := hc.stable.po C h
   have hcomm : ∀ b, p₀.f (h.f b) = q₀.f (h.f b) := fun b => congrArg (fun k : Hom B D => k.f b) hpo.comm
   letI : Algebra (B.A ⧸ adI B ^ 1) (C.A ⧸ adI C ^ 1) := (qmap h 1).toAlgebra
-  obtain ⟨N₁, hN₁, hfin, hproj, hbc⟩ := GlobalTheory.T.stratifiedPhiModule_descent_finite_level l K bk d S B C D h f p₀ q₀ hc hpo 1
+  obtain ⟨N₁, hN₁, hfin, hproj, hbc⟩ := _root_.GlobalTheory.BSP.LevH.descent_at_level l K bk d S B C D h f p₀ q₀ hc hpo 1
   haveI hcB : IsAdicComplete (adI B ^ 1) B.A := by rw [pow_one]; exact B.complete
-  obtain ⟨P, _, _, _, _, u₁, hu₁⟩ := GlobalTheory.T.exists_finite_projective_lift_of_isAdicComplete B.A (adI B ^ 1) ↥N₁
+  obtain ⟨P, _, _, _, _, u₁, hu₁⟩ := _root_.GlobalTheory.BSP.LiftProj.exists_lift B.A (adI B ^ 1) ↥N₁
   letI : Algebra B.A C.A := h.f.toAlgebra
   haveI : IsScalarTower B.A (B.A ⧸ adI B ^ 1) (C.A ⧸ adI C ^ 1) := IsScalarTower.of_algebraMap_eq (fun b => rfl)
   have hs : ∀ (b : B.A) (y : ↥N₁), (Ideal.Quotient.mk (adI B ^ 1) b) • y = b • y := fun b y => Subtype.ext rfl
   let u₁' : P →ₗ[B.A] ↥N₁ := { toFun := fun x => u₁ x, map_add' := fun x y => u₁.map_add x y, map_smul' := fun b x => (u₁.map_smulₛₗ b x).trans (hs b (u₁ x)) }
-  have hb1 : IsBaseChange (B.A ⧸ adI B ^ 1) u₁' := (GlobalTheory.T.isSemilinearBaseChange_iff_isBaseChange B.A (B.A ⧸ adI B ^ 1) P ↥N₁ u₁ u₁' (fun x => rfl)).1 hu₁
+  have hb1 : IsBaseChange (B.A ⧸ adI B ^ 1) u₁' := (_root_.GlobalTheory.BSP.semiBC_iff_isBaseChange B.A (B.A ⧸ adI B ^ 1) P ↥N₁ u₁ u₁' (fun x => rfl)).1 hu₁
   have hb2 := hb1.comp hbc
   let M := solSub h p₀ q₀ hpo.comm (S.ε (p₀.comp f) (q₀.comp f))
   have memM : ∀ z, z ∈ M ↔ (fun i => p₀.f (z i)) = (S.ε (p₀.comp f) (q₀.comp f)).mulVec fun i => q₀.f (z i) := fun z => Iff.rfl
@@ -150,16 +154,16 @@ theorem exists_descent : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K)
   · haveI := C.complete
     have hV : IsBaseChange C.A u' := by
       have hgq := (IsBaseChange.linearMap C.A (C.A ⧸ adI C ^ 1)).finitePow (Fin d)
-      refine GlobalTheory.T.isBaseChange_of_isBaseChange_quotient_comp B.A C.A (adI C ^ 1) ?_ P (Fin d → C.A) _ u' _ hgq ?_
+      refine _root_.GlobalTheory.BSP.isBaseChange_of_isBaseChange_quotient B.A C.A (adI C ^ 1) ?_ P (Fin d → C.A) _ u' _ hgq ?_
       · exact le_trans (Ideal.pow_le_self one_ne_zero) (IsAdicComplete.le_jacobson_bot _)
       · have heq : ((Algebra.linearMap C.A (C.A ⧸ adI C ^ 1)).compLeft (Fin d)).restrictScalars B.A ∘ₗ u' =
             (N₁.subtype.restrictScalars B.A).comp u₁' := by
           refine LinearMap.ext fun x => funext fun i => ?_
           exact congrArg (fun y : ↥N₁ => y.1 i) (LinearMap.congr_fun hg x)
         rw [heq]; exact hb2
-    exact (GlobalTheory.T.isSemilinearBaseChange_iff_isBaseChange B.A C.A P (Fin d → C.A) u u' (fun x => rfl)).2 hV
+    exact (_root_.GlobalTheory.BSP.semiBC_iff_isBaseChange B.A C.A P (Fin d → C.A) u u' (fun x => rfl)).2 hV
   · intro Q p q hpq x
-    have HC := GlobalTheory.T.prismPushoutModAdicPow_universal l _ B C C D h h p₀ q₀ hpo Q p q hpq
+    have HC := _root_.GlobalTheory.BSP.PoUniv.isPO_univ l _ B C C D h h p₀ q₀ hpo Q p q hpq
     obtain ⟨c, ⟨hcp, hcq⟩, -⟩ := HC
     subst hcp hcq
     have hx := (memM _).1 (huM x)

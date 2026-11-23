@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LabelDatum
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraRestrictionTwoBlockCuspidalEqZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MackeyFormulaHarishChandraRestrictionInductionStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraRestrictionTwoBlockCuspidalEqZero
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MackeyFormulaHarishChandraRestrictionInduction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -223,7 +223,7 @@ theorem compl_insert_map_succ {n : ℕ} (J : Finset (Fin n)) :
 theorem collapse_mid {e a b : ℕ} (ρ : Gn g e → ℂ) (hρ : IsCusp ρ) (i c d : ℕ) (h0 : 0 < i) (he : i < e)
     (R : Gn g c → Gn g d → ℂ) (x : Gn g a) (y : Gn g b) :
     hcT i c (fun y₁ y₃ => hcT (e - i) d (fun y₂ y₄ => res i (e - i) ρ y₁ y₂ * R y₃ y₄) b y) a x = 0 := by
-  simp only [GlobalTheory.T.harishChandraRestrictionTwoBlock_cuspidal_eq_zero g e i ρ hρ h0 he, zero_mul, hcT_zero]
+  simp only [_root_.GlobalTheory.GLq.res_cusp_eq_zero g e i ρ hρ h0 he, zero_mul, hcT_zero]
 
 theorem collapse_left {e a b : ℕ} (i c ei d : ℕ) (hi : i = 0) (hca : c = a) (hei : ei = e) (ρ : Gn g e → ℂ)
     {ι : Type} (s : Finset ι) (F G : ι → (n : ℕ) → Gn g n → ℂ) (hF : ∀ j n, IsClass (F j n))
@@ -294,7 +294,7 @@ theorem main : ∀ (g : ℕ) [Fact g.Prime] (L : List (Pc g)) (a b : ℕ), degL 
     have he0 : 0 < e := hρ.1
     rw [hcL_cons]
     unfold hc
-    rw [GlobalTheory.T.mackey_formula_harishChandra_restriction_induction g e (degL L) a b (a + b) hdeg'.symm rfl (fun u v => ρ u * hcL L (degL L) v)
+    rw [_root_.GlobalTheory.GLq.Mackey.mackey_formula g e (degL L) a b (a + b) hdeg'.symm rfl (fun u v => ρ u * hcL L (degL L) v)
       (fun v u w => by simp only [hρc u w]) (fun u v w => by simp only [isClass_hcL L (degL L) v w]) x y]
     simp only [res_const_mul, res_mul_const]
     set S := (Finset.range (e + 1)).filter (fun i => i ≤ a ∧ a - i ≤ degL L) with hS

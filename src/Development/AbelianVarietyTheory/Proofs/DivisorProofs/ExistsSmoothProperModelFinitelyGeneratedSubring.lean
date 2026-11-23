@@ -4,9 +4,10 @@ public import Mathlib.AlgebraicGeometry.Morphisms.Proper
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HasModelOfSpreading
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsProperSpreadsOutStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SchemeModelsSpreadStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothSpreadsOutStatement
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.CubeTheorem.SchemeModels
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsProperSpreadsOut
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SchemeModelsSpread
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothSpreadsOut
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,10 +63,10 @@ theorem exists_smooth_proper_model : ∀ (k : Type) [CommRing k] (X : Scheme.{0}
     ∃ (R : Subring k) (X₀ : Scheme.{0}) (f₀ : X₀ ⟶ Sp R) (π : X ⟶ X₀), Algebra.FiniteType ℤ R ∧ Smooth f₀ ∧
       IsProper f₀ ∧ IsPullback π f f₀ (spMap R.subtype) := by
   intro k _ X f hsm hpr
-  obtain ⟨R₀, _, φ, X₀, f₀, π, hm⟩ := GlobalTheory.T.scheme_models_spread k X f inferInstance inferInstance inferInstance
-  obtain ⟨R₁, _, ψ₁, φ₁, e₁, ft₁, sm₁⟩ := GlobalTheory.T.smooth_spreads_out k R₀ φ X X₀ f f₀ π hm hsm
+  obtain ⟨R₀, _, φ, X₀, f₀, π, hm⟩ := _root_.GlobalTheory.CompanionTheory.NoethApprox.schemeModels k X f inferInstance inferInstance inferInstance
+  obtain ⟨R₁, _, ψ₁, φ₁, e₁, ft₁, sm₁⟩ := _root_.GlobalTheory.CompanionTheory.SmoothSpread.smooth_spreads k R₀ φ X X₀ f f₀ π hm hsm
   have m₁ := GlobalTheory.CompanionTheory.CubeModels.model_refine' e₁ ft₁ hm
-  obtain ⟨R₂, _, ψ₂, φ₂, e₂, ft₂, pr₂⟩ := GlobalTheory.T.isProper_spreads_out k R₁ φ₁ X _ f _ _ m₁ hpr
+  obtain ⟨R₂, _, ψ₂, φ₂, e₂, ft₂, pr₂⟩ := _root_.GlobalTheory.CompanionTheory.SpreadingModels.properSpreads k R₁ φ₁ X _ f _ _ m₁ hpr
   have m₂ := GlobalTheory.CompanionTheory.CubeModels.model_refine' e₂ ft₂ m₁
   have sm₁' : Smooth (pullback.snd f₀ (Spec.map (CommRingCat.ofHom ψ₁))) := sm₁
   have pr₂' : IsProper (pullback.snd (pullback.snd f₀ (Spec.map (CommRingCat.ofHom ψ₁)))

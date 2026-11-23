@@ -1,7 +1,9 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GL1SpectralBounds.CuspOrTwoAlt
-public import Development.AbelianVarietyTheory.BlockTheory.IrreducibleCharacters.CuspidalCharacters
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.RepresentationTheory.Irreducible
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.ImportsAlt
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSplitAtOfIsSplitPl
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPolarizedTwistAbsPow
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.StrongMultiplicityOne.Strong
@@ -59,7 +61,7 @@ private theorem hasSat_of_comp {P : CuspSub E n} (hV : IsDiscrete P.V) {w : Heig
   constructor
   · obtain ⟨f, h0, hfV, hf⟩ := hσ
     obtain ⟨x, hx⟩ := hB.exists_vec
-    have hi : LinearMap.ker f = ⊥ := ((GlobalTheory.IndefiniteRowSideFullHecke.CuspidalCharacters.isIrreducible_iff σ.ρ).1 σ.irred).2 _ (fun g v hv => by
+    have hi : LinearMap.ker f = ⊥ := ((_root_.GlobalTheory.UnimodularLatticeExistence.main σ.ρ).1 σ.irred).2 _ (fun g v hv => by
       rw [LinearMap.mem_ker] at hv ⊢
       rw [hf, hv, map_zero]) |>.resolve_right fun e => h0 (LinearMap.ker_eq_top.1 e)
     have h1 := hx.map (ρ' := (finRep E n).comp (locGL E n w)) f hf

@@ -4,10 +4,10 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.VecPair
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.ContinuousCycMod
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.PoitouTateNineTermTransgressionZeroApply
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CocycleUnramifiedOutsideVanishOnKernel
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PairingEquivariantStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SumInvEqZeroOfUnramifiedCocyclePowStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TameCupProductInvariantUnramifiedHomStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistedRepresentationKillsSmallSubgroupStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PairingEquivariant
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SumInvEqZeroOfUnramifiedCocyclePow
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TameCupProductInvariantUnramifiedHom
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistedRepresentationKillsSmallSubgroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -191,7 +191,7 @@ theorem local_pair (hT : TameLocal) {n : ℕ} (hn : 0 < n) {R W W' : Type} [Comm
       inv _ (Submodule.Quotient.mk (locZ (moveVal X.cc (N.plOm.1 P)) (cupZ hc hB x y))) =
         -((u : ZMod (X.l i ^ n)) * B (x.1 (cConj X γ)) (y.1 (cConj X φ))) := by
   have hA := N.plOm.2 P
-  obtain ⟨u, hu⟩ := GlobalTheory.T.tame_cupProduct_invariant_unramified_hom hT D.host.E N.Om (X.l i) n _ P hn hA hl hq (inv _) (hinv.1 _ _ hA).1 M hM d hd
+  obtain ⟨u, hu⟩ := _root_.GlobalTheory.TamePairing.tame_pairing_hom hT D.host.E N.Om (X.l i) n _ P hn hA hl hq (inv _) (hinv.1 _ _ hA).1 M hM d hd
     ⟨γ, Ine_le_Dec _ hγ⟩ ⟨φ, hφ.1⟩ hγ hdγ hφ
   refine ⟨u, fun x y hy hy' => ?_⟩
   have hμ : ∀ (g : DecV N P) m, muLoc D.host.E (X.l i) n (N.plOm.1 P) g m = m := fun g m => by
@@ -246,8 +246,8 @@ theorem reciprocity : PoitouTateTotallyComplex → TameLocal → ∀ (D : Formal
   haveI : NeZero ((X.l i : ℕ) : N.Om) := ⟨Nat.cast_ne_zero.mpr hl.ne_zero⟩
   haveI : NeZero ((X.l i ^ (nu X i + 1) : ℕ) : N.Om) := ⟨Nat.cast_ne_zero.mpr (pow_ne_zero _ hl.ne_zero)⟩
   obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot N.Om (X.l i ^ (nu X i + 1))
-  obtain ⟨inv, hinv, hsum⟩ := GlobalTheory.T.sum_local_inv_eq_zero_of_unramified_cocycle_pow hPT D.host.E N.Om (X.l i) (nu X i + 1) ζ (show 0 < nu X i + 1 by omega) hζ
-  obtain ⟨hc, hc', hB, hunr⟩ := GlobalTheory.T.pairing_equivariant_alt D N X bkP i s A κ Q ρ hset hK hρ Y Y' β hβ
+  obtain ⟨inv, hinv, hsum⟩ := _root_.GlobalTheory.sum_inv_eq_zero_of_unramified_cocycle_pow hPT D.host.E N.Om (X.l i) (nu X i + 1) ζ (show 0 < nu X i + 1 by omega) hζ
+  obtain ⟨hc, hc', hB, hunr⟩ := _root_.GlobalTheory.NewPrime.PairEquiv.pairing_equivariant D N X bkP i s A κ Q ρ hset hK hρ Y Y' β hβ
   have hS0 : ∀ v, Over p v → v ∉ placesOver D.host.E (X.l i) ∧ v ∉ Spl (X := X) i := fun v hv =>
     ⟨fun e => hp0 v hv (X.twistExcludedPlaces_contains_residueChar i e), fun e => hp0 v hv (spl_subset e)⟩
   have hq : normV p ≡ 1 [MOD X.l i ^ (nu X i + 1)] := by
@@ -263,8 +263,8 @@ theorem reciprocity : PoitouTateTotallyComplex → TameLocal → ∀ (D : Formal
       rw [antiHom_cConj X hanti, show κ g = 1 from hg.2, inv_one]⟩
   have hHt : ∀ g ∈ H, (∀ m, repOn (Tgl i s) κ Y g m = m) ∧ (∀ m, repOn ρ κ⁻¹ Y' g m = m) ∧
       cycMod D.host.E N.Om (X.l i) (nu X i + 1) g = 1 := fun g hg => by
-    have h1 := GlobalTheory.T.twisted_representation_kills_small_subgroup D N X i s hl2 M L z (by omega) hS A κ ρ hK hρ Y g hg.1
-    have h2 := GlobalTheory.T.twisted_representation_kills_small_subgroup D N X i s hl2 M L z (by omega) hS A κ⁻¹ ρ hK hρ Y' g hg.1
+    have h1 := _root_.GlobalTheory.NewPrime.SmallActs.small_acts D N X i s hl2 M L z (by omega) hS A κ ρ hK hρ Y g hg.1
+    have h2 := _root_.GlobalTheory.NewPrime.SmallActs.small_acts D N X i s hl2 M L z (by omega) hS A κ⁻¹ ρ hK hρ Y' g hg.1
     have h3 : κ g = 1 := hg.2
     refine ⟨fun m => ?_, fun m => ?_, h1.2.2⟩
     · rw [h1.1, h3, Units.val_one, one_smul]

@@ -1,16 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowsMeanC
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdaptedNormalFormGivesRealNormalFormStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdaptedNormalFormGivesRealNormalForm
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagToFrameOfNonzeroLevelIsotropicEq
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianStabiliserCovolumeLeStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsFundOne
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianStabiliserCovolumeLe
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsFundConjAndMeasure
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsFundImage
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalFormStabilizerMeasureEqAnyNormalForm
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RealPtsEqImage
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowLatticeTermAdaptedNormalFormStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowLatticeTermAdaptedNormalForm
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StabilizerDilationWeightsDualIsotropicVector
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryHostFieldArithmeticConditionsProofStatement
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryHostFieldArithmeticConditionsProof
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,9 +62,9 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem covTC_holds : CovTC := by
   intro D large₂ X Y u C hStd t N hAd μ K hμ hK
-  obtain ⟨hCM, hPl, hvI, hv1, -, hcard, -, -, -, hnorm, hrk, hg2, -⟩ := GlobalTheory.T.unitaryHostFieldArithmeticConditions D large₂ hStd
-  have hTerm := GlobalTheory.T.rowLattice_term_adaptedNormalForm D large₂ X Y u hStd t N hAd
-  obtain ⟨β, n₁, g, n₂, hF⟩ := GlobalTheory.T.adaptedNormalForm_gives_real_normal_form D large₂ X Y u C hStd t N hAd
+  obtain ⟨hCM, hPl, hvI, hv1, -, hcard, -, -, -, hnorm, hrk, hg2, -⟩ := _root_.GlobalTheory.TypeAsm.hostC D large₂ hStd
+  have hTerm := _root_.GlobalTheory.TermRow.termC_holds D large₂ X Y u hStd t N hAd
+  obtain ⟨β, n₁, g, n₂, hF⟩ := _root_.GlobalTheory.TypeAsm.frameC_holds D large₂ X Y u C hStd t N hAd
   have hι : Nonempty D.what₂.Tau := by
     obtain ⟨w⟩ : Nonempty (InfinitePlace D.host.E) := inferInstance
     exact ⟨(hPl.2 w).choose⟩
@@ -106,7 +107,7 @@ theorem covTC_holds : CovTC := by
   have hF' : ∀ τ, GlobalTheory.DegVol.IsFrameOf N D.R.k (embS D τ) (2 * Formalism.HermitianLatticesTheory.vInv D.host.E) β
       (fun y => n₂ τ *ᵥ phiV C τ y) (zB X (C.Qi τ) u τ) (zB X (C.Qi τ) u τ) (g τ) := fun τ => by
     rw [hvI]; exact (hF τ).2.2.2
-  have hle := GlobalTheory.T.hermitian_stabiliser_covolume_le D.host.E (VS D).V (HV D) hCM D.R.rS N D.R.k D.what₂.Tau (embS D) β
+  have hle := _root_.GlobalTheory.DegVol.Cov.cov_le D.host.E (VS D).V (HV D) hCM D.R.rS N D.R.k D.what₂.Tau (embS D) β
     (fun τ y => n₂ τ *ᵥ phiV C τ y) (fun τ => zB X (C.Qi τ) u τ) (fun τ => zB X (C.Qi τ) u τ) g hPl hrk hF'
     (by rw [hAd.1, hnorm, hvI, hcard]) (by rw [hvI]; exact hv1) (gS D) t.lam _ (by omega) hTerm hFund
   have hμpi : Measure.pi μ = Measure.pi fun τ => (GlobalTheory.Amp.lebR0 D.R.k D.R.rS N.j β).map (Formalism.QuantumDeterminants.conjM (n₂ τ)⁻¹) := by

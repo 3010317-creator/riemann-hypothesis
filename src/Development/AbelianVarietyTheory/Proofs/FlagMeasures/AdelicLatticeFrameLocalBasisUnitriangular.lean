@@ -2,14 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.SelfDualAt
 public import Formalism.LocalToGlobal.HermitianForms.PsiZeroNontrivialCharacter
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicLatticeFrameComponentLocalFrameStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CmFieldSplitCompletelyPlaceStructureStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalFrameIdempotentFactorCasesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalFrameSecondFactorReversedDualBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalIntegersIffSplitAtTypePrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SplitPlaceFirstFactorLocalFrameStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardAdditiveCharacterLocalNeOneSplitPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UniformiserProductTypePrimesStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicLatticeFrameComponentLocalFrame
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CmFieldSplitCompletelyPlaceStructure
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalFrameIdempotentFactorCases
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalFrameSecondFactorReversedDualBasis
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalIntegersIffSplitAtTypePrime
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SplitPlaceFirstFactorLocalFrame
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardAdditiveCharacterLocalNeOneSplitPrime
+public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Completion
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UniformiserProductTypePrimes
 import Formalism.LocalRingCardinality.SpanPowerMembership.LocAtA
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -71,19 +72,19 @@ theorem GlobalTheory.St.G.frame_local_basis_unitriangular : ∀ (F E : Type) [Fi
       simp only [AdFrame.locChi, supSum, lamJ, Finset.univ_eq_empty, Finset.sum_empty, mul_zero, map_zero,
         Finset.range_zero, Finset.prod_empty, mul_one, AddChar.map_zero_eq_one]
       exact Fr.psi_int 0 (zero_mem _)
-  · obtain ⟨-, hsplitv⟩ := GlobalTheory.T.cmField_splitCompletely_place_structure F E cm (gp i) (hpr i) (hspl i)
+  · obtain ⟨-, hsplitv⟩ := _root_.GlobalTheory.St.G.SplitPrime.split_place F E cm (gp i) (hpr i) (hspl i)
     obtain ⟨-, hmax, -⟩ := hsplitv v hv
-    obtain ⟨hmaxg, hgv, q, hq, hgq⟩ := GlobalTheory.T.uniformiser_product_type_primes F gp hpr hne i v hv hmax
-    have hint := GlobalTheory.T.local_integers_iff_split_at_type_prime F E cm gp G hpr hspl i v hv
+    obtain ⟨hmaxg, hgv, q, hq, hgq⟩ := _root_.GlobalTheory.St.G.TypePrimeProduct.uniformiser_prod F gp hpr hne i v hv hmax
+    have hint := _root_.GlobalTheory.St.G.intV_iff_sp F E cm gp G hpr hspl i v hv
     obtain ⟨he1, he2, he3, he4, hb, hbd, hbe, hbde, hdual, hspan⟩ :=
-      GlobalTheory.T.adelicLatticeFrame_component_localFrame F E cm.sig n J L (gp 0 * gp 1) n Fr v
-    have hcase := GlobalTheory.T.local_frame_idempotent_factor_cases F E cm.sig n v (G.sp i v hv) (G.sp_sig i v hv) (G.sp_alg i v hv)
+      _root_.GlobalTheory.St.G.frame_component_local F E cm.sig n J L (gp 0 * gp 1) n Fr v
+    have hcase := _root_.GlobalTheory.St.G.local_idempotent_cases F E cm.sig n v (G.sp i v hv) (G.sp_sig i v hv) (G.sp_alg i v hv)
       (gp 0 * gp 1) hgv L hlat hpos _ he1 he2 he4
     have hne0 : prV (E := E) v Fr.eps ≠ 0 := by
       intro h0
       rw [h0, map_zero] at hcase
       rcases hcase with h | h <;> simp [Prod.ext_iff] at h
-    obtain ⟨a, ha, hpa⟩ := GlobalTheory.T.standardAdditiveCharacter_local_ne_one_splitPrime F E cm Fr.psi Fr.psi_add Fr.psi_int Fr.psi_rat (gp i) (hpr i) (hspl i)
+    obtain ⟨a, ha, hpa⟩ := _root_.GlobalTheory.St.G.psi_local_ne_one F E cm Fr.psi Fr.psi_add Fr.psi_int Fr.psi_rat (gp i) (hpr i) (hspl i)
       v hv _ he3 he1 hne0
     have hnt : ∃ a ∈ intV E v, Fr.psi (Formalism.UG.P.afsplitIE v (algebraMap F (E ⊗[F] v.adicCompletion F)
         (((gp 0 * gp 1 : ℕ) : F)⁻¹) * (prV (E := E) v Fr.eps * a))) ≠ 1 := by
@@ -102,5 +103,5 @@ theorem GlobalTheory.St.G.frame_local_basis_unitriangular : ∀ (F E : Type) [Fi
       rw [key]
       exact hpa
     rcases hcase with hc | hc
-    · exact GlobalTheory.T.splitPlace_firstFactor_localFrame F E cm n J hJ hdet t v (G.sp i v hv) (G.sp_sig i v hv) (G.sp_alg i v hv) hint (gp 0 * gp 1) hmaxg L hlat _ hc _ _ hb hbd hbe hbde hdual hspan Fr.psi Fr.psi_add Fr.psi_int hnt
-    · exact GlobalTheory.T.localFrame_secondFactor_reversedDualBasis F E cm n J hJ hdet t v (G.sp i v hv) (G.sp_sig i v hv) (G.sp_alg i v hv) hint (gp 0 * gp 1) hmaxg L hlat _ hc _ _ hb hbd hbe hbde hdual hspan Fr.psi Fr.psi_add Fr.psi_int hnt
+    · exact _root_.GlobalTheory.St.G.FirstFactorFrame.local_frame_first_factor F E cm n J hJ hdet t v (G.sp i v hv) (G.sp_sig i v hv) (G.sp_alg i v hv) hint (gp 0 * gp 1) hmaxg L hlat _ hc _ _ hb hbd hbe hbde hdual hspan Fr.psi Fr.psi_add Fr.psi_int hnt
+    · exact _root_.GlobalTheory.St.G.local_frame_second_factor F E cm n J hJ hdet t v (G.sp i v hv) (G.sp_sig i v hv) (G.sp_alg i v hv) hint (gp 0 * gp 1) hmaxg L hlat _ hc _ _ hb hbd hbe hbde hdual hspan Fr.psi Fr.psi_add Fr.psi_int hnt

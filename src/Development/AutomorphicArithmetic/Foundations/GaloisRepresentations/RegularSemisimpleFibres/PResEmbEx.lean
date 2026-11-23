@@ -1,7 +1,9 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.ResEmbCompat
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.ExistsTeichmullerMapAlgebraicClosureFiniteFieldStatement
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.ExistsTeichmullerMapAlgebraicClosureFiniteField
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ResAlgClosed
 public import Development.DiscreteGroups.GlobalIrreducibility.DzGalKappa
 import Mathlib.Algebra.Order.Floor.Extended
@@ -130,6 +132,6 @@ theorem UpperTheory.Gal.InertialTypesAlt.resEmbEx :
   have hs := res_surj hΩ A p (e : AlgebraicClosure 𝓀[v.adicCompletion E] →+* IsLocalRing.ResidueField A)
   let e' := RingEquiv.ofBijective (e : AlgebraicClosure 𝓀[v.adicCompletion E] →+* IsLocalRing.ResidueField A)
     ⟨RingHom.injective _, hs⟩
-  obtain ⟨θ, hθ⟩ := GlobalTheory.T.exists_teichmuller_map_algebraicClosure_finiteField 𝓀[v.adicCompletion E]
+  obtain ⟨θ, hθ⟩ := _root_.GlobalTheory.CuspGL.TeichEmb.exists_teichmuller 𝓀[v.adicCompletion E]
   refine ⟨⟨_, hres⟩, θ.comp (e'.symm : IsLocalRing.ResidueField A →* _), fun x y hx hy h => ?_⟩
   exact e'.symm.injective (hθ _ _ (by simpa using hx) (by simpa using hy) h)

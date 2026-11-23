@@ -2,16 +2,20 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsRealFam
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AddCharSymplecticFinitePartRestEqOne
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselThetaContractionExtendByZeroVacuumSmoothStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapPreservesVacuumProofStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HermitianAdjointSymplecticActionThetaHeisenberg
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CombAtSingleZero
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsBiSmooth
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsQuasiFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselThetaContractionExtendByZeroVacuumSmooth
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.SmallPair
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapPreservesVacuumProof
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastSeeSawDatumIsTwoVariableThetaFunction
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastSeeSawDatumOfVacuaIsVacuumBothStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastSeeSawDatumOfVacuaIsVacuumBoth
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawUnfoldedVacuaOfShapeProof
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualLatticesConsecutiveStep
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LastRowLatticesGoodPositionLargeDepthStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealLineOfPeriodsOnLine
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TopOrthAtEmb
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HermitianAdjointSymplecticActionThetaHeisenberg
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealLineOfPeriodsOnLine
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -151,7 +155,7 @@ theorem vacReal_of_shape (hsh : ShapeAt ch) : VacReal ch := by
   obtain ⟨c, hc⟩ := hje
   have hψ : IsStdChar D ch.W.ψ (-1) := ch.W.ψ_std
   obtain ⟨x₀⟩ := GlobalTheory.SeeSaw.VacShape.nonempty_pl D
-  have hFV := GlobalTheory.T.flatMapPreservesVacuum_proof D ch.W.ψ (fun _ => True)
+  have hFV := _root_.GlobalTheory.FinPl.FlatVacuum.flatVac D ch.W.ψ (fun _ => True)
   have hbf := base_fin ch hb
   have hpi : ∀ k, p k ∈ GinfC _ := hp.1
   unfold conAt
@@ -177,7 +181,7 @@ theorem vacReal_of_shape (hsh : ShapeAt ch) : VacReal ch := by
       (ch.G.Λ (.grid D.R.m D.R.m)) hg0.sdW hg0.sdW₀ (sd_grid ch _ le_rfl) (fun x _ => (hs x).2.2.1.monoW) _ v₃
     refine real_of ?_ ?_
     · exact GlobalTheory.LastBiTheta.isBiTheta_lastBi D _ hψ _ _ _ _ _ _ _ _ _ _ GlobalTheory.RowChain.LastSeeSawStep.lastTau_gram _ _ f₁.1 f₂.1
-    · exact GlobalTheory.T.lastSeeSawDatum_of_vacua_is_vacuum_both D _ hψ _ _ _ _ _ _ _ _ _ _ rfl rfl GlobalTheory.RowChain.LastSeeSawStep.lastTau_gram (fun _ => True) (N₀ j)
+    · exact _root_.GlobalTheory.LastVacPf.lastVac D _ hψ _ _ _ _ _ _ _ _ _ _ rfl rfl GlobalTheory.RowChain.LastSeeSawStep.lastTau_gram (fun _ => True) (N₀ j)
         (ch.G.Λ (.top j)) (ch.G.Λ (.top (j + 1))) (ch.G.Λ (.top (j + 1 + 1))) (ch.G.Λ (.grid D.R.m D.R.m)) hg0.sdV₀
         (sd_top ch _ (by omega)) hg0.sdW₀ (sd_top ch _ (by omega)) (sd_grid ch _ le_rfl)
         (fun x _ => ⟨(hs x).2.2.1.tame, LL j, LZ, (hs x).1, hLZ, (hs x).2.1, orth_cast ch (hor x) _, (hs x).2.2.2.2.1 rfl⟩)
@@ -203,7 +207,7 @@ theorem vacReal_of_shape (hsh : ShapeAt ch) : VacReal ch := by
       (rowJac ch.G (j + 1) (by omega) ((D.R.m - 4 - j) / 2 + 1) (by omega))
       (besDecAt ch.G (j + 1 + 1) ((D.R.m - 4 - j) / 2) (by omega))) (N (j + 1)) (ch.G.Λ (.top (j + 1))) (N (j + 1 + 1))
       (N₀ (j + 1 + 1)) (fun x _ => had x) _ v₂
-    have hCC := GlobalTheory.T.besselThetaContraction_extendByZero_vacuum_smooth D _ hψ _ _ _ _
+    have hCC := _root_.GlobalTheory.ContrComb.contr_comb_main D _ hψ _ _ _ _
       (linkAt hM j _ h1 (GlobalTheory.Unf.Inhab.nonempty_volN _).some (by omega) (GlobalTheory.Unf.Inhab.nonempty_volN _).some)
       (ch.G.V (.top (j + 1))) ((GlobalTheory.Unf.Inhab.nonempty_volM D _ _).some) _ _ f₁.1 f₂.1
     exact real_of hCC.1 (hCC.2.2 (fun _ => True) (ch.G.Λ (.top j)) (ch.G.Λ (.top (j + 1))) (ch.G.Λ (.top (j + 1 + 1)))

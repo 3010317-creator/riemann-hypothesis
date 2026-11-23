@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.EeProd
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IntegralLocallyConstCochainModPow
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsReparametrizationByTowerParameterStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsReparametrizationByTowerParameter
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KummerCocycleTwistedCoboundary
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -228,7 +228,7 @@ theorem h1_geometric_level_coboundary : ∀ (p : ℕ) [Fact p.Prime], p ≠ 2 �
   have hkum := GlobalTheory.K5.TopGeo.top p hp2
   obtain ⟨c, hc⟩ := hkum
   refine ⟨c, fun Ω _ _ hΩ T L n _ lq hlq => ?_⟩
-  obtain ⟨ψ, hψ⟩ := GlobalTheory.T.exists_reparametrizationByTowerParameter p Ω hΩ T L
+  obtain ⟨ψ, hψ⟩ := _root_.GlobalTheory.Glue.exists_isReb p Ω hΩ T L
   have hk : IsKum (tw hψ) n (Ggeo p (RebT Ω ψ)) ((tw hψ).qq n) (fun g => lq (down hψ g)) :=
     fun g hg => hlq (down hψ g) (mem_H hψ hg)
   obtain ⟨h1, h2⟩ := hc (RebT Ω ψ) (isClo hΩ hψ) (tw hψ) n (fun _ => 0) _ hk

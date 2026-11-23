@@ -3,14 +3,14 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FromBlocksMem
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
 public import Development.AbelianVarietyTheory.Definitions.Divisors.AdelicAdmissibleSmul
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledSiegelParabolicDiagonalActionIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTranslationInvariantDoubledFormConjProductStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledSiegelParabolicDiagonalActionIntegral
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTranslationInvariantDoubledFormConjProduct
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductFunctionOnSumCoordsMemAdelicSchwartzSpace
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StarMemAdelicSchwartzSpaceNumberField
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.DoubleLineEigenspaceDecompositionSplit
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.SplitDetCharacterTrivial
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.SplitDetModulusNormFormula
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductFunctionOnSumCoordsMemAdelicSchwartzSpace
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StarMemAdelicSchwartzSpaceNumberField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -82,10 +82,10 @@ theorem parabolic_derivative_fixes_split_vector : _root_.GlobalTheory.FunPr.Thet
     simp only [hΨdef, tens, x, GlobalTheory.LatVac.evFin_liftV, hRx, Pi.zero_apply] at h1
     exact mul_ne_zero hy hR0 h1
   obtain ⟨c, hc⟩ := _root_.GlobalTheory.SplitDblLine.doubleLine_eigenfunction_split hP F E σ B a a' G X om om' hTr v hsp hT hψ h2 hvac dd omd hdc hws R hRv p hp.1
-  obtain ⟨l, hl, hinv, hl0⟩ := GlobalTheory.T.exists_translationInvariant_doubledForm_conjProduct_ne_zero F _ Ψ hΨ hΨne
+  obtain ⟨l, hl, hinv, hl0⟩ := _root_.GlobalTheory.DblDiagForm.exists_form F _ Ψ hΨ hΨne
   obtain ⟨t, ht⟩ := hp.2
   have hS := hws.2.2 l hl (fun z φ hφ => hinv φ hφ _ _ (GlobalTheory.WeilM.SiegelModel.rho_diag B.ψ hdc z φ)) p t ht _ hΦ
-  have htp := GlobalTheory.T.doubledSiegelParabolic_diagonal_action_integral F E σ G.W v p hp t ht
+  have htp := _root_.GlobalTheory.InertDbl.parD_diag_action F E σ G.W v p hp t ht
   have ha := _root_.GlobalTheory.T.split_det_character_trivial hP F E σ B a a' G X om om' hTr v hsp hT hψ h2 hvac t htp
   have hb := _root_.GlobalTheory.SplitDetModule.split_det_modulus_eq_norm_det hP F E σ B a a' G X om om' hTr v hsp hT hψ h2 hvac t htp
   rw [ha, hb] at hS

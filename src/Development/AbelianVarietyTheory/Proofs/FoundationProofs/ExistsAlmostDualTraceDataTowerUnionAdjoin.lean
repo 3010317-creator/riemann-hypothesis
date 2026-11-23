@@ -3,9 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Foundations.CosetTrace
 public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsTrDataGaussianIntOne
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CosetRepresentativeTraceFixedProperties
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsValuationAlmostEtaleTowerFixerStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemTowerUnionAdjoinOfGaloisFixedStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SumMulCosetRepresentativeTraceEqStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NotCoboundaryConstantOne
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsValuationAlmostEtaleTowerFixer
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemTowerUnionAdjoinOfGaloisFixed
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SumMulCosetRepresentativeTraceEq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -148,7 +149,7 @@ theorem exists_trData_towerAlg : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field
   intro p _ Ω _ _ hp2 hclo T F
   classical
   have hpcoe : ((p : integralClosure (O0 p) Ω) : Ω) = p := map_natCast (integralClosure (O0 p) Ω).val p
-  obtain ⟨v, hvint, hvinv, hp0, hp1, hS⟩ := GlobalTheory.T.exists_valuation_almostEtale_towerFixer p Ω hp2 hclo T
+  obtain ⟨v, hvint, hvinv, hp0, hp1, hS⟩ := _root_.GlobalTheory.ValuationAlmostSeparation.exists_valuation_almostSep p Ω hp2 hclo T
   obtain ⟨U, -, hUfin, hUfix, hUsep⟩ := hS (F.image Subtype.val)
   obtain ⟨n, a, b, c, hsep, hc⟩ := hUsep (v p) hp1
   haveI := hUfin
@@ -191,7 +192,7 @@ theorem exists_trData_towerAlg : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field
       right := ?_
       sum := ?_ }
   · intro x hx
-    apply GlobalTheory.T.mem_towerUnionAdjoin_of_galois_fixed p Ω hclo T
+    apply _root_.GlobalTheory.K5.mem_towerAlg_of_fixed p Ω hclo T
     intro g hg
     exact (cosetTrace_fixed_props Ω v _ hvinv' U _ hx).1 ⟨g, hg⟩
   · intro x _ y _
@@ -204,11 +205,11 @@ theorem exists_trData_towerAlg : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field
   · intro x hx
     apply Subtype.ext
     simp only [Subalgebra.coe_mul, hpcoe, AddSubmonoidClass.coe_finsetSum, htr]
-    exact GlobalTheory.T.sum_mul_cosetRepresentativeTrace_eq Ω v _ U n _ _ _ hsep' _ hx
+    exact _root_.GlobalTheory.AlmostEt.sum_mul_cosetTrace_eq Ω v _ U n _ _ _ hsep' _ hx
   · intro x hx
     apply Subtype.ext
     simp only [Subalgebra.coe_mul, hpcoe, AddSubmonoidClass.coe_finsetSum, htr]
-    exact GlobalTheory.T.sum_mul_cosetRepresentativeTrace_eq Ω v _ U n _ _ _ hsw _ hx
+    exact _root_.GlobalTheory.AlmostEt.sum_mul_cosetTrace_eq Ω v _ U n _ _ _ hsw _ hx
   · apply Subtype.ext
     simp only [Subalgebra.coe_mul, hpcoe, AddSubmonoidClass.coe_finsetSum]
     simpa using hsep'.sum_in 1 (one_mem _)

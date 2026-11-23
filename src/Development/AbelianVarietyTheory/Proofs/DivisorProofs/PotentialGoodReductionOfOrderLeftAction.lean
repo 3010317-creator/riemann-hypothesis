@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.SemistableFin
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PotentialGoodReductionOfDivisionAlgebraLeftActioStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PotentialGoodReductionOfDivisionAlgebraLeftActio
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -146,7 +146,7 @@ theorem potModel_of_intDivOrder_leftAction : ∀ (V K : Type) [CommRing V] [IsDo
     rw [hz]
     exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨x, rfl⟩)
   have hrank : Module.finrank ℚ (ℚ ⊗[ℤ] O) = Module.finrank ℤ O := Module.finrank_baseChange
-  exact GlobalTheory.T.potentialGoodReduction_of_divisionAlgebra_leftAction V K A g hA hsm O act hmon h1 hmul hadd (ℚ ⊗[ℤ] O)
+  exact _root_.GlobalTheory.potModel_of_divAlg_leftAction V K A g hA hsm O act hmon h1 hmul hadd (ℚ ⊗[ℤ] O)
     (Algebra.TensorProduct.includeRight (R := ℤ) (A := ℚ) (B := O)).toRingHom
     (DivOrder.isUnit_of_ne_zero O hdiv) hinj hspan (hrank ▸ hg)
 

@@ -2,9 +2,10 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsLatIntVec
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermOf
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CmConjugationPropertiesStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LamIsLatticeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MemLatticeOfDualPairingStatement
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CmConjugationProperties
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LamIsLattice
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MemLatticeOfDualPairing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -107,7 +108,7 @@ theorem sO_mem_tor (σ : E →ₐ[F] E) (hinv : ∀ x, σ (σ x) = x)
     (ha : ∀ y ∈ Kc c, (a : E) * ∑ j, σ (u j) * (y j : E) ∈ (1 : Submodule (𝓞 E) E)) :
     sO σ a ∈ tor c u := by
   have hmem : (sO σ a) • u ∈ lam c := by
-    refine GlobalTheory.T.mem_lattice_of_dual_pairing E m (lam c) (GlobalTheory.T.lam_is_lattice E m c) _ ?_
+    refine _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.LatticeDualityAlt.mem_of_dot_integral E m (lam c) (_root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.isLat_lam_of_matrix E m c) _ ?_
     intro a' hL
 
     have hstd : ∀ j, (Pi.single j (1 : E) : Fin m → E) ∈ intVec E m := by
@@ -170,7 +171,7 @@ open GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.DualCover in
 theorem GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.dual_cover : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (m : ℕ) (c : Matrix (Fin m) (Fin m) E), (∀ a b, σ (c b a) = c a b) → ∀ (u : Fin m → E) (b : E), (∀ t ∈ tor c u, σ (t : E) * b ∈ (1 : Submodule (𝓞 E) E)) → ∃ y : Fin m → 𝓞 E, y ∈ Kc c ∧ b - ∑ j, σ (u j) * (y j : E) ∈ (1 : Submodule (𝓞 E) E) := by
   open GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.DualCover in
   intro F E _ _ _ _ _ σ hcm m c hc u b hb
-  obtain ⟨hinv, -, hsO, -⟩ := GlobalTheory.T.cm_conjugation_properties F E σ hcm
+  obtain ⟨hinv, -, hsO, -⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.isCMExt_conj_fixed_integers F E σ hcm
   set w : Fin m → E := fun j => σ (u j) with hw
   let B : FractionalIdeal (nonZeroDivisors (𝓞 E)) E :=
     ⟨bMod c w, FractionalIdeal.isFractional_of_fg (bMod_fg c w)⟩

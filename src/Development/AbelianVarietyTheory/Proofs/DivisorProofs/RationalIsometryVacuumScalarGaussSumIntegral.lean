@@ -2,18 +2,21 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsHalfIdem
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ApplyAddInfRat
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInverseChart
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FiniteRationalPointsCompletedLattice
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsFinWeil
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussianPoincareSeriesThetaVacuumStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnfoldPoincareSeriesLatticeFourier
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInverseChart
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HomSymplecticHalfFormAlgebraicLawsContinuous
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RationalPointsFinitePartSelfDualLatticeIff
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealSymplecticFormAlternatingInvariantDefinite
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ScaledFiniteMatrixMemLattice
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.StdCharacterHalfSymplecticFormRealPoint
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsFinWeil
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussianPoincareSeriesThetaVacuumStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexNeZeroOfFinite
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticFormUnitaryPairActionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnfoldPoincareSeriesLatticeFourierStatement
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsGoodIndexNormalizationNegativeInert
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SumOpTransversal
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.SpanRealProjectionRationalPointsEqTop
@@ -428,7 +431,7 @@ theorem gauss_mul_integral : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (hψ 
   haveI : (volume : Measure (Fin S.rank → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   haveI : (volume : Measure (Fin T.rank → Fin S.rank → ℂ)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
   haveI : (volume : Measure (RW T S)).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  have key := GlobalTheory.T.unfold_poincareSeries_lattice_fourier (RW T S) volume _ (infRat S T) (infRat_injective S T) C
+  have key := _root_.GlobalTheory.PoincareUnfold.unfold_poincare_fourier (RW T S) volume _ (infRat S T) (infRat_injective S T) C
     (fun R => (finite_latQ dS dT R).subset fun c hc => ⟨hc.1.1, hc.2⟩) ?_ n t (gaussQ ψ S T ΛS ΛT w a b) ?_ ?_ ?_ _ hF
     (fun y => κ * ∑ i, coefQ ψ S T sS sT ΛS ΛT w (u i) y) (fun y => -omO S T (infRat S T y)) ?_ ?_ ?_ ?_ ?_
   · obtain ⟨r, hr, e⟩ := key

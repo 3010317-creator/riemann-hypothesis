@@ -1,11 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalizationFreeStageTrueGroupColumnChoiceStep
+public import Formalism.GaloisCohomology.Statement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLocalGaloisDataShaLengthEq
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCentralIdempotentOfGoodSeriesIdempotent
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsTameGenAtOfValuationSubring
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCharpoly
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsExponentThetaData
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLocalGaloisDataShaLengthEqStatement
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsTypesIdempotentCoefficients
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -244,7 +245,7 @@ theorem exists_bare_over {K : Ctx} (P : Pre2 K w) {rows₁ : Rows.Data B.R} (Y :
       HEq N.nd.PlG Y.PlG ∧ HEq N.naut.plGw A₁.plGw := by
   letI := P.z.alg
   obtain ⟨ldat₀, hsha₀⟩ := P.q.sha
-  have hD := fun (p : ℕ) [Fact p.Prime] => GlobalTheory.T.exists_localGaloisData_shaLength_eq (Ω' := Y.Om) p (ldat₀ p)
+  have hD := fun (p : ℕ) [Fact p.Prime] => _root_.GlobalTheory.ShaTransport.exists_lData_shaLen_eq (Ω' := Y.Om) p (ldat₀ p)
   let ldat : ∀ (p : ℕ) [Fact p.Prime], Formalism.GaloisCohomology.LData B.host.E Y.Om p := fun p _ => (hD p).choose
   have hsha : ∀ (p : ℕ) [Fact p.Prime] (e : ℕ), 0 < e → e < B.R.t → ∀ n : ℕ,
       Formalism.GaloisCohomology.shaLen (ldat p) (e : ℤ) = (n : ℕ∞) → (P.q.W (fun _ _ => 0) fun _ _ => le_rfl).shaLen p e = (n : ℚ) :=

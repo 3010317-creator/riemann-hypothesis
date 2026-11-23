@@ -3,7 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsWildInertiaCyclotomicElement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CharacterValuesInjectiveLength
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CycZBridge
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsWildInertiaGeneratingCyclotomicValueStatement
+public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
+public import Formalism.SharpRestriction.LevelLetterCocycles.QuotientHomNonvanishingBound
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsWildInertiaGeneratingCyclotomicValue
 import Mathlib.Algebra.AffineMonoid.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -75,7 +77,7 @@ theorem placesOver_nonempty (E : Type) [Field E] [NumberField E] (p : ℕ) (hp :
 theorem exists_wild_inertia_cyclotomic_generator (D : D7) (i : D.nd.Loc) : ∃ g0, IsWildInertiaCyclotomicElement D.nd i g0 := by
   by_cases ht : ∃ k, D.nd.l i = D.host.g k
   · obtain ⟨k, hk⟩ := ht
-    obtain ⟨g0, h1, h2, h3⟩ := GlobalTheory.T.exists_wildInertia_generating_cyclotomicValue D i k hk
+    obtain ⟨g0, h1, h2, h3⟩ := _root_.GlobalTheory.WildCycGen.main D i k hk
     exact ⟨g0, ⟨h1, h2⟩, fun _ => h3⟩
   · obtain ⟨w, hw⟩ := placesOver_nonempty D.host.E (D.nd.l i) (D.nd.lPrime i).out
     obtain ⟨g, hg, hc⟩ := GlobalTheory.EpsInertia.epsAll D i w hw 1

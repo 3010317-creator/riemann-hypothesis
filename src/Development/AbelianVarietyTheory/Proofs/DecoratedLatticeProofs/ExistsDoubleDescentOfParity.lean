@@ -3,18 +3,23 @@ module
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsOneComb
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ExistsDblClosed
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ExistsDoubleDescentRanksOneThreeFive
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SmulEqZeroOfInf
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExchangeToPositionOneUniformInLevelStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsHeisenbergCombinationSplitPlaceDatumStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ToOneSucc
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExchangeToPositionOneUniformInLevel
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.FramePositiveSum
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ExistsUnitarySupportedAtPlaceOfMulEqIdem
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.JointSmooth
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsHeisenbergCombinationSplitPlaceDatum
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsInjectiveModel
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalSchrodingerModelUniqTransportExistsStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalSchrodingerModelUniqTransportExists
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalZetaIntegralOpenSubgroup
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PlaceIdempotentActsOnSupportedAndOffStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilCharacterSplitPlaceExistsContinuousNontrivia
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PlaceIdempotentActsOnSupportedAndOff
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsThetaFunNeZero
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsClosedEmbeddingAffPtUncurry
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilCharacterSplitPlaceExistsContinuousNontrivia
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasWeil
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -141,7 +146,7 @@ theorem exists_fixed_vacSet {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D 
 theorem exists_model_of_fixed {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar D ψ (-1)) (p : Place D k)
     (FS : GlobalTheory.LocMod.Frame k S.rank Y') (FT : GlobalTheory.LocMod.Frame k T.rank Y) {f : WO S T → ℂ} (hf : IsThetaFunO ψ S T f)
     (h : ∀ u ∈ vacSet ψ p FS FT, heisO ψ S T u f = f) : ∃ Tm O, p.IsModel ψ FS FT Tm ∧ IsOne O ∧ Tm O = f := by
-  obtain ⟨Tm, h1, h2⟩ := (GlobalTheory.T.localSchrodingerModel_uniq_transport_exists D k p Y Y' S T FS FT ψ hψ).2.2 f hf (fun x hx => h _ (Or.inl ⟨x, hx, rfl⟩))
+  obtain ⟨Tm, h1, h2⟩ := (_root_.GlobalTheory.LocModU.localModel_uniq_transport_exist D k p Y Y' S T FS FT ψ hψ).2.2 f hf (fun x hx => h _ (Or.inl ⟨x, hx, rfl⟩))
     fun y hy hy' => h _ (Or.inr ⟨hy, hy'⟩)
   obtain ⟨O, hO, -⟩ := PinModel.exists_isOne (k := k) (Y := Y) (Y' := Y')
   exact ⟨Tm, O, h1, hO, h2 O hO⟩
@@ -154,9 +159,9 @@ theorem idem_orth {k' : Type} [Field k'] [ValuativeRel k'] [TopologicalSpace k']
   obtain ⟨he, hec, -⟩ := q'.split
   have he' : cA D q'.e * cA D q'.e = cA D q'.e := by rw [← map_mul, he]
   have h1 : q'.e + cA D q'.e ∈ GlobalTheory.FinPl.idAt D (· = q'.v) :=
-    ((GlobalTheory.T.placeIdempotent_acts_on_supportedAndOff D q'.v ε' hε').1 _).2 (by rw [← hs']; linear_combination he + he' + 2 * hec)
+    ((_root_.GlobalTheory.FinPl.placeIdem_acts D q'.v ε' hε').1 _).2 (by rw [← hs']; linear_combination he + he' + 2 * hec)
   rw [map_add (f := _), cA_cA, add_comm, hs]
-  refine (GlobalTheory.T.placeIdempotent_acts_on_supportedAndOff D q.v ε hε).2 _ ⟨h1.1, ?_⟩
+  refine (_root_.GlobalTheory.FinPl.placeIdem_acts D q.v ε hε).2 _ ⟨h1.1, ?_⟩
   have h2 := h1.2
   simp only [SetLike.mem_coe, Submodule.mem_iInf] at h2 ⊢
   exact fun w => h2 ⟨w.1, fun e => w.2 fun e' => h (e'.symm.trans e)⟩
@@ -229,7 +234,7 @@ theorem exists_isOneComb {ψ : AddChar k Circle} (hψ : HasConductor ψ 1) {ν :
     (hP : P ≤ c) (L : Level (GL (n ⊕ Fin c) k)) (hL : IsOpen (L.J : Set (GL (n ⊕ Fin c) k))) (α : GL (n ⊕ Fin c) k) :
     ∃ e, IsOneComb ψ ν P L α e := by
   obtain ⟨U, hU, h⟩ := exists_open_fix L hL α
-  obtain ⟨e, e', he⟩ := GlobalTheory.T.exchangeToPositionOne_uniform_in_level k n c P h1 hP ψ hψ.continuous hψ.ne_one ν (isSelfDual_of_isUnitVol ν hψ hν) U hU
+  obtain ⟨e, e', he⟩ := _root_.GlobalTheory.PosOne.toOne_uniform k n c P h1 hP ψ hψ.continuous hψ.ne_one ν (isSelfDual_of_isUnitVol ν hψ hν) U hU
   refine ⟨e.mapDomain (· * α), fun A _ _ σ hσ l hl v hv => ?_⟩
   rw [(he A σ hσ l _ hl (h A σ hσ v hv)).1, GlobalTheory.PosOne.comb, GlobalTheory.PosOne.comb,
     Finsupp.sum_mapDomain_index (by simp) (fun _ _ _ => add_mul _ _ _)]
@@ -280,7 +285,7 @@ theorem exists_isCombAt {D : D7} {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdCh
     (FS : GlobalTheory.LocMod.Frame k S.rank n') (FT : GlobalTheory.LocMod.Frame k T.rank n) {Ξ : Matrix n n' k → ℂ} (hΞ : Ξ ∈ SB (Matrix n n' k)) :
     ∃ d, p.IsCombAt ψ FS FT d Ξ := by
   obtain ⟨O, hO, z⟩ := PinModel.exists_isOne (k := k) (Y := n) (Y' := n')
-  obtain ⟨d, h1, h2⟩ := GlobalTheory.T.exists_heisenberg_combination_split_place_datum D k p n n' S T FS FT ψ hψ O ⟨Ξ, hΞ⟩ (by rintro rfl; exact zero_ne_one z)
+  obtain ⟨d, h1, h2⟩ := _root_.GlobalTheory.LocComb.exists_comb D k p n n' S T FS FT ψ hψ O ⟨Ξ, hΞ⟩ (by rintro rfl; exact zero_ne_one z)
   refine ⟨d, h1, fun Tm hT Φ₀ Φ h₀ h => ?_⟩
   rw [show Φ = ⟨Ξ, hΞ⟩ from Subtype.ext h, show Φ₀ = O from Subtype.ext (h₀.trans hO.symm)]
   exact h2 Tm hT

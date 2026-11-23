@@ -3,11 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.MulSmulIdemMem
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.ComponentMassSum
 public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComponentRanksDegreesAddWithMassesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComponentsPeterssonOrthogonalAndMassesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspFormSupLatticeDegreeTwistLowerBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspFormsSupLatticeSplitOverComponentsStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistingSectionPreservesHermitianLatticesRanksStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComponentRanksDegreesAddWithMasses
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComponentsPeterssonOrthogonalAndMasses
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspFormSupLatticeDegreeTwistLowerBound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspFormsSupLatticeSplitOverComponents
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistingSectionPreservesHermitianLatticesRanks
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,11 +56,11 @@ theorem degW_twist : ∀ (D : D7) (H : ReciprocityTheory.ChartRestriction.G.Geo.
   intro D H Dw l Xo c r U V dict hC G₀ G s B τ hev hB hint hτ hG
   have hU : ∀ σ, GoodEmb c σ → IsUnf (U σ) := fun σ hσ => (hC.2 σ hσ).1
   have hA : ∀ G' : WTZ D.host.E, Adds U V dict G' := fun G' =>
-    GlobalTheory.T.component_ranks_degrees_add_with_masses D H Dw l Xo c r U V dict G' (GlobalTheory.T.cuspForms_supLattice_split_over_components D H Dw l Xo c r U V dict hU G')
-      ((GlobalTheory.T.components_peterssonOrthogonal_and_masses D H Dw l Xo c r U V dict hC G').1)
+    _root_.GlobalTheory.CompAdds.adds D H Dw l Xo c r U V dict G' (_root_.GlobalTheory.CuspSplit.splits D H Dw l Xo c r U V dict hU G')
+      ((_root_.GlobalTheory.CompPetOrth.orthogonal_mass_idem D H Dw l Xo c r U V dict hC G').1)
   have hOn : ∀ Z, GoodOn U (xiR D) V dict Z G := (hA G).1.1 hG
   have hgr : ∀ Z, GoodOn U (xiR D) V dict Z (G + G₀) ∧ rankOn U Z (G + G₀) = rankOn U Z G := fun Z =>
-    GlobalTheory.T.twistingSection_preserves_hermitianLattices_ranks D.host.E H Dw l Xo c r U (xiR D) D V dict Z G₀ (s Z) G hU hev (hOn Z)
+    _root_.GlobalTheory.FlatTw.Good.twist_goodOn D.host.E H Dw l Xo c r U (xiR D) D V dict Z G₀ (s Z) G hU hev (hOn Z)
   have hG' : GoodW U (xiR D) V dict (G + G₀) := (hA (G + G₀)).1.2 (fun Z => (hgr Z).1)
   obtain ⟨-, hr1, -, -, hd1⟩ := (hA G).2 hG
   obtain ⟨-, hr2, -, -, hd2⟩ := (hA (G + G₀)).2 hG'
@@ -71,7 +71,7 @@ theorem degW_twist : ∀ (D : D7) (H : ReciprocityTheory.ChartRestriction.G.Geo.
   letI := Fintype.ofFinite (Comp Xo c)
   have hZ : ∀ Z, degOn U (xiR D) V dict Z G + (rankOn U Z G : ℝ) * (τ - logSum B) ≤
       degOn U (xiR D) V dict Z (G + G₀) := fun Z => by
-    have h1 := GlobalTheory.T.cuspForm_supLattice_degree_twist_lower_bound D.host.E H Dw l Xo c r U (xiR D) D V dict Z G₀ (s Z) G B hU hev hB (hint Z) (hOn Z)
+    have h1 := _root_.GlobalTheory.FlatTw.degOn_add_rank_mul_degLo_le D.host.E H Dw l Xo c r U (xiR D) D V dict Z G₀ (s Z) G B hU hev hB (hint Z) (hOn Z)
     have h2 : (rankOn U Z G : ℝ) * (τ - logSum B) ≤ (rankOn U Z G : ℝ) * ((s Z).degLo - logSum B) :=
       mul_le_mul_of_nonneg_left (by linarith [hτ Z]) (Nat.cast_nonneg _)
     linarith

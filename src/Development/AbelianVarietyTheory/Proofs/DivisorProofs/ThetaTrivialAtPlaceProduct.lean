@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchimedeanThetaLocalActionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLocalFactorFinitePlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTrivialAtFiniteSetStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTrivialAtInfinitySetStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchimedeanThetaLocalAction
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLocalFactorFinitePlace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTrivialAtFiniteSet
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTrivialAtInfinitySet
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,16 +57,16 @@ theorem pure_away : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Field
   classical
   intro P F E _ _ _ _ _ σ B a a' G X om om' hT v g h hg hh f φ hφ hφv
   obtain ⟨S, g₁, g₂, g₃, h₁, h₂, h₃, hvS, rfl, rfl, a1, a2, b1, b2, c1, c2, c3, c4, c5, c6⟩ :=
-    GlobalTheory.T.theta_local_factor_finite_place F E σ B a a' G X om om' hT v g h hg hh φ hφv
-  obtain ⟨c, hc⟩ := GlobalTheory.T.theta_trivial_at_infinity_set P F E σ B a a' G X om om' hT (insert v S) g₃ h₃ c1 c2
+    _root_.GlobalTheory.UnitaryTriSplit.factor_away F E σ B a a' G X om om' hT v g h hg hh φ hφv
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.VacScalar.scalar_of_trivial P F E σ B a a' G X om om' hT (insert v S) g₃ h₃ c1 c2
     (fun w hw => c3 w (Finset.mem_insert.mp hw)) (fun w hw => c4 w (Finset.mem_insert.mp hw))
     (fun w hw => c5 w (fun e => hw (e ▸ Finset.mem_insert_self _ _)) (fun e => hw (Finset.mem_insert_of_mem e))) f φ hφ
     (fun w hw => c6 w (fun e => hw (e ▸ Finset.mem_insert_self _ _)) (fun e => hw (Finset.mem_insert_of_mem e)))
-  obtain ⟨φ₁, hφ₁, hφ₁e, he₁⟩ := GlobalTheory.T.theta_trivial_at_finite_set P F E σ B a a' G X om om' hT S g₂ h₂ b1 b2 f φ hφ hφv
+  obtain ⟨φ₁, hφ₁, hφ₁e, he₁⟩ := _root_.GlobalTheory.PureStabFin.pure_stab_fin P F E σ B a a' G X om om' hT S g₂ h₂ b1 b2 f φ hφ hφv
   have hφ₁v : ∀ᶠ w in Filter.cofinite, φ₁ w = G.M'.vac w := by
     filter_upwards [hφv, S.finite_toSet.compl_mem_cofinite] with w hw hwS
     rw [hφ₁e w hwS, hw]
-  obtain ⟨f₂, he₂⟩ := GlobalTheory.T.archimedean_theta_local_action P F E σ B a a' G X om om' hT g₁ h₁ a1 a2 f φ₁ hφ₁ hφ₁v
+  obtain ⟨f₂, he₂⟩ := _root_.GlobalTheory.ArchPure.arch_pure P F E σ B a a' G X om om' hT g₁ h₁ a1 a2 f φ₁ hφ₁ hφ₁v
   refine ⟨c • f₂, φ₁, hφ₁, hφ₁v, hφ₁e v hvS, ?_⟩
   have hmul : ((g₁ * g₂ * g₃, h₁ * h₂ * h₃) : UA σ G.V'.J × UA σ G.W.J) = (g₁, h₁) * (g₂, h₂) * (g₃, h₃) := rfl
   rw [hmul, map_mul, map_mul, Module.End.mul_apply, Module.End.mul_apply, hc, map_smul, he₁, map_smul, he₂]

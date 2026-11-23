@@ -3,10 +3,13 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.AdelicGroupAlgebraActionInjective
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
 public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CodimOneGramTwistAgreeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EqOfEqGenericProjectiveStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.HodgeIPIffHodgeFormConj
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CodimOneGramTwistAgree
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCptGen
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EqOfEqGenericProjective
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EventuallyOneTmulAdicIntegralCoords
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptInteriorIffStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptInteriorIff
 public import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.TwPhiF
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -115,8 +118,8 @@ theorem gramAt_iff_of_tied : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   classical
   have hzq : A'.ξ (IsLocalRing.closedPoint (CommRingCat.of Ω)) ⤳ centre z := A'.all _
   let p : Cpt A'.ξ := ⟨centre z, hzq⟩
-  obtain ⟨hjm', hint'⟩ := GlobalTheory.T.hodge_cpt_interior_iff E H D l Xo c O' β' Y' S Ω K J y A' z hβ'
-  obtain ⟨hjm, -⟩ := GlobalTheory.T.hodge_cpt_interior_iff E H D l Xo c O β Y S Ω K J y A (z ≫ e.hom) hβ
+  obtain ⟨hjm', hint'⟩ := _root_.GlobalTheory.CompanionTheory.Ar.IntOpen.interior_iff_factor E H D l Xo c O' β' Y' S Ω K J y A' z hβ'
+  obtain ⟨hjm, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.IntOpen.interior_iff_factor E H D l Xo c O β Y S Ω K J y A (z ≫ e.hom) hβ
   obtain ⟨u'p, hu'p⟩ := hint'.1 hz
   obtain ⟨ΦF, ν, hΦ1, hΦ2, hν⟩ := PositivityTheory.UnitarySelfGeneration.tw_phiF E H D l Xo c Y.oF Y.m0 g Φ n hΦ
   have hxx : x' = x ≫ ΦF.hom :=
@@ -134,7 +137,7 @@ theorem gramAt_iff_of_tied : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   have hξup : ξp ≫ up = x := by
     rw [hup_def, ← Category.assoc, hξu', hxx, Category.assoc, Iso.hom_inv_id, Category.comp_id]
   have hup : up ≫ Y.j = A'.X.fromSpecStalk (centre z) ≫ e.hom ≫ A.f := by
-    refine GlobalTheory.T.eq_of_eq_generic_projective O (Spec (A'.X.presheaf.stalk (centre z))) Y.X Y.s Ω ξp _ _ Y.proj hgen ?_
+    refine _root_.GlobalTheory.CompanionTheory.Ar.maps_eq_of_eq_at_generic O (Spec (A'.X.presheaf.stalk (centre z))) Y.X Y.s Ω ξp _ _ Y.proj hgen ?_
     rw [← Category.assoc, hξup, ← hx, reassoc_of% hξp, ← hξ, Category.assoc]
   obtain ⟨tp, π⟩ : ∃ tp : SAB H (Spec (A'.X.presheaf.stalk (centre z))), Nonempty (SABMap tp Y.oF.t up) := by
     obtain ⟨_, _, _, _, _, π, -⟩ := sabPull ReciprocityTheory.ChartRestriction.G.Out.proved_CubePullSt up Y.oF.t
@@ -183,7 +186,7 @@ theorem gramAt_iff_of_tied : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
       rw [← hw0, hm0c, F1, F2]
     · simp only [Category.assoc]
       rw [phi_w w0, Category.comp_id, F3, reassoc_of% (phi_w u), F4, hxx]
-  refine GlobalTheory.T.codim_one_gram_twist_agree E H g A'.X Ω A'.ξ p t A'.t tp mp mp' A.Li M₁ (Flat.lieModelOfEquiv A'.M φ) ?_ z rfl r b Γ
+  refine _root_.GlobalTheory.CompanionTheory.Ar.codim_one_gram_twist_eq E H g A'.X Ω A'.ξ p t A'.t tp mp mp' A.Li M₁ (Flat.lieModelOfEquiv A'.M φ) ?_ z rfl r b Γ
   intro ev
   obtain ⟨w, hw1, hw2⟩ := htie ev
   have hsq : (w.left ≫ u.φ) ≫ Y.oF.t.G.hom = (w.left ≫ tΩ.G.hom ≫ ξp) ≫ up := by

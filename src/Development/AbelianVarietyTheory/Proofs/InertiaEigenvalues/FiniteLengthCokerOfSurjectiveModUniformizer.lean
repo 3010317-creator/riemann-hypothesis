@@ -3,13 +3,14 @@ module
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExistsEqAlgebraMapAddPowMul
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.InstTameDescentExponentDataPadicThree
 public import Mathlib.RingTheory.FiniteLength
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CokerFiniteLengthOfPrimitiveDivisorStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CokernelTorsionFreeOfBoundedLeftInverseStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsEPowMulFrobMemRightDivisorSetStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFrobeniusSliceMemRightDivisorSetStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobMemLeftDivisorSetPhiModuleHomStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusResidueSliceMemBoundedLeftDivisorSetStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.OneMemOfFrobeniusLinkedBoundedSeriesIdealsStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BddOfMemLdivSet
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CokerFiniteLengthOfPrimitiveDivisor
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CokernelTorsionFreeOfBoundedLeftInverse
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsEPowMulFrobMemRightDivisorSet
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFrobeniusSliceMemRightDivisorSet
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobMemLeftDivisorSetPhiModuleHom
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusResidueSliceMemBoundedLeftDivisorSet
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.OneMemOfFrobeniusLinkedBoundedSeriesIdeals
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,7 +60,6 @@ import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.InvertibleSpanSingleton
 import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPotential
 import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.RealisesUnitPow
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BddOfMemLdivSet
 import Formalism.SharpRestriction.CuspSpanNormBounds.Point
 import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
 
@@ -81,13 +81,13 @@ theorem GlobalTheory.BK.Hom.finiteLength_coker_of_generic : ∀ (O K : Type) [Co
   have he : 0 < e := Nat.pos_of_ne_zero (NeZero.ne e)
   have hone : ∃ c : ℝ, ∀ n, ‖coeff n (1 : K⟦X⟧)‖ ≤ c :=
     ⟨1, fun n => by rw [coeff_one]; split_ifs <;> simp⟩
-  refine ⟨fun hyp => GlobalTheory.T.coker_finite_length_of_primitive_divisor O K l e a ι κ P Q F hyp ?_, fun hyp => GlobalTheory.T.cokernel_torsionFree_of_bounded_leftInverse O K l e a ι κ P Q F hyp ?_⟩
+  refine ⟨fun hyp => _root_.GlobalTheory.CokerFinLen.main O K l e a ι κ P Q F hyp ?_, fun hyp => _root_.GlobalTheory.BK.Hom.coker_torsionFree O K l e a ι κ P Q F hyp ?_⟩
   · rcases isEmpty_or_nonempty κ with hκ | ⟨⟨i0⟩⟩
     · intro τ
       exact ⟨hone, 0, ⟨0, fun _ j => isEmptyElim j⟩, Subsingleton.elim _ _⟩
-    · obtain ⟨M₁, h₁⟩ := GlobalTheory.T.exists_E_pow_mul_frob_mem_rightDivisorSet O K l e a ι κ P Q F
-      obtain ⟨M₂, h₂⟩ := GlobalTheory.T.exists_frobeniusSlice_mem_rightDivisorSet O K l e a ι κ P Q F
-      refine GlobalTheory.T.one_mem_of_frobenius_linked_boundedSeries_ideals K l e a M₁ M₂ he hl0 hlK F.rdivSet (fun τ x hx y hy => Hom.rdivSet_add F τ hx hy)
+    · obtain ⟨M₁, h₁⟩ := _root_.GlobalTheory.BK.Hom.exists_E_pow_mul_frob_mem_rdivSet O K l e a ι κ P Q F
+      obtain ⟨M₂, h₂⟩ := _root_.GlobalTheory.BK.RdivSlice.exists_frobSlice_mem_rdivSet O K l e a ι κ P Q F
+      refine _root_.GlobalTheory.BK.GcdCore.one_mem K l e a M₁ M₂ he hl0 hlK F.rdivSet (fun τ x hx y hy => Hom.rdivSet_add F τ hx hy)
         (fun τ x hx b hb => Hom.rdivSet_mul F τ hx b hb) (fun τ x hx => hx.1) ?_ h₁ h₂
       intro τ
       obtain ⟨Y, g, hY, hg, hFY⟩ := hyp τ
@@ -99,9 +99,9 @@ theorem GlobalTheory.BK.Hom.finiteLength_coker_of_generic : ∀ (O K : Type) [Co
   · rcases isEmpty_or_nonempty ι with hι | ⟨⟨i0⟩⟩
     · intro τ
       exact ⟨hone, 0, ⟨0, fun i _ => isEmptyElim i⟩, Subsingleton.elim _ _⟩
-    · obtain ⟨M₁, h₁⟩ := GlobalTheory.T.frob_mem_leftDivisorSet_phiModuleHom O K l e a ι κ P Q F
-      obtain ⟨M₂, h₂⟩ := GlobalTheory.T.frobeniusResidueSlice_mem_boundedLeftDivisorSet O K l e a ι κ P Q F
-      refine GlobalTheory.T.one_mem_of_frobenius_linked_boundedSeries_ideals K l e a M₁ M₂ he hl0 hlK F.ldivSet (fun τ x hx y hy => Hom.ldivSet_add F τ hx hy)
+    · obtain ⟨M₁, h₁⟩ := _root_.GlobalTheory.BK.Hom.frob_mem_ldivSet_target O K l e a ι κ P Q F
+      obtain ⟨M₂, h₂⟩ := _root_.GlobalTheory.BK.SliceLdiv.frobSlice_mem_ldivSet O K l e a ι κ P Q F
+      refine _root_.GlobalTheory.BK.GcdCore.one_mem K l e a M₁ M₂ he hl0 hlK F.ldivSet (fun τ x hx y hy => Hom.ldivSet_add F τ hx hy)
         (fun τ x hx b hb => Hom.ldivSet_mul F τ hx b hb) (fun τ x hx => hx.1) ?_ h₁ h₂
       intro τ
       obtain ⟨Y, g, hY, hg, hFY⟩ := hyp τ

@@ -1,8 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitPlaceIdempotentCmEmbeddingCompat
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsApproxFinitePlacesNumberFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsGlobalMatrixApproximationModIntegralStatement
+public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Completion
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsApproxFinitePlacesNumberField
+public import Formalism.SharpRestriction.GrowthBounds.UnramifiedQuadraticSetting
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsGlobalMatrixApproximationModIntegral
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,7 +64,7 @@ theorem weak_approx {F : Type} [Field F] [NumberField F] {ι : Type} [Fintype ι
     (w : ι → HeightOneSpectrum (𝓞 F)) (hw : Function.Injective w) (y : ∀ i, (w i).adicCompletion F) (c : F) (hc : c ≠ 0) :
     ∃ a : F, ∀ i, Valued.v (algebraMap F ((w i).adicCompletion F) a - y i) ≤
       Valued.v (algebraMap F ((w i).adicCompletion F) c) :=
-  GlobalTheory.T.exists_approx_finite_places_numberField w hw y c hc
+  _root_.GlobalTheory.exists_approx_finite_places w hw y c hc
 
 theorem matrix_approx {ι : Type} [Fintype ι] [DecidableEq ι] (W Q : ι → Type) [∀ q, CommRing (W q)] [∀ q, IsDomain (W q)]
     [∀ q, IsDiscreteValuationRing (W q)] [∀ q, Field (Q q)] [∀ q, Algebra (W q) (Q q)] [∀ q, IsFractionRing (W q) (Q q)]
@@ -73,7 +75,7 @@ theorem matrix_approx {ι : Type} [Fintype ι] [DecidableEq ι] (W Q : ι → Ty
     ∃ (B : Matrix (Fin n) (Fin n) F) (u : Matrix (Fin n) (Fin n) (W q0)), IsUnit u.det ∧
       B.map (f q0) = g q0 * u.map (algebraMap (W q0) (Q q0)) ∧
       ∀ q, q ≠ q0 → ∀ c, (fun i => f q (B i c)) ∈ Formalism.MainNotions.G.colSpan (W q) (g q) :=
-  GlobalTheory.T.exists_global_matrix_approximation_mod_integral W Q f π hπ t ht hd g hg q0
+  _root_.GlobalTheory.GlobApx.exists_glob_approx W Q f π hπ t ht hd g hg q0
 
 theorem colSpan_mul_le {R K : Type} [CommRing R] [Field K] [Algebra R K] {k : ℕ} (g : Matrix (Fin k) (Fin k) K)
     (u : Matrix (Fin k) (Fin k) R) :

@@ -5,7 +5,7 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FreeHomEx
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FreeHomGlueOfCoveringStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FreeSheafSumSectionsEqOfTwoSplittingsStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplitByBaseChangeStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplittingSieveMemEtaleTopologyStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplittingSieveMemEtaleTopology
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -71,7 +71,7 @@ theorem splitSum_eq {Z X V : Scheme.{0}} {f : Z ⟶ X} {y : V ⟶ X} (h : Splits
 
 theorem existsUnique_isTransfer {Z X : Scheme.{0}} (f : Z ⟶ X) [IsFinite f] [Etale f] :
     ∃! t, IsTransfer R f t := by
-  have hT := GlobalTheory.T.splittingSieve_mem_etaleTopology f (𝟙 X)
+  have hT := _root_.GlobalTheory.EtC.Tr.splitSieve_mem f (𝟙 X)
 
   let σ : ∀ ⦃V : Scheme.{0}⦄ (v : V ⟶ X), splitSieve f (𝟙 X) v → (freeSch R V ⟶ freeSch R Z) :=
     fun V v hv => splitSum R f (v ≫ 𝟙 X) (splits_of_splitSieve hv)
@@ -92,7 +92,7 @@ theorem existsUnique_isTransfer {Z X : Scheme.{0}} (f : Z ⟶ X) [IsFinite f] [E
     rwa [Category.comp_id] at this
   refine ⟨t, ?_, fun t' ht' => ?_⟩
   · intro S x m s hs hiso
-    refine GlobalTheory.T.freeSch_hom_ext_of_etale_covering R (freeSch R Z) _ _ _ (GlobalTheory.T.splittingSieve_mem_etaleTopology f x) (fun V v hv => ?_)
+    refine GlobalTheory.T.freeSch_hom_ext_of_etale_covering R (freeSch R Z) _ _ _ (_root_.GlobalTheory.EtC.Tr.splitSieve_mem f x) (fun V v hv => ?_)
     obtain ⟨m', s', hs'⟩ := splits_of_splitSieve hv
     have hvx : splitSieve f (𝟙 X) (v ≫ x) := ⟨V, 𝟙 V, v ≫ x, (show Splits f ((v ≫ x) ≫ 𝟙 X) by rw [Category.comp_id]; exact ⟨m', s', hs'⟩), Category.id_comp _⟩
     have h1 := GlobalTheory.T.splitBy_baseChange' ⟨hs, hiso⟩ v

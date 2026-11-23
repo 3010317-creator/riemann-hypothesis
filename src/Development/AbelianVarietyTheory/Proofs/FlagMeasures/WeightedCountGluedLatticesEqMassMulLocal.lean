@@ -6,11 +6,17 @@ public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FiniteRationa
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GlobalLatticesCountEqProdLocalCountsBadPlacesStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GluedLatticesLocalDataUnimodularStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsometryFixingSpanPreservesGluedLatticesStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalIsometryExtendsLocalIsometryStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TsumInvStabilizerEqTsumMulFiberStatement
+public import Mathlib.Basic.Real.ENatENNReal
+public import Mathlib.Data.Set.Card
+public import Mathlib.GroupTheory.GroupAction.Defs
+public import Mathlib.Topology.Algebra.InfiniteSum.Defs
+public import Mathlib.Topology.Order.Real
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TsumInvStabilizerEqTsumMulFiber
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TsumRationalClassesEqProdLocalSumsStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TsumTransversalEqTsumOrbitQuotientGeneral
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryComplementMovesHermitianTermsStatement
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalIsometryExtendsLocalIsometryStatement
+import Formalism.SharpRestriction.CuspSpanNormBounds.IsTermOver
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryComplementMovesHermitianTerms
 import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -147,7 +153,7 @@ theorem locSet_encard_rel : ∀ (D : D7) (Z : LocDat D) (FP : ∀ p : PlF D, Loc
     intro g hg d d' hmv ⟨Λ, hΛ⟩
     obtain ⟨n, hn, hf, -⟩ := hΛ.1.2.2.1
     obtain ⟨n', hn', hf', -⟩ := hΛ.1.2.2.2.1
-    have key := (GlobalTheory.T.unitaryComplement_moves_hermitianTerms (Z.M p) (Z.agree p).1 (locH Z p) D.R.rS D.R.k (FP p) (rank_Vp' D p)
+    have key := (_root_.GlobalTheory.HL.ComplMove.main (Z.M p) (Z.agree p).1 (locH Z p) D.R.rS D.R.k (FP p) (rank_Vp' D p)
       (hB.2.1 p) _ _ ⟨n, hn, hf⟩ ⟨n', hn', hf'⟩ g hg d d' hmv).2
     have hset : locSet G G' p d' = LocNG.img g '' locSet G G' p d := key.symm
     rw [hset]
@@ -271,7 +277,7 @@ theorem glue_count : ∀ (D : D7) (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPai
     have h1 := stab_finite D Z FP u u' F G F' G' P d0 hk hB hS hTP x.1 (π x) x.2 (hπ x)
     rw [hstabY] at h1
     exact (h1.of_finite_image Subtype.val_injective.injOn).to_subtype
-  have horbit := GlobalTheory.T.tsum_inv_card_stabilizer_eq_tsum_mul_card_fiber π hπeq hfin
+  have horbit := _root_.GlobalTheory.tsum_inv_stabilizer_eq_tsum_mul_fiber π hπeq hfin
 
   let ι : s → {Λ : LV D // Λ ∈ GS} := fun a => ⟨a.1, hs.1 a.1 a.2⟩
   have hcover : ∀ x : {Λ : LV D // Λ ∈ GS}, True → ∃ (a : s) (g : Γ), g • ι a = x := by

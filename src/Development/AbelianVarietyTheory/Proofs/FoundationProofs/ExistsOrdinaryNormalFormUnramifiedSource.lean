@@ -4,13 +4,18 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.VanishOrd
 public import Development.AbelianVarietyTheory.Statements.CuspidalUnitaryTwists.ZetaUr
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
 public import Mathlib.RingTheory.AdicCompletion.Noetherian
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CharacterPowPredEqOneOfKillsPrimeRootsStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCoefficientRingFiniteExtensionPadicStatement
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.BlochKatoSelmerVanishes
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CharacterPowPredEqOneOfKillsPrimeRoots
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeightAndVanishing.DirichletPrimeToLPartMulLPowerPart
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCoefficientRingFiniteExtensionPadic
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsNf
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsUpperTriangularConjIntegralCompactStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IrreducibleRestrictionOfIsoStatement
+public import Formalism.ConjugateSelfDual.Statement
+public import Mathlib.Topology.Instances.Matrix
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsUpperTriangularConjIntegralCompact
+public import Development.AbelianVarietyTheory.Definitions.Foundations.FinalTheorems
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IrreducibleRestrictionOfIso
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SrcOfRepIso
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnramifiedOfLevelAwayInertiaCharactersStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnramifiedOfLevelAwayInertiaCharacters
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CompactGroupRepDefinedOverFiniteExtension
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.KatoQuadraticCharacters.AdmissibleTwistByDet
 import Mathlib.Algebra.Order.Floor.Extended
@@ -79,15 +84,15 @@ theorem GlobalTheory.Ord2.exists_nf_srcUr : ∀ (l : ℕ) [Fact l.Prime] (Ω : T
   obtain ⟨⟨g0, χ, A, κ, hM0, ha0, hχ, hatt, hA, hfl, hin⟩, hne⟩ := hS
   obtain ⟨g, hg⟩ := hfl
   obtain ⟨M, hM, hMa⟩ := hW.away
-  obtain ⟨S, hSa, hSu⟩ := GlobalTheory.T.unramified_of_levelAway_inertia_characters l Ω W M hM hMa
+  obtain ⟨S, hSa, hSu⟩ := _root_.GlobalTheory.Ord2.unramified_of_levelAway l Ω W M hM hMa
   let r : G ℚ Ω →* GL (Fin 2) (Qbar l) := (MulAut.conj g).toMonoidHom.comp W
   have hrc : Continuous r := by
     show Continuous fun s => g * W s * g⁻¹
     exact (continuous_const.mul hW.cont).mul continuous_const
   obtain ⟨E, hE, hEm⟩ := GlobalTheory.CompactRepField.exists_finiteDimensional_entries_mem l (G ℚ Ω) 2 r
     (fun i j => ((Units.continuous_val.comp hrc).matrix_elem i j))
-  obtain ⟨B, hB10, hBint⟩ := GlobalTheory.T.exists_upperTriangular_conj_integral_compact l (G ℚ Ω) E r hE hrc hEm
-  obtain ⟨c, hc⟩ := GlobalTheory.T.exists_coefficientRing_finiteExtension_padic l E hE
+  obtain ⟨B, hB10, hBint⟩ := _root_.GlobalTheory.StableLatticeTriangular.exists_upperTriangular_conj_integral l (G ℚ Ω) E r hE hrc hEm
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.CoefJoin.coef_of_finite l E hE
   let h : GL (Fin 2) (Qbar l) := B * g
   let W' : R2 Ω l := (MulAut.conj h).toMonoidHom.comp W
   have hh : ∀ s, W' s = h * W s * h⁻¹ := fun s => rfl
@@ -150,7 +155,7 @@ theorem GlobalTheory.Ord2.exists_nf_srcUr : ∀ (l : ℕ) [Fact l.Prime] (Ω : T
         unr := ?_
         det2 := by rw [hdt]; exact hW.det2
         odd := by rw [hdt]; exact hW.odd
-        irr := GlobalTheory.T.irreducible_restriction_of_iso Ω l W W' hiso hW.irr
+        irr := _root_.GlobalTheory.IrrConj.irr_of_repIso Ω l W W' hiso hW.irr
         atL := hA
         upper := fun s hs => (hup s hs).1
         wt := ?_
@@ -164,7 +169,7 @@ theorem GlobalTheory.Ord2.exists_nf_srcUr : ∀ (l : ℕ) [Fact l.Prime] (Ω : T
     · refine ⟨l - 1, ?_, fun s hs => ?_⟩
       · have := (Fact.out : l.Prime).two_le; omega
       · rw [hline s hs, mul_pow, ← pow_mul]
-        have hχ1 := GlobalTheory.T.character_pow_pred_eq_one_of_killsPrimeRoots Ω l _ χ s hχ
+        have hχ1 := _root_.GlobalTheory.KillsMuOrd.charPow_sub_one_eq_one Ω l _ χ s hχ
         rw [← Units.val_pow_eq_pow_val (χ s), hχ1, Units.val_one, mul_one]
     · obtain ⟨s, hs⟩ := hne A κ hA ⟨g, hg⟩
       refine ⟨s, s.2, ?_⟩

@@ -2,12 +2,18 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReindexDblIncM
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTransportF
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzSpaceClosedUnderConjReflectionStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzSpaceClosedUnderConjReflection
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilTransportAdelicSchwartzCmExtension
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsThetaFunctionThetaTransformRationalCoordsCMStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductFunctionOnSumCoordsMemAdelicSchwartzSpace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTransformDoubledTargetBoxProductStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumDoubledTargetRestrictsToPairStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeltaTApply
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTransformDoubledTargetBoxProduct
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumDoubledTargetRestrictsToPair
+public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.DecayZero
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoMulInvOf
+import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+import Formalism.LocalToGlobal.IndefiniteReal.DatumF
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsThetaFunctionThetaTransformRationalCoordsCM
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,8 +50,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.DecayZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeltaTApply
 
 @[expose] public section
 
@@ -100,7 +104,7 @@ theorem restrict_boxFun : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
   have hΦ := GlobalTheory.SchwartzBox.boxFun_mem_schA F κ κ φ₁ hφ₁ φ₂ hφ₂
   have hΦ' := GlobalTheory.SchwartzBox.boxFun_mem_schA F κ κ _ t1.1 φ₂ hφ₂
   have t2 := homp gd 1 1 hd hhd h1 _ hΦ
-  have hφ₂' := GlobalTheory.T.adelicSchwartzSpace_closed_under_conj_reflection F κ φ₂ hφ₂
+  have hφ₂' := _root_.GlobalTheory.Adopt.adelicSchwartzSpace_closed_under_conj_reflection F κ φ₂ hφ₂
   let τ := Fintype.equivFin κ
   have he : ∀ w w', Formalism.IndefR.DatumF.symplOF σ JS JT ξ₀ w w' =
       GlobalTheory.ThetaTransform.symV (GlobalTheory.TransportF.numCoordF co τ w) (GlobalTheory.TransportF.numCoordF co τ w') := fun w w' => by
@@ -113,13 +117,13 @@ theorem restrict_boxFun : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
   have thf : ∀ Φ ∈ schA F κ, Formalism.IndefR.DatumF.IsThetaFunOF σ JS JT ξ₀ B.ψ
       (GlobalTheory.WeilSchrodinger.thetaTr F co B.ψ Φ) := fun Φ hΦ => by
     rw [GlobalTheory.TransportF.thetaTr_eqF co τ]
-    exact GlobalTheory.T.isThetaFunction_thetaTransform_rational_coords_CM F E σ B hB nS nT JS JT hS hT ξ₀ hξ0 hσξ hω.std _ (GlobalTheory.TransportF.numCoordF co τ) he hr _
+    exact _root_.GlobalTheory.ThetaTransformF.isThetaFunOF_thV F E σ B hB nS nT JS JT hS hT ξ₀ hξ0 hσξ hω.std _ (GlobalTheory.TransportF.numCoordF co τ) he hr _
       (GlobalTheory.TransportF.comp_mem_schA τ hΦ)
-  have key := t2.2.trans ((congrArg (ωd (1, hd)) (GlobalTheory.T.thetaTransform_doubledTarget_boxProduct F E σ B hB hω.std nS nT JT JA JB ξ hA κ co φ₁ hφ₁ φ₂ hφ₂)).trans
-    ((GlobalTheory.T.weilDatum_doubled_target_restricts_to_pair F E σ B hB nS nT JS JT hS hT ξ₀ hξ0 hσξ χS χT ω hω ωd hωd h hd hdm _ _ (thf φ₁ hφ₁) (thf _ hφ₂')).trans
+  have key := t2.2.trans ((congrArg (ωd (1, hd)) (_root_.GlobalTheory.DblThetaProd.thetaTr_coDbl_boxFun F E σ B hB hω.std nS nT JT JA JB ξ hA κ co φ₁ hφ₁ φ₂ hφ₂)).trans
+    ((_root_.GlobalTheory.DblTargetRestrictCore.restrict_core F E σ B hB nS nT JS JT hS hT ξ₀ hξ0 hσξ χS χT ω hω ωd hωd h hd hdm _ _ (thf φ₁ hφ₁) (thf _ hφ₂')).trans
       ((congrArg (fun f => GlobalTheory.DblTargetDelta.deltaT f
         (GlobalTheory.WeilSchrodinger.thetaTr F co B.ψ (fun x => starRingEnd ℂ (φ₂ (-x))))) t1.2.symm).trans
-        (GlobalTheory.T.thetaTransform_doubledTarget_boxProduct F E σ B hB hω.std nS nT JT JA JB ξ hA κ co _ t1.1 φ₂ hφ₂).symm)))
+        (_root_.GlobalTheory.DblThetaProd.thetaTr_coDbl_boxFun F E σ B hB hω.std nS nT JT JA JB ξ hA κ co _ t1.1 φ₂ hφ₂).symm)))
   let τ' := Fintype.equivFin (κ ⊕ κ)
   have key' := (GlobalTheory.TransportF.thetaTr_eqF (GlobalTheory.WeilSchrodinger.DblTargetF.coDbl hA co) τ' ((omp (gd, 1)) (boxFun φ₁ φ₂))).symm.trans
     (key.trans (GlobalTheory.TransportF.thetaTr_eqF (GlobalTheory.WeilSchrodinger.DblTargetF.coDbl hA co) τ' (boxFun ((om (g, 1)) φ₁) φ₂)))

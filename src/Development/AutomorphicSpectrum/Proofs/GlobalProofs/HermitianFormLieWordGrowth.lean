@@ -2,7 +2,7 @@ module
 
 public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
 public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.NelsonExistsWordGrowthConstantStatement
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.NelsonExistsWordGrowthConstant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -138,7 +138,7 @@ theorem nelson_inner {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℂ E]
       norm_cast
     rw [e, ← n]
     exact hs i x
-  obtain ⟨C, hC, hb⟩ := GlobalTheory.T.nelson_exists_word_growth_constant X c hc A hA hskew V hV
+  obtain ⟨C, hC, hb⟩ := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.HCA.Nelson.word_growth X c hc A hA hskew V hV
   refine ⟨C, hC, fun l u hu => ?_⟩
   rw [hsq, hsq]
   exact hb l u hu

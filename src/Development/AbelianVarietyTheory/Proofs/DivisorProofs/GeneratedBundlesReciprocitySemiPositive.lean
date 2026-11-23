@@ -2,10 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DensConst
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmoothSemipositiveWeightOfGeneratedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReciprocityDefectIndependentFirstMetricStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReciprocityFormulaLeSemipositiveStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothWeightsDifferBySmoothFunctionStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsClosedImmersionGenericPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmoothSemipositiveWeightOfGenerated
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReciprocityDefectIndependentFirstMetric
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReciprocityFormulaLeSemipositive
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothWeightsDifferBySmoothFunction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -73,8 +74,8 @@ theorem semiPosReg_of_eqOn {k : Type} [CommRing k] {X : Scheme.{0}} {p : X ⟶ S
 theorem exists_addFn_semiPosReg {k : Type} [CommRing k] {X : Scheme.{0}} {p : X ⟶ Sp k} {σ : k →+* ℂ}
     (M : MLine p σ) (D : ℕ) (hg : ∃ (n : ℕ) (u : Fin n → M.B.Sec), ⨆ i, nonzeroLocus (u i) = ⊤) :
     ∃ (u : CxPts p σ → ℝ) (hu : ∀ y, CInfAt u y), (M.addFn u hu).φ.SemiPosReg D := by
-  obtain ⟨ψ, hψ, hψp⟩ := GlobalTheory.T.exists_smooth_semipositive_weight_of_generated k X p σ M.B M.φ.isLB hg
-  obtain ⟨u, hu, he⟩ := GlobalTheory.T.smooth_weights_differ_by_smooth_function k X p σ M.B M.φ ψ M.cInf hψ
+  obtain ⟨ψ, hψ, hψp⟩ := _root_.GlobalTheory.weight_cInf_semiPos_of_generated k X p σ M.B M.φ.isLB hg
+  obtain ⟨u, hu, he⟩ := _root_.GlobalTheory.Mix.weight_sub_cInf k X p σ M.B M.φ ψ M.cInf hψ
   exact ⟨u, hu, semiPosReg_of_eqOn (hψp D) fun i y hy => (he i y hy).symm⟩
 
 end GlobalTheory.Mix
@@ -84,10 +85,10 @@ theorem GlobalTheory.Mix.side_eq_of_generated : GlobalTheory.Published.Principal
   obtain ⟨u, hu, hMu⟩ := GlobalTheory.Mix.exists_addFn_semiPosReg M (e + 1) hgM
   obtain ⟨v, hv, hNv⟩ := GlobalTheory.Mix.exists_addFn_semiPosReg N (e + 1) hgN
   have hz' : ∀ z : X, Order.coheight z = 1 → z ∈ nonzeroLocus t ∨ z ∈ nonzeroLocus s := fun z h => (hz z h).symm
-  have h1 := GlobalTheory.T.reciprocityDefect_independent_firstMetric hP F X p σ e hproj hdim L M N s hs t ht hz u hu
-  have h2 := GlobalTheory.T.reciprocityDefect_independent_firstMetric hP F X p σ e hproj hdim L N (M.addFn u hu) t ht s hs hz' v hv
-  have h3 := GlobalTheory.T.reciprocityFormula_le_semipositive hP F X p σ e hproj hdim L (M.addFn u hu) (N.addFn v hv) s hs t ht hz hL hNv
-  have h4 := GlobalTheory.T.reciprocityFormula_le_semipositive hP F X p σ e hproj hdim L (N.addFn v hv) (M.addFn u hu) t ht s hs hz' hL hMu
+  have h1 := _root_.GlobalTheory.MetricIndep.side_sub_side_addFn hP F X p σ e hproj hdim L M N s hs t ht hz u hu
+  have h2 := _root_.GlobalTheory.MetricIndep.side_sub_side_addFn hP F X p σ e hproj hdim L N (M.addFn u hu) t ht s hs hz' v hv
+  have h3 := _root_.GlobalTheory.CycPair.side_le hP F X p σ e hproj hdim L (M.addFn u hu) (N.addFn v hv) s hs t ht hz hL hNv
+  have h4 := _root_.GlobalTheory.CycPair.side_le hP F X p σ e hproj hdim L (N.addFn v hv) (M.addFn u hu) t ht s hs hz' hL hMu
   have d1 : divOfSec (M.addFn u hu).φ.isLB s hs = divOfSec M.φ.isLB s hs := rfl
   have d2 : divOfSec (N.addFn v hv).φ.isLB t ht = divOfSec N.φ.isLB t ht := rfl
   rw [d1, d2] at h3 h4

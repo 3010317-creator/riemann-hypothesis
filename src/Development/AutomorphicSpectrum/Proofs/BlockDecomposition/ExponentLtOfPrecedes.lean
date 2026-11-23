@@ -1,12 +1,13 @@
 module
 
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.SquareIntegrableTempered.CasselmanNecTemp
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralCharacterExistsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralCharacterNormEqPowStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralCharacterExists
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralCharacterNormEqPow
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralCharacterTwistAbsPow
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsUnitPowTendstoZeroStatement
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsUnitPowTendstoZero
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NormLtOneOfPowTendstoZero
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegmentRepCentralCharacterStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegmentRepCentralCharacter
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -73,7 +74,7 @@ theorem exponent_lseg (Δ : Segment k) (y : IrrGL (k := k)) (s e : ℝ) (t : kˣ
     (hL : IsLSeg Δ y.rep) (hc : Zl.ScalarBy Δ.first t c) (hcn : ‖c‖ = nabs k t ^ ((Δ.d : ℝ) * e))
     (hy : ∀ (t : kˣ) (c : ℂ), Zl.ScalarBy y t c → ‖c‖ = nabs k t ^ ((y.1 : ℝ) * s)) :
     s = e + ((Δ.len : ℝ) - 1) / 2 := by
-  have h1 := GlobalTheory.T.segment_rep_central_character k Δ y hL t c hc
+  have h1 := _root_.GlobalTheory.CompanionTheory.ZlScalar.scalarBy_lseg k Δ y hL t c hc
   have h2 := hy t _ h1
   have hdeg : y.1 = Δ.len * Δ.d := hL.deg_eq.symm
   have hα : 0 < nabs k t := nabs_pos' k t
@@ -105,11 +106,11 @@ theorem len_lt_of_precedes {Δ Δ' : Segment k} {j : ℕ} (hl : Δ.Linked Δ') (
 theorem exponent_lt_of_precedes : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (Δ Δ' : Segment k) (y y' : IrrGL (k := k)) (s s' : ℝ), IsLSeg Δ y.rep → IsLSeg Δ' y'.rep → (∀ (t : kˣ) (c : ℂ), Zl.ScalarBy y t c → ‖c‖ = nabs k t ^ ((y.1 : ℝ) * s)) → (∀ (t : kˣ) (c : ℂ), Zl.ScalarBy y' t c → ‖c‖ = nabs k t ^ ((y'.1 : ℝ) * s')) → Δ.Precedes Δ' → s < s' := by
   intro k _ _ _ _ Δ Δ' y y' s s' hL hL' hy hy' hP
   obtain ⟨hlink, j, hj, hf⟩ := hP
-  obtain ⟨t, ht⟩ := GlobalTheory.T.exists_unit_pow_tendsto_zero' k
+  obtain ⟨t, ht⟩ := _root_.GlobalTheory.CompanionTheory.LocalFieldPow.exists_unit_pow_tendsto_zero k
   have hα1 : nabs k t < 1 := GlobalTheory.CompanionTheory.NabsContract.nabs_lt_one_of_tendsto_pow k t ht
   have hα : 0 < nabs k t := nabs_pos' k t
-  obtain ⟨e, he⟩ := GlobalTheory.T.central_character_norm_eq_pow k Δ.first Δ.isCusp_first.1
-  obtain ⟨c, hc⟩ := GlobalTheory.T.central_character_exists k Δ.first t
+  obtain ⟨e, he⟩ := _root_.GlobalTheory.CompanionTheory.CentralExp.norm_scalarBy_eq_nabs_rpow k Δ.first Δ.isCusp_first.1
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.CompanionTheory.ScalarEx.exists_scalarBy k Δ.first t
   have hcn : ‖c‖ = nabs k t ^ ((Δ.d : ℝ) * e) := he t c hc
   have hdd : Δ'.d = Δ.d := congrArg Sigma.fst hf
   have hc' : Zl.ScalarBy Δ'.first t (c * ((absPow k ((j : ℕ) : ℂ) (t ^ Δ.first.1) : ℂˣ) : ℂ)) := by

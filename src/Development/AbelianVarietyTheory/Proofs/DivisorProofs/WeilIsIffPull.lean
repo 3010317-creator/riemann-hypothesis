@@ -4,18 +4,20 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGoodLa
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.CharZeroOfIsPrimitiveRoot
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TateProductRigidificationTrivial
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.PullQkSurjective
-import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.LocallyOfFiniteTypeKer
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLabelsFinExt
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SecondIffFirstAndRest
+import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsGtExtOfTorsion
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsQkPullEquiv
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsCoordPtFibre
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaCoordinatesExistUniqueSeparatePoints
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLabelsFinExt
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPushEquiv
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsRingBaseChange
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.WeilIsIffOfIsGrpPullbackComm
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ConstGen
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.WeilIsGrpPullbackOfCommute
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SecondIffFirstAndRest
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.WeilQkPairingExistsUniqueTorus
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -74,7 +76,7 @@ theorem weilIs_iff_pull {S S' : Scheme.{0}} {P : PolAV S} {P' : PolAV S'} {f : S
     (ey : y₀.left = y.left ≫ φ) : WeilIs P'.A P'.L k x y c ↔ WeilIs P.A P.L k x₀ y₀ c := by
   subst hg
   have := P.isAb.comm
-  exact GlobalTheory.weilIs_iff_of_isGrpPullback_comm _ _ _ _ _ _ _ _ P.isLB P'.isLB hp hw T k x y x₀ y₀ c ex ey
+  exact _root_.GlobalTheory.weilIs_grpPullback_of_comm _ _ _ _ _ _ _ _ P.isLB P'.isLB hp hw T k x y x₀ y₀ c ex ey
 
 theorem unitOn_map {F F' : Type} [Field F] [Field F'] (β : F →+* F') (w : Fˣ) :
     Units.map (spMap β).appTop.hom.toMonoidHom (unitOn w) = unitOn (Units.map β.toMonoidHom w) :=

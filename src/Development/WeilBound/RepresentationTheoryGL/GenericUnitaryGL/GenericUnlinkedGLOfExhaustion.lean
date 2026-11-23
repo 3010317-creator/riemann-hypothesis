@@ -3,7 +3,8 @@ module
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.SegmentCuspLines.ProdIrrFiniteLength
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.SegmentCuspLines.CuspStdSubGeneric
 public import Development.WeilBound.RepresentationTheoryGL.GenericUnitaryGL.SegmentDerivatives.CuspPairSubGeneric
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerHeredityStatement
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.LeibnizDerivatives.GenericProdIff
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerHeredity
 public import Development.WeilBound.RepresentationTheoryGL.GenericUnitaryGL.NuPairInjectivity.NuPair
 public import Development.WeilBound.RepresentationTheoryGL.GenericUnitaryGL.WhittakerCuspidal.WhitCuspOfSegCuspGeneric
 public import Development.WeilBound.RepresentationTheoryGL.GenericUnitaryGL.WhittakerRankHeredity.WhitStd
@@ -57,7 +58,7 @@ theorem whitRankIrr : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpac
   fun k _ _ _ _ => PositivityTheory.rg.gu.whit.whitRankIrr k
 
 theorem whitRankStd : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k], GlobalTheory.BZSeg.WhitRankStd k :=
-  fun k _ _ _ _ => whitRankStd_of_heredity k (GlobalTheory.T.whittaker_heredity k) (whitRankIrr k)
+  fun k _ _ _ _ => whitRankStd_of_heredity k (_root_.GlobalTheory.CompanionTheory.Rodier.whitHeredity k) (whitRankIrr k)
 
 theorem nuPair : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k], GlobalTheory.BZSeg.NuPair k :=
   fun k _ _ _ _ => GlobalTheory.RgGu.Nup2.nuPair k

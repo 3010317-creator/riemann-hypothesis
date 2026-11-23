@@ -4,10 +4,12 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsDu
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.PoitouTateNineTermTransgressionZeroApply
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsIntegralOfNormLeOne
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousAlgebraMapPadicInt
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CupCoboundaryStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsZmodPowCoboundaryOfRationalCoboundaryStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CupCoboundary
+public import Mathlib.NumberTheory.Padics.RingHoms
+public import Mathlib.Topology.Instances.ZMod
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsZmodPowCoboundaryOfRationalCoboundary
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MuCocycleCoboundaryLift
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteQuotientPow
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MuCocycleCoboundaryLiftStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -147,14 +149,14 @@ theorem mk_eq_zero_of_rational (hT : LocalTateDuality) {F Ω : Type} [Field F] [
   have : IsTopologicalRing ↥Bw.LL.1 := inferInstanceAs (IsTopologicalRing ↥Bw.LL.1.toSubfield.toSubring)
   have hr : Set.range Bw.toLL = Set.range (algebraMap ↥(Loc.OL Bw.LL) ↥Bw.LL.1) :=
     Bw.eO.surjective.range_comp (algebraMap ↥(Loc.OL Bw.LL) ↥Bw.LL.1)
-  obtain ⟨n, a, ha, e⟩ := GlobalTheory.T.exists_zmod_pow_coboundary_of_rational_coboundary' (Dec (F := F) A) l (fun g => ((cycZ F Ω l g : ℤ_[l]ˣ) : ℤ_[l])) O ↥Bw.LL.1 Bw.toLL
+  obtain ⟨n, a, ha, e⟩ := _root_.GlobalTheory.exists_zmod_pow_coboundary_of_rational_coboundary (Dec (F := F) A) l (fun g => ((cycZ F Ω l g : ℤ_[l]ˣ) : ℤ_[l])) O ↥Bw.LL.1 Bw.toLL
     (GlobalTheory.BlochKatoIntegralScalars.toLL_injective Bw) (hr ▸ GlobalTheory.LocalIntegers.isOpen_integers l Bw.LL)
     (Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero)
     (fun x => by
       obtain ⟨n, hn⟩ := GlobalTheory.BlochKatoIntegralScalars.exists_pow_mul_mem_OL Bw.LL (fun (_ : Unit) (_ : Fin 1) => x)
         continuous_const
       exact ⟨n, hr ▸ ⟨⟨_, hn () 0⟩, rfl⟩⟩) β z f hf hz
-  refine GlobalTheory.T.mu_cocycle_coboundary_lift hT F Ω l A v hA n w a ha fun g h => ?_
+  refine _root_.GlobalTheory.MuTowerInj.mk_eq_zero_of_coboundary hT F Ω l A v hA n w a ha fun g h => ?_
   rw [hw]
   exact e g h
 
@@ -220,7 +222,7 @@ theorem cup_eq_zero_above : LocalTateDuality → ∀ (D : Formalism.BasicNotions
     (coboundaries_le_cyclotomic_additive φ hl μ hμ) _ _ (by
       rintro _ ⟨z, c, t, b, h1, h2, h3, rfl⟩ _ ⟨z', c', t', b', h1', h2', h3', rfl⟩
       refine ⟨z, z', rfl, rfl, fun lam => ?_⟩
-      obtain ⟨f, hf, e⟩ := GlobalTheory.T.cup_coboundary_alt D N X bkP i s ‹_› ρ hρ v hv c c' t t' h1 h1' h2 h2'
+      obtain ⟨f, hf, e⟩ := _root_.GlobalTheory.BKCup.cup_coboundary D N X bkP i s ‹_› ρ hρ v hv c c' t t' h1 h1' h2 h2'
       obtain ⟨w, hw⟩ := exists_push φ hl μ hμ
         (cupCocycleZ1Z1 _ _ μ (dotProductBilin K K) continuous_of_discreteTopology hbe hc z z') lam
       simp_rw [← hw]

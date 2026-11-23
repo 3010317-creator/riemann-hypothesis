@@ -3,14 +3,15 @@ module
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UniqGapOfUniq
 public import Formalism.SharpRestriction.CuspSpanNormBounds.NormalizedLocalScale
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.BesselGapExistsFunctionalStatement
-public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.GapCoefficientDerivativeBoundStatement
-import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.HaarEqSmul
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselMapsProportionalDiscreteSeriesLargeGapStatement
+public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.IsDSOfIsDG
+public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.GapCoefficientDerivativeBound
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselMapsProportionalDiscreteSeriesLargeGap
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselPeriodPositivity
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsKFinNeZeroOfCwCont
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsKFiniteBesselPeriodNeZeroGapStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUnitaryTorusScaleBesselCharacter
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsKFiniteBesselPeriodNeZeroGap
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalizedBesselMapsAnyScalePieriConstants
+import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.HaarEqSmul
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsKFinNeZeroOfCwCont
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUnitaryTorusScaleBesselCharacter
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BesselGapDimensionFormula
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DiscreteSeriesUnitarySmoothBasic
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.QuotientMeasureAeMemAndMeasurableBesselModel
@@ -117,19 +118,19 @@ theorem one_side_gap (hH : GlobalTheory.GapIn.Hyp) {k r : ℕ} {ε : Fin (2 * r 
       rw [hmul _ hti _ hx, e2]
     simp only [this]
   have hB₁ : IsBes R z π (fun v => B (R.σ t v)) := (hbes B).1 hB
-  obtain ⟨v, hv, hv0⟩ := GlobalTheory.T.exists_kFinite_besselPeriod_ne_zero_gap hH k r ε mu h R Wp z π u μW _ μG _ (fun v => B (R.σ t v))
+  obtain ⟨v, hv, hv0⟩ := _root_.GlobalTheory.BesselPeriodNonzeroGap.exists_kFin_period_ne_zero hH k r ε mu h R Wp z π u μW _ μG _ (fun v => B (R.σ t v))
     (fun v => l (R.σ t v)) w hds hgap hok hS' hB₁ hw
     (by rw [htr B, hmass]; exact (ENNReal.ofReal_pos.2 hm).ne') (by rw [htr B, hmass]; exact ENNReal.ofReal_ne_top) hl₂
   have hvs : v ∈ R.sm := hTKsm v (hKT v hv)
   have hnz : NzOn R (fun v => l (R.σ t v)) := ⟨v, hvs, hv0⟩
   refine ⟨GlobalTheory.exists_kFin_ne_zero_of_cwCont hKF k r ε mu R hds Wp l hl.1 hl.2.1 hl.2.2.2 ⟨_, hsm t ht v hvs, hv0⟩, ?_⟩
-  obtain ⟨β, hβ⟩ := GlobalTheory.T.besselMaps_proportional_discreteSeries_largeGap hH k r ε mu R Wp z π u μW _ μG _ _ _ hdg hS' hl₂.1 hnz hB₁
+  obtain ⟨β, hβ⟩ := _root_.GlobalTheory.GapLine.bessel_line_gap hH k r ε mu R Wp z π u μW _ μG _ _ _ hdg hS' hl₂.1 hnz hB₁
   have hβ' : ∀ v ∈ R.sm, B v = β • l v := fun v hv => by
     have := hβ _ (hsm _ hti v hv)
     simpa only [e2] using this
   refine ⟨β, hβ', ?_⟩
   have hws : w ∈ R.sm := hTKsm w (hKT w hw)
-  have hiso := (Gp91.GlobalTheory.T.isIsoB_sqrt_fdeg_smul_of_gap hH.1 k r ε mu h R Wp z π u μW _ μG _ _ dd hdg hgap hok hS' hl₂ hdd hnz).2 w hws
+  have hiso := (_root_.Gp91.GlobalTheory.scaled_bessel_isometric hH.1 k r ε mu h R Wp z π u μW _ μG _ _ dd hdg hgap hok hS' hl₂ hdd hnz).2 w hws
   have h2 := (htr fun v => ((Real.sqrt dd : ℝ) : ℂ) • l v).symm.trans hiso
   have h3 : ENNReal.ofReal dd * PI.BesselPeriodGGP.l2SG νq (fun g => B (R.σ g w)) =
       ENNReal.ofReal (‖β‖ ^ 2) * PI.BesselPeriodGGP.l2SG νq (fun g => ((Real.sqrt dd : ℝ) : ℂ) • l (R.σ g w)) := by

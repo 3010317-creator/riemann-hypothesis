@@ -1,18 +1,19 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsLogMult
-import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLiftedFunctionOnLogResolutionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrimeDivisorOverSourceBirationalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrimeDivisorOverTargetBirationalStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLiftedFunctionOnLogResolution
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrimeDivisorOverSourceBirational
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrimeDivisorOverTargetBirational
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModificationLineBundleGlobalSectionsDimPullEq
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrdFunctionFieldPullbackPrimeDivisorOverStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrimeDivisorCentreThroughImageStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrdFunctionFieldPullbackPrimeDivisorOver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrimeDivisorCentreThroughImage
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalTopFormPullbackBijectiveBirational
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RegularAtNormalPointOfDivisorsStatement
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.DiscrepancyFormulaDivisor
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.DivisorPointProperLiftStatement
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.FormOrderBirationalPullback
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsLogCanonicalMultipleCanonical
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RegularAtNormalPointOfDivisors
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscrepancyFormulaDivisor
+public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.DivisorPointProperLift
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormOrderBirationalPullback
+import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -100,8 +101,8 @@ theorem regAt_pull {p : X ⟶ Sp k} (s : Y ⟶ X) [IsDominant s] [LocallyOfFinit
     (hbir : Function.Bijective (functionFieldMap s)) {v : Y} {y : X} (hv : Order.coheight v = 1)
     (hsv : s v ⤳ y) {f : X.functionField} (hf : RegAt y f) : RegAt v (functionFieldMap s f) := by
   obtain ⟨E', hE'⟩ := DivOver.exists_isAt_of_coheight_eq_one (p := s ≫ p) hv
-  obtain ⟨E, hE⟩ := GlobalTheory.T.exists_primeDivisor_over_target_birational k X Y p s hbir E'
-  have ht := GlobalTheory.T.primeDivisorCentre_through_image k X Y p s E' E hE v (hE'.through specializes_rfl)
+  obtain ⟨E, hE⟩ := _root_.GlobalTheory.Discrepancy.DivOver.exists_over_of_bijective k X Y p s hbir E'
+  have ht := _root_.GlobalTheory.Discrepancy.DivOver.Over.through_image k X Y p s E' E hE v (hE'.through specializes_rfl)
   exact (hE' _).1 ((hE f).1 ((ht.of_specializes hsv) f hf))
 
 theorem unitAt_pull {p : X ⟶ Sp k} (s : Y ⟶ X) [IsDominant s] [LocallyOfFiniteType (s ≫ p)]
@@ -141,7 +142,7 @@ theorem mult_lt_of_connected : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoe
   have hbir := hres.bir
   have hσc : Order.coheight σ = 1 :=
     CartierDiv.coheight_eq_one_of_mult_ne_zero (by rw [hσ]; exact_mod_cast hm.ne')
-  obtain ⟨h, hσreg, hreg⟩ := GlobalTheory.T.exists_lifted_function_on_logResolution X p n hp hn η m G N Y s K B F hres hcoh y σ
+  obtain ⟨h, hσreg, hreg⟩ := _root_.GlobalTheory.PairStep.exists_lifted_fn X p n hp hn η m G N Y s K B F hres hcoh y σ
     (fun v w h1 h2 h3 h4 => (hFle v).2 (hnear v w h1 h2 h3 h4)) hsσ hσc
   obtain ⟨h₀, rfl⟩ := hbir.2 h
 
@@ -154,14 +155,14 @@ theorem mult_lt_of_connected : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoe
     subst hwz
     obtain ⟨g, hg⟩ := G.exists_isEqn (s w)
     have hd := hdisc (s w) hz E hE g hg
-    have h1 := GlobalTheory.T.discrepancy_formula_divisor ℂ Y (s ≫ p) n (EtaleKlt.ratPull p s n η) hη' K (pullCart s G) m hm
+    have h1 := _root_.GlobalTheory.Discrepancy.discrep_isAt_eq_neg_mult ℂ Y (s ≫ p) n (EtaleKlt.ratPull p s n η) hη' K (pullCart s G) m hm
       hres.div E' w (fnPull s g) hw (isEqn_pullCart s hg)
     have h2 : discrep E' (EtaleKlt.ratPull p s n η) m (fnPull s g) = discrep E η m g := by
       have hform : E'.formOrd (EtaleKlt.ratPull p s n η) = E.formOrd η := by
         simpa only [DivOver.formOrd] using
-          (GlobalTheory.T.form_order_birational_pullback ℂ X Y p s hbir E' E hE'E n η hη)
+          (_root_.GlobalTheory.BirOrd.formOrd_ratPull_of_over ℂ X Y p s hbir E' E hE'E n η hη)
       unfold discrep
-      rw [hform, GlobalTheory.T.ord_functionField_pullback_primeDivisor_over ℂ X Y p s hbir E' E hE'E g]
+      rw [hform, _root_.GlobalTheory.Discrepancy.DivOver.Over.ord_fnPull_of_bijective ℂ X Y p s hbir E' E hE'E g]
     rw [h2] at h1
     rw [h1] at hd
     have hmq : (0 : ℚ) < m := by exact_mod_cast hm
@@ -171,9 +172,9 @@ theorem mult_lt_of_connected : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoe
     exact hFnn w (by exact_mod_cast this)
 
   have hreg0 : RegAt y h₀ := by
-    refine GlobalTheory.T.regular_at_normal_point_of_divisors X p hp y hyint h₀ fun z hz E hE => ?_
-    obtain ⟨E', hE'E⟩ := GlobalTheory.T.exists_primeDivisor_over_source_birational ℂ X Y p s hbir E
-    obtain ⟨w, hwz, hw⟩ := GlobalTheory.T.divisor_point_proper_lift ℂ X Y p s hbir inferInstance E' E hE'E z hE
+    refine _root_.GlobalTheory.Discrepancy.regAt_of_isIntegrallyClosed_stalk X p hp y hyint h₀ fun z hz E hE => ?_
+    obtain ⟨E', hE'E⟩ := _root_.GlobalTheory.Discrepancy.DivOver.exists_over ℂ X Y p s hbir E
+    obtain ⟨w, hwz, hw⟩ := _root_.GlobalTheory.Discrepancy.DivOver.isAt_lift ℂ X Y p s hbir inferInstance E' E hE'E z hE
     have hFw := hDnn z hz E E' hE hE'E w hwz hw
     have hsw : s w ⤳ y := hwz ▸ hz
     rw [hE'E h₀]

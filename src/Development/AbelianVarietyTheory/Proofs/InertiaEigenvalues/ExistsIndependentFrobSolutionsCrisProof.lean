@@ -3,8 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TwistStep
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ImportsAlt
 public import Development.AbelianVarietyTheory.CrystallinePeriods.RingBasics
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBcrisPlusSeriesWithThetaResiduesStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsTiltZerosUntiltFrobeniusDoubleSeriesStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdmSt
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBcrisPlusSeriesWithThetaResidues
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsTiltZerosUntiltFrobeniusDoubleSeries
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -87,4 +88,4 @@ theorem GlobalTheory.PMon.exI_of_ser_core (hser : ∀ (l : ℕ) [Fact l.Prime] (
     have := (hker _).1 h2
     simpa only [AddSubmonoidClass.coe_finsetSum, Subring.coe_mul] using this
 
-theorem GlobalTheory.PMon.exI_main : ExI := GlobalTheory.PMon.exI_of_ser_core GlobalTheory.T.exists_BcrisPlus_series_with_theta_residues GlobalTheory.T.exists_tilt_zeros_untiltFrobeniusDoubleSeries
+theorem GlobalTheory.PMon.exI_main : ExI := GlobalTheory.PMon.exI_of_ser_core _root_.GlobalTheory.PSer.series_residues _root_.GlobalTheory.PSerExist.exists_zeros

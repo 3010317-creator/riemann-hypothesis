@@ -1,12 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ToSpanSingletonConstGenInjective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComapMapEqSelfOfInjectiveFiniteHopfStatement
+public import Mathlib.RingTheory.Bialgebra.Hom
+public import Mathlib.RingTheory.HopfAlgebra.Basic
+public import Mathlib.RingTheory.Ideal.Maps
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComapMapEqSelfOfInjectiveFiniteHopf
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CotangentDimsLeHeight
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankFrobeniusDualAddFinrankKerVerschiebungStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MulPMemFrobeniusKernelOfVerschiebungEqZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobTwistBaseChangeHomApp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankFrobeniusDualAddFinrankKerVerschiebung
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MulPMemFrobeniusKernelOfVerschiebungEqZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowFinrankCotangentLeFinrankFrobeniusKernelQuoti
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelativeFrobeniusKernelIdealLeFrobeniusKernelIdeStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsKSValueOneOfRetraction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -47,7 +52,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsKSValueOneOfRetraction
 
 @[expose] public section
 
@@ -85,13 +89,13 @@ theorem GlobalTheory.PDivGroup.finrank_cot_add_finrank_cot_dual_le_of_cast_eq_ze
         Γ.A 1 →ₐ[k] (PDivGroup.frobTwist hp Γ).A 1).toLinearMap ≤
       (kerIdeal ((PDivGroup.relFrob hp Γ).app 1)).restrictScalars k := by
     intro a ha
-    have h := GlobalTheory.T.mulP_mem_kerIdeal_comp_relFrob_of_verschiebung_eq_zero p k hp Γ a ha
+    have h := _root_.GlobalTheory.PDivGroup.mulP_mem_kerIdeal_of_verschiebung_eq_zero p k hp Γ a ha
     rw [kerIdeal_comp] at h
     change a ∈ kerIdeal ((PDivGroup.relFrob hp Γ).app 1)
-    rw [← GlobalTheory.T.comap_map_eq_self_of_injective_finiteHopf k _ _ (Γ.mulP 1) hmulP
+    rw [← _root_.GlobalTheory.PDiv.comap_map_eq_self_of_hopf_injective k _ _ (Γ.mulP 1) hmulP
       (kerIdeal ((PDivGroup.relFrob hp Γ).app 1))]
     exact h
-  have hV := GlobalTheory.T.finrank_frobeniusDual_add_finrank_ker_verschiebung p k hp Γ
+  have hV := _root_.GlobalTheory.PDivGroup.finrank_range_relFrob_dual_add_finrank_ker_verschiebung p k hp Γ
   have hq := Submodule.finrank_quotient_add_finrank
     ((kerIdeal ((PDivGroup.relFrob hp Γ).app 1)).restrictScalars k)
   rw [(Submodule.Quotient.restrictScalarsEquiv k (kerIdeal ((PDivGroup.relFrob hp Γ).app 1))).finrank_eq] at hq

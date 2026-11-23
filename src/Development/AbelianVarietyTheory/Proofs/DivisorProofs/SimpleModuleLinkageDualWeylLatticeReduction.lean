@@ -2,9 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LiftFrameEmbeddingBase
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EvalPol
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CapelliCoeffDualWeylEqCoeffProdStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueDualWeylWeightProjectorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolarisationOperatorFormulaGroupAndProjectorsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CapelliCoeffDualWeylEqCoeffProd
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HasBlockOfOccurs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueDualWeylWeightProjector
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolarisationOperatorFormulaGroupAndProjectors
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -199,11 +200,11 @@ theorem linkage : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationR
   intro O _ _ _ _ N ι _ _ lam mu l ϖ hl hϖ hϖl hlam hmu Gm _ _ _ hSub hEmb τ
   obtain ⟨U, π, hπ, -⟩ := hSub
   obtain ⟨ψ, hψ, h2, h3, h4⟩ := hEmb
-  choose P hP _ using fun σ w => GlobalTheory.T.existsUnique_dualWeylWeightProjector O N ι lam σ w
-  choose Q hQ _ using fun σ w => GlobalTheory.T.existsUnique_dualWeylWeightProjector O N ι mu σ w
+  choose P hP _ using fun σ w => _root_.GlobalTheory.ExpFrame.exists_unique_isProj O N ι lam σ w
+  choose Q hQ _ using fun σ w => _root_.GlobalTheory.ExpFrame.exists_unique_isProj O N ι mu σ w
   obtain ⟨M, hM⟩ : ∃ M, M = ∑ c : Fin N, lam τ c + ∑ c : Fin N, mu τ c := ⟨_, rfl⟩
-  choose Fab hFab using fun p : Fin N × Fin N => GlobalTheory.T.polarisationOperator_formula_groupAndProjectors O N ι τ M p.1 p.2
-  obtain ⟨Fk, hFk⟩ := GlobalTheory.T.capelliCoeff_dualWeyl_eq_coeff_prod O N
+  choose Fab hFab using fun p : Fin N × Fin N => _root_.GlobalTheory.PolarFormula.polar_formula O N ι τ M p.1 p.2
+  obtain ⟨Fk, hFk⟩ := _root_.GlobalTheory.CapelliCoeffs.capelli_coeff_dualWeyl O N
   have hscal : ∀ (nu : ι → ℕ → ℕ) (R : ι → (Fin N → ℕ) → Module.End O (NablaT O N nu)),
       (∀ σ, Antitone (res N (nu σ))) → (∀ σ w, IsProj O N nu σ w (R σ w)) → ∑ c : Fin N, nu τ c ≤ M → ∀ k,
       evalE O N nu R (FreeAlgebra.lift O Fab (Fk k)) =

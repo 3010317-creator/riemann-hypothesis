@@ -2,9 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsTestRep
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.QuadraticStarStructure
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelfDualIffLatticeVolumeAndPlancherelStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelfDualIffLatticeVolumeAndPlancherel
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelfDualMeasureExistsUniqueFourierInversion
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedStandardAddCharConductorPropertiesStatement
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FourierMatch
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedStandardAddCharConductorProperties
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -161,7 +162,7 @@ theorem pi_selfDual [hU : Unram F E] (ψ : AddChar F ℂ) (hψ : IsStdChar ψ) (
     rw [hOset]; exact isOpen_set_pi Set.finite_univ fun _ _ => IsUltrametricDist.isOpen_closedBall _ one_ne_zero
   have hOk : IsCompact (O : Set (Fin r → E)) := by
     rw [hOset]; exact isCompact_univ_pi fun _ => isCompact_closedBall 0 1
-  have hc := ((GlobalTheory.T.unramifiedStandardAddChar_conductor_properties F E).2 ψ hψ).2.2.2
+  have hc := ((_root_.GlobalTheory.StdChar.psi_conductor F E).2 ψ hψ).2.2.2
   have hdual : {y | ∀ x ∈ O, ψ (trForm (F := F) r x y) = 1} = (O : Set (Fin r → E)) := by
     ext y
     simp only [Set.mem_setOf_eq, SetLike.mem_coe, hmem]
@@ -184,7 +185,7 @@ theorem pi_selfDual [hU : Unram F E] (ψ : AddChar F ℂ) (hψ : IsStdChar ψ) (
   have hvol : (Measure.pi fun _ : Fin r => M.μE) O = 1 := by
     rw [hOset, Measure.pi_pi]; simp [M.volE]
   haveI : (Measure.pi fun _ : Fin r => M.μE).IsAddHaarMeasure := Measure.pi.isAddHaarMeasure _
-  have key := (GlobalTheory.T.selfDual_iff_lattice_volume_and_plancherel_alt F E ψ hψ (Fin r → E) (trForm r) (trForm_symm r) (trForm_nondeg r) (Measure.pi fun _ : Fin r => M.μE) inferInstance).1 O
+  have key := (_root_.GlobalTheory.JR.selfDual_iff_lattice_volume_and_plancherel F E ψ hψ (Fin r → E) (trForm r) (trForm_symm r) (trForm_nondeg r) (Measure.pi fun _ : Fin r => M.μE) inferInstance).1 O
     hOo hOk |>.1
   rw [key, hdual, hvol, one_mul]
 

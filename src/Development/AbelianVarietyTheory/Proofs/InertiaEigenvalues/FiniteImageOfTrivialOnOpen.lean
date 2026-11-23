@@ -1,8 +1,9 @@
 module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteIndexOfIsOpenAbsGaloisFinExtStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ImageFiniteOfTrivialOnInfFiniteIndexStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteIndexOfIsOpenAbsGaloisFinExt
+public import Mathlib.GroupTheory.Index
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ImageFiniteOfTrivialOnInfFiniteIndex
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,7 +58,7 @@ theorem GK.finite_image_of_trivial_on_open :
       (J H : Subgroup ↥(GK K)), IsOpen (H : Set ↥(GK K)) → (∀ g ∈ J, g ∈ H → ρ g = 1) →
       (ρ '' (J : Set ↥(GK K))).Finite := by
   intro l _ K Q _ ρ J H hH hρ
-  haveI := GlobalTheory.T.finiteIndex_of_isOpen_absGalois_finExt l K H hH
-  exact GlobalTheory.T.finite_image_of_trivial_on_inf_finiteIndex _ Q ρ J H inferInstance hρ
+  haveI := _root_.GlobalTheory.OpenFiniteIndex.finiteIndex_of_isOpen l K H hH
+  exact _root_.GlobalTheory.image_finite_of_trivial_on_inf_finiteIndex _ Q ρ J H inferInstance hρ
 
 end GlobalTheory

@@ -3,9 +3,11 @@ module
 public import Formalism.LocalToGlobal.CharacterGerms.ContentLargeFromSupplies
 public import Formalism.LocalToGlobal.CharacterGerms.ContentZeroAt
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.BlockOfNormalForm
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.BlockValueOnRowsEqStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.MainTermImpliesRowHypothesisStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.RowDataMainTermNormalFormAndLevelOneStatement
+public import Formalism.LocalToGlobal.CharacterGerms.BiadditiveInSingleVariables
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.BlockValueOnRowsEq
+public import Formalism.LocalToGlobal.CharacterGerms.LatticeInclusionFormsInjective
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.MainTermImpliesRowHypothesis
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.RowDataMainTermNormalFormAndLevelOne
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.SumEqOfIsHomogeneous
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -135,10 +137,10 @@ theorem window_letterDet (X : RowData K V d I J) (hA : X.Alt) (hl : 5 ≤ V.l) (
         V.v (ValOf X.hL (letterDet K g p ^ (V.l ^ i * y) * letterDet K (1 - g) p' ^ y)
           (fun _ => some (g, a, a + (i : ZMod d))) gr) ≤ ((blockBd V.l X.n X.m i y : ℝ) : WithTop ℝ)} := by
   have := X.charZero
-  obtain ⟨n0, e, v', Φ, hM, -⟩ := (GlobalTheory.T.rowData_mainTerm_normalForm_and_levelOne K V d I J X).1 hA hl g a ha i hi hid _ _
+  obtain ⟨n0, e, v', Φ, hM, -⟩ := (_root_.GlobalTheory.MainTerm.main K V d I J X).1 hA hl g a ha i hi hid _ _
     (satIn_single X g a p hp hty) (satIn_single X (1 - g) _ p' hp' hty')
   have hn : n0 ≤ X.n := hM.1.2
-  obtain ⟨hR, hH1, hH2, -⟩ := GlobalTheory.T.mainTerm_implies_rowHypothesis K V d I J X g a i _ _ n0 e v' Φ hM hn
+  obtain ⟨hR, hH1, hH2, -⟩ := _root_.GlobalTheory.mainTerm_to_rowHypothesis K V d I J X g a i _ _ n0 e v' Φ hM hn
   obtain ⟨S, t, hSt, hr, tt, tt', hB, hy⟩ :=
     block_of_normal_form X g a i p p' hp hp' n0 e v' Φ hM hn _ hR
   have hrank : X.n - n0 ≤ (i + 1) * X.m := by
@@ -166,7 +168,7 @@ theorem window_letterDet (X : RowData K V d I J) (hA : X.Alt) (hl : 5 ≤ V.l) (
   · subst h0
     refine ⟨Y0, ⟨S, t, hSt, hgood Y0 (Or.inl ?_)⟩, le_rfl, Nat.lt_add_of_pos_right (sum_positive_of_five_le hl hn1)⟩
     have hl1 : (1 : ℝ) < V.l := by exact_mod_cast (by omega : 1 < V.l)
-    rw [GlobalTheory.T.blockValue_on_rows_eq K V.l i 0 X.n hn hr tt tt' _ hB Y0]
+    rw [_root_.GlobalTheory.blockValue_rows K V.l i 0 X.n hn hr tt tt' _ hB Y0]
     refine (GlobalTheory.OddBlock.content_and_window.1 K V.v V.l V.l_prime hl V.v_l i X.n 0 Y0 hi hn1 hn _ ?_).trans ?_
     · have : LamP K V.l i 0 (X.restrictedCurveSystemSeries g a i hn e v') Y0 = 1 := by
         simp [LamP, detL, detR, jetAt0_one', cc_mvExp']

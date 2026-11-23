@@ -3,8 +3,10 @@ module
 public import GroundTheory.ProfiniteCohomology.CohomologicalDimension.PrimaryComponentCohomologyEqBotOfScdpLt
 public import GroundTheory.ProfiniteCohomology.RestrictedRamification.MaxUnramifiedOutside
 public import ReciprocityTheory.Hypotheses.GalCoh
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.CohomologicalDimensionTopologicalIsoStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ConstantTermFrameKTypeCoefficientsStatement
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.IsDiscreteRepResMuROrep
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.CohomologicalDimensionTopologicalIso
+public import Mathlib.Topology.Algebra.ContinuousMonoidHom
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ConstantTermFrameKTypeCoefficients
 public import Development.WeilBound.CoreStatements.PublishedTheorems.GlobalFiniteness.Transport
 public import GroundTheory.ProfiniteCohomology.RestrictedRamification.Dimension
 public import GroundTheory.ProfiniteCohomology.RestrictedRamification.Finite
@@ -72,7 +74,7 @@ theorem mem_of_pow_mem {F : Type} [Field F] [NumberField F] (v : HeightOneSpectr
 
 theorem finite_H2_torsion_module : ∀ (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω] (l : ℕ) [Fact l.Prime] (r : ℕ) (S : Finset (HeightOneSpectrum (𝓞 F))), ContainsAbove S l → ∀ (A : Rep.{0} (ULift.{0} ℤ) (galUnramifiedOutside F Ω (S : Set (HeightOneSpectrum (𝓞 F))))) [IsDiscreteRep A], Finite A.V → (∀ a : A.V, (l ^ r) • a = 0) → Finite (cohomology A 2) := by
   intro F Ω _ _ _ _ _ l _ r S hS A _ hAf hAk
-  obtain ⟨K, S', hS', ⟨θ⟩⟩ := GlobalTheory.T.galois_unramified_outside_descends_finite F Ω l S hS
+  obtain ⟨K, S', hS', ⟨θ⟩⟩ := _root_.GlobalTheory.CompanionTheory.GSCd.Transport.exists_gs_transport F Ω l S hS
   obtain ⟨k, hk⟩ := card_eq_pow_of_torsion l r hAk
   have hK : ∀ v : HeightOneSpectrum (𝓞 K.1), ((Nat.card A.V : ℕ) : 𝓞 K.1) ∈ v.asIdeal →
       v ∈ (S' : Set (HeightOneSpectrum (𝓞 K.1))) := by
@@ -92,8 +94,8 @@ theorem cdp_gal_le_two (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algeb
     [IsAlgClosure F Ω] (l : ℕ) [Fact l.Prime] (S : Finset (HeightOneSpectrum (𝓞 F)))
     (hS : ContainsAbove S l) (hl2 : l ≠ 2) :
     cdp l (galUnramifiedOutside F Ω (S : Set (HeightOneSpectrum (𝓞 F)))) ≤ 2 := by
-  obtain ⟨K, S', hS', ⟨e⟩⟩ := GlobalTheory.T.galois_unramified_outside_descends_finite F Ω l S hS
-  rw [GlobalTheory.T.cohomological_dimension_topological_iso _ _ l e]
+  obtain ⟨K, S', hS', ⟨e⟩⟩ := _root_.GlobalTheory.CompanionTheory.GSCd.Transport.exists_gs_transport F Ω l S hS
+  rw [_root_.GlobalTheory.CompanionTheory.GSCd.cdp_eq_of_continuousMulEquiv _ _ l e]
   exact cdp_galUnramifiedOutside_le_two K (S' : Set (HeightOneSpectrum (𝓞 K.1))) Fact.out
     (fun v hv => hS' v hv) (Or.inl hl2)
 

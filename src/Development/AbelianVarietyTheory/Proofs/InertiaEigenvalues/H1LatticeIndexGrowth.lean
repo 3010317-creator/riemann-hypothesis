@@ -5,14 +5,18 @@ public import Formalism.GaloisCohomology.LocalTateDualityK
 public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CardDualZmodModuleEqCard
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardCocyclesMulInvariantsDiscrete
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardH1H0TransportLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardLatticeQuotPrimePowStatement
+public import Formalism.GaloisCohomology.StatementLoc
+public import ReciprocityTheory.Hypotheses.GalCohDefs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardH1H0TransportLattice
+public import Mathlib.NumberTheory.Padics.PadicNumbers
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardLatticeQuotPrimePow
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoefficientRingIntegersCompactAdicProperties
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsTraceFormIntegralIffGoodCoeffStatement
+public import Mathlib.NumberTheory.Padics.PadicIntegers
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsTraceFormIntegralIffGoodCoeff
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LatticeModPowActionIsLocallyConstant
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PeriodCyclotomicCharReducesModPrimePow
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TracePairingInjectiveEquivariantLevelMap
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FixingSubgroupEquivBicontinuous
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LatticeModPowActionIsLocallyConstantStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PeriodCyclotomicCharReducesModPrimePowStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TracePairingInjectiveEquivariantLevelMapStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -92,10 +96,10 @@ theorem core_pos (hT : Formalism.GaloisCohomology.LocalTateDualityK) (hE : Forma
   haveI : NeZero (l ^ r) := ⟨pow_ne_zero _ hp.ne_zero⟩
   have hcM : Nat.card M = Nat.card (O ⧸ Ideal.span {((l : ℕ) : O)}) ^ (r * finrank LL A.V) := by
     rw [← Nat.card_congr e.toEquiv]
-    exact GlobalTheory.T.card_lattice_quot_prime_pow l _ LL O hG A LA r
+    exact _root_.GlobalTheory.LatticeCard.card_lattice_quot_pow l _ LL O hG A LA r
   have hcM' : Nat.card (↥LA'.T ⧸ (Ideal.span {((l : ℕ) : O) ^ r} • ⊤ : Submodule O ↥LA'.T)) =
       Nat.card (O ⧸ Ideal.span {((l : ℕ) : O)}) ^ (r * finrank LL A.V) := by
-    rw [GlobalTheory.T.card_lattice_quot_prime_pow l _ LL O hG A' LA' r, ← hm.1.2.2.2]
+    rw [_root_.GlobalTheory.LatticeCard.card_lattice_quot_pow l _ LL O hG A' LA' r, ← hm.1.2.2.2]
   haveI : Finite M := Nat.finite_of_card_ne_zero (by rw [hcM]; exact pow_ne_zero _ hcO)
   have htor : ∀ x : M, l ^ r • x = 0 := by
     intro x
@@ -147,18 +151,18 @@ theorem core_pos (hT : Formalism.GaloisCohomology.LocalTateDualityK) (hE : Forma
       funext g
       rw [← hcomp, e.apply_symm_apply]
     rw [hx]
-    exact ((GlobalTheory.T.lattice_modPow_action_isLocallyConstant l ↥(GK K) LL O hG A LA r hI (e.symm x)).comp e).continuous.comp hφ.2
+    exact ((_root_.GlobalTheory.InertiaEigenvalues.actQ_pow_isLocallyConstant l ↥(GK K) LL O hG A LA r hI (e.symm x)).comp e).continuous.comp hφ.2
   have hT1 := hT l K.1 hK r M rho hr hrho
   obtain ⟨⟨eH⟩, -, -, -, hb⟩ := hT1
   have hEu := hE l K.1 hK r M rho hr hrho
-  have hTr := GlobalTheory.T.card_H1_H0_transport_lattice l K LL O A LA _ hI (l ^ r) M e rho hcomp
+  have hTr := _root_.GlobalTheory.GaloisTransport.card_H1_H0_transport l K LL O A LA _ hI (l ^ r) M e rho hcomp
   obtain ⟨h1Q, h0Q⟩ := hTr
   have hTDfin : Finite (ReciprocityTheory.Gal.TDual (ZMod (l ^ r)) M) :=
     (GlobalTheory.CocycleCount.card_linear_le (l ^ r) M).1
   have hH2 := card_H2_eq (l ^ r) _ M _ rho eH hb
-  have hD := GlobalTheory.T.exists_trace_form_integral_iff_goodCoeff l LL O hG
+  have hD := _root_.GlobalTheory.GoodCoeff.exists_trace_form_integral_iff l LL O hG
   obtain ⟨lam, hlam⟩ := hD
-  have hMp := GlobalTheory.T.tracePairing_injective_equivariant_levelMap l P K LL O A A' LA LA' m hm lam hlam r hI hI' (GlobalTheory.T.periodCyclotomicChar_reduces_mod_prime_pow l P K r) M e rho hcomp
+  have hMp := _root_.GlobalTheory.tracePairing_levelMap l P K LL O A A' LA LA' m hm lam hlam r hI hI' (_root_.GlobalTheory.CycLevel.chi_reduces l P K r) M e rho hcomp
   obtain ⟨Ψ, hΨi, hΨe⟩ := hMp
   have hcD : Nat.card (ReciprocityTheory.Gal.TDual (ZMod (l ^ r)) M) = Nat.card M :=
     GlobalTheory.ZModDual.card_dual_eq (l ^ r) M

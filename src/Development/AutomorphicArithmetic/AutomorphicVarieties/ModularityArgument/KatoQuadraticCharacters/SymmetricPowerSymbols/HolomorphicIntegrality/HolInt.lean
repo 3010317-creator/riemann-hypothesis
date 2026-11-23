@@ -7,7 +7,10 @@ public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsIntegralModularTowerJCompGlTwoPosRat
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OverAffineJLineComapSlGal
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SlTwoInvariantHolomorphicMemAdjoinJInvariantStatement
+import Development.AbelianVarietyTheory.Definitions.Foundations.ExpUpper
+import Mathlib.FieldTheory.IsAlgClosed.Basic
+import Mathlib.RingTheory.SimpleRing.Principal
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SlTwoInvariantHolomorphicMemAdjoinJInvariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -135,7 +138,7 @@ private theorem hol_int {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure �
     rw [← hc]
     exact c.2
   have hadj : ∀ n, P.coeff n ∈ Algebra.adjoin Ω {Tw.jK} := fun n =>
-    GlobalTheory.T.slTwo_invariant_holomorphic_mem_adjoin_jInvariant ε Tw ε.injective
+    _root_.GlobalTheory.KZ.LevelOne.mem_adjoin_j ε Tw ε.injective
       (by obtain ⟨ψ, h1, h2⟩ := Tw.j_hol; exact ⟨ψ, h2, h1⟩) _ (fun γ => hinv γ n) (hhol n)
   have hl2 : P ∈ lifts (algebraMap (Algebra.adjoin Ω {Tw.jK}) Tw.K) := by
     rw [lifts_iff_coeff_lifts]

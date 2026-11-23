@@ -6,13 +6,14 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumWIffGoodF
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LabelsCharOne
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TypeIdempotentCoeffAcrossLayers
 public import Formalism.SharpRestriction.Divisibility.LiftErrorLocal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLabelsSemisimpleParameterGLFiniteFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobeniusOrbitRootPolynomialFactorizationStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLabelsSemisimpleParameterGLFiniteField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobeniusOrbitRootPolynomialFactorization
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrimeToPartFrob
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquarefreeMonicPolyLabelsSemisimpleParameterStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CentralIdempotentOfIrrCharacterOrthogonalCentralStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraSeriesLabelExistsUniqueGLn
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquarefreeMonicPolyLabelsSemisimpleParameter
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LemmaLSeriesWeightsOfGreenCuspidalParametrisatio
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LabelDatum
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CentralIdempotentOfIrrCharacterOrthogonalCentral
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraSeriesLabelExistsUniqueGLn
 import Formalism.CyclotomicNorms.NonsquarefreeBounds.NonsquarefreeMonicBoundHolds
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -264,7 +265,7 @@ open GlobalTheory.ParamLabel GlobalTheory.GLq
 
 theorem irr_one_ne_zero {G : Type} [Group G] [Fintype G] {χ : G → ℂ} (h : IsIrr χ) : χ 1 ≠ 0 := by
   intro h0
-  have h1 := (GlobalTheory.T.centralIdempotentOfIrrCharacter_orthogonal_central G χ χ h h).2.2
+  have h1 := (_root_.GlobalTheory.GLq.ZOrth.zorth G χ χ h h).2.2
   obtain ⟨V, -, hV⟩ := h
   have h2 : Module.finrank ℂ V = 0 := by
     have := hV 1
@@ -285,8 +286,8 @@ theorem eq_of_prod_eq {ι : Type} [Fintype ι] {G : ι → Type} [∀ i, Group (
     congr 1
     exact Finset.prod_congr rfl fun k hk => by rw [Pi.mulSingle_eq_of_ne (Finset.ne_of_mem_erase hk)]
   by_contra hne
-  have h1 := (GlobalTheory.T.centralIdempotentOfIrrCharacter_orthogonal_central _ _ _ (h i) (h i)).2.2
-  have h2 := (GlobalTheory.T.centralIdempotentOfIrrCharacter_orthogonal_central _ _ _ (h i) (h' i)).2.2
+  have h1 := (_root_.GlobalTheory.GLq.ZOrth.zorth _ _ _ (h i) (h i)).2.2
+  have h2 := (_root_.GlobalTheory.GLq.ZOrth.zorth _ _ _ (h i) (h' i)).2.2
   rw [if_pos rfl] at h1
   rw [if_neg hne] at h2
   have h3 : ip (χ i) (χ i) * ∏ k ∈ Finset.univ.erase i, χ k 1 = ip (χ i) (χ' i) * ∏ k ∈ Finset.univ.erase i, χ' k 1 := by
@@ -323,13 +324,13 @@ theorem TameTie.idemTie (hG : Green) {om : ∀ i : Fin 2, (ZMod (D.host.g i))ˣ 
     ((Set.ext_iff.1 (ser a s h hg k v).1) _).2 rfl
   have exa : ∀ s, ∃ a, Rel L a s := by
     intro s
-    choose x f hf using fun kv : (Σ k : Fin 2, D.nd.PlG k) => GlobalTheory.T.exists_labels_semisimple_parameter_GL_finiteField _ (L kv.1) _ (s ⟨kv.1, below kv.1 kv.2⟩)
+    choose x f hf using fun kv : (Σ k : Fin 2, D.nd.PlG k) => _root_.GlobalTheory.ParamLabel.exists_labels _ (L kv.1) _ (s ⟨kv.1, below kv.1 kv.2⟩)
     refine ⟨fun kv i => (f kv).coeff i, fun k v => ⟨x ⟨k, v⟩, ?_⟩⟩
-    rw [Formalism.CyclotomicNorms.Sqf.monicOf_coeffs _ (hf ⟨k, v⟩).2.2.1 (GlobalTheory.T.frobeniusOrbitRootPolynomial_factorization _ _ _ _ _ (hf ⟨k, v⟩).2).1]
+    rw [Formalism.CyclotomicNorms.Sqf.monicOf_coeffs _ (hf ⟨k, v⟩).2.2.1 (_root_.GlobalTheory.ParamLabel.RootPolyFactor.rootPoly_factor _ _ _ _ _ (hf ⟨k, v⟩).2).1]
     exact hf ⟨k, v⟩
   have exs : ∀ a, D.ntypes.goodTuple (fun k v => Formalism.CyclotomicNorms.monicOf (a ⟨k, v⟩)) → ∃ s, Rel L a s := by
     intro a hg
-    choose s hs using fun k v => GlobalTheory.T.squarefree_monic_poly_labels_semisimple_parameter _ (L k) _ _ ((hg k).1.1 v).1 ((hg k).1.1 v).2.1 ((hg k).1.1 v).2.2 ((hg k).1.2.1 v)
+    choose s hs using fun k v => _root_.GlobalTheory.ParamExists.param_exists _ (L k) _ _ ((hg k).1.1 v).1 ((hg k).1.1 v).2.1 ((hg k).1.1 v).2.2 ((hg k).1.2.1 v)
     refine ⟨fun w => s w.1 ((Equiv.ofBijective _ (below_bijective w.1)).symm w.2), fun k v => ?_⟩
     have : (Equiv.ofBijective _ (below_bijective k)).symm (below k v) = v :=
       (Equiv.ofBijective _ (below_bijective k)).symm_apply_apply v

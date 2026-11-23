@@ -1,8 +1,8 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HasStepCharts
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagGapSameBaseOrbitStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagGapTorusInvariantStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagGapSameBaseOrbit
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagGapTorusInvariant
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsValueAtOfTorus
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -129,9 +129,9 @@ theorem stepGap_eq {M : FlagModel y Ψ N j} [Fintype Ψ] [DecidableEq Ψ] {BM : 
     · exact one_ne_zero
   have hT := GlobalTheory.CompanionTheory.Ar.PB.StepW.TorusAct.main K ι Φ y z' c hc
   have h1 : stepGap M BM p (fun q => c q.1 * z' q) = stepGap M BM p z' :=
-    GlobalTheory.T.flag_gap_torus_invariant K ι Φ y Ψ N j M n BM p z' c hc hz'm.1
+    _root_.GlobalTheory.CompanionTheory.Ar.PB.StepW.stepGap_torus K ι Φ y Ψ N j M n BM p z' c hc hz'm.1
   rw [← h1]
-  refine GlobalTheory.T.flag_gap_same_base_orbit K ι Φ y Ψ N j M n BM p (pr x) z _ hb hzm (hT.2 hz'm).1 so ?_ ?_
+  refine _root_.GlobalTheory.CompanionTheory.Ar.PB.StepW.stepGap_eq_of_base_block K ι Φ y Ψ N j M n BM p (pr x) z _ hb hzm (hT.2 hz'm).1 so ?_ ?_
   · funext q
     have : c q.1.1 = cb q.1 := dif_pos q.1.2
     show basePart M.blk z q = c q.1.1 * z' ⟨q.1.1, q.2⟩

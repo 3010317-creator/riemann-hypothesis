@@ -2,7 +2,8 @@ module
 
 public import Mathlib.Analysis.SpecialFunctions.Log.Basic
 public import Mathlib.LinearAlgebra.Matrix.PosDef
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetReLePowMulDetReStatement
+public import Mathlib.Analysis.Complex.Order
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetReLePowMulDetRe
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -144,11 +145,11 @@ theorem main : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (G : Matrix ι ι �
     simp
   have d1 : G.det.re ≤ 2 ^ Fintype.card ι * A.det := by
     rw [← hdet]
-    refine GlobalTheory.T.det_re_le_pow_mul_det_re_of_posDef ι G Ac 2 hG hAcpd fun c => ?_
+    refine _root_.GlobalTheory.HSAmp.det_re_le_pow_mul_det_re ι G Ac 2 hG hAcpd fun c => ?_
     rw [hqA c]; linarith [hn2 c]
   have d2 : A.det ≤ κ ^ Fintype.card ι * G.det.re := by
     rw [← hdet]
-    refine GlobalTheory.T.det_re_le_pow_mul_det_re_of_posDef ι Ac G κ hAcpd hG fun c => ?_
+    refine _root_.GlobalTheory.HSAmp.det_re_le_pow_mul_det_re ι Ac G κ hAcpd hG fun c => ?_
     rw [hqA c]; nlinarith [hq2 c, hn1 c]
   have ha : 0 < A.det := hApd.det_pos
   have hg : 0 < G.det.re := (Complex.pos_iff.1 hG.det_pos).1

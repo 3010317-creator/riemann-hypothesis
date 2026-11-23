@@ -2,14 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasDerivAtAndIsTheta
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EqZeroOfAeFundamentalDomain
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HomSymplecticHalfFormAlgebraicLawsContinuous
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.CocompactTensor
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.MeanSquareAddFundamentalDomainOfCocompact
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RationalSymplecticPointsSelfAnnihilator
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsDescendPeriodicTrig
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DescMk
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FourierCoeffMulCharConvAndHasDerivAt
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MeanPeriodicIndepOfCovolumeOne
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SetIntegralPosOfPeriodicNonneg
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HomSymplecticHalfFormAlgebraicLawsContinuous
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.CocompactTensor
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.MeanSquareAddFundamentalDomainOfCocompact
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -221,7 +223,7 @@ theorem schur (hψ : IsCharAF D.host.F ψ) (S T : HSp D) : Schur ψ S T := by
       · exact ENNReal.mul_ne_top ENNReal.coe_ne_top (ENNReal.mul_ne_top ENNReal.ofReal_ne_top hfin)
       · exact ENNReal.mul_ne_top ENNReal.ofReal_ne_top hfin
       intro ε hε
-      obtain ⟨s, c, happ⟩ := GlobalTheory.trigPoly_dense_periodic (WO S T) (ratL T S) K hK hcov (ratL T S) (chiR ψ S T)
+      obtain ⟨s, c, happ⟩ := _root_.GlobalTheory.QuotientDescentTwistedOperators.approx (WO S T) (ratL T S) K hK hcov (ratL T S) (chiR ψ S T)
         hχc hχadd hχadd' hχ0 hχn hχker Φ hΦ.cont (periodic_of_one hΦ) ε hε
       obtain ⟨P, hPdef⟩ : ∃ P : WO S T → ℂ, P = ∑ a ∈ s, c a • chiR ψ S T a := ⟨_, rfl⟩
       have hPθ : IsThetaFunO 1 S T P := by

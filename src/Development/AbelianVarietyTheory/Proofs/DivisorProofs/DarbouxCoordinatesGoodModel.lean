@@ -4,12 +4,13 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSymp
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicHeisenbergActsByLocalSchrodinger
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplementaryAdelicSchwartzRestFunctionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalDarbouxCoordinatesCompareStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardCharacterAlmostUnramifiedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticGroupGeneratedByElementaryStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilOperatorForLeviMatrixStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilOperatorForUnipotentMatrixStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilOperatorForWeylElementStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalDarbouxCoordinatesCompare
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardCharacterAlmostUnramified
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticGroupGeneratedByElementary
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilOperatorForLeviMatrix
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilOperatorForUnipotentMatrix
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilOperatorForWeylElement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -156,15 +157,15 @@ theorem GlobalTheory.SympChange.change_of_coordinates : ∀ (F E : Type) [Field 
         (∀ᶠ v in cofinite, ev v (M.vac v) = Set.indicator {x | ∀ i, x i ∈ v.adicCompletionIntegers F} 1) ∧
         ∀ f φ, (∀ v, φ v ∈ SB _) → (∀ᶠ v in cofinite, φ v = M.vac v) → e (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure f φ) = GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.pure (ei f) fun v => ev v (φ v) := by
   intro F E _ _ _ _ _ σ B n d X W M r s r' s' hB _ _ hM co hco
-  obtain ⟨G, hGs, hGe⟩ := GlobalTheory.T.rational_darboux_coordinates_compare F E σ n d X.J W.J M.co co hM.rat hco
-  obtain ⟨hunr, hnt⟩ := GlobalTheory.T.standard_character_almost_unramified F B.ψ hB.std
+  obtain ⟨G, hGs, hGe⟩ := _root_.GlobalTheory.SympChange.darboux_change_rat F E σ n d X.J W.J M.co co hM.rat hco
+  obtain ⟨hunr, hnt⟩ := _root_.GlobalTheory.PsiStdCond.psi_std_conductor F B.ψ hB.std
   have hgen : ∀ G ∈ gens (F := F) (κ := Fin n × Fin d), HasOp B.ψ G := by
     rintro G ((⟨A, hA, rfl⟩ | ⟨S, hS, rfl⟩) | hG)
-    · exact GlobalTheory.T.weil_operator_for_levi_matrix F B.ψ hB.std hunr hnt _ A hA
-    · exact GlobalTheory.T.weil_operator_for_unipotent_matrix F B.ψ hB.std hunr hnt _ S hS
-    · rw [Set.mem_singleton_iff.mp hG]; exact GlobalTheory.T.weil_operator_for_weyl_element F B.ψ hB.std hunr hnt _
+    · exact _root_.GlobalTheory.LeviOp.hasOp_levi F B.ψ hB.std hunr hnt _ A hA
+    · exact _root_.GlobalTheory.SympUnip.hasOp_unipM F B.ψ hB.std hunr hnt _ S hS
+    · rw [Set.mem_singleton_iff.mp hG]; exact _root_.GlobalTheory.WeylFour.weyl_hasOp F B.ψ hB.std hunr hnt _
   obtain ⟨e, ei, ev, hsurj, hmaps, hheis, hSB, hinj, hloc, hind, hpure⟩ :=
-    hasOp_of_mem_closure hgen G (GlobalTheory.T.symplectic_group_generated_by_elementary F _ G hGs)
+    hasOp_of_mem_closure hgen G (_root_.GlobalTheory.SympChangeGen.mem_closure_gens F _ G hGs)
   refine ⟨e, ei, ev, hsurj, hmaps, ?_, hSB, ?_, ?_, ?_⟩
   · intro u Φ hΦ
     show e (schr B.ψ (M.co.e u) Φ) = schr B.ψ (co.e u) (e Φ)

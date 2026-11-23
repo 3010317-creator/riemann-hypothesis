@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNontrivialCharacterFiniteCommGroup
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTwistedGroupLikeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUnitOfUnitMulComulEqTmulSelfStatement
+public import Mathlib.RingTheory.HopfAlgebra.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUnitOfUnitMulComulEqTmulSelf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -224,7 +225,7 @@ theorem exists_coboundary : ∀ (K : Type) [Field K] [IsAlgClosed K] (N : Over (
     rw [E2, E4, E1, E3] at h'
     simpa [map_mul] using h'
   obtain ⟨u₀, hu₀, hcu⟩ := (GlobalTheory.T.exists_twisted_groupLike') K B (Ψ cG) hcBu hcocB hsymB
-  have hu := (GlobalTheory.T.isUnit_of_isUnit_mul_comul_eq_tmul) K B (Ψ cG) hcBu u₀ hu₀ hcu
+  have hu := (_root_.GlobalTheory.isUnit_of_unit_mul_comul_eq_tmul_self) K B (Ψ cG) hcBu u₀ hu₀ hcu
   obtain ⟨w, hw⟩ : ∃ w : Γ(((Spec (CommRingCat.of B)).asOver (Sp K)).left, ⊤)ˣ,
       w = Units.map (Scheme.ΓSpecIso (CommRingCat.of B)).inv.hom.toMonoidHom hu.unit := ⟨_, rfl⟩
   have hcu' : Ψ cG * Coalgebra.comul (R := K) (hu.unit : B) = (hu.unit : B) ⊗ₜ[K] (hu.unit : B) := by

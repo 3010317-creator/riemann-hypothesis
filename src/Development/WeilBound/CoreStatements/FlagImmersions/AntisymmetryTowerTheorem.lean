@@ -2,8 +2,12 @@ module
 
 public import GroundTheory.HeightsAndTheta.Heights.Antisymmetric.Statements
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.HeckeSectionsIsotropicCommutatorPairingPower
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.AntisymmetricPerturbationBoundStatement
-import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.PolarizationPolynomialCoeffBoundStatement
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.CompactGapsGE
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.AntisymmetricPerturbationBound
+import Mathlib.Basic.Real.Basic
+import Mathlib.Data.Nat.Choose.Multinomial
+import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.PolarizationPolynomialCoeffBound
 import Mathlib.Algebra.MvPolynomial.Funext
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -179,7 +183,7 @@ theorem antisymmetry_tower_theorem : GroundTheory.Heights₂.Heights.AntisymPert
   have hv : 0 < T.volT := by
     show 0 < ∑ c : T.Comp, T.vol c
     exact Finset.sum_pos (fun c _ => hvol c) Finset.univ_nonempty
-  obtain ⟨h, hhom, hev, -, -⟩ := GlobalTheory.T.polarization_polynomial_coeff_bound (Ψ × Fin N) (dimFl Ψ N + 1) hh
+  obtain ⟨h, hhom, hev, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Top.polarisation_functional (Ψ × Fin N) (dimFl Ψ N + 1) hh
   let x0 : Ψ → Ψ × Fin N → ℝ := fun τ y => -(1 / (4 * ((N : ℝ) + 1)) *
     (((y.2 : ℕ) : ℝ) - if y.1 = τ ∧ T.j ≤ (y.2 : ℕ) then 1 else 0))
   let K : Ψ → Set (Ψ × Fin N → ℝ) := fun τ =>
@@ -215,7 +219,7 @@ theorem antisymmetry_tower_theorem : GroundTheory.Heights₂.Heights.AntisymPert
   have hL : ∀ F, L F = T.PPt II B F := by
     intro F
     simp [L, RootTower.PPt, RootTower.PPc, toA, LinearMap.sum_apply]
-  obtain ⟨P, hPhom, hPev, -, -⟩ := GlobalTheory.T.polarization_polynomial_coeff_bound (Ψ × Fin N) (dimFl Ψ N + 1) L
+  obtain ⟨P, hPhom, hPev, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Top.polarisation_functional (Ψ × Fin N) (dimFl Ψ N + 1) L
   have hQev : ∀ x : Ψ × Fin N → ℝ, eval x (P - T.volT • h) =
       (L - T.volT • hh) ((-∑ z, MvPolynomial.C (x z) * X z) ^ (dimFl Ψ N + 1)) := by
     intro x
@@ -251,7 +255,7 @@ theorem antisymmetry_tower_theorem : GroundTheory.Heights₂.Heights.AntisymPert
     rw [hPev x, hL]
     exact hB B hB1 τ (fun s i => x (s, i)) hwall
   obtain ⟨l, hl, hlc⟩ := hC P T.volT (CW * Real.log B / B) hanti hsmall
-  obtain ⟨α, β, hαβ⟩ := GlobalTheory.T.antisymmetric_perturbation_bound Ψ N T.j (L - T.volT • hh) T.volT (C0 * (CW * Real.log B / B))
+  obtain ⟨α, β, hαβ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Top.cor_b_poly_functional Ψ N T.j (L - T.volT • hh) T.volT (C0 * (CW * Real.log B / B))
     (P - T.volT • h) l hv (fun lam => hQev _) hQhom hl hlc
   refine ⟨α, β, fun m hm => ?_⟩
   have h1 := hαβ m hm

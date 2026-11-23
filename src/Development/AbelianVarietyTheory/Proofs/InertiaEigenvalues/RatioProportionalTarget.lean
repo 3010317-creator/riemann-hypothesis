@@ -1,13 +1,12 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaussNormAcrisSubUnitLeDigit
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaussNormAcrisSubUnitLeDigit
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsGauss
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisValuationSubEqIntMulRadiusStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaussNormAcrisRadiusPosDefiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaussNormAcrisSubUnitLeDigitStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ISupMonomialHolderLogConvexStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsGaussGCTarget
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisValuationSubEqIntMulRadius
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AcrisFrobeniusFixedEqPadicInt
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaussNormAcrisRadiusPosDefinite
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ISupMonomialHolderLogConvex
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsGaussGCTarget
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -86,7 +85,7 @@ theorem iter_lpow (m j : ℕ) (x : Formalism.Per.Acris l) :
 
 theorem gC_zero {ρ : ℝ} (h0 : (l : ℝ)⁻¹ ≤ ρ) (h1 : ρ < 1) : gC l ρ 0 = 0 := by
   have hm := (gauss h0 h1).2.2.2.1 0 (l : Formalism.Per.Acris l)
-  rw [zero_mul, (GlobalTheory.T.gaussNormAcris_basic_values l ρ h0 h1).2.1] at hm
+  rw [zero_mul, (_root_.GlobalTheory.PMon.Gauss.gC_basic_values l ρ h0 h1).2.1] at hm
   have e : gC l ρ 0 * (1 - ρ) = 0 := by linear_combination hm
   rcases mul_eq_zero.1 e with h | h
   · exact h
@@ -97,14 +96,14 @@ theorem gC_lpow {ρ : ℝ} (h0 : (l : ℝ)⁻¹ ≤ ρ) (h1 : ρ < 1) (m : ℕ) 
   induction m with
   | zero => rw [pow_zero, one_mul, pow_zero, one_mul]
   | succ m ih =>
-    rw [pow_succ', mul_assoc, (gauss h0 h1).2.2.2.1, (GlobalTheory.T.gaussNormAcris_basic_values l ρ h0 h1).2.1, ih, pow_succ']
+    rw [pow_succ', mul_assoc, (gauss h0 h1).2.2.2.1, (_root_.GlobalTheory.PMon.Gauss.gC_basic_values l ρ h0 h1).2.1, ih, pow_succ']
     ring
 
 theorem lpow_ne_zero {x : Formalism.Per.Acris l} (hx : x ≠ 0) (m : ℕ) : (l : Formalism.Per.Acris l) ^ m * x ≠ 0 := by
   intro e
   have h := gC_lpow le_rfl inv_l_lt_one m x
   rw [e, gC_zero le_rfl inv_l_lt_one] at h
-  have hp := GlobalTheory.T.gaussNormAcrisRadius_pos_definite l x hx _ le_rfl inv_l_lt_one
+  have hp := _root_.GlobalTheory.PMon.Gauss.gC_pos_target l x hx _ le_rfl inv_l_lt_one
   have : (0 : ℝ) < (l : ℝ)⁻¹ ^ m * gC l (l : ℝ)⁻¹ x := mul_pos (pow_pos inv_l_pos m) hp
   linarith
 
@@ -155,10 +154,10 @@ theorem digit_step {h s : ℕ} (hs : s < h) {W W' : Formalism.Per.Acris l}
   · refine ⟨c, fun ρ h0 h1 => ?_⟩
     rw [hV0, gC_zero h0 h1]
     exact mul_nonneg (pow_nonneg (rho_pos h0).le _) ((gauss h0 h1).1 _).1
-  obtain ⟨n, hn⟩ := GlobalTheory.T.acrisValuation_sub_eq_int_mul_radius l h s hs _ W' he hV0 hW' hrV
+  obtain ⟨n, hn⟩ := _root_.GlobalTheory.PMon.Gauss.vr_sub_eq_int_mul l h s hs _ W' he hV0 hW' hrV
   have hg : ∀ ρ : ℝ, (l : ℝ)⁻¹ ≤ ρ → ρ < 1 → gC l ρ (W - zc l c * W') = ρ ^ n * gC l ρ W' :=
     fun ρ h0 h1 => gC_eq_of_vr hV0 hW' n hn h0 h1
-  have hW0 := GlobalTheory.T.gaussNormAcrisRadius_pos_definite l W' hW' _ le_rfl inv_l_lt_one
+  have hW0 := _root_.GlobalTheory.PMon.Gauss.gC_pos_target l W' hW' _ le_rfl inv_l_lt_one
   have hk : (k : ℤ) ≤ n := by
     have a := hc _ le_rfl inv_l_lt_one
     rw [hg _ le_rfl inv_l_lt_one] at a
@@ -167,7 +166,7 @@ theorem digit_step {h s : ℕ} (hs : s < h) {W W' : Formalism.Per.Acris l}
     exact (zpow_le_zpow_iff_right_of_lt_one₀ inv_l_pos inv_l_lt_one).1 b
   obtain ⟨m, rfl⟩ : ∃ m : ℕ, n = m := ⟨n.toNat, (Int.toNat_of_nonneg (by omega)).symm⟩
   have hkm : k ≤ m := by exact_mod_cast hk
-  obtain ⟨u, -, hu⟩ := GlobalTheory.T.gaussNormAcris_sub_unit_le_digit l h s hs (W - zc l c * W') ((l : Formalism.Per.Acris l) ^ m * W')
+  obtain ⟨u, -, hu⟩ := _root_.GlobalTheory.PMon.Gauss.one_digit l h s hs (W - zc l c * W') ((l : Formalism.Per.Acris l) ^ m * W')
     (by rw [iter_lpow, he]; ring) (lpow_ne_zero hW' m)
     (by rw [map_mul, map_pow, map_natCast]; linear_combination (l : Formalism.Per.Acris l) ^ m * hrV)
     (fun ρ h0 h1 => by rw [hg ρ h0 h1, gC_lpow h0 h1, zpow_natCast])
@@ -203,7 +202,7 @@ theorem eq_zc_mul {h s : ℕ} (hs : s < h) {W W' : Formalism.Per.Acris l}
   rw [Set.mem_iInter] at hc
   refine ⟨c, ?_⟩
   by_contra hne'
-  have hpos := GlobalTheory.T.gaussNormAcrisRadius_pos_definite l (W - zc l c * W') (sub_ne_zero.2 hne') _ le_rfl inv_l_lt_one
+  have hpos := _root_.GlobalTheory.PMon.Gauss.gC_pos_target l (W - zc l c * W') (sub_ne_zero.2 hne') _ le_rfl inv_l_lt_one
   have hlim : Filter.Tendsto (fun i : ℕ => (l : ℝ)⁻¹ ^ i * gC l (l : ℝ)⁻¹ W') Filter.atTop (nhds 0) := by
     simpa using (tendsto_pow_atTop_nhds_zero_of_lt_one inv_l_pos.le inv_l_lt_one).mul_const
       (gC l (l : ℝ)⁻¹ W')
@@ -220,7 +219,7 @@ theorem ratio_proportional_target : ∀ (l : ℕ) [Fact l.Prime] (h s : ℕ), s 
   intro l _ h s hs w w' _ he' hw' hr
   by_cases hw : w = 0
   · exact ⟨1, 0, one_ne_zero, by rw [hw, mul_zero, map_zero, zero_mul]⟩
-  obtain ⟨n, hn⟩ := GlobalTheory.T.acrisValuation_sub_eq_int_mul_radius l h s hs w w' he' hw hw' hr
+  obtain ⟨n, hn⟩ := _root_.GlobalTheory.PMon.Gauss.vr_sub_eq_int_mul l h s hs w w' he' hw hw' hr
   have hg : ∀ ρ : ℝ, (l : ℝ)⁻¹ ≤ ρ → ρ < 1 → gC l ρ w = ρ ^ n * gC l ρ w' :=
     fun ρ h0 h1 => gC_eq_of_vr hw hw' n hn h0 h1
   rcases le_or_gt 0 n with hn0 | hn0

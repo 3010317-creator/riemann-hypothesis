@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.XiEqXiOffMul
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsAdelicReadingLastStepTrivialOffLevelStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsTupleChainAdelicDataStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsPointOfDecoratedLatticeUniqueStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ReferenceCharactersFactorTame
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsPointOfDecoratedLatticeUnique
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsMemberStepCharts
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevOkTwists
 import Mathlib.Algebra.Order.Floor.Extended
@@ -84,7 +85,7 @@ theorem exists_twDat_baseStd : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I
     have e1 := (hA₁.base i hi β).1
     have e2 := (hA₁.base i hi β').1
     rw [hkb i hi β β'] at e1
-    exact GlobalTheory.T.isPointOfDecoratedLattice_unique _ _ _ _ (IsPtOf.of_extTo (I.Q_subset_SQ a) hd e1) (IsPtOf.of_extTo (I.Q_subset_SQ a) hd e2)
+    exact _root_.GlobalTheory.Mem.Col2.PtUniq.isPtOf_unique _ _ _ _ (IsPtOf.of_extTo (I.Q_subset_SQ a) hd e1) (IsPtOf.of_extTo (I.Q_subset_SQ a) hd e2)
   · intro i hi β
     exact (hk₁ i hi β).trans (hk i hi β)
   · intro i hi β v hv hq

@@ -3,13 +3,20 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PurityFree
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AnnihilatorQuotientSmulTopOfFree
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DepthGeThreeFiniteEtalePuncturedRegularStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleQuotientOfEtalePuncturedStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSMulRegularOfEtalePuncturedOfDepthPosStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModDepthGEQuotientMapSpanSingletonStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModDepthGETwoOfIsIntegrallyClosedOfIsRegularLocaStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModuleFreeOfRegularOfFreeQuotientLocalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PurityFreeOfCompleteRegularLocalStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DepthGeThreeFiniteEtalePuncturedRegular
+public import ReciprocityTheory.CommutativeAlgebra.CohenMacaulay.ModDepthGE
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModDepthGEQuotientMapSpanSingleton
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModDepthGETwoOfIsIntegrallyClosedOfIsRegularLoca
+public import Mathlib.LinearAlgebra.FreeModule.Basic
+public import Mathlib.RingTheory.Ideal.Over
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Defs
+public import Mathlib.RingTheory.Noetherian.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModuleFreeOfRegularOfFreeQuotientLocal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PurityFreeOfCompleteRegularLocal
+import Mathlib.RingTheory.Etale.Basic
+import Mathlib.RingTheory.Localization.AtPrime.Basic
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleQuotientOfEtalePunctured
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSMulRegularOfEtalePuncturedOfDepthPos
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -79,13 +86,13 @@ theorem hyperplane (R : Type) [CommRing R] [IsRegularLocalRing R]
     (hf : f ∈ maximalIdeal R) (hf2 : f ∉ maximalIdeal R ^ 2) [IsLocalRing (R ⧸ Ideal.span {f})]
     (hP : PurityFree (R ⧸ Ideal.span {f})) : PurityFree R := by
   intro A _ _ _ hA het
-  have h3 := GlobalTheory.T.depth_ge_three_finite_etale_punctured_regular R hc hd f hf hf2 hP A hA het
+  have h3 := _root_.GlobalTheory.LocalLefschetz.depth_three R hc hd f hf hf2 hP A hA het
   have hf0 : f ≠ 0 := by
     rintro rfl
     exact hf2 (zero_mem _)
-  have hreg := GlobalTheory.T.isSMulRegular_of_etale_punctured_of_depth_pos' R A (ReciprocityTheory.CA.ModDepthGE.mono (by norm_num) hA) het f hf0
+  have hreg := _root_.GlobalTheory.isSMulRegular_of_etale_punctured_of_depth_pos R A (ReciprocityTheory.CA.ModDepthGE.mono (by norm_num) hA) het f hf0
   haveI := finite_quot R A f
-  exact GlobalTheory.T.moduleFree_of_regular_of_free_quotient_local R A f hf hreg (hP _ (GlobalTheory.T.modDepthGE_quotient_span_of_isSMulRegular R A f hf hreg 2 h3) (GlobalTheory.T.etale_quotient_of_etale_punctured' R A f het))
+  exact _root_.GlobalTheory.AnnRegSeq.free_of_free_quotient_map R A f hf hreg (hP _ (_root_.GlobalTheory.modDepthGE_quotient_map_span_singleton R A f hf hreg 2 h3) (_root_.GlobalTheory.etale_quotient_of_etale_punctured R A f het))
 
 theorem purityFree_of_ringKrullDim (n : ℕ) : ∀ (S : Type) [CommRing S] [IsRegularLocalRing S],
     ringKrullDim S = n → PurityFree S := by
@@ -97,7 +104,7 @@ theorem purityFree_of_ringKrullDim (n : ℕ) : ∀ (S : Type) [CommRing S] [IsRe
     intro S _ _ hS
     by_cases h2 : n + 1 ≤ 2
     · exact lowDim S (by rw [hS]; exact_mod_cast h2)
-    refine GlobalTheory.T.purityFree_of_complete_regularLocal S fun S' _ _ hc hd' => ?_
+    refine _root_.GlobalTheory.PurityStep.purityFree_of_complete S fun S' _ _ hc hd' => ?_
     rw [hS] at hd'
     have hsq : ¬ maximalIdeal S' ≤ maximalIdeal S' ^ 2 := by
       intro h
@@ -123,6 +130,6 @@ theorem purityFree_of_ringKrullDim (n : ℕ) : ∀ (S : Type) [CommRing S] [IsRe
 theorem free_of_etale_punctured : ∀ (R A : Type) [CommRing R] [IsLocalRing R] [IsNoetherianRing R] [IsDomain R] [CommRing A] [IsDomain A] [IsIntegrallyClosed A] [Algebra R A] [Module.Finite R A] [FaithfulSMul R A], (((maximalIdeal R).spanFinrank : WithBot ℕ∞) = ringKrullDim R) → 3 ≤ ringKrullDim R → (∀ (p : Ideal R) [p.IsPrime], p ≠ maximalIdeal R → Algebra.Etale (Localization.AtPrime p) (TensorProduct R (Localization.AtPrime p) A)) → Module.Free R A := by
   intro R A _ _ _ _ _ _ _ _ _ _ hreg hd het
   haveI : IsRegularLocalRing R := (isRegularLocalRing_iff R).mpr hreg
-  refine purityFree_of_ringKrullDim _ R hreg.symm A (GlobalTheory.T.modDepthGE_two_of_isIntegrallyClosed_of_isRegularLocalRing' R A (le_trans (by norm_num) hd)) het
+  refine purityFree_of_ringKrullDim _ R hreg.symm A (_root_.GlobalTheory.modDepthGE_two_of_isIntegrallyClosed_of_isRegularLocalRing R A (le_trans (by norm_num) hd)) het
 
 end GlobalTheory.PurityStep

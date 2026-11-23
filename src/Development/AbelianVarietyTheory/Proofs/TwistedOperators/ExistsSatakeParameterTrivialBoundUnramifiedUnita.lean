@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.TrivialParameterBound
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasSatakeGLOfIsSatVecGL
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsOpenIsCompactUnitaryIntegralPoints
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SatakeTrivialBoundInertPlaceUnitarisableSphericaStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SatakeTrivialBoundInertPlaceUnitarisableSpherica
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SphericalEigenvectorGeneratesIrreducibleSubrepreStatement
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsOpenIsCompactUnitaryIntegralPoints
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -72,6 +72,6 @@ theorem GlobalTheory.Twist.satParam_exists_trivialBound : ∀ (L : Type) [Field 
       exact Submodule.smul_mem _ c (Submodule.subset_span rfl)
     exact Submodule.finiteDimensional_of_le hle
   obtain ⟨α, hα⟩ := exists_hasSatU hU hirr hf hs
-  refine ⟨α, ?_, GlobalTheory.T.satakeTrivialBound_inertPlace_unitarisable_spherical L ϖ σ q n hU U π α hirr hun hα⟩
+  refine ⟨α, ?_, _root_.GlobalTheory.SatBoundInert.satakeBoundInert L ϖ σ q n hU U π α hirr hun hα⟩
   have := (hα.2 x' hx'K hx'0).map hU U.subtype (fun g y => rfl) hx0
   exact this

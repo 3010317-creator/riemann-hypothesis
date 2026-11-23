@@ -3,13 +3,13 @@ module
 public import Mathlib.Algebra.Module.ZLattice.Basic
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSchwartzPartitionOfUnityLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeDualFourierExpansionSchwartzStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeShiftedCutoffSummableStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeTranslatesCutoffSummableStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModulatedSchwartzSeminormPolynomialStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSchwartzPartitionOfUnityLattice
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeDualFourierExpansionSchwartz
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeShiftedCutoffSummable
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeTranslatesCutoffSummable
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModulatedSchwartzSeminormPolynomial
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SummableSchwartzSeries
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormIteratedFDerivRemCompLe
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SummableSchwartzSeriesStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -68,7 +68,7 @@ theorem comb_unique : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ V] 
       T f' = Complex.exp (2 * Real.pi * Complex.I * (P a μ : ℂ)) * T f) →
     ∃ c : ℂ, ∀ f : SchwartzMap V ℂ, T f = c * ∑' l : Λ, f (a + l) := by
   intro V _ _ _ P hP Λ _ _ a T htr hmod
-  obtain ⟨h, hhc, hh1⟩ := GlobalTheory.T.exists_schwartz_partition_of_unity_lattice Λ
+  obtain ⟨h, hhc, hh1⟩ := _root_.GlobalTheory.exists_schwartz_hasCompactSupport_latticeTranslates_sum_one Λ
   refine ⟨T h, fun f => ?_⟩
   have hth : ∀ l : Λ, (fun x => h (x + (l : V))).HasTemperateGrowth := fun l =>
     HasCompactSupport.hasTemperateGrowth (hhc.comp_homeomorph (Homeomorph.addRight (l : V)))
@@ -77,7 +77,7 @@ theorem comb_unique : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ V] 
   let u : Λ → 𝓢(V, ℂ) := fun l => SchwartzMap.smulLeftCLM ℂ (fun x => h (x + (l : V))) f
   have hu : ∀ (l : Λ) (x : V), u l x = h (x + l) * f x := fun l x => by
     simp [u, SchwartzMap.smulLeftCLM_apply_apply (hth l)]
-  obtain ⟨F1, hF1p, hF1T⟩ := GlobalTheory.T.summable_schwartz_series u (GlobalTheory.T.lattice_translates_cutoff_summable Λ h f hhc u hu)
+  obtain ⟨F1, hF1p, hF1T⟩ := _root_.GlobalTheory.SchwartzSum.hasSum_of_summable_seminorms u (_root_.GlobalTheory.SchwartzTranslateSum.summable_seminorm_mul_translate Λ h f hhc u hu)
   have hF1 : F1 = f := by
     ext x
     refine (hF1p x).unique ?_
@@ -87,13 +87,13 @@ theorem comb_unique : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ V] 
     simp [w, SchwartzMap.smulLeftCLM_apply_apply hh]
   have huw : ∀ l, T (u l) = T (w l) := fun l =>
     htr l l.2 (w l) (u l) (fun x => by rw [hu, hw]; simp)
-  obtain ⟨G, hGp, hGT⟩ := GlobalTheory.T.summable_schwartz_series w (GlobalTheory.T.lattice_shifted_cutoff_summable Λ h f hhc w hw)
+  obtain ⟨G, hGp, hGT⟩ := _root_.GlobalTheory.SchwartzSum.hasSum_of_summable_seminorms w (_root_.GlobalTheory.LatticeSchwartz.summable_seminorm_mul_comp_sub Λ h f hhc w hw)
   have h1 : T f = T G := by
     have := hF1T T
     rw [hF1] at this
     simp_rw [huw] at this
     exact this.unique (hGT T)
-  obtain ⟨c, hcs, hcP⟩ := GlobalTheory.T.lattice_dual_fourier_expansion_schwartz P hP Λ f
+  obtain ⟨c, hcs, hcP⟩ := _root_.GlobalTheory.periodisation_hasSum_fourier_bilinForm P hP Λ f
   have hch : ∀ μ : V, (fun x : V => Complex.exp (2 * Real.pi * Complex.I * (P x μ : ℂ))).HasTemperateGrowth := by
     intro μ
     have e : (fun x : V => Complex.exp (2 * Real.pi * Complex.I * (P x μ : ℂ))) =
@@ -111,13 +111,13 @@ theorem comb_unique : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ V] 
   let v : {μ : V // ∀ l ∈ Λ, ∃ k : ℤ, P l μ = k} → 𝓢(V, ℂ) := fun μ => c μ • v0 μ
   have hvs : ∀ k n : ℕ, Summable (fun μ => SchwartzMap.seminorm ℂ k n (v μ)) := by
     intro k n
-    obtain ⟨C, hC⟩ := GlobalTheory.T.modulated_schwartz_seminorm_polynomial P h v0 hv0 k n
+    obtain ⟨C, hC⟩ := _root_.GlobalTheory.CharModGrowth.seminorm_char_mul_polynomial_growth P h v0 hv0 k n
     refine Summable.of_nonneg_of_le (fun μ => apply_nonneg _ _) (fun μ => ?_) ((hcs n).mul_left C)
     simp only [v, map_smul_eq_mul]
     calc ‖c μ‖ * SchwartzMap.seminorm ℂ k n (v0 μ) ≤ ‖c μ‖ * (C * (1 + ‖(μ : V)‖) ^ n) :=
           mul_le_mul_of_nonneg_left (hC μ) (norm_nonneg _)
       _ = C * (‖c μ‖ * (1 + ‖(μ : V)‖) ^ n) := by ring
-  obtain ⟨G', hG'p, hG'T⟩ := GlobalTheory.T.summable_schwartz_series v hvs
+  obtain ⟨G', hG'p, hG'T⟩ := _root_.GlobalTheory.SchwartzSum.hasSum_of_summable_seminorms v hvs
   have hGG : G = G' := by
     ext x
     refine (hGp x).unique ?_

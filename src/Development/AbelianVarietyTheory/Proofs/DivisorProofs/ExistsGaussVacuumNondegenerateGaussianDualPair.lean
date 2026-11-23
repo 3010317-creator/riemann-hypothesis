@@ -1,11 +1,18 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPositiveComplexStructureDarbouxPairStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSchwartzCexpNegFormStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSiegelFockFormOfComplexStructureStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsComplexStructureGaussVacuumFockEquations
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PairInfApply
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPositiveComplexStructureDarbouxPair
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSchwartzCexpNegForm
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Mathlib.Topology.Algebra.Module.Spaces.ContinuousLinearMap
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSiegelFockFormOfComplexStructure
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFiniteWeightComplementaryArchimedeanSchwar
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsComplexStructureGaussVacuumFockEquations
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,12 +85,12 @@ theorem exists_gauss_vacuum : ∀ (F E : Type) [Field F] [NumberField F] [Field 
         0 < c ∧ (∀ x, c * ‖x‖ ^ 2 ≤ (Q x x).re) ∧ ∀ x, g x = Complex.exp (-(Q x x)) := by
   intro F E _ _ _ _ _ σ B n d X W M χX χW om r s r' s' hP
   have hψ : IsStd B.ψ := hP.base.std
-  obtain ⟨J₀, hJJ, hJω, hJpos, hJrel⟩ := GlobalTheory.T.exists_positive_complex_structure_darboux_pair F E σ B n d X W M χX χW om r s r' s' hP
+  obtain ⟨J₀, hJJ, hJω, hJpos, hJrel⟩ := _root_.GlobalTheory.GaussFockPair.exists_pos_complex_structure F E σ B n d X W M χX χW om r s r' s' hP
   have hsym : ∀ x y : (Fin n × Fin d → mixedEmbedding.mixedSpace F), GlobalTheory.GaussLine.pairInf F (Fin n × Fin d) x y = GlobalTheory.GaussLine.pairInf F (Fin n × Fin d) y x := by
     intro x y
     simp only [GlobalTheory.GaussLine.pairInf_apply, mul_comm]
-  obtain ⟨Q, c, hc, hQc, hQs, hQJ⟩ := GlobalTheory.T.exists_siegel_fock_form_of_complex_structure (Fin n × Fin d → mixedEmbedding.mixedSpace F) (GlobalTheory.GaussLine.pairInf F (Fin n × Fin d)) J₀ hsym hJJ hJω hJpos
-  obtain ⟨g, hg, hgd⟩ := GlobalTheory.T.exists_schwartz_eq_cexp_neg_form (Fin n × Fin d → mixedEmbedding.mixedSpace F) Q c hc hQc
+  obtain ⟨Q, c, hc, hQc, hQs, hQJ⟩ := _root_.GlobalTheory.siegel_fock_exists (Fin n × Fin d → mixedEmbedding.mixedSpace F) (GlobalTheory.GaussLine.pairInf F (Fin n × Fin d)) J₀ hsym hJJ hJω hJpos
+  obtain ⟨g, hg, hgd⟩ := _root_.GlobalTheory.GaussComplexForm.exists_schwartz_cexp_neg_form (Fin n × Fin d → mixedEmbedding.mixedSpace F) Q c hc hQc
   refine ⟨g, ⟨fun _ => 1, ?_⟩, Q, c, hc, hQc, hg⟩
   intro u u' hu hu' hrel f f' hf hf'
   have hrel' : ∀ w, u'.map (piInf (B.emb w)) = Complex.I • (X.θ w * u.map (piInf (B.emb w)) * (W.θ w)ᵀ) := by

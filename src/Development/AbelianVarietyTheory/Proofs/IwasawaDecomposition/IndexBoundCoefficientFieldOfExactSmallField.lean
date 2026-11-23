@@ -11,7 +11,9 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Hermi
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HermitianCodeWordStagesTypeNormsPrincipal
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemFOAssembledIff
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemOfOrderDvd
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.OmegaFieldDegreeRootDiscrBoundedByRingPolynomialStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.FixedCoefficientFieldInComplex
+public import Development.AbelianVarietyTheory.Definitions.HeightFunctions.JointQ
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.OmegaFieldDegreeRootDiscrBoundedByRingPolynomial
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RootOneMemOfIsRayFieldIn
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -113,7 +115,7 @@ theorem fieldTies_of_ksExact : GlobalTheory.NT.RayField → ∀ (X : Stages) (f 
   · have hle : FO X.toD7 ≤ δ.Om := by
       rw [hFO, hxe]
       exact GlobalTheory.Mem.FieldsEx.listField_le_Om δ f
-    exact GlobalTheory.FieldSize.sz_mono_and_of_le.2 _ _ _ _ hle (GlobalTheory.T.omegaField_degree_rootDiscr_bounded_by_ringPolynomial hR X.B.toPre δ L hL)
+    exact GlobalTheory.FieldSize.sz_mono_and_of_le.2 _ _ _ _ hle (_root_.GlobalTheory.FieldSize.sz_Om_poR hR X.B.toPre δ L hL)
 
 end GlobalTheory.AtMember
 

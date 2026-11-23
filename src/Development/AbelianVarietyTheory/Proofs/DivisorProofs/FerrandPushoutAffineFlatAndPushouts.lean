@@ -4,7 +4,8 @@ public import Mathlib.AlgebraicGeometry.Morphisms.ClosedImmersion
 public import Mathlib.AlgebraicGeometry.Morphisms.Flat
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPushoutAppLEOfIsPullbackOfIsAffine
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchlessingerFlatFibreProductStatement
+public import Mathlib.RingTheory.RingHom.Flat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchlessingerFlatFibreProduct
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -138,7 +139,7 @@ theorem GlobalTheory.SchlessingerAffine.flat_and_pushouts : ∀ (P R₁ R₂ R�
     refine (Scheme.Hom.appLE_comp_appLE j₂ y _ _ _ _ _).trans ?_
     refine Eq.trans ?_ (Scheme.Hom.appLE_comp_appLE p₂ (Spec.map f₂) _ _ _ _ _).symm
     simp only [hy₂]
-  exact GlobalTheory.T.schlessinger_flat_fibreProduct _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ hPT (surjTop g₁ hs₁) (surjTop g₂ hs₂)
+  exact _root_.GlobalTheory.SchlessingerFlat.schlessinger_flat _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ hPT (surjTop g₁ hs₁) (surjTop g₂ hs₂)
     (nilTop g₁ hn₁) (nilTop g₂ hn₂) q₁ q₂
     (p₁.flat_appLE (isAffineOpen_top _) hU₁ le_top) (p₂.flat_appLE (isAffineOpen_top _) hU₂ le_top)
     (hV V) c₁ c₂

@@ -1,24 +1,25 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DifferentiableSqTh
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AlgebraicTaylorTorsionTranslateEvenThetaStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmThetaPointsIntegralNormConjugateLawsStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AlgebraicTaylorTorsionTranslateEvenTheta
+public import Formalism.SharpRestriction.GlobalSchurBounds.GL3Theta
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmThetaPointsIntegralNormConjugateLaws
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmThetaTorsionTranslateIntegralSeries
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CoeffNormLeOneOfIsogenySeriesIdentities
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EvenThetaDoubleTranslateMul
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EvenThetaTranslateSqEqSigmaStar
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsTraceOneEvenNormUnitAtTwo
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsogenyFibresEvenThetaSigmaStarSquareQuotient
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SigmaStarSquareQuotientInModelParameter
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmThetaTaylorCoeffAlgebraicAndConjugate
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmThetaTorsionTranslateIntegralSeriesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CoeffNormLeOneOfIsogenySeriesIdentitiesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EvenThetaDoubleTranslateMulStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EvenThetaTranslateSqEqSigmaStarStatement
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EvenThetaTwoTorsionBasicProperties
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsTraceOneEvenNormUnitAtTwoStatement
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExpMvNegLogMvMul
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IdealPeriodLatticeOfCurveDatum
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutes
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntSerOfIsWq
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegralJAndAlgebraicData
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsogenyFibresEvenThetaSigmaStarSquareQuotientStatement
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicComplexIntegralBoundedSeriesLaws
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PowerSeriesSupNormMulPadicComplex
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SigmaStarSquareQuotientInModelParameterStatement
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TaylorSeriesInParameterRescaleOfAlgebraic
 import Formalism.SharpRestriction.GlobalSchurBounds.GlobalRankLatticeProofs.UnitTraceSumBounds.FamilyLogGammaSmallHolds
 import Mathlib.Algebra.Order.Floor.Extended
@@ -189,14 +190,14 @@ theorem alg_sg : AlgEnt (sgStar g.abelian₂) := by
 
 include hlat halg hnm htwo in
 theorem alg_th : AlgEnt (GL3Theta.th0 g.abelian₂ t₀) := by
-  have := (GlobalTheory.T.algebraicTaylor_torsionTranslate_evenTheta g.abelian₂ hlat halg t₀ hnm htwo 0 (rational_lattice_point_zero _)).1
+  have := (_root_.GlobalTheory.EvenThetaTorsion.algebraicTaylor_torsionTranslate_evenTheta_alt g.abelian₂ hlat halg t₀ hnm htwo 0 (rational_lattice_point_zero _)).1
   rwa [thetaTranslation_zero] at this
 
 include hok hlat h2 h3 hwp halg in
 theorem atU_sqTh {v : ℂ} (hv : v ∉ g.abelian₂) (hq : InRationalLattice g.abelian₂ v) :
     AlgEnt (sqTh g.abelian₂ v) ∧
       g.atU (sqTh g.abelian₂ v) = ePhi1 g.lam g.abelian₂ g.C g.wq ^ 2 * lineSer g.wq⁻¹ (xAt g v) :=
-  GlobalTheory.T.sigmaStarSquareQuotient_in_model_parameter 2 g hok.2.1 hlat h2 h3 (alg_sg halg) v hv (hwp v hq hv)
+  _root_.GlobalTheory.EvenTheta.Param.sqTh_atU 2 g hok.2.1 hlat h2 h3 (alg_sg halg) v hv (hwp v hq hv)
 
 include hok hlat h2 h3 hwp halg hnm htwo in
 theorem atU_th_sq : PowerSeries.constantCoeff (g.atU (GL3Theta.th0 g.abelian₂ t₀)) = 1 ∧
@@ -215,7 +216,7 @@ theorem int_th {β : ℂ} {k : ℕ} (hβ : β ∈ Qbar) (hn : ‖lamC g.lam β�
     (hint : IntegralMv (g.mulBy (lamC g.lam β) (GL3Theta.Xv ()) : MvPowerSeries Unit ℂ_[2])) :
     IntSer (g.atU (GL3Theta.th0 g.abelian₂ t₀)) ∧ ‖xAt g t₀‖ ≤ 1 := by
   obtain ⟨Q, Q', hQ, hQ', e1, e2, hne, ⟨j0, hj0⟩, ⟨j1, hj1⟩, h01⟩ :=
-    GlobalTheory.T.isogeny_fibres_even_theta_sigmaStarSquareQuotient g.abelian₂ hlat β t₀ k hst htr hN htwo hb1 hb2
+    _root_.GlobalTheory.EvenTheta.Fibres.isogeny_fibres g.abelian₂ hlat β t₀ k hst htr hN htwo hb1 hb2
   obtain ⟨h, hh, hh0, hh1, hsub⟩ := (GlobalTheory.SerTransport.transport 2 g).2.2.2 hok β hβ
   obtain ⟨-, hw, hw0, hE, -⟩ := GlobalTheory.EvenTheta.DatumBasic.datum_basic 2 g hok hlat h2 h3 hdisc
   obtain ⟨hf0, hf2⟩ := atU_th_sq hok hlat h2 h3 hwp halg hnm htwo
@@ -226,7 +227,7 @@ theorem int_th {β : ℂ} {k : ℕ} (hβ : β ∈ Qbar) (hn : ‖lamC g.lam β�
   have hd := fun v hv hq => atU_sqTh (v := v) hok hlat h2 h3 hwp halg hv hq
   have hxe : ∀ v w, wpF g.abelian₂ v = wpF g.abelian₂ w → xAt g v = xAt g w := fun v w h => by
     simp only [xAt, h]
-  refine GlobalTheory.T.coeffNormLeOne_of_isogeny_series_identities 2 k g.wq⁻¹ h (ePhi1 g.lam g.abelian₂ g.C g.wq ^ 2) _ (xAt g t₀) (xAt g (β * t₀))
+  refine _root_.GlobalTheory.EvenTheta.intSer_of_isogeny_identities 2 k g.wq⁻¹ h (ePhi1 g.lam g.abelian₂ g.C g.wq ^ 2) _ (xAt g t₀) (xAt g (β * t₀))
     (fun i => xAt g (Q i)) (fun j => xAt g (Q' j)) hw hw0 (intSer_iff.1 (hh ▸ hint)) hh0 (hh1 ▸ hn) ?_
     (by rw [map_pow, hE, one_pow]) hf0 hf2 ?_ ?_ ?_ ⟨j0, hxe _ _ hj0⟩ ⟨j1, hxe _ _ hj1⟩ ?_
   · rw [Nat.cast_mul, norm_mul]
@@ -337,7 +338,7 @@ theorem transl_sq {t : ℂ} (ht : GL3Theta.Tors1 2 g.abelian₂ t) : ∃ H : Pow
   have hq0 : InRationalLattice g.abelian₂ t₀ := ⟨2, two_pos, by exact_mod_cast htwo⟩
   have w1 := hwp _ (tors_laQ ht) ht.1
   have w0 := hwp _ hq0 hnm
-  have hA := (GlobalTheory.T.algebraicTaylor_torsionTranslate_evenTheta g.abelian₂ hlat halg t₀ hnm htwo t (tors_laQ ht)).1
+  have hA := (_root_.GlobalTheory.EvenThetaTorsion.algebraicTaylor_torsionTranslate_evenTheta_alt g.abelian₂ hlat halg t₀ hnm htwo t (tors_laQ ht)).1
   have hs1 := halg _ (tors_laQ ht)
   have hs2 := halg _ (tors_laQ (tors_two ht))
   have hs0 := alg_sg halg
@@ -348,7 +349,7 @@ theorem transl_sq {t : ℂ} (ht : GL3Theta.Tors1 2 g.abelian₂ t) : ∃ H : Pow
       ((wpF g.abelian₂ t - wpF g.abelian₂ t₀) * (U1 g.abelian₂ t (sgStar g.abelian₂) 0 * U1 g.abelian₂ t (sgStar g.abelian₂) 0)) *
         U1 g.abelian₂ t (sgStar g.abelian₂) z ^ 2 := by
     funext z
-    linear_combination GlobalTheory.T.U1_sq_mul_U1_th0_sq_eq_sgStar g.abelian₂ hlat t₀ hnm htwo t ht.1 z
+    linear_combination _root_.GlobalTheory.EvenTheta.IsLat.evenTheta_translate_sq_eq_sigmaStar g.abelian₂ hlat t₀ hnm htwo t ht.1 z
   have m1 := atU_smul g (neg_mem (one_mem _)) (atU_mul g hs2 hs0).1
   have m2 := atU_smul g (mul_mem (sub_mem w1 w0) (mul_mem a3 a3)) (atU_sq g hs1).1
   rw [id1, (atU_add g m1.1 m2.1).2, m1.2, m2.2, (atU_mul g hs2 hs0).2, (atU_sq g hs1).2, (atU_sq g hA).2,
@@ -394,11 +395,11 @@ include hok hlat hdisc h2 h3 hwp halg hnm htwo htr hf hx in
 theorem transl_bdd {t : ℂ} (ht : GL3Theta.Tors1 2 g.abelian₂ t) :
     BddSer (g.atU (U1 g.abelian₂ t (GL3Theta.th0 g.abelian₂ t₀))) := by
   obtain ⟨s, ω, hs, hω, e2⟩ := tors_half ht
-  obtain ⟨hA, hsh⟩ := GlobalTheory.T.algebraicTaylor_torsionTranslate_evenTheta g.abelian₂ hlat halg t₀ hnm htwo t (tors_laQ ht)
+  obtain ⟨hA, hsh⟩ := _root_.GlobalTheory.EvenThetaTorsion.algebraicTaylor_torsionTranslate_evenTheta_alt g.abelian₂ hlat halg t₀ hnm htwo t (tors_laQ ht)
   obtain ⟨κ, hκ, hκ0, hκe⟩ := hsh ω hω
   rw [← e2] at hκe
-  have hAs := (GlobalTheory.T.algebraicTaylor_torsionTranslate_evenTheta g.abelian₂ hlat halg t₀ hnm htwo s (tors_laQ hs)).1
-  have hA2 := (GlobalTheory.T.algebraicTaylor_torsionTranslate_evenTheta g.abelian₂ hlat halg t₀ hnm htwo _ (tors_laQ (tors_two hs))).1
+  have hAs := (_root_.GlobalTheory.EvenThetaTorsion.algebraicTaylor_torsionTranslate_evenTheta_alt g.abelian₂ hlat halg t₀ hnm htwo s (tors_laQ hs)).1
+  have hA2 := (_root_.GlobalTheory.EvenThetaTorsion.algebraicTaylor_torsionTranslate_evenTheta_alt g.abelian₂ hlat halg t₀ hnm htwo _ (tors_laQ (tors_two hs))).1
   have hA0 := alg_th hlat halg hnm htwo
   have hs1 := halg _ (tors_laQ hs)
   obtain ⟨τ, a1, -, a3, a4, a5⟩ := exists_tau hok hlat hdisc h2 h3 halg htr hs
@@ -418,7 +419,7 @@ theorem transl_bdd {t : ℂ} (ht : GL3Theta.Tors1 2 g.abelian₂ t) :
       U1 g.abelian₂ s (GL3Theta.th0 g.abelian₂ t₀) 0 ^ 4) / (U1 g.abelian₂ s (sgStar g.abelian₂) 0 ^ 2 * κ),
       div_mem (pow_mem q1 _) hκ, div_mem (sub_mem q2 (pow_mem q1 _)) (mul_mem (pow_mem a3 _) hκ),
       funext fun z => ?_⟩
-    have := GlobalTheory.T.U1_two_mul_th0_mul_th0_eq g.abelian₂ hlat t₀ hnm htwo s hs.1 z
+    have := _root_.GlobalTheory.EvenTheta.Double.evenTheta_double_translate_mul g.abelian₂ hlat t₀ hnm htwo s hs.1 z
     rw [hκe z] at this
     field_simp
     linear_combination this
@@ -455,8 +456,8 @@ end Two
 
 theorem atTwo : ∀ D : D7, GL3Theta.atTwo D := by
   intro D cc δ g hg t₀ ht₀
-  have htr := GlobalTheory.T.cm_theta_torsion_translate_integral_series D 2 cc δ g hg
-  have hend := (GlobalTheory.T.cmThetaPoints_integral_norm_conjugate_laws D).1 2 cc δ g hg
+  have htr := _root_.GlobalTheory.ThetaTransl.transl_holds D 2 cc δ g hg
+  have hend := (_root_.GlobalTheory.CMEndo.endo_all D).1 2 cc δ g hg
   obtain ⟨hcc, -, hδ, hΛ, hok⟩ := hg
   have hcrv : Crv D cc δ := ⟨hcc, hδ⟩
   have hG := (GlobalTheory.InducedType.induced_type D).1
@@ -465,7 +466,7 @@ theorem atTwo : ∀ D : D7, GL3Theta.atTwo D := by
   have huse := (GlobalTheory.ThetaConj.cmTheta_taylorCoeff_algebraic_and_conjugate D cc δ hcrv).1
   simp only [tor0] at h2 h3
   rw [← hΛ] at hlat hdisc hst h2 h3 hwp huse
-  obtain ⟨a, β, k, ha, hβ, hn, htrc, hN, hb⟩ := GlobalTheory.T.exists_traceOne_evenNorm_unit_at_two D g.lam
+  obtain ⟨a, β, k, ha, hβ, hn, htrc, hN, hb⟩ := _root_.GlobalTheory.EvenTheta.exists_int_trace_one_unit_at_two D g.lam
   obtain ⟨hb1, hb2⟩ := hb _ _ ht₀
   have hst' : ∀ ω ∈ g.abelian₂, β * ω ∈ g.abelian₂ := fun ω hω => ha ▸ hst a ω hω
   have hnm : t₀ ∉ g.abelian₂ := fun h => hb1 (hst' _ h)

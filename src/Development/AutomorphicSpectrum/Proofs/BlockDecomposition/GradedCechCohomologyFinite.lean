@@ -2,11 +2,16 @@ module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.GlobalSerreRelations.GlobSerreSt
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SubMemOfMk
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AffineCoverCohomologyFiniteStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoverCupActionBasisStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsGradedFormOnAffineChartStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InOpenFiniteInfIffStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SheafFiltrationPropertyStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.CapOComp
+public import Mathlib.AlgebraicGeometry.Morphisms.Proper
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.Tactic.ENatToNat
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AffineCoverCohomologyFinite
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoverCupActionBasis
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsGradedFormOnAffineChart
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.SEqOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SheafFiltrationProperty
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InOpenFiniteInfIff
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -67,7 +72,7 @@ theorem capO_affine {O : Type} [CommRing O] {X : Scheme.{0}} {q : X ⟶ Spec (Co
 theorem inU_capO {O : Type} [CommRing O] {X : Scheme.{0}} {q : X ⟶ Spec (CommRingCat.of O)} {R : Type} [CommRing R] {I : Ideal R} {γ : DividedPowers I} {p : ℕ}
     {κ : O →+* R ⧸ I} {ι : Type} (U : ι → X.Opens) {n : ℕ} (i : Fin n → ι) (T : Thick (nlFun γ p X q κ)) :
     InU (capO U i) T ↔ ∀ a, InU (U (i a)) T := by
-  have h := GlobalTheory.T.inOpen_finite_inf_iff (γ := γ) (p := p) (q := q) (κ := κ) (fun a => U (i a)) Finset.univ T
+  have h := _root_.GlobalTheory.CompanionTheory.Thick.inU_iInf_finset (γ := γ) (p := p) (q := q) (κ := κ) (fun a => U (i a)) Finset.univ T
   simpa [capO] using h
 
 theorem capT_eq {O : Type} [CommRing O] {X : Scheme.{0}} {q : X ⟶ Spec (CommRingCat.of O)} {R : Type} [CommRing R] {I : Ideal R} {γ : DividedPowers I} {p : ℕ}
@@ -96,8 +101,8 @@ theorem vb_cech (hLoc : KH.LocGr) (hPoly : KH.PolyTf) {O : Type} [CommRing O] (l
       (fun α => St (TF l s) {U.U α}) r)) := by
   classical
   have isF : ∀ Q : ObjectProperty (Thick (nlFun (dividedPowersBot O) 0 X q (Ideal.Quotient.mk ⊥))), IsFil (sP Q) (sFil Q) :=
-    fun Q => GlobalTheory.T.sheaf_filtration_property Q
-  choose ω hω using fun α => GlobalTheory.T.exists_graded_form_on_affine_chart hLoc hPoly l s hb q (U.c α) r hr
+    fun Q => _root_.GlobalTheory.CompanionTheory.DPFil.isFil_sFil Q
+  choose ω hω using fun α => _root_.GlobalTheory.CompanionTheory.GrCech.Omega.basis hLoc hPoly l s hb q (U.c α) r hr
   have hT : ∀ {n : ℕ} (i : Fin (n + 1) → U.ι) (T : Thick (nlFun (dividedPowersBot O) 0 X q (Ideal.Quotient.mk ⊥))), capT (fun α => St (TF l s) {U.U α}) i T → InU (capO U.U i) T := by
     intro n i T h
     rw [capT_eq] at h
@@ -121,7 +126,7 @@ theorem vb_cech (hLoc : KH.LocGr) (hPoly : KH.PolyTf) {O : Type} [CommRing O] (l
   have hg0 := fun α β (k' : Idx r (U.d β)) => (hω α (U.U α ⊓ U.U β) (hpair α β) inf_le_left _ rfl (hl2 inf_le_left) (isF _) hq2
     ((resU _ (hl2 inf_le_right)).pull r (ω β k'))).exists
   choose g' hg' using hg0
-  refine GlobalTheory.T.cover_cup_action_basis (fun W => strV q W) _ U.U _ r (fun α => Idx r (U.d α))
+  refine _root_.GlobalTheory.CompanionTheory.CechVB.vb_basis (fun W => strV q W) _ U.U _ r (fun α => Idx r (U.d α))
     (fun i => fHom (isF _) (hT i) r) (fun i a k => (resU _ (hle i a)).pull r (ω (i a) k)) (fun α β k k' => g' α β k' k)
     ?_ ?_ ?_ ?_ ?_
   · intro n i a h
@@ -149,7 +154,7 @@ theorem main_nl (hLoc : KH.LocGr) (hPoly : KH.PolyTf) {O : Type} [CommRing O] [I
     Module.Finite O ((CrystallineSemistableComparison.Pb.cechH (grF (nlFun (dividedPowersBot O) 0 X q (Ideal.Quotient.mk ⊥)) r)
       (fun α => St (TF l s) {U.U α}) r).cx.H p) := by
   obtain ⟨V⟩ := vb_cech hLoc hPoly l s hb q U r hr
-  exact GlobalTheory.T.affine_cover_cohomology_finite q U.U U.cover (capO_affine U) _ V p
+  exact _root_.GlobalTheory.CompanionTheory.VBGlue.finite_H_cx q U.U U.cover (capO_affine U) _ V p
 
 
 

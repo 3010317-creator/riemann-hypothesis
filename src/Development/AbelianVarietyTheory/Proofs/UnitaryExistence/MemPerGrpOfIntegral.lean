@@ -11,11 +11,13 @@ public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.Exists
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaRuleExistsAndEval
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.NumericalConsequencesOfPins
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FockHxDifferentiable
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaValueStandardLatticeEqClassicalThetaStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.GCauchyStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ThetaFunctionIsogenyRestriction
+public import Formalism.LocalToGlobal.ProjectiveLattices.FreeBridge
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsBaseClassLevelAdapted
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HermitianFormAtFrameLaws
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.TensorLatticeSelfDualSemicharacterIndex
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaValueStandardLatticeEqClassicalThetaStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ThetaFunctionIsogenyRestrictionStatement
-public import Formalism.LocalToGlobal.ProjectiveLattices.FreeBridge
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,7 +62,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import ReciprocityTheory.AnalyticForms.AnalyticCharts.Osgood
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.ContDiffOfDifferentiableFd
-public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsBaseClassLevelAdapted
 
 @[expose] public section
 
@@ -325,7 +326,7 @@ theorem exists_jet_ne_zero (hs : IsSympl X bas) (hd : x ∈ X.dom) {L : Lt E r} 
     have := hconj z z
     rw [hx_eq_hermForm] at this
     exact (Complex.conj_eq_iff_im.1 this.symm).symm
-  obtain ⟨y, hy, hne⟩ := GlobalTheory.T.theta_function_isogeny_restriction g _ hPD (perGrp idx x L)
+  obtain ⟨y, hy, hne⟩ := _root_.GlobalTheory.ThetaTranslJet.exists_translates_jet_ne_zero g _ hPD (perGrp idx x L)
     (discrete_of_integral _ hpos _ (span_image_pv idx hs hd L (TensLat.span_of_selfD X hL)) hint)
     (fun v => by
       simp only [hf_transpose]

@@ -6,9 +6,16 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.PieceEqPi
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
 public import Mathlib.RingTheory.AdicCompletion.Noetherian
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DiamondCommutesHeckeU
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalBActCommGamma0CapGamma0LevelShimuraReciprocitStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.Letter
+public import Mathlib.RingTheory.Coalgebra.IsFrobenius
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.HopfAlgebra.Basic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalBActCommGamma0CapGamma0LevelShimuraReciprocit
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.SiegelFixedPoints.Actcls
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.SiegelFixedPoints.ExistsSeries
+public import Development.AbelianVarietyTheory.Definitions.Foundations.ActWBOfInvariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -42,7 +49,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Foundations.ActWBOfInvariant
 
 @[expose] public section
 
@@ -82,7 +88,7 @@ theorem UpperTheory.Kd.L.twist :
       simp only [GlobalTheory.KA.push, Tower.diam, map_sum]
       refine Finset.sum_congr rfl fun y' _ => ?_
       simp only [bTop]
-      exact GlobalTheory.T.galB_act_comm_gamma0CapGamma0Level_shimuraReciprocity ε X ε.injective ⟨ψ, hψ2, hψ1⟩ N l w hP.odd hP.five hcop hw _ hD.1 _ _
+      exact _root_.GlobalTheory.KZ.GammaZeroComm.galB_act_comm ε X ε.injective ⟨ψ, hψ2, hψ1⟩ N l w hP.odd hP.five hcop hw _ hD.1 _ _
         (hB _ (shArg_mem_fixMu _ s y')).1
     rw [hpush]
     exact hφ

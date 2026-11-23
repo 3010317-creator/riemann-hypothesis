@@ -3,19 +3,21 @@ module
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.LocNorm
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CarrierJointQuotMeas
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.RealConjugatorData
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselRootMeasureIndependentOfChoicesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegralEqOfQuotientMeasuresBesselUnitaryStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnipotentRadicalInterConjugateClosedUnimodularStatement
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.CompactGroupHaarExists
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction
+public import Formalism.SharpRestriction.CuspSpanNormBounds.NormalizedLocalScale
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselRootMeasureIndependentOfChoices
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegralEqOfQuotientMeasuresBesselUnitary
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnipotentRadicalInterConjugateClosedUnimodular
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.RootPatterns
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CarrierEnergyPfLoc
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CarrierJointQuotStRel
-import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.Choice
-import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.HsNormSqEqHilbertSchmidtSq
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.LocJEqMeas
-import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.LoopTermLem
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.PiMeasureScaling
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.RMeasP
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.CompactGroupHaarExists
+import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.Choice
+import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.HsNormSqEqHilbertSchmidtSq
+import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.LoopTermLem
 import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.RelPtR
 import Formalism.RealPlaceAnalysis.RealPlaceTaylor.ModularCharacterEqOneOnExpHermitian
 import Formalism.SharpRestriction.CuspSpanNormBounds.UnimodularSchurMeasures.RightRegularIsometricMultiplicative
@@ -265,11 +267,11 @@ theorem use₇ (hB : WuBessel C) (u u' : D.what₂.Word)
   have hG : Formalism.QuantumDeterminants.Gf D.R.k D.R.rS (zB X (C.Qi τ) u τ) (zB X (C.Qi τ) u' τ) (JointAmplitudePoints.gamP C u u' w τ) ≠ 0 := by
     rw [RelPtR.gf_gamP C u u' w hw τ]
     exact (hb.2 τ).ne'
-  obtain ⟨-, hμ, hHaar⟩ := GlobalTheory.T.besselRootMeasure_independent_of_choices D _ _ _ _ _ _ _ hz hz' (hT.symm ▸ hTu u) (hT'.symm ▸ hTu u') hg hG
+  obtain ⟨-, hμ, hHaar⟩ := _root_.GlobalTheory.SnMass.RootUniq.rootMeas_unique D _ _ _ _ _ _ _ hz hz' (hT.symm ▸ hTu u) (hT'.symm ▸ hTu u') hg hG
     (ka_pos D) hr1 (root_push C u u' w hw τ hH.2.2.1 hp)
   have hq2 := quot_push C γ τ hQ
   rw [← hμ] at hq2
-  obtain ⟨hcl, hun⟩ := GlobalTheory.T.unipotentRadical_inter_conjugate_closed_unimodular D.R.k D.R.rS _ hg
+  obtain ⟨hcl, hun⟩ := _root_.GlobalTheory.UnipUnimod.rset_unimodular D.R.k D.R.rS _ hg
   have := FiniteDimensional.complete ℂ (X.Vloc u (vOf X τ))
   set F : MatKR D.R.k D.R.rS → (X.Vloc u' (vOf X τ) →L[ℂ] X.Vloc u (vOf X τ)) := fun x =>
     (innerSL ℂ ((locS hB u u' τ).Φ' x)).smulRight ((locS hB u u' τ).Φ (JointAmplitudePoints.gamP C u u' w τ * x)) with hF
@@ -303,7 +305,7 @@ theorem use₇ (hB : WuBessel C) (u u' : D.what₂.Word)
     refine (hFS (s * z)).trans ?_
     rw [rank_one_term_invariant u u' hok _ hs z]
     exact (hFS z).symm
-  have hI := (GlobalTheory.T.integral_eq_of_quotientMeasures_besselUnitary D.R.k D.R.rS _ _ _ _ _ hcl (haarTr C τ) hHaar (hun _ hHaar) hq1 hq2 _ F hFc hFi).2
+  have hI := (_root_.GlobalTheory.SnMass.QuotUniq.quot_uniq D.R.k D.R.rS _ _ _ _ _ hcl (haarTr C τ) hHaar (hun _ hHaar) hq1 hq2 _ F hFc hFi).2
   exact congrArg (fun A => hsNormSq (((cOf hB u τ : ℝ) : ℂ)⁻¹ • A)) hI
 
 end Formalism.MainStatements.RowRest

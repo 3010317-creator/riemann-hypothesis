@@ -2,9 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExpStar
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicCharacterPadicBasicProperties
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicTowerFrobeniusFormulaPosWeightStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DualExpTeichmullerPowerSumFormulaStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCyclotomicFrobeniusTwistedValueEqPowMulStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowMulMemLatIff
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicTowerFrobeniusFormulaPosWeight
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCyclotomicFrobeniusTwistedValueEqPowMul
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DualExpTeichmullerPowerSumFormula
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinrankCyclotomicExtAndCyclotomicCharSurjective
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormUnitPowSubOne
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PadicNormZpowSubOnePadicValInt
@@ -105,7 +106,7 @@ theorem expStar_image : ∀ (D : Formalism.BasicNotions.D7) (l : ℕ) [Fact l.Pr
         div_eq_one_iff_eq (zpow_pos hlr _).ne']
       congr 1
       ring
-    obtain ⟨lam, d, h1, h2, h3, h4⟩ := GlobalTheory.T.exists_cyclotomicFrobeniusTwistedValue_eq_pow_mul l (D.loc l) K s e hs.1 (algebraMap ℚ_[l] (Om l) κ * α)
+    obtain ⟨lam, d, h1, h2, h3, h4⟩ := _root_.GlobalTheory.ExpImage.exists_cycVal_eq_pow_mul l (D.loc l) K s e hs.1 (algebraMap ℚ_[l] (Om l) κ * α)
       (mul_mem (IntermediateField.algebraMap_mem _ _) hα) (by rw [norm_algebraMap_mul, hκ1, one_mul]; exact hα1)
     obtain ⟨z, hz, hE⟩ := H lam d h1 h2 h3
     refine ⟨z, hz, ?_⟩
@@ -125,14 +126,14 @@ theorem expStar_image : ∀ (D : Formalism.BasicNotions.D7) (l : ℕ) [Fact l.Pr
       congr 1
       simp
     · intro lam d h1 h2 h3
-      have := GlobalTheory.T.dualExp_teichmuller_power_sum_formula D.loc l (D.locA l) (D.locT l) K (s' + 1) hs 0 g hg hχ ℕ (primeTo l (s' + 1)) lam id
+      have := _root_.GlobalTheory.ExpImage.expStar_levSum D.loc l (D.locA l) (D.locT l) K (s' + 1) hs 0 g hg hχ ℕ (primeTo l (s' + 1)) lam id
         (fun _ => d) (fun i hi => ⟨h1 i, (Finset.mem_filter.1 hi).2⟩)
         (fun j hj => by
           obtain rfl : j = 0 := Nat.le_zero.1 hj
           exact ⟨h2, by simpa using h3⟩)
       convert this using 5
       simp [cycVal, levSum]
-  · refine key _ ?_ (GlobalTheory.T.cyclotomicTower_frobenius_formula_pos_weight D.loc l (D.locA l) (D.locT l) K (s' + 1) hs e he g hg hχ)
+  · refine key _ ?_ (_root_.GlobalTheory.ExpImage.PosWeight.formula_pos D.loc l (D.locA l) (D.locT l) K (s' + 1) hs e he g hg hχ)
     obtain ⟨e', rfl⟩ := Nat.exists_eq_add_of_le' he
     have h6 := GlobalTheory.Cyc.LiftExp.norm_zpow_sub_one l (s' + 1) hs u hn ((e' + 1 : ℕ) : ℤ) (by omega)
     rw [zpow_natCast, padicValInt.of_nat] at h6

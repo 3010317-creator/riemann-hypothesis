@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsFlatLift
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.AlternatingProductIntegral
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlternatingProductIntegral
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -69,7 +69,7 @@ theorem phi_mem_forms : ∀ {K : Type} [CommRing K] {V : Type} [AddCommGroup V] 
     obtain ⟨c, hc, v, hv, rfl⟩ := hx
     rw [show Φ (c • ExteriorAlgebra.ιMulti K a v) = c ^ p • alt f h a v from hΦ c a v, Pi.smul_apply]
     exact pow_smul_mem_forms_powMul p (A : Set K) B L q c hc _
-      (GlobalTheory.T.alternating_product_integral f h A L s hf hh a v t hv hts q hq)
+      (_root_.GlobalTheory.DI.alt_mem_forms f h A L s hf hh a v t hv hts q hq)
   | zero =>
     rw [map_zero, Pi.zero_apply]
     exact zero_mem _

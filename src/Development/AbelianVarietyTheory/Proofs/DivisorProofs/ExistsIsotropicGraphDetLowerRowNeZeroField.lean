@@ -1,7 +1,7 @@
 module
 
 public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSkewHermitianMulAddDetNeZeroOfPairStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSkewHermitianMulAddDetNeZeroOfPair
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -107,7 +107,7 @@ theorem exists_isotropic_graph_det_lowerRow_ne_zero_field :
     simpa [Matrix.transpose_map] using this
   have hJσ : K.map σ * J.map σ = 1 := by
     rw [← Matrix.map_mul, hKJ]; simp
-  obtain ⟨V, hV, hdet⟩ := GlobalTheory.T.exists_skewHermitian_mul_add_det_ne_zero k σ hσ ε hε0 hε n (C * K.map σ) D
+  obtain ⟨V, hV, hdet⟩ := _root_.GlobalTheory.exists_skewHermitian_mul_add_det_ne_zero_of_pair k σ hσ ε hε0 hε n (C * K.map σ) D
     (by
       rw [Matrix.map_mul, hmm, Matrix.transpose_mul, hKt, ← Matrix.mul_assoc, add_comm]
       exact h6)

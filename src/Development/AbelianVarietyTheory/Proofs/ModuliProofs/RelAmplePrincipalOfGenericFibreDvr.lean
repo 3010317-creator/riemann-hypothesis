@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.HomExtSt
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.RelAmpleOfGenericIsogenousDedekindStatement
+public import Mathlib.RingTheory.DedekindDomain.Basic
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.RelAmpleOfGenericIsogenousDedekind
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsHeckeQuotientTriple
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPrincipallyPolarizedCMExtensionDvrStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPrincipallyPolarizedCMExtensionDvr
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaGroupKTrivialOfPrincipalGenericFibreDvrStatement
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AbelianSchemeCubicalBundleExistsAndMapsStatement
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ConnectedSpaceSpecOfIsLocalRing
@@ -90,7 +92,7 @@ theorem relAmple_kTriv_of_generic_fibre : GlobalTheory.LN.HomExtSt → Out.Laws 
   have hiso : LBIso tK.PP.L (t.PP.L.pull m.cm.F) := by
     obtain ⟨w, hw, -⟩ := m.lin
     exact ⟨w, hw⟩
-  obtain ⟨t', -, e, -, -, hA', hK'⟩ := GlobalTheory.T.exists_principallyPolarizedCM_extension_dvr hH hL hL2 E H V K t.G tK m.cm.F hab m.cart hA hK
+  obtain ⟨t', -, e, -, -, hA', hK'⟩ := _root_.GlobalTheory.GoodPol.exists_sab_of_generic hH hL hL2 E H V K t.G tK m.cm.F hab m.cart hA hK
   have hp' : IsProper t'.G.hom := by
     have := hp
     have : IsIso e.hom.left := ((Over.forget _).mapIso e).isIso_hom
@@ -99,7 +101,7 @@ theorem relAmple_kTriv_of_generic_fibre : GlobalTheory.LN.HomExtSt → Out.Laws 
   obtain ⟨P, e', -⟩ := exists_polAV t' hp' hA' hK'
   have : IsIso (e'.hom ≫ e.hom).left := ((Over.forget _).mapIso (e' ≪≫ e)).isIso_hom
   have hAmp : Out.RelAmple t.G t.PP.L :=
-    GlobalTheory.T.relAmple_of_generic_isogenous_dedekind hL hL2 V K P t.G (e'.hom ≫ e.hom) t.PP.L tK.G m.cm.F tK.PP.L hab t.PP.isLB tK.PP.isLB
+    _root_.GlobalTheory.AmpleDedekind.relAmple_of_generic_of_isogenous hL hL2 V K P t.G (e'.hom ≫ e.hom) t.PP.L tK.G m.cm.F tK.PP.L hab t.PP.isLB tK.PP.isLB
       inferInstance inferInstance inferInstance m.cart hiso hA
   refine ⟨hAmp, ?_⟩
   have hpK : IsProper tK.G.hom := MorphismProperty.of_isPullback (P := @IsProper) m.cart.1 hp

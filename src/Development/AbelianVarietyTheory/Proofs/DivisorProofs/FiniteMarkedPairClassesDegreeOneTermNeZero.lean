@@ -11,7 +11,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteMonicR
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinitePolynomialsBoundedDenom
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralSmulOfCharpolyCoeffMulIntStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PadicCoeffDenominatorBoundOfBoundedRootsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimilitudePairGramInvCongruentStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsRootSelectionUnitaryRankOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimilitudePairGramInvCongruent
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimilitudePairHermitianFormInvertibleSimilitudeStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedHeckeTestFunctionSupportCompactStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedOrbitNormBoundsStatement
@@ -262,7 +263,7 @@ theorem finite_pol_marked' : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p), G.a =
       ‖w‖ ^ 2 = ((P.c : ℚ) : ℝ) := by
     intro v w x hx hwx
     obtain ⟨-, -, hlaw⟩ := GlobalTheory.T.similitudePair_hermitianForm_invertible_similitude p G P v
-    obtain ⟨Z, hZ⟩ := GlobalTheory.T.similitudePair_gram_inv_congruent p G P v
+    obtain ⟨Z, hZ⟩ := _root_.GlobalTheory.LKMid.Pair.gram_psi_inv_congr p G P v
     have hsig := G.sig v
     have hn := G.n_pos
     refine GlobalTheory.T.eigenvalue_normSq_of_similitude_hermitian_signature G.n (G.gram v) _ (G.psi v P.γ) (G.gram_herm v) Z ((P.c : ℚ) : ℝ) ?_ ?_ hZ hc0 ?_ ?_

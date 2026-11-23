@@ -3,10 +3,15 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Foundations.FinalTheorems
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
 public import Mathlib.RingTheory.AdicCompletion.Noetherian
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIntegralPolyOfPrimitiveRootTotallyRamifiedStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsPolyInRootOfInertiaCyclotomicFixedStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InertiaFixedValuationEqZpowPrimeValuationStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ValuationPrimitiveRootSubOnePowTotientStatement
+public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
+public import Mathlib.RingTheory.Valuation.ValuationSubring
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIntegralPolyOfPrimitiveRootTotallyRamified
+public import Mathlib.RingTheory.Coalgebra.IsFrobenius
+public import Mathlib.RingTheory.HopfAlgebra.Basic
+public import ReciprocityTheory.GaloisValuations.Global
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsPolyInRootOfInertiaCyclotomicFixed
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InertiaFixedValuationEqZpowPrimeValuation
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ValuationPrimitiveRootSubOnePowTotient
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,7 +70,7 @@ theorem exists_poly_of_fixed : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field �
     subst hxu
     haveI : Subsingleton (ZMod (l ^ 0)) := by rw [pow_zero]; infer_instance
     exact ⟨hu, fun s hs => hfix s hs (Units.ext (Subsingleton.elim _ _))⟩
-  · obtain ⟨Q, hQ, hQe⟩ := GlobalTheory.T.exists_poly_in_root_of_inertia_cyclotomic_fixed l Ω A m ζ hζ u hfix
+  · obtain ⟨Q, hQ, hQe⟩ := _root_.GlobalTheory.InertiaCycFixed.exists_poly_of_fixed l Ω A m ζ hζ u hfix
     have hl : A.valuation (l : Ω) < 1 := by
       obtain ⟨v, hv, hlv⟩ := hA
       have := (hv (l : 𝓞 ℚ)).2 hlv
@@ -73,9 +78,9 @@ theorem exists_poly_of_fixed : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field �
     let K : Subfield Ω := (IntermediateField.fixedField (Ine (F := ℚ) A)).toSubfield
     have hK : ∀ x, x ∈ K ↔ ∀ s ∈ Ine (F := ℚ) A, s x = x := fun x =>
       IntermediateField.mem_fixedField_iff _ x
-    obtain ⟨P, hP, hPe⟩ := GlobalTheory.T.exists_integral_poly_eval_zeta_of_totally_ramified l Ω A hl K
-      (fun x hx hx0 => GlobalTheory.T.inertia_fixed_valuation_eq_zpow_prime_valuation l Ω A hA x hx0 ((hK x).1 hx)) m hm ζ hζ
-      (GlobalTheory.T.valuationSubring_primitiveRoot_sub_one_pow_totient_charZero l Ω A m hm ζ hζ) u hu ⟨Q, fun x hx => (hK x).2 (hQ x hx), hQe⟩
+    obtain ⟨P, hP, hPe⟩ := _root_.GlobalTheory.exists_integral_poly_of_primitiveRoot_totally_ramified l Ω A hl K
+      (fun x hx hx0 => _root_.GlobalTheory.InertiaFieldUnram.valuation_eq_zpow l Ω A hA x hx0 ((hK x).1 hx)) m hm ζ hζ
+      (_root_.GlobalTheory.valuation_primitiveRoot_sub_one_pow_totient l Ω A m hm ζ hζ) u hu ⟨Q, fun x hx => (hK x).2 (hQ x hx), hQe⟩
     exact ⟨P, fun x hx => ⟨(hP x hx).1, (hK x).1 (hP x hx).2⟩, hPe⟩
 
 end GlobalTheory.CycIne

@@ -7,7 +7,9 @@ public import CompanionTheory.RealGroups.GeneralUnitaryRepresentations.Archimede
 public import CompanionTheory.RealGroups.GeneralUnitaryRepresentations.ArchimedeanJacquetSegments.DerFin
 public import CompanionTheory.RealGroups.GeneralUnitaryRepresentations.ArchimedeanJacquetSegments.JacquetModuleThetaTwist
 public import CompanionTheory.RealGroups.GeneralUnitaryRepresentations.ArchimedeanJacquetSegments.NontrivialOfIsIrreducible
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DerivativeJacquetHoldsStatement
+public import Development.WeilBound.RepresentationTheoryGL.GenericUnitaryGL.SegmentDerivatives.DerivJac
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IrreducibleAdmissibleGL
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DerivativeJacquetHolds
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsSmoothIterPhi
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -54,7 +56,7 @@ namespace CompanionTheory.RgGu.NR
 variable (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
 theorem nuPair : GlobalTheory.BZSeg.NuPair k :=
-  nuPair_of k (GlobalTheory.T.derivative_jacquet_holds k GlobalTheory.CompanionTheory.BZCuspPair.irrAdm) (jmTheta k) (derFin_of k (derEquiv k))
+  nuPair_of k (_root_.GlobalTheory.CompanionTheory.BZDerivJac.derivJac_main k GlobalTheory.CompanionTheory.BZCuspPair.irrAdm) (jmTheta k) (derFin_of k (derEquiv k))
 
 theorem cuspPairIrr : GlobalTheory.BZSeg.CuspPairIrr k := cuspPairIrr_of k (nuPair k)
 

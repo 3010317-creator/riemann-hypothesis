@@ -2,12 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.BijectiveCechDeRhamComparisonDegreeOne
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianHodgeDeRham
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianDeRhamFreeOfCrystallineComparisonStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AffinePairRestrictionInjectiveFirstCohomologyStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechDeRhamComparisonBijectiveCupSmooth
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianDeRhamStructure
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianDeRhamFreeOfCrystallineComparison
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ComparisonMemCechHodgeFiltration
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AffinePairRestrictionInjectiveFirstCohomology
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PullOverOneEqZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StructureSheafComparisonInjectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StructureSheafComparisonInjective
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSchemeOfIsGrpPullback
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechDeRhamComparisonBijectiveCupSmooth
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -157,7 +159,7 @@ theorem abelianDeRham_baseChange_of_smoothLift (H₁ : GlobalTheory.Published.Cr
   have hA' : IsAbelianScheme A' := GlobalTheory.PolPull.isAbelianScheme_of_isGrpPullback hA h
   have hg' : SmoothOfRelativeDimension g A'.hom :=
     (smoothOfRelativeDimension_isStableUnderBaseChange (n := g)).of_isPullback h.1 hg
-  have hF := GlobalTheory.AbelianPrim.abelianDeRham_free (GlobalTheory.T.abelianDeRhamFree_of_crystalline_comparison H₁ H₂)
+  have hF := GlobalTheory.AbelianPrim.abelianDeRham_free (_root_.GlobalTheory.Proof.abelianDeRhamFree_of_hodge H₁ H₂)
   have hP : primDR A = ⊤ := (hF R A g hA hg).1
   have hP' : primDR A' = ⊤ := (hF R' A' g hA' hg').1
   have geom : ∀ {S : Type} [CommRing S] (B : Over (Sp S)) [GrpObj B], IsAbelianScheme B →
@@ -176,8 +178,8 @@ theorem abelianDeRham_baseChange_of_smoothLift (H₁ : GlobalTheory.Published.Cr
   obtain ⟨⟨e, he⟩, ⟨e', he'⟩, -⟩ := hbc R' A'.left A'.hom φ h.1
   let m := (GlobalTheory.Published.AbelianDeRham.bcMor h).isMor
   obtain ⟨hB, hF1⟩ := core A.hom (A.hom ≫ 𝟙 _) (Category.comp_id _) A'.hom (A'.hom ≫ 𝟙 _)
-    (Category.comp_id _) φ h.1.w m hcmp hcmp' (GlobalTheory.T.structure_sheaf_comparison_injective R A.left _)
-    (GlobalTheory.T.affinePairRestriction_injective_firstCohomology φ (A'.hom ≫ 𝟙 _)).2.2 hcl hcl' e he e' he'
+    (Category.comp_id _) φ h.1.w m hcmp hcmp' (_root_.GlobalTheory.CechDR.cmpO_injective R A.left _)
+    (_root_.GlobalTheory.CechDR.pairRes_injective φ (A'.hom ≫ 𝟙 _)).2.2 hcl hcl' e he e' he'
   refine ⟨?_, ?_⟩
   · have hsq : (LinearEquiv.ofTop _ hP').toLinearMap ∘ₗ liftSemi (GlobalTheory.Published.AbelianDeRham.bcMor h).pull =
         liftSemi m.pull1 ∘ₗ (LinearEquiv.baseChange R R' _ _ (LinearEquiv.ofTop _ hP)).toLinearMap := by

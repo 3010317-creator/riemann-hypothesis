@@ -1,13 +1,18 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.HeightFunctions.GrowthConstantBoundGcR
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsThetaGeneratorReadingNeZeroAllFramesStatement
+public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniqOfChartIndep2
+public import Formalism.LocalToGlobal.ProjectiveLattices.RecPJThAllNeBot
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsThetaGeneratorReadingNeZeroAllFrames
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.WeightsBelow
-public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.HarmonicGermValueChartIndependentStatement
+public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.HarmonicGermValueChartIndependent
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.CompSplitRecord
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.CuspEqZeroOfGenericValues
 public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.ExistsOpenSameModel
 public import Formalism.LocalToGlobal.ProjectiveLattices.CurveLocInst
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.NonzeroDivisorOfConnected
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.WeightFloorInequalities
+public import Formalism.LocalToGlobal.ProjectiveLattices.CurveComp
 import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
 import Mathlib.Algebra.Module.Submodule.Union
 import Mathlib.Algebra.Order.Floor.Extended
@@ -45,10 +50,7 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.NonzeroDivisorOfConnected
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.WeightFloorInequalities
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.GGConn
-public import Formalism.LocalToGlobal.ProjectiveLattices.CurveComp
 
 @[expose] public section
 
@@ -146,7 +148,7 @@ theorem exists_nonZeroComp_and_ne_zero : ∀ (D : D7) (T : Top D) (h : LawsP T) 
     omega
   obtain ⟨g0, hg0⟩ := exists_cusp_reading_ne_zero h wF T.σ₀ fun k => by
     obtain ⟨x, hx⟩ := (ReciprocityTheory.ChartRestriction.G.TB.WickVanishing.flag_domain_frames_connected _ ((T.U j T.σ₀).X k)).nonempty
-    obtain ⟨f, hf, hf0⟩ := GlobalTheory.T.exists_thetaGenerator_reading_ne_zero_all_frames GlobalTheory.T.harmonic_germ_value_chart_independent D T h j hj wF hr hdeg T.σ₀ T.good_σ₀ k x hx
+    obtain ⟨f, hf, hf0⟩ := _root_.GlobalTheory.RunIn.exists_theta_ne_zero_record _root_.GlobalTheory.harmonicValue_chart_independent D T h j hj wF hr hdeg T.σ₀ T.good_σ₀ k x hx
     refine ⟨x, hx, f, ?_, hf0⟩
     rw [cutR_eq T.C hj]
     exact h.thCusp j hj _ _ (dom_wtA wF) hlp f hf

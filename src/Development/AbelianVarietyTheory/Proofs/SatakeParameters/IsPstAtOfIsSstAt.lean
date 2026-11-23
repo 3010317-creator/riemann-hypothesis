@@ -3,9 +3,9 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.DeRhamPotSemistable
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.GaloisRepOfPolarizedCuspidal
 public import Formalism.SharpRestriction.LevelLetterCocycles.SumRepresentations
-import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsPotentiallySemistableOfSemistableRestrict
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsSemistableAtPlaceTwistCrystallineCharacterStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsSemistableAtPlaceTwistCrystallineCharacter
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -101,7 +101,7 @@ theorem isSstAt_twist (hD : GlobalTheory.Published.DeRhamPotSemistable) {l : ℕ
     (hc : Continuous fun g => ((c g : GL (Fin 1) (Om l)) : Matrix (Fin 1) (Fin 1) (Om l)))
     (h1 : IsSstAt P Bw r) (h2 : IsCrysAt P Bw c) :
     IsSstAt P Bw (Formalism.MainNotions.SumRepresentations.At.twGL r (Matrix.GeneralLinearGroup.det.comp c)) :=
-  GlobalTheory.T.isSemistableAtPlace_twist_crystallineCharacter hD l P AI hT E Ω Gw O Bw a r c hr hc h1 h2
+  _root_.GlobalTheory.SstTwist.isSstAt_twist hD l P AI hT E Ω Gw O Bw a r c hr hc h1 h2
 
 end GlobalTheory.GalCut.IwaTwist
 

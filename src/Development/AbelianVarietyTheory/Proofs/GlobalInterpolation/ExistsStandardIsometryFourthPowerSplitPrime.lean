@@ -2,20 +2,21 @@ module
 
 public import Formalism.LocalToGlobal.InertKernelTheory.StatementReBase
 public import Formalism.LocalToGlobal.InertKernelTheory.StatementCurve
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.NormKappaSqMulDetSplitPrimeStatement
-import Formalism.LocalToGlobal.GlobalTheory.GL3.PFamily
-import Formalism.LocalToGlobal.GlobalTheory.GL3.PStdOK
+public import Formalism.LocalToGlobal.KernelLattices.LateralTheory
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.NormKappaSqMulDetSplitPrime
 public import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.HalfTorsionNotMemCmLattice
-import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.BaseEx
 public import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.HalfPeriodStandardCM
 public import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.IsTorsionPointStandardCM
 public import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.StdOK
+public import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.QuadraticSemicharacterIdentityReformulated
+import Formalism.LocalToGlobal.GlobalTheory.GL3.PFamily
+import Formalism.LocalToGlobal.GlobalTheory.GL3.PStdOK
+import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.BaseEx
 import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.MulStableIntegral
 import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.QuasiPeriodConstUnique
 import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.CayleyGaussianIntegrals.FinitelyGeneratedModPow
 import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.CayleyGaussianIntegrals.MatrixFormFourfoldBlock
 import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.CayleyGaussianIntegrals.StdDataCmProof
-public import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.QuadraticSemicharacterIdentityReformulated
 import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.QuadraticSemicharactersFactTer
 import Formalism.SharpRestriction.GlobalSchurBounds.StandardIntegralLatticeExists
 import Mathlib.Algebra.Order.Floor.Extended
@@ -251,7 +252,7 @@ theorem isomStdCm (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (B : Base D c
         (imgLat (g : (Fin 4 × D.what₂.Tau → ℂ) →ₗ[ℂ] (Fin 4 × D.what₂.Tau → ℂ)) (pow4 B.lamM)) ∧
       ‖ι e‖ = 1 ∧
       tens4 B.thMM = e • kernel4 B.L B.ω₀ B.lamM (alphaQ B.cq (stdH B.L (Fin 4 × D.what₂.Tau))) g := by
-  have hK := GlobalTheory.T.norm_kappa_sq_mul_det_splitPrime D cc δ B hcc hδ q hq2 hj hco ι
+  have hK := _root_.GlobalTheory.MomN.norm_kappa_sq_mul_norm_det D cc δ B hcc hδ q hq2 hj hco ι
   obtain ⟨hL, hω⟩ := hB
   have hS : StdData B.L B.ω₀ (hOne B.L D.what₂.Tau) B.lamM (alphaQ B.cq (matH (hOne B.L D.what₂.Tau)))
     (alphaQ B.cq (stdH B.L (Fin 4 × D.what₂.Tau))) B.gC := B.stdOK hcc hδ

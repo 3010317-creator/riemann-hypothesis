@@ -1,10 +1,11 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GenericBlockMatrixIsBlockDiag
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BlockDiagonalMinorVanishingStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BlockDiagonalMinorVanishing
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FrameChangeScalarFactor
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MinorIJMap
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FrameDefinitions.Values
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AevalNeZeroOfNotMem
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,7 +54,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AevalNeZeroOfNotMem
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsBlkCover
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsLocSec
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.PullbackPullback
@@ -189,7 +189,7 @@ theorem detFac_improper (hz : zb ∈ mcPts (mCoordIdeal M.x)) (hF₁ : M.IsFrame
   have hT₂ := hF₂.1 p.1
   have hu₁ : IsUnit (F₁.T p.1).det := hT₁.2.isUnit
   have hC : IsBlockDiag j ((F₁.T p.1)⁻¹ * F₂.T p.1) := (hT₁.1.inv hu₁).mul hT₂.1
-  have hm := ((GlobalTheory.T.block_diagonal_minor_vanishing M.Ω N j p.2 M.j_le).2.2.2 _ _ hT₁.1 hC).2
+  have hm := ((_root_.GlobalTheory.CompanionTheory.Ar.PB.MinorCalc.minors_main M.Ω N j p.2 M.j_le).2.2.2 _ _ hT₁.1 hC).2
   rw [Matrix.mul_nonsing_inv_cancel_left _ _ hu₁] at hm
   have e₁ := hF₁.2.2.2 p hp
   have e₂ := hF₂.2.2.2 p hp
@@ -238,7 +238,7 @@ theorem minor_change (hz : zb ∈ mcPts (mCoordIdeal M.x)) (hF₁ : M.IsFrame F�
   have hT₁ := hF₁.1 p.1
   have hT₂ := hF₂.1 p.1
   have hu₁ : IsUnit (F₁.T p.1).det := hT₁.2.isUnit
-  have hi := GlobalTheory.T.block_diagonal_minor_vanishing M.Ω N j p.2 hj
+  have hi := _root_.GlobalTheory.CompanionTheory.Ar.PB.MinorCalc.minors_main M.Ω N j p.2 hj
   have hC : IsBlockDiag j ((F₁.T p.1)⁻¹ * F₂.T p.1) := (hT₁.1.inv hu₁).mul hT₂.1
   have hdet : ((F₁.T p.1)⁻¹ * F₂.T p.1).det ≠ 0 := by
     rw [Matrix.det_mul, Matrix.det_nonsing_inv]

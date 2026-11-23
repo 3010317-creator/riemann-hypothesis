@@ -2,15 +2,18 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.ZetaValueIdeals
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TranslateWideInd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinitePrimesOverPrimeCoprimalityEquivStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsNarrowRayClassLFunctionMulPrimeWideIndicatorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsNarrowRayClassLFunctionTopWideIndicatorIffStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsRatInPadicIntegersOfTwistedDifferenceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MinPadicValPowSubOneCoprimeEqClosedFormulaStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PartialZetaDenomSumBoundOfLocalBoundsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PartialZetaDenominatorExponentLeOfIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmValuesExponentLogSumLeStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmValuesMinPadicValBoundStatement
+public import Formalism.SharpRestriction.GlobalSchurBounds.ShortIntervalPrimes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SupEqTopOfLeMaximal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsNarrowRayClassLFunctionMulPrimeWideIndicator
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsNarrowRayClassLFunctionTopWideIndicatorIff
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.SiegelKlingenDeligneRibet
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsRatInPadicIntegersOfTwistedDifference
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MinPadicValPowSubOneCoprimeEqClosedFormula
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PartialZetaDenomSumBoundOfLocalBounds
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PartialZetaDenominatorExponentLeOfIntegral
+public import Formalism.PairingDivisors.StatementN
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmValuesExponentLogSumLe
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmValuesMinPadicValBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,34 +66,34 @@ namespace GlobalTheory.ZetaDenom
 theorem eulerStep {F : Type} [Field F] [NumberField F] (𝔪 𝔭 : Ideal (𝓞 F)) (hmax : 𝔭.IsMaximal) (hp : 𝔭 ≠ ⊥) (hcop : 𝔭 ⊔ 𝔪 = ⊤)
     (C : ClassGroup (𝓞 F)) (Z Z' : ℂ → ℂ) (hZ : IsRayL 𝔪 (wideInd C) Z) (hZ' : IsRayL 𝔪 (wideInd (C * (cls 𝔭)⁻¹)) Z') :
     IsRayL (𝔪 * 𝔭) (wideInd C) (fun s => Z s - ((Ideal.absNorm 𝔭 : ℕ) : ℂ) ^ (-s) * Z' s) :=
-  GlobalTheory.T.isNarrowRayClassLFunction_mul_prime_wideIndicator 𝔪 𝔭 hmax hp hcop C Z Z' hZ hZ'
+  _root_.GlobalTheory.isRayL_mul_prime_wideInd 𝔪 𝔭 hmax hp hcop C Z Z' hZ hZ'
 
 theorem isRayL_top_iff {F : Type} [Field F] [NumberField F] (C : ClassGroup (𝓞 F)) (Z : ℂ → ℂ) :
     IsRayL (⊤ : Ideal (𝓞 F)) (wideInd C) Z ↔ IsClassZeta C Z :=
-  GlobalTheory.T.isNarrowRayClassLFunction_top_wideIndicator_iff C Z
+  _root_.GlobalTheory.ZetaDenom.isRayL_top_wideInd_iff C Z
 
 theorem primesOver_exists {F : Type} [Field F] [NumberField F] (l : ℕ) (hl : l.Prime) :
     ∃ P : Finset (Ideal (𝓞 F)), (∀ 𝔭 ∈ P, 𝔭.IsMaximal ∧ 𝔭 ≠ ⊥ ∧ l ∣ Ideal.absNorm 𝔭) ∧
       ∀ I : Ideal (𝓞 F), CoprimeTo F (∏ 𝔭 ∈ P, 𝔭) I ↔ CoprimeTo F (Ideal.span {(l : 𝓞 F)}) I :=
-  GlobalTheory.T.exists_finite_primes_over_prime_coprimality_equiv l hl
+  _root_.GlobalTheory.PrimesAboveExistence.exists_primes_above l hl
 
 theorem inZl_of_shift {G : Type} [CommGroup G] [Finite G] (l : ℕ) [Fact l.Prime] (g : G) (q : ℕ) (hq : l ∣ q)
     (x : G → ℚ) (h : ∀ C, InZl l (x C - (q : ℚ) * x (C * g))) (C : G) : InZl l (x C) :=
-  GlobalTheory.T.isRatInPadicIntegers_of_twisted_difference l g q hq x h C
+  _root_.GlobalTheory.inZl_of_twisted_difference l g q hq x h C
 
 theorem cE_le_of_inZl {F : Type} [Field F] [NumberField F] (z : ClassGroup (𝓞 F) → ℚ) (l a n : ℕ) [Fact l.Prime]
     (ha : 2 ≤ a) (hn : 1 ≤ n) (h : ∀ C, InZl l (((a ^ n - 1 : ℕ) : ℚ) * z C)) :
     cE z l ≤ finrank ℚ F * padicValNat l 2 + padicValNat l (a ^ n - 1) :=
-  GlobalTheory.T.partialZetaDenominatorExponent_le_of_integral z l a n ha hn h
+  _root_.GlobalTheory.DenomBound.cE_le_of_inZl z l a n ha hn h
 
 theorem mMin_eq_mE (hmin : Formalism.PairingDivisionLocalBalance.MinVal) (l n : ℕ) (hl : l.Prime) (hn : 2 ≤ n) (he : Even n) :
     mMin l n = Formalism.PairingDivisionLocalBalance.mE l n :=
-  GlobalTheory.T.minPadicValPowSubOneCoprime_eq_closedFormula hmin l n hl hn he
+  _root_.GlobalTheory.MinValClosed.mMin_eq_mE hmin l n hl hn he
 
 theorem sumBound_of_local {F : Type} [Field F] [NumberField F] (hsum : Formalism.PairingDivisionLocalBalance.CESum) (k : ℕ)
     (z : ClassGroup (𝓞 F) → ℚ) (hk : 2 ≤ k) (h16 : 16 ≤ finrank ℚ F * k)
     (h : ∀ l : ℕ, l.Prime → cE z l ≤ finrank ℚ F * padicValNat l 2 + Formalism.PairingDivisionLocalBalance.mE l (finrank ℚ F * k)) : SumBound k z :=
-  GlobalTheory.T.partialZetaDenomSumBound_of_local_bounds hsum k z hk h16 h
+  _root_.GlobalTheory.Proof.partialZetaDenomSumBound_of_local_bounds.sumBound_of_local hsum k z hk h16 h
 
 theorem isRayL_of_coprime_iff {F : Type} [Field F] [NumberField F] {𝔣 𝔤 : Ideal (𝓞 F)}
     (h : ∀ I, CoprimeTo F 𝔣 I ↔ CoprimeTo F 𝔤 I) {ε : Ideal (𝓞 F) → ℚ} {L : ℂ → ℂ} (hL : IsRayL 𝔣 ε L) : IsRayL 𝔤 ε L :=
@@ -194,13 +197,13 @@ theorem zetaDenominators (h : GlobalTheory.Published.SiegelKlingenDeligneRibet) 
   have hloc : ∀ z : ClassGroup (𝓞 F) → ℚ, IsZetaValues (2 * s) z → ∀ l : ℕ, l.Prime → LocalBound (2 * s) z l := by
     intro z hz l hl
     haveI := Fact.mk hl
-    have hm := mMin_eq_mE GlobalTheory.T.dividedPowerValuations_minVal l _ hl hn2 hev
-    obtain ⟨a, ha2, hac, hv⟩ := GlobalTheory.T.dividedPowerValuations_minVal l _ hl hn2 hev
+    have hm := mMin_eq_mE _root_.GlobalTheory.cmValues_minPadicVal_bound l _ hl hn2 hev
+    obtain ⟨a, ha2, hac, hv⟩ := _root_.GlobalTheory.cmValues_minPadicVal_bound l _ hl hn2 hev
     have hc := cE_le_of_inZl (F := F) z l a _ ha2 (by omega) (inZl_mul_zeta h.2 F l a (2 * s) ha2 hac (by omega) z hz)
     rw [hv] at hc
     refine ⟨by rw [hm]; exact hc, fun h2 hd => ?_, fun h2 hd => ?_, fun h2 => ?_⟩ <;> rw [hm] <;> simp [Formalism.PairingDivisionLocalBalance.mE, *]
   refine ⟨exists_isZetaValues h.1 F (2 * s) (by omega), fun z hz => ⟨hloc z hz, fun h16 =>
-    sumBound_of_local GlobalTheory.T.cmValues_exponent_log_sum_le (2 * s) z (by omega) h16 fun l hl => ?_⟩⟩
+    sumBound_of_local _root_.GlobalTheory.dividedPowerValuations_cESum (2 * s) z (by omega) h16 fun l hl => ?_⟩⟩
   have h1 := hloc z hz l hl
   have h2 := h1.1
   rwa [h1.mMin_eq] at h2

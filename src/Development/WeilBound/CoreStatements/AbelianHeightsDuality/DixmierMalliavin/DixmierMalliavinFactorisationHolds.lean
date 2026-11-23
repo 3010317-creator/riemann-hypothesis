@@ -3,7 +3,11 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.IsClosedEmbeddingOfLocallyCompact
 public import GroundTheory.AutomorphicForms.RealGroupsLie
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ClosedMatrixSubgroupTheorem
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GlueSmoothOfCompactSupportStatement
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GlueSmoothOfCompactSupport
+public import GroundTheory.AutomorphicForms.DixmierMalliavin
 import GroundTheory.AutomorphicForms.DixmierMalliavinSeries
 import GroundTheory.AutomorphicForms.GKModules.SmoothVectors
 import Mathlib.Algebra.Order.Floor.Extended
@@ -44,7 +48,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import GroundTheory.AutomorphicForms.DixmierMalliavin
 import CompanionTheory.AutomorphicTheory.PadicUnitaryWeights.DixmierMalliavin.DixmierMalliavinFactorisationHolds
 
 @[expose] public section
@@ -90,7 +93,7 @@ theorem mem_ccSmooth_iff {H : Subgroup 𝔸ˣ} {𝔤 : Submodule ℝ 𝔸} (h : 
     rw [show f = Φ ∘ fun x : H => ((x : 𝔸ˣ) : 𝔸) from funext e]
     exact hΦ.contMDiff.comp (h.contMDiff_val ∞)
   · rintro ⟨hf, hc⟩
-    refine ⟨hc, GlobalTheory.T.exists_contDiff_comp_of_locally_smooth_compactSupport H 𝔸 _ f (continuous_val_val H) hc fun a => ?_⟩
+    refine ⟨hc, _root_.GlobalTheory.glue_smooth_of_compactSupport H 𝔸 _ f (continuous_val_val H) hc fun a => ?_⟩
     have h1 : ContDiff ℝ ∞ fun Y : 𝔤 => f (a * h.expG Y) := by
       have := (h.contDiff_comp_expG_smul_mul_mul_expG hf 0 a).comp (contDiff_id.prodMk (contDiff_const (c := (0 : ℝ))))
       simpa [Function.comp_def, h.expG_zero] using this

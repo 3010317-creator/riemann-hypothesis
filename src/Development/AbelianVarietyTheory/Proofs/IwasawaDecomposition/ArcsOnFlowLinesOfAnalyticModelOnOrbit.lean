@@ -4,18 +4,20 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Orbit
 public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.ModelsAt
 public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.NonemptyGtAnOfToric
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.NonemptyFamilyUnifIffUnifAt
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PointEqIffIsometryClosed
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArithmeticCMKnownTheoremsProof
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.EqZeroOfTraceLattice
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsCoeffNeZeroOfFourierJacobiArcDatum
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HolomorphicArcAgreesAnalyticDictionary
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.PointExpEqOfIsometry
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsPeriodCompIsometry
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PointEqIffIsometryClosed
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExpEqOfIsometryMatchingMarkings
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HolArcEqFlowOrbit
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HolArcNilpotent
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HolomorphicArcAgreesAnalyticDictionary
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.PointExpEqOfIsometry
-import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.RiemannFormFramePeriodsEqMajorantStatement
+import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IsThetaL2NormSquared
+import Formalism.LocalToGlobal.ProjectiveLattices.NormsFree
+import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.RiemannFormFramePeriodsEqMajorant
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsDerivAt0CompLinear
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsPeriodCompIsometry
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RelabelEmbeddingsGoodBijectiveConjCompat
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -199,7 +201,7 @@ theorem flowTie_of_onOrbit : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     exact (map_eq_zero_iff _ Λ.eX.injective).1 hy0
   let x₀ : (U.X k).dom := ⟨_, hs₁⟩
   obtain ⟨-, -, -, -, Hm, hHm⟩ := Uw.period k x₀
-  have hκ := (GlobalTheory.T.riemann_form_frame_periods_eq_majorant E H Dw l Xo c σ r U Uw k x₀ Hm hσ hU hHm).2.1 hr
+  have hκ := (_root_.GlobalTheory.RiemMaj.riemann_eq_majorant E H Dw l Xo c σ r U Uw k x₀ Hm hσ hU hHm).2.1 hr
   obtain ⟨sE, -, hbe, hsp, -, hform⟩ := GlobalTheory.ArcFlow.rank_one (U.X k) (Uw.φ k) _ (Uw.iso k) y'' hY hκ hy''
     Λ.A.be Λ.A.be_symm Λ.A.be_pos nn' hnn'' hrep'' ξ hξ0 t' o3 hyt
   have hform' : ∀ v, (Uw.φ k (nn' v) : Fin r → E) =

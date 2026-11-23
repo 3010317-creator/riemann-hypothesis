@@ -1,7 +1,8 @@
 module
 
 public import Formalism.PeriodIntegrals.SigmaStarUniq
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.AreaLat
+public import Formalism.PeriodIntegrals.AreaLat
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LatticeArea.ImConjMulCombo
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ThetaSeriesUniqueness.SigmaStarUniqOf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -45,4 +46,4 @@ import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
-theorem sigma_star_unique : PI.SigmaStarUniq := PI.SSU.sigmaStarUniq_of area_lattice_formula
+theorem sigma_star_unique : PI.SigmaStarUniq := PI.SSU.sigmaStarUniq_of _root_.PI.AreaLatWork.areaLat

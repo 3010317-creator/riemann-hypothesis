@@ -3,7 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsRatDatum
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ExistsSumFrame
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSplitPointFrameCharacterStatement
+public import Formalism.LocalToGlobal.Divisibility.DefGroup
+public import Formalism.LocalToGlobal.HeckeThetaElements.IsHeckeElt
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSplitPointFrameCharacter
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualSplitComponentIsLatticeStabilizerEq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -200,7 +202,7 @@ theorem ker_stdPair : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topolo
   have hπO : πw ∈ 𝒪[k] := (Valuation.mem_integer_iff _ _).2 (by
     rw [hπ]; exact (Valuation.mem_integer_iff _ _).1 q.1.2)
   have hrow := row_eq_zero o hg ζ l _ hπ0 hvec
-  obtain ⟨γ, hγ⟩ := ((GlobalTheory.T.exists_splitPoint_frame_character D).2 k p).1 A (Fin A.rank) 1 1 (Matrix.mul_one _) (Matrix.mul_one _)
+  obtain ⟨γ, hγ⟩ := ((_root_.GlobalTheory.InhPt.exists_splitPt_frame_char D).2 k p).1 A (Fin A.rank) 1 1 (Matrix.mul_one _) (Matrix.mul_one _)
   obtain ⟨γ₀, hsum⟩ := GlobalTheory.FinPl.DblInh.exists_sumFrame o hζ γ β
   have hact : ∀ (w : Fin A.rank ⊕ Fin 1 → k) (i : Fin S.rank), (γ₀.b *ᵥ w) i =
       (o.jA.map p.pr *ᵥ (w ∘ Sum.inl)) i + if i = l then πw * w (Sum.inr 0) else 0 := by

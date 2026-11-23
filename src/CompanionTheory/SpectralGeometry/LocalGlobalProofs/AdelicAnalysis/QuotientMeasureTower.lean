@@ -1,7 +1,8 @@
 module
 
 public import Mathlib.MeasureTheory.Group.FundamentalDomain
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ClosedSubgroupQuotientMeasureStatement
+public import Mathlib.MeasureTheory.Group.Measure
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ClosedSubgroupQuotientMeasure
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FiniteCovolumeUnimodular
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -187,7 +188,7 @@ theorem lintegral_sum_cosets_average : ∀ (G : Type) [Group G] [TopologicalSpac
     GlobalTheory.CompanionTheory.SW.LatticeUnimod.unimodular_of_isFundamentalDomain G₁ Γ₁ μ₁ 𝓕₁ h𝓕₁ hfin
   haveI := hright
   haveI := hinvinv
-  obtain ⟨w, hw, hw1⟩ := GlobalTheory.T.closed_subgroup_quotient_measure G G₁ ι hιce μ₁
+  obtain ⟨w, hw, hw1⟩ := _root_.GlobalTheory.CompanionTheory.SW.exists_weight_mass_one_right_coset G G₁ ι hιce μ₁
   have hιc : Continuous ι := hιce.continuous
   have hι : Function.Injective ι := hιce.injective
   have hm : Measurable (fun p : G × G₁ => φ (ι p.2 * p.1)) :=

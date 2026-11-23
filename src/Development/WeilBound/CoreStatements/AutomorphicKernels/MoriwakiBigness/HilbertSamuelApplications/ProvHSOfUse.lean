@@ -3,11 +3,12 @@ module
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.BlowupProjections.BlowupProjStatement
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.ZhangDimensionPushDownGrassmannianHeightBounds
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.SmallGeneratedCountUpperOfUse
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BigLineImpliesHeightPositivityStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.MoriwakiSt
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BigLineImpliesHeightPositivity
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.ArithmeticHilbertSamuelOfSystems
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.HsLinksOfUse
-import Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.SelfIntersectionLeOfBoundedInjectionUse
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.SmallSectionsUpperOfUse
+import Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.SelfIntersectionLeOfBoundedInjectionUse
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,7 +58,7 @@ theorem provHS_of_use :
       ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.MoriwakiBigStatement → ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement → Prov.HS := by
   intro hI hU hBig hRes
   obtain ⟨g1, z1, z2, g6p, -, -⟩ := GlobalTheory.CompanionTheory.Ar.Giv.hsLinks_of_use hU hBig
-  exact ⟨z1, z2, g1, g6p, GlobalTheory.T.big_line_implies_height_positivity hBig, hU.g7p, GlobalTheory.CompanionTheory.Ar.Giv.smallSections_upper_of_use hI hU hRes,
+  exact ⟨z1, z2, g1, g6p, _root_.GlobalTheory.CompanionTheory.Ar.Small.selfIntersection_le_volNm_of_moriwakiBig hBig, hU.g7p, GlobalTheory.CompanionTheory.Ar.Giv.smallSections_upper_of_use hI hU hRes,
     GlobalTheory.CompanionTheory.Ar.Giv.selfIntersection_le_of_boundedInjection_use hU hBig,
     GlobalTheory.CompanionTheory.Ar.Giv.arithmetic_hilbert_samuel_of_systems hI hU hBig hRes⟩
 

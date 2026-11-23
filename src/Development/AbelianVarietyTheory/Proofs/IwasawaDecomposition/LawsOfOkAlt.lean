@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PredMemGamRanks
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DiamondActionOnHermitianChartClassesStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelFunctionalDilatedClassStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelFunctionalLevelVectorLawsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PrimeLevelStructureDataRanksModPrimeStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DiamondActionOnHermitianChartClasses
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelFunctionalDilatedClass
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelFunctionalLevelVectorLaws
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PrimeLevelStructureDataRanksModPrime
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,10 +53,10 @@ namespace GlobalTheory.Mem.Col2
 theorem TDat.laws_of_ok : ∀ {E K : Type} [Field E] [NumberField E] [StarRing E] [Field K] {n : ℕ} {S : GStep E K n}
     {ST : Finset (HeightOneSpectrum (𝓞 E))} (A : TDat S ST) (T : ℕ), S.Ok → A.Ok T → A.Laws T := by
   intro E K _ _ _ _ n S ST A T hS hA
-  have h1 := GlobalTheory.T.primeLevelStructureData_ranks_mod_prime A T hS hA
-  have h2 := GlobalTheory.T.levelFunctional_levelVector_laws A T hS hA
-  have h3 := GlobalTheory.T.diamond_action_on_hermitianChartClasses A T hS hA
-  have h4 := GlobalTheory.T.levelFunctional_dilated_class A T hS hA
+  have h1 := _root_.GlobalTheory.Mem.Col2.LRank.ranks A T hS hA
+  have h2 := _root_.GlobalTheory.Mem.Col2.fv_te_laws A T hS hA
+  have h3 := _root_.GlobalTheory.Mem.Col2.diamond_action_on_classes A T hS hA
+  have h4 := _root_.GlobalTheory.Mem.Col2.DilFv.dil_fv A T hS hA
   exact ⟨h1.1, h1.2, h2.2.1, h2.2.2, h3.1, h3.2.1, h4, h3.2.2⟩
 
 end GlobalTheory.Mem.Col2

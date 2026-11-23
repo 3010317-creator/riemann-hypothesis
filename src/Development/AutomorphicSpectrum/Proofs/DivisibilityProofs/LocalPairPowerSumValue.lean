@@ -2,9 +2,9 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.BundleChernComparison
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.CycNumIntAndComb
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.CycleNumberLinearStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.CycleNumberMulExpandStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.CycleNumberRenameStatement
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.CycleNumberLinear
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.CycleNumberMulExpand
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.CycleNumberRename
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.OfSteps
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PVerticalDivisorsCommute
 import Mathlib.Algebra.Order.Floor.Extended
@@ -68,10 +68,10 @@ theorem val_psumExpansion_mul : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDisc
         ((cycEval (fun W => classNum (Sum.elim (T.x ∘ e) (T.x' ∘ e)) (psumExpansion r k a) L W)
           (ratDiv P (T.f (e a)) (T.g (e a))) : ℤ) : ℝ) := by
     intro i L
-    rw [(GlobalTheory.T.cycle_number_linear O K ι (σ ⊕ σ) (ratDiv P (T.f i) (T.g i)) (Sum.elim T.x T.x') L).2.2.1]
+    rw [(_root_.GlobalTheory.CompanionTheory.Ar.Num.cycNum_linear O K ι (σ ⊕ σ) (ratDiv P (T.f i) (T.g i)) (Sum.elim T.x T.x') L).2.2.1]
     refine Finset.sum_congr rfl fun a ha => ?_
     obtain rfl : e a = i := (Finset.mem_filter.mp ha).2
-    rw [GlobalTheory.T.cycle_number_rename.1 O K ι (Fin r ⊕ Fin r) (σ ⊕ σ) (Sum.map e e) _ (Sum.elim T.x T.x') _ L, hcomp]
+    rw [_root_.GlobalTheory.CompanionTheory.Ar.Num.numbers_rename.1 O K ι (Fin r ⊕ Fin r) (σ ⊕ σ) (Sum.map e e) _ (Sum.elim T.x T.x') _ L, hcomp]
     exact (cycNum_int_and_comb O K ι (Fin r ⊕ Fin r) (Sum.elim (T.x ∘ e) (T.x' ∘ e)) L).1 _
       (hfin _ _) _
   have hck : ∀ L : List (K → ℤ), (((T.comp e).ck P k L : ℤ) : ℝ) =
@@ -82,7 +82,7 @@ theorem val_psumExpansion_mul : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDisc
     rw [Finset.sum_fiberwise]
     simp only [LocPair.ck, pairNum, LocPair.comp, Function.comp_apply, Int.cast_sum]
   unfold LocPair.val
-  simp only [GlobalTheory.T.cycle_number_mul_expand O K ι (σ ⊕ σ), List.append_nil, hterm]
+  simp only [_root_.GlobalTheory.CompanionTheory.Ar.Num.cycNum_mul O K ι (σ ⊕ σ), List.append_nil, hterm]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun μ _ => ?_
   rw [← Finset.mul_sum, hck]

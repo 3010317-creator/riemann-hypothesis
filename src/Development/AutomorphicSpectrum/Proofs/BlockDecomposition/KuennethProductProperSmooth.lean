@@ -2,9 +2,9 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HodgeXD
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.HodgeSurjectivity.FirstChernCoboundary
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KuennethMayerVietorisRightStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KuennethOfRestrictBijectiveStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KuennethProductLocalGlobalStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KuennethMayerVietorisRight
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KuennethOfRestrictBijective
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KuennethProductLocalGlobal
 import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.ChartGrConst
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -85,8 +85,8 @@ theorem glue_top (hMV : MVBij) (hCD : CovDesc) {K : Type} [Field K] (E : XD K) (
     (b₁ : ∀ a n, Function.Bijective ((resU (E.F₁ a) k₁).pull n))
     (b₃ : ∀ a n, Function.Bijective ((resU (E.F₃ a) k₃).pull n))
     (g₁ : ∀ T, U₃ T → U₁ (E.L₁.obj T)) (g₂ : ∀ T, U₃ T → U₂ (E.L₂.obj T)) : E.Kun U₁ U₂ U₃ g₁ g₂ :=
-  (GlobalTheory.T.kuenneth_of_restrict_bijective E g₁ g₂ (h₁ ∅) (h₂ ∅) k₁ (le_refl U₂) k₃ b₁ (fun a n => resU_self_bij _ _ _ n) b₃).2
-    (GlobalTheory.T.kuenneth_mayer_vietoris_right hMV hCD E U₂ V W hV hW h₁ h₂ hK)
+  (_root_.GlobalTheory.CompanionTheory.KunGlue.kun_res E g₁ g₂ (h₁ ∅) (h₂ ∅) k₁ (le_refl U₂) k₃ b₁ (fun a n => resU_self_bij _ _ _ n) b₃).2
+    (_root_.GlobalTheory.CompanionTheory.KunGlue.glue_l hMV hCD E U₂ V W hV hW h₁ h₂ hK)
 
 section Site
 
@@ -154,7 +154,7 @@ theorem kun_left : SiteLaws → MVBij → CovDesc → ZarAbs → AffOm → KunAf
     obtain ⟨α₀, h₀⟩ := id hSn
     obtain ⟨c, -⟩ := coord_res (U.c α₀) (iInf₂_le α₀ h₀) (U.inter S hSn)
     exact kun_congr _ (eV S hSn) (eW S hSn) _ _ _ _
-      (GlobalTheory.T.kuenneth_product_local_global hS hMV hCD hZ hA hKA K X X' P q q' p₁ p₂ hP _ _ ⟨c⟩
+      (_root_.GlobalTheory.CompanionTheory.KunGlue.Right.kun_right hS hMV hCD hZ hA hKA K X X' P q q' p₁ p₂ hP _ _ ⟨c⟩
         (fun T h => ((inP _ _ T).1 h).1) (fun T h => ((inP _ _ T).1 h).2))
   have e₁ : capU V ∅ = fun T => ∃ α, inU q (U.U α) T := by
     funext T

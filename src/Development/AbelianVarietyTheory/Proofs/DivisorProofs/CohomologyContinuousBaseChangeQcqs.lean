@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IndEtOfForallFinset
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuityBaseChangeAffineCofilteredLimitStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuityBaseChangeAffineCofilteredLimit
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousConeDescendsEtaleSurjectiveStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAffineEtaleSurjective
 import Mathlib.Algebra.Order.Floor.Extended
@@ -62,7 +62,7 @@ theorem contCone_bc_of_compact_separated (R : Type) [CommRing R] (F : Shv R) (hF
   refine GlobalTheory.T.continuousCone_descends_etale_surjective R F S I G c W V r f hfe hfs @IsAffineHom hfa ?_
   intro Z π hπ
   have : IsAffine Z := isAffine_of_isAffineHom π
-  exact GlobalTheory.T.continuity_baseChange_affine_cofiltered_limit R F hF S I G c hc hG Z (π ≫ f ≫ r) inferInstance
+  exact _root_.GlobalTheory.EtC.contCone_bc_affine R F hF S I G c hc hG Z (π ≫ f ≫ r) inferInstance
 
 theorem contCone_bc_of_qcqs : ∀ (R : Type) [CommRing R] (F : Shv R), Finitary F → ∀ (S : Scheme.{0}) (I : Type) [SmallCategory I] [IsCofiltered I] (G : I ⥤ Over S) (c : Cone G), IsLimit c → (∀ i, IsAffineHom (G.obj i).hom) → ∀ (W : Scheme.{0}) (r : W ⟶ S) [CompactSpace W] [QuasiSeparatedSpace W], ContCone R F ((bc (sch.map r)).mapCone c) := by
   intro R _ F hF S I _ _ G c hc hG W r _ _

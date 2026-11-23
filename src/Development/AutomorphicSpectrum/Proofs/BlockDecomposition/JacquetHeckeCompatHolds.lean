@@ -1,8 +1,8 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.TwistedFactors.LocalBaseChange.StrictDominanceCasselman.IsStrictlyDominant
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DominantIwahoriCosetRepsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeckeOperatorCosetSumStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DominantIwahoriCosetReps
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeckeOperatorCosetSum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,8 +50,8 @@ namespace GlobalTheory.CompanionTheory.Lbc
 theorem jacquet_hecke_operator_compat : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k], PositivityTheory.Lbc.C2 k := by
   intro k _ _ _ _ N h d hd J hJo hJc hI hpos V _ _ π hπ t ht T hT v
-  obtain ⟨r, hr, x, hx, hu⟩ := GlobalTheory.T.dominant_iwahori_coset_reps k N h d hd J hJo hJc hI hpos t ht
-  have key := GlobalTheory.T.hecke_operator_coset_sum k N J hJc V π hπ (leviEmb k (stdBlocks d hd) t) T hT r x hr
+  obtain ⟨r, hr, x, hx, hu⟩ := _root_.GlobalTheory.CompanionTheory.Casselman.exists_fin_KN_coset_reps k N h d hd J hJo hJc hI hpos t ht
+  have key := _root_.GlobalTheory.CompanionTheory.HeckeAvg.hecke_eq_average k N J hJc V π hπ (leviEmb k (stdBlocks d hd) t) T hT r x hr
     (fun i => (hx i).1) hu v
   have hmk : ∀ i, (Submodule.Quotient.mk (π (x i * leviEmb k (stdBlocks d hd) t) (v : V)) :
       Jacquet π (unipRad k (stdBlocks d hd))) =

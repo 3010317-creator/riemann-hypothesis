@@ -2,9 +2,12 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.TrivFlagMod
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.BundleObjects
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ChernClassOnFlagPairStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LineBundleModelDegreeStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericFlagComparisonStatement
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.Inhabit
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ChernClassOnFlagPair
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsBundles
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LineBundleModelDegree
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.InstFintypeSumElim
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericFlagComparison
 public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.XCkFlagSum
 import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.ClassListMapDomainPerm
 import Mathlib.Algebra.Order.Floor.Extended
@@ -60,11 +63,11 @@ theorem main : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing
   obtain ⟨hK, hW⟩ := (BundleExamples.isModelOver_iff O _ d).mp hM
   have hW' : GroundTheory.Heights₂.Heights.NumbersDVR.IsModelOver (pointIdeal O x) d := hW
   obtain ⟨hG, f, g, hP⟩ :=
-    GlobalTheory.T.same_generic_flag_comparison O Ω K ι x ϖ hϖ d hW' N V B B' hS w w' b b' hF hF' hw
-  have h1 := (GlobalTheory.T.chern_class_on_flag_pair O ϖ hϖ Ω K ι x d hK hW' N V B B' hG w w' b b' f g hP).1 k hk1 hk2
+    _root_.GlobalTheory.CompanionTheory.Ar.FlagPairOfFrames.main O Ω K ι x ϖ hϖ d hW' N V B B' hS w w' b b' hF hF' hw
+  have h1 := (_root_.GlobalTheory.CompanionTheory.ChernFlagPairRootPolynomial.main O ϖ hϖ Ω K ι x d hK hW' N V B B' hG w w' b b' f g hP).1 k hk1 hk2
     (psumExpansion N k) (isPairExpansion_psum N k) q L Q hQ
   have h2 : ∀ i, ck O x d 1 (A i) (A' i) k L Q = _ := fun i =>
-    (GlobalTheory.T.line_bundle_model_degree O Ω K ι x ϖ hϖ d hM (A i) (A' i) 1 (w.repr (w' i) i) (b i) (b' i)
+    (_root_.GlobalTheory.CompanionTheory.Ar.Num.LineCk.main O Ω K ι x ϖ hϖ d hM (A i) (A' i) 1 (w.repr (w' i) i) (b i) (b' i)
       (hA i).1 (hA i).2 (f i) (g i) (hP.vertical i)
       (by rw [mul_one, mul_comm]; exact hP.generic i)).2 k hk1 hk2 q L Q hQ
   refine h1.trans ?_

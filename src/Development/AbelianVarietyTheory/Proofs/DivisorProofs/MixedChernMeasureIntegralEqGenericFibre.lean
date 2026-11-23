@@ -3,13 +3,14 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ContinuousBcPt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithVarComplexPointsCompact
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChernPartOverProperClosedEqZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexPointsOverRingHomIsHomeomorphBaseChangeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexPointsOverRingHomIsHomeomorphBaseChange
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAffineEtaleCoordinatesGenericPoint
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsChartDensBc
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenericFiberArithmeticVarietyIntegralProjective
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.L2DbarChartMeasureTransfer
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernFormDensityChangeOfChartStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DensConst
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernFormDensityChangeOfChart
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VolumeComplexPointsProperClosedChartField
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.L2DbarChartMeasureTransfer
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -70,7 +71,7 @@ theorem ofReal_dens_trans {k : Type} [CommRing k] {X : Scheme.{0}} {p : X ⟶ Sp
     (hy' : y ∈ c'.e.source) :
     ENNReal.ofReal ((ε : ℤ) * dens L c y) =
       ENNReal.ofReal (‖transDet c.e c'.e y‖ ^ 2) * ENNReal.ofReal ((ε : ℤ) * dens L c' y) := by
-  rw [GlobalTheory.T.mixedChernFormDensity_change_of_chart k X p σ D L c c' y hy hy', ← ENNReal.ofReal_mul (by positivity)]
+  rw [_root_.GlobalTheory.Mix.ChartChange.dens_change_chart k X p σ D L c c' y hy hy', ← ENNReal.ofReal_mul (by positivity)]
   congr 1
   ring
 
@@ -79,7 +80,7 @@ theorem map_part {k K : Type} [CommRing k] [Field K] [Algebra k K] [IsFractionRi
     (hp : IsPullback j q p (spMap (algebraMap k K))) (τ : K →+* ℂ) {D : ℕ} (hX : IsArithVar p D)
     (L : Fin D → MLine p (τ.comp (algebraMap k K))) (ε : ℤˣ) :
     Measure.map (bcPt hp.w τ) (part (fun i => (L i).bc hp.w τ) ε) = part L ε := by
-  have hm : IsHomeomorph (bcPt hp.w τ) := GlobalTheory.T.complexPointsOverRingHom_isHomeomorph_baseChange k K (algebraMap k K) X G p q j hp τ
+  have hm : IsHomeomorph (bcPt hp.w τ) := _root_.GlobalTheory.Mix.isHomeomorph_bcPt k K (algebraMap k K) X G p q j hp τ
   obtain ⟨_, hT2, hSC⟩ := (IsArithVar.finite_emb_and_topology hX).2 (τ.comp (algebraMap k K))
   let h := hm.homeomorph (bcPt hp.w τ)
   haveI : T2Space (CxPts q τ) := h.isEmbedding.t2Space
@@ -125,7 +126,7 @@ theorem map_part {k K : Type} [CommRing k] [Field K] [Algebra k K] [IsFractionRi
 theorem part_int_generic : ∀ (k K : Type) [CommRing k] [Field K] [Algebra k K] [IsFractionRing k K] (X G : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (q : G ⟶ Sp K) (j : G ⟶ X) (hp : IsPullback j q p (spMap (algebraMap k K))) (τ : K →+* ℂ) (D : ℕ), IsArithVar p D → ∀ (L : Fin D → MLine p (τ.comp (algebraMap k K))), (∀ ε : ℤˣ, Measure.map (bcPt hp.w τ) (part (fun i => (L i).bc hp.w τ) ε) = part L ε) ∧ ∀ f : CxPts p (τ.comp (algebraMap k K)) → ℝ, (Intg (fun i => (L i).bc hp.w τ) (fun y => f (bcPt hp.w τ y)) ↔ Intg L f) ∧ Mix.int (fun i => (L i).bc hp.w τ) (fun y => f (bcPt hp.w τ y)) = Mix.int L f := by
   intro k K _ _ _ _ X G _ p q j hp τ D hX L
   have hmap := map_part hp τ hX L
-  have hm : IsHomeomorph (bcPt hp.w τ) := GlobalTheory.T.complexPointsOverRingHom_isHomeomorph_baseChange k K (algebraMap k K) X G p q j hp τ
+  have hm : IsHomeomorph (bcPt hp.w τ) := _root_.GlobalTheory.Mix.isHomeomorph_bcPt k K (algebraMap k K) X G p q j hp τ
   have he : MeasurableEmbedding (bcPt hp.w τ) := (hm.homeomorph (bcPt hp.w τ)).measurableEmbedding
   refine ⟨hmap, fun f => ⟨?_, ?_⟩⟩
   · simp only [Intg]

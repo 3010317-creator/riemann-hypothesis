@@ -1,14 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsGauss
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisValuationSubEqIntMulRadiusStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqualGaussNormTeichmullerCancelStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaussNormAcrisRadiusPosDefiniteStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ISupMonomialHolderLogConvex
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisValuationSubEqIntMulRadius
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqualGaussNormTeichmullerCancel
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ImportsTerFurther
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsGaussGCTarget
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RootCancelPowEqSelfAcrisGaussNormStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RootCancelPowEqSelfAcrisGaussNorm
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TeichmullerRootUnityEqUnit
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaussNormAcrisRadiusPosDefinite
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ISupMonomialHolderLogConvex
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsGaussGCTarget
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -87,8 +87,8 @@ theorem gC_eq_zpow_mul_of_vr (l : ℕ) [Fact l.Prime] (x y : Formalism.Per.Acris
     linarith
   have hv := hn r ⟨hr0, hr1⟩
   simp only [vr, hρr] at hv
-  have hgx := GlobalTheory.T.gaussNormAcrisRadius_pos_definite l x hx ρ h0 h1
-  have hgy := GlobalTheory.T.gaussNormAcrisRadius_pos_definite l y hy ρ h0 h1
+  have hgx := _root_.GlobalTheory.PMon.Gauss.gC_pos_target l x hx ρ h0 h1
+  have hgy := _root_.GlobalTheory.PMon.Gauss.gC_pos_target l y hy ρ h0 h1
   apply Real.logb_injOn_pos hl1 hgx (Set.mem_Ioi.2 (mul_pos (zpow_pos hρ n) hgy))
   have hz : Real.logb l (ρ ^ n) = n * Real.logb l ρ := by
     rw [Real.logb, Real.logb, Real.log_zpow, mul_div_assoc]
@@ -101,8 +101,8 @@ end GlobalTheory.PMon.Gauss
 theorem GlobalTheory.PMon.Gauss.one_digit : ∀ (l : ℕ) [Fact l.Prime] (h s : ℕ), s < h → ∀ w w' : Formalism.Per.Acris l, (φc l)^[h] w' = (l : Formalism.Per.Acris l) ^ s * w' → w' ≠ 0 → φc l w * w' = w * φc l w' → (∀ ρ : ℝ, (l : ℝ)⁻¹ ≤ ρ → ρ < 1 → gC l ρ w = gC l ρ w') → ∃ c : ℤ_[l], IsUnit c ∧ ∀ ρ : ℝ, (l : ℝ)⁻¹ ≤ ρ → ρ < 1 → gC l ρ (w - zc l c * w') ≤ ρ * gC l ρ w' := by
   intro l _ h s hsh w w' hφh hw' hrat hg
   have hl0 : (0 : ℝ) < l := by exact_mod_cast (Fact.out : l.Prime).pos
-  obtain ⟨ζ, o, ρ₀, ho, hζo, hζ0, hρ₀l, hρ₀1, hlt⟩ := GlobalTheory.T.equal_gaussNorm_teichmuller_cancel l w w' hw' hg
-  have hζl : ζ ^ l = ζ := GlobalTheory.T.rootCancel_pow_eq_self_acris_gaussNorm l h s hsh w w' ζ o ρ₀ hφh hw' hrat hg ho hζo hζ0 hρ₀l.le hρ₀1 hlt
+  obtain ⟨ζ, o, ρ₀, ho, hζo, hζ0, hρ₀l, hρ₀1, hlt⟩ := _root_.GlobalTheory.GaussCancel.equal_gauss_cancel l w w' hw' hg
+  have hζl : ζ ^ l = ζ := _root_.GlobalTheory.PMon.Gauss.root_cancel_pow_eq_self l h s hsh w w' ζ o ρ₀ hφh hw' hrat hg ho hζo hζ0 hρ₀l.le hρ₀1 hlt
   obtain ⟨c, hcu, hc⟩ := GlobalTheory.PMon.Gauss.teichmuller_root_unity_eq_unit l ζ hζl hζ0
   refine ⟨c, hcu, fun ρ h0 h1 => ?_⟩
   have hρ : 0 < ρ := (inv_pos.2 hl0).trans_le h0
@@ -115,7 +115,7 @@ theorem GlobalTheory.PMon.Gauss.one_digit : ∀ (l : ℕ) [Fact l.Prime] (h s : 
   have hrat1 : φc l (w - zc l c * w') * w' = (w - zc l c * w') * φc l w' := by
     rw [map_sub, map_mul, hφz]
     linear_combination hrat
-  obtain ⟨n, hn⟩ := GlobalTheory.T.acrisValuation_sub_eq_int_mul_radius l h s hsh (w - zc l c * w') w' hφh hw1 hw' hrat1
+  obtain ⟨n, hn⟩ := _root_.GlobalTheory.PMon.Gauss.vr_sub_eq_int_mul l h s hsh (w - zc l c * w') w' hφh hw1 hw' hrat1
   have hmono := gC_eq_zpow_mul_of_vr l _ w' hw1 hw' n hn
   have hρ₀ : 0 < ρ₀ := (inv_pos.2 hl0).trans hρ₀l
   have hn1 : 1 ≤ n := by
@@ -125,7 +125,7 @@ theorem GlobalTheory.PMon.Gauss.one_digit : ∀ (l : ℕ) [Fact l.Prime] (h s : 
     have e := hmono ρ₀ hρ₀l.le hρ₀1
     rw [← hc] at hlt
     rw [e] at hlt
-    have hg0 := GlobalTheory.T.gaussNormAcrisRadius_pos_definite l w' hw' ρ₀ hρ₀l.le hρ₀1
+    have hg0 := _root_.GlobalTheory.PMon.Gauss.gC_pos_target l w' hw' ρ₀ hρ₀l.le hρ₀1
     have : (1 : ℝ) ≤ ρ₀ ^ n := one_le_zpow_of_nonpos₀ hρ₀ hρ₀1.le hle
     nlinarith
   rw [hmono ρ h0 h1]

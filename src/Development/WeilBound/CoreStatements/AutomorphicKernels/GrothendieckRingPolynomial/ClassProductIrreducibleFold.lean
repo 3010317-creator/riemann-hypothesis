@@ -1,9 +1,10 @@
 module
 
-import CompanionTheory.AutomorphicTheory.ProductFormulaTheory.GrothendieckRingPolynomial.ClassProductIrreducibleFold
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.GrothendieckRingPolynomial.ProdList
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivProdIrrZero
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductIrreducibleAppendEquivStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductIrreducibleAppendEquiv
+import CompanionTheory.AutomorphicTheory.ProductFormulaTheory.GrothendieckRingPolynomial.ClassProductIrreducibleFold
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -114,7 +115,7 @@ theorem prodIrr_append_one (hM : MulCls k) {h : ℕ} (x₀ : IrrGL (k := k)) (y 
     HasFiniteLength (prodIrr (Fin.append (fun _ : Fin 1 => x₀) y) happ) ∧
       cl0 (prodIrr (Fin.append (fun _ : Fin 1 => x₀) y) happ) = mulR (sg x₀) (cl0 (prodIrr y hy)) := by
   have hx1 : ∑ _ : Fin 1, x₀.1 = x₀.1 := by simp
-  obtain ⟨F⟩ := GlobalTheory.T.product_irreducible_append_equiv k 1 h x₀.1 (∑ a, (y a).1) (fun _ : Fin 1 => x₀) y hx1 hy happ
+  obtain ⟨F⟩ := _root_.GlobalTheory.CompanionTheory.ProdStage.prod₂_prodIrr_append k 1 h x₀.1 (∑ a, (y a).1) (fun _ : Fin 1 => x₀) y hx1 hy happ
   have H1 := prodIrr_one x₀ hx1
   have H3 := class_of_product_equiv hM (prodIrr (fun _ : Fin 1 => x₀) hx1) (prodIrr y hy) _ F H1.1 hfl
     (isSmooth_prodIrr _ _) (isSmooth_prodIrr _ _)

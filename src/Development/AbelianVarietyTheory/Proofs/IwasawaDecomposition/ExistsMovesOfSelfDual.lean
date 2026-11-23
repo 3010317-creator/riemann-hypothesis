@@ -2,29 +2,31 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsUnitaryExtension
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CharacterTrivialAtInertPrimes
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmFiniteAdeleIntegralSeparatedComplete
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmThetaTaylorCoeffAlgebraicAndConjugate
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CoordsAlongOrthonormalRealSubfieldBasisStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIdeleGenerator
+public import Formalism.SharpRestriction.GlobalSchurBounds.StandardLatticesGL3
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CoordsAlongOrthonormalRealSubfieldBasis
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLatticeOfAdelicPoint
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsWeilOfVacuum
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasSumTaylorCoordinateSpaceEntire
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NormSqMulGaussianLatticeTranslateEqShifted
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OddEqOfEven
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaVacuaConjugatesCmPoints
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsTriv
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsTraceCompatibleTorusEmbeddingStandardTorus
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmFiniteAdeleIntegralSeparatedComplete
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIdeleGenerator
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IdealPeriodLatticeOfCurveDatum
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutes
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegralJAndAlgebraicData
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NormSqMulGaussianLatticeTranslateEqShifted
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OddEqOfEven
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OrthoProductThetaMemThetaSpaceOfLattice
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RationalPointsIntegralPointsMembership
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TaylorCoeffConjugateSeries
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaSpaceSelfDualPairAtMostLine
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaTaylorCoeffsAlgebraicAtComplexMultiplicatio
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaTranslationIntertwinerUnitary
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaVacuaConjugatesCmPoints
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitaryHeckeCharacterValues
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.WeilOperatorVacuumExactConstantEvenRank
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.WeilRepresentationVacuumSignInertPlaces
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsTriv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -68,7 +70,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsTraceCompatibleTorusEmbeddingStandardTorus
 
 @[expose] public section
 
@@ -469,7 +470,7 @@ theorem ne_zero_of_like {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ t0 : ℂ} (hC 
   obtain ⟨b, κ, hb, ⟨hκQ, hκ1⟩, rfl⟩ := h
   have hG := (GlobalTheory.InducedType.induced_type D).1
   obtain ⟨hd, h0, hth⟩ := GlobalTheory.Vacuum.evenTheta_properties_curveLattice D cc δ hC t0 ht
-  obtain ⟨-, -, hpar, hmem, -⟩ := GlobalTheory.T.coords_along_orthonormal_realSubfield_basis D hG cc δ N N' _ b hb
+  obtain ⟨-, -, hpar, hmem, -⟩ := _root_.GlobalTheory.OnCoord.coords_of_orthonormal_basis D hG cc δ N N' _ b hb
   have hκn : ‖κ‖ = 1 := hκ1 (Qbar : IntermediateField ℚ ℂ).val.toRingHom
   have hκ0 : κ ≠ 0 := by rintro rfl; simp at hκn
   obtain ⟨-, -, -, u3⟩ := GlobalTheory.theta_translation_intertwiner_unitary D cc δ hC N N' _ _ (Or.inl ⟨_, b, hb, rfl⟩)

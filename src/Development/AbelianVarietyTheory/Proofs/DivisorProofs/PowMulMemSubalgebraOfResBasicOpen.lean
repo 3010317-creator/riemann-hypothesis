@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubNatCompSubIncl
 public import Mathlib.AlgebraicGeometry.Noetherian
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AffineInterFiniteBasicOpenCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowMulMemAdjoinOfLocalizationAwayStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemAdjoinRestrictedSectionsOfLocalStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AffineInterFiniteBasicOpenCover
+public import Mathlib.Algebra.Algebra.Subalgebra.Lattice
+public import Mathlib.RingTheory.Localization.Away.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowMulMemAdjoinOfLocalizationAway
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemAdjoinRestrictedSectionsOfLocal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -93,7 +95,7 @@ theorem res_pow_mul_mem_gen
     intro U₁ U₂ U₃ h₁ h₂ y
     rw [← CommRingCat.comp_apply, ← F.map_comp]
     rfl
-  obtain ⟨m, hm⟩ := GlobalTheory.T.exists_pow_mul_mem_adjoin_of_localizationAway (R := Γ(X, D)) (A := F.obj (op D))
+  obtain ⟨m, hm⟩ := _root_.GlobalTheory.adjoin_mem_of_away_localization' (R := Γ(X, D)) (A := F.obj (op D))
     (R' := Γ(X, X.basicOpen fD)) (A' := F.obj (op (X.basicOpen fD))) fD
     ((F.map (homOfLE hDV).op).hom '' T) ((F.map (homOfLE hDW).op).hom a) (by
       have h0 := ha _ hD' hD'f hD'V
@@ -120,7 +122,7 @@ theorem GlobalTheory.QcSub.pow_mul_mem_sub_of_res_basicOpen : ∀ (X : Scheme.{0
   classical
   haveI := Fintype.ofFinite ι
   rw [mem_sub] at ha
-  choose s hs1 hs2 using fun j => GlobalTheory.T.exists_finset_basicOpen_cover_inf_of_isAffineOpen X hX W (V j) hW (hV j)
+  choose s hs1 hs2 using fun j => _root_.GlobalTheory.affine_inter_finite_basicOpen_cover X hX W (V j) hW (hV j)
   have hle : ∀ j, ∀ h ∈ s j, X.basicOpen h ≤ V j := by
     intro j h hh
     obtain ⟨r, hr⟩ := hs1 j h hh
@@ -132,7 +134,7 @@ theorem GlobalTheory.QcSub.pow_mul_mem_sub_of_res_basicOpen : ∀ (X : Scheme.{0
   refine ⟨∑ j, ∑ h : s j, m j h, ?_⟩
   rw [mem_sub]
   intro j W' hW' hWW' hWV
-  refine GlobalTheory.T.mem_adjoin_restricted_sections_of_local X F α hα (V j) W (T j) _ ?_ W' hW' hWW' hWV
+  refine _root_.GlobalTheory.QcSub.Local.mem_gen_of_local X F α hα (V j) W (T j) _ ?_ W' hW' hWW' hWV
   intro x hx
   have hx' := hs2 j hx
   simp only [Set.mem_iUnion, SetLike.mem_coe] at hx'

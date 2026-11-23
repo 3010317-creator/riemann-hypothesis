@@ -3,13 +3,16 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IndEtOfForallFinset
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RingCocone
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechLevelRepresentableStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechNerveLevelPreservesCofilteredLimitStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuityCofilteredLimitRepresentedAffineStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.GalMapMul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechNerveLevelPreservesCofilteredLimit
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuityCofilteredLimitRepresentedAffine
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCohomologyContinuousOnConeOfLevelwiseStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsColimitFiniteSubextensionRingCoconeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLimitFiniteSubextensionSpecArrowConeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothSurjectiveCechDescentCohomologyStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpecMapSmoothSurjectiveOfIsSeparableStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLimitFiniteSubextensionSpecArrowCone
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DivisorSupportCondition
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothSurjectiveCechDescentCohomology
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpecMapSmoothSurjectiveOfIsSeparable
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -70,11 +73,11 @@ theorem aug_comm {Y Y' X : Scheme.{0}} (f : Y ⟶ X) (g : Y' ⟶ X) (u : yoneda.
 theorem cont (R : Type) [CommRing R] (F : Shv R) (hF : Finitary F) (K Ω : Type) [Field K] [Field Ω] [Algebra K Ω]
     [Algebra.IsAlgebraic K Ω] : ContCone R F (cechCone K Ω) := by
   obtain ⟨hc⟩ := GlobalTheory.T.isColimit_finiteSubextensionRingCocone K Ω
-  obtain ⟨hl⟩ := GlobalTheory.T.isLimit_finiteSubextensionSpecArrowCone K Ω hc
+  obtain ⟨hl⟩ := _root_.GlobalTheory.SepCech.isLimit_leftFunc_arrCone K Ω hc
   refine GlobalTheory.T.isCohomologyContinuousOnCone_of_levelwise R F _ _ _ (fun k => ?_)
-  obtain ⟨hk⟩ := GlobalTheory.T.cechNerve_level_preserves_cofiltered_limit _ _ _ hl (fun _ _ _ => show IsIso (𝟙 _) from inferInstance)
+  obtain ⟨hk⟩ := _root_.GlobalTheory.cech_level_limit _ _ _ hl (fun _ _ _ => show IsIso (𝟙 _) from inferInstance)
     (fun _ => show IsIso (𝟙 _) from inferInstance) k
-  refine GlobalTheory.T.continuity_cofiltered_limit_represented_affine R F hF _ _ _ hk (fun L => ?_) ?_
+  refine _root_.GlobalTheory.contCone_of_represented R F hF _ _ _ hk (fun L => ?_) ?_
   · obtain ⟨Z, π, e, hπ, -⟩ := GlobalTheory.T.exists_representable_cech_level_of_stable @IsAffineHom _ _ (Spec.map (CommRingCat.ofHom (algebraMap K L.unop.1))) inferInstance k
     haveI := hπ
     exact ⟨Z, isAffine_of_isAffineHom π, ⟨e⟩⟩
@@ -90,8 +93,8 @@ theorem cechAug_sepClosure_eqv : ∀ (R : Type) [CommRing R] (F : Shv R), Finita
     intro L
     haveI := L.unop.2
     haveI : Algebra.IsSeparable K L.unop.1 := Algebra.isSeparable_tower_bot_of_isSeparable K L.unop.1 Ω
-    obtain ⟨h1, h2⟩ := GlobalTheory.T.smooth_and_surjective_spec_map_of_isSeparable K L.unop.1
-    exact GlobalTheory.T.etC_a2 R _ F
+    obtain ⟨h1, h2⟩ := _root_.GlobalTheory.spec_map_smooth_surjective_of_isSeparable K L.unop.1
+    exact _root_.GlobalTheory.EtC.smooth_surjective_cech_descent_cohomology R _ F
   have hw : ∀ L : (FinSub K Ω)ᵒᵖ, (cechCone K Ω).π.app L ≫ cechAug (Spec.map (CommRingCat.ofHom (algebraMap K L.unop.1))) =
       cechAug (Spec.map (CommRingCat.ofHom (algebraMap K Ω))) := fun L => aug_comm _ _ _ _
   have hw2 : ∀ ⦃L L' : (FinSub K Ω)ᵒᵖ⦄ (f : L ⟶ L'), (arr K Ω ⋙ SimplicialObject.cechNerve).map f ≫

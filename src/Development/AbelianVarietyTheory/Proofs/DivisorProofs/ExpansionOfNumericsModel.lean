@@ -3,9 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SumExpSt
 public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.SingleIndexPlacesAreTwisted
 public import Formalism.PieriBlockIdeals.StatementE
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExponentDatumLeOfPrimePowerLatticeInclusionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExponentDatumLeOfPrimePowerLatticeInclusion
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExponentOfRecordVsFormulas
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrimePowerLatticeInclusionOfLocalModelsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrimePowerLatticeInclusionOfLocalModels
 public import Development.AutomorphicArithmetic.PrimeDiscriminants.ExcSet
 import Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.RamBasic
 import Mathlib.Algebra.Order.Floor.Extended
@@ -67,11 +67,11 @@ theorem jexpU_le_jrec7 (hcut : Formalism.CohomologicalDescent.E.ExCut) {K : Type
   have hrec := GlobalTheory.exponent_of_record_vs_formulas hcut P hN.1 hN.2.1 ι W hN.2.2.1 _ hp
   by_cases hR : W.WRange P (Formalism.EigenvalueLevelCeiling.plc w)
   · obtain ⟨fr, cj, I, X, hc, hX⟩ := hin hR
-    have h1 := GlobalTheory.T.primePowerLatticeInclusion_of_localModels K G Pl0 B ℓ Z w ι P W hN hp hR fr cj I X hc hX
-    have h2 := (GlobalTheory.T.exponent_datum_le_of_primePowerLatticeInclusion K G Pl0 B ℓ Z w _ h1).2
+    have h1 := _root_.GlobalTheory.ExpTie.lIncl_of_models K G Pl0 B ℓ Z w ι P W hN hp hR fr cj I X hc hX
+    have h2 := (_root_.GlobalTheory.ExpTie.jexpU_le_of_lIncl K G Pl0 B ℓ Z w _ h1).2
     rw [hrec.2 hR] at h2
     exact h2
-  · have h2 := (GlobalTheory.T.exponent_datum_le_of_primePowerLatticeInclusion K G Pl0 B ℓ Z w _ (hoff hR)).2
+  · have h2 := (_root_.GlobalTheory.ExpTie.jexpU_le_of_lIncl K G Pl0 B ℓ Z w _ (hoff hR)).2
     exact h2.trans (by exact_mod_cast hrec.1 hR)
 
 section Point
@@ -93,7 +93,7 @@ theorem hasExpBound_at (hcut : Formalism.CohomologicalDescent.E.ExCut) {c : OnCo
     HasExpBound ((R2 p).num (F2 p) C CH) O := by
   constructor
   · intro w _ j
-    have h := (GlobalTheory.T.exponent_datum_le_of_primePowerLatticeInclusion _ _ _ _ _ _ w _ (hS j ((S2 p).μ w) w)).1
+    have h := (_root_.GlobalTheory.ExpTie.jexpU_le_of_lIncl _ _ _ _ _ _ w _ (hS j ((S2 p).μ w) w)).1
     rw [splitPartNumbers_exponent_eq_liftExponent]
     exact_mod_cast h
   refine ⟨fun j l => ((Wj j).Jrec7 (Pj j) l : ℝ), ?_, ?_⟩

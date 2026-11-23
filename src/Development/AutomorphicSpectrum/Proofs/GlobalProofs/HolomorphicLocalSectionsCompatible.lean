@@ -1,8 +1,10 @@
 module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AnalyticSectionIsAlgebraicStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.HolomorphicGluingLocalFunctionsStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SecondCountableTopologyOfIsProjOver
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AnalyticSectionIsAlgebraic
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.HolomorphicGluingLocalFunctions
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DetJacMatCoordsEqTransitionJacobianDet
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -40,8 +42,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.DetJacMatCoordsEqTransitionJacobianDet
-public import Development.AbelianVarietyTheory.Definitions.Divisors.SecondCountableTopologyOfIsProjOver
 
 @[expose] public section
 
@@ -53,8 +53,8 @@ namespace GlobalTheory.CompanionTheory.Gaga
 
 theorem gagaSections_pure : ∀ (X : Scheme.{0}) (s : X ⟶ Sp ℂ) (D : ℕ), IsProper s → SmoothOfRelativeDimension D s → ∀ (L : LB X), L.IsLB → ∀ h : L.ι → (Sp ℂ ⟶ X) → ℂ, (∀ (i : L.ι) (m : ℕ) (B : Set (Fin m → ℂ)) (y : (Fin m → ℂ) → (Sp ℂ ⟶ X)), IsOpen B → IsHolTo B y → (∀ b ∈ B, y b ≫ s = 𝟙 _ ∧ ⊤ ≤ y b ⁻¹ᵁ L.U i) → DifferentiableOn ℂ (fun b => h i (y b)) B) → (∀ (i j : L.ι) (x : Sp ℂ ⟶ X), x ≫ s = 𝟙 _ → ⊤ ≤ x ⁻¹ᵁ (L.U i ⊓ L.U j) → h i x = valAt' x (L.U i ⊓ L.U j) (L.g i j).val * h j x) → ∃ σ : L.Sec, ∀ (i : L.ι) (x : Sp ℂ ⟶ X), x ≫ s = 𝟙 _ → ⊤ ≤ x ⁻¹ᵁ L.U i → valAt' x (L.U i) (σ.f i) = h i x := by
   intro X s D hp hs L hL h hh hg
-  obtain ⟨σ, hσ, e⟩ := GlobalTheory.T.holomorphic_gluing_local_functions X s D hs (AnRead.all s (RingHom.id ℂ) D) L hL h hh hg
-  obtain ⟨t, ht⟩ := GlobalTheory.T.analytic_section_is_algebraic X s D hs hp (AnRead.all s (RingHom.id ℂ) D) L hL σ hσ
+  obtain ⟨σ, hσ, e⟩ := _root_.GlobalTheory.CompanionTheory.Gaga.exists_mem_holSec X s D hs (AnRead.all s (RingHom.id ℂ) D) L hL h hh hg
+  obtain ⟨t, ht⟩ := _root_.GlobalTheory.CompanionTheory.Gaga.holomorphicSections_algebraic_of_isProper X s D hs hp (AnRead.all s (RingHom.id ℂ) D) L hL σ hσ
   refine ⟨t, fun i x hx hU => ?_⟩
   have hx' : x ≫ s = spMap (RingHom.id ℂ) := by
     rw [hx, spMap]; exact (by simp)

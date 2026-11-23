@@ -1,14 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ComplementReferenceCompactSubgroup
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CongruenceSubgroupLatticeStabilizerStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsLatticeStabilizerNormalisingSubgroupStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarInvVolumeConjModularCharacterStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermLat
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CongruenceSubgroupLatticeStabilizer
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsLatticeStabilizerNormalisingSubgroup
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsHermND
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarInvVolumeConjModularCharacter
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LatticeStabilizerCommensurableUnramifiedHermitia
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LatticeStabilizerInfLeConjNormalisingSubgroup
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PowEqZeroOfMemHermitianFrameUnipotent
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnipotentStabilizesSomeLattice
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.InvVolMulPosLeConj
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LatticeStabilizerCommensurableUnramifiedHermitiaStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LatticeStabilizerInfLeConjNormalisingSubgroupStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PowEqZeroOfMemHermitianFrameUnipotentStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnipotentStabilizesSomeLatticeStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,7 +53,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermLat
 
 @[expose] public section
 
@@ -89,25 +90,25 @@ theorem volSt {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNona
     ∀ C, S.IsCls C → S.K0.relIndex (S.St ⊓ MulAction.stabilizer S.GLV C) ≠ 0 ∧
       (S.St ⊓ MulAction.stabilizer S.GLV C).relIndex S.K0 ≠ 0 ∧ 1 ≤ S.wC C ∧
       ∀ h ∈ S.St, S.wC (h • C) = S.wC C := by
-  obtain ⟨Λ1, hΛ1, hK0, -⟩ := GlobalTheory.T.exists_lattice_stabilizer_normalising_subgroup L r k S 1 S.N.one_mem 1 S.N'.one_mem
+  obtain ⟨Λ1, hΛ1, hK0, -⟩ := _root_.GlobalTheory.HL.FrameStabLat.main L r k S 1 S.N.one_mem 1 S.N'.one_mem
   have hK : S.K0 = S.St ⊓ stabL L Λ1 := hK0.symm
   have hc : ∀ Λ, IsLat L Λ → S.K0.relIndex (S.St ⊓ stabL L Λ) ≠ 0 ∧
       (S.St ⊓ stabL L Λ).relIndex S.K0 ≠ 0 := by
     intro Λ hΛ
     rw [hK]
-    exact ⟨(GlobalTheory.T.latticeStabilizer_commensurable_unramified_hermitian L Λ Λ1 hΛ hΛ1 S.St).1, (GlobalTheory.T.latticeStabilizer_commensurable_unramified_hermitian L Λ1 Λ hΛ1 hΛ S.St).1⟩
+    exact ⟨(_root_.GlobalTheory.LatComm.stab_commensurable L Λ Λ1 hΛ hΛ1 S.St).1, (_root_.GlobalTheory.LatComm.stab_commensurable L Λ1 Λ hΛ1 hΛ S.St).1⟩
   have hconj : ∀ h ∈ S.St, S.K0.relIndex (MulAut.conj h • S.K0) ≠ 0 ∧
       (MulAut.conj h • S.K0).relIndex S.K0 ≠ 0 := by
     intro h hh
     have e : MulAut.conj h • S.K0 = S.St ⊓ stabL L (h • Λ1) := by
       rw [hK]; exact (volSt_inf_stab_smul S.St hh Λ1).symm
     rw [e]
-    exact hc _ ((GlobalTheory.T.latticeStabilizer_commensurable_unramified_hermitian L Λ1 Λ1 hΛ1 hΛ1 S.St).2 h).1
+    exact hc _ ((_root_.GlobalTheory.LatComm.stab_commensurable L Λ1 Λ1 hΛ1 hΛ1 S.St).2 h).1
   have hle : S.K0 ≤ S.St := by rw [hK]; exact inf_le_left
-  have hmod := (GlobalTheory.T.haarInvVolume_conj_modular_character S.St S.K0 hle hconj).2.2.2
+  have hmod := (_root_.GlobalTheory.HL.invVol_conj_modular S.St S.K0 hle hconj).2.2.2
   have hone : ∀ h ∈ S.St, invVol S.K0 (MulAut.conj h • S.K0) = 1 := by
     intro h hh
-    obtain ⟨Λ, hΛ, hs⟩ := GlobalTheory.T.unipotent_stabilizes_some_lattice L h _ (GlobalTheory.T.pow_eq_zero_of_mem_hermitianFrameUnipotent L r k S h hh.1)
+    obtain ⟨Λ, hΛ, hs⟩ := _root_.GlobalTheory.HL.exists_isLat_stabL_of_unipotent L h _ (_root_.GlobalTheory.FlagUnipotent.main L r k S h hh.1)
     exact (hmod _ (hc Λ hΛ).1 (hc Λ hΛ).2 h hh).2 (volSt_conj_self _ ⟨hh, hs⟩)
   have hinv : ∀ K' : Subgroup S.GLV, S.K0.relIndex K' ≠ 0 → K'.relIndex S.K0 ≠ 0 → ∀ h ∈ S.St,
       invVol S.K0 (MulAut.conj h • K') = invVol S.K0 K' := by
@@ -118,9 +119,9 @@ theorem volSt {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNona
     rw [volSt_inf_stab_smul S.St hh Λ]
     exact hinv _ (hc Λ hΛ).1 (hc Λ hΛ).2 h hh
   rintro C ⟨n, hn, n', hn', hC⟩
-  obtain ⟨Λ, hΛ, e1, e2, e3⟩ := GlobalTheory.T.exists_lattice_stabilizer_normalising_subgroup L r k S n hn n' hn'
+  obtain ⟨Λ, hΛ, e1, e2, e3⟩ := _root_.GlobalTheory.HL.FrameStabLat.main L r k S n hn n' hn'
   rw [← hC] at e2 e3
-  obtain ⟨⟨K, hKm, hKi, -⟩, -⟩ := GlobalTheory.T.congruence_subgroup_lattice_stabilizer L S.ϖ S.ϖ_irr Λ hΛ 1
+  obtain ⟨⟨K, hKm, hKi, -⟩, -⟩ := _root_.GlobalTheory.HL.congruence_subgroup_facts L S.ϖ S.ϖ_irr Λ hΛ 1
   have a1 : S.K0.relIndex (S.St ⊓ MulAction.stabilizer S.GLV C) ≠ 0 :=
     fun h0 => (hc Λ hΛ).1 (Subgroup.relIndex_eq_zero_of_le_right e2 h0)
   have b1 : K.relIndex (S.St ⊓ stabL L Λ) ≠ 0 :=
@@ -135,7 +136,7 @@ theorem volSt {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNona
   have a2 : (S.St ⊓ MulAction.stabilizer S.GLV C).relIndex S.K0 ≠ 0 :=
     Subgroup.relIndex_ne_zero_trans b3 (hc Λ hΛ).2
   refine ⟨a1, a2, ?_, fun h hh => ?_⟩
-  · obtain ⟨h, hh, hw, -⟩ := GlobalTheory.T.latticeStabilizer_inf_le_conj_normalisingSubgroup L r k S n hn
+  · obtain ⟨h, hh, hw, -⟩ := _root_.GlobalTheory.HL.StabConj.main L r k S n hn
     have c1 : S.St ⊓ MulAction.stabilizer S.GLV C ≤ MulAut.conj h • S.K0 :=
       e2.trans (e1.le.trans (inf_le_left.trans hw))
     have c2 := (invVol_mul_pos_le_conj S.K0 (MulAut.conj h • S.K0) _ (hconj h hh).1 (hconj h hh).2

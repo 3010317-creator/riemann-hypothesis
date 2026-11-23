@@ -1,8 +1,8 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.LeftEquivariantFunctions.SymZeroCommFrame
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GelfandOperatorNormalStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GelfandOperatorsCommuteStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GelfandOperatorNormal
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GelfandOperatorsCommute
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -347,6 +347,6 @@ theorem gelFlag_of (hC : GelComm) (hN : GelN) : GelFlag := by
     rw [e1, ← e4, e2, ← e3, e7]
   exact sub_eq_zero.1 this
 
-theorem gelFlag_holds : GelFlag := gelFlag_of GlobalTheory.T.gelfand_operators_commute GlobalTheory.T.gelfand_operator_normal
+theorem gelFlag_holds : GelFlag := gelFlag_of _root_.GlobalTheory.CompanionTheory.GelC.gelComm _root_.GlobalTheory.CompanionTheory.GelLevi.gelN
 
 end GlobalTheory.CompanionTheory.GelFlagPf

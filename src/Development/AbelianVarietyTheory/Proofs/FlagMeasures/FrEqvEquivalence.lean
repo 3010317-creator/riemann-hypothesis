@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.AdaptSelf
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsHermFramePairNormalFormMovedByIsometryStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NormalFormDualOrthogonalLast
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsHermFramePairNormalFormMovedByIsometry
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagFramesSameGradedDefinitePartLatticeEq
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairCommonUnipotentStabiliserSummary
 import Mathlib.Algebra.Order.Floor.Extended
@@ -137,7 +138,7 @@ theorem move (hK : Formalism.HermitianLatticesTheory.IsCMUnram K) {F G G' : Flag
       ∀ g : ℕ, (N'.IsTerm g Λ ↔ N.IsTerm g Λ) ∧ N'.gI g Λ = N.gI g Λ := by
   obtain ⟨n, hn, hΛ, hG⟩ := h
   have hiso : n ∈ isomGrp H := (mem_isomGrp H n).2 fun x y => hn.1 x y
-  obtain ⟨N', he, -, -, -, hd, -, hrest⟩ := GlobalTheory.T.exists_hermFramePairNormalForm_moved_by_isometry K V H hK r N n hiso
+  obtain ⟨N', he, -, -, -, hd, -, hrest⟩ := _root_.GlobalTheory.DegMove.exists_moved K V H hK r N n hiso
   refine ⟨N', ⟨hd.trans hN.1, fun a => ?_, fun a => ?_⟩, ?_, fun g => ?_⟩
   · rw [(he a).1]
     have e1 : n (N.F.e a) - F.e a = n (N.F.e a - F.e a) + (n (F.e a) - F.e a) := by

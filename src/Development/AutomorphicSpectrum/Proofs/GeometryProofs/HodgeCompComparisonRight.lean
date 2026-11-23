@@ -4,9 +4,14 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GlueApp
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
 public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenMapStalkMap
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntegralElementRegularStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeEigenFieldExtensionStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeStableUnderActionStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCptGen
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntegralElementRegular
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeEigenFieldExtension
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeStableUnderAction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -132,7 +137,7 @@ theorem isFlagVBOn_genFib : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     Lat.patch_of_not S _ _ fun r hr hfib => hfib (hq r (B.S_prime r hr).pos)
   have hdisc := discr_inv_mem ⟨h q'.1, hsp⟩ E hunit
   have hint : ∀ a, A.emb s a ∈ regAt A.ξ ⟨h q'.1, hsp⟩ := fun a =>
-    GlobalTheory.T.integral_element_regular A.X Ω₁ A.ξ ⟨h q'.1, hsp⟩ hgenA (A.normal (h q'.1)).2 _
+    _root_.GlobalTheory.CompanionTheory.Ar.IntReg.mem_regAt_of_isIntegral_of_stalk A.X Ω₁ A.ξ ⟨h q'.1, hsp⟩ hgenA (A.normal (h q'.1)).2 _
       ((Algebra.IsIntegral.isIntegral (R := ℤ) a).map (A.emb s).toIntAlgHom)
   obtain ⟨U, hU, b, hb, hfr⟩ := Fl.sub s ⟨h q'.1, hsp⟩ trivial
   obtain ⟨hli, hbs⟩ := hfr ⟨h q'.1, hsp⟩ trivial hU
@@ -140,9 +145,9 @@ theorem isFlagVBOn_genFib : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   intro q'' hq'' _
   rw [show q'' = q' from hq'']
   refine ⟨hext.2 _ b hli, ?_⟩
-  have key := GlobalTheory.T.lattice_eigen_field_extension E Ω₁ Ω i A.Li B.Li jA A.ρ B.ρ (A.emb s) _ _ (A.M.lat ⟨h q'.1, hsp⟩) hext
+  have key := _root_.GlobalTheory.CompanionTheory.Ar.EigLat.span_inf_eigSp E Ω₁ Ω i A.Li B.Li jA A.ρ B.ρ (A.emb s) _ _ (A.M.lat ⟨h q'.1, hsp⟩) hext
     (fun a e => (hρ a e).symm) hreg
-    (fun a e he => GlobalTheory.T.lie_lattice_stable_under_action A.X Ω₁ A.ξ A.t.G A.Li A.M (𝓞 E) A.t.act A.ρ A.act _ a e he) hint hdisc
+    (fun a e he => _root_.GlobalTheory.CompanionTheory.Ar.LieStable.lat_stable A.X Ω₁ A.ξ A.t.G A.Li A.M (𝓞 E) A.t.act A.ρ A.act _ a e he) hint hdisc
   have hem : B.emb s = i.comp (A.emb s) := by
     show B.cst.comp _ = i.comp (A.cst.comp _)
     rw [hcst]; rfl

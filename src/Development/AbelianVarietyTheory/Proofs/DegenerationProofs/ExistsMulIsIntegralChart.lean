@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.InducedModelMorphismCompStructureMap
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIsIntegralMulPowOfSubalgebra
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsProjectiveClosureIsProjOverStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsProjectiveClosureIsProjOver
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsNmOfIsClVeronese
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -106,7 +106,7 @@ theorem exists_isNm_isProjOver : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Alge
     | algebraMap a => exact Subfield.subset_closure (Or.inl ⟨a, rfl⟩)
     | add x y _ _ hx hy => exact add_mem hx hy
     | mul x y _ _ hx hy => exact mul_mem hx hy
-  obtain ⟨M, hM, hP⟩ := GlobalTheory.T.exists_projectiveClosure_isProjOver o Ω n z ⟨k, by rw [hzk]; exact pow_ne_zero _ hi⟩ (by
+  obtain ⟨M, hM, hP⟩ := _root_.GlobalTheory.ZH.exists_isCl_isProjOver o Ω n z ⟨k, by rw [hzk]; exact pow_ne_zero _ hi⟩ (by
     refine top_unique fun x _ => ?_
     obtain ⟨a, ha, ha0, h⟩ := exists_mul_isIntegral_chart t hi hfin x
     have h1 := hL _ ((hint i hi _).2 h)

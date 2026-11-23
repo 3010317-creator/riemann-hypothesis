@@ -1,12 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.Uniformised
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BirigidifiedBundleKernelKilledOfComplexPointsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagFormTwoSmulAndKerStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAbelianVarietyOfHalvedPeriodMapStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowEqOneOfPoincareKernelComplexStatement
+public import Mathlib.Basic.Complex.Basic
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.NonzeroLocus
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BirigidifiedBundleKernelKilledOfComplexPoints
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHolPeriods
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagFormTwoSmulAndKer
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NotCompactOfMEqOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAbelianVarietyOfHalvedPeriodMap
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowEqOneOfPoincareKernelComplex
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrimeToPTateSimilitudeComplexTorusStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieConditionOfComplexExpIntertwinesActionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieConditionOfComplexExpIntertwinesAction
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RosatiAdjointIffBiextensionPullbacksIsomorphicStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -109,10 +114,10 @@ theorem GlobalTheory.UPel.HT.exists_obj_unifAt_of_period : ∀ (p : ℕ) [Fact p
   intro p _ D R _ b N σ ρ D' t Q hN hNp htype hcls hper
   obtain ⟨hgen, E₁, hE₁, e₀, he₀p, hperf⟩ := hcls
   obtain ⟨A, _, _, act, P, e, hab, hdim, hP, r₁, r₂, hsy, ham, hexp, hker, hact, hweil⟩ :=
-    GlobalTheory.T.exists_abelianVariety_of_halved_periodMap D.O D.inv D.g ρ D' Q E₁ hper hE₁
+    _root_.GlobalTheory.HalvedPeriod.exists_abelian_of_isPeriod D.O D.inv D.g ρ D' Q E₁ hper hE₁
   have hadd := hexp.1
   have hsurj := hexp.2.1
-  obtain ⟨hlie, hlieR⟩ := GlobalTheory.T.lieCondition_of_complexExp_intertwines_action p D R b N σ ρ A act e hab hdim hexp hact htype
+  obtain ⟨hlie, hlieR⟩ := _root_.GlobalTheory.UPel.HT.lie_of_complexExp p D R b N σ ρ A act e hab hdim hexp hact htype
   have hgen' := hgen
   obtain ⟨f, ν, rfl, -, hf⟩ := hgen
   have hfN := hf N hN hNp
@@ -135,8 +140,8 @@ theorem GlobalTheory.UPel.HT.exists_obj_unifAt_of_period : ∀ (p : ℕ) [Fact p
       rig₂ := r₂
       symm := hsy
       ample := ham
-      kerP := ⟨e₀, he₀p, GlobalTheory.T.birigidified_bundle_kernel_killed_of_complex_points A D.g hab hdim P hP r₁ r₂ hsy ham e₀ (fun x hx => by
-        obtain ⟨k, hk, hxk⟩ := GlobalTheory.T.exists_pow_eq_one_of_poincareKernel_complex A D.g hab hdim P hP r₁ r₂ hsy ham e D'.La Q D'.EF hexp hper.2.1
+      kerP := ⟨e₀, he₀p, _root_.GlobalTheory.BiKill.kernel_pow_eq_one A D.g hab hdim P hP r₁ r₂ hsy ham e₀ (fun x hx => by
+        obtain ⟨k, hk, hxk⟩ := _root_.GlobalTheory.KerPoincare.exists_pow_eq_one_of_kernel A D.g hab hdim P hP r₁ r₂ hsy ham e D'.La Q D'.EF hexp hper.2.1
           hper.2.2.2.1 hker hweil x hx
         obtain ⟨z, rfl⟩ := hsurj x
         have hk' : (k : ℂ) ≠ 0 := by exact_mod_cast hk.ne'
@@ -144,7 +149,7 @@ theorem GlobalTheory.UPel.HT.exists_obj_unifAt_of_period : ∀ (p : ℕ) [Fact p
         obtain ⟨a, ha⟩ := (hker _).1 h1
         have hz : z = (k : ℂ)⁻¹ • Q a := by
           rw [ha, ← Nat.cast_smul_eq_nsmul ℂ, smul_smul, inv_mul_cancel₀ hk', one_smul]
-        obtain ⟨E₁', hE₁', hdiv⟩ := GlobalTheory.T.diag_form_two_smul_and_ker_alt A D.g hab hdim P hP r₁ r₂ hsy ham e D'.La Q D'.EF hexp
+        obtain ⟨E₁', hE₁', hdiv⟩ := _root_.GlobalTheory.SymBirig.diag_form_two_smul_and_ker A D.g hab hdim P hP r₁ r₂ hsy ham e D'.La Q D'.EF hexp
           hper.2.1 hker hweil
         have hx' : ∃ t : (P.pull (lift (snd A (Over.mk (𝟙 (Sp ℂ))) ≫ e ((k : ℂ)⁻¹ • Q a))
             (fst A (Over.mk (𝟙 (Sp ℂ))))).left).Gen, t.IsGen := by

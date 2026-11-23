@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.ContinuousOfMemCcSmooth
-import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.T2SpaceOfNonarchimedeanLocalField
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsMulCommutativeCentRealUJ
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.QuotientIntegralEqZeroOfNormalisedCosetIntegralsStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.MeasurePreservingRmulQuotMeas
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.QuotientIntegralEqZeroOfNormalisedCosetIntegrals
+import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -432,7 +433,7 @@ theorem GlobalTheory.RadicalOrb.hasQuotInt_zero : ∀ (k : Type) [Field k] [Valu
     integrable_descend (isClosed_cent γ) hφi hφc hC fun x hx =>
       h0 x (subset_tsupport f (right_ne_zero_of_mul hx))
   refine ⟨hint, ?_⟩
-  refine GlobalTheory.T.quotientIntegral_eq_zero_of_normalised_coset_integrals (GL (Fin r) k) (cent γ) N (isClosed_cent γ) hNc hTc
+  refine _root_.GlobalTheory.Orb.quotInt_eq_zero_of_integral_coset_eq_zero (GL (Fin r) k) (cent γ) N (isClosed_cent γ) hNc hTc
     (fun t ht n hn => conj_mem hN (hTε t ht) hn) (isClosedEmbedding_mul hε hN (isClosed_cent γ) hTε) μ dt dn _ hφc.measurable hφi hint
     fun x => ?_
   · have e : ∀ n : N, b ((n : GL (Fin r) k) * x) * f (((n : GL (Fin r) k) * x)⁻¹ * γ * (n * x)) =

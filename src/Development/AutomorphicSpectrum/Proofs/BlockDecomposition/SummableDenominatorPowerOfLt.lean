@@ -2,10 +2,10 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermOf
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsLatIntVec
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DeltaBlockQuotientInjectionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DeltaBlockSeriesZetaBoundStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DeltaEqLatticeIndexStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TorsionSumZetaBoundDeltaStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DeltaBlockQuotientInjection
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DeltaBlockSeriesZetaBound
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TorsionSumZetaBoundDelta
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DeltaEqLatticeIndex
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,8 +64,8 @@ theorem step {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [A
     (ih : Summable (fun x : hermE σ m ⧸ hermO σ m => (delta (Quotient.out x).1 : ℝ) ^ (-(s - 1)))) :
     Summable (fun x : hermE σ (m + 1) ⧸ hermO σ (m + 1) =>
       (delta (Quotient.out x).1 : ℝ) ^ (-s)) := by
-  obtain ⟨C, hC, hD⟩ := GlobalTheory.T.delta_block_series_zeta_bound F E σ hσ
-  obtain ⟨ι, hinj, hι⟩ := GlobalTheory.T.delta_block_quotient_injection F E σ hσ m
+  obtain ⟨C, hC, hD⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.SumD.sum_delta_le F E σ hσ
+  obtain ⟨ι, hinj, hι⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.Decomp.hermClass_blocks F E σ hσ m
   have hm : (0 : ℝ) ≤ m := Nat.cast_nonneg m
   have hs1 : 1 < s := by linarith
   set G : (hermE σ m ⧸ hermO σ m) × ((Fin m → E) ⧸ intVec E m) × FQ F → ℝ := fun p =>
@@ -91,9 +91,9 @@ theorem step {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [A
       ∑' q : ((Fin m → E) ⧸ intVec E m) × FQ F, G (x, q) ≤
         A * zetaR E r * (delta (Quotient.out x).1 : ℝ) ^ (-(s - 1)) := by
     intro x
-    obtain ⟨hU, hUle⟩ := GlobalTheory.T.torsion_sum_zeta_bound_delta E m (Quotient.out x).1 r hr1
+    obtain ⟨hU, hUle⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.SumU.sum_tor E m (Quotient.out x).1 r hr1
     have hδ : (0 : ℝ) < delta (Quotient.out x).1 :=
-      Nat.cast_pos.mpr (Nat.pos_of_ne_zero (GlobalTheory.T.delta_eq_lattice_index E m _).1)
+      Nat.cast_pos.mpr (Nat.pos_of_ne_zero (_root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.DeltaIndex.delta_index E m _).1)
     set B : ℝ := A * (delta (Quotient.out x).1 : ℝ) ^ (-s) with hB
     have hB0 : 0 ≤ B := mul_nonneg hA0 (Real.rpow_nonneg hδ.le _)
     have hsum : Summable (fun U : (Fin m → E) ⧸ intVec E m => ∑' D : FQ F, G (x, U, D)) :=

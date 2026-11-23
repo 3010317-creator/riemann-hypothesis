@@ -1,11 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AinfDivisibilityBreuilKisinFactsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinOEModPrimeLaurentFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DescentOfPointsKilledStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFixFlatOfTiltMapsAgreeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsResidueTiltInjectiveRetractStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AinfDivisibilityBreuilKisinFacts
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinOEModPrimeLaurentField
+public import Mathlib.FieldTheory.Perfect
+public import Mathlib.RingTheory.AdicCompletion.Basic
+public import Mathlib.RingTheory.Flat.Basic
+public import Mathlib.RingTheory.Valuation.ValuationRing
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DescentOfPointsKilled
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFixFlatOfTiltMapsAgree
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsResidueTiltInjectiveRetract
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusIntegralityWittTiltAinf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -120,9 +124,9 @@ theorem mem_reduction_of_invariant : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l)
       ∃ c : κ → κ → T, ∀ j, i₁ (x j) - i₂ (x j) = ∑ i, (i₁ (x i) - i₂ (x i)) ^ l * c i j) →
     ∀ j, x j ∈ bk.OE.map (WittVector.constantCoeff (p := l) (R := Cb l)) := by
   intro l _ K bk κ _ x hfix hφ
-  obtain ⟨ek, prA, hek, hinj, hpr, hpr1⟩ := GlobalTheory.T.exists_residueTilt_injective_retract l K bk
-  obtain ⟨hoe, -⟩ := GlobalTheory.T.breuilKisin_OE_mod_prime_laurent_field l K bk
-  obtain ⟨-, -, -, h0, -, hc, -⟩ := GlobalTheory.T.ainf_divisibility_breuilKisin_facts l K bk
+  obtain ⟨ek, prA, hek, hinj, hpr, hpr1⟩ := _root_.GlobalTheory.BSP.exists_resTilt_retract l K bk
+  obtain ⟨hoe, -⟩ := _root_.GlobalTheory.BSP.oe_mod_l l K bk
+  obtain ⟨-, -, -, h0, -, hc, -⟩ := _root_.GlobalTheory.BSP.AinfDiv.main l K bk
   have hH : IsHausdorff (Ideal.span {bk.flat}) (OCb l) := hc.toIsHausdorff
   have hX : ek X = bk.flat := by
     have := hek X
@@ -178,7 +182,7 @@ theorem mem_reduction_of_invariant : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l)
     intro O _ _ _ _ _ ψ ψ' h1 h2 h3 hag j
     rw [halg, hX] at h1 h2 h3
     have hag' : ∀ a, ψ (ek a) = ψ' (ek a) := hag
-    obtain ⟨g, hg, hψ⟩ := GlobalTheory.T.exists_fixFlat_of_tilt_maps_agree l K bk O ψ h1 h2 h3 ψ' (fun s => by rw [← hek s]; exact hag' _)
+    obtain ⟨g, hg, hψ⟩ := _root_.GlobalTheory.BSP.exists_galK_fixFlat_of_tilt_maps_agree l K bk O ψ h1 h2 h3 ψ' (fun s => by rw [← hek s]; exact hag' _)
     have hg' : Per.σF (g : GQ l) bk.flat = bk.flat := hg
     rw [hψ]
     congr 1
@@ -188,7 +192,7 @@ theorem mem_reduction_of_invariant : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l)
     rw [halg, hX]; exact mem_nonZeroDivisors_of_ne_zero h0
   have hHX : IsHausdorff (Ideal.span {algebraMap (Fq l bk.a)⟦X⟧ (OCb l) X}) (OCb l) := by
     rw [halg, hX]; exact hH
-  have key := GlobalTheory.T.descent_of_points_killed_alt l (Fq l bk.a)⟦X⟧ (OCb l) X pr (CharP.cast_eq_zero _ _) hnz hHX κ x' hEq hPts hpr1
+  have key := _root_.GlobalTheory.descent_of_points_killed l (Fq l bk.a)⟦X⟧ (OCb l) X pr (CharP.cast_eq_zero _ _) hnz hHX κ x' hEq hPts hpr1
   intro j
   obtain ⟨s, hs⟩ := map_constantCoeff_surj (l := l) (prA (x' j))
   refine (hoe (x j)).2 ⟨m, s, ?_⟩

@@ -2,7 +2,11 @@ module
 
 public import Mathlib.Analysis.Normed.Field.Instances
 public import Mathlib.NumberTheory.Padics.Complex
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardRootsClosedBallBoundsUltrametricStatement
+public import Mathlib.Analysis.Normed.Field.Basic
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.Topology.MetricSpace.Ultra.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardRootsClosedBallBoundsUltrametric
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -80,7 +84,7 @@ theorem GlobalTheory.onto_OC_additive_poly : ∀ (l : ℕ) [Fact l.Prime] (E N :
       · simp
   have hne : f.coeff (l ^ N) ≠ 0 := by
     rw [hcN]; intro h; rw [h, norm_zero] at haN; exact zero_ne_one haN
-  have key := (GlobalTheory.T.card_roots_closedBall_bounds_ultrametric ℂ_[l] f 1 (l ^ N) zero_lt_one hne).1 (by
+  have key := (_root_.GlobalTheory.card_roots_le_radius_bounds ℂ_[l] f 1 (l ^ N) zero_lt_one hne).1 (by
     intro j; simp only [one_pow, mul_one]; rw [hcN, haN]; exact hbound j)
   have hpos : 0 < Multiset.card (f.roots.filter fun z => ‖z‖ ≤ 1) :=
     lt_of_lt_of_le (pow_pos (by omega) N) key

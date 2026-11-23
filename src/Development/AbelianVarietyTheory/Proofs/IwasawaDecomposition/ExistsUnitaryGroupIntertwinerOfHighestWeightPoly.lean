@@ -2,8 +2,10 @@ module
 
 public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
 public import ReciprocityTheory.DualLattices.FischerAdjointStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIntertwinerIrreducibleUnitaryHighestWeightStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIntertwinerIrreducibleUnitaryHighestWeight
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TotalDegreeSubstFLe
+public import ReciprocityTheory.DualLattices.ConstantCoeffRowSubst
+public import ReciprocityTheory.DualLattices.FischerSelfNeZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -41,8 +43,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.DualLattices.ConstantCoeffRowSubst
-public import ReciprocityTheory.DualLattices.FischerSelfNeZero
 import ReciprocityTheory.DualLattices.FischerSmulRight
 
 @[expose] public section
@@ -152,7 +152,7 @@ theorem exists_intertwiner_of_embedding (k : ℕ) (κ : Type) (ν : Fin k → �
         rowSubst_mul, mem_UJset_allPos hg, rowSubst_one]
     · intro v
       exact (hdiff v).continuous.continuousOn
-  obtain ⟨L, hL, v, hv⟩ := GlobalTheory.T.exists_intertwiner_with_highestWeight_vector_in_range k (fun a => (ν a : ℝ)) H τ E π D hτ hK hrep (fun w => hdiff w _)
+  obtain ⟨L, hL, v, hv⟩ := _root_.GlobalTheory.HighestWeightMap.exists_intertwiner k (fun a => (ν a : ℝ)) H τ E π D hτ hK hrep (fun w => hdiff w _)
     (fun h => hD (by rw [h, map_zero]))
     (by
       intro a b hab s

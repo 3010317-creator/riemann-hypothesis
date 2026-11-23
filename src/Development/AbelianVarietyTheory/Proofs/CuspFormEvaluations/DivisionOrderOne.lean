@@ -1,14 +1,15 @@
 module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.WeightFunctionOnFrames
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.OneDivisionUpstairsFreeWeightStatement
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.SingularMetricFreeDivisorInvariantLowerBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.SingularMetricFreeDivisorSmoothCurvatureStatement
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.SquareIntegrableSingularMetricOrderOneStatement
-import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.FirstMinimumInvariantContinuousPosOnFrames
-import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.MeasureStatements
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.OneDivisionUpstairsFreeWeight
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.BasePsiLeviLowerBound
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.SingularMetricFreeDivisorInvariantLowerBound
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.SingularMetricFreeDivisorSmoothCurvature
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.SquareIntegrableSingularMetricOrderOne
 public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.PoinSumMul
 public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.UnfoldPoincareOnto
+import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.FirstMinimumInvariantContinuousPosOnFrames
+import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.MeasureStatements
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,10 +79,10 @@ theorem division_order_one : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     have : 0 ≤ bb ^ 2 * ((X.Ψ.card * min X.p0 (r - X.p0) : ℕ) : ℝ) := by positivity
     linarith
   have hs : ∀ k, X.IsSec Xa.L (Fl.s k) := fun k => (Fl.s_van k).1.1.1
-  have hIn := GlobalTheory.T.square_integrable_singular_metric_order_one E r X Xa Fl G x0 ho FF hFF f hf.1 hfC hvan
-  obtain ⟨hMT, hLT, hET⟩ := GlobalTheory.T.singularMetricFreeDivisor_invariant_lower_bound E r X Xa Fl G (nd X + 1) (by omega)
-  obtain ⟨hMn, hLn, -⟩ := GlobalTheory.T.singularMetricFreeDivisor_invariant_lower_bound E r X Xa Fl G (nd X) (by omega)
-  obtain ⟨⟨k0, z0, hz0, hz0'⟩, hLev⟩ := GlobalTheory.T.singularMetricFreeDivisor_smooth_curvature E r X Xa Fl G (nd X + 1) (by omega) x0 ho
+  have hIn := _root_.GlobalTheory.FreeWeightInFF.inFF_order_one E r X Xa Fl G x0 ho FF hFF f hf.1 hfC hvan
+  obtain ⟨hMT, hLT, hET⟩ := _root_.GlobalTheory.FreeDivMetric.freeDivMetric E r X Xa Fl G (nd X + 1) (by omega)
+  obtain ⟨hMn, hLn, -⟩ := _root_.GlobalTheory.FreeDivMetric.freeDivMetric E r X Xa Fl G (nd X) (by omega)
+  obtain ⟨⟨k0, z0, hz0, hz0'⟩, hLev⟩ := _root_.GlobalTheory.Shares.divLevi_freeWeight E r X Xa Fl G (nd X + 1) (by omega) x0 ho
   obtain ⟨F, P, hF, hFI, hP, hPF, hpo⟩ := hOn r X x0 ho hPD _ _
     (fun x => phla X G x + (1 / 2) * Real.log (∑ k, ‖Xa.w k x‖ ^ 2) +
       (((nd X + 1 : ℕ) : ℝ) - 1 / 2) * Real.log (∑ k, ‖Fl.s k x‖ ^ 2))
@@ -89,7 +90,7 @@ theorem division_order_one : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     ⟨z0, hz0, hz0'⟩ (hLev k0).1 (fun z hz hz' => hET _ hz ⟨k0, hz'⟩)
     (fun z hz hz' ξ => (hmar x0 ho z hz ξ).trans ((hLev k0).2 z hz hz' ξ)) hcusp FF hFF
     ⟨K, gs, fun f hf _ => hgs f hf⟩ _ (hcusp _ hf) hIn
-  obtain ⟨H, hH, hFH⟩ := GlobalTheory.T.one_division_upstairs_free_weight E r X Xa Fl G x0 ho bb
+  obtain ⟨H, hH, hFH⟩ := _root_.GlobalTheory.Shares.DivOne.divOne_up E r X Xa Fl G x0 ho bb
     (fun z hz ξ => (mul_le_mul_of_nonneg_right hbm'
       (OntoB.levi_rh_nonneg RhGradFStatement_holds ho hz ξ)).trans (hmar x0 ho z hz ξ))
     ⟨k0, z0, hz0, hz0'⟩ F hF hFI

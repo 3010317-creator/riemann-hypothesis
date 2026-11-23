@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.GhostFrobenius
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AinfHodgeTateLatticeConstQpModZpEquivStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniquePadicOfFrobeniusEigenAinfStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HodgeTateLatticeMuPInfinityFreeRankOneStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AinfHodgeTateLatticeConstQpModZpEquiv
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.EpsilonPairingZeta
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniquePadicOfFrobeniusEigenAinf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HodgeTateLatticeMuPInfinityFreeRankOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -72,9 +73,9 @@ theorem frobenius_mu' {p : ℕ} [Fact p.Prime] {O : Type} [CommRing O] [Fact ¬I
 
 theorem existsUnique_lattMap : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [IsDomain O], v.Integers O → ∀ (ε : PreTilt O p) (hε : IsPrimitiveSystem ε), ∀ g : latt (PDivGroup.mu p O) →ₗ[Ainf p O] latt (const p O), (∀ m m' : latt (PDivGroup.mu p O), (∀ t, m'.1 t = WittVector.frobenius (m.1 t)) → ∀ t, (g m').1 t = WittVector.frobenius ((g m).1 t)) → ∃! f : const p O ⟶ PDivGroup.mu p O, lattMap f = g := by
   intro p _ C _ _ _ v O _ _ _ _ _ hv ε hε g hg
-  obtain ⟨ec, hec⟩ := GlobalTheory.T.ainfHodgeTateLattice_constQpModZp_equiv p C v O hv ε hε
-  obtain ⟨em, hem⟩ := GlobalTheory.T.hodgeTateLattice_muPInfinity_free_rank_one p C v O hv ε hε
-  have eig := GlobalTheory.T.existsUnique_padic_of_frobenius_eigen_ainf p C v O hv ε hε
+  obtain ⟨ec, hec⟩ := _root_.GlobalTheory.PDivLat.latt_const_equiv p C v O hv ε hε
+  obtain ⟨em, hem⟩ := _root_.GlobalTheory.MuLattice.latt_mu_equiv p C v O hv ε hε
+  have eig := _root_.GlobalTheory.PDivLat.existsUnique_padic_of_eigen p C v O hv ε hε
   set l : latt (PDivGroup.mu p O) := em.symm 1 with hl_def
   have hl : l.1 (epsTate hε) = Sandwich.mu ε := by
     rw [← hem l, hl_def, LinearEquiv.apply_symm_apply, mul_one]

@@ -2,10 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EvIInfScaleMul
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharacterInvariantAdelicFormEqMulEvalZeroStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharacterInvariantAdelicFormEqMulEvalZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdelicSchwartzNeZeroAtOrigin
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergWordL2Bound
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralInfiniteScalingStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralInfiniteScaling
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeasurableThetaSumOfSchrodinger
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationPreservesSchwartz
 import Mathlib.Algebra.Order.Floor.Extended
@@ -140,7 +141,7 @@ theorem main : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField
   set l₁ : ((Fin n × Fin d → AF F) → ℂ) →ₗ[ℂ] ℂ :=
     (LinearMap.proj (R := ℂ) (φ := fun _ : (Fin n × Fin d → AF F) => ℂ) 0) ∘ₗ om (g, 1) with hl₁
   have hadm : l₁ ∈ (adeleClass F).adm (Fin n × Fin d) := hS.adm (g, 1) _ (proj_zero_mem_adm' _)
-  obtain ⟨c, hc⟩ := GlobalTheory.T.character_invariant_adelic_form_eq_mul_eval_zero F B.ψ hψ (Fin n × Fin d) l₁ hadm (fun y φ hφ => by
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.CharInvForm.main F B.ψ hψ (Fin n × Fin d) l₁ hadm (fun y φ hφ => by
     have e : (fun x => B.ψ (x ⬝ᵥ y) * φ x) = schr B.ψ (M.co.e (M.co.e.symm (0, y))) φ := by
       funext x; simp [schr]
     rw [e]
@@ -175,7 +176,7 @@ theorem main : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField
     · simpa using h2.ne
     · exact (memLp_of_mem_schA μ hμ hΦ).aestronglyMeasurable
   have hU := hS.unit μ hμ (g, 1) Φ hΦ
-  have hsc := GlobalTheory.T.lintegral_infinite_scaling F (Fin n × Fin d) u hu μ hμ (fun y => ‖Φ y‖ₑ ^ 2)
+  have hsc := _root_.GlobalTheory.TorusTheta.lintegral_infScale_pi F (Fin n × Fin d) u hu μ hμ (fun y => ‖Φ y‖ₑ ^ 2)
   simp only [hval Φ hΦ, enorm_mul, mul_pow] at hU
   rw [lintegral_const_mul' _ _ (by simp), hsc] at hU
   set P := ENNReal.ofReal (∏ j, u j ^ Module.finrank ℚ F) with hPdef

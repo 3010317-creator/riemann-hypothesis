@@ -1,12 +1,19 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsBaseFrame
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBasicOpenTopFormFrameOfStalkKaehlerBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoordinatesExtendingRegularParametersStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdealSheafEqSpanOnBasicOpensOfStalkPrincipalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogDerivationDetEqUnitMulProdNormalCrossingsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothAffineOpenFinitePresentationStalkKaehlerFrStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SncStalkRegularParametersFromAffineOpenStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitMkOfFormallyUnramified
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBasicOpenTopFormFrameOfStalkKaehlerBasis
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsAlgHomOfComp
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
+public import Mathlib.RingTheory.Kaehler.Basic
+public import ReciprocityTheory.AnalyticForms.RegularLocalRings.FinalTheorems
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoordinatesExtendingRegularParameters
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdealSheafEqSpanOnBasicOpensOfStalkPrincipal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogDerivationDetEqUnitMulProdNormalCrossings
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.FlatBCSec
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothAffineOpenFinitePresentationStalkKaehlerFr
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SncStalkRegularParametersFromAffineOpen
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -67,9 +74,9 @@ theorem GlobalTheory.LogPole.exists_coord_logDet : ∀ (E : Type) [Field E] [Num
     have h' := hf.res hW h
     rw [TopForm.resForm_dOn] at h'
     simpa only [LB.resG_resG] using h'
-  obtain ⟨hreg, m, a, J, hRsp, hIa⟩ := GlobalTheory.T.snc_stalk_regularParameters_from_affineOpen TF.Y.X (LogKS.boundary TF.Y) TF.snc U x₀ hx₀
+  obtain ⟨hreg, m, a, J, hRsp, hIa⟩ := _root_.GlobalTheory.SncStalk.stalk_snc TF.Y.X (LogKS.boundary TF.Y) TF.snc U x₀ hx₀
   haveI := TF.smooth
-  obtain ⟨hfp, hfree, hfin, hrank⟩ := GlobalTheory.T.smooth_affineOpen_finitePresentation_stalkKaehler_free_rank c.F TF.Y.X TF.Y.s Dw.dim U x₀ hx₀
+  obtain ⟨hfp, hfree, hfin, hrank⟩ := _root_.GlobalTheory.SmoothStalk.smooth_stalk c.F TF.Y.X TF.Y.s Dw.dim U x₀ hx₀
   letI : Algebra c.F Γ(TF.Y.X, U.1) := (algX TF.Y.s U.1).toAlgebra
   letI : Algebra Γ(TF.Y.X, U.1) (TF.Y.X.presheaf.stalk x₀) :=
     TopCat.Presheaf.algebra_section_stalk TF.Y.X.presheaf ⟨x₀, hx₀⟩
@@ -81,7 +88,7 @@ theorem GlobalTheory.LogPole.exists_coord_logDet : ∀ (E : Type) [Field E] [Num
   haveI : IsNoetherianRing Γ(TF.Y.X, U.1) := Algebra.FiniteType.isNoetherianRing c.F _
   haveI : IsNoetherianRing (TF.Y.X.presheaf.stalk x₀) :=
     IsLocalization.isNoetherianRing (U.2.primeIdealOf ⟨x₀, hx₀⟩).asIdeal.primeCompl _ inferInstance
-  have h3 := GlobalTheory.T.exists_coordinates_extending_regular_parameters c.F Γ(TF.Y.X, U.1) (TF.Y.X.presheaf.stalk x₀)
+  have h3 := _root_.GlobalTheory.exists_coords_extending_regularParams c.F Γ(TF.Y.X, U.1) (TF.Y.X.presheaf.stalk x₀)
     (U.2.primeIdealOf ⟨x₀, hx₀⟩).asIdeal Dw.dim hrank m a hRsp
   obtain ⟨x, e, hxe, bs, hbs⟩ := h3
   have hxe' : (fun j => x (e j)) = a := funext hxe
@@ -97,7 +104,7 @@ theorem GlobalTheory.LogPole.exists_coord_logDet : ∀ (E : Type) [Field E] [Num
     have := congrArg Subtype.val (b.sum_repr D')
     rw [Submodule.coe_sum] at this
     exact this.symm
-  have h4 := GlobalTheory.T.logDerivation_det_eq_unit_mul_prod_normalCrossings c.F Γ(TF.Y.X, U.1) (TF.Y.X.presheaf.stalk x₀) (U.2.primeIdealOf ⟨x₀, hx₀⟩).asIdeal
+  have h4 := _root_.GlobalTheory.logDet_local_eq_unit_mul_prod c.F Γ(TF.Y.X, U.1) (TF.Y.X.presheaf.stalk x₀) (U.2.primeIdealOf ⟨x₀, hx₀⟩).asIdeal
     Dw.dim m x e J (by simp only [hxe]; exact hRsp) ⟨bs, hbs⟩ ((LogKS.boundary TF.Y).ideal U) hI
     (fun j => (b j).1) (fun j c' => (b j).2.1 c') (fun j => (b j).2.2) hspan
   obtain ⟨u, hu⟩ := h4
@@ -106,9 +113,9 @@ theorem GlobalTheory.LogPole.exists_coord_logDet : ∀ (E : Type) [Field E] [Num
     change ((LogKS.boundary TF.Y).ideal U).map (algebraMap Γ(TF.Y.X, U.1) (TF.Y.X.presheaf.stalk x₀)) =
       Ideal.span {algebraMap Γ(TF.Y.X, U.1) (TF.Y.X.presheaf.stalk x₀) (logDet (fun j => (b j).1) x)}
     exact hI.trans ((Ideal.span_singleton_mul_left_unit u.isUnit _).symm.trans (congrArg (fun y => Ideal.span {y}) hu.symm))
-  have h5 := GlobalTheory.T.idealSheaf_eq_span_on_basicOpens_of_stalk_principal TF.Y.X (LogKS.boundary TF.Y) U x₀ hx₀ _ inferInstance hd
+  have h5 := _root_.GlobalTheory.IdealSpread.ideal_eq_span_of_germ TF.Y.X (LogKS.boundary TF.Y) U x₀ hx₀ _ inferInstance hd
   obtain ⟨s₂, hs₂, hid⟩ := h5
-  have h2 := GlobalTheory.T.exists_basicOpen_topFormFrame_of_stalkKaehlerBasis c.F TF.Y.X TF.Y.s Dw.dim U x₀ hx₀ x ⟨bs, hbs⟩
+  have h2 := _root_.GlobalTheory.FrameSpread.exists_basicOpen_isFrame_dOn c.F TF.Y.X TF.Y.s Dw.dim U x₀ hx₀ x ⟨bs, hbs⟩
   obtain ⟨s₁, hs₁, hfr⟩ := h2
   have hle₁ : TF.Y.X.basicOpen (s₁ * s₂) ≤ TF.Y.X.basicOpen s₁ := by
     rw [Scheme.basicOpen_mul]; exact inf_le_left

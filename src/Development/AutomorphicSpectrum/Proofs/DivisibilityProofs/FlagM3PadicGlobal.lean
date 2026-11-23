@@ -1,9 +1,12 @@
 module
 
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ModelDescentIntegralClosure
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.LocalAtPlaces
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.CycNumIntAndComb
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FinitePlacesModelFamilyStatement
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.LaurentCechNerveLevelSpecTensorPower
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FinitePlacesModelFamily
+public import Mathlib.GroupTheory.FiniteAbelian.Basic
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ModelDescentIntegralClosure
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -17,7 +20,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.GroupTheory.FiniteAbelian.Basic
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
@@ -253,7 +255,7 @@ theorem flag_m3_padic_of_family {A : Type} [CommRing A] [Algebra A Ω] [IsDedeki
     [∀ l, IsScalarTower A (O l) Ω] (fd : Λ → ℕ) (hfd : ∀ l, Nat.card (A ⧸ m l) = (p : ℕ) ^ fd l)
     (hloc : ∀ l, FlagChernComparison (pointIdeal (O l) y) D p j φ (T.map (Int.castRingHom (O l)))) :
     FlagChernComparison (extTo (ZP p) (mCoordIdeal y)) D p j φ (T.map (Int.castRingHom (ZP p))) := by
-  have hnum := GlobalTheory.T.finite_places_model_family K ι Ω y A hinj hc D hv p Λ m hm hcov O fd hfd
+  have hnum := _root_.GlobalTheory.CompanionTheory.Ar.Num.cycList_zp_eq_sum_places K ι Ω y A hinj hc D hv p Λ m hm hcov O fd hfd
   have hCp := C_prime_notMem hv.2.2.1 p
   have hconst : ∀ (R : Type) [CommRing R], MvPolynomial.map (Int.castRingHom R)
       (C ((p : ℕ) : ℤ) : MvPolynomial (Σ k, ι k) ℤ) = C ((p : ℕ) : R) := by

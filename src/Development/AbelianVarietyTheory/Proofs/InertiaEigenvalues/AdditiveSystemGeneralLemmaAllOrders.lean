@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MooreNorm
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdditiveSystemGeneralLemmaOrderOneStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdditiveSystemIntegralSolutionCountOfOrderOneStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdditiveSystemGeneralLemmaOrderOne
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdditiveSystemIntegralSolutionCountOfOrderOne
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdditiveSystemIntegralSurjectivityOfOneStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdditiveSystemSurjectivityAndCountOrderZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdditiveSystemSurjectivityAndCountOrderZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,7 +54,7 @@ namespace GlobalTheory
 theorem PMonE.generalLemma_allOrders : ∀ N : ℕ, GLOnto N ∧ GLCount N := by
   intro N
   rcases Nat.eq_zero_or_pos N with rfl | hN
-  · exact GlobalTheory.T.additiveSystem_surjectivity_and_count_order_zero
-  · exact ⟨GlobalTheory.T.additiveSystemIntegralSurjectivity_of_one N hN GlobalTheory.T.additiveSystem_generalLemma_orderOne.1, GlobalTheory.T.additiveSystemIntegralSolutionCount_of_order_one N hN GlobalTheory.T.additiveSystem_generalLemma_orderOne.2⟩
+  · exact _root_.GlobalTheory.PMonE.glOnto_zero_and_glCount_zero
+  · exact ⟨GlobalTheory.T.additiveSystemIntegralSurjectivity_of_one N hN _root_.GlobalTheory.PMonE.gl1.1, _root_.GlobalTheory.PMonE.LinCount.glCount_of_one N hN _root_.GlobalTheory.PMonE.gl1.2⟩
 
 end GlobalTheory

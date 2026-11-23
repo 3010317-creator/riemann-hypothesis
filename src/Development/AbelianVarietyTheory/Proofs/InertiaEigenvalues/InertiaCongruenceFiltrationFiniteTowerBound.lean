@@ -1,13 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NoTowerQ
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardLeWildJumpSumOfElementaryAbelianStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CommutatorMemOfCoboundaryDetectsQuotientStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardLeWildJumpSumOfElementaryAbelian
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CommutatorMemOfCoboundaryDetectsQuotient
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DoublingArithStep
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RamificationJumpSumLeAddStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RamificationJumpSumPowGrowthStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WildJumpSumLeOfDetectingCoboundaryCharactersStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WildLowerRamificationGroupAntitoneEventuallyBotStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RamificationJumpSumLeAdd
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RamificationJumpSumPowGrowth
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WildJumpSumLeOfDetectingCoboundaryCharacters
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WildLowerRamificationGroupAntitoneEventuallyBot
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,21 +59,21 @@ theorem finiteTowerBound : ∀ (K L : Type) [Field K] [ValuativeRel K] [Topologi
   have hG0 : ∀ k, G k ≤ lowerRamificationGroup K L 0 := fun k => le_trans (hanti (Nat.zero_le k)) h0
 
   have hcomm : ∀ k ≤ 2 * T, ∀ σ ∈ G k, ∀ τ ∈ G k, σ * τ * σ⁻¹ * τ⁻¹ ∈ G (k + 8) :=
-    fun k hk => GlobalTheory.T.commutator_mem_of_coboundary_detects_quotient K L p E 8 (G k) (G (k + 8)) hp hE hord (hdet k hk)
-  obtain ⟨hw, hbot⟩ := GlobalTheory.T.wildLowerRamificationGroup_antitone_eventually_bot K L
+    fun k hk => _root_.GlobalTheory.PMon.Ram.commutator_mem_of_detects K L p E 8 (G k) (G (k + 8)) hp hE hord (hdet k hk)
+  obtain ⟨hw, hbot⟩ := _root_.GlobalTheory.PMon.Ram.wild_antitone_and_eventually_bot K L
 
   refine doublingArith (fun a b => jumpSum (wild K L) (G a) (G b)) E T (Nat.card ↥(G 0)) hE ?_ ?_ ?_ ?_
   · intro k hk j hj1 hj8
-    refine GlobalTheory.T.ramificationJumpSum_pow_growth K L p E (G k) (G (k + j)) (G (k + j + 1)) (hG0 k) hord ?_ ?_
+    refine _root_.GlobalTheory.PMon.Ram.jumpSum_pow_growth K L p E (G k) (G (k + j)) (G (k + j + 1)) (hG0 k) hord ?_ ?_
     · intro σ hσ τ hτ
       exact hanti (show k + j + 1 ≤ k + 8 by omega) (hcomm k hk σ hσ τ hτ)
     · intro σ hσ hσp
       exact hlift (k + j) (by omega) σ (hanti (Nat.zero_le k) hσ) hσp
   · intro k hk
-    exact GlobalTheory.T.wildJumpSum_le_of_detecting_coboundary_characters K L p E 8 (G k) (G (k + 8)) hp hE hord hax (hdet k hk)
+    exact _root_.GlobalTheory.PMon.Ram.jumpSum_le_of_detects K L p E 8 (G k) (G (k + 8)) hp hE hord hax (hdet k hk)
   · intro k
-    exact GlobalTheory.T.ramificationJumpSum_le_add _ (wild K L) (G k) (G (k + 2)) (G (k + 3)) hw hbot (hanti (Nat.le_add_right k 2))
-  · refine GlobalTheory.T.card_le_wildJumpSum_of_elementaryAbelian K L p E (G 0) (G 1) hp hE h0 hord ?_ hpow h01
+    exact _root_.GlobalTheory.PMon.Ram.jumpSum_le_add _ (wild K L) (G k) (G (k + 2)) (G (k + 3)) hw hbot (hanti (Nat.le_add_right k 2))
+  · refine _root_.GlobalTheory.PMon.Ram.card_le_jumpSum_wild K L p E (G 0) (G 1) hp hE h0 hord ?_ hpow h01
     intro σ hσ τ hτ
     exact hanti (show 1 ≤ 0 + 8 by omega) (hcomm 0 (Nat.zero_le _) σ hσ τ hτ)
 

@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StarDepthToFunNonneg
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemStarDepthSetThroughRadicalFreePresentationStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StarDepthSetBddAboveOfUniqueCentreStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemStarDepthSetThroughRadicalFreePresentation
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StarDepthSetBddAboveOfUniqueCentre
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,7 +55,7 @@ theorem depth_le_starDepth : ∀ (O : Type) [CommRing O] (bar : O → O) (ψ w :
   obtain ⟨n, π, hπ⟩ := Module.Finite.exists_fin' O X
   show t ≤ (starDepth bar ψ w).eval X (fun a b => B a b)
   rw [InvFun.eval_eq _ hπ]
-  exact le_csSup (GlobalTheory.T.starDepthSet_bddAbove_of_unique_centre O bar ψ w X m γ B v hγ hB hv hvp hv0 huniq n π hπ)
-    (GlobalTheory.T.mem_starDepthSet_through_radicalFree_presentation O bar ψ w X m γ B v t hγ hB hv hvp hvw hvc ht hBt n π hπ)
+  exact le_csSup (_root_.GlobalTheory.PolFan.depthSet_bddAbove_of_unique_centre O bar ψ w X m γ B v hγ hB hv hvp hv0 huniq n π hπ)
+    (_root_.GlobalTheory.PolFan.mem_depthSet_of_rcone O bar ψ w X m γ B v t hγ hB hv hvp hvw hvc ht hBt n π hπ)
 
 end GlobalTheory.PolFan

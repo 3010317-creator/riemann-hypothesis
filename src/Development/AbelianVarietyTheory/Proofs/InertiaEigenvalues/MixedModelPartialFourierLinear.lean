@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RowMap
 public import Mathlib.Analysis.CStarAlgebra.Classes
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedStandardAddCharConductorPropertiesStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FourierMatch
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedStandardAddCharConductorProperties
+public import Mathlib.MeasureTheory.Function.LocallyIntegrable
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -47,7 +49,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Mathlib.Topology.UniformSpace.Uniformizable
-public import Mathlib.MeasureTheory.Function.LocallyIntegrable
 
 @[expose] public section
 
@@ -81,7 +82,7 @@ theorem GlobalTheory.JR.WeilMix.ptrB_linear : ∀ (F E : Type) [NontriviallyNorm
   haveI := M.bF
   haveI := M.haarF
   haveI : LocallyCompactSpace F := hU.lcF
-  have hlc : IsLocallyConstant (fun x => ψ x) := ((GlobalTheory.T.unramifiedStandardAddChar_conductor_properties F E).2 ψ hψ).1
+  have hlc : IsLocallyConstant (fun x => ψ x) := ((_root_.GlobalTheory.StdChar.psi_conductor F E).2 ψ hψ).1
   funext Y
   have h1 := WeilMix.integrable_mixedModel_partialFourier_integrand M.μF ψ hlc f hf Y
   have h2 := WeilMix.integrable_mixedModel_partialFourier_integrand M.μF ψ hlc f' hf' Y

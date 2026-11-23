@@ -1,13 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
-import Development.AbelianVarietyTheory.CrystallinePeriods.RingBasics
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AinfDvdOfClosedDiscDvdEisensteinPow
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EisensteinImagePowIdealAinfPropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EisensteinImagePowIdealAinfProperties
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCongrPowE
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsDiscMaps
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsInvLiftStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsInvLift
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsUnitClosedDiscFrobeniusEisenstein
+import Development.AbelianVarietyTheory.CrystallinePeriods.RingBasics
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -117,7 +117,7 @@ theorem mat_lift (bk : BK K) (m : ℕ) {d : ℕ} (x : Matrix (Fin d) (Fin d) (bk
       toDisc l (X : bk.S) bk.ρ₀ (γ a b) - (l : bk.DS bk.ρ₀) ^ k * x a b) ∧
       ∀ (g : ↥(GK K)) a b, bk.ev bk.E ^ m ∣ Per.σA (g : GQ l) (bk.ev (γ a b)) - bk.ev (γ a b) := by
   obtain ⟨k₀, s, hs⟩ := mat_approx bk 1 x
-  obtain ⟨k₁, hk₁⟩ := GlobalTheory.T.exists_invariant_lift_mod_E l K bk m
+  obtain ⟨k₁, hk₁⟩ := _root_.GlobalTheory.BSP.BK.exists_inv_lift l K bk m
   choose γ hγ1 hγ2 using fun p : Fin d × Fin d => hk₁ (s p.1 p.2)
   refine ⟨k₁ + k₀, fun a b => γ (a, b), fun a b => ?_, fun g a b => hγ2 (a, b) g⟩
   have h1 := map_dvd (toDisc l (X : bk.S) bk.ρ₀) (hγ1 (a, b))
@@ -138,7 +138,7 @@ theorem dvd_gal_E (bk : BK K) (g : GQ l) : bk.ev bk.E ∣ Per.σA g (bk.ev bk.E)
 theorem dvd_of_iS_dvd (bk : BK K) (s : bk.S) (h : bk.iS bk.E ∣ bk.iS s) : bk.E ∣ s := by
   have h2 : bk.ev bk.E ^ 1 ∣ bk.ev s :=
     (GlobalTheory.BSP.ainf_dvd_of_disc_dvd l K bk (bk.ev s)).1 1 (by rw [pow_one]; exact h)
-  have h3 := (GlobalTheory.T.eisensteinImage_pow_ideal_ainf_properties l K bk 1).2.1 s h2
+  have h3 := (_root_.GlobalTheory.AinfEPow.ePow_facts l K bk 1).2.1 s h2
   rwa [pow_one] at h3
 
 end GlobalTheory.BKLim.BetaDR

@@ -3,11 +3,14 @@ module
 public import Formalism.SharpRestriction.LevelLetterCocycles.BlochKatoDuality
 public import Formalism.GaloisCohomology.LocalTateDualityK
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.RationalDualityOfAllCoefficients
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BlochKatoLocalAllOfTateDualityEulerCharStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteH1PeriodDatumStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TateDualDeRhamAndFilZeroDimAllStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TateH2PeriodDatumStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.LocalSituation
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BlochKatoLocalAllOfTateDualityEulerChar
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TateDualDeRhamAndFilZeroDimAll
 public import Formalism.SharpRestriction.LevelLetterCocycles.JointConditionsZpowers.DimensionInputTwoOfBlochKato
+import Formalism.SharpRestriction.LevelLetterCocycles.LocCoh
+import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteH1PeriodDatum
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TateH2PeriodDatum
 import Formalism.SharpRestriction.LevelLetterCocycles.RamificationTwoAndConjugationAtQAndD
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -56,12 +59,12 @@ theorem main : GlobalTheory.Published.BlochKatoLocal → Formalism.GaloisCohomol
     ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf D.loc D.locA HW F),
       BlochKatoDuality.Conclusion1 D ∧ BlochKatoDuality.Conclusion2 D := by
   intro hBK hTD hEC D _ _ _
-  have h5 : Formalism.MainNotions.LocalSituation.Conclusion5 D := GlobalTheory.T.blochKatoLocal_all_of_tateDuality_eulerChar hBK hTD hEC D
+  have h5 : Formalism.MainNotions.LocalSituation.Conclusion5 D := _root_.GlobalTheory.BlochKatoLocalAllOfTateDualityEulerChar₂.aux_of_blochKato_tateDuality_eulerChar₂ hBK hTD hEC D
   have a1 : BlochKatoDuality.adm1 D := dimension_input_one_of_bloch_kato D h5
   have a2 : BlochKatoDuality.adm2 D := dimension_input_two_of_bloch_kato D h5
-  have a3 : BlochKatoDuality.adm3 D := fun l _ K => GlobalTheory.T.tate_H2_period_datum hTD l (D.loc l) K
-  have a5 : BlochKatoDuality.adm5 D := fun l _ K => GlobalTheory.T.finite_H1_period_datum hTD l (D.loc l) K
-  have a6 : BlochKatoDuality.adm6 D := fun l _ K => (GlobalTheory.T.tateDual_deRham_and_filZero_dim_all D l K).1
+  have a3 : BlochKatoDuality.adm3 D := fun l _ K => _root_.GlobalTheory.TateTop.tateH2_of_duality_loc hTD l (D.loc l) K
+  have a5 : BlochKatoDuality.adm5 D := fun l _ K => _root_.GlobalTheory.TateFiniteH1.tate_finH1 hTD l (D.loc l) K
+  have a6 : BlochKatoDuality.adm6 D := fun l _ K => (_root_.GlobalTheory.TateDualFil.main D l K).1
   exact ⟨BlochKatoDuality.ramification_two_and_conjugation_at_q_and_d D a1 a2 a6, BlochKatoDuality.second_proposition_every_localisation D a1 a2 a3 a5 a6⟩
 
 end GlobalTheory.ClosingStatement

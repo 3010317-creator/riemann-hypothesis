@@ -4,12 +4,12 @@ public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IrreducibleAdmissibleGL
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EquivContra
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContragredientSegmentProductEquiv
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualClassCuspidal
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualClassCuspidalStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualClassTwistNeg
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualClassTwistNegStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualClassTwistNeg
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GelfandKazhdanContragredient
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LanglandsSocleOfOrderFree
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualClassInvolutive
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualClassCuspidal
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductTransposeInverseDualReverse
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegmentDualPrecedesIff
 import Mathlib.Algebra.Order.Floor.Extended
@@ -49,7 +49,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualClassInvolutive
 
 @[expose] public section
 
@@ -68,7 +67,7 @@ theorem segDual_nu (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (Δ : S
   · show (Zc.segDual (Δ.nu s)).first = (Zc.segDual Δ).first.nu (-s)
     rw [GlobalTheory.CompanionTheory.SegDualPrec.first_segDual hc, GlobalTheory.CompanionTheory.SegDualPrec.first_segDual hc]
     show (Zc.dualCl (Δ.first.nu s)).nu (1 - ((Δ.len : ℕ) : ℂ)) = _
-    rw [GlobalTheory.T.dual_class_twist_neg hA, IrrGL.nu_nu, IrrGL.nu_nu]
+    rw [_root_.GlobalTheory.CompanionTheory.ZcDual.dualCl_nu hA, IrrGL.nu_nu, IrrGL.nu_nu]
     congr 1
     ring
   · show (Zc.segDual (Δ.nu s)).len = (Zc.segDual Δ).len

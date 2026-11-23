@@ -8,9 +8,11 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Exist
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsPolynomialModelCoefficientSpaceRealPoints
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsotypicFactorOfIsIrreduciblePiFiniteGroups
 public import Formalism.LocalToGlobal.Columns.MtAdWtIrr
+public import Formalism.PeriodIntegrals.HwFixedLine
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.HighestWeightFixedVectors.HwFixedExMain
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.HighestWeightFixedLine.HwFixedLineMain
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousCoeffBlockAct
 import Formalism.LocalToGlobal.Divisibility.CoefModLemmas
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.HwFixEx
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.HwFixLine
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +48,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.StableIffCarrierEq
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousCoeffBlockAct
 
 @[expose] public section
 
@@ -108,7 +109,7 @@ theorem exists_weight_of_coefMap {L : Type} [Field L] [NumberField L] [IsCMField
       rw [← hfam, ← GlobalTheory.CoefModel.mapVV_rhoK, hT, hT]
       exact h0 γ _
     exact LinearMap.congr_fun hL x
-  have hi : TenIrr emb lam := tenIrr_of' highest_weight_fixed_exists highest_weight_fixed_line emb hinj hcm lam
+  have hi : TenIrr emb lam := tenIrr_of' _root_.PI.HwFix.UnitaryGroupMassFormula.hwFixedEx_main _root_.PI.HwFix.Line.hwFixedLine_main emb hinj hcm lam
   have alg : Formalism.AUTREP.IsAlgWeight L n ρ := isAlgWeight_of_equiv (mtRep emb lam) ρ T hint (mtRep_alg emb lam)
   have irr : ρ.IsIrreducible :=
     GlobalTheory.PiIsotypic.isIrreducible_of_linearEquiv (mtRep emb lam) ρ T (fun g v => (hint g v).symm) hi
@@ -121,7 +122,7 @@ theorem exists_weight_of_coefMap {L : Type} [Field L] [NumberField L] [IsCMField
     · show B (T (mtRep emb lam γ x)) (a.ρ γ y) = B (T x) y
       rw [hint]
       exact hB γ (T x) y
-  exact mtWtOf_hw_dual highest_weight_fixed_exists highest_weight_fixed_line emb hinj hcm lam τ a lam0 hd' hw
+  exact mtWtOf_hw_dual _root_.PI.HwFix.UnitaryGroupMassFormula.hwFixedEx_main _root_.PI.HwFix.Line.hwFixedLine_main emb hinj hcm lam τ a lam0 hd' hw
 
 theorem wt_main : ∀ (D : D7) (V : HSp D) (P : principalLevelFrame.RowPsi V V.rank) (e : ReciprocityTheory.Aut.GQ D.host.E V.rank ≃* Formalism.L2.Theta.GQ V), RatIso P e → ∀ (c : CoefA V) (lam : D.what₂.Tau → DomWeight V.rank) (c0 : VV D.what₂.LL lam →ₛₗ[D.what₂.embLL] c.W), Bridge.CoefMapTie V c.coef c0 (rhoVr (labLL D) lam) → ∃ (alg : Formalism.AUTREP.IsAlgWeight D.host.E V.rank (wtRep c e)) (irr : (wtRep c e).IsIrreducible), ∀ (a : NG.AlgWt D.host.E V.rank) (τ : D.what₂.Tau) (lam0 : Fin V.rank → ℤ), NG.AlgWt.IsDual { W := c.W, ρ := wtRep c e, alg := alg, irr := irr } a → a.HWAt (Formalism.L2.embT D τ) lam0 → lam0 = (lam τ).w := by
   intro D V P e hR c lam c0 ht

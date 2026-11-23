@@ -2,8 +2,8 @@ module
 
 public import GroundTheory.ProfiniteCohomology.RestrictedRamification.MaxUnramifiedOutside
 public import ReciprocityTheory.GaloisValuations.Global
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.GaloisUnramifiedOutsideCohomologyStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.NormalSubgroupLeUnramifiedFixingStatement
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.GaloisUnramifiedOutsideCohomology
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.NormalSubgroupLeUnramifiedFixing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,6 +55,6 @@ namespace GlobalTheory.CompanionTheory.Hypotheses₂
 theorem NS_eq_fixingSubgroup (F Ω : Type) [Field F] [NumberField F] [Field Ω] [Algebra F Ω] [IsAlgClosure F Ω]
     (S : Set (HeightOneSpectrum (𝓞 F))) :
     NS Ω S = (maxUnramifiedOutside F Ω S).fixingSubgroup :=
-  le_antisymm (GlobalTheory.T.normal_subgroup_le_unramified_fixing F Ω S) (GlobalTheory.T.galois_unramified_outside_cohomology F Ω S)
+  le_antisymm (_root_.GlobalTheory.CompanionTheory.GlobalFiniteness.NS_le_fixingSubgroup F Ω S) (_root_.GlobalTheory.CompanionTheory.Glob.InertiaLift.fixingSubgroup_le_NS F Ω S)
 
 end GlobalTheory.CompanionTheory.Hypotheses₂

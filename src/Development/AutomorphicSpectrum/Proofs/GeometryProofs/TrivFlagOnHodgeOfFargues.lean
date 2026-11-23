@@ -3,10 +3,12 @@ module
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.TrivFlagOnHodge
 public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.TrivFlagMod
 public import Development.AutomorphicSpectrum.PublishedTheorems.Algebra₂.FarguesHodgeTate
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.TrivialFlagAtPrimeStatement
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.BundleChernComparison
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.TrivialFlagAtPrime
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.PowerSumsVanishAtPlaces
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeTateFreeTrivialFlagModStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TrivFlagModOfDvdStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IntegralClosureHeightEqOneOfLiesOver
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeTateFreeTrivialFlagMod
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TrivFlagModOfDvd
 import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PMinimalPrimeMultiHomog
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -155,7 +157,7 @@ theorem trivFlagOnHodge_of_fargues : GlobalTheory.CompanionTheory.Ar.HT.FarguesH
       haveI : CharZero Ω := ⟨fun a b hab => by
         have : Int.castRingHom Ω (a : ℤ) = Int.castRingHom Ω (b : ℤ) := by simpa using hab
         exact_mod_cast hint this⟩
-      have h1 := GlobalTheory.T.hodge_tate_free_trivial_flag_mod hF E H D l Xo c O₀ β Y S Ω K J y 𝔐 p hpS hpos (zpLocSubalg Ω p)
+      have h1 := _root_.GlobalTheory.CompanionTheory.Ar.HT.trivFlagMod_rootLines_model hF E H D l Xo c O₀ β Y S Ω K J y 𝔐 p hpS hpos (zpLocSubalg Ω p)
         (mem_range_zpLocSubalg Ω p) Fl x e hHT hRL τ
       have hr : ∀ a : zpLocSubalg Ω p, algebraMap (zpLocSubalg Ω p) Ω a ∈ (algebraMap O Ω).range := by
         intro a
@@ -175,12 +177,12 @@ theorem trivFlagOnHodge_of_fargues : GlobalTheory.CompanionTheory.Ar.HT.FarguesH
       have hR : 𝔐.R p - 2 ≠ 0 := by
         have := 𝔐.R_ge p hpS
         omega
-      exact GlobalTheory.T.triv_flag_mod_of_dvd O Ω K J y _ ϖ _ _ (dvd_pow hpO hR) h2
+      exact _root_.GlobalTheory.CompanionTheory.Ar.HT.trivFlagMod_of_dvd O Ω K J y _ ϖ _ _ (dvd_pow hpO hR) h2
   have hJ := isMultiHomogIdeal_pointIdeal_sup_map_C (ι := J) (O := O) y (IsLocalRing.maximalIdeal O)
   have hWh := GroundTheory.Heights₂.Heights.NumbersDVR.MinimalPrimeMultiHomog.proof.{0} O K J _ W hJ hW.1
   have hCϖ : (C ϖ : GroundTheory.Heights₂.Heights.NumbersDVR.MRing J O) ∈ W :=
     hW.1.1.2 (Ideal.mem_sup_right (Ideal.mem_map_of_mem _
       ((IsLocalRing.mem_maximalIdeal _).2 hϖ.not_isUnit)))
-  exact GlobalTheory.T.trivial_flag_at_prime O Ω K J y ϖ hϖ _ _ hflag W ⟨hW.1.1.1, hWh, hW.2⟩ (le_sup_left.trans hW.1.1.2) hCϖ
+  exact _root_.GlobalTheory.CompanionTheory.Ar.Num.TrivFlagAtRelay.main O Ω K J y ϖ hϖ _ _ hflag W ⟨hW.1.1.1, hWh, hW.2⟩ (le_sup_left.trans hW.1.1.2) hCϖ
 
 end GlobalTheory.CompanionTheory.Ar.Num

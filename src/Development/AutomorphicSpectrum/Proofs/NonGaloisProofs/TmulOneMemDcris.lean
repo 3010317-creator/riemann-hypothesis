@@ -3,13 +3,16 @@ module
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsComponentEquiv
 public import Formalism.SharpRestriction.LevelLetterCocycles.LocalSituation
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BlochKatoRightExact
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ConcretePeriodDeRhamModuleFinrankLeStatement
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.LinearRelationExactSequenceDim
+import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ConcretePeriodDeRhamModuleFinrankLe
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineCoboundaryLift
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineCoboundaryLiftStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBlochKatoCocycleOfCrysDeRhamPairStatement
+import Formalism.SharpRestriction.LevelLetterCocycles.LocCoh
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBlochKatoCocycleOfCrysDeRhamPair
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FontaineInequalityDcrisFiniteConcreteRingsStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TensorFundamentalExactSequenceCrystallineStatement
-public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.LinearRelationExactSequenceDimStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TensorFundamentalExactSequenceCrystalline
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -245,7 +248,7 @@ theorem finrank_eq (hD : FiniteDimensional LL ↥(Dcris PD ρ)) (hR : FiniteDime
       refine ⟨d, e, 0, hef, rfl, rfl, fun g => ?_, rfl⟩
       rw [(mem_Dcris_iff PD ρ).1 hd g]
       simp
-  obtain ⟨-, hcount⟩ := GlobalTheory.T.linear_relation_exact_sequence_dim LL _ _ _ _ (aMap PD ρ) (bMap PD ρ) (relR PD ρ) hInj hRan hAll
+  obtain ⟨-, hcount⟩ := _root_.GlobalTheory.CompanionTheory.InertiaEigenvalues.finrank_along_relation LL _ _ _ _ (aMap PD ρ) (bMap PD ρ) (relR PD ρ) hInj hRan hAll
     hOnto hZero hBack
   rw [Module.finrank_prod, Module.finrank_prod] at hcount
   omega
@@ -268,7 +271,7 @@ theorem finite_periods {l : ℕ} [Fact l.Prime] {P : LocPrime l} {AI : LocAinf l
   haveI : IsScalarTower ℚ_[l] ↥L.1 V := IsScalarTower.to₁₂₄ ℚ_[l] ↥L.1 LL V
   haveI : FiniteDimensional ↥L.1 V := Module.Finite.trans LL V
   have h1 := (GlobalTheory.T.fontaine_inequality_dcris_finite_concrete_rings l P AI T K L).2 V (GlobalTheory.BKRightExact.res ↥L.1 ρ)
-  have h2 := (GlobalTheory.T.concretePeriod_deRham_module_finrank_le l P AI T K L V (GlobalTheory.BKRightExact.res ↥L.1 ρ)).1
+  have h2 := (_root_.GlobalTheory.Per.TiedDdR.ddR_finrank_le l P AI T K L V (GlobalTheory.BKRightExact.res ↥L.1 ρ)).1
   rw [GlobalTheory.BKRightExact.Dcris_res] at h1
   rw [GlobalTheory.BKRightExact.DdR_res] at h2
   have h1' : Module.Finite ↥L.1 ↥(Dcris (P.PD K) ρ) := h1
@@ -282,8 +285,8 @@ theorem bkADim_of_tied : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : Loc
   haveI := hO.2.1
   obtain ⟨hD, hR⟩ := finite_periods T K LL A.ρ
   exact finrank_eq (P.PD K) A.ρ hD hR
-    (GlobalTheory.T.tensor_fundamental_exact_sequence_crystalline l P AI T K LL A.V).2
-    (fun d₁ h₁ d₂ h₂ => GlobalTheory.T.exists_blochKato_cocycle_of_crys_deRham_pair l P AI T K LL O hO A d₁ h₁ d₂ h₂)
-    (fun c x hx => GlobalTheory.T.crystalline_coboundary_lift l P AI T K LL O hO A hdr c x hx)
+    (_root_.GlobalTheory.FundSeq.tensor_fundamental_sequence l P AI T K LL A.V).2
+    (fun d₁ h₁ d₂ h₂ => _root_.GlobalTheory.FundDel.connecting_cocycle l P AI T K LL O hO A d₁ h₁ d₂ h₂)
+    (fun c x hx => _root_.GlobalTheory.CobCrisLift.coboundary_lift l P AI T K LL O hO A hdr c x hx)
 
 end GlobalTheory.CompanionTheory.BKDim

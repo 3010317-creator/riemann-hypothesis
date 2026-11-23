@@ -3,10 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExpoConjOfIsCsd
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OmegaOpCommLiB
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchLieDerivativeExists
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CasimirMemCenterEnvelopingStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactSpanFiniteDimStableStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OmegaOperatorCommutesInfiniteGlStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OmegaOperatorEqCasimirSumStatement
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ContinuousConjFin
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CasimirMemCenterEnveloping
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactSpanFiniteDimStable
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OmegaOperatorCommutesInfiniteGl
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OmegaOperatorEqCasimirSum
 import GroundTheory.AutomorphicForms.AutomorphicFormSpaces.GKStableConv
 import GroundTheory.AutomorphicForms.AutomorphicFormSpaces.GKStableLaplacian
 import Mathlib.Algebra.Order.Floor.Extended
@@ -84,10 +85,10 @@ theorem exists_aeval_lapOp_eq_zero_of_finite (φ : Sm E a)
   set W := Submodule.span ℂ (Set.range fun k => cptRep E a k φ) with hWdef
   haveI : FiniteDimensional ℂ W := hk
   have hZ : Ω ∈ Zalg E a := by
-    rw [hΩ, GlobalTheory.T.omega_operator_eq_casimir_sum E a d b ε hε horth]
+    rw [hΩ, _root_.GlobalTheory.CompanionTheory.HCRep.TraceCas.omegaOp_eq_two_cas E a d b ε hε horth]
     refine Subalgebra.smul_mem _ (Subalgebra.sum_mem _ fun w _ => Subalgebra.add_mem _ ?_ ?_) _
-    · exact GlobalTheory.T.casimir_mem_center_enveloping E a _
-    · exact GlobalTheory.T.casimir_mem_center_enveloping E a _
+    · exact _root_.GlobalTheory.CompanionTheory.Inh.CapelliCasimir.cas_mem_Zalg E a _
+    · exact _root_.GlobalTheory.CompanionTheory.Inh.CapelliCasimir.cas_mem_Zalg E a _
   set Vz := Submodule.span ℂ ((fun z : Module.End ℂ (Sm E a) => z φ) '' Zalg E a) with hVz
   haveI : FiniteDimensional ℂ Vz := hz
   have hVs : ∀ w ∈ Vz, Ω w ∈ Vz := by
@@ -106,7 +107,7 @@ theorem exists_aeval_lapOp_eq_zero_of_finite (φ : Sm E a)
     · rintro _ ⟨k, rfl⟩
       have hcomm : ∀ m, cptRep E a k (Ω m) = Ω (cptRep E a k m) := fun m =>
         (congrArg (fun T : Module.End ℂ (Sm E a) => T m)
-          (GlobalTheory.T.omega_operator_commutes_infinite_gl E a d b ε hε horth (Unitary.toUnits k))).symm
+          (_root_.GlobalTheory.CompanionTheory.HCRep.omegaOp_comm_rt E a d b ε hε horth (Unitary.toUnits k))).symm
       have := AutomorphicForm.map_aeval_apply_of_intertwine (cptRep E a k) hcomm q φ
       rw [hq, map_zero] at this
       exact this.symm
@@ -134,7 +135,7 @@ theorem exists_aeval_lapOp_eq_zero_of_finite (φ : Sm E a)
     · simp [h]
     · refine W.smul_mem _ ?_
       have hs := mem_archSkew.1 (hskew i h)
-      exact GlobalTheory.T.compact_span_finite_dim_stable E a φ (b i) hs hk _ (GlobalTheory.T.compact_span_finite_dim_stable E a φ (b i) hs hk _ hw)
+      exact _root_.GlobalTheory.CompanionTheory.HCRep.liB_skew_mem_span E a φ (b i) hs hk _ (_root_.GlobalTheory.CompanionTheory.HCRep.liB_skew_mem_span E a φ (b i) hs hk _ hw)
   have hφW : φ ∈ W := by
     refine Submodule.subset_span ⟨1, ?_⟩
     change cptRep E a 1 φ = φ

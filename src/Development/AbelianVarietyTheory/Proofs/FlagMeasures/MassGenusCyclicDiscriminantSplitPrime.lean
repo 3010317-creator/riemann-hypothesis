@@ -2,14 +2,19 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass
 public import Mathlib.Order.CompletePartialOrder
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardSublatticesQuotientProdDegreeOnePrimesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CyclicDiscriminantLatticesFormOneGenusStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsMaximalIntegralHermitianLatticeOrthonormalStatement
+public import Mathlib.Algebra.Module.Lattice.Full
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardSublatticesQuotientProdDegreeOnePrimes
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
+public import Formalism.HermitianLattices.StatementMass
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CyclicDiscriminantLatticesFormOneGenus
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsMaximalIntegralHermitianLatticeOrthonormal
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUnimodularOverlatticeCyclicSplitDiscriminaStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianGenusMassEqOrbitStabilizerMassStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemGenusIffMaximalIntegralHermitianLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrbitStabilizerMassEqWeightedSumFibresStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrbitWeightedStabilizerSumMonoSubadditiveStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianGenusMassEqOrbitStabilizerMass
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemGenusIffMaximalIntegralHermitianLattice
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrbitStabilizerMassEqWeightedSumFibres
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrbitWeightedStabilizerSumMonoSubadditive
 import Formalism.HermitianLattices.FinalNeighbourConstruct
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -167,7 +172,7 @@ theorem main : MaxMass → ∀ (K V : Type) [Field K] [NumberField K] [StarRing 
   have hnd := nondeg_of_pd h hp
   have hp' := pd_of_ortho hK h' I _ hI
   have hnd' := nondeg_of_pd h' hp'
-  obtain ⟨⟨s, hcard, hsP, hcop, hprod⟩, hgen⟩ := GlobalTheory.T.cyclicDiscriminant_lattices_form_one_genus K V h hK hs hnd T hT hsp
+  obtain ⟨⟨s, hcard, hsP, hcop, hprod⟩, hgen⟩ := _root_.GlobalTheory.Mass.CyclicGenus.main K V h hK hs hnd T hT hsp
   have hT0 : (T : 𝓞 K) ≠ 0 := Nat.cast_ne_zero.2 hT.ne_zero
   have hP0 : (∏ P ∈ s, P) ≠ ⊥ := by
     intro h0
@@ -188,8 +193,8 @@ theorem main : MaxMass → ∀ (K V : Type) [Field K] [NumberField K] [StarRing 
     letI := hL.1
     letI := hM0.1
     exact Submodule.IsFullLattice.of_le K hM0.2.2.1
-  obtain ⟨-, m2, -⟩ := GlobalTheory.T.exists_maximal_integralHermitianLattice_orthonormal_maximal K V h hK hs hnd
-  obtain ⟨-, m2', m3'⟩ := GlobalTheory.T.exists_maximal_integralHermitianLattice_orthonormal_maximal K V' h' hK hs' hnd'
+  obtain ⟨-, m2, -⟩ := _root_.GlobalTheory.Mass.MaxExists.main K V h hK hs hnd
+  obtain ⟨-, m2', m3'⟩ := _root_.GlobalTheory.Mass.MaxExists.main K V' h' hK hs' hnd'
   obtain ⟨c, hc⟩ := hMM K hK _ hn
   obtain ⟨iL, iU, iR⟩ := m3' I _ hI
   have iLfull : Submodule.IsFullLattice K I := by
@@ -199,17 +204,17 @@ theorem main : MaxMass → ∀ (K V : Type) [Field K] [NumberField K] [StarRing 
   have e0 : mass h M0 = mass h' I := by
     rw [hc V h hs hp rfl M0 (m2 M0 hM0.1 hM0.2.1).1, (m2 M0 hM0.1 hM0.2.1).2.2,
       hc V' h' hs' hp' iR I (m2' I iLfull iU).1, (m2' I iLfull iU).2.2]
-  obtain ⟨b1, b2, b3, b4, -⟩ := GlobalTheory.T.hermitianGenusMass_eq_orbitStabilizerMass K V h hK hs hp L hL.1
-  obtain ⟨a1, a2, a3, -, -⟩ := GlobalTheory.T.hermitianGenusMass_eq_orbitStabilizerMass K V h hK hs hp M0 hM0full
+  obtain ⟨b1, b2, b3, b4, -⟩ := _root_.GlobalTheory.Mass.GenusOrb.main K V h hK hs hp L hL.1
+  obtain ⟨a1, a2, a3, -, -⟩ := _root_.GlobalTheory.Mass.GenusOrb.main K V h hK hs hp M0 hM0full
   have hmaps : Set.MapsTo (up h (∏ P ∈ s, P)) (genus h L) (genus h M0) := by
     intro N hN
     obtain ⟨M, hM, -⟩ := hex N hN
     rw [up_eq h _ N M (hex N hN) hM]
-    exact (GlobalTheory.T.mem_genus_iff_maximalIntegralHermitianLattice K V h hK hs hp M0 M (m2 M0 hM0.1 hM0.2.1).1).2 (m2 M (by
+    exact (_root_.GlobalTheory.Mass.MaxGenus.main K V h hK hs hp M0 M (m2 M0 hM0.1 hM0.2.1).1).2 (m2 M (by
       letI := hN.1
       letI := hM.1
       exact Submodule.IsFullLattice.of_le K hM.2.2.1) hM.2.1).1
-  have hfib := GlobalTheory.T.orbitStabilizerMass_eq_weightedSum_fibres (isom h) _ _ (genus h L) (genus h M0) (up h (∏ P ∈ s, P))
+  have hfib := _root_.GlobalTheory.Mass.orbMass_eq_orbSum_fibre (isom h) _ _ (genus h L) (genus h M0) (up h (∏ P ∈ s, P))
     (up_smul h _) b3 a3 hmaps (fun y hy => b4 y hy.1)
   set B : ℕ := (∑ i ∈ Finset.range (Module.finrank K V), T ^ i) ^ s.card with hB
   have hconst : ∀ M ∈ genus h M0,
@@ -229,9 +234,9 @@ theorem main : MaxMass → ∀ (K V : Type) [Field K] [NumberField K] [StarRing 
       · rintro ⟨h1, h2⟩
         have hN : N ∈ genus h L := (hgen L N hL hLq).2 (o2 M N hM.1 hU h1 h2)
         exact ⟨hN, up_eq h _ N M (hex N hN) ⟨hM.1.toIsLattice, hU, h1, h2⟩⟩
-    rw [hset, GlobalTheory.T.card_sublattices_quotient_prod_degree_one_primes K V M hM.1 T s hT hsP]
+    rw [hset, _root_.GlobalTheory.SublatCount.main K V M hM.1 T s hT hsP]
     exact ENat.toENNReal_coe _
-  obtain ⟨p1, p2, -⟩ := GlobalTheory.T.orbitWeightedStabilizerSum_mono_subadditive (isom h) (Submodule (𝓞 K) V)
+  obtain ⟨p1, p2, -⟩ := _root_.GlobalTheory.Mass.OrbMono.main (isom h) (Submodule (𝓞 K) V)
   have hsum : orbMass (isom h) (genus h L) = (B : ℝ≥0∞) * orbMass (isom h) (genus h M0) := by
     rw [hfib, ← p2]
     exact le_antisymm (p1 _ _ _ _ subset_rfl fun x hx => (hconst x hx).le)

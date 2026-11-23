@@ -1,11 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NoTowerQ
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AxLemmaFiniteGaloisPadicStatement
+public import Mathlib.NumberTheory.Padics.ValuativeRel
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AxLemmaFiniteGaloisPadic
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardLeIndexMulCardMapInf
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CharactersDetectRestrictNormalInfFiniteLevelStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CharactersDetectRestrictNormalInfFiniteLevel
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGaloisKerLeRange
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InertiaCongruenceFiltrationFiniteTowerBoundStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InertiaCongruenceFiltrationFiniteTowerBound
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.OrdIsEqCardInertia
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RestrictNormalHomMemLowerRamificationGroupZero
 import Mathlib.Algebra.Order.Floor.Extended
@@ -91,8 +92,8 @@ theorem noTowerQ_holds : NoTowerQ := by
     have h' : τ⁻¹ * σ ∈ N (k + j) := hanti (by omega) (hker h)
     simpa using (N (k + j)).mul_mem hτ h'
   have hE : 0 < Nat.card I := Nat.card_pos
-  have hfin := GlobalTheory.T.inertia_congruenceFiltration_finite_tower_bound ℚ_[l] L l (Nat.card I) T (fun j => (N (k + j)).map res ⊓ I) Fact.out hE
-    (ordIs_eq_card_inertia l L) (GlobalTheory.T.axLemma_finiteGalois_padic l L)
+  have hfin := _root_.GlobalTheory.PMon.Ram.finiteTowerBound ℚ_[l] L l (Nat.card I) T (fun j => (N (k + j)).map res ⊓ I) Fact.out hE
+    (ordIs_eq_card_inertia l L) (_root_.GlobalTheory.PMon.Ram.axIn_padic l L)
     (fun i j hij => inf_le_inf_right _ (Subgroup.map_mono (hanti (by omega)))) inf_le_right
     (fun h => hn₀ (hlift 1 (by omega) σ₀
       (h ⟨⟨σ₀, hσ₀, rfl⟩, restrictNormalHom_mem_lowerRamificationGroup_zero l L σ₀ hi₀⟩).1))
@@ -105,7 +106,7 @@ theorem noTowerQ_holds : NoTowerQ := by
       rw [map_pow]; exact hp.1)
     (by
       intro i hi
-      have := GlobalTheory.T.characters_detect_restrictNormal_inf_finiteLevel l L 8 (N (k + i)) (N (k + i + 8)) I (ι i) (x i) (a i)
+      have := _root_.GlobalTheory.PMon.Ram.detects_restrictNormal_inf l L 8 (N (k + i)) (N (k + i + 8)) I (ι i) (x i) (a i)
         (fun b => hSL (Set.mem_biUnion (show i ∈ Set.Iic (2 * T) from hi) ⟨b, rfl⟩)) (hxa i) (hdet i)
       simpa [add_assoc] using this)
   have hidx := card_le_index_mul_card_map_inf (GQ l) (L ≃ₐ[ℚ_[l]] L) res (N k) I

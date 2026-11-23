@@ -10,16 +10,24 @@ public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsCh
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsFiniteIntegralChartCoverFlagSpace
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsValuationSubringComapEqNonunits
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.InjectiveAlgebraMapOfDvrOfIsIntegral
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspFormValuesBoundedOnHolomorphicArcStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsArcDataOfBadReductionFiniteExtensionStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsComplexEmbeddingFractionFieldCdvrStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsConstantIntegralArcFramesStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGaussPointStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsRefinedFlagChartIntegralPointsInOpenStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegralFramedPointGoodReductionDefiniteSignaturStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegralOfIntegralAtAlgebraicPointsSmoothStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsProperSemiAbelianTripleOfAbelianLocusEqUnivStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LaurentCoeffNegEqZeroOfBoundedStatement
+public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IsThetaL2NormSquared
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspFormValuesBoundedOnHolomorphicArc
+public import Formalism.LocalToGlobal.ProjectiveLattices.OneLtAbsNormReal
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsArcDataOfBadReductionFiniteExtension
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsComplexEmbeddingFractionFieldCdvr
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsConstantIntegralArcFrames
+public import Mathlib.RingTheory.PowerSeries.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGaussPoint
+public import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsRefinedFlagChartIntegralPointsInOpen
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegralFramedPointGoodReductionDefiniteSignatur
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegralOfIntegralAtAlgebraicPointsSmooth
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PushInvertible
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsProperSemiAbelianTripleOfAbelianLocusEqUniv
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.HasArcDataIff
+public import Mathlib.RingTheory.LaurentSeries
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LaurentCoeffNegEqZeroOfBounded
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CompactifiedModuliExistenceAndModuliScheme
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.DataAtTraitsOfTraitData
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.IntegralFramedPointBaseChangeStable
@@ -27,25 +35,28 @@ public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArcFramed
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArcFramedPointUniqueAndBaseChange
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArcLetterAnalyticVectorsIndependentBlockType
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArcModelWitnessExtension
-import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.DegenerationDataBaseChangesExistPid
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.EqZeroOfMulEventually
-import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsIsArcFr
-import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.FramedPointEvalNaturalWeightScaling
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HasSumSectionValueArcFramedPoint
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsFramedPointOfArcBaseChange
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsOpenImmersionJKPowerSeries
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.NonemptyUnifWitnessDataOfIsUnf
-import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.TorusExtExponentialDerivativeBijectiveTangent
 public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.FiniteExtensionRamificationEmbedding
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ArcClauseClosed
+public import Formalism.LocalToGlobal.ProjectiveLattices.FreeBridge
+import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.DegenerationDataBaseChangesExistPid
+import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsIsArcFr
+import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.FramedPointEvalNaturalWeightScaling
+import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.TorusExtExponentialDerivativeBijectiveTangent
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.DvrAdmissibleBaseAndPowerSeriesEvalUniformiser
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFramedPointBaseChangeAlgebraMap
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedModuliAlgebraicLawsChartWeightIntegralityStatement
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointReducedFromTestRingStatement
+import Formalism.LocalToGlobal.ProjectiveLattices.UnitIndepOfCharts
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedModuliAlgebraicLawsChartWeightIntegrality
+import Formalism.LocalToGlobal.ProjectiveLattices.AllTest
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointReducedFromTestRing
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RelabelEmbeddingsGoodBijectiveConjCompat
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ValuationExtension
-public import Formalism.LocalToGlobal.ProjectiveLattices.FreeBridge
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -88,8 +99,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbProj
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.RigidSys
-public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IsThetaL2NormSquared
-public import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt
 
 @[expose] public section
 
@@ -151,7 +160,7 @@ theorem good_of_extIn {O : Type} [CommRing O] {β : O →+* c.F} (Y : Model Xo c
   obtain ⟨t', m₁, -, m₂, -⟩ := GlobalTheory.TraitDataIntrinsic.exists_generic Y m h3
   have hab : abLocus t.G = Set.univ := Set.eq_univ_of_forall fun p =>
     (abLocus_pullback abLocusOne Y.t.semi m.cart.1 p).1 (h4 ⟨_, rfl⟩)
-  have hp := GlobalTheory.T.isProper_semiAbelian_triple_of_abelianLocus_eq_univ E H Dw l Xo T _ t t' m₂ m₁ hab
+  have hp := _root_.GlobalTheory.GoodProper.isProper_of_abLocus_eq_univ E H Dw l Xo T _ t t' m₂ m₁ hab
   exact ⟨t, t', h1 ▸ m₂, m₁, hp⟩
 
 theorem inV_of_frBor {a : (E →+* ℂ) × ℕ → ℕ} {n : ℕ} {f : Rul Xo c} (hf : f ∈ sec Xo c a n) {T : CDVR}
@@ -159,8 +168,8 @@ theorem inV_of_frBor {a : (E →+* ℂ) × ℕ → ℕ} {n : ℕ} {f : Rul Xo c}
     (h : letI := io.toAlgebra; FrBor t y.1 y'.1) : InV T (evI y f) ↔ InV T (evI y' f) := by
   have ⟨hE, hU⟩ : EvLaws Xo c ∧ IntDiagUnit Xo c := by
     have hB : Out.SecBaseChangeSt := GlobalTheory.abelianSchemeLaws_all.1.secBaseChange
-    obtain ⟨-, -, hwd, hwt, hint, -⟩ := GlobalTheory.T.framedModuli_algebraicLaws_chart_weight_integrality hB E H Dw l Xo c
-    exact ⟨⟨hwd, GlobalTheory.T.framedPoint_reduced_from_testRing hB E H Dw l Xo c, hwt,
+    obtain ⟨-, -, hwd, hwt, hint, -⟩ := _root_.GlobalTheory.Frames.algebraic_laws hB E H Dw l Xo c
+    exact ⟨⟨hwd, _root_.GlobalTheory.Frames.allTest_of_secBaseChange hB E H Dw l Xo c, hwt,
       fun S T _ _ _ _ φ y => GlobalTheory.Frames.FramedBaseChange.exists_frMap hB E H Dw l Xo c S T φ y⟩, hint⟩
   have h1 := unitIndep_of hE.wt hU a n f hf T io y y' t h 1
   have key : ∀ x : T.Fr, InV T x ↔ 0 ≤ nval T.V 1 x := fun x => by
@@ -176,8 +185,8 @@ theorem inV_of_extIn (la : HeightOneSpectrum (𝓞 c.F)) (Y : Model Xo c (la.val
   let _ := io.toAlgebra
   have ⟨hE, hU⟩ : EvLaws Xo c ∧ IntDiagUnit Xo c := by
     have hB : Out.SecBaseChangeSt := GlobalTheory.abelianSchemeLaws_all.1.secBaseChange
-    obtain ⟨-, -, hwd, hwt, hint, -⟩ := GlobalTheory.T.framedModuli_algebraicLaws_chart_weight_integrality hB E H Dw l Xo c
-    exact ⟨⟨hwd, GlobalTheory.T.framedPoint_reduced_from_testRing hB E H Dw l Xo c, hwt,
+    obtain ⟨-, -, hwd, hwt, hint, -⟩ := _root_.GlobalTheory.Frames.algebraic_laws hB E H Dw l Xo c
+    exact ⟨⟨hwd, _root_.GlobalTheory.Frames.allTest_of_secBaseChange hB E H Dw l Xo c, hwt,
       fun S T _ _ _ _ φ y => GlobalTheory.Frames.FramedBaseChange.exists_frMap hB E H Dw l Xo c S T φ y⟩, hint⟩
   have hev := GlobalTheory.ArcQ.evR_natural_weight_scaling E H Dw l Xo c hE a n f hf
   obtain ⟨J, _, P, hC⟩ := GlobalTheory.Reg.exists_finite_pchart_cover GlobalTheory.abelianSchemeLaws_all.2.secTwist E H Dw l Xo c hE.bc
@@ -187,14 +196,14 @@ theorem inV_of_extIn (la : HeightOneSpectrum (𝓞 c.F)) (Y : Model Xo c (la.val
     ⟨fun h => IsDiscreteValuationRing.exists_lift_of_le_one (A := T.V) (K := T.Fr) h,
       by rintro ⟨a, rfl⟩; exact IsDedekindDomain.HeightOneSpectrum.valuation_le_one _ a⟩
   obtain ⟨j, e₀, he₀, ψ, z, t, hg, hz, ht⟩ := hC T.Fr W (fun a => (hW _).2 (inV_of_overLa ho a)) y.1
-  obtain ⟨P', e', he', ψ', hg', hz', hall⟩ := GlobalTheory.T.exists_refined_flagChart_integral_points_in_open E H Dw l Xo c (la.valuation c.F).valuationSubring Y
+  obtain ⟨P', e', he', ψ', hg', hz', hall⟩ := _root_.GlobalTheory.GoodRefine.exists_refine_extIn E H Dw l Xo c (la.valuation c.F).valuationSubring Y
     (abLocus Y.t.G) (P j) T io hop e₀ he₀ ψ z (fun g hgg => (hW _).1 (hg g hgg)) hz (ht.1 ▸ h)
   have hzI : Integral T io z := P'.int e' he' T io ψ' (inV_of_overLa ho) hg' z hz'
   rw [inV_of_frBor hf y ⟨z, hE.test _ z, hzI⟩ t ht]
   show InV T (evR Xo c f z)
   set_option synthInstance.maxHeartbeats 200000 in
     rw [(hev _).1 _ ψ' _ _ hz']
-  refine GlobalTheory.T.integral_of_integral_at_algebraic_points_smooth c.F P'.Ω la P'.gens e' P'.frac (P'.es_mem e' he').1 (P'.es_mem e' he').2 (P'.sm e' he')
+  refine _root_.GlobalTheory.ChartIntegral.integral_of_integral_at_algebraic_points c.F P'.Ω la P'.gens e' P'.frac (P'.es_mem e' he').1 (P'.es_mem e' he').2 (P'.sm e' he')
     (evR Xo c f (P'.y e' he')) (fun T₁ io₁ n₁ ho₁ hfin ψ₁ hk hg₁ => ?_) T io e ho ψ'.toRingHom ψ'.commutes hg'
   let _ := io₁.toAlgebra
   let φ : P'.R e' →ₐ[c.F] T₁.Fr := ⟨ψ₁, hk⟩
@@ -270,8 +279,8 @@ theorem coeff_neg_eq_zero {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Formalism.L2.Pj
   obtain ⟨h1, h2⟩ := GlobalTheory.abelianSchemeLaws_all
   have hE : EvLaws Xo c := by
     have hB : Out.SecBaseChangeSt := GlobalTheory.abelianSchemeLaws_all.1.secBaseChange
-    obtain ⟨-, -, hwd, hwt, -, -⟩ := GlobalTheory.T.framedModuli_algebraicLaws_chart_weight_integrality hB E H Dw l Xo c
-    exact ⟨hwd, GlobalTheory.T.framedPoint_reduced_from_testRing hB E H Dw l Xo c, hwt,
+    obtain ⟨-, -, hwd, hwt, -, -⟩ := _root_.GlobalTheory.Frames.algebraic_laws hB E H Dw l Xo c
+    exact ⟨hwd, _root_.GlobalTheory.Frames.allTest_of_secBaseChange hB E H Dw l Xo c, hwt,
       fun S T _ _ _ _ φ y => GlobalTheory.Frames.FramedBaseChange.exists_frMap hB E H Dw l Xo c S T φ y⟩
   have hY : Mono Y.j := GlobalTheory.ThetaShiftProofs.mono_j Y (mono_spMap_subtype _)
   obtain ⟨Uw⟩ := nonempty_unfWit_of_isUnf E H Dw l Xo c σ r (U σ) (hU σ hσ)
@@ -283,8 +292,8 @@ theorem coeff_neg_eq_zero {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Formalism.L2.Pj
   have hzt := GlobalTheory.ArcType.main h1 h2 E H Dw l Xo c σ r (U σ) Uw _ _ Y a χ W Ha y e th z hσ halg hY hy hz
   obtain ⟨T₁, hT₁⟩ := GlobalTheory.ArcQ.hasSum_evR_arc h1 h2 E H Dw l Xo c σ _ _ Y a χ W _ _ Uw.F Ha y e th Θ z hE halg hover
     (mono_spMap_subtype _) hP hth hy hz
-  obtain ⟨T₂, C, hT₂⟩ := GlobalTheory.T.cuspForm_values_bounded_on_holomorphicArc E H Dw l Xo c r U σ Uw _ _ Y a χ W Ha th Θ z hU hσ hzt a' n f hd hf
-  refine GlobalTheory.T.laurent_coeff_neg_eq_zero_of_bounded' _ (max Ha.T (max T₁ T₂)) C fun w hw => ?_
+  obtain ⟨T₂, C, hT₂⟩ := _root_.GlobalTheory.ArcBdd.cusp_values_bounded_on_arc E H Dw l Xo c r U σ Uw _ _ Y a χ W Ha th Θ z hU hσ hzt a' n f hd hf
+  refine _root_.GlobalTheory.laurent_coeff_neg_eq_zero_of_bounded _ (max Ha.T (max T₁ T₂)) C fun w hw => ?_
   obtain ⟨yw, hyw, -⟩ := GlobalTheory.ArcQ.AnFrEx.existsUnique_anFr h1 h2 E H Dw l Xo c σ r (U σ) Uw _ _ Y a χ W Ha th Θ z hσ hzt
     w ((le_max_left _ _).trans_lt hw)
   exact ⟨_, hT₁ w (((le_max_left _ _).trans (le_max_right _ _)).trans_lt hw) yw hyw a' n f hf.1,
@@ -332,8 +341,8 @@ theorem exists_value {V : ValuationSubring c.F} (Y : Model Xo c V.subtype) (T : 
   obtain ⟨h1, h2⟩ := GlobalTheory.abelianSchemeLaws_all
   have hE : EvLaws Xo c := by
     have hB : Out.SecBaseChangeSt := GlobalTheory.abelianSchemeLaws_all.1.secBaseChange
-    obtain ⟨-, -, hwd, hwt, -, -⟩ := GlobalTheory.T.framedModuli_algebraicLaws_chart_weight_integrality hB E H Dw l Xo c
-    exact ⟨hwd, GlobalTheory.T.framedPoint_reduced_from_testRing hB E H Dw l Xo c, hwt,
+    obtain ⟨-, -, hwd, hwt, -, -⟩ := _root_.GlobalTheory.Frames.algebraic_laws hB E H Dw l Xo c
+    exact ⟨hwd, _root_.GlobalTheory.Frames.allTest_of_secBaseChange hB E H Dw l Xo c, hwt,
       fun S T _ _ _ _ φ y => GlobalTheory.Frames.FramedBaseChange.exists_frMap hB E H Dw l Xo c S T φ y⟩
   have hY : Mono Y.j := GlobalTheory.ThetaShiftProofs.mono_j Y (mono_spMap_subtype _)
   let d : PowerSeries T.V := PowerSeries.C ϖ * PowerSeries.X
@@ -427,8 +436,8 @@ theorem inV_of_arc {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (hU : �
   obtain ⟨h1, h2, -, hL4, hL5⟩ := GlobalTheory.firstFiveLaws
   have hE : EvLaws Xo c := by
     have hB : Out.SecBaseChangeSt := GlobalTheory.abelianSchemeLaws_all.1.secBaseChange
-    obtain ⟨-, -, hwd, hwt, -, -⟩ := GlobalTheory.T.framedModuli_algebraicLaws_chart_weight_integrality hB E H Dw l Xo c
-    exact ⟨hwd, GlobalTheory.T.framedPoint_reduced_from_testRing hB E H Dw l Xo c, hwt,
+    obtain ⟨-, -, hwd, hwt, -, -⟩ := _root_.GlobalTheory.Frames.algebraic_laws hB E H Dw l Xo c
+    exact ⟨hwd, _root_.GlobalTheory.Frames.allTest_of_secBaseChange hB E H Dw l Xo c, hwt,
       fun S T _ _ _ _ φ y => GlobalTheory.Frames.FramedBaseChange.exists_frMap hB E H Dw l Xo c S T φ y⟩
   have hY : Mono Y.j := GlobalTheory.ThetaShiftProofs.mono_j Y (mono_spMap_subtype _)
   have hcpl : IsAdicComplete (Ideal.span {ϖ}) T.V := hϖ.maximalIdeal_eq ▸ T.cpl
@@ -439,12 +448,12 @@ theorem inV_of_arc {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (hU : �
   have hχy : spMap ev ≫ χ = y' := hsp hϖ y' ev hy' (by
     rintro _ ⟨x, rfl⟩
     exact ⟨z x, by rw [← Scheme.Hom.comp_apply, hz₃]⟩) hA hevC hevX
-  obtain ⟨ρ, e, th, y₀, t, he, hth, htan, hρ, hy₀, ht⟩ := GlobalTheory.T.exists_constant_integral_arc_frames E H Dw l Xo c _ Y T io b a χ W ev z hP hb hover
+  obtain ⟨ρ, e, th, y₀, t, he, hth, htan, hρ, hy₀, ht⟩ := _root_.GlobalTheory.ArcFrame.exists_arcFrame E H Dw l Xo c _ Y T io b a χ W ev z hP hb hover
     hevC hz₂ (by rw [hz₃, ← hχy, ← Category.assoc, sp_comp]) y.1 hz₁
   obtain ⟨h, N, hval⟩ := exists_value Y T io b a χ W ϖ hϖ hP hb hover hab ρ e th he hth hρ hf.1
 
   have hX : PowerSeries.X ^ N ∣ h := by
-    obtain ⟨κ, hκ⟩ := GlobalTheory.T.exists_complex_embedding_fractionField_cdvr c.F c.F.val.toRingHom T hfin io
+    obtain ⟨κ, hκ⟩ := _root_.GlobalTheory.ComplexEmbedding.exists_embedding_fractionField c.F c.F.val.toRingHom T hfin io
     let κ₀ : T.V →+* ℂ := κ.comp (algebraMap T.V T.Fr)
     have hκ₀ : Function.Injective κ₀ := κ.injective.comp (IsFractionRing.injective T.V T.Fr)
     have hb' : c.F.val.toRingHom.comp (la.valuation c.F).valuationSubring.subtype = κ₀.comp b := by
@@ -478,7 +487,7 @@ theorem inV_of_arc {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (hU : �
   obtain ⟨h₁, rfl⟩ := hX
 
   have hG : PowerSeries.C ϖ ^ N ∣ h₁ := by
-    obtain ⟨T', ω, i, hω, hωX, hωd, hi, hv'⟩ := GlobalTheory.T.exists_gaussPoint' T ϖ hϖ
+    obtain ⟨T', ω, i, hω, hωX, hωd, hi, hv'⟩ := _root_.GlobalTheory.GaussPoint.exists_gaussPoint T ϖ hϖ
     have hinj := IsFractionRing.injective T'.V T'.Fr
     have hω0 : ω (PowerSeries.C ϖ) ≠ 0 := fun h0 =>
       hϖ.ne_zero (PowerSeries.C_injective ((hω (h0.trans (map_zero _).symm)).trans (map_zero _).symm))
@@ -530,7 +539,7 @@ theorem bddAll_one {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (hU : �
     (hbd : BddGood Xo c la 1 f) : BddAll Xo c la 1 f := by
   intro T io m ho y hy
   by_cases hq : Dw.q = 0
-  · exact hbd T io m ho y hy (GlobalTheory.T.integral_framed_point_good_reduction_definite_signature E H Dw l Xo c hq T io y)
+  · exact hbd T io m ho y hy (_root_.GlobalTheory.GoodDefinite.good_of_definite E H Dw l Xo c hq T io y)
   obtain ⟨Y, hP, hop, hS, h3, h4⟩ := exists_model (by omega) Xo c la p hp hpl hg
   let _ := io.toAlgebra
   obtain ⟨b, hb⟩ := exists_factor T (io.comp (la.valuation c.F).valuationSubring.subtype) (inV_of_overLa ho)
@@ -540,7 +549,7 @@ theorem bddAll_one {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (hU : �
   obtain ⟨⟨y', ⟨hy', hz₃⟩, -⟩, -⟩ := GlobalTheory.ValuativeExtension.valuation_extension E H Dw l Xo c _ _ Y T.V T.Fr b io z hb hz₂
   by_cases hr : Set.range y' ⊆ abLocus Y.t.G
   · exact hbd T io m ho y hy (good_of_extIn Y y ⟨y', z, hz₁, hz₂, hz₃.symm, hr⟩)
-  obtain ⟨T', g, ϖ, a, hg₁, hg₂, hϖ, hA⟩ := GlobalTheory.T.exists_arcData_of_badReduction_finiteExtension E H Dw l Xo c _ Y h3 hS T io b y' z hb hy' hz₂ hz₃.symm hr
+  obtain ⟨T', g, ϖ, a, hg₁, hg₂, hϖ, hA⟩ := _root_.GlobalTheory.ArcOfPoint.exists_arcIn_of_bad_reduction E H Dw l Xo c _ Y h3 hS T io b y' z hb hy' hz₂ hz₃.symm hr
   obtain ⟨i, ρ, hρ, hi, hv, -⟩ := GlobalTheory.EtaVal.finite_extension_ramification_embedding T T' g hg₁ hg₂
   have hfin : T'.FinRes := by
     let _ := g.toAlgebra
@@ -557,8 +566,8 @@ theorem bddAll_one {r : ℕ} (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r) (hU : �
     (by rw [Category.assoc, ← hz₃, ← Category.assoc, ← Category.assoc, sp_comp, sp_comp, e₁])
   have hE : EvLaws Xo c := by
     have hB : Out.SecBaseChangeSt := GlobalTheory.abelianSchemeLaws_all.1.secBaseChange
-    obtain ⟨-, -, hwd, hwt, -, -⟩ := GlobalTheory.T.framedModuli_algebraicLaws_chart_weight_integrality hB E H Dw l Xo c
-    exact ⟨hwd, GlobalTheory.T.framedPoint_reduced_from_testRing hB E H Dw l Xo c, hwt,
+    obtain ⟨-, -, hwd, hwt, -, -⟩ := _root_.GlobalTheory.Frames.algebraic_laws hB E H Dw l Xo c
+    exact ⟨hwd, _root_.GlobalTheory.Frames.allTest_of_secBaseChange hB E H Dw l Xo c, hwt,
       fun S T _ _ _ _ φ y => GlobalTheory.Frames.FramedBaseChange.exists_frMap hB E H Dw l Xo c S T φ y⟩
   have e₂ : evI y₁ f = φ (evI y f) :=
     (GlobalTheory.ArcQ.evR_natural_weight_scaling E H Dw l Xo c hE a' n f hf.1 T.Fr).1 _ φ _ _ hy₁

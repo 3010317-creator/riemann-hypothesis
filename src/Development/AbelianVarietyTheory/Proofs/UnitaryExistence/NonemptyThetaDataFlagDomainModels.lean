@@ -3,11 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.NormConst
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ContinuousRmulPair
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaFrameFrames
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CmTypeLetterFrameColumnDictionaryStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFramePeriodsStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CmTypeLetterFrameColumnDictionary
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFramePeriods
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.HostGeneratorPowFourTraceNormModEight
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RelabelEmbeddingsGoodBijectiveConjCompat
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.TypeFnPeriodExistModuliNonempty
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RelabelEmbeddingsGoodBijectiveConjCompat
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,8 +59,8 @@ namespace GlobalTheory.FrameUnif
 theorem nonempty_thetaData : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (σ : c.F →+* ℂ) (g : ℕ) (e : Fin g ≃ Σ τ : E →+* ℂ, Fin (Dw.mult τ)) (F : FamilyUnif Xo (σ.comp (IntermediateField.inclusion c.le).toRingHom) (fun j => relab c σ (e j).1)) (r : ℕ) (M : ModelsOf F r), GoodEmb c σ → ModelBase M → NegXi M → ∀ k, Nonempty (ThetaData e F M k) := by
   intro E _ _ _ H Dw l Xo c σ g e F r M hσ hM hξ k
   obtain ⟨⟨idx, hty, -, hper⟩, hp0, hr, hcc, hpos, hφ⟩ :=
-    GlobalTheory.T.cmType_letter_frame_column_dictionary E H Dw l Xo c σ g e F r M hσ hM hξ k
-  obtain ⟨Pf, hPf, -, hisPer, hdiff, -⟩ := GlobalTheory.T.exists_framePeriods_alt E H Dw l Xo c σ g e F r M hσ hM hξ k
+    _root_.GlobalTheory.FrameUnif.letter_column_dictionary E H Dw l Xo c σ g e F r M hσ hM hξ k
+  obtain ⟨Pf, hPf, -, hisPer, hdiff, -⟩ := _root_.GlobalTheory.exists_framePeriods E H Dw l Xo c σ g e F r M hσ hM hξ k
   have htf : IsTypeFn H (F.Di k).p (F.Di k).q (fun j => relab c σ (e j).1) := by
     rw [(F.sig k).1, (F.sig k).2]
     exact (GlobalTheory.Relab.relab_good E H l c σ hσ).2.2.2 Dw g e

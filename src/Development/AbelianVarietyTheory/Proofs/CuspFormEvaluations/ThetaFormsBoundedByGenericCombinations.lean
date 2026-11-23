@@ -1,7 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.ThetaValues.Generic
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsCoordsNoHomogeneousRelationGenericHyperplaStatement
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.RingTheory.MvPolynomial.Homogeneous
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsCoordsNoHomogeneousRelationGenericHyperpla
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -116,7 +118,7 @@ theorem forms_le_generic_comb : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
       exact this)
     (fun ζ hζ h => by
       by_contra hz
-      obtain ⟨jj, hjj⟩ := GlobalTheory.T.exists_coords_no_homogeneous_relation_generic_hyperplanes K σ _ _ t ζ ht hz h
+      obtain ⟨jj, hjj⟩ := _root_.GlobalTheory.exists_coordinates_no_homogeneous_relation_of_generic_zero K σ _ _ t ζ ht hz h
       exact hjj _ _ (hQ0 jj) (hQd jj) (hζ jj))
   exact ⟨C, fun x hx => hC (fun k => Xa.w k x) fun jj => hQ jj x hx⟩
 

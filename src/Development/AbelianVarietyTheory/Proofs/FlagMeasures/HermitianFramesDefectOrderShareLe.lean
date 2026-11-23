@@ -3,9 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ComplementReferenceCompactSubgroup
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetFrameClassProperties
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetTermBasicFacts
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFrameClassTermsLeOverlatticeMassesStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFrameClassTermsLeOverlatticeMasses
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LatticeCountBoundFrames
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SelfDualHermitianLatticeMassOfTraceStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SelfDualHermitianLatticeMassOfTrace
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermExponentsNonnegAndDefectGroupBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -97,8 +97,8 @@ theorem share_le {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
   have hp : (S.fr d Λ, S.fr' d Λ) ∈ C := by
     rw [← hFr]
     exact (GlobalTheory.HL.FrameClass.frame_classes L r k S (S.fr d Λ) (S.fr' d Λ)).1
-  obtain ⟨κ, hκ, hU⟩ := GlobalTheory.T.selfDualHermitianLattice_mass_of_trace L r k S (by omega) ⟨Λ, hSD⟩
-  obtain ⟨h1, h2⟩ := GlobalTheory.T.hermitianFrameClass_terms_le_overlattice_masses L r k S C hC _ hp
+  obtain ⟨κ, hκ, hU⟩ := _root_.GlobalTheory.HL.FrameMass.mass_trace L r k S (by omega) ⟨Λ, hSD⟩
+  obtain ⟨h1, h2⟩ := _root_.GlobalTheory.HL.ClassMass.class_mass L r k S C hC _ hp
   have h3 := GlobalTheory.FrameOver.encard_overlattices_le L r k S C hC _ hp ha
   have hlow : ENNReal.ofReal (κ / 2) ≤ S.massSig (S.Mof (S.fr d Λ) (S.fr' d Λ)) := by
     have := (hU C hC _ hp _ le_rfl (fun x hx => (hM hx).2)

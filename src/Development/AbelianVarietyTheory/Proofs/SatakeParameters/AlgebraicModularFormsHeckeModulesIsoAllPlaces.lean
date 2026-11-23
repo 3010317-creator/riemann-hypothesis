@@ -4,22 +4,26 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsFin
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CommuteOfTrivOutside
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GraphOfFixedGraph
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RingSpecNormalisedCharacterEq
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteDoubleCosetsDefiniteUnitaryMaximalLevelStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteInertHeckeSupportCosets
+public import Formalism.AlgebraicWeights.IsAlgWeight
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteDoubleCosetsDefiniteUnitaryMaximalLevel
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.EquivariantIsoOfTranslationStableGraphStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsDoubleCosetCommutingMapPrincipalCongruenceStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsStableGraphOfEqualAnnihilatorsStatement
+public import Mathlib.Algebra.Algebra.Subalgebra.Basic
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsStableGraphOfEqualAnnihilators
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsStableGraphOfIsoSplitPlaceComponentsStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsTrivOutsideInertDatumLocalEqStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteAdelicGLInductionOverPlacesStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteAdelicUnitaryEqMulTrivOutsidePlaceAndAtPlaStatement
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteDimensionalForms
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertDatumLocalInjectiveOnTrivOutsideStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertDatumLocalMemUnitaryGroupAntidiagonalStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertDatumLocalStdLatticeStabilizerMemMaxCompactStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertDoubleCosetOperatorEqInertHeckeOperatorStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertHeckeOperatorLevelIndependentStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PrincipalCongruenceSplitTrivOutsideAndAtPlaceStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteInertHeckeSupportCosets
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteDimensionalForms
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -79,7 +83,7 @@ theorem graph_of_local' (H : PlaceSys Gv Gc J) (horb : ∀ x, ((fun k => ρ k x)
     {S₁ S₂ : Submodule ℂ V} (h₁ : Irr ρ S₁) (h₂ : Irr ρ S₂) (n₁ : fixIn ρ J S₁ ≠ ⊥) (n₂ : fixIn ρ J S₂ ≠ ⊥)
     (hfd : FiniteDimensional ℂ (fixIn ρ J S₁)) (hloc : ∀ v, ∃ X, IsGraph ρ (Gv v) S₁ S₂ X) :
     ∃ W, IsGraph ρ ⊤ S₁ S₂ W := by
-  obtain ⟨X, hX0, hXm, hX, i₁, i₂⟩ := GlobalTheory.T.exists_stable_graph_of_equal_annihilators V ι (fun v => locAlg ρ (Gv v) (Gc v) ⊓ fixAlg ρ J)
+  obtain ⟨X, hX0, hXm, hX, i₁, i₂⟩ := _root_.GlobalTheory.CommDet.stable_graph V ι (fun v => locAlg ρ (Gv v) (Gc v) ⊓ fixAlg ρ J)
     (fixIn ρ J S₁) (fixIn ρ J S₂) hfd n₁ n₂
     (fun v c hc x hx => ⟨locAlg_mem hc.1 h₁.stab hx.1, hc.2 x hx.2⟩)
     (fun v c hc x hx => ⟨locAlg_mem hc.1 h₂.stab hx.1, hc.2 x hx.2⟩)
@@ -182,7 +186,7 @@ theorem main : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n : ℕ) 
     ((Submodule.ne_bot_iff _).2 ⟨g₁, ⟨hg₁, fun k hk => funext fun g => e₁ k (NG.Cong.of_mul_left L n hk) g⟩, hg₁0⟩)
     ((Submodule.ne_bot_iff _).2 ⟨g₂, ⟨hg₂, fun k hk => funext fun g => e₂ k (NG.Cong.of_mul_right L n hk) g⟩, hg₂0⟩)
     (by
-      have := GlobalTheory.AlgFormsFin.fixedForms_finite L n a.ρ (GlobalTheory.T.finite_doubleCosets_definiteUnitary_maximalLevel L n) hM
+      have := GlobalTheory.AlgFormsFin.fixedForms_finite L n a.ρ (_root_.GlobalTheory.DefiniteClassFinite.exists_finset_double_cosets_Umax L n) hM
       refine Submodule.finiteDimensional_of_le (S₂ := GlobalTheory.AlgFormsFin.fixedForms L n a.ρ (M₁ * M₂)) ?_
       rintro f ⟨hfS, hfU⟩
       exact ⟨(h₁.1.le hfS).1, fun κ hκ g => congrFun (hfU κ hκ) g⟩)

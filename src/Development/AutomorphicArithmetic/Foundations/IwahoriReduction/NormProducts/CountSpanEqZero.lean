@@ -4,8 +4,10 @@ public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Mathlib.FieldTheory.RatFunc.Basic
 public import Mathlib.RingTheory.SimpleRing.Principal
 public import Mathlib.RingTheory.Valuation.ValuationSubring
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ClassGroupAffineCurveDivisibleCharZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ValuationEqOneOfPowEqSpanStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsFirstChernClassOfLineBundle
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ClassGroupAffineCurveDivisibleCharZero
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ValuationEqOneOfPowEqSpan
+public import Mathlib.RingTheory.DedekindDomain.Factorization
 import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -60,7 +62,6 @@ import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Foundations.ExpUpper
 import Development.AbelianVarietyTheory.Definitions.Foundations.Mdl
 import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.NormProducts.InvMod
-public import Mathlib.RingTheory.DedekindDomain.Factorization
 
 @[expose] public section
 
@@ -173,7 +174,7 @@ theorem UpperTheory.Kd.K4.cdAbs :
     refine finprod_congr fun v => ?_
     rw [FractionalIdeal.count_pow, hIdef, FractionalIdeal.count_finprod K v _ he,
       Int.mul_ediv_cancel' (hdiv v)]
-  obtain ⟨d, hd⟩ := GlobalTheory.T.classGroup_affineCurve_divisible_charZero k K m' hm' (ClassGroup.mk K (Units.mk0 I hI0))
+  obtain ⟨d, hd⟩ := _root_.GlobalTheory.classGroup_ringOfIntegers_divisible k K m' hm' (ClassGroup.mk K (Units.mk0 I hI0))
   obtain ⟨Ju, rfl⟩ : ∃ Ju : (FractionalIdeal (nonZeroDivisors (FunctionField.ringOfIntegers k K)) K)ˣ,
       ClassGroup.mk K Ju = d :=
     ClassGroup.induction K (P := fun d => ∃ Ju, ClassGroup.mk K Ju = d) (fun J => ⟨J, rfl⟩) d
@@ -188,6 +189,6 @@ theorem UpperTheory.Kd.K4.cdAbs :
       ← hxJ, mul_pow, hIm, FractionalIdeal.spanSingleton_pow,
       FractionalIdeal.spanSingleton_mul_spanSingleton, inv_pow, div_inv_eq_mul]
   have hw : f / x⁻¹ ^ m ≠ 0 := div_ne_zero hf (pow_ne_zero _ (inv_ne_zero hx))
-  obtain ⟨c, hc, hcv⟩ := GlobalTheory.T.exists_valuation_div_pow_eq_one_of_pow_eq_span K K (FunctionField.ringOfIntegers k K) B _ (m * m')
+  obtain ⟨c, hc, hcv⟩ := _root_.GlobalTheory.valuation_eq_one_of_pow_eq_span K K (FunctionField.ringOfIntegers k K) B _ (m * m')
     (Nat.mul_pos hm hm') (fun r => ringOfIntegers_mem_of_polynomial_mem k K B hB r) (f / x⁻¹ ^ m) hw hJ
   exact ⟨c, hc, by simpa using hcv⟩

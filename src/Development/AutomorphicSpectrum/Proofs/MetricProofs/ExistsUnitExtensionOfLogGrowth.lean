@@ -3,7 +3,7 @@ module
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.Calculus.FDeriv.Defs
 public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagDomainUnitaryTriangularStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagDomainUnitaryTriangular
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,8 +61,8 @@ theorem exists_unit_extension_of_log_growth :
         (∀ z ∈ ball (0 : Fin n → ℂ) ρ, ψ z ≠ 0) ∧
         ∀ z ∈ ball (0 : Fin n → ℂ) ρ, (∀ i ∈ S, z i ≠ 0) → ψ z = φ z := by
   intro n S φ ρ C N hρ hφ hb
-  obtain ⟨ψ, hψ, hψe⟩ := GlobalTheory.T.removable_log_growth_singularity n S φ ρ C N hρ hφ (fun z hz hS => (hb z hz hS).2.1)
-  obtain ⟨χ, hχ, hχe⟩ := GlobalTheory.T.removable_log_growth_singularity n S (fun z => (φ z)⁻¹) ρ C N hρ
+  obtain ⟨ψ, hψ, hψe⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.exists_extension_polydisc_of_log_growth n S φ ρ C N hρ hφ (fun z hz hS => (hb z hz hS).2.1)
+  obtain ⟨χ, hχ, hχe⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.exists_extension_polydisc_of_log_growth n S (fun z => (φ z)⁻¹) ρ C N hρ
     (hφ.inv fun z hz => (hb z hz.1 hz.2).1) (fun z hz hS => (hb z hz hS).2.2)
   refine ⟨ψ, hψ, fun z hz => ?_, hψe⟩
   have hF : ContinuousAt (fun w => ψ w * χ w) z :=

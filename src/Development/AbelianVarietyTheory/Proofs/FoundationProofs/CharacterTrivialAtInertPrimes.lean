@@ -1,11 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHalfIdem
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmFiniteAdeleIntegralSeparatedComplete
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ConjInvolutiveAndExistsHalfIdempotent
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIdeleGenerator
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsPrimeNatCastMem
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsRealSpanEqConjFixedPrimeMulRelNormStatement
+public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsRealSpanEqConjFixedPrimeMulRelNorm
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmFiniteAdeleIntegralSeparatedComplete
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RationalPointsIntegralPointsMembership
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitaryHeckeCharacterValues
 import Mathlib.Algebra.Order.Floor.Extended
@@ -261,7 +262,7 @@ theorem hom_eq_one {G : Type} [CommGroup G] (ψ : (AE D)ˣ →* G) (h1 : ∀ u, 
     obtain ⟨q, hq, hqP⟩ : ∃ q : ℕ, q.Prime ∧ (q : 𝓞 D.host.E) ∈ P :=
       exists_prime_mem P hPp _ (by simpa [Ideal.absNorm_eq_zero_iff] using hP0) (Ideal.absNorm_mem P)
     by_cases hi : InertQ D q
-    · obtain ⟨t, B, ht0, htc, e⟩ := GlobalTheory.T.exists_real_span_eq_conjFixedPrime_mul_relNorm D P hPp hP0 (hi P hPp hP0 hqP)
+    · obtain ⟨t, B, ht0, htc, e⟩ := _root_.GlobalTheory.FixedPrimeNorm.exists_span_eq_prime_mul_norm D P hPp hP0 (hi P hPp hP0 hqP)
       have hB : B ≠ ⊥ := by
         rintro rfl
         exact ht0 (by simpa using e)

@@ -2,17 +2,17 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsNormalFormStabilizerMeasure
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ExistsIsFolnerUWset
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CommonStabilizerSetEqRangeNormalFormStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagGramEqGramDetProjectionNormalFormStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CommonStabilizerSetEqRangeNormalForm
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagGramEqGramDetProjectionNormalForm
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagGramNumberNormalizedInvariance
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralFlagUnipotentEqStabilizerTimesSection
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableFlagGramNumberNormalizedIndicator
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurePreservingMulVec
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SiegelHeightBoundSection
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TwoMulPiPowLeFourPow
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotropicLeviEmbeddingHomomorphismProperties
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotropicStabilizerRadicalStructure
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralFlagUnipotentEqStabilizerTimesSectionStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableFlagGramNumberNormalizedIndicatorStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurePreservingMulVec
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalFormFlagZeroMiddleInverseMinorOrthogonal
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SiegelHeightBoundSectionStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TwoMulPiPowLeFourPow
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TwoSidedSizeFunctionPosInvariantContinuous
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -156,12 +156,12 @@ theorem Sg2_N {k r : ℕ} {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (h
 theorem fibre_volume : ∀ (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k + 1) → ℂ)), ∀ (g₀ : Mat k r) (β : Fin r → ℕ) (c : ℂ), inWb k r z → inWb k r z' → 0 < Tz k r z → IsNormal0 k r hj β c z z' g₀ → 1 ≤ j → j + 2 ≤ k → ∀ De : ℝ, DeOK k r z z' g₀ De → ∀ m ∈ UH (Hb k), ∀ a : Fin r → ℝ, (∀ b, 0 < a b) → lebN k r {n | Yj k r hj z z' g₀ (Matrix.of n * (uEmb k r (Matrix.diagonal fun b => (a b : ℂ)) * mEmb k r m)) = 0} = 0 ∧ ∀ φ, SubCut (Nset k r) (lebR0 k r j β) φ → ∀ R₀ y : ℝ, 1 ≤ R₀ → 0 < y → ∫⁻ n, φ n * (Eset0 k r hj z z' g₀ R₀ y).indicator 1 (rmulM (uEmb k r (Matrix.diagonal fun b => (a b : ℂ)) * mEmb k r m) n) ∂(lebN k r) ≤ ENNReal.ofReal (fibVol0 k r j R₀ De y) := by
   intro k r j hj z z' g₀ β c hz hz' hT hN h1j hjk De hDe m hm a ha
   have hT' : 0 < Tz k r z' := by rw [(GlobalTheory.Amp.NfMid.normal0_middle k r j hj z z' g₀ β c hz hz' hT hN).1]; exact hT
-  obtain ⟨hR, hRc⟩ := GlobalTheory.T.commonStabilizerSet_eq_range_normalForm k r j hj z z' g₀ β c hz hz' hT hN
-  obtain ⟨P₀, hP₀, hY⟩ := GlobalTheory.T.flagGram_eq_gramDetProjection_normalForm k r j hj z z' g₀ β c hz hz' hT hN m hm
+  obtain ⟨hR, hRc⟩ := _root_.GlobalTheory.Amp.rset_normal0 k r j hj z z' g₀ β c hz hz' hT hN
+  obtain ⟨P₀, hP₀, hY⟩ := _root_.GlobalTheory.Amp.NormalGram.Yj_eq_gramProj k r j hj z z' g₀ β c hz hz' hT hN m hm
   obtain ⟨hnull, hvol⟩ := GlobalTheory.Amp.GramVol.vol_gram k j h1j hjk m hm P₀ hP₀
-  obtain ⟨hYm, hEm⟩ := GlobalTheory.T.measurable_flagGramNumberNormalized_indicator k r j hj z z' g₀ hz hz' hT hT' hN.1
-  have hsplit := GlobalTheory.T.lintegral_flagUnipotent_eq_stabilizer_times_section k r j β hN.2.2.2.1 hN.2.2.2.2.1
-  have hB := fun R₀ hR₀ q => GlobalTheory.T.siegel_height_bound_section k r j hj z z' g₀ β c hz hz' hT hN De R₀ hDe hR₀ m hm q a ha
+  obtain ⟨hYm, hEm⟩ := _root_.GlobalTheory.Amp.YMeas.yj_measurable k r j hj z z' g₀ hz hz' hT hT' hN.1
+  have hsplit := _root_.GlobalTheory.Amp.RadConj.lebN_split k r j β hN.2.2.2.1 hN.2.2.2.2.1
+  have hB := fun R₀ hR₀ q => _root_.GlobalTheory.Amp.SecBound.section_coord_le k r j hj z z' g₀ β c hz hz' hT hN De R₀ hDe hR₀ m hm q a ha
   have hY' := fun q => hY q a ha
   have hmul := (isClosedSub_GG (k := k) (r := r)).2.2.2.1
   have ht : uEmb k r (Matrix.diagonal fun b => (a b : ℂ)) * mEmb k r m ∈ GG k r := by

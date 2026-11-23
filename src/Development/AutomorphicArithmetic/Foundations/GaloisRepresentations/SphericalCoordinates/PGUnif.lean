@@ -3,7 +3,8 @@ module
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.LevelChange
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsGHeckeMapForget
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexPointsClassifyMarkedPeriodsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexUniformisationOfMarkedPeriodsFamilyStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHolPeriods
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexUniformisationOfMarkedPeriodsFamily
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuasiCompactOfQProj
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -92,7 +93,7 @@ theorem gUnif_of : ModelEx → GenCmp → GenPts → BaseC → GFine → GUnif :
     rw [← hjs]
     infer_instance
   refine ⟨hsm, hqc, hsep, hX, hL', hXf, ?_⟩
-  refine T.complexUniformisation_of_markedPeriods_family _ _ _ ρ _ (gfam X.univ hX hL') N (D.Cls N) (D.n - 1) hN ?_ hsm hqc
+  refine _root_.GlobalTheory.PELU.unif_of_fineAt _ _ _ ρ _ (gfam X.univ hX hL') N (D.Cls N) (D.n - 1) hN ?_ hsm hqc
     (fun D' t ht => Datum.Cls.fullMark D N (by omega) hNp D' t ht) hXf
   intro a
   change X.univ.eta a ^ N = 1

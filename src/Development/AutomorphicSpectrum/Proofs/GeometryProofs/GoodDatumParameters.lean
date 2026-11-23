@@ -3,22 +3,25 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CInfGood
-import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexUniformizationLawsOfGoodDeepCover
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCuspOnRestrict
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.EvaluationLawsGenericFramesAtlasHold
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsBijectiveKappa
-import Development.AbelianVarietyTheory.Proofs.GenericRegularity.GenFrExAndGenFromTest
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.NoCommonZeroIffOfSec
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CompactifiedModuliPartOne
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CompNonemptyFiniteGenFrTrdeg
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IntAll
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IntFrExtOfGoodLevel
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ModuliExistsNumberFieldPointStatement
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.NumberFieldFinitePlaceCompletionEmbedding
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CardLower
-import Formalism.LocalToGlobal.ProjectiveLattices.IntAllProof
 public import Formalism.LocalToGlobal.ProjectiveLattices.ModelAt
+public import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt
+import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
+import Development.AbelianVarietyTheory.Proofs.GenericRegularity.GenFrExAndGenFromTest
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.NoCommonZeroIffOfSec
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CompNonemptyFiniteGenFrTrdeg
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IntFrExtOfGoodLevel
+import Formalism.LocalToGlobal.ProjectiveLattices.IntAllProofFree
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ModuliExistsNumberFieldPoint
+import Formalism.LocalToGlobal.ProjectiveLattices.IntAllProof
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +53,6 @@ import Mathlib.Tactic.NormNum.NatSqrt
 import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt
 import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.DefiniteFormStabilizerFiniteAwayFromP
 import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ModelSmall
 
@@ -97,7 +99,7 @@ theorem compLaws_of (hN : N1ab) (hN' : N1c) (U : ∀ σ : c.F →+* ℂ, Unf Xo 
       unf := hU
       unTest := hT
       chiTriv := hC
-      ptNe := intFrNe_of' (GlobalTheory.T.xoNumPt_of_p_add_q_pos hN' E H Dw l Xo c hpq) GlobalTheory.locFld
+      ptNe := intFrNe_of' (_root_.GlobalTheory.moduli_exists_numberField_point hN' E H Dw l Xo c hpq) GlobalTheory.locFld
         (GlobalTheory.Exist.intFrExt_of_good GlobalTheory.partI_closed hN hB hTw E H Dw l Xo c hpq hg)
       intAll := GlobalTheory.IntegralFrames.intAll GlobalTheory.partI_closed hN hB hTw E H Dw l Xo c hpq hg
       e_sec := GlobalTheory.CompRestr.idem_mem_sec

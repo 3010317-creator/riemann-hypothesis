@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfLinearZeroCoboundaryZeroFractionsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfLinearZeroCoboundaryZeroFractions
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapCoboundarySwapPullbackCommute
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -208,7 +208,7 @@ theorem generate_of_step : ∀ (p : ℕ) [Fact p.Prime] (O E : Type) [CommRing O
       rw [h1, h2]
       linear_combination (norm := module) tele N
   have hR : f - comb Bv e - map (algebraMap O E) S = 0 := by
-    refine GlobalTheory.T.eq_zero_of_lin_zero_cob1_zero p O E h d μ hμ _ ?_ ?_
+    refine _root_.GlobalTheory.LogUniq.eq_zero_of_linear_zero_coboundary_zero_fractions p O E h d μ hμ _ ?_ ?_
     · funext i
       refine Conv.eq_zero_of_forall h fun N => ?_
       obtain ⟨g, hg, hgN⟩ := key N

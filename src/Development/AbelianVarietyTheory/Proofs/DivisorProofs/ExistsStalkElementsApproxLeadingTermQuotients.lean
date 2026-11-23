@@ -2,17 +2,19 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsChartMemberP
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FromBase
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.NonemptyClosureExtensionAbelianScheme
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BlowupChartIdealSheafEqSpanMonomialStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsApproximateSeriesLeadingTermFourierSystemStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCorrectionApproximateIdealSectionsStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.OrdGeOfForall
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsApproximateSeriesLeadingTermFourierSystem
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExistsIvDOfDefinite
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCorrectionApproximateIdealSections
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNormalisationNormalisedBlowupSiegelModelStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdlAlongComapEq
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RefinePolarisedMonomialPeriodsMonomialData
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SqLeOfForallNonneg
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StalkIdPow
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraitExistsAfterFiniteExtensionOfCompleteDVRStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ResidueFieldMapFiniteOfQuasiFinite
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.NonemptyClosureExtensionAbelianScheme
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdlAlongComapEq
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RefinePolarisedMonomialPeriodsMonomialData
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StalkIdComapOfAffine
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -262,7 +264,7 @@ theorem exists_mem_of_ordGe {g n : ℕ} {F : SFam g n (zetaAway n)} {Z : Scheme.
       rw [X₁.comp]
       exact ⟨_, rfl⟩⟩
     exact ⟨x, hx⟩
-  obtain ⟨e, he⟩ := GlobalTheory.T.exists_correction_approximate_ideal_sections X₁.M.Z S₁ (X₁.M.s ≫ spMap (algebraMap ℤ X₁.o₁)) p₁ hn _ hU E z₁ k
+  obtain ⟨e, he⟩ := _root_.GlobalTheory.ApproxCorr.exists_correction X₁.M.Z S₁ (X₁.M.s ≫ spMap (algebraMap ℤ X₁.o₁)) p₁ hn _ hU E z₁ k
   refine ⟨e, fun f hf => hE' ▸ he f fun V _ _ _ _ hc ξ ev hev hξ hr => ?_⟩
   have hr' : Set.range (jK V ≫ ξ ≫ p₁ ≫ X₁.π) ⊆ Set.range i := by
     rintro _ ⟨w, rfl⟩
@@ -409,7 +411,7 @@ theorem exists_elements : ∀ g : ℕ, 1 ≤ g → ∀ n : ℕ, 3 ≤ n → Odd 
   · have hle : ∀ {R : Type} [CommRing R] (I J : Ideal R) {a b : ℕ}, a ≤ b → J ⊔ I ^ b ≤ J ⊔ I ^ a :=
       fun I J _ _ h => sup_le_sup_left (Ideal.pow_le_pow_right h) J
     obtain ⟨e₁, he₁⟩ := exists_mem_of_ordGe hval X₁ z₁ Φ hT p₁ hn₁ hE D e₀
-    obtain ⟨fe, hord, hlead⟩ := GlobalTheory.T.exists_approximate_series_leading_term_fourierSystem ℤ id bddAct_int_and_cm.1 g φ hpf 8 W Φ.posW N₁ _ Φ y ga' M hM
+    obtain ⟨fe, hord, hlead⟩ := _root_.GlobalTheory.Poinc.approx_of_vsys ℤ id bddAct_int_and_cm.1 g φ hpf 8 W Φ.posW N₁ _ Φ y ga' M hM
       (fun k => LinearMap.ext₂ fun u v => by
         rw [(htδ k).2, hδ]
         simp [hga']) (D * d) l a ha c (max e₀ e₁)

@@ -2,10 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsFinEmb
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicLatticeSplitUnitVectorOrthComplement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutPointLatticeIntersectionSelfDualProperties
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutPointRationalEquivariance
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsFiniteAdelicOrthogonalStabilizerEmbedding
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsFiniteAdelicPointLatticeEqSelfDualStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LayerProd
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsFiniteAdelicPointLatticeEqSelfDual
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutPointLatticeIntersectionSelfDualProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -344,7 +345,7 @@ theorem exists_of_split (D : Sib I) (A : Matrix (Fin I.n) (Fin D.n) I.E) (xf : I
     (g : I.Gf) (hg : ∀ y ∈ lamX I (1, g), ∃ a : 𝓞 I.E, ∃ w ∈ Λ, y = a • x + A *ᵥ w) :
     ∃ h : I.Gf, I.fmat h *ᵥ afVec I x = afVec I x ∧ ∃ k ∈ I.Kset, g = h * xf * k := by
 
-  obtain ⟨c, hc⟩ := GlobalTheory.T.exists_finiteAdelicPoint_lattice_eq_selfDual D.inst Λ (Submodule.IsLattice.of_fg I.E hfg) hdual
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.SelfDualPoint.exists_lamX_eq D.inst Λ (Submodule.IsLattice.of_fg I.E hfg) hdual
   obtain ⟨jf, hj, -⟩ := exists_finEmb I D s x A xf hP
 
   have hle : lamX I (1, g) ≤ lamX I (1, jf c * xf) := by

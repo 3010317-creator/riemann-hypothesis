@@ -4,16 +4,19 @@ public import Development.WeilBound.CoreStatements.FlagImmersions.FibSandwich
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsValFam
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.AlternatingMapSumSmulEqDetSmul
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CmTypeExteriorLatticeComparison
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CmTypeLatticeComparisonStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComponentPointCmEigenFrameStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenFrameIffEigenspaceBasisStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenLatticeVectorBundleStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsFlatAnIffIsConstMul
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsCombTangentIffLinearSumStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniversalLieModelPullback
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsPullWedge
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LevelSectionsExactKernelLocusOpen
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CmTypeLatticeComparison
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComponentPointCmEigenFrame
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenLatticeVectorBundle
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GagaLineGeneratorEmbedding
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GermStalkClosedPointToBaseChange
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsCombTangentIffLinearSumStatement
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsVBOneOfChartGenerators
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniversalLieModelPullbackStatement
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.WedgeLatticeGenerator
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -316,7 +319,7 @@ theorem frame_vals {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host 
     obtain ⟨w', h1, h2⟩ := val_of_comb 𝔐.M hc (fun a => j (b a)) w hw (T' k)
     rw [← hT' k] at h1
     rwa [LieModel.ValAt.unique hξ (hvb k) h1]
-  obtain ⟨W, _, _, Mu, Mz, act, hMu, -, hsame⟩ := GlobalTheory.T.universal_lie_model_pullback E H D l Xo c O β Y L y₀
+  obtain ⟨W, _, _, Mu, Mz, act, hMu, -, hsame⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieTransport.main E H D l Xo c O β Y L y₀
   choose e he using fun a => Mu.onto (v a) (hve.1 a).1
   obtain rfl : v = fun a => Mu.pt (e a) := funext fun a => (he a).symm
   have hwe : ∀ a, (w a).left ≫ 𝔐.m.φ = (Mz.pt (e a)).left := fun a => by
@@ -367,13 +370,13 @@ theorem valuePhi : ValuePhi := by
     exact ⟨p, q, hq0, div_mul_cancel₀ _ hq0⟩
   obtain ⟨y₀, hz, hU, hs, h, hT⟩ := exists_point E H D l Xo c Y U Z S Ω K J y 𝔐 i j s z hc ht hint hcst
   have hτ : τ.1 (H.rt : E) = H.rt0 := τ.2
-  obtain ⟨hv1, hv2, -⟩ := GlobalTheory.T.eigen_lattice_vector_bundle E H D l Xo c _ _ Y U Z τ.1 hβ hτ
+  obtain ⟨hv1, hv2, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.isVBOn_eig_genFib E H D l Xo c _ _ Y U Z τ.1 hβ hτ
   obtain ⟨W₁, hW₁, b₁, -, hb₁⟩ := hv1 _ hT
   have hb₁x := hb₁ _ hT hW₁
   obtain ⟨W₂, hW₂, b₂, -, hb₂⟩ := hv2 _ hT
   have hb₂x := hb₂ _ hT hW₂
-  obtain ⟨v, hvv, hve⟩ := GlobalTheory.T.component_point_cm_eigen_frame E H D l Xo c _ _ Y U Z τ.1 hβ hτ L s y₀ hs hU h τ.1 D.p b₁ hb₁x
-  obtain ⟨w, hwv, hwe⟩ := GlobalTheory.T.component_point_cm_eigen_frame E H D l Xo c _ _ Y U Z τ.1 hβ hτ L s y₀ hs hU h
+  obtain ⟨v, hvv, hve⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.Rep.valFam_eigFrame E H D l Xo c _ _ Y U Z τ.1 hβ hτ L s y₀ hs hU h τ.1 D.p b₁ hb₁x
+  obtain ⟨w, hwv, hwe⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.Rep.valFam_eigFrame E H D l Xo c _ _ Y U Z τ.1 hβ hτ L s y₀ hs hU h
     (ComplexEmbedding.conjugate τ.1) D.q b₂ hb₂x
   have hfr : IsFramed U τ.1 s y₀ v w := ⟨hs, hU, hve, hwe⟩
   obtain ⟨-, -, hgen⟩ := hg
@@ -381,7 +384,7 @@ theorem valuePhi : ValuePhi := by
   obtain ⟨α₀, ha₀⟩ := coeff_of_span hA₁ (hw1.symm.trans (WedgeFrame.wedge_eq_span_ιMulti _ _ _ _ _ _ _ _ hb₁x).1)
   obtain ⟨κ₀, hb₀⟩ := coeff_of_span hB₁ (hw2.symm.trans (WedgeFrame.wedge_eq_span_ιMulti _ _ _ _ _ _ _ _ hb₂x).1)
   have hRep := hr L s y₀ v w b₁ b₂ α₀ κ₀ hfr ha₀ hb₀ hvv hwv
-  obtain ⟨-, hst1, hst2⟩ := GlobalTheory.T.cm_type_lattice_comparison E H D l Xo c Y U Z S Ω K J y 𝔐 τ i j ht ⟨centre z, hc⟩ (mem_genFibre _ z hc)
+  obtain ⟨-, hst1, hst2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.CptStalk.main E H D l Xo c Y U Z S Ω K J y 𝔐 τ i j ht ⟨centre z, hc⟩ (mem_genFibre _ z hc)
   have hcen : centre (y₀ ≫ Y.j) = 𝔐.f (centre z) := by rw [← hz]; rfl
   have h' : genPt (Z.ξ₀ ≫ Y.j) ⤳ 𝔐.f (centre z) := hcen ▸ h
   have hpt : (⟨centre (y₀ ≫ Y.j), h⟩ : Cpt (Z.ξ₀ ≫ Y.j)) = ⟨𝔐.f (centre z), h'⟩ := Subtype.ext hcen

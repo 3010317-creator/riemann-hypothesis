@@ -4,25 +4,28 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.IsDCReps
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.Newform
 public import Mathlib.Analysis.CStarAlgebra.Classes
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CuspFormsEqZeroOfPeriodSubConjCoboundaryStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CuspidalOfEichlerPeriodSubConjMemCoboundariesStatement
+public import Mathlib.NumberTheory.ModularForms.Basic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CuspFormsEqZeroOfPeriodSubConjCoboundary
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CuspidalOfEichlerPeriodSubConjMemCoboundaries
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DiamondGenEigenEigen
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DiamondOperatorOfMatrixCuspFormGamma1InterGamma0Statement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DiamondOperatorOfMatrixModularFormGamma1InterGamStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.PetEqRelIndexMulPetProd
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DiamondOperatorOfMatrixCuspFormGamma1InterGamma0
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DiamondOperatorOfMatrixModularFormGamma1InterGam
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EichlerShimuraConjCocyclesCoboundariesPeriodSmul
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsEichlerShimuraDecompositionCocycleStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsEichlerShimuraDecompositionCocycle
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeBoundMain
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeDoubleCosetRepsGammaOneGammaZeroLevelStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeOperatorOnCocycleMapsCocycleCoboundaryConjStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeDoubleCosetRepsGammaOneGammaZeroLevel
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeOperatorOnCocycleMapsCocycleCoboundaryConj
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeOperatorsOnHalfPlaneFunctionsAgreeExplicit
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeTOperatorExplicitCuspFormStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeTOperatorExplicitModularFormStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeUOperatorPreservesModularFormGamma1InterGamStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeTOperatorExplicitCuspForm
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeTOperatorExplicitModularForm
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeUOperatorPreservesModularFormGamma1InterGamma0
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsZeroAtFinsetSum
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PeriodMapEquivariantStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PeriodMapEquivariant
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SlashSmulPos
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TendstoSlashValueAtInfty
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TqFSemisimple
+public import Mathlib.NumberTheory.PrimesCongruentOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -39,7 +42,6 @@ import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.ModularForms.CuspFormSubmodule
-public import Mathlib.NumberTheory.PrimesCongruentOne
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.Tactic.Basify
@@ -67,7 +69,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.Foundations.PetEqRelIndexMulPetProd
 
 @[expose] public section
 
@@ -198,9 +199,9 @@ theorem direct (N : ℕ) (Γ : Subgroup SL(2, ℤ)) (k : ℕ) (hN : 5 ≤ N) (h�
     rw [this, (GlobalTheory.HeckeFamilyMatrices.cj_mem_Z1_cj_mem_B1_per_smul Γ (k - 2)).2.2, cj_smul]; simp
   have H' : per Γ (k - 2) ⇑f - cj (per Γ (k - 2) ⇑(-h)) ∈ B1 Γ (k - 2) := by
     rw [e, sub_neg_eq_add]; exact H
-  obtain ⟨f', hf'⟩ := GlobalTheory.T.cuspidal_of_eichlerPeriod_sub_conj_mem_coboundaries N Γ k hN hΓ hfi hk f (-h) H'
+  obtain ⟨f', hf'⟩ := _root_.GlobalTheory.HeckeFamilyMatrices.cuspidal_of_per_sub_cj_mem N Γ k hN hΓ hfi hk f (-h) H'
   rw [← hf'] at H' ⊢
-  obtain ⟨h1, h2⟩ := GlobalTheory.T.cuspForms_eq_zero_of_period_sub_conj_coboundary N Γ k hN hΓ hfi hk f' (-h) H'
+  obtain ⟨h1, h2⟩ := _root_.GlobalTheory.HeckeFamilyMatrices.Positivity.eq_zero_of_per_sub_cj_mem N Γ k hN hΓ hfi hk f' (-h) H'
   rw [neg_eq_zero] at h2
   rw [h1, h2]
   exact ⟨rfl, rfl⟩
@@ -354,14 +355,14 @@ theorem pres (N l : ℕ) (k : ℤ) (hN : 0 < N) (hl : l.Prime) :
   refine ⟨fun q σ hq hqn hσ => ?_, fun f => ?_, fun f => ?_, fun d σ hσ => ?_⟩
   · have hσ' : GlobalTheory.Hk.IsDia N l q σ := (bI N l q σ).1 (by simpa using hσ)
     refine ⟨fun f => ?_, fun f => ?_⟩
-    · rw [bT k q σ _ hq.pos]; exact GlobalTheory.T.heckeTOperatorExplicit_modularForm N l q k σ hN hq hqn hσ' f
-    · rw [bT k q σ _ hq.pos]; exact GlobalTheory.T.heckeTOperatorExplicit_cuspForm N l q k σ hN hq hqn hσ' f
-  · rw [bU k l _ hl.pos]; exact GlobalTheory.T.heckeUOperator_preserves_modularForm_gamma1InterGamma0 N l l k hN hl.pos hl (dvd_mul_left l N) f
+    · rw [bT k q σ _ hq.pos]; exact _root_.GlobalTheory.Hk.heckeT_modularForm N l q k σ hN hq hqn hσ' f
+    · rw [bT k q σ _ hq.pos]; exact _root_.GlobalTheory.Hk.heckeT_cuspForm N l q k σ hN hq hqn hσ' f
+  · rw [bU k l _ hl.pos]; exact _root_.GlobalTheory.Hk.uOp_modularForm N l l k hN hl.pos hl (dvd_mul_left l N) f
   · rw [bU k l _ hl.pos]; exact GlobalTheory.Hk.uOp_cuspForm N l l k hN hl.pos hl (dvd_mul_left l N) f
   · have hσ' : GlobalTheory.Hk.IsDia N l (mat σ 1 1) σ := (bI N l _ σ).1 ⟨hσ.1, rfl⟩
     refine ⟨fun f => ?_, fun f => ?_⟩
-    · rw [bD]; exact GlobalTheory.T.diamondOperatorOfMatrix_modularForm_gamma1InterGamma0 N l k _ σ hN hσ' f
-    · rw [bD]; exact GlobalTheory.T.diamondOperatorOfMatrix_cuspForm_gamma1InterGamma0 N l k _ σ hN hσ' f
+    · rw [bD]; exact _root_.GlobalTheory.Hk.dia_modularForm N l k _ σ hN hσ' f
+    · rw [bD]; exact _root_.GlobalTheory.Hk.dia_cuspForm N l k _ σ hN hσ' f
 
 end GlobalTheory.HeckeFamilyMatrices.Semi
 
@@ -388,27 +389,27 @@ theorem GlobalTheory.HeckeFamilyMatrices.hecke_semisimple_at_newform : ∀ (k : 
   have hfi : (Lev N l).FiniteIndex := by
     haveI : NeZero (N * l) := ⟨hpos.ne'⟩
     exact Subgroup.finiteIndex_of_le (gamma_le_lev N l)
-  obtain ⟨f, h, hfh⟩ := GlobalTheory.T.exists_eichlerShimura_decomposition_cocycle N (N * l) (Lev N l) k hN hpos (gamma_le_lev N l) hle hodd hk z hz
-  obtain ⟨rT, rU, rD⟩ := GlobalTheory.T.heckeDoubleCosetReps_gammaOneGammaZeroLevel N l hN hl hlN
+  obtain ⟨f, h, hfh⟩ := _root_.GlobalTheory.HeckeFamilyMatrices.EichlerShimura.exists_per_add_cj_per N (N * l) (Lev N l) k hN hpos (gamma_le_lev N l) hle hodd hk z hz
+  obtain ⟨rT, rU, rD⟩ := _root_.GlobalTheory.HeckeFamilyMatrices.CosetReps.dcReps_level N l hN hl hlN
   obtain ⟨pT, pU1, pU2, pD⟩ := pres N l (k : ℤ) (by omega) hl
   have keyT := fun (q : ℕ) (hq : q.Prime) (hqn : ¬ q ∣ N * l) =>
-    have hk' := GlobalTheory.T.heckeOperatorOnCocycleMaps_cocycle_coboundary_conj (Lev N l) (k - 2) _ _ _
+    have hk' := _root_.GlobalTheory.HeckeFamilyMatrices.HkC.hk_cocycle_coboundary_conj (Lev N l) (k - 2) _ _ _
       (by simpa [dg, Matrix.det_fin_two] using hq.pos) (rT q (σT q) hq hqn (hT q hq hqn))
     have hp := pT q (σT q) hq hqn (hT q hq hqn)
     key N (Lev N l) k hN hle hfi hk (TqZ (Lev N l) (k - 2) q (σT q)) (TqF (k : ℤ) q (σT q))
       hk'.2.1 hk'.2.2 hp.1 hp.2
-      (fun f => (GlobalTheory.T.per_hecke_and_diamond_sub_mem_b1_of_lev N l k hN hl hlN hk f).1 q (σT q) hq hqn (hT q hq hqn)) z f h hfh (g.a q)
+      (fun f => (_root_.GlobalTheory.HeckeFamilyMatrices.HeckeEqv.period_map_equivariant N l k hN hl hlN hk f).1 q (σT q) hq hqn (hT q hq hqn)) z f h hfh (g.a q)
   have keyU :=
-    have hk' := GlobalTheory.T.heckeOperatorOnCocycleMaps_cocycle_coboundary_conj (Lev N l) (k - 2) _ _ _
+    have hk' := _root_.GlobalTheory.HeckeFamilyMatrices.HkC.hk_cocycle_coboundary_conj (Lev N l) (k - 2) _ _ _
       (by simpa [dg, Matrix.det_fin_two] using hl.pos) rU
     key N (Lev N l) k hN hle hfi hk (UlZ (Lev N l) (k - 2) l) (UlF (k : ℤ) l)
       hk'.2.1 hk'.2.2 pU1 pU2
-      (fun f => (GlobalTheory.T.per_hecke_and_diamond_sub_mem_b1_of_lev N l k hN hl hlN hk f).2.1) z f h hfh α
+      (fun f => (_root_.GlobalTheory.HeckeFamilyMatrices.HeckeEqv.period_map_equivariant N l k hN hl hlN hk f).2.1) z f h hfh α
   have keyD := fun d : (ZMod N)ˣ =>
-    have hk' := GlobalTheory.T.heckeOperatorOnCocycleMaps_cocycle_coboundary_conj (Lev N l) (k - 2) _ _ _ (by simp) (rD d (σD d) (hD d))
+    have hk' := _root_.GlobalTheory.HeckeFamilyMatrices.HkC.hk_cocycle_coboundary_conj (Lev N l) (k - 2) _ _ _ (by simp) (rD d (σD d) (hD d))
     key N (Lev N l) k hN hle hfi hk (DdZ (Lev N l) (k - 2) (σD d)) (DdF (k : ℤ) (σD d))
       hk'.2.1 hk'.2.2 (pD d (σD d) (hD d)).1 (pD d (σD d) (hD d)).2
-      (fun f => (GlobalTheory.T.per_hecke_and_diamond_sub_mem_b1_of_lev N l k hN hl hlN hk f).2.2 d (σD d) (hD d)) z f h hfh (g.χ (ZMod.castHom hMN (ZMod g.M) (d : ZMod N)))
+      (fun f => (_root_.GlobalTheory.HeckeFamilyMatrices.HeckeEqv.period_map_equivariant N l k hN hl hlN hk f).2.2 d (σD d) (hD d)) z f h hfh (g.χ (ZMod.castHom hMN (ZMod g.M) (d : ZMod N)))
 
   obtain ⟨f', hf'⟩ : ∃ f' : CuspForm (Lev N l) (k : ℤ), ⇑f' = ⇑f := by
     obtain ⟨q, hq, hgt, hmod⟩ := Nat.exists_prime_gt_modEq_one (N * l) hpos.ne'

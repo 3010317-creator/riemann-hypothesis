@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.SumMulEqZeroOfSumToReal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmoothConeInteriorDefiniteBalancedForm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteMinimiserSystemsPosCombinationDefiniteSumStatement
+public import Mathlib.Data.ZMod.Defs
+public import Mathlib.LinearAlgebra.DFinsupp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteMinimiserSystemsPosCombinationDefiniteSum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,7 +64,7 @@ theorem finite_minimiser_systems_upTo_aut : ∀ (O : Type) [CommRing O] (bar : O
   let P : ι → Prop := fun i => IsCone bar φ (fun j => ((i.2 j : F) : LinearMap.BilinForm ℤ Y)) ∧
     ∀ x, x ≠ 0 → 0 < ∑ j, ((i.2 j : F) : LinearMap.BilinForm ℤ Y) x x
   let T : ι → Finset ((Fin n → ZMod N) → Y) := fun i =>
-    if h : P i then Classical.choose (GlobalTheory.T.finite_minimiserSystems_posCombination_definiteSum Y n N eb i.1.val _ (fun j x y => (h.1.mem j).1 x y)
+    if h : P i then Classical.choose (_root_.GlobalTheory.Poinc.MinSysLat.finite_minimiser_systems_lat Y n N eb i.1.val _ (fun j x y => (h.1.mem j).1 x y)
       (fun j y => h.1.nonneg j y) h.2) else ∅
   refine ⟨Finset.univ.biUnion T, ?_⟩
   intro b hb hpos
@@ -98,7 +100,7 @@ theorem finite_minimiser_systems_upTo_aut : ∀ (O : Type) [CommRing O] (bar : O
     · omega
   have hmem : μ ∈ T i := by
     simp only [T, dif_pos hPi]
-    refine Classical.choose_spec (GlobalTheory.T.finite_minimiserSystems_posCombination_definiteSum Y n N eb i.1.val _ (fun j x y => (hPi.1.mem j).1 x y)
+    refine Classical.choose_spec (_root_.GlobalTheory.Poinc.MinSysLat.finite_minimiser_systems_lat Y n N eb i.1.val _ (fun j x y => (hPi.1.mem j).1 x y)
       (fun j y => hPi.1.nonneg j y) hPi.2) (pull e.toLinearMap b) k cf hk hcf ?_ μ h1 h2
     ext a c
     have := LinearMap.congr_fun₂ hsum (e a) (e c)

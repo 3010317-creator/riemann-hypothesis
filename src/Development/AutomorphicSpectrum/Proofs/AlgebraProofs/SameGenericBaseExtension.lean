@@ -4,13 +4,14 @@ public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.Bund
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.InstFintypeSumElim
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MixedFieldContraction.GenericFibreKerTarget
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericBundleChain
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericFlagComparisonStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericFlagDifferenceStatement
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericFlagComparison
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsBundles
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericFlagDifference
 public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.XPullPreserve
 public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.XRelabelBundle
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PTwinJoinPull
 import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.ClassListMapDomainPerm
 import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PPairNumberRelabel
-public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PTwinJoinPull
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -234,7 +235,7 @@ theorem main : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing
     ⟨fun j i => b j i ∘ (Equiv.sumAssoc K K' K₁).symm, by
       funext j i k
       simp⟩
-  obtain ⟨-, f, g, hfp⟩ := GlobalTheory.T.same_generic_flag_comparison O Ω _ _ (joinCoord (joinCoord x z) z₁)
+  obtain ⟨-, f, g, hfp⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FlagPairOfFrames.main O Ω _ _ (joinCoord (joinCoord x z) z₁)
     ϖ hϖ d hM₁ N V (F 0) (F 1) hs₁ w w _ _ (hF 0).2 (hF 1).2 (fun i j hij => by
       simp [Finsupp.single_apply, hij.ne])
   have hσ := assocEquiv_fst ι ι' ι₁
@@ -259,9 +260,9 @@ theorem main : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing
       exact PairNumberRelabel.isVerticalDivisor_map _ _ hσ _ ϖ _ _ _ (hfp.vertical i)
     · rw [aeval_rename, aeval_rename, join_assoc]
       exact hfp.generic i
-  obtain ⟨A₁, B₁⟩ := GlobalTheory.T.same_generic_flag_difference O Ω _ _ (joinCoord x z) ϖ hϖ d hm N V EB E'B hsB
+  obtain ⟨A₁, B₁⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.ck_rootNum_eq_pairNum_on_flagPair O Ω _ _ (joinCoord x z) ϖ hϖ d hm N V EB E'B hsB
     K₁ ι₁ z₁ hm₁ hb₁ (F 0) (F 1) hq hq' w w _ _ f g hfp
-  obtain ⟨A₂, B₂⟩ := GlobalTheory.T.same_generic_flag_difference O Ω K ι x ϖ hϖ d hW N V E E' hEE'
+  obtain ⟨A₂, B₂⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.ck_rootNum_eq_pairNum_on_flagPair O Ω K ι x ϖ hϖ d hW N V E E' hEE'
     (K' ⊕ K₁) (Sum.elim ι' ι₁) (joinCoord z z₁) hm₂ (hK.trans (hb₁.trans hb)) G G' hr hr'
     w w _ _ _ _ hfp₂
   refine ⟨fun k hk1 hk2 q L Q hQ => ?_, fun c P hsym hP hcd q L Q hQ a ha => ?_⟩

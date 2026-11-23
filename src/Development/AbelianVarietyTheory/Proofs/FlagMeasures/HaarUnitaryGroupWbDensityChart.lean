@@ -3,11 +3,16 @@ module
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.WeightedLimitGauge.GaugeExists
 public import Formalism.PeriodIntegrals.QuotInv
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.WeightedLimitGauge.HaarUniq
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ClosedMatrixSubgroupTheoremStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ContinuousAtZeroOfSqueezePowBoundsStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UpperOff
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ClosedMatrixSubgroupTheorem
+public import Mathlib.Analysis.Normed.Module.Basic
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ContinuousAtZeroOfSqueezePowBounds
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniqueHaarDensityAtIdentity
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasureBallEqLintegralUpperMeasureDensityStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UpperDensityBoundsAlmostHomogeneousMeasureStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UpperDens
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Mathlib.MeasureTheory.Group.Measure
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasureBallEqLintegralUpperMeasureDensity
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UpperDensityBoundsAlmostHomogeneousMeasure
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsDensityOriginOfAlmostHomogeneous
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MatGroupHaarUniqueFiniteCompactOpenPos
 import Mathlib.Algebra.Order.Floor.Extended
@@ -100,7 +105,7 @@ theorem haarDens : HaarDens := by
   obtain ⟨νh, hνh⟩ := exists_haarOn k r
   have hS : PI.IsMatGroup (UWb k r) := isMatGroup_uwb
   have hμ : PI.IsHaarOnM (UWb k r) νh := hνh
-  obtain ⟨hlie, hsurj⟩ := GlobalTheory.T.closed_matrix_subgroup_theorem _ (UWb k r) hS
+  obtain ⟨hlie, hsurj⟩ := _root_.GlobalTheory.ClosedMatGroup.closed_subgroup _ (UWb k r) hS
   obtain ⟨-, hcpt, hop⟩ := GlobalTheory.MatHaar.haar_unique_locFinite_openPos _ (UWb k r) νh hS hμ
   have hmem : ∀ X, expL (UWb k r) X ∈ UWb k r := fun X => by simpa [expL] using hlie X 1
   have hsurj' : ∀ ρ : ℝ, 0 < ρ → ∃ δ : ℝ, 0 < δ ∧ ∀ g ∈ UWb k r, (∀ i j, ‖(g - 1) i j‖ < δ) →
@@ -195,8 +200,8 @@ theorem haarDens : HaarDens := by
         upperDens volume ν x ≤ ENNReal.ofReal (((1 + ε) / (1 - ε)) ^ Module.finrank ℝ (lieE (UWb k r))) * c := by
     intro ε h0 h1
     obtain ⟨η, hη, H⟩ := hsν ε h0 h1
-    exact ⟨η, hη, GlobalTheory.T.upperDensity_bounds_almost_homogeneous_measure _ volume ν c hct hlim ε η h0 h1 H⟩
-  obtain ⟨hδ0, hδc⟩ := GlobalTheory.T.continuousAt_zero_of_squeeze_pow_bounds _ _ (upperDens volume ν) c hct hb
+    exact ⟨η, hη, _root_.GlobalTheory.upperDens_bounds_of_almost_homogeneous _ volume ν c hct hlim ε η h0 h1 H⟩
+  obtain ⟨hδ0, hδc⟩ := _root_.GlobalTheory.squeeze_continuousAt_zero _ _ (upperDens volume ν) c hct hb
   obtain ⟨η₀, hη₀, H₀⟩ := hb (1 / 2) (by norm_num) (by norm_num)
   set a := ENNReal.ofReal (((1 + 1 / 2) / (1 - 1 / 2)) ^ Module.finrank ℝ (lieE (UWb k r)) : ℝ) * c with ha
   have hne : a ≠ ⊤ := ENNReal.mul_ne_top ENNReal.ofReal_ne_top hct
@@ -212,6 +217,6 @@ theorem haarDens : HaarDens := by
       Set.inter_eq_left.2 (Metric.ball_subset_ball (hρε.le.trans (min_le_right _ _)))]
     rfl
   rw [e1]
-  exact GlobalTheory.T.measure_ball_eq_lintegral_upperMeasureDensity _ volume ν η₀ _ hC ρ (hρε.le.trans (min_le_left _ _))
+  exact _root_.GlobalTheory.measure_ball_eq_lintegral_upperDens _ volume ν η₀ _ hC ρ (hρε.le.trans (min_le_left _ _))
 
 end GlobalTheory.HaarDensChart

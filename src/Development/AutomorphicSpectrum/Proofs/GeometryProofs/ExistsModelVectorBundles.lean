@@ -2,16 +2,22 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsGenericFlag
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DominatesOfCoordsRegularStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsProperIntegralModelStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsTwistedGeneratorsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagFramesGenericModelLeftStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagFramesGenericModelRightStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrameMatrixChartRatiosStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrameViaTwistedGeneratorsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FunctionFieldRatioGeneratorsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericFlagOverGenericFieldStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProperDominatingSurjectiveStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EtaleLocalizationAtPrimeTensorOfLowHeight
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DominatesOfCoordsRegular
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+public import Mathlib.AlgebraicGeometry.Morphisms.Proper
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsProperIntegralModel
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordTieCompEquiv
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsTwistedGenerators
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagFramesGenericModelLeft
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagFramesGenericModelRight
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrameMatrixChartRatios
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrameViaTwistedGenerators
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FunctionFieldRatioGenerators
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericFlagOverGenericField
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProperDominatingSurjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,7 +57,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordTieCompEquiv
 
 @[expose] public section
 
@@ -70,16 +75,16 @@ theorem GlobalTheory.CompanionTheory.Ar.exists_flagBundle : ∀ (X : Scheme.{0})
     exact ⟨b, (hfr ⟨genPt ξ, specializes_refl _⟩ trivial hU).1, hb⟩
   choose c hc using hc
   have hg : ∀ s, ∃ (m n : ℕ) (φ : Fin n → Module.Dual Ω E), IsTwistGen ξ x (L s) m φ :=
-    fun s => GlobalTheory.T.exists_twisted_generators X Ω ξ E κ x (L s) (r s) (V s) hx hirr (hL s)
+    fun s => _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.Twist.exists_twistGen X Ω ξ E κ x (L s) (r s) (V s) hx hirr (hL s)
   choose m n φ hφ using hg
   obtain ⟨c₀, hc₀⟩ := hx.cover ⟨genPt ξ, specializes_refl _⟩
   have hB : ∀ s, ∃ B : Matrix (Fin (r s)) (Fin (n s)) Ω, B * Matrix.of (fun j l => φ s j (c s l)) = 1 :=
-    fun s => GlobalTheory.T.frame_via_twisted_generators X Ω ξ E κ x (L s) (r s) (V s) (m s) (n s) (φ s) (c s) hx (hL s) (hφ s) (hc s).1 (hc s).2
-  obtain ⟨J₀, hJ₀, hfrac⟩ := GlobalTheory.T.frame_matrix_chart_ratios Ω E S r n κ x φ c c₀ hc₀.1 (GlobalTheory.T.function_field_ratio_generators X Ω ξ κ x c₀ hx hc₀.1) hB
+    fun s => _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.exists_leftInverse_flagForms X Ω ξ E κ x (L s) (r s) (V s) (m s) (n s) (φ s) (c s) hx (hL s) (hφ s) (hc s).1 (hc s).2
+  obtain ⟨J₀, hJ₀, hfrac⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.CoordGen.flagCoord_generate Ω E S r n κ x φ c c₀ hc₀.1 (_root_.GlobalTheory.CompanionTheory.Ar.FlagBun.FracChart.exists_eq_div_adjoin X Ω ξ κ x c₀ hx hc₀.1) hB
   haveI : Finite (FlagIx κ n r) := by unfold FlagIx; infer_instance
   obtain ⟨X', ξ', s', hx', hirr', -, hprop, -⟩ :=
-    GlobalTheory.T.exists_proper_integral_model (GenField Ω r) ℤ (FlagIx κ n r) (flagCoord κ x φ c) J₀ hJ₀ hfrac
-  obtain ⟨f, hdom, hch⟩ := GlobalTheory.T.dominates_of_coords_regular X Ω ξ ℤ κ x X' (GenField Ω r) ξ' (algebraMap Ω (GenField Ω r)) hx hx'.gen
+    _root_.GlobalTheory.CompanionTheory.Ar.exists_cl_scheme (GenField Ω r) ℤ (FlagIx κ n r) (flagCoord κ x φ c) J₀ hJ₀ hfrac
+  obtain ⟨f, hdom, hch⟩ := _root_.GlobalTheory.CompanionTheory.Ar.CoordMap.exists_dominating_map X Ω ξ ℤ κ x X' (GenField Ω r) ξ' (algebraMap Ω (GenField Ω r)) hx hx'.gen
     hirr' (fun z p' => by simpa using intCast_mem (regAt ξ' p') z) (fun p' => by
       obtain ⟨⟨c1, J⟩, hne, hrat⟩ := hx'.cover p'
       have e1 : ∀ k, flagCoord κ x φ c (k, J) = algebraMap Ω (GenField Ω r) (x k) *
@@ -88,10 +93,10 @@ theorem GlobalTheory.CompanionTheory.Ar.exists_flagBundle : ∀ (X : Scheme.{0})
       refine ⟨c1, left_ne_zero_of_mul hne, fun k => ?_⟩
       have := hrat (k, J)
       rwa [e1, e1, mul_div_mul_right _ _ (right_ne_zero_of_mul hne)] at this)
-  have hsurj := GlobalTheory.T.proper_dominating_surjective X Ω ξ κ x X' (GenField Ω r) ξ' s' f _ hx hirr hprop hdom
-  have hsm := GlobalTheory.T.flag_frames_generic_model_right X Ω ξ E κ x S r V L m n φ c X' ξ' f hx hirr hL hφ hc hx' hirr' hdom hch
-  have hfl := GlobalTheory.T.flag_frames_generic_model_left X Ω ξ E κ x S r V L m n φ c X' ξ' f hx hirr hL hφ hc hx' hirr' hdom hch
-  have hgen := GlobalTheory.T.generic_flag_over_generic_field Ω E S r V c hc
+  have hsurj := _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.surjective_of_dominates X Ω ξ κ x X' (GenField Ω r) ξ' s' f _ hx hirr hprop hdom
+  have hsm := _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.Sm.flag_smooth X Ω ξ E κ x S r V L m n φ c X' ξ' f hx hirr hL hφ hc hx' hirr' hdom hch
+  have hfl := _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.Flags.pull_isFlagVB_genB X Ω ξ E κ x S r V L m n φ c X' ξ' f hx hirr hL hφ hc hx' hirr' hdom hch
+  have hgen := _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.genB_isGenericFlag Ω E S r V c hc
   have hne : Nonempty (FlagIx κ n r) := ⟨J₀⟩
   have hpos : 0 < Nat.card (FlagIx κ n r) := Nat.card_pos
   let e : Fin (Nat.card (FlagIx κ n r) - 1 + 1) ≃ FlagIx κ n r :=

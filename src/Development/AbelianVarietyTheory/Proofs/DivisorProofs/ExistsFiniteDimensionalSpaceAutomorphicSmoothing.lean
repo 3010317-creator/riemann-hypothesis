@@ -2,13 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfMemSpanK
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsSpanFormsNeBot
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CentreEnvelopingAlgebraCommuteRealLieSmoothingStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDimensionalCentreAnnihilatorCompatibleMapsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieDerivativeRealLieSmoothingEqDensityStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemZalgCommuteCompactRep
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealLieSmoothingMemSlowlyIncreasingStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfMemWeakIn
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CentreEnvelopingAlgebraCommuteRealLieSmoothing
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDimensionalCentreAnnihilatorCompatibleMaps
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GrowthOfTame
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieDerivativeRealLieSmoothingEqDensity
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealLieSmoothingMemSlowlyIncreasing
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealLieSmoothingMemSmoothAdelicFunctionsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothingRightTranslateMaxCompactStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothingRightTranslateMaxCompact
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemZalgCommuteCompactRep
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -181,7 +183,7 @@ theorem smoothMap_mem (hα : IsTest (invSet E a) α) (hK : KInv α) (hφ : IsAut
     smoothMap ν hα (spanK E a φ) ∈ mapsJ φ (stabL φ) := by
   refine ⟨⟨fun k w => ?_, fun w => ⟨?_, fun γ g => ?_, fun k hk => ?_⟩⟩, fun z hz h0 w => ?_⟩
   · apply Subtype.ext; funext g
-    exact GlobalTheory.T.smoothing_right_translate_maxCompact E a ν α hK w.1.1 k g
+    exact _root_.GlobalTheory.AutGrowth.smoothing_rt_Kinf E a ν α hK w.1.1 k g
   · intro l
     obtain ⟨β, hβ, e⟩ : ∃ β, IsTest (invSet E a) β ∧
         ((l.map (lie E a)).prod (smoothMap ν hα (spanK E a φ) w)).1 = smoothing ν β w.1.1 := by
@@ -191,9 +193,9 @@ theorem smoothMap_mem (hα : IsTest (invSet E a) α) (hK : KInv α) (hφ : IsAut
         obtain ⟨β, hβ, e⟩ := ih
         refine ⟨dens X β, isTest_dens X hβ, funext fun g => ?_⟩
         rw [List.map_cons, List.prod_cons, Module.End.mul_apply, lie_apply, e]
-        exact GlobalTheory.T.lieDerivative_realLieSmoothing_eq_density E a ν β hβ w.1.1 w.1.2 X g
+        exact _root_.GlobalTheory.AutGrowth.lieD_smoothing_eq_dens E a ν β hβ w.1.1 w.1.2 X g
     rw [e]
-    exact GlobalTheory.T.realLieSmoothing_mem_slowlyIncreasing E a ν β hβ w.1.1 (growth_mem hφ w.2)
+    exact _root_.GlobalTheory.AutGrowth.smoothing_mem_growth E a ν β hβ w.1.1 (growth_mem hφ w.2)
   · show smoothing ν α w.1.1 (ratGL E a γ * g) = smoothing ν α w.1.1 g
     have hl := left_mem hφ w.2
     simp only [smoothing, chart, mul_assoc, hl]
@@ -204,7 +206,7 @@ theorem smoothMap_mem (hα : IsTest (invSet E a) α) (hK : KInv α) (hφ : IsAut
     rw [← chart_rt_fin, hw]
   · show (z ⟨smoothing ν α w.1.1, GlobalTheory.T.realLieSmoothing_mem_smoothAdelicFunctions E a ν α hα w.1.1 w.1.2⟩) = 0
     apply Subtype.ext
-    rw [GlobalTheory.T.centreEnvelopingAlgebra_commute_realLieSmoothing E a ν α hα w.1 _ z hz, killed_mem hz h0 w.2]
+    rw [_root_.GlobalTheory.CentreSmooth.zalg_smoothing E a ν α hα w.1 _ z hz, killed_mem hz h0 w.2]
     funext g
     simp [smoothing, chart]
 
@@ -216,7 +218,7 @@ theorem exists_finite_space : GlobalTheory.Published.AutomorphicFormsFiniteGL �
       ∃ h : smoothing ν α φ.1 ∈ Sm E a, (⟨smoothing ν α φ.1, h⟩ : Sm E a) ∈ V := by
   intro hP E _ _ _ a ν _ φ hφ
   let w0 : spanK E a φ := ⟨φ, self_mem_spanK φ⟩
-  haveI := GlobalTheory.T.finiteDimensional_centreAnnihilatorCompatibleMaps hP E a φ hφ (stabL φ) hφ.level
+  haveI := _root_.GlobalTheory.AutGrowth.KilledFin.finiteDimensional_mapsJ hP E a φ hφ (stabL φ) hφ.level
   refine ⟨(mapsJ φ (stabL φ)).map (LinearMap.applyₗ w0), inferInstance, ?_, fun α hα hK =>
     ⟨GlobalTheory.T.realLieSmoothing_mem_smoothAdelicFunctions E a ν α hα φ.1 φ.2, smoothMap ν hα _, smoothMap_mem ν hα hK hφ, rfl⟩⟩
   rintro _ ⟨T, hT, rfl⟩

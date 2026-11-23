@@ -1,13 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HolomorphicDiscreteSeries
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexifiedDerivedActionEqSumKFiniteModuleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsKFiniteModuleIrreducibleUnitaryStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KFiniteSmoothVecOfIrreducibleUnitaryRepStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KFiniteSpanRaisingOperatorWordsLowestKTypeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KTypeWeightMemConeOverLowestKTypeStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LowestKTypeSpaceHolomorphicKModuleKilledStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RaisingSpanEqSpanWordsStatement
+public import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.LowKMultOneP
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EqZeroOfInnerSmooth
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexifiedDerivedActionEqSumKFiniteModule
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsKFiniteModuleIrreducibleUnitary
+public import Formalism.LocalToGlobal.BesselHermitianTheta.TiedType
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KFiniteSmoothVecOfIrreducibleUnitaryRep
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KFiniteSpanRaisingOperatorWordsLowestKType
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KTypeWeightMemConeOverLowestKType
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RaisingSpanEqSpanWords
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LowestKTypeSpaceHolomorphicKModuleKilled
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,7 +47,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.LowKMultOneP
 
 @[expose] public section
 
@@ -57,11 +59,11 @@ theorem holomorphicDiscreteSeries_holds : GlobalTheory.Published.HolomorphicDisc
   obtain ⟨hc, hnt, hU, hI, -⟩ := id hDS
   haveI := hc
   haveI := hnt
-  obtain ⟨D, E, hK⟩ := GlobalTheory.T.exists_kFiniteModule_irreducible_unitary n ε H σ hU hI
-  have low := GlobalTheory.T.lowestKTypeSpace_holomorphicKModule_killed n ε H σ D E lam hHC hHol hDS hK
+  obtain ⟨D, E, hK⟩ := _root_.GlobalTheory.CompanionTheory.KModExistsStep.kModExists_holds n ε H σ hU hI
+  have low := _root_.GlobalTheory.HolDS.lowKSub_kMod n ε H σ D E lam hHC hHol hDS hK
   refine ⟨?_, ?_, ?_, ?_⟩
-  · exact fun μ S hS => GlobalTheory.T.kType_weight_mem_cone_over_lowest_kType n ε H σ D E lam hHC hHol hDS hK μ S hS
-  · exact fun v hv => GlobalTheory.T.kFinite_smoothVec_of_irreducible_unitaryRep n ε H σ hU hI v hv
+  · exact fun μ S hS => _root_.GlobalTheory.kType_weight_in_cone_over_lowK n ε H σ D E lam hHC hHol hDS hK μ S hS
+  · exact fun v hv => _root_.GlobalTheory.HdSmooth.kFinite_smoothVec n ε H σ hU hI v hv
   · intro Z hZ v hv
     let vD : D := ⟨v, low.1 hv⟩
     have hx : vD ∈ (Formalism.MainNotions.S.lowKSub ε lam σ).comap D.subtype := hv
@@ -71,10 +73,10 @@ theorem holomorphicDiscreteSeries_holds : GlobalTheory.Published.HolomorphicDisc
       · rw [low.2.2.2 b a hab.2 hab.1 vD hx, smul_zero]
       · rw [hZ a b hab, zero_smul]
     change GlobalTheory.SmVec.dRepC (Formalism.REAL.Jm ε) σ Z (vD : H) = 0
-    rw [GlobalTheory.T.complexifiedDerivedAction_eq_sum_kFiniteModule n ε H σ D E hK Z vD,
+    rw [_root_.GlobalTheory.HolomorphicDiscreteSeriesDecomposition.dRepC_eq_sum n ε H σ D E hK Z vD,
       h0, Submodule.coe_zero]
   · intro v
-    rw [GlobalTheory.T.raisingSpan_eq_map_span_words_of_isKMod n ε H σ D E hK _ low.1, GlobalTheory.T.kFinite_span_raisingOperator_words_lowestKType n ε H σ D E lam hHC hHol hDS hK,
+    rw [_root_.GlobalTheory.HolDS.raisingSpan_eq_span_words n ε H σ D E hK _ low.1, _root_.GlobalTheory.kfin_span_raising_words_lowK n ε H σ D E lam hHC hHol hDS hK,
       Submodule.map_top, Submodule.range_subtype]
     exact (hK.mem v).symm
 

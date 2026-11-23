@@ -4,15 +4,16 @@ public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCoh
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.GlobalSerreRelations.GlobSerreSt
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CupListRepresentativeOfForms
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RepUnique
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsLocalFrameOfCoordsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FormSumRepresentativeLiftStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsLocalFrameOfCoords
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FormSumRepresentativeLift
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InvProd
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalFrameDerivationCompatStatement
+import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.ConeSectionRestriction.LocDefs
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalFrameDerivationCompat
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalFrameTaylorClassEq
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalGradedClassRepresentativeStatement
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalGradedClassRepresentative
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SheafFiltrationProperty
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TaylorDifferentialRepresentativeStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TaylorOfLocalFrameStatement
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TaylorDifferentialRepresentative
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TaylorOfLocalFrame
 import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.TotPairing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -236,24 +237,24 @@ theorem main : CrystallineSemistableComparison.Pb.KH.LocGr → CrystallineSemist
         Rep (sFil (KS q s {V}) ((n : ℤ) + 1)) (sFil (KS q s {V}) ((n : ℤ) + 1 + 1)) (xdtC s V c.t (∑ k : Fin (n + 1), (-1 : Γ(X, V)) ^ (k : ℕ) * D k (η k))) (resKS q s hVV _ _ _ x) := by
   intro _ _ _ K _ _ X q n _ s hs V V' hVV hV' c D hD f hf hdf x hx
   haveI : Smooth q := SmoothOfRelativeDimension.smooth (n + 1) q
-  obtain ⟨E, ε, hL⟩ := GlobalTheory.T.exists_local_frame_of_coords q c s (by omega)
+  obtain ⟨E, ε, hL⟩ := _root_.GlobalTheory.CompanionTheory.ConeLocal.exists_loc q c s (by omega)
   let σ : ∀ T, E.D ⟶ T := fun T => (E.ne T).some
   have hF := GlobalTheory.CompanionTheory.DPFil.isFil_sFil (KS q s {V})
   have hc : E.GrConst (sFil (KS q s {V})) := hL.1
-  have hT := GlobalTheory.T.taylor_of_local_frame q c s E ε hL D hD
+  have hT := _root_.GlobalTheory.CompanionTheory.ConeLocal.taylor_loc q c s E ε hL D hD
   have hr : (n : ℤ) + 1 = ((n + 1 : ℕ) : ℤ) := by push_cast; ring
   obtain ⟨ξ, hξ⟩ := rep_exists (a := sFil (KS q s {V'}) (n : ℤ)) (b := sFil (KS q s {V'}) ((n : ℤ) + 1)) f hf hdf
   have h1 := rep_res (ks_le q s hVV) _ _ hξ
   have h2 := rep_res (ks_le q s hVV) _ _ hx
-  obtain ⟨y, hy⟩ := (GlobalTheory.T.local_graded_class_representative q c.t s E ε hL σ n (n : ℤ) rfl (by omega)).1 (resKS q s hVV _ _ _ ξ)
-  have hmem := GlobalTheory.T.local_frame_derivation_compat q s hVV hV' c D hD E ε hL σ n (n : ℤ) rfl (by omega) ξ y hy
+  obtain ⟨y, hy⟩ := (_root_.GlobalTheory.CompanionTheory.ConeLocal.loc_coef q c.t s E ε hL σ n (n : ℤ) rfl (by omega)).1 (resKS q s hVV _ _ _ ξ)
+  have hmem := _root_.GlobalTheory.CompanionTheory.ConeLocal.coef_mem_jacSpan q s hVV hV' c D hD E ε hL σ n (n : ℤ) rfl (by omega) ξ y hy
   have h2' : CrystallineSemistableComparison.Pb.Rep (sFil (KS q s {V}) ((n : ℤ) + 1)) (sFil (KS q s {V}) ((n : ℤ) + 1 + 1))
       (fun u => CH.d _ n (resQ (ks_le q s hVV) f) u) (resKS q s hVV _ _ _ x) := by
     refine rep_congr h2 fun u => ?_
     have e := congrFun (d_resQ (ks_le q s hVV) f) u
     exact (sub_eq_zero.2 e.symm) ▸ Ideal.zero_mem _
-  have h3 := GlobalTheory.T.taylor_differential_representative hF E σ hc _ hT n (resQ (ks_le q s hVV) f) (fun I => ε (y I)) (resKS q s hVV _ _ _ ξ) (resKS q s hVV _ _ _ x) h1 hy h2'
-  have h4 := GlobalTheory.T.form_sum_representative_lift hF E σ hc (n + 1) _ hr (fun a : Idx n (n + 1) × Fin (n + 1) => Fin.snoc (α := fun _ => Fin (n + 1)) a.1.1 a.2)
+  have h3 := _root_.GlobalTheory.CompanionTheory.ConeLocal.connecting_form hF E σ hc _ hT n (resQ (ks_le q s hVV) f) (fun I => ε (y I)) (resKS q s hVV _ _ _ ξ) (resKS q s hVV _ _ _ x) h1 hy h2'
+  have h4 := _root_.GlobalTheory.CompanionTheory.ConeLocal.rep_collapse hF E σ hc (n + 1) _ hr (fun a : Idx n (n + 1) × Fin (n + 1) => Fin.snoc (α := fun _ => Fin (n + 1)) a.1.1 a.2)
     (fun a => (-1) ^ n * ε (D a.2 (ε.symm (ε (y a.1))))) _ h3
   have h5 := rep_one E σ _ (fun I => ∑ a : Idx n (n + 1) × Fin (n + 1), sgn I (Fin.snoc (α := fun _ => Fin (n + 1)) a.1.1 a.2) • ((-1) ^ n * ε (D a.2 (ε.symm (ε (y a.1)))))) _ h4
   let Ik : Fin (n + 1) → Idx n (n + 1) := fun k => ⟨k.succAbove, Fin.strictMono_succAbove k⟩

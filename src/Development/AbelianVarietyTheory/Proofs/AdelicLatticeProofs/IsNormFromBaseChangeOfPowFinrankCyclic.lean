@@ -1,9 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.MemPowSub
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.AlgebraMapNormTensorEqProdConjugatesStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.Hilbert90BaseChangeStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.TensorExistsOfGaloisFixedStatement
+public import Mathlib.FieldTheory.Galois.Basic
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.AlgebraMapNormTensorEqProdConjugates
+public import Mathlib.GroupTheory.OrderOfElement
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Mathlib.RingTheory.TensorProduct.Maps
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.Hilbert90BaseChange
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.TensorExistsOfGaloisFixed
+public import Mathlib.FieldTheory.Galois.Abelian
+public import Mathlib.RingTheory.Flat.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,8 +55,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.FieldTheory.Galois.Abelian
-public import Mathlib.RingTheory.Flat.Basic
 
 @[expose] public section
 
@@ -190,16 +194,16 @@ theorem tnorm_of_tnorm_pow : ∀ (F M E K : Type) [Field F] [CharZero F] [Field 
     (algebraMap K _ (algebraMap F K a)⁻¹) (by rw [← map_mul, mul_inv_cancel₀ haK, map_one])
     (S.commutes _) (S.commutes _)
     (by
-      have := GlobalTheory.T.algebraMap_norm_tensor_eq_prod_galois_conjugates F E K x
+      have := _root_.GlobalTheory.CNorm.algebraMap_norm_tensor_eq_prod_conjugates F E K x
       rw [hx, prod_cyc σ hσ, hcard, map_pow, map_pow] at this
       rw [this]
       exact Finset.prod_congr rfl fun i _ => (map_pow_iter σ i x).symm)
     (by
       intro u hu
-      have := GlobalTheory.T.hilbert90_baseChange' F E K (σ ^ d) m hτ u (by rw [hSd]; exact hu)
+      have := _root_.GlobalTheory.CNorm.hilbert90_baseChange F E K (σ ^ d) m hτ u (by rw [hSd]; exact hu)
       rw [hSd] at this
       exact this)
-  obtain ⟨z, rfl⟩ := GlobalTheory.T.exists_tensor_eq_of_fixed_by_algEquiv F M E K w (by
+  obtain ⟨z, rfl⟩ := _root_.GlobalTheory.CNorm.tensor_exists_of_galois_fixed F M E K w (by
     intro h
     obtain ⟨k, hk⟩ := exists_pow_of_pow_eq_one σ d m hm0 hσ ho (h.restrictScalars F) (by
       have h1 : h ^ m = 1 := by
@@ -232,7 +236,7 @@ theorem tnorm_of_tnorm_pow : ∀ (F M E K : Type) [Field F] [CharZero F] [Field 
   refine ⟨z, ?_⟩
   apply (algebraMap K (K ⊗[F] M)).injective
   apply hinj
-  rw [GlobalTheory.T.algebraMap_norm_tensor_eq_prod_galois_conjugates F M K z, prod_cyc σ' hσ', IsGalois.card_aut_eq_finrank, ι.commutes, ← hw',
+  rw [_root_.GlobalTheory.CNorm.algebraMap_norm_tensor_eq_prod_conjugates F M K z, prod_cyc σ' hσ', IsGalois.card_aut_eq_finrank, ι.commutes, ← hw',
     map_prod]
   refine Finset.prod_congr rfl fun i _ => ?_
   rw [map_pow_iter]

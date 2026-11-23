@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ContinuousMapPFin
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EqBotOrTopOfTensor
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsDefiniteUnitaryInfinitePointOfUnitaryFamilStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsDefiniteUnitaryInfinitePointOfUnitaryFamil
 public import Formalism.LocalToGlobal.Columns.CoefColLemmas
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -52,7 +52,7 @@ theorem Wt.isIrreducible_rep : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   intro E _ _ _ n W
   refine (GlobalTheory.CuspRep.isIrreducible_iff _).2 ⟨Formalism.L2.Col.VV_nontrivial ℂ W, fun U hU => ?_⟩
   refine GlobalTheory.CoefIrred.vv_irreducible_unitary (InfinitePlace E) n W U fun g hg x hx => ?_
-  obtain ⟨y, hy, hyg⟩ := GlobalTheory.T.exists_definiteUnitaryInfinitePoint_of_unitary_family E n g hg
+  obtain ⟨y, hy, hyg⟩ := _root_.GlobalTheory.InfSurj.exists_infU_cAll_eq E n g hg
   have h := hU ⟨y, hy⟩ x hx
   rw [← hyg]
   exact h

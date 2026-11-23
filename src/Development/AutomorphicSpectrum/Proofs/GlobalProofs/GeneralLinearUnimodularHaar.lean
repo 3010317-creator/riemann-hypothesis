@@ -2,7 +2,7 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.InstBorelGL
 public import Mathlib.MeasureTheory.Group.Measure
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.GeneralLinearIntegralCompactOpenStatement
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.GeneralLinearIntegralCompactOpen
 public import GroundTheory.AutomorphicForms.MeasuresGL
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -54,7 +54,7 @@ namespace GlobalTheory.CompanionTheory.QL.HaarGL
 
 theorem exists_haar_unimodular : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] {O : Subring F} {ϖ : F} {nrm : AbsoluteValue F ℝ} {q : ℕ}, LF O ϖ nrm q → ∀ n : ℕ, (∃ κ : Measure (GL (Fin n) F), κ.IsMulLeftInvariant ∧ κ (GLint O n : Set (GL (Fin n) F)) = 1) ∧ ∀ μ : Measure (GL (Fin n) F), μ.IsHaarMeasure → μ.IsMulRightInvariant ∧ μ.IsInvInvariant := by
   intro F _ _ _ _ O ϖ nrm q hLF n
-  obtain ⟨hKo, hKc, hlc, _hsc, ht2, -, -⟩ := GlobalTheory.T.generalLinear_integral_compact_open hLF n
+  obtain ⟨hKo, hKc, hlc, _hsc, ht2, -, -⟩ := _root_.GlobalTheory.CompanionTheory.QLTop.gl_topology hLF n
   haveI := hlc
   haveI := ht2
   haveI : BorelSpace (GL (Fin n) F) := GlobalTheory.CompanionTheory.QL.instBorelGL n

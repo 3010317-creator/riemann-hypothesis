@@ -1,16 +1,18 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TrMMemFramesEIff
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CompletionIsLocalRingStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CoordinateHaarMeasureStatement
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CompletionIsLocalRing
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CoordinateHaarMeasure
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.GlobalUnitScalingHaarProductFormula
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HermitianMatricesLocallyCompactBorel
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.LocalRankOneDensityUniformizerPower
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.RankOneLocalDensitiesProductConverges
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorIntegerRingAlmostAllPlaces
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRingStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SiegelWeilFreeOfCongruentMatrix
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitScalingRankOneVolume
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorIntegerRingAlmostAllPlaces
+import Formalism.UnipotentAdelicQuotients.SWXSDefs
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,7 +66,7 @@ theorem lam_map_mul {F : Type} [Field F] [NumberField F] (v : HeightOneSpectrum 
     [lam.IsAddHaarMeasure] (x : Fv F v) (hx : x ≠ 0) :
     lam.map (fun y => x * y) = (‖x‖₊)⁻¹ • lam := by
   haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  obtain ⟨i1, i2, i3, i4, -⟩ := GlobalTheory.T.completion_is_local_ring F v
+  obtain ⟨i1, i2, i3, i4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
   have hu : IsUnit x := hx.isUnit
   have hc : ((distribHaarChar (Fv F v) hu.unit : ℝ≥0) : ℝ) = ‖x‖ := by
     have h := GlobalTheory.CompanionTheory.SW.ProdFormula.distribHaarChar_eq_nnnorm v x hx
@@ -114,13 +116,13 @@ theorem fibre_zero_image_mul (F E : Type) [Field F] [NumberField F] [Field E] [N
     (u : (Fv F v ⊗[F] E)ˣ) (B : Set (Fin 1 → Fin N → Fv F v ⊗[F] E)) (hB : MeasurableSet B) :
     m 0 ((fun (X : Fin 1 → Fin N → Fv F v ⊗[F] E) a i => (u : Fv F v ⊗[F] E) * X a i) '' B) =
       ((‖Algebra.norm (Fv F v) (u : Fv F v ⊗[F] E)‖₊ ^ (N - 1) : ℝ≥0) : ℝ≥0∞) * m 0 B := by
-  have hloc := GlobalTheory.T.completion_is_local_ring F v
+  have hloc := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
   obtain ⟨i1, i2, i3, i4, -⟩ := id hloc
   haveI : BorelSpace (Fv F v) := ⟨rfl⟩
   haveI : lam.IsAddHaarMeasure := hlam.1
-  obtain ⟨j1, j2, j3, j4, -⟩ := GlobalTheory.T.tensor_locally_compact_ring F E σ hσ (Fv F v)
+  obtain ⟨j1, j2, j3, j4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Fv F v)
   haveI : BorelSpace (Fv F v ⊗[F] E) := ⟨rfl⟩
-  obtain ⟨hK, hW, hH⟩ := GlobalTheory.T.coordinate_haar_measure F E σ hσ (Fv F v) d b lam ‹_›
+  obtain ⟨hK, hW, hH⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hσ (Fv F v) d b lam ‹_›
   haveI := hK
   haveI : Module.Finite F E := Module.finite_of_finrank_pos (by rw [hσ.2.2.1]; norm_num)
   set s : Fv F v := Algebra.norm (Fv F v) (u : Fv F v ⊗[F] E) with hs

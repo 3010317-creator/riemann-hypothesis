@@ -3,9 +3,9 @@ module
 public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TotalDegreeSubstFLe
 public import ReciprocityTheory.DualLattices.FischerAdjointStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DetTwistedConjugateIsKTypeOfReversedStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsConjugateUnitaryKTypeSameWeightStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsTensorTypesIntertwinerMatrixPolynomialsStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DetTwistedConjugateIsKTypeOfReversed
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsConjugateUnitaryKTypeSameWeight
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsTensorTypesIntertwinerMatrixPolynomials
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -184,16 +184,16 @@ open Contraction ReciprocityTheory.PGsh
 
 theorem exists_local_contraction : ∀ (N n : ℕ) (hn : n ≤ N) (ν : Fin N → ℕ) (x₁ x₃ : ℤ) (Λ : Fin n → ℝ) (Λ' : Fin N → ℝ) (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [FiniteDimensional ℂ H] (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)) (H' : Type) [NormedAddCommGroup H'] [InnerProductSpace ℂ H'] [FiniteDimensional ℂ H'] (σ' : Matrix (Fin N) (Fin N) ℂ → (H' →L[ℂ] H')), Antitone ν → (∀ b : Fin N, n ≤ (b : ℕ) → ν b = 0) → (∀ a, Λ a = (x₃ : ℝ) - ν (Fin.castLE hn (Fin.rev a))) → (∀ b, Λ' b = -(x₁ : ℝ) - ν (Fin.rev b)) → IsURepOn (UJset (allPos n)) σ → IsKTypeOf (allPos n) σ Λ ⊤ → IsURepOn (UJset (allPos N)) σ' → IsKTypeOf (allPos N) σ' Λ' ⊤ → ∃ I : MvPolynomial (Fin N × Fin n) ℂ →ₗ[ℂ] H' →ₗ[ℂ] H, I ≠ 0 ∧ ∀ h ∈ UJset (allPos N), ∀ g ∈ UJset (allPos n), ∀ P v, I ((h.det ^ x₁ * g.det ^ x₃) • subst2 h (g⁻¹)ᵀ P) (σ' h v) = σ g (I P v) := by
   intro N n hn ν x₁ x₃ Λ Λ' H _ _ _ σ H' _ _ _ σ' hν hν0 hΛ hΛ' hσ hK hσ' hK'
-  obtain ⟨hτ, hτK⟩ := GlobalTheory.T.detTwistedConjugate_isKTypeOf_reversed n Λ x₃ H σ hσ hK
-  obtain ⟨hτ', hτK'⟩ := GlobalTheory.T.detTwistedConjugate_isKTypeOf_reversed N Λ' (-x₁) H' σ' hσ' hK'
+  obtain ⟨hτ, hτK⟩ := _root_.GlobalTheory.ConjTwist.conj_twist_isKTypeOf n Λ x₃ H σ hσ hK
+  obtain ⟨hτ', hτK'⟩ := _root_.GlobalTheory.ConjTwist.conj_twist_isKTypeOf N Λ' (-x₁) H' σ' hσ' hK'
   have e1 : (fun a => ((x₃ : ℤ) : ℝ) - Λ (Fin.rev a)) = fun a => (ν (Fin.castLE hn a) : ℝ) := by
     funext a; rw [hΛ, Fin.rev_rev]; ring
   have e2 : (fun b => ((-x₁ : ℤ) : ℝ) - Λ' (Fin.rev b)) = fun b => (ν b : ℝ) := by
     funext b; rw [hΛ', Fin.rev_rev]; push_cast; ring
   rw [e1] at hτK
   rw [e2] at hτK'
-  obtain ⟨E, i1, i2, i3, π, J, hJ, hπ, hπK, hπJ⟩ := GlobalTheory.T.exists_conjugate_unitaryKType_sameWeight N _ H' _ hτ' hτK'
-  obtain ⟨Ψ, hΨ0, hΨ⟩ := GlobalTheory.T.exists_tensor_types_intertwiner_matrix_polynomials N n hn ν H _ E π hν hν0 hτ hτK hπ hπK
+  obtain ⟨E, i1, i2, i3, π, J, hJ, hπ, hπK, hπJ⟩ := _root_.GlobalTheory.ConjugateType.exists_conjugate_type N _ H' _ hτ' hτK'
+  obtain ⟨Ψ, hΨ0, hΨ⟩ := _root_.GlobalTheory.CompactHoweJoint.exists_joint_intertwiner N n hn ν H _ E π hν hν0 hτ hτK hπ hπK
   obtain ⟨I, hI⟩ := exists_contraction J Ψ
   refine ⟨I, fun h0 => hΨ0 ?_, fun h hh g hg P v => ?_⟩
   · ext1 w

@@ -8,8 +8,12 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Hec
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.InertUnitaryCosetSymmetryHeckeEvenStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnramifiedHeckeVacuumLargerEqSmallerStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumInertPlaceStandardCayleyPairStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BaseChangeThetaLiftSatakeParameterEqAddSegmentStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SatakeTransformEqAtThetaLiftOfVacuumEqStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsPairingSingleNe
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalThetaInertPlace
+public import Development.AbelianVarietyTheory.Definitions.Divisors.LineOppositeParabolicUnitaryLeviSectionEq
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BaseChangeThetaLiftSatakeParameterEqAddSegment
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatVecUOfIsSphericalU
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SatakeTransformEqAtThetaLiftOfVacuumEq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -132,7 +136,7 @@ theorem transferOn_inert : GlobalTheory.Hk3.HoweUnram → ∀ D : D7, TransferOn
     · have : CharZero (w.adicCompletion D.host.E) :=
         charZero_of_injective_algebraMap (algebraMap D.host.E (w.adicCompletion D.host.E)).injective
       obtain ⟨h0, hh0, heq⟩ := GlobalTheory.T.unramified_hecke_vacuum_larger_eq_smaller hH _ ϖ c _ δ ψ' S.rank T.rank M ρ0 ω s hstd h' hh'
-      have hsat := GlobalTheory.T.satakeTransform_eq_at_thetaLift_of_vacuum_eq _ ϖ c _ δ ψ' S.rank T.rank M ρ0 ω s hstd hcT hcS (by omega) h0 hh0 h' hh' heq
+      have hsat := _root_.GlobalTheory.SphTheta.satU_eq_satU_liftPar_of_heckeVec_eq _ ϖ c _ δ ψ' S.rank T.rank M ρ0 ω s hstd hcT hcS (by omega) h0 hh0 h' hh' heq
         (Units.mk0 _ hq0) rfl α
       have sA : b (heckeVec πT (KU c T.rank) h' f) x =
           heckeVec (ρ'.comp eT.symm.toMonoidHom) (KU c T.rank) h' (b f x) :=
@@ -149,7 +153,7 @@ theorem transferOn_inert : GlobalTheory.Hk3.HoweUnram → ∀ D : D7, TransferOn
         (fun g u y => hbS g u y) f (GlobalTheory.LGrp.mem_fixed.2 hfixS) x hxS.2.1 h0 hh0).2
       have hev : (fun g => h0 g⁻¹) = h0 := funext fun g => hcom1.2.2 h0 hh0 g
       rw [← sA, sB, sC, hev, hxS.2.2 h0 hh0, map_smul, hsat]
-  · have hc := GlobalTheory.T.baseChange_thetaLiftSatakeParameter_eq_add_segment (Units.mk0 _ hq0) S.rank T.rank (by omega) α
+  · have hc := _root_.GlobalTheory.SphTheta.bcParam_liftPar (Units.mk0 _ hq0) S.rank T.rank (by omega) α
     have ht' : ((T.rank : ℤ) - S.rank) = (t : ℤ) := by omega
     rw [ht'] at hc
     have e := congrArg (Multiset.map (((-1 : ℂˣ) ^ S.rank) * ·)) hc

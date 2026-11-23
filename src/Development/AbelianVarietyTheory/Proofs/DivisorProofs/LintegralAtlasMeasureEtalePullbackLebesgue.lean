@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EtaleEmpty
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleIsLocalHomeomorphStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.JacobianDetIsFrameOnCanonicalWeightStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleIsLocalHomeomorph
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.JacobianDetIsFrameOnCanonicalWeight
+public import ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.APrimeI
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +47,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import ReciprocityTheory.L2DbarEstimates.ChartDerivatives.ChartSymmEventuallyEq
 import ReciprocityTheory.L2DbarEstimates.ChartDerivatives.MeasurableSetImageOfIsLocalHomeomorph
-public import ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.APrimeI
 import ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.FlatCalcC
 import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.L2ExtensionLogCanonical
 
@@ -67,7 +67,7 @@ def rho (A : WeightedAtlas n Y ι La) (U : Set Y) (z : Y → V n) (x : U) : ℝ�
 
 theorem rho_measurable (A : WeightedAtlas n Y ι La) {U : Set Y} {z : Y → V n}
     (hE : Etale A U z) : Measurable (rho A U z) := by
-  have hfr := GlobalTheory.T.jacobianDet_isFrameOn_canonicalWeight n Y ι La A U z hE
+  have hfr := _root_.GlobalTheory.OTY.jdet_isFrameOn_kap n Y ι La A U z hE
   have hc : ContinuousOn (A.nsq A.kap (jdet A z)) U := api_nsq_contOn A hE.isOpen hfr.1
   have hc' : Continuous (fun x : U => A.nsq A.kap (jdet A z) x) := hc.restrict
   exact ENNReal.measurable_ofReal.comp hc'.measurable.inv
@@ -79,8 +79,8 @@ theorem mu_piece (A : WeightedAtlas n Y ι La) {U : Set Y} {z : Y → V n}
     A.mu.comap Subtype.val B = ∫⁻ m in B, rho A U z m ∂vol n (fun y : U => z y) := by
   have hUm : MeasurableSet U := hE.isOpen.measurableSet
   have hemb := MeasurableEmbedding.subtype_coe hUm
-  have hz : IsLocalHomeomorph (fun y : U => z y) := GlobalTheory.T.etale_isLocalHomeomorph' n Y ι La A U z hE
-  have hfr := GlobalTheory.T.jacobianDet_isFrameOn_canonicalWeight n Y ι La A U z hE
+  have hz : IsLocalHomeomorph (fun y : U => z y) := _root_.GlobalTheory.OTY.etale_isLocalHomeomorph n Y ι La A U z hE
+  have hfr := _root_.GlobalTheory.OTY.jdet_isFrameOn_kap n Y ι La A U z hE
   have hρ : Measurable (rho A U z) := rho_measurable A hE
   rw [hemb.comap_apply]
   have hBY : MeasurableSet (Subtype.val '' B : Set Y) := hemb.measurableSet_image.2 hB
@@ -151,7 +151,7 @@ namespace GlobalTheory.EtaleMeasure
 theorem lintegral_mu_etale : ∀ (n : ℕ) (Y : Type) [TopologicalSpace Y] [T2Space Y] [SecondCountableTopology Y] [MeasurableSpace Y] [BorelSpace Y] (ι La : Type) [AddCommGroup La] (A : WeightedAtlas n Y ι La), ∀ (U : Set Y) (z : Y → V n), Etale A U z → ∀ φ : Y → ℝ≥0∞, Measurable φ → ∫⁻ y in U, φ y ∂A.mu = ∫⁻ x : U, φ x * ENNReal.ofReal (A.nsq A.kap (jdet A z) x)⁻¹ ∂vol n (fun y : U => z y) := by
   intro n Y _ _ _ _ _ ι La _ A U z hE φ hφ
   have hUm : MeasurableSet U := hE.isOpen.measurableSet
-  have hz : IsLocalHomeomorph (fun y : U => z y) := GlobalTheory.T.etale_isLocalHomeomorph' n Y ι La A U z hE
+  have hz : IsLocalHomeomorph (fun y : U => z y) := _root_.GlobalTheory.OTY.etale_isLocalHomeomorph n Y ι La A U z hE
   have hρ : Measurable (rho A U z) := rho_measurable A hE
   have hmeas : A.mu.comap Subtype.val = (vol n (fun y : U => z y)).withDensity (rho A U z) := by
     choose e he hxe using fun x : U => exists_chart n _ hz x

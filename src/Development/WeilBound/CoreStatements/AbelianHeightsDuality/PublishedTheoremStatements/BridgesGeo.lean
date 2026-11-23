@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ArBirational
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ChernDegreeComplex
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ResidueDegreeOfIsClosedImmersion
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProjectionFormulaAndChernDegreeOfHeightProjectioStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProjectionFormulaAndChernDegreeOfHeightProjectio
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -47,6 +47,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 namespace PositivityTheory.Prw
 
 theorem arDegree_of (h₁ : GlobalTheory.Published.HeightProjection) (h₂ : GlobalTheory.Published.ChernDegreeComplex) : GlobalTheory.Published.ArDegree :=
-  GlobalTheory.T.projectionFormulaAndChernDegree_of_heightProjection h₁ h₂
+  _root_.GlobalTheory.Published.arDegree_of_heightProjection h₁ h₂
 
 end PositivityTheory.Prw

@@ -2,17 +2,20 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JpUnif
 public import Mathlib.Data.Matrix.ColumnRowPartitioned
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AverageInvariantRightTranslationStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AverageOverMaximalCompactResidueStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CardCompletionsToFullRankStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CardFixedLowerRightBlockStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CardRankCompletionSymmetryStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CardRankLowerLeftEqLowerRightStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LevelSquareCongruenceConjugationStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParabolicDoubleCosetOfEqualCorankStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ReductionCorankEqRankLowerLeftStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ReductionUniqueUpToParabolicStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ResidueUpperUnipotentLiftStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LowerLeftBlock
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AverageInvariantRightTranslation
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AverageOverMaximalCompactResidue
+public import Mathlib.LinearAlgebra.Matrix.Rank
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CardCompletionsToFullRank
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CardFixedLowerRightBlock
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CardRankCompletionSymmetry
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CardRankLowerLeftEqLowerRight
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LevelSquareCongruenceConjugation
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParabolicDoubleCosetOfEqualCorank
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ReductionCorankEqRankLowerLeft
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ReductionUniqueUpToParabolic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ResidueUpperUnipotentLift
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UniformBoundednessStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -74,51 +77,51 @@ theorem red_unique : ∀ (O L : Type) [CommRing O] [IsDomain O] [IsDiscreteValua
     (n : ℕ) (w : Lˣ) (κ : GL (Ix n) O) (h₁ h₂ : GL (Ix n) (IsLocalRing.ResidueField O)),
     IsRed (O := O) w κ h₁ → IsRed (O := O) w κ h₂ →
       ∃ (a d : GL (Fin n) (IsLocalRing.ResidueField O)) (b : Matrix (Fin n) (Fin n) (IsLocalRing.ResidueField O)),
-        h₂ = pM a d b * h₁ := GlobalTheory.T.reduction_unique_up_to_parabolic
+        h₂ = pM a d b * h₁ := _root_.GlobalTheory.CompanionTheory.Jp.RedUnique.red_unique
 
 theorem twist_gam : ∀ (O L : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Field L] [Algebra O L] [IsFractionRing O L]
     (n : ℕ) (ϖ : O), Irreducible ϖ → ∀ w : Lˣ, (w : L) = algebraMap O L ϖ → ∀ γ ∈ Gam2 (n := n) ϖ,
-      ∃ j' : GL (Ix n) O, inL γ * tauM w = tauM w * inL j' ∧ resK j' = 1 := GlobalTheory.T.level_square_congruence_conjugation
+      ∃ j' : GL (Ix n) O, inL γ * tauM w = tauM w * inL j' ∧ resK j' = 1 := _root_.GlobalTheory.CompanionTheory.Jp.Twist.twist_gam
 
 theorem twist_low : ∀ (O L : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Field L] [Algebra O L] [IsFractionRing O L]
     (n : ℕ) (ϖ : O), Irreducible ϖ → ∀ w : Lˣ, (w : L) = algebraMap O L ϖ →
     ∀ x : GL (Ix n) (IsLocalRing.ResidueField O), x.1.toBlocks₁₂ = 0 →
-      ∃ j j' : GL (Ix n) O, inL j * tauM w = tauM w * inL j' ∧ resK j' = x := GlobalTheory.T.residue_upper_unipotent_lift
+      ∃ j j' : GL (Ix n) O, inL j * tauM w = tauM w * inL j' ∧ resK j' = x := _root_.GlobalTheory.CompanionTheory.Jp.twist_low
 
 theorem red_rank : ∀ (O L : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Field L] [Algebra O L] [IsFractionRing O L]
     (n : ℕ) (ϖ : O), Irreducible ϖ → ∀ w : Lˣ, (w : L) = algebraMap O L ϖ →
     ∀ (κ : GL (Ix n) O) (h : GL (Ix n) (IsLocalRing.ResidueField O)), IsRed (O := O) w κ h →
-      iD h = (lowerLeftBlock (resK κ)).rank := GlobalTheory.T.reduction_corank_eq_rank_lower_left
+      iD h = (lowerLeftBlock (resK κ)).rank := _root_.GlobalTheory.CompanionTheory.Jp.RedRank.iD_eq_rank
 
 theorem dbl : ∀ (k : Type) [Field k] (n : ℕ) (g₁ g₂ : GL (Ix n) k), iD g₁ = iD g₂ →
     ∃ (a d : GL (Fin n) k) (b : Matrix (Fin n) (Fin n) k) (x : GL (Ix n) k),
-      x.1.toBlocks₁₂ = 0 ∧ g₂ = pM a d b * g₁ * x := GlobalTheory.T.parabolic_double_coset_of_equal_corank
+      x.1.toBlocks₁₂ = 0 ∧ g₂ = pM a d b * g₁ * x := _root_.GlobalTheory.CompanionTheory.Jp.Dbl.main
 
 theorem avg_res : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Fintype (IsLocalRing.ResidueField O)]
     (n : ℕ) (ϖ : O), Irreducible ϖ → ∀ f : GL (Ix n) (IsLocalRing.ResidueField O) → ℂ,
-      avgK ϖ (fun κ => f (resK κ)) = sumG f / (Nat.card (GL (Ix n) (IsLocalRing.ResidueField O)) : ℂ) := GlobalTheory.T.average_over_maximal_compact_residue
+      avgK ϖ (fun κ => f (resK κ)) = sumG f / (Nat.card (GL (Ix n) (IsLocalRing.ResidueField O)) : ℂ) := _root_.GlobalTheory.CompanionTheory.Jp.AvgRes.avgK_res
 
 theorem avg_right : ∀ (O : Type) [CommRing O] [IsLocalRing O] (n : ℕ) (ϖ : O) (φ : GL (Ix n) O → ℂ),
     (∀ κ, ∀ γ ∈ Gam2 (n := n) ϖ, φ (κ * γ) = φ κ) → ∀ j : GL (Ix n) O,
-      avgK ϖ (fun κ => φ (κ * j)) = avgK ϖ φ := GlobalTheory.T.average_invariant_right_translation
+      avgK ϖ (fun κ => φ (κ * j)) = avgK ϖ φ := _root_.GlobalTheory.CompanionTheory.Jp.AvgRight.avgK_right_invariant
 
 theorem cnt_swap : ∀ (k : Type) [Field k] [Fintype k] (n i : ℕ),
-    Nat.card {g : GL (Ix n) k // (lowerLeftBlock g).rank = i} = Nat.card {g : GL (Ix n) k // (dBlk g).rank = i} := GlobalTheory.T.card_rank_lower_left_eq_lower_right
+    Nat.card {g : GL (Ix n) k // (lowerLeftBlock g).rank = i} = Nat.card {g : GL (Ix n) k // (dBlk g).rank = i} := _root_.GlobalTheory.CompanionTheory.Jp.CntSwap.card_lower_left_rank_eq_card_lower_right_rank
 
 theorem cnt_half : ∀ (k : Type) [Field k] [Fintype k] (n : ℕ) (D : Matrix (Fin n) (Fin n) k),
     Nat.card {g : GL (Ix n) k // dBlk g = D} =
       Nat.card {g : GL (Ix n) k // lowerLeftBlock g = 0 ∧ dBlk g = 1} *
-        Nat.card {C : Matrix (Fin n) (Fin n) k // (Matrix.fromCols C D).rank = n} := GlobalTheory.T.card_fixed_lower_right_block
+        Nat.card {C : Matrix (Fin n) (Fin n) k // (Matrix.fromCols C D).rank = n} := _root_.GlobalTheory.CompanionTheory.Jp.CntHalf.card_lowerRightBlock_eq_fibre_formula
 
 theorem cnt_cols : ∀ (k : Type) [Field k] [Fintype k] (n ρ : ℕ) (D : Matrix (Fin n) (Fin n) k), D.rank = ρ →
     Nat.card {C : Matrix (Fin n) (Fin n) k // (Matrix.fromCols C D).rank = n} =
-      Fintype.card k ^ (n * ρ) * ∏ j ∈ Finset.range (n - ρ), (Fintype.card k ^ n - Fintype.card k ^ j) := GlobalTheory.T.card_completions_to_full_rank
+      Fintype.card k ^ (n * ρ) * ∏ j ∈ Finset.range (n - ρ), (Fintype.card k ^ n - Fintype.card k ^ j) := _root_.GlobalTheory.CompanionTheory.Jp.CntCols.card_completions
 
 theorem cnt_rank : ∀ (k : Type) [Field k] [Fintype k] (n ρ : ℕ), ρ ≤ n →
     Nat.card {D : Matrix (Fin n) (Fin n) k // D.rank = ρ} *
         ∏ j ∈ Finset.range (n - ρ), (Fintype.card k ^ n - Fintype.card k ^ j) =
       Nat.card {D : Matrix (Fin n) (Fin n) k // D.rank = n - ρ} *
-        ∏ j ∈ Finset.range ρ, (Fintype.card k ^ n - Fintype.card k ^ j) := GlobalTheory.T.card_rank_completion_symmetry
+        ∏ j ∈ Finset.range ρ, (Fintype.card k ^ n - Fintype.card k ^ j) := _root_.GlobalTheory.CompanionTheory.Jp.CountRank.rank_symm
 
 theorem red_mul {O L : Type} [CommRing O] [IsLocalRing O] [Field L] [Algebra O L] {n : ℕ} {w : Lˣ}
     {κ j j' : GL (Ix n) O} {h : GL (Ix n) (IsLocalRing.ResidueField O)} (hr : IsRed (O := O) w κ h)

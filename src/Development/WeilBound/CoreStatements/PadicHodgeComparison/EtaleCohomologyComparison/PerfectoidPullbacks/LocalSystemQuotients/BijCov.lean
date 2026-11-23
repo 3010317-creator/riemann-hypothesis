@@ -3,13 +3,16 @@ module
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.BocksteinBaseChange.IsUnitWitt
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LocalSystemQuotients.Functor
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNormalProjectiveModel
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoordinatesRestrictAffineOpenStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.CapOComp
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.SEqOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoordinatesRestrictAffineOpen
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WittCoordQuotientPullBijectiveStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WittLevelMorphismCoverCompatStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WittSiteQuotientRestrictBijectiveStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WittSiteRestrictBijectiveStatement
-import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.ChartGrConst
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LocalSystemQuotients.ResVq
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WittLevelMorphismCoverCompat
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WittSiteQuotientRestrictBijective
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WittSiteRestrictBijective
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LocalSystemQuotients.BijOfSub
+import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.ChartGrConst
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -74,13 +77,13 @@ theorem bij_cov (U : Cov q) {n : ℕ} (hn : n ≠ 0) (j : ℕ) :
   have hUs : sSup (Set.range U.U) = ⊤ := by
     rw [sSup_range]
     exact U.cover
-  have g := GlobalTheory.T.witt_level_morphism_cover_compat q ρ U n ((l : WittVector l k) ^ n) (mq (F := B.schFn q) (ρ := ρ) hn) (hGq q ρ hn)
+  have g := _root_.GlobalTheory.CompanionTheory.FlatCoverGlue.glue q ρ U n ((l : WittVector l k) ^ n) (mq (F := B.schFn q) (ρ := ρ) hn) (hGq q ρ hn)
     (fun S hS j => by
       obtain ⟨α, hα⟩ := hS
-      obtain ⟨c', -⟩ := GlobalTheory.T.coordinates_restrict_affine_open (U.c α) (iInf₂_le α hα : (⨅ α ∈ S, U.U α) ≤ U.U α) (U.inter S ⟨α, hα⟩)
+      obtain ⟨c', -⟩ := _root_.GlobalTheory.CompanionTheory.CoordRes.main (U.c α) (iInf₂_le α hα : (⨅ α ∈ S, U.U α) ≤ U.U α) (U.inter S ⟨α, hα⟩)
       exact GlobalTheory.T.witt_coord_quotient_pull_bijective q ρ hn c' j) j
-  have z0 := GlobalTheory.T.witt_site_restrict_bijective q ρ n (Set.range U.U) hUs j
-  have zq := GlobalTheory.T.witt_site_quotient_restrict_bijective q ρ (n + 1) (Set.range U.U) ((l : WittVector l k) ^ n) hUs j
+  have z0 := _root_.GlobalTheory.CompanionTheory.FlatZar.resV_bij q ρ n (Set.range U.U) hUs j
+  have zq := _root_.GlobalTheory.CompanionTheory.ZariskiStratumQuotient.main q ρ (n + 1) (Set.range U.U) ((l : WittVector l k) ^ n) hUs j
   exact bij_of_sub (mq (F := B.schFn q) (ρ := ρ) hn) (stF q ρ n (Set.range U.U)) (stF q ρ (n + 1) (Set.range U.U)) (fun _ h => h.1)
     (fun _ h => h.1) (hGq q ρ hn _) j z0 zq g
 

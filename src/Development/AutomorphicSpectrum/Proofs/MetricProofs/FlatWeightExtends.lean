@@ -1,11 +1,13 @@
 module
 
 public import ReciprocityTheory.AnalyticForms.LeviForms.IsRegFamilyInhabitStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BoundedPshCorrectionLocallySmoothStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PshExtensionAcrossClosedDenseStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.SectionBoundaryClosedAndCodenseStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SingularPotentialLogGrowthPshStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SmoothExtensionAcrossClosedDenseStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BoundedPshCorrectionLocallySmooth
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PshExtensionAcrossClosedDense
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SingularPotentialLogGrowthPsh
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.IsPotentialOfFun
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SmoothExtensionAcrossClosedDense
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.ContDiffAtOfIsPotential
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.SectionBoundaryClosedAndCodense
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,7 +50,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.ContDiffAtOfIsPotential
 import GroundTheory.HeightsAndTheta.Heights.Antisymmetric.Statements
 
 @[expose] public section
@@ -72,8 +73,8 @@ theorem flat_weight_extends : ∀ (e : ℕ) (X : Type) [TopologicalSpace X] [Com
       ring
     rw [hf]
     exact hp' x j y hy w
-  obtain ⟨C5, h5⟩ := GlobalTheory.T.singular_potential_log_growth_psh e X A L s nb m W hL hs hsnc hn th u C₁ hth hu hp hb
-  obtain ⟨C6, h6⟩ := GlobalTheory.T.singular_potential_log_growth_psh e X A L s nb m W hL hs hsnc hn (th.rsmul (-1)) (fun y => -u y) C₁ hthm hum hpm
+  obtain ⟨C5, h5⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.isSingWeight_of_logGrowth e X A L s nb m W hL hs hsnc hn th u C₁ hth hu hp hb
+  obtain ⟨C6, h6⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.isSingWeight_of_logGrowth e X A L s nb m W hL hs hsnc hn (th.rsmul (-1)) (fun y => -u y) C₁ hthm hum hpm
     (fun y hy => by simpa using hb y hy)
   have hM : ∀ y ∉ bdry s, |u y| ≤ max C5 C6 := by
     intro y hy
@@ -83,9 +84,9 @@ theorem flat_weight_extends : ∀ (e : ℕ) (X : Type) [TopologicalSpace X] [Com
     constructor
     · have := le_max_right C5 C6; linarith
     · exact a.trans (le_max_left _ _)
-  obtain ⟨hcl, hde⟩ := GlobalTheory.T.section_boundary_closed_and_codense e X A L s nb m W hs hsnc
-  obtain ⟨u', hu', heq⟩ := GlobalTheory.T.smooth_extension_across_closed_dense e X A (bdry s) u hcl hde
-    (GlobalTheory.T.bounded_psh_correction_locally_smooth e X A L s nb m W hs hsnc th u _ hth hu hp hp' hM)
+  obtain ⟨hcl, hde⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Bdry.bdry_isClosed_dense_compl e X A L s nb m W hs hsnc
+  obtain ⟨u', hu', heq⟩ := _root_.GlobalTheory.CompanionTheory.SmoothGlue.glue e X A (bdry s) u hcl hde
+    (_root_.GlobalTheory.CompanionTheory.Ar.PB.Flat.locExt e X A L s nb m W hs hsnc th u _ hth hu hp hp' hM)
   have hsm : ∀ x, A.SmoothOn ((th + LocPot.ofFun u').U x) ((th + LocPot.ofFun u').φ x) := by
     intro x j
     have h1 : ContDiffOn ℝ ∞ (th.φ x ∘ (A.chart j).symm)
@@ -96,12 +97,12 @@ theorem flat_weight_extends : ∀ (e : ℕ) (X : Type) [TopologicalSpace X] [Com
       (hu' j).mono fun y hy => ⟨hy.1, trivial⟩
     exact h1.add h2
   refine ⟨u', hu', heq, ?_, ?_⟩
-  · refine GlobalTheory.T.psh_extension_across_closed_dense e X A (bdry s) (th + LocPot.ofFun u) (th + LocPot.ofFun u') hcl hde
+  · refine _root_.GlobalTheory.CompanionTheory.AnForm.isPsh_of_dense_compl e X A (bdry s) (th + LocPot.ofFun u) (th + LocPot.ofFun u') hcl hde
       (fun _ => rfl) hsm ?_ hp
     intro x y _ hy
     show th.φ x y + u' y = th.φ x y + u y
     rw [heq y hy]
-  · refine GlobalTheory.T.psh_extension_across_closed_dense e X A (bdry s) ((th + LocPot.ofFun u).rsmul (-1))
+  · refine _root_.GlobalTheory.CompanionTheory.AnForm.isPsh_of_dense_compl e X A (bdry s) ((th + LocPot.ofFun u).rsmul (-1))
       ((th + LocPot.ofFun u').rsmul (-1)) hcl hde (fun _ => rfl) ?_ ?_ hp'
     · intro x j
       have := (hsm x j).const_smul (-1 : ℝ)

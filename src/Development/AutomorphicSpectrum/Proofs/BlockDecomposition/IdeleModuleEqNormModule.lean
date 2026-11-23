@@ -2,8 +2,11 @@ module
 
 public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.BaseOneSide.PsiSide
 public import GroundTheory.IdeleRoots.TorusPowers.HeckeTensor
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IdeleModuleBaseChangeSqStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IdeleModuleConjugationInvariantStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OfE
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IdeleModuleBaseChangeSq
+public import Formalism.UnipotentAdelicQuotients.SWXSDefs
+public import GroundTheory.GlobalFields.IdeleGroups.IdeleNorms
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IdeleModuleConjugationInvariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,8 +52,8 @@ namespace GlobalTheory.CompanionTheory.SW.RankOneSiegelWeil
 
 theorem ideleModule_eq_md_of_isNm : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (x : (AF F ⊗[F] E)ˣ) (n : (AF F)ˣ), IsNm σ x n → (IdeleGroup.ideleModule E (GroundTheory.BlockD.ThmBHecke.ideleEquiv F E x) : ℝ) = md n := by
   intro F E _ _ _ _ _ σ hcm x n h
-  have h1 := GlobalTheory.T.idele_module_conjugation_invariant F E σ hcm x
-  have h2 := GlobalTheory.T.idele_module_base_change_sq F E σ hcm n
+  have h1 := _root_.GlobalTheory.CompanionTheory.SW.ModConj.ideleModule_conj F E σ hcm x
+  have h2 := _root_.GlobalTheory.CompanionTheory.SW.MdBase.ideleModule_ideleEquiv_ofF F E σ hcm n
   have hu : (ofF n : (AF F ⊗[F] E)ˣ) = Units.map (sigR (AF F) σ).toMonoidHom x * x := Units.ext h
   rw [hu, map_mul, map_mul] at h2
   have h3 : ((IdeleGroup.ideleModule E (GroundTheory.BlockD.ThmBHecke.ideleEquiv F E (Units.map (sigR (AF F) σ).toMonoidHom x)) : ℝ)) *

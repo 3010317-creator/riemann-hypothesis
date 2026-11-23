@@ -10,8 +10,10 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalMomentM
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerPreservesSchwartzBruhat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAdelicCharacterNontrivialAtPlaces
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticFormUnitaryInvariantStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaActionExistsStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaActionExists
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaPairLocalSchwartzActionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +47,6 @@ import Mathlib.Tactic.NormNum.NatSqrt
 import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable
 
 @[expose] public section
 
@@ -72,7 +73,7 @@ theorem local_op_eq_smul : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type)
       (1 : GL (Fin (a + a')) (Fv F v)).1) with hco
   have hL : G.M'.IsLin B.ψ (piW (t.comp σ)) (piW t) co ι := hι
   have hP' := (GlobalTheory.ThK.Check.isPair_of_isTriple hT).2
-  obtain ⟨hex1, hex2, -⟩ := GlobalTheory.T.theta_action_exists hPr F E σ B a' (a + a') G.V' G.W G.M' X.α (X.α / X.β) om' _ _ _ _ hP' v
+  obtain ⟨hex1, hex2, -⟩ := _root_.GlobalTheory.ThK.LocalOps.actsEx hPr F E σ B a' (a + a') G.V' G.W G.M' X.α (X.α / X.β) om' _ _ _ _ hP' v
 
   have hex1' : ∀ ξ : (Fin a' × Fin (a + a') → Fv F v) → ℂ, ∃ η, ξ ∈ SB (Fin a' × Fin (a + a') → Fv F v) →
       η ∈ SB (Fin a' × Fin (a + a') → Fv F v) ∧ Acts (evFin F v) (om' (g, h)) ξ η := by

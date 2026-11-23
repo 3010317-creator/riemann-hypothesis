@@ -1,13 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LeftMulTau
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleUnitsHaarMeasureDivAbsIsHaarMeasureStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FubiniCutoffIntegralGeneralLinearTorusStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GeneralLinearHaarIsMulRightInvariantUnramifiedStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleUnitsHaarMeasureDivAbsIsHaarMeasure
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FubiniCutoffIntegralGeneralLinearTorus
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FourierMatch
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GeneralLinearHaarIsMulRightInvariantUnramified
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetRallisBorderedMatrixNormalFormInvariants
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetRallisInvKRegularIffIsUnitStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetRallisOrbitalIntegrandIsLocallyConstantCoStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedValuationParitySignCharacterKernelNormStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsTestRep
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetRallisInvKRegularIffIsUnit
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetRallisOrbitalIntegrandIsLocallyConstantCo
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedValuationParitySignCharacterKernelNorm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,8 +78,8 @@ theorem desc_unit_eq {F E : Type} [NontriviallyNormedField F] [NontriviallyNorme
         (α (g * tm A hG a⁻¹ * tm A hG s) : ℂ) ∂M.μG) := by
   letI := M.mG
   haveI := M.bG
-  haveI : M.μG.IsMulRightInvariant := GlobalTheory.T.generalLinear_haar_isMulRightInvariant_unramified F E r M
-  have hmul := (GlobalTheory.T.unramifiedValuationParitySign_character_kernel_norms F E).1
+  haveI : M.μG.IsMulRightInvariant := _root_.GlobalTheory.JR.gl_unimodular F E r M
+  have hmul := (_root_.GlobalTheory.EtaChar.main F E).1
   set Y := pt A hG lam 1 (a : A.K) with hY
   set u : A.Kˣ := a * s⁻¹ with hu
   have hpt : pt A hG lam ((a : A.K) * Ring.inverse (s : A.K)) (s : A.K) = act (tm A hG u) Y := by
@@ -131,7 +133,7 @@ theorem orb_descent_unit : ∀ (F E : Type) [NontriviallyNormedField F] [Nontriv
   obtain ⟨a, rfl⟩ := ha
   letI := M.mG
   set Y := pt A hG lam 1 (a : A.K) with hY
-  have hconv := (GlobalTheory.T.etaleUnitsHaarMeasureDivAbs_isHaarMeasure F E A μK hμK).2.2
+  have hconv := (_root_.GlobalTheory.JR.LinDesc.unitsMeas_isHaar F E A μK hμK).2.2
     (fun t => desc A M hG lam α f' ((a : A.K) * Ring.inverse t, t) * A.etaK t)
   have hO : A.orbK μK (desc A M hG lam α f') (a : A.K) =
       ∫ s, desc A M hG lam α f' ((a : A.K) * Ring.inverse (s : A.K), (s : A.K)) * A.etaK s ∂(unitsMeas A μK) := by
@@ -139,8 +141,8 @@ theorem orb_descent_unit : ∀ (F E : Type) [NontriviallyNormedField F] [Nontriv
   set Φ : GL (Fin r) F → ℂ := fun g => f' (act g Y) * omega (act g Y) with hΦ
   have hΔ : Delta (inv Y) ≠ 0 := by
     rw [hY, pt_one, GlobalTheory.JR.NormalFormL.inv_sec']
-    exact ((GlobalTheory.T.jacquetRallis_invK_regular_iff_isUnit F E A r τ p lam hG).2 (a : A.K)).2.2 (Units.isUnit a)
-  have hΦt : IsTest Φ := (GlobalTheory.T.jacquetRallis_orbitalIntegrand_isLocallyConstantCompactSupport F E r M).1 f' hf' Y hΔ
+    exact ((_root_.GlobalTheory.JR.EtInv.invK_regular_iff_isUnit F E A r τ p lam hG).2 (a : A.K)).2.2 (Units.isUnit a)
+  have hΦt : IsTest Φ := (_root_.GlobalTheory.JR.orb_integrand_isTest F E r M).1 f' hf' Y hΔ
   have hinner : ∀ s : A.Kˣ, κ₀ * (desc A M hG lam α f' ((a : A.K) * Ring.inverse (s : A.K), (s : A.K)) * A.etaK s) =
       ∫ g, Φ g * (α (g * tm A hG a⁻¹ * tm A hG s) : ℂ) ∂M.μG := by
     intro s
@@ -158,6 +160,6 @@ theorem orb_descent_unit : ∀ (F E : Type) [NontriviallyNormedField F] [Nontriv
     simp only [hΦ, h1, zero_mul]
   rw [hO, ← integral_const_mul]
   simp_rw [hinner]
-  exact ((GlobalTheory.T.fubini_cutoff_integral_generalLinear_torus) F E A r τ p hG M μK hμK α Φ hΦt hαlc hαcs hα0 (tm A hG a⁻¹) hc).symm
+  exact ((_root_.GlobalTheory.JR.LinDesc.fubini_cutoff) F E A r τ p hG M μK hμK α Φ hΦt hαlc hαcs hα0 (tm A hG a⁻¹) hc).symm
 
 end GlobalTheory.JR.LinDesc

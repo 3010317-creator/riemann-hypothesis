@@ -1,20 +1,20 @@
 module
 
-import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LatExistsOfSteps
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.LocalDiscriminantIsUnit
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.LocalAdditiveCharContinuous
 public import Formalism.PeriodIntegrals.LocLatEq
 public import Formalism.PeriodIntegrals.LocLatSat
-import Formalism.HermitianLattices.HermitianLatticesProofs.DualLattice
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.DensInertDisplayHolds
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.LocLatEq
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.LocLatSat
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalLatticeSaturation.LocLatSat
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.TrDualLoc
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountNonIntegrality.DApprox
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountNonIntegrality.LGSmall
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountNonIntegrality.RingInverseAlgebraMap
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountNonIntegrality.T2SpaceOfNonarchimedeanLocalField
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountNonIntegrality.TrDual
+import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LatExistsOfSteps
+import Formalism.HermitianLattices.HermitianLatticesProofs.DualLattice
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CountNonIntegrality.T2SpaceOfNonarchimedeanLocalField
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -160,7 +160,7 @@ theorem locSatC_of_stmt (h : PI.LocLatSat.Stmt) (Z : LocDat D) : LocSatC D Z := 
 end LocFacts
 
 theorem locSatC_holds (D : D7) (Z : LocDat D) : LocSatC D Z :=
-  LocFacts.locSatC_of_stmt inf_eq_inter_span Z
+  LocFacts.locSatC_of_stmt _root_.PI.LocLatSat.UnitaryGroupMassFormula.locLatSat Z
 
 theorem locEqC_of (h : PI.LocLatEq.Stmt) (D : D7) (Z : LocDat D) : LocEqC D Z :=
   LocFacts.locEqC_of_stmt h Z

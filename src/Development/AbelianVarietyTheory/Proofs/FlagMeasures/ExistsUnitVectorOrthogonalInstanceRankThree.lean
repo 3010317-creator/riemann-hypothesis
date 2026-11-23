@@ -3,8 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GaugeUnfold
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsFrameOfHasSignature
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LamXEquivariant
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsFiniteAdelicPointLatticeEqSelfDualStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianSpacesSameSignatureIsometricStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LayerProd
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsFiniteAdelicPointLatticeEqSelfDual
+public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.SameKindIsometric
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianSpacesSameSignatureIsometric
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -104,7 +106,7 @@ theorem exists_point (I : AutInst) (ε : Fin I.n → Bool) (γ : GL (Fin I.n) I.
   let Λ : Submodule (𝓞 I.E) (Fin I.n → I.E) := (intLat I.E I.n).map (G.mulVecLin.restrictScalars (𝓞 I.E))
   have hΛ : ∀ z, G *ᵥ z ∈ Λ ↔ z ∈ intLat I.E I.n := fun z =>
     ⟨fun ⟨w, hw, e⟩ => (hinj e : w = z) ▸ hw, fun hz => ⟨z, hz, rfl⟩⟩
-  obtain ⟨xf, hxf⟩ := GlobalTheory.T.exists_finiteAdelicPoint_lattice_eq_selfDual I Λ (Submodule.IsLattice.of_fg I.E ((intLat_fg _).map _)) (by
+  obtain ⟨xf, hxf⟩ := _root_.GlobalTheory.SelfDualPoint.exists_lamX_eq I Λ (Submodule.IsLattice.of_fg I.E ((intLat_fg _).map _)) (by
       intro x
       obtain ⟨x, rfl⟩ := hsur x
       rw [hΛ, intLat_dual ε]
@@ -131,7 +133,7 @@ theorem exists_isPerpInst : ∀ (I : AutInst) (P Q : ℕ), HasSig I P Q → 3 �
       · rw [hP]; exact hs
     obtain ⟨k, hk⟩ := Finset.card_pos.1 this
     exact ⟨k, (Finset.mem_filter.1 hk).2⟩
-  obtain ⟨γ, hγ⟩ := GlobalTheory.T.hermitian_spaces_same_signature_isometric I.E I.cm.cmUnram I.n I.J (signMat I.E ε) I.J_herm (signMat_isHerm ε)
+  obtain ⟨γ, hγ⟩ := _root_.GlobalTheory.FlagMeas.sameKindIsometric I.E I.cm.cmUnram I.n I.J (signMat I.E ε) I.J_herm (signMat_isHerm ε)
     I.J_det (signMat_det ε) ⟨I.L, Submodule.IsLattice.of_fg I.E I.L_fg, fun x => by simpa only [hform_eq] using I.L_dual x⟩
     ⟨intLat I.E I.n, Submodule.IsLattice.of_fg I.E (intLat_fg _), fun x => by simpa only [hform_eq] using intLat_dual ε x⟩
     (fun φ => ⟨P, Q, hasSignature_all I h φ, by

@@ -2,12 +2,15 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IntegralAngMeas
 public import Mathlib.Analysis.CStarAlgebra.Classes
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HarmonicAnnulusMaximumPrincipleStatement
+public import Mathlib.Analysis.InnerProductSpace.Harmonic.Basic
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HarmonicAnnulusMaximumPrinciple
+public import Mathlib.Analysis.InnerProductSpace.Harmonic.Constructions
+public import ReciprocityTheory.AnalyticForms.PlurisubharmonicFunctions.PshPoisson
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-public import Mathlib.Analysis.InnerProductSpace.Harmonic.Constructions
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
@@ -47,7 +50,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Presheaf
-public import ReciprocityTheory.AnalyticForms.PlurisubharmonicFunctions.PshPoisson
 
 @[expose] public section
 
@@ -121,7 +123,7 @@ theorem le_zero_of_bddAbove_punctured (g : ℂ → ℝ) (ρ C : ℝ) (hρ : 0 < 
       · show g z - ε * (Real.log ρ - Real.log ‖z‖) ≤ 0
         rw [hz, sub_self, mul_zero, sub_zero]
         exact h0 z hz
-    have hmax := GlobalTheory.T.harmonic_annulus_maximum_principle h r ρ hr0 hrρ hcont hharm hbdry w hrw.le hwρ.le
+    have hmax := _root_.GlobalTheory.CompanionTheory.Ar.PB.Flat.harmonic_annulus_le_zero h r ρ hr0 hrρ hcont hharm hbdry w hrw.le hwρ.le
     simp only [h] at hmax
     linarith
   by_contra hneg

@@ -1,12 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.CmLatticeCommutatorPairingPowEqOneOfGoodLift
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ChartHatCoeffBoundsStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ChartHatCoeffBounds
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsEllipticFunctionMulProdEqXy
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IntegralWeierstrassChartXyUnitSeries
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormLeOfDistinct
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CpSeriesCoeffNormBoundedRingLaws
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CpTransportedTaylorSeriesInChartRingHomLaws
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsEllipticFunctionMulProdEqXyStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IntegralWeierstrassChartXyUnitSeriesStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormLeOfDistinct
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -184,10 +184,10 @@ theorem translate_norm_le : ∀ (q : ℕ) [Fact q.Prime] (M : Mdl q) (ℓ : ℂ_
   have hB0 : 0 ≤ B := (norm_nonneg _).trans (hB 0)
   have hℓ := hc.2.1
   obtain ⟨hl1, hl2, -⟩ := TaylorRead.hat_laws q M.ι ℓ hℓ
-  obtain ⟨m, P, A, B', hP, hid⟩ := GlobalTheory.T.exists_ellipticFunction_mul_prod_eq_xy q M φ hc.1 hE
+  obtain ⟨m, P, A, B', hP, hid⟩ := _root_.GlobalTheory.EllipticModel.exists_mul_prod_eq_xy q M φ hc.1 hE
   have hPx : ∀ i, ‖M.ι (M.x (P i))‖ ≤ 1 := fun i =>
     not_lt.1 fun h => hpole _ (hP i).2 (Or.inr h)
-  obtain ⟨-, v, xs, ys, -, hxs, hys, -, hxs0, hys0, -, -, -, hread⟩ := GlobalTheory.T.integral_weierstrass_chart_xy_unit_series q M ℓ hc
+  obtain ⟨-, v, xs, ys, -, hxs, hys, -, hxs0, hys0, -, -, -, hread⟩ := _root_.GlobalTheory.MomOne.ChartXY.chart_xy q M ℓ hc
   set D : Polynomial ℂ := ∏ i, (Polynomial.X - Polynomial.C (M.x (P i))) with hD
   set k := max A.natDegree B'.natDegree with hk
   have e0 := hread φ A B' k h0 (le_max_left _ _) (le_max_right _ _) (fun _ => 1) analyticAt_const
@@ -202,7 +202,7 @@ theorem translate_norm_le : ∀ (q : ℕ) [Fact q.Prime] (M : Mdl q) (ℓ : ℂ_
     exact bd_mul_one (bd_mul_one (bd_C (norm_coeff_prod M.ι _ hPx i)) (bd_pow bd_X _)) (bd_pow hxs _)
   have hco := Triang.coeff_norm_le q xs ys k (fun i => M.ι (A.coeff i)) (fun i => M.ι (B'.coeff i)) B
     hxs hys hxs0 hys0 hS
-  obtain ⟨hxt, hyt, hbig⟩ := GlobalTheory.T.chart_hat_coeff_bounds q M ℓ t hc hts
+  obtain ⟨hxt, hyt, hbig⟩ := _root_.GlobalTheory.MomOne.Transl.translate_integral q M ℓ t hc hts
   have htl : t ∉ M.L.lattice := fun h => hts (Or.inl h)
   have ax := analyticAt_shift (analyticAt_x_of_not_mem_lattice M htl)
   have ay := analyticAt_shift (analyticAt_y M htl)

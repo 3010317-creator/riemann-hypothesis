@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.CMLattices.LamLetters
 public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsLieRepresentationEigenLatticesStatement
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueDifferentialMonHomLieBasisStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsLieRepresentationEigenLattices
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueDifferentialMonHomLieBasis
 import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.IsLieBasisIffIsUnitDet
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -82,11 +82,11 @@ theorem forall_apply_eq_smul_iff {K O : Type} [Field K] {n : ℕ} (r : O → Mod
 
 theorem mem_eigLat_iff : ∀ (E : Type) [Field E] [NumberField E] [StarRing (𝓞 E)] (K : Type) [Field K] [NumberField K] (A : Out.PolAV (Sp (𝓞 K))) (x : KeyIn K) (φ : x.P.A.left ⟶ A.A.left) (hf : IsPolFibre (algebraMap (𝓞 K) K) A x.P φ) (oa : A.OAct (𝓞 E)) (act : OAct (𝓞 E) A.A) (S : Set (E →+* ℂ)) (τ : Fin x.P.g ≃ S) (lab : (E →+* ℂ) → (E →+* K)), act.act = oa.act → Function.Injective lab → IsLieType A oa x φ τ lab → ∀ (i : Fin x.P.g) (t : 𝓞 E →+* 𝓞 K), (∀ a : 𝓞 E, (t a : K) = lab (τ i) (a : E)) → ∀ c, c ∈ (GenFib.mk x.P φ hf x.v x.basis : GenFib A).eigLat act t ↔ c ∈ (GenFib.mk x.P φ hf x.v x.basis : GenFib A).lieLat ∧ ∃ r : K, c = Pi.single i r := by
   intro E _ _ _ K _ _ A x φ hf oa act S τ lab hact hlab hty i t ht c
-  obtain ⟨r, hr, he⟩ := GlobalTheory.T.exists_lieRepresentation_eigenLattices K A (GenFib.mk x.P φ hf x.v x.basis) (𝓞 E) act
+  obtain ⟨r, hr, he⟩ := _root_.GlobalTheory.CM.GenFib.exists_lieRep_eigLat K A (GenFib.mk x.P φ hf x.v x.basis) (𝓞 E) act
   have := x.P.isAb.comm
   have halg := LieComb.lieComb_algebra K x.P.A x.P.g x.v x.basis.1
   have hdiag : ∀ (a : 𝓞 E) (j : Fin x.P.g), r a (Pi.single j 1) = Pi.single j (lab (τ j) (a : E)) := fun a j => by
-    obtain ⟨-, f₀, -, e, h⟩ := GlobalTheory.T.existsUnique_differential_monHom_lieBasis K A (GenFib.mk x.P φ hf x.v x.basis) A (GenFib.mk x.P φ hf x.v x.basis)
+    obtain ⟨-, f₀, -, e, h⟩ := _root_.GlobalTheory.CM.DiffCoord.existsUnique_isDiffOf K A (GenFib.mk x.P φ hf x.v x.basis) A (GenFib.mk x.P φ hf x.v x.basis)
       (act.act a) (act.hom a)
     obtain ⟨w, hw, hw'⟩ := hty a j
     have h₁ : IsLieComb (r a (Pi.single j 1)) x.v (x.v j ≫ f₀) := h _ (hr a) _ _ (halg.2.2.2.1 j)

@@ -1,8 +1,11 @@
 module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.SplittingFieldLattices.BasisB
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AlmostFiniteModuleBoundedTorsionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InverseLimitCohomologyComparisonStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.CapOComp
+public import Mathlib.RingTheory.AdicCompletion.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AlmostFiniteModuleBoundedTorsion
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.InstAddCommGroup
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InverseLimitCohomologyComparison
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SheafFiltrationProperty
 import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.MapHComp
 import Mathlib.Algebra.Order.Floor.Extended
@@ -69,7 +72,7 @@ theorem gen (c : R) (red : ∀ n, CH.Mor F (G n) (RingHom.id R)) (tr : ∀ n, CH
     (∀ x : ∀ n, CH.H (G n) j, (∀ n, (tr n).pull j (x (n + 1)) = x n) →
       ∃ z : CH.H F j, ∀ n, (red n).pull j z = c ^ (2 * k) • x n) ∧
     ∀ z : CH.H F j, (∀ n, (red n).pull j z = 0) → c ^ k • z = 0 := by
-  refine GlobalTheory.T.inverse_limit_cohomology_comparison (K := CH.cx F) (fun n => CH.cx (G n)) c (fun n => (red n).hom) (fun n => (tr n).hom)
+  refine _root_.GlobalTheory.CompanionTheory.LimLift.lim_lift (K := CH.cx F) (fun n => CH.cx (G n)) c (fun n => (red n).hom) (fun n => (tr n).hom)
     ?_ ?_ ?_ ?_ j k h1 h2 h3
   · intro n j x
     funext s
@@ -227,7 +230,7 @@ theorem bounds {I : Ideal R} {γ : DividedPowers I} {l m : ℕ} (h : LatBase γ 
   have hcl : ∀ x : R, (∀ n : ℕ, x ∈ Ideal.span {(l : R) ^ n} ⊔ I) → x ∈ I := by
     have := h.closed 1
     rwa [dividedPowerFiltration_one_eq] at this
-  have key := fun (N : Type 1) [AddCommGroup N] [Module R N] => GlobalTheory.T.almost_finite_module_bounded_torsion R I (l : R) hfg hnil h.prime h.val h.dv
+  have key := fun (N : Type 1) [AddCommGroup N] [Module R N] => _root_.GlobalTheory.CompanionTheory.AlmostFinite.afg_separated_complete R I (l : R) hfg hnil h.prime h.val h.dv
     h.cpl.toIsPrecomplete hcl N
   obtain ⟨k₁, a₁, -, -⟩ := key M' hM'
   obtain ⟨k₂, -, b₂, c₂⟩ := key M hM

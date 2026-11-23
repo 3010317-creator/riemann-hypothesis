@@ -5,7 +5,9 @@ public import Development.AutomorphicSpectrum.PublishedTheorems.Algebra₂.Zarhi
 public import Development.AutomorphicSpectrum.Statements.AlgebraStatements.HodgeTateDatumStatement
 public import Development.AutomorphicSpectrum.Statements.AlgebraStatements.OrdinaryCurveStatement
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.AbelianSchemeTorsionAugmentationStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HopfOrderRetractRestrictionStatement
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.IsTight
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HopfOrderRetractRestriction
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.TorsionPointsFiniteStatement
 import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.TorsionPointsHopfOrderStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -75,7 +77,7 @@ theorem subquotientStatement_of_quotient_zarhin_hodgeTate
   letI : Fintype N := Fintype.ofFinite N
   obtain ⟨⟨AA, hAA⟩, -⟩ := GlobalTheory.T.torsion_points_hopf_order p C v R hv hp A T N' pt hpt
   have hgen := GlobalTheory.T.abelian_scheme_torsion_augmentation hQ hZ hH p C v R hv hp hc A L hA hL hamp T N' pt hpt (K.map i)
-  have hret := GlobalTheory.T.hopf_order_retract_restriction p C v R hv hp N' AA N i π hiπ (by rw [hAA]; exact hst)
+  have hret := _root_.GlobalTheory.CompanionTheory.Ar.GR.ret_hopf_factor p C v R hv hp N' AA N i π hiπ (by rw [hAA]; exact hst)
   rw [← hAA]
   exact hret.2.2 K (by rw [hAA]; exact hgen)
 

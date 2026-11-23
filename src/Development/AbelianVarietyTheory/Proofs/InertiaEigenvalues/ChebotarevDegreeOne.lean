@@ -1,12 +1,21 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.ChebotarevDegreeOneIffCheb
+public import Formalism.ConjugateSelfDual.Statement
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.Polynomial.Cyclotomic.Basic
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCyclotomicCrossingFieldDecidingFrobenius
+public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPrimeAbsNormEqOfIrreducibleCyclotomic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPrimeDvdSubOneCyclotomicIrreducibleOver
+public import ReciprocityTheory.GaloisValuations.Global
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinitePlacesInertiaNotFixingFiniteExtension
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsFrobRestrictScalarsOfPrimeAbsNorm
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AbsNormPrimeIffInertiaDegEqOneAndFiniteRamified
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCyclotomicCrossingFieldDecidingFrobeniusStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPrimeAbsNormEqOfIrreducibleCyclotomicStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPrimeDvdSubOneCyclotomicIrreducibleOverStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinitePlacesInertiaNotFixingFiniteExtensionStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsFrobRestrictScalarsOfPrimeAbsNormStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,11 +68,11 @@ theorem chebotarevDegreeOne' : ChebotarevDegreeOne := by
   have : IsGalois F Ω := {}
   obtain ⟨g', rfl⟩ := AlgEquiv.restrictNormalHom_surjective (F := F) (K₁ := L) Ω g
   have : NumberField L := NumberField.of_module_finite F L
-  obtain ⟨m, hm, hdvd, hirr⟩ := GlobalTheory.T.exists_prime_dvd_sub_one_cyclotomic_irreducible_over L (Module.finrank F L) Module.finrank_pos.ne'
-  obtain ⟨Z, τ, hZ, hZirr, hcross⟩ := GlobalTheory.T.exists_cyclotomic_crossing_field_deciding_frobenius F Ω L g' m hm hdvd hirr
+  obtain ⟨m, hm, hdvd, hirr⟩ := _root_.GlobalTheory.exists_prime_dvd_sub_one_irreducible_cyclotomic L (Module.finrank F L) Module.finrank_pos.ne'
+  obtain ⟨Z, τ, hZ, hZirr, hcross⟩ := _root_.GlobalTheory.ChebCross.cross F Ω L g' m hm hdvd hirr
   have : NumberField Z := NumberField.of_module_finite F Z
   have : IsAlgClosure Z Ω := ⟨IsAlgClosure.isAlgClosed F, inferInstance⟩
-  have hfin := hS.union (GlobalTheory.T.finite_places_inertia_not_fixing_finiteExtension F Ω L)
+  have hfin := hS.union (_root_.GlobalTheory.InertiaAlmostAll.finite_ramified F Ω L)
   let u : HeightOneSpectrum (𝓞 Z) → HeightOneSpectrum (𝓞 F) := fun w => w.under (𝓞 F)
   have hu : ∀ w : HeightOneSpectrum (𝓞 Z), w.asIdeal.LiesOver (u w).asIdeal := fun w => ⟨rfl⟩
   have hfin' : (u ⁻¹' (S ∪ {v | ∃ B : ValuationSubring Ω, IsPlaceOver B v ∧
@@ -74,10 +83,10 @@ theorem chebotarevDegreeOne' : ChebotarevDegreeOne := by
       (f := fun w : HeightOneSpectrum (𝓞 Z) => w.asIdeal) (fun a _ b _ h => HeightOneSpectrum.ext h)).subset ?_
     rintro w rfl
     exact ⟨w.isPrime, hu w⟩
-  obtain ⟨w, hw, hp, hτ⟩ := GlobalTheory.T.exists_prime_absNorm_eq_of_irreducible_cyclotomic' Z m hm hZirr τ _ hfin'
+  obtain ⟨w, hw, hp, hτ⟩ := _root_.GlobalTheory.CyclotomicPrimes.exists_prime_absNorm_eq_of_irreducible_cyclotomic Z m hm hZirr τ _ hfin'
   obtain ⟨B, hB⟩ := exists_isPlaceOver Ω w
   obtain ⟨σ, hσ⟩ := exists_isFrob hB
-  obtain ⟨hN, hBv, hσv⟩ := GlobalTheory.T.isFrob_restrictScalars_of_prime_absNorm' F Ω Z w (u w) (hu w) hp B hB σ hσ
+  obtain ⟨hN, hBv, hσv⟩ := _root_.GlobalTheory.isFrob_restrictScalars_of_prime_absNorm F Ω Z w (u w) (hu w) hp B hB σ hσ
   simp only [Set.mem_preimage, Set.mem_union, not_or, Set.mem_ofPred_eq, not_exists, not_and, not_not] at hw
   refine ⟨u w, hw.1, ((GlobalTheory.absNorm_prime_iff_inertiaDeg_eq_one_and_finite_ramified F).1 _).1 (hN ▸ hp),
     B, hBv, hw.2 B hBv, σ.restrictScalars F, hσv, ?_⟩

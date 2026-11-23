@@ -2,13 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaneSplit
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.CoordinatesFlagVector
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsotropicDualPartnerSelfDualHermitianLattiStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionHermitianLinearFormFgModuleStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsotropicDualPartnerSelfDualHermitianLatti
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionHermitianLinearFormFgModule
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeterssonAdjointHeckeOperatorEqDualLabel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualHermitianLatticeExistsNonzeroPairingStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualHermitianLatticeExistsNonzeroPairing
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteUnimodularPlaneSplitAlongVector
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIntegerAddConjEqOneOfFormallyUnramified
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AlgebraMapTraceEq
+public import Development.AbelianVarietyTheory.Definitions.Foundations.InFrameStabilizer
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +52,6 @@ import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Divisors.CmHostImaginaryGeneratorNeZero
 import Development.AbelianVarietyTheory.Definitions.Divisors.FinitePrimesUnder
 import Development.AbelianVarietyTheory.Definitions.Divisors.FlatTensorVacuum
-public import Development.AbelianVarietyTheory.Definitions.Foundations.InFrameStabilizer
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsMatchOver
 import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.NormSmall
 
@@ -118,9 +119,9 @@ theorem exists_partner : ∀ (D : D7) (S : HSp D) (Λ : Submodule (𝓞 D.host.E
     (GlobalTheory.AdelicU.isCMExt_host D) hfu
   have hcx0 : co x ≠ 0 := fun h => hx0 (co.injective (by rw [h, map_zero]))
   have hcxx : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.form σ J (co x) (co x) = 0 := by rw [← hform]; exact hxx
-  obtain ⟨z0, hz0L, hz0⟩ := GlobalTheory.T.selfDual_hermitianLattice_exists_nonzero_pairing D.host.F D.host.E σ hσ S.rank J Λ hfg hherm hdual (co x) hcx0
-  obtain ⟨y₀, hy₀1, hy₀L⟩ := GlobalTheory.T.exists_section_hermitianLinearForm_fg_module D.host.F D.host.E σ S.rank J Λ hfg (co x) ⟨z0, hz0L, hz0⟩
-  obtain ⟨y, hyy, hxy, hL⟩ := GlobalTheory.T.exists_isotropic_dual_partner_selfDual_hermitianLattice D.host.F D.host.E σ hσ S.rank J Λ hherm hdual θ hθ (co x) y₀ hcxx hy₀1 hy₀L
+  obtain ⟨z0, hz0L, hz0⟩ := _root_.GlobalTheory.selfDual_pair_nondeg D.host.F D.host.E σ hσ S.rank J Λ hfg hherm hdual (co x) hcx0
+  obtain ⟨y₀, hy₀1, hy₀L⟩ := _root_.GlobalTheory.FormSection.exists_section D.host.F D.host.E σ S.rank J Λ hfg (co x) ⟨z0, hz0L, hz0⟩
+  obtain ⟨y, hyy, hxy, hL⟩ := _root_.GlobalTheory.TraceCorrection.exists_pair D.host.F D.host.E σ hσ S.rank J Λ hherm hdual θ hθ (co x) y₀ hcxx hy₀1 hy₀L
   have hconj : ∀ a b, σ (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.form σ J a b) = GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.form σ J b a := fun a b => by
     have hh' : ∀ i j, σ (J i j) = J j i := fun i j => hherm j i
 

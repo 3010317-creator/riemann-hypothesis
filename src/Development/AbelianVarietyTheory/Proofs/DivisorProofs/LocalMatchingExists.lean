@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SiegelWeilAnisotropicHermitian
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsINeZeroKind
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaKernelCoinvariantStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaKernelCoinvariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -83,7 +85,7 @@ variable {a a' : ℕ} {B : Base F E} {G : Geo σ a a'} {X : Chars F E} {om : Rep
 
 theorem partner_of_big (hK : KP) (hM : IsMatched B G X om om' R Rf) {Φ} (hΦ : Φ ∈ PolData B G.M) :
     ∃ Φ' ∈ G.M'.So B.ψ B.τ₁, PolMatch B G X R Rf Φ Φ' := by
-  have hco : Coinv B G X om om' Rf := GlobalTheory.T.theta_kernel_coinvariant hK.base F E σ B a a' G X om om' R Rf hM
+  have hco : Coinv B G X om om' Rf := _root_.GlobalTheory.KCoinvGood.kCoinv hK.base F E σ B a a' G X om om' R Rf hM
   obtain ⟨m, f, φ, hfφ, rfl⟩ := polData_sum hΦ
   have hfin := finite_bad fun i => (hfφ i).2
   let T : Finset (Pl F) := X.T ∪ {B.v₁} ∪ hfin.toFinset

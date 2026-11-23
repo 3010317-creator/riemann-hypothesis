@@ -2,13 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FinitePrimesUnder
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjSmulNeBot
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitSupportedUnitaryMovingToSelfDualSkewLStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitSupportedUnitaryMovingToSelfDualSkewL
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitBlockCosetThetaVectorMemThetaFunctions
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmThetaNormBoundHypothesesSatisfiedStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHalfIdem
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutes
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NormSumPairRankZeroOfCurveCoordNorm
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmThetaNormBoundHypothesesSatisfied
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.VacuumUnderAdelicPairModulusOne
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsMovesOfSelfDual
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHalfIdem
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutes
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -177,14 +178,14 @@ theorem om_unitVec_eig : ∀ (D : D7) (δ t0 : ℂ) (hc : Crv D ⊤ δ) (ht : GL
   have h1 := (GlobalTheory.InducedType.induced_type D).1
   have he := hv.1
   have hT := VacMove.vac_TT h1 hc he
-  have hI : Inp D := GlobalTheory.T.cmThetaNormBoundHypotheses_satisfied D
+  have hI : Inp D := _root_.GlobalTheory.NormSum.inp_all D
   have hev : Even (a * d) := hd.mul_left a
   have hcc : D.host.conj • D.host.conj • 𝔪 = 𝔪 := by
     have h2 : D.host.conj * D.host.conj = 1 := AlgEquiv.ext fun x => VacMove.conj_conj D x
     rw [smul_smul, h2, one_smul]
   have hcop' : IsCoprime (D.host.conj • 𝔪) (D.host.conj • D.host.conj • 𝔪) := by
     rw [hcc, Ideal.isCoprime_iff_sup_eq, sup_comm]; exact hcop
-  obtain ⟨h, -, -, hmv, -, -⟩ := GlobalTheory.T.exists_splitSupported_unitary_moving_to_selfDualSkewLattice D (D.host.conj • 𝔪) (GlobalTheory.BotPairSmall.conj_smul_ne_bot D hm) hcop' d
+  obtain ⟨h, -, -, hmv, -, -⟩ := _root_.GlobalTheory.SkewMove.exists_skew_move D (D.host.conj • 𝔪) (GlobalTheory.BotPairSmall.conj_smul_ne_bot D hm) hcop' d
   obtain ⟨c1, hc1, he1, -⟩ := GlobalTheory.NormSum.vacuum_under_adelic_pair D hI ⊤ δ hc a d hev e0 he W 1 h (stdL D a)
     (skewLat D (D.host.conj • 𝔪) d) (VacMove.moves_one D a) hmv
   have hg1 : Moves D (g : GL (Fin a) (AE D)) (stdL D a) := by

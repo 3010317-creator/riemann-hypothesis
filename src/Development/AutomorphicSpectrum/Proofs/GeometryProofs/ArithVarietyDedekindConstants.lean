@@ -2,7 +2,7 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsPreFamilyOfLatticeFamilyTwo
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsLatFlagPair
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DedekindConstantsDegreeTwoStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DedekindConstantsDegreeTwo
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -166,7 +166,7 @@ theorem flagPair_coord : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec 
     intro q h1 h2
     show (L q).comap _ = (L' q).comap _
     rw [hoff q h1 h2]
-  obtain ⟨B, B', v, v', hlat, -, -, hfp⟩ := GlobalTheory.T.dedekind_constants_degree_two X Ω ξ K J y hT d hd A hA hC p hp m hm O ϖ hϖ
+  obtain ⟨B, B', v, v', hlat, -, -, hfp⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.LatFlag.flag_pair_of_lat X Ω ξ K J y hT d hd A hA hC p hp m hm O ϖ hϖ
     (Fin r → Ω) r (Pi.basisFun Ω (Fin r)) (L.comap (Fintype.linearCombination Ω b))
     (L'.comap (Fintype.linearCombination Ω b)) Q hpair hoff'
   refine ⟨B, B', v, v', fun c hc => ⟨AddSubgroup.ext fun z => ?_, AddSubgroup.ext fun z => ?_⟩, hfp⟩

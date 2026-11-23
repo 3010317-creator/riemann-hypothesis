@@ -3,11 +3,15 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.UnrOutside
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.T2SpaceAdelicGeneralLinearGroupNumberField
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRapidInf
-import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.ExistsIsFundamentalDomainAndQuotMeasureEq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeasurableCompInfGLProd
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HasProdLocalRankinSelbergFactorSelfOfEulerProducStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RankinSelbergThetaIntegralPoleRapidKernelSpanStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SchurDir
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HasProdLocalRankinSelbergFactorSelfOfEulerProduc
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousOfMemSmoothSpan
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.StrongMultiplicityOne
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RankinSelbergThetaIntegralPoleRapidKernelSpan
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnfoldedThetaIntegralEqMulSchurEulerProductStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.MeasurableCompInfGL
+import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.ExistsIsFundamentalDomainAndQuotMeasureEq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +49,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.Definitions.Divisors.MeasurableCompInfGL
 
 @[expose] public section
 
@@ -99,7 +102,7 @@ theorem rs_pole_conj : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberFi
   have hZH : ∀ x : ℝ, 1 < x → _ := fun x hx => (hZH' x hx).2
   have hHpos : ∀ x : ℝ, 1 < x → 0 < H x := fun x hx => (hZH' x hx).1
   set D : ℝ → ℝ := fun x => (eulD q (fun w i => ((α w i : ℂˣ) : ℂ)) x).toReal with hDdef
-  obtain ⟨hprod, hcont⟩ := GlobalTheory.T.hasProd_localRankinSelbergFactor_self_of_eulerProduct _ q a α hq fun x hx => (hZH x hx).1
+  obtain ⟨hprod, hcont⟩ := _root_.GlobalTheory.RSPole.EulerPole.eulD_hasProd_locL _ q a α hq fun x hx => (hZH x hx).1
   refine ⟨D, fun x hx => ?_, hcont, ?_⟩
   · have e : (fun w : {w : HeightOneSpectrum (𝓞 E) // w ∉ T} => locL (Ideal.absNorm w.1.asIdeal) (sat π w.1)
         ((sat π w.1).map (Units.map (starRingEnd ℂ).toMonoidHom)) (x : ℂ)) = fun w => locL (q w)
@@ -107,7 +110,7 @@ theorem rs_pole_conj : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberFi
       funext w; rw [hα w]
     rw [e]
     exact hprod x hx
-  · obtain ⟨c, hc0, hlim⟩ := GlobalTheory.T.rankinSelberg_theta_integral_pole_rapid_kernel_span E a ℓ Φ hΦc hΦs hΦr J η μ 𝓕 𝓕' h𝓕 h𝓕'
+  · obtain ⟨c, hc0, hlim⟩ := _root_.GlobalTheory.RSThetaLimR.theta_integral_pole_mspanR E a ℓ Φ hΦc hΦs hΦr J η μ 𝓕 𝓕' h𝓕 h𝓕'
     have hc : c ≠ 0 := hc0 hΦpos hΦ0
     have hT2 := (hlim π₀ π₀ ω hω hωc hωc φ φ hφ hφ).2
     have hP := setIntegral_mul_conj_ne_zero_rapid π₀ ω hω hωc φ hφ hφ0 μ 𝓕' h𝓕'

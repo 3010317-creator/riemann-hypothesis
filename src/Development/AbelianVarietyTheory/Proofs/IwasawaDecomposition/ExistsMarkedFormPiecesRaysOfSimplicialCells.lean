@@ -2,11 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EqZeroOfIsOrbFormConst
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NotIsPrimZero
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CellRayInConeOfMarkedFormPiecesStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ConeMatchRaysAfterDroppingZeroCoordsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsDescendedRaysMarkedFormPiecesStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsSemilinearPullbackOfMarkedOrbitIndicatorStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MarkedFormPiecesInEveryCellConeStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PullAddInjective
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEqAddOfRedVEq
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SysExOfPol
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CellRayInConeOfMarkedFormPieces
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsBaryStageStart
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ConeMatchRaysAfterDroppingZeroCoords
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PullLinInjective
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsDescendedRaysMarkedFormPieces
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsSemilinearPullbackOfMarkedOrbitIndicator
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MarkedFormPiecesInEveryCellCone
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,15 +70,15 @@ theorem exists_pieces_match : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
         (∀ i, 0 < t i → ∃ j, 0 < c j ∧ ∃ d : ℝ, 0 < d ∧ toReal (p i) = d • toReal (δ j)) ∧
         (∀ j, 0 < c j → ∃ i, 0 < t i ∧ ∃ d : ℝ, 0 < d ∧ toReal (p i) = d • toReal (δ j) ∧ c j = t i * d) := by
   intro E _ _ _ H φ hφ X₀ _ _ _ m₀ δ₀ h₀ hind hprim v t hv ht hvt X _ _ _ β hβ
-  obtain ⟨τ, f, hτ, hf, hsemi, hrel⟩ := GlobalTheory.T.exists_semilinear_pullback_of_markedOrbitIndicator H.w0 v β hβ
-  obtain ⟨u, hsum, hli, hu⟩ := GlobalTheory.T.exists_descended_rays_marked_form_pieces E H δ₀ h₀.mem h₀.nonneg hind hprim v t ht hvt β τ f hτ hf hsemi hrel
+  obtain ⟨τ, f, hτ, hf, hsemi, hrel⟩ := _root_.GlobalTheory.PolFan.OrbMark.exists_semilinear_pull_of_evalZ_eq_one H.w0 v β hβ
+  obtain ⟨u, hsum, hli, hu⟩ := _root_.GlobalTheory.PolFan.OrbMark.exists_desc_rays_pullAdd E H δ₀ h₀.mem h₀.nonneg hind hprim v t ht hvt β τ f hτ hf hsemi hrel
   refine ⟨fun i => pullAdd f (u i), hsum, fun i hi => (hu i hi).2, ?_⟩
   intro m δ hδ hδi c hc hβc
-  have hA := GlobalTheory.T.marked_form_pieces_in_every_cell_cone E H φ hφ δ₀ h₀ t ht (CarDim.orad v : Submodule (𝓞 E) X₀).mkQ (Submodule.mkQ_surjective _) τ f hτ
+  have hA := _root_.GlobalTheory.PolFan.OrbMark.inRCone_pullAdd_of_isCell E H φ hφ δ₀ h₀ t ht (CarDim.orad v : Submodule (𝓞 E) X₀).mkQ (Submodule.mkQ_surjective _) τ f hτ
     hf hsemi u (fun i hi => ⟨(hu i hi).1, (hu i hi).2.1, (hu i hi).2.2.1⟩) β hsum m δ hδ c hc hβc
-  have hB := GlobalTheory.T.cell_ray_in_cone_of_marked_form_pieces E H φ hφ δ₀ h₀ hind v t ht hvt (CarDim.orad v : Submodule (𝓞 E) X₀).mkQ
+  have hB := _root_.GlobalTheory.PolFan.OrbMark.exists_coord_pullAdd_of_pos E H φ hφ δ₀ h₀ hind v t ht hvt (CarDim.orad v : Submodule (𝓞 E) X₀).mkQ
     (Submodule.mkQ_surjective _) τ f hτ hf hsemi u (fun i hi => (hu i hi).1) β
     (fun x y x₀ y₀ hx hy => hrel x y x₀ y₀ hx hy) m δ hδ c hc hβc
-  exact GlobalTheory.T.cone_match_rays_after_dropping_zero_coords (fun i => pullAdd f (u i)) t ht hli β hsum m δ hδi c hc hβc hA hB
+  exact _root_.GlobalTheory.PolFan.cone_match_rays_of_nonneg (fun i => pullAdd f (u i)) t ht hli β hsum m δ hδi c hc hβc hA hB
 
 end GlobalTheory.PolFan.OrbMark

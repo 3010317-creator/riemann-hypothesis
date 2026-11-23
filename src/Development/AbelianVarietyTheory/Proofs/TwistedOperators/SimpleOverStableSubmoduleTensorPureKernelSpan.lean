@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SimpleOver
 public import Mathlib.LinearAlgebra.Dimension.Basic
 public import Mathlib.LinearAlgebra.Quotient.Defs
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SimpleTensorProductOperatorStableCountableStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SimpleTensorProductOperatorStableCountable
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -107,7 +107,7 @@ theorem simpleOver_tensKer : ∀ {V₀ V₁ : Type} [AddCommGroup V₀] [Module 
         rw [hφ, ← TensorProduct.map_comp, ← TensorProduct.map_comp, hfg]; rfl
       refine ⟨TensorProduct.map LinearMap.id g x, hN _ (Or.inr ⟨g, hg, rfl⟩) x hx, ?_⟩
       exact (LinearMap.congr_fun hc x).symm
-  rcases GlobalTheory.T.simple_tensor_product_operatorStable_countable (quotOps A K₀) (quotOps B K₁) ((rank_quotient_le K₀).trans hr)
+  rcases _root_.GlobalTheory.TensHead.simple_tensor (quotOps A K₀) (quotOps B K₁) ((rank_quotient_le K₀).trans hr)
     (quot_simple A K₀ hA hsA) (quot_simple B K₁ hB hsB) _ hstU with h | h
   · left
     refine le_antisymm ?_ hKN

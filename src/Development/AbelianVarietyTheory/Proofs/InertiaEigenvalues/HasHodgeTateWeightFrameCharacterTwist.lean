@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ScalGLC
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdmSt
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FiltrationZeroMembership
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.PotentiallySemistableCyclotomicSum
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamPeriodRingFieldTPowFiltrationUnitsStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamPeriodRingFieldTPowFiltrationUnits
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -158,7 +158,7 @@ theorem framed_twist : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAi
     Framed P (GlobalTheory.PMon.Twist.twist hK ρ χ a)
       (fun (m : Fin (r * N)) j => w ⟨(m : ℕ) % r, Nat.mod_lt _ hr⟩ j + if (m : ℕ) = 0 then a else 0) := by
   intro l _ P AI T n _ _ K K' hK r N hr ρ w χ x a hρ hf hx hx1 hx2 hev m
-  obtain ⟨-, -, hshift, hunit, -⟩ := GlobalTheory.T.deRhamPeriodRing_field_tPow_filtration_units l P AI T
+  obtain ⟨-, -, hshift, hunit, -⟩ := _root_.GlobalTheory.PMon.bdR_tied l P AI T
   have hgal : ∀ g : ↥(GK K'), P.actQdR (g : GQ l) (ev P m x) = kd P (fr l m (χ g : ↥(MaximalUnramifiedExtension l))) * ev P m x := by
     intro g
     rw [← ev_act, hx g, ← evHom_apply, map_mul, evHom_apply, evHom_apply, ev_kur]

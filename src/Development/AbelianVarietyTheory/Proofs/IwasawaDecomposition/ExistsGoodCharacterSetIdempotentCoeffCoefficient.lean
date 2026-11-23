@@ -3,13 +3,14 @@ module
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsAbsIrrCharCompIff
 public import Formalism.LocalToGlobal.Columns.GoodXgFin
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.MemLevelOfLocalDepth
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCentralIdempotentOfGoodSeriesIdempotent
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AbsIrrCharCompMemComplexIrrCharSetStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AbsIrrCharMemClosurePrimitiveRootCardStatement
+public import Formalism.LocalToGlobal.Divisibility.GoodPartHermitianSpec
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AbsIrrCharMemClosurePrimitiveRootCard
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AbsIrrCharRealiseOfPrimitiveRootCardStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CentralIdempotentEqSumCharacterIdempotentsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ClassFunctionActsByScalarOnIrrCharStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CentralIdempotentEqSumCharacterIdempotents
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ClassFunctionActsByScalarOnIrrChar
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SumIrrCharOneMulIrrCharColumnOrthogonalityStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCentralIdempotentOfGoodSeriesIdempotent
 import Formalism.LocalToGlobal.Divisibility.ProjLemmas
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -121,8 +122,8 @@ theorem exists_goodSet_Ks (eR : Gc X.B px ≃* G0g X.toD7.nd) :
   refine ⟨Formalism.L2.Col.XgE σ e, Model.goodSet_of_idem X eR _ Formalism.L2.Col.XgE_irr fun g => ?_, fun g => ?_⟩
   · let A := (Formalism.L2.Col.gxIrrSet_finite (G := Gc X.B px) (k := ℂ)).toFinset
     have hA : ∀ ψ, ψ ∈ A ↔ ψ ∈ Formalism.L2.Col.gxIrrSet (G := Gc X.B px) ℂ := fun ψ => Set.Finite.mem_toFinset _
-    have hexp := GlobalTheory.T.centralIdempotent_eq_sum_character_idempotents A e (fun ψ hψ => one_ne_zero_of_mem ψ ((hA ψ).1 hψ)) (GlobalTheory.T.sum_irrChar_one_mul_irrChar_column_orthogonality A hA)
-      (fun ψ hψ x => GlobalTheory.T.classFunction_acts_by_scalar_on_irrChar e (coeff_conj_of_center hcen) ψ ((hA ψ).1 hψ) x) hid
+    have hexp := _root_.GlobalTheory.IdemExpand.eq_idemOf_filter A e (fun ψ hψ => one_ne_zero_of_mem ψ ((hA ψ).1 hψ)) (GlobalTheory.T.sum_irrChar_one_mul_irrChar_column_orthogonality A hA)
+      (fun ψ hψ x => _root_.GlobalTheory.classFun_char_scalar e (coeff_conj_of_center hcen) ψ ((hA ψ).1 hψ) x) hid
     have himg : (A.filter fun ψ => ∑ g, e.coeff g * ψ g = ψ 1) =
         (Formalism.L2.Col.XgE σ e).image (fun χ g => σ (χ g)) := by
       ext ψ
@@ -151,8 +152,8 @@ theorem exists_goodSet_Ks (eR : Gc X.B px ≃* G0g X.toD7.nd) :
       exact this hy
     refine IntermediateField.sum_mem _ fun χ hχ => ?_
     have hχ' := Formalism.L2.Col.XgE_irr χ hχ
-    exact IntermediateField.mul_mem _ (IntermediateField.div_mem _ (hcl _ (GlobalTheory.T.absIrrChar_mem_closure_primitiveRoot_card z hzp χ hχ' 1))
-      (IntermediateField.natCast_mem _ _)) (hcl _ (GlobalTheory.T.absIrrChar_mem_closure_primitiveRoot_card z hzp χ hχ' _))
+    exact IntermediateField.mul_mem _ (IntermediateField.div_mem _ (hcl _ (_root_.GlobalTheory.absIrrChar_mem_closure_primitiveRoot z hzp χ hχ' 1))
+      (IntermediateField.natCast_mem _ _)) (hcl _ (_root_.GlobalTheory.absIrrChar_mem_closure_primitiveRoot z hzp χ hχ' _))
 
 end Record
 

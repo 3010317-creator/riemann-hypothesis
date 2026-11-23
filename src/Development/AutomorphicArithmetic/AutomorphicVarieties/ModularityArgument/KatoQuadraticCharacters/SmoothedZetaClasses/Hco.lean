@@ -9,10 +9,12 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.IsLamFR2
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
 public import Mathlib.RingTheory.AdicCompletion.Noetherian
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmValuationNewformCongruence
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCuspFunctionalOddWeightOddPrimeStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalBMemKummerInvariantSet
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaLatticeDiamondAction
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.SiegelFixedPoints.Thdiam
+import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsRootOfIsAlgClosed
+import Development.AbelianVarietyTheory.Definitions.Foundations.EeProd
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCuspFunctionalOddWeightOddPrime
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaLatticeDiamondAction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -211,7 +213,7 @@ theorem _root_.UpperTheory.V.Z.Kato.K5.hco : ∀ (Ω : Type) [Field Ω] [Algebra
     obtain ⟨φ, h1, h2⟩ := hφ
     exact ⟨φ, h2, h1⟩
   choose φδ hφδ _ using fun δ : (ZMod N)ˣ =>
-    GlobalTheory.T.exists_cuspFunctional_oddWeight_oddPrime Ω ε X A N l halg hφ' hl2 hlN h5 hlnon n (2 * e - 1) hodd _ (hdB δ)
+    _root_.GlobalTheory.ThEx.thex Ω ε X A N l halg hφ' hl2 hlN h5 hlnon n (2 * e - 1) hodd _ (hdB δ)
   obtain ⟨Φ, hΦ, hΦc⟩ := GlobalTheory.LambdaValuationPowers.ZetaCoef.exists_isThB_sum X hj hlnon Finset.univ Finset.univ_nonempty u
     (fun δ => X.diam N l (δ : ZMod N).val f) φδ hdB hφδ
   have hInChi := GlobalTheory.LambdaValuationPowers.ZetaCoef.inChi_avg X (N := N) hlcop.symm (w := 2 * e - 1) (χ := χ)

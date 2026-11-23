@@ -1,11 +1,11 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyClosureHomTiltField
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyClosureHomTiltField
 public import Formalism.LocalRingCardinality.AdicCompletionLocal.InstIsAdicCompleteOCSpanSingletonSetCast
 public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
 public import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyClosureHomTiltFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TiltGaloisActionRootOfUnityCoprimeStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TiltGaloisActionRootOfUnityCoprime
+public import Mathlib.RingTheory.WittVector.FrobeniusFractionField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -24,7 +24,6 @@ import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Radical.NatInt
-public import Mathlib.RingTheory.WittVector.FrobeniusFractionField
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Echelon.Zsqrtd
@@ -88,7 +87,7 @@ private theorem padicInt_ringHom_ext (l : ℕ) [Fact l.Prime] {R : Type*} [CommR
 
 theorem exists_unramified_period : ∀ (l : ℕ) [Fact l.Prime] (F : GQ l), (∀ (x : Om l) (m : ℕ), 0 < m → ¬ l ∣ m → x ^ m = 1 → F x = x ^ l) → ∀ u : ℤ_[l]ˣ, ∃ w : Per.Ainf l, IsUnit w ∧ (∀ g ∈ (MaximalUnramifiedExtension l).fixingSubgroup, Per.σA g w = w) ∧ Per.σA F w = Per.zA l u * w ∧ Per.φA l w = Per.zA l u * w := by
   intro l _ F hF u
-  obtain ⟨f⟩ := GlobalTheory.T.nonempty_closure_hom_tilt_field l
+  obtain ⟨f⟩ := _root_.GlobalTheory.Per.nonempty_algClosure_zmod_to_tilt l
   let u' : WittVector l (AlgebraicClosure (ZMod l)) :=
     WittVector.map (ZMod.castHom (dvd_refl l) _) (WittVector.fromPadicInt l u)
   have hu' : IsUnit u' := (u.isUnit.map _).map _
@@ -104,7 +103,7 @@ theorem exists_unramified_period : ∀ (l : ℕ) [Fact l.Prime] (F : GQ l), (∀
     by_cases ha : a = 0
     · rw [ha, map_zero, map_zero, zero_pow hn]
     · obtain ⟨m, hm, hl, ham⟩ := exists_pow_eq_one_algClosure_coprime l a ha
-      exact GlobalTheory.T.tilt_galois_action_root_of_unity_coprime l (f a) m n g hm hl (by rw [← map_pow, ham, map_one])
+      exact _root_.GlobalTheory.MemLoc.σF_root_of_unity l (f a) m n g hm hl (by rw [← map_pow, ham, map_one])
         fun x hx => hg x m hm hl hx
   have hφA : Per.φA l (WittVector.map f w₀) = Per.zA l u * WittVector.map f w₀ := by
     rw [← hfu, ← map_mul, ← hφ]

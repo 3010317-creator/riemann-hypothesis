@@ -4,14 +4,14 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.IndEtOfForal
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PullHlComp
 public import GroundTheory.ProfiniteCohomology.ContinuousCochains
 public import Mathlib.FieldTheory.KrullTopology
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechLevelAcyclicStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCechAugmentationSepClosureIsEquivalenceStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechLevelAcyclic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCechAugmentationSepClosureIsEquivalence
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSimplicialCochainRepresentingClassAcyclicLStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FreeEtaleModuleSheafHomEquivNaturalSectionsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaloisDescentFreeSheafCechLevelSepClosureStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomogeneousCochainsHomologyAddEquivStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomogeneousCochainsHomologyAddEquiv
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeraySimplicialCocycleCoboundaryOfAcyclicLevelsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimplicialCochainClassesBasicPropertiesStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FreeEtaleModuleSheafHomEquivNaturalSectionsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -315,9 +315,9 @@ theorem cohomology_field_addEquiv_galois : ∀ (R : Type) [CommRing R] (F : Shv 
       (Spec (CommRingCat.of Ω)) (galPt K Ω (m + 1) σ)
     rw [galE_apply, galE_apply, ← galPt_face, ← h4]
     rfl
-  obtain ⟨b⟩ := bridge R F (cech (fK K Ω)) (fun k m hm y => GlobalTheory.T.cohomology_cech_level_eq_zero_of_pos R F hF K Ω k m hm y) n
-  obtain ⟨c⟩ := GlobalTheory.T.homogeneousCochains_homology_addEquiv_alt R (Ω ≃ₐ[K] Ω) M (cochC R (cech (fK K Ω)) F) (galE K Ω R F M e) hinj himg hface n
-  exact ⟨(AddEquiv.ofBijective (pull R (cechAug (fK K Ω)) F n) (GlobalTheory.T.etaleCechAugmentation_sepClosure_isEquivalence R F hF K Ω n)).trans (b.trans c)⟩
+  obtain ⟨b⟩ := bridge R F (cech (fK K Ω)) (fun k m hm y => _root_.GlobalTheory.EtC.cech_level_acyclic R F hF K Ω k m hm y) n
+  obtain ⟨c⟩ := _root_.GlobalTheory.homogeneousCochains_homology_addEquiv R (Ω ≃ₐ[K] Ω) M (cochC R (cech (fK K Ω)) F) (galE K Ω R F M e) hinj himg hface n
+  exact ⟨(AddEquiv.ofBijective (pull R (cechAug (fK K Ω)) F n) (_root_.GlobalTheory.SepCech.cechAug_sepClosure_eqv R F hF K Ω n)).trans (b.trans c)⟩
 
 end GlobalTheory.EtC.GalFld
 

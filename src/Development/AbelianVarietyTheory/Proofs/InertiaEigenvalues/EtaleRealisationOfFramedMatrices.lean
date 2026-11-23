@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSemilinearBaseChangeExistsBasisEqImageOfBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSemilinearBaseChangeOfBasisMapsToBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrismaticFCrystalFrobeniusPullbackBasisStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.InvertibleSpanSingleton
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSemilinearBaseChangeExistsBasisEqImageOfBasis
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSemilinearBaseChangeOfBasisMapsToBasis
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrismaticFCrystalFrobeniusPullbackBasis
 import Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.Kernel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -98,7 +99,7 @@ theorem algEquiv_mulVec {R A : Type} [CommSemiring R] [CommRing A] [Algebra R A]
 
 theorem realises_of_mreal : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (d : ℕ) (S : Strat bk d) (M : FCrys l ↥(OL K)) (e : Module.Basis (Fin d) bk.prism.A (M.M bk.prism)), Framed S M e → ∀ (T : Type) [AddCommGroup T] [Module ℤ_[l] T] (ρ : ↥(GK K) → (T →ₗ[ℤ_[l]] T)) (b : Module.Basis (Fin d) ℤ_[l] T) (U : Matrix (Fin d) (Fin d) (WCb l)), MReal S (fun g => LinearMap.toMatrix b b (ρ g)) U → ∃ j : M.M (ainfObj K) →ₛₗ[(inclW l).comp (ainfId K).toRingHom] (WCb l ⊗[ℤ_[l]] T), Realises K M (ainfObj K) (ainfId K) T ρ j := by
   intro l _ K bk d S M e hF T _ _ ρ b U hU
-  obtain ⟨b₀, hb₀⟩ := GlobalTheory.T.isSemilinearBaseChange_exists_basis_eq_image_of_basis _ _ _ _ _ (M.tr bk.ι) (M.tr_bc bk.ι) _ e
+  obtain ⟨b₀, hb₀⟩ := _root_.GlobalTheory.Prism.semiBC_basis _ _ _ _ _ (M.tr bk.ι) (M.tr_bc bk.ι) _ e
   let σ : (ainfObj K).A →+* WCb l := (inclW l).comp (ainfId K).toRingHom
   let cv : (Fin d → (ainfObj K).A) →ₛₗ[σ] (Fin d → WCb l) :=
     { toFun := fun v k => σ (v k)
@@ -114,7 +115,7 @@ theorem realises_of_mreal : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK
   have hbc : SemiBC j := by
     letI := hU.unit.invertible
     let c := (Pi.basisFun (WCb l) (Fin d)).map ((Matrix.toLinearEquiv' U this).trans (b.baseChange (WCb l)).equivFun.symm)
-    refine GlobalTheory.T.isSemilinearBaseChange_of_basis_maps_to_basis _ _ _ _ _ j (Fin d) b₀ c fun i => ?_
+    refine _root_.GlobalTheory.BSP.semiBC_of_basis _ _ _ _ _ j (Fin d) b₀ c fun i => ?_
     apply (b.baseChange (WCb l)).equivFun.injective
     rw [hj]
     simp only [c, Module.Basis.map_apply, Pi.basisFun_apply, LinearEquiv.trans_apply,
@@ -133,7 +134,7 @@ theorem realises_of_mreal : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK
     have hx : x = ∑ i, b₀.equivFun x i • M.tr bk.ι (e i) := by
       simp_rw [← hb₀]; exact (b₀.sum_equivFun x).symm
     rw [hx] at hfr
-    obtain ⟨r, hr⟩ := GlobalTheory.T.prismaticFCrystal_frobenius_pullback_basis l K bk d M e S.a S.A hF.Φ (ainfObj K) bk.ι d₀ (b₀.equivFun x) m k hfr
+    obtain ⟨r, hr⟩ := _root_.GlobalTheory.BSP.frob_tr_basis l K bk d M e S.a S.A hF.Φ (ainfObj K) bk.ι d₀ (b₀.equivFun x) m k hfr
     haveI : IsDomain (ainfObj K).A := (ainfId K).toMulEquiv.isDomain
     haveI := Module.Free.of_basis b₀
     have h1 := sub_eq_zero.1 ((smul_eq_zero.1 hr).resolve_left (pow_ne_zero _ hne))

@@ -1,10 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.AdelicPair
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.CompletelyReducibleKroneckerPowerTransposeStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsReynoldsOfCompletelyReducibleStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.LeftTranslateMatrixPolyCompletelyReducibleStatement
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.LeftTranslateMatrixPolyTensorFormPropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.CompletelyReducibleKroneckerPowerTranspose
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.Span.Defs
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsReynoldsOfCompletelyReducible
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.LeftTranslateMatrixPolyCompletelyReducible
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.LeftTranslateMatrixPolyTensorFormProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,22 +56,22 @@ namespace GlobalTheory.ClassFin
 
 theorem invariant_form_eq_sum_invariant_tensors : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (Γ : Set (Matrix ι ι ℂ)), IsPre Γ → SS Γ → ∀ (n : ℕ) (F : MvPolynomial (ι × ι) ℂ), IsInv Γ F → F.IsHomogeneous n → ∃ l : (Fin n → ι) → (Fin n → ι) → ℂ, (∀ b, ∀ g ∈ Γ, l b ᵥ* tpow n g = l b) ∧ ∀ y : Matrix ι ι ℂ, evC F y = ∑ b, (l b ᵥ* tpow n y) b := by
   intro ι _ _ Γ hP hS n F hF hhom
-  obtain ⟨-, hinv, -, hp⟩ := GlobalTheory.T.leftTranslateMatrixPoly_tensorForm_properties ι
+  obtain ⟨-, hinv, -, hp⟩ := _root_.GlobalTheory.ClassFin.ltr_tensorForms ι
   obtain ⟨p, hpev, hpl, hpsurj⟩ := hp n
   obtain ⟨l, hl⟩ := hpsurj F hhom
-  obtain ⟨R₁, h1a, -, -, h1d, -, -⟩ := GlobalTheory.T.exists_reynolds_of_completelyReducible' ((Fin n → ι) → ℂ)
+  obtain ⟨R₁, h1a, -, -, h1d, -, -⟩ := _root_.GlobalTheory.ClassFin.exists_reynolds_of_completelyReducible ((Fin n → ι) → ℂ)
     ((fun g => Matrix.toLin' (tpow n g)ᵀ) '' Γ) (by
       intro U hU
-      obtain ⟨U', hU', hc⟩ := GlobalTheory.T.completelyReducible_kroneckerPower_transpose ι Γ hP hS n U (by
+      obtain ⟨U', hU', hc⟩ := _root_.GlobalTheory.ClassFin.ss_tpow_transpose ι Γ hP hS n U (by
         rintro _ ⟨g, hg, rfl⟩ v hv
         simpa [Matrix.toLin'_apply] using hU _ ⟨g, hg, rfl⟩ v hv)
       refine ⟨U', ?_, hc⟩
       rintro _ ⟨g, hg, rfl⟩ v hv
       simpa [Matrix.toLin'_apply] using hU' _ ⟨g, hg, rfl⟩ v hv)
-  obtain ⟨R₂, -, h2b, h2c, -, -, -⟩ := GlobalTheory.T.exists_reynolds_of_completelyReducible' (MvPolynomial (ι × ι) ℂ)
+  obtain ⟨R₂, -, h2b, h2c, -, -, -⟩ := _root_.GlobalTheory.ClassFin.exists_reynolds_of_completelyReducible (MvPolynomial (ι × ι) ℂ)
     ((fun g => (ltr g).toLinearMap) '' Γ) (by
       intro U hU
-      obtain ⟨U', hU', hc⟩ := GlobalTheory.T.leftTranslateMatrixPoly_completelyReducible ι Γ hP hS U (fun g hg f hf => hU _ ⟨g, hg, rfl⟩ f hf)
+      obtain ⟨U', hU', hc⟩ := _root_.GlobalTheory.ClassFin.ltr_completely_reducible ι Γ hP hS U (fun g hg f hf => hU _ ⟨g, hg, rfl⟩ f hf)
       refine ⟨U', ?_, hc⟩
       rintro _ ⟨g, hg, rfl⟩ v hv
       exact hU' g hg v hv)

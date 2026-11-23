@@ -2,7 +2,8 @@ module
 
 public import Mathlib.AlgebraicGeometry.IdealSheaf.Functorial
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapComapFlatStatement
+public import Mathlib.AlgebraicGeometry.Morphisms.Flat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapComapFlat
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,7 +78,7 @@ theorem map_comap_ideal_eq_of_isIso_restrict :
   intro W W' π U hq hiso τ V hVU
   have hpb := (isPullback_morphismRestrict π U).flip
   have hres : ((τ.comap π).map π).comap U.ι = τ.comap U.ι := by
-    rw [GlobalTheory.T.map_comap_eq_comap_map_of_flat W W' U (π ⁻¹ᵁ U) π U.ι (π ⁻¹ᵁ U).ι (π ∣_ U) hpb inferInstance hq (τ.comap π),
+    rw [_root_.GlobalTheory.FlatBaseChangeIdeal.map_comap_flat W W' U (π ⁻¹ᵁ U) π U.ι (π ⁻¹ᵁ U).ι (π ∣_ U) hpb inferInstance hq (τ.comap π),
       ← Scheme.IdealSheafData.comap_comp, ← morphismRestrict_ι, Scheme.IdealSheafData.comap_comp,
       map_comap_of_isIso]
   have hle : V.1 ≤ Scheme.Hom.opensRange U.ι := by rw [Scheme.Opens.opensRange_ι]; exact hVU

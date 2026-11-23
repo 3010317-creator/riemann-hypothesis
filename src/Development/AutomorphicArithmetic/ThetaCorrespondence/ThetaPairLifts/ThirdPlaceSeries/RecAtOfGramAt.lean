@@ -1,10 +1,14 @@
 module
 
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LiftLambdaBound
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CovolumePerRankLeNegSlopeScaledStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LiftFormsFramesMajorantNormEqPeterssonStatement
-import Formalism.LocalToGlobal.IndefiniteForms.IndefUse
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsProbabilityMeasureMuPart
+public import Formalism.QuotientMetricDivisors.Statement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CovolumePerRankLeNegSlopeScaled
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings
+public import Formalism.LocalToGlobal.IndefiniteReal.ZeroPartEigenvalueConvention
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LiftFormsFramesMajorantNormEqPetersson
 public import Formalism.LocalToGlobal.IndefiniteReal.PrimitivePackageFullHecke
+import Formalism.LocalToGlobal.IndefiniteForms.IndefUse
 import Formalism.PadicSubsetSums.StableGradedCounts.ZBrauerNesbittAlg
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -58,7 +62,7 @@ theorem recAt_of_gramAt_alt (p : PtAt ex Csz) (i : Fin D.R.m) (hp : p.PointCondi
   have hD : (p.S false).dW i = (p.S false).D :=
     (primRows3 hp.ok hp.sep p.R p.F p.charW hp.prim).dW_eq (hR.wf false) i
   have hpos : 0 < (p.S false).D := (primRows3 hp.ok hp.sep p.R p.F p.charW hp.prim).D_pos
-  obtain ⟨hU, hN⟩ := GlobalTheory.T.liftForms_frames_majorantNorm_eq_petersson p.R p.F false i (RealDat3.kForm_of hp.prim.unif false)
+  obtain ⟨hU, hN⟩ := _root_.GlobalTheory.FrameRead.frames_read p.R p.F false i (RealDat3.kForm_of hp.prim.unif false)
   have hn1 : (1 : ℝ) ≤ RealDat.nP p.F.lv2 false := by
     unfold RealDat.nP
     exact_mod_cast Nat.one_le_iff_ne_zero.2 Nat.card_pos.ne'
@@ -78,7 +82,7 @@ theorem recAt_of_gramAt_alt (p : PtAt ex Csz) (i : Fin D.R.m) (hp : p.PointCondi
       rw [Submodule.map_span, ← Set.range_comp, Submodule.map_subtype_top] at h2
       exact h2
     rw [e]; exact hxW
-  have key := GlobalTheory.T.covolumePerRank_le_neg_slope_scaled D.what₂.LL _ (nrmR p.R.toRealDat i) hg.1 (latGood p.R.toRealDat p.F.lv2 i) _ (show 0 < (p.S false).dW i from hD.symm ▸ hpos)
+  have key := _root_.GlobalTheory.CovolCore.lcv_div_le_neg_slope_sq D.what₂.LL _ (nrmR p.R.toRealDat i) hg.1 (latGood p.R.toRealDat p.F.lv2 i) _ (show 0 < (p.S false).dW i from hD.symm ▸ hpos)
     (p.R.toRealDat.bL p.F.lv2 false i) hli hsp ((p.S false).XW i) _ hs0 hs1 hU hN (by first | exact hp.prim.mLat i | exact (hp.prim.mLat i).toIsLattice)
   unfold RecAt
   rw [← hD]

@@ -2,7 +2,7 @@ module
 
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutMP2
 public import Formalism.HermitianCurvature.StatementJF
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CapelliDetAdInvariant
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CapAdInv
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutBesselEigen
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.InvariantOperatorUnderJacquet
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.OrbitalIntegralAeConvergenceContinuity
@@ -105,7 +105,7 @@ theorem class_eigenvalue_constant : ClassEigenC := by
       JF.xiP (T v).base p • Q.CV S.G.k S.G.r (Y : ℂ) (B.rho (T v).base p (f v)) g =
         ((S.P v Y : ℝ) : ℂ) • (JF.xiP (T v).base p • B.rho (T v).base p (f v) g) := by
     filter_upwards [Formalism.FourierDecayAlt.P.B7.ae_inSS (T v).base] with p hp
-    rw [Formalism.FourierDecayAlt.P.capelli_rho_commute S.G.k S.G.r _ _ (T v).base (Y : ℂ) (f v) p hp hCkn _ hgG]
+    rw [_root_.Formalism.FourierDecayAlt.P.JFxE.cVRho S.G.k S.G.r _ _ (T v).base (Y : ℂ) (f v) p hp hCkn _ hgG]
     have hs := Formalism.FourierDecayAlt.P.B7.sgs_mem (T v).base hp hgG
     simp only [B.rho]
     rw [heig Y _ hs, ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_smul, smul_comm]

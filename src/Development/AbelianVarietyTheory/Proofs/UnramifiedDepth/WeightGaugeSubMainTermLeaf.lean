@@ -5,11 +5,11 @@ public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.TwoMulChai
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.WeightSubstNonneg
 public import Mathlib.RingTheory.MvPowerSeries.Derivative
 public import Mathlib.RingTheory.MvPowerSeries.Rename
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.CoeffLeafGaugeSubMainTermEqZeroOnFirstAxisStatement
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.CoeffLeafGaugeSubMainTermEqZeroOnFirstAxis
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.FactorizationLeFourFifteenths
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.HPullWUpGTwoGroupEmbeddingEqRenameStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.LinearSubstCoordinateWeightNonnegRadiusStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.PderivLeafGaugeEqPairingAddIntegralStatement
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.HPullWUpGTwoGroupEmbeddingEqRename
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.LinearSubstCoordinateWeightNonnegRadius
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.PderivLeafGaugeEqPairingAddIntegral
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -157,7 +157,7 @@ theorem weight_gauge_sub_main : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) [N
   intro C _ V d _ I J _ _ X hA hl g a i hi hid S t ht N M e v' Φt he hv hv' hT hZ
   haveI := X.charZero
   have hl0 : V.l ≠ 0 := V.l_prime.ne_zero
-  have hpull := GlobalTheory.T.hPullW_upG_twoGroupEmbedding_eq_rename C I g (Fin N) (Fin M) e v'
+  have hpull := _root_.GlobalTheory.MainTerm.hPullW_upG_toW C I g (Fin N) (Fin M) e v'
   have key := GlobalTheory.weight_of_weight_pderiv C V.v V.l V.l_prime V.v_l hl i (Fin N) (Fin M)
     (X.hM g a i e v' - mainM V i (fun b c => ∑ κ : J g, ∑ k : I (1 - g), Φt c κ * X.pair g κ k * v' b k))
     hi.pos ?_ ?_
@@ -172,7 +172,7 @@ theorem weight_gauge_sub_main : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) [N
   · intro α hα
     by_contra hn
     push Not at hn
-    exact hα (GlobalTheory.T.coeff_leafGauge_sub_mainTerm_eq_zero_on_first_axis C V d I J X g a i _ _ e v' _ α hn)
+    exact hα (_root_.GlobalTheory.MainTerm.Axis.coeff_hM_sub_mainM_eq_zero C V d I J X g a i _ _ e v' _ α hn)
   · intro b
     set ρ : Fin N ⊕ Fin M → ℝ := Sum.elim (fun _ => 1 / ((V.l : ℝ) ^ 2 - 1) + 3 / (8 * (V.l : ℝ) ^ i))
       (fun _ => 1 / ((V.l : ℝ) - 1)) with hρ
@@ -184,7 +184,7 @@ theorem weight_gauge_sub_main : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) [N
       have := hF μ
       rw [le_add_coe_iff, radius_one _ _ hl0, zero_sub] at this
       exact this
-    obtain ⟨γ, hγ, hd⟩ := GlobalTheory.T.pderiv_leafGauge_eq_pairing_add_integral C V d I J X hA g a i hi hid S t ht (Fin N) (Fin M) e v' he hv hv' b
+    obtain ⟨γ, hγ, hd⟩ := _root_.GlobalTheory.GaugeDeriv.pderiv_hM C V d I J X hA g a i hi hid S t ht (Fin N) (Fin M) e v' he hv hv' b
     have hE : MvPowerSeries.pderiv (R := C) (Sum.inr b)
         (X.hM g a i e v' - mainM V i (fun b c => ∑ κ : J g, ∑ k : I (1 - g), Φt c κ * X.pair g κ k * v' b k)) =
         MvPowerSeries.subst (fun w : WV I => hPullW (upG w.1 (t w.1 w.2)) (fun c => toW g (e c))
@@ -226,7 +226,7 @@ theorem weight_gauge_sub_main : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) [N
           exact hinl _ (hT x)
         · simp only [hpull.2]
           refine wtNonneg_rename V.v Function.Embedding.inr ρ (1 / ((V.l : ℝ) - 1)) (fun _ => rfl) _ fun μ => ?_
-          have := GlobalTheory.T.linearSubst_coordinate_weight_nonneg_radius C V d _ _ (X.G (1 - g)) (S _) (t _) (ht _) M v' hv x μ
+          have := _root_.GlobalTheory.MainTerm.linPull_coord_weight_nonneg C V d _ _ (X.G (1 - g)) (S _) (t _) (ht _) M v' hv x μ
           unfold VF.Ge at this
           rw [mul_one_div]
           exact this

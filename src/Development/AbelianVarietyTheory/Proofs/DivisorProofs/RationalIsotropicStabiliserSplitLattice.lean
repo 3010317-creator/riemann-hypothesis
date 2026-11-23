@@ -2,10 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LocallyCompactSpaceAxis
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsConstAlongSingleton
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteCovolumeNormOneLeviWittFrameStabilizerStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeviDecompositionWittFrameStabilizerStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WittFrameLeviNormalizesRadicalPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WittFrameUnipotentRadicalClosedFundDomainMassOneStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteCovolumeNormOneLeviWittFrameStabilizer
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ScalesBy
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeviDecompositionWittFrameStabilizer
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WittFrameLeviNormalizesRadicalProperties
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsSmoothModerateOfIsAutFunSm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WittFrameUnipotentRadicalClosedFundDomainMassOne
 import GroundTheory.AutomorphicForms.QuotientMeasure
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -66,13 +68,13 @@ theorem semiLat_frameGrp : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
           ν π DN DM := by
   intro F E _ _ _ _ _ σ n J r X Y h hJ hW ν DN hν hDN h1
   obtain ⟨π, DM, hπ, hDM⟩ := GlobalTheory.StdPar.exists_haar_leviOne (X := X) (Y := Y) {Fin.last r} h hJ hW
-  obtain ⟨f1, f2, f3, f4, f5, f6, f7⟩ := GlobalTheory.T.wittFrameLevi_normalizes_radical_properties F E σ n J r X Y h hJ hW
+  obtain ⟨f1, f2, f3, f4, f5, f6, f7⟩ := _root_.GlobalTheory.ResidueEisenstein.frame_levi_facts F E σ n J r X Y h hJ hW
   have hN : unipRad σ J X ≤ GlobalTheory.StdPar.frameStab σ J X ⊤ := fun u hu => ⟨1, trivial, f3 u hu⟩
   have hM : GlobalTheory.StdPar.leviOne σ J X Y {Fin.last r} ≤ GlobalTheory.StdPar.frameStab σ J X ⊤ := fun m hm => by
     obtain ⟨β, e, -⟩ := f4 m hm
     exact ⟨β, trivial, e⟩
   refine ⟨π, DM,
-    { closedN := (GlobalTheory.T.wittFrameUnipotentRadical_closed_fundDomain_mass_one F E σ n J r X Y h hJ hW).1
+    { closedN := (_root_.GlobalTheory.ResidueEisenstein.unipRad_frame_closed_mass_one F E σ n J r X Y h hJ hW).1
       closedM := f7
       norm := fun m hm => f1 m (f6 hm)
       disj := fun g hg hg' => f2 g hg (f6 hg')
@@ -82,9 +84,9 @@ theorem semiLat_frameGrp : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
       domN := by rw [inf_subgroupOf_of_le' hN]; exact hDN
       domM := by rw [inf_subgroupOf_of_le' hM]; exact hDM
       finN := by rw [h1]; exact ENNReal.one_ne_top
-      finM := GlobalTheory.T.finiteCovolume_normOneLevi_wittFrameStabilizer F E σ n J r X Y h hJ hW π DM hπ hDM }⟩
+      finM := _root_.GlobalTheory.ResidueEisenstein.finCovol_leviOne_last F E σ n J r X Y h hJ hW π DM hπ hDM }⟩
   rintro γ ⟨hγ, β, -, e⟩
-  obtain ⟨u, hu, m, -, hp, -, hr, ho⟩ := GlobalTheory.T.leviDecomposition_wittFrameStabilizer F E σ n J r X Y h hJ hW γ β e
+  obtain ⟨u, hu, m, -, hp, -, hr, ho⟩ := _root_.GlobalTheory.LeviDecompositionFrame.levi_dec_frame F E σ n J r X Y h hJ hW γ β e
   have hm := ho (f5 γ hγ β e)
   refine ⟨u, hu, m, hm, ⟨?_, hN hu⟩, ⟨hr hγ, hM hm⟩, hp⟩
   have : u = γ * m⁻¹ := by rw [hp, mul_inv_cancel_right]

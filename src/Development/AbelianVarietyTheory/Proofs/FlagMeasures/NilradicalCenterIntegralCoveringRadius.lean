@@ -2,10 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.SiegelWeilLocal.CenteredPerpendicularSets
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutPointLatticeIntersectionSelfDualProperties
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ComplexSpanAtRealPlaceAutPointLatticePropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.InvLeSizeQAboveOrthogonalSaturatedStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ComplexSpanAtRealPlaceAutPointLatticeProperties
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LayerProd
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.InvLeSizeQAboveOrthogonalSaturated
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SubquotientCoveringRadiusRealPlaces
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrthogonalCanonicalFiltrationStepsAutPoint
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SubquotientCoveringRadiusRealPlacesStatement
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -250,13 +251,13 @@ theorem main : ∀ (I : AutInst) (x : I.GA) (R : Submodule (𝓞 I.E) (Fin I.n �
   intro I x R hi rho hR hRp hhi hls hrho Z hZ
   obtain ⟨-, hA, hsp, hdual, -⟩ := GlobalTheory.PointLattice.lamX_selfDual I x
   obtain ⟨hS, hrk, -⟩ := (PerpStep.main I x).2.2.2 R R hR hR le_rfl
-  obtain ⟨-, htop, hperp, -⟩ := GlobalTheory.T.complexSpanAtRealPlace_autPointLattice_properties I x R
+  obtain ⟨-, htop, hperp, -⟩ := _root_.GlobalTheory.RealSpan.spanAt_properties I x R
   have hmem : ∀ y, y ∈ perpIn I x R ↔
       y ∈ lamX I x ∧ ∀ s ∈ R, Formalism.UG.hform (starRingEnd I.E) I.J s y = 0 := by
     intro y
     rw [PerpStep.perpIn_eq, PerpStep.mem_perp]
-  obtain ⟨Φ, hΦS, hΦA, D, hD, hn⟩ := GlobalTheory.T.subquotient_covering_radius_real_places I x (lamX I x) (perpIn I x R) R hi⁻¹ hi hA hS
-    (Submodule.FG.of_le hA hR.1) (inv_pos.2 hhi) hhi (GlobalTheory.T.inv_le_sizeQ_above_orthogonal_saturated I x R hi hR hhi hls) hls
+  obtain ⟨Φ, hΦS, hΦA, D, hD, hn⟩ := _root_.GlobalTheory.Count.SubquotFrame.subquot_frame I x (lamX I x) (perpIn I x R) R hi⁻¹ hi hA hS
+    (Submodule.FG.of_le hA hR.1) (inv_pos.2 hhi) hhi (_root_.GlobalTheory.Count.PerpSize.inv_le_sizeQ_perp I x R hi hR hhi hls) hls
     (fun v => (1 / 2 : ℂ) • Z v)
     (by
       intro v y hy

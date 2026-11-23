@@ -1,7 +1,8 @@
 module
 
 public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExpQuadraticLowerAndLogLinearLowerStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExpQuadraticLowerAndLogLinearLower
+public import Mathlib.Analysis.Convex.SpecificFunctions.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +47,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.Analysis.Convex.SpecificFunctions.Basic
 
 @[expose] public section
 
@@ -59,7 +59,7 @@ theorem cumulant_lower_bound_of_bounded_centred :
       ∑ J, w J * y J = 0 → (∀ J, w J ≠ 0 → |y J| ≤ R) →
       min 1 (1 / R) * (∑ J, w J * y J ^ 2) / 4 ≤ Real.log (∑ J, w J * Real.exp (y J)) := by
   intro ι _ w y R hR hw hs hm hb
-  obtain ⟨hexp, hlog⟩ := GlobalTheory.T.exp_quadratic_lower_and_log_linear_lower'
+  obtain ⟨hexp, hlog⟩ := _root_.GlobalTheory.exp_quadratic_lower_and_log_linear_lower
   set t : ℝ := min 1 (1 / R) with ht
   set V : ℝ := ∑ J, w J * y J ^ 2 with hV
   set S : ℝ := ∑ J, w J * Real.exp (y J) with hS

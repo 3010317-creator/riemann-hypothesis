@@ -1,10 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ClosedDiscCoefficientsTopologicallyFreeStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ClosedDiscGaugeCompletionBasicPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EisensteinDvdOfDvdRestrictClosedDiscStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormEisensteinMulClosedDiscEqRpowStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ClosedDiscCoefficientsTopologicallyFree
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EisensteinDvdOfDvdRestrictClosedDisc
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormEisensteinMulClosedDiscEqRpow
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MemBallOfGaugeLt
+import Mathlib.Topology.MetricSpace.Ultra.Basic
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ClosedDiscGaugeCompletionBasicProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -71,9 +73,9 @@ theorem norm_E_mul_of_topBasis (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK 
   have hρ : 0 < ρ := bk.rho_zero_pos.trans_le h0
   have hρ' : (0 : ℝ) < (ρ : ℝ) ^ bk.Ep.natDegree := pow_pos (by exact_mod_cast hρ) _
   obtain ⟨j, hj⟩ := exists_discMap_of_map_eq l s X (s X) ρ ρ hρ rfl le_rfl
-  obtain ⟨cD, -, hmul, hle, -, -, hsup, -, -⟩ := GlobalTheory.T.closedDisc_coefficients_topologicallyFree l K bk A s ι TB ρ hρ h1 j hj
+  obtain ⟨cD, -, hmul, hle, -, -, hsup, -, -⟩ := _root_.GlobalTheory.BSP.disc_coefficients l K bk A s ι TB ρ hρ h1 j hj
   have key : ∀ i, ‖cD i (toDisc l (s X) ρ (s bk.E) * y)‖ = (ρ : ℝ) ^ bk.Ep.natDegree * ‖cD i y‖ := fun i => by
-    rw [← hj.ext, hmul, GlobalTheory.T.norm_eisenstein_mul_closedDisc_eq_rpow l K bk ρ h0 h1]
+    rw [← hj.ext, hmul, _root_.GlobalTheory.BSP.BK.norm_toDisc_E_mul l K bk ρ h0 h1]
   refine le_antisymm (hsup _ _ (by positivity) fun i => ?_) ?_
   · rw [key]
     exact mul_le_mul_of_nonneg_left (hle i y) hρ'.le
@@ -92,11 +94,11 @@ theorem E_dvd_of_topBasis (l : ℕ) [hl : Fact l.Prime] (K : FinExt l) (bk : BK 
   obtain ⟨j, hj⟩ := exists_discMap_of_map_eq l s X (s X) ρ ρ hρ rfl le_rfl
   obtain ⟨j₀, hj₀⟩ := exists_discMap_of_map_eq l s X (s X) bk.ρ₀ bk.ρ₀ hρ₀ rfl le_rfl
   obtain ⟨RS, hRS⟩ := exists_discMap_of_map_eq l (RingHom.id bk.S) X X ρ bk.ρ₀ hρ₀ rfl h0
-  obtain ⟨cD, hc, hmul, hle, hnull, -, hsup, hex, -⟩ := GlobalTheory.T.closedDisc_coefficients_topologicallyFree l K bk A s ι TB ρ hρ h1 j hj
+  obtain ⟨cD, hc, hmul, hle, hnull, -, hsup, hex, -⟩ := _root_.GlobalTheory.BSP.disc_coefficients l K bk A s ι TB ρ hρ h1 j hj
   obtain ⟨cD₀, hc₀, hmul₀, hle₀, -, -, -, -, -⟩ :=
-    GlobalTheory.T.closedDisc_coefficients_topologicallyFree l K bk A s ι TB bk.ρ₀ hρ₀ (h0.trans_lt h1) j₀ hj₀
+    _root_.GlobalTheory.BSP.disc_coefficients l K bk A s ι TB bk.ρ₀ hρ₀ (h0.trans_lt h1) j₀ hj₀
   have comm : ∀ i x, cD₀ i (R x) = RS (cD i x) := fun i => by
-    have h := (GlobalTheory.T.closedDiscGaugeCompletion_basic_properties l A (s X) ρ).2.2.1 (bk.DS bk.ρ₀) (fun z hz => by
+    have h := (_root_.GlobalTheory.BSP.DiscBasic.disc_basic l A (s X) ρ).2.2.1 (bk.DS bk.ρ₀) (fun z hz => by
         rw [nsmul_eq_mul] at hz
         exact (isUnit_l_disc l (X : bk.S) bk.ρ₀).mul_right_eq_zero.1 hz)
       ((cD₀ i).comp R.toAddMonoidHom) (RS.toAddMonoidHom.comp (cD i))
@@ -110,14 +112,14 @@ theorem E_dvd_of_topBasis (l : ℕ) [hl : Fact l.Prime] (K : FinExt l) (bk : BK 
     exact fun x => DFunLike.congr_fun h x
   obtain ⟨w, hw⟩ := hy
   have hd : ∀ i, ∃ z, cD i y = toDisc l (X : bk.S) ρ bk.E * z := fun i =>
-    GlobalTheory.T.eisenstein_dvd_of_dvd_restrict_closedDisc l K bk ρ h0 h1 RS hRS _ ⟨cD₀ i w, by rw [← comm, hw, ← hj₀.ext, hmul₀]⟩
+    _root_.GlobalTheory.BSP.dvd_of_dvd_restrict_discS l K bk ρ h0 h1 RS hRS _ ⟨cD₀ i w, by rw [← comm, hw, ← hj₀.ext, hmul₀]⟩
   choose z hz using hd
   have hzn : Filter.Tendsto z Filter.cofinite (nhds 0) := by
     rw [tendsto_zero_iff_norm_tendsto_zero]
     have h := (tendsto_zero_iff_norm_tendsto_zero.1 (hnull y)).div_const ((ρ : ℝ) ^ bk.Ep.natDegree)
     rw [zero_div] at h
     refine h.congr fun i => ?_
-    rw [hz, GlobalTheory.T.norm_eisenstein_mul_closedDisc_eq_rpow l K bk ρ h0 h1, mul_div_cancel_left₀ _ hρ'.ne']
+    rw [hz, _root_.GlobalTheory.BSP.BK.norm_toDisc_E_mul l K bk ρ h0 h1, mul_div_cancel_left₀ _ hρ'.ne']
   obtain ⟨y', hy'⟩ := hex z hzn
   refine ⟨y', ?_⟩
   rw [← sub_eq_zero, ← norm_le_zero_iff]

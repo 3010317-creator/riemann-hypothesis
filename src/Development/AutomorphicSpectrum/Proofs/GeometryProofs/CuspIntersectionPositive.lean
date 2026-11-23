@@ -3,13 +3,17 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.BdryChart
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.NineGeoU
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeIPOfFibreLatVec
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComponentDataHodgeBoundStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComponentDataIntersectionBoundStatement
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUniqueLeftBasisCoordsAdicCompletion
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComponentDataHodgeBound
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspVolumeMiddle
+public import ReciprocityTheory.AnalyticForms.PlurisubharmonicFunctions.IsPshLocallyIntegrableStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PlurisubharmonicLocal
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsEigFrames
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ContinuousHermitianMatrixFamily
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LogDetEigenFramePlurisubharmonic
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComponentDataIntersectionBound
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PlurisubharmonicLocalStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ContinuousHermitianMatrixFamilyStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LogDetEigenFramePlurisubharmonicStatement
 import GroundTheory.HeightsAndTheta.Heights.StabilizerCovolume.PhiISemipositive
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -99,7 +103,7 @@ theorem logDet_cont {E : Type} [Field E] [NumberField E] [IsCMField E] {g : ℕ}
   · exact continuousOn_empty _
   rw [continuousOn_iff_continuous_restrict]
   have hH : Continuous fun x : U => (R x).Hm :=
-    GlobalTheory.T.continuous_hermitian_matrix_family E g Λ U (fun x => R x) (R t₁).form (fun x => hR.1 x x.2 t₁ ht₁)
+    _root_.GlobalTheory.CompanionTheory.Ar.Cusp.HmCont.continuous_Hm E g Λ U (fun x => R x) (R t₁).form (fun x => hR.1 x x.2 t₁ ht₁)
       fun v => continuousOn_iff_continuous_restrict.1 (hR.2 v).continuousOn
   apply continuous_finsetSum _
   intro τ _
@@ -172,7 +176,7 @@ theorem point_formula (Or : CptOrigin Y S₀ Dc Hd) {z : Sp ℂ ⟶ Or.𝔐.X} {
     (hfib : FibreLatVec Or.𝔐.t z R (fun i => x i.1 i.2) v) :
     phMu Hd w = Real.log (‖valAt Dc.y d.u w‖ * ∏ k, ‖w ⟨k, d.c k⟩‖ ^ Hd.aMu k) +
       ((Fintype.card (CMType H) : ℝ) * (((Dc.N - Dc.j : ℕ) : ℝ) * Real.log Real.pi) + R.logDet x) / 2 := by
-  obtain ⟨-, hP⟩ := GlobalTheory.T.component_data_intersection_bound hG E H D Xo l c Y II K J Ω W Dc Hd S₀ Or z w co
+  obtain ⟨-, hP⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.PhMuFree.phMu_small hG E H D Xo l c Y II K J Ω W Dc Hd S₀ Or z w co
   obtain ⟨-, hP2⟩ := hP d
   obtain ⟨-, -, hform⟩ := hP2 s hs
   let Γ : CMType H → Matrix (Fin (Dc.N - Dc.j)) (Fin (Dc.N - Dc.j)) ℂ := fun τ =>
@@ -214,12 +218,12 @@ theorem chart_formula (hG : Top.Given) (Or : CptOrigin Y S₀ Dc Hd) {U : ((Σ k
         U ((Dc.chart a).γ (aff t₀ ρ π (expCover a₀ w))) = (L.riem w hw).cuspW σ := by
   classical
   obtain ⟨a₀, g, Λ, i₁, i₂, L, π, ρ, σ, pt, d, s, b, hρ, hσ, hs, hb, hu, hw⟩ :=
-    GlobalTheory.T.component_data_hodge_bound hG E H D Xo l c Y II K J Ω W Dc Hd S₀ Or a t₀ ht₀
+    _root_.GlobalTheory.CompanionTheory.Ar.Cusp.ChartFree.exists_actPeriods_chart hG E H D Xo l c Y II K J Ω W Dc Hd S₀ Or a t₀ ht₀
   obtain ⟨-, -, co0, -, int0⟩ := hu 0 (mem_ball_self one_pos)
   have hT0 : t₀ + (ρ : ℂ) • ((0 : Fin (Fintype.card (CMType H) * Dc.j * (Dc.N - Dc.j)) → ℂ) ∘ π) = t₀ := by
     funext i; simp
   rw [hT0] at co0
-  obtain ⟨-, hP⟩ := GlobalTheory.T.component_data_intersection_bound hG E H D Xo l c Y II K J Ω W Dc Hd S₀ Or (pt 0) _ co0
+  obtain ⟨-, hP⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.PhMuFree.phMu_small hG E H D Xo l c Y II K J Ω W Dc Hd S₀ Or (pt 0) _ co0
   obtain ⟨-, hP2⟩ := hP d
   obtain ⟨-, hv0, -⟩ := hP2 s hs
   obtain ⟨r, hr, G, hGd, hlog⟩ := unit_factor a t₀ ht₀ d hv0
@@ -291,7 +295,7 @@ theorem near_all (hG : Top.Given) (Or : CptOrigin Y S₀ Dc Hd) {U : ((Σ k, J k
       rw [he]
     simp only [e]
     exact hb.2 t ht τ
-  obtain ⟨p1, p2, p3⟩ := GlobalTheory.T.log_det_eigen_frame_plurisubharmonic E g Λ (CMType H) _ (ball 0 1) R σ (Dc.N - Dc.j) b isOpen_ball hHol hσ hEig
+  obtain ⟨p1, p2, p3⟩ := _root_.GlobalTheory.CompanionTheory.Relay.log_det_eigen_frame_plurisubharmonic E g Λ (CMType H) _ (ball 0 1) R σ (Dc.N - Dc.j) b isOpen_ball hHol hσ hEig
   have c1 := logDet_cont hHol (fun τ i => (hb.1 τ i).continuousOn) fun t ht τ => (hb.2 t ht τ).1
   have key : ∀ u ∈ ball (0 : Fin (Fintype.card (CMType H) * Dc.j * (Dc.N - Dc.j)) → ℂ) r,
       phMu Hd ((Dc.chart a).γ (aff t₀ ρ π u)) = (G u).re + (R u).logDet (fun τ i => b τ i u) / 2 ∧
@@ -311,8 +315,8 @@ theorem near_all (hG : Top.Given) (Or : CptOrigin Y S₀ Dc Hd) {U : ((Σ k, J k
 
 theorem _root_.GlobalTheory.CompanionTheory.Relay.cusp_intersection_positive : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] [IsAbelianGalois ℚ E] (H : Host E) (D : Datum H) (Xo : ∀ l : Tor.Level H, Moduli D l) (l : Tor.Level H) (c : Coeff l) (Y : Model (Xo l) c (algebraMap (𝓞 c.F) c.F)) (II : IntersectionSystem) (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (Ω : Type) [Field Ω] [Algebra ℚ Ω] (W : CMType H → Type) [∀ τ, AddCommGroup (W τ)] [∀ τ, Module Ω (W τ)] (Dc : ComponentData II (CMType H) K J Ω W) (Hd : HodgeData Dc) (S₀ : Finset ℕ) (Or : CptOrigin Y S₀ Dc Hd) (U : ((Σ k, J k) → ℂ) → ℝ), Or.𝔐.IsCuspWeight Or.sm U → ChartPsh Dc (phMu Hd) ∧ ChartCont Dc (phMu Hd) ∧ ChartPsh Dc (corrW Hd U) ∧ ChartCont Dc (corrW Hd U) := by
   intro hG E _ _ _ _ H D Xo l c Y II K _ J _ Ω _ _ W _ _ Dc Hd S₀ Or U hU
-  refine ⟨fun a => GlobalTheory.T.plurisubharmonic_local _ _ _ (isOpen_offBd Dc a) fun t ht => ?_, fun a t ht => ?_,
-    fun a => GlobalTheory.T.plurisubharmonic_local _ _ _ (isOpen_offBd Dc a) fun t ht => ?_, fun a t ht => ?_⟩
+  refine ⟨fun a => _root_.GlobalTheory.CompanionTheory.AnForm.PshLocal.isPsh_of_locally _ _ _ (isOpen_offBd Dc a) fun t ht => ?_, fun a t ht => ?_,
+    fun a => _root_.GlobalTheory.CompanionTheory.AnForm.PshLocal.isPsh_of_locally _ _ _ (isOpen_offBd Dc a) fun t ht => ?_, fun a t ht => ?_⟩
   · obtain ⟨V, h1, h2, h3, -⟩ := (near_all hG Or hU a t ht).1
     exact ⟨V, h1, h2, h3⟩
   · obtain ⟨V, h1, h2, -, h3⟩ := (near_all hG Or hU a t ht).1

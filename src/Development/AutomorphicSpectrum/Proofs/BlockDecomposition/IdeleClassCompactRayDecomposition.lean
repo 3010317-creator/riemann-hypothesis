@@ -3,8 +3,8 @@ module
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OfE
 public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.BaseOneSide.PsiSide
 public import GroundTheory.IdeleRoots.TorusPowers.HeckeTensor
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IdeleModuleEqNormModuleStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RayNormAndModuleFormulaStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IdeleModuleEqNormModule
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RayNormAndModuleFormula
 public import GroundTheory.GlobalFields.IdeleGroups.NormOneCompact
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -86,11 +86,11 @@ theorem exists_unit_decomp (F E : Type) [Field F] [NumberField F] [Field E] [Num
   have hε : 0 < ε := Real.rpow_pos_of_pos hn _
   have hεm : md n = ε ^ m := (Real.rpow_inv_natCast_pow hn.le hm).symm
   have hray : md (r ε * r ε) = ε ^ m := by
-    have h1 := ((GlobalTheory.T.ray_norm_and_module_formula F hcm.1 θ hθ r hr).2 ε hε)
+    have h1 := ((_root_.GlobalTheory.CompanionTheory.SW.RankOneSiegelWeil.MdRay.norm_md_ray F hcm.1 θ hθ r hr).2 ε hε)
     have h2 : md (r ε * r ε) = md (r ε) * md (r ε) := by simp [md, map_mul]
     rw [h2, h1, hmdef, two_mul, pow_add]
-  have hy := GlobalTheory.T.idele_module_eq_norm_module F E σ hcm y n hyn
-  have hu := GlobalTheory.T.idele_module_eq_norm_module F E σ hcm (ofF (r ε)) (r ε * r ε) (isNm_ofF σ (r ε))
+  have hy := _root_.GlobalTheory.CompanionTheory.SW.RankOneSiegelWeil.ideleModule_eq_md_of_isNm F E σ hcm y n hyn
+  have hu := _root_.GlobalTheory.CompanionTheory.SW.RankOneSiegelWeil.ideleModule_eq_md_of_isNm F E σ hcm (ofF (r ε)) (r ε * r ε) (isNm_ofF σ (r ε))
   set I := GroundTheory.BlockD.ThmBHecke.ideleEquiv F E with hI
   have hker : I (y * (ofF (r ε))⁻¹) ∈ IdeleGroup.normOneSubgroup E := by
     refine MonoidHom.mem_ker.2 (Subtype.ext ?_)

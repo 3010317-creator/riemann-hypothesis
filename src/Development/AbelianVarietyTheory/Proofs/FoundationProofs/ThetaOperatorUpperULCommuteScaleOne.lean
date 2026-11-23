@@ -9,16 +9,18 @@ public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
 public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.HopfAlgebra.Basic
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DiamondCommutesHeckeUStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.Letter
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DiamondCommutesHeckeU
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCuspFunctionalOddWeightOddPrime
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsInvariantLift
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeNormGamma1PrimePowInvariantStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeNormGamma1PrimePowInvariant
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeNormPreservesDeltaPowerConditionStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeSumAtCuspHahnCoeffOfIntegralExponentsStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsLogDerivQExpansionModPrimePowCalculusStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsLogDerivQExpansionModPrimePowHeckeNormStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeSumAtCuspHahnCoeffOfIntegralExponents
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsLogDerivQExpansionModPrimePowCalculus
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsLogDerivQExpansionModPrimePowHeckeNorm
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsThBSuccCoeffCong
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaLatticeDiamondAction
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsInvariantLift
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -126,11 +128,11 @@ theorem isThB_act_heckeU_same : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsA
   IsThB X A N l n (X.act l (sgD N l d : Matrix (Fin 2) (Fin 2) ℤ) b) φ →
     IsThB X A N l n (X.act l (sgD N l d : Matrix (Fin 2) (Fin 2) ℤ) (X.heckeU l b)) (hq ε l φ) := by
   intro Ω _ _ _ ε X A N l _ n w d hd hl b hb φ hφ h
-  rw [GlobalTheory.T.diamond_commutes_hecke_U Ω ε X N l w d hd hl b hb]
+  rw [_root_.GlobalTheory.KZ.DiamU.act_sgD_heckeU Ω ε X N l w d hd hl b hb]
   obtain ⟨f, hinv, hcls, hδ, hdl⟩ := h
   have hint : ∀ r, (hq ε l φ).coeff r ∈ A := by
     intro r
-    rw [GlobalTheory.T.heckeSumAtCuspHahn_coeff_of_integral_exponents Ω ε l (Nat.Prime.pos Fact.out) φ hφ r]
+    rw [_root_.GlobalTheory.HeckeInt.hq_coeff_of_int Ω ε l (Nat.Prime.pos Fact.out) φ hφ r]
     split_ifs
     · exact hdl.1 _
     · exact A.zero_mem
@@ -145,7 +147,7 @@ theorem isThB_act_heckeU_same : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsA
     rw [Units.coe_prod]; rfl
   refine ⟨∏ j ∈ Finset.range l, Units.map (X.sl (toGQ !![1, (j : ℤ); 0, (l : ℤ)])).toRingEquiv.toMonoidHom f,
     ?_, ?_, ?_, ?_⟩
-  · rw [hcoe]; exact GlobalTheory.T.heckeNorm_gamma1PrimePow_invariant Ω ε X N l n hn _ hinv
+  · rw [hcoe]; exact _root_.GlobalTheory.normInv_gamma1 Ω ε X N l n hn _ hinv
   · have hv : X.heckeU l b' ![1, 0] = ∑ j ∈ Finset.range l,
         X.kmap l (X.sl (toGQ !![1, (j : ℤ); 0, (l : ℤ)])).toRingEquiv (b' ![1, 0]) := by
       simp only [Tower.heckeU]
@@ -158,7 +160,7 @@ theorem isThB_act_heckeU_same : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsA
     exact eval_sum_kmap X l n (Finset.range l)
       (fun j => (X.sl (toGQ !![1, (j : ℤ); 0, (l : ℤ)])).toRingEquiv) _ f hcls
   · rw [hcoe]; exact GlobalTheory.T.heckeNorm_preserves_delta_powerCondition Ω ε X N l n hn hl _ hinv hδ
-  · rw [hcoe]; exact GlobalTheory.T.isLogDerivQExpansionModPrimePow_heckeNorm Ω ε X A l n _ φ hT hφ hdl
+  · rw [hcoe]; exact _root_.GlobalTheory.NormDl.isDl_norm Ω ε X A l n _ φ hT hφ hdl
 
 theorem isThB_congr {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] {ε : Ω →+* ℂ} (X : Tower Ω ε)
     (A : ValuationSubring Ω) (N l : ℕ) [Fact l.Prime] (n : ℕ)
@@ -167,7 +169,7 @@ theorem isThB_congr {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω
     (hc : ∀ r, CgA A l n (ψ.coeff r) (ψ₂.coeff r)) : IsThB X A N l n x ψ₂ := by
   obtain ⟨f, h1, h2, h3, h4⟩ := h
   obtain ⟨φ₀, han, hdiff⟩ := hj
-  exact ⟨f, h1, h2, h3, (GlobalTheory.T.isLogDerivQExpansionModPrimePow_calculus ε X ⟨φ₀, hdiff, han⟩ l A hlA n 1 (f : X.K) (f : X.K) ψ ψ₂).2.2.1 h4 hint hc⟩
+  exact ⟨f, h1, h2, h3, (_root_.GlobalTheory.Glue.isDl_calc ε X ⟨φ₀, hdiff, han⟩ l A hlA n 1 (f : X.K) (f : X.K) ψ ψ₂).2.2.1 h4 hint hc⟩
 
 theorem isThB_act_heckeU : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosed Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε)
     (A : ValuationSubring Ω) (N l : ℕ) [Fact l.Prime] (n w d : ℕ), Algebra.IsAlgebraic ℚ Ω →

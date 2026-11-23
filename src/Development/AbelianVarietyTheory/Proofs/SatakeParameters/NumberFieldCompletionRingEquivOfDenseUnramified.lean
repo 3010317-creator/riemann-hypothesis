@@ -3,8 +3,11 @@ module
 public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Completion
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsUniqueIdeleOfLinearEquivQuotientLocal
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.EqZeroOfForallLeExp
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemPowHeightOneIdealIffDvdEmbeddingStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SurjectiveAlgebraMapAdicCompletionCompleteDvrStatement
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemPowHeightOneIdealIffDvdEmbedding
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SurjectiveAlgebraMapAdicCompletionCompleteDvr
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,7 +79,7 @@ theorem completion_ringEquiv_of_dense : ∀ {E : Type} [Field E] [NumberField E]
       intro k
       rw [HeightOneSpectrum.intValuation_le_pow_iff_mem, HeightOneSpectrum.intValuation_le_pow_iff_mem,
         asIdeal_eq_span hp v, Ideal.span_singleton_pow, Ideal.mem_span_singleton]
-      exact GlobalTheory.T.mem_pow_heightOneIdeal_iff_dvd_embedding P p hp ρ h1 h2 x y k hy
+      exact _root_.GlobalTheory.ordIdeal_of_embedding P p hp ρ h1 h2 x y k hy
     exact le_antisymm (le_of_forall_le_exp (P.intValuation_le_one x) fun k hk => (key k).1 hk)
       (le_of_forall_le_exp (v.intValuation_le_one y) fun k hk => (key k).2 hk)
   have hval : ∀ x : E, v.valuation Qq (ρ x) = P.valuation E x := by
@@ -113,7 +116,7 @@ theorem completion_ringEquiv_of_dense : ∀ {E : Type} [Field E] [NumberField E]
       exact ht n
     · rw [GlobalTheory.Idele.valued_algebraMap]
       exact (exists_eq_pow_mul_iff hp v _ n).1 ⟨z n, rfl⟩
-  have hι := GlobalTheory.T.surjective_algebraMap_adicCompletion_complete_dvr (Qq := Qq) (p : W) hp hc v
+  have hι := _root_.GlobalTheory.DenseCompl.surjective_algebraMap_adicCompletion (Qq := Qq) (p : W) hp hc v
   have hsurj : Function.Surjective ψ := by
     intro a
     obtain ⟨q, rfl⟩ := hι a

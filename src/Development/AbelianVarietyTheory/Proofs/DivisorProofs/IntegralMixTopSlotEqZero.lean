@@ -1,11 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EndValuedForm11Coeffs
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AntiholomorphicDerivCutoffConnectionDifferenceEqStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AntiholomorphicDerivCutoffConnectionDifferenceEq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBoundFamilyOfIsCompact
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralPolarisedTopFormDbarExactEqZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralPolarisedTopFormDbarExactEqZero
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenOffCoordinateHyperplanes
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PoincareCoordinateLengthMemIccAndPosStatement
+import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.InterPolyProdSum
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PoincareCoordinateLengthMemIccAndPos
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -98,7 +99,7 @@ theorem integral_mixTop_position_eq_zero : ∀ {n : ℕ} {r : Type} [Fintype r] 
   have h2 : (2 : WithTop ℕ∞) ≤ ∞ := WithTop.coe_le_coe.2 le_top
   have h3 : (2 : WithTop ℕ∞) + 1 ≤ ∞ := WithTop.coe_le_coe.2 le_top
   have hw : ∀ v ∈ U, ∀ a, 0 ≤ poinWt S v a ∧ poinWt S v a ≤ 1 :=
-    fun v hv a => (GlobalTheory.T.poincareCoordinateLength_mem_Icc_and_pos S v (hsmall v hv)).1 a
+    fun v hv a => (_root_.GlobalTheory.GoodTop.poinWt_mem_Icc_and_pos S v (hsmall v hv)).1 a
   have hρd : ∀ v ∈ U, ContDiffAt ℝ ∞ ρ v := fun v hv => hρ.contDiffAt (hU.mem_nhds hv)
   have hρc : ∀ v ∈ U, ContDiffAt ℝ 2 (fun x => (ρ x : ℂ)) v := fun v hv =>
     Complex.ofRealCLM.contDiff.contDiffAt.comp v ((hρd v hv).of_le h2)
@@ -119,7 +120,7 @@ theorem integral_mixTop_position_eq_zero : ∀ {n : ℕ} {r : Type} [Fintype r] 
     simp only [hθ, transConn, intersection_update_fsHerm_neg_one]
     split_ifs with h h'
     · rw [mdbar_neg]; rfl
-    · exact congrFun (congrFun (GlobalTheory.T.antiholomorphicDeriv_cutoff_connection_difference_eq ((hρd v hv.1).differentiableAt (by simp))
+    · exact congrFun (congrFun (_root_.GlobalTheory.GoodTop.mdbar_neg_cut_conn_sub ((hρd v hv.1).differentiableAt (by simp))
         ((hG₀ v hv.1).1.of_le h2) (hG₀ v hv.1).2 ((hG₁ v hv).1.of_le h2) (hG₁ v hv).2) a) b
     · rw [mdbar_neg]; rfl
   have hzero : ∀ a, ∀ v ∈ offHyp S U, v ∉ K → θ j a v = 0 := by
@@ -167,7 +168,7 @@ theorem integral_mixTop_position_eq_zero : ∀ {n : ℕ} {r : Type} [Fintype r] 
       have := hk0 a b p q
       have := mul_le_mul_of_nonneg_left hww1 (norm_nonneg (curv G₀ v (coordVec a) (coordVec b) p q))
       nlinarith
-  obtain ⟨hi, hint⟩ := GlobalTheory.T.integral_polarisedTopForm_dbarExact_eq_zero S U K θ j (|c| + C + 2 * C * (|c| + C)) hU hK hKU hsmall hsm hzero
+  obtain ⟨hi, hint⟩ := _root_.GlobalTheory.GoodTop.integral_mixTop_mdbar_eq_zero S U K θ j (|c| + C + 2 * C * (|c| + C)) hU hK hKU hsmall hsm hzero
     hbd1 hbd2
   have hO : MeasurableSet (offHyp S U) := (isOpen_offHyp_of_isOpen S U hU).measurableSet
   refine ⟨hi.congr_fun (fun v hv => congrArg mixTop (heq v hv)) hO, ?_⟩

@@ -6,8 +6,7 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDesc
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.FormallyUnramifiedOfTangentMapInjective
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.Direct
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsEquivOmegaStd
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsEquivStdSymp
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPrincipallyPolarizedCMExtensionDvrStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPrincipallyPolarizedCMExtensionDvr
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSabCancel
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSabMapOfIsProperOfLbIsoLam
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.FullLevelObjectPullbackExistsAndFull
@@ -18,9 +17,11 @@ public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsProperOfCom
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsQProjOverIffLocallyOfFiniteTypeAndExistsIsAmpl
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsSquareUnique
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.Rigidity
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelDataPullbackOfLevelMapStatement
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelPullbackIdCompCancel
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.AuxiliaryInertOddPrime
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelDataPullbackOfLevelMap
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SmoothOfRelativeDimensionOfCharZero
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsEquivStdSymp
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelPullbackIdCompCancel
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ObjMapIdCompCancel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -126,7 +127,7 @@ theorem exists_extension : GlobalTheory.LN.HomExtSt → Out.Laws → Out.Laws2 �
   obtain ⟨φ, hφ₁, hφ₂⟩ : ∃ φ : tK.G.left ⟶ ((Over.pullback y).obj c.A).left, φ ≫ pullback.fst _ _ = θ ∧
       φ ≫ ((Over.pullback y).obj c.A).hom = tK.G.hom ≫ spMap (algebraMap V K) :=
     ⟨hA.1.lift θ _ (hθ.1.w.trans (Category.assoc _ _ _).symm), hA.1.lift_fst _ _ _, hA.1.lift_snd _ _ _⟩
-  obtain ⟨t, m, e, he, hmon, hamp, hkt⟩ := GlobalTheory.T.exists_principallyPolarizedCM_extension_dvr hX hL hL₂ E H V K _ tK φ hab
+  obtain ⟨t, m, e, he, hmon, hamp, hkt⟩ := _root_.GlobalTheory.GoodPol.exists_sab_of_generic hX hL hL₂ E H V K _ tK φ hab
     (hA.cancel (by rw [hφ₁]; exact hθ) hφ₂) hK.ample hK.ktriv
   have hψ : IsGrpPullback t.G c.A y (e.hom.left ≫ pullback.fst _ _) :=
     ((isGrpPullback_of_iso e).comp hA).congr (Category.id_comp _) rfl
@@ -344,7 +345,7 @@ theorem baseChange {O' : Type} [CommRing O'] (c : O →+* O') {b' : RZ H n N →
     · rw [Category.assoc, hs, hr₂, Category.assoc, hq₂, ← Category.assoc, hw₂]
   refine ⟨w', ?_, MorphismProperty.of_isPullback (P := @IsFinite) hsq ‹_›,
     MorphismProperty.of_isPullback (P := @FormallyUnramified) hsq ‹_›⟩
-  obtain ⟨o, φ, φ₂, h₁, h₂, h₃, h₄, -, h₅⟩ := GlobalTheory.T.siegelData_pullback_of_levelMap E H D O _ T _ r t tT κ' lv lvT g p N Ag z bas w hl hw
+  obtain ⟨o, φ, φ₂, h₁, h₂, h₃, h₄, -, h₅⟩ := _root_.GlobalTheory.SiegelDataPull.siegData_pull E H D O _ T _ r t tT κ' lv lvT g p N Ag z bas w hl hw
   rw [← hw₁] at h₅
   unfold SiegData
   generalize (r ≫ pullback.snd sM (spMap b)) ≫ spMap z = s at e o φ φ₂ h₁ h₂ h₃ h₄ h₅

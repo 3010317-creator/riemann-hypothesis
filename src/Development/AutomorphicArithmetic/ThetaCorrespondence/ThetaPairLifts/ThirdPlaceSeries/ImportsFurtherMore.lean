@@ -1,9 +1,13 @@
 module
 
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.BoundAtTwoThreeFamilyFon
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FontainePropertiesAllPlacesStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.DecompositionData
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FontainePropertiesAllPlacesAlt
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LiftColumnRowSetup
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalConstantsFromAdmittedLocalGaloisStatementsStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.LiftingTheory
+public import Formalism.GaloisCohomology.LocalTateDualityK
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.RationalDualityOfAllCoefficients
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalConstantsFromAdmittedLocalGaloisStatements
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.HoldsAll
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ImportsFurtherTerStatement
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.UnrCrysAtRangePrime
@@ -74,9 +78,9 @@ theorem main_alt_alt : Hypotheses₂ → ∀ (D : D7) (L : SizeData₂ D) (P : P
   have h2 : D.nd.l i ≠ 2 := fun h => hR.1 (Or.inl (h ▸ D.host.two_mem_small))
   have heS : X.eS i = eA L 23 (D.nd.l i) := hS.canon.data.eS i hsp
   have h54 : LiftingTheory.LiftTheoremAllCases D HW F 23 32 32 :=
-    (GlobalTheory.T.localConstants_from_admitted_local_Galois_statements hP.bk hP.tate hP.euler D HW F Cm).2.2.2.2.2.2.2
+    (_root_.GlobalTheory.localConstants_from_admitted_local_Galois_statements_alt hP.bk hP.tate hP.euler D HW F Cm).2.2.2.2.2.2.2
   have hcont : TruncatedSeriesCountingIdentities.FamilyContinuous (D := D) i (X.r i) := continuous_family_of D i (X.r i) (hgood i)
-  have hFont : TruncatedSeriesCountingIdentities.FontaineAtPlacesOverL (D := D) i := GlobalTheory.T.fontaineAtPlacesOverL D i
+  have hFont : TruncatedSeriesCountingIdentities.FontaineAtPlacesOverL (D := D) i := _root_.GlobalTheory.FontaineAdm.fontaineProperties_all_places D i
   have hj := D.nd.j_range i
   have hhB : AdmissibleParameterJ.hJ L + 2 = Formalism.MainNotions.TwistedPlaces.hB L := by
     unfold AdmissibleParameterJ.hJ Formalism.MainNotions.TwistedPlaces.hB; ring

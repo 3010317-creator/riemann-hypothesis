@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.VecPairApply
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelmerCocyclesScalarChangeTransferStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelmerCocyclesScalarChangeTransfer
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +52,7 @@ theorem univ_map : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.w
   intro D N X bkP i s B _ _ A _ _ π κ κ' hκ Q a Φ Z hU Y _ _ _ _
   letI : Module B Y := Module.compHom Y π.toRingHom
   have hsm : ∀ (b : B) (y : Y), b • y = π b • y := fun _ _ => rfl
-  obtain ⟨hrep, hsel⟩ := GlobalTheory.T.selmerCocycles_scalarChange_transfer D N X bkP i s B A π κ κ' hκ Y hsm
+  obtain ⟨hrep, hsel⟩ := _root_.GlobalTheory.NewPrime.ScalarChange.selC_transfer D N X bkP i s B A π κ κ' hκ Y hsm
   obtain ⟨h1, h2, h3⟩ := hU Y
   have hm : ∀ x : Fin a → Y, matAct (Φ.map π) x = matAct Φ x := fun _ => rfl
   have hr : ∀ g (x : Fin a → Y), rect ((Z g).map π) x = rect (Z g) x := fun _ _ => rfl

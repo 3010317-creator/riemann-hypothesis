@@ -4,9 +4,10 @@ public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentation
 public import Development.WeilBound.ThetaLifts.LatticeBasics.HypothesesE
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.EisensteinSeriesConvergenceBound
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.HeightFunctionContinuousPos
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.IsCompactStandardMaximalCompact
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EisensteinSeriesContinuation
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FlatSectionGrowthBoundStatement
+import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.IsCompactStandardMaximalCompact
+import Development.WeilBound.ThetaLifts.LatticeBasics.Hypotheses2
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FlatSectionGrowthBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,7 +58,7 @@ theorem eis_half_plane_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
   intro F E _ _ _ _ _ σ B n Y r s hB hn hY b K a hb hK hH χ s₁ f hf
   have hKc : IsCompact (K : Set (G2 σ Y)) := _root_.GlobalTheory.T.isCompact_standard_maximal_compact F E σ B n Y r s hB hn hY b K a hb hK hH
   obtain ⟨-, hpos⟩ := _root_.GlobalTheory.T.height_function_continuous_pos F E σ B n Y r s hB hn hY b K a hb hK hH
-  obtain ⟨C, hC⟩ := GlobalTheory.T.flat_section_growth_bound K a hKc hH hpos χ s₁ f hf
+  obtain ⟨C, hC⟩ := _root_.GlobalTheory.CompanionTheory.EisTerm.flat_norm_le_height_rpow K a hKc hH hpos χ s₁ f hf
   obtain ⟨σ₀, hσ⟩ := _root_.GlobalTheory.T.eisenstein_series_convergence_bound F E σ B n Y r s hB hn hY b K a hb hK hH
   have hsum : ∀ σ' : ℝ, σ₀ < σ' → ∀ x : G2 σ Y,
       Summable (fun q : Cos σ Y => a ((Quotient.out q).1 * x) ^ σ') := by

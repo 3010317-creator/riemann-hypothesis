@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsTestRep
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleHermitianPairStructureFactsStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleHermitianPairStructureFacts
+public import Mathlib.Topology.Algebra.Valued.NormedValued
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IdempotentDecompositionOfIntegrality
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsIntegralOrInvIsIntegralFiniteExtUltrametric
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSubringEqOK
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IdempotentDecompositionOfIntegralityStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsIntegralOrInvIsIntegralFiniteExtUltrametricStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -127,9 +128,9 @@ theorem height_sq_lintegral_lt_top : ∀ (F E : Type) [NontriviallyNormedField F
   haveI : T2Space A.K := .of_injective_continuous b.equivFun.injective
     (IsModuleTopology.continuous_of_linearMap b.equivFun.toLinearMap)
   haveI : SecondCountableTopology A.K := b.equivFunL.toHomeomorph.secondCountableTopology
-  obtain ⟨-, -, -, -, -, -, -, -, -, hOo, hOc, R, hR⟩ := GlobalTheory.T.etaleHermitianPair_structure_facts F E A
+  obtain ⟨-, -, -, -, -, -, -, -, -, hOo, hOc, R, hR⟩ := _root_.GlobalTheory.JR.EtFacts.main F E A
   obtain ⟨m, f, hid, hor, hsum, hsc, hvp⟩ :=
-    GlobalTheory.T.idempotent_decomposition_of_integrality F E A (fun k _ _ _ y hy => GlobalTheory.T.isIntegral_or_inv_isIntegral_finite_ext_ultrametric F k y hy)
+    _root_.GlobalTheory.JR.Et.Idem.main F E A (fun k _ _ _ y hy => _root_.GlobalTheory.JR.Spec.isIntegral_or_isIntegral_inv F k y hy)
   have hOR : ∀ x, x ∈ A.OK ↔ x ∈ R := fun x => by rw [← hR, SetLike.mem_coe]
   have hfR : ∀ i, f i ∈ R := fun i => by
     rw [← hOR, Et.mem_OK_iff_isIntegral]

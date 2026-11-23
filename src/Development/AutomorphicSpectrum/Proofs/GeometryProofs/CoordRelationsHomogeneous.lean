@@ -3,7 +3,8 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EmbedsGeneric
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.HasMultiplier
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.MatchStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SmallPointsCoordRatioBoundStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SmallPointsCoordRatioBound
+public import Mathlib.RingTheory.Valuation.LocalSubring
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -21,7 +22,6 @@ import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Mathlib.RingTheory.Valuation.LocalSubring
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
@@ -415,7 +415,7 @@ theorem finite_families : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] [CharZero 
     intro L _ _ z hz
     obtain ⟨i, hi⟩ := hz.1 k₀
     obtain ⟨c, hc⟩ := hz.1 k
-    obtain ⟨n, F, hom, rel, hne⟩ := GlobalTheory.T.small_points_coord_ratio_bound X Ω ξ K J y k₀ hT hE L z hz i k c hi hc
+    obtain ⟨n, F, hom, rel, hne⟩ := _root_.GlobalTheory.CompanionTheory.Ar.BlockRatio.ratios_quotients_of_forms X Ω ξ K J y k₀ hT hE L z hz i k c hi hc
     have yc : y ⟨k, c⟩ ≠ 0 := ne_zero_of_pt y hz hc
     refine ⟨F c, ⟨n, F, c, ⟨hom, fun j j' => mul_right_cancel₀ yc ?_⟩, rfl⟩, hne⟩
     linear_combination y ⟨k, j'⟩ * rel j - y ⟨k, j⟩ * rel j'

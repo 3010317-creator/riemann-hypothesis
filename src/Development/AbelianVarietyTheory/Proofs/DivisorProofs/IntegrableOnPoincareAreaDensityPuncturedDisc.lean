@@ -4,7 +4,8 @@ public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 public import Mathlib.MeasureTheory.Integral.IntegrableOn
 public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegrableOnInvMulLogSqNearZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegrableOnInvMulLogSqNearZero
+public import Mathlib.MeasureTheory.Constructions.HaarToSphere
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -18,7 +19,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.MeasureTheory.Constructions.HaarToSphere
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -54,7 +54,7 @@ namespace GlobalTheory.GoodTop
 
 theorem integrableOn_poincare_disc :
     IntegrableOn (fun z : ℂ => (‖z‖ * |Real.log ‖z‖|)⁻¹ ^ 2) (Metric.closedBall 0 (1 / 2)) := by
-  have h := GlobalTheory.T.integrableOn_inv_mul_log_sq_near_zero
+  have h := _root_.GlobalTheory.GoodTop.integrableOn_inv_mul_log_sq
   have key : Integrable (fun z : ℂ =>
       (Set.Iic (1 / 2 : ℝ)).indicator (fun t : ℝ => (t * |Real.log t|)⁻¹ ^ 2) ‖z‖) := by
     rw [integrable_fun_norm_addHaar (volume : Measure ℂ)

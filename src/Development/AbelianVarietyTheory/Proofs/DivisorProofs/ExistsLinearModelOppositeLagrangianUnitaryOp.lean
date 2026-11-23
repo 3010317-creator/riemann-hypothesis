@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInertLocalUniformizerImports
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.OneEqSumPlaceIdempotentsOverTwoAddTwoMul
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceSchwartzBruhatVacuumConditionEqSmulStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceSchwartzBruhatVacuumConditionEqSmul
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAddCharSymplecticLocalLatticeEqOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -83,7 +84,7 @@ theorem GlobalTheory.InertBridgeLine.locVac_line : ∀ (F E : Type) [Field F] [N
     have hx := (hLat x).2 hγ
     have h := hρ x m
     rwa [hm x hx] at h
-  obtain ⟨c, hc⟩ := GlobalTheory.T.inertPlace_schwartzBruhat_vacuumCondition_eq_smul F E σ B a a' G X om om' hTr v w hin θ hθ hvac m m.2 hm'
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.VacUniqInert.vac_unique F E σ B a a' G X om om' hTr v w hin θ hθ hvac m m.2 hm'
   refine ⟨c, Subtype.ext ?_⟩
   rw [Submodule.coe_smul, hs]
   exact hc

@@ -10,9 +10,10 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearWeilFu
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearWeilFunctionalTranslationEquivariantStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearWeilFunctionalUnramifiedVectorStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalCharacterSmoothUnitaryStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalUnitaryGroupSurjectsGeneralLinearRightStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalUnitaryGroupSurjectsGeneralLinearStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaActionExistsStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalUnitaryGroupSurjectsGeneralLinearRightStatement
+import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaActionExists
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -114,7 +115,7 @@ theorem localOps_eq_omA : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) 
     rcases ht' with h | h
     · rw [h]; exact hu
     · rw [h]; exact isUnitaryChar_inv _ hu
-  have hloc := ((GlobalTheory.T.theta_action_exists hP) F E σ B a (a + a') G.V G.W G.M X.β (X.β / X.α) om _ _ _ _
+  have hloc := ((_root_.GlobalTheory.ThK.LocalOps.actsEx hP) F E σ B a (a + a') G.V G.W G.M X.β (X.β / X.α) om _ _ _ _
     (GlobalTheory.ThK.Check.isPair_of_isTriple hTr).1 v).1
   refine ⟨ν₀, β₀, ι, ⟨t', ht'⟩, hνs, hνu, hβs, hβu, hι.bij, ?_, ?_, ?_⟩
   · intro g hg

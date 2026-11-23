@@ -2,11 +2,11 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MinorIJMap
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BlockDiagonalMinorVanishing
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BlockDiagonalMinorVanishingStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GenericBlockMatrixIsBlockDiag
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverFramesAtPoint
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagModelBaseProjectionPoints
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FrameChangeScalarFactor
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FrameChangeUnderFieldMap
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagModelBaseProjectionPoints
 import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FrameDefinitions.Values
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -219,7 +219,7 @@ theorem step_mem (hz : zb ∈ mcPts (mCoordIdeal M.x)) (h₁ : M.IsFrame F₁) (
     intro I hI
     have hE : IsBlockDiag j (FrameChange.unitCols I' (stepCols N j i) h'.1 : Matrix (Fin N) (Fin N) M.Ω) :=
       FrameChange.unitCols_blockDiag _ _ _ (FrameChange.stepRows_same_side h')
-    have := ((GlobalTheory.T.block_diagonal_minor_vanishing M.Ω N j i M.j_le).2.1 _ I (hS.mul hE) hI).resolve_right (FV.stepCols_ne_empty i)
+    have := ((_root_.GlobalTheory.CompanionTheory.Ar.PB.MinorCalc.minors_main M.Ω N j i M.j_le).2.1 _ I (hS.mul hE) hI).resolve_right (FV.stepCols_ne_empty i)
     rw [MinorCalc.minorIJ_mul] at this
     simpa only [FrameChange.minor_unitCols, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ,
       if_true] using this

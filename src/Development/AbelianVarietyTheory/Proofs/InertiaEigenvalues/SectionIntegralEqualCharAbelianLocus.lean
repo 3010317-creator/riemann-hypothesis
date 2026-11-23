@@ -6,18 +6,20 @@ public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.Abe
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.EvaluationLawsGenericFramesAtlasHold
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsChartFiniteType
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsFiniteIntegralChartCoverFlagSpace
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspFormBoundGoodPointsExtendsAllPoints
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.BddGood
+public import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsFiniteMchartCover
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsFlagCellChartOverModelChart
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsFrPtTie
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsIntegralPivotDecomposition
-import Development.AbelianVarietyTheory.Proofs.GenericRegularity.IsCombAtIffCoordinateCombinationStatement
+import Development.AbelianVarietyTheory.Proofs.GenericRegularity.IsCombAtIffCoordinateCombination
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.IsEigenvectorIffLieBasisCoordinates
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.LieBasisCoordinatesBijectiveTangent
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.NonemptyLift
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.TieBaseChange
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.TieIntegral
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.TriangularInvOfDiagNe
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspFormBoundGoodPointsExtendsAllPoints
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.DataAtTraitsOfTraitData
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.FramedPointEvalNaturalWeightScaling
 import Mathlib.Algebra.Order.Floor.Extended
@@ -55,8 +57,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.BddGood
-public import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt
 
 @[expose] public section
 
@@ -209,7 +209,7 @@ theorem inV_of_extIn_eqChar : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     have htan := hv2 _ _ hw
     have heig := (GlobalTheory.Reg.isEigAt_iff_eig E H Dw l Xo c _ _ Y (M j) T.Fr _ y.1.x ΛK τ _ _ hw).mpr hcvK
     obtain ⟨a0, ha0, -⟩ := y.1.basis τ w htan heig
-    have hv := (GlobalTheory.T.isCombAt_iff_coordinate_combination E H Dw l Xo c _ _ Y (M j) T.Fr _ y.1.x ΛK _ (fun i j' => g τ j' i) (y.1.u τ) a0 w
+    have hv := (_root_.GlobalTheory.Reg.VecComb.isCombAt_iff_vec E H Dw l Xo c _ _ Y (M j) T.Fr _ y.1.x ΛK _ (fun i j' => g τ j' i) (y.1.u τ) a0 w
       (hg τ)).mp ha0
     have heq : (∑ i, a0 i • fun j' => g τ j' i) = fun i => algebraMap T.V T.Fr (cv i) := (hv3 w htan).unique hv hw
     refine GlobalTheory.EqCharGood.existsUnique_mulVec_of_inCell (algebraMap T.V T.Fr) hinj (ix τ) (u₀ τ) (hcell τ) cv

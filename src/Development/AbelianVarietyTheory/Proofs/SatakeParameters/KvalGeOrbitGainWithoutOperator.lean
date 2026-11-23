@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.BeData
 public import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.StatementB
 public import Formalism.ThetaLogCoordinates.UniformThetaSubstitution.StatementE
 public import Formalism.ThetaLogCoordinates.UniformThetaSubstitution.StatementG
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIntegralOrbitSeriesStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIntegralOrbitSeries
 public import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KurComplete
 public import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.TransportFirstLevel
 import Formalism.SharpRestriction.Divisibility.JetPolynomialLogs.OneLetterJetKernel
@@ -150,7 +150,7 @@ theorem kernel_bound (l : ℕ) [Fact l.Prime] (ν m N0 N1 : ℕ) [NeZero ν] (hm
 
 theorem kvalGe_gainA : ∀ (Lc : product_zeroth_first_parts.Loc) (ep : ℂ_[Lc.l]) (be : MvPowerSeries (ZMod Lc.d) ℂ_[Lc.l]), ‖ep‖ = 1 → BeStd Lc.l Lc.d be → OrbitPlaces.OrbitThetaExpansion Lc ep (-1) be → product_zeroth_first_parts.KvalGe Lc.N0 Lc.N1 Lc.l Lc.nu Lc.Th (gainA Lc) := by
   rintro Lc ep be hep ⟨σ, F, be0, om, oms, ζ, hD, rfl⟩ hB
-  obtain ⟨U0, hU, hTh⟩ := GlobalTheory.T.exists_integral_orbit_series Lc ep σ F be0 om oms ζ hD hB
+  obtain ⟨U0, hU, hTh⟩ := _root_.GlobalTheory.KerStd.integral_cofactor_converse Lc ep σ F be0 om oms ζ hD hB
   have hp : ∀ s (c : Fin ((Lc.nu s).rowLen 0)), (Lc.nu s).colLen c ≤ Lc.N0 :=
     fun s c => (yd_colLen_le _ _).trans (Lc.nu_rows s)
   refine tieFrame Lc.l Lc.d Lc.N0 Lc.N1 Lc.nu hp Lc.Th ep _ hep ?_

@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasBoundedSumsOne
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HasSumHeckeSeriesBorelSphericalIntegralCosetsStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HasSumHeckeSeriesBorelSphericalIntegralCosets
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IwasawaBlockTriangular
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -152,7 +152,7 @@ namespace GlobalTheory.HeckeShift
 theorem hasSum_hecke_shift : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (n : ℕ) (γ : Fin n → ℂ) (φ : GL (Fin n) k → ℂ), IsBorelSph k γ φ → (∀ i, γ i ≠ 0) → ∀ X : ℂ, (∀ i : Fin n, ‖(resCard k : ℂ) ^ (n - 1 - (i : ℕ)) * γ i * X‖ < 1) → ∀ g : GL (Fin n) k, HasSum (fun c : {c : GL (Fin n) k ⧸ KO k (Fin n) // (∀ i j, (c.out : GL (Fin n) k).1 i j ∈ 𝒪[k])} => X ^ (ord k (Matrix.GeneralLinearGroup.det c.1.out)).toNat * φ (g * c.1.out)) ((∏ i : Fin n, (1 - (resCard k : ℂ) ^ (n - 1 - (i : ℕ)) * γ i * X)⁻¹) * φ g) := by
   intro k _ _ _ _ n γ φ hφ hγ X hX g
   obtain ⟨b, hb, x, hx, rfl⟩ := exists_borel_mul g
-  have hI := (GlobalTheory.T.hasSum_heckeSeries_borelSpherical_integralCosets k n γ φ hφ X hX).mul_left (∏ i, γ i ^ ord k (diagU hb i))
+  have hI := (_root_.GlobalTheory.HeckeSeries.hasSum_integral_cosets k n γ φ hφ X hX).mul_left (∏ i, γ i ^ ord k (diagU hb i))
   have key : ∀ c : IntCos k n,
       X ^ (ord k (Matrix.GeneralLinearGroup.det (smulEquiv (inv_mem hx) c).1.out)).toNat *
           φ (b * x * (smulEquiv (inv_mem hx) c).1.out) =

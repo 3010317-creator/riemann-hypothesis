@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.SumIoPr
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CardFilterFinBounds
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.UnitaryGlModuleLevelOffDiagNormSqLeStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.WeightNearDiagonalOperatorsBoundsStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.UnitaryGlModuleLevelOffDiagNormSqLe
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.WeightNearDiagonalOperatorsBounds
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,8 +58,8 @@ theorem lev_gl_size : ∀ (M : Type) [NormedAddCommGroup M] [InnerProductSpace �
   intro M _ _ n ε E μ kk j bv b w hM hS hb hj hL
   have hj' : j ≤ 4 * n ^ 2 + 2 := by omega
   obtain ⟨hbv, hpos, -⟩ := GlobalTheory.shape_position n kk j ε μ bv hS hj'
-  have hoff := GlobalTheory.T.unitaryGlModule_level_offDiag_normSq_le M n ε E μ kk j bv w hM hS hj' hL
-  have hdiag := (GlobalTheory.T.weightNear_diagonalOperators_bounds M n ε E (lowK ε μ) (j : ℝ) w hM.2.1 hL.2).2.2
+  have hoff := _root_.GlobalTheory.lev_offDiag_normSq_le M n ε E μ kk j bv w hM hS hj' hL
+  have hdiag := (_root_.GlobalTheory.wtNear_diag_bounds M n ε E (lowK ε μ) (j : ℝ) w hM.2.1 hL.2).2.2
   have hd : ∀ a, ‖E a a w‖ ^ 2 ≤ (3 * bv) ^ 2 * ‖w‖ ^ 2 := by
     intro a
     refine hdiag a (3 * bv) ?_

@@ -2,12 +2,12 @@ module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.Birational
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RationalWeightIntegralCoeffsStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RootModelArithIntersectionFormulaStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RootModelCurveDegreeNefStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RootModelLogIntegralFormulaStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RootModelPointHeightDegreeStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RootModelSemipositiveConjStatement
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RationalWeightIntegralCoeffs
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RootModelArithIntersectionFormula
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RootModelCurveDegreeNef
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RootModelLogIntegralFormula
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RootModelPointHeightDegree
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RootModelSemipositiveConj
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,11 +55,11 @@ namespace GlobalTheory.CompanionTheory.Ar.Top
 
 theorem zhang_upper_bound_root_model : SuccessiveMinimaUpperBound → ∀ II : IntersectionSystem, IsFullIntersectionSystem II → ∀ (Ψ : Type) [Fintype Ψ] (N : ℕ) (M : RootModel Ψ N) (t : ℝ) (lam : Wt Ψ N) (s : ℚ) (e : ℝ) (F : Set (Ideal (MRing M.ι))), IsRatWt lam → M.Semipos t lam s → M.NefFib lam s → IsZariskiDense M.P F → (∀ W ∈ F, M.IsPt W ∧ M.ht II t lam s W ≤ e) → M.arFun II t (linA lam s ^ (dimFl Ψ N + 1)) ≤ ((dimFl Ψ N : ℝ) + 1) * e * M.geoFun (linA lam s ^ dimFl Ψ N) := by
   intro hZ II hII Ψ _ N M t lam s e F hrat hsp hnef hF hpt
-  obtain ⟨q, n, hq, hn⟩ := GlobalTheory.T.rational_weight_integral_coeffs Ψ N M lam s hrat
-  have hsemi := GlobalTheory.T.root_model_semipositive_conj Ψ N M t lam s q n hn hsp
-  have hnf := (GlobalTheory.T.root_model_curve_degree_nef Ψ N M t lam s q n hn).2 hnef
-  have hA := GlobalTheory.T.root_model_arith_intersection_formula II hII Ψ N M t lam s q n hn
-  have hG := GlobalTheory.T.root_model_log_integral_formula II hII Ψ N M t (fun _ => lam) (fun _ => (s : ℝ)) q (fun _ => n)
+  obtain ⟨q, n, hq, hn⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Top.clear_rat_weight_coef Ψ N M lam s hrat
+  have hsemi := _root_.GlobalTheory.CompanionTheory.Ar.Top.semipositive_integral_multiple Ψ N M t lam s q n hn hsp
+  have hnf := (_root_.GlobalTheory.CompanionTheory.Ar.Top.nefFib_integral_multiple Ψ N M t lam s q n hn).2 hnef
+  have hA := _root_.GlobalTheory.CompanionTheory.Ar.Top.top_comb_eq_arFun II hII Ψ N M t lam s q n hn
+  have hG := _root_.GlobalTheory.CompanionTheory.Ar.Top.geoFun_comb_mixed II hII Ψ N M t (fun _ => lam) (fun _ => (s : ℝ)) q (fun _ => n)
     (fun _ j => hn j)
   have hGeo : geomDeg M.P (combLine (M.line t) n) (dimFl Ψ N) =
       M.δ * (q : ℝ) ^ dimFl Ψ N * M.geoFun (linA lam s ^ dimFl Ψ N) := by
@@ -72,7 +72,7 @@ theorem zhang_upper_bound_root_model : SuccessiveMinimaUpperBound → ∀ II : I
     (by
       intro W hW
       obtain ⟨hp, hle⟩ := hpt W hW
-      obtain ⟨-, hI⟩ := GlobalTheory.T.root_model_point_height_degree II hII Ψ N M t lam s q n W hn hp
+      obtain ⟨-, hI⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Top.ht_combLine_integral_multiple II hII Ψ N M t lam s q n W hn hp
       refine ⟨hp.1, hp.2, ?_⟩
       rw [hI]
       exact mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_left hle (Nat.cast_nonneg q))

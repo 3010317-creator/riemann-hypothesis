@@ -3,14 +3,17 @@ module
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ToXQFst
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocRatio
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointsClosureCoords
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsAtSmul
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsCocharacterLieModel
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFiniteBaseChangeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelIsBaseChangeStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFiniteBaseChange
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelIsBaseChange
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelPullbackEquivalence
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieOmegaLatticeVectorBundle
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsAtSmul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -110,7 +113,7 @@ theorem span_tr {X : Scheme.{0}} {G : Over X} [GrpObj G] [Smooth G.hom] {R R' : 
       { toFun := j
         map_add' := j.map_add
         map_smul' := fun r e => j.map_smulₛₗ r e }
-    have hb : IsBaseChange R' jl := GlobalTheory.T.lie_model_isBaseChange X G R R' x E E' M M' jl (fun e => by
+    have hb : IsBaseChange R' jl := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_isBaseChange X G R R' x E E' M M' jl (fun e => by
       rw [Category.comp_id]
       exact hj e)
     exact hb.inductionOn n base smul add
@@ -334,7 +337,7 @@ theorem PositivityTheory.Xgn.torus_uniformization_continuous : ∀ (X : Scheme.{
   let φ : Γ(X, W) →+* Γ(Z', V) := (ρ.appLE W V hVW).hom
   have hφ : spMap φ ≫ x = xV ≫ ρ := IsAffineOpen.SpecMap_appLE_fromSpec ρ hW hV hVW
   obtain ⟨E, _, _, ⟨MR⟩⟩ := lieModel_exists X G Γ(X, W) x
-  haveI : Module.Finite Γ(X, W) E := (GlobalTheory.T.lie_model_finite_base_change X G Γ(X, W) x E MR).1
+  haveI : Module.Finite Γ(X, W) E := (_root_.GlobalTheory.CompanionTheory.Ar.LieProj.lie_finite_projective_baseChange X G Γ(X, W) x E MR).1
   obtain ⟨n, s, hs⟩ := Module.Finite.exists_fin (R := Γ(X, W)) (M := E)
   obtain ⟨c, hc⟩ := local_formula h hΦ u β H hH x xV φ hφ MR s hs
   obtain ⟨ψ, hψ⟩ := exists_lift x ξ (by

@@ -4,11 +4,13 @@ public import Formalism.UnipotentAdelicQuotients.SmComplete
 public import Mathlib.Analysis.Calculus.Deriv.Basic
 public import Mathlib.Analysis.InnerProductSpace.Basic
 public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LieAlgebraOfTangentCurveStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LieAlgebraOfTangentCurve
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+public import Mathlib.Analysis.Calculus.Deriv.Comp
+public import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Prod
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Matrix.Normed
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
@@ -53,8 +55,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.Analysis.Calculus.Deriv.Comp
-public import Mathlib.Analysis.Calculus.Deriv.Mul
 
 @[expose] public section
 
@@ -107,7 +107,7 @@ theorem exists_submodule_eq_lieAlg :
   · intro a b ha hb
     have ha' : ∀ t : ℝ, NormedSpace.exp ((t : ℂ) • a) ∈ G := ha
     have hb' : ∀ t : ℝ, NormedSpace.exp ((t : ℂ) • b) ∈ G := hb
-    refine GlobalTheory.T.lie_algebra_of_tangent_curve n G hG
+    refine _root_.GlobalTheory.CompanionTheory.SmTangent.tangent_mem_lieAlg n G hG
       (fun t : ℝ => NormedSpace.exp ((t : ℂ) • a) * NormedSpace.exp ((t : ℂ) • b)) (a + b) ?_ ?_
       (hasDerivAt_exp_mul_exp a b)
     · simp

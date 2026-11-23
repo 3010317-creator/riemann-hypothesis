@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.FormsAre
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PairKernelMapsStepWeightValuesStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PairKernelTermTargetStabiliserLawStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PairKernelTermTargetStabiliserLaw
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -72,6 +72,6 @@ theorem K_mem_Fi : ∀ (D : D7) (u : D.what₂.Word) (C : ColumnChain D.R D.what
   rw [hK]
   exact ⟨isVal_sum _ _ _ _ _ fun c => GlobalTheory.T.pair_kernel_maps_step_weight_values D u C A Pm M O i hi (hU i hi) c c' _ (hv c),
     fun g hg => lawAt_sum O _ g _ _ _ fun c =>
-      GlobalTheory.T.pair_kernel_term_target_stabiliser_law D u C A Pm M O i hi (hU i hi) c c' (hd i hi c c') g (hT i hi c c' g hg) _ (hv c)⟩
+      _root_.GlobalTheory.KerJ.lawAt_Kmap D u C A Pm M O i hi (hU i hi) c c' (hd i hi c c') g (hT i hi c c' g hg) _ (hv c)⟩
 
 end GlobalTheory.KerJ.FiCore

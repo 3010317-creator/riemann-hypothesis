@@ -6,10 +6,11 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechDeRhamCo
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmpFormEqZeroOfPullbackVanishingStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystallineFormTangentValueMulAbelianSchemeStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLieBasisSmoothCommGroupSchemeFieldStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormValueOnTangentVectorEqZeroOfGlobalFormZeroStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PullbackFormVanishesTangentsOfLieBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StructureSheafComparisonInjectiveStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ComparisonMemCechHodgeFiltration
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StructureSheafComparisonInjective
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSchemeOfIsGrpPullback
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormValueOnTangentVectorEqZeroOfGlobalFormZeroStatement
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -74,7 +75,7 @@ theorem cmpForm_surjective (hC : GlobalTheory.Published.CrystallineSmoothLift) (
   have hF : clForm _ ω ∈ CechHodgeFiltration (A.hom ≫ 𝟙 (Sp R)) := by rw [cechHodgeFiltration_eq_range]; exact ⟨ω, rfl⟩
   have h1 : c ∈ F1 (A.hom ≫ 𝟙 (Sp R)) := by
     change toH1O _ c = 0
-    apply GlobalTheory.T.structure_sheaf_comparison_injective R A.left _
+    apply _root_.GlobalTheory.CechDR.cmpO_injective R A.left _
     rw [← structureSheaf_comparison_comm, map_zero, hc]
     exact hF
   rw [hodgeFiltration_eq_range] at h1

@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
-import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ClosedDiscGaugeCompletionBasicProperties
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormTeichmullerTiltMinusOneLeStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormTeichmullerTiltMinusOneLe
+import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPrimitiveTiltedRootOfUnityLocalPeriodRingsData
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -196,7 +196,7 @@ theorem t_assoc_mu : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (C 
   set m := bk.iA (mu C.ε) with hm_def
   have hl2 : (2 : ℝ) ≤ l := by exact_mod_cast hl.out.two_le
   have hm : ‖m‖ ≤ 1 / 3 := by
-    obtain ⟨h1, h2⟩ := GlobalTheory.T.norm_teichmullerTiltMinusOne_le l K bk C.ε (core_isEps l C)
+    obtain ⟨h1, h2⟩ := _root_.GlobalTheory.BSP.BK.norm_iA_mu_le l K bk C.ε (core_isEps l C)
     by_cases h : l = 2
     · exact (h2 h).trans (by norm_num)
     · have h3 : (3 : ℝ) ≤ l := by

@@ -8,18 +8,20 @@ public import Formalism.LocalToGlobal.IndefiniteReal.LinksChar
 public import Formalism.UnipotentAdelicQuotients.CuspidalCharExists
 public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.AsAlgebraHomSurjectiveOfFinrankIntertwiningMapEq
 public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.FiniteGroupFunctionPairingCharacterEqFinrankInte
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GoodCharsGoodFamilyOfProductIrreducible
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCuspIndProdCharOfIsProdCuspChar
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCuspProdCharTransport
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumCoeffChiIdemMul
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TraceCompLeftFunLeft
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.CharacterExtendScalarsRep
 import Development.AbelianVarietyTheory.Proofs.CharacterTheory.FiniteGroupFunctionPairingSelfIrreducibleAlgClos
 import Development.AbelianVarietyTheory.Proofs.CharacterTheory.IsCharacterOverSubfieldOfRepresentation
 import Development.AbelianVarietyTheory.Proofs.CharacterTheory.VirtualCharactersMulComapConjIndLinear
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLabelsSemisimpleParameterGLFiniteField
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobeniusOrbitRootPolynomialFactorizationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GoodCharsGoodFamilyOfProductIrreducible
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LabelsCharOne
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobeniusOrbitRootPolynomialFactorization
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GreenCuspidalCharIsCuspidalOfMinpolyOfParam
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCuspIndProdCharOfIsProdCuspChar
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCuspProdCharTransport
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrimeToPartFrob
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumCoeffChiIdemMul
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TraceCompLeftFunLeft
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspidalCharExistsOfGreen
 import Formalism.LocalToGlobal.Divisibility.ProjLemmas
 import Mathlib.Algebra.Order.Floor.Extended
@@ -63,7 +65,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.CharacterExtendScalarsRep
 
 @[expose] public section
 
@@ -365,7 +366,7 @@ theorem isCusp_cuspOn {s : SSParam p ℂ r} (hs : IsRegularParam s) (c : Cyc s.1
   obtain ⟨L⟩ := GlobalTheory.GLq.LabelModel.inhab p
   obtain ⟨x, f, h⟩ := exists_labels p L r s
   exact (isCuspOf_cuspOn L (s.2 c) (x c) (cycLen_pos _ c) (h.1 c)
-    (((GlobalTheory.T.frobeniusOrbitRootPolynomial_factorization p r _ x f h.2).2.2.2 (h.regular_iff.1 hs)).1 c)).2.1
+    (((_root_.GlobalTheory.ParamLabel.RootPolyFactor.rootPoly_factor p r _ x f h.2).2.2.2 (h.regular_iff.1 hs)).1 c)).2.1
 
 def cycEquiv (b : Fin r → Fin r) : (Σ c : Cyc b, Fin (cycLen b c)) ≃ Fin r :=
   Equiv.ofBijective (fun x => ((Fintype.equivFin {a : Fin r // b a = x.1.1}).symm x.2).1) (by

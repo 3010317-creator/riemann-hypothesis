@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAmbOfIsArithVar
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ResidueDegreeOfIsClosedImmersion
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithIntersectionCalculusOfFormMixedProjection
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithIntersectionFormsOfArchimedeanStatementsStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ArFormExists
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithIntersectionFormsOfArchimedeanStatements
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,7 +54,7 @@ namespace GlobalTheory.MixHt
 
 theorem arCalc_cycleHeights_of_analytic :
     ArchInteg → ArchRecip → GlobalTheory.Published.ArCalc ∧ GlobalTheory.Published.CycleHeights := fun hI hR =>
-  have h := GlobalTheory.T.arithIntersection_forms_of_archimedean_statements hI hR
+  have h := _root_.GlobalTheory.MixHtCalc.arFormExists_arMix_heightProjection hI hR
   have hC : GlobalTheory.Published.ArCalc := GlobalTheory.Published.arCalc_of_form_mix_projection h.1 h.2.1 h.2.2
   ⟨hC, GlobalTheory.Published.cycleHeights_of_arCalc hC⟩
 

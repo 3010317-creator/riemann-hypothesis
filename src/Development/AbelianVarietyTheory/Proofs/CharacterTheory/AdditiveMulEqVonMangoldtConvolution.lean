@@ -1,7 +1,8 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.MonicFactorizationConvolutionFiniteCommAssocAddStatement
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.AdditiveEqPolynomialVonMangoldtConvolutionOneStatement
+public import Development.AbelianVarietyTheory.Definitions.CommutativeAlgebra.InvariantSubspaceMobiusInverseRecEqOfFinrankLt
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.MonicFactorizationConvolutionFiniteCommAssocAdd
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.AdditiveEqPolynomialVonMangoldtConvolutionOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,7 +66,7 @@ theorem conv_congr_monic {a a' b b' : F[X] → ℂ} (ha : ∀ P : F[X], P.Monic 
   rw [ha _ hx.1, hb _ hx.2.1]
 
 theorem conv_eq_sum (a b : F[X] → ℂ) {P : F[X]} (hP : P.Monic) :
-    conv a b P = ∑ x ∈ (GlobalTheory.T.monicFactorizationConvolution_finite_comm_assoc_add F P hP).1.toFinset, a x.1 * b x.2 := by
+    conv a b P = ∑ x ∈ (_root_.GlobalTheory.CuspGL.conv_basic F P hP).1.toFinset, a x.1 * b x.2 := by
   unfold conv
   rw [finsum_mem_eq_finite_toFinset_sum]
 
@@ -172,19 +173,19 @@ theorem additive_mul_eq_conv (F : Type) [Field F] (q : ℕ) (hq : 2 ≤ q) (s m 
     rw [mul_left_comm, hm Q hQ, additive_mul_conv hs _ _ hQ]
     congr 1
     refine conv_congr_monic (fun D hD => ?_) (fun _ _ => rfl) Q
-    rw [← (GlobalTheory.T.additive_eq_polynomialVonMangoldt_convolution_one F s hs).1 D hD]
+    rw [← (_root_.GlobalTheory.CuspGL.mangoldt_conv_spec F s hs).1 D hD]
     simp [ho]
   have hB : ∀ Q : F[X], Q.Monic → (q : ℂ) ^ Q.natDegree * conv L m Q =
       conv (conv (mangoldt s) o) m Q + conv o (conv L m) Q := by
     intro Q hQ
-    have H := (GlobalTheory.T.monicFactorizationConvolution_finite_comm_assoc_add F Q hQ).2
+    have H := (_root_.GlobalTheory.CuspGL.conv_basic F Q hQ).2
     rw [pow_mul_conv _ _ _ hQ, conv_congr_monic hσL hm Q, (H L (mangoldt s) (conv o m)).2.2.1,
       (H (mangoldt s) o m).2.1, add_comm, ← (H L o m).2.1, ← (H o L m).2.1]
     congr 1
-    exact conv_congr_monic (fun D hD => ((GlobalTheory.T.monicFactorizationConvolution_finite_comm_assoc_add F D hD).2 L o o).1) (fun _ _ => rfl) Q
+    exact conv_congr_monic (fun D hD => ((_root_.GlobalTheory.CuspGL.conv_basic F D hD).2 L o o).1) (fun _ _ => rfl) Q
   have hE := eq_zero_of_rec hq (E := (fun D => s D * m D) - conv L m)
     (by simp [hs1, conv_at_one, hL, mangoldt_one]) (fun Q hQ => by
-      have H := (GlobalTheory.T.monicFactorizationConvolution_finite_comm_assoc_add F Q hQ).2
+      have H := (_root_.GlobalTheory.CuspGL.conv_basic F Q hQ).2
       rw [(H _ _ o).1, (H _ _ _).2.2.2, ← (H o _ o).1, ← (H o _ o).1, Pi.sub_apply, mul_sub,
         hA Q hQ, hB Q hQ]
       ring) P hP

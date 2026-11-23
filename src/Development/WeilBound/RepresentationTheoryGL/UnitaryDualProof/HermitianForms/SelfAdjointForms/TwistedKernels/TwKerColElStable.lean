@@ -2,7 +2,10 @@ module
 
 public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.SelfAdjointForms.FixK
 public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.AvgData
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianPsdIsotropicRadicalStatement
+public import Mathlib.Algebra.Algebra.Basic
+public import Mathlib.Algebra.Module.LinearMap.Star
+public import Mathlib.Basic.Complex.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianPsdIsotropicRadical
 public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.TransversalSums.ContinuousBlkAtApply
 public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.TransversalSums.SumTranslateTransversal
 public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.UnitaryLattices.IsotropicAtoms.ChartRestriction
@@ -179,7 +182,7 @@ theorem dens_rad (hB : Lv ψ h π s B) {A₀ : AddSubgroup (Fin (m + 1) → k)} 
   have h0 : B (avg ψ h π (xi0 k m) A₁ v) (avg ψ h π (xi0 k m) A₁ v) = 0 := (mul_eq_zero.1 hv).resolve_left hc
   have hker : avg ψ h π (xi0 k m) A₁ v ∈ LinearMap.ker B := by
     rw [LinearMap.mem_ker]
-    exact LinearMap.ext fun w => GlobalTheory.T.hermitian_psd_isotropic_radical V B hB.psd.1 hB.psd.2 _ h0 w
+    exact LinearMap.ext fun w => _root_.GlobalTheory.CompanionTheory.HermitianForm.pairing_eq_zero_of_psd V B hB.psd.1 hB.psd.2 _ h0 w
   have e : v = (v - avg ψ h π (xi0 k m) A₁ v) + avg ψ h π (xi0 k m) A₁ v := by abel
   rw [e]
   exact Submodule.add_mem_sup (ColumnElementGluing.sub_avg_mem ψ h π hB.cont hB.smooth A₁ hA₁ v) hker

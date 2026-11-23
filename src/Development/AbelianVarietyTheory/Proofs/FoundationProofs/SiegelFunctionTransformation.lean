@@ -2,10 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.Imports
 public import Mathlib.Analysis.Complex.UpperHalfPlane.MoebiusAction
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AdmissibleOfSl2ActionStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AdmissibleOfSl2Action
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularLawOfSAndTStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SmoothedSiegelUnitModularGroupTSmulStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SmoothedSiegelUnitModularSSmulStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SmoothedSiegelUnitModularGroupTSmul
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SmoothedSiegelUnitModularSSmul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,7 +54,7 @@ namespace GlobalTheory.Sieg
 
 theorem sg_smul (c : ℕ) (x : Fin 2 → ℚ) (γ : SL(2, ℤ)) (τ : ℍ) (hx : admitted c x) :
     sg c x (γ • τ) = sg c (act x γ) τ :=
-  GlobalTheory.T.modular_law_of_s_and_t (admitted c) (sg c) (fun x γ h => GlobalTheory.T.admissible_of_sl2_action c x γ h)
-    (fun x τ h => GlobalTheory.T.smoothedSiegelUnit_modularS_smul c x τ h) (fun x τ _ => GlobalTheory.T.smoothedSiegelUnit_modularGroupT_smul c x τ) γ x τ hx
+  GlobalTheory.T.modular_law_of_s_and_t (admitted c) (sg c) (fun x γ h => _root_.GlobalTheory.Sieg.admissible_act_SL2 c x γ h)
+    (fun x τ h => _root_.GlobalTheory.Sieg.sg_S c x τ h) (fun x τ _ => _root_.GlobalTheory.Sieg.sg_T_smul c x τ) γ x τ hx
 
 end GlobalTheory.Sieg

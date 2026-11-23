@@ -3,9 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtLAlgebraMap
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsProperToroidalModelStructureMap
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLogVectorFieldBasisToroidalModelSncStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowSmulEqLogDerivationExtendLocalizationAwStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowSmulEqOfLogDerivationExtendEqStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowSmulEqLogDerivationExtendLocalizationAw
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowSmulEqOfLogDerivationExtendEq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteOfLocallyFiniteFreeLocalizations
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsLinearHomPull
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsInvDer
 import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ToroidalCompactificationBis
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -43,10 +45,8 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.FlatBCSec
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsLinearHomPull
 import Development.AbelianVarietyTheory.Definitions.Divisors.HasDefect
 import Development.AbelianVarietyTheory.Definitions.Divisors.RigidForFan
-public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsInvDer
 
 @[expose] public section
 
@@ -65,7 +65,7 @@ namespace GlobalTheory.LogDerProj
 
 theorem isLocalizedModule_res : ∀ {k R S : Type} [Field k] [CommRing R] [CommRing S] [Algebra R S] (f : R) [IsLocalization.Away f S] (φ : k →+* R), φ.FiniteType → ∀ J : Ideal R, IsLocalizedModule (Submonoid.powers f) (res (S := S) f φ J) := by
   intro k R S _ _ _ _ f _ φ hφ J
-  refine IsLocalizedModule.mk (fun x => ?_) (GlobalTheory.T.exists_pow_smul_eq_logDerivation_extend_localizationAway f φ hφ J) (GlobalTheory.T.exists_pow_smul_eq_of_logDerivation_extend_eq f φ hφ J _ _)
+  refine IsLocalizedModule.mk (fun x => ?_) (_root_.GlobalTheory.LogDerProj.exists_pow_smul_eq_res f φ hφ J) (_root_.GlobalTheory.LogDerProj.exists_pow_smul_eq_of_res_eq f φ hφ J _ _)
   have hu : IsUnit (algebraMap R S x) := IsLocalization.map_units S x
   rw [Module.End.isUnit_iff]
   constructor

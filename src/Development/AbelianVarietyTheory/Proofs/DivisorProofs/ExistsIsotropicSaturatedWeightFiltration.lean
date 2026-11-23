@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiltGraded
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompatibleIsometriesCoisotropicKernelsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmHostUnitAddConjEqOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompatibleIsometriesCoisotropicKernels
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEquivLatticePartZeroIffMemNsmulStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLevelIsometryExtensionAlgClosedStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLevelIsometryGenericFibreBoundaryChartStatement
@@ -118,7 +119,7 @@ theorem GlobalTheory.LowFilt.exists_filt : ∀ {E : Type} [Field E] [NumberField
     simp only [smul_sub, smul_smul]
     abel
   have hM : 0 < l.M' := Nat.lcm_pos (by have := l.three_le; omega) l.A_pos
-  obtain ⟨Z, hZ, hZr, g, hgi, hgt, hgN, hker⟩ := GlobalTheory.T.exists_compatible_isometries_coisotropic_kernels Dw y hcois htow (GlobalTheory.T.finrank_uChart_le_min_signature Xo c R hR C) l.M' hM
+  obtain ⟨Z, hZ, hZr, g, hgi, hgt, hgN, hker⟩ := _root_.GlobalTheory.LowFilt.exists_compatible_isometries Dw y hcois htow (GlobalTheory.T.finrank_uChart_le_min_signature Xo c R hR C) l.M' hM
   refine ⟨Z, hZ, hZr, tK, m1, m2, fun F _ _ _ => ?_⟩
   let I₁ := twistI hB I₀ g hgi hgt
   have hI₁ : XFLevel C tK m1 m2 F₀ I₁ := by

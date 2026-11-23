@@ -5,7 +5,8 @@ public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLif
 public import Formalism.LocalToGlobal.ClassOfRecordOfChoice
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ClassOfRecordOfChoice
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ClosedRankTiesFC2S
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.MinkowskiQ
+public import Formalism.PeriodIntegrals.MinkowskiQ
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.MinkowskiTorsionFree.Lattice
 public import Formalism.SharpRestriction.GlobalSchurBounds.TheoremThreeFamilyOfFormalDegreeInput
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -71,7 +72,7 @@ theorem GlobalTheory.Top.designExists_of_tuSize_aux4n_litThin : ∀ (𝒜 : FamC
     (hn4.and (Pk.Closed.sub _root_.Formalism.MainNotions.Ext.Lw.second_chern_linked_closed_rank_ties fun Fm hc => (hRec Fm (hsub Fm hc)).c2s)).imp
       fun Fm _ _ h => Formalism.MainNotions.StandardLattice.HarishChandraReduction.chosenProviso_min Fm 3 hCe h.1 h.2
   have hE' : DesignExists (WithTw (WithSm (WithChN 𝒜))) 3 :=
-    designExists_of_choices (designChoices_upN (hEx minkowski_bound_rat)) hTu hProv
+    designExists_of_choices (designChoices_upN (hEx _root_.PI.MkQ.minkowskiBoundQ)) hTu hProv
       (chosenThin_closed (WithTw (WithSm (WithChN 𝒜))) hLit)
   exact hE'
 end

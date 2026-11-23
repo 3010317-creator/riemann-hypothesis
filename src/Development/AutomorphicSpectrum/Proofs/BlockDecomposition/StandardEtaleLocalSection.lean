@@ -2,7 +2,7 @@ module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.AcrisKummerUnits.Splits
 public import Mathlib.RingTheory.Etale.StandardEtale
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AbsolutelyClosedPolynomialSplitsStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AbsolutelyClosedPolynomialSplits
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -71,7 +71,7 @@ theorem exists_section_standardEtale : ∀ {S : Type} [CommRing S] , Aic (S := S
       Nonempty (B →ₐ[S] Localization.Away e) := by
   intro S _ hA hL B _ _ _ Q hQ hm
   obtain ⟨P⟩ := Algebra.IsStandardEtale.nonempty_standardEtalePresentation (R := S) (S := B)
-  obtain ⟨s, hs⟩ := GlobalTheory.T.absolutely_closed_polynomial_splits hA P.f P.monic_f
+  obtain ⟨s, hs⟩ := _root_.GlobalTheory.CompanionTheory.MonicSplit.monic_splits hA P.f P.monic_f
 
   have hprod : (s.map fun b => P.x - algebraMap S B b).prod ∈ Q := by
     have h0 : Polynomial.aeval P.x P.f = 0 := P.hasMap.1

@@ -7,13 +7,15 @@ public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.FamilySetupBesselGrowthStatement
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.FamilySetupCayleyBoundStatement
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.FamilySetupCayleyRecursionStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevZeroOfKHighest
+public import Development.AbelianVarietyTheory.Definitions.Jets.SideFam
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NumericalFamilyProductBoundConstantLe
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ProductMomentBoundDensityMassOne
 import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.QuotientMeasureAeMemAndMeasurableBesselModelStatement
 import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.SmoothVectorsDiscreteSeriesGlModuleStatement
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LenEqOfUnitriangular
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevZeroOfKHighest
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NumericalFamilyProductBoundConstantLeStatement
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NumericalFamilyShapeGaps
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ProductMomentBoundDensityMassOneStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -106,7 +108,7 @@ theorem product_moment : HypsG → ∀ (k r : ℕ) (Wp : Type) [NormedAddCommGro
   have hA : 0 ≤ (((2 * r + k + 1) : ℝ) ^ 2 * (Formalism.QuantumDeterminants.Tz k r z * b ^ 4) * (6 * bv) ^ (2 * (2 * r + 2))) := by
     have : 0 ≤ bv := by linarith
     positivity
-  have hmain := GlobalTheory.T.product_moment_bound_density_mass_one (Formalism.QuantumDeterminants.Mt k r) νq r (fun a x => lenA k r z (Matrix.of x) a)
+  have hmain := _root_.GlobalTheory.MomentHolder.product_moment_le (Formalism.QuantumDeterminants.Mt k r) νq r (fun a x => lenA k r z (Matrix.of x) a)
     (fun x => dg ν * ‖l ν ((R ν).σ (Matrix.of x) w)‖ ^ 2)
     (((2 * r + k + 1) : ℝ) ^ 2 * (Formalism.QuantumDeterminants.Tz k r z * b ^ 4) * (6 * bv) ^ (2 * (2 * r + 2))) (b ^ 2)
     hlen
@@ -127,6 +129,6 @@ theorem product_moment : HypsG → ∀ (k r : ℕ) (Wp : Type) [NormedAddCommGro
       simpa only [hw1, one_pow, mul_one] using this)
   refine hmain.trans (ENNReal.ofReal_le_ofReal ?_)
   exact pow_le_pow_left₀ (mul_nonneg hA (by positivity))
-    (GlobalTheory.T.numericalFamily_productBound_constant_le k r lam u b bv ga h q0 _ hNum hT) _
+    (_root_.GlobalTheory.MomNum.mom_num k r lam u b bv ga h q0 _ hNum hT) _
 
 end GlobalTheory.MomProd

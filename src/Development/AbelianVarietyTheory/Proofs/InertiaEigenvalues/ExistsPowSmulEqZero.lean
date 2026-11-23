@@ -1,11 +1,19 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.InvariantsVanishing
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdicallyCompleteLatticeReductionActionStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LatticePowSmulNhdsZeroBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LatticeTwistExactSequenceCohomologyStatement
+public import Mathlib.RingTheory.AdicCompletion.Basic
+public import Mathlib.Topology.Algebra.Monoid.Defs
+public import ReciprocityTheory.BasicDefinitions.AdRep
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdicallyCompleteLatticeReductionAction
+public import Mathlib.Topology.Algebra.Module.ModuleTopology
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LatticePowSmulNhdsZeroBasis
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LatticeTwistExactSequenceCohomology
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteResidueField
 public import Mathlib.Algebra.Module.Lattice.Full
+public import Mathlib.RingTheory.AdicCompletion.AsTensorProduct
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsDiscreteValuationRingIntegralClosurePadicInt
+public import Mathlib.Algebra.Module.Lattice.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -23,7 +31,6 @@ import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
-public import Mathlib.RingTheory.AdicCompletion.AsTensorProduct
 import Mathlib.RingTheory.AdicCompletion.Noetherian
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.Tactic.Basify
@@ -47,8 +54,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsDiscreteValuationRingIntegralClosurePadicInt
-public import Mathlib.Algebra.Module.Lattice.Basic
 import ReciprocityTheory.BasicDefinitions.ExistsUnique
 
 @[expose] public section
@@ -315,7 +320,7 @@ theorem tensIso_res [ContinuousMul G] [IsAdicComplete (Ideal.span {lam}) ↥L.T]
     exact ⟨Submodule.Quotient.mk ⟨_, tensCoc_mem χ hB hX c 1⟩, rfl⟩
   · rintro _ ⟨y, rfl⟩
     obtain ⟨z, rfl⟩ := Submodule.Quotient.mk_surjective _ y
-    obtain ⟨c, hc1, hc2, hc3⟩ := GlobalTheory.T.exists_continuous_cocycle_lift_of_subsingleton_H2 O G ↥L.T _ lam (act L χ) _
+    obtain ⟨c, hc1, hc2, hc3⟩ := _root_.GlobalTheory.CocycleLift.exists_lift O G ↥L.T _ lam (act L χ) _
       ((TensorProduct.mk O ↥L.T (O ⧸ Ideal.span {lam})).flip 1) inferInstance (eq_zero_of_smul hl)
       tmul_one_surj tmul_one_eq_zero (fun _ _ => rfl)
       (fun a t => (continuous_iff_adic hB fun g => act L χ g t).mp (by simpa only [act_coe] using hc t) a)
@@ -448,7 +453,7 @@ theorem free_and_tensIso [ContinuousMul G] [IsDomain O] [IsDiscreteValuationRing
   · refine (finite_induction hi (fun X _ _ => (twCoef (latRep L) χ X).invariants = ⊥ ∧ TensIso L χ X)
       (fun X _ _ _ => ⟨Subsingleton.elim _ _, fun _ _ _ => Subsingleton.elim _ _, ?_⟩)
       (fun X Y _ _ _ _ _ i p hi' he hp hY => ⟨inv_ext _ i p hi' he hp h0 hY.1,
-        GlobalTheory.T.lattice_twist_exact_sequence_cohomology G LL O V ρ L χ _ X Y i p hi' he hp
+        _root_.GlobalTheory.TensIsoExt.tensIso_of_exact G LL O V ρ L χ _ X Y i p hi' he hp
           (tensCoc_mem χ hB (exists_pow_smul_eq_zero hi.not_isUnit))
           (lc_act χ hB hc (exists_pow_smul_eq_zero hi.not_isUnit)) hY.1 hk hY.2⟩) X).2
     have : Subsingleton (Amb (twCoef (latRep L) χ X)) := (Submodule.mkQ_surjective _).subsingleton
@@ -495,7 +500,7 @@ theorem free_and_tensIso_gal {G Qp LL O : Type} [Group G] [TopologicalSpace G] [
   rw [hm] at hA hF'
   rw [← hr]
   refine free_and_tensIso Γ.χ₁ hi
-    (GlobalTheory.T.lattice_pow_smul_nhds_zero_basis LL O Γ.T₀.V Γ.T₀.L.T Γ.lam Γ.T₀.L.fg Γ.T₀.L.span hO hl0 hU) (fun v => ?_) hl0 h0 h2
+    (_root_.GlobalTheory.lattice_multiples_nhds_basis LL O Γ.T₀.V Γ.T₀.L.T Γ.lam Γ.T₀.L.fg Γ.T₀.L.span hO hl0 hU) (fun v => ?_) hl0 h0 h2
     fun _ hlc => hE _ _ (fun m => ?_) hlc h0 h2
   · have h := (hχ.comp continuous_inv).smul (Γ.T₀.cont v)
     refine h.congr fun g => ?_

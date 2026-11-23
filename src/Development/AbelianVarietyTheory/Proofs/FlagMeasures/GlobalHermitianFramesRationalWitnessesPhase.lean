@@ -1,13 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GFrames
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CoordinateLatticeUniqueTermAlmostAllPlacesStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CoordinateLatticeUniqueTermAlmostAllPlaces
+public import Mathlib.Algebra.Module.Lattice.Full
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NumberFieldLatticeDeterminedByLocalLattices
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StrongApproximationUnipotentStatement
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetTermBasicFacts
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsIntegralOfQuad
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemPerpSpan
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NumberFieldLatticeDeterminedByLocalLatticesStatement
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalExtend
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StrongApproximationUnipotentStatement
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermInvariantsIndependentOfWitnesses
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
@@ -245,7 +246,7 @@ theorem good_places (A : Places F E sig) (r k : ℕ) (G : GFrames A r k) (hk : 4
     {p | ¬ (G.S p).IsTermW (d p) (A.lat p Λ) 1 1}.Finite := by
   have hfull := full_lattice_of_term G hT
   obtain ⟨hL, hloc⟩ := hT
-  refine ((GlobalTheory.T.numberField_lattice_determined_by_local_lattices A (k + 2 * r + 1) Λ hfull).2.2.union (GlobalTheory.T.coordinateLattice_unique_term_almost_all_places A r k G hk)).subset ?_
+  refine ((_root_.GlobalTheory.HL.PlacesRec.lattice_local A (k + 2 * r + 1) Λ hfull).2.2.union (_root_.GlobalTheory.HL.StdPlace.coordinate_lattice_standard A r k G hk)).subset ?_
   intro p hp
   by_contra hq
   rw [Set.mem_union, not_or] at hq

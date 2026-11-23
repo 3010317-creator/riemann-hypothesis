@@ -7,7 +7,7 @@ public import Formalism.SharpRestriction.GenusPolyhedralBounds.RelativeIndexClas
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.SupBoundPageRows
 public import Development.AbelianVarietyTheory.Counterexamples.JetSurvey.EqZeroOfPnorm
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.LawsFieldsSeparately
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsNetDataFromHalfConjugateEmbeddingsStatement
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsNetDataFromHalfConjugateEmbeddings
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsNetMaxAtGoodEmb
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ReadingLinearIndependentAndInjective
 import Formalism.LocalToGlobal.ProjectiveLattices.FreeBridge
@@ -238,7 +238,7 @@ theorem netData_exists : ∀ (D : D7) (T : Top D) (h : LawsP T), GamAt T.toCore 
         exact ⟨n, ev, fun _ => H⟩
       · exact ⟨0, Fin.elim0, fun h' => absurd h' hσ⟩
     choose n ev H using key2
-    exact GlobalTheory.T.exists_netData_from_half_conjugate_embeddings D (recB h.toLawsCore) j w (GoodEmb T.Q.c)
+    exact _root_.GlobalTheory.exists_netData_of_readings_on_half D (recB h.toLawsCore) j w (GoodEmb T.Q.c)
       (fun σ => by rw [good_conj_iff]; exact not_not.symm) (supN_conj h j w) n ev _ H
 
 end GlobalTheory.RunIn.NetAtRecord

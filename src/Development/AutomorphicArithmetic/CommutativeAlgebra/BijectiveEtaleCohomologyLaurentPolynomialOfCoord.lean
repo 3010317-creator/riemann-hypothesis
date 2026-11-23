@@ -1,20 +1,22 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PullHlComp
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeZeroSectionClassPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyNegativeVanishingDegreeZeroStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeZeroSectionClassProperties
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DivisorSupportCondition
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyNegativeVanishingDegreeZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KummerClassOfUnitCocycleNaturalAdditiveStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupProductAssocStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupUnitAndPrimitiveRootClassesStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistSectionsLocallyGeneratedStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistUnitClassRootClassSpecStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupProductAssoc
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupUnitAndPrimitiveRootClasses
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.CohomologySubsingletonPosOfStrictlyHenselian
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.ConnectedSpaceSpecLocalAndLaurent
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.DvdExponentOfPowEqLaurentMonomial
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.ExistsRootOfKummerClassEqZero
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.NonemptyPrimitiveRootOfStrictlyHenselian
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.TwistedSectionEqNsmulGeneratorOfConnected
-public import Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.EtaleCohomologyLocallyAcyclic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentPolynomialCohomologyVanishingStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistSectionsLocallyGeneratedStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistUnitClassRootClassSpecStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,7 +59,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
-public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
 import Development.AutomorphicArithmetic.CupPullbacks.ConstCompSingle
 
 @[expose] public section
@@ -88,14 +89,14 @@ private theorem inv_sch {X : Scheme.{0}} (ζ : Prim q Γ(X, ⊤)) : Inv q (sch.o
 private theorem cupRootInj {X : Scheme.{0}} (ζ : Prim q Γ(X, ⊤)) (j : ℤ) {n i : ℤ} (x : Ht q (sch.obj X) n i)
     (h : cup q (rootClass j ζ) x = 0) : x = 0 := by
   have h1 : cup q (cup q (rootClass (-j) ζ) (rootClass j ζ)) x = 0 := by
-    rw [GlobalTheory.T.tateTwistCupProduct_assoc, h, map_zero, cast_zero']
-  rw [((GlobalTheory.T.tateTwistCup_unit_and_primitiveRoot_classes q).2 X ζ (-j) j).1] at h1
+    rw [_root_.GlobalTheory.EtC.CupAssoc.main, h, map_zero, cast_zero']
+  rw [((_root_.GlobalTheory.EtC.CupGen.main q).2 X ζ (-j) j).1] at h1
   rw [cup_cast'] at h1
   have h2 := cast_eq_zero' _ _ _ h1
   have key : ∀ (k : ℤ), k = 0 → cup q (rootClass k ζ) x = 0 → x = 0 := by
     intro k hk hx
     subst hk
-    rw [((GlobalTheory.T.tateTwistCup_unit_and_primitiveRoot_classes q).2 X ζ 0 0).2, (GlobalTheory.T.tateTwistCup_unit_and_primitiveRoot_classes q).1 _ (inv_sch ζ)] at hx
+    rw [((_root_.GlobalTheory.EtC.CupGen.main q).2 X ζ 0 0).2, (_root_.GlobalTheory.EtC.CupGen.main q).1 _ (inv_sch ζ)] at hx
     exact cast_eq_zero' _ _ _ hx
   exact key _ (by ring) h2
 
@@ -114,14 +115,14 @@ private theorem tors {E : Spc} {n i : ℤ} (x : Ht q E n i) {c : ℕ} (h : q ∣
   rw [← Nat.cast_smul_eq_nsmul (ZMod q), (ZMod.natCast_eq_zero_iff c q).2 h, zero_smul]
 
 private noncomputable def secHom (i : ℤ) (X : Scheme.{0}) : Sec (tw q i) X →+ Ht q (sch.obj X) 0 i :=
-  AddMonoidHom.mk' (secClass (tw q i)) (GlobalTheory.T.degreeZeroSectionClass_properties (ZMod q) (tw q i) X).2.2.1
+  AddMonoidHom.mk' (secClass (tw q i)) (_root_.GlobalTheory.EtC.secClass_props (ZMod q) (tw q i) X).2.2.1
 
 private theorem root_eq (i : ℤ) {X : Scheme.{0}} (ζ : Prim q Γ(X, ⊤)) : rootClass i ζ = secHom i X (twGen i ζ) :=
   (GlobalTheory.T.tateTwistUnitClass_rootClass_spec q).2.2.2 i X ζ
 
 private theorem root_every {X : Scheme.{0}} [ConnectedSpace X] (ζ : Prim q Γ(X, ⊤)) (i : ℤ) (b : Ht q (sch.obj X) 0 i) :
     ∃ c : ℕ, b = c • rootClass i ζ := by
-  obtain ⟨s, rfl⟩ := (GlobalTheory.T.degreeZeroSectionClass_properties (ZMod q) (tw q i) X).2.1.2 b
+  obtain ⟨s, rfl⟩ := (_root_.GlobalTheory.EtC.secClass_props (ZMod q) (tw q i) X).2.1.2 b
   obtain ⟨c, rfl⟩ := UpperTheory.twisted_section_eq_nsmul_generator_of_connected q i X ζ s
   refine ⟨c, ?_⟩
   rw [root_eq, ← map_nsmul]
@@ -130,14 +131,14 @@ private theorem root_every {X : Scheme.{0}} [ConnectedSpace X] (ζ : Prim q Γ(X
 private theorem root_tors {X : Scheme.{0}} [Nonempty X] (ζ : Prim q Γ(X, ⊤)) (i : ℤ) (c : ℕ) (h : c • rootClass i ζ = 0) :
     q ∣ c := by
   rw [root_eq, ← map_nsmul] at h
-  have hinj : Function.Injective (secHom (q := q) i X) := (GlobalTheory.T.degreeZeroSectionClass_properties (ZMod q) (tw q i) X).2.1.1
+  have hinj : Function.Injective (secHom (q := q) i X) := (_root_.GlobalTheory.EtC.secClass_props (ZMod q) (tw q i) X).2.1.1
   have h0 : c • twGen i ζ = 0 := hinj (h.trans (map_zero _).symm)
   exact (GlobalTheory.T.tateTwist_sections_locally_generated q i).2.2.1 X ζ c h0
 
 private theorem pull_root {Y X : Scheme.{0}} (f : Y ⟶ X) (ζ : Prim q Γ(X, ⊤)) (i : ℤ) :
     pull _ (sch.map f) _ _ (rootClass i ζ) = rootClass i (ζ.map f.appTop.hom) := by
   rw [root_eq, root_eq]
-  refine ((GlobalTheory.T.degreeZeroSectionClass_properties (ZMod q) (tw q i) X).2.2.2.1 f _).trans ?_
+  refine ((_root_.GlobalTheory.EtC.secClass_props (ZMod q) (tw q i) X).2.2.2.1 f _).trans ?_
   rw [(GlobalTheory.T.tateTwist_sections_locally_generated q i).2.2.2.1 Y X f ζ]
   rfl
 
@@ -173,9 +174,9 @@ theorem UpperTheory.bijective_etaleCohomology_laurentPolynomial_of_coordinate_un
     Spec.map (CommRingCat.ofHom (LaurentPolynomial.C : O →+* LaurentPolynomial O))
   let ζ' := ζ.map f.appTop.hom
   have hqL : IsUnit (q : Γ(Spec (CommRingCat.of (LaurentPolynomial O)), ⊤)) := ζ'.2.1
-  have hC5 := UpperTheory.Cb.etale_cohomology_locally_acyclic q O hSH hq
+  have hC5 := _root_.GlobalTheory.T.etale_cohomology_locally_acyclic q O hSH hq
   have hneg : ∀ (E : Spc) (n i : ℤ), n < 0 → Subsingleton (Ht q E n i) := fun E n i hn =>
-    (GlobalTheory.T.etaleCohomology_negative_vanishing_degree_zero (ZMod q) (tw q i)).1 E n hn
+    (_root_.GlobalTheory.EtC.etale_cohomology_vanishing_negative_degree_zero (ZMod q) (tw q i)).1 E n hn
   have hpos : ∀ (n i : ℤ), 0 < n → Subsingleton (Ht q (sp O) n i) := fun n i hn => UpperTheory.cohomology_subsingleton_pos_of_strictly_henselian (ZMod q) O hSH (tw q i) n hn
 
   have hinj : Function.Injective fun b : Ht q (sp O) 0 j => cup q (pull _ (sch.map f) _ _ b) (kum q u) := by

@@ -3,17 +3,20 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrysActApply
 public import Development.AbelianVarietyTheory.Definitions.Divisors.KottwitzDimSignatureOneOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QActMSubAlgebraMap
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeFirstDeRhamStructureStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeFirstDeRhamStructure
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharacterAugmentationSubspaceQuotientActionTopStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRelativeDimensionAbelianVarietyField
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankEquivariantHomEqAugmentationQuotientStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankFirstDeRhamHomologyHodgeFiltrationOfFieldStatement
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankEquivariantHomEqAugmentationQuotient
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankFirstDeRhamHomologyHodgeFiltrationOfField
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankHomHarrisTaylorOrderMoritaStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankKsSubMapClsEqHomOStatement
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankKsSubMapClsEqHomO
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankMapEqOfKerEq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorFinrankDeRhamQuotientCharacterStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorRhoPartLieDeRhamQuotientStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KodairaSpencerFormApplyStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KodairaSpencerFormApply
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MonoidAlgebraActionViaRingActionApplyStatement
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
@@ -110,7 +113,7 @@ variable {k O C : Type*} {H : Type v} [Field k] [AddCommGroup H] [Module k H] [R
 theorem finrank_ks_map_cls [FiniteDimensional k H] (σ : O →+* Module.End k H) (G Z : Submodule k H)
     (hG : ∀ a, ∀ x ∈ G, σ a x ∈ G) (hZ : ∀ a, ∀ x ∈ Z, σ a x ∈ Z) (hZG : Z ≤ G) :
     finrank k ((ksSub σ 0 G Z).map (cls G)) =
-      finrank k (homO (qAct (rAct σ G hG) (Z.comap G.subtype) (fun a x hx => hZ a x hx)) (qAct σ G hG)) := GlobalTheory.T.finrank_ksSub_map_cls_eq_finrank_homO σ G Z hG hZ hZG
+      finrank k (homO (qAct (rAct σ G hG) (Z.comap G.subtype) (fun a x hx => hZ a x hx)) (qAct σ G hG)) := _root_.GlobalTheory.HTRho.finrank_ksSub_map_cls_eq_homO σ G Z hG hZ hZG
 
 theorem finrank_homO_crt {ι W V : Type*} [Fintype ι] [AddCommGroup W] [Module k W] [FiniteDimensional k W]
     [AddCommGroup V] [Module k V] [FiniteDimensional k V] (σW : O →+* Module.End k W) (τ : O →+* Module.End k V)
@@ -122,12 +125,12 @@ theorem finrank_homO_quot {W V : Type*} [AddCommGroup W] [Module k W] [FiniteDim
     [AddCommGroup V] [Module k V] [FiniteDimensional k V] (σW : O →+* Module.End k W) (τ : O →+* Module.End k V)
     (χ : C →+* k) (hτ : ∀ c, τ (algebraMap C O c) = χ c • 1) :
     finrank k (homO σW τ) =
-      finrank k (homO (qAct σW (mSub σW χ ⊤) (mSub_stable σW χ ⊤ (fun _ _ _ => trivial))) τ) := GlobalTheory.T.finrank_homO_eq_augmentationQuotient_of_scalar_character σW τ χ hτ
+      finrank k (homO (qAct σW (mSub σW χ ⊤) (mSub_stable σW χ ⊤ (fun _ _ _ => trivial))) τ) := _root_.GlobalTheory.HTRho.finrank_homO_eq_quot_mSub σW τ χ hτ
 
 theorem quot_facts {ι : Type*} (σ : O →+* Module.End k H) (G : Submodule k H) (hG : ∀ a, ∀ x ∈ G, σ a x ∈ G)
     (χ : ι → C →+* k) :
     (jSub σ χ ⊤ ≤ G → jSub (qAct σ G hG) χ ⊤ = ⊥) ∧
-    ∀ i, finrank k ((H ⧸ G) ⧸ mSub (qAct σ G hG) (χ i) ⊤) = finrank k (H ⧸ (G ⊔ mSub σ (χ i) ⊤)) := GlobalTheory.T.finrank_equivariantHom_eq_augmentation_quotient σ G hG χ
+    ∀ i, finrank k ((H ⧸ G) ⧸ mSub (qAct σ G hG) (χ i) ⊤) = finrank k (H ⧸ (G ⊔ mSub σ (χ i) ⊤)) := _root_.GlobalTheory.HTRho.quotFacts σ G hG χ
 
 theorem finrank_sub_quot {ι : Type*} [Fintype ι] [FiniteDimensional k H] (σ : O →+* Module.End k H)
     (χ : ι → C →+* k) (hχ : Function.Injective χ) (Fil : Submodule k H) (hFil : ∀ a, ∀ x ∈ Fil, σ a x ∈ Fil)
@@ -205,10 +208,10 @@ namespace GlobalTheory.HTRho
 
 theorem rhoCount : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum p) (R : Type) [CommRing R] (b : GlobalTheory.UPel.HT.Base D R) (N : ℕ), 3 ≤ N → N.Coprime p → ∀ (k : Type) [Field k] [IsAlgClosed k] (t : Sp k ⟶ Sp R) (o₀ : GlobalTheory.UPel.HT.Obj b N t) (β : R →+* k), t = spMap β → KSDim (GlobalTheory.HTCount.crysAct o₀) 0 (Fil o₀.A ⊔ LinearMap.range (GlobalTheory.HTCount.crysAct o₀ (algebraMap (𝓞 D.F) D.O D.ω) - β b.ρ • 1)) (GlobalTheory.HTCount.lieZ o₀ β) (D.a * (D.n - 1)) := by
   intro p _ D R _ b N _ _ k _ _ t o₀ β hβ
-  obtain ⟨hFree, hHodge, -, -, -⟩ := GlobalTheory.T.abelianScheme_firstDeRham_structure
+  obtain ⟨hFree, hHodge, -, -, -⟩ := _root_.GlobalTheory.abelianDeRham
   have hA := o₀.ab
   obtain ⟨g, hg⟩ := GlobalTheory.AbVarRelDim.exists_relDim k o₀.A hA
-  obtain ⟨hfd, -, -⟩ := GlobalTheory.T.finrank_firstDeRhamHomology_hodgeFiltration_of_field hFree hHodge k o₀.A g hA hg
+  obtain ⟨hfd, -, -⟩ := _root_.GlobalTheory.finrank_HdR_Fil_of_field hFree hHodge k o₀.A g hA hg
   have hunit : ∀ n : ℕ, n.Coprime p → IsUnit (n : k) := fun n hn => by
     simpa using (b.unit n hn).map β
   set σ := GlobalTheory.HTCount.crysAct o₀ with hσ

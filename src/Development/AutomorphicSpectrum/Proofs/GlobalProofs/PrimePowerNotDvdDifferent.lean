@@ -3,7 +3,9 @@ module
 public import Mathlib.Algebra.AffineMonoid.Basic
 public import Mathlib.NumberTheory.NumberField.Basic
 public import Mathlib.RingTheory.DedekindDomain.Different
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.TraceIdempotentNotDivisibleStatement
+public import Mathlib.RingTheory.Trace.Defs
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.TraceIdempotentNotDivisible
+public import Mathlib.NumberTheory.NumberField.Norm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +52,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.NumberTheory.NumberField.Norm
 
 @[expose] public section
 
@@ -101,7 +102,7 @@ theorem not_pow_dvd_different (E : Type) [Field E] [NumberField E] (P J : Ideal 
   have hlt : Module.finrank ℤ (𝓞 E) < p ^ d := by
     rw [RingOfIntegers.rank]
     exact Nat.lt_pow_self hp.one_lt
-  refine GlobalTheory.T.trace_idempotent_not_divisible (𝓞 E) x p d hp hlt hidem hnot ?_
+  refine _root_.GlobalTheory.CompanionTheory.IdemTrace.not_dvd_trace (𝓞 E) x p d hp hlt hidem hnot ?_
 
   have hpdE : ((p : E)) ^ d ≠ 0 := pow_ne_zero _ (Nat.cast_ne_zero.2 hp.ne_zero)
   have hD0 : ((differentIdeal ℤ (𝓞 E) : Ideal (𝓞 E)) : FractionalIdeal (𝓞 E)⁰ E) ≠ 0 := by

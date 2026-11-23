@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.RigidForFan
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RigidBoundaryChartsForFanOfUnitarySeparationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryToroidalSeparationOfBaseStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.FromBaseAlt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryToroidalSeparationOfBase
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsLinearHomPull
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -37,7 +39,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsLinearHomPull
 
 @[expose] public section
 
@@ -54,6 +55,6 @@ attribute [local instance] Over.cartesianMonoidalCategory
 namespace GlobalTheory.RigChart
 
 theorem rigidForFan_holds : GlobalTheory.RigChart.RigidForFan :=
-  GlobalTheory.T.rigidBoundaryChartsForFan_of_unitarySeparation GlobalTheory.T.unitaryToroidalSeparation_of_base
+  GlobalTheory.T.rigidBoundaryChartsForFan_of_unitarySeparation _root_.GlobalTheory.UPoincTop.uStB
 
 end GlobalTheory.RigChart

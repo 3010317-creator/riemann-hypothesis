@@ -1,8 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HermSysHypOneLeLambdaZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChowFormZeroSetExtensionFieldIffCommonConeZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleOfFinrankLeCardAlgHomAlgebraicClosureStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.JoinCastSucc
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChowFormZeroSetExtensionFieldIffCommonConeZero
+public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
+public import Mathlib.RingTheory.Etale.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleOfFinrankLeCardAlgHomAlgebraicClosure
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDvdPowOfZeros
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEqIsoSpecComp
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPtOfMemConeOfIsAlgClosed
@@ -67,7 +70,7 @@ theorem spec_zero_iff {F : Type} [Field F] [NumberField F] (T : Tuple F) (hT : T
       ∃ x ∈ T.geomPts E (T.linSection E s),
         ∑ j, ξ j * T.coords (LinSys.toBase x : T.Pt (AlgebraicClosure E)).1 j = 0 := by
   rw [eval_spec]
-  obtain ⟨hA, hB⟩ := GlobalTheory.T.chowForm_zeroSet_extensionField_iff_common_cone_zero F _ _ δ _ f hf
+  obtain ⟨hA, hB⟩ := _root_.GlobalTheory.ChowZeroExt.zero_set_ext F _ _ δ _ f hf
   have hs : ∀ (u y : Fin T.N → AlgebraicClosure E) (c : AlgebraicClosure E), ∑ j, u j * y j = 0 →
       ∑ j, u j * (c • y) j = 0 := fun u y c h => by
     simp only [Pi.smul_apply, smul_eq_mul, mul_left_comm _ c, ← Finset.mul_sum]
@@ -94,7 +97,7 @@ theorem simpleAt_of_noSquare : ∀ (F : Type) [Field F] [NumberField F] (T : Tup
   haveI := hmod
   have hPfin : (T.geomPts E (T.linSection E s)).Finite := hfs.finite_subPts _
   have hcard := natCard_subPts _ _ hfs (AlgebraicClosure E)
-  have hI := GlobalTheory.T.etale_of_finrank_le_card_algHom E Γ((T.linSection E s).subscheme, ⊤)
+  have hI := _root_.GlobalTheory.etale_of_finrank_le_card_algHom_algebraicClosure E Γ((T.linSection E s).subscheme, ⊤)
   set P := T.geomPts E (T.linSection E s) with hPdef
   set Ω := AlgebraicClosure E
   let yv : (T.toLinSys.baseChange E).Pt Ω → Fin T.N → Ω := fun x => T.coords (LinSys.toBase x : T.Pt Ω).1

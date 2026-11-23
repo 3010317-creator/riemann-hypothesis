@@ -4,17 +4,20 @@ public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.IoInjective
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DifferentiableOneP
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HarishChandraFinite
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsMulRightInvariantHaarAdelicUnitaryGroupHermiti
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOneP
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdelicOpenNeighbourhoodProduct
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ArchimedeanNeighbourhoodExpSurjectiveStatement
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.CuspTranslateBoundedByDerivativeStatement
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.DerivativeSkewAdjointCuspFormsStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.FiniteCoefficientSpaceAnnihilatingPolynomialStatement
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.FiniteCoefficientSpaceAnnihilatingPolynomial
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.FiniteDimensionalOfEmbedding
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.LieAlgebraSpannedByCompactAndFrameStatement
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.SkewOfCommute
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.SkewOperatorBoundedByPolynomialRootsStatement
+public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.SkewOperatorBoundedByPolynomialRoots
 public import Development.WeilBound.CoreStatements.MeasureExistence.ExistsMeas
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HasDRepIffHasDerivAt
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOneP
 import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemElt
 import Formalism.RealPlaceAnalysis.RealPlaceTaylor.KoszulLowersPower
 import Mathlib.Algebra.Order.Floor.Extended
@@ -55,7 +58,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HasDRepIffHasDerivAt
 
 @[expose] public section
 
@@ -251,9 +253,9 @@ theorem bd_ktype (μ : Measure (GA D V)) [μ.IsHaarMeasure] (hθ : IsInfFam θ) 
     Bd μ hθ {φ | HasTypeAt θ V τ e P ρ φ.1} (der hθ τ hY) := by
   classical
   obtain ⟨s, hc, h0, ha, hs⟩ := exists_oneParam hy
-  obtain ⟨m, hm0, hm⟩ := GlobalTheory.T.finite_coefficient_space_annihilating_polynomial (Formalism.REAL.KG e) W ρ hρ s hc h0 ha
+  obtain ⟨m, hm0, hm⟩ := _root_.GlobalTheory.CompanionTheory.HcFinite.OneParam.coeff_ode (Formalism.REAL.KG e) W ρ hρ s hc h0 ha
   have hκ0 : 0 ≤ ∑ r ∈ m.roots.toFinset, ‖r‖ := Finset.sum_nonneg fun _ _ => norm_nonneg _
-  refine ⟨_, hκ0, fun φ hφ => GlobalTheory.T.skew_operator_bounded_by_polynomial_roots _ _ (io μ hθ) (io_injective μ hθ) (der hθ τ hY)
+  refine ⟨_, hκ0, fun φ hφ => _root_.GlobalTheory.CompanionTheory.SkewSpec.norm_le_of_aeval_eq_zero _ _ (io μ hθ) (io_injective μ hθ) (der hθ τ hY)
     (fun a b => GlobalTheory.T.derivative_skew_adjoint_cusp_forms D θ hθ V μ τ _ hY a b) m hm0 _ hκ0
     (fun r hr => Finset.single_le_sum (f := fun r : ℂ => ‖r‖) (fun _ _ => norm_nonneg _)
       (Multiset.mem_toFinset.2 hr)) φ ?_⟩

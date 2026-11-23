@@ -1,12 +1,13 @@
 module
 
-import Development.WeilBound.CoreStatements.VolumeEquality.Pieces
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GroupDict
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.DifferentiableOnOfTendstoLocallyUniformlyOn
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BallAutomorphismInverseExists
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HaarPushforwardEqBallDensityStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HaarPushforwardEqBallDensity
 public import GroundTheory.HeightsAndTheta.Heights.FiniteCovolume.PAdelicCovolumeFinite
 public import GroundTheory.HeightsAndTheta.Heights.FiniteCovolume.PArchLatticeDiscrete
+public import ReciprocityTheory.AnalyticForms.AnalyticCharts.NullZero
+import Development.WeilBound.CoreStatements.VolumeEquality.Pieces
 import GroundTheory.HeightsAndTheta.Heights.FiniteCovolume.PMajorantStabCompact
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -58,7 +59,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import ReciprocityTheory.AnalyticForms.AnalyticCharts.NullZero
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 
 @[expose] public section
@@ -253,7 +253,7 @@ theorem pi_eq_of_eqvBy (Δ : GroupDict F) (γ : latticeStab Δ.h Δ.e.range) (a)
 
 theorem null_fixed (Δ : GroupDict F) (μ : Measure (archUnitary Δ.h 𝐯)) [μ.IsHaarMeasure] (u : archUnitary Δ.h 𝐯)
     (hu : ∃ a, Δ.π (u * a) ≠ Δ.π a) : μ {a | Δ.π (u * a) = Δ.π a} = 0 := by
-  obtain ⟨c, -, -, hc⟩ := GlobalTheory.T.haar_pushforward_eq_ball_density E Ψ j j' n g Λ F Δ μ
+  obtain ⟨c, -, -, hc⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.DictMeas.haar_projects E Ψ j j' n g Λ F Δ μ
   obtain ⟨A, G, hA, -, hAπ, -⟩ := Δ.act u
   obtain ⟨a₀, ha₀⟩ := hu
   rw [hAπ] at ha₀
@@ -309,7 +309,7 @@ theorem exists_const_lintegral (Δ : GroupDict F) (μ : Measure (archUnitary Δ.
       (∀ t ∈ ballDom F.q, ∀ t' ∈ ballDom F.q, F.Eqv (autGrp F.form) t t' → Φ t = Φ t') →
       ∫⁻ t in FF, Φ t * ENNReal.ofReal (ballDens F.q t) = C * ∫⁻ a in FD, Φ (Δ.π a) ∂μ := by
   classical
-  obtain ⟨c, hc0, hcT, hc⟩ := GlobalTheory.T.haar_pushforward_eq_ball_density E Ψ j j' n g Λ F Δ μ
+  obtain ⟨c, hc0, hcT, hc⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.DictMeas.haar_projects E Ψ j j' n g Λ F Δ μ
   set Γ₀ := archLatticeGroup Δ.h 𝐯 Δ.e.range with hΓ₀
   let φ : latticeStab Δ.h Δ.e.range →* archUnitary Δ.h 𝐯 := (archEmbed Δ.h 𝐯).comp (latticeStab Δ.h Δ.e.range).subtype
   let ψ : latticeStab Δ.h Δ.e.range →* (Λ ≃ₗ[𝓞 E] Λ) := (autGrp F.form).subtype.comp Δ.α.toMonoidHom

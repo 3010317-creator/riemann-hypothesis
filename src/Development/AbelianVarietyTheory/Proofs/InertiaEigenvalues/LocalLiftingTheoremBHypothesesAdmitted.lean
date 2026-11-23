@@ -3,22 +3,28 @@ module
 public import Formalism.GaloisCohomology.LocalTateDualityK
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.RationalDualityOfAllCoefficients
 public import Formalism.SharpRestriction.LevelLetterCocycles.ArcLiftingSetup
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleArcDatumGivesArcPropertyStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ArcTheoremToolsOfWachModuleConclusionsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BlochKatoCrystallineExtensionCriterionStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ClassSplittingAlongArcsOfAdmissibleStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineUniversalPartCaseAStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DDeRhamEqDCrisOfUnramifiedStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DcrisExactStrictElementwiseCrystallineStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FontaineDcrisStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FontaineFullFaithfulExactPsiStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.H1fGenerationUnramifiedStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.FiltrationSaturationKiller
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleArcDatumGivesArcProperty
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ArcTheoremToolsOfWachModuleConclusions
+public import Formalism.SharpRestriction.LevelLetterCocycles.RamifiedCoefficientChains
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BlochKatoCrystallineExtensionCriterion
+public import Formalism.SharpRestriction.LevelLetterCocycles.InvariantsGenerators
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ClassSplittingAlongArcsOfAdmissible
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineUniversalPartCaseA
+public import Formalism.SharpRestriction.LevelLetterCocycles.CrystallineMapLemmas
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DDeRhamEqDCrisOfUnramified
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DcrisExactStrictElementwiseCrystalline
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FontaineFullFaithfulExactPsi
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.H1fGenerationUnramified
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HerrExtensionClassFormula
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JumpsExactAdm
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalConstantsFromAdmittedLocalGaloisStatementsStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeLaterClausesHoldStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachModuleLocalConclusionsUsedFormsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachRelayLemmaArcCoordinateHypothesesStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.LiftingTheory
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalConstantsFromAdmittedLocalGaloisStatements
+public import Formalism.SharpRestriction.LevelLetterCocycles.UsedLocalConclusion
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachModuleLocalConclusionsUsedForms
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachRelayLemmaArcCoordinateHypotheses
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FontaineDcris
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeLaterClausesHold
 import Formalism.SharpRestriction.LevelLetterCocycles.DivisibilityInvariantMulLinear
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -67,22 +73,22 @@ theorem admissible_ranks_of_CMDatum : GlobalTheory.Published.BlochKatoLocal → 
     ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf D.loc D.locA HW F),
       ArcLiftingSetup.admitted D HW F Cm 10 23 32 32 8 := by
   intro hBK hTD hEC D HW F Cm
-  have hN1 := GlobalTheory.T.wachLattice_laterClauses_hold D HW F Cm
+  have hN1 := _root_.GlobalTheory.NL.wach_used_clauses D HW F Cm
   obtain ⟨hP1, -, -, -, -, hP6, -, hP8, hP9, -⟩ := hN1
-  have h54 := GlobalTheory.T.localConstants_from_admitted_local_Galois_statements hBK hTD hEC D HW F Cm
+  have h54 := _root_.GlobalTheory.localConstants_from_admitted_local_Galois_statements_alt hBK hTD hEC D HW F Cm
   obtain ⟨-, ⟨hWX, -⟩, hW1, -, -, hH, -, -⟩ := h54
-  have hB := GlobalTheory.T.arcTheorem_tools_of_wachModuleConclusions D HW F Cm
+  have hB := _root_.GlobalTheory.ArcTools.arc_tools_from_clauses D HW F Cm
   obtain ⟨hSat, -, hSatP, hPi0, hKL, hKill, -, hF1, -⟩ := hB
-  obtain ⟨hRelay, hArcAdm⟩ := GlobalTheory.T.wachRelayLemma_arcCoordinateHypotheses hBK hTD hEC D HW F Cm
-  have hA11 := GlobalTheory.T.ramifiedCoefficientChains_adm11 D
-  have hArc := GlobalTheory.T.arcCoordinatesCaseA_of_admArcA_of_P1free_of_adm11 D HW F Cm hArcAdm hP1 hA11
+  obtain ⟨hRelay, hArcAdm⟩ := _root_.GlobalTheory.NQ.relay_and_arc_inputs hBK hTD hEC D HW F Cm
+  have hA11 := _root_.GlobalTheory.Per.DcrisExact.fontaine_dcris D
+  have hArc := _root_.GlobalTheory.admissibleArcDatum_gives_arcProperty D HW F Cm hArcAdm hP1 hA11
   have hJ := (GlobalTheory.jumps_exact_adm D HW F).2
   have hExt := GlobalTheory.HerrExtClass.herr_extension_class_formula D HW F
-  have hAdm9 := GlobalTheory.T.dcris_exact_strict_elementwise_crystalline D
-  have hSplit := GlobalTheory.T.classSplitting_along_arcs_of_admissible D HW F Cm ⟨hP8, hP9, hW1, hJ, hExt, hF1, hRelay, hArc⟩ hArcAdm hP1 hP6 hWX
-    (GlobalTheory.T.fontaine_fullFaithful_exact_psi D HW F) hJ hAdm9 hA11
-  have hUniv := GlobalTheory.T.crystallineUniversalPart_caseA D HW F Cm ⟨hSat, hKL, hPi0, hArc⟩ hP9 hH (GlobalTheory.T.dDeRham_eq_dCris_of_unramified D)
-  exact ⟨(GlobalTheory.T.wachModuleLocalConclusions_usedForms D HW F Cm).1, GlobalTheory.T.localConstants_from_admitted_local_Galois_statements hBK hTD hEC D HW F Cm, hSat, hSatP, hKill,
-    ArcLiftingSetup.content_divisibility_clause D, GlobalTheory.T.h1fGeneratorBoundAll_loc D, hRelay, hArc, hSplit, hUniv, hAdm9, GlobalTheory.T.blochKato_crystalline_extension_criterion D⟩
+  have hAdm9 := _root_.GlobalTheory.dcris_exact_strict_elementwise D
+  have hSplit := _root_.GlobalTheory.classSplitAlongArcs D HW F Cm ⟨hP8, hP9, hW1, hJ, hExt, hF1, hRelay, hArc⟩ hArcAdm hP1 hP6 hWX
+    (_root_.GlobalTheory.fontaine_litFont_assembled D HW F) hJ hAdm9 hA11
+  have hUniv := _root_.GlobalTheory.universalPart_caseA D HW F Cm ⟨hSat, hKL, hPi0, hArc⟩ hP9 hH (_root_.GlobalTheory.FontaineAdmissibility.intersectionNumber_baseChange D)
+  exact ⟨(_root_.GlobalTheory.NL.usedLocalConclusion_and_prvE D HW F Cm).1, _root_.GlobalTheory.localConstants_from_admitted_local_Galois_statements_alt hBK hTD hEC D HW F Cm, hSat, hSatP, hKill,
+    ArcLiftingSetup.content_divisibility_clause D, _root_.GlobalTheory.GenCountUnram.admGenL_all D, hRelay, hArc, hSplit, hUniv, hAdm9, _root_.GlobalTheory.ExtCrysCrit.blochKato_ext_all D⟩
 
 end GlobalTheory.TheoremBAdm

@@ -3,9 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Foundations.MemRingOfInR
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitZetaAct
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModularGroupRowVecAndConjRightActions
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CuspExpansionCoeffConjOfQExpansionConjStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsComplexRingEquivExtendingSubfieldAutStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LevelNFunctionGaloisConjQExpansionStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CuspExpansionCoeffConjOfQExpansionConj
+public import Mathlib.Basic.Complex.Basic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsComplexRingEquivExtendingSubfieldAut
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ZetaActRefl
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LevelNFunctionGaloisConjQExpansion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,7 +46,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ZetaActRefl
 
 @[expose] public section
 
@@ -59,12 +60,12 @@ theorem exists_conj_of_inR : ∀ (Ω : Type) [Field Ω] (ε : Ω →+* ℂ) (s :
   intro Ω _ ε s f hf
   obtain ⟨N, w, hN, hLv⟩ := hf
   haveI : NeZero N := ⟨hN.ne'⟩
-  obtain ⟨g, hg⟩ := GlobalTheory.T.exists_complex_ringEquiv_extending_subfield_aut Ω ε s
+  obtain ⟨g, hg⟩ := _root_.GlobalTheory.FN.exists_ringEquiv_extend_of_embedding Ω ε s
   have hgE : ∀ x ∈ ε.range, g x ∈ ε.range := by
     rintro x ⟨y, rfl⟩
     exact ⟨s y, (hg y).symm⟩
   obtain ⟨d, hd⟩ := GlobalTheory.WpFam.exists_unit_zetaAct N g
-  obtain ⟨f', hLv', hconj⟩ := GlobalTheory.T.levelN_function_galois_conj_qExpansion g ε.range N d w f hgE hd hLv
+  obtain ⟨f', hLv', hconj⟩ := _root_.GlobalTheory.FN.lv_galois_conj g ε.range N d w f hgE hd hLv
   refine ⟨f', ⟨N, w, hN, hLv'⟩, ?_⟩
   intro h h' hh hh' r
   have h1 : dg d * redGL N 1 = redGL N 1 * dg d := by
@@ -73,6 +74,6 @@ theorem exists_conj_of_inR : ∀ (Ω : Type) [Field Ω] (ε : Ω →+* ℂ) (s :
   simp only [one_smul] at hc
   have hq := hLv.2 1
   simp only [one_smul] at hq
-  exact GlobalTheory.T.cuspExpansion_coeff_conj_of_qExpansion_conj Ω ε s.toRingHom g N w f f' h h' hg hN hq hc hh hh' r
+  exact _root_.GlobalTheory.FN.exp_conj Ω ε s.toRingHom g N w f f' h h' hg hN hq hc hh hh' r
 
 end GlobalTheory.FN

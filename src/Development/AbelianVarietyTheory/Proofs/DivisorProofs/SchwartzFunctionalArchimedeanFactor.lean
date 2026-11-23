@@ -4,12 +4,17 @@ public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTenso
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenScaledInt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EigenIntertwinerGoodModels
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNatMulIntegralOfIsCompact
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteAdeleApproxScaledStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ScaledCosetIndicatorSchwartzStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ScaledIndicatorCosetSumStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ScaledLatticeFourierInvariantStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ScaledLatticeTranslationInvariantStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaSumIndicatorNonzeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteAdeleApproxScaled
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ScaledCosetIndicatorSchwartz
+public import Mathlib.Basic.Complex.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ScaledIndicatorCosetSum
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ScaledLatticeFourierInvariant
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Mathlib.NumberTheory.NumberField.CanonicalEmbedding.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ScaledLatticeTranslationInvariant
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaSumIndicatorNonzero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTransformRationalTranslateQuasiInvariant
 import GroundTheory.GlobalFields.TateThesis.AdelicChar
 import Mathlib.Algebra.Order.Floor.Extended
@@ -80,7 +85,7 @@ theorem inf_rat (q : F) :
   rfl
 
 theorem boxInd_mem_SB {a : F} (ha : a ≠ 0) : boxInd F κ a ∈ SB (κ → FiniteAdeleRing (𝓞 F) F) := by
-  have h := GlobalTheory.T.scaled_coset_indicator_schwartz F κ a ha 0
+  have h := _root_.GlobalTheory.EvAdm.indicator_coset_scaledInt_mem_SB F κ a ha 0
   convert h using 2
   ext y
   simp
@@ -127,14 +132,14 @@ theorem box_eq (ψ : AddChar (AF F) ℂ) (hψ : IsStd ψ) (L : ((κ → AF F) �
     {a : F} (ha : a ≠ 0) (T : SchwartzMap (κ → mixedEmbedding.mixedSpace F) ℂ →L[ℂ] ℂ)
     (hT : ∀ f : SchwartzMap (κ → mixedEmbedding.mixedSpace F) ℂ, L (pureA F f (boxInd F κ a)) = T f) :
     ∃ c : ℂ, ∀ f : SchwartzMap (κ → mixedEmbedding.mixedSpace F) ℂ, L (pureA F f (boxInd F κ a)) = c * thetaSum F (pureA F f (boxInd F κ a)) := by
-  obtain ⟨c, hc⟩ := GlobalTheory.T.scaled_lattice_translation_invariant F κ a ha T (fun ξ hξ f f' hf => by
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.LatUniq.main_lat F κ a ha T (fun ξ hξ f f' hf => by
       rw [← hT, ← hT]
       have e := pure_shift f f' ξ (boxInd F κ a) (boxInd F κ a) hf (fun y => by
         simp only [Set.indicator_apply, SetLike.mem_coe, AddSubgroup.add_mem_cancel_right _ hξ])
       rw [← e]
       exact L_shift ψ L hinv ξ (pure_mem f (boxInd_mem_SB ha)))
     (fun b hb f f' hf => by
-      rw [← hT, ← hT, ← GlobalTheory.T.scaled_lattice_fourier_invariant F ψ hψ κ a ha b hb f f' hf]
+      rw [← hT, ← hT, ← _root_.GlobalTheory.SchrCharPure.main F ψ hψ κ a ha b hb f f' hf]
       have h := hinv 0 b _ (pure_mem f (boxInd_mem_SB ha))
       have e0 : (fun i => algebraMap F (AF F) ((0 : κ → F) i)) = 0 := by funext i; simp
       rw [e0] at h
@@ -160,7 +165,7 @@ variable {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ]
 
 theorem cosInd_mem_SB {a : F} (ha : a ≠ 0) (r : κ → FiniteAdeleRing (𝓞 F) F) :
     cosInd F κ a r ∈ SB (κ → FiniteAdeleRing (𝓞 F) F) :=
-  GlobalTheory.T.scaled_coset_indicator_schwartz F κ a ha r
+  _root_.GlobalTheory.EvAdm.indicator_coset_scaledInt_mem_SB F κ a ha r
 
 theorem cos_eq (ψ : AddChar (AF F) ℂ) (hψ : IsStd ψ) (L : ((κ → AF F) → ℂ) → ℂ)
     (hinv : ∀ a b : κ → F, ∀ Φ ∈ schA F κ,
@@ -170,7 +175,7 @@ theorem cos_eq (ψ : AddChar (AF F) ℂ) (hψ : IsStd ψ) (L : ((κ → AF F) �
       L (pureA F f (boxInd F κ a)) = c * thetaSum F (pureA F f (boxInd F κ a)))
     (r : κ → FiniteAdeleRing (𝓞 F) F) (f : SchwartzMap (κ → mixedEmbedding.mixedSpace F) ℂ) :
     L (pureA F f (cosInd F κ a r)) = c * thetaSum F (pureA F f (cosInd F κ a r)) := by
-  obtain ⟨ξ, hξ⟩ := GlobalTheory.T.finite_adele_approx_scaled F κ a ha r
+  obtain ⟨ξ, hξ⟩ := _root_.GlobalTheory.EvAdm.exists_rational_rep_scaledInt F κ a ha r
   have hs : {y | y - r ∈ GlobalTheory.EvAdm.scaledInt F κ a} =
       {y | y - (fun i => algebraMap F (FiniteAdeleRing (𝓞 F) F) (ξ i)) ∈ GlobalTheory.EvAdm.scaledInt F κ a} := by
     ext y
@@ -230,8 +235,8 @@ theorem const_mul (L : ((κ → AF F) → ℂ) → ℂ) (hadd : ∀ Φ ∈ schA 
     (hc : ∀ a : F, a ≠ 0 → ∀ (r : κ → FiniteAdeleRing (𝓞 F) F) (f : SchwartzMap (κ → mixedEmbedding.mixedSpace F) ℂ),
       L (pureA F f (cosInd F κ a r)) = c a * thetaSum F (pureA F f (cosInd F κ a r)))
     {a : F} (ha : a ≠ 0) (m : 𝓞 F) (hm : m ≠ 0) : c a = c (a * m) := by
-  obtain ⟨R, hR⟩ := GlobalTheory.T.scaled_indicator_coset_sum F κ a ha m hm
-  obtain ⟨f, hf⟩ := GlobalTheory.T.theta_sum_indicator_nonzero F κ a ha
+  obtain ⟨R, hR⟩ := _root_.GlobalTheory.EvAdm.CosetSum.indicator_scaledInt_eq_sum F κ a ha m hm
+  obtain ⟨f, hf⟩ := _root_.GlobalTheory.ThetaScaledNe.exists_thetaSum_scaledInt_ne_zero F κ a ha
   have ham : a * (m : F) ≠ 0 := mul_ne_zero ha (by simpa using hm)
   have hb : boxInd F κ a = cosInd F κ a 0 := by
     unfold boxInd cosInd

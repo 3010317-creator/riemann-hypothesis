@@ -3,13 +3,18 @@ module
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LiftLambdaBound
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EigLatLe
 public import Development.AbelianVarietyTheory.Definitions.Divisors.QuoIff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmObjectDefiniteLieEigenLatticeDegreeDifferenceStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.EigenvectorLieDegree
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.ExistsIsThetaDegOfIsLocalModel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmObjectDefiniteLieEigenLatticeDegreeDifference
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComponentPointLastIndex
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeDualDetLieEqNegFlatSectionDegreeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeDualDetLieEqNegFlatSectionDegree
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LawsCore
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogPeriodEqKroneckerCharacterLogPeriodOfHostStatement
+public import Formalism.LocalToGlobal.Divisibility.NumbersLemmas
+public import Formalism.LocalToGlobal.ProjectiveLattices.PartitionExtendByZeroAntitone
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogPeriodEqKroneckerCharacterLogPeriodOfHost
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FlatSecInhabited
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.DefCaseCoreStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HtValOnSubset
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -42,7 +47,6 @@ import Mathlib.Tactic.NormNum.NatSqrt
 import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.HtValOnSubset
 
 @[expose] public section
 
@@ -62,14 +66,14 @@ theorem degLie_core_alt : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi 
   have hJ : LawsJ p.T := p.fw.laws
   have hj : InR D ((i : ℕ) + 1) := ⟨Nat.succ_pos _, hm.le⟩
   have hL : Laws (p.T.U ((i : ℕ) + 1)) (xiR D) := GlobalTheory.LawsCore.laws_core D p.T hJ _ hj hF
-  obtain ⟨_, χ, hχ, hOm, -, hH⟩ := GlobalTheory.T.logPeriod_eq_kroneckerCharacter_logPeriod_of_host D L p.T.Q hJ.pins.1 p.Del p.h0
-  have hFr := frameDeg_def GlobalTheory.T.cmObject_definite_lieEigenLattice_degree_difference D.host.E p.T.Q.H hH χ hχ _ _ _ _ _ _ _ hL hDC.q
+  obtain ⟨_, χ, hχ, hOm, -, hH⟩ := _root_.GlobalTheory.CovTop.Period.period_eq_kronecker D L p.T.Q hJ.pins.1 p.Del p.h0
+  have hFr := frameDeg_def _root_.GlobalTheory.FlatCore.CMDiff0.cmDiff_definite D.host.E p.T.Q.H hH χ hχ _ _ _ _ _ _ _ hL hDC.q
   obtain ⟨s⟩ := GlobalTheory.FlatLine.Definite.nonempty_flatSec (p.T.U ((i : ℕ) + 1)) (xiR D) hDC.q hDC.p hDC.good hDC.unf hDC.geo Z τ
   have h := (hFr Z τ (ArchSec.ofConst s.toFrame) s.toFrame.rho_vw fun w v hv => by
       have h1 := s.toFrame.val_eq hv
       rw [Pi.zero_apply, zero_add] at h1
       exact h1).2
-  rw [(GlobalTheory.T.degree_dualDetLie_eq_neg_flatSection_degree _ _ _ _ _ _ _ _ _ hDC Z P).1 τ s, s.deg_eq_toFrame, flatDegVal, ← hOm, ← h]
+  rw [(_root_.GlobalTheory.DefPt.degLie_eq_neg_deg_flat _ _ _ _ _ _ _ _ _ hDC Z P).1 τ s, s.deg_eq_toFrame, flatDegVal, ← hOm, ← h]
   rfl
 end GlobalTheory.DefCoreLie
 end

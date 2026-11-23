@@ -4,12 +4,14 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormIdeal
 public import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.IsOpenOfMemIrreducibleComponentsOfFinite
 public import Mathlib.AlgebraicGeometry.Morphisms.Finite
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharZeroStalkImageOfGenericPointStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdealSheafDataOfIsClopenFamilyStatement
+public import Mathlib.AlgebraicGeometry.IdealSheaf.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdealSheafDataOfIsClopenFamily
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDimensionalFunctionFieldStalkImageGenericPStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFieldStalkImageOfGenericPointStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormCoeffIdealFamilyMapBasicOpenStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormCoefficientIdealFamilyEqTopOfDisjointStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionsIsFractionRingStalkImageOfGenericPointStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FamIdeal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFieldStalkImageOfGenericPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormCoeffIdealFamilyMapBasicOpen
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormCoefficientIdealFamilyEqTopOfDisjoint
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionsIsFractionRingStalkImageOfGenericPoint
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -73,13 +75,13 @@ theorem descendedIdealSheaf_exists : ∀ (Y Z : Scheme.{0}) (π : Y ⟶ Z) [IsFi
           (algebraMap K L).comp (algebraMap Γ(Z, U) K) = (algebraMap Γ(Y, π ⁻¹ᵁ U.1) L).comp (π.app U.1).hom ∧
           J.ideal U = GlobalTheory.NormSheaf.normIdeal Γ(Z, U) K L Γ(Y, π ⁻¹ᵁ U.1) (I.ideal ⟨π ⁻¹ᵁ U.1, U.2.preimage π⟩) := by
   intro Y Z π _ hY _ _ hnZ hW hchar I
-  have hK := GlobalTheory.T.isField_stalk_imageOfGenericPoint Y Z π hW
+  have hK := _root_.GlobalTheory.NormSheafDescent.isField_stalk_genPt Y Z π hW
   have hfd := GlobalTheory.T.finiteDimensional_functionField_stalk_imageGenericPoint Y Z π hK
   letI := GlobalTheory.NormSheafDescent.fieldK π hK
   letI := GlobalTheory.NormSheafDescent.algKL π
   have hcl : IsClosed (Set.range π) := π.isClosedMap.isClosed_range
-  obtain ⟨J, hJ, hJs⟩ := GlobalTheory.T.exists_idealSheafData_of_isClopen_family Z (Set.range π) ⟨hcl, hW⟩ (GlobalTheory.NormSheafDescent.famIdeal π hK hfd I)
-    (fun U f hU => GlobalTheory.T.normCoeffIdealFamily_map_basicOpen Y Z π hK hfd I U f hU)
+  obtain ⟨J, hJ, hJs⟩ := _root_.GlobalTheory.ClopenIdealSheaf.exists_idealSheafData_of_isClopen Z (Set.range π) ⟨hcl, hW⟩ (GlobalTheory.NormSheafDescent.famIdeal π hK hfd I)
+    (fun U f hU => _root_.GlobalTheory.NormSheafDescent.famIdeal_map_basicOpen Y Z π hK hfd I U f hU)
   have hgen : ∀ (U : Z.Opens) (x : Z), x ∈ U → x ∈ Set.range π →
       GlobalTheory.NormSheafDescent.genPt π ∈ U := by
     rintro U _ hx ⟨y, rfl⟩
@@ -94,13 +96,13 @@ theorem descendedIdealSheaf_exists : ∀ (Y Z : Scheme.{0}) (π : Y ⟶ Z) [IsFi
     obtain ⟨_, ⟨U, hU, rfl⟩, hxU, hUsub⟩ := Z.isBasis_affineOpens.exists_subset_of_mem_open
       (show x ∈ (π '' (I.support : Set Y))ᶜ ∩ Set.range π from ⟨fun ⟨y, hy, e⟩ => hne y hy e, hxW⟩)
       (hS.isOpen_compl.inter hW)
-    have htop := GlobalTheory.T.normCoefficientIdealFamily_eq_top_of_disjoint Y Z π hK hfd I ⟨U, hU⟩ (fun y hy hyU => (hUsub hyU).1 ⟨y, hy, rfl⟩)
+    have htop := _root_.GlobalTheory.NormSheafDescent.famIdeal_eq_top_of_disjoint Y Z π hK hfd I ⟨U, hU⟩ (fun y hy hyU => (hUsub hyU).1 ⟨y, hy, rfl⟩)
     have hx' := (Scheme.IdealSheafData.mem_support_iff_of_mem (U := ⟨U, hU⟩) hxU).mp hx
     rw [hJ ⟨U, hU⟩ (fun z hz => (hUsub hz).2), htop] at hx'
     exact (Scheme.mem_zeroLocus_iff _ _ _).mp hx' 1 Submodule.mem_top (by simpa using hxU)
   · rintro U hUW ⟨x, hxU⟩
     have h := hgen U.1 x hxU (hUW hxU)
-    obtain ⟨hdom, hfr⟩ := GlobalTheory.T.sections_isFractionRing_stalk_imageOfGenericPoint Y Z π U.1 U.2 hUW h
+    obtain ⟨hdom, hfr⟩ := _root_.GlobalTheory.NormSheafDescent.sections_isDomain_isFractionRing_stalk Y Z π U.1 U.2 hUW h
     letI := GlobalTheory.NormSheafDescent.algAK π U.1 h
     letI := GlobalTheory.NormSheafDescent.algBL π U.1 h
     haveI : Nonempty (π ⁻¹ᵁ U.1) := ⟨⟨genericPoint Y, h⟩⟩

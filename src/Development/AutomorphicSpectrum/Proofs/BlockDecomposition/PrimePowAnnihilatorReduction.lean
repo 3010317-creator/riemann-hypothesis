@@ -1,7 +1,8 @@
 module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.AcrisKummerUnits.MapUgAlgebraMap
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PerfectoidXiNonZeroDivisorStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.MapWXi
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PerfectoidXiNonZeroDivisor
 import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.AcrisKummerUnits.ConstantCoeffSurjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -68,7 +69,7 @@ theorem lseq : ∀ {l : ℕ} [Fact l.Prime] (A : PAlg l) (n m : ℕ), Function.S
   have hl : (l : A.Acr0) ∈ nonZeroDivisors A.Acr0 := A.acris_torsion_free l (Fact.out : l.Prime).ne_zero
   have mk0 : ∀ (k : ℕ) (y : A.Acr0), A.mkAcr k y = 0 ↔ y ∈ Ideal.span {(l : A.Acr0) ^ k} :=
     fun k y => Ideal.Quotient.eq_zero_iff_mem
-  refine ⟨?_, ?_, ?_, fun x => pow_mul_mem_span_iff (GlobalTheory.T.perfectoid_xi_nonZeroDivisor A).1 n m x⟩
+  refine ⟨?_, ?_, ?_, fun x => pow_mul_mem_span_iff (_root_.GlobalTheory.CompanionTheory.UntiltRegular.untilt_regular A).1 n m x⟩
   · intro x
     obtain ⟨y, rfl⟩ := Ideal.Quotient.mk_surjective x
     exact ⟨A.mkAcr _ y, rfl⟩

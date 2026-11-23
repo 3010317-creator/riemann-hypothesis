@@ -1,13 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.SameKindIsometric
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DedekindZetaResidueLeSixteenLogRootDiscrPowStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LogUnitarySphereVolumeProductRatioLeLargeRankStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NegLogProdLValEtaLeAndPosStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OneLeDedekindZetaRealValueAndLeZetaPowStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RootDiscrGeThreeHalvesOfIsTotallyComplexStatement
+public import Formalism.HermitianLattices.StatementMass
+public import Mathlib.NumberTheory.NumberField.DedekindZeta
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DedekindZetaResidueLeSixteenLogRootDiscrPow
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DefClassNum
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LogUnitarySphereVolumeProductRatioLeLargeRank
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NegLogProdLValEtaLeAndPos
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OneLeDedekindZetaRealValueAndLeZetaPow
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SqSumEqSumSqAddTwoMulSumLt
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitarySphereVolumeProductRatioAndInvBoundsStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitarySphereVolumeProductRatioAndInvBounds
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RootDiscrGeThreeHalvesOfIsTotallyComplex
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ZetaProdSphereVolumeBounds
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -80,7 +83,7 @@ theorem rpow_le (v x : ℝ) (hv : 3 / 4 ≤ v) (hx : 0 ≤ x) : v ^ (-x) ≤ Rea
 
 theorem inv_sph_le (J : ℕ) (s : ℝ) (hJ : (J : ℝ) ≤ s) (hJ1 : 1 ≤ J) :
     (sphV J)⁻¹ ≤ Real.exp (J * (s / 2 * Real.log s)) := by
-  refine (GlobalTheory.T.unitarySphereVolumeProduct_ratio_and_inv_bounds.2 J).2.trans ?_
+  refine (_root_.GlobalTheory.sphV_ratio_and_inv_bounds.2 J).2.trans ?_
   have h1 : (1 : ℝ) ≤ J := by exact_mod_cast hJ1
   have h0 : (0 : ℝ) < J := by linarith
   rw [← Real.exp_log (pow_pos h0 _), Real.log_pow]
@@ -99,9 +102,9 @@ theorem zeta_prod (E : Type) [Field E] [NumberField E] (J : ℕ) :
     0 ≤ ∏ l ∈ Finset.Icc 2 J, zetaE E l ∧
       ∏ l ∈ Finset.Icc 2 J, zetaE E l ≤ Real.exp (Module.finrank ℚ E) := by
   have h0 : ∀ l ∈ Finset.Icc 2 J, 0 ≤ zetaE E l := fun l hl =>
-    zero_le_one.trans (GlobalTheory.T.one_le_dedekindZetaRealValue_and_le_zeta_pow E l (Finset.mem_Icc.1 hl).1).1
+    zero_le_one.trans (_root_.GlobalTheory.DedekindZetaBound.one_le_zetaE_and_le E l (Finset.mem_Icc.1 hl).1).1
   refine ⟨Finset.prod_nonneg h0, ?_⟩
-  refine (Finset.prod_le_prod₀ h0 fun l hl => (GlobalTheory.T.one_le_dedekindZetaRealValue_and_le_zeta_pow E l (Finset.mem_Icc.1 hl).1).2).trans ?_
+  refine (Finset.prod_le_prod₀ h0 fun l hl => (_root_.GlobalTheory.DedekindZetaBound.one_le_zetaE_and_le E l (Finset.mem_Icc.1 hl).1).2).trans ?_
   rw [Finset.prod_pow, ← Real.exp_one_pow]
   apply pow_le_pow_left₀ (Finset.prod_nonneg fun l _ => GlobalTheory.ZetaProd.zeta_nonneg l)
   have := GlobalTheory.zetaProd_sphereVolume_bounds.1 J
@@ -124,8 +127,8 @@ end ConstBd
 open ConstBd in
 theorem constantBound : ConstantBound := by
   intro E _ _ _ hE p q a j hj1 hjq hL hq hrd _
-  obtain ⟨hdeg, hf1, hv, -⟩ := GlobalTheory.T.rootDiscr_ge_three_halves_of_isTotallyComplex E hE.1
-  obtain ⟨hres0, hres⟩ := GlobalTheory.T.dedekindZeta_residue_le_sixteen_log_rootDiscr_pow E hE.1
+  obtain ⟨hdeg, hf1, hv, -⟩ := _root_.GlobalTheory.rootDiscr_ge_three_halves_of_totallyComplex E hE.1
+  obtain ⟨hres0, hres⟩ := _root_.GlobalTheory.dedekindZeta_residue_le_log_rootDiscr_pow E hE.1
   unfold kapBd
   have haJ : a ≤ ∑ i, j i := by
     simpa using Finset.sum_le_sum (s := Finset.univ) (fun i _ => hj1 i)
@@ -164,7 +167,7 @@ theorem constantBound : ConstantBound := by
     have : (J : ℝ) ≤ p := by linarith
     exact_mod_cast this
   have hlogs : Real.log s = Real.log n / 2 := Real.log_sqrt hn0.le
-  have hpos : ∀ i, 0 < sphV i := fun i => (GlobalTheory.T.unitarySphereVolumeProduct_ratio_and_inv_bounds.2 i).1
+  have hpos : ∀ i, 0 < sphV i := fun i => (_root_.GlobalTheory.sphV_ratio_and_inv_bounds.2 i).1
   have hpi := Real.pi_pos
   have hc0 : 0 ≤ Real.log (2 * Real.pi) := Real.log_nonneg (by have := Real.pi_gt_three; linarith)
   have hc2 : Real.log (2 * Real.pi) ≤ 2 := by
@@ -185,12 +188,12 @@ theorem constantBound : ConstantBound := by
     have := mul_nonneg hf0 this
     linarith
 
-  have hA := GlobalTheory.T.log_unitarySphereVolumeProduct_ratio_le_large_rank n p J (by exact_mod_cast (by linarith : (18 : ℝ) ≤ n)) hJp (by omega)
+  have hA := _root_.GlobalTheory.SphRatio.log_sphV_ratio_le n p J (by exact_mod_cast (by linarith : (18 : ℝ) ≤ n)) hJp (by omega)
     (by linarith) (by linarith)
   rw [Real.log_div hn0.ne' (by positivity), Real.log_mul (x := 2 * Real.pi) (by positivity) (by positivity),
     Real.log_exp,
     Real.log_le_iff_le_exp (div_pos (hpos _) (hpos _))] at hA
-  have hB := GlobalTheory.T.unitarySphereVolumeProduct_ratio_and_inv_bounds.1 q J hjq
+  have hB := _root_.GlobalTheory.sphV_ratio_and_inv_bounds.1 q J hjq
   rw [Real.log_le_iff_le_exp (div_pos (hpos _) (hpos _))] at hB
   have hC : (∏ i, sphV (j i))⁻¹ ≤ Real.exp (J * (s / 2 * (Real.log n / 2))) := by
     rw [← Finset.prod_inv_distrib, hcast, Finset.sum_mul, Real.exp_sum, ← hlogs]
@@ -247,7 +250,7 @@ theorem constantBound : ConstantBound := by
   have T5' : 0 ≤ ∏ i, ∏ l ∈ Finset.Icc 2 (j i), zetaE E l :=
     Finset.prod_nonneg fun i _ => (zeta_prod E (j i)).1
 
-  obtain ⟨hL1, hL0⟩ := GlobalTheory.T.neg_log_prod_lValEta_le_and_pos E hE (n - 2 * J) n (by omega)
+  obtain ⟨hL1, hL0⟩ := _root_.GlobalTheory.FlagMeas.LProd.neg_log_prod_le E hE (n - 2 * J) n (by omega)
   rw [hf] at hL1
   have FreeQuotientRank : (∏ M ∈ Finset.Ioc (n - 2 * J) n, Formalism.HermitianLatticesTheory.lValEta E M)⁻¹ ≤ Real.exp (f * J * 1) := by
     rcases Nat.eq_zero_or_pos J with h | h

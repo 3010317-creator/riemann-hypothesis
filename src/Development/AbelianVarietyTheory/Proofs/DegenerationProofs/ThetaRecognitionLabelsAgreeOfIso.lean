@@ -2,13 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.NotAllMatchRankZero
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationDataTorsionStructureAlgClosed
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationWeilPairingPropertiesStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsBasisUniqueMinPairSums
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FourierExtractionTsumClass
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.HomTransportStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.HomTransport
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.NormRepGeneratorsAndThetaSeriesTermStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SymmPairingEqOneOfOddOfDiag
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaConstantTermRepresentativeDependence
+import Development.AbelianVarietyTheory.Definitions.Degenerations.SepticCharacterInjective
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationWeilPairingProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -85,10 +86,10 @@ def TR {k : ℕ} (p : N.QT k) (p' : N'.QT k) : Prop :=
   p'.1.1.toAdd = J.e p.1.1.toAdd ∧ J.Rel p.1.2 p'.1.2
 
 theorem rel_unique {g : N.Gt} {a b : N'.Gt} (ha : J.Rel g a) (hb : J.Rel g b) : a = b :=
-  ((GlobalTheory.T.hom_transport_alt _ _ _ _ _ (toHom J)).1 g).unique ha hb
+  ((_root_.GlobalTheory.Ex.NumD.hom_transport _ _ _ _ _ (toHom J)).1 g).unique ha hb
 
 theorem rel_mul {g h : N.Gt} {a b : N'.Gt} (ha : J.Rel g a) (hb : J.Rel h b) : J.Rel (g * h) (a * b) :=
-  (GlobalTheory.T.hom_transport_alt _ _ _ _ _ (toHom J)).2.1 g h a b ha hb
+  (_root_.GlobalTheory.Ex.NumD.hom_transport _ _ _ _ _ (toHom J)).2.1 g h a b ha hb
 
 theorem rel_pow {g : N.Gt} {a : N'.Gt} (ha : J.Rel g a) (k : ℕ) : J.Rel (g ^ k) (a ^ k) := by
   induction k with
@@ -96,10 +97,10 @@ theorem rel_pow {g : N.Gt} {a : N'.Gt} (ha : J.Rel g a) (k : ℕ) : J.Rel (g ^ k
   | succ k ih => rw [pow_succ, pow_succ]; exact rel_mul J ih ha
 
 theorem tr_exists {k : ℕ} (p : N.QT k) : ∃ p', TR J p p' := by
-  obtain ⟨g', hg'⟩ := ((GlobalTheory.T.hom_transport_alt _ _ _ _ _ (toHom J)).1 p.1.2).exists
+  obtain ⟨g', hg'⟩ := ((_root_.GlobalTheory.Ex.NumD.hom_transport _ _ _ _ _ (toHom J)).1 p.1.2).exists
   have h1 := rel_pow J hg' k
   rw [N.mem_QT.1 p.2] at h1
-  have h2 : J.Rel (N.io p.1.1.toAdd) (N'.io (J.e p.1.1.toAdd)) := (GlobalTheory.T.hom_transport_alt _ _ _ _ _ (toHom J)).2.2.1 _
+  have h2 : J.Rel (N.io p.1.1.toAdd) (N'.io (J.e p.1.1.toAdd)) := (_root_.GlobalTheory.Ex.NumD.hom_transport _ _ _ _ _ (toHom J)).2.2.1 _
   exact ⟨⟨(Multiplicative.ofAdd (J.e p.1.1.toAdd), g'), rel_unique J h1 h2⟩, rfl, hg'⟩
 
 theorem tr_unique {k : ℕ} {p : N.QT k} {a b : N'.QT k} (ha : TR J p a) (hb : TR J p b) : a = b :=
@@ -113,11 +114,11 @@ theorem tr_mul {k : ℕ} {p q : N.QT k} {a b : N'.QT k} (ha : TR J p a) (hb : TR
 
 theorem tr_wp {k : ℕ} {p q : N.QT k} {a b : N'.QT k} (ha : TR J p a) (hb : TR J q b) :
     N'.wp a b = N.wp p q :=
-  (GlobalTheory.T.hom_transport_alt _ _ _ _ _ (toHom J)).2.2.2.1 k p q a b ha.1 ha.2 hb.1 hb.2
+  (_root_.GlobalTheory.Ex.NumD.hom_transport _ _ _ _ _ (toHom J)).2.2.2.1 k p q a b ha.1 ha.2 hb.1 hb.2
 
 theorem tr_txT {m : ℕ} (hm : Odd m) {p : N.QT (m ^ 2)} {a : N'.QT (m ^ 2)} (ha : TR J p a) (χ : N.X) :
     N'.txT m a (J.e χ) = J.lam * N.txT m p χ :=
-  ((GlobalTheory.T.hom_transport_alt _ _ _ _ _ (toHom J)).2.2.2.2 m hm p a ha.1 ha.2 χ).1
+  ((_root_.GlobalTheory.Ex.NumD.hom_transport _ _ _ _ _ (toHom J)).2.2.2.2 m hm p a ha.1 ha.2 χ).1
 
 theorem eq_of_qEq {k : ℕ} (hk : k ≠ 0) {p q : N.QT k} (h : N.QEq p q) (hy : p.1.1 = q.1.1) : p = q := by
   obtain ⟨z, h1, h2⟩ := h
@@ -130,14 +131,14 @@ theorem eq_of_qEq {k : ℕ} (hk : k ≠ 0) {p q : N.QT k} (h : N.QEq p q) (hy : 
   exact Subtype.ext (Prod.ext hy h2.symm)
 
 theorem wp_mul_left {k : ℕ} (p p' q : N.QT k) : N.wp (p * p') q = N.wp p q * N.wp p' q :=
-  (GlobalTheory.T.degenerationWeilPairing_properties _ N k p p' q).1
+  (_root_.GlobalTheory.Ex.WpPairing.wp_pairing _ N k p p' q).1
 
 theorem wp_mul_right {k : ℕ} (p q q' : N.QT k) : N.wp p (q * q') = N.wp p q * N.wp p q' := by
   rw [N.wp_swap, wp_mul_left, mul_inv, ← N.wp_swap, ← N.wp_swap]
 
 theorem wp_tor {k : ℕ} {d : N.QT k} (h1 : d.1.1 = 1) (h2 : d.1.2.b = 1) (q : N.QT k) :
     N.wp d q = d.1.2.s q.1.1.toAdd :=
-  (GlobalTheory.T.degenerationWeilPairing_properties _ N k d q q).2.2.2.2.2.1 h1 h2
+  (_root_.GlobalTheory.Ex.WpPairing.wp_pairing _ N k d q q).2.2.2.2.2.1 h1 h2
 
 end Transport
 
@@ -421,7 +422,7 @@ theorem main : AllMatch fun {_} _ {N} {N'} {_} μ _ _ =>
     (fun x y => defect_symm μ J (s x) (s y) (hs x) (hs y) (hd x) (hd y))
     (fun x y => by
       obtain ⟨a, ha⟩ := tr_exists J (s y)
-      have := (GlobalTheory.T.degenerationWeilPairing_properties _ N' _ (d x) a a).2.2.2.1
+      have := (_root_.GlobalTheory.Ex.WpPairing.wp_pairing _ N' _ (d x) a a).2.2.2.1
       rwa [wp_tor (hd x).1 (hd x).2.1, ha.1, hs] at this)
     (fun a => by
       rw [zpow_natCast]

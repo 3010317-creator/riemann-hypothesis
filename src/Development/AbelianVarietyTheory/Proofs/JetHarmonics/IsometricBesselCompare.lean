@@ -5,10 +5,11 @@ public import Mathlib.MeasureTheory.Function.L2Space
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DiscreteSeriesParameterUnique
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FrechetContinuousContinuousOnOrbitHasDerivAtStatement
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IsometricBesselSideBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.QuotientMeasureIntegralRmulBesselGroupStatement
+public import Development.AbelianVarietyTheory.Definitions.Jets.SumIoPrAlt
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.QuotientMeasureIntegralRmulBesselGroup
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ReproducingFormulaReduction
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.BesselNeZeroOfCyclicOrbit
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.ContinuousMulMt
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ReproducingFormulaReduction
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.UhMeasurableSet
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -103,7 +104,7 @@ theorem bessel_orth_of_param_ne : Hyps → ∀ (k r : ℕ) (ε : Fin (2 * r + k 
   have hP : Poulsen := hH.2.2.2.2.2.1
   obtain ⟨hL, hI⟩ := GlobalTheory.T.isometric_bessel_memLp_and_integral_inner_eq hK k r ε mu R Wp z π u μW μN μG νq Bm hR hS hB
   obtain ⟨hL', hI'⟩ := GlobalTheory.T.isometric_bessel_memLp_and_integral_inner_eq hK k r ε mu' R' Wp z π u μW μN μG νq Bm' hR' hS hB'
-  have hq := GlobalTheory.T.quotientMeasure_integral_rmul_besselGroup k r Wp z π u μW μN μG νq
+  have hq := _root_.GlobalTheory.quot_integral_rmul k r Wp z π u μW μN μG νq
   obtain ⟨⟨ha, hs, he, hc⟩, -⟩ := hB
   obtain ⟨⟨ha', hs', he', hc'⟩, -⟩ := hB'
   have hco := GlobalTheory.T.frechetContinuous_continuousOn_orbit_hasDerivAt hK k r ε mu R hR Wp Bm ha hs hc

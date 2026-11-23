@@ -2,7 +2,7 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FiniteMinimalPrimes
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MultihomogeneousIdeals.CycDim
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AffineChartIdealPrimeAndSaturatedStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AffineChartIdealPrimeAndSaturated
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -231,7 +231,7 @@ theorem relation_dehom : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fi
     exact hs (sum_part s ▸ Ideal.sum_mem _ fun b _ => hall b)
   have hmem := part_mul_mem hI hf hrel b
   refine ⟨bind₁ (lift p) (part b s), ?_, ?_⟩
-  · rw [((GlobalTheory.T.affine_chart_ideal_prime_and_saturated K ι Q p hQ hQp hX).2 _ b (isMultiHomog_part b s))]
+  · rw [((_root_.GlobalTheory.CompanionTheory.Ar.Cmp.SncRes.Dict.ideal_isPrime_and_mem_iff K ι Q p hQ hQp hX).2 _ b (isMultiHomog_part b s))]
     exact hb
   · have h1 := Ideal.mem_map_of_mem (bind₁ (lift p) : _ →ₐ[ℂ] _) hmem
     rw [map_mul, Ideal.map_sup, Ideal.map_pow] at h1

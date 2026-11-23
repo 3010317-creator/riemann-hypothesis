@@ -1,7 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.SignedLogMeans
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaZeroMeanLogNormConjugatesOfWeberStatement
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.ThetaConstantWeber
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.PeriodLatticeAgreement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaZeroMeanLogNormConjugatesOfWeber
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LatticePeriodEtaObj
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ThetaWeberStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -46,6 +48,6 @@ open Formalism.BasicNotions
 namespace GlobalTheory.Theta0MeanLeC
 
 theorem theta0MeanLeC : ∃ C : ℝ, 0 ≤ C ∧ ∀ D : Formalism.BasicNotions.D7, GlobalTheory.IndefiniteRowSideFullHecke.SignedLogMeans.MeanLeC C D :=
-  (GlobalTheory.T.thetaZero_mean_log_norm_conjugates_of_weber GlobalTheory.LatticePeriodEtaObj.latticePeriodEta_obj GlobalTheory.ThetaWeberObj.thetaWeberStatement).1.2.2
+  (_root_.GlobalTheory.Theta0MeanCore.theta0Mean GlobalTheory.LatticePeriodEtaObj.latticePeriodEta_obj GlobalTheory.ThetaWeberObj.thetaWeberStatement).1.2.2
 
 end GlobalTheory.Theta0MeanLeC

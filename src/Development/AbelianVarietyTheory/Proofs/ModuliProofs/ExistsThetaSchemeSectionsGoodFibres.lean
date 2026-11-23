@@ -1,21 +1,22 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSectionsFam
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.FiniteHomogeneousInf
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.SabPull
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.EmbeddedAbelianVarietyCutOutByTorsionFormsStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsFlatProjectiveThroughPointsGoodFibresStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.EmbeddedAbelianVarietyCutOutByTorsionForms
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsFlatProjectiveThroughPointsGoodFibres
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLocalMultiplicationPullbackThetaEmbeddingI
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLocalMultiplicationPullbackThetaEmbeddingStatement
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ProjectiveRepresentationPullbackCoordinates
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SecCoordBcScaleUnique
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLocalMultiplicationPullbackThetaEmbedding
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SmoothAndGeomConnectedOfVeryDense
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SpMapCompRingHomComp
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaCosetNonvanishingOfHasThStatement
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.GoodClass
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaCosetNonvanishingOfHasTh
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.TorsionSectionCoordsThetaTimesRoots
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSectionsFam
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ProjectiveRepresentationPullbackCoordinates
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SecCoordBcScaleUnique
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaEmbeddingSectionsBaseChangeAffineStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.TorsionSectionCoordsThetaTimesRootsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -110,7 +111,7 @@ theorem exists_emb (l1 : Out.Laws) (l2 : Out.Laws2) {o : Type} [CommRing o] {g N
     (hm : m ^ 2 ∣ N') (h2 : 2 ≤ m) (hth : t.HasTh (𝟙 _) v) :
     ∃ σ, t.Emb m (Over.mk (𝟙 _)) σ ∧
       ProjRep (idealOf (fst (Over.mk (𝟙 (Sp K))) t.A).left _ σ (𝟙 _)) (fst (Over.mk (𝟙 (Sp K))) t.A).left _ σ := by
-  obtain ⟨R', _, φ, σ, hφ, hp, hE, hP⟩ := GlobalTheory.T.exists_local_multiplicationPullback_theta_embedding l1 l2 o g N' J b _ s t m K (𝟙 _) v hm h2 hth
+  obtain ⟨R', _, φ, σ, hφ, hp, hE, hP⟩ := _root_.GlobalTheory.ZM.EmbedLocal.exists_emb_projRep l1 l2 o g N' J b _ s t m K (𝟙 _) v hm h2 hth
     (⟨⊥, Ideal.isPrime_bot⟩ : PrimeSpectrum K)
   obtain ⟨ψ, hψ⟩ := exists_retraction φ hφ _ hp
   let h : Over.mk (𝟙 (Sp K)) ⟶ Over.mk (spMap φ ≫ 𝟙 (Sp K)) := Over.homMk (spMap ψ) (by
@@ -221,7 +222,7 @@ theorem pt_unique {R σ : Type} [CommRing R] {I : Ideal (MvPolynomial σ R)} {Z 
 theorem span_theta (l1 : Out.Laws) (l2 : Out.Laws2) {o : Type} [CommRing o] {g N' : ℕ} {J : Type} {b : TBase o (N' ^ 2)}
     {K : Type} [Field K] {s : Sp K ⟶ Sp o} (t : TObj g (N' ^ 2) J b s) (n : ℕ) (v : Ix g (N' ^ 2) → K)
     (h2 : 2 ≤ n) (hn : n ∣ N') (hth : t.HasTh (𝟙 _) v) : Ideal.span (Set.range v) = ⊤ := by
-  obtain ⟨c, hc⟩ := GlobalTheory.T.thetaCosetNonvanishing_of_hasTh l1 l2 o g N' J b _ s t n K (𝟙 _) v ⊥ h2 hn hth Ideal.isPrime_bot 0
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.coset_of_hasTh l1 l2 o g N' J b _ s t n K (𝟙 _) v ⊥ h2 hn hth Ideal.isPrime_bot 0
   exact Ideal.eq_top_of_isUnit_mem _ (Ideal.subset_span ⟨_, rfl⟩) (Ne.isUnit fun h => hc (Ideal.mem_bot.2 h))
 
 theorem fibre_of_unit {R K σ : Type} [CommRing R] [CommRing K] {x : R →+* K} {Z : Scheme.{0}} {s : Z ⟶ Sp R} {M : LB Z}
@@ -241,7 +242,7 @@ theorem fibre_of_unit {R K σ : Type} [CommRing R] [CommRing K] {x : R →+* K} 
 
 theorem exists_scheme_sections_fibres : Out.Laws → Out.Laws2 → ∀ (g : ℕ) (J : Type) [Finite J] (Mat : J → Matrix (Fin (2 * g)) (Fin (2 * g)) ℤ) (κ n : ℕ), n.Prime → Odd n → ∃ j₀ : ℕ, ∀ j ≥ j₀, ∀ (o : Type) [CommRing o] (b : TBase o ((n ^ j) ^ 2)) (R : Type) [CommRing R] [IsNoetherianRing R] [IsReduced R] (β : o →+* R) (v : Ix g ((n ^ j) ^ 2) → R), VeryDense (objPrimes b Mat κ β v) → ∃ (Z : Over (Sp R)) (I : Ideal (MvPolynomial (Ix g ((n ^ j) ^ 2)) R)) (M : LB Z.left) (th : Ix g ((n ^ j) ^ 2) → M.Sec) (sc : Ix g ((n ^ j) ^ 2) → (Out.baseOver (Sp R) ⟶ Z)) (p : Ix g ((n ^ j) ^ 2) → Ix g ((n ^ j) ^ 2) → R), (ProjRep I Z.hom M th ∧ SmoothOfRelativeDimension g Z.hom ∧ GeometricallyConnected Z.hom ∧ (∀ h, SecCoord M th (sc h).left (p h))) ∧ (∀ (K : Type) [Field K] [IsAlgClosed K] (x : R →+* K) (t' : TObj g ((n ^ j) ^ 2) J b (spMap x ≫ spMap β)), t'.Shape Mat κ → t'.HasTh (𝟙 _) (fun a => x (v a)) → ∃ φ : t'.A.left ⟶ Z.left, (IsPullback φ t'.A.hom Z.hom (spMap x) ∧ (∃ σ, t'.Emb (n ^ 2) (Over.mk (𝟙 _)) σ ∧ ∀ (T : Type) [CommRing T] (y : Sp T ⟶ (Over.mk (𝟙 (Sp K)) ⊗ t'.A).left) (w : Ix g ((n ^ j) ^ 2) → T), SecCoord _ σ y w ↔ SecCoord M th (y ≫ (snd (Over.mk (𝟙 (Sp K))) t'.A).left ≫ φ) w) ∧ LBIso (lbPow t'.L ((n ^ 2) ^ 2)) (M.pull φ) ∧ ∀ h, (t'.lab h ^ n ^ j).left ≫ φ = spMap x ≫ (sc h).left)) := by
   intro l1 l2 g J _ Mat κ n hn hodd
-  obtain ⟨j₀, hj₀⟩ := GlobalTheory.T.embeddedAbelianVariety_cutOut_by_torsionForms l1 l2 g J Mat κ n hn hodd
+  obtain ⟨j₀, hj₀⟩ := _root_.GlobalTheory.cutBy_embedded_abelian l1 l2 g J Mat κ n hn hodd
   refine ⟨max j₀ 4, fun j hj o _ b R _ _ _ β v hvd => ?_⟩
   have hj4 : 4 ≤ j := le_of_max_le_right hj
   have hdiv : (n ^ 2) ^ 2 ∣ n ^ j := by rw [← pow_mul]; exact pow_dvd_pow n hj4
@@ -249,7 +250,7 @@ theorem exists_scheme_sections_fibres : Out.Laws → Out.Laws2 → ∀ (g : ℕ)
   have h2 : 2 ≤ n ^ 2 := hn.two_le.trans (Nat.le_self_pow two_ne_zero n)
   haveI : NeZero ((n ^ j) ^ 2) := ⟨pow_ne_zero 2 (pow_ne_zero j hn.ne_zero)⟩
   obtain ⟨Hh, _, hh, Q, d, hcut⟩ := hj₀ j (le_of_max_le_left hj) o b
-  obtain ⟨e, idx, hco⟩ := GlobalTheory.T.torsion_sectionCoords_theta_times_roots l1 l2 g (n ^ 2) (n ^ j) hodd.pow hdiv
+  obtain ⟨e, idx, hco⟩ := _root_.GlobalTheory.torsion_secCoord l1 l2 g (n ^ 2) (n ^ j) hodd.pow hdiv
   obtain ⟨p, hp⟩ : ∃ p : Ix g ((n ^ j) ^ 2) → Ix g ((n ^ j) ^ 2) → R,
       ∀ h a, p h a = β (b.ζ ^ e a h : oˣ) * v (idx a h) := ⟨_, fun _ _ => rfl⟩
   have hcut' : ∀ (K : Type) [Field K] [IsAlgClosed K] (β' : o →+* K) (s : Sp K ⟶ Sp o), s = spMap β' →
@@ -278,7 +279,7 @@ theorem exists_scheme_sections_fibres : Out.Laws → Out.Laws2 → ∀ (g : ℕ)
       simp only [hp, map_mul x]
       exact hs
     exact ⟨σ, hE, hP, hc, hcut' K (x.comp β) _ (spMap_comp β x).symm t' σ _ hE fun h => hc (hh h)⟩
-  obtain ⟨Z, M, th, hZ, hproj, hflat, -, hφ⟩ := GlobalTheory.T.exists_flat_projective_through_points_goodFibres R _ Hh (fun h => p (hh h)) Q d
+  obtain ⟨Z, M, th, hZ, hproj, hflat, -, hφ⟩ := _root_.GlobalTheory.ZM.FlatFamily.exists_flat_projRep_vanIdeal R _ Hh (fun h => p (hh h)) Q d
     (fun K _ x I => (∀ F ∈ I, ∀ e, MvPolynomial.homogeneousComponent e F ∈ I) ∧ CutBy I Q d (fun h i => x (p (hh h) i)))
     (fun _ _ _ _ h => h) (by
       intro q f hq hf

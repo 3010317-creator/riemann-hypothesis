@@ -1,8 +1,10 @@
 module
 
 public import Development.AutomorphicArithmetic.ShortNorms.ShortNorm
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.NormPrimesImagQuadShortIntervalLowerBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.PrimesInProgressionsRelativeErrorStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.RayPrimes
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.NormPrimesImagQuadShortIntervalLowerBound
+public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.ZerosDisc
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.PrimesInProgressionsRelativeError
 public import Development.AutomorphicArithmetic.ShortNorms.SmallOneOf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -44,6 +46,6 @@ import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
-theorem UpperTheory.T3.shortNorm : UpperTheory.T3.ShortNorm := GlobalTheory.T.normPrimesImagQuad_short_interval_lower_bound
+theorem UpperTheory.T3.shortNorm : UpperTheory.T3.ShortNorm := _root_.GlobalTheory.Hk.normPrimes_short_interval_lower
 
-theorem UpperTheory.T3.smallOne : UpperTheory.T3.SmallOne := UpperTheory.T3.smallOne_of GlobalTheory.T.primesInProgressions_relativeError
+theorem UpperTheory.T3.smallOne : UpperTheory.T3.SmallOne := UpperTheory.T3.smallOne_of _root_.GlobalTheory.Lin.primesRel_holds

@@ -2,13 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicStoneVonNeumannLagrangianUniqueness
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzVanishingDecomposition
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TranslationInvariantFunctionalLinearZero
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharacterInvariantAdelicFormEqMulEvalZero
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompactOpenSeparating
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEqMulApplyZero
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSymplecticBlockGeneratorsLagrangianNormalFStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzVanishingDecompositionStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealisedOne
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSymplecticBlockGeneratorsLagrangianNormalF
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceFormMapSurjective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TranslationInvariantFunctionalLinearZeroStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationPreservesSchwartz
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -60,7 +63,7 @@ namespace GlobalTheory.SvNLinear
 theorem kills_linear_mul : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
     (T : SchwartzMap V ℂ →ₗ[ℂ] ℂ),
     (∀ (L : V →L[ℝ] ℝ) (f f' : SchwartzMap V ℂ), (∀ x, f' x = Complex.exp (Complex.I * (L x : ℂ)) * f x) → T f' = T f) →
-    ∀ (L : V →L[ℝ] ℝ) (h g : SchwartzMap V ℂ), (∀ x, g x = (L x : ℂ) * h x) → T g = 0 := GlobalTheory.T.modulation_invariant_functional_kills_linear_multiple
+    ∀ (L : V →L[ℝ] ℝ) (h g : SchwartzMap V ℂ), (∀ x, g x = (L x : ℂ) * h x) → T g = 0 := _root_.GlobalTheory.CharInvForm.kills_linear_mul
 
 theorem arch (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]
     (T : SchwartzMap V ℂ →ₗ[ℂ] ℂ)
@@ -70,7 +73,7 @@ theorem arch (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimens
   obtain ⟨f₀, hf₀⟩ := GlobalTheory.CharInvForm.exists_schwartz_one V
   refine ⟨T f₀, fun f => ?_⟩
   have h0 : (f - f 0 • f₀) 0 = 0 := by simp [hf₀]
-  obtain ⟨n, L, h, g, hg, hsum⟩ := GlobalTheory.T.schwartz_vanishing_decomposition V _ h0
+  obtain ⟨n, L, h, g, hg, hsum⟩ := _root_.GlobalTheory.SchwartzDiv.hadamard V _ h0
   have e : f - f 0 • f₀ = ∑ i, g i := by
     ext x
     rw [hsum x, SchwartzMap.sum_apply]
@@ -190,7 +193,7 @@ theorem main : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F : Type) [Field F] [Nu
     (∃ φ ∈ schA F κ, l₂ φ ≠ 0) → ∃ c : ℂ, ∀ φ ∈ schA F κ, l₁ φ = c * l₂ φ := by
   intro _ F _ _ ψ hψ κ _ L hL hdim l₁ l₂ hi₁ hi₂ ⟨φ₀, hφ₀, hne⟩
   classical
-  obtain ⟨g, hg, hgL⟩ := GlobalTheory.T.exists_symplecticBlockGenerators_lagrangian_normal_form F κ L hL hdim
+  obtain ⟨g, hg, hgL⟩ := _root_.GlobalTheory.AdelicSvN.LagrangianNormalForm.exists_mem_closure F κ L hL hdim
   obtain ⟨S, hS, hSs, hSa, hSi⟩ := realised_of_mem_closure ψ hψ hg
 
   have hlin : ∀ (a b : ℂ), ∀ φ ∈ schA F κ, ∀ φ' ∈ schA F κ, S (a • φ + b • φ') = a • S φ + b • S φ' := by

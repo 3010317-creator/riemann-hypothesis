@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ReferenceCharactersFactorTame
 public import Formalism.LocalToGlobal.Columns.TwQExact
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LatAtLattice
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DecoratedLatticeDiagonalBasePointMulStatement
+public import Formalism.LocalToGlobal.Columns.Adelic
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DecoratedLatticeDiagonalBasePointMul
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitLocalLevelFirstFactorReadsComponentStatement
 public import Formalism.LocalToGlobal.Columns.TwQLevU
 import Mathlib.Algebra.Order.Floor.Extended
@@ -64,7 +65,7 @@ theorem frExact_of_isPtOf : ∀ {F E : Type} [Field F] [NumberField F] [Field E]
       simpa using hasRes_coe P.1 1
     · rw [Matrix.one_apply_ne (Ne.symm h), map_zero, if_neg h]
       simpa using hasRes_coe P.1 0
-  obtain ⟨hU, hd⟩ := GlobalTheory.T.decoratedLattice_diagonalBasePoint_mul F E hc n ST SG Q g 1 p 1 h1 ⟨DecoF.base E n ∅ ∅ ∅, isPtOf_base hc, rfl⟩
+  obtain ⟨hU, hd⟩ := _root_.GlobalTheory.Mem.Col2.DiaPt.decoOf_dia_eq F E hc n ST SG Q g 1 p 1 h1 ⟨DecoF.base E n ∅ ∅ ∅, isPtOf_base hc, rfl⟩
     (fun w _ => map_one _) hres
   rw [DecoSet.dia_one] at hd
   refine ⟨hU, hd, fun P => Units.ext (Matrix.ext fun i j => ?_)⟩

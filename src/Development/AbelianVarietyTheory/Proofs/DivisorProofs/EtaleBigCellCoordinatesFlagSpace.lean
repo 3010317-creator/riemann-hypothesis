@@ -2,11 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsBaseFrame
 public import Formalism.LocalToGlobal.ProjectiveLattices.CompHt
-import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.IsIntegralOfSmoothFieldOfConnectedSpace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOpenImmersionBigCellBaseAffineCoordsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOpenImmersionBigCellBaseAffineCoords
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagSpaceComponentSmoothProjectiveConnected
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenImmersionSpecOfQuasiFiniteOfNormalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocallyQuasiFiniteBigCellToBaseProdAffineSpaceStatement
+public import Mathlib.AlgebraicGeometry.Morphisms.QuasiFinite
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenImmersionSpecOfQuasiFiniteOfNormal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocallyQuasiFiniteBigCellToBaseProdAffineSpace
+import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.IsIntegralOfSmoothFieldOfConnectedSpace
 import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsDomainAndIsIntegrallyClosedAtPrimeOfSmoothOfCo
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -120,10 +122,10 @@ theorem etale_cellCoord : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     haveI := TF.smooth
     have : Smooth TF.Y.s := SmoothOfRelativeDimension.smooth (n := Dw.dim) TF.Y.s
     obtain ⟨hN, hA⟩ := normal_mvPolynomial TF.Y.X c.F TF.Y.s U (VIx Dw)
-    exact etale_of_isOpenImmersion_spec _ (GlobalTheory.T.isOpenImmersion_specMap_of_quasiFinite_of_normal _ hA
+    exact etale_of_isOpenImmersion_spec _ (_root_.GlobalTheory.isOpenImmersion_spec_of_quasiFinite_of_normal _ hA
       (finiteType_cell E H Dw l Xo c TF Z hF U n e v hv W k L N h)
-      (GlobalTheory.T.locallyQuasiFinite_bigCell_to_base_prod_affineSpace E H Dw l Xo c TF Z hF U n e v hv W k L N h)
-      (GlobalTheory.T.exists_open_immersion_big_cell_base_affine_coords E H Dw l Xo c TF Z hF U n e v hv W k L N h hW))
+      (_root_.GlobalTheory.LogPole.locallyQuasiFinite_cellMap E H Dw l Xo c TF Z hF U n e v hv W k L N h)
+      (_root_.GlobalTheory.LogPole.CellBir.exists_isOpenImmersion E H Dw l Xo c TF Z hF U n e v hv W k L N h hW))
   · haveI : Subsingleton Γ(Y₀ TF.X Z, W) := by
       have hE : IsEmpty W := not_nonempty_iff.1 hW
       have : IsEmpty (Spec Γ(Y₀ TF.X Z, W)) := (Scheme.Hom.homeomorph h.1.isoSpec.hom).isEmpty_congr.1 hE

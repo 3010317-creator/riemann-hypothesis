@@ -4,26 +4,40 @@ public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ContDiffUnce
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSabCancel
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ConjugateRootZeroSecond
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianMapTangentCoordinatesStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BoundaryDiscMapEmbeddingFixedStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianMapTangentCoordinates
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.BdryChart
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BoundaryDiscMapEmbeddingFixed
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ChartLatticeTangentCoordinatesStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointsIffCentresStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ConjugatePointSameCentreStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsConjugateLogPeriodsStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointsIffCentres
+public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.CoordinateIdeals
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ConjugatePointSameCentre
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsConjugateLogPeriods
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrameDomainInSegreChart
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GramMatrixConjugation
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeGeneratedSumSpecializationFrame
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeGeneratedSumSpecialization
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolomorphicCoordsOfGenericPoint
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExponentialFamilyPeriods
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolomorphicDiscInAffineOpen
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolomorphicDiscOverNumberFieldRing
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Mathlib.Basic.Complex.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeTangentVectorsAffineOpen
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelComplexLinearComparison
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.ClopenCondOnto
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LogPeriodsRiemannForm
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SncChartLocalNormalForm
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TBijective
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrameDomainInSegreChartStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GramMatrixConjugationStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeGeneratedSumSpecializationFrameStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeGeneratedSumSpecializationStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolomorphicCoordsOfGenericPointStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolomorphicDiscInAffineOpenStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolomorphicDiscOverNumberFieldRingStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeTangentVectorsAffineOpenStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelComplexLinearComparisonStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalRingPointsExistsUniqueStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LogPeriodsRiemannFormStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SncChartLocalNormalFormStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TBijectiveStatement
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalRingPointsExistsUnique
 import Mathlib.Algebra.AffineMonoid.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -132,19 +146,19 @@ theorem core {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D 
         (fun k => ((bb k : ↥(𝔐.Vgen a ⊔ 𝔐.Vgen b)) : 𝔐.Li)) (HodgeMetric.periodGram L U u) := by
   classical
   have hsm : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
-  obtain ⟨W, hW, v, hq, htan, hval⟩ := GlobalTheory.T.lattice_tangent_vectors_affine_open 𝔐.X 𝔐.t.G Ω 𝔐.ξ 𝔐.Li 𝔐.M ⟨centre (p 0), h0⟩ N
+  obtain ⟨W, hW, v, hq, htan, hval⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HodgeMetric.FrameExt.exists_affine_frame 𝔐.X 𝔐.t.G Ω 𝔐.ξ 𝔐.Li 𝔐.M ⟨centre (p 0), h0⟩ N
     (fun k => ((bb k : ↥(𝔐.Vgen a ⊔ 𝔐.Vgen b)) : 𝔐.Li)) 𝔐.tie.gen
-    (GlobalTheory.T.hodge_generated_sum_specialization E H D l Xo c Y S Ω K J y 𝔐 a b N bb (p 0) h0 hfr)
+    (_root_.GlobalTheory.CompanionTheory.Ar.HodgeMetric.FrameLat.frame_mem_lat E H D l Xo c Y S Ω K J y 𝔐 a b N bb (p 0) h0 hfr)
   have hW0 : ⊤ ≤ p 0 ⁻¹ᵁ W := fun x _ => by
     have : x = IsLocalRing.closedPoint ℂ := Subsingleton.elim _ _
     subst this
     exact hq
-  obtain ⟨ρ₁, ψ, hρ₁, hρ₁', hψ, hψp⟩ := GlobalTheory.T.holomorphic_disc_in_affine_open 𝔐.X W hW n p hp hW0
+  obtain ⟨ρ₁, ψ, hρ₁, hρ₁', hψ, hψp⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HolFac.exists_ringMaps_of_hol 𝔐.X W hW n p hp hW0
   have hp₁ : IsHolTo (Metric.ball 0 1) (fun u => spMap (ψ u)) :=
     ReciprocityTheory.ChartRestriction.G.PullbackSections.isHolTo_spMap Metric.isOpen_ball hψ.2
   obtain ⟨tW, ⟨mW⟩⟩ := exists_sab hW.fromSpec 𝔐.t
   obtain ⟨mY, -⟩ := GlobalTheory.ObjMaps.exists_sab_comp 𝔐.m mW
-  obtain ⟨ρ₂, C, h, hρ₂, hρ₂', ⟨mC⟩, hC⟩ := GlobalTheory.T.boundary_disc_map_embedding_fixed E H D l Xo c Y _ (hW.fromSpec ≫ 𝔐.f) tW mY τ n a₀
+  obtain ⟨ρ₂, C, h, hρ₂, hρ₂', ⟨mC⟩, hC⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ModelChart.exists_bdryChart_of_model E H D l Xo c Y _ (hW.fromSpec ≫ 𝔐.f) tW mY τ n a₀
     (fun u => spMap (ψ u)) ha hp₁
     (fun u hu => by
       have := hc _ (smul_mem_ball' hρ₁ hρ₁' hu)
@@ -152,11 +166,11 @@ theorem core {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D 
       simpa using this)
     (fun u hu x hx => interior_range 𝔐 _ (hi _ (smul_mem_punct' hρ₁ hρ₁' hu)) x (by
       rw [hx, ← hψp u hu.1, Category.assoc]))
-  obtain ⟨ρ₃, Λ, _, L, hρ₃, hρ₃', hR⟩ := GlobalTheory.T.log_periods_riemann_form E H D l Xo _ n a₀ C hpq hτ
+  obtain ⟨ρ₃, Λ, _, L, hρ₃, hρ₃', hR⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.exists_logPeriods_isRiem E H D l Xo _ n a₀ C hpq hτ
   obtain ⟨θ, hθ⟩ : ∃ θ : Γ(𝔐.X, W) →+* C.R, spMap θ = h := ⟨(Spec.preimage h).hom, Spec.map_preimage _⟩
   subst hθ
   obtain ⟨mX, -⟩ := GlobalTheory.ObjMaps.exists_sab_comp mW mC
-  obtain ⟨x, hx⟩ := GlobalTheory.T.abelian_map_tangent_coordinates E H 𝔐.X 𝔐.t Γ(𝔐.X, W) hW.fromSpec N v C.R C.t θ mX C.g C.M htan
+  obtain ⟨x, hx⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PeriodCoord.exists_coords E H 𝔐.X 𝔐.t Γ(𝔐.X, W) hW.fromSpec N v C.R C.t θ mX C.g C.M htan
 
   have hw : ∀ z : Fin n → ℂ, ∃ w : Fin N → (epsAt (spMap (C.ψ z) ≫ spMap θ ≫ hW.fromSpec) ⟶ 𝔐.t.G),
       (∀ k, 𝔐.M.ValAt _ ((bb k : ↥(𝔐.Vgen a ⊔ 𝔐.Vgen b)) : 𝔐.Li) (w k)) ∧
@@ -177,14 +191,14 @@ theorem core {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D 
     exact (C.hol.2 (x k e)).comp (by fun_prop) fun u hu => smul_mem_ball' hρ₃ hρ₃' hu
   · obtain ⟨w, hw1, hw2⟩ := hw 0
     obtain ⟨Vz, _, _, ⟨MR⟩⟩ := lieModel_exists 𝔐.X 𝔐.t.G ℂ (spMap (C.ψ 0) ≫ spMap θ ≫ hW.fromSpec)
-    obtain ⟨Θ, hΘ⟩ := GlobalTheory.T.lie_model_complex_linear_comparison E H 𝔐.X 𝔐.t C.R C.t _ mX C.g C.M (C.ψ 0) Vz MR
+    obtain ⟨Θ, hΘ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FrameFibre.exists_linear_fibre E H 𝔐.X 𝔐.t C.R C.t _ mX C.g C.M (C.ψ 0) Vz MR
     have hz0 : spMap (C.ψ 0) ≫ spMap θ ≫ hW.fromSpec = p 0 := by
       simpa using hpt 0 (by simp)
     have hfr' : ∀ (z : Sp ℂ ⟶ 𝔐.X) (hz : z = p 0) (h' : genPt 𝔐.ξ ⤳ centre z),
         (Lat.comap (fun p => 𝔐.V a p ⊔ 𝔐.V b p) (𝔐.Vgen a ⊔ 𝔐.Vgen b).subtype).IsFrameAt bb ⟨centre z, h'⟩ := by
       rintro z rfl h'
       exact hfr
-    have hin := GlobalTheory.T.hodge_generated_sum_specialization_frame E H D l Xo c Y S Ω K J y 𝔐 a b N bb _ (𝔐.all _) Vz MR (fun k => Θ fun e => C.ψ 0 (x k e))
+    have hin := _root_.GlobalTheory.CompanionTheory.Ar.PeriodIndep.values_indep E H D l Xo c Y S Ω K J y 𝔐 a b N bb _ (𝔐.all _) Vz MR (fun k => Θ fun e => C.ψ 0 (x k e))
       (hfr' _ hz0 _) (fun k => by
         have e : MR.pt (Θ fun e => C.ψ 0 (x k e)) = w k :=
           Over.OverMorphism.ext ((hΘ (x k)).trans (hw2 k).symm)
@@ -253,7 +267,7 @@ theorem zeroPeriods (n a : ℕ) (ha : a ≤ n) : ∃ (Λ : Type) (_ : AddCommGro
 theorem exists_isFramePeriods : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (Xo : ∀ l : Level H, Moduli D l) (l : Level H) (c : Coeff l) (Y : Model (Xo l) c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (Ω : Type) [Field Ω] [CharZero Ω] (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y), Top.IsGlobal Xo l c Y → ∀ (a b : CMType H ⊕ CMType H) (N : ℕ) (bb : Fin N → ↥(𝔐.Vgen a ⊔ 𝔐.Vgen b)) (n : ℕ) (Bd : Set ((Σ k, J k) → ℂ)) (χ : SncChart (mCoordIdeal y) n Bd) (t₀ : Fin n → ℂ) (cc : (k : K) → J k) (f : Ω), (∀ (z : Spec (CommRingCat.of ℂ) ⟶ 𝔐.X) w, CoordsAt 𝔐.ξ y z w → (w ∈ Bd ↔ ¬ 𝔐.Interior z)) → t₀ ∈ Metric.ball (0 : Fin n → ℂ) 1 → (∀ p : Cpt 𝔐.ξ, InChart 𝔐.ξ (segreCoord y) cc p → unitAt 𝔐.ξ p f → (Lat.comap (fun p => 𝔐.V a p ⊔ 𝔐.V b p) (𝔐.Vgen a ⊔ 𝔐.Vgen b).subtype).IsFrameAt bb p) → InFrameDomain y cc f (χ.γ t₀) → ∃ (a₀ g : ℕ) (Λ : Type) (_ : AddCommGroup Λ) (L : Flat.LogPeriods n a₀ g Λ) (π : Equiv.Perm (Fin n)) (ρ : ℝ) (U : Fin N → (Fin n → ℂ) → Fin g → ℂ), HodgeMetric.IsFramePeriods 𝔐 (fun k => ((bb k : ↥(𝔐.Vgen a ⊔ 𝔐.Vgen b)) : 𝔐.Li)) χ t₀ cc f L π ρ U := by
   intro _ E _ _ _ H D Xo l c Y S Ω _ _ K _ J _ y 𝔐 _ a b N bb n Bd χ t₀ cc f hBd ht₀ hfr hdom
   classical
-  obtain ⟨a₀, π, ρ₀, ha, hρ₀, hρ₀', hπ, hgeo⟩ := GlobalTheory.T.snc_chart_local_normal_form K J Ω y _ n Bd χ t₀ cc f ht₀ hdom
+  obtain ⟨a₀, π, ρ₀, ha, hρ₀, hρ₀', hπ, hgeo⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ChartGeo.exists_recentre_chart K J Ω y _ n Bd χ t₀ cc f ht₀ hdom
   have hw : DifferentiableOn ℂ (fun u => χ.γ (HodgeMetric.recentre t₀ ρ₀ π u)) (Metric.ball 0 1) := by
     refine χ.analytic.differentiableOn.comp ?_ fun u hu => (hgeo ρ₀ hρ₀ le_rfl u hu).1
     unfold HodgeMetric.recentre
@@ -263,11 +277,11 @@ theorem exists_isFramePeriods : Top.Given → ∀ (E : Type) [Field E] [NumberFi
   have htie := 𝔐.tie
   have hall := 𝔐.all
   have hex : ∀ u ∈ Metric.ball (0 : Fin n → ℂ) 1, ∃ z : Sp ℂ ⟶ 𝔐.X, genPt 𝔐.ξ ⤳ centre z ∧ CoordsAt 𝔐.ξ y z (w u) := fun u hu =>
-    (GlobalTheory.T.complex_points_iff_centres 𝔐.X Ω 𝔐.ξ K J y htie (w u)).1 (χ.mem _ (hgeo ρ₀ hρ₀ le_rfl u hu).1)
+    (_root_.GlobalTheory.CompanionTheory.Ar.mem_mcPts_iff_exists_coordsAt 𝔐.X Ω 𝔐.ξ K J y htie (w u)).1 (χ.mem _ (hgeo ρ₀ hρ₀ le_rfl u hu).1)
   haveI : Nonempty (Sp ℂ ⟶ 𝔐.X) := ⟨(hex 0 (by simp)).choose⟩
   choose! p hp₀ hp using hex
   have huniq : ∀ (z z' : Sp ℂ ⟶ 𝔐.X) (w' : (Σ k, J k) → ℂ), CoordsAt 𝔐.ξ y z w' → CoordsAt 𝔐.ξ y z' w' → z = z' := fun z z' w' h h' => by
-    obtain ⟨e1, -, e3⟩ := GlobalTheory.T.local_ring_points_existsUnique 𝔐.X Ω 𝔐.ξ K J y htie ℂ
+    obtain ⟨e1, -, e3⟩ := _root_.GlobalTheory.CompanionTheory.Ar.tie_points 𝔐.X Ω 𝔐.ξ K J y htie ℂ
     exact (e1 w' h.1 (e3 z w' (hall _) h).1).unique ⟨hall _, h⟩ ⟨hall _, h'⟩
 
   have fin : ∀ (g : ℕ) (Λ : Type) (_ : AddCommGroup Λ) (L : Flat.LogPeriods n a₀ g Λ) (ρ₁ : ℝ)
@@ -287,7 +301,7 @@ theorem exists_isFramePeriods : Top.Given → ∀ (E : Type) [Field E] [NumberFi
   have hb0 : (0 : Fin n → ℂ) ∈ Metric.ball (0 : Fin n → ℂ) 1 := by simp
   have hfr0 : (Lat.comap (fun p => 𝔐.V a p ⊔ 𝔐.V b p) (𝔐.Vgen a ⊔ 𝔐.Vgen b).subtype).IsFrameAt bb ⟨centre (p 0), hall _⟩ := by
     have hd := (hgeo ρ₀ hρ₀ le_rfl 0 hb0).2.1
-    obtain ⟨c1, c2⟩ := GlobalTheory.T.frame_domain_in_segre_chart 𝔐.X Ω 𝔐.ξ K J y htie (p 0) (w 0) cc f (hall _) (hp 0 hb0) hd
+    obtain ⟨c1, c2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HodgeMetric.inChart_unitAt_of_inFrameDomain 𝔐.X Ω 𝔐.ξ K J y htie (p 0) (w 0) cc f (hall _) (hp 0 hb0) hd
     exact hfr _ c1 c2
   by_cases hpq : D.p + D.q = 0
   · have hV : ∀ s, 𝔐.Vgen s = ⊥ := fun s => by
@@ -307,10 +321,10 @@ theorem exists_isFramePeriods : Top.Given → ∀ (E : Type) [Field E] [NumberFi
     exact fin 0 Λ _ L 1 (fun _ _ => 0) one_pos le_rfl (fun k => isEmptyElim k) linearIndependent_empty_type
       fun u _ z _ => ⟨fun k => isEmptyElim k, fun k => isEmptyElim k, fun k => isEmptyElim k⟩
   have hpq' : 1 ≤ D.p + D.q := Nat.one_le_iff_ne_zero.2 hpq
-  have hhol : IsHolTo (Metric.ball 0 1) p := GlobalTheory.T.holomorphic_coords_of_generic_point 𝔐.X Ω 𝔐.ξ K J y htie hall n _ w p Metric.isOpen_ball hw hp
+  have hhol : IsHolTo (Metric.ball 0 1) p := _root_.GlobalTheory.CompanionTheory.Ar.PeriodsHol.isHolTo_of_coordsAt_family 𝔐.X Ω 𝔐.ξ K J y htie hall n _ w p Metric.isOpen_ball hw hp
   haveI : FiniteDimensional ℚ c.F := c.fin
   haveI : NumberField c.F := ⟨⟩
-  obtain ⟨τ, hτ⟩ := GlobalTheory.T.holomorphic_disc_over_number_field_ring c.F 𝔐.X (𝔐.f ≫ Y.s) n p hhol
+  obtain ⟨τ, hτ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ConstEmbedding.exists_embedding c.F 𝔐.X (𝔐.f ≫ Y.s) n p hhol
   have hint : ∀ u ∈ Flat.punct n a₀ 1, 𝔐.Interior (p u) := fun u hu => by
     have h1 := (hgeo ρ₀ hρ₀ le_rfl u hu.1).2.2
     have h2 := hBd (p u) (w u) (hp u hu.1)
@@ -332,9 +346,9 @@ theorem exists_isFramePeriods : Top.Given → ∀ (E : Type) [Field E] [NumberFi
       simp
     set p' : (Fin n → ℂ) → (Sp ℂ ⟶ 𝔐.X) := fun u => spMap (starRingEnd ℂ) ≫ p (star u) with hp'
     have hcoord : ∀ u ∈ Metric.ball (0 : Fin n → ℂ) 1, CoordsAt 𝔐.ξ y (p' u) (fun q => star (w (star u) q)) := fun u hu =>
-      (GlobalTheory.T.conjugate_point_same_centre 𝔐.X Ω 𝔐.ξ K J y _ _).2 (hp _ (star_mem_ball' hu))
-    have hcen : ∀ u, centre (p' u) = centre (p (star u)) := fun u => (GlobalTheory.T.conjugate_point_same_centre 𝔐.X Ω 𝔐.ξ K J y _ (w 0)).1
-    have hhol' : IsHolTo (Metric.ball 0 1) p' := GlobalTheory.T.holomorphic_coords_of_generic_point 𝔐.X Ω 𝔐.ξ K J y htie hall n _ _ p' Metric.isOpen_ball
+      (_root_.GlobalTheory.CompanionTheory.Ar.CoordConj.centre_and_coords_conj 𝔐.X Ω 𝔐.ξ K J y _ _).2 (hp _ (star_mem_ball' hu))
+    have hcen : ∀ u, centre (p' u) = centre (p (star u)) := fun u => (_root_.GlobalTheory.CompanionTheory.Ar.CoordConj.centre_and_coords_conj 𝔐.X Ω 𝔐.ξ K J y _ (w 0)).1
+    have hhol' : IsHolTo (Metric.ball 0 1) p' := _root_.GlobalTheory.CompanionTheory.Ar.PeriodsHol.isHolTo_of_coordsAt_family 𝔐.X Ω 𝔐.ξ K J y htie hall n _ _ p' Metric.isOpen_ball
       (diffOn_star' hw) hcoord
     have hτ' : ∀ u ∈ Metric.ball (0 : Fin n → ℂ) 1, p' u ≫ 𝔐.f ≫ Y.s =
         spMap (((starRingEnd ℂ).comp τ).comp (algebraMap (𝓞 c.F) c.F)) := fun u hu => by
@@ -354,7 +368,7 @@ theorem exists_isFramePeriods : Top.Given → ∀ (E : Type) [Field E] [NumberFi
       rw [e]
       exact hfr0
     obtain ⟨g, Λ, _, L', ρ₁, U', h1, h2, h3, h4, h5⟩ := core 𝔐 a b N bb n a₀ p' _ hpq' hs' ha hhol' hτ' hint' (hall _) hfr0'
-    obtain ⟨L, hL⟩ := GlobalTheory.T.exists_conjugate_log_periods n a₀ g N Λ L' U' (GlobalTheory.T.bijective_logPeriods_T n a₀ g Λ L')
+    obtain ⟨L, hL⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.ConjPeriods.exists_conj_periodGram n a₀ g N Λ L' U' (_root_.GlobalTheory.CompanionTheory.Ar.Flat.MonodromyBij.T_bijective n a₀ g Λ L')
     refine fin g Λ _ L ρ₁ (fun k u' => star (U' k (star u'))) h1 h2 (fun k => diffOn_star' (h3 k)) ?_ fun u hu z hz => ?_
     · refine Fintype.linearIndependent_iff.2 fun c' hc' k => ?_
       have e := congrArg star hc'
@@ -362,7 +376,7 @@ theorem exists_isFramePeriods : Top.Given → ∀ (E : Type) [Field E] [NumberFi
       have := Fintype.linearIndependent_iff.1 h4 (fun k => star (c' k)) (by simpa [star_smul] using e) k
       simpa using this
     · rw [hL u hu, huniq z _ _ hz (hp _ (smul_mem_ball' h1 h2 hu.1))]
-      have := GlobalTheory.T.gramAt_conj_point_map_conj E H D l (Xo l) c Y S Ω K J y 𝔐 _ N _ _ (h5 (star u) (star_mem_punct' hu))
+      have := _root_.GlobalTheory.CompanionTheory.Ar.HodgeMetric.ConjPoint.gramAt_conj_point E H D l (Xo l) c Y S Ω K J y 𝔐 _ N _ _ (h5 (star u) (star_mem_punct' hu))
       have e : spMap (starRingEnd ℂ) ≫ p' ((ρ₁ : ℂ) • star u) = p ((ρ₁ : ℂ) • u) := by
         rw [hp']
         simp only

@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FullToGlIsSelfAdjoint
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BorderedInvariantsAndHankelDetMapRingHom
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetRallisBorderedMatrixNormalFormInvariantsStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FourierMatch
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetRallisBorderedMatrixNormalFormInvariants
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -127,7 +128,7 @@ theorem hasInv_liftH : ∀ (F E : Type) [NontriviallyNormedField F] [Nontriviall
     exact (map_ne_zero (algebraMap F E)).2 hΔ
   have hX' : inv X.toGl = inv (glMap (algebraMap F E) Z) := by
     rw [InvMap.inv_glMap]; exact hX
-  obtain ⟨g, ⟨hg, -⟩, -⟩ := (GlobalTheory.T.jacquetRallis_borderedMatrix_normalForm_invariants E r).2.2.2.2 _ _ hΔ' hX'
+  obtain ⟨g, ⟨hg, -⟩, -⟩ := (_root_.GlobalTheory.JR.normalForm_invariants E r).2.2.2.2 _ _ hΔ' hX'
   have hfull : full X.toGl = embHom r E (g : Matrix (Fin r) (Fin r) E) * (full Z).map (algebraMap F E) *
       embHom r E ((g⁻¹ : GL (Fin r) E) : Matrix (Fin r) (Fin r) E) := by
     rw [← hg, full_act, full_glMap]

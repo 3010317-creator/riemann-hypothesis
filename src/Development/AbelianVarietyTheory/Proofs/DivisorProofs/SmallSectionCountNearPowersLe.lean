@@ -3,11 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CharZeroFunctionField
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.SmallSecTensTriv
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqOfIsometricTrivShift
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithHilbertSamuelLogBallCountTendstoStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithHilbertSamuelLogBallCountTendsto
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyLeOfPolyAsymptotics
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLineBundlePairBallsFiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianLineBundleIsNefShiftOfNonnegStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepresentsBaseBundlesAndTrivialStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLineBundlePairBallsFinite
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsClosedImmersionGenericPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianLineBundleIsNefShiftOfNonneg
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepresentsBaseBundlesAndTrivial
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,13 +63,13 @@ theorem lc_two_le_lc_one_add (hHS : GlobalTheory.Published.ArithHilbertSamuel) (
       P.lc 0 (b * (n * m : ℕ) + m) 2 ≤ P.lc 0 (b * (n * m : ℕ)) 1 + ε * ((n : ℝ) * m) ^ (D + 1) := by
   obtain ⟨h, hh⟩ := (hA.1 k X p D hX).1 P.A
   have hα : P.A.IsSelfInter (h (genericPoint X)) := ⟨h, hh, rfl⟩
-  have hnef := GlobalTheory.T.hermitianLineBundle_isNef_shift_of_nonneg k X p D hX P.A 0 le_rfl hG.nef
-  have hrep : P.Rep 0 1 P.A := (GlobalTheory.T.represents_base_bundles_and_trivial k X p P).2.1
+  have hnef := _root_.GlobalTheory.NefShift.isNef_shift_nonneg k X p D hX P.A 0 le_rfl hG.nef
+  have hrep : P.Rep 0 1 P.A := (_root_.GlobalTheory.VolBr.Pair.rep_base k X p P).2.1
   have key := GlobalTheory.eventually_le_of_poly_asymptotics (D + 1) b
     (fun η j => P.lc 0 (j : ℤ) (Real.exp (η * j))) (fun j => P.lc 0 (j : ℤ) 2)
     (h (genericPoint X) / (D + 1).factorial) ((D + 1) * gdeg P.A D / (D + 1).factorial) (Nat.succ_pos D) hG.pos
     (fun η hη => by
-      have := GlobalTheory.T.arith_hilbertSamuel_log_ball_count_tendsto hHS hA k X p D hX P 0 1 P.A (h (genericPoint X)) 0 hrep hα hnef η hη
+      have := _root_.GlobalTheory.VolBr.lc_tendsto_of_rep hHS hA k X p D hX P 0 1 P.A (h (genericPoint X)) 0 hrep hα hnef η hη
       simpa only [mul_zero, mul_one] using this)
     (fun η hη => by
       have h1 : ∀ᶠ j : ℕ in atTop, Real.log 2 ≤ η * j :=
@@ -79,7 +80,7 @@ theorem lc_two_le_lc_one_add (hHS : GlobalTheory.Published.ArithHilbertSamuel) (
           _ ≤ _ := Real.exp_le_exp.2 hj
       have hsub : P.Bl 0 (j : ℤ) 2 ⊆ P.Bl 0 (j : ℤ) (Real.exp (η * j)) :=
         fun f hf => ⟨hf.1, fun σ y => (hf.2 σ y).trans h2⟩
-      have hfin := GlobalTheory.T.hermLineBundlePair_balls_finite hHS k X p D hX P b s t hG 0 (j : ℤ) (Real.exp (η * j)) hA
+      have hfin := _root_.GlobalTheory.VolBr.BallFinite.bl_finite hHS k X p D hX P b s t hG 0 (j : ℤ) (Real.exp (η * j)) hA
       have hle := Set.ncard_le_ncard hsub hfin
       simp only [Pair.lc]
       rcases Nat.eq_zero_or_pos (P.Bl 0 (j : ℤ) 2).ncard with h0 | h0

@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SmallFam
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLBLeBySmallSectionIffLocalQuotientsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLBLeBySmallSectionIffLocalQuotients
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,7 +78,7 @@ theorem le_shift_of_isFS_sub : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsI
       (w' : J' → ℝ) (ι : J' → J) (Δ : ℝ), Function.Injective ι → IsFS M f w → IsFS M' (f ∘ ι) w' →
       (∀ j, w' j + Δ ≤ w (ι j)) → Le (M'.shift (fun _ => Δ) fun _ => rfl) M := by
   intro k _ X _ p M M' J J' _ _ f w w' ι Δ hι hM hM' hw
-  rw [GlobalTheory.T.hermLBLeBySmallSection_iff_localQuotients]
+  rw [_root_.GlobalTheory.HSNef.le_iff_local]
   obtain ⟨ρ, hρ, hreg, hφ⟩ := hM
   obtain ⟨ρ', hρ', hreg', hφ'⟩ := hM'
   simp only [Function.comp_apply] at hreg' hφ'

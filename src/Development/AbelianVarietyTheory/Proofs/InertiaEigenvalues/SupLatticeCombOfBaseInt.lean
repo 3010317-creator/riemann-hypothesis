@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Univ
 public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.TwistSeries
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KapTopLastPosRun
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemCuspFormsAllEmbeddingsOfInclusionReading
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SupLatticeLocalisationOfUnitBall
+public import Formalism.LocalToGlobal.IndefiniteReal.GramCEqTranspose
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSmulMemSupLattice
 public import Formalism.LocalToGlobal.IndefiniteReal.FWCentral
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -99,7 +100,7 @@ theorem GlobalTheory.XiIntCore.supLattice_comb_of_baseInt : GlobalTheory.Publish
     have hball : ∀ y : (X.R.FW j).Pt la, (X.R.FW j).nrm la y (X.geo.fw.e j fc) ≤ 1 := fun y => by
       rw [X.geo.fw.nrm_eq]
       exact (X.core.nrmM_le_one_iff _ la _ _).2 (hint la rfl _ (X.geo.fw.pt j la y).2)
-    obtain ⟨s, hs, hsM⟩ := GlobalTheory.supLattice_localisation_of_unitBall _ _ _ _ _ (X.R.FW j) (X.integral j).2.1.2 la _ hball
+    obtain ⟨s, hs, hsM⟩ := _root_.GlobalTheory.DenominatorExistenceTwistedOperators.exists_smul_mem_supLattice _ _ _ _ _ (X.R.FW j) (X.integral j).2.1.2 la _ hball
     set w := X.geo.fw.e j fc with hw
     have hx₀ : evW Y.YS X.geo.v₀ j ((Y.YS.fi j).e.symm (w : Fin (X.R.nW j) → D.what₂.LL)) =
         FWT.phiC X.core hV' (Formalism.L2.Pj.wtA (X.geo.κ j)) f := by

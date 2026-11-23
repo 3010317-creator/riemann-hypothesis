@@ -1,10 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AddMulLeOfPowLeOfLargeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffFinsuppProdConstFreeEqZeroOfDegreeLtStatement
+public import Mathlib.Algebra.Group.Nat.Defs
+public import Mathlib.Tactic.ToDual
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AddMulLeOfPowLeOfLarge
+public import Mathlib.RingTheory.MvPowerSeries.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffFinsuppProdConstFreeEqZeroOfDegreeLt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MvPowerSeriesEvalTruncSubstEqSumStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowDvdEvalTruncOfHighOrderStatement
+public import Mathlib.RingTheory.MvPowerSeries.Trunc
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowDvdEvalTruncOfHighOrder
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,8 +57,8 @@ open MvPowerSeries GlobalTheory GlobalTheory.Katz GlobalTheory.QLog GlobalTheory
 theorem GlobalTheory.tail_subst_small : ∀ (p : ℕ) [Fact p.Prime] (B O Q : Type) [CommRing B] [CommRing Q] [CommRing O] [Algebra B Q] (θ : B →+* O), IsFrame p Q θ → ∀ (σ : Type) [Fintype σ] [DecidableEq σ] (z : σ → B), (∀ i, ∃ N : ℕ, (p : B) ∣ z i ^ N) → ∀ (τ : Type) [Fintype τ] [DecidableEq τ] (u : τ → MvPowerSeries σ B) (f : MvPowerSeries τ Q), (∀ j, constantCoeff (u j) = 0) → DIn (⊤ : Ideal B) f → ∀ m : ℕ, ∃ M0 : ℕ, ∀ M ≥ M0, ∀ n : σ →₀ ℕ, ∃ b : B, MvPolynomial.eval (fun i => algebraMap B Q (z i)) (trunc' Q n (subst (up Q u) (f - (trunc' Q (Finsupp.equivFunOnFinite.symm fun _ => M) f : MvPowerSeries τ Q)))) = algebraMap B Q (p ^ m * b) := by
   intro p hp B O Q _ _ _ _ θ hF σ _ _ z hz τ _ _ u f hu hD m
   have hpr : p.Prime := hp.out
-  obtain ⟨L, hL⟩ := GlobalTheory.T.pow_dvd_eval_trunc_of_high_order p B σ z hz
-  obtain ⟨M0, hM0⟩ := GlobalTheory.T.add_mul_le_of_pow_le_of_large p L m hpr.two_le
+  obtain ⟨L, hL⟩ := _root_.GlobalTheory.trunc'_eval_dvd_of_order p B σ z hz
+  obtain ⟨M0, hM0⟩ := _root_.GlobalTheory.VSubArith.add_mul_le_of_pow_le p L m hpr.two_le
   refine ⟨M0, fun M hM n => ?_⟩
   set g : MvPowerSeries τ Q := f - (trunc' Q (Finsupp.equivFunOnFinite.symm fun _ => M) f : MvPowerSeries τ Q) with hg
   have hfin := Finsupp.finite_of_degree_le (σ := τ) n.degree
@@ -86,7 +90,7 @@ theorem GlobalTheory.tail_subst_small : ∀ (p : ℕ) [Fact p.Prime] (B O Q : Ty
       have hdeg : (v + m) * L ≤ α.degree :=
         hM0 α.degree v (by have := Finsupp.le_degree i α; omega) hpv
       obtain ⟨c, hc⟩ := hL (v + m) (α.prod fun j e => u j ^ e) (fun β hβ =>
-        GlobalTheory.T.coeff_finsuppProd_constFree_eq_zero_of_degree_lt B σ τ u hu α β (by rw [mul_comm] at hβ; omega)) n
+        _root_.GlobalTheory.DivMono.coeff_finsuppProd_eq_zero_of_degree_lt B σ τ u hu α β (by rw [mul_comm] at hβ; omega)) n
       refine ⟨b * w * c, ?_⟩
       rw [hc]
       rw [hdec] at hb

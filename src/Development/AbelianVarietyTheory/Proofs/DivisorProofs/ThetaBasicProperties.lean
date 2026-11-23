@@ -2,9 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdmissibleFormAdelicThetaSumStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaModerateGrowthHeightStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaSumInvariantRationalUnitaryStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdmissibleFormAdelicThetaSum
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaModerateGrowthHeight
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaSumInvariantRationalUnitary
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,8 +52,8 @@ namespace GlobalTheory.ThKBasic
 theorem thetaBasic : GlobalTheory.FunPr.Hypotheses₂ → GlobalTheory.ThK.ThetaBasic := by
   intro hKP F E _ _ _ _ _ σ B n d X W M χX χW om r s r' s' hP
   have hS := hP.weil.isUSplitting
-  obtain ⟨l, hl, hlt⟩ := GlobalTheory.T.exists_admissibleForm_adelicThetaSum F (Fin n × Fin d)
-  refine ⟨fun Φ hΦ => ⟨?_, ?_, GlobalTheory.T.theta_moderate_growth_height hKP F E σ B n d X W M χX χW om r s r' s' hP Φ hΦ⟩, ?_⟩
+  obtain ⟨l, hl, hlt⟩ := _root_.GlobalTheory.WeilM.exists_adm_eq_thetaSum_of_locallyCompact F (Fin n × Fin d)
+  refine ⟨fun Φ hΦ => ⟨?_, ?_, _root_.GlobalTheory.ThetaModGrowthPair.theta_modGrowth hKP F E σ B n d X W M χX χW om r s r' s' hP Φ hΦ⟩, ?_⟩
   · refine (hS.cont l hl Φ hΦ).congr fun x => ?_
     simp only [theta]
     exact hlt _ (hS.pres _ _ hΦ)
@@ -61,7 +62,7 @@ theorem thetaBasic : GlobalTheory.FunPr.Hypotheses₂ → GlobalTheory.ThK.Theta
     have e : om (γ * g, γ' * h) Φ = om (γ, γ') (om (g, h) Φ) := by
       rw [← Module.End.mul_apply, ← map_mul]; rfl
     rw [e]
-    exact GlobalTheory.T.thetaSum_invariant_rational_unitary hKP F E σ B n d X W M χX χW om r s r' s' hP γ hγ γ' hγ' _ (hS.pres _ _ hΦ)
+    exact _root_.GlobalTheory.ThetaRatPair.thetaSum_om_rat hKP F E σ B n d X W M χX χW om r s r' s' hP γ hγ γ' hγ' _ (hS.pres _ _ hΦ)
   · intro φ hφ g h
     obtain ⟨T, hT⟩ := hS.adm (g, h) l hl φ hφ
     refine T.continuous.congr fun f => ?_

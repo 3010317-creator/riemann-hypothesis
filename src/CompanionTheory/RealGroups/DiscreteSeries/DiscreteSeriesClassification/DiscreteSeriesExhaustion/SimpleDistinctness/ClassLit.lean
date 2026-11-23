@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesU
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.AdmissibleDiscreteSeriesOfHasParam
 public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.DiscreteSpectrumKFiniteDecomposition
 public import CompanionTheory.RealGroups.DiscreteSeries.DiscreteSeriesClassification.KTypesAbove
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DiscreteSeriesDetSqrtCoverOfUnitaryClassificatioStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DiscreteSeriesDetSqrtCoverOfUnitaryClassificatio
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,6 +65,6 @@ theorem discreteSeriesClassification_of (hX : GlobalTheory.Dec.DSExhaust) : Glob
   GlobalTheory.Published.discreteSeriesClassification_iff.2 (dsClass_of hX)
 
 theorem discreteSeriesCover_of (hX : GlobalTheory.Dec.DSExhaust) : GlobalTheory.Published.DiscreteSeriesCover :=
-  GlobalTheory.T.discreteSeries_detSqrtCover_of_unitary_classification (discreteSeriesClassification_of hX)
+  _root_.GlobalTheory.CoverDS.discreteSeriesCover_of_classification (discreteSeriesClassification_of hX)
 
 end CompanionTheory.RgExh.Fin

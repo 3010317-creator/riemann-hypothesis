@@ -1,8 +1,9 @@
 module
 
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.TwistedKernels.ExPhiPlusOnto
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MirabolicFiltrationExhaustiveStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwistedJacquetExactSmoothStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MirabolicFiltrationExhaustive
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.TwistedKernels.TwKerLeComapOf
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwistedJacquetExactSmooth
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,7 +54,7 @@ namespace GlobalTheory.CompanionTheory.BZMir
 theorem exPsiMinus : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k],
     GlobalTheory.BZMir.Fun.ExPsiMinus k := by
   intro k _ _ _ _ n V₁ V₂ V₃ _ _ _ _ _ _ τ₁ τ₂ τ₃ h₁ h₂ h₃ f g hf hg hfg
-  refine GlobalTheory.T.twisted_jacquet_exact_smooth τ₁ τ₂ τ₃ h₁ h₂ h₃ (MirUin k n) 1 ?_ (GlobalTheory.T.mirabolic_filtration_exhaustive k n) f g hf hg hfg
+  refine _root_.GlobalTheory.CompanionTheory.PRep.TwExact.twMap_range_eq_ker τ₁ τ₂ τ₃ h₁ h₂ h₃ (MirUin k n) 1 ?_ (_root_.GlobalTheory.CompanionTheory.BZMirExhaust.exhaust k n) f g hf hg hfg
   have hker : ((1 : MirUin k n →* ℂˣ).ker : Set (MirUin k n)) = Set.univ := by
     ext x
     simp

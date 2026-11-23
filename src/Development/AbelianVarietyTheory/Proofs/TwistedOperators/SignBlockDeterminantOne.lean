@@ -7,13 +7,11 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForm
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FiniteSupport
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LowestKTypesJointShapeBlockUnitary
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContDiffDerivSnoc
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EquivariantMapCarriesGelfandInvariantToFunction
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PtYAndItYOfPair
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompactSubgroupsActOnFockVectorsAllSignaturesStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIntegralForm
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIsKActOfStable
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRealPlaceThetaObjectsTheoremARPartsStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRealPlaceThetaObjectsTheoremARParts
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FrameExistsSignCompat
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GluingLawHoldsStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegrableOnMulRight
@@ -22,9 +20,12 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LieAction
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PairingEqZero
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SignBlockDeterminantMulMaximalCompact
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SignBlockDeterminantNeZeroOfMemMaxCompact
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SubstitutionTotalDegreeLe
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaLiftCuspFormAutomorphicSmoothModerateGrowthStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaModelsAreCoverDiscreteSeriesOfHarishChandraStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.RapidDecayLift
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIsKActOfStable
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SubstitutionTotalDegreeLe
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,7 +63,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.RapidDecayLift
 
 @[expose] public section
 
@@ -126,7 +126,7 @@ theorem lowVanishFock (h1 : GlobalTheory.Published.DiscreteSeriesCover) (h2 : Gl
     (h3 : GlobalTheory.Published.CuspRapidDecay) : ∀ D : D7, LowVanishFock D := by
   classical
   intro D
-  obtain ⟨X, hX, -, h5, -, -, -, hAR⟩ := GlobalTheory.T.exists_provA_discreteSeries_archimedeanRallis h1 h2
+  obtain ⟨X, hX, -, h5, -, -, -, hAR⟩ := _root_.GlobalTheory.RealPlaceTheta.exists_record_theta h1 h2
   have hTB := (GlobalTheory.T.thetaModels_are_coverDiscreteSeries_of_harishChandra h1 h2 D).2
   intro k i V' W M' θ ψ hθ hP hi hs ω' hω ν 𝓕 hν h𝓕 J χ F hF v A f₀ hf P
   obtain ⟨χS, χT, hW, hexp⟩ := hω

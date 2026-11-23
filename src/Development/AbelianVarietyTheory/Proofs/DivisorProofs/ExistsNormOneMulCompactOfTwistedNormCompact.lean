@@ -4,10 +4,14 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TwCo
 public import Mathlib.Analysis.Normed.Field.Basic
 public import Mathlib.Topology.Instances.Matrix
 public import Mathlib.Topology.MetricSpace.ProperSpace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjoinMatrixReducedOfCharpolySeparableStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCompactPreimageQuadraticMapNoNullVectorsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReducedArtinianInvolutionIdempotentSplitStatement
+public import Mathlib.FieldTheory.Separable
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjoinMatrixReducedOfCharpolySeparable
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCompactPreimageQuadraticMapNoNullVectors
+public import Mathlib.Algebra.Group.Idempotent
+public import Mathlib.RingTheory.Artinian.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReducedArtinianInvolutionIdempotentSplit
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistedCentralizerIsNormOneTorus
+public import Mathlib.Topology.Algebra.Group.Units
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,7 +57,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
-public import Mathlib.Topology.Algebra.Group.Units
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
 import Development.AbelianVarietyTheory.Definitions.Foundations.SmoothPartStable
@@ -95,9 +98,9 @@ theorem exists_normOne_mul_compact : ∀ (K : Type) [NontriviallyNormedField K] 
   have hσv : ∀ x : A, (σ x : Matrix (Fin n) (Fin n) K) = GlobalTheory.Tw.adj δ x := fun x => rfl
   have hσσ : ∀ x : A, σ (σ x) = x := fun x => Subtype.ext (hA x x.2).2
   haveI : IsReduced A := ⟨fun x ⟨m, hm⟩ => Subtype.ext
-    (GlobalTheory.T.eq_zero_of_pow_eq_zero_of_mem_adjoin_of_charpoly_separable K n N hδ.2 x x.2 m (by simpa using congrArg Subtype.val hm))⟩
+    (_root_.GlobalTheory.adjoin_matrix_reduced_of_charpoly_separable K n N hδ.2 x x.2 m (by simpa using congrArg Subtype.val hm))⟩
   haveI : IsArtinianRing A := IsArtinianRing.of_finite K A
-  obtain ⟨e, f, he, hf, hes, hsum, hnull⟩ := GlobalTheory.T.reduced_artinian_involution_idempotent_split A σ hσσ
+  obtain ⟨e, f, he, hf, hes, hsum, hnull⟩ := _root_.GlobalTheory.reducedArtinian_involution_split A σ hσσ
 
   have hse : σ e * f = 0 := by
     have h1 : σ e * σ e = σ e := by rw [← map_mul, he.eq]
@@ -130,10 +133,10 @@ theorem exists_normOne_mul_compact : ∀ (K : Type) [NontriviallyNormedField K] 
     have h1 := hnull _ hx
     rw [mul_assoc, hf.eq] at h1
     exact congrArg Subtype.val h1
-  obtain ⟨B1, hB1, hB1m⟩ := GlobalTheory.T.isCompact_preimage_quadratic_map_no_null_vectors K hK n S (fun w => w * GlobalTheory.Tw.adj δ w) hqc hhom hnullS
+  obtain ⟨B1, hB1, hB1m⟩ := _root_.GlobalTheory.quadratic_preimage_compact_on_subspace K hK n S (fun w => w * GlobalTheory.Tw.adj δ w) hqc hhom hnullS
     ((fun u : GL (Fin n) K => (f : Matrix (Fin n) (Fin n) K) * u) '' C)
     (hC.image (continuous_const.mul Units.continuous_val))
-  obtain ⟨B2, hB2, hB2m⟩ := GlobalTheory.T.isCompact_preimage_quadratic_map_no_null_vectors K hK n S (fun w => w * GlobalTheory.Tw.adj δ w) hqc hhom hnullS
+  obtain ⟨B2, hB2, hB2m⟩ := _root_.GlobalTheory.quadratic_preimage_compact_on_subspace K hK n S (fun w => w * GlobalTheory.Tw.adj δ w) hqc hhom hnullS
     ((fun u : GL (Fin n) K => (f : Matrix (Fin n) (Fin n) K) * ((u⁻¹ : GL (Fin n) K) : Matrix (Fin n) (Fin n) K)) '' C)
     (hC.image (continuous_const.mul (Units.continuous_coe_inv (M := Matrix (Fin n) (Fin n) K))))
   let φ : GL (Fin n) K × Matrix (Fin n) (Fin n) K × Matrix (Fin n) (Fin n) K →

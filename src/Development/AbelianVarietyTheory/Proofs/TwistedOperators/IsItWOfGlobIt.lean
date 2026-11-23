@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ChosenSer
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.BarMatrix
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ContractionTensorModels
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.VacuumFockVectors
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LowestKTypesJointShapeBlockUnitaryStatement
+public import Formalism.LocalRingCardinality.DataTheta
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LowestKTypesJointShapeBlockUnitary
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompactActionPreservesPolynomialDegree
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsContractionIsometricDiscreteSeriesFockStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFockPolynomialIsoUnitaryPairStatement
@@ -86,7 +87,7 @@ theorem exists_locIt {X : ProvA} (hX : ChosenSeries X) (h1 : Formalism.MainNotio
     (hS : S τ = dualPar (signed (al ++ be) (ga ++ de) aT))
     (hS' : S' τ = dualPar (signed (al ++ block t ++ de) (ga ++ be) aS)) :
     (0 < V.rank ∧ 0 < W.rank) ∧ ∃ A, LocIt M M' τ aS aT A := by
-  obtain ⟨-, p1, p2, -⟩ := GlobalTheory.T.lowest_kTypes_jointShape_block_unitary t al be ga de hd.1
+  obtain ⟨-, p1, p2, -⟩ := _root_.GlobalTheory.LowestTypes.lowest_types t al be ga de hd.1
   have ht := hd.1.1
   have hn := hd.1.2.1
   obtain ⟨⟨e, he⟩, m, hm, hU⟩ := hB.1 X V S M τ (al.length + be.length) (ga.length + de.length) _ _ aT

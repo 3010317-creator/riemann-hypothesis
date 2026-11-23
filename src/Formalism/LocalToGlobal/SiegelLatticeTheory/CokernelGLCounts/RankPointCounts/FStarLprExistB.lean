@@ -2,7 +2,8 @@ module
 
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.Corank
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.TermDefPf
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ScalEquivGen
+public import Formalism.PeriodIntegrals.ScalPairs
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ScalarEquivalenceGeneral.ScalarFactorEqOneOfLe
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ScalRelRepFree
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -56,7 +57,7 @@ variable {D : Formalism.BasicNotions.D7} {u u' : D.what₂.Word} {F0 : FlagG (VS
 
 theorem LprExistB_equiv {Λ : Submodule (𝓞 D.host.E) (VS D).V} (hΛ : IsRowLat D F0 Λ) :
     Equivalence (Formalism.L2.SG.Corank.ScalRelD D u' F0 Λ) :=
-  Formalism.L2.SG.Corank.scalarEquiv_of_G scalar_equiv_general u u' F0 Λ hΛ
+  Formalism.L2.SG.Corank.scalarEquiv_of_G _root_.PI.UnitaryGroupMassFormula.ScalEquivGen.scalarEquivG_holds u u' F0 Λ hΛ
 
 theorem LprExistB_repFree : Formalism.L2.SG.Corank.ScalarRepFree D u u' :=
   scalar_rep_free D u u'

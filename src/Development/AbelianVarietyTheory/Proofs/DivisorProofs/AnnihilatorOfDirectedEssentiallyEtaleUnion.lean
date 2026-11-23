@@ -2,7 +2,8 @@ module
 
 public import Mathlib.RingTheory.Etale.Basic
 public import Mathlib.RingTheory.Localization.AtPrime.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatOfEssentiallyEtaleLocalAlgebrasStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatOfEssentiallyEtaleLocalAlgebras
+public import Mathlib.RingTheory.RingHom.FaithfullyFlat
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -22,7 +23,6 @@ import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Radical.NatInt
-public import Mathlib.RingTheory.RingHom.FaithfullyFlat
 import Mathlib.Tactic.Echelon.Zsqrtd
 import Mathlib.Tactic.Inclusion.Extension.Core.Core
 import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
@@ -71,7 +71,7 @@ theorem ann_of_directed_essEtale : ∀ (R B : Type) [CommRing R] [CommRing B] [A
     simp only [g, Localization.localRingHom_to_map]
     congr 1
   haveI : Module.Flat (Localization.AtPrime Qi) (Localization.AtPrime Qk) :=
-    GlobalTheory.T.flat_of_essentiallyEtale_local_algebras R _ _ (hess i) (hess k)
+    _root_.GlobalTheory.flat_of_essEtale R _ _ (hess i) (hess k)
   haveI : IsLocalHom (algebraMap (Localization.AtPrime Qi) (Localization.AtPrime Qk)) :=
     (inferInstance : IsLocalHom g)
   haveI : Module.FaithfullyFlat (Localization.AtPrime Qi) (Localization.AtPrime Qk) :=

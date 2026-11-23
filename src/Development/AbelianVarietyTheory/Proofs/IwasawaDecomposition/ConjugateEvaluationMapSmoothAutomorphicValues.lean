@@ -6,12 +6,17 @@ public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PiCongrLeftUpdate
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ConjIntertwinerPointValueSobolevContinuous
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ConjugateIntertwinerValuesSmoothAutomorphic
+public import Development.AbelianVarietyTheory.BlockTheory.SiegelWeilLocal.OrthonormalPlaceBasis
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ThetaIdentityOfMapsAll
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermitianFormUnitaryOneOne
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ModelIdentificationRespectsRealAndFinite
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ModelIdentificationRespectsRealAndFiniteStatement
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicTransportMeasureSecond
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicTransportMeasureThird
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CuspidalFrame
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DerivativeClosedClassBoundedByInverseLeastSizeStatement
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurePreservingReindex
+import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DerivativeClosedClassBoundedByInverseLeastSize
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FiniteAdelicUnitaryCongruenceTopology
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HeightBoundByInfinityNorm
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegralInvOfSupport
@@ -55,9 +60,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.BlockTheory.SiegelWeilLocal.OrthonormalPlaceBasis
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ThetaIdentityOfMapsAll
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermitianFormUnitaryOneOne
 
 @[expose] public section
 
@@ -281,7 +283,7 @@ theorem conjMap_isAutFunSm_gen {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSet
       rw [this, mul_one, pow_zero, mul_one]
     have hn' : 1 ≤ X.B.I.n := by rw [← rank_eq X h]; exact hn
     have hti : (iotaX X h t⁻¹).1 = 1 := hfst _ ((GfC _).inv_mem ht)
-    obtain ⟨m, hm⟩ := GlobalTheory.T.derivativeClosedClass_bounded_by_inverseLeastSize X.B hn' hg
+    obtain ⟨m, hm⟩ := _root_.GlobalTheory.SobolevBound.derivative_closed_class_bound X.B hn' hg
     refine ⟨m, fun v x => ?_⟩
     obtain ⟨C, hC⟩ := hm (Set.range f) (by
       rintro _ ⟨u, rfl⟩

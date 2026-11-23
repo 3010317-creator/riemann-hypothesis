@@ -2,8 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.CarchAt
 public import Development.AbelianVarietyTheory.Definitions.ThetaValues.GamAt
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.CmArcFunctionalVanishesLowFourierJacobiStatement
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.MemFormsLowCoeffsVanishIffFourierJacobiStatement
+public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.ModelsAt
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.CmArcFunctionalVanishesLowFourierJacobi
+public import Formalism.LocalToGlobal.ProjectiveLattices.XcLat
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.MemFormsLowCoeffsVanishIffFourierJacobi
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.TransvInOfHasPrinc
 public import Formalism.LocalToGlobal.ProjectiveLattices.FreeBridge
 import Mathlib.Algebra.Order.Floor.Extended
@@ -65,10 +67,10 @@ theorem killQ_of_gamAt : Known → ∀ (D : D7) (T : Core D) (h : LawsCore T) (j
     intro σ hσ hr
     obtain ⟨em, rfl⟩ := exists_extend_embedding (K := K₁) σ
     have hc : F.1 ∈ T.C j ka := cutR_le T.C j ka F.2
-    exact GlobalTheory.T.cmArcFunctional_vanishes_low_fourierJacobi hK _ _ _ _ (T.Q.Xo j) T.Q.c K₁ d _ _ _ em _
+    exact _root_.GlobalTheory.ArcKill.cfOf_eq_zero hK _ _ _ _ (T.Q.Xo j) T.Q.c K₁ d _ _ _ em _
       (Formalism.L2.PjFree.Unf.ofPj (T.U j _)) (wtA ka) ka.n hd hσ (h.unf j hj _ hσ) (dom_wtA ka)
       (GlobalTheory.TransvPrinc.transvIn_of_hasPrinc _ _ _ _ (T.Q.Xo j) T.Q.c _ _ (Formalism.L2.PjFree.Unf.ofPj (T.U j _)) (wtA ka) ka.n
         (hG j hj _ hσ) (h.chiTriv j hj _ hσ _ _ (dom_wtA ka))) F.1 hc.1 hr
-  exact key T.σ₀ T.good_σ₀ ((GlobalTheory.T.mem_forms_low_coeffs_vanish_iff_fourierJacobi D T h j ka CR Tt cc hj hm F).2.1 hF)
+  exact key T.σ₀ T.good_σ₀ ((_root_.GlobalTheory.LowCoeff.mem_iff_low_coeff_vanish D T h j ka CR Tt cc hj hm F).2.1 hF)
 
 end GlobalTheory.ArcCM

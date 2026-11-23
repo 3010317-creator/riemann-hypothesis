@@ -5,7 +5,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ResEtaOfIsWe
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLiftEisensteinLevelSubgroup
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousThetaKernelComponentsStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IntegrableSchwartzRestrictionColumnsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SchwartzExistsRealMajorantStatement
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SchwartzExistsRealMajorant
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ThetaFourierCoefficientWeylIntegralStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WeilRepresentationFourierCoefficientStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WeilRepresentationThetaIntegralStatement
@@ -71,7 +72,7 @@ theorem maj_mem {θ : InfFam D} {a b : ℕ} {φ : Mx D a b → ℂ} (hφ : φ �
   induction hφ using Submodule.span_induction with
   | mem φ h =>
     obtain ⟨f, g, hg, rfl⟩ := h
-    obtain ⟨F₀, hF₀⟩ := GlobalTheory.T.schwartz_exists_real_majorant _ f
+    obtain ⟨F₀, hF₀⟩ := _root_.GlobalTheory.CompanionTheory.SchwartzMaj.exists_nonneg_schwartz_majorant _ f
     refine ⟨fun x => F₀ (fun τ i j => compAt θ τ x i j) * (fun u => ((‖g u‖ : ℝ) : ℂ)) (fun i j => finPart D (x i j)),
       Submodule.subset_span ⟨F₀, fun u => ((‖g u‖ : ℝ) : ℂ), ⟨?_, ?_⟩, rfl⟩, fun x => ?_⟩
     · exact hg.1.comp fun z => ((‖z‖ : ℝ) : ℂ)

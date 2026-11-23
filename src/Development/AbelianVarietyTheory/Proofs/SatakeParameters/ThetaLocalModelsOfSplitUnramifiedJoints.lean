@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.JointCmpEmbeddingY
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ModelsOK
 public import Formalism.SharpRestriction.Divisibility.OrbitPlaces
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.JointSiteChainComparedCarriesAdmittedSystemStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.JointSiteChainComparedCarriesAdmittedSystem
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,7 +60,7 @@ theorem modelsOK_of_joints : Lt.AdmAtEnt2 → Lt.CurveEx → ∀ {D : D7} {L : S
       x = ⟨_, chainAt (Classical.choose (Classical.choose_spec (Classical.choose_spec (hJ μ hP.1 u w hg hP.2)))) hT⟩ →
       GlobalTheory.TwU.CmpLite D ex.cmp ex.tw u μ w hg x.2 ∧ GlobalTheory.TwU.SiteAdm D u w hg (Gl.Fl u w hg) x.1 x.2 := by
     rintro x rfl
-    exact GlobalTheory.T.jointSite_chain_compared_carries_admittedSystem hA hC t
+    exact _root_.GlobalTheory.TwV.site_cmpLite_siteAdm hA hC t
       (Classical.choose_spec (Classical.choose_spec (Classical.choose_spec (Classical.choose_spec (hJ μ hP.1 u w hg hP.2))))).some
       hU hS hk
   exact key _ (dif_pos hP)

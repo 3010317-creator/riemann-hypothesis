@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnimodMod
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsometryEqReflOfCongrModGeThreeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothConeFaceOfInteriorCommonPointStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsometryEqReflOfCongrModGeThree
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.SumMulEqZeroOfSumToReal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothConeFaceOfInteriorCommonPoint
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,7 +79,7 @@ theorem leadingTerm_unique : ∀ (O : Type) [CommRing O] (bar : O → O) (φ : I
       rw [Finset.mul_sum]; exact Finset.sum_congr rfl fun j _ => by push_cast; ring
     rw [e1, e2, ← h1, ← h2]; ring
   have hγe : IsCone bar φ fun j => pull e.toLinearMap (γ j) := hγ.pull_equiv e
-  choose σ hσ using GlobalTheory.T.smoothCone_face_of_interior_common_point O bar φ X hF r r _ γ hγe hγ (fun j => k' * c j) (fun j => k * c' j)
+  choose σ hσ using _root_.GlobalTheory.Poinc.intCone_face O bar φ X hF r r _ γ hγe hγ (fun j => k' * c j) (fun j => k * c' j)
     (fun j => Nat.mul_pos hk' (hc j)) hsum
   have hσinj : Function.Injective σ := fun i j hij => hγe.injective (by simp only [hσ, hij])
   let σe := Equiv.ofBijective σ (Finite.injective_iff_bijective.1 hσinj)
@@ -96,7 +97,7 @@ theorem leadingTerm_unique : ∀ (O : Type) [CommRing O] (bar : O → O) (φ : I
     have hj' : 0 < γ j x x := pos_of_mul_pos_right hj (by positivity)
     simp only [LinearMap.sum_apply]
     exact hj'.trans_le (Finset.single_le_sum (fun i _ => hγ.nonneg i x) (Finset.mem_univ j))
-  have key := GlobalTheory.T.isometry_eq_refl_of_congr_mod_ge_three X (∑ j, γ j) hGpos e.toAddEquiv.toIntLinearEquiv (fun y z => hG y z) N hN he
+  have key := _root_.GlobalTheory.Poinc.eq_refl_of_isometry_congMod X (∑ j, γ j) hGpos e.toAddEquiv.toIntLinearEquiv (fun y z => hG y z) N hN he
   intro x
   simpa using LinearEquiv.congr_fun key x
 

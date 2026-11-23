@@ -5,10 +5,11 @@ public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.
 public import GroundTheory.LocalFields.PadicLogSeries
 public import CompanionTheory.AutomorphicTheory.TemperedLocalSpectra.BernsteinZelevinsky.TopAdm
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualClassTwistNeg
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualClassTwistNegStatement
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.LSegJacquet
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IrreducibleAdmissibleGL
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LanglandsSocleOfOrderFree
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalLanglandsOfIrreducibleAdmissibleStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductTransposeInverseDualReverseStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalLanglandsOfIrreducibleAdmissible
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductTransposeInverseDualReverse
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -118,12 +119,12 @@ theorem herm_ofB (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsN
     (h1 : ConjProd k) (h2 : ConjDual k) : Herm k := by
   intro x hxu s N hd hirr
   have hA := CompanionTheory.Tls2.BZGL.irreducibleAdmissibleGL_top
-  have hGK : GKLocal k := GlobalTheory.T.local_langlands_of_irreducible_admissible hA
+  have hGK : GKLocal k := _root_.GlobalTheory.CompanionTheory.GKLocalProof.gkLocal hA
   change HasSesq (prodIrr (yy x s) hd)
   change (prodIrr (yy x s) hd).IsIrreducible at hirr
 
   obtain ⟨E5⟩ := theta_contra hGK (prodIrr (yy x s) hd) (isSmooth_prodIrr _ _) hirr
-  obtain ⟨hd', ⟨E4⟩⟩ := GlobalTheory.T.product_transpose_inverse_dual_reverse (k := k) (h := 2) (N := N) hA hGK (yy x s) hd
+  obtain ⟨hd', ⟨E4⟩⟩ := _root_.GlobalTheory.CompanionTheory.ThetaProd.prodIrr_comp_thetaW (k := k) (h := 2) (N := N) hA hGK (yy x s) hd
 
   let c : Fin 2 → ℝ := ![-s, s]
   have hM : ∑ _a : Fin 2, x.1 = N := by
@@ -170,10 +171,10 @@ theorem herm_ofB (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsN
     rw [keyσ _ (hχ a)]
     fin_cases a
     · show (dualCl x).tw (absPow k ((-s : ℝ) : ℂ)) _ = dualCl (x.nu (s : ℂ))
-      rw [GlobalTheory.T.dual_class_twist_neg hA x (s : ℂ)]
+      rw [_root_.GlobalTheory.CompanionTheory.ZcDual.dualCl_nu hA x (s : ℂ)]
       simp only [IrrGL.nu, e0]
     · show (dualCl x).tw (absPow k ((s : ℝ) : ℂ)) _ = dualCl (x.nu (-(s : ℂ)))
-      rw [GlobalTheory.T.dual_class_twist_neg hA x (-(s : ℂ)), neg_neg]
+      rw [_root_.GlobalTheory.CompanionTheory.ZcDual.dualCl_nu hA x (-(s : ℂ)), neg_neg]
       rfl
   obtain ⟨E0⟩ := congrProd fπ.symm hd hM
   obtain ⟨E3⟩ := congrProd fσ hM hd'

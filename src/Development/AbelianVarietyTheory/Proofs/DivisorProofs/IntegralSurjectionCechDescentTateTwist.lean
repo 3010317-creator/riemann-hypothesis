@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DivisorSupportCondition
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseChangeCechNerveAugmentationIsoStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechAugEqvOfIsIntegralHomOfStrictlyHenselianStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PullHlComp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechAugEqvOfIsIntegralHomOfStrictlyHenselian
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IndEtOfForallFinset
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EquivOfStalkwiseBaseChange
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechLevelRepresentableStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EquivOfStalkwiseBaseChangeStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyEquivalenceBasicPropertiesStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistFinitaryStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -47,7 +49,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.LinCombTrivG
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IndEtOfForallFinset
 
 @[expose] public section
 
@@ -73,7 +74,7 @@ theorem eqv_cechAug_of_comp_iso (R : Type) [CommRing R] (F : Shv R) {V W T : Sch
 theorem b4 : B4 := by
   intro q Y X f _ _ hq i
   have E := GlobalTheory.T.etaleCohomologyEquivalence_basic_properties (ZMod q) (tw q i)
-  refine GlobalTheory.T.equiv_of_stalkwise_base_change (ZMod q) (tw q i) X (cech f) (sch.obj X) (cechAug f) (sch.map (𝟙 X))
+  refine _root_.GlobalTheory.EtC.LocGlobSp.main (ZMod q) (tw q i) X (cech f) (sch.obj X) (cechAug f) (sch.map (𝟙 X))
     (GlobalTheory.T.tateTwist_finitary q i) ?_ ?_ ?_
   · intro k
     obtain ⟨Z, π, e, hπ, he⟩ := GlobalTheory.T.exists_representable_cech_level_of_stable @IsIntegralHom Y X f ‹_› k
@@ -90,7 +91,7 @@ theorem b4 : B4 := by
       simpa using this
     have hg : Eqv _ (cechAug (pullback.snd f (pullback.fst (𝟙 X) (Over.mk s).hom))) (tw q i) :=
       eqv_cechAug_of_comp_iso _ _ _ (pullback.snd (𝟙 X) s)
-        (GlobalTheory.T.eqv_cechAug_of_isIntegralHom_of_surjective_of_sh q i O hs.1 hqO _ _ inferInstance inferInstance)
+        (_root_.GlobalTheory.EtC.cechAug_eqv_of_isIntegralHom_of_strictlyHenselian q i O hs.1 hqO _ _ inferInstance inferInstance)
     have hm : (bcMap (cechAug f) (sch.map (𝟙 X))).app (Over.mk s) =
         e₁.inv ≫ cechAug (pullback.snd f (pullback.fst (𝟙 X) (Over.mk s).hom)) ≫ e₂.hom := by
       rw [← h, Iso.inv_hom_id_assoc]

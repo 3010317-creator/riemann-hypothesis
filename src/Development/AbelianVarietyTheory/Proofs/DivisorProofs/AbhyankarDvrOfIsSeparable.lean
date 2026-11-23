@@ -5,7 +5,11 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbhyankarRam
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbhyankarResidueFieldIsSeparableStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjoinRootUniformiserIsDVRStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjoinRootXPowSubUniformizerIsDomainStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalisationDvrTensorSeparableFiniteStatement
+public import Mathlib.RingTheory.Smooth.Fiber
+public import Mathlib.RingTheory.Flat.TorsionFree
+import Mathlib.FieldTheory.Separable
+import Mathlib.RingTheory.DiscreteValuationRing.Basic
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalisationDvrTensorSeparableFinite
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -28,7 +32,6 @@ import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
-public import Mathlib.RingTheory.Smooth.Fiber
 import Mathlib.RingTheory.TotallySplit
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Echelon.Zsqrtd
@@ -55,7 +58,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.RingTheory.Flat.TorsionFree
 
 @[expose] public section
 
@@ -128,7 +130,7 @@ theorem abhyankar_dvr_of_isSeparable : ∀ (S K L : Type) [CommRing S] [IsDomain
       rw [Algebra.algebraMap_eq_smul_one, ← h0, map_smul, Module.Basis.repr_self]
       simp
     rw [← key a, ← key b, h1]
-  haveI : Module.Finite D (integralClosure D (TensorProduct S D L)) := GlobalTheory.T.normalisation_dvr_tensor_separable_finite S K L D
+  haveI : Module.Finite D (integralClosure D (TensorProduct S D L)) := _root_.GlobalTheory.NormFin.main S K L D
   haveI : Module.Flat S K := IsLocalization.flat K (nonZeroDivisors S)
   haveI : Module.Flat S L := Module.Flat.trans S K L
   haveI : Module.Flat D (integralClosure D (TensorProduct S D L)) := by

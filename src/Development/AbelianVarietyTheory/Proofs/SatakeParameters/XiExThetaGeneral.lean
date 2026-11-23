@@ -4,9 +4,15 @@ public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NatCas
 public import Formalism.LocalToGlobal.GroupLattices.PendingLemmas.ConditionIffAdditiveMaps
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsTraceCompatibleTorusEmbeddingStandardTorus
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CoefInTranslate
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsAddMonoidHomOfLinearRelations
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HomLatticeVolumeCompletionSplitPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.KernelThetaRelationOfIndicatorRelationSplitStatement
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Algebra.Group.Action.Pi
+public import Mathlib.Algebra.Module.Defs
+public import Mathlib.Algebra.Ring.Rat
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ImportsExtra
+public import Formalism.LocalToGlobal.GroupLattices.PendingLemmas.XiOfSpec
+public import Formalism.SharpRestriction.GlobalSchurBounds.GL3Theta
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HomLatticeVolumeCompletionSplitPlace
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.KernelThetaRelationOfIndicatorRelationSplit
 import Formalism.SharpRestriction.AdmissibleParameterJoins.GandSp
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -165,7 +171,7 @@ theorem xiEx_theta_general : letI := fun D : D7 => D.host.cmStar; ∀ (D : D7) (
     have hOKi := fun i : I a => hOK j hj i.1.1 i.1.2 i.2.1 i.2.2.1
     obtain ⟨hAdm0, hDat0, -, -, hsc0, -, -, hfr0⟩ := hOK j hj La₀ La₀' hL0 hL0'
 
-    obtain ⟨φ, -, hvol⟩ := GlobalTheory.T.homLattice_volume_completion_splitPlace D p X v j (ρ v) P hAA hρ1 hρ2
+    obtain ⟨φ, -, hvol⟩ := _root_.GlobalTheory.VolAt.vol_main D p X v j (ρ v) P hAA hρ1 hρ2
     let NN : (X.Pj j).Tup → Submodule (𝓞 D.host.E) (Fin ((X.Pj j).m + 1) → D.host.E) := fun L => fd.kerN j (La₀.1, L)
     let NN' : (X.Pj (j + 1)).Tup → Submodule (𝓞 D.host.E) (Fin ((X.Pj (j + 1)).m + 1) → D.host.E) :=
       fun L => fd.kerN (j + 1) (La₀'.1, L)
@@ -223,7 +229,7 @@ theorem xiEx_theta_general : letI := fun D : D7 => D.host.cmStar; ∀ (D : D7) (
           Set (Matrix (Fin ((X.Pj (j + 1)).m + 1)) (Fin ((X.Pj j).m + 1)) (GL3Theta.EP D P))) 1 y)]
       simp only [hi]
       exact_mod_cast hy0
-    have hker := GlobalTheory.T.kernelTheta_relation_of_indicator_relation_split D cc δ B χ hcurve hdelta hδ hchi hLat hVec hEq hmod hmoves SS cl hcl hSS
+    have hker := _root_.GlobalTheory.KerRel.kerTh_relation_of_indicator D cc δ B χ hcurve hdelta hδ hchi hLat hVec hEq hmod hmoves SS cl hcl hSS
       ((X.Pj j).m + 1) ((X.Pj (j + 1)).m + 1) P hsplit hPS hPcS hcP hcPc (fd.kerN j La₀) (fd.kerN (j + 1) La₀')
       (xiM X fd Ξ₀ j La₀ La₀') hAdm0 hDat0 (↥s) (fun i => fd.kerN j i.1.1.1) (fun i => fd.kerN (j + 1) i.1.1.2)
       (fun i => ⟨(hOKi i.1).1, (hHi i.1).1, (hHi i.1).2.1⟩) (fun i => (cq i.1 : ℂ)) hind
@@ -344,7 +350,7 @@ theorem xiEx_theta_general : letI := fun D : D7 => D.host.cmStar; ∀ (D : D7) (
       _ = resV (kapOf X pos j) (linSub (fun x y => c * subBG E pos fd j La₀ La₀' x y)
             (∑ i ∈ s, ((cq i : ℂ_[p]) * (E.iK (kk i.1.1 i.1.2))⁻¹) • G i)) := resV_linSub_sum _ _ _ _ _
       _ = 0 := by rw [hG0]; exact resV_linSub_zero _ _
-  have hex := fun a => GlobalTheory.exists_addMonoidHom_of_linear_relations
+  have hex := fun a => _root_.GlobalTheory.NormBoundTheorem.main
     (Matrix (Fin ((X.Pj (j + 1)).m + 1)) (Fin ((X.Pj j).m + 1)) (X.G.P.Qq v)) (I a) (MvPowerSeries (X.ZA j) ℂ_[p])
     (fun i => X.ind v j i.1.1.2 i.1.2.2) (fun i => (kk i.1.1 i.1.2)⁻¹ • K j i.1.1 i.1.2) (hrel a)
   refine ⟨fun a => (hex a).choose, u, u', hu, hu', fun La La' hLa hLa' => ?_⟩

@@ -3,11 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.GoodClass
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSpreadThetaLevelAbelianSchemeAwayStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaLevelAbelianSchemePullbackStatement
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsIffOfThetaLevelPullbackStatement
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsRingBaseChangeStatement
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelShapePrimitivityPullbackDescentStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaLevelAbelianSchemePullback
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.BoundedOnFramesIffIntegralOnFrames
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsDiscreteValuationRingIntegralClosurePadicInt
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsIffOfThetaLevelPullback
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsRingBaseChange
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelShapePrimitivityPullbackDescentStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -47,7 +48,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsDiscreteValuationRingIntegralClosurePadicInt
 
 @[expose] public section
 
@@ -88,11 +88,11 @@ theorem exists_obj_over_complete_dvr : Out.Laws → Out.Laws2 → ∀ (o : Type)
       spMap (algebraMap V F) ≫ spMap (y.comp β) := by
     simp only [spMap, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
     rw [← RingHom.comp_assoc, hφ, RingHom.comp_assoc]
-  obtain ⟨tF, hm⟩ := GlobalTheory.T.exists_thetaLevelAbelianScheme_pullback o g (N' ^ 2) J b _ _ _ _ (spMap φ) t' hsq
+  obtain ⟨tF, hm⟩ := _root_.GlobalTheory.tObj_pull o g (N' ^ 2) J b _ _ _ _ (spMap φ) t' hsq
   obtain ⟨h1, h2, -⟩ := GlobalTheory.T.thetaLevel_shape_primitivity_pullback_descent o g (N' ^ 2) J b Mat κ w w' _ _ _ _ _ t' tF hm
   refine ⟨V, F, i1, i2, i3, i4, i5, i6, i7, i8, i9, y, tF, hy, h1 hsh', h2 hpr', ?_⟩
-  have h3 := GlobalTheory.T.hasThetaConstants_ring_baseChange L2 o g N' J b _ _ t' _ _ φ _ _ hth'
-  refine (GlobalTheory.T.hasThetaConstants_iff_of_thetaLevelPullback o g N' J b _ _ t' _ _ tF _ F _ _ hm).mpr ?_
+  have h3 := _root_.GlobalTheory.hasTh_baseChange L2 o g N' J b _ _ t' _ _ φ _ _ hth'
+  refine (_root_.GlobalTheory.hasTh_iff_of_tmap o g N' J b _ _ t' _ _ tF _ F _ _ hm).mpr ?_
   rw [Category.id_comp]
   rw [Category.comp_id] at h3
   have e : (fun a => algebraMap V F (y (v a))) =

@@ -4,13 +4,15 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrysActApply
 public import Development.AbelianVarietyTheory.Definitions.Divisors.InfUniv
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumProjSingle
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrystallinePull2SumCup
-import Development.AbelianVarietyTheory.Definitions.Divisors.IsLocalRingTrivSqZeroExt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystalGluedHodgeGraphFiltrationHasComplementStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystalGluedHodgeGraphFiltrationIsotropicPolarisStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystalGluedHodgeGraphFiltrationLieConditionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystalGluedHodgeGraphFiltrationOrderStableStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsArtinianRingTsze
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystalGluedHodgeGraphFiltrationOrderStable
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorExistsSquareZeroLiftOfFiltrationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemHodgeFiltrationIffReductionGluedFilHtObjectStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CanonicalOfAbelianDeRham
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemHodgeFiltrationIffReductionGluedFilHtObject
+import Development.AbelianVarietyTheory.Definitions.Divisors.IsLocalRingTrivSqZeroExt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -70,8 +72,8 @@ theorem GlobalTheory.UPel.HT.exists_sqZero_lift_realising_ks : ∀ (p : ℕ) [Fa
     rw [this]
     simp [spMap]
   have h1 := GlobalTheory.T.crystalGluedHodgeGraphFiltration_hasComplement p D R b N hN hNp k t o₀ β ht φ hφ d f hf
-  have h2 := GlobalTheory.T.mem_hodgeFiltration_iff_reduction_gluedFil_htObject p D R b N hN hNp k t o₀ β ht φ hφ d f hf
-  have h3 := GlobalTheory.T.crystalGluedHodgeGraphFiltration_order_stable p D R b N hN hNp k t o₀ β ht φ hφ d f hf
+  have h2 := _root_.GlobalTheory.HTGlue.fil_iff_red_glueFil p D R b N hN hNp k t o₀ β ht φ hφ d f hf
+  have h3 := _root_.GlobalTheory.HTGlue.push_mem_glueFil p D R b N hN hNp k t o₀ β ht φ hφ d f hf
   have h4 := GlobalTheory.T.crystalGluedHodgeGraphFiltration_isotropic_polarisation p D R b N hN hNp k t o₀ β ht φ hφ d f hf
   have h5 := GlobalTheory.T.crystalGluedHodgeGraphFiltration_lie_condition p D R b N hN hNp k t o₀ β ht φ hφ d f hf
   have key := GlobalTheory.T.harrisTaylor_exists_squareZero_lift_of_filtration p D R b N hNp (TrivSqZeroExt k (Fin d → k)) k

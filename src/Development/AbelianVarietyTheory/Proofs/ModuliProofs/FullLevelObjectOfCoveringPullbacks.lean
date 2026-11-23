@@ -5,10 +5,12 @@ public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsUnitOfP
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsPolAVPullbackOfIsLocalRing
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.DetCondIffOfFieldExtension
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PushEquivSymmLeft
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.TorsionPointsFieldExtension
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.WeilIsIffOfIsGrpPullbackComm
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.WeilPairingFieldExtensionIff
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ConstGen
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.WeilIsGrpPullbackOfCommute
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsMulEquivOfIsGrpPullback
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.TorsionPointsFieldExtension
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.WeilPairingFieldExtensionIff
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -94,7 +96,7 @@ theorem tate_push {S S' : Scheme.{0}} {t : SAB H S} {t' : SAB H S'} {f : S' ⟶ 
     apply Over.OverMorphism.ext
     show (g.left ≫ _) ≫ _ = (g.left ≫ _) ≫ _
     rw [Category.assoc, ← ν.act, Category.assoc]
-  · exact (weilIs_iff_of_isGrpPullback_comm S S' t.G t'.G f ν.cm.F t.PP.L t'.PP.L t.PP.isLB t'.PP.isLB ν.cart hL
+  · exact (_root_.GlobalTheory.weilIs_grpPullback_of_comm S S' t.G t'.G f ν.cm.F t.PP.L t'.PP.L t.PP.isLB t'.PP.isLB ν.cart hL
       (Over.mk y) m _ _ g g' _ (ObjPull.pushEquiv_symm_left ν.cart (Over.mk y) g).symm
       (ObjPull.pushEquiv_symm_left ν.cart (Over.mk y) g').symm).1 hc
 

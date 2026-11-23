@@ -1,13 +1,14 @@
 module
 
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.ExSub
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PairNumberPullbackStatement
-import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PTwinBirationalJoin
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsBundles
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PairNumberPullback
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PTwinFlagModelJoinLeft
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PTwinFlagPairJoinLeft
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PTwinJoinVertDiv
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PTwinJoinVertDivLeft
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PTwinPairNumJoinLeft
+import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PTwinBirationalJoin
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,7 +57,7 @@ theorem main : GroundTheory.Heights₂.Heights.NumbersDVR.FlagModelJoinLeftAlt.S
     GroundTheory.Heights₂.Heights.NumbersDVR.JoinVerticalDivisor.proof
     (GroundTheory.Heights₂.Heights.NumbersDVR.FlagPairJoinLeft.proof
       GroundTheory.Heights₂.Heights.NumbersDVR.JoinVerticalDivisorLeft.proof)
-    (GroundTheory.Heights₂.Heights.NumbersDVR.PairNumberJoinLeft.proof GlobalTheory.T.pair_number_pullback
+    (GroundTheory.Heights₂.Heights.NumbersDVR.PairNumberJoinLeft.proof _root_.GlobalTheory.CompanionTheory.Ar.Num.PairNumberPullback.main
       GroundTheory.Heights₂.Heights.NumbersDVR.JoinVerticalDivisorLeft.proof
       GroundTheory.Heights₂.Heights.NumbersDVR.BirationalJoin.proof)
 

@@ -1,7 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TCoefMInMMul
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivationDetEqDoubleSumAdjugateEntryStatement
+public import Mathlib.LinearAlgebra.Matrix.Adjugate
+public import Mathlib.RingTheory.Derivation.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivationDetEqDoubleSumAdjugateEntry
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,7 +58,7 @@ theorem modeDerivation_det_eq_zero : GlobalTheory.PsCo.Cw2a.T_dM_detb := by
     intro i j
     simp only [dM, dZ, Mx, W, Matrix.of_apply, mkDerivation_X, Sum.elim_inr, Matrix.sub_apply,
       Matrix.mul_apply, Matrix.map_apply, Finset.sum_sub_distrib]
-  have key := GlobalTheory.T.derivation_det_eq_double_sum_adjugate_entry (dM ε x) Mx
+  have key := _root_.GlobalTheory.DetDeriv.main (dM ε x) Mx
   have hdet : detbP n = Mx.det := rfl
   rw [hdet, key]
   simp_rw [hD]

@@ -4,14 +4,15 @@ public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.GoodTopChernForm
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ChernWeilNumbers
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.MumfordProportionality
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ChernConnectionCurvaturePolyRepEvalStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ChernFormIntegrableComplexPointsOfChernWeilStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsPolyRepInducedBundleAndMetricStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsSmoothHermitianMetricProjectiveVarietyStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HasChernIntegralLinearOfDensityEqSumStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.InterPolyProdSum
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ChernConnectionCurvaturePolyRepEval
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ChernFormIntegrableComplexPointsOfChernWeil
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsPolyRepInducedBundleAndMetric
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsSmoothHermitianMetricProjectiveVariety
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HasChernIntegralLinearOfDensityEqSum
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MumfordGoodGrowthBoundCongrGermGram
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MumfordGoodGrowthPolynomialRepresentationStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TopDegreeFormCoeffChernPolyEqSumRepresentationsStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MumfordGoodGrowthPolynomialRepresentation
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TopDegreeFormCoeffChernPolyEqSumRepresentations
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -126,7 +127,7 @@ theorem curvPoly_polyRep {ι : Type} [Fintype ι] {m : ι → ℕ} (ρ : PolyRep
   have hdet : ∀ τ, (H A (e.symm (e y)) τ).det ≠ 0 := fun τ => by
     rw [e.left_inv hye]
     exact ((Matrix.isUnit_iff_isUnit_det _).1 (hH.posDef y hy A hA τ).isUnit).ne_zero
-  obtain ⟨-, hc⟩ := GlobalTheory.T.chernConnection_curvature_polyRep_eval ι m ρ X.dim (fun v => H A (e.symm v)) (e y) hG2 hdet
+  obtain ⟨-, hc⟩ := _root_.GlobalTheory.GoodMetric.conn_curvPoly_ev ι m ρ X.dim (fun v => H A (e.symm v)) (e y) hG2 hdet
   rw [← hc]
   have ht : Tendsto e.symm (𝓝 (e y)) (𝓝 y) := by
     have := e.continuousAt_symm (e.map_source hye)
@@ -153,7 +154,7 @@ theorem _root_.GlobalTheory.GoodMetric.isGood_polyRep : ∀ (F : Type) [Field F]
         IsGood E O H → IsGood E' O H' := by
   intro F _ σ X ι _ m ρ E E' O H H' hS hH hρ hG y hy
   obtain ⟨e, S, he, hye, hS0, hSO, A, hA, c, N, hev⟩ := hG y hy
-  obtain ⟨c', N', hgood⟩ := GlobalTheory.T.mumfordGoodGrowth_polynomialRepresentation ι m ρ c N
+  obtain ⟨c', N', hgood⟩ := _root_.GlobalTheory.RepBound.goodBound_ev ι m ρ c N
   refine ⟨e, S, he, hye, hS0, hSO, fun _ => ρ.ev A, hS _ A hA, c', N', ?_⟩
   obtain ⟨a₀, ha₀S, ha₀⟩ := (hSO y hye).1 hy
   have hcont : ContinuousAt (fun z => e z a₀) y :=
@@ -190,12 +191,12 @@ theorem _root_.GlobalTheory.GoodMetric.goodChernWeil_of_goodTopChernForm :
   intro hT hCW hP
   refine ⟨?_, hP⟩
   intro F _ σ X Y ι _ m E E' φ f gr hRef hGr O H hH hG R
-  obtain ⟨J, _, ρ, a, hAlg⟩ := GlobalTheory.T.topDegreeFormCoeff_chernPoly_eq_sum_representations ι m X.dim R
-  obtain ⟨H₀, hH₀⟩ := GlobalTheory.T.exists_smooth_hermitianMetric_projective_variety F σ X ι m E
-  choose Eb hEbS hEbH using fun j => GlobalTheory.T.exists_polyRep_inducedBundle_and_metric F X ι m (ρ j) E
+  obtain ⟨J, _, ρ, a, hAlg⟩ := _root_.GlobalTheory.GoodMetric.ChernSpan.topCoeff_chern_eq_sum_rep ι m X.dim R
+  obtain ⟨H₀, hH₀⟩ := _root_.GlobalTheory.GoodMetric.SmoothMetric.exists_isMetricOn_top F σ X ι m E
+  choose Eb hEbS hEbH using fun j => _root_.GlobalTheory.GoodMetric.RepBundle.exists_repBundle F X ι m (ρ j) E
   choose H' hH' hH'eq using fun j => hEbH j σ O H hH
   choose H₀' hH₀' hH₀'eq using fun j => hEbH j σ ⊤ H₀ hH₀
-  choose t ht using fun j => GlobalTheory.T.chernForm_integrable_complexPoints_of_chernWeil hCW F σ X Unit (fun _ => (ρ j).M) (Eb j) (H₀' j) (hH₀' j)
+  choose t ht using fun j => _root_.GlobalTheory.GoodMetric.hasChernIntegral_top_of_chernWeil hCW F σ X Unit (fun _ => (ρ j).M) (Eb j) (H₀' j) (hH₀' j)
     (MvPolynomial.X ((), X.dim))
   have htO : ∀ j, HasChernIntegral (Eb j) O (H' j) (MvPolynomial.X ((), X.dim)) (t j) := fun j =>
     hT F σ X (ρ j).M (Eb j) O (H' j) (H₀' j) (hH' j)
@@ -224,9 +225,9 @@ theorem _root_.GlobalTheory.GoodMetric.goodChernWeil_of_goodTopChernForm :
     rw [key]
     simp only [hcurv, Complex.re_sum, Complex.re_ofReal_mul, Finset.mul_sum]
     exact Finset.sum_congr rfl fun j _ => by ring
-  have hlinO := GlobalTheory.T.hasChernIntegral_linear_of_density_eq_sum F σ X ι m E O H R J (fun j => (ρ j).M) Eb H' (MvPolynomial.X ((), X.dim)) a t hH hH'
+  have hlinO := _root_.GlobalTheory.GoodMetric.hasChernIntegral_of_eq_sum F σ X ι m E O H R J (fun j => (ρ j).M) Eb H' (MvPolynomial.X ((), X.dim)) a t hH hH'
     (hdens O H H' hH hH'eq) htO
-  have hlinT := GlobalTheory.T.hasChernIntegral_linear_of_density_eq_sum F σ X ι m E ⊤ H₀ R J (fun j => (ρ j).M) Eb H₀' (MvPolynomial.X ((), X.dim)) a t hH₀ hH₀'
+  have hlinT := _root_.GlobalTheory.GoodMetric.hasChernIntegral_of_eq_sum F σ X ι m E ⊤ H₀ R J (fun j => (ρ j).M) Eb H₀' (MvPolynomial.X ((), X.dim)) a t hH₀ hH₀'
     (hdens ⊤ H₀ H₀' hH₀ hH₀'eq) ht
   have hs := hCW F σ X Y ι m E E' φ f gr hRef hGr H₀ hH₀ R
   rw [hs.2.symm.trans hlinT.2]

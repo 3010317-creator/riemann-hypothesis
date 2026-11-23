@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsWildInertiaCyclotomicElement
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.GaloisSideTwistedSelmerAuxiliaryPrimes
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AbsoluteIrreducibilitySpan
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGlobalObjectsEveryFamilyWildStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGlobalObjectsEveryFamilyWild
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,7 +57,7 @@ theorem main : GlobalTheory.TwSys.Cheb → ∀ D : D7, TakenAll D → Formalism.
     GlobalTheory.Proof.AbsoluteIrreducibilitySpan.absIrr_of_span hpos _ _ (fun _ => 1) (fun g => by rw [one_smul]; rfl) hG3.2.2
   have hlive : Live D.nd i := ⟨π, hπ, r π, ρ π, hr π, hdec, habs⟩
   obtain ⟨r₀, ρ₀, hr₀, hw⟩ := hT i hlive
-  obtain ⟨S, hS, _⟩ := GlobalTheory.T.exists_globalObjects_every_family_wild hC D.nd i r₀ ρ₀ hr₀ hw r ρ hr π hπ hdec
+  obtain ⟨S, hS, _⟩ := _root_.GlobalTheory.ConsEveryFamilyWild.main hC D.nd i r₀ ρ₀ hr₀ hw r ρ hr π hπ hdec
   exact ⟨S, hS⟩
 
 end GlobalTheory.DesignFromSize

@@ -2,14 +2,19 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsHermRingRat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitEqNormCompletionTensorOfIsInertAt
+public import Development.AbelianVarietyTheory.Definitions.Foundations.EventuallyNormFinLeOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConjugationInvariantValuationField
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianSplitRankOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianValuationSplitCriterion
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MaxEvenLatticeRankOneSplit
+public import Development.AbelianVarietyTheory.Definitions.Foundations.HermitianSpaceBaseLatticeEqFrameLattice
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SplitLocalTensorProductSwap
+public import Mathlib.RingTheory.Valuation.ValuationSubring
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SplitOrderFgIdealProduct
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TensorFixedByInvolutionIsBase
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NonemptyAlgHomOfNotIsField
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemStabLocStdLatticeIffHtFinEqOne
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConjugationInvariantValuationFieldStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianSplitRankOneStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianValuationSplitCriterionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MaxEvenLatticeRankOneSplitStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SplitLocalTensorProductSwapStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SplitOrderFgIdealProductStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TensorFixedByInvolutionIsBaseStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +54,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.Foundations.NonemptyAlgHomOfNotIsField
 import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsSmoothModerateOfIsAutFunSm
 import Development.WeilBound.ThetaLifts.Reductions.SiegelCore
 
@@ -89,7 +93,7 @@ theorem hasBase_of_field {k R : Type} [Field k] [CommRing R] [Algebra k R] (c : 
     obtain ⟨b, hb⟩ := hf _ hy
     exact hiso z (b • y) hz (by rw [hH.smul_right, mul_comm]; exact hb)
   have key : ∀ (z w : V) (a b : R), a ∈ 𝔬 → b ∈ 𝔬 → h z z = a + c a → h w w = b + c b → h z w ∈ 𝔬 :=
-    GlobalTheory.T.hermitian_valuation_split_criterion c 𝔬 W hf hinv hfix hck h𝔬 hWc hW0 hN h hH hanis
+    _root_.GlobalTheory.CompanionTheory.KFin.EvenAniso.pair_mem_of_even c 𝔬 W hf hinv hfix hck h𝔬 hWc hW0 hN h hH hanis
   have h0 : ∀ x : V, h x 0 = 0 := fun x => by simpa using hH.smul_right 0 x 0
   let M : Submodule 𝔬 V :=
     { carrier := {z | ∃ a ∈ 𝔬, h z z = a + c a}
@@ -130,7 +134,7 @@ theorem hasBase_of_split {k R : Type} [Field k] [CommRing R] (O : ValuationSubri
     (𝔬 : Subring R) (hc : ∀ r, φ (c r) = (φ r).swap) (h𝔬 : ∀ r, r ∈ 𝔬 ↔ (φ r).1 ∈ O ∧ (φ r).2 ∈ O) : HasBase c 𝔬 := by
   unfold HasBase
   intro V _ _ _ h hH hP hiso L L' hL hL'
-  rcases GlobalTheory.T.hermitian_split_rank_one φ c hc h hH hP hiso with hsub | ⟨w₀, hspan, hunit⟩
+  rcases _root_.GlobalTheory.CompanionTheory.KFin.hermSwap_struct φ c hc h hH hP hiso with hsub | ⟨w₀, hspan, hunit⟩
   · refine ⟨LinearEquiv.refl R V, ?_⟩
     unfold IsIsomOnto
     refine ⟨fun _ _ => rfl, fun z => ?_⟩
@@ -163,10 +167,10 @@ theorem hasBase_of_split {k R : Type} [Field k] [CommRing R] (O : ValuationSubri
         apply Submodule.fg_of_fg_map_injective f finj
         rw [Submodule.map_comap_eq_of_surjective fsurj]
         exact hNfg
-      obtain ⟨α, β, hαβ⟩ := GlobalTheory.T.split_order_fg_ideal_product O φ 𝔬 h𝔬 (N.comap f) hfg
+      obtain ⟨α, β, hαβ⟩ := _root_.GlobalTheory.CompanionTheory.KFin.fg_eq_prod_principal O φ 𝔬 h𝔬 (N.comap f) hfg
       have hαβ' : ∀ r : R, r • w₀ ∈ N ↔ (∃ x ∈ O, (φ r).1 = α * x) ∧ ∃ y ∈ O, (φ r).2 = β * y :=
         fun r => hαβ r
-      exact ⟨α, β, GlobalTheory.T.max_even_lattice_rank_one_split O φ c 𝔬 hc h𝔬 h hH w₀ hspan hunit N hN α β hαβ', hαβ'⟩
+      exact ⟨α, β, _root_.GlobalTheory.CompanionTheory.KFin.RankOne.unimodular_coords O φ c 𝔬 hc h𝔬 h hH w₀ hspan hunit N hN α β hαβ', hαβ'⟩
     obtain ⟨α, β, ⟨hα, hβ, u, hu, hu', hud⟩, hL1⟩ := desc L hL
     obtain ⟨α', β', ⟨hα', hβ', u', hu2, hu2', hud'⟩, hL2⟩ := desc L' hL'
     have hd0 : (φ (h w₀ w₀)).1 ≠ 0 := by
@@ -223,9 +227,9 @@ theorem hasBase_of_split {k R : Type} [Field k] [CommRing R] (O : ValuationSubri
 theorem hasBase_place : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {σ : E →ₐ[F] E}, IsCMExt F E σ → ∀ (v : HeightOneSpectrum (𝓞 F)), HasBase (sigR (Fv F v) σ) (intLoc F E v) := by
   intro F E _ _ _ _ _ σ hcm v
   by_cases hF : IsField (Fv F v ⊗[F] E)
-  · obtain ⟨W, hW, hWc⟩ := GlobalTheory.T.conjugation_invariant_valuation_field hcm v hF
+  · obtain ⟨W, hW, hWc⟩ := _root_.GlobalTheory.CompanionTheory.KFin.FieldVal.exists_valuation hcm v hF
     refine hasBase_of_field (k := Fv F v) (sigR (Fv F v) σ) (intLoc F E v) W
-      (fun a ha => hF.mul_inv_cancel ha) ?_ (fun a ha => GlobalTheory.T.tensor_fixed_by_involution_is_base hcm (Fv F v) a ha) ?_ ?_ hWc ?_ ?_
+      (fun a ha => hF.mul_inv_cancel ha) ?_ (fun a ha => _root_.GlobalTheory.CompanionTheory.KFin.sigR_fixed_eq_algebraMap hcm (Fv F v) a ha) ?_ ?_ hWc ?_ ?_
     · intro a
       induction a using TensorProduct.induction_on with
       | zero => simp
@@ -272,7 +276,7 @@ theorem hasBase_place : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Nu
         have h3 := congrArg Subtype.val ha
         simpa using h3
       linear_combination h2
-  · obtain ⟨φ, hφc, hφ𝔬⟩ := GlobalTheory.T.split_local_tensor_product_swap hcm v hF
+  · obtain ⟨φ, hφc, hφ𝔬⟩ := _root_.GlobalTheory.CompanionTheory.KFin.SplitBase.exists_split_ringEquiv hcm v hF
     exact hasBase_of_split (HeightOneSpectrum.adicCompletionIntegers F v) φ _ _ hφc hφ𝔬
 
 end GlobalTheory.CompanionTheory.KFin.Base

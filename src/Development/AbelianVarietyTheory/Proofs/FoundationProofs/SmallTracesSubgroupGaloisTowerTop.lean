@@ -1,11 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.NotCoboundaryConstantOne
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIntegerCosetRepresentativeTraceEqOfLtOneStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsRepsOfCosetRepresentativeTraceStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsValuationAlmostEtaleTowerFixerStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FixedFieldAlmostEtaleSubgroupOfStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ValuationTowerZetaSubOneStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.CosetTrace
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIntegerCosetRepresentativeTraceEqOfLtOne
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsRepsOfCosetRepresentativeTrace
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsValuationAlmostEtaleTowerFixer
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FixedFieldAlmostEtaleSubgroupOf
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ValuationTowerZetaSubOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +47,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.Foundations.CosetTrace
 
 @[expose] public section
 
@@ -62,7 +62,7 @@ theorem small_traces_subgroup : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field 
       ∑ g ∈ E, g y = T.ζ j - 1 := by
   intro p _ Ω _ _ hp2 hclo T H hH S j hj
   classical
-  obtain ⟨v, hvint, hvgal, -, hv1, hsep⟩ := GlobalTheory.T.exists_valuation_almostEtale_towerFixer p Ω hp2 hclo T
+  obtain ⟨v, hvint, hvgal, -, hv1, hsep⟩ := _root_.GlobalTheory.ValuationAlmostSeparation.exists_valuation_almostSep p Ω hp2 hclo T
   obtain ⟨U, -, hUfin, hUS, hUsep⟩ := hsep S
   let K : Subgroup (Gal p Ω) := ⨅ n, Gn T n
   let H' : Subgroup ↥K := H.subgroupOf K
@@ -70,7 +70,7 @@ theorem small_traces_subgroup : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field 
   haveI : U'.FiniteIndex := inferInstance
   haveI : Finite (↥H' ⧸ U') := Subgroup.finite_quotient_of_finiteIndex
   letI : Fintype (↥H' ⧸ U') := Fintype.ofFinite _
-  have hU'sep : AlmostSep v U' := GlobalTheory.T.fixedFieldAlmostEtale_subgroupOf Ω v ↥K U H' hUsep
+  have hU'sep : AlmostSep v U' := _root_.GlobalTheory.AlmostEt.almostSep_subgroupOf Ω v ↥K U H' hUsep
   have hsmul : ∀ (h : ↥H') (x : Ω), h • x = ((h : ↥K) : Gal p Ω) x := fun _ _ => rfl
   have hinv : ∀ (h : ↥H') (x : Ω), v (h • x) = v x := fun h x => by rw [hsmul]; exact hvgal _ x
   have hfixζ : ∀ h : ↥H', h • (T.ζ j - 1) = T.ζ j - 1 := by
@@ -78,11 +78,11 @@ theorem small_traces_subgroup : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field 
     have hm : ((h : ↥K) : Gal p Ω) ∈ Gn T j := (Subgroup.mem_iInf.mp (h : ↥K).2) j
     have h1 : ((h : ↥K) : Gal p Ω) (T.ζ j) = T.ζ j := ((Basic.mem_gn T j _).mp hm).1
     rw [hsmul, map_sub, map_one, h1]
-  have hve : v (T.ζ j - 1) < 1 := (GlobalTheory.T.valuation_tower_zeta_sub_one p Ω hp2 T v hv1 j hj).1
-  obtain ⟨y₀, hy₀, hy₀le, htr⟩ := GlobalTheory.T.exists_integer_cosetRepresentativeTrace_eq_of_lt_one Ω v ↥H' hinv U' hU'sep (T.ζ j - 1) hfixζ hve
+  have hve : v (T.ζ j - 1) < 1 := (_root_.GlobalTheory.K5.ZetaNonvanishing₂.valuation_zeta_sub_one p Ω hp2 T v hv1 j hj).1
+  obtain ⟨y₀, hy₀, hy₀le, htr⟩ := _root_.GlobalTheory.AlmostEt.exists_integer_coset_trace_eq' Ω v ↥H' hinv U' hU'sep (T.ζ j - 1) hfixζ hve
   have hS : ∀ s ∈ S, s ∈ Fix Ω U' := fun s hs g =>
     hUS s hs ⟨((g : ↥H') : ↥K), Subgroup.mem_subgroupOf.mp g.2⟩
-  obtain ⟨y, D, E', hy, huniq, hsum⟩ := GlobalTheory.T.exists_reps_of_cosetRepresentativeTrace Ω ↥H' U' S hS y₀ hy₀
+  obtain ⟨y, D, E', hy, huniq, hsum⟩ := _root_.GlobalTheory.AlmostEt.exists_reps_of_cosetTrace Ω ↥H' U' S hS y₀ hy₀
   let ι : ↥H' ↪ Gal p Ω := ⟨fun h => ((h : ↥K) : Gal p Ω), fun a b hab => Subtype.ext (Subtype.ext hab)⟩
   have hιH : ∀ h : ↥H', ι h ∈ H := fun h => Subgroup.mem_subgroupOf.mp h.2
   have hιs : ∀ (h : ↥H') (x : Ω), ι h x = h • x := fun _ _ => rfl

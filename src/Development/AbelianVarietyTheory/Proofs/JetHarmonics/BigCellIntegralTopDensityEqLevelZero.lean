@@ -3,14 +3,16 @@ module
 public import Formalism.HermitianCurvature.StatementTBB
 public import Formalism.HermitianCurvature.HerGenC
 public import Development.AbelianVarietyTheory.PublishedTheorems.BesselIntegrals.BesselXiIntegrable
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.AestronglyMeasurableTopVectorSmoothCoefficientStatement
+public import Development.AbelianVarietyTheory.Definitions.Jets.ImportsAlt
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.AestronglyMeasurableTopVectorSmoothCoefficient
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BetaCutFTendsto
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CapelliWordProductDecayBoundUniform
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.HsInnerSelfEqNormSq
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevelZeroPairingCutoffLocalityStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevelZeroPairingEqIntegralInnerTopVectorsStatement
+public import Formalism.HermitianCurvature.RealInputsClosedAdmissibleSettings
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevelZeroPairingCutoffLocality
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevelZeroPairingEqIntegralInnerTopVectors
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MemLpAndTendstoIntegralInnerOfEventuallyEq
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.TopVectorCutoffEqAndVanishStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.TopVectorCutoffEqAndVanish
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.ComponentFamilySettingOfSetting
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutLimE
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.SlicesFiniteRegularityBuilt
@@ -52,7 +54,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.Jets.ImportsAlt
 
 @[expose] public section
 
@@ -80,7 +81,7 @@ theorem threshold_le_cut (k r N : ℕ) :
 
 theorem integral_topDensity_eq_levelZero : GlobalTheory.HCXi.BesselXiIntegrable → P5.ThmPActualCpt → ∀ Cb : ℝ, ∃ Cc : ℝ, ∀ (Wp Wq : Type) [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq] (P : M.Par) (p : KB.Pl P Wp Wq) (f : B.Mat P.k P.r → (Wq →L[ℂ] Wp)) (χ : ℝ → ℝ) (A : ℝ) (N : ℕ) (w : List C.Letter), KB.InDDplus2 P p.l0 p.T.base Cb p.Θ → C6.IsCut0 χ → B.CkOn ⊤ (B.GV P.k P.r) f → (∀ m : ℕ, B.InCC A m f) → Cc * ((P.r : ℝ) + 1) ^ 4 * ((N : ℝ) * (2 * (P.r : ℝ) + P.k + 1) ^ 2 + (2 * (P.r : ℝ) + P.k + 1) ^ 3) ≤ A → KB.CutWord P p.l0 w → w.length ≤ N → ((∀ᶠ ε in 𝓝[>] (0 : ℝ), AEStronglyMeasurable (fun c : Fin (P.r + 1) → ℂ => TBB.Ew p (fun _ => 1) (D.cutF p.T.base χ f ε) (P.r + 1) w (TBB.bigPt P.r c)) volume) ∧ ∃ h : (Fin (P.r + 1) → ℂ) → ℝ, Integrable h ∧ ∀ᶠ ε in 𝓝[>] (0 : ℝ), ∀ᵐ c : Fin (P.r + 1) → ℂ, ‖TBB.Ew p (fun _ => 1) (D.cutF p.T.base χ f ε) (P.r + 1) w (TBB.bigPt P.r c)‖ ≤ h c) → ∫ c : Fin (P.r + 1) → ℂ, TBB.Ew p (fun _ => 1) f (P.r + 1) w (TBB.bigPt P.r c) = (p.RR f 0 w [] []).re := by
   intro hXi hA Cb
-  obtain ⟨Cc, hCc⟩ := GlobalTheory.T.levelZeroPairing_eq_integral_inner_topVectors hA Cb
+  obtain ⟨Cc, hCc⟩ := _root_.GlobalTheory.beta_word_cutF_eq_integral_inner_tv hA Cb
   refine ⟨max Cc 3, ?_⟩
   intro Wp Wq _ _ _ _ _ _ P p f χ A N w hDD hχ hf hCC hthr hw hN hdom
   obtain ⟨-, h, hint, hb⟩ := hdom
@@ -98,7 +99,7 @@ theorem integral_topDensity_eq_levelZero : GlobalTheory.HCXi.BesselXiIntegrable 
   have hpol := hCc Wp Wq P p f χ A N w hDD hχ hf hCC hthr1 hw hN
   obtain ⟨δ, hδ, hδχ⟩ := hχ.2.1
   have hcut := fun (ε : ℝ) (hε : 0 < ε) (c : Fin (P.r + 1) → ℂ) =>
-    GlobalTheory.T.topVector_cutoff_eq_and_vanish Wp Wq P p Cb χ δ ε f w c hDD hw hχ hδχ hε hf
+    _root_.GlobalTheory.TopVec.tv_cutF Wp Wq P p Cb χ δ ε f w c hDD hw hχ hδχ hε hf
   set X := List.foldr (fun (a : Bool × ℝ) G => M.sgn P p.l0 • Q.CV P.k P.r (a.2 : ℂ) G) f w with hXdef
   have hXCC : B.InCC A 5 X := by
     obtain ⟨K, -, hK⟩ := GlobalTheory.capelli_fold_ccle P.k P.r Wp Wq (M.sgn P p.l0) w 5
@@ -107,7 +108,7 @@ theorem integral_topDensity_eq_levelZero : GlobalTheory.HCXi.BesselXiIntegrable 
   have hlimL := GlobalTheory.beta_cutF_tendsto hXi P.k P.r Wp Wq p.T.base χ A X f hχ hAB hXCC (hCC 5)
   have hlimR := (GlobalTheory.memLp_and_tendsto_integral_inner_of_eventually_eq (Fin (P.r + 1) → ℂ) volume _
     (fun ε => tv p (D.cutF p.T.base χ f ε) w) (tv p f w) h hint
-    (Eventually.of_forall fun ε => GlobalTheory.T.aestronglyMeasurable_topVector_smoothCoefficient Wp Wq P p Cb _ w hDD hw
+    (Eventually.of_forall fun ε => _root_.GlobalTheory.TopVec.aestronglyMeasurable_tv Wp Wq P p Cb _ w hDD hw
       (Formalism.FourierDecayAlt.P.JCTx6.Link2.ckOn_cutF p.T.base hχ hf ε))
     (by
       filter_upwards [hb] with ε hε
@@ -129,7 +130,7 @@ theorem integral_topDensity_eq_levelZero : GlobalTheory.HCXi.BesselXiIntegrable 
     have hδε : 0 < δ * ε := mul_pos hδ hε'
     have h1 : 0 < δ * ε / 2 := by linarith
     have h2 : δ * ε / 2 < δ * ε := by linarith
-    rw [hXdef, ← GlobalTheory.T.levelZeroPairing_cutoff_locality Wp Wq P p (M.sgn P p.l0) w χ δ ε (δ * ε / 2) f hχ hδχ hε' h1 h2 hf,
+    rw [hXdef, ← _root_.GlobalTheory.beta_fold_cut_eq_beta_fold_of_cut Wp Wq P p (M.sgn P p.l0) w χ δ ε (δ * ε / 2) f hχ hδχ hε' h1 h2 hf,
       hpol _ _ h1 hε']
     refine integral_congr_ae (Eventually.of_forall fun c => ?_)
     by_cases hG : TBB.Gp p (TBB.bigPt P.r c) < δ * ε

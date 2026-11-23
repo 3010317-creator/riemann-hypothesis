@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsMirClass
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DerTailStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsMirabolicConjInvariantTwistedTailMeanFunStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MirabolicFunctionEqInducedDerivativeAddTailStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MirabolicInductionPhiPlusInductionFromBlockUniStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DerTail
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsMirabolicConjInvariantTwistedTailMeanFun
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MirabolicFunctionEqInducedDerivativeAddTail
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MirabolicInductionPhiPlusInductionFromBlockUni
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -166,8 +166,8 @@ theorem eq_sum_indR_der : ∀ (g : ℕ) [Fact g.Prime] (ψ : AddChar (ZMod g) �
       show F 1 = ∑ i ∈ Finset.range 1, indR ψ i 1 (der ψ i F) 1
       rw [Finset.sum_range_one]
       exact base ψ F
-    · have hT := GlobalTheory.T.isMirabolicConjInvariant_twistedTailMeanFun g ψ m (m + 1) F hm (Nat.le_succ m) hF
-      rw [GlobalTheory.T.mirabolic_function_eq_induced_derivative_add_tail g ψ hψ m F hm hF p hp, Finset.sum_range_succ,
+    · have hT := _root_.GlobalTheory.GLm.TailClass.isMirClass_tail g ψ m (m + 1) F hm (Nat.le_succ m) hF
+      rw [_root_.GlobalTheory.GLm.MirStep.mir_step g ψ hψ m F hm hF p hp, Finset.sum_range_succ,
         add_comm (indR ψ m (m + 1) (der ψ m F) p)]
       congr 1
       refine (indV_sum ψ m (tail ψ m F) (Finset.range m)
@@ -175,6 +175,6 @@ theorem eq_sum_indR_der : ∀ (g : ℕ) [Fact g.Prime] (ψ : AddChar (ZMod g) �
       refine Finset.sum_congr rfl fun i hi => ?_
       rw [Finset.mem_range] at hi
       show indV ψ m (indR ψ i m (der ψ i (tail ψ m F))) p = _
-      rw [GlobalTheory.T.mirabolicInductionPhiPlus_inductionFromBlockUni g ψ i m _ hi p hp, GlobalTheory.T.der_tail_of_lt_of_le g ψ i m (m + 1) F hi (Nat.le_succ m)]
+      rw [_root_.GlobalTheory.GLm.indV_indR g ψ i m _ hi p hp, _root_.GlobalTheory.GLm.DerTail.der_tail g ψ i m (m + 1) F hi (Nat.le_succ m)]
 
 end GlobalTheory.GLm.MirSum

@@ -1,7 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsTypeIsRealConst
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChernCurvatureLowerTriangularPositiveDiagonalStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExtFormAdjEqNegSecondForm
+public import ReciprocityTheory.L2DbarEstimates.IsLocalHomeomorph
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChernCurvatureLowerTriangularPositiveDiagonal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,7 +78,7 @@ theorem coeff_charpolyRev_neg_of_tri {R : Type} [CommRing R] {s : ℕ} (F : Matr
 
 theorem chernAt_tri : ∀ (n s : ℕ) (T : V n → Matrix (Fin s) (Fin s) ℂ) (d : Fin s → V n → ℝ) (v : V n), MContDiffAt ∞ T v → (∀ i, 0 < d i v) → (∀ᶠ x in 𝓝 v, (∀ i j, i < j → T x i j = 0) ∧ ∀ i, T x i i = d i x) → ∀ j, chernAt T v j = aeval (fun i => ofValues (ddc (fun x => -Real.log (d i x)) v)) (esymm (Fin s) ℂ j) := by
   intro n s T d v hT hd htri j
-  have key := GlobalTheory.T.chernCurvature_lowerTriangular_positive_diagonal n s T d v hT hd htri
+  have key := _root_.GlobalTheory.ChernCalc.curv_lowerTriangular n s T d v hT hd htri
   rw [chernAt, chernPoly, coeff_charpolyRev_neg_of_tri _ (fun a b hab => by
     simp [curvPoly, fun ξ η => (key ξ η).1 a b hab]), esymm]
 

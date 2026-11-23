@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FullRk
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsUnitarisableOfCharIff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FullRankZetaKernelStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FullRankZetaSurjectiveStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegrableFullRankZetaStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FullRankZetaKernel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FullRankZetaSurjective
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegrableFullRankZeta
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -100,7 +100,7 @@ theorem fibre_coinvariants : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologi
       map_add' := fun Ψ Φ => by
         funext h
         simp only [smallF, Submodule.coe_add, Pi.add_apply]
-        rw [← integral_add (GlobalTheory.T.integrable_full_rank_zeta k n d ν hν Ψ.1 Ψ.2 _) (GlobalTheory.T.integrable_full_rank_zeta k n d ν hν Φ.1 Φ.2 _)]
+        rw [← integral_add (_root_.GlobalTheory.FullRankCoinv.integrable_fibre_target k n d ν hν Ψ.1 Ψ.2 _) (_root_.GlobalTheory.FullRankCoinv.integrable_fibre_target k n d ν hν Φ.1 Φ.2 _)]
         congr 1; funext g; ring
       map_smul' := fun c Ψ => by
         funext h
@@ -130,9 +130,9 @@ theorem fibre_coinvariants : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologi
       have h1 : (ν (gdet D) : ℂ) ≠ 0 := Units.ne_zero _
       have h2 := apow_ne_zero (gdet D) ((d : ℂ) / 2)
       field_simp
-  · obtain ⟨Ψ, hΨ, hf'⟩ := GlobalTheory.T.full_rank_zeta_surjective k n d ν hnd hν f hf
+  · obtain ⟨Ψ, hΨ, hf'⟩ := _root_.GlobalTheory.FullRankOnto.exists_fullRk_smallF_eq k n d ν hnd hν f hf
     exact ⟨Ψ, hΨ, by rw [hZΨ Ψ hΨ]; funext h; exact hf' h⟩
-  · refine GlobalTheory.T.full_rank_zeta_kernel k n d ν hnd hν Ψ hΨ fun h => ?_
+  · refine _root_.GlobalTheory.FullRankCoinv.mem_augRk_of_fibre_eq_zero k n d ν hnd hν Ψ hΨ fun h => ?_
     have := congrFun h0 h
     rwa [hZΨ Ψ hΨ] at this
   · have hmem : (fun Y => Ψ (Y * h₀.1)) ∈ fullRk k n d := by

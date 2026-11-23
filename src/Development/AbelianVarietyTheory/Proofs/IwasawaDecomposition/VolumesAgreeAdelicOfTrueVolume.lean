@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.CdScaleTieIff
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsCMFamHost
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryAdelicQuotientVolumeIsVolumeStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryAdelicQuotientVolumeIsVolume
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,6 +55,6 @@ theorem volTieG_of_trueVol : ∀ D : D7, letI := D.host.cmStar;
   rw [volTieG_iff]
   intro W hW
   rw [h W]
-  exact GlobalTheory.T.unitaryAdelicQuotientVolume_is_volume _ _ D.sp.cm _ _ D.cd W (isCMFam_host _ D.host _ D.eTau) hW
+  exact _root_.GlobalTheory.Mem.Vol.volIs_trueVol _ _ D.sp.cm _ _ D.cd W (isCMFam_host _ D.host _ D.eTau) hW
 
 end GlobalTheory.Mem.Vol

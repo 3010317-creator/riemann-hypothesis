@@ -4,8 +4,8 @@ public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.Eigenvect
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PointShiftSt
 public import Development.AbelianVarietyTheory.Counterexamples.JetSurvey.PairingIsoPullback
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.LawsFieldsSeparately
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionCmUnitaryShimuraMemClosureLinearHomImages
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.WeilIsAlternatingSkewNatural
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionCmUnitaryShimuraMemClosureLinearHomImagesStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -116,7 +116,7 @@ theorem kill : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Recip
     suffices h : Out.WeilIs X.B.pol.A X.B.pol.L n y (u ≫ ψ) 1 by
       have := GlobalTheory.CommPairing.weilIs_symm X.B.pol.isLB h
       rwa [inv_one] at this
-    have hmem := GlobalTheory.T.torsion_cmUnitaryShimura_mem_closure_linearHom_images E H hH K ρ σ₁ p X n hn y hy
+    have hmem := _root_.GlobalTheory.FlatCM.TorsGen.gen E H hH K ρ σ₁ p X n hn y hy
     clear hy
     induction hmem using Submonoid.closure_induction with
     | mem w hw =>

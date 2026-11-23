@@ -1,7 +1,7 @@
 module
 
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CompletionIsLocalRingStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CompletionIsLocalRing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -280,7 +280,7 @@ theorem GlobalTheory.CompanionTheory.SW.QuadIso.measure_quad_Fv : ∀ (F : Type)
   haveI : BorelSpace (Fv F v) := ⟨rfl⟩
   obtain ⟨hH, h1⟩ := hlam
   haveI := hH
-  obtain ⟨_, _, hsc, _⟩ := GlobalTheory.T.completion_is_local_ring F v
+  obtain ⟨_, _, hsc, _⟩ := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
   haveI := hsc
   have hfin : lam {s : Fv F v | Valued.v s < 1} ≠ ⊤ := by
     refine ne_top_of_le_ne_top (b := 1) ENNReal.one_ne_top ?_

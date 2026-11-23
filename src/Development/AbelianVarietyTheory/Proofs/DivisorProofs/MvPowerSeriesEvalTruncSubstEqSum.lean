@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffFinsuppProdConstFreeEqZeroOfDegreeLtStatement
+public import Mathlib.RingTheory.MvPowerSeries.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffFinsuppProdConstFreeEqZeroOfDegreeLt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -95,7 +96,7 @@ theorem eval_trunc'_subst_eq_sum :
     apply hα
     dsimp only
     have hlt : n.degree < α.degree := lt_of_not_ge fun h => hαS (hS α h)
-    rw [GlobalTheory.T.coeff_finsuppProd_constFree_eq_zero_of_degree_lt B σ τ u hu α β (lt_of_le_of_lt (Finsupp.degree_mono hβ) hlt), map_zero,
+    rw [_root_.GlobalTheory.DivMono.coeff_finsuppProd_eq_zero_of_degree_lt B σ τ u hu α β (lt_of_le_of_lt (Finsupp.degree_mono hβ) hlt), map_zero,
       mul_zero]
   rw [eval_trunc'_eq_sum, Finset.sum_congr rfl fun β hβ => by
     rw [hcoeff β (Finset.mem_Iic.mp hβ)]]

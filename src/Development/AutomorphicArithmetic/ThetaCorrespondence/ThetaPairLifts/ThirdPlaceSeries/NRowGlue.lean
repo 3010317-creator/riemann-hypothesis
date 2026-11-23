@@ -1,7 +1,9 @@
 module
 
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.NRowDef
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleParametersFamilyConstStatement
+public import Development.AutomorphicArithmetic.ResidueCharacters.TwistedPlaces
+public import Formalism.SharpRestriction.ParConsts
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleParametersFamilyConst
 public import Development.AutomorphicArithmetic.ResidueCharacters.NumCost
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -50,7 +52,7 @@ end UpperTheory.N
 theorem UpperTheory.N.starSF_of_rowC_alt (A B : ℝ) (hA : 0 ≤ A) (hB : 0 ≤ B) : _root_.UpperTheory.N.RowCAlt A B → _root_.UpperTheory.N.StarSelfDualCondition := by
   intro h eps Fm
   obtain ⟨x0, h0⟩ := h Fm
-  obtain ⟨C0, x1, hC0, hpar⟩ := GlobalTheory.T.admissible_parameters_family_const Fm
+  obtain ⟨C0, x1, hC0, hpar⟩ := _root_.GlobalTheory.NLink.admissible_parameters_design_family Fm
   refine ⟨18 * A * C0 + 2 * B * (3 * C0 + 9) + 5 * C0 + 1, max 3 (max x0 x1),
     fun x hxx hx i HW F Cm X C₂ hS k hTw hs h2 π hπ => ?_⟩
   have h3 : 3 ≤ x := (le_max_left _ _).trans hxx

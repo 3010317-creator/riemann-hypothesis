@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FramedDConst
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchimedeanSplittingsDifferByCharacterStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivContinuousCharacterRealUnitaryOneParameterStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGenuineSplittingAdelicSchwartzPlaceSignatuStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchimedeanSplittingsDifferByCharacter
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivContinuousCharacterRealUnitaryOneParameter
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGenuineSplittingAdelicSchwartzPlaceSignatu
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieScalar
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -59,9 +60,9 @@ theorem lieScalarD : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
     FramedD τ JA JB a b A C → IsFockMapD ψ τ d A C Φ → IsUSplitting (adeleClass F) ψ d (actB (cA σ)) om →
     ∃ c, ActsByD τ C om Φ (fun w => fockAct2 (P w) (Q w) (R w) (S w)) c := by
   intro F E _ _ _ _ _ σ α β κ _ _ _ _ _ P Q R S ψ τ JA JB d a b A C Φ om hCM hψ hFr hΦ hom
-  obtain ⟨ω₀, c₀, hH, hc, hact⟩ := GlobalTheory.T.exists_genuineSplitting_adelicSchwartz_placeSignature F E σ α β κ P Q R S ψ τ JA JB d a b A C Φ hCM hψ hFr hΦ
-  obtain ⟨ν, hν, hmul, hνc, hν0⟩ := GlobalTheory.T.archimedean_splittings_differ_by_character F E σ α β κ ψ JA JB d om ω₀ hψ hom hH hc
-  obtain ⟨k, hk⟩ := GlobalTheory.T.deriv_continuous_character_real_unitary_one_parameter F E σ β R S τ JB b C hCM hFr.2.2 ν hmul hνc hν0
+  obtain ⟨ω₀, c₀, hH, hc, hact⟩ := _root_.GlobalTheory.GenRepD.genRepD F E σ α β κ P Q R S ψ τ JA JB d a b A C Φ hCM hψ hFr hΦ
+  obtain ⟨ν, hν, hmul, hνc, hν0⟩ := _root_.GlobalTheory.HoweD.SplitScalar.splittings_differ_by_character F E σ α β κ ψ JA JB d om ω₀ hψ hom hH hc
+  obtain ⟨k, hk⟩ := _root_.GlobalTheory.HoweD.deriv_charD F E σ β R S τ JB b C hCM hFr.2.2 ν hmul hνc hν0
   refine ⟨fun w => c₀ w + k w, ?_⟩
   intro γ hγ Y hY T g hg l hl
   have hH1 : ∀ t : ℝ, At (evI F) (((γ (Multiplicative.ofAdd t)).1 : Matrix β β (AE F E)) - 1) := fun t => hγ.2 _

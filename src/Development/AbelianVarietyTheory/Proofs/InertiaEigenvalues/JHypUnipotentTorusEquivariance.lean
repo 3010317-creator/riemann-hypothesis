@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsTestRep
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleHermitianPairStructureFactsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedValuationParitySignCharacterKernelNormStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleHermitianPairStructureFacts
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FourierMatch
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedValuationParitySignCharacterKernelNorm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -103,7 +104,7 @@ theorem etaK_mul [Unram F E] (A : Et F E) (s : A.Kˣ) (u : A.K) (hu : IsUnit u) 
     A.etaK ((s : A.K) * u) = A.etaK s * A.etaK u := by
   unfold Et.etaK
   rw [map_mul]
-  exact (GlobalTheory.T.unramifiedValuationParitySign_character_kernel_norms F E).1 _ _ (s.isUnit.map (Algebra.norm F)).ne_zero (hu.map (Algebra.norm F)).ne_zero
+  exact (_root_.GlobalTheory.EtaChar.main F E).1 _ _ (s.isUnit.map (Algebra.norm F)).ne_zero (hu.map (Algebra.norm F)).ne_zero
 
 theorem jHyp_nm : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E]
     [StarRing E] [Unram F E] (A : Et F E) (μK : Measure A.K), μK.IsAddHaarMeasure → ∀ (ψ : AddChar F ℂ)
@@ -121,7 +122,7 @@ theorem jHyp_nm : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNorm
     rw [Units.mul_inv_cancel_left]
     congr 2 <;> ring
   rw [h1, integral_inv_mul A μK s H]
-  have hnull : μK {t | ¬ IsUnit t} = 0 := (GlobalTheory.T.etaleHermitianPair_structure_facts F E A).2.2.2.2.2.2.2.2.1 μK hμ
+  have hnull : μK {t | ¬ IsUnit t} = 0 := (_root_.GlobalTheory.JR.EtFacts.main F E A).2.2.2.2.2.2.2.2.1 μK hμ
   have hae : ∀ᵐ u ∂μK, IsUnit u := ae_iff.mpr hnull
   have h2 : ∫ u, H u ∂μK = ∫ u, A.tilde μK ψ φ' (u * g 1 0) (u * g 1 1) * A.etaK u * A.etaK s ∂μK := by
     refine integral_congr_ae ?_

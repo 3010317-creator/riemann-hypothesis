@@ -1,7 +1,8 @@
 module
 
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.IdealLatticeBasis.IdealBasisAlt
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.AreaLat
+public import Formalism.PeriodIntegrals.AreaLat
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LatticeArea.ImConjMulCombo
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -130,6 +131,6 @@ theorem assemble : Assemble := by
   ring
 
 theorem idealLattice_of (h1 : OKArea) (h2 : IdealBasis) : PI.IdealLattice :=
-  assemble h1 h2 okBasis area_lattice_formula
+  assemble h1 h2 okBasis _root_.PI.AreaLatWork.areaLat
 
 end PI.IdealLatticeWork

@@ -1,9 +1,10 @@
 module
 
-import CompanionTheory.AutomorphicTheory.ProductFormulaTheory.CuspidalExhaustion.JuxtWords
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.LanglandsExhaustion.JuxtDefs
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IrreducibleAdmissibleGL
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalTwistInjectiveStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalTwistInjective
+import CompanionTheory.AutomorphicTheory.ProductFormulaTheory.CuspidalExhaustion.JuxtWords
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,7 +63,7 @@ theorem nxt_not_mem (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (Δ : 
   intro h
   rw [decW, List.mem_ofFn] at h
   obtain ⟨i, hi⟩ := h
-  have h2 := GlobalTheory.T.cuspidal_twist_injective hA Δ.first Δ.isCusp_first _ _ hi
+  have h2 := _root_.GlobalTheory.CompanionTheory.SegNu.nu_natCast_inj hA Δ.first Δ.isCusp_first _ _ hi
   have h3 := (Fin.rev i).isLt
   omega
 

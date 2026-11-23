@@ -2,7 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ZetaActRefl
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSLTwoPermutedModularFamilyIffValues
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeierstrassPTorsionIsModularFamilyStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeierstrassPTorsionIsModularFamily
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.DefiningCoordinates
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.OmegaFactorization
+public import Development.AbelianVarietyTheory.Definitions.Divisors.JetAnalytic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -40,10 +43,7 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.DefiningCoordinates
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.OmegaFactorization
 import Development.AbelianVarietyTheory.Definitions.Divisors.HasLevelStd
-public import Development.AbelianVarietyTheory.Definitions.Divisors.JetAnalytic
 import Development.AbelianVarietyTheory.Definitions.Divisors.TorsTransport
 
 @[expose] public section
@@ -70,7 +70,7 @@ theorem wB_smul_transform : ∀ (N : ℕ) [NeZero N] (x : Fin 2 → ZMod N) (γ 
     rw [zpow_neg, zpow_ofNat] at h
     field_simp at h
     linear_combination h
-  have hwp := ((GlobalTheory.QFam.isFam_iff_values _ _ _ _).1 (GlobalTheory.T.weierstrassP_torsion_isModularFamily N).1) x γ τ
+  have hwp := ((GlobalTheory.QFam.isFam_iff_values _ _ _ _).1 (_root_.GlobalTheory.WpFam.isFam_wp_wpd N).1) x γ τ
   have hpi : (2 * Real.pi * Complex.I : ℂ) ≠ 0 := by
     simp [Real.pi_ne_zero, Complex.I_ne_zero]
   rw [zpow_ofNat] at hwp

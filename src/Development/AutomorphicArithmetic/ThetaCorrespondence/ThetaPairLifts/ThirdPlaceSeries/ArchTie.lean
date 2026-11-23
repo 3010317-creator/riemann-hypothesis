@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.TieTest
 public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.NormSmall
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SettingAtPoint
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LeafInfinitePlaceBound
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchimedeanBoundBottomPairsNormsGridStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchimedeanBoundBottomPairsNormsGrid
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.GBigAtTiedStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -51,7 +51,7 @@ open Formalism.L2.Indef.Tree Formalism.L2.Indef.Tree.ArchimedeanLeafBounds.Cuts
 theorem GlobalTheory.BigTop.Fun.arch_tie_of_logDeriv_bound (hS : _root_.GlobalTheory.BigTop.Fun.SettingAtPoint)
     (hd : Closed FamHyp fun Fm _ => _root_.GlobalTheory.BigTop.EventuallyAtPoints Fm fun x _ i _ => |(Fm.L x i).logDerivativeAtOne| ≤ (Fm.L x i).sc.x ^ (Fm.L x i).sc.eps)
     (_hA : GlobalTheory.NormSum.ArchSt) (_hB : BotSmall) : _root_.GlobalTheory.BigTop.Fun.ArchimedeanCondition @Comparison₂ := by
-  have hQ := _root_.GlobalTheory.T.forallLeaves_fitted_of_gBig _ hS hd GlobalTheory.T.archimedeanBound_bottomPairs_norms_grid
+  have hQ := _root_.GlobalTheory.T.forallLeaves_fitted_of_gBig _ hS hd _root_.GlobalTheory.ArchGrid.arch_grid
   refine _root_.GlobalTheory.BigTop.Fun.LeafConditions.mono hQ ?_
   intro D L hT Gi Gl Kc Y cX ex Csz p CF d C CH _ hd
   refine ⟨hd, fun hq => ?_⟩

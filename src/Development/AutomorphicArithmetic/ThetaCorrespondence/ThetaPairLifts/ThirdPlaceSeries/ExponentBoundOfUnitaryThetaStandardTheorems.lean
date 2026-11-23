@@ -7,7 +7,8 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomolog
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.WeightsConj
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ExportSt
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.DiscreteSpectrumResidualClassification
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeylLatticeExactExponentBlockCutStatement
+public import Formalism.PieriBlockIdeals.StatementE
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeylLatticeExactExponentBlockCut
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ExpStOfStatement
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.FrameStOfSmallStStatement
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.GaloisAtPlaceOfAutomorphicAtPlace
@@ -67,7 +68,7 @@ theorem exponent_bound_of_unitaryThetaStandardTheorems_alt :
       _root_.UpperTheory.Zero.LLC.RecTExists →
       _root_.GlobalTheory.BigOn.ExponentStatement :=
   fun hCoh hHecke hCheb hGal hBC hBS hAbove hLL =>
-    _root_.GlobalTheory.T.expSt_of_num_sumExp_model GlobalTheory.T.weylLattice_exact_exponent_block_cut _root_.GlobalTheory.ExpTie.numSt_alt _root_.GlobalTheory.T.sum_expansion'
+    _root_.GlobalTheory.T.expSt_of_num_sumExp_model _root_.GlobalTheory.LeviCut.exCut _root_.GlobalTheory.ExpTie.numSt_alt _root_.GlobalTheory.T.sum_expansion'
       (_root_.GlobalTheory.T.model_statement_of_crystalline_chebotarev_frame_gal hBS hCheb _root_.GlobalTheory.T.small_estimate (_root_.GlobalTheory.T.frame_statement_of_small_statement _root_.GlobalTheory.T.small_estimate)
         (_root_.GlobalTheory.T.galois_frame_compatibility_alt hCoh hHecke hCheb hGal hBC hBS hAbove hLL _root_.GlobalTheory.T.small_estimate))
 end GlobalTheory.BigOn

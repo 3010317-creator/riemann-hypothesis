@@ -2,8 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfFormalGroupLawCoboundaryOneEqZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFormalChartQuotientByIdealWithPrimePowStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapCoboundarySwapPullbackCommuteStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ToBaseChangePtsBijective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFormalChartQuotientByIdealWithPrimePow
+public import Development.AbelianVarietyTheory.Definitions.Divisors.FormalCoboundarySmul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapCoboundarySwapPullbackCommute
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -42,7 +44,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ToBaseChangePtsBijective
 
 @[expose] public section
 
@@ -52,10 +53,10 @@ namespace GlobalTheory.QLog
 
 theorem coeff_mem_ideal_of_formalGroupCoboundaryOne_coeff_mem : ∀ (p : ℕ) [Fact p.Prime] (O : Type) [CommRing O] (G : PDivGroup p O) (d : ℕ) (c : QLog.Chart G d), ∀ I : Ideal O, (p : O) ∈ I → ∀ s : MvPowerSeries (Fin d) O, (∀ α, coeff α (cob1 c.μ s) ∈ I) → ∀ α, coeff α s ∈ I := by
   intro p _ O _ G d c I hp s hs α
-  obtain ⟨c', hlaw, -, -⟩ := GlobalTheory.T.exists_formalChart_quotient_by_ideal_with_primePow p O G d c I 1 (by rwa [pow_one])
+  obtain ⟨c', hlaw, -, -⟩ := _root_.GlobalTheory.QLog.ChartRed.exists_chart p O G d c I 1 (by rwa [pow_one])
   have hpk : ((p : ℕ) : O ⧸ I) = 0 := by
     rw [← map_natCast (Ideal.Quotient.mk I), Ideal.Quotient.eq_zero_iff_mem]; exact hp
-  have hmap := (GlobalTheory.T.map_coboundary_swap_pullback_commute O d c.μ c.isLaw.const (O ⧸ I) (Ideal.Quotient.mk I)).1 s
+  have hmap := (_root_.GlobalTheory.Katz.map_cob_swap_pull O d c.μ c.isLaw.const (O ⧸ I) (Ideal.Quotient.mk I)).1 s
   have hz : map (Ideal.Quotient.mk I) (cob1 c.μ s) = 0 := by
     ext β
     rw [coeff_map, map_zero, Ideal.Quotient.eq_zero_iff_mem]

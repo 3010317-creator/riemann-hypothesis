@@ -2,8 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VanishingH1InvertingMorphisms
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfUpwardFamilyStandardCover
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGluedSectionUpwardFamilyStandardCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneCocycleUpwardFamilyIsCoboundaryStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CovBy
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGluedSectionUpwardFamilyStandardCover
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneCocycleUpwardFamilyIsCoboundary
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -43,7 +44,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CovBy
 
 @[expose] public section
 
@@ -70,8 +70,8 @@ theorem coboundary_on_piece : ∀ {R : Type} [CommRing R] {C : Type} [Category.{
     (fun _ _ _ ↦ Subsingleton.elim _ _) (fun t u ↦ IsUnit (mp F u e))
     (fun t _ ↦ Nonempty (p ⟶ t)) (fun _ _ _ a h ↦ isUnit_comp (G.map a) h)
     (fun t u hu ↦ sep_of_covBy F G H hdir t (fun t' _ ↦ Nonempty (p ⟶ t')) (up t) (cov t u hu))
-    (fun t u hu ↦ GlobalTheory.T.exists_glued_section_upwardFamily_standardCover F G H hdir t (fun t' _ ↦ Nonempty (p ⟶ t')) (up t) (cov t u hu))
-    (fun t u hu ↦ GlobalTheory.T.van1_of_covBy_upward_sieve F G H hdir t (fun t' _ ↦ Nonempty (p ⟶ t')) (up t) (cov t u hu))
+    (fun t u hu ↦ _root_.GlobalTheory.CatCoh.Desc.VandermondeTwoBasis.glue_upward_of_cov F G H hdir t (fun t' _ ↦ Nonempty (p ⟶ t')) (up t) (cov t u hu))
+    (fun t u hu ↦ _root_.GlobalTheory.CatCoh.Desc.Basis.oneCocycle_upwardFamily_isCoboundary F G H hdir t (fun t' _ ↦ Nonempty (p ⟶ t')) (up t) (cov t u hu))
     z (fun t t' t'' t''' u a b c _ ↦ hz t t' t'' t''' u a b c)
     (fun t t' _ a ↦ if h : Nonempty (p ⟶ t) then z p t t' v h.some a else 0)
     (fun t t' t'' u a b hp ↦ by

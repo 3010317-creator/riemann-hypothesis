@@ -1,13 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.ConvolutionSmoothL2
-import Aesop.Main
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FiniteAdelicUnitaryCongruenceTopology
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalL2BoundHeightStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RightConvolutionOperatorAeEqIntegralAdelicStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LayerProd
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalL2BoundHeight
+public import Formalism.SharpRestriction.CuspSpanNormBounds.GlobAut
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RightConvolutionOperatorAeEqIntegralAdelic
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermitianFormUnitaryOneOne
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SmoothContinuousConvolutionRealPointsUnitary
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TruncatedLeastLatticeSizeLipschitzProperties
+import Aesop.Main
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RightRegularRepUnitaryStronglyContinuous
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SmoothContinuousConvolutionRealPointsUnitaryStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TruncatedLeastLatticeSizeLipschitzPropertiesStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -189,7 +192,7 @@ theorem weak_integral_fixed {X Z H : Type} [MeasurableSpace X] [MeasurableSpace 
 
 theorem inv_tau_le (I : AutInst) (hn : 1 ≤ I.n) (h1 : (1 : I.Gf) ∈ I.Kset) (m : ℕ) (z : I.Ginf) (b : I.Gf) :
     (tau1 I (z, b))⁻¹ ^ m ≤ (tau1 I (1, b))⁻¹ ^ m * Real.exp ((m / I.f : ℝ) * dSum I z) := by
-  obtain ⟨hp, -, -, hl⟩ := GlobalTheory.T.truncatedLeastLatticeSize_lipschitz_properties I hn
+  obtain ⟨hp, -, -, hl⟩ := _root_.GlobalTheory.TauLipschitz.tauLip I hn
   have h := (abs_le.1 (hl (1, b) (z, 1) h1)).1
   simp only [Prod.mk_mul_mk, one_mul, mul_one] at h
   have e : (m / I.f : ℝ) * dSum I z = m * (dSum I z / I.f) := by ring
@@ -237,14 +240,14 @@ theorem convolutionSmoothL2 : ConvolutionSmoothL2 := by
   obtain ⟨M, hM⟩ := hacont.bounded_above_of_compact_support hac
   have hφi : Integrable (fun p : B.I.GA => a p.1 * e p.2) (B.I.muA B.μf) := hai.mul_prod hei
   set m : ℕ := 2 * B.I.n ^ 2 * B.I.f with hm
-  have hpos := (GlobalTheory.T.truncatedLeastLatticeSize_lipschitz_properties B.I hn).1
+  have hpos := (_root_.GlobalTheory.TauLipschitz.tauLip B.I hn).1
 
   have hloc : ∀ V : Set B.I.Ginf, IsCompact V → ∃ C : ℝ, 0 ≤ C ∧ ∀ (y : B.I.L2 B.μf B.fund) (x : B.I.GA),
       IntegrableOn (fun p => B.I.ext y (x * p)) (V ×ˢ B.I.Kg g) (B.I.muA B.μf) ∧
       ∫ p in V ×ˢ B.I.Kg g, ‖B.I.ext y (x * p)‖ ∂(B.I.muA B.μf) ≤ C * (tau1 B.I x)⁻¹ ^ m * ‖y‖ := by
     intro V hV
     have hU : IsCompact (V ×ˢ B.I.Kg g) := hV.prod hKcomp
-    obtain ⟨C, hC, hb⟩ := GlobalTheory.T.local_L2_bound_height B _ hn hU fun u hu => hsub hu.2
+    obtain ⟨C, hC, hb⟩ := _root_.GlobalTheory.LocMass.local_mass_le B _ hn hU fun u hu => hsub hu.2
     refine ⟨Real.sqrt C * Real.sqrt (B.I.muA B.μf (V ×ˢ B.I.Kg g)).toReal, by positivity, fun y x => ?_⟩
     have hτ : 0 ≤ (tau1 B.I x)⁻¹ := inv_nonneg.2 (hpos x).le
     have hsq : (Real.sqrt C * (tau1 B.I x)⁻¹ ^ m * ‖y‖) ^ 2 =
@@ -280,7 +283,7 @@ theorem convolutionSmoothL2 : ConvolutionSmoothL2 := by
       funext z
       exact conv_eq_partial (muInf B.I) B.μf a e (B.I.ext y) z b (hmain (z, b)).1
     rw [e1]
-    refine GlobalTheory.T.smooth_continuous_convolution_realPointsUnitary B.I a _ ha hac ?_
+    refine _root_.GlobalTheory.SmoothConv.smooth_convolution B.I a _ ha hac ?_
     refine locallyIntegrable_partial (muInf B.I) B.μf (B.I.Kg g) hKm e hei.1 ‖c‖ heM he0
       (fun p => B.I.ext y ((1, b) * p)) fun V hV => ?_
     obtain ⟨C', -, hb'⟩ := hloc V hV
@@ -306,6 +309,6 @@ theorem convolutionSmoothL2 : ConvolutionSmoothL2 := by
       have : ((z, k) : B.I.GA) = (z, 1) * (1, k) := by simp
       rw [this, hmul, ContinuousLinearMap.mul_apply, hy k hk']
     rw [hTT]
-    exact (GlobalTheory.T.rightConvolution_operator_ae_eq_integral_adelic B _ T' hT' y).2
+    exact (_root_.GlobalTheory.ConvKernel.rconv_eq_integral B _ T' hT' y).2
 
 end GlobalTheory.SmoothGrowth

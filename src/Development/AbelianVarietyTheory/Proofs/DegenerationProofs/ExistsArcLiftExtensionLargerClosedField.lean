@@ -6,7 +6,8 @@ public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsG
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIntegralDegenerationValues
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsNumDHomDegenerationValuesFieldExtensionStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsNumOf
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.HomTransportStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.NotAllMatchRankZero
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.HomTransport
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.DetCondIffOfFieldExtension
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -101,7 +102,7 @@ theorem exists_lift_ext : Laws → BrGtSt → BrWpSt → AllA fun {_} _ _ _ {_} 
     have e := hI k _ _ _ _ ((qkExt_iff a.bimult f hf _ _).2 rfl) hq hr
     have e' := hI k _ _ _ _ ((qkExt_iff a.bimult f hf _ _).2 rfl) hq' hr'
     rw [hWp R a.D₀ a.even a.bimult F' N' ν' k hk _ _ _ _ _ hr hr',
-      (GlobalTheory.T.hom_transport_alt F F' f A.N N' I).2.2.2.1 k q q' r r' e.1 e.2 e'.1 e'.2,
+      (_root_.GlobalTheory.Ex.NumD.hom_transport F F' f A.N N' I).2.2.2.1 k q q' r r' e.1 e.2 e'.1 e'.2,
       (hWp R a.D₀ a.even a.bimult F A.N A.ν k hk _ _ _ _ _ hq hq').1 h]
     rfl
   choose q' hq' using fun (n : ℕ) (v : D.La) => ((G' n).1 (qkExt a.bimult f hf (A.I.ev n v))).exists

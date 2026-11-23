@@ -4,9 +4,17 @@ public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.Actio
 public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.PerpendicularEmbedding
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NonemptyCompactDualHaar
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsBorelSectionUnitaryOrbitQuadricStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.FourierInversionHaarSymmFormStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.IsFibreFamilyEqAtContinuityPointStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LintegralComplexEqLintegralSqrtMulExpStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.FourierInversionHaarSymmForm
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.IsFibreFamilyEqAtContinuityPoint
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Complex
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LintegralComplexEqLintegralSqrtMulExp
+public import Mathlib.RingTheory.Complex
+public import Mathlib.Analysis.Calculus.BumpFunction.Basic
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.HaarUpqIsMulRightInvariant
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UpqLocallyCompactGroup
 import Mathlib.Algebra.Order.Floor.Extended
@@ -32,7 +40,6 @@ import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.Order.CompletePartialOrder
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
-public import Mathlib.RingTheory.Complex
 import Mathlib.RingTheory.HopfAlgebra.Basic
 import Mathlib.RingTheory.PiTensorProduct
 import Mathlib.RingTheory.Radical.NatInt
@@ -65,7 +72,6 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Separation.CompletelyRegular
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Mathlib.Analysis.Calculus.BumpFunction.Basic
 
 @[expose] public section
 
@@ -255,7 +261,7 @@ theorem exists_chart (j : Fin P ⊕ Fin Q) : ∃ fib : ℝ → Measure (Perpendi
     symm
     rw [lintegral_lintegral_swap]
     · refine lintegral_congr fun y => Eq.symm ?_
-      rw [GlobalTheory.T.lintegral_complex_eq_polar_sqrt ε (c y) hε
+      rw [_root_.GlobalTheory.lintegral_complex_eq_lintegral_sqrt_mul_exp ε (c y) hε
         (fun z => ENNReal.ofReal (rho j (glue j (z, y))) * φ (glue j (z, y)))
         (hG.comp ((continuous_glue j).measurable.comp measurable_prodMk_right))
         (by simp [rho, glue_self])]
@@ -341,7 +347,7 @@ theorem fib_eq {fib fib' : ℝ → Measure (PerpendicularEmbedding.Sp P Q)} {β 
     (h : PerpendicularEmbedding.IsDxDq fib) (h' : ActionCoordinates.IsDxDq β fib') : fib' β = fib β := by
   obtain ⟨U, B, hU, hB, hβB, h'⟩ := h'
   rw [qf_eq] at h'
-  refine GlobalTheory.T.isFibreFamily_eq_at_continuity_point (PerpendicularEmbedding.dx P Q) PerpendicularEmbedding.qf {x | x ≠ 0} U {x | x ≠ 0} B Set.univ fib' fib β
+  refine _root_.GlobalTheory.IsFibreFamily_eq_at (PerpendicularEmbedding.dx P Q) PerpendicularEmbedding.qf {x | x ≠ 0} U {x | x ≠ 0} B Set.univ fib' fib β
     continuous_qf.measurable isOpen_ne hU subset_rfl ?_ hB isOpen_univ hβB trivial h' h
   rintro x hx rfl
   exact hβ (by simpa [qf_zero] using hx.symm)
@@ -378,7 +384,7 @@ theorem selfDual_iff_of_bilin {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ
     (hn : ∀ x, (∀ y, B x y = 0) → x = 0) (μ : Measure V) (hμ : μ.IsAddHaarMeasure) :
     SelfDual μ (fun x y => Complex.exp (2 * Real.pi * Complex.I * ((e * β x y : ℝ) : ℂ))) ↔
       ActionCoordinates.IsSelfDualFor e β μ := by
-  obtain ⟨⟨c, -, hc⟩, hS⟩ := GlobalTheory.T.fourier_inversion_haar_symm_form_alt B hs hn μ hμ
+  obtain ⟨⟨c, -, hc⟩, hS⟩ := _root_.GlobalTheory.fourier_inversion_haar_symm_form B hs hn μ hμ
   obtain ⟨Φ₀, h0, h1⟩ := exists_test V
   have key := hc Φ₀ Φ₀.continuous (hS Φ₀).1 (hS Φ₀).2 0
   unfold SelfDual ActionCoordinates.IsSelfDualFor ActionCoordinates.fourierT

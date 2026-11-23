@@ -1,9 +1,16 @@
 module
 
 public import ReciprocityTheory.GaloisValuations.Global
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ConjPlacesOfSamePrimeBelowStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrtApproxIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAlgebraMapSubEqSumConjugatesStatement
+public import Formalism.ConjugateSelfDual.Statement
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ConjPlacesOfSamePrimeBelow
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrtApproxIntegral
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAlgebraMapSubEqSumConjugates
+public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +56,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import ReciprocityTheory.GaloisValuations.GlobalB
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExistsNotCongPow
-public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
 
 @[expose] public section
 
@@ -128,15 +134,15 @@ theorem exists_base_near_of_dec_fixed : ∀ (E Ω : Type) [Field E] [NumberField
   have hsame : ∀ σ : G E Ω, (∀ x ∈ K, IsIntegral ℤ x → (A.valuation (σ x) < 1 ↔ A.valuation x < 1)) →
       σ z = z := by
     intro σ hall
-    obtain ⟨ρ, hρK, hρ⟩ := GlobalTheory.T.exists_conj_valuationSubring_of_same_below E Ω K A (σ⁻¹ • A) (fun x hx hxi => by
+    obtain ⟨ρ, hρK, hρ⟩ := _root_.GlobalTheory.conj_places_of_same_prime_below E Ω K A (σ⁻¹ • A) (fun x hx hxi => by
       rw [smul_valuation_lt_one_iff, inv_inv]; exact (hall x hx hxi).symm)
     have hD : σ * ρ ∈ Dec (F := E) A := by
       rw [mem_Dec, mul_smul, hρ, smul_inv_smul]
     have := hz _ hD
     rw [AlgEquiv.mul_apply, hρK z hzK] at this
     exact this
-  obtain ⟨t, htK, htint, ht1, htσ⟩ := GlobalTheory.T.exists_integral_near_one_small_off_decomposition E Ω K A c hc0
-  obtain ⟨e, s, hs, he⟩ := GlobalTheory.T.exists_algebraMap_sub_eq_sum_conjugates' E Ω (t * z)
+  obtain ⟨t, htK, htint, ht1, htσ⟩ := _root_.GlobalTheory.crt_approx_integral E Ω K A c hc0
+  obtain ⟨e, s, hs, he⟩ := _root_.GlobalTheory.exists_algebraMap_sub_eq_sum_conjugates E Ω (t * z)
   refine ⟨e, ?_⟩
   have hyz : A.valuation (t * z - z) < A.valuation r := by
     have : t * z - z = (t - 1) * z := by ring

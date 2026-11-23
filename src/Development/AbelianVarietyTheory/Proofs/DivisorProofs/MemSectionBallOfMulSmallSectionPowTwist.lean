@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SmallFam
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithGlobalMaximumPrincipleOffDivisorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GeneratingPairSectionsNormBoundsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLineBundlePairSectionsMulMemNormMulStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermPairPowSectionMemAndNormPowStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.CharZeroFunctionField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithGlobalMaximumPrincipleOffDivisor
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GeneratingPairSectionsNormBounds
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLineBundlePairSectionsMulMemNormMul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermPairPowSectionMemAndNormPow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,9 +55,9 @@ namespace GlobalTheory.HSNef.MpDivTwist
 theorem mem_Bl_of_mul_pow_twist : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (D : ℕ), IsArithVar p D → ∀ (P : Pair p) (c : ℕ), GenAt P c → ∀ s : X.functionField, s ∈ P.H 0 1 → s ≠ 0 → ∀ δ : ℝ, 0 < δ → ∃ C : ℝ, 0 ≤ C ∧ ∀ (N m : ℕ) (f : X.functionField), f ∈ P.H N (-c) → f * s ^ m ∈ P.Bl N (m - c) 2 → f ∈ P.Bl N (-c) (Real.exp (δ * N + C * m + C)) := by
   intro k _ X _ p D hX P c hc s hs hs0 δ hδ
 
-  obtain ⟨n, v, ρ₁, hρ₁, hv, hcov⟩ := GlobalTheory.T.generatingPairSections_norm_bounds k X p D hX P c hc
+  obtain ⟨n, v, ρ₁, hρ₁, hv, hcov⟩ := _root_.GlobalTheory.HSNef.GenLow.gen_low k X p D hX P c hc
 
-  obtain ⟨ρ₂, hρ₂, hmax⟩ := GlobalTheory.T.arith_global_maximum_principle_off_divisor k X p D hX P s hs hs0 δ hδ
+  obtain ⟨ρ₂, hρ₂, hmax⟩ := _root_.GlobalTheory.VolBr.max_principle_global k X p D hX P s hs hs0 δ hδ
   have hnu0 : ∀ (a b : ℤ) (σ : k →+* ℂ) (y : CxPts p σ) (g : X.functionField), 0 ≤ P.nu a b σ y g := by
     intro a b σ y g
     unfold Pair.nu
@@ -65,8 +66,8 @@ theorem mem_Bl_of_mul_pow_twist : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [
   obtain ⟨B, hB⟩ : ∃ B : ℝ, Real.exp B = 2 * ρ₁⁻¹ * ρ₁⁻¹ := ⟨_, Real.exp_log (by positivity)⟩
   refine ⟨|A| + |B|, by positivity, ?_⟩
   intro N m f hf hfs
-  obtain ⟨hsm, hsmnu⟩ := GlobalTheory.T.hermPair_pow_section_mem_and_norm_pow k X p P 0 1 s hs m
-  obtain ⟨-, hfsnu⟩ := GlobalTheory.T.hermLineBundlePair_sections_mul_mem_norm_mul k X p P (N : ℤ) (-(c : ℤ)) ((m : ℤ) * 0) ((m : ℤ) * 1) f (s ^ m) hf hsm
+  obtain ⟨hsm, hsmnu⟩ := _root_.GlobalTheory.VolBr.NuPow.pow_mem_H_and_nu_pow k X p P 0 1 s hs m
+  obtain ⟨-, hfsnu⟩ := _root_.GlobalTheory.VolBr.NuMul.mul_mem_H_and_nu_mul k X p P (N : ℤ) (-(c : ℤ)) ((m : ℤ) * 0) ((m : ℤ) * 1) f (s ^ m) hf hsm
 
   have key : ∀ (σ : k →+* ℂ) (y : CxPts p σ), ρ₂ ≤ P.nu 0 1 σ y s → P.nu N (-c) σ y f ≤ 2 * ρ₂⁻¹ ^ m := by
     intro σ y hy
@@ -90,7 +91,7 @@ theorem mem_Bl_of_mul_pow_twist : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [
   have hprod : ∀ i, ∀ (σ : k →+* ℂ) (y : CxPts p σ),
       P.nu N (-c) σ y f * P.nu 0 c σ y (v i) ≤ Real.exp (δ * N) * (2 * ρ₂⁻¹ ^ m * ρ₁⁻¹) := by
     intro i
-    obtain ⟨hfv, hfvnu⟩ := GlobalTheory.T.hermLineBundlePair_sections_mul_mem_norm_mul k X p P (N : ℤ) (-(c : ℤ)) 0 (c : ℤ) f (v i) hf (hv i).1
+    obtain ⟨hfv, hfvnu⟩ := _root_.GlobalTheory.VolBr.NuMul.mul_mem_H_and_nu_mul k X p P (N : ℤ) (-(c : ℤ)) 0 (c : ℤ) f (v i) hf (hv i).1
     have e1 : ((N : ℤ) + 0) = N := by ring
     have e2 : (-(c : ℤ) + c) = 0 := by ring
     rw [e1, e2] at hfv hfvnu

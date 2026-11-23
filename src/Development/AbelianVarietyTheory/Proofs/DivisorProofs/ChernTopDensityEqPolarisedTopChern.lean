@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EndValuedForm11Coeffs
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopDegreeFormCoeffChernPolyEqPolarisedStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopDegreeFormCoeffChernPolyEqPolarised
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,6 +52,6 @@ namespace GlobalTheory.GoodTop
 theorem chernTop_eq_mixTop {n m : ℕ} (G : V n → Mat (fun _ : Unit => m) ℂ) (v : V n) :
     chernTop (MvPolynomial.X ((), n)) G v =
       (Real.pi ^ n)⁻¹ * (mixTop fun _ => curvAt (fun u => G u ()) v).re := by
-  rw [chernTop, MvPolynomial.aeval_X, GlobalTheory.T.topDegreeFormCoeff_chernPoly_eq_polarised]
+  rw [chernTop, MvPolynomial.aeval_X, _root_.GlobalTheory.GoodTop.topCoeff_chernPoly_eq_mixTop]
 
 end GlobalTheory.GoodTop

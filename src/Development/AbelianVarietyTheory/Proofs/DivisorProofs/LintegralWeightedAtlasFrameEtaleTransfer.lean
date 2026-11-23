@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtendByZeroOnSubsetApplyCoe
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralAtlasMeasureEtalePullbackLebesgueStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.EtaleEmpty
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralAtlasMeasureEtalePullbackLebesgue
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,7 +62,7 @@ theorem GlobalTheory.OTY.TwEst.lintegral_frame_transfer : ∀ (n : ℕ) (Y : Typ
     ENNReal.measurable_ofReal.comp ((hm.mul (ha.norm.pow_const 2)).mul hw)
   rw [setLIntegral_congr_fun hUm
     (g := fun y => ENNReal.ofReal (N y * ‖a y‖ ^ 2 * w y)) (fun y hy => by simp only [hNU y hy]),
-    GlobalTheory.T.lintegral_atlasMeasure_etale_pullback_lebesgue n Y ι La A U z hE _ hΦ]
+    _root_.GlobalTheory.EtaleMeasure.lintegral_mu_etale n Y ι La A U z hE _ hΦ]
   refine lintegral_congr fun x => ?_
   have hJ : 0 < A.nsq A.kap (jdet A z) x := by
     have := hE.det_ne (A.pick (x : Y)) x x.2 (A.mem_pick _)

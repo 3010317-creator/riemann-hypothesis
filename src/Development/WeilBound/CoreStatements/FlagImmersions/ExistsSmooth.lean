@@ -1,15 +1,15 @@
 module
 
-import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.RCombine
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.Birational
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.LogIntegralMultilinearStatement
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.LogIntegralMultilinear
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.RCombine
 import Development.WeilBound.CoreStatements.FlagImmersions.CombLineSmoothConjInvariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-public import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
@@ -96,7 +96,7 @@ theorem last_lin (II : IntersectionSystem) (hII : IsFullIntersectionSystem II) (
   let n : Fin (e + 1) → Fin e ⊕ Bool → ℤ :=
     Fin.snoc (fun i => Pi.single (Sum.inl i) 1)
       (Pi.single (Sum.inr false) 1 + m • Pi.single (Sum.inr true) 1)
-  obtain ⟨hexp, hperm⟩ := GlobalTheory.T.log_integral_multilinear II hII K ι P (e + 1) (Fin e ⊕ Bool) ℓ n hP hℓ
+  obtain ⟨hexp, hperm⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Top.geo_multilin II hII K ι P (e + 1) (Fin e ⊕ Bool) ℓ n hP hℓ
   have h1 := hperm (fun k => combLine ℓ (n k)) (Fin.snoc L C) 1 (fun k => smooth_comb hℓ _)
     (smooth_snoc hL hC) (by
       intro k

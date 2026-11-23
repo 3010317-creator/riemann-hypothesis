@@ -1,10 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.SameKindIsometric
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsFiniteAdelicPointLatticeEqSelfDualStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LayerProd
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsFiniteAdelicPointLatticeEqSelfDual
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsFrameOfHasSignature
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GaugeVolumeEqOfSemilinearIsometryGenusStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianSpacesSameSignatureIsometricStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsGaugeAll
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GaugeVolumeEqOfSemilinearIsometryGenus
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianSpacesSameSignatureIsometric
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.SignatureConjugationInvariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -203,7 +205,7 @@ theorem exists_isometry (hE : Formalism.HermitianLatticesTheory.IsCMUnram E) (e 
     have h3 : (J'.map e).det = e J'.det := this.symm
     rw [h3]
     exact (map_ne_zero e).2 hdet'
-  obtain ⟨γ, hγ⟩ := GlobalTheory.T.hermitian_spaces_same_signature_isometric E hE _ J (J'.map e) hJ hh hdet hde ⟨L, hL, hd⟩ ⟨Λ₁, h1, h2⟩
+  obtain ⟨γ, hγ⟩ := _root_.GlobalTheory.FlagMeas.sameKindIsometric E hE _ J (J'.map e) hJ hh hdet hde ⟨L, hL, hd⟩ ⟨Λ₁, h1, h2⟩
     fun φ => ⟨p, q, hs φ, hs' (φ.comp (e : E' →+* E))⟩
   obtain ⟨Λ, h3, h4, h5⟩ := exists_image e he J J' γ hγ L' hL' hd'
   exact ⟨γ, Λ, hγ, h3, h4, h5⟩
@@ -221,7 +223,7 @@ theorem volumeInvariant : VolumeInvariant := by
     I.J_det I'.J_det I.L (Submodule.IsLattice.of_fg I.E I.L_fg) (by simpa only [hform_eq] using I.L_dual)
     I'.L (Submodule.IsLattice.of_fg I'.E I'.L_fg) (by simpa only [hform_eq] using I'.L_dual)
     (hasSignature_all I h) (hasSignature_all I' h')
-  obtain ⟨xf, hx⟩ := GlobalTheory.T.exists_finiteAdelicPoint_lattice_eq_selfDual I Λ hΛ (by simpa only [hform_eq] using hd)
-  exact GlobalTheory.T.gaugeVolume_eq_of_semilinear_isometry_genus I I' e A xf he hn hA (hx ▸ hmem) c μf c' μf' hc hc'
+  obtain ⟨xf, hx⟩ := _root_.GlobalTheory.SelfDualPoint.exists_lamX_eq I Λ hΛ (by simpa only [hform_eq] using hd)
+  exact _root_.GlobalTheory.GaugeTransport.gaugeVol_transport I I' e A xf he hn hA (hx ▸ hmem) c μf c' μf' hc hc'
 
 end GlobalTheory.VolInvariant

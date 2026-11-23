@@ -2,7 +2,7 @@ module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.FamilyUniformisationOfAbelianVarietyUniformisatiStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.FamilyUniformisationOfAbelianVarietyUniformisati
 public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.ThetaUnifAVOfLaws
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -55,6 +55,6 @@ theorem familyUnif_of_laws : Out.Laws → N1c := by
   have hU : ThetaUnifAV :=
     thetaUnifAV_of_laws (by cases hL; assumption) (by cases hL; assumption) (by cases hL; assumption)
       (by cases hL; assumption) (by cases hL; assumption)
-  exact GlobalTheory.T.familyUniformisation_of_abelianVariety_uniformisation hU hL
+  exact _root_.GlobalTheory.familyUnif_of_thetaUnif hU hL
 
 end GlobalTheory

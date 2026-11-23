@@ -5,11 +5,13 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CartFrSgn
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.KFiniteVectorsDiscreteSeriesSmoothAbsolutelyIrre
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiscreteSeriesPureInnerProductsTensorProduct
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRealIntertwinerContractionOnePlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRealPlaceThetaObjectsTheoremARPartsStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HarishChandraModulesOn
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRealPlaceThetaObjectsTheoremARParts
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GluingLawHoldsStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LocLineOfMatches
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaModelsAreCoverDiscreteSeriesOfHarishChandraStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaVacuumCharactersRealPlacesStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EqMulProdOfPartial
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,7 +50,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EqMulProdOfPartial
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NodeAgree
 
 @[expose] public section
@@ -115,7 +116,7 @@ theorem exists_adj_glue {V W : HSp D} {S S' : D.what₂.Tau → SPar} (M : DSMod
       ellT M (fun τ => (w τ : M.H τ)) (inclT M (It (glue Ps) (PiTensorProduct.tprod ℂ v))) =
         conj (ellT M' (fun τ => (v τ : M'.H τ)) (inclT M' u)) := by
   classical
-  obtain ⟨X, hX, -, -, -, -, h3, -⟩ := GlobalTheory.T.exists_provA_discreteSeries_archimedeanRallis hC hH
+  obtain ⟨X, hX, -, -, -, -, h3, -⟩ := _root_.GlobalTheory.RealPlaceTheta.exists_record_theta hC hH
   have hB := GlobalTheory.T.thetaModels_are_coverDiscreteSeries_of_harishChandra hC hH D
   obtain ⟨χS, χT, hωd, he⟩ := hω
   have hv := fun τ => GlobalTheory.T.thetaVacuumCharacters_realPlaces D V W _ _ M M' θ ψ χS χT ω f τ _ _ hθ hωd (he τ).1 (he τ).2 hf

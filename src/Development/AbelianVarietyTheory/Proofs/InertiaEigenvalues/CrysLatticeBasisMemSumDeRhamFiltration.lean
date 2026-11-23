@@ -2,7 +2,7 @@ module
 
 public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
 public import Formalism.WeaklyAdmissibleFiltrations.StatementTor
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineFilteredDeRhamComparisonStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineFilteredDeRhamComparison
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -164,7 +164,7 @@ theorem GlobalTheory.crysLattice_basis_mem_sum_fil_dR : ∀ (l : ℕ) [Fact l.Pr
   intro l _ K P AI T V _ _ _ _ _ ρ L hcrys d b j
   have hy : ((b j : ↥L.T) : V) ⊗ₜ[ℚ_[l]] (1 : P.R.BdR) ∈ FilV (P.PD K) (LL := ℚ_[l]) (V := V) 0 :=
     ⟨((b j : ↥L.T) : V) ⊗ₜ ⟨1, (P.PD K).one_mem⟩, by simp [AlgebraTensorModule.map_tmul]⟩
-  obtain ⟨m, k, c, dd, hdd, hsum⟩ := GlobalTheory.T.crystalline_filtered_deRham_comparison l P AI T K V ρ hcrys 0 _ hy
+  obtain ⟨m, k, c, dd, hdd, hsum⟩ := _root_.GlobalTheory.SeedFil.crys_filtered l P AI T K V ρ hcrys 0 _ hy
   refine ⟨m, k, fun i => T.eD (c i), fun i r => T.eD (coord (basisQ L.T L.span b) r (dd i)),
     ?_, ?_, ?_, ?_⟩
   · intro i g

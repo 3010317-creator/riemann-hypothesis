@@ -2,9 +2,11 @@ module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.DeltaInvariantLattices
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GeomSumOneAddPrime
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HerrCocyclePolesFrobeniusQCrystallineStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HerrCocyclePolesFrobeniusQCrystalline
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HerrH1Description
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemWachOfFrobeniusGammaStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NotFullBot
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemWachOfFrobeniusGamma
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MemEurOfTeichmullerSeries
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RingsCyclotomic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -43,7 +45,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MemEurOfTeichmullerSeries
 
 @[expose] public section
 
@@ -88,13 +89,13 @@ theorem main : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonOf 
     simp only [smulA, LinearMap.smul_apply, LinearMap.id_apply]
     rw [hb, mul_smul]
   refine ⟨?_, fun h0 => ?_⟩
-  · refine GlobalTheory.T.herrCocycle_poles_frobeniusQ_crystalline D HW F l K s LL h T hT (Multiset.replicate (mx M) 0) y z ?_ hz' hc
+  · refine _root_.GlobalTheory.NL.PoleCrys.main D HW F l K s LL h T hT (Multiset.replicate (mx M) 0) y z ?_ hz' hc
     rw [Multiset.map_replicate, Multiset.prod_replicate, pow_zero]
     exact hy
   · obtain ⟨m, hm⟩ := ((GlobalTheory.NL.HerrComplexH1.herr_H1_description D HW F l K s LL h T hT).1.2 ⟨(y, z), hc⟩).1 h0
     have hm1 : y = ((HW l).W K s LL h).φD T m - m := congrArg Prod.fst hm
     have hm2 : z = ((HW l).W K s LL h).γ T m - m := congrArg Prod.snd hm
-    refine ⟨m, GlobalTheory.T.mem_wach_of_frobenius_gamma D HW F l K s LL h T hT (mx M) m ?_ ?_, hm1, hm2⟩
+    refine ⟨m, _root_.GlobalTheory.NL.CocycleInj.main D HW F l K s LL h T hT (mx M) m ?_ ?_, hm1, hm2⟩
     · exact hm1 ▸ hy
     · exact hm2 ▸ hz'
 

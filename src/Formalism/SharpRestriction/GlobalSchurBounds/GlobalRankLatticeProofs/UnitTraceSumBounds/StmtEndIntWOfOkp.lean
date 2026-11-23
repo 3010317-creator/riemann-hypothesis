@@ -2,7 +2,8 @@ module
 
 public import Formalism.SharpRestriction.GlobalSchurBounds.GlobalRankLatticeProofs.UnitTraceSumBounds.EndIntWOf
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.WfRing
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.WfSubst
+public import Formalism.PeriodIntegrals.WfSubst
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.WittSubstitution.CoeffMapMem
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.WittFrobeniusEnd
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -47,7 +48,7 @@ import Mathlib.Topology.Sheaves.Init
 namespace Formalism.MainNotions.Ext
 
 theorem substWf_holds : SubstWf :=
-  fun p _ σ f a hf ha h0 => witt_substitution p σ f a hf (fun n => ⟨0, by rw [pow_zero, one_mul]; exact ha n⟩) h0
+  fun p _ σ f a hf ha h0 => _root_.PI.WfSubstProof.wfSubst p σ f a hf (fun n => ⟨0, by rw [pow_zero, one_mul]; exact ha n⟩) h0
 
 theorem coefWfRing_holds : CoefWfRing := witt_ring_structure
 

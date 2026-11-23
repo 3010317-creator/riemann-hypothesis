@@ -4,13 +4,16 @@ public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.ArcF
 public import Development.AbelianVarietyTheory.PublishedTheorems.SemistableReduction₂.SemistableReductionSt
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ModelSystemsJointPropertiesOfLawsStatement
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.EgaHolds
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HomExtensionSemiAbelianDiscreteValuationRingStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LinearUniformisationTriplesTorsionStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.HomExtSt
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HomExtensionSemiAbelianDiscreteValuationRing
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.PelSt
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LinearUniformisationTriplesTorsion
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ModelsOfSemistableReduction
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelFamiliesExistStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.Clauses
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelFamiliesExist
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.UniformisationCompleteDVR
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHoldStatement
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.TwistedPrincipalPolarisationSectionsBaseChangeStatement
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHoldStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,7 +65,7 @@ theorem partI_of_semistableReduction_of_arcFam :
   fun S A => by
     obtain ⟨L, L2, L3, L4, L5, L6⟩ := GlobalTheory.T.all_six_abelian_scheme_laws_hold
     exact GlobalTheory.T.modelSystems_jointProperties_of_laws GlobalTheory.T.twistedPrincipalPolarisation_sections_baseChange L L2 L3 L4 L5 L6 GlobalTheory.LN.ega_holds
-      GlobalTheory.uniformisation_dvr_unconditional GlobalTheory.T.linearUniformisation_triples_torsion GlobalTheory.T.homExtension_semiAbelian_discreteValuationRing A
-      (GlobalTheory.modelsSt_of_semistableReduction S) GlobalTheory.T.siegelFamilies_exist
+      GlobalTheory.uniformisation_dvr_unconditional _root_.GlobalTheory.LN.pelSt_holds _root_.GlobalTheory.homExtension_semiAbelian_dvr A
+      (GlobalTheory.modelsSt_of_semistableReduction S) _root_.GlobalTheory.Moduli.siegelFamilies_closed
 
 end GlobalTheory

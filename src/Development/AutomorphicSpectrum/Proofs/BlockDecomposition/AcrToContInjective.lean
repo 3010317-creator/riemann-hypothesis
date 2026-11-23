@@ -1,9 +1,12 @@
 module
 
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousAlgebraUniversalPropertyStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousFunctionsPeriodRingSeparationStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.MapUSharp
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousAlgebraUniversalProperty
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.AcrisKummerUnits.TwistAcrisZeroPreservesFiltration
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousFunctionsPeriodRingSeparation
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.MapAcrFromBase
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PeriodRingBaseChangeFromUniversal
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsLocallyConstantToZModPow
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PeriodRingBaseChangeFromUniversalStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -98,19 +101,19 @@ def gam (P : PAlg l ⥤ Type) : Xi P ⟶ Xi P where
     rw [← Functor.map_comp_apply, toCont_shift])
   naturality T T' φ := Functor.Elements.hom_ext (contMap_shift φ.hom)
 
-def eta₀ (ε : Eps l) : (((base l).cont ℤ_[l]).A)ˣ := (GlobalTheory.T.continuous_algebra_universal_property ε).choose
+def eta₀ (ε : Eps l) : (((base l).cont ℤ_[l]).A)ˣ := (_root_.GlobalTheory.CompanionTheory.ContUniv.main ε).choose
 
 theorem eta₀_sharp (ε : Eps l) : ((base l).cont ℤ_[l]).sharp (eta₀ ε) = 1 :=
-  (GlobalTheory.T.continuous_algebra_universal_property ε).choose_spec.1
+  (_root_.GlobalTheory.CompanionTheory.ContUniv.main ε).choose_spec.1
 
 theorem eta₀_shift (ε : Eps l) :
     PAlg.Hom.f (contShift (base l)) (eta₀ ε) = ((base l).cont ℤ_[l]).s (ε.e 0) * eta₀ ε :=
-  (GlobalTheory.T.continuous_algebra_universal_property ε).choose_spec.2.1
+  (_root_.GlobalTheory.CompanionTheory.ContUniv.main ε).choose_spec.2.1
 
 theorem eta₀_univ (ε : Eps l) (A t : PAlg l) (ht : t.IsTest) (φ : A ⟶ t) (u : (t.A)ˣ) (hu : t.sharp u = 1) :
     ∃! ψ : A.cont ℤ_[l] ⟶ t, A.toCont ℤ_[l] ≫ ψ = φ ∧
       PAlg.Hom.f ψ (PAlg.Hom.f (contMap A.fromBase ℤ_[l]) (eta₀ ε)) = u :=
-  (GlobalTheory.T.continuous_algebra_universal_property ε).choose_spec.2.2 A t ht φ u hu
+  (_root_.GlobalTheory.CompanionTheory.ContUniv.main ε).choose_spec.2.2 A t ht φ u hu
 
 def eta (ε : Eps l) (A : PAlg l) : ((A.cont ℤ_[l]).A)ˣ :=
   Units.map (PAlg.Hom.f (contMap A.fromBase ℤ_[l])).toMonoidHom (eta₀ ε)
@@ -175,7 +178,7 @@ theorem map_mem_map {A B : PAlg l} (f : A ⟶ B) (n : ℕ) (𝔞 : Ideal ((base 
 theorem fixed_const (A : PAlg l) (n : ℕ) (𝔞 : Ideal ((base l).Acr n)) {x : (A.cont ℤ_[l]).Acr n}
     (hx : x ∈ 𝔞.map (mapAcr (A.cont ℤ_[l]).fromBase n)) (hg : mapAcr (contShift A) n x = x) :
     ∃ m ∈ 𝔞.map (mapAcr A.fromBase n), mapAcr (A.toCont ℤ_[l]) n m = x := by
-  obtain ⟨hlc, hinj, -⟩ := GlobalTheory.T.continuous_functions_period_ring_separation A n
+  obtain ⟨hlc, hinj, -⟩ := _root_.GlobalTheory.CompanionTheory.ContAcr.acr_cont A n
   have hper : ∀ z, mapAcr (A.evCont z) n x = mapAcr (A.evCont 0) n x :=
     GlobalTheory.CompanionTheory.PadicShift.eq_of_shift_invariant l _ (hlc x) fun z => by
       rw [← acr_ev_shift, hg]
@@ -187,7 +190,7 @@ theorem fixed_const (A : PAlg l) (n : ℕ) (𝔞 : Ideal ((base l).Acr n)) {x : 
 theorem shift_surj (A : PAlg l) (n : ℕ) (𝔞 : Ideal ((base l).Acr n)) {x : (A.cont ℤ_[l]).Acr n}
     (hx : x ∈ 𝔞.map (mapAcr (A.cont ℤ_[l]).fromBase n)) :
     ∃ y ∈ 𝔞.map (mapAcr (A.cont ℤ_[l]).fromBase n), mapAcr (contShift A) n y - y = x := by
-  obtain ⟨hlc, hinj, hex⟩ := GlobalTheory.T.continuous_functions_period_ring_separation A n
+  obtain ⟨hlc, hinj, hex⟩ := _root_.GlobalTheory.CompanionTheory.ContAcr.acr_cont A n
   let f : ℤ_[l] → ↥(𝔞.map (mapAcr A.fromBase n)) := fun z =>
     ⟨mapAcr (A.evCont z) n x, map_mem_map _ n 𝔞 hx⟩
   have hf : IsLocallyConstant f := by
@@ -222,7 +225,7 @@ variable {O : Type} [CommRing O] (F : Fn O) (κ : O →+* OC l) (ε : Eps l) (k 
 theorem mem_step (r : ℕ) (T : (F.pt κ).Elements) (x : T.1.Acr n) :
     x ∈ (((flt F κ ε k n ρ hρ).comap (gE F κ k n)).S r).S T ↔
       x ∈ (fil (DD k (base l) n) (ρ r)).map (mapAcr T.1.fromBase n) := by
-  rw [← (GlobalTheory.T.period_ring_base_change_from_universal T.1 n).2.2.2.2.1 k (ρ r)]
+  rw [← (_root_.GlobalTheory.CompanionTheory.AcrMod.acr_modp T.1 n).2.2.2.2.1 k (ρ r)]
   rfl
 
 theorem step_fixed (T : (F.pt κ).Elements) (r : ℕ) (x : (T.1.cont ℤ_[l]).Acr n)

@@ -1,9 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdIPowLe
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFiniteProductOrientedBoundedPrismsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrismHomMapIdealEqStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RingHomIsPushoutOfPiComponentsStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.InvertibleSpanSingleton
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFiniteProductOrientedBoundedPrisms
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrismHomMapIdealEq
+public import Mathlib.Algebra.Category.Ring.Basic
+public import Mathlib.CategoryTheory.Limits.Shapes.Pullback.IsPullback.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RingHomIsPushoutOfPiComponents
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -128,16 +131,16 @@ theorem prodStable : ∀ (l : ℕ) [Fact l.Prime] (R : Type) [CommRing R] (n : �
     Function.Bijective (fun (x : Q.A) (i : Fin n) => (π i).f x) → ∀ (B : Obj l R) (h : Hom B Q),
     (∀ i, Stable ((π i).comp h)) → Stable h := by
   intro l _ R _ n C hC Q π hbij B h hs
-  have hQI : ∀ i, Q.I.map (π i).f = (C i).I := fun i => GlobalTheory.T.prism_hom_map_ideal_eq l R Q (C i) (π i)
+  have hQI : ∀ i, Q.I.map (π i).f = (C i).I := fun i => _root_.GlobalTheory.Prism.Rigid.map_I_eq l R Q (C i) (π i)
   refine ⟨fun m => ?_, fun B' k => ?_⟩
   · exact flat_of_pi (qmap h m) (fun i => qmap (π i) m) (qmap_pi_bij π hbij hQI m)
       fun i => by rw [← qmap_comp]; exact (hs i).flat m
   · choose C' k' h' hpo using fun i => (hs i).po B' k
     have hC' : ∀ i, ∃ t, (C' i).I = Ideal.span {t} := fun i => by
       obtain ⟨t, ht⟩ := hC i
-      exact ⟨(k' i).f t, by rw [← GlobalTheory.T.prism_hom_map_ideal_eq l R _ _ (k' i), ht, Ideal.map_span, Set.image_singleton]⟩
-    obtain ⟨Q', π', hbij', -, huniv⟩ := GlobalTheory.T.exists_finite_product_oriented_boundedPrisms l R n C' hC'
-    have hQ'I : ∀ i, Q'.I.map (π' i).f = (C' i).I := fun i => GlobalTheory.T.prism_hom_map_ideal_eq l R Q' (C' i) (π' i)
+      exact ⟨(k' i).f t, by rw [← _root_.GlobalTheory.Prism.Rigid.map_I_eq l R _ _ (k' i), ht, Ideal.map_span, Set.image_singleton]⟩
+    obtain ⟨Q', π', hbij', -, huniv⟩ := _root_.GlobalTheory.Prism.finite_product_oriented l R n C' hC'
+    have hQ'I : ∀ i, Q'.I.map (π' i).f = (C' i).I := fun i => _root_.GlobalTheory.Prism.Rigid.map_I_eq l R Q' (C' i) (π' i)
     obtain ⟨K, hK⟩ := huniv Q fun i => (k' i).comp (π i)
     obtain ⟨H, hH⟩ := huniv B' h'
     have hinj : ∀ {X : Obj l R} (a b : Hom X Q'), (∀ i, (π' i).comp a = (π' i).comp b) → a = b :=
@@ -148,7 +151,7 @@ theorem prodStable : ∀ (l : ℕ) [Fact l.Prime] (R : Type) [CommRing R] (n : �
         _ = (h' i).comp k := (hpo i).comm
         _ = ((π' i).comp H).comp k := by rw [hH i]
         _ = (π' i).comp (H.comp k) := Hom.ext' rfl
-    · refine GlobalTheory.T.ringHom_isPushout_of_pi_components (qmap h m) (qmap k m) (qmap K m) (qmap H m) (fun i => qmap (π i) m)
+    · refine _root_.GlobalTheory.isPushout_of_pi_components (qmap h m) (qmap k m) (qmap K m) (qmap H m) (fun i => qmap (π i) m)
         (fun i => qmap (π' i) m) (fun i => qmap (k' i) m) (fun i => qmap (h' i) m)
         (qmap_pi_bij π hbij hQI m) (qmap_pi_bij π' hbij' hQ'I m) (fun i => ?_) (fun i => ?_) (fun i => ?_)
       · rw [← qmap_comp, ← qmap_comp, hK i]

@@ -1,9 +1,11 @@
 module
 
 public import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.TranslateProduct
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfOddEllipticOfTendstoStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdKernelMultiplierTranslateNegStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TendstoCubeMulDerivWeierstrassPNegTwoStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.SpecialFunctions.Elliptic.Weierstrass
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfOddEllipticOfTendsto
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdKernelMultiplierTranslateNeg
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TendstoCubeMulDerivWeierstrassPNegTwo
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,7 +68,7 @@ theorem derivWeierstrassP_mul_prod_translate_kernel :
   intro L α S hα hst hS hev z hz
   have hper : ∀ z l, l ∈ L.lattice → L.derivWeierstrassP (z + l) = L.derivWeierstrassP z :=
     fun z l hl => L.derivWeierstrassP_add_coe z ⟨l, hl⟩
-  obtain ⟨k1, k2⟩ := GlobalTheory.T.prod_kernel_multiplier_translate_neg L α S L.derivWeierstrassP hS hst hper
+  obtain ⟨k1, k2⟩ := _root_.GlobalTheory.KerPerm.prod_ker_translate_neg L α S L.derivWeierstrassP hS hst hper
   have hdiff : ∀ w, w ∉ L.lattice → DifferentiableAt ℂ L.derivWeierstrassP w := fun w hw =>
     (L.analyticOnNhd_derivWeierstrassP w hw).differentiableAt
   have hcancel : ∀ w : ℂ, α * (w / α) = w := fun w => mul_div_cancel₀ w hα
@@ -81,7 +83,7 @@ theorem derivWeierstrassP_mul_prod_translate_kernel :
     rw [add_sub_cancel_right] at h4
     exact hw h4
   set c : ℂ := ∏ t ∈ S, L.derivWeierstrassP t with hc
-  have key := GlobalTheory.T.eq_zero_of_odd_elliptic_of_tendsto' L
+  have key := _root_.GlobalTheory.eq_zero_of_odd_elliptic_of_tendsto L
     (fun w => L.derivWeierstrassP (w / α) * ∏ t ∈ S, L.derivWeierstrassP (w / α + t)
       - c * α ^ 3 * L.derivWeierstrassP w) ?_ ?_ ?_ ?_ (α * z) hz
   · have e : α * z / α = z := mul_div_cancel_left₀ z hα
@@ -109,7 +111,7 @@ theorem derivWeierstrassP_mul_prod_translate_kernel :
     simp only [e1]
     rw [neg_div, L.derivWeierstrassP_neg, L.derivWeierstrassP_neg]
     ring
-  · have c0 := GlobalTheory.T.tendsto_cube_mul_derivWeierstrassP_neg_two L
+  · have c0 := _root_.GlobalTheory.CMModel.tendsto_cube_mul_derivWeierstrassP L
     have tdiv : Filter.Tendsto (fun w : ℂ => w / α) (𝓝 0) (𝓝 0) := by
       have : Continuous (fun w : ℂ => w / α) := continuous_id.div_const α
       simpa using this.tendsto 0

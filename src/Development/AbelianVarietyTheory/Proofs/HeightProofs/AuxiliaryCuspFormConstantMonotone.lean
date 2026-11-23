@@ -13,11 +13,11 @@ public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.Biration
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.CompSplitRecord
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.CuspEqZeroOfGenericValues
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.GenFrExAndGenFromTest
-public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.PageHypothesesAtCuspStatement
+public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.PageHypothesesAtCusp
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.IInfLeOfCombBound
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.LowerBoundConstAtLargeMultipleNumericalBounds
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.SubsingletonSectionsOfNoLeadingTerm
 public import Formalism.LocalToGlobal.ProjectiveLattices.CompFin
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.LowerBoundConstAtLargeMultipleNumericalBounds
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -125,7 +125,7 @@ theorem exists_primeData_heights_of
   obtain ⟨hG, hT⟩ := GlobalTheory.Reg.genFrEx_and_genFromTest _ _ _ _ (T.Q.Xo j) T.Q.c
   haveI : Finite (Comp (T.Q.Xo j) T.Q.c) := CompFin.finite_comp _ _
   letI : Fintype (Comp (T.Q.Xo j) T.Q.c) := Fintype.ofFinite _
-  obtain ⟨g0, hcur⟩ := GlobalTheory.T.page_hypotheses_at_cusp D T h j hj large₂ H C2 A2 CT ka wL wF Tn nP nW h0 S nus hG hP hC G hGen hEta
+  obtain ⟨g0, hcur⟩ := _root_.GlobalTheory.RunJoin.curveHyp_of_run D T h j hj large₂ H C2 A2 CT ka wL wF Tn nP nW h0 S nus hG hP hC G hGen hEta
   have hinj := GlobalTheory.Reg.genValInj_record D T h j hj hG
   have hspl := GlobalTheory.Reg.compSplit_record D T h j hj hG
   have hbirA := fun ka wL wF G => (GlobalTheory.Reg.birSt_of_ratios_trdeg D T h j hj hG ka wL wF G).2

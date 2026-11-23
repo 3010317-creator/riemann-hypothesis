@@ -6,9 +6,9 @@ public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GaloisSlTwoActionModularFunctionRingOfCongrStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GammaLeOfDvdStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemModularFunctionRingOverIffHasSomeLevelOverStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GaloisSlTwoActionModularFunctionRingOfCongr
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GammaLeOfDvd
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemModularFunctionRingOverIffHasSomeLevelOver
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,16 +61,16 @@ theorem reciprocity_large_level : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [I
     exact hb (T.io_inj (by rw [h, map_zero]))
   have hf : f = T.io a / T.io b := by
     rw [eq_div_iff hbK, hab]
-  obtain ⟨Na, wa, hNa, hLa⟩ := ((GlobalTheory.T.mem_modularFunctionRingOver_iff_hasSomeLevelOver ε.range).1 a).1 a.2
-  obtain ⟨Nb, wb, hNb, hLb⟩ := ((GlobalTheory.T.mem_modularFunctionRingOver_iff_hasSomeLevelOver ε.range).1 b).1 b.2
+  obtain ⟨Na, wa, hNa, hLa⟩ := ((_root_.GlobalTheory.FN.mem_ring_iff_inR ε.range).1 a).1 a.2
+  obtain ⟨Nb, wb, hNb, hLb⟩ := ((_root_.GlobalTheory.FN.mem_ring_iff_inR ε.range).1 b).1 b.2
   refine ⟨Na * Nb, Nat.mul_pos hNa hNb, ?_⟩
   intro N hN hdiv s d hs γ γ' hc
   have hLa' : Lv ε.range N wa a :=
-    GlobalTheory.T.lv_mono_of_dvd_of_le ε.range Na N wa wa a hN (dvd_trans (dvd_mul_right Na Nb) hdiv) le_rfl hLa
+    _root_.GlobalTheory.FN.lv_mono ε.range Na N wa wa a hN (dvd_trans (dvd_mul_right Na Nb) hdiv) le_rfl hLa
   have hLb' : Lv ε.range N wb b :=
-    GlobalTheory.T.lv_mono_of_dvd_of_le ε.range Nb N wb wb b hN (dvd_trans (dvd_mul_left Nb Na) hdiv) le_rfl hLb
-  have ra := GlobalTheory.T.galois_slTwo_action_modularFunctionRing_of_congr Ω ε T a N wa hN hLa' s d hs γ γ' hc
-  have rb := GlobalTheory.T.galois_slTwo_action_modularFunctionRing_of_congr Ω ε T b N wb hN hLb' s d hs γ γ' hc
+    _root_.GlobalTheory.FN.lv_mono ε.range Nb N wb wb b hN (dvd_trans (dvd_mul_left Nb Na) hdiv) le_rfl hLb
+  have ra := _root_.GlobalTheory.FN.gal_sl_io_of_cong Ω ε T a N wa hN hLa' s d hs γ γ' hc
+  have rb := _root_.GlobalTheory.FN.gal_sl_io_of_cong Ω ε T b N wb hN hLb' s d hs γ γ' hc
   rw [hf, map_div₀, map_div₀, map_div₀, map_div₀, ra, rb]
 
 end GlobalTheory.FN

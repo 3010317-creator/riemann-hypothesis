@@ -2,12 +2,17 @@ module
 
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegrableSqPowMulIteratedFDerivSchwartzStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralNormPowMulLeSqrtWeightedSqStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormIteratedFDerivIteratedFDerivStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzIteratedFDerivTendstoZeroCocompactStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzWeightedSobolevOfFinrankZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightedLintegralSobolevPointwiseStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegrableSqPowMulIteratedFDerivSchwartz
+public import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Mathlib.MeasureTheory.Group.Measure
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralNormPowMulLeSqrtWeightedSq
+public import Mathlib.Analysis.Calculus.ContDiff.FTaylorSeries
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormIteratedFDerivIteratedFDeriv
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzIteratedFDerivTendstoZeroCocompact
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzWeightedSobolevOfFinrankZero
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightedLintegralSobolevPointwise
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -68,9 +73,9 @@ theorem schwartz_pow_mul_iteratedFDeriv_le_sqrt_sum_weighted_sq :
     rcases Nat.eq_zero_or_pos (finrank ℝ E) with h | h
     · exact Or.inl h
     · exact Or.inr ⟨finrank ℝ E - 1, by omega⟩
-  · exact GlobalTheory.T.schwartz_weighted_sobolev_bound_of_finrank_eq_zero μ hd k n
-  obtain ⟨C5, hC5, h5⟩ := GlobalTheory.T.ofReal_norm_pow_mul_le_lintegral_iteratedFDeriv μ m hm
-  obtain ⟨C6, hC6, h6⟩ := GlobalTheory.T.exists_lintegral_norm_pow_mul_le_sqrt_weighted_sq (F := ContinuousMultilinearMap ℝ (fun _ : Fin (m + 1) => E) (ContinuousMultilinearMap ℝ (fun _ : Fin n => E) ℂ)) μ
+  · exact _root_.GlobalTheory.schwartz_weighted_sobolev_of_finrank_zero μ hd k n
+  obtain ⟨C5, hC5, h5⟩ := _root_.GlobalTheory.weighted_lintegral_sobolev_pointwise μ m hm
+  obtain ⟨C6, hC6, h6⟩ := _root_.GlobalTheory.lintegral_norm_pow_mul_le_sqrt_weighted_sq (F := ContinuousMultilinearMap ℝ (fun _ : Fin (m + 1) => E) (ContinuousMultilinearMap ℝ (fun _ : Fin n => E) ℂ)) μ
   refine ⟨max (n + (m + 1)) (k + finrank ℝ E + 1), (C5 * C6).toReal, ENNReal.toReal_nonneg, ?_⟩
   intro f x
   set G : E → ContinuousMultilinearMap ℝ (fun _ : Fin n => E) ℂ := iteratedFDeriv ℝ n f with hGdef
@@ -82,12 +87,12 @@ theorem schwartz_pow_mul_iteratedFDeriv_le_sqrt_sum_weighted_sq :
   have hdec : ∀ j ≤ m, Tendsto (iteratedFDeriv ℝ j G) (cocompact E) (𝓝 0) := by
     intro j _
     rw [tendsto_zero_iff_norm_tendsto_zero]
-    have := tendsto_zero_iff_norm_tendsto_zero.1 (GlobalTheory.T.schwartz_iteratedFDeriv_tendsto_zero_cocompact' f (n + j))
-    simpa [G, GlobalTheory.T.norm_iteratedFDeriv_iteratedFDeriv'] using this
+    have := tendsto_zero_iff_norm_tendsto_zero.1 (_root_.GlobalTheory.schwartz_iteratedFDeriv_tendsto_zero_cocompact f (n + j))
+    simpa [G, _root_.GlobalTheory.norm_iteratedFDeriv_iteratedFDeriv] using this
   have hcont : Continuous (iteratedFDeriv ℝ (m + 1) G) :=
     hG.continuous_iteratedFDeriv (by exact_mod_cast le_top)
   have hn : ∀ z, ‖iteratedFDeriv ℝ (m + 1) G z‖ = ‖iteratedFDeriv ℝ (n + (m + 1)) f z‖ :=
-    fun z => GlobalTheory.T.norm_iteratedFDeriv_iteratedFDeriv' _ _ _ z
+    fun z => _root_.GlobalTheory.norm_iteratedFDeriv_iteratedFDeriv _ _ _ z
   have e1 := h5 G hG hdec k x
   have e2 := h6 _ hcont k
   simp only [hn] at e1 e2
@@ -95,10 +100,10 @@ theorem schwartz_pow_mul_iteratedFDeriv_le_sqrt_sum_weighted_sq :
   set b := ∫ z, (‖z‖ ^ (k + finrank ℝ E + 1) * ‖iteratedFDeriv ℝ (n + (m + 1)) f z‖) ^ 2 ∂μ
   have ha : ∫⁻ z, ENNReal.ofReal ((‖z‖ ^ k * ‖iteratedFDeriv ℝ (n + (m + 1)) f z‖) ^ 2) ∂μ
       = ENNReal.ofReal a :=
-    (ofReal_integral_eq_lintegral_ofReal (GlobalTheory.T.integrable_sq_norm_pow_mul_iteratedFDeriv_schwartz μ f _ _) (Eventually.of_forall fun z => sq_nonneg _)).symm
+    (ofReal_integral_eq_lintegral_ofReal (_root_.GlobalTheory.integrable_sq_pow_mul_iteratedFDeriv_schwartz μ f _ _) (Eventually.of_forall fun z => sq_nonneg _)).symm
   have hb : ∫⁻ z, ENNReal.ofReal ((‖z‖ ^ (k + finrank ℝ E + 1) * ‖iteratedFDeriv ℝ (n + (m + 1)) f z‖) ^ 2) ∂μ
       = ENNReal.ofReal b :=
-    (ofReal_integral_eq_lintegral_ofReal (GlobalTheory.T.integrable_sq_norm_pow_mul_iteratedFDeriv_schwartz μ f _ _) (Eventually.of_forall fun z => sq_nonneg _)).symm
+    (ofReal_integral_eq_lintegral_ofReal (_root_.GlobalTheory.integrable_sq_pow_mul_iteratedFDeriv_schwartz μ f _ _) (Eventually.of_forall fun z => sq_nonneg _)).symm
   have ha0 : 0 ≤ a := integral_nonneg fun z => sq_nonneg _
   have hb0 : 0 ≤ b := integral_nonneg fun z => sq_nonneg _
   rw [ha, hb, ← ENNReal.ofReal_add ha0 hb0, ENNReal.ofReal_rpow_of_nonneg (by positivity) (by norm_num)] at e2

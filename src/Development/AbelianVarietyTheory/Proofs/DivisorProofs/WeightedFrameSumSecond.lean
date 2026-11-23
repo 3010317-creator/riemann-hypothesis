@@ -3,9 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.UnifOfSpaceEq
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.TamagawaSpecialUnitary
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsProbabilityMeasureMuPart
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MassBoundOfTamagawaUnitaryStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormOneTorusClassNumberBoundProofStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightedFrameSumPositiveStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MassBoundOfTamagawaUnitary
+public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.DefiniteBound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormOneTorusClassNumberBoundProof
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightedFrameSumPositive
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,6 +50,6 @@ open scoped ENNReal
 namespace GlobalTheory
 
 theorem supPetersson_of_tamagawa : GlobalTheory.Published.TamagawaSpecialUnitary → ∀ (D : D7) (j : ℕ) (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host D.host.E) (Dw : Datum H) (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ D.R.r) (dict : ∀ σ : c.F →+* ℂ, GA D (D.sp.W j) → Σ k, Frame ((U σ).X k).Ψ D.R.r), Laws D j Xo c U dict → ∀ σ, GoodEmb c σ → ∀ (la : ∀ k, Wt ((U σ).X k).Ψ D.R.r) (w : ℝ), 0 < w → (∀ k, (∑ τ, ((U σ).X k).spread (la k) τ) ≤ w) → (∀ k, ∀ γ ∈ ((U σ).X k).Γ, ((U σ).X k).χ (la k) γ = 1) → ∀ P ∈ holSub (U σ).X la, supE (U σ).X la P ^ 2 ≤ ENNReal.ofReal (supConst D.host.E D.R.r D.host.d l.M w) * petE (D.sp.W j) (dict σ) (muQ1 (D.sp.W j)) la P ^ 2 := fun hT =>
-  GlobalTheory.T.weighted_frame_sum_positive (GlobalTheory.T.mass_bound_of_tamagawa_unitary hT) GlobalTheory.T.normOneTorusClassNumberBound_proof
+  _root_.GlobalTheory.supPet_principal (_root_.GlobalTheory.UCls.massBound_of_tamagawa hT) _root_.GlobalTheory.UCls.torusBound
 
 end GlobalTheory

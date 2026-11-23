@@ -2,14 +2,17 @@ module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.SplittingFieldLattices.BasisB
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.GlobalSerreRelations.GlobSerreSt
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ChartDividedPowersGradedConstantStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.SEqOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ChartDividedPowersGradedConstant
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ChartIsGoodStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ChartTensorBaseCompatStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.SplittingFieldLattices.GrSplit
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ChartTensorBaseCompat
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsChartFromCoordinates
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsChartFromCoordinatesStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GradedSplitRangeIsoOfIntervalStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ScalarMultiplicationShiftsFiltrationStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SheafFiltrationPropertyStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.CapOComp
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GradedSplitRangeIsoOfInterval
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ScalarMultiplicationShiftsFiltration
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SheafFiltrationProperty
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -166,8 +169,8 @@ theorem chart_tens : ∀ {O A : Type} [CommRing O] [CommRing A] [Algebra O A] {I
   have hQ' : ∀ T, TS γ q l s {V} T → InU V T := by
     rintro T ⟨-, V', rfl, h⟩
     exact h
-  have pO := (GlobalTheory.T.chart_divided_powers_graded_constant cO (GlobalTheory.T.chart_is_good cO) (TO q l s {V}) hQ hD).1
-  have pA := (GlobalTheory.T.chart_divided_powers_graded_constant cA (GlobalTheory.T.chart_is_good cA) (TS γ q l s {V}) hQ' hD').1
+  have pO := (_root_.GlobalTheory.CompanionTheory.ChartFil.chart_grConst cO (GlobalTheory.T.chart_is_good cO) (TO q l s {V}) hQ hD).1
+  have pA := (_root_.GlobalTheory.CompanionTheory.ChartFil.chart_grConst cA (GlobalTheory.T.chart_is_good cA) (TS γ q l s {V}) hQ' hD').1
   have bot1 : ∀ r : ℕ, r ≠ 0 → cO.D.pdPow r = ⊥ := fun r hr => by
     rw [pO, dividedPowerFiltration_dividedPowersBot' O hr, Ideal.map_bot]
   have mA : ∀ (r : ℕ) (z : A ⊗[O] Γ(X, V)), eA z ∈ cA.D.pdPow r ↔
@@ -195,7 +198,7 @@ theorem chart_tens : ∀ {O A : Type} [CommRing O] [CommRing A] [Algebra O A] {I
         exact bot1 _ (by omega)) eO hiO
   choose θ hθ using fa
   obtain ⟨π, hs, hk, hπ⟩ := pi_ex (sFil (TS γ q l s {V}) (t - c)) (sFil (TS γ q l s {V}) t) ⟨cA.D, hD'⟩ eA (mA _) (mA _)
-  refine GlobalTheory.T.graded_split_range_iso_of_interval (O := O) (A := A) (G := Γ(X, V)) γ m S (t - c).toNat t.toNat θ ?_ π hs hk _ ?_ ?_
+  refine _root_.GlobalTheory.CompanionTheory.GrPiece.main (O := O) (A := A) (G := Γ(X, V)) γ m S (t - c).toNat t.toNat θ ?_ π hs hk _ ?_ ?_
   · intro i hi
     by_cases hu : (t - c).toNat ≤ (i : ℕ)
     · refine sub_of_top _ _ _ ?_
@@ -231,7 +234,7 @@ theorem bc_single : KH.LocBc → KH.PolyTf → BcOn True := by
   obtain ⟨cO, eO, tfO, hiO, htO, hevO⟩ := GlobalTheory.T.exists_chart_from_coordinates (O := O) (R := O) (dividedPowersBot O) l s hO q
     (Ideal.Quotient.mk ⊥) (fun _ => rfl) cV
   obtain ⟨cA, eA, tfA, hiA, htA, hevA⟩ := GlobalTheory.T.exists_chart_from_coordinates (O := O) (R := A) γ l s hA q (κA O I) (fun _ => rfl) cV
-  obtain ⟨e₀, he₀⟩ := GlobalTheory.T.chart_tensor_base_compat γ q cV cO cA eO eA hiO hiA hevO hevA
+  obtain ⟨e₀, he₀⟩ := _root_.GlobalTheory.CompanionTheory.BcMor.chart_mor γ q cV cO cA eO eA hiO hiA hevO hevA
   have hQ : ∀ T, TO q l s {V} T → InU V T := by
     rintro T ⟨-, V', rfl, h⟩
     exact h
@@ -251,12 +254,12 @@ theorem bc_single : KH.LocBc → KH.PolyTf → BcOn True := by
       rw [← htO, ← htA]; exact he₀ _
     change (σ'.hom.φ (e₀.φ (cO.t i)) - σ.hom.φ (e₀.φ (cO.t i)) : T.obj.B) = σ'.hom.φ (cA.t i) - σ.hom.φ (cA.t i)
     rw [h1]
-  have fil := GlobalTheory.T.sheaf_filtration_property (TO q l s {V})
-  have fil' := GlobalTheory.T.sheaf_filtration_property (TS γ q l s {V})
+  have fil := _root_.GlobalTheory.CompanionTheory.DPFil.isFil_sFil (TO q l s {V})
+  have fil' := _root_.GlobalTheory.CompanionTheory.DPFil.isFil_sFil (TS γ q l s {V})
   obtain ⟨PO, hPO⟩ := hPoly (dividedPowersBot O) q (Ideal.Quotient.mk ⊥) l s {V}
   obtain ⟨PA, hPA⟩ := hPoly γ q (κA O I) l s {V}
   have lem : ∀ (i : ℕ) (a : A), a ∈ pdP γ i → ∀ t : ℤ, (smO γ q l s {V}).LeC a (sFil _ (t - i)) (sFil _ t) :=
-    fun i a h t => GlobalTheory.T.scalar_multiplication_shifts_filtration γ q l s {V} i a h t
+    fun i a h t => _root_.GlobalTheory.CompanionTheory.LecShift.leC_shift γ q l s {V} i a h t
   refine hLoc (smO γ q l s {V}) PO PA E E' e he (fun _ => Function.injective_id) S.N S.ν
     (fun i t => sFil _ (t - c - i)) (fun i t => sFil _ (t - i)) (fun t => sFil _ (t - c)) (fun t => sFil _ t) r'
     (fun i => ⟨fun t T => fil.anti (by omega) T, fun t ht => crit_of PO (hPO (t - c - i) (by omega)).1 rfl

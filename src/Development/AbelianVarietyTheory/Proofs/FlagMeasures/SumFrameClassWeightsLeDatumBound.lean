@@ -2,11 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ClsOmNonneg
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PerRowC
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdaptedNormalFormNormsMinorsEqLabelProofStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EmbeddedDatumOfTermDefiniteSpaceStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsStarStableIdealAbsorbingMinorsStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdaptedNormalFormNormsMinorsEqLabelProof
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.AdaptSelf
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EmbeddedDatumOfTermDefiniteSpace
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NormalFormDualOrthogonalLast
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsStarStableIdealAbsorbingMinors
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagFrameVectorMemCommonSubspace
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryHostFieldArithmeticConditionsProofStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowsMeanC
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryHostFieldArithmeticConditionsProof
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,14 +57,14 @@ namespace GlobalTheory.TypeAsm.PerRow
 
 theorem sum_clsOm_le_datBd : ∀ (D : D7) (large₂ : SizeData₂ D) (X : HidaSetting D) (Y : Full X) (u : D.what₂.Word), Std D large₂ → ∀ (W : Submodule D.host.E (VS D).V) (HW : Formalism.HermitianLatticeCounting.S6.HermSpace D.host.E W), GlobalTheory.DegAsm.IsEmb (F0 X u) HW W.subtype → ∀ (Λ : Submodule (𝓞 D.host.E) (VS D).V) (j x : ℕ) (δ : ℕ → D.host.E) (d : Submodule (𝓞 D.host.E) W × Submodule (𝓞 D.host.E) (W × W)) (N : GTu Y u → GlobalTheory.DegCnt.NF (HV D) D.R.rS) (A : Finset (GTu Y u)), A.Nonempty → (∀ t ∈ A, t ∈ relSet Y u ∧ t.lam = Λ ∧ jT t = j ∧ labT t = δ ∧ AdT t (N t) ∧ (N t).IsTerm (gS D) Λ ∧ (N t).gI (gS D) Λ = x ∧ GlobalTheory.DegAsm.datOf (F0 X u) (Ft t) W.subtype (gS D) Λ = d) → ∑ b ∈ A.image (frCls Λ), clsOm Y u Λ b ≤ GlobalTheory.DegAsm.datBd D.host.E D.R.k D.R.rS (k2Del D j δ) (DbL D j δ) (NT D u) x := by
   intro D large₂ X Y u hStd W HW he Λ j x δ d N A hA hT
-  obtain ⟨hK, -, -, -, hf, -, -, -, -, -, hV, hg2, -⟩ := GlobalTheory.T.unitaryHostFieldArithmeticConditions D large₂ hStd
+  obtain ⟨hK, -, -, -, hf, -, -, -, -, -, hV, hg2, -⟩ := _root_.GlobalTheory.TypeAsm.hostC D large₂ hStd
   have hgS : 1 ≤ gS D := by omega
   obtain ⟨t₀, ht₀⟩ := hA
   obtain ⟨-, -, hj0, hδ0, hAd0, hTm0, hg0, -⟩ := hT t₀ ht₀
-  obtain ⟨-, -, hLDel, hLDb, -⟩ := GlobalTheory.T.adaptedNormalForm_normsMinors_eq_label D large₂ X Y u hStd t₀ (N t₀) hAd0
-  obtain ⟨-, hx1, -, -, hfW⟩ := GlobalTheory.T.embeddedDatum_of_term_definiteSpace D.host.E (VS D).V W (HV D) HW W.subtype hK D.R.rS (F0 X u) (Ft t₀)
+  obtain ⟨-, -, hLDel, hLDb, -⟩ := _root_.GlobalTheory.TypeAsm.labC D large₂ X Y u hStd t₀ (N t₀) hAd0
+  obtain ⟨-, hx1, -, -, hfW⟩ := _root_.GlobalTheory.DegAsm.isDat_datOf D.host.E (VS D).V W (HV D) HW W.subtype hK D.R.rS (F0 X u) (Ft t₀)
     (dI D) (N t₀) (gS D) Λ hgS he hAd0 hTm0
-  obtain ⟨-, -, hDb1, hDel1, -⟩ := GlobalTheory.T.exists_star_stable_ideal_absorbing_minors D.host.E (VS D).V (HV D) hK D.R.rS (N t₀) (gS D) Λ hgS hTm0
+  obtain ⟨-, -, hDb1, hDel1, -⟩ := _root_.GlobalTheory.DegCnt.Absorb.exists_absorbing_ideal D.host.E (VS D).V (HV D) hK D.R.rS (N t₀) (gS D) Λ hgS hTm0
   rw [hg0] at hx1
   rw [hLDel, hj0, hδ0] at hDel1
   rw [hLDb, hj0, hδ0] at hDb1
@@ -90,7 +93,7 @@ theorem sum_clsOm_le_datBd : ∀ (D : D7) (large₂ : SizeData₂ D) (X : HidaSe
   · intro b hb
     obtain ⟨t, ht, -, hG⟩ := hGb b hb
     obtain ⟨-, -, hjt, hδt, hAdt, hTmt, hgt, -⟩ := hT t ht
-    obtain ⟨a1, a2, a3, a4, -⟩ := GlobalTheory.T.adaptedNormalForm_normsMinors_eq_label D large₂ X Y u hStd t (N t) hAdt
+    obtain ⟨a1, a2, a3, a4, -⟩ := _root_.GlobalTheory.TypeAsm.labC D large₂ X Y u hStd t (N t) hAdt
     refine ⟨N t, ?_, hTmt, a1.trans hjt, a2, ?_, ?_, hgt⟩
     · rw [hG]; exact hAdt
     · rw [a3, hjt, hδt]
@@ -98,7 +101,7 @@ theorem sum_clsOm_le_datBd : ∀ (D : D7) (large₂ : SizeData₂ D) (X : HidaSe
   · intro b hb
     obtain ⟨t, ht, -, hG⟩ := hGb b hb
     obtain ⟨-, -, hjt, hδt, hAdt, -, -, hdt⟩ := hT t ht
-    obtain ⟨-, -, -, -, a5⟩ := GlobalTheory.T.adaptedNormalForm_normsMinors_eq_label D large₂ X Y u hStd t (N t) hAdt
+    obtain ⟨-, -, -, -, a5⟩ := _root_.GlobalTheory.TypeAsm.labC D large₂ X Y u hStd t (N t) hAdt
     refine ⟨?_, ?_⟩
     · rw [hG, ← hjt, a5, hδt]
     · rw [hG]; exact hdt

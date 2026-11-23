@@ -1,14 +1,19 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LagrangianDimensionBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuadraticInjectivePlaneCoordinatesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalLagrangianSubspaceExistsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalModelCoordinatesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SkewDeterminantNeZeroFirstSpaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticFormRestrictedPlaneStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticIsotropicEmbeddedVanishesAdelicStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticIsotropicPlaneVanishesAdelicStatement
+public import Mathlib.Data.Matrix.Mul
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LagrangianDimensionBound
+public import Development.AbelianVarietyTheory.Definitions.Foundations.T2SpaceTensorProductFiniteExtension
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MulTransposeInjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuadraticInjectivePlaneCoordinates
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalLagrangianSubspaceExists
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalModelCoordinates
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SkewDeterminantNeZeroFirstSpace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticFormRestrictedPlane
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticIsotropicEmbeddedVanishesAdelic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticIsotropicPlaneVanishesAdelic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +50,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MulTransposeInjective
 
 @[expose] public section
 
@@ -72,7 +76,7 @@ theorem exists_ratLagr : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
 
   have hD : ∀ p q, symp (cA σ) (-1) (incM F X.J) (incM F W.J) p q =
       (M.co.e p).1 ⬝ᵥ (M.co.e q).2 - (M.co.e q).1 ⬝ᵥ (M.co.e p).2 := M.co.form
-  have hcross := GlobalTheory.T.symplectic_isotropic_embedded_vanishes_adelic F E σ n d d₁ X.J W.J H' (fun u => (hH.orth u).1)
+  have hcross := _root_.GlobalTheory.MixedLagr.symplectic_isotropic_embedded_vanishes F E σ n d d₁ X.J W.J H' (fun u => (hH.orth u).1)
   have hiso : ∀ a ∈ lagr M M₁ H', ∀ b ∈ lagr M M₁ H', a.1 ⬝ᵥ b.2 = b.1 ⬝ᵥ a.2 := by
     intro a ha b hb
     obtain ⟨u, hu, z, hz, hea⟩ := ha
@@ -81,10 +85,10 @@ theorem exists_ratLagr : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
       rw [← hea, LinearEquiv.apply_symm_apply]
     have eb : hat b = M.co.e (u' + incM F (1 : Matrix (Fin n) (Fin n) E) * z' * (incM F H'.ι)ᵀ) := by
       rw [← heb, LinearEquiv.apply_symm_apply]
-    have h1 := GlobalTheory.T.symplectic_isotropic_plane_vanishes_adelic F E σ n d d₁ X.J W.J H' hH.xx u hu u' hu'
+    have h1 := _root_.GlobalTheory.MixedLagr.symplectic_isotropic_plane_vanishes F E σ n d d₁ X.J W.J H' hH.xx u hu u' hu'
     have h2 := hcross u' hu' z
     have h3 := hcross u hu z'
-    have h4 := GlobalTheory.T.symplectic_form_restricted_plane F E σ n d d₁ X.J W.J W₁.J H'.ι hH.gram z z'
+    have h4 := _root_.GlobalTheory.MixedLagrGram.symp_restrict_gram F E σ n d d₁ X.J W.J W₁.J H'.ι hH.gram z z'
     change symp (cA σ) (-1) (incM F X.J) (incM F W.J)
       (incM F (1 : Matrix (Fin n) (Fin n) E) * z * (incM F H'.ι)ᵀ)
       (incM F (1 : Matrix (Fin n) (Fin n) E) * z' * (incM F H'.ι)ᵀ) =
@@ -109,18 +113,18 @@ theorem exists_ratLagr : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     linear_combination h1 + h2 - h3 + h4
   refine ⟨lagr M M₁ H', hiso, ?_, ?_⟩
   ·
-    have hrat := GlobalTheory.T.rational_model_coordinates F E σ n d X W M hP.good.rat
-    have hrat₁ := GlobalTheory.T.rational_model_coordinates F E σ n d₁ X W₁ M₁ hP₁.good.rat
+    have hrat := _root_.GlobalTheory.MixedLagr.ratCoord_linear_injective F E σ n d X W M hP.good.rat
+    have hrat₁ := _root_.GlobalTheory.MixedLagr.ratCoord_linear_injective F E σ n d₁ X W₁ M₁ hP₁.good.rat
     obtain ⟨f, hf, hfe⟩ := hrat
     obtain ⟨f₁, hf₁, hfe₁⟩ := hrat₁
     have h2 : Module.finrank F E = 2 := hP.base.cm.2.2.1
-    obtain ⟨K, hK, hKz⟩ := GlobalTheory.T.rational_lagrangian_subspace_exists F E σ n d₁ X W₁ M₁ h2 f₁ hf₁ hfe₁
+    obtain ⟨K, hK, hKz⟩ := _root_.GlobalTheory.MixedLagr.rat_first_zero_dim F E σ n d₁ X W₁ M₁ h2 f₁ hf₁ hfe₁
     have hinj := mul_transpose_injective F E σ n d d₁ W.J W₁.J H'.ι hH.gram
-      (GlobalTheory.T.skew_determinant_ne_zero_first_space F E σ B d₁ W₁ r₁ s₁ hP₁.skew)
+      (_root_.GlobalTheory.SkewGram.det_ne_zero F E σ B d₁ W₁ r₁ s₁ hP₁.skew)
     refine le_antisymm ?_ ?_
-    · exact GlobalTheory.T.lagrangian_dimension_bound F _ _ hiso
+    · exact _root_.GlobalTheory.finrank_le_card_of_isotropic_prod_pi F _ _ hiso
     · rw [Fintype.card_prod, Fintype.card_fin, Fintype.card_fin]
-      exact GlobalTheory.T.quadratic_injective_plane_coordinates F E σ n d d₁ X W W₁ M M₁ H' h2 hH.rank hH.xy (fun u => (hH.orth u).2) hinj f hf hfe K hK hKz
+      exact _root_.GlobalTheory.MixedLagr.le_finrank_lagr F E σ n d d₁ X W W₁ M M₁ H' h2 hH.rank hH.xy (fun u => (hH.orth u).2) hinj f hf hfe K hK hKz
   ·
     intro t w hw
     obtain ⟨u, ⟨y, rfl⟩, z, hz, he⟩ := hw

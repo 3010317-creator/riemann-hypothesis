@@ -1,17 +1,18 @@
 module
 
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FrameDefinitions.CpRegPhRegOfNonneg
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LocalOrbitChartStatement
+public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.StatementsLocalOrbitChart
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LocalOrbitChart
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PHermExtend
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PHoloInjDerivInj
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PMuRegSmooth
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PNbarSmooth
-import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PVertFactorPos
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PVertFactorSmooth
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.RegWeightLimits
-import GroundTheory.HeightsAndTheta.Heights.Regularisation.IsCompactImageClosureMid
 public import GroundTheory.HeightsAndTheta.Heights.StabilizerCovolume.BRegWeightLevi
 public import GroundTheory.HeightsAndTheta.Heights.StabilizerCovolume.PMUcSmooth
+import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PVertFactorPos
+import GroundTheory.HeightsAndTheta.Heights.Regularisation.IsCompactImageClosureMid
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -163,7 +164,7 @@ theorem bregWeight_ge_and_MUc_smooth : ∀ (K : Type) [Fintype K] (J : K → Typ
       obtain ⟨j, hj⟩ := M.atlas.cover x₀
       set e := M.atlas.chart j with he
       obtain ⟨W, hWo, hxW, s, hs, hsh⟩ := M.sections x₀
-      obtain ⟨N, hNo, hzN, κ, hκa, hκt, hκi⟩ := GlobalTheory.T.local_orbit_chart_statement_holds K JJ Ω D.y D.n D.arith D.smoothGeneric z₀ hz₀
+      obtain ⟨N, hNo, hzN, κ, hκa, hκt, hκi⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Giv.localOrbitChart K JJ Ω D.y D.n D.arith D.smoothGeneric z₀ hz₀
       set σ : (Fin D.n → ℂ) → (Σ k, JJ k) → ℂ := fun u => s (e.symm u) with hσ
       set f : (Fin D.n → ℂ) → (Fin D.n → ℂ) := fun u => κ (σ u) with hf
       set u₀ := e x₀ with hu₀

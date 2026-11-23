@@ -2,8 +2,10 @@ module
 
 public import Mathlib.RingTheory.Artinian.Defs
 public import Mathlib.RingTheory.Noetherian.Defs
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CancelProdSummandNilpotentOrBijectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.EndomorphismIndecomposableNilpotentOrBijectiveStatement
+public import Mathlib.Algebra.Module.LinearMap.End
+public import Mathlib.Algebra.Module.Prod
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CancelProdSummandNilpotentOrBijective
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.EndomorphismIndecomposableNilpotentOrBijective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,7 +60,7 @@ theorem ks_cancel_submodule (R P : Type) [Ring R] [AddCommGroup P] [Module R P] 
   | _ N ih =>
   intro M M' _ _ _ _ e
   by_cases hind : ∀ A B : Submodule R N, IsCompl A B → A = ⊥ ∨ B = ⊥
-  · exact GlobalTheory.T.cancel_prod_summand_nilpotent_or_bijective R M M' N (GlobalTheory.T.endomorphism_indecomposable_nilpotent_or_bijective R N hind) e
+  · exact _root_.GlobalTheory.cancel_summand_nilpotent_or_bijective R M M' N (_root_.GlobalTheory.endo_indecomposable_finite_length_nilpotent_or_bijective R N hind) e
   · push_neg at hind
     obtain ⟨A, B, hAB, hA, hB⟩ := hind
     have hAlt : A.map N.subtype < N := by

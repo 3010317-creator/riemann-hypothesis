@@ -1,10 +1,11 @@
 module
 
 public import Formalism.HermitianCurvature.StatementQ
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.CovariantHatSqOfLin
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.QnCovDet
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.QnCovHat
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.QnCovLin
+public import Formalism.PeriodIntegrals.ContractionsCovariantIff
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CovariantHatPairReindex.QnCovHat2OfLin
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CovariantDeterminantScaling.IntCastMulEqSmul
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CovariantHatDecomposition.SkipOneEqSuccAbove
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CovariantLinearProduct.OfFnProdSmul
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.QnEabGl
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.QnEabPres
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.QnMinorLeft
@@ -47,12 +48,11 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Formalism.PeriodIntegrals.ContractionsCovariantIff
 
 @[expose] public section
 
 theorem qnTInv : Formalism.FourierDecayAlt.Q.TInvariant :=
   Formalism.FourierDecayAlt.Q.TInvW.qnTInv_of
     (PI.contractionsCovariant_iff.2
-      ⟨covariant_det_of_lin covariant_linear, covariant_hat_of_lin covariant_linear, covariant_hat_sq_of_lin covariant_linear⟩)
+      ⟨covariant_det_of_lin _root_.PI.QnCovLinW.qnCovLin, _root_.PI.QnCovHatW.qnCovHat_of_lin _root_.PI.QnCovLinW.qnCovLin, _root_.PI.QnCovHat2W.qnCovHat2_of_lin covariant_linear⟩)
     qnEabPres qnEabGl qnMinorLeft

@@ -1,11 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.ExistenceTori.UnitaryHaarVolume
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsDiscreteArithGroupImageRealUnitaryStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsMeasurePreservingFrameChangeProportionalHeStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsDiscreteArithGroupImageRealUnitary
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsMeasurePreservingFrameChangeProportionalHe
+public import Mathlib.MeasureTheory.Group.FundamentalDomain
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LintegralUnfoldArithmeticQuotientDoubleCosets
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.Signature
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.UnitFrameRealUnitaryOrbitGramRigid
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.FundSetPf
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.OrthoStatementPf
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsProbabilityMeasureAutQuotientNormalized
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LintegralUnfoldArithmeticQuotientDoubleCosetsStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.UnitFrameRealUnitaryOrbitGramRigidStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,8 +56,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Algebra.Group.Units
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.FundSetPf
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.OrthoStatementPf
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.DetSubUpper
 import Std.Tactic.BVDecide.Normalize.Prop
 
@@ -174,7 +176,7 @@ theorem lintegral_dict {Comp : Type} [Fintype Comp] (X : Comp → Data E r) {G :
       (∀ k, ∀ b ∈ Bor (X k).Ψ r, ∀ x ∈ (X k).dom, F k (rmul x b) = F k x) →
       Measurable (fun g => F (dict g).1 (dict g).2) ∧
         ∫⁻ g in 𝓕, F (dict g).1 (dict g).2 ∂μ = κ * ∑ k, quotInt (X k) (F k) := by
-  obtain ⟨hG, hgr⟩ := GlobalTheory.T.unitFrame_real_unitary_orbit_gram_rigid E r Comp X G Gi dict (fun k g τ => ar τ.1 g) (fun k τ => J τ.1) x0
+  obtain ⟨hG, hgr⟩ := _root_.GlobalTheory.PeterssonRigid.rigid E r Comp X G Gi dict (fun k g τ => ar τ.1 g) (fun k τ => J τ.1) x0
     (fun k τ => hJ τ.1) hs d0 dI dD dU
   choose t ht0 ht using hG
   choose y hy b hb hxb using fun k => ReciprocityTheory.ChartRestriction.G.AR.Up.ortho_holds r (X k) (x0 k) (d0 k).1
@@ -189,7 +191,7 @@ theorem lintegral_dict {Comp : Type} [Fintype Comp] (X : Comp → Data E r) {G :
     fun τ g => (hJG k τ _).1 (hu k τ g)
   choose s hsy using fun k => exists_real_of_orth (X k) (baseFr_mem (X k)) (hy k)
   choose g hg using fun k => (d0 k).2
-  choose Λ hΛ hΛd using fun k => GlobalTheory.T.exists_discrete_arithGroupImage_realUnitary E r (X k)
+  choose Λ hΛ hΛd using fun k => _root_.GlobalTheory.ArithImage.exists_discrete_image E r (X k)
   have hfr : ∀ k h τ, mat (frameOf (X k) (s k * ψ k h)) τ = ar τ.1 h * mat (y k) τ := by
     intro k h τ
     rw [← hψ, hsy, mat_frameOf, Matrix.mul_assoc]
@@ -205,7 +207,7 @@ theorem lintegral_dict {Comp : Type} [Fintype Comp] (X : Comp → Data E r) {G :
     simp only [Matrix.nonsing_inv_mul_cancel_right _ _ (hyu k τ)] at h2
     exact Subtype.ext (Units.ext (((Matrix.isUnit_iff_isUnit_det _).2 (hyu k τ)).mul_left_cancel h2))
   haveI : ∀ k, (haarR (X k)).IsHaarMeasure := fun k => by unfold haarR; infer_instance
-  refine Exists.elim (GlobalTheory.T.lintegral_unfold_arithmetic_quotient_doubleCosets G μ Γ H Kf 𝓕 h𝓕 h0 h1 hH
+  refine Exists.elim (_root_.GlobalTheory.PeterssonUnfold.unfold_lintegral G μ Γ H Kf 𝓕 h𝓕 h0 h1 hH
     (fun z hz => (hmem z).2 ⟨1, one_mem _, z, hz, (one_mul _).symm⟩) Comp (fun k => RealGrp (X k))
     (fun k => haarR (X k)) ψ Λ s g _ (SameOrb X) dict (fun k a => ⟨k, rmul (frameOf (X k) a) (b k)⟩)
     (fun k => (hψc k).measurable) ?_ ?_ ?_ ?_ hΛd (sameOrb_equivalence X) ?_ ?_ ?_ ?_ ?_) ?_
@@ -242,7 +244,7 @@ theorem lintegral_dict {Comp : Type} [Fintype Comp] (X : Comp → Data E r) {G :
     rw [← hψ' k, h]
     simp [Matrix.mul_nonsing_inv _ (hyu k τ)]
   · intro k k'
-    obtain ⟨e, α, u, he, hα, hαα, h⟩ := GlobalTheory.T.exists_measurePreserving_frameChange_proportional_hermitian E r (X k) (X k') (y k) (y k') (hΨ k k').1 (hΨ k k').2 (hy k)
+    obtain ⟨e, α, u, he, hα, hαα, h⟩ := _root_.GlobalTheory.PeterssonFrameChange.frame_change E r (X k) (X k') (y k) (y k') (hΨ k k').1 (hΨ k k').2 (hy k)
       (hy k') fun τ => by
         have hτ : τ.1 ∈ (X k').Ψ := (hΨ k k').1 ▸ τ.2
         refine ⟨t k' ⟨τ.1, hτ⟩ / t k τ, div_ne_zero (ht0 _ _) (ht0 _ _), ?_⟩

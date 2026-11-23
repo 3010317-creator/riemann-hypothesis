@@ -1,9 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.SumMulEqZeroOfSumToReal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFreeSubmoduleFiniteIndexNumberFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankBalancedIntBilinFormsEqOfFiniteIndexStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankBalancedIntBilinFormsPiStatement
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFreeSubmoduleFiniteIndexNumberField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemBalBil
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Mathlib.LinearAlgebra.FreeModule.Basic
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankBalancedIntBilinFormsEqOfFiniteIndex
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankBalancedIntBilinFormsPi
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoMulFinrankBalancedSymmIntBilinFormsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -53,10 +59,10 @@ attribute [local instance] Over.cartesianMonoidalCategory
 
 theorem GlobalTheory.BalRank.finrank_balForms : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] (H : Host E) (X : Type) [AddCommGroup X] [Module (𝓞 E) X] [Module.Free ℤ X] [Module.Finite ℤ X], Module.finrank ℤ (balForms H.bar X) = Module.finrank ℚ E / 2 * Module.finrank (𝓞 E) X * Module.finrank (𝓞 E) X := by
   intro E _ _ _ H X _ _ _ _
-  obtain ⟨f, m, hm, hf, hmf⟩ := GlobalTheory.T.exists_free_submodule_finite_index_numberField (E := E) X
+  obtain ⟨f, m, hm, hf, hmf⟩ := _root_.GlobalTheory.latt_free_sub_full_rank (E := E) X
   have h1 := GlobalTheory.T.two_mul_finrank_balancedSymmIntBilinForms H X
-  have h2 := GlobalTheory.T.finrank_balancedIntBilinForms_eq_of_finite_index H.bar X _ f m hm hf hmf
-  have h3 := GlobalTheory.T.finrank_balancedIntBilinForms_pi H (Fin (Module.finrank (𝓞 E) X))
+  have h2 := _root_.GlobalTheory.BalRank.finrank_balBil_eq_of_finiteIndex H.bar X _ f m hm hf hmf
+  have h3 := _root_.GlobalTheory.BalRank.finrank_balBil_pi H (Fin (Module.finrank (𝓞 E) X))
   rw [Fintype.card_fin] at h3
   obtain ⟨k, hk⟩ : 2 ∣ Module.finrank ℚ E := ⟨_, IsTotallyComplex.finrank E⟩
   rw [hk, Nat.mul_div_cancel_left _ two_pos]

@@ -2,8 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.SpecialFibreUnits
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.FormalAlgebraisation
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHomSpecProdSelfPreimageEqClopenStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomExtSpecProdSelfOfBasicOpenPreimageEqStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsClopenBasicOpenSpecProdSelfFirstIdempotent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHomSpecProdSelfPreimageEqClopen
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomExtSpecProdSelfOfBasicOpenPreimageEq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpecialFibreConnected
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -124,13 +125,13 @@ theorem connectedSpace_specialFibre_of_morphisms : GlobalTheory.Published.Formal
   have hclo : ∀ n, IsClopen (GlobalTheory.SpecialConn.thickι f n ⁻¹' A) := fun n =>
     ⟨hA.preimage (GlobalTheory.SpecialConn.thickι f n).continuous,
       by rw [← isClosed_compl_iff, hAB n]; exact hB.preimage (GlobalTheory.SpecialConn.thickι f n).continuous⟩
-  choose h hhp hhU using fun n => GlobalTheory.T.exists_hom_specProdSelf_preimage_eq_clopen O (GlobalTheory.SpecialConn.thickFib f n)
+  choose h hhp hhU using fun n => _root_.GlobalTheory.exists_hom_spec_prod_self_preimage_eq_clopen O (GlobalTheory.SpecialConn.thickFib f n)
     (GlobalTheory.SpecialConn.thickι f n ≫ f) _ (hclo n)
   haveI : IsProper (Over.mk f).hom := hP
   haveI : IsProper (Over.mk (twoπ O)).hom := isProper_twoπ O
   have hc : ∀ n, GlobalTheory.SpecialConn.thickTr f n ≫ h (n + 1) = h n := by
     intro n
-    refine GlobalTheory.T.hom_ext_specProdSelf_of_basicOpen_preimage_eq O _ _ _ ?_ ?_
+    refine _root_.GlobalTheory.AlgConn.hom_ext_of_twoπ_of_basicOpen O _ _ _ ?_ ?_
     · rw [Category.assoc, hhp, hhp, ← Category.assoc, GlobalTheory.SpecialConn.thickTr_ι]
     · refine TopologicalSpace.Opens.ext ?_
       rw [hhU n, Scheme.Hom.comp_preimage]

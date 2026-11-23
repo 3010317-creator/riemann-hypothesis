@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenScal
 public import Development.AbelianVarietyTheory.Definitions.Divisors.UnifOfSpaceEq
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardFramedLiftsLevelCoverConstStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.ThShort
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardFramedLiftsLevelCoverConst
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexFramedLiftsEquivMovedGroupCosetsStatement
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUnfFamily
 import Mathlib.Algebra.Order.Floor.Extended
@@ -58,7 +59,7 @@ theorem cover_degree_const : ∀ (D : D7) (j : ℕ) (H : ReciprocityTheory.Chart
   letI : Field (CAt σ₂) := inferInstanceAs (Field ℂ)
   letI : IsAlgClosed (CAt σ₂) := inferInstanceAs (IsAlgClosed ℂ)
   have hC := GlobalTheory.T.complexFramedLifts_equiv_movedGroupCosets D j H Dw l Xo c U dict d U₂ dict₂ hL hL₂ hd σ₂ hσ₂ pr δ hπ
-  have hK := GlobalTheory.T.card_framed_lifts_levelCover_const D j H Dw l Xo c U dict d U₂ dict₂ hL hL₂ hd σ₂ hσ₂
+  have hK := _root_.GlobalTheory.LevDegree.card_lifts_const D j H Dw l Xo c U dict d U₂ dict₂ hL hL₂ hd σ₂ hσ₂
   have hfin : ∀ k (k₂ : {k₂ // pr k₂ = k}), Finite (↥((U (σ₂.comp (d.eF : c.F →+* d.c₂.F))).X k).Γ ⧸ (((U₂ σ₂).X k₂.1).Γ.map (MulAut.conj (δ k₂.1)).toMonoidHom).subgroupOf ((U (σ₂.comp (d.eF : c.F →+* d.c₂.F))).X k).Γ) := by
     intro k k₂
     have h := (hπ k₂.1).2.2.2.1

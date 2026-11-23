@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowMulMemLatIff
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicLevelIntegersMemClosureLevelsStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicLevelIntegersMemClosureLevels
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCyclotomicFrobeniusTwistedValueEq
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCyclotomicFrobeniusTwistedValueEqStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -100,12 +100,12 @@ theorem exists_cycVal_eq_pow_mul (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K : 
     exact (Nat.cast_ne_zero.mpr (by omega : l ≠ 0)) hz
   have hchain : ∀ j, P.ζQ (j + 1) ^ l = P.ζQ j := fun j => by
     simpa using GlobalTheory.ExpImage.Values.zeta_pow P j 1
-  have hmem := GlobalTheory.T.cyclotomicLevel_integers_mem_closure_levels l K P.ζQ h0 h1 hchain s hs α hα hn
+  have hmem := _root_.GlobalTheory.Cyc.integers_mem_closure_levels l K P.ζQ h0 h1 hchain s hs α hα hn
   clear hα hn
   induction hmem using AddSubgroup.closure_induction with
   | mem x hx =>
     obtain ⟨j, n, c, hj, hjs, hn', hc, hc1, rfl⟩ := hx
-    exact GlobalTheory.T.exists_cyclotomicFrobeniusTwistedValue_eq l P K s e j n hj hjs hn' c hc hc1
+    exact _root_.GlobalTheory.ExpImage.Values.exists_cycVal_eq l P K s e j n hj hjs hn' c hc hc1
   | zero =>
     refine ⟨fun _ => 0, 0, fun _ => by simp, by simp, by simp, ?_⟩
     rw [cycVal_zero, mul_zero]

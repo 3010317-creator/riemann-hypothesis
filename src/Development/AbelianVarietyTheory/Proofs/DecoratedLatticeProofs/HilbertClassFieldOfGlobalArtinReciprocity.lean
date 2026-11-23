@@ -4,19 +4,21 @@ public import ReciprocityTheory.NeutralLocalFields.HilbertClassField
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteIndexUnitIdlSup
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocUnitApply
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsNormNearNegOneAtRealPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.InfIdeleNegOneNotMemClosurePrincipalIdentityCompStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemConnectedComponentOfOneOfPos
+public import ReciprocityTheory.NeutralLocalFields.LocalFieldComparison.HCFFromRecipB
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsNormNearNegOneAtRealPlace
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.InfIdeleNegOneNotMemClosurePrincipalIdentityComp
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AbsoluteGaloisAbelianizationEqOneOfMemOpenSubgro
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DenseRangeUnits
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFinsetPlacesOverFinsetPlaces
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FrobeniusRestrictScalarsPowModInertia
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IntValuationNormEqSumResidueDegreeMul
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsOpenIdeleSubgroupContainsCongruenceUnits
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormCloseToOneOfCloseAbovePlace
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitOpenAndCongrOpen
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIdeleClassGroupHomOpenKernel
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertiaElementEqOneOrLiesAboveFinitePlace
+public import ReciprocityTheory.NeutralLocalFields.LocalFieldComparison.HilbertClassFieldA
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemConnectedComponentOfOneOfPos
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DenseRangeUnits
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitOpenAndCongrOpen
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,7 +61,6 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Connected.Separation
 import Mathlib.Topology.Separation.CompletelyRegular
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.NeutralLocalFields.LocalFieldComparison.HilbertClassFieldA
 import ReciprocityTheory.NeutralLocalFields.LocalFieldComparison.HCFFromRecipA
 
 @[expose] public section
@@ -153,7 +154,7 @@ theorem art_sign_mem (ha : IsGlobalArtin art) (U : Subgroup (Gab E Ω)) (hU : Is
   obtain ⟨T, hT⟩ := GlobalTheory.PlacesOver.places_over_finset E L S
   choose M' hM' using fun v : HeightOneSpectrum (𝓞 E) => GlobalTheory.NormCompat.NormCont.norm_close_to_one E L v M
   have e0 : (j.comp (algebraMap L Ω)).comp (algebraMap E L) = j.comp (algebraMap E Ω) := RingHom.ext fun _ => rfl
-  obtain ⟨a, ha1, ha2⟩ := GlobalTheory.T.exists_norm_near_neg_one_at_real_place E L _ hj T (S.sup M') (ψ ⁻¹' {ψ _})
+  obtain ⟨a, ha1, ha2⟩ := _root_.GlobalTheory.NormSign.exists_norm_sign E L _ hj T (S.sup M') (ψ ⁻¹' {ψ _})
     (hψ.continuousAt.preimage_mem_nhds ((isOpen_discrete _).mem_nhds rfl))
   rw [e0, Set.mem_preimage, Set.mem_singleton_iff] at ha2
   have hfin : ψ (Units.map (finPart E) (diagUnits E (Units.map (Algebra.norm E (S := L)) a))) = 1 := by
@@ -181,7 +182,7 @@ theorem isReal_of_conj (j : Ω →+* ℂ) (c : G E Ω) (hc : ∀ x, j (c x) = st
 theorem art_sign_eq (ha : IsGlobalArtin art) (j : Ω →+* ℂ) (c : G E Ω) (hc : ∀ x, j (c x) = starRingEnd ℂ (j x)) :
     art (infIdele E (InfinitePlace.mk (j.comp (algebraMap E Ω))) (-1)) = GlobalTheory.HeckeGal.toAb E Ω c := by
   have hg1 : art (infIdele E (InfinitePlace.mk (j.comp (algebraMap E Ω))) (-1)) ≠ 1 := fun h =>
-    GlobalTheory.T.infIdele_neg_one_not_mem_closure_principal_identityComponent E _ (isReal_of_conj j c hc) (ha.ker ▸ h)
+    _root_.GlobalTheory.RealSignIdele.infIdele_neg_one_not_mem E _ (isReal_of_conj j c hc) (ha.ker ▸ h)
   have hmem := fun U hU => art_sign_mem ha U hU j c hc
   generalize art (infIdele E (InfinitePlace.mk (j.comp (algebraMap E Ω))) (-1)) = g at hg1 hmem
   have hcc : c * c = 1 := AlgEquiv.ext fun x => j.injective (by

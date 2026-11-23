@@ -1,10 +1,10 @@
 module
 
-import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.UnitaryLattices.PositiveShells.ContinuousColElVal
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AvgVanish
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchwartzBruhatMatrixTranslationModulationIrreduc
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocallyConstantCompactSupportUnipotentStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocallyConstantCompactSupportUnipotent
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothIntegralLinear
+import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.UnitaryLattices.PositiveShells.ContinuousColElVal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -331,8 +331,8 @@ theorem qC_intC_abs (ψ : AddChar k Circle) (hψ : Continuous ψ) (f f' : XS τ 
     (e : Fin (t + 1) → k)
     (hpt : ∀ d, qC τ σ (evX f' (dEmb k i t d * y)) = qC τ σ (evX f (dEmb k i t (d + e) * y))) :
     qC τ σ (intC ψ f' y) = ((Circle.toUnits (ψ (e (Fin.last t))) : ℂˣ) : ℂ) • qC τ σ (intC ψ f y) :=
-  shift_abs ψ hψ (qC τ σ) (GlobalTheory.T.locally_constant_compact_support_unipotent k i t τ σ f y).1 (GlobalTheory.T.locally_constant_compact_support_unipotent k i t τ σ f y).2
-    (GlobalTheory.T.locally_constant_compact_support_unipotent k i t τ σ f' y).1 (GlobalTheory.T.locally_constant_compact_support_unipotent k i t τ σ f' y).2 e hpt
+  shift_abs ψ hψ (qC τ σ) (_root_.GlobalTheory.CompanionTheory.BZPhiPG.Fib.fibre_isLocallyConstant_hasCompactSupport k i t τ σ f y).1 (_root_.GlobalTheory.CompanionTheory.BZPhiPG.Fib.fibre_isLocallyConstant_hasCompactSupport k i t τ σ f y).2
+    (_root_.GlobalTheory.CompanionTheory.BZPhiPG.Fib.fibre_isLocallyConstant_hasCompactSupport k i t τ σ f' y).1 (_root_.GlobalTheory.CompanionTheory.BZPhiPG.Fib.fibre_isLocallyConstant_hasCompactSupport k i t τ σ f' y).2 e hpt
 
 theorem qC_intC_tw (ψ : AddChar k Circle) (hψ : Continuous ψ) (f : XS τ σ) (y g : Mir k ((i + 1) + t + 1))
     (c : Fin (i + 1) → k) (e : Fin (t + 1) → k)

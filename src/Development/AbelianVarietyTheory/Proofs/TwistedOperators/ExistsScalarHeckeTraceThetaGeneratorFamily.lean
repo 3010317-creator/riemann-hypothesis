@@ -4,20 +4,23 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIsC
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.UnivFrame
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.KerScheme
 public import Mathlib.Tactic.ENatToNat
-import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsChartPulledBackFunctionNeZeroOfValueStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRationalPointThetaGeneratorNeZeroStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRigidifiedThetaIsoBaseChangeStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeckeKernelSumEqCardTorsionMulTraceStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemKernelOfGeometricFibresReducedBaseStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsPointedOfIsHkIsog
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeckeKernelSumEqCardTorsionMulTrace
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemKernelOfGeometricFibresReducedBase
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormalizedMulPullbackCommutesBaseChangeStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PullConstantToPointEqRingImageStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PulledBackLocalFunctionEqMulOfValuesStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RatioLocalFunctionsGeometricFibreDescendsBaseStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.IsCombAt
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RatioLocalFunctionsGeometricFibreDescendsBase
+public import Development.AbelianVarietyTheory.BlockTheory.ExistenceTori.FibrePushforward
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SectionValuePulledBackAlongGroupMapStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TranslationCommutesCanonicalBaseChangeMapStatement
+import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFramedPointBaseChangeAlgebraMap
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUniqueScaledBaseChangeFibreSectionStatement
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUniqueScaledBaseChangeFibreSection
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FibreSectionGeneratesOfNowhereZero
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FibreSectionNowhereZeroOfGenerates
 import Mathlib.Algebra.Order.Floor.Extended
@@ -193,14 +196,14 @@ theorem fibre {c : Coeff l} {P : Ideal (𝓞 E)} {p i n : ℕ} {T : Type} [CommR
   obtain ⟨e, he⟩ := hlist Ω χ.toRingHom y₁.x x₁' Ψ₁ hΨ₁
   obtain ⟨β₁, hβ₁, hvβ⟩ := rigIso_baseChange χ.toRingHom hpm hpm' hc hf hβ
   obtain ⟨s₁₁, hs₁₁, hvs⟩ := mulPull_baseChange χ.toRingHom hpm hsy hs₁
-  have heps := GlobalTheory.T.heckeKernel_sum_eq_card_torsion_mul_trace E H Dw l Xo Ω y₁.x x₁' Ψ₁ p n y₁.s s' β₁ s₁₁ e hisog hth htr hβ₁ hs₁₁
+  have heps := _root_.GlobalTheory.KernelSum.sum_ker_eq_card_mul E H Dw l Xo Ω y₁.x x₁' Ψ₁ p n y₁.s s' β₁ s₁₁ e hisog hth htr hβ₁ hs₁₁
   haveI : Finite (transKer Xo.univ.t.G Ψ₁) := Finite.of_equiv _ e
   have hm := card_tors_mul hp hker e
   have hmpos := card_tors_pos (C := transKer Xo.univ.t.G Ψ₁) (p := p)
   have hmeq : Nat.card {a // a ∈ transKer Xo.univ.t.G Ψ₁ ∧ a ^ p = 1} = n / Ideal.absNorm P ^ i := by
     rw [← hm, Nat.mul_div_cancel _ (absNorm_pow_pos hadm)]
 
-  obtain ⟨s₀₁, hs₀₁, -⟩ := GlobalTheory.T.existsUnique_scaledBaseChange_fibreSection E H Dw l Xo T Ω χ.toRingHom 1 x' x₁' hpm'.1 s₀
+  obtain ⟨s₀₁, hs₀₁, -⟩ := _root_.GlobalTheory.Frames.SecPull.existsUnique_secBC E H Dw l Xo T Ω χ.toRingHom 1 x' x₁' hpm'.1 s₀
   have hg₀₁ : SecGen x₁' s₀₁ := GlobalTheory.Frames.secGen_of_secNZ hB E H Dw l Xo Ω x₁' s₀₁
     (NonzeroGenerates.secNZ_pull hpm'.1 hs₀₁ (GlobalTheory.Frames.secNZ_of_secGen hB E H Dw l Xo T x' s₀ hgen))
   have hv₀ : ∀ (Z : Scheme.{0}) (r : Z ⟶ Gx x₁') (z : Z) (J), Good Xo.univ.t.PP.L z J →
@@ -277,7 +280,7 @@ theorem GlobalTheory.HeckeScal.exists_scal_of_family : ∀ (E : Type) [Field E] 
   have hB : Out.SecBaseChangeSt := GlobalTheory.abelianSchemeLaws_all.1.secBaseChange
   obtain ⟨hlin, -, -, ⟨β, hβ⟩, -⟩ := id hfam
   have hσ : ∀ j, σ j ∈ transKer Xo.univ.t.G Ψ := fun j =>
-    GlobalTheory.T.mem_kernel_of_geometric_fibres_reduced_base E H Dw l Xo T y.x x' Ψ (σ j) hlin.1 fun Ω _ _ χ x₁ x₁' Ψ₁ hF => by
+    _root_.GlobalTheory.HeckeEx.mem_transKer_of_geometric E H Dw l Xo T y.x x' Ψ (σ j) hlin.1 fun Ω _ _ χ x₁ x₁' Ψ₁ hF => by
       obtain ⟨e, he⟩ := hlist Ω χ x₁ x₁' Ψ₁ hF
       exact ⟨(e j).1, (e j).2, he j⟩
   obtain ⟨s₁, hs₁⟩ := exists_isMulPull p y.s
@@ -286,7 +289,7 @@ theorem GlobalTheory.HeckeScal.exists_scal_of_family : ∀ (E : Type) [Field E] 
     have := Xo.univ.t.semi.smooth
     show Smooth (pullback.fst y.x Xo.univ.t.G.hom)
     infer_instance
-  obtain ⟨a', ha'⟩ := GlobalTheory.T.ratio_localFunctions_geometricFibre_descends_base T (Gx y.x) (fst (Over.mk y.x) Xo.univ.t.G).left _
+  obtain ⟨a', ha'⟩ := _root_.GlobalTheory.ratio_descends T (Gx y.x) (fst (Over.mk y.x) Xo.univ.t.G).left _
     (LPow Xo.univ.t.G Xo.univ.t.PP.L ((p : ℤ) ^ 2) (Over.mk y.x)).U t.f t₀.f hsm fun Ω _ _ χ => by
       letI : Algebra c.F Ω := (χ.comp (algebraMap c.F T)).toAlgebra
       let χ' : T →ₐ[c.F] Ω := { χ with commutes' := fun _ => rfl }

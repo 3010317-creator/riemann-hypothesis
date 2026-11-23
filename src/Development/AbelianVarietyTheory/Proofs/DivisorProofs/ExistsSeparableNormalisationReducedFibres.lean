@@ -4,7 +4,9 @@ public import GroundTheory.FunctionField.PlaceDefs
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Mathlib.RingTheory.Kaehler.Basic
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.RingKrullDimQuotientEqOfMemMinimalPrimes
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NoetherNormalizationFiniteAevalPowAddStatement
+public import Mathlib.Algebra.Polynomial.AlgebraMap
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NoetherNormalizationFiniteAevalPowAdd
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReducedFibresAlmostAllOfSeparableDedekindCurveStatement
 public import GroundTheory.ArithmeticGeometry.AbelianVarieties.JacobianSmoothness.RingKrullDimLeRingKrullDimQuotientAddOne
 public import GroundTheory.ArithmeticGeometry.SchemeCohomology.KaehlerPlace
@@ -210,7 +212,7 @@ theorem exists_separable_normalisation_reduced_fibres : ∀ (k A : Type) [Field 
   have key : ∃ y : A, (Polynomial.aeval (R := k) y).Finite ∧
       D k (FractionRing A) (algebraMap A (FractionRing A) y) ≠ 0 := by
     by_cases hD : D k (FractionRing A) (algebraMap A (FractionRing A) t) = 0
-    · obtain ⟨M, hM⟩ := GlobalTheory.T.noether_normalization_finite_aeval_pow_add k A t a ht
+    · obtain ⟨M, hM⟩ := _root_.GlobalTheory.noether_trick k A t a ht
       refine ⟨t ^ M + a, hM, ?_⟩
       rw [map_add (f := _), map_pow, map_add (f := _), Derivation.leibniz_pow, hD, smul_zero, smul_zero, zero_add]
       exact ha

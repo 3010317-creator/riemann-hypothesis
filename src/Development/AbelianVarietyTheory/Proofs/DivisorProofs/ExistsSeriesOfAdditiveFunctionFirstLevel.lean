@@ -6,11 +6,11 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChartSquareC
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CobOneEqZeroOfConnecting
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConnectedPDivGroupFormalLawCoordinates
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConnectedPDivGroupHomCoordinatesExistsUnique
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CounitCotangentClassPowerSeriesEvalAtNilpotent
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FunctionsEqSeriesInChart
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsMapOfNatMultipleFormalGroupLawStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsMapOfNatMultipleFormalGroupLaw
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSymmetricFormalGroupCocycleIffMemCocycles
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowerSeriesEvalTwoGroupsRules
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CounitCotangentClassPowerSeriesEvalAtNilpotent
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FunctionsEqSeriesInChart
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,7 +76,7 @@ theorem exists_series_of_cobOne_eq_zero : ∀ (p : ℕ) [Fact p.Prime] (k : Type
     have e : (fun n => c.ev₂ n κ) = cc.1 := funext hκ
     rw [e]; exact cc.2)
   have hmap := (isMapOf_existsUnique_and p k d d G G c c ((p : ℤ_[p]) • 𝟙 G)).2 (nmul μ p)
-    (GlobalTheory.T.isMapOf_natMultiple_formalGroupLaw p k d G c μ hμ p)
+    (_root_.GlobalTheory.Katz.Chart.isMapOf_nmul p k d G c μ hμ p)
   have hid : cob1 μ Bs = pull2 (nmul μ p) κ := by
     obtain ⟨s, -, hs⟩ := hsq.2 (fun n => c.ev₂ n (cob1 μ Bs)) (fun n => hfun.2.1 n _)
     refine (hs _ fun n => rfl).trans (hs _ fun n => ?_).symm

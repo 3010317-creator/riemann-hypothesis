@@ -5,9 +5,10 @@ public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCoh
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RepUnique
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CupListRepresentativeOfForms
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsLocalFrameOfCoords
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalFrameDerivationCompatStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.ConeSectionRestriction.LocDefs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalFrameDerivationCompat
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalFrameTaylorClassEq
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalGradedClassRepresentativeStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalGradedClassRepresentative
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SheafFiltrationProperty
 import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.TotPairing
 import Mathlib.Algebra.Order.Floor.Extended
@@ -278,8 +279,8 @@ theorem main : CrystallineSemistableComparison.Pb.KH.LocGr → CrystallineSemist
   obtain ⟨E, ε, hL⟩ := GlobalTheory.CompanionTheory.ConeLocal.exists_loc q c s (by omega)
   let σ : ∀ T, E.D ⟶ T := fun T => (E.ne T).some
   have hr : (n : ℤ) + 1 = ((n + 1 : ℕ) : ℤ) := by push_cast; ring
-  obtain ⟨y, hy⟩ := (GlobalTheory.T.local_graded_class_representative q c.t s E ε hL σ (n + 1) ((n : ℤ) + 1) hr (by omega)).1 (resKS q s hVV _ _ _ ω)
-  have h1 := GlobalTheory.T.local_frame_derivation_compat q s hVV hV' c D hD E ε hL σ (n + 1) ((n : ℤ) + 1) hr (by omega) ω y hy (i0 _)
+  obtain ⟨y, hy⟩ := (_root_.GlobalTheory.CompanionTheory.ConeLocal.loc_coef q c.t s E ε hL σ (n + 1) ((n : ℤ) + 1) hr (by omega)).1 (resKS q s hVV _ _ _ ω)
+  have h1 := _root_.GlobalTheory.CompanionTheory.ConeLocal.coef_mem_jacSpan q s hVV hV' c D hD E ε hL σ (n + 1) ((n : ℤ) + 1) hr (by omega) ω y hy (i0 _)
   exact ⟨y (i0 _), h1, rep_xdt q s n c.t E ε hL σ _ _ hr _ (rep_top E σ _ (fun I => ε (y I)) _ hy)⟩
 
 end GlobalTheory.CompanionTheory.ConeLRestr

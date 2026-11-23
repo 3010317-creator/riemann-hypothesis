@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FromBlocksMem
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnipotentConjugateToSquareStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnipotentConjugateToSquare
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.DoubleVacuumLineEigenspaceSplit
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ParabolicDerivativeFixesSplitVector
 import Mathlib.Algebra.Order.Floor.Extended
@@ -60,7 +60,7 @@ theorem gradient_fixes_split_vector : _root_.GlobalTheory.FunPr.ThetaLocalInputs
     ∀ n ∈ GlobalTheory.InertDbl.NabD σ G.W v, omd n (GlobalTheory.InertDbl.dblFun (tens (evFin F v) (G.M'.vac v) R)) =
       GlobalTheory.InertDbl.dblFun (tens (evFin F v) (G.M'.vac v) R) := by
   have hLine := _root_.GlobalTheory.T.doubleVacuum_line_eigenspace_split
-  have hConj := GlobalTheory.T.adelicSchwartzSpace_le_span_pureTensors
+  have hConj := _root_.GlobalTheory.SplitConj.conj_to_sq
   intro hP F E _ _ _ _ _ σ B a a' G X om om' hTr v hsp hT hψ h2 hvac dd omd hdc hws R hR0 hRv n hn
   set Φ := GlobalTheory.InertDbl.dblFun (tens (evFin F v) (G.M'.vac v) R) with hΦdef
   obtain ⟨c, hc⟩ := hLine hP F E σ B a a' G X om om' hTr v hsp hT hψ h2 hvac dd omd hdc hws R hR0 hRv n hn.1

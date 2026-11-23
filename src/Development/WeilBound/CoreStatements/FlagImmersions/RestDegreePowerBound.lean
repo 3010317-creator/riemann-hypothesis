@@ -2,9 +2,11 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.HeckeSectionsIsotropicCommutatorPairingPower
 public import Development.WeilBound.CoreStatements.FlagImmersions.CoeffShift
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagDegreeWeightFormulaStatement
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.CompactGapsGE
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagDegreeWeightFormula
 public import Development.WeilBound.CoreStatements.FlagImmersions.AltEqZero
 public import Development.WeilBound.CoreStatements.FlagImmersions.SumChooseLe
+public import Development.WeilBound.CoreStatements.FlagImmersions.RrCoeffSucc
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +52,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.WeilBound.CoreStatements.FlagImmersions.RrCoeffSucc
 
 @[expose] public section
 
@@ -273,9 +274,9 @@ theorem one_bound (j : ℕ) (u : Wt Ψ N) (g : ℝ) (Q : Ψ → ℕ → RP Ψ N)
     have h1 := hle ⟨0, by omega⟩
     have h2 := hge ⟨1, by omega⟩
     linarith
-  have hpos : 0 < flagDeg u := (GlobalTheory.T.flag_degree_weight_formula Ψ N u).2.1 hreg
+  have hpos : 0 < flagDeg u := (_root_.GlobalTheory.CompanionTheory.Ar.Top.flagDeg_eq_weyl Ψ N u).2.1 hreg
   have hfl : flagDeg (fun σ b => u σ b - if σ = τ then ⨅ i, u τ i else 0) = flagDeg u := by
-    rw [(GlobalTheory.T.flag_degree_weight_formula Ψ N u).1, (GlobalTheory.T.flag_degree_weight_formula Ψ N _).1]
+    rw [(_root_.GlobalTheory.CompanionTheory.Ar.Top.flagDeg_eq_weyl Ψ N u).1, (_root_.GlobalTheory.CompanionTheory.Ar.Top.flagDeg_eq_weyl Ψ N _).1]
     simp only [sub_sub_sub_cancel_right]
   have hb := lam_bound (fun σ b => u σ b - if σ = τ then ⨅ i, u τ i else 0) τ τ' i g U hg hU
     (fun b hb => by rw [sub_sub_sub_cancel_right]; exact hsep τ' i b hi hb)

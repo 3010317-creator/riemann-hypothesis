@@ -4,70 +4,62 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.BlowupProjections.BlowupProjStatement
 public import GroundTheory.HeightsAndTheta.Heights.KernelsLattice
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.SmallGeneratedCountUpperOfUse
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DualStackedExceptionalBaseStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DualStackedExceptionalChartStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DualStackedExceptionalCoordsStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DualStackedExceptionalLeadingFormStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DualStackedGraphBihomogeneousStatement
+public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.StatementsDualStackedExcChart
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DualStackedExceptionalBase
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DualStackedExceptionalChart
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DualStackedExceptionalCoords
+public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.StatementsDualStackedExcLead
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DualStackedExceptionalLeadingForm
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DualStackedGraphBihomogeneous
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FibreDim
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.GraphStatementHoldsStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CoordinateProjectionOfArithSystemStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MixedFieldContraction.ContractMixedFieldStatement
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.GraphStatementHolds
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CoordinateProjectionOfArithSystem
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.DegreeOfIsIntersectionSystem
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.GenericDegreeOfArithSystemStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IntersectionExistsOfArithSystemStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PointsIntegrableOfResolutionStatementStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.ResolutionExistsOfResolutionStatementStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.GenericDegreeOfArithSystem
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.RationalSections.ThmISt
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IntersectionExistsOfArithSystem
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PointsIntegrableOfResolutionStatement
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.HsLinksOfUse
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.Assembly
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PChartCutoffEnergy
-import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PChartDensityIntegrable
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PChartDiffEnergy
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PChartEnergy
-import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PChartEnergyCocycle
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PChartEnergyDiagonal
-import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PChartEnergyIntegrable
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PChartEnergyInvariant
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PChartEnergySwap
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PChartEnergySymm
-import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PChartHessCompare
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PChartIbpCutoff
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PChartIbpSymm
-import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PChartMassInvariant
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PClosedPointChart
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PClosedPointUnitSection
-import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PCurveCharts
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualCotangentKer
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualEnergyCharts
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualLatticeModPrime
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualMetricEnergy
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStackedDegree
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStackedExcBaseLe
-import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStackedExcCycle
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStackedExcGeoSecond
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStackedExcLinPrimeLe
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStackedExcLinear
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStackedExcReduced
-import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStackedExcResidueExists
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStackedGraphFibre
-import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStackedGraphHorizontal
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStackedGraphImage
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStdBaseChange
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStdBasePtFree
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStdFibreRatios
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStdGenDeg
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStdGraphModel
-import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStdImageBot
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStdMetricPull
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStdModelRank
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStdModelTransc
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualTopBasisChange
-import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualTopSimpleStacked
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualTopSimpleSub
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualTopStacked
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PGenFibreModelTransport
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PGrassFibreDegree
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PGrassGeomDegChart
-import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PHermFormCompare
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PIntCoordArInt
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PIntCoordChange
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PIntCoordGeoNum
@@ -86,14 +78,27 @@ public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PVertPointInj
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PVertPointLength
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PVertPointMultChart
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PVertPointNagata
-import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PVertPointResidue
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PVertPointSurj
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PVertRIndex
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.AssemblyBase
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.AssemblyBridge
-import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PGraphIsometric
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PIsomInvariance
 public import GroundTheory.HeightsAndTheta.Heights.Intersections.Assembly
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.ResolutionExistsOfResolutionStatementStatement
+import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PChartDensityIntegrable
+import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PChartEnergyCocycle
+import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PChartEnergyIntegrable
+import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PChartHessCompare
+import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PChartMassInvariant
+import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PCurveCharts
+import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStackedExcCycle
+import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStackedExcResidueExists
+import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStackedGraphHorizontal
+import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualStdImageBot
+import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PDualTopSimpleStacked
+import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PHermFormCompare
+import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PVertPointResidue
+import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PGraphIsometric
 import GroundTheory.HeightsAndTheta.Heights.Intersections.PConsequences
 import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.ChangeOfModel
 import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.ExistsUnique
@@ -150,10 +155,10 @@ theorem lineOfLargeDegree_of_use :
         GroundTheory.Heights₂.Heights.LineOfLargeDegree.Statement := by
   intro hAIS hU hBig hResK
   have hZ2 : SuccessiveMinimaUpperBound := (hsLinks_of_use hU hBig).2.2.1
-  have hI : ReciprocityTheory.ChartRestriction.G.AI.I2.ExistsStatement := GlobalTheory.T.intersection_exists_of_arith_system hAIS
-  have hGr : GraphStatement := GlobalTheory.T.graph_statement_holds
-  have hAI3 : Inter.PushforwardArithIntersection.Statement := GlobalTheory.T.generic_degree_of_arith_system hAIS
-  have hPts : PtsIntegrableStatement := GlobalTheory.T.points_integrable_of_resolution_statement hResK
+  have hI : ReciprocityTheory.ChartRestriction.G.AI.I2.ExistsStatement := _root_.GlobalTheory.CompanionTheory.Ar.Giv.exists_family_of_system hAIS
+  have hGr : GraphStatement := _root_.GlobalTheory.CompanionTheory.Ar.Giv.graphStatement
+  have hAI3 : Inter.PushforwardArithIntersection.Statement := _root_.GlobalTheory.CompanionTheory.Ar.Giv.genDeg_of_system hAIS
+  have hPts : PtsIntegrableStatement := _root_.GlobalTheory.CompanionTheory.Ar.Giv.ptsIntegrable_of_resK hResK
   have hInd : PtsIndepStatement :=
     ReciprocityTheory.ChartRestriction.G.Geo.ptsIndep_of (GlobalTheory.T.resolution_exists_of_resolution_statement hResK) HilbertSamuel.Closed.ReciprocityTheory.ChartRestriction.G.Geo.ResBridge
   have hSheet : SheetIndepStatement :=
@@ -198,12 +203,12 @@ theorem lineOfLargeDegree_of_use :
         DualStdModelRank.proof DualStdModelTransc.proof)
   have hLinear : DualStackedExcLinear.Statement :=
     DualStackedExcLinear.proof (DualStackedExcResidueExists.proof DualLatticeModPrime.proof)
-      (DualStackedExcBaseLe.proof GlobalTheory.T.dual_stacked_graph_bihomogeneous GlobalTheory.T.dual_stacked_exceptional_leading_form)
+      (DualStackedExcBaseLe.proof _root_.GlobalTheory.CompanionTheory.Ar.Giv.graph_bihomog _root_.GlobalTheory.CompanionTheory.Ar.Giv.LeadForm.dualStackedExcLeadForm)
       (DualStackedExcLinPrimeLe.proof DualCotangentKer.proof)
   have hFib : DualStackedGraphFibre.Statement :=
     DualStackedGraphFibre.proof
       (DualStackedExcCycle.proof
-        (DualStackedExcReduced.proof GlobalTheory.T.dual_stacked_exceptional_coords GlobalTheory.T.dual_stacked_exceptional_base GlobalTheory.T.dual_stacked_exceptional_chart))
+        (DualStackedExcReduced.proof _root_.GlobalTheory.CompanionTheory.Ar.Giv.dualStackedExcCoords _root_.GlobalTheory.CompanionTheory.Ar.Giv.exc_base _root_.GlobalTheory.CompanionTheory.Ar.Giv.dualStackedExcChart))
       (DualStackedExcGeoSecond.proof hLinear LinPrimeCut.proof LinPrimeBase.proof)
       DualStackedExcGeoFirst.proof
   have hStep : DualTopSimpleStacked.Statement :=
@@ -220,7 +225,7 @@ theorem lineOfLargeDegree_of_use :
       (fun F _ K _ ι _ => Targets.ExistsUnique.full F ι)
       DualStdBasePtFree.proof DualStdImageBot.proof hStdGenDeg DualStdMetricPull.proof
   exact LineOfLargeDegreeFromZ.ofOpen hVRI hSN hEnergy hBasis hStacked hSDeg hBC
-    (GrassLinesProj.proof (GlobalTheory.T.coordinate_projection_of_arith_system hAIS))
+    (GrassLinesProj.proof (_root_.GlobalTheory.CompanionTheory.Relay.coordinate_projection_of_arith_system hAIS))
     (DualGeomDegCharts.proof ChartDensityIntegrable.proof) GrassGeomDegChart.proof ChartMassInvariant.proof
     (degree_of_system hAIS) hInd hU.z1 hZ2 hI
 

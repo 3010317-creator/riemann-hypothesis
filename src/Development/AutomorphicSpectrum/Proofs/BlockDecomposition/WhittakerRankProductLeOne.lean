@@ -2,7 +2,10 @@ module
 
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.LeibnizDerivatives.GenericProdIff
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.SegmentCuspLines.ProdIrrFiniteLength
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TensorProductRankLeOneStatement
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.Dimension.Basic
+public import Mathlib.LinearAlgebra.PiTensorProduct.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TensorProductRankLeOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,7 +61,7 @@ theorem rank_twJacquet_multiProd_le_one {k : Type} [Field k] [ValuativeRel k] [T
     (hr : ∀ a, Module.rank ℂ (TwJacquet (π a) (unipB k (Fin (d a))) (whitChar ψ (d a))) ≤ 1) :
     Module.rank ℂ (TwJacquet (multiProd (stdBlocks d hd) π) (unipB k (Fin N)) (whitChar ψ N)) ≤ 1 := by
   obtain ⟨e⟩ := hH ψ hc h1 h N d hd X π hs
-  exact e.rank_eq.le.trans (GlobalTheory.T.tensor_product_rank_le_one _ hr)
+  exact e.rank_eq.le.trans (_root_.GlobalTheory.CompanionTheory.TensorRank.rank_piTensorProduct_le_one _ hr)
 
 theorem rank_twJacquet_prodIrr_le_one : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k], GlobalTheory.BZMir.Leib.WhitHeredity k → GlobalTheory.BZSeg.WhitRankIrr k →

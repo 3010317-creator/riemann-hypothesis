@@ -3,9 +3,16 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Jets.CmQuadraticFormEqAlternatingForm
 public import Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.DepthCond
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors.StChartF
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DepthAtTwoOfUnscaledDepthBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.HostFieldTwoConjugatePlacesOverTwoStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SizesBoundAtTwoFirstRowsWeightsStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.PlaceBelow
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DepthAtTwoOfUnscaledDepthBound
+public import Development.AutomorphicArithmetic.CMTraceForms.Places
+public import Development.AutomorphicArithmetic.PrimeDiscriminants.SlopeTestRemainingChoices
+public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
+public import Formalism.SharpRestriction.Divisibility.AbelianOpenPart.OEOsInjective
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.HostFieldTwoConjugatePlacesOverTwo
+public import Formalism.LocalToGlobal.ProjectiveLattices.IsThRule
+public import Formalism.LocalToGlobal.ProjectiveLattices.PartitionExtendByZeroAntitone
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SizesBoundAtTwoFirstRowsWeights
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ValuationBoundAtResidueCharacteristicStatement
 import Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.DepthTie
 import Formalism.LocalToGlobal.ProjectiveLattices.CrudeVal
@@ -64,13 +71,13 @@ theorem GlobalTheory.RunDepth.leafDepth2_run : (∀ (p : ℕ) [Fact p.Prime], Av
     refine le_trans ?_ Tp.nW_lo.1
     nlinarith [Nat.mul_le_mul_left (D.R.f * D.R.r) (show 2 ≤ D.R.r + 1 by omega)]
   have hL : LawsPi T (depOf T EX Tp hK) := lawsPi_depRun hM EX _ _ _ _ _ hn
-  refine GlobalTheory.T.depthAtTwo_of_unscaled_depth_bound D.host.E T.Q.H T.Q.l T.Q.Dw T.Q.Xo T.Q.c (depOf T EX Tp hK) K Bs Df S P oc O ι N (numOf D L)
+  refine _root_.GlobalTheory.RunDepth.leafDepthTwo_of_unscaled_bound D.host.E T.Q.H T.Q.l T.Q.Dw T.Q.Xo T.Q.c (depOf T EX Tp hK) K Bs Df S P oc O ι N (numOf D L)
     hR.E_eq hR.σ_eq hR.T_eq ⟨hR.jets_eq_fact, hR.g2_eq, hR.cmQuadraticForm_eq_alternatingForm, hR.dd_eq, hR.sm_eq⟩ hL.piSplit hPg tF
     ⟨hR.jets_eq_fact, hR.g2_eq, hR.cmQuadraticForm_eq_alternatingForm, hR.dd_eq, hR.sm_eq⟩ ?_
   intro la hla j
-  obtain ⟨Ap, hAp0, hAp, hle⟩ := GlobalTheory.T.sizes_bound_at_two_first_rows_weights D L Pm Tp hK T.Q hM.pins hx hb O.C hPg.1 (ι j) (hR.inR j)
+  obtain ⟨Ap, hAp0, hAp, hle⟩ := _root_.GlobalTheory.RunDepth.sizes_bound_two D L Pm Tp hK T.Q hM.pins hx hb O.C hPg.1 (ι j) (hR.inR j)
   haveI : Fact (resCharOf la).Prime := ⟨Crude.resCharOf_prime la⟩
-  obtain ⟨hsp, h2, hvd, hup⟩ := GlobalTheory.T.hostField_two_conjugate_places_over_two D T.Q.H hM.pins.1.1 (resCharOf la) (hR.sm_eq ▸ hla)
+  obtain ⟨hsp, h2, hvd, hup⟩ := _root_.GlobalTheory.CharDepth.twoPlaces_host D T.Q.H hM.pins.1.1 (resCharOf la) (hR.sm_eq ▸ hla)
   refine ⟨_, ?_, GlobalTheory.T.unscaledDepth_le_placeOverTwo (resCharOf la) (hAv _) (hHT _) D.host.E T.Q.H (T.Q.Dw (ι j)) T.Q.l (T.Q.Xo (ι j)) T.Q.c
     hR.star_eq D.R.f (D.host.vdH (resCharOf la)) hvd hsp h2 la rfl _ _ _ (fun τ _ _ h => (hL.wts _ (hR.inR j)).1 τ h)
     (DepthTie.card_of_laws T _ hL hM.pins (ι j) (hR.inR j)) Ap hAp0 hAp⟩

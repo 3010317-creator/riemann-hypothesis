@@ -6,15 +6,18 @@ public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsTestFunctionOfFockVacuumThetaFunctionStatement
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FockPolynomialVectorLawsStatement
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FockPolynomialVectorTestThetaZeroEqThetaSeriesStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelTestFunctionMapLinearInjectiveEquivarStatement
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
+public import Development.AbelianVarietyTheory.Definitions.ThetaValues.ExistsMemRowHighestTotalDegreeEqTwo
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaSeriesTestFunctionHolomorphicWeight
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.WeakWeilRepCarriesDerivativesVacuaFockVectorsStatement
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HMatMulVecPerCrd
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RealPeriodMapHomeomorphRiemannFormDensityStatement
+import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.Fischer
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RealPeriodMapHomeomorphRiemannFormDensity
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RealPointsClassicalModelRealVectorSpaceStatement
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.SymplecticCharacterRealFinitePointsMatchStatement
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaFunctionSpaceHeisenbergLawsStatement
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelOrthonormalFrameInDomainPeriodLinearStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelTestFunctionMapLinearInjectiveEquivarStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaSeriesTestFunctionHolomorphicWeightStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.WeakWeilRepCarriesDerivativesVacuaFockVectorsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -86,7 +89,7 @@ theorem eq_zero_of_rho_finW_zero (C : Ctx S T) {F : WO S T → ℂ} (hF : C.IsTh
   have hrat := (GlobalTheory.T.symplecticCharacter_real_finite_points_match D S T C).2.2.2.2.2.2.2
   obtain ⟨B, hB⟩ := (GlobalTheory.T.thetaKernel_orthonormalFrame_inDomain_periodLinear D S T C).1
   have hdom := ((GlobalTheory.T.thetaKernel_orthonormalFrame_inDomain_periodLinear D S T C).2 B hB).2.1
-  have hd := (GlobalTheory.T.realPeriodMap_homeomorph_riemannForm_density D.host.E T.rank C.X C.g C.q0 C.hr C.bas C.idx S.rank C.sympl C.even _ hdom).2.2.2.1
+  have hd := (_root_.GlobalTheory.Ker.zR_laws D.host.E T.rank C.X C.g C.q0 C.hr C.bas C.idx S.rank C.sympl C.even _ hdom).2.2.2.1
   have hRe : ∀ y : Matrix (Fin S.rank) (Fin T.rank) D.host.E, R (embR C.X y) = ratW T S yᵀ - finW S T y := by
     intro y
     obtain ⟨h1, h2, h3, -⟩ := hrat y
@@ -131,7 +134,7 @@ theorem fvec_Th_rmul (C : Ctx S T) {B B' : C.Bas} (hB : C.IsB B) (hB' : C.IsB B'
   have hhe : ∀ (y : Matrix (Fin S.rank) (Fin T.rank) D.host.E) (ψ : TF S.rank C.g), SW.IsSB ψ →
       SW.IsSB (heisG C.X C.bas y ψ) := fun y ψ h =>
     ((GlobalTheory.SW.heisG_laws D.host.E T.rank C.X C.g C.bas C.idx S.rank C.sympl C.even).2.2.2 y ψ h).1
-  have hw := (GlobalTheory.T.thetaSeries_testFunction_holomorphic_weight D.host.E T.rank C.X C.g C.q0 C.hr C.bas C.idx S.rank C.sympl C.even c c')
+  have hw := (_root_.GlobalTheory.SW.theta_holomorphic_weight D.host.E T.rank C.X C.g C.q0 C.hr C.bas C.idx S.rank C.sympl C.even c c')
   set la := bchar (wtOf C.X C.hr c c' S.rank) b
   have t1 : C.IsTh (C.fvec B' (C.Th (C.xB B') φ) Q) :=
     (GlobalTheory.T.fockPolynomialVector_laws D S T C B' hB' (fun _ => 1) _ (hth _ hdom' φ hφ) Q).1

@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.BlockSplitAll
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.CharacterChoiceData
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.CuspidalGaloisUnramified
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ThetaLiftHasPointAtLocalisationSamePlaceStatement
+public import Formalism.LocalToGlobal.NormalizedHeckeFactors.HeckeStdTwOfStd
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ThetaLiftHasPointAtLocalisationSamePlace
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PointOfConditions
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.HeckeStdTwCoverStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -56,7 +57,7 @@ theorem main_alt_alt (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7)
   intro i σ hne
   obtain ⟨Q, hQ⟩ := ((h42 i) σ hne).1.2
   obtain ⟨i', hi', P', x', hth, hx⟩ :=
-    GlobalTheory.T.theta_lift_has_point_at_localisation_same_place D P.M P.H.hecke P.H.av P.H.cover (_root_.GlobalTheory.T.heckeStdTw_cover' hL D P) i σ Q hQ
+    _root_.GlobalTheory.LiftPoint.main D P.M P.H.hecke P.H.av P.H.cover (_root_.GlobalTheory.T.heckeStdTw_cover' hL D P) i σ Q hQ
   obtain ⟨hj, hw⟩ := (D.nd.locs_mem _ _ i').1 hi'
   have hl : D.nd.l i' = D.nd.l i := by rw [← D.nd.w_l i', ← D.nd.w_l i, hw]
   obtain ⟨φ, hφ⟩ := P.H.hecke.sameO i' i hj hw

@@ -6,23 +6,29 @@ public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership
 public import Development.AbelianVarietyTheory.Definitions.UpperBounds.FreeBallIffOfDimXEqZero
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.UnfGroupContainsCongruenceUptoRootsOfUnity
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexUniformizationLawsOfGoodDeepCover
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousOnReadingIntegerExponentSectionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousOnReadingIntegerExponentSection
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspFormsComponentFiniteDimensionalAndSpanned
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCuspCentre
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCuspFormPairQuotientHorizontalGeneratorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsKeySectionFourthRootPerComponentStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCuspFormPairQuotientHorizontalGenerator
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.KchMul
+public import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsFlatSecRankZero
+public import Development.AbelianVarietyTheory.Definitions.KeyFormula.KeyRootOfKeyFormula
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsKeySectionFourthRootPerComponent
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrincipalCongruenceBackTriangularFrame
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionQuotientOfContinuousReadingStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionQuotientOfContinuousReading
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTwSecOfConst
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitSectionThetaKeyRuleWeightFourStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FramesOnEqModel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitSectionThetaKeyRuleWeightFour
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GoodCoverComponentExtendsToRankOneCuspData
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrdConjDifferentEqZero
+public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.IndicatorMemSSAndDomSpan
+public import Formalism.LocalToGlobal.ProjectiveLattices.ModelAt
+public import Development.AbelianVarietyTheory.Definitions.Divisors.MulSmulIdemMem
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FramesOnEqModel
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HorizontalGeneratorZpowMulCuspFormMemSpan
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModuliLawsOfPrincipalLevelFieldOfDefinition
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MulMemCuspFormsOfBoundedSectionComponent
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrdConjDifferentEqZero
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SecZEqZeroOfGenVal
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaKeySectionNormComplexPointsEqTwoPiPowStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaKeySectionNormComplexPointsEqTwoPiPow
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnfoldingSectionsFiniteType
 import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ChartIndependenceUnconditional
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemSuppOnIffIdemMulOfNatural
@@ -30,10 +36,8 @@ import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsBijective
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.GenFrExAndGenFromTest
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.UnfoldingConstantTermsAgreeAtGoodEmbeddings
 import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.KeyFamOne
-public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.IndicatorMemSSAndDomSpan
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CoreArithmeticGroupContainsPrincipalCongruence
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsDatumRankOne
-public import Formalism.LocalToGlobal.ProjectiveLattices.ModelAt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,7 +80,6 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.F
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.RealPlaceEmbeddings
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.GGConn
 import Development.AbelianVarietyTheory.Definitions.Divisors.GenRatios
-public import Development.AbelianVarietyTheory.Definitions.Divisors.MulSmulIdemMem
 import Development.AbelianVarietyTheory.Definitions.Divisors.Multiplier
 
 @[expose] public section
@@ -231,7 +234,7 @@ theorem rdU_eq_of_rdU_mul' (hL : Laws U x) {σ : c.F →+* ℂ} (hσ : GoodEmb c
     differentiableOn_of_mem_holSub' ((mem_cuspW.1 (Submodule.mem_inf.1 hf).1).2 σ hσ) k
   have hint := interior_closure_zeros ((U σ).X k) hdiff hex
   have hcont : ContinuousOn (fun y => rdU (U σ) s k y - q k y) ((U σ).X k).dom :=
-    (GlobalTheory.T.continuousOn_reading_integerExponent_section E H Dw l Xo c r U x hL e' he s hs σ hσ k).sub (hq k)
+    (_root_.GlobalTheory.ReadCont.continuousOn_rdU E H Dw l Xo c r U x hL e' he s hs σ hσ k).sub (hq k)
   have hO := FourierCoefficientDomain.isOpen_dom ((U σ).X k)
   have key : ∀ y ∈ ((U σ).X k).dom, rdU (U σ) s k y = q k y := by
     intro y hy
@@ -288,7 +291,7 @@ end SlopeTestRemainingChoices
 
 theorem flatSec_always : Always fun U x => ArchEx U x := by
   intro E _ _ _ H Dw l Xo c r U x hL Z τ
-  obtain ⟨G, f, g, -, hf, hg, hf0, hq⟩ := GlobalTheory.T.exists_cuspForm_pair_quotient_horizontal_generator E H Dw l Xo c r U x hL Z τ
+  obtain ⟨G, f, g, -, hf, hg, hf0, hq⟩ := _root_.GlobalTheory.FlatPair.flat_pair E H Dw l Xo c r U x hL Z τ
   have hfs : f ∈ secZ Xo c (exZ Dw G) := cuspW_le_secZ G hf.1
   have hgs : g ∈ secZ Xo c (exZ Dw (G + wtOf Dw (flatWt Dw τ) 0)) := cuspW_le_secZ _ hg.1
   have hex : exZ Dw (G + wtOf Dw (flatWt Dw τ) 0) - exZ Dw G = exOf Dw (flatWt Dw τ) 0 := by
@@ -299,7 +302,7 @@ theorem flatSec_always : Always fun U x => ArchEx U x := by
   have hσ₀ := hgood c.F.val.toRingHom
   generalize goodOf c c.F.val.toRingHom = σ₀ at hσ₀
   obtain ⟨a₀, ha₀, h₀⟩ := hq σ₀ hσ₀
-  obtain ⟨sig, hsig, hsi, hsf⟩ := GlobalTheory.T.exists_section_quotient_of_continuous_reading E H Dw l Xo c r U x hL Z _ _ f g hfs hf.2 hgs hg.2 hf0 σ₀ hσ₀
+  obtain ⟨sig, hsig, hsi, hsf⟩ := _root_.GlobalTheory.SecDivision.exists_quotient E H Dw l Xo c r U x hL Z _ _ f g hfs hf.2 hgs hg.2 hf0 σ₀ hσ₀
     (fun k y => a₀ * horizGen ⟨_, hmem σ₀ hσ₀ k⟩ y)
     (fun k => continuousOn_const.mul (flatSec_continuousOn_horizGen _ _)) (fun z hz => h₀ z.1 _ z.2 hz)
   rw [hex] at hsig
@@ -336,7 +339,7 @@ theorem flatSec_always : Always fun U x => ArchEx U x := by
     have h4 := h3 z hz
     rw [h1, ← zero_smul c.F (0 : Rul Xo c), homN_smul, map_zero, norm_zero, zero_mul] at h4
     exact hb.ne h4
-  obtain ⟨inv, hinv, hii, hig⟩ := GlobalTheory.T.exists_section_quotient_of_continuous_reading E H Dw l Xo c r U x hL Z _ _ g f hgs hg.2 hfs hf.2 hg0 σ₀ hσ₀
+  obtain ⟨inv, hinv, hii, hig⟩ := _root_.GlobalTheory.SecDivision.exists_quotient E H Dw l Xo c r U x hL Z _ _ g f hgs hg.2 hfs hf.2 hg0 σ₀ hσ₀
     (fun k y => a₀⁻¹ * (mat y ⟨_, hmem σ₀ hσ₀ k⟩).det)
     (fun k => (continuous_const.mul (flatSec_continuous_det _)).continuousOn) (fun z hz => by
       have hd := (hz.1 ⟨_, hmem σ₀ hσ₀ z.1⟩).1
@@ -371,9 +374,9 @@ theorem exists_ne_zero_key (hL : Laws U x) : Nonempty (KeySec Xo c) ∧ ∀ (Z :
   obtain ⟨κ, k₁, k₂, -, k₄, k₅, k₆, -, -⟩ := GlobalTheory.KeyFamClosing.keyFam_one
   let e : Fin (Fintype.card (Σ τ : E →+* ℂ, Fin (Dw.mult τ))) ≃ Σ τ : E →+* ℂ, Fin (Dw.mult τ) :=
     (Fintype.equivFin _).symm
-  obtain ⟨K, hKmem, hKval⟩ := GlobalTheory.T.exists_unit_section_thetaKeyRule_weightFour κ k₁ k₂ k₆ E H Dw l Xo c _ e hL.pos
+  obtain ⟨K, hKmem, hKval⟩ := _root_.GlobalTheory.KeyFourth.exists_unit_secZ_keyRule κ k₁ k₂ k₆ E H Dw l Xo c _ e hL.pos
   have hσ0 := goodEmb_goodOf c c.F.val.toRingHom
-  obtain ⟨ρ, -⟩ := GlobalTheory.T.exists_keySection_fourthRoot_perComponent κ k₁ k₂ k₆ k₄ E H Dw l Xo c _ e _ r (U _) K hσ0 (hL.unf _ hσ0) hL.geo hL.pos hKmem hKval
+  obtain ⟨ρ, -⟩ := _root_.GlobalTheory.KeyRoot.exists_keySec_pow_four κ k₁ k₂ k₆ k₄ E H Dw l Xo c _ e _ r (U _) K hσ0 (hL.unf _ hσ0) hL.geo hL.pos hKmem hKval
   refine ⟨⟨ρ⟩, fun Z G hG ⟨f, hf, hf0⟩ => ⟨f * (idem Z * (K : Rul Xo c)), ?_,
     mul_ne_zero_of_inv (t := ((K⁻¹ : (Rul Xo c)ˣ) : Rul Xo c)) hf hf0 (by rw [mul_assoc, Units.mul_inv, mul_one])⟩⟩
   have hwt := GlobalTheory.KeyRootTw.wtOf_zero_fst E H Dw
@@ -389,7 +392,7 @@ theorem exists_ne_zero_key (hL : Laws U x) : Nonempty (KeySec Xo c) ∧ ∀ (Z :
   · have := mul_mem_secZ (idem_mem_secZ Z) hKmem
     rwa [zero_add, ← hex] at this
   · rw [mul_comm]; exact mul_mem_suppOn _ (idem_mem_suppOn Z)
-  · obtain ⟨C, hC, -, hCeq⟩ := GlobalTheory.T.thetaKeySection_norm_complexPoints_eq_two_pi_pow κ k₁ k₂ k₅ E H Dw l Xo c _ e σ r (U σ) x K hσ (hL.unf σ hσ) (hL.xi σ hσ)
+  · obtain ⟨C, hC, -, hCeq⟩ := _root_.GlobalTheory.KeyArchNorm.homN_key_const κ k₁ k₂ k₅ E H Dw l Xo c _ e σ r (U σ) x K hσ (hL.unf σ hσ) (hL.xi σ hσ)
       ⟨ρ⟩ hL.pos hKmem hKval
     refine ⟨C, fun z hz => ?_⟩
     have h0 : homN (U σ) x (wtOf Dw 0 (-4)) (K : Rul Xo c) z = C := hCeq z.1 z.2 hz.1

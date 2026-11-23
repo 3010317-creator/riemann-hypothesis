@@ -2,8 +2,8 @@ module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.AcrisKummerUnits.MapUgAlgebraMap
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CrystallineFiltrationSpanDividedPowers
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PrimePowAnnihilatorReductionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TensorLiftKernelModPrimeStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PrimePowAnnihilatorReduction
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TensorLiftKernelModPrime
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -146,7 +146,7 @@ theorem mem_span_of_tensMap_eq_zero (n : ℕ) (z : TensorProduct (Ainf l) (Acris
     z ∈ Ideal.span {(l : TensorProduct (Ainf l) (Acris l) A.W) ^ n} :=
   mem_span_pow_of_compatible l (B := A.Acr) (tensMap A) (fun n => A.red (Nat.le_succ n))
     (fun n => A.red (Nat.le_add_left 1 n)) (fun n z => red_tensMap A _ z) (fun n z => red_tensMap A _ z)
-    (fun n x => ((GlobalTheory.T.prime_pow_annihilator_reduction A n 1).2.2.1 x).1) (GlobalTheory.T.tensor_lift_kernel_mod_prime A) n z hz
+    (fun n x => ((_root_.GlobalTheory.CompanionTheory.PerfAlg.lseq A n 1).2.2.1 x).1) (_root_.GlobalTheory.CompanionTheory.TensOne.main A) n z hz
 
 theorem tensMap_eq_zero_of_mem (n : ℕ) (z : TensorProduct (Ainf l) (Acris l) A.W)
     (hz : z ∈ Ideal.span {(l : TensorProduct (Ainf l) (Acris l) A.W) ^ n}) : tensMap A n z = 0 :=

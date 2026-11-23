@@ -1,11 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.SmallPair
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GluedPlaceDoubleStepExactSignedConstantStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ValueDoubleUnif
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GluedPlaceDoubleStepExactSignedConstant
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PlacesToAdeles
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RamifiedOperatorBijectiveFiniteTranslationCombin
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ValueDoubleExact
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RamifiedOperatorsBijectiveAtPlaces
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HomLatticeIndicatorOnSplitHalfEqHalfIndicatorStatement
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IndicatorHomSelfDualComponentsSchwartzBruhatStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RamifiedOperatorBijectiveFiniteTranslationCombinStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RamifiedOperatorsBijectiveAtPlacesStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -87,7 +90,7 @@ end GlobalTheory.FinPl.VertexAllProof
 open GlobalTheory.FinPl.VertexAllProof in
 theorem GlobalTheory.FinPl.vertexAll : ∀ D : D7, GlobalTheory.FinPl.VertexAll D := by
   intro D k _ _ _ _ ι p I P hPl q ψ χ hχ hc
-  have hvg := fun i => GlobalTheory.T.gluedPlace_doubleStep_exact_signed_constant D k (p i) q ψ (χ i) (hχ i) (hc i)
+  have hvg := fun i => _root_.GlobalTheory.FinPl.VertexExactCount.vertexExact D k (p i) q ψ (χ i) (hχ i) (hc i)
   refine ⟨fun i => (hvg i).choose, fun i => (hvg i).choose_spec.1, ?_⟩
   intro n n' n'' _ _ _ _ _ _
   have hrc := fun i => (hvg i).choose_spec.2 n n' n''
@@ -97,7 +100,7 @@ theorem GlobalTheory.FinPl.vertexAll : ∀ D : D7, GlobalTheory.FinPl.VertexAll 
   have hP : ∀ i, P (p i).v := fun i => (hPl.mem _).2 ⟨i, rfl⟩
   have hmaps : ∀ (ls : List ι) (φ : GA D B.A → ℂ), a.Ram φ →
       a.Ram (a.sAll q (fun i => resChar (χ i) (hχ i) q) (fun i => (hvg i).choose) ls φ) := fun ls φ hφ =>
-    (GlobalTheory.T.epsilonFourierProduct_bijective_gluedPlaces D k ι p q χ hχ (fun i => (hvg i).choose) n' B.A B.V₀ a hPl.inj ls).1.mapsTo hφ
+    (_root_.GlobalTheory.FinPl.allBijective_all D k ι p q χ hχ (fun i => (hvg i).choose) n' B.A B.V₀ a hPl.inj ls).1.mapsTo hφ
   have hV : ∀ ls : List ι, ∀ Ξ₁' Ξ₂',
       OverAll ψ a.α₀ b.β M₀ M₁ (fun i => tensCol (phiOne (a.P i) (b.Q i)) (vecInd (b.Q i).lat)) ls Ξ₁ Ξ₁' →
       OverAll ψ b.β a'.α₀ M₁ M₂ (fun i => tensRow (phiOne (b.Q i) (a'.P i)) (dualInd (b.Q i).lat)) ls Ξ₂ Ξ₂' →
@@ -120,7 +123,7 @@ theorem GlobalTheory.FinPl.vertexAll : ∀ D : D7, GlobalTheory.FinPl.VertexAll 
       have hv := hre i (a.P i) (b.Q i) (a'.P i) σ B J B' s₁ s₂ l vL (hunr _ (hP i)).1 (hunr _ (hP i)).2 (a.α i)
         (a.α₀ i) (b.β i) (a'.α i) (a'.α₀ i) (hgl i).1.sum (hgl i).2.1.sum M₀ M₁ M₁ M₂ g₁ g₁ Ξ₁' g₂ g₂ Ξ₂' ho₁ hΞ₁'
         ho₂ hΞ₂' F hF
-      have hsop := ((GlobalTheory.T.ramifiedOperator_bijective_finite_translation_combination D k (p i) n' q (χ i) (hχ i) _ rfl ((hvg i).choose) B.A (a.α i) (a.P i)).2.1 F hF).2
+      have hsop := ((_root_.GlobalTheory.FinPl.ramBijective_holds D k (p i) n' q (χ i) (hχ i) _ rfl ((hvg i).choose) B.A (a.α i) (a.P i)).2.1 F hF).2
       rw [ih g₁ g₂ hg₁ hg₂ φ hφ, ← hFP, hv, ← hsop, hFP, smul_smul, List.map_cons, List.prod_cons, mul_comm]
       rfl
   intro Ξ₁' Ξ₂' h1 h2 φ hφ

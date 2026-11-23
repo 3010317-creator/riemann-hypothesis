@@ -2,15 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ProjExists
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.OffQOfSizeRows
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CardMinusSignsHalfOfEvenStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.StrictInterlaceIffDescEnum
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CardMinusSignsHalfOfEven
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ChiGridNumericalDataRealPlaceGapSizeBoundsStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSignsMatchBranchingCoordinateEquivStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HarishChandraParamOfEvenStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InterlacedSignedParametersStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsInterlacedSubSingleOfSpreadStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParametersSeparatedByOneStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParametersSpacingAndGapStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SignedParametersBoundedStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSignsMatchBranchingCoordinateEquiv
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HarishChandraParamOfEven
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InterlacedSignedParameters
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsInterlacedSubSingleOfSpread
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParametersSeparatedByOne
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParametersSpacingAndGap
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SignedParametersBounded
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -88,19 +89,19 @@ private theorem exists_par_of_gridData_bounds {G : GlobalTheory.SignedHC.GridDat
     have h1 : (1 : ℝ) ≤ ((n : ℝ) + 1) ^ 3 := one_le_pow₀ (by linarith [(Nat.cast_nonneg n : (0 : ℝ) ≤ n)])
     linarith
   have hvk1 : 1 ≤ G.v G.k + G.b 1 := by omega
-  obtain ⟨hc, hc'⟩ := GlobalTheory.T.card_minus_signs_half_of_even hme hga0 hl hm
-  obtain ⟨e, he⟩ := GlobalTheory.T.exists_signsMatchBranchingCoordinate_equiv ε ε' (hc.trans hc'.symm)
-  obtain ⟨hHl, hHm⟩ := GlobalTheory.T.harish_chandra_param_of_even hke hme hn hl hm
-  have hw := GlobalTheory.T.interlaced_signed_parameters hga0 hvk1 hl hm
-  obtain ⟨hs1, hs2⟩ := GlobalTheory.T.parameters_separated_by_one hga0 hv (by omega) hl hm
-  obtain ⟨hwl, hwm, hgl, hgm⟩ := GlobalTheory.T.parameters_spacing_and_gap hH hga hv hvk hb hl hm
+  obtain ⟨hc, hc'⟩ := _root_.GlobalTheory.SignedHC.GridData.card_minus_signs_interlacing_parameters hme hga0 hl hm
+  obtain ⟨e, he⟩ := _root_.GlobalTheory.SepReal.exists_signs_equiv ε ε' (hc.trans hc'.symm)
+  obtain ⟨hHl, hHm⟩ := _root_.GlobalTheory.HCEnum.isHCParam_parPi_zero_parD0 hke hme hn hl hm
+  have hw := _root_.GlobalTheory.SignedHC.GridData.interlaced_pi_zero_and_D0 hga0 hvk1 hl hm
+  obtain ⟨hs1, hs2⟩ := _root_.GlobalTheory.WordSep.word_sep hga0 hv (by omega) hl hm
+  obtain ⟨hwl, hwm, hgl, hgm⟩ := _root_.GlobalTheory.SignedHC.GridData.pi_zero_and_D0_spacing hH hga hv hvk hb hl hm
   have habs : ∀ a c, a ≠ c → 2 ≤ |lam a - lam c| := by
     intro a c hac
     rcases lt_or_gt_of_ne hac with h | h
     · exact (hwl a c h).trans (le_abs_self _)
     · rw [abs_sub_comm]
       exact (hwl c a h).trans (le_abs_self _)
-  have hB := GlobalTheory.T.signed_parameters_bounded hvk0 hb1 ha0 hbm hl hm
+  have hB := _root_.GlobalTheory.Twist.parPi_parD0_entries_bounded hvk0 hb1 ha0 hbm hl hm
   have hk2 := G.two_le_k
   have hsum := Finset.card_filter_add_card_filter_not (s := (Finset.univ : Finset (Fin n)))
     (fun i => ε' i = false)
@@ -116,7 +117,7 @@ private theorem exists_par_of_gridData_bounds {G : GlobalTheory.SignedHC.GridDat
       simp
     rw [heq, Finset.card_univ, Fintype.card_fin] at hsum
     omega
-  exact ⟨e, he, h3, hHl, hHm, hw, GlobalTheory.T.isInterlaced_sub_single_of_spread hw habs hs1 hs2, hwl, hwm, hgl, hgm, hneg, hpos, hB⟩
+  exact ⟨e, he, h3, hHl, hHm, hw, _root_.GlobalTheory.SepReal.interlaced_sub_single hw habs hs1 hs2, hwl, hwm, hgl, hgm, hneg, hpos, hB⟩
 
 theorem realInputPar : Ev fun {D} _ _ {sc} _ _ _ => ∀ (τ : D.what₂.Tau) (ε : Fin (D.R.r + 1) → Bool) (lam : Fin (D.R.r + 1) → ℝ)
     (ε' : Fin D.R.r → Bool) (mu : Fin D.R.r → ℝ), IsEnum (Node.par D sc.cGap (.core 0) τ) lam ε →

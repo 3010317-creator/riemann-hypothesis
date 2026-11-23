@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsUnitNorm
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedQuadraticNormsTraceUniformizerFactsStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedQuadraticNormsTraceUniformizerFacts
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -112,7 +112,7 @@ theorem exists_orthonormal_basis : ∀ (K : UQ) (V : Type) [AddCommGroup V] [Mod
     ∃ b : Module.Basis (Fin (Module.finrank K.E V)) K.E V, Submodule.span K.O (Set.range b) = L ∧
       ∀ i j, h (b i) (b j) = if i = j then 1 else 0 := by
   intro K V _ _ _ _ _ h hadd hsmul hsym L hfg hspan hdual
-  obtain ⟨hN, hT, -, -⟩ := GlobalTheory.T.unramifiedQuadratic_norms_trace_uniformizer_facts K
+  obtain ⟨hN, hT, -, -⟩ := _root_.GlobalTheory.UnitLemma.UnramNorm.unram_quadratic_facts K
   obtain ⟨m, v, hvo, hvs⟩ := exists_orthonormal_family K hN hT _ V h rfl hadd hsmul hsym L hfg hspan hdual
   have hli : LinearIndependent K.E v := by
     rw [Fintype.linearIndependent_iff]

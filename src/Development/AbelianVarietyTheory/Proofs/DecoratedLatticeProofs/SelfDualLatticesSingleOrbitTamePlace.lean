@@ -1,9 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittCoreEmbeddingPreservesSupportedUnitarySubgro
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicPointComponentsAtPlacesLatticesVacuaStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsUnimodularBasisSelfDualLatticeAtPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnimodularHermitianCongrOneAtTamePlaceStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicPointComponentsAtPlacesLatticesVacua
+public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.MarkSpec
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsUnimodularBasisSelfDualLatticeAtPlace
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnimodularHermitianCongrOneAtTamePlace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -140,8 +142,8 @@ theorem exists_onb (S : HSp D) (v : Pl D) (ε : AE D) (Λ : AddSubgroup (Fin S.r
     ext i j
     change cA D ((X * Y) j i) = (adj Y * adj X) i j
     simp only [Matrix.mul_apply, map_sum, map_mul, GlobalTheory.MixModel.adj, Matrix.transpose_apply, Matrix.map_apply, mul_comm]
-  obtain ⟨β, β', hβ, hβ', h1, h2, hmem, hHO, hHc, hH⟩ := GlobalTheory.T.exists_unimodular_basis_selfDual_lattice_at_place D S v ε Λ ht hεε hcε hεO hεI hΛ
-  obtain ⟨P, P', hP, hP', hPP', hP'P, hPH⟩ := GlobalTheory.T.unimodular_hermitian_congr_one_at_tamePlace D v ε S.rank _ ht hεε hcε hεO hεI hHO hHc hH
+  obtain ⟨β, β', hβ, hβ', h1, h2, hmem, hHO, hHc, hH⟩ := _root_.GlobalTheory.IwaPlace.SDBasis.exists_basis_unimodular D S v ε Λ ht hεε hcε hεO hεI hΛ
+  obtain ⟨P, P', hP, hP', hPP', hP'P, hPH⟩ := _root_.GlobalTheory.IwaPlace.UnimodNF.unimodular_congr_one D v ε S.rank _ ht hεε hcε hεO hεI hHO hHc hH
   refine ⟨β * P, P' * β', mul_mem_idAt_left P hβ, mul_mem_idAt_right P' hβ', ?_, ?_, ?_, ?_⟩
   · calc β * P * (P' * β') = β * (P * P') * β' := by simp only [Matrix.mul_assoc]
       _ = ε • (β * β') := by rw [hPP', Matrix.mul_smul, Matrix.mul_one, Matrix.smul_mul]
@@ -170,7 +172,7 @@ theorem selfDual_orbit : ∀ (D : D7) (S₀ : HSp D) (v : Pl D) (Λ Λ' : AddSub
     ext i j
     change cA D ((X * Y) j i) = (adj Y * adj X) i j
     simp only [Matrix.mul_apply, map_sum, map_mul, GlobalTheory.MixModel.adj, Matrix.transpose_apply, Matrix.map_apply, mul_comm]
-  obtain ⟨⟨ε, hεε, hcε, hεO, hεI, -⟩, -⟩ := GlobalTheory.T.adelicPoint_components_atPlaces_lattices_vacua D (· = v)
+  obtain ⟨⟨ε, hεε, hcε, hεO, hεI, -⟩, -⟩ := _root_.GlobalTheory.FinPl.localComponents D (· = v)
   obtain ⟨b, b', hb, hb', hbb', hb'b, hmem, hG⟩ := exists_onb S v ε Λ ht hεε hcε hεO hεI hΛ
   obtain ⟨c, c', hc, hc', hcc', hc'c, hmem', hG'⟩ := exists_onb S v ε Λ' ht hεε hcε hεO hεI hΛ'
   set g := c * b' with hg

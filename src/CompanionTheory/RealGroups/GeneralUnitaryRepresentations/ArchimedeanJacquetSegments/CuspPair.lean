@@ -5,8 +5,9 @@ public import Development.WeilBound.RepresentationTheoryGL.GenericUnitaryGL.Segm
 public import CompanionTheory.RealGroups.GeneralUnitaryRepresentations.WhittakerModels.WhitCuspOfSegCuspGeneric
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NontrivialTwJacquetOfSurjective
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalPairSubGeneric
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.SegmentCuspLines.ProdIrrFiniteLength
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ReducibleCuspidalPairNongenericSubquotient
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicitySubquotientLe
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ReducibleCuspidalPairNongenericSubquotientStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -81,7 +82,7 @@ theorem cuspPairIrr_of (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k
   intro x y N hd hx hy h1 h2
   by_contra hred
   obtain ⟨ψ, hc, hψ⟩ := exists_continuous_addChar_ne_one k
-  obtain ⟨τ, hτ, hg⟩ := GlobalTheory.T.reducible_cuspidal_pair_nongeneric_subquotient k (CompanionTheory.rg.gu.whit.whitRankIrr k) ψ hc hψ x y N hd hx hy hred
+  obtain ⟨τ, hτ, hg⟩ := _root_.GlobalTheory.CompanionTheory.CuspPair.exists_nongeneric_subquotient k (CompanionTheory.rg.gu.whit.whitRankIrr k) ψ hc hψ x y N hd hx hy hred
   have hng : ¬ IsGeneric τ.ρ := fun hG => hg ((isGeneric_iff_isGenericFor hc hψ τ.ρ).1 hG)
   obtain ⟨α, β, β', hd1, hd2, hα, hβ, hββ, j1, j2⟩ := h N τ.V τ.ρ τ.smooth τ.irr hng
   have hp1 : ∀ a, 0 < (![α, β] a).1 := Fin.forall_fin_two.2 ⟨hα, hβ⟩

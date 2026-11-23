@@ -2,11 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRatioOfWeight
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbsFinsumIntegralWeightSubLe
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BergmanFunctionTotalMassExtremalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsChernTopPowerVolumeDensityRatioStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramPosDefL2LeSupOfLinIndepStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicMorseSectionsMLAddAUniformStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothVolumeDensityFiniteIsOpenPosStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BergmanFunctionTotalMassExtremal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsChernTopPowerVolumeDensityRatio
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramPosDefL2LeSupOfLinIndep
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicMorseSectionsMLAddAUniform
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothVolumeDensityFiniteIsOpenPos
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -94,8 +94,8 @@ theorem tendsto_finsum_integral_berg : ∀ (k : Type) [CommRing k] (X : Scheme.{
   haveI : Finite (k →+* ℂ) := hX.finite_emb
   letI := Fintype.ofFinite (k →+* ℂ)
   have hcpt : ∀ σ, CompactSpace (CxPts p σ) := hX.compactSpace
-  have hfm : ∀ σ, IsFiniteMeasure (ω σ).meas := fun σ => (GlobalTheory.T.smoothVolumeDensity_finite_isOpenPos k X p D hX hG σ (ω σ)).1
-  choose ρ hρR hρ0 hρint using fun σ => GlobalTheory.T.exists_chernTopPower_volumeDensity_ratio k X p D hX hG P.L hpos σ (ω σ)
+  have hfm : ∀ σ, IsFiniteMeasure (ω σ).meas := fun σ => (_root_.GlobalTheory.HSAmp.volDens_meas_finite_openPos k X p D hX hG σ (ω σ)).1
+  choose ρ hρR hρ0 hρint using fun σ => _root_.GlobalTheory.HSAmp.exists_isRatio_chernInt k X p D hX hG P.L hpos σ (ω σ)
   have hbd : ∀ σ (g : CxPts p σ → ℝ), Continuous g → ∃ C, ∀ y, |g y| ≤ C := fun σ g hg => by
     haveI := hcpt σ
     obtain ⟨C, hC⟩ := isCompact_univ.exists_bound_of_continuousOn hg.continuousOn
@@ -126,9 +126,9 @@ theorem tendsto_finsum_integral_berg : ∀ (k : Type) [CommRing k] (X : Scheme.{
   rw [hgd] at hr
   refine tendsto_of_abs_sub_le_eventually _ (fun m : ℕ => (r m : ℝ) / (m : ℝ) ^ D) (Iw / D.factorial)
     (G' / D.factorial) W V C hC0 hr fun ε hε => ?_
-  filter_upwards [GlobalTheory.T.holomorphicMorse_sections_mL_add_A_uniform k X p D hX hG P hpos ω ρ hρR ε hε, eventually_ge_atTop 1] with m hmo hm1
-  obtain ⟨hfam, hpd, -⟩ := GlobalTheory.T.gram_posDef_l2_le_sup_of_lin_indep k X p D hX hG P ω m 1 (Fin (r m)) (f m) (hf m) (hli m)
-  obtain ⟨hBi, hBs, hB0, hBx⟩ := GlobalTheory.T.bergman_function_total_mass_extremal (k →+* ℂ) (fun σ => CxPts p σ) (Fin (r m))
+  filter_upwards [_root_.GlobalTheory.HSAmp.Morse.cmb_le k X p D hX hG P hpos ω ρ hρR ε hε, eventually_ge_atTop 1] with m hmo hm1
+  obtain ⟨hfam, hpd, -⟩ := _root_.GlobalTheory.HSAmp.gram_posDef_and_l2_le_sup_bound k X p D hX hG P ω m 1 (Fin (r m)) (f m) (hf m) (hli m)
+  obtain ⟨hBi, hBs, hB0, hBx⟩ := _root_.GlobalTheory.HSAmp.berg_mass_extremal (k →+* ℂ) (fun σ => CxPts p σ) (Fin (r m))
     (fun σ => (ω σ).meas) (vals P m 1 (f m)) hfam hpd
   set M : ℝ := (m : ℝ) ^ D with hMdef
   have hM : 0 < M := pow_pos (by exact_mod_cast hm1) D

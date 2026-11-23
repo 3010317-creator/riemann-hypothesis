@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.SiegelToroidalIntegral
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualNumberFieldHomFlatSurjective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelFamilyClassifiedOfFaithfullyFlatStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelPointLiftsToDualNumbersStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelFamilyClassifiedOfFaithfullyFlat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelPointLiftsToDualNumbers
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelPrePullbackPrincipalRingChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -128,7 +128,7 @@ theorem classified_dualNumber : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n �
   have hff : ψ.FaithfullyFlat := (flat_and_surjective_SpecMap_iff (CommRingCat.ofHom ψ)).1 ⟨hfl, hsurj⟩
   letI : Algebra (DualNumber K) (DualNumber L) := ψ.toAlgebra
   haveI : Module.FaithfullyFlat (DualNumber K) (DualNumber L) := RingHom.faithfullyFlat_algebraMap_iff.1 hff
-  refine GlobalTheory.T.siegelFamily_classified_of_faithfullyFlat g n hg hn hodd F (DualNumber K) (DualNumber L) _ c hc ?_
+  refine _root_.GlobalTheory.SiegFpqcDesc.classified_of_faithfullyFlat g n hg hn hodd F (DualNumber K) (DualNumber L) _ c hc ?_
   intro c' hc'
   have hp : c'.Principal := by
     refine (GlobalTheory.SiegelRingChange.siegPre_pull_ringChange g n (cycAway n) (cycAway n) (zetaAway n) (zetaAway n)
@@ -145,7 +145,7 @@ theorem classified_dualNumber : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n �
       ∀ c' : SiegPre g n (zetaAway n) (spMap b), c'.Principal →
       ∃ f : Sp (DualNumber L) ⟶ F.X, f ≫ F.s = spMap b ∧ SiegPB c' F.univ f := by
     rintro b rfl c' hc'
-    exact GlobalTheory.T.siegel_point_lifts_to_dual_numbers g n hg hn hodd F L ((algebraMap K L).comp β₀) c' hc'
+    exact _root_.GlobalTheory.FirstOrderSiegel.classified_dualNumber_of_algClosed g n hg hn hodd F L ((algebraMap K L).comp β₀) c' hc'
   exact key _ e c' hp
 
 end GlobalTheory.SiegelTangent

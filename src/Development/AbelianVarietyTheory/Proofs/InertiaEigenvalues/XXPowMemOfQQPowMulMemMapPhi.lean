@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MemEurOfTeichmullerSeries
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PhiFreeStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PhiFree
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -144,7 +144,7 @@ theorem XX_pow_mem_of_QQ_pow_mul_mem_map_phi : ∀ (l : ℕ) [Fact l.Prime] (O :
     | succ m ih =>
       intro y hy
       obtain ⟨z, hz, rfl⟩ := colon_le_map (phi l O : PowerSeries O →+* PowerSeries O)
-        (fun j : Fin l => (1 + PowerSeries.X) ^ (j : ℕ)) (GlobalTheory.T.existsUnique_decomposition_one_add_X_pow_mul_phi l O hl0 hlu)
+        (fun j : Fin l => (1 + PowerSeries.X) ^ (j : ℕ)) (_root_.GlobalTheory.Cyc.phi_free l O hl0 hlu)
         (𝔞 (i + (m + 1 : ℕ))) (𝔞 (i + m)) (XX l O s ^ H) (QQ l O s ^ H)
         (by rw [map_pow, ← mul_pow]; exact congrArg (· ^ H) (Series.phi_XX l O s))
         (fun g hg => by

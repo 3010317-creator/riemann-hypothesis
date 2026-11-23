@@ -8,7 +8,7 @@ public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
 public import Mathlib.RingTheory.SimpleRing.Principal
 public import Mathlib.Topology.LocallyConstant.Basic
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.Hilbert90LocallyConstantCocycleStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.Hilbert90LocallyConstantCocycle
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KummerExponentOfGaloisElementIsKummerCharacter
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -103,7 +103,7 @@ theorem zmod_cocycle_eq_coboundary_of_unit_twisted_cocycle : ∀ (K Ω : Type) [
     simp only [u, Units.val_pow_eq_pow_val, map_pow]
     rw [← mul_pow, hcoc g h, mul_pow, ← pow_mul, mul_comm (c g h).val N, pow_mul, hζ.pow_eq_one,
       one_pow, one_mul]
-  obtain ⟨t, ht⟩ := GlobalTheory.T.exists_unit_eq_div_of_locallyConstant_cocycle K Ω u hu_lc hu_coc
+  obtain ⟨t, ht⟩ := _root_.GlobalTheory.hilbert90_locallyConstant_cocycle K Ω u hu_lc hu_coc
   obtain ⟨τ, hτ⟩ := IsAlgClosed.exists_pow_nat_eq (t : Ω) hN0
   have ht0 : (t : Ω) ≠ 0 := t.ne_zero
   have hτ0 : τ ≠ 0 := by

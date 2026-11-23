@@ -1,9 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.BaseIdealIdeal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseIdealSheafOfIdealComapSpecMapSupportStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosedEmptyOfUniversallyClosedOfLeJacobsonStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompatibleReductionSystemMapImmersionStatement
+public import Mathlib.AlgebraicGeometry.IdealSheaf.Functorial
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseIdealSheafOfIdealComapSpecMapSupport
+public import Mathlib.AlgebraicGeometry.Morphisms.UniversallyClosed
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosedEmptyOfUniversallyClosedOfLeJacobson
+public import Mathlib.AlgebraicGeometry.Morphisms.Immersion
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompatibleReductionSystemMapImmersion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,7 +59,7 @@ theorem alg_comp_of_isOpenImmersion : ∀ (R : Type) [CommRing R] (I : Ideal R),
     ∀ (W W' : Scheme.{0}) (f : W ⟶ Spec (CommRingCat.of R)) (j : W' ⟶ W), IsSeparated f →
       IsOpenImmersion j → Alg f I → Alg (j ≫ f) I := by
   intro R _ I hI W W' f j hf hj hA t ht hp
-  obtain ⟨hs, hsp, hsc⟩ := GlobalTheory.T.compatibleReductionSystem_map_immersion R I W W' f j hf inferInstance t ht hp
+  obtain ⟨hs, hsp, hsc⟩ := _root_.GlobalTheory.FormalAlg.mapSystem R I W W' f j hf inferInstance t ht hp
   obtain ⟨T, hTp, hTr⟩ := hA _ hs hsp
 
   have hs0 : ((((t 0).map j).support : Set W)) ⊆ Set.range j := by
@@ -74,7 +78,7 @@ theorem alg_comp_of_isOpenImmersion : ∀ (R : Type) [CommRing R] (I : Ideal R),
     haveI : UniversallyClosed (T.subschemeι ≫ f) := inferInstance
     have hZ : IsClosed (T.subschemeι.base ⁻¹' (Set.range j)ᶜ) :=
       (j.isOpenEmbedding.isOpen_range.isClosed_compl).preimage T.subschemeι.continuous
-    have hE := GlobalTheory.T.eq_empty_of_isClosed_of_universallyClosed_of_le_jacobson R I hI T.subscheme (T.subschemeι ≫ f) inferInstance _ hZ (by
+    have hE := _root_.GlobalTheory.closed_empty_of_universallyClosed_of_le_jacobson R I hI T.subscheme (T.subschemeι ≫ f) inferInstance _ hZ (by
       intro x hx hIx
       apply hx
       apply hs0
@@ -82,7 +86,7 @@ theorem alg_comp_of_isOpenImmersion : ∀ (R : Type) [CommRing R] (I : Ideal R),
       rw [← h0, Scheme.IdealSheafData.support_sup]
       refine ⟨?_, ?_⟩
       · rw [← Scheme.IdealSheafData.range_subschemeι]; exact ⟨x, rfl⟩
-      · refine ((GlobalTheory.T.baseIdealSheafOfIdeal_comap_specMap_support).2.2 R W f (I ^ (0 + 1)) (T.subschemeι x)).2 ?_
+      · refine ((_root_.GlobalTheory.FormalAlg.baseIdeal_calculus).2.2 R W f (I ^ (0 + 1)) (T.subschemeι x)).2 ?_
         rw [zero_add, pow_one]
         simpa using hIx)
     intro y hy
@@ -106,6 +110,6 @@ theorem alg_comp_of_isOpenImmersion : ∀ (R : Type) [CommRing R] (I : Ideal R),
       rw [← Scheme.IdealSheafData.comapIso_hom_fst, Category.assoc, pullback.condition_assoc]
     rw [he]
     infer_instance
-  · rw [← (GlobalTheory.T.baseIdealSheafOfIdeal_comap_specMap_support).1 R W W' f j, ← Scheme.IdealSheafData.comap_sup, show T ⊔ baseIdeal f (I ^ (e + 1)) = (t e).map j from hTr e, hsc e]
+  · rw [← (_root_.GlobalTheory.FormalAlg.baseIdeal_calculus).1 R W W' f j, ← Scheme.IdealSheafData.comap_sup, show T ⊔ baseIdeal f (I ^ (e + 1)) = (t e).map j from hTr e, hsc e]
 
 end GlobalTheory.FormalAlg

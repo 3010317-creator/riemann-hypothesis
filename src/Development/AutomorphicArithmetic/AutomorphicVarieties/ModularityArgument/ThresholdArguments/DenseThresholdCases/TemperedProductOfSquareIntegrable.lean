@@ -10,11 +10,11 @@ public import CompanionTheory.AutomorphicTheory.PadicCyclotomicFields.GcohTop
 public import CompanionTheory.AutomorphicTheory.PadicCyclotomicFields.GcohTopEuler
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CuspFormsRapidDecay
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeHomLiftingNilpotentDividedPowers
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualAbelianSchemeExistsBiduality
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMulEquiv
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GrothendieckDeformationOfLifting
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HcfjHolds
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeTateFE
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.HeckeTateFunctionalEquationCM
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.HeckeTateFunctionalEquation
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LoceulerHolds
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocfinHolds
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BrauerDegreeZero
@@ -23,44 +23,50 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamP
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FixedNeBotOfIsSubquotient
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HeckeLAdicCharacterAboveOfPublished
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedOrthogonalityHolds
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GlobalArtinReciprocityHolds
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
+public import CompanionTheory.AutomorphicTheory.PlaceSeparation.IsOpenQuotientMapArt0
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GeometricLemmaOfFiltration
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.TemperedLocalComponents.PSpecC
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.CuspDiscreteDecompositionGL
+public import Development.WeilBound.CoreStatements.RegularisedThetaMirabolic.KFiniteCuspForms.CuspSp
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.LitCharCrys
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.AlgebraicCharacters.AlgebraicCharacterWD
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.FockModels.GlnTemp
-public import Development.AutomorphicArithmetic.ThetaCorrespondence.GaloisRepresentations.BlochKatoLocal
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.RationalDualityOfAllCoefficients
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.BlochKatoLocal
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.GaloisRepresentations.GreenbergWiles
-public import Development.AutomorphicArithmetic.ThetaCorrespondence.GaloisRepresentations.HeckeDeRham
-import Development.AutomorphicSpectrum.Proofs.GlobalProofs.GeometricLemma
+public import Development.WeilBound.CoreStatements.PublishedTheorems.HeckeLAdicCharacters.Outright
 public import Development.DiscreteGroups.GlobalIrreducibility.LConvFinal
 public import Development.WeilBound.CoreStatements.AbelianHeightsDuality.PublishedTheoremStatements.BridgesAut
 public import Development.WeilBound.CoreStatements.AbelianHeightsDuality.PublishedTheoremStatements.BridgesMore
 public import Development.WeilBound.CoreStatements.AbelianHeightsDuality.PublishedTheoremStatements.ProvedMore
-public import Development.WeilBound.CoreStatements.AutomorphicKernels.DeligneRibet.DeligneRibetHolds
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.SiegelKlingenDeligneRibet
+public import Development.WeilBound.CoreStatements.AutomorphicKernels.DeligneRibet.NotDvdAbsNorm
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.DualAbelianScheme.AbelianDeRhamDuality.AbelianDeRhamDuality
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.GrothendieckRingPolynomial.GrothendieckRingPolynomialOfSeg
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.LanglandsExhaustion.EssSquareIntegrableSegmentsOfSeg
-import Development.WeilBound.CoreStatements.AutomorphicKernels.LanglandsExhaustion.LanglandsMultisegmentsOfSeg
 public import Development.WeilBound.CoreStatements.PublishedTheorems.ClozelPurity.Bridge
 public import Development.WeilBound.CoreStatements.PublishedTheorems.FiniteGLInvariants.AffineLieInvariants.Imports
 public import Development.WeilBound.CoreStatements.PublishedTheorems.GlobalEulerCharacteristic.GlobalEulerCharOfLemmaX
 public import Development.WeilBound.CoreStatements.PublishedTheorems.GlobalFiniteness.GlobalFiniteness
 public import Development.WeilBound.CoreStatements.PublishedTheorems.JacquetShalikaRigidity.JacquetShalikaRigidity
 public import Development.WeilBound.CoreStatements.PublishedTheorems.PoitouTateDuality.PoitouTateNineTerm.PoitouTateNormalisedHolds
-import Development.WeilBound.CoreStatements.RegularisedThetaMirabolic.KFiniteCuspForms.CuspSp
 public import Development.WeilBound.CoreStatements.StandardPublishedResults.StandardTheoremStatements.GlobalArtinReciprocity
 public import Development.WeilBound.CoreStatements.StandardPublishedResults.StandardTheoremStatements.GreenRegularCharacters
-import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.BernsteinZelevinskyGL.TopAdm
-import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.BernsteinZelevinskyGL.TopStd
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.GeometricSplitting.Imports
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MultiplicityOneRigidity.GelfandKazhdanDualOfRigidity
-public import Development.WeilBound.CoreStatements.TotallyDisjointProducts.SLGLProductIrreducibility.TdpFill
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.TotallyDisjointProductIrreducible
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.TotallyDisjointProductIrreducibleOfPolynomialRin
 public import Development.WeilBound.RepresentationTheoryGL.CasimirAlgebra.KugaCoordinates.ClozelCohomological
 public import Development.WeilBound.RepresentationTheoryGL.ConstantTermFiniteness.CuspidalConstantTerms.FiniteOfCuspOfConstTerm
 public import Development.WeilBound.RepresentationTheoryGL.GenericUnitaryGL.ComplementarySeries.SegmentJacquetSubquotients.SegmentRepresentation
 public import Development.WeilBound.RepresentationTheoryGL.GenericUnitaryGL.GenericUnlinkedGL.GenericUnlinkedGLOfSegRep2
 public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.BernsteinExponentBounds.BernAll
+public import Lean.Meta.Injective
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualAbelianSchemeExistsBiduality
+import Development.AutomorphicSpectrum.Proofs.GlobalProofs.GeometricLemma
+import Development.WeilBound.CoreStatements.AutomorphicKernels.LanglandsExhaustion.LanglandsMultisegmentsOfSeg
+import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.BernsteinZelevinskyGL.TopAdm
+import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.BernsteinZelevinskyGL.TopStd
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -93,7 +99,6 @@ import Mathlib.Tactic.NormNum.NatSqrt
 import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Lean.Meta.Injective
 
 @[expose] public section
 
@@ -108,13 +113,13 @@ structure UpperTheory.LiteratureTheorems.OpenImageCondition : Prop where
 theorem UpperTheory.LiteratureTheorems.elliptic_main_theorem_cm_of_open (O : _root_.UpperTheory.LiteratureTheorems.OpenImageCondition) : GlobalTheory.Published.EllipticMainTheoremCM :=
   PositivityTheory.Prw.ellipticMainTheoremCM_holds
 theorem UpperTheory.LiteratureTheorems.hecke_tate_functional_equation_of_open (O : _root_.UpperTheory.LiteratureTheorems.OpenImageCondition) : GlobalTheory.Published.HeckeTateFunctionalEquation :=
-  GlobalTheory.Top.heckeTateFE
+  _root_.GlobalTheory.CompanionTheory.HeckeFE.heckeTateFunctionalEquation
 theorem UpperTheory.LiteratureTheorems.hilbert_class_field_j_of_open (O : _root_.UpperTheory.LiteratureTheorems.OpenImageCondition) : GlobalTheory.Published.HilbertClassFieldJ :=
   GlobalTheory.Laid.hcfj_holds
 theorem UpperTheory.LiteratureTheorems.partial_zeta_functional_equation_of_open (O : _root_.UpperTheory.LiteratureTheorems.OpenImageCondition) : GlobalTheory.Published.PartialZetaFunctionalEquation :=
   PositivityTheory.Prw.partialZetaFunctionalEquation_holds
 theorem UpperTheory.LiteratureTheorems.deligne_ribet_of_open (O : _root_.UpperTheory.LiteratureTheorems.OpenImageCondition) : GlobalTheory.Published.DeligneRibet :=
-  PositivityTheory.PfDR.deligneRibet_holds
+  _root_.PositivityTheory.PfDRL.deligneRibet
 theorem UpperTheory.LiteratureTheorems.siegel_klingen_deligne_ribet_of_open (O : _root_.UpperTheory.LiteratureTheorems.OpenImageCondition) : GlobalTheory.Published.SiegelKlingenDeligneRibet :=
   PositivityTheory.Prw.siegelKlingenDeligneRibet_of PositivityTheory.Prw.siegelKlingen_holds (_root_.UpperTheory.LiteratureTheorems.deligne_ribet_of_open O)
 theorem UpperTheory.LiteratureTheorems.abelian_de_rham_of_open (O : _root_.UpperTheory.LiteratureTheorems.OpenImageCondition) : GlobalTheory.Published.AbelianDeRham :=
@@ -122,9 +127,9 @@ theorem UpperTheory.LiteratureTheorems.abelian_de_rham_of_open (O : _root_.Upper
 theorem UpperTheory.LiteratureTheorems.de_rham_pot_semistable_of_open (O : _root_.UpperTheory.LiteratureTheorems.OpenImageCondition) : GlobalTheory.Published.DeRhamPotSemistable :=
   GlobalTheory.deRham_potentiallySemistable
 theorem UpperTheory.LiteratureTheorems.global_artin_reciprocity_of_open (O : _root_.UpperTheory.LiteratureTheorems.OpenImageCondition) : GlobalTheory.Published.GlobalArtinReciprocity :=
-  GlobalTheory.globalArtinReciprocity_holds
+  _root_.CompanionTheory.FamInh.globalArtin
 theorem UpperTheory.LiteratureTheorems.hecke_ladic_character_de_rham_of_open (O : _root_.UpperTheory.LiteratureTheorems.OpenImageCondition) : GlobalTheory.Published.HeckeLAdicCharacterDeRham :=
-  UpperTheory.Lit.heckeLAdicCharacterDeRham
+  _root_.HodgeLocalDeRhamField.HLdR.field_outright
 theorem UpperTheory.LiteratureTheorems.algebraic_character_wd_of_open (O : _root_.UpperTheory.LiteratureTheorems.OpenImageCondition) : GlobalTheory.Published.AlgebraicCharacterWD :=
   UpperTheory.Lit.CharWD.algebraicCharacterWD (_root_.UpperTheory.LiteratureTheorems.global_artin_reciprocity_of_open O) (_root_.UpperTheory.LiteratureTheorems.hecke_ladic_character_de_rham_of_open O) (_root_.UpperTheory.LiteratureTheorems.de_rham_pot_semistable_of_open O)
 theorem UpperTheory.LiteratureTheorems.automorphic_forms_finite_gl_of_open (O : _root_.UpperTheory.LiteratureTheorems.OpenImageCondition) : GlobalTheory.Published.AutomorphicFormsFiniteGL :=
@@ -134,7 +139,7 @@ theorem UpperTheory.LiteratureTheorems.bernstein_unitary_product_irreducible_of_
 theorem UpperTheory.LiteratureTheorems.bernstein_zelevinsky_finiteness_of_open (O : _root_.UpperTheory.LiteratureTheorems.OpenImageCondition) : GlobalTheory.Published.BernsteinZelevinskyFiniteness :=
   PositivityTheory.Prw.bernsteinZelevinskyFiniteness_holds
 theorem UpperTheory.LiteratureTheorems.bloch_kato_local_of_open (O : _root_.UpperTheory.LiteratureTheorems.OpenImageCondition) : GlobalTheory.Published.BlochKatoLocal :=
-  UpperTheory.Lit.blochKatoLocal
+  _root_.GlobalTheory.CompanionTheory.Hypotheses₂.BK.blochKatoLocal
 theorem UpperTheory.LiteratureTheorems.brauer_degree_zero_of_open (O : _root_.UpperTheory.LiteratureTheorems.OpenImageCondition) : GlobalTheory.Published.BrauerDegreeZero :=
   (GlobalTheory.BrauerZero.brauerDegreeZero )
 theorem UpperTheory.LiteratureTheorems.ess_square_integrable_segments_of_open (O : _root_.UpperTheory.LiteratureTheorems.OpenImageCondition) : GlobalTheory.Published.EssSquareIntegrableSegments :=
@@ -142,7 +147,7 @@ theorem UpperTheory.LiteratureTheorems.ess_square_integrable_segments_of_open (O
 theorem UpperTheory.LiteratureTheorems.local_converse_gl_of_open (O : _root_.UpperTheory.LiteratureTheorems.OpenImageCondition) : GlobalTheory.Published.LocalConverseGL :=
   DiscreteGroups.sglob.LConv.localConverseGL
 theorem UpperTheory.LiteratureTheorems.cusp_forms_bounded_gl_of_open (O : _root_.UpperTheory.LiteratureTheorems.OpenImageCondition) : GlobalTheory.Published.CuspFormsBoundedGL :=
-  UpperTheory.V.Af.cuspSpectrumGL.2.2
+  _root_.RfCs.cuspidalSpectrumGL.2.2
 theorem UpperTheory.LiteratureTheorems.jacquet_shalika_rigidity_of_open (O : _root_.UpperTheory.LiteratureTheorems.OpenImageCondition) : GlobalTheory.Published.JacquetShalikaRigidity :=
   PositivityTheory.AdelicQuotientData.jacquetShalikaRigidity
 theorem UpperTheory.LiteratureTheorems.gelfand_kazhdan_dual_of_open (O : _root_.UpperTheory.LiteratureTheorems.OpenImageCondition) : GlobalTheory.Published.GelfandKazhdanDual :=
@@ -204,7 +209,7 @@ theorem UpperTheory.LiteratureTheorems.ray_class_field_st_of_open (O : _root_.Up
 theorem UpperTheory.LiteratureTheorems.square_integrable_segment_of_open (O : _root_.UpperTheory.LiteratureTheorems.OpenImageCondition) : GlobalTheory.Published.SquareIntegrableSegment :=
   PositivityTheory.Prw.squareIntegrableSegment_of (_root_.UpperTheory.LiteratureTheorems.ess_square_integrable_segments_of_open O)
 theorem UpperTheory.LiteratureTheorems.totally_disjoint_product_irreducible_of_open (O : _root_.UpperTheory.LiteratureTheorems.OpenImageCondition) : GlobalTheory.Published.TotallyDisjointProductIrreducible :=
-  PositivityTheory.SlGl.totallyDisjointProductIrreducible_of_parts (GlobalTheory.geometricLemma_of_filtration PositivityTheory.Prw.bernsteinZelevinskyFiniteness_holds PositivityTheory.Geo.geometricLemmaFiltration) (PositivityTheory.RgGu.segmentRepresentation) (PositivityTheory.Groth.grothendieckRingPolynomial_of_seg (PositivityTheory.RgGu.segmentRepresentation))
+  _root_.GlobalTheory.CompanionTheory.Hypotheses₂.totallyDisjointProductIrreducible_of_parts (GlobalTheory.geometricLemma_of_filtration PositivityTheory.Prw.bernsteinZelevinskyFiniteness_holds PositivityTheory.Geo.geometricLemmaFiltration) (PositivityTheory.RgGu.segmentRepresentation) (PositivityTheory.Groth.grothendieckRingPolynomial_of_seg (PositivityTheory.RgGu.segmentRepresentation))
 theorem UpperTheory.LiteratureTheorems.dual_abelian_scheme_of_open (O : _root_.UpperTheory.LiteratureTheorems.OpenImageCondition) : GlobalTheory.Published.DualAbelianScheme :=
   GlobalTheory.dualAbelianScheme
 theorem UpperTheory.LiteratureTheorems.global_euler_char_of_open (O : _root_.UpperTheory.LiteratureTheorems.OpenImageCondition) : ReciprocityTheory.Gal.GlobalEulerChar :=

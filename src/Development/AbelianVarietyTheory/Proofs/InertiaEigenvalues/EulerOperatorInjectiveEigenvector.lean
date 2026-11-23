@@ -2,15 +2,19 @@ module
 
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.Normed.Operator.Basic
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ProdOneSubBoundedBelowOfSummableStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SummableFinprodOfFiniteSupportEulerSumStatement
+public import Mathlib.Topology.Algebra.InfiniteSum.Defs
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ProdOneSubBoundedBelowOfSummable
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SummableFinprodOfFiniteSupportEulerSum
+public import Mathlib.Analysis.Normed.Group.Tannery
+public import Mathlib.Analysis.Normed.Module.HahnBanach
+public import Mathlib.Analysis.Normed.Group.Indicator
+public import Mathlib.Analysis.Normed.Group.InfiniteSum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-public import Mathlib.Analysis.Normed.Group.Tannery
-public import Mathlib.Analysis.Normed.Module.HahnBanach
 import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
@@ -53,8 +57,6 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Mathlib.Topology.UniformSpace.Uniformizable
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Mathlib.Analysis.Normed.Group.Indicator
-public import Mathlib.Analysis.Normed.Group.InfiniteSum
 
 @[expose] public section
 
@@ -173,7 +175,7 @@ theorem eulerOp_rec : ∀ (ι : Type) [DecidableEq ι] (X : ι → Type) (x0 : �
 
 theorem eulerOp_normSummable (ι : Type) [DecidableEq ι] (X : ι → Type) (x0 : ∀ v, X v) (H : Type) [NormedAddCommGroup H] [NormedSpace ℂ H] (a : ∀ v, X v → ℂ) (s : ι → ℝ) (B : (∀ v, X v) → (H →L[ℂ] H)) (ha0 : ∀ v, a v (x0 v) = 1) (hs : Summable s) (hC : ∀ v (C : Finset (X v)), x0 v ∉ C → ∑ x ∈ C, ‖a v x‖ ≤ s v) (hB : ∀ f, ‖B f‖ ≤ 1) :
     Summable (fun f : {f : ∀ v, X v // {w | f w ≠ x0 w}.Finite} => ‖(∏ᶠ v, a v (f.1 v)) • B f.1‖) := by
-  have h1 := GlobalTheory.T.summable_finprod_of_finite_support_euler_sum ι X x0 (fun v x => ‖a v x‖) s (fun v x => norm_nonneg _) (by intro v; simp [ha0]) hs hC
+  have h1 := _root_.GlobalTheory.summable_finprod_of_finite_support_euler ι X x0 (fun v x => ‖a v x‖) s (fun v x => norm_nonneg _) (by intro v; simp [ha0]) hs hC
   refine Summable.of_nonneg_of_le (fun _ => norm_nonneg _) (fun f => ?_) h1
   rw [norm_smul]
   have hfin := f.2
@@ -225,7 +227,7 @@ theorem eulerOp_injective_eigen : ∀ (ι : Type) [DecidableEq ι] (X : ι → T
       by_contra h
       exact hw (hS (by simpa using h))
     exact (Set.indicator_of_mem hm t).symm
-  obtain ⟨δ, hδ, hδS⟩ := GlobalTheory.T.prod_one_sub_bounded_below_of_summable ι s hs0 hs1 hs
+  obtain ⟨δ, hδ, hδS⟩ := _root_.GlobalTheory.prod_one_sub_bounded_below ι s hs0 hs1 hs
   have hlow : ∀ S : Finset ι, ∀ y, (∏ v ∈ S, (1 - s v)) * ‖y‖ ≤ ‖WS S y‖ := by
     intro S
     induction S using Finset.induction_on with

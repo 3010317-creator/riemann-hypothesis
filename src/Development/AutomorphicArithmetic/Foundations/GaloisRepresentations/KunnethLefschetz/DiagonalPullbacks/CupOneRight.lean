@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.KunnethLefschetz.DiagonalPullbacks.ProjectiveBundleFormulaTorsion
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupUnitAndPrimitiveRootClassesStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PullHlComp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupUnitAndPrimitiveRootClasses
 public import Development.EtaleCohomology.EtaleTrace.LRingPf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -89,7 +90,7 @@ private theorem two_roots (h6 : DivisorRingCompatibility) {q : ℕ} [NeZero q] {
   have hA : cup q (cup q a (rootClass i ζ)) (rootClass j ζ) =
       Ht.cast (by ring) (by ring) (cup q a (cup q (rootClass i ζ) (rootClass j ζ))) :=
     (h6 q (sch.obj X)).2.1 a _ _
-  rw [hA, ((GlobalTheory.T.tateTwistCup_unit_and_primitiveRoot_classes q).2 X ζ i j).1, root_idx ζ hij.symm, ((GlobalTheory.T.tateTwistCup_unit_and_primitiveRoot_classes q).2 X ζ 0 0).2,
+  rw [hA, ((_root_.GlobalTheory.EtC.CupGen.main q).2 X ζ i j).1, root_idx ζ hij.symm, ((_root_.GlobalTheory.EtC.CupGen.main q).2 X ζ 0 0).2,
     LRingPf.cast_cast, LRingPf.cast_cast, cup_cast_right, LRingPf.cast_cast]
   exact cup_one_right h6 hE a (by ring) (by ring)
 

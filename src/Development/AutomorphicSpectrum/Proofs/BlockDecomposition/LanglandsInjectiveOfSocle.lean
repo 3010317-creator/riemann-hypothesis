@@ -3,11 +3,11 @@ module
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.ZelevinskyInterleaving.LInjective
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IrreducibleAdmissibleGL
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.PropsCos
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LanglandsRepOrderedWordOccursStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OrderedFormsMutualShuffleEqStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OrderedWordLettersCuspidalStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegmentProductWordInShuffleStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WordOccursOfSubquotientStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LanglandsRepOrderedWordOccurs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OrderedFormsMutualShuffleEq
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OrderedWordLettersCuspidal
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegmentProductWordInShuffle
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WordOccursOfSubquotient
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,8 +60,8 @@ theorem inShW_of_wd_cosocle {k : Type} [Field k] [ValuativeRel k] [TopologicalSp
     (hv : ∀ i, IsLSeg (Γ i) (v i).rep) (hc : IsCosocle π (prodIrr v hd)) (hw : Wd π (wtW Δ)) :
     InShW 𝔫 (wtW Δ) := by
   have h1 : Wd (prodIrr v hd) (wtW Δ) :=
-    GlobalTheory.T.word_occurs_of_subquotient (prodIrr v hd) π (isSmooth_prodIrr v hd) hc.isSubquotient _ hw
-  have h2 := GlobalTheory.T.segment_product_word_in_shuffle hA hSeg v hd Γ hv (wtW Δ) (GlobalTheory.T.ordered_word_letters_cuspidal Δ) h1
+    _root_.GlobalTheory.CompanionTheory.Words.wd_of_isSubquotient (prodIrr v hd) π (isSmooth_prodIrr v hd) hc.isSubquotient _ hw
+  have h2 := _root_.GlobalTheory.CompanionTheory.CuspShuffle.inShW_of_wd hA hSeg v hd Γ hv (wtW Δ) (_root_.GlobalTheory.CompanionTheory.ZcWords.wtW_isCusp Δ) h1
   rwa [hΓ.1] at h2
 
 theorem lInjective {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
@@ -69,9 +69,9 @@ theorem lInjective {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [I
   intro 𝔪 𝔫 x h𝔪 h𝔫
   obtain ⟨h, u, hd, ⟨Δ, hΔ, hu⟩, hc⟩ := id h𝔪
   obtain ⟨h', v, hd', ⟨Γ, hΓ, hv⟩, hc'⟩ := id h𝔫
-  have wΔ : Wd x.rep (wtW Δ) := GlobalTheory.T.langlands_rep_ordered_word_occurs hA hSoc hSeg 𝔪 x.rep h𝔪 h Δ hΔ
-  have wΓ : Wd x.rep (wtW Γ) := GlobalTheory.T.langlands_rep_ordered_word_occurs hA hSoc hSeg 𝔫 x.rep h𝔫 h' Γ hΓ
-  exact GlobalTheory.T.ordered_forms_mutual_shuffle_eq hA 𝔪 𝔫 h h' Δ Γ hΔ hΓ
+  have wΔ : Wd x.rep (wtW Δ) := _root_.GlobalTheory.CompanionTheory.ZWordL.wd_wtW_of_isL hA hSoc hSeg 𝔪 x.rep h𝔪 h Δ hΔ
+  have wΓ : Wd x.rep (wtW Γ) := _root_.GlobalTheory.CompanionTheory.ZWordL.wd_wtW_of_isL hA hSoc hSeg 𝔫 x.rep h𝔫 h' Γ hΓ
+  exact _root_.GlobalTheory.CompanionTheory.ZcWords.eq_of_inShW_wtW hA 𝔪 𝔫 h h' Δ Γ hΔ hΓ
     (inShW_of_wd_cosocle hA hSeg Δ Γ v hd' hΓ hv hc' wΔ)
     (inShW_of_wd_cosocle hA hSeg Γ Δ u hd hΔ hu hc wΓ)
 

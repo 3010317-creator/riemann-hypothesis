@@ -2,15 +2,21 @@ module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.FrameReading.FmTools
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ImportsBisExtra
-import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexNeZeroOfIsOpen
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousPairProjection
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteRestrictionVanishing
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteTestFunctionProductStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RestrictedProductEmbeddingsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RestrictedProductIntegralStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SlotEmbeddingsExistStatement
+public import Mathlib.Algebra.Group.Subgroup.Defs
+public import Mathlib.Topology.Algebra.Group.Defs
+public import Mathlib.Topology.Separation.Hausdorff
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RestrictedProductEmbeddings
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnifAt
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RestrictedProductIntegral
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.AdelRep
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.ReadSplit
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FactorEmbeddingsExist
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SlotLevelSubgroupsExistStatement
+import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteRestrictionVanishing
 import GroundTheory.GlobalFields.LocalFieldAtPlace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -97,7 +103,7 @@ theorem finActOf : FinActOf := by
   haveI := B.hν'
   haveI : BorelSpace (Hf E B.a B.b) := ⟨rfl⟩
   obtain ⟨hmul, hcont, hsep, -, hev, hmem, -⟩ := hSl E B.a B.b S hS
-  obtain ⟨e, hec, hpe, hpe', he₁, he₂⟩ := GlobalTheory.T.position_embeddings_exist (E := E) B.a B.b hS
+  obtain ⟨e, hec, hpe, hpe', he₁, he₂⟩ := _root_.GlobalTheory.CompanionTheory.FinActS.exists_factorEmb (E := E) B.a B.b hS
   obtain ⟨U₀, hU₀, hlev⟩ := hG
   obtain ⟨-, hc⟩ := hConv E B S hS
   obtain ⟨hcs, ⟨U₁, hU₁, hinv⟩, -⟩ := hc φ₁ φ₂ h₁ h₂
@@ -114,14 +120,14 @@ theorem finActOf : FinActOf := by
     (GlobalTheory.CompanionTheory.FinTestTw.isRestrW B.a B.b).isOpen_K i.pl
   have hKHc : ∀ i : Slot S, IsCompact (K2 B.a B.b i.pl : Set (GLw B.a i.pl × GLw B.b i.pl)) := fun i =>
     (GlobalTheory.CompanionTheory.FinTestTw.isRestrW B.a B.b).isCompact_K i.pl
-  obtain ⟨V₀, hV₀o, hV₀K, hV₀e, hV₀U⟩ := GlobalTheory.T.restricted_product_embeddings p e K (fun i => K2 B.a B.b i.pl) hcont hec hpe hpe' hsep hmem hKc hKHo U₀ hU₀
+  obtain ⟨V₀, hV₀o, hV₀K, hV₀e, hV₀U⟩ := _root_.GlobalTheory.CompanionTheory.FinActS.exists_local_levels_le_open p e K (fun i => K2 B.a B.b i.pl) hcont hec hpe hpe' hsep hmem hKc hKHo U₀ hU₀
   let V : ∀ i : Slot S, Subgroup (GLw B.a i.pl × GLw B.b i.pl) := fun i => V₀ i ⊓ L i
   have hVo : ∀ i, IsOpen (V i : Set (GLw B.a i.pl × GLw B.b i.pl)) := fun i => by
     simp only [V, Subgroup.coe_inf]
     exact (hV₀o i).inter (hLo i)
   let g : Hf E B.a B.b → ℂ := fun h => G (x * finH h)
   have hact := actS_eq φ₁ φ₂ e he₁ he₂
-  have hcore := GlobalTheory.T.restricted_product_integral p e K (fun i => K2 B.a B.b i.pl) V (sf φ₁ φ₂) hpe hpe' hsep hev hmem
+  have hcore := _root_.GlobalTheory.CompanionTheory.FinActCore.hint_prod_eq_foldr p e K (fun i => K2 B.a B.b i.pl) V (sf φ₁ φ₂) hpe hpe' hsep hev hmem
     (fun i => inf_le_left.trans (hV₀K i)) (fun i => relIndex_ne_zero_of_open (hVo i) (hKHc i))
     (by
       filter_upwards [hV₀e, hLe, hLu] with i a₁ a₂ a₃

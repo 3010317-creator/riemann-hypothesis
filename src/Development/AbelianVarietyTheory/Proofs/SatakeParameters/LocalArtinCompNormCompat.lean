@@ -2,15 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSmoothCharCompNormU
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HasExponentZeroIff
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CharZeroAdicCompletion
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChevalleyUnits
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DecompositionGroupLocalGaloisIso
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEqOfPowEqSelf
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLocalEmbeddingOverPlace
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GlobalArtinReciprocityHolds
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
+public import CompanionTheory.AutomorphicTheory.PlaceSeparation.IsOpenQuotientMapArt0
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalArtinHasNormGroups
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsIntegralIffSpectralNormLeOne
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.LocalLanglandsGL
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CharZeroAdicCompletion
 import GroundTheory.LocalFields.LocalArtinUniqueness
 import GroundTheory.LocalFields.MainTheorem
 import GroundTheory.LocalFields.UnramifiedHensel
@@ -137,7 +138,7 @@ theorem localArtin_normU : ∀ (K L Ω : Type) [Field Ω] [Field K] [NumberField
         AlgEquiv.restrictNormalHom (maximalAbelianExtension (w.adicCompletion E) (Kbar w)) g =
           (localArtinMap (w.adicCompletion E) (Kbar w) (a σ))⁻¹ := by
     intro E Ω _ _ _ _ _ A w h ι hι a ha _ σ g hg
-    have hN := GlobalTheory.LocNormGrp.hasNormGroups_of_isLocalArtin GlobalTheory.globalArtinReciprocity_holds
+    have hN := GlobalTheory.LocNormGrp.hasNormGroups_of_isLocalArtin _root_.CompanionTheory.FamInh.globalArtin
       GlobalTheory.Published.chevalleyUnits' E Ω A w h ι a hι ha
     obtain ⟨θ, -, -, hl⟩ := GlobalTheory.LocDec.decomposition_mulEquiv_galLoc E Ω A w h ι hι
     let ψ : Weil h →* GalLoc w := θ.toMonoidHom.comp (Subgroup.inclusion (Weil_le_Dec h))

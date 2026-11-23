@@ -1,9 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.ImagePolynomialAction
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExistsAlgebraMapEqRoot
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EulerEAddSmulMemEisensteinShiftGraded
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExistsEqAlgebraMapAddPowMul
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemAnalyticFiltrationIffLatticeFiltrationAdd
+public import Mathlib.LinearAlgebra.Eigenspace.Minpoly
 import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExistsEqMulAddOfIsAdicComplete
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EulerEAddSmulMemEisensteinShiftGradedStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemAnalyticFiltrationIffLatticeFiltrationAddStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -16,7 +19,6 @@ import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.LinearAlgebra.Eigenspace.Minpoly
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -170,7 +172,7 @@ theorem lc_semisimple : ∀ (O K : Type) [CommRing O] [NormedField K] [IsUltrame
     simp [lam]
   have hstep : ∀ j, ∀ x ∈ F j, D.EN x - lam j • x ∈ F (j + 1) := by
     intro j x hx
-    have h1 := GlobalTheory.T.eulerE_add_smul_mem_eisenstein_shift_graded O K l e a ι η H D j x hx
+    have h1 := _root_.GlobalTheory.Proof.eulerE_add_smul_mem_eisenstein_shift_graded.EN_add_smul_mem_shiftE O K l e a ι η H D j x hx
     have h2 : D.EN x - lam j • x = D.EN x + ((j * e * l : ℤ) : K) • x := by
       rw [sub_eq_add_neg, ← neg_smul]
       congr 2
@@ -205,8 +207,8 @@ theorem lc_semisimple : ∀ (O K : Type) [CommRing O] [NormedField K] [IsUltrame
         y ∈ (Lan ⊓ shiftE l e i (D.Mext (Rpi O K l e))) ⊔ shiftE l e 1 Lan →
         y ∈ (Lan ⊓ shiftE l e (i + 1) (D.Mext (Rpi O K l e))) ⊔ shiftE l e 1 Lan := by
       intro i h y hy
-      rw [GlobalTheory.T.mem_analytic_filtration_iff_lattice_filtration_add O K l e a ι D.toPhiMod i y] at hy
-      rw [GlobalTheory.T.mem_analytic_filtration_iff_lattice_filtration_add O K l e a ι D.toPhiMod (i + 1) y, h]
+      rw [_root_.GlobalTheory.BK.PhiMod.mem_analytic_filtration_iff O K l e a ι D.toPhiMod i y] at hy
+      rw [_root_.GlobalTheory.BK.PhiMod.mem_analytic_filtration_iff O K l e a ι D.toPhiMod (i + 1) y, h]
       exact hy
     have hchain : ∀ k : ℕ, k ≤ η → ∀ y,
         y ∈ (Lan ⊓ shiftE l e (-j - η) (D.Mext (Rpi O K l e))) ⊔ shiftE l e 1 Lan →

@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemCycAlg
 public import Development.AbelianVarietyTheory.Definitions.Foundations.FinalTheorems
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
 public import Mathlib.RingTheory.AdicCompletion.Noetherian
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsAlmostDualTraceDataCyclotomicAlgebraStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsTrDataGaussianIntOne
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsAlmostDualTraceDataCyclotomicAlgebra
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsDerivationOnExtensionCubeDefect
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsZetaDerivationInertiaCyclotomicAlgebraStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KaehlerRelationOfDerivationOnLargeSubalgebra
@@ -46,7 +47,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Development.AbelianVarietyTheory.Definitions.Foundations.ExpUpper
-public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsTrDataGaussianIntOne
 
 @[expose] public section
 
@@ -68,7 +68,7 @@ theorem pow_four_mul_mem_of_smul_dA_eq_zero : ∀ (l : ℕ) [Fact l.Prime], l �
       KaehlerDifferential.D (fixA A) A ((fun _ => z) i) = 0 := by
     simpa using hrel
   obtain ⟨F, hF⟩ := kaehler_rel_local (fixA A) A 1 _ _ hrel'
-  obtain ⟨C, tr, m, α, β, hFC, htr⟩ := GlobalTheory.T.exists_almostDualTraceData_cyclotomicAlgebra l hl2 Ω A hA F
+  obtain ⟨C, tr, m, α, β, hFC, htr⟩ := _root_.GlobalTheory.RecOne.TrCyc.exists_trData_cycAlg l hl2 Ω A hA F
   obtain ⟨D, hD, hDv⟩ := GlobalTheory.T.exists_zeta_derivation_inertia_cyclotomic_algebra l Ω A hA N z hz
   obtain ⟨D', hD', hD'v⟩ := exists_derOn_ext (fixA A) A (FracA A) (cycAlg l A) C tr m α β _ htr D hD
   have h := hF C hFC (fun _ => htr.le hzT) (FracA A) D' hD'

@@ -5,15 +5,21 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.Exponen
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.NonemptyFamilyUnifIffUnifAt
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsEigAtIffOfIsDerivAt0
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ExistsValueBasis
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspCorrespondenceBoundStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspCorrespondenceBound
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLinearLiftOfAdditiveFamily
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FamilyExpDerivativeLie
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptAwayFromPrimesStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueSemilinearStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFiniteBaseChangeStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptAwayFromPrimes
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueSemilinear
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFiniteBaseChange
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelPushAlongMap
+public import Mathlib.RingTheory.TensorProduct.IsBaseChangeFree
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HolomorphicHomDetermined
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -30,7 +36,6 @@ import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Radical.NatInt
-public import Mathlib.RingTheory.TensorProduct.IsBaseChangeFree
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
@@ -59,7 +64,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.ExpRowsPf
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HolomorphicHomDetermined
 
 @[expose] public section
 
@@ -131,7 +135,7 @@ theorem exists_basis_of_base {S : Scheme.{0}} {G : Over S} [GrpObj G] [Smooth G.
     ∃ (j : E →ₛₗ[φ] F) (β : Module.Basis I C F),
       (∀ e, (M'.pt (j e)).left = spMap (GlobalTheory.CompanionTheory.Ar.dualMap φ) ≫ (M.pt e).left) ∧ ∀ i, β i = j (b i) := by
   subst hy
-  obtain ⟨j, hj, -⟩ := GlobalTheory.T.lie_model_existsUnique_semilinear S G R C φ x E F M M'
+  obtain ⟨j, hj, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieBaseChange.existsUnique_semilinear_lifts S G R C φ x E F M M'
   have hj' : ∀ e, (M'.pt (j e)).left = spMap (GlobalTheory.CompanionTheory.Ar.dualMap φ) ≫ (M.pt e).left := fun e => by
     have := hj e
     rwa [Category.comp_id] at this
@@ -142,7 +146,7 @@ theorem exists_basis_of_base {S : Scheme.{0}} {G : Over S} [GrpObj G] [Smooth G.
     rw [mul_smul]⟩
   let jl : E →ₗ[R] F :=
     { toFun := j, map_add' := j.map_add, map_smul' := fun r e => j.map_smulₛₗ r e }
-  have hbc : IsBaseChange C jl := (GlobalTheory.T.lie_model_finite_base_change S G R x E M).2.2 C F M' jl hj'
+  have hbc : IsBaseChange C jl := (_root_.GlobalTheory.CompanionTheory.Ar.LieProj.lie_finite_projective_baseChange S G R x E M).2.2 C F M' jl hj'
   refine ⟨j, IsBaseChange.basis b hbc, hj', fun i => ?_⟩
   rw [IsBaseChange.basis_apply]
   rfl
@@ -326,10 +330,10 @@ theorem values_eig : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H :
     have h1 := congrArg (genMap 𝔐.ξ q) (Units.inv_mul u)
     rw [map_mul, hu, map_natCast, map_one] at h1
     exact h1
-  obtain ⟨hVd, -, hlat⟩ := GlobalTheory.T.hodge_cpt_away_from_primes E H D l Xo c (𝓞 c.F) (algebraMap (𝓞 c.F) c.F) Y S Ω K J y 𝔐
+  obtain ⟨hVd, -, hlat⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HodgeChar0.lattices_of_char_zero E H D l Xo c (𝓞 c.F) (algebraMap (𝓞 c.F) c.F) Y S Ω K J y 𝔐
     RingOfIntegers.coe_injective q hfib
   have hσinj : Function.Injective σ := by
-    obtain ⟨σ₀, -, hu, hbij, -⟩ := GlobalTheory.T.cusp_correspondence_bound E H D l Xo c Y S Ω K J y 𝔐 ℂ z
+    obtain ⟨σ₀, -, hu, hbij, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.LabPt.exists_labVal E H D l Xo c Y S Ω K J y 𝔐 ℂ z
     rw [hu σ hσ]
     exact hbij.1
   have hemb : Function.Injective 𝔐.emb := by

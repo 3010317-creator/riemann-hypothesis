@@ -2,8 +2,9 @@ module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.NonzeroLocus
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteTopologicalKrullDimDiffOpenLtStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSecNonzeroOnFiniteOfGeneratedStatement
+public import Mathlib.Topology.KrullDimension
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteTopologicalKrullDimDiffOpenLt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSecNonzeroOnFiniteOfGenerated
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -79,8 +80,8 @@ theorem exists_sections_cover_closed (k : Type) [Field k] [Infinite k] (X : Sche
     exact ⟨Fin.elim0, fun x hx => (this.false ⟨x, hx⟩).elim⟩
   | succ e ih =>
     intro Z hZ h
-    obtain ⟨S, hS, hdim⟩ := GlobalTheory.T.exists_finite_topologicalKrullDim_diff_open_lt X Z hZ
-    obtain ⟨t, ht⟩ := GlobalTheory.T.exists_sec_nonzero_on_finite_of_generated' k X p L hL n u hu S hS
+    obtain ⟨S, hS, hdim⟩ := _root_.GlobalTheory.Div.exists_finite_topologicalKrullDim_diff_lt X Z hZ
+    obtain ⟨t, ht⟩ := _root_.GlobalTheory.exists_sec_nonzero_on_finite_of_generated k X p L hL n u hu S hS
     have hU : IsOpen ((nonzeroLocus t : X.Opens) : Set X) := (nonzeroLocus t).isOpen
     obtain ⟨s, hs⟩ := ih (Z \ ((nonzeroLocus t : X.Opens) : Set X)) (hZ.sdiff hU)
       (hdim _ hU (fun x hx => ht x hx) e h)

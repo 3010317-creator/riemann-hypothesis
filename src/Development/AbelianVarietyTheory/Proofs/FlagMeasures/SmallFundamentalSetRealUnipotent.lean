@@ -1,11 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsInStabilizerNilradicalLieTripleMulEqZero
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ComplexSpanAtRealPlaceAutPointLatticePropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NilradicalCenterIntegralCoveringRadiusStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NilradicalFirstLayerCoveringRadiusLeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PointConjMemCongruenceSubgroupOfCongrLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalUnipotentRadicalMemAdelicStatement
+public import Development.AbelianVarietyTheory.BlockTheory.SiegelWeilLocal.CenteredPerpendicularSets
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ComplexSpanAtRealPlaceAutPointLatticeProperties
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NilradicalCenterIntegralCoveringRadius
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NilradicalFirstLayerCoveringRadiusLe
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LayerProd
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PointConjMemCongruenceSubgroupOfCongrLattice
+public import Formalism.SharpRestriction.CuspSpanNormBounds.GlobAut
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalUnipotentRadicalMemAdelic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -86,7 +89,7 @@ theorem exists_real (x : I.GA) (R : Submodule (𝓞 I.E) (Fin I.n → I.E))
       calc _ = (I.P v * (I.P v)⁻¹) * ex (B v) * (I.P v * (I.P v)⁻¹) := by simp only [mul_assoc]
         _ = _ := by rw [P_mul_inv, one_mul, mul_one]
     show I.InUnipRad _ _ _ (I.P v * ((I.P v)⁻¹ * ex (B v) * I.P v) * (I.P v)⁻¹)
-    rw [h, ← (GlobalTheory.T.complexSpanAtRealPlace_autPointLattice_properties I x R).1 v]
+    rw [h, ← (_root_.GlobalTheory.RealSpan.spanAt_properties I x R).1 v]
     exact ex_unip (hB v)
   · have h : I.fmat (1 : I.Gf) = 1 := by simp [AutInst.fmat]
     simp only [h, AutInst.InUnipRad, sub_self, Matrix.zero_mulVec]
@@ -99,7 +102,7 @@ theorem exists_real_log (x : I.GA) (R : Submodule (𝓞 I.E) (Fin I.n → I.E)) 
   have key : ∀ v, ∃ Y, InNil (starRingEnd ℂ) (I.J.map (I.φ v)) (spanAt I R v) Y ∧
       ex Y = I.P v * uMat (ν v) * (I.P v)⁻¹ := fun v => by
     have h := hν.1 v
-    rw [← (GlobalTheory.T.complexSpanAtRealPlace_autPointLattice_properties I x R).1 v] at h
+    rw [← (_root_.GlobalTheory.RealSpan.spanAt_properties I x R).1 v] at h
     refine exists_log ?_ h
     have hx : (uMat (ν v))ᴴ * Jm (I.ε v) * uMat (ν v) = Jm (I.ε v) := (ν v).2
     rw [cT_conj]
@@ -137,8 +140,8 @@ theorem exists_rat (x : I.GA) (g : ℕ) (R : Submodule (𝓞 I.E) (Fin I.n → I
     nil_add (nil_smul (by simp [map_ofNat]) hY.1) (cen_smul (by simp) hZ.1).1
   let γ : GL (Fin I.n) I.E := ⟨ex ((2 * g : I.E) • Y₀ + (g : I.E) • Z₀), ex (-((2 * g : I.E) • Y₀ + (g : I.E) • Z₀)),
     ex_mul_ex_neg hN, ex_neg_mul_ex hN⟩
-  obtain ⟨a, ha, h1, h2⟩ := GlobalTheory.T.rational_unipotentRadical_mem_adelic I _ γ (ex_unitary hN) (ex_unip hN)
-  refine ⟨a, ha, GlobalTheory.T.pointConj_mem_congruenceSubgroup_of_congr_lattice I x a g γ h2 (hcong hY hZ) fun y hy => ?_, fun v => ?_⟩
+  obtain ⟨a, ha, h1, h2⟩ := _root_.GlobalTheory.Proof.rational_unipotentRadical_mem_adelic.rational_mem_adelic I _ γ (ex_unitary hN) (ex_unip hN)
+  refine ⟨a, ha, _root_.GlobalTheory.PointLattice.conj_mem_Kg_of_congr I x a g γ h2 (hcong hY hZ) fun y hy => ?_, fun v => ?_⟩
   · have hY' : -Y₀ ∈ nilInt I x R :=
       ⟨nil_neg hY.1, fun u hu => by rw [neg_mulVec]; exact neg_mem (hY.2 u hu)⟩
     have hZ' : -Z₀ ∈ cenInt I x R :=
@@ -184,9 +187,9 @@ theorem small_fundamental_set : ∀ (I : AutInst) (x : I.GA) (g : ℕ) (R : Subm
   have hg0 : (0 : ℝ) < g := by exact_mod_cast hg
   have hgc : ((g : ℝ) : ℂ) ≠ 0 := by exact_mod_cast hg0.ne'
   have hreal : ∀ c : ℝ, starRingEnd ℂ (c : ℂ) = c := Complex.conj_ofReal
-  obtain ⟨-, -, -, hnil, hcen⟩ := GlobalTheory.T.complexSpanAtRealPlace_autPointLattice_properties I x R
+  obtain ⟨-, -, -, hnil, hcen⟩ := _root_.GlobalTheory.RealSpan.spanAt_properties I x R
   obtain ⟨Y, hY, hνY⟩ := exists_real_log I x R ν hν
-  obtain ⟨Y₀, hY₀, Z, hZ, hA⟩ := GlobalTheory.T.nilradical_first_layer_covering_radius_le I x R lo hi rho hsat hiso hhi hlarge hlo hlo0 hhl
+  obtain ⟨Y₀, hY₀, Z, hZ, hA⟩ := _root_.GlobalTheory.Count.FirstLayer.main I x R lo hi rho hsat hiso hhi hlarge hlo hlo0 hhl
     (fun v => (((2 * g : ℝ)⁻¹ : ℝ) : ℂ) • Y v) (fun v => nil_smul (hreal _) (hY v))
   have hY₀' := hnil Y₀ hY₀.1
   set A : InfinitePlace I.F → Matrix (Fin I.n) (Fin I.n) ℂ := fun v => ((2 * g : ℝ) : ℂ) •
@@ -198,7 +201,7 @@ theorem small_fundamental_set : ∀ (I : AutInst) (x : I.GA) (g : ℕ) (R : Subm
     with hZ''def
   have hZ''c : Z'' ∈ cenReal I R := fun v =>
     cen_add (cen_smul (hreal _) (hZ v)) (cen_smul map_half (cen_comm (hAn v) (nil_smul (hreal _) (hY₀' v))))
-  obtain ⟨Z₀, hZ₀, hZ'⟩ := GlobalTheory.T.nilradicalCenter_integral_covering_radius I x R hi rho hsat hiso hhi hlarge hh2
+  obtain ⟨Z₀, hZ₀, hZ'⟩ := _root_.GlobalTheory.Count.CentralCover.main I x R hi rho hsat hiso hhi hlarge hh2
     (fun v => (((g : ℝ)⁻¹ : ℝ) : ℂ) • Z'' v) (fun v => cen_smul (hreal _) (hZ''c v))
   have hZ₀' := hcen Z₀ hZ₀.1
   set Z' : InfinitePlace I.F → Matrix (Fin I.n) (Fin I.n) ℂ := fun v => ((g : ℝ) : ℂ) •

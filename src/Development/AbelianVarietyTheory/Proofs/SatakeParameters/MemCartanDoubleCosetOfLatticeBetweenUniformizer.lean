@@ -1,8 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RpowNegLeNormOfComponent
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GlMapDiagUniformizerElementarySublatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GlMapStandardLatticeEqIffMemGLintAdicStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GlMapDiagUniformizerElementarySublattice
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.FiniteResidueFieldPadicInt
+public import Formalism.SatakeDualWeyl.StatementE
+public import Mathlib.NumberTheory.NumberField.Completion.FinitePlace
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GlMapStandardLatticeEqIffMemGLintAdic
 public import Formalism.SatakeDualWeyl.KpqSubgroupCompact
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -115,8 +118,8 @@ theorem mem_doubleCoset_of_subElem :
     have := (zpow_mem_iff w hϖ 1).2 zero_le_one
     simpa using this
   obtain ⟨a, ha, k₁, hk₁, k₂, hk₂, e⟩ := Formalism.UG.Final.CartanDecomp E w n ϖ hϖO hϖ g
-  have hs₁ : glMap k₁⁻¹ L.1 = L.1 := (GlobalTheory.T.glMap_standardLattice_eq_iff_mem_GLint_adic E w n k₁⁻¹).2 (inv_mem hk₁)
-  have hs₂ : glMap k₂⁻¹ L.1 = L.1 := (GlobalTheory.T.glMap_standardLattice_eq_iff_mem_GLint_adic E w n k₂⁻¹).2 (inv_mem hk₂)
+  have hs₁ : glMap k₁⁻¹ L.1 = L.1 := (_root_.GlobalTheory.LatHecke.glMap_std_eq_iff_mem_GLint E w n k₁⁻¹).2 (inv_mem hk₁)
+  have hs₂ : glMap k₂⁻¹ L.1 = L.1 := (_root_.GlobalTheory.LatHecke.glMap_std_eq_iff_mem_GLint E w n k₂⁻¹).2 (inv_mem hk₂)
   set D : GL (Fin n) (w.adicCompletion E) := k₁⁻¹ * g * k₂⁻¹ with hDdef
   have hD : (D : Matrix (Fin n) (Fin n) (w.adicCompletion E)) = diagPow E w ϖ a := by
     rw [hDdef, Units.val_mul, Units.val_mul, e]
@@ -177,7 +180,7 @@ theorem mem_doubleCoset_of_subElem :
     rcases h01 i with h | h <;> simp [hSdef, h]
   have hD' : (D : Matrix (Fin n) (Fin n) (w.adicCompletion E)) = Matrix.diagonal fun i => if i ∈ S then ϖ else 1 := by
     rw [hD, diagPow, hdiag]
-  obtain ⟨M₂, ⟨⟨-, hidx₂⟩, -⟩, hM₂⟩ := GlobalTheory.T.glMap_diagUniformizer_elementarySublattice E w n ϖ hϖ S D hD'
+  obtain ⟨M₂, ⟨⟨-, hidx₂⟩, -⟩, hM₂⟩ := _root_.GlobalTheory.DiagElem.glMap_diag_mem_subElem E w n ϖ hϖ S D hD'
   rw [hM₂] at hidx₂
   have hcard : S.card = j := by
     have h := hidx₂.symm.trans hidx

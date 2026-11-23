@@ -2,9 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.StandardFiveNontrivial
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExteriorTensorProductConvolutionCalculus
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GoodSquarefreeLabelTuplesWeightGeStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SeriesRepresentationWeightLowerBoundStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SquarefreeLabelTorusMassDivisorBoundStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.SamePartIffOfNeZero
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GoodSquarefreeLabelTuplesWeightGe
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SeriesRepresentationWeightLowerBound
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SquarefreeLabelTorusMassDivisorBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -74,7 +75,7 @@ theorem sum_goodSet_le_one (g : ℕ) [Fact g.Prime] (N m : ℕ) (ι : Type) [Fin
     exact Finset.prod_nonneg fun v _ => inv_nonneg.2 (Nat.cast_nonneg _)
   refine h1.trans ?_
   rw [← Finset.prod_univ_sum (fun _ : ι => sqSet g N) fun _ f => ((torusCard g f : ℝ))⁻¹]
-  have h2 := (GlobalTheory.T.squarefreeLabelTorusMass_divisor_bound g).1 N
+  have h2 := (_root_.GlobalTheory.BadShare.divisor_bound g).1 N
   have h3 := mass_nonneg (g := g) N fun _ => True
   simp only [mass, Finset.filter_true] at h2 h3
   exact Finset.prod_le_one₀ (fun _ _ => h3) fun _ _ => h2
@@ -82,11 +83,11 @@ theorem sum_goodSet_le_one (g : ℕ) [Fact g.Prime] (N m : ℕ) (ι : Type) [Fin
 theorem badWeight_le : ∀ (g : ℕ) [Fact g.Prime] (N : ℕ), ∀ (m q d : ℕ) (ι : Type) [Fintype ι] (L : ι → Lev g N) (τ : ι → (ZMod g)[X] → GG g N → ℂ) (ch : ι → Fin m → (ZMod g)ˣ), 100000 ≤ N → PrimeOK g q d → (∀ v, IsSeries (τ v)) → ∃ w : ℝ, conv (dirac - eGood τ ch) (tens fun v => (L v).e) 1 = (w : ℂ) * (tens fun v => (L v).e) 1 ∧ w ≤ badBound g (Fintype.card ι) m N ((min q d : ℕ) : ℝ) := by
   intro g _ N m q d ι _ L τ ch hN hP hτ
   obtain ⟨h1, h2, h3, h4, h5, h6, h7, hg⟩ := hP
-  have hS := GlobalTheory.T.goodSquarefreeLabelTuples_weight_ge g N m q d ι ch hN hg ⟨h1, h2, h3, h4, h5, h6, h7⟩
+  have hS := _root_.GlobalTheory.BadShare.goodSet_weight_ge g N m q d ι ch hN hg ⟨h1, h2, h3, h4, h5, h6, h7⟩
   have hS1 := sum_goodSet_le_one g N m ι ch
   have hS0 : 0 ≤ ∑ F ∈ goodSet g N ch, ∏ v, ((torusCard g (F v) : ℝ))⁻¹ :=
     Finset.sum_nonneg fun F _ => Finset.prod_nonneg fun v _ => inv_nonneg.2 (Nat.cast_nonneg _)
-  choose! w hw1 hw2 using fun v => GlobalTheory.T.series_representation_weight_lower_bound g N (L v) (τ v) (hτ v)
+  choose! w hw1 hw2 using fun v => _root_.GlobalTheory.BadShare.series_weight_lower_bound g N (L v) (τ v) (hτ v)
   have hmem : ∀ F ∈ goodSet g N ch, ∀ v, F v ∈ sqSet g N := fun F hF =>
     (good_iff.1 (mem_goodSet_iff_good.1 hF)).1
   refine ⟨1 - ∑ F ∈ goodSet g N ch, ∏ v, w v (F v), ?_, ?_⟩

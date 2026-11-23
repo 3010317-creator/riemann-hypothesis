@@ -2,13 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.EpsilonPairingZeta
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Cob1FormalLogMapMemKerStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DlogEqSumLinearCoefficientsFormExplicitStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCharSeriesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobeniusFormalLogSubSmulIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeriodFormalLogLiftCharacterSeriesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowerSeriesLinearCoefficientsMvPowerSeriesFormalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubstGroupLawEqMulOfDualTateCharacterStatement
+public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.FormalExpMulFormalExpNeg
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Cob1FormalLogMapMemKer
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DlogEqSumLinearCoefficientsFormExplicit
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCharSeries
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobeniusFormalLogSubSmulIntegral
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeriodFormalLogLiftCharacterSeries
+public import Development.AbelianVarietyTheory.Definitions.Divisors.FormalCoboundarySmul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowerSeriesLinearCoefficientsMvPowerSeriesFormal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubstGroupLawEqMulOfDualTateCharacter
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,7 +50,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Definitions.Divisors.GhostFrobenius
-public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.FormalExpMulFormalExpNeg
 
 @[expose] public section
 
@@ -81,8 +82,8 @@ open MvPowerSeries GlobalTheory GlobalTheory.Katz GlobalTheory.QLog GlobalTheory
 theorem GlobalTheory.CharLog.exists_log_char_period : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [IsDomain O], v.Integers O → ∀ (ε : PreTilt O p) (hε : IsPrimitiveSystem ε), ∀ F : BFrame ε, ∀ (G : PDivGroup p O) (d : ℕ) (c : QLog.Chart G d) (μ' : Fin d → MvPowerSeries (Fin d ⊕ Fin d) F.B), IsLift F.θ μ' → (∀ i, map F.θ (μ' i) = c.μ i) → ∀ χ : G.dual.Tate, ∃ (f : MvPowerSeries (Fin d) F.Q) (w : Fin d → F.B), QL μ' ⊤ f ∧ In (RingHom.ker F.θ) (cob1 (up F.Q μ') f) ∧ In (⊤ : Ideal F.B) (frob p F.s f - (p : F.Q) • f) ∧ (∀ i, lin f i = algebraMap F.B F.Q (w i)) ∧ dlog G χ = ∑ i, F.θ (w i) • c.form i ∧ ∀ t, c.HasPeriod F.θ t f (F.a (Sandwich.mu ε * ofPadic p O (epsPairing hε G t χ))) := by
   intro p _ C _ _ _ v O _ _ _ _ _ hv ε hε F G d c μ' hlift hμ χ
   letI : Algebra ℚ F.Q := GlobalTheory.CharLog.ratAlgebra F.frame
-  obtain ⟨u, hu0, hu⟩ := GlobalTheory.T.exists_charSeries' p O G d c χ
-  have hmul := GlobalTheory.T.subst_groupLaw_eq_mul_of_dualTateCharacter p O G d c χ u hu
+  obtain ⟨u, hu0, hu⟩ := _root_.GlobalTheory.QLog.exists_charSeries p O G d c χ
+  have hmul := _root_.GlobalTheory.QLog.Chart.subst_μ_eq_inL_mul_inR p O G d c χ u hu
   choose g0 hg0 using fun α => F.frame.surj (coeff α u)
   let g : MvPowerSeries (Fin d) F.B := fun α => if α = 0 then 1 else g0 α
   have hg : map F.θ g = u := by
@@ -100,15 +101,15 @@ theorem GlobalTheory.CharLog.exists_log_char_period : ∀ (p : ℕ) [Fact p.Prim
     rw [if_pos rfl]
   have hlin : ∀ i, lin (formalLog (map (algebraMap F.B F.Q) g)) i =
       algebraMap F.B F.Q (coeff (Finsupp.single i 1) g) := fun i => by
-    rw [GlobalTheory.T.powerSeriesLinearCoefficients_mvPowerSeriesFormalLog F.Q d _ (by rw [constantCoeff_map, hg1, map_one]) i, lin, coeff_map]
-  have hcob := GlobalTheory.T.cob1_formalLog_mem_ker_of_map_grouplike p F.B O F.Q F.θ F.frame d μ' hlift.const g hg1 (by
+    rw [_root_.GlobalTheory.FormalCalc.lin_formalLog F.Q d _ (by rw [constantCoeff_map, hg1, map_one]) i, lin, coeff_map]
+  have hcob := _root_.GlobalTheory.CobLog.cob1_formalLog_mem_ker p F.B O F.Q F.θ F.frame d μ' hlift.const g hg1 (by
     rw [hg]; convert hmul using 2; funext i; exact hμ i)
   refine ⟨formalLog (map (algebraMap F.B F.Q) g), fun i => coeff (Finsupp.single i 1) g,
     ⟨constantCoeff_formalLog (by rw [constantCoeff_map, hg1, map_one]),
       fun i => ⟨_, Submodule.mem_top, hlin i⟩,
       fun α => by obtain ⟨b, -, hb⟩ := hcob α; exact ⟨b, Submodule.mem_top, hb⟩⟩,
-    hcob, GlobalTheory.T.frobenius_formalLog_sub_smul_integral p F.B O F.Q F.θ F.frame F.σ F.s F.s_alg F.σ_pow d g hg1, hlin, ?_, ?_⟩
-  · rw [GlobalTheory.T.dlog_eq_sum_linearCoefficients_form_explicit p O G d c χ u hu0 hu]
+    hcob, _root_.GlobalTheory.QLog.in_frob_formalLog_sub_smul p F.B O F.Q F.θ F.frame F.σ F.s F.s_alg F.σ_pow d g hg1, hlin, ?_, ?_⟩
+  · rw [_root_.GlobalTheory.QLog.Chart.dlog_eq_sum_lin' p O G d c χ u hu0 hu]
     refine Finset.sum_congr rfl fun i _ => ?_
     rw [← hg, lin, coeff_map]
-  · exact GlobalTheory.T.period_formalLog_lift_characterSeries p C v O hv ε hε F G d c χ g hg1 (by rw [hg]; exact hu)
+  · exact _root_.GlobalTheory.CharPeriod.hasPeriod_formalLog_char p C v O hv ε hε F G d c χ g hg1 (by rw [hg]; exact hu)

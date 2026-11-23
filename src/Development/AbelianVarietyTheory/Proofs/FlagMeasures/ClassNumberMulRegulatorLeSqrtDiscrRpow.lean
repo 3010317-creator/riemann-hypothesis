@@ -2,8 +2,14 @@ module
 
 public import Mathlib.NumberTheory.NumberField.ClassNumber
 public import Mathlib.NumberTheory.NumberField.Units.Regulator
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RegulatorLeSumSmallIdealsInClassStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SumAbsNormRpowNegLeDedekindZetaBoundStatement
+public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
+public import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
+public import Mathlib.RingTheory.ClassGroup.Basic
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RegulatorLeSumSmallIdealsInClass
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SumAbsNormRpowNegLeDedekindZetaBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,7 +84,7 @@ theorem classNumber_mul_regulator_le_sqrt_discr_rpow :
   have h1 : ∀ C : ClassGroup (𝓞 K),
       Units.regulator K ≤ ∑ I ∈ T.filter (fun I => cls I = C), g I := by
     intro C
-    refine GlobalTheory.T.regulator_le_sum_small_ideals_in_class K hK C _ fun I => ?_
+    refine _root_.GlobalTheory.RegulatorClassBound.regulator_le_sum_class K hK C _ fun I => ?_
     rw [Finset.mem_filter, hmem]
     constructor
     · rintro ⟨⟨h0, hle⟩, hc⟩
@@ -107,6 +113,6 @@ theorem classNumber_mul_regulator_le_sqrt_discr_rpow :
     _ = Y ^ s * ∑ I ∈ T, (Ideal.absNorm I : ℝ) ^ (-s) := (Finset.mul_sum _ _ _).symm
     _ ≤ Y ^ s * (s / (s - 1)) ^ Module.finrank ℚ K :=
         mul_le_mul_of_nonneg_left
-          (GlobalTheory.T.sum_absNorm_rpow_neg_le_dedekindZeta_bound K s hs T fun I hI => ((hmem I).1 hI).1) (Real.rpow_nonneg hY0 s)
+          (_root_.GlobalTheory.IdealZetaSum.sum_absNorm_rpow_neg_le K s hs T fun I hI => ((hmem I).1 hI).1) (Real.rpow_nonneg hY0 s)
 
 end GlobalTheory

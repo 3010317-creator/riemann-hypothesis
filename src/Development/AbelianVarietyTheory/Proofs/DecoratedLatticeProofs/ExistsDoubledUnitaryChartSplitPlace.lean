@@ -3,9 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsSplitOfIsInertAt
 public import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsAHEqOfMemRatPts
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HasIwasawaDecompositionDoubledSplitPlace
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsLatticeFrameAtPlaceDirectSumBlockDiagonalStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.MemSiegelOfIffRightAct
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsLatticeFrameAtPlaceDirectSumBlockDiagonal
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIsSplitChartOfBasis
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIsSplitChartOne
+public import Development.AbelianVarietyTheory.Definitions.Foundations.GLintEqKOAndPrincEqKOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +48,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Divisors.EqOfHasValueAtInfinite
-public import Development.AbelianVarietyTheory.Definitions.Foundations.GLintEqKOAndPrincEqKOne
 
 @[expose] public section
 
@@ -127,10 +128,10 @@ theorem exists_dbl_chart : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
       apply Units.ext
       exact Matrix.ext fun i j => φ.apply_symm_apply _
     rw [heq]
-    exact GlobalTheory.T.isLatticeFrameAtPlace_directSum_blockDiagonal E w n L a ha
+    exact _root_.GlobalTheory.LFun.isFrameAt_sumLat_blkGL E w n L a ha
   obtain ⟨f₀, ⟨⟨b, hb, e0⟩, hK⟩⟩ :=
     ConjPlace.exists_isSplitChart_of_basis hc hQ' (isSelfDualAt_dbl hQ hL) h hτ hβ
-  have hk := hb.inv_mul_mem (GlobalTheory.T.isLatticeFrameAtPlace_directSum_blockDiagonal E w n L a ha)
+  have hk := hb.inv_mul_mem (_root_.GlobalTheory.LFun.isFrameAt_sumLat_blkGL E w n L a ha)
   have ef : ∀ g, f₀.trans (MulAut.conj (b⁻¹ * blkGL finSumFinEquiv (a, a))⁻¹) g =
       (blkGL finSumFinEquiv (a, a))⁻¹ * locMat σ Q h g * blkGL finSumFinEquiv (a, a) := fun g => by
     rw [MulEquiv.trans_apply, MulAut.conj_apply, e0]; group

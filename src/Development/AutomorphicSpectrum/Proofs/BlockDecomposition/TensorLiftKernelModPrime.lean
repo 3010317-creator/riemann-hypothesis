@@ -2,10 +2,11 @@ module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.AcrisKummerUnits.ConstantCoeffSurjective
 public import GroundTheory.PAdicHodge.ACrisLog
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExpansionEqZeroIffCoeffsMemStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExpansionSurjectiveAdditiveLinearStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExpansionEqZeroIffCoeffsMem
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IntegralRingAdicCompletePrimeRegular
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PeriodRingComparisonOfBaseStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.AcrisKummerUnits.MapUgAlgebraMap
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PeriodRingComparisonOfBase
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExpansionSurjectiveAdditiveLinear
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -180,11 +181,11 @@ theorem cris_teich (a : Ob l) :
 
 theorem mem_of_cris (a : Acris l) (h : (base (l := l)).cris 1 a = 0) : a ∈ Ideal.span {(l : Acris l)} := by
   have := (RingHom.mem_ker).2 h
-  rwa [((GlobalTheory.T.period_ring_comparison_of_base base isBase_base).2 1).2, pow_one] at this
+  rwa [((_root_.GlobalTheory.CompanionTheory.BaseAcris.main base isBase_base).2 1).2, pow_one] at this
 
 theorem hsurj (a : Acris l) : ∃ (s : Finset ℕ) (c : ℕ → Ainf l),
     a - ∑ k ∈ s, algebraMap (Ainf l) (Acris l) (c k) * d (l * k) ∈ Ideal.span {(l : Acris l)} := by
-  obtain ⟨c, hc⟩ := (GlobalTheory.T.expansion_surjective_additive_linear (base (l := l))).1 ((base (l := l)).cris 1 a)
+  obtain ⟨c, hc⟩ := (_root_.GlobalTheory.CompanionTheory.PerfFil.Expand.main (base (l := l))).1 ((base (l := l)).cris 1 a)
   refine ⟨c.support, fun k => WittVector.teichmuller l (c k), mem_of_cris _ ?_⟩
   have e : (base (l := l)).expand c =
       ∑ k ∈ c.support, (base (l := l)).aTo1 (c k) * (base (l := l)).dxi 1 (l * k) := rfl
@@ -198,7 +199,7 @@ def r0 : Ainf l := WittVector.teichmuller l (pFlat l ^ l)
 theorem hv (k : ℕ) : algebraMap (Ainf l) (Acris l) (r0 (l := l)) * d k ∈ Ideal.span {(l : Acris l)} := by
   refine mem_of_cris _ ?_
   rw [map_mul, r0, cris_teich, cris_d]
-  exact (GlobalTheory.T.expansion_surjective_additive_linear (base (l := l))).2.2.2 k
+  exact (_root_.GlobalTheory.CompanionTheory.PerfFil.Expand.main (base (l := l))).2.2.2 k
 
 theorem hK (A : PAlg l) (s : Finset ℕ) (w : ℕ → A.W)
     (h : ∑ k ∈ s, A.cris 1 (d (l * k)) * A.toAcr 1 (w k) = 0) (k : ℕ) (hks : k ∈ s) :
@@ -207,7 +208,7 @@ theorem hK (A : PAlg l) (s : Finset ℕ) (w : ℕ → A.W)
     rw [expand, Finsupp.sum_of_support_subset _ (Finsupp.support_indicator_subset _ _) _ (by simp), ← h]
     refine Finset.sum_congr rfl fun k hk => ?_
     rw [Finsupp.indicator_of_mem hk, aTo1_coeff, cris_d, mul_comm]
-  have hk := (GlobalTheory.T.expansion_eq_zero_iff_coeffs_mem A _).1 hexp k
+  have hk := (_root_.GlobalTheory.CompanionTheory.ExpandKer.expand_eq_zero_iff A _).1 hexp k
   rw [Finsupp.indicator_of_mem hks] at hk
   obtain ⟨b, hb⟩ := Ideal.mem_span_singleton'.1 hk
   have hr : algebraMap (Ainf l) A.W r0 = WittVector.teichmuller l (A.pi ^ l) := by

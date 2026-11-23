@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwiste
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InvMemDoubleCosetAndComm
 public import Development.AbelianVarietyTheory.Definitions.Foundations.GLintEqKOAndPrincEqKOne
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CayleyRuleOfBiInvariantVacuumCoefficient
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmFieldStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmField
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsUniqueIsConjAt
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryIwahoriFacts
 import Mathlib.Algebra.Order.Floor.Extended
@@ -105,7 +105,7 @@ theorem inv_mem_doubleCoset : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     ∀ (w : Pl E), ¬ IsSplitAt w → ∀ (n : ℕ) (g : UL n w),
       ∃ k₁ ∈ KL n w, ∃ k₂ ∈ KL n w, g⁻¹ = k₁ * g * k₂ := by
   intro E _ _ _ hU w hw n g
-  obtain ⟨-, -, -, hns, -⟩ := GlobalTheory.T.placeConjugation_properties_cmField E hU w
+  obtain ⟨-, -, -, hns, -⟩ := _root_.GlobalTheory.ConjAtPlace.main E hU w
   obtain ⟨-, ⟨ϖ, q, hUI, -⟩, -⟩ := hns hw
   obtain ⟨b, hbK, hb⟩ := GlobalTheory.LFun.InertChart.exists_congr_antiJ (n := n) hUI (B := 1) (one_mem _) (cT_one _)
   have hb' : cT (cj w) b.val * b.val = antiJ _ n := by simpa using hb

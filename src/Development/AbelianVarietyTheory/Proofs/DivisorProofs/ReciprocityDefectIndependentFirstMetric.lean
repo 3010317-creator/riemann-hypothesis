@@ -3,13 +3,13 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DensConst
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoheightEqOneIffClosureDimProjective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogNormSectionIntegrableMixedChernProjectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernFormFiniteIntegrablePointClosureStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernFormSignedPartMeasureComplOpenGenericP
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogNormSectionIntegrableMixedChernProjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernFormFiniteIntegrablePointClosure
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernFormSignedPartMeasureEqOfIsometricProj
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernIntegralAdditiveInFactorStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernMeasureFiniteIntegrableProjectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PoincareLelongFormulaSectionProjectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernIntegralAdditiveInFactor
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PoincareLelongFormulaSectionProjective
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernFormSignedPartMeasureComplOpenGenericP
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernMeasureFiniteIntegrableProjective
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothWeightedLineBundleIsometryCalculus
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothWeightedLineBundleLogSectionNormProperties
 import Mathlib.Algebra.Order.Floor.Extended
@@ -102,8 +102,8 @@ theorem side_sub_side_addFn : GlobalTheory.Published.Principalisation → ∀ (F
       refine ae_iff.2 (measure_mono_null (fun y hy => ?_)
         (GlobalTheory.MixNull.part_compl_null F X p σ hσ hproj (e + 1) (Fin.cons N L) ε (nonzeroLocus s) hs))
       exact fun hy' => hy (hlog u hu y hy')
-    have hf := GlobalTheory.T.log_norm_section_integrable_mixedChern_projective hP F X p σ (e + 1) hproj hdim (Fin.cons N L) M s hs
-    have hv := (GlobalTheory.T.mixedChernMeasure_finite_integrable_projective hP F X p σ (e + 1) hproj hdim (Fin.cons N L)).2 u hcont
+    have hf := _root_.GlobalTheory.Mix.logSec_intg_proj hP F X p σ (e + 1) hproj hdim (Fin.cons N L) M s hs
+    have hv := (_root_.GlobalTheory.MixFin.finite_and_intg hP F X p σ (e + 1) hproj hdim (Fin.cons N L)).2 u hcont
     rw [← int_sub_half _ hf hv]
     unfold Mix.int
     rw [integral_congr_ae (hae 1), integral_congr_ae (hae (-1))]
@@ -115,9 +115,9 @@ theorem side_sub_side_addFn : GlobalTheory.Published.Principalisation → ∀ (F
     have hpart : ∀ ε : ℤˣ, part (Fin.cons (M.addFn u hu) L : Fin (e + 1) → MLine p σ) ε =
         part (Fin.cons (M.tens (MLine.ofFun u hu)) L : Fin (e + 1) → MLine p σ) ε :=
       GlobalTheory.Mix.part_eq_of_isom F X p σ hproj (e + 1) _ _ fun i => Fin.cases (haddFn M u hu) (fun j => hrefl (L j)) i
-    have h1 := GlobalTheory.T.log_norm_section_integrable_mixedChern_projective hP F X p σ (e + 1) hproj hdim (Fin.cons M L) N t ht
-    have h2 := GlobalTheory.T.log_norm_section_integrable_mixedChern_projective hP F X p σ (e + 1) hproj hdim (Fin.cons (MLine.ofFun u hu) L) N t ht
-    have hadd := GlobalTheory.T.mixedChernIntegral_additive_in_factor F X p σ hproj (e + 1) (Fin.cons M L : Fin (e + 1) → MLine p σ) 0 M
+    have h1 := _root_.GlobalTheory.Mix.logSec_intg_proj hP F X p σ (e + 1) hproj hdim (Fin.cons M L) N t ht
+    have h2 := _root_.GlobalTheory.Mix.logSec_intg_proj hP F X p σ (e + 1) hproj hdim (Fin.cons (MLine.ofFun u hu) L) N t ht
+    have hadd := _root_.GlobalTheory.Mix.int_update_tens F X p σ hproj (e + 1) (Fin.cons M L : Fin (e + 1) → MLine p σ) 0 M
       (MLine.ofFun u hu) (N.logSec t)
     rw [upd_cons, upd_cons, upd_cons] at hadd
     replace hadd := hadd h1 h2
@@ -135,7 +135,7 @@ theorem side_sub_side_addFn : GlobalTheory.Published.Principalisation → ∀ (F
     have hzs : z ∈ nonzeroLocus s := (hcod z hz1).resolve_right fun hzt =>
       (notMem_supp_divOfSec.2 hzt) (CartierDiv.mem_supp_of_mult_ne_zero h)
     have hdz := (GlobalTheory.FieldDimCoheight.coheight_eq_one_iff F X p e hproj hdim z).1 hz1
-    obtain ⟨-, hcc, hnull, hlc⟩ := GlobalTheory.T.mixedChernForm_finite_integrable_pointClosure hP F X p σ hproj e L z hdz
+    obtain ⟨-, hcc, hnull, hlc⟩ := _root_.GlobalTheory.CycFin.cycle_facts hP F X p σ hproj e L z hdz
     have hae : ∀ ε : ℤˣ, (fun y => (M.addFn u hu).logSec s (ptMap (closι z) rfl σ y)) =ᵐ[part (fun i => (L i).pull (closι z) rfl) ε]
         fun y => M.logSec s (ptMap (closι z) rfl σ y) - u (ptMap (closι z) rfl σ y) / 2 := by
       intro ε
@@ -160,7 +160,7 @@ theorem side_sub_side_addFn : GlobalTheory.Published.Principalisation → ∀ (F
     exact finsum_sub_distrib (hsub _) ((hsub (fun z => cycInt L u z)).subset fun z hz h0 => hz (by
       have h1 : ((divOfSec N.φ.isLB t ht).mult z : ℝ) * cycInt L u z = 0 := h0
       simp only [h1, zero_div]))
-  have hPL := GlobalTheory.T.poincareLelong_formula_section_projective hP F X p σ e hproj hdim L N t ht u hu
+  have hPL := _root_.GlobalTheory.poincareLelong_sec hP F X p σ e hproj hdim L N t ht u hu
   simp only [side]
   rw [hA, hB, hsum]
   linarith

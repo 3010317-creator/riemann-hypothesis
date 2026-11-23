@@ -2,13 +2,15 @@ module
 
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.HypJ
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelesLocallyCompactSecondCountable
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicBoxesCompactExhaustStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ExistsRealFlowAdelicUnitsStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FundamentalDomainTransportCongruentFormStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HyperbolicFiniteVolumeIntegralBoundStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.IsotropicVectorSplitsHyperbolicPlaneStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRingStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicBoxesCompactExhaust
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ExistsRealFlowAdelicUnits
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FundamentalDomainTransportCongruentForm
+public import Formalism.UnipotentAdelicQuotients.SiegelWeilUnitaryConvergent
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HyperbolicFiniteVolumeIntegralBound
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.IsotropicVectorSplitsHyperbolicPlane
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.UnitaryGroupFiniteVolume
+import Formalism.UnipotentAdelicQuotients.SWXSDefs
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -130,18 +132,18 @@ theorem mean_isotropic_box : ∀ (F E : Type) [Field F] [NumberField F] [Field E
   intro F E _ _ _ _ _ σ hCM M J hJ hM μ 𝓕 hH hF d b N hN
   by_cases hiso : ∃ x : Fin M → E, x ≠ 0 ∧ hE σ J x x = 0
   · obtain ⟨x, hx, hxx⟩ := hiso
-    obtain ⟨M₁, hM₁, g, J₁, hJ₁, hg⟩ := GlobalTheory.T.isotropic_vector_splits_hyperbolic_plane F E σ hCM M J hJ x hx hxx
+    obtain ⟨M₁, hM₁, g, J₁, hJ₁, hg⟩ := _root_.GlobalTheory.CompanionTheory.SW.HypSplit.splitHyp F E σ hCM M J hJ x hx hxx
     subst hM₁
     obtain ⟨μ', 𝓕', hH', hF', -, hT⟩ :=
-      GlobalTheory.T.fundamental_domain_transport_congruent_form F E σ hCM (M₁ + 2) J hJ g (hypJ J₁) hg μ 𝓕 hH hF
-    obtain ⟨τ, hτ⟩ := GlobalTheory.T.exists_real_flow_adelic_units F E σ hCM
-    obtain ⟨hbc, -, hsc⟩ := GlobalTheory.T.adelic_boxes_compact_exhaust F E σ hCM d b 1 (M₁ + 2)
+      _root_.GlobalTheory.CompanionTheory.SW.FTransfer.cntI_transfer F E σ hCM (M₁ + 2) J hJ g (hypJ J₁) hg μ 𝓕 hH hF
+    obtain ⟨τ, hτ⟩ := _root_.GlobalTheory.CompanionTheory.SW.Flow.exists_flow F E σ hCM
+    obtain ⟨hbc, -, hsc⟩ := _root_.GlobalTheory.CompanionTheory.SW.BoxF.box_facts F E σ hCM d b 1 (M₁ + 2)
     obtain ⟨⟨hA1, hA2, hA3⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
     have := hA1
     have := hA2
     have := hA3
     have : IsTopologicalRing (AF F ⊗[F] E) :=
-      (GlobalTheory.T.tensor_locally_compact_ring F E σ hCM (AF F)).1
+      (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (AF F)).1
     set G : GL (Fin (M₁ + 2)) (AF F ⊗[F] E) := bc (inclR (AF F)) g with hG
     have hΩ : IsCompact (actTup (AF F) G ⁻¹' (box b N 1 : Set (Fin 1 → Fin (M₁ + 2) → AF F ⊗[F] E))) := by
       have himg : actTup (AF F) G ⁻¹' (box b N 1 : Set (Fin 1 → Fin (M₁ + 2) → AF F ⊗[F] E)) =
@@ -159,7 +161,7 @@ theorem mean_isotropic_box : ∀ (F E : Type) [Field F] [NumberField F] [Field E
           simpa [Set.mem_preimage, this] using hZ
       rw [himg]
       exact (hbc N 1 hN).image (IsoBox.continuous_actTup (AF F) G⁻¹)
-    obtain ⟨C, hC⟩ := GlobalTheory.T.hyperbolic_finite_volume_integral_bound F E σ hCM M₁ J₁ hJ₁ (by omega)
+    obtain ⟨C, hC⟩ := _root_.GlobalTheory.CompanionTheory.SW.IsoCount.mean_isotropic_count_le F E σ hCM M₁ J₁ hJ₁ (by omega)
       (GlobalTheory.CompanionTheory.SW.finVol_unitaryGroup F E σ hCM M₁ J₁ hJ₁) τ hτ μ' 𝓕' hH' hF' _ hΩ
     refine ⟨C, fun r hr => ?_⟩
     have hfun : (fun Y : Fin 1 → Fin (M₁ + 2) → AF F ⊗[F] E =>

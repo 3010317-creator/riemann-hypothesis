@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsRead
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LinearMapKillingPartialEvalIntegralKernelTranslaStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LinearMapKillsPartialEvalIntegralKernelOfLawsStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LinearMapKillingPartialEvalIntegralKernelTransla
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LinearMapKillsPartialEvalIntegralKernelOfLaws
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ContinuousCharactersLocallyConstantNonarchLocalF
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -114,9 +114,9 @@ theorem kerRed_extend : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
   have hT : (∀ e ∈ it', ∀ (a : k) (Θ Θ' : SB (Matrix m m' k)), (∀ t, Θ'.1 t = Θ.1 (t + Matrix.single e.1 e.2 a)) → l Θ' = l Θ) := by
     intro e he
     by_cases h : e ∈ it
-    · exact GlobalTheory.T.linearMap_killing_partialEvalIntegralKernel_translation_invariant k ψ ν hψc hψ1 hν m m' M l β ev it hd0 hK e h
+    · exact _root_.GlobalTheory.FlatFactor.kerRed_translate_invariant k ψ ν hψc hψ1 hν m m' M l β ev it hd0 hK e h
     · exact htr e he h
-  exact GlobalTheory.T.linearMap_kills_partialEvalIntegralKernel_of_laws k ψ ν hψc hψ1 hν m m' M l β ev' it' hd
+  exact _root_.GlobalTheory.FlatFactor.KerEngine.kerRed_of_laws k ψ ν hψc hψ1 hν m m' M l β ev' it' hd
     (mul_sum_law k ψ ν hψc hψ1 hν m m' M l β ev' hM) (trans_sum_law k ψ ν hψc hψ1 hν m m' M l β it' hT)
 
 end GlobalTheory.FlatFactor.KerRedStep

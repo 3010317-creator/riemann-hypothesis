@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.CosetTrace
 public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsPthPowerScaleThinShellStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KummerGeneratorApproxCriticalRadiusStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ValuationSubOnePowEqPrimeStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsPthPowerScaleThinShell
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KummerGeneratorApproxCriticalRadius
+public import Mathlib.Basic.NNReal.Defs
+public import Mathlib.RingTheory.Valuation.Basic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ValuationSubOnePowEqPrime
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,8 +68,8 @@ theorem kummer_moves : ∀ (L : Type) [Field L] (v : Valuation L ℝ≥0) (p : �
   have hs0 : 0 < s := lt_trans zero_lt_one hs1
   have hrs : r * s < 1 := by
     rw [hs_def, ← div_eq_mul_inv]; exact (div_lt_one ht0).mpr hrt
-  obtain ⟨y, hyF, hy⟩ := GlobalTheory.T.kummer_generator_approx_critical_radius L v p hp F hF hp1 α hαp hp0 s hs1
-  have hz := GlobalTheory.T.valuation_primitiveRoot_sub_one_pow_pred_eq L v p hp ζ hζ
+  obtain ⟨y, hyF, hy⟩ := _root_.GlobalTheory.AlmostEt.kummer_approx_critical L v p hp F hF hp1 α hαp hp0 s hs1
+  have hz := _root_.GlobalTheory.AlmostEt.valuation_sub_one_pow_eq_prime L v p hp ζ hζ
   have hp2 : 2 ≤ p := hp.two_le
   have hpn : p - 1 ≠ 0 := by omega
   set β := α - y with hβ_def
@@ -88,7 +90,7 @@ theorem kummer_moves : ∀ (L : Type) [Field L] (v : Valuation L ℝ≥0) (p : �
           exact le_self_pow₀ hs1.le hpn
         _ = s ^ (p - 1) * (v (p : L) * v α ^ (p - 1)) := by ring
     exact le_of_pow_le_pow_left₀ hpn (zero_le') h1
-  obtain ⟨d, hdF, hd0, hdlo, hdhi⟩ := GlobalTheory.T.exists_pth_power_scale_thin_shell L v p hp F hF hp0 hp1 (r * s) hrs β hβ0
+  obtain ⟨d, hdF, hd0, hdlo, hdhi⟩ := _root_.GlobalTheory.AlmostEt.klc_scale L v p hp F hF hp0 hp1 (r * s) hrs β hβ0
   refine ⟨β * d ^ p, Subfield.mem_top _, hdhi, ?_⟩
   have hσx : σ • (β * d ^ p) - β * d ^ p = d ^ p * (σ • β - β) := by
     rw [smul_mul', smul_pow', hσ d hdF]; ring

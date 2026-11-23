@@ -1,7 +1,9 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsPeriodOn
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagBundlePartialBlockMapStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GenericBlockMatrixIsBlockDiag
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MultihomogeneousIdeals.IsFieldIntersection
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagBundlePartialBlockMap
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.LogResolutionFunctorialHolomorphic
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.PullbackPullback
 import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.GenericComplexPoint
@@ -142,7 +144,7 @@ theorem flagAn_dim : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintyp
       · exact Or.inl h
       · obtain ⟨p, hp⟩ := not_forall.1 h
         exact Or.inr ⟨p, trivial, not_not.1 hp⟩, fun _ => ⟨k, rfl⟩⟩
-  obtain ⟨e, R, he, -⟩ := GlobalTheory.T.flag_bundle_partial_block_map K ι Φ y Ψ N j M n _ BM.Rb rfl (fun _ => True) K ι id id isBlockMap_id hk
+  obtain ⟨e, R, he, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.PFl.main K ι Φ y Ψ N j M n _ BM.Rb rfl (fun _ => True) K ι id id isBlockMap_id hk
   have R2 : AnLogRes (mCoordIdeal y) ⊤ e := R
   obtain ⟨z, hz, hJ⟩ :=
     GroundTheory.Heights₂.Heights.HilbertSamuel.exists_mcPts_not_mem_mcPts FA.Re.arith FA.Re.R.nondeg

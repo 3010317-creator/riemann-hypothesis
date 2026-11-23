@@ -2,10 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenScal
 public import Development.AbelianVarietyTheory.Definitions.Divisors.UnifOfSpaceEq
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithmeticGroupConjIsometryMovesCoverPointStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoverComparisonScalarEqOneStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqArithmeticGroupMulScalarOfMovedFramesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexConjIsometryFlagDomainGroupNeZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithmeticGroupConjIsometryMovesCoverPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoverComparisonScalarEqOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqArithmeticGroupMulScalarOfMovedFrames
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.Signature
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexConjIsometryFlagDomainGroupNeZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -67,12 +68,12 @@ theorem conj_arithGroup_le : ∀ (D : D7) (j : ℕ) (H : ReciprocityTheory.Chart
   have hΨ : ((U₂ σ₂).X k₂).Ψ = ((U (σ₂.comp (d.eF : c.F →+* d.c₂.F))).X k).Ψ := by
     ext τ
     rw [((hL₂.unf σ₂ hσ₂).2.1 k₂).2 τ, ((hL.unf _ hσ).2.1 k).2 τ]
-  refine ⟨?_, GlobalTheory.T.relIndex_conj_isometry_flagDomainGroup_ne_zero _ _ δ hGm hδ⟩
+  refine ⟨?_, _root_.GlobalTheory.ArithIndex.relIndex_map_conj_ne_zero _ _ δ hGm hδ⟩
   intro g hg
   obtain ⟨γ₂, hγ₂, rfl⟩ := Subgroup.mem_map.1 hg
-  obtain ⟨γ, hγ, ζ, hζ⟩ := GlobalTheory.T.eq_arithmeticGroup_mul_scalar_of_moved_frames _ _ δ (MulAut.conj δ γ₂) hΨ
-    (fun x hx x' hm => GlobalTheory.T.arithmeticGroup_conj_isometry_moves_cover_point D j H Dw l Xo c U dict d U₂ dict₂ hL hL₂ hlev σ₂ hσ₂ k₂ k δ hGm hδ hov γ₂ hγ₂ x hx x' hm)
-  have h1 := GlobalTheory.T.coverComparison_scalar_eq_one D j H Dw l Xo c U dict d U₂ dict₂ hL hL₂ hlev σ₂ hσ₂ k₂ k δ hGm hδ hov γ₂ hγ₂ γ hγ ζ hζ
+  obtain ⟨γ, hγ, ζ, hζ⟩ := _root_.GlobalTheory.LevModel.eq_mul_scalar_of_moved _ _ δ (MulAut.conj δ γ₂) hΨ
+    (fun x hx x' hm => _root_.GlobalTheory.LevModel.lact_conj_eq_rmul D j H Dw l Xo c U dict d U₂ dict₂ hL hL₂ hlev σ₂ hσ₂ k₂ k δ hGm hδ hov γ₂ hγ₂ x hx x' hm)
+  have h1 := _root_.GlobalTheory.LevScalar.scalar_eq_one_of_conj D j H Dw l Xo c U dict d U₂ dict₂ hL hL₂ hlev σ₂ hσ₂ k₂ k δ hGm hδ hov γ₂ hγ₂ γ hγ ζ hζ
   have e : (MulAut.conj δ).toMonoidHom γ₂ = γ := by
     apply Units.ext
     show ((MulAut.conj δ γ₂ : GL (Fin D.R.r) D.host.E) : Matrix (Fin D.R.r) (Fin D.R.r) D.host.E) = _

@@ -2,13 +2,14 @@ module
 
 public import Development.EtaleCohomology.EtaleSheaves.H0TwistOverClosedField
 public import Mathlib.Order.CompletePartialOrder
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyNegativeVanishingDegreeZeroStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DivisorSupportCondition
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyNegativeVanishingDegreeZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistSectionsLocallyGeneratedStatement
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.TwistedSectionEqNsmulGeneratorOfConnected
 public import Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.ExistsMayerVietorisConnectingExact
 public import Development.EtaleCohomology.EtaleSheaves.LeafAffCoverVanishPfEmpty
-import Development.EtaleCohomology.EtaleTrace.LDblPf
 public import Development.EtaleCohomology.EtaleTrace.LocalSplitting.Cover2
+import Development.EtaleCohomology.EtaleTrace.LDblPf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -68,7 +69,7 @@ private theorem res_nsmul' {R : Type} [CommRing R] {F : Shv R} {V U : Scheme.{0}
 private theorem exists_h0_restriction_eq_of_le_open {q : ℕ} [NeZero q] {X E : Scheme.{0}} [IsIntegral X] (ζ : Prim q Γ(X, ⊤))
     (j : E ⟶ X) [IsOpenImmersion j] {O P : E.Opens} (h : P ≤ O) (c : Ht q (sch.obj P) 0 1) :
     ∃ a : Ht q (sch.obj O) 0 1, pl q 1 (E.homOfLE h) 0 a = c := by
-  obtain ⟨-, e, he, -⟩ := GlobalTheory.T.etaleCohomology_negative_vanishing_degree_zero (ZMod q) (tw q 1)
+  obtain ⟨-, e, he, -⟩ := _root_.GlobalTheory.EtC.etale_cohomology_vanishing_negative_degree_zero (ZMod q) (tw q 1)
   by_cases hP : Nonempty (P : Scheme.{0})
   · haveI : IsIntegral (P : Scheme.{0}) := isIntegral_of_isOpenImmersion (P.ι ≫ j)
     haveI : ConnectedSpace (P : Scheme.{0}) := inferInstance

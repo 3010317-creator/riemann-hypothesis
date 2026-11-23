@@ -4,14 +4,14 @@ public import Development.WeilBound.RepresentationTheoryGL.CasimirAlgebra.Tensor
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnipotentBlockColumnIndex
 public import Development.WeilBound.RepresentationTheoryGL.CasimirAlgebra.KugaCoordinates.ArchimedeanWhittakerDerivatives.ContinuousInfGL
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieCoordinateMatrixEquivariant
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsStandardAdelicAddCharStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsStandardAdelicAddChar
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsGenericOfIsLocComp
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsMirabolicWhittakerStageOfIsCuspFormStatement
 public import Development.WeilBound.RepresentationTheoryGL.CasimirAlgebra.KugaCoordinates.ArchimedeanWhittakerDerivatives.ConjSingleApply
 public import Development.WeilBound.RepresentationTheoryGL.CasimirAlgebra.KugaCoordinates.ArchimedeanWhittakerDerivatives.ContinuousAtEmb
 public import Development.WeilBound.RepresentationTheoryGL.CasimirAlgebra.KugaCoordinates.ArchimedeanWhittakerDerivatives.ExistsUpperUnitary
 public import Development.WeilBound.RepresentationTheoryGL.CasimirAlgebra.KugaCoordinates.ArchimedeanWhittakerDerivatives.HasDerivAtOfIntRel
 public import Development.WeilBound.RepresentationTheoryGL.CasimirAlgebra.KugaCoordinates.ArchimedeanWhittakerDerivatives.HasDerivAtOfMulHom
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsMirabolicWhittakerStageOfIsCuspFormStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -95,7 +95,7 @@ theorem whit_lie_eq {ψ : AddChar (Ad E) ℂ} (hψ : StdPsi ψ) (π : CuspSub E 
 
 theorem whitLie_holds : WhitLie := by
   intro E _ _ _ a π
-  obtain ⟨ψ, hψ⟩ := GlobalTheory.T.exists_standardAdelicAddChar E
+  obtain ⟨ψ, hψ⟩ := _root_.GlobalTheory.CuspGeneric.exists_stdPsi E
   have hg : ∀ φ : π.V, Good ψ (a - 1) φ.1.1 := fun φ => GlobalTheory.T.isMirabolicWhittakerStage_of_isCuspForm E a ψ φ.1 (π.cusp _ φ.2)
   have h0 : a - 1 < a ∨ a - 1 = 0 := by omega
   obtain ⟨φ₀, hφ₀⟩ : ∃ φ : π.V, φ ≠ 0 := by

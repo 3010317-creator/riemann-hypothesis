@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsBlockOrderedSumEquivTrueIndex
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HuaIntegralPositiveDefiniteQuadricStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LeadingMinorFlagDensityGlueLowerUnitriangularStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MeasurePreservingGlueLowerUnitriangularBlocksStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HuaIntegralPositiveDefiniteQuadric
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LeadingMinorFlagDensityGlueLowerUnitriangular
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MeasurePreservingGlueLowerUnitriangularBlocks
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -90,7 +90,7 @@ theorem lintegral_dens : ∀ (m : ℕ) (A : Matrix (Fin m) (Fin m) ℂ), A.PosDe
     obtain ⟨hDpos, hD⟩ := re_facts hA
     have hf := flagConst_pos p
     have hc : 0 ≤ A.det.re ^ (1 - (p : ℤ)) / flagConst p := by positivity
-    rw [← (GlobalTheory.T.measurePreserving_glueLowerUnitriangularBlocks _ _ _ e he).lintegral_comp hm, Measure.volume_eq_prod, lintegral_prod _ hm2.aemeasurable]
+    rw [← (_root_.GlobalTheory.FlagFibre.measurePreserving_glue _ _ _ e he).lintegral_comp hm, Measure.volume_eq_prod, lintegral_prod _ hm2.aemeasurable]
     have key : ∀ v : Fin p × Fin 1 → ℂ,
         ∫⁻ w : (Low 1 → ℂ) × (Low p → ℂ), ENNReal.ofReal (dens A (glue e (v, w))) =
         ENNReal.ofReal (A.det.re ^ (1 - (p : ℤ)) / flagConst p) *
@@ -102,7 +102,7 @@ theorem lintegral_dens : ∀ (m : ℕ) (A : Matrix (Fin m) (Fin m) ℂ), A.PosDe
       have hm3 : Measurable fun w : (Low 1 → ℂ) × (Low p → ℂ) => ENNReal.ofReal (dens A (glue e (v, w))) :=
         hm2.comp measurable_prodMk_left
       rw [Measure.volume_eq_prod, lintegral_prod _ hm3.aemeasurable]
-      have hg := fun (y1 : Low 1 → ℂ) (y2 : Low p → ℂ) => GlobalTheory.T.leadingMinorFlagDensity_glueLowerUnitriangular _ _ _ e he A (v, y1, y2) hu
+      have hg := fun (y1 : Low 1 → ℂ) (y2 : Low p → ℂ) => _root_.GlobalTheory.FlagFibre.dens_glue _ _ _ e he A (v, y1, y2) hu
       simp only [dens_one, one_mul] at hg
       simp only [hg]
       have hdet := det_eq_mul_schur hu
@@ -125,7 +125,7 @@ theorem lintegral_dens : ∀ (m : ℕ) (A : Matrix (Fin m) (Fin m) ℂ), A.PosDe
         rw [← zpow_add₀ hp2.ne']; congr 1; push_cast; ring
       rw [this]; ring
     simp only [key]
-    rw [lintegral_const_mul' _ _ ENNReal.ofReal_ne_top, GlobalTheory.T.hua_integral_positive_definite_quadric p 1 _ hA', ← ENNReal.ofReal_mul hc, hd,
+    rw [lintegral_const_mul' _ _ ENNReal.ofReal_ne_top, _root_.GlobalTheory.HuaQuadric.quadric p 1 _ hA', ← ENNReal.ofReal_mul hc, hd,
       flagConst_add p 1]
     congr 1
     have h1 : flagConst 1 = 1 := by simp [flagConst]

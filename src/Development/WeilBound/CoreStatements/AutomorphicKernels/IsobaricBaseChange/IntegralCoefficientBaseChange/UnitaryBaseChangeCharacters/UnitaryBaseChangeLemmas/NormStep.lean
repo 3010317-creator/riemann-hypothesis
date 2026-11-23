@@ -3,8 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AevalRootEqZeroIff
 public import Formalism.SatakeDualWeyl.StatementF
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLemmas.ExistsPolyOfCommute
-public import Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLinks.CharpolyDvdOfAevalEqZero
+public import Mathlib.FieldTheory.Separable
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharpolyDvdOfAevalEqZero
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLinks.IntegralUnitaryConjugacyLattice
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUnitOneAddPiOMul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +48,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUnitOneAddPiOMul
 
 @[expose] public section
 
@@ -106,7 +107,7 @@ theorem norm_step [CompleteSpace L] (σ : L →+* L) (ϖ : L) (q : ℕ) (h : IsU
     refine (injective_iff_map_eq_zero ev).2 fun z hz => ?_
     obtain ⟨r, rfl⟩ := GlobalTheory.UTr.exists_aeval_root P z
     rw [hev] at hz
-    have hd := GlobalTheory.T.charpoly_dvd_of_aeval_eq_zero_alt (intL L) n γO r hsepO hz
+    have hd := _root_.GlobalTheory.SepCharpoly.charpoly_dvd_of_aeval_eq_zero (intL L) n γO r hsepO hz
     rw [hchO] at hd
     exact (GlobalTheory.UTr.aeval_root_eq_zero_iff P).2 hd
 

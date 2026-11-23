@@ -2,13 +2,15 @@ module
 
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.FixedOfMem
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.HalfIndexLattices.SplitStab
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmExtensionConjugationInvolutiveFixedFieldStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryHeckeCharacterExtendingBaseCharacte
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankSmulMemAdelesFiniteMultipleOfTensorCongruStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenIntegralTensorAdeleMultiples
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemNormGroupIffEverywhereNorm
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.ExistsEtaCmTypeK
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.RedWpEtaA
+import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmExtensionConjugationInvolutiveFixedField
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryHeckeCharacterExtendingBaseCharacte
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntFOneMul
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankSmulMemAdelesFiniteMultipleOfTensorCongru
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenIntegralTensorAdeleMultiples
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemNormGroupIffEverywhereNorm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,7 +68,7 @@ theorem eta_fin_k {σ : E →ₐ[F] E} {B : Base F E} (hB : _root_.UpperTheory.T
   have hint : ∀ t : AF F, algebraMap (AF F) (AF F ⊗[F] E) t ∈ SE F E → ∀ v : HeightOneSpectrum (𝓞 F),
       2 * t.2 v ∈ v.adicCompletionIntegers F := by
     intro t ht v
-    have := GlobalTheory.T.finrank_smul_mem_adelesFiniteMultiple_of_tensorCongruence F E 1 t (CE_one ht)
+    have := _root_.GlobalTheory.HeckeExtend.TraceCE.finrank_smul_mem_intF F E 1 t (CE_one ht)
     rw [hB.cm.2.2.1] at this
     obtain ⟨c, hc, e⟩ := this
     have e2 : evalV F v (2 • t.2) = evalV F v (1 • c) := congrArg (evalV F v) e
@@ -92,7 +94,7 @@ theorem key_k {σ : E →ₐ[F] E} {B : Base F E} (hB : _root_.UpperTheory.TP.W.
   obtain ⟨y, hy, w, hw, hyw⟩ := Subgroup.mem_sup.1 hV
   obtain ⟨_, ⟨k, rfl⟩, _, ⟨a, rfl⟩, rfl⟩ := Subgroup.mem_sup.1 hy
   have hk := fixed_of_mem hB.cm B.τ₁ hNk hx hw k a hyw
-  obtain ⟨f, hf⟩ := (GlobalTheory.T.cmExtension_conjugation_involutive_fixedField F E σ hB.cm).2 k hk
+  obtain ⟨f, hf⟩ := (_root_.GlobalTheory.CMConjInvol.cm_conj_invol_fixed F E σ hB.cm).2 k hk
   have hf0 : f ≠ 0 := by
     rintro rfl
     rw [map_zero] at hf

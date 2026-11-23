@@ -1,7 +1,7 @@
 module
 
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FrameDefinitions.Weights
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.VerticalFactorSmoothHermitianMetricStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.VerticalFactorSmoothHermitianMetric
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -117,7 +117,7 @@ theorem logDiff_descends : ∀ (K : Type) [Fintype K] (J : K → Type) [∀ k, F
     intro p
     by_cases hp : p ∈ D.SB B
     · obtain ⟨A, h1, h2, -, h3⟩ :=
-        (GlobalTheory.T.vertical_factor_smooth_hermitian_metric K J II Ψ Ω W D p (Finset.mem_of_mem_filter p hp)).1
+        (_root_.GlobalTheory.CompanionTheory.Relay.vertical_factor_smooth_hermitian_metric K J II Ψ Ω W D p (Finset.mem_of_mem_filter p hp)).1
       exact ⟨A, fun _ => ⟨h1, h2, h3⟩⟩
     · exact ⟨S.ref, fun h => absurd h hp⟩
   choose A hA using hA

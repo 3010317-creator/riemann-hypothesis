@@ -2,13 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ThetaSetupStructureMapComp
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNormalisedBlowupCyclotomicAwayProjective
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Mathlib.AlgebraicGeometry.Morphisms.Finite
+public import Mathlib.AlgebraicGeometry.Noetherian
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIsoMorphismRestrictFiniteOfIsNormalDense
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteTypeCycAway
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIsoMorphismRestrictFiniteOfIsNormalDenseStatement
 import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsUniqueLiftSpecOfIsLocalizationAway
 import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsIsoNormalizationPullbackOfToIntegralClosure
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCartierOnNormalizedBlowup
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsSectionOfIsIsoRestrict
-public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -109,7 +112,7 @@ theorem isIso_restrict_of_isNormBl {n : ℕ} {Z : Scheme.{0}} (z : Z ⟶ Sp (cyc
     rw [← morphismRestrict_ι]; infer_instance
   haveI : GlobalTheory.IsNormalScheme (π₀ ⁻¹ᵁ V).toScheme := .of_isOpenImmersion ((π₀ ⁻¹ᵁ V).ι ≫ π₀)
   haveI : IsIso (ν ∣_ (π₀ ⁻¹ᵁ V)) :=
-    GlobalTheory.T.isIso_morphismRestrict_finite_of_isNormal_dense ν U (π₀ ⁻¹ᵁ V) ((GlobalTheory.isNormalScheme_iff_pred S).mp hS) (GlobalTheory.IsNormalScheme.pred _) hUd hνd hνU
+    _root_.GlobalTheory.FiniteBirationalNear.isIso_morphismRestrict_of_isNormal ν U (π₀ ⁻¹ᵁ V) ((GlobalTheory.isNormalScheme_iff_pred S).mp hS) (GlobalTheory.IsNormalScheme.pred _) hUd hνd hνU
   rw [morphismRestrict_comp]
   exact IsIso.comp_isIso' (by assumption) hπ₀V
 

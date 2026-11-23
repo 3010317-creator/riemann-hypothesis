@@ -3,8 +3,9 @@ module
 public import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.DiscreteSeriesCharacters.CapelliDeterminantBlockProduct
 public import Formalism.HermitianCurvature.StatementQ
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.LemmaDDeterminantIdentity
-import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.QnCovDet
-import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.QnCovLin
+import Formalism.PeriodIntegrals.ContractionsCovariantIff
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CovariantDeterminantScaling.IntCastMulEqSmul
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CovariantLinearProduct.OfFnProdSmul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -198,7 +199,7 @@ theorem capelli_spread : Spread := by
       exact this
     refine ⟨τ x, fun Y => ?_, rfl⟩
     have := qminor_intertwine τ E _ hτ id id (Y + ((n : ℂ) - 1) / 2)
-    have h2 := covariant_det_of_lin covariant_linear _ n E g g⁻¹ hS.gl h1 (mul_eq_one_comm.1 h1) (Y + ((n : ℂ) - 1) / 2)
+    have h2 := _root_.PI.QnCovDetW.qnCovDet_of_lin _root_.PI.QnCovLinW.qnCovLin _ n E g g⁻¹ hS.gl h1 (mul_eq_one_comm.1 h1) (Y + ((n : ℂ) - 1) / 2)
     unfold qdet at h2
     rw [h2] at this
     have h3 := congrArg (fun T : Module.End ℂ S => T x) this

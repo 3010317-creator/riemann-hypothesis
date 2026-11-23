@@ -2,12 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExpStar
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowMulMemLatIff
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BoundedAndEventuallySubMemLatStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BoundedAndEventuallySubMemLat
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicCharacterPadicBasicProperties
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCyclotomicTowerLevelGeneratorProperties
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormLeOfQBMemLatStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormLeOfQBMemLat
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormUnitPowSubOne
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PadicIntAddFilClosedInDeRhamPeriodRingStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PadicIntAddFilClosedInDeRhamPeriodRing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -157,8 +157,8 @@ theorem ev_small {f : GQ l → ℚ_[l]} (hf : Continuous f) (h1 : f 1 = 0) (k : 
 theorem coc_small {AI : LocAinf l (LT l)} (T : LocTied l (LT l) AI) (e M n : ℕ)
     {x b : (LT l).R.BdR} (hx : x ∈ FilB (LT l) 0) (hb : b ∈ FilB (LT l) 0) :
     ∀ᶠ τ in 𝓝 (1 : GQ l), coc LT e x b τ ∈ Lat AI M n := by
-  obtain ⟨⟨k, hk⟩, -⟩ := GlobalTheory.T.bounded_and_eventually_sub_mem_Lat_alt l _ AI T x hx M n
-  obtain ⟨⟨k', hk'⟩, h3⟩ := GlobalTheory.T.bounded_and_eventually_sub_mem_Lat_alt l _ AI T b hb M n
+  obtain ⟨⟨k, hk⟩, -⟩ := _root_.GlobalTheory.ExpImage.bounded_and_eventually_sub_mem_Lat l _ AI T x hx M n
+  obtain ⟨⟨k', hk'⟩, h3⟩ := _root_.GlobalTheory.ExpImage.bounded_and_eventually_sub_mem_Lat l _ AI T b hb M n
   have h1 := ev_small (continuous_logChi (l := l) LT)
     (by rw [logChi_coe, map_one, Units.val_one, logZl_one]) k
   have h2 := ev_small (f := fun τ : GQ l => tw LT e τ - 1) ((continuous_tw LT e).sub continuous_const)
@@ -213,7 +213,7 @@ theorem eq_zero_of_fil {P : LocPrime l} {AI : LocAinf l P} (T : LocTied l P AI) 
     (hM : 1 ≤ M) {c : ℚ_[l]} (hc : qB P c ∈ FilB P (M : ℤ)) : c = 0 := by
   by_contra h
   obtain ⟨n, hn⟩ := exists_pow_lt (l := l) (norm_pos_iff.2 h)
-  exact absurd (GlobalTheory.T.norm_le_of_qB_mem_Lat_alt l P AI T M n hM c (FilB_le_Lat AI hc)) (not_le.2 hn)
+  exact absurd (_root_.GlobalTheory.ExpImage.norm_le_of_qB_mem_Lat l P AI T M n hM c (FilB_le_Lat AI hc)) (not_le.2 hn)
 
 end GlobalTheory.ExpImage.IntCoc
 
@@ -245,7 +245,7 @@ theorem integral_cocycle_of_gen : ∀ (LT : LocTheory) (l : ℕ) [Fact l.Prime] 
     | zero => rw [pow_zero]; exact hHz 1 (one_mem _)
     | succ a ih => rw [pow_succ']; exact nearZ_mul LT e _ (hfix g hg.1) hgz ih
   have hall : ∀ σ ∈ Gj K s, NearZ (LT l) (e + 1) (coc LT e x b σ) := fun σ hσ => by
-    refine GlobalTheory.T.padicInt_add_fil_closed_in_deRhamPeriodRing l _ AI T _ hM _ fun n => ?_
+    refine _root_.GlobalTheory.ExpImage.nearZ_of_forall_Lat l _ AI T _ hM _ fun n => ?_
     have hcl := ((gen_dense l _ _ hact hχ K s hs).2 g hg).2.2 hσ
     obtain ⟨τ, ⟨h, hh, a, rfl⟩, hτ⟩ := ((mem_closure_iff_frequently.1 hcl).and_eventually
       (coc_near LT T e (e + 1) n hx hb σ (hfix σ hσ))).exists
@@ -262,7 +262,7 @@ theorem integral_cocycle_of_gen : ∀ (LT : LocTheory) (l : ℕ) [Fact l.Prime] 
     filter_upwards [self_mem_nhdsWithin, nhdsWithin_le_nhds
       (coc_near LT T e (e + 1) n hx hb σ (hfix σ hσ))] with τ hτ h1
     rw [dist_eq_norm]
-    refine lt_of_le_of_lt (GlobalTheory.T.norm_le_of_qB_mem_Lat_alt l _ AI T _ n hM _ ?_) hn
+    refine lt_of_le_of_lt (_root_.GlobalTheory.ExpImage.norm_le_of_qB_mem_Lat l _ AI T _ n hM _ ?_) hn
     have := sub_mem (add_mem (FilB_le_Lat AI (n := n) (hz τ hτ)) h1) (FilB_le_Lat AI (hz σ hσ))
     convert this using 1
     rw [map_sub]

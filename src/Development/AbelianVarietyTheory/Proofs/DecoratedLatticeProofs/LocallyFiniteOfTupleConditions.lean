@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PlaceLaws
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapHandedFunctionVanishingPeriodInvariantStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapHandedFunctionVanishingPeriodInvariant
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationDisjointPlacesCommuteVacua
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.T2SpaceAdeleRingNumberField
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TrivialAtPlaceCommSeeSawCombinationKeepsVacuum
@@ -332,7 +333,7 @@ theorem locFin : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t)
     have hfix := ((hO j σ h _ _ hVO hΨ2O).1 κ hκ).1
     have hne2 : flatBF (t.sBF j (σ + 1) h) (t.om j (ε, z) (comb c.ψ _ _ (v.eG j) (comb c.ψ _ _ (w.eQ j) Ψ))) ≠ 0 := by
       intro h0
-      have hR := (GlobalTheory.T.flatMap_handedFunction_vanishing_period_invariant D c.ψ (offP v w)).1 (σ + 1) _ _ (t.sBF j (σ + 1) h) _ (W1.om_pres (ε, z) _ hVO.1) r hr hrO
+      have hR := (_root_.GlobalTheory.FlatRInv.vanish_invariant D c.ψ (offP v w)).1 (σ + 1) _ _ (t.sBF j (σ + 1) h) _ (W1.om_pres (ε, z) _ hVO.1) r hr hrO
       rw [(ht.sBF j (σ + 1) h).1] at hR
       apply hne
       have e := hR.2 h0

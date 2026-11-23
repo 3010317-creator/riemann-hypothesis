@@ -1,8 +1,10 @@
 module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.SplittingFieldLattices.BasisB
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GradedSplittingOverLatticeBaseStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ScalarMultiplicationShiftsFiltrationStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.SplittingFieldLattices.GrSplit
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GradedSplittingOverLatticeBase
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.CapOComp
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ScalarMultiplicationShiftsFiltration
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -125,11 +127,11 @@ theorem tfBase_mono {B : Type} [CommRing B] {J : Ideal B} {δ : DividedPowers J}
 
 theorem afgA_of_bcOn_finO : BcOn False → FinO → AfgA := by
   intro hB hF O A _ _ _ _ _ I γ l s m hl hO hL hms X q _ U 𝒱 h𝒱 r r' hr hr' j
-  obtain ⟨S⟩ := GlobalTheory.T.graded_splitting_over_lattice_base γ l m hl hL
+  obtain ⟨S⟩ := _root_.GlobalTheory.CompanionTheory.LatSplit.nonempty_grSplit γ l m hl hL
   have hA : TFBase γ l s := tfBase_mono hL.tf hms
   have hC : ∀ (i : Fin m) (t : ℤ) (c : A), c ∈ pdP γ i →
       (smO γ q l s 𝒱).LeC c (sFil _ (t - i)) (sFil _ t) :=
-    fun i t c hc => GlobalTheory.T.scalar_multiplication_shifts_filtration γ q l s 𝒱 i c hc t
+    fun i t c hc => _root_.GlobalTheory.CompanionTheory.LecShift.leC_shift γ q l s 𝒱 i c hc t
   have ha : ∀ (i : Fin m) n, (smO γ q l s 𝒱).LeC (S.ν i n) (sFil _ (r - i)) (sFil _ r) :=
     fun i n => hC i r _ (S.mem i n)
   have hb : ∀ (i : Fin m) n, (smO γ q l s 𝒱).LeC (S.ν i n) (sFil _ (r' - i)) (sFil _ r') :=

@@ -4,7 +4,7 @@ public import Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSm
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeGroups.BaseRepGL3NormalisedOfPsiEqOne
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.DeterminantRepresentations.GramIff
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.DeterminantRepresentations.IrrIffSpan
+public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.IrrIffSpan
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.DeterminantRepresentations.SignLemma
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.Imports
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.OfForm
@@ -188,7 +188,7 @@ theorem UpperTheory.V.Fr.of_trace :
   have h2K : (2 : K) ≠ 0 := by simpa [map_ofNat] using (h2C.map (algebraMap C K)).ne_zero
   have h2K' : (2 : K') ≠ 0 := by simpa [map_ofNat] using (h2C.map φ).ne_zero
   have hs' : Submodule.span K' (Set.range ρ'.r) = ⊤ :=
-    (UpperTheory.V.AlgebraTools.Det.irrIffSpan ρ'.r).1 fun N hN => hirr N fun g _ => hN g
+    (_root_.UpperTheory.Reformulated.B.Qe4.irrIffSpan ρ'.r).1 fun N hN => hirr N fun g _ => hN g
   have hs := span_of_trace (algebraMap C K) hinj φ t r ρ'.r htr hφ hs'
   have s1 : F.star 1 = 1 := by simp [Frame.star]
   let r' : F.G0 →* Matrix (Fin n) (Fin n) K :=
@@ -223,6 +223,6 @@ theorem UpperTheory.V.Fr.of_trace :
   obtain ⟨ρ, h, h1, h2, h3⟩ := UpperTheory.V.Fr.of_form hF hn C K hinj r P t χ hP hsym hform ht htr hχ
     fun v g => zero_of_trace r hs _ (hord v g)
   refine ⟨ρ, h, h1, h2, h3, fun N hN => ?_⟩
-  refine (UpperTheory.V.AlgebraTools.Det.irrIffSpan ρ.r).2 ?_ N fun g => hN g trivial
+  refine (_root_.UpperTheory.Reformulated.B.Qe4.irrIffSpan ρ.r).2 ?_ N fun g => hN g trivial
   refine span_of_trace (algebraMap C K) hinj φ t ρ.r ρ'.r (fun g => ?_) hφ hs'
   rw [h1, htr, Matrix.trace_mul_cycle, Units.inv_mul, Matrix.one_mul]

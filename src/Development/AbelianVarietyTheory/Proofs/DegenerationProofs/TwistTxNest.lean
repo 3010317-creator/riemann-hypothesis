@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.CharZeroOfIsPrimitiveRoot
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationSeriesTermsNestStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaConstantTermRepresentativeDependenceStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.SepticCharacterInjective
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationSeriesTermsNest
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaConstantTermRepresentativeDependence
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -90,7 +91,7 @@ end
 theorem tx_of_qEq {O : Type} [CommRing O] [TopologicalSpace O] (N : NumD O) {m : ℕ} (hm : Odd m) {p p' : N.QT (m ^ 2)}
     (h : N.QEq p p') : N.tx m p' = N.tx m p := by
   obtain ⟨z, h1, h2⟩ := h
-  exact (tsum_congr fun χ => (GlobalTheory.T.thetaConstantTerm_representative_dependence O N m hm p p' χ).1 z h1 h2).trans
+  exact (tsum_congr fun χ => (_root_.GlobalTheory.Ex.txT_shift O N m hm p p' χ).1 z h1 h2).trans
     ((Equiv.addRight (m • z)).tsum_eq fun χ => N.txT m p χ)
 
 theorem qEq_pow {O : Type} [CommRing O] (N : NumD O) {La : Type} [AddCommGroup La] {j : ℕ} (q : La → N.QT j)
@@ -151,7 +152,7 @@ theorem twist_tx_nest : ∀ (C : Type) [NormedField C] (N : NumD C) (La : Type) 
     have := qEq_pow N (q ((n * m) ^ 2)) (hadd _ hK0) x (n - 1)
     rwa [Nat.sub_add_cancel hn.pos] at this
   rw [tx_of_qEq _ (hn.mul hm) (qEq_of_twRel (hr.pow hK0) t2 h'' e2), tx_of_qEq _ hm (qEq_of_twRel (hr.pow hm2) t1 h e1)]
-  refine tsum_congr fun χ => GlobalTheory.T.degenerationSeriesTerms_nest C _ n m hn hm (P ^ n) P' rfl ?_ χ
+  refine tsum_congr fun χ => _root_.GlobalTheory.Ex.Nest.txT_nest C _ n m hn hm (P ^ n) P' rfl ?_ χ
   change P.1.2 ^ (n ^ 2) = (P.1.2 ^ n) ^ n
   rw [← pow_mul, sq n]
 end GlobalTheory.Ex

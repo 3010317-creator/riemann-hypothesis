@@ -3,8 +3,11 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.RealMetaplecticRepresentation
 public import GroundTheory.GlobalFields.TateThesis.GaussianSchwartz
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivedActionIntertwinesOfGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EqZeroOfOrthogonalSchrodingerGaussianStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchwartzEqGaussianOfFderivAddEqZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSchwartzTranslate
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EqZeroOfOrthogonalSchrodingerGaussian
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchwartzEqGaussianOfFderivAddEqZero
 import Mathlib.Algebra.Order.Archimedean.Real.Hom
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -132,7 +135,7 @@ theorem exists_eq_smul_of_commute_rhoFun : ∀ (l : Type) [Fintype l] (S : Sch l
   set c : ℂ := S G 0 with hc
   have hSGc : S G = c • G := by
     ext x
-    rw [GlobalTheory.T.schwartz_eq_gaussian_of_fderiv_add_eq_zero' l (S G) hSG x, SchwartzMap.smul_apply, smul_eq_mul, hG, GroundTheory.Global.gaussianSchwartz_apply]
+    rw [_root_.GlobalTheory.schwartz_eq_gaussian_of_fderiv_add_eq_zero l (S G) hSG x, SchwartzMap.smul_apply, smul_eq_mul, hG, GroundTheory.Global.gaussianSchwartz_apply]
   have hrho : ∀ w, S (rhoSch w G) = c • rhoSch w G := by
     intro w
     ext x
@@ -142,7 +145,7 @@ theorem exists_eq_smul_of_commute_rhoFun : ∀ (l : Type) [Fintype l] (S : Sch l
   have key : ∀ f : Sch l, (starRingEnd ℂ c) • S f = f := by
     intro f
     rw [← sub_eq_zero]
-    apply GlobalTheory.T.eq_zero_of_orthogonal_schrodinger_gaussian l
+    apply _root_.GlobalTheory.RealWeil.eq_zero_of_inner_rhoSch_gaussian l
     intro w
     have hsm : ∀ (a : ℂ) (g : Sch l), (a • g).toLp 2 volume = a • g.toLp 2 volume := fun a g =>
       (SchwartzMap.toLpCLM ℂ ℂ 2 volume).map_smul a g

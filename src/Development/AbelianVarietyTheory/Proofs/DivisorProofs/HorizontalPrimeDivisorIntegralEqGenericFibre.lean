@@ -4,9 +4,11 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.ContinuousBc
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoheightOneIffPointClosureDimProjArith
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenericFiberArithmeticVarietyIntegralProjective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsomOfChart
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernFormSignedPartMeasureEqOfIsometricProjStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernIntegralPointClosureClosedSubschemeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernMeasureIntegralEqGenericFibreStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DensConst
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernFormSignedPartMeasureEqOfIsometricProj
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernIntegralPointClosureClosedSubscheme
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernMeasureIntegralEqGenericFibre
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAmbOfIsArithVar
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReducedClosureOfPointProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -45,7 +47,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAmbOfIsArithVar
 import ReciprocityTheory.AnalyticForms.PotentialTheory.IsPotentialOfFun
 
 @[expose] public section
@@ -100,13 +101,13 @@ theorem GlobalTheory.Mix.cycInt_genericFibre : ∀ (k K : Type) [CommRing k] [Fi
     apply hinj
     rw [← Scheme.Hom.comp_apply, hg1, Scheme.Hom.comp_apply, hG'gen, hZgen]
   have hproj'' : IsProjOver (g ≫ q) := by rw [hg2]; exact hG'proj
-  obtain ⟨-, h1⟩ := GlobalTheory.T.mixed_chern_integral_point_closure_closed_subscheme K G G' q (g ≫ q) τ hGproj g rfl e (fun i => (L i).bc hp.w τ)
+  obtain ⟨-, h1⟩ := _root_.GlobalTheory.Mix.cycInt_of_closedImmersion K G G' q (g ≫ q) τ hGproj g rfl e (fun i => (L i).bc hp.w τ)
     (fun y => f (bcPt hp.w τ y))
-  obtain ⟨-, h2⟩ := GlobalTheory.T.mixedChernMeasure_integral_eq_genericFibre k K (clos (j x)) G' (closι (j x) ≫ p) (g ≫ q) j' hp'' τ e hZ
+  obtain ⟨-, h2⟩ := _root_.GlobalTheory.MixGen.part_int_generic k K (clos (j x)) G' (closι (j x) ≫ p) (g ≫ q) j' hp'' τ e hZ
     (fun i => (L i).pull (closι (j x)) rfl)
   have h3 := fun i => GlobalTheory.Mix.BcPull.bc_pull_isom k K (algebraMap k K) X G (clos (j x)) G' p q j hp.w (closι (j x)) j' g hg1
     hp''.w τ (L i)
-  have h4 := GlobalTheory.T.mixedChernFormSignedPartMeasure_eq_of_isometric_projOver K G' (g ≫ q) τ hproj'' e _ _ h3
+  have h4 := _root_.GlobalTheory.Mix.part_eq_of_isom K G' (g ≫ q) τ hproj'' e _ _ h3
   conv_lhs => rw [← hgx]
   rw [h1]
   have h5 := (h2 (fun y => f (ptMap (closι (j x)) rfl _ y))).2

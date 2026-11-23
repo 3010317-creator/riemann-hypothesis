@@ -1,16 +1,17 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.IsMultZero
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AlgebraEstimateForRegularityStatement
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.WaveSt
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AlgebraEstimateForRegularity
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AsmMultMain
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FinitePropagationSpeedHoldsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GeneralLinearGroupUnimodularStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LengthFunctionFactsHoldStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RightDerivativeCalculusHoldsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SobolevInequalityOnGroupStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WaveKernelExistenceStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WaveKernelUniquenessStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WaveSolutionExistenceStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FinitePropagationSpeedHolds
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GeneralLinearGroupUnimodular
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LengthFunctionFactsHold
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RightDerivativeCalculusHolds
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SobolevInequalityOnGroup
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WaveKernelExistence
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WaveKernelUniqueness
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WaveSolutionExistence
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.FriedrichsKernels.AsmKerOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -54,17 +55,17 @@ import Mathlib.Topology.Sheaves.Init
 namespace PositivityTheory.RgBcC
 
 theorem wave_existence_speed_multiplicity : WaveEx ∧ WaveSpeed ∧ KerEx ∧ MultAlg := by
-  have hL : LgFacts := GlobalTheory.T.length_function_facts_hold
-  have hU : Unimod := GlobalTheory.T.general_linear_group_unimodular
-  have hS : SobG := GlobalTheory.T.sobolev_inequality_on_group
-  have hR : RCalc := GlobalTheory.T.right_derivative_calculus_holds
-  have hKU : KerUniq := GlobalTheory.T.wave_kernel_uniqueness
-  have hA : AlgEst := GlobalTheory.T.algebra_estimate_for_regularity
-  have hsp : WaveSpeed := GlobalTheory.T.finite_propagation_speed_holds hL hU hR
+  have hL : LgFacts := _root_.GlobalTheory.CompanionTheory.LengthGL.lgFacts
+  have hU : Unimod := _root_.GlobalTheory.CompanionTheory.GLUnimod.unimod
+  have hS : SobG := _root_.GlobalTheory.CompanionTheory.SobGL.sobG
+  have hR : RCalc := _root_.GlobalTheory.CompanionTheory.RCalc.rcalc
+  have hKU : KerUniq := _root_.GlobalTheory.CompanionTheory.KerUniq.main
+  have hA : AlgEst := _root_.GlobalTheory.CompanionTheory.SkewWords.algEst
+  have hsp : WaveSpeed := _root_.GlobalTheory.CompanionTheory.WaveSpd.asmSpeed hL hU hR
   have hcpt : WaveCpt := Fc.asmCpt hL hU hR hS
-  have hex : WaveEx := GlobalTheory.T.wave_solution_existence hL hR hsp hcpt
+  have hex : WaveEx := _root_.GlobalTheory.CompanionTheory.WaveAll.asmEx hL hR hsp hcpt
   have hk1 : KerOne := Fc.asmKerOne hL hU hR hS hA hsp
-  exact ⟨hex, hsp, GlobalTheory.T.wave_kernel_existence hL hR hsp hex hKU hk1,
+  exact ⟨hex, hsp, _root_.GlobalTheory.CompanionTheory.WaveKer.asmKerEx hL hR hsp hex hKU hk1,
     GlobalTheory.CompanionTheory.WaveMult.asmMult_main hL hU hR hsp hex hKU hk1⟩
 
 end PositivityTheory.RgBcC

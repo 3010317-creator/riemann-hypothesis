@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BaseChangeDefiniteUnitary
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DiscreteAutomorphicRepGLLocalComponentIsUnitaris
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.SchwartzBilinear.EnnrealRpowTwoEqSq
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HaarRightInvariantTotallyComplexStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.DifferentiableAtChart
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HaarRightInvariantTotallyComplex
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicLocalCompactness.AdeleLC
 import GroundTheory.AutomorphicForms.ReductionMeasure
 import GroundTheory.GlobalFields.TateThesis.IdeleMeasure
@@ -221,7 +222,7 @@ theorem GlobalTheory.CompanionTheory.Conc.translate_sq_mean_close : ∀ (E : Typ
   (∀ γ ∈ latticeGL E N, ∀ g, ψ (γ * g) = ψ g) → (∃ s : ℂ, δ ≤ ‖s‖ ∧ ∀ x, ∫ y, α y * ψ (x * y) ∂μ = s * ψ x) →
   (∫⁻ x in F, ‖ψ x‖ₑ ^ 2 ∂μ) = 1 → ∀ y ∈ U, ∫⁻ x in F, ‖ψ (x * y) - ψ x‖ₑ ^ 2 ∂μ ≤ η := by
   intro E _ _ _ N _ _ μ _ α δ F hα hs hδ hF η hη
-  haveI : μ.IsMulRightInvariant := GlobalTheory.T.haar_right_invariant_totally_complex E N μ
+  haveI : μ.IsMulRightInvariant := _root_.GlobalTheory.CompanionTheory.GAUnimod.isMulRightInvariant_haar_GA E N μ
   haveI : Countable (latticeGL E N) := GlobalTheory.DiscreteUnit.countable_latticeGL
   set_option synthInstance.maxHeartbeats 200000 in
     exact GlobalTheory.CompanionTheory.Conc.WeightedCauchySchwarzLintegral.exists_nhds_sq_mean_le μ (latticeGL E N) hα hs hδ hF hη

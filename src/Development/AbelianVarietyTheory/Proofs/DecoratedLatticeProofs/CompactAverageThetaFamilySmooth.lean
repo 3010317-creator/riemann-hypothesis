@@ -1,7 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasDerivAtZeroAndIsTheta
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContDiffCompactAverageOfClosedPartialsStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContDiffCompactAverageOfClosedPartials
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -137,7 +141,7 @@ theorem avg_smooth : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D 
     rw [e]
     exact (contDiff_const.add (contDiff_additive _ hc')).neg
   have hmem : (fun k t => F k (w + L t)) ∈ 𝒢' := ⟨F, hF, rfl⟩
-  refine GlobalTheory.T.contDiff_compactAverage_of_closed_partials K μ n φ hφ 𝒢' ?_ ?_ ?_ _ hmem
+  refine _root_.GlobalTheory.AvgSmooth.main K μ n φ hφ 𝒢' ?_ ?_ ?_ _ hmem
   · rintro G ⟨F, hF, rfl⟩
     exact (hc F hF).comp (continuous_fst.prodMk (continuous_const.add (hL.comp continuous_snd)))
   · rintro G ⟨F, hF, rfl⟩ k

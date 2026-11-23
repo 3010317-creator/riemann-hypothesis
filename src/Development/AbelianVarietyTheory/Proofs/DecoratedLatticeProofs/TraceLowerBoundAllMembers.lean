@@ -7,7 +7,11 @@ public import Formalism.SharpRestriction.CuspSpanNormBounds.LocalBesselAndTopKer
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.VanishingGramTermsBoundParams
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GlobalRowsOfSizeParameters
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NodesOfSizeData
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DiagonalHypothesesOfRowsAndWindowStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ToGlob0
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RowsConc
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.SzHypFD
+public import Formalism.SharpRestriction.CuspSpanNormBounds.AdmissibleBoundsFromSource
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DiagonalHypothesesOfRowsAndWindow
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DuWinThreeOfCount
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FirstTypePrimeLargeOfRecord
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SiegelMassRatioUnimodularDefinite
@@ -116,7 +120,7 @@ theorem eventually_le_trace : EvP fun _ K => ∀ β : BPt K, LocalBesselAndTopKe
   refine ⟨c2, fun ch hch _ => ?_⟩
   obtain ⟨x1, hN⟩ := hN ch hch
   obtain ⟨x2, hNo⟩ := GlobalTheory.Diag.PG.NodeParameters.nodes_of_parameters eps he he52
-  obtain ⟨x3, hP⟩ := GlobalTheory.T.diagonal_hypotheses_of_rows_and_window GlobalTheory.Mass.siegelMassRatio_holds GlobalTheory.DsigSize.dsigHC eps 40 he he52 (by norm_num)
+  obtain ⟨x3, hP⟩ := _root_.GlobalTheory.Diag.PG.lemmaPG_record GlobalTheory.Mass.siegelMassRatio_holds GlobalTheory.DsigSize.dsigHC eps 40 he he52 (by norm_num)
     (8 * C.CGam) 40 (C.P.CYL + 1) 0 le_rfl le_rfl
   refine ⟨max (max x1 x2) (max x3 ((max 2 (5 / (eps / 100))) ^ (eps / 100)⁻¹)), fun K hK hx β hAdm hMu => ?_⟩
   obtain ⟨hC, hcD', hch', heps, -⟩ := hK

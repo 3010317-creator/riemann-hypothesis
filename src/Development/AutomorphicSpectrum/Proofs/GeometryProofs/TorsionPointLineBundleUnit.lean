@@ -3,7 +3,7 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsThetaMeanSquareNorm
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TopLeOfClosedPoint
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SumMulFG
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionValueUniqueBaseChangeStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionValueUniqueBaseChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -145,6 +145,6 @@ theorem torsVal_eq_unit_mul : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
         u0 u1 u2 e0' e1' e2' (N ^ 2) n)
       simp only [map_mul, map_pow] at key ⊢
       exact key
-  exact (GlobalTheory.T.torsion_value_unique_base_change E H L D n s C _ yC N hN hyCN).1.unique hT hT'
+  exact (_root_.GlobalTheory.CompanionTheory.Ar.Sl.TorsExist.torsVal_existsUnique E H L D n s C _ yC N hN hyCN).1.unique hT hT'
 
 end GlobalTheory.CompanionTheory.Ar.Sl.Reg

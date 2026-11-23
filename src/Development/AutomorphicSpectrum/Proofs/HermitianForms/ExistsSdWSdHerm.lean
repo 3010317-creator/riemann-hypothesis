@@ -4,9 +4,10 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Four
 public import Formalism.UnipotentAdelicQuotients.SWXSDefs
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AdditiveCharConductorExists
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSmallDualLattices
-public import Development.AutomorphicSpectrum.Proofs.HermitianForms.AdelicCharacterLocalNontrivial
-public import Development.AutomorphicSpectrum.Proofs.HermitianForms.IndicatorInSchrodingerSpanStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.HermitianCharacters.SelfDualLatticeFiltrationCharacter
+public import Development.AutomorphicSpectrum.Proofs.HermitianForms.IndicatorInSchrodingerSpan
 public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Tjcosets
+public import Mathlib.Topology.Algebra.Valued.LocallyCompact
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -58,7 +59,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import Mathlib.Topology.Algebra.Valued.LocallyCompact
 import Mathlib.Topology.Connected.Separation
 import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 import Mathlib.Topology.Sheaves.Init
@@ -106,7 +106,7 @@ theorem exists_of_std (ψ : AddChar K ℂ) (hψ : GlobalTheory.JR.IsStdChar ψ) 
     obtain ⟨n, hn⟩ := pow_unbounded_of_one_lt (∑ i, ‖b.repr x i‖) (one_lt_inv₀ ht0 |>.2 ht1)
     exact ⟨n, fun i => (Finset.single_le_sum (f := fun i => ‖b.repr x i‖)
       (fun _ _ => norm_nonneg _) (Finset.mem_univ i)).trans hn.le⟩
-  refine GlobalTheory.T.self_dual_lattice_filtration_character V _ (fun k => box e ‖t ^ k‖ (norm_nonneg _))
+  refine _root_.GlobalTheory.CompanionTheory.SDPadic.exists_selfDual V _ (fun k => box e ‖t ^ k‖ (norm_nonneg _))
     (fun k => box e' ‖(t ^ k)⁻¹‖ (norm_nonneg _)) (fun x x' y => ?_) (fun x y => ?_) (fun x y => hu _)
     (GlobalTheory.JR.exists_small_dual_lattices K ψ hψ V β hs hβ).1
     (fun k => ⟨(box_open_compact e _ (hp k)).1, (box_open_compact e _ (hp k)).2,
@@ -400,7 +400,7 @@ theorem exists_sdW_sdHerm : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
     apply φ.injective
     rw [h.2.2.2, h.2.2.2, star_star]
   haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
-  obtain ⟨hc, hne⟩ := (GlobalTheory.T.adelic_character_local_nontrivial F ψ hψ).1 v
+  obtain ⟨hc, hne⟩ := (_root_.GlobalTheory.CompanionTheory.AdeleCharLocal.char_nontrivial_at_every_place F ψ hψ).1 v
   have hu : ∀ t, ‖psiChar ψ v t‖ = 1 := fun t => hψ.2.1 _
   haveI hp : ProperSpace (Fv F v) := properSpace_Fv v
   haveI : IsModuleTopology (Fv F v) (Fv F v ⊗[F] E) := ⟨rfl⟩

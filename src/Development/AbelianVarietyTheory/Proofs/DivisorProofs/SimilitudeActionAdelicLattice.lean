@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasDivPlace
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowEqPowOfModEqSim
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicGroupAlgebraActionInjectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicGroupAlgebraActionInjective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfDivisibleInLattice
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfPairingVanishes
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdelicEndomorphismLattice
@@ -10,9 +10,9 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGroupAlgebraActionOfCommuteOrderStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegralAdeleLimitCompatibleIntSystemStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInverseAdeleAwayFromPOfUnitCongruencesStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteAdeleAwayFromPEqZeroOfDivisibleCoprimeStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticePairingIntegral
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PairingAdjointInvolution
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteAdeleAwayFromPEqZeroOfDivisibleCoprimeStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -100,7 +100,7 @@ theorem comm {D : Datum p} {G : HTGroup p} (L : Link D G) (A : Module.End (AfP p
     (hA : ∀ b : D.O, A * (actQ D b).baseChange (AfP p) = (actQ D b).baseChange (AfP p) * A) :
     ∃ y, actOn L.rep (AfP p) y = A := GlobalTheory.T.exists_groupAlgebra_action_of_commute_order p D G L A hA
 
-theorem inj {D : Datum p} {G : HTGroup p} (L : Link D G) : Function.Injective (actOn L.rep (AfP p)) := GlobalTheory.T.adelicGroupAlgebraAction_injective p D G L
+theorem inj {D : Datum p} {G : HTGroup p} (L : Link D G) : Function.Injective (actOn L.rep (AfP p)) := _root_.GlobalTheory.LKGeo.actOn_rep_afP_injective p D G L
 
 theorem nondeg (D : Datum p) (z : AfP p ⊗[ℚ] VQ D) (h : ∀ v, formAf D v z = 0) : z = 0 := GlobalTheory.T.eq_zero_of_pairing_vanishes p D z h
 

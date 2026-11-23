@@ -2,8 +2,11 @@ module
 
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PPairCocycle
 public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.TrivFlagMod
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LineBundleModelDegreeStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.MonomialRatioIntegralModelStatement
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsBundles
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LineBundleModelDegree
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.BundleObjects
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.InstFintypeSumElim
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.MonomialRatioIntegralModel
 import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.ClassListMapDomainPerm
 import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.OfSteps
 import Mathlib.Algebra.Order.Floor.Extended
@@ -201,7 +204,7 @@ theorem main : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing
   obtain ⟨-, hW⟩ := (BundleExamples.isModelOver_iff O _ d).mp hM
   have hW' : GroundTheory.Heights₂.Heights.NumbersDVR.IsModelOver (pointIdeal O x) d := hW
   have hS' := (BundleExamples.sameGeneric_iff hϖ x A T).mp hS
-  obtain ⟨f, g, hD, hfg⟩ := GlobalTheory.T.monomial_ratio_integral_model O Ω K ι x ϖ hϖ d hW' a 0 u⁻¹ (inv_ne_zero hu) (by
+  obtain ⟨f, g, hD, hfg⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.VertDiv.commensurable_vertical O Ω K ι x ϖ hϖ d hW' a 0 u⁻¹ (inv_ne_zero hu) (by
     intro s hs
     obtain ⟨h1, h2⟩ := hS' s hs
     constructor
@@ -227,9 +230,9 @@ theorem main : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing
     (aeval x : MRing ι O →ₐ[O] Ω).toRingHom hD hu hfg' m
   have hFG' : IsVerticalDivisor (pointIdeal O x) ϖ (m • a - 0) F G := by
     simpa using hFG
-  obtain ⟨hs1, h1⟩ := GlobalTheory.T.line_bundle_model_degree O Ω K ι x ϖ hϖ d hM Am T (u ^ m) 1 (m • a) 0 hAm hT F G hFG'
+  obtain ⟨hs1, h1⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.LineCk.main O Ω K ι x ϖ hϖ d hM Am T (u ^ m) 1 (m • a) 0 hAm hT F G hFG'
     (by rw [mul_one]; exact hv)
-  obtain ⟨-, h2⟩ := GlobalTheory.T.line_bundle_model_degree O Ω K ι x ϖ hϖ d hM A T u 1 a 0 hA hT f g hD
+  obtain ⟨-, h2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.LineCk.main O Ω K ι x ϖ hϖ d hM A T u 1 a 0 hA hT f g hD
     (by rw [mul_one]; exact hfg')
   refine ⟨hs1, fun k hk1 hk2 q L Q hQ => ?_⟩
   rw [h1 k hk1 hk2 q L Q hQ, h2 k hk1 hk2 q L Q hQ, Finset.mul_sum]

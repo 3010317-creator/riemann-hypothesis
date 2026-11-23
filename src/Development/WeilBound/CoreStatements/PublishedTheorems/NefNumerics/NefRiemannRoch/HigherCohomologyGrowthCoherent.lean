@@ -1,13 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LineBundleGlobalSectionsDimCongrPicardClass
-import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.EventuallySubsingletonCohTwistZOfIsProjOver
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleIntersectionNumberEqGenericRankMul
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SheafCohomologyDimTwistBoundOfShortExactStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IntersectionNumberEqGenericRankMulProjCurve
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SheafCohomologyDimTwistBoundOfShortExact
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ImportsRestFurther
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NefNumerics.NefRiemannRoch.HigherCohomologyGrowthStructureStatement
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NefNumerics.NefRiemannRoch.HigherCohomologyGrowthTwist
+public import Development.WeilBound.CoreStatements.PublishedTheorems.NefNumerics.NefRiemannRoch.HigherCohomologyGrowthStructure
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HigherCohomologyGrowthTwist
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsFrameOfForallExists
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsTorsionFreeOfForallExists
+import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.EventuallySubsingletonCohTwistZOfIsProjOver
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IntersectionNumberEqGenericRankMulProjCurve
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,8 +47,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsFrameOfForallExists
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsTorsionFreeOfForallExists
 
 @[expose] public section
 
@@ -100,9 +100,9 @@ theorem GlobalTheory.NefBound.hdim_twist_le_of_isIntegral : ∀ (k : Type) [Fiel
     have h1 : IsFiniteQC S.X₁ := inferInstanceAs (IsFiniteQC (structureModule X))
     have hbd : ∀ i, 0 < i → ∃ C : ℕ, ∀ m : ℕ,
         hdim k (twist (twist G (lbPow A n)) (lbPow L m)) i ≤ C * ((d + 1) * (m + 1) ^ d) :=
-      fun i hi => GlobalTheory.T.sheafCohomologyDim_twist_bound_of_shortExact k X hp L hL.isLB S hS h1 hQ i _
-        (GlobalTheory.T.higher_cohomology_growth_structure k X hp d L hL hd hE i hi) (ih (cokernel (QCoh.sectionHom s)) (by omega) i hi)
-    obtain ⟨C, hC⟩ := GlobalTheory.T.higher_cohomology_growth_twist k X hp d L hL.isLB hE (twist G (lbPow A n))
+      fun i hi => _root_.GlobalTheory.hdim_twist_bound_of_shortExact k X hp L hL.isLB S hS h1 hQ i _
+        (_root_.GlobalTheory.NefRR.hdim_twist_structureModule_le k X hp d L hL hd hE i hi) (ih (cokernel (QCoh.sectionHom s)) (by omega) i hi)
+    obtain ⟨C, hC⟩ := _root_.GlobalTheory.NefRR.hdim_twist_twist_bound k X hp d L hL.isLB hE (twist G (lbPow A n))
       ((QCoh.suppDim_le _).trans hd) _ (isLB_lbZPow hM (-1)) hbd i hi
     refine ⟨C, fun m => ?_⟩
     exact (hdim_congr k i ((twistFunctor (lbPow L m)).mapIso (Twist.twistTwistZNegOneIso G hM))).symm.trans_le (hC m)

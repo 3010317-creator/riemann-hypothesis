@@ -1,6 +1,5 @@
 module
 
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeEvalAtLocalRing
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import Mathlib.Analysis.Complex.Basic
@@ -10,9 +9,11 @@ public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsAtSmul
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeFrameSpecializes
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelBaseChangeMapStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFiniteBaseChangeStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SegreChartBundle
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeEvalAtLocalRing
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelBaseChangeMap
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFiniteBaseChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -233,7 +234,7 @@ theorem co_map [IsCommMonObj G] (τ : ℂ →+* ℂ) (M : LieModel G ξ Li) (B :
           Submodule.span R (Set.range fun k => j (b k)) = ⊤) := by
     subst hz
     letI := φ.toAlgebra
-    obtain ⟨j, h1, h2, h3⟩ := GlobalTheory.T.lie_model_base_change_map S G A R x E F M N
+    obtain ⟨j, h1, h2, h3⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_baseChange S G A R x E F M N
     exact ⟨j, h1, h2, fun hs n b => (h3 hs n b).2⟩
   obtain ⟨V', _, _, ⟨M'⟩⟩ := lieModel_exists X G ℂ z'
   obtain ⟨j, hj, hjs, -⟩ := exists_base τ z z' hz Mz M'
@@ -291,7 +292,7 @@ theorem co_val [IsCommMonObj G] [Smooth G.hom] (hξ : IsCptGen ξ) (M : LieModel
           Submodule.span R (Set.range fun k => j (b k)) = ⊤) := by
     subst hz
     letI := φ.toAlgebra
-    obtain ⟨j, h1, h2, h3⟩ := GlobalTheory.T.lie_model_base_change_map S G A R x E F M N
+    obtain ⟨j, h1, h2, h3⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_baseChange S G A R x E F M N
     exact ⟨j, h1, h2, fun hs n b => (h3 hs n b).2⟩
   obtain ⟨V, _, _, ⟨Mz⟩⟩ := lieModel_exists X G ℂ z
   obtain ⟨β, hβ, hβ'⟩ := frame_basis hξ M B z h hB Mz

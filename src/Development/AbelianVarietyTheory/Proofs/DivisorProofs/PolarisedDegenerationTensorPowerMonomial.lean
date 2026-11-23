@@ -1,9 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinHomIffLinEnd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramPosSemidefOfIntFormStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumHadamardPosDefPosSemidefStatement
+public import Mathlib.LinearAlgebra.Matrix.PosDef
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramPosSemidefOfIntForm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumHadamardPosDefPosSemidef
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorDegenerationPsiCoordEqUnitMulProdStatement
+public import Development.AbelianVarietyTheory.BlockTheory.ExistenceTori.GeneratorValues
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsPsiCoordOfIsPsiCoord
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -40,7 +42,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.BlockTheory.ExistenceTori.GeneratorValues
 
 @[expose] public section
 
@@ -96,7 +97,7 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (Q : Dat
         (Matrix.of fun i j => (β l (xe y i) (xe y j) : ℝ)) i j := by
     intro l y; rw [tensForm_apply]; push_cast; simp [Matrix.map_apply]
   have hpos : ∀ l y, 0 ≤ tensForm (W + W.transpose) xe (β l) y y := fun l y => by
-    have := (GlobalTheory.T.sum_mul_nonneg_and_pos_of_posDef_of_posSemidef _ _ hW (GlobalTheory.T.gram_posSemidef_of_symm_nonneg_int_bilinForm (β l) (hsym l) (hnn l) (fun i => xe y i))).1
+    have := (_root_.GlobalTheory.sum_hadamard_posDef_posSemidef _ _ hW (_root_.GlobalTheory.gram_posSemidef_of_int_form (β l) (hsym l) (hnn l) (fun i => xe y i))).1
     rw [← hreal] at this; exact_mod_cast this
   refine ⟨fun l => tensForm (W + W.transpose) xe (β l), ?_, fun l y z => tensForm_symm W xe (β l) (hsym l) y z, ?_⟩
   · intro y
@@ -140,7 +141,7 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] (Q : Dat
     have hG : (Matrix.of fun i j => (β l (xe y i) (xe y j) : ℝ)) ≠ 0 := fun h => by
       have := congrFun (congrFun h j) j
       simp at this; omega
-    have := (GlobalTheory.T.sum_mul_nonneg_and_pos_of_posDef_of_posSemidef _ _ hW (GlobalTheory.T.gram_posSemidef_of_symm_nonneg_int_bilinForm (β l) (hsym l) (hnn l) (fun i => xe y i))).2 hG
+    have := (_root_.GlobalTheory.sum_hadamard_posDef_posSemidef _ _ hW (_root_.GlobalTheory.gram_posSemidef_of_int_form (β l) (hsym l) (hnn l) (fun i => xe y i))).2 hG
     rw [← hreal] at this; exact_mod_cast this
 
 end GlobalTheory.TensMono

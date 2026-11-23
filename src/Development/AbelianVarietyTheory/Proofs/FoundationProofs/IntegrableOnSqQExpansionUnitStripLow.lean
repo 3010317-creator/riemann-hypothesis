@@ -3,9 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Foundations.PetIPSmulRight
 public import Development.AbelianVarietyTheory.Definitions.Foundations.RepL
 public import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasSumParsevalQExpansionHorizontalLineStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.QExpansionPolyGrowthSummableContinuousStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitStripIntegralEqIteratedStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasSumParsevalQExpansionHorizontalLine
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Complex.UpperHalfPlane.Measure
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitStripIntegralEqIterated
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.QExpansionPolyGrowthSummableContinuous
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -69,8 +71,8 @@ theorem lintegral_sq_qs_line (b : ℕ → ℂ) (hb : PolyB b) (y : ℝ) (hy : 0 
     show Continuous fun x : ℝ => (x : ℂ) + y * Complex.I
     fun_prop
   have hc : Continuous fun x : ℝ => ‖qs b (ofComplex (x + y * Complex.I))‖ ^ 2 :=
-    ((GlobalTheory.T.qExpansion_polyGrowth_summable_continuous b hb).2.comp hc0).norm.pow 2
-  have hP := GlobalTheory.T.hasSum_parseval_qExpansion_horizontal_line b b y hb hb hy
+    ((_root_.GlobalTheory.EisM.qs_summable_continuous b hb).2.comp hc0).norm.pow 2
+  have hP := _root_.GlobalTheory.EisM.parseval_line b b y hb hb hy
   have h1 : (∫ x in (0 : ℝ)..1, conj (qs b (ofComplex (x + y * Complex.I))) * qs b (ofComplex (x + y * Complex.I)))
       = ((∫ x in (0 : ℝ)..1, ‖qs b (ofComplex (x + y * Complex.I))‖ ^ 2 : ℝ) : ℂ) := by
     rw [← intervalIntegral.integral_ofReal]
@@ -137,7 +139,7 @@ theorem integrableOn_sq_qs_low : ∀ (e : ℕ) (b : ℕ → ℂ) (s : ℝ), 1 �
   have hp : 2 * (e : ℝ) + s = a + 1 := by rw [ha]; ring
   rw [hp]
   have hcont : Continuous fun τ : ℍ => ‖qs b τ‖ ^ 2 * τ.im ^ (a + 1) :=
-    ((GlobalTheory.T.qExpansion_polyGrowth_summable_continuous b hb).2.norm.pow 2).mul
+    ((_root_.GlobalTheory.EisM.qs_summable_continuous b hb).2.norm.pow 2).mul
       (UpperHalfPlane.continuous_im.rpow_const fun τ => Or.inr (by linarith))
   refine ⟨hcont.aestronglyMeasurable, ?_⟩
   have hmeas : MeasurableSet {τ : ℍ | τ.im < 1} :=
@@ -153,7 +155,7 @@ theorem integrableOn_sq_qs_low : ∀ (e : ℕ) (b : ℕ → ℂ) (s : ℝ), 1 �
     refine lintegral_congr fun τ => ?_
     have := τ.im_pos
     exact Real.enorm_of_nonneg (by positivity)
-  rw [hasFiniteIntegral_iff_enorm, e1, GlobalTheory.T.unitStrip_integral_eq_iterated.1 _ (hGm.indicator hmeas)]
+  rw [hasFiniteIntegral_iff_enorm, e1, _root_.GlobalTheory.EisM.strip_iterated.1 _ (hGm.indicator hmeas)]
   set T : ℕ → ℝ → ENNReal := fun n y =>
     ENNReal.ofReal (‖b n‖ ^ 2) * ENNReal.ofReal (y ^ (a - 1) * Real.exp (-(4 * π * n * y))) with hT
   have hTm : ∀ n : ℕ, Measurable fun y : ℝ => ENNReal.ofReal (y ^ (a - 1) * Real.exp (-(4 * π * n * y))) := fun n => by

@@ -2,14 +2,20 @@ module
 
 public import Development.WeilBound.CoreStatements.FiniteTypeHarishChandra.SupportExistsAll
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ColGeR
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AdditiveCharacterSumOrthogonalityStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BlockEmbeddingGLInverseStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalUnipotentRadicalSumZeroStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GLTransitiveNonzeroVectorsStatement
+public import Mathlib.Algebra.Group.AddChar
+public import Mathlib.Basic.Complex.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AdditiveCharacterSumOrthogonality
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BlockEmbeddingGLInverse
+public import Development.WeilBound.CoreStatements.FiniteTypeHarishChandra.FiniteDimensionalHcSpace
+public import Formalism.PadicSubsetSums.CentralIdempotents.GaloisConjCentralIdempotent
+public import Mathlib.RepresentationTheory.Character
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalUnipotentRadicalSumZero
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GLTransitiveNonzeroVectors
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PatternSetCardColumnStepStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerBlockEmbeddingConjStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerColumnRecursionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerVanishesOfRadicalSumsStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerBlockEmbeddingConj
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerColumnRecursion
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerVanishesOfRadicalSums
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -98,17 +104,17 @@ theorem wh_row_ne_zero (K : Type) [Field K] [Fintype K] [DecidableEq K] (d j : �
     intro h
     have := congrFun h ⟨j - 1, by omega⟩
     simp at this
-  obtain ⟨g, hg⟩ := GlobalTheory.T.GL_transitive_nonzero_vectors K j r _ hr hs
-  obtain ⟨h, h1, h2⟩ := GlobalTheory.T.block_embedding_GL_inverse K d j hd.le g
-  rw [GlobalTheory.T.whittaker_block_embedding_conj K d j ψ₀ χ g h r hd hχ h1 h2, hg, colGeR_single K d j hj]
+  obtain ⟨g, hg⟩ := _root_.GlobalTheory.CompanionTheory.TyFin.RowTrans.gl_transitive_rows K j r _ hr hs
+  obtain ⟨h, h1, h2⟩ := _root_.GlobalTheory.CompanionTheory.TyFin.BlockEmbeddingGL.exists_gl_blkEmb K d j hd.le g
+  rw [_root_.GlobalTheory.CompanionTheory.TyFin.ColStep.Conj.wh_colGeR_conj K d j ψ₀ χ g h r hd hχ h1 h2, hg, colGeR_single K d j hj]
 
 theorem wh_step (K : Type) [Field K] [Fintype K] [DecidableEq K] (d j : ℕ) (ψ₀ : AddChar K ℂ)
     (τ : FDRep ℂ (GL (Fin d) K)) (hψ : ψ₀ ≠ 1) (hτ : IsCuspidal K τ) (hj : 1 ≤ j) (hd : j < d) :
     wh (colGe d (j + 1)) (colGeE K d (j + 1)) ψ₀ τ.character =
       ((Fintype.card K : ℂ) ^ j - 1) * wh (colGe d j) (colGeE K d j) ψ₀ τ.character := by
-  rw [GlobalTheory.T.whittaker_column_recursion K d j ψ₀ τ.character hd (GlobalTheory.T.pattern_set_card_column_step K d j hd) (GlobalTheory.T.additive_character_sum_orthogonality K j ψ₀ hψ)]
+  rw [_root_.GlobalTheory.CompanionTheory.TyFin.ColStep.Fourier.wh_colGe_succ_eq_sum K d j ψ₀ τ.character hd (GlobalTheory.T.pattern_set_card_column_step K d j hd) (_root_.GlobalTheory.CompanionTheory.TyFin.Orth.orth K j ψ₀ hψ)]
   rw [← Finset.add_sum_erase _ _ (Finset.mem_univ (0 : Fin j → K)),
-    GlobalTheory.T.whittaker_vanishes_of_radical_sums K d j ψ₀ τ.character (GlobalTheory.T.cuspidal_unipotent_radical_sum_zero K d j τ hj hd hτ), zero_add,
+    _root_.GlobalTheory.CompanionTheory.TyFin.ColStep.Avg.wh_zero_row' K d j ψ₀ τ.character (_root_.GlobalTheory.CompanionTheory.TyFin.CuspSum.sum_character_translate K d j τ hj hd hτ), zero_add,
     Finset.sum_congr rfl (fun r hr => wh_row_ne_zero K d j ψ₀ τ.character hj hd
       (fun x y => FDRep.char_conj τ y x) r (Finset.ne_of_mem_erase hr))]
   rw [Finset.sum_const, Finset.card_erase_of_mem (Finset.mem_univ _), Finset.card_univ,

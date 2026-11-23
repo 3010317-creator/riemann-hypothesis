@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.L2ExtensionLogCanonical
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEtaleFrameOffFiniteZeroSetStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.L2ExtensionEtaleCoordinatesFiniteZerosStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.EtaleEmpty
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEtaleFrameOffFiniteZeroSet
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.L2ExtensionEtaleCoordinatesFiniteZeros
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +53,7 @@ namespace GlobalTheory
 
 theorem l2ExtensionLogCanonical' : GlobalTheory.Published.L2ExtensionLogCanonical := by
   intro n hn Y _ _ _ _ _ _ ι La _ A hH E L s hs hS hjac hle δ hδ hcurv f
-  obtain ⟨Λ, τ, z, β, hdata⟩ := GlobalTheory.T.exists_etale_frame_off_finite_zeroSet n Y ι La A hn hH E L s hs hS
-  exact GlobalTheory.T.l2_extension_etale_coordinates_finite_zeros n Y ι La A hn E L s hs hS hjac hle δ hδ hcurv Λ τ z β hdata f
+  obtain ⟨Λ, τ, z, β, hdata⟩ := _root_.GlobalTheory.exists_etale_frame_of_finite_zeroSet n Y ι La A hn hH E L s hs hS
+  exact _root_.GlobalTheory.l2_extension_of_etale_coordinates n Y ι La A hn E L s hs hS hjac hle δ hδ hcurv Λ τ z β hdata f
 
 end GlobalTheory

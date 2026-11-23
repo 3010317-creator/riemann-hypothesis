@@ -3,9 +3,9 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GaussManinPeriods
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EllFamNontrivial
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyShiftMem
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TaylorPolynomialEvalAlgebraFormalPropertiesStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TaylorShear
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TaylorSumSubValueEqSumSqZero
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TaylorPolynomialEvalAlgebraFormalProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,7 +64,7 @@ theorem GlobalTheory.AnPer.close_paramTaylor_shift : ∀ {I I₀ : Type} [Fintyp
     fun a ↦ analyticAt_pi_iff.1 hτa a
   have et : (fun i ↦ ∑ j, n j i) = t := funext fun i ↦ (ht i).symm
   rw [et] at h3
-  obtain ⟨-, -, hconst, hcongr, -, -⟩ := GlobalTheory.T.taylorPolynomialEvalAlgebra_formal_properties N t
+  obtain ⟨-, -, hconst, hcongr, -, -⟩ := _root_.GlobalTheory.PeriodFamily.taylor_formal_properties N t
   have hm : ∀ p ∈ K₀.W k₀', (((0 : I → ℂ), p.2 + F.τ l 0) : Tot I g) ∈ K.W k := fun p hp ↦ K.maps h _ (hW p hp)
   refine GlobalTheory.AnPer.close_of_sliceTaylor J N hN t htJ r n' h1 h2 (K.W k) (K₀.W k₀') (fun p : Tot I₀ g ↦ p.2 + F.τ l 0)
     (fun p _ ↦ analyticAt_snd.add analyticAt_const) hm _ _ (fun f p hp ↦ ?_) fun f p hp ↦ ?_

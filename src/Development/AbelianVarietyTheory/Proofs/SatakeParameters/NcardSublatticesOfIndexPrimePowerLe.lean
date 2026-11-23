@@ -3,8 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.FiniteResidueFieldPadicInt
 public import Mathlib.Basic.Complex.Basic
 public import Mathlib.RingTheory.PowerSeries.Basic
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ElementarySublatticesOfIndexDegreesQBinomialStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeOperatorAlternatingSeriesIdentityStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ElementarySublatticesOfIndexDegreesQBinomial
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeOperatorAlternatingSeriesIdentity
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -151,7 +151,7 @@ variable {O K : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O]
 theorem elem_coeff (r : ℕ) (L : Lat O K r) (k : ℕ) :
     (-1 : ℂ) ^ k * (qRes O : ℂ) ^ (k * (k - 1) / 2) * ((subElem k L).ncard : ℂ) =
       (polP (qRes O) r).coeff k := by
-  obtain ⟨-, -, hemp, hX⟩ := GlobalTheory.T.elementarySublatticesOfIndex_degrees_qBinomial O K r L
+  obtain ⟨-, -, hemp, hX⟩ := _root_.GlobalTheory.LatHecke.subElem_degrees O K r L
   have hQP : (∑ j ∈ Finset.range (r + 1), Polynomial.C ((-1 : ℂ) ^ j *
       (qRes O : ℂ) ^ (j * (j - 1) / 2) * ((subElem j L).ncard : ℂ)) * Polynomial.X ^ j) =
       polP (qRes O) r := by
@@ -175,7 +175,7 @@ theorem ncard_subIdx_eq (r : ℕ) : ∀ (n : ℕ) (L : Lat O K r),
   intro L
   rcases Nat.eq_zero_or_pos n with rfl | hn
   · rw [subIdx_zero, Set.ncard_singleton, hc_zero_right]
-  have hid := GlobalTheory.T.heckeOperator_alternating_series_identity O K r ℂ (fun _ => (1 : ℂ)) n L hn
+  have hid := _root_.GlobalTheory.HeckeSeries.heckeSeries_identity O K r ℂ (fun _ => (1 : ℂ)) n L hn
   have hall : ∀ (m : ℕ) (M : Lat O K r),
       heckeAll m (fun _ => (1 : ℂ)) M = ((subIdx m M).ncard : ℂ) := by
     intro m M

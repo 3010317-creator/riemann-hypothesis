@@ -2,15 +2,23 @@ module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.StrictDominance.UnitaryExtremality.SatPowNonvan
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsPermWOne
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BruhatWeightDecreasesStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CosetRepsOfFactorizationStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DominantConjugateUnipotentMemStatement
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.StrictDominance.UnitaryExtremality.IsStrictDom
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BruhatWeightDecreases
+public import Mathlib.Algebra.Group.End
+public import Mathlib.Algebra.Group.Subgroup.Map
+public import Mathlib.Basic.Finite.Defs
+public import Mathlib.Data.Finset.Defs
+public import Mathlib.GroupTheory.Coset.Defs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CosetRepsOfFactorization
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DominantConjugateUnipotentMem
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FunctionalZeroOfInjectivePower
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeckePowerCosetFormula
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryIwahoriFactorization
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryIwahoriIndexFinite
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryIwasawaBruhatDecomposition
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsStrictDom
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FunctionalZeroOfInjectivePowerStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeckePowerCosetFormulaStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryIwahoriFactorizationStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryIwahoriIndexFiniteStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryIwasawaBruhatDecompositionStatement
 import Formalism.SatakeDualWeyl.KpqSubgroupCompact
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -131,8 +139,8 @@ theorem abs_main {G : Type} [Group G] (K I : Subgroup G) (hIK : I ≤ K) (hfin :
     intro a ha
     exact Subtype.ext (hinj a a.2 (congrArg Subtype.val ha))
   have hl0 : l v = 0 := by
-    refine GlobalTheory.T.functional_zero_of_injective_power _ A hAinj l v j₀ fun j hj => ?_
-    obtain ⟨m, -, hm⟩ := GlobalTheory.T.hecke_power_coset_formula G K I hIK hfin t R h1R hRI hRt hR j
+    refine _root_.GlobalTheory.CompanionTheory.SatPow.functional_eq_zero_of_late_iterates _ A hAinj l v j₀ fun j hj => ?_
+    obtain ⟨m, -, hm⟩ := _root_.GlobalTheory.CompanionTheory.SatPow.HeckeTrace.heckeTrace G K I hIK hfin t R h1R hRI hRt hR j
     have := hm φ₀ hK
     rw [hlam, hcon j hj, mul_zero, finsum_eq_sum_of_fintype] at this
     show ∑ c : K ⧸ I.subgroupOf K, (((A ^ j) v : Wsp) : G → ℂ) ((c.out : K) : G) = 0
@@ -202,7 +210,7 @@ theorem aOp_inj (q : ℕ) (hq : (q : ℂ) ≠ 0) {m : ℕ} (α : Fin m → ℂ) 
     fun b w i hb hi => by rw [hI _ _ hi, hB _ _ hb]
   set S : Finset (Equiv.Perm (Fin n)) := Finset.univ.filter fun π => ∃ w : GU σ n, IsPermW w π ∧ φ w ≠ 0 with hS
   have hSne : S.Nonempty := by
-    obtain ⟨b, w, i, π, hb, hw, hi, e⟩ := GlobalTheory.T.unitary_iwasawa_bruhat_decomposition L σ n hσ hσv g
+    obtain ⟨b, w, i, π, hb, hw, hi, e⟩ := _root_.GlobalTheory.CompanionTheory.BruhatIw.bruhat_iwasawa L σ n hσ hσv g
     refine ⟨π, Finset.mem_filter.2 ⟨Finset.mem_univ _, w, hw, fun h => hg ?_⟩⟩
     rw [e, hdec _ _ _ hb hi, h, mul_zero]
   obtain ⟨π, hπS, hmin⟩ := Finset.exists_min_image S (permWt t) hSne
@@ -213,8 +221,8 @@ theorem aOp_inj (q : ℕ) (hq : (q : ℂ) ≠ 0) {m : ℕ} (α : Fin m → ℂ) 
   have hterm : ∀ r ∈ R, φ (w * r * t) = if φ (w * r * t) = x then x else 0 := fun r hr => by
     split_ifs with h
     · exact h
-    obtain ⟨b, w', i, π', hb, hw', hi, e⟩ := GlobalTheory.T.unitary_iwasawa_bruhat_decomposition L σ n hσ hσv (w * r * t)
-    rcases GlobalTheory.T.bruhat_weight_decreases L σ n t w w' b r i π π' htD htS hw hw' hb (hRI r hr) hi e with hlt | ⟨rfl, hord⟩
+    obtain ⟨b, w', i, π', hb, hw', hi, e⟩ := _root_.GlobalTheory.CompanionTheory.BruhatIw.bruhat_iwasawa L σ n hσ hσv (w * r * t)
+    rcases _root_.GlobalTheory.CompanionTheory.SatPow.cell_triang L σ n t w w' b r i π π' htD htS hw hw' hb (hRI r hr) hi e with hlt | ⟨rfl, hord⟩
     · have hz : φ w' = 0 := by
         by_contra hz
         exact absurd (hmin π' (Finset.mem_filter.2 ⟨Finset.mem_univ _, w', hw', hz⟩)) (not_le.2 hlt)
@@ -255,7 +263,7 @@ theorem finiteDimensional_iwFix (hσ : ∀ x, σ (σ x) = x) (hσv : ∀ x, Valu
   set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
   intro φ hφ
   refine Subtype.ext (funext fun g => ?_)
-  obtain ⟨b, w, i, π, hb, hw, hi, rfl⟩ := GlobalTheory.T.unitary_iwasawa_bruhat_decomposition L σ n hσ hσv g
+  obtain ⟨b, w, i, π, hb, hw, hi, rfl⟩ := _root_.GlobalTheory.CompanionTheory.BruhatIw.bruhat_iwasawa L σ n hσ hσv g
   have h1 : (φ : GU σ n → ℂ) w = 0 := by
     have := congrFun hφ π
     rwa [show F φ π = (φ : GU σ n → ℂ) (wOf π) from rfl, hwOf w π hw] at this
@@ -273,14 +281,14 @@ theorem satPowNonvan : PositivityTheory.SphericalProduct.SatPowNonvan := by
   have hq2 : 2 ≤ q := hU.2.2.2.2.2.1
   have hq : (q : ℂ) ≠ 0 := by exact_mod_cast (show q ≠ 0 by omega)
   have hα : ∀ i, (fun i => (α i : ℂ)) i ≠ 0 := fun i => (α i).ne_zero
-  obtain ⟨hKI, hYI⟩ := GlobalTheory.T.unitary_iwahori_index_finite L ϖ σ q n hU
-  obtain ⟨R, h1R, hRP, hR⟩ := GlobalTheory.T.coset_reps_of_factorization (GU σ n) (IwU σ n) t (fun u => u ∈ IwU σ n ∧ IsUnipU u)
+  obtain ⟨hKI, hYI⟩ := _root_.GlobalTheory.CompanionTheory.SatPow.finite_index_iwU L ϖ σ q n hU
+  obtain ⟨R, h1R, hRP, hR⟩ := _root_.GlobalTheory.CompanionTheory.SatPow.RepsGen.reps_of_quotient_with_property (GU σ n) (IwU σ n) t (fun u => u ∈ IwU σ n ∧ IsUnipU u)
     ⟨one_mem _, isBorelU_one, fun i => by simp⟩ (hYI t) (fun i hi => by
-      obtain ⟨u, hu, hu', y, hy, hy', e⟩ := GlobalTheory.T.unitary_iwahori_factorization L σ n hσ hσv t htD htS i hi
+      obtain ⟨u, hu, hu', y, hy, hy', e⟩ := _root_.GlobalTheory.CompanionTheory.SatPow.IwFact.iwahori_fact L σ n hσ hσv t htD htS i hi
       exact ⟨u, hu, ⟨hu, hu'⟩, y, hy, hy', e⟩)
   have hRI : ∀ r ∈ R, r ∈ IwU σ n := fun r hr => (hRP r hr).1
   have hRt : ∀ r ∈ R, ∀ k : ℕ, t ^ k * r * (t ^ k)⁻¹ ∈ KU σ n := fun r hr k =>
-    GlobalTheory.T.dominant_conjugate_unipotent_mem L σ n t r htD htS (hRP r hr).1 (hRP r hr).2.2 k
+    _root_.GlobalTheory.CompanionTheory.SatPow.conj_unip_mem_KU L σ n t r htD htS (hRP r hr).1 (hRP r hr).2.2 k
   obtain ⟨φ₀, hsph, h1, -⟩ := Final.SphericalExistsU L ϖ σ q n (n / 2) hU (by omega) (by omega) (fun i => (α i : ℂ)) hα
   have hIK := GlobalTheory.CompanionTheory.KUFactsU.iwU_le_KU σ n
   have hK : ∀ g, ∀ k ∈ KU σ n, φ₀ (g * k) = φ₀ g := fun g k hk => by

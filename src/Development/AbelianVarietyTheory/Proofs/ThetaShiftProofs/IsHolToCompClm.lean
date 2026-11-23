@@ -7,8 +7,9 @@ public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.AnalyticD
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.AnalyticDictionaryExpKernelIotaTorusPoints
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArcLevelOneSectionEqKappaThetaStatement
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.EqSpMapOfInjective
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsLatticeVectorRepAndShiftStatement
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExponentialFamilyDerivSumsAtPeriodStatement
+public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.ArcDictExpZeroSection
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsLatticeVectorRepAndShift
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExponentialFamilyDerivSumsAtPeriod
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.GtAnOrthKerIff
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.MemThetaShiftZero
 import Mathlib.Algebra.Order.Floor.Extended
@@ -73,9 +74,9 @@ theorem nonempty_holArc : Out.Laws → Out.Laws2 → ∀ (E : Type) [Field E] [N
   have hfin : AnFin Λ.A := (ArcThetaSpaces.sections_theta hL hL2 E H D l c O β _ a Λ).2.1
   have hrie := gtAn_orth_ker_iff hL hL2 E H D l c O β _ a Λ
   have hpt := ArcPoint.point_sumsAt E H D l Xo c O β Y bF a χ W Λ C Γ Ψ g ty Fu laA laM K
-  have hdiff := GlobalTheory.T.exponentialFamily_deriv_sumsAt_period hL hL2 E H D l Xo c O β Y bF a χ W Λ C Γ Ψ g ty Fu laA laM K hfin hrat
+  have hdiff := _root_.GlobalTheory.ArcDeriv.deriv_sumsAt hL hL2 E H D l Xo c O β Y bF a χ W Λ C Γ Ψ g ty Fu laA laM K hfin hrat
   obtain ⟨T₂, hth⟩ := GlobalTheory.T.arc_levelOne_section_eq_kappa_theta hL hL2 E H D l Xo c O β Y bF a χ W Λ C Γ Ψ g ty Fu laA laM K hfin lin cst T₁ hfib
-  have hrep := GlobalTheory.T.exists_latticeVector_rep_and_shift hL hL2 E H D l c O β _ a Λ
+  have hrep := _root_.GlobalTheory.GtRep.exists_rep_and_shift hL hL2 E H D l c O β _ a Λ
   have hsm : ∀ (s : ℂ) (v : Λ.A.V), K.h.symm (s • K.h v) = s • v := fun s v => by
     rw [map_smul, K.h.symm_apply_apply]
   refine ⟨{

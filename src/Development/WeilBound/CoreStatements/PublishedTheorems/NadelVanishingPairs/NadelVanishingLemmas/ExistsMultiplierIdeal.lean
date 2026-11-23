@@ -1,9 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsLogMult
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.ExistsPushforwardRegularIdeal
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.ExistsRoundedDownDivisorStatement
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.MultiplierIdealIndependentStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsEqnIffGeneratesAtInv
+public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsValuationSubringDominatingSubring
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPushforwardRegularIdeal
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsClosedImmersionGenericPoint
+public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.ExistsRoundedDownDivisor
+public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.MultiplierIdealIndependent
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,8 +68,8 @@ theorem exists_isMultIdeal : ∀ (k : Type) [Field k] [CharZero k] (X : Scheme.{
   haveI : IsProper (s ≫ p) := isProper_of_isProjOver' hres.proj
   haveI : IsProper p := isProper_of_isProjOver' hp
   haveI : QuasiCompact s := QuasiCompact.of_comp s p
-  obtain ⟨F, hF, -⟩ := GlobalTheory.T.exists_rounded_down_divisor k Y (s ≫ p) n hres.proj (pullCart s G - m • K) m
-  obtain ⟨J, hJ⟩ := GlobalTheory.T.exists_pushforward_regular_ideal X Y s (-F)
-  exact ⟨J, (GlobalTheory.T.multiplier_ideal_independent k X p n hp η m G Y s K B F hη hm hres hF J).2 hJ⟩
+  obtain ⟨F, hF, -⟩ := _root_.GlobalTheory.exists_cartierDiv_mult_ediv k Y (s ≫ p) n hres.proj (pullCart s G - m • K) m
+  obtain ⟨J, hJ⟩ := _root_.GlobalTheory.Cartier.PullIdeal.exists_idealSheaf X Y s (-F)
+  exact ⟨J, (_root_.GlobalTheory.Discrepancy.isMultIdeal_iff_regularAt k X p n hp η m G Y s K B F hη hm hres hF J).2 hJ⟩
 
 end GlobalTheory.MultIdealExists

@@ -2,16 +2,17 @@ module
 
 public import Development.AbelianVarietyTheory.Statements.FundamentalDomains.AtOfNumberField
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditionalStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaUniformisationComplexAbelianVarietiesStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaUniformisationComplexAbelianVarieties
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ChiGen
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsCommonCountable
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsKeyRuleCharHalf
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsSmoothThrough
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.FiniteAbsLeOneMulMemRange
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.IsDomainTensorOfIsAlgClosed
-import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.KeyDataDescendCountableSubringsStatement
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.NormLeTsumOfCubeFourierCoeffLe
 public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.TorusAlgebraicHolds
+import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.KeyDataDescendCountableSubringsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,8 +62,8 @@ namespace GlobalTheory
 
 theorem keyFormula_of_connFam : GlobalTheory.KeyKa.ConnFam → KeyFormula := fun hF =>
   have hL := GlobalTheory.T.abelianScheme_laws_unconditional.1
-  have hR := GlobalTheory.KeyTop.exists_keyRule_charHalf hL GlobalTheory.T.theta_uniformisation_complex_abelian_varieties GlobalTheory.ThetaInversion.inversion (GlobalTheory.phHolo_of_phKoecher GlobalTheory.phKoecher) GlobalTheory.torusAlgebraic_holds
-  GlobalTheory.KeyRoot.keyFormula_of_families GlobalTheory.T.theta_uniformisation_complex_abelian_varieties hL.polBaseChange (GlobalTheory.T.keyData_descend_countable_subrings hL).1 hR
-    (GlobalTheory.ThetaFrameSpec.value_specialises hL GlobalTheory.T.theta_uniformisation_complex_abelian_varieties GlobalTheory.ThetaInversion.inversion hR (GlobalTheory.ThetaEquiv.val_equivariant hL GlobalTheory.T.theta_uniformisation_complex_abelian_varieties GlobalTheory.ThetaInversion.inversion hR hF))
+  have hR := GlobalTheory.KeyTop.exists_keyRule_charHalf hL _root_.GlobalTheory.thetaUnifAV_closed GlobalTheory.ThetaInversion.inversion (GlobalTheory.phHolo_of_phKoecher GlobalTheory.phKoecher) GlobalTheory.torusAlgebraic_holds
+  GlobalTheory.KeyRoot.keyFormula_of_families _root_.GlobalTheory.thetaUnifAV_closed hL.polBaseChange (GlobalTheory.T.keyData_descend_countable_subrings hL).1 hR
+    (GlobalTheory.ThetaFrameSpec.value_specialises hL _root_.GlobalTheory.thetaUnifAV_closed GlobalTheory.ThetaInversion.inversion hR (GlobalTheory.ThetaEquiv.val_equivariant hL _root_.GlobalTheory.thetaUnifAV_closed GlobalTheory.ThetaInversion.inversion hR hF))
 
 end GlobalTheory

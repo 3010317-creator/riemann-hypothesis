@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UMLeviMulUMLevi
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParabolicUnipotentLeviDecompStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsUMOfMem
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParabolicUnipotentLeviDecomp
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -73,7 +74,7 @@ theorem mem_of_eq_mul (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     (e : uM k (i + t) y * levi k (i + t) g = (h : Mir k (i + t)) * β) :
     ∃ q : Qp k i t, ∃ b' ∈ K₁, g = (q : GL (Fin (i + t)) k) * b' := by
   obtain ⟨y', _, b', hb', hβe⟩ := GlobalTheory.CompanionTheory.BZPsiPG.FibOnto.mem_Bgrp.1 hβ
-  obtain ⟨x, q, hx⟩ := GlobalTheory.T.parabolic_unipotent_levi_decomp k i t h
+  obtain ⟨x, q, hx⟩ := _root_.GlobalTheory.CompanionTheory.BZPsiPG.HpgMem.main k i t h
   have e2 : uM k (i + t) y * levi k (i + t) g =
       uM k (i + t) (topV k i t x + ((q : GL (Fin (i + t)) k) : Matrix (Fin (i + t)) (Fin (i + t)) k).mulVec y') *
         levi k (i + t) ((q : GL (Fin (i + t)) k) * b') := by

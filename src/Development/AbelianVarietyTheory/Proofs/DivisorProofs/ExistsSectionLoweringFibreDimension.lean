@@ -1,13 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRatioOfWeight
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAmplePowSectionNonvanishingOnClosedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCommonZeroAmpleSectionsVerticalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionsCutGenericFibreFiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteGenericFibreClosureInterResidueCharFibreStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProjArithResidueCharFibreStructureStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RegularNonvanishingLocusSectionPropertiesStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopologicalKrullDimDropAndFiniteOfDimZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAmplePowSectionNonvanishingOnClosed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCommonZeroAmpleSectionsVertical
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionsCutGenericFibreFinite
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteGenericFibreClosureInterResidueCharFibre
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProjArithResidueCharFibreStructure
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RegularNonvanishingLocusSectionProperties
+import Mathlib.Topology.KrullDimension
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopologicalKrullDimDropAndFiniteOfDimZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,11 +77,11 @@ theorem exists_sec_fibre_dim_lt : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [
   intro k _ X _ p D hX P hA d Z hZ hdim
   haveI : NoetherianSpace X := noetherianSpace_of_isArithVar hX
   have memfib : ∀ {x : X} {ℓ : ℕ}, x ∈ fib X ℓ ↔ ringChar (X.residueField x) = ℓ := Iff.rfl
-  obtain ⟨hcov, hfibc, -, -, hWfib⟩ := GlobalTheory.T.projArith_residueCharFibre_structure k X p D hX
+  obtain ⟨hcov, hfibc, -, -, hWfib⟩ := _root_.GlobalTheory.IntFib.fib_structure k X p D hX
   have hNV : ∀ (a b : ℤ) (g : X.functionField), g ∈ P.H a b → IsOpen (NV P a b g) :=
-    fun a b g hg => (GlobalTheory.T.regularNonvanishingLocusSection_properties k X p P a b g hg).1
+    fun a b g hg => (_root_.GlobalTheory.HSAmp.nv_rules k X p P a b g hg).1
 
-  obtain ⟨e₀, g, hg, hfin0⟩ := GlobalTheory.T.exists_sections_cut_genericFibre_finite k X p D hX P hA d Z hZ (hdim 0)
+  obtain ⟨e₀, g, hg, hfin0⟩ := _root_.GlobalTheory.HSAmp.GenCut.exists_sections_finite k X p D hX P hA d Z hZ (hdim 0)
   have hW₀c : IsClosed (Z \ ⋃ j, NV P (e₀ j) 0 (g j)) :=
     hZ.sdiff (isOpen_iUnion fun j => hNV _ _ _ (hg j).2)
 
@@ -130,10 +131,10 @@ theorem exists_sec_fibre_dim_lt : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [
   set T : Set X := closure (W ∩ fib X 0) ∪ Set.range fun i => ((q i : ↥(Z ∩ fib X (i.1 : ℕ))) : X) with hTdef
   have hTc : IsClosed T := isClosed_closure.union hFc
   have hTfin : ∀ ℓ : ℕ, (T ∩ fib X ℓ).Finite := fun ℓ =>
-    ((GlobalTheory.T.finite_genericFibreClosure_inter_residueCharFibre k X p D hX W hWc hWfin ℓ).union (Set.finite_range _)).subset fun x ⟨hx, hxl⟩ =>
+    ((_root_.GlobalTheory.GenFibClosure.finite_closure_inter_fib k X p D hX W hWc hWfin ℓ).union (Set.finite_range _)).subset fun x ⟨hx, hxl⟩ =>
       hx.elim (fun h => Or.inl ⟨h, hxl⟩) Or.inr
 
-  obtain ⟨e, he, f, hf, hTNV⟩ := GlobalTheory.T.exists_ample_pow_section_nonvanishing_on_closed k X p D hX P hA T hTc hTfin
+  obtain ⟨e, he, f, hf, hTNV⟩ := _root_.GlobalTheory.HSAmp.exists_pow_section_nonvanishing_on_closed k X p D hX P hA T hTc hTfin
   refine ⟨e, he, f, hf, fun ℓ => ?_⟩
   have hfo : IsOpen (NV P e 0 f) := hNV _ _ _ hf
 
@@ -160,7 +161,7 @@ theorem exists_sec_fibre_dim_lt : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [
     have hCd : (d : WithBot ℕ∞) ≤ topologicalKrullDim ↥(Subtype.val '' Y) := by
       rwa [← (Topology.IsEmbedding.subtypeVal.homeomorphImage Y).isHomeomorph.topologicalKrullDim_eq]
     obtain ⟨x, ⟨s, hsY, rfl⟩, hxg⟩ :=
-      GlobalTheory.T.exists_common_zero_ample_sections_vertical k X p D hX P hA ℓ d (Subtype.val '' Y) e₀ g hℓp hCi hCc hCf hCd hg
+      _root_.GlobalTheory.HSAmp.common_zero_of_le_dim k X p D hX P hA ℓ d (Subtype.val '' Y) e₀ g hℓp hCi hCc hCf hCd hg
     refine ⟨s, hsY, ?_⟩
     have hxW : (s : X) ∈ W := Or.inl ⟨s.2.1, hxg⟩
     rcases hWS hxW with h | h
@@ -170,7 +171,7 @@ theorem exists_sec_fibre_dim_lt : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [
       exact absurd (this ▸ hℓ'S) hℓS
   have hCsc : IsClosed {s : ↥(Z ∩ fib X ℓ) | (s : X) ∉ NV P e 0 f} :=
     (hfo.preimage continuous_subtype_val).isClosed_compl
-  have hdrop := (GlobalTheory.T.topologicalKrullDim_drop_and_finite_of_dim_zero ↥(Z ∩ fib X ℓ)).1 _ d hCsc (hdim ℓ) fun Y hY hYd hsub => by
+  have hdrop := (_root_.GlobalTheory.DimDrop.dim_drop ↥(Z ∩ fib X ℓ)).1 _ d hCsc (hdim ℓ) fun Y hY hYd hsub => by
     obtain ⟨s, hsY, hsT⟩ := key Y hY hYd
     exact hsub hsY (hTNV hsT)
   have hset : Subtype.val '' {s : ↥(Z ∩ fib X ℓ) | (s : X) ∉ NV P e 0 f} = (Z \ NV P e 0 f) ∩ fib X ℓ := by

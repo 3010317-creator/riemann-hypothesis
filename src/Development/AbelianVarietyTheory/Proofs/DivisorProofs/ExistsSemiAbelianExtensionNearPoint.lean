@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.SubsetSpanBy
 public import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.IsOpenOfMemIrreducibleComponentsOfFinite
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.MemNonzeroLocusIffPowFn
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsAbelianSchemeAndExtendOfGenericHoms
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtendsToSemiAbelianAwayOfChartsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtendsToSemiAbelianAwayOfCharts
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiAbelianHomExtensionHolds
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StalkGenerizationGermCompat
 import Mathlib.Algebra.Order.Floor.Extended
@@ -177,7 +177,7 @@ theorem hasExt_opensRange (X S : Scheme.{0}) [AlgebraicGeometry.IsNoetherian S]
   have hL' := pull_isLB hL (pullback.fst A.hom k)
   obtain ⟨u, hu⟩ := GlobalTheory.lbIso_refl hL'
   have hext : HasExt (awayMap f) ((Over.pullback k).obj A) :=
-    GlobalTheory.T.extendsToSemiAbelian_away_of_charts R f hf0 _ (isAbelianScheme_pullback_obj k A hA) (L.pull (pullback.fst A.hom k)) hL'
+    _root_.GlobalTheory.Desc.hasExt_awayMap_of_charts R f hf0 _ (isAbelianScheme_pullback_obj k A hA) (L.pull (pullback.fst A.hom k)) hL'
       (relAmple_pull (isGrpPullback_pullback A k).1 hL hL' ((isGen_iff u).1 hu) k.opensRange
         (isAffineOpen_opensRange k) (fun y => ⟨y, rfl⟩) hamp)
       fun x => (hC (i x)).elim fun C => Chart.nonempty_restrict j (awayMap f) i k hk A x C

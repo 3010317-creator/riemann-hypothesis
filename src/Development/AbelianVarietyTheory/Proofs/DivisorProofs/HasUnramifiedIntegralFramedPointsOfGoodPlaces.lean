@@ -4,16 +4,24 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.For
 public import Development.AbelianVarietyTheory.Definitions.Divisors.MulSmulIdemMem
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CanonicalOfAbelianDeRham
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.PermutesRefl
-import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmEllipticCurveIsPureHodgeEndomorphismBaseChangeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPureBCId
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmEllipticCurveIsPureHodgeEndomorphismBaseChange
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompositumIntermediateFieldExistsPlaceValuationE
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCmEllipticCurveGaloisTorsionSectionsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplexLinearOfPureTypesFiniteIndexStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCmEllipticCurveGaloisTorsionSections
+public import Development.AbelianVarietyTheory.Statements.PrincipalLattices.FiniteDimensionalBase
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplexLinearOfPureTypesFiniteIndex
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFramedPointLiesOnComponentCmCurveField
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLatticeIsometryConjPointSplitUpToIndexStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLatticeSplitIndexPrimeToStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnramifiedFieldOfInertiaPropertyStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertiaFixesComplexFibrePureEndomorphismTorsionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLatticeIsometryConjPointSplitUpToIndex
+public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLatticeSplitIndexPrimeTo
+public import Mathlib.Basic.Complex.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnramifiedFieldOfInertiaProperty
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertiaFixesComplexFibrePureEndomorphismTorsion
+public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.DegenerationDataAtModelPointOfUniformisation
+import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsNumberFieldPoint
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsAlgebraMapEqOfValVLeOne
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CmModuliConsequenceOfAbelianSchemeLaws
@@ -21,7 +29,6 @@ import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CompactifiedModuliPa
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsModuliSchemePolarizedAbelianLevel
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PointEqIffIsometryClosed
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PrincipalRootReZeroImSq
-public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.DegenerationDataAtModelPointOfUniformisation
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ThetaUniformisationComplexAbelianVariety
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ConjugationActsOnCmTorsionByMultiplication
@@ -69,7 +76,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.ComponentMassSum
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.FnAlgClosedOfFixedPoints
 import Development.AbelianVarietyTheory.Definitions.CMLattices.IntegralOf
-public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.KchMul
 
 @[expose] public section
@@ -92,9 +98,9 @@ theorem exists_curveOver (hA : GlobalTheory.Published.FormalAlgebraisation) (hG 
     (hR : GlobalTheory.Published.AbelianDeRham) (H : Host E) {n q : ℕ} (hq : q.Prime) (hn : ¬ q ∣ n) (hd : ¬ q ∣ H.d) :
     ∃ (F' : IntermediateField ℚ ℂ) (_ : NumberField F'), ¬ (q : ℤ) ∣ discr F' ∧ CurveOver H F' n := by
   have hn0 : 0 < n := Nat.pos_of_ne_zero fun h => hn (h ▸ dvd_zero q)
-  obtain ⟨N, _, _, ω, C, C₀, ψ, hω, hψ, hy⟩ := GlobalTheory.T.exists_cmEllipticCurve_galois_torsion_sections E H n hn0
+  obtain ⟨N, _, _, ω, C, C₀, ψ, hω, hψ, hy⟩ := _root_.GlobalTheory.TorsionModel.exists_ell_torsion_sections E H n hn0
   have h1 : wC H (1, 0) = 1 := by simp [wC]
-  obtain ⟨F', _, hF, h⟩ := GlobalTheory.T.exists_unramified_field_of_inertia_property N q hq (fun τ => ∃ io, C₀.ActsBy τ io n (1, 0))
+  obtain ⟨F', _, hF, h⟩ := _root_.GlobalTheory.InertiaGood.exists_unramified_field_good N q hq (fun τ => ∃ io, C₀.ActsBy τ io n (1, 0))
     (by
       rintro τ τ' ⟨i, hi, hi'⟩ ⟨j, hj, hj'⟩
       have e : spMap (τ' : ℂ →+* ℂ) ≫ spMap (τ : ℂ →+* ℂ) = spMap ((τ.trans τ' : ℂ ≃+* ℂ) : ℂ →+* ℂ) := by
@@ -116,7 +122,7 @@ theorem exists_curveOver (hA : GlobalTheory.Published.FormalAlgebraisation) (hG 
         have h3 : (u : 𝓞 N) * (q : 𝓞 N) + (v : 𝓞 N) * (H.d : 𝓞 N) = 1 := by exact_mod_cast congrArg (Int.cast : ℤ → 𝓞 N) huv
         rw [← h3]
         exact add_mem (𝔮.mul_mem_left _ hq𝔮) (𝔮.mul_mem_left _ h2)
-      obtain ⟨io, hio, hx⟩ := GlobalTheory.T.inertia_fixes_complex_fibre_pure_endomorphism_torsion hA hG N C.P _ (1 - ω) ω (GlobalTheory.T.cmEllipticCurve_isPureHodgeEndomorphismBaseChange hR E H _ ω C) q hq 𝔮 h𝔮 hq𝔮 hu τ hτ
+      obtain ⟨io, hio, hx⟩ := _root_.GlobalTheory.InertiaTransfer.exists_isGrpPullback_of_inertia hA hG N C.P _ (1 - ω) ω (_root_.GlobalTheory.PureLift.isPureBC_ell hR E H _ ω C) q hq 𝔮 h𝔮 hq𝔮 hu τ hτ
         C₀.P.A ψ hψ
       refine ⟨io, hio, fun a => ?_⟩
       obtain ⟨y, hy1, hy2⟩ := hy a
@@ -155,9 +161,9 @@ theorem conj_point_eq {D : Datum H} {l : Level H} {Xo : Moduli D l} {σ : KA l �
   have hA : 0 < l.A := l.A_pos
   have hdiv : ∀ m : ℕ, m ∣ N * l.M' → C.ActsBy τ io m (1, 0) :=
     ((GlobalTheory.CompRat.Acts.main E H C τ hτ io hC.1 _ (Nat.mul_pos hN (Nat.lcm_pos hM hA))).2 _ hC).2
-  obtain ⟨Φ, hE, hp, hm, hact⟩ := GlobalTheory.T.exists_lattice_isometry_conj_point_split_up_to_index E H D l Xo σ g ty F hD hσ hty τ hτ C io hC.1 i P hP i' P' hP' N hN hs
+  obtain ⟨Φ, hE, hp, hm, hact⟩ := _root_.GlobalTheory.CompRat.exists_isometry_of_conj_split_index E H D l Xo σ g ty F hD hσ hty τ hτ C io hC.1 i P hP i' P' hP' N hN hs
     hu.symm (hdiv _ (dvd_mul_right _ _))
-  obtain ⟨L, hL⟩ := GlobalTheory.T.exists_complexLinear_of_pure_types_finite_index E H _ _ g ty P P' hP hP' Φ N hN hs hp hm
+  obtain ⟨L, hL⟩ := _root_.GlobalTheory.CompRat.exists_complex_linear_of_pure_types_of_index E H _ _ g ty P P' hP hP' Φ N hN hs hp hm
   have tu : ∀ (y : Sp ℂ ⟶ Xo.X) (s : 𝟙_ (Over Xo.X) ⟶ Xo.univ.t.G), (toUnit (Over.mk y) ≫ s).left = y ≫ s.left := by
     intro y s
     rw [Over.comp_left]
@@ -222,7 +228,7 @@ theorem exists_fixed_point (hD : 1 ≤ Dw.p + Dw.q) {q : ℕ} (hq : q.Prime) (hq
     rw [← Spec.map_comp]; rfl
   obtain ⟨i, P, hP, hu⟩ := F.onto (x₂ ≫ prX Xo c) (by
     rw [Category.assoc, pullback.condition, ← Category.assoc, h1, hsp])
-  obtain ⟨Lp, Lm, N, hN, hs, ho, hp, hm⟩ := GlobalTheory.T.exists_lattice_split_index_prime_to E H (F.Di i) q hq hqd
+  obtain ⟨Lp, Lm, N, hN, hs, ho, hp, hm⟩ := _root_.GlobalTheory.LatSplitPrime.exists_split_prime_to E H (F.Di i) q hq hqd
   have hN0 : 0 < N := Nat.pos_of_ne_zero fun h => hN (h ▸ dvd_zero q)
   obtain ⟨P₀, hP₀, k₁, k₂⟩ := GlobalTheory.CM.FamCompare.exists_period (F.Di i) Lp Lm (fun z => ⟨N, hN0, hs z⟩) ho hp hm
     (ty := ty) (by rw [(F.sig i).1, (F.sig i).2]; exact hty)

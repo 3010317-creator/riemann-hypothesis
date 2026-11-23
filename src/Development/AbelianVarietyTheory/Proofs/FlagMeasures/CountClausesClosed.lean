@@ -1,7 +1,7 @@
 module
 
 public import Formalism.SharpRestriction.CuspSpanNormBounds.StandingHypothesesHoldFamily
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CountParameterConditionsOfSizeHypothesesStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CountParameterConditionsOfSizeHypotheses
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ResidEvFree
 import Formalism.SharpRestriction.SmoothDesignExistence.DGamSmooth
 import Mathlib.Algebra.Order.Floor.Extended
@@ -124,7 +124,7 @@ theorem countClauses_closed : ∀ (𝒞 : FamClass) (c30 : List ℝ → Counting
   have hLx := scL_eq Fm x hx1 i
   have hk8 := GlobalTheory.IrrCountEv.k_ge_of_hypLine (Fm.L x i) hH
   rw [hLx, Fm.CGam_eq x i] at hk8
-  refine GlobalTheory.T.countParameterConditions_of_sizeHypotheses (Fm.D x i) (Fm.L x i) _ _ _ _ _ _ _ (c30 Fm.cOut).n0 (c30 Fm.cOut).A (c30 Fm.cOut).C
+  refine _root_.GlobalTheory.countClauses_of_sizeHyp (Fm.D x i) (Fm.L x i) _ _ _ _ _ _ _ (c30 Fm.cOut).n0 (c30 Fm.cOut).A (c30 Fm.cOut).C
     (c30 Fm.cOut).cb hC hcb7 hA ?_ hCl2 hCl3 ?_ hAr hH
   · have : ((c30 Fm.cOut).n0 : ℝ) ≤ (c30 Fm.cOut).n0 * y := le_mul_of_one_le_right (Nat.cast_nonneg _) hy1
     linarith

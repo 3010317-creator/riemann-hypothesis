@@ -1,7 +1,7 @@
 module
 
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsBundles
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FlagIndependenceStatement
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FlagIndependence
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PSubQuotient
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -48,6 +48,6 @@ import Mathlib.Topology.Sheaves.Init
 namespace GlobalTheory.CompanionTheory.Ar.Num.SubQuotFlags
 
 theorem main : GroundTheory.Heights₂.Heights.NumbersDVR.SubQuotient.Statement :=
-  GroundTheory.Heights₂.Heights.NumbersDVR.SubQuotient.proof GlobalTheory.T.flag_independence
+  GroundTheory.Heights₂.Heights.NumbersDVR.SubQuotient.proof _root_.GlobalTheory.CompanionTheory.CommAlg.FlagIndependence.main
 
 end GlobalTheory.CompanionTheory.Ar.Num.SubQuotFlags

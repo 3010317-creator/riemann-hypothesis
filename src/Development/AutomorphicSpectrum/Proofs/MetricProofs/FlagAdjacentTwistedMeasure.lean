@@ -1,13 +1,16 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsLocSec
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAdjacentTwistedResolutionAltBis
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAdjacentTwistedResolutionStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAdjacentTwoFramesOrbitStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HolomorphicFrameMetricNearPointStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PullbackPullback
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.EqOfOrbitNormal
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAdjacentTwistedResolution
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAdjacentTwoFramesOrbit
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GenericBlockMatrixIsBlockDiag
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.PairRelationOfScaledRatio
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HolomorphicFrameMetricNearPoint
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwistedMetricLogFormula
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsValueAtOfTorus
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwistedAtlasCompatibility
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwistedMetricLogFormulaStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -143,7 +146,7 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
   intro K _ ι _ Φ _ y Ψ _ _ N j M n e Rb τ a b k₀ ca cb hb hj hk hca hcb RW pr hW x
   obtain ⟨ψ, kb, σ, i₀, F, H, hx, hC⟩ := hW.2.2 x
   obtain ⟨V, z₀, z₁, c, hVo, hxV, hVs, hVU, hz₀h, hch, hc0, hL⟩ :=
-    GlobalTheory.T.flag_adjacent_twisted_resolution_alt K ι Φ y Ψ N j M n e Rb τ a b k₀ ca cb hb hj hk hca hcb RW pr hW x ψ kb σ i₀ F H hx hC
+    _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.Sec.LForm.main K ι Φ y Ψ N j M n e Rb τ a b k₀ ca cb hb hj hk hca hcb RW pr hW x ψ kb σ i₀ F H hx hC
   have hFr : M.IsFrame F := hC.2.1
   have hsrc := hC.2.2.2.2.2
   have hfacts : ∀ w ∈ V, basePart M.blk (z₀ w) ∈ mcPts (mCoordIdeal M.x) ∧ (∀ k, ∃ i, z₀ w ⟨k, i⟩ ≠ 0) ∧
@@ -161,7 +164,7 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
     have hH := (hsrc w (hVs hw)).1 τ
     exact ⟨hFr, (hfacts w hw).2.2.2.2, ho₀, ho₁, hH.1, hH.2, h0, fun i => (hex τ i).1, fun i => by
       simpa using (hex τ i).2⟩
-  obtain ⟨V', hV'o, hxV', hV'V, hfh, hf0⟩ := GlobalTheory.T.holomorphic_frame_metric_near_point K ι Φ y Ψ N j M e RW.X RW.A V x
+  obtain ⟨V', hV'o, hxV', hV'V, hfh, hf0⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.Sec.Factor.improper_factor K ι Φ y Ψ N j M e RW.X RW.A V x
     (fun w => basePart M.blk (z₀ w)) (fun w => H τ (ψ w)) F τ a hVo hxV (fun q => hz₀h ⟨q.1.1, q.2⟩)
     (fun w hw => (hfacts w hw).1) (fun w hw => (hfacts w hw).2.2.2.2)
     (fun r s => holoOn_comp_chart RW.A hC.1 (hC.2.2.2.2.1 τ r s) hVs) (fun w hw => (hsrc w (hVs hw)).1 τ)
@@ -196,7 +199,7 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
       exact orbit_trans (orbit_symm ho₀) ho₁
     · intro hs
       by_contra h0
-      exact GlobalTheory.T.flag_adjacent_twisted_resolution K ι Φ y Ψ N j M n e Rb τ a b k₀ ca cb hb hj hk hca hcb RW pr hW w _ _ _ _ _
+      exact _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.Sec.not_sameOrbit_of_ptData K ι Φ y Ψ N j M n e Rb τ a b k₀ ca cb hb hj hk hca hcb RW pr hW w _ _ _ _ _
         (hdata w hwV h0) hs
   · intro w hw h0 z₀' z₁' F' h' t' hD
     have hwV := hV'V hw
@@ -204,7 +207,7 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
     obtain ⟨hmc, hn₀, hn₁, hbase, hG⟩ := hfacts w hwV
     obtain ⟨hF', hG', hp₀, hp₁, hB', hd', ht', he₀', he₁'⟩ := hD
     have hd := hdata w hwV h0
-    have hind := GlobalTheory.T.flag_adjacent_two_frames_orbit K ι Φ y Ψ N j M τ a b k₀ ca cb hb hj hk hca hcb F F' (z₀ w) (z₁ w) z₀' z₁'
+    have hind := _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.Sec.Indep.normRhs_indep K ι Φ y Ψ N j M τ a b k₀ ca cb hb hj hk hca hcb F F' (z₀ w) (z₁ w) z₀' z₁'
       (H τ (ψ w)) h' (ψ w i₀) t' hmc hn₀ hn₁ hbase hFr hF' hG hG' (orbit_trans ho₀ (orbit_symm hp₀))
       (orbit_trans ho₁ (orbit_symm hp₁)) hd.2.2.2.2.1 hd.2.2.2.2.2.1 hB' hd' h0 ht' hd.2.2.2.2.2.2.2.1
       hd.2.2.2.2.2.2.2.2 he₀' he₁'
@@ -218,7 +221,7 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
     have hzz := mixPt_blocks (k₀ := k₀) hn₀ hn₁
     have hnorm := log_norm_sub (potA M τ a k₀) (c := fun o => c o w) (fun o => hc0 o w hwV) hlift hzz
       (hf0 w hw) h0
-    have hcombo := GlobalTheory.T.twisted_metric_log_formula K ι Φ y Ψ N j M τ a k₀ hk _ hzz
+    have hcombo := _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.Sec.log_potA K ι Φ y Ψ N j M τ a k₀ hk _ hzz
     rw [fstPt_mixPt, sndPt_mixPt hoff] at hcombo
     have e₁ : Real.log ‖(f w * ∏ o, c o w ^ aDeg M τ a k₀ o) * ψ w i₀‖ -
         Real.log ((potA M τ a k₀).h (RW.lift x w)) = _ := hnorm

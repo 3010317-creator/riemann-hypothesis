@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobKerIdealLeAugIdeal
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqZeroOfCobOneEqZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HopfHeightOnePrimitiveEqZeroOfZeroDifferentialStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HopfHeightOnePrimitiveEqZeroOfZeroDifferential
+public import Mathlib.RingTheory.HopfAlgebra.Quotient
+public import Mathlib.RingTheory.Bialgebra.Quotient
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -21,7 +23,6 @@ import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
-public import Mathlib.RingTheory.HopfAlgebra.Quotient
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.Tactic.Echelon.Zsqrtd
 import Mathlib.Tactic.Inclusion.Extension.Core.Core
@@ -43,7 +44,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Mathlib.RingTheory.Bialgebra.Quotient
 
 @[expose] public section
 
@@ -136,7 +136,7 @@ theorem mem_frobKerIdeal_of_cobOne (p : ℕ) [Fact p.Prime] (K H : Type) [Field 
     exact hc
   have hd' : dUnit (R := K) (π b) = 0 := by
     rw [← cotMap_d, hd, map_zero]
-  have h0 := GlobalTheory.T.hopf_height_one_primitive_eq_zero_of_zero_differential p K (H ⧸ J) hpow (π b) hc' hd'
+  have h0 := _root_.GlobalTheory.PDiv.HeightOnePrim.eq_zero_of_cobOne_eq_zero_of_dUnit_eq_zero p K (H ⧸ J) hpow (π b) hc' hd'
   exact Ideal.Quotient.eq_zero_iff_mem.1 h0
 
 end GlobalTheory.PDiv.FrobKerPrim

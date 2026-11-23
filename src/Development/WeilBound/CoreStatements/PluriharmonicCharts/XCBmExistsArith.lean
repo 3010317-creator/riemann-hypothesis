@@ -3,7 +3,8 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsSncModel
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ExistsBasisKaehlerOfAlgebraicIndependent
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BirationalOfTranscendenceDegreeStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BirationalOfTranscendenceDegree
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FunctionFieldRatioGenerators
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.KaehlerFinrankFractionField
 import Mathlib.Algebra.Order.Floor.Extended
@@ -142,4 +143,4 @@ theorem PositivityTheory.Xgp.t_c_bm_exists_arith : ∀ (X : Scheme.{0}) (Ω : Ty
   have htr : Algebra.trdeg ℚ Ω = n := by
     rw [← GlobalTheory.rank_kaehler_eq_trdeg, ← Module.finrank_eq_rank, hfin]
   have htr' : Algebra.trdeg ℤ Ω = n := (PositivityTheory.Xgp.c_bm_exists_arith.trdeg_int_eq_rat Ω).trans htr
-  exact (GlobalTheory.T.birational_of_transcendence_degree X Ω ξ K J x n T htr').2
+  exact (_root_.GlobalTheory.CompanionTheory.Ar.coordTie_birational_isArithVar X Ω ξ K J x n T htr').2

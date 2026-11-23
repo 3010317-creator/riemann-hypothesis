@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsPeriodHom
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeriodsExistAffineZeroSectionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeriodsOfDeRhamClassesUniqueStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeriodsExistAffineZeroSection
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeriodsOfDeRhamClassesUnique
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -121,6 +121,6 @@ theorem pHom_of (hE : PExist) (hU : PUniq) : PHom := by
   change algebraMap ℂ (Hol (fibFam u).V) (ev (per c x)) = per c x
   exact (congrArg _ (Hol.ev_apply (W := (fibFam u).V) 0 trivial (per c x))).trans (hol_point _)
 
-theorem pHom : PHom := pHom_of GlobalTheory.T.periods_exist_affine_zero_section GlobalTheory.T.periods_of_deRham_classes_unique
+theorem pHom : PHom := pHom_of _root_.GlobalTheory.AnPer.periods_exist _root_.GlobalTheory.AnPer.period_unique
 
 end GlobalTheory.AnPer

@@ -2,11 +2,17 @@ module
 
 public import Mathlib.RingTheory.Etale.Basic
 public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlgHomLiftSquareZeroOfFormallyEtaleAwayDepthStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormallyEtaleAwayOfEtaleOffMaximalIdealStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAdicCompleteOfLeMaximalIdealStatement
+public import ReciprocityTheory.CommutativeAlgebra.CohenMacaulay.ModDepthGE
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlgHomLiftSquareZeroOfFormallyEtaleAwayDepth
+public import Mathlib.RingTheory.Localization.AtPrime.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormallyEtaleAwayOfEtaleOffMaximalIdeal
+public import Mathlib.RingTheory.AdicCompletion.Basic
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Defs
+public import Mathlib.RingTheory.Noetherian.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAdicCompleteOfLeMaximalIdeal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModDepthGETwoQuotientPowFreeOverRegularLocalRingStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsUniqueAlgEquivOfCompatibleQuotient
+public import Mathlib.RingTheory.AdicCompletion.RingHom
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -25,7 +31,6 @@ import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
-public import Mathlib.RingTheory.AdicCompletion.RingHom
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.Tactic.Echelon.Zsqrtd
 import Mathlib.Tactic.Inclusion.Extension.Core.Core
@@ -59,14 +64,14 @@ namespace GlobalTheory.LiftHom
 
 theorem liftHom_of_etale_punctured : ∀ (R : Type) [CommRing R] [IsRegularLocalRing R], IsAdicComplete (maximalIdeal R) R → 3 ≤ ringKrullDim R → ∀ f ∈ maximalIdeal R, f ≠ 0 → ∀ (A : Type) [CommRing A] [Algebra R A] [Module.Finite R A], (∀ (p : Ideal R) [p.IsPrime], p ≠ maximalIdeal R → Algebra.Etale (Localization.AtPrime p) (TensorProduct R (Localization.AtPrime p) A)) → ∀ (B : Type) [CommRing B] [Algebra R B] [Module.Finite R B] [Module.Free R B] (φ : A →ₐ[R] B ⧸ (Ideal.span {f}).map (algebraMap R B)), ∃ ψ : A →ₐ[R] B, (Ideal.Quotient.mkₐ R ((Ideal.span {f}).map (algebraMap R B))).comp ψ = φ := by
   intro R _ _ hcomp hdim f hf hf0 A _ _ _ he B _ _ _ _ φ
-  have hfe := GlobalTheory.T.formallyEtale_away_of_etale_off_maximalIdeal R A he
+  have hfe := _root_.GlobalTheory.EtaleAway.formallyEtale_away R A he
   generalize hJ : (Ideal.span {f}).map (algebraMap R B) = J at φ ⊢
   rcases subsingleton_or_nontrivial B with hB | hB
   · refine ⟨default, ?_⟩
     haveI : Subsingleton (B ⧸ J) := Ideal.Quotient.subsingleton_iff.2 (Subsingleton.elim _ _)
     exact AlgHom.ext fun x => Subsingleton.elim _ _
   haveI : IsAdicComplete (Ideal.span {f}) R :=
-    GlobalTheory.T.isAdicComplete_of_le_maximalIdeal' R hcomp _ ((Ideal.span_singleton_le_iff_mem _).2 hf)
+    _root_.GlobalTheory.isAdicComplete_of_le_maximalIdeal R hcomp _ ((Ideal.span_singleton_le_iff_mem _).2 hf)
   haveI : IsAdicComplete J B := hJ ▸ GlobalTheory.isAdicComplete_map_of_finite (Ideal.span {f}) B
   have hd : ∀ k : ℕ, ReciprocityTheory.CA.ModDepthGE R (B ⧸ J ^ (k + 1)) 2 := fun k =>
     hJ ▸ GlobalTheory.T.modDepthGE_two_quotient_pow_free_over_regularLocalRing R hdim f hf hf0 B (k + 1) (Nat.le_add_left 1 k)
@@ -74,7 +79,7 @@ theorem liftHom_of_etale_punctured : ∀ (R : Type) [CommRing R] [IsRegularLocal
   have step : ∀ (k : ℕ) (φk : A →ₐ[R] B ⧸ J ^ (k + 1)),
       ∃ ψ : A →ₐ[R] B ⧸ J ^ (k + 2), (Ideal.Quotient.factorₐ R (hle k)).comp ψ = φk := by
     intro k φk
-    refine GlobalTheory.T.algHom_lift_squareZero_of_formallyEtale_away_depth R A hfe (B ⧸ J ^ (k + 2)) (B ⧸ J ^ (k + 1)) (hd (k + 1))
+    refine _root_.GlobalTheory.SquareZeroLift.squareZeroLift R A hfe (B ⧸ J ^ (k + 2)) (B ⧸ J ^ (k + 1)) (hd (k + 1))
       ((hd k).mono (by norm_num)) (Ideal.Quotient.factorₐ R (hle k))
       (Ideal.Quotient.factor_surjective (hle k)) ?_ φk
     rw [pow_two, eq_bot_iff]

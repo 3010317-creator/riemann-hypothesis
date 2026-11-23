@@ -4,16 +4,28 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.IsLamOfLS
 public import Development.AbelianVarietyTheory.Definitions.Foundations.OpLDOneSubMemTriv
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
 public import Mathlib.RingTheory.AdicCompletion.Noetherian
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCuspFunctionalOddWeightOddPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLinearLimitOfCompatibleFamilyStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsRootOfIsAlgClosed
+public import Development.AbelianVarietyTheory.Definitions.Foundations.EeProd
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCuspFunctionalOddWeightOddPrime
+public import Mathlib.Analysis.Normed.Field.Instances
+public import Mathlib.NumberTheory.Padics.Complex
+public import Mathlib.NumberTheory.Padics.RingHoms
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLinearLimitOfCompatibleFamily
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalBMemKummerInvariantSet
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsCuspFunctionalValueGalBEquivariant
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsThBSuccCoeffCongStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KummerBettiModuleFreeFiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LineFunctionalEqPeriodMulStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemSpanEigenOfBaseChangeEigenStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.Letter
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KummerBettiModuleFreeFinite
+public import Mathlib.NumberTheory.Padics.PadicIntegers
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LineFunctionalEqPeriodMul
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemSpanEigenOfBaseChangeEigen
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaBasisLinearCombination
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaKillsFplusDiscreteFormStatement
+public import ReciprocityTheory.GaloisValuations.Global
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaKillsFplusDiscreteForm
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ValuationSubringNonunitsPowModEqZero
 import GroundTheory.PAdicHodge.GaloisOnCp
 import Mathlib.Algebra.Order.Floor.Extended
@@ -163,8 +175,8 @@ theorem exists_limit [IsAlgClosure ℚ Ω] (X : Tower Ω ε) (A : ValuationSubri
   have hlA : (l : Ω) ∈ A.nonunits := (ValuationSubring.mem_nonunits_iff A).2 (val_l_lt_one hj)
   have hhol' : ∃ φ : ℂ → ℂ, X.an X.jK = (φ : Mero) ∧ DifferentiableOn ℂ φ Hs := hhol.imp fun _ h => h.symm
   have hex : ∀ n, ∀ b ∈ X.B N l w, ∃ φ, IsThB X A N l n b φ := fun n b hb =>
-    (GlobalTheory.T.exists_cuspFunctional_oddWeight_oddPrime Ω ε X A N l inferInstance hhol' hl2 hlN (by omega) hlA n w hw b hb).imp fun _ h => h.1
-  obtain ⟨L, hL⟩ := GlobalTheory.T.exists_linearMap_limit_of_compatible_approximations l (X.Fn l) (X.B N l w)
+    (_root_.GlobalTheory.ThEx.thex Ω ε X A N l inferInstance hhol' hl2 hlN (by omega) hlA n w hw b hb).imp fun _ h => h.1
+  obtain ⟨L, hL⟩ := _root_.GlobalTheory.exists_linear_limit_of_compatible_family l (X.Fn l) (X.B N l w)
     (fun n b x => ∃ φ, IsThB X A N l n b φ ∧ x = lam (seqN D j φ)) C
     (fun n b hb => (hex n b hb).elim fun φ h => ⟨_, φ, h, rfl⟩)
     (by
@@ -234,11 +246,11 @@ theorem exists_period [IsAlgClosure ℚ Ω] (X : Tower Ω ε) (A : ValuationSubr
   have hhol' : ∃ φ : ℂ → ℂ, X.an X.jK = (φ : Mero) ∧ DifferentiableOn ℂ φ Hs := hhol.imp fun _ h => h.symm
   obtain ⟨L, F, hL, hb, hg⟩ := exists_limit X A j hj hhol N w D hl2 hN hNl hw lam hfin C hC
   obtain ⟨F₀, hF₀⟩ := hρ
-  obtain ⟨c, hc⟩ := GlobalTheory.T.theta_kills_Fplus_discrete_form l Ω ε X A hhol' (val_l_lt_one hj) N w F₀ hl2 hlN (by omega) hw
-  have := (GlobalTheory.T.kummerBettiModule_free_finite ε X ε.injective hhol N l w hl2 hN hNl hw).1
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.ThKill.th_kills_Fplus_discrete l Ω ε X A hhol' (val_l_lt_one hj) N w F₀ hl2 hlN (by omega) hw
+  have := (_root_.GlobalTheory.KZ.B_free_finite ε X ε.injective hhol N l w hl2 hN hNl hw).1
   have hkill : ∀ i, L (σ i ![1, 0]) = 0 := by
     intro i
-    have hsp := GlobalTheory.T.mem_span_eigen_of_baseChange_eigen' l (X.Fn l) {s : Ω ≃ₐ[ℚ] Ω // s ∈ Ine (F := ℚ) A ∧ ∀ y ∈ F₀, s y = y} (X.B N l w)
+    have hsp := _root_.GlobalTheory.mem_span_eigen_of_baseChange_eigen l (X.Fn l) {s : Ω ≃ₐ[ℚ] Ω // s ∈ Ine (F := ℚ) A ∧ ∀ y ∈ F₀, s y = y} (X.B N l w)
       (fun s => X.galB l s.1) (fun s => (cycZ ℚ Ω l s.1 : ℤ_[l]) ^ (w + 1))
       (fun s => GlobalTheory.KZ.StabGal.galB_mem_B ε X ε.injective hhol N l w hl2 hN hNl hw s.1) (σ i ![1, 0]) (hσ i _) (fun s => by
         obtain ⟨h1, h2⟩ := hF₀ s.1 s.2.1 s.2.2
@@ -250,7 +262,7 @@ theorem exists_period [IsAlgClosure ℚ Ω] (X : Tower Ω ε) (A : ValuationSubr
     refine (Submodule.span_le (p := LinearMap.ker L)).2 ?_ hsp
     rintro _ ⟨b, hbB, hbe, rfl⟩
     refine eq_zero_of_le (C := C * ‖((l : ℕ) : Qbar l) ^ c‖⁻¹) (c := 0) fun n _ => ?_
-    obtain ⟨φ, hφ, -⟩ := GlobalTheory.T.exists_cuspFunctional_oddWeight_oddPrime Ω ε X A N l inferInstance hhol' hl2 hlN (by omega) hlA n w hw b hbB
+    obtain ⟨φ, hφ, -⟩ := _root_.GlobalTheory.ThEx.thex Ω ε X A N l inferInstance hhol' hl2 hlN (by omega) hlA n w hw b hbB
     have hlc : ((l : ℕ) : Qbar l) ^ c ≠ 0 := pow_ne_zero _ l_ne_zero
     have hp : 0 < ‖((l : ℕ) : Qbar l) ^ c‖ := norm_pos_iff.2 hlc
     have hc1 : 1 ≤ ‖((l : ℕ) : Qbar l) ^ c‖⁻¹ := by
@@ -270,7 +282,7 @@ theorem exists_period [IsAlgClosure ℚ Ω] (X : Tower Ω ε) (A : ValuationSubr
     refine (IsUltrametricDist.norm_add_le_max _ _).trans (max_le h2 ?_)
     rw [norm_neg]
     exact h1.trans (mul_le_mul_of_nonneg_right (le_mul_of_one_le_right hC0 hc1) (norm_nonneg _))
-  obtain ⟨κ, per, h1, h2⟩ := GlobalTheory.T.line_functional_eq_period_mul_alt l (X.Fn l) (Ω ≃ₐ[ℚ] Ω) (X.B N l w) (X.galB l) (fun s => mat ρ s) L F
+  obtain ⟨κ, per, h1, h2⟩ := _root_.GlobalTheory.line_functional_eq_period_mul l (X.Fn l) (Ω ≃ₐ[ℚ] Ω) (X.B N l w) (X.galB l) (fun s => mat ρ s) L F
     (fun K hK τ => (exists_restrict j τ.toRingEquiv).imp fun s hs => hg K hK τ s hs) m σ hσ hσg hkill
   exact ⟨L, κ, per, hL, hb, h1, h2⟩
 

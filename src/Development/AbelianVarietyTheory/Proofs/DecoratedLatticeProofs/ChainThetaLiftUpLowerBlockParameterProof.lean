@@ -1,18 +1,19 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsLevMeas
-import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PredMemGamRanks
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsChartsAtTwistPlacesChain
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LiftsCharOfResidueCharAtSplitPlaceStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LinearModelTwistPlaceInThetaFunctionsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LowerBlockParameterTransferInvariantPairingStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCoType
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LowerBlockParameterTransferInvariantPairing
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SetIntegralFundamentalDomainRightTranslateInvari
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitProjectionUnderEqResidueCardEqAbsNorm
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TameLiftResidueCharacterIsTameNotUnramified
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainUpwardLiftHeckeParamTransferred
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaLiftChainSplittingCharactersResidueUnramifi
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PredMemGamRanks
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TameLiftResidueCharacterIsTameNotUnramified
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaIntegralConjCuspFormParameterTransfer
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaKernelMulConjCuspFormIntegrableOn
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaLiftChainSplittingCharactersResidueUnramifi
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DegreeOnePrimeReductionSplitPlaceDictionary
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -241,7 +242,7 @@ theorem GlobalTheory.ChainTw.upQ_holds : GlobalTheory.Published.CuspRapidDecay �
       (fun γ hγ g => by simp only [thetaKO_left hp.weil (hTθ u₁) γ hγ, (hXp z z.2).2 γ hγ]) (ι a)
   have hx0 : GlobalTheory.ParHecke.IsGen ρ ξl ϖ (qPar c PP x k) ⟨cy, hcy⟩ :=
     isGen_of_injective X.subtype (fun _ _ => rfl) Subtype.val_injective hsrc
-  have key := GlobalTheory.T.lowerBlockParameter_transfer_invariantPairing (Fv D.host.F v) (Fin D.R.r) (Blocks k D.R.t) (Blocks (k + 1) D.R.t) ϖ hϖ D.R.t hcard ξl μS μT
+  have key := _root_.GlobalTheory.ParHeckeTransfer.transfer (Fv D.host.F v) (Fin D.R.r) (Blocks k D.R.t) (Blocks (k + 1) D.R.t) ϖ hϖ D.R.t hcard ξl μS μT
     htame hunS hunT W hW hΦ X ρ ⟨cy, hcy⟩ (qPar c PP x k) hx0 (GA D s'.V → ℂ) ((GlobalTheory.PRep.rightReg ℂ (GA D s'.V) ℂ).comp ι') b hb
   have hval : b ⟨GlobalTheory.IndefiniteRowSideFullHecke.VolumeFlatSection.datum ξl⁻¹, hΦ⟩ ⟨cy, hcy⟩ = fun y => conj (p.up φ F y) := by
     funext y

@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsCompactCosetSet
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousLeviUnipotentProjStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsUMOfMem
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousLeviUnipotentProj
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -87,7 +88,7 @@ end GlobalTheory.CompanionTheory.BZPsiPG.FibKer.SmTop
 open GlobalTheory.CompanionTheory.BZPsiPG.FibKer.SmTop in
 theorem GlobalTheory.CompanionTheory.BZPsiPG.FibKer.isSmooth_topRep : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (i : ℕ) {V W : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup W] [Module ℂ W] (τ : Representation ℂ (Mir k i) V), IsSmooth τ → IsSmooth (topRep τ W) := by
   intro k _ _ _ _ i V W _ _ _ _ τ hτ v
-  have hU : Continuous (uMh k i) := (GlobalTheory.T.continuous_levi_unipotent_proj k i).2.1.comp continuous_toAdd
+  have hU : Continuous (uMh k i) := (_root_.GlobalTheory.CompanionTheory.BZPsiPG.continuous_levi_uM_mirProj k i).2.1.comp continuous_toAdd
   suffices h : IsOpen (stabSub (topRep τ W) v : Set (Multiplicative (Fin i → k))) from h
   induction v using TensorProduct.induction_on with
   | zero =>

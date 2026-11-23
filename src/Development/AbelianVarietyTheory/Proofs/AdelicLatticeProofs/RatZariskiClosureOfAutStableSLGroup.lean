@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.AdelicPair
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EvalComplexPolyEqZeroOnRatZariskiClosureStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RatZariskiClosurePointsIsGroupStatement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EvalComplexPolyEqZeroOnRatZariskiClosure
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RatZariskiClosurePointsIsGroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -83,7 +83,7 @@ theorem exists_poly_of_dual (φ : Module.Dual ℂ (Matrix ι ι ℂ)) :
 
 theorem ratClosure : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (Γ : Set (Matrix ι ι ℂ)), IsPre Γ → IsQGroup (pts Γ ℂ) ∧ vanI (pts Γ ℂ) = vanI Γ ∧ Submodule.span ℂ (pts Γ ℂ) = Submodule.span ℂ Γ := by
   intro ι _ _ Γ h
-  obtain ⟨h1, h2, h3, h4⟩ := GlobalTheory.T.ratZariskiClosurePoints_isGroup ι Γ h ℂ
+  obtain ⟨h1, h2, h3, h4⟩ := _root_.GlobalTheory.ClassFin.pts_group ι Γ h ℂ
   refine ⟨⟨⟨h1, h2, h3, h4, ?_⟩, ?_⟩, vanI_pts Γ, ?_⟩
   · intro σ g hg f hf
     rw [ev_map_aut, hg f hf, map_zero]
@@ -93,7 +93,7 @@ theorem ratClosure : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (Γ : Set (Ma
     refine (Subspace.forall_mem_dualAnnihilator_apply_eq_zero_iff (Submodule.span ℂ Γ) y).1 fun φ hφ => ?_
     obtain ⟨f, hf⟩ := exists_poly_of_dual φ
     rw [← hf]
-    refine GlobalTheory.T.evalComplexPoly_eq_zero_on_ratZariskiClosure ι Γ h.aut_mem f (fun g hg => ?_) y hy
+    refine _root_.GlobalTheory.ClassFin.evC_eq_zero_of_mem_pts_of_stable ι Γ h.aut_mem f (fun g hg => ?_) y hy
     rw [hf]
     exact (Submodule.mem_dualAnnihilator φ).1 hφ g (Submodule.subset_span hg)
 

@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.FirstCoordinateAdmissible
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HermitianWeilActionUnitaryGroupTestFunctionsStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThHSiegelOperatorStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.UnitaryActHalfSpaceStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HermitianWeilActionUnitaryGroupTestFunctions
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThHSiegelOperator
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.UnitaryActHalfSpace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -278,7 +278,7 @@ theorem transH_drop (hΨ : IsType Ψ) {γ : M2 E N} (hγ : γ ∈ UU E N)
     {φ ψ : Matrix (Fin n) (Fin (N + 1)) E → ℂ} (hφ : IsSB φ) (hψ : IsSB ψ)
     (h : TransH Ψ (emb γ) φ ψ) : TransH Ψ γ (dropF φ) (dropF ψ) := by
   intro Z hZ z z'
-  obtain ⟨hden, hact, -⟩ := (GlobalTheory.T.unitary_act_halfSpace_alt E Ψ N γ hγ).2 Z hZ
+  obtain ⟨hden, hact, -⟩ := (_root_.GlobalTheory.SW.unitary_act_halfSpace E Ψ N γ hγ).2 Z hZ
   have hdet : ∀ τ, (hDen Ψ γ Z τ).det ≠ 0 := fun τ => (hden τ).1
   have hdet' : ∀ τ, (hDen' Ψ γ Z τ).det ≠ 0 := fun τ h0 =>
     (hden τ).1 (by rw [← (hden τ).2.1, h0, zero_mul])
@@ -286,8 +286,8 @@ theorem transH_drop (hΨ : IsType Ψ) {γ : M2 E N} (hγ : γ ∈ UU E N)
   obtain ⟨w', hw'⟩ : ∃ w' : CM Ψ n N, w' = fun τ => Matrix.of fun k => z' τ k ᵥ* (hDen Ψ γ Z τ)⁻¹ :=
     ⟨_, rfl⟩
   rw [← hw, ← hw']
-  have hWφ := (GlobalTheory.T.tendsto_thH_pushZ_atTop_thH_dropF E Ψ hΨ n N φ hφ).2 (corZ I Z) (corZ_mem hZ)
-  have hWψ := (GlobalTheory.T.tendsto_thH_pushZ_atTop_thH_dropF E Ψ hΨ n N ψ hψ).2 (corZ I (hAct Ψ γ Z)) (corZ_mem hact)
+  have hWφ := (_root_.GlobalTheory.SW.thH_siegel_operator E Ψ hΨ n N φ hφ).2 (corZ I Z) (corZ_mem hZ)
+  have hWψ := (_root_.GlobalTheory.SW.thH_siegel_operator E Ψ hΨ n N ψ hψ).2 (corZ I (hAct Ψ γ Z)) (corZ_mem hact)
   have L1 := hWφ.2.2 (corV z) (corV z')
   have L2 := hWψ.2.2 (corV w) (corV w')
   simp only [dropZ_corZ, drop_corV] at L1 L2
@@ -316,10 +316,10 @@ theorem transH_drop (hΨ : IsType Ψ) {γ : M2 E N} (hγ : γ ∈ UU E N)
 theorem dropF_weil (hΨ : IsType Ψ) (hn : Even n) {γ : M2 E N} (hγ : γ ∈ UU E N)
     {φ : Matrix (Fin n) (Fin (N + 1)) E → ℂ} (hφ : IsSB φ) :
     dropF (weil Ψ (emb γ) φ) = weil Ψ γ (dropF φ) := by
-  obtain ⟨hsb, htr, -⟩ := GlobalTheory.T.hermitianWeilAction_unitaryGroup_testFunctions E Ψ hΨ n (N + 1) hn (emb γ) (emb_mem hγ) φ hφ
-  have hd := (GlobalTheory.T.tendsto_thH_pushZ_atTop_thH_dropF E Ψ hΨ n N φ hφ).1
-  have hdw := (GlobalTheory.T.tendsto_thH_pushZ_atTop_thH_dropF E Ψ hΨ n N _ hsb).1
-  exact (GlobalTheory.T.hermitianWeilAction_unitaryGroup_testFunctions E Ψ hΨ n N hn γ hγ (dropF φ) hd).2.2.1 _ hdw (transH_drop hΨ hγ hφ hsb htr)
+  obtain ⟨hsb, htr, -⟩ := _root_.GlobalTheory.SW.weil_action E Ψ hΨ n (N + 1) hn (emb γ) (emb_mem hγ) φ hφ
+  have hd := (_root_.GlobalTheory.SW.thH_siegel_operator E Ψ hΨ n N φ hφ).1
+  have hdw := (_root_.GlobalTheory.SW.thH_siegel_operator E Ψ hΨ n N _ hsb).1
+  exact (_root_.GlobalTheory.SW.weil_action E Ψ hΨ n N hn γ hγ (dropF φ) hd).2.2.1 _ hdw (transH_drop hΨ hγ hφ hsb htr)
 
 abbrev up (N : ℕ) : Fin N ⊕ Fin N → Fin (N + 1) ⊕ Fin (N + 1) := Sum.map Fin.succ Fin.succ
 
@@ -480,7 +480,7 @@ theorem sub_mem {h : M2 E (N + 1)} (hh : h ∈ UU E (N + 1))
 
 theorem exists_botSpan {g : M2 E (N + 1)} (hg : g ∈ UU E (N + 1))
     (h0 : ∀ a, g.toBlocks₂₁ a 0 = 0) : ∃ γ ∈ UU E N, botSpan g = botSpan (emb γ) := by
-  have hgU := (GlobalTheory.T.unitary_act_halfSpace_alt E (∅ : Finset (E →+* ℂ)) (N + 1) g hg).1
+  have hgU := (_root_.GlobalTheory.SW.unitary_act_halfSpace E (∅ : Finset (E →+* ℂ)) (N + 1) g hg).1
   have h0' : ∀ a, g (Sum.inr a) (Sum.inl 0) = 0 := fun a => by simpa [Matrix.toBlocks₂₁] using h0 a
   obtain ⟨v, hvd⟩ : ∃ v : Fin (N + 1) → E, v = fun i => g (Sum.inl i) (Sum.inl 0) := ⟨_, rfl⟩
   have hv : v ≠ 0 := by

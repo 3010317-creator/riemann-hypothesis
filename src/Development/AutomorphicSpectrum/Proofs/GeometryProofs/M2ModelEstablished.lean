@@ -1,8 +1,9 @@
 module
 
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.SeparableFormGroupElementFixesUniquePositiveLine
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.M2CurveEstablishedStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.M2ModelOfCurveBoundStatement
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.CurveSemiAbelianConjecture
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.M2CurveEstablished
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.M2ModelOfCurveBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,6 +47,6 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.G
 
 namespace GlobalTheory.CompanionTheory.Ar.Conj
 
-theorem m2Model_holds : RootLineDeRhamModel := GlobalTheory.T.rootLineDeRhamModel_of_curveSemiAbelian GlobalTheory.T.curveSemiAbelianConjecture
+theorem m2Model_holds : RootLineDeRhamModel := _root_.GlobalTheory.CompanionTheory.Ar.Conj.m2Model_of_m2Curve _root_.GlobalTheory.CompanionTheory.Ar.Conj.CurveDegreeNonneg.m2Curve_holds
 
 end GlobalTheory.CompanionTheory.Ar.Conj

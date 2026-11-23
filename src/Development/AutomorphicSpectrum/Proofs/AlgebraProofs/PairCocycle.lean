@@ -1,8 +1,9 @@
 module
 
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsBundles
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FlagIndependenceStatement
-import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.VerticalDivisorsCommuteStatement
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FlagIndependence
+import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.Statements
+import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.VerticalDivisorsCommute
 import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.OfSteps
 import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PPairCocycle
 import Mathlib.Algebra.Order.Floor.Extended
@@ -52,6 +53,6 @@ namespace GlobalTheory.CompanionTheory.CommAlg.PairCocycleClosed
 open GroundTheory.Heights₂.Heights.NumbersDVR
 
 theorem pairCocycle : PairCocycle.Statement :=
-  PairCocycle.proof GlobalTheory.T.flag_independence GlobalTheory.T.vertical_divisors_commute IntNumAddFirst.full
+  PairCocycle.proof _root_.GlobalTheory.CompanionTheory.CommAlg.FlagIndependence.main _root_.GlobalTheory.CompanionTheory.CommAlg.VerticalDivisors.verticalDivisorsCommute IntNumAddFirst.full
 
 end GlobalTheory.CompanionTheory.CommAlg.PairCocycleClosed

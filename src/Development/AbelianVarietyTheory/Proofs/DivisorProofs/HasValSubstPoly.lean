@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasPAdicPowerSeriesValueAddSmulMapStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasPAdicPowerSeriesValueMapOfContinuousEvaluatioStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasPAdicPowerSeriesValueAddSmulMap
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasPAdicPowerSeriesValueMapOfContinuousEvaluatio
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,14 +61,14 @@ theorem hasVal_subst_poly : ∀ (p : ℕ) [Fact p.Prime] (B O Q : Type) [CommRin
       simp [up, Finsupp.prod, map_prod, map_pow]
     have hEp : E (α.prod fun s n => (u s) ^ n) = α.prod fun s n => (E (u s)) ^ n := by
       simp [Finsupp.prod, map_prod, map_pow]
-    have hv := GlobalTheory.T.hasPAdicPowerSeriesValue_map_of_continuousEvaluation p B O Q θ hF σ z hz E hE (α.prod fun s n => (u s) ^ n)
-    have hs := (GlobalTheory.T.hasPAdicPowerSeriesValue_add_smul_map p B O Q θ hF σ z _ 0 _ 0 hv).2.1 c
+    have hv := _root_.GlobalTheory.hasVal_map_of_isEval p B O Q θ hF σ z hz E hE (α.prod fun s n => (u s) ^ n)
+    have hs := (_root_.GlobalTheory.QLog.ValLin.hasVal_add_smul_map p B O Q θ hF σ z _ 0 _ 0 hv).2.1 c
     rw [hprod]
     convert hs using 1
     · rw [MvPowerSeries.smul_eq_C_mul]; rfl
     · rw [hEp]; simp [Finsupp.prod, map_prod, map_pow]
   | add f g hf hg =>
     rw [MvPolynomial.coe_add, subst_add ha, map_add (f := _)]
-    exact (GlobalTheory.T.hasPAdicPowerSeriesValue_add_smul_map p B O Q θ hF σ z _ _ _ _ hf).1 hg
+    exact (_root_.GlobalTheory.QLog.ValLin.hasVal_add_smul_map p B O Q θ hF σ z _ _ _ _ hf).1 hg
 
 end GlobalTheory.QLog

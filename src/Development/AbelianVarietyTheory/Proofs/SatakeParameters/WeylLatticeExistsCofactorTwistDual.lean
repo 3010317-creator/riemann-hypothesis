@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PosOkId
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CofactorTwistRelationRowDivSwapStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsCofactorTwistHighestWeightStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RowDivRowWeightStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CofactorTwistRelationRowDivSwap
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsCofactorTwistHighestWeight
+public import Formalism.GradedWeylDivisibility.StatementA
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RowDivRowWeight
 import Formalism.GradedWeylDivisibility.DualWeylDominanceOf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -59,14 +60,14 @@ theorem applyWord_hw_cofRel (R : Type) [CommRing R] [IsDomain R] (m : ℕ) (ν :
     (∃ μ : Fin (m + 1) → ℕ, IsWeightedHomogeneous (rowW (m + 1) (m + 1)) (applyWord R w (hw R le_rfl ν)) μ) ∧
       ∃ g ∈ weyl R (m + 1) (m + 1) le_rfl (nuDual ν), CofRel R m ν (applyWord R w (hw R le_rfl ν)) g := by
   induction w with
-  | nil => exact ⟨⟨_, hwRowWeight R _ _ le_rfl ν hν⟩, GlobalTheory.T.exists_cofactorTwist_highestWeight R m ν hν h0⟩
+  | nil => exact ⟨⟨_, hwRowWeight R _ _ le_rfl ν hν⟩, _root_.GlobalTheory.ValCmp.exists_cofRel_hw R m ν hν h0⟩
   | cons x w ih =>
     obtain ⟨a, b, k⟩ := x
     obtain ⟨⟨μ, hμ⟩, g, hg, hrel⟩ := ih
     have hstep : applyWord R ((a, b, k) :: w) (hw R le_rfl ν) =
         rowDiv R a b k (applyWord R w (hw R le_rfl ν)) := rfl
     rw [hstep]
-    obtain ⟨h1, h2⟩ := GlobalTheory.T.isWeightedHomogeneous_div_and_diag_eq_choose_smul R _ _ μ _ hμ
+    obtain ⟨h1, h2⟩ := _root_.GlobalTheory.ValCmp.rowDiv_rowWeight R _ _ μ _ hμ
     refine ⟨h1 a b k, ?_⟩
     by_cases hab : a = b
     · subst hab
@@ -74,7 +75,7 @@ theorem applyWord_hw_cofRel (R : Type) [CommRing R] [IsDomain R] (m : ℕ) (ν :
       rw [h2 a k]
       unfold CofRel at hrel ⊢
       rw [map_nsmul, ← hrel, mul_smul_comm]
-    · exact ⟨_, zsmul_mem (weylRowDivStable R _ _ le_rfl _ b a k g hg) _, GlobalTheory.T.cofactorTwistRelation_rowDiv_swap R m ν a b k _ g hab hrel⟩
+    · exact ⟨_, zsmul_mem (weylRowDivStable R _ _ le_rfl _ b a k g hg) _, _root_.GlobalTheory.ValCmp.cofRel_rowDiv R m ν a b k _ g hab hrel⟩
 
 theorem weyl_exists_cofRel : ∀ (R : Type) [CommRing R] [IsDomain R] (m : ℕ) (ν : Fin (m + 1) → ℕ), Antitone ν →
     ν (Fin.last m) = 0 → ∀ f ∈ weyl R (m + 1) (m + 1) le_rfl ν,

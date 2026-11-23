@@ -5,9 +5,11 @@ public import Formalism.SatakeDualWeyl.StatementG
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsUniqueIsConjAt
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelfDualLatticeIndexEqLocalUnitaryIndexAtInertStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelfDualSumLe
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.StdLatticeMapEqIffMemGLintValuationSubringStatement
+public import Formalism.SatakeDualWeyl.Statement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.StdLatticeMapEqIffMemGLintValuationSubring
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsPrimeIdemOfInert
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsSphericalDoubleCosetLabelIffDecreasing
+public import ReciprocityTheory.ResidueCardinality.ArtinOntoB
 import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -44,7 +46,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import ReciprocityTheory.ResidueCardinality.ArtinOntoB
 
 @[expose] public section
 
@@ -123,7 +124,7 @@ theorem indexSum_inert : ∀ (D : D7) (W : HSp D) (n : ℕ), 2 * W.rank + 5 ≤ 
         Submodule.span O (Set.range (Pi.basisFun K (Fin W.rank))) := by
     intro x hx he
     obtain ⟨g, hg, rfl⟩ := Finset.mem_image.1 hx
-    have h1 := (GlobalTheory.T.stdLattice_map_eq_iff_mem_GLint_valuationSubring K O W.rank _).1 he
+    have h1 := (_root_.GlobalTheory.GLintLattice.stdLattice_map_eq_iff_mem_GLint K O W.rank _).1 he
     have h2 := (hGC.2.2.2 (H g)).2 h1
     rw [hH g hg] at h2
     exact (hC g hg).2 h2
@@ -145,7 +146,7 @@ theorem indexSum_inert : ∀ (D : D7) (W : HSp D) (n : ℕ), 2 * W.rank + 5 ≤ 
       rw [Subgroup.coe_mul, Subgroup.coe_inv, hcomp, Submodule.map_comp, ← he, ← Submodule.map_comp, ← hcomp, inv_mul_cancel]
       ext y
       simp
-    have h1 := (GlobalTheory.T.stdLattice_map_eq_iff_mem_GLint_valuationSubring K O W.rank _).1 hm
+    have h1 := (_root_.GlobalTheory.GLintLattice.stdLattice_map_eq_iff_mem_GLint K O W.rank _).1 hm
     have h2 := (hGC.2.2.2 _).2 h1
     rw [map_mul, map_inv, hH g hg, hH g' hg'] at h2
     rw [hdist g hg g' hg' h2]

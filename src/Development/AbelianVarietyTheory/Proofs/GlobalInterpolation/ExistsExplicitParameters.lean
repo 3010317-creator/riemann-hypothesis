@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.ThinScalesIffHostBound
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.GoodTopCountLeConstMulLog
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ParametersWindowsOfExplicitParametersStatement
+public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.PairRowIffQdRows
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.WindowsOfExplicitParameters
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -114,7 +115,7 @@ theorem exists_sizeData_explicit : ∀ (eps : ℝ) (C : FC) (cD ch : ℝ), 0 < e
   have hGam : 1 ≤ C.CGam := hmid _ (by simp [FC.cMid])
   have hCt : C.Ct = 401 := hfix.2.2.2.2.2.2.2.2.2
   obtain ⟨x1, hx1⟩ := bottom_window_le eps C.GK h0 h1 hLa
-  obtain ⟨x2, hx2⟩ := GlobalTheory.T.windows_of_explicitParameters eps cD ch C.P.Cpde h0 h1 hcD hch
+  obtain ⟨x2, hx2⟩ := _root_.GlobalTheory.EX.windows_of_large_scale eps cD ch C.P.Cpde h0 h1 hcD hch
   refine ⟨max (max x1 x2) ((max C.P.Cpde 1) ^ (100 / eps)), ?_⟩
   intro s D aT bT he hx0 hR hH hHC hdl hDel hCT2 hW heta hG hwin htop hA
   have hx : max x1 x2 ≤ s.x := le_trans (le_max_left _ _) hx0

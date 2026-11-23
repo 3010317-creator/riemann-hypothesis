@@ -3,9 +3,8 @@ module
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BasePartFlagPt
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PullbackPullback
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BaseVectorProperties
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.BlockDiagonalMinorVanishing
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsUpperOfMinors
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAdjacentArithVarietySecondStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAdjacentArithVarietySecond
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAdjacentPluckerOrbit
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAnalyticProjectionBijective
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagPointTriangularChangeOrbit
@@ -13,6 +12,7 @@ public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsParabolicTra
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LowerUnipotentFamilyAnalytic
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PlkFlagPt
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PluckerNonvanishingOrbitInvariant
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.BlockDiagonalMinorVanishing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -152,7 +152,7 @@ theorem vector_of_chart : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, F
     have e2 := FA.pr_eq x₀
     rw [hx₀] at e2
     exact orbit_trans (orbit_symm e1) e2
-  obtain ⟨h, t, hh, ho⟩ := GlobalTheory.T.flag_adjacent_arith_variety_second K ι Φ y Ψ N j M n BM d τ a b k₀ ca cb hb hab hk hca hcb FA.Re.arith l _ hO _
+  obtain ⟨h, t, hh, ho⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.FC.exists_flags_of_point K ι Φ y Ψ N j M n BM d τ a b k₀ ca cb hb hab hk hca hcb FA.Re.arith l _ hO _
     hz hbase
   obtain ⟨hbv, hgood, -, -⟩ := bvec_good K ι Φ y Ψ N j M n BM l _ hO
   obtain ⟨hw0, hw1⟩ := fstPt_sndPt_wVec K ι Φ y Ψ N j M τ a b k₀ ca cb hb hab hk hca hcb (BM.F l)

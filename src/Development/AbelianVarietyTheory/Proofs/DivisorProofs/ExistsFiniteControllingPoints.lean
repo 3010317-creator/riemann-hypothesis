@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CharZeroFunctionField
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinitePointsRegularDivAffineOpenStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsEqnIffGeneratesAtInv
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinitePointsRegularDivAffineOpen
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -72,7 +73,7 @@ theorem exists_finite_controlling_points : ∀ (k : Type) [CommRing k] (X : Sche
   choose V jj hV hxV a hVj ha using hloc
   have hne : ∀ y, fnOf (V y) (gen_mem (hxV y)) (a y) ≠ 0 := by
     intro y; rw [ha]; exact mul_ne_zero hs0 (P.r' (jj y)).ne_zero
-  choose T hTfin hT using fun y => GlobalTheory.T.exists_finite_points_regular_div_affineOpen X (V y) (hV y) (gen_mem (hxV y)) (a y) (hne y)
+  choose T hTfin hT using fun y => _root_.GlobalTheory.exists_finite_points_regAt_div_of_affine X (V y) (hV y) (gen_mem (hxV y)) (a y) (hne y)
   obtain ⟨t, ht⟩ := isCompact_univ.elim_finite_subcover (fun y => (V y : Set X)) (fun y => (V y).isOpen)
     (fun y _ => Set.mem_iUnion.2 ⟨y, hxV y⟩)
   refine ⟨⋃ y ∈ t, T y, t.finite_toSet.biUnion fun y _ => hTfin y, ?_⟩

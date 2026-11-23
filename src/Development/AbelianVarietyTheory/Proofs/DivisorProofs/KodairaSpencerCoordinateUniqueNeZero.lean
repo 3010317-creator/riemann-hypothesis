@@ -1,10 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsKSIffKsRel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroTangentOfJacobianDerivsVanishStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsJacobianEvalRingPointNeZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueModificationLiftSqZeroFlagStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniversalFirstOrderDeformationStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitMkOfFormallyUnramified
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroTangentOfJacobianDerivsVanish
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
+public import Development.AbelianVarietyTheory.Definitions.Divisors.UnitaryWeightExponentVectorSignatureWeightMuZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsJacobianEvalRingPointNeZero
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NonemptyCuspFrame
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueModificationLiftSqZeroFlag
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniversalFirstOrderDeformation
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.FrameBorelGroupoidProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -86,13 +90,13 @@ theorem exists_datum {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Hos
   obtain ⟨alg, hQex⟩ := exists_chartFr (z ≫ toFlag M) hfo
   obtain ⟨Q, hQ⟩ := hQex k hk
   have hzQ : z ≫ toFlag M = X.ptY Q := FlagCover.eq_ptY hQ.lies
-  obtain ⟨W, v, hWP, hWv, hv, hinj⟩ := GlobalTheory.T.exists_universal_first_order_deformation X K Q (hKS K Q)
+  obtain ⟨W, v, hWP, hWv, hv, hinj⟩ := _root_.GlobalTheory.FlagTan.KSIso.tanFrame_of_universal_injective X K Q (hKS K Q)
   have hW0 : spMap (TrivSqZeroExt.fstHom K K (TIx Dw (psiSet H) → K)).toRingHom ≫ X.ptY W = z ≫ toFlag M := by
     have e : (TrivSqZeroExt.fstHom K K (TIx Dw (psiSet H) → K)).toRingHom =
         (TrivSqZeroExt.fstHom c.F K (TIx Dw (psiSet H) → K)).toRingHom := RingHom.ext fun _ => rfl
     rw [hzQ, e]; exact X.ptY_frMap hWP
-  obtain ⟨W', hW'1, hW'2, hW'3⟩ := GlobalTheory.T.existsUnique_modification_lift_sqZero_flag M z ho (X.ptY W) hW0
-  obtain ⟨g, hg⟩ := GlobalTheory.T.exists_jacobian_evalRingPoint_ne_zero M.K i z hi
+  obtain ⟨W', hW'1, hW'2, hW'3⟩ := _root_.GlobalTheory.ModifLift.exists_lift_sqZero M z ho (X.ptY W) hW0
+  obtain ⟨g, hg⟩ := _root_.GlobalTheory.CanonLB.exists_jacobian_evalPt_ne_zero M.K i z hi
   have hW'O := hW'3 _ hi
   have hpre : ∀ {R : Type} [CommRing R] (φ : TrivSqZeroExt K (TIx Dw (psiSet H) → K) →+* R),
       ⊤ ≤ (spMap φ ≫ W') ⁻¹ᵁ M.K.bundle.U i := fun φ s _ => hW'O (Set.mem_univ ((spMap φ).base s))
@@ -109,7 +113,7 @@ theorem exists_datum {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Hos
     let m' : TIx Dw (psiSet H) → K := fun b => m ((tanOrd Dw).symm b)
     obtain ⟨u, hu⟩ := GlobalTheory.FlagTan.exists_frMap (GlobalTheory.FlagTan.dir c m') W
     obtain ⟨P₀, hP₀⟩ := GlobalTheory.FlagTan.exists_frMap (GlobalTheory.FlagTan.cst c K) Q
-    have key := GlobalTheory.T.eq_zero_tangent_of_jacobian_derivs_vanish M.K i z hi g hg (spMap (GlobalTheory.FlagTan.dir c m').toRingHom ≫ W') (hpre _) ?_ ?_ ?_
+    have key := _root_.GlobalTheory.CanonLB.eq_zero_tangent_of_jacobian M.K i z hi g hg (spMap (GlobalTheory.FlagTan.dir c m').toRingHom ≫ W') (hpre _) ?_ ?_ ?_
     · apply hm0
       have hm'0 : m' = 0 := by
         refine hinj m' u P₀ hu hP₀ ?_

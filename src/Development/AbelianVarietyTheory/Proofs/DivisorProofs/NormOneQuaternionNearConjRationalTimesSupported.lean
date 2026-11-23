@@ -2,10 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.OneMemH0WeightZero
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.NotIsCompactUnivFv
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdditiveStrongApproximationAvoidingFinsetStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRationalPureQuaternionSqOfAdelicStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitIntertwinerAdelicQuaternionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuaternionNormOneTraceOpenAdelesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdditiveStrongApproximationAvoidingFinset
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRationalPureQuaternionSqOfAdelic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitIntertwinerAdelicQuaternion
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuaternionNormOneTraceOpenAdeles
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -145,8 +145,8 @@ theorem key_step : ∀ (F : Type) [Field F] [NumberField F] (a b : F), a ≠ 0 �
     rw [this, hg1, sub_zero]
   have hW' : φ ⁻¹' W ∈ 𝓝 g :=
     (continuous_affine ε).continuousAt.preimage_mem_nhds (by change W ∈ 𝓝 (φ g); rw [hφg]; exact hW)
-  obtain ⟨O, hO, ⟨x, hx⟩, hOu⟩ := GlobalTheory.T.quaternion_norm_one_trace_open_adeles F a b ha hb g hg _ hW'
-  obtain ⟨t, htZ, s, hts⟩ := GlobalTheory.T.additive_strongApproximation_avoiding_finset F S₁ S₂ ε hε hS x O (hO.mem_nhds hx) {1, -1}
+  obtain ⟨O, hO, ⟨x, hx⟩, hOu⟩ := _root_.GlobalTheory.QSA.traceOpen_adele F a b ha hb g hg _ hW'
+  obtain ⟨t, htZ, s, hts⟩ := _root_.GlobalTheory.AddApproxPlaces.exists_approx_notMem F S₁ S₂ ε hε hS x O (hO.mem_nhds hx) {1, -1}
   obtain ⟨u₀, hu₀W, hu₀n, hu₀r⟩ := hOu _ hts
   obtain ⟨h₁, hh₁n, hh₁r⟩ := hsplit (ι t)
   have hc : t ^ 2 - 1 ≠ 0 := by
@@ -166,11 +166,11 @@ theorem key_step : ∀ (F : Type) [Field F] [NumberField F] (a b : F), a ≠ 0 �
   set q := u - algebraMap (AF F) (DA F a b) (ι t) with hq
   have hqq' : q * q = algebraMap (AF F) (DA F a b) (ι (t ^ 2 - 1)) := by
     rw [hqq]; simp [hι]
-  obtain ⟨p, hp0, hpp⟩ := GlobalTheory.T.exists_rational_pure_quaternion_sq_of_adelic F a b ha hb _ hc q hq0 hqq'
+  obtain ⟨p, hp0, hpp⟩ := _root_.GlobalTheory.QSA.PureSq.exists_rat_of_adelic F a b ha hb _ hc q hq0 hqq'
   have hrp0 : (rat p).re = 0 := by simp [rat, hp0]
   have hrpp : rat p * rat p = algebraMap (AF F) (DA F a b) (ι (t ^ 2 - 1)) := by
     rw [← rat_mul, hpp, rat_algebraMap]
-  obtain ⟨y, hy, hyq⟩ := GlobalTheory.T.exists_unit_intertwiner_adelicQuaternion F a b ha hb _ hc (rat p) q hrp0 hq0 hrpp hqq'
+  obtain ⟨y, hy, hyq⟩ := _root_.GlobalTheory.QSA.exists_unit_intertwiner F a b ha hb _ hc (rat p) q hrp0 hq0 hrpp hqq'
   set γ : ℍ[F, a, b] := algebraMap F ℍ[F, a, b] t + p with hγ
   have hγn : nrm γ = 1 := by
     have hre := congrArg QuaternionAlgebra.re hpp

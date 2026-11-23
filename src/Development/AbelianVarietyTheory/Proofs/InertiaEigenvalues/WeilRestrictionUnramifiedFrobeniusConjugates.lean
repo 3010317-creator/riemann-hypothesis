@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TwistStep
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedExtFixedFieldFrobeniusPowDegreeStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdmSt
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedExtFixedFieldFrobeniusPowDegree
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -181,7 +182,7 @@ theorem weilRes_of_basis (hE : ∀ (l : ℕ) [Fact l.Prime] (r : ℕ), 0 < r →
     rw [hpU]
     exact key g
 
-theorem weilRes : WeilRes := weilRes_of_basis GlobalTheory.T.unramifiedExt_fixedField_frobeniusPow_degree
+theorem weilRes : WeilRes := weilRes_of_basis _root_.GlobalTheory.PMon.UnrDeg.fixed_field_deg
 
 end GlobalTheory.PMon
 

@@ -2,14 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsLatMeasurableConst
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GlVolEqTsumSlabVol
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsScalarStableLatticeAutomorphismFundamentalStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsLatticeTraceDualAndTraceDualTraceDualStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LineLatticeClassMeanCovolumeFunctionStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LineLatticeClassMeanSumNonzeroUnfoldStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DefClassNum
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsScalarStableLatticeAutomorphismFundamental
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableSetDetNormPos
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsLatticeTraceDualAndTraceDualTraceDual
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LineLatticeClassMeanCovolumeFunction
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LineLatticeClassMeanSumNonzeroUnfold
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LineLatticeClassMeanTraceFormDualLattice
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableTranslatedLatticeFunctionsStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PoissonSummationInfinitePlaceGaussianLatticeStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TranslatedLatticeAtInfinityFullCovolumeDualStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PoissonSummationInfinitePlaceGaussianLattice
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableTranslatedLatticeFunctions
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TranslatedLatticeAtInfinityFullCovolumeDual
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -95,7 +97,7 @@ theorem latMean_add (hE : IsTotallyComplex E) (hj : 1 ≤ j) {F G : Submodule �
   rw [← ENNReal.tsum_add]
   refine tsum_congr fun c => ?_
   obtain ⟨Λ, hΛ⟩ := Quot.out c
-  obtain ⟨D, hD, hDP, -, -, H⟩ := GlobalTheory.T.exists_scalarStable_latticeAutomorphismFundamentalDomain E hE j Λ hΛ
+  obtain ⟨D, hD, hDP, -, -, H⟩ := _root_.GlobalTheory.LatDom.exists_cone_domain E hE j Λ hΛ
   have hP : MeasurableSet {g | 0 < detNorm E j g} := measurableSet_lt measurable_const (measurable_detNorm E j)
   rw [Measure.restrict_eq_self_of_ae_mem (s := {g | 0 < detNorm E j g}) (ae_detNorm_pos E j hj)] at H
   have hinv : ∀ γ ∈ autGL E j Λ, ∀ g ∈ {g | 0 < detNorm E j g}, γ * g ∈ {g | 0 < detNorm E j g} := by
@@ -137,7 +139,7 @@ theorem measurable_weight_mul_sum (hE : IsTotallyComplex E) (w : ℝ → ENNReal
     (hw : Measurable w) (hΦ : Measurable Φ) (Λ : Submodule (𝓞 E) (Fin j → E)) (hΛ : Submodule.IsFullLattice E Λ) :
     Measurable (fun g : MatInf E j => {g | 0 < detNorm E j g}.indicator (fun g => w (covAt E j (latAt E j Λ g)) *
       ∑' x : {x : VecInf E j // x ∈ latAt E j Λ g ∧ x ≠ 0}, Φ x.1) g) := by
-  obtain ⟨h1, h2, -⟩ := GlobalTheory.T.measurable_translatedLattice_functions E hE j w Φ hw hΦ Λ hΛ
+  obtain ⟨h1, h2, -⟩ := _root_.GlobalTheory.LatMeasurable.measurable_latFun E hE j w Φ hw hΦ Λ hΛ
   convert h1.mul h2 using 2 with g
   by_cases hg : g ∈ {g | 0 < detNorm E j g} <;> simp [hg]
 
@@ -159,7 +161,7 @@ theorem measurable_gauss : Measurable fun x => ENNReal.ofReal (gaussV E j x) := 
   fun_prop
 
 theorem lintegral_gauss : ∫⁻ x, ENNReal.ofReal (gaussV E j x) = 1 := by
-  have h := (GlobalTheory.T.poisson_summation_infinitePlaceGaussian_lattice E j (Submodule.span ℤ (Set.range (Module.finBasis ℝ (VecInf E j))))
+  have h := (_root_.GlobalTheory.FlagBase.poisson_gaussV E j (Submodule.span ℤ (Set.range (Module.finBasis ℝ (VecInf E j))))
     inferInstance).2.2.2
   have hi : Integrable (gaussV E j) := by
     by_contra hn
@@ -172,7 +174,7 @@ theorem poisson_ne_zero (L : Submodule ℤ (VecInf E j)) [DiscreteTopology L] (h
     1 + ∑' x : {x : VecInf E j // x ∈ L ∧ x ≠ 0}, ENNReal.ofReal (gaussV E j x.1) =
       ENNReal.ofReal (covAt E j L)⁻¹ *
         (1 + ∑' x : {x : VecInf E j // x ∈ dualAt E j L ∧ x ≠ 0}, ENNReal.ofReal (gaussV E j x.1)) := by
-  obtain ⟨h1, h2, h3, -⟩ := GlobalTheory.T.poisson_summation_infinitePlaceGaussian_lattice E j L hL
+  obtain ⟨h1, h2, h3, -⟩ := _root_.GlobalTheory.FlagBase.poisson_gaussV E j L hL
   have h0 : ENNReal.ofReal (gaussV E j 0) = 1 := by simp [gaussV]
   have hc : 0 ≤ (covAt E j L)⁻¹ := inv_nonneg.2 (by unfold covAt ZLattice.covolume; exact ENNReal.toReal_nonneg)
   rw [← h0, ← tsum_eq_zero_add E j L fun x => ENNReal.ofReal (gaussV E j x),
@@ -267,8 +269,8 @@ private theorem latMean_dualAt_full (hE : IsTotallyComplex E) (F : Submodule ℤ
   let X := {Λ : Submodule (𝓞 E) (Fin j → E) // Submodule.IsFullLattice E Λ}
   let r : X → X → Prop := fun Λ Λ' => ∃ γ : GL (Fin j) E,
     ∀ y, (γ : Matrix (Fin j) (Fin j) E) *ᵥ y ∈ Λ'.1 ↔ y ∈ Λ.1
-  let d : X → X := fun Λ => ⟨trDual E j Λ.1, (GlobalTheory.T.isLattice_traceDual_and_traceDual_traceDual E j Λ.1 Λ.2).1⟩
-  have hdd : ∀ Λ, d (d Λ) = Λ := fun Λ => Subtype.ext (GlobalTheory.T.isLattice_traceDual_and_traceDual_traceDual E j Λ.1 Λ.2).2
+  let d : X → X := fun Λ => ⟨trDual E j Λ.1, (_root_.GlobalTheory.MeanDual.Alg.isLattice_trDual_and_trDual_trDual E j Λ.1 Λ.2).1⟩
+  have hdd : ∀ Λ, d (d Λ) = Λ := fun Λ => Subtype.ext (_root_.GlobalTheory.MeanDual.Alg.isLattice_trDual_and_trDual_trDual E j Λ.1 Λ.2).2
   have hd : ∀ ⦃a b⦄, r a b → r (d a) (d b) := fun a b ⟨γ, h⟩ => ⟨_, Carries.trDual h⟩
   let D : Quot r → Quot r := Quot.map d hd
   have hD : Function.Involutive D := by
@@ -300,9 +302,9 @@ theorem glVol_step : ∀ (E : Type) [Field E] [NumberField E], IsTotallyComplex 
   have m3 : Measurable ((Set.Ioo (0 : ℝ) 1).indicator fun t => ENNReal.ofReal (t ^ 2)) :=
     Measurable.indicator (by fun_prop) measurableSet_Ioo
   have mg := measurable_gauss E j
-  have e1 := GlobalTheory.T.lineLatticeClassMean_covolume_function E hE j hj1 _ m1
-  have e2 := GlobalTheory.T.lineLatticeClassMean_sum_nonzero_unfold E hE j hj _ _ m2 mg
-  have e3 := GlobalTheory.T.lineLatticeClassMean_sum_nonzero_unfold E hE j hj _ _ m3 mg
+  have e1 := _root_.GlobalTheory.FlagBase.MeanCov.latMean_covAt E hE j hj1 _ m1
+  have e2 := _root_.GlobalTheory.FlagBase.SiegelUnfold.latMean_sum_ne_zero E hE j hj _ _ m2 mg
+  have e3 := _root_.GlobalTheory.FlagBase.SiegelUnfold.latMean_sum_ne_zero E hE j hj _ _ m3 mg
   have e4 := latMean_dualAt_full E j hE (fun L => (Set.Ioo (0 : ℝ) 1).indicator (fun t => ENNReal.ofReal (t ^ 2))
     (covAt E j L) * ∑' x : {x : VecInf E j // x ∈ L ∧ x ≠ 0}, ENNReal.ofReal (gaussV E j x.1))
     (measurable_weight_mul_sum E j hE _ _ m3 mg)
@@ -310,7 +312,7 @@ theorem glVol_step : ∀ (E : Type) [Field E] [NumberField E], IsTotallyComplex 
     (F := fun L => (Set.Ioi (1 : ℝ)).indicator (fun t => ENNReal.ofReal (t⁻¹ - t⁻¹ ^ 2)) (covAt E j L))
     (G := fun L => (Set.Ioi (1 : ℝ)).indicator (fun t => ENNReal.ofReal t⁻¹) (covAt E j L) *
       ∑' x : {x : VecInf E j // x ∈ L ∧ x ≠ 0}, ENNReal.ofReal (gaussV E j x.1))
-    (fun Λ hΛ => (GlobalTheory.T.measurable_translatedLattice_functions E hE j _ _ m1 mg Λ hΛ).1) (measurable_weight_mul_sum E j hE _ _ m2 mg)
+    (fun Λ hΛ => (_root_.GlobalTheory.LatMeasurable.measurable_latFun E hE j _ _ m1 mg Λ hΛ).1) (measurable_weight_mul_sum E j hE _ _ m2 mg)
   rw [e1, e2, lintegral_diff, lintegral_cube, lintegral_gauss] at e5
   rw [e3, lintegral_unit, lintegral_gauss] at e4
   rw [latMean_congr E j hj1 (G := fun L => (Set.Ioo (0 : ℝ) 1).indicator (fun t => ENNReal.ofReal (t ^ 2))
@@ -324,7 +326,7 @@ theorem glVol_step : ∀ (E : Type) [Field E] [NumberField E], IsTotallyComplex 
     have e7 := (ENNReal.add_left_inj (ENNReal.mul_ne_top hC (by simp))).1 e6
     exact (ENNReal.mul_left_inj (by simp) (by simp)).1 e7
   · intro Λ hΛ g hg
-    obtain ⟨κ, hκ, H⟩ := (GlobalTheory.T.translatedLatticeAtInfinity_full_covolume_dual E hE j).1 Λ hΛ
+    obtain ⟨κ, hκ, H⟩ := (_root_.GlobalTheory.LatFacts.lattice_facts E hE j).1 Λ hΛ
     obtain ⟨⟨_, hL⟩, hc, hd, -⟩ := H g hg
     rw [hd]
     exact weighted (by rw [hc]; positivity) (poisson_ne_zero E j _ hL)

@@ -3,11 +3,13 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NonUnitAt
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.ArithBase
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EffectiveCartierIdealSheafLeOfClosedPointsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsChevalleyCorrectionOverProperFibreStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsChevalleyCorrectionOverProperFibre
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GeneratesOfCloseLocalEquationClassicalPointStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalEquationMemComapMapIdealSheafNearPointStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemMapIdealSheafOfForallDivLocalEquationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpreadRegularDivLocalEquationsProperFibreStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.InducedModelMorphismCompStructureMap
+public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.CoeNonzeroLocusCanonicalEqComplRange
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalEquationMemComapMapIdealSheafNearPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemMapIdealSheafOfForallDivLocalEquation
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpreadRegularDivLocalEquationsProperFibre
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -72,16 +74,16 @@ theorem exists_idealSheaf_comap_eq_of_approx : ∀ (o Ω : Type) [CommRing o] [F
   obtain ⟨i, hi⟩ := D.exists_mem x
   have hEq : EqAt M D x (valF M.pt (D.U i) (D.f i)) := ⟨i, hi, rfl⟩
   obtain ⟨k, hk⟩ := GlobalTheory.T.generates_of_close_localEquation_classicalPoint o Ω M₁ M π hπ U D hUD x p y₀ hcen _ hEq
-  obtain ⟨e, he⟩ := GlobalTheory.T.exists_chevalley_correction_over_proper_fibre o Ω M₁ M π hπ hprop hn₁ hn U D hU hUD (π x) hz k
+  obtain ⟨e, he⟩ := _root_.GlobalTheory.FibreCorr.exists_correction o Ω M₁ M π hπ hprop hn₁ hn U D hU hUD (π x) hz k
   obtain ⟨F, hFm, h1, h2⟩ := hF e
   obtain ⟨G, b, hFGb, hfib, hb⟩ := he ⟨F, hFm⟩ h2
   have hGf : (G : Ω) / valF M.pt (D.U i) (D.f i) ∈ M.O x := hfib x rfl _ hEq
   have hnorm : ‖M.val (gPt p ≫ y₀) ((G : Ω) + b)‖ = ‖M.val (gPt p ≫ y₀) (valF M.pt (D.U i) (D.f i))‖ := by
     rw [← hFGb]; exact h1 _ hEq
   obtain ⟨hG0, hfG⟩ := hk G b hnorm hb hGf
-  obtain ⟨V, g, hzV, hg, hV⟩ := GlobalTheory.T.spread_regular_div_localEquations_proper_fibre o Ω M₁ M π hπ hprop D (π x) G G.2 hfib
-  have hgI := GlobalTheory.T.mem_map_idealSheaf_of_forall_div_localEquation o Ω M₁ M π hπ hprop D V g (by rw [hg]; exact hV)
-  obtain ⟨W, h, hxW, hW⟩ := GlobalTheory.T.localEquation_mem_comap_map_idealSheaf_near_point o Ω M₁ M π hπ D V g x i hzV hi hgI (by rw [hg]; exact hG0) (by rw [hg]; exact hfG)
+  obtain ⟨V, g, hzV, hg, hV⟩ := _root_.GlobalTheory.Poinc.spread_regular_div o Ω M₁ M π hπ hprop D (π x) G G.2 hfib
+  have hgI := _root_.GlobalTheory.Poinc.mem_map_idealSheaf_of_forall_div o Ω M₁ M π hπ hprop D V g (by rw [hg]; exact hV)
+  obtain ⟨W, h, hxW, hW⟩ := _root_.GlobalTheory.Poinc.resG_f_mem_comap_map_ideal o Ω M₁ M π hπ D V g x i hzV hi hgI (by rw [hg]; exact hG0) (by rw [hg]; exact hfG)
   exact ⟨W, i, h, hxW, hW⟩
 
 

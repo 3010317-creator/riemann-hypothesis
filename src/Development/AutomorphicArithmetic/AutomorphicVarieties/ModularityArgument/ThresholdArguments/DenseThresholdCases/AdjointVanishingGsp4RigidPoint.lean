@@ -3,9 +3,9 @@ module
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.WsLink
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.AutomorphicPointGalois
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.ResidueFlagPoints.ResLeMemDec
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.DeterminantRepresentations.IrrIffSpan
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.IrrIffSpan
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.DeterminantRepresentations.RepApi
-import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.AdTransfer
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.TNiceFour
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.TPhiEx
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.VWBridge
@@ -14,13 +14,14 @@ public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimura
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.AutomorphicCharacters.CharpolySmulScale
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.AutomorphicCharacters.IrrOfStab
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.EigenbasisLifts.TrPlus
-import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.PhiCharacterResidues.ConjPlace
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.ProjectiveLineFlags.CondC
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.ProjectiveLineFlags.CondDRoots
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.ResidueFlagPoints.PowMemOpen
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.ResidueFlagPoints.PtFlag
-import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.ResidueFlagPoints.ResLeCont
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.ResidueFlagPoints.ResOneOfMap
+import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.AdTransfer
+import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.PhiCharacterResidues.ConjPlace
+import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.ResidueFlagPoints.ResLeCont
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -99,7 +100,7 @@ theorem adjoint_vanishing_gsp4_rigid_point (hU : _root_.UpperTheory.V.Ws.Unramif
   have hirr : Af.IsIrr (K.rhoQ 0 (r.comp (resQ T.F))) :=
     (auIrr _ (r.comp (resQ T.L)) hi fun g => ⟨IntermediateField.fixingSubgroupEquiv T.L g, rfl⟩).2 (K.twc 0)
   have hfull : Eb.Full (K.rhoQ 0 (r.comp (resQ T.F))) :=
-    (AlgebraTools.Det.irrIffSpan (W.mat _)).1 fun N hN => hirr.2.2 N le_top fun g v hv => hN g v hv
+    (_root_.UpperTheory.Reformulated.B.Qe4.irrIffSpan (W.mat _)).1 fun N hN => hirr.2.2 N le_top fun g v hv => hN g v hv
   obtain ⟨hs, hq, -⟩ := phiKer K.V
   let τ := K.rhoQ 0 (r.comp (resQ T.F))
   have hchi (g : G T.L Ω) :
@@ -174,7 +175,7 @@ theorem adjoint_vanishing_gsp4_rigid_point (hU : _root_.UpperTheory.V.Ws.Unramif
     · have h1 := hfl v
       rw [← hρ] at h1
       exact h1
-  have hirr₀ : U3.MatIrr ⊤ (W.mat ρ) := fun N hN => (AlgebraTools.Det.irrIffSpan (W.mat ρ)).2 hfull' N fun g v hv => hN g trivial v hv
+  have hirr₀ : U3.MatIrr ⊤ (W.mat ρ) := fun N hN => (_root_.UpperTheory.Reformulated.B.Qe4.irrIffSpan (W.mat ρ)).2 hfull' N fun g v hv => hN g trivial v hv
   have hfree : Free K.V.frame fun v => (Link.pt φ y).psi v := fun v : W.Vl l T.L => by
     have : IsGalois ℚ Ω := {}
     obtain ⟨g, hg, hc, α, hα, hcp⟩ := hf (K.s.A v) (by simpa using (K.s.hA v _).2 v.2)

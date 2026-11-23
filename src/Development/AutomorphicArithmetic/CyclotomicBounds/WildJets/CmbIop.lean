@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KernelAtPrimeEqSumTorsionTranslates
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaSpaceSelfDualPairAtMostLineStatement
+import Formalism.SharpRestriction.GlobalSchurBounds.StandardLatticesGL3
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaSpaceSelfDualPairAtMostLine
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,11 +63,11 @@ theorem UpperTheory.WildA.cmbIop :
   obtain ⟨s₂, hs₂, hs₂a, -⟩ := hEt
   have hLa := smul_mem_La ⊤ δ (smul_mem_YYl (smul_mem_homL hs₁a hs₂a))
   have hsp : Nat.Coprime (s₂ * s₁) p := Nat.Coprime.mul_left hs₂ hs₁
-  obtain ⟨-, -, -, -, hfg, -⟩ := GlobalTheory.T.theta_space_selfDual_pair_at_most_line D hI.g1 ⊤ δ hC a d _
+  obtain ⟨-, -, -, -, hfg, -⟩ := _root_.GlobalTheory.ThetaLine.theta_line D hI.g1 ⊤ δ hC a d _
     (Or.inr ⟨Ls, Lt, hLs, hLt, rfl⟩)
   have hi₁ := coprime_index (La0 D (tor0 D ⊤ δ) a d) _ hfg _ p hp hsp hLa
   obtain ⟨b, ε, hb, hloc, hε, hεn, hi₀, he0⟩ := hvac.2.2.2.2 p lam (by simp)
-  obtain ⟨-, -, hB, -⟩ := GlobalTheory.T.theta_space_selfDual_pair_at_most_line D hI.g1 ⊤ δ hC a d _ (Or.inl ⟨_, b, hb, rfl⟩)
+  obtain ⟨-, -, hB, -⟩ := _root_.GlobalTheory.ThetaLine.theta_line D hI.g1 ⊤ δ hC a d _ (Or.inl ⟨_, b, hb, rfl⟩)
   obtain ⟨n₀, hn₀⟩ : ∃ n₀, n₀ = ((LaB D (tor0 D ⊤ δ) b).addSubgroupOf (La0 D (tor0 D ⊤ δ) a d)).index := ⟨_, rfl⟩
   have hMp : Nat.Coprime (n₀ * (s₂ * s₁)) p := Nat.Coprime.mul_left (hn₀ ▸ hi₀) hsp
   have hM0 : n₀ * (s₂ * s₁) ≠ 0 := by

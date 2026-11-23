@@ -2,11 +2,12 @@ module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
 public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IdealPart
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsArcGenericFibrePointsBaseChangeStatement
+public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IsFShiftZeroIff
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsArcGenericFibrePointsBaseChange
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsFormalConvergence
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsUniqueFactorOfIsAlgClosed
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.PointFamiliesEqOfValuesLevelsUniversalFamilyStatement
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ThetaSumShiftStatement
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.PointFamiliesEqOfValuesLevelsUniversalFamily
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ThetaSumShift
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,7 +66,7 @@ theorem fsum_mem (j : ℕ) [NeZero j] (α : A.X) (th : (Fin A.gB → ℂ) → �
 theorem exists_shift_mem (k : ℕ) [NeZero k] (la : A.La) (hla : ∀ α, (k : ℤ) ∣ A.be la.y α) :
     ∃ ψ : (Σ α : A.X, A.Theta k α) → A.V → ℂ⸨X⸩,
       ∀ i z, IsFShift A k i.1 i.2 la z (ψ i z) ∧ ψ i z ∈ Conv.convLaurent := by
-  obtain ⟨cz, -, h⟩ := GlobalTheory.T.theta_sum_shift_eq_single_mul_fSum O A k la hla
+  obtain ⟨cz, -, h⟩ := _root_.GlobalTheory.ArcPts.theta_sum_shift O A k la hla
   choose th' hth' _ h' using h
   refine ⟨fun i z => HahnSeries.single (A.be la.y i.1 / k) (cz z) *
     A.FSum k (i.1 + la.y) (th' i.1 i.2 i.2.2) z, fun i z => ⟨((h' i.1 i.2 i.2.2 z).1 _).2 rfl, ?_⟩⟩
@@ -92,8 +93,8 @@ theorem points_frames_eq (L₁ : Out.Laws) (L₂ : Out.Laws2) {E : Type} [Field 
     dif_neg (NeZero.ne j)
   have hg : ∀ (j : ℕ) [NeZero j] i v, φ j i v = g (A.FSum j i.1 i.2 v) := fun j _ i v =>
     (hf j i v).trans (hfg _ (fsum_mem A j _ _ i.2.2 v))
-  obtain ⟨Θ₁, x₁, l₁⟩ := GlobalTheory.T.exists_arcGenericFibrePoints_baseChange E H Xo.X A Xo.univ.t y Φ F f φ hA hf
-  obtain ⟨Θ₂, x₂, l₂⟩ := GlobalTheory.T.exists_arcGenericFibrePoints_baseChange E H Xo.X A Xo.univ.t y Φ F g φ hA hg
+  obtain ⟨Θ₁, x₁, l₁⟩ := _root_.GlobalTheory.ArcBaseChange.exists_fpts_baseChange E H Xo.X A Xo.univ.t y Φ F f φ hA hf
+  obtain ⟨Θ₂, x₂, l₂⟩ := _root_.GlobalTheory.ArcBaseChange.exists_fpts_baseChange E H Xo.X A Xo.univ.t y Φ F g φ hA hg
   have lev : ∀ (k : ℕ) [NeZero k] (ξ : 𝟙_ (Over Xo.X) ⟶ Xo.univ.t.G) (la : A.La),
       Φ.LevelPt k (toUnit _ ≫ ξ) la → ∃ ψ, Θ₁.Lev k (toUnit _ ≫ ξ) ψ ∧ Θ₂.Lev k (toUnit _ ≫ ξ) ψ := by
     intro k _ ξ la h
@@ -108,7 +109,7 @@ theorem points_frames_eq (L₁ : Out.Laws) (L₂ : Out.Laws2) {E : Type} [Field 
       RingHom.ext fun a => hfg _ (Conv.convLaurent.algebraMap_mem (σ a))
     rw [Category.assoc, Category.assoc, hy]
     simp only [spMap, ← Spec.map_comp, ← CommRingCat.ofHom_comp, e]
-  obtain ⟨e₁, e₂⟩ := GlobalTheory.T.pointFamilies_eq_of_values_levels_universalFamily L₁ L₂ E H D l Xo F A.V _ _ φ _ _ Θ₁ Θ₂ hs
+  obtain ⟨e₁, e₂⟩ := _root_.GlobalTheory.FamilyUnique.points_frames_eq L₁ L₂ E H D l Xo F A.V _ _ φ _ _ Θ₁ Θ₂ hs
     (fun v => lev _ _ _ (levA v)) (fun v hv => lev _ _ _ (levM v hv)) v
   refine ⟨(x₁ v).1.symm.trans (e₁.trans (x₂ v).1), fun j hj => ?_⟩
   rw [← (x₁ v).2 j hj, ← (x₂ v).2 j hj]

@@ -5,17 +5,17 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.GlobalTheta.IsS
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GramNear
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MatC
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TrMMemFramesEIff
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CoordinateHaarMeasureStatement
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CoordinateHaarMeasure
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.GramRightActionIdentities
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HermitianMatricesLocallyCompactBorel
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteAdeleHaarMapEqScaledVolumeStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteAdelesLocalRingTotallyRealStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRingStatement
+public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteAdeleHaarMapEqScaledVolume
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteAdelesLocalRingTotallyReal
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.DenLE
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanCompactSetDensityBoundedStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanHermitianScalingByUnitsStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanMeasureScalingByUnitsStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ComplexCoordinatesExistAtInfinityStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DensityBoundFromBoxVolumeGrowthStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DisintegrationAlongContinuousQuotientMapStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GoodSetCompactLinearlyIndependentStatement
@@ -23,6 +23,9 @@ public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.Measurab
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SchwartzArchContinuousIntegrableStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ShearPreservesArchimedeanHaarStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ShearPushforwardHermitianMeasureStatement
+import Formalism.UnipotentAdelicQuotients.SWXSDefs
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ComplexCoordinatesExistAtInfinityStatement
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicLocalCompactness.T2SpaceTensorProductFiniteExtension
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.TensTop
 import Mathlib.Algebra.Order.Floor.Extended
@@ -206,17 +209,17 @@ theorem avgInf_tendsto : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
   intro F E _ _ _ _ _ σ hCM M J hJ n hn hM d b lam hinf minf hminf c φ hφ
   classical
   have hlam : lam.IsAddHaarMeasure := hinf.1
-  obtain ⟨ρ0, e, hρ0, he, hρe, -⟩ := GlobalTheory.T.infinite_adele_haar_map_eq_scaled_volume F hCM.1
+  obtain ⟨ρ0, e, hρ0, he, hρe, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.real_iso F hCM.1
   obtain ⟨τ₀, κ, hco⟩ := GlobalTheory.T.complex_coordinates_exist_at_infinity F E σ hCM ρ0 e hρ0 he hρe
   obtain ⟨hκ, -, hκa⟩ := isSplitK_of_isCoord hCM hco
-  have hloc := GlobalTheory.T.infinite_adeles_local_ring_totally_real F hCM.1
+  have hloc := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hCM.1
   obtain ⟨hTR, hLC, hSC, hT2, -⟩ := id hloc
   haveI := hTR
   haveI := hLC
   haveI := hSC
   haveI := hT2
   haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  obtain ⟨hTK, hLK, hSK, hTK2, -, -, -, hBor, -, -⟩ := GlobalTheory.T.tensor_locally_compact_ring F E σ hCM (Ainf F)
+  obtain ⟨hTK, hLK, hSK, hTK2, -, -, -, hBor, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Ainf F)
   haveI := hTK
   haveI := hLK
   haveI := hSK
@@ -235,7 +238,7 @@ theorem avgInf_tendsto : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
   haveI i6 : SecondCountableTopology (HermR (Ainf F) σ n) := hSH
   haveI i7 : T2Space (HermR (Ainf F) σ n) := hT2H
   haveI i8 : BorelSpace (HermR (Ainf F) σ n) := ⟨rfl⟩
-  obtain ⟨-, hW, hH⟩ := GlobalTheory.T.coordinate_haar_measure F E σ hCM (Ainf F) d b lam hlam
+  obtain ⟨-, hW, hH⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hCM (Ainf F) d b lam hlam
   haveI := hW n M
   haveI := hH n
   obtain ⟨halg, -, -, hmem, -⟩ := GlobalTheory.CompanionTheory.SW.GramAlg.gram_algebra F E σ hCM M J hJ (Ainf F) n

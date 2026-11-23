@@ -3,11 +3,13 @@ module
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.HeckeOpen
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.NbcOf
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.NormalIntegrality
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AutomorphicMultiplicityEqOfIsoStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAutomorphicSideEmptyLocal
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLocalComponentConjSplitPlaceStatement
+public import Formalism.LocalToGlobal.GaloisLevelStructure.DefsAut
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AutomorphicMultiplicityEqOfIso
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InfOfNodupAlg
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLocalComponentConjSplitPlace
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.HeckeSideStatement
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ImportsTerTailStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAutomorphicSideEmptyLocal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -96,7 +98,7 @@ theorem f_locPol_alt (π : NG.AutRep D.host.E D.R.nV) (s : SplitPlace D.host.E) 
     X ^ D.R.nV + ∑ k ∈ Finset.Icc 1 D.R.nV,
         Polynomial.C ((-1 : ℂ) ^ k * ((normV w : ℕ) : ℂ) ^ (k * (k - 1) / 2) * c k) * X ^ (D.R.nV - k) =
       galPol D.naut (D.naut.lpTw (_root_.GlobalTheory.AutQuot.locOf_alt hL D T (clsA π).rep w) ((1 - (D.R.nV : ℝ)) / 2)) := by
-  obtain ⟨x, hx⟩ := GlobalTheory.T.exists_localComponent_conj_splitPlace D π s w hc
+  obtain ⟨x, hx⟩ := _root_.GlobalTheory.AutQuot.conjLoc D π s w hc
   obtain ⟨hun, hpol⟩ := _root_.GlobalTheory.T.spherical_vector_fixed_local_alt hL D π s w ϖ hc hu J hJ f hf hf0 hfix c hc' x hx
   rw [_root_.GlobalTheory.AutQuot.locOf_eq_alt hL D T hx]
   have hu2 : D.naut.unr (D.naut.lpTw ((T.e w).symm (_root_.GlobalTheory.CuspRep.ParLawsT.locRecT hL (D.nd.plOm.2 w) x))
@@ -119,7 +121,7 @@ theorem exists_nbc_auSide_true_of_empty (hE : IsEmpty D.nd.Loc) :
     { cls := fun _ _ _ π => clsA π
       surj := fun _ _ _ X => ⟨X.rep, AUq.cls_rep X⟩
       iso := fun _ _ _ π π' => clsA_eq_iff π π'
-      mult := fun _ _ _ π => GlobalTheory.T.automorphic_multiplicity_eq_of_iso _ _ _ _ (rep_iso π)
+      mult := fun _ _ _ π => _root_.GlobalTheory.MultIso.mult_eq_of_iso _ _ _ _ (rep_iso π)
       sph := fun _ _ _ π w v _ hv => _root_.GlobalTheory.AutQuot.f_sph_alt D π w v hv
       sat := fun _ _ _ π v w hv Dv hα => f_sat D π v w hv Dv hα
       clsWt := fun _ _ _ a => clsW a

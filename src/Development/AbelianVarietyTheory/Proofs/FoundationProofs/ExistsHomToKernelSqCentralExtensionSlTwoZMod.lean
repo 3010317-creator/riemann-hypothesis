@@ -2,7 +2,9 @@ module
 
 public import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIsSymplecticBasisToMatrixOffDiagDvd
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.Sl2CentralExtensionCommutatorSqStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.Sl2CentralExtensionCommutatorSq
+public import Mathlib.GroupTheory.NoncommCoprod
+public import Mathlib.LinearAlgebra.Matrix.FixedDetMatrices
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -16,8 +18,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.GroupTheory.NoncommCoprod
-public import Mathlib.LinearAlgebra.Matrix.FixedDetMatrices
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -290,7 +290,7 @@ theorem sq_eq_one (l n : ℕ) (hl : l.Prime) (m : ℕ) : 0 < m → Nat.Coprime m
     intro _ hm
     have hp' : Nat.Coprime p (6 * l) := Nat.Coprime.coprime_dvd_left (dvd_pow_self p ha.ne') hm
     have hnd : ¬ p ∣ 6 * l := (Nat.Prime.coprime_iff_not_dvd hp).1 hp'
-    refine GlobalTheory.T.sq_eq_one_of_mem_ker_commutator_central_ext_sl l n p a hl hp ?_ ?_
+    refine _root_.GlobalTheory.sl2_zmod_central_ext_commutator_sq_eq_one l n p a hl hp ?_ ?_
     · refine hp.five_le_of_ne_two_of_ne_three ?_ ?_ <;> rintro rfl <;> apply hnd <;> omega
     · rintro rfl
       exact hnd (dvd_mul_left _ _)

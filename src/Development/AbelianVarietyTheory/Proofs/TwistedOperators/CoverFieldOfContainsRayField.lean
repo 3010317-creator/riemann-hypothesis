@@ -2,8 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.TupPrimeEmpty
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.RayFieldTheta
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.WeberValuesMemOfContainsRayFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.GeometricallyIrreducibleComponentsWeberValuesStatement
+public import Development.AbelianVarietyTheory.Definitions.HeightFunctions.XiValIffXiAt
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.WeberValuesMemOfContainsRayField
+public import Formalism.LocalToGlobal.ProjectiveLattices.CompHt
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.GeometricallyIrreducibleComponentsWeberValues
 import Formalism.LocalRingCardinality.ConjSqrtMinusD
 import Formalism.LocalToGlobal.ProjectiveLattices.LevelPb
 import Mathlib.Algebra.Order.Floor.Extended
@@ -70,9 +72,9 @@ theorem coverField_of_containsRayField : ∀ (D : D7) (G : Type) [Group G] [Fint
     exact Formalism.BasicNotions.Host.sqrtMinusD_sq D.host
   have h3 : 3 ≤ GlobalTheory.IndefiniteRowSideFullHecke.RayFieldTheta.tupLevel R t := hn ▸ l₂.three_le
 
-  have hW := (GlobalTheory.T.weberValues_mem_of_containsRayField D.host.E T.Q.H D.host.K D.what₂.LL (GlobalTheory.IndefiniteRowSideFullHecke.RayFieldTheta.embK D) D.what₂.embLL
+  have hW := (_root_.GlobalTheory.FieldSize.WeberTransport.weberIn_of_containsRayField D.host.E T.Q.H D.host.K D.what₂.LL (GlobalTheory.IndefiniteRowSideFullHecke.RayFieldTheta.embK D) D.what₂.embLL
     (Formalism.L2.Pj.LPb.finrank_K D) hsq _ h3 (hray t)).1
-  refine GlobalTheory.T.geometricallyIrreducible_components_weberValues D T.Q hT.pins ((i : ℕ) + 1) ⟨by omega, by omega⟩ l₂ Xo₂ c₂
+  refine _root_.GlobalTheory.FinalJoin.FieldAlg.fnAlgClosed_of_weberIn D T.Q hT.pins ((i : ℕ) + 1) ⟨by omega, by omega⟩ l₂ Xo₂ c₂
     (GlobalTheory.IndefiniteRowSideFullHecke.RayFieldTheta.tupLevel R t) (by omega) ?_ (Or.inl (hc ▸ hW))
   show Nat.lcm l₂.M l₂.A ∣ _
   rw [hA, Nat.lcm_one_right, hn]

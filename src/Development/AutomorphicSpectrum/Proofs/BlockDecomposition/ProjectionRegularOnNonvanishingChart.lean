@@ -1,14 +1,16 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RatiosEqOfSameOrbit
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ComplexPointLiftsToMulticoneStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsPullHermPullLine
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ComplexPointLiftsToMulticone
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsUnderOfSameOrbitStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PointIdealMultiprojectivePrime
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PointsEqIffSameTorusOrbit
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PointsEqIffSameTorusOrbitStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRes
 public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PSheetOnlyNull
 public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PPtsSheetOnlyNull
 public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PSegreChartZeroSet
+public import Mathlib.Topology.Algebra.MvPolynomial
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +51,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Mathlib.Topology.Algebra.MvPolynomial
 
 @[expose] public section
 
@@ -140,7 +141,7 @@ theorem over_scale_vecAt {X : Scheme.{0}} [IsIntegral X] (i : X ⟶ MP ℤ m n) 
     (b : Fin (m + 1) → ℂ) (hb : ∀ k, b k ≠ 0) :
     Over i y (fun q => b q.1 * vecAt i p y q) ∧
       (fun q : Σ k, Bk n k => b q.1 * vecAt i p y q) ∈ mcPts (ptIdeal (i (genericPoint X))) := by
-  obtain ⟨z', hz', hU⟩ := GlobalTheory.T.complex_point_lifts_to_multicone m n X i y
+  obtain ⟨z', hz', hU⟩ := _root_.GlobalTheory.CompanionTheory.MPDict.exists_mem_mcPts_isUnder m n X i y
   have hne : ∀ k, z' ⟨k, p k⟩ ≠ 0 := fun k => (hU k (p k)).1.1 (hy k)
   have hc : ∀ k, b k / z' ⟨k, p k⟩ ≠ 0 := fun k => div_ne_zero (hb k) (hne k)
   have e : (fun q : Σ k, Bk n k => b q.1 * vecAt i p y q) =
@@ -236,7 +237,7 @@ theorem mem_pieceSet : ∀ (m : ℕ) (n : Fin (m + 1) → ℕ) (X : Scheme.{0}) 
     have h1 := (hlamU v hv.1).1
     have h2 := over_liftOf h1
     exact ratios_eq_of_sameOrbit Ψ
-      ((GlobalTheory.T.points_eq_iff_same_torus_orbit m n X i _ _ _ _ h2 h1).1 rfl) (hΨ0 v hv)
+      ((_root_.GlobalTheory.CompanionTheory.MixZ.Orbit.eq_iff_sameOrbit m n X i _ _ _ _ h2 h1).1 rfl) (hΨ0 v hv)
   have hτd : DifferentiableOn ℂ (projCoord i Ψ ∘ c.finChart.symm) O := by
     intro v hv
     have h1 : DifferentiableAt ℂ (fun v' => ratio (Ψ (segre (lam v')))) v :=

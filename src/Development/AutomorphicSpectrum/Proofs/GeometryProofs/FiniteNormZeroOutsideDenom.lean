@@ -6,13 +6,16 @@ public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.PadicEmbedding
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianTripleSpreadsOut
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenFrameFieldExtension
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenFrameIffEigenspaceBasis
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModelBaseChangeStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueAct
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueEquiv
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFiniteBaseChange
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelPushAlongMap
 public import Development.WeilBound.CoreStatements.SesquilinearFractions.NBasic
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModelBaseChange
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueAct
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFiniteBaseChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -133,7 +136,7 @@ theorem lie_lift {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCommMonObj G] [Smoo
       (Function.Injective g → Function.Injective b) := by
   letI := g.toAlgebra
   subst hx
-  obtain ⟨T, _, _, _, _, M'', j, hl, hj⟩ := GlobalTheory.T.exists_lie_model_base_change S G R R' x V M
+  obtain ⟨T, _, _, _, _, M'', j, hl, hj⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FlagFib.lieModel_liftBaseChange S G R R' x V M
   obtain ⟨f, hf, -⟩ := lieModel_existsUnique_equiv S G R' _ T V' M'' M'
   refine ⟨f.toLinearMap.toAddMonoidHom.comp j.toAddMonoidHom, fun e => ?_, fun c e => ?_, ?_, fun hg => ?_⟩
   · have := hl e

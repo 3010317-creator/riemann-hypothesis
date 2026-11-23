@@ -5,11 +5,11 @@ public import Development.AbelianVarietyTheory.CrystallinePeriods.CrisMapsLoc
 public import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AwayOfInjective
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Acris0TorsionFree
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AcrisFrobeniusFontaineTEqMulStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AcrisLogTeichmullerUniqueGaloisFrobeniusBdRStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLogTeichmullerAcrisEqMuMulUnitStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AcrisFrobeniusFontaineTEqMul
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AcrisLogTeichmullerUniqueGaloisFrobeniusBdR
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLogTeichmullerAcrisEqMuMulUnit
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FontaineTIsUnitBcrisAndUniformizerBdRPlus
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPrimitiveTiltedRootOfUnityLocalPeriodRingsDataStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPrimitiveTiltedRootOfUnityLocalPeriodRingsData
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -93,7 +93,7 @@ theorem φA_xi_sub (e : Per.Fl l) :
 theorem cancel_mu (C : Core l) (x y : Per.Acris l)
     (h : algebraMap (Per.Ainf l) (Per.Acris l) (mu C.ε) * x =
       algebraMap (Per.Ainf l) (Per.Acris l) (mu C.ε) * y) : x = y := by
-  have he := GlobalTheory.T.isPrimitiveTiltedRootOfUnity_localPeriodRingsData l C
+  have he := _root_.GlobalTheory.MemLoc.core_isEps l C
   have hU : IsUnit (algebraMap (Per.Acris l) (Per.Bcris l)
       (algebraMap (Per.Ainf l) (Per.Acris l) (mu C.ε))) :=
     GlobalTheory.MemLoc.TFil.isUnit_mu he
@@ -103,10 +103,10 @@ theorem cancel_mu (C : Core l) (x y : Per.Acris l)
 
 theorem exists_unit (C : Core l) : ∃ u : Per.Acris l, IsUnit u ∧
     (l : Per.Acris l) * u = algebraMap (Per.Ainf l) (Per.Acris l) (Per.φA l (xi C.ε)) := by
-  have he := GlobalTheory.T.isPrimitiveTiltedRootOfUnity_localPeriodRingsData l C
-  obtain ⟨t, ρ, ht, hρ, htρ⟩ := GlobalTheory.T.exists_log_teichmuller_acris_eq_mu_mul_unit l C.ε he.1
-  have h1 : t = C.t := (GlobalTheory.T.acris_logTeichmuller_unique_galois_frobenius_bdR l C.ε C.t he.1 C.t_log).1 t ht
-  have hφt := GlobalTheory.T.acrisFrobenius_fontaine_t_eq_mul l C
+  have he := _root_.GlobalTheory.MemLoc.core_isEps l C
+  obtain ⟨t, ρ, ht, hρ, htρ⟩ := _root_.GlobalTheory.MemLoc.exists_isLogA l C.ε he.1
+  have h1 : t = C.t := (_root_.GlobalTheory.MemLoc.LogFun.log_fun l C.ε C.t he.1 C.t_log).1 t ht
+  have hφt := _root_.GlobalTheory.MemLoc.TPhi.t_phi l C
   rw [← h1, htρ, map_mul, phiA_alg, φA_mu, map_mul, mul_assoc, mul_left_comm (l : Per.Acris l)] at hφt
   have h2 := cancel_mu C _ _ hφt
   have hφρ : IsUnit (phiA l ρ) := hρ.map _

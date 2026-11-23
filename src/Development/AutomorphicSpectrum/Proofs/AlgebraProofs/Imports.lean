@@ -1,7 +1,7 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.FlagMinor
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LocallyFreeOfShortExactStatement
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LocallyFreeOfShortExact
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SumMemLoc
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -78,7 +78,7 @@ theorem main : ∀ {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (R : Sub
       (by rw [hC'eq]; exact hC') (by rw [hLeq]; exact hL)
     rwa [Nat.add_comm] at h
   refine ⟨hΔ, ?_⟩
-  have h := GlobalTheory.T.locally_free_of_short_exact R (LinearMap.inl Ω E E₂) (LinearMap.snd Ω E E₂)
+  have h := _root_.GlobalTheory.CompanionTheory.Ar.Num.LocFreeKernel.main R (LinearMap.inl Ω E E₂) (LinearMap.snd Ω E E₂)
     LinearMap.inl_injective LinearMap.snd_surjective
     (LinearMap.range_inl (R := Ω) (M := E) (M₂ := E₂)) Δ r r₂ hΔ (by rw [hCeq]; exact hC)
   have he : (LinearMap.inl Ω E E₂).toAddMonoidHom = AddMonoidHom.inl E E₂ := by

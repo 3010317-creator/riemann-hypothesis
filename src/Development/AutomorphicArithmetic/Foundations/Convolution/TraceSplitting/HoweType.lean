@@ -13,9 +13,11 @@ public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityA
 public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.ExCusp
 public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.LocIff
 public import Development.AutomorphicArithmetic.Foundations.Convolution.IntegrableConvolution.LineRank
-public import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.OccursBasics
+public import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.SummandFactor
+public import Development.WeilBound.CuspidalAdmissibility.OccursIff
 public import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.OccursIff
 public import Development.AutomorphicArithmetic.Foundations.Convolution.TwistedLocalOrbits.HoweLine
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.NotIsGenericDetRepTwo
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LatticeIndices.CharZeroAdicCompletion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -52,7 +54,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.NotIsGenericDetRepTwo
 
 @[expose] public section
 
@@ -126,7 +127,7 @@ theorem UpperTheory.ConvolutionTheory.T.howeType :
   obtain ⟨hl, -, -, -⟩ := UpperTheory.V.Z.Tf.Orb.gLTop (w.1.adicCompletion E) n
   letI : MeasurableSpace (Gw n w.1) := borel _
   haveI : BorelSpace (Gw n w.1) := ⟨rfl⟩
-  obtain ⟨⟨τ, hτ⟩, -, -⟩ := occursBasics E n μ V w.1 MeasureTheory.Measure.haar hV
+  obtain ⟨⟨τ, hτ⟩, -, -⟩ := _root_.PositivityTheory.TfC.OccursBasics_holds E n μ V w.1 MeasureTheory.Measure.haar hV
   have hloc : (UpperTheory.CBC.Cusp.cx π).locComp w.1 τ :=
     (UpperTheory.ConvolutionTheory.Dp.locIff E n μ π V hπ w.1 τ).2 ((occursIff E n μ V hV w.1 τ).1 hτ)
   have hgen : GlobalTheory.LocGL.IsGeneric τ.ρ := GlobalTheory.CuspRep.Generic.isGeneric_of_isLocComp E n π w.1 τ hloc

@@ -2,9 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.WdOfMono0L
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsWildInertiaCyclotomicElement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DenseFrobeniusGoodSplitPlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFiniteCoefficientSetFrobeniusCharpolysStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIntegralModelRepCoeffRingStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.RankOneUnitary
+public import Formalism.LocalToGlobal.NormalizedHeckeFactors.HeckeStdTwOfStd
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DenseFrobeniusGoodSplitPlaces
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataN
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFiniteCoefficientSetFrobeniusCharpolys
+public import Formalism.SharpRestriction.LevelLetterCocycles.SumRepresentations
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIntegralModelRepCoeffRing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -84,10 +88,10 @@ theorem exists_bigOk (D : D7) (l : ℕ) [Fact l.Prime] (Q : Finset (PlE D.host))
     IsSplitPl D.host v ∧ v ∉ placesOver D.host.E l ∧ v ∉ placesS D l ∧ v ∉ Q
   let U : Set (G D.host.E D.nd.Om) := {σ | ∃ v, Good v ∧ ∃ B : ValuationSubring D.nd.Om,
     IsPlaceOver (F := D.host.E) B v ∧ IsFrob (F := D.host.E) B (normV v) σ}
-  have hU : Dense U := GlobalTheory.T.dense_frobenius_goodSplitPlaces D l Q (Fact.out) hch
+  have hU : Dense U := _root_.GlobalTheory.FrobDense.frob_dense_goodSplit D l Q (Fact.out) hch
   let p : (PlE D.host → ℕ → ℂ) → G D.host.E D.nd.Om → ℂ[X] := fun c σ =>
     if h : σ ∈ U then sysPol D.R.nV c (Classical.choose h) else 0
-  have hS := fun c => GlobalTheory.T.exists_finite_coefficient_set_frobenius_charpolys l ι D.host.E D.nd.Om D.R.nV U (p c) hU
+  have hS := fun c => _root_.GlobalTheory.FrobSysCoef.main l ι D.host.E D.nd.Om D.R.nV U (p c) hU
   choose Sc hSc using hS
   refine ⟨hE.toFinset.biUnion Sc, ?_⟩
   intro c hc K hK ρ hcont hss hchar
@@ -135,7 +139,7 @@ theorem model_of_conj : ∀ {R : Ranks} {H : Host R} {what₂ : Rows.Data R} (N 
       funext g; rw [hρ']; rfl
     rw [e]
     exact (continuous_const.matrix_mul hc).matrix_mul continuous_const
-  obtain ⟨r, Pm, hr⟩ := GlobalTheory.T.exists_integral_model_rep_coeffRing N A i a ρ' hc' (fun g s t => by rw [hρ']; exact hP g s t)
+  obtain ⟨r, Pm, hr⟩ := _root_.GlobalTheory.IntegralModelOverCoeff.exists_integral_model_rep N A i a ρ' hc' (fun g s t => by rw [hρ']; exact hP g s t)
   refine ⟨r, P * Pm, fun g => ?_⟩
   rw [hr g, hρ', mul_inv_rev]
   group

@@ -4,8 +4,11 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IntF
 public import Formalism.LocalToGlobal.IndefiniteReal.FWExist
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoverFormLevelInvariantMemSpanBaseForms
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoverSectionsLinearIndependentAdelicReadings
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsNonzeroDominantSectionEachComponentStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.FamilyUniformisationBasePointOrthogonalBis
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsNonzeroDominantSectionEachComponent
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPullbackSectionToLevelCover
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IMemSiegel
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameMulTriangularOrthonormal
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RealAdelesCmFieldEquivComplexCmType
 import Mathlib.Algebra.Order.Floor.Extended
@@ -46,8 +49,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IMemSiegel
-public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsInertTop
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ValRingLocRing
 
@@ -75,7 +76,7 @@ theorem cc_unique_of_pinned : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0
   obtain ⟨θ, hθ⟩ := (GlobalTheory.Member.infiniteAdele_bijective D).1
   obtain ⟨hr, -⟩ := hT.modelW _ hj _ hσ
 
-  obtain ⟨a, ha, hk⟩ := GlobalTheory.T.exists_nonzero_dominant_section_each_component D T hT _ hj _ hσ (κ i).n (κ i).n_even
+  obtain ⟨a, ha, hk⟩ := _root_.GlobalTheory.CoverNZ.exists_sec_ne_zero_each_comp D T hT _ hj _ hσ (κ i).n (κ i).n_even
   set k₀ := (T.dict ((i : ℕ) + 1) T.σ₀ h).1 with hk₀
   obtain ⟨f, hf, x, hx, hne⟩ := hk k₀
   have hU := hT.unf _ hj _ hσ

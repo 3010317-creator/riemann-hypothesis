@@ -3,9 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FockOfApply
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.PublishedInputsThirdLayer
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAlgebraicOfRoot
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RingAutFixingSmallFieldFixesDeltaValuesStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.GoodSetupCountEqZeroOffBadPlaces
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RingAutFixingSmallFieldFixesDeltaValues
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FixBaseOfFixingField
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FixesUntwistedTupleDataOfFixesSmallFieldStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.CenUsedOfCenReal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -38,7 +40,6 @@ import Mathlib.Tactic.NormNum.NatSqrt
 import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.CenUsedOfCenReal
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.StrictHenselianAcyclic
 
 @[expose] public section
@@ -76,7 +77,7 @@ theorem fixed_at_place_of_local_alt : _root_.GlobalTheory.HeightCounting.Up.Publ
     obtain ⟨σ, hσ⟩ := de_chi_eq Z.good (c.twI w) j (c.sd w) y
     change τ (((Z.ρ.B _ j _).de.chi y : Circle) : ℂ) = _
     rw [hσ]
-    refine GlobalTheory.T.ringAut_fixing_smallField_fixes_delta_values Z.ρ Z.good _ j _ (X.R.C.delAt (D.ntw.l (c.twI w))) (Z.pin.delta _ j _) ?_ τ hτ σ
+    refine _root_.GlobalTheory.DeltaFixed.aut_fixes_delta_values Z.ρ Z.good _ j _ (X.R.C.delAt (D.ntw.l (c.twI w))) (Z.pin.delta _ j _) ?_ τ hτ σ
     unfold Formalism.L2.Host.CharFrame.delAt
     split_ifs
     exacts [H.field.vals.del', H.field.vals.del]

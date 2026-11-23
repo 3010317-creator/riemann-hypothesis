@@ -2,10 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EmbGLMemRealSU
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.IsOrth
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearIndependentComplexMapStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealIndependentSkewMatricesStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearIndependentComplexMap
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.Signature
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealIndependentSkewMatrices
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentHaarRealSUOfMap
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryLieAlgebraSpannedStatement
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Mathlib.LinearAlgebra.Matrix.Trace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryLieAlgebraSpanned
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -150,7 +155,7 @@ theorem abs_det_re_trace {r : ℕ} (D : Matrix (Fin r) (Fin r) ℂ) (hD : D * D 
     ext a b; simp
   have hspan : ∀ j, (Y j)ᴴ ∈ Submodule.span ℝ (Set.range Y) := by
     intro j
-    refine GlobalTheory.T.unitary_lie_algebra_spanned D hdet Y hli hY _ ?_ (by rw [trace_conjTranspose, (hY j).2, star_zero])
+    refine _root_.GlobalTheory.TracelessSkewSpan.mem_span_of_linearIndependent D hdet Y hli hY _ ?_ (by rw [trace_conjTranspose, (hY j).2, star_zero])
     have e1 : ((Y j)ᴴ)ᵀ = (Y j).map (starRingEnd ℂ) := rfl
     have e2 : ((Y j)ᴴ).map (starRingEnd ℂ) = (Y j)ᵀ := by ext a b; simp
     have := congrArg (fun M => D * M * D) (hY j).1
@@ -273,8 +278,8 @@ theorem riemLie_eq_smul_formLie (E : Type) [Field E] [NumberField E] [IsCMField 
     rw [det_mul, det_mul, det_transpose, h] at h1
     simp [← h1] at h2
   have hsk : ∀ i, (e i)ᵀ * G + G * (e i).map cc = 0 := fun i => skew_matrix G (he i).2
-  have hE : LinearIndependent E e := GlobalTheory.T.real_independent_skew_matrices G hG e hsk hli
-  have hR : ∀ τ : X.Ψ, LinearIndependent ℝ (fun i => (e i).map τ.1) := fun τ => GlobalTheory.T.linear_independent_complex_map τ.1 e hE
+  have hE : LinearIndependent E e := _root_.GlobalTheory.linearIndependent_of_skew_of_real G hG e hsk hli
+  have hR : ∀ τ : X.Ψ, LinearIndependent ℝ (fun i => (e i).map τ.1) := fun τ => _root_.GlobalTheory.linearIndependent_real_map_of_fieldEmb τ.1 e hE
   have hmem : ∀ (τ : X.Ψ) i, ((e i).map τ.1)ᵀ * G.map τ.1 + G.map τ.1 * ((e i).map τ.1).map (starRingEnd ℂ) = 0 ∧
       ((e i).map τ.1).trace = 0 := by
     intro τ i
@@ -290,7 +295,7 @@ theorem riemLie_eq_smul_formLie (E : Type) [Field E] [NumberField E] [IsCMField 
     intro Z hZ
     have hX' := (mem_realLie_iff X.Ψ G Z).1 hZ
     have hspan : ∀ τ : X.Ψ, Matrix.of (Z τ) ∈ Submodule.span ℝ (Set.range fun i => (e i).map τ.1) :=
-      fun τ => GlobalTheory.T.unitary_lie_algebra_spanned (G.map τ.1) (det_map_ne G hG τ.1) _ (hR τ) (hmem τ) _ (hX' τ).1 (hX' τ).2
+      fun τ => _root_.GlobalTheory.TracelessSkewSpan.mem_span_of_linearIndependent (G.map τ.1) (det_map_ne G hG τ.1) _ (hR τ) (hmem τ) _ (hX' τ).1 (hX' τ).2
     choose c hc using fun τ => (Submodule.mem_span_range_iff_exists_fun ℝ).1 (hspan τ)
     refine ⟨c, funext fun τ => ?_⟩
     have h1 := coordMap_apply X.Ψ e c τ

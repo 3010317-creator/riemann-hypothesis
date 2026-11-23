@@ -4,15 +4,17 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.RedSurjectiv
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TorsionTowersOfDivisibleGroup
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDimEqOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyDieudonneIntegralityFactorisationStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyIntCastSmulIsogenyDegree
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneFunctorBaseFunctorPropertiesStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneIntegralityAndFaithfulStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EndIsogenyAlgebraFiniteFinrankLeStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EndIsogenyAlgebraInjectiveClearDenom
+public import Mathlib.NumberTheory.Padics.PadicIntegers
+public import Mathlib.RingTheory.WittVector.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WittVectorColengthRangeEqDetValuation
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyIntCastSmulIsogenyDegree
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneFunctorBaseFunctorProperties
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneIntegralityAndFaithful
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqPowSmulOfPDivGroupTorsionTowerMapStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIsogenyCompIffAndDegreeMul
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsogenyFlatFinrank
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WittVectorColengthRangeEqDetValuationStatement
 import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrystallinePull2SumCup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -128,7 +130,7 @@ theorem norm_det_eq_norm_deg : ∀ (p : ℕ) [Fact p.Prime] (T : Theory p) (k : 
     (ψ : ℤ_[p] →+* (WittVector p k)) (f : End A) (d : ℤ_[p]),
     LinearMap.det (T.map (t.map t f.asHom.hom)) = ψ d → ‖d‖ = ‖((deg f.asHom : ℕ) : ℤ_[p])‖ := by
   intro p _ T k _ _ _ A G t _ _ ψ f d hd
-  have hlen := GlobalTheory.T.wittVector_colength_range_eq_det_valuation p k (T.M G) ψ (T.map (t.map t f.asHom.hom)) d hd
+  have hlen := _root_.GlobalTheory.Dieu.ColenDet.colength_det p k (T.M G) ψ (T.map (t.map t f.asHom.hom)) d hd
   by_cases hf : IsIsogeny f.asHom
   · have hb := (GlobalTheory.T.abelianVariety_dieudonne_integrality_factorisation p T k A A G G t t f.asHom).2.1 hf
     have hpos := (isogeny_flat_finrank k A A f.asHom hf).2.2.1
@@ -138,7 +140,7 @@ theorem norm_det_eq_norm_deg : ∀ (p : ℕ) [Fact p.Prime] (T : Theory p) (k : 
     apply hlen.2.1
     intro hinj
     obtain ⟨g, hg0, hfg⟩ := exists_comp_eq_zero_of_not_isIsogeny A f hf
-    have hfun := GlobalTheory.T.dieudonneFunctorBase_functor_properties p (fun _ _ _ => True) T.base k G G G trivial trivial trivial
+    have hfun := _root_.GlobalTheory.Dieu.base_functor_props p (fun _ _ _ => True) T.base k G G G trivial trivial trivial
     have hcomp : t.map t f.asHom.hom ≫ t.map t g.asHom.hom = 0 := by
       have e1 : f.asHom.hom ≫ g.asHom.hom = (1 : A.X ⟶ A.X) := by rw [← comp_hom, hfg, zero_hom]
       exact (TorsionTower.map_comp t t t _ _).symm.trans ((t.map_congr t e1).trans (TorsionTower.map_one t t))
@@ -148,7 +150,7 @@ theorem norm_det_eq_norm_deg : ∀ (p : ℕ) [Fact p.Prime] (T : Theory p) (k : 
       apply End.addEquiv.injective
       rw [map_zero]
       exact (GlobalTheory.T.eq_pow_smul_of_pDivGroup_torsionTower_map p k A A G G t t g.asHom).2
-        ((GlobalTheory.T.dieudonne_integrality_and_faithful p T k G G _).2 h0)
+        ((_root_.GlobalTheory.Dieu.Integrality.exists_pow_smul_and_faithful p T k G G _).2 h0)
     obtain ⟨m, hm⟩ : ∃ m, T.map (t.map t g.asHom.hom) m ≠ 0 := by
       by_contra h
       push Not at h

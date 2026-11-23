@@ -4,7 +4,9 @@ public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.UnderT
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ReferenceCharactersFactorTame
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.IntegralPowerExpansion
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PlaceProjectionZeroIntegralIffComponentsAbove
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GLInvMulCongrOneModUniformizerStatement
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
+public import Mathlib.Topology.Algebra.Valued.ValuationTopology
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GLInvMulCongrOneModUniformizer
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemIntegralGLAtPrimeOfCongruentOneModPowStatement
 import Formalism.LocalRingCardinality.SpanPowerMembership.LocAtA
 import Mathlib.Algebra.Order.Floor.Extended
@@ -62,7 +64,7 @@ theorem inv_mul_cong {K : Type} [Field K] [Valued K (WithZero (Multiplicative �
     (ha : ∀ i j, Valued.v (π⁻¹ * ((a : Matrix (Fin N) (Fin N) K) - 1) i j) ≤ 1)
     (ha₁ : ∀ i j, Valued.v (π⁻¹ * ((a₁ : Matrix (Fin N) (Fin N) K) - 1) i j) ≤ 1) :
     ∀ i j, Valued.v (π⁻¹ * (((a⁻¹ * a₁ : GL (Fin N) K) : Matrix (Fin N) (Fin N) K) - 1) i j) ≤ 1 :=
-  GlobalTheory.T.GL_inv_mul_congr_one_mod_uniformizer π hπ0 hπ a a₁ ha ha₁
+  _root_.GlobalTheory.GL_inv_mul_congr_one π hπ0 hπ a a₁ ha ha₁
 
 theorem glint_of_cong {E : Type} [Field E] [NumberField E] {n : ℕ} (P : HeightOneSpectrum (𝓞 E)) (d : ℕ)
     (g : Sp E n ≃ₗ[E] Sp E n)

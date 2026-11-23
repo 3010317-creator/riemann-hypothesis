@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NoTo
 public import GroundTheory.LocalFields.HerbrandFunction
 public import GroundTheory.LocalFields.SeparableClosure
 public import Mathlib.FieldTheory.Galois.Abelian
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowPrimeMemUnitFiltrationUnitsMinStatement
+public import GroundTheory.LocalFields.ExistsUnitFiltrationUnitsLeAndRangePowLe
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowPrimeMemUnitFiltrationUnitsMin
 public import GroundTheory.LocalFields.ConductorReciprocity
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -60,6 +61,6 @@ theorem pow_mem_upperRamificationGroup_abelian_nat :
   obtain ⟨x, hx, rfl⟩ := Subgroup.mem_map.mp hσ
   rw [← map_unitFiltrationUnits_restrictAb_localArtinMap (Ω := SeparableClosure F) M
     (min (2 * n) (n + e)), ← map_pow]
-  exact Subgroup.mem_map_of_mem _ (GlobalTheory.T.pow_prime_mem_unitFiltrationUnits_min F p e n h x hx)
+  exact Subgroup.mem_map_of_mem _ (_root_.GlobalTheory.PMon.Ram.pow_mem_unitFiltrationUnits F p e n h x hx)
 
 end GlobalTheory.PMon.Ram

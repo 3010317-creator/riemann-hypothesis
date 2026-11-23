@@ -2,8 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
 public import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BasisOfCongrBasisModNilpotentIdealStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TriangularSystemMonomialProductsBasisStatement
+public import Mathlib.Algebra.Algebra.Operations
+public import Mathlib.LinearAlgebra.LinearIndependent.Defs
+public import Mathlib.RingTheory.Ideal.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BasisOfCongrBasisModNilpotentIdeal
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TriangularSystemMonomialProductsBasis
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -97,7 +100,7 @@ theorem GlobalTheory.digitMonomials_basis_mod_pow : ∀ (l : ℕ) [Fact l.Prime]
   let t : ℕ → MvPolynomial ℕ (A ⧸ J ^ n) := fun i =>
     π (MvPolynomial.C (v i : A) * MvPolynomial.X i ^ l + a i * MvPolynomial.X i + b i)
   have ht := fun i => GlobalTheory.EnvLevel.tri_map (Ideal.Quotient.mk (J ^ n)) l i (v i) (a i) (b i) (ha i) (hb i)
-  obtain ⟨htli, htsp⟩ := GlobalTheory.T.triangular_system_monomial_products_basis l (A ⧸ J ^ n) t ht
+  obtain ⟨htli, htsp⟩ := _root_.GlobalTheory.TriBasis.tri_basis l (A ⧸ J ^ n) t ht
   let B : Digits l × (ℕ →₀ ℕ) → MvPolynomial ℕ (A ⧸ J ^ n) := fun x =>
     MvPolynomial.monomial x.1.1 (1 : A ⧸ J ^ n) * x.2.prod fun i m => π (r i) ^ m
   have hK : ∀ i, π (r i) - t i ∈ Ideal.map (MvPolynomial.C : (A ⧸ J ^ n) →+* MvPolynomial ℕ (A ⧸ J ^ n)) I := by
@@ -119,7 +122,7 @@ theorem GlobalTheory.digitMonomials_basis_mod_pow : ∀ (l : ℕ) [Fact l.Prime]
     congr 1
     refine Finset.prod_congr rfl fun i _ => ?_
     rw [Ideal.Quotient.eq.mpr (hK i)]
-  obtain ⟨hBli, hBsp⟩ := GlobalTheory.T.basis_of_congr_basis_mod_nilpotent_ideal (A ⧸ J ^ n) (MvPolynomial ℕ (A ⧸ J ^ n)) (Digits l × (ℕ →₀ ℕ))
+  obtain ⟨hBli, hBsp⟩ := _root_.GlobalTheory.BSP.family_congr_basis_mod_nilpotent (A ⧸ J ^ n) (MvPolynomial ℕ (A ⧸ J ^ n)) (Digits l × (ℕ →₀ ℕ))
     _ B I n hIn htli htsp hBK
   have hBmem : ∀ k : Digits l × (ℕ →₀ ℕ), k.2 ≠ 0 → B k ∈ Ideal.span (Set.range (⇑π ∘ r)) := by
     intro k hk

@@ -1,16 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HkLiftIsPullback
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsGenMovePow
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsTransferPts
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsEquivHeckeKernelSchemePointsHeckeKernels
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsGeneratorHeckeIsogenyLineBundleQuotient
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIsRigIsoOfIsGen
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeckeUniversalIsogenyOnFibresLinearAtRingPointStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeckeUniversalIsogenyOnFibresPreservesOrigin
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsGenMovePow
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSchemeOfProper
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsPullCubicalOfIso
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ObjIsAbelianSchemeDimRigidifiedSym
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsEquivHeckeKernelSchemePointsHeckeKernels
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsGeneratorHeckeIsogenyLineBundleQuotientStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIsRigIsoOfIsGen
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeckeUniversalIsogenyOnFibresLinearAtRingPointStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeckeUniversalIsogenyOnFibresPreservesOriginStatement
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -166,7 +166,7 @@ theorem exists_isHeckeFam_carries : ∀ (E : Type) [Field E] [NumberField E] [Is
     hkMap_surjective Z hx hx', ?_, fun Ω _ _ χ x₁ x₁' Ψ₁ hΨ =>
       ⟨(hfib Ω χ x₁ x₁' Ψ₁ hΨ).1, (hfib Ω χ x₁ x₁' Ψ₁ hΨ).2.1⟩⟩,
     fun Ω _ _ χ x₁ x₁' Ψ₁ hΨ => (hfib Ω χ x₁ x₁' Ψ₁ hΨ).2.2⟩
-  obtain ⟨β, hβ⟩ := GlobalTheory.T.exists_generator_heckeIsogeny_lineBundle_quotient E H Dw l Xo P p i Z T h x x' hx hx'
-  exact exists_isRigIso_of_isGen _ _ _ _ _ _ _ _ β ⟨hkMap_fst Z hx hx', GlobalTheory.T.heckeUniversalIsogenyOnFibres_preserves_origin E H Dw l Xo P p i Z T h x x' hx hx'⟩ hβ
+  obtain ⟨β, hβ⟩ := _root_.GlobalTheory.HeckeEx.exists_gen_isoLB E H Dw l Xo P p i Z T h x x' hx hx'
+  exact exists_isRigIso_of_isGen _ _ _ _ _ _ _ _ β ⟨hkMap_fst Z hx hx', _root_.GlobalTheory.HeckeEx.hkMap_ptSec_one E H Dw l Xo P p i Z T h x x' hx hx'⟩ hβ
 
 end GlobalTheory.HeckeEx

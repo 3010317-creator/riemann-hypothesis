@@ -2,7 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.OmegaFactorization
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TorsTransport
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DifferentIdealPowFinrankEqSpanDiscrStatement
+public import Mathlib.Algebra.AffineMonoid.Basic
+public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
+public import Mathlib.RingTheory.DedekindDomain.Different
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DifferentIdealPowFinrankEqSpanDiscr
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.DefiningCoordinates
+public import Development.AbelianVarietyTheory.Definitions.Divisors.JetAnalytic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +54,6 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Divisors.HasLevelStd
 import Development.AbelianVarietyTheory.Definitions.Divisors.HasQIff
-public import Development.AbelianVarietyTheory.Definitions.Divisors.JetAnalytic
 
 @[expose] public section
 
@@ -93,7 +97,7 @@ theorem exists_int_mul_pow {F : Type} [Field F] [NumberField F] [IsGalois ℚ F]
     simp [latM]
   rw [h1] at hy
   have h2 := pow_mem hy (Module.finrank ℚ F)
-  rw [inv_pow, ← FractionalIdeal.coeIdeal_pow, GlobalTheory.T.differentIdeal_pow_finrank_eq_span_discr' F, FractionalIdeal.coeIdeal_span_singleton,
+  rw [inv_pow, ← FractionalIdeal.coeIdeal_pow, _root_.GlobalTheory.GalDiff.differentIdeal_pow_finrank_eq_span_discr F, FractionalIdeal.coeIdeal_span_singleton,
     FractionalIdeal.spanSingleton_inv] at h2
   obtain ⟨c, hc⟩ := (FractionalIdeal.mem_spanSingleton _).1 h2
   refine ⟨c, ?_⟩

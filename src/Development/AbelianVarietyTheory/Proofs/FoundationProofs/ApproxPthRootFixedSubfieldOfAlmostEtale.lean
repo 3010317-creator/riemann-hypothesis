@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.CosetTrace
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsPthPowerScaleThinShellStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PowMulApproxPowOfAlmostEtaleSeparatingFamilyStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsPthPowerScaleThinShell
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PowMulApproxPowOfAlmostEtaleSeparatingFamily
+public import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,7 +49,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.Analysis.SpecialFunctions.Pow.NNReal
 
 @[expose] public section
 
@@ -80,11 +80,11 @@ theorem approxRoot_fix_of_almostSep : ∀ (L : Type) [Field L] (v : Valuation L 
   · refine ⟨0, zero_mem _, ?_⟩
     simp [hx0, hp.ne_zero]
   obtain ⟨d, hdF, hd0, hdr, hd1⟩ :=
-    GlobalTheory.T.exists_pth_power_scale_thin_shell L v p hp _ ⟨θ, hθ1, hθ⟩ hp0 hp1 r hr1 x hx0
+    _root_.GlobalTheory.AlmostEt.klc_scale L v p hp _ ⟨θ, hθ1, hθ⟩ hp0 hp1 r hr1 x hx0
   have hdN : d ∈ Fix L N := fun σ => hdF ⟨σ.1, Subgroup.mem_top _⟩
   have hx'N : x * d ^ p ∈ Fix L N := mul_mem hx (pow_mem hdN p)
   obtain ⟨w, hwN, hw⟩ :=
-    GlobalTheory.T.pow_mul_approx_pow_of_almostEtaleSeparatingFamily L v p hp G hinv N θ hθ1.le hθ n a b c hc (x * d ^ p) hx'N hd1
+    _root_.GlobalTheory.AlmostEt.cpow_mul_approx_pow_of_isSep L v p hp G hinv N θ hθ1.le hθ n a b c hc (x * d ^ p) hx'N hd1
   have hc0 : c ≠ 0 := by
     intro h
     rw [h, map_zero] at hrc

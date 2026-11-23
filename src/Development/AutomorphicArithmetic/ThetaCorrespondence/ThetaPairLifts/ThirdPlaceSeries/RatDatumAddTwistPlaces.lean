@@ -5,13 +5,15 @@ public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLif
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsLocFac
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPlaceModelPlaceMap
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FiniteDatumFactorsOverTwistPrimesLocalStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ParahoricChainLastTwoStepsRootOfUnityStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.StandardOrderExtendedBasisApplyLowBlock
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ParahoricChainLastTwoStepsRootOfUnity
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RationalDatumFoldrLocalCombinationsStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RootExchangeEntriesMemSchwartzBruhat
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TrueGeometryRowPairProperty
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TupleCharacterAtBasePointDetRootRootOfUnityStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistChainLevelProductInverseScalarLaws
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistParahoricChainLastStepsAgreeColumnsStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.EntryAgree
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistParahoricChainLastStepsAgreeColumns
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistPlaceLastTwoStepEntriesSchwartzBruhat
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.NarrowJetMoments
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsOfStarEq
@@ -112,7 +114,7 @@ theorem lastAgree_of_reads (hW : _root_.GlobalTheory.Fam.AllFamilyConditions W) 
   have hs : (J.G i).s = B.R.m - 2 := by have := (hJ.tw i).steps; omega
   have hL : (I.idx (W.P.I.tup t)).Ok I.Ch I.sel (I.tup (W.P.I.tup t)) (I.cst (W.P.I.tup t)) I.glob (J.G i).s := by
     rw [hs]; exact hI.idx_ok _
-  exact GlobalTheory.T.twistParahoricChain_lastSteps_agree_columns B.fields (B.primes X) B.R I.Ch I.sel _ _ _ B.embLL (J.P i) (J.G i).k _ (J.G i).s _ (J.G i).ν (J.G i).unitVol
+  exact _root_.GlobalTheory.TwLast.lastAgree B.fields (B.primes X) B.R I.Ch I.sel _ _ _ B.embLL (J.P i) (J.G i).k _ (J.G i).s _ (J.G i).ν (J.G i).unitVol
     (hI.idx_ok _).cst_ok (hJ.tw i) _ I.glob hL
 variable (J i) in
 def TranslationCondition (e : XIx (Fin B.R.k) (Fin B.R.t) ((J.G i).s + 1) ≃ Fin (B.R.N ((J.G i).s + 1))) (hm : (J.G i).s + 1 ≤ B.R.m)
@@ -129,7 +131,7 @@ def TranslationCondition (e : XIx (Fin B.R.k) (Fin B.R.t) ((J.G i).s + 1) ≃ Fi
 theorem exists_root_of_unity_moveAt (hm : MovedAt J.A (J.P i) (J.E i) (J.hψ i) (J.sg i) (J.π i)) (e) (he : GlobalTheory.SymBridge.IsOrd GlobalTheory.SymBridge.xPos e)
     (h : (J.G i).s + 1 ≤ B.R.m) (β) : ∃ c : ℂ, (∃ n : ℕ, 0 < n ∧ c ^ n = 1) ∧ _root_.GlobalTheory.TwPlaces.TranslationCondition J i e h β c := by
   obtain ⟨κ, hκ, h1, h2⟩ := hm.pen h β e he
-  obtain ⟨c, hc, h3, h4⟩ := GlobalTheory.T.parahoricChain_last_two_steps_root_of_unity (J.G i).k (J.G i).ν (J.G i).unitVol (J.G i).s (Fin B.R.k) (Fin B.R.t) (J.E i).δ (J.E i).tame
+  obtain ⟨c, hc, h3, h4⟩ := _root_.GlobalTheory.LevelLaw.last_steps_law (J.G i).k (J.G i).ν (J.G i).unitVol (J.G i).s (Fin B.R.k) (Fin B.R.t) (J.E i).δ (J.E i).tame
     (J.E i).η (J.E i).unr κ hκ
   exact ⟨c, hc, κ, h1, h2, h3, h4⟩
 theorem facAt_s_sgnAt_mul_of_moveAt (hW : _root_.GlobalTheory.Fam.AllFamilyConditions W) (ha : a.Is) (haT : a.True) (hJ : J.Reads)

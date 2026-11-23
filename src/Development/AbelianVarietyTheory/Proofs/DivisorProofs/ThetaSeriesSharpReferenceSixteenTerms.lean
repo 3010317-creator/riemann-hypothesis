@@ -1,12 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsChartMember
-import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemePrimeToCharTorsionRationalStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FibreEighthPowerThetaObjectSubfieldStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionFibrePointTransferFixedModelStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistFibreIso
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.DescendToThetaConstantFieldStatement
+import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
+import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.GoodClass
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.DescendToThetaConstantField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,7 +61,7 @@ theorem sharp_fibre_iso_exists : ∀ (g l : ℕ), l.Prime → Odd l → ∀ W : 
   intro g l hl hodd W hW
   have LL := GlobalTheory.abelianSchemeLaws_all
   choose J hJ Mat κ w w' hTf using GlobalTheory.T.fibre_eighth_power_theta_object_subfield W hW
-  have hD := fun gQ : ℕ => @GlobalTheory.T.descend_to_thetaConstant_field LL.1 LL.2 (8 * gQ) (J gQ) (hJ gQ) (Mat gQ) (κ gQ) l (w gQ) (w' gQ) hl hodd
+  have hD := fun gQ : ℕ => @_root_.GlobalTheory.ZM.descend_to_theta_field LL.1 LL.2 (8 * gQ) (J gQ) (hJ gQ) (Mat gQ) (κ gQ) l (w gQ) (w' gQ) hl hodd
   choose j₀f hj₀f using hD
   refine ⟨(Finset.range (g + 1)).sup j₀f + 1, ?_⟩
   intro j hj V V₁ _ _ _ _ _ hCN hlu Q hQg ρ hρ D e hS C u mo hmo hTh K _ _ ev k₀ hk₀ hrat σ hσ

@@ -2,7 +2,8 @@ module
 
 public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
 public import Mathlib.LinearAlgebra.Multilinear.Basic
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IrreducibleUnitaryVectorDensityStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IrreducibleUnitaryVectorDensity
+public import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Extend
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +46,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Separation.CompletelyRegular
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Extend
 
 @[expose] public section
 
@@ -135,7 +135,7 @@ private theorem multilinear_translates_zero_local : ∀ (ι : Type) [Fintype ι]
         rw [show (π a k (v j a) : H a) =
           ((⟨π a k (v j a), hinv a k _ (v j a).2⟩ : Sm a) : H a) from rfl,
           hΛ, hupd, mul_assoc]
-      have h2 := GlobalTheory.T.irreducibleUnitary_vector_density
+      have h2 := _root_.GlobalTheory.irreducibleUnitary_density
         (H a) (G a) (π a) (hu a) (hs a) n (fun j => (v j a : H a)) Λ hG (φ a) (u a)
       rw [← h2]
       refine Finset.sum_congr rfl fun j _ => ?_

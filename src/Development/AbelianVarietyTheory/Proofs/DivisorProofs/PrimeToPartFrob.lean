@@ -2,16 +2,19 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LabelsCharOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspidalCharacterFormula
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteFieldCharacterLabelsCompatNormPowInvStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobeniusOrbitRootPolynomialFactorizationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GreenCuspidalCharIsCuspidalOfMinpolyOfParamStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarishChandraInducedTypeCharEqProductListStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LabelledCharactersEqAndCongrPrimeToPartStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NatDegreeDivisorsProdDistinctMonicIrreducibleStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CharacterDecompositionAndClassFunctionExpansionStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CharacterPairingHarishChandraCuspidalMackeyStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraProductListIsCharacterAndPermInvariStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteFieldCharacterLabelsCompatNormPowInv
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobeniusOrbitRootPolynomialFactorization
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GreenCuspidalCharIsCuspidalOfMinpolyOfParam
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarishChandraInducedTypeCharEqProductList
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LabelledCharactersEqAndCongrPrimeToPart
+public import Mathlib.Algebra.Group.Irreducible.Defs
+public import Mathlib.Algebra.Polynomial.Degree.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NatDegreeDivisorsProdDistinctMonicIrreducible
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LabelDatum
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CharacterDecompositionAndClassFunctionExpansion
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CharacterPairingHarishChandraCuspidalMackey
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraSeriesLabelExistsUniqueGLn
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraProductListIsCharacterAndPermInvari
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -83,51 +86,51 @@ section Good
 variable {L : GlobalTheory.GLq.LabelDatum p} {r : ℕ} {s : SSParam p ℂ r} {x : Cyc s.1 → Fbar p} {f : (ZMod p)[X]}
 
 theorem Labels.root (h : Labels L s x f) (y) : LabelsChar L (rootChar s y) (rootElt x y) :=
-  (GlobalTheory.T.finiteField_character_labels_compat_norm_pow_inv p L _ r.factorial_pos).1 _ (cycLen_dvd s.1 y.1) _ _ _ (h.1 y.1)
+  (_root_.GlobalTheory.LabelNorm.main p L _ r.factorial_pos).1 _ (cycLen_dvd s.1 y.1) _ _ _ (h.1 y.1)
 
 theorem Labels.cyc (h : Labels L s x f) (c) : LabelsChar L (cycChar s c) (x c) := by
-  have := (GlobalTheory.T.finiteField_character_labels_compat_norm_pow_inv p L _ r.factorial_pos).1 _ (cycLen_dvd s.1 c) _ _ 1 (h.1 c)
+  have := (_root_.GlobalTheory.LabelNorm.main p L _ r.factorial_pos).1 _ (cycLen_dvd s.1 c) _ _ 1 (h.1 c)
   rwa [pow_one, pow_one] at this
 
 theorem Labels.mem_roots (h : Labels L s x f) (z : Fbar p) : z ∈ Formalism.CyclotomicNorms.rootsBar f ↔ ∃ y, rootElt x y = z := by
   rw [h.2.2.2]; simp
 
 theorem Labels.regular_iff (h : Labels L s x f) : IsRegularParam s ↔ Squarefree f := by
-  rw [(GlobalTheory.T.frobeniusOrbitRootPolynomial_factorization p r _ x f h.2).2.2.1]
+  rw [(_root_.GlobalTheory.ParamLabel.RootPolyFactor.rootPoly_factor p r _ x f h.2).2.2.1]
   exact forall₂_congr fun y y' => by
-    rw [(GlobalTheory.T.labelled_characters_eq_and_congr_primeToPart p L _ r.factorial_pos _ _ _ _ (h.root y) (h.root y')).1]
+    rw [(_root_.GlobalTheory.ParamLabel.Congr.eq_and_congr p L _ r.factorial_pos _ _ _ _ (h.root y) (h.root y')).1]
 
 theorem Labels.two_iff (h : Labels L s x f) (hs : Squarefree f) {l : ℕ} (hl : l.Prime) :
     (∀ y y', y ≠ y' → ¬ CongrMod l (rootChar s y) (rootChar s y')) ↔
       ∀ z ∈ Formalism.CyclotomicNorms.rootsBar f, ∀ z' ∈ Formalism.CyclotomicNorms.rootsBar f, Formalism.CyclotomicNorms.primeToPart l z = Formalism.CyclotomicNorms.primeToPart l z' → z = z' := by
-  have hi := (GlobalTheory.T.frobeniusOrbitRootPolynomial_factorization p r _ x f h.2).2.2.1.1 hs
+  have hi := (_root_.GlobalTheory.ParamLabel.RootPolyFactor.rootPoly_factor p r _ x f h.2).2.2.1.1 hs
   simp only [h.mem_roots, forall_exists_index, forall_apply_eq_imp_iff, hi.eq_iff]
   exact forall₂_congr fun y y' => by
-    rw [(GlobalTheory.T.labelled_characters_eq_and_congr_primeToPart p L _ r.factorial_pos _ _ _ _ (h.root y) (h.root y')).2 l hl, not_imp_not]
+    rw [(_root_.GlobalTheory.ParamLabel.Congr.eq_and_congr p L _ r.factorial_pos _ _ _ _ (h.root y) (h.root y')).2 l hl, not_imp_not]
 
 theorem Labels.three_iff (h : Labels L s x f) {χ : (ZMod p)ˣ →* ℂˣ} {a : (ZMod p)ˣ} (ha : LabelsTame L χ a)
     {l : ℕ} (hl : l.Prime) :
     (∀ c, ¬ CongrMod l (cycChar s c) (χ.comp (baseNorm p r.factorial))) ↔
       ∀ z ∈ Formalism.CyclotomicNorms.rootsBar f, Formalism.CyclotomicNorms.primeToPart l z ≠
         Formalism.CyclotomicNorms.primeToPart l (algebraMap (ZMod p) (Fbar p) (a : ZMod p)) := by
-  have hχ := ((GlobalTheory.T.finiteField_character_labels_compat_norm_pow_inv p L _ r.factorial_pos).2 χ a ha).1
+  have hχ := ((_root_.GlobalTheory.LabelNorm.main p L _ r.factorial_pos).2 χ a ha).1
   simp only [h.mem_roots, forall_exists_index, forall_apply_eq_imp_iff, rootElt, Ne, primeToPart_frob,
-    (GlobalTheory.T.labelled_characters_eq_and_congr_primeToPart p L _ r.factorial_pos _ _ _ _ (h.cyc _) hχ).2 l hl]
+    (_root_.GlobalTheory.ParamLabel.Congr.eq_and_congr p L _ r.factorial_pos _ _ _ _ (h.cyc _) hχ).2 l hl]
   exact ⟨fun H y => H y.1, fun H c => H ⟨c, ⟨0, cycLen_pos _ c⟩⟩⟩
 
 theorem Labels.ne_of (h : Labels L s x f) {χ : (ZMod p)ˣ →* ℂˣ} {a : (ZMod p)ˣ} (ha : LabelsTame L χ a) {l : ℕ}
     (H : ∀ z ∈ Formalism.CyclotomicNorms.rootsBar f, Formalism.CyclotomicNorms.primeToPart l z ≠
         Formalism.CyclotomicNorms.primeToPart l (algebraMap (ZMod p) (Fbar p) (a : ZMod p))) (y) :
     rootChar s y ≠ χ.comp (baseNorm p r.factorial) := fun e => by
-  have hχ := ((GlobalTheory.T.finiteField_character_labels_compat_norm_pow_inv p L _ r.factorial_pos).2 χ a ha).1
-  have := (GlobalTheory.T.labelled_characters_eq_and_congr_primeToPart p L _ r.factorial_pos _ _ _ _ (h.root y) hχ).1.1 e
+  have hχ := ((_root_.GlobalTheory.LabelNorm.main p L _ r.factorial_pos).2 χ a ha).1
+  have := (_root_.GlobalTheory.ParamLabel.Congr.eq_and_congr p L _ r.factorial_pos _ _ _ _ (h.root y) hχ).1.1 e
   exact H _ ((h.mem_roots _).2 ⟨y, rfl⟩) (by rw [this])
 
 theorem Labels.dvd_iff (h : Labels L s x f) (hs : Squarefree f) :
     (∀ a : ℕ, (∃ q : (ZMod p)[X], q ∣ f ∧ q.natDegree = a) ↔ ∃ A : Finset (Cyc s.1), ∑ c ∈ A, cycLen s.1 c = a) ∧
     ∀ Q : ℕ → Prop, (∃ q : (ZMod p)[X], Irreducible q ∧ q ∣ f ∧ Q q.natDegree) ↔ ∃ c, Q (cycLen s.1 c) := by
-  obtain ⟨h1, h2, h3⟩ := (GlobalTheory.T.frobeniusOrbitRootPolynomial_factorization p r _ x f h.2).2.2.2 hs
-  have := GlobalTheory.T.natDegree_divisors_prod_distinct_monic_irreducible (ZMod p) _ _ (fun c => ⟨minpoly.monic (Algebra.IsIntegral.isIntegral (x c)),
+  obtain ⟨h1, h2, h3⟩ := (_root_.GlobalTheory.ParamLabel.RootPolyFactor.rootPoly_factor p r _ x f h.2).2.2.2 hs
+  have := _root_.GlobalTheory.Div.natDegree_divisors_prod_distinct_monic_irreducible.natDegree_divisors_prod (ZMod p) _ _ (fun c => ⟨minpoly.monic (Algebra.IsIntegral.isIntegral (x c)),
     minpoly.irreducible (Algebra.IsIntegral.isIntegral (x c))⟩) h2
   simp only [h1, ← h3] at this
   exact this
@@ -140,7 +143,7 @@ theorem good_iff (L : GlobalTheory.GLq.LabelDatum p) (h5 : 5 ≤ p) {r : ℕ} {�
     (ha : ∀ v j, LabelsTame L (χ j) (a v j) ∨ LabelsTame L (χ j)⁻¹ (a v j)) :
     GoodAt χ s ↔ Formalism.CyclotomicNorms.IsGood r p f a ∧ Formalism.CyclotomicNorms.IsGood r p f fun v j => (a v j)⁻¹ := by
   have inv : ∀ {χ : (ZMod p)ˣ →* ℂˣ} {a}, LabelsTame L χ a → LabelsTame L χ⁻¹ a⁻¹ := fun h =>
-    ((GlobalTheory.T.finiteField_character_labels_compat_norm_pow_inv p L 1 one_pos).2 _ _ h).2
+    ((_root_.GlobalTheory.LabelNorm.main p L 1 one_pos).2 _ _ h).2
   have three : ∀ l : ℕ, l.Prime → ∀ v j,
       ((∀ c, ¬ CongrMod l (cycChar (s v) c) ((χ j).comp (baseNorm p r.factorial))) ∧
         ∀ c, ¬ CongrMod l (cycChar (s v) c) ((χ j)⁻¹.comp (baseNorm p r.factorial))) ↔
@@ -154,7 +157,7 @@ theorem good_iff (L : GlobalTheory.GLq.LabelDatum p) (h5 : 5 ≤ p) {r : ℕ} {�
     · have H' := inv H
       rw [inv_inv] at H'
       rw [(h v).three_iff H hl, (h v).three_iff H' hl, and_comm]
-  have base := fun v => GlobalTheory.T.frobeniusOrbitRootPolynomial_factorization p r _ (x v) (f v) (h v).2
+  have base := fun v => _root_.GlobalTheory.ParamLabel.RootPolyFactor.rootPoly_factor p r _ (x v) (f v) (h v).2
   constructor
   · rintro ⟨g1, g2, ⟨g3, -⟩, g4, g5⟩
     have hs := fun v => (h v).regular_iff.1 (g1 v)
@@ -190,9 +193,9 @@ theorem Labels.series (hG : GlobalTheory.GLq.Green) {L : GlobalTheory.GLq.LabelD
     {x : Cyc s.1 → Fbar p} {f : (ZMod p)[X]} (h : Labels L s x f) (hs : Squarefree f) :
     {χ | GlobalTheory.GLq.IsIrr χ ∧ GlobalTheory.GLq.HasLabel L χ f} = {typeChar s} ∧
       GlobalTheory.GLq.eSerC L r f = centralIdem (typeChar s) := by
-  obtain ⟨d1, d2, -, d3⟩ := GlobalTheory.T.frobeniusOrbitRootPolynomial_factorization p r _ x f h.2
+  obtain ⟨d1, d2, -, d3⟩ := _root_.GlobalTheory.ParamLabel.RootPolyFactor.rootPoly_factor p r _ x f h.2
   obtain ⟨h1, h2, h3⟩ := d3 hs
-  obtain ⟨l, hl, hl', e⟩ := GlobalTheory.T.harishChandraInducedTypeChar_eq_productList p r s
+  obtain ⟨l, hl, hl', e⟩ := _root_.GlobalTheory.TypeCharProduct.typeChar_eq_hcL p r s
   let Q : List ((ZMod p)[X] × GlobalTheory.GLq.Pc p) := l.map fun c => (minpoly (ZMod p) (x c), ⟨cycLen s.1 c, cuspOn (s.2 c)⟩)
   have hsnd : Q.map Prod.snd = l.map fun c => (⟨cycLen s.1 c, cuspOn (s.2 c)⟩ : GlobalTheory.GLq.Pc p) := by
     rw [List.map_map]; rfl
@@ -201,7 +204,7 @@ theorem Labels.series (hG : GlobalTheory.GLq.Green) {L : GlobalTheory.GLq.LabelD
   have hQ : ∀ q ∈ Q, GlobalTheory.GLq.IsCuspOf L q.1 q.2.2 := by
     intro q hq
     obtain ⟨c, -, rfl⟩ := List.mem_map.1 hq
-    exact GlobalTheory.T.greenCuspidalChar_isCuspidalOfMinpoly_of_param hG p L h5 _ (s.2 c) (x c) (cycLen_pos _ c) (h.1 c) (h1 c)
+    exact _root_.GlobalTheory.ParamLabel.isCuspOf_cuspOn_of_green hG p L h5 _ (s.2 c) (x c) (cycLen_pos _ c) (h.1 c) (h1 c)
   have hprod : f = (Q.map Prod.fst).prod := by
     classical
     rw [hfst, h3, ← List.prod_toFinset _ hl]
@@ -214,9 +217,9 @@ theorem Labels.series (hG : GlobalTheory.GLq.Green) {L : GlobalTheory.GLq.LabelD
     rw [← GlobalTheory.GLq.Label.map_fst_eq L h5 Q hQ, hfst]
     exact hl.map h2
   rw [← hsnd] at e
-  have hip := (GlobalTheory.T.characterPairing_harishChandra_cuspidal_mackey p _ _ r hdeg hdeg (GlobalTheory.GLq.Label.cusp_snd L Q hQ) (GlobalTheory.GLq.Label.cusp_snd L Q hQ)).2 hnd
+  have hip := (_root_.GlobalTheory.GLq.IpCuspProd.ip_hcL_cusp p _ _ r hdeg hdeg (GlobalTheory.GLq.Label.cusp_snd L Q hQ) (GlobalTheory.GLq.Label.cusp_snd L Q hQ)).2 hnd
   have hirr : GlobalTheory.GLq.IsIrr (typeChar s) :=
-    e ▸ (GlobalTheory.T.character_decomposition_and_classFunction_expansion _ _).2.2.2.1 (GlobalTheory.T.harishChandraProductList_isCharacter_and_perm_invariant p _ [] r hdeg.symm (GlobalTheory.GLq.Label.char_snd L Q hQ)).1 hip
+    e ▸ (_root_.GlobalTheory.charDec _ _).2.2.2.1 (_root_.GlobalTheory.gl_list_product_perm_char p _ [] r hdeg.symm (GlobalTheory.GLq.Label.char_snd L Q hQ)).1 hip
   have hlab : GlobalTheory.GLq.HasLabel L (typeChar s) f := ⟨Q, hQ, hdeg, hprod, by rw [e, hip]; exact one_ne_zero⟩
   obtain ⟨Q', -, -, -, hset⟩ := GlobalTheory.GLq.Label.squarefree_series L h5 hG r f h.2.2.1 d1 d2 hs
   have : typeChar s = GlobalTheory.GLq.hcL (Q'.map Prod.snd) r := by

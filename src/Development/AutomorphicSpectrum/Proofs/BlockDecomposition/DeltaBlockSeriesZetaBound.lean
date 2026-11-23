@@ -2,15 +2,22 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsLatIntVec
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermOf
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DeltaBlockLowerBoundTorsionStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DeltaEqLatticeIndexStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IdealPrincipalElementNormBoundStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LamIsLatticeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LatticeQuotientTorsionNonzeroStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RelativeNormCmAbsNormStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TorsionCardLeAbsNormPowStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TorsionNormZetaBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TsumCompBoundedFibresLeStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DeltaBlockLowerBoundTorsion
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IdealPrincipalElementNormBound
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LatticeQuotientTorsionNonzero
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TorsionCardLeAbsNormPow
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TorsionNormZetaBound
+public import Mathlib.SetTheory.Cardinal.Finite
+public import Mathlib.Topology.Algebra.InfiniteSum.Defs
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TsumCompBoundedFibresLe
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DeltaEqLatticeIndex
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LamIsLattice
+import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RelativeNormCmAbsNorm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -68,7 +75,7 @@ theorem fibres (F : Type) [Field F] [NumberField F] (ρ : 𝓞 F) (hρ : ρ ≠ 
       Nat.card {D : FQ F // a + ρ • D = b} ≤ Ideal.absNorm (Ideal.span {ρ}) := by
   have hne : Ideal.span {ρ} ≠ ⊥ := by
     simpa [Ideal.span_singleton_eq_bot] using hρ
-  obtain ⟨hfin, hcard⟩ := GlobalTheory.T.torsion_card_le_absNorm_pow F 1 (intVec F 1) (isLat_intVec 1) (Ideal.span {ρ}) hne
+  obtain ⟨hfin, hcard⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.TorCard.tor_card F 1 (intVec F 1) (isLat_intVec 1) (Ideal.span {ρ}) hne
   rw [pow_one] at hcard
   by_cases hb : ∃ D₀ : FQ F, a + ρ • D₀ = b
   · obtain ⟨D₀, hD₀⟩ := hb
@@ -128,15 +135,15 @@ theorem term_le (A δ N n : ℕ) (s : ℝ) (hs : 0 < s) (hδ : δ ≠ 0) (hN : N
 
 theorem sum_delta_le : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∃ C : ℝ, 0 < C ∧ ∀ (m : ℕ) (c : Matrix (Fin m) (Fin m) E), (∀ a b, σ (c b a) = c a b) → ∀ (u : Fin m → E) (s : ℝ), 1 < s → Summable (fun D : FQ F => (delta (blk σ c u (algebraMap F E ((Quotient.out D : Fin 1 → F) 0))) : ℝ) ^ (-s)) ∧ ∑' D : FQ F, (delta (blk σ c u (algebraMap F E ((Quotient.out D : Fin 1 → F) 0))) : ℝ) ^ (-s) ≤ C * zetaR F (2 * s - 1) * (delta c : ℝ) ^ (-s) * (Ideal.absNorm (tor c u) : ℝ) ^ (1 - 2 * s) := by
   intro F E _ _ _ _ _ σ hσ
-  obtain ⟨C, hC, hmink⟩ := GlobalTheory.T.ideal_principal_element_norm_bound E
+  obtain ⟨C, hC, hmink⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.Mink.exists_ne_zero_mem_absNorm_le E
   refine ⟨C, hC, ?_⟩
   intro m c hc u s hs
   have hT : tor c u ≠ ⊥ :=
-    GlobalTheory.T.lattice_quotient_torsion_nonzero E m (lam c) (GlobalTheory.T.lam_is_lattice E m c) (Submodule.Quotient.mk u)
+    _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.torsionOf_quot_lat_ne_bot E m (lam c) (_root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.isLat_lam_of_matrix E m c) (Submodule.Quotient.mk u)
   obtain ⟨t, htT, ht0, htC⟩ := hmink (tor c u) hT
-  obtain ⟨f, hf⟩ := GlobalTheory.T.delta_block_lower_bound_torsion F E σ hσ m c hc u t htT ht0
+  obtain ⟨f, hf⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.LocalBound.local_bound F E σ hσ m c hc u t htT ht0
   have hkt : Ideal.absNorm (Ideal.span {RingOfIntegers.norm F t}) =
-      Ideal.absNorm (Ideal.span {t}) := (GlobalTheory.T.relative_norm_cm_absNorm F E σ hσ t).2
+      Ideal.absNorm (Ideal.span {t}) := (_root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.NormSig.norm_eq_mul_conj_and_absNorm F E σ hσ t).2
   have hNt : Ideal.absNorm (Ideal.span {t}) ≠ 0 := by
     rw [Ne, Ideal.absNorm_eq_zero_iff]
     simpa [Ideal.span_singleton_eq_bot] using ht0
@@ -147,14 +154,14 @@ theorem sum_delta_le : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     rw [← hkt]
     simp
   generalize hρdef : RingOfIntegers.norm F t = ρ at hf hkt hρ
-  have hδ : delta c ≠ 0 := (GlobalTheory.T.delta_eq_lattice_index E m c).1
+  have hδ : delta c ≠ 0 := (_root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.DeltaIndex.delta_index E m c).1
   have hN : Ideal.absNorm (tor c u) ≠ 0 := by
     rw [Ne, Ideal.absNorm_eq_zero_iff]
     exact hT
   have hδ' : (0 : ℝ) < delta c := by exact_mod_cast Nat.pos_of_ne_zero hδ
   have hN' : (0 : ℝ) < Ideal.absNorm (tor c u) := by exact_mod_cast Nat.pos_of_ne_zero hN
   have hs0 : 0 < s := by linarith
-  obtain ⟨hsum, hzeta⟩ := GlobalTheory.T.torsion_norm_zeta_bound F 1 (intVec F 1) (isLat_intVec 1) (2 * s - 1) (by linarith)
+  obtain ⟨hsum, hzeta⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.sum_torsion F 1 (intVec F 1) (isLat_intVec 1) (2 * s - 1) (by linarith)
   have hexp : (((1 : ℕ) : ℝ) + (2 * s - 1)) = 2 * s := by
     push_cast
     ring
@@ -163,7 +170,7 @@ theorem sum_delta_le : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
   have hg0 : ∀ x, 0 ≤ g x := fun x => Real.rpow_nonneg (Nat.cast_nonneg _) _
   let a : FQ F := Submodule.Quotient.mk (fun _ => f)
   let π : FQ F → FQ F := fun D => a + ρ • D
-  obtain ⟨hsum2, hle2⟩ := GlobalTheory.T.tsum_comp_bounded_fibres_le (FQ F) (FQ F) π (Ideal.absNorm (Ideal.span {ρ}))
+  obtain ⟨hsum2, hle2⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.SumFibre.summable_comp_of_bounded_fibres (FQ F) (FQ F) π (Ideal.absNorm (Ideal.span {ρ}))
     (fun b => fibres F ρ hρ a b) g hg0 hsum
   let P : ℝ := (delta c : ℝ) ^ (-s) * (Ideal.absNorm (tor c u) : ℝ) ^ (-(2 * s))
   have hP : 0 ≤ P := by positivity
@@ -175,7 +182,7 @@ theorem sum_delta_le : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     rw [den_eq F ρ f D] at h1
     have hn : Ideal.absNorm (Ideal.torsionOf (𝓞 F) (FQ F) (π D)) ≠ 0 := by
       rw [Ne, Ideal.absNorm_eq_zero_iff]
-      exact GlobalTheory.T.lattice_quotient_torsion_nonzero F 1 (intVec F 1) (isLat_intVec 1) (π D)
+      exact _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.torsionOf_quot_lat_ne_bot F 1 (intVec F 1) (isLat_intVec 1) (π D)
     exact term_le _ _ _ _ s hs0 hδ hN hn h1
   have hnn : ∀ D : FQ F,
       0 ≤ (delta (blk σ c u (algebraMap F E ((Quotient.out D : Fin 1 → F) 0))) : ℝ) ^ (-s) :=

@@ -3,10 +3,14 @@ module
 public import Formalism.SharpRestriction.LevelLetterCocycles.LocCoh
 public import Formalism.GaloisCohomology.LocalTateDualityK
 public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteQuotientOfCompleteNakayamaStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FreeModuleAdicCompleteSeparatedStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodCoefficientsExplicitSumsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LatticeCocyclesFinitelyGeneratedModPrimeStatement
+public import Mathlib.LinearAlgebra.Quotient.Defs
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteQuotientOfCompleteNakayama
+public import Mathlib.LinearAlgebra.FreeModule.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FreeModuleAdicCompleteSeparated
+public import Mathlib.NumberTheory.Padics.PadicNumbers
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodCoefficientsExplicitSums
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LatticeCocyclesFinitelyGeneratedModPrime
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,10 +61,10 @@ namespace GlobalTheory.TateFiniteH1
 theorem tate_finH1 (hT : Formalism.GaloisCohomology.LocalTateDualityK) :
     ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K : FinExt l), TateFiniteness (P.PD K) := by
   intro l _ P K LL _ _ _ O _ _ hO A LA
-  obtain ⟨hR, hRs⟩ := GlobalTheory.T.goodCoefficients_explicit_sums l LL O hO
+  obtain ⟨hR, hRs⟩ := _root_.GlobalTheory.goodO_coeff_explicit_sums l LL O hO
   haveI : Module.Free O ↥LA.T := LA.free
   haveI : Module.Finite O ↥LA.T := Module.Finite.iff_fg.2 LA.fg
-  obtain ⟨hTc, hTs⟩ := GlobalTheory.T.free_finite_module_adicComplete_and_separated ((l : ℕ) : O) hR hRs ↥LA.T
+  obtain ⟨hTc, hTs⟩ := _root_.GlobalTheory.freeModule_adicComplete_separated ((l : ℕ) : O) hR hRs ↥LA.T
   have hmemT : ∀ c : ↥(latticeCocycles LA), ∀ g, (c : ↥(GK K) → A.V) g ∈ LA.T := fun c g =>
     (Submodule.mem_pi.1 (Submodule.mem_inf.1 c.2).2) g (Set.mem_univ g)
   have hd : ∀ t : ↥LA.T, ((cob A.ρ).restrictScalars O) (t : A.V) ∈ latticeCocycles LA := fun t => by
@@ -89,8 +93,8 @@ theorem tate_finH1 (hT : Formalism.GaloisCohomology.LocalTateDualityK) :
       rw [hz]
       rfl
     exact congrArg Subtype.val h0
-  obtain ⟨s, hs⟩ := GlobalTheory.T.latticeCocycles_finitelyGenerated_mod_prime hT l K LL O hO A LA
-  refine GlobalTheory.T.module_finite_quotient_of_complete_of_span_mod_range ((l : ℕ) : O) hR hTc hZ d _ hdN s fun c => ?_
+  obtain ⟨s, hs⟩ := _root_.GlobalTheory.LatRed.cocycles_fg_mod_l hT l K LL O hO A LA
+  refine _root_.GlobalTheory.finite_quotient_of_complete_nakayama ((l : ℕ) : O) hR hTc hZ d _ hdN s fun c => ?_
   obtain ⟨a, c', hm⟩ := hs c
   obtain ⟨x, hx, hxe⟩ := hm
   refine ⟨a, c', ⟨x, hx⟩, Subtype.ext ?_⟩

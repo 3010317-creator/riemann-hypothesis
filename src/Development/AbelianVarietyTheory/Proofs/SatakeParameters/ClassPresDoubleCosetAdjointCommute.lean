@@ -1,7 +1,7 @@
 module
 
 public import Formalism.LocalToGlobal.IndefiniteReal.Bridge
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AdelicInnerDoubleCosetOpAdjointStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AdelicInnerDoubleCosetOpAdjoint
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ClassPresBasic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -51,7 +51,7 @@ theorem classPres_dcOp_adjoint_commute : ∀ {G Γ W K : Type} [Group G] [Group 
   refine ⟨fun f g => ?_, fun hc => ?_⟩
   · apply σ.injective
     rw [← hiso, ← hiso, hT, hT']
-    exact GlobalTheory.T.adelicInner_doubleCosetOp_adjoint ι ρ J L χ P.y x A A' hρ hχ P.reps
+    exact _root_.GlobalTheory.adInner_dcOp_adjoint ι ρ J L χ P.y x A A' hρ hχ P.reps
       (fun c => Finite.of_equiv _ (P.stabI c).toEquiv) hJ hχL hA hA' hx hx' _ (hmem f) _ (hmem g)
   · refine LinearMap.ext fun f => hinj ?_
     rw [Module.End.mul_apply, Module.End.mul_apply, P.extL_apply, P.extL_apply, hT, hU, hU, hT]

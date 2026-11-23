@@ -2,10 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.IwahoriDoubleCosets
 public import Development.AbelianVarietyTheory.Definitions.Foundations.InnerEqZeroOfNotUEquiv
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasFiniteRankTraceOfOfRangeLeFiniteDimensionalStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InjectiveSumOfLinIndepIntertwinersStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntertwinerMemISupRangeEqSumSmulStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TraceMatrixPiOperatorStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasFiniteRankTraceOfOfRangeLeFiniteDimensional
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.RepresentationTheory.Irreducible
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InjectiveSumOfLinIndepIntertwiners
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.RepresentationTheory.Intertwining
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntertwinerMemISupRangeEqSumSmul
+public import Mathlib.LinearAlgebra.Trace
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TraceMatrixPiOperator
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.EllipticPartTestData
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -42,7 +48,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.EllipticPartTestData
 import Development.AbelianVarietyTheory.Definitions.Divisors.HasTypeVec
 import Development.AbelianVarietyTheory.Definitions.Foundations.MeasurePreservingRmulQuotMeas
 import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
@@ -74,7 +79,7 @@ theorem trace_mul_isotypic : ∀ (G : Type) [Group G] (N X : Type) [AddCommGroup
   let bS := Module.finBasis ℂ S
   let φ : Fin (Module.finrank ℂ S) → π.IntertwiningMap ρ := fun j => (bS j : π.IntertwiningMap ρ)
   have hli : LinearIndependent ℂ φ := bS.linearIndependent.map' S.subtype (Submodule.ker_subtype S)
-  have hinj := GlobalTheory.T.injective_sum_of_linIndep_intertwiners G N X π ρ hirr hschur _ φ hli
+  have hinj := _root_.GlobalTheory.intertwiners_indep_injective G N X π ρ hirr hschur _ φ hli
   have hY : LinearMap.range H ≤ ⨆ j, LinearMap.range (φ j).toLinearMap := by
     refine hs.trans (iSup₂_le fun ψ hψ => ?_)
     have hψS : ψ ∈ S := Submodule.subset_span hψ
@@ -97,7 +102,7 @@ theorem trace_mul_isotypic : ∀ (G : Type) [Group G] (N X : Type) [AddCommGroup
     have hr : LinearMap.range Hψ.toLinearMap ≤ ⨆ j, LinearMap.range (φ j).toLinearMap := by
       rintro _ ⟨n, rfl⟩
       exact hY ⟨ψ n, rfl⟩
-    exact GlobalTheory.T.exists_eq_sum_smul_of_range_le_iSup_range G N X π ρ hschur _ φ hinj Hψ hr
+    exact _root_.GlobalTheory.intertwiner_mem_iSup_range_eq_sum_smul G N X π ρ hschur _ φ hinj Hψ hr
   choose hc hhc using fun j => hcoef (φ j)
   refine ⟨∑ j, hc j j, fun A B hB b hb => ?_⟩
   obtain ⟨hfin, htr⟩ := hb
@@ -132,7 +137,7 @@ theorem trace_mul_isotypic : ∀ (G : Type) [Group G] (N X : Type) [AddCommGroup
     · intro x y hx hy
       simpa using Z.add_mem hx hy
   haveI : FiniteDimensional ℂ Z := LinearMap.finiteDimensional_range Φ'
-  have hT1 := GlobalTheory.T.hasFiniteRankTraceOf_of_range_le_finiteDimensional X (H ∘ₗ B) Z hrange
+  have hT1 := _root_.GlobalTheory.IndefiniteRowSideFullHecke.RangeTrace.hasFinTrace_of_range_le X (H ∘ₗ B) Z hrange
   let e : (Fin (Module.finrank ℂ S) → R) ≃ₗ[ℂ] Z := LinearEquiv.ofInjective Φ' hinj'
   let A' : R →ₗ[ℂ] R := A.restrict (p := R) (q := R) fun v _ => LinearMap.mem_range_self A v
   let h : Matrix (Fin (Module.finrank ℂ S)) (Fin (Module.finrank ℂ S)) ℂ := Matrix.of fun k j => hc j k
@@ -154,7 +159,7 @@ theorem trace_mul_isotypic : ∀ (G : Type) [Group G] (N X : Type) [AddCommGroup
     rw [Finset.sum_comm]
   have key : LinearMap.trace ℂ Z ((H ∘ₗ B).restrict (p := Z) (q := Z)
       fun x _ => hrange (LinearMap.mem_range_self _ x)) = (∑ j, hc j j) * b := by
-    rw [hconj, LinearMap.trace_conj', GlobalTheory.T.trace_sum_single_comp_proj_eq R _ h A', ← htr]
+    rw [hconj, LinearMap.trace_conj', _root_.GlobalTheory.trace_matrix_pi_operator R _ h A', ← htr]
     simp [h, Matrix.trace, A', R]
   rw [← key]
   exact hT1

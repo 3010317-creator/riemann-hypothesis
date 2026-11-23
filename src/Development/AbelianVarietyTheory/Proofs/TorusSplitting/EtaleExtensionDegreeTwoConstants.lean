@@ -4,10 +4,11 @@ public import Development.AbelianVarietyTheory.Definitions.TorusSections.IsTorus
 public import Formalism.LocalToGlobal.ProjectiveLattices.EtArch
 public import Formalism.LocalToGlobal.ProjectiveLattices.Adm3OfExtension
 public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.ArchimedeanBoundTotalConstantSize
-public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.ExistsCuspFormFourClausesExplicitConstantStatement
-public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.LogCardComponentsLeOfRowsBoundStatement
-import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
+public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.ExistsCuspFormFourClausesExplicitConstant
+public import Formalism.LocalToGlobal.ProjectiveLattices.HasDataCondition
+public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.LogCardComponentsLeOfRowsBound
 public import Formalism.LocalToGlobal.ProjectiveLattices.HostSize
+import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,9 +63,9 @@ theorem etEx_deg_two : ∀ (D : D7) (T : Top D) (h : LawsP T) (large₂ : SizeDa
     unfold WeightFamilies.PPv
     rw [Real.rpow_two]
   rw [hP]
-  refine GlobalTheory.T.exists_cuspForm_four_clauses_explicitConstant D T h DF q R0 _ _ hrun (fun j hj => ?_) (by positivity)
+  refine _root_.GlobalTheory.EtaAn.exists_form_four_clauses D T h DF q R0 _ _ hrun (fun j hj => ?_) (by positivity)
   rw [min_self]
-  have hN := GlobalTheory.T.log_card_components_le_of_rows_bound D T h large₂ hrows j hj T.σ₀ T.good_σ₀
+  have hN := _root_.GlobalTheory.EtaAn.log_card_comp_le_of_rows D T h large₂ hrows j hj T.σ₀ T.good_σ₀
   obtain ⟨hL, lr, lρ, lf, -, hf⟩ := hrows
   have hm := D.R.two_le_m
   have hk := D.R.f_le_k

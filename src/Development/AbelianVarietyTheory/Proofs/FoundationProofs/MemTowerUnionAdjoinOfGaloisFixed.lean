@@ -4,8 +4,9 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsTrDa
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLevelOfMemAdjoin
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsDiscreteValuationRingCyclotomicTowerLevel
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemAdjoinDivOfFixed
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemTowerUnionAdjoinIntegralClosureIffStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TowerEmbeddingInjectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemTowerUnionAdjoinIntegralClosureIff
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NotCoboundaryConstantOne
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TowerEmbeddingInjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,7 +66,7 @@ variable {p : ℕ} [hp : Fact p.Prime] {Ω : Type} [Field Ω] [Algebra (O0 p) Ω
 theorem exists_eq_of_isIntegral_div (h : IsClo p Ω) (T : Tower p Ω) {n : ℕ} (hn : 1 ≤ n)
     (ι : On p n →ₐ[O0 p] Ω) (hι : IsEmb T n ι) (wb wc : On p n) (hc : ι wc ≠ 0) {x : Ω}
     (hx : IsIntegral (O0 p) x) (hxe : x = ι wb / ι wc) : ∃ w : On p n, ι w = x := by
-  have hinj : Function.Injective ι := GlobalTheory.T.tower_embedding_injective p Ω h T n hn ι hι
+  have hinj : Function.Injective ι := _root_.GlobalTheory.K5.EmbInj.emb_injective p Ω h T n hn ι hι
   obtain ⟨hdom, hdvr, -⟩ := GlobalTheory.K5.OnDVR.isDVR_On p n hn
   let K := FractionRing (On p n)
   let φ : K →+* Ω := IsFractionRing.lift (g := ι.toRingHom) hinj
@@ -101,7 +102,7 @@ theorem GlobalTheory.K5.mem_towerAlg_of_fixed :
   haveI := h.clo
   haveI := h.alg
   haveI : CharZero Ω := GlobalTheory.K5.Basic.charZero_of_isClo h
-  rw [GlobalTheory.T.mem_towerUnionAdjoinIntegralClosure_iff p Ω T x]
+  rw [_root_.GlobalTheory.towerAlg_mem_iff p Ω T x]
   set B := Algebra.adjoin (O0 p) (Set.range T.ζ ∪ Set.range T.qq)
   obtain ⟨b, hb, c, hc, hc0, hbc⟩ := GlobalTheory.mem_adjoin_div_of_fixed (O0 p) Ω h.inj
     (Set.range T.ζ ∪ Set.range T.qq) (x : Ω) (fun g hg => hx g (by

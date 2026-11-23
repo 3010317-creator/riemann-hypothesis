@@ -2,16 +2,18 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CharZeroFunctionField
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqOfIsometricTrivShift
+public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAmpleLBOfRelAmpleOfIsAffine
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAmpleNefHermitianSmallSection
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteControllingPoints
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsClosedImmersionGenericPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionAmpleTwistNonvanishingFiniteSet
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermPairWithSectionsRepresentsTensor
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianLineBundleIsNefShiftOfNonneg
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepresentedBundleSectionsRationalFunctionsDict
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepresentsBaseBundlesAndTrivial
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepresentsHermitianLineBundleDual
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepresentsHermitianLineBundlePow
 import Development.AbelianVarietyTheory.Definitions.Divisors.LineBundleGlobalSectionsDimCongrPicardClass
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAmpleNefHermitianSmallSectionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteControllingPointsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionAmpleTwistNonvanishingFiniteSetStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermPairWithSectionsRepresentsTensorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianLineBundleIsNefShiftOfNonnegStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepresentedBundleSectionsRationalFunctionsDictStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepresentsBaseBundlesAndTrivialStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepresentsHermitianLineBundleDualStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepresentsHermitianLineBundlePowStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -111,11 +113,11 @@ namespace GlobalTheory.VolBr
 theorem exists_good_pair : GlobalTheory.Published.ArCalc → ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k)
     (D : ℕ), IsArithVar p D → ∀ L : HermLB p, ∃ (P : Pair p) (b : ℕ) (s t : X.functionField), P.L = L ∧ P.Good D b s t := by
   intro hC k _ X _ p D hX L
-  obtain ⟨A₀, hAmp, hNef, s₀, hs₀, hs₀ne⟩ := GlobalTheory.T.exists_ample_nef_hermitian_smallSection hC k X p D hX
+  obtain ⟨A₀, hAmp, hNef, s₀, hs₀, hs₀ne⟩ := _root_.GlobalTheory.AmpleNefSmall.exists_ample_nef_smallSec hC k X p D hX
   obtain ⟨P, rfl, rfl⟩ := exists_pair L A₀
-  have hrep := GlobalTheory.T.represents_base_bundles_and_trivial k X p P
+  have hrep := _root_.GlobalTheory.VolBr.Pair.rep_base k X p P
 
-  obtain ⟨e, -, he_rng, he_nu, he_loc⟩ := GlobalTheory.T.representedBundle_sections_rationalFunctions_dict k X p P 0 1 P.A hrep.2.1
+  obtain ⟨e, -, he_rng, he_nu, he_loc⟩ := _root_.GlobalTheory.VolBr.RepDict.rep_dict k X p P 0 1 P.A hrep.2.1
   have hsH : e s₀ ∈ P.H 0 1 := by
     show e s₀ ∈ (P.H 0 1 : Set X.functionField)
     rw [← he_rng]; exact ⟨s₀, rfl⟩
@@ -133,14 +135,14 @@ theorem exists_good_pair : GlobalTheory.Published.ArCalc → ∀ (k : Type) [Com
     have h3 := P.nu_nonneg 0 1 σ y (e s₀)
     nlinarith
 
-  obtain ⟨S, hSfin, hS⟩ := GlobalTheory.T.exists_finite_set_controlling_regularity_of_quotient k X p D hX P (e s₀) hsH hsne
+  obtain ⟨S, hSfin, hS⟩ := _root_.GlobalTheory.VolBr.exists_finite_controlling_points k X p D hX P (e s₀) hsH hsne
 
-  obtain ⟨b, hb, u, hu⟩ := GlobalTheory.T.exists_section_ampleTwist_nonvanishing_finiteSet k X p D hX P.L.dual P.A hAmp (insert (genericPoint X) S) (hSfin.insert _)
-  have hR1 : P.Rep (-1) 0 P.L.dual := by simpa using GlobalTheory.T.represents_hermitianLineBundle_dual k X p P 1 0 P.L hrep.1
-  have hR2 : P.Rep 0 b (P.A.pow b) := by simpa using GlobalTheory.T.represents_hermitianLineBundle_pow k X p P 0 1 P.A b hrep.2.1
+  obtain ⟨b, hb, u, hu⟩ := _root_.GlobalTheory.VolBr.exists_sec_finite_subset_nonzeroLocus k X p D hX P.L.dual P.A hAmp (insert (genericPoint X) S) (hSfin.insert _)
+  have hR1 : P.Rep (-1) 0 P.L.dual := by simpa using _root_.GlobalTheory.VolBr.Pair.rep_dual k X p P 1 0 P.L hrep.1
+  have hR2 : P.Rep 0 b (P.A.pow b) := by simpa using _root_.GlobalTheory.VolBr.Pair.rep_pow k X p P 0 1 P.A b hrep.2.1
   have hR : P.Rep (-1) b (P.L.dual.tens (P.A.pow b)) := by
-    simpa using GlobalTheory.T.hermPairWithSections_represents_tensor k X p P (-1) 0 0 b _ _ hR1 hR2
-  obtain ⟨e', -, he'_rng, he'_nu, he'_loc⟩ := GlobalTheory.T.representedBundle_sections_rationalFunctions_dict k X p P (-1) b _ hR
+    simpa using _root_.GlobalTheory.VolBr.Pair.rep_tens k X p P (-1) 0 0 b _ _ hR1 hR2
+  obtain ⟨e', -, he'_rng, he'_nu, he'_loc⟩ := _root_.GlobalTheory.VolBr.RepDict.rep_dict k X p P (-1) b _ hR
   have htH : e' u ∈ P.H (-1) b := by
     show e' u ∈ (P.H (-1) b : Set X.functionField)
     rw [← he'_rng]; exact ⟨u, rfl⟩
@@ -167,7 +169,7 @@ theorem exists_good_pair : GlobalTheory.Published.ArCalc → ∀ (k : Type) [Com
   have hsub : ∀ (z x : X) (U : X.Opens), z ⤳ x → x ∈ U → z ∈ U := fun z x U h hx => h.mem_open U.isOpen hx
   exact {
     ample := hAmp
-    nef := GlobalTheory.T.hermitianLineBundle_isNef_shift_of_nonneg k X p D hX P.A c hc0 hNef
+    nef := _root_.GlobalTheory.NefShift.isNef_shift_nonneg k X p D hX P.A c hc0 hNef
     pos := hb
     s_mem := ⟨hsH, fun σ y => by
       rw [Pair.nu_shiftA]

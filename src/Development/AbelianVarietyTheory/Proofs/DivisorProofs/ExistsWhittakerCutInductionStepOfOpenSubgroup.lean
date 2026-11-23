@@ -2,9 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemSupportComp
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqvCorMulCol
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteCharacterSumEqLocallyConstantOnCompaStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsClopenRowVectorOrbitCompactOpenGLStatement
+public import Mathlib.Algebra.Group.AddChar
+public import Mathlib.Analysis.Normed.Field.Basic
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.Data.Matrix.Mul
+public import Mathlib.Topology.LocallyConstant.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteCharacterSumEqLocallyConstantOnCompa
+public import Mathlib.Topology.Instances.Matrix
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsClopenRowVectorOrbitCompactOpenGL
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCompactCharAnnihilatorOfMemNhdsZero
+public import Mathlib.Topology.LocallyConstant.Algebra
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +57,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import Mathlib.Topology.LocallyConstant.Algebra
 import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
@@ -75,7 +81,7 @@ theorem exists_mul_lr {F : Type} [NormedField F] [ProperSpace F] {ψ : AddChar F
   let K' : Set (Fin (m + 1) → F) := ⋃ k ∈ T'.support, (fun r => r ᵥ* ((κ k)⁻¹).val) '' K
   have hK' : IsCompact K' := T'.support.isCompact_biUnion fun k _ =>
     hK.image (continuous_id.matrix_vecMul continuous_const)
-  obtain ⟨M, hM⟩ := GlobalTheory.T.exists_finite_characterSum_eq_locallyConstant_on_compact ψ hψ hψ1 K' hK' Φ hΦ
+  obtain ⟨M, hM⟩ := _root_.GlobalTheory.JSW.KirFin.exists_charSum_eq_on_compact ψ hψ hψ1 K' hK' Φ hΦ
   set T₂ : GL (Fin (m + 2)) F →₀ ℂ := T'.sum fun k c => Finsupp.single (cor (κ k)) c with hT₂def
   let M₂ : GL (Fin (m + 2)) F →₀ ℂ := M.sum fun v c => Finsupp.single (mir 1 v) c
   refine ⟨M₂, fun f hf hfL h => ?_⟩
@@ -114,7 +120,7 @@ theorem exists_cut_cor_of_sub : ∀ {F : Type} [NormedField F] [ProperSpace F] [
   obtain ⟨U₁, hU₁U, hU₁o, T', hT'⟩ := H U hUc hUo 1
   have hU₁c : IsCompact (U₁ : Set (GL (Fin (m + 1)) F)) :=
     hUc.of_isClosed_subset (U₁.isClosed_of_isOpen hU₁o) hU₁U
-  have hOe := GlobalTheory.T.isClopen_rowVector_orbit_compactOpen_GL U₁ hU₁c hU₁o (lr 1) (lr_ne_zero 1)
+  have hOe := _root_.GlobalTheory.JSW.Orbit.isClopen_orbit U₁ hU₁c hU₁o (lr 1) (lr_ne_zero 1)
   let R : GL (Fin (m + 1)) F → Set (Fin (m + 1) → F) := fun a =>
     (fun r => r ᵥ* ((a * h₀)⁻¹).val) ⁻¹' {r | ∃ b ∈ U₁, r = lr 1 ᵥ* (b : Matrix (Fin (m + 1)) (Fin (m + 1)) F)}
   have hR : ∀ a, IsClopen (R a) := fun a => hOe.preimage (continuous_id.matrix_vecMul continuous_const)

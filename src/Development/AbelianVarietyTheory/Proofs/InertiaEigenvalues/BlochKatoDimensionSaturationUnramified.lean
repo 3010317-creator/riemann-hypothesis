@@ -1,11 +1,12 @@
 module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.TableLineDegreeTwo
-import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CoboundaryMemBlochKatoCocycles
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BlochKatoDimensionFormulaConcretePeriodRings
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamComponentsCrystallineLettersFinrank
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedTrivialLocalStatement
+public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedTrivialLocal
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -223,6 +224,6 @@ theorem blochKato_dimension_saturation_unramified : ∀ D : D7, Formalism.MainNo
     refine mem_H1fT_of_smul _ ρ L hc κ a ?_ h
     intro h0
     exact ha (Subtype.ext h0)
-  · exact GlobalTheory.T.unramified_trivial_local l (D.loc l) (D.locA l) (D.locT l) K LL
+  · exact _root_.GlobalTheory.UnramifiedTrivial.unrTriv l (D.loc l) (D.locA l) (D.locT l) K LL
 
 end GlobalTheory.FiltrationJumpMultiplicity

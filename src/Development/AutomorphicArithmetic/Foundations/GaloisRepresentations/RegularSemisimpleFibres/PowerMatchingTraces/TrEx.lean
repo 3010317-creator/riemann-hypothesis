@@ -3,7 +3,8 @@ module
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.PowerMatchingTraces.MatchPowAlt
 public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.ExTwist
 public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.LocIff
-public import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.OccursBasics
+public import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.SummandFactor
+public import Development.WeilBound.CuspidalAdmissibility.OccursIff
 public import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.OccursIff
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.PowerMatchingTraces.ChiBasic
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.PowerMatchingTraces.IsIntegralOpUntw
@@ -65,7 +66,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.G.trEx :
   obtain ⟨e, he⟩ := htw τ₁ h₁
   have hocc : Occurs μ V v τ₁ :=
     (occursIff K n μ V hV.summand v τ₁).2 ((Dp.locIff K n μ (π.twist χ) V hV v τ₁).1 h₁)
-  obtain ⟨h₁, h₂, h₃⟩ := occursBasics K n μ V v m hV.summand
+  obtain ⟨h₁, h₂, h₃⟩ := _root_.PositivityTheory.TfC.OccursBasics_holds K n μ V v m hV.summand
   obtain ⟨z, hz⟩ := h₃ τ₁ hocc (fun g => f g * chiAt n χ⁻¹ v g) ((chiBasic K n χ⁻¹ v).2.2 f hf)
   have ht := (trTw _ m (chiAt n χ v) τ τ₁ e he (fun g => f g * chiAt n χ⁻¹ v g) z).1.2 hz
   have hfun : (fun g => f g * chiAt n χ⁻¹ v g * chiAt n χ v g) = f := by

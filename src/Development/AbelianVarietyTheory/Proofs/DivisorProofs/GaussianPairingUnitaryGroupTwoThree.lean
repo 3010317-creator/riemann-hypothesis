@@ -3,8 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousFourierGau
 public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HalfAddSelf
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralComplexGaussianPosDefHermitianPartStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralComplexGaussianPosDefHermitianPart
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeasurePreservingOfNormSqEqSumComplexCoords
+public import Mathlib.Data.Matrix.ColumnRowPartitioned
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -15,7 +19,6 @@ import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-public import Mathlib.Data.Matrix.ColumnRowPartitioned
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
@@ -133,7 +136,7 @@ theorem lam_mu_eq : ∀ (V : Type) [NormedAddCommGroup V] [InnerProductSpace ℝ
   refine ⟨fun g k hg hk => ?_, fun g₁ g₂ k₁ k₂ hg₁ hg₂ hk₁ hk₂ => ?_⟩
   · obtain ⟨A, hA⟩ : ∃ A : Matrix ι ι ℂ, A = (1 / 2 : ℂ) • (1 + gᴴ * g) := ⟨_, rfl⟩
     have hAA : A + Aᴴ = 1 + gᴴ * g := by rw [hA]; exact half_smul_add_conjTranspose_eq_of_hermitian _ (hHerm g)
-    obtain ⟨hA0, -, hAint⟩ := GlobalTheory.T.integral_complexGaussian_posDef_hermitian_part ι A (by rw [hAA]; exact posDef_one_add g)
+    obtain ⟨hA0, -, hAint⟩ := _root_.GlobalTheory.MatrixGaussian.integral_gaussian ι A (by rw [hAA]; exact posDef_one_add g)
     obtain ⟨hstar, hdet⟩ := hd1 g hg
     rw [← hA] at hdet
     have hpt : ∀ u, gau u * gau (k u) = cexp (-(π : ℂ) * (star (e u) ⬝ᵥ A *ᵥ e u)) := by
@@ -164,7 +167,7 @@ theorem lam_mu_eq : ∀ (V : Type) [NormedAddCommGroup V] [InnerProductSpace ℝ
         fromBlocks_conjTranspose, fromBlocks_add, ← fromBlocks_one, fromBlocks_add,
         half_smul_add_conjTranspose_eq_of_hermitian _ (hHerm g₁), half_smul_add_conjTranspose_eq_of_hermitian _ (hHerm g₂), half_cross_add_conjTranspose_eq_mul s g₁ g₂ hs,
         half_cross_add_conjTranspose_eq_mul_swap s g₁ g₂ hs]
-    obtain ⟨-, hMi, hMint⟩ := GlobalTheory.T.integral_complexGaussian_posDef_hermitian_part (ι ⊕ ι) M (by rw [hMM]; exact posDef_one_add _)
+    obtain ⟨-, hMi, hMint⟩ := _root_.GlobalTheory.MatrixGaussian.integral_gaussian (ι ⊕ ι) M (by rw [hMM]; exact posDef_one_add _)
     have hpt : ∀ u v, gau u * gau v * (cexp (π * I * (omJ J (k₁ u) (k₂ v) : ℂ)) * gau (k₁ u + k₂ v)) =
         cexp (-(π : ℂ) * (star (Sum.elim (e u) (e v)) ⬝ᵥ M *ᵥ Sum.elim (e u) (e v))) := by
       intro u v

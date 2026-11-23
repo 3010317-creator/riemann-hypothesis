@@ -4,7 +4,8 @@ public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
 public import Mathlib.RingTheory.DiscreteValuationRing.Basic
 public import Mathlib.RingTheory.Valuation.ValuationSubring
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsValuationSubringExtendingRingHomStatement
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsValuationSubringExtendingRingHom
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -72,7 +73,7 @@ theorem geomPoint_factors_valuationSubring_algClosure :
   have hinj : Function.Injective j' :=
     (algebraMap L (AlgebraicClosure L)).injective.comp (IsFractionRing.injective W L)
   set g : W →+* k := (Spec.preimage x).hom with hg
-  obtain ⟨U, hU, h, hh⟩ := GlobalTheory.T.exists_valuationSubring_extending_ringHom W (AlgebraicClosure L) k j' hinj g
+  obtain ⟨U, hU, h, hh⟩ := _root_.GlobalTheory.ValExt.exists_valuationSubring_ext W (AlgebraicClosure L) k j' hinj g
   refine ⟨U, j'.codRestrict U.toSubring hU, h, ?_, ?_⟩
   · ext w; rfl
   · have hcomp : h.comp (j'.codRestrict U.toSubring hU) = g := by

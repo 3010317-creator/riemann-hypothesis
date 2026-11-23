@@ -2,7 +2,8 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsFlatAnIffIsConstMul
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelEigenvectorsActionStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeGram
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelEigenvectorsAction
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelPullbackEquivalence
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -142,7 +143,7 @@ theorem exists_lieModel_tied_isEigFrame : ∀ (E : Type) [Field E] [NumberField 
   have hfr₀ : IsEigFrame Xo.univ.t.act (under y) ch v₀ := hv₀
   have htan₀ : ∀ k, IsTanAt Xo.univ.t.G (under y) (v₀ k) := fun k => (hfr₀.1 k).1
   choose u hu using fun k => M₀.onto (v₀ k) (htan₀ k)
-  have hI := (GlobalTheory.T.lie_model_eigenvectors_action _ ℂ Xo.univ.t.G (under y) V M₀).2 _ Xo.univ.t.act ρ ch hρ
+  have hI := (_root_.GlobalTheory.CompanionTheory.Ar.Fl.Bridge.comb_eig_frame _ ℂ Xo.univ.t.G (under y) V M₀).2 _ Xo.univ.t.act ρ ch hρ
   have hv₀' : v₀ = fun k => M₀.pt (u k) := funext fun k => (hu k).symm
   rw [hv₀'] at hfr₀
   obtain ⟨hu_li, hu_span⟩ := (hI.2 n u).1 hfr₀

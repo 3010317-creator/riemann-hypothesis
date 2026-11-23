@@ -2,12 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
 public import Development.AbelianVarietyTheory.CrystallinePeriods.CrisIncl
-import Development.AbelianVarietyTheory.CrystallinePeriods.RingBasics
-import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EisensteinApproxRootGaloisSubMemBdRFilStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsApproxRootEisensteinAwayPrimeStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsApproxRootEisensteinAwayPrime
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsMulSubPrimePowDvdEPowStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisFactorTiltLogBdRPlusStatement
+import Development.AbelianVarietyTheory.CrystallinePeriods.RingBasics
+import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AcrisLogTeichmullerUniqueGaloisFrobeniusBdR
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.OneAddMulDerivativeTrunc
 import Mathlib.Algebra.Order.Floor.Extended
@@ -64,7 +64,7 @@ theorem exists_truncLog_gal_mod_fil : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l
       aDp l (Per.σA (g : GQ l) (bk.ev s) - bk.ev s) -
         (l : Per.BdRp l) ^ k * (aDp l (Per.zA l ((bk.Ep.natDegree : ℤ_[l]) * c g)) * C.j C.t) ∈ Per.FilP l m := by
   intro l _ K bk C c hc m
-  obtain ⟨M, q, hq1, hq2⟩ := GlobalTheory.T.exists_approx_root_eisenstein_away_prime l K bk m
+  obtain ⟨M, q, hq1, hq2⟩ := _root_.GlobalTheory.BSP.BK.exists_approx_root l K bk m
   obtain ⟨N, r, hr⟩ := GlobalTheory.T.exists_mul_sub_prime_pow_dvd_E_pow l K bk M m q hq1
   obtain ⟨d, hd⟩ := GlobalTheory.RingBasics.exists_pow_div_factorial l m
   set w₀ : bk.S := ((l : bk.S) ^ M * X - q) * r with hw₀

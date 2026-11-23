@@ -2,15 +2,19 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.T2SpaceAdelicGeneralLinearGroupNumberField
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspFormLinearCombination
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDimensionalSpanCompactOrbitLieDerivativeStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExpoConjOfIsCsd
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDimensionalSpanCompactOrbitLieDerivative
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasCompactSupportSum
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCuspidalLieActionOfIsCuspFormStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemZalgCommuteCompactRepStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemZalgCommuteLieActionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCuspidalLieActionOfIsCuspForm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemZalgCommuteCompactRep
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ContinuousConjFin
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemZalgCommuteLieAction
+public import Development.AbelianVarietyTheory.Definitions.Foundations.AestronglyMeasurableQuotMeasureIffLift
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.L2ConvolutionLocallyCompactMem
+public import GroundTheory.AutomorphicForms.AutomorphicFormSpaces.Archimedean
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LieDerivativeConvolutionKernel
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ModerateGrowthConvolutionIntegral
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOfIsOpenStab
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.L2ConvolutionLocallyCompactMemStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LieDerivativeConvolutionKernelStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ModerateGrowthConvolutionIntegralStatement
 import GroundTheory.AutomorphicForms.AutomorphicFormSpaces.GKStable
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -47,7 +51,8 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AutomorphicFormDerivativeModerateGrowth
+import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsSpanFormsNeBot
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieGrowthOfFinite
 import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.IsNormalisedOfIsDiscrete
 import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.IsCompactOperatorOfIsHilbertSchmidt
 
@@ -113,7 +118,7 @@ theorem isCuspForm_cpt (c : Kinf E a) {φ : Sm E a} (h : IsCuspForm φ) : IsCusp
     refine Submodule.subset_span ⟨c' * c, ?_⟩
     change _ = (cptRep E a c' * cptRep E a c) φ
     rw [← map_mul]
-  · exact zfin_of_comm _ (fun z hz => GlobalTheory.T.mem_zalg_commute_compactRep E a c z hz) hA.zfin
+  · exact zfin_of_comm _ (fun z hz => _root_.GlobalTheory.ZalgCpt.zalg_comm_cptRep E a c z hz) hA.zfin
   · obtain ⟨C, N, h1⟩ := growth_mul (Unitary.toUnits c) (hA.growth g)
     refine ⟨C, N, fun y => ?_⟩
     change ‖φ.1 (g * infGL E a y * infGL E a (Unitary.toUnits c))‖ ≤ _
@@ -197,13 +202,13 @@ theorem exists_stable (E : Type) [Field E] [NumberField E] [_root_.NumberField.I
   | lie X =>
     letI : MeasurableSpace (AutomorphicForm.archGroup E a) := borel _
     haveI : BorelSpace (AutomorphicForm.archGroup E a) := ⟨rfl⟩
-    obtain ⟨D, hD, hDc, hrep⟩ := GlobalTheory.T.lie_derivative_convolution_kernel E a (Measure.haar : Measure (AutomorphicForm.archGroup E a)) φ h1.1 X
+    obtain ⟨D, hD, hDc, hrep⟩ := _root_.GlobalTheory.CompanionTheory.LieConv.lie_eq_conv E a (Measure.haar : Measure (AutomorphicForm.archGroup E a)) φ h1.1 X
     have hc : Continuous φ.1 := ContAut.continuous_of_isOpen_stab E a φ h1.1.level
-    obtain ⟨h', hW⟩ := GlobalTheory.T.l2_convolution_locally_compact_mem (latticeGL E a) μ (Measure.haar : Measure (AutomorphicForm.archGroup E a))
+    obtain ⟨h', hW⟩ := _root_.GlobalTheory.CompanionTheory.AutomorphicL2Convolution.memL2_convolution_mem (latticeGL E a) μ (Measure.haar : Measure (AutomorphicForm.archGroup E a))
       (AutomorphicForm.infEmb E a) AutomorphicForm.continuous_infEmb D hD hDc φ.1 (lie E a X φ).1 hc h3 hrep
-    refine ⟨⟨⟨fun γ g => lieD_left X (h1.1.left γ) g, ?_, GlobalTheory.T.finiteDimensional_span_compact_orbit_lieDerivative E a X φ h1.1.kfin,
-      GlobalTheory.CuspStab.zfin_of_comm _ (fun z hz => GlobalTheory.T.mem_zalg_commute_lie_action E a X z hz) h1.1.zfin,
-      GlobalTheory.T.moderate_growth_convolution_integral E a _ φ.1 _ hc h1.1.growth D hD hDc hrep⟩, GlobalTheory.T.isCuspidal_lieAction_of_isCuspForm E a X φ h1⟩,
+    refine ⟨⟨⟨fun γ g => lieD_left X (h1.1.left γ) g, ?_, _root_.GlobalTheory.CuspRep.KFin.kfin_lie E a X φ h1.1.kfin,
+      GlobalTheory.CuspStab.zfin_of_comm _ (fun z hz => _root_.GlobalTheory.CuspRep.Zalg_mul_lie E a X z hz) h1.1.zfin,
+      _root_.GlobalTheory.CompanionTheory.GrowthConv.growth_conv E a _ φ.1 _ hc h1.1.growth D hD hDc hrep⟩, _root_.GlobalTheory.CuspRep.isCuspidal_lie_of_isCuspForm E a X φ h1⟩,
       fun t g => lieD_left X (h2 t) g, h', hW H hS h4⟩
     exact GlobalTheory.CuspStab.level_of_le h1.1.level fun k hk => by
       change finRep E a k (lie E a X φ) = lie E a X φ

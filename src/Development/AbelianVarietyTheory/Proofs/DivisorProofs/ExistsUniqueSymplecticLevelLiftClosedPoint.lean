@@ -3,9 +3,12 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.SiegelToroidalIntegral
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueTorsionLift
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsGrpPullbackSelf
+public import Development.AbelianVarietyTheory.Definitions.Divisors.GalRigidOfSurjective
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaLevelAbelianSchemeGlueAffineCover
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PushEquivSymmLeft
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.WeilIsIffOfIsGrpPullbackComm
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ConstGen
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.WeilIsGrpPullbackOfCommute
 import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsFiniteEtaleCoverConstantTorsion
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ConnectedSpaceSpecOfIsLocalRing
 import Mathlib.Algebra.Order.Floor.Extended
@@ -43,7 +46,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.GalRigidOfSurjective
 import Development.AbelianVarietyTheory.Definitions.Divisors.SRelOneOneIff
 
 @[expose] public section
@@ -224,7 +226,7 @@ theorem exists_level_lift : ∀ (g n : ℕ), 3 ≤ n → Odd n → ∀ (K : Type
   · have cardk := GlobalTheory.TorsionCover.card_torsion AV hAV hd (spMap ρ) (GlobalTheory.TorsionCover.natCast_ne_zero hnΓ (spMap ρ))
     exact surj (fun a => toUnit (Over.mk (spMap ρ)) ≫ σ a) (addAt _) (kerAt _) (torsAt _)
       (by rw [cardk]; simp [two_mul]) gg hg
-  · have H' := (GlobalTheory.weilIs_iff_of_isGrpPullback_comm (Sp V) (Sp K) AV c.A (spMap π) φ
+  · have H' := (_root_.GlobalTheory.weilIs_grpPullback_of_comm (Sp V) (Sp K) AV c.A (spMap π) φ
       (PV.pull (lift (𝟙 AV) (𝟙 AV)).left) (c.P.pull (lift (𝟙 c.A) (𝟙 c.A)).left) (pull_isLB hPV _)
       (pull_isLB c.isLB _) hφ hdiag (Over.mk x₀) (n : ℤ) _ _ (toUnit T₀ ≫ σ a) (toUnit T₀ ≫ σ a') _
       (by rw [← push]; rfl) (by rw [← push]; rfl)).1 (g3 a a')

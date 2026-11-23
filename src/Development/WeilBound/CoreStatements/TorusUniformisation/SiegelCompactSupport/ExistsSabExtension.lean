@@ -7,11 +7,17 @@ public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.IsI
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.RangeSubsetAbLocusOfIsProper
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsRigidifiedCubicalSymmetricExtensionNormalB
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSabExtension
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CubicalStructureAndSymmetricOfCubeGenStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLineBundleGeneratorExtendingDensePartStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.CubicalStructures.CubicalPullBaseChangeSt
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CubicalStructureAndSymmetricOfCubeGen
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.CubicalStructures.CubeSymmetricSwapFirst
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLineBundleGeneratorExtendingDensePart
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSabMapOfLbIso
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsIsoStalkMapOfFlatOfSurjectiveOnStalks
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsPullCubicalId
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsIsoStalkMapOfFlatOfSurjectiveOnStalks
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -70,7 +76,7 @@ theorem pic_ext {X U : Scheme.{0}} [IsLocallyNoetherian X] (hX : Geo.Tor.IsNorma
     α = β := by
   obtain ⟨N, hN, hc⟩ := cls_surj (α - β)
   refine sub_eq_zero.1 (hc ▸ (cls_eq_zero_iff hN).2 ?_)
-  refine GlobalTheory.T.exists_lineBundleGenerator_extending_densePart X U j hX inferInstance inferInstance inferInstance inferInstance P e N he hp hg hN
+  refine _root_.GlobalTheory.GenericExtend.exists_isGen_of_densePart X U j hX inferInstance inferInstance inferInstance inferInstance P e N he hp hg hN
     ((cls_eq_zero_iff (pull_isLB hN _)).1 ?_) ((cls_eq_zero_iff (pull_isLB hN _)).1 ?_)
   · rw [cls_pull hN, hc, map_sub, h₂, sub_self]
   · rw [cls_pull hN, hc, ← hj.isoPullback_inv_fst, pull_comp, map_sub, h₁, sub_self, map_zero]
@@ -122,7 +128,7 @@ theorem exists_sab_extension {X U : Scheme.{0}} [IsLocallyNoetherian X] (hX : Ge
     ⟨Over.homMk (h.1.lift (pullback.fst T.hom j ≫ y.left) (pullback.snd T.hom j)
       (by rw [Category.assoc, Over.w]; exact pullback.condition)) (h.1.lift_snd _ _ _),
       Over.OverMorphism.ext (h.1.lift_fst _ _ _)⟩
-  obtain ⟨hcub, hsym⟩ := GlobalTheory.T.cubicalStructure_and_symmetric_of_cube_gen X G PP semi
+  obtain ⟨hcub, hsym⟩ := _root_.GlobalTheory.CubeGen.cubical_and_symmetric X G PP semi
     ⟨isReduced_of_normal hX, hgen.trans (range_subset_abLocus_of_isProper semi h.1)⟩
   obtain ⟨cub⟩ : Nonempty (CubicalStr G PP) := by
     refine hcub ((cls_eq_zero_iff (isLB_cube (x3 G) PP.isLB)).1 ?_)

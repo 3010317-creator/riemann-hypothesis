@@ -3,8 +3,8 @@ module
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MixedFieldContraction.ContractMixedFieldStatement
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FibreDim
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CoordinateProjectionOfArithSystemStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.GenericDegreeOfProjectionAndFibreDimStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CoordinateProjectionOfArithSystem
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.GenericDegreeOfProjectionAndFibreDim
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,6 +52,6 @@ namespace GlobalTheory.CompanionTheory.Ar.Giv
 
 theorem genDeg_of_system (h : ReciprocityTheory.ChartRestriction.G.Geo.ArithIntersectionSystemStatement) :
     GenDegStatement :=
-  GlobalTheory.T.generic_degree_of_projection_and_fibre_dim (GlobalTheory.T.coordinate_projection_of_arith_system h) fibreDim
+  _root_.GlobalTheory.CompanionTheory.Relay.generic_degree_of_projection_and_fibre_dim (_root_.GlobalTheory.CompanionTheory.Relay.coordinate_projection_of_arith_system h) fibreDim
 
 end GlobalTheory.CompanionTheory.Ar.Giv

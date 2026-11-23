@@ -3,12 +3,17 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntDerApply
 public import Mathlib.RingTheory.AdicCompletion.Basic
 public import Mathlib.RingTheory.MvPowerSeries.Derivative
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffSingleDerivationTaylorPowerSeriesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffSingleDerivationTaylorPowerSeries
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivationTaylorPowerSeriesOfDerivationsKill
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoeffwiseDerivationMvPowerSeriesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoordinatePolynomialSubMemMaximalIdealPowStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSolveMvPowerSeriesMatrixIdentityConstStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MvPowerSeriesDegreeAdicFiltrationMulLeStatement
+public import Mathlib.RingTheory.Derivation.Basic
+public import Mathlib.RingTheory.MvPowerSeries.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoeffwiseDerivationMvPowerSeries
+public import Mathlib.RingTheory.Ideal.Maps
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoordinatePolynomialSubMemMaximalIdealPow
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSolveMvPowerSeriesMatrixIdentityConst
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfForallMemFilt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MvPowerSeriesDegreeAdicFiltrationMulLe
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TaylorIsRingHom
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -54,7 +59,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfForallMemFilt
 
 @[expose] public section
 
@@ -86,18 +90,18 @@ theorem derivation_extends : ∀ (R A : Type) [CommRing R] [IsLocalRing R] [IsNo
   intro R A _ _ _ _ _ _ _ _ inc ev hev n ds z hz hdz hm hinc d D hdD
   obtain ⟨T, hT⟩ := taylor_isRingHom A R n ev ds
   simp only [← hT]
-  obtain ⟨E, hE⟩ := GlobalTheory.T.exists_coeffwise_derivation_mvPowerSeries (Fin n) R D
+  obtain ⟨E, hE⟩ := _root_.GlobalTheory.mvPowerSeries_derivation_coeffwise (Fin n) R D
   have hEC : ∀ r, E (MvPowerSeries.C r) = MvPowerSeries.C (D r) := by
     intro r; ext α
     rw [hE, MvPowerSeries.coeff_C, MvPowerSeries.coeff_C]
     split_ifs <;> simp
   have hTinc : ∀ r, T (inc r) = MvPowerSeries.C r := by
     intro r; rw [hT, taylor_const A R n ev ds (inc r) (fun i => hinc i r), hev]
-  obtain ⟨G, hG⟩ := GlobalTheory.T.exists_solve_mvPowerSeries_matrix_identity_const n R (fun i j => pdZ j (T (z i))) (by
+  obtain ⟨G, hG⟩ := _root_.GlobalTheory.powerSeries_matrix_solve n R (fun i j => pdZ j (T (z i))) (by
     intro i j
     simp only [pdZ_apply]
     rw [← MvPowerSeries.coeff_zero_eq_constantCoeff_apply, MvPowerSeries.coeff_pderiv, zero_add, hT,
-      GlobalTheory.T.coeff_single_derivationTaylorPowerSeries, hdz]
+      _root_.GlobalTheory.FormalOrigin.Extend.taylor_coeff_single, hdz]
     simp [eq_comm]) (fun i => T (d (z i)) - E (T (z i)))
   set dΩ : Derivation ℤ (MvPowerSeries (Fin n) R) (MvPowerSeries (Fin n) R) := E + ∑ j, G j • pdZ j with hdΩ
   have hΩ : ∀ F, dΩ F = E F + ∑ j, G j * pdZ j F := fun F => add_sum_apply E G _ F
@@ -164,7 +168,7 @@ theorem derivation_extends : ∀ (R A : Type) [CommRing R] [IsLocalRing R] [IsNo
         rw [pow_succ'] at hx
         refine Submodule.mul_induction_on hx (fun a ha b hb => ?_) (fun a b ha hb => ?_)
         · rw [map_mul, add_comm]
-          exact GlobalTheory.T.mvPowerSeriesDegreeAdicFiltration_mul_le (Fin n) R _ 1 k (Ideal.mul_mem_mul (hT1 a ha) (ih b hb))
+          exact _root_.GlobalTheory.FormalOrigin.Extend.filt_mul_filt_le (Fin n) R _ 1 k (Ideal.mul_mem_mul (hT1 a ha) (ih b hb))
         · rw [map_add (f := _)]; exact Ideal.add_mem _ ha hb
     have hek : ∀ k, ∀ x ∈ maximalIdeal A ^ (k + 1), e x ∈ filt (maximalIdeal R) k := by
       intro k
@@ -177,12 +181,12 @@ theorem derivation_extends : ∀ (R A : Type) [CommRing R] [IsLocalRing R] [IsNo
         · rw [e_mul]
           refine Ideal.add_mem _ ?_ (Ideal.mul_mem_right _ _ (hTk _ b hb))
           rw [add_comm]
-          exact GlobalTheory.T.mvPowerSeriesDegreeAdicFiltration_mul_le (Fin n) R _ 1 k (Ideal.mul_mem_mul (hT1 a ha) (ih b hb))
+          exact _root_.GlobalTheory.FormalOrigin.Extend.filt_mul_filt_le (Fin n) R _ 1 k (Ideal.mul_mem_mul (hT1 a ha) (ih b hb))
         · rw [e_add]; exact Ideal.add_mem _ ha hb
     intro f
     have : e f = 0 := by
       refine eq_zero_of_forall_mem_filt (maximalIdeal R) _ fun k => ?_
-      obtain ⟨p, hp, hfp⟩ := GlobalTheory.T.exists_coordinate_polynomial_sub_mem_maximalIdeal_pow R A inc ev hev n z hm (k + 1) f
+      obtain ⟨p, hp, hfp⟩ := _root_.GlobalTheory.exists_mem_closure_sub_mem_maximalIdeal_pow R A inc ev hev n z hm (k + 1) f
       have h1 : e f = e p + e (f - p) := by rw [← e_add]; congr 1; ring
       rw [h1, show e p = 0 from hQ hp, zero_add]
       exact hek k _ hfp

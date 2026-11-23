@@ -4,8 +4,9 @@ public import Formalism.SharpRestriction.LevelLetterCocycles.WachCoordinates
 public import Formalism.GaloisCohomology.LocalTateDualityK
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.RationalDualityOfAllCoefficients
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FontaineAndDecompletion
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FontaineFullFaithfulExactPsiStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalLiftingTheoremEHypothesesAdmittedStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.InvariantsGenerators
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FontaineFullFaithfulExactPsi
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalLiftingTheoremEHypothesesAdmitted
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RecordCaseA
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitGenExists
 public import Formalism.SharpRestriction.LevelLetterCocycles.LocalCorollaryConstant
@@ -62,11 +63,11 @@ theorem closing (hBK : GlobalTheory.Published.BlochKatoLocal) (hTD : Formalism.G
   have hDdR := fun (l : ℕ) [Fact l.Prime] (K LL : FinExt l) (h : CaseA K LL) =>
     GlobalTheory.Per.DdREqDcris.record_caseA D l K LL h
   have h9 := GlobalTheory.Decompl.fontaine_and_decompletion D HW F
-  have hFont := GlobalTheory.T.fontaine_fullFaithful_exact_psi D HW F
+  have hFont := _root_.GlobalTheory.fontaine_litFont_assembled D HW F
   have hUG : ∀ (l : ℕ) [Fact l.Prime] (K LL : FinExt l) (h : CaseA K LL), 5 ≤ l →
       ∃ e, Formalism.MainNotions.WachCoordinates.Br.UnitGen ((HW l).W K 1 LL h.2.2) e :=
     fun l _ K LL h _ => GlobalTheory.WachUnit.unitGen_exists D HW F l K 1 LL h.2.2
-  have hA := GlobalTheory.T.localLifting_theoremE_hypotheses_admitted hBK hTD hEC D HW F Cm
+  have hA := _root_.GlobalTheory.AdmThmE.admitted_all hBK hTD hEC D HW F Cm
   refine ⟨(Formalism.MainNotions.N.Ln03.local_corollary_of_de_rham D HW F Cm 10 800 _ rfl le_rfl hDdR h9 hFont hUG hA).1, fun C₂ hC₂ => ?_⟩
   exact (Formalism.MainNotions.N.Ln03.local_corollary_of_de_rham D HW F Cm 10 800 C₂ rfl hC₂ hDdR h9 hFont hUG hA).2
 

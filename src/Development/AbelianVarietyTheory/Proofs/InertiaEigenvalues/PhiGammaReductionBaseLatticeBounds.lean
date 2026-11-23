@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.JSmul
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Saturated
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GammaActionReductionStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GammaActionReduction
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachDeltaInvariantsReductionIsLatticeStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -366,7 +366,7 @@ theorem base_abc : ∀ {l : ℕ} [Fact l.Prime] {P : LocPrime l} (H : LocHW l P)
   obtain ⟨N', hN', hL⟩ := GlobalTheory.T.wachDeltaInvariants_reduction_isLattice H S k hk ι F τ γ p hι hτ hγ hQN T A q U hq hker hU
   have hNN : N = N' := funext fun i => Submodule.ext fun y => (hN i y).trans (hN' i y).symm
   subst hNN
-  exact ⟨hL, cond_all p hι (GlobalTheory.T.map_gamma_eq_deltaPi_teichmuller H S k).2 (P.PD_p S.K) (H.W_s _ _ _ _) hk.1 S.emb S.hyp.1.2.2.2.1 hτ hQN
+  exact ⟨hL, cond_all p hι (_root_.GlobalTheory.RedAct.gamma_action_reduction H S k).2 (P.PD_p S.K) (H.W_s _ _ _ _) hk.1 S.emb S.hyp.1.2.2.2.1 hτ hQN
     hq U hU N hN w w' hw⟩
 
 end GlobalTheory.BaseABC

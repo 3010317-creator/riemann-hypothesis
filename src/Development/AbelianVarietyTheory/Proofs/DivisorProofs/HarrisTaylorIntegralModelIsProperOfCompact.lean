@@ -2,11 +2,17 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NotCompactOfMEqOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHarrisTaylorObjectPullbackTer
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorModuliObjectPotentiallyGoodReductionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorObjectExtendsOverDvrOfAbelianModelStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorObjectPullbackCompStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsGrpPullbackOfGroupSchemeModelBaseChangeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsProperOfLiftCompleteDvrCharZeroStatement
+public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.SemistableFin
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorModuliObjectPotentiallyGoodReduction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorObjectExtendsOverDvrOfAbelianModel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorObjectPullbackComp
+public import Mathlib.AlgebraicGeometry.Morphisms.Flat
+public import Mathlib.AlgebraicGeometry.Morphisms.Proper
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsProperOfLiftCompleteDvrCharZero
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsGrpPullbackOfGroupSchemeModelBaseChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -67,7 +73,7 @@ theorem isProper_model_of_compact (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Ty
     (hc : 2 * D.a < Module.finrank ℚ D.F ∨ (D.IsDivision ∧ D.n < 2 * D.m)) : IsProper M.s := by
   haveI := M.smooth
   haveI : Smooth M.s := SmoothOfRelativeDimension.smooth (D.a * (D.n - 1)) M.s
-  refine GlobalTheory.T.isProper_of_lift_completeDvr_charZero R M.X M.s M.qproj inferInstance ?_
+  refine _root_.GlobalTheory.ValuativeFlat.isProper_of_lift_dominating R M.X M.s M.qproj inferInstance ?_
   intro V K _ _ _ _ _ _ _ _ β x hx
 
   obtain ⟨oK, ⟨hK⟩⟩ := GlobalTheory.T.exists_harrisTaylorObject_pullback p D R b N M.X (Sp K) M.s x M.univ
@@ -75,7 +81,7 @@ theorem isProper_model_of_compact (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Ty
   obtain rfl : s₀ = spMap ((algebraMap V K).comp β) := hs.symm.trans hx
 
   obtain ⟨W, L, _, _, _, _, _, _, _, _, hcomp, _, hloc, _, G, _, hmod, hab⟩ :=
-    GlobalTheory.T.harrisTaylorModuliObject_potentiallyGoodReduction p D R b N V K ((algebraMap V K).comp β) oK hc
+    _root_.GlobalTheory.HTPotGood.potGood p D R b N V K ((algebraMap V K).comp β) oK hc
 
   obtain ⟨oL, ⟨hL⟩⟩ := GlobalTheory.T.exists_harrisTaylorObject_pullback p D R b N (Sp K) (Sp L) (spMap ((algebraMap V K).comp β))
     (spMap (algebraMap K L)) oK
@@ -84,11 +90,11 @@ theorem isProper_model_of_compact (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Ty
     rw [specMap_contravariant_comp_ringHom, ← RingHom.comp_assoc, ← RingHom.comp_assoc, hcomp]
   generalize hs' : spMap (algebraMap K L) ≫ spMap ((algebraMap V K).comp β) = s₁ at oL hL
   obtain rfl : s₁ = spMap ((algebraMap W L).comp ((algebraMap V W).comp β)) := hs'.symm.trans hLs
-  obtain ⟨φ, hφ⟩ := GlobalTheory.T.isGrpPullback_of_group_scheme_model_base_change K W L oK.A G hmod oL.A hL.φ hL.cart
-  obtain ⟨oW, ⟨hW⟩⟩ := GlobalTheory.T.harrisTaylorObject_extends_over_dvr_of_abelianModel p D R b N W L ((algebraMap V W).comp β) oL G φ hab hφ
+  obtain ⟨φ, hφ⟩ := _root_.GlobalTheory.SS.exists_isGrpPullback_of_isModel K W L oK.A G hmod oL.A hL.φ hL.cart
+  obtain ⟨oW, ⟨hW⟩⟩ := _root_.GlobalTheory.HTObjExt.extends_obj p D R b N W L ((algebraMap V W).comp β) oL G φ hab hφ
   obtain ⟨f, ⟨hfs, ⟨hf⟩⟩, -⟩ := M.rep (Sp W) _ oW
-  obtain ⟨h₁⟩ := GlobalTheory.T.harrisTaylorObjectPullback_comp p D R b N _ _ _ _ _ _ oL oW M.univ _ _ hW hf
-  obtain ⟨h₂⟩ := GlobalTheory.T.harrisTaylorObjectPullback_comp p D R b N _ _ _ _ _ _ oL oK M.univ _ _ hL hK
+  obtain ⟨h₁⟩ := _root_.GlobalTheory.UPel.HT.objMap_comp p D R b N _ _ _ _ _ _ oL oW M.univ _ _ hW hf
+  obtain ⟨h₂⟩ := _root_.GlobalTheory.UPel.HT.objMap_comp p D R b N _ _ _ _ _ _ oL oK M.univ _ _ hL hK
   obtain ⟨g, -, hg⟩ := M.rep (Sp L) _ oL
   have e₁ : spMap (algebraMap W L) ≫ f = g := hg _ ⟨by rw [Category.assoc, hfs, specMap_contravariant_comp_ringHom], ⟨h₁⟩⟩
   have e₂ : spMap (algebraMap K L) ≫ x = g := hg _ ⟨by rw [Category.assoc, hx, hLs], ⟨h₂⟩⟩

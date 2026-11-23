@@ -1,12 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselFormConvergesEquivariantHermitianStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselFunctionalStandardSideStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsContinuousBesselMapSmoothVectorsStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselFormConvergesEquivariantHermitian
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselFunctionalStandardSide
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsContinuousBesselMapSmoothVectors
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableSetNotGG
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormIdentityBesselCoefficientQuotientStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SmoothVectorsDenseInvariantStatement
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormIdentityBesselCoefficientQuotient
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SmoothVectorsDenseInvariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -147,7 +147,7 @@ theorem GlobalTheory.SgInf.exists_isEll_DD : ∀ (k r : ℕ) {H : Type} [NormedA
   intro k r H _ _ _ Wp _ _ _ _ σ w a μG d z c π μS hStd hSide hsm hM1 ν hq hNV
   obtain ⟨-, hU, -, -, hHG, -, -, hDec, -⟩ := id hStd
   obtain ⟨-, -, -, hHS, -⟩ := id hSide
-  obtain ⟨hinv, -, hDV, -, hVsm⟩ := GlobalTheory.T.smooth_vectors_dense_invariant k r σ w hU
+  obtain ⟨hinv, -, hDV, -, hVsm⟩ := _root_.GlobalTheory.SgInfDD.DD_stable_dense k r σ w hU
   have hsmDD : ∀ v ∈ DD σ w, v ∈ smoothVecs (k := k) (r := r) σ :=
     fun v hv => (hVsm hsm).1 v (hDV hv)
   have hae := GlobalTheory.SgInf.WUnfold.ae_mem_GG hHG hHS hq
@@ -160,7 +160,7 @@ theorem GlobalTheory.SgInf.exists_isEll_DD : ∀ (k r : ℕ) {H : Type} [NormedA
     have hW0 : ∀ y ∈ GG k r, W y = 0 := by
       intro y hy
       rw [← hWfix y hy,
-        (GlobalTheory.T.bessel_functional_standard_side k r σ w a μG d z c π μS hStd hSide ν hq W hWG hWν hWeq hWfin y hy).2,
+        (_root_.GlobalTheory.SgInf.KernelRe.kernel_rconv k r σ w a μG d z c π μS hStd hSide ν hq W hWG hWν hWeq hWfin y hy).2,
         integral_eq_zero_of_ae, smul_zero]
       filter_upwards [hae] with g hg
       exact hz _ (mem_DD σ w hy) _ (mem_DD σ w hg) _
@@ -170,12 +170,12 @@ theorem GlobalTheory.SgInf.exists_isEll_DD : ∀ (k r : ℕ) {H : Type} [NormedA
     filter_upwards [hae] with x hx
     simp [hW0 _ hx]
   obtain ⟨u₁, hu₁, v₁, hv₁, ξ₁, hne₁⟩ := hne
-  obtain ⟨l₀, hB₀, hl₀⟩ := GlobalTheory.T.exists_continuous_besselMap_smoothVectors k r σ w a μG d z c π μS hStd hSide hsm v₁ hv₁ ξ₁
+  obtain ⟨l₀, hB₀, hl₀⟩ := _root_.GlobalTheory.SgInf.exists_besselExt k r σ w a μG d z c π μS hStd hSide hsm v₁ hv₁ ξ₁
 
   have hcol : ∀ v ∈ (DD σ w : Set H), ∀ ξ : Wp, ∃ b : ℂ, ∀ u ∈ (DD σ w : Set H),
       be (psiGen k r z c) π μS σ u v ξ = b • l₀ u := by
     intro v hv ξ
-    obtain ⟨l, hB, hl⟩ := GlobalTheory.T.exists_continuous_besselMap_smoothVectors k r σ w a μG d z c π μS hStd hSide hsm v hv ξ
+    obtain ⟨l, hB, hl⟩ := _root_.GlobalTheory.SgInf.exists_besselExt k r σ w a μG d z c π μS hStd hSide hsm v hv ξ
     obtain ⟨b, hb | hb⟩ := hM1 l l₀ hB hB₀
     · exact ⟨b, fun u hu => by rw [← hl u hu]; exact hb u (hsmDD u hu)⟩
     · have hb0 : b ≠ 0 := by
@@ -187,9 +187,9 @@ theorem GlobalTheory.SgInf.exists_isEll_DD : ∀ (k r : ℕ) {H : Type} [NormedA
   obtain ⟨t, ⟨u₂, hu₂, hne₂⟩, hrk⟩ := GlobalTheory.SgInf.BeRankOne.exists_rankOne_of_hermitian_nonneg_operatorKernel (DD σ w : Set H)
     (be (psiGen k r z c) π μS σ) l₀ hcol
     (fun u hu v hv =>
-      (GlobalTheory.T.besselForm_converges_equivariant_hermitian k r σ w a μG d z c π μS hStd hSide (DD σ w : Set H) hinv hDec u hu v hv).2.2.1)
+      (_root_.GlobalTheory.SgInf.BeForm.be_converges_equivariant_hermitian_continuous k r σ w a μG d z c π μS hStd hSide (DD σ w : Set H) hinv hDec u hu v hv).2.2.1)
     (fun v hv ξ => by
-      have h := GlobalTheory.T.norm_identity_besselCoefficient_quotient k r σ w a μG d z c π μS hStd hSide ν hq v hv v hv v hv ξ
+      have h := _root_.GlobalTheory.SgInf.normIdentity_besselCoef k r σ w a μG d z c π μS hStd hSide ν hq v hv v hv v hv ξ
       exact ⟨h.2.2.2.2.1, h.2.2.2.2.2⟩)
     ⟨u₁, hu₁, v₁, hv₁, ξ₁, hne₁⟩
   refine ⟨fun u => t • l₀ u, ?_⟩

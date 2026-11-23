@@ -4,15 +4,18 @@ public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.P
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.Signature
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasseNormTheoremQuadraticExtension
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsConjDatum
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsCoprimeScaledIsometrySameSignatureStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsCoprimeScaledIsometrySameSignature
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsDatumSumAndAllSignatures
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsHermCoordOfDatum
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsScaledIsometry
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsSplitLatticeDatumEverySignatureStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUnitaryConjSplitLatticeOfLocalStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsSplitLatticeDatumEverySignature
+public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.IsHermHyperbolic
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUnitaryConjSplitLatticeOfLocal
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.HermitianLatticeSignatureSplitOfIndefinite
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsHermCoordOfDatum
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FinrankEqOfInjectiveOfSpan
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.HermitianFormsSameSignatureSameSpace
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.HermitianLatticeSignatureSplitOfIndefinite
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LandherrStOfHasseNormSt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -58,7 +61,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.IsHermHyperbolic
 
 @[expose] public section
 
@@ -104,7 +106,7 @@ theorem exists_isotropic (h1 : ∃ D₁ : Datum H, D₁.p = 1 ∧ D₁.q = 0) (D
 
 theorem splitLat_of_one_one : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H), (∃ D₁ : Datum H, D₁.p = 1 ∧ D₁.q = 0) → D.p = 1 → D.q = 1 → SplitLat D := by
   intro E _ _ _ H D h1 hp hq
-  obtain ⟨D₀, ep, eq, Lp, Lm, htop, ho, rp, rm, sp, sm⟩ := GlobalTheory.T.exists_splitLattice_datum_every_signature E H D.p D.q h1
+  obtain ⟨D₀, ep, eq, Lp, Lm, htop, ho, rp, rm, sp, sm⟩ := _root_.GlobalTheory.CompRat.exists_splitLat_of_signature E H D.p D.q h1
   have := D.fin
   have := D₀.fin
   have hξ := GlobalTheory.OneSpace.cc_rt H
@@ -138,7 +140,7 @@ theorem splitLat_of_one_one : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     simp at h5
   obtain ⟨b₁, hb₁, m₁⟩ := GlobalTheory.SelfDualIsom.exists_nat_smul_mem φ φ₀ span₀
   obtain ⟨b₂, hb₂, m₂⟩ := GlobalTheory.SelfDualIsom.exists_nat_smul_mem φ₀ φ span
-  obtain ⟨k, f, hk, hf⟩ := GlobalTheory.T.exists_coprime_scaled_isometry_same_signature E H D D₀ ep eq (2 * b₁ * b₂) (by positivity)
+  obtain ⟨k, f, hk, hf⟩ := _root_.GlobalTheory.LocalIsomAt.exists_coprime_scaled_isometry E H D D₀ ep eq (2 * b₁ * b₂) (by positivity)
   have hk0 : k ≠ 0 := by
     rintro rfl
     rw [Nat.coprime_zero_left] at hk
@@ -164,7 +166,7 @@ theorem splitLat_of_one_one : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
       rfl) x y
     rwa [one_mulVec, one_mulVec] at this
   have hd₀ := isUnit_det hdet hU₀
-  obtain ⟨γ, hU, hγ⟩ := GlobalTheory.T.exists_unitary_conj_split_lattice_of_local (maximalRealSubfield E) E (IsCMField.complexConj E) _ G
+  obtain ⟨γ, hU, hγ⟩ := _root_.GlobalTheory.UTrans.exists_isU_conj_mem (maximalRealSubfield E) E (IsCMField.complexConj E) _ G
     (Algebra.IsQuadraticExtension.finrank_eq_two _ _) hh hz (LinearMap.range φ) (LinearMap.range φ₀) hfg span
     π γ₀ (φ₀ a) (2 * b₁ * b₂) k π1 π2 ((π4 a).2 ha) hxx (by rintro _ ⟨y, rfl⟩; exact π3 y) (by positivity)
     (by

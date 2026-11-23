@@ -1,8 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSingle
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.KerReductionLeRangeReductionOfMulEqSmulStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymEdgeStableSubmoduleEqTopStatement
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Data.Matrix.Mul
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.KerReductionLeRangeReductionOfMulEqSmul
+public import Formalism.LocalToGlobal.Divisibility.DefGroup
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymEdgeStableSubmoduleEqTop
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -341,7 +344,7 @@ theorem isScal_of_normalises (K : Type) [Field K] (O : ValuationSubring K) (k : 
   have hAst : ∀ w ∈ V, (fun j => ∑ i, if symEdge ρ κ i j then a i j * w i else 0) ∈ V := by
     rintro w ⟨u, rfl⟩
     rw [hz]
-    obtain ⟨u', hu'⟩ := GlobalTheory.T.ker_reduction_le_range_reduction_of_mul_eq_smul r hr Mo No πo hπ0 hπdiv hMN (A'ᵀ *ᵥ (Mb *ᵥ u)) (by
+    obtain ⟨u', hu'⟩ := _root_.GlobalTheory.ker_map_subset_range_map_of_mul_eq_smul r hr Mo No πo hπ0 hπdiv hMN (A'ᵀ *ᵥ (Mb *ᵥ u)) (by
       rw [← hNb, Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, hNAM, Matrix.zero_mulVec])
     exact ⟨u', hu'.symm⟩
   have hEst' : ∀ i j : Fin n, i < j → ¬(ρ ≤ i.val ∧ i.val < ρ + κ ∧ j.val = ρ + κ) → ∀ w ∈ V, Pi.single i (w j) ∈ V := by
@@ -364,7 +367,7 @@ theorem isScal_of_normalises (K : Type) [Field K] (O : ValuationSubring K) (k : 
       simp only [Matrix.mulVec, dotProduct]
       refine Finset.sum_eq_zero fun x _ => ?_
       rw [Matrix.single_apply, if_neg (fun e => h e.1.symm), zero_mul]
-  have htop := GlobalTheory.T.symEdge_stable_submodule_eq_top k n ρ κ hn hρ a ha V hV0 hAst hEst'
+  have htop := _root_.GlobalTheory.symEdge_span_eq_top k n ρ κ hn hρ a ha V hV0 hAst hEst'
   have hmemv : Pi.single j₂ (1 : k) ∈ V := htop ▸ Submodule.mem_top
   obtain ⟨u, hu⟩ := hmemv
   have h6 : Nb *ᵥ Pi.single j₂ 1 = 0 := by

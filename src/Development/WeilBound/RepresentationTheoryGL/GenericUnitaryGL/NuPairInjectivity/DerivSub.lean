@@ -2,7 +2,10 @@ module
 
 public import Development.WeilBound.RepresentationTheoryGL.GenericUnitaryGL.SegmentDerivatives.DerivSub
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DerivativeJacquetHolds
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeviIrreducibleTensorDecompositionStatement
+import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IrreducibleAdmissibleGL
+import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.LeviEmbMemNormalizerLower
+import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.NontrivialOfIrreducible
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeviIrreducibleTensorDecomposition
 import Development.AutomorphicSpectrum.Proofs.GlobalProofs.JacquetModuleFiniteLength
 import GroundTheory.LocalFields.PadicLogSeries
 import Mathlib.Algebra.Order.Floor.Extended
@@ -125,7 +128,7 @@ theorem exists_irr_sub_of_quot (hA : GlobalTheory.Published.IrreducibleAdmissibl
   have hZsq : IsSubquotient (subQuot B C) T :=
     ⟨B, ⟨Submodule.mkQ _, fun _ => rfl⟩, Submodule.mkQ_surjective _⟩
   have hZs : IsSmooth (subQuot B C) := hZsq.isSmooth hs
-  obtain ⟨σ, ⟨E⟩⟩ := GlobalTheory.T.levi_irreducible_tensor_decomposition hA (dd n t) (⟨_, subQuot B C, hZs, hZi⟩ : IrrRep _)
+  obtain ⟨σ, ⟨E⟩⟩ := _root_.GlobalTheory.CompanionTheory.LeviTensor.nonempty_equiv_piTensor hA (dd n t) (⟨_, subQuot B C, hZs, hZi⟩ : IrrRep _)
   let φ' := φ ∘ₗ E.symm.toIntertwiningMap.toLinearMap
   have hq : ∀ (g : GL (Fin (dd n t 0)) k) z, φ (subQuot B C (Pi.mulSingle 0 g) z) = R g (φ z) := by
     intro g z

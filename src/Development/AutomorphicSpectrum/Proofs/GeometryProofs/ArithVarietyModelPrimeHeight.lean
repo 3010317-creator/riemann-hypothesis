@@ -3,10 +3,12 @@ module
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsLatFamilyCongr
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsLatFlagPair
 public import Development.AutomorphicSpectrum.PublishedTheorems.Algebra₂.FarguesHodgeTate
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyModelPrimeBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyPrimeHodgeBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyPrimeHodgeFinalStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HermitianPairingTorsionFreeStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyModelPrimeBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyPrimeHodgeBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyPrimeHodgeFinal
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.LatNormGrLatNeZeroOfSpan
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HermitianPairingTorsionFree
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -304,7 +306,7 @@ theorem seqfam_holds : GlobalTheory.CompanionTheory.Ar.HT.FarguesHodgeTate → �
   have hp : p.Prime := Fact.out
   have hR : 4 ≤ 𝔐.R p := 𝔐.R_ge p hpS
   obtain ⟨-, -, -, -, hemb, -, ⟨hp0, ⟨u0, hu0, hwu⟩, hpnu⟩, hCp⟩ := hOrb
-  have hlat := fun t => GlobalTheory.T.arith_variety_model_prime_bound hFH E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hvar hpq p hpS hfree hp2 hdisc b hb A m hpm O w hCp t
+  have hlat := fun t => _root_.GlobalTheory.CompanionTheory.Ar.Num.FamLat.lat_main hFH E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hvar hpq p hpS hfree hp2 hdisc b hb A m hpm O w hCp t
 
   have hw0 : algebraMap O Ω w ≠ 0 := by
     have h := hCp
@@ -356,7 +358,7 @@ theorem seqfam_holds : GlobalTheory.CompanionTheory.Ar.HT.FarguesHodgeTate → �
   have hGC : ∀ (c' : ∀ k, J k) (Pc : ChartPack G O c'), ∃ C : Matrix (Fin (D.p + D.q)) (Fin (D.p + D.q)) Ω,
       (∀ i j, C i j ∈ (algebraMap O Ω).range) ∧ Gm * C = 1 := by
     intro c' Pc
-    refine GlobalTheory.T.hermitian_pairing_torsion_free E (HT.cmConj E) p (𝔐.R p) (D.p + D.q) (by omega) hdisc G.e
+    refine _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.gram_invertible_of_unramified E (HT.cmConj E) p (𝔐.R p) (D.p + D.q) (by omega) hdisc G.e
       (fun a x y' => by rw [← Pc.Dh_e]; exact Pc.Dh.adj a x y')
       (fun x hx => Pc.Dh.e_inj x (by rw [Pc.Dh_e]; exact hx)) O Ω hOinj hpnu σE ?_
     intro a
@@ -394,7 +396,7 @@ theorem seqfam_holds : GlobalTheory.CompanionTheory.Ar.HT.FarguesHodgeTate → �
     have h1 : wΩ • a ∈ coordLat O y (𝔐.dR t') (b t') c' := ((hlat t').2.2.2.2 c' hc).2.2.2.2.2.1 ha
     have e1 : ∑ k, (wΩ • a) k • b t' k = wΩ • ∑ k, a k • b t' k := by
       simp only [Pi.smul_apply, Finset.smul_sum, smul_assoc]
-    have h2 := GlobalTheory.T.arith_variety_prime_hodge_final E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hvar hpq p hpS A m hpm O G c' hc Pc u hu
+    have h2 := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.chartForm_regular_of_mem_lat E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hvar hpq p hpS A m hpm O G c' hc Pc u hu
       (∑ k, (wΩ • a) k • b t' k) (fun q hq ho => by
         simp only [coordLat, AddSubgroup.mem_iInf] at h1
         have h4 : Fintype.linearCombination Ω (b t') (wΩ • a) ∈ 𝔐.dR t' q := h1 q hq ho
@@ -406,7 +408,7 @@ theorem seqfam_holds : GlobalTheory.CompanionTheory.Ar.HT.FarguesHodgeTate → �
       ∃ u ∈ ((P t ht).Dh.om : Set (Module.Dual Ω 𝔐.Li)), (mseg y s / mseg y t) ^ n •
         ((P s hs).Dh.h (Pi.single j 1) - (P t ht).Dh.h (Pi.single j 1)) = (wΩ * wΩ * Q) • u := by
     intro s t hs ht
-    have h := fun j : Fin (D.p + D.q) => GlobalTheory.T.arith_variety_prime_hodge_bound E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hvar hpq p hpS A m hpm O G s t hs ht
+    have h := fun j : Fin (D.p + D.q) => _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.chartPack_lift_overlap E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hvar hpq p hpS A m hpm O G s t hs ht
       (P s hs) (P t ht) (Pi.single j 1)
     choose n₀ u hu hE using h
     have hf : mseg y s / mseg y t ∈ CR O y t := Algebra.subset_adjoin ⟨s, rfl⟩

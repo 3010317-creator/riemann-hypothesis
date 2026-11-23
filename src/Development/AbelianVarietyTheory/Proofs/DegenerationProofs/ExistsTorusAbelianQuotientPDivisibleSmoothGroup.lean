@@ -2,9 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.OfDerivationFnOn
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ForallGeometricallyIntegralOfSmoothOfGeometrical
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsTorusQuotientNoCocharacterStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.InfiniteTorsionOrCocharacterOfArcAtInfinityStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsProperOfPowerSeriesArcsOverAlgClosedStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsTorusQuotientNoCocharacter
+public import Mathlib.RingTheory.PowerSeries.Basic
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.InfiniteTorsionOrCocharacterOfArcAtInfinity
+public import Mathlib.AlgebraicGeometry.Morphisms.Proper
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsProperOfPowerSeriesArcsOverAlgClosed
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.QuasiFiniteAtGenericPointOfIsDominant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -108,7 +112,7 @@ theorem isMonHom_id_pow {S : Scheme.{0}} (B : Over S) [GrpObj B] [IsCommMonObj B
 theorem exists_torus_abelian_quotient :
     ∀ (k : Type) [Field k] [IsAlgClosed k] (p : ℕ) [Fact p.Prime] [CharP k p] (G : Over (Sp k)) [GrpObj G], SmConn G → (∀ y : (𝟙_ (Over (Sp k)) ⟶ G), ∃ x : (𝟙_ (Over (Sp k)) ⟶ G), x ^ p = y) → ∃ (X : Type) (_ : AddCommGroup X) (_ : Module.Free ℤ X) (_ : Module.Finite ℤ X) (B : Over (Sp k)) (_ : GrpObj B) (i : splitTorus (Sp k) X ⟶ G) (q : G ⟶ B), IsQuot i q ∧ IsAbelianScheme B ∧ ∀ g, SmoothOfRelativeDimension g G.hom → ∃ a, SmoothOfRelativeDimension a B.hom ∧ g = a + Module.finrank ℤ X := by
   intro k _ _ p _ _ G _ hG hp
-  obtain ⟨X, _, _, _, B, _, i, q, hQ, hmax⟩ := GlobalTheory.T.exists_torusQuotient_no_cocharacter k G hG
+  obtain ⟨X, _, _, _, B, _, i, q, hQ, hmax⟩ := _root_.GlobalTheory.SS.MaxTorus.exists_quot_no_cocharacter k G hG
   have hsm := smooth_proj hQ
   have hQ' := hQ
   obtain ⟨hi, hq, hf, hs, ha, hk, hB⟩ := hQ'
@@ -125,9 +129,9 @@ theorem exists_torus_abelian_quotient :
       exact ⟨x ≫ q, by rw [e, MonObj.pow_comp]⟩
     simpa only [e] using this
   have hpr : IsProper B.hom := by
-    refine GlobalTheory.T.isProper_of_powerSeries_arcs_over_algClosed k B h₂ inferInstance h₃ fun a ha => ?_
+    refine _root_.GlobalTheory.ArcProper.isProper_of_arcs k B h₂ inferInstance h₃ fun a ha => ?_
     by_contra hn
-    rcases GlobalTheory.T.infinite_torsion_or_cocharacter_of_arc_at_infinity k p B hB a ha hn with h | ⟨f, hf, hf'⟩
+    rcases _root_.GlobalTheory.SS.infinite_torsion_or_cocharacter k p B hB a ha hn with h | ⟨f, hf, hf'⟩
     · exact not_finite {x : (𝟙_ (Over (Sp k)) ⟶ B) // x ^ p = 1}
     · exact hf' (hmax f hf)
   refine ⟨X, _, ‹_›, ‹_›, B, _, i, q, hQ, ⟨hc, h₁, hpr, h₄⟩, fun g hg => ?_⟩

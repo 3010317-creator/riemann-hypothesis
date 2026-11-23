@@ -3,10 +3,14 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
 public import Development.AbelianVarietyTheory.Definitions.Divisors.P22
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GrothendieckDeformation
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KodairaSpencerMatrixUniqueStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpecLocalHomFactorsAffineOpenStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareZeroDeformationFactorsThroughLinearStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniversalFirstOrderDeformationStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KodairaSpencerMatrixUnique
+public import Mathlib.AlgebraicGeometry.AffineScheme
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpecLocalHomFactorsAffineOpen
+public import Mathlib.Algebra.DualNumber
+public import Mathlib.RingTheory.Smooth.StandardSmooth
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareZeroDeformationFactorsThroughLinear
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniversalFirstOrderDeformation
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,8 +82,8 @@ theorem exists_dir_eq_of_smooth : ∀ (k₀ : Type) [Field k₀] (X : Scheme.{0}
     rw [← cp]; exact hxV
   have h2 : x' (IsLocalRing.closedPoint (DualNumber K)) ∈ V := by
     rw [← cp]; have := hxV; rw [← hred] at this; exact this
-  obtain ⟨R, rfl⟩ := GlobalTheory.T.exists_ringHom_spec_factor_fromSpec_of_closedPoint_mem X V hV _ Xι h1
-  obtain ⟨g, rfl⟩ := GlobalTheory.T.exists_ringHom_spec_factor_fromSpec_of_closedPoint_mem X V hV _ x' h2
+  obtain ⟨R, rfl⟩ := _root_.GlobalTheory.spec_local_hom_factors_affineOpen X V hV _ Xι h1
+  obtain ⟨g, rfl⟩ := _root_.GlobalTheory.spec_local_hom_factors_affineOpen X V hV _ x' h2
   letI := (s.appLE U V e).hom.toAlgebra
   haveI : Algebra.IsStandardSmoothOfRelativeDimension n Γ(Spec (CommRingCat.of k₀), U) Γ(X, V) := hstd
   have key := IsAffineOpen.SpecMap_appLE_fromSpec s hU hV e
@@ -108,7 +112,7 @@ theorem exists_dir_eq_of_smooth : ∀ (k₀ : Type) [Field k₀] (X : Scheme.{0}
       congr 2
     have := mono hU _ _ (e2.trans (hφ.symm.trans e1))
     exact (RingHom.congr_fun this a).symm
-  obtain ⟨M, hM⟩ := GlobalTheory.T.square_zero_deformation_factors_through_linear Γ(Spec (CommRingCat.of k₀), U) Γ(X, V) K n hstd ι hι R (hc _ R hXs)
+  obtain ⟨M, hM⟩ := _root_.GlobalTheory.FirstOrderPoints.exists_linearCombination_eq Γ(Spec (CommRingCat.of k₀), U) Γ(X, V) K n hstd ι hι R (hc _ R hXs)
     (fun M M' h => hinj M M' (by
       rw [← Category.assoc, ← Category.assoc, ← Spec.map_comp, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
         ← CommRingCat.ofHom_comp, h]))
@@ -128,9 +132,9 @@ theorem eq_of_isKS_eq : GlobalTheory.CovTop.Hypotheses₂ → GlobalTheory.Publi
       ∀ M : GlobalTheory.FlagTan.HIx Dw (GlobalTheory.FlagTan.psiSet H) → K,
         GlobalTheory.FlagTan.IsKS (GlobalTheory.FlagTan.psiSet H) y (spMap (GlobalTheory.FlagTan.dir c M).toRingHom ≫ X) M := by
     first
-    | exact GlobalTheory.T.universal_first_order_deformation hP hG E H Dw l Xo c K y hpq
-    | exact GlobalTheory.T.universal_first_order_deformation hP E H Dw l Xo c K y hpq
-    | exact (GlobalTheory.T.universal_first_order_deformation hP hG E H Dw l Xo c K y hpq)
+    | exact _root_.GlobalTheory.FlagTan.KSUniv.ksUniv hP hG E H Dw l Xo c K y hpq
+    | exact _root_.GlobalTheory.FlagTan.KSUniv.ksUniv hP E H Dw l Xo c K y hpq
+    | exact (_root_.GlobalTheory.FlagTan.KSUniv.ksUniv hP hG E H Dw l Xo c K y hpq)
   have htan : ∀ N, GlobalTheory.FlagTan.IsTanX y (spMap (GlobalTheory.FlagTan.dir c N).toRingHom ≫ X) := fun N => by
     refine ⟨?_, ?_⟩
     · rw [Category.assoc, hX, sOf, sOf, ← Spec.map_comp]
@@ -143,7 +147,7 @@ theorem eq_of_isKS_eq : GlobalTheory.CovTop.Hypotheses₂ → GlobalTheory.Publi
       congr 2
       ext z
       simp
-  have uniq := fun x hx => GlobalTheory.T.kodaira_spencer_matrix_unique hP E H Dw l Xo c K y x hpq hx
+  have uniq := fun x hx => _root_.GlobalTheory.FlagTan.isKS_unique hP E H Dw l Xo c K y x hpq hx
   have key := exists_dir_eq_of_smooth (KA l) Xo.X Xo.s Dw.dim Xo.smooth K ((algebraMap c.F K).comp (IntermediateField.inclusion c.le).toRingHom)
     (GlobalTheory.FlagTan.HIx Dw (GlobalTheory.FlagTan.psiSet H)) (GlobalTheory.FlagTan.card_HIx (GlobalTheory.FlagTan.isHalf_psiSet H)) X
     (by rw [hX, sOf])

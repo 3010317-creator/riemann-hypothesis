@@ -4,13 +4,17 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.Potenti
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IntegralClosureHeightEqOneOfLiesOver
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsReindexDegreeStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.MetricsProjectionFormulaNef
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsReindexDegree
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DetLatticeFlagTensor
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenOfUnit
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompCoverPrimesStatement
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.Birational
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompCoverPrimes
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EtaleLocalizationAtPrimeTensorOfLowHeight
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.WeilBound.CoreStatements.PlurisubharmonicCones.NefFibresScaledLattice
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NefOnFibresBlockXdegSumsOfRootLines
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeTensorPowerDegree
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NefDegreeScaleInvariant
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NefOnFibresBlockXdegSumsOfRootLinesStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,11 +66,11 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.hodge_comp_cover_cm_signs : To
   intro hG hW E _ _ _ H D Xo l c Y S Ω _ _ K _ J _ y 𝔐 dg sm m s a e₀ hY hp hq hcov hS hS' hsm hs hdeg
   have hI : PB.Inputs := hG.2.2.2.2.2.2.2.2.2.1
   obtain ⟨M, 𝔐', Fl, e, i, g, bk, bx, j, hbk, hy, hd, hS2, hR, hj, hli, hV⟩ :=
-    GlobalTheory.T.hodge_comp_cover_primes hW E H D Xo l c Y S Ω K J y 𝔐 dg hcov
+    _root_.GlobalTheory.CompanionTheory.Relay.hodge_comp_cover_primes hW E H D Xo l c Y S Ω K J y 𝔐 dg hcov
       (fun p hp hdv => by by_contra h; exact (hS' p hp h).1 hdv) hS
   haveI : CharZero M.Ω := charZero_of_injective_ringHom i.injective
   have hNef : _ ∧ _ :=
-    GlobalTheory.T.nefOnFibres_block_xdeg_sums_of_rootLines hG E H D Xo l c Y S M 𝔐' Fl e
+    _root_.GlobalTheory.CompanionTheory.Relay.nefOnFibres_block_xdeg_sums_of_rootLines hG E H D Xo l c Y S M 𝔐' Fl e
       hY hp hq hS2 hS' hR
   obtain ⟨n1, n2⟩ := hNef
   have hb₀ : ∀ σ, LinearIndependent M.Ω (Fl.b σ) := by
@@ -121,7 +125,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.hodge_comp_cover_cm_signs : To
       have h3 := Equiv.sum_comp Fin.revPerm fun k : Fin D.q => M.xdeg (τ, Fin.natAdd D.p k)
       simp [HodgeCpt.rootSgn, h2, ← h3]
   obtain ⟨A, e₁, hA1, hA2⟩ := hA
-  have hN := GlobalTheory.CompanionTheory.Relay.nef_degree_scale_invariant hI _ M.Ω M.K M.ι M.y 𝔐'.ξ _ A a' e₁ _ _ 𝔐'.tie
+  have hN := _root_.LevelTowerAlt.nef_fibres_scaled_lattice hI _ M.Ω M.K M.ι M.y 𝔐'.ξ _ A a' e₁ _ _ 𝔐'.tie
     (Finset.prod_ne_zero_iff.2 fun τ _ => hu0 τ) hA1 hB hA2
   obtain ⟨c₀, hc₀⟩ := 𝔐'.tie.cover ⟨genPt 𝔐'.ξ, specializes_rfl⟩
-  exact GlobalTheory.T.coords_reindex_degree hI Ω M.Ω i K M.K J M.ι y M.y bk bx a a' hbk hy (fun k => ⟨_, GlobalTheory.CompanionTheory.Ar.Cusp.DetNef.chart_ne hc₀ k⟩) ha ha' hN
+  exact _root_.GlobalTheory.CompanionTheory.Relay.coords_reindex_degree hI Ω M.Ω i K M.K J M.ι y M.y bk bx a a' hbk hy (fun k => ⟨_, GlobalTheory.CompanionTheory.Ar.Cusp.DetNef.chart_ne hc₀ k⟩) ha ha' hN

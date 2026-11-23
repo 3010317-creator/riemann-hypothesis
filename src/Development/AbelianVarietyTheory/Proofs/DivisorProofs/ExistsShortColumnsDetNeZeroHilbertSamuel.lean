@@ -1,15 +1,18 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HermSysHypOneLeLambdaZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetBlockSymbolMatrixNeZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetColumnsNeZeroOfPointValuesIndependentStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExchangeIndependentCompletionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBasisChoiceDetNeZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBlockWordOfTypeProdStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankDeepestFiltrationStepEqRationalStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianMultiplicationFlatColumnsEvalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearIndependentOfFiltrationSymbolDetNeZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymbolsOfEvaluatedColumnsHermitianMultSystemStatement
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetBlockSymbolMatrixNeZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetColumnsNeZeroOfPointValuesIndependent
+public import Mathlib.LinearAlgebra.LinearIndependent.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExchangeIndependentCompletion
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBasisChoiceDetNeZero
+public import Mathlib.Data.Finsupp.Weight
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBlockWordOfTypeProd
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankDeepestFiltrationStepEqRational
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearIndependentOfFiltrationSymbolDetNeZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymbolsOfEvaluatedColumnsHermitianMultSystem
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianMultiplicationFlatColumnsEval
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -149,25 +152,25 @@ theorem exists_cols : ∀ (F A : Type) [Field F] [NumberField F] [AddCommGroup A
   obtain ⟨r0, b0, hb0⟩ := hS.short0
   obtain ⟨rD, bD, hbD⟩ := hS.shortD
   obtain ⟨rT, bT, hbT⟩ := hS.shortT
-  obtain ⟨σ0, hσ0⟩ := GlobalTheory.T.exists_basis_choice_det_ne_zero' F E A A' Φ.ι (S.V 0) r0 δ b0 Φ.res Φ.onto
+  obtain ⟨σ0, hσ0⟩ := _root_.GlobalTheory.exists_basis_choice_det_ne_zero F E A A' Φ.ι (S.V 0) r0 δ b0 Φ.res Φ.onto
   obtain ⟨l, hl⟩ := avoid E S.N δ Φ.y Φ.y_ne
   have hwX : ∀ q : (Σ a : Fin (S.T - S.D), MonoDeg (Fin S.D) a), ∃ β : Fin S.T → Fin (S.D + 1),
       (∀ i : Fin S.D, (Finset.univ.filter fun r => β r = i.castSucc).card = q.2.1 i) ∧
       (q.2.1.degree = S.T → ∀ r, β r ≠ Fin.last S.D) ∧
       ∀ (M : Type) [Monoid M] (f : Fin (S.D + 1) → M), (List.ofFn fun r => f (β r)).prod =
         (List.ofFn fun i : Fin S.D => f i.castSucc ^ q.2.1 i).prod * f (Fin.last S.D) ^ (S.T - q.2.1.degree) :=
-    fun q => GlobalTheory.T.exists_block_word_of_type_prod S.D S.T q.2.1 (by have h1 := q.2.2; have h2 := q.1.2; omega)
+    fun q => _root_.GlobalTheory.HSShort.words_of_type S.D S.T q.2.1 (by have h1 := q.2.2; have h2 := q.1.2; omega)
   choose βX hβX1 hβX2 hβX3 using hwX
   have hwD : ∀ α : MonoDeg (Fin S.D) (S.T - S.D), ∃ β : Fin (S.T - S.D) → Fin (S.D + 1),
       (∀ i : Fin S.D, (Finset.univ.filter fun r => β r = i.castSucc).card = α.1 i) ∧
       (α.1.degree = S.T - S.D → ∀ r, β r ≠ Fin.last S.D) ∧
       ∀ (M : Type) [Monoid M] (f : Fin (S.D + 1) → M), (List.ofFn fun r => f (β r)).prod =
         (List.ofFn fun i : Fin S.D => f i.castSucc ^ α.1 i).prod * f (Fin.last S.D) ^ (S.T - S.D - α.1.degree) :=
-    fun α => GlobalTheory.T.exists_block_word_of_type_prod S.D (S.T - S.D) α.1 (le_of_eq α.2)
+    fun α => _root_.GlobalTheory.HSShort.words_of_type S.D (S.T - S.D) α.1 (le_of_eq α.2)
   choose βD hβD1 hβD2 hβD3 using hwD
   let s' : Fin S.D → Fin S.N → E := fun i k => algebraMap F E (s i k)
   let g : MonoDeg (Fin S.D) (S.T - S.D) × Fin rD → A' := fun p => pw Φ.mul s' p.1.1 (Φ.ι (bD p.2))
-  obtain ⟨hfin, hrank, -⟩ := GlobalTheory.T.finrank_deepestFiltrationStep_eq_rational F A S hS E A' s δ Φ
+  obtain ⟨hfin, hrank, -⟩ := _root_.GlobalTheory.HSShort.deepStep_finrank F A S hS E A' s δ Φ
   obtain ⟨n, σD, hn, hindD⟩ := pick_indep E A' _ g (Φ.U (S.T - S.D)) (deep_span F A S E A' s' δ Φ rD bD).symm hfin
   let X := (Σ a : Fin (S.T - S.D), MonoDeg (Fin S.D) a) × Fin δ
   let m : Fin δ → S.V 0 := fun p => b0 (σ0 p)
@@ -196,7 +199,7 @@ theorem exists_cols : ∀ (F A : Type) [Field F] [NumberField F] [AddCommGroup A
       rw [hcolD]
       exact ⟨rfl, hβD2 _ (σD k').1.2⟩
   let v : Fin d' → A' := fun k => word Φ.mul (fun q j => join s' l ((col' k).β q, j)) (Φ.ι (col' k).x)
-  obtain ⟨hsym, hdeepU⟩ := GlobalTheory.T.symbols_of_evaluated_columns_hermitianMultSystem F A S hS E A' s' δ Φ d' col' m ix' hshape' l
+  obtain ⟨hsym, hdeepU⟩ := _root_.GlobalTheory.HSShort.symbols_of_columns F A S hS E A' s' δ Φ d' col' m ix' hshape' l
   have hj : ∀ (i : Fin S.D) (j : Fin S.N), join s' l (Fin.castSucc i, j) = s' i j := fun i j => by simp [join]
   have hvD : ∀ k', v (e1 (Sum.inr k')) = g (σD k') := by
     intro k'
@@ -235,7 +238,7 @@ theorem exists_cols : ∀ (F A : Type) [Field F] [NumberField F] [AddCommGroup A
       · rw [if_pos (congrArg Subtype.val h), if_pos h]; rfl
       · rw [if_neg (fun h' => h (Subtype.ext h')), if_neg h]
     rw [heq]
-    exact GlobalTheory.T.det_blockSymbolMatrix_ne_zero' E _ δ _ _ _ hl hσ0
+    exact _root_.GlobalTheory.det_blockSymbolMatrix_ne_zero E _ δ _ _ _ hl hσ0
   have hrspec : ∀ k : J, ∃ k', e1 (Sum.inr k') = k.1 := fun k => hrange k.1 (Finset.mem_filter.1 k.2).2
   choose f hf using hrspec
   have hfinj : Function.Injective f := fun k1 k2 h => Subtype.ext (by rw [← hf k1, ← hf k2, h])
@@ -245,7 +248,7 @@ theorem exists_cols : ∀ (F A : Type) [Field F] [NumberField F] [AddCommGroup A
     funext k
     change v k.1 = g (σD (f k))
     rw [← hvD, hf k]
-  have hall := GlobalTheory.T.linearIndependent_of_filtration_symbol_det_ne_zero E A' (S.T - S.D) d' (fun a => MonoDeg (Fin S.D) a × Fin δ) Φ.U (fun a => Φ.sym a)
+  have hall := _root_.GlobalTheory.HSShort.linearIndependent_of_symbol_det_ne_zero E A' (S.T - S.D) d' (fun a => MonoDeg (Fin S.D) a × Fin δ) Φ.U (fun a => Φ.sym a)
     (fun a ha => Φ.le a ha) (fun a x => Φ.ker a a.2 x) ix'' J v hv hJ hdet hJind
   have hcover : ∀ k, k ∈ Set.range ix'' ∨ k ∈ J := by
     intro k
@@ -259,11 +262,11 @@ theorem exists_cols : ∀ (F A : Type) [Field F] [NumberField F] [AddCommGroup A
     hall.comp (fun k => ⟨k, hcover k⟩) (fun a a' h => congrArg Subtype.val h)
   have hw : LinearIndependent E (fun k : Fin rT => Φ.ι (bT k : A)) := Φ.indep rT (fun k => bT k) bT.linearIndependent
   have hmemT : ∀ k, v k ∈ Submodule.span E (Set.range fun k : Fin rT => Φ.ι (bT k : A)) := by
-    obtain ⟨c', -, hc'⟩ := GlobalTheory.T.hermitianMultiplicationFlat_columns_eval F A S hS E A' s' δ Φ d b c hc
+    obtain ⟨c', -, hc'⟩ := _root_.GlobalTheory.HSShort.ColEval.columns_eval F A S hS E A' s' δ Φ d b c hc
     intro k
     rw [← span_basis F E A A' Φ.ι (S.V S.T) rT bT]
     exact (hc' (col' k) (join s' l)).1
-  obtain ⟨K, hK, hindK⟩ := GlobalTheory.T.exists_independent_completion E A' d' rT v _ hind' hw hmemT
+  obtain ⟨K, hK, hindK⟩ := _root_.GlobalTheory.exchange_independent_completion E A' d' rT v _ hind' hw hmemT
   have hrT : rT = d := by simpa using Fintype.card_congr (bT.indexEquiv b)
   have hZ : Fintype.card (Fin d' ⊕ K) = d := by
     rw [Fintype.card_sum, Fintype.card_fin, Fintype.card_coe, hK, hrT]
@@ -316,7 +319,7 @@ theorem exists_cols : ∀ (F A : Type) [Field F] [NumberField F] [AddCommGroup A
     rw [← e1.sum_comp, Fintype.sum_sum_type]
     simp only [hcolX', hcolD]
     simp [colX, colD, colT, hTD, hD0.symm]
-  · apply GlobalTheory.T.det_columns_ne_zero_of_pointValues_independent F A S hS E A' s' δ Φ d b c hc col (join s' l)
+  · apply _root_.GlobalTheory.HSShort.DetNe.det_ne_zero_of_indep F A S hS E A' s' δ Φ d b c hc col (join s' l)
     have heq : (fun k => word Φ.mul (fun q j => join s' l ((col k).β q, j)) (Φ.ι (col k).x)) =
         (Sum.elim v fun k : K => Φ.ι (bT k : A)) ∘ e2.symm := by
       funext k

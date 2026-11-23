@@ -2,7 +2,8 @@ module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.DeltaInvariantLattices
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ValOfPowAssociated
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeDeltaInvariantBasisStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NotFullBot
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeDeltaInvariantBasis
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +50,7 @@ theorem GlobalTheory.NL.p9_statement : ∀ (D : Formalism.BasicNotions.D7) (HW :
   have hp : ((D.loc l).PD K).p = l := (D.loc l).PD_p K
   rw [hp] at hl ⊢
   obtain ⟨hc, ⟨π', E', hr⟩, h1⟩ := GlobalTheory.DelParam.torsion_parameters D HW l K s LL h hs hl
-  have md := GlobalTheory.T.wachLattice_deltaInvariant_basis D HW F l K s LL h T hT hs hl
+  have md := _root_.GlobalTheory.NL.InvBasis.invariant_basis D HW F l K s LL h T hT hs hl
   have hpos : 0 < ((HW l).W K s LL h).DelF.card :=
     Finset.card_pos.2 ⟨1, (((HW l).W K s LL h).DelF_def 1).2 ⟨1, one_pos, one_pow _⟩⟩
   have hl1 : 0 < l - 1 := Nat.sub_pos_of_lt (Fact.out : l.Prime).one_lt

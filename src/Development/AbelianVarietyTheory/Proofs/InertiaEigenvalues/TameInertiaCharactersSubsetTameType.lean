@@ -2,12 +2,17 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPotential
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AcrisTorsionFreeComplete
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinSectionTrivialisesInvertPrimeTensorStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EmbeddingProductSeriesToTensorBcrisInjectiveFinEStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBcrisTensorLatticeEquivPeriodRingStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisEqMulKisinInfTameSemidirectStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.KisinInfGaloisActsThroughDescentDatumStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TameDescentCharactersEqAndFrobeniusStableStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ConnPhiExtensionGeneratorEqZeta
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinSectionTrivialisesInvertPrimeTensor
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExistsSumMonomialAdd
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsUltrametricDistFinExt
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EmbeddingProductSeriesToTensorBcrisInjectiveFinE
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBcrisTensorLatticeEquivPeriodRing
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisEqMulKisinInfTameSemidirect
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.KisinInfGaloisActsThroughDescentDatum
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.InstTameDescentExponentDataPadicThree
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TameDescentCharactersEqAndFrobeniusStable
+public import Mathlib.LinearAlgebra.Eigenspace.Minpoly
 import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -19,7 +24,6 @@ import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.LinearAlgebra.Eigenspace.Minpoly
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -79,7 +83,7 @@ theorem xi_mem_MMl {O K : Type} [CommRing O] [NormedField K] [IsUltrametricDist 
     [Algebra O K] [IsUnitBall O K] {l e a : ℕ} {ι : Type} [Fintype ι] [DecidableEq ι] [Fact l.Prime]
     [NormedAlgebra ℚ_[l] K] [NeZero e] [NeZero a] (P : PhiMod O K l e a ι) (d : P.D) :
     P.xi d ∈ P.MMl := by
-  refine ((GlobalTheory.T.breuilKisin_section_trivialises_invertPrime_tensor O K l e a ι P).2 (cst d)).2 ?_
+  refine ((_root_.GlobalTheory.BK.xi_trivialises_invL_S O K l e a ι P).2 (cst d)).2 ?_
   refine mem_tot.2 fun τ i => ?_
   obtain ⟨n, b, hb⟩ := exists_pow_mul_mem (O := O) l (d τ i)
   refine ⟨n, ?_⟩
@@ -168,12 +172,12 @@ theorem GlobalTheory.CharsDesc.chars_subset_sig : ∀ (l : ℕ) [Fact l.Prime] (
       Finset.prod_eq_zero_iff, sub_eq_zero] at h
     exact h
   have hc0 : c ∈ Δ.chars 0 := by
-    rw [← (GlobalTheory.T.tameDescent_characters_eq_and_frobenius_stable _ _ l e a ι P Δ).1 τ 0]; exact hc
+    rw [← (_root_.GlobalTheory.BK.chars_eq_and_mul_mem _ _ l e a ι P Δ).1 τ 0]; exact hc
   obtain ⟨d, hd0, hdc⟩ := hc0
 
   obtain ⟨ζ, hζ⟩ := TameDescentExponentData.prim (K := ↥LL.1) (l := l) (e := e) (a := a)
   obtain ⟨ζu, hζu⟩ : ∃ ζu : rootsOfUnity e ↥LL.1, (((ζu : (↥LL.1)ˣ) : ↥LL.1)) = ζ := ⟨hζ.toRootsOfUnity, rfl⟩
-  have I8 := GlobalTheory.T.galois_eq_mul_kisinInf_tameSemidirect l a e ϖ LL
+  have I8 := _root_.GlobalTheory.TameCover.main l a e ϖ LL
   obtain ⟨k, -, hkc⟩ := I8.2.2.1 (TameGal.inertia ζu)
   obtain ⟨k', hk'I, hk'c, hk'π⟩ := I8.2.2.2.2.2.2 k ζu hkc
   classical
@@ -198,16 +202,16 @@ theorem GlobalTheory.CharsDesc.chars_subset_sig : ∀ (l : ℕ) [Fact l.Prime] (
     rw [Descent.act_xi, hact', P.xi.map_smul, ← ho, algebraMap_smul]
   let f := toBcris (thetaW a LL) ϖ P
   let b := jB (f σ)
-  have hA := GlobalTheory.T.kisinInfGalois_acts_through_descentDatum l a e ↥(OL LL) ↥LL.1 (thetaW a LL) ϖ ι P T I jB Δ hCmp hDesc k'
+  have hA := _root_.GlobalTheory.TameAct.main l a e ↥(OL LL) ↥LL.1 (thetaW a LL) ϖ ι P T I jB Δ hCmp hDesc k'
     (TameGal.inertia ζu) hk'c σ σ' hσ'
-  obtain ⟨β, -, hβ2, -, -⟩ := GlobalTheory.T.exists_bcrisTensorLattice_equiv_periodRing l LL T Pl AI hStd
+  obtain ⟨β, -, hβ2, -, -⟩ := _root_.GlobalTheory.BKGal.CrisTensor.exists_equiv l LL T Pl AI hStd
   let x := β b
   have hx0 : x ≠ 0 := by
     intro h
     have hb0 : b = 0 := β.map_eq_zero_iff.mp h
     have hf0 : f σ = 0 := jB.map_eq_zero_iff.mp hb0
     have hσ0 : σ = 0 := toBcris_inj (thetaW a LL) ϖ P
-      (GlobalTheory.T.embeddingProductSeriesToTensorBcris_injective_finExt l a e LL (thetaW a LL) ϖ)
+      (_root_.GlobalTheory.BKReal.IBInj.iB_injective_finExt l a e LL (thetaW a LL) ϖ)
       (hf0.trans (map_zero f).symm)
     have hxi0 : P.xi d' = 0 := congrArg Subtype.val hσ0
     exact hd'0 ((P.red_xi d').symm.trans ((congrArg (fun v => red v) hxi0).trans red.map_zero))

@@ -4,12 +4,12 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.Generic
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsGenOfIsVBOne
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LevelSectionsExactKernelLocusOpen
 public import Mathlib.AlgebraicGeometry.Morphisms.Proper
-import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ProjectiveLinePlaceTrivialOnConstants
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsRegularSectionGenerator
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenMapGermEqGenMapGerm
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SpecialFibreClosedSpecializationStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.StalkClosedPointToGermTop
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SpecialFibreClosedSpecialization
 public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.DegreeZeroCurvePositive
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ProjectiveLinePlaceTrivialOnConstants
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.StalkClosedPointToGermTop
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -167,7 +167,7 @@ theorem PositivityTheory.Xgn.normal_proper_line_order : ∀ (X : Scheme.{0}) (Ω
       refine (hV q).2 ⟨b, hb q hqU, ?_⟩
       by_contra hnu
       obtain ⟨e, he, hue⟩ := (hV ⟨y, hy⟩).1 hyV
-      obtain ⟨Γ, i, -, hη, hz⟩ := GlobalTheory.T.special_fibre_closed_specialization X Ω ξ O s ϖ hϖ hinj hs hg ⟨y, hy⟩ q (π / (σ / b) ^ M) hyn hyx' hcl
+      obtain ⟨Γ, i, -, hη, hz⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.exists_fibreCurve_through_closed_point X Ω ξ O s ϖ hϖ hinj hs hg ⟨y, hy⟩ q (π / (σ / b) ^ M) hyn hyx' hcl
         (hreg q b (hb q hqU)) (unit_change (hb ⟨y, hy⟩ (hyx'.mem_open U.isOpen hqU)) he hue) hnu
       have hq : q = ⟨centre (Γ.z i), Γ.z_spec i⟩ := Subtype.ext hz.symm
       have hηU : centre Γ.η ∈ U := (Γ.generic_centre_specializes i).mem_open U.isOpen (by rw [hz]; exact hqU)

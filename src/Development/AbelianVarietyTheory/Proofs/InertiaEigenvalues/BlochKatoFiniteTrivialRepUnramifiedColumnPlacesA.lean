@@ -1,7 +1,8 @@
 module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.EmbeddingTypes
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedTrivialLocalStatement
+public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedTrivialLocal
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ValuationLtOneIffNorm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -49,7 +50,7 @@ namespace GlobalTheory.ColumnUnramified
 theorem blochKatoFinite_trivialRep_unramified_columnPlaces : ∀ (D : D7) (i : D.nd.Loc) (dc : Formalism.MainNotions.TruncatedSeriesCountingIdentities.Decl D i), Formalism.MainNotions.EmbeddingTypes.UnramifiedTrivialH1f (D := D) i dc := by
   intro D i dc w hw _ C
   rw [GlobalTheory.BridgeInertia.inertEq D i w hw]
-  exact GlobalTheory.T.unramified_trivial_local (D.nd.l i) (D.loc (D.nd.l i)) (D.locA (D.nd.l i)) (D.locT (D.nd.l i))
+  exact _root_.GlobalTheory.UnramifiedTrivial.unrTriv (D.nd.l i) (D.loc (D.nd.l i)) (D.locA (D.nd.l i)) (D.locT (D.nd.l i))
     (D.nbr i w hw).Kw C.LL
 
 end GlobalTheory.ColumnUnramified

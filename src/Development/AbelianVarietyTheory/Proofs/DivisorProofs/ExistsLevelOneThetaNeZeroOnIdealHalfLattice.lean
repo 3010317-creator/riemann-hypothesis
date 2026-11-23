@@ -1,7 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsStabForm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaFunctionNeZeroAtDivisionPointSelfDualStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+public import Mathlib.LinearAlgebra.Matrix.Hermitian
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaFunctionNeZeroAtDivisionPointSelfDual
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HermitianFormAtFrameLaws
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.TensorLatticeSelfDualSemicharacterIndex
 import Development.AbelianVarietyTheory.Proofs.ToricGeometry.IsUnitOfLagrangian
@@ -160,7 +165,7 @@ theorem exists_ne_zero_of_scaled {V : Type} [AddCommGroup V] [Module ℚ V] [Fin
   have hMR : (0 : ℝ) < (M : ℝ)⁻¹ := by positivity
   have hsc : ∀ z u : Fin g → ℂ, z ⬝ᵥ ((M : ℝ)⁻¹ • Hm).mulVec u = (M : ℝ)⁻¹ • (z ⬝ᵥ Hm.mulVec u) :=
     fun z u => by rw [smul_mulVec, dotProduct_smul]
-  refine GlobalTheory.T.thetaFunction_ne_zero_at_divisionPoint_selfDual V g ((M : ℚ)⁻¹ • B) p hp L hfg hL hsp ((M : ℝ)⁻¹ • Hm) ?_ (fun z hz => ?_)
+  refine _root_.GlobalTheory.ThetaDivisionPoints.exists_ne_zero_of_selfDual V g ((M : ℚ)⁻¹ • B) p hp L hfg hL hsp ((M : ℝ)⁻¹ • Hm) ?_ (fun z hz => ?_)
     (fun u v => ?_) c hc M hM f hd h0 fun v hv z => ?_
   · ext i j
     rw [conjTranspose_apply, Matrix.smul_apply, Matrix.smul_apply, star_smul, hH.apply, star_trivial]

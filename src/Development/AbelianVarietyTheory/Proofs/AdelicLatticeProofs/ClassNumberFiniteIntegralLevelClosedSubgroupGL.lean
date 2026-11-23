@@ -1,11 +1,12 @@
 module
 
 public import Mathlib.RingTheory.DedekindDomain.FiniteAdeleRing
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.AdelicPairReducedBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsIsQGroupWeilRestrictionStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FiniteAdelicDoubleCosetsOfRationalSLSubgroupStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.GlFreeAlgebraEmbIntegralAndRationalStatement
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.GlFreeAlgebraToSpecialLinearEmbInjectiveHomStatement
+public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.AdelicPair
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.AdelicPairReducedBasis
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsIsQGroupWeilRestriction
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FiniteAdelicDoubleCosetsOfRationalSLSubgroup
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.GlFreeAlgebraEmbIntegralAndRational
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.GlFreeAlgebraToSpecialLinearEmbInjectiveHom
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +46,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.AdelicPair
 
 @[expose] public section
 
@@ -60,14 +60,14 @@ theorem classFinite_integralLevel : ∀ (F : Type) [Field F] [NumberField F] (n 
   classical
 
   obtain ⟨R, _, _, R₀, _, b, hAP, hred, hb, hint⟩ :=
-    GlobalTheory.T.adelic_pair_reduced_basis F _ (NumberField.RingOfIntegers.basis F)
-  obtain ⟨Γ, hΓ, hcorr⟩ := GlobalTheory.T.exists_isQGroup_weilRestriction_alt F _ (NumberField.integralBasis F) n S hS
+    _root_.GlobalTheory.AdeleFree.finiteAdele_free F _ (NumberField.RingOfIntegers.basis F)
+  obtain ⟨Γ, hΓ, hcorr⟩ := _root_.GlobalTheory.ClassFin.exists_isQGroup_weilRestriction F _ (NumberField.integralBasis F) n S hS
   have hbF : ∀ i, b i = algebraMap F (FiniteAdeleRing (𝓞 F) F) (NumberField.integralBasis F i) := by
     intro i
     rw [hb i, NumberField.integralBasis_apply]
   have hA := hcorr R (FiniteAdeleRing (𝓞 F) F) b hbF
   have hQ := hcorr ℚ F (NumberField.integralBasis F) (fun i => rfl)
-  obtain ⟨T₀, hT₀, hdec⟩ := GlobalTheory.T.finiteAdelicDoubleCosets_of_rational_SL_subgroup _ Γ R R₀ hΓ hAP
+  obtain ⟨T₀, hT₀, hdec⟩ := _root_.GlobalTheory.ClassFin.cf_of_isQGroup _ Γ R R₀ hΓ hAP
 
   let lift : Matrix ((Fin n × _) ⊕ Unit) ((Fin n × _) ⊕ Unit) R → GL (Fin n) (FiniteAdeleRing (𝓞 F) F) :=
     fun s => if h : ∃ g : GL (Fin n) (FiniteAdeleRing (𝓞 F) F),
@@ -81,7 +81,7 @@ theorem classFinite_integralLevel : ∀ (F : Type) [Field F] [NumberField F] (n 
     have h := hA.1 s hs
     simp only [lift, dif_pos h]
     exact h.choose_spec
-  obtain ⟨hemb1, hembmul, -, hembinj⟩ := GlobalTheory.T.glFreeAlgebraToSpecialLinearEmb_injective_hom R (FiniteAdeleRing (𝓞 F) F) _ (Fin n) b
+  obtain ⟨hemb1, hembmul, -, hembinj⟩ := _root_.GlobalTheory.ClassFin.EmbHom.emb_hom R (FiniteAdeleRing (𝓞 F) F) _ (Fin n) b
   refine ⟨T₀.image lift, ?_, ?_⟩
   · intro t ht
     obtain ⟨s, hs, rfl⟩ := Finset.mem_image.1 ht
@@ -95,12 +95,12 @@ theorem classFinite_integralLevel : ∀ (F : Type) [Field F] [NumberField F] (n 
       refine (hint 1).1 ?_
       intro v
       exact (HeightOneSpectrum.adicCompletionIntegers F v).one_mem
-    have hunits := GlobalTheory.T.glFreeAlgebraEmb_integral_and_rational.1 R _ _ (Fin n) b R₀ u h1 hu₀int
+    have hunits := _root_.GlobalTheory.ClassFin.EmbInt.emb_integral_and_rational.1 R _ _ (Fin n) b R₀ u h1 hu₀int
     refine ⟨γ, hγS, lift s, Finset.mem_image_of_mem lift hs, u, huS, ?_, ?_⟩
     · intro i j
       exact ⟨(hint _).2 (fun k => (hunits i j k).1), (hint _).2 (fun k => (hunits i j k).2)⟩
     · apply hembinj
       simp only [hembmul]
-      rw [hx₀, ← hsemb, GlobalTheory.T.glFreeAlgebraEmb_integral_and_rational.2 F _ (NumberField.integralBasis F) (Fin n) R _ b hbF γ]
+      rw [hx₀, ← hsemb, _root_.GlobalTheory.ClassFin.EmbInt.emb_integral_and_rational.2 F _ (NumberField.integralBasis F) (Fin n) R _ b hbF γ]
 
 end GlobalTheory.ClassFin

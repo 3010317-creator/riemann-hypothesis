@@ -2,13 +2,16 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.TowerOrigin
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsFundSet
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.CmFieldSmallIntegralBasisStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsGroupDictionaryStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FirstMinimumAndCuspWeightBoundsStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FirstMinimumContinuousCuspWeightMeasurableStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FirstMinimumIntegralBoundStatement
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.CmFieldSmallIntegralBasis
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GroupDict
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsGroupDictionary
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsEigFrames
+public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FirstMinimumAndCuspWeightBounds
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FirstMinimumContinuousCuspWeightMeasurable
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FirstMinimumIntegralBound
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FundamentalSetToFundamentalDomain
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FundamentalSetToFundamentalDomainStatement
 import GroundTheory.HeightsAndTheta.Heights.CountingLowerBound.Assembly
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -50,7 +53,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Algebra.Group.Units
-public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GroupDict
 
 @[expose] public section
 
@@ -275,7 +277,7 @@ open BallMean
 theorem fund_set_mean_cuspW : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (Ψ : Type) [Fintype Ψ] (j j' n g : ℕ) (Λ : Type) [AddCommGroup Λ] [Module (𝓞 E) Λ] (H : Host E) (F : UnivFam E Ψ j j' n g Λ) (Γ : Subgroup (Λ ≃ₗ[𝓞 E] Λ)) (FF : Set (Fin n → ℂ)), F.IsArith Γ → F.IsFundSet Γ FF → 1 ≤ j' → 3 * j' + 1 ≤ j + j' → IntegrableOn (ballDens F.q) FF ∧ 0 < ∫ t in FF, ballDens F.q t ∧ IntegrableOn (fun t => (F.R t).cuspW F.σ * ballDens F.q t) FF ∧ ∫ t in FF, (F.R t).cuspW F.σ * ballDens F.q t ≤ Fintype.card Ψ * j' * (6 + Real.log (2 * Fintype.card Ψ * hostRd E) + Real.log (2 * Fintype.card Ψ * j' * hostRd E)) * ∫ t in FF, ballDens F.q t := by
   classical
   intro E _ _ _ Ψ _ j j' n g Λ _ _ H F Γ FF hA hFS hj' hN
-  obtain ⟨Δ⟩ := GlobalTheory.T.exists_group_dictionary E Ψ j j' n g Λ H F
+  obtain ⟨Δ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.Dict.groupDict_nonempty E Ψ j j' n g Λ H F
   have hcard := finrank_eq_two_mul F.cm
   have hrd : 1 ≤ hostRd E := one_le_rd
   have hf : 1 ≤ Fintype.card Ψ := by
@@ -286,18 +288,18 @@ theorem fund_set_mean_cuspW : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
   set vr : ℝ := 2 * Fintype.card Ψ * hostRd E with hvrdef
   have hvr : 1 ≤ vr := by nlinarith
   have hvr0 : 0 < vr := by linarith
-  obtain ⟨a, ha1, ha2⟩ := GlobalTheory.T.cm_field_small_integral_basis E
+  obtain ⟨a, ha1, ha2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.exists_full_family_conjugates_le E
   have ha2' : ∀ i (s : E →+* ℂ), ‖s (a i)‖ ≤ vr := fun i s => by
     have := ha2 i s
     rw [hcard] at this
     rw [hvrdef]
     simpa using this
   let μ : Measure (archUnitary Δ.h (Pi.basisFun E (Fin (j + j')))) := Measure.haar
-  obtain ⟨FD, hFD, h0, hT, hmean⟩ := GlobalTheory.T.first_minimum_integral_bound E Ψ j j' n g Λ F Δ μ vr hj' hN hvr0 ⟨a, ha1, ha2'⟩
-  obtain ⟨C, hC0, hCT, hC⟩ := GlobalTheory.T.fundamental_set_to_fundamental_domain E Ψ j j' n g Λ F Δ μ Γ FF FD hA hFS hFD
-  obtain ⟨hcont, hUm, hopen, hinv⟩ := GlobalTheory.T.first_minimum_continuous_cusp_weight_measurable E Ψ j j' n g Λ F hj'
+  obtain ⟨FD, hFD, h0, hT, hmean⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.group_mean_logPlus_le E Ψ j j' n g Λ F Δ μ vr hj' hN hvr0 ⟨a, ha1, ha2'⟩
+  obtain ⟨C, hC0, hCT, hC⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.lintegral_fundSet_eq_const_mul E Ψ j j' n g Λ F Δ μ Γ FF FD hA hFS hFD
+  obtain ⟨hcont, hUm, hopen, hinv⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.FamilyMeas.first_minimum_cusp_weight_regular E Ψ j j' n g Λ F hj'
   have hu1 : ∀ t ∈ ballDom F.q, _ := fun t ht =>
-    GlobalTheory.T.first_minimum_and_cusp_weight_bounds E g Λ Ψ (F.R t) F.σ j' F.cm (fun τ => (F.sig t ht τ).1) hj'
+    _root_.GlobalTheory.CompanionTheory.Ar.Cusp.cuspW_le E g Λ Ψ (F.R t) F.σ j' F.cm (fun τ => (F.sig t ht τ).1) hj'
   obtain ⟨hFFm, hFFsub, -, -⟩ := hFS
   set B := ballDom F.q with hB
   have hBm : MeasurableSet B := hopen.measurableSet

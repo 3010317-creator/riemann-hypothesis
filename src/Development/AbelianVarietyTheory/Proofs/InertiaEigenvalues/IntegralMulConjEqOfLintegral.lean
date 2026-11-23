@@ -6,9 +6,11 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsF
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsRationalMirabolicMovingRowToLast
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsFundamentalDomainIUnion
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsGenericOfIsLocComp
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ParsevalContinuousPeriodicAdelicRationalQuotientStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.QuotientAverageAddOfPeriodicStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SetLIntegralAverageAbelianQuotientStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnipotentBlockColumnIndex
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ParsevalContinuousPeriodicAdelicRationalQuotient
+public import Mathlib.MeasureTheory.Group.FundamentalDomain
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SetLIntegralAverageAbelianQuotient
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.QuotientAverageAddOfPeriodic
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WhittakerCoefficientRationalMirabolicMul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -172,7 +174,7 @@ theorem good_comb {m : ℕ} {f f' : GA E a → ℂ} (hf : Good ψ m f) (hf' : Go
       (fun x g => by rw [hf.left _ (isMir_blkU x)]) g
     have p2 := per_blk (r := r) (m := m) (f := fun g => d * f' g) (continuous_const.mul hf'.cont)
       (fun x g => by rw [hf'.left _ (isMir_blkU x)]) g
-    have := GlobalTheory.T.quotientAverage_add_of_periodic _ (ratV E (UnipotentBlockColumnIndex a r m)) (isCoLat_ratV E _) _ _ p1 p2
+    have := _root_.GlobalTheory.CuspGeneric.avg_add_of_per _ (ratV E (UnipotentBlockColumnIndex a r m)) (isCoLat_ratV E _) _ _ p1 p2
     rw [avg_const_mul, avg_const_mul, hf.van r h0 hr, hf'.van r h0 hr] at this
     simpa using this
 
@@ -262,7 +264,7 @@ theorem lintegral_step (hψ : StdPsi ψ) {m : ℕ} (hm : m + 1 < a) {𝓕 𝓕' 
   have hT := GlobalTheory.CuspRep.Generic.good_colT hψ hm hf
   have hnorm : ∀ k, m + 1 < k → ∀ (y : UnipotentBlockColumnIndex a k k → Ad E) g, ‖f (blkU y * g)‖ₑ = ‖f g‖ₑ := fun k hk y g => by
     rw [hf.law k hk, enorm_mul, ← ofReal_norm (ψ _), hψ.norm, ENNReal.ofReal_one, one_mul]
-  have havg := GlobalTheory.T.setLIntegral_average_abelian_quotient_alt (GA E a) (UnipotentBlockColumnIndex a (m + 1) (m + 1) → Ad E) μ (ratMirU E a (m + 1)) (lateU (Ad E) a (m + 1))
+  have havg := _root_.GlobalTheory.UnipAvg.setLIntegral_average_abelian_quotient (GA E a) (UnipotentBlockColumnIndex a (m + 1) (m + 1) → Ad E) μ (ratMirU E a (m + 1)) (lateU (Ad E) a (m + 1))
     (isClosed_lateU _) (by rintro _ ⟨γ, hγ, rfl⟩ u hu; exact conj_mem_lateU (map_mem_mirU _ hγ) hu)
     (by
       obtain ⟨K, hK, h⟩ := exists_compact_lateU (E := E) (a := a) (m + 1)
@@ -297,7 +299,7 @@ theorem lintegral_step (hψ : StdPsi ψ) {m : ℕ} (hm : m + 1 < a) {𝓕 𝓕' 
   have hwγ : ∀ ξ, w (ratGL E a (γ ξ) * g) = w g := fun ξ => hwΓ _ (fun i k hi _ => (hγ ξ).1 i k (Or.inl hi)) g
   simp only [hwU (m + 1) (Nat.lt_succ_self m), hc, hwγ]
   rw [lintegral_mul_const _ (hper.1.measurable.enorm.pow_const 2), ENNReal.tsum_mul_right,
-    ← GlobalTheory.T.parseval_continuous_periodic_adelicRationalQuotient E _ ψ hψ _ hper ν D hν hD hνD]
+    ← _root_.GlobalTheory.AdelicParseval.tsum_enorm_avg_sq E _ ψ hψ _ hper ν D hν hD hνD]
   congr 1
   refine (tsum_subtype_eq_of_support_subset (f := fun ξ => ‖coefF ψ (m + 1) ξ f g‖ₑ ^ 2) (s := {ξ | ξ ≠ 0}) ?_).symm
   rintro ξ hξ rfl

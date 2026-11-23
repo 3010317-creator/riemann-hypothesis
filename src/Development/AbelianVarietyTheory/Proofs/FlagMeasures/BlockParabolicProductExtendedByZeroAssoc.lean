@@ -2,7 +2,6 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LabelDatum
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BlockParabolicUnitriangularSubgroupsGLnPrimeFiel
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BlockParabolicUnitriangularSubgroupsGLnPrimeFielStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -120,7 +119,7 @@ private lemma conj_indicator_inPar_eq {a b : ℕ} (Φ : Gn g a → Gn g b → �
         ParBasic.blkM (h₁ : Mt g a) 0 (h₂ : Mt g b) := by
     rw [Units.val_mul, Units.val_mul, hinv, hsv]
   by_cases hz : InPar a (z : Mt g (a + b))
-  · obtain ⟨u1, u2⟩ := (GlobalTheory.T.blockParabolic_unitriangular_subgroups_GLnPrimeField g a b (a + b) rfl).2.2.1 z hz
+  · obtain ⟨u1, u2⟩ := (_root_.GlobalTheory.GLm.ParBasic.par_basic g a b (a + b) rfl).2.2.1 z hz
     obtain ⟨c1, c2, c3⟩ := conj_lemma_2 (h₁ : Mt g a) ((h₁⁻¹ : Gn g a) : Mt g a) (h₂ : Mt g b)
       ((h₂⁻¹ : Gn g b) : Mt g b) hz
     rw [e, if_pos hz, if_pos c1, c2, c3, toG_mul (h₁⁻¹.isUnit.mul u1) h₁.isUnit, toG_mul h₁⁻¹.isUnit u1,
@@ -179,7 +178,7 @@ theorem indicatorIdempotent_eq_add_sum {a b n : ℕ} (hn : n = a + b) :
     cP g a n = ((Fintype.card (Gn g a) : ℂ) * (Fintype.card (Gn g b) : ℂ) * (g : ℂ) ^ (a * b))⁻¹ := by
   subst hn
   unfold cP
-  rw [(GlobalTheory.T.blockParabolic_unitriangular_subgroups_GLnPrimeField g a b (a + b) rfl).2.2.2.2.2, Nat.cast_mul, Nat.cast_mul, Nat.cast_pow]
+  rw [(_root_.GlobalTheory.GLm.ParBasic.par_basic g a b (a + b) rfl).2.2.2.2.2, Nat.cast_mul, Nat.cast_mul, Nat.cast_pow]
 
 theorem stage_left {m c n : ℕ} (hn : n = m + c) (k : ℂ) (φ F : Gn g m → ℂ) (γ : Gn g c → ℂ)
     (hF : ∀ u, F u = k * ∑ h : Gn g m, φ (h⁻¹ * u * h)) (x : Gn g n) :
@@ -297,8 +296,8 @@ private lemma br_add_eq_br_br {a b c n : ℕ} (M : Mt g n) : br (a + b) c M = br
 theorem blockParabolicProductExtendedByZero_assoc {a b c n : ℕ} (hn : n = a + b + c) (α : Gn g a → ℂ) (β : Gn g b → ℂ) (γ : Gn g c → ℂ)
     (z : Gn g n) :
     ext0 (a + b) c (ext0 a b α β (a + b)) γ n z = ext0 a (b + c) α (ext0 b c β γ (b + c)) n z := by
-  obtain ⟨-, -, hu1, -, -, -⟩ := GlobalTheory.T.blockParabolic_unitriangular_subgroups_GLnPrimeField g (a + b) c n hn
-  obtain ⟨-, -, hu2, -, -, -⟩ := GlobalTheory.T.blockParabolic_unitriangular_subgroups_GLnPrimeField g a (b + c) n (by omega)
+  obtain ⟨-, -, hu1, -, -, -⟩ := _root_.GlobalTheory.GLm.ParBasic.par_basic g (a + b) c n hn
+  obtain ⟨-, -, hu2, -, -, -⟩ := _root_.GlobalTheory.GLm.ParBasic.par_basic g a (b + c) n (by omega)
   have hpp := par_par hn (z : Mt g n)
   unfold ext0
   by_cases hA : InPar (a + b) (z : Mt g n) <;> by_cases hB : InPar a (z : Mt g n)

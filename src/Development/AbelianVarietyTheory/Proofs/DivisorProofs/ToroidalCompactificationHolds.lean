@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.DenseInterior
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInvariantSmoothProjFanNoSelfIntersectionsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToroidalCompactificationFanLogKodairaSpencerIsoStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ToroidalCompactificationBis
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToroidalCompactificationFanLogKodairaSpencerIso
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFineInvariantFan
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -51,7 +52,7 @@ theorem toroidalCompactification_holds : GlobalTheory.Published.ToroidalCompacti
   intro E _ _ _ H Dw hr l Xo c
   obtain ⟨φs, hs, -⟩ := GlobalTheory.T.exists_invariant_smoothProjFan_noSelfIntersections (max 1 (Module.finrank ℚ E * min Dw.p Dw.q))
   obtain ⟨φ, h₁, h₂, -⟩ := GlobalTheory.PolFan.exists_fine_invariant_fan H hs (le_max_right _ _) ∅ (by simp)
-  obtain ⟨Y, -, -, -, -, -, a₁, a₂, a₃, -⟩ := GlobalTheory.Published.ToroidalForFanKS.exists_model_of_fan GlobalTheory.T.toroidalCompactificationFan_logKodairaSpencer_iso hr h₁ h₂ Xo c
+  obtain ⟨Y, -, -, -, -, -, a₁, a₂, a₃, -⟩ := GlobalTheory.Published.ToroidalForFanKS.exists_model_of_fan _root_.GlobalTheory.TorKSField.toroidalForFanKS hr h₁ h₂ Xo c
   exact ⟨Y, a₁, a₂, a₃⟩
 
 end GlobalTheory

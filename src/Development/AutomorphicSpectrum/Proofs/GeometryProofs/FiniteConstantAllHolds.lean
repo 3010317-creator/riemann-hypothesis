@@ -2,10 +2,13 @@ module
 
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.FinConstFor
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LevelSectionsExactKernelLocusOpen
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HermitianSignatureBasisStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LinearIndependentEigProj
+public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.AdaptedEigenbasisExists
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenLinePAdicBoundStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenLinePAdicFrameStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeLatticeValuationAgreeStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsGenOfIsVBOne
+public import Mathlib.AlgebraicGeometry.Morphisms.Proper
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeLatticeValuationAgree
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProperNormalCompactificationStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -47,7 +50,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LinearIndependentEigProj
 
 @[expose] public section
 
@@ -213,7 +215,7 @@ theorem finConstAll : FinConstAll := by
   obtain ⟨v, hvli, hvsp⟩ := exists_basis_of_finrank (HT.eigSp Z.ρ σ) (heig ▸ hrk)
   obtain ⟨w, hwli, hwsp⟩ := exists_basis_of_finrank (HT.eigSp Z.ρ σ') (heig' ▸ hrk')
   obtain ⟨𝓗, hdeg⟩ := GlobalTheory.T.eigen_line_p_adic_bound E H D l Xo c O β Y U Z τ ϖ (p : ℕ) hϖ p.2 hdvd hβ hr hsplit hN3
-  obtain ⟨u, hu, -, -⟩ := GlobalTheory.T.hermitian_signature_basis E Z.Ω Z.V Z.ρ 𝓗.ρH H.bar σ σ' D.p D.q v w 𝓗.act_fst 𝓗.act_inr
+  obtain ⟨u, hu, -, -⟩ := _root_.PositivityTheory.Xgn.adapted_eigenbasis_exists E Z.Ω Z.V Z.ρ 𝓗.ρH H.bar σ σ' D.p D.q v w 𝓗.act_fst 𝓗.act_inr
     hbar hinv hvli hvsp hwli hwsp
   obtain ⟨-, a, b, ⟨ha0, hb0, hco⟩, hrep⟩ := hflat
   let x₀ : Cpt (Z.ξ₀ ≫ Y.j) := ⟨genPt (Z.ξ₀ ≫ Y.j), specializes_rfl⟩
@@ -234,7 +236,7 @@ theorem finConstAll : FinConstAll := by
       (norm_le_one_of_isIntegral p (𝓞 E) (κ.comp (tauIn c τ)) a (RingOfIntegers.isIntegral a))
     exact ⟨o, by show Z.inc (β o) = Z.inc (tauIn c τ a); rw [ho]⟩
   have hcc : ConstClosed O Z.Ω := constClosed_of_isGeom β Z.inc hβ hfr hgeom
-  obtain ⟨M, k, hM, hord⟩ := GlobalTheory.T.hodge_lattice_valuation_agree Y.X Z.Ω (Z.ξ₀ ≫ Y.j) E Z.V Z.M.lat Z.ρ H.bar D.p D.q 𝓗 σ σ'
+  obtain ⟨M, k, hM, hord⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.COrder.order_on_component Y.X Z.Ω (Z.ξ₀ ≫ Y.j) E Z.V Z.M.lat Z.ρ H.bar D.p D.q 𝓗 σ σ'
     v w u α κ' O Y.s ϖ hϖ hinjO hover Z.gen hnormal hcc hσrange hbar hinv hvli hvsp hwli hwsp hu (hdeg σ) hline'
   exact GlobalTheory.T.eigen_line_p_adic_frame E H D l Xo c O β Y U Z τ ϖ p κ φ 𝓗 σ v w u α κ' M k hτ hϖ hβ hnorm hσ hvli hvsp hwli
     (hwsp.trans heig') hu hM hord hκ' hrep hline

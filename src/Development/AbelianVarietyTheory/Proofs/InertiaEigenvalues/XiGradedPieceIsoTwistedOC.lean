@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExpStar
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFontaineThetaOnAinfStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFontaineThetaOnAinf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -321,7 +321,7 @@ theorem graded_iso : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf
       ∀ g : GQ l, g (P.ζQ 1) = P.ζQ 1 → ∀ x,
         Φ (actQab (xiOK AI) i (i + 1) g x) = chiC P.χQ i g * AI.actC g (Φ x) := by
   intro l _ P AI i
-  obtain ⟨θ, hθ⟩ := GlobalTheory.T.exists_fontaineTheta_on_Ainf l P AI
+  obtain ⟨θ, hθ⟩ := _root_.GlobalTheory.Cyc.exists_isTheta l P AI
   exact graded_of_theta AI θ hθ i
 
 end GlobalTheory.Cyc.Graded

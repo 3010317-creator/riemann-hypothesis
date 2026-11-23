@@ -3,7 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Definitions.HeightFunctions.FiniteDimensionalOfSz
 public import Mathlib.Algebra.AffineMonoid.Basic
 public import Mathlib.RingTheory.DedekindDomain.Different
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.MapDifferentLeDifferentSupIntermediateFieldStatement
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.Topology.Sheaves.Presheaf
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.MapDifferentLeDifferentSupIntermediateField
+public import Mathlib.NumberTheory.NumberField.Discriminant.Different
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -19,7 +23,6 @@ import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
-public import Mathlib.NumberTheory.NumberField.Discriminant.Different
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.Radical.NatInt
@@ -117,7 +120,7 @@ theorem sz_sup : ∀ (F F' : IntermediateField ℚ ℂ) (a b a' b' : ℝ), Sz F 
     linarith
   · letI : Algebra F ↥(F ⊔ F') := (IntermediateField.inclusion le_sup_left).toRingHom.toAlgebra
     letI : Algebra F' ↥(F ⊔ F') := (IntermediateField.inclusion le_sup_right).toRingHom.toAlgebra
-    have h := log_discr_div_le F F' ↥(F ⊔ F') (GlobalTheory.T.map_different_le_different_sup_intermediateField F F')
+    have h := log_discr_div_le F F' ↥(F ⊔ F') (_root_.GlobalTheory.DiffBaseChange.map_different_le_sup F F')
     exact h.trans (add_le_add hb hb')
 
 end GlobalTheory.FieldSize

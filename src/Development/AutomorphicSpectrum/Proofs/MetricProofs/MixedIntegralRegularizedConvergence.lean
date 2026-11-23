@@ -3,9 +3,16 @@ module
 public import GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.Objects
 public import GroundTheory.HeightsAndTheta.Heights.Regularisation.Statements
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ConvDensOfOpen
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.DominatedConvergenceExhaustionStatement
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Integral.IntegrableOn
+public import Mathlib.Order.CompletePartialOrder
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.DominatedConvergenceExhaustion
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LocDensAddOfFunContinuousOn
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularChartDataPropertiesStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularChartDataProperties
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.ContDiffAtOfIsPotential
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.DegreeInt
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.MaMeasureA
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,10 +57,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.ContDiffAtOfIsPotential
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.DegreeInt
 import ReciprocityTheory.AnalyticForms.PotentialTheory.LocDens
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.MaMeasureA
 import ReciprocityTheory.AnalyticForms.PotentialTheory.Partition
 import ReciprocityTheory.AnalyticForms.PotentialTheory.PotentialContDiffAt
 
@@ -99,7 +103,7 @@ theorem integrableOn_compl_of_ae_eq_nonneg {α : Type*} [MeasurableSpace α] (μ
 
 theorem conv_chart_integral : ∀ (e : ℕ) (X : Type) [TopologicalSpace X] [CompactSpace X] [T2Space X] (A : FinHolAtlas e X) (R : GroundTheory.Heights₂.Heights.Regular.RegChartData A) (Θ : LocPot X) (th : Fin e → LocPot X) (ph : Fin e → X → ℝ) (phT : Fin e → ℝ → X → ℝ) (G : X → ℝ) (GT : ℝ → X → ℝ) (C CE : ℝ), IsPotential A Θ → (∀ i, IsPotential A (th i)) → (∀ i, A.SmoothOn R.Yo (ph i)) → (∀ᶠ t in 𝓝[>] (0 : ℝ), (∀ i, A.Smooth (phT i t)) ∧ (∀ i, IsPsh A (th i + LocPot.ofFun (phT i t) + Θ)) ∧ GroundTheory.Heights₂.Heights.AnalyticLimit.TailLogBound A R.Yo R.r (fun i => th i + LocPot.ofFun (phT i t) + Θ) CE) → (∀ i, ∀ j, ∀ K' ⊆ (A.chart j).target ∩ (A.chart j).symm ⁻¹' R.Yo, IsCompact K' → TendstoUniformlyOn (fun t => fderiv ℝ (fderiv ℝ (phT i t ∘ (A.chart j).symm))) (fderiv ℝ (fderiv ℝ (ph i ∘ (A.chart j).symm))) (𝓝[>] 0) K') → (∀ᶠ t in 𝓝[>] (0 : ℝ), @Measurable X ℝ (borel X) _ (R.Yo.indicator (GT t)) ∧ ∀ x ∈ R.Yo, |GT t x| ≤ C + C * Real.log (R.r x)) → (∀ K' ⊆ R.Yo, IsCompact K' → TendstoUniformlyOn GT G (𝓝[>] 0) K') → ∀ (j : Fin A.n) (S : Set (Fin e → ℂ)) (c : X → ℝ), S ⊆ (A.chart j).target → IsCompact S → @Measurable X ℝ (borel X) _ c → (∀ x, 0 ≤ c x ∧ c x ≤ 1) → (∀ y ∈ (A.chart j).target, y ∉ S → c ((A.chart j).symm y) = 0) → IntegrableOn (fun y => c ((A.chart j).symm y) * G ((A.chart j).symm y) * locDens A (fun i => th i + LocPot.ofFun (ph i) + Θ) j y) (A.chart j).target ∧ (∀ᶠ t in 𝓝[>] (0 : ℝ), IntegrableOn (fun y => c ((A.chart j).symm y) * GT t ((A.chart j).symm y) * locDens A (fun i => th i + LocPot.ofFun (phT i t) + Θ) j y) (A.chart j).target) ∧ Tendsto (fun t => ∫ y in (A.chart j).target, c ((A.chart j).symm y) * GT t ((A.chart j).symm y) * locDens A (fun i => th i + LocPot.ofFun (phT i t) + Θ) j y) (𝓝[>] 0) (𝓝 (∫ y in (A.chart j).target, c ((A.chart j).symm y) * G ((A.chart j).symm y) * locDens A (fun i => th i + LocPot.ofFun (ph i) + Θ) j y)) := by
   intro e X _ _ _ A R Θ th ph phT G GT C CE hΘ hth hph hev hconv hGev hGconv j S c hST hS hcm hc01 hc0
-  obtain ⟨hYo, hnull, -, hKc⟩ := GlobalTheory.T.regular_chart_data_properties e X A R
+  obtain ⟨hYo, hnull, -, hKc⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Giv.regData_open_part e X A R
   have hsymmS : ContinuousOn (A.chart j).symm S := (A.chart j).continuousOn_symm.mono hST
   have hSm : MeasurableSet S := hS.measurableSet
   have hTm : MeasurableSet (A.chart j).target := (A.chart j).open_target.measurableSet
@@ -319,7 +323,7 @@ theorem conv_chart_integral : ∀ (e : ℕ) (X : Type) [TopologicalSpace X] [Com
           by_contra h
           exact hyE ((hEmem n y).2 ⟨hy.1, hy.2, (not_le.1 h).le⟩)
         rw [Set.indicator_of_mem hmem]
-  obtain ⟨i1, i2, i3⟩ := GlobalTheory.T.dominated_convergence_exhaustion (volume.restrict S) (𝓝[>] (0 : ℝ)) E
+  obtain ⟨i1, i2, i3⟩ := _root_.GlobalTheory.CompanionTheory.Conv.tendsto_integral_of_exhaustion (volume.restrict S) (𝓝[>] (0 : ℝ)) E
     (fun y => Real.log (R.r ((A.chart j).symm y)))
     (fun t => locDens A (fun i => th i + LocPot.ofFun (phT i t) + Θ) j)
     (fun t y => c ((A.chart j).symm y) * GT t ((A.chart j).symm y))

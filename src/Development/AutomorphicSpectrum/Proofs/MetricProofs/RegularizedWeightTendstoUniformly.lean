@@ -1,8 +1,8 @@
 module
 
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularizedWeightUniformOnCompact
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FrameDefinitions.CpRegPhRegOfNonneg
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularizedWeightTendstoC2Statement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularizedWeightTendstoC2
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularizedWeightUniformOnCompact
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

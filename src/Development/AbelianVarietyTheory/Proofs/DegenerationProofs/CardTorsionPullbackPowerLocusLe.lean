@@ -1,15 +1,16 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsImage
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.OfDerivationFnOn
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.PlOrdSomeOfAssociated
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.LocallyOfFinitePresentationDiagMap
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsSplitTorusPointsMulEquiv
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AmpleCubPullAndPullPow
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.QuasiAffineSubgroupContainingTorusEqTorusStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.QuasiAffineSubgroupContainingTorusEqTorus
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsOpenConnectedComponentOfNoetherianSpace
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.MulPullOfCubeOfSymm
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsImage
 import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsReducedAlgebraOfSmoothOfIsNoetherianRing
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.GeometricallyReducedOfPerfectField
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsOpenConnectedComponentOfNoetherianSpace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,7 +57,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.PrecompleteBases.PsbLb
-public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.MulPullOfCubeOfSymm
 
 @[expose] public section
 
@@ -288,7 +288,7 @@ theorem card_torsion_powLocus_le : ∀ (k : Type) [Field k] [IsAlgClosed k] (G :
       (by have : (2 : ℤ) ≤ Q := by exact_mod_cast hQ
           nlinarith) hP h₂ hF₀ n s
     exact ⟨f, hf ▸ hx, hf ▸ hs⟩
-  have hK := GlobalTheory.T.quasiAffine_subgroup_containing_torus_eq_torus k G hG X B i q hq hB N₀ (μ₀ ≫ ν) i' hN₀ inferInstance hcl₀
+  have hK := _root_.GlobalTheory.QuasiAffineTorus.main k G hG X B i q hq hB N₀ (μ₀ ≫ ν) i' hN₀ inferInstance hcl₀
     (by rw [← Category.assoc, hi', hi₁']) hqa
 
   have : CompactSpace N.left := QuasiCompact.compactSpace_of_compactSpace N.hom

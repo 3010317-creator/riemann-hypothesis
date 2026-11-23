@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SmallFam
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLBLeBySmallSectionIffLocalQuotientsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLBLeBySmallSectionIffLocalQuotients
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -81,7 +81,7 @@ theorem GlobalTheory.HSNef.le_shift_of_isFS : ∀ (k : Type) [CommRing k] (X : S
       field_simp
     rw [e]
     exact regAt_mul' (hbreg x c hc l) (regAt_inv_of_unitAt hl)
-  refine (GlobalTheory.T.hermLBLeBySmallSection_iff_localQuotients k X p _ M).2 ⟨β, ρ, hβ, hρ, fun x i j hi hj => key x i j hi hj, ?_⟩
+  refine (_root_.GlobalTheory.HSNef.le_iff_local k X p _ M).2 ⟨β, ρ, hβ, hρ, fun x i j hi hj => key x i j hi hj, ?_⟩
   intro σ y i j hi hj
   have hxi : under y ∈ B.B.U i := mem_ptsIn.1 hi
   have hxj : under y ∈ M.B.U j := mem_ptsIn.1 hj

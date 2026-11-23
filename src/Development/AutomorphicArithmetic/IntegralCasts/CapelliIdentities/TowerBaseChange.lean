@@ -1,7 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.DifferentiableAtChart
-public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.AbsoluteValueAlt
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ExistsSmoothExtensionNear
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,4 +52,4 @@ theorem UpperTheory.Reformulated.B.LocalSmoothExtension.exists_smooth_eq : ∀ {
     ∀ {x : GlobalTheory.CuspRep.Lie K n}, x ∈ U →
       ∃ G : GlobalTheory.CuspRep.Lie K n → ℂ, ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) G ∧ G =ᶠ[nhds x] F := by
   intro K _ _ n U hU F hF x hx
-  exact UpperTheory.Reformulated.B.ContDiffOnLocalExtension.abs hU hF hx
+  exact _root_.UpperTheory.exists_smooth_extension_near hU hF hx

@@ -1,11 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinsumDoubleCosetEqFinprodLocalSumsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GroupAverageComponentwiseSubgroupEqProdStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemCompactPartCentralizerIffLocalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexInfConjEqFinprodRestrictedProductStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedOrbitalIntegralSummandGoodPlaceIndicatorStatement
+public import Mathlib.Algebra.BigOperators.Finprod
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.GroupTheory.DoubleCoset
+public import Mathlib.Order.Filter.Cofinite
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinsumDoubleCosetEqFinprodLocalSums
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GroupAverageComponentwiseSubgroupEqProd
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemCompactPartCentralizerIffLocal
+public import Mathlib.GroupTheory.Index
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexInfConjEqFinprodRestrictedProduct
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedOrbitalIntegralTwistedConjInvariant
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedOrbitalIntegralSummandGoodPlaceIndicator
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -69,7 +75,7 @@ theorem twOrb_restrProd : ∀ (ι G : Type) [Group G] [TopologicalSpace G] [IsTo
       apply hinj
       intro i
       rw [map_mul, h i, map_mul]
-  have hC := GlobalTheory.T.mem_compactPart_centralizer_iff_local ι G H p KH _ _ hpc hfin hcpt hKc hT hcomm
+  have hC := _root_.GlobalTheory.BCT.mem_cptPart_iff_local ι G H p KH _ _ hpc hfin hcpt hKc hT hcomm
   have hCT : ∀ i, cptPart (twCent (MonoidHom.id (H i)) (p i δ)) ≤ twCent (MonoidHom.id (H i)) (p i δ) :=
     fun i => (Subgroup.closure_le _).2 (fun t ht => ht.1)
   have havg1 : ∀ (M : Type) [Group M], avg (fun _ : M => (1 : ℂ)) = 1 := by
@@ -85,14 +91,14 @@ theorem twOrb_restrProd : ∀ (ι G : Type) [Group G] [TopologicalSpace G] [IsTo
   have hs : ∀ g, GlobalTheory.TwOrbConj.summand (MonoidHom.id G) K δ (fun x => ∏ᶠ i, f i (p i x)) g =
       ∏ᶠ i, GlobalTheory.TwOrbConj.summand (MonoidHom.id (H i)) (KH i) (p i δ) (f i) (p i g) := by
     intro g
-    have hrel := GlobalTheory.T.relIndex_inf_conj_eq_finprod_restrictedProduct ι G H p K _ _ KH _ _ g hglue hfin hK hT hC hCT (fun i => hloc i (p i g))
+    have hrel := _root_.GlobalTheory.relIndex_inf_conj_eq_finprod_of_restricted_product ι G H p K _ _ KH _ _ g hglue hfin hK hT hC hCT (fun i => hloc i (p i g))
       (hgood.mono fun i h => h.2.2.2)
     have hu1 : ∀ᶠ i in cofinite, ∀ k : KH i, f i ((p i g * k)⁻¹ * p i δ * (p i g * k)) = 1 := by
       filter_upwards [hgood, hfin g] with i h hg k
       rw [h.2.1]
       apply Set.indicator_of_mem
       exact (KH i).mul_mem ((KH i).mul_mem ((KH i).inv_mem ((KH i).mul_mem hg k.2)) h.1) ((KH i).mul_mem hg k.2)
-    have havg := GlobalTheory.T.groupAverage_componentwiseSubgroup_eq_prod ι G H p K KH hK (fun i k => f i ((p i g * k)⁻¹ * p i δ * (p i g * k))) hglue
+    have havg := _root_.GlobalTheory.AvgRestr.avg_restrProd ι G H p K KH hK (fun i k => f i ((p i g * k)⁻¹ * p i δ * (p i g * k))) hglue
       (fun i => hstab i (p i g)) hu1
     have hr1 : ∀ᶠ i in cofinite, (((twCent (MonoidHom.id (H i)) (p i δ) ⊓ (KH i).map (MulAut.conj (p i g)).toMonoidHom).relIndex
         (cptPart (twCent (MonoidHom.id (H i)) (p i δ))) : ℕ) : ℂ) = 1 := by
@@ -122,7 +128,7 @@ theorem twOrb_restrProd : ∀ (ι G : Type) [Group G] [TopologicalSpace G] [IsTo
     rw [e1, hrel, hcast, ← finprod_mul_distrib (Filter.eventually_cofinite.1 hr1) (Filter.eventually_cofinite.1 ha1)]
   rw [GlobalTheory.TwOrbConj.twOrb_eq]
   simp only [GlobalTheory.TwOrbConj.twOrb_eq]
-  refine GlobalTheory.T.finsum_doubleCoset_eq_finprod_local_sums ι G H p _ K _ KH _ _ hglue hfin hK hT ?_ ?_ ?_ hs
+  refine _root_.GlobalTheory.DoubleCosetEuler.finsum_doubleCoset_eq_finprod_local ι G H p _ K _ KH _ _ hglue hfin hK hT ?_ ?_ ?_ hs
   · intro i t ht k hk x
     exact GlobalTheory.TwOrbConj.summand_rep _ _ _ _ x ht hk
   · intro i
@@ -140,6 +146,6 @@ theorem twOrb_restrProd : ∀ (ι G : Type) [Group G] [TopologicalSpace G] [IsTo
     simp [avg]
   · filter_upwards [hgood] with i h x
     rw [h.2.1]
-    exact GlobalTheory.T.twistedOrbitalIntegralSummand_goodPlace_indicator (H i) (KH i) (p i δ) h.1 h.2.2.2 h.2.2.1 x
+    exact _root_.GlobalTheory.TwOrbGood.summand_goodplace (H i) (KH i) (p i δ) h.1 h.2.2.2 h.2.2.1 x
 
 end GlobalTheory.RestrProd

@@ -4,15 +4,18 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PadNatZ
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NAInterSupSSubset
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AutomorphicFormGLContinuous
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBumpShintani
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSphericalCuspFormWhittakerNeZeroStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KirillovSemilocalSmoothBump
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KirillovSemilocalSmoothBumpStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WhittakerMulTorusIteratedFactorisationStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BlockEmbeddingGLTorusElementZeroPaddedStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BlockGLSupportedMemMirabolicSupportedStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContDiffOnChartGlobalWhittakerCoefficient
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsUnipotentInvariantCompactlySupportedWeight
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsWhittakerBumpExtensionSchurComplementStatement
+import Development.AbelianVarietyTheory.Definitions.Divisors.IsRapidInf
+import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatVecUOfIsSphericalU
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSphericalCuspFormWhittakerNeZero
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KirillovSemilocalSmoothBump
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KirillovSemilocalSmoothBumpStatement
+import Development.AbelianVarietyTheory.Definitions.Divisors.IsAddHaarMeasureVolumeLie
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WhittakerMulTorusIteratedFactorisation
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -159,8 +162,8 @@ theorem GlobalTheory.JSW.MatchedVec.matched_vectors : ∀ (E : Type) [Field E] [
         ∀ u ∈ U, ∀ h, κ (h * finGL E (m + 1) u) = κ h) ∧
       ∃ h₀ ∈ GlobalTheory.JSW.supS (E := E) (a := (m + 1)) S, 0 < κ h₀ ∧ GlobalTheory.JSW.whit φ' h₀ ≠ 0 := by
   intro E _ _ _ m r S hcond π π' hπu hπ'u α β hα hβ
-  obtain ⟨φ', hφ'V, hφ'K, x₀, hx₀S, hx₀⟩ := GlobalTheory.T.exists_spherical_cuspForm_whittaker_ne_zero E m S hcond π' β hβ
-  obtain ⟨φ₀, hφ₀V, hφ₀K, x₁, hx₁S, hx₁⟩ := GlobalTheory.T.exists_spherical_cuspForm_whittaker_ne_zero E (m + r + 1) S hcond π α hα
+  obtain ⟨φ', hφ'V, hφ'K, x₀, hx₀S, hx₀⟩ := _root_.GlobalTheory.JSW.NzSph.exists_sph_whit_ne_zero E m S hcond π' β hβ
+  obtain ⟨φ₀, hφ₀V, hφ₀K, x₁, hx₁S, hx₁⟩ := _root_.GlobalTheory.JSW.NzSph.exists_sph_whit_ne_zero E (m + r + 1) S hcond π α hα
   obtain ⟨κ, hκc, hκ0, hκN, ⟨C, hC, hκC⟩, ⟨Uκ, hUκo, hUκ⟩, hκsm, hκx₀⟩ := GlobalTheory.Tx.exists_unipotentInvariant_compactlySupported_weight E m x₀
   have haut' : IsAutForm φ' := (π'.cusp φ' hφ'V).1
   obtain ⟨U', hU'o, hU'⟩ := exists_level φ' haut'
@@ -210,7 +213,7 @@ theorem GlobalTheory.JSW.MatchedVec.matched_vectors : ∀ (E : Type) [Field E] [
   · intro w hw k hk g
     exact congrArg (fun ψ : Sm E (m + 1) => ψ.1 g) (hφ'K w hw k hk)
   · intro ϖ hϖ l hl h hh
-    exact GlobalTheory.T.whittaker_mul_torus_iterated_factorisation E (m + 1) S hcond π' β hβ φ' hφ'V hφ'K ϖ hϖ l hl h hh
+    exact _root_.GlobalTheory.JSW.whit_mul_tl E (m + 1) S hcond π' β hβ φ' hφ'V hφ'K ϖ hϖ l hl h hh
   · intro ϖ hϖ l hl h hh
     set l' : HeightOneSpectrum (𝓞 E) →₀ (Fin (m + r + 1 + 1) → ℕ) :=
       l.mapRange GlobalTheory.RSnmUnf.padNat GlobalTheory.RSnmUnf.padNat_zero with hl'
@@ -227,7 +230,7 @@ theorem GlobalTheory.JSW.MatchedVec.matched_vectors : ∀ (E : Type) [Field E] [
         have := congrFun h2 ⟨i, by omega⟩
         simpa [GlobalTheory.RSnmUnf.padNat, i.2] using this
     have hl's : ∀ w ∈ l'.support, w ∉ S := fun w hw => hl w (hsupp ▸ hw)
-    have hC := GlobalTheory.T.whittaker_mul_torus_iterated_factorisation E (m + r + 1 + 1) S hcond π α hα φ₀ hφ₀V hφ₀K ϖ hϖ l' hl's
+    have hC := _root_.GlobalTheory.JSW.whit_mul_tl E (m + r + 1 + 1) S hcond π α hα φ₀ hφ₀V hφ₀K ϖ hϖ l' hl's
     have hS : ∀ w ∈ S, GeneralLinearGroup.map ((pLoc E w).comp (pFin E)) (GlobalTheory.JSW.tl ϖ l') = 1 :=
       fun w hw => GlobalTheory.JSW.BumpShintani.loc_tl ϖ l' w (fun h => hl's w h hw)
     have hmir := GlobalTheory.T.blockGL_supported_mem_mirabolic_supported E m r S h hh

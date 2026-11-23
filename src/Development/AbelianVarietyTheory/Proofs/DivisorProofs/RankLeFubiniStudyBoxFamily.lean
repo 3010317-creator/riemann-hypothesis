@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SmallFam
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqOfIsometricTrivShift
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FubiniStudyBundleIsNefOfNonnegWeightsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFubiniStudyRatFnsMemPairSectionsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RankLeGeometricDegreeOfIsNefStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FubiniStudyBundleIsNefOfNonnegWeights
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFubiniStudyRatFnsMemPairSections
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RankLeGeometricDegreeOfIsNef
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,9 +57,9 @@ theorem fs_box_rank_le : GlobalTheory.Published.ArCalc → AmpleHS → ∀ (k : 
     LinearIndependent ℤ e → AlgebraicIndependent ℤ x → (∀ c, 0 ≤ w c) →
     IsFS M (boxFam e x) w → (D.factorial : ℝ) * Fintype.card J ≤ gdeg M D := by
   intro hAr hHS k _ X _ p D hD M J _ e x w he hx hw hFS
-  have hNef : M.IsNef D := GlobalTheory.T.fubiniStudy_bundle_isNef_of_nonneg_weights hAr k X p D hD M _ (boxFam e x) w hFS hw
-  obtain ⟨P, hPL, hmem⟩ := GlobalTheory.T.isFubiniStudy_ratFns_mem_pairSections k X p M _ (boxFam e x) w hFS
+  have hNef : M.IsNef D := _root_.GlobalTheory.HSNef.FSNef.isNef_of_isFS hAr k X p D hD M _ (boxFam e x) w hFS hw
+  obtain ⟨P, hPL, hmem⟩ := _root_.GlobalTheory.HSNef.isFS_mem_pair k X p M _ (boxFam e x) w hFS
   subst hPL
-  exact GlobalTheory.T.rank_le_geometricDegree_of_isNef hAr hHS k X p D hD P hNef J e x he hx hmem
+  exact _root_.GlobalTheory.HSNef.RankNef.rank_le_gdeg_of_isNef hAr hHS k X p D hD P hNef J e x he hx hmem
 
 end GlobalTheory.HSNef

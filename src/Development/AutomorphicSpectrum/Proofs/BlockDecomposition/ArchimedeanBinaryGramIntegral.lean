@@ -1,16 +1,20 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.BinaryMassMeans.MeanVal
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CoordinateHaarMeasureStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.GramFiberMeasuresSupportStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteAdeleHaarMapEqScaledVolumeStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteAdelesLocalRingTotallyRealStatement
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CoordinateHaarMeasure
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.GramFiberMeasuresSupport
+public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteAdeleHaarMapEqScaledVolume
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteAdelesLocalRingTotallyReal
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.LocalRankOneDensityUniformizerPower
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRingStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ArchimedeanFrameKTypeDecompositionStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.CoordinateMeasureScalingTensorStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.HermitianMeasureScalingTransformStatement
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ArchimedeanFrameKTypeDecomposition
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.CoordinateMeasureScalingTensor
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.HermitianMeasureScalingTransform
 public import Development.WeilBound.CoreStatements.ThetaDilations.SdTransport
+import Formalism.UnipotentAdelicQuotients.SWXSDefs
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.TensTop
 import GroundTheory.GlobalFields.Adele.Approximation
 import GroundTheory.GlobalFields.TateThesis.AdeleMeasurable
@@ -73,11 +77,11 @@ namespace GlobalTheory.CompanionTheory.BinaryDil
 
 theorem fibre_unit_dilation : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → 0 < M → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (laminf : Measure (Ainf F)), laminf.IsAddHaarMeasure → ∀ (minf : HermR (Ainf F) σ 1 → Measure (Fin 1 → Fin M → Ainf F ⊗[F] E)), GlobalTheory.CompanionTheory.SW.IsGramFib (Ainf F) σ J 1 (GlobalTheory.CompanionTheory.SW.coordW (Ainf F) b laminf 1 M) (GlobalTheory.CompanionTheory.SW.coordHerm (Ainf F) σ b laminf 1) minf → ∀ (e : Ainf F ≃+* (InfinitePlace F → ℝ)), IsHomeomorph e → ∀ s t : Ainf F, IsUnit t → minf (GlobalTheory.CompanionTheory.SW.hermScal (Ainf F) σ (t ^ 2 * s)) = ((∏ w, ‖e t w‖₊) ^ (2 * M - 2)) • (minf (GlobalTheory.CompanionTheory.SW.hermScal (Ainf F) σ s)).map (fun X p i => algebraMap (Ainf F) (Ainf F ⊗[F] E) t * X p i) := by
   intro F E _ _ _ _ _ σ hσ M J hJ hM d b lam hlam m hm e he s t ht
-  have hloc : GlobalTheory.CompanionTheory.SW.IsLocR (Ainf F) := GlobalTheory.T.infinite_adeles_local_ring_totally_real F hσ.1
-  obtain ⟨i1, i2, i3, i4, i5, -, -, hB, -, -⟩ := GlobalTheory.T.tensor_locally_compact_ring F E σ hσ (Ainf F)
+  have hloc : GlobalTheory.CompanionTheory.SW.IsLocR (Ainf F) := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hσ.1
+  obtain ⟨i1, i2, i3, i4, i5, -, -, hB, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Ainf F)
   haveI : BorelSpace (Ainf F) := ⟨rfl⟩
   haveI : BorelSpace (Ainf F ⊗[F] E) := ⟨rfl⟩
-  obtain ⟨-, hW, hH⟩ := GlobalTheory.T.coordinate_haar_measure F E σ hσ (Ainf F) d b lam hlam
+  obtain ⟨-, hW, hH⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hσ (Ainf F) d b lam hlam
   have hd : d = 2 := by
     rw [← hσ.2.2.1, Module.finrank_eq_card_basis b, Fintype.card_fin]
   subst hd
@@ -90,10 +94,10 @@ theorem fibre_unit_dilation : ∀ (F E : Type) [Field F] [NumberField F] [Field 
     rw [hN, ← Finset.prod_pow]
     refine Finset.prod_congr rfl fun w _ => ?_
     simp [map_pow]
-  have hs1 := GlobalTheory.T.archimedean_haar_scaling_norm F e he lam hlam t ht
-  have hs2 := GlobalTheory.T.archimedean_haar_scaling_norm F e he lam hlam (t ^ 2) (ht.pow 2)
+  have hs1 := _root_.GlobalTheory.CompanionTheory.HaarScale.unit_mul_map_haar F e he lam hlam t ht
+  have hs2 := _root_.GlobalTheory.CompanionTheory.HaarScale.unit_mul_map_haar F e he lam hlam (t ^ 2) (ht.pow 2)
   rw [hN2] at hs2
-  have hk := GlobalTheory.T.coordinate_measure_scaling_tensor F E σ hσ M 2 b lam hlam t ht _ hs1
+  have hk := _root_.GlobalTheory.CompanionTheory.SW.Dil.coordW_map_unit F E σ hσ M 2 b lam hlam t ht _ hs1
   let g : Matrix (Fin 1) (Fin 1) (Ainf F ⊗[F] E) := Matrix.of fun _ _ => algebraMap (Ainf F) (Ainf F ⊗[F] E) t
   have hg : IsUnit g.det := by
     rw [Matrix.det_fin_one]
@@ -120,12 +124,12 @@ theorem fibre_unit_dilation : ∀ (F E : Type) [Field F] [NumberField F] [Field 
       refine continuous_pi fun i => continuous_pi fun j => ?_
       exact continuous_const.mul ((continuous_apply j).comp ((continuous_apply i).comp continuous_subtype_val))
     exact this.measurable
-  have hc := GlobalTheory.T.hermitian_measure_scaling_transform F E σ hσ 2 b lam hlam (t ^ 2) (ht.pow 2) _ hs2 τ hτm hτe
+  have hc := _root_.GlobalTheory.CompanionTheory.SW.DilU.coordHerm_map_ainf F E σ hσ 2 b lam hlam (t ^ 2) (ht.pow 2) _ hs2 τ hτm hτe
   have hτ : ∀ S, (τ S : Matrix (Fin 1) (Fin 1) (Ainf F ⊗[F] E)) = HeckeCharacterZeroLocus.SiegelWeilU.cT (sigR (Ainf F) σ) g * S * g := by
     intro S
     ext i j
     rw [hτe, map_pow, GlobalTheory.CompanionTheory.SW.Dil.cT_scalar _ _ hsig]
-  have key := GlobalTheory.T.gram_fiber_measures_rmul_equivariant F E σ hσ M J hJ (Ainf F) hloc 1 (GlobalTheory.CompanionTheory.SW.coordW (Ainf F) b lam 1 M)
+  have key := _root_.GlobalTheory.CompanionTheory.SW.FibScale.fib_rmul F E σ hσ M J hJ (Ainf F) hloc 1 (GlobalTheory.CompanionTheory.SW.coordW (Ainf F) b lam 1 M)
     (GlobalTheory.CompanionTheory.SW.coordHerm (Ainf F) σ b lam 1) m (hW 1 M) (hH 1) hm g hg τ hτ _ _
     (by rw [hrm]; exact hk) hc (GlobalTheory.CompanionTheory.SW.hermScal (Ainf F) σ s)
   have hτs : τ (GlobalTheory.CompanionTheory.SW.hermScal (Ainf F) σ s) = GlobalTheory.CompanionTheory.SW.hermScal (Ainf F) σ (t ^ 2 * s) := by
@@ -154,8 +158,8 @@ theorem dilation_inf_binary : ∀ (F E : Type) [Field F] [NumberField F] [Field 
   ENNReal.ofReal (ε ^ (4 * Module.finrank ℚ F)) * ∫⁻ X, ENNReal.ofReal (φ (PositivityTheory.Rg.Mass.dil θ ε X)) ∂(mi (hermScal (Ainf F) σ s)) =
     ENNReal.ofReal ((ε ^ 2) ^ Module.finrank ℚ F) * ∫⁻ X, ENNReal.ofReal (φ X) ∂(mi (hermScal (Ainf F) σ (θ (ε ^ 2) * s))) := by
   intro F E _ _ _ _ _ σ hσ J hJ d b li hli mi hm θ hθ ε hε s φ hφ
-  obtain ⟨-, e, -, he, -, habs, -⟩ := GlobalTheory.T.infinite_adele_haar_map_eq_scaled_volume F hσ.1
-  obtain ⟨i1, i2, i3, i4, -, -, -, hB, -, -⟩ := GlobalTheory.T.tensor_locally_compact_ring F E σ hσ (Ainf F)
+  obtain ⟨-, e, -, he, -, habs, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.real_iso F hσ.1
+  obtain ⟨i1, i2, i3, i4, -, -, -, hB, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Ainf F)
   haveI : BorelSpace (Fin 1 → Fin 2 → Ainf F ⊗[F] E) := hB 1 2
   set t : Ainf F := θ ε with ht_def
   have ht : IsUnit t := (isUnit_iff_ne_zero.2 hε.ne').map θ

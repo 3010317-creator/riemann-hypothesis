@@ -1,10 +1,10 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocInOfUniqOfDecLow
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselOpNormPowerIntegralLtTopClosedSubgroupStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselRegularDoubleCosetPolynomialPropernessStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupsClosedUnitaryWCompactStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselOpNormPowerIntegralLtTopClosedSubgroup
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselRegularDoubleCosetPolynomialProperness
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupsClosedUnitaryWCompact
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocInOfUniqOfDecLow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -97,9 +97,9 @@ theorem rpow_le {a a' x C0 A : ℝ} {M : ℕ} (ha : 0 < a) (ha' : 0 < a') (hx : 
 
 theorem orbNormInt_lt_top : ∀ (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) (μS μS' : Measure (Mt k r)) (b : ℝ) (C : Set (Mat k r)), inWb k r z → inWb k r z' → 0 < Tz k r z → 0 < Tz k r z' → IsHaarOn (Sset k r z) μS → IsHaarOn (Sset k r z') μS' → 2 * ((2 * (r ^ 2 + r + 1) : ℕ) : ℝ) * (2 * ((2 * r + k + 1 : ℕ) : ℝ) ^ 2) < b → IsCompact C → C ⊆ Greg k r z z' → (∀ γ ∈ C, orbNormInt μS μS' b γ < ⊤) ∧ ∃ F : Mt k r × Mt k r → ℝ, Integrable F (μS.prod μS') ∧ ∀ γ ∈ C, ∀ p : Mt k r × Mt k r, Matrix.of p.1 ∈ Sset k r z → Matrix.of p.2 ∈ Sset k r z' → opn (Matrix.of (act2 γ p)) ^ (-b) ≤ F p := by
   intro k r z z' μS μS' b C hz hz' hT hT' hS hS' hb hC hCr
-  obtain ⟨C0, hC0, hbd⟩ := GlobalTheory.T.besselRegularDoubleCoset_polynomial_properness k r z z' C hz hz' hT hT' hC hCr
-  obtain ⟨-, -, -, hSS, -⟩ := GlobalTheory.T.bessel_subgroups_closed_unitaryW_compact k r z hz hT
-  obtain ⟨-, -, -, hSS', -⟩ := GlobalTheory.T.bessel_subgroups_closed_unitaryW_compact k r z' hz' hT'
+  obtain ⟨C0, hC0, hbd⟩ := _root_.GlobalTheory.SgInf.PolyProper.poly_proper k r z z' C hz hz' hT hT' hC hCr
+  obtain ⟨-, -, -, hSS, -⟩ := _root_.GlobalTheory.SgInf.closedSub_groups k r z hz hT
+  obtain ⟨-, -, -, hSS', -⟩ := _root_.GlobalTheory.SgInf.closedSub_groups k r z' hz' hT'
   set M : ℕ := 2 * (r ^ 2 + r + 1) with hM
   have hM0 : 0 < M := by rw [hM]; positivity
   have hMr : (0 : ℝ) < M := by exact_mod_cast hM0
@@ -112,8 +112,8 @@ theorem orbNormInt_lt_top : ∀ (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ)
   have hbA : b = 2 * (M : ℝ) * A := by
     rw [hA]
     field_simp
-  have hi := integrable_of_normInt (GlobalTheory.T.besselOpNormPowerIntegral_lt_top_closedSubgroup k r (Sset k r z) μS A hSS hS hA2)
-  have hi' := integrable_of_normInt (GlobalTheory.T.besselOpNormPowerIntegral_lt_top_closedSubgroup k r (Sset k r z') μS' A hSS' hS' hA2)
+  have hi := integrable_of_normInt (_root_.GlobalTheory.SgGrowth.normInt_lt_top k r (Sset k r z) μS A hSS hS hA2)
+  have hi' := integrable_of_normInt (_root_.GlobalTheory.SgGrowth.normInt_lt_top k r (Sset k r z') μS' A hSS' hS' hA2)
   have : SigmaFinite μS := hS.1
   have : SigmaFinite μS' := hS'.1
   let F : Mt k r × Mt k r → ℝ := fun p =>

@@ -2,13 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.SelfDualAt
 public import Formalism.LocalToGlobal.HermitianForms.PsiZeroNontrivialCharacter
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicLatticeFrameLocalBasisUnitriangularStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CmFieldSplitCompletelyPlaceStructureStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DiagonalTorusTransitiveGenericCharactersStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsLocallySelfDualOfHermitianLatticeOfLevelStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemLevelOfPreservesFirstComponentsSplitStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SplitPlaceLatticeComponentsStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicLatticeFrameLocalBasisUnitriangular
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DiagonalTorusTransitiveGenericCharacters
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsLocallySelfDualOfHermitianLatticeOfLevel
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemLevelOfPreservesFirstComponentsSplit
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StepLevelTLat
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CmFieldSplitCompletelyPlaceStructure
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SplitPlaceLatticeComponents
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -134,18 +134,18 @@ theorem gmatch_local : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
   have hTv : (T : 𝓞 F) ∉ v.asIdeal := fun h =>
     GlobalTheory.St.G.Match.nat_prime_not_mem v (gp i) T (hgp i) hT (fun e => hTg i e.symm) hv h
   have hTL := GlobalTheory.St.G.stepLevel_tLat F E n cm.sig J T f _ S
-  have hSD := GlobalTheory.T.isLocallySelfDual_of_hermitianLatticeOfLevel F E cm n J hJ hdet T f S.Lb hTL v hTv
+  have hSD := _root_.GlobalTheory.St.G.selfDualAt_of_tLat F E cm n J hJ hdet T f S.Lb hTL v hTv
   have hLat : IsLat S.Lb := ⟨S.Lb_fin, S.Lb_span⟩
-  obtain ⟨fr', ψ', hψ', hfr', hK⟩ := GlobalTheory.T.adelicLatticeFrame_local_basis_unitriangular F E cm n J hJ hdet k t gp G S.Lb Fr hk hgp hne hspl hLat i v hv hSD
-  have hcard := ((GlobalTheory.T.cmField_splitCompletely_place_structure F E cm (gp i) (hgp i) (hspl i)).2 v hv).1
+  obtain ⟨fr', ψ', hψ', hfr', hK⟩ := _root_.GlobalTheory.St.G.frame_local_basis_unitriangular F E cm n J hJ hdet k t gp G S.Lb Fr hk hgp hne hspl hLat i v hv hSD
+  have hcard := ((_root_.GlobalTheory.St.G.SplitPrime.split_place F E cm (gp i) (hgp i) (hspl i)).2 v hv).1
   haveI : Finite (kv F v) := Nat.finite_of_card_ne_zero (by rw [hcard]; exact (hgp i).ne_zero)
-  obtain ⟨d, hd⟩ := GlobalTheory.T.diagonal_torus_transitive_generic_characters (kv F v) n t (G.psi0 i v hv) ψ' (G.chiB i v hv) (fun _ => 1) (G.psi_zero_nontrivial_character i v hv) hψ'
+  obtain ⟨d, hd⟩ := _root_.GlobalTheory.St.G.Torus.torus_transitive (kv F v) n t (G.psi0 i v hv) ψ' (G.chiB i v hv) (fun _ => 1) (G.psi_zero_nontrivial_character i v hv) hψ'
   obtain ⟨D, hDint, hDred⟩ := GlobalTheory.St.G.Match.diag_lift F v n d
-  obtain ⟨κ, hκ, -⟩ := (GlobalTheory.T.split_place_lattice_components F E cm n J hJ hdet v (G.sp i v hv) (G.sp_sig i v hv) (G.sp_alg i v hv)).2.1
+  obtain ⟨κ, hκ, -⟩ := (_root_.GlobalTheory.St.G.split_components F E cm n J hJ hdet v (G.sp i v hv) (G.sp_sig i v hv) (G.sp_alg i v hv)).2.1
     (fr' * D * (Gl.fr i v hv)⁻¹)
   have hphi : bc (G.phi i v hv) κ.1 = fr' * D * (Gl.fr i v hv)⁻¹ := hκ
   have hlev : κ.1 ∈ levelVL cm.sig J v S.Lb := by
-    refine GlobalTheory.T.mem_level_of_preserves_first_components_split F E cm n J v (G.sp i v hv) (G.sp_sig i v hv) (G.sp_alg i v hv) S.Lb hSD κ.1 κ.2 ?_
+    refine _root_.GlobalTheory.St.G.mem_levelVL_of_first_components F E cm n J v (G.sp i v hv) (G.sp_sig i v hv) (G.sp_alg i v hv) S.Lb hSD κ.1 κ.2 ?_
     intro x
     refine (Gl.fr_lat i v hv x).trans ?_
     refine Iff.trans ?_ (hfr' _).symm

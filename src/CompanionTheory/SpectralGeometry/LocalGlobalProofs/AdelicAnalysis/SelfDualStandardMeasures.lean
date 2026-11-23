@@ -3,9 +3,13 @@ module
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
 public import GroundTheory.AutomorphicForms.GL2.FiniteIdeleDecomp
 public import GroundTheory.GlobalFields.TateThesis.EulerFactorsFourierFinite
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ArchimedeanSelfdualMeasureDiscriminantScaledStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.DiscriminantDifferentProductFormulaStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.LocalFieldSelfdualMeasureExistsStatement
+public import GroundTheory.GlobalFields.TateThesis.AdelicChar
+public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ArchimedeanSelfdualMeasureDiscriminantScaled
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.DiscriminantDifferentProductFormula
+public import GroundTheory.LocalFields.LocalFourier
+public import Formalism.UnipotentAdelicQuotients.SWXSDefs
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.LocalFieldSelfdualMeasureExists
 public import GroundTheory.GlobalFields.TateThesis.RootNumberLocalPlace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -83,7 +87,7 @@ theorem smul_eq_selfDualMeasure (v : HeightOneSpectrum (𝓞 F)) (lam : Measure 
 
 theorem selfDual_std : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal F → ∀ (laminf : Measure (Ainf F)) (lam : ∀ v : HeightOneSpectrum (𝓞 F), Measure (Fv F v)), IsStdInf laminf → (∀ v, IsStdV v (lam v)) → ∃ ψ, IsCharAF F ψ ∧ ∃ (cinf : ℝ≥0) (c : HeightOneSpectrum (𝓞 F) → ℝ≥0), IsUnitProd cinf c ∧ (SelfDual (cinf • laminf) (fun s t => psiInf F ψ (s * t))) ∧ ∀ v : HeightOneSpectrum (𝓞 F), (SelfDual (c v • lam v) (fun s t => psiV F ψ v (s * t))) := by
   intro F _ _ hF laminf lam hinf hlam
-  refine ⟨Circle.coeHom.compAddChar (adelicChar F), ?_, Real.toNNReal (Real.sqrt |(discr F : ℝ)|), cV F, ?_, GlobalTheory.T.archimedean_selfdual_measure_discriminant_scaled F hF laminf hinf, fun v => ?_⟩
+  refine ⟨Circle.coeHom.compAddChar (adelicChar F), ?_, Real.toNNReal (Real.sqrt |(discr F : ℝ)|), cV F, ?_, _root_.GlobalTheory.CompanionTheory.SW.selfDual_psiInf_std F hF laminf hinf, fun v => ?_⟩
   · refine ⟨continuous_subtype_val.comp (continuous_adelicChar (K := F)), fun x => Circle.norm_coe _, fun a => ?_, ?_⟩
     · show ((adelicChar F _ : Circle) : ℂ) = 1
       rw [adelicChar_algebraMap]
@@ -93,9 +97,9 @@ theorem selfDual_std : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal F
       apply adelicChar_ne_one (K := F)
       ext x
       exact h x
-  · exact GlobalTheory.T.discriminant_different_product_formula F
+  · exact _root_.GlobalTheory.CompanionTheory.SW.SelfDual.sqrt_discr_mul_finprod_different F
   · rw [smul_eq_selfDualMeasure F v (lam v) (hlam v)]
     simp only [psiV_std]
-    exact GlobalTheory.T.local_field_selfdual_measure_exists _ _ (continuous_localAdelicChar v) (localAdelicChar_ne_one v)
+    exact _root_.GlobalTheory.CompanionTheory.SW.selfDual_selfDualMeasure _ _ (continuous_localAdelicChar v) (localAdelicChar_ne_one v)
 
 end GlobalTheory.CompanionTheory.SW.SDOne

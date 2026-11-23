@@ -1,19 +1,20 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsRealPD
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AcrisFrobeniusFontaineTEqMulStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AcrisGaloisActionFontaineTEqCyclotomicStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BcrisFrobeniusFixedFilZeroEqQpStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BdRFiltrationLawsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BdRGaloisInvariantsEqFinExtStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BdRPlusSimpleRootsSectionUniqueEquivariantStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FontaineTIsUnitBcrisAndUniformizerBdRPlusStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FrobeniusPeriodRingInjectiveStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsCrisP
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AcrisFrobeniusFontaineTEqMul
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AcrisGaloisActionFontaineTEqCyclotomic
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BcrisFrobeniusFixedFilZeroEqQp
+public import Formalism.LocalRingCardinality.AdicCompletionLocal.InstIsAdicCompleteOCSpanSingletonSetCast
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BdRGaloisInvariantsEqFinExt
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FrobeniusPeriodRingInjective
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GaloisInvariantsBcrisEqMaxUnramified
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalPeriodRingsDataUnramifiedLaws
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalPeriodRingsDataUnramifiedLawsStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PeriodRingsGaloisActionLawsFrobeniusComm
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ResEqIff
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BdRFiltrationLaws
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BdRPlusSimpleRootsSectionUniqueEquivariant
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FontaineTIsUnitBcrisAndUniformizerBdRPlus
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalPeriodRingsDataUnramifiedLaws
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PeriodRingsGaloisActionLawsFrobeniusComm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -203,11 +204,11 @@ theorem exists_abstract (R : LocRings l) (K : FinExt l)
 theorem exists_realPD : ∀ (l : ℕ) [Fact l.Prime], ∀ (C : Core l) (K : FinExt l), ∃ PD, IsRealPD C K PD := by
   intro l _ C K
   obtain ⟨a1, a2, a3, a4, a5, -, -, -, -, a10, -, a12, a13⟩ := ActLaws.act_laws l
-  obtain ⟨f1, f2, f3, f4, f5, f6, f7⟩ := GlobalTheory.T.bdR_filtration_laws l
-  obtain ⟨u1, u2, -, u4, u5, -⟩ := GlobalTheory.T.localPeriodRingsData_unramified_laws l C
-  obtain ⟨t1, t2, t3, -⟩ := GlobalTheory.T.fontaine_t_isUnit_bcris_and_uniformizer_bdRPlus l C
+  obtain ⟨f1, f2, f3, f4, f5, f6, f7⟩ := _root_.GlobalTheory.MemLoc.filD_laws l
+  obtain ⟨u1, u2, -, u4, u5, -⟩ := _root_.GlobalTheory.MemLoc.ULaws.u_laws l C
+  obtain ⟨t1, t2, t3, -⟩ := _root_.GlobalTheory.MemLoc.core_t_unit_fil l C
   have hσ := (frob_laws l C.σ C.σ_root).2.1 K
-  have so := (GlobalTheory.T.bdRPlus_simple_roots_section_unique_equivariant l C.o C.o_sec).2.2
+  have so := (_root_.GlobalTheory.MemLoc.SecUniq.main l C.o C.o_sec).2.2
   have sD_o : ∀ (g : GQ l) (x : Om l), Per.σD g (algebraMap (Per.BdRp l) (Per.BdR l) (C.o x)) =
       algebraMap (Per.BdRp l) (Per.BdR l) (C.o (g x)) := fun g x => by rw [a10, so]
   have F_o : ∀ x : Om l, algebraMap (Per.BdRp l) (Per.BdR l) (C.o x) ∈ Per.FilD l 0 := fun x => by
@@ -225,10 +226,10 @@ theorem exists_realPD : ∀ (l : ℕ) [Fact l.Prime], ∀ (C : Core l) (K : FinE
   have t_act : ∀ g : GQ l, Per.σB g (algebraMap (Per.Acris l) (Per.Bcris l) C.t) =
       C.u (algebraMap ℚ_[l] ↥(MaximalUnramifiedExtension l) ((C.χ g : ℤ_[l]) : ℚ_[l])) * algebraMap (Per.Acris l) (Per.Bcris l) C.t :=
     fun g => by
-      rw [a12, GlobalTheory.T.acrisGaloisAction_fontaine_t_eq_cyclotomic l C g, map_mul, u_z]
+      rw [a12, _root_.GlobalTheory.MemLoc.TAct.t_act l C g, map_mul, u_z]
   have t_φ : Per.φB l (algebraMap (Per.Acris l) (Per.Bcris l) C.t) =
       (l : Per.Bcris l) * algebraMap (Per.Acris l) (Per.Bcris l) C.t := by
-    rw [a13, GlobalTheory.T.acrisFrobenius_fontaine_t_eq_mul l C, map_mul, map_natCast]
+    rw [a13, _root_.GlobalTheory.MemLoc.TPhi.t_phi l C, map_mul, map_natCast]
   have s1 : C.ι (algebraMap (Per.Acris l) (Per.Bcris l) C.t) ∈ Per.FilD l 1 := by
     rw [C.ι_j]
     exact (f7 1 _).2 t2
@@ -238,8 +239,8 @@ theorem exists_realPD : ∀ (l : ℕ) [Fact l.Prime], ∀ (C : Core l) (K : FinE
   obtain ⟨PD, h1, h2, h3, h4, h5, h6, h7, h8, h9⟩ := exists_abstract (ringsOf C) K
     (fun g => Per.σB g) (fun g => Per.σD g) (Per.φB l) C.ι (fun a => (Per.FilD l a).toAddSubgroup) C.σ C.χ
     (algebraMap (Per.Acris l) (Per.Bcris l) C.t) hσ a1 a2 a3 a4 u2 sD_o
-    (InvCris.invariants_Bcris l C K) (GlobalTheory.T.bdR_galois_invariants_eq_finExt l C K) (GlobalTheory.T.frobenius_period_ring_injective l) u1 (fun g b => a5 g b) C.ι_u u4 u5
-    F_o f1 f3 f4 f5 f6 t1 t_act t_φ s1 s2 (GlobalTheory.T.bcris_frobenius_fixed_fil_zero_eq_qp l C)
+    (InvCris.invariants_Bcris l C K) (_root_.GlobalTheory.MemLoc.InvDR.invariants_BdR l C K) (_root_.GlobalTheory.MemLoc.phiB_injective l) u1 (fun g b => a5 g b) C.ι_u u4 u5
+    F_o f1 f3 f4 f5 f6 t1 t_act t_φ s1 s2 (_root_.GlobalTheory.MemLoc.fundamental_exact l C)
   exact ⟨PD, h1, h2, h3, h4, h5, h6, h7, h8, h9⟩
 
 end GlobalTheory.MemLoc.PdEx

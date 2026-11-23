@@ -4,8 +4,9 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.FramedDConst
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ActAtApply
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.HoweDualityReal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchActionReadingsCompatible
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIndefiniteUnitaryLieAlgAddISmulEqStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOneParameterSubgroupUnitaryOfRealPlaceLieAStatement
+public import Formalism.LocalRingCardinality.DataTheta
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIndefiniteUnitaryLieAlgAddISmulEq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOneParameterSubgroupUnitaryOfRealPlaceLieA
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -96,7 +97,7 @@ theorem tensAny_coinv_le_comap : ∀ (F E : Type) [Field F] [NumberField F] [Fie
       · subst h
         simpa [Y] using hZ
       · simp [Y, Pi.single_eq_of_ne h, upq]
-    obtain ⟨γ, hγ, hgen⟩ := GlobalTheory.T.exists_oneParameterSubgroup_unitary_of_realPlace_lieAlg F E σ (Fin n) P Q τ (incM F X.J) 1 A hCM hA Y hY
+    obtain ⟨γ, hγ, hgen⟩ := _root_.GlobalTheory.HoweD.exists_line_of_upqD F E σ (Fin n) P Q τ (incM F X.J) 1 A hCM hA Y hY
     have h1 := hact γ hγ Y hgen (e g)
     have h2 := (actsLaws F (Fin n × Fin d) _ _ 0).1 _ (fun t => map_zero _) h1
     have h3 := hN.2.1 γ hγ _ (hr ▸ LinearMap.mem_range_self Φ (e g)) _ h2
@@ -106,7 +107,7 @@ theorem tensAny_coinv_le_comap : ∀ (F E : Type) [Field F] [NumberField F] [Fie
   have hle : GlobalTheory.HoweR.coinv (P w) (Q w) (R w) (S w) (-c w) ≤ (N.comap Φ).comap e := by
     refine Submodule.span_le.2 ?_
     rintro _ ⟨Z, g, rfl⟩
-    obtain ⟨Z₁, h₁, Z₂, h₂, rfl⟩ := GlobalTheory.T.exists_indefiniteUnitaryLieAlg_add_I_smul_eq _ _ Z
+    obtain ⟨Z₁, h₁, Z₂, h₂, rfl⟩ := _root_.GlobalTheory.HoweD.upq_span _ _ Z
     have h := Submodule.add_mem _ (key Z₁ h₁ g) (Submodule.smul_mem _ Complex.I (key Z₂ h₂ g))
     rw [SetLike.mem_coe]
     convert h using 1

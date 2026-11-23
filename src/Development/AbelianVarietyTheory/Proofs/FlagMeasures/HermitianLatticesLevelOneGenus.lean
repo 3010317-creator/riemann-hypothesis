@@ -1,12 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.SelfDualAt
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicLatticeCarryIffForallPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsAdelicUnitaryOfFiniteSupportStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsLocalUnitaryLatticesOfLevelStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsLocalUnitaryOfSelfDualAtPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsLocallySelfDualOfHermitianLatticeOfLevelStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalSpanOfLatticeAtPlaceEqForAlmostAllPlacesStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicLatticeCarryIffForallPlace
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsAdelicUnitaryOfFiniteSupport
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsLocalUnitaryLatticesOfLevel
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsLocalUnitaryOfSelfDualAtPlace
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsLocallySelfDualOfHermitianLatticeOfLevel
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalSpanOfLatticeAtPlaceEqForAlmostAllPlaces
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,10 +62,10 @@ theorem tlat_one_genus : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
       ∀ x, x ∈ loc v L ↔ g.1 *ᵥ x ∈ loc v M := by
     intro v
     by_cases hv : (T : 𝓞 F) ∈ v.asIdeal
-    · exact GlobalTheory.T.exists_localUnitary_lattices_of_level F E cm n J hJ hdet T f L M hT hS hf hL hM v hv
-    · exact GlobalTheory.T.exists_localUnitary_of_selfDual_at_place F E cm n J hJ hdet L M hLat hMat v
-        (GlobalTheory.T.isLocallySelfDual_of_hermitianLatticeOfLevel F E cm n J hJ hdet T f L hL v hv)
-        (GlobalTheory.T.isLocallySelfDual_of_hermitianLatticeOfLevel F E cm n J hJ hdet T f M hM v hv)
+    · exact _root_.GlobalTheory.St.G.exists_unitary_of_TLat F E cm n J hJ hdet T f L M hT hS hf hL hM v hv
+    · exact _root_.GlobalTheory.St.G.Unimod.exists_unitary_of_selfDualAt F E cm n J hJ hdet L M hLat hMat v
+        (_root_.GlobalTheory.St.G.selfDualAt_of_tLat F E cm n J hJ hdet T f L hL v hv)
+        (_root_.GlobalTheory.St.G.selfDualAt_of_tLat F E cm n J hJ hdet T f M hM v hv)
   choose g hgU hg using hloc
 
   let k : ∀ v : HeightOneSpectrum (𝓞 F), GL (Fin n) (E ⊗[F] v.adicCompletion F) :=
@@ -76,12 +76,12 @@ theorem tlat_one_genus : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     · simp only [k, if_pos hv]; exact one_mem _
     · simp only [k, if_neg hv]; exact hgU v
   have hfin : {v | k v ≠ 1}.Finite := by
-    refine (GlobalTheory.T.localSpanOfLatticeAtPlace_eq_for_almost_all_places F E n L M hLat hMat).subset ?_
+    refine (_root_.GlobalTheory.St.G.loc_eq_almost_all F E n L M hLat hMat).subset ?_
     intro v hv heq
     exact hv (by simp only [k, if_pos heq])
-  obtain ⟨y, hyU, hy⟩ := GlobalTheory.T.exists_adelic_unitary_of_finite_support F E n cm.sig J k hkU hfin
+  obtain ⟨y, hyU, hy⟩ := _root_.GlobalTheory.St.G.exists_adelic_of_finite_support F E n cm.sig J k hkU hfin
   have hglob : ∀ x, x ∈ hat F L ↔ y.1 *ᵥ x ∈ hat F M := by
-    rw [GlobalTheory.T.adelicLattice_carry_iff_forall_place F E n L M hLat hMat y]
+    rw [_root_.GlobalTheory.St.G.Carry.carry_iff F E n L M hLat hMat y]
     intro v x
     rw [hy v]
     by_cases hv : loc v L = loc v M

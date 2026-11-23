@@ -1,10 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubMemTwistSpan
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoxFunctionTwistedCoinvariantRankStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralRightInverseNormalizationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixRankNormalFormStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RankDeficientIntegralRowReductionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoxFunctionTwistedCoinvariantRank
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralRightInverseNormalization
+public import Mathlib.LinearAlgebra.Matrix.Rank
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixRankNormalForm
+public import Development.AbelianVarietyTheory.Definitions.Foundations.MatrixMeasurableSpace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RankDeficientIntegralRowReduction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -185,14 +188,14 @@ end GlobalTheory.RankCoinv.Nbhd
 open GlobalTheory.RankCoinv.Nbhd GlobalTheory.SplitFlip GlobalTheory.SplitWeil in
 theorem GlobalTheory.RankCoinv.exists_boxFn_mem_lowRank_sup_twistSpan : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (A D : Type) [Fintype A] [DecidableEq A] [Fintype D] [DecidableEq D] (ϖ : kˣ), GlobalTheory.SplitFlip.IsUnif ϖ → ∀ (ν β : kˣ →* ℂˣ), (∀ x, ‖(ν x : ℂ)‖ = 1) → ν ϖ ≠ 1 → ∀ (r : ℕ) (X₀ : Matrix A D k), X₀.rank = r → r < Fintype.card A → ∃ m₀ : ℕ, ∀ m ≥ m₀, ∀ C ∈ GlobalTheory.RankCoinv.box ϖ X₀ (fun _ => m₀), GlobalTheory.RankCoinv.boxFn ϖ C (fun _ => m) ∈ GlobalTheory.RankCoinv.lowRank (r + 1) ⊔ GlobalTheory.RankCoinv.twistSpan ν β := by
   intro k _ _ _ _ A D _ _ _ _ ϖ hϖ ν β hν hνϖ r X₀ hrank hr
-  obtain ⟨g, hg, i₀, hi₀⟩ := GlobalTheory.T.rank_deficient_integral_row_reduction k A D X₀ (hrank ▸ hr)
+  obtain ⟨g, hg, i₀, hi₀⟩ := _root_.GlobalTheory.RankCoinv.exists_KO_row_zero_of_rank_lt k A D X₀ (hrank ▸ hr)
   have hgint := (GlobalTheory.SplitFlip.mem_KO_iff g).1 hg
   have hg1 : ∀ i a, valuation k (g.val i a) ≤ 1 := fun i a => (Valuation.mem_integer_iff _ _).1 (hgint.1 i a)
   have hYr : (g.val * X₀).rank = r := by
     rw [← hrank]
     exact Matrix.rank_mul_eq_right_of_isUnit_det _ _ ((Matrix.isUnit_iff_isUnit_det _).1 g.isUnit)
   obtain ⟨H₁, Q₁, hHQ⟩ : ∃ (H₁ : Matrix (Fin r) A k) (Q₁ : Matrix D (Fin r) k), H₁ * (g.val * X₀) * Q₁ = 1 := by
-    rw [← hYr]; exact GlobalTheory.T.matrix_rank_normal_form k A D _
+    rw [← hYr]; exact _root_.GlobalTheory.rank_frame_exists k A D _
   let H₂ : Matrix (Fin r) A k := Matrix.of fun l i => if i = i₀ then 0 else H₁ l i
   have hH₂Y : H₂ * (g.val * X₀) = H₁ * (g.val * X₀) := by
     ext l j
@@ -202,7 +205,7 @@ theorem GlobalTheory.RankCoinv.exists_boxFn_mem_lowRank_sup_twistSpan : ∀ (k :
     split_ifs with h
     · rw [h, hi₀ j, zero_mul, mul_zero]
     · rfl
-  obtain ⟨h, Q₀, hhY, hQ₀, hhYQ⟩ := GlobalTheory.T.integral_right_inverse_normalization k D r (H₂ * (g.val * X₀)) Q₁ (by rw [hH₂Y, hHQ])
+  obtain ⟨h, Q₀, hhY, hQ₀, hhYQ⟩ := _root_.GlobalTheory.frame_normalise_integral k D r (H₂ * (g.val * X₀)) Q₁ (by rw [hH₂Y, hHQ])
   let H := h * H₂
   have hHi₀ : ∀ l, H l i₀ = 0 := fun l => by simp [H, H₂, Matrix.mul_apply]
   obtain ⟨c, hc⟩ := exists_bound hϖ H
@@ -239,7 +242,7 @@ theorem GlobalTheory.RankCoinv.exists_boxFn_mem_lowRank_sup_twistSpan : ∀ (k :
   have hHCQ' : H * (g.val * C) * (Q₀ * N) = 1 := by rw [← Matrix.mul_assoc, hHCQ, hN1]
   have hrow : ∀ j, valuation k ((g.val * C) i₀ j) ≤ valuation k ((ϖ ^ (c + 1) : kˣ) : k) := fun j => by
     rw [hsplit, Matrix.add_apply, hi₀ j, zero_add]; simpa using hgCX i₀ j
-  have hmem := GlobalTheory.T.box_function_twisted_coinvariant_rank k A D ϖ hϖ ν β hν hνϖ i₀ r c m (g.val * C) H (Q₀ * N) hHi₀ hc (by omega)
+  have hmem := _root_.GlobalTheory.RankCoinv.boxFn_mem_lowRank_sup_twistSpan_of_small_row k A D ϖ hϖ ν β hν hνϖ i₀ r c m (g.val * C) H (Q₀ * N) hHi₀ hc (by omega)
     hHCint hQint hHCQ' hrow
   obtain ⟨s, hs⟩ := omA_boxFn hg ν β ϖ C m
   have hΦ := boxFn_mem_SB ϖ C (fun _ => m)

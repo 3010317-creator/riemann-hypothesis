@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TripleAtt
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsComplexReadingLocalEmbeddingStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinrankDdRAndFilZeroOfJumpMultisetStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsComplexReadingLocalEmbedding
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinrankDdRAndFilZeroOfJumpMultiset
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,10 +60,10 @@ theorem card_filter_nonneg_add_reflect (t : ℤ) (ht : 0 ≤ t) (M : Multiset �
 
 theorem negCount_of_goodJ : ∀ (D : D7) (bkP : BlochKatoReduction.BK D) (i : D.ntw.Tw) (s : D.ntw.Sig i), ∀ (ι : FractionRing (D.ntw.O0 i) →+* ℂ) (J : (D.host.E →+* ℂ) → Multiset ℤ), HodgeL bkP i s → JumpsAre bkP i s ι J → GoodJ D J → NegCount bkP i s := by
   intro D bkP i s ι J hH hJ hG v v' hv hv' τ τ' hc
-  obtain ⟨τc, h1, h2⟩ := GlobalTheory.T.exists_complex_reading_local_embedding D bkP i ι v hv τ
+  obtain ⟨τc, h1, h2⟩ := _root_.GlobalTheory.ReadEmbEx.exists_readEmb D bkP i ι v hv τ
   have h2' := h2 v' hv' τ' hc
-  obtain ⟨a1, a2⟩ := GlobalTheory.T.finrank_DdR_and_fil_zero_of_jump_multiset D bkP i s v hv τ (J τc) hH (hJ v hv τ τc h1)
-  obtain ⟨b1, b2⟩ := GlobalTheory.T.finrank_DdR_and_fil_zero_of_jump_multiset D bkP i s v' hv' τ' (J (τc.comp (cj D))) hH (hJ v' hv' τ' _ h2')
+  obtain ⟨a1, a2⟩ := _root_.GlobalTheory.JumpDims.dims_of_mult D bkP i s v hv τ (J τc) hH (hJ v hv τ τc h1)
+  obtain ⟨b1, b2⟩ := _root_.GlobalTheory.JumpDims.dims_of_mult D bkP i s v' hv' τ' (J (τc.comp (cj D))) hH (hJ v' hv' τ' _ h2')
   obtain ⟨g1, g2, g3⟩ := hG τc
   have k := card_filter_nonneg_add_reflect (D.R.t : ℤ) (by positivity) (J τc) g3
   rw [a1, a2, b1, b2, g2, Multiset.card_map]

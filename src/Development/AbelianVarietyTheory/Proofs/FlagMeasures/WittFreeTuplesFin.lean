@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.InFrameStabilizer
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsFieldOrExistsSwappedIdempotentOfQuadraticEtaleStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.WittExtensionHermitianFramesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.WittFreeTuplesSplitQuadraticEtaleStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsFieldOrExistsSwappedIdempotentOfQuadraticEtale
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.WittExtensionHermitianFrames
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.WittFreeTuplesSplitQuadraticEtale
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,10 +53,10 @@ theorem witt_free_tuples_fin {E : Type} [CommRing E] (σ : E →+* E) (hσ : IsQ
     (J : Matrix (Fin n) (Fin n) E) (hJ : IsHermU σ J) (Y Y' : Matrix (Fin n) (Fin k) E)
     (hY : Free Y) (hY' : Free Y') (hP : pairM σ J Y Y = pairM σ J Y' Y') :
     ∃ g, IsUn σ J g ∧ g * Y = Y' := by
-  rcases GlobalTheory.T.isField_or_exists_swapped_idempotent_of_quadraticEtale σ hσ with hF | hS
+  rcases _root_.GlobalTheory.SgAlg.isField_or_exists_idempotent_of_isQA σ hσ with hF | hS
   · letI := hF.toField
-    exact GlobalTheory.T.witt_extension_hermitian_frames σ hσ J hJ Y Y' hY hY' hP
-  · exact GlobalTheory.T.witt_free_tuples_split_quadratic_etale σ hσ hS J hJ Y Y' hY hY' hP
+    exact _root_.GlobalTheory.SgAlg.witt_free_field σ hσ J hJ Y Y' hY hY' hP
+  · exact _root_.GlobalTheory.SgAlg.WittSplit.witt_split σ hσ hS J hJ Y Y' hY hY' hP
 
 theorem free_reindex {E : Type} [CommRing E] {n : ℕ} {a b : Type} [Fintype a] [DecidableEq a]
     [Fintype b] [DecidableEq b] (e : b ≃ a) {X : Matrix (Fin n) a E} (hX : Free X) :

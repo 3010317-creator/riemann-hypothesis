@@ -3,15 +3,15 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.RedSurjective
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TorsionTowersOfDivisibleGroup
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDimEqOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneColengthEqLogDegreeStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneFunctorBaseFunctorPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneIntegralityAndFaithfulStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneColengthEqLogDegree
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneIntegralityAndFaithful
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqPowSmulOfPDivGroupTorsionTowerMapStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNsmulEqOfKillsTorsion
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsQuasiInverseIsogeny
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomTorsionFree
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsogenyInducesPDivisibleGroupIsogenyPPartDegreeStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KernelKilledOfDegNeZero
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneFunctorBaseFunctorProperties
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNsmulEqOfKillsTorsion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,7 +76,7 @@ theorem pow_comp_hom {S : Scheme.{0}} {Z G H : Over S} [GrpObj G] [GrpObj H] (φ
 theorem exists_eq_ppow_smul (T : Theory p) {k : Type} [Field k] [CharP k p] [PerfectRing k p]
     {A B : AbVar k} {G H : PDivGroup p k} (t : G.TorsionTower A.X) (t' : H.TorsionTower B.X) (f : A ⟶ B)
     (n : ℕ) (h : ∀ m, ∃ m', T.map (t.map t' f.hom) m = p ^ n • m') : ∃ f' : A ⟶ B, f = p ^ n • f' := by
-  obtain ⟨g, hg⟩ := (GlobalTheory.T.dieudonne_integrality_and_faithful p T k G H (t.map t' f.hom)).1 n h
+  obtain ⟨g, hg⟩ := (_root_.GlobalTheory.Dieu.Integrality.exists_pow_smul_and_faithful p T k G H (t.map t' f.hom)).1 n h
   exact (GlobalTheory.T.eq_pow_smul_of_pDivGroup_torsionTower_map p k A B G H t t' f).1 n g hg
 
 theorem map_nsmul_id {k : Type} [Field k] {A : AbVar k} {G : PDivGroup p k} (t : G.TorsionTower A.X) (N : ℕ) :
@@ -86,12 +86,12 @@ theorem map_nsmul_id {k : Type} [Field k] {A : AbVar k} {G : PDivGroup p k} (t :
 
 theorem tmap_comp (T : Theory p) {k : Type} [Field k] [CharP k p] [PerfectRing k p] {G H K : PDivGroup p k}
     (f : G ⟶ H) (g : H ⟶ K) (y : T.M K) : T.map (f ≫ g) y = T.map f (T.map g y) := by
-  have := (GlobalTheory.T.dieudonneFunctorBase_functor_properties p (fun _ _ _ => True) T.base k G H K trivial trivial trivial).2.1 f g
+  have := (_root_.GlobalTheory.Dieu.base_functor_props p (fun _ _ _ => True) T.base k G H K trivial trivial trivial).2.1 f g
   exact LinearMap.congr_fun this y
 
 theorem tmap_ppow_smul_id (T : Theory p) {k : Type} [Field k] [CharP k p] [PerfectRing k p] {H : PDivGroup p k}
     (a : ℕ) (y : T.M H) : T.map ((p : ℤ_[p]) ^ a • 𝟙 H) y = p ^ a • y := by
-  have h := GlobalTheory.T.dieudonneFunctorBase_functor_properties p (fun _ _ _ => True) T.base k H H H trivial trivial trivial
+  have h := _root_.GlobalTheory.Dieu.base_functor_props p (fun _ _ _ => True) T.base k H H H trivial trivial trivial
   have h5 := h.2.2.2.2.1 a (𝟙 H) y
   have h1 := h.1
   change T.base.map trivial trivial _ y = _
@@ -148,6 +148,6 @@ theorem abVar_dieudonne_integral_length_factor : ∀ (p : ℕ) [Fact p.Prime] (T
   refine ⟨fun n h => exists_eq_ppow_smul T t t' f n h, fun hf => ?_,
     fun C K t'' g e hf hdeg hr => exists_factor_of_range_le T t t' t'' f g e hf hdeg hr⟩
   obtain ⟨h1, h2⟩ := GlobalTheory.T.isogeny_induces_pDivisibleGroupIsogeny_pPartDegree p k A B G H t t' f hf
-  exact ⟨h1, GlobalTheory.T.dieudonneColength_eq_log_degree p T k G H _ _ h1 h2⟩
+  exact ⟨h1, _root_.GlobalTheory.Dieu.length_quot_range_map_eq_of_hasLogDeg p T k G H _ _ h1 h2⟩
 
 end GlobalTheory.Dieu.AbVarDieu

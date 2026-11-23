@@ -1,12 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.T2SpaceAdelicGeneralLinearGroupNumberField
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ContinuousConjFin
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CasimirSignatureMemCenter
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CenterCommutesLieAction
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExpoConjOfIsCsd
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteDimStableSubspace
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LieSkewAdjointL2
+public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SkewAdjointCasimirSpectral
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOfIsOpenStab
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CasimirSignatureMemCenterStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CenterCommutesLieActionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteDimStableSubspaceStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LieSkewAdjointL2Statement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SkewAdjointCasimirSpectralStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -125,7 +128,7 @@ theorem mem_span_basis {W Y : Submodule ℂ (Sm E a)} (hYW : Y ≤ W) {m : ℕ} 
 
 theorem factorial_bound : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) (μ : Measure (GA E a)) [μ.IsHaarMeasure] [μ.IsMulRightInvariant] (W : Submodule ℂ (Sm E a)), _root_.GlobalTheory.CuspRep.IsStable W → (∀ φ ∈ W, IsAutForm φ ∧ MemL2Quotient (latticeGL E a) μ φ.1) → ∀ φ ∈ W, ∀ X : GlobalTheory.CuspRep.Lie E a, ∃ M C : ℝ, ∀ (k : ℕ) (h : MemL2Quotient (latticeGL E a) μ (((lie E a X) ^ k) φ).1), ‖h.toL2‖ ≤ M * C ^ k * (k.factorial : ℝ) := by
   intro E _ _ _ a μ _ _ W hW hA φ hφ X
-  obtain ⟨ι, _, _, Z, K, hspan, hskewK, hΩ⟩ := GlobalTheory.T.casimir_signature_mem_center E a
+  obtain ⟨ι, _, _, Z, K, hspan, hskewK, hΩ⟩ := _root_.GlobalTheory.CompanionTheory.CasFamily.exists_family E a
   have hL : ∀ (X : GlobalTheory.CuspRep.Lie E a), ∀ ψ ∈ W, lie E a X ψ ∈ W := fun X ψ h => hW (.lie X) ψ h
   have hm : ∀ ψ ∈ W, MemL2Quotient (latticeGL E a) μ ψ.1 := fun ψ h => (hA ψ h).2
   have hc : ∀ ψ ∈ W, Continuous ψ.1 := fun ψ h =>
@@ -137,7 +140,7 @@ theorem factorial_bound : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numbe
   have hZ : ∀ i, Restricts W (Zop i) (lie E a (Z i)) := fun i v => rfl
   let j := toL2ₗ μ W hm
   have hskew : ∀ i v w, inner ℂ (j (Zop i v)) (j w) = - inner ℂ (j v) (j (Zop i w)) := fun i v w =>
-    GlobalTheory.T.lie_skew_adjoint_l2 E a μ (Z i) v.1 w.1 (hm _ v.2) (hm _ w.2) (hm _ (hL _ _ v.2)) (hm _ (hL _ _ w.2))
+    _root_.GlobalTheory.CompanionTheory.LieSkew.lie_skew E a μ (Z i) v.1 w.1 (hm _ v.2) (hm _ w.2) (hm _ (hL _ _ v.2)) (hm _ (hL _ _ w.2))
       (hc _ v.2) (hc _ w.2) (hc _ (hL _ _ v.2)) (hc _ (hL _ _ w.2))
   choose r hr using fun (p : ι × ι) => hreal (toL (of (Z p.1) * of (Z p.2)) - toL (of (Z p.2) * of (Z p.1)))
   have hcomm : ∀ κ i, Zop κ * Zop i - Zop i * Zop κ = ∑ l, ((r (κ, i) l : ℝ) : ℂ) • Zop l := fun κ i => by
@@ -152,8 +155,8 @@ theorem factorial_bound : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numbe
     (Restricts.sum _ fun κ => (hZ κ).mul (hZ κ)).sub hSI
   have hcentral : ∀ i, (∑ i ∈ Kᶜ, Zop i * Zop i - ∑ κ ∈ K, Zop κ * Zop κ) * Zop i
       = Zop i * (∑ i ∈ Kᶜ, Zop i * Zop i - ∑ κ ∈ K, Zop κ * Zop κ) := fun i =>
-    Restricts.ext_of_eq (hΩI.mul (hZ i)) ((hZ i).mul hΩI) (GlobalTheory.T.center_commutes_lie_action E a Ω₀ hΩ (Z i))
-  obtain ⟨Y, hfd, hYW, hφY, hZY, hKY⟩ := GlobalTheory.T.finite_dim_stable_subspace E a W hW (fun ψ h => (hA ψ h).1) φ hφ
+    Restricts.ext_of_eq (hΩI.mul (hZ i)) ((hZ i).mul hΩI) (_root_.GlobalTheory.CompanionTheory.ZalgCentral.Zalg_mul_lie E a Ω₀ hΩ (Z i))
+  obtain ⟨Y, hfd, hYW, hφY, hZY, hKY⟩ := _root_.GlobalTheory.CompanionTheory.IrredMod.exists_finiteDimensional_zalg_lie_stable E a W hW (fun ψ h => (hA ψ h).1) φ hφ
   let b := Module.finBasis ℂ Y
   have hSY : ∀ u ∈ Y, S₀ u ∈ Y := fun u hu => by
     rw [hS₀, LinearMap.sum_apply]
@@ -165,7 +168,7 @@ theorem factorial_bound : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numbe
   have hT : Restricts W (∑ i, ((x i : ℝ) : ℂ) • Zop i) (lie E a X) := by
     rw [← hx, lie_sum]
     exact Restricts.sum _ fun l => (hZ l).smul _
-  obtain ⟨M, C, hMC⟩ := GlobalTheory.T.skew_adjoint_casimir_spectral W (L2 (latticeGL E a) μ) j ι Zop K _
+  obtain ⟨M, C, hMC⟩ := _root_.GlobalTheory.CompanionTheory.AnalyticWord.analytic_bound W (L2 (latticeGL E a) μ) j ι Zop K _
     (fun e => (⟨(b e).1, hYW (b e).2⟩ : W)) d o (fun κ i l => ((r (κ, i) l : ℝ) : ℂ))
     hskew hcomm hcentral hd ho (fun i => (x i : ℂ)) ⟨φ, hφ⟩ (mem_span_basis hYW b hφY)
   refine ⟨M, C, fun k h => ?_⟩

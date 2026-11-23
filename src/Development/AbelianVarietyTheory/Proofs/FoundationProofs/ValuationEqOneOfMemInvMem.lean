@@ -6,8 +6,9 @@ public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FixingSubgroupOfIntermediateFieldPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InertFixesRootOfUnitRatioStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FixingSubgroupOfIntermediateFieldProperties
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsFirstChernClassOfLineBundle
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InertFixesRootOfUnitRatio
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -95,7 +96,7 @@ theorem thmA_on_open_geo : GlobalTheory.NeedB.ThmA → ∀ (k F Ω : Type) [Fiel
   ∀ r ∈ GlobalTheory.K4.geo F (RatFunc k) Ω ⊓ U, ∀ B : ValuationSubring Ω, (∀ p : k[X], algebraMap k[X] Ω p ∈ B) → GlobalTheory.NeedB.Inert B r → η₀ r = 0 ∧ r α = α ∧ r β = β := by
   intro hA k F Ω _ _ _ _ _ _ _ _ _ _ _ _ _ N _ ζ hζ U hU α β hα0 hβ0 hαi hαi' hβi hβi' hUfix
   classical
-  obtain ⟨-, ⟨e, he, hec, -⟩, -, -, -⟩ := GlobalTheory.T.fixingSubgroupOfIntermediateField_properties F (RatFunc k) Ω
+  obtain ⟨-, ⟨e, he, hec, -⟩, -, -, -⟩ := _root_.GlobalTheory.K4.geo_facts F (RatFunc k) Ω
   let U' : Subgroup (Ω ≃ₐ[RatFunc k] Ω) :=
     U.comap ((GlobalTheory.K4.geo F (RatFunc k) Ω).subtype.comp e.toMonoidHom)
   have hU'mem : ∀ g, g ∈ U' ↔ ((e g : GlobalTheory.K4.geo F (RatFunc k) Ω) : Ω ≃ₐ[F] Ω) ∈ U := fun g => Iff.rfl
@@ -109,7 +110,7 @@ theorem thmA_on_open_geo : GlobalTheory.NeedB.ThmA → ∀ (k F Ω : Type) [Fiel
   haveI : IsScalarTower k[X] K' Ω := IsScalarTower.of_algebraMap_eq (fun _ => rfl)
   haveI : IsAlgClosure K' Ω :=
     ⟨IsAlgClosure.isAlgClosed (RatFunc k), Algebra.IsAlgebraic.tower_top (K := RatFunc k) K'⟩
-  obtain ⟨-, ⟨e', he', -, hesc'⟩, -, -, -⟩ := GlobalTheory.T.fixingSubgroupOfIntermediateField_properties F K' Ω
+  obtain ⟨-, ⟨e', he', -, hesc'⟩, -, -, -⟩ := _root_.GlobalTheory.K4.geo_facts F K' Ω
   have hφ : ∀ g (hg : g ∈ GlobalTheory.K4.geo F K' Ω) x, (e'.symm ⟨g, hg⟩) x = g x := by
     intro g hg x
     have := he' (e'.symm ⟨g, hg⟩) x
@@ -192,7 +193,7 @@ theorem thmA_on_open_geo : GlobalTheory.NeedB.ThmA → ∀ (k F Ω : Type) [Fiel
         exact hB _
     have hroot : ∀ θ : Ω, θ ≠ 0 → IsIntegral k[X] θ → IsIntegral k[X] θ⁻¹ → r (θ ^ N) = θ ^ N → r θ = θ := by
       intro θ h0 hi hi' hfix
-      refine GlobalTheory.T.inert_apply_eq_of_pow_fixed_of_valuation_one F Ω B r N 1 θ (Nat.pos_of_ne_zero (NeZero.ne N)) hvN hinert (map_one r) one_ne_zero hfix ?_
+      refine _root_.GlobalTheory.inert_fixes_root_of_unit_ratio F Ω B r N 1 θ (Nat.pos_of_ne_zero (NeZero.ne N)) hvN hinert (map_one r) one_ne_zero hfix ?_
       rw [one_pow, div_one]
       refine valuation_eq_one_of_mem_inv_mem B (hmemB (hi.pow N)) ?_ (pow_ne_zero N h0)
       rw [← inv_pow]

@@ -3,13 +3,16 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Jets.ExistsSecTieFOfTies
 public import Development.AbelianVarietyTheory.Definitions.Jets.ExistsGeneratesIffFg
 public import Formalism.SharpRestriction.GenusPolyhedralBounds.RelativeIndexClassSets.WeightedPrimeSumBound
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SumFinitePlacesLeSumOverPrimesStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SumLogPrimeDepthBoundsLeMulWeightSizeStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SumPrimeLogDivPredLeLogAddStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.UnscaledWeightDepthFiniteBoundedAboveChartsStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.PlaceBelow
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SumFinitePlacesLeSumOverPrimes
+public import Formalism.SharpRestriction.Divisibility.AbelianOpenPart.OEOsInjective
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SumLogPrimeDepthBoundsLeMulWeightSize
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SumPrimeLogDivPredLeLogAdd
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.UnscaledWeightDepthFiniteBoundedAboveCharts
 public import Development.AutomorphicArithmetic.CMTraceForms.CmDatumNatCastMemHeightOneSpectrumIff
-import Formalism.LocalToGlobal.ProjectiveLattices.CrudeVal
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.SpanResCharNeBot
+import Formalism.LocalToGlobal.ProjectiveLattices.CrudeVal
 import Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.HostFacts
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -152,12 +155,12 @@ theorem depth_sum {D : D7} (B : WeightFamilies.Prov D) {j : ℕ} (large₂ : Siz
   have hQ : ∀ la : HeightOneSpectrum (𝓞 B.KO), ((D.host.QS : ℕ) : 𝓞 B.KO) ∈ la.asIdeal ↔ resCharOf la ∈ D.host.small :=
     fun la => (UpperTheory.cmDatum_natCast_mem_heightOneSpectrum_iff D.host.toHostRaw B.KO la).1
   have e5 : ∀ p : ℕ, (0 : ℝ) ≤ (padicValNat p D.host.QS : ℝ) * (c2 D w : ℝ) := fun p => by positivity
-  have key := GlobalTheory.T.sum_finitePlaces_le_sum_over_primes B.KO (primeBound N D.host.QS D.host.q D.host.d D.host.g (c2 D w) (cHalf w)) S hSp ?_
+  have key := _root_.GlobalTheory.PlaceSum.finsum_le_sum_primes B.KO (primeBound N D.host.QS D.host.q D.host.d D.host.g (c2 D w) (cHalf w)) S hSp ?_
     (nusOf B w nu) hpos ?_ ?_
   · refine ⟨hpos, key.1, key.2.trans ?_⟩
     rw [sum_primeBound _ _ _ _ _ _ _ S Finset.subset_union_left hsm hSp (by simp [hS]) (by simp [hS]) hgS]
-    refine le_trans ?_ (GlobalTheory.T.sum_log_prime_depth_bounds_le_mul_weight_size D large₂ j w hn1 hL)
-    have := mul_le_mul_of_nonneg_left (GlobalTheory.T.sum_prime_log_div_pred_le_log_add N) (Nat.cast_nonneg (α := ℝ) N)
+    refine le_trans ?_ (_root_.GlobalTheory.PtTie.depth_sum_le_PN D large₂ j w hn1 hL)
+    have := mul_le_mul_of_nonneg_left (_root_.GlobalTheory.PrimeLogSum.sum_log_div_pred_le N) (Nat.cast_nonneg (α := ℝ) N)
     linarith
   · intro p
     unfold primeBound
@@ -209,7 +212,7 @@ theorem depth_sum {D : D7} (B : WeightFamilies.Prov D) {j : ℕ} (large₂ : Siz
 
 theorem depth_sum_record : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (hj : InR D j) (large₂ : SizeData₂ D) (w : WeightFamilies.Wt D j), 2 * D.R.f * D.R.r ≤ w.n → Real.log (WeightAlgebra.DF w) ≤ 2 * large₂.sc.L → WeightedPrimeSumBoundAlt large₂ (recPJ h j hj) w (nusOf (recB h.toLawsCore) w (nuWt T w)) ∧ ∀ (Nd : NormDatum (recB h.toLawsCore)), WeightedPrimeSumBoundAlt large₂ (Nd.X' (recPJ h j hj) (extAll h j hj) (intAtExt_extAll h j hj)) w (nusOf (recB h.toLawsCore) w (nuWt T w)) := by
   intro D T h j hj large₂ w hn hL
-  have hb := GlobalTheory.T.unscaledWeightDepth_finite_bounded_above_charts D T h j hj w hn
+  have hb := _root_.GlobalTheory.DepthBd.nuWt_bounds D T h j hj w hn
   have key := depth_sum (recB h.toLawsCore) large₂ w hn hL (nuWt T w) (fun la => (hb la).2.1) (fun la => (hb la).2.2.1)
     (fun la => (hb la).2.2.2.1)
   exact ⟨key, fun _ => key⟩

@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsWildInertiaCyclotomicElement
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.RowsExhaust
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HeckeStableLocalLatticeOfIntegralStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HeckeStableLocalLatticeOfIntegral
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,7 +56,7 @@ theorem latStable_tied : ∀ (D : D7) (M : MtFam D) (Tn : NormalizedLocalCompati
   · obtain ⟨i, hi⟩ := hne
     have hwi : D.nd.w i = w := ((D.nd.locs_mem j w i).1 hi).2
     have hQc : Tn.B.Qc j w = Q w := by rw [← Tn.Q_eq j w i hi, hQ i, hwi]
-    apply GlobalTheory.T.heckeStableLocalLattice_of_integral D M Tn.B j h1 h2 w
+    apply _root_.GlobalTheory.LatStab.latStable_of_latInt D M Tn.B j h1 h2 w
     rw [hQc]; exact hI j h1 h2 w hw
   · have hsub : Subsingleton (heckeAlg Tn.B j w) := by
       by_contra hns

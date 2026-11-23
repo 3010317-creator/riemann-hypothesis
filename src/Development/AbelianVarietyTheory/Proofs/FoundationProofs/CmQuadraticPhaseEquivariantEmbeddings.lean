@@ -2,8 +2,8 @@ module
 
 public import Formalism.SharpRestriction.GlobalSchurBounds.StandardLatticesGL3
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIntegerMapEqHalfOneAddSqrt
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalStarComplexMultiplicationPointsStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.WeilPairingGaloisEquivariantCmTorsionStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalStarComplexMultiplicationPoints
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.WeilPairingGaloisEquivariantCmTorsion
 import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsRingEquivOfIsTranscendenceBasis
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -229,6 +229,6 @@ theorem galPh1_of (D : D7) (hS : galStar D) (hW : WeilPairingGaloisAlt D) : galP
   exact h
 
 theorem galPh1_all : ∀ D : D7, galPh1 D := fun D =>
-  galPh1_of D (GlobalTheory.T.galStar_complexMultiplication_points D) (GlobalTheory.T.weilPairing_galois_equivariant_cm_torsion D)
+  galPh1_of D (_root_.GlobalTheory.ConjPoint.galStar_holds D) (_root_.GlobalTheory.WeilPairingGalois.weilPairingGalois_all D)
 
 end GlobalTheory.QuadPhase

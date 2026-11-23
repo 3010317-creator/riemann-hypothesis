@@ -1,15 +1,16 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ResAlgSplitTwo
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CardRangeMulQuotientBoundedLevelStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CardRangeMulQuotientBoundedLevel
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GaussSumHermitianNormLevelOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GaussSumHermitianNormLevelShift
+public import Development.WeilBound.CoreStatements.AutomorphicKernels.UnitarySchrodingerModel.LocalDefs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianMatrixDiagonalizable
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MatrixGaussSumCongrInvariance
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MatrixGaussSumDiagonalFactor
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MultiplicityReductionDiagonalProd
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FixedNondeg
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GaussSumHermitianNormLevelOneStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GaussSumHermitianNormLevelShiftStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianMatrixDiagonalizableStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MatrixGaussSumCongrInvarianceStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MatrixGaussSumDiagonalFactorStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MultiplicityReductionDiagonalProdStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnramifiedQuotientCardStatement
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnramifiedQuotientCard
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -70,9 +71,9 @@ theorem gauss1 {R : Type} [CommRing R] {σ : R →+* R} {ϖ : R} {q : ℕ} {ε :
     have : Subsingleton (R ⧸ lev ϖ 0) := Ideal.Quotient.subsingleton_iff.2 (by simp [lev])
     rw [Fintype.sum_subsingleton _ 0]
     simp
-  | one => simpa using GlobalTheory.T.gauss_sum_hermitian_norm_level_one R σ ϖ q ε hR ψ hψ a ha ha'
+  | one => simpa using _root_.GlobalTheory.CompanionTheory.SiegLoc.gauss_level_one R σ ϖ q ε hR ψ hψ a ha ha'
   | more j ih _ =>
-    rw [GlobalTheory.T.gauss_sum_hermitian_norm_level_shift R σ ϖ q ε hR ψ hψ j a ha ha', ih, pow_add, mul_pow (ε : ℂ) (q : ℂ) 2, hε]
+    rw [_root_.GlobalTheory.CompanionTheory.GaussRec.gauss_recursion R σ ϖ q ε hR ψ hψ j a ha ha', ih, pow_add, mul_pow (ε : ℂ) (q : ℂ) 2, hε]
     ring
 
 theorem gauss_full {R : Type} [CommRing R] {σ : R →+* R} {ϖ : R} {q : ℕ} {ε : ℤ} (hR : IsUnrQuad R σ ϖ q ε)
@@ -82,8 +83,8 @@ theorem gauss_full {R : Type} [CommRing R] {σ : R →+* R} {ϖ : R} {q : ℕ} {
     (∑ x : Matrix (Fin m) (Fin n) (R ⧸ lev ϖ k), ψ k (Matrix.trace (B * (cT (barσ σ ϖ hR.fix_ϖ k) x * red ϖ k S * x)))) =
       (Nat.card (Matrix (Fin m) (Fin n) (R ⧸ lev ϖ k)) : ℂ) * (((ε : ℂ) ^ m * (q : ℂ) ^ (-(m : ℤ))) ^ Nat.log (q ^ 2) (nuAt ϖ B)) := by
   obtain ⟨h, hh, rfl⟩ := hB
-  obtain ⟨g, g', d, hgg, hgg', hd, hgd⟩ := GlobalTheory.T.hermitian_matrix_diagonalizable R σ ϖ q ε hR n h hh
-  obtain ⟨p, p', e, hpp, hpp', he, hpe⟩ := GlobalTheory.T.hermitian_matrix_diagonalizable R σ ϖ q ε hR m S hS.1
+  obtain ⟨g, g', d, hgg, hgg', hd, hgd⟩ := _root_.GlobalTheory.CompanionTheory.HermDiag.herm_diag R σ ϖ q ε hR n h hh
+  obtain ⟨p, p', e, hpp, hpp', he, hpe⟩ := _root_.GlobalTheory.CompanionTheory.HermDiag.herm_diag R σ ϖ q ε hR m S hS.1
   have hq0 : (q : ℂ) ≠ 0 := by
     have := hR.one_lt
     exact_mod_cast (by omega : q ≠ 0)
@@ -105,16 +106,16 @@ theorem gauss_full {R : Type} [CommRing R] {σ : R →+* R} {ϖ : R} {q : ℕ} {
     obtain ⟨c, hc⟩ := mem_lev_iff.1 hl
     rw [hc, pow_one] at h4
     exact hR.notUnit (isUnit_of_mul_isUnit_left h4)
-  choose eI heI hcard hsum using fun i => GlobalTheory.T.card_range_mul_quotient_bounded_level R σ ϖ q ε hR ψ hψ (fun j a ha ha' => gauss1 hR hψ hε j a ha ha') k (d i) (hd i)
-  rw [GlobalTheory.T.matrix_gauss_sum_congr_invariance R σ ϖ hR.fix_ϖ hR.inv k (ψ k) m n h _ g g' S _ p p' hgg hgg' hpp hpp' hgd hpe,
-    GlobalTheory.T.matrix_gauss_sum_diagonal_factor R σ ϖ hR.fix_ϖ k (ψ k) m n d e,
-    GlobalTheory.T.multiplicity_reduction_diagonal_prod R σ ϖ hR.fix_ϖ hR.inv k n h g g' d hgg hgg' hgd]
+  choose eI heI hcard hsum using fun i => _root_.GlobalTheory.CompanionTheory.SiegLoc.Scaled.gauss_image_level R σ ϖ q ε hR ψ hψ (fun j a ha ha' => gauss1 hR hψ hε j a ha ha') k (d i) (hd i)
+  rw [_root_.GlobalTheory.CompanionTheory.SiegCov.gauss_cov R σ ϖ hR.fix_ϖ hR.inv k (ψ k) m n h _ g g' S _ p p' hgg hgg' hpp hpp' hgd hpe,
+    _root_.GlobalTheory.CompanionTheory.GaussProd.gauss_prod R σ ϖ hR.fix_ϖ k (ψ k) m n d e,
+    _root_.GlobalTheory.CompanionTheory.SiegLoc.NuDiag.nuAt_eq_prod R σ ϖ hR.fix_ϖ hR.inv k n h g g' d hgg hgg' hgd]
   have hq2 : 1 < q ^ 2 := Nat.one_lt_pow (by norm_num) hR.one_lt
   have hnu : (∏ i, Nat.card (Set.range fun w : R ⧸ lev ϖ k => w * Ideal.Quotient.mk (lev ϖ k) (d i))) = (q ^ 2) ^ (∑ i, eI i) := by
     rw [Finset.prod_congr rfl (fun i _ => hcard i), Finset.prod_pow_eq_pow_sum]
   rw [hnu, Nat.log_pow hq2]
   have hM : (Nat.card (Matrix (Fin m) (Fin n) (R ⧸ lev ϖ k)) : ℂ) = ((q : ℂ) ^ (2 * k)) ^ (m * n) := by
-    have hc : Nat.card (R ⧸ lev ϖ k) = q ^ (2 * k) := GlobalTheory.T.unramified_quotient_card R σ ϖ q ε hR k
+    have hc : Nat.card (R ⧸ lev ϖ k) = q ^ (2 * k) := _root_.GlobalTheory.CompanionTheory.UnrDens.card_quot_lev R σ ϖ q ε hR k
     have : Nat.card (Matrix (Fin m) (Fin n) (R ⧸ lev ϖ k)) = (q ^ (2 * k)) ^ (m * n) := by
       show Nat.card (Fin m → Fin n → R ⧸ lev ϖ k) = _
       rw [Nat.card_fun, Nat.card_fun, hc]

@@ -10,12 +10,14 @@ public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.GreenCuspidalIff
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EllTraceOfMiddleX
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasDSComp
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalPseudoCoefficientExistenceUnitaryGroupStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonFieldTypeVanishingX
+public import Development.AbelianVarietyTheory.Definitions.Divisors.RangeShape
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalPseudoCoefficientExistenceUnitaryGroup
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceEqXOfGeomExpansionX
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceSeparationOfIwahoriTraceStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IwahoriTraceOfBorelCasselman
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LengthFilterFinRange
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.EllipticPartTestData
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonFieldTypeVanishingX
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +52,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.EllipticPartTestData
 
 @[expose] public section
 
@@ -67,7 +68,7 @@ open GlobalTheory.LiftRows
 
 theorem UpperTheory.Lit.I5.unitary_theory_of_harishChandra_langlands_alt : GlobalTheory.Published.HarishChandraAnalyticity → GlobalTheory.Published.DiscreteSeriesClassification → GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Published.CuspTraceClass → GlobalTheory.Published.DixmierMalliavinFactorisation → GlobalTheory.Published.FlathFactorisation → GlobalTheory.Published.ZelevinskyPolynomialRing → GlobalTheory.Published.GeometricLemma → GlobalTheory.Published.GreenCuspidal → ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : FamIn D.what₂.LL G Pl0 T D.R.m} {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A), Given R F → GlobalTheory.CuspMult.MultEq R := by
   intro _ ds rd hf tc dm _ ze gl gc D G _ _ Pl0 T A Ks _ _ _ R F hG
-  exact GlobalTheory.PsCo.Pc.multEq_of_sides GlobalTheory.T.localPseudoCoefficientExistence_unitaryGroup rd hf dm gc (GlobalTheory.PsCo.SpecX.main ds tc)
+  exact GlobalTheory.PsCo.Pc.multEq_of_sides _root_.GlobalTheory.PsCo.Pc.localPC_holds rd hf dm gc (GlobalTheory.PsCo.SpecX.main ds tc)
     (GlobalTheory.T.trace_separation_of_iwahori_trace GlobalTheory.IwahoriTraceProof.iwahoriTrace (GlobalTheory.SmGL.Exponents.exponentsSeparate gl ze))
     (GlobalTheory.PsCo.Plug.ellipticSideDirect tc) GlobalTheory.PsCo.Plug.ellipticT R F hG
 end

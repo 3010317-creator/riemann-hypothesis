@@ -5,7 +5,8 @@ public import Mathlib.Analysis.Calculus.FDeriv.Defs
 public import Mathlib.Analysis.InnerProductSpace.Basic
 public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.DifferentiableExpMulOfAnnihilatedStatement
+public import Mathlib.LinearAlgebra.Matrix.Hermitian
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.DifferentiableExpMulOfAnnihilated
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsRatBilinForm
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LevelOneThetaEqSmulOfSelfDualLattice
 public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.ExistsEquivOfSumEq
@@ -178,7 +179,7 @@ theorem not_linearIndependent : ∀ (U : Type) [NormedAddCommGroup U] [NormedSpa
   · intro u v
     rw [him, hB, hP, hP, e.symm_apply_apply, e.symm_apply_apply]
   · intro k
-    refine GlobalTheory.T.differentiable_exp_mul_of_annihilated' g Hm hH (fun w => f k (E w)) ((hd k).comp E.differentiable) fun w z => ?_
+    refine _root_.GlobalTheory.differentiable_exp_mul_of_annihilated g Hm hH (fun w => f k (E w)) ((hd k).comp E.differentiable) fun w z => ?_
     have h1 : fderiv ℝ (fun w => f k (E w)) w = (fderiv ℝ (f k) (E w)).comp E :=
       ((hd k (E w)).hasFDerivAt.comp w E.hasFDerivAt).fderiv
     have h2 := hann k (e.symm w) (e.symm z)

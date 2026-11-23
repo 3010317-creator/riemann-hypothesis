@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.T2SpaceMatrixOfIsNonarchimedeanLocalField
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierPairingPairCharIndicatorCosetIndicatorStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierPairingPairCharIndicatorDualLatticeIndicaStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierPairingPairCharIndicatorCosetIndicator
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierPairingPairCharIndicatorDualLatticeIndica
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -234,10 +234,10 @@ theorem fpair_charInd_dualInd_add_cosets : ∀ (k : Type) [Field k] [ValuativeRe
     rcases he with h | h
     · exact ⟨1, Or.inl ⟨h, rfl⟩⟩
     · exact ⟨-1, Or.inr ⟨h, rfl⟩⟩
-  rw [key, GlobalTheory.T.fourierPairing_pairCharIndicator_dualLatticeIndicator_zero k n q χ hχ e he μ Q, zero_add, Finset.sum_eq_single (ε • Q)]
-  · exact (GlobalTheory.T.fourierPairing_pairCharIndicator_cosetIndicator k n q χ hχ e ε hε μ Q (ε • Q) (Pair.dia_lat ε Q)).1 rfl
+  rw [key, _root_.GlobalTheory.FinPl.Comm.fpair_charInd_dualInd k n q χ hχ e he μ Q, zero_add, Finset.sum_eq_single (ε • Q)]
+  · exact (_root_.GlobalTheory.FinPl.CosetPairing.fpair_charInd_cosetInd k n q χ hχ e ε hε μ Q (ε • Q) (Pair.dia_lat ε Q)).1 rfl
   · intro Q'' hQ'' hne
-    exact (GlobalTheory.T.fourierPairing_pairCharIndicator_cosetIndicator k n q χ hχ e ε hε μ Q Q'' (mem_withLat.1 hQ'')).2 hne
+    exact (_root_.GlobalTheory.FinPl.CosetPairing.fpair_charInd_cosetInd k n q χ hχ e ε hε μ Q Q'' (mem_withLat.1 hQ'')).2 hne
   · intro h
     exact absurd (mem_withLat.2 (Pair.dia_lat ε Q)) h
 

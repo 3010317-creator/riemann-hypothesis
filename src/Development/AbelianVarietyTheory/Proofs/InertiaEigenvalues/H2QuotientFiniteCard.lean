@@ -2,11 +2,12 @@ module
 
 public import ReciprocityTheory.ReductiveGroups.TraceFormulas.LatDefs
 public import Formalism.GaloisCohomology.LocalTateDualityK
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardH2EqSameActionStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardH2LeCardLocalStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousCyclotomicCharacterLocalGaloisStatement
+public import ReciprocityTheory.GaloisValuations.SeparatedDvrSecondCohomologyMem
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardH2EqSameAction
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardH2LeCardLocal
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousCyclotomicCharacterLocalGalois
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NatCardH2CompEquivStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.QuotPowMaximalIdealDiscreteFiniteStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.QuotPowMaximalIdealDiscreteFinite
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -82,9 +83,9 @@ theorem h2_twist_card_of_zmod {p : ℕ} [Fact p.Prime] {K : IntermediateField �
     unfold ReciprocityTheory.Gal.ContAction
     rw [e]
     exact hc.comp ((i.symm.continuous.comp continuous_fst).prodMk continuous_snd)
-  obtain ⟨hF, hC⟩ := GlobalTheory.T.card_H2_le_card_local hTD p K hK r M rho hr hcont
+  obtain ⟨hF, hC⟩ := _root_.GlobalTheory.card_H2_le_of_local_duality hTD p K hK r M rho hr hcont
   have htr := GlobalTheory.T.natCard_H2_comp_equiv i rho
-  have hsc := GlobalTheory.T.card_H2_eq_same_action (rho.comp i.toMulEquiv.toMonoidHom) (twist ε M) (fun g x => by
+  have hsc := _root_.GlobalTheory.H2CardScalars.card_H2_eq_of_same_action (rho.comp i.toMulEquiv.toMonoidHom) (twist ε M) (fun g x => by
       show rho (i g) x = ((ε g : Oˣ) : O) • x
       rw [hrho, i.symm_apply_apply])
   have hcard : Nat.card (H2 (twist ε M)) = Nat.card (H2 rho) := by
@@ -96,7 +97,7 @@ theorem h2_twist_card_of_zmod {p : ℕ} [Fact p.Prime] {K : IntermediateField �
 
 theorem h2_quot_card : ∀ {p : ℕ} [Fact p.Prime] {K : IntermediateField ℚ_[p] (PadicAlgCl p)} {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [TopologicalSpace O] [IsTopologicalRing O] {G : Type} [Group G] [TopologicalSpace G], Formalism.GaloisCohomology.LocalTateDualityK → FiniteDimensional ℚ_[p] K → PadicCoeff p O → ∀ (i : G ≃ₜ* GK p K) {ε : G →* Oˣ}, IsCyc p K (carry i ε) → ∀ k : ℕ, Finite (H2 (twist ε (O ⧸ IsLocalRing.maximalIdeal O ^ k))) ∧ Nat.card (H2 (twist ε (O ⧸ IsLocalRing.maximalIdeal O ^ k))) ≤ Nat.card (O ⧸ IsLocalRing.maximalIdeal O ^ k) := by
   intro p _ K O _ _ _ _ _ G _ _ hTD hK hO i ε hε k
-  obtain ⟨hdisc, hfin⟩ := GlobalTheory.T.quotient_maximalIdeal_pow_discrete_and_finite hO k
+  obtain ⟨hdisc, hfin⟩ := _root_.GlobalTheory.NatQuot.quot_pow_maximalIdeal_discrete_finite hO k
   haveI := hdisc
   haveI := hfin
   have hkill : ∀ x : O ⧸ IsLocalRing.maximalIdeal O ^ k, (p ^ (k + 1)) • x = 0 := by
@@ -106,7 +107,7 @@ theorem h2_quot_card : ∀ {p : ℕ} [Fact p.Prime] {K : IntermediateField ℚ_[
     push_cast
     rw [pow_succ, mul_assoc]
     exact Ideal.mul_mem_right _ _ (Ideal.pow_mem_pow hO.p_mem k)
-  have hce := GlobalTheory.T.continuous_cyclotomic_character_localGalois hO i hε
+  have hce := _root_.GlobalTheory.FunctorialityH2.cyc_char_continuous hO i hε
   have hc : Continuous fun q : G × (O ⧸ IsLocalRing.maximalIdeal O ^ k) =>
       ((ε q.1 : Oˣ) : O) • q.2 := by
     have hq : Continuous (Ideal.Quotient.mk (IsLocalRing.maximalIdeal O ^ k)) := continuous_quot_mk

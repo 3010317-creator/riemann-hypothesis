@@ -7,10 +7,15 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry�
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsFiniteMeasureQuotMeasure
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ConjOpInvolutive
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.NotPairedId
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConjugateInverseRightActionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspFormConjugateInverseStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalEqTwistNormalisedStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalSatakeAlmostAllStatement
+public import Development.WeilBound.CoreStatements.AbelianHeightsDuality.GelfandKazhdanDuality.IsCuspFormDualMap
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.DualIsConjByOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConjugateInverseRightAction
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExpoConjOfIsCsd
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspFormConjugateInverse
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.IsNormalisedOfIsDiscrete
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalEqTwistNormalised
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.StrongMultiplicityOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalSatakeAlmostAll
 public import Development.WeilBound.CoreStatements.AbelianHeightsDuality.GelfandKazhdanDuality.LieSkew
 public import Development.WeilBound.CoreStatements.AbelianHeightsDuality.UnitarisableLocalReps.IsUnitarisableLocRep
 import Mathlib.Algebra.Order.Floor.Extended
@@ -73,10 +78,10 @@ theorem dualMapC_dualMapC (φ : Sm E a) : dualMapC E a (dualMapC E a φ) = φ :=
   Subtype.ext (funext fun g => by simp [dualMapC, invA_invA])
 
 theorem act_dualMapC (o : Op E a) (φ : Sm E a) : act o (dualMapC E a φ) = dualMapC E a (act (invTOp o) φ) :=
-  GlobalTheory.T.conjugate_inverse_right_action o φ _ _
+  _root_.GlobalTheory.CompanionTheory.DualMapAct.act_dual o φ _ _
 
 theorem isCuspForm_dualMapC {φ : Sm E a} (h : IsCuspForm φ) : IsCuspForm (dualMapC E a φ) :=
-  GlobalTheory.T.cuspForm_conjugate_inverse φ _ h
+  _root_.GlobalTheory.CompanionTheory.DualCusp.isCuspForm_conj_invA φ _ h
 
 theorem dualMapC_injective : Function.Injective (dualMapC E a) := fun φ ψ h => by
   rw [← dualMapC_dualMapC φ, ← dualMapC_dualMapC ψ, h]
@@ -155,7 +160,7 @@ theorem dualSubC_V_eq (hJ : GlobalTheory.Published.JacquetShalikaRigidity) (hM :
   refine hM E a (dualSubC π) π ?_
   obtain ⟨s, hs⟩ := hJ E Unit Unit (fun _ => a) (fun _ => a) (fun _ => CG.mk (dualSubC π)) (fun _ => CG.mk π)
     (fun _ => ha) (fun _ => ha) (by
-      filter_upwards [GlobalTheory.T.cuspidal_satake_almost_all π] with w hw
+      filter_upwards [_root_.GlobalTheory.CompanionTheory.SatAe.eventually_exists_hasSat π] with w hw
       obtain ⟨B, hw⟩ := hw
       exact ⟨fun _ => B, fun _ => B, fun _ => PositivityTheory.PRW.SatakeDual.hasSat_dual hB hπ (dualSubC π) (fun ψ => ⟨fun ⟨φ, hφ, e⟩ => ⟨φ, hφ, e ▸ rfl⟩,
         fun ⟨φ, hφ, e⟩ => ⟨φ, hφ, Subtype.ext e.symm⟩⟩) w B hw, fun _ => hw, rfl⟩)
@@ -166,7 +171,7 @@ theorem gelfandKazhdanDual_of_multiplicityOne (hJ : GlobalTheory.Published.Jacqu
   intro E _ _ _ n π
   rcases Nat.eq_zero_or_pos n with rfl | hn
   · exact GlobalTheory.Published.InvTransposeModel.rank_zero π
-  obtain ⟨π₀, χ, h0, rfl⟩ := GlobalTheory.T.cuspidal_eq_twist_normalised π
+  obtain ⟨π₀, χ, h0, rfl⟩ := _root_.GlobalTheory.CompanionTheory.TwistNorm.exists_twist_normalised π
   exact GlobalTheory.Published.InvTransposeModel.twist (paired_of_dualSubC_eq hB h0 (dualSubC_V_eq hJ hM hB hn h0)) χ
 
 end PositivityTheory.PRW.GKD

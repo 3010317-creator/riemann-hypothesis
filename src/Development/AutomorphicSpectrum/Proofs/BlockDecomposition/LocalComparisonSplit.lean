@@ -9,7 +9,8 @@ public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalSup
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PairInvolutionContinuous
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PairLocalAuxiliaryStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SplitPlaceLocalElement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwistedOrbitalPairConvolutionStatement
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ThetaNormCommutation.LocalComparisonSplitting.EulerFactorLevels.EulerFinOf
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwistedOrbitalPairConvolution
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -155,7 +156,7 @@ theorem locCompareSplit : LocCompareSplit := by
       show φ₁ w (e g).1 * φ₂ w (sgP a b w (e g).2) = _
       rw [he1, ← h2, fv_split S hS w hw hs])
   rw [ht, seen_split φ₁ φ₂ w hs, th_split a b w hs]
-  have hsc := GlobalTheory.T.twisted_orbital_pair_convolution _ (sgP a b w) (K2 a b w) hc hi hk hKo hKc (e y).1 (e y).2 (φ₁ w) (φ₂ w) L hLo hLK hLs hH₁ hH₂
+  have hsc := _root_.GlobalTheory.CompanionTheory.SplitConvF.splitConv_of_finite _ (sgP a b w) (K2 a b w) hc hi hk hKo hKc (e y).1 (e y).2 (φ₁ w) (φ₂ w) L hLo hLK hLs hH₁ hH₂
     (by rw [hN]; exact hG) (by rw [hN]; exact hF)
   rw [hN] at hsc
   exact hsc

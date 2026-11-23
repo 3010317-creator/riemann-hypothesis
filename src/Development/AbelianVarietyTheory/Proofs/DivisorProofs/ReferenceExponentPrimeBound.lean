@@ -3,8 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.MulSmulIdemMem
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HtValOnSubset
 public import Development.AbelianVarietyTheory.Definitions.Foundations.NonnegOfMemCStarSet
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseLocusExponentTwistingSectionMulLeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsKeySectionInverseRootTwistingSectionSpreadStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseLocusExponentTwistingSectionMulLe
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.FlagComponentFramedPointFrame
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsKeySectionInverseRootTwistingSectionSpread
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMulInvPow
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTwSecOfConst
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ImportsExtraSide
@@ -112,7 +113,7 @@ theorem refExp_vp_le_of_laws {E : Type} [Field E] [NumberField E] [IsCMField E] 
     (hs : ∑ τ : E →+* ℂ, (Dw.mult τ : ℝ) = N) :
     refExp_vp U cst (wtOf Dw u 0) q ≤ refExp_vp U cst (wtOf Dw (u + parWt Dw w₀) m) q +
       (((if q ∈ badPrimes H l then (m * N * (different_vp E q : ℝ) + 1) else 0 : ℝ)) : EReal) := by
-  obtain ⟨hK, ht⟩ := GlobalTheory.T.exists_keySection_inverseRoot_twistingSection_spread E H Dw l Xo c r U hL.unf x hL.xi hL.geo hL.pos hL.good hN
+  obtain ⟨hK, ht⟩ := _root_.GlobalTheory.KeyRootSpread.exists_twSec_keyRoot_spread E H Dw l Xo c r U hL.unf x hL.xi hL.geo hL.pos hL.good hN
   have hz : ∀ Z : Comp Xo c, ∃ z : TwSec U x Z (wtOf Dw u 0 - wtOf Dw (u + parWt Dw w₀) m),
       IntOff (badPrimes H l) z.lo ∧ ∀ w, z.hi w - z.lo w ≤
         m * ∑ τ : E →+* ℂ, (Dw.mult τ : ℝ) * (ord_vw w (conjDifferent (embF c τ)) : ℝ) := fun Z => by
@@ -125,7 +126,7 @@ theorem refExp_vp_le_of_laws {E : Type} [Field E] [NumberField E] [IsCMField E] 
         exact hw (by simp [Finset.sum_apply, hn]))
     exact GlobalTheory.CombTw.exists_twSec_comb E H Dw l Xo c r U hL.unf x _ Z u w₀ m _ s t hs1 hs2 ht1 ht2
   choose z hz1 hz2 using hz
-  have key := GlobalTheory.T.baseLocusExponent_twistingSection_mul_le E H Dw l Xo c r U hL.unf x (wtOf Dw (u + parWt Dw w₀) m) _ (even_two_mul (m : ℤ)) cst
+  have key := _root_.GlobalTheory.RefTwist.refExp_vp_add_le E H Dw l Xo c r U hL.unf x (wtOf Dw (u + parWt Dw w₀) m) _ (even_two_mul (m : ℤ)) cst
     (if q ∈ badPrimes H l then (m * N * (different_vp E q : ℝ) + 1) else 0) q hq z fun Z w hw => by
       have h1 := hz2 Z w
       simp only [fun τ => (GlobalTheory.DifferentGalois.ord_conjDifferent_and_sum E c.F (embF c τ) q w hq hw).1, ← Finset.sum_mul, hs] at h1

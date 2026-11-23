@@ -7,33 +7,33 @@ public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.RapidDecayLift
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.VacuumFockVectors
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FiniteSupport
-import Development.AbelianVarietyTheory.Definitions.Foundations.OfInfProjInfMulOfFinProjFin
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicUnitaryTopology
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicUnitaryUnimodularExistsFundamentalDomain
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContDiffDerivSnoc
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOneP
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EquivariantMapCarriesGelfandInvariantToFunction
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteVolumeAdelicUnitaryQuotient
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IntegrationByPartsRightDerivativeAdelicQuotient
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiscreteSeriesPureInnerProductsTensorProduct
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsEmbeddingSkew
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIntegralForm
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRealPlaceThetaObjectsTheoremARPartsStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRealPlaceThetaObjectsTheoremARParts
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GkMapCuspFormsExtendsToSmoothVectorsStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InclTprodUpdate
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegrableOnMulRight
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsCuspGrowOfMemSpan
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ItEqSumKMean
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.KMeanMemKFinOfCoefFam
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MultTEqZero
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmPureTensorOOfFinite
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SignBlockDeterminantNeZeroOfMemMaxCompact
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SubstitutionTotalDegreeLe
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaChainLiftsAreCuspFormsStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaLiftCuspFormAutomorphicSmoothModerateGrowth
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaModelsAreCoverDiscreteSeriesOfHarishChandraStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaVacuumCharactersRealPlacesStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.VacuumFockFromSquareIntegrability
+import Development.AbelianVarietyTheory.Definitions.Foundations.OfInfProjInfMulOfFinProjFin
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOneP
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteVolumeAdelicUnitaryQuotient
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InclTprodUpdate
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsCuspGrowOfMemSpan
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SubstitutionTotalDegreeLe
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaLiftCuspFormAutomorphicSmoothModerateGrowth
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaModelsAreCoverDiscreteSeriesOfHarishChandraStatement
 import Development.AbelianVarietyTheory.Statements.HaarFundamentalDomain.ExistsHaarFundDom
 import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemElt
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerOrbitVolume.TopoAF
@@ -422,7 +422,7 @@ theorem ioPair_of_rapid (D : D7) (X : ProvA) (hX : ChosenSeries X) (h3 : Formali
 theorem ioPair_onObjects : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.HarishChandraModules →
     GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.CasselmanWallach → ∀ D : D7, GlobalTheory.Chain.IoPair D := by
   intro hD hH hC hW D
-  obtain ⟨X, hX, -, -, -, -, h3, -⟩ := GlobalTheory.T.exists_provA_discreteSeries_archimedeanRallis hD hH
+  obtain ⟨X, hX, -, -, -, -, h3, -⟩ := _root_.GlobalTheory.RealPlaceTheta.exists_record_theta hD hH
   exact ioPair_of_rapid D X hX h3 (GlobalTheory.T.thetaChainLifts_areCuspForms hD hH hC D) (GlobalTheory.Chain.LiftReg.liftProps_obj hC D)
     (GlobalTheory.T.gkMapCuspForms_extends_to_smoothVectors hH hW D) (GlobalTheory.VacuumFockLaws.vacuumFock_onObjects D) (GlobalTheory.T.thetaVacuumCharacters_realPlaces D) (GlobalTheory.T.thetaModels_are_coverDiscreteSeries_of_harishChandra hD hH D) hC hH
 

@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.LatIntZero
 public import Formalism.LocalToGlobal.KernelLattices.LateralTheory
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.CmThetaBaseVectorTranslatesIntegralStatement
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LatticeJetsAreBoundedMomentsProdAndSumStatement
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LatticeJetsAreBoundedMomentsPullbackStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.CmThetaBaseVectorTranslatesIntegral
+import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LatticeJetsAreBoundedMomentsProdAndSum
+import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LatticeJetsAreBoundedMomentsPullback
 import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.IsAdmissibleFlagPairOfUnitriangularLeftAutomorph
 import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.StdOK
 import Mathlib.Algebra.Order.Floor.Extended
@@ -88,21 +88,21 @@ theorem latInt_U_thZero : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (
       (fun z => G i j (entry D.what₂.Tau N N' i j z)) := by
     intro i j
     have hm : LatInt ι (Ω / ι δ₀) B.lamM (G i j) := by
-      refine GlobalTheory.T.cmTheta_baseVector_translates_integral D cc δ B hcc hδ q hq2 hsplit hcop ι δ₀ θ Ω hP (fun τ => s τ i j) n hnq ?_
+      refine _root_.GlobalTheory.MomN.translates_latInt D cc δ B hcc hδ q hq2 hsplit hcop ι δ₀ θ Ω hP (fun τ => s τ i j) n hnq ?_
       have := hns i j
       convert this using 1
       funext τ
       simp [nsmul_eq_mul]
-    refine GlobalTheory.T.latticeJetsAreBoundedMoments_pullback q ι (D.what₂.Tau → ℂ) (VC D N N') (Ω / ι δ₀) B.lamM
+    refine _root_.GlobalTheory.MomN.latInt_pull q ι (D.what₂.Tau → ℂ) (VC D N N') (Ω / ι δ₀) B.lamM
       (La D B.tor (StandardLatticesGL3.stdL D N) (StandardLatticesGL3.stdL D N')) (entry D.what₂.Tau N N' i j) (G i j) (hGc i j) ?_ hm
     intro x hx
     rw [hLat] at hx
     exact ⟨1, Nat.coprime_one_left q, by rw [one_smul]; exact hx i j⟩
   rw [hU]
-  refine (GlobalTheory.T.latticeJetsAreBoundedMoments_prod_and_sum q ι (VC D N N') (Ω / ι δ₀) (La D B.tor (StandardLatticesGL3.stdL D N) (StandardLatticesGL3.stdL D N'))).1 (Fin N')
+  refine (_root_.GlobalTheory.MomN.latInt_prod_sum q ι (VC D N N') (Ω / ι δ₀) (La D B.tor (StandardLatticesGL3.stdL D N) (StandardLatticesGL3.stdL D N'))).1 (Fin N')
     (fun i z => ∏ j, G i j (entry D.what₂.Tau N N' i j z)) (fun i => ?_) (fun i => ?_)
   · exact contDiff_prod fun j _ => hEc i j
-  · exact (GlobalTheory.T.latticeJetsAreBoundedMoments_prod_and_sum q ι (VC D N N') (Ω / ι δ₀) (La D B.tor (StandardLatticesGL3.stdL D N) (StandardLatticesGL3.stdL D N'))).1 (Fin N)
+  · exact (_root_.GlobalTheory.MomN.latInt_prod_sum q ι (VC D N N') (Ω / ι δ₀) (La D B.tor (StandardLatticesGL3.stdL D N) (StandardLatticesGL3.stdL D N'))).1 (Fin N)
       (fun j z => G i j (entry D.what₂.Tau N N' i j z)) (hEc i) (hF i)
 
 end GlobalTheory.MomN

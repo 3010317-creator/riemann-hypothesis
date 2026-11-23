@@ -7,7 +7,8 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Exist
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsRealIndependentBasisLatticeFamilyStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsSncCoordinatesComplexPointSmoothVarietyStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExponentialKernelsIsHolomorphicLatticeFamilyStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SpanPeriodLatticeComplexSemiAbelianEqTopStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SpanPeriodLatticeComplexSemiAbelianEqTop
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsDifferentiableOnTransfer
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLinearEquivLift
 import Mathlib.Algebra.Order.Floor.Extended
@@ -261,7 +262,7 @@ theorem span_of_isExpAt {X : Scheme.{0}} (t : SAB H X) (y : Sp ℂ ⟶ X) {g : �
     rw [add_zero] at h2
     exact left_eq_mul.1 h2
   have hl : (e 0).left = (1 : Over.mk y ⟶ t.G).left := by rw [h1]
-  refine GlobalTheory.T.span_periodLattice_complexSemiAbelian_eq_top X t.G y g e t.semi ⟨he.1, hs, hh, fun w => ?_, fun v hv => ?_⟩
+  refine _root_.GlobalTheory.PeriodSpan.span_ker_eq_top X t.G y g e t.semi ⟨he.1, hs, hh, fun w => ?_, fun v hv => ?_⟩
   · obtain ⟨v, ⟨hv, hd⟩, hu⟩ := he.2.1 w
     refine ⟨Over.homMk v hv.1, hd, fun v' hv' => ?_⟩
     have h3 : v'.left = v := hu _ ⟨⟨Over.w v', hv'.1.trans hl⟩, hv'⟩

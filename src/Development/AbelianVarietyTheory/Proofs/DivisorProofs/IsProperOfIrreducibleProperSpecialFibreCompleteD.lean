@@ -3,9 +3,12 @@ module
 public import Mathlib.AlgebraicGeometry.Morphisms.Proper
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
 public import Mathlib.RingTheory.DiscreteValuationRing.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChowLemmaProjectiveModification
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsClosedImageClosureCompleteDVRSpecialFibreStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniversallyClosedOfClosedCoverInUniversallyCloseStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAffineLeOrDisjoint
+public import Mathlib.AlgebraicGeometry.Morphisms.Immersion
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsClosedImageClosureCompleteDVRSpecialFibre
+public import Mathlib.AlgebraicGeometry.Morphisms.UniversallyClosed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniversallyClosedOfClosedCoverInUniversallyClose
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,7 +61,7 @@ theorem isProper_of_irreducible_of_isProper_specialFibre : ∀ (O : Type) [CommR
   obtain ⟨x₀, hx₀⟩ := hx
   have hne : Nonempty X := ⟨x₀⟩
   obtain ⟨Y, P, π, q, s, U, hπ, hUne, hiso, hproj, hq, hcomm⟩ :=
-    GlobalTheory.FormalAlg.exists_isProper_isImmersion_isProjOver O X f hsep hlft hqc hne
+    _root_.GlobalTheory.DenseClosedAffineSubsets.chow O X f hsep hlft hqc hne
   have hs : IsProper s := by
     obtain ⟨N, i, hi, rfl⟩ := hproj
     have := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str O N
@@ -102,9 +105,9 @@ theorem isProper_of_irreducible_of_isProper_specialFibre : ∀ (O : Type) [CommR
     rw [hcomm, (Iso.eq_inv_comp (pullbackRightPullbackFstIso f (Spec.map (CommRingCat.ofHom (IsLocalRing.residue O))) π)).2
       (pullbackRightPullbackFstIso_hom_snd (f := f) (g := Spec.map (CommRingCat.ofHom (IsLocalRing.residue O))) (f' := π))]
     infer_instance
-  have hclosed := GlobalTheory.T.isClosed_image_closure_completeDVR_specialFibre O Y P q s C hs hq hfib' hCirr hmeet
+  have hclosed := _root_.GlobalTheory.FibProperClosed.isClosed_image_closure O Y P q s C hs hq hfib' hCirr hmeet
   have huc : UniversallyClosed f :=
-    GlobalTheory.T.universallyClosed_of_closed_image_cover _ X Y P f π q s (closure C) inferInstance hq hcomm isClosed_closure hclosed hπT
+    _root_.GlobalTheory.universallyClosed_of_closed_cover_in_universallyClosed _ X Y P f π q s (closure C) inferInstance hq hcomm isClosed_closure hclosed hπT
   exact ⟨⟩
 
 end GlobalTheory.FibreProper

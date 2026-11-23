@@ -2,15 +2,23 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsValues
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUniqueLeftBasisCoordsAdicCompletion
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianPartBaseChangeAltBis
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AdaptedFamilyBasisChangeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AdaptedGramDetPositiveStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorusOver
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.SlopeBoundSt
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsAbPartBaseChange
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsAdapted
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AdaptedFamilyBasisChange
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AdaptedGramDetPositive
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenComponentMapCompatStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HermitianBundleFibreTangentStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelBaseChangeActionStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelBaseChangeExistsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieValuePullbackFieldExtStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorusOverLieModelBaseChangeStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HermitianBundleFibreTangent
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelBaseChangeAction
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelBaseChangeExists
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelComplexBaseChange
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieValuePullbackFieldExt
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorusOverLieModelBaseChange
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ValAtComplexEmbedding
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -80,19 +88,19 @@ theorem geo_height_arch : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   intro E _ _ _ H D l Xo c Y S Ω _ K _ J y 𝔐 L _ _ z P V _ _ _ _ MV A lab r k m h v q b bL T hA hv hq hb hT hdet e
   obtain ⟨hact, hlab, hΛ, hcoch, hprin, t', m', MB, hfib, hlift⟩ := hA
   have hgram : ∀ τ, 0 < A.gramDet e (q τ) := fun τ =>
-    GlobalTheory.T.adapted_gram_det_positive E L _ V A (lab τ) r k v (q τ) hv (hq τ).1 (hq τ).2 e
+    _root_.GlobalTheory.CompanionTheory.Ar.Cusp.gramDet_pos_of_adapted E L _ V A (lab τ) r k v (q τ) hv (hq τ).1 (hq τ).2 e
   refine ⟨hgram, ?_⟩
-  obtain ⟨P', mK, mB, h1, h2, h3⟩ := GlobalTheory.T.abPart_comp_spMap_compat E H _ 𝔐.t L ℂ (spMap (algebraMap (𝓞 L) L) ≫ z) P e
+  obtain ⟨P', mK, mB, h1, h2, h3⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.PtHt.Arch.AbPartBC.exists_abPart_baseChange E H _ 𝔐.t L ℂ (spMap (algebraMap (𝓞 L) L) ≫ z) P e
   haveI := P.tK.semi.smooth
-  obtain ⟨V', _, _, MV', j, hjs, hji, hjpt, hjspan⟩ := GlobalTheory.T.lie_model_base_change_exists L ℂ e P.tK.G P'.tK.G mK.φ mK.cart V MV
-  obtain ⟨ρ', hρa, hρ⟩ := GlobalTheory.T.lie_model_base_change_action L ℂ e _ _ mK.φ mK.cart (𝓞 E) P.tK.act P'.tK.act mK.act V V' MV MV' j hjpt hjspan
+  obtain ⟨V', _, _, MV', j, hjs, hji, hjpt, hjspan⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieBc.main L ℂ e P.tK.G P'.tK.G mK.φ mK.cart V MV
+  obtain ⟨ρ', hρa, hρ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ActBC.exists_act_extends L ℂ e _ _ mK.φ mK.cart (𝓞 E) P.tK.act P'.tK.act mK.act V V' MV MV' j hjpt hjspan
     A.ρ hact
   have hcoch' : P'.IsCochars MV' (A.I.map j) :=
-    GlobalTheory.T.torus_over_lie_model_base_change L ℂ e _ _ mK.φ P.τ P'.τ mK.cart h3 V V' MV MV' j hjpt A.I hcoch
+    _root_.GlobalTheory.CompanionTheory.Ar.Cusp.PtHt.Arch.CocharsBC.cochars_baseChange L ℂ e _ _ mK.φ P.τ P'.τ mK.cart h3 V V' MV MV' j hjpt A.I hcoch
   letI := P'.τ.grpB
   haveI := P'.τ.q_hom
   haveI := P'.e_hom
-  obtain ⟨hbF, hbI, hbv⟩ := GlobalTheory.T.hermitian_bundle_fibre_tangent E H L t' P.tB P'.tB e m' mB A.Bq MB hfib V'
+  obtain ⟨hbF, hbI, hbv⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HodgeBC.main E H L t' P.tB P'.tB e m' mB A.Bq MB hfib V'
     (fun x => MV'.pt x ≫ P'.τ.q ≫ P'.e.hom) (fun x => isTan_comp _ (MV'.tan x))
   have hover : ∀ x : A.Λ, (MV'.pt (j x) ≫ P'.τ.q ≫ P'.e.hom).left ≫ mB.φ ≫ m'.φ =
       spMap (dualMap (e.comp (algebraMap (𝓞 L) L))) ≫ (MB.pt (A.f x)).left := fun x => by
@@ -118,10 +126,10 @@ theorem geo_height_arch : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     positivity
   refine ⟨_, ⟨P', V', _, _, MV', ρ', A.I.map j, hbF, fun τ => e.comp (A.σ (lab τ)), fun τ i => j (bL τ i), hρa, hcoch',
     fun τ a => GlobalTheory.CompanionTheory.Ar.RootHt.PullVal.valAt_of_field_map _ _ _ e rfl (hlab (lab τ) a), hbI, fun τ i => ?_,
-    GlobalTheory.T.adapted_family_basis_change E L _ V A lab r k m h v q bL T hv hq hT hdet e V' j hjs hji ρ' hρ heig hbF (fun τ c c' =>
+    _root_.GlobalTheory.CompanionTheory.Ar.Cusp.PhiBaseChange.phiNormSq_baseChange E L _ V A lab r k m h v q bL T hv hq hT hdet e V' j hjs hji ρ' hρ heig hbF (fun τ c c' =>
       hbv _ _ _ _ (hover _) (hover _))⟩, hpos, rfl⟩
   obtain ⟨v₀, hv₀, e₀⟩ := hb τ i
-  refine ⟨LieSigma.pullEps e _ ≫ v₀, GlobalTheory.T.lie_value_pullback_field_ext _ _ _ _ _ 𝔐.M _ _ _ e _ _ hv₀, ?_⟩
+  refine ⟨LieSigma.pullEps e _ ≫ v₀, _root_.GlobalTheory.CompanionTheory.Ar.LieSigma.ValBC.valAt_field_map _ _ _ _ _ 𝔐.M _ _ _ e _ _ hv₀, ?_⟩
   rw [← h1, ← Category.assoc, hjpt, Category.assoc, e₀]
   rfl
 

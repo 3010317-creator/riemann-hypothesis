@@ -2,14 +2,16 @@ module
 
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.StatementsPtsBddConv
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.ModelProjObjects
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ChartIntegralPotentialLocallyFiniteStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FiniteFibresOfAnalyticLocalDiffeoStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IntegralFibreSumChangeOfVariablesStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MeasurableFibreCountOfLocalDiffeoStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.MixedDensityNonnegOffNullSet
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SmoothLocalPotentialLiftStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.VolumeModelCritChartEqZeroStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ChartIntegralPotentialLocallyFinite
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.IsPotentialOfFun
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FiniteFibresOfAnalyticLocalDiffeo
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IntegralFibreSumChangeOfVariables
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MeasurableFibreCountOfLocalDiffeo
+public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FrameDefinitions.Weights
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SmoothLocalPotentialLift
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.VolumeModelCritChartEqZero
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PModelFibreFinite
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.MixedDensityNonnegOffNullSet
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,7 +62,7 @@ theorem push_chart_integrals : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀
   have hS : ∀ j, volume ((M.atlas.chart j).target ∩ (M.atlas.chart j).symm ⁻¹' modelBad M Q (Yᶜ ∪ Z)) = 0 := by
     intro j
     rw [modelBad, Set.preimage_union, Set.inter_union_distrib_left]
-    exact measure_union_null (hnull j) (GlobalTheory.T.volume_modelCrit_chart_eq_zero K ι P n M Q j hP hQ)
+    exact measure_union_null (hnull j) (_root_.GlobalTheory.CompanionTheory.Ar.Giv.Push.Crit.modelCrit_null K ι P n M Q j hP hQ)
   have hq := modelQ_good_of_notMem M Q (Yᶜ ∪ Z)
   have hfin : ∀ y, (modelQ M Q ⁻¹' {y} \ modelBad M Q (Yᶜ ∪ Z)).Finite := fun y =>
     (ModelFibreFinite.proof K ι P n M Q hP hQ y).subset (Set.sdiff_subset_sdiff_right Set.subset_union_right)
@@ -85,9 +87,9 @@ theorem push_chart_integrals : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀
     have : BorelSpace M.Xc := ⟨rfl⟩
     refine AEStronglyMeasurable.mul (hG j) ?_
     rw [MeasOff.restrict_target_eq M.atlas hYnull j]
-    exact ((GlobalTheory.T.smooth_local_potential_lift K ι P n M Y c B Φ j hY hΦs hΦt).aestronglyMeasurable
+    exact ((_root_.GlobalTheory.CompanionTheory.Ar.Giv.Push.DCont.locDens_continuousOn_of_sections K ι P n M Y c B Φ j hY hΦs hΦt).aestronglyMeasurable
       (MeasOff.isOpen_ov M.atlas hY j).measurableSet)
-  have hae := GlobalTheory.T.chart_integral_potential_locally_finite K ι P n M Q Y Z N c B Φ g G₀ hP hQ hY hnull hN hΦs hΦt hg
+  have hae := _root_.GlobalTheory.CompanionTheory.Ar.Giv.Push.fibre_term_ae K ι P n M Q Y Z N c B Φ g G₀ hP hQ hY hnull hN hΦs hΦt hg
   have e1 : ∀ᵐ y, ∑ᶠ w ∈ fibre P Q y, sheetDensity P Q (fun i z => c i * Real.log ((B i).h z)) g y w =
       ∑ᶠ x ∈ modelQ M Q ⁻¹' {y} \ modelBad M Q (Yᶜ ∪ Z), G₀ x * pushDens M.atlas Φ (modelQ M Q) x := by
     filter_upwards [hae] with y ⟨W, hW, hf, ht⟩
@@ -98,11 +100,11 @@ theorem push_chart_integrals : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀
     filter_upwards [hae] with y ⟨W, hW, hf, ht⟩
     rw [hf, finsum_mem_image hW]
     exact finsum_mem_congr rfl fun x hx => by rw [ht x hx]
-  refine ⟨(GlobalTheory.T.measurable_fibre_count_of_local_diffeo M.atlas Φ (modelQ M Q) _ G₀ hS hq hfin hsm hm).congr (e1.mono fun y hy => hy.symm),
+  refine ⟨(_root_.GlobalTheory.CompanionTheory.Ar.Giv.Push.aestronglyMeasurable_fibreSum_pushDens M.atlas Φ (modelQ M Q) _ G₀ hS hq hfin hsm hm).congr (e1.mono fun y hy => hy.symm),
     fun Pt => ?_, fun hI => ?_⟩
   · rw [lintegral_congr_ae (e2.mono fun y hy => congrArg ENNReal.ofReal hy)]
-    exact GlobalTheory.T.finite_fibres_of_analytic_local_diffeo M.atlas Φ (modelQ M Q) _ G₀ hS hq hfin hsm hm Pt
-  · obtain ⟨h1, h2⟩ := GlobalTheory.T.integral_fibre_sum_change_of_variables M.atlas Φ (modelQ M Q) _ G₀ hS hq hfin hsm hI
+    exact _root_.GlobalTheory.CompanionTheory.Ar.Giv.Push.lintegral_absFibre_eq M.atlas Φ (modelQ M Q) _ G₀ hS hq hfin hsm hm Pt
+  · obtain ⟨h1, h2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Giv.Push.integrable_mInt_fibreSum M.atlas Φ (modelQ M Q) _ G₀ hS hq hfin hsm hI
     refine ⟨h1.congr (e1.mono fun y hy => hy.symm), ?_⟩
     rw [h2]
     exact integral_congr_ae (e1.mono fun y hy => hy)

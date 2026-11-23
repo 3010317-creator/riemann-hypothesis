@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsCompatOfLocal
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaLevelAbelianSchemePullback
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelPullbackIdCompCancelStatement
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.GoodClass
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelPullbackIdCompCancel
+public import Mathlib.RingTheory.TensorProduct.Nontrivial
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -23,7 +25,6 @@ import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Mathlib.RingTheory.TensorProduct.Nontrivial
 import Mathlib.Tactic.Echelon.Zsqrtd
 import Mathlib.Tactic.Inclusion.Extension.Core.Core
 import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
@@ -112,9 +113,9 @@ theorem geoGood_commonFibres : ∀ (o : Type) [CommRing o] (g k : ℕ) (J : Type
     exists_algClosed_join_of_mem_range x x₁ (IsLocalRing.closedPoint K) p₁ hp₁.symm
   obtain ⟨u, hu₀⟩ := GlobalTheory.tObj_pull o g k J b (Sp K₁) (Sp Ω) (x₁ ≫ s) (spMap i ≫ x ≫ s) (spMap j) u₁
     (by rw [← Category.assoc, ← hij, Category.assoc])
-  have hT := ((GlobalTheory.T.thetaLevelPullback_id_comp_cancel o g k J b S (Sp K₁) (Sp Ω) s (x₁ ≫ s) (spMap i ≫ x ≫ s) t u₁ u).2
+  have hT := ((_root_.GlobalTheory.ZM.tmap_id_comp_cancel o g k J b S (Sp K₁) (Sp Ω) s (x₁ ≫ s) (spMap i ≫ x ≫ s) t u₁ u).2
     x₁ (spMap j) hu).1 hu₀
-  have hT' := ((GlobalTheory.T.thetaLevelPullback_id_comp_cancel o g k J b S (Sp K₁) (Sp Ω) s (x₁ ≫ s) (spMap i ≫ x ≫ s) t' u₁ u).2
+  have hT' := ((_root_.GlobalTheory.ZM.tmap_id_comp_cancel o g k J b S (Sp K₁) (Sp Ω) s (x₁ ≫ s) (spMap i ≫ x ≫ s) t' u₁ u).2
     x₁ (spMap j) hu').1 hu₀
   rw [← hij] at hT hT'
   obtain ⟨ψ, hψ⟩ := (tMap_iff u t _).1 hT

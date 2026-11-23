@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.InterPolyProdSum
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ParabolicMatrixFamilyDiagIsUnitStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ParabolicMatrixFamilyDiagIsUnit
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,9 +58,9 @@ theorem isEqn_diag_of_frame : ∀ (F : Type) [Field F] (Y : Var F) (ι : Type) (
   have hP : Par m ((ratOf Y).O y).toSubring (A' * A⁻¹) := (Fr.mem_iff hA).1 hA'
   have e : B * A⁻¹ = (B * A'⁻¹) * (A' * A⁻¹) := by
     rw [← mul_assoc, mul_assoc B, Mat.inv_mul (Fr.det_ne hA'), mul_one]
-  obtain ⟨hu0, hui, -, -⟩ := GlobalTheory.T.parabolicMatrixFamily_diag_isUnit ι m Y.Fn _ (A' * A⁻¹) hP x
-  obtain ⟨-, -, -, hmul⟩ := GlobalTheory.T.parabolicMatrixFamily_diag_isUnit ι m Y.Fn ⊤ (B * A'⁻¹) (par hA') x
-  obtain ⟨ht0, -⟩ := GlobalTheory.T.parabolicMatrixFamily_diag_isUnit ι m Y.Fn ⊤ (B * A⁻¹) (par hA) x
+  obtain ⟨hu0, hui, -, -⟩ := _root_.GlobalTheory.FlagPush.diag_of_par ι m Y.Fn _ (A' * A⁻¹) hP x
+  obtain ⟨-, -, -, hmul⟩ := _root_.GlobalTheory.FlagPush.diag_of_par ι m Y.Fn ⊤ (B * A'⁻¹) (par hA') x
+  obtain ⟨ht0, -⟩ := _root_.GlobalTheory.FlagPush.diag_of_par ι m Y.Fn ⊤ (B * A⁻¹) (par hA) x
   have hd : (B * A⁻¹) x.1 x.2 x.2 = t' * (A' * A⁻¹) x.1 x.2 x.2 := by
     rw [e, hmul _ (hP.mono le_rfl le_top), ht']
   refine ⟨Units.mk0 _ ht0, rfl, heq.iff_unitAt.2 ?_⟩

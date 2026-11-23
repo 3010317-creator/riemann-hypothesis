@@ -5,9 +5,12 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RpowNegLe
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatVecUOfIsSphericalU
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSubquotSmIndCongr
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasSatakeGLOfIsSatVecGL
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GlMapDiagUniformizerElementarySublatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GlMapStandardLatticeEqIffMemGLintAdicStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemCartanDoubleCosetOfLatticeBetweenUniformizerStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GlMapDiagUniformizerElementarySublattice
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.FiniteResidueFieldPadicInt
+public import Formalism.SatakeDualWeyl.StatementE
+public import Mathlib.NumberTheory.NumberField.Completion.FinitePlace
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GlMapStandardLatticeEqIffMemGLintAdic
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemCartanDoubleCosetOfLatticeBetweenUniformizer
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -73,7 +76,7 @@ theorem diagJ_det_ne {n : ℕ} {ϖ : w.adicCompletion E} (hϖ : IsUnifV E w ϖ) 
 theorem stab_iff (n : ℕ) (g : GL (Fin n) (w.adicCompletion E)) :
     glMap g (std (w.adicCompletionIntegers E) (w.adicCompletion E) n).1 =
       (std (w.adicCompletionIntegers E) (w.adicCompletion E) n).1 ↔ g ∈ GLint (Fin n) (Ov E w) :=
-  GlobalTheory.T.glMap_standardLattice_eq_iff_mem_GLint_adic E w n g
+  _root_.GlobalTheory.LatHecke.glMap_std_eq_iff_mem_GLint E w n g
 
 theorem coset_of_elem (n : ℕ) (ϖ : w.adicCompletion E) (hϖ : IsUnifV E w ϖ) (j : ℕ) (hj : j ≤ n)
     (g : GL (Fin n) (w.adicCompletion E)) :
@@ -82,7 +85,7 @@ theorem coset_of_elem (n : ℕ) (ϖ : w.adicCompletion E) (hϖ : IsUnifV E w ϖ)
       Subtype.val '' subElem j (std (w.adicCompletionIntegers E) (w.adicCompletion E) n) →
     ∃ a ∈ GLint (Fin n) (Ov E w), ∃ b ∈ GLint (Fin n) (Ov E w),
       (g : Matrix (Fin n) (Fin n) (w.adicCompletion E)) = (a : Matrix (Fin n) (Fin n) _) * diagJ n ϖ j * (b : Matrix (Fin n) (Fin n) _) :=
-  GlobalTheory.T.mem_cartanDoubleCoset_of_lattice_between_uniformizer E w n ϖ hϖ j hj g
+  _root_.GlobalTheory.ElemCartan.mem_doubleCoset_of_subElem E w n ϖ hϖ j hj g
 
 theorem diag_elem (n : ℕ) (ϖ : w.adicCompletion E) (hϖ : IsUnifV E w ϖ) (S : Finset (Fin n))
     (d : GL (Fin n) (w.adicCompletion E))
@@ -90,7 +93,7 @@ theorem diag_elem (n : ℕ) (ϖ : w.adicCompletion E) (hϖ : IsUnifV E w ϖ) (S 
     haveI := GlobalTheory.RowSatakeBound.finite_residue w
     glMap d (std (w.adicCompletionIntegers E) (w.adicCompletion E) n).1 ∈
       Subtype.val '' subElem S.card (std (w.adicCompletionIntegers E) (w.adicCompletion E) n) :=
-  GlobalTheory.T.glMap_diagUniformizer_elementarySublattice E w n ϖ hϖ S d hd
+  _root_.GlobalTheory.DiagElem.glMap_diag_mem_subElem E w n ϖ hϖ S d hd
 
 theorem elem_of_coset (n : ℕ) (ϖ : w.adicCompletion E) (hϖ : IsUnifV E w ϖ) (j : ℕ) (hj : j ≤ n)
     (g : GL (Fin n) (w.adicCompletion E)) :

@@ -6,13 +6,13 @@ public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.C1FieldNormSurjectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CupKummerCoboundaryOfNormsStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InertiaFixesAdjoinKummerRootsAndValuesEqStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KummerCochainCharacterGaloisInvariantClassStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KummerDivisorDescendsFunctionFieldStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.C1FieldNormSurjective
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CupKummerCoboundaryOfNorms
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InertiaFixesAdjoinKummerRootsAndValuesEq
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KummerCochainCharacterGaloisInvariantClass
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KummerDivisorDescendsFunctionField
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TsenTheorem
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KummerExponentOfGaloisElementIsKummerCharacter
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TsenTheoremStatement
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ZetaMemRange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -77,13 +77,13 @@ theorem cup_eq_coboundary_vanishing_on_inertia : ∀ (k K Ω : Type) [Field k] [
   haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap (RatFunc k) K).injective
   obtain ⟨z, hz⟩ := zeta_mem_range k K Ω N ζ hN hζ
   have hfix : ∀ g : Ω ≃ₐ[K] Ω, g ζ = ζ := fun g => by rw [← hz]; exact g.commutes z
-  have hC1 : IsFirstChernClassOfLineBundle K := GlobalTheory.T.tsen_theorem k K
+  have hC1 : IsFirstChernClassOfLineBundle K := _root_.GlobalTheory.NeedB.tsen k K
   have hnorm : ∀ (L : IntermediateField K Ω), FiniteDimensional K L → ∀ c : K, c ≠ 0 →
-      ∃ x : L, Algebra.norm K x = c := fun L _ c hc => GlobalTheory.T.exists_algebra_norm_eq_of_isFirstChernClass K L hC1 c hc
-  obtain ⟨η₀, hη₀c, hη₀⟩ := GlobalTheory.T.exists_locallyConstant_kum_cup_coboundary_of_norm_surj K Ω N ζ hN hζ hfix hnorm a b α β ha0 hb0 hα hβ
+      ∃ x : L, Algebra.norm K x = c := fun L _ c hc => _root_.GlobalTheory.norm_surjective_of_is_c1 K L hC1 c hc
+  obtain ⟨η₀, hη₀c, hη₀⟩ := _root_.GlobalTheory.cup_kummer_coboundary_of_norms K Ω N ζ hN hζ hfix hnorm a b α β ha0 hb0 hα hβ
   obtain ⟨θ, hθ0, hθE, hθη, hθs⟩ :=
-    GlobalTheory.T.kummer_cochain_character_galoisInvariant_class K Ω N ζ hN hζ hfix a b α β ha0 hb0 hα hβ η₀ hη₀c hη₀
-  obtain ⟨f, hf0, hfB⟩ := GlobalTheory.T.kummer_divisor_descends_functionField k K Ω N ζ hN hζ a b α β haA hai hbA hbi ha0 hb0 hα hβ θ hθ0 hθE hθs
+    _root_.GlobalTheory.eta_kummer_galoisInvariant K Ω N ζ hN hζ hfix a b α β ha0 hb0 hα hβ η₀ hη₀c hη₀
+  obtain ⟨f, hf0, hfB⟩ := _root_.GlobalTheory.KummerCob.divisor_descends k K Ω N ζ hN hζ a b α β haA hai hbA hbi ha0 hb0 hα hβ θ hθ0 hθE hθs
   obtain ⟨θ₀, hθ₀⟩ := IsAlgClosed.exists_pow_nat_eq (algebraMap K Ω f) hN
   have hθ₀0 : θ₀ ≠ 0 := by
     rintro rfl
@@ -99,7 +99,7 @@ theorem cup_eq_coboundary_vanishing_on_inertia : ∀ (k K Ω : Type) [Field k] [
   · intro B hB g hg
     obtain ⟨c, hcE, hc0, hcv⟩ := hfB B hB
     rw [← hθ₀] at hcv
-    obtain ⟨hgE, hk⟩ := GlobalTheory.T.inertia_fixes_adjoin_kummer_roots_and_values_eq k K Ω N ζ hN hζ a b α β haA hai hbA hbi ha0 hb0 hα hβ θ θ₀ hθ0 hθ₀0 hθE
+    obtain ⟨hgE, hk⟩ := _root_.GlobalTheory.InertKummer.inert_fixes_adjoin_and_kum_eq k K Ω N ζ hN hζ a b α β haA hai hbA hbi ha0 hb0 hα hβ θ θ₀ hθ0 hθ₀0 hθE
       ⟨f, hθ₀.symm⟩ B hB g hg c hcE hc0 hcv
     show η₀ g - kum ζ θ₀ g = 0
     rw [hθη g hgE, hk, sub_self]

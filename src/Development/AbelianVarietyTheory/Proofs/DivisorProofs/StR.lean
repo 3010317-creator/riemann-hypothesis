@@ -1,9 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.RangeShape
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCompactPseudoUnitaryOffDiagNormSublevelStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OffDiagBlockNormContInvStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PseudoUnitaryOffDiagNormSqZeroIffMemMaxCompactStatement
+public import Formalism.RealPlaceAnalysis.SmoothVectorGrowthBound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCompactPseudoUnitaryOffDiagNormSublevel
+public import Formalism.RealPlaceAnalysis.SmoothOnGVIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OffDiagBlockNormContInv
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PseudoUnitaryOffDiagNormSqZeroIffMemMaxCompact
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +48,7 @@ namespace GlobalTheory.PsCo.Pc3
 
 theorem stR : StR := by
   intro n ε
-  obtain ⟨hcont, hinv⟩ := GlobalTheory.T.offDiagBlockNorm_mul_invariant n ε
-  exact ⟨hcont, hinv, GlobalTheory.T.pseudoUnitary_offDiag_norm_sq_zero_iff_mem_maxCompact n ε, GlobalTheory.T.isCompact_pseudoUnitary_offDiag_norm_sublevel n ε⟩
+  obtain ⟨hcont, hinv⟩ := _root_.GlobalTheory.offDiagBlockNorm_cont_inv n ε
+  exact ⟨hcont, hinv, _root_.GlobalTheory.offDiag_zero_iff_mem_K n ε, _root_.GlobalTheory.isCompact_offDiag_sublevel n ε⟩
 
 end GlobalTheory.PsCo.Pc3

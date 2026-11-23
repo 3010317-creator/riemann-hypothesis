@@ -1,10 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatFrame
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DepthNonnegIntegralOperatorIntegralVectorsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DifferentialOperatorDepthLeDividedPowerContentStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedPowerContentValuationDetPowBoundsStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixVariablesDeterminantPowMonomialShapeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DepthNonnegIntegralOperatorIntegralVectors
+public import Mathlib.RingTheory.MvPolynomial.Homogeneous
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DifferentialOperatorDepthLeDividedPowerContent
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedPowerContentValuationDetPowBounds
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixVariablesDeterminantPowMonomialShape
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -73,16 +75,16 @@ theorem detDepth_bounds : ∀ (C : Type) [Field C] [CharZero C] (v : AddValuatio
     IsSatFrame v u → 0 ≤ detDepth G u c ∧ detDepth G u c ≤ content v (detPow C i c) ∧
     detDepth G u c ≤ (((i * c : ℝ) / (p - 1) : ℝ) : EReal) := by
   intro C _ _ v p hp hv i d c G u hu
-  obtain ⟨hhom, hint, -, -⟩ := GlobalTheory.T.matrixVariablesDeterminantPow_monomial_shape C i c
+  obtain ⟨hhom, hint, -, -⟩ := _root_.GlobalTheory.DetPowShape.detPow_shape C i c
   have h0 : 0 ≤ detDepth G u c := by
     unfold detDepth
-    exact GlobalTheory.T.depth_nonneg_integral_operator_integral_vectors C v (Fin i) (fun _ => d) (fun _ => G) (fun _ => Fin i) (fun _ => u)
+    exact _root_.GlobalTheory.DepthNonneg.depth_nonneg C v (Fin i) (fun _ => d) (fun _ => G) (fun _ => Fin i) (fun _ => u)
       (detPow C i c) (fun _ a e => hu.1 a e)
       (fun α => by obtain ⟨n, hn⟩ := hint α; rw [hn]; exact intCast_isInt v n)
   have h1 : detDepth G u c ≤ content v (detPow C i c) := by
     unfold detDepth
-    exact GlobalTheory.T.differentialOperatorDepth_le_dividedPowerContent C v (Fin i) (fun _ => d) (fun _ => i) (fun _ => G) (fun _ => u)
+    exact _root_.GlobalTheory.FGDepth.DepthLeContent.depth_le_content C v (Fin i) (fun _ => d) (fun _ => i) (fun _ => G) (fun _ => u)
       (detPow C i c) (i * c) hhom (fun _ => hu)
-  exact ⟨h0, h1, h1.trans (GlobalTheory.T.dividedPowerContentValuation_detPow_bounds C v p hp hv i c).1⟩
+  exact ⟨h0, h1, h1.trans (_root_.GlobalTheory.DetPowContent.content_detPow_bounds C v p hp hv i c).1⟩
 
 end GlobalTheory.FGDepth

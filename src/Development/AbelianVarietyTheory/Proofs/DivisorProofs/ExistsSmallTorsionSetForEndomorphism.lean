@@ -6,8 +6,16 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusExtensionPointsDivisible
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOneOfKillsIdealPowerTorsionSemiAbelianStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteOrderUnipotentAutDivisiblePrimaryEqIdStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrimaryTorsionDivisibleAndTorsionEqIdealTorsionStatement
+public import Mathlib.Algebra.Group.Hom.Defs
+public import Mathlib.Data.Finset.Card
+public import Mathlib.Data.Nat.Prime.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteOrderUnipotentAutDivisiblePrimaryEqId
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrimaryTorsionDivisibleAndTorsionEqIdealTorsion
+public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.LevelCarrying
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsCoprimeOfNatCast
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHomogeneousCompIdeal
+public import Development.AbelianVarietyTheory.Definitions.Divisors.MemLevEigenIffTransl
+public import Development.AbelianVarietyTheory.Definitions.Divisors.UnitaryWeightExponentVectorSignatureWeightMuZero
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.FinitePointsOfIsOpenImmersion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -49,16 +57,11 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.LevelCarrying
 import Development.AbelianVarietyTheory.Definitions.Divisors.CommGroupMulMulEqMulInvMulMulMul
 import Development.AbelianVarietyTheory.Definitions.Divisors.CuspIso
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsCoprimeOfNatCast
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHomogeneousCompIdeal
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsRightActFunPull
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsoOverOfIsOpenImmersion
-public import Development.AbelianVarietyTheory.Definitions.Divisors.MemLevEigenIffTransl
 import Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings
-public import Development.AbelianVarietyTheory.Definitions.Divisors.UnitaryWeightExponentVectorSignatureWeightMuZero
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GapGeSubKapBase
 import Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf
 import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
@@ -178,8 +181,8 @@ theorem finite_order_unipotent_eq_id : ∀ (E : Type) [Field E] [NumberField E] 
     obtain ⟨y, hy⟩ := GlobalTheory.SS.torusExtension_points_divisible k G (GlobalTheory.TorsionDense.nonempty_torusExtension G hG)
       g hg.one_le x.toMul
     exact ⟨Additive.ofMul y, by rw [← ofMul_pow, hy]; rfl⟩
-  obtain ⟨hred1, hred2⟩ := GlobalTheory.T.primaryTorsion_divisible_and_torsion_eq_ideal_torsion E (Additive (𝟙_ (Over (Sp k)) ⟶ G)) g I hg hI hI2 hdivM
-  have key := GlobalTheory.T.finiteOrder_unipotent_aut_divisible_primary_eq_id A βA n g r m hn
+  obtain ⟨hred1, hred2⟩ := _root_.GlobalTheory.primaryTorsion_divisible_and_gTorsion E (Additive (𝟙_ (Over (Sp k)) ⟶ G)) g I hg hI hI2 hdivM
+  have key := _root_.GlobalTheory.finite_order_unipotent_eq_id A βA n g r m hn
     (fun x => Subtype.ext (by
       rw [hβAit, hβit, ← iter_comp, hpow, Category.comp_id]; rfl))
     hg (by omega)

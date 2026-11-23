@@ -3,15 +3,16 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUniqueLeftBasisCoordsAdicCompletion
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueLinearLiftOfHolomorphicAbelianVariet
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.UnifMetricScalar
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsValLineLogNormAtIffEmbedding
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.EqZeroOfFderivEqZero
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLinearEquivOfLifting
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsMonHomLift
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsLieBasis
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolomorphicUniformizationDiffUnique
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolomorphicUniformizationDimEq
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsValLineLogNormAtIffEmbedding
 import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.UnimodularAndTangentOfIsAH
 import Development.AbelianVarietyTheory.Proofs.ToricGeometry.TangentBijectionOfValues
 import Development.AbelianVarietyTheory.Proofs.ToricGeometry.TopLePreimageOfValAtNeZero
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolomorphicUniformizationDiffUniqueStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolomorphicUniformizationDimEqStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,12 +61,12 @@ namespace GlobalTheory.CompanionTheory.Ar.Cusp.FibreUnique
 
 theorem dim_eq_of_smooth {A : Over (Sp ℂ)} [GrpObj A] {L : LB A.left} {g d : ℕ} (u : HolUnif A L g)
     (hs : SmoothOfRelativeDimension d A.hom) : g = d :=
-  GlobalTheory.T.holomorphic_uniformization_dim_eq A L g d u hs
+  _root_.GlobalTheory.CompanionTheory.Ar.UnifDim.eq_relativeDimension A L g d u hs
 
 theorem isDiff_unique_off {A : Over (Sp ℂ)} [GrpObj A] {L : LB A.left} {g : ℕ} (u : HolUnif A L g)
     (hs : SmoothOfRelativeDimension g A.hom) (hc : ConnectedSpace A.left) {v : epsR ℂ ⟶ A} (hv : ¬ IsTangent v)
     {w w' : Fin g → ℂ} (h : u.IsDiff w v) (h' : u.IsDiff w' v) : w = w' :=
-  GlobalTheory.T.holomorphic_uniformization_diff_unique A L g u hs hc v hv w w' h h'
+  _root_.GlobalTheory.CompanionTheory.Ggeo.DualFibre.eq_of_isDiff_of_not_isTangent A L g u hs hc v hv w w' h h'
 
 
 open TangentOrigin in

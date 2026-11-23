@@ -4,12 +4,16 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Other
 public import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.LevelCuspCharacters
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIntegerLiftModNatIntegralAdeleTensorStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExpDivMulEqStdAddCharMulOfCoprimeStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IntTraceModEqSumResiduesSplitPrimeStatement
+public import Mathlib.Algebra.AffineMonoid.Basic
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
+public import Mathlib.RingTheory.IntegralClosure.IntegralRestrict
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IntTraceModEqSumResiduesSplitPrime
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemPrimeOfInclEMemPlaceIdealIntegralAdelicSpanStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PlacesOverTypePrimeChosenAndConjStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StarFiniteAddCharDivNatEqExpTraceStatement
-import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LevelSubgroupCharacterUnitary
+import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -160,7 +164,7 @@ theorem psiEf_conj_eq_prod : ∀ (D : D7) (X : HidaSetting D) (h : X.B.I = Forma
       ∑ v : D.nd.PlG k, (t ⟨k, v⟩ + u ⟨k, v⟩) := by
     intro k
     obtain ⟨hinj, hcov, hcard⟩ := GlobalTheory.T.places_over_typePrime_chosen_and_conj D k
-    rw [GlobalTheory.T.intTrace_modEq_sum_residues_split_prime (D.host.g k) (D.host.g_prime k) _ hinj hcov hcard α
+    rw [_root_.GlobalTheory.SplitTrace.intTrace_modEq_sum (D.host.g k) (D.host.g_prime k) _ hinj hcov hcard α
       (Sum.elim (fun v => (((t ⟨k, v⟩).val : ℕ) : ℤ)) (fun v => (((u ⟨k, v⟩).val : ℕ) : ℤ))) ?_]
     · rw [Fintype.sum_sum_type, Finset.sum_add_distrib]; simp
     · rintro (v | v)

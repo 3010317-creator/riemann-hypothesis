@@ -6,17 +6,22 @@ public import Formalism.LocalToGlobal.ProjectiveLattices.OneLtAbsNormReal
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.WchartLePreimage
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ArcGenericPointDescendsToPowerSeries
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsPelUnifPull
-import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsChartFiniteType
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCdvrExtensionQkPointsRationalStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifBaseChangeSt
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCdvrExtensionQkPointsRational
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsGrpPullbackGenericFibre
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GenericLieMultiplicitiesUniformisedGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NontrivialOfNotRangeSubsetAbLocusStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PsiUnitOnRescaleUniformizerOfQValStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.QValPullbackMulRamificationCompleteDvrStatement
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPushEquiv
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSchemeOfUnifOfSubsingleton
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GenericLieMultiplicitiesUniformisedGroup
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NontrivialOfNotRangeSubsetAbLocus
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsScalarFormTraceForm
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PsiUnitOnRescaleUniformizerOfQVal
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.QValPullbackMulRamificationCompleteDvr
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LinearUniformisationTorsionIsomorphism
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsRootOfIsAlgClosed
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.DvrAll
+import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsChartFiniteType
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPushEquiv
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSchemeOfUnifOfSubsingleton
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -55,7 +60,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.DvrAll
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.ExistsRosatiGen
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.LBPull
@@ -194,7 +198,7 @@ theorem exists_arcIn_of_unif {V : ValuationSubring c.F} (Y : Model Xo c V.subtyp
             nontriv := hX
             even := psiEven_twist ht _ P.D.psi_even
             bimult := tauBimult_twist hw ht hB
-            gen := fun y => GlobalTheory.T.psiUnitOn_rescale_uniformizer_of_qVal T P.D.toPre ϖ hϖ y _ (hQ y) _ (by
+            gen := fun y => _root_.GlobalTheory.TauTwist.psiUnitOn_rescale_of_qVal T P.D.toPre ϖ hϖ y _ (hQ y) _ (by
               beta_reduce; rw [htf, ← zpow_neg, Units.val_zpow_eq_zpow_val]; rfl)
             w0 := psi_weight_zero_twist hw ht P.w0
             be := be
@@ -214,7 +218,7 @@ theorem exists_arcIn_of_unif {V : ValuationSubring c.F} (Y : Model Xo c V.subtyp
       rw [pullback.condition, Category.assoc, ← Category.assoc z, hz, spMap_comp, spMap_comp])
     have finj : Function.Injective f := by
       rw [hf]; exact (algebraMap T.Fr F).injective.comp (IsFractionRing.injective T.V T.Fr)
-    refine ⟨fun τ => GlobalTheory.T.generic_lie_multiplicities_uniformised_group E H T t P F f finj τ _ ?_, ?_⟩
+    refine ⟨fun τ => _root_.GlobalTheory.LieUnif.lieMult_unif E H T t P F f finj τ _ ?_, ?_⟩
     · rw [LiePull.lieMult_pull _ _ _ _ _ _ _ _ _ m.cart m.act]
       have e : spMap f ≫ χ = (jFK (R := T.V) F ≫ z) ≫ Y.j := by
         rw [Category.assoc, hj, hf, spMap_comp]; exact Category.assoc _ _ _
@@ -324,11 +328,11 @@ theorem exists_arcIn_of_bad_reduction : ∀ (E : Type) [Field E] [NumberField E]
   let T₁ : CDVR := { V := W.W }
   let g₁ : T.V →+* T₁.V := algebraMap Pt.V W.W
   have f₁ : g₁.Finite := RingHom.finite_algebraMap.2 W.fin
-  have hX : Nontrivial P.D.toPre.X := GlobalTheory.T.nontrivial_X_of_not_range_subset_abLocus E H _ Y.t T T₁ g₁ y' t m P W.inj f₁ hbad
+  have hX : Nontrivial P.D.toPre.X := _root_.GlobalTheory.BadReductionLattice.nontrivial_of_not_range_subset_abLocus E H _ Y.t T T₁ g₁ y' t m P W.inj f₁ hbad
   obtain ⟨π, hπ⟩ := IsDiscreteValuationRing.exists_irreducible T₁.V
   have hM' : 0 < l.M' := Nat.lcm_pos (lt_of_lt_of_le (by decide) l.three_le) l.A_pos
   obtain ⟨T', g₂, ϖ, e, i₂, f₂, hϖ, he, hass, rat⟩ :=
-    GlobalTheory.T.exists_cdvr_extension_qkPoints_rational T₁ P.D.toPre P.D.tau_bimult (2 * l.M') (by omega) π hπ
+    _root_.GlobalTheory.QkRationalExt.exists_cdvr_ext_rational T₁ P.D.toPre P.D.tau_bimult (2 * l.M') (by omega) π hπ
   have loc : IsLocalHom g₂ := f₂.to_isIntegral.isLocalHom i₂
   obtain ⟨t', m₀, P', hD, -⟩ := ArcDataDescent.exists_pelUnif_pull h₃.cubePull h₁.polBaseChange h₄.unifBaseChange h₅
     (I' := IsLocalRing.maximalIdeal T'.V) ⟨inferInstance, inferInstance, inferInstance, hc⟩
@@ -349,7 +353,7 @@ theorem exists_arcIn_of_bad_reduction : ∀ (E : Type) [Field E] [NumberField E]
       rw [Category.assoc, hj, ← Category.assoc, ← Category.assoc]
       exact congrArg (· ≫ y') (ArcPointDescent.sp_sq (f' := g) (g' := algebraMap T'.V T'.Fr) hgam))
     t' m' P' hD.xe.toEquiv.nontrivial hϖ (Q := fun y => e * Q (hD.xe y))
-    (fun y => GlobalTheory.T.qVal_pullback_mul_ramification_complete_dvr T₁ T' g₂ _ _ hD π ϖ e i₂ hπ hϖ hass y _ (hQ _))
+    (fun y => _root_.GlobalTheory.QValPull.main T₁ T' g₂ _ _ hD π ϖ e i₂ hπ hϖ hass y _ (hQ _))
     (fun y => Dvd.dvd.mul_right (by exact_mod_cast he) _)
     fun k hk => rat _ hD P'.D.tau_bimult k (hk.mul_left 2)
   exact ⟨T', g, ϖ, a, ig, f₂.comp f₁, hϖ, hϖ.maximalIdeal_eq ▸ ha⟩

@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsStableGauss
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.QuadraticWeilFourierPreservesTestAdditive
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedStandardAddCharConductorPropertiesStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FourierMatch
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedStandardAddCharConductorProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -71,7 +72,7 @@ theorem main : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedF
   haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
   haveI : ContinuousAdd A.L := IsModuleTopology.toContinuousAdd F A.L
   haveI : ContinuousSMul F A.L := IsModuleTopology.toContinuousSMul F A.L
-  have hcond := ((GlobalTheory.T.unramifiedStandardAddChar_conductor_properties F E).2 ψ hψ).2.2.1
+  have hcond := ((_root_.GlobalTheory.StdChar.psi_conductor F E).2 ψ hψ).2.2.1
   let β := FourierTest.beta A (x : A.K)
   have hker : ∀ w y, A.kerL ψ x w y = ψ (β w y) := fun _ _ => rfl
   let e := Module.finBasis F A.L

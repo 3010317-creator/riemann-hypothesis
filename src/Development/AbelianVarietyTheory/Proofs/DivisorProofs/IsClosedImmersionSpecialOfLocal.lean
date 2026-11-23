@@ -1,11 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.LieAlgebraMaps
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosedImmersionOfBaseChangeFieldExtStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsClosedImmersionSplitTorusIntoTorusExtensionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OverSpecBaseChangeMapEqOfFieldExtensionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SplitTorusHomExtOfEqModMaximalIdealPowStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SplitTorusHomTrivialModPowStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosedImmersionOfBaseChangeFieldExt
+public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.HomBaseChangeBijectiveOfLeNilradical
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsClosedImmersionSplitTorusIntoTorusExtension
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OverSpecBaseChangeMapEqOfFieldExtension
+public import Mathlib.AlgebraicGeometry.Morphisms.Separated
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.SplitTori.SplitTorusAff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SplitTorusHomExtOfEqModMaximalIdealPow
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SplitTorusHomTrivialModPow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -81,13 +85,13 @@ theorem isClosedImmersion_special_of_local : ∀ (R : Type) [CommRing R] [IsLoca
   intro R _ _ _ K _ _ G _ hG r u hu hmono
   let k := IsLocalRing.ResidueField R
   let Ω := AlgebraicClosure k
-  refine GlobalTheory.T.closedImmersion_of_baseChange_field_ext R k Ω (GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraMaps.torus R r) G u ?_
+  refine _root_.GlobalTheory.ClosedImmFieldDescent.isClosedImmersion_of_baseChange_extension R k Ω (GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraMaps.torus R r) G u ?_
   let p : Spec (CommRingCat.of Ω) ⟶ Spec (CommRingCat.of R) :=
     Spec.map (CommRingCat.ofHom (algebraMap R Ω))
   obtain ⟨E⟩ := hG.fibres Ω p
   let v := (bcIso p (Fin r → ℤ)).hom ≫ (GlobalTheory.IndefiniteRowSideFullHecke.LieAlgebraMaps.baseChange R Ω).map u
   have hv : IsClosedImmersion v.left := by
-    refine GlobalTheory.T.isClosedImmersion_splitTorus_into_torusExtension Ω _ E r v inferInstance fun q hq φ hφ h => hφ ?_
+    refine _root_.GlobalTheory.TorusFieldCrit.isClosedImmersion_of_torusExtension Ω _ E r v inferInstance fun q hq φ hφ h => hφ ?_
     have hsep : IsSeparated G.hom := hG.separated
     have e1 : torusMap _ φ ≫ (bcIso p (Fin r → ℤ)).hom =
         (bcIso p (ZMod q)).hom ≫ (Over.pullback p).map (torusMap _ φ) :=
@@ -101,9 +105,9 @@ theorem isClosedImmersion_special_of_local : ∀ (R : Type) [CommRing R] [IsLoca
       rw [← e1, Category.assoc]
       exact h
 
-    have hk := GlobalTheory.T.overSpecBaseChange_map_eq_of_fieldExtension R k Ω _ _ _ _ hΩ
+    have hk := _root_.GlobalTheory.baseChange_map_eq_of_fieldExtension R k Ω _ _ _ _ hΩ
     have hf : torusMap _ φ ≫ u = 1 :=
-      GlobalTheory.T.splitTorus_hom_ext_of_eq_mod_maximalIdeal_pow R (ZMod q) G hsep _ _ (GlobalTheory.T.splitTorus_hom_pullback_quotient_pow_eq_one R (ZMod q) G _ inferInstance hk)
+      _root_.GlobalTheory.splitTorus_hom_ext_of_forall_pow R (ZMod q) G hsep _ _ (_root_.GlobalTheory.splitTorus_hom_trivial_mod_pow R (ZMod q) G _ inferInstance hk)
 
     let pK : Spec (CommRingCat.of K) ⟶ Spec (CommRingCat.of R) :=
       Spec.map (CommRingCat.ofHom (algebraMap R K))

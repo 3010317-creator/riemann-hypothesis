@@ -5,11 +5,11 @@ public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryTorusCompactQuotientFiniteVolume
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCyclicOfFiniteQuotient
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasOrbIntTensorOfHasOrbInt
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ClassTermEqVolumeMulOrbitalIntegral
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.EllipticPartTestData
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsCentralizerMeasuresFromUnitaryTorus
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsMulCommutativeCentRealUJ
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ClassTermEqVolumeMulOrbitalIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsCentralizerMeasuresFromUnitaryTorusStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LocalStableOrbitalIntegralsWellDefinedStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryTorusCompactQuotientFiniteVolumeStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LocalStableOrbitalIntegralsWellDefined
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -107,8 +107,8 @@ theorem class_term : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
   intro F E _ _ _ _ _ σ hcm r P J hJ L _ μa μf μ hμ fa ff hfa hff dta dtf dt hdt γ hγ qf qa hqf hqa
   have hreg : IsRegSS γ.1.1 := by
     rw [IsRegSS, hγ]; exact P.2.2.1.separable
-  obtain ⟨ea, ef, e, hc, ⟨𝓣, h𝓣, hvol⟩, hf, ha⟩ := GlobalTheory.T.exists_centralizer_measures_from_unitaryTorus F E σ hcm r P J hJ L γ hγ dta dtf dt hdt
-  obtain ⟨pf, pa⟩ := GlobalTheory.T.local_stable_orbital_integrals_well_defined F E σ hcm r r P J hJ
+  obtain ⟨ea, ef, e, hc, ⟨𝓣, h𝓣, hvol⟩, hf, ha⟩ := _root_.GlobalTheory.TrEllMeas.exists_isCentProd_torus F E σ hcm r P J hJ L γ hγ dta dtf dt hdt
+  obtain ⟨pf, pa⟩ := _root_.GlobalTheory.TrPhiOK.phiOK_local F E σ hcm r r P J hJ
   have := hμ.haar
   have := hc.1
   have := hc.2.1
@@ -132,9 +132,9 @@ theorem class_term : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
     rw [show qa w = ⟨QuotientGroup.mk x, x, φ, rfl, h⟩ from Subtype.ext e1.symm]
     exact (ha w x φ h e2 _ _ _).1 this
   have hO := (hasOrbInt_tensor_of_hasOrbInt hμ hc hff.2 (eventually_conj_mem_stabLoc hcm hJ L hreg) ha' hf').2
-  have hfin := (GlobalTheory.T.unitaryTorus_compact_quotient_finite_volume F E σ hcm r P).2 dt (IsRestrictedProd.haar hdt)
+  have hfin := (_root_.GlobalTheory.TorCompact.torus_compact_finiteVol F E σ hcm r P).2 dt (IsRestrictedProd.haar hdt)
   have ht := continuous_tensor hfa hff
-  obtain ⟨-, h1, h2⟩ := GlobalTheory.T.classTerm_eq_volume_mul_orbitalIntegral (GAd σ J) (ratPts σ J) (ratEmb σ J γ) (range_ratEmb σ J ▸ ⟨γ, rfl⟩)
+  obtain ⟨-, h1, h2⟩ := _root_.GlobalTheory.ClassUnfold.hasClassInt_of_hasOrbInt (GAd σ J) (ratPts σ J) (ratEmb σ J γ) (range_ratEmb σ J ▸ ⟨γ, rfl⟩)
     (isMulCommutative_cent_ratEmb hreg) μ e 𝓣 h𝓣 (hvol ▸ hfin.lt_top) _ _ ht.1 ht.2 hO _
     (isFundamentalDomain_stdDom _ μ)
   obtain ⟨h3, h4⟩ := integrable_descend_of_stdDom

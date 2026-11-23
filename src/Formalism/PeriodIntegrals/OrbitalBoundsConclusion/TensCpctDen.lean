@@ -1,7 +1,8 @@
 module
 
 public import Formalism.PeriodIntegrals.FinOrdAd
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.AdCpctDen
+public import Formalism.PeriodIntegrals.AdCpctDen
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdicCompactDensity.ExistsNatLocal
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CompactTensorDensity.TensCpctDenOf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -45,4 +46,4 @@ import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
-theorem tensor_compact_dense : PI.TensCpctDen := PI.tensCpctDen_of compactBounded
+theorem tensor_compact_dense : PI.TensCpctDen := PI.tensCpctDen_of _root_.PI.adCpctDen

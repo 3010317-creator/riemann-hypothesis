@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InducesPl
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsExtPlaceOfNeZeroMaximalStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RingKrullDimIntegers
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsExtPlaceOfNeZeroMaximal
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsExtPointSpecializingOutsideBasicOpen
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RegularOfValuationBoundedAtPoints
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ValAtAlgebraMap
@@ -168,7 +169,7 @@ theorem exists_hom (F : Type) [Field F] [NumberField F] (A K : Type) [CommRing A
   have : Algebra.FiniteType (𝓞 F) B := Algebra.FiniteType.trans (S := A) inferInstance h1
   have : CharZero B := charZero_of_injective_algebraMap hB
   obtain ⟨𝔫, h𝔫, hle⟩ := Ideal.exists_le_maximal _ hne
-  obtain ⟨v, e, φ, h₁, h₂, h₃⟩ := GlobalTheory.T.exists_ext_place_of_ne_zero_maximal F B 𝔫 h𝔫 (algebraMap A B c) fun h => hc (hB (by rw [h, map_zero]))
+  obtain ⟨v, e, φ, h₁, h₂, h₃⟩ := _root_.GlobalTheory.TrueGeo.HorizRing.main F B 𝔫 h𝔫 (algebraMap A B c) fun h => hc (hB (by rw [h, map_zero]))
   have hn : ∀ s ∈ 𝔫, ¬ IsUnit (φ s) := fun s hs => by
     rw [← h₂] at hs
     exact hs

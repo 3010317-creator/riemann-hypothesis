@@ -4,8 +4,12 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfMemSpanK
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsSpanFormsNeBot
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CentreCompMemKinfEquivariantAutomorphicMapsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsChiDetSplitCentre
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDimensionalEigenIntertwinersStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDimensionalOfCommutingFiniteAlgebraJointEiStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GrowthOfTame
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDimensionalEigenIntertwiners
+public import Mathlib.Algebra.Algebra.Subalgebra.Lattice
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDimensionalOfCommutingFiniteAlgebraJointEi
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DiscreteSpectrumOfResidual
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -122,7 +126,7 @@ theorem finiteDimensional_mapsJ : GlobalTheory.Published.AutomorphicFormsFiniteG
   have hcap : ∀ (τ : E →+* ℂ) (u : ℂ), cap (a := a) τ u ∈ Zalg E a := fun τ u =>
     Algebra.subset_adjoin ⟨τ, u, rfl⟩
   let S : Set (Module.End ℂ (mapsJ φ L)) := {s | ∃ τ u, s = postZ φ L (cap τ u) (hcap τ u)}
-  refine GlobalTheory.T.finiteDimensional_of_commuting_finiteAlgebra_jointEigen (mapsJ φ L) S ?_ ?_ ?_
+  refine _root_.GlobalTheory.AutGrowth.finiteDimensional_of_commuting_finite_eigen (mapsJ φ L) S ?_ ?_ ?_
   · rintro _ ⟨τ, u, rfl⟩ _ ⟨τ', u', rfl⟩
     refine LinearMap.ext fun T => Subtype.ext (LinearMap.ext fun w => ?_)
     show cap τ u (cap τ' u' (T.1 w)) = cap τ' u' (cap τ u (T.1 w))
@@ -161,7 +165,7 @@ theorem finiteDimensional_mapsJ : GlobalTheory.Published.AutomorphicFormsFiniteG
       rw [LinearMap.mem_ker, LinearMap.sub_apply, sub_eq_zero, Module.algebraMap_end_apply] at h
       exact congrArg Subtype.val h
     have hN : FiniteDimensional ℂ N :=
-      GlobalTheory.T.finiteDimensional_eigen_intertwiners hP E a L hL (spanK E a φ) (spanK_stable φ) hφ.kfin
+      _root_.GlobalTheory.AutGrowth.finiteDimensional_capEigen_maps hP E a L hL (spanK E a φ) (spanK_stable φ) hφ.kfin
         (fun τ u => c (postZ φ L (cap τ u) (hcap τ u))) N hNle hNe
     exact LinearEquiv.finiteDimensional
       (Submodule.equivMapOfInjective (mapsJ φ L).subtype Subtype.val_injective J).symm

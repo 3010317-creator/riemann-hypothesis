@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.GlobalTheta.ExistsMemIdealInvariants
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ComplexMultiplicationJacquetShalikaStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.PublishedFoundations.ComplexMultiplicationJPremises
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ComplexMultiplicationJacquetShalika
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -42,6 +43,6 @@ import Mathlib.Topology.Sheaves.Init
 namespace GlobalTheory.CompanionTheory.CM
 
 theorem idealInvariantsOneOrbit : GlobalTheory.Published.IdealInvariantsOneOrbitSt :=
-  GlobalTheory.Published.ComplexMultiplicationJSt.oneOrbit GlobalTheory.T.complex_multiplication_jacquet_shalika
+  GlobalTheory.Published.ComplexMultiplicationJSt.oneOrbit _root_.GlobalTheory.CompanionTheory.Published.complexMultiplicationJ
 
 end GlobalTheory.CompanionTheory.CM

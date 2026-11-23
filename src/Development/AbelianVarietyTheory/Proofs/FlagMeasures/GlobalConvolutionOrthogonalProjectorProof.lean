@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.ConvolutionSmoothL2
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CompletedTensorDiscreteSeriesIrreducibleFormalDeStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CompletedTensorDiscreteSeriesIrreducibleFormalDe
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegralInvOfSupport
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsIrrAndDenseOfIsFdegG
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ProjAbsHolds
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsIrrAndDenseOfIsFdegG
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RightRegularRepUnitaryStronglyContinuous
 import Formalism.RealPlaceAnalysis.RealPlaceTaylor.ModularCharacterEqOneOnExpHermitian
 import Mathlib.Algebra.Order.Floor.Extended
@@ -192,7 +192,7 @@ theorem abstract_count {G H L : Type} [NormedAddCommGroup H] [InnerProductSpace 
 theorem globalProj_holds : GlobalProj := by
   intro B d hd hint
   obtain ⟨hReP, hReC, -⟩ := GlobalTheory.IdemProj.re_orth_proj B
-  obtain ⟨hU, -, hF, hnw, hph⟩ := GlobalTheory.T.completedTensorDiscreteSeries_irreducible_formalDegree B d hd
+  obtain ⟨hU, -, hF, hnw, hph⟩ := _root_.GlobalTheory.Dec.tensorRep B d hd
   obtain ⟨h1, hmul, hnorm, hcont, -⟩ := GlobalTheory.RightRegFund.rightReg_unitary_continuous B
   haveI : (muInf B.I).IsHaarMeasure := by unfold muInf; infer_instance
   haveI : ∀ v, (muG (B.I.ε v)).IsMulRightInvariant := fun v =>

@@ -6,11 +6,13 @@ public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ComponentFam
 public import Formalism.SharpRestriction.CuspSpanNormBounds.NormalizedLocalScale
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.CellDataExists
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudesRelevantCellMonomialRep
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselRootMeasureIndependentOfChoicesStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselRootMeasureIndependentOfChoices
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CellRep
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CutoffComputesBesselQuotientIntegral
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsRootHaar
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UniformBesselConstant
+public import Mathlib.Analysis.Complex.Isometry
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CutoffComputesBesselQuotientIntegral
 import Formalism.FormalDegreeBessel.FinalBF
 import Formalism.FormalDegreeBessel.FinalG
 import Formalism.FormalDegreeBessel.FormalDegreeRatio.UnitaryWeylNormalHolds
@@ -20,7 +22,6 @@ import Formalism.HermitianCurvature.HermitianCurvatureProofs.ConjugationContinuo
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
-public import Mathlib.Analysis.Complex.Isometry
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
@@ -59,7 +60,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction
 
 @[expose] public section
 
@@ -224,7 +224,7 @@ theorem amp_at_root (D : D7) τ w w' θ (W : LocW D.R.k D.R.rS) (hW : GoodW D τ
     have hG0 := hGf
     rw [e, gInv _ _ _ _ hz hz' _ (P.Dx2.Rad.N_sub_S W.z hn) _ (P.Dx2.Rad.N_sub_S W.z' hn')] at hG0
     obtain ⟨μ, h1, -, h3⟩ := GlobalTheory.Amp.RootQuot.exists_root_haar hk hz hz' hTz hTz' p hg hZ hG0
-    refine (GlobalTheory.T.besselRootMeasure_independent_of_choices D W.z W.z' γ p q _ μ' hz hz' hTz hTz' hγ hGf hka
+    refine (_root_.GlobalTheory.SnMass.RootUniq.rootMeas_unique D W.z W.z' γ p q _ μ' hz hz' hTz hTz' hγ hGf hka
       ⟨n, hn, n', hn', g, e, hZ, ENNReal.ofReal _ • μ, ?_, by rw [Measure.map_smul _ (measurable_rootCoords _ _).aemeasurable, h3], rfl⟩ hroot).1
     rw [Measure.smul_apply, h1.2.2.1, smul_zero]
   obtain ⟨n, hn, n', hn', g, rfl, hZ, μ₀, h0, h1, rfl⟩ := hroot

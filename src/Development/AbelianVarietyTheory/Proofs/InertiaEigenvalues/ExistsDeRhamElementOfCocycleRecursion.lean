@@ -1,14 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowMulMemLatIff
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicActionOnRootTowerStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicActionOnRootTower
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicCharacterPadicBasicProperties
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAinfCocycleRecursionOfFrobeniusTwistStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsInvIoPiStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSeriesLimitLatStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAinfCocycleRecursionOfFrobeniusTwist
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsInvIoPi
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSeriesLimitLat
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PadicIntAddFilClosedInDeRhamPeriodRing
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrimePowMulInvPowMemAinfFilLattice
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobSubMulSurjective
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PadicIntAddFilClosedInDeRhamPeriodRingStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrimePowMulInvPowMemAinfFilLatticeStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -67,7 +68,7 @@ theorem frob_π₁ : WittVector.frobenius AI.π₁ = AI.μ := by
 theorem act_μ {K : FinExt l} {h : GQ l} (hh : h ∈ Hinf K) : AI.actW h AI.μ = AI.μ := by
   have h1 : P.χQ h = 1 :=
     ((GlobalTheory.Cyc.cyc_basic l P.χQ P.χQ_cyc).2.2 K h (Hinf_le_fix hh)).2.mp hh
-  have h2 := GlobalTheory.T.cyclotomic_action_on_root_tower l P AI h 1 (by rw [h1]; simp) 0
+  have h2 := _root_.GlobalTheory.ExpImage.actT_εroot_eq_pow l P AI h 1 (by rw [h1]; simp) 0
   have h3 : AI.actT h AI.ε = AI.ε := by simpa [LocAinf.εroot] using h2
   rw [LocAinf.μ, map_sub, map_one, LocAinf.actW, WittVector.map_teichmuller]
   congr 2
@@ -91,7 +92,7 @@ theorem limit (T : LocTied l P AI) {M : ℕ} (hM : 1 ≤ M) (g : GQ l) (U : ℤ_
     (hE : ∀ n : ℕ, ∃ R₀ : ℕ, ∀ R ≥ R₀, E R ∈ Lat AI M n)
     (hS : ∀ R, ∃ z : ℤ_[l], v + (qB P (U : ℚ_[l]) * P.actQdR g (S R) - S R) = qB P (z : ℚ_[l]) - E R) :
     NearZ P M (v + (qB P (U : ℚ_[l]) * P.actQdR g b - b)) := by
-  refine GlobalTheory.T.padicInt_add_fil_closed_in_deRhamPeriodRing l P AI T M hM _ fun n => ?_
+  refine _root_.GlobalTheory.ExpImage.nearZ_of_forall_Lat l P AI T M hM _ fun n => ?_
   obtain ⟨R₀, h₀⟩ := hb n
   obtain ⟨R₁, h₁⟩ := hE n
   obtain ⟨z, hz⟩ := hS (max R₀ R₁)
@@ -132,9 +133,9 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P),
     · obtain ⟨η, h⟩ := asw (AI.ξ ^ (k + 1)) (q (k + 1))
       exact ⟨η, h, fun h => absurd h (Nat.succ_ne_zero k)⟩
   choose η hη hη0 using hη'
-  obtain ⟨u, hu0, hu⟩ := GlobalTheory.T.exists_inv_io_pi_alt l P AI T
-  have small := GlobalTheory.T.prime_pow_mul_inv_pow_mem_ainfFilLattice l P AI s hs u hu0 hu M
-  obtain ⟨b, hb0, hb⟩ := GlobalTheory.T.exists_series_limit_Lat_alt l P AI M
+  obtain ⟨u, hu0, hu⟩ := _root_.GlobalTheory.ExpImage.exists_inv_io_pi l P AI T
+  have small := _root_.GlobalTheory.ExpImage.pow_mul_inv_pow_mem_Lat l P AI s hs u hu0 hu M
+  obtain ⟨b, hb0, hb⟩ := _root_.GlobalTheory.ExpImage.exists_series_limit_Lat l P AI M
     (fun k => (l : P.R.BdR) ^ (s * k) * (io AI (β k) * u ^ (k + 1)))
     (fun k => by
       have h1 : (l : P.R.BdR) ^ (s * k) * io AI (β k) ∈ FilB P 0 := by
@@ -150,7 +151,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P),
   · have key : ∀ k, ∃ z : ℤ_[l], qB P ((1 : ℤ_[l]) : ℚ_[l]) * P.actQdR h (io AI (β k) * u ^ (k + 1)) -
         io AI (β k) * u ^ (k + 1) = (0 : P.R.BdR) - (l : P.R.BdR) ^ s * 0 + qB P (z : ℚ_[l]) := by
       intro k
-      obtain ⟨z, hz⟩ := GlobalTheory.T.exists_ainfCocycleRecursion_of_frobenius_twist l P AI h 1 (k + 1) (β k) 0 (by
+      obtain ⟨z, hz⟩ := _root_.GlobalTheory.ExpStep.main l P AI h 1 (k + 1) (β k) 0 (by
         rw [hβ]
         unfold Step
         rw [hp k h hh, act_μ AI hh]
@@ -166,7 +167,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P),
         io AI (β k) * u ^ (k + 1) = io AI (η k) * u ^ k -
           (l : P.R.BdR) ^ s * (io AI (η (k + 1)) * u ^ (k + 1)) + qB P (z : ℚ_[l]) := by
       intro k
-      obtain ⟨z, hz⟩ := GlobalTheory.T.exists_ainfCocycleRecursion_of_frobenius_twist l P AI g U (k + 1) (β k)
+      obtain ⟨z, hz⟩ := _root_.GlobalTheory.ExpStep.main l P AI g U (k + 1) (β k)
         (AI.π₁ * η k - ((l : ℕ) : Ainf l) ^ s * η (k + 1)) (by
         rw [hβ]
         convert hstep k using 1

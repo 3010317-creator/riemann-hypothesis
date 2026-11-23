@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.BuiltEx
 public import Formalism.LocalToGlobal.NormalizedHeckeFactors.CoverStd
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocationsDistinguishedByGenericsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SideEigenFrobeniusStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocationsDistinguishedByGenerics
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SideEigenFrobenius
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SplitOutIffGenAt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -56,7 +56,7 @@ theorem main : HeckeStdPlain → ∀ (D : D7) (cf : CharFrame D) (jE : D.host.E 
       ∀ c ∈ EigSet (M (D.what₂.muTw w) j h1 h2) (D.what₂.places.resChar w) (C.Q w),
         ∃ i ∈ L.X.nd.locs j w, ∃ x : L.X.nd.X i, sys L i x = c := by
     intro big L hB j w h1 h2 htw c hc
-    obtain ⟨i, hi, x, hx⟩ := GlobalTheory.T.side_eigen_frobenius hstd D cf jE A low Pq S hL eig θ Bs M C tp hch hmt hstar hexp hspl hcheb big L hB j w h1 h2 htw c hc
+    obtain ⟨i, hi, x, hx⟩ := _root_.GlobalTheory.EigOnto.main hstd D cf jE A low Pq S hL eig θ Bs M C tp hch hmt hstar hexp hspl hcheb big L hB j w h1 h2 htw c hc
     refine ⟨i, hi, x, funext fun v => funext fun k => ?_⟩
     by_cases hg : GenAt D (D.what₂.places.resChar w) (C.Q w) v k
     · rw [sys_of_genAt hB hi x hg, hx v k hg]
@@ -66,7 +66,7 @@ theorem main : HeckeStdPlain → ∀ (D : D7) (cf : CharFrame D) (jE : D.host.E 
       ∀ (x : L.X.nd.X i) (x' : L.X.nd.X i'),
         (i = i' ↔ ∀ v k, sys L i x v k - sys L i' x' v k ∈ (A.pl.plB w).nonunits) := by
     intro big L hB j w i i' hi hi' x x'
-    rw [GlobalTheory.T.locations_distinguished_by_generics D cf jE A M C tp.tup big L hB j w i i' hi hi' x x']
+    rw [_root_.GlobalTheory.CoefDuty.sameLoc_iff_heckeCong D cf jE A M C tp.tup big L hB j w i i' hi hi' x x']
     constructor
     · intro h v k
       by_cases hg : GenAt D (D.what₂.places.resChar w) (C.Q w) v k

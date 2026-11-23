@@ -1,11 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdIPowLe
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinHomEisensteinSpanAndNonZeroDivisorStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPrismCoverReceivingBreuilKisinStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteProjectiveModuleElementDescentEqualizerStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InjectiveAndRangeOfPrismCoverStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrismCoverInjectiveAndDescentStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinHomEisensteinSpanAndNonZeroDivisor
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPrismCoverReceivingBreuilKisin
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.InvertibleSpanSingleton
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteProjectiveModuleElementDescentEqualizer
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InjectiveAndRangeOfPrismCover
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrismCoverInjectiveAndDescent
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -299,7 +301,7 @@ theorem descent_compat {l : ℕ} [Fact l.Prime] {K : FinExt l} {bk : BK K} {d : 
       ((S.ε (p.comp f) (q.comp f)).map D.D.φ) *ᵥ
         (fun i => q.f (((T ^ (S.a + S.b) * (BK.hf f bk.E ^ S.a * c ^ S.b)) • ((S.A'.map (BK.hf f)) *ᵥ v)) i)) := by
   subst hc
-  have hEp := (GlobalTheory.T.breuilKisinHom_eisenstein_span_and_nonZeroDivisor l K bk D (p.comp f)).2
+  have hEp := (_root_.GlobalTheory.BSP.hf_E_span_and_regular l K bk D (p.comp f)).2
   have hT' : p.f c * BK.hf (p.comp f) bk.E = q.f c * BK.hf (q.comp f) bk.E :=
     (map_mul p.f c _).symm.trans (hT.trans (map_mul q.f c _))
   have key := descent_identity (S.A.map (BK.hf (p.comp f))) (S.A'.map (BK.hf (p.comp f)))
@@ -358,11 +360,11 @@ theorem linFrob_inv_pow : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K
   haveI := V.fin
   haveI := V.proj
   obtain ⟨hPf, hPp⟩ := hu.finite_projective
-  obtain ⟨C, h, ⟨f⟩, hC⟩ := GlobalTheory.T.exists_prism_cover_receiving_breuilKisin l K bk B
+  obtain ⟨C, h, ⟨f⟩, hC⟩ := _root_.GlobalTheory.BSP.exists_cover_receiving_bk l K bk B
   obtain ⟨D, p, q, hpo⟩ := hC.stable.po C h
-  obtain ⟨hinj, heq⟩ := GlobalTheory.T.prism_cover_injective_and_descent l ↥(OL K) B C h hC
-  obtain ⟨hEC, hEnzd⟩ := GlobalTheory.T.breuilKisinHom_eisenstein_span_and_nonZeroDivisor l K bk C f
-  obtain ⟨hVinj, -⟩ := GlobalTheory.T.injective_and_range_of_prism_cover l K bk d S B C N V h f hC
+  obtain ⟨hinj, heq⟩ := _root_.GlobalTheory.BSP.cover_injective_and_descent l ↥(OL K) B C h hC
+  obtain ⟨hEC, hEnzd⟩ := _root_.GlobalTheory.BSP.hf_E_span_and_regular l K bk C f
+  obtain ⟨hVinj, -⟩ := _root_.GlobalTheory.BSP.Eval.effective_of_cover l K bk d S B C N V h f hC
   obtain ⟨κ, hκbc, hκu⟩ := exists_kappa V hu h f
   obtain ⟨κD, hκDbc, hκDu⟩ := exists_kappa V hu (p.comp h) (p.comp f)
   have htC : h.f t ∈ C.I := h.f_I t ht
@@ -409,7 +411,7 @@ theorem linFrob_inv_pow : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K
         ((congrArg (· • u₂ (κ y)) hb).trans ((congrArg u₂ (κ.map_smulₛₗ b y)).trans (u₂.map_smulₛₗ _ _)).symm))
   haveI := hPf
   haveI := hPp
-  obtain ⟨hκinj, hdesc⟩ := GlobalTheory.T.finite_projective_module_element_descent_equalizer B.A C.A D.A h.f p.f q.f (congrArg Hom.f hpo.comm) hinj
+  obtain ⟨hκinj, hdesc⟩ := _root_.GlobalTheory.BSP.ProjDescent.descent B.A C.A D.A h.f p.f q.f (congrArg Hom.f hpo.comm) hinj
     (fun b hb => heq D p q hpo b hb) P (Fin d → C.A) (Fin d → D.A) κ u₁ u₂ κD hκbc hκDbc hw1 hw2
   refine ⟨2 * (S.a + S.b), fun y hy => ?_, fun x => ?_⟩
   ·

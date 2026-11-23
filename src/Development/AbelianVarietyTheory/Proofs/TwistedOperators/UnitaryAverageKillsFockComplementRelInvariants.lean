@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdMinorsMemInv
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockSFockColumnSubstitutionUnitaryStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockSFockColumnSubstitutionUnitary
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -305,7 +305,7 @@ theorem avg_perp : ∀ {ι : Type} [Fintype ι] (a d : ℕ) (n : ι → ℕ) {K 
           funext τ
           simp [Mg]
         rw [h1, colSub_one]
-      rw [← hI', show Mg ρ g = fun τ => ((ρ g τ : Matrix.unitaryGroup (Fin a) ℂ) : Matrix (Fin a) (Fin a) ℂ) from rfl, GlobalTheory.T.fockS_fockColumnSubstitution_unitary, hIu, ← Formalism.L2.DIV.fockL_apply, LinearMap.map_smulₛₗ₂,
+      rw [← hI', show Mg ρ g = fun τ => ((ρ g τ : Matrix.unitaryGroup (Fin a) ℂ) : Matrix (Fin a) (Fin a) ℂ) from rfl, _root_.GlobalTheory.MinorFrame.fockS_colSub_unitary, hIu, ← Formalism.L2.DIV.fockL_apply, LinearMap.map_smulₛₗ₂,
         Formalism.L2.DIV.fockL_apply, hP I hI, smul_zero]
     rw [← Formalism.L2.DIV.fockL_apply, ← hav]
     simp only [Formalism.L2.DIV.fockL_apply, key, mul_zero, integral_zero]

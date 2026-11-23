@@ -3,7 +3,8 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IntegralClosureHeightEqOneOfLiesOver
 public import Mathlib.Algebra.AffineMonoid.Basic
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GlueApplyOfNotInFibre
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenProjectorDenominatorStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagLabelBasesExist
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenProjectorDenominator
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -115,7 +116,7 @@ end Loc
 
 theorem hodge_loc : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], ∃ Dn : ℕ, 0 < Dn ∧ ∀ (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (s : CMType H ⊕ CMType H), ∃ T : Module.End Ω 𝔐.Li, (∀ v ∈ eigSp 𝔐.ρ (𝔐.emb s), T v = (Dn : Ω) • v) ∧ ∀ q : Cpt 𝔐.ξ, (∀ e ∈ 𝔐.M.lat q, T e ∈ 𝔐.V s q) ∧ ((∀ p ∈ S, ¬ InFibre 𝔐.ξ p q) → ∀ e ∈ 𝔐.V s q, (Dn : Ω) • e ∈ 𝔐.M.lat q) ∧ ∀ p ∈ S, InFibre 𝔐.ξ p q → ∀ κ : Ω, HT.Sandwich 𝔐 p κ → ∀ e ∈ 𝔐.V s q, ((Dn : Ω) * κ) • e ∈ 𝔐.M.lat q := by
   intro E _ _ _
-  obtain ⟨D₁, hD₁, hop⟩ := GlobalTheory.T.eigen_projector_denominator E
+  obtain ⟨D₁, hD₁, hop⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Sandwich.exists_eigen_op_uniform E
   have hdiff : differentIdeal ℤ (𝓞 E) ≠ ⊥ := differentIdeal_ne_bot
   have hD₂ : 0 < Ideal.absNorm (differentIdeal ℤ (𝓞 E)) :=
     Nat.pos_of_ne_zero (by rwa [Ne, Ideal.absNorm_eq_zero_iff])

@@ -2,10 +2,17 @@ module
 
 public import Mathlib.LinearAlgebra.LinearIndependent.Defs
 public import Mathlib.RingTheory.AlgebraicIndependent.Defs
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjoinRootMapComplexLinearIndependentStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFormalBranchesOfSeparableReductionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrimitiveMonicSeparableSpecializationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankMulPowLeFinrankOfPowerSeriesStatement
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.RingTheory.AdjoinRoot
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjoinRootMapComplexLinearIndependent
+public import Mathlib.FieldTheory.Separable
+public import Mathlib.RingTheory.MvPowerSeries.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFormalBranchesOfSeparableReduction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrimitiveMonicSeparableSpecialization
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankMulPowLeFinrankOfPowerSeries
+public import Mathlib.RingTheory.AlgebraicIndependent.AlgebraicClosure
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +59,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.RingTheory.AlgebraicIndependent.AlgebraicClosure
 
 @[expose] public section
 
@@ -81,7 +87,7 @@ theorem many_independent_products_in_function_field : ∀ (K : Type) [Field K] [
   haveI : Algebra.IsAlgebraic ℤ ℚ := IsLocalization.isAlgebraic ℚ (nonZeroDivisors ℤ)
   have hxQ : IsTranscendenceBasis ℚ x := (Algebra.IsAlgebraic.isTranscendenceBasis_iff ℤ ℚ).1 hx
   have heQ : LinearIndependent ℚ e := (LinearIndependent.iff_fractionRing ℤ ℚ).1 he
-  obtain ⟨P, ψ, g, c, hPm, hψ, hψx, hg, hge, hsep⟩ := GlobalTheory.T.exists_primitive_monic_separable_specialization' K D x hxQ J e
+  obtain ⟨P, ψ, g, c, hPm, hψ, hψx, hg, hge, hsep⟩ := _root_.GlobalTheory.PrimTransc.exists_primitive_monic_separable_specialization K D x hxQ J e
   choose e' he' using fun j => (AlgHom.mem_range ψ).1 (hge j)
   have he'Q : LinearIndependent ℚ e' := by
     have h1 : LinearIndependent ℚ (fun j => g * e j) := by
@@ -89,7 +95,7 @@ theorem many_independent_products_in_function_field : ∀ (K : Type) [Field K] [
       exact mul_right_injective₀ hg
     have h2 : (ψ.toLinearMap ∘ e') = fun j => g * e j := funext he'
     exact LinearIndependent.of_comp ψ.toLinearMap (h2 ▸ h1)
-  obtain ⟨τ, hτX, hτq, hτind⟩ := GlobalTheory.T.adjoinRoot_complex_map_linearIndependent D P hPm
+  obtain ⟨τ, hτX, hτq, hτind⟩ := _root_.GlobalTheory.adjoinRoot_map_complex_linearIndependent D P hPm
   have hPCm : (P.map (MvPolynomial.map (algebraMap ℚ ℂ))).Monic := hPm.map _
   have hsepC : ((P.map (MvPolynomial.map (algebraMap ℚ ℂ))).map
       (MvPolynomial.eval (fun i => (c i : ℂ)))).Separable := by
@@ -100,7 +106,7 @@ theorem many_independent_products_in_function_field : ∀ (K : Type) [Field K] [
       ext <;> simp
     rw [h]; exact hsep.map
   let PC := P.map (MvPolynomial.map (algebraMap ℚ ℂ))
-  obtain ⟨n, φ, hφinj, hφX⟩ := GlobalTheory.T.exists_formal_branches_of_separable_reduction D PC (fun i => (c i : ℂ)) hPCm hsepC
+  obtain ⟨n, φ, hφinj, hφX⟩ := _root_.GlobalTheory.branches_of_unramified_point D PC (fun i => (c i : ℂ)) hPCm hsepC
   let w : (Fin m → J) × (Fin D → Fin m) → AdjoinRoot P := fun ub =>
     (∏ l, e' (ub.1 l)) * ∏ i, AdjoinRoot.of P (MvPolynomial.X i) ^ (ub.2 i : ℕ)
   obtain ⟨κ, a, ha, hspan, hind⟩ := exists_linearIndependent' ℚ w
@@ -118,7 +124,7 @@ theorem many_independent_products_in_function_field : ∀ (K : Type) [Field K] [
     | zero => simp
     | add y z _ _ hy hz => rw [map_add (f := _)]; exact G.add_mem hy hz
     | smul q y _ hy => rw [hτq]; exact G.smul_mem _ hy
-  have key := GlobalTheory.T.finrank_mul_pow_le_finrank_of_prod_mem D n (AdjoinRoot PC) φ xC (fun i => (c i : ℂ)) hφinj hφX F G m hm (by
+  have key := _root_.GlobalTheory.finrank_mul_pow_le_finrank_of_powerSeries D n (AdjoinRoot PC) φ xC (fun i => (c i : ℂ)) hφinj hφX F G m hm (by
     intro f b hf hb
     have h1 := prod_mem_span_range_prod_mul (R := ℂ) (fun j => τ (e' j)) m f hf (∏ i, xC i ^ b i)
     refine Submodule.span_le.2 ?_ h1

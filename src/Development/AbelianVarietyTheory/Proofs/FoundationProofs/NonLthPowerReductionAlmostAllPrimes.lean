@@ -3,7 +3,10 @@ module
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
 public import Mathlib.RingTheory.Valuation.ValuationSubring
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GaussValuationExtensionUniqueBertiniNoetherStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GaussValuationExtensionUniqueBertiniNoether
+public import Mathlib.RingTheory.Valuation.LocalSubring
+public import Mathlib.RingTheory.Polynomial.Cyclotomic.Basic
+public import Mathlib.RingTheory.RootsOfUnity.EnoughRootsOfUnity
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -27,7 +30,6 @@ import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
 import Mathlib.RingTheory.SimpleRing.Principal
-public import Mathlib.RingTheory.Valuation.LocalSubring
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
@@ -55,8 +57,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Foundations.ExpUpper
-public import Mathlib.RingTheory.Polynomial.Cyclotomic.Basic
-public import Mathlib.RingTheory.RootsOfUnity.EnoughRootsOfUnity
 
 @[expose] public section
 
@@ -308,7 +308,7 @@ theorem not_valuation_lt_one : ∀ {F : Type} [Field F] [CharZero F] [IsAlgClose
   have htL : Transcendental F (algebraMap K (AdjoinRoot (X ^ l - C s)) t) :=
     (transcendental_algebraMap_iff (algebraMap K _).injective).2 ht
   have hfinL := finiteDimensional_adjoin_map (F := F) hKL t hfin
-  obtain ⟨S₀, hS₀⟩ := GlobalTheory.T.gauss_valuation_extension_unique_bertiniNoether _ htL hfinL
+  obtain ⟨S₀, hS₀⟩ := _root_.GlobalTheory.BertiniNoether.gauss_extension_unique _ htL hfinL
   refine ⟨insert l S₀, fun q hq hqS V hqV W hW h c _hh hc0 hcV hciV => ?_⟩
   have hql : q ≠ l := fun e => hqS (e ▸ Finset.mem_insert_self _ _)
   have hqS₀ : q ∉ S₀ := fun e => hqS (Finset.mem_insert_of_mem e)

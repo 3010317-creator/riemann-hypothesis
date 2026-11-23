@@ -5,11 +5,15 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.ToKnownTheor
 public import Development.AbelianVarietyTheory.Definitions.Divisors.UnifOfSpaceEq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HostBoundHolds
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KroneckerCharacterFrameThirdStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogPeriodEqKroneckerCharacterLogPeriodOfHostStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeanLogSupNormLossLeLinearInWeightStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.EigenvectorLieDegree
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.ExistsIsThetaDegOfIsLocalModel
+public import Formalism.LocalToGlobal.Divisibility.NumbersLemmas
+public import Formalism.LocalToGlobal.ProjectiveLattices.PartitionExtendByZeroAntitone
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogPeriodEqKroneckerCharacterLogPeriodOfHost
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeanLogSupNormLossLeLinearInWeight
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrincipalLevelLiftModuliLawsOfCore
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SupremumConstantLogBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightBoundHoldsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SupremumConstantLogBound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightBoundHolds
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -139,7 +143,7 @@ theorem slopeMax_le (h6 : GlobalTheory.Published.TamagawaSpecialUnitary) {PP A :
   have hn : normW (p.T.U ((i : ℕ) + 1)) (xiR D) (fun _ => D.sp.W ((i : ℕ) + 1)) (GlobalTheory.LevGeo.coreDict p.T.toCore ((i : ℕ) + 1))
       (Gk p i) = nrmK p.fw i := by
     funext σ f; exact hnorm _ σ f
-  obtain ⟨_, χ, hχ, hOm, -, -⟩ := GlobalTheory.T.logPeriod_eq_kroneckerCharacter_logPeriod_of_host D L p.T.Q p.fw.laws.pins.1 p.Del p.h0
+  obtain ⟨_, χ, hχ, hOm, -, -⟩ := _root_.GlobalTheory.CovTop.Period.period_eq_kronecker D L p.T.Q p.fw.laws.pins.1 p.Del p.h0
   have hgood : GoodW (p.T.U ((i : ℕ) + 1)) (xiR D) (fun _ => D.sp.W ((i : ℕ) + 1))
       (GlobalTheory.LevGeo.coreDict p.T.toCore ((i : ℕ) + 1)) (Gk p i) := ⟨by rw [hn]; exact hG.2.2.2.1, hG.2.2.2.2⟩
   have main := GlobalTheory.T.kronecker_character_frame_third h6 D _ _ _ _ _ _ _ _ hLaws χ hχ (wtA (p.κ i)) (p.κ i).n hW.dom hgood (latW_ne_bot p i hG)
@@ -194,9 +198,9 @@ theorem slopeMax_le (h6 : GlobalTheory.Published.TamagawaSpecialUnitary) {PP A :
     have : 0 ≤ (D.R.f : ℝ) * L.sc.L := by positivity
     linarith [hN.disc]
   have hl3 : Real.log (D.host.d : ℝ) ≤ 4 * (2 * L.sc.L) := by linarith [hN.logd]
-  have n1 := (GlobalTheory.T.supremum_constant_log_bound D.host.E D.R.r D.host.d _ (s + t + 1) (2 * L.sc.L) hr2 hd hM (by linarith) (by linarith)
+  have n1 := (_root_.GlobalTheory.SupConstSize.supConst_size D.host.E D.R.r D.host.d _ (s + t + 1) (2 * L.sc.L) hr2 hd hM (by linarith) (by linarith)
     hl1 hlM hl2 hl3 hlw).2
-  have n2 := GlobalTheory.T.meanLogSupNormLoss_le_linear_in_weight D.host.E D.R.r (dat p i).q D.host.d _ (ofRecord D L p.Del p.h0).logOm s t (2 * L.sc.L) (by omega) hd hM
+  have n2 := _root_.GlobalTheory.LamSize.lamSup_le D.host.E D.R.r (dat p i).q D.host.d _ (ofRecord D L p.Del p.h0).logOm s t (2 * L.sc.L) (by omega) hd hM
     (by linarith) hs0 ht0 hl1 hlM hl2 hl3 hlw
   have n3 := (log_rd_le_fieldSz _).trans (hR.core_size_le p (by linarith))
   rw [hfd] at n1 n2
@@ -210,7 +214,7 @@ theorem slopeMax_le (h6 : GlobalTheory.Published.TamagawaSpecialUnitary) {PP A :
 theorem lamCore : GlobalTheory.CovTop.Hypotheses2 → Gram → Lifts fun Fm x _ ι p i _ A =>
     slopeMax_sq (nrmK p.fw i) (latW (p.T.U ((i : ℕ) + 1)) (Gk p i)) ≤ (Fm.L x ι).sc.x ^ A * (Fm.L x ι).sc.b := by
   intro hP hG
-  refine Closed.imp (Closed.and hG (Closed.and (GlobalTheory.CovTop.Sizes.hostN 1) GlobalTheory.T.weight_bound_holds)) ?_
+  refine Closed.imp (Closed.and hG (Closed.and (GlobalTheory.CovTop.Sizes.hostN 1) _root_.GlobalTheory.CovTop.WtShape.wtN)) ?_
   rintro eps Fm CH - ⟨⟨_, -, h1⟩, ⟨A, hA, h2⟩, ⟨_, -, h3⟩⟩
   obtain ⟨x0, h⟩ := h1.and (h2.and h3)
   refine ⟨2 * A + 4, by linarith, x0, fun x hx hle ι p hp i => ?_⟩

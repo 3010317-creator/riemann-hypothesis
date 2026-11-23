@@ -2,21 +2,24 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsWeakOfDatum
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GelfConstSmul
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.UnitaryAdelicHeightCosetLeNormInfPowStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicHeightGrowthOfCosetGrowthUnitaryPairStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdjoinGelfandInvariantsDualPairEqStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsQuadOfPlane
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsLieDataCircle
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdjoinGelfandInvariantsDualPairEq
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousCoordSymm
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsOpenKer
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsOpenLevelFixingThetaFunctionStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsOrientedWeilDatumOfAdelicWeilRepThetaStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GelfandInvariantsActKernelFamilyShiftedStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GlRelOfCanonicalCommutationRelationsStatement
+public import Formalism.RealPlaceAnalysis.StatementA
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GlRelOfCanonicalCommutationRelations
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.KernelLiftGelfandInvariantFiniteOfFiniteStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemSmoothFunctionsOfClosedRightDerivativesStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SmoothCuspFormMemUnitaryRapidDecayFormsStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaKernelLieActionThroughWeylAlgebraStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaKernelLiftConvergesContinuousGrowthDerivStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilRepThetaFunctionPolynomialGrowthRealPointsStatement
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.UnitaryAdelicHeightCosetLeNormInfPowStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemSmoothFunctionsOfClosedRightDerivativesStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaKernelLiftConvergesContinuousGrowthDerivStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -166,14 +169,14 @@ theorem isKerSys_thKer (hθ : IsInfFam θ) {ψ : AddChar (AF D.host.F) ℂ} (hψ
       · rintro _ ⟨f, rfl⟩ τ X hX
         obtain ⟨f', e⟩ := derV τ X hX f
         exact ⟨_, ⟨f', rfl⟩, fun g => e g h⟩
-    obtain ⟨g1, g2⟩ := GlobalTheory.T.glRel_of_canonicalCommutationRelations _ _ _ (x τ) (d τ) (hx τ).1
+    obtain ⟨g1, g2⟩ := _root_.GlobalTheory.Mem.Lift.glRel_of_isCCR _ _ _ (x τ) (d τ) (hx τ).1
     obtain ⟨c, e1⟩ := GlobalTheory.T.gelfandInvariants_act_kernelFamily_shifted D θ hθ T _ _ (thKer ψ S T om) sT τ (matLin fun i j => ∑ a, x τ (i, a) * d τ (j, a))
       (by simpa only [matLin_single] using g1) (hx τ).2.1
     obtain ⟨c', e2⟩ := GlobalTheory.T.gelfandInvariants_act_kernelFamily_shifted D θ hθ S _ _ (swapKer (thKer ψ S T om)) sS τ
       (matLin fun a b => -∑ i, x τ (i, b) * d τ (i, a)) (by simpa only [matLin_single] using g2)
       fun Y hY => ((hx τ).2.2 Y hY).imp fun _ e f h g => e f g h
     simp only [matLin_single] at e1 e2
-    exact ⟨_, _, e2, e1, (GlobalTheory.T.adjoin_gelfandInvariants_dual_pair_eq _ _ _ (x τ) (d τ) (hx τ).1 c c').symm⟩
+    exact ⟨_, _, e2, e1, (_root_.GlobalTheory.Mem.Capelli.adjoin_gelfA_dual_pair _ _ _ (x τ) (d τ) (hx τ).1 c c').symm⟩
 
 theorem toTWsmall_zero (S T : HSp D) : toTWsmall S T 0 = 0 := by
   unfold toTWsmall

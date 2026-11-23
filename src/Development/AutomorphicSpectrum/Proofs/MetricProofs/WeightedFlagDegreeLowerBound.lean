@@ -2,7 +2,8 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsOrthFull
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.NormDegreeStepZero
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.NormalizedDegreeLeRankMulSlopeStatement
+public import GroundTheory.HeightsAndTheta.Heights.HeightsOfSets.Slopes
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.NormalizedDegreeLeRankMulSlope
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -72,7 +73,7 @@ theorem sum_weight_lower {n : ℕ} (a d : Fin n → ℝ) (M : ℝ) (ha : ∀ i, 
 theorem step_le {K : Type} [Field K] [NumberField K] {E : HermitianBundle.{0} K} {r : ℕ} (A : SatFlag E r)
     (μ : ℝ) (N : ℝ) (hμ : 0 ≤ μ) (hE : E.slopeMax ≤ (μ : EReal)) (hN : (r : ℝ) ≤ N) (i : Fin (r + 1)) :
     E.normDegree (A.F i) ≤ N * μ := by
-  have h := GlobalTheory.T.normalized_degree_le_rank_mul_slope K E μ hE (A.F i)
+  have h := _root_.GlobalTheory.CompanionTheory.Ar.DegSlope.normDegree_le_rank_mul_of_slopeMax_le K E μ hE (A.F i)
   rw [A.rank i] at h
   have hi : ((i : ℕ) : ℝ) ≤ N := le_trans (by exact_mod_cast Nat.lt_succ_iff.mp i.isLt) hN
   exact h.trans (mul_le_mul_of_nonneg_right hi hμ)

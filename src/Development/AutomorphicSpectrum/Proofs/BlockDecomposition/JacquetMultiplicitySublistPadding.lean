@@ -1,7 +1,8 @@
 module
 
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.ZelevinskyCosocles.LUnlinkedComm
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityDropZeroBlocksStatement
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.LSegJacquet
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityDropZeroBlocks
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -114,7 +115,7 @@ theorem jm_row : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] 
     intro r x y hx hy e
     subst e
     rfl
-  rw [GlobalTheory.T.jacquet_multiplicity_drop_zero_blocks Y hd o ho hnz hsum π, jmL, dite_eq_left hdeg]
+  rw [_root_.GlobalTheory.CompanionTheory.FineProd.JmDrop.jm_drop Y hd o ho hnz hsum π, jmL, dite_eq_left hdeg]
   exact hcongr _ _ _ _ hget.symm
 
 end GlobalTheory.CompanionTheory.FineProd

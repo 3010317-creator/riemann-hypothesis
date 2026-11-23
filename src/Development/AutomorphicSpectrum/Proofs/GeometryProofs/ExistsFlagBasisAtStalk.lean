@@ -1,7 +1,9 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenspaceDecompositionInternalStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenspaceDecompositionInternal
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsConstStalk
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FinrankFiniteFlatTorsionSubschemeEqCardPoints
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
@@ -211,7 +213,7 @@ theorem exists_frames : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   have hlab := GlobalTheory.CompanionTheory.Ar.LabelCount.labels_injective_card E H l c Ω 𝔐.cst
   have hinj : Function.Injective 𝔐.emb := hlab.1
   have hint : DirectSum.IsInternal fun s => eigSp 𝔐.ρ (𝔐.emb s) :=
-    GlobalTheory.T.eigenspace_decomposition_internal Ω 𝔐.Li E 𝔐.ρ (CMType H ⊕ CMType H) 𝔐.emb hinj hlab.2
+    _root_.GlobalTheory.CompanionTheory.Ar.isInternal_eigSp Ω 𝔐.Li E 𝔐.ρ (CMType H ⊕ CMType H) 𝔐.emb hinj hlab.2
   let v : ∀ s, Module.Basis (Fin (labelRk D s)) Ω (eigSp 𝔐.ρ (𝔐.emb s)) := fun s =>
     (Module.Basis.span (hli s)).map (LinearEquiv.ofEq _ _ (hΩ s))
   have hB : ⇑(hint.collectedBasis v) = fun q : Σ s, Fin (labelRk D s) => b q.1 q.2 := by

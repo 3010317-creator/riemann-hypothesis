@@ -3,12 +3,21 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.PoitouTateNineTermTransgressionZeroApply
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DecompositionGroupLocalGaloisIso
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLocalEmbeddingOverPlace
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DecompositionGroupFrobeniusFactorStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FrobeniusPowerFixesRootUniqueStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KummerCocycleNormCriterionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NormFromKummerUnramifiedUnitStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ResidueFieldCardEqNormStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UniformizerRatioValuationZeroStatement
+public import ReciprocityTheory.GaloisValuations.Global
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DecompositionGroupFrobeniusFactor
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FrobeniusPowerFixesRootUnique
+public import Mathlib.FieldTheory.IsSepClosed
+public import Mathlib.FieldTheory.KrullTopology
+public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
+public import Mathlib.Topology.LocallyConstant.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KummerCocycleNormCriterion
+public import GroundTheory.LocalFields.UnitsBasic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NormFromKummerUnramifiedUnit
+public import GroundTheory.GlobalFields.LocalFieldAtPlace
+public import Formalism.ConjugateSelfDual.Statement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ResidueFieldCardEqNorm
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UniformizerRatioValuationZero
+public import ReciprocityTheory.GaloisValuations.GlobalE
 import GroundTheory.GlobalFields.CompletionAtPlace.Integers
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -56,7 +65,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.GaloisValuations.GlobalE
 
 @[expose] public section
 
@@ -102,7 +110,7 @@ theorem chi_unique (hA : IsPlaceOver A v) (hN : 0 < N) {χ χ' : Dec (F := F) A 
   obtain ⟨φ₁, hφ₁⟩ := exists_isFrob hA
   let φ : Dec (F := F) A := ⟨φ₁, hφ₁.1⟩
   funext g
-  obtain ⟨a, -, t, i, hi, rfl⟩ := GlobalTheory.T.decomposition_group_frobenius_factor F Ω A v hA φ hφ₁ N hN g
+  obtain ⟨a, -, t, i, hi, rfl⟩ := _root_.GlobalTheory.CompanionTheory.TameDecomp.exists_frob_pow_mul_pow_mul_inertia F Ω A v hA φ hφ₁ N hN g
   rw [chi_decomp χ ha φ t i a (hF φ hφ₁) (hI i hi), chi_decomp χ' ha' φ t i a (hF' φ hφ₁) (hI' i hi)]
 
 theorem chi_eq_zero_of_fix (hA : IsPlaceOver A v) (hN : 0 < N) {χ : Dec (F := F) A → ZMod N}
@@ -113,8 +121,8 @@ theorem chi_eq_zero_of_fix (hA : IsPlaceOver A v) (hN : 0 < N) {χ : Dec (F := F
     (hg : (g : G F Ω) ξ = ξ) : χ g = 0 := by
   obtain ⟨φ₁, hφ₁⟩ := exists_isFrob hA
   let φ : Dec (F := F) A := ⟨φ₁, hφ₁.1⟩
-  obtain ⟨a, haN, t, i, hi, rfl⟩ := GlobalTheory.T.decomposition_group_frobenius_factor F Ω A v hA φ hφ₁ N hN g
-  have h0 := GlobalTheory.T.frobenius_power_fixes_root_unique F Ω A v hA φ hφ₁ N hN ξ hξ a t i haN hi hg
+  obtain ⟨a, haN, t, i, hi, rfl⟩ := _root_.GlobalTheory.CompanionTheory.TameDecomp.exists_frob_pow_mul_pow_mul_inertia F Ω A v hA φ hφ₁ N hN g
+  have h0 := _root_.GlobalTheory.CompanionTheory.TameAction.eq_zero_of_fixes_primitiveRoot F Ω A v hA φ hφ₁ N hN ξ hξ a t i haN hi hg
   rw [chi_decomp χ ha φ t i a (hF φ hφ₁) (hI i hi), h0, Nat.cast_zero]
 
 end Dec
@@ -163,7 +171,7 @@ theorem exists_cochain_cup (l : ℕ) [Fact l.Prime] (r : ℕ) (hr : 0 < r) {ζ :
   obtain ⟨ξ, hξ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω n
   rw [hn] at hξ
   have hξv : IsPrimitiveRoot (ι ξ) (Nat.card 𝓀[v.adicCompletion F] ^ l ^ r - 1) := by
-    rw [GlobalTheory.T.residue_field_card_eq_norm F v]
+    rw [_root_.GlobalTheory.CompanionTheory.LocRes.natCard_residueField_eq_normV F v]
     exact hξ.map_of_injective ι.toRingHom.injective
   let ψ : GlobalTheory.LocDict.GalLoc v →* Multiplicative (ZMod (l ^ r)) :=
     (addHom χ ha).comp θ.symm.toMonoidHom
@@ -195,8 +203,8 @@ theorem exists_cochain_cup (l : ℕ) [Fact l.Prime] (r : ℕ) (hr : 0 < r) {ζ :
     (div_ne_zero hϖ0' hϖ0)
   have hU : (U : v.adicCompletion F) * algebraMap F (v.adicCompletion F) (ϖ : F) =
       algebraMap F (v.adicCompletion F) (ϖ' : F) := div_mul_cancel₀ _ hϖ0
-  have hord := GlobalTheory.T.uniformizer_ratio_valuation_zero F v ϖ ϖ' h1 h2 h1' h2' U hU
-  have hnorm := GlobalTheory.T.norm_from_kummer_unramified_unit (K := v.adicCompletion F) (Ω := GlobalTheory.LocDict.Kbar v) (l ^ r) hN.ne' (ι ξ) hξv ψ ho hfix U hord
+  have hord := _root_.GlobalTheory.CompanionTheory.Uniformiser.ord_ratio_eq_zero F v ϖ ϖ' h1 h2 h1' h2' U hU
+  have hnorm := _root_.GlobalTheory.CompanionTheory.LocalField.exists_norm_fixedField_ker_eq_unit (K := v.adicCompletion F) (Ω := GlobalTheory.LocDict.Kbar v) (l ^ r) hN.ne' (ι ξ) hξv ψ ho hfix U hord
   have hcomm : ∀ x : F, ι (algebraMap F Ω x) =
       algebraMap (v.adicCompletion F) (GlobalTheory.LocDict.Kbar v) (algebraMap F (v.adicCompletion F) x) := fun x => by
     rw [ι.commutes, ← IsScalarTower.algebraMap_apply]
@@ -209,7 +217,7 @@ theorem exists_cochain_cup (l : ℕ) [Fact l.Prime] (r : ℕ) (hr : 0 < r) {ζ :
     rw [hlift', apply_eq_pow_cycMod l r _ hζ.pow_eq_one, map_pow]
   have hκ' : ∀ σ : GlobalTheory.LocDict.GalLoc v, σ (ι t) = ι ζ ^ (κt (θ.symm σ)).val * ι t := fun σ => by
     rw [hlift', hκ, map_mul, map_pow]
-  obtain ⟨c, hc, hc2⟩ := GlobalTheory.T.kummer_cocycle_norm_criterion (K := v.adicCompletion F) (Ω := GlobalTheory.LocDict.Kbar v) (l ^ r) hN (ι ζ)
+  obtain ⟨c, hc, hc2⟩ := _root_.GlobalTheory.CompanionTheory.KummerCup.kummerCup_eq_coboundary (K := v.adicCompletion F) (Ω := GlobalTheory.LocDict.Kbar v) (l ^ r) hN (ι ζ)
     (hζ.map_of_injective ι.toRingHom.injective) _ hc0 ψ ho U hnorm (ι t) (fun σ => κt (θ.symm σ)) hT hκ'
   refine ⟨fun g => c (θ g), hc.continuous.comp hθ, fun g h => ?_⟩
   have e := hc2 (θ g) (θ h)

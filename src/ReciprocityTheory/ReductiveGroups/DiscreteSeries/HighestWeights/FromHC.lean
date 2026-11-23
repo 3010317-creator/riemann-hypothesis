@@ -2,7 +2,11 @@ module
 
 public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.ContinuousRepresentations.DerivExistsAllPosStatement
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.PolyCoef
+public import Formalism.PeriodIntegrals.WeylForU
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CompactGroupIntegrability.IsPositiveDefiniteMatrixCoefficientOfMemAlgA
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.FromHCA
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.FromHCB
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.ContinuousTorepK
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -43,9 +47,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.FromHCA
-public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.FromHCB
-public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.ContinuousTorepK
 
 @[expose] public section
 
@@ -96,7 +97,7 @@ theorem derivExists_allPos : DerivExistsAllPosStatement := by
       exact hc.congr fun g => (congrArg (fun A : V →L[ℂ] V => A v) (hσ g.2)).symm
   let b := stdOrthonormalBasis ℂ V
   have hcoeff (i j : Fin (Module.finrank ℂ V)) :=
-    polynomial_coefficients k V σ ⊤ hrep inferInstance
+    _root_.PI.UnitaryGroupMassFormula.PolyCoef.polyCoef k V σ ⊤ hrep inferInstance
       (fun _ _ _ _ => Submodule.mem_top) (b j) Submodule.mem_top (b i)
   choose m P hP using hcoeff
   let F (A : Matrix (Fin k) (Fin k) ℂ) : V →L[ℂ] V :=

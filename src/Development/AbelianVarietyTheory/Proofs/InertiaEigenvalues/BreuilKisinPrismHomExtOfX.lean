@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.DeltaStructureOfWittLengthTwoSection
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WittVectorRingHomEqOfSubMemStatement
+public import Mathlib.RingTheory.AdicCompletion.Basic
+public import Mathlib.RingTheory.WittVector.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WittVectorRingHomEqOfSubMem
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,7 +68,7 @@ theorem hom_ext_of_hf_X : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K
   have hH : IsHausdorff (JJ C) C.A := C.complete.toIsHausdorff
 
   have hCC : (BK.hf g).comp (PowerSeries.C (R := Wq l bk.a)) = (BK.hf g').comp PowerSeries.C :=
-    GlobalTheory.T.wittVector_ringHom_eq_of_sub_mem' l (Fq l bk.a) C.A (JJ C) (Ideal.mem_sup_left (Ideal.mem_span_singleton_self _)) hH _ _
+    _root_.GlobalTheory.wittVector_ringHom_eq_of_sub_mem l (Fq l bk.a) C.A (JJ C) (Ideal.mem_sup_left (Ideal.mem_span_singleton_self _)) hH _ _
       (fun w => Ideal.mem_sup_right (hI _))
 
   have hP : ∀ p : Polynomial (Wq l bk.a), BK.hf g (p : bk.S) = BK.hf g' (p : bk.S) := by

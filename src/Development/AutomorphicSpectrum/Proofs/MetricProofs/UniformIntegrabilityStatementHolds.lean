@@ -3,10 +3,12 @@ module
 public import ReciprocityTheory.AnalyticForms.LeviForms.IsRegFamilyInhabitStatement
 public import GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.UIObjects
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ConvergenceStatementHoldsStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MixedMeasureConvergenceSncStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.TailBoundStatementHolds
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.WeakConvergenceOffZeroSetStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MixedMeasureConvergenceSnc
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.WeakConvergenceOffZeroSet
 public import GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.OfListTailLog
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.TailBoundStatementHolds
 import GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.PGreenMassZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -166,10 +168,10 @@ theorem unifInt_holds : UnifIntStatement := by
     simp only [hμeq]
     exact ⟨hint, Filter.Eventually.of_forall fun _ => hint, tendsto_const_nhds⟩
   | succ e =>
-    have hsmall := GlobalTheory.T.mixed_measure_convergence_snc GroundTheory.Heights₂.Heights.AnalyticLimit.UniformIntegrability.full
+    have hsmall := _root_.GlobalTheory.CompanionTheory.Ar.Giv.green_small_uniform GroundTheory.Heights₂.Heights.AnalyticLimit.UniformIntegrability.full
       GlobalTheory.CompanionTheory.Ar.Giv.tailBound_holds A Θ L s m W hΘ hΘpos hL hs hsnc hsle L' v Dg hL' hv hvsnc
       hsvsnc th ph phT C₅ C t₀ hsing hreg
-    exact GlobalTheory.T.weak_convergence_off_zero_set (maMeasure A (fun i => th i + LocPot.ofFun (ph i) + Θ))
+    exact _root_.GlobalTheory.CompanionTheory.Ar.Giv.tendsto_integral_neg_log_of_green_small (maMeasure A (fun i => th i + LocPot.ofFun (ph i) + Θ))
       (fun t => maMeasure A (fun i => th i + LocPot.ofFun (phT i t) + Θ))
       (GroundTheory.Heights₂.Heights.AnalyticLimit.secNorm L' v) hμfin hμTfin
       (GroundTheory.Heights₂.Heights.AnalyticLimit.continuous_secNorm A L' v hL' hv) hbd (hnull _)

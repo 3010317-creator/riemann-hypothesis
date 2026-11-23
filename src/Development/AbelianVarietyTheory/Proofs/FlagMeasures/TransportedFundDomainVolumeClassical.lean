@@ -6,7 +6,9 @@ public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.
 public import Development.AbelianVarietyTheory.Definitions.Foundations.HermitianSpaceBaseLatticeEqFrameLattice
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselTransportIsometryFrameAdaptedStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ConcreteGramHermitianNondegenerateLatticeSelfDuaStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CovolumeIntegralUnipotentRadicalRealPointsStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MemConfTOfDetNeZero
+public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CovolumeIntegralUnipotentRadicalRealPoints
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FundamentalDomainNormalisingConstantsStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegralUnipotentEqLatticeUnipotentCoordsStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableSetTransportedRealPointsImageStatement
@@ -135,7 +137,7 @@ theorem main : ∀ (D : D7) (X : HidaSetting D) (Y : Formalism.L2.SG.Full.Full X
   obtain ⟨hH, hSD⟩ := GlobalTheory.T.concrete_gram_hermitian_nondegenerate_lattice_selfDual D X
   obtain ⟨hF, hDu, hT⟩ := GlobalTheory.T.wordFrame_dualTuple_gram_integrality D X u
   obtain ⟨hM, hAd⟩ := GlobalTheory.T.bessel_transport_isometry_frame_adapted D X θ C u
-  have hI := GlobalTheory.T.covolume_integral_unipotentRadical_real_points D.host.F D.host.E D.sp.cm.sig D.R.k D.R.rS (Jc X) (Lc X) (Pc X u) (fc X) (Tc u)
+  have hI := _root_.GlobalTheory.SnMass.VolN.covolume_N D.host.F D.host.E D.sp.cm.sig D.R.k D.R.rS (Jc X) (Lc X) (Pc X u) (fc X) (Tc u)
     (Ac X C) (sc D) (GlobalTheory.AdelicU.isCMExt_host D) (formallyUnramified_host D) hH hSD hF hDu hT hM hs hAd
   have h1 := hI.2 _ (isDomN D X Y θ C u)
   have hv : 0 ≤ 2 * D.host.v := by unfold Host.v Host.rdE; positivity

@@ -1,13 +1,18 @@
 module
 
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompDescentSecond
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ConjugateHermitianLineIsometries
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DegreeLatticeQuotientFormsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagVectorBundleTransportStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EtaleLocalizationAtPrimeTensorOfLowHeight
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DegreeLatticeQuotientForms
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsGenericFlag
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagVectorBundleTransport
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GrGenOfIsFlagVBOn
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SectionNormIsomorphicLinesStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.HodgeIPIffHodgeFormConj
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SectionNormIsomorphicLines
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MixedFieldContraction.GenericFibreKerTarget
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompDescentSecond
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +55,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MixedFieldContraction.GenericFibreKerTarget
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MultihomogeneousIdeals.IsFieldIntersection
 
 @[expose] public section
@@ -352,7 +356,7 @@ theorem core (e : X' ≅ X) {ξ : Spec (CommRingCat.of Ω) ⟶ X} {ξ' : Spec (C
       x ∈ V'.gr b' j q ↔ μ * x ∈ V.gr b j ⟨e.hom q.1, h⟩ := by
     intro q h x
     refine (gr_scale V' j hμ (hF' j) hμb q x).trans ?_
-    have := (GlobalTheory.T.flag_vector_bundle_transport X X' Ω ξ ξ' e Li Li' φ V V' r b hξ hV).2 j q h
+    have := (_root_.GlobalTheory.CompanionTheory.Ar.FlagIso.flag_graded_transport X X' Ω ξ ξ' e Li Li' φ V V' r b hξ hV).2 j q h
     exact Set.ext_iff.1 this (μ * x)
   have hmove := isDegOn_move e hξ hμ (fun q => Flag.gr_gen_of_isFlagVBOn hfl' (Set.mem_univ q) j) hmem n hD'
   have he0 : e₀ ≠ 0 := hD.1
@@ -365,7 +369,7 @@ theorem core (e : X' ≅ X) {ξ : Spec (CommRingCat.of Ω) ⟶ X} {ξ' : Spec (C
   have hne : ∀ k, ∃ i, y ⟨k, i⟩ ≠ 0 := by
     obtain ⟨c, hc⟩ := tie.cover ⟨genPt ξ, specializes_rfl⟩
     exact fun k => ⟨c k, fun h0 => hc.1 (Finset.prod_eq_zero (Finset.mem_univ k) h0)⟩
-  obtain ⟨f, g, hfg, hval⟩ := GlobalTheory.T.degree_lattice_quotient_forms X Ω ξ K ι y Ω _ L.a L'.a e₀ ρ tie hB hne hD hD₂
+  obtain ⟨f, g, hfg, hval⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LineIso.lineIso_of_two_degrees X Ω ξ K ι y Ω _ L.a L'.a e₀ ρ tie hB hne hD hD₂
   refine ⟨f, g, hfg, ?_⟩
   rintro w ⟨z, hzw, hzI⟩ u v huv hu
   obtain ⟨z', rfl⟩ : ∃ z', z = z' ≫ e.hom := ⟨z ≫ e.inv, by simp⟩
@@ -403,7 +407,7 @@ theorem core (e : X' ≅ X) {ξ : Spec (CommRingCat.of Ω) ⟶ X} {ξ' : Spec (C
   have et : μ ^ n * (t₀ / μ) ^ n = t₀ ^ n := by
     rw [← mul_zpow, mul_div_cancel₀ _ hμ]
   rw [et, ← hρe] at s3
-  have key := GlobalTheory.T.section_norm_isomorphic_lines X Ω _ K ι y L L' e₀ ρ (t₀ ^ n) f g u v _ w _ tie.gen hzw he0 hfg hval s1 s3
+  have key := _root_.GlobalTheory.CompanionTheory.Ar.LineDefect.norm_mul_h_eq X Ω _ K ι y L L' e₀ ρ (t₀ ^ n) f g u v _ w _ tie.gen hzw he0 hfg hval s1 s3
     (zpow_pos hνpos n) huv hu
   have hpt : ∀ k, ∃ i, w ⟨k, i⟩ ≠ 0 := fun k => (hzw.1 k).imp fun _ hc => hc.ne_zero
   have hA := L.pos w hpt

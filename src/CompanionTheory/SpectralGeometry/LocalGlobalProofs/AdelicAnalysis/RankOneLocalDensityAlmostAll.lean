@@ -1,18 +1,19 @@
 module
 
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CompletionIsLocalRingStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CompletionIsLocalRing
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ContinuousDensitiesEqOfIntegralsOnCompacts
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ContinuousHermScal
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CoordinateHaarMeasureStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CoordinateHaarMeasure
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.EtaleAwayQuotientEqLocalization
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.GramFiberMeasuresTransitivityStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HermitianMatricesLocallyCompactBorel
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.GramFiberMeasuresTransitivity
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.IntegralAlmostAllPlaces
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.LocalLatticeCompactOpenUnitVolumeStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.LocalQuadraticDensityBoundNonzeroStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.MeasurableCoordinateMapsTensorStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRingStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.LocalLatticeCompactOpenUnitVolume
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.LocalQuadraticDensityBoundNonzero
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.MeasurableCoordinateMapsTensor
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HermitianMatricesLocallyCompactBorel
+import Formalism.UnipotentAdelicQuotients.SWXSDefs
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -97,21 +98,21 @@ theorem local_mass {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
         (D : ℝ≥0∞) * lam A) :
     (m (hermScal (Fv F v) σ s) (latV b v)).toReal = D := by
   classical
-  have hloc : IsLocR (Fv F v) := GlobalTheory.T.completion_is_local_ring F v
+  have hloc : IsLocR (Fv F v) := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
   haveI : BorelSpace (Fv F v) := ⟨rfl⟩
   haveI : IsTopologicalRing (Fv F v) := hloc.1
   haveI : LocallyCompactSpace (Fv F v) := hloc.2.1
   haveI : SecondCountableTopology (Fv F v) := hloc.2.2.1
   haveI : T2Space (Fv F v) := hloc.2.2.2.1
   haveI := hlam.1
-  obtain ⟨-, -, -, hT2K, -, -, -, hBorW, -, -⟩ := GlobalTheory.T.tensor_locally_compact_ring F E σ hCM (Fv F v)
+  obtain ⟨-, -, -, hT2K, -, -, -, hBorW, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Fv F v)
   haveI := hT2K
-  obtain ⟨-, hW, hH⟩ := GlobalTheory.T.coordinate_haar_measure F E σ hCM (Fv F v) d b lam hlam.1
-  obtain ⟨hLc, hLo, -, -⟩ := GlobalTheory.T.local_lattice_compact_open_unit_volume F E σ hCM d b 1 M v
+  obtain ⟨-, hW, hH⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hCM (Fv F v) d b lam hlam.1
+  obtain ⟨hLc, hLo, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.latV_compact_open_mass F E σ hCM d b 1 M v
   obtain ⟨hSh, hSl, hSm⟩ := GlobalTheory.CompanionTheory.SW.hermScal_main F E σ hCM (Fv F v) d b
   obtain ⟨-, -, -, hHB, hG⟩ := GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hCM (Fv F v) 1
   obtain ⟨g, -, hgram⟩ := hG M J hJ
-  obtain ⟨hcm, hcmap⟩ := GlobalTheory.T.measurable_coordinate_maps_tensor F E σ hCM (Fv F v) d b M lam hlam.1
+  obtain ⟨hcm, hcmap⟩ := _root_.GlobalTheory.CompanionTheory.SW.coordW_one_map_coords F E σ hCM (Fv F v) d b M lam hlam.1
   haveI : BorelSpace (Fin 1 → Fin M → Fv F v ⊗[F] E) := hBorW 1 M
   haveI : BorelSpace (HermR (Fv F v) σ 1) := hHB
   have hLm : MeasurableSet (latV (M := M) (n := 1) b v) := hLo.measurableSet
@@ -128,7 +129,7 @@ theorem local_mass {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
   have hφs : HasCompactSupport φ := by
     rw [hφ]
     exact HasCompactSupport.intro hLc (fun x hx => Set.indicator_of_notMem hx _)
-  obtain ⟨⟨hgc, hgi⟩, -⟩ := GlobalTheory.T.gram_fiber_integral_isContDensityOn F E σ hCM M J hJ (Fv F v) hloc 1
+  obtain ⟨⟨hgc, hgi⟩, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.GramDensity.isContDensityOn_gram F E σ hCM M J hJ (Fv F v) hloc 1
     (coordW (Fv F v) b lam 1 M) (coordHerm (Fv F v) σ b lam 1) m (hW 1 M) (hH 1) hm φ hφc hφs
   have hval : ∀ T, ∫ X, φ X ∂(m T) = (((m T (latV b v)).toReal : ℝ) : ℂ) := fun T => by
     rw [hφ, integral_indicator_const (1 : ℂ) hLm]
@@ -262,7 +263,7 @@ theorem density_standard_lattice : ∀ (F E : Type) [Field F] [NumberField F] [F
     have h1 := (algebraMap F (Fv F v)).map_det B
     rw [h1] at hvd
     exact hvd
-  obtain ⟨D, hD1, hD⟩ := GlobalTheory.T.local_quadratic_density_bound_nonzero F v lam hlam hv2' (Fin M × Fin d)
+  obtain ⟨D, hD1, hD⟩ := _root_.GlobalTheory.CompanionTheory.SW.GBall.density_near_value F v lam hlam hv2' (Fin M × Fin d)
     (B.map (algebraMap F (Fv F v))) (hBs.map _) (fun i j => hve i j) hdet M hcard h3 s hs hs0
   rw [local_mass σ hCM M J hJ d b v (B.map (algebraMap F (Fv F v))) (fun x y => hBt (Fv F v) x y)
     lam hlam m hm s hs0 D hD]

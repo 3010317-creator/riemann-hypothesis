@@ -1,11 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermLat
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianMatrixCongruenceContentJacobianStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianMatrixCongruenceContentJacobian
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MatrixCongruentOneModUniformizerPowGroupAndOrbit
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PrimitiveTuplesHermitianGramCosetContent
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TupleJacobianRightMulIsometry
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsPrincipalIdealRingOfHenselian
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MatrixCongruentOneModUniformizerPowGroupAndOrbitStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PrimitiveTuplesHermitianGramCosetContentStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TupleJacobianRightMulIsometryStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -179,9 +179,9 @@ theorem cont_prim_scale : ∀ {F : Type} [Field F] [ValuativeRel F] [Topological
   have hΓ := isHerm_gramT L hH.1 x
   set O := horb L ϖ (gramT L Hm x) i with hOdef
   have hOco : IsCO (hermLat L m) O :=
-    ((GlobalTheory.T.matrixCongruentOneModUniformizerPow_group_and_orbits L ϖ hϖ m i (le_of_max_le_right hi)).2.2 _ hΓ hx).1
+    ((_root_.GlobalTheory.CongGrp.congK_group L ϖ hϖ m i (le_of_max_le_right hi)).2.2 _ hΓ hx).1
   set B := (fun X => cT L A⁻¹ * X * A⁻¹) '' O with hBdef
-  have hBco : IsCO (hermLat L m) B := ((GlobalTheory.T.hermitianMatrix_congruence_content_jacobian L ϖ hϖ m A⁻¹ hAi).2 O hOco).1
+  have hBco : IsCO (hermLat L m) B := ((_root_.GlobalTheory.HL.HermJacobian.cont_congr L ϖ hϖ m A⁻¹ hAi).2 O hOco).1
   have hback : ∀ X : Matrix (Fin m) (Fin m) E, cT L A * (cT L A⁻¹ * X * A⁻¹) * A = X := by
     intro X
     calc _ = (cT L A * cT L A⁻¹) * X * (A⁻¹ * A) := by simp only [Matrix.mul_assoc]
@@ -193,7 +193,7 @@ theorem cont_prim_scale : ∀ {F : Type} [Field F] [ValuativeRel F] [Topological
   have hOB : (fun X => cT L A * X * A) '' B = O := by
     rw [hBdef, Set.image_image]
     simp only [hback, Set.image_id']
-  have hcO := ((GlobalTheory.T.hermitianMatrix_congruence_content_jacobian L ϖ hϖ m A hA).2 B hBco).2
+  have hcO := ((_root_.GlobalTheory.HL.HermJacobian.cont_congr L ϖ hϖ m A hA).2 B hBco).2
   rw [hOB] at hcO
   have hBint : ∀ X ∈ B, X ∈ hermLat L m := by
     rintro _ ⟨_, ⟨K, hK, rfl⟩, rfl⟩
@@ -210,7 +210,7 @@ theorem cont_prim_scale : ∀ {F : Type} [Field F] [ValuativeRel F] [Topological
     · change IsIntM L (cT L A⁻¹ * (cT L K * gramT L Hm x * K) * A⁻¹)
       rw [h1]
       exact isIntM_mul L (isIntM_mul L (fun a b => (hO.2.1 _ (hK' b a)).1) hint) hK'
-  obtain ⟨hTco, hT1, hT2⟩ := GlobalTheory.T.primitiveTuples_hermitianGram_coset_content L ϖ hϖ Hm hH Λs hΛ m hmn B hBint hBco
+  obtain ⟨hTco, hT1, hT2⟩ := _root_.GlobalTheory.HL.PrimVol.cont_primitive_tuples L ϖ hϖ Hm hH Λs hΛ m hmn B hBint hBco
   have hS : {z : Fin m → Fin n → E | IsPrimT L Hm Λs (rmul z A⁻¹) ∧ gramT L Hm z ∈ O}
       = (fun x => rmul x A) ''
         {z : Fin m → Fin n → E | IsPrimT L Hm Λs z ∧ gramT L Hm z ∈ B} := by
@@ -223,7 +223,7 @@ theorem cont_prim_scale : ∀ {F : Type} [Field F] [ValuativeRel F] [Topological
       refine ⟨by simpa only [rmul_rmul, hAA, rmul_one] using h1, ?_⟩
       rw [← hOB]
       exact ⟨_, h2, (gramT_rmul L hH.1 _ _).symm⟩
-  have hcS := ((GlobalTheory.T.tuple_jacobian_rightMul_isometry L ϖ hϖ Hm hH Λs hΛ m).1 A hA _ hTco).2
+  have hcS := ((_root_.GlobalTheory.HL.TupleJac.tuple_jacobian L ϖ hϖ Hm hH Λs hΛ m).1 A hA _ hTco).2
   rw [hS, hcS, hcO, ← mul_assoc, ← zpow_add₀ hq.ne']
   have he : -(vE L ϖ (A.det * L.cj A.det) * ((n : ℤ) - m)) + -(vE L ϖ (A.det * L.cj A.det) * m)
       = -(vE L ϖ (A.det * L.cj A.det) * n) := by ring

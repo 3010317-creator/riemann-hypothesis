@@ -1,8 +1,10 @@
 module
 
 public import Formalism.LocalRingCardinality.DataSpaces
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsMemFractionalIdealPrimitiveLocalGeneratorAStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeMapComapOfLeConjMaximalCmDataStatement
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.FractionalIdeal.Basic
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsMemFractionalIdealPrimitiveLocalGeneratorA
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeMapComapOfLeConjMaximalCmData
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,7 +60,7 @@ theorem exists_ideal_coprime_conj_mul_eq_spanSingleton :
         ∃ α : E, (P : FractionalIdeal (nonZeroDivisors (𝓞 E)) E) * c =
           FractionalIdeal.spanSingleton (nonZeroDivisors (𝓞 E)) α := by
   intro F E _ _ _ _ _ _ hcm c hc N hN
-  obtain ⟨a, hac, hQ, hp⟩ := GlobalTheory.T.exists_mem_fractionalIdeal_primitive_local_generator' F E hcm.deg2 c hc N hN
+  obtain ⟨a, hac, hQ, hp⟩ := _root_.GlobalTheory.exists_mem_fractionalIdeal_primitive_local_generator F E hcm.deg2 c hc N hN
 
   have ha : a ≠ 0 := by
     rintro rfl
@@ -97,7 +99,7 @@ theorem exists_ideal_coprime_conj_mul_eq_spanSingleton :
       show RingOfIntegers.mapRingHom (starRingEnd E) (RingOfIntegers.mapRingHom (starRingEnd E) x) ∈ P
       rw [hσσ]
       exact hx
-    have h3 := GlobalTheory.T.le_map_comap_of_le_conj_maximal_cmData F E hcm P Q hQm h1 h2
+    have h3 := _root_.GlobalTheory.UnramifiedConj.le_map_comap_of_le_conj F E hcm P Q hQm h1 h2
     have hpm : (Q.comap (algebraMap (𝓞 F) (𝓞 E))).IsMaximal :=
       Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := 𝓞 F) Q
     exact hp _ hpm (key _ h3)

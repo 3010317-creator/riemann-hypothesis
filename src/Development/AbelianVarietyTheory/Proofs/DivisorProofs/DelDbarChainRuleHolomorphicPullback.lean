@@ -1,12 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsTypeIsRealConst
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContDiffOnCoefficientsComplexFormMulStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContDiffOnReprPullbackComplexFormFderivStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DelOperatorAtDbarOperatorAtLeibnizOfCommuteStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DelOperatorAtDbarOperatorAtLinearLocalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DelOperatorDbarOperatorPullbackConstantFormHolomStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WirtingerDerivsCompHolomorphicPullbackDzStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContDiffOnCoefficientsComplexFormMul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContDiffOnReprPullbackComplexFormFderiv
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DelOperatorAtDbarOperatorAtLeibnizOfCommute
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DelOperatorAtDbarOperatorAtLinearLocal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DelOperatorDbarOperatorPullbackConstantFormHolom
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WirtingerDerivsCompHolomorphicPullbackDz
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -93,13 +93,13 @@ theorem delAt_dbarAt_pull_comp (m n : ℕ) (τ : V m → V n) (U : Set (V m)) (�
   have hg : ∀ S, DifferentiableAt ℝ (fun x => (bas n).repr (β (τ x)) S) v :=
     fun S => (hβ S).comp v (hτv.restrictScalars ℝ)
   have hPd : ∀ S T, DifferentiableAt ℝ (fun x => (bas m).repr (pull (fderiv ℂ τ x) (bas n S)) T) v :=
-    fun S T => ((GlobalTheory.T.contDiffOn_repr_pullbackComplexForm_fderiv m n τ U (bas n S) hU hτ T).contDiffAt (hU.mem_nhds hv)).differentiableAt (by simp)
+    fun S T => ((_root_.GlobalTheory.PullSmooth.contDiffOn_repr_pull_fderiv m n τ U (bas n S) hU hτ T).contDiffAt (hU.mem_nhds hv)).differentiableAt (by simp)
   have hA : ∀ S T, DifferentiableAt ℝ
       (fun x => (bas m).repr (algebraMap ℂ (Alt m) ((bas n).repr (β (τ x)) S)) T) v :=
     fun S T => differentiableAt_repr_algebraMap (hg S) T
   have hprod : ∀ S T, DifferentiableAt ℝ (fun x => (bas m).repr
       (algebraMap ℂ (Alt m) ((bas n).repr (β (τ x)) S) * pull (fderiv ℂ τ x) (bas n S)) T) v :=
-    fun S => (GlobalTheory.T.contDiffOn_coefficients_complexForm_mul m m (fun x => algebraMap ℂ (Alt m) ((bas n).repr (β (τ x)) S))
+    fun S => (_root_.GlobalTheory.CxForm.contDiff_coeff_mul m m (fun x => algebraMap ℂ (Alt m) ((bas n).repr (β (τ x)) S))
       (fun x => pull (fderiv ℂ τ x) (bas n S))).2 v (hA S) (hPd S)
   have hexp : (fun x => pull (fderiv ℂ τ x) (β (τ x))) = fun x => ∑ S,
       algebraMap ℂ (Alt m) ((bas n).repr (β (τ x)) S) * pull (fderiv ℂ τ x) (bas n S) := by
@@ -107,13 +107,13 @@ theorem delAt_dbarAt_pull_comp (m n : ℕ) (τ : V m → V n) (U : Set (V m)) (�
     conv_lhs => rw [← (bas n).sum_repr (β (τ x))]
 
     simp only [map_sum, map_smul, Algebra.smul_def, map_mul, AlgHom.commutes]
-  have hsum := (GlobalTheory.T.delOperatorAt_dbarOperatorAt_linear_local m v).2.2.1 (Finset (Fin (n + n))) Finset.univ
+  have hsum := (_root_.GlobalTheory.CxForm.delAt_dbarAt_linear_local m v).2.2.1 (Finset (Fin (n + n))) Finset.univ
     (fun S x => algebraMap ℂ (Alt m) ((bas n).repr (β (τ x)) S) * pull (fderiv ℂ τ x) (bas n S))
     (fun S _ => hprod S)
-  have hL := fun S => GlobalTheory.T.delOperatorAt_dbarOperatorAt_leibniz_of_commute m (fun x => algebraMap ℂ (Alt m) ((bas n).repr (β (τ x)) S))
+  have hL := fun S => _root_.GlobalTheory.CxForm.FormMul.leibniz_of_comm m (fun x => algebraMap ℂ (Alt m) ((bas n).repr (β (τ x)) S))
     (fun x => pull (fderiv ℂ τ x) (bas n S)) v (algebraMap ℂ (Alt m) ((bas n).repr (β (τ v)) S)) (hA S) (hPd S)
-  have hcl := fun S => GlobalTheory.T.delOperator_dbarOperator_pullback_constantForm_holomorphic m n τ U (bas n S) hU hτ v hv
-  have hch := fun S => GlobalTheory.T.wirtingerDerivs_comp_holomorphic_pullback_dz m n τ (fun y => (bas n).repr (β y) S) v hτv (hβ S)
+  have hcl := fun S => _root_.GlobalTheory.CxForm.PullDelClosed.delAt_dbarAt_pull_fderiv m n τ U (bas n S) hU hτ v hv
+  have hch := fun S => _root_.GlobalTheory.LineForm.del_dbar_comp_holo_pull m n τ (fun y => (bas n).repr (β y) S) v hτv (hβ S)
   have hfun := fun S => delAt_dbarAt_algebraMap (fun x => (bas n).repr (β (τ x)) S) v
   rw [hexp]
   constructor

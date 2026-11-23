@@ -3,9 +3,13 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Foundations.PetIPSmulRight
 public import Development.AbelianVarietyTheory.Definitions.Foundations.RepL
 public import Mathlib.NumberTheory.ModularForms.Basic
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasModerateGrowthQExpansionOfCoeffPolynomialGrowStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsBoundedAtImInftyOfPeriodicPolynomialBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MdifferentiableQExpansionOfCoeffPolynomialGrowthStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasModerateGrowthQExpansionOfCoeffPolynomialGrow
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Complex.UpperHalfPlane.FunctionsBoundedAtInfty
+public import Mathlib.Analysis.Complex.UpperHalfPlane.Manifold
+public import Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative.LeviCivita
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsBoundedAtImInftyOfPeriodicPolynomialBound
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MdifferentiableQExpansionOfCoeffPolynomialGrowth
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -186,7 +190,7 @@ theorem GlobalTheory.EisM.modularForm_gammaOne_of_MF :
   intro k L N ε a hL hNL ha
   haveI : NeZero L := ⟨hL.ne'⟩
   have hinv : ∀ γ ∈ Gamma1 L, qs a ∣[(k : ℤ)] γ = qs a := fun γ hγ => slash_inv hNL ha.2 γ hγ
-  have hhol := GlobalTheory.T.mdifferentiable_qExpansion_of_coeffPolynomialGrowth a ha.1
+  have hhol := _root_.GlobalTheory.EisM.qs_mdifferentiable a ha.1
   refine ⟨{ toFun := qs a, slash_action_eq' := ?_, holo' := hhol, bdd_at_cusps' := ?_ }, rfl⟩
   · rintro _ ⟨A, (hA : A ∈ Gamma1 L), rfl⟩
     exact hinv A hA
@@ -194,7 +198,7 @@ theorem GlobalTheory.EisM.modularForm_gammaOne_of_MF :
     rw [Subgroup.IsArithmetic.isCusp_iff_isCusp_SL2Z] at hc
     rw [OnePoint.isBoundedAt_iff_forall_SL2Z hc]
     intro γ _
-    obtain ⟨C, A, hC⟩ := growth (GlobalTheory.T.hasModerateGrowth_qExpansion_of_coeffPolynomialGrowth a ha.1) k L γ
+    obtain ⟨C, A, hC⟩ := growth (_root_.GlobalTheory.EisM.mod_qs_of_polyB a ha.1) k L γ
     have hs : MDifferentiable 𝓘(ℂ) 𝓘(ℂ) (qs a ∣[(k : ℤ)] γ) := by
       rw [ModularForm.SL_slash]; exact hhol.slash _ _
-    exact GlobalTheory.T.isBoundedAtImInfty_of_periodic_polynomial_bound _ L C A hL hs (periodic hinv γ) hC
+    exact _root_.GlobalTheory.isBoundedAtImInfty_of_periodic_of_polyBound _ L C A hL hs (periodic hinv γ) hC

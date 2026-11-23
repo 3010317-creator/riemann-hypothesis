@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.ResidualConstruction
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIdempotentSubMemOfPowSubMemStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsRepMatrixCombinationKillingCharactersStatement
+public import Mathlib.NumberTheory.Padics.PadicIntegers
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIdempotentSubMemOfPowSubMem
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsRepMatrixCombinationKillingCharacters
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemSpanRingCornerIdealModuleIff
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -100,7 +101,7 @@ theorem exists_corner (T : Subalgebra A (X → A)) (rep : X → (Γ →* GL (Fin
     (P : Matrix (Fin r) (Fin r) A) :
     ∃ a, InRing T rep a ∧
       ∀ u, e (((a π).map (toFr A)).mulVec u) = ((P.map (toFr A)).mulVec (e u).1, 0) := by
-  obtain ⟨m, f, h, hP, hχ⟩ := GlobalTheory.T.exists_repMatrix_combination_killing_characters ρ χ hr hs P
+  obtain ⟨m, f, h, hP, hχ⟩ := _root_.GlobalTheory.MatCorner.exists_comb_kills_chars ρ χ hr hs P
   refine ⟨∑ k, f k • fun x => mat (rep x) (h k),
     inRing_sum _ fun k _ => inRing_smul _ (inRing_mat _), fun u => ?_⟩
 
@@ -135,7 +136,7 @@ theorem exists_idem (l : ℕ) [Fact l.Prime] [Finite X] [Algebra ℤ_[l] A] [Mod
       (∀ y, b * y = 0 → E * y = 0) := by
   haveI : Module.Finite ℤ_[l] (Matrix (Fin n) (Fin n) A) :=
     inferInstanceAs (Module.Finite ℤ_[l] (Fin n → Fin n → A))
-  obtain ⟨E, hE, hM⟩ := GlobalTheory.T.exists_idempotent_sub_mem_of_pow_sub_mem' l b
+  obtain ⟨E, hE, hM⟩ := _root_.GlobalTheory.exists_idempotent_sub_mem_of_pow_sub_mem l b
   refine ⟨E, ?_, hE, ?_, fun y hy => ?_, fun y hy => ?_⟩
   · have := hM ((Subalgebra.toSubmodule (ringR T rep)).restrictScalars ℤ_[l]) 0 fun k => by
       rw [sub_zero]

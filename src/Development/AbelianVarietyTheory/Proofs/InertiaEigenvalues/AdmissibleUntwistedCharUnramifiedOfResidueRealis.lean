@@ -6,8 +6,9 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.Admissi
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleQuotientOfFullRepresentation
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleStd
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ClsEqHomModInertia
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineSumsTwistsCharactersExpectedJumpsStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineSumsTwistsCharactersExpectedJumps
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LinearIndependentOfIndepMod
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleClassesPropsOfFlatCoefficient
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +46,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleClassesPropsOfFlatCoefficient
 
 @[expose] public section
 
@@ -61,7 +61,7 @@ theorem admissibleUntwistedCharUnramified_of_residueRealisation {l : ℕ} [Fact 
   let S : TopSit P :=
     { K := K, LL := LL, n := n, r := r, nz := ⟨GlobalTheory.IndefiniteRowSideFullHecke.InvariantsVanishing.letters_ne_zero hst⟩, emb := emb, D := D, Γ := Γ,
       hyp := ⟨hst, hgal, h1, h2, h3⟩ }
-  have hcrys : S.CrysCalc := GlobalTheory.T.crystalline_sums_twists_characters_expected_jumps AI hT S
+  have hcrys : S.CrysCalc := _root_.GlobalTheory.TopSteps.CrysRules.crysCalc AI hT S
   have hcl : S.Closed := GlobalTheory.AdmClosure.admissible_closed S
   have hstd : S.StdAdm := StdAdm.stdAdm S hcrys hcl
   have hL : S.Lem0 (S.Γ.Wchi 1) := (GlobalTheory.AdmClasses.admissibleLocalSituation_admissible_classes S hcl hstd).2 1 le_rfl S.D.one_le_letterBlockLength

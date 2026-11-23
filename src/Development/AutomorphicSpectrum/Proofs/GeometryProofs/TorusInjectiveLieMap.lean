@@ -3,10 +3,10 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCocharLie
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.LocallyOfFinitePresentationDiagMap
 public import Mathlib.RingTheory.DiscreteValuationRing.Basic
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CharValMultiplicativeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.KillsOverOfAdicCompletionStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.KillsOverSquareZeroLiftStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorusKernelPrimeQuotientStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CharValMultiplicative
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.KillsOverOfAdicCompletion
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.KillsOverSquareZeroLift
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorusKernelPrimeQuotient
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -111,7 +111,7 @@ theorem killsOver_pow (u : splitTorus S X ⟶ G) [IsMonHom u] (Y : AddSubgroup X
       simp only [I]
       rw [← Ideal.map_pow, ← pow_mul, Ideal.map_eq_bot_iff_le_ker, Ideal.mk_ker]
       exact Ideal.pow_le_pow_right (by omega)
-    refine GlobalTheory.T.killsOver_square_zero_lift S G X u Y _ _ I hI ?_
+    refine _root_.GlobalTheory.CompanionTheory.Ar.killsOver_of_sq_zero S G X u Y _ _ I hI ?_
     let c : R ⧸ (IsLocalRing.maximalIdeal R ^ (n + 1)) →+*
         (R ⧸ IsLocalRing.maximalIdeal R ^ (n + 1 + 1)) ⧸ I :=
       Ideal.Quotient.lift _ ((Ideal.Quotient.mk I).comp (Ideal.Quotient.mk _))
@@ -125,12 +125,12 @@ theorem killsOver_pow (u : splitTorus S X ⟶ G) [IsMonHom u] (Y : AddSubgroup X
 theorem diff_injective_mod_pi : ∀ (R K : Type) [CommRing R] [IsDomain R] [IsDiscreteValuationRing R] [Field K] [Algebra R K] [IsFractionRing R K] (S : Scheme.{0}) (b : Sp R ⟶ S) (G : Over S) [GrpObj G] [IsSeparated G.hom] (X : Type) [AddCommGroup X] [Module.Finite ℤ X] (u : splitTorus S X ⟶ G) [IsMonHom u], (∀ (A : Type) [CommRing A] (g : K →+* A) (t : Over.mk (spMap g ≫ spMap (algebraMap R K) ≫ b) ⟶ splitTorus S X), t ≫ u = 1 → t = 1) → ∀ M : LieModel (splitTorus S X) (spMap (IsLocalRing.residue R) ≫ b) (X →+ IsLocalRing.ResidueField R), IsCocharLie M → ∀ δ, M.pt δ ≫ u = 1 → δ = 0 := by
   intro R K _ _ _ _ _ _ S b G _ _ X _ _ u _ hK M hM δ hδ
   by_contra hne
-  obtain ⟨l, hl, ψ, hψ, hk⟩ := GlobalTheory.T.torus_kernel_prime_quotient S G X u (IsLocalRing.ResidueField R)
+  obtain ⟨l, hl, ψ, hψ, hk⟩ := _root_.GlobalTheory.CompanionTheory.Ar.TsField.exists_mu_killed S G X u (IsLocalRing.ResidueField R)
     (spMap (IsLocalRing.residue R) ≫ b) M hM δ hne hδ
-  have hR := GlobalTheory.T.killsOver_of_adic_completion S G X u ψ.ker R b (killsOver_pow u ψ.ker b hk)
+  have hR := _root_.GlobalTheory.CompanionTheory.Ar.KillsAdic.killsOver_of_forall_pow S G X u ψ.ker R b (killsOver_pow u ψ.ker b hk)
   have hKk := killsOver_comp u ψ.ker b (algebraMap R K) hR
   haveI := Fact.mk hl
-  obtain ⟨-, -, h1, -, hex, -⟩ := GlobalTheory.T.charVal_multiplicative S X (AddMonoidAlgebra K (ZMod l))
+  obtain ⟨-, -, h1, -, hex, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.TorusPoints.main S X (AddMonoidAlgebra K (ZMod l))
     (spMap (algebraMap K (AddMonoidAlgebra K (ZMod l))) ≫ spMap (algebraMap R K) ≫ b)
   let w : Multiplicative X →* AddMonoidAlgebra K (ZMod l) :=
     (AddMonoidAlgebra.of K (ZMod l)).comp (AddMonoidHom.toMultiplicative ψ)

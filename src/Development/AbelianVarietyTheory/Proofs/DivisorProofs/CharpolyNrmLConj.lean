@@ -1,12 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
-import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteTwistedClassesCharpoly
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalTwistContinuousInvolutionIntegralProperties
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RegularTwistedOrbitLocalFinitenessStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedOrbitalIntegralProductGroupStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RegularTwistedOrbitLocalFiniteness
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedOrbitalIntegralProductGroup
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedOrbitalIntegralTwistedConjInvariant
+import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -171,7 +171,7 @@ theorem clSum_prod {G G' : Type} [Group G] [TopologicalSpace G] [IsTopologicalGr
     by_cases h1 : p.1.rep ∈ S <;> by_cases h2 : p.2.rep ∈ S'
     · simp only [hmem, h1, h2, and_self, if_true]
       rw [hind]
-      exact GlobalTheory.T.twistedOrbitalIntegral_productGroup G G' θ θ' K K' _ _ _ _ (fun x => index_ne θ K hK _ x) (fun x => index_ne θ' K' hK' _ x)
+      exact _root_.GlobalTheory.BCT.OrbProd.twOrb_prod G G' θ θ' K K' _ _ _ _ (fun x => index_ne θ K hK _ x) (fun x => index_ne θ' K' hK' _ x)
         (hfin θ K hK S hd _ h1) (hfin θ' K' hK' S' hd' _ h2)
     · rw [if_neg fun h => h2 (hmem.mp h).2, if_neg h2, mul_zero]
     · rw [if_neg fun h => h1 (hmem.mp h).1, if_neg h1, zero_mul]
@@ -222,7 +222,7 @@ theorem stTw2_unit : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr
           (Quotient.out q)⁻¹ * y * thL m w (Quotient.out q) ∈ GlobalTheory.LFun.KGL w (n := m)}.Finite := by
     intro m Q hQ y hy
     have hy' : (nrmL m w y).val.charpoly = Q := hy
-    exact (GlobalTheory.T.regularTwistedOrbit_local_finiteness E hE m w y (hy' ▸ hQ) _ (hL m)).2 _ (GlobalTheory.BCT.ThBasic.twist_basic E hE m w).2.2.2.2.2.1
+    exact (_root_.GlobalTheory.LocFin.main E hE m w y (hy' ▸ hQ) _ (hL m)).2 _ (GlobalTheory.BCT.ThBasic.twist_basic E hE m w).2.2.2.2.2.1
   exact clSum_prod (thL a w) (thL b w) _ _ _ _ (GlobalTheory.BCT.ThBasic.thL_mem_KGL hE a w)
     (GlobalTheory.BCT.ThBasic.thL_mem_KGL hE b w) (hS a Q₁) (hS b Q₂) (GlobalTheory.BCT.ClsFin.classes_finite E hE a w Q₁ h₁).1
     (GlobalTheory.BCT.ClsFin.classes_finite E hE b w Q₂ h₂).1 (hd a Q₁ h₁) (hd b Q₂ h₂)

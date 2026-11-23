@@ -2,15 +2,20 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DegVand
 public import Formalism.LocalRingCardinality.DataTies
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeSizeConsequencesOfWordIndependentHypsStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselDoubleCosetMeasureBigCellEqStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselModelSchurOfFormalDegreeDensityStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniqueHaarDensityAtIdentityStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsHaarOnBesselSubgroupProdMapStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralHilbertSchmidtNormSqBesselAmplitudeLeStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeSizeConsequencesOfWordIndependentHyps
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.BlockAnti
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselDoubleCosetMeasureBigCellEq
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UpperOff
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselModelSchurOfFormalDegreeDensity
+public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsHaarOnBesselSubgroupProdMap
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralHilbertSchmidtNormSqBesselAmplitudeLe
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalDataBothAmplitudeSidesStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableBcWeight
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableHsNormSqAmplitudeBesselUnitaryStatement
+import Formalism.PeriodIntegrals.QuotInv
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniqueHaarDensityAtIdentity
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableHsNormSqAmplitudeBesselUnitary
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnitaryQuotientCompactness.MaximalCompactIsCompact
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -67,7 +72,7 @@ theorem schurSt_of_big_tie_uniform : ∀ Cg cb Cu cT CT C1 : ℝ, ∃ C₀ : ℝ
   refine ⟨2 * |CT| + 2 * C1, fun C hC => ⟨0, ?_⟩⟩
   intro D large₂ C' Cl C0 hBig htie hB hL hZ τ w w' hTT θ hθ W hW A hA μsec hsec
   obtain ⟨-, -, hb, hm, hr, -, -, hk, hv, -, -, -, -, -, -, -, hTb, -, -⟩ :=
-    GlobalTheory.T.amplitudeSizeConsequences_of_wordIndependentHyps D large₂ C' Cl Cg cb Cu cT CT C0 hBig.1 hZ
+    _root_.GlobalTheory.Amp.SizesProof.sizes_of_hyp D large₂ C' Cl Cg cb Cu cT CT C0 hBig.1 hZ
   have hb1 : 1 ≤ large₂.sc.b := by linarith [Real.add_one_le_exp 1]
   have hθ0 : 0 < θ := lt_of_lt_of_le (Real.rpow_pos_of_pos (by linarith) _) hθ.1
   have hv0 : 0 < D.host.v := by linarith
@@ -83,12 +88,12 @@ theorem schurSt_of_big_tie_uniform : ∀ Cg cb Cu cT CT C1 : ℝ, ∃ C₀ : ℝ
   obtain ⟨t1, t2, t3, t4, t5, -, t7, t8, -, t10, -, -, t13, -, t15⟩ := hS'
   obtain ⟨-, -, -, -, hz, hz', -, -, -, -, -, hN, -, -⟩ := hW
   obtain ⟨-, -, a3, a4, a5, a6, -, -, -, -, P, hP, hdeg⟩ := hA
-  obtain ⟨c, hc, hdens, -⟩ := GlobalTheory.T.exists_unique_haarDensity_at_identity _ (GG D.R.k D.R.rS) W.μG (PI.QuotSetU.UnitaryGroupMassFormula.unitary_hermitian_group _ _) s6
-  have hSch := GlobalTheory.T.besselModel_schur_of_formalDegree_density D.R.k D.R.rS A.σ (epsSH D.R) D.cd _ P A.deg c W.μG (htie _ _) hP hdeg hc s6 hdens
+  obtain ⟨c, hc, hdens, -⟩ := _root_.GlobalTheory.MatHaarDensity.exists_hasDens _ (GG D.R.k D.R.rS) W.μG (PI.QuotSetU.UnitaryGroupMassFormula.unitary_hermitian_group _ _) s6
+  have hSch := _root_.GlobalTheory.FdegDens.schur_of_dens D.R.k D.R.rS A.σ (epsSH D.R) D.cd _ P A.deg c W.μG (htie _ _) hP hdeg hc s6 hdens
   have hd : 0 < A.deg := hdeg.1
   set κ : ℝ := (2 * D.host.v) ^ (-((D.R.rS : ℝ) * D.R.k)) * θ with hκ
   have hκ0 : 0 < κ := mul_pos (Real.rpow_pos_of_pos (by linarith) _) hθ0
-  obtain ⟨hmeas, hdis⟩ := GlobalTheory.T.besselDoubleCosetMeasure_bigCell_eq D.R.k D.R.rS W.z W.z' μsec W.μG W.μW W.μW' c κ hk1 s1 t1 s2 t2 hsec hc hκ0
+  obtain ⟨hmeas, hdis⟩ := _root_.GlobalTheory.DoubleCosetMeasure.isDis_bigCell D.R.k D.R.rS W.z W.z' μsec W.μG W.μW W.μW' c κ hk1 s1 t1 s2 t2 hsec hc hκ0
     s6 hdens s7 s8 t7 t8
   have hN' : haarLie (Nset D.R.k D.R.rS) (ENNReal.ofReal κ) = W.μN := hN.symm
   rw [hN'] at hdis
@@ -99,11 +104,11 @@ theorem schurSt_of_big_tie_uniform : ∀ Cg cb Cu cT CT C1 : ℝ, ∃ C₀ : ℝ
     rw [norm_smul, norm_inv, Complex.norm_real, norm_norm, inv_mul_cancel₀ hnv]
   unfold psiS at hM hM' a3 a4
   rw [psi_eq_psiGen] at hM hM' a3 a4
-  have hQ := GlobalTheory.T.lintegral_hilbertSchmidtNormSq_besselAmplitude_le D.R.k D.R.rS A.σ A.v0 _ _ A.cN W.μG _ _ W.νS W.νS' _ W.z W.z' _ _ W.π W.π' A.B A.B' a6 hstd
-    ⟨⟨s1, s2, s4, GlobalTheory.T.isHaarOn_besselSubgroup_prod_map _ _ _ _ _ s1 s2 s7 s9, inferInstance⟩, s5, s3⟩
-    ⟨⟨t1, t2, t4, GlobalTheory.T.isHaarOn_besselSubgroup_prod_map _ _ _ _ _ t1 t2 t7 s9, inferInstance⟩, t5, t3⟩
+  have hQ := _root_.GlobalTheory.Amp.SchurNorm.lintegral_hsNormSq_ampJ_le D.R.k D.R.rS A.σ A.v0 _ _ A.cN W.μG _ _ W.νS W.νS' _ W.z W.z' _ _ W.π W.π' A.B A.B' a6 hstd
+    ⟨⟨s1, s2, s4, _root_.GlobalTheory.SgInf.ProdHaarS.isHaarOn_prod_map _ _ _ _ _ s1 s2 s7 s9, inferInstance⟩, s5, s3⟩
+    ⟨⟨t1, t2, t4, _root_.GlobalTheory.SgInf.ProdHaarS.isHaarOn_prod_map _ _ _ _ _ t1 t2 t7 s9, inferInstance⟩, t5, t3⟩
     s10 t10 hM hM' a3 a4 s14 s15 t15 hBS hBS' hdis
-  have hFm := GlobalTheory.T.measurable_hsNormSq_amplitude_besselUnitary D.R.k D.R.rS W.μG A.cN A.Φ A.Φ' s6 s13 t13
+  have hFm := _root_.GlobalTheory.Amp.AmpMeas.measurable_hsNormSq_ampJ D.R.k D.R.rS W.μG A.cN A.Φ A.Φ' s6 s13 t13
   have hvk := volUn_pos D.R.k
   have hvk1 := volUn_pos (D.R.k - 1)
   have hvn := volUn_pos (2 * D.R.rS + D.R.k + 1)

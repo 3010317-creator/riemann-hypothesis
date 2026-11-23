@@ -3,7 +3,8 @@ module
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.MetricsProjectionFormulaNef
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FlagIndices
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagGrassmannPushOfInputsStatement
+public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.StatementsFlagGrassPush
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagGrassmannPushOfInputs
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.AssemblyBase
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PFSGeomDegPos
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.HFl
@@ -54,7 +55,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Giv
 theorem grassmann_height_Z2_of_push : GlobalTheory.CompanionTheory.Ar.PB.Inputs → ReciprocityTheory.ChartRestriction.G.Geo.ArithIntersectionSystemStatement →
     SuccessiveMinimaUpperBound → GroundTheory.Heights₂.Heights.LowerBoundFree.GrassmannianHeightZTwo.Statement :=
   fun hIn hAI hZ2 =>
-    GroundTheory.Heights₂.Heights.LowerBoundFree.GrassmannianHeightZTwo.proof hZ2 (GlobalTheory.T.flag_grassmann_push_of_inputs hIn hAI)
+    GroundTheory.Heights₂.Heights.LowerBoundFree.GrassmannianHeightZTwo.proof hZ2 (_root_.GlobalTheory.CompanionTheory.Ar.Giv.flagGrassPush hIn hAI)
       (GroundTheory.Heights₂.Heights.HilbertSamuel.FSGeomDegPos.proof hIn.degree
         GroundTheory.Heights₂.Heights.HilbertSamuel.MultiDegreePositive.full)
 

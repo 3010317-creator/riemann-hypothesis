@@ -2,14 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.RepL
 public import Mathlib.Analysis.Complex.UpperHalfPlane.Measure
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitStripIntegralEqIterated
+public import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
 import Aesop.Main
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitStripIntegralEqIteratedStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
-public import Mathlib.Analysis.SpecialFunctions.Gaussian.GaussianIntegral
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
@@ -94,7 +95,7 @@ theorem integrableOn_im_rpow_mul_exp_strip_one_le :
     ext τ; simp [and_comm]
   show ∫⁻ τ in {τ : ℍ | τ ∈ strip ∧ 1 ≤ τ.im}, ‖τ.im ^ r * Real.exp (-c * τ.im)‖ₑ < ⊤
   rw [hS, ← Measure.restrict_restrict hmT, ← lintegral_indicator hmT,
-    (GlobalTheory.T.unitStrip_integral_eq_iterated).1 _ ((hmeas.enorm).indicator hmT)]
+    (_root_.GlobalTheory.EisM.strip_iterated).1 _ ((hmeas.enorm).indicator hmT)]
   have hinner : Set.EqOn
       (fun y : ℝ => (∫⁻ x in Set.Ico (0 : ℝ) 1, {τ : ℍ | 1 ≤ τ.im}.indicator
         (fun τ => ‖τ.im ^ r * Real.exp (-c * τ.im)‖ₑ) (ofComplex (x + y * Complex.I))) *

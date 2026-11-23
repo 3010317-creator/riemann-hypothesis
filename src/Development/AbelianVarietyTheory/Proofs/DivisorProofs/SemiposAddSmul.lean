@@ -1,8 +1,10 @@
 module
 
 public import ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.FamilyLeCoords
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CurvatureLowerBoundOnCoverBallsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyAtlasBallPartitionCoverStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.EtaleEmpty
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CurvatureLowerBoundOnCoverBalls
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyAtlasBallPartitionCover
+public import ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.AApproxF
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,8 +46,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.AApproxF
-public import Development.AbelianVarietyTheory.Definitions.Divisors.EtaleEmpty
 import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.L2ExtensionLogCanonical
 
 @[expose] public section
@@ -57,8 +57,8 @@ namespace GlobalTheory.SemiPosLarge
 
 theorem semipos_add_smul : ∀ (n : ℕ) (Y : Type) [TopologicalSpace Y] [T2Space Y] [SecondCountableTopology Y] [MeasurableSpace Y] [BorelSpace Y] [CompactSpace Y] (ι La : Type) [AddCommGroup La] (A : WeightedAtlas n Y ι La), ∀ H G : La, (∀ i y, y ∈ (A.chart i).source → ∀ ξ : Fin n → ℂ, ξ ≠ 0 → 0 < A.leviAt i (A.ph H i) y ξ) → ∃ k0 : ℕ, ∀ k ≥ k0, A.Pos (G + k • H) (fun _ => 0) := by
   intro n Y _ _ _ _ _ _ ι La _ A H G hH
-  obtain ⟨C⟩ := GlobalTheory.T.nonempty_atlasBallPartitionCover n Y ι La A
-  obtain ⟨k0, hk0⟩ := GlobalTheory.T.curvature_lower_bound_on_cover_balls n Y ι La A C H G hH 0
+  obtain ⟨C⟩ := _root_.GlobalTheory.OTY.nonempty_cover n Y ι La A
+  obtain ⟨k0, hk0⟩ := _root_.GlobalTheory.OTY.CoverCurv.curv_cover n Y ι La A C H G hH 0
   refine ⟨k0, fun k hk i y hy ξ => ?_⟩
   have hcurv := hk0 k hk
 

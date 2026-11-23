@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NonemptyCuspFrame
 public import Development.AbelianVarietyTheory.Definitions.Divisors.WellChosen
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithHilbertSamuelRankDegreeShareLeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithHilbertSamuelRankDegreeShareLe
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AsIdealSpMapClosedPoint
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ImageDegEqDel
 import Mathlib.Algebra.Order.Floor.Extended
@@ -67,7 +67,7 @@ theorem choose_mul_compDeg_le : Quoted → ∀ (E : Type) [Field E] [NumberField
   have hD : (h.data f₁ f₂ th k).D = CompHt.dimFlag Dw := hp.1
   have e := GlobalTheory.HSCore.ImageDegree.imageDeg_eq_del hQ c.F (h.data f₁ f₂ th k).toTuple _ _ _ _ _
     (h.data f₁ f₂ th k).geom hB hp.2
-  refine share_of_data (h.data f₁ f₂ th k) hD rfl (h.d_eq f₁ f₂ th k) ?_ (GlobalTheory.T.arithHilbertSamuel_rankDegree_share_le hQ c.F _ hn hb)
+  refine share_of_data (h.data f₁ f₂ th k) hD rfl (h.d_eq f₁ f₂ th k) ?_ (_root_.GlobalTheory.HSCore.share_le hQ c.F _ hn hb)
   rw [← e, CompHt.compDeg, ← hD]
 
 end GlobalTheory.HSCore.CompShare

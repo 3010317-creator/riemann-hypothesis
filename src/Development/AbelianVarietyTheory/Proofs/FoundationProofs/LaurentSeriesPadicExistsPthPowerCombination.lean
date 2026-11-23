@@ -1,7 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.NotCoboundaryConstantOne
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LaurentSeriesEqSumSingleMulPowStatement
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.RingTheory.LaurentSeries
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LaurentSeriesEqSumSingleMulPow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -89,7 +91,7 @@ theorem red_single (a : ℤ) : red p (HahnSeries.single a (1 : ℤ_[p])) = HahnS
 
 theorem exists_pow_comb (f : Lau p) : ∃ (g : Fin p → Lau p) (h : Lau p),
     f = ∑ j : Fin p, HahnSeries.single ((j : ℕ) : ℤ) (1 : ℤ_[p]) * g j ^ p + (p : Lau p) * h := by
-  obtain ⟨G, hG⟩ := GlobalTheory.T.laurentSeries_eq_sum_single_mul_pow_prime p (red p f)
+  obtain ⟨G, hG⟩ := _root_.GlobalTheory.laurentSeries_eq_sum_single_mul_pow p (red p f)
   set S : Lau p := ∑ j : Fin p, HahnSeries.single ((j : ℕ) : ℤ) (1 : ℤ_[p]) * lift p (G j) ^ p
   have hS : red p S = red p f := by
     rw [hG]

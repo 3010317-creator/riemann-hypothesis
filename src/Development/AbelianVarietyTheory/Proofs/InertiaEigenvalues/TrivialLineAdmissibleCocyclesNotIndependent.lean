@@ -2,12 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ResBound
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleLetterDataWindowArithmetic
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPhiGammaModelExtensionCocyclePairStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPhiGammaModelExtensionCocyclePair
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobSubOneBij
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemCoboundariesOfHerrPairCoboundaryStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemCoboundariesOfHerrPairCoboundary
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SmulAdd
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NabBijectiveWindow
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SmulAddStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistedPhiGammaModelCharacterEqStandardStatement
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TwistedModelAdmissibleCocycles
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistedPhiGammaModelCharacterEqStandard
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -150,10 +151,10 @@ theorem exists_const_pair (F : DFun R n G) {r : ℕ} {Dt : TopData n r} (M : Mod
     (h2 : Dt.T2 l) (h3 : Dt.T3 l) (z : G → Fin 1 → k) (hz : z ∈ M.twistedModelAdmissibleCocycles (chr 1)) :
     ∃ (b g m : ZMod n → Vc k 1) (c : ZMod n → k), Repr F (chr 1) z b g ∧
       ∀ i, b i = (F.D (chr 1)).φ i (m (i - 1)) - m i + c i • F.unit i ∧ g i = (F.D (chr 1)).γ i (m i) - m i := by
-  obtain ⟨N, b, g, hN, hR, hZ⟩ := GlobalTheory.T.exists_phiGammaModel_extension_cocycle_pair F M h1 h2 h3 (chr 1) z hz
+  obtain ⟨N, b, g, hN, hR, hZ⟩ := _root_.GlobalTheory.TopSteps.ExtPair.exists_model_repr_inZZ F M h1 h2 h3 (chr 1) z hz
   have hω : M.ω ^ (-(0 : ℤ)) = 1 := by simp
   have ht : (0 : ℤ) < Dt.t := by exact_mod_cast Dt.one_le_letterBlockLength
-  have hCH := GlobalTheory.T.twistedPhiGammaModel_character_eq_standard F M h1 h2 h3 0 le_rfl ht N
+  have hCH := _root_.GlobalTheory.Models.CharModel.model_chr_eq F M h1 h2 h3 0 le_rfl ht N
   rw [hω] at hCH
   obtain rfl := hCH hN
   have hb : ∀ i, ∃ β : k⟦X⟧, b i = (β : k⸨X⸩) • F.unit i := fun i => by
@@ -196,8 +197,8 @@ theorem main : ∀ {k G : Type} [Field k] [Group G] {l n : ℕ} [Fact l.Prime] [
     intro p q x hx
     obtain ⟨d, hd⟩ := exists_diff_of_sum_eq_zero (fun i => x * c p i + c q i)
       (by rw [Finset.sum_add_distrib, ← Finset.mul_sum, hx])
-    have hr := GlobalTheory.T.repr_smul_add F (chr 1) x (z p) (z q) _ _ _ _ (hR p) (hR q)
-    have h0 := GlobalTheory.T.mem_coboundaries_of_herrPair_coboundary F (chr 1) _ _ _ hr (by
+    have hr := _root_.GlobalTheory.TopSteps.Repr.smul_add F (chr 1) x (z p) (z q) _ _ _ _ (hR p) (hR q)
+    have h0 := _root_.GlobalTheory.TopSteps.mem_cob_of_repr_mem_herrB F (chr 1) _ _ _ hr (by
       refine ⟨fun i => x • m p i + m q i + d i • F.unit i, Prod.ext (funext fun i => ?_) (funext fun i => ?_)⟩
       · change (F.D (chr 1)).φ i (x • m p (i - 1) + m q (i - 1) + d (i - 1) • F.unit (i - 1)) -
           (x • m p i + m q i + d i • F.unit i) = x • b p i + b q i

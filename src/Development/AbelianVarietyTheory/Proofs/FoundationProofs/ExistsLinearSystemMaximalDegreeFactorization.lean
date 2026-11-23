@@ -2,10 +2,12 @@ module
 
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Mathlib.RingTheory.DedekindDomain.Basic
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsDegreeLtTwoCorrectionSimpleZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLowDegreeCoordsModMulStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsSquarefreePolyDistinctZerosOnCurveStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NormDegreeBoundPolynomialCombinationStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsDegreeLtTwoCorrectionSimpleZero
+public import Mathlib.RingTheory.Norm.Defs
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLowDegreeCoordsModMul
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsSquarefreePolyDistinctZerosOnCurve
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NormDegreeBoundPolynomialCombination
+public import Mathlib.LinearAlgebra.FreeModule.Norm
 import Mathlib.Algebra.AffineMonoid.UniqueSums
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -21,7 +23,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.LinearAlgebra.FreeModule.Norm
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -124,8 +125,8 @@ theorem GlobalTheory.linear_system_setup : ∀ (k A : Type) [Field k] [IsAlgClos
   simp only [Nat.add_sub_cancel]
   set n := Module.finrank k[X] A
   let b : Module.Basis (Fin n) k[X] A := Module.finBasis k[X] A
-  obtain ⟨c, lam, hdeg1, hdeg2⟩ := GlobalTheory.T.norm_degree_bound_polynomial_combination k A n b
-  obtain ⟨p, hp2, hpP, hpP2⟩ := GlobalTheory.T.exists_degree_lt_two_correction_simple_zero k A n b P₀ (∑ i, (C (lam i) * X ^ 2) • b i) hP
+  obtain ⟨c, lam, hdeg1, hdeg2⟩ := _root_.GlobalTheory.NormDegree.natDegree_norm_of_coord_degree k A n b
+  obtain ⟨p, hp2, hpP, hpP2⟩ := _root_.GlobalTheory.exists_deg_lt_two_correction_simple k A n b P₀ (∑ i, (C (lam i) * X ^ 2) • b i) hP
   set f₁ : A := ∑ i, (C (lam i) * X ^ 2 + p i) • b i with hf₁def
   have hf₁eq : (∑ i, (C (lam i) * X ^ 2) • b i) + ∑ i, p i • b i = f₁ := by
     rw [hf₁def, ← Finset.sum_add_distrib]; simp [add_smul]
@@ -141,7 +142,7 @@ theorem GlobalTheory.linear_system_setup : ∀ (k A : Type) [Field k] [IsAlgClos
     have : Ideal.span {f₁} ≤ D := hD ▸ Ideal.mul_le_right
     exact (Ideal.span_singleton_le_iff_mem _).1 this
   set s := n * 2 + c with hs
-  obtain ⟨q, r, Q, hqm, hqdeg, hQmax, hQinj, hf₁Q, hqQ⟩ := GlobalTheory.T.exists_squarefree_poly_distinct_zeros_on_curve k A f₁ s hf₁0
+  obtain ⟨q, r, Q, hqm, hqdeg, hQmax, hQinj, hf₁Q, hqQ⟩ := _root_.GlobalTheory.SquarefreeFibre.main k A f₁ s hf₁0
   set d := 2 + (M + 1) * s with hd
   have hspan : ∀ m : ℕ, Ideal.span {f₁ * algebraMap k[X] A (q ^ m)} = P₀ * D * ∏ i, Q i ^ m := by
     intro m
@@ -183,7 +184,7 @@ theorem GlobalTheory.linear_system_setup : ∀ (k A : Type) [Field k] [IsAlgClos
     obtain ⟨x, hx, y, hy, hxy⟩ := Submodule.mem_sup.1 h1
     have hqd : (Algebra.norm k[X] f₁).natDegree + (q ^ M).natDegree ≤ d + 1 := by
       rw [hqm.natDegree_pow, hqdeg, hf₁deg, hd, hs]; nlinarith
-    obtain ⟨p', hp'd, hp'⟩ := GlobalTheory.T.exists_lowDegree_coords_mod_mul k A n b f₁ (q ^ M) d hf₁0 (pow_ne_zero _ hqm.ne_zero)
+    obtain ⟨p', hp'd, hp'⟩ := _root_.GlobalTheory.exists_lowDegree_coords_mod k A n b f₁ (q ^ M) d hf₁0 (pow_ne_zero _ hqm.ne_zero)
       hqd (u * y)
     rw [hspan M] at hp'
     have hP0 : P₀ * D * ∏ i, Q i ^ M ≤ D := Ideal.mul_le_left.trans Ideal.mul_le_right

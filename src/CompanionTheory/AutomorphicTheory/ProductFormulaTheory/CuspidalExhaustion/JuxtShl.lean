@@ -2,10 +2,13 @@ module
 
 public import CompanionTheory.AutomorphicTheory.ProductFormulaTheory.CuspidalExhaustion.JuxtDefs
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IrreducibleAdmissibleGL
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.LSegJacquet
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityPos
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.ZelevinskyInterleaving.Interleave
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ShuffleOfPerm
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.ZelevinskyInterleaving.LInjective
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WordOccursOfSubquotient
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.NotInSupportOfSubsingleton
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityPosStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ShuffleOfPermStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WordOccursOfSubquotientStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -111,10 +114,10 @@ theorem words_of_subq (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (hW 
   have hnt : ∃ v, f v ≠ 0 := by
     obtain ⟨v, hv⟩ := exists_ne (0 : σ.2.rep.V)
     exact ⟨v, fun h => hv (hf (h.trans (f.toLinearMap.map_zero).symm))⟩
-  have h1 : 1 ≤ jm l.get hd2 σ.rep := GlobalTheory.T.jacquet_multiplicity_pos hA l.get hd2 σ.rep σ.2.rep.smooth f hnt
+  have h1 : 1 ≤ jm l.get hd2 σ.rep := _root_.GlobalTheory.CompanionTheory.FrobJm.one_le_jm hA l.get hd2 σ.rep σ.2.rep.smooth f hnt
   have hwd : Wd σ.rep l := ⟨hd2, by intro h; rw [h] at h1; simp at h1⟩
   have hwd2 : Wd (prodIrr [nxt Δ, b].get hd1) l :=
-    GlobalTheory.T.word_occurs_of_subquotient _ σ.rep (isSmooth_prodIrr _ _) hsub l hwd
+    _root_.GlobalTheory.CompanionTheory.Words.wd_of_isSubquotient _ σ.rep (isSmooth_prodIrr _ _) hsub l hwd
   have hc : (nxt Δ).IsCusp := Δ.isCusp_first.nu _
   obtain ⟨L, hL, hsh⟩ := hW [nxt Δ, b].get hd1 ![Segment.single (nxt Δ) hc, Δ] (by
       intro i
@@ -124,7 +127,7 @@ theorem words_of_subq (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (hW 
   have hL' : L.Perm [Segment.single (nxt Δ) hc, Δ] := by
     rw [← Multiset.coe_eq_coe, hL]
     simp [Fin.univ_val_map]
-  have h2 := GlobalTheory.T.shuffle_of_perm _ _ l hsh (hL'.map decW)
+  have h2 := _root_.GlobalTheory.CompanionTheory.ShuffleWords.shuffle_perm _ _ l hsh (hL'.map decW)
   rw [List.map_cons, List.map_cons, List.map_nil, decW_single] at h2
   exact shuffle_two_single h2
 

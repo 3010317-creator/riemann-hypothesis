@@ -2,11 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.BlockAnti
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselUnipotentMulVecMiddleVec
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FibreGramNumberNullAndCutoffIntegralBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagUnipotentLebesgueMeasureIsHaarOnStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FibreGramNumberNullAndCutoffIntegralBound
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UpperOff
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagUnipotentLebesgueMeasureIsHaarOn
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IwasawaDecompositionIsotropicFlag
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnimodularBesselSubgroupsUWN
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MajorantFlagLengthsInvarianceTorusPositivity
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnimodularBesselSubgroupsUWNStatement
 import Formalism.FormalDegreeBessel.FinalG
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -125,7 +127,7 @@ theorem fibre_volume : ∀ (k r : ℕ) (z z' : (Fin (2 * r + k + 1) → ℂ)) (�
     exact hDe.2 l hl hne
 
   obtain ⟨n', hn', a, ha, m, hm, κ, hκ, hdec⟩ := GlobalTheory.Amp.Iwa.iwasawa k r (n₂ * g₁) (GG_mul hn₂G hg₁)
-  have hB := GlobalTheory.T.fibre_gramNumber_null_and_cutoff_integral_bound k r z z' g₀ β De hr hk hTF0 hNorm hDe0 m hm a ha
+  have hB := _root_.GlobalTheory.Amp.FibNf.fibre_bound k r z z' g₀ β De hr hk hTF0 hNorm hDe0 m hm a ha
   set A := uEmb k r (Matrix.diagonal fun b => (a b : ℂ)) * mEmb k r m with hA
   have hn'G : n' ∈ GG k r := hn'.1
   have hdec' : n₂ * g₁ = n' * A * κ := by rw [hdec, hA]; simp only [mul_assoc]
@@ -135,9 +137,9 @@ theorem fibre_volume : ∀ (k r : ℕ) (z z' : (Fin (2 * r + k + 1) → ℂ)) (�
     rw [this]; exact GG_mul (GG_inv hn'G) (GG_mul hn₂G hg₁)
   have hg : n₂⁻¹ * (n' * (A * κ)) = g₁ := by rw [← mul_assoc n' A, ← hdec', c2]
 
-  have hl2 : (lebN k r).map (lmulM n₂) = lebN k r := (GlobalTheory.T.flagUnipotentLebesgueMeasure_isHaarOn k r).2.2.2 n₂ hn₂
+  have hl2 : (lebN k r).map (lmulM n₂) = lebN k r := (_root_.GlobalTheory.Amp.NHaar.isHaarOn_lebN k r).2.2.2 n₂ hn₂
   have hr2 : (lebN k r).map (rmulM (n₂⁻¹ * n')) = lebN k r :=
-    ((GlobalTheory.T.unimodular_besselSubgroups_UW_N k r z hz hT (lebN k r)).2.1 (GlobalTheory.T.flagUnipotentLebesgueMeasure_isHaarOn k r)).1.1 _ ((nSubgroup k r).2.1 _ hn₂i _ hn')
+    ((_root_.GlobalTheory.SgInf.unimodular_S_N_UW k r z hz hT (lebN k r)).2.1 (_root_.GlobalTheory.Amp.NHaar.isHaarOn_lebN k r)).1.1 _ ((nSubgroup k r).2.1 _ hn₂i _ hn')
   have hu' : IsUnit (n₂⁻¹ * n').det := GG_unit (GG_mul (GG_inv hn₂G) hn'G)
   obtain ⟨e, he_map, he⟩ : ∃ e : Mt k r ≃ᵐ Mt k r, (lebN k r).map e = lebN k r ∧
       ∀ n, Matrix.of (e n) = n₂ * Matrix.of n * (n₂⁻¹ * n') :=

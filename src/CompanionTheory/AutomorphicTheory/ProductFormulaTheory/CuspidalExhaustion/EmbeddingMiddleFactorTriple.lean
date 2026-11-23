@@ -7,8 +7,10 @@ public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.
 public import CompanionTheory.AutomorphicTheory.ProductFormulaTheory.CuspidalExhaustion.EquivTripleProductOfIso
 public import CompanionTheory.AutomorphicTheory.ProductFormulaTheory.CuspidalExhaustion.MidExact
 public import CompanionTheory.AutomorphicTheory.ProductFormulaTheory.CuspidalExhaustion.MidGen
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductIrreducibleFiniteLength
+public import CompanionTheory.AutomorphicTheory.ProductFormulaTheory.CuspidalExhaustion.MidDefs
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyEquivContraOfChar
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductIrreducibleFiniteLengthStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +51,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import CompanionTheory.AutomorphicTheory.ProductFormulaTheory.CuspidalExhaustion.MidDefs
 
 @[expose] public section
 
@@ -101,7 +102,7 @@ theorem sq_pr_iff (x : IrrGL (k := k)) {a : ℕ} (z : Fin a → IrrGL (k := k)) 
 
 unseal GlobalTheory.ProdFlatten.one GlobalTheory.ProdFlatten.two GlobalTheory.ProdFlatten.mp GlobalTheory.ProdFlatten.pr GlobalTheory.ProdFlatten.Iso GlobalTheory.ProdFlatten.Sm in
 theorem fl_pr (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) {a N : ℕ} (z : Fin a → IrrGL (k := k)) (hd : ∑ i, (z i).1 = N) : FL (pr z hd) :=
-  GlobalTheory.T.product_irreducible_finite_length hA z hd
+  _root_.GlobalTheory.CompanionTheory.ProdFL.main hA z hd
 
 unseal GlobalTheory.ProdFlatten.one GlobalTheory.ProdFlatten.two GlobalTheory.ProdFlatten.mp GlobalTheory.ProdFlatten.pr GlobalTheory.ProdFlatten.Iso GlobalTheory.ProdFlatten.Sm in
 theorem iso_one_pr (x : IrrGL (k := k)) (hd : ∑ _ : Fin 1, x.1 = x.1) : Iso (one x) (pr (fun _ : Fin 1 => x) hd) :=

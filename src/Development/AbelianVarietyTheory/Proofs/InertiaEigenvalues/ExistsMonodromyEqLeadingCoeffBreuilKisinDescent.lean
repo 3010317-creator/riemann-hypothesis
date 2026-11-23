@@ -1,12 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExistsAlgebraMapEqRoot
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinDescentOperatorPreservesLatticeStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinIntegralityComputationStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinZetaFineBoundSecondBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsMemTameDescentClassEqOfPowMemStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MonodromyMemRangeOfInvariantVectorStatement
+public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.ImagePolynomialAction
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinDescentOperatorPreservesLattice
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinZetaFineBoundSecondBasis
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsMemTameDescentClassEqOfPowMem
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MonodromyMemRangeOfInvariantVector
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SmulPowMemSpanPowSmulTop
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinIntegralityComputation
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -71,8 +72,8 @@ theorem exists_Mon_eq_Lc_cls : ∀ (O K : Type) [CommRing O] [NormedField K] [Is
   have hlK : (l : K) ≠ 0 := natCast_l_ne_zero
   set k : ℕ := l - 14 * H with hk
   have hlk : ((l : K) ^ k) ≠ 0 := pow_ne_zero _ hlK
-  have hint := GlobalTheory.T.breuilKisin_descent_operator_preserves_lattice O K l e a ι η H D hηH hl2
-  have hcomp := GlobalTheory.T.breuilKisin_integrality_computation O K l e a ι η H D hηH hl2
+  have hint := _root_.GlobalTheory.Proof.breuilKisin_descent_operator_preserves_lattice.integral O K l e a ι η H D hηH hl2
+  have hcomp := _root_.GlobalTheory.IntegralityComp.integralityComputation O K l e a ι η H D hηH hl2
   have hY'Y : ∀ {y : Vec K a ι}, y ∈ D.Y' → y ∈ D.Y := fun h => D.desc.Y'_le_Y η h
 
   let LcK : Vec K a ι →ₗ[K] D.Pol := D.Lc ∘ₗ D.cls
@@ -86,7 +87,7 @@ theorem exists_Mon_eq_Lc_cls : ∀ (O K : Type) [CommRing O] [NormedField K] [Is
   have hP : ∀ v : D.Y', PK.restrictScalars O (v : Vec K a ι) ∈ D.Z := by
     intro v
     have hv := v.2
-    obtain ⟨p, hp, f, hf, hz⟩ := GlobalTheory.T.breuilKisin_zeta_fine_bound_second_basis O K l e a ι η H D hη1 hηH (by omega) v hv
+    obtain ⟨p, hp, f, hf, hz⟩ := _root_.GlobalTheory.BK.zeta_Y'_fine_bound O K l e a ι η H D hη1 hηH (by omega) v hv
     have hEf : D.cls (E K l e • f) = 0 := by
       rw [PhiMod.cls_eq_zero_iff]
       have h1 := hcomp.2.1 f hf
@@ -128,7 +129,7 @@ theorem exists_Mon_eq_Lc_cls : ∀ (O K : Type) [CommRing O] [NormedField K] [Is
     intro v
     refine ⟨(hW _).2 ⟨D.cls v, D.desc.mem_Zl_of_mem_Z (D.desc.cls_mem_Z (hY'Y v.2)), rfl⟩, (hW _).2 ?_⟩
     rw [hsum]
-    obtain ⟨-, w, hw, h⟩ := GlobalTheory.T.monodromy_mem_range_of_invariant_vector O K l e a ι η H D v
+    obtain ⟨-, w, hw, h⟩ := _root_.GlobalTheory.BK.BKDat.Mon_mem_range_Lc O K l e a ι η H D v
       (D.desc.mem_Yl_iff.2 ⟨0, by rw [pow_zero, one_smul]; exact hY'Y v.2⟩)
     exact ⟨w, hw, h⟩
   have h2 : ∀ z : D.Z, (l : O) • z ∈ W → z ∈ W := by
@@ -140,7 +141,7 @@ theorem exists_Mon_eq_Lc_cls : ∀ (O K : Type) [CommRing O] [NormedField K] [Is
   have h3 : ∀ z ∈ W, (l : O) ^ (η + (N + 1) * η) • z ∈ LinearMap.range Lc' := by
     intro z hz
     obtain ⟨w, hw, h⟩ := (hW z).1 hz
-    obtain ⟨y', hy', hy'eq⟩ := GlobalTheory.T.exists_mem_tameDescent_class_eq_of_pow_mem O K l e a ι η H D U N hU hUI hUc hηH (by omega) hl2 0 w hw
+    obtain ⟨y', hy', hy'eq⟩ := _root_.GlobalTheory.LcImage.exists_mem_Y'_Lc_cls_eq O K l e a ι η H D U N hU hUI hUc hηH (by omega) hl2 0 w hw
       (by rw [pow_zero, one_smul, h]; exact z.2)
     refine ⟨⟨y', hy'⟩, Subtype.ext ?_⟩
     rw [hLc'apply, Submodule.coe_smul_of_tower, ← algebraMap_smul K ((l : O) ^ (η + (N + 1) * η)), map_pow, map_natCast, ← h, hy'eq,

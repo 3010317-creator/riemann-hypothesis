@@ -3,10 +3,14 @@ module
 public import Development.AbelianVarietyTheory.Definitions.ThetaValues.GamAt
 public import Formalism.LocalToGlobal.ProjectiveLattices.HasDataCondition
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.SupBoundPageRows
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsClearingIntegersPrincipalDatumHostStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.CuspidalL2Subspace
+public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FundamentalDomainPointBound
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsClearingIntegersPrincipalDatumHost
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsNetAllComponentsMax
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsRankOneCuspDataLogBoundsStatement
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.LogCardComponentsLeAtGoodEmbeddingStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.SupGenTies
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsRankOneCuspDataLogBounds
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.LogCardComponentsLeAtGoodEmbedding
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,9 +57,9 @@ theorem exists_net_max_at_goodEmb : ∀ (D : D7) (T : Top D) (_h : LawsP T), Gam
 
   have hne0 : Nonempty (T.U j σ).Comp := ⟨(T.dict j σ 1).1⟩
   obtain ⟨-, hlrd, hd, hcc, hlf, -, -, -, hn⟩ := id hw
-  obtain ⟨-, -, -, -, -, hfdeg, hdE, -, hfr, hf1, -, -, -⟩ := GlobalTheory.T.exists_clearing_integers_principalDatum_host D large₂.sc.L hL hlrd hd hcc
-  obtain ⟨e, M, wg, hM1, hMl, hwg, hwgl, -, hk⟩ := GlobalTheory.T.exists_rankOne_cuspData_log_bounds D T h hG large₂ j hj w hw hL hrn σ hσ
-  have hcard := GlobalTheory.T.log_card_components_le_at_good_embedding D T h large₂ j hj w hw hL hrn hf σ hσ
+  obtain ⟨-, -, -, -, -, hfdeg, hdE, -, hfr, hf1, -, -, -⟩ := _root_.GlobalTheory.HostClear.host_clear D large₂.sc.L hL hlrd hd hcc
+  obtain ⟨e, M, wg, hM1, hMl, hwg, hwgl, -, hk⟩ := _root_.GlobalTheory.CuspDataBounds.cusp_data_bounds D T h hG large₂ j hj w hw hL hrn σ hσ
+  have hcard := _root_.GlobalTheory.RunIn.log_card_comp_le D T h large₂ j hj w hw hL hrn hf σ hσ
   have hL1 : (1 : ℝ) ≤ large₂.sc.L := by linarith
   have hr1 : 1 ≤ D.R.r := le_trans hf1 hfr
   have hF1 : (1 : ℝ) ≤ (fdeg D.host.E : ℝ) := by rw [hfdeg]; exact_mod_cast hf1

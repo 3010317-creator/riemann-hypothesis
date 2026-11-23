@@ -7,10 +7,20 @@ public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.Rel
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSchemeOfIsGrpPullback
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PushEquivSymmLeft
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsIntegralAdeleLimitCompatibleIntSystem
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeTateDualEqOfOmegaEqStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeEqOfCodimOneEqStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NormalCodimOneStalkDvrStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegAtNoetherianModelNoetherianStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.MemEigSpOfMemHtDual
+public import Mathlib.Algebra.AffineMonoid.Basic
+public import Mathlib.RingTheory.DedekindDomain.Different
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeTateDualEqOfOmegaEq
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EtaleLocalizationAtPrimeTensorOfLowHeight
+public import Mathlib.AlgebraicGeometry.Noetherian
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeEqOfCodimOneEq
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NormalCodimOneStalkDvr
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+public import Mathlib.AlgebraicGeometry.Properties
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegAtNoetherianModelNoetherian
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SemiabelianLieLatticeAgree
 public import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.LatticeStalkDvrTwistedModels
 import Mathlib.Algebra.Order.Floor.Extended
@@ -359,7 +369,7 @@ theorem bund : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
     labels_side E H l c Ω A.cst g s s' (by have h := hss'; unfold HodgeCpt.emb at h; rwa [← hc] at h)
 
   haveI : IsLocallyNoetherian A'.X := by
-    have := (GlobalTheory.T.regAt_noetherian_model_noetherian A'.X Ω A'.ξ ℤ ((k : K) → J k) (fun c' => ∏ k, y ⟨k, c' k⟩) A'.tie).2 A'.all
+    have := (_root_.GlobalTheory.CompanionTheory.Ar.CoordNoeth.noetherian_of_coordTie A'.X Ω A'.ξ ℤ ((k : K) → J k) (fun c' => ∏ k, y ⟨k, c' k⟩) A'.tie).2 A'.all
     haveI := this.1
     infer_instance
   let M₂ : LieModel A'.t.G A'.ξ A.Li := Flat.lieModelOfEquiv A'.M φ
@@ -399,16 +409,16 @@ theorem bund : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
     rw [← heig]
     exact h1
   have hagree : ∀ q ∈ (Set.univ : Set (Cpt A'.ξ)), La q = Lb q := by
-    refine GlobalTheory.T.lattice_eq_of_codim_one_eq A'.X Ω A'.ξ A'.tie.gen Set.univ (fun _ _ _ _ => trivial)
+    refine _root_.GlobalTheory.CompanionTheory.Ar.lat_agree_of_height_one A'.X Ω A'.ξ A'.tie.gen Set.univ (fun _ _ _ _ => trivial)
       (fun p _ => (A'.normal p.1).2) A.Li La Lb (labelRk D s) (eigSp A.ρ (A.emb s)) hvbA hvbB ?_
     intro q _ hq1
-    have hdvr := GlobalTheory.T.normal_codim_one_stalk_dvr A'.X A'.normal q.1 hq1
+    have hdvr := _root_.GlobalTheory.CompanionTheory.Ar.stalk_isDiscreteValuationRing_of_dim_one A'.X A'.normal q.1 hq1
     rw [hLb]
     simp only [La, Lat.patch]
     split_ifs with hF
     · refine iInf_congr fun p => iInf_congr fun hp => iInf_congr fun _ => ?_
       rw [hR p hp]
-      have key := GlobalTheory.T.hodge_tate_dual_eq_of_omega_eq E g.s A'.X Ω A'.ξ t.G A'.t.G t.PP.L A'.t.PP.L A.Li M₁ M₂ (p ^ A.R p)
+      have key := _root_.GlobalTheory.CompanionTheory.Ar.htDual_htW_relabel E g.s A'.X Ω A'.ξ t.G A'.t.G t.PP.L A'.t.PP.L A.Li M₁ M₂ (p ^ A.R p)
         (p ^ A.R p) A.ρ (A.emb s) q (hom q hdvr p hp)
       rcases s with τ | τ <;> rcases s' with τ' | τ' <;> simp at hside
       · simp only [htLabel]; rw [hss']; exact key.2.symm

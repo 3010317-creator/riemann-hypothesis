@@ -2,7 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TorsTransport
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasSumZeroOfTwoLe
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDenominatorPrimeToLFiniteAdeleStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.EntireEqOfHalfPlane
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDenominatorPrimeToLFiniteAdele
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.DefiningCoordinates
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.OmegaFactorization
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.VpBounds
+public import Development.AbelianVarietyTheory.Definitions.Divisors.JetAnalytic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -41,10 +46,8 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.OmegaFactorization
 import Development.AbelianVarietyTheory.Definitions.Divisors.HasLevelStd
 import Development.AbelianVarietyTheory.Definitions.Divisors.HasQIff
-public import Development.AbelianVarietyTheory.Definitions.Divisors.JetAnalytic
 
 @[expose] public section
 
@@ -64,7 +67,7 @@ namespace GlobalTheory.HilbFam.LatticeUp
 theorem exists_mul_integral : ∀ (E : Type) [Field E] [NumberField E] (l : ℕ) (c : Ideal (OF E)) (y : (Af E)ˣ), l.Prime →
     OneOver l y → ∃ M : ℕ, ¬ l ∣ M ∧ ∀ x ∈ lattice c y, IsIntegral ℤ ((M : E) * x) := by
   intro E _ _ l c y hl hy
-  obtain ⟨M, hM, hMv⟩ := GlobalTheory.T.exists_denominator_prime_to_l_finiteAdele E l (y : Af E) hl fun w hw => by rw [hy w hw, map_one]
+  obtain ⟨M, hM, hMv⟩ := _root_.GlobalTheory.HilbFam.AdeleDen.exists_den_prime_to E l (y : Af E) hl fun w hw => by rw [hy w hw, map_one]
   refine ⟨M, hM, fun x hx => ?_⟩
   have hx' : algebraMap E (Af E) x * (↑y⁻¹ : Af E) ∈ hatO c := hx
   have key : algebraMap E (Af E) ((M : E) * x) =

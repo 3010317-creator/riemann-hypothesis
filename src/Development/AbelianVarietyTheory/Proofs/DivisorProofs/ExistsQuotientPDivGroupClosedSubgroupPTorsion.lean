@@ -1,11 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ToSpanSingletonConstGenInjective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BialgHomFactorThroughSplitInjectionStatement
+public import Mathlib.RingTheory.Bialgebra.Hom
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BialgHomFactorThroughSplitInjection
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsQuotPDivGroup
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsQuotientFiniteCommGroupSchemeClosedSubgrouStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.KerIdealCompOfSurjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsQuotientFiniteCommGroupSchemeClosedSubgrou
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivSubgroupQuotientTowerRSEqSRes
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuotientTransitionSurjectiveSameSubgroupStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuotientTransitionSurjectiveSameSubgroup
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsRetractionMulP
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -47,7 +50,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsRetractionMulP
 import Development.AbelianVarietyTheory.Definitions.Divisors.RedSurjective
 
 @[expose] public section
@@ -103,7 +105,7 @@ theorem GlobalTheory.HTPair.exists_quot_field : ∀ (p : ℕ) [Fact p.Prime] (k 
   have hsurj : ∀ m, Function.Surjective (π.comp (levelRes G m)) := fun m =>
     hπ.comp (levelRes_surjective G m)
   choose B iR iH iC iF j hinj hker huniv using
-    fun m => GlobalTheory.T.exists_quotient_finiteCommGroupScheme_closedSubgroup k (G.A (m + 1)) C (π.comp (levelRes G m)) (hsurj m)
+    fun m => _root_.GlobalTheory.HopfQuot.exists_quotient k (G.A (m + 1)) C (π.comp (levelRes G m)) (hsurj m)
   letI := iR
   letI := iH
   letI := iC
@@ -116,7 +118,7 @@ theorem GlobalTheory.HTPair.exists_quot_field : ∀ (p : ℕ) [Fact p.Prime] (k 
   have hfac : ∀ m (D : Type) [CommRing D] [Bialgebra k D] (f : D →ₐc[k] G.A (m + 1)),
       kerIdeal f ≤ RingHom.ker (π.comp (levelRes G m)) →
         ∃ g : D →ₐc[k] B m, ∀ d, j m (g d) = f d := fun m D _ _ f hf =>
-    GlobalTheory.T.bialgHom_factor_through_split_injection k (G.A (m + 1)) (B m) D (j m) (ρ m) f (hρ m) (huniv m D f hf)
+    _root_.GlobalTheory.bialgHom_factor_through_split k (G.A (m + 1)) (B m) D (j m) (ρ m) f (hρ m) (huniv m D f hf)
   choose r hr using fun m => hfac m (B (m + 1)) ((G.res (m + 1)).comp (j (m + 1))) (by
     rw [kerIdeal_comp, hker (m + 1), ker_succ]
     exact Ideal.map_comap_le)
@@ -141,7 +143,7 @@ theorem GlobalTheory.HTPair.exists_quot_field : ∀ (p : ℕ) [Fact p.Prime] (k 
       r := r
       s := s
       ρ_j := hρ
-      r_surjective := fun m => GlobalTheory.T.quotientTransition_surjective_same_subgroup k (G.A (m + 1)) (G.A (m + 2)) (B m) (B (m + 1))
+      r_surjective := fun m => _root_.GlobalTheory.QuotTransition.transition_surjective k (G.A (m + 1)) (G.A (m + 2)) (B m) (B (m + 1))
         (G.res (m + 1)) (j m) (j (m + 1)) (r m) (ρ m) (hρ m) (fun b => hr m b) (hkr m)
       j_r := fun m b => hr m b
       j_s := hs

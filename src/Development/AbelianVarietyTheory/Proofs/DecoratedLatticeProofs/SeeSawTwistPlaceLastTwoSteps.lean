@@ -2,11 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CosInj
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleThetaLiftLastStepsCouplingCosetOrbitInvariStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsHeisenbergCombinationSplitPlaceDatumStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntIndFromCols
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ExistsUnitarySupportedAtPlaceOfMulEqIdem
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.JointSmooth
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsHeisenbergCombinationSplitPlaceDatum
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastStepsKernelEqSumCouplingCosetsStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawLastTwoStepsDoubleLiftAdditiveStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistPlaceCouplingIndexFiniteLevelStableStatement
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntIndFromCols
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistPlaceLastTwoStepEntriesSchwartzBruhatStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -77,7 +79,7 @@ theorem lastOne : ∀ (D : D7) (c : Comm D) (v : VCom c) χ (Q : QAt v χ), c.Is
       intro h0
       have := congrFun (congrArg Subtype.val h0) 0
       simp [O, Set.indicator_apply] at this
-    obtain ⟨d, hd, hT⟩ := GlobalTheory.T.exists_heisenberg_combination_split_place_datum D Q.k (ofSplit Q.q) Y Y' S T FS FT c.ψ hc.std O ⟨Ξ, hΞ⟩ hO
+    obtain ⟨d, hd, hT⟩ := _root_.GlobalTheory.LocComb.exists_comb D Q.k (ofSplit Q.q) Y Y' S T FS FT c.ψ hc.std O ⟨Ξ, hΞ⟩ hO
     refine ⟨d, hd, fun Tm hTm Φ₀ Φ h0 h1 => ?_⟩
     have e0 : Φ₀ = O := Subtype.ext h0
     have e1 : Φ = ⟨Ξ, hΞ⟩ := Subtype.ext h1

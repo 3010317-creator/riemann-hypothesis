@@ -1,11 +1,20 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.KatoQuadraticCharacters.FrobeniusHodgeTateLaws.ChiQuadAlt
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CuspFunctionalModPrimePowCommutesHeckeDiamondStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.ThNSpec
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
+public import Mathlib.RingTheory.AdicCompletion.Noetherian
+public import Mathlib.RingTheory.Coalgebra.IsFrobenius
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.HopfAlgebra.Basic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CuspFunctionalModPrimePowCommutesHeckeDiamond
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CuspFunctionalValueModPrimePowUniqueOddWeightStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsThBSuccCoeffCongStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaBasisLinearCombinationStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaLatticeDiamondActionStatement
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaLatticeDiamondAction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -120,9 +129,9 @@ private theorem diam_cg {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure �
   have hBa : X.diam N l a b ∈ X.B N l w := by
     rw [hdiam a ha]
     exact Submodule.smul_mem _ _ hbB
-  have hψ := (GlobalTheory.T.theta_lattice_diamond_action Ω ε X A N l X.j_hol hl2 hlN hN5 hl n w 1 hw
+  have hψ := (_root_.GlobalTheory.CyclotomicQExpansion.thN_isThB Ω ε X A N l X.j_hol hl2 hlN hN5 hl n w 1 hw
     (Nat.coprime_one_left N) b hbB).1
-  have hθ := (GlobalTheory.T.theta_lattice_diamond_action Ω ε X A N l X.j_hol hl2 hlN hN5 hl n w 1 hw
+  have hθ := (_root_.GlobalTheory.CyclotomicQExpansion.thN_isThB Ω ε X A N l X.j_hol hl2 hlN hN5 hl n w 1 hw
     (Nat.coprime_one_left N) (X.diam N l a b) hBa).1
   have hD : ∀ s : ℚ, (thN X A N l n 1 b).coeff s ∈ A := by
     obtain ⟨f, -, -, -, hd⟩ := hψ
@@ -168,8 +177,8 @@ theorem UpperTheory.V.Z.Kato.Joint.thOp :
   have hS' := hS
   obtain ⟨hl, hl2, hlN, hN5, hw, hj⟩ := hS'
   have hψ : ∀ m, IsThB X A N l m (X.act l (sgD N l 1) b) (thN X A N l m 1 b) ∧ IsLat 1 (thN X A N l m 1 b) :=
-    fun m => GlobalTheory.T.theta_lattice_diamond_action Ω ε X A N l X.j_hol hl2 hlN hN5 hl m w 1 hw (Nat.coprime_one_left N) b hb.1
-  have hrel := GlobalTheory.T.cuspFunctionalModPrimePow_commutes_hecke_diamond Ω ε X A N l X.j_hol hl2 hlN hN5 hl n w 1 hw (Nat.coprime_one_left N) b hb.1
+    fun m => _root_.GlobalTheory.CyclotomicQExpansion.thN_isThB Ω ε X A N l X.j_hol hl2 hlN hN5 hl m w 1 hw (Nat.coprime_one_left N) b hb.1
+  have hrel := _root_.GlobalTheory.CyclotomicQExpansion.thN_hecke Ω ε X A N l X.j_hol hl2 hlN hN5 hl n w 1 hw (Nat.coprime_one_left N) b hb.1
   cases T with
   | T q =>
     obtain ⟨hqp, hqNl⟩ := hT

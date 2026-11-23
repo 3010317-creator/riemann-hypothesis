@@ -1,11 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMemKAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergSelfDualLatticeFixedFunctionsLineStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeStabilizerVacuumEigenvalueEqOneInertPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorLatticeInertPlaceSelfDualStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilOperatorLatticeStabiliserRightPreservesVacuuStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationLocalityUnitaryGroupWPairVWStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergSelfDualLatticeFixedFunctionsLine
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeStabilizerVacuumEigenvalueEqOneInertPlace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorLatticeInertPlaceSelfDual
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilOperatorLatticeStabiliserRightPreservesVacuu
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationLocalityUnitaryGroupWPairVW
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,11 +57,11 @@ theorem vac_fixed : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
     ∀ k ∈ GlobalTheory.InertSph.KAt σ G.W v, Acts (evFin F v) (om (1, k)) (G.M.vac v) (G.M.vac v) := by
   intro F E _ _ _ _ _ σ B a a' G X om om' hT v w hin hvT k hk
   obtain ⟨hSB, hne, θ, hθ, hfix⟩ := hT.geo.hM.vac v
-  obtain ⟨φ₁, hφ₁, hact⟩ := GlobalTheory.T.weilRepresentationLocality_unitaryGroupW_pairVW F E σ B a a' G X om om' hT v k hk.1 _ hSB
-  have hfix₁ := GlobalTheory.T.weilOperator_latticeStabiliser_right_preserves_vacuumType F E σ B a a' G X om om' hT v k hk θ hθ _ hSB φ₁ hφ₁ hfix hact
-  obtain ⟨c, rfl⟩ := GlobalTheory.T.heisenbergSelfDualLattice_fixedFunctions_line F E σ B a a' G X om om' hT v (hT.base.inert v w hin).2.2
-    (GlobalTheory.T.tensorLattice_inertPlace_selfDual F E σ B a a' G X om om' hT v w hin) θ hθ _ hSB hne hfix φ₁ hφ₁ hfix₁
-  have hc := GlobalTheory.T.latticeStabilizer_vacuum_eigenvalue_eq_one_inertPlace F E σ B a a' G X om om' hT v w hin hvT k hk c hact
+  obtain ⟨φ₁, hφ₁, hact⟩ := _root_.GlobalTheory.WeilLocalityW.locality F E σ B a a' G X om om' hT v k hk.1 _ hSB
+  have hfix₁ := _root_.GlobalTheory.VacTransport.transport F E σ B a a' G X om om' hT v k hk θ hθ _ hSB φ₁ hφ₁ hfix hact
+  obtain ⟨c, rfl⟩ := _root_.GlobalTheory.LatVacLine.vacuum_line F E σ B a a' G X om om' hT v (hT.base.inert v w hin).2.2
+    (_root_.GlobalTheory.InertSelfDual.latAtV_selfDual F E σ B a a' G X om om' hT v w hin) θ hθ _ hSB hne hfix φ₁ hφ₁ hfix₁
+  have hc := _root_.GlobalTheory.DblVac.eigen_eq_one F E σ B a a' G X om om' hT v w hin hvT k hk c hact
   rw [hc, one_smul] at hact
   exact hact
 

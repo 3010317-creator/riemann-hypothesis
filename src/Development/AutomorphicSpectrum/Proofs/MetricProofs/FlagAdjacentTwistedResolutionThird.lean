@@ -2,7 +2,8 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsPeriodOn
 public import Mathlib.FieldTheory.RatFunc.AsPolynomial
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAdjacentArithVarietyFirstStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BasePartFlagPt
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAdjacentArithVarietyFirst
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAnalyticSpaceNonempty
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LogResolutionFunctorialHolomorphic
 import Mathlib.Algebra.Order.Floor.Extended
@@ -60,7 +61,7 @@ theorem anLogRes_W_nonempty : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ 
   intro K _ ι _ Φ _ y Ψ _ _ N j M n d BM FA τ a b k₀ ca cb hab hj hk hca hcb RW
   obtain ⟨x⟩ := flagAn_S_nonempty K ι Φ y Ψ N j M n d BM FA
   obtain ⟨l, hl⟩ := BM.O_cover (FA.pr x)
-  have hz := GlobalTheory.T.flag_adjacent_arith_variety_first K ι Φ y Ψ N j M n BM d τ a b k₀ ca cb hab hj hk hca hcb FA.Re.arith l (FA.pr x) hl
+  have hz := _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.FC.WMem.main K ι Φ y Ψ N j M n BM d τ a b k₀ ca cb hab hj hk hca hcb FA.Re.arith l (FA.pr x) hl
     (fun _ => 1) 0 (fun _ => ⟨?_, by simp⟩)
   · obtain ⟨w, -⟩ := RW.surj _ hz (GlobalTheory.CompanionTheory.Ar.PB.Proj.not_mem_mcPts_top _)
     exact ⟨w⟩

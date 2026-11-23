@@ -3,11 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Definitions.RegularCharts.Reframe
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.EvaluationLawsGenericFramesAtlasHold
+public import Formalism.LocalToGlobal.ProjectiveLattices.CompFin
+public import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsFlagCellChartOverFramedAffineOpen
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsIntegralSmoothChartFrameModuli
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.FlagChartsCoverFramedFieldPoints
-import Development.AbelianVarietyTheory.Proofs.GenericRegularity.IsTriangularReframeExistsAndUniqueStatement
-public import Formalism.LocalToGlobal.ProjectiveLattices.CompFin
+import Development.AbelianVarietyTheory.Proofs.GenericRegularity.IsTriangularReframeExistsAndUnique
 import Formalism.LocalToGlobal.ProjectiveLattices.FrameCharts
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -48,7 +49,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt
 
 @[expose] public section
 
@@ -92,7 +92,7 @@ theorem exists_countable_atlas : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   have hx : y.x = z₀.x := by
     rw [hz₀.1, hyA, ← Category.assoc, hf]
     exact (pullback.lift_fst _ _ _).symm
-  obtain ⟨g, ⟨hgu, hg⟩, -⟩ := (GlobalTheory.T.isTriangularReframe_exists_and_unique E H Dw l Xo c L z₀).2 y hx
+  obtain ⟨g, ⟨hgu, hg⟩, -⟩ := (_root_.GlobalTheory.Reg.ReframeEx.reframe_exists_unique E H Dw l Xo c L z₀).2 y hx
   choose σ u b h0 h1 hb e using fun τ => exists_perm_lower_upper (g τ) (hgu τ)
   let x : FlagVar Dw → L := fun v => u v.1 (σ v.1 v.2.1.2) v.2.1.1
   have hu : ∀ τ, (lowM x τ).submatrix (σ τ).symm id = u τ := by

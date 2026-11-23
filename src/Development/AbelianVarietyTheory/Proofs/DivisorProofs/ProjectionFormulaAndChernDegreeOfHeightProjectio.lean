@@ -3,8 +3,8 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ResidueDegreeOfIsClosedImmersion
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ChernDegreeComplex
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ArBirational
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithInterProjectionFormulaOfHeightProjectionForStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeEqChernFormIntegralOfComplexCaseStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithInterProjectionFormulaOfHeightProjectionFor
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeEqChernFormIntegralOfComplexCase
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.GenericOfIsIsoRestrict
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -49,6 +49,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 namespace GlobalTheory.Published
 
 theorem arDegree_of_heightProjection : HeightProjection → ChernDegreeComplex → ArDegree :=
-  fun H H' => ⟨arBirational_of_arProj (GlobalTheory.T.arithInterProjectionFormula_of_heightProjectionFormula H), GlobalTheory.T.degreeEqChernFormIntegral_of_complex_case H'⟩
+  fun H H' => ⟨arBirational_of_arProj (_root_.GlobalTheory.Published.arProj_of_heightProjection H), _root_.GlobalTheory.ChernDegreeBaseChange.chernDegree_of_complex H'⟩
 
 end GlobalTheory.Published

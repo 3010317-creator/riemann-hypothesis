@@ -4,17 +4,21 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPo
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.OneSubPhiOntoOfFilZero
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BhattScholzeCrystallineLattices
 public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.ConductorExponents
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinDescentUnitLatticeDatumStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinExactTripleJumpsCharactersLiftStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinSectionTrivialisesInvertPrimeTensorStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CokernelLatticeMapKilledByPrimePowStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBreuilKisinModuleTameDescentGoodLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPreimageInvertedPrimeBreuilOfExactTripleStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExtensionClassEqLPowSmulGaloisStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExtensionLatticeIsCrysTameTypeWithJumpsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InjectiveOfPhiModuleExactTripleStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsExactTripleBreuilKisinOfShortExactLatticesStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LatticeHomLiftsBreuilKisinDescentHomStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinDescentUnitLatticeDatum
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExistsAlgebraMapEqRoot
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinExactTripleJumpsCharactersLift
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ConnPhiExtensionGeneratorEqZeta
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinSectionTrivialisesInvertPrimeTensor
+public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.RepresentationBounds
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CokernelLatticeMapKilledByPrimePow
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBreuilKisinModuleTameDescentGoodLattice
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TameDescentExtendedActionExtraVector
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPreimageInvertedPrimeBreuilOfExactTriple
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExtensionClassEqLPowSmulGalois
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExtensionLatticeIsCrysTameTypeWithJumps
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InjectiveOfPhiModuleExactTriple
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsExactTripleBreuilKisinOfShortExactLattices
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LatticeHomLiftsBreuilKisinDescentHom
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +54,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.RepresentationBounds
 
 @[expose] public section
 
@@ -93,7 +96,7 @@ theorem lift_phi_sub {O K : Type} [CommRing O] [NormedField K] [IsUltrametricDis
   · rw [← sub_eq_zero]
     refine hinj _ (sub_mem (D₀.desc.act_mem_EM g hy₀) hy₀) ?_
     rw [map_sub, F.app_act, hFy₀, hinv2, sub_self]
-  · refine (GlobalTheory.T.breuilKisin_exactTriple_jumps_characters_lift O K l e a ι κ μ η H D₀ D₁ D₂ F G hex).2.2.1 ?_
+  · refine (_root_.GlobalTheory.exactTriple_jumps_chars_lift O K l e a ι κ μ η H D₀ D₁ D₂ F G hex).2.2.1 ?_
     rw [map_zero, Hom.onPol_Mon, hFy₀, PhiMod.Mon_phi_sub,
       (D₁.cls_eq_zero_iff).2 (D₁.EN_mem_Man (D₁.M_le_Man hx.1)), neg_zero]
 
@@ -121,45 +124,45 @@ theorem main : GlobalTheory.Published.BhattScholzeCrystallineLattices → Global
       calc 8 = 2 ^ 3 := by norm_num
         _ ≤ N ^ 3 := Nat.pow_le_pow_left h2 3
     omega
-  obtain ⟨hUnit, hExt⟩ := GlobalTheory.T.extensionLattice_isCrysTameTypeWithJumps hFB l a e ϖ LL Pl AI hStd Sig U hN.zero_mem_Sig hN.zero_mem_U
+  obtain ⟨hUnit, hExt⟩ := _root_.GlobalTheory.ExtGood.extLat_isGood hFB l a e ϖ LL Pl AI hStd Sig U hN.zero_mem_Sig hN.zero_mem_U
   obtain ⟨Tp, f, g, v, hfg, hv, hgv, hcv, hTp⟩ := hExt T hT c hc
-  obtain ⟨Pp, hPp⟩ := GlobalTheory.T.exists_breuilKisinModule_tameDescent_goodLattice hBS hFB l a e ϖ LL hl2 Pl AI hStd η H Sig U hN.range_U Tp hTp
-  obtain ⟨Pu, hPu⟩ := GlobalTheory.T.exists_breuilKisinModule_tameDescent_goodLattice hBS hFB l a e ϖ LL hl2 Pl AI hStd η H Sig U hN.range_U _ hUnit
-  obtain ⟨F, hF⟩ := GlobalTheory.T.latticeHom_lifts_breuilKisinDescentHom hBS l a e ϖ LL η H T Tp Pk Pp f
-  have hG' := GlobalTheory.T.latticeHom_lifts_breuilKisinDescentHom hBS l a e ϖ LL η H Tp (unitLat (Gl l) : QLat LL) Pp Pu g
+  obtain ⟨Pp, hPp⟩ := _root_.GlobalTheory.BKGal.exists_pack_isOfType hBS hFB l a e ϖ LL hl2 Pl AI hStd η H Sig U hN.range_U Tp hTp
+  obtain ⟨Pu, hPu⟩ := _root_.GlobalTheory.BKGal.exists_pack_isOfType hBS hFB l a e ϖ LL hl2 Pl AI hStd η H Sig U hN.range_U _ hUnit
+  obtain ⟨F, hF⟩ := _root_.GlobalTheory.BKGal.PackMap.main hBS l a e ϖ LL η H T Tp Pk Pp f
+  have hG' := _root_.GlobalTheory.BKGal.PackMap.main hBS l a e ϖ LL η H Tp (unitLat (Gl l) : QLat LL) Pp Pu g
   obtain ⟨G, hG⟩ := hG'
   have hex : IsExactTriple F.toHom G.toHom :=
-    GlobalTheory.T.isExactTriple_breuilKisin_of_shortExactLattices l a e ϖ LL _ _ _ Pk.D.toPhiMod Pp.D.toPhiMod Pu.D.toPhiMod T Tp (unitLat (Gl l) : QLat LL) Pk.R.I Pp.R.I Pu.R.I f g
+    _root_.GlobalTheory.BKExact.isExactTriple_of_isSESLat l a e ϖ LL _ _ _ Pk.D.toPhiMod Pp.D.toPhiMod Pu.D.toPhiMod T Tp (unitLat (Gl l) : QLat LL) Pk.R.I Pp.R.I Pu.R.I f g
       F.toHom G.toHom hfg hF hG
   have hB : GlobalTheory.IndefiniteRowSideFullHecke.RepresentationBounds.Bounds l e Sig U N η H :=
     ⟨hN.frob_mem, hN.zero_mem_Sig, hN.card_Sig, hN.two_le, hN.range_U, hN.zero_mem_U, hN.card_U, hN.one_le,
       hN.lt, hN.large⟩
-  have hK := GlobalTheory.T.cokernel_latticeMap_killed_by_prime_pow (↥(OL LL)) (↥LL.1) l e a (Fin Pp.n) (Fin Pu.n) Sig U N η H hB Pp.D Pu.D hPp
+  have hK := _root_.GlobalTheory.Proof.cokernel_latticeMap_killed_by_prime_pow.main (↥(OL LL)) (↥LL.1) l e a (Fin Pp.n) (Fin Pu.n) Sig U N η H hB Pp.D Pu.D hPp
     hPu.chars_subset G hex.finiteLength
-  obtain ⟨u, x, hx1, hu, hφu, hux⟩ := GlobalTheory.T.breuilKisinDescent_unitLattice_datum hBS l a e ϖ LL η H Pu
+  obtain ⟨u, x, hx1, hu, hφu, hux⟩ := _root_.GlobalTheory.BKGal.UnitDatum.main hBS l a e ϖ LL η H Pu
   obtain ⟨x₂, hx₂, hGx₂⟩ := hK.2.2.2.1 u.1 hu
   have hG0 : G.app (Pp.D.phi x₂ - x₂) = 0 := by
     rw [map_sub, G.toHom.app_phi, hGx₂, map_nsmul, hφu, sub_self]
   obtain ⟨y, hy, hFy, hMon⟩ := lift_phi_sub F G hex hx₂ hG0
   refine ⟨y, hy, hMon, ?_⟩
-  have hFinj := GlobalTheory.T.injective_of_phiModule_exact_triple _ _ _ _ _ _ _ _ _ _ _ F.toHom G.toHom hex
+  have hFinj := _root_.GlobalTheory.BK.IsExactTriple.injective_app _ _ _ _ _ _ _ _ _ _ _ F.toHom G.toHom hex
   set d := red (Pp.D.phi x₂) with hd
   have hL : Pp.D.phi x₂ ∈ Pp.D.L := Pp.D.phi_mem_L hx₂.1
   have hσp : Pp.D.phi x₂ - Pp.D.xi d ∈ Pp.D.MMl := by
     refine sub_mem (Pp.D.ext_mono ((A_le_S l e).trans (le_away _ _)) hL) ?_
     rw [PhiMod.xi_apply]
-    refine ((GlobalTheory.T.breuilKisin_section_trivialises_invertPrime_tensor (↥(OL LL)) (↥LL.1) l e a (Fin Pp.n) Pp.D.toPhiMod).2 _).2 ?_
+    refine ((_root_.GlobalTheory.BK.xi_trivialises_invL_S (↥(OL LL)) (↥LL.1) l e a (Fin Pp.n) Pp.D.toPhiMod).2 _).2 ?_
     exact mem_tot.2 fun τ i => by
       rw [cst_apply]
       exact HasK.C_mem _
   have hGσ : G.app (Pp.D.phi x₂ - Pp.D.xi d) = 0 := by
     rw [map_sub, Hom.app_xi, hd, ← Hom.red_app, G.toHom.app_phi, hGx₂, map_nsmul, hφu, map_nsmul, map_nsmul,
       xi_red_of_phi_eq _ hφu, sub_self]
-  obtain ⟨σ, hσ, hFσ⟩ := GlobalTheory.T.exists_preimage_invertedPrime_breuil_of_exactTriple _ _ _ _ _ _ _ _ _ _ _ F.toHom G.toHom hex _ hσp hGσ
+  obtain ⟨σ, hσ, hFσ⟩ := _root_.GlobalTheory.BK.exists_preimage_invL_S_of_exactTriple _ _ _ _ _ _ _ _ _ _ _ F.toHom G.toHom hex _ hσp hGσ
   have hσinv : σ ∈ Pk.D.desc.inv := fun γ => hFinj (by
     rw [F.app_act, hFσ, map_sub, Pp.D.desc.act_phi, hx₂.2 γ, Descent.act_xi, hd, ← Descent.red_act,
       Pp.D.desc.act_phi, hx₂.2 γ])
-  exact GlobalTheory.T.extensionClass_eq_lPow_smul_galois l a e ϖ LL η H T Tp f g hfg Pk Pp Pu F G hF hG hex hFinj u x hx1 hu hφu hux
+  exact _root_.GlobalTheory.ExtClass.main l a e ϖ LL η H T Tp f g hfg Pk Pp Pu F G hF hG hex hFinj u x hx1 hu hφu hux
     (GlobalTheory.IndefiniteRowSideFullHecke.RepresentationBounds.rho l Sig N) x₂ hx₂ hGx₂ v c hv hgv hcv σ hσ hσinv hFσ y hy hFy
 
 end GlobalTheory.BKGal.ExtClass

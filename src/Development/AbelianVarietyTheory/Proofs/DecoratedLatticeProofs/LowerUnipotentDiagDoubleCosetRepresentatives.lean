@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCoType
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BlockDetLowUEmb
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsLowerUnipotentBlockDiagCosetRepStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LowerUnipotentBlockDiagCosetsDistinctStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsLowerUnipotentBlockDiagCosetRep
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LowerUnipotentBlockDiagCosetsDistinct
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,7 +64,7 @@ theorem repsBuild : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace 
   have key : ∀ g₁ ∈ R, ∀ ν₁ ∈ N g₁, ∀ g₂ ∈ R, ∀ ν₂ ∈ N g₂,
       (f ⟨g₁, ν₁⟩ * t)⁻¹ * (f ⟨g₂, ν₂⟩ * t) ∈ parahoric k A D → g₁ = g₂ ∧ ν₁ = ν₂ := by
     intro g₁ hg₁ ν₁ hν₁ g₂ hg₂ ν₂ hν₂ h
-    obtain ⟨rfl, μ, hμ, hdiff⟩ := GlobalTheory.T.lowerUnipotent_blockDiag_cosets_distinct k A D ϖ hϖ s R hR κ κ' hκ g₁ hg₁ g₂ hg₂ ν₁ ν₂ h
+    obtain ⟨rfl, μ, hμ, hdiff⟩ := _root_.GlobalTheory.CosetDistinct.coset_uniq k A D ϖ hϖ s R hR κ κ' hκ g₁ hg₁ g₂ hg₂ ν₁ ν₂ h
     refine ⟨rfl, ?_⟩
     obtain ⟨hsmall, huniq⟩ := hN g₁ hg₁
     obtain ⟨ν', _, hν'⟩ := huniq ν₂ (hsmall ν₂ hν₂)
@@ -82,7 +82,7 @@ theorem repsBuild : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace 
     show ((blockDet (lowU ν * emb₂ k (Equiv.refl (A ⊕ D)) (1, κ g)) : kˣ) : k) = _
     rw [blockDet_lowU_emb, h22, GeneralLinearGroup.val_det_apply]
   · intro j hj
-    obtain ⟨g, hg, ν₀, hν₀, hall⟩ := GlobalTheory.T.exists_lowerUnipotent_blockDiag_coset_rep k A D ϖ hϖ s R hR κ κ' hκ j hj
+    obtain ⟨g, hg, ν₀, hν₀, hall⟩ := _root_.GlobalTheory.LowerHecke.exists_lowU_diag_coset k A D ϖ hϖ s R hR κ κ' hκ j hj
     obtain ⟨ν', ⟨hν'N, μ, hμ, hdiff⟩, -⟩ := (hN g hg).2 ν₀ hν₀
     refine ⟨f ⟨g, ν'⟩, ⟨Finset.mem_image.2 ⟨(⟨g, ν'⟩ : Σ _ : GL D k, Matrix D A k), Finset.mem_sigma.2 ⟨hg, hν'N⟩, rfl⟩,
       hall ν' ⟨μ, hμ, hdiff⟩⟩, ?_⟩

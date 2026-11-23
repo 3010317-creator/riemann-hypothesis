@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntIndMemSB
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatLintegralSqNeTopStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatLintegralSqNeTop
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -177,12 +178,12 @@ theorem _root_.GlobalTheory.T.normSq_uniformizer_character_mul_residueCard_pow_e
   rw [hSg] at hiso
   simp only [Pi.smul_apply, smul_eq_mul, eNorm_mul, mul_pow] at hiso
   rw [lintegral_const_mul' _ _ (by simp [eNorm_eq_nnNorm])] at hiso
-  obtain ⟨hFtop, hFint, -, hFi⟩ := GlobalTheory.T.schwartzBruhat_lintegral_sq_ne_top μ hμ F hFSB
-  obtain ⟨h0top, h0int, h0ne, -⟩ := GlobalTheory.T.schwartzBruhat_lintegral_sq_ne_top μ hμ φ0 hφ0
+  obtain ⟨hFtop, hFint, -, hFi⟩ := _root_.GlobalTheory.SBNorm.schwartzBruhat_memL2_inner_self μ hμ F hFSB
+  obtain ⟨h0top, h0int, h0ne, -⟩ := _root_.GlobalTheory.SBNorm.schwartzBruhat_memL2_inner_self μ hμ φ0 hφ0
   have hN0 : (∫⁻ y, ‖φ0 y‖ₑ ^ 2 ∂μ).toReal ≠ 0 := ENNReal.toReal_ne_zero.2 ⟨h0ne hne, h0top⟩
   have hint : ∀ T T' : Fin d → SplitFlip.Res (k := k) 1, Integrable (fun y => Tr (cosetRep ϖ i0 T) φ0 y *
       (starRingEnd ℂ) (Tr (cosetRep ϖ i0 T') φ0 y)) μ := fun T T' =>
-    (GlobalTheory.T.schwartzBruhat_lintegral_sq_ne_top μ hμ _ (hTr _ φ0 hφ0).1).2.2.2 _ (hTr _ φ0 hφ0).1
+    (_root_.GlobalTheory.SBNorm.schwartzBruhat_memL2_inner_self μ hμ _ (hTr _ φ0 hφ0).1).2.2.2 _ (hTr _ φ0 hφ0).1
   have hsum : ∫ y, F y * (starRingEnd ℂ) (F y) ∂μ =
       (Fintype.card (Fin d → SplitFlip.Res (k := k) 1) : ℂ) * ∫ y, φ0 y * (starRingEnd ℂ) (φ0 y) ∂μ := by
     have hpt : ∀ y, F y * (starRingEnd ℂ) (F y) = ∑ T : Fin d → SplitFlip.Res (k := k) 1, ∑ T' : Fin d → SplitFlip.Res (k := k) 1,

@@ -1,10 +1,18 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRatioOfWeight
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsHomogeneousDehomogenizeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemPolyringOfIntegralClosureRangeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TotalDegreeLeOfIntegralAtInfinityStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceMonicOverMvPolynomialStatement
+public import Mathlib.RingTheory.MvPolynomial.Homogeneous
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsHomogeneousDehomogenize
+public import Mathlib.Algebra.Field.Subfield.Basic
+public import Mathlib.Algebra.Polynomial.Degree.Defs
+public import Mathlib.Algebra.Polynomial.Eval.Defs
+public import Mathlib.RingTheory.AlgebraicIndependent.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemPolyringOfIntegralClosureRange
+public import Mathlib.Algebra.MvPolynomial.Degrees
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TotalDegreeLeOfIntegralAtInfinity
+public import Mathlib.RingTheory.IntegralClosure.IsIntegral.Defs
+public import Mathlib.RingTheory.Trace.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceMonicOverMvPolynomial
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -70,12 +78,12 @@ theorem trace_homog : ∀ (K : Type) [Field K] [CharZero K] (D : ℕ) (x : Fin (
     rw [this]; exact div_mem (e k) (e l)
   set t : K := (Algebra.trace (ratF x) K (w / x 0 ^ q) : K) with htdef
 
-  obtain ⟨f₀, hf₀, hft₀⟩ := GlobalTheory.T.exists_monic_root_trace_of_isIntegral_closure (ratF x) (fun k => x k / x 0) (hzF 0) _ (hint 0)
+  obtain ⟨f₀, hf₀, hft₀⟩ := _root_.GlobalTheory.trace_monic_over_mvPolynomial (ratF x) (fun k => x k / x 0) (hzF 0) _ (hint 0)
   have hz0 : ∀ k, ∃ p : MvPolynomial (Fin D) ℤ, aeval y p = x k / x 0 := by
     intro k
     refine Fin.cases ⟨1, ?_⟩ (fun i => ⟨X i, by simp [y]⟩) k
     rw [map_one, div_self (hx 0)]
-  obtain ⟨T₀, hT₀⟩ := GlobalTheory.T.mem_polyring_of_integral_closure_range' y hind t (Algebra.trace (ratF x) K (w / x 0 ^ q)).2 _ hz0 f₀ hf₀ hft₀
+  obtain ⟨T₀, hT₀⟩ := _root_.GlobalTheory.mem_polyring_of_integral_closure_range y hind t (Algebra.trace (ratF x) K (w / x 0 ^ q)).2 _ hz0 f₀ hf₀ hft₀
 
   have hdeg : T₀.totalDegree ≤ q := by
     rcases Nat.eq_zero_or_pos D with hD | hD
@@ -83,20 +91,20 @@ theorem trace_homog : ∀ (K : Type) [Field K] [CharZero K] (D : ℕ) (x : Fin (
       rw [MvPolynomial.eq_C_of_isEmpty T₀, totalDegree_C]; exact Nat.zero_le _
     · set j : Fin D := ⟨0, hD⟩
       have hyj : y j ≠ 0 := div_ne_zero (hx _) (hx 0)
-      obtain ⟨f₁, hf₁, hft₁⟩ := GlobalTheory.T.exists_monic_root_trace_of_isIntegral_closure (ratF x) (fun k => x k / x j.succ) (hzF j.succ) _ (hint j.succ)
+      obtain ⟨f₁, hf₁, hft₁⟩ := _root_.GlobalTheory.trace_monic_over_mvPolynomial (ratF x) (fun k => x k / x j.succ) (hzF j.succ) _ (hint j.succ)
       have hc : (⟨(x 0 / x j.succ) ^ q, pow_mem (hzF _ 0) q⟩ : ratF x) • (w / x 0 ^ q) = w / x j.succ ^ q := by
         rw [Subfield.smul_def]; simp only [smul_eq_mul, div_pow]; field_simp [hx 0, hx j.succ] <;> ring
       have htr : (Algebra.trace (ratF x) K (w / x j.succ ^ q) : K) = aeval y T₀ / y j ^ q := by
         rw [← hc, LinearMap.map_smul, smul_eq_mul, Subfield.coe_mul, ← htdef, hT₀]
         simp only [y, j, div_pow]; field_simp [hx 0, hx _] <;> ring
       rw [htr] at hft₁
-      refine GlobalTheory.T.totalDegree_le_of_root_of_monic_eval y hind j hyj T₀ q _ ?_ f₁ hf₁ hft₁
+      refine _root_.GlobalTheory.totalDegree_le_of_integral_at_infinity y hind j hyj T₀ q _ ?_ f₁ hf₁ hft₁
       intro k
       refine Fin.cases ⟨1, 1, by simp, ?_⟩ (fun i => ⟨1, X i, ?_, ?_⟩) k
       · simp only [y, pow_one, map_one]; field_simp [hx 0, hx _]
       · simp [totalDegree_X]
       · simp only [y, pow_one, aeval_X]; field_simp [hx 0, hx _]
-  obtain ⟨T, hT, hTa⟩ := GlobalTheory.T.exists_isHomogeneous_aeval_eq_of_first_eq_one T₀ q hdeg
+  obtain ⟨T, hT, hTa⟩ := _root_.GlobalTheory.exists_isHomogeneous_dehomogenize T₀ q hdeg
   refine ⟨T, hT, ?_⟩
   rw [hTa K _ (div_self (hx 0)), ← hT₀]
 

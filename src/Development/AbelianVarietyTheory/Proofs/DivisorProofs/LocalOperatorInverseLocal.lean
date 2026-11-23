@@ -2,11 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjLinApply
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfComponentTensorAdelicFunctionEq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalOperatorsProductCompatible
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalOperatorsProductExtend
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictedTensorLocalOperators
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBijectionRightInverse
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyIntegralPointsIndicatorIsVacuum
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalOperatorsProductCompatibleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalOperatorsProductExtendStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictedTensorLocalOperatorsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBijectionRightInverseStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -75,16 +77,16 @@ theorem isLocOp_inv : ∀ {F : Type} [Field F] [NumberField F] {κ : Type} [Fint
   intro F _ _ κ _ e he hbij
   obtain ⟨ei, ev, hSB, hstd, hloc⟩ := he
   have hne : ∀ v, ev v (stdInd F κ v) ≠ 0 := fun v h =>
-    (stdInd_mem_SB_ne v).2 (GlobalTheory.T.restricted_tensor_local_operators e ei ev hSB hstd hloc hbij.injOn v _ (stdInd_mem_SB_ne v).1 h)
-  obtain ⟨S, hS⟩ := GlobalTheory.T.schwartz_bijection_right_inverse _ _ ei (GlobalTheory.T.bijective_infinite_part_of_restricted_product e ei ev hSB hstd hloc hbij hne)
+    (stdInd_mem_SB_ne v).2 (_root_.GlobalTheory.EvKer.ker_trivial e ei ev hSB hstd hloc hbij.injOn v _ (stdInd_mem_SB_ne v).1 h)
+  obtain ⟨S, hS⟩ := _root_.GlobalTheory.FrechetOpenMapping.schwartz_exists_inverse _ _ ei (_root_.GlobalTheory.ArchBij.bijective_arch e ei ev hSB hstd hloc hbij hne)
 
   have hbv : ∀ v, Function.Bijective ((ev v).restrict (p := SB (κ → Fv F v)) (q := SB (κ → Fv F v)) (hSB v)) := by
     intro v
     refine ⟨?_, ?_⟩
     · refine (injective_iff_map_eq_zero _).2 fun ψ hψ => ?_
-      exact Subtype.ext (GlobalTheory.T.restricted_tensor_local_operators e ei ev hSB hstd hloc hbij.injOn v ψ.1 ψ.2 (congrArg Subtype.val hψ))
+      exact Subtype.ext (_root_.GlobalTheory.EvKer.ker_trivial e ei ev hSB hstd hloc hbij.injOn v ψ.1 ψ.2 (congrArg Subtype.val hψ))
     · intro χ
-      obtain ⟨ψ, hψ, h⟩ := GlobalTheory.T.local_operators_product_compatible e ei ev hSB hstd hloc hbij.surjOn hne v χ.1 χ.2
+      obtain ⟨ψ, hψ, h⟩ := _root_.GlobalTheory.EvOnto.ev_surjOn_SB e ei ev hSB hstd hloc hbij.surjOn hne v χ.1 χ.2
       exact ⟨⟨ψ, hψ⟩, Subtype.ext h⟩
   let Lv : ∀ v, SB (κ → Fv F v) ≃ₗ[ℂ] SB (κ → Fv F v) := fun v => LinearEquiv.ofBijective _ (hbv v)
   have hCv : ∀ v, ∃ C : Submodule ℂ ((κ → Fv F v) → ℂ), IsCompl (SB (κ → Fv F v)) C := fun v =>

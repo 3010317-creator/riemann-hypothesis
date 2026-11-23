@@ -2,7 +2,7 @@ module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegersEqSumZetaPow
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegersLevelOneEqSumZetaPowStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegersLevelOneEqSumZetaPow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -86,7 +86,7 @@ theorem mem_closure_all (l : ℕ) [Fact l.Prime] (K : FinExt l) (ζ : ℕ → Om
     intro α hα hn
     have hp : IsPrimitiveRoot (ζ (0 + 1)) l := by
       simpa using chain_primitive ζ h0 h1 h 0
-    obtain ⟨y, hy, rfl⟩ := GlobalTheory.T.exists_integral_eq_sum_zeta_pow_level_one l K (ζ (0 + 1)) hp α hα hn
+    obtain ⟨y, hy, rfl⟩ := _root_.GlobalTheory.Cyc.integers_level_one_eq_sum_zeta_pow l K (ζ (0 + 1)) hp α hα hn
     refine AddSubgroup.sum_mem _ (fun a _ => AddSubgroup.subset_closure ?_)
     exact ⟨a, y a, (hy a).1, (hy a).2, mul_comm _ _⟩
   | succ s ih =>

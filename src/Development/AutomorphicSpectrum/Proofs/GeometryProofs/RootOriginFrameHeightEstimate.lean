@@ -4,12 +4,19 @@ public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsFrameVec
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LabelSigBijective
 public import Mathlib.Algebra.AffineMonoid.Basic
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GlueApplyOfNotInFibre
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DiscriminantValuationDifferentStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsElementSamePrimeCountStatement
+public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
+public import Mathlib.NumberTheory.Padics.PadicVal.Basic
+public import Mathlib.RingTheory.DedekindDomain.Different
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DiscriminantValuationDifferent
+public import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsElementSamePrimeCount
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteResidueAbsoluteValueStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeEvalAtLocalRingStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NonarchValuationOfPrimeStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeEvalAtLocalRing
+public import Mathlib.Basic.Real.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NonarchValuationOfPrime
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginFrameArchimedeanStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginFrameNonarchimedeanStatement
 import Formalism.LocalToGlobal.ProjectiveLattices.CrudeVal
@@ -74,11 +81,11 @@ theorem exists_different_val (E : Type) [Field E] [NumberField E] [IsGalois ℚ 
   have hp1 : (1 : ℝ) < p := by exact_mod_cast hp.out.one_lt
   have hpos : (0 : ℝ) < p := by linarith
   have hp0 : (p : 𝓞 E) ≠ 0 := by exact_mod_cast hp.out.ne_zero
-  obtain ⟨P, c, hPp, hPb, hpP, hc, hμ⟩ := GlobalTheory.T.nonarch_valuation_of_prime (𝓞 E) μ (p : 𝓞 E) hp0 h0 h1 hu
+  obtain ⟨P, c, hPp, hPb, hpP, hc, hμ⟩ := _root_.GlobalTheory.CompanionTheory.Ggeo.map_eq_pow_count_of_ultrametric (𝓞 E) μ (p : 𝓞 E) hp0 h0 h1 hu
     (by rw [hμp]; exact inv_lt_one_of_one_lt₀ hp1) (by rw [hμp]; exact (inv_pos.2 hpos).ne')
-  obtain ⟨d₀, hd, hd0, hcount⟩ := GlobalTheory.T.exists_element_same_prime_count (𝓞 E) (differentIdeal ℤ (𝓞 E)) P differentIdeal_ne_bot hPp hPb
+  obtain ⟨d₀, hd, hd0, hcount⟩ := _root_.GlobalTheory.CompanionTheory.Ggeo.exists_mem_count_normalizedFactors_span_eq (𝓞 E) (differentIdeal ℤ (𝓞 E)) P differentIdeal_ne_bot hPp hPb
   refine ⟨d₀, hd, ?_⟩
-  have hk := GlobalTheory.T.discriminant_valuation_different E p P hPp hpP
+  have hk := _root_.GlobalTheory.CompanionTheory.Different.padicValInt_discr_mul_count_eq E p P hPp hpP
   have he := hμ _ hp0
   have hv := hμ _ hd0
   rw [hcount] at hv
@@ -198,7 +205,7 @@ theorem smul_mem_fibAt [IsCommMonObj G] [IsScalarTower R C EC] (hξ : IsCptGen �
     obtain ⟨hh, e, he, hv⟩ := hw
     refine Submodule.subset_span ⟨hh, a • e, h hh e he, ?_⟩
     obtain ⟨h', s, hs, hs'⟩ := hr
-    obtain ⟨ev, h1, h2, -⟩ := GlobalTheory.T.lie_lattice_eval_at_local_ring X G Ω ξ Li M C _ h' EC MC hξ hsm
+    obtain ⟨ev, h1, h2, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieLat_val X G Ω ξ Li M C _ h' EC MC hξ hsm
     obtain ⟨hel, rfl⟩ := (h1 e w).1 hv
     let a' : regAt ξ ⟨_, h'⟩ := ⟨a, ⟨s, hs⟩⟩
     have e2 := h2 a' (algebraMap R C D) ⟨e, hel⟩ ⟨h', s, hs, hs'⟩

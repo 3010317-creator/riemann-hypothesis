@@ -8,11 +8,13 @@ public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BoundaryChar
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ChartLatticeTangentCoordinates
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ChartLatticeTangentCoordinatesStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GlobalPairSumGramBound
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolomorphicDiscInAffineOpenStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeTangentVectorsAffineOpen
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelPullbackEquivalence
 public import Development.WeilBound.CoreStatements.PluriharmonicCharts.ChartPeriods
 public import Development.WeilBound.CoreStatements.PluriharmonicCharts.ExistsIsDerivAt0Loc
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.BdryChart
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExponentialFamilyPeriods
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolomorphicDiscInAffineOpen
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeTangentVectorsAffineOpen
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelPullbackEquivalence
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,7 +57,6 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.T
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.ExpRowsPf
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.UnLocal
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.BdryChart
 
 @[expose] public section
 
@@ -158,7 +159,7 @@ theorem model_periods {Xo : Moduli D l} {c : Coeff l} {Y : Model Xo c (algebraMa
     have : x = IsLocalRing.closedPoint ℂ := Subsingleton.elim _ _
     subst this
     exact hq
-  obtain ⟨ρ₁, ψ, hρ₁, hρ₁', hψ, hψp⟩ := GlobalTheory.T.holomorphic_disc_in_affine_open 𝔐.X W hW n p hp hW0
+  obtain ⟨ρ₁, ψ, hρ₁, hρ₁', hψ, hψp⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HolFac.exists_ringMaps_of_hol 𝔐.X W hW n p hp hW0
   have hp₁ : IsHolTo (Metric.ball 0 1) (fun u => spMap (ψ u)) :=
     ReciprocityTheory.ChartRestriction.G.PullbackSections.isHolTo_spMap Metric.isOpen_ball hψ.2
   obtain ⟨tW, ⟨mW⟩⟩ := exists_sab hW.fromSpec 𝔐.t

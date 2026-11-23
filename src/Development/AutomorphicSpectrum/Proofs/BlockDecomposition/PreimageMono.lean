@@ -3,14 +3,16 @@ module
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SubMemOfLift
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ChartDividedPowersGradedConstant
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ChartIsGood
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoordinatesRestrictAffineOpenStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.CapOComp
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.SEqOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoordinatesRestrictAffineOpen
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoverCupActionBasis
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsChart
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsChartFromCoordinates
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GradedCechCohomologyFinite
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalGradedVanishing
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SheafFiltrationProperty
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.PolynomialSiteTraces.PolyAll
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsChartFromCoordinates
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SheafFiltrationProperty
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -244,7 +246,7 @@ theorem free_at (hp : p ≠ 0) (hn : IsNilpotent (p : R)) {V W : X.Opens} (h : W
     (c : Coord q V d) {u : Fin d → ∀ T : Thick (nlFun γ p X q κ), T.B}
     (hu : IsLift (fib hI q κ γ p) (jF hI q κ ⁻¹ᵁ V) (fun i => jf hI q κ V (c.t i)) u) (r : ℕ) :
     Free (fib hI q κ γ p) (jF hI q κ ⁻¹ᵁ W) (SQ q κ γ p W) r u := by
-  obtain ⟨c', hc'⟩ := GlobalTheory.T.coordinates_restrict_affine_open c h hW
+  obtain ⟨c', hc'⟩ := _root_.GlobalTheory.CompanionTheory.CoordRes.main c h hW
   have hu' : IsLift (fib hI q κ γ p) (jF hI q κ ⁻¹ᵁ W) (fun i => jf hI q κ W (c'.t i)) u :=
     isLift_res _ (preimage_mono' hI h) hu fun i => by rw [hc', jf_rs]
   obtain ⟨E, σ, θ, hGr, hbot, hco, hσ, hpt⟩ := frame_at hI hp hn c' u hu'

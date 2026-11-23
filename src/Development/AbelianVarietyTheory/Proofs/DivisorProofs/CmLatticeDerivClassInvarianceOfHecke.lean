@@ -4,22 +4,26 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Differentiab
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.OmegaFactorization
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeformedProductDerivativeTermNormLeUniform
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivFormulaOfSeries
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DifferentiableOnWirtWordMulExpCompStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DifferentiableOnWirtWordMulExpComp
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualFormBaseOfValue
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualFormExistsUnique
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualFormValueOfValues
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsElementPosImUnderCmTypeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEquivCmTypeRealEmbeddingsMaxRealSubfieldStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasFDerivAtWeightTwoDerivativeEisensteinTermStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasSumDeformedLatticeEisensteinSummandWeightTwoStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsFinSetSplitPlacesCoprimeConductor
+public import Mathlib.NumberTheory.NumberField.CMField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsElementPosImUnderCmType
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEquivCmTypeRealEmbeddingsMaxRealSubfield
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasFDerivAtWeightTwoDerivativeEisensteinTerm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasSumDeformedLatticeEisensteinSummandWeightTwo
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomothetyLatSum
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IteratedComplexPartialDerivativeEqWirtingerWordStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.DefiningCoordinates
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IteratedComplexPartialDerivativeEqWirtingerWord
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticePrincMulUnit
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemIntegersOfMemHatO
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrderLatticeEqSteinitzFormCmStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.EntireEqOfHalfPlane
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrderLatticeEqSteinitzFormCm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RiemannClEqSum
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SeriesDifferentiable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightTwoDerivativeEisensteinTermUniformBoundStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightTwoDerivativeEisensteinTermUniformBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -90,7 +94,7 @@ theorem series_weightTwo : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   set N : modUnits (lattice c y) → ℝ := fun q => |(Algebra.norm ℚ (q.1.out : E) : ℝ)| ^ (-(1 + σ.re)) with hN
   have hNs : Summable N := GlobalTheory.CMVal.Conv.summable_norm_rpow E c y (1 + σ.re) hc (by linarith)
   have hne : ∀ q : modUnits (lattice c y), q.1.out ≠ 0 := fun q => (out_mem_lattice q).2
-  choose C hC using fun m : I → ℕ => GlobalTheory.T.weightTwoDerivativeEisensteinTerm_uniform_bound E I φ hφ m σ r hσ.le hr1
+  choose C hC using fun m : I → ℕ => _root_.GlobalTheory.WeightTwoSum.Bound.eTerm_bound E I φ hφ m σ r hσ.le hr1
   have hsum : ∀ m, ∀ w ∈ U, Summable (fun q : modUnits (lattice c y) => eTerm φ m σ w q.1.out) := fun m w hw =>
     Summable.of_norm_bounded (hNs.mul_left (C m)) fun q => hC m w (hUle w hw) _ (hne q)
   set f' : modUnits (lattice c y) → (I → ℂ) → ((I → ℂ) →L[ℝ] ℂ) := fun q w =>
@@ -101,7 +105,7 @@ theorem series_weightTwo : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   have hus : Summable u := summable_sum fun j _ =>
     ((hNs.mul_left _).mul_right _).add (((hNs.mul_left _).mul_right _).mul_right _)
   have hder : ∀ q w, w ∈ U → HasFDerivAt (fun w : I → ℂ => eTerm φ m σ w q.1.out) (f' q w) w :=
-    fun q w hw => GlobalTheory.T.hasFDerivAt_weightTwoDerivativeEisensteinTerm E I φ m σ q.1.out (hne q) w (hUpd w hw)
+    fun q w hw => _root_.GlobalTheory.WeightTwoSum.hasFDerivAt_eTerm E I φ m σ q.1.out (hne q) w (hUpd w hw)
   have hrat : ∀ (q : modUnits (lattice c y)) w, w ∈ U → ∀ j,
       ‖-σ * φ j q.1.out / starRingEnd ℂ (defCoord φ w q.1.out j)‖ ≤ ‖σ‖ / (1 - r) := by
     intro q w hw j
@@ -174,8 +178,8 @@ theorem isOpen_upperHalf (F : Type) [Field F] [NumberField F] : IsOpen (upperHal
 theorem derivFormula_two (hH : HeckeWeightTwo) (E : Type) [Field E] [NumberField E] [IsCMField E] (I : Type) [Fintype I]
     [DecidableEq I] (φ : I → E →+* ℂ) (hF : 2 ≤ Module.finrank ℚ (maximalRealSubfield E)) (hφ : IsCMType φ)
     (c : Ideal (OF E)) (y : (Af E)ˣ) (hc : c ≠ ⊥) : DerivFormula φ 2 (lattice c y) := by
-  obtain ⟨e, he⟩ := GlobalTheory.T.exists_equiv_cmType_realEmbeddings_maxRealSubfield E I φ hφ
-  obtain ⟨θ₀, hθ₀⟩ := GlobalTheory.T.exists_element_pos_im_under_cmType E I φ hφ
+  obtain ⟨e, he⟩ := _root_.GlobalTheory.CMTypeRealEmb.exists_equiv E I φ hφ
+  obtain ⟨θ₀, hθ₀⟩ := _root_.GlobalTheory.CMTypeImPos.exists_im_pos E I φ hφ
   have hne : Nonempty I := by
     obtain ⟨i, -⟩ := hφ (Classical.arbitrary (E →+* ℂ))
     exact ⟨i⟩
@@ -184,7 +188,7 @@ theorem derivFormula_two (hH : HeckeWeightTwo) (E : Type) [Field E] [NumberField
     have h1 := h i
     rw [show θ = ((⟨θ, hθ⟩ : maximalRealSubfield E) : E) from rfl, he] at h1
     simp at h1
-  obtain ⟨𝔞, 𝔟, a₀, hL⟩ := GlobalTheory.T.orderLattice_eq_steinitzForm_cm E c y hc θ₀ (hnot θ₀ hθ₀)
+  obtain ⟨𝔞, 𝔟, a₀, hL⟩ := _root_.GlobalTheory.SteinitzOrder.lattice_eq_steinitz E c y hc θ₀ (hnot θ₀ hθ₀)
   set θ : E := θ₀ + a₀ with hθdef
   have hθ : ∀ i, 0 < (φ i θ).im := fun i => by
     rw [hθdef, map_add (f := _), he]; simpa using hθ₀ i
@@ -198,7 +202,7 @@ theorem derivFormula_two (hH : HeckeWeightTwo) (E : Type) [Field E] [NumberField
   set K : ℂ → (I → ℂ) → ℂ := fun σ z => b z * Complex.exp (-σ * logFac z) * G σ (modPt φ e θ z) with hK
   have hchain : ∀ (a : ℂ) (w : List (I × Bool)), ∀ z ∈ polydisc I,
       DifferentiableOn ℂ (fun σ => wirtWord w (fun z' => a * K σ z') z) halfPlane := fun a w z hz => by
-    have h := GlobalTheory.T.differentiableOn_wirtWord_mul_exp_comp' _ I (polydisc I) (upperHalf _) halfPlane G (modPt φ e θ) (fun z => a * b z) logFac hP
+    have h := _root_.GlobalTheory.WirtChain.differentiableOn_wirtWord_mul_exp_comp _ I (polydisc I) (upperHalf _) halfPlane G (modPt φ e θ) (fun z => a * b z) logFac hP
       (isOpen_upperHalf _) hmaps ((contDiffOn_modPt φ e θ).restrict_scalars ℝ)
       ((contDiffOn_const.mul hbC).restrict_scalars ℝ) contDiffOn_logFac hG2 hG3 w z hz
     simpa only [hK, mul_assoc] using h
@@ -207,7 +211,7 @@ theorem derivFormula_two (hH : HeckeWeightTwo) (E : Type) [Field E] [NumberField
   have hKs : ∀ z ∈ polydisc I, ∀ σ : ℂ, 0 < σ.re →
       HasSum (fun q : modUnits (lattice c y) => defTerm φ 2 z σ q.1.out) (K σ z) := fun z hz σ hσ => by
     obtain ⟨h1, h2⟩ := hG1 σ hσ _ (hmaps hz)
-    refine GlobalTheory.T.hasSum_deformedLatticeEisensteinSummand_weight_two E I φ e he 𝔞 𝔟 θ _ (hnot θ hθ) hL z hz σ _ ?_
+    refine _root_.GlobalTheory.WeightTwoCompare.hasSum_defTerm E I φ e he 𝔞 𝔟 θ _ (hnot θ hθ) hL z hz σ _ ?_
     rw [h2]
     exact h1.hasSum
   have hagree : ∀ g, IsDefSum φ 2 (lattice c y) g → ∀ z ∈ polydisc I, g z = cw * K 0 z := by
@@ -242,7 +246,7 @@ theorem derivFormula_two (hH : HeckeWeightTwo) (E : Type) [Field E] [NumberField
       have h3 := wirtWord_congr hP ih [(i, false)] z hz
       rw [List.map_cons, wirtWord_cons, count_cons_eq, ← h2 i, ← wirt_const_mul i false cw h1]
       exact h3
-  rw [GlobalTheory.T.iteratedComplexPartialDerivative_eq_wirtingerWord I _ g hP hgd l 0 h0, wirtWord_congr hP (hagree g hg) _ 0 h0, ← risingS_zero]
+  rw [_root_.GlobalTheory.HoloWirt.iterD_eq_wirtWord I _ g hP hgd l 0 h0, wirtWord_congr hP (hagree g hg) _ 0 h0, ← risingS_zero]
   refine eq_at_zero (f := fun σ => wirtWord (l.map fun i => (i, false)) (fun z' => cw * K σ z') 0)
     (g := fun σ => cw * risingS σ κ * S σ) (hchain cw _ 0 h0)
     ((((differentiable_risingS κ).const_mul cw).mul hS.1).differentiableOn) fun σ hσ => ?_

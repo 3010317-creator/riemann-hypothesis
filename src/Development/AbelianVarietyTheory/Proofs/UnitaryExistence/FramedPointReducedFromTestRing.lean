@@ -6,18 +6,19 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDesc
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FramedPointBaseChangeLaws
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFactorOpenImmersion
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFgSubalgebraDescAway
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFramedPointBaseChangeAlgebraMapStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsOpenChartFramedPointTestRingStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUniqueFrameChangeByMatricesStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUniversalFrameTestRingStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameChangeByMatricesReflAndCompStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameChangeCommBaseChangeStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameChangeExistsUniqueOfSamePointStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameEqOfBaseChangeInjectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointsGluePrincipalCoverStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.IsCombAt
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFramedPointBaseChangeAlgebraMap
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsOpenChartFramedPointTestRing
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUniqueFrameChangeByMatrices
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUniversalFrameTestRing
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameChangeByMatricesReflAndComp
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameChangeCommBaseChange
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameChangeExistsUniqueOfSamePoint
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameEqOfBaseChangeInjective
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointsGluePrincipalCover
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ModuliPointFromFgSubalgebra
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.UniversalFrameClassifiesFramedPoints
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ReducedFiniteTypeIffTestRing
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.UniversalFrameClassifiesFramedPointsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -113,10 +114,10 @@ theorem eq_of_cover {S : Type} [CommRing S] [Algebra c.F S] {n : ℕ} (h : Fin n
     (z : ∀ i, FrPt Xo c (Localization.Away (h i)))
     (hy : ∀ i, FrMap (IsScalarTower.toAlgHom c.F S (Localization.Away (h i))) y (z i))
     (hy' : ∀ i, FrMap (IsScalarTower.toAlgHom c.F S (Localization.Away (h i))) y' (z i)) : y = y' := by
-  obtain ⟨g, a, -, hga⟩ := (GlobalTheory.T.frameChange_exists_unique_of_same_point E H Dw l Xo c S y y').1 hx
-  have key := fun i => (GlobalTheory.T.frameChange_exists_unique_of_same_point E H Dw l Xo c _ (z i) (z i)).2 _ _ _ _
-    ((GlobalTheory.T.frameChange_comm_baseChange E H Dw l Xo c S _ _ y y' (z i) (z i) g a hga (hy i)).1 (hy' i))
-    (GlobalTheory.T.frameChangeByMatrices_refl_and_comp E H Dw l Xo c _ (z i) (z i) (z i)).1
+  obtain ⟨g, a, -, hga⟩ := (_root_.GlobalTheory.Frames.frChg_exists_unique E H Dw l Xo c S y y').1 hx
+  have key := fun i => (_root_.GlobalTheory.Frames.frChg_exists_unique E H Dw l Xo c _ (z i) (z i)).2 _ _ _ _
+    ((_root_.GlobalTheory.Frames.ChgBC.frChg_baseChange E H Dw l Xo c S _ _ y y' (z i) (z i) g a hga (hy i)).1 (hy' i))
+    (_root_.GlobalTheory.Frames.frChg_refl_and_comp E H Dw l Xo c _ (z i) (z i) (z i)).1
   have hg : g = fun _ => 1 := by
     funext τ
     ext p q
@@ -131,8 +132,8 @@ theorem eq_of_cover {S : Type} [CommRing S] [Algebra c.F S] {n : ℕ} (h : Fin n
     have := (key i).2
     simpa using this
   subst hg ha
-  exact (GlobalTheory.T.existsUnique_frameChangeByMatrices E H Dw l Xo c S y (fun _ => 1) 1 (fun _ => by simp)).unique
-    (GlobalTheory.T.frameChangeByMatrices_refl_and_comp E H Dw l Xo c _ y y y).1 hga
+  exact (_root_.GlobalTheory.Frames.existsUnique_frChg E H Dw l Xo c S y (fun _ => 1) 1 (fun _ => by simp)).unique
+    (_root_.GlobalTheory.Frames.frChg_refl_and_comp E H Dw l Xo c _ y y y).1 hga
 
 theorem exists_chart_cover (hB : Out.SecBaseChangeSt) {S : Type} [CommRing S] [Algebra c.F S]
     (x : Sp S ⟶ Xo.X) (hx : x ≫ Xo.s = sOf c S) :
@@ -143,7 +144,7 @@ theorem exists_chart_cover (hB : Out.SecBaseChangeSt) {S : Type} [CommRing S] [A
         ∃ ψ : (p i).R →ₐ[c.F] T, spMap lam.toRingHom ≫ xF = spMap ψ.toRingHom ≫ j i := by
   classical
   let xF : Sp S ⟶ Xo.XF c := pullback.lift x (spMap (algebraMap c.F S)) (hx.trans (spec_comp _ _))
-  choose p j y₀ hj hr using fun q : Sp S => GlobalTheory.T.exists_openChart_framedPoint_testRing hB E H Dw l Xo c (xF q)
+  choose p j y₀ hj hr using fun q : Sp S => _root_.GlobalTheory.Frames.exists_openChart_testRing hB E H Dw l Xo c (xF q)
   choose g hg hfac using fun q : Sp S => GlobalTheory.Frames.openChart_factor_near_prime E H Dw l Xo c _ (j q) (y₀ q)
     (hj q) S xF (pullback.lift_snd _ _ _) q (hr q)
   have hspan : Ideal.span (Set.range g) = ⊤ := by
@@ -214,20 +215,20 @@ theorem exists_descent_of_local (hB : Out.SecBaseChangeSt) {S : Type} [CommRing 
     (hvx : ∀ i, (v i).x = spMap (algebraMap S₁ (Localization.Away (h₁ i))) ≫ x₁)
     (hv : ∀ i, FrMap (κ i) (v i) (z i)) :
     ∃ y₁ : FrPt Xo c S₁, FrMap S₁.val y₁ y := by
-  obtain ⟨y₁, hy₁x, hy₁⟩ := GlobalTheory.T.framedPoints_glue_principal_cover hB E H Dw l Xo c S₁ x₁ hx₁ n h₁ hs₁ v hvx (by
+  obtain ⟨y₁, hy₁x, hy₁⟩ := _root_.GlobalTheory.Frames.frPt_glue hB E H Dw l Xo c S₁ x₁ hx₁ n h₁ hs₁ v hvx (by
     intro i j α β hα hβ u hu
-    obtain ⟨u', hu'⟩ := GlobalTheory.T.exists_framedPoint_baseChange_algebraMap hB E H Dw l Xo c _ _ β (v j)
+    obtain ⟨u', hu'⟩ := _root_.GlobalTheory.Frames.FramedBaseChange.exists_frMap hB E H Dw l Xo c _ _ β (v j)
     obtain ⟨θ, hθ, hinj⟩ := exists_away_val S₁ (h₁ i * h₁ j)
-    obtain ⟨w, hw⟩ := GlobalTheory.T.exists_framedPoint_baseChange_algebraMap hB E H Dw l Xo c _ _
+    obtain ⟨w, hw⟩ := _root_.GlobalTheory.Frames.FramedBaseChange.exists_frMap hB E H Dw l Xo c _ _
       (IsScalarTower.toAlgHom c.F S (Localization.Away ((h₁ i * h₁ j : S₁) : S))) y
     have a1 := frMap_restrict y S₁ _ _ (hh i) (κ i) (hκ i) _ (hz i) _ (hv i) _ θ hθ α hα w hw u hu
     have b1 := frMap_restrict y S₁ _ _ (hh j) (κ j) (hκ j) _ (hz j) _ (hv j) _ θ hθ β hβ w hw u' hu'
     have a2 := x_restrict x₁ _ _ α hα (hvx i) hu
     have b2 := x_restrict x₁ _ _ β hβ (hvx j) hu'
-    have : u = u' := GlobalTheory.T.frame_eq_of_baseChange_injective hB E H Dw l Xo c _ _ θ u u' w hinj (b2.trans a2.symm) a1 b1
+    have : u = u' := _root_.GlobalTheory.Frames.frPt_eq_of_frMap_injective hB E H Dw l Xo c _ _ θ u u' w hinj (b2.trans a2.symm) a1 b1
     rw [this]
     exact hu')
-  obtain ⟨w, hw⟩ := GlobalTheory.T.exists_framedPoint_baseChange_algebraMap hB E H Dw l Xo c _ _ S₁.val y₁
+  obtain ⟨w, hw⟩ := _root_.GlobalTheory.Frames.FramedBaseChange.exists_frMap hB E H Dw l Xo c _ _ S₁.val y₁
   have : w = y := by
     refine eq_of_cover h hs w y ?_ z (fun i => ?_) hz
     · rw [hw.1, hy₁x, hx]
@@ -275,8 +276,8 @@ theorem exists_fg_descent (hB : Out.SecBaseChangeSt) {S : Type} [CommRing S] [Al
   have hs : Ideal.span (Set.range h) = ⊤ := by
     have := congrArg (Ideal.map S₀.val) hg
     rwa [Ideal.map_top, Ideal.map_span, ← Set.range_comp] at this
-  choose A π X s u hu using fun i => GlobalTheory.T.exists_universalFrame_testRing hB E H Dw l Xo c (p i) (y₀ i)
-  choose z hz using fun i => GlobalTheory.T.exists_framedPoint_baseChange_algebraMap hB E H Dw l Xo c _ _
+  choose A π X s u hu using fun i => _root_.GlobalTheory.Frames.exists_univFrame_testRing hB E H Dw l Xo c (p i) (y₀ i)
+  choose z hz using fun i => _root_.GlobalTheory.Frames.FramedBaseChange.exists_frMap hB E H Dw l Xo c _ _
     (IsScalarTower.toAlgHom c.F S (Localization.Away (h i))) y
   choose ψ hψ using fun i => hfac i (Localization.Away (h i))
     ((IsScalarTower.toAlgHom c.F S (Localization.Away (h i))).comp S₀.val)
@@ -285,11 +286,11 @@ theorem exists_fg_descent (hB : Out.SecBaseChangeSt) {S : Type} [CommRing S] [Al
     intro i
     rw [← (hj i).2.1, ← Category.assoc, ← hψ, Category.assoc, hxF, spec_comp_alg, Category.assoc, hx, (hz i).1]
   choose a ha hau using fun i =>
-    (GlobalTheory.T.universalFrame_classifies_framedPoints hB E H Dw l Xo c _ _ (y₀ i) (π i) (X i) (s i) (u i) (hu i) _ (z i) (ψ i) (hzx i)).exists
+    (_root_.GlobalTheory.Frames.univFrame_classifies hB E H Dw l Xo c _ _ (y₀ i) (π i) (X i) (s i) (u i) (hu i) _ (z i) (ψ i) (hzx i)).exists
   obtain ⟨S₁, h₁, hS₁, hle, hh, hs₁, hd⟩ := GlobalTheory.exists_fg_subalgebra_desc_away c.F S S₀ hS₀ n h
     (fun i => (A i).R) (fun i => inferInstance) a hs
   choose κ a' hκ hinj hκa using hd
-  choose v hv using fun i => GlobalTheory.T.exists_framedPoint_baseChange_algebraMap hB E H Dw l Xo c _ _ (a' i) (u i)
+  choose v hv using fun i => _root_.GlobalTheory.Frames.FramedBaseChange.exists_frMap hB E H Dw l Xo c _ _ (a' i) (u i)
   let incl : S₀ →ₐ[c.F] S₁ := Subalgebra.inclusion hle
   refine ⟨S₁, hS₁, exists_descent_of_local hB y S₁ (spMap incl.toRingHom ≫ x₀) ?_ ?_ h h₁ hh hs hs₁ κ hκ z hz v
     (fun i => ?_) (fun i => cancel _ _ (hv i) ((hκa i).symm ▸ hau i))⟩
@@ -321,7 +322,7 @@ theorem allTest_of_secBaseChange : Out.SecBaseChangeSt → ∀ (E : Type) [Field
   have hred : IsReduced S₁ := isReduced_of_injective S₁.val Subtype.val_injective
   obtain ⟨p, ⟨e⟩⟩ := (GlobalTheory.reduced_finiteType_iff_testRing c.F).1 S₁
     ((Subalgebra.fg_iff_finiteType S₁).1 hS₁) hred
-  obtain ⟨y', hy'⟩ := GlobalTheory.T.exists_framedPoint_baseChange_algebraMap hB E H Dw l Xo c _ _ (e.symm : S₁ →ₐ[c.F] p.R) y₁
+  obtain ⟨y', hy'⟩ := _root_.GlobalTheory.Frames.FramedBaseChange.exists_frMap hB E H Dw l Xo c _ _ (e.symm : S₁ →ₐ[c.F] p.R) y₁
   refine ⟨p, S₁.val.comp (e : p.R →ₐ[c.F] S₁), y', FramedBaseChange.cancel _ _ hy' ?_⟩
   have : (S₁.val.comp (e : p.R →ₐ[c.F] S₁)).comp (e.symm : S₁ →ₐ[c.F] p.R) = S₁.val := by
     ext t

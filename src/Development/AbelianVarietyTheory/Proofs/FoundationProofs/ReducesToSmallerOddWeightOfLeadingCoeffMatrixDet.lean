@@ -1,11 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FiniteIndexOfGammaLe
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CoeffEqZeroOfSumPlusMinusRepsEqZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsEqDiscriminantMulOfExpDecayCuspsStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLevelOneFormOneAddExpDecayStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SlashQExpansionCoeffWidthTransformStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SlashSubQExpansionPartialSumIsBigOStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CoeffEqZeroOfSumPlusMinusRepsEqZero
+public import Mathlib.NumberTheory.ModularForms.Discriminant
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsEqDiscriminantMulOfExpDecayCusps
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLevelOneFormOneAddExpDecay
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SlashQExpansionCoeffWidthTransform
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SlashSubQExpansionPartialSumIsBigO
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,9 +77,9 @@ theorem reduces_of_det_leadM_eq_zero : ∀ (M : ℕ) (Γ : Subgroup SL(2, ℤ)) 
   classical
   intro M Γ r s w F hM hΓ hs hF hdet
   obtain ⟨c, hc, hcv⟩ := Matrix.exists_mulVec_eq_zero_iff.mpr hdet
-  have hT := fun j => GlobalTheory.T.slashQExpansionCoeffWidth_transform M Γ (w j) (F j) hM hΓ (hF j).2
+  have hT := fun j => _root_.GlobalTheory.OddFrame.co_transform M Γ (w j) (F j) hM hΓ (hF j).2
   have hb : ∀ (x : SL(2, ℤ)) (n : ℕ), n < M → ∑ j, c j * co M (w j) (F j) x n = 0 := by
-    refine GlobalTheory.T.coeff_eq_zero_of_sum_plusMinusReps_eq_zero M Γ r s (fun x n => ∑ j, c j * co M (w j) (F j) x n) hM hs ?_ ?_ ?_ ?_
+    refine _root_.GlobalTheory.OddFrame.coeff_eq_zero_of_sum_reps_eq_zero M Γ r s (fun x n => ∑ j, c j * co M (w j) (F j) x n) hM hs ?_ ?_ ?_ ?_
     · intro x n
       simp only [fun j => (hT j).1 x n, Finset.mul_sum]
       exact Finset.sum_congr rfl fun j _ => by ring
@@ -95,7 +96,7 @@ theorem reduces_of_det_leadM_eq_zero : ∀ (M : ℕ) (Γ : Subgroup SL(2, ℤ)) 
       fun τ : ℍ => Real.exp (-2 * Real.pi * τ.im) := by
     intro x
     have h1 := IsBigO.sum (s := Finset.univ) fun j _ =>
-      (GlobalTheory.T.slash_sub_qExpansion_partialSum_isBigO M Γ (w j) (F j) hM hΓ (hF j).2 x).const_mul_left (c j)
+      (_root_.GlobalTheory.OddFrame.slash_sub_partialSum_isBigO M Γ (w j) (F j) hM hΓ (hF j).2 x).const_mul_left (c j)
     refine h1.congr_left fun τ => ?_
     simp only [Finset.sum_apply, mul_sub, Finset.sum_sub_distrib, Finset.mul_sum]
     rw [Finset.sum_comm, sub_eq_self]
@@ -113,7 +114,7 @@ theorem reduces_of_det_leadM_eq_zero : ∀ (M : ℕ) (Γ : Subgroup SL(2, ℤ)) 
     by_cases hj : c j = 0
     · exact ⟨0, IsMF.zero _ _, by simp [hj, isBigO_zero]⟩
     · have hle : w j ≤ w j₀ := hmax j (by simpa using hj)
-      obtain ⟨e, h1, h2⟩ := GlobalTheory.T.exists_levelOne_form_one_add_expDecay (w j₀ - w j + 4) (by omega)
+      obtain ⟨e, h1, h2⟩ := _root_.GlobalTheory.levelOne_form_one_add_expDecay (w j₀ - w j + 4) (by omega)
         (((hF j₀).1.sub_odd (hF j).1).add (by decide))
       refine ⟨c j • e, h1.smul _, (h2.const_mul_left (c j)).congr_left fun τ => ?_⟩
       simp [mul_sub]
@@ -141,7 +142,7 @@ theorem reduces_of_det_leadM_eq_zero : ∀ (M : ℕ) (Γ : Subgroup SL(2, ℤ)) 
     refine (h1.add (hO x)).congr_left fun τ => ?_
     rw [← Finset.sum_add_distrib, Finset.sum_apply]
     exact Finset.sum_congr rfl fun j _ => by simp; ring
-  obtain ⟨G, hG, hHG⟩ := GlobalTheory.T.exists_eq_discriminant_mul_of_expDecay_cusps Γ _ _ hH hHO
+  obtain ⟨G, hG, hHG⟩ := _root_.GlobalTheory.exists_eq_discriminant_mul Γ _ _ hH hHO
   have hΔ : IsMF ⊤ 12 ModularForm.discriminant := (isCF_coe_top CuspForm.discriminant).isMF
   refine ⟨j₀, w j₀ + 4 - 12, G, ModularForm.discriminant, e, by omega, ?_, hG,
     fun j => (heMF j).2.1, ?_, ?_⟩

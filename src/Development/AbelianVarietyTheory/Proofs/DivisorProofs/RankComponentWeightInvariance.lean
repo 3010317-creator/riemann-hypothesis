@@ -5,6 +5,26 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.WellChosen
 public import Development.AbelianVarietyTheory.Definitions.Divisors.GenRatios
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NonemptyCuspFrame
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AsIdealSpMapClosedPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommonRestrIsoTens
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeImageBirationalLinearSystemEqSelfInt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GeometricallyConnectedStr
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralBaseChangeRationalFunctionFieldFiniteV
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.SecEqZeroAndHomEqOfThickenings
+public import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.BijectiveSmulChartSec
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralOrIsEmptyGenericMemberLinearSystem
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsoOverOfIsOpenImmersion
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModificationLineBundleGlobalSectionsDimPullEq
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
+public import Development.AbelianVarietyTheory.Definitions.Divisors.UnitaryWeightExponentVectorSignatureWeightMuZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NeBotOfNotMem
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ExistsAlgClosedBaseChange
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopSelfIntersectionNefLeCuspFormGrowth
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopologicalKrullDimFieldBaseChangeLe
+public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.LevelCarrying
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsCoprimeOfNatCast
+public import Development.AbelianVarietyTheory.Definitions.Divisors.MemLevEigenIffTransl
 import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.EventuallySubsingletonCohTwistZOfIsProjOver
 import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ExistsLinearMapMultilinearMapBaseChange
 import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.HigherDirectImagesVanishOfIsAffineHom
@@ -12,20 +32,10 @@ import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.IsFinite
 import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.RingKrullDimQuotientEqOfMemMinimalPrimes
 import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.SumNegOnePowFinrankEqZero
 import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AsIdealSpMapClosedPoint
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommonRestrIsoTens
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeImageBirationalLinearSystemEqSelfInt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GeometricallyConnectedStr
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ImageIdealEqConeIdealOfGeneric
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralBaseChangeRationalFunctionFieldFiniteVStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralOrIsEmptyGenericMemberLinearSystemStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeOfRingKrullDimConeIdeal
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemNonzeroLocusFormMap
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModificationLineBundleGlobalSectionsDimPullEqStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NeBotOfNotMem
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyHomologyEquiv
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopSelfIntersectionNefLeCuspFormGrowthStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopologicalKrullDimFieldBaseChangeLeStatement
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.GenFrExAndGenFromTest
 import Formalism.PadicSubsetSums.StableGradedCounts.ZBrauerNesbittAlg
 import Mathlib.Algebra.Module.StablyFree.Basic
@@ -67,11 +77,8 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
-public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.LevelCarrying
 import Development.AbelianVarietyTheory.Definitions.Divisors.BadElt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsCoprimeOfNatCast
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsRightActFunPull
-public import Development.AbelianVarietyTheory.Definitions.Divisors.MemLevEigenIffTransl
 import Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings
 
 @[expose] public section
@@ -220,8 +227,8 @@ theorem exists_step {k : Type} [Field k] {X : Scheme.{0}} [IsIntegral X] [a : Al
   set f' := pullback.snd f (spMap (algebraMap k K))
   letI := algebraΓOfHom f'
   obtain ⟨hpr, -⟩ := (isProjOver_iff_isProper_and_exists_isAmpleLB f).1 hp
-  have := GlobalTheory.T.isIntegral_baseChange_rationalFunctionField_finiteVars k N X _ f f' π H
-  obtain ⟨t, ht, hH⟩ := GlobalTheory.T.isIntegral_or_isEmpty_generic_member_linearSystem k N X _ f f' π H L hLB b hb
+  have := _root_.GlobalTheory.PureTransc.isIntegral_of_isPullback k N X _ f f' π H
+  obtain ⟨t, ht, hH⟩ := _root_.GlobalTheory.GenericMember.isIntegral_or_isEmpty_zeroScheme k N X _ f f' π H L hLB b hb
   have hp' : IsProjOver (strHom K (X := (pullback f (spMap (algebraMap k K))))) := by
     rw [strHom_eq (f := f') fun _ => rfl]
     exact PosBaseChange.isProjOver_of_isPullback H hp
@@ -231,7 +238,7 @@ theorem exists_step {k : Type} [Field k] {X : Scheme.{0}} [IsIntegral X] [a : Al
   set ι := (secIdeal hL' t).subschemeι
   letI := algebraΓAlong K ι
   refine ⟨K, inferInstance, _, algebraΓAlong K ι, ι ≫ π, isProjOver_along hp' ι, ?_, hH, fun B hB => ?_, fun e P hP => ?_⟩
-  · exact dim_zeroScheme_le hL' ht ((GlobalTheory.T.topologicalKrullDim_fieldBaseChange_le k K X _ f f' π H).trans hd)
+  · exact dim_zeroScheme_le hL' ht ((_root_.GlobalTheory.FieldExtDim.topologicalKrullDim_baseChange_le k K X _ f f' π H).trans hd)
   · have h1 := globalSections_dim_le_div_add_restriction hp' hL' (LB.isLB_pull hB π) ht
     have e1 : lbH0 K (B.pull π) = lbH0 k B := FieldChangeInter.hdim_pull H hB 0
     have e2 : lbH0 K ((LB.div B L).pull π) = lbH0 k (LB.div B L) := FieldChangeInter.hdim_pull H (LB.isLB_div hB hLB) 0
@@ -502,7 +509,7 @@ theorem topSelf_pull (hN : GlobalTheory.Published.NefNumerics) {k : Type} [Field
   obtain ⟨hpr', A', hA'⟩ := (isProjOver_iff_isProper_and_exists_isAmpleLB M.str).1 M.proj
   have : IsProper M.σ := IsProper.of_comp M.σ p
   have : IsProper (strHom k (X := Y)) := e ▸ hpr
-  have h0 := GlobalTheory.T.modification_globalSectionsDim_pull_eq k Y p U D hs hp M
+  have h0 := _root_.GlobalTheory.ModifSections.modification_lineBundleGlobalSectionsDim_pull_eq k Y p U D hs hp M
   have hp₁ : IsProjOver (strHom k (X := Y)) := by rw [e]; exact hp
   have hp₂ : IsProjOver (strHom k (X := M.X)) := by rw [e']; exact M.proj
   refine ⟨inferInstance, hp₂, hd', h0, fun B hB => ?_⟩
@@ -548,7 +555,7 @@ theorem finrank_cusp_le (hQ : GlobalTheory.HSCore.Quoted) (hPr : GlobalTheory.Pu
   have hne : ∃ f : Cusp Z U u, f ≠ 0 := by
     by_contra! h0
     exact hB.1 (LinearMap.ext fun f => by rw [h0 f, map_zero]; rfl)
-  have htop := GlobalTheory.T.topSelfIntersection_nef_le_cuspFormGrowth hQ.nef E H Dw l Xo c Y X Z r U u hV hD hC hne hn.1
+  have htop := _root_.GlobalTheory.NefCuspGrowth.topSelf_le_growthOn hQ.nef E H Dw l Xo c Y X Z r U u hV hD hC hne hn.1
   rw [hG, ENNReal.ofReal_le_ofReal_iff hv, ← (hpull _ hn.1).2] at htop
   obtain ⟨d, hd⟩ : ∃ d, dimFlag Dw = d + 1 := ⟨dimFlag Dw - 1, by omega⟩
   have hP : HasNonzeroSec R.Δ₁.P := by

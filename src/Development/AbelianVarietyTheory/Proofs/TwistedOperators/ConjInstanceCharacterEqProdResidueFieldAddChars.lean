@@ -3,14 +3,17 @@ module
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CPAsIdeal
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ChiSRfl
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlagLevelCharacterEqPsiDivN
-import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.GoodIdempotentBadPlaces
-import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PredMemGamRanks
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CharacterResidueFieldsEqProdGenericShiftStatement
+public import Formalism.LocalToGlobal.Divisibility.DefGroup
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CharacterResidueFieldsEqProdGenericShift
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsFiniteAdditiveCharNeOneAtEachPrimeStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsIntegralAdelePrescribedResiduesAndConjStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralAdeleCongrZeroOfResiduesSquarefreeStatement
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.HidaSetting
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralAdeleCongrZeroOfResiduesSquarefree
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ResidueSupportSinglePlaceToConjugatePairSlotStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TypePrimesProductNotMemSqPlaceStatement
+public import Mathlib.GroupTheory.FiniteAbelian.Duality
+import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.GoodIdempotentBadPlaces
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PredMemGamRanks
 import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LevelSubgroupCharacterUnitary
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -21,7 +24,6 @@ import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.GroupTheory.FiniteAbelian.Duality
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -167,12 +169,12 @@ theorem core (psiEf : (instOf D).E ⊗[(instOf D).F] Formalism.MainNotions.S.Af 
       (∀ PP ∈ Pg, resS D.host.F PP s = 0 ∧ resS D.host.F PP (sigInt (instOf D) s) = 0) →
       ZMod' (instOf D) (D.host.g 0 * D.host.g 1) s.1 := by
     intro s hs
-    refine GlobalTheory.T.integralAdele_congr_zero_of_residues_squarefree (instOf D) _ hg (GlobalTheory.T.typePrimes_product_not_mem_sq_place D) s fun Q hQ => ?_
+    refine _root_.GlobalTheory.AdeleSquarefree.zmod_of_forall_resS_eq_zero (instOf D) _ hg (GlobalTheory.T.typePrimes_product_not_mem_sq_place D) s fun Q hQ => ?_
     obtain ⟨PP, hPP, rfl | rfl⟩ := hcov Q hQ
     · exact (hs _ hPP).1
     · exact (resS_cP PP s).trans (by rw [(hs _ hPP).2]; exact map_zero _)
   choose ψ0 hψ0 using fun P : Pl D.host.E => exists_addChar_ne_one (kP P)
-  obtain ⟨a₁, a₂, ha, hχ⟩ := GlobalTheory.T.character_residueFields_eq_prod_genericShift D.host.E (Formalism.L2.Herm.intAf D.host.F D.host.E) Pg (fun PP => resS D.host.F PP)
+  obtain ⟨a₁, a₂, ha, hχ⟩ := _root_.GlobalTheory.LeviBlockCharacter.char_eq_prod_shift D.host.E (Formalism.L2.Herm.intAf D.host.F D.host.E) Pg (fun PP => resS D.host.F PP)
     (fun PP => (resS D.host.F PP).comp (sigInt (instOf D)))
     (fun s => psiEf (divN (instOf D) (D.host.g 0 * D.host.g 1) s.1)) ψ0 (fun PP _ => hψ0 PP)
     (fun s t => (congrArg psiEf (Formalism.L2.SG.Pf.unitaryCongruence.divN_add (instOf D) (D.host.g 0 * D.host.g 1) s.1 t.1)).trans

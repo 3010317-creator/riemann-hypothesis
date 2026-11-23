@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VanishingH1InvertingMorphisms
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneCocycleInvertibleLocusIsCoboundaryStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionsInvertibleLocusOfBasisFunctorStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneCocycleInvertibleLocusIsCoboundary
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionsInvertibleLocusOfBasisFunctor
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,7 +62,7 @@ theorem twoCocycle_comma_coboundary_of_standardCover : ∀ {R : Type} [CommRing 
   choose y hy using hy
   have hu : ∀ {t t' : C'} {u : T ⟶ G.obj t} (a : t ⟶ t') {x : F.obj T}, IsUnit (mp F u x) →
       IsUnit (mp F (u ≫ G.map a) x) := fun a _ h ↦ isUnit_comp _ h
-  have h1 := fun i j : Fin n ↦ GlobalTheory.T.oneCocycle_invertibleLocus_isCoboundary_alt F G H hcov hfil T (d i * d j)
+  have h1 := fun i j : Fin n ↦ _root_.GlobalTheory.CatCoh.Desc.Basis.oneCocycle_invertibleLocus_isCoboundary F G H hcov hfil T (d i * d j)
     (fun t t' u a ↦ y j t t' u a - y i t t' u a) fun t t' t'' u a b h ↦ by
       rw [map_mul, IsUnit.mul_iff] at h
       rw [map_sub]
@@ -72,7 +72,7 @@ theorem twoCocycle_comma_coboundary_of_standardCover : ∀ {R : Type} [CommRing 
       IsUnit (mp F u (d j)) →
       β i j t' (u ≫ G.map a) - mp F (G.map a) (β i j t u) = y j t t' u a - y i t t' u a :=
     fun i j t t' u a hi hj ↦ hβ' i j t t' u a (by rw [map_mul]; exact hi.mul hj)
-  have h2 := fun i j k : Fin n ↦ GlobalTheory.T.sections_invertibleLocus_of_basisFunctor F G H hcov hfil T (d i * d j * d k)
+  have h2 := fun i j k : Fin n ↦ _root_.GlobalTheory.CatCoh.Desc.sec_of_basis_unit F G H hcov hfil T (d i * d j * d k)
     (fun t u ↦ β j k t u - β i k t u + β i j t u) fun t t' u a h ↦ by
       rw [map_mul, map_mul, IsUnit.mul_iff, IsUnit.mul_iff] at h
       rw [map_add (f := _), map_sub]

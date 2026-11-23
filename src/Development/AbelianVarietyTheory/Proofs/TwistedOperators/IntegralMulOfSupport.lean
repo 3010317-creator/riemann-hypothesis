@@ -3,31 +3,37 @@ module
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.FourierJacobiAverage
 public import Mathlib.CategoryTheory.Category.Basic
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ColEInvMulAffPt
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ContinuousCharactersLocallyConstantNonarchLocalFStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Complex.Circle
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Mathlib.Topology.LocallyConstant.Basic
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ContinuousCharactersLocallyConstantNonarchLocalF
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExDownExUpAndExUpExDown
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsHeisenbergSubgroupFourierJacobiCommutatorStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSchwartzBruhatConvolutionLocalFieldPowerStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSchwartzBruhatSupportedNhdsIntegralOneStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSumSmulOfLocallyConstantCompactSupportStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsWeakIntegralOfIsLocallyConstantOfIsCompact
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FourierJacobiUnipotentEqProdRootExchangeStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegrableOfMemSB
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsHeisenbergSubgroupFourierJacobiCommutator
+public import Development.AbelianVarietyTheory.Definitions.Foundations.MatrixMeasurableSpace
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSchwartzBruhatConvolutionLocalFieldPower
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSchwartzBruhatSupportedNhdsIntegralOne
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSumSmulOfLocallyConstantCompactSupport
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FourierJacobiUnipotentEqProdRootExchange
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsUnimodularBlockUpperTriangularSymmetricLevelsStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LinearChangeOfVariablesLocalFieldMatrix
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemFourierJacobiSubgroupIffParabolicMulColumnStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemRootExchangeParabolicAndFourierJacobiIffEntriStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemFourierJacobiSubgroupIffParabolicMulColumn
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemRootExchangeParabolicAndFourierJacobiIffEntri
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OrbitLocallyConstant
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.QuotIntFJUniqueStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.QuotientIntegralParabolicUnfolding
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.QuotIntFJUnique
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.QuotientIntegralWhittakerTwist
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RootExchangeHeisenbergVariableSignStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RootExchangeOperatorWeilRowUnipotentStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RootExchangeHeisenbergVariableSign
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RootExchangeOperatorWeilRowUnipotent
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchwartzFourierTransformPiSurjectiveSchwartzBruh
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilFormulaRootExchangeParabolicQuotient
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsWeakIntegralOfIsLocallyConstantOfIsCompact
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegrableOfMemSB
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LinearChangeOfVariablesLocalFieldMatrix
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.QuotientIntegralParabolicUnfolding
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RootExchangeSupportAndFourierRelation
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RootExchangeUnipotentSubgroupSuccDecomposition
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchwartzFourierTransformPiSurjectiveSchwartzBruhStatement
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnipotentRadicalBasic
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilFormulaRootExchangeParabolicIntersection
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilFormulaRootExchangeParabolicQuotientStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -72,7 +78,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Algebra.Group.Units
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
 
 @[expose] public section
 
@@ -89,11 +94,11 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 theorem heisenberg : Heisenberg k := by
   intro n _ _ c ρ h1 hc
   have h2 : ρ < c := by omega
-  refine ⟨(GlobalTheory.T.fourierJacobiUnipotent_eq_prod_rootExchange k n c ρ h1 h2).1, (GlobalTheory.T.exists_heisenbergSubgroup_fourierJacobi_commutator k n c ρ h1 h2).1, (GlobalTheory.T.exists_heisenbergSubgroup_fourierJacobi_commutator k n c ρ h1 h2).2, ?_⟩
+  refine ⟨(_root_.GlobalTheory.RootEx.FJUnipotent.fj_unipotent k n c ρ h1 h2).1, (_root_.GlobalTheory.RootEx.HeisenbergSubgroup.heisenberg_subgroup k n c ρ h1 h2).1, (_root_.GlobalTheory.RootEx.HeisenbergSubgroup.heisenberg_subgroup k n c ρ h1 h2).2, ?_⟩
   intro ψ hψ _ u β₀ Φ₀
   refine ⟨⟨Φ₀.2.1.comp_continuous (continuous_add_const β₀),
     Φ₀.2.2.comp_homeomorph (Homeomorph.addRight β₀)⟩,
-    ⟨(((GlobalTheory.T.continuous_characters_locallyConstant_nonarchLocalField k).2 ψ hψ).comp_continuous (f := fun β : n → k => u ⬝ᵥ β) (by fun_prop)).mul Φ₀.2.1,
+    ⟨(((_root_.GlobalTheory.RootEx.OpenKernel.characters_locallyConstant k).2 ψ hψ).comp_continuous (f := fun β : n → k => u ⬝ᵥ β) (by fun_prop)).mul Φ₀.2.1,
       Φ₀.2.2.mul_left⟩, ?_⟩
   funext β
   simp only [schM, schT, Pi.smul_apply, smul_eq_mul, dotProduct_add, ← mul_assoc, ← Circle.coe_mul,
@@ -125,7 +130,7 @@ theorem fj_conv [ν.IsAddHaarMeasure] (hfj : IsFJ ψ ρ σ fj) (Φ Ψ : SB (n �
     ∃ w : SB (n → k), (∀ x, w.1 x = ∫ y, Φ.1 y * Ψ.1 (x - y) ∂(Measure.pi fun _ => ν)) ∧
       (∀ x, w.1 x = ∫ y, Ψ.1 y * Φ.1 (x - y) ∂(Measure.pi fun _ => ν)) ∧
       ∀ φ v, fj φ v w = ∫ y, Φ.1 y * fj φ (σ (colE c (ρ + 1) y) v) Ψ ∂(Measure.pi fun _ => ν) := by
-  obtain ⟨T, w, hT, h1, h2, h3⟩ := GlobalTheory.T.exists_schwartzBruhat_convolution_localFieldPower k n ν Φ Ψ
+  obtain ⟨T, w, hT, h1, h2, h3⟩ := _root_.GlobalTheory.SBConv.exists_convolution k n ν Φ Ψ
   refine ⟨w, h1, h2, fun φ v => ?_⟩
   rw [h3]
   congr 1; funext y
@@ -156,11 +161,11 @@ theorem fj_indep [ν.IsAddHaarMeasure] (hfj : IsFJ ψ ρ σ fj) (φ : P) (v : A)
 
 theorem exists_represents [ν.IsAddHaarMeasure] (h1 : 1 ≤ ρ) (h2 : ρ < c) (hψ : Continuous ψ) (hψ1 : ψ ≠ 1)
     (hσ : IsSmoothRep σ) (hfj : IsFJ ψ ρ σ fj) : ∃ b, Represents ψ ν ρ σ fj b := by
-  choose Ψ hΨ hΨ1 using fun v : A => GlobalTheory.T.exists_schwartzBruhat_supported_nhds_integral_one k n ν _ (stab_nhds (ρ := ρ) hσ v)
+  choose Ψ hΨ hΨ1 using fun v : A => _root_.GlobalTheory.RootEx.exists_SB_supported_integral_one k n ν _ (stab_nhds (ρ := ρ) hσ v)
   have key : ∀ U ∈ 𝓝 (0 : n → k), ∃ Φ : SB (n → k), (∀ y, y ∉ U → Φ.1 y = 0) ∧
       ∫ y, Φ.1 y ∂(Measure.pi fun _ => ν) = 1 ∧ ∀ φ v, U ⊆ stab ρ σ v → fj φ v (Ψ v) = fj φ v Φ := by
     intro U hU
-    obtain ⟨Φ, a, a1⟩ := GlobalTheory.T.exists_schwartzBruhat_supported_nhds_integral_one k n ν U hU
+    obtain ⟨Φ, a, a1⟩ := _root_.GlobalTheory.RootEx.exists_SB_supported_integral_one k n ν U hU
     exact ⟨Φ, a, a1, fun φ v hv => fj_indep hfj φ v _ _ (hΨ v) (hΨ1 v) (fun y hy => a y fun h => hy (hv h)) a1⟩
   let b : P →ₗ[ℂ] A →ₗ[ℂ] ℂ := LinearMap.mk₂ ℂ (fun φ v => fj φ v (Ψ v)) (by intros; simp) (by intros; simp)
     (by
@@ -185,7 +190,7 @@ theorem exists_represents [ν.IsAddHaarMeasure] (h1 : 1 ≤ ρ) (h2 : ρ < c) (h
     obtain ⟨g₁, hg₁, u, rfl⟩ := RadicalDecomp.succ_decomp k n c ρ g hg
     obtain ⟨-, hs, -, -, -, -, hr, -⟩ := Radical.unipotent_radical_basic k n c (ρ + 1)
     have hu : {β : n → k | (ψ ((-u) ⬝ᵥ β) : ℂ) = 1} ∈ 𝓝 (0 : n → k) :=
-      ((((GlobalTheory.T.continuous_characters_locallyConstant_nonarchLocalField k).2 ψ hψ).comp_continuous (f := fun β : n → k => (-u) ⬝ᵥ β)
+      ((((_root_.GlobalTheory.RootEx.OpenKernel.characters_locallyConstant k).2 ψ hψ).comp_continuous (f := fun β : n → k => (-u) ⬝ᵥ β)
         (by fun_prop)).isOpen_fiber 1).mem_nhds (by simp)
     obtain ⟨Φ, a, -, h⟩ := key _ (inter_mem (inter_mem (stab_nhds (ρ := ρ) hσ v)
       (stab_nhds (ρ := ρ) hσ (σ (g₁ * rowE c ρ u) v))) hu)
@@ -240,7 +245,7 @@ theorem uniqueBessel : UniqueBessel k := by
   refine ⟨existsUnique_of_exists_of_unique (exists_represents h1 h2 hψ hψ1 hσ hfj) fun b b' hb hb' => ?_,
     fun b hb => ⟨existsUnique_of_exists_of_unique ?_ fun b₀ b₁ h h' => ?_, fun b₀ h φ v Φ₀ => ?_⟩⟩
   · ext φ v
-    obtain ⟨Ψ, a, a1⟩ := GlobalTheory.T.exists_schwartzBruhat_supported_nhds_integral_one k n ν _ (stab_nhds (ρ := ρ) hσ v)
+    obtain ⟨Ψ, a, a1⟩ := _root_.GlobalTheory.RootEx.exists_SB_supported_integral_one k n ν _ (stab_nhds (ρ := ρ) hσ v)
     have e := represents_eval hb φ v Ψ a
     rw [represents_eval hb' φ v Ψ a, a1, one_mul, one_mul] at e
     exact e.symm
@@ -259,7 +264,7 @@ theorem uniqueBessel : UniqueBessel k := by
   · ext φ v
     rw [exchanges_eq h1 h2 hψ hψ1 hν hσ h, exchanges_eq h1 h2 hψ hψ1 hν hσ h']
   · obtain ⟨s1, -, s3⟩ := (hS (b₀ φ) v).1 (h.1 φ)
-    have hh := (GlobalTheory.T.schwartzFourierTransformPi_surjective_schwartzBruhat k n ψ hψ hψ1 ν hν).1 Φ₀
+    have hh := (_root_.GlobalTheory.SplitWeil.FourierSurj.hat_surjective k n ψ hψ hψ1 ν hν).1 Φ₀
     refine ⟨sb_int ⟨hh.1.mul s1.1, hh.2.mul_right⟩, ?_⟩
     rw [(hb.2 φ v Φ₀).2]
     simp only [(h.2 φ _).2, s3, hat, ← integral_const_mul, ← integral_mul_const]
@@ -280,7 +285,7 @@ theorem exponents : Exponents k := by
       b (twist η π g φ) (σ (embX c g) v) =
         ((nabs k (Matrix.GeneralLinearGroup.det g) ^ e : ℝ) : ℂ) * b φ v := by
     intro s e hse hinv g φ v
-    obtain ⟨Ψ, a, a1⟩ := GlobalTheory.T.exists_schwartzBruhat_supported_nhds_integral_one k n ν _ (stab_nhds (ρ := ρ) hσ v)
+    obtain ⟨Ψ, a, a1⟩ := _root_.GlobalTheory.RootEx.exists_SB_supported_integral_one k n ν _ (stab_nhds (ρ := ρ) hσ v)
     let T : (n → k) ≃ₜ (n → k) :=
       { toFun := fun β => (g⁻¹ : GL n k).val *ᵥ β
         invFun := fun β => g.val *ᵥ β
@@ -334,15 +339,15 @@ end Bessel
 theorem localSign : LocalSign k := by
   intro n n' _ _ _ _ c ρ h1 hc
   have h2 : ρ < c := by omega
-  refine ⟨(GlobalTheory.T.mem_fourierJacobiSubgroup_iff_parabolic_mul_column k n c ρ h1 h2).1,
-    GlobalTheory.T.isUnimodular_blockUpperTriangular_symmetricLevels k n c _ _ (fun i => ?_) _ ((GlobalTheory.T.mem_rootExchangeParabolic_and_fourierJacobi_iff_entries k n c ρ).2 h1 h2),
-    (GlobalTheory.T.rootExchange_heisenbergVariable_sign k n n' c ρ h1 h2).1, fun ψ ν hψ _ hν => ?_⟩
+  refine ⟨(_root_.GlobalTheory.RootEx.FourierJacobiGroup.mem_RFJ_iff k n c ρ h1 h2).1,
+    GlobalTheory.T.isUnimodular_blockUpperTriangular_symmetricLevels k n c _ _ (fun i => ?_) _ ((_root_.GlobalTheory.RootEx.ParabolicEntries.mem_R_iff_and_mem_RFJ_iff k n c ρ).2 h1 h2),
+    (_root_.GlobalTheory.RootEx.HeisenbergSign.sign k n n' c ρ h1 h2).1, fun ψ ν hψ _ hν => ?_⟩
   · have := i.2
     simp only [Fin.val_rev]
     omega
   · have := hν.1
-    exact ⟨fun μ _ => (GlobalTheory.T.rootExchange_heisenbergVariable_sign k n n' c ρ h1 h2).2 ψ ν hψ μ,
-      fun μX μG _ _ => GlobalTheory.T.weil_formula_rootExchange_parabolic_quotient k n c ρ h1 h2 ν μX μG⟩
+    exact ⟨fun μ _ => (_root_.GlobalTheory.RootEx.HeisenbergSign.sign k n n' c ρ h1 h2).2 ψ ν hψ μ,
+      fun μX μG _ _ => _root_.GlobalTheory.QuotIntFJ.weil_formula_FJ k n c ρ h1 h2 ν μX μG⟩
 
 theorem target : Target k := by
   intro n n' _ _ _ _ c ρ h1 hc ψ ν hψ hψ1 hν μ hμ μX μG hX hG P A P' A' _ _ _ _ _ _ _ _ π σ π' σ' _ hσ _ _
@@ -351,7 +356,7 @@ theorem target : Target k := by
   have := hν.1
   have := secondCountable k
   have := t2Space k
-  have hμ' := (GlobalTheory.T.continuous_characters_locallyConstant_nonarchLocalField k).1 μ hμ
+  have hμ' := (_root_.GlobalTheory.RootEx.OpenKernel.characters_locallyConstant k).1 μ hμ
   have main : ∀ Φ : SB (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k),
       (∀ h, Integrable (fun β : n → k => b (app (θ φ) fun x₀ => fl ψ ν μ ρ (om μ 1 h Φ.1) x₀ β)
           (σ (colE c (ρ + 1) β) (σ h F))) (Measure.pi fun _ => ν)) ∧
@@ -372,7 +377,7 @@ theorem target : Target k := by
       rfl
     obtain ⟨z₀, hz₀⟩ := exists_isQuotInt_unfolding k n n' c (ρ + 1) (by omega) h2 ψ hψ hψ1 ν μ hμ' μX μG A σ hσ
       P P' π π' θ hθ b hp φ F Φ (rInt ψ ν μ (ρ + 1) σ θ b φ F Φ.1) fun h Ψ hΨ => by rw [rInt, ← hΨ, app_coe]
-    have W := GlobalTheory.T.weil_formula_rootExchange_parabolic_quotient k n c ρ h1 h2 ν μX μG (rInt ψ ν μ (ρ + 1) σ θ b φ F Φ.1)
+    have W := _root_.GlobalTheory.QuotIntFJ.weil_formula_FJ k n c ρ h1 h2 ν μX μG (rInt ψ ν μ (ρ + 1) σ θ b φ F Φ.1)
     have val : ∀ h w, HasTensorVal (fun Ψ Φ₀ => fj (θ φ Ψ) (σ h F) Φ₀) (fl ψ ν μ ρ (om μ 1 h Φ.1)) w ↔
         w = ∫ β : n → k, b (app (θ φ) fun x₀ => fl ψ ν μ ρ (om μ 1 h Φ.1) x₀ β) (σ (colE c (ρ + 1) β) (σ h F))
           ∂(Measure.pi fun _ => ν) := by
@@ -395,7 +400,7 @@ theorem target : Target k := by
         ((orbit_locallyConstant (omR_smooth hμ') (omR μ (1, h) Φ)).comp_continuous
           (continuous_const.prodMk ExchangeSupport.continuous_colE)).comp fun Ψ => opL hψ ν (ρ + 1) Ψ
       obtain ⟨K, hK, HK⟩ := ColumnSupport.opE_colE_eq_zero k n n' c ρ h2 ψ ν μ _ (omR μ (1, h) Φ).2
-      obtain ⟨m, Ψ, Φ₀, hd⟩ := GlobalTheory.T.exists_sum_smul_of_locallyConstant_compactSupport (n → k) _ T hT K hK fun β hβ => Subtype.ext (by
+      obtain ⟨m, Ψ, Φ₀, hd⟩ := _root_.GlobalTheory.LocConstTensor.exists_sum (n → k) _ T hT K hK fun β hβ => Subtype.ext (by
         have := HK β hβ fun _ => 1
         simp only [one_mul] at this
         exact this)
@@ -411,7 +416,7 @@ theorem target : Target k := by
               ∂(Measure.pi fun _ => ν)) z := by
       intro z
       simp only [e]
-      exact ⟨fun hz => (W z hz).2, fun hz => GlobalTheory.T.eq_of_isQuotIntFJ_of_isQuotIntFJ k n c ρ h1 h2 ν μX μG _ _ _ (W z₀ hz₀).2 hz ▸ hz₀⟩
+      exact ⟨fun hz => (W z hz).2, fun hz => _root_.GlobalTheory.QuotIntFJ.quotIntFJ_unique k n c ρ h1 h2 ν μX μG _ _ _ (W z₀ hz₀).2 hz ▸ hz₀⟩
     refine ⟨fun h => ?_, fun z => ⟨i1 z, (i1 z).trans ⟨fun hz => ⟨_, fun h => (val h _).2 rfl, hz⟩, ?_⟩⟩⟩
     · simp only [e]
       exact (W z₀ hz₀).1 h
@@ -427,8 +432,8 @@ theorem source : Source k := by
   have := hν.1
   have := secondCountable k
   have := t2Space k
-  have hμ' := (GlobalTheory.T.continuous_characters_locallyConstant_nonarchLocalField k).1 μ hμ
-  have hF := GlobalTheory.T.schwartzFourierTransformPi_surjective_schwartzBruhat k n' ψ hψ hψ1 ν hν
+  have hμ' := (_root_.GlobalTheory.RootEx.OpenKernel.characters_locallyConstant k).1 μ hμ
+  have hF := _root_.GlobalTheory.SplitWeil.FourierSurj.hat_surjective k n' ψ hψ hψ1 ν hν
   have main : ∀ (Φ : SB (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k)) (Φ₀ : SB (n' → k)),
       ∃ w : SB (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k), avg ψ ν μ ρ Φ₀ Φ.1 = w.1 ∧
       (∀ h, opE ψ ν ρ (om μ 1 h w.1) = opEFJ ψ ν ρ Φ₀ (om μ 1 h Φ.1)) ∧ fj' φ (ϑ F Φ) Φ₀ = b' φ (ϑ F w) := by
@@ -448,7 +453,7 @@ theorem source : Source k := by
       congr 1; funext u
       simp only [T, LinearMap.comp_apply, map_smul, smul_eq_mul]
       congr 1
-      have := GlobalTheory.T.rootExchangeOperator_weil_rowUnipotent k n n' c ρ (by omega) (by omega) ψ hψ ν μ (omR μ (1, h) Φ) u x₀
+      have := _root_.GlobalTheory.RootEx.RowSign.opE_om_rowE k n n' c ρ (by omega) (by omega) ψ hψ ν μ (omR μ (1, h) Φ) u x₀
       rw [← omR_val, omR_mul, one_mul, mul_one] at this
       rw [omR_mul, one_mul, mul_one]
       exact this
@@ -458,7 +463,7 @@ theorem source : Source k := by
       have := hϑ (rowE (c + 1) ρ u) 1 F Φ (omR μ (rowE (c + 1) ρ u, 1) Φ) rfl
       rw [map_one, Module.End.one_apply] at this
       simp only [T, LinearMap.comp_apply, map_smul, smul_eq_mul, this]
-  refine ⟨GlobalTheory.T.isUnimodular_blockUpperTriangular_symmetricLevels k n c _ _ (fun i => ?_) _ (GlobalTheory.T.mem_rootExchangeParabolic_and_fourierJacobi_iff_entries k n c ρ).1, fun Φ Φ₀ => ?_, fun H Φ => ?_,
+  refine ⟨GlobalTheory.T.isUnimodular_blockUpperTriangular_symmetricLevels k n c _ _ (fun i => ?_) _ (_root_.GlobalTheory.RootEx.ParabolicEntries.mem_R_iff_and_mem_RFJ_iff k n c ρ).1, fun Φ Φ₀ => ?_, fun H Φ => ?_,
     fun H Φ Φ₀ => ?_⟩
   · have := i.2
     simp only [Fin.val_rev]
@@ -470,7 +475,7 @@ theorem source : Source k := by
       ((omR_smooth hμ' Φ).preimage (ExchangeSupport.continuous_rowE.prodMk continuous_const)).mem_nhds (by
         change omR μ (rowE (c + 1) ρ 0, 1) Φ = Φ
         rw [ExchangeSupport.rowE_zero, ← Prod.one_eq_mk, map_one, Module.End.one_apply])
-    obtain ⟨g, a, a1⟩ := GlobalTheory.T.exists_schwartzBruhat_supported_nhds_integral_one k n' ν _ hU
+    obtain ⟨g, a, a1⟩ := _root_.GlobalTheory.RootEx.exists_SB_supported_integral_one k n' ν _ hU
     obtain ⟨Φ₀, h0⟩ := hF.2 g
     obtain ⟨w, e1, e2, e3⟩ := main Φ Φ₀
     have e : w = Φ := by

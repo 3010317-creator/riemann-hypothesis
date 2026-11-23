@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsEtCoord
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtendLinearIndependentDifferentialsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsEtaleCoordinatesOnOpenRestrictAffineOpenStatement
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.EtaleCoordinatesKaehlerBasis
+public import Mathlib.RingTheory.Kaehler.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtendLinearIndependentDifferentials
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsEtaleCoordinatesOnOpenRestrictAffineOpen
+public import Mathlib.RingTheory.RingHom.Etale
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCoordinatesKaehlerBasis
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -118,10 +120,10 @@ theorem exists_chart : ∀ (R : Type) [CommRing R] (X : Scheme.{0}) (f : X ⟶ S
   letI : Algebra R Γ(X, U) := (cstOn f U).toAlgebra
   obtain ⟨hd, hli⟩ := H
   have : Algebra.Smooth R Γ(X, U) := smooth_cstOn f hU
-  obtain ⟨t, e', het, htli⟩ := GlobalTheory.T.extend_linear_independent_differentials R Γ(X, U) K d
+  obtain ⟨t, e', het, htli⟩ := _root_.GlobalTheory.kaehler_baseChange_independent_extend R Γ(X, U) K d
     {i : Fin s // algebraMap Γ(X, U) K (resG X (hc i) ((σ i).f (c i))) = 0}
     (fun i => resG X (hc i.1) ((σ i.1).f (c i.1))) hd hli
-  obtain ⟨h, hh, het2⟩ := GlobalTheory.T.etale_coordinates_kaehler_basis R Γ(X, U) K d t hd htli
+  obtain ⟨h, hh, het2⟩ := _root_.GlobalTheory.EtaleCoordSpread.exists_away_etale R Γ(X, U) K d t hd htli
   have hV := isEtCoord_basicOpen f hU t h het2
   let sf : Fin s → Γ(X, U) := fun i => resG X (hc i) ((σ i).f (c i))
   let q : Fin s → Γ(X, U) := fun j => if algebraMap Γ(X, U) K (sf j) = 0 then 1 else sf j
@@ -142,7 +144,7 @@ theorem exists_chart : ∀ (R : Type) [CommRing R] (X : Scheme.{0}) (f : X ⟶ S
     · simp
     · exact hj
   have hgU : X.basicOpen g ≤ U := X.basicOpen_le g
-  have hEt := GlobalTheory.T.isEtaleCoordinatesOnOpen_restrict_affineOpen R X f (X.basicOpen h) (X.basicOpen g) hgW d _ (hU.basicOpen h) (hU.basicOpen g) hV
+  have hEt := _root_.GlobalTheory.LogPair.isEtCoord_res R X f (X.basicOpen h) (X.basicOpen g) hgW d _ (hU.basicOpen h) (hU.basicOpen g) hV
   have hunit : ∀ i, algebraMap Γ(X, U) K (sf i) ≠ 0 → IsUnit (resG X hgU (sf i)) := by
     intro i hi
     have h1 : IsUnit (resG X (X.basicOpen_le (sf i)) (sf i)) := X.toRingedSpace.isUnit_res_basicOpen (sf i)

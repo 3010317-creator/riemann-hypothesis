@@ -4,7 +4,10 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwiste
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharpolyCoeffsValuedBoundedOnCompactGLStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharpolyIntegralUnitConstCoeffOfMemMaxCompactStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EllipticPolyConjSelfReciprocalCoeffStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteOfBoundedEmbeddingsAndValuationsStatement
+public import Mathlib.Analysis.Complex.Norm
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Valuation
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteOfBoundedEmbeddingsAndValuations
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationEqOrConjOfUnderMaximalRealSubfieldEqStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -94,7 +97,7 @@ theorem finite_ell_charpoly : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
         exact ⟨zero_le', fun _ => zero_le'⟩
   set A := {x : E | ∃ P ∈ T, ∃ k, P.coeff k = x} with hA
   have hAfin : A.Finite := by
-    refine GlobalTheory.T.finite_of_bounded_embeddings_and_valuations E A ((2 : ℝ) ^ n) ?_ ?_ ?_
+    refine _root_.GlobalTheory.BddFinite.finite_of_bdd E A ((2 : ℝ) ^ n) ?_ ?_ ?_
     · rintro _ ⟨P, hP, k, rfl⟩ τ; exact norm_coeff_le_of_mem_ell E n P hP.1 τ k
     · intro w; exact ⟨_, by rintro _ ⟨P, hP, k, rfl⟩; exact (glob P hP w k).1⟩
     · have hbad : {u : Pl E | ¬ C u ⊆ GlobalTheory.LFun.KGL u (n := n)}.Finite := Filter.eventually_cofinite.1 hK

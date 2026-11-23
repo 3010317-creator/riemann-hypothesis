@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BlockParOpp
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CentralizerSeparableCommutative
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjMemBlockUpperUnipotentRadicalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubleCosetVolumeWeightedSumConjStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjMemBlockUpperUnipotentRadical
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubleCosetVolumeWeightedSumConj
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DsumEqZeroOfFibreSumsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsConjCentralizerLeBlockDiagonalLeviStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinsumUnipotentConjEqZeroOfConstantTermZeroStatement
@@ -182,7 +182,7 @@ theorem twOrbU_eq_zero_of_cusp : ∀ (K : Type) [Field K] [TopologicalSpace K] [
     simp only
     rw [← hbi l⁻¹ (K0.inv_mem hl) l hl (x⁻¹ * γ * x)]
     congr 1; group
-  rw [twOrbU_eq_dsum K0 _ γ f hbi, GlobalTheory.T.doubleCosetVolumeWeightedSum_conj _ T K0 (T ⊓ K1) _ c⁻¹ hcomm hleft hright, twCent_conj γ c]
+  rw [twOrbU_eq_dsum K0 _ γ f hbi, _root_.GlobalTheory.OrbDesc.dsum_conj _ T K0 (T ⊓ K1) _ c⁻¹ hcomm hleft hright, twCent_conj γ c]
   set T' := GlobalTheory.BCT.twCent (MonoidHom.id (GL ι K)) γ'
   set K0' := K0.map (MulAut.conj c⁻¹).toMonoidHom with hK0'
   set Ψ : GL ι K → ℂ := fun x => (fun x => f (x⁻¹ * γ * x)) (c⁻¹⁻¹ * x * c⁻¹) with hΨdef
@@ -213,7 +213,7 @@ theorem twOrbU_eq_zero_of_cusp : ∀ (K : Type) [Field K] [TopologicalSpace K] [
     have h1 := conj_open_compact K0 c⁻¹ hK0o hK0c
     exact conj_open_compact K0' y h1.1 h1.2
   apply GlobalTheory.T.dsum_eq_zero_of_fibre_sums' _ T' P N (P ⊓ K0'.map (MulAut.conj y).toMonoidHom) _ _ hTP hNP inf_le_left
-    (GlobalTheory.T.conj_mem_blockUpperUnipotentRadical K ι a b e) hcomm'
+    (_root_.GlobalTheory.OrbDesc.blockUni_conj_mem K ι a b e) hcomm'
   · intro t ht x
     have : t * x ∈ P ↔ x ∈ P := ⟨fun h => by simpa using P.mul_mem (P.inv_mem (hTP ht)) h,
       fun h => P.mul_mem (hTP ht) h⟩

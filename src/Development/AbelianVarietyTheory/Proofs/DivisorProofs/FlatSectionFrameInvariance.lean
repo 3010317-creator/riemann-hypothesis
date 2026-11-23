@@ -5,7 +5,8 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsFla
 public import Formalism.LocalToGlobal.CMDeterminantIdeals.StatementG
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsLatBasisHtLatIffSpanEq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExOfFlatWtSome
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RightInvariantGLOfUpperTriangularRightInvariantStatement
+public import Mathlib.LinearAlgebra.Matrix.Block
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RightInvariantGLOfUpperTriangularRightInvariant
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightedSectionExponentShift
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.FrameChangeComposeInvertBaseChangeTriangular
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUniqueFrameChangeByMatrices
@@ -204,7 +205,7 @@ theorem hfun_update_one [Infinite k] (hf : f ∈ secZ Xo c (exOf Dw (flatWt Dw �
       · rw [Function.update_of_ne h]; exact hX b'
     have := hfun_upper τ y₀ G hf hGY (Function.update X b A) hX' b T hT htri
     simpa [Function.update_idem, Function.update_self] using this
-  have key := GlobalTheory.T.rightInvariant_GL_of_upperTriangular_rightInvariant (fun A => hfun Dw τ G (Function.update X b A))
+  have key := _root_.GlobalTheory.rightInv_of_upperTriangular_rightInv (fun A => hfun Dw τ G (Function.update X b A))
     (fun A => evalFr G (Function.update X b A)) (fun d => wr τ (Function.update (fun b' => (X b').det) b d))
     (fun A₀ D => evalFr_update_line G X b A₀ D) hψ hT 1 (X b) (by simp) (hX b)
   simp only [_root_.one_mul, Function.update_eq_self] at key

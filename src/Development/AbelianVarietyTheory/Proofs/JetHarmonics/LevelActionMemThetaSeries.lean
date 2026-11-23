@@ -6,10 +6,10 @@ public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.Exists
 public import Formalism.LocalToGlobal.ProjectiveLattices.RecPJThAllNeBot
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsFramedPointBaseChangeAlgHom
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.HarmonicValuesInvariantUniversalEndomorphismStatement
-import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.IsLocallyNoetherian
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShortThetaValueUnderLevelMove
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ActLevFullLevelGroupFramedPoints
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.IsLocallyNoetherian
 import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.UniversalNormalisedMulByNatPullbackIso
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ActLevFullLevelGroupFramedPointsStatement
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -181,7 +181,7 @@ theorem actLev_mem_th : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndep
     rw [hp, hq]
     simp only [Ranks.sigW]
     omega
-  have hA := (GlobalTheory.T.actLev_full_level_group_framedPoints D T.Q j hr h.pins.2.1.2).total
+  have hA := (_root_.GlobalTheory.FullLevelAction.actLev_levFull D T.Q j hr h.pins.2.1.2).total
   refine ⟨fun b => liftLa γ (x b), P, hP, fun p y => ?_⟩
   obtain ⟨ρ, ν, -, hlev, hmv⟩ := mvPt_spec hA γ y
   exact thValAt_move GlobalTheory.firstFiveLaws.1 hCI hnab hlev hmv hP.1 (hf p _)

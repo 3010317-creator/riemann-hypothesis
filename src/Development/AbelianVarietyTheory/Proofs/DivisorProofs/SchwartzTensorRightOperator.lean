@@ -1,13 +1,19 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClmSupBound
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IteratedDerivativeBoundByPartialsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PartialOperatorFderivFormulaStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PartialOperatorSchwartzSeminormBoundStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.LinearAlgebra.FreeModule.PID
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IteratedDerivativeBoundByPartials
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PartialOperatorFderivFormula
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PartialOperatorSchwartzSeminormBound
+public import Mathlib.Analysis.Calculus.ContDiff.FiniteDimension
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
-public import Mathlib.Analysis.Calculus.ContDiff.FiniteDimension
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
@@ -63,10 +69,10 @@ variable {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensiona
 theorem contDiff_qOp_nat (n : ℕ) : ∀ (P : SchwartzMap (κ' → V) ℂ →L[ℂ] SchwartzMap (κ₁' → V) ℂ)
     (f : SchwartzMap (κ ⊕ κ' → V) ℂ), ContDiff ℝ n (qOp P f) := by
   induction n with
-  | zero => intro P f; exact contDiff_zero.2 (GlobalTheory.T.partial_operator_fderiv_formula V κ κ' κ₁' P f).1.continuous
+  | zero => intro P f; exact contDiff_zero.2 (_root_.GlobalTheory.SliceOp.differentiable_qOp_and_fderiv V κ κ' κ₁' P f).1.continuous
   | succ n ih =>
     intro P f
-    obtain ⟨hd, hf⟩ := GlobalTheory.T.partial_operator_fderiv_formula V κ κ' κ₁' P f
+    obtain ⟨hd, hf⟩ := _root_.GlobalTheory.SliceOp.differentiable_qOp_and_fderiv V κ κ' κ₁' P f
     have e : ((n + 1 : ℕ) : WithTop ℕ∞) = (n : WithTop ℕ∞) + 1 := by push_cast; rfl
     rw [e, contDiff_succ_iff_fderiv_apply]
     refine ⟨hd, by simp, fun v => ?_⟩
@@ -86,11 +92,11 @@ theorem decay_qOp (n : ℕ) : ∀ (P : SchwartzMap (κ' → V) ℂ →L[ℂ] Sch
   induction n with
   | zero =>
     intro P k
-    obtain ⟨s, C, hC, h⟩ := GlobalTheory.T.partial_operator_schwartz_seminorm_bound V κ κ' κ₁' P k
+    obtain ⟨s, C, hC, h⟩ := _root_.GlobalTheory.SliceOpDecay.decay V κ κ' κ₁' P k
     exact ⟨s, C, hC, fun f z => by rw [norm_iteratedFDeriv_zero]; exact h f z⟩
   | succ n ih =>
     intro P k
-    obtain ⟨CE, hCE, hE⟩ := GlobalTheory.T.iterated_derivative_bound_by_partials (κ ⊕ κ₁' → V)
+    obtain ⟨CE, hCE, hE⟩ := _root_.GlobalTheory.norm_iteratedFDeriv_succ_le_sum_partial (κ ⊕ κ₁' → V)
     set b := Module.finBasis ℝ (κ ⊕ κ₁' → V)
     obtain ⟨s1, C1, hC1, h1⟩ := ih P k
     choose s1' C1' hC1' h1' using fun i => clm_sup_bound (pd (padL (κ' := κ') (b i ∘ Sum.inl))) s1
@@ -108,7 +114,7 @@ theorem decay_qOp (n : ℕ) : ∀ (P : SchwartzMap (κ' → V) ℂ →L[ℂ] Sch
       intro i
       have hfun : (fun w => fderiv ℝ (qOp P f) w (b i)) =
           qOp P (pd (padL (κ' := κ') (b i ∘ Sum.inl)) f) + qOp ((pd (b i ∘ Sum.inr)).comp P) f :=
-        funext fun w => (GlobalTheory.T.partial_operator_fderiv_formula V κ κ' κ₁' P f).2 w (b i)
+        funext fun w => (_root_.GlobalTheory.SliceOp.differentiable_qOp_and_fderiv V κ κ' κ₁' P f).2 w (b i)
       rw [hfun, iteratedFDeriv_add_apply (contDiff_qOp_nat n _ _).contDiffAt (contDiff_qOp_nat n _ _).contDiffAt]
       have e1 := h1 (pd (padL (κ' := κ') (b i ∘ Sum.inl)) f) z
       have e1' := h1' i f

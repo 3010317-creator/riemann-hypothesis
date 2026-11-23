@@ -3,7 +3,11 @@ module
 public import Mathlib.FieldTheory.Perfect
 public import Mathlib.RingTheory.Kaehler.Basic
 public import Mathlib.RingTheory.MvPowerSeries.Derivative
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsPthRootOfDerivationZeroStatement
+public import Mathlib.RingTheory.Derivation.Basic
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsPthRootOfDerivationZero
+public import Mathlib.RingTheory.MvPowerSeries.Expand
+public import Mathlib.Algebra.CharP.Algebra
+public import Mathlib.RingTheory.Localization.Submodule
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -23,7 +27,6 @@ import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Henselian
-public import Mathlib.RingTheory.MvPowerSeries.Expand
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
@@ -49,8 +52,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.Algebra.CharP.Algebra
-public import Mathlib.RingTheory.Localization.Submodule
 
 @[expose] public section
 
@@ -162,7 +163,7 @@ theorem exists_pow_eq_fractionRing_of_pderiv_eq_zero : ∀ (k : Type) [Field k] 
     rw [map_sub, Derivation.leibniz_pow, ← Nat.cast_smul_eq_nsmul A, CharP.cast_eq_zero,
       zero_smul, zero_sub] at h2
     exact (neg_mem_iff).mp h2
-  apply GlobalTheory.T.exists_pth_root_of_derivation_zero
+  apply _root_.GlobalTheory.exists_pow_eq_of_forall_derivation_eq_zero
   intro D
   exact derivation_eq_zero_of_kaehler p f hd D
 

@@ -3,8 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsMonoFamNontrivial
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SpecializesGenericImage
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLineBundleExtensionAtBoundaryPointStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLineBundleSpreadFromLocalSchemeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRigidifiedLineBundleExtensionOfLocalStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import Mathlib.AlgebraicGeometry.Noetherian
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLineBundleSpreadFromLocalScheme
+public import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.IsOpenOfMemIrreducibleComponentsOfFinite
+public import Mathlib.AlgebraicGeometry.Geometrically.Connected
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRigidifiedLineBundleExtensionOfLocal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -71,9 +75,9 @@ theorem exists_lb_extension : ∀ {E : Type} [Field E] [NumberField E] [IsCMFiel
   have hS : Geo.Tor.IsNormalScheme S := (GlobalTheory.isNormalScheme_iff_pred S).mp hnorm
   haveI := GlobalTheory.IsNormalScheme.of_pred hS
   have hst := GlobalTheory.T.exists_lineBundle_extension_at_boundaryPoint Xo c φ h1 h2 h3 zs i OZ N d J π j BD hU hpre tF hmap G e hsa he hch
-  exact GlobalTheory.T.exists_rigidifiedLineBundle_extension_of_local G.hom j hdense e tF.G.hom he.1 (eSec G) (eSec tF.G) (Over.w η[G]) (cubeMapOf he).e_comm
+  exact _root_.GlobalTheory.RigLBDense.exists_extension_of_local_ext G.hom j hdense e tF.G.hom he.1 (eSec G) (eSec tF.G) (Over.w η[G]) (cubeMapOf he).e_comm
     tF.PP.L tF.PP.isLB tF.PP.rig tF.PP.rigGen fun x hx => by
       obtain ⟨Nx, hNx, hx'⟩ := hst x hx
-      exact GlobalTheory.T.exists_lineBundle_spread_from_localScheme G.hom j e tF.G.hom he.1 tF.PP.L tF.PP.isLB x Nx hNx hx'
+      exact _root_.GlobalTheory.SpreadLB.exists_spread G.hom j e tF.G.hom he.1 tF.PP.L tF.PP.isLB x Nx hNx hx'
 
 end GlobalTheory.DescLBExt

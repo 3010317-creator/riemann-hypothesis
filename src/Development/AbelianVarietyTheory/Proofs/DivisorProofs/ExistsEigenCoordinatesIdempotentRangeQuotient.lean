@@ -5,9 +5,12 @@ public import Mathlib.Algebra.Module.Projective
 public import Mathlib.RingTheory.Finiteness.Defs
 public import Mathlib.RingTheory.Ideal.Quotient.Defs
 public import Mathlib.RingTheory.LocalRing.Defs
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EigenIdempotentsOfComaximalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoordsRangeIdempotentOfRetractStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuotientRetractPiQuotientOfSummandStatement
+public import Mathlib.RingTheory.Ideal.Span
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EigenIdempotentsOfComaximal
+public import Mathlib.Algebra.Module.Pi
+public import Mathlib.Algebra.Module.Submodule.Range
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoordsRangeIdempotentOfRetract
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuotientRetractPiQuotientOfSummand
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -89,7 +92,7 @@ theorem exists_eigen_coordinates_range_quot : ∀ {C : Type} [CommRing C] [IsLoc
     rintro rfl
     rw [Ideal.top_pow] at hI2
     exact top_ne_bot hI2
-  obtain ⟨m, s, r, hrs⟩ := GlobalTheory.T.quotient_retract_pi_quotient_of_summand I F hIF hEM
+  obtain ⟨m, s, r, hrs⟩ := _root_.GlobalTheory.quotient_retract_pi_quotient I F hIF hEM
   let σb : A →+* Module.End C (H ⧸ F) :=
     { toFun := fun c => F.mapQ F (σ c) (fun x hx => hσF c x hx)
       map_one' := Submodule.linearMap_qext _ (LinearMap.ext fun x => by simp)
@@ -104,7 +107,7 @@ theorem exists_eigen_coordinates_range_quot : ∀ {C : Type} [CommRing C] [IsLoc
     rw [← Module.End.mul_apply, ← hσπ c, Module.End.mul_apply])
   have hσσ : ∀ c d, σb c * σb d = σb d * σb c := fun c d => by
     rw [← map_mul, ← map_mul, mul_comm]
-  obtain ⟨e, he1, he2, he3⟩ := GlobalTheory.T.exists_eigen_idempotents_of_comaximal σb a χ hχ
+  obtain ⟨e, he1, he2, he3⟩ := _root_.GlobalTheory.eigenIdempotents_of_comaximal σb a χ hχ
   have heπ : ∀ i, πb * e i = e i * πb := fun i => he1 i πb hπσ
   have heσ : ∀ i c, σb c * e i = e i * σb c := fun i c => he1 i (σb c) (hσσ c)
   have hππ : πb * πb = πb := Submodule.linearMap_qext _ (LinearMap.ext fun x => by
@@ -154,7 +157,7 @@ theorem exists_eigen_coordinates_range_quot : ∀ {C : Type} [CommRing C] [IsLoc
     · exact he3 j i _ (Ne.symm h) (hpE i w)
   have hidem : ∀ i, p i * p i = p i := fun i => LinearMap.ext fun w => by
     rw [Module.End.mul_apply, hpp]; simp
-  choose n b f hb hfp hδ hinj using fun i => GlobalTheory.T.exists_coords_range_idempotent_of_retract I hItop m s r hrs (p i) (hidem i)
+  choose n b f hb hfp hδ hinj using fun i => _root_.GlobalTheory.idem_retract_coords I hItop m s r hrs (p i) (hidem i)
   obtain ⟨eqv⟩ : Nonempty ((Σ i, Fin (n i)) ≃ Fin (∑ i, n i)) := ⟨finSigmaFinEquiv⟩
   have hlift : ∀ i t, ∃ z ∈ LinearMap.range π, F.mkQ z = b i t := by
     intro i t

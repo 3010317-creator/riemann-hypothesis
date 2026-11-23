@@ -4,10 +4,11 @@ public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EqZeroOfAeFundamentalDomain
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdeleAt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumRealPlacesFockVacuumCharacterStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnramifiedHeckeCharHalfExponentRestrictQua
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompactSubgroupsActOnFockVectorsAllSignatures
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DetPositivePartKroneckerBlockUnitaryOrthonormalStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitaryOnTheta
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DetPositivePartKroneckerBlockUnitaryOrthonormal
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplittingHeckeCharExistsArchimedeanExponent
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnramifiedHeckeCharHalfExponentRestrictQua
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,7 +45,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitaryOnTheta
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RestrictedTensorBasePointNormSq
 
 @[expose] public section
@@ -187,7 +187,7 @@ theorem GlobalTheory.VacCharAtPlace.vacuum_char_at_place : ∀ (D : D7) (ψ : Ad
   obtain ⟨hA, hB⟩ := nz nS d0S
   obtain ⟨hC, hE⟩ := nz nT d0T
   rw [Circle.coe_mul, Circle.coe_inv, vx, vy, hP,
-    GlobalTheory.T.detPositivePartKronecker_blockUnitary_orthonormal (gramAt D S τ) (sS τ) (BS τ) κS (gramAt D T τ) (sT τ) (BT τ) κT (pS τ) (pT τ) (hpS τ) (hpT τ)
+    _root_.GlobalTheory.PlusDetONB.detPlus_onb (gramAt D S τ) (sS τ) (BS τ) κS (gramAt D T τ) (sT τ) (BT τ) κT (pS τ) (pT τ) (hpS τ) (hpT τ)
       (hOS τ) (hOT τ) hkS hkT, d0S, d0T,
     show (-cT - (T.rank : ℤ)) = -cT - (pT τ : ℤ) - ((T.rank - pT τ : ℕ) : ℤ) by push_cast [hpT τ]; ring]
   exact alg cS cT (pS τ) (S.rank - pS τ) (pT τ) (T.rank - pT τ) hA hB hC hE

@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NoCommonZeroCombVal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousSectionPolynomialGrowth
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.CompactSpaceCxPtsOfIsProper
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.RegularFunctionPolynomialGrowthStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DetJacMatCoordsEqTransitionJacobianDet
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.RegularFunctionPolynomialGrowth
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,7 +58,7 @@ namespace GlobalTheory.CompanionTheory.Gaga
 theorem continuous_section_polynomial_growth_of_isProper : ∀ (Y : Scheme.{0}) (p : Y ⟶ Sp ℂ), IsProper p → ∀ (B : LB Y), B.IsLB → ∀ s ∈ fibSec p (RingHom.id ℂ) B, (∀ j, ContinuousOn (s j) (ptsIn p (RingHom.id ℂ) (B.U j))) → ∀ (i : B.ι) (V : Y.Opens), IsAffineOpen V → V ≤ B.U i → ∃ (n : ℕ) (u : Fin n → Γ(Y, V)) (C : ℝ) (m : ℕ), ∀ y ∈ ptsIn p (RingHom.id ℂ) V, ‖s i y‖ ≤ C * (1 + ∑ l, ‖ev p (RingHom.id ℂ) V (u l) y‖) ^ m := by
   intro Y p hp B hB s hs hc i V hVa hV
   have := compactSpace_cxPts_of_isProper Y p hp
-  obtain ⟨n, u, hu⟩ := GlobalTheory.T.regular_function_polynomial_growth Y p inferInstance inferInstance V hVa
+  obtain ⟨n, u, hu⟩ := _root_.GlobalTheory.CompanionTheory.Gaga.exists_gens_bound Y p inferInstance inferInstance V hVa
   refine ⟨n, u, ?_⟩
   have h0 (y) : 0 ≤ ∑ l, ‖ev p (RingHom.id ℂ) V (u l) y‖ := Finset.sum_nonneg fun _ _ => norm_nonneg _
   refine SectionGrowth.global_bound _ (fun y => ‖s i y‖) _ (fun y => le_add_of_nonneg_right (h0 y)) fun y₀ => ?_

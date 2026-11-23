@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasTraitsOnOfHasTraitsP
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompleteDVRValuationCompleteNormalLocalStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HomExtNormalSt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompleteDVRValuationCompleteNormalLocal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsThetaConstantDvdPowOverDvrStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaLabelsSurjectiveHomLatticeModLevelStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisedMemberBaseChangeInjectiveLocalHomStatement
@@ -77,7 +78,7 @@ theorem theta_pow_le : ∀ (I : Type) (X₁ : GlobalTheory.GSep.GSet) (z₁ : X�
         _ = _ := _root_.mul_one _
     rw [h1', _root_.mul_one]
     exact pow_le_pow_left' (hc a) _
-  · obtain ⟨V', _, _, _, _, j, k, hcn, hj, hjl, hk, hν⟩ := GlobalTheory.T.exists_completeDVR_valuation_completeNormalLocal V 𝔪.cn ν h1 h2 hm
+  · obtain ⟨V', _, _, _, _, j, k, hcn, hj, hjl, hk, hν⟩ := _root_.GlobalTheory.DivBound.exists_cdvr_valuation_le V 𝔪.cn ν h1 h2 hm
     obtain ⟨𝔫, hyk, hyy⟩ := GlobalTheory.T.uniformisedMember_baseChange_injective_localHom I X₁ z₁ act V ev X t δ 𝔪 V' j k hcn hj hjl hk
     obtain ⟨b, hb⟩ := GlobalTheory.T.exists_thetaConstant_dvd_pow_over_dvr I X₁ z₁ act V' (j.comp ev) X (fun i => j (t i)) δ 𝔫
     obtain ⟨w, r, hw, he⟩ := hb a

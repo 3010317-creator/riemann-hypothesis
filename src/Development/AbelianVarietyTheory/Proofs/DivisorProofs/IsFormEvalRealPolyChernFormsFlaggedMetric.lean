@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsMetricFrOfIsMetricOn
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChernFormFieldDbarCohomologousTwoConnectionsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsGramConnectionPairOfTwoFlaggedMetricsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothFormsCalculusHolomorphicAtlasStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChernFormFieldDbarCohomologousTwoConnections
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsGramConnectionPairOfTwoFlaggedMetrics
+public import Development.AbelianVarietyTheory.Definitions.Divisors.LineSCShortExact
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothFormsCalculusHolomorphicAtlas
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,7 +56,7 @@ theorem isForm_evalF_chernF : ∀ (F : Type) [Field F] (σ : F →+* ℂ) (X : V
     (E : Fr (ratOf X) m k) (H : Mat m X.Fn → CxPts X.str σ → Mat m ℂ), IsMetricFr E H →
     ∀ R : MvPolynomial (ι × ℕ) ℝ, (atlas X σ).IsForm (evalF (atlas X σ) (chernF E H) R) := by
   intro F _ σ X ι _ m k E H h R
-  exact ((GlobalTheory.T.smoothForms_calculus_holomorphicAtlas _ _ (atlas X σ)).2.2.2.1 _ (chernF E H) R fun x =>
-    (GlobalTheory.T.chernFormField_dbarCohomologous_two_connections _ _ (atlas X σ) _ _ _ (GlobalTheory.T.isGramConnectionPair_of_two_flagged_metrics F σ X ι m k E H H h h x.1) x.2).1).1
+  exact ((_root_.GlobalTheory.formCalculus _ _ (atlas X σ)).2.2.2.1 _ (chernF E H) R fun x =>
+    (_root_.GlobalTheory.ChernCalc.dbarCoh_chernFld _ _ (atlas X σ) _ _ _ (_root_.GlobalTheory.ChernCalc.isGramPair_of_isMetricFr F σ X ι m k E H H h h x.1) x.2).1).1
 
 end GlobalTheory.ChernCalc

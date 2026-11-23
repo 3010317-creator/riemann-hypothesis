@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ComparisonMemCechHodgeFiltration
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBasicOpen
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGlueFunctionsAffineOpenFromPairsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneFormEqZeroOfVanishingOnPairsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGlueFunctionsAffineOpenFromPairs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneFormEqZeroOfVanishingOnPairs
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,7 +63,7 @@ theorem exists_cob_of_pair (φ : X' ⟶ X) (s' : X' ⟶ Sp R') (f : Z1 (OAff s')
   have ex : ∀ W : X'.affineOpens, ∃ G : (OAff s').obj (op W), ∀ (p : Pair φ) (hp : p.1.1 ≤ W),
       mp (OAff s') (homOfLE hp).op G = g p - f.1 (op W) (op p.1.1) (homOfLE hp).op := by
     intro W
-    refine GlobalTheory.T.exists_glue_functions_affineOpen_from_pairs φ s' W _ fun p q hp hq hqp ↦ ?_
+    refine _root_.GlobalTheory.CechDR.pair_glue φ s' W _ fun p q hp hq hqp ↦ ?_
     have e := Z1.comp f (homOfLE hp).op (homOfLE (Pair.le_fst hqp)).op
     rw [show (homOfLE hp).op ≫ (homOfLE (Pair.le_fst hqp)).op = (homOfLE hq).op from rfl, hg p q hqp] at e
     rw [map_sub, e]
@@ -101,7 +101,7 @@ theorem pairRes_injective : ∀ {R' : Type} [CommRing R'] {X X' : Scheme.{0}} (�
     have h0 : ∀ p : Pair φ, ω.1 (op p.1.1) = 0 := fun p ↦
       (cechDeRhamCoefMapOneForms_restrictAlongFunctor (OAff s') (pairFst φ) (op p) _).symm.trans
         (congrArg (fun z : Glob1 (OPair φ s') ↦ z.1 (op p)) hω)
-    refine Subtype.ext (funext fun W ↦ GlobalTheory.T.oneForm_eq_zero_of_vanishing_on_pairs φ s' W.unop _ fun p hp ↦ ?_)
+    refine Subtype.ext (funext fun W ↦ _root_.GlobalTheory.CechDR.form_eq_zero_of_pair φ s' W.unop _ fun p hp ↦ ?_)
     rw [← ω.2 (homOfLE hp).op]
     exact h0 p
   · rw [injective_iff_map_eq_zero]
@@ -118,7 +118,7 @@ theorem pairRes_injective : ∀ {R' : Type} [CommRing R'] {X X' : Scheme.{0}} (�
     obtain ⟨G, hG, hGp⟩ := exists_cob_of_pair φ s' (cechDeRhamTotalCocyclesOne.fn _ z) g' hf
     refine Hyp1.mk_eq_zero.2 ⟨G, Tot1.ext (fun T T' a ↦ congrFun (congrFun (congrFun hG T) T') a)
       fun W ↦ ?_⟩
-    refine (sub_eq_zero.1 (GlobalTheory.T.oneForm_eq_zero_of_vanishing_on_pairs φ s' W.unop (D R' _ (G W) - z.1.2 W) fun p hp ↦ ?_))
+    refine (sub_eq_zero.1 (_root_.GlobalTheory.CechDR.form_eq_zero_of_pair φ s' W.unop (D R' _ (G W) - z.1.2 W) fun p hp ↦ ?_))
     have e := cechDeRhamTotalCocyclesOne.conn z (homOfLE hp).op
     rw [map_sub, p1_D, hGp, map_sub, hω]
     change _ - (p1 _ _ _) = _

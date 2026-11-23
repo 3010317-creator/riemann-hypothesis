@@ -3,9 +3,9 @@ module
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.HypJ
 public import Formalism.UnipotentAdelicQuotients.SiegelWeilUnitaryConvergent
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelesLocallyCompactSecondCountable
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FlowLatticeCountBoundedStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FlowLatticeCountBounded
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.GeomSumIntLe
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HyperbolicFundamentalDomainCoverStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HyperbolicFundamentalDomainCover
 import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -70,7 +70,7 @@ theorem mean_isotropic_count_le : ∀ (F E : Type) [Field F] [NumberField F] [Fi
   obtain ⟨⟨_, _, _⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
   obtain ⟨_, _, _, _, hsc, -, -, hB, -⟩ := GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm (AF F)
   have := hB 1 (M + 2)
-  obtain ⟨Y, Kc, hY, hKc, hY1, hmain⟩ := GlobalTheory.T.hyperbolic_fundamental_domain_cover F E σ hcm M J hJ hfin τ hτ μ 𝓕 hμ h𝓕
+  obtain ⟨Y, Kc, hY, hKc, hY1, hmain⟩ := _root_.GlobalTheory.CompanionTheory.SW.IsoMain.integral_isotropic_lines_le_flow_sum F E σ hcm M J hJ hfin τ hτ μ 𝓕 hμ h𝓕
   have hc : Continuous fun p : ((Fin 1 → Fin (M + 2) → AF F ⊗[F] E) × (Fin 1 → Fin (M + 2) → AF F ⊗[F] E)) ×
       (Fin 1 → Fin (M + 2) → AF F ⊗[F] E) => fun (_ _ : Fin 1) => hR (AF F) σ (hypJ J) (p.1.2 0) (p.2 0) := by
     refine continuous_pi fun _ => continuous_pi fun _ => ?_
@@ -78,7 +78,7 @@ theorem mean_isotropic_count_le : ∀ (F E : Type) [Field F] [NumberField F] [Fi
     exact continuous_finsetSum _ fun i _ => continuous_finsetSum _ fun j _ =>
       ((hsc.comp ((continuous_apply_apply 0 i).comp continuous_fst.snd)).mul continuous_const).mul
         ((continuous_apply_apply 0 j).comp continuous_snd)
-  obtain ⟨x₀, C, hlat⟩ := GlobalTheory.T.flow_lattice_count_bounded F E σ hcm τ hτ 1 _ ((hY.prod hΩ).image hc)
+  obtain ⟨x₀, C, hlat⟩ := _root_.GlobalTheory.CompanionTheory.SW.LatCount.count_le F E σ hcm τ hτ 1 _ ((hY.prod hΩ).image hc)
   obtain ⟨C', hC'⟩ := GlobalTheory.CompanionTheory.Adelic.geom_sum_int (Module.finrank ℚ F) M Module.finrank_pos hM x₀ C
   refine ⟨Kc.toReal * C', fun r hr => ?_⟩
   set t : AF F ⊗[F] E := ((τ (Multiplicative.ofAdd (-Real.log r)) : (AF F ⊗[F] E)ˣ) : AF F ⊗[F] E) with ht

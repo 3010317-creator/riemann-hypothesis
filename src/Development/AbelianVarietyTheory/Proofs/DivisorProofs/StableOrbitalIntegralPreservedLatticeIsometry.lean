@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.EllipticPartTestData
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryTorusEllipticElementsOfLocalLatticeIsometStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryTorusEquivCentralizerWithMeasureStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryTorusEllipticElementsOfLocalLatticeIsomet
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryTorusEquivCentralizerWithMeasure
 public import Formalism.SharpRestriction.GlobalSchurBounds.LocalCountingBounds
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -91,7 +91,7 @@ open GlobalTheory.Orb in
 theorem phi_map : ∀ (D : D7) (V V' : HSp D) (r : ℕ) (P : PPol D.sp.cm.sig r) (v : HeightOneSpectrum (𝓞 D.host.F)) (j : GLoc D.sp.cm.sig V.gram v ≃ₜ* GLoc D.sp.cm.sig V'.gram v), IsLatticeConj (frameLat V) (frameLat V') j → ∀ (μ : Measure (GLoc D.sp.cm.sig V.gram v)) (dt : Measure (Tor P (Fv D.host.F v))) (f : GLoc D.sp.cm.sig V.gram v → ℂ), μ.IsHaarMeasure → dt.IsHaarMeasure → PhiOK (J := V.gram) μ dt f → PhiOK (J := V'.gram) (μ.map j) dt (f ∘ j.symm) → Phi (J := V'.gram) (μ.map j) dt (f ∘ j.symm) = Phi (J := V.gram) μ dt f := by
   intro D V V' r P v j hj μ dt f hμ hdt hok hok'
   have hcm := Formalism.MainNotions.UnusedSlot34.isCMExt_D D
-  obtain ⟨hX, hmv⟩ := GlobalTheory.T.unitaryTorusEllipticElements_of_localLatticeIsometry _ _ D.sp.cm.sig hcm r V.rank V'.rank P V.gram V'.gram (frameLat V) (frameLat V')
+  obtain ⟨hX, hmv⟩ := _root_.GlobalTheory.trEll_latticeConj_move _ _ D.sp.cm.sig hcm r V.rank V'.rank P V.gram V'.gram (frameLat V) (frameLat V')
     v j hj
   unfold Phi
   rw [← finsum_comp_equiv (Equiv.subtypeEquivRight (fun c => by rw [hX]))]
@@ -100,9 +100,9 @@ theorem phi_map : ∀ (D : D7) (V V' : HSp D) (r : ℕ) (P : PPol D.sp.cm.sig r)
   obtain ⟨x, φ, hc, h⟩ := id h2
   subst hc
   obtain ⟨φ'', h'', hγ, ht⟩ := hmv x φ h
-  obtain ⟨e, he, hme⟩ := GlobalTheory.T.unitaryTorus_equiv_centralizer_with_measure _ _ D.sp.cm.sig hcm r V.rank P V.gram (isHermND_gram V) (Fv D.host.F v) x φ h
+  obtain ⟨e, he, hme⟩ := _root_.GlobalTheory.TorCentTop.torEquiv_cent _ _ D.sp.cm.sig hcm r V.rank P V.gram (isHermND_gram V) (Fv D.host.F v) x φ h
   obtain ⟨e'', he'', hme''⟩ :=
-    GlobalTheory.T.unitaryTorus_equiv_centralizer_with_measure _ _ D.sp.cm.sig hcm r V'.rank P V'.gram (isHermND_gram V') (Fv D.host.F v) x φ'' h''
+    _root_.GlobalTheory.TorCentTop.torEquiv_cent _ _ D.sp.cm.sig hcm r V'.rank P V'.gram (isHermND_gram V') (Fv D.host.F v) x φ'' h''
   haveI := hμ
   haveI := hdt
   obtain ⟨i1, i2⟩ := map_isHaar_rightInv P (Fv D.host.F v) e dt

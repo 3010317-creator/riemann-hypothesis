@@ -4,7 +4,8 @@ public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.Ste
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.CharacterIdealPrincipalEigen
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FundamentalCharacterIdealPowers
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FundamentalIdealFrobeniusPowersStatement
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FundamentalIdealFrobeniusPowers
+public import ReciprocityTheory.DualLattices.IsUnitDetOfSpanEq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,7 +49,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.DualLattices.IsUnitDetOfSpanEq
 import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
@@ -169,7 +169,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.fundamental_ideal_frobenius_va
   intro p _ C _ _ _ v R _ _ hv hpv F _ _ _ _ f hcard AA hst σ hσ c hc
   classical
   have hp : 0 < p := (Fact.out : p.Prime).pos
-  have hT := GlobalTheory.T.fundamental_ideal_frobenius_powers p C v R hv hpv F f hcard AA hst σ hσ c hc
+  have hT := _root_.GlobalTheory.CompanionTheory.Relay.fundamental_ideal_frobenius_powers p C v R hv hpv F f hcard AA hst σ hσ c hc
   obtain ⟨c', hc', hc'd⟩ : ∃ c' : ℕ → R, (∀ m, xIdeal AA.carrier (σ ^ m) = Ideal.span {c' m}) ∧
       ∀ d : Fin f → Fin p, num d ≠ 0 → c' (num d) = ∏ n : Fin f, c n ^ (d n : ℕ) := by
     refine ⟨fun m => if h : m ≠ 0 ∧ m < p ^ f then

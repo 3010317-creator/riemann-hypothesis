@@ -3,9 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ContrFactor
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.AllPositions
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapRowEqZeroUnlessRowMemDualLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatRowMapEqRootExchangeOperatorTranslateStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatRowMapEqRootExchangeOperatorTranslate
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IteratedDepthOneLevelCharOfOneRowFirstBlockStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RootExchangeRowUnipotentLatticeFrameConjApplyStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.StandardOrderExtendedBasisApplyLowBlock
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RootExchangeRowUnipotentLatticeFrameConjApply
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RootExchangeRowUnipotentMemSourceLevelStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymmetricPositionLevelCharacterEqOneSingleRowStatement
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
@@ -67,7 +68,7 @@ theorem lam_rowE_symLevel : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
       ((S.T t).lev j (c + 1 + 1) (by omega)).lam ⟨_, hm⟩ = 1 := by
   intro k _ _ _ _ s κ S t _ _ j c H r hc u hm
   have hodd := S.odd
-  have hsh := GlobalTheory.T.rootExchangeRowUnipotent_latticeFrame_conj_apply k (Fin κ) t S.ϖ j (c + 1 + 1) (s + 1) (by omega) r (by omega) u
+  have hsh := _root_.GlobalTheory.typeFrame_conj_symm_rowE_apply k (Fin κ) t S.ϖ j (c + 1 + 1) (s + 1) (by omega) r (by omega) u
   obtain ⟨g, hg, hl⟩ := GlobalTheory.T.iteratedDepthOneLevel_char_of_one_row_first_block k _ t S.P S.μ S.tame j (Sum.inr ⟨r, by omega⟩) ⟨_, hm⟩
     (fun a b ha => by
       have := hsh a b
@@ -130,7 +131,7 @@ theorem pureRow_of_exchange : ∀ (k : Type) [Field k] [ValuativeRel k] [Topolog
       funext z
       have := congrFun hT z
       simpa [om, hdet, nabs] using this
-    rw [GlobalTheory.T.flatRowMap_eq_rootExchangeOperator_translate k S.ψ ν S.cond.continuous inferInstance (XIx (Fin κ) t (j + 1)) (XIx (Fin κ) t j) (c + 1)
+    rw [_root_.GlobalTheory.LocFlat.flRow_eq_opE_rowE k S.ψ ν S.cond.continuous inferInstance (XIx (Fin κ) t (j + 1)) (XIx (Fin κ) t j) (c + 1)
       (r + 1) (by omega) (by omega) Φ (HR.1 j (c + 1) (by omega)) x]
     erw [hfun]
     rw [congrFun hEq]

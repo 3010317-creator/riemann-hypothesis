@@ -2,12 +2,15 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WtRInjective
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TZero
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MonomialCoefficientComparisonStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProdPairSumsEqSumPowersetScoreStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ScoreRigidityPermEqOneStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ScoreTZeroEqLevelCountStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.VandermondeSquaresStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WeylDenominatorProductStatement
+public import Mathlib.Analysis.Complex.Norm
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MonomialCoefficientComparison
+public import Mathlib.Data.Finset.Powerset
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProdPairSumsEqSumPowersetScore
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ScoreRigidityPermEqOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ScoreTZeroEqLevelCount
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.VandermondeSquares
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WeylDenominatorProduct
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -67,16 +70,16 @@ theorem coeff_eq {ι κ : Type} (I : Finset ι) (J : Finset κ) (f : ι → ℂ)
     (h : ∀ z : Fin n → ℂ, (∀ a, ‖z a‖ = 1) → Function.Injective (fun a => z a ^ 2) →
       ∑ i ∈ I, f i * mon (e i) z = ∑ j ∈ J, g j * mon (e' j) z) (m : Fin n → ℤ) :
     ∑ i ∈ I.filter (fun i => e i = m), f i = ∑ j ∈ J.filter (fun j => e' j = m), g j :=
-  GlobalTheory.T.monomial_coefficient_comparison I J f g e e' h m
+  _root_.GlobalTheory.CompanionTheory.CoefId.laurent_indep_torus I J f g e e' h m
 
 theorem flip_prod (z : Fin n → ℂ) (h0 : ∀ a, z a ≠ 0) :
     (∏ a, ∏ b, (1 + z a / z b)) * (∏ a, z a) ^ (n - 1) = 2 ^ n * (∏ p ∈ prs n, (z p.1 + z p.2)) ^ 2 :=
-  GlobalTheory.T.weyl_denominator_product z h0
+  _root_.GlobalTheory.CompanionTheory.CoefId.prod_one_add_div_mul_prod_pow z h0
 
 theorem den_sq (z : Fin n → ℂ) :
     (Matrix.of fun i j : Fin n => (z i ^ 2) ^ (n - 1 - (j : ℕ))).det =
       (Matrix.of fun i j : Fin n => z i ^ (n - 1 - (j : ℕ))).det * ∏ p ∈ prs n, (z p.1 + z p.2) :=
-  GlobalTheory.T.vandermonde_squares z
+  _root_.GlobalTheory.CompanionTheory.CoefId.det_vandermonde_sq z
 
 theorem den_ne_zero (t : Fin n → ℂ) (ht : Function.Injective t) :
     (Matrix.of fun i j : Fin n => t i ^ (n - 1 - (j : ℕ))).det ≠ 0 := by
@@ -91,7 +94,7 @@ theorem den_ne_zero (t : Fin n → ℂ) (ht : Function.Injective t) :
 
 theorem prod_expand (z : Fin n → ℂ) :
     ∏ p ∈ prs n, (z p.1 + z p.2) = ∑ T ∈ (prs n).powerset, mon (score T) z :=
-  GlobalTheory.T.prod_pair_sums_eq_sum_powerset_score z
+  _root_.GlobalTheory.CompanionTheory.CoefId.prod_pairs_add_eq_sum_score z
 
 theorem alt_expand (e : Fin n → ℤ) (z : Fin n → ℂ) :
     (Matrix.of fun i j : Fin n => z i ^ e j).det =
@@ -102,13 +105,13 @@ theorem alt_expand (e : Fin n → ℤ) (z : Fin n → ℂ) :
 theorem score_tZero (lev : Fin n → ℕ) (hm : Monotone lev) (a : Fin n) :
     score (tZero lev) a = ((univ.filter fun b => lev a < lev b).card : ℤ) -
       ((univ.filter fun b => lev b < lev a).card : ℤ) + ((a : ℕ) : ℤ) :=
-  GlobalTheory.T.score_tZero_eq_level_count lev hm a
+  _root_.GlobalTheory.CompanionTheory.CoefId.score_tZero_level lev hm a
 
 theorem step_unique (lev : Fin n → ℕ) (hm : Monotone lev) (L : Fin n → ℤ) (hL : StrictAnti L)
     (hb : ∀ a b, lev a = lev b → L a - L b = ((b : ℕ) : ℤ) - ((a : ℕ) : ℤ)) (σ : Equiv.Perm (Fin n))
     (T : Finset (Fin n × Fin n)) (hT : T ⊆ prs n)
     (h : ∀ a, score T a = score (tZero lev) a + 2 * (L a - L (σ a))) : σ = 1 ∧ T = tZero lev :=
-  GlobalTheory.T.score_rigidity_perm_eq_one lev hm L hL hb (fun a b hab => by
+  _root_.GlobalTheory.CompanionTheory.CoefId.Unique.tournament_unique lev hm L hL hb (fun a b hab => by
     rw [score_tZero lev hm a, score_tZero lev hm b]
     simp only [hab, add_sub_cancel_right]) σ T hT h
 

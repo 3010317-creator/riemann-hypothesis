@@ -4,19 +4,28 @@ public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbBound
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ContDiffUncentre
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.BlowupProjections.BlowupProjStatement
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSabCancel
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianBoundConjugateStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianBoundConjugate
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BoundaryChartLieMetricBound
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BoundaryChartLieMetricBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BoundaryChartLieModelExistsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointsIffCentresStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodPointOrConjugateStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeComponentFiniteChartsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeComponentHolomorphicCoverStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFiniteGeneratingValuesStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelPullbackEquivalence
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalRingPointsExistsUniqueStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrincipalNearBoundaryStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.BdryChart
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.SlopeBoundSt
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BoundaryChartLieModelExists
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointsIffCentres
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodPointOrConjugate
+public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.CoordinateIdeals
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeComponentFiniteCharts
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeComponentHolomorphicCover
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Mathlib.Basic.Complex.Basic
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFiniteGeneratingValues
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrincipalNearBoundary
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SncChartLocalNormalForm
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelPullbackEquivalence
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalRingPointsExistsUnique
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -163,16 +172,16 @@ theorem local_bound (𝔐 : HodgeCpt Y S y) (h : LieMetric 𝔐.M y) (hpq : 1 �
     hw.differentiableOn.comp hrd.differentiableOn fun u hu => (hrc u hu).1
   have hall := 𝔐.all
   have htie := 𝔐.tie
-  obtain ⟨z₀, hz₀g, hz₀⟩ := (GlobalTheory.T.complex_points_iff_centres 𝔐.X Ω 𝔐.ξ K J y htie (w t₀)).1 (hm _ ht₀)
+  obtain ⟨z₀, hz₀g, hz₀⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.mem_mcPts_iff_exists_coordsAt 𝔐.X Ω 𝔐.ξ K J y htie (w t₀)).1 (hm _ ht₀)
   haveI : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
-  obtain ⟨N, s, hs, hfr⟩ := GlobalTheory.T.lie_model_finite_generating_values 𝔐.X Ω 𝔐.ξ 𝔐.t.G 𝔐.Li 𝔐.M z₀ htie.gen hz₀g
+  obtain ⟨N, s, hs, hfr⟩ := _root_.GlobalTheory.CompanionTheory.Ar.QuotUnif.lie_frame_values_basis 𝔐.X Ω 𝔐.ξ 𝔐.t.G 𝔐.Li 𝔐.M z₀ htie.gen hz₀g
   have hw0 : w' 0 = w t₀ := by simp only [hw', HodgeMetric.recentre_zero]
-  obtain ⟨ρ₁, τ, C, jj, m, sc, hρ₁, hρ₁', hC⟩ := GlobalTheory.T.hodge_component_holomorphic_cover E H D l Xo c Y S Ω K J y 𝔐 n a₀ w' N s z₀ ha₀ hw'd
+  obtain ⟨ρ₁, τ, C, jj, m, sc, hρ₁, hρ₁', hC⟩ := _root_.GlobalTheory.CompanionTheory.Ar.QuotUnif.exists_chart_at_of_polydisc E H D l Xo c Y S Ω K J y 𝔐 n a₀ w' N s z₀ ha₀ hw'd
     (fun u hu => hm _ (hrc u hu).1) (fun u hu z hz => hi _ (hrc u hu.1).1 ((hrc u hu.1).2 hu) z hz)
     (by rw [hw0]; exact hz₀) hs
   have huniq : ∀ (z z' : Sp ℂ ⟶ 𝔐.X) (w₁ : (Σ k, J k) → ℂ), CoordsAt 𝔐.ξ y z w₁ → CoordsAt 𝔐.ξ y z' w₁ → z = z' :=
     fun z z' w₁ h₁ h₂ => by
-      obtain ⟨e1, -, e3⟩ := GlobalTheory.T.local_ring_points_existsUnique 𝔐.X Ω 𝔐.ξ K J y htie ℂ
+      obtain ⟨e1, -, e3⟩ := _root_.GlobalTheory.CompanionTheory.Ar.tie_points 𝔐.X Ω 𝔐.ξ K J y htie ℂ
       exact (e1 w₁ h₁.1 (e3 z w₁ (hall _) h₁).1).unique ⟨hall _, h₁⟩ ⟨hall _, h₂⟩
   have hsm : ∀ {r : ℝ}, r ≤ 1 → ∀ u ∈ ball (0 : Fin n → ℂ) r, u ∈ ball (0 : Fin n → ℂ) 1 := fun hr u hu =>
     ball_subset_ball hr hu
@@ -184,7 +193,7 @@ theorem local_bound (𝔐 : HodgeCpt Y S y) (h : LieMetric 𝔐.M y) (hpq : 1 �
     simp only [hw', e] at this
     exact this
   by_cases hgood : (τ.comp (IntermediateField.inclusion c.le).toRingHom) (baseKA l).ρ = H.rt0
-  · obtain ⟨ρ₂, K₂, hρ₂, hρ₂', hQ⟩ := GlobalTheory.T.principal_near_boundary E H D l Xo _ n a₀ C hpq hgood
+  · obtain ⟨ρ₂, K₂, hρ₂, hρ₂', hQ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.QuotLoc.abPart_principal_and_bound E H D l Xo _ n a₀ C hpq hgood
     have hz0 : spMap (C.ψ 0) ≫ jj = z₀ :=
       huniq _ _ (w t₀) (by
         have := (hC 0 (by simp)).1
@@ -194,8 +203,8 @@ theorem local_bound (𝔐 : HodgeCpt Y S y) (h : LieMetric 𝔐.M y) (hpq : 1 �
     have hcont : ContinuousOn (fun u : Fin n → ℂ => w' ((ρ₁ : ℂ) • u)) (ball 0 1) := by
       refine hw'd.continuousOn.comp (continuous_const_smul _).continuousOn fun u hu => ?_
       exact smul_mem_ball hρ₁ hρ₁' hu
-    obtain ⟨ρ₃, K₃, hρ₃, hK₃, hL⟩ := GlobalTheory.T.boundary_chart_lie_metric_bound E H D l Xo _ n a₀ C 𝔐.X 𝔐.t jj m Ω 𝔐.ξ K J y 𝔐.Li 𝔐.M h N s sc _ hcont
-      (fun u _ => GlobalTheory.T.boundary_chart_lie_model_exists E H D l Xo _ n a₀ C u) (fun u hu => (hC u hu).1) (fun u hu i => (hC u hu).2.2 i) hfr
+    obtain ⟨ρ₃, K₃, hρ₃, hK₃, hL⟩ := _root_.GlobalTheory.CompanionTheory.Ar.QuotUnif.chart_coords_le_metric E H D l Xo _ n a₀ C 𝔐.X 𝔐.t jj m Ω 𝔐.ξ K J y 𝔐.Li 𝔐.M h N s sc _ hcont
+      (fun u _ => _root_.GlobalTheory.CompanionTheory.Ar.QuotUnif.frame_lieModel_fibre E H D l Xo _ n a₀ C u) (fun u hu => (hC u hu).1) (fun u hu i => (hC u hu).2.2 i) hfr
     have hr : 0 < min 1 (min ρ₂ ρ₃) := lt_min one_pos (lt_min hρ₂ hρ₃)
     refine ⟨ρ₀ * ρ₁ * min 1 (min ρ₂ ρ₃), max 1 (|K₂| * K₃), mul_pos (mul_pos hρ₀ hρ₁) hr, le_max_left _ _,
       fun K' hK' t ht z hz _ => ?_⟩
@@ -207,7 +216,7 @@ theorem local_bound (𝔐 : HodgeCpt Y S y) (h : LieMetric 𝔐.M y) (hpq : 1 �
     intro P
     obtain ⟨mK, hmK⟩ := GlobalTheory.ObjMaps.exists_sab_cancel m P.m
     let P' : AbPart C.t (spMap (C.ψ u)) := ⟨P.tK, mK, P.τ, P.tB, P.e, P.e_hom, P.act, P.pp⟩
-    obtain ⟨Mz, hMz⟩ := GlobalTheory.T.boundary_chart_lie_model_exists E H D l Xo _ n a₀ C u
+    obtain ⟨Mz, hMz⟩ := _root_.GlobalTheory.CompanionTheory.Ar.QuotUnif.frame_lieModel_fibre E H D l Xo _ n a₀ C u
     have hsingle : ∀ i, (Mz.pt (Pi.single i 1)).left ≫ (𝟙 _) = spMap (GlobalTheory.CompanionTheory.Ar.dualMap (C.ψ u)) ≫ (C.M.pt (Pi.single i 1)).left := fun i => by
       have := hMz (Pi.single i 1)
       have e : (fun j => C.ψ u ((Pi.single i 1 : Fin C.g → C.R) j)) = Pi.single i 1 := by
@@ -255,7 +264,7 @@ end GlobalTheory.CompanionTheory.Ar.QuotUnif
 open GlobalTheory.CompanionTheory.Ar.QuotUnif in
 theorem GlobalTheory.CompanionTheory.Ar.QuotUnif.main : Geo.ResK.ResKStatement → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (h : LieMetric 𝔐.M y), 1 ≤ D.p + D.q → ∃ K : ℝ, 1 ≤ K ∧ ∀ (z : Sp ℂ ⟶ 𝔐.X) (P : AbPart 𝔐.t z), IsPrincipal P.tB ∧ ∀ (v : epsAt (𝟙 (Sp ℂ)) ⟶ P.tK.G) (v₀ : epsAt z ⟶ 𝔐.t.G) (c : ℂ), IsTanAt _ _ v → v.left ≫ P.m.φ = v₀.left → HodgeIP P.tB.G P.tB.PP.L (𝟙 _) (v ≫ P.τ.q ≫ P.e.hom) (v ≫ P.τ.q ≫ P.e.hom) c → c.re ≤ K * (h.ip z v₀ v₀).re := by
   intro hR E _ _ _ H D l Xo c Y S Ω _ K _ J _ y 𝔐 h hpq
-  obtain ⟨n, nc, w, a, -, hw, hm, hi, hcov⟩ := GlobalTheory.T.hodge_component_finite_charts hR E H D l Xo c Y S Ω K J y 𝔐
+  obtain ⟨n, nc, w, a, -, hw, hm, hi, hcov⟩ := _root_.GlobalTheory.CompanionTheory.Ar.QuotUnif.Charts.exists_halfPolydisc_cover hR E H D l Xo c Y S Ω K J y 𝔐
   have hcpt : ∀ i, ∃ Kc : ℝ, 1 ≤ Kc ∧ ∀ K', Kc ≤ K' → ∀ t ∈ Metric.closedBall (0 : Fin n → ℂ) (1 / 2),
       ∀ z : Sp ℂ ⟶ 𝔐.X, CoordsAt 𝔐.ξ y z (w i t) → GoodPt 𝔐 z → AbBound 𝔐.t h K' z := by
     intro i
@@ -282,9 +291,9 @@ theorem GlobalTheory.CompanionTheory.Ar.QuotUnif.main : Geo.ResK.ResKStatement �
     linarith
   have hB : ∀ z : Sp ℂ ⟶ 𝔐.X, GoodPt 𝔐 z → AbBound 𝔐.t h (1 + ∑ j, Kf j) z := by
     intro z hz
-    obtain ⟨-, e2, e3⟩ := GlobalTheory.T.local_ring_points_existsUnique 𝔐.X Ω 𝔐.ξ K J y 𝔐.tie ℂ
+    obtain ⟨-, e2, e3⟩ := _root_.GlobalTheory.CompanionTheory.Ar.tie_points 𝔐.X Ω 𝔐.ξ K J y 𝔐.tie ℂ
     obtain ⟨x, hx⟩ := e2 z (𝔐.all _)
-    have hxm := (GlobalTheory.T.complex_points_iff_centres 𝔐.X Ω 𝔐.ξ K J y 𝔐.tie x).2 ⟨z, 𝔐.all _, hx⟩
+    have hxm := (_root_.GlobalTheory.CompanionTheory.Ar.mem_mcPts_iff_exists_coordsAt 𝔐.X Ω 𝔐.ξ K J y 𝔐.tie x).2 ⟨z, 𝔐.all _, hx⟩
     obtain ⟨i, t, b, ht, hb, rfl⟩ := hcov x hxm
     have hc : CoordsAt 𝔐.ξ y z (w i t) := by
       refine ((e3 z _ (𝔐.all _) hx).2 _).2 ⟨fun k => (Units.mk0 (b k) (hb k))⁻¹, ?_⟩
@@ -295,6 +304,6 @@ theorem GlobalTheory.CompanionTheory.Ar.QuotUnif.main : Geo.ResK.ResKStatement �
     have : 0 ≤ ∑ j, Kf j := Finset.sum_nonneg fun j _ => by have := hKf1 j; linarith
     linarith
   refine ⟨1 + ∑ j, Kf j, h1, fun z => ?_⟩
-  rcases GlobalTheory.T.good_point_or_conjugate E H D l Xo c Y S Ω K J y 𝔐 z with hg | hg
+  rcases _root_.GlobalTheory.CompanionTheory.Ar.QuotUnif.Dich.goodPt_or_conj E H D l Xo c Y S Ω K J y 𝔐 z with hg | hg
   · exact hB z hg
-  · exact GlobalTheory.T.abelian_bound_conjugate E H 𝔐.X 𝔐.t Ω 𝔐.ξ 𝔐.Li 𝔐.M K J y h _ z (hB _ hg)
+  · exact _root_.GlobalTheory.CompanionTheory.Ar.QuotUnif.abBound_of_conj E H 𝔐.X 𝔐.t Ω 𝔐.ξ 𝔐.Li 𝔐.M K J y h _ z (hB _ hg)

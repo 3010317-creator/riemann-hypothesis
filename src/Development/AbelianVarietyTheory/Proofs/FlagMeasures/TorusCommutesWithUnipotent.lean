@@ -4,12 +4,13 @@ public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DegVa
 public import Development.AbelianVarietyTheory.Definitions.Jets.SideFam
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CapParamOfIsHCTypeW
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarLieIsHaarOnUnipotentRadicalStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MomentPieriNumericsOfSizeHypsStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TorusNormaliserBesselStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.OnePlaceKF
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MomentPieriNumericsOfSizeHyps
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TorusNormaliserBessel
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.AbsCoordLeOfLOneNormLe
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BesselGapExistsFunctional
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.HaarEqSmul
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NumericalFamilyShapeGaps
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.HaarEqSmul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -98,12 +99,12 @@ theorem exists_setup_both : Hyps → ∀ (D : D7) (large₂ : SizeData₂ D) (C'
     ⟨z1, hT1, ⟨_, c1⟩, GlobalTheory.ThA.capParam_of_isHCTypeW _ _ _ _ U _ _ z1 hT1 c1 hU, w1, hNH, hG, q1⟩
   have s2 : SideG D.R.k D.R.rS W.z' W.π' U' W.μW' W.μN W.μG W.νS' :=
     ⟨z2, hT2, ⟨_, c2⟩, GlobalTheory.ThA.capParam_of_isHCTypeW _ _ _ _ U' _ _ z2 hT2 c2 hU', w2, hNH, hG, q2⟩
-  have m1 := (GlobalTheory.T.torus_normaliser_bessel hH _ _ _ _ _ _ _ _ _ _ _ t ht hNt (hψ _ z1).1 (hψ _ z1).2 s1).1
-  have m2 := (GlobalTheory.T.torus_normaliser_bessel hH _ _ _ _ _ _ _ _ _ _ _ t ht hNt (hψ _ z2).1 (hψ _ z2).2 s2).1
+  have m1 := (_root_.GlobalTheory.BesselMove.bessel_move hH _ _ _ _ _ _ _ _ _ _ _ t ht hNt (hψ _ z1).1 (hψ _ z1).2 s1).1
+  have m2 := (_root_.GlobalTheory.BesselMove.bessel_move hH _ _ _ _ _ _ _ _ _ _ _ t ht hNt (hψ _ z2).1 (hψ _ z2).2 s2).1
   obtain ⟨c, hc, hd⟩ := GlobalTheory.BesselDegree.schur_fdeg hH D.R.k D.R.rS (PI.BesselPeriodGGP.eps48 _ _) W.μG hG
-  obtain ⟨l, hl⟩ := exists_setup hH (GlobalTheory.T.momentPieriNumerics_of_sizeHyps D large₂ C' Cl Cg cb Cu cT CT C0 hZ hCl τ w U hU).1 hF m1 hc
+  obtain ⟨l, hl⟩ := exists_setup hH (_root_.GlobalTheory.SizeNum.num_of_size D large₂ C' Cl Cg cb Cu cT CT C0 hZ hCl τ w U hU).1 hF m1 hc
     fun mu R h => (hd mu R h).1
-  obtain ⟨l', hl'⟩ := exists_setup hH (GlobalTheory.T.momentPieriNumerics_of_sizeHyps D large₂ C' Cl Cg cb Cu cT CT C0 hZ hCl τ w' U' hU').1 hF m2 hc
+  obtain ⟨l', hl'⟩ := exists_setup hH (_root_.GlobalTheory.SizeNum.num_of_size D large₂ C' Cl Cg cb Cu cT CT C0 hZ hCl τ w' U' hU').1 hF m2 hc
     fun mu R h => (hd mu R h).1
   exact ⟨U, U', l, l', _, hl, hl'⟩
 

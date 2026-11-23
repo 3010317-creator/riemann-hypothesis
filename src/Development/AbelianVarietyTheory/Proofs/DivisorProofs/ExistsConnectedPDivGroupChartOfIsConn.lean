@@ -2,10 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.WittOnFalse
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FormalCoboundarySmul
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffEqZeroOfEvAEqZeroOfLeFinrankStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoordinatesGenerateConnectedLevelsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowFinrankOmegaLeFinrankFrobeniusKernelStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowerSeriesEvalAtNilpotentXEqCoordinateStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffEqZeroOfEvAEqZeroOfLeFinrank
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoordinatesGenerateConnectedLevels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobKerIdealLeAugIdeal
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ToSpanSingletonConstGenInjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowFinrankOmegaLeFinrankFrobeniusKernel
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowerSeriesEvalAtNilpotentXEqCoordinate
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,7 +46,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobKerIdealLeAugIdeal
 
 @[expose] public section
 
@@ -59,11 +60,11 @@ theorem evA_comp_coe {K A : Type} [Field K] [CommRing A] [Algebra K A] {d : ℕ}
   intro i
   rw [AlgHom.comp_apply, MvPolynomial.coeToMvPowerSeries.algHom_apply, MvPolynomial.aeval_X]
   simp only [MvPolynomial.coe_X, map_X]
-  exact GlobalTheory.T.powerSeriesEvalAtNilpotent_X_eq_coordinate K (Fin d) A x hx i
+  exact _root_.GlobalTheory.Katz.evA_X K (Fin d) A x hx i
 
 theorem exists_chart_of_isConn (p : ℕ) [Fact p.Prime] (K : Type) [Field K] (h : (p : K) = 0)
     (G : PDivGroup p K) (hG : G.IsConn) : ∃ d, Nonempty (Chart G d) := by
-  obtain ⟨x, hres, haug, hsurj⟩ := GlobalTheory.T.exists_coordinates_generate_connected_levels p K h G hG
+  obtain ⟨x, hres, haug, hsurj⟩ := _root_.GlobalTheory.PDivGroup.exists_coords_generate p K h G hG
   have hmem : ∀ n i, x n i ∈ augIdeal K (G.A n) := fun n i => by
     simp [augIdeal, haug n i]
   have hnil : ∀ n i, IsNilpotent (x n i) := fun n i => hG n _ (hmem n i)
@@ -79,8 +80,8 @@ theorem exists_chart_of_isConn (p : ℕ) [Fact p.Prime] (K : Type) [Field K] (h 
     refine ⟨N, fun f hf α hα => ?_⟩
     have hq : ∀ i, x N i ^ (p ^ N) ∈ frobKerIdeal (p ^ N) K (G.A N) :=
       fun i => pow_mem_frobKerIdeal (hmem N i)
-    exact GlobalTheory.T.coeff_eq_zero_of_evA_eq_zero_of_le_finrank' K (G.A N) _ (p ^ N) (x N) (hnil N) _ (hsurj N) hq
-      (GlobalTheory.T.pow_finrank_omega_le_finrank_frobeniusKernel p K h G N) f hf α
+    exact _root_.GlobalTheory.coeff_eq_zero_of_evA_eq_zero_of_le_finrank K (G.A N) _ (p ^ N) (x N) (hnil N) _ (hsurj N) hq
+      (_root_.GlobalTheory.PDivGroup.pow_finrank_omega_le_finrank_frobKer p K h G N) f hf α
       (lt_of_lt_of_le hα (Nat.lt_pow_self (Fact.out : p.Prime).one_lt).le)
 
 end GlobalTheory.Katz

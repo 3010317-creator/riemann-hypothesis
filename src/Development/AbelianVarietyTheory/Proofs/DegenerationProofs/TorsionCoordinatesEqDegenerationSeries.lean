@@ -6,21 +6,27 @@ public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.Mul
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationValuesIntOfAdmissibleBaseStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIntegralDegenerationValues
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FamiliesValuesCorrespond
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.HasSumGradedOfMulDegreeStatement
+public import Mathlib.Analysis.Normed.Field.Basic
+public import Mathlib.Topology.Algebra.InfiniteSum.Defs
+public import Mathlib.Topology.MetricSpace.Ultra.Basic
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.HasSumGradedOfMulDegree
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.HasSumOfAdicSumUnitBallExtensionStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SummableVtQTStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.SepticCharacterInjective
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SummableVtQT
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaPtEqUnitMulTh
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsGenOfSection
-import Development.AbelianVarietyTheory.Proofs.ThetaFamilyOrigin.IsThetaPtOverOfSubsingleton
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.CubNMul
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsActValue
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsNsmulAndNeg
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsUniqueThetaConst
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExpBijFAndExpandsFLin
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExpansionPullbackSectionEndomorphism
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ProductOfSectionsExpandsToConvolution
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SymmetricLiftOddOrderActsAsExpansionOperator
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationTorsionMapsCompatibleInLevelStatement
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.SpanEqTopOfFunctionals
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExpansionBijectiveOverFields
+import Development.AbelianVarietyTheory.Proofs.ThetaFamilyOrigin.IsThetaPtOverOfSubsingleton
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExpBijFAndExpandsFLin
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ValueAtOrigin
 import Development.AbelianVarietyTheory.Statements.TorsionEndomorphisms.ExistsGeneratorOfIsField
 import Mathlib.Algebra.Order.Floor.Extended
@@ -68,8 +74,6 @@ import Mathlib.Topology.Connected.Separation
 import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.LBPull
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FirstCohomology.SectionArithmetic
-public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.SpanEqTopOfFunctionals
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExpansionBijectiveOverFields
 
 @[expose] public section
 
@@ -451,7 +455,7 @@ theorem value_at_torsion (hL : LL) (hB : AdmBase R I) (hG : IsSemiAbelian G) (U 
   obtain ⟨ω, hω⟩ := (coef_basic R D.toPre C 1 p.g).1
   choose Ω hΩ hΩv using exists_frm_pow ω hω
   have pf : ∀ (k : ℤ) z J, val (powFrame A.A A.L x e k) (𝟙 _) z J = val e (𝟙 _) z J ^ k := fun k z J => map_zpow _ _ _
-  obtain ⟨u, hu, H⟩ := GlobalTheory.T.hasSum_graded_of_mul_degree' C D.toPre.X (fun k a c => ∃ (t : SecA A C k) (s : Fam D.toPre C k),
+  obtain ⟨u, hu, H⟩ := _root_.GlobalTheory.hasSum_graded_of_mul_degree C D.toPre.X (fun k a c => ∃ (t : SecA A C k) (s : Fam D.toPre C k),
       U.ExpandsF C k w₀ t s ∧ ValIs t x e c ∧ a = coef s p.g (Ω k)) n k hn hk
     (by
       rintro k k' _ _ c c' hk hk' ⟨t, s, hs, ht, rfl⟩ ⟨t', s', hs', ht', rfl⟩
@@ -500,7 +504,7 @@ theorem summable_vt [IsLocalRing R] (hL : LL) (hgt : BrGtSt) (hfam : BrFamSt) (h
   obtain ⟨c', rfl⟩ := h₂ ϑ f hf
   obtain ⟨w, hw⟩ := (coef_basic R D.toPre C 1 p.g).1
   have a₁ : Summable (coef ϑ p.g w ∘ ν'.eX.toEquiv) :=
-    ((GlobalTheory.T.summable_vt_of_int C N' Q hQ k hk q').mul_left _).congr fun χ => (coef_theta ν' hf hq'.2 hw χ).symm
+    ((_root_.GlobalTheory.Ex.summable_vt_QT C N' Q hQ k hk q').mul_left _).congr fun χ => (coef_theta ν' hf hq'.2 hw χ).symm
   have a₂ := ν.eX.toEquiv.summable_iff.2 (ν'.eX.toEquiv.summable_iff.1 a₁)
   exact (summable_mul_left_iff (mul_ne_zero hc₀ (vF_ne ν w))).1 (a₂.congr fun χ => coef_theta ν hϑ hp.2 hw χ)
 

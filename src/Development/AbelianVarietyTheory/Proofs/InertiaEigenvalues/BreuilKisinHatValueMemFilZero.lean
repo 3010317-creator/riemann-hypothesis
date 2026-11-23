@@ -1,12 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPotential
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinValueMulEisensteinPowEqSumStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoordEPowBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EisensteinPowSmulValueEqSumBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ImageDeRhamEqEisensteinPowMulOfComponentsStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinValueMulEisensteinPowEqSum
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoordEPowBasis
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EisensteinPowSmulValueEqSumBasis
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BdRpToBdR
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ImageDeRhamEqEisensteinPowMulOfComponents
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemFilPIffEvPt
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemSpanFiltrationZeroOfIntegralTensorLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemSpanFiltrationZeroOfIntegralTensorLattice
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.CrisToODToOCr
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCompatibleRootsOfUnityAndTiltPadic
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FontaineThetaEqZeroIffFontaineXiElementDvd
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaBdRPlusSurjectiveKerUnitsEquivariant
@@ -48,8 +50,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Connected.Separation
 import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.CrisToODToOCr
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BdRpToBdR
 
 @[expose] public section
 
@@ -133,9 +133,9 @@ theorem GlobalTheory.BKGal.value_hat_mem_filZero : ∀ (l : ℕ) [Fact l.Prime] 
     rw [Algebra.TensorProduct.includeRight_apply] at this
     exact this
 
-  choose c hc z hz using GlobalTheory.T.coord_E_pow_basis_alt l a e O K t ϖ ι η H D T R ε δ hEps hδl
+  choose c hc z hz using _root_.GlobalTheory.BKGal.HatVal.coord_E_pow_basis l a e O K t ϖ ι η H D T R ε δ hEps hδl
 
-  obtain ⟨s, hs, hσv⟩ := GlobalTheory.T.eisensteinPow_smul_value_eq_sum_basis l a e O K t ϖ ι η H D T R σ c hc
+  obtain ⟨s, hs, hσv⟩ := _root_.GlobalTheory.BKGal.HatVal.Epow_smul_jB_toBcris_eq_sum l a e O K t ϖ ι η H D T R σ c hc
 
   have hYA : ∀ j τ, E K l e ^ η * y τ j ∈ A O K := by
     intro j τ
@@ -153,7 +153,7 @@ theorem GlobalTheory.BKGal.value_hat_mem_filZero : ∀ (l : ℕ) [Fact l.Prime] 
     exact mul_mem (pow_mem (E_mem l e _) η) hn'
   set Y : ι → ZMod a → A O K := fun j τ => ⟨_, hYA j τ⟩ with hYdef
 
-  have hbv := GlobalTheory.T.breuilKisin_value_mul_eisensteinPow_eq_sum l a e O K t ϖ ι η H D T R y hy b₂ hb₂ c hc Y (fun _ _ => rfl)
+  have hbv := _root_.GlobalTheory.BKGal.HatVal.value_mul_E_pow_eq_sum l a e O K t ϖ ι η H D T R y hy b₂ hb₂ c hc Y (fun _ _ => rfl)
   have hAS : A O K ≤ invL l (S O K e) := le_trans (A_le_S l e) (le_away _ _)
   set ρ : ι → ZMod a → invL l (S O K e) := fun j τ => s j τ - ⟨_, hAS (hYA j τ)⟩ with hρdef
   have hρ : ∀ j τ, ∃ r ∈ Rpi O K l e, (ρ j τ : K⟦X⟧) = E K l e ^ η * r := fun j τ =>
@@ -171,7 +171,7 @@ theorem GlobalTheory.BKGal.value_hat_mem_filZero : ∀ (l : ℕ) [Fact l.Prime] 
     rw [← sub_smul, ← hiBY j, ← map_sub]
     rfl
 
-  apply GlobalTheory.T.mem_span_filtrationZero_of_integral_tensorLattice l O K T C
+  apply _root_.GlobalTheory.BKGal.HatVal.mem_span_filD_zero_of_integral l O K T C
   set EAD := toOD l O ((1 : O) ⊗ₜ[ℤ_[l]] ϖ.ev a (eis l a e)) with hEAD
   obtain ⟨v, hv⟩ := hνD.exists_left_inv
   have hcomp : (iotaO O C).comp (toB l O) = (dRO l O).comp (toOD l O) := AlgHom.ext (iotaO_toB C)
@@ -186,7 +186,7 @@ theorem GlobalTheory.BKGal.value_hat_mem_filZero : ∀ (l : ℕ) [Fact l.Prime] 
       _ = dRO l O v • TWincl (dRO l O) T (EAD ^ H • TWincl (toOD l O) T (z j)) := by
           rw [map_mul, mul_smul, h1]
       _ = _ := by rw [TWincl_smul', TWincl_smul', map_mul, mul_smul]
-  choose z' hz' using fun j => GlobalTheory.T.image_deRham_eq_eisenstein_pow_mul_of_components l a e O K t ϖ C η (ρ j) (hρ j)
+  choose z' hz' using fun j => _root_.GlobalTheory.BKGal.HatVal.iotaO_iB_eq_Epow_mul l a e O K t ϖ C η (ρ j) (hρ j)
   have hE' : dRO l O EAD ^ (H + η) =
       iotaO O C ((toB l O ((1 : O) ⊗ₜ[ℤ_[l]] ϖ.ev a (eis l a e))) ^ (H + η)) := by
     rw [map_pow, iotaO_toB]

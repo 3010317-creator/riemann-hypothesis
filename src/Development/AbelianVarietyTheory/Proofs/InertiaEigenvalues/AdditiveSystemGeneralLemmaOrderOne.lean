@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MooreNorm
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdditiveSystemPreparationNormalFormOneStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIntegralSolutionFrobeniusSubMulVecEqStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsUniqueIntegralAdditiveSystemFrobeniusPowerStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LangCountFrobeniusEqMulVecSolutionsStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdditiveSystemPreparationNormalFormOne
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIntegralSolutionFrobeniusSubMulVecEq
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsUniqueIntegralAdditiveSystemFrobeniusPower
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LangCountFrobeniusEqMulVecSolutions
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -82,22 +82,22 @@ theorem additiveSystemFrobeniusPowerSum_zero {F : Type} [NormedField F] {m : Typ
 theorem gl1 : GLOnto 1 ∧ GLCount 1 := by
   constructor
   · intro F _ _ _ _ p _ _ m _ _ e D he hD M hM b hb
-    obtain ⟨A, U, hA, hU0, hUn, -, hfac⟩ := GlobalTheory.T.additiveSystem_preparation_normalForm_one F p m e D he hD M hM
-    obtain ⟨y, ⟨hy, hyb⟩, -⟩ := GlobalTheory.T.existsUnique_integral_additiveSystemFrobeniusPowerSum_eq F p m e D he U hU0 hUn b hb
-    obtain ⟨x, hx, hxy⟩ := GlobalTheory.T.exists_integral_solution_frobenius_sub_mulVec_eq F p m e he A hA y hy
+    obtain ⟨A, U, hA, hU0, hUn, -, hfac⟩ := _root_.GlobalTheory.PMonE.preparation F p m e D he hD M hM
+    obtain ⟨y, ⟨hy, hyb⟩, -⟩ := _root_.GlobalTheory.PMonE.existsUnique_integral_gsum_eq F p m e D he U hU0 hUn b hb
+    obtain ⟨x, hx, hxy⟩ := _root_.GlobalTheory.PMonE.LangOnto.lang_onto F p m e he A hA y hy
     refine ⟨x, hx, ?_⟩
     rw [hfac]
     have : (fun i => x i ^ p ^ e - A.mulVec x i) = y := funext hxy
     rw [this, hyb]
   · intro F _ _ _ _ p _ _ m _ _ e D he hD M hM hdet
-    obtain ⟨A, U, hA, hU0, hUn, hM0, hfac⟩ := GlobalTheory.T.additiveSystem_preparation_normalForm_one F p m e D he hD M hM
+    obtain ⟨A, U, hA, hU0, hUn, hM0, hfac⟩ := _root_.GlobalTheory.PMonE.preparation F p m e D he hD M hM
     have hAdet : A.det ≠ 0 := by
       intro h
       apply hdet
       rw [hM0, Matrix.det_neg, Matrix.det_mul, h, mul_zero, mul_zero]
-    obtain ⟨hInt, hcard⟩ := GlobalTheory.T.lang_count_frobenius_eq_mulVec_solutions F p m e he A hA hAdet
+    obtain ⟨hInt, hcard⟩ := _root_.GlobalTheory.PMonE.langCount F p m e he A hA hAdet
     have hq : 0 < p ^ e := pow_pos (Fact.out : p.Prime).pos e
-    obtain ⟨z, -, hz⟩ := GlobalTheory.T.existsUnique_integral_additiveSystemFrobeniusPowerSum_eq F p m e D he U hU0 hUn 0 (fun i => by simp)
+    obtain ⟨z, -, hz⟩ := _root_.GlobalTheory.PMonE.existsUnique_integral_gsum_eq F p m e D he U hU0 hUn 0 (fun i => by simp)
     have key : ∀ x : m → F, Integral x →
         (gsum (p ^ e) D M x = 0 ↔ ∀ i, x i ^ p ^ e = A.mulVec x i) := by
       intro x hx

@@ -2,14 +2,23 @@ module
 
 public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.SemistableFin
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SemiAbelianReductionAlongIsogenyStrictHenselian
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyPotentialSemiAbelianSplitTorusStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DivisionAlgebraOrderNoSmallLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRingActionPullbackCartesianGroupSchemesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankTorusExtensionCharactersLeRelDimStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAbelianSchemeSemiAbelianDvrNoSpecialTorusStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsGrpPullbackOfGroupSchemeModelBaseChangeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RingActExtendsSemiAbelianDvrStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RingHomCharacterEndOfTorusExtensionActionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyPotentialSemiAbelianSplitTorus
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Mathlib.LinearAlgebra.FreeModule.Basic
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DivisionAlgebraOrderNoSmallLattice
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRingActionPullbackCartesianGroupSchemes
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankTorusExtensionCharactersLeRelDim
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAbelianSchemeSemiAbelianDvrNoSpecialTorus
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsGrpPullbackOfGroupSchemeModelBaseChange
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RingActExtendsSemiAbelianDvr
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.PointEqOfSubsingleton
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RingHomCharacterEndOfTorusExtensionAction
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.OfDerivationFnOn
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -47,7 +56,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Degenerations.OfDerivationFnOn
 import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.HenselianLocalRingOfIsAdicComplete
 
 @[expose] public section
@@ -62,23 +70,23 @@ namespace GlobalTheory.DivPotGood
 theorem potGood_of_divisionAlgebra_action : ∀ (V K : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [IsAdicComplete (maximalIdeal V) V] [Field K] [CharZero K] [Algebra V K] [IsFractionRing V K] (A : Over (Sp K)) [GrpObj A] (g : ℕ), IsAbelianScheme A → SmoothOfRelativeDimension g A.hom → ∀ (O : Type) [Ring O] (act : O → (A ⟶ A)), (∀ a, IsMonHom (act a)) → act 1 = 𝟙 A → (∀ a b, act (a * b) = act a ≫ act b) → (∀ a b, act (a + b) = act a * act b) → ∀ (B : Type) [Ring B] [Algebra ℚ B] [Module.Finite ℚ B] (jj : O →+* B), (∀ x : B, x ≠ 0 → IsUnit x) → Function.Injective jj → Submodule.span ℚ (Set.range jj) = ⊤ → g < Module.finrank ℚ B → GlobalTheory.SS.PotModel V K A (fun _ _ _ G _ => IsAbelianScheme G) := by
   intro V K _ _ _ _ _ _ _ _ A _ g hA hg O _ act hact h1 hmul hadd B _ _ _ jj hdiv hinj hspan hgB
   obtain ⟨W, L, i1, i2, i3, i4, i5, i6, i7, i8, hcomp, hfin, hloc, hcpl, G, iG, hmod, hsa, ⟨E⟩⟩ :=
-    GlobalTheory.T.abelianVariety_potential_semiAbelian_splitTorus V K A hA
+    _root_.GlobalTheory.SS.potModel_semiAbelian_torusExtension V K A hA
   refine ⟨W, L, i1, i2, i3, i4, i5, i6, i7, i8, hcomp, hfin, hloc, hcpl, G, iG, hmod, ?_⟩
 
   set f : Sp L ⟶ Sp K := spMap (algebraMap K L)
   set A' := (Over.pullback f).obj A
   have hψ : IsGrpPullback A' A f (pullback.fst A.hom f) := isGrpPullback_pullback A f
-  obtain ⟨act₁, ⟨h1a, h1b, h1c, h1d⟩, -⟩ := GlobalTheory.T.exists_ring_action_pullback_cartesian_group_schemes (Sp K) (Sp L) f A A' _ hψ O act hact h1 hmul hadd
-  obtain ⟨φ, hφ⟩ := GlobalTheory.T.isGrpPullback_of_group_scheme_model_base_change K W L A G hmod A' _ hψ
-  obtain ⟨act₂, ⟨h2a, h2b, h2c, h2d⟩, -⟩ := GlobalTheory.T.exists_ring_action_extension_compatible W L G A' φ hsa hφ O act₁ h1a h1b h1c h1d
+  obtain ⟨act₁, ⟨h1a, h1b, h1c, h1d⟩, -⟩ := _root_.GlobalTheory.ActPull.exists_act_pull (Sp K) (Sp L) f A A' _ hψ O act hact h1 hmul hadd
+  obtain ⟨φ, hφ⟩ := _root_.GlobalTheory.SS.exists_isGrpPullback_of_isModel K W L A G hmod A' _ hψ
+  obtain ⟨act₂, ⟨h2a, h2b, h2c, h2d⟩, -⟩ := _root_.GlobalTheory.ringAct_extends_semiAbelian_dvr W L G A' φ hsa hφ O act₁ h1a h1b h1c h1d
   have hres : IsGrpPullback (GlobalTheory.SS.spFibre G) G (spMap (IsLocalRing.residue W)) (pullback.fst G.hom _) :=
     isGrpPullback_pullback G _
   obtain ⟨act₃, ⟨h3a, h3b, h3c, h3d⟩, -⟩ :=
-    GlobalTheory.T.exists_ring_action_pullback_cartesian_group_schemes _ _ (spMap (IsLocalRing.residue W)) G (GlobalTheory.SS.spFibre G) _ hres O act₂ h2a h2b h2c h2d
+    _root_.GlobalTheory.ActPull.exists_act_pull _ _ (spMap (IsLocalRing.residue W)) G (GlobalTheory.SS.spFibre G) _ hres O act₂ h2a h2b h2c h2d
   haveI : IsCommMonObj (GlobalTheory.SS.spFibre G) := by
     haveI := hsa.comm
     infer_instance
-  obtain ⟨ρ, -⟩ := GlobalTheory.T.ringHom_characterEnd_of_torusExtension_action _ (GlobalTheory.SS.spFibre G) E O act₃ h3a h3b h3c h3d
+  obtain ⟨ρ, -⟩ := _root_.GlobalTheory.ringHom_charEnd_of_torusExtension _ (GlobalTheory.SS.spFibre G) E O act₃ h3a h3b h3c h3d
 
   obtain ⟨e, -⟩ := hmod
   haveI : IsIso e.hom.left := inferInstanceAs (IsIso ((Over.forget _).map e.hom))
@@ -90,17 +98,17 @@ theorem potGood_of_divisionAlgebra_action : ∀ (V K : Type) [CommRing V] [IsDom
         (f := A'.hom) (g := 𝟙 _) ⟨by rw [Category.comp_id]; exact Over.w e.hom⟩) hA'g
   have hsc : GlobalTheory.SS.SmConn G := ⟨hsa.comm, hsa.smooth, hsa.separated, hsa.quasiCompact, hsa.geomConnected⟩
   have hsp : SmoothOfRelativeDimension g (GlobalTheory.SS.spFibre G).hom := GlobalTheory.IsogRed.relDim_spFibre (K := L) G hsc g hGLg
-  have hle := GlobalTheory.T.finrank_torusExtension_characters_le_relDim _ (GlobalTheory.SS.spFibre G) E g hsp
+  have hle := _root_.GlobalTheory.finrank_torusExtension_le _ (GlobalTheory.SS.spFibre G) E g hsp
   letI := E.addCommGroup
   haveI := E.free
   haveI := E.finite
-  have h0 : Module.finrank ℤ E.X = 0 := GlobalTheory.T.divisionAlgebra_order_no_small_lattice B O jj hdiv hinj hspan E.X ρ (lt_of_le_of_lt hle hgB)
+  have h0 : Module.finrank ℤ E.X = 0 := _root_.GlobalTheory.divAlg_order_no_small_lattice B O jj hdiv hinj hspan E.X ρ (lt_of_le_of_lt hle hgB)
 
   have hprop : IsProper ((Over.pullback (spMap (algebraMap W L))).obj G).hom := by
     haveI : IsProper A.hom := hA.proper
     haveI : IsProper A'.hom := inferInstanceAs (IsProper (pullback.snd A.hom f))
     rw [← Over.w e.hom]
     infer_instance
-  exact GlobalTheory.T.isAbelianScheme_semiAbelian_dvr_noSpecialTorus W L G hsa hprop E h0
+  exact _root_.GlobalTheory.ToricRankZero.isAbelianScheme_of_finrank_eq_zero W L G hsa hprop E h0
 
 end GlobalTheory.DivPotGood

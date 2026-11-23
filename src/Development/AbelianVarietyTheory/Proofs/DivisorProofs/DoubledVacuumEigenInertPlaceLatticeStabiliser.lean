@@ -2,10 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AntiCols
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjMemAdelicSchwartzSpaceNumberFieldOfMem
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledStabilizerWeilOperatorTransportsLatticeEiStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledStabilizerWeilOperatorTransportsLatticeEi
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledUnitaryElementActsLocalOperatorAtPlace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledVacuumHeisenbergEigenDoubledLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceDoubledEigenfunctionsLineVacuumStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledVacuumHeisenbergEigenDoubledLattice
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceDoubledEigenfunctionsLineVacuum
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductFunctionOnSumCoordsMemAdelicSchwartzSpace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -137,9 +138,9 @@ theorem vdbl_eigen : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
     set_option backward.isDefEq.respectTransparency false in
       rw [e2, he] at h3
     exact h3
-  have hE0 := GlobalTheory.T.doubledVacuum_heisenbergEigen_doubledLattice F E σ B a a' G X om om' hT v w hw hv d' hd' dd hdc θ hθ hvac
-  have hE1 := GlobalTheory.T.doubledStabilizer_weilOperator_transports_latticeEigen F E σ B a a' G X om om' hT v w hw hv d' hd' dd hdc θ hθ hvac omd hsp g hg vD hvDSB φ₁ hφ₁ hE0 hA
-  obtain ⟨μ, hμ⟩ := GlobalTheory.T.inertPlace_doubledEigenfunctions_line_vacuum F E σ B a a' G X om om' hT v w hw hv d' hd' dd hdc θ hθ hvac φ₁ hφ₁ hE1
+  have hE0 := _root_.GlobalTheory.DblVacEigen.doubled_vac_eigen F E σ B a a' G X om om' hT v w hw hv d' hd' dd hdc θ hθ hvac
+  have hE1 := _root_.GlobalTheory.DblVacTransport.transport F E σ B a a' G X om om' hT v w hw hv d' hd' dd hdc θ hθ hvac omd hsp g hg vD hvDSB φ₁ hφ₁ hE0 hA
+  obtain ⟨μ, hμ⟩ := _root_.GlobalTheory.VDblLine.vdbl_line F E σ B a a' G X om om' hT v w hw hv d' hd' dd hdc θ hθ hvac φ₁ hφ₁ hE1
   refine ⟨μ, ?_⟩
   rw [hS, hA RD hRest, hμ]
   funext x

@@ -1,8 +1,10 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.GuDefs
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAlgebraicWeightOfAutomorphicDefiniteUnitarStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CuspContragredientIsCMConjTwistOfPairedInvTranspStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BaseChangeDefiniteUnitary
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAlgebraicWeightOfAutomorphicDefiniteUnitar
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.DualIsConjByOne
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CuspContragredientIsCMConjTwistOfPairedInvTransp
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,9 +63,9 @@ theorem UpperTheory.irreducible_case :
     have e := H.weight φ lam h
     rw [Fin.sum_univ_one, spehInf_one'] at e
     exact e ▸ H.inf 0 φ
-  refine ⟨P 0, (GlobalTheory.CuspRep.CG.isRegAlg_iff _).2 fun τ => ?_, (GlobalTheory.ContraPair.dualIsConjBy_one (P 0)).1 (GlobalTheory.T.cuspContragredientIsCMConjTwist_of_paired_invTranspose E _ (P 0) 1 (by simpa only [inv_one, CuspSub.twist_one] using PH.toClassicalTheorems.litN.aut.gk E _ (P 0)) ((GlobalTheory.GalOfCusp.isConjDualBy_one (P 0)).2 (H.csd 0))),
+  refine ⟨P 0, (GlobalTheory.CuspRep.CG.isRegAlg_iff _).2 fun τ => ?_, (GlobalTheory.ContraPair.dualIsConjBy_one (P 0)).1 (_root_.GlobalTheory.ConjDualPair.dualIsConjBy_of_paired_invT E _ (P 0) 1 (by simpa only [inv_one, CuspSub.twist_one] using PH.toClassicalTheorems.litN.aut.gk E _ (P 0)) ((GlobalTheory.GalOfCusp.isConjDualBy_one (P 0)).2 (H.csd 0))),
     ⟨hr, hF.mono fun w ⟨S, h1, h2⟩ => ⟨S 0, h1 0, satTot_one w S ▸ h2⟩⟩, hw⟩
-  obtain ⟨lam, hl⟩ := GlobalTheory.T.exists_algebraicWeight_of_automorphic_definiteUnitary E _ hn1 π hπ τ
+  obtain ⟨lam, hl⟩ := _root_.GlobalTheory.DefU.exists_hasWeightAt_of_isAutRepU E _ hn1 π hπ τ
   rw [CG.HasInfChar.infChar_eq (π := CG.mk (P 0)) (hw τ lam hl)]
   refine ⟨nodup_infOfWeight lam, fun z hz => ?_⟩
   rw [infOfWeight, Multiset.mem_map] at hz

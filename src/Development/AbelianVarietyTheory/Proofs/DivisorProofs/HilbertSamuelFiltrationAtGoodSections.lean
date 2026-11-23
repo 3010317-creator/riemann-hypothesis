@@ -2,18 +2,20 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.InclEquiv
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexifyStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoordinatesSpecialisedFormProdLinearFormsStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HermSysHypOneLeLambdaZero
+public import Development.AbelianVarietyTheory.Definitions.Divisors.WellChosen
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoordinatesSpecialisedFormProdLinearForms
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FilMonoOfKerRes
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertSamuelDegreeZeroResiduesRangeEqTopStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertSamuelFiltrationSymbolMonomialProductStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertSamuelSectionBaseChangePropertiesStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertSamuelSectionShiftCommSingleMonomialStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertSamuelVanishingFiltrationDeepestStepSpanStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertSamuelDegreeZeroResiduesRangeEqTop
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertSamuelFiltrationSymbolMonomialProduct
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertSamuelSectionBaseChangeProperties
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertSamuelVanishingFiltrationDeepestStepSpan
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemSubPtsIffOfToBaseEq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NefBigBaseChange
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NefBigSecondBaseChange
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictedSectionChartCoords
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TotFilTotSymKer
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertSamuelSectionShiftCommSingleMonomial
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictedSectionChartCoords
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -85,19 +87,19 @@ theorem flatAt_of_simpleAt : Quoted → ∀ (F : Type) [Field F] [NumberField F]
   have hSE : SimpleAt X.toTuple δ f E (fun i k => algebraMap F E (s i k)) :=
     hS E _ (by rw [hval]; exact (map_ne_zero _).2 hs)
   have hgood : (X.baseChange E).IsGood (fun i k => algebraMap F E (s i k)) := Geo.isGood_baseChange_iff.2 hSE.good
-  obtain ⟨Co, c, hc, hspec⟩ := GlobalTheory.T.exists_coordinates_specialisedForm_prod_linearForms F X.toGeo E _ hgood δ f hsp hSE
+  obtain ⟨Co, c, hc, hspec⟩ := _root_.GlobalTheory.HSShort.SplitCoord.exists_coord_spec_eq F X.toGeo E _ hgood δ f hsp hSE
   have hnef₂ := nef_big_second_baseChange F X E hX.nef₂ hX.big₂
   have hnefA := GlobalTheory.HSCore.nef_big_baseChange F X E hX.nef hX.big
   have hms : (X.baseChange E).MulStable :=
     (GlobalTheory.HilbertSamuel.Data.complexify_statement F X (fun _ => X.beta) hX.totallyComplex
       (fun _ => one_pos.trans_le X.one_le_beta) hX.mulStable hX.mulBound).2 E
   have hFM : FilMono := GlobalTheory.HSCore.filMono_of_kerRes (GlobalTheory.HSKerRes.kerRes hQ)
-  obtain ⟨hind, hmul, hspan⟩ := GlobalTheory.T.hilbertSamuelSectionBaseChange_properties F X Λ₀ E
-  obtain ⟨hcomm, -, -⟩ := GlobalTheory.T.hilbertSamuelSectionShift_comm_single_monomial E (X.toGeo.baseChange E)
-  have honto := GlobalTheory.T.hilbertSamuelDegreeZeroResidues_range_eq_top hQ E (X.baseChange E) _ hgood δ Co hnef₂.1 hnef₂.2
+  obtain ⟨hind, hmul, hspan⟩ := _root_.GlobalTheory.HSShort.totExt_props F X Λ₀ E
+  obtain ⟨hcomm, -, -⟩ := _root_.GlobalTheory.HSShort.shift_comm_single_mono E (X.toGeo.baseChange E)
+  have honto := _root_.GlobalTheory.HSShort.map_totRes_range_incl_zero hQ E (X.baseChange E) _ hgood δ Co hnef₂.1 hnef₂.2
   have hker := totFil_totSym_ker E (X.baseChange E) _ hgood δ Co
-  have hmono := GlobalTheory.T.hilbertSamuelFiltrationSymbol_monomial_product E (X.baseChange E) _ hgood δ Co hms
-  have hdiv := GlobalTheory.T.hilbertSamuelVanishingFiltration_deepest_step_span hFM E (X.baseChange E) _ hgood hnefA.1 hnefA.2 hms
+  have hmono := _root_.GlobalTheory.HSShort.totSym_mono E (X.baseChange E) _ hgood δ Co hms
+  have hdiv := _root_.GlobalTheory.HSShort.totFil_deepest hFM E (X.baseChange E) _ hgood hnefA.1 hnefA.2 hms
   let Φ : (sysOf X Λ₀).Flat E (Tot (X.toGeo.baseChange E)) (fun i k => algebraMap F E (s i k)) δ :=
     { ι := totExt X.toGeo E
       indep := hind

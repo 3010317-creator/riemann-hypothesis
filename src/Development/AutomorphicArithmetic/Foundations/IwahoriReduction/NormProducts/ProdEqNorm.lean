@@ -8,10 +8,12 @@ public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
 public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.HopfAlgebra.Basic
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FiniteDimensionalLevStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.HahnPowOrderLeadingCoeff
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FiniteDimensionalLev
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.NormProducts.CountSpanEqZero
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.NormProducts.ExistsOfFixed
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.NormProducts.RelOfComap
+public import Mathlib.RingTheory.Valuation.LocalSubring
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -31,7 +33,6 @@ import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Radical.NatInt
-public import Mathlib.RingTheory.Valuation.LocalSubring
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
@@ -59,7 +60,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.Foundations.HahnPowOrderLeadingCoeff
 import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.NormProducts.InvMod
 
 @[expose] public section
@@ -309,7 +309,7 @@ theorem UpperTheory.Kd.K4.step :
     @abs_step Ω X.K SL(2, ℤ) _ _ _ _ _ (fun γ => (X.sl (ofSL γ)).toRingEquiv)
       (fun g => by simp [X.sl_one]) (fun x y g => by simp [X.sl_mul]) H H' hn (lev X H) (lev X H') (lev_anti X hle)
       (mem_lev_iff X H) (mem_lev_iff X H') (algPoly X H) (algRat X H) (isScalarTower_poly_rat X H)
-      (GlobalTheory.T.finiteDimensional_lev_of_gamma_le Ω ε X H M hM (hΓ.trans hle)) (algPoly X H') (algRat X H') (isScalarTower_poly_rat X H')
-      (GlobalTheory.T.finiteDimensional_lev_of_gamma_le Ω ε X H' M hM hΓ) (fun p => (coe_jPoly X H p).trans (coe_jPoly X H' p).symm) hfaith ι _ δ hδ.1 hδ.2
+      (_root_.GlobalTheory.K4.finiteDimensional_lev Ω ε X H M hM (hΓ.trans hle)) (algPoly X H') (algRat X H') (isScalarTower_poly_rat X H')
+      (_root_.GlobalTheory.K4.finiteDimensional_lev Ω ε X H' M hM hΓ) (fun p => (coe_jPoly X H p).trans (coe_jPoly X H' p).symm) hfaith ι _ δ hδ.1 hδ.2
       m m' hm hm' ⟨f, hfH⟩ hF0 ((lun_iff X H m ⟨f, hfH⟩).1 hfW)
   exact ⟨f', ⟨fun e => hf'0 (Subtype.ext e), f'.2, (lun_iff X H' (m * m') f').2 hf'⟩, h, hh0, hprod⟩

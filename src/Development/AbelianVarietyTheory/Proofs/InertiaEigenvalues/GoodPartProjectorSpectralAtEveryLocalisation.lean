@@ -3,12 +3,14 @@ module
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsWildInertiaCyclotomicElement
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.RowsExhaust
 public import Formalism.LocalRingCardinality.DataTies
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EveryHeckeRowGoodAtGoodPointLocalisationStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GramClassVacuumCombinationOrbitSumModLowerStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.OrthKerEqRangeAdjoint
+public import Formalism.LocalToGlobal.NormalizedHeckeFactors.HeckeStdTwOfStd
+public import Formalism.SharpRestriction.LevelLetterCocycles.SumRepresentations
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EveryHeckeRowGoodAtGoodPointLocalisation
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GramClassVacuumCombinationOrbitSumModLower
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpecPrOfZSpecTypeTie
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SphericalHeckeScalarOnTypeSpacesAllPlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TypeSpaceProjectionToPointEigenspacesStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TypeSpaceProjectionToPointEigenspaces
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.OrthKerEqRangeAdjoint
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SphericalHeckeScalarOnTypeSpacesAllPlaces
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplitExEveryDatum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -59,9 +61,9 @@ theorem specPr_all : ∀ (D : D7) (M : MtFam D), HeckeTied D M → HeckeRational
   intro D M HT HR AV Tn HS CS TC HE II UnitaryCharacterOfReals PZ GF i
   have SU : SplitUnif D := GlobalTheory.SplitConjPlace.splitEx_all D
   have hZ : ZSpec D i :=
-    GlobalTheory.EtaJoin.TypeSum.main D M i HT AV SU (GlobalTheory.T.gramClass_vacuumCombination_orbitSum_mod_lower D M AV i (CS i)) (TC i) II PZ
-      (GlobalTheory.T.every_heckeRow_good_at_goodPointLocalisation D M HT AV Tn HS UnitaryCharacterOfReals GF i)
-  have hT : TypeTie D i := GlobalTheory.T.typeSpace_projection_to_pointEigenspaces D M i HT HR AV SU (GlobalTheory.T.sphericalHeckeScalarOnTypeSpaces_all_places D M HT AV i) HE
+    GlobalTheory.EtaJoin.TypeSum.main D M i HT AV SU (_root_.GlobalTheory.TypeOrthClassSum.typeOrth_of_classSum D M AV i (CS i)) (TC i) II PZ
+      (_root_.GlobalTheory.ExhaustRows.main D M HT AV Tn HS UnitaryCharacterOfReals GF i)
+  have hT : TypeTie D i := _root_.GlobalTheory.EtaJoin.TypeTieProof.typeTie_holds D M i HT HR AV SU (_root_.GlobalTheory.HeckeScalarAll.heckeScalar_all D M HT AV i) HE
   exact GlobalTheory.EtaJoin.SpecProj.specPr_of_zSpec_typeTie D i hZ hT
 
 end GlobalTheory.EtaJoin.SpecAll

@@ -2,11 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SRelOneOneIff
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.SiegelToroidalIntegral
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGaloisCoverQuotientFreeFiniteActionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsQProjOverTargetGaloisCoverNoetherianStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrincipalSiegelLowerLevelDescendsGaloisStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelFamilySimilitudeGroupActionFreeTransitiveStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothOfRelativeDimensionDescentEtaleCoverStatement
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsGaloisCover
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGaloisCoverQuotientFreeFiniteAction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsQProjOverTargetGaloisCoverNoetherian
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrincipalSiegelLowerLevelDescendsGalois
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelFamilySimilitudeGroupActionFreeTransitive
+public import Mathlib.AlgebraicGeometry.Morphisms.Etale
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothOfRelativeDimensionDescentEtaleCover
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SmoothProjectiveStalkFactorial
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsQProjOverBaseChangeAndFiniteRestrict
 import Mathlib.Algebra.Order.Floor.Extended
@@ -61,13 +64,13 @@ theorem nonempty_sQuot : ∀ (h n N : ℕ) (F : SFam h N (zetaAway N)) (j : cycA
   have hn0 : n ≠ 0 := by omega
   have hN0 : N ≠ 0 := by rintro rfl; exact (Nat.not_odd_zero hN)
   haveI : IsDedekindDomain (cycAway n) := GlobalTheory.CycAwayReg.isDedekindDomain_cycAway n
-  obtain ⟨Ga, _, _, ρ, ν, h1, hmul, hν1, hνmul, hover, hlow, hfree, htrans⟩ := GlobalTheory.T.siegelFamily_similitudeGroup_action_free_transitive h n N F j hn hN hdvd hj
+  obtain ⟨Ga, _, _, ρ, ν, h1, hmul, hν1, hνmul, hover, hlow, hfree, htrans⟩ := _root_.GlobalTheory.SiegAct.siegel_group_action h n N F j hn hN hdvd hj
   have hjf : j.Finite := (IsFinite.SpecMap_iff _).1 hfin
   have hq : IsQProjOver (F.s ≫ spMap j) :=
     (GlobalTheory.isQProjOver_baseChange_and_finite_restrict _ _ j F.X (F.s ≫ spMap j)).2 F.s hjf F.qproj
   obtain ⟨Y, π, sY, hπ, hG, hsep, hft, -⟩ :=
-    GlobalTheory.T.exists_galoisCover_quotient_freeFiniteAction (cycAway n) F.X (F.s ≫ spMap j) Ga ρ hq h1 hmul hover hfree
-  have hqY : IsQProjOver sY := GlobalTheory.T.isQProjOver_target_galoisCover_noetherian (cycAway n) F.X Y π sY Ga ρ hG hsep hft (by rw [hπ]; exact hq)
+    _root_.GlobalTheory.ZM.exists_isGaloisCover_of_isQProjOver_noetherian (cycAway n) F.X (F.s ≫ spMap j) Ga ρ hq h1 hmul hover hfree
+  have hqY : IsQProjOver sY := _root_.GlobalTheory.GaloisQuotientRing.isQProjOver_of_isGaloisCover (cycAway n) F.X Y π sY Ga ρ hG hsep hft (by rw [hπ]; exact hq)
   have hsm : SmoothOfRelativeDimension (h * (h + 1) / 2) (π ≫ sY) := by
     rw [hπ]
     haveI := F.smooth
@@ -75,8 +78,8 @@ theorem nonempty_sQuot : ∀ (h n N : ℕ) (F : SFam h N (zetaAway N)) (j : cycA
     have := smoothOfRelativeDimension_comp (h * (h + 1) / 2) 0 F.s (spMap j)
     rwa [Nat.add_zero] at this
   have hsY : SmoothOfRelativeDimension (h * (h + 1) / 2) sY :=
-    GlobalTheory.T.smoothOfRelativeDimension_descent_etaleCover (cycAway n) F.X Y π sY _ hG.etale hG.onto hft hsm
-  obtain ⟨c, hc, hlowc⟩ := GlobalTheory.T.principal_siegel_lower_level_descends_galois h n N (cycAway n) (cycAway N) (cycBase hn0) (zetaAway N) j F.X Y F.s π sY F.univ
+    _root_.GlobalTheory.SmoothDescent.smoothOfRelativeDimension_of_etale_cover_noetherian (cycAway n) F.X Y π sY _ hG.etale hG.onto hft hsm
+  obtain ⟨c, hc, hlowc⟩ := _root_.GlobalTheory.PrincipalDescent.principal_descends h n N (cycAway n) (cycAway N) (cycBase hn0) (zetaAway N) j F.X Y F.s π sY F.univ
     Ga ρ ν hN0 (isUnit_natCast hN0) hdvd (by rw [cycBase_ζ]; exact hj) hπ hG (by rw [hπ]; exact hq) hft F.princ hν1
     hνmul hlow
   refine ⟨⟨Y, sY, hsY, hqY, c, hc, π, hπ, hG.fin, hG.etale, hG.onto, hlowc, ?_⟩⟩

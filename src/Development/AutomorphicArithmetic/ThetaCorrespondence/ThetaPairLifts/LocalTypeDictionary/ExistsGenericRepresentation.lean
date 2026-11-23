@@ -3,11 +3,12 @@ module
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFockMap
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DarbouxSchrodingerCompatibility
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdelicRepExtendingArchimedeanSchwartzRepStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergRhoArchimedeanAdelicPureTensorStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergRhoSplitArchimedeanFiniteStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilOperatorUnitaryAdelicL2Statement
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ArchimedeanComponentDiscreteSeries
+import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdelicRepExtendingArchimedeanSchwartzRep
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergRhoArchimedeanAdelicPureTensor
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergRhoSplitArchimedeanFinite
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilOperatorUnitaryAdelicL2
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -68,7 +69,7 @@ theorem exists_generic_representation : _root_.GlobalTheory.FunPr.ThetaLocalInpu
       ActsBy τ C ω₀ Φ (fockAct2 P Q R S) c₀ := by
   intro hP hD hV F E _ _ _ _ _ σ α β κ _ _ _ _ _ P Q R S ψ τ JA JB d a b A C Φ hCM hψ hFr hΦ
   obtain ⟨ρ, c₀, hR, hcont, hder⟩ := _root_.GlobalTheory.T.archimedean_component_discreteSeries hP hD hV F E σ α β κ P Q R S ψ τ JA JB d a b A C Φ hCM hψ hFr hΦ
-  obtain ⟨ω₀, hω⟩ := GlobalTheory.T.exists_adelicRep_extending_archimedeanSchwartzRep F κ (UG (cA σ) JB) ρ
+  obtain ⟨ω₀, hω⟩ := _root_.GlobalTheory.SliceExt.exists_rep_pure F κ (UG (cA σ) JB) ρ
   have hgen : ∀ g, ∀ φ ∈ schA F κ, ω₀ g φ ∈ schA F κ := by
     intro g φ hφ
     unfold schA at hφ ⊢
@@ -83,13 +84,13 @@ theorem exists_generic_representation : _root_.GlobalTheory.FunPr.ThetaLocalInpu
   have h1m : At (evI F) (((1 : UG (cA σ) JB).1 : Matrix β β (AE F E)) - 1) := fun u _ => by simp
   have hact1 : ∀ x : Matrix α β (AE F E), actB (cA σ) (1 : UG (cA σ) JB) x = x := fun x => by simp [actB]
   refine ⟨ω₀, c₀, fun g hg => ⟨hgen g, fun w φ hφ => ?_, fun μ hμ φ hφ =>
-    GlobalTheory.T.weil_operator_unitary_adelic_L2 F κ (ρ g).toLinearMap (ω₀ g) (hω g) (hR g hg).2 μ hμ φ hφ⟩, fun l hl φ hφ => ?_, ?_⟩
+    _root_.GlobalTheory.ArchimedeanL2.lintegral_arch_eq F κ (ρ g).toLinearMap (ω₀ g) (hω g) (hR g hg).2 μ hμ φ hφ⟩, fun l hl φ hφ => ?_, ?_⟩
   · unfold schA at hφ
     induction hφ using Submodule.span_induction with
     | mem x hx =>
       obtain ⟨f, h, hh, rfl⟩ := hx
-      obtain ⟨u, H, hu, hsplit⟩ := GlobalTheory.T.heisenbergRho_split_archimedean_finite F E σ α β κ ψ JA JB d w
-      obtain ⟨f₁, hf₁⟩ := GlobalTheory.T.heisenbergRho_archimedean_adelicPureTensor F E σ α β κ ψ JA JB d hψ u hu f
+      obtain ⟨u, H, hu, hsplit⟩ := _root_.GlobalTheory.HeisSplit.rho_split F E σ α β κ ψ JA JB d w
+      obtain ⟨f₁, hf₁⟩ := _root_.GlobalTheory.ArchHeisPure.rho_pureA F E σ α β κ ψ JA JB d hψ u hu f
       have e1 : d.rho ψ w (pureA F f h) = pureA F f₁ (H h) := by
         have := hsplit 1 h1m f f₁ h (by simpa only [hact1] using hf₁)
         simpa only [hact1] using this

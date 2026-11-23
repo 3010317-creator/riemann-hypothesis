@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AntiCols
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledVacuumLatticeStabilizerBigCellFactorizatiStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnipotentCornerIsUnitInertPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledVacuumLatticeStabilizerBigCellFactorizati
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnipotentCornerIsUnitInertPlace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -109,8 +109,8 @@ theorem mem_of_KD_diag_anti : ∀ (F E : Type) [Field F] [NumberField F] [Field 
       (∀ p ∈ GlobalTheory.DblVac.KD σ G.V v, p ∈ GlobalTheory.DblVac.PAnti σ G.V → p ∈ H) → ∀ g ∈ GlobalTheory.DblVac.KD σ G.V v, g ∈ H := by
   intro F E _ _ _ _ _ σ B a a' G X om om' hT v w hin _ H hD hA g hg
   have h2 : (2 : 𝓞 F) ∉ v.asIdeal := (hT.base.inert v w hin).1
-  obtain ⟨u, hu, huP, hdet, hlat⟩ := GlobalTheory.T.exists_unipotent_corner_isUnit_inertPlace F E σ B a (a - G.p) G.p G.V hT.base hT.geo.hV v w hin g hg
-  obtain ⟨p, q, hp, hpP, hq, hqA, hpq⟩ := GlobalTheory.T.doubledVacuumLatticeStabilizer_bigCell_factorization F E σ a G.V v h2 (g * u) (KD_mul hg hu) hdet hlat
+  obtain ⟨u, hu, huP, hdet, hlat⟩ := _root_.GlobalTheory.InertTransv.exists_unip_corner_isUnit F E σ B a (a - G.p) G.p G.V hT.base hT.geo.hV v w hin g hg
+  obtain ⟨p, q, hp, hpP, hq, hqA, hpq⟩ := _root_.GlobalTheory.DblVacFactor.factor F E σ a G.V v h2 (g * u) (KD_mul hg hu) hdet hlat
   have e : g = p * q * u⁻¹ := by rw [← hpq]; group
   rw [e]
   exact H.mul_mem (H.mul_mem (hD p hp hpP) (hA q hq hqA)) (hD _ (KD_inv hu) (PDiag_inv huP))

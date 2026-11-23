@@ -2,10 +2,17 @@ module
 
 public import ReciprocityTheory.ReductiveGroups.TraceFormulas.LatDefs
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HilbertClassFieldOfGlobalArtinReciprocityStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisAddHomVanishesComplexConjugationStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HilbertSubgroupLeKerOfKillsInertiaStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LengthAddMonoidHomFiniteGroupFractionQuotientLeStatement
+public import ReciprocityTheory.NeutralLocalFields.HilbertClassField
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HilbertClassFieldOfGlobalArtinReciprocity
+public import Formalism.ConjugateSelfDual.Statement
+public import Mathlib.NumberTheory.NumberField.InfinitePlace.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisAddHomVanishesComplexConjugation
+public import ReciprocityTheory.GaloisValuations.Global
+public import Mathlib.Topology.LocallyConstant.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HilbertSubgroupLeKerOfKillsInertia
+public import Formalism.CharacterColumnKernels.Statement
+public import Mathlib.NumberTheory.Padics.PadicIntegers
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LengthAddMonoidHomFiniteGroupFractionQuotientLe
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,7 +64,7 @@ open Neutral.HilbertClassField
 theorem vhE_of_globalArtinReciprocity (hA : GlobalTheory.Published.GlobalArtinReciprocity) : ReciprocityTheory.ChartRestriction.T2.VhE := by
   intro E Ω _ _ _ _ _ Av hAv l _ O _ _ _ _ _ hl M _ _ hM ρ hρ S hS hU
   obtain ⟨eM⟩ := hM
-  obtain ⟨art, hsurj, hker, -⟩ := GlobalTheory.T.hilbertClassField_of_globalArtinReciprocity hA E Ω
+  obtain ⟨art, hsurj, hker, -⟩ := _root_.GlobalTheory.Published.GlobalArtinReciprocity.hilbertClassField hA E Ω
 
   let ψ : (Additive (ClassGroup (𝓞 E)) →+ M) →ₗ[O] coZ1s ρ :=
     { toFun := fun f => ⟨fun g => f (Additive.ofMul (art g)), fun g h => by
@@ -83,7 +90,7 @@ theorem vhE_of_globalArtinReciprocity (hA : GlobalTheory.Published.GlobalArtinRe
       have := congrFun hw ⟨σ, hσ⟩
       simp only [coD0, resRep, LinearMap.coe_mk, AddHom.coe_mk] at this
       exact (show (z : G E Ω → M) σ = _ from this.symm).trans (by simp [hρ])
-    have hkill := GlobalTheory.T.hilbertSubgroup_le_ker_of_kills_inertia E Ω Av hAv M z hz hlc hI (fun c hc => GlobalTheory.T.galoisAddHom_vanishes_complexConjugation E Ω l O hl M z hz c hc)
+    have hkill := _root_.GlobalTheory.HilbertKill.hilbertSubgroup_le_ker E Ω Av hAv M z hz hlc hI (fun c hc => _root_.GlobalTheory.addHom_complexConjugation_eq_zero E Ω l O hl M z hz c hc)
     let zH : G E Ω →* Multiplicative M :=
       { toFun := fun g => Multiplicative.ofAdd ((z : G E Ω → M) g)
         map_one' := by
@@ -116,7 +123,7 @@ theorem vhE_of_globalArtinReciprocity (hA : GlobalTheory.Published.GlobalArtinRe
     _ ≤ Module.length O (Additive (ClassGroup (𝓞 E)) →+ M) :=
         Module.length_le_of_surjective Φ.rangeRestrict Φ.surjective_rangeRestrict
     _ ≤ _ := by
-        have := GlobalTheory.T.length_addMonoidHom_finite_group_fractionQuotient_le l O M eM (Additive (ClassGroup (𝓞 E)))
+        have := _root_.GlobalTheory.HomLen.length_addMonoidHom_le l O M eM (Additive (ClassGroup (𝓞 E)))
         rwa [show Nat.card (Additive (ClassGroup (𝓞 E))) = classNumber E from by
           rw [NumberField.classNumber, ← Nat.card_eq_fintype_card]; rfl] at this
 end GlobalTheory.UnramifiedClassBound

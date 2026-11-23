@@ -7,7 +7,8 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CompAtE
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPadicEquiv
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SGoodOfLevelShape
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SplitPlaceUnderFixedSplitPlace
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FixedVectorOfMemIsotypicComponentStatement
+public import Formalism.LocalToGlobal.GaloisLevelStructure.DefsAut
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FixedVectorOfMemIsotypicComponent
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GaloisFamilyPolarized
 public import Development.AutomorphicArithmetic.Foundations.LocalLanglands.Multi
 import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemSum
@@ -75,7 +76,7 @@ theorem sphAU_of_not_split_m_alt : ∀ (D : D7) (cf : CharFrame D) (jE : D.host.
     hy0 ((mlX M X i).real_inj (h0.trans (map_zero (mlX M X i).real).symm))
   have hT : (mlX M X i).real y ∈ NG.TypeSp (mlX M X i).wt.ρ (mlX M X i).J (mlX M X i).χ := by
     rw [← (mlX M X i).real_range]; exact LinearMap.mem_range_self _ _
-  obtain ⟨f, hfS, hf0, hfix⟩ := GlobalTheory.T.fixed_vector_of_mem_isotypic_component (mlX M X i).wt.ρ (F P)
+  obtain ⟨f, hfS, hf0, hfix⟩ := _root_.GlobalTheory.IsoFix.fixed_of_isoTyp (mlX M X i).wt.ρ (F P)
     {κ | κ ∈ Umax D.host.E D.R.nV ∧ TrivOutside {v} κ} (irr P) _ hy hry (by
       rintro κ ⟨hU, htr⟩
       have ht : TrivOutside (gPl D ∪ qPl D (tp.tup (D.what₂.muTw (X.nd.w i)) j))ᶜ κ := fun u hu =>

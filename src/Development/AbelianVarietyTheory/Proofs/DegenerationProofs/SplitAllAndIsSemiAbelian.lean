@@ -9,8 +9,8 @@ public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.Exi
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianSchemeProperClosureDataBasicProperties
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsDenseClosedPointsChartSplitting
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsSemiAbelianOfSplitAll
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SplitChartsTorusExtensionOverFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.WeightedProjectiveChartsSplitGenericPointStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SplitChartsTorusExtensionOverField
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.WeightedProjectiveChartsSplitGenericPoint
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -82,7 +82,7 @@ theorem exists_splitExt_of_split (K : Type) [Field K] (H : Over (Sp K)) [GrpObj 
     [IsSeparated H.hom] [QuasiCompact H.hom] (C : Charts H.left) (d : ℕ) (c : Fin d → C.Cl) (h : C.Split c) :
     ∃ E : SplitExt (Sp K), E.IsGt H := by
   obtain ⟨hc, i, hT⟩ := h
-  obtain ⟨B, gB, q, hB, hq, hf, hs, ha, hk, -⟩ := GlobalTheory.T.splitCharts_torus_extension_over_field K H C d c i hc hT
+  obtain ⟨B, gB, q, hB, hq, hf, hs, ha, hk, -⟩ := _root_.GlobalTheory.SplitChartsField.main K H C d c i hc hT
   exact GlobalTheory.exists_splitExt_isGt_of_torusExtension K H ⟨{
     X := Fin d → ℤ, B := B, grpB := gB, isAbelian := hB, i := i, q := q, i_hom := hT.hom, q_hom := hq,
     q_flat := hf, q_surjective := hs, q_quasiCompact := inferInstance, isKernel := hk }⟩
@@ -109,7 +109,7 @@ theorem splitAll_and_isSemiAbelian : ∀ (C : Core) (L : C.Law), C.HasTests → 
     have : IsAffineHom (pullback.fst ((Over.pullback t).obj C.GG).hom (Out.jK R)) :=
       isAffineHom_isStableUnderBaseChange.of_isPullback (IsPullback.of_hasPullback _ _).flip inferInstance
     obtain ⟨E, hE⟩ := exists_splitExt_of_split (FractionRing R) _ _ d _
-      (GlobalTheory.T.weightedProjectiveCharts_split_generic_point R ((Over.pullback t).obj C.GG) Ch d c Sg hd hS)
+      (_root_.GlobalTheory.ZJ.GenericSplit.split_generic R ((Over.pullback t).obj C.GG) Ch d c Sg hd hS)
     have : IsPreimmersion (Out.jK R) := IsPreimmersion.of_isLocalization (nonZeroDivisors R)
     obtain ⟨f, hf⟩ := exists_residue_factor (Out.jK R ≫ t) z (by
       rw [← ht]

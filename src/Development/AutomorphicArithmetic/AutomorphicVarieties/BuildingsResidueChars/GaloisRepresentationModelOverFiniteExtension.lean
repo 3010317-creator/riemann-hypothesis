@@ -3,7 +3,9 @@ module
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.WdDefs
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteDimensionalFilDR
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FontaineParameterInvariantUnderConjugationStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsPotentiallySemistableCoefficientFieldEnlargeStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.EqOfPowEqOneOfNormSubLt
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataN
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsPotentiallySemistableCoefficientFieldEnlarge
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PotSemistableParameterCoefficientFieldEnlargeStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -81,7 +83,7 @@ theorem UpperTheory.galois_representation_model_over_finite_extension :
       (IntermediateField.subset_adjoin _ _ (Set.mem_iUnion.2 ⟨i, _, ⟨s, rfl⟩, rfl⟩))
   obtain ⟨L, h₁, hχL⟩ := hL
   have hm₂ := hm₁.enlarge h₁
-  have hp₂ := GlobalTheory.T.isPotentiallySemistable_coefficientField_enlarge (Loc.PP l) Bw h₁ r₁ hp₁
+  have hp₂ := _root_.GlobalTheory.PstExt.isPst_enlarge (Loc.PP l) Bw h₁ r₁ hp₁
   have e₂ := GlobalTheory.T.potSemistableParameter_coefficientField_enlarge (Loc.PP l) ι Bw h hj h₁ r₁ hp₁
   generalize mapRep (IntermediateField.inclusion h₁).toRingHom r₁ = r₂ at hm₂ hp₂ e₂
   have er : ∀ s i j, (p * r (s : ↥(Dec (F := F) A)) * p⁻¹ : GL (Fin n) (Qbar l)) i j =

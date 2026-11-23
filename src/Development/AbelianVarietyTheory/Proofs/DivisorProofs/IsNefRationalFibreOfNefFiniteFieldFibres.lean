@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LineBundleGlobalSectionsDimCongrPicardClass
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NefFibOfIsNef
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsClosureCurveRationalFibreArithmeticSurfaceStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMemChart
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsClosedImmersionGenericPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsClosureCurveRationalFibreArithmeticSurface
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NefOfSemipositiveFibrewise
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalDegreePullbackEqReducedIntersectionNumbeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalDegreePullbackEqReducedIntersectionNumbe
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NefFibPullback
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -56,8 +58,8 @@ theorem GlobalTheory.GenNef.isNef_ratFibre : ∀ (k : Type) [CommRing k] (X : Sc
   haveI := hX.finite
   letI := GlobalTheory.algebraΓOfHom (Limits.pullback.snd (p ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom ℚ)))
   refine ⟨LB.isLB_pull L.isLB _, fun Z hZ => ?_⟩
-  obtain ⟨W, w, z, _, hW, hzw, hpb⟩ := GlobalTheory.T.exists_closure_curve_rationalFibre_arithmeticSurface k X p D hX Z hZ
-  have e := GlobalTheory.T.rationalDegree_pullback_eq_reducedIntersectionNumber k X p Z hZ W w z hW hzw hpb L.B L.isLB
+  obtain ⟨W, w, z, _, hW, hzw, hpb⟩ := _root_.GlobalTheory.CurveClosure.exists_closure_arith_surface_rat k X p D hX Z hZ
+  have e := _root_.GlobalTheory.RatFibreClosure.ratDeg_pull_eq_interNumRed k X p Z hZ W w z hW hzw hpb L.B L.isLB
   have h0 := NefGeneric.ratDeg_nonneg k W (w ≫ p) (L.pull w rfl) hW
     (ArInt.nefFib_pull k X W p (w ≫ p) hX.isProjOver hW.isProjOver w rfl L hL)
   change 0 ≤ ratDeg (w ≫ p) (L.B.pull w) at h0

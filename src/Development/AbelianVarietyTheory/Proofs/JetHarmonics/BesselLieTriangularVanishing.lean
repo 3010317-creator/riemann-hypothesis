@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.SumIoPrAlt
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DerivedActionDiscreteSeriesProperties
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExpMemUnipotentAndHasDerivAtCharacterStatement
+public import Formalism.HermitianCurvature.BesselNonvanishingReduction
+public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExpMemUnipotentAndHasDerivAtCharacter
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FrechetContinuousContinuousOnOrbitHasDerivAtStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -188,7 +190,7 @@ theorem on_real (hK : PI.KFinSmooth) {ε : Fin (2 * r + k + 1) → Bool} {mu : F
     l (PI.UpqRep.dsig (k := k) (r := r) R.σ X v) =
       (Formalism.QuantumDeterminants.ell k r z X - star (Formalism.QuantumDeterminants.ell k r z X)) • l v := by
   obtain ⟨hadd, hsmul, heq, hc⟩ := hl
-  obtain ⟨hN, hd⟩ := GlobalTheory.T.exp_mem_unipotent_and_hasDerivAt_character k r z X hz hX hP
+  obtain ⟨hN, hd⟩ := _root_.GlobalTheory.UnipotentExp.exp_mem_and_deriv k r z X hz hX hP
   have h1 := (GlobalTheory.T.frechetContinuous_continuousOn_orbit_hasDerivAt hK k r ε mu R hR Wp l hadd hsmul hc v hv).2 X hX
   have h2 := hd.smul_const (l v)
   have hone : (1 : Mx k r) ∈ Formalism.QuantumDeterminants.UWset k r z := by

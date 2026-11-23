@@ -3,10 +3,11 @@ module
 public import Formalism.SharpRestriction.GrowthBounds.FockGramWindow.InitialPointNumericBound
 public import Formalism.SharpRestriction.GrowthBounds.FockGramWindow.WinLvl
 public import Formalism.SharpRestriction.GrowthBounds.MonomialFactorials.IntegralityFromMetricOfOrthBasisLat
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.DiagRank
+public import Formalism.PeriodIntegrals.DiagRank
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.DiagonalRank.DetOneSubPNe
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.LatMin
-import Formalism.SharpRestriction.GrowthBounds.FockGramWindow.FirstCoefficientLeDiv
 public import Formalism.SharpRestriction.GrowthBounds.MonomialFactorials.ClosedOfMinimalVector
+import Formalism.SharpRestriction.GrowthBounds.FockGramWindow.FirstCoefficientLeDiv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,7 +65,7 @@ theorem restWinE_proved (D : Formalism.BasicNotions.D7) : RestWinE D := by
     (a_mem_win hS)
 
 theorem theorem_A_closed_form_holds (D : Formalism.BasicNotions.D7) : Formalism.MainNotions.flipOneThree.IntegralityFromMetricForLargeConstants D :=
-  closed_of_minimal_vector D PI.exists_minimalNormVector diagonal_rank_bound (restWinE_proved D)
+  closed_of_minimal_vector D PI.exists_minimalNormVector _root_.PI.UnitaryGroupMassFormula.DiagRank.diagRank (restWinE_proved D)
 
 end Formalism.MainNotions.G.GramWindowAlt
 

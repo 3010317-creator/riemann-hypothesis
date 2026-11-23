@@ -1,7 +1,8 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.RealDescent.RealLeviDescent.NoSecondTypeWeight
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CapelliClassificationOfActionStatement
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.RealDescent.RealLeviDescent.LeviCommutantWordReduction
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CapelliClassificationOfAction
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.RealDescent.RealLeviDescent.InjectiveDecompositionActionHolds
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.RealDescent.RealLeviDescent.MultForOfCapCls
 import Mathlib.Algebra.Order.Floor.Extended
@@ -46,6 +47,6 @@ import Mathlib.Topology.Sheaves.Init
 namespace PositivityTheory.RgBcC.RealD
 
 theorem multiplicity_formula_holds : MultFor :=
-  multFor_of_capCls (GlobalTheory.T.capelli_classification_of_action injective_decomposition_action_holds.2.2)
+  multFor_of_capCls (_root_.GlobalTheory.CompanionTheory.CapClsA.capCls_of_actUU injective_decomposition_action_holds.2.2)
 
 end PositivityTheory.RgBcC.RealD

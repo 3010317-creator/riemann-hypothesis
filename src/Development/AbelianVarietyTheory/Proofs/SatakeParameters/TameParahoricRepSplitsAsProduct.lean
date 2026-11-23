@@ -5,21 +5,25 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFor
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.ExistsCellOfIsSubquotient
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.UnlinkedProductIrreducible
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.DepthZeroJacquetInjective
-import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.NotInSupportOfSubsingleton
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIrreducibleSubquotientTwoBlockConstituentsStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsTorusEigenformOfCompactTorusEigenvectorStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemSupercuspidalSupportOfTorusJacquetEigenformStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ParahoricVectorTwoBlockProductExistsPermNeZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PrincipalSeriesAppendEquivParabolicProductStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalFactorsOfParahoricVectorTwoBlockProductStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ExistsReadingLaws
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIrreducibleSubquotientTwoBlockConstituents
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsSubquotientDetRepParInd
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsTorusEigenformOfCompactTorusEigenvector
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemSupercuspidalSupportOfTorusJacquetEigenform
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsCuspidalIffCompositions
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.IsParahoricVec
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ParahoricVectorTwoBlockProductExistsPermNeZero
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PrincipalSeriesAppendEquivParabolicProduct
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalFactorsOfParahoricVectorTwoBlockProduct
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalRepGLExistsSatakeParameters
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TameIwahoriEigenvectorJacquetQuotientNeZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TameIwahoriTorusCharVectorOfParahoricDetCharVectStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TameIwahoriVectorTwoBlockProductPermValueFirstStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TameIwahoriEigenvectorJacquetQuotientNeZero
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TameIwahoriTorusCharVectorOfParahoricDetCharVect
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TameIwahoriVectorTwoBlockProductPermValueFirst
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsInSupportOfMultiProd
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InSupportOfIsSubquotient
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.JordanHolderMultiplicityNormalizedBorelJacquetUn
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PrincipalSeriesSubquotientOfCharacters
+import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.NotInSupportOfSubsingleton
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.JordanHolderMultiplicityNormalizedBorelJacquetUn
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,7 +64,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsCuspidalIffCompositions
 
 @[expose] public section
 
@@ -87,14 +90,14 @@ theorem exists_prinSeries (hBZ : GlobalTheory.Published.BernsteinZelevinskyFinit
   have hl : HasFiniteLength (jacB π.π) :=
     (hasFiniteLength_comp_iff _ _ (leviTorus k (Fin n)).surjective).2
       ((hBZ k).2.1 _ _ _ (points (Fin n)) _ π.π π.smooth (hasFiniteLength_of_isIrreducible π.irr))
-  obtain ⟨ψ, l, hl0, hψ, hu⟩ := GlobalTheory.T.exists_torusEigenform_of_compactTorus_eigenvector k n _ (jacB π.π) (Submodule.Quotient.mk v) θ
-    (isSmooth_jacB π.smooth) hl hθ (GlobalTheory.T.tameIwahoriEigenvector_jacquetQuotient_ne_zero hD k n π v θ hv h) fun t ht => by
+  obtain ⟨ψ, l, hl0, hψ, hu⟩ := _root_.GlobalTheory.TorusEigenform.main k n _ (jacB π.π) (Submodule.Quotient.mk v) θ
+    (isSmooth_jacB π.smooth) hl hθ (_root_.GlobalTheory.TameIwahori.JacquetNonzero.jacquet_mk_ne_zero hD k n π v θ hv h) fun t ht => by
       rw [UnramFixed.jacB_apply, jacBU_mk, h.2 t ht]
       have : ((deltaHalf k fun _ : Fin n => Unit).comp (leviTorus k (Fin n)).toMonoidHom) t = 1 :=
         UnramFixed.deltaHalf_torusO k ht
       rw [this]
       simp
-  exact ⟨ψ, hu, GlobalTheory.T.mem_supercuspidalSupport_of_torus_jacquet_eigenform k n _ π.π ψ l hl0 hψ,
+  exact ⟨ψ, hu, _root_.GlobalTheory.EigenSupport.inSupport_of_torus_eigenform k n _ π.π ψ l hl0 hψ,
     SatakeExists.isSubquotient_of_eigenform π.smooth π.irr _ l hl0 hψ⟩
 
 theorem hasFiniteLength_prinSeries (hBZ : GlobalTheory.Published.BernsteinZelevinskyFiniteness) {n : ℕ}
@@ -155,7 +158,7 @@ theorem tameSplit : GlobalTheory.Published.BernsteinZelevinskyFiniteness → Glo
     induction i using Fin.addCases with
     | left i => simpa [θ] using isSmoothChar_one
     | right i => simpa [θ] using hχ
-  obtain ⟨ψ, hψθ, -, hsub⟩ := exists_prinSeries hBZ hD π hθ hv (GlobalTheory.T.tameIwahoriTorusCharVector_of_parahoricDetCharVector k r t χ _ π.π v htame hpar)
+  obtain ⟨ψ, hψθ, -, hsub⟩ := exists_prinSeries hBZ hD π hθ hv (_root_.GlobalTheory.TameParahoric.isIwVec_of_isParahoricVec k r t χ _ π.π v htame hpar)
   have hψ : ∀ i, IsSmoothChar (ψ i) := fun i => isSmoothChar_of_eq_on_units (hθ i) (hψθ i)
   let ψ₁ : Fin r → kˣ →* ℂˣ := fun i => ψ (Fin.castAdd t i)
   let ψ₂ : Fin t → kˣ →* ℂˣ := fun i => ψ (Fin.natAdd r i)
@@ -169,8 +172,8 @@ theorem tameSplit : GlobalTheory.Published.BernsteinZelevinskyFiniteness → Glo
       IsSubquotient σ₂.π (prinSeries ψ₂) ∧ IsSubquotient π.π (prod₂ σ₁.π σ₂.π) := by
     obtain ⟨V, _, _, A, ⟨φA⟩, sA, lA⟩ := exists_model hBZ (ψ := ψ₁) fun i => hψ _
     obtain ⟨W, _, _, B, ⟨φB⟩, sB, lB⟩ := exists_model hBZ (ψ := ψ₂) fun i => hψ _
-    obtain ⟨σ₁, σ₂, h₁, h₂, hπ⟩ := GlobalTheory.T.exists_irreducible_subquotient_twoBlockConstituents k r t _ _ _ π.π A B π.irr sA sB lA lB
-      (hsub.trans (GlobalTheory.T.prinSeries_append_isSubquotient_prod₂ k r t ψ₁ ψ₂ V W A B ⟨φA⟩ ⟨φB⟩))
+    obtain ⟨σ₁, σ₂, h₁, h₂, hπ⟩ := _root_.GlobalTheory.ParIndExact.exists_irr_isSubquotient_prod₂ k r t _ _ _ π.π A B π.irr sA sB lA lB
+      (hsub.trans (_root_.GlobalTheory.SmGL.PrinProd.prinSeries_append k r t ψ₁ ψ₂ V W A B ⟨φA⟩ ⟨φB⟩))
     exact ⟨σ₁, σ₂, h₁.trans (.of_injective φA.toIntertwiningMap φA.injective),
       h₂.trans (.of_injective φB.toIntertwiningMap φB.injective), hπ⟩
   have hirr : (prod₂ σ₁.π σ₂.π).IsIrreducible := by
@@ -194,8 +197,8 @@ theorem tameSplit : GlobalTheory.Published.BernsteinZelevinskyFiniteness → Glo
     have := φ.symm.toIntertwiningMap.isIntertwining _ _ h v
     rw [hpar h hh hl u hu, map_smul] at this
     exact this.symm
-  obtain ⟨w, hw⟩ := GlobalTheory.T.parahoricVector_twoBlockProduct_exists_perm_ne_zero k r t χ _ _ σ₁.π σ₂.π f hf0 hf
-  obtain ⟨s, y, hy0, hy⟩ := GlobalTheory.T.tameIwahoriVector_twoBlockProduct_perm_value_first k r t θ _ _ σ₁.π σ₂.π f w (GlobalTheory.T.tameIwahoriTorusCharVector_of_parahoricDetCharVector k r t χ _ _ f htame hf) hw
+  obtain ⟨w, hw⟩ := _root_.GlobalTheory.ParahoricPerm.exists_perm_ne_zero k r t χ _ _ σ₁.π σ₂.π f hf0 hf
+  obtain ⟨s, y, hy0, hy⟩ := _root_.GlobalTheory.TameIwahori.PermCell.exists_isIwVec_fst k r t θ _ _ σ₁.π σ₂.π f w (_root_.GlobalTheory.TameParahoric.isIwVec_of_isParahoricVec k r t χ _ _ f htame hf) hw
   obtain ⟨μ, hμ, hμs, -⟩ := exists_prinSeries hBZ hD σ₁ (fun i => hθ _) hy0 hy
   have hwP : GlobalTheory.Parabolic.permGL k w ∈ parab k (two (stdSum (rfl : r + t = r + t))) := by
     have key : ∀ (i : Fin r) (j : Fin t), Fin.castAdd t i ≠ w (Fin.natAdd r j) := fun i j hij => by
@@ -224,7 +227,7 @@ theorem tameSplit : GlobalTheory.Published.BernsteinZelevinskyFiniteness → Glo
     have := f.1.2 ⟨_, hwP⟩ 1
     rw [mul_one, h, map_zero] at this
     exact this)
-  obtain ⟨s₁, s₂⟩ := GlobalTheory.T.spherical_factors_of_parahoricVector_twoBlockProduct k r t χ _ _ σ₁.π σ₂.π f hf hf1
+  obtain ⟨s₁, s₂⟩ := _root_.GlobalTheory.ParahoricSph.isSpherical_of_isParahoricVec k r t χ _ _ σ₁.π σ₂.π f hf hf1
   refine ⟨σ₁, twistIrr σ₂ χ⁻¹ hχ.inv, s₁, s₂, ?_⟩
   have e : twist (twist σ₂.π (detChar (Fin t) χ⁻¹)) (detChar (Fin t) χ) = σ₂.π := by
     ext g x

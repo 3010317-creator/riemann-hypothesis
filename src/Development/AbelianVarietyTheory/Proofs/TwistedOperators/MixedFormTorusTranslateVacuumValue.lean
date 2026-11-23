@@ -1,11 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsPairingSingleNe
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SumOpTransversalStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CayleyUnitaryTorusInvDetIntegralOrderStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsHeisenbergInvariantLinearFormIsotropicVacuStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergQuotientOpSumVacuumCommensurableSelfDuStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsHeisTrivial
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SumOpTransversal
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CayleyUnitaryTorusInvDetIntegralOrder
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalThetaInertPlace
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsHeisenbergInvariantLinearFormIsotropicVacu
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergQuotientOpSumVacuumCommensurableSelfDu
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RelIndexIntegralMatricesUnitaryDiagonalTranslate
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemIntMat
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,9 +49,7 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalThetaInertPlace
 import Development.AbelianVarietyTheory.Definitions.Divisors.EqOfHasValueAtInfinite
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemIntMat
 
 @[expose] public section
 
@@ -172,7 +173,7 @@ theorem GlobalTheory.SphTheta.mixed_torus_value : ∀ (L : Type) [Field L] [Valu
   have hT : t.1.1 = Matrix.diagonal (fun i => ϖ ^ ex n' k i) := ht.trans (tMat_single ϖ n' k)
   have hΛ' := selfDual_map (n := n) (δ := δ) (ψ := ψ) t hΛ
   have hidx := idx_translate_ne (n := n) hU t _ hT
-  obtain ⟨e, he1, heinv⟩ := GlobalTheory.T.exists_heisenbergInvariant_linearForm_isotropic_vacuum hH _ hΛ s hS.2.1 hS.fixes hS.2.2.2 _ (fun a ha b hb => hH.iso hΛ ha hb)
+  obtain ⟨e, he1, heinv⟩ := _root_.GlobalTheory.SphTheta.exists_linearForm_invariant_isotropic_vacuum hH _ hΛ s hS.2.1 hS.fixes hS.2.2.2 _ (fun a ha b hb => hH.iso hΛ ha hb)
   have hv : Fixes ρ ((intMat L (Fin n') (Fin n)).map (lmulI t.1.1)) (ω (1, t) s) := by
     rintro _ ⟨y, hy, rfl⟩
     have h1 := congrArg (fun F : Module.End ℂ M => F s) (hS.1.norm 1 t y)
@@ -181,9 +182,9 @@ theorem GlobalTheory.SphTheta.mixed_torus_value : ∀ (L : Type) [Field L] [Valu
     simp at h1
     exact h1.symm
   have hsum : ℓ (sumOp ρ (intMat L (Fin n') (Fin n)) ((intMat L (Fin n') (Fin n)).map (lmulI t.1.1)) s) = 1 := by
-    obtain ⟨N, f, hf, hu⟩ := ((GlobalTheory.T.sumOp_transversal_fixes_linear_and_of_le hH _ _ hΛ').2.1 hidx).1
+    obtain ⟨N, f, hf, hu⟩ := ((_root_.GlobalTheory.FinWeil.sumOp_transversal hH _ _ hΛ').2.1 hidx).1
 
-    rw [((GlobalTheory.T.sumOp_transversal_fixes_linear_and_of_le hH _ _ hΛ').1 s hS.fixes (Fin N) f hf hu).1, map_sum]
+    rw [((_root_.GlobalTheory.FinWeil.sumOp_transversal hH _ _ hΛ').1 s hS.fixes (Fin N) f hf hu).1, map_sum]
     obtain ⟨i0, hi0, huniq⟩ := hu 0 (zero_mem _)
     have key : ∀ i, ℓ (ρ (f i) s) = if i = i0 then 1 else 0 := by
       intro i
@@ -200,10 +201,10 @@ theorem GlobalTheory.SphTheta.mixed_torus_value : ∀ (L : Type) [Field L] [Valu
         rintro ⟨a, ha, hxa⟩
         exact hfi (mem_of_mixLat hϖle k t hT (hf i) ha hxa)
     simp only [key, Finset.sum_ite_eq', Finset.mem_univ, if_true]
-  obtain ⟨hd, hint, hord⟩ := GlobalTheory.T.cayley_unitaryTorus_inv_det_integral_order L ϖ σ q hU hS.v_two n' k t ht
+  obtain ⟨hd, hint, hord⟩ := _root_.GlobalTheory.CayleyTorus.cayley_torus_inv L ϖ σ q hU hS.v_two n' k t ht
   have hev := hC e heinv t⁻¹ hd hint
   rw [inv_inv, hord, he1, mul_one] at hev
-  have hco := (GlobalTheory.T.heisenbergQuotientOpSum_vacuum_commensurable_selfDualLattice hH _ hΛ s hS.2.1 hS.fixes hS.2.2.2 _ hΛ' hidx).2 e he1 heinv _ hv
+  have hco := (_root_.GlobalTheory.SphTheta.sumOp_vacuum_lift hH _ hΛ s hS.2.1 hS.fixes hS.2.2.2 _ hΛ' hidx).2 e he1 heinv _ hv
   rw [hco, map_smul, hsum, smul_eq_mul, mul_one]
   simp only [MonoidHom.comp_apply, MonoidHom.inr_apply] at hev
   rw [hev, _root_.zpow_neg, zpow_one, mul_inv, _root_.zpow_neg, zpow_natCast, ← inv_pow, inv_neg, inv_one]

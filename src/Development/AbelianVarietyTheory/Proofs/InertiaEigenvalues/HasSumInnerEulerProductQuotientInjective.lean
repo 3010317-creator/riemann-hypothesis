@@ -2,7 +2,10 @@ module
 
 public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
 public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EulerOperatorInjectiveEigenvectorStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Normed.Operator.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EulerOperatorInjectiveEigenvector
+public import Mathlib.Analysis.InnerProductSpace.LinearMap
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +49,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.Analysis.InnerProductSpace.LinearMap
 
 @[expose] public section
 
@@ -163,7 +165,7 @@ theorem hasSum_inner_quotient_eulerProduct_injective : ∀ (Γ : Type) [Group Γ
     convert this using 1
     funext x
     rw [key]
-  obtain ⟨W, hW, hinj, -⟩ := GlobalTheory.T.eulerOperator_injective_eigenvector ι (fun v => Γ ⧸ K.comap (c v)) x0 H a' s B' Z h1 hs hs1 hfin
+  obtain ⟨W, hW, hinj, -⟩ := _root_.GlobalTheory.eulerOp_injective_eigen ι (fun v => Γ ⧸ K.comap (c v)) x0 H a' s B' Z h1 hs hs1 hfin
     hnorm hx0 hrec
   refine ⟨W, hinj, fun x y => ?_⟩
   have hW' := (Equiv.hasSum_iff e).mpr hW

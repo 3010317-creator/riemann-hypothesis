@@ -3,9 +3,13 @@ module
 public import Formalism.SharpRestriction.LevelLetterCocycles.EmbeddingTypes
 public import Formalism.GaloisCohomology.LocalTateDualityK
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodORingOfIntegers
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalH1fFiniteDimensionalStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PeriodDataCrystallineAdmissibleStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TwistedDualContinuousIntegralOverEnlargedCoeffStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.QuotientHomNonvanishingBound
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalH1fFiniteDimensional
+public import Formalism.SharpRestriction.LevelLetterCocycles.LocCoh
+public import Mathlib.RepresentationTheory.Invariants
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PeriodDataCrystallineAdmissible
+public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TwistedDualContinuousIntegralOverEnlargedCoeff
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,9 +62,9 @@ theorem ambient_h1f_of_local_finiteness : Formalism.GaloisCohomology.LocalFinite
   obtain ⟨⟨_, hdvr, hfr⟩, -⟩ := GlobalTheory.Pass.goodO_ringOfIntegers (D.nd.l i) C.LL
   haveI := hdvr
   haveI := hfr
-  have hcont := GlobalTheory.T.twistedDual_continuous_integral_over_enlarged_coeff D i w hw C.LL C.le ρ π hc
-  have hfin := GlobalTheory.T.local_h1f_finite_dimensional hLF (D.nd.l i) (D.loc (D.nd.l i)) (D.nbr i w hw).Kw C.LL D.R.r
+  have hcont := _root_.GlobalTheory.TwistedDualLoc.continuous_and_integral D i w hw C.LL C.le ρ π hc
+  have hfin := _root_.GlobalTheory.LocalH1Finiteness.finite_H1fV_matRep hLF (D.nd.l i) (D.loc (D.nd.l i)) (D.nbr i w hw).Kw C.LL D.R.r
     (TruncatedSeriesCountingIdentities.locC C (T2O D.nd i ρ π)) hcont.1 hcont.2
-  exact GlobalTheory.T.period_data_crystalline_admissible (Br.PD D.loc D.nbr i w hw) (O := ↥(OL C.LL)) L2 hfin n
+  exact _root_.GlobalTheory.length_H1fT_modPow_le (Br.PD D.loc D.nbr i w hw) (O := ↥(OL C.LL)) L2 hfin n
 
 end GlobalTheory.Pass

@@ -2,10 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.DenseOfDenseP
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaLevelAbelianSchemePullbackStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsIffOfThetaLevelPullbackStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsRingBaseChangeStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelPullbackIdCompCancelStatement
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.GoodClass
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaLevelAbelianSchemePullback
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsIffOfThetaLevelPullback
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsRingBaseChange
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelPullbackIdCompCancel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,17 +62,17 @@ theorem concl_map (hL : Out.Laws2) {o : Type} [CommRing o] {g N' : ℕ} {J : Typ
     Concl b Mat κ (ρ.comp β) (fun a => ρ (v a)) := by
   obtain ⟨t, hth, hall⟩ := h
   have hs : spMap ρ ≫ spMap β = spMap (ρ.comp β) := (spMap_comp ρ β).symm
-  obtain ⟨t₂, h₂⟩ := GlobalTheory.T.exists_thetaLevelAbelianScheme_pullback o g (N' ^ 2) J b (Sp R) (Sp R') (spMap β) (spMap (ρ.comp β)) (spMap ρ) t hs
+  obtain ⟨t₂, h₂⟩ := _root_.GlobalTheory.tObj_pull o g (N' ^ 2) J b (Sp R) (Sp R') (spMap β) (spMap (ρ.comp β)) (spMap ρ) t hs
   refine ⟨t₂, ?_, ?_⟩
-  · rw [GlobalTheory.T.hasThetaConstants_iff_of_thetaLevelPullback o g N' J b (Sp R) (spMap β) t (Sp R') (spMap (ρ.comp β)) t₂ (spMap ρ) R' (𝟙 _) _ h₂,
+  · rw [_root_.GlobalTheory.hasTh_iff_of_tmap o g N' J b (Sp R) (spMap β) t (Sp R') (spMap (ρ.comp β)) t₂ (spMap ρ) R' (𝟙 _) _ h₂,
       Category.id_comp]
-    have hpush := GlobalTheory.T.hasThetaConstants_ring_baseChange hL o g N' J b (Sp R) (spMap β) t R R' ρ (𝟙 _) v hth
+    have hpush := _root_.GlobalTheory.hasTh_baseChange hL o g N' J b (Sp R) (spMap β) t R R' ρ (𝟙 _) v hth
     rwa [Category.comp_id] at hpush
   · intro K _ _ x s t' hg
     rw [good_comp] at hg
     have h3 := hall K (x.comp ρ) s t' hg
     rw [spMap_comp] at h3
-    exact ((GlobalTheory.T.thetaLevelPullback_id_comp_cancel o g (N' ^ 2) J b (Sp R) (Sp R') (Sp K) (spMap β) (spMap (ρ.comp β)) s t t₂ t').2
+    exact ((_root_.GlobalTheory.ZM.tmap_id_comp_cancel o g (N' ^ 2) J b (Sp R) (Sp R') (Sp K) (spMap β) (spMap (ρ.comp β)) s t t₂ t').2
       (spMap ρ) (spMap x) h₂).2 h3
 
 theorem exists_loc_loc {R : Type} [CommRing R] (f : R) (q₁ : Ideal (Localization.Away f)) (hq : q₁.IsPrime)

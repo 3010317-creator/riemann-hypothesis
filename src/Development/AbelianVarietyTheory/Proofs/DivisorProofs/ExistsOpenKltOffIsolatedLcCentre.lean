@@ -2,10 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CentreAtOfIsAt
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict
-import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.IsFiniteLengthOfIsArtinianRingAnnihilator
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOpenInterEqSingletonOfNoGenerisation
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTopologicalKrullDimClosurePointLe
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenKawamataLogTerminalLocusLogCanonicalLocusStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsLogCanonicalMultipleCanonical
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenKawamataLogTerminalLocusLogCanonicalLocus
+import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.IsFiniteLengthOfIsArtinianRingAnnihilator
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,7 +59,7 @@ theorem GlobalTheory.PairStep.exists_open_lc_klt_off_point :
   intro hPr X _ _ _ p n hp hdim Γ m G x hm hlc hx hcut
   obtain ⟨hlcx, hnk, hdimz⟩ := hcut
   haveI : AlgebraicGeometry.IsNoetherian X := isNoetherian_of_isProjOver hp
-  have hopen := (GlobalTheory.T.isOpen_kawamataLogTerminalLocus_logCanonicalLocus hPr ℂ X p n hp hdim Γ m G hm hlc).1
+  have hopen := (_root_.GlobalTheory.Discrepancy.isOpen_kltLocus_lcLocus hPr ℂ X p n hp hdim Γ m G hm hlc).1
   set T : Set X := {y | ¬ KltAt p n Γ y} with hT
   have hTc : IsClosed T := by
     rw [← isOpen_compl_iff]

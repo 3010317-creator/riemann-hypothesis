@@ -6,12 +6,18 @@ public import Development.AutomorphicArithmetic.AutomorphicVarieties.Commutative
 public import Mathlib.RingTheory.AdicCompletion.Noetherian
 public import Development.AbelianVarietyTheory.Definitions.Foundations.ActWBOfInvariant
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CuspFunctionalValueModPrimePowUniqueOddWeightStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalBMemKummerInvariantSetStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsCuspFunctionalValueGalBEquivariantStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.Letter
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalBMemKummerInvariantSet
+public import Development.AbelianVarietyTheory.Definitions.Foundations.EeProd
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsCuspFunctionalValueGalBEquivariant
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaBasisLinearCombination
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.SiegelFixedPoints.IntCastEqZeroOfDvd
-import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.SiegelFixedPoints.WcocEdge0
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.SiegelFixedPoints.Witalg
+import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.SiegelFixedPoints.WcocEdge0
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -245,10 +251,10 @@ theorem UpperTheory.Kd.L.zcoc :
   have hmem : ∀ s z, bMid X l n m N bB s z ∈ X.B N l w := by
     intro s z
     refine Submodule.sum_mem _ fun y _ => ?_
-    exact GlobalTheory.T.galB_mem_kummer_invariant_set ε X ε.injective hj N l w hp.odd hp.five hcop hw _ _
+    exact _root_.GlobalTheory.KZ.StabGal.galB_mem_B ε X ε.injective hj N l w hp.odd hp.five hcop hw _ _
       (hB _ (shArg_mem_fixMu (topM l n m (N * N)) s y)).1
   refine ⟨hmem, fun χ hχ s t hs z φ₁ φ₂ φ₃ h₁ h₂ h₃ r => ?_⟩
-  have hg := GlobalTheory.T.isCuspFunctionalValue_galB_equivariant Ω ε X A N l n w s hA (fun x => (hs x).symm) _ (hmem t _) _ h₃
+  have hg := _root_.GlobalTheory.isThB_galB Ω ε X A N l n w s hA (fun x => (hs x).symm) _ (hmem t _) _ h₃
   obtain ⟨f₂, w₂, d₂⟩ := (isThB_iff X A N l n _ _).1 h₂
   obtain ⟨f₃, w₃, d₃⟩ := (isThB_iff X A N l n _ _).1 hg
   have hw' := (witalg ε X l N n hN1).1 _ _ _ _ w₂ w₃

@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupLawPointsCommMonoidSubstHomStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.FormalCoboundarySmul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupLawPointsCommMonoidSubstHom
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -67,7 +68,7 @@ theorem nmul_const (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) R) (hμ : IsL
   | zero => intro i; simp [nmul_zero']
   | succ n ih =>
     rw [nmul_succ']
-    exact (GlobalTheory.T.formalGroupLaw_points_commMonoid_subst_hom R d μ hμ (Fin d) (nmul μ n) (fun i => X i) (fun _ => 0) ih
+    exact (_root_.GlobalTheory.Katz.LawMonoid.mon R d μ hμ (Fin d) (nmul μ n) (fun i => X i) (fun _ => 0) ih
       (fun i => constantCoeff_X i) (fun _ => map_zero _)).1
 
 theorem nmul_add (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) R) (hμ : IsLaw μ) (m n : ℕ) :
@@ -75,17 +76,17 @@ theorem nmul_add (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) R) (hμ : IsLaw
   induction n with
   | zero =>
     rw [Nat.add_zero, nmul_zero']
-    exact ((GlobalTheory.T.formalGroupLaw_points_commMonoid_subst_hom R d μ hμ (Fin d) (nmul μ m) (fun _ => 0) (fun _ => 0)
+    exact ((_root_.GlobalTheory.Katz.LawMonoid.mon R d μ hμ (Fin d) (nmul μ m) (fun _ => 0) (fun _ => 0)
       (nmul_const μ hμ m) (fun _ => map_zero _) (fun _ => map_zero _)).2.2.2.1).symm
   | succ n ih =>
     rw [← Nat.add_assoc, nmul_succ', ih, nmul_succ']
-    exact (GlobalTheory.T.formalGroupLaw_points_commMonoid_subst_hom R d μ hμ (Fin d) (nmul μ m) (nmul μ n) (fun i => X i)
+    exact (_root_.GlobalTheory.Katz.LawMonoid.mon R d μ hμ (Fin d) (nmul μ m) (nmul μ n) (fun i => X i)
       (nmul_const μ hμ m) (nmul_const μ hμ n) (fun i => constantCoeff_X i)).2.1
 
 theorem nmul_one (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) R) (hμ : IsLaw μ) :
     nmul μ 1 = fun i => X i := by
   rw [nmul_succ', nmul_zero']
-  have h := GlobalTheory.T.formalGroupLaw_points_commMonoid_subst_hom R d μ hμ (Fin d) (fun i => X i) (fun _ => 0) (fun _ => 0)
+  have h := _root_.GlobalTheory.Katz.LawMonoid.mon R d μ hμ (Fin d) (fun i => X i) (fun _ => 0) (fun _ => 0)
     (fun i => constantCoeff_X i) (fun _ => map_zero _) (fun _ => map_zero _)
   rw [← h.2.2.1, h.2.2.2.1]
 
@@ -100,7 +101,7 @@ theorem nmul_mul (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) R) (hμ : IsLaw
   | succ m ih =>
     intro i
     rw [Nat.succ_mul, nmul_add μ hμ, nmul_succ']
-    rw [(GlobalTheory.T.formalGroupLaw_points_commMonoid_subst_hom R d μ hμ (Fin d) (nmul μ m) (fun i => X i) (fun _ => 0)
+    rw [(_root_.GlobalTheory.Katz.LawMonoid.mon R d μ hμ (Fin d) (nmul μ m) (fun i => X i) (fun _ => 0)
       (nmul_const μ hμ m) (fun i => constantCoeff_X i) (fun _ => map_zero _)).2.2.2.2
       (Fin d) (nmul μ n) (nmul_const μ hμ n) i]
     have e1 : (fun j => subst (nmul μ n) (nmul μ m j)) = nmul μ (m * n) := funext fun j => (ih j).symm

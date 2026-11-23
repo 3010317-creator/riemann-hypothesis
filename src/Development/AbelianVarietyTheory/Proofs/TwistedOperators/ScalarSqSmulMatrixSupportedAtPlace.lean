@@ -2,12 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiagonalFixingDoublingMatrix
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDiagOneNegOneConjAntidiagonalStabilizerMem
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiagonalFixingDoublingMatrixMemIntegralSiegelParStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiagonalFixingDoublingMulFirstFactorLagrangianAlStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DoubledFirstFactorMemDoubledLatticeStabilizerStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsAntiInvariantSignAdeleSplitPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NablaUnipotentMemIntegralDoubledUnipotentStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitDoublingTMatrixMulInverseEqOneStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiagonalFixingDoublingMatrixMemIntegralSiegelPar
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiagonalFixingDoublingMulFirstFactorLagrangianAl
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FromBlocksMem
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DoubledFirstFactorMemDoubledLatticeStabilizer
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMemKAt
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsAntiInvariantSignAdeleSplitPlace
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NablaUnipotentMemIntegralDoubledUnipotent
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitDoublingTMatrixMulInverseEqOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,10 +64,10 @@ theorem inlD_mem_closure_split : ∀ (F E : Type) [Field F] [NumberField F] [Fie
     ∀ (v : Pl (F := F)), Formalism.MainNotions.SchurIrreducible.IsSplit (E := E) v → PsiUnr B.ψ v → (2 : 𝓞 F) ∉ v.asIdeal →
     ∀ k ∈ GlobalTheory.InertSph.KAt σ G.W v, GlobalTheory.InertDbl.inlD σ G.W k ∈ Subgroup.closure (GlobalTheory.InertDbl.ParD σ G.W v ∪ GlobalTheory.InertDbl.NabD σ G.W v) := by
   intro F E _ _ _ _ _ σ B a a' G X om om' hTr v hsp _ h2 k hk
-  obtain ⟨c, hcσ, hcAt, hc2, hcL⟩ := GlobalTheory.T.exists_antiInvariant_sign_adele_splitPlace F E σ B hTr.base v hsp
-  obtain ⟨p, hp, hpm⟩ := GlobalTheory.T.exists_parD_matD_eq_diagonalFixingDoublingMatrix F E σ _ G.W v h2 c hcσ hcAt (hcL _ G.W)
-  obtain ⟨n, hn, hnm⟩ := GlobalTheory.T.nablaUnipotent_mem_integralDoubledUnipotent F E σ _ G.W v h2 c hcσ (hcL _ G.W) k hk
-  have hg := GlobalTheory.T.doubledFirstFactor_mem_doubledLatticeStabilizer F E σ _ G.W v k hk
+  obtain ⟨c, hcσ, hcAt, hc2, hcL⟩ := _root_.GlobalTheory.SplitSign.exists_split_sign F E σ B hTr.base v hsp
+  obtain ⟨p, hp, hpm⟩ := _root_.GlobalTheory.SplitDblPar.diagonalFixingDoublingMatrix_mem_integralSiegelParabolic F E σ _ G.W v h2 c hcσ hcAt (hcL _ G.W)
+  obtain ⟨n, hn, hnm⟩ := _root_.GlobalTheory.SplitDblNab.nMat_mem_NabD F E σ _ G.W v h2 c hcσ (hcL _ G.W) k hk
+  have hg := _root_.GlobalTheory.InertDbl.inlD_mem_KAtD F E σ _ G.W v k hk
   have hKK' : mat k * mat k⁻¹ = 1 := congrArg (fun g : UA σ G.W.J => g.1.1) (mul_inv_cancel k)
   have hK'K : mat k⁻¹ * mat k = 1 := congrArg (fun g : UA σ G.W.J => g.1.1) (inv_mul_cancel k)
   have hAtK : At (evFin F v) (mat k - 1) := hk.1
@@ -80,9 +82,9 @@ theorem inlD_mem_closure_split : ∀ (F E : Type) [Field F] [NumberField F] [Fie
     exact hc2 _ (fun u hu => by
       have h0 := congrFun (congrFun (hM u hu) i) j
       simpa using h0)
-  have ht := GlobalTheory.T.splitDoublingTMatrix_mul_inverse_eq_one F E _ c (mat k) (mat k⁻¹) hKK' (hc2M _ hAtK)
-  have ht' := GlobalTheory.T.splitDoublingTMatrix_mul_inverse_eq_one F E _ c (mat k⁻¹) (mat k) hK'K (hc2M _ hAtK')
-  have hid := GlobalTheory.T.diagonalFixingDoublingMatrix_mul_fromBlocks_mul_diagCols F E _ c (mat k) (mat k⁻¹) hKK' hK'K (hc2M _ hAtK)
+  have ht := _root_.GlobalTheory.SplitDblGen.tMat_mul_tMat_eq_one F E _ c (mat k) (mat k⁻¹) hKK' (hc2M _ hAtK)
+  have ht' := _root_.GlobalTheory.SplitDblGen.tMat_mul_tMat_eq_one F E _ c (mat k⁻¹) (mat k) hK'K (hc2M _ hAtK')
+  have hid := _root_.GlobalTheory.SplitDblGen.diagonalFixingDoubling_mul_firstFactor_lagrangian F E _ c (mat k) (mat k⁻¹) hKK' hK'K (hc2M _ hAtK)
   let T : GL (Fin (a + a')) (AE F E) := ⟨tMat c (mat k), tMat c (mat k⁻¹), ht, ht'⟩
   have hinv : GlobalTheory.InertDbl.matD n⁻¹ * GlobalTheory.InertDbl.matD n = 1 := GlobalTheory.DblVacFlip.matD_inv_mul n
   have hq : n⁻¹ * p * GlobalTheory.InertDbl.inlD σ G.W k ∈ GlobalTheory.InertDbl.ParD σ G.W v := by

@@ -2,12 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaEqB
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasArchimedeanCharExponentsConjOfHasInfExp
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixOneParameterGroupEqExpOfContinuousStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Normed.Algebra.Exponential
+public import Mathlib.Topology.Instances.Matrix
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixOneParameterGroupEqExpOfContinuous
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCompactAdele
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryActionAtRealPlace
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.EmbeddingXiZeroNeZero
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOneP
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MeasurePreservingMulRight
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryActionAtRealPlace
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.EmbeddingXiZeroNeZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -178,7 +181,7 @@ theorem GlobalTheory.KapXLineDec.line_dec : ∀ (D : D7) (θ : InfFam D) (X : HS
   have hNm : ∀ τ s t, N τ (s + t) = N τ s * N τ t := fun τ s t => by
     show infMat D.sp.cm.sig X.gram (θ τ) (h (s + t)) = _
     rw [hadd]; exact GlobalTheory.PointAtPlaceHom.infMat_mul X _ _ _
-  choose Y hY using fun τ => GlobalTheory.T.matrix_oneParameterGroup_eq_exp_of_continuous (N τ) (hNc τ) (hN0 τ) (hNm τ)
+  choose Y hY using fun τ => _root_.GlobalTheory.OneParamMatrix.eq_exp_of_continuous_oneParameter (N τ) (hNc τ) (hN0 τ) (hNm τ)
   have hYl : ∀ τ, Y τ ∈ lieAt X τ := fun τ =>
     lie_of _ _ fun t => (hY τ t) ▸ GlobalTheory.FockCompare.RealAction.infMat_mem_UH hθ X (h t) τ
   let L : List D.what₂.Tau := (Finset.univ : Finset D.what₂.Tau).toList

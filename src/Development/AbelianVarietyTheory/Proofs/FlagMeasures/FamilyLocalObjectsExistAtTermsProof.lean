@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.FamilyGroupSumFactorsWeightAmplitude
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsLocalObjectFamilyClassesDetermineRowsStatement
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FamDefs
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsLocalObjectFamilyClassesDetermineRows
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NonGenericFamilyClassesDetermineRowsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -66,6 +67,6 @@ theorem existFam : ExistFam := by
     show Gt t = 0
     simp [Gt, h0]
   have hrel : t₀.relevant := (GlobalTheory.T.nonGeneric_family_classes_determine_rows D X Y u u' hTie).2.2 t₀ hv
-  exact GlobalTheory.T.exists_localObjectFamily_classesDetermineRows D X Y u u' TS cls hG hrow t₀ ht₀ hrel
+  exact _root_.GlobalTheory.FamGen.exists_famTie D X Y u u' TS cls hG hrow t₀ ht₀ hrel
 
 end GlobalTheory.SnFam

@@ -4,9 +4,10 @@ public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentation
 public import Development.WeilBound.ThetaLifts.LatticeBasics.HypothesesE
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.EisensteinSeriesConvergenceBound
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.HeightFunctionContinuousPos
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.IsCompactStandardMaximalCompact
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EisensteinVerticalBound
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FlatSectionGrowthBoundStatement
+import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.IsCompactStandardMaximalCompact
+import Development.WeilBound.ThetaLifts.LatticeBasics.Hypotheses2
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FlatSectionGrowthBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,7 +64,7 @@ theorem eis_half_plane_k : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
   haveI := GlobalTheory.Doubling.isTopologicalRing_tens (F := F) (E := E) (R := AF F)
   obtain ⟨ac, a0⟩ := _root_.GlobalTheory.T.height_function_continuous_pos F E σ B n Y r s hB hn hY b K a hb hK ha
   have kc := _root_.GlobalTheory.T.isCompact_standard_maximal_compact F E σ B n Y r s hB hn hY b K a hb hK ha
-  obtain ⟨C, hC⟩ := GlobalTheory.T.flat_section_growth_bound K a kc ha a0 χ s₁ f hf
+  obtain ⟨C, hC⟩ := _root_.GlobalTheory.CompanionTheory.EisTerm.flat_norm_le_height_rpow K a kc ha a0 χ s₁ f hf
   obtain ⟨σ₀, hG⟩ := _root_.GlobalTheory.T.eisenstein_series_convergence_bound F E σ B n Y r s hB hn hY b K a hb hK ha
   obtain ⟨W, hW, h1W, hWa⟩ := exists_nhd_one kc ac ha a0
   refine ⟨σ₀ - n / 2, fun t Ê ht hE => ?_⟩

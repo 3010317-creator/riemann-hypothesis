@@ -2,18 +2,18 @@ module
 
 public import Development.WeilBound.RepresentationTheoryGL.GenericUnitaryGL.LeibnizOrders.LeibnizOrd
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AvgVanish
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AverageVanishesClosedCellStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AverageVanishesOpenCellStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ClosedEvaluationEquivariantStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ClosedEvaluationInducedStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ClosedEvaluationSurjectiveStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ClosedEvaluationVanishingOnOpenStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EvaluationMapsLinearStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MirabolicCellStructureDataStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OpenEvaluationEquivariantStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OpenEvaluationInducedStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OpenEvaluationSurjectiveStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AverageVanishesClosedCell
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AverageVanishesOpenCell
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ClosedEvaluationEquivariant
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ClosedEvaluationInduced
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ClosedEvaluationSurjective
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ClosedEvaluationVanishingOnOpen
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MirabolicCellStructureData
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OpenEvaluationEquivariant
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OpenEvaluationInduced
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OpenEvaluationSurjective
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwistedJacquetClosedOpenSequenceStatement
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EvaluationMapsLinear
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -167,8 +167,8 @@ theorem jO0_inj (ψ : AddChar k Circle) (τ : MRep k (i + 1)) (σ : GRep k (t + 
 def eCl (ψ : AddChar k Circle) (hψ : Continuous ψ) (τ : MRep k (i + 1)) (σ : GRep k (t + 1)) (hτ : IsSmooth τ.ρ)
     (hσ : IsSmooth σ.ρ) : XS τ σ →ₗ[ℂ] (Mir k ((i + 1) + t) → (psiN τ).V ⊗[ℂ] σ.V) where
   toFun f := eC ψ f
-  map_add' f g := (GlobalTheory.T.evaluation_maps_linear k i t ψ hψ τ σ hτ hσ f g 0).1
-  map_smul' c f := (GlobalTheory.T.evaluation_maps_linear k i t ψ hψ τ σ hτ hσ f f c).2.1
+  map_add' f g := (_root_.GlobalTheory.CompanionTheory.BZPhiPG.Lin.eC_eO_linear k i t ψ hψ τ σ hτ hσ f g 0).1
+  map_smul' c f := (_root_.GlobalTheory.CompanionTheory.BZPhiPG.Lin.eC_eO_linear k i t ψ hψ τ σ hτ hσ f f c).2.1
 
 def eOl (ψ : AddChar k Circle) (hψ : Continuous ψ) (τ : MRep k (i + 1)) (σ : GRep k (t + 1)) (hτ : IsSmooth τ.ρ)
     (hσ : IsSmooth σ.ρ) (hh : i + (t + 1) = (i + 1) + t) :
@@ -176,10 +176,10 @@ def eOl (ψ : AddChar k Circle) (hψ : Continuous ψ) (τ : MRep k (i + 1)) (σ 
   toFun f m := eO ψ f ((castM k hh).symm m)
   map_add' f g := by
     funext m
-    exact congrFun (GlobalTheory.T.evaluation_maps_linear k i t ψ hψ τ σ hτ hσ f g 0).2.2.1 _
+    exact congrFun (_root_.GlobalTheory.CompanionTheory.BZPhiPG.Lin.eC_eO_linear k i t ψ hψ τ σ hτ hσ f g 0).2.2.1 _
   map_smul' c f := by
     funext m
-    exact congrFun (GlobalTheory.T.evaluation_maps_linear k i t ψ hψ τ σ hτ hσ f f c).2.2.2 _
+    exact congrFun (_root_.GlobalTheory.CompanionTheory.BZPhiPG.Lin.eC_eO_linear k i t ψ hψ τ σ hτ hσ f f c).2.2.2 _
 
 theorem eOl_apply (ψ : AddChar k Circle) (hψ : Continuous ψ) (τ : MRep k (i + 1)) (σ : GRep k (t + 1)) (hτ : IsSmooth τ.ρ)
     (hσ : IsSmooth σ.ρ) (hh : i + (t + 1) = (i + 1) + t) (f : XS τ σ) (m : Mir k ((i + 1) + t)) :
@@ -217,7 +217,7 @@ theorem phiPG_core (ψ : AddChar k Circle) (hψ : Continuous ψ) (i t : ℕ) (τ
     (hτ : IsSmooth τ.ρ) (hσ : IsSmooth σ.ρ) :
     MExt (mcast (by omega : i + (t + 1) = (i + 1) + t) (RO ψ τ σ)) (phiN ψ (n := (i + 1) + t) (XR' τ σ)) (RC τ σ) := by
   have hh : i + (t + 1) = (i + 1) + t := by omega
-  obtain ⟨hUn, hθ, hCc, hHC, hCU, hdir⟩ := GlobalTheory.T.mirabolic_cell_structure_data k ψ hψ i t
+  obtain ⟨hUn, hθ, hCc, hHC, hCU, hdir⟩ := _root_.GlobalTheory.CompanionTheory.BZPhiPG.Grp.main k ψ hψ i t
   obtain ⟨e, he⟩ := mcast_spec hh (RO ψ τ σ)
   let jOl : (mcast hh (RO ψ τ σ)).V →ₗ[ℂ] (Mir k ((i + 1) + t) → (phiN ψ τ).V ⊗[ℂ] σ.V) :=
     mirabolicRestriction ψ τ σ hh ∘ₗ e.symm.toLinearMap
@@ -240,30 +240,30 @@ theorem phiPG_core (ψ : AddChar k Circle) (hψ : Continuous ψ) (i t : ℕ) (τ
     (RC τ σ).ρ (mcast hh (RO ψ τ σ)).ρ
     (rightReg ℂ _ _) (rightReg ℂ _ _) (jC τ σ) jOl (jC_inj τ σ) hjOl (fun m v => rfl) hjOe
     (eCl ψ hψ τ σ hτ hσ) (eOl ψ hψ τ σ hτ hσ hh)
-    (fun u f => GlobalTheory.T.closed_evaluation_equivariant k i t ψ hψ τ σ hτ hσ u f)
+    (fun u f => _root_.GlobalTheory.CompanionTheory.BZPhiPG.TwC.eC_tw k i t ψ hψ τ σ hτ hσ u f)
     (fun u f => by
       funext m
-      exact congrFun (GlobalTheory.T.open_evaluation_equivariant k i t ψ hψ τ σ hτ hσ u f) _)
+      exact congrFun (_root_.GlobalTheory.CompanionTheory.BZPhiPG.TwO.eO_cInd k i t ψ hψ τ σ hτ hσ u f) _)
     (fun m f => aC_eCl ψ hψ τ σ hτ hσ m f)
     (fun m f => aO_eOl ψ hψ τ σ hτ hσ hh m f)
     (fun f => by
-      obtain ⟨y, hy⟩ := GlobalTheory.T.closed_evaluation_induced k i t ψ hψ τ σ hτ hσ f
+      obtain ⟨y, hy⟩ := _root_.GlobalTheory.CompanionTheory.BZPhiPG.MemC.memC k i t ψ hψ τ σ hτ hσ f
       exact ⟨y, hy⟩)
     (fun f hf => by
-      obtain ⟨y, hy⟩ := GlobalTheory.T.open_evaluation_induced k i t ψ hψ τ σ hτ hσ f hf
+      obtain ⟨y, hy⟩ := _root_.GlobalTheory.CompanionTheory.BZPhiPG.MemO.eO_mem k i t ψ hψ τ σ hτ hσ f hf
       refine ⟨e y, ?_⟩
       funext m
       have e1 : e.symm (e y) = y := e.symm_apply_apply y
       exact (congrArg (fun z => mirabolicRestriction ψ τ σ hh z m) e1).trans (congrFun hy _))
-    (fun v => GlobalTheory.T.closed_evaluation_surjective k i t ψ hψ τ σ hτ hσ v)
+    (fun v => _root_.GlobalTheory.CompanionTheory.BZPhiPG.Onto.eC_onto k i t ψ hψ τ σ hτ hσ v)
     (fun v => by
-      obtain ⟨f, hf, hy⟩ := GlobalTheory.T.open_evaluation_surjective k i t ψ hψ τ σ hτ hσ (e.symm v)
+      obtain ⟨f, hf, hy⟩ := _root_.GlobalTheory.CompanionTheory.BZPhiPG.OntoO.onto k i t ψ hψ τ σ hτ hσ (e.symm v)
       refine ⟨f, hf, ?_⟩
       funext m
       exact congrFun hy _)
-    (fun f hf => GlobalTheory.T.closed_evaluation_vanishing_on_open k i t ψ τ σ hτ hσ f hf)
-    (fun f h0 p hp => GlobalTheory.T.average_vanishes_closed_cell k i t ψ hψ τ σ hτ hσ f h0 p hp)
-    (fun f h0 p hp => GlobalTheory.T.average_vanishes_open_cell k i t ψ hψ τ σ hτ hσ f (by
+    (fun f hf => _root_.GlobalTheory.CompanionTheory.BZPhiPG.eC_eq_zero_of_vanish k i t ψ τ σ hτ hσ f hf)
+    (fun f h0 p hp => _root_.GlobalTheory.CompanionTheory.BZPhiPG.LocC.avgVanish_of_mem_Cl k i t ψ hψ τ σ hτ hσ f h0 p hp)
+    (fun f h0 p hp => _root_.GlobalTheory.CompanionTheory.BZPhiPG.LocO.main k i t ψ hψ τ σ hτ hσ f (by
       funext m
       have := congrFun h0 (castM k hh m)
       rw [eOl_apply, MulEquiv.symm_apply_apply] at this

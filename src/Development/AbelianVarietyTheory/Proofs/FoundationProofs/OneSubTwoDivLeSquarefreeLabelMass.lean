@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.SamePartIffOfNeZero
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CardMonicSquarefreeUnitConstPolysGeStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemMonicSquarefreeUnitConstPolysIffMonicSquarefrStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SquarefreeLabelTorusCardBoundsAndMulStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CardMonicSquarefreeUnitConstPolysGe
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemMonicSquarefreeUnitConstPolysIffMonicSquarefr
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SquarefreeLabelTorusCardBoundsAndMul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,7 +62,7 @@ theorem one_sub_two_div_le_mass_true :
   have hpow : (0 : ℝ) < (g : ℝ) ^ N := pow_pos hg0 N
   have hterm : ∀ f ∈ sqSet g N, ((g : ℝ) ^ N)⁻¹ ≤ ((torusCard g f : ℝ))⁻¹ := by
     intro f hf
-    obtain ⟨h1, h2, -⟩ := (GlobalTheory.T.squarefreeLabelTorusCard_bounds_and_mul g).1 N f hf
+    obtain ⟨h1, h2, -⟩ := (_root_.GlobalTheory.BadShare.torusCard_bounds_mul g).1 N f hf
     have h1' : (0 : ℝ) < (torusCard g f : ℝ) := by exact_mod_cast h1
     have h2' : (torusCard g f : ℝ) ≤ (g : ℝ) ^ N := by exact_mod_cast h2
     exact inv_anti₀ h1' h2'
@@ -74,13 +74,13 @@ theorem one_sub_two_div_le_mass_true :
   refine le_trans ?_ hsum
   rcases Nat.eq_zero_or_pos N with rfl | hN
   · have h1 : (1 : (ZMod g)[X]) ∈ sqSet g 0 :=
-      (GlobalTheory.T.mem_monicSquarefreeUnitConstPolys_iff_monic_squarefree g 0 1).2 ⟨monic_one, natDegree_one, squarefree_one, by simp⟩
+      (_root_.GlobalTheory.BadShare.mem_sqSet_iff g 0 1).2 ⟨monic_one, natDegree_one, squarefree_one, by simp⟩
     have hc : (1 : ℝ) ≤ ((sqSet g 0).card : ℝ) := by
       exact_mod_cast Finset.card_pos.2 ⟨_, h1⟩
     have : (0 : ℝ) ≤ 2 / (g : ℝ) := by positivity
     simp only [pow_zero, inv_one, mul_one]
     linarith
-  · have hc := GlobalTheory.T.card_monicSquarefreeUnitConstPolys_ge g N hN
+  · have hc := _root_.GlobalTheory.BadShare.card_sqSet_ge g N hN
     obtain ⟨M, rfl⟩ : ∃ M, N = M + 1 := ⟨N - 1, by omega⟩
     rw [Nat.add_sub_cancel] at hc
     have he : 1 - 2 / (g : ℝ) = ((g : ℝ) ^ (M + 1) - 2 * (g : ℝ) ^ M) * ((g : ℝ) ^ (M + 1))⁻¹ := by

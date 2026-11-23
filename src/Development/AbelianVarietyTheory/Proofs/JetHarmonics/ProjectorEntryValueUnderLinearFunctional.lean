@@ -2,10 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.SumIoPr
 public import Formalism.HermitianCurvature.StatementQ
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BesselColumnStepsFunctionalEigenStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CapelliComatrixPicksSplitCasimirEigencomponentStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.GlRelationRowStepsFunctionalEigenStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.QuantumMinorBlockLinearMapIntertwineStatement
+public import Formalism.RealPlaceAnalysis.StatementE
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BesselColumnStepsFunctionalEigen
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CapelliComatrixPicksSplitCasimirEigencomponent
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.GlRelationRowStepsFunctionalEigen
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.QuantumMinorBlockLinearMapIntertwine
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -93,14 +94,14 @@ theorem capelli_projector_entry_value : ∀ (M Wp : Type) [NormedAddCommGroup M]
   have hblock : ∀ v, l (Formalism.REAL.qminor E (fun i : Fin k => (⟨r + i.val, by omega⟩ : Fin (2 * r + k + 1)))
       (fun i : Fin k => (⟨r + i.val, by omega⟩ : Fin (2 * r + k + 1))) (-(mu s : ℂ) + (k : ℂ) / 2) v) = N • l v := by
     intro v
-    rw [GlobalTheory.T.quantumMinor_block_linearMap_intertwine M Wp _ k E l _ Pop hinj hP, hW, hN]
+    rw [_root_.GlobalTheory.qminor_block_intertwine M Wp _ k E l _ Pop hinj hP, hW, hN]
     congr 1
     refine Finset.prod_congr rfl fun t _ => ?_
     ring
   have hcof : ∀ (v : M) (y : Fin (2 * r + k + 1) → Fin (2 * r + k + 1) → M), (∀ t, splitCas E (y t) = ((-mu t + (1 - (((2 * r + k + 1) : ℕ) : ℝ)) / 2 : ℝ) : ℂ) • y t) → ∑ t, y t = Pi.single (Fin.last (2 * r + k)) v → ∀ i : Fin (2 * r + k + 1),
       D • l (y s i) = ((-1 : ℂ) ^ (i.val + (2 * r + k))) • l (Formalism.REAL.qminor E (Fin.succAbove (Fin.last (2 * r + k))) (Fin.succAbove i) (-(mu s : ℂ) + ((2 * r + k : ℕ) : ℂ) / 2) v) := by
     intro v y hy hs i
-    have h := GlobalTheory.T.capelliComatrix_picks_splitCasimir_eigencomponent M (2 * r + k) E mu y hE hq hy s i
+    have h := _root_.GlobalTheory.comatrix_picks_eigencomponent M (2 * r + k) E mu y hE hq hy s i
     have hj : ∀ j, ∑ t, y t j = (Pi.single (Fin.last (2 * r + k)) v : Fin (2 * r + k + 1) → M) j := by
       intro j
       rw [← hs, Finset.sum_apply]
@@ -134,8 +135,8 @@ theorem capelli_projector_entry_value : ∀ (M Wp : Type) [NormedAddCommGroup M]
       rw [hs1, one_smul] at h
       rw [mul_smul, ← h, smul_smul, inv_mul_cancel₀ hD0, one_smul]
   · have hr1 : 1 ≤ r := by omega
-    obtain ⟨c1, hc1, h1⟩ := GlobalTheory.T.glRelation_row_steps_functional_eigen M Wp k r E l p τ hk hE hp hr1
-    obtain ⟨c2, hc2, h2⟩ := GlobalTheory.T.besselColumnSteps_functional_eigen M Wp k r E l p τ hk hE hp hr1
+    obtain ⟨c1, hc1, h1⟩ := _root_.GlobalTheory.RowChain.chain_rows M Wp k r E l p τ hk hE hp hr1
+    obtain ⟨c2, hc2, h2⟩ := _root_.GlobalTheory.qminor_column_chain M Wp k r E l p τ hk hE hp hr1
     refine ⟨D⁻¹ * ((-1 : ℂ) ^ (2 * r + k) * (c1 * (c2 * N))), ?_, ?_⟩
     · rw [norm_mul, norm_inv, norm_mul, norm_mul, norm_mul, hDn, hNn, if_neg hr, hc1, hc2, norm_pow]
       simp only [norm_neg, norm_one, one_pow]

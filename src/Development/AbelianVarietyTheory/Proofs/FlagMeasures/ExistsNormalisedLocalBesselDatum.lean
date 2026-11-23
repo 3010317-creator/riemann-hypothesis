@@ -1,10 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.Admissible
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HcTypeWContinuousUnitaryIrreducibleStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsTwoSidedHaarOfLeftInvariantProbabilityCompactUStatement
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.SettingConstruction
+public import Formalism.HermitianCurvature.StatementB
+public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HcTypeWContinuousUnitaryIrreducible
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsTwoSidedHaarOfLeftInvariantProbabilityCompact
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.UnipotentCoordinatesMeasurePreserving
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.OppositeWeylSubgroupClosed
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.SettingConstruction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -41,7 +44,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.OppositeWeylSubgroupClosed
 
 @[expose] public section
 
@@ -55,10 +57,10 @@ theorem exists_isStdOf (k r : ℕ) (L : Formalism.MainNotions.S.LocBessel k r) (
     ∃ Bs : B.RealPlaceData k r L.Wp L.Wq, IsStdOf L μsec Bs := by
   obtain ⟨μG, hμG⟩ := P.unitary_group_haar_exists k r
   obtain ⟨χ, hχs, hχsupp, hχint⟩ := P.character_exists_alt
-  have h1 := GlobalTheory.T.hcTypeW_continuous_unitary_irreducible k r L.z L.u L.Wp L.π L.hz.1 L.hz.2 L.hπ
-  have h1' := GlobalTheory.T.hcTypeW_continuous_unitary_irreducible k r L.z' L.u' L.Wq L.π' L.hz'.1 L.hz'.2 L.hπ'
-  have hW := GlobalTheory.T.isTwoSidedHaar_of_leftInvariant_probability_compactUnitary k r L.z L.μW L.hz.1 L.hz.2 L.hμW.1 L.hμW.2
-  have hW' := GlobalTheory.T.isTwoSidedHaar_of_leftInvariant_probability_compactUnitary k r L.z' L.μW' L.hz'.1 L.hz'.2 L.hμW'.1 L.hμW'.2
+  have h1 := _root_.GlobalTheory.ThA.hcType_rep k r L.z L.u L.Wp L.π L.hz.1 L.hz.2 L.hπ
+  have h1' := _root_.GlobalTheory.ThA.hcType_rep k r L.z' L.u' L.Wq L.π' L.hz'.1 L.hz'.2 L.hπ'
+  have hW := _root_.GlobalTheory.ThA.haarW_twoSided_of_left k r L.z L.μW L.hz.1 L.hz.2 L.hμW.1 L.hμW.2
+  have hW' := _root_.GlobalTheory.ThA.haarW_twoSided_of_left k r L.z' L.μW' L.hz'.1 L.hz'.2 L.hμW'.1 L.hμW'.2
   have hN := P.Dx2.MN.haar (k := k) r
   exact ⟨⟨L.z, L.z', L.π, L.π', μG, L.μW, D.muN k r, L.μW', μsec, χ, hk, L.hz.1, L.hz'.1, L.hz.2, L.hz'.2,
     h1.2.1, h1'.2.1, h1.2.2.2.1, h1'.2.2.2.1, h1.2.2.1, h1'.2.2.1, hμG, hW, hN, hW', hsec, hχs, hχsupp, hχint⟩,

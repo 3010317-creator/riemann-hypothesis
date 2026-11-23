@@ -1,6 +1,5 @@
 module
 
-import Formalism.LocalToGlobal.GlobalTheory.GL3.CubicFields.ComplexMultiplication.ExtEmbEquivComp
 public import Development.AbelianVarietyTheory.Definitions.Foundations.SgC
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasQIff
 public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
@@ -9,8 +8,14 @@ public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Mathlib.RingTheory.SimpleRing.Principal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasQExpansionOfLevelCoeffAndFunctionUnique
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SiegelUnitQExpansionCoefficientsStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SmoothedSiegelUnitCoeffGaloisLevelStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SiegelUnitQExpansionCoefficients
+public import Development.AbelianVarietyTheory.Definitions.Foundations.CthFac
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SmoothedSiegelUnitCoeffGaloisLevel
+public import Mathlib.FieldTheory.IsAlgClosed.Classification
+public import Mathlib.RingTheory.Algebraic.Cardinality
+public import Mathlib.RingTheory.Polynomial.Cyclotomic.Basic
+public import Mathlib.RingTheory.Polynomial.Cyclotomic.Roots
+import Formalism.LocalToGlobal.GlobalTheory.GL3.CubicFields.ComplexMultiplication.ExtEmbEquivComp
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -22,14 +27,12 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
-public import Mathlib.FieldTheory.IsAlgClosed.Classification
 import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
-public import Mathlib.RingTheory.Algebraic.Cardinality
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Basify
@@ -57,8 +60,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.RingTheory.Polynomial.Cyclotomic.Basic
-public import Mathlib.RingTheory.Polynomial.Cyclotomic.Roots
 
 @[expose] public section
 
@@ -214,9 +215,9 @@ theorem gal_siegel : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure �
     have e2 := eps_eOm ε (d / M)
     push_cast at e1 e2
     rw [← e1, hσ, hs, e2]
-  obtain ⟨k0, B, hB, hB'⟩ := GlobalTheory.T.smoothedSiegelUnit_coeff_galois_level c M a b d σ hM ha hσM h1 h2
-  obtain ⟨k1, A1, hA1, c1, z1⟩ := GlobalTheory.T.siegel_unit_q_expansion_coefficients Ω ε T c M a b hM ha h1
-  obtain ⟨k2, A2, hA2, c2, z2⟩ := GlobalTheory.T.siegel_unit_q_expansion_coefficients Ω ε T c M a (d * b) hM ha h2
+  obtain ⟨k0, B, hB, hB'⟩ := _root_.GlobalTheory.Sieg.sg_coeff_galois_int c M a b d σ hM ha hσM h1 h2
+  obtain ⟨k1, A1, hA1, c1, z1⟩ := _root_.GlobalTheory.KExp.siegel_exp Ω ε T c M a b hM ha h1
+  obtain ⟨k2, A2, hA2, c2, z2⟩ := _root_.GlobalTheory.KExp.siegel_exp Ω ε T c M a (d * b) hM ha h2
   have L1 := eq_lc hM c1 z1
   have L2 := eq_lc hM c2 z2
   have U1 := lc_unique hM hA1 hB

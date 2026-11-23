@@ -4,7 +4,9 @@ public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsCliff
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CliffordHighestWeightVector
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DiracKHolds
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParthasarathyRaoVaradarajanStatement
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.RealDescent.RealLeviDescent.IsCoreMod
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParthasarathyRaoVaradarajan
+public import Mathlib.Algebra.Order.Rearrangement
 import Formalism.RealPlaceAnalysis.RealPlaceTaylor.CasKHW
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -45,7 +47,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.Algebra.Order.Rearrangement
 
 @[expose] public section
 
@@ -260,7 +261,7 @@ theorem dirac_inequality_k_types : DiracInequalityWithoutSplitComponent := by
   have hνm : wtR m = ν := by
     funext a
     exact (hm a).symm
-  obtain ⟨ι, i1, i2, c, hcl, hconds⟩ := GlobalTheory.T.parthasarathy_rao_varadarajan n
+  obtain ⟨ι, i1, i2, c, hcl, hconds⟩ := _root_.GlobalTheory.CompanionTheory.SpinPRV.spin_parthasarathy_rao_varadarajan n
   have hK' : Formalism.REAL.KHighest (fun _ => true) (kF E1 E2) (wtR m) x := by rwa [hνm]
   obtain ⟨w, -, y, hy, hyh⟩ := hconds V (kF E1 E2) S m x hGl hc.pair.unitK hfd hKS hvS hx hK'
   have hn := dirac_ineq0 lam V E1 E2 σ hc ι c hcl _ y hy hyh

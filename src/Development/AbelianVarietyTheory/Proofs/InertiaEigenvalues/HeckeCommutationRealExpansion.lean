@@ -8,11 +8,17 @@ public import Formalism.LocalToGlobal.IndefiniteReal.ConcretePkgSpec
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AevalIntertwine
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ComplexHeckeConjugatePlacePeterssonAdjointStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsConjugateSplitPlaceOffStableSetStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodProjectorFormsIdempotentStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodProjectorFormsIdempotent
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HeckeOperatorsRationalFormsCommuteStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsKsFormOfAlgebraicFormsIsoStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LinearIndependentFormsIntermediateFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MinpolySeparableOfComplexNormalReadingStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.DoubleCosetOperators.RatDatOfReal
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsKsFormOfAlgebraicFormsIso
+public import Mathlib.Algebra.Algebra.Basic
+public import Mathlib.LinearAlgebra.LinearIndependent.Defs
+public import Mathlib.LinearAlgebra.TensorProduct.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LinearIndependentFormsIntermediateField
+public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
+public import Mathlib.FieldTheory.Separable
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MinpolySeparableOfComplexNormalReading
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -217,7 +223,7 @@ theorem hL_separable_good : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I
 
   have hfix : ∀ z ∈ V, goodProjW S ((i0 : ℕ) + 1) D.nexp.eLL0 (inWL S ((i0 : ℕ) + 1) z) = inWL S ((i0 : ℕ) + 1) z := by
     rintro _ ⟨y, rfl⟩
-    rw [inForms_goodProjector S _ hst hχ _ s hsupp y, ← Module.End.mul_apply, GlobalTheory.T.good_projector_forms_idempotent D S ((i0 : ℕ) + 1) i]
+    rw [inForms_goodProjector S _ hst hχ _ s hsupp y, ← Module.End.mul_apply, _root_.GlobalTheory.GoodSS.Idem.goodProjW_idem D S ((i0 : ℕ) + 1) i]
   have hT0w : ∀ z, inWL S ((i0 : ℕ) + 1) (T0 z) = H.hL ((i0 : ℕ) + 1) k P (inWL S ((i0 : ℕ) + 1) z) := fun z =>
     inWL_opK S _ _ _ z
   have hT0w' : ∀ z, inWL S ((i0 : ℕ) + 1) (T0' z) = H.hL ((i0 : ℕ) + 1) k P' (inWL S ((i0 : ℕ) + 1) z) := fun z =>
@@ -283,7 +289,7 @@ theorem hL_separable_good : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I
     rw [hSS', LinearMap.smul_apply, h2, smul_smul, mul_assoc, inv_mul_cancel₀ hc'0, mul_one]
   have hTT : ∀ z : ↥V, T (T' z) = T' (T z) := fun z => Subtype.ext (LinearMap.congr_fun hPQc z.1)
 
-  obtain ⟨nb, bs, hbs, -, hspan, hbLL, -⟩ := GlobalTheory.T.isKsForm_of_algebraicFormsIso _ _ (Y.fi i0) (hI i0).1
+  obtain ⟨nb, bs, hbs, -, hspan, hbLL, -⟩ := _root_.GlobalTheory.isKsForm_of_formsIso _ _ (Y.fi i0) (hI i0).1
   haveI : IsScalarTower S.Ks ↥D.LL0 D.what₂.LL := IsScalarTower.of_algebraMap_eq fun x => (S.kKs_spec x).symm
   haveI : Module.Finite S.Ks (FmK S ((i0 : ℕ) + 1)) := by
     have h := FiniteDimensional.span_of_finite S.Ks (Set.finite_range bs)
@@ -295,7 +301,7 @@ theorem hL_separable_good : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I
     have hx1 : LinearIndependent ↥D.LL0 (fun a => (x a : ↥D.LL0 ⊗[S.Ks] FmK S ((i0 : ℕ) + 1))) :=
       hx.map' V.subtype (Submodule.ker_subtype V)
     have hx2 : LinearIndependent D.what₂.LL (fun a => inWL S ((i0 : ℕ) + 1) (x a).1) :=
-      GlobalTheory.T.linearIndependent_forms_intermediate_field S.Ks ↥D.LL0 D.what₂.LL (S.WL ((i0 : ℕ) + 1)) (S.A ((i0 : ℕ) + 1)).WK nb bs hbs hspan hbLL
+      _root_.GlobalTheory.ksForm_tensor_linearIndependent S.Ks ↥D.LL0 D.what₂.LL (S.WL ((i0 : ℕ) + 1)) (S.A ((i0 : ℕ) + 1)).WK nb bs hbs hspan hbLL
         (inWL S ((i0 : ℕ) + 1)) (fun _ _ => rfl) n (fun a => (x a).1) hx1
     have hx3 : LinearIndependent D.what₂.LL (fun a => (Y.fi i0).e (inWL S ((i0 : ℕ) + 1) (x a).1)) :=
       hx2.map' (Y.fi i0).e.toLinearMap (LinearEquiv.ker _)
@@ -322,7 +328,7 @@ theorem hL_separable_good : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I
     intro u _ v _
     rw [hSS, hSS', LinearMap.smul_apply, LinearMap.smul_apply, inner_smul_left, inner_smul_right,
       hadj u v (S0 u) (S1 v) (hS0 u) (hS1 v)]
-  have hsep := GlobalTheory.T.minpoly_separable_of_complex_normal_reading ↥D.LL0 ↥V (Rl.HW i0 σ0).H φ jm T SS SS' hind (fun z => (hSj z).symm) hkeep hadj' hcomm
+  have hsep := _root_.GlobalTheory.NormalSeparable.minpoly_separable_of_normal ↥D.LL0 ↥V (Rl.HW i0 σ0).H φ jm T SS SS' hind (fun z => (hSj z).symm) hkeep hadj' hcomm
   refine ⟨minpoly ↥D.LL0 T, hsep, fun z hz => ?_⟩
   have h := aeval_map_of_comm V.subtype T T0 (fun _ => rfl) (minpoly ↥D.LL0 T) ⟨z, hz⟩
   rw [minpoly.aeval, LinearMap.zero_apply, map_zero] at h

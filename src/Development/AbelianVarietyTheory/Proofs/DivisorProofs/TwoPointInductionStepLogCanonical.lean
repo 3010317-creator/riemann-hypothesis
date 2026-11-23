@@ -3,15 +3,16 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CentreAtOfIsAt
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ExistsAlgClosedBaseChange
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLcCutPointOfNotLcOtherStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNonKltCentreOfNotKltAfterAddingStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmallAmpleThroughOffStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTopologicalKrullDimClosurePointLeStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLogEqnAddSmulIffOfOff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LcCutTwoClosedPointsOneCentreStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MultNsmulOfQadd
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLcCutPointOfNotLcOther
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNonKltCentreOfNotKltAfterAdding
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmallAmpleThroughOff
+public import Mathlib.AlgebraicGeometry.Scheme
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTopologicalKrullDimClosurePointLe
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LcCutTwoClosedPointsOneCentre
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NotKltAtOfIsNkltCentre
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NotLcAtAddOfIsNkltCentreStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NotLcAtAddOfIsNkltCentre
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLogEqnAddSmulIffOfOff
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MultNsmulOfQadd
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -131,12 +132,12 @@ theorem twoPoint_step : GlobalTheory.Published.Principalisation → GlobalTheory
     exact hz0 (topologicalKrullDim_closure_closedPt_le_zero hx)
   have hDq : IsQCart D := hD.isQCart
 
-  obtain ⟨w, hwz, hw⟩ := GlobalTheory.T.exists_nonKltCentre_of_not_klt_after_adding X p n hp hn Δ D z hDq (hklt z) hkz
+  obtain ⟨w, hwz, hw⟩ := _root_.GlobalTheory.PairStep.Centre.exists_isNkltCentre X p n hp hn Δ D z hDq (hklt z) hkz
   have hwx : w ⤳ x := hwz.trans hzx
   have hwne : w ≠ x := by
     rintro rfl
     exact hzne (eq_of_closedPt_specializes hx hwz)
-  obtain ⟨e, -, hdw, he1⟩ := GlobalTheory.T.exists_topologicalKrullDim_closure_point_le X n w hn
+  obtain ⟨e, -, hdw, he1⟩ := _root_.GlobalTheory.closure_point_topologicalKrullDim X n w hn
   have he1' : 1 ≤ e := he1 x hwx hwne.symm
   have hkw : ¬ KltAt p n (Δ + D) w :=
     not_kltAt_of_isNkltCentre X p n hp hn (Δ + D) w w hw (specializes_refl w)
@@ -148,12 +149,12 @@ theorem twoPoint_step : GlobalTheory.Published.Principalisation → GlobalTheory
   have hwN := hbig w (i + 1) (Or.inl hwx) he1' hdw
   by_cases hlx' : LcAt p n (Δ + D) x'
   ·
-    obtain ⟨w', hw'x', hw'⟩ := GlobalTheory.T.exists_nonKltCentre_of_not_klt_after_adding X p n hp hn Δ D x' hDq (hklt x') hnk
+    obtain ⟨w', hw'x', hw'⟩ := _root_.GlobalTheory.PairStep.Centre.exists_isNkltCentre X p n hp hn Δ D x' hDq (hklt x') hnk
     by_cases hw'x : w' ⤳ x
     ·
       have hkw' : ¬ KltAt p n (Δ + D) w' :=
         not_kltAt_of_isNkltCentre X p n hp hn (Δ + D) w' w' hw' (specializes_refl w')
-      obtain ⟨e', -, hdw', he1''⟩ := GlobalTheory.T.exists_topologicalKrullDim_closure_point_le X n w' hn
+      obtain ⟨e', -, hdw', he1''⟩ := _root_.GlobalTheory.closure_point_topologicalKrullDim X n w' hn
       have h1e' : 1 ≤ e' := by
         by_cases hxw : x = w'
         · refine he1'' x' hw'x' ?_
@@ -168,12 +169,12 @@ theorem twoPoint_step : GlobalTheory.Published.Principalisation → GlobalTheory
       have hw'N := hbig w' (i' + 1) (Or.inl hw'x) h1e' hdw'
       have hnum := two_mul_lt_pow_mul_of_le _ (h (i' + 1)) (h (i' + 1) + ε) _ (i' + 1) (by positivity)
         (hpos _) (by linarith) hw'N
-      obtain ⟨D', d', hd'0, hd'le, hD', hfin⟩ := GlobalTheory.T.lc_cut_two_closed_points_one_centre hP hNV hNef X p n hp hn Δ m G N D d
+      obtain ⟨D', d', hd'0, hd'le, hD', hfin⟩ := _root_.GlobalTheory.PairStep.logCanonicalCut_two_points hP hNV hNef X p n hp hn Δ m G N D d
         (h (i' + 1) + ε) x x' w' i' hΔ hklt hm hG hN hD hd hx hx' hlcx hlx' hw'x hw'x' (Or.inr hw')
         hdw' (by linarith [hpos (i' + 1)]) hnum.1
       exact ⟨i', D', d', by omega, hd'0, hd'le, hD', hfin⟩
     ·
-      obtain ⟨b, A, hb0, hbε, hA, hAx, hAw'⟩ := GlobalTheory.T.exists_small_ample_through_off' X p hp N x w' ε hN hw'x hε
+      obtain ⟨b, A, hb0, hbε, hA, hAx, hAw'⟩ := _root_.GlobalTheory.PairStep.exists_small_ample_through_off X p hp N x w' ε hN hw'x hε
       have hAq : IsQCart A := hA.isQCart
       have hsum : Δ + D + (1 : ℚ) • A = Δ + (D + A) := by
         rw [one_smul, add_assoc]
@@ -191,21 +192,21 @@ theorem twoPoint_step : GlobalTheory.Published.Principalisation → GlobalTheory
         rw [hsum] at h3
         exact h3.mpr hw
       have hnlc : ¬ LcAt p n (Δ + (D + A)) x' := by
-        have h4 := GlobalTheory.T.not_lcAt_add_of_isNkltCentre' X p n hp hn (Δ + D) A w' x' hw' hAq hAw' hw'x'
+        have h4 := _root_.GlobalTheory.PairStep.not_lcAt_add_of_isNkltCentre X p n hp hn (Δ + D) A w' x' hw' hAq hAw' hw'x'
         rw [add_assoc] at h4
         exact h4
       have hDA : QNum p N (d + b) (D + A) := qNum_add X p hp N d b D A hD hA
       have hnum := two_mul_lt_pow_mul_of_le _ (h (i + 1)) (h (i + 1) + ε - b) _ (i + 1) (by positivity)
         (hpos _) (by linarith) hwN
       obtain ⟨hlcx2, -, -⟩ := hcut'
-      obtain ⟨D', d', hd'0, hd'le, hD', hcutD', hnkD'⟩ := GlobalTheory.T.exists_lc_cut_point_of_not_lc_other hP hNV hNef X p n hp hn Δ m G
+      obtain ⟨D', d', hd'0, hd'le, hD', hcutD', hnkD'⟩ := _root_.GlobalTheory.PairStep.exists_lcCut_of_not_lcAt hP hNV hNef X p n hp hn Δ m G
         N (D + A) (d + b) (h (i + 1) + ε - b) x x' w i hΔ hklt hm hG hN hDA (by linarith) hx hlcx2
         hnlc hwx hw2 hdw (by linarith [hpos (i + 1)]) hnum.2
       exact ⟨i, D', d', by omega, hd'0, by linarith, hD', Or.inl ⟨hcutD', hnkD'⟩⟩
   ·
     have hnum := two_mul_lt_pow_mul_of_le _ (h (i + 1)) (h (i + 1) + ε) _ (i + 1) (by positivity)
       (hpos _) (by linarith) hwN
-    obtain ⟨D', d', hd'0, hd'le, hD', hcutD', hnkD'⟩ := GlobalTheory.T.exists_lc_cut_point_of_not_lc_other hP hNV hNef X p n hp hn Δ m G
+    obtain ⟨D', d', hd'0, hd'le, hD', hcutD', hnkD'⟩ := _root_.GlobalTheory.PairStep.exists_lcCut_of_not_lcAt hP hNV hNef X p n hp hn Δ m G
       N D d (h (i + 1) + ε) x x' w i hΔ hklt hm hG hN hD hd hx hlcx hlx' hwx hw hdw
       (by linarith [hpos (i + 1)]) hnum.2
     exact ⟨i, D', d', by omega, hd'0, hd'le, hD', Or.inl ⟨hcutD', hnkD'⟩⟩

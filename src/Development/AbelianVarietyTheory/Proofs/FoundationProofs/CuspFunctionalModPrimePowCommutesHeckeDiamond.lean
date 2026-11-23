@@ -12,12 +12,16 @@ public import Mathlib.RingTheory.HopfAlgebra.Basic
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeLetterPreservesBasisSet
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsThBActSgDDiamIff
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LogDerivQExpansionMulPrimePowCongr
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularFunctionTowerIntegralityStatement
+public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularTowerClassEqImpPowRatio
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularTowerRootOfInvariantTInvariant
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaLatticeDiamondActionStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaLatticeDiamondAction
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaOperatorHeckeTQEqUAddVTwistStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaOperatorUpperULCommuteScaleOneStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsRootOfIsAlgClosed
+public import Development.AbelianVarietyTheory.Definitions.Foundations.EeProd
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaOperatorUpperULCommuteScaleOne
+import Development.AbelianVarietyTheory.Definitions.Foundations.Letter
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularFunctionTowerIntegrality
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -93,7 +97,7 @@ theorem op_mem_B [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε)
     (hN : 1 ≤ N) (hlN : ¬ l ∣ N) (T : Letter) (hT : admitted N l T) (b : X.Fn l) (hb : b ∈ X.B N l w) :
     X.op N l T b ∈ X.B N l w := by
   obtain ⟨φ, h1, h2⟩ := hj
-  have hA := (GlobalTheory.T.modular_function_tower_integrality ε X ε.injective ⟨φ, h2, h1⟩ l).1
+  have hA := (_root_.GlobalTheory.KZ.kmap_A_stable ε X ε.injective ⟨φ, h2, h1⟩ l).1
   have hNl : Nat.Coprime N l :=
     Nat.coprime_comm.mp ((Nat.Prime.coprime_iff_not_dvd (Fact.out : l.Prime)).mpr hlN)
   have hle : X.B N l w ≤ (X.B N l w).comap (X.op N l T) :=
@@ -146,7 +150,7 @@ theorem GlobalTheory.CyclotomicQExpansion.thN_hecke : ∀ (Ω : Type) [Field Ω]
     fun e he c hc => stab (Letter.D e) he c hc
   have exL : ∀ (m e : ℕ), e.Coprime N → ∀ c : X.Fn l, c ∈ X.B N l w →
       IsThB X A N l m (X.act l (sgD N l e : Matrix (Fin 2) (Fin 2) ℤ) c) (thN X A N l m e c) ∧ IsLat 1 (thN X A N l m e c) :=
-    fun m e he c hc => GlobalTheory.T.theta_lattice_diamond_action Ω ε X A N l hj hl2 hlN (by omega) hlA m w e hw he c hc
+    fun m e he c hc => _root_.GlobalTheory.CyclotomicQExpansion.thN_isThB Ω ε X A N l hj hl2 hlN (by omega) hlA m w e hw he c hc
   have ex : ∀ (m e : ℕ), e.Coprime N → ∀ c : X.Fn l, c ∈ X.B N l w →
       IsThB X A N l m (X.act l (sgD N l e : Matrix (Fin 2) (Fin 2) ℤ) c) (thN X A N l m e c) :=
     fun m e he c hc => (exL m e he c hc).1
@@ -171,7 +175,7 @@ theorem GlobalTheory.CyclotomicQExpansion.thN_hecke : ∀ (Ω : Type) [Field Ω]
     have e1 := exL (n + 1) d hd b hb
     have h2 : IsThB X A N l n (X.act l (sgD N l d : Matrix (Fin 2) (Fin 2) ℤ) (X.heckeU l b))
         (uq l (thN X A N l (n + 1) d b)) :=
-      GlobalTheory.T.thetaOperator_upperU_l_commute_scale_one Ω ε X A N l n w d halg hj hl2 (by omega) hw hlA hd hlN b hb _ e1.2 e1.1
+      _root_.GlobalTheory.ThHeckeU.isThB_act_heckeU Ω ε X A N l n w d halg hj hl2 (by omega) hw hlA hd hlN b hb _ e1.2 e1.1
     exact uniq n _ (dB d hd _ hUb) _ _ (ex n d hd _ hUb) h2 r
   · intro a ha r
     have hDb : X.diam N l a b ∈ X.B N l w := stab (Letter.D a) ha b hb

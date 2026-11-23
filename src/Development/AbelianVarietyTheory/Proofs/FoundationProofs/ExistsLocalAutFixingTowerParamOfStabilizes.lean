@@ -8,12 +8,17 @@ public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AutomorphismExtensionUniform
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AutomorphismOnExtensionPointwise
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CompletedLaurentIsDVRStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCompletedLaurentQuotPrimeEquivLaurentFp
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FrobeniusPowerBasisIndependent
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FrobeniusPowerReductionCongruence
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LaurentSeriesAlgebraicConstant
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnramifiedIntegersAdicCompleteStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ValuationLeOneIffIsIntegralOfCompleteDvrStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NotCoboundaryConstantOne
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnramifiedIntegersAdicComplete
+public import Mathlib.Basic.NNReal.Defs
+public import Mathlib.RingTheory.Algebraic.Defs
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Mathlib.RingTheory.IntegralClosure.IsIntegral.Defs
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ValuationLeOneIffIsIntegralOfCompleteDvr
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCompletedLaurentQuotPrimeEquivLaurentFp
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -303,9 +308,9 @@ theorem exists_gal_fix_qq_of_stab {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlg
   obtain ⟨_, hdvr, hirr⟩ := completed_laurent_isDVR p
   haveI : IsAdicComplete (IsLocalRing.maximalIdeal (O0 p)) (O0 p) := by
     rw [hirr.maximalIdeal_eq]
-    exact GlobalTheory.T.unramified_integers_adic_complete p
+    exact _root_.GlobalTheory.K5.o0_isAdicComplete_span_p p
   haveI := h.alg
-  obtain ⟨v, hv⟩ := GlobalTheory.T.exists_valuation_le_one_iff_isIntegral_of_complete_dvr (O0 p) Ωl h.inj
+  obtain ⟨v, hv⟩ := _root_.GlobalTheory.valuation_le_one_iff_isIntegral_of_complete_dvr (O0 p) Ωl h.inj
   have h1 : v (p : Ωl) < 1 := by
     haveI := Basic.charZero_of_isClo h
     have hle : v (p : Ωl) ≤ 1 := by

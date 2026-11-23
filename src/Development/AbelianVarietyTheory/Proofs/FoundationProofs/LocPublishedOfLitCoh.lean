@@ -5,10 +5,10 @@ public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.LocalPublishedTheorems
 public import Mathlib.RingTheory.AdicCompletion.Noetherian
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.BlochKatoCocycleUnramifiedAndGreenbergOrdinaryStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OrdinarySelmerDualVanishesOfStrictStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OrdinarySelmerVanishesOfDualVanishesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.StrictVanishingDualOfLiteratureStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.BlochKatoCocycleUnramifiedAndGreenbergOrdinary
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OrdinarySelmerDualVanishesOfStrict
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OrdinarySelmerVanishesOfDualVanishes
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.StrictVanishingDualOfLiterature
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,10 +55,10 @@ theorem localGaloisCohomology_of_galoisCohomology (h : GlobalTheory.Mem.LiteralA
 theorem es_vanish : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω]
     (e : ℕ) (S : Finset Pl) (A : ValuationSubring Ω) (W : R2 Ω l), Nf e S A W → ES W A → BlochKatoSelmerVanishes l (Loc.colRep W) := by
   intro hLit l _ Ω _ _ _ e S A W hNf hES c hc hBK
-  have hStr : StrZero (dual1 W) A := GlobalTheory.T.strict_vanishing_dual_of_literature hLit l Ω e S A W hNf hES
-  have hGrD : GrZero (dual1 W) A := GlobalTheory.T.ordinarySelmer_dual_vanishes_of_strict hLit l Ω e S A W hNf hES hStr
-  have hGr : GrZero W A := GlobalTheory.T.ordinarySelmer_vanishes_of_dual_vanishes hLit l Ω e S A W hNf hGrD
-  obtain ⟨hU, hG⟩ := GlobalTheory.T.blochKato_cocycle_unramified_and_greenbergOrdinary (localGaloisCohomology_of_galoisCohomology hLit) l Ω e S A W hNf c hc hBK
+  have hStr : StrZero (dual1 W) A := _root_.GlobalTheory.Ord2.StrictKill.main hLit l Ω e S A W hNf hES
+  have hGrD : GrZero (dual1 W) A := _root_.GlobalTheory.Ord2.Upgrade.upgrade hLit l Ω e S A W hNf hES hStr
+  have hGr : GrZero W A := _root_.GlobalTheory.Ord2.grZero_of_grZero_dual1 hLit l Ω e S A W hNf hGrD
+  obtain ⟨hU, hG⟩ := _root_.GlobalTheory.Ord2.bk_unr_gr (localGaloisCohomology_of_galoisCohomology hLit) l Ω e S A W hNf c hc hBK
   exact hGr c hc hU hG
 
 end GlobalTheory.Ord2

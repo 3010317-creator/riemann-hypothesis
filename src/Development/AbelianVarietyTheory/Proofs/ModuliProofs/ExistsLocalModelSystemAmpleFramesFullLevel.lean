@@ -6,7 +6,9 @@ public import Development.AbelianVarietyTheory.Definitions.Degenerations.HomExtS
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CoefficientFieldIntegersDedekindFractionField
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CoprimeLevel
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsBaseModelSemiAbelianStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GtBaseChangeSt
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.AuxiliaryInertOddPrime
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsBaseModelSemiAbelian
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsModelRaises
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PrimeToPartLevelExistsUniqueMono
 import Mathlib.Algebra.Order.Floor.Extended
@@ -66,7 +68,7 @@ theorem exists_system_ampFrames : GlobalTheory.LN.HomExtSt → Out.Laws → Out.
   have aux : ∀ i, AuxiliaryInertOddPrime H (n i) := fun i => by cases i <;> assumption
   choose J k T hJ hamp using fun i => htop E H D hpq Xo (n i) (aux i)
   let B : ∀ i (l₀ : Level H), l₀.A = 1 → BaseModel (T i) l₀ := fun i l₀ h =>
-    (GlobalTheory.T.exists_base_model_semiAbelian hx h1 h2 h3 E H D Xo hpq hN (n i) (J i) (T i) l₀ (aux i) (hJ i) h).some
+    (_root_.GlobalTheory.BaseModelEx.exists_baseModel hx h1 h2 h3 E H D Xo hpq hN (n i) (J i) (T i) l₀ (aux i) (hJ i) h).some
   let ch : ℕ → Bool := fun p => decide (n₀ = p)
   have ch_ne : ∀ p, n (ch p) ≠ p := by
     intro p

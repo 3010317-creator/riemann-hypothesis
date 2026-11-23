@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRatioOfWeight
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramDeterminantJensenChangeOfWeightStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramPosDefL2LeSupOfLinIndepStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RaiseFirstWeightSectionsLociValuesNormsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TendstoBergmanMeasureChernFormPowStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramDeterminantJensenChangeOfWeight
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramPosDefL2LeSupOfLinIndep
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RaiseFirstWeightSectionsLociValuesNorms
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TendstoBergmanMeasureChernFormPow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,12 +60,12 @@ theorem gram_det_up_le : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegra
   have hcomp : ∀ σ, CompactSpace (CxPts p σ) := hX.compactSpace
   have hcont : ∀ σ, Continuous (u.u σ) := fun σ =>
     continuous_iff_continuousAt.2 fun y => (u.cInf σ y).continuousAt
-  have hT := GlobalTheory.T.tendsto_bergmanMeasure_chernForm_pow k X p D hX hG P hL ω r f hf hli hr u.u hcont
+  have hT := _root_.GlobalTheory.HSAmp.tendsto_finsum_integral_berg k X p D hX hG P hL ω r f hf hli hr u.u hcont
   have hev : ∀ᶠ m : ℕ in atTop, (∑ᶠ σ, ∫ y, u.u σ y * bergmanDensity (fun σ => (ω σ).meas) (vals P m 1 (f m)) σ y ∂(ω σ).meas)
       / (m : ℝ) ^ D < chInt P.L D u.u / D.factorial + ε :=
     hT (Iio_mem_nhds (by linarith))
   filter_upwards [hev, eventually_ge_atTop 1] with m hm hm1
-  obtain ⟨hF, hPD, -⟩ := GlobalTheory.T.gram_posDef_l2_le_sup_of_lin_indep k X p D hX hG P ω m 1 (Fin (r m)) (f m) (hf m) (hli m)
+  obtain ⟨hF, hPD, -⟩ := _root_.GlobalTheory.HSAmp.gram_posDef_and_l2_le_sup_bound k X p D hX hG P ω m 1 (Fin (r m)) (f m) (hf m) (hli m)
   haveI : Finite (k →+* ℂ) := hF.finite
   haveI : Fintype (k →+* ℂ) := Fintype.ofFinite _
   have hB : ∀ σ, ∃ C : ℝ, ∀ y, |u.u σ y| ≤ C := fun σ => by
@@ -79,13 +79,13 @@ theorem gram_det_up_le : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegra
     refine mul_le_mul_of_nonneg_left ?_ (Nat.cast_nonneg m)
     exact (hC σ y).trans ((le_abs_self _).trans
       (Finset.single_le_sum (f := fun τ => |C τ|) (fun τ _ => abs_nonneg _) (Finset.mem_univ σ)))
-  obtain ⟨-, -, hJ⟩ := GlobalTheory.T.gramDeterminant_jensen_change_of_weight (k →+* ℂ) (fun σ => CxPts p σ) (Fin (r m)) (fun σ => (ω σ).meas)
+  obtain ⟨-, -, hJ⟩ := _root_.GlobalTheory.GramJensen.gram_det_jensen (k →+* ℂ) (fun σ => CxPts p σ) (Fin (r m)) (fun σ => (ω σ).meas)
     (vals P m 1 (f m)) hF hPD w _ hwm hwb
   have hnew : (fun σ y i => vals P m 1 (f m) σ y i * ((Real.exp (-(w σ y) / 2) : ℝ) : ℂ))
       = vals (upperParabolic P u) m 1 (f m) := by
     funext σ y i
     simp only [vals, hw]
-    rw [((GlobalTheory.T.raiseFirstWeight_sections_loci_values_norms k X p P u m 1).2.2 σ y (f m i)).1]
+    rw [((_root_.GlobalTheory.HSAmp.upAtPrime_groups_values_norms k X p P u m 1).2.2 σ y (f m i)).1]
   rw [hnew] at hJ
   have hsum : (∑ᶠ σ, ∫ y, w σ y * bergmanDensity (fun σ => (ω σ).meas) (vals P m 1 (f m)) σ y ∂(ω σ).meas)
       = (m : ℝ) * ∑ᶠ σ, ∫ y, u.u σ y * bergmanDensity (fun σ => (ω σ).meas) (vals P m 1 (f m)) σ y ∂(ω σ).meas := by

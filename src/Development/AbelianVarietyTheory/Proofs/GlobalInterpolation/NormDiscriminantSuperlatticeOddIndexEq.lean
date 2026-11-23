@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.CmLatticeCommutatorPairingPowEqOneOfGoodLift
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.WeierstrassPSuperlatticeHalfPeriodProdStatement
+public import Mathlib.Analysis.SpecialFunctions.Elliptic.Weierstrass
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.WeierstrassPSuperlatticeHalfPeriodProd
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MulPowTwoLeTripleProdOfGe
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -251,7 +252,7 @@ theorem key (M : Mdl q) (L' : PeriodPair) (N : ℕ) (hOk : M.Ok) (hc : Nat.Copri
       apply hd
       have h' := neg_mem (hLL h)
       convert h' using 1; ring
-  have hprod := GlobalTheory.T.weierstrassP_superlattice_half_period_prod M.L L' T w hLL T1 T2 T3 hw2 hw w' hw'
+  have hprod := _root_.GlobalTheory.HalfPeriodProduct.wp_half_period_prod M.L L' T w hLL T1 T2 T3 hw2 hw w' hw'
   have hn := congrArg (fun z => ‖M.ι z‖) hprod
   simp only [map_mul, map_prod, norm_mul, norm_prod] at hn
   rw [Finset.prod_congr rfl hA, Finset.prod_congr rfl hB, hC, Finset.prod_const] at hn

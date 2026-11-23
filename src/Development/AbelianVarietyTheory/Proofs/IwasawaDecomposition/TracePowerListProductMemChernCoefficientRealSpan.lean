@@ -1,12 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SumSumEqSumPair
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CharpolyRevNegFinSumBlockDiagonalMatrixStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsPolyRepCombinationPurePowerTraceStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PolynomialMatrixFamilyRepLieDirectSumStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PolynomialMatrixFamilyRepLieTensorProductStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TracePowEqSumSmulCoeffCharpolyRevPowStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TracePowFinProdKroneckerAddBinomialStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CharpolyRevNegFinSumBlockDiagonalMatrix
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsPolyRepCombinationPurePowerTrace
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PolynomialMatrixFamilyRepLieDirectSum
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TracePowEqSumSmulCoeffCharpolyRevPow
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TracePowFinProdKroneckerAddBinomial
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PolynomialMatrixFamilyRepLieTensorProduct
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -68,8 +70,8 @@ theorem charpolyRev_neg_lie_nsum (ρ : PolyRep m) (k : ℕ) {S : Type} [CommRing
     haveI : IsEmpty (Fin (ρ.nsum 0).M) := inferInstanceAs (IsEmpty (Fin 0))
     exact Matrix.det_isEmpty
   | succ k ih =>
-    rw [pow_succ, ← ih, ← GlobalTheory.T.charpolyRev_neg_finSumBlockDiagonalMatrix]
-    exact congrArg (fun L => Matrix.charpolyRev (-L)) (GlobalTheory.T.polynomialMatrixFamilyRep_lie_directSum (ρ.nsum k) ρ A)
+    rw [pow_succ, ← ih, ← _root_.GlobalTheory.GoodMetric.ChernSpan.charpolyRev_neg_blockSum]
+    exact congrArg (fun L => Matrix.charpolyRev (-L)) (_root_.GlobalTheory.GoodMetric.PolyRep.lie_sum (ρ.nsum k) ρ A)
 
 theorem chern_mem_reach (n : ℕ) (S : Type) [CommRing S] [Algebra ℝ S] (ρ : PolyRep m) :
     (fun A : Mat m S => (Matrix.charpolyRev (-(ρ.lie A))).coeff n) ∈ Reach m n S :=
@@ -84,7 +86,7 @@ theorem ptr_mem_reach (n : ℕ) (S : Type) [CommRing S] [Algebra ℝ S] (ρ : Po
     have h0 : (Matrix.charpolyRev (-(ρ.lie A))).coeff 0 = 1 := by
       rw [Polynomial.coeff_zero_eq_eval_zero, Matrix.eval_charpolyRev]
     simp [PolyRep.ptr, h0, Algebra.smul_def]
-  · obtain ⟨c, hc⟩ := GlobalTheory.T.exists_trace_pow_eq_sum_smul_coeff_charpolyRev n hn
+  · obtain ⟨c, hc⟩ := _root_.GlobalTheory.trace_pow_eq_sum_smul_coeff_charpolyRev_pow n hn
     have h := (Reach m n S).sum_mem (t := Finset.range (n + 1))
       (fun k _ => (Reach m n S).smul_mem (c k) (chern_mem_reach n S (ρ.nsum k)))
     convert h using 1
@@ -97,8 +99,8 @@ theorem ptr_tensor (ρ σ : PolyRep m) (N : ℕ) {S : Type} [CommRing S] (A : Ma
     (ρ.tensor σ).ptr N A =
       ∑ a ∈ Finset.range (N + 1), (N.choose a : S) * ρ.ptr a A * σ.ptr (N - a) A := by
   simp only [PolyRep.ptr]
-  rw [← GlobalTheory.T.trace_pow_finProdKronecker_add_binomial]
-  exact congrArg (fun L => (L ^ N).trace) (GlobalTheory.T.polynomialMatrixFamilyRep_lie_tensorProduct ρ σ A)
+  rw [← _root_.GlobalTheory.GoodMetric.ChernSpan.trace_pow_kron_add]
+  exact congrArg (fun L => (L ^ N).trace) (_root_.GlobalTheory.GoodMetric.PolyRep.lie_tensor ρ σ A)
 
 theorem ptr_mul_trProd_mem_reach (n : ℕ) (S : Type) [CommRing S] [Algebra ℝ S] (l : List (ι × ℕ)) :
     (∀ x ∈ l, 1 ≤ x.2) → ∀ r : ℕ, r + (l.map Prod.snd).sum = n → ∀ ρ : PolyRep m,
@@ -116,7 +118,7 @@ theorem ptr_mul_trProd_mem_reach (n : ℕ) (S : Type) [CommRing S] [Algebra ℝ 
     have hr' : (r + i) + (l.map Prod.snd).sum = n := by
       simp only [List.map_cons, List.sum_cons] at hr
       omega
-    obtain ⟨J, _, σ, c, hσ⟩ := GlobalTheory.T.exists_polyRep_combination_pure_power_trace m n S τ i hi
+    obtain ⟨J, _, σ, c, hσ⟩ := _root_.GlobalTheory.GoodMetric.PureVirt.exists_pure_power_trace m n S τ i hi
     have ih' := ih (fun x hx => hl x (List.mem_cons_of_mem _ hx)) (r + i) hr'
     have h := (Reach m n S).smul_mem (((r + i).choose r : ℝ)⁻¹)
       ((Reach m n S).sum_mem (t := Finset.univ)

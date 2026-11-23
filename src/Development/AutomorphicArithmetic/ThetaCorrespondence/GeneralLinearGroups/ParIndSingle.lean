@@ -2,15 +2,16 @@ module
 
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.GeneralLinearGroups.FirstIn
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
-import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.NotInSupportOfSubsingleton
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SupercuspidalSupportUniqueGL
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GeometricLemmaCellOneBlockSwapEquiv
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.NontrivialOfIrreducible
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PiExteriorTensorSmoothIrreducibleIsIrreducible
+public import Development.AutomorphicArithmetic.ThetaCorrespondence.GeneralLinearGroups.FPiece
+public import Development.AutomorphicArithmetic.ThetaCorrespondence.GeneralLinearGroups.TCells
+import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.NotInSupportOfSubsingleton
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InSupportOfIsSubquotient
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.JhMultSubAddQuot
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParIndJacPlacing
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PiExteriorTensorSmoothIrreducibleIsIrreducibleStatement
-public import Development.AutomorphicArithmetic.ThetaCorrespondence.GeneralLinearGroups.FPiece
-public import Development.AutomorphicArithmetic.ThetaCorrespondence.GeneralLinearGroups.TCells
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SocleOfMultiplicityOne
 import Development.AutomorphicSpectrum.Proofs.GlobalProofs.HasSupportOfIsSubquotientProdIrr
 import Development.AutomorphicSpectrum.Proofs.GlobalProofs.IsSubquotientCompMulSingle
@@ -128,7 +129,7 @@ private theorem cell (hG : GlobalTheory.Published.GeometricLemma) (hBZ : GlobalT
   obtain ⟨hd, f, hf⟩ := h
   obtain ⟨hd', f', hf'⟩ := h'
   have hτ : (piTensor fun j => (![y', z'] j).rep).IsIrreducible :=
-    GlobalTheory.T.piExteriorTensor_smoothIrreducible_isIrreducible hBZ k _ _ fun j => (![y', z'] j).2.rep
+    _root_.GlobalTheory.ExtTensorIrr.piTensor_isIrreducible hBZ k _ _ fun j => (![y', z'] j).2.rep
   haveI := GlobalTheory.SmGL.Model.nontrivial_of_isIrreducible x.2.rep.irr
   obtain ⟨v, hv⟩ := exists_ne (0 : x.2.rep.V)
   have h1 := GlobalTheory.CompanionTheory.SocleJm.one_le_jhMult_jac (stdBlocks (fun a => (![y', z'] a).1) hd') hτ f'

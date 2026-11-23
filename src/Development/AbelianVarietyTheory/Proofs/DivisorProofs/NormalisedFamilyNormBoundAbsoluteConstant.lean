@@ -4,8 +4,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CosetRefinem
 public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.SignedLogMeans
 public import Formalism.LocalToGlobal.GlobalTheory.GL3.PFamily
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.ExistsPowPrincipalFractionalIdeal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsThetaZeroMeanLogLeConstMulStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalisedFamilyEqTensorPowerVacuumStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsThetaZeroMeanLogLeConstMul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalisedFamilyEqTensorPowerVacuum
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.VacuumNormConjCmPointsAllEmbeddings
 import Formalism.LocalToGlobal.GlobalTheory.GL3.PStdOK
 import Mathlib.Algebra.Order.Floor.Extended
@@ -97,6 +97,6 @@ theorem familyNorms_of (hT : FamilyTie) (hM : ∃ C : ℝ, 0 ≤ C ∧ ∀ D : D
   have h14 := theta_link_holds D cc hcc δ hδ B (Formalism.L2.GlobalTheoryTheory.IntegralLatticeDensity.SO.stdOK B hcc hδ) χ hχ
   exact ⟨h14.1, mean_le_of (hC D) B χ hc ht, conj_indep B χ hc ht, h14.2⟩
 
-theorem familyNorms : FamilyNorms := familyNorms_of GlobalTheory.T.normalisedFamily_eq_tensorPower_vacuum GlobalTheory.T.exists_thetaZeroMeanLogLeConstMul
+theorem familyNorms : FamilyNorms := familyNorms_of _root_.GlobalTheory.FamilyTieProof.familyTie _root_.GlobalTheory.Theta0MeanLeC.theta0MeanLeC
 
 end GlobalTheory.ColNorms.FamilyBound

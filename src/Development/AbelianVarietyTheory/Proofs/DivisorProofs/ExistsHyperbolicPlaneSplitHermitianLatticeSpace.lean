@@ -1,14 +1,18 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCartanInvolutionExtendSwappingHyperbolicPaStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCartanInvolutionOfHasHermitianSignatureStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFractionalIdealLatticeLineCoefficientsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHyperbolicPairSelfDualLatticeIsotropicStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsotropicVectorHermitianRankGeThreeIndefinStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOrthogonalComplementEmbeddingHyperbolicPaiStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCartanInvolutionExtendSwappingHyperbolicPa
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCartanInvolutionOfHasHermitianSignature
+public import Mathlib.Algebra.Module.Lattice.Basic
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.FractionalIdeal.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFractionalIdealLatticeLineCoefficients
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHyperbolicPairSelfDualLatticeIsotropic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsotropicVectorHermitianRankGeThreeIndefin
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOrthogonalComplementEmbeddingHyperbolicPai
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitPlaceBasisHyperbolicPlaneComplement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasHermitianSignatureComplementHyperbolicPlaneStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasHermitianSignatureComplementHyperbolicPlane
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLatticeComapMulVecLinOfLeftInverseMatrixStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -155,9 +159,9 @@ theorem exists_hyperbolic_split : ∀ (F E : Type) [Field F] [NumberField F] [Fi
   intro F E _ _ _ _ _ σ B hB n n₁ hn hn₁ Y r s hr hs hY i₀ i₁ h01 h1n
   classical
   have hcm : IsCMExt F E σ := hB.cm
-  obtain ⟨x₀, hx₀, hx₀x₀⟩ := GlobalTheory.T.exists_isotropic_vector_hermitian_rank_ge_three_indefinite F E σ B hB n Y r s (by omega) hr hs hY
-  obtain ⟨x, y, hxx, hyy, hxy, hL, hP⟩ := GlobalTheory.T.exists_hyperbolicPair_selfDualLattice_isotropic F E σ B hB n Y r s hY x₀ hx₀ hx₀x₀
-  obtain ⟨ι, P, hPι, horth, hcomp⟩ := GlobalTheory.T.exists_orthogonalComplement_embedding_hyperbolicPair F E σ n n₁ Y.J x y hn hY.herm hxx hyy hxy
+  obtain ⟨x₀, hx₀, hx₀x₀⟩ := _root_.GlobalTheory.HermIso.exists_isotropic F E σ B hB n Y r s (by omega) hr hs hY
+  obtain ⟨x, y, hxx, hyy, hxy, hL, hP⟩ := _root_.GlobalTheory.HypPairLat.exists_pair F E σ B hB n Y r s hY x₀ hx₀ hx₀x₀
+  obtain ⟨ι, P, hPι, horth, hcomp⟩ := _root_.GlobalTheory.exists_orthCompl_hypPair F E σ n n₁ Y.J x y hn hY.herm hxx hyy hxy
   have hyx : form σ Y.J y x = 1 := by rw [form_swap hcm hY.herm, hxy, map_one]
   have hsplit : ∀ z ∈ Y.L, ∃ u, ι *ᵥ u ∈ Y.L ∧ z = form σ Y.J z y • x + ι *ᵥ u + form σ Y.J z x • y := by
     intro z hz
@@ -184,7 +188,7 @@ theorem exists_hyperbolic_split : ∀ (F E : Type) [Field F] [NumberField F] [Fi
     rwa [← IsScalarTower.algebraMap_smul E (d : 𝓞 E), smul_smul,
       IsLocalization.mk'_spec, map_one, one_smul] at h
   have hx0 : x ≠ 0 := by rintro rfl; simp [form] at hxy
-  obtain ⟨𝔟, h𝔟⟩ := GlobalTheory.T.exists_fractionalIdeal_lattice_line_coefficients E n Y.L hY.lat.toIsLattice x hx0
+  obtain ⟨𝔟, h𝔟⟩ := _root_.GlobalTheory.latticeLine_fractionalIdeal E n Y.L hY.lat.toIsLattice x hx0
   set J₁ := ιᵀ * Y.J * ι.map σ with hJ₁
   have hform₁ : ∀ u u', form σ J₁ u u' = form σ Y.J (ι *ᵥ u) (ι *ᵥ u') := form_gram Y.J ι
   let e : InfinitePlace F → E →+* ℂ := fun w => (B.emb w).1
@@ -205,12 +209,12 @@ theorem exists_hyperbolic_split : ∀ (F E : Type) [Field F] [NumberField F] [Fi
     map_gram hcm _ Y.J ι
   have hsig₁ : ∀ w, HasSig (J₁.map (e w)) (r - 1) (s - 1) := fun w => by
     rw [← cg w]
-    exact GlobalTheory.T.hasHermitianSignature_complement_hyperbolicPlane n n₁ _ _ _ _ _ r s hn (hMh w) (cxx w) (cyy w) (cxy w) (cox w) (coy w) (cP w) (hY.sig w)
-  have hθ₁ : ∀ w, ∃ θ, IsCartan (J₁.map (e w)) θ := fun w => GlobalTheory.T.exists_cartanInvolution_of_hasHermitianSignature n₁ _ _ _ (hsig₁ w)
+    exact _root_.GlobalTheory.PlaneSig.hasSig_complement_plane n n₁ _ _ _ _ _ r s hn (hMh w) (cxx w) (cyy w) (cxy w) (cox w) (coy w) (cP w) (hY.sig w)
+  have hθ₁ : ∀ w, ∃ θ, IsCartan (J₁.map (e w)) θ := fun w => _root_.GlobalTheory.CartanEx.exists_isCartan n₁ _ _ _ (hsig₁ w)
   choose θ₁ hθ₁ using hθ₁
   have hθ : ∀ w, ∃ θ, IsCartan (Y.J.map (e w)) θ ∧ θ * ι.map (e w) = ι.map (e w) * θ₁ w ∧
       θ *ᵥ (fun i => e w (x i)) = fun i => e w (y i) := fun w =>
-    GlobalTheory.T.exists_cartanInvolution_extend_swapping_hyperbolicPair n n₁ _ _ _ _ _ _ hn (hMh w) (cxx w) (cyy w) (cxy w) (cox w) (coy w) (cP w) (by rw [cg w]; exact hθ₁ w)
+    _root_.GlobalTheory.CartanPlane.extend_swap n n₁ _ _ _ _ _ _ hn (hMh w) (cxx w) (cyy w) (cxy w) (cox w) (coy w) (cP w) (by rw [cg w]; exact hθ₁ w)
   choose θ hθ using hθ
   haveI := hlat₁
   have hb₁ : ∀ v : B.P, ∃ β, IsSplitBasis (B.τ v) L₁ β := fun v => exists_isSplitBasis (B.τ v) L₁ hcm

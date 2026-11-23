@@ -3,9 +3,13 @@ module
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.SmulCommClassGalIntegers
 public import Mathlib.Analysis.SpecialFunctions.Elliptic.Weierstrass
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LatticeDeterminedByInvariants
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.NcardPrimesEqFinrankOfFrobeniusFixesStatement
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.NcardPrimesEqFinrankOfFrobeniusFixes
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.AddMonoidHomEqZeroOfEventually
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ModularJExpansionAndPolynomialAndIsIntegral
+public import Mathlib.NumberTheory.NumberField.Cyclotomic.Basic
+public import Mathlib.RingTheory.Valuation.LocalSubring
+public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.HasSumLocallyUniformlyWeierstrassZetaExcept
+public import Mathlib.RingTheory.LocalRing.LocalSubring
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -20,13 +24,11 @@ import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
-public import Mathlib.NumberTheory.NumberField.Cyclotomic.Basic
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
-public import Mathlib.RingTheory.Valuation.LocalSubring
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
@@ -54,8 +56,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.HeightFunctions.FiniteDimensionalOfSz
-public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.HasSumLocallyUniformlyWeierstrassZetaExcept
-public import Mathlib.RingTheory.LocalRing.LocalSubring
 
 @[expose] public section
 
@@ -234,7 +234,7 @@ theorem ncard_eq_of_tower (K M N : Type) [Field K] [NumberField K] [Field M] [Nu
       Module.finrank K M := by
   let φ : M →ₐ[K] N := IsScalarTower.toAlgHom K M N
   let e : M ≃ₐ[K] φ.fieldRange := φ.equivFieldRange
-  have h1 := GlobalTheory.T.ncard_primes_eq_finrank_of_frobenius_fixes K N φ.fieldRange 𝔭 (fun σ hσ x hx => by
+  have h1 := _root_.GlobalTheory.SplitCriterion.ncard_primes_eq_finrank_of_frob_fix K N φ.fieldRange 𝔭 (fun σ hσ x hx => by
     obtain ⟨y, rfl⟩ := hx
     exact h σ hσ y)
   rw [ncard_primes_over_eq_of_ringEquiv_comp (NumberField.RingOfIntegers.mapRingEquiv e.toRingEquiv)

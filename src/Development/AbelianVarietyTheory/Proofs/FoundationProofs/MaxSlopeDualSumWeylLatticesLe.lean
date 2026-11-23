@@ -4,15 +4,16 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSelfDua
 public import Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.RealCubicMeans.LeafBounds.MeanMaxLeaf.LeafMMFree
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DualFormIntegralOnDualFr
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DualLatticeIsLatticeAndHermitianDual
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DualLatticeIsLatticeAndHermitianDualStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExtNormMulWeylPairingIntegralSelfDualStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MaxSlopeLeLogOfIntegralHermitianFormStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NablaDeltaOperatorLatticePreservedStatement
+public import Formalism.LocalToGlobal.Divisibility.CoefModLemmas
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExtNormMulWeylPairingIntegralSelfDual
+public import Formalism.QuotientMetricDivisors.RatHermLcvTwist
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MaxSlopeLeLogOfIntegralHermitianForm
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NablaDeltaOperatorLatticePreserved
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OrthogonalSumCoefficientLatticeIsLatticeAndDual
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OrthogonalSumCoefficientLatticeIsLatticeAndDualStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PairingNormalisingConstantLogLeBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SumPairingGramMatrixValuesAndDefiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TransportedWeylLatticeHermitianDualityStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PairingNormalisingConstantLogLeBound
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SumPairingGramMatrixValuesAndDefinite
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TransportedWeylLatticeHermitianDuality
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsSelfDualETwo
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,7 +58,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsSelfDualETwo
 
 @[expose] public section
 
@@ -156,15 +156,15 @@ theorem testLatticeCondition_dualFr_sumLat_delK : ∀ (K : Type) [Field K] [Numb
   have hGh : ∀ τ, (G τ)ᴴ = G τ := fun τ => (hG τ).1
   have hMfull : ∀ c τ, Submodule.IsFullLattice K (M c τ) := fun c τ => selfDual_full _ _ (hM c τ)
   have hdel : ∀ c, Submodule.IsFullLattice K (delK lam (M c)) := fun c =>
-    (GlobalTheory.T.nablaDeltaOperator_lattice_preserved K ι n lam (M c) (hMfull c)).2
-  obtain ⟨hlat, hN, hdual⟩ := GlobalTheory.T.orthogonalSumCoefficientLattice_isLattice_and_dual K ι n lam C N e (fun c => delK lam (M c)) (fun c => (hdel c).toIsLattice)
+    (_root_.GlobalTheory.TransLattice.nabDelLattice K ι n lam (M c) (hMfull c)).2
+  obtain ⟨hlat, hN, hdual⟩ := _root_.GlobalTheory.TestLat.SumLat.sumLat_lattice_dual K ι n lam C N e (fun c => delK lam (M c)) (fun c => (hdel c).toIsLattice)
   haveI : Finite C := by
     let i₀ : VVIdx lam := (e ⟨0, hN⟩).2
     refine Finite.of_injective (fun c : C => e.symm (c, i₀)) ?_
     intro a b hab
     exact (Prod.ext_iff.1 (e.symm.injective hab)).1
   letI : Fintype C := Fintype.ofFinite C
-  obtain ⟨hval, hH, hHi, hGu⟩ := GlobalTheory.T.sumPairingGramMatrix_values_and_definite K ι n lam G hG C N e
+  obtain ⟨hval, hH, hHi, hGu⟩ := _root_.GlobalTheory.TestLat.sumGram_spec K ι n lam G hG C N e
   have hHu : IsUnit (sumGram lam e G).det := by
     have h1 := (hH.2.2 v₀.embedding).isUnit
     rw [Matrix.isUnit_iff_isUnit_det] at h1
@@ -179,11 +179,11 @@ theorem testLatticeCondition_dualFr_sumLat_delK : ∀ (K : Type) [Field K] [Numb
     rw [hdual G hGh]
     congr 1
     funext c
-    rw [(GlobalTheory.T.transported_weylLattice_hermitianDuality K ι n lam G (M c) hGh hGu (hMfull c)).2]
+    rw [(_root_.GlobalTheory.TransDual.nabDelDual K ι n lam G (M c) hGh hGu (hMfull c)).2]
     congr 1
     funext τ
     exact (hM c τ).2
-  obtain ⟨s, hs, hse, hsb⟩ := GlobalTheory.T.pairing_normalising_constant_log_le_bound K ι n lam R hR hsp
+  obtain ⟨s, hs, hse, hsb⟩ := _root_.GlobalTheory.extNorm_eq_nat_log_le_bound K ι n lam R hR hsp
   have hint : ∀ x ∈ hdualFr (sumGram lam e G) (sumLat lam e fun c => delK lam (M c)),
       ∀ y ∈ hdualFr (sumGram lam e G) (sumLat lam e fun c => delK lam (M c)),
         (s : K) * (star x ⬝ᵥ sumGram lam e G *ᵥ y) ∈ (algebraMap (𝓞 K) K).range := by
@@ -192,10 +192,10 @@ theorem testLatticeCondition_dualFr_sumLat_delK : ∀ (K : Type) [Field K] [Numb
     rw [hval, Finset.mul_sum]
     refine Subring.sum_mem _ fun c _ => ?_
     rw [← hse]
-    exact GlobalTheory.T.extNorm_mul_weylPairing_integral_selfDual K ι n lam G (M c) hGh hGu (hM c) _
+    exact _root_.GlobalTheory.PairInt.extNorm_mul_pairK_integral K ι n lam G (M c) hGh hGu (hM c) _
       ((Submodule.mem_iInf _).1 hx c) _ ((Submodule.mem_iInf _).1 hy c)
   have hint' := dualForm_integral_on_dualFr K N (sumGram lam e G) hH.1 hHu _ s hint
-  have hD := (GlobalTheory.T.dualLattice_isLattice_and_hermitianDual.1 K N (sumGram lam e G) _ hHu (sumLat_full lam e _ hdel hlat)).1
+  have hD := (_root_.GlobalTheory.DualLat.dualFr_lattice_and_hdual.1 K N (sumGram lam e G) _ hHu (sumLat_full lam e _ hdel hlat)).1
   have hne : dualFr (sumLat lam e fun c => delK lam (M c)) ≠ ⊥ := by
     classical
     let i : Fin N := ⟨0, hN⟩
@@ -220,6 +220,6 @@ theorem testLatticeCondition_dualFr_sumLat_delK : ∀ (K : Type) [Field K] [Numb
     simp only [Pi.single_eq_same, Pi.zero_apply] at this
     exact hd0 (RingOfIntegers.coe_injective (by simpa using this))
   refine ⟨hD.fg, hne, fun v => (hX v).1, le_trans ?_ hsb⟩
-  exact GlobalTheory.T.maxSlope_le_log_of_integral_hermitian_form K v₀ hv N _ X ⟨hHi.2.1, hX⟩ s hs _ hD.fg hne hint'
+  exact _root_.GlobalTheory.muMaxDef_le_log_of_integral K v₀ hv N _ X ⟨hHi.2.1, hX⟩ s hs _ hD.fg hne hint'
 
 end GlobalTheory.TestLat

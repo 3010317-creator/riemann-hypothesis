@@ -1,13 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPotential
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinLatticeExponentsAinfComparisonStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CmpSemilinearPairStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinLatticeExponentsAinfComparison
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CmpSemilinearPair
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBcrisComparisonKisinLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsUnitToBFrobEisStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PhiWInclLEPowStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TeichmullerSubOneAinfPropertiesCompatibleRootsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ToBcrisPhiStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsUnitToBFrobEis
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExistsIterateDerivative
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.InstTameDescentExponentDataPadicThree
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PhiWInclLEPow
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ToBcrisPhi
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TeichmullerSubOneAinfPropertiesCompatibleRoots
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -96,22 +98,22 @@ theorem exists_Y : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e
 
 theorem main : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (O K : Type) [CommRing O] [Algebra ℤ_[l] O] [Module.Free ℤ_[l] O] [Module.Finite ℤ_[l] O] [NormedField K] [IsUltrametricDist K] [Algebra O K] [IsUnitBall O K] [NormedAlgebra ℚ_[l] K] [TameDescentExponentData K l e a] (t : Wq l a →ₐ[ℤ_[l]] O) (ϖ : PiSys l e) (ι : Type) [Fintype ι] [DecidableEq ι] (P : PhiMod O K l e a ι) (T : LocLat (Gl l) ℚ_[l] K O) (I : Ident t ϖ P T), (∃ jB, IsCrisCmp I jB) ∧ ∀ (jB : (ι → OB l O) ≃ₗ[OB l O] TW (OB l O) T), IsCrisCmp I jB → (∀ (m m' : P.MMl), m'.1 = P.phi m.1 → jB (toBcris t ϖ P m') = TWmap (frobOB l O) T (jB (toBcris t ϖ P m))) ∧ (∀ w b b', IsCrisVal t ϖ P jB w b → IsCrisVal t ϖ P jB w b' → b = b') ∧ (∀ w b, IsCrisVal t ϖ P jB w b → IsCrisVal t ϖ P jB (phiW t ϖ P w) (TWmap (frobOB l O) T b)) ∧ (∀ x : ↥T.L.T, IsCrisVal t ϖ P jB (I.ofT x) ((1 : OB l O) ⊗ₜ[O] x)) ∧ (∀ g : Gl l, (∀ v ∈ LA t ϖ P, I.act (sQ l g) g v ∈ LA t ϖ P) → ∀ w b, IsCrisVal t ϖ P jB w b → IsCrisVal t ϖ P jB (I.act (sQ l g) g w) (actB (sQ l) T g b)) := by
   intro l _ a e _ _ O K _ _ _ _ _ _ _ _ _ _ t ϖ ι _ _ P T I
-  obtain ⟨ε, hε⟩ := (GlobalTheory.T.teichmullerSubOneAinf_properties_compatibleRoots l).1
+  obtain ⟨ε, hε⟩ := (_root_.GlobalTheory.MuOfEps.main l).1
   obtain ⟨δ, hδ, -⟩ := hε.2
-  obtain ⟨-, -, -, hμB, -, -, -⟩ := (GlobalTheory.T.teichmullerSubOneAinf_properties_compatibleRoots l).2 ε δ hε hδ
+  obtain ⟨-, -, -, hμB, -, -, -⟩ := (_root_.GlobalTheory.MuOfEps.main l).2 ε δ hε hδ
   obtain ⟨α, β, hα, hβ⟩ := P.exists_exponents
-  obtain ⟨-, -, hK3, hK4⟩ := GlobalTheory.T.breuilKisin_lattice_exponents_ainf_comparison l a e O K t ϖ ι P T I α β hα hβ ε δ hε hδ
+  obtain ⟨-, -, hK3, hK4⟩ := _root_.GlobalTheory.BKExp.exponents l a e O K t ϖ ι P T I α β hα hβ ε δ hε hδ
   have hunit : ∀ n : ℕ, IsUnit (toB l O (1 ⊗ₜ (muOf ε ^ n))) := fun n => by
     rw [toB_tmul', map_pow, map_pow]
     exact (hμB.pow n).map (Algebra.TensorProduct.includeRight : Per.Bcris l →ₐ[ℤ_[l]] OB l O)
   obtain ⟨Y, hY⟩ := exists_Y l a e O K t ϖ ι P α hα
-  have hEu := GlobalTheory.T.isUnit_toB_frobOA_eis l a e O ϖ
-  have hYphi := GlobalTheory.T.eis_pow_smul_phiW_inclL_eq_inclL_mulVec l a e O K t ϖ ι P α Y hY
-  have hSl := GlobalTheory.T.toBcris_phi_alt l a e O K t ϖ ι P α Y hY
+  have hEu := _root_.GlobalTheory.BKGal.FrobEis.isUnit_toB_frob_eis l a e O ϖ
+  have hYphi := _root_.GlobalTheory.BKReal.phiW_inclL_E_pow l a e O K t ϖ ι P α Y hY
+  have hSl := _root_.GlobalTheory.BKGal.FrobCoord.toBcris_phi l a e O K t ϖ ι P α Y hY
   refine ⟨GlobalTheory.T.exists_bcris_comparison_kisinLattice l a e O K t ϖ ι P T I, fun jB hjB => ?_⟩
   have hμL : ∀ v ∈ LA t ϖ P, ∃ z : TW (OA l O) T, I.j (inclO l O (1 ⊗ₜ (muOf ε ^ α)) • v) = TWincl (inclO l O) T z :=
     hK4
-  have keyφ := GlobalTheory.T.cmp_semilinear_pair_alt l a e O K t ϖ ι P T I jB hjB _ (hunit α) hμL (frobOA l O) (frobOW l O) (frobOB l O)
+  have keyφ := _root_.GlobalTheory.BKGal.cmp_semilinear_pair l a e O K t ϖ ι P T I jB hjB _ (hunit α) hμL (frobOA l O) (frobOW l O) (frobOB l O)
     LinearMap.id (phiW t ϖ P) (frobOA l O (1 ⊗ₜ ϖ.ev a (eis l a e)) ^ α) (Y.map (frobOA l O))
     (fun x => (frobOW_inclO x).symm) toB_frobOA (fun v => I.j_φ v) (phiW_smul t ϖ P)
     (fun c => by rw [map_pow]; exact hYphi c)
@@ -149,7 +151,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (O
     rfl
   · obtain ⟨m, c, hm, hw, hb⟩ := hb
     obtain ⟨Γ, hΓ⟩ := (I.exists_isLMat_iff (sQ l g) g).2 hg
-    have key := GlobalTheory.T.cmp_semilinear_pair_alt l a e O K t ϖ ι P T I jB hjB _ (hunit α) hμL (galOA O (sQ l g)) (galOW O (sQ l g))
+    have key := _root_.GlobalTheory.BKGal.cmp_semilinear_pair l a e O K t ϖ ι P T I jB hjB _ (hunit α) hμL (galOA O (sQ l g)) (galOW O (sQ l g))
       (galOB O (sQ l g)) (T.actT g) (I.act (sQ l g) g) 1 Γ (fun x => (galOW_inclO _ x).symm) (toB_galOA _)
       (fun v => I.j_act _ _ v) (I.act_smul _ _) (fun c => by rw [map_one, one_smul]; exact hΓ c)
     refine ⟨galOA O (sQ l g) m, Γ *ᵥ fun i => galOA O (sQ l g) (c i), ?_, ?_, ?_⟩

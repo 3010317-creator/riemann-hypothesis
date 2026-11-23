@@ -4,7 +4,7 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.RangeSubsetAbLocusOfIsProper
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSabCancel
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSabMapIdOfCommonGeneric
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsTripleGlueTwoOpensStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsTripleGlueTwoOpens
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsIsoStalkMapOfFlatOfSurjectiveOnStalks
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -135,7 +135,7 @@ theorem DensePart.glue_top {X X₀ : Scheme.{0}} {j : X₀ ⟶ X} (h : DensePart
     rw [← cancel_mono V.ι, Category.assoc, Scheme.homOfLE_ι, hk, hV]
   obtain ⟨s, b, m₁, -⟩ := exists_fac a₁ _ hkU
   obtain ⟨m₂, -⟩ := (h.restrict _ hk).exists_map hdvr hkV a₂ b hp
-  obtain ⟨t, n₁, -, -⟩ := GlobalTheory.T.exists_triple_glue_two_opens E H X U V t₁ t₂ s m₁ m₂ hUV ((h.restrict _ hU).generic a₁ hp)
+  obtain ⟨t, n₁, -, -⟩ := _root_.GlobalTheory.TripleGlue.exists_sab_glue E H X U V t₁ t₂ s m₁ m₂ hUV ((h.restrict _ hU).generic a₁ hp)
     ((h.restrict _ hV).generic a₂ hp)
   obtain ⟨n, -⟩ := ObjMaps.exists_sab_comp n₁ a₁
   obtain ⟨n', -⟩ := exists_cast n hU

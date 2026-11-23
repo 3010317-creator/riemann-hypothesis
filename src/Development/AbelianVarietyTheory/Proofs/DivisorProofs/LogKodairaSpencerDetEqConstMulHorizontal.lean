@@ -2,10 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsBaseFrame
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopPairDForm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BalancedSymmetricPairMatrixHorizontalSingleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetFlagTangentConjugateMatrixChangeEqOneStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDualNumberTangentPointOfLogarithmicDerivatStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentDerivativeLinearInKodairaSpencerMatrixOfIStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BalancedSymmetricPairMatrixHorizontalSingle
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLieCombIffIsCombAt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetFlagTangentConjugateMatrixChangeEqOne
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsAlgHomOfComp
+public import Development.AbelianVarietyTheory.Definitions.Divisors.BarCompSubsetClosure
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDualNumberTangentPointOfLogarithmicDerivat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentDerivativeLinearInKodairaSpencerMatrixOfI
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,15 +65,15 @@ namespace GlobalTheory.LogPole
 
 theorem logDet_eq_hor : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (TF : TorFlag Xo c) (s : ℚ), s ≠ 0 → KSCompare TF s → (∀ (K : Type) [Field K] [Algebra c.F K] (y : FrPt Xo c K), KSIso (psiSet H) y) → ∀ (U : TF.Y.X.affineOpens) (n : ℕ) (e : (Σ τ : E →+* ℂ, Fin (Dw.mult τ)) ≃ Fin n) (v : Fin n → (Sp (DualNumber Γ(TF.Y.X, U.1)) ⟶ TF.Y.t.G.left)), IsEigBasis TF U e v → ∀ (ε : Fin Dw.dim ≃ GlobalTheory.LogKSDiv.PairIx H Dw) (b : Fin Dw.dim → LogKS.logDer TF.Y.s (Scheme.IdealSheafData.vanishingIdeal (LogKS.interior TF.Y).compl) U), (∀ j, LogKS.IsKS TF.Y.t (LogKS.interior TF.Y) U v (b j).1 (GlobalTheory.LogKSDiv.symPair e (ε j))) → ∀ (o : Fin Dw.dim ≃ HIx Dw (psiSet H)), ∃ a : ℚ, a ≠ 0 ∧ ∀ (x : Fin Dw.dim → Γ(TF.Y.X, U.1)) (K : Type) [Field K] [Algebra c.F K] (P₀ P : FrPt Xo c K) (hU : ⊤ ≤ (frX P₀ ≫ TF.Y.j) ⁻¹ᵁ U.1) (g : ∀ σ : E →+* ℂ, Matrix (Fin (Dw.mult σ)) (Fin (Dw.mult σ)) K), (∀ σ, (g σ).det = 1) → GlobalTheory.Frames.FrChg g 1 P₀ P → IsBaseFrame TF U e v P₀ hU → ∀ (w : HIx Dw (psiSet H) → FrPt Xo c (DualNumber K)) (hw : ∀ b, ⊤ ≤ (frX (w b) ≫ TF.Y.j) ⁻¹ᵁ U.1), (∀ b, IsDef P (w b) ∧ FlagTan.IsKS (psiSet H) P (w b).x (Pi.single b 1)) → ev (frX P₀ ≫ TF.Y.j) U.1 hU (logDet (fun j => (b j).1) x) = (a : K) * (Matrix.of fun i j => (ev (frX (w (o j)) ≫ TF.Y.j) U.1 (hw _) (x i)).snd).det := by
   intro E _ _ _ H Dw l Xo c TF s hs hcmp hKS U n e v hv ε b hb o
-  obtain ⟨κ, hκ⟩ := GlobalTheory.T.balancedSymmetricPairMatrix_horizontal_single ε
+  obtain ⟨κ, hκ⟩ := _root_.GlobalTheory.LogKSDiv.PairEntry.symPair_horizontal_single ε
   refine ⟨s ^ Dw.dim * ((Equiv.Perm.sign (κ.trans o.symm) : ℤ) : ℚ), ?_, ?_⟩
   · have : ((Equiv.Perm.sign (κ.trans o.symm) : ℤ) : ℚ) ≠ 0 := by
       rcases Int.units_eq_one_or (Equiv.Perm.sign (κ.trans o.symm)) with h | h <;> simp [h]
     exact mul_ne_zero (pow_ne_zero _ hs) this
   intro x K _ _ P₀ P hU g hg hP hB w hw hwk
   haveI : CharZero K := charZero_of_injective_algebraMap (algebraMap c.F K).injective
-  obtain ⟨δ, hδ⟩ := GlobalTheory.T.tangentDerivative_linear_in_kodairaSpencerMatrix_of_iso TF K P₀ (hKS K P₀) U.1 hU
-  choose y' hy' hsnd hred hev using fun j => GlobalTheory.T.exists_dualNumberTangentPoint_of_logarithmicDerivation TF U (b j) K P₀ hU
+  obtain ⟨δ, hδ⟩ := _root_.GlobalTheory.LogPole.exists_snd_ev_eq_sum_of_ksIso TF K P₀ (hKS K P₀) U.1 hU
+  choose y' hy' hsnd hred hev using fun j => _root_.GlobalTheory.LogPole.exists_tanPt_of_logDer TF U (b j) K P₀ hU
   have hKSj : ∀ j, FlagTan.IsKS (psiSet H) P₀ (y' j ≫ pullback.fst _ _)
       (fun k => (s : K) * (Pi.single (κ j) (1 : K) : HIx Dw (psiSet H) → K) k) := by
     intro j
@@ -105,7 +108,7 @@ theorem logDet_eq_hor : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     rw [Matrix.of_apply, hR, Matrix.mul_apply, ← Equiv.sum_comp o, hA]
     simp only [Matrix.of_apply]
     exact Finset.sum_congr rfl fun k _ => mul_comm _ _
-  rw [logDet, RingHom.map_det, eR, Matrix.det_mul, GlobalTheory.T.det_flagTangentConjugateMatrixChange_eq_one K g hg o, mul_one, eL, Matrix.det_smul,
+  rw [logDet, RingHom.map_det, eR, Matrix.det_mul, _root_.GlobalTheory.KSChgDet.det_ksChg_eq_one K g hg o, mul_one, eL, Matrix.det_smul,
     Matrix.det_permute', Fintype.card_fin]
   push_cast
   ring

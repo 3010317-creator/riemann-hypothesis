@@ -1,15 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SmallFam
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsClearDenominatorsAmpleHermLineBundleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLBLeBySmallSectionOfRepStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLineBundlePairSectionsMulMemNormMul
+public import Development.AbelianVarietyTheory.Definitions.Divisors.CharZeroFunctionField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsClearDenominatorsAmpleHermLineBundle
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLBLeBySmallSectionOfRep
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermPairPowSectionMemAndNormPow
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PairSectionMemBallExpOfProjArithVarietyStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PairSectionMemBallExpOfProjArithVariety
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ShiftSecondBundleNormPairNormBallGeneration
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLineBundlePairSectionsMulMemNormMul
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepresentsBaseBundlesAndTrivial
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepresentsHermitianLineBundleDual
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepresentsHermitianLineBundlePow
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ShiftSecondBundleNormPairNormBallGenerationStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -72,7 +73,7 @@ theorem le_dual_pow_shift : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsInte
   intro k _ X _ p D hX P N s hA hs hs0
   obtain ⟨rN, hrN⟩ := exists_isRatSec N.isLB
   let Q : Pair p := ⟨N, P.A, rN, P.r', hrN, P.hr'⟩
-  obtain ⟨c₁, g, _, hg0, hg, -⟩ := GlobalTheory.T.exists_clear_denominators_ampleHermLineBundle k X p D hX Q hA 1 Empty (fun e => e.elim)
+  obtain ⟨c₁, g, _, hg0, hg, -⟩ := _root_.GlobalTheory.HSNef.Den.exists_clear_denominators k X p D hX Q hA 1 Empty (fun e => e.elim)
   refine ⟨c₁, fun c hc hc0 => ?_⟩
   have hsQ : s ∈ Q.H 0 1 := mem_regular_sections_second_bundle_indep_first P N rN hrN hs
   obtain ⟨hpow, -⟩ := NuPow.pow_mem_H_and_nu_pow k X p Q 0 1 s hsQ (c - c₁)
@@ -80,10 +81,10 @@ theorem le_dual_pow_shift : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsInte
   have e1 : (1 : ℤ) + ((c - c₁ : ℕ) : ℤ) * 0 = 1 := by ring
   have e2 : (c₁ : ℤ) + ((c - c₁ : ℕ) : ℤ) * 1 = c := by push_cast [Nat.cast_sub hc]; ring
   rw [e1, e2] at hf
-  obtain ⟨w, _, hw⟩ := GlobalTheory.T.pairSection_mem_ball_exp_of_projArithVariety k X p D hX Q 1 c _ hf
+  obtain ⟨w, _, hw⟩ := _root_.GlobalTheory.HSNef.bounded_norm k X p D hX Q 1 c _ hf
   have hcpos : (0 : ℝ) < c := by exact_mod_cast hc0
   refine ⟨w / c, fun u hu => ?_⟩
-  obtain ⟨-, hBl, -⟩ := GlobalTheory.T.shiftSecondBundleNormPair_norm_ball_generation k X p Q u
+  obtain ⟨-, hBl, -⟩ := _root_.GlobalTheory.HSNef.shiftA_props k X p Q u
   have hwu : w ≤ (c : ℤ) * u := by
     have := (div_le_iff₀ hcpos).1 hu
     push_cast; linarith
@@ -99,6 +100,6 @@ theorem le_dual_pow_shift : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsInte
   have e4 : (0 : ℤ) - -((c : ℤ) * 1) = c := by ring
   have hmem' : g * s ^ (c - c₁) ∈ (shiftA Q u).Bl (1 - -((c : ℤ) * 0)) (0 - -((c : ℤ) * 1)) 1 := by
     rw [e3, e4]; exact hmem
-  exact GlobalTheory.T.hermLBLeBySmallSection_of_rep k X p (shiftA Q u) 1 0 _ _ N _ _ hrepN hdual hne hmem'
+  exact _root_.GlobalTheory.HSNef.le_of_rep k X p (shiftA Q u) 1 0 _ _ N _ _ hrepN hdual hne hmem'
 
 end GlobalTheory.HSNef.TwistSmall

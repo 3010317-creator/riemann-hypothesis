@@ -2,12 +2,16 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TrMMemFramesEIff
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HermitianMatricesLocallyCompactBorel
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRingStatement
+public import Formalism.UnipotentAdelicQuotients.SWXSDefs
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.UnitsOpenEmbeddingLocalTensor
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.UnitsOpenEmbeddingLocalTensorStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DisintegrationHaarBaseStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianFormPrimitiveVectorPairingStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.QuotientMeasureByInvariantSubgroupStatement
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DisintegrationHaarBase
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianFormPrimitiveVectorPairing
+public import Mathlib.MeasureTheory.Group.Defs
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.QuotientMeasureByInvariantSubgroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -221,7 +225,7 @@ theorem map_shift_eq {V A : Type} [AddCommGroup V] [AddCommGroup A] [MeasurableS
   have hT : Measurable fun v => v + j (f v) := measurable_id.add (hj.comp hf)
   ext B hB
   rw [Measure.map_apply hT hB]
-  have key := GlobalTheory.T.quotient_measure_by_invariant_subgroup V A μ lam j hj f hf hinv C hC h0 h1 (B.indicator 1)
+  have key := _root_.GlobalTheory.CompanionTheory.Shear.lintegral_shear_eq V A μ lam j hj f hf hinv C hC h0 h1 (B.indicator 1)
     (measurable_one.indicator hB)
   rw [lintegral_indicator_one hB] at key
   rw [← key, ← lintegral_indicator_one (hT hB)]
@@ -264,7 +268,7 @@ theorem fibre_ne_zero : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
   haveI : LocallyCompactSpace R := hL.2.1
   haveI : SecondCountableTopology R := hL.2.2.1
   haveI : T2Space R := hL.2.2.2.1
-  obtain ⟨tK1, tK2, tK3, tK4, tsc, -, -, tK8, -, -⟩ := GlobalTheory.T.tensor_locally_compact_ring F E σ hσ R
+  obtain ⟨tK1, tK2, tK3, tK4, tsc, -, -, tK8, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ R
   haveI := tK1
   haveI := tK2
   haveI := tK3
@@ -277,7 +281,7 @@ theorem fibre_ne_zero : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
   haveI := h3
   haveI := h4
   obtain ⟨g, hgc, hg⟩ := h5 M J hJ
-  have hU := GlobalTheory.T.units_open_embedding_local_tensor F E σ hσ R hL
+  have hU := _root_.GlobalTheory.CompanionTheory.SW.KUnits.units_val_isOpenEmbedding F E σ hσ R hL
   have hss : ∀ a, sigR R σ (sigR R σ a) = a := HermTop.sigR_sigR R (HermTop.sigma_sigma hσ)
   have hJJ : ∀ i j, sigR R σ (JR R J j i) = JR R J i j := by
     intro i j
@@ -291,8 +295,8 @@ theorem fibre_ne_zero : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
   have hXeq : (fun _ : Fin 1 => X 0) = X := by
     funext a
     rw [Subsingleton.elim a 0]
-  obtain ⟨y, hy⟩ := GlobalTheory.T.hermitian_form_primitive_vector_pairing F E σ hσ M J hJ R hL (X 0) (by rw [hXeq]; exact hX)
-  have hgen := GlobalTheory.T.disintegration_haar_base (Fin 1 → Fin M → R ⊗[F] E) (HermR R σ 1)
+  obtain ⟨y, hy⟩ := _root_.GlobalTheory.CompanionTheory.WeilSiegel.FreePartner.exists_partner F E σ hσ M J hJ R hL (X 0) (by rw [hXeq]; exact hX)
+  have hgen := _root_.GlobalTheory.CompanionTheory.SW.FibreShift.fib_ne_zero (Fin 1 → Fin M → R ⊗[F] E) (HermR R σ 1)
     (Matrix (Fin 1) (Fin 1) (R ⊗[F] E)) μ ν (gramR R σ J) g Subtype.val Subtype.val_injective hgc hg
     {Y | LinearIndependent (R ⊗[F] E) Y} {Y | IsUnit (bet (sigR R σ) (JR R J) (X 0) Y)}
     ((isOpen_isUnit hU).preimage (continuous_bet _ _ _))

@@ -2,11 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrdL
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FlatTensorVacuum
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagColumnUnipotentMemPeriodUnipotentIntegralGL
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagRowUnipotentMemPeriodUnipotentIntegralGL
+public import Development.AbelianVarietyTheory.Definitions.Divisors.RankEqCardIffExistsFrameMatrixFirstColumnBlock
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexConjIntegralGLColumnCongruence
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexConjIntegralGLRowCongruence
 import Development.AbelianVarietyTheory.Definitions.Foundations.SimpleSumRowCol
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagColumnUnipotentMemPeriodUnipotentIntegralGLStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagRowUnipotentMemPeriodUnipotentIntegralGLStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexConjIntegralGLColumnCongruenceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexConjIntegralGLRowCongruenceStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -132,9 +133,9 @@ theorem invVol_diag_one (ϖ : kˣ) (hϖ : IsUnif ϖ) (t : n ⊕ Fin c) :
     fun x hx => symN_le_unipSub (Subgroup.mem_inf.1 hx).1
 
   have hnum : C.relIndex (symN k n c ⊓ K) = resCard k ^ Sout.card := by
-    refine GlobalTheory.T.relIndex_conj_integralGL_row_congruence ϖ hϖ t Sout (by simp [Sout]) _ inf_le_right (fun x hx s hs => ?_) (fun y hy h0 => ?_)
+    refine _root_.GlobalTheory.DiagVol.RowIdx.relIndex_rowCong ϖ hϖ t Sout (by simp [Sout]) _ inf_le_right (fun x hx s hs => ?_) (fun y hy h0 => ?_)
     · exact hU x hx t s (by simpa [Sout] using hs)
-    · exact GlobalTheory.T.flagRowUnipotent_mem_periodUnipotent_integralGL t y hy fun s hs => h0 s (by simpa [Sout] using hs)
+    · exact _root_.GlobalTheory.DiagVol.rowElt_mem t y hy fun s hs => h0 s (by simpa [Sout] using hs)
 
   have hden : K.relIndex (symN k n c ⊓ C) = resCard k ^ Sin.card := by
     set φ := (MulAut.conj g⁻¹).toMonoidHom
@@ -152,9 +153,9 @@ theorem invVol_diag_one (ϖ : kˣ) (hϖ : IsUnif ϖ) (t : n ⊕ Fin c) :
       · refine ⟨g * x * g⁻¹, conj_diag_mem _ hx, ?_⟩
         simp [φ, mul_assoc]
     rw [← Subgroup.relIndex_map_map_of_injective _ _ hφ, Subgroup.map_inf_eq _ _ _ hφ, hNφ, hCφ]
-    refine GlobalTheory.T.relIndex_conj_integralGL_column_congruence ϖ hϖ t Sin (by simp [Sin]) _ inf_le_right (fun x hx r hr => ?_) (fun y hy h0 => ?_)
+    refine _root_.GlobalTheory.IndexCol.relIndex_conj_col ϖ hϖ t Sin (by simp [Sin]) _ inf_le_right (fun x hx r hr => ?_) (fun y hy h0 => ?_)
     · exact hU x hx r t (by simpa [Sin] using hr)
-    · exact GlobalTheory.T.flagColumnUnipotent_mem_periodUnipotent_integralGL t y hy fun r hr => h0 r (by simpa [Sin] using hr)
+    · exact _root_.GlobalTheory.DiagVol.colE_mem_symN_KO t y hy fun r hr => h0 r (by simpa [Sin] using hr)
   have hq : (0 : ℚ) < resCard k := by
     have : 1 < resCard k := Finite.one_lt_card
     exact_mod_cast this.trans' one_pos

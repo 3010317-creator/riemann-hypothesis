@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.Hat1
 public import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrameStabiliserMapsToCompletedLatticeStatement
+public import Formalism.LocalToGlobal.Divisibility.DefGroup
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrameStabiliserMapsToCompletedLattice
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FinCongMemLevEnv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -56,7 +57,7 @@ theorem mulVec_mem_hatL {F E : Type} [Field F] [NumberField F] [Field E] [Number
     (x : GL (Fin n) (E ⊗[F] Formalism.L2.Herm.Af F)) (hx : x ∈ Formalism.L2.DIV.St β)
     (v : Fin n → E ⊗[F] Formalism.L2.Herm.Af F) (hv : v ∈ Formalism.L2.Herm.hatL (F := F) Λ) :
     x.1 *ᵥ v ∈ Formalism.L2.Herm.hatL (F := F) Λ :=
-  GlobalTheory.T.frameStabiliser_mapsTo_completedLattice β Λ hβ x hx v hv
+  _root_.GlobalTheory.stab_hatL_mapsTo β Λ hβ x hx v hv
 
 theorem mulVec_mem_hat (D : D7) {n : ℕ} (β : GL (Fin n) (Formalism.IndefR.Lev.EAf D))
     (Λ : Submodule (𝓞 D.host.E) (Fin n → D.host.E)) (hβ : Formalism.L2.DIV.IsFrame β Λ)

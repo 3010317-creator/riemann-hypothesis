@@ -2,7 +2,9 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsTwiceDifferentiableAt
 public import GroundTheory.HeightsAndTheta.Heights.Antisymmetric.Statements
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MongeAmpereDensityDiagonalLeviStatement
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import ReciprocityTheory.AnalyticForms.MaIntEmpty
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MongeAmpereDensityDiagonalLevi
 public import Development.WeilBound.CoreStatements.PluriharmonicCharts.LeviDiagonalOfIsPeriodChart
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -141,7 +143,7 @@ theorem PositivityTheory.Xgp.t_per_point : ∀ (e : ℕ) (X : Type) [Topological
       congr 1
       refine Finset.prod_congr rfl (fun τ _ => ?_)
       exact per_point.prod_pairs (fun i l => ∑ m ∈ Finset.Ico i l, c (τ, m))
-    rw [hloc, GlobalTheory.T.monge_ampere_density_diagonal_levi e _ (A.chart k x) dd M hC ?_]
+    rw [hloc, _root_.GlobalTheory.CompanionTheory.Ar.PB.MaDiag.maDens_diag_levi e _ (A.chart k x) dd M hC ?_]
     · rw [hprod]
       ring
     · intro v

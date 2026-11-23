@@ -2,14 +2,17 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.LieLatticeData
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.CharacterLatticeBaseChangeFreeStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.CharacterLatticeFibreIdealLocallyFreeStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.CharacterLatticeGraphComapLocallyFreeStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.CharacterLatticeKernelLocallyFreeStatement
-import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.KernelGraphBaseChangeHoldsStatement
-import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LatticeGoodBaseChangeStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LatticeImageBaseChangeStatement
-import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LocFreeMapMkQIff
-import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LocallyFreeBaseChangeSummandStatement
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.CharacterLatticeFibreIdealLocallyFree
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.CharacterLatticeGraphComapLocallyFree
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.CharacterLatticeKernelLocallyFree
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LatticeGoodBaseChange
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LocFreeMapMkQIff
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.FlagMinor
+public import Mathlib.RingTheory.IsTensorProduct
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LocallyFreeBaseChangeQuotient
+public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.ImageLatticeBaseChange
+import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.KernelGraphBaseChangeHolds
+import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LocallyFreeBaseChangeSummand
 import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SmulMemSpanOver
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -182,21 +185,21 @@ private theorem loc_free_base_change {o Ω C : Type} [CommRing o] [Field Ω] [Fi
 
 theorem main : ∀ {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] {F : Type} [Zero F] [One F] [Fintype F] {n : ℕ} {Sg : Type} {r s : Sg → ℕ} (D : LieLatticeData Ω F n Sg r s) (R : Subalgebra o Ω) (p : ℕ) (w : Ω) (χ : Sg → F → Ω), CharData R p w χ → D.Base R p w → D.Good₁ R p χ → D.Good₂ R p χ → (∀ τ, mulLat w (stdLat R _) ≤ D.af R p (χ τ)) → (∀ τ, LocFree R (r τ) (D.kerH R p τ (χ τ)) ∧ ∀ i, LocFree R 1 (D.dId R p (χ τ) i) ∧ LocFree R 1 ((D.stepGraph τ (χ τ) i).comap (AddMonoidHom.inl _ _))) ∧ ∀ (C : Type) [Field C] [Algebra o C] [Algebra Ω C] [IsScalarTower o Ω C] (RC : Subalgebra o C), (∀ a ∈ R, algebraMap Ω C a ∈ RC) → (D.bc RC).Good₂ RC p (fun τ a => algebraMap Ω C (χ τ a)) ∧ ∀ τ, (D.bc RC).kerH RC p τ (fun a => algebraMap Ω C (χ τ a)) = spanOver RC (bcMap Ω C _ '' D.kerH R p τ (χ τ)) ∧ ∀ i, (D.bc RC).dId RC p (fun a => algebraMap Ω C (χ τ a)) i = spanOver RC (algebraMap Ω C '' D.dId R p (χ τ) i) ∧ ((D.bc RC).stepGraph τ (fun a => algebraMap Ω C (χ τ a)) i).comap (AddMonoidHom.inl _ _) = spanOver RC (algebraMap Ω C '' (D.stepGraph τ (χ τ) i).comap (AddMonoidHom.inl _ _)) := by
   intro o Ω _ _ _ F _ _ _ n Sg r s D R p w χ hc hB hG1 hG2 haf
-  obtain ⟨hdL, hdB⟩ := GlobalTheory.T.character_lattice_fibre_ideal_locally_free D R p w χ hc hB hG1 hG2
-  obtain ⟨hsL, hsB⟩ := GlobalTheory.T.character_lattice_graph_comap_locally_free D R p w χ hc hB hG1 hG2
-  have hkL := GlobalTheory.T.character_lattice_kernel_locally_free D R p w χ hc hB hG1 hG2 haf
-  have h68 := GlobalTheory.T.lattice_good_base_change D R p w χ hc hB hG1
+  obtain ⟨hdL, hdB⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.LatticeGoodness.StepIdeal.main D R p w χ hc hB hG1 hG2
+  obtain ⟨hsL, hsB⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.LatticeGoodness.stepKer D R p w χ hc hB hG1 hG2
+  have hkL := _root_.GlobalTheory.CompanionTheory.Ar.Num.LatticeGoodness.KerFree.main D R p w χ hc hB hG1 hG2 haf
+  have h68 := _root_.GlobalTheory.CompanionTheory.Ar.Num.LatticeGoodBaseChange.main D R p w χ hc hB hG1
   refine ⟨fun τ => ⟨hkL τ, fun i => ⟨hdL τ i, hsL τ i⟩⟩, ?_⟩
   intro C _ _ _ _ RC hRC
   have hbc := h68.2 C RC hRC
-  have h69 := GlobalTheory.T.kernel_graph_base_change_holds D R p w χ hc hB hG1 C RC hRC
-  have h70 := GlobalTheory.T.lattice_image_base_change D R p w χ hc hB hG1 haf C RC hRC
+  have h69 := _root_.GlobalTheory.CompanionTheory.Ar.Num.kernel_graph_base_change D R p w χ hc hB hG1 C RC hRC
+  have h70 := _root_.PositivityTheory.Xgn.image_lattice_base_change D R p w χ hc hB hG1 haf C RC hRC
   refine ⟨⟨fun τ i => ?_, fun τ i => ?_, fun τ i => ?_, fun τ => ?_⟩,
     fun τ => ⟨GlobalTheory.T.character_lattice_base_change_free D R p w χ hc hB hG1 hG2 haf C RC hRC τ,
       fun i => ⟨hdB C RC hRC τ i, hsB C RC hRC τ i⟩⟩⟩
   · beta_reduce
     rw [(hbc.2 τ).1, ← span_bcMap_annSub Ω C n i]
-    exact (GlobalTheory.T.locally_free_base_change_summand R RC hRC (bcMap Ω C (Fin n)) (isBaseChange_bcMap Ω C (Fin n))
+    exact (_root_.GlobalTheory.CompanionTheory.Ar.Num.summand_baseChange R RC hRC (bcMap Ω C (Fin n)) (isBaseChange_bcMap Ω C (Fin n))
       (D.af R p (χ τ)) (annSub Ω n i) (h68.1 τ).1.1 (hG2.ann τ i)).1
   · rw [(h69 τ).1 i]
     exact loc_free_base_change R RC hRC (hG2.kk τ i)

@@ -1,12 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.EeProd
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CompletedLaurentIsDVRStatementStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIntegralBasisOfIntegralAlgebraicElementsStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RamifiedDivisibilityOfUnramifiedDivisibilityStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NotCoboundaryConstantOne
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CompletedLaurentIsDVRStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIntegralBasisOfIntegralAlgebraicElements
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RamifiedDivisibilityOfUnramifiedDivisibility
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ResidueLinearDisjointnessCoeffLtOneStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnramifiedIntegersAdicCompleteStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ValuationLeOneIffIsIntegralOfCompleteDvrStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnramifiedIntegersAdicComplete
+public import Mathlib.Basic.NNReal.Defs
+public import Mathlib.RingTheory.Algebraic.Defs
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Mathlib.RingTheory.IntegralClosure.IsIntegral.Defs
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ValuationLeOneIffIsIntegralOfCompleteDvr
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -181,13 +186,13 @@ theorem GlobalTheory.Glue.ev_cong_iff_and_unit :
   intro p _ Ω _ _ hC T n ψ hψ k c x x' hEv
   have hval : ∃ v : Valuation Ω ℝ≥0, (∀ y, v y ≤ 1 ↔ IsInt (p := p) y) ∧
       0 < v (p : Ω) ∧ v (p : Ω) < 1 := by
-    obtain ⟨_, _, hirr⟩ := GlobalTheory.T.completed_laurent_isDVR_statement p
+    obtain ⟨_, _, hirr⟩ := _root_.GlobalTheory.K5.completed_laurent_isDVR p
     have : IsAdicComplete (IsLocalRing.maximalIdeal (O0 p)) (O0 p) := by
       rw [hirr.maximalIdeal_eq]
-      exact GlobalTheory.T.unramified_integers_adic_complete p
+      exact _root_.GlobalTheory.K5.o0_isAdicComplete_span_p p
     have := hC.alg
     obtain ⟨v, hv⟩ :=
-      GlobalTheory.T.exists_valuation_le_one_iff_isIntegral_of_complete_dvr (O0 p) Ω hC.inj
+      _root_.GlobalTheory.valuation_le_one_iff_isIntegral_of_complete_dvr (O0 p) Ω hC.inj
     have : CharZero Ω := GlobalTheory.K5.Basic.charZero_of_isClo hC
     have hp : (p : Ω) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
     refine ⟨v, hv, (Valuation.pos_iff v).2 hp, ?_⟩
@@ -207,7 +212,7 @@ theorem GlobalTheory.Glue.ev_cong_iff_and_unit :
   have hxv : v x ≤ 1 := by
     rw [hx]; exact v.map_sum_le fun t _ => by rw [map_mul]; exact mul_le_one' (hev t) (hψv _)
   refine ⟨?_, ?_⟩
-  · obtain ⟨E, F, π, κ, lam, hE, -, hπE, hκ, hκu, hesp⟩ := GlobalTheory.T.exists_integral_basis_of_integral_algebraic_elements p Ω hC v hv hp0 hp1 d e he
+  · obtain ⟨E, F, π, κ, lam, hE, -, hπE, hκ, hκu, hesp⟩ := _root_.GlobalTheory.K5.OkBasis.okbasis p Ω hC v hv hp0 hp1 d e he
     have hπ1 : v π < 1 := by
       by_contra h
       push_neg at h
@@ -226,7 +231,7 @@ theorem GlobalTheory.Glue.ev_cong_iff_and_unit :
       have h2 := hr r
       rw [h1] at h2
       exact lt_irrefl _ h2
-    have K1 := GlobalTheory.T.ramified_divisibility_of_unramified_divisibility p Ω v ψ E F π κ hE hp0 hp1 hπE hκv hψv LeviInductionForms
+    have K1 := _root_.GlobalTheory.KZ.ramified_divisible_of_unramified p Ω v ψ E F π κ hE hp0 hp1 hπE hκv hψv LeviInductionForms
     have Kk := key_k v hp0 hp1 ψ π κ hπ1.le hκv hψv K1
     obtain ⟨B, hB⟩ : ∃ B : Fin F → Fin E → Lau p, ∀ j s, B j s = ∑ t, HahnSeries.C (lam t j s) * a t :=
       ⟨_, fun _ _ => rfl⟩

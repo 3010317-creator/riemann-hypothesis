@@ -2,7 +2,7 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueEquivStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueEquiv
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.HtatLieB
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -125,7 +125,7 @@ theorem lie_free : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] (g : ℕ), Smoot
     (fun c e a => by
       simp only [Pi.smul_apply, smul_eq_mul, Finset.mul_sum]
       exact Finset.sum_congr rfl fun i _ => mul_assoc _ _ _) d4 d5
-  obtain ⟨f, -, -⟩ := GlobalTheory.T.lie_model_existsUnique_equiv S G R x E (Fin g → R) M M'
+  obtain ⟨f, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_existsUnique_equiv S G R x E (Fin g → R) M M'
   exact ⟨Module.Basis.ofEquivFun f⟩
 
 end PositivityTheory.UnitarySelfGeneration

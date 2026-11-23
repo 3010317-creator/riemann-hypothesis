@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.GaloisSideTwistedSelmerAuxiliaryPrimes
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsLevelOrderExponentsSmallValuationDeterminaStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.BlochKatoPhases
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsLevelOrderExponentsSmallValuationDetermina
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -341,7 +342,7 @@ theorem exists_level (i : X.Tw) (R Dd nmax M₀ : ℕ) (I J : Type) [Finite I] [
   haveI := X.twistBaseCoefficientRing_residueField_finite i
   haveI := isLocalHom_O i
   choose D1 g hDg using hf
-  obtain ⟨M, k, e, hM, hk, hkM, he, H⟩ := GlobalTheory.T.exists_level_order_exponents_small_valuation_determinants (X.O0 i) (X.O i) (X.O_inj i) (X.l i) hl (l_ne_zero_Ok i 0).2.2
+  obtain ⟨M, k, e, hM, hk, hkM, he, H⟩ := _root_.GlobalTheory.OrderEval.order_eval (X.O0 i) (X.O i) (X.O_inj i) (X.l i) hl (l_ne_zero_Ok i 0).2.2
     (l_not_unit i 0).2.2 R Dd nmax M₀ I J (fun _ => μ) v (fun M x => if h : M₀ ≤ M then F M h x else 0)
     (fun M x => if h : M₀ ≤ M then f M h x else 0) (fun M x => if h : M₀ ≤ M then D1 M h x else 0)
     (fun M x => if h : M₀ ≤ M then g M h x else 0)

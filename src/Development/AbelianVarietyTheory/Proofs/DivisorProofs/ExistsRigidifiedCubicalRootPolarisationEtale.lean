@@ -1,9 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsSeparatedOfIsQProjOver
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompleteLocalGeomDomainStatement
+public import Mathlib.FieldTheory.PurelyInseparable.Basic
+public import Mathlib.RingTheory.AdicCompletion.Basic
+public import Mathlib.RingTheory.LocalRing.ResidueField.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompleteLocalGeomDomain
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRigLBCubical
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSeparablePointOfGeometricallyDomainStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSeparablePointOfGeometricallyDomain
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteUnramifiedExtensionGroupLift
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MumfordBundleRootExistsOverFgSubalgebraStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MumfordBundleRootLiftsFromResidueCompleteLocalStatement
@@ -100,7 +103,7 @@ theorem exists_rigLB_sFam_etale :
   haveI : Algebra.IsIntegral k B := ⟨fun b => (isIntegral_algHom_iff B.val Subtype.val_injective).1 (Algebra.IsIntegral.isIntegral (R := k) (b : AlgebraicClosure k))⟩
   haveI : Module.Finite k B := Algebra.IsIntegral.finite
 
-  obtain ⟨C, _, _, _, _, hC, ⟨ιC⟩, hdom⟩ := GlobalTheory.T.exists_complete_local_geomDomain' k B inferInstance
+  obtain ⟨C, _, _, _, _, hC, ⟨ιC⟩, hdom⟩ := _root_.GlobalTheory.SepRing.exists_complete_local_geomDomain k B inferInstance
   let tC : Sp C ⟶ F.X := spMap (algebraMap k C) ≫ t₀
   have h₃ : Root F.univ.A F.univ.P (spMap (residue C) ≫ tC) := by
     refine root_congr ?_ (h₂.comp hAb (spMap ιC.toRingHom))
@@ -121,7 +124,7 @@ theorem exists_rigLB_sFam_etale :
         Subtype.val_injective
       exact this
     exact hm.isDomain m
-  obtain ⟨k'', _, _, hfin, hsep, ⟨ψ⟩⟩ := GlobalTheory.T.exists_separable_point_of_geometrically_domain k B' ((Subalgebra.fg_iff_finiteType B').1 hB') hdom'
+  obtain ⟨k'', _, _, hfin, hsep, ⟨ψ⟩⟩ := _root_.GlobalTheory.SepPoint.exists_sepPoint k B' ((Subalgebra.fg_iff_finiteType B').1 hB') hdom'
   have h₆ : Root F.univ.A F.univ.P (spMap (algebraMap k k'') ≫ t₀) := by
     refine root_congr ?_ (h₅.comp hAb (spMap ψ.toRingHom))
     rw [← Category.assoc, spMap_comp']

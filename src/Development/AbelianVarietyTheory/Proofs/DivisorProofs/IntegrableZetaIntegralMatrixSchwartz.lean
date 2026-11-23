@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IndicatorIntMMemSB
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegrableDetPowIndicatorIntegerGl
 import Development.AbelianVarietyTheory.Definitions.Foundations.SecondCountableAndT2LocalField
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegrableDetPowIndicatorIntegerGlStatement
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormalizedAbsCharacterization
 import Formalism.DoubleCosetMeasures.StatementZ
@@ -126,7 +126,7 @@ theorem integrable_gjIntegrand : ∀ (k : Type) [Field k] [ValuativeRel k] [Topo
     simp
   set T : GL (Fin n) k → ℝ := fun g =>
     (intM k (Fin n) (Fin n)).indicator (fun _ => (1 : ℝ)) g.val * nabs k (gdet g) ^ z.re with hT
-  have hTi : Integrable T (haarVol (KO k (Fin n))) := GlobalTheory.T.integrable_det_pow_indicator_integer_gl k n z.re hz
+  have hTi : Integrable T (haarVol (KO k (Fin n))) := _root_.GlobalTheory.GJTransfer.integrable_indicator_intM_mul_nabs_rpow k n z.re hz
   have hT0 : ∀ g, 0 ≤ T g := fun g =>
     mul_nonneg (Set.indicator_nonneg (fun _ _ => zero_le_one) _) (Real.rpow_nonneg (nabs_pos_unit _).le _)
   set D : ℝ := |C| * (nabs k c ^ n) ^ z.re with hD

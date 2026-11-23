@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TrivIsCr
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AinfDvdOfClosedDiscDvdEisensteinPowStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AinfDvdOfClosedDiscDvdEisensteinPow
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinDiscExistsConstAddXMulStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsDiscMaps
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisActionExtendsToAinfDiscRings
@@ -152,4 +153,4 @@ theorem GlobalTheory.BKLim.Frame.isCr_of_wSeed : ∀ (l : ℕ) [Fact l.Prime] (K
     have h := congrFun (congrFun k3 i) j
     simp only [Matrix.map_apply, Matrix.sub_apply, Matrix.one_apply] at h ⊢
     split_ifs at h ⊢ <;> simp [h]
-  exact (GlobalTheory.T.ainf_dvd_of_closed_disc_dvd_eisenstein_pow l K bk _).2 (Ideal.mem_span_singleton.1 (Ideal.Quotient.eq_zero_iff_mem.1 k5))
+  exact (_root_.GlobalTheory.BSP.ainf_dvd_of_disc_dvd l K bk _).2 (Ideal.mem_span_singleton.1 (Ideal.Quotient.eq_zero_iff_mem.1 k5))

@@ -2,12 +2,13 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsOrthFull
 public import GroundTheory.HeightsAndTheta.Heights.LatticeLemmas.StatementsBundles
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.NormalizedDegreeBoundedMapStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.NormalizedDegreeFullRankSublatticeStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SlopeBoundComparableMetricStatement
-import GroundTheory.HeightsAndTheta.Heights.HeightsOfSets.DegreeTopEqArithDegree
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.NormalizedDegreeBoundedMap
+public import GroundTheory.HeightsAndTheta.Heights.HeightsOfSets.Slopes
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.NormalizedDegreeFullRankSublattice
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SlopeBoundComparableMetric
 public import GroundTheory.HeightsAndTheta.Heights.HeightsOfSets.HeightsSetAll
 public import GroundTheory.HeightsAndTheta.Heights.LatticeLemmas.PExactSequence
+import GroundTheory.HeightsAndTheta.Heights.HeightsOfSets.DegreeTopEqArithDegree
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -196,9 +197,9 @@ theorem slopeMax_le_log : ∀ (g : ℕ) (C : ℝ), 1 ≤ C → ∃ C' : ℝ, 0 �
     rw [← h1]
     simp only [sqAt]
     rw [X.incl_isometric]
-  obtain ⟨hP1, hP2⟩ := GlobalTheory.T.slope_bound_comparable_metric K (E.sub P) r b C hC (fun σ w => by rw [hb]; exact hgram σ w)
+  obtain ⟨hP1, hP2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.basis_slope_degree_bound K (E.sub P) r b C hC (fun σ w => by rw [hb]; exact hgram σ w)
 
-  obtain ⟨hQ1, hQ2⟩ := GlobalTheory.T.normalized_degree_bounded_map K (E.quot P hP) E' φ C hφinj hC0
+  obtain ⟨hQ1, hQ2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.MapCompare.main K (E.quot P hP) E' φ C hφinj hC0
     (fun σ y => sqAt_barMap_le E E' P hP q hPq C hexp σ y)
 
   have hrP : Module.finrank (𝓞 K) (E.sub P).carrier = r := by
@@ -215,7 +216,7 @@ theorem slopeMax_le_log : ∀ (g : ℕ) (C : ℝ), 1 ≤ C → ∃ C' : ℝ, 0 �
     exact (LinearMap.finrank_range_of_inj hφinj).symm
   have hsum : r + Module.finrank (𝓞 K) E'.carrier = g := by
     rw [← hg, hrk, hrP, hrQ]
-  obtain ⟨hI1, -⟩ := GlobalTheory.T.normalized_degree_full_rank_sublattice K E' ((⊤ : Submodule (𝓞 K) (E.quot P hP).carrier).map φ) hrange
+  obtain ⟨hI1, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.IndexBound.full_sublattice_normDegree_bounds K E' ((⊤ : Submodule (𝓞 K) (E.quot P hP).carrier).map φ) hrange
 
   have hdeg : E.normDegree ⊤ = (E.sub P).normDegree ⊤ + (E.quot P hP).normDegree ⊤ := by
     rw [normDegree_top_eq, normDegree_top_eq, normDegree_top_eq, X.arithDegree_eq_add, add_div]

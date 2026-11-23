@@ -1,11 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsTestRep
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleHermitianPairStructureFactsStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleHermitianPairStructureFacts
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FourierEtaleKEqIntegralPartialFourier
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelfDualIffLatticeVolumeAndPlancherel
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FourierMatch
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedValuationParitySignCharacterKernelNorm
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyMeasAndReps
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelfDualIffLatticeVolumeAndPlancherelStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedValuationParitySignCharacterKernelNormStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -85,7 +86,7 @@ theorem norm_eta (x : F) : ‖eta x‖ = 1 := by
 theorem measurable_etaK [Unram F E] (A : Et F E) : Measurable A.etaK := by
   letI : MeasurableSpace F := borel F
   haveI : BorelSpace F := ⟨rfl⟩
-  obtain ⟨-, -, -, hlc⟩ := GlobalTheory.T.unramifiedValuationParitySign_character_kernel_norms F E
+  obtain ⟨-, -, -, hlc⟩ := _root_.GlobalTheory.EtaChar.main F E
   have hc : ContinuousOn (eta : F → ℂ) {0}ᶜ := by
     rw [continuousOn_iff_continuous_restrict]
     exact hlc.continuous
@@ -97,7 +98,7 @@ theorem collapse : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNor
   have := U.charZero; have := U.ultraF; have := U.lcF
   haveI := GlobalTheory.FourKFub.secondCountableK A
   obtain ⟨_, _, _, _, -⟩ := GlobalTheory.JR.EtMeas.top_facts F A.K
-  obtain ⟨-, -, hnd, -, -, -, -, -, -, hOKo, hOKc, R, hR⟩ := GlobalTheory.T.etaleHermitianPair_structure_facts F E A
+  obtain ⟨-, -, hnd, -, -, -, -, -, -, hOKo, hOKc, R, hR⟩ := _root_.GlobalTheory.JR.EtFacts.main F E A
   have hψc := GlobalTheory.FourKFub.psiK_continuous A ψ hψ
   have hηm := measurable_etaK A
   have hφc : Continuous φ' := hφ.1.continuous
@@ -138,7 +139,7 @@ theorem collapse : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNor
       (Eventually.of_forall fun q => (norm_eta _).le)
 
   have hsymm : (Algebra.traceForm F A.K).IsSymm := ⟨fun x y => by simp [mul_comm]⟩
-  have hI := fun y => ((GlobalTheory.T.selfDual_iff_lattice_volume_and_plancherel_alt F E ψ hψ A.K (Algebra.traceForm F A.K) hsymm hnd μK hμ).1 M hMo hMc).2 y
+  have hI := fun y => ((_root_.GlobalTheory.JR.selfDual_iff_lattice_volume_and_plancherel F E ψ hψ A.K (Algebra.traceForm F A.K) hsymm hnd μK hμ).1 M hMo hMc).2 y
   set N : Set A.K := {y : A.K | ∀ x : A.K, c • x ∈ A.OK → A.psiK ψ (x * y) = 1} with hNdef
   have hN : {y | ∀ x ∈ M, ψ (Algebra.traceForm F A.K x y) = 1} = N := by
     ext y

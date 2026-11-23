@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComapMaximalIdealEqOrigin
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GoodIffEtaleAt
 public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleAtPrimeBaseChangeOfIntegralClosureEtaleStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleAtPrimeBaseChangeOfIntegralClosureEtale
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleIntegrallyClosedInLocalizationStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsClosureBaseChangeMapsAndRetractionStatement
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsDomainAndIsIntegrallyClosedAtPrimeOfSmoothOfCo
@@ -79,7 +79,7 @@ theorem closureEtaleAt_bc : ∀ (A R A₁ R₁ : Type) [CommRing A] [IsDomain A]
     ((algebraMap R₁ (Localization.AtPrime P₁)).comp κ).toAlgebra
   letI : Algebra R₁ (BC β DA) := (baseHom A₁ R₁ (BC β DA)).toAlgebra
   haveI hE : Algebra.Etale (Localization.AtPrime P₁) (Localization.AtPrime P₁ ⊗[R] closure A R DA) :=
-    GlobalTheory.T.etale_atPrime_baseChange_of_integralClosureEtale A R R₁ DA κ P₁ hP
+    _root_.GlobalTheory.KeyOriginEnlarge.closureEtaleAt_comap_baseChange_atPrime A R R₁ DA κ P₁ hP
   haveI : IsDomain (Localization.AtPrime P₁) :=
     IsLocalization.isDomain_localization P₁.primeCompl_le_nonZeroDivisors
   haveI : IsIntegrallyClosed (Localization.AtPrime P₁) :=

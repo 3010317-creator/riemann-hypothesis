@@ -1,16 +1,19 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DefClassNum
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GaugeMeasureMatrixAlgebraSubgroupLocalAsymptoticStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryJLieCoordsConjLinearStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryJMapConjEqSmulOfNormalizingStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GaugeMeasureMatrixAlgebraSubgroupLocalAsymptotic
+public import Formalism.SharpRestriction.CuspSpanNormBounds.GlobAut
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryJLieCoordsConjLinear
+public import Formalism.RealPlaceAnalysis.InstMeasurableSpaceUJ
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryJMapConjEqSmulOfNormalizing
 public import Formalism.RealPlaceAnalysis.RealPlaceTaylor.RightDerivativeZeroOutsideSupport
+public import Mathlib.Analysis.Calculus.BumpFunction.Normed
+public import Mathlib.Analysis.Calculus.BumpFunction.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
-public import Mathlib.Analysis.Calculus.BumpFunction.Normed
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
@@ -48,7 +51,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Algebra.Group.Units
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.Analysis.Calculus.BumpFunction.Basic
 
 @[expose] public section
 
@@ -179,7 +181,7 @@ theorem map_conj_eq_inv_det_smul (n : ℕ) (ε : Fin n → Bool) (A : Submodule 
     (hmL : ∀ k, uMat m * E k * uMat m⁻¹ = ∑ i, L i k • E i) (hL : L.det ≠ 0) :
     μ.map (fun u => m * u * m⁻¹) = ENNReal.ofReal |L.det|⁻¹ • μ := by
   have hSe : (S : Set (Formalism.REAL.UJ ε)) = {g | uMat g - 1 ∈ A} := Set.ext hS
-  obtain ⟨-, hK, -, r₀, hr₀, hlim⟩ := GlobalTheory.T.gaugeMeasure_matrixAlgebraSubgroup_local_asymptotics n ε A d E hA hE hsp μ (hSe ▸ hμ)
+  obtain ⟨-, hK, -, r₀, hr₀, hlim⟩ := _root_.GlobalTheory.GaugeSubLoc.gauge_local_asymptotics n ε A d E hA hE hsp μ (hSe ▸ hμ)
   obtain ⟨h1, h2, h3⟩ := hμ
   have hp : 0 < volume (Metric.ball (0 : EuclideanSpace ℝ (Fin d)) 1) := Metric.measure_ball_pos _ _ one_pos
   have hf : volume (Metric.ball (0 : EuclideanSpace ℝ (Fin d)) 1) < ⊤ := measure_ball_lt_top
@@ -199,7 +201,7 @@ theorem map_conj_eq_inv_det_smul (n : ℕ) (ε : Fin n → Bool) (A : Submodule 
     intro h
     rw [h, ENNReal.top_div_of_ne_top ENNReal.ofReal_ne_top] at hr2
     exact lt_irrefl _ hr2
-  obtain ⟨c, hcμ⟩ := GlobalTheory.T.unitaryJ_map_conj_eq_smul_of_normalizing n ε S μ hcl h1 h2 hK hne m hm
+  obtain ⟨c, hcμ⟩ := _root_.GlobalTheory.ConjScalesMeasure.map_conj_eq_smul n ε S μ hcl h1 h2 hK hne m hm
   have hC0 : 0 ≤ Formalism.REAL.hs (uMat m) * Formalism.REAL.hs (uMat m⁻¹) :=
     mul_nonneg (Formalism.REAL.frobenius_nonneg _) (Formalism.REAL.frobenius_nonneg _)
   have hT : Continuous (fun u : Formalism.REAL.UJ ε => m * u * m⁻¹) := by fun_prop
@@ -212,7 +214,7 @@ theorem map_conj_eq_inv_det_smul (n : ℕ) (ε : Fin n → Bool) (A : Submodule 
   · rw [hcμ, ← key, ENNReal.ofReal_coe_nnreal]
   · have : ∀ᵐ g ∂μ, g ∈ (S : Set (Formalism.REAL.UJ ε)) := h1
     filter_upwards [this] with g hg
-    exact GlobalTheory.T.unitaryJ_lieCoords_conj_linear n ε A d E hE hsp g m L ((hS g).1 hg) ((hS _).1 (S.inv_mem hg)) hmL
+    exact _root_.GlobalTheory.UnitaryCoords.coords_conj n ε A d E hE hsp g m L ((hS g).1 hg) ((hS _).1 (S.inv_mem hg)) hmL
   · intro g
     have := hs_conj_le m g
     have := Formalism.REAL.frobenius_nonneg (uMat g - 1)

@@ -2,15 +2,19 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ToroidalCompactificationBis
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsVanBdOfMemExtVanZ
-import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.EventuallyExistsFiniteSubsetNonzeroLocus
-import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BorelWeilFlagModelDetInverseIsAmpleLocalStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.UnitaryWeightExponentVectorSignatureWeightMuZero
+public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAmpleLBOfRelAmpleOfIsAffine
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BorelWeilFlagModelDetInverseIsAmpleLocal
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommonRestrIsoTens
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCommonModification
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasFibrewiseNonvanishingThetaSectionOfSmoothMode
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAmplePullbackPowerDivOfLocallyAmpleStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSingle
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAmplePullbackPowerDivOfLocallyAmple
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LbIsoOfCoboundary
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyIntegralFlagModelOfSmoothCoefficientFielStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyIntegralFlagModelOfSmoothCoefficientFiel
+import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.EventuallyExistsFiniteSubsetNonzeroLocus
+import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasFibrewiseNonvanishingThetaSectionOfSmoothMode
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PushInvertibleOfHasTheta
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -150,7 +154,7 @@ theorem exists_nonvanishing_of_toroidal : GlobalTheory.Published.SiegelToroidalI
   intro hS hK E _ _ _ H Dw l Xo c σ hr a n hD y
   classical
   obtain ⟨φ, Y, BD, d, k, -, -, -, -, -, a₁, a₂, a₃, a₄, -, -, hY, hA⟩ := hK.exists_model hS hr Xo c
-  obtain ⟨fl⟩ := GlobalTheory.T.nonempty_integralFlagModel_of_smooth_coefficientField E H Dw l Xo c Y a₁ (GlobalTheory.CompHS.TorFlagEx.pushInvertible_of_hasTheta Y
+  obtain ⟨fl⟩ := _root_.GlobalTheory.FlagMod.FieldFlag.nonempty_flagModel E H Dw l Xo c Y a₁ (GlobalTheory.CompHS.TorFlagEx.pushInvertible_of_hasTheta Y
     (GlobalTheory.ThetaNormal.hasTheta_of_smooth E H Dw hr l Xo c Y a₁))
   let TF : TorFlag Xo c := ⟨Y, a₁, a₂, a₃, fl⟩
   have : IsProper Y.s := projProper _ _ _ Y.proj
@@ -181,9 +185,9 @@ theorem exists_nonvanishing_of_toroidal : GlobalTheory.Published.SiegelToroidalI
     have e₃ : AllWt.exOf Dw (FlagMod.mu0 Dw) 0 = w := FlagMod.unitaryWeightExponentVector_signatureWeightMuZero
     show cls (TF.X.F.LL w) _ = cls (TF.X.F.LL (AllWt.exOf Dw (FlagMod.mu0 Dw) 0)) _
     simp only [e₃]
-  obtain ⟨n₀, hn⟩ := GlobalTheory.T.isAmple_pullbackPower_div_of_locally_ample TF.X.π _ hA (TF.X.F.LL (-e₀)) (TF.X.F.LL e₀) (TF.X.F.isLB_LL _) (TF.X.F.isLB_LL _)
+  obtain ⟨n₀, hn⟩ := _root_.GlobalTheory.AmpleTwistLB.ample_pow_div TF.X.π _ hA (TF.X.F.LL (-e₀)) (TF.X.F.LL e₀) (TF.X.F.isLB_LL _) (TF.X.F.isLB_LL _)
     (by have := hneg e₀; show Lc e₀ = - Lc (-e₀); rw [this, neg_neg])
-    (fun z => GlobalTheory.T.borelWeil_flagModel_detInverse_isAmple_local fl z)
+    (fun z => _root_.GlobalTheory.FlagPlucker.isAmpleLB_LL_flagModel fl z)
   let m : ℕ := max n₀ 1
   have hm : 1 ≤ m := le_max_right _ _
   have hP := hn m (le_max_left _ _)

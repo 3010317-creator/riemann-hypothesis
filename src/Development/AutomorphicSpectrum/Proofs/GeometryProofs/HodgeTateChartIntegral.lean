@@ -3,16 +3,28 @@ module
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.IsPolLatticePlane
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.HTChartExists
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.CompleteIntegersPropertiesStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HodgeTateConstantDividesPSqStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.IntegralPointCompleteValuedFieldStatement
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.NumberTheory.Padics.PadicIntegers
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.CompleteIntegersProperties
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HodgeTateConstantDividesPSq
+public import Mathlib.Basic.NNReal.Defs
+public import Mathlib.RingTheory.AdicCompletion.Basic
+public import Mathlib.RingTheory.Ideal.Height
+public import Mathlib.RingTheory.Valuation.Integers
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.IntegralPointCompleteValuedField
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueAct
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFiniteProjectiveStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelIsBaseChangeStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelRankEqGeneric
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TateIsoTorsionTowerStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionTowerWeilPairingStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.NonemptyLinearEquivOfPiFinPowFinite
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TateIsoTorsionTower
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionTowerWeilPairing
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFiniteProjective
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelIsBaseChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -116,13 +128,13 @@ theorem finrank_lie_eq (S : Scheme.{0}) (G : Over S) [GrpObj G] [Smooth G.hom]
     (x : Sp R ⟶ S) (L L' : Type) [AddCommGroup L] [Module R L] [AddCommGroup L'] [Module O L']
     (M : LieModel G x L) (M' : LieModel G (spMap (algebraMap R O) ≫ x) L') :
     Module.finrank O L' = Module.finrank R L := by
-  obtain ⟨hf, hp⟩ := GlobalTheory.T.lie_model_finite_projective S G R x L M
+  obtain ⟨hf, hp⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_finite_projective S G R x L M
   letI : Module R L' := Module.compHom L' (algebraMap R O)
   haveI : IsScalarTower R O L' := ⟨fun a b c => by
     rw [Algebra.smul_def, mul_smul]
     rfl⟩
   obtain ⟨j, hj⟩ := LieRank.exists_lift G x M M'
-  have hbc := GlobalTheory.T.lie_model_isBaseChange S G R O x L L' M M' j hj
+  have hbc := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_isBaseChange S G R O x L L' M M' j hj
   rw [← LinearEquiv.finrank_eq hbc.equiv,
     finrank_eq_rankAtStalk (IsLocalRing.closedPoint (FractionRing O) |> PrimeSpectrum.comap (algebraMap O (FractionRing O))),
     Module.rankAtStalk_baseChange]
@@ -170,9 +182,9 @@ namespace GlobalTheory.CompanionTheory.Ar.HT
 open GlobalTheory.CompanionTheory.Ar.HT.TestPts in
 theorem hasTestPoints_of_tate : PointHT → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (p : ℕ) [Fact p.Prime] (R K : Type) [CommRing R] [IsDomain R] [IsNoetherianRing R] [IsIntegrallyClosed R] [CharZero R] [Field K] [Algebra R K] [IsFractionRing R K] (n : ℕ) (Ω : Type) [AddCommGroup Ω] [Module K Ω] [Module R Ω] [IsScalarTower R K Ω] (Dc : HTChart R K (IsCMField.complexConj E).toRingEquiv p n (D.p + D.q) Ω) (u : Fin (D.p + D.q) → D.La) (hu : IsPolLattice (IsCMField.complexConj E).toRingEquiv p D.EF u) (S : Scheme.{0}) [IsLocallyNoetherian S] (t : SAB H S) (x : Sp R ⟶ S) (Γ₀ : QFGroup R (LevGrp D.La p n)) (i : Γ₀.G.left ⟶ t.G.left) (hi : Γ₀.IsTorsionAlong t.G x (p ^ n) i) (L : Type) [AddCommGroup L] [Module R L] (M : LieModel t.G x L) (ρ : 𝓞 E →+* Module.End R L) (hρ : M.IsActOf t.act.act ρ) (j : Module.Dual R L →ₗ[R] Ω) (hj : IsBaseChange K j) (π : Multiplicative (Fin (D.p + D.q) → 𝓞 E) →* LevGrp D.La p n) (ζ₀ : Rˣ) (κ : R), IsHTChartOf Dc Γ₀ i M ρ j π ζ₀ → (∀ z, π (Multiplicative.ofAdd z) = lev p n (∑ k, z k • u k)) → (∀ z z', Dc.e z z' = ((D.EF (∑ k, z k • u k) (∑ k, z' k • u k) : ℤ) : ZMod (p ^ n))) → 2 * Module.finrank R L = Module.finrank ℤ D.La → IsProper (Limits.pullback.snd t.G.hom ((BT.genPt R).hom ≫ x)) → (∀ (k : Type) [Field k] [IsAlgClosed k] (f : FractionRing R →+* k), ∃ I : TateIso D k (Over.mk (spMap f ≫ (BT.genPt R).hom ≫ x) ⟶ t.G) (fun a g => g ≫ t.act.act a) (fun n g g' c => Out.WeilIs t.G t.PP.L n g g' (unitOn c)), (I.ζ (p ^ n) : k) = f (algebraMap R _ (ζ₀ : R)) ∧ ∀ a, (I.ev (p ^ n) a).left = spMap f ≫ (Γ₀.pt (lev p n a)).left ≫ i) → (if p = 2 then κ = 4 else ∃ ζ : R, IsPrimitiveRoot ζ p ∧ κ = ζ - 1) → Dc.HasTestPoints κ := by
   intro hPt E _ _ _ H D p _ R K _ _ _ _ _ _ _ _ n Ω _ _ _ _ Dc u hu S _ t x Γ₀ i hi L _ _ M ρ hρ j hj π ζ₀ κ hc hπ he hrank hprop hTate hκ 𝔮 hq hh hpq
-  obtain ⟨C, O, iF, iAC, iCZ, iR, iD, iAl, v, φ, hv, hp, hO, hinj, hcent⟩ := GlobalTheory.T.integral_point_complete_valued_field R p 𝔮 hq hh hpq
+  obtain ⟨C, O, iF, iAC, iCZ, iR, iD, iAl, v, φ, hv, hp, hO, hinj, hcent⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HT.exists_complete_algClosed_center_of_height_one R p 𝔮 hq hh hpq
   letI : Algebra R O := φ.toAlgebra
-  obtain ⟨-, -, hIC, -, hAC, -⟩ := GlobalTheory.T.complete_integers_properties p C v O hv hp hO
+  obtain ⟨-, -, hIC, -, hAC, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HT.padicComplete_integers_structure p C v O hv hp hO
   haveI := hAC
   haveI := hIC
   have hgk : Function.Injective ((algebraMap O (FractionRing O)).comp φ) :=

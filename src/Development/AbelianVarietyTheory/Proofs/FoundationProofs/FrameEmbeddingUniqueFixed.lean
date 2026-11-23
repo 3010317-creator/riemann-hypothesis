@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IdxEqRelIndex
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AbsNormCmPrimeInertPrimeSignStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AbsNormCmPrimeInertPrimeSign
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsPrimeDvdMem
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -70,7 +70,7 @@ theorem simple_case (D : D7) (S : Type) [AddCommGroup S] [Module (𝓞 D.host.E)
   have hc : Nat.card S = Ideal.absNorm P := by
     rw [Nat.card_congr e.toEquiv, Ideal.absNorm_apply, Submodule.cardQuot_apply]
   have h0 : Ideal.absNorm P ≠ 0 := hc ▸ Nat.card_pos.ne'
-  obtain ⟨h1, h2, h3⟩ := GlobalTheory.T.absNorm_cmPrime_inertPrime_sign D P hP
+  obtain ⟨h1, h2, h3⟩ := _root_.GlobalTheory.InertResidue.norm_prime D P hP
   rw [hc]
   refine ⟨h1, fun h => ?_⟩
   by_cases hs : D.host.conj • P = P

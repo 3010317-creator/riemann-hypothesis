@@ -1,8 +1,8 @@
 module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.BlochKatoPhases
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormalizedValuationAlgebraMapEqStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormalizedValuationPrimitiveRootPrimePowSubOneStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormalizedValuationAlgebraMapEq
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormalizedValuationPrimitiveRootPrimePowSubOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -212,14 +212,14 @@ theorem value_at_root_sub_one : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDisc
     have hlu' : ¬ IsUnit (l : O') := by
       rw [← map_natCast (algebraMap O O')]
       exact fun h0 => hlu (IsLocalHom.map_nonunit _ h0)
-    obtain ⟨hz, hv⟩ := GlobalTheory.T.normalizedValuation_primitiveRoot_prime_pow_sub_one O' l k hl hk hl0' hlu' ζ hζ
+    obtain ⟨hz, hv⟩ := _root_.GlobalTheory.nval_primitiveRoot_prime_pow_sub_one O' l k hl hk hl0' hlu' ζ hζ
     have hc : ∀ i ∈ h.support, algebraMap O O' (h.coeff i) ≠ 0 := fun i hi h0 =>
       Polynomial.mem_support_iff.mp hi (hinj (by rw [h0, map_zero]))
     have hval : ∀ i ∈ h.support,
         Formalism.MainNotions.BlochKatoReduction.Gen.nval O' l (algebraMap O O' (h.coeff i) * (ζ - 1) ^ i)
           = ((a i : ℝ) + i * q k) / e := by
       intro i hi
-      rw [nval_mul_pow l (hc i hi) hz, hv, GlobalTheory.T.normalizedValuation_algebraMap_eq O O' hinj, ← hform, mul_one_div]
+      rw [nval_mul_pow l (hc i hi) hz, hv, _root_.GlobalTheory.nval_algebraMap_eq O O' hinj, ← hform, mul_one_div]
     have key := sum_unique_min l h.support
       (fun i => algebraMap O O' (h.coeff i) * (ζ - 1) ^ i)
       (fun i hi => mul_ne_zero (hc i hi) (pow_ne_zero _ hz)) (I k) (hIS k) (by

@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsTwiceDifferentiableAt
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MongeAmpereChartDensityIntegralStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MongeAmpereChartDensityIntegral
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.Partition
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -42,7 +43,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.Partition
 import GroundTheory.HeightsAndTheta.Heights.Antisymmetric.Statements
 
 @[expose] public section
@@ -121,7 +121,7 @@ theorem chartTerm_hasSum (A : FinHolAtlas e X) (V B : ℕ → Set (Fin e → ℂ
         exact ⟨h1, h2⟩
     rw [hEq]
     exact (hB n).1.inter hO.measurableSet
-  have key := fun n => GlobalTheory.T.monge_ampere_chart_density_integral e X A (V n) (B n ∩ Φ n ⁻¹' (A.chart j).source) (Φ n) P
+  have key := fun n => _root_.GlobalTheory.CompanionTheory.Ar.PB.param_chart_changeOfVariables e X A (V n) (B n ∩ Φ n ⁻¹' (A.chart j).source) (Φ n) P
     (fun x => Q.χ j x * g x) j (hpar n) (hCm n) (fun z hz => (hB n).2 hz.1) (fun z hz => hz.2)
     (fun z hz => hC2 n z hz.1)
   have hsub : ∀ n, (A.chart j ∘ Φ n) '' (B n ∩ Φ n ⁻¹' (A.chart j).source) ⊆

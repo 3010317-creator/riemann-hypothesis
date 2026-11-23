@@ -4,14 +4,14 @@ public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentation
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.WhittakerCovolume.MeasProps
 public import GroundTheory.AutomorphicForms.GL2.GJMatrixCoord
 public import GroundTheory.HeightsAndTheta.Theta.AdelicFourier
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNegOneOfStandardTraceAdelicAddChar
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelWeilKwhitMeasND
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelWeilKwhitMeasTop
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelWeilMeasdictHOfMain
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelWeilMeasdictToMx
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianCovolumeFormulaStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TupleSpaceCovolumeFormulaStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianCovolumeFormula
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TupleSpaceCovolumeFormula
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.WhittakerCovolume.CovolUnique
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNegOneOfStandardTraceAdelicAddChar
+import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelWeilKwhitMeasND
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -103,7 +103,7 @@ theorem measDict_of_k (hH : MeasP.HermCovol) (hT : MeasP.TupCovol) : _root_.Posi
     obtain ⟨hνH, 𝓖, hG, hG1⟩ := hνc
     haveI := hνH; haveI := hH'
     exact ⟨hemb, hemb.measurable, @MeasG.covol_unique _ _ _ _ _ _ _ _ d.ratM _ _ _ hνH hH' _ _ hG hfd hG1 h1⟩
-theorem measDict_k : _root_.PositivityTheory.SiegelWeilFormula.KWhit.MeasDict_k := _root_.PositivityTheory.SiegelWeilFormula.KWhit.measDict_of_k GlobalTheory.T.hermitian_covolume_formula GlobalTheory.T.tuple_space_covolume_formula
+theorem measDict_k : _root_.PositivityTheory.SiegelWeilFormula.KWhit.MeasDict_k := _root_.PositivityTheory.SiegelWeilFormula.KWhit.measDict_of_k _root_.GlobalTheory.CompanionTheory.SW.HermCov.hermCovol _root_.GlobalTheory.CompanionTheory.SiegelND.TupCovolume.tupCovol
 end PositivityTheory.SiegelWeilFormula.KWhit
 end
 end

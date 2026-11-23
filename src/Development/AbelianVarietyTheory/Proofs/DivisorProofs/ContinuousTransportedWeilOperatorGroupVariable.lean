@@ -1,9 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUSplittingInl
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousAtCharSeriesCoefZeroStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousAtCharSeriesCoefZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalFiniteDimFinitePartsWeilOperatorsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSummableMajorantAdelicSchwartzLocallyUnifoStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSummableMajorantAdelicSchwartzLocallyUnifo
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTransformTransportedWeilContinuousStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilOperatorArchimedeanSliceSchwartzSeminormBounStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -100,7 +102,7 @@ theorem continuous_transport_apply : ∀ (D : D7) (ψ : AddChar (AF D.host.F) �
     rw [hslice p hpN i v]
     exact h1.trans ((le_abs_self _).trans
       (Finset.single_le_sum (f := fun i => |C i|) (fun _ _ => abs_nonneg _) (Finset.mem_univ i)))
-  obtain ⟨M, hM, hMb⟩ := GlobalTheory.T.exists_summableMajorant_adelicSchwartz_locallyUniform D.host.F κ (fun p => om p Φ) p0 m g f hg
+  obtain ⟨M, hM, hMb⟩ := _root_.GlobalTheory.SchwartzMajorant.exists_summable_majorant D.host.F κ (fun p => om p Φ) p0 m g f hg
     (Filter.eventually_of_mem hN fun p hp => hfe p hp) hbd z
   let e : (κ → D.host.F) → AddChar (κ → AF D.host.F) ℂ := fun a =>
     ψ.compAddMonoidHom (AddMonoidHom.mk' (fun y => (fun i => algebraMap D.host.F (AF D.host.F) (a i)) ⬝ᵥ y)
@@ -135,7 +137,7 @@ theorem continuous_transport_apply : ∀ (D : D7) (ψ : AddChar (AF D.host.F) �
       intro p
       simp only [hform, ← mul_assoc, hψinv, one_mul]
     exact ((continuous_const.mul (hth _)).continuousAt).congr (Filter.Eventually.of_forall h2)
-  have hL := GlobalTheory.T.continuousAt_coeff_zero_of_continuousAt_char_series e (fun a y => hψ.1.2.1 _) h0 hne _ p0 M hM hMb hc
+  have hL := _root_.GlobalTheory.continuousAt_charSeries_coef_zero e (fun a y => hψ.1.2.1 _) h0 hne _ p0 M hM hMb hc
   simpa using hL
 
 end GlobalTheory.WeilCont

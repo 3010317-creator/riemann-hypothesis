@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPotential
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BhattScholzeCrystallineLattices
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinFullFaithfulnessLatticeMorphism
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisEqMulKisinInfTameSemidirectStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisEqMulKisinInfTameSemidirect
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -90,7 +90,7 @@ theorem main : GlobalTheory.Published.BhattScholzeCrystallineLattices → ∀ (l
   have key : toW (thetaW a LL) ϖ Pk.D.toPhiMod u = Pk.R.I.ofT x :=
     h6.symm.trans ((congrArg (homW (thetaW a LL) ϖ F) h0).trans (IsMapOf.homW_ofT hF x'))
   refine ⟨u, x, rfl, (Descent.mem_invOf _).2 ⟨huM, fun γ => ?_⟩, ?_, key⟩
-  · obtain ⟨k, -, hk⟩ := (GlobalTheory.T.galois_eq_mul_kisinInf_tameSemidirect l a e ϖ LL).2.2.1 γ
+  · obtain ⟨k, -, hk⟩ := (_root_.GlobalTheory.TameCover.main l a e ϖ LL).2.2.1 γ
     have hkG : k ∈ GK (Formalism.MainNotions.ElementDenominator.qlExt l) := by
       intro y
       obtain ⟨y, hy⟩ := y

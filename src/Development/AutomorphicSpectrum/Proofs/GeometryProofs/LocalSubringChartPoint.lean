@@ -1,9 +1,9 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsUniqueCentreLocalHomStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsUniqueCentreLocalHom
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrimeChartExistsUniquePointStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrimeChartExistsUniquePoint
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegAtIffChartLocalization
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -107,7 +107,7 @@ theorem point_of_local_subring : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ
     | mul a b _ _ ha hb => rw [map_mul]; exact mul_mem ha hb
   let θC : chartRing x c →+* A :=
     (θ.comp (chartRing x c).val.toRingHom).codRestrict A (fun s => hC s s.2)
-  obtain ⟨p, ⟨hpc, hpu⟩, -⟩ := GlobalTheory.T.prime_chart_existsUnique_point X Ω ξ ℤ κ x hT c hc
+  obtain ⟨p, ⟨hpc, hpu⟩, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.chart_point_of_prime X Ω ξ ℤ κ x hT c hc
     (Ideal.comap θC (IsLocalRing.maximalIdeal A)) inferInstance
   have hunit : ∀ s (hs : s ∈ chartRing x c), unitAt ξ p s ↔ IsUnit (⟨θ s, hC s hs⟩ : A) := by
     intro s hs
@@ -142,7 +142,7 @@ theorem point_of_local_subring : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ
       rw [h1]
       exact mul_mem hsu.2.1 hi
     exact IsUnit.of_mul_eq_one ⟨_, hinv⟩ (Subtype.ext (mul_inv_cancel₀ ha0))
-  obtain ⟨z, ⟨hzc, hzv⟩, -⟩ := GlobalTheory.T.existsUnique_centre_local_hom X Ω ξ hT.gen p A φ hloc
+  obtain ⟨z, ⟨hzc, hzv⟩, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.exists_unique_point_of_local X Ω ξ hT.gen p A φ hloc
   have h : genPt ξ ⤳ centre z := by rw [hzc]; exact p.2
   have hp : (⟨centre z, h⟩ : Cpt ξ) = p := Subtype.ext hzc
   have hs : ∀ s : X.presheaf.stalk (centre z),

@@ -9,7 +9,7 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsAdic
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.NormCoeffMinpolyLeOneOfNormLeOne
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.PowIndexTorsionKerRangeMul
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SubgroupPowRelIndexTopOfGroupFg
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SubgroupPowRelIndexUnitsOfIsAdicCompleteStatement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SubgroupPowRelIndexUnitsOfIsAdicComplete
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -203,7 +203,7 @@ theorem pIdx_units_finite_extension_adicCompletion (p : ℕ) (F : Type) [Field F
       congr 1; push_cast; ring)] at this
     rw [this]
     exact pow_ne_zero _ (pow_ne_zero _ hq)
-  obtain ⟨u1, u2⟩ := GlobalTheory.T.subgroupPowRelIndex_units_of_isAdicComplete p O _ hp hπO hcomp hc2
+  obtain ⟨u1, u2⟩ := _root_.GlobalTheory.CNorm.pIdx_units_of_isAdicComplete p O _ hp hπO hcomp hc2
   rw [hc1] at u2
   have hN : ∀ x : Lˣ, Valued.v (Algebra.norm (v.adicCompletion F) (x : L)) ≠ 0 := by
     intro x

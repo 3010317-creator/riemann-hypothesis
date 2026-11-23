@@ -5,17 +5,18 @@ public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DegVa
 public import Formalism.LocalRingCardinality.DataTies
 public import Development.AbelianVarietyTheory.Definitions.Jets.SideFam
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselPeriodPositivityStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CapParamOfIsHCTypeW
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUnitaryTorusScaleBesselCharacterStatement
+public import Development.AbelianVarietyTheory.Definitions.Jets.SumIoPrAlt
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUnitaryTorusScaleBesselCharacter
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FormalDegreeProportionalStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalDataBothAmplitudeSidesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MomentPieriNumericsOfSizeHypsStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TorusNormaliserBesselStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UniformBesselConstantStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MomentPieriNumericsOfSizeHyps
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TorusNormaliserBessel
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UniformBesselConstant
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.BigCellMemUnitary
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BesselGapExistsFunctional
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.HcParamSubIntegral
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NumericalFamilyShapeGaps
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CapParamOfIsHCTypeW
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BesselGapExistsFunctional
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.HighestWeightUniqueness.HpkMulMulHpkApply
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -111,9 +112,9 @@ theorem exists_bessel_scale (hH : Hyps) {k r : ℕ} {Wp : Type} [NormedAddCommGr
     (hU : Formalism.MainNotions.S.IsURepOn (GG k r) R.σ) (hg : GapAtLeast ε mu h) (hok : Formalism.FourierDecayAlt.ThreeDimData.GapOK k r h) :
     ∃ l : R.H → Wp, PI.BesselMapUniq.IsBesselMapSm (k := k) (r := r) z (psi k r z c) R.σ π l ∧
       ∀ x ∈ R.sm, ∀ v ∈ R.TK, Formalism.FourierDecayAlt.ThreeDimData.be z c π R.σ μW μN x v = (innerSL ℂ (l v)).smulRight (l x) := by
-  obtain ⟨t, ht, hN, hz, -⟩ := GlobalTheory.T.exists_unitaryTorus_scale_besselCharacter k r c hc
+  obtain ⟨t, ht, hN, hz, -⟩ := _root_.GlobalTheory.TorusScale.exists_torus_scale k r c hc
   obtain ⟨-, hW, hψ⟩ := hz z hS.1
-  obtain ⟨hS', hm⟩ := GlobalTheory.T.torus_normaliser_bessel hH k r Wp z π u c μW μN μG νq t ht hN hW hψ hS
+  obtain ⟨hS', hm⟩ := _root_.GlobalTheory.BesselMove.bessel_move hH k r Wp z π u c μW μN μG νq t ht hN hW hψ hS
   obtain ⟨l₁, hl⟩ := GlobalTheory.exists_normalised_bessel_map hH k r ε mu h R Wp _ _ _ _ _ _ _ hR hg hok hS'
   obtain ⟨h1, h2⟩ := hm R hU
   refine ⟨fun v => l₁ (R.σ t⁻¹ v), (h1 _).2 ?_, h2 l₁ hl⟩
@@ -153,7 +154,7 @@ theorem norm_eq_const_div_deg : Hyps → AmpKF → CellConv → ∀ Cg cb Cu cT 
   have n2' : 0 < Module.finrank ℂ W.Wq := by haveI := o2.2.2.1; exact Module.finrank_pos
   have hNH : IsHaarOn (Nset D.R.k D.R.rS) W.μN := o1.2.2.2.2.2.2.2.2.1
   obtain ⟨κ, hκ, hdeg⟩ := GlobalTheory.T.formal_degree_proportional hH D τ w w' θ W hcd hW
-  obtain ⟨c, hc0, hnorm⟩ := GlobalTheory.T.uniform_bessel_constant hH hKF hCC _ _ (toBessel D τ w w' θ W lam₀ A₀ hW hA₀ hT hT') W.μG μsec hk hc
+  obtain ⟨c, hc0, hnorm⟩ := _root_.GlobalTheory.AmpNorm.lintegral_hsNormSq_amp hH hKF hCC _ _ (toBessel D τ w w' θ W lam₀ A₀ hW hA₀ hT hT') W.μG μsec hk hc
     hκN ENNReal.ofReal_ne_top hW.2.2.2.2.2.2.1 hsec
   have hW' := hW
   obtain ⟨c1, c2, z1, z2, t1, t2, hG, w1, -, w2, -, hN, q1, q2⟩ := hW'
@@ -163,7 +164,7 @@ theorem norm_eq_const_div_deg : Hyps → AmpKF → CellConv → ∀ Cg cb Cu cT 
     ⟨z1, t1 ▸ hT, ⟨_, c1⟩, GlobalTheory.ThA.capParam_of_isHCTypeW _ _ _ _ _ _ _ z1 (t1 ▸ hT) c1 (hsq _), w1, hNH, hG, q1⟩
   have s2 : SideG D.R.k D.R.rS W.z' W.π' (sq (uS D w' τ)) W.μW' W.μN W.μG W.νS' :=
     ⟨z2, t2 ▸ hT', ⟨_, c2⟩, GlobalTheory.ThA.capParam_of_isHCTypeW _ _ _ _ _ _ _ z2 (t2 ▸ hT') c2 (hsq _), w2, hNH, hG, q2⟩
-  obtain ⟨hNum, hcell, heps⟩ := GlobalTheory.T.momentPieriNumerics_of_sizeHyps D large₂ C' Cl Cg cb Cu cT CT C0 hZ hCl τ w _ (hsq _)
+  obtain ⟨hNum, hcell, heps⟩ := _root_.GlobalTheory.SizeNum.num_of_size D large₂ C' Cl Cg cb Cu cT CT C0 hZ hCl τ w _ (hsq _)
   obtain ⟨⟨-, -, -, -, hok⟩, hν⟩ := GlobalTheory.NumFam.num_fam _ _ _ _ _ _ _ _ _ hNum
   refine ⟨c * κ * (Module.finrank ℂ W.Wp * Module.finrank ℂ W.Wq), by positivity, fun lam' hl A hA => ?_⟩
   obtain ⟨ν, hlam, hn1, -⟩ := GlobalTheory.hcParam_sub_integral _ (lamD D τ) lam' hNum.2.1 hA.1

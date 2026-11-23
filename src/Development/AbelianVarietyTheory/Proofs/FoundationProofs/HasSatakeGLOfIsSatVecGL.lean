@@ -8,19 +8,24 @@ public import Formalism.SatakeDualWeyl.KpqSubgroupCompact
 public import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeltaHalfMulUnrTorus
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SphericalHeckeValuesSameParameters
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CommutativeHeckeActsByScalarOnFixedVectorsStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsMultisetSatakeEigenvalueEqStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsSymmetricElementaryDivisorsUnitaryStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeVecMemFixed
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsOpenIsCompactUnitaryIntegralPointsStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsSubquotientOfSameSphericalHeckeEigenvaluesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LaurentFiniteOfTriangularSignedIndicatorsStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitaryDoubleCosetOfGLintDoubleCosetStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitaryIwasawaCellBoundSmallTorusDoubleCosetStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitarySatakeTransformIsLaurentPolynomialStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CommutativeHeckeActsByScalarOnFixedVectors
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsMultisetSatakeEigenvalueEq
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsSymmetricElementaryDivisorsUnitary
+public import Formalism.SatakeDualWeyl.StatementF
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsOpenIsCompactUnitaryIntegralPoints
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsSubquotientOfSameSphericalHeckeEigenvalues
+public import Mathlib.Algebra.Algebra.Subalgebra.Basic
+public import Mathlib.Algebra.MonoidAlgebra.Basic
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LaurentFiniteOfTriangularSignedIndicators
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitaryDoubleCosetOfGLintDoubleCoset
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitaryIwasawaCellBoundSmallTorusDoubleCoset
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitarySatakeTransformIsLaurentPolynomial
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsIdempotentElemCharIdem
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InvMemDoubleCosetAndComm
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFixedIff
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeVecMemFixed
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InvMemDoubleCosetAndComm
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.FSatakeB
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.FSatakeC
 import Mathlib.Algebra.Order.Floor.Extended
@@ -274,7 +279,7 @@ theorem hasSatakeGL_of_isSatVecGL (hπ : IsIrrSmooth π) {x : V} (hx : IsSatVecG
   have hφ0 : φ ≠ 0 := fun e => by simp [e] at h1
   obtain ⟨ho, hc⟩ := isOpen_isCompact_KGL w n
   obtain ⟨y, hy, hy0, ht⟩ := exists_fixed_of_fun _ _ ho (Final.GLintComm E w n) hφ0 ((isSphericalGL_iff α φ).1 hφ)
-  refine ⟨⟨α, rfl, hπ, GlobalTheory.T.isSubquotient_of_same_spherical_hecke_eigenvalues _ _ _ π _ _ hc (Final.GLintComm E w n) hπ (LeviDatum.nInd_isSmooth _ _) x hx.2.1
+  refine ⟨⟨α, rfl, hπ, _root_.GlobalTheory.LGrp.Zonal.isSubquot_of_hecke_eigenvalues _ _ _ π _ _ hc (Final.GLintComm E w n) hπ (LeviDatum.nInd_isSmooth _ _) x hx.2.1
     hx.1 y hy hy0 fun f hf => ?_⟩, ?_⟩
   · obtain ⟨c, e1, e2⟩ := exists_eigenvalue_GL hx (isSatVecGL_of_isSpherical hφ hφ0) f hf
     exact ⟨c, e1, ht f hf c e2⟩
@@ -295,7 +300,7 @@ theorem exists_hasSatGL (hπ : IsIrrSmooth π) (hf : FiniteDimensional ℂ (fixe
   obtain ⟨ϖ, hu⟩ := exists_isUnifV w
   have h0 := ne_zero_of_isUnifV hu
   obtain ⟨x, hx, hx0⟩ := (Submodule.ne_bot_iff _).1 hs
-  choose c hc using fun j => GlobalTheory.T.commutative_hecke_acts_by_scalar_on_fixed_vectors _ _ π _ (isOpen_isCompact_KGL w n).2 hK (Final.HeckeCommGL E w n ℂ) hπ hf _
+  choose c hc using fun j => _root_.GlobalTheory.LFun.HeckeScalar.exists_scalar _ _ π _ (isOpen_isCompact_KGL w n).2 hK (Final.HeckeCommGL E w n ℂ) hπ hf _
     (Tj_mem_hecke hu j)
   have c0 : c 0 = 1 := by
     have e : Tj ℂ n (Ov E w) ϖ 0 = dosetInd ℂ (KGL w (n := n)) 1 := by
@@ -317,7 +322,7 @@ theorem exists_hasSatGL (hπ : IsIrrSmooth π) (hf : FiniteDimensional ℂ (fixe
       refine ⟨_, ⟨Finset.mem_singleton_self _, ?_⟩, fun γ hγ => Finset.mem_singleton.1 hγ.1⟩
       rw [← tor_const_comm, mul_assoc, inv_mul_cancel_left]
       exact mul_mem ha hb
-  obtain ⟨B, hB, hBc⟩ := GlobalTheory.T.exists_multiset_satakeEigenvalue_eq (qV E w) n (qV_ne_zero w) c c0 cn
+  obtain ⟨B, hB, hBc⟩ := _root_.GlobalTheory.LFun.exists_satEig_eq (qV E w) n (qV_ne_zero w) c c0 cn
   refine ⟨B, hs, fun y hy hy0 => ⟨hy0, hy, hB, fun ϖ' hu' j hj => ?_⟩⟩
   have hv : Valued.v (ϖ' / ϖ) = 1 := by
     rw [map_div₀, hu, hu', div_self WithZero.coe_ne_zero]
@@ -409,11 +414,11 @@ theorem labInd_eq {d : List ℤ} {t : GU σ n}
 
 theorem exists_labInd_eq (hU : IsUnramInv ϖ σ q) (g : GU σ n) :
     ∃ d, Good n d ∧ labInd σ n ϖ d = dosetInd ℂ (KU σ n) g := by
-  obtain ⟨d, hd, a, ha, b, hb, e⟩ := GlobalTheory.T.exists_symmetric_elementaryDivisors_unitary L ϖ σ q n hU g
+  obtain ⟨d, hd, a, ha, b, hb, e⟩ := _root_.GlobalTheory.LFun.UnitaryDiv.exists_good_div L ϖ σ q n hU g
   obtain ⟨t, ht, -⟩ := P.fSatake_diag_exists (σ := σ) (fun i : Fin n => ϖ ^ d.getD i.1 0) fun i => by
     rw [map_zpow₀, hU.2.2.1, hd.rev, ← zpow_add₀ (unif_ne_zero hU), add_neg_cancel, zpow_zero]
   refine ⟨d, hd, (labInd_eq ht).trans (GlobalTheory.WeylGL.dosetInd_congr ?_).symm⟩
-  exact GlobalTheory.T.unitaryDoubleCoset_of_GLintDoubleCoset L ϖ σ q n hU t g a b ha hb (Units.ext (by rw [e, ← ht]; rfl))
+  exact _root_.GlobalTheory.UnramDoubleCoset.doubleCoset_GU_of_GL L ϖ σ q n hU t g a b ha hb (Units.ext (by rw [e, ← ht]; rfl))
 
 theorem eq_zero_of_satU (hU : IsUnramInv ϖ σ q) {f : GU σ n → ℂ} (hf : f ∈ Hecke ℂ (KU σ n))
     (h : ∀ α : Fin (n / 2) → ℂˣ, SatU ϖ q f (fun i => (α i : ℂ)) = 0) : f = 0 := by
@@ -487,19 +492,19 @@ theorem exists_satU_eq (hU : IsUnramInv ϖ σ q) (l : Hecke ℂ (KU σ n) →ₗ
       (∀ α : Fin (n / 2) → ℂ, SatU ϖ q f.1 α = s.sum fun a c => c * ∏ i, α i ^ a i) → R (.ofCoeff s) f :=
     fun f s e α => by rw [ev_apply, e]
   haveI : Module.Finite B (AddMonoidAlgebra ℂ (Fin (n / 2) → ℤ)) := by
-    refine GlobalTheory.T.laurent_finite_of_triangular_signed_indicators _ B fun ε hε => ?_
+    refine _root_.GlobalTheory.LaurentFinite.finite_of_triangular _ B fun ε hε => ?_
     obtain ⟨t, ht⟩ := P.fSatake_tMat_exists (n := n) hU (Nat.mul_div_le n 2) ε
-    obtain ⟨s, e, hs, ht'⟩ := GlobalTheory.T.unitarySatakeTransform_isLaurentPolynomial L ϖ σ q n hU _ (Final.DosetIndMem _ (KU σ n) ℂ t)
+    obtain ⟨s, e, hs, ht'⟩ := _root_.GlobalTheory.LFun.SatCoef.satU_laurent L ϖ σ q n hU _ (Final.DosetIndMem _ (KU σ n) ℂ t)
     refine ⟨.ofCoeff s, ⟨_, hR ⟨_, Final.DosetIndMem _ (KU σ n) ℂ t⟩ s e⟩, ht' t ε ht rfl, fun κ hκ => ?_⟩
     obtain ⟨g, hg, u, hu, k, hk, eg⟩ := hs κ hκ
     obtain ⟨a, ha, b, hb, rfl⟩ : ∃ a ∈ KU σ n, ∃ b ∈ KU σ n, g = a * t * b := by
       by_contra h0
       exact hg (GlobalTheory.WeylGL.dosetInd_of_not h0)
-    exact GlobalTheory.T.unitaryIwasawaCell_bound_small_torusDoubleCoset L ϖ σ q n hU ε κ u k a b hε hu hk ha hb (by rw [← eg, ← ht]; rfl)
+    exact _root_.GlobalTheory.LFun.CellBound.cell_bound L ϖ σ q n hU ε κ u k a b hε hu hk ha hb (by rw [← eg, ← ht]; rfl)
   obtain ⟨ψ, hψ⟩ := exists_algHom_extend B χ
   obtain ⟨α, rfl⟩ := exists_eq_ev ψ
   refine ⟨α, fun f => ?_⟩
-  obtain ⟨s, e, -⟩ := GlobalTheory.T.unitarySatakeTransform_isLaurentPolynomial L ϖ σ q n hU _ f.2
+  obtain ⟨s, e, -⟩ := _root_.GlobalTheory.LFun.SatCoef.satU_laurent L ϖ σ q n hU _ f.2
   have r := hR f s e
   rw [← r α, hψ ⟨_, f, r⟩]
   exact congrArg l (Runiq r (hφ ⟨_, f, r⟩))
@@ -510,7 +515,7 @@ theorem exists_hasSatU (hU : IsUnramInv ϖ σ q) (hπ : IsIrrSmooth π) (hf : Fi
     (hs : LGrp.IsSpherical π (KU σ n)) : ∃ α, HasSatU ϖ q π α := by
   have hK := P.isCommensurated_integral_unitary_of_unramified hU n
   obtain ⟨x, hx, h0⟩ := (Submodule.ne_bot_iff _).1 hs
-  choose c hc using fun f : Hecke ℂ (KU σ n) => GlobalTheory.T.commutative_hecke_acts_by_scalar_on_fixed_vectors _ _ π _ (GlobalTheory.T.isOpen_isCompact_unitaryIntegralPoints L ϖ σ q n hU).2 hK
+  choose c hc using fun f : Hecke ℂ (KU σ n) => _root_.GlobalTheory.LFun.HeckeScalar.exists_scalar _ _ π _ (_root_.GlobalTheory.LFun.IntPtsUnitary.isOpen_isCompact_KU L ϖ σ q n hU).2 hK
     (GlobalTheory.UnitarySwap.heckeCommU L ϖ σ q n ℂ hU) hπ hf _ f.2
   let l : Hecke ℂ (KU σ n) →ₗ[ℂ] ℂ :=
     { toFun := c

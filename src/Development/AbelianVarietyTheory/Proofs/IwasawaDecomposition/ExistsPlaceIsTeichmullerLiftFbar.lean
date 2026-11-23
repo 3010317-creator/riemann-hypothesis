@@ -2,8 +2,9 @@ module
 
 public import Formalism.LocalToGlobal.NormalizedHeckeFactors.TypesDefs
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsPadicAlgClRingEquivComplexCompEqOfCountabl
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsTeichmullerReindexComplexPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FbarExistsComplexAutCompEqStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsTeichmullerReindexComplexPlace
+public import Formalism.CyclotomicNorms.StatementT
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FbarExistsComplexAutCompEq
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NonemptyResidueFieldUnitBallEquiv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -53,8 +54,8 @@ theorem exists_place_isTeich : ∀ (g : ℕ) [Fact g.Prime] (t : Formalism.Cyclo
   intro g _ t ht
   obtain ⟨ι⟩ := GlobalTheory.nonempty_padicAlgCl_ringEquiv_complex g
   obtain ⟨κ₀⟩ := GlobalTheory.HeightCounting.nonempty_residueField_unitBall_equiv ι
-  obtain ⟨t₀, ht₀, hinj₀⟩ := GlobalTheory.T.exists_teichmuller_reindex_complexPlace g (GlobalTheory.HeightCounting.unitBall ι) κ₀ t ht
-  obtain ⟨σ, hσ⟩ := GlobalTheory.T.fbar_exists_complexAut_comp_eq g t t₀ ht hinj₀
+  obtain ⟨t₀, ht₀, hinj₀⟩ := _root_.GlobalTheory.TeichAt.exists_teich_reindex g (GlobalTheory.HeightCounting.unitBall ι) κ₀ t ht
+  obtain ⟨σ, hσ⟩ := _root_.GlobalTheory.TeichGalois.exists_ringEquiv_comp_eq g t t₀ ht hinj₀
   let A : ValuationSubring ℂ := (GlobalTheory.HeightCounting.unitBall ι).comap (σ.symm : ℂ →+* ℂ)
   have hmem : ∀ z : ℂ, z ∈ A ↔ σ.symm z ∈ GlobalTheory.HeightCounting.unitBall ι := fun z => ValuationSubring.mem_comap
   let e : A ≃+* GlobalTheory.HeightCounting.unitBall ι :=

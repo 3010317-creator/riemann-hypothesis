@@ -2,20 +2,20 @@ module
 
 public import Formalism.LocalToGlobal.KernelLattices.DeterminantCokernelCount.CokernelIndexFactors.StatementB
 public import Development.AbelianVarietyTheory.Definitions.Jets.CmLatticeCommutatorPairingPowEqOneOfGoodLift
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmLatticeHeisenbergRelationsOneVariableStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmThetaOperatorInvariantOfLiftCongrOneStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmLatticeHeisenbergRelationsOneVariable
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmThetaOperatorInvariantOfLiftCongrOne
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CpTransportedTaylorSeriesInChartRingHomLawsStatement
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DifferentiableU1
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsCmThetaEqSumProdTranslatesStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsOrthogonalFrameNormsCoprimeOfUnimodularStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsPadicIntFrameChangeEtaleBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.HeisenbergOperatorsOrthogonalFrameCoordsStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ImagQuadraticMaximalOrderArithmeticAtSplitPrimeStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsCmThetaEqSumProdTranslates
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsOrthogonalFrameNormsCoprimeOfUnimodular
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsPadicIntFrameChangeEtaleBasis
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.HeisenbergOperatorsOrthogonalFrameCoords
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ImagQuadraticMaximalOrderArithmeticAtSplitPrime
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IteratedFDerivCombMem
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MeasureOfProducts
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormSumProdLeOfCoord
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ThetaVectorsSetupExistsEqSmulStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.TorsionLiftPairingInOrthogonalFrameStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ThetaVectorsSetupExistsEqSmul
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.TorsionLiftPairingInOrthogonalFrame
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -161,12 +161,12 @@ theorem rho_mem {d q : ℕ} (hOK : ∀ x y, InOK d x → InOK d y → ∃ k : �
   rw [hp]; exact isAlgebraic_one
 
 theorem thetaTranslation_comp_eq_cocycle_mul {d : ℕ} (hd : 0 < d) (x y : ℂ) (F : ℂ → ℂ) :
-    U1 d x (U1 d y F) = fun z => rho d x y * U1 d (x + y) F z := (GlobalTheory.T.cmLattice_heisenberg_relations_one_variable d hd).1 x y F
+    U1 d x (U1 d y F) = fun z => rho d x y * U1 d (x + y) F z := (_root_.GlobalTheory.MomOne.heisenbergOne d hd).1 x y F
 
 theorem cmLatticeTranslationOperator_eq_phase_mul_neg_comp {d : ℕ} (hd : 0 < d) (x y : ℂ) (F : ℂ → ℂ) :
     U1 d y F = fun z => rho d x y * U1 d (-x) (U1 d (x + y) F) z := by
   have e1 : U1 d (-x) (U1 d x (U1 d y F)) = U1 d y F := by
-    rw [thetaTranslation_comp_eq_cocycle_mul hd (-x) x, neg_add_cancel, (GlobalTheory.T.cmLattice_heisenberg_relations_one_variable d hd).2.1]
+    rw [thetaTranslation_comp_eq_cocycle_mul hd (-x) x, neg_add_cancel, (_root_.GlobalTheory.MomOne.heisenbergOne d hd).2.1]
     have : (h1 d (-x) x).im = 0 := by
       rw [h1, Complex.im_ofReal_mul]; simp [mul_comm]
     simp [rho, this]
@@ -217,7 +217,7 @@ theorem product_measures (d : ℕ) (ι : ℂ ≃+* ℂ_[q]) (δ : ℂ) (Ω : ℂ
           ι (iteratedFDeriv ℂ k (fun z : Fin g → ℂ =>
             ∑ j, c j * ∏ i, W1 d (y i) (U1 d (τ i) (U1 d (t j i) θ)) (z i) ^ a i) 0 (fun l => δ⁻¹ • ys l)) = μ F := by
   have hU : ∀ x F, Differentiable ℂ F → Differentiable ℂ (U1 d x F) := fun x F h =>
-    ((GlobalTheory.T.cmLattice_heisenberg_relations_one_variable d hd).2.2.1 x F h).1
+    ((_root_.GlobalTheory.MomOne.heisenbergOne d hd).2.2.1 x F h).1
   obtain ⟨μ₀, h₀, -⟩ := ProdMeasure.measure_of_products d q ι δ Ω θ hd hδ hΩ hθ hL g m a c t ht
   refine ⟨‖μ₀‖, fun τ hτ => ?_⟩
   have ht' : ∀ j i, PrimeTo d q (τ i + t j i) := fun j i => primeTo_add (hτ i) (ht j i)
@@ -250,13 +250,13 @@ theorem product_algebraic (d : ℕ) (ι : ℂ ≃+* ℂ_[q]) (δ : ℂ) (θ : �
       ∑ j, c j * ∏ i, W1 d (y i) (U1 d (τ i) (U1 d (t j i) θ)) (z i) ^ a i) 0 (fun l => δ⁻¹ • ys l)
       ∈ algebraicClosure ℚ ℂ := by
   have hd := hp.pos
-  have H := (GlobalTheory.T.cmLattice_heisenberg_relations_one_variable d hd).2.2.1
+  have H := (_root_.GlobalTheory.MomOne.heisenbergOne d hd).2.2.1
   rw [comb_translate hd]
   refine GlobalTheory.AlgJetComb.iteratedFDeriv_comb_mem g m k δ a _ (fun j i => W1 d (y i) (U1 d (τ i + t j i) θ)) ys
     (fun j i => (H _ _ (H _ _ hθ.1).1).2)
     (fun j i k' => jets_algebraic d q δ θ hp h7 hS hθ hδ hL ι _ _ n s k' hs (hst j i) (hy i)) (fun j => ?_) hys
   refine mul_mem (hc j) (prod_mem fun i _ => pow_mem ?_ _)
-  exact rho_mem (GlobalTheory.T.imagQuadraticMaximalOrder_arithmetic_at_split_prime d q ι hp h7 hS).2.2.2.2.2.1 (hτ i) (ht j i)
+  exact rho_mem (_root_.GlobalTheory.MomOne.okArith d q ι hp h7 hS).2.2.2.2.2.1 (hτ i) (ht j i)
 
 theorem beta_sum_left {g : ℕ} (d : ℕ) (Hm : Matrix (Fin g) (Fin g) ℂ) {I : Type} [Fintype I] (c : I → ℂ)
     (u : I → Fin g → ℂ) (w : Fin g → ℂ) : beta d Hm (∑ k, c k • u k) w = ∑ k, c k * beta d Hm (u k) w := by
@@ -275,7 +275,7 @@ theorem good_zero (ι : ℂ ≃+* ℂ_[q]) (d s : ℕ) : Good ι d 0 s 0 :=
   ⟨0, ⟨0, 0, by simp⟩, by simp, by simp⟩
 
 theorem cmLatticeWeylOperator_zero {d : ℕ} (hd : 0 < d) (F : ℂ → ℂ) : W1 d 0 F = F := by
-  funext z; simp [W1, (GlobalTheory.T.cmLattice_heisenberg_relations_one_variable d hd).2.1]
+  funext z; simp [W1, (_root_.GlobalTheory.MomOne.heisenbergOne d hd).2.1]
 
 theorem lamA_eq (lam : Qbar →+* ℂ_[q]) (ι : ℂ ≃+* ℂ_[q]) (h : ∀ z : Qbar, ι (z : ℂ) = lam z) {z : ℂ}
     (hz : z ∈ Qbar) : lamA lam z = ι z := by
@@ -301,9 +301,9 @@ theorem theta_in_frame (ι : ℂ ≃+* ℂ_[q]) (δ : ℂ) (θ : ℂ → ℂ) {g
     ∃ (m : ℕ) (r : Fin m → ℂ) (t : Fin m → Fin g → ℂ), (∀ j, r j ∈ Qbar) ∧ (∀ j i, PrimeTo S.d q (t j i)) ∧
       ∀ z : Fin g → ℂ, e (∑ i, z i • x i) = ∑ j, r j * ∏ i, U1 S.d (t j i) θ (z i) ^ a i := by
   have hd := hO.1.pos
-  obtain ⟨m, r, t, Θ, hΘ, hne, hr, ht, hz⟩ := GlobalTheory.T.exists_cmTheta_eq_sum_prod_translates q g S x a θ Fact.out hO hx hxx ha hθ
-  obtain ⟨c, rfl⟩ := GlobalTheory.T.theta_vectors_setup_exists_eq_smul g S e Θ hO he hΘ hne
-  obtain ⟨C1, -, -, C4⟩ := GlobalTheory.T.heisenbergOperators_orthogonalFrame_coords g S x a hd hxx fun i => (ha i).1
+  obtain ⟨m, r, t, Θ, hΘ, hne, hr, ht, hz⟩ := _root_.GlobalTheory.MomOne.exists_theta_eq_sum_prod q g S x a θ Fact.out hO hx hxx ha hθ
+  obtain ⟨c, rfl⟩ := _root_.GlobalTheory.MomOne.ThetaLine.exists_eq_smul g S e Θ hO he hΘ hne
+  obtain ⟨C1, -, -, C4⟩ := _root_.GlobalTheory.MomOne.Frame.coord g S x a hd hxx fun i => (ha i).1
   have hc : c ∈ Qbar := by
     by_contra hc
     have hΦ : ContDiff ℂ ⊤ (fun z : Fin g → ℂ => Θ (∑ i, z i • x i)) := hΘ.1.comp (by fun_prop)
@@ -316,7 +316,7 @@ theorem theta_in_frame (ι : ℂ ≃+* ℂ_[q]) (δ : ℂ) (θ : ℂ → ℂ) {g
         (fun l i => by
           rw [Pi.single_apply]; split_ifs
           exacts [one_mem _, zero_mem _])
-      simp only [Pi.zero_apply, cmLatticeWeylOperator_zero hd, (GlobalTheory.T.cmLattice_heisenberg_relations_one_variable S.d hd).2.1, ← hz] at h1
+      simp only [Pi.zero_apply, cmLatticeWeylOperator_zero hd, (_root_.GlobalTheory.MomOne.heisenbergOne S.d hd).2.1, ← hz] at h1
       have h2 := hj k (fun l => x (σ l)) fun l => ⟨1, one_pos, by simpa using hx _⟩
       have e1 : (fun l => δ⁻¹ • x (σ l)) =
           fun l => ∑ i, (δ⁻¹ • (Pi.single (σ l) 1 : Fin g → ℂ)) i • x i := by
@@ -340,11 +340,11 @@ theorem moments_of_translates : ∀ (d q : ℕ) [Fact q.Prime] (lam : Qbar →+*
   subst hSd
   have hd := hp.pos
   have hq : q.Prime := Fact.out
-  obtain ⟨-, K2, -, -, -, -, K7⟩ := GlobalTheory.T.imagQuadraticMaximalOrder_arithmetic_at_split_prime S.d q ι hp h7 hS
-  obtain ⟨x, a, hx, hxx, ha⟩ := GlobalTheory.T.exists_orthogonal_frame_norms_coprime_of_unimodular q g S hq hO K7
+  obtain ⟨-, K2, -, -, -, -, K7⟩ := _root_.GlobalTheory.MomOne.okArith S.d q ι hp h7 hS
+  obtain ⟨x, a, hx, hxx, ha⟩ := _root_.GlobalTheory.MomOne.exists_orthFrame q g S hq hO K7
   obtain ⟨m, c, t, hc, ht, hz⟩ := theta_in_frame ι δ θ S hO hS hθ hδ hL x a hx hxx ha e he hj
-  obtain ⟨C1, -, C3, C4⟩ := GlobalTheory.T.heisenbergOperators_orthogonalFrame_coords g S x a hd hxx fun i => (ha i).1
-  obtain ⟨T, hT⟩ := GlobalTheory.T.exists_padicInt_frame_change_etale_basis q ι g S x a r b hO hS hx hxx ha hb
+  obtain ⟨C1, -, C3, C4⟩ := _root_.GlobalTheory.MomOne.Frame.coord g S x a hd hxx fun i => (ha i).1
+  obtain ⟨T, hT⟩ := _root_.GlobalTheory.MomOne.frameChange q ι g S x a r b hO hS hx hxx ha hb
   have hΩ0 : Ω ≠ 0 := by rintro rfl; simp at hΩ
   obtain ⟨N, hN⟩ := product_measures S.d ι δ Ω θ hd hδ hΩ0 hθ.1 hL0 a c t ht
   have hβ : ∀ u ∈ S.La, ∀ v ∈ S.La, InOK S.d (beta S.d S.Hm u v) := hO.2.2.2.2.2.2.1
@@ -374,8 +374,8 @@ theorem moments_of_translates : ∀ (d q : ℕ) [Fact q.Prime] (lam : Qbar →+*
   set s := (s₀ * ∏ i, a i) ^ Nat.totient (q ^ n) with hsd
   have hs1 : s ≡ 1 [MOD q ^ n] := Nat.ModEq.pow_totient hcop
   have hs2 : (s₀ * ∏ i, a i) ∣ s := dvd_pow_self _ (Nat.totient_pos.2 (pow_pos hq.pos n)).ne'
-  obtain ⟨L1, L2⟩ := GlobalTheory.T.cmThetaOperator_invariant_of_lift_congr_one q lam g S r b e t₀ n m' s eps y hO hb.1 he hI hnm (hint 0) hs1
-  obtain ⟨G1, G2⟩ := GlobalTheory.T.torsion_lift_pairing_in_orthogonal_frame q lam ι g S x a r b n m' s s₀ eps y hlam hO hS hx hxx ha hb.1 hI hnm hs2
+  obtain ⟨L1, L2⟩ := _root_.GlobalTheory.MomOne.lift_change q lam g S r b e t₀ n m' s eps y hO hb.1 he hI hnm (hint 0) hs1
+  obtain ⟨G1, G2⟩ := _root_.GlobalTheory.MomOne.kapFrame q lam ι g S x a r b n m' s s₀ eps y hlam hO hS hx hxx ha hb.1 hI hnm hs2
   set y' : Fin g → ℂ := fun i => beta S.d S.Hm ((s : ℂ) • liftY q n eps b y) (x i) / (a i : ℂ) with hy'
   set yc : Fin k → Fin g → ℂ := fun l i => beta S.d S.Hm (ys l) (x i) / (a i : ℂ) with hyc
   have hyc' : ∀ l i, yc l i ∈ Qbar := fun l i => div_mem (hβ' _ (hys l) _ (hx i)) (natCast_mem _ _)

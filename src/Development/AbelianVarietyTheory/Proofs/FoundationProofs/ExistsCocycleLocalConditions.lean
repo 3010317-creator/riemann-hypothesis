@@ -3,9 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PowMulMemAdd
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
 public import Mathlib.RingTheory.AdicCompletion.Noetherian
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CoboundaryInertiaIndependentStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CohomologyKernelModPrimePowerKilledByFixedPowStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemIntegersOfNormLeOneStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.FinalTheorems
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CoboundaryInertiaIndependent
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CohomologyKernelModPrimePowerKilledByFixedPow
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemIntegersOfNormLeOne
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NormLeOneOfMem
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -71,7 +72,7 @@ theorem lpow_ne_zero (n : ℕ) : ((l : ℕ) : Qbar l) ^ n ≠ 0 :=
 
 theorem inv_mul_sub_mem (c : Coef l) (n : ℕ) {a b : Qbar l} (ha : a ∈ c.O) (hb : b ∈ c.O) (h : Cg n a b) :
     (((l : ℕ) : Qbar l) ^ n)⁻¹ * (a - b) ∈ c.O := by
-  refine GlobalTheory.T.mem_integers_of_norm_le_one l c _ ⟨n, ?_⟩ ?_
+  refine _root_.GlobalTheory.Ord2.mem_coefO_of_memE_norm_le_one l c _ ⟨n, ?_⟩ ?_
   · rw [← mul_assoc, mul_inv_cancel₀ (lpow_ne_zero n), one_mul]
     exact c.O.sub_mem ha hb
   · rw [norm_mul, norm_inv]
@@ -91,7 +92,7 @@ theorem divSel_unbounded : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [
       ¬ Cob1 c n W ⊤ (fun s => ((l : ℕ) : Qbar l) ^ m • z s)) →
     ∀ m : ℕ, ∃ x : DivSel c W S A, l ^ m • x ≠ 0 := by
   intro l _ Ω _ _ _ S A W c hW hg H m
-  obtain ⟨r, hr⟩ := GlobalTheory.T.cohomologyKernel_modPrimePower_killed_by_fixed_pow l Ω W c hW hg
+  obtain ⟨r, hr⟩ := _root_.GlobalTheory.Ord2.exists_pow_smul_cob1_of_cv_mod_pow l Ω W c hW hg
   obtain ⟨n, z, hcoc, hker, hine, hdec, hnot⟩ := H (m + r)
   have hz : ∀ s i, z s i ∈ c.O := hcoc.2.1
   have hL0 : ((l : ℕ) : Qbar l) ^ n ≠ 0 := lpow_ne_zero n
@@ -124,7 +125,7 @@ theorem divSel_unbounded : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [
       rw [e]
       exact inv_mul_sub_mem c n (hz a i) c.O.zero_mem (hker a ha i)
     · obtain ⟨B, hB, hcob⟩ := hine q hq hl
-      obtain ⟨x, hx, hxs⟩ := GlobalTheory.T.coboundary_inertia_independent l Ω W c n z q B B' hW hcoc hB hB' hcob
+      obtain ⟨x, hx, hxs⟩ := _root_.GlobalTheory.Ord2.CobConj.cob_conj l Ω W c n z q B B' hW hcoc hB hB' hcob
       refine ⟨L⁻¹ • x, ⟨n, fun i => ?_⟩, fun s hs i => ?_⟩
       · rw [Pi.smul_apply, smul_eq_mul, ← mul_assoc, ← hL, mul_inv_cancel₀ hL0, one_mul]; exact hx i
       · have e : ζ s i - (mat W s *ᵥ (L⁻¹ • x) - L⁻¹ • x) i = L⁻¹ * (z s i - (mat W s *ᵥ x - x) i) := by

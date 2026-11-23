@@ -1,11 +1,12 @@
 module
 
 public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.StChartDivisor
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegreChartIntegralHoldsStatement
+public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.StSegreChartIntegral
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegreChartIntegralHolds
 public import GroundTheory.HeightsAndTheta.Heights.LocalFiniteness.TargetsProjFullRankMeetsRegular
-import GroundTheory.HeightsAndTheta.Heights.LocalFiniteness.UniformIntegrabilityProportionalityHolds
 public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PChartDivisorCompare
 public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PSegreChartIntegralPoints
+import GroundTheory.HeightsAndTheta.Heights.LocalFiniteness.UniformIntegrabilityProportionalityHolds
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +53,7 @@ set_option maxSynthPendingDepth 1
 namespace GlobalTheory.CompanionTheory.Ar
 
 theorem chartDivisorCompare : GroundTheory.Heights₂.Heights.Targets.ChartDivisorCompare.Statement :=
-  @GroundTheory.Heights₂.Heights.Targets.ChartDivisorCompare.proof GlobalTheory.T.segre_chart_integral_holds
+  @GroundTheory.Heights₂.Heights.Targets.ChartDivisorCompare.proof _root_.GlobalTheory.CompanionTheory.Ar.SegreChart.Chart.SegreChartIntegral
     GroundTheory.Heights₂.Heights.Targets.SegreChartIntegralPoints.proof
     GroundTheory.Heights₂.Heights.AutoClose.Targets_ChartDivisorComponents
     GroundTheory.Heights₂.Heights.AutoClose.Targets_ChartDivisorLength

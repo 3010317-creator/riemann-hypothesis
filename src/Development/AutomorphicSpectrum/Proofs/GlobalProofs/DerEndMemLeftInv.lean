@@ -4,11 +4,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsBlockEmb
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsSmoothAutomorphicFunctionTranslateAtRealPlace
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ContinuousConjFin
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.MemFormsOnOfMemSpan
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GodementSectionSmoothBounded
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RightTranslateCommutesCenterAction
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BlockEmbNormalises
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlacesStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CmDataIsCMExtAndGramIsHermND
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CapelliConstantTermVanishing
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdaptedBasisBlockEntriesStatement
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdaptedBasisConjugateZeroEntriesStatement
@@ -16,9 +13,14 @@ public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AutomorphicFun
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.BlockEmbeddingAdaptedBasisStatement
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ConjugatedMatrixUnitEntriesStatement
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.GelfandEigenvalueCasimirScalarStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.GlRelationsDerivativePreservedStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.LeviEmbMemNormalizerLower
+public import Formalism.RealPlaceAnalysis.StatementE
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.GlRelationsDerivativePreserved
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.OrthogonalSubspaceWittFrameExtensionStatement
 public import Formalism.LocalToGlobal.NumberFieldFamilies.ThetaCI
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GodementSectionSmoothBounded
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlacesStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CmDataIsCMExtAndGramIsHermND
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -376,7 +378,7 @@ theorem core [_root_.NumberField.IsTotallyComplex D.host.E] (hθ : IsInfFam θ) 
       map_smul' := fun _ _ => rfl }
   let U : Subgroup (GA D V) := unip D.sp.cm.sig V.gram X T
   let W₀ : Set (GlobalTheory.Mem.AutSpace.SmFun θ V) := {F | F ∈ leftInv θ U ∧ ∀ k, gelf θ V τ' k F.1 = ck k • F.1}
-  obtain ⟨q, hq, hq0⟩ := GlobalTheory.T.gl_relations_triangular_annihilation _ _ 5 V.rank (sizes l d V.rank) hS Xf (GlobalTheory.T.gl_relations_derivative_preserved D θ hθ V τ' M hM) (leftInv θ U)
+  obtain ⟨q, hq, hq0⟩ := _root_.GlobalTheory.CompanionTheory.Dblock.CentreManyBlocks.monic_relations_along_block _ _ 5 V.rank (sizes l d V.rank) hS Xf (GlobalTheory.T.gl_relations_derivative_preserved D θ hθ V τ' M hM) (leftInv θ U)
     (fun p q F hF => derEnd_mem_leftInv hθ U τ' _ F hF) L
     (fun p q hpq F hF => Subtype.ext (funext fun x => hvan p q (cut_of_blk hN hS p q hpq) F hF x)) W₀ (fun F hF => hF.1)
     (fun v => by

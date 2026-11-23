@@ -1,27 +1,28 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.WStmtx
-import Development.AbelianVarietyTheory.Definitions.Divisors.EqOfHasValueAtInfinite
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BernsteinZelevinskyFinitenessHolds
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsUnitaryTwistAbsPow
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodToralOfIsSubquotientProdIrr
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LanglandsClassificationSupercuspidalSupportMulti
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalLanglandsExtensionPreservesCuspidal
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SupercuspidalSupportUniqueGL
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeilDeligneCharpolyTwistSpecial
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEquivOfMapEq
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Mono0OfLpDimEqOne
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilDeligneParamMonodromyEqZeroIff
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CuspContragredientIsCMConjTwistOfPairedInvTranspStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.DualIsConjByOne
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CuspContragredientIsCMConjTwistOfPairedInvTransp
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SatWDCharPolChars
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalContragredientMonomial
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupercuspidalSupportCharacters
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupercuspidalSupportTwistNuCharacters
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFixedIff
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormSatakeLeOfUnitarySphericalGL
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.TLocCompC
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.TSatLoc
 public import Development.AutomorphicArithmetic.Foundations.LocalLanglands.LocalCentralUnits.RecTExists
+import Development.AbelianVarietyTheory.Definitions.Divisors.EqOfHasValueAtInfinite
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SupercuspidalSupportUniqueGL
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEquivOfMapEq
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Mono0OfLpDimEqOne
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilDeligneParamMonodromyEqZeroIff
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFixedIff
 import GroundTheory.GlobalFields.CompletionAtPlace.Integers
 import GroundTheory.ProfiniteCohomology.LocalClassFormation.UnramifiedRes
 import Mathlib.Algebra.Order.Floor.Extended
@@ -250,7 +251,7 @@ theorem UpperTheory.V.Z.Desc.W.galAEOf_alt  :
   intro P hRow E Ω _ _ _ _ _ _ l _ ι a ha π hc s hreg
   have hp := GlobalTheory.HeightCounting.Blocks.isPolarized_twist_absPow hc s
   have hpp : GlobalTheory.ContraPair.PolarizedPair (π.twist (GlobalTheory.HeckeGal.Model.absPow E s)) _ :=
-    ⟨hp.sign, GlobalTheory.T.cuspContragredientIsCMConjTwist_of_paired_invTranspose E a _ (GlobalTheory.GalOfCusp.compNorm E _) (P.litN.aut.gk E a _) hp.dual⟩
+    ⟨hp.sign, _root_.GlobalTheory.ConjDualPair.dualIsConjBy_of_paired_invT E a _ (GlobalTheory.GalOfCusp.compNorm E _) (P.litN.aut.gk E a _) hp.dual⟩
   obtain ⟨r, wt, HT, H⟩ := hRow E Ω l ι a ha _ _ hreg hpp
   refine ⟨r, H.cont, fun w hl B hB A hA g hg => ?_⟩
   obtain ⟨rc, hrc⟩ := UpperTheory.Zero.LLC.recTExists E Ω A w hA

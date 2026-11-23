@@ -3,9 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemH0sub
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FrameFixingIsometriesEmbedProdLocalUnitary
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeLocalGlobalPrinciple
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NumberFieldLatticeDeterminedByLocalLatticesStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalAutomorphismLocalExtensionMovesLatticesStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalLatticeClassesFiniteLocalOrbitsStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PlacesOf
+import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GFrames
+import Mathlib.Algebra.Module.Lattice.Full
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NumberFieldLatticeDeterminedByLocalLattices
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalAutomorphismLocalExtensionMovesLatticesStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -41,7 +44,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PlacesOf
 
 @[expose] public section
 
@@ -106,7 +108,7 @@ theorem localLattice_fg_span (Z : LocDat D) (Λ : LV D) (h : Submodule.IsFullLat
     change Submodule.span D.host.E ((LatLoc.cE D).toLinearMap '' (Λ : Set (VS D).V)) = ⊤
     rw [Submodule.span_image, h.span_eq_top, Submodule.map_top, LinearMap.range_eq_top]
     exact (LatLoc.cE D).surjective
-  have := (GlobalTheory.T.numberField_lattice_determined_by_local_lattices (GlobalTheory.HL.placesOf Z) (nV D) (LatLoc.cL Λ) hc).2.1 p
+  have := (_root_.GlobalTheory.HL.PlacesRec.lattice_local (GlobalTheory.HL.placesOf Z) (nV D) (LatLoc.cL Λ) hc).2.1 p
   rw [LatLoc.localLattice_eq]
   exact this
 

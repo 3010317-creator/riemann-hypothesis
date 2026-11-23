@@ -1,7 +1,8 @@
 module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisTransitiveOnRootsOfPrimeStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisTransitiveOnRootsOfPrime
+public import Mathlib.FieldTheory.Galois.Infinite
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +47,6 @@ import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.InvertibleSpanSingleton
 import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsAdicCompleteOfPowLe
 import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MemBallOfGaugeLt
-public import Mathlib.FieldTheory.Galois.Infinite
 
 @[expose] public section
 
@@ -104,7 +104,7 @@ theorem galois_transitive_on_root_systems_of_prime : ∀ (l : ℕ) [Fact l.Prime
       have h := hpow z hz' 0 n
       rw [zero_add] at h
       rw [h, hz]
-    obtain ⟨g, hg⟩ := GlobalTheory.T.exists_galois_apply_eq_of_pow_eq_prime l K π hπ (l ^ n) (y n) (z n) hyn hzn
+    obtain ⟨g, hg⟩ := _root_.GlobalTheory.galois_transitive_on_roots_of_prime l K π hπ (l ^ n) (y n) (z n) hyn hzn
       (pow_pos (Fact.out : l.Prime).pos n)
     refine ⟨(g : GQ l), g.2, Set.mem_iInter.2 fun m => Set.mem_iInter.2 fun hm => ?_⟩
     obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le hm

@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.ThetaValues.LeCovCoeff
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.LevelCoverLargerCoeffFieldLyingOverStatement
-import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.RuleBaseChangeSectionValuesSemilinear
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.LevelCoverLargerCoeffFieldLyingOver
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShortValAtBc
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.RuleBaseChangeSectionValuesSemilinear
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -101,7 +101,7 @@ theorem isThClsD_ddBC_iff : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     rw [← h, map_mul (incF c c' hle), map_mul (incF c c' hle), map_inv₀, map_natCast]
   have hf' := ((GlobalTheory.FieldBC.rulBC_sec_val_linear E H Dw l Xo c c' hle).1 a m f hf).2
   have hδ' := ((GlobalTheory.FieldBC.rulBC_sec_val_linear E H Dw d.l₂ d.Xo₂ d.c₂ (covCoeff hle d) (le_covCoeff hle d)).1 0 0 d.cδ hδ).2
-  have hov := (GlobalTheory.T.levelCover_larger_coeffField_lying_over E H Dw l Xo c c' hle n d).1
+  have hov := (_root_.GlobalTheory.FieldBC.frOver_isLev_ddBC E H Dw l Xo c c' hle n d).1
   constructor
   · intro H' k _ _ _ _ hk y y₂ hy
     obtain ⟨A, h⟩ := exists_algOver hle k

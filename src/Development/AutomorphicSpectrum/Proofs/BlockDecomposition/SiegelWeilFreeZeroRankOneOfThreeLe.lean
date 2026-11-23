@@ -1,20 +1,24 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TrMMemFramesEIff
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicTupleProjectionsStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CompletionIsLocalRingStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.EulerProductMeasureIntegralStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteAdelesLocalRingTotallyRealStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteProductRenormalizationStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.LatticeStableAlmostEverywhereStatement
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicTupleProjections
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CompletionIsLocalRing
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.EulerProductMeasureIntegral
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteAdelesLocalRingTotallyReal
+public import Mathlib.Topology.Algebra.InfiniteSum.Defs
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteProductRenormalization
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.LatticeStableAlmostEverywhere
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.SiegelWeilFormulaRange
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRingStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteVolumeRankOneEulerStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteVolumeRankOneProductStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GlobalVolumeRankOneIsotropicStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GlobalVolumeRankOneNormalisedStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GlobalVolumeRankOneProductStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ThetaMeasureLocallyFiniteInvariantStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteVolumeRankOneEuler
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GlobalVolumeRankOneIsotropic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GlobalVolumeRankOneNormalised
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GlobalVolumeRankOneProduct
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ThetaMeasureLocallyFiniteInvariant
+import Formalism.UnipotentAdelicQuotients.SWXSDefs
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteVolumeRankOneProduct
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ArchimedeanOrbitMeasures.PushInv
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.TopoAF
 import GroundTheory.GlobalFields.LocalFieldAtPlace
@@ -71,24 +75,24 @@ namespace GlobalTheory.CompanionTheory.SW.OneZero
 theorem one_vector_zero : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → 3 ≤ M → ∀ (h₀ : ∀ a b : Fin 1, σ ((0 : Matrix (Fin 1) (Fin 1) E) b a) = (0 : Matrix (Fin 1) (Fin 1) E) a b), (framesE σ J (0 : Matrix (Fin 1) (Fin 1) E)).Nonempty → SWFree σ J (0 : Matrix (Fin 1) (Fin 1) E) h₀ := by
   intro F E _ _ _ _ _ σ hcm M J hJ hM h₀ hne d b li lam hli hlam μ 𝓕 hμ h𝓕 mi m hmi hm
   classical
-  obtain ⟨t0, t1, t2⟩ := GlobalTheory.T.theta_measure_locally_finite_invariant F E σ hcm M J hJ hM μ 𝓕 hμ h𝓕
+  obtain ⟨t0, t1, t2⟩ := _root_.GlobalTheory.CompanionTheory.WeilSiegel.Free.ThetaFrame.theta_frames_zero F E σ hcm M J hJ hM μ 𝓕 hμ h𝓕
   set I := thetaMeas σ J μ 𝓕 (framesE σ J (0 : Matrix (Fin 1) (Fin 1) E)) with hI
   set m0 : ∀ v : HeightOneSpectrum (𝓞 F), Measure (Fin 1 → Fin M → Fv F v ⊗[F] E) :=
     fun v => m v (hermOf (Fv F v) σ (0 : Matrix (Fin 1) (Fin 1) E) h₀) with hm0
   set mi0 := mi (hermOf (Ainf F) σ (0 : Matrix (Fin 1) (Fin 1) E) h₀) with hmi0
-  obtain ⟨sfi, sfv, hnz⟩ := GlobalTheory.T.global_volume_rank_one_product F E σ hcm M J hJ hM h₀ d b li lam hli hlam mi hmi m hm
+  obtain ⟨sfi, sfv, hnz⟩ := _root_.GlobalTheory.CompanionTheory.WeilSiegel.FreeLocal.free_fibre_zero F E σ hcm M J hJ hM h₀ d b li lam hli hlam mi hmi m hm
   obtain ⟨nzi, nzv⟩ := hnz hne
-  obtain ⟨hfin, hsum⟩ := GlobalTheory.T.finite_volume_rank_one_product F E σ hcm M J hJ hM h₀ d b lam hlam m hm
-  choose cS hcS using GlobalTheory.T.global_volume_rank_one_isotropic F E σ hcm M J hJ hM h₀ d b li lam hli hlam mi hmi m hm I t0 t1 t2
+  obtain ⟨hfin, hsum⟩ := _root_.GlobalTheory.CompanionTheory.WeilSiegel.FreeMass.mass_free_summable F E σ hcm M J hJ hM h₀ d b lam hlam m hm
+  choose cS hcS using _root_.GlobalTheory.CompanionTheory.WeilSiegel.FreeFact.fact_free F E σ hcm M J hJ hM h₀ d b li lam hli hlam mi hmi m hm I t0 t1 t2
   obtain ⟨A, hAm, hA0, hAt⟩ := @GlobalTheory.CompanionTheory.SW.Fact.exists_test_set _ _ mi0 sfi nzi
   choose B hBm hB0 hBt using fun v => @GlobalTheory.CompanionTheory.SW.Fact.exists_test_set _ _ (m0 v) (sfv v) (nzv v)
-  have hLv : ∀ v, IsLocR (Fv F v) := GlobalTheory.T.completion_is_local_ring F
+  have hLv : ∀ v, IsLocR (Fv F v) := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F
   have hstep : ∀ S : Finset (HeightOneSpectrum (𝓞 F)), ∅ ⊆ S → ∀ v, v ∉ S →
       (cS S : ℝ) = cS (insert v S) * (m0 v (latV b v)).toReal := by
     intro S _ v hv
     have hlatm : MeasurableSet (latV b v : Set (Fin 1 → Fin M → Fv F v ⊗[F] E)) := by
       haveI := GlobalTheory.CompanionTheory.SW.Fact.borel_tup σ hcm (Fv F v) (hLv v) 1 M
-      exact ((GlobalTheory.T.adelic_tuple_projections F E σ hcm d b 1 M).2.2.2.1 v).2.measurableSet
+      exact ((_root_.GlobalTheory.CompanionTheory.SW.MeasProj.proj_props F E σ hcm d b 1 M).2.2.2.1 v).2.measurableSet
     let φ0 : ∀ w : HeightOneSpectrum (𝓞 F), (Fin 1 → Fin M → Fv F w ⊗[F] E) → ℝ≥0∞ :=
       fun w => (B w).indicator 1
     let φ1 := Function.update φ0 v ((latV b v).indicator 1)
@@ -132,7 +136,7 @@ theorem one_vector_zero : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
     have e5 := (ENNReal.mul_left_inj hP0 hPt).mp e4
     have e6 := congrArg ENNReal.toReal e5
     simpa [ENNReal.toReal_mul] using e6
-  obtain ⟨c, S₀, -, hS₀⟩ := GlobalTheory.T.infinite_product_renormalization _ (fun v => (m0 v (latV b v)).toReal) cS ∅
+  obtain ⟨c, S₀, -, hS₀⟩ := _root_.GlobalTheory.CompanionTheory.SW.TailConst.exists_const_mul_tail _ (fun v => (m0 v (latV b v)).toReal) cS ∅
     (fun _ => ENNReal.toReal_nonneg) hsum hstep
   have hc : IsEulerProd b I c mi0 m0 := by
     refine ⟨hfin, hsum, S₀, fun S hS φinf φ hφi hφ => ?_⟩
@@ -144,12 +148,12 @@ theorem one_vector_zero : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
     rw [hcS']
     ring
   suffices h : c = 1 from h ▸ hc
-  obtain ⟨φ, C, φc, φp, φf, hb⟩ := GlobalTheory.T.global_volume_rank_one_normalised F E σ hcm M J hJ hM h₀ d b li lam hli hlam μ 𝓕 hμ h𝓕 mi hmi m hm
-  obtain ⟨hdf, κ, hκ, hg⟩ := GlobalTheory.T.finite_volume_rank_one_euler F E σ hcm M J hJ hM h₀ d b lam hlam m hm nzv
+  obtain ⟨φ, C, φc, φp, φf, hb⟩ := _root_.GlobalTheory.CompanionTheory.WeilSiegel.Free.EstZero.estimate_zero F E σ hcm M J hJ hM h₀ d b li lam hli hlam μ 𝓕 hμ h𝓕 mi hmi m hm
+  obtain ⟨hdf, κ, hκ, hg⟩ := _root_.GlobalTheory.CompanionTheory.WeilSiegel.Free.GrowthZero.growth_zero F E σ hcm M J hJ hM h₀ d b lam hlam m hm nzv
   have : BorelSpace (Fin 1 → Fin M → Ainf F ⊗[F] E) := by
     have : BorelSpace (Ainf F ⊗[F] E) := ⟨rfl⟩
-    obtain ⟨_, _, _, _, -⟩ := GlobalTheory.T.infinite_adeles_local_ring_totally_real F hcm.1
-    exact (GlobalTheory.T.tensor_locally_compact_ring F E σ hcm (Ainf F)).2.2.2.2.2.2.2.1 1 M
+    obtain ⟨_, _, _, _, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hcm.1
+    exact (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm (Ainf F)).2.2.2.2.2.2.2.1 1 M
   have hφm : Measurable fun X => ENNReal.ofReal (φ X) := φc.measurable.ennreal_ofReal
   set w := ∫⁻ X, ENNReal.ofReal (φ X) ∂mi0 with hw
   have hw0 : 0 < w.toReal := ENNReal.toReal_pos (fun h => nzi (by
@@ -162,17 +166,17 @@ theorem one_vector_zero : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
     have haE : (a : E) ≠ 0 := by exact_mod_cast ha0.ne'
     obtain ⟨I', e1, e2⟩ := hb a ha0
     have hA : ∀ v, MeasurableSet {X : Fin 1 → Fin M → Fv F v ⊗[F] E | (fun p i => (a : Fv F v ⊗[F] E) * X p i) ∈ latV b v} := fun v => by
-      have hR := GlobalTheory.T.completion_is_local_ring F v
+      have hR := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
       obtain ⟨_, _, _, _, -⟩ := hR
       have : BorelSpace (Fv F v) := ⟨rfl⟩
-      obtain ⟨_, _, _, _, -, -, -, hB, -⟩ := GlobalTheory.T.tensor_locally_compact_ring F E σ hcm (Fv F v)
+      obtain ⟨_, _, _, _, -, -, -, hB, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm (Fv F v)
       have := hB 1 M
       have hu : IsUnit (a : Fv F v ⊗[F] E) := by simpa using (Ne.isUnit haE).map (inclR (F := F) (Fv F v))
       have hK : IsCompact {X : Fin 1 → Fin M → Fv F v ⊗[F] E | (fun p i => (a : Fv F v ⊗[F] E) * X p i) ∈ latV b v} :=
-        (Homeomorph.smul hu.unit).isCompact_preimage.2 ((GlobalTheory.T.adelic_tuple_projections F E σ hcm d b 1 M).2.2.2.1 v).1
+        (Homeomorph.smul hu.unit).isCompact_preimage.2 ((_root_.GlobalTheory.CompanionTheory.SW.MeasProj.proj_props F E σ hcm d b 1 M).2.2.2.1 v).1
       exact hK.measurableSet
-    obtain ⟨-, e3⟩ := GlobalTheory.T.euler_product_measure_integral F E σ hcm d b 1 M _ c _ _ hc _ _ hφm (fun v => hA v) (fun v => hdf a ha0 v)
-      (((GlobalTheory.T.lattice_stable_almost_everywhere F E σ hcm d b 1 M).1 (Matrix.of fun _ _ => (a : E)) ((Matrix.det_unique _).trans_ne haE)).mono fun v hv => Set.ext fun X => by
+    obtain ⟨-, e3⟩ := _root_.GlobalTheory.CompanionTheory.SW.EulerBox.euler_box F E σ hcm d b 1 M _ c _ _ hc _ _ hφm (fun v => hA v) (fun v => hdf a ha0 v)
+      (((_root_.GlobalTheory.CompanionTheory.SW.LatRat.latV_rational F E σ hcm d b 1 M).1 (Matrix.of fun _ _ => (a : E)) ((Matrix.det_unique _).trans_ne haE)).mono fun v hv => Set.ext fun X => by
         refine Iff.trans (Iff.of_eq (congrArg (· ∈ latV b v) (funext fun p => funext fun i => ?_))) (hv X)
         rw [Subsingleton.elim p 0]
         simp [rmul, mul_comm])

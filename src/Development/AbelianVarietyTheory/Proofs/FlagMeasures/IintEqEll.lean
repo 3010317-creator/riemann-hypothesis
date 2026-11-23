@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselOrbitalIntegralEqInvDegSmulStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselOrbitalIntegralEqInvDegSmul
 import Formalism.FormalDegreeBessel.FinalG
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -91,7 +91,7 @@ theorem iint_eq_ell : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H] [InnerPr
   obtain ⟨u', hu', hlu'⟩ := hl'.2.1
   have hint : Integrable
       (fun x : Mt k r => rk1 (l (σ (Matrix.of x) w)) (l' (σ (γ⁻¹ * Matrix.of x) w))) μG := by
-    obtain ⟨-, hI, -⟩ := GlobalTheory.T.besselOrbitalIntegral_eq_inv_deg_smul k r σ w a μG d z c π μS z' c' π' μS' hStd hS hS' u hu u' hu'
+    obtain ⟨-, hI, -⟩ := _root_.GlobalTheory.SgInf.OO_eq_inv_deg_smul_Iint k r σ w a μG d z c π μS z' c' π' μS' hStd hS hS' u hu u' hu'
       (l u) (l' u') γ hγ
     have hc : (⟪l u, l u⟫_ℂ * (starRingEnd ℂ) ⟪l' u', l' u'⟫_ℂ) ≠ 0 :=
       mul_ne_zero (inner_self_ne_zero.2 hlu) ((map_ne_zero _).2 (inner_self_ne_zero.2 hlu'))
@@ -100,7 +100,7 @@ theorem iint_eq_ell : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H] [InnerPr
     rw [Pi.smul_apply, hx, smul_smul, inv_mul_cancel₀ hc, one_smul]
   refine ⟨hint, ?_⟩
   intro w₀ hw₀ w₀' hw₀' ξ ξ'
-  obtain ⟨-, -, hO⟩ := GlobalTheory.T.besselOrbitalIntegral_eq_inv_deg_smul k r σ w a μG d z c π μS z' c' π' μS' hStd hS hS' w₀ hw₀ w₀' hw₀'
+  obtain ⟨-, -, hO⟩ := _root_.GlobalTheory.SgInf.OO_eq_inv_deg_smul_Iint k r σ w a μG d z c π μS z' c' π' μS' hStd hS hS' w₀ hw₀ w₀' hw₀'
     ξ ξ' γ hγ
   have hO2 : OO μG (Afun (psiGen k r z c) π μS σ w w₀ ξ) (Afun (psiGen k r z' c') π' μS' σ w w₀' ξ') γ =
       (⟪l w₀, ξ⟫_ℂ * (starRingEnd ℂ) ⟪l' w₀', ξ'⟫_ℂ) • OO μG (fun x => l (σ x w)) (fun x => l' (σ x w)) γ := by

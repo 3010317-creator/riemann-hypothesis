@@ -2,13 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseChange
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LiftFrameEmbeddingBase
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualWeylTensorReductionIntertwinesGroupActionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualWeylTensorReductionWeightProjectorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLiftDualWeylTensorReductionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMatrixCoefficientPolySimpleSubquotientStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeightFormOnSimpleSubquotientStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemDualWeylProductSpanOfFactorwiseDualWeylStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemSmulTopOfDualWeylTensorReductionEqZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BlockSub
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HasBlockOfOccurs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualWeylTensorReductionIntertwinesGroupAction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualWeylTensorReductionWeightProjector
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLiftDualWeylTensorReduction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMatrixCoefficientPolySimpleSubquotient
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeightFormOnSimpleSubquotient
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemDualWeylProductSpanOfFactorwiseDualWeyl
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemSmulTopOfDualWeylTensorReductionEqZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -41,7 +43,6 @@ import Mathlib.Tactic.NormNum.NatSqrt
 import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BlockSub
 
 @[expose] public section
 
@@ -59,9 +60,9 @@ namespace GlobalTheory.HighWtEmb
 theorem embeds_of_maxWeight : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [CharZero O] (N : ℕ) (ι : Type) [Fintype ι] [DecidableEq ι] (lam : ι → ℕ → ℕ) (ϖ : O), Irreducible ϖ → (∀ τ, Antitone (res N (lam τ))) → GlobalTheory.HighWt.BaseChange → GlobalTheory.HighWt.CoefIn O N lam → ∀ (Gm : Type) [AddCommGroup Gm] [Module (alg O N lam) Gm], IsSimpleModule (alg O N lam) Gm → SubQ O N lam ϖ Gm → ∀ w : ι → Fin N → ℕ, (∀ τ, Antitone (w τ)) → GlobalTheory.HighWt.JointWt O N lam Gm w → (∀ w' : ι → Fin N → ℕ, GlobalTheory.HighWt.JointWt O N lam Gm w' → GlobalTheory.HighWt.pot N w' ≤ GlobalTheory.HighWt.pot N w) → Embeds O N lam (GlobalTheory.HighWt.extW N w) ϖ Gm := by
   intro O _ _ _ _ N ι _ _ lam ϖ hϖ hlam hBC hC Gm _ _ hS hSQ w hw hJ hmax
   obtain ⟨z₀, hz₀, hfix⟩ := hJ
-  obtain ⟨φ, hφ0, hφc, hφp⟩ := GlobalTheory.T.exists_weightForm_on_simple_subquotient O N ι lam ϖ hϖ Gm hSQ w z₀ hz₀ hfix
+  obtain ⟨φ, hφ0, hφc, hφp⟩ := _root_.GlobalTheory.HighWtEmb.exists_weightForm O N ι lam ϖ hϖ Gm hSQ w z₀ hz₀ hfix
   obtain ⟨Pz, hPc, hPg, hPp, hPn, hPz0⟩ :=
-    GlobalTheory.T.exists_matrixCoefficientPoly_simpleSubquotient O N ι lam ϖ hϖ hlam hC Gm hSQ w hmax φ z₀ hφ0 hfix hφc hφp
+    _root_.GlobalTheory.HighWtEmb.exists_coefPoly O N ι lam ϖ hϖ hlam hC Gm hSQ w hmax φ z₀ hφ0 hfix hφc hφp
   have hmuA : ∀ τ, Antitone (res N (GlobalTheory.HighWt.extW N w τ)) := fun τ => by
     rw [GlobalTheory.HighWt.res_extW]; exact hw τ
   have hle : (Ideal.span {ϖ} • ⊤ : Submodule O (NablaT O N (GlobalTheory.HighWt.extW N w))) ≤
@@ -77,7 +78,7 @@ theorem embeds_of_maxWeight : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscre
   have hLinj : Function.Injective L := by
     rw [← LinearMap.ker_eq_bot, hL, Submodule.ker_liftQ_eq_bot]
     intro y hy
-    exact GlobalTheory.T.mem_smul_top_of_dualWeylTensorReduction_eq_zero O N ι (GlobalTheory.HighWt.extW N w) ϖ hϖ hmuA hBC y hy
+    exact _root_.GlobalTheory.HighWtEmb.mem_smul_top_of_redT_eq_zero O N ι (GlobalTheory.HighWt.extW N w) ϖ hϖ hmuA hBC y hy
   have hsurj : ∀ z, ∃ q, L q = Pz z := by
     intro z
     have h1 : Pz z ∈ nabK (O ⧸ Ideal.span {ϖ}) N (fun τ => res N (GlobalTheory.HighWt.extW N w τ)) := by
@@ -85,8 +86,8 @@ theorem embeds_of_maxWeight : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscre
       rw [e]
       haveI : (Ideal.span {ϖ}).IsMaximal := PrincipalIdealRing.isMaximal_of_irreducible hϖ
       letI : Field (O ⧸ Ideal.span {ϖ}) := Ideal.Quotient.field _
-      exact GlobalTheory.T.mem_dualWeylProductSpan_of_factorwise_dualWeyl (O ⧸ Ideal.span {ϖ}) N ι w (Pz z) (hPn z)
-    obtain ⟨y, hy⟩ := GlobalTheory.T.exists_lift_dualWeylTensorReduction O N ι (GlobalTheory.HighWt.extW N w) ϖ hϖ hmuA hBC _ h1
+      exact _root_.GlobalTheory.HighWtEmb.mem_nabK_of_toBlock (O ⧸ Ideal.span {ϖ}) N ι w (Pz z) (hPn z)
+    obtain ⟨y, hy⟩ := _root_.GlobalTheory.HighWtEmb.nabK_lift O N ι (GlobalTheory.HighWt.extW N w) ϖ hϖ hmuA hBC _ h1
     exact ⟨Submodule.Quotient.mk y, hy⟩
   choose q hq using hsurj
   have hsm : ∀ (a : alg O N lam) (z : Gm), Pz z = 0 → Pz (a • z) = 0 := by
@@ -143,12 +144,12 @@ theorem embeds_of_maxWeight : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscre
     apply hLinj
     change L (q _) = _
     have hzy' : q z = Submodule.Quotient.mk y := hzy
-    rw [hq, hLmk, GlobalTheory.T.dualWeylTensorReduction_intertwines_group_action, hPg, ← hq z, hzy', hLmk]
+    rw [hq, hLmk, _root_.GlobalTheory.HighWtEmb.redT_grp, hPg, ← hq z, hzy', hLmk]
   · intro τ v a a' ha ha' z y hzy
     apply hLinj
     change L (q _) = _
     have hzy' : q z = Submodule.Quotient.mk y := hzy
-    rw [hq, hLmk, GlobalTheory.T.dualWeylTensorReduction_weightProjector O N ι _ ϖ τ v a' ha', hPp τ v a ha, ← hq z, hzy', hLmk]
+    rw [hq, hLmk, _root_.GlobalTheory.HighWtEmb.redT_isProj O N ι _ ϖ τ v a' ha', hPp τ v a ha, ← hq z, hzy', hLmk]
 
 end GlobalTheory.HighWtEmb
 

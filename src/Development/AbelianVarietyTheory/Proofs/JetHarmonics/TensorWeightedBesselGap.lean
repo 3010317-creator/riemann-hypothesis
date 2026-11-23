@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.SideFam
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BesselFunctionLocalityInvariantFactorFiniteSumStatement
+public import Development.AbelianVarietyTheory.Definitions.Jets.SumIoPrAlt
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BesselFunctionLocalityInvariantFactorFiniteSum
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BesselSettingGapDecayStatement
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.TensorWeightedBesselSumStatement
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.MirrorDecomposition.HpkRowEsI
@@ -101,7 +102,7 @@ theorem pieri_bessel : Hyps → ∀ (k r : ℕ) (ι κ : Type) [Fintype ι] [Dec
   have hγG : γ ∈ GG k r := hγ.1
   obtain ⟨Ft, st, hFt, hsum, hz, hst⟩ := GlobalTheory.T.tensor_weighted_bessel_sum H.1.2.2.1 k r ι κ ρ Γ d R RI io pr ep ε mu muI Wp Wq om om'
     l l' lI lI' F s hR (fun I => (hRI I).1) hρ hT hF
-  obtain ⟨hloc, hfac, hfin, -⟩ := GlobalTheory.T.besselFunction_locality_invariantFactor_finiteSum k r Wp Wq D γ hγG
+  obtain ⟨hloc, hfac, hfin, -⟩ := _root_.GlobalTheory.BesselFunctionBasic.JF_basic k r Wp Wq D γ hγG
   have hOO := fun I => GlobalTheory.T.bessel_orbital_integral_integrable_and_eq_smul H k r ε (muI I) h (RI I) Wp Wq D (lI I) (lI' I) (hRI I).1 (hRI I).2 hgap
     (hBe I).1 (hBe I).2
   choose OO hOO using hOO

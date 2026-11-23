@@ -2,8 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.RedSurjective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneFunctorBaseFunctorProperties
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneHodgeFiltrationPerfectFieldStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneTheoryVEqVerschiebungInjectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CobOneEqZeroOfConnecting
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneHodgeFiltrationPerfectField
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneTheoryVEqVerschiebungInjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,15 +60,15 @@ variable {p : ℕ} [Fact p.Prime] (T : GlobalTheory.Dieu.Theory p)
 def redVToRange (G : PDivGroup p k) : T.M G →+ LinearMap.range G.rigOfOmega :=
   AddMonoidHom.codRestrict ((T.red G).toAddMonoidHom.comp (T.V G).toAddMonoidHom)
     (LinearMap.range G.rigOfOmega) fun m =>
-      ((GlobalTheory.T.dieudonne_hodgeFiltration_perfectField p T k G).1 (T.red G (T.V G m))).1 ⟨m, rfl⟩
+      ((_root_.GlobalTheory.Dieu.Theory.hodge_filtration p T k G).1 (T.red G (T.V G m))).1 ⟨m, rfl⟩
 
 def theta (G : PDivGroup p k) : T.M G →+ G.omega :=
-  (LinearEquiv.ofInjective G.rigOfOmega (GlobalTheory.T.dieudonne_hodgeFiltration_perfectField p T k G).2.2.2).symm.toLinearMap.toAddMonoidHom.comp
+  (LinearEquiv.ofInjective G.rigOfOmega (_root_.GlobalTheory.Dieu.Theory.hodge_filtration p T k G).2.2.2).symm.toLinearMap.toAddMonoidHom.comp
     (T.redVToRange G)
 
 theorem rigOfOmega_theta (G : PDivGroup p k) (m : T.M G) :
     G.rigOfOmega (T.theta G m) = T.red G (T.V G m) := by
-  have inj := (GlobalTheory.T.dieudonne_hodgeFiltration_perfectField p T k G).2.2.2
+  have inj := (_root_.GlobalTheory.Dieu.Theory.hodge_filtration p T k G).2.2.2
   exact LinearEquiv.ofInjective_symm_apply G.rigOfOmega (h := inj) (T.redVToRange G m)
 
 theorem theta_spec (G : PDivGroup p k) :
@@ -77,7 +78,7 @@ theorem theta_spec (G : PDivGroup p k) :
         WittVector.constantCoeff a • T.theta G m) ∧
       ∀ (H : PDivGroup p k) (f : G ⟶ H) (m : T.M H),
         T.theta G (T.map f m) = omegaMap G H f (T.theta H m) := by
-  have hG := GlobalTheory.T.dieudonne_hodgeFiltration_perfectField p T k G
+  have hG := _root_.GlobalTheory.Dieu.Theory.hodge_filtration p T k G
   have inj := hG.2.2.2
   refine ⟨T.rigOfOmega_theta G, fun w => ?_, fun m => ?_, fun a m => ?_, fun H f m => ?_⟩
   · obtain ⟨m, hm⟩ := (hG.1 (G.rigOfOmega w)).2 ⟨w, rfl⟩
@@ -95,7 +96,7 @@ theorem theta_spec (G : PDivGroup p k) :
     simpa only [T.rigOfOmega_theta, G.rigOfOmega.map_smul, hV] using!
       (T.red G).map_smulₛₗ a (T.V G m)
   · apply inj
-    have hV := (GlobalTheory.T.dieudonneTheory_V_eq_verschiebung_injective p T k G).2.2.2.2 H f m
+    have hV := (_root_.GlobalTheory.Dieu.theory_V_verschiebung p T k G).2.2.2.2 H f m
     have hred : T.red G (T.map f (T.V H m)) = rigExtMap f (T.red H (T.V H m)) :=
       T.base.red_map trivial trivial f (T.V H m)
     rw [T.rigOfOmega_theta, ← hV, hred, ← T.rigOfOmega_theta H m, rigExtMap_rigOfOmega]

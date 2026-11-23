@@ -4,11 +4,16 @@ public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AddJFintype
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SncModelReindexedCoords
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EtaleLocalizationAtPrimeTensorOfLowHeight
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DominantSmoothMapCoordsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FractionFieldCoordsGeneratedStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.KaehlerRankLocalizationBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.KaehlerRankTranscendenceDegreeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SmoothMapLocalizationCompatStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DominantSmoothMapCoords
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FractionFieldCoordsGenerated
+public import Mathlib.RingTheory.RingHom.Smooth
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.KaehlerRankLocalizationBound
+public import Mathlib.FieldTheory.IntermediateField.Adjoin.Defs
+public import Mathlib.RingTheory.AlgebraicIndependent.Defs
+public import Mathlib.RingTheory.Kaehler.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.KaehlerRankTranscendenceDegree
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SmoothMapLocalizationCompat
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -131,7 +136,7 @@ theorem isSncModel_pull : ∀ (X X' : Scheme.{0}) (Ω₀ Ω : Type) [Field Ω₀
     obtain ⟨d, hd⟩ := exists_seg_ratio (addY y x') c₁ hc₁ p
     rw [hd]
     exact Algebra.subset_adjoin ⟨d, rfl⟩
-  obtain ⟨φ, hφ, hφs⟩ := GlobalTheory.T.dominant_smooth_map_coords X X' Ω₀ Ω ξ ξ' f (algebraMap Ω₀ Ω) _ _ (seg y) (seg (addY y x'))
+  obtain ⟨φ, hφ, hφs⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ChartSmooth.smooth_chartRing X X' Ω₀ Ω ξ ξ' f (algebraMap Ω₀ Ω) _ _ (seg y) (seg (addY y x'))
     hq hq' tie tie' hd hsm c c₁ hxc hxc₁ (fun d => by
       have e1 : seg y d / seg y c = ∏ k, bratio y c ⟨k, d k⟩ := (Finset.prod_div_distrib _ _).symm
       rw [e1, map_prod]
@@ -139,7 +144,7 @@ theorem isSncModel_pull : ∀ (X X' : Scheme.{0}) (Ω₀ Ω : Type) [Field Ω₀
       rw [hv]
       exact hblk _)
   obtain ⟨m, f₀, a₀, hf, ha, hsum, H⟩ := hsnc c hc
-  have hfin := GlobalTheory.T.kaehler_rank_transcendence_degree Ω₀ Ω I u hu hadj
+  have hfin := _root_.GlobalTheory.CompanionTheory.Kaehler.finrank_kaehlerDifferential_of_adjoin_eq_top Ω₀ Ω I u hu hadj
   have hW : ∀ w ∈ Set.range (bratio y c), algebraMap Ω₀ Ω w ∈ Set.range (bratio (addY y x') c₁) := by
     rintro _ ⟨p, rfl⟩
     exact ⟨_, (hv p).symm⟩
@@ -189,7 +194,7 @@ theorem isSncModel_pull : ∀ (X X' : Scheme.{0}) (Ω₀ Ω : Type) [Field Ω₀
         obtain ⟨d, hd⟩ := exists_seg_ratio y c hc p
         rw [hd]
         exact Algebra.subset_adjoin (Algebra.subset_adjoin ⟨d, rfl⟩))
-    obtain ⟨ψ, hψ, hψs⟩ := GlobalTheory.T.smooth_map_localization_compat Ω₀ Ω _ _ φ hφ hφs (f₀ l) (hle₀ (hf l)) h0
+    obtain ⟨ψ, hψ, hψs⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LocalisedSmooth.smooth_localised Ω₀ Ω _ _ φ hφ hφs (f₀ l) (hle₀ (hf l)) h0
       (Algebra.adjoin ℚ (insert (f₀ l)⁻¹ (Set.range (bratio y c))))
       (Algebra.adjoin ℚ (insert (algebraMap Ω₀ Ω (f₀ l))⁻¹ (Set.range (bratio (addY y x') c₁))))
       (adjoin_insert_eq y c hc _).symm (adjoin_insert_eq (addY y x') c₁ hc₁ _).symm
@@ -201,9 +206,9 @@ theorem isSncModel_pull : ∀ (X X' : Scheme.{0}) (Ω₀ Ω : Type) [Field Ω₀
         a ∈ Algebra.adjoin ℚ (insert (algebraMap Ω₀ Ω (f₀ l))⁻¹ (Set.range (bratio (addY y x') c₁))) := fun a ha' => by
       rw [← adjoin_insert_eq (addY y x') c₁ hc₁]
       exact Algebra.subset_adjoin (Set.mem_insert_of_mem _ ha')
-    obtain ⟨t, ht, hG⟩ := GlobalTheory.T.kaehler_rank_localization_bound Ω₀ Ω _ _ (bratio y c) (bratio (addY y x') c₁) (addV J N) hv e _ bd hfin (f₀ l) h0 _ _ rfl rfl
-      ψ hψ hψs (hfr _ _ hA₀ (GlobalTheory.T.fraction_field_coords_generated X Ω₀ ξ _ (seg y) tie c hxc))
-      (hfr₁ _ _ hA₁ (GlobalTheory.T.fraction_field_coords_generated X' Ω ξ' _ (seg (addY y x')) tie' c₁ hxc₁)) hSm z n hn hli hspan hbd P hP (fl l) rfl hl
+    obtain ⟨t, ht, hG⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LocalStep.local_step Ω₀ Ω _ _ (bratio y c) (bratio (addY y x') c₁) (addV J N) hv e _ bd hfin (f₀ l) h0 _ _ rfl rfl
+      ψ hψ hψs (hfr _ _ hA₀ (_root_.GlobalTheory.CompanionTheory.Ar.ChartFrac.exists_eq_div_chart X Ω₀ ξ _ (seg y) tie c hxc))
+      (hfr₁ _ _ hA₁ (_root_.GlobalTheory.CompanionTheory.Ar.ChartFrac.exists_eq_div_chart X' Ω ξ' _ (seg (addY y x')) tie' c₁ hxc₁)) hSm z n hn hli hspan hbd P hP (fl l) rfl hl
     exact ⟨t, ht, fun _ => hG⟩
   obtain ⟨m', f', a', hs', hG⟩ := exists_cover _ hloc
   refine ⟨m', fun l => (f' l : Ω), fun l => (a' l : Ω), fun l => (f' l).2, fun l => (a' l).2, ?_, fun l hl S' hS' => ?_⟩

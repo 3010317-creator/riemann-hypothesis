@@ -2,7 +2,8 @@ module
 
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.VoronoiMeans.VorFunEvalEqFineMean
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsBaryStageStart
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RealConeCoveredByStarAtPointStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsStrictIff
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RealConeCoveredByStarAtPoint
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -108,7 +109,7 @@ theorem isStarOf_finite_cover : ∀ (O : Type) [CommRing O] [IsDedekindDomain O]
       simp only [GlobalTheory.PolCell.rcone, Set.mem_ofPred_eq]
       exact ⟨c, hc, hBe⟩
     obtain ⟨m', s, h, hcut, hpos, hB'⟩ :=
-      GlobalTheory.T.realCone_covered_by_star_at_point X m γ β₀ (GlobalTheory.PolFan.pullR e.toLinearMap B) hsymm hcell.nonneg hβne hin hBr
+      _root_.GlobalTheory.StarCover.star_cover X m γ β₀ (GlobalTheory.PolFan.pullR e.toLinearMap B) hsymm hcell.nonneg hβne hin hBr
     obtain ⟨t, ht, htB⟩ := hB'
     refine ⟨e, m' + 1, Fin.cons β₀ fun j => γ (s j), t,
       hS2 X hq m γ hcell β₀ hbal hpsd hw1 hin m' s h hcut hpos, ?_, ht, htB⟩

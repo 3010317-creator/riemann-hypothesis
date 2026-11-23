@@ -2,22 +2,36 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsSncModel
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexCoordsAddedStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsAddedProjectiveStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DimensionPlusFlagCountStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AddJFintype
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EtaleLocalizationAtPrimeTensorOfLowHeight
+public import Mathlib.Basic.Complex.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexCoordsAdded
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsAddedProjective
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.CompactGapsGE
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DimensionPlusFlagCount
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsCoordsForComponent
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsGenericFlag
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsModelVectorBundles
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagBundleUnderEquiv
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericFlagUnderEquiv
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelConstantsExtension
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelPullbackActionRing
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SncModelAddedCoords
+public import Mathlib.LinearAlgebra.DFinsupp
+public import Mathlib.LinearAlgebra.TensorProduct.Defs
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TensorEquivOfBasisExtension
+public import Mathlib.FieldTheory.IntermediateField.Adjoin.Defs
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Mathlib.LinearAlgebra.Matrix.Defs
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.UnipotentEntriesFieldDegree
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsModelVectorBundlesStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagBundleUnderEquivStatement
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericCoordsDescendSubfield
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericFlagUnderEquivStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelConstantsExtensionStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelDominantHodgeStatement
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelDominantHodge
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueAct
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelPullbackActionRingStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SncModelAddedCoordsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TensorEquivOfBasisExtensionStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.UnipotentEntriesFieldDegreeStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,7 +71,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.SabPull
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.LawsProved
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AddJFintype
 
 @[expose] public section
 
@@ -74,7 +87,7 @@ theorem GlobalTheory.CompanionTheory.Ar.exists_flagStep : ∀ (E : Type) [Field 
   intro E _ _ _ H D l Xo c Y Ω₀ _ _ ξ₀ K _ J _ y X ξ f cst t m Li _ _ M ρ L bd hgen hall htie hξ hcst hact hvb hLeq hsnc hbd
   haveI : Fintype (CMType H ⊕ CMType H) := Fintype.ofFinite _
   obtain ⟨X', Ω', _, _, ξ', f', N, x', b₁, htie', hall', hdom, hsm, -, hgf, hfl⟩ :=
-    GlobalTheory.T.exists_model_vector_bundles X Ω₀ ξ Li ((k : K) → J k) (fun c' => ∏ k, y ⟨k, c' k⟩) (CMType H ⊕ CMType H) (labelRk D)
+    _root_.GlobalTheory.CompanionTheory.Ar.exists_flagBundle X Ω₀ ξ Li ((k : K) → J k) (fun c' => ∏ k, y ⟨k, c' k⟩) (CMType H ⊕ CMType H) (labelRk D)
       (fun s => eigSp ρ (cst.comp (labelEmb c s))) L htie hall hvb
   haveI : CharZero Ω' := charZero_of_injective_algebraMap (algebraMap Ω₀ Ω').injective
   have hg : IsCptGen ξ := htie.gen
@@ -86,14 +99,14 @@ theorem GlobalTheory.CompanionTheory.Ar.exists_flagStep : ∀ (E : Type) [Field 
   obtain ⟨Li', _, _, ⟨M'⟩⟩ := GlobalTheory.CompanionTheory.Ar.lieModel_exists _ t'.G Ω' ξ'
   obtain ⟨ρ', hact', -⟩ := GlobalTheory.CompanionTheory.Ar.lieModel_exists_unique_act _ t'.G Ω' ξ' Li' M' (𝓞 E) t'.act.act t'.act.hom
     t'.act.one t'.act.mul t'.act.add
-  obtain ⟨j', hj₁, hj₂, hj₃, hj₄, hj₅⟩ := GlobalTheory.T.lie_model_dominant_hodge E H X t X' t' f' m₁ Ω₀ Ω' ξ ξ' (algebraMap Ω₀ Ω') Li Li' M M'
+  obtain ⟨j', hj₁, hj₂, hj₃, hj₄, hj₅⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LiePullSab.lie_pull_lat E H X t X' t' f' m₁ Ω₀ Ω' ξ ξ' (algebraMap Ω₀ Ω') Li Li' M M'
     hg hg' hdom
   obtain ⟨Li₀, _, _, ⟨M₀⟩⟩ := GlobalTheory.CompanionTheory.Ar.lieModel_exists _ Y.t.G Ω₀ ξ₀
   have hdom₀ : GlobalTheory.CompanionTheory.Ar.Dominates ξ ξ₀ f (RingHom.id Ω₀) := by
     show ξ ≫ f = _
     rw [hξ]
     simp
-  obtain ⟨a₀, ha₁, ha₂, ha₃, ha₄, -⟩ := GlobalTheory.T.lie_model_dominant_hodge E H Y.X Y.t X t f m Ω₀ Ω₀ ξ₀ ξ (RingHom.id Ω₀) Li₀ Li M₀ M
+  obtain ⟨a₀, ha₁, ha₂, ha₃, ha₄, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LiePullSab.lie_pull_lat E H Y.X Y.t X t f m Ω₀ Ω₀ ξ₀ ξ (RingHom.id Ω₀) Li₀ Li M₀ M
     hgen hg hdom₀
 
   let aL : Li₀ →ₗ[Ω₀] Li := { toFun := a₀, map_add' := a₀.map_add, map_smul' := fun c e => ha₂ c e }
@@ -108,13 +121,13 @@ theorem GlobalTheory.CompanionTheory.Ar.exists_flagStep : ∀ (E : Type) [Field 
       exact Submodule.span_le.2 (by rintro _ ⟨e, rfl⟩; exact ⟨e, rfl⟩)
     exact LinearMap.range_eq_top.1 this
   let a : Li₀ ≃ₗ[Ω₀] Li := LinearEquiv.ofBijective aL ⟨hainj, hasurj⟩
-  obtain ⟨Φ, hΦ⟩ := GlobalTheory.T.tensor_equiv_of_basis_extension Ω₀ Ω' Li Li' j' hj₂ hj₃ hj₄
+  obtain ⟨Φ, hΦ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FlagStep.exists_tensor_equiv_of_semilinear Ω₀ Ω' Li Li' j' hj₂ hj₃ hj₄
   have hjinj : Function.Injective j' := by
     refine (injective_iff_map_eq_zero j').2 fun e he => ?_
     by_contra hne
     have h1 := hj₃ 1 (fun _ => e) (LinearIndependent.of_subsingleton (0 : Fin 1) hne)
     exact h1.ne_zero (0 : Fin 1) he
-  have hint := GlobalTheory.T.lie_model_pullback_action_ring E H X X' t t' f' m₁ Ω₀ Ω' ξ ξ' (algebraMap Ω₀ Ω') Li Li' M M' ρ ρ' j' hdom hact hact' hj₁
+  have hint := _root_.GlobalTheory.CompanionTheory.Ar.FlagStep.lieMap_act_pull E H X X' t t' f' m₁ Ω₀ Ω' ξ ξ' (algebraMap Ω₀ Ω') Li Li' M M' ρ ρ' j' hdom hact hact' hj₁
   have hjΦ : Φ.toLinearMap.toAddMonoidHom.comp (TensorProduct.mk Ω₀ Ω' Li 1).toAddMonoidHom = j' :=
     AddMonoidHom.ext hΦ
   let cst' : c.F →+* Ω' := (algebraMap Ω₀ Ω').comp cst
@@ -126,16 +139,16 @@ theorem GlobalTheory.CompanionTheory.Ar.exists_flagStep : ∀ (E : Type) [Field 
     rw [← hint a e, RingHom.comp_apply, ← hj₂]
     exact hjinj.eq_iff
   let V₀ : CMType H ⊕ CMType H → Submodule Ω₀ Li₀ := fun s => (eigSp ρ (cst.comp (labelEmb c s))).comap aL
-  have hgf' := GlobalTheory.T.generic_flag_under_equiv Ω₀ Ω' Li₀ Li _ Li' a _ Φ _ (labelRk D) _ V₀ b₁ 1 (fun s e => Iff.rfl) hgf
+  have hgf' := _root_.GlobalTheory.CompanionTheory.Ar.FlagStep.Transport.isGenericFlag_transport Ω₀ Ω' Li₀ Li _ Li' a _ Φ _ (labelRk D) _ V₀ b₁ 1 (fun s e => Iff.rfl) hgf
   obtain ⟨cc, u, -, -, -, -, hu1, hu0, -, halg, -, hfr⟩ := hgf
-  have htop := GlobalTheory.T.unipotent_entries_field_degree Ω₀ Ω' _ (labelRk D) u hu1 hu0 hfr
+  have htop := _root_.GlobalTheory.CompanionTheory.Ar.FlagStep.AdjoinLower.adjoin_lower_eq_top Ω₀ Ω' _ (labelRk D) u hu1 hu0 hfr
   have hgf'' : IsGenericFlag (Ω' := Ω') (j'.comp aL.toAddMonoidHom) V₀ (fun s k => Φ (b₁ s k)) 1 := by
     rw [← hjΦ]
     exact hgf'
   have hg'' : IsCptGen ξ' := hg'
-  have tie₁ := GlobalTheory.T.coords_added_projective X X' Ω₀ Ω' ξ ξ' f' K J y N x' hall htie htie' hdom
-  have snc₁ := GlobalTheory.T.snc_model_added_coords X X' Ω₀ Ω' ξ ξ' f' K J y N x' D.dim bd _ _ hall hall' htie tie₁ hdom hsm halg htop hsnc
-  rw [GlobalTheory.T.dimension_plus_flag_count E H D l c] at snc₁
+  have tie₁ := _root_.GlobalTheory.CompanionTheory.Ar.FlagStep.TieBlocks.tie_blocks X X' Ω₀ Ω' ξ ξ' f' K J y N x' hall htie htie' hdom
+  have snc₁ := _root_.GlobalTheory.CompanionTheory.Ar.SncPull.isSncModel_pull X X' Ω₀ Ω' ξ ξ' f' K J y N x' D.dim bd _ _ hall hall' htie tie₁ hdom hsm halg htop hsnc
+  rw [_root_.GlobalTheory.CompanionTheory.Ar.FlagStep.dim_add_card_strictLower E H D l c] at snc₁
   refine ⟨Ω', inferInstance, inferInstance, inferInstance, Unit ⊕ K, inferInstance, addJ J N, inferInstance,
     addY y x', X', ξ', f' ≫ f, cst', t', n, Li', inferInstance, inferInstance, M', ρ', Li₀, inferInstance,
     inferInstance, M₀, j'.comp aL.toAddMonoidHom, V₀, fun s k => Φ (b₁ s k),
@@ -164,15 +177,15 @@ theorem GlobalTheory.CompanionTheory.Ar.exists_flagStep : ∀ (E : Type) [Field 
     have hfl' : ∀ s, ((L s).pull ξ' f' j').IsFlagVBOn Set.univ (fun k => Φ (b₁ s k)) := by
       intro s
       rw [← hjΦ]
-      exact GlobalTheory.T.flag_bundle_under_equiv X X' Ω₀ Ω' ξ ξ' f' Li _ Li' (L s) _ Φ Set.univ _ (b₁ s) (hfl s)
+      exact _root_.GlobalTheory.CompanionTheory.Ar.FlagStep.isFlagVBOn_pull_map X X' Ω₀ Ω' ξ ξ' f' Li _ Li' (L s) _ Φ Set.univ _ (b₁ s) (hfl s)
     have hi₀ : ∀ q : Cpt ξ, (∀ r : ℕ, r.Prime → ¬ InFibre ξ r q) → IsIntegrallyClosed (regAt ξ q) :=
       fun q hq => EigBase.isIntegrallyClosed_of_snc htie hsnc q hq
     have hi₁ : ∀ q : Cpt ξ', (∀ r : ℕ, r.Prime → ¬ InFibre ξ' r q) → IsIntegrallyClosed (regAt ξ' q) :=
       fun q hq => EigBase.isIntegrallyClosed_of_snc tie₁ snc₁ q hq
-    exact GlobalTheory.T.lie_model_constants_extension E H l c X X' t t' f' Ω₀ Ω' ξ ξ' cst Li Li' M M' ρ ρ' L j' (labelRk D) (fun s k => Φ (b₁ s k)) hg hg'
+    exact _root_.GlobalTheory.CompanionTheory.Ar.FlagStep.eigLat_isFlagVBOn_of_pull_char0 E H l c X X' t t' f' Ω₀ Ω' ξ ξ' cst Li Li' M M' ρ ρ' L j' (labelRk D) (fun s k => Φ (b₁ s k)) hg hg'
       hdom hact hact' hi₀ hi₁ hLeq hj₅ heig' hfl' s
   · intro z w hw
-    have hw₁ := GlobalTheory.T.complex_coords_added X X' Ω₀ Ω' ξ ξ' f' K J y N x' z w hall htie hg'' hall' hdom hw
+    have hw₁ := _root_.GlobalTheory.CompanionTheory.Ar.FlagStep.CoordsRestrict.coordsAt_restrict X X' Ω₀ Ω' ξ ξ' f' K J y N x' z w hall htie hg'' hall' hdom hw
     have hne : ∀ k, ∃ i, w ⟨k, i⟩ ≠ 0 := fun k => (hw.1 k).imp fun _ h => h.ne_zero
     have hne' : ∀ k, ∃ i, w (addV J N ⟨k, i⟩) ≠ 0 := fun k => (hw₁.1 k).imp fun _ h => h.ne_zero
     rw [EigBase.mem_mcPts_rename (addV J N) bd w hne hne']

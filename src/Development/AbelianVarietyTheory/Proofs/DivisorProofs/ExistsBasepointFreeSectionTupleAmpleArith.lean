@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRatioOfWeight
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionLoweringFibreDimensionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionLoweringFibreDimension
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermPairPowSectionMemAndNormPow
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProjArithResidueCharFibreStructureStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RegularNonvanishingLocusSectionPropertiesStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProjArithResidueCharFibreStructure
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RegularNonvanishingLocusSectionProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -72,9 +72,9 @@ theorem exists_cover (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p 
     exact absurd h₁ (not_lt.2 (by simpa using h₂))
   | succ d ih =>
     intro Z hZ h
-    obtain ⟨e, he, f, hf, hlt⟩ := GlobalTheory.T.exists_section_lowering_fibre_dimension k X p D hX P hP d Z hZ fun ℓ =>
+    obtain ⟨e, he, f, hf, hlt⟩ := _root_.GlobalTheory.HSAmp.exists_sec_fibre_dim_lt k X p D hX P hP d Z hZ fun ℓ =>
       ENat.WithBot.lt_add_one_iff.1 (by simpa using h ℓ)
-    have hnf := GlobalTheory.T.regularNonvanishingLocusSection_properties k X p P e 0 f hf
+    have hnf := _root_.GlobalTheory.HSAmp.nv_rules k X p P e 0 f hf
     obtain ⟨e', x, he', hx, hc⟩ := ih (Z \ NV P e 0 f) (hZ.sdiff hnf.1) hlt
     have c₁ : ((e' * e : ℕ) : ℤ) = (e' : ℤ) * (e : ℤ) := Nat.cast_mul _ _
     have c₂ : ((e' * e : ℕ) : ℤ) = (e : ℤ) * (e' : ℤ) := by rw [c₁, mul_comm]
@@ -94,7 +94,7 @@ theorem exists_cover (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p 
         exact hzf
       · obtain ⟨l, hl⟩ := hc z ⟨hz, hzf⟩
         refine ⟨l.succ, ?_⟩
-        have := (GlobalTheory.T.regularNonvanishingLocusSection_properties k X p P e' 0 (x l) (hx l)).2.2.1 e he
+        have := (_root_.GlobalTheory.HSAmp.nv_rules k X p P e' 0 (x l) (hx l)).2.2.1 e he
         rw [mul_zero, ← c₂] at this
         rw [Fin.cons_succ, this]
         exact hl
@@ -104,7 +104,7 @@ theorem exists_gens (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p :
     ∃ (e : ℕ) (x : Fin (D + 1) → X.functionField), Gens P D e x := by
   obtain ⟨e, x, he, hx, hc⟩ := exists_cover k X p D hX P hP (D + 1) Set.univ isClosed_univ fun ℓ => by
     rw [Set.univ_inter, Nat.cast_add_one]
-    exact ENat.WithBot.lt_add_one_iff.2 ((GlobalTheory.T.projArith_residueCharFibre_structure k X p D hX).2.2.2.1 ℓ)
+    exact ENat.WithBot.lt_add_one_iff.2 ((_root_.GlobalTheory.IntFib.fib_structure k X p D hX).2.2.2.1 ℓ)
   exact ⟨e, x, he, hx, fun z => hc z trivial⟩
 
 end GlobalTheory.HSAmp.NoethGens

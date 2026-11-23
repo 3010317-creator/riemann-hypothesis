@@ -2,8 +2,9 @@ module
 
 public import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 public import Mathlib.NumberTheory.LSeries.RiemannZeta
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.NormRiemannZetaSubPartialSumLeStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.NormRiemannZetaSubPartialSumLe
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SumTruncConv
+public import Mathlib.NumberTheory.Harmonic.Bounds
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -18,7 +19,6 @@ import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.NumberTheory.Chebyshev
-public import Mathlib.NumberTheory.Harmonic.Bounds
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
@@ -124,7 +124,7 @@ theorem zeta_zero_detect : ∃ Q₀ : ℕ, ∀ Q : ℕ, Q₀ ≤ Q → ∀ ρ : 
     · intro d hd
       obtain ⟨hd1, hdD⟩ := Finset.mem_Icc.mp hd
       have hN : 1 ≤ Q ^ 6 / d := Nat.div_pos (hdD.trans hDX) hd1
-      have ht := GlobalTheory.T.norm_riemannZeta_sub_partial_sum_le ρ hσ hρ1 _ hN
+      have ht := _root_.GlobalTheory.ZetaPartialSum.norm_zeta_sub_sum_le ρ hσ hρ1 _ hN
       have hy : Q ^ 6 ≤ 2 * (d * (Q ^ 6 / d)) := by
         have h1 := Nat.div_add_mod (Q ^ 6) d
         have h2 := Nat.mod_lt (Q ^ 6) hd1

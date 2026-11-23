@@ -3,7 +3,7 @@ module
 public import Formalism.PeriodIntegrals.WeylProd
 public import Formalism.LocalToGlobal.Columns.Inputs
 public import Formalism.PeriodIntegrals.AdmissibleModel.WeylDim
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.WeylProd
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.WeylProduct.WeylProd
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,7 +77,7 @@ theorem weylDim_of_weylProd (h : PI.WeylProd) {n : ℕ} (lam : DomWeight n) : We
   have h2 : _ = Formalism.LogVandermondeBounds.StandardLattice.dimVN (wSeq lam) n := h n (fun t => ((lam.natW t : ℕ) : ℤ)) lam.w lam.detShift hnn
   rw [← h2, ← h1, Rat.cast_natCast]
 
-theorem weylDim_holds {n : ℕ} (lam : DomWeight n) : WeylDim lam := weylDim_of_weylProd weyl_product_formula lam
+theorem weylDim_holds {n : ℕ} (lam : DomWeight n) : WeylDim lam := weylDim_of_weylProd _root_.PI.WeylProdWork.weylProd lam
 
 section Inst
 

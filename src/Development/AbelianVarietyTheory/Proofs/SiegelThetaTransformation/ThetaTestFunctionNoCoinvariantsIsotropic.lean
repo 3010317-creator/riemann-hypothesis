@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HMatMulVecPerCrd
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LevelStructurePropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LevelTestFunctionFiniteSumEquivariantStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LevelStructureProperties
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LevelTestFunctionFiniteSumEquivariant
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.NeBotOfNorm
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.TensorLatticeSelfDualSemicharacterIndex
 import Mathlib.Algebra.Order.Floor.Extended
@@ -264,9 +264,9 @@ theorem exists_pairing (D : Level X) (hn : r ≤ n) (hX : SelfD X X.Λ) {M : ℕ
 
 theorem phi_no_coinvariants : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (X : Data E r) (g : ℕ) (bas : (Fin g ⊕ Fin g → ℤ) ≃ₗ[ℤ] X.Λ) (idx : Fin g ≃ X.Ψ × Fin r) (n : ℕ), IsSympl X bas → Even n → ∀ (D : Level X) (hn : r ≤ n) (M : ℕ), 0 < M → (M : 𝓞 E) ∈ D.𝔪 → ∀ v₀ : Lt E r → TF n g, (∀ L ∈ D.lats, IsVac X bas D.w (tens (stdL E n) (D.sh L)) (v₀ L)) → ∀ ξ : Fin r → E, ξ ≠ 0 → herm X.Gm ξ ξ = 0 → ∀ L ∈ D.lats, ∀ Λ ∈ Vset E n M, ∃ (s : Finset (Fin n → E)) (a : (Fin n → E) → ℂ), ∑ v ∈ s, a v ≠ 0 ∧ ∑ v ∈ s, a v • heisG X bas (vecMulVec v ξ) (D.phi bas hn v₀ L Λ) = 0 := by
   intro E _ _ _ r X g bas idx n hs hev D hn M hM0 hM v₀ hv₀ ξ hξ hiso L hL Λ hΛ
-  obtain ⟨-, hvac, h3, -⟩ := GlobalTheory.T.levelTestFunction_finite_sum_equivariant E r X g bas idx n hs hev D hn M hM0 hM v₀ hv₀ L hL Λ hΛ
+  obtain ⟨-, hvac, h3, -⟩ := _root_.GlobalTheory.SW.RecSum.phi_sum_equivariant E r X g bas idx n hs hev D hn M hM0 hM v₀ hv₀ L hL Λ hΛ
   obtain ⟨t, -, ht, hphi, -⟩ := h3 L hL
-  have hX := (GlobalTheory.T.level_structure_properties E r X g bas idx n hs hev D hn).1.1
+  have hX := (_root_.GlobalTheory.SW.level_laws E r X g bas idx n hs hev D hn).1.1
   rw [hphi]
   generalize unitv (projA X bas D.w (tens Λ (D.sh L)) (v₀ L)) = φ at hvac
   have law := fun y => ((heisG_laws E r X g bas idx n hs hev).2.2.2 y φ hvac.1).2.2.1

@@ -8,8 +8,9 @@ public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Development.AbelianVarietyTheory.Definitions.Foundations.OpLDOneSubMemTriv
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsDomGauss
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsPowOfGaussValuationCongrOneAlmostAllPrimesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KroneckerCongruenceModularFunctionTowerLevelStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsPowOfGaussValuationCongrOneAlmostAllPrimes
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KroneckerCongruenceModularFunctionTowerLevel
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LocalPowerUnitsTowerClosureProperties
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemGammaOfMul
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularFunctionTowerIntegrality
@@ -134,8 +135,8 @@ open GlobalTheory.KZ.ES.Ues in
 theorem GlobalTheory.KZ.ES.eichlerShimura_unit : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε), (∃ φ : ℂ → ℂ, DifferentiableOn ℂ φ Hs ∧ X.an X.jK = (φ : Mero)) → ∀ (l M₀ : ℕ), l.Prime → 0 < M₀ → l ∣ M₀ → ∃ S : Finset ℕ, ∀ q : ℕ, q.Prime → q ∉ S → ∀ (V : ValuationSubring Ω) (s : Ω ≃ₐ[ℚ] Ω), FrobV V q s → ∀ (n k : ℕ) (f : X.Kˣ), f ∈ X.Un (l ^ n) → Lev X (M₀ * l ^ k) f → ∀ γ : SL(2, ℤ), DiagMod (M₀ * l ^ k) q γ → ∃ g : X.Kˣ, Nq X (M₀ * l ^ k) q f * X.sl (toGQ ((γ : Matrix (Fin 2) (Fin 2) ℤ) * !![(q : ℤ), 0; 0, 1])) (f : X.K) = X.gal s (f : X.K) * (X.gal s.symm (X.sl (ofSL γ) (f : X.K))) ^ q * (g : X.K) ^ (l ^ n) := by
   intro Ω _ _ _ ε X hhol l M₀ hl hM₀ hlM
   haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
-  obtain ⟨S₁, hS₁⟩ := GlobalTheory.T.kronecker_congruence_modularFunctionTower_level ε X hhol l M₀ hl hM₀
-  obtain ⟨S₂, hS₂⟩ := GlobalTheory.T.isPow_of_gauss_valuation_congr_one_almost_all_primes ε X hhol l M₀ hl hM₀ hlM
+  obtain ⟨S₁, hS₁⟩ := _root_.GlobalTheory.KZ.ES.kron_cong_level ε X hhol l M₀ hl hM₀
+  obtain ⟨S₂, hS₂⟩ := _root_.GlobalTheory.KZ.ES.pow_of_gauss_congr_one ε X hhol l M₀ hl hM₀ hlM
   refine ⟨S₁ ∪ S₂ ∪ M₀.primeFactors, ?_⟩
   intro q hq hqS V s hFrob n k f hf hlev γ hγ
   simp only [Finset.mem_union, not_or] at hqS

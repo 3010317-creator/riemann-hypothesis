@@ -10,12 +10,11 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledUnita
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledWeilOperatorDiagonalIntegralHeisenbergPoiStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfComponentTensorAdelicFunctionEqStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdmittedDiagonalIntegralLinearFormStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplementaryAdelicSchwartzRestFunctionStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryDoubledBlockDiagOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryScalarInertPlaceInvertibleShiftsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinitePlaceComponentAdeleNormEqLocalNormStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergDiagonalIntegralMemSchwartzBruhatStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergInvariantFormVanishesLagrangianTestStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergInvariantFormVanishesLagrangianTest
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdempotentBlockUnipotentIdentityStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralInjectiveSubspaceCompactOpenConstNeZeroStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUnitDetGramOfHermitianSelfDualLatticeSpace
@@ -25,11 +24,13 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LagrangianDi
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearFormEqZeroOfKillsProductSchwartzBruhatStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalProductActsOfAdelicProductActsFirstStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalizedAbsDetMulIntegralCompMulVecFinitePlaceStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerPreservesSchwartzBruhat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelParabolicLeviInverseQuotientDetNormStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAdelicAddCharNontrivialFinitePlaceStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticFormEqZeroOfLagrangianAtPlaceStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationLocalityUnitaryGroupVStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagWZero
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplementaryAdelicSchwartzRestFunctionStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerPreservesSchwartzBruhat
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAdelicAddCharNontrivialFinitePlaceStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticFormEqZeroOfLagrangianAtPlace
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
 import GroundTheory.AutomorphicForms.GLnLocal
 import GroundTheory.GlobalFields.LocalAtPlace
@@ -75,7 +76,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagWZero
 
 @[expose] public section
 
@@ -226,7 +226,7 @@ theorem char_eq_one : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
     ⟨fun t ht => by rw [← Matrix.smul_mul, (hζ y).1 t ht, Matrix.zero_mul], ζ y, rfl⟩
   have hiso : ∀ y y', (j y).1 ⬝ᵥ (j y').2 = (j y').1 ⬝ᵥ (j y).2 := by
     intro y y'
-    have h0 := GlobalTheory.T.symplecticForm_eq_zero_of_lagrangianAtPlace σ G.V'.J G.W v C hC (-1) _ _ (hlag y) (hlag y')
+    have h0 := _root_.GlobalTheory.InertVacIso.symp_eq_zero_of_lagAt σ G.V'.J G.W v C hC (-1) _ _ (hlag y) (hlag y')
     change symp (cA σ) (-1) (incM F G.V'.J) (incM F G.W.J) (ζ y * Cᵀ) (ζ y' * Cᵀ) = 0 at h0
     rw [G.M'.co.form] at h0
     have h1 := congrArg (evFin F v) h0
@@ -244,7 +244,7 @@ theorem char_eq_one : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
     show Λ (boxFun φ₁ φ₂) = Λ (boxFun φ φ₂)
     rw [hΛ _ (box_mem_SB hφ₁ hφ₂), hΛ _ (box_mem_SB hφ hφ₂), e, hu', (hζ y).2]
     exact GlobalTheory.T.isotropicIntegral_invariant_heisenberg_first_vars F v _ _ μ hμ N ν hν j hiso y φ φ₂
-  obtain ⟨φt, hφt, hline⟩ := GlobalTheory.T.heisenberg_invariant_form_vanishes_lagrangian_test F E σ a' (a + a') G.V' G.W G.M' B.ψ v hunr m C hC
+  obtain ⟨φt, hφt, hline⟩ := _root_.GlobalTheory.InertLagUniq.exists_test F E σ a' (a + a') G.V' G.W G.M' B.ψ v hunr m C hC
   have hlt : l φt ≠ 0 := fun h => by
     obtain ⟨f, hf, hne⟩ := hne; exact hne (hline l hl h f hf)
   have hprop : ∀ φ₂ ∈ SB (Fin a' × Fin (a + a') → Fv F v), ∀ φ ∈ SB (Fin a' × Fin (a + a') → Fv F v),

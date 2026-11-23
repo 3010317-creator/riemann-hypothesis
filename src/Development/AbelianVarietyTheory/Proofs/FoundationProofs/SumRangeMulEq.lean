@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.PetEqRelIndexMulPetProd
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeUOperatorExplicitCommDiamondOperatorOfMatriStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeUOperatorExplicitCommDiamondOperatorOfMatrix
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsDiamondMatrixConjMemGamma1InterGamma0Level
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -203,7 +203,7 @@ theorem uOp_heckeT_comm : ∀ (N l q r : ℕ) (k : ℤ) (σ : SL(2, ℤ)), 0 < N
       rw [denom]; simp [ModularGroup.coe_T]
     rw [SL_slash_apply, modular_T_smul] at h2
     simpa [hden] using h2
-  have hd := GlobalTheory.T.heckeUOperatorExplicit_comm_diamondOperatorOfMatrix N l q k r σ hN hl hq hqd hσ f
+  have hd := _root_.GlobalTheory.Hk.uOp_dia_comm N l q k r σ hN hl hq hqd hσ f
   unfold GlobalTheory.Hk.dia at hd
   simp only [GlobalTheory.Hk.heckeT]
   rw [uOp_add, uOp_smul, uOp_comm _ q r hq0 hr0, uOp_vOp _ q r hq0 hr0 hcop hper, hd]

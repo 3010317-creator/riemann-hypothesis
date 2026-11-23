@@ -1,8 +1,10 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RatTuple
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FiniteAdeleTopologyStatement
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.CountData
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FiniteAdeleTopology
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ExistsNatMulMem
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ModerateGrowthSchwartz
 import Formalism.LocalRingCardinality.DataHost
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -44,7 +46,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ModerateGrowthSchwartz
 import Development.AbelianVarietyTheory.Definitions.Foundations.AestronglyMeasurableQuotMeasureIffLift
 import Development.AbelianVarietyTheory.Definitions.Foundations.EventuallyEqOfIsPreconnected
 import Development.AbelianVarietyTheory.Definitions.Foundations.IsIwasawaOfIsCompact
@@ -151,7 +152,7 @@ theorem ratTuple_mem_latN : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
   intro a j k
   choose r hr using fun i => hD (j, i) (ρ i a) k
   refine ⟨algebraMap F (Af F) (((∑ i, r i : 𝓞 F)) : F), ?_, ?_⟩
-  · exact ((GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F).2.2.2.2.2.2.1 _).2 ⟨_, rfl⟩
+  · exact ((_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.2.2.2.2.2.1 _).2 ⟨_, rfl⟩
   · show (Algebra.TensorProduct.basis (Af F) b).repr
       (inclR (Af F) (((N * D : ℕ) : E) *
         (J⁻¹ *ᵥ fun i => algebraMap (𝓞 E) E (ρ i a)) j)) k = _

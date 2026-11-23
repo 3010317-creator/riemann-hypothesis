@@ -1,9 +1,11 @@
 module
 
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FiniteAdeleHaarEqProductLocalMeasures
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CoordinateHaarMeasureStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRingStatement
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CoordinateHaarMeasure
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.FactorConjugationCancel
+import Formalism.UnipotentAdelicQuotients.SWXSDefs
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.TensTop
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -150,7 +152,7 @@ theorem map_coordW_unit : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
     rw [hcm.2.2.1] at this
     simpa using this.symm
   subst hd
-  obtain ⟨iTR, iLC, iSC, iT2, hsc, -, hK', hB, -⟩ := GlobalTheory.T.tensor_locally_compact_ring F E σ hcm R
+  obtain ⟨iTR, iLC, iSC, iT2, hsc, -, hK', hB, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm R
   haveI := iTR
   haveI := iLC
   haveI := iSC
@@ -159,7 +161,7 @@ theorem map_coordW_unit : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
   haveI := hlam
   have hK : IsHomeomorph (cK (F := F) (E := E) R b) := hK' 2 b
   haveI hν : (coordW R b lam 1 1).IsAddHaarMeasure :=
-    (GlobalTheory.T.coordinate_haar_measure F E σ hcm R 2 b lam hlam).2.1 1 1
+    (_root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hcm R 2 b lam hlam).2.1 1 1
   have hinv := sigR_sigR R σ (conj_conj σ hcm)
   set π : Measure (Fin 1 × Fin 1 × Fin 2 → R) := Measure.pi fun _ => lam with hπ
   have hmp := GlobalTheory.CompanionTheory.SW.WBox.map_coordW R hK lam 1 1

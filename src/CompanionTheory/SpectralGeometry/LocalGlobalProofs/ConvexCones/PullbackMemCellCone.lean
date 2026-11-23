@@ -3,8 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PullAddInjective
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.VoronoiMeans.VorFunEvalEqFineMean
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsBaryStageStart
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.EvalPullbackSemilinearSurjectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InRealConeCellOfLinearPieceThroughCellPointStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.EvalPullbackSemilinearSurjective
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InRealConeCellOfLinearPieceThroughCellPoint
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -80,18 +80,18 @@ theorem inRCone_pullAdd_of_isCell : ∀ (O : Type) [CommRing O] [IsDedekindDomai
   have h3 : φ.LinearOn (fun j => pullAdd f (u (s j))) := by
     intro a ha
     have hz : ∀ j, φ.evalZ (pullAdd f (u (s j))) = φ.evalZ (u (s j)) := fun j =>
-      GlobalTheory.T.eval_pullback_semilinear_surjective O bar w0 hb φ htw τ hτ f hf hsm fun x y => ((u (s j) x y : ℤ) : ℝ)
+      _root_.GlobalTheory.CompanionTheory.Ar.Fan.SemilinearPullbackEval.eval_pull_semilinear_of_isTwG O bar w0 hb φ htw τ hτ f hf hsm fun x y => ((u (s j) x y : ℤ) : ℝ)
     have := h2 a ha
     simp only [hz]
     rw [← this]
-    exact GlobalTheory.T.eval_pullback_semilinear_surjective O bar w0 hb φ htw τ hτ f hf hsm fun x y => ∑ j, a j * ((u (s j) x y : ℤ) : ℝ)
+    exact _root_.GlobalTheory.CompanionTheory.Ar.Fan.SemilinearPullbackEval.eval_pull_semilinear_of_isTwG O bar w0 hb φ htw τ hτ f hf hsm fun x y => ∑ j, a j * ((u (s j) x y : ℤ) : ℝ)
   have hsum : toReal β = ∑ j, t (s j) • toReal (pullAdd f (u (s j))) := by
     rw [hβ]
     refine (Fintype.sum_of_injective s s.injective _ _ (fun j hj => ?_) (fun j => rfl)).symm
     have : t j = 0 := le_antisymm (not_lt.1 fun h => hj (hmem j h)) (ht j)
     rw [this, zero_smul]
   obtain ⟨j, rfl⟩ := hmem i hi
-  exact GlobalTheory.T.inRealCone_cell_of_linearPiece_through_cellPoint bar φ δ (fun j => pullAdd f (u (s j))) hδ (fun j => (hu _ (hs j)).2.1) (fun j => (hu _ (hs j)).2.2) h3
+  exact _root_.GlobalTheory.PolFan.inRCone_of_interior_linearOn' bar φ δ (fun j => pullAdd f (u (s j))) hδ (fun j => (hu _ (hs j)).2.1) (fun j => (hu _ (hs j)).2.2) h3
     β c (fun j => t (s j)) hc hs hβc hsum j
 
 end GlobalTheory.CompanionTheory.Ar.Fan.PullbackInCellCone

@@ -1,12 +1,12 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.RealDescent.RealLeviDescent.InjectiveDecompositionAction
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ActionUnipotentRadicalRealStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BoundarySquareLeviRealStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HarishChandraDecompositionLeviStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InjectiveRestrictionOfBdsqVanishStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InjectiveUnipotentOfRestrictionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.VanishingKernelLeviRealStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ActionUnipotentRadicalReal
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BoundarySquareLeviReal
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HarishChandraDecompositionLevi
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InjectiveRestrictionOfBdsqVanish
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InjectiveUnipotentOfRestriction
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.VanishingKernelLeviReal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,8 +49,8 @@ import Mathlib.Topology.Sheaves.Init
 namespace PositivityTheory.RgBcC.RealD
 
 theorem injective_decomposition_action_holds : InjectiveDecompositionAction :=
-  injective_decomposition_action_of GlobalTheory.T.boundary_square_levi_real GlobalTheory.T.vanishing_kernel_levi_real GlobalTheory.T.injective_restriction_of_bdsq_vanish GlobalTheory.T.injective_unipotent_of_restriction (hcdecL_of GlobalTheory.T.harish_chandra_decomposition_levi) GlobalTheory.T.action_unipotent_radical_real
+  injective_decomposition_action_of _root_.GlobalTheory.CompanionTheory.KPChains.bdSqL _root_.GlobalTheory.CompanionTheory.KostL.vanKL _root_.GlobalTheory.CompanionTheory.InjRL.injRL_of _root_.GlobalTheory.CompanionTheory.LvChain.injUU_of_injRL (hcdecL_of _root_.GlobalTheory.CompanionTheory.RealHCLv.hcdecLv) _root_.GlobalTheory.CompanionTheory.PairBridge.actUU
 
-theorem hc_decomposition_levi_holds : HCdecLv := GlobalTheory.T.harish_chandra_decomposition_levi
+theorem hc_decomposition_levi_holds : HCdecLv := _root_.GlobalTheory.CompanionTheory.RealHCLv.hcdecLv
 
 end PositivityTheory.RgBcC.RealD

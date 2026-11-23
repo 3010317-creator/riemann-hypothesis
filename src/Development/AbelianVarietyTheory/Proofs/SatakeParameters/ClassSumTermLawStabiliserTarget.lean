@@ -2,8 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.FormsPin
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LastStepDatumInvariantCBHomTwistPrimesStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LastStepDatumLawTopLevelStabilizerStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PairKernelLawOfFiniteDatumLawStatement
+public import Formalism.LocalToGlobal.Columns.KOneCharacterTrivialNearOne
+public import Formalism.LocalToGlobal.Columns.ChainInstY
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LastStepDatumLawTopLevelStabilizer
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.FormsAre
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PairKernelLawOfFiniteDatumLaw
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.XiCpl1Stab
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.XiEntryStab
 import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.KerHypAll
@@ -66,7 +69,7 @@ theorem term_law : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (Gi : G.Ins
   have hm := hok.hm
   obtain ⟨hSS, hlev, -⟩ := t.rd_chain u μ
   obtain ⟨pt, ix, yb, pT, hN, hyb, hE, hC1, hTop, hGi, hGm, hGT⟩ := hG
-  have dat := GlobalTheory.T.pairKernelLaw_of_finiteDatumLaw D L hT Gi Gl K Y cX ex t hC.fields hC.sel hC.bad.1 hC.bad.2.1 hC.bad.2.2.1 hC.bad.2.2.2 hC.chars u μ i hi c c'
+  have dat := _root_.GlobalTheory.KFiDat.termLaw_of_xi D L hT Gi Gl K Y cX ex t hC.fields hC.sel hC.bad.1 hC.bad.2.1 hC.bad.2.2.1 hC.bad.2.2.2 hC.chars u μ i hi c c'
   have fin : ∀ (f : HomE t.X.E (D.R.N i) (D.R.N (i + 1)) → t.X.K) (N : Submodule (𝓞 t.X.E) (Sp t.X.E (D.R.N i)))
       (N' : Submodule (𝓞 t.X.E) (Sp t.X.E (D.R.N (i + 1)))) (γ : UF t.X.E (D.R.N (i + 1))) (k : t.X.K),
       (t.rd u μ).N i c = N → (t.rd u μ).N (i + 1) c' = N' → (∀ x, (t.rd u μ).Xi i c c' x = t.seam.σ₀ (f x)) →
@@ -102,7 +105,7 @@ theorem term_law : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (Gi : G.Ins
     exact fin _ _ _ a.1 _ (hN _ le_rfl c) (hTop.1 c') (hTop.2 c c') (gmap_of_fix a _ hfix)
       (fun x z hz => GlobalTheory.T.lastStep_datum_invariant_cB_hom_twist_primes t.Ch t.sel (t.tup μ) (t.cst μ) (t.idx μ) t.glob t.m2 hC.fields t.pr_ok hC.sel hC.bad.1 hC.bad.2.1 hok
         (t.word u) _ _ _ x z (hyb c) hz)
-      (GlobalTheory.T.lastStepDatum_law_topLevelStabilizer t.Ch t.sel (t.tup μ) (t.cst μ) (t.idx μ) t.glob t.m2 hC.fields t.pr_ok hC.sel hC.bad.1 hC.bad.2.1 hok hC.chOk
+      (_root_.GlobalTheory.StabTopLaw.xiTop_stab_law t.Ch t.sel (t.tup μ) (t.cst μ) (t.idx μ) t.glob t.m2 hC.fields t.pr_ok hC.sel hC.bad.1 hC.bad.2.1 hok hC.chOk
         (hC.sharp μ) (hC.deep μ).1 (hC.repOne μ) (hC.deep μ).2 (t.word u) _ _ _ a (hyb c) hfix)
 
 end GlobalTheory.KerJ

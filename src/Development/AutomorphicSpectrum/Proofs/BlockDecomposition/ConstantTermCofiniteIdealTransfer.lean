@@ -3,8 +3,8 @@ module
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OneMemGoodCT
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.AffineGLForms.GenSpace
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CommuteRtOfMemZalg
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeviEmbeddingHeightBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeviRestrictionSmoothStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeviEmbeddingHeightBound
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeviRestrictionSmooth
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,7 +58,7 @@ theorem slice_mem_genSpace : ∀ (E : Type) [Field E] [NumberField E] [_root_.Nu
   obtain ⟨hN, hM, hLv, hC, hG, hZ⟩ := hF
   let h : GA E (r + s) := lev (Ad E) r s (1, m₂) * finGL E (r + s) t * infGL E (r + s) (Unitary.toUnits κ)
   let F' := rt E (r + s) h F
-  let G : Sm E r := ⟨_, GlobalTheory.T.levi_restriction_smooth E r s F'.1 F'.2⟩
+  let G : Sm E r := ⟨_, _root_.GlobalTheory.CompanionTheory.CTFin.Slice1.sm_lev_slice E r s F'.1 F'.2⟩
   have hGv : ∀ m₁, G.1 m₁ = F.1 (lev (Ad E) r s (m₁, m₂) * finGL E (r + s) t * infGL E (r + s) (Unitary.toUnits κ)) := by
     intro m₁
     change F.1 (lev (Ad E) r s (m₁, 1) * h) = _
@@ -105,7 +105,7 @@ theorem slice_mem_genSpace : ∀ (E : Type) [Field E] [NumberField E] [_root_.Nu
     exact hM (γ, 1) _
   ·
     obtain ⟨C, N, hb⟩ := hG (lev (Ad E) r s (g, m₂) * finGL E (r + s) t)
-    obtain ⟨B, hB0, hB⟩ := GlobalTheory.T.levi_embedding_height_bound E r s (Unitary.toUnits κ)
+    obtain ⟨B, hB0, hB⟩ := _root_.GlobalTheory.CompanionTheory.CTFin.Slice1.height_lev_mul_le E r s (Unitary.toUnits κ)
     refine ⟨|C| * B ^ N, N, fun y => ?_⟩
     have e1 : G.1 (g * infGL E r y) = F.1 (lev (Ad E) r s (g, m₂) * finGL E (r + s) t *
         infGL E (r + s) (lev (Cinf E) r s (y, 1) * Unitary.toUnits κ)) := by

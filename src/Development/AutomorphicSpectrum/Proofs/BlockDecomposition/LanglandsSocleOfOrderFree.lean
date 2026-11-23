@@ -6,13 +6,16 @@ public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.PropsCos
 public import GroundTheory.LocalFields.PadicLogSeries
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TransportKeepsProductsCosocles
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContragredientProductIrreducibleStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CosocleContragredientSocleStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualClassInvolutiveStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GelfandKazhdanContragredientStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductIrreducibleFiniteLengthStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductTransposeInverseDualReverseStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TransposeInverseInvolutionApplyStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContragredientProductIrreducible
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivOfRangeEq
+public import Mathlib.Topology.Algebra.Group.Units
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CosocleContragredientSocle
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualClassInvolutive
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GelfandKazhdanContragredient
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductIrreducibleFiniteLength
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductTransposeInverseDualReverse
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TransposeInverseInvolutionApply
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -101,13 +104,13 @@ end General
 variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
 theorem thetaW_surjective (N : ℕ) : Function.Surjective (thetaW k N) :=
-  fun g => ⟨thetaW k N g, GlobalTheory.T.transpose_inverse_involution_apply N g⟩
+  fun g => ⟨thetaW k N g, _root_.GlobalTheory.CompanionTheory.ThetaInv.thetaW_thetaW N g⟩
 
 theorem comp_thetaW_thetaW {N : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V]
     (π : Representation ℂ (GL (Fin N) k) V) : (π.comp (thetaW k N)).comp (thetaW k N) = π :=
   MonoidHom.ext fun g => by
     show π (thetaW k N (thetaW k N g)) = π g
-    rw [GlobalTheory.T.transpose_inverse_involution_apply N g]
+    rw [_root_.GlobalTheory.CompanionTheory.ThetaInv.thetaW_thetaW N g]
 
 theorem isCosocle_comp_thetaW {N : ℕ} {V W : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup W] [Module ℂ W]
     {σ : Representation ℂ (GL (Fin N) k) W} {π : Representation ℂ (GL (Fin N) k) V}
@@ -120,7 +123,7 @@ theorem isCosocle_comp_thetaW {N : ℕ} {V W : Type} [AddCommGroup V] [Module �
 theorem equiv_contra_comp_thetaW (hGK : GKLocal k) {N : ℕ} {W : Type} [AddCommGroup W] [Module ℂ W]
     (σ : Representation ℂ (GL (Fin N) k) W) (hs : IsSmooth (σ.comp (thetaW k N)))
     (hi : Representation.IsIrreducible (σ.comp (thetaW k N))) : Nonempty (σ.Equiv (contra (σ.comp (thetaW k N)))) := by
-  have E := GlobalTheory.T.gelfand_kazhdan_contragredient hGK N (σ.comp (thetaW k N)) hs hi
+  have E := _root_.GlobalTheory.CompanionTheory.ThetaW.comp_thetaW_equiv_contra hGK N (σ.comp (thetaW k N)) hs hi
   rwa [comp_thetaW_thetaW σ] at E
 
 theorem prodIrr_congr {h N : ℕ} {x y : Fin h → IrrGL (k := k)} (e : x = y) (hx : ∑ a, (x a).1 = N)
@@ -135,7 +138,7 @@ theorem isSocle_rev_of_isCosocle (hA : GlobalTheory.Published.IrreducibleAdmissi
     (e3 : (fun a => dualCl (y (Fin.rev a))) = x) (e6 : (fun a => dualCl (y a)) = x ∘ Fin.rev)
     {V : Type} [AddCommGroup V] [Module ℂ V] (π : Representation ℂ (GL (Fin N) k) V)
     (hc : IsCosocle π (prodIrr x hd0)) : IsSocle π (prodIrr (x ∘ Fin.rev) hd) := by
-  obtain ⟨hd2, ⟨E2⟩⟩ := GlobalTheory.T.product_transpose_inverse_dual_reverse hA hGK y hdy
+  obtain ⟨hd2, ⟨E2⟩⟩ := _root_.GlobalTheory.CompanionTheory.ThetaProd.prodIrr_comp_thetaW hA hGK y hdy
   obtain ⟨E3⟩ := prodIrr_congr e3 hd2 hd0
   have hc1 : IsCosocle π ((prodIrr y hdy).comp (thetaW k N)) :=
     hc.of_equiv (Representation.Equiv.refl _) (E2.trans E3).symm
@@ -143,10 +146,10 @@ theorem isSocle_rev_of_isCosocle (hA : GlobalTheory.Published.IrreducibleAdmissi
   have hs : IsSmooth (π.comp (thetaW k N)) := by
     obtain ⟨-, f, hf, -⟩ := hc2
     exact isSmooth_of_surjective (isSmooth_prodIrr y hdy) f hf
-  have hsoc := GlobalTheory.T.cosocle_contragredient_socle hA (π.comp (thetaW k N)) (prodIrr y hdy) (isSmooth_prodIrr y hdy)
-    (GlobalTheory.T.product_irreducible_finite_length hA y hdy) hc2
+  have hsoc := _root_.GlobalTheory.CompanionTheory.SocleContra.isSocle_contra_of_isCosocle hA (π.comp (thetaW k N)) (prodIrr y hdy) (isSmooth_prodIrr y hdy)
+    (_root_.GlobalTheory.CompanionTheory.ProdFL.main hA y hdy) hc2
   obtain ⟨E4⟩ := equiv_contra_comp_thetaW hGK π hs hc2.1
-  obtain ⟨hd5, ⟨E5⟩⟩ := GlobalTheory.T.contragredient_product_irreducible hA y hdy
+  obtain ⟨hd5, ⟨E5⟩⟩ := _root_.GlobalTheory.CompanionTheory.ContraProd.contra_prodIrr hA y hdy
   obtain ⟨E6⟩ := prodIrr_congr e6 hd5 hd
   exact hsoc.of_equiv E4.symm (E5.trans E6)
 
@@ -157,11 +160,11 @@ theorem lSocleGL : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k
     rw [← hd]
     exact (Equiv.sum_comp Fin.revPerm (fun a => (x a).1)).symm
   have hc := hLO 𝔪 h N x hd0 hx π hπ
-  obtain ⟨hdy, -⟩ := GlobalTheory.T.contragredient_product_irreducible hA (x ∘ Fin.rev) hd
+  obtain ⟨hdy, -⟩ := _root_.GlobalTheory.CompanionTheory.ContraProd.contra_prodIrr hA (x ∘ Fin.rev) hd
   exact isSocle_rev_of_isCosocle hA hGK x (fun a => dualCl ((x ∘ Fin.rev) a)) hd0 hd hdy
     (funext fun a => by
       simp only [Function.comp_apply, Fin.rev_rev]
-      exact GlobalTheory.T.dual_class_involutive hA (x a))
-    (funext fun a => GlobalTheory.T.dual_class_involutive hA (x (Fin.rev a))) π hc
+      exact _root_.GlobalTheory.CompanionTheory.Zcore.dualCl_dualCl hA (x a))
+    (funext fun a => _root_.GlobalTheory.CompanionTheory.Zcore.dualCl_dualCl hA (x (Fin.rev a))) π hc
 
 end GlobalTheory.CompanionTheory.LSocle

@@ -2,8 +2,10 @@ module
 
 public import Development.WeilBound.CoreStatements.MultihomogeneousSquares.AntisymmetryFibreSquares
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.CmHostRankBounds
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AgreementPositiveStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AntisymmetryStatement
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.AgreementPos
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AgreementPositive
+public import Development.AutomorphicSpectrum.Statements.MetricStatements.AgreementIffGuarded
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.Antisymmetry
 public import Development.WeilBound.CoreStatements.MultihomogeneousSquares.ChooseTwoAdd
 public import Development.WeilBound.CoreStatements.MultihomogeneousSquares.SqOf
 import Mathlib.Algebra.Order.Floor.Extended
@@ -62,7 +64,7 @@ theorem good_tower_antisymmetry_of (hX : StX) (hAlg : StAlg) (hHt : StHt) (hSing
     (hI8 : AntisymmetryFibreSquares) : GoodTowerAntisymmetry := by
   intro hC hG hW E _ _ _ H D Xo l c Y _ T o II hE hII hp hq
   obtain ⟨-, hne, -⟩ := GlobalTheory.CompanionTheory.Ar.Top.HostNumbers.host_numbers E H
-  exact hI8 GlobalTheory.T.antisymmetry' GlobalTheory.T.agreement_positive hG.2.2.2.2.2.2.2.2.2.1 II hII _ _ T _
+  exact hI8 _root_.GlobalTheory.CompanionTheory.Ar.PB.Top.antisymmetry _root_.GlobalTheory.CompanionTheory.Ar.PB.agreementPos hG.2.2.2.2.2.2.2.2.2.1 II hII _ _ T _
     (sq_of (tie_of hX hAlg hHt hSing hBase) hCmp hC hG hW E H D Xo l c Y T o II hE hII hp hq)
 
 end SquareStatements

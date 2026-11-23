@@ -4,15 +4,15 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsFlatA
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LevelSectionsExactKernelLocusOpen
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.BlowupProjections.BlowupProjStatement
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsGenericFlag
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AffineChartBundleSectionsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenLatticeVectorBundleStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrameAtComponentPointStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AffineChartBundleSections
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenLatticeVectorBundle
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrameAtComponentPoint
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GermStalkClosedPointToBaseChange
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PairFramesOnSet
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PullbackFramesComplexPoint
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenMapFromSpecStalk
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenMapStalkMap
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GermStalkClosedPointToBaseChange
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PairFramesOnSetStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PullbackFramesComplexPointStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.VectorsAtComplexPointStatement
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.VectorsAtComplexPoint
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,11 +77,11 @@ theorem extendsUnitAt_resolution : ∀ (E : Type) [Field E] [NumberField E] [IsC
   let p₀ : Cpt (Z.ξ₀ ≫ Y.j) := ⟨π (centre x), hp⟩
   have hp₀ : p₀ ∈ Z.genFib := ⟨pullback.lift π s' hπ (centre x), by
     rw [← Scheme.Hom.comp_apply, pullback.lift_fst]⟩
-  obtain ⟨hVB₁, hVB₂, -, -⟩ := GlobalTheory.T.eigen_lattice_vector_bundle E H D l Xo c O β Y U Z τ hβ hτ
+  obtain ⟨hVB₁, hVB₂, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.isVBOn_eig_genFib E H D l Xo c O β Y U Z τ hβ hτ
   obtain ⟨A, hA, EB, _, _, MB, e₁, e₂, v₁, v₂, hp₀A, hfr, heig, hval⟩ :=
-    GlobalTheory.T.frame_at_component_point E H D l Xo c O β Y U Z τ σ b₁ b₂ p₀ hβ hτ hb₁ hs₁ hb₂ hs₂ hp₀
+    _root_.GlobalTheory.CompanionTheory.Ar.Flat.LocalFrames.exists_affine_eigenframes E H D l Xo c O β Y U Z τ σ b₁ b₂ p₀ hβ hτ hb₁ hs₁ hb₂ hs₂ hp₀
   obtain ⟨hv₁, hv₂⟩ := hfr p₀ hp₀A
-  obtain ⟨α, κ, hα, hκ, hαe, hκe, hgen0⟩ := GlobalTheory.T.pair_frames_on_set _ _ _ _ (Z.eig τ) (Z.eig (ComplexEmbedding.conjugate τ)) D.p D.q _ _ Z.genFib
+  obtain ⟨α, κ, hα, hκ, hαe, hκe, hgen0⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.LineGenerator.isGenAt_div _ _ _ _ (Z.eig τ) (Z.eig (ComplexEmbedding.conjugate τ)) D.p D.q _ _ Z.genFib
     b₁ v₁ b₂ v₂ p₀ hp₀ hVB₁ hVB₂ hb₁ hs₁ hb₂ hs₂ hv₁ hv₂
   refine ⟨α / κ, hpull _ _ hgen0, ?_⟩
   intro m B y hB hy hyσ b₀ hb₀ hyx
@@ -89,7 +89,7 @@ theorem extendsUnitAt_resolution : ∀ (E : Type) [Field E] [NumberField E] [IsC
     have : q = IsLocalRing.closedPoint ℂ := Subsingleton.elim (α := PrimeSpectrum ℂ) _ _
     rw [this]
     exact hp₀A
-  obtain ⟨ε, hh, hε, hdiff, hne, key⟩ := GlobalTheory.T.affine_chart_bundle_sections E H D l Xo c O β Y τ σ Φ X' π s' d W' jW A hA EB MB e₁ e₂ x hpq hτ hσ hΦ hπ hsm hsnc hj hjs hx hxA heig m B y hB hy hyσ b₀ hb₀ hyx
+  obtain ⟨ε, hh, hε, hdiff, hne, key⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.flat_unit_along_families E H D l Xo c O β Y τ σ Φ X' π s' d W' jW A hA EB MB e₁ e₂ x hpq hτ hσ hΦ hπ hsm hsnc hj hjs hx hxA heig m B y hB hy hyσ b₀ hb₀ hyx
   refine ⟨ε, hh, hε, hdiff, hne, fun b hbB hbW r hr => ?_⟩
   obtain ⟨f, hf, hk⟩ := key b hbB
   have hc : genPt ξ' ⤳ centre (y b) := hr.choose
@@ -123,12 +123,12 @@ theorem extendsUnitAt_resolution : ∀ (E : Type) [Field E] [NumberField E] [IsC
   obtain ⟨hV₁, hV₂⟩ := hval f (yy ≫ Y.j) u₁ u₂ hyf hspec hu₁ hu₂
   choose a₁ ha₁ using fun i => exists_sameVec_left Y yy (u₁ i)
   choose a₂ ha₂ using fun i => exists_sameVec_left Y yy (u₂ i)
-  have hfr₀ : IsFramed Set.univ τ σ yy a₁ a₂ := GlobalTheory.T.vectors_at_complex_point E H D l Xo c O β Y τ σ yy a₁ a₂ u₁ u₂ hys ha₁ ha₂ hE₁ hE₂
+  have hfr₀ : IsFramed Set.univ τ σ yy a₁ a₂ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.isFramed_of_model E H D l Xo c O β Y τ σ yy a₁ a₂ u₁ u₂ hys ha₁ ha₂ hE₁ hE₂
   have h₁ := (hk hW') yy a₁ a₂ u₁ u₂ hyj hys ha₁ ha₂ hu₁ hu₂
   have hqA : ∀ q : Cpt (Z.ξ₀ ≫ Y.j), q.1 = centre (yy ≫ Y.j) → q.1 ∈ A := fun q hq => by
     rw [hq, hyf, ← SetLike.mem_coe, ← hA.range_fromSpec]
     exact ⟨_, rfl⟩
-  have h₂ := GlobalTheory.T.pullback_frames_complex_point E H D l Xo c O β Y U Z τ σ Φ b₁ v₁ b₂ v₂ X' π ξ' (y b) yy v a₁ w a₂ α κ r hξ hgen hyj hΦ hfrvw hfr₀ hvv hww
+  have h₂ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.PointCompare.point_compare E H D l Xo c O β Y U Z τ σ Φ b₁ v₁ b₂ v₂ X' π ξ' (y b) yy v a₁ w a₂ α κ r hξ hgen hyj hΦ hfrvw hfr₀ hvv hww
     (fun i => ⟨_, hV₁ i, ha₁ i⟩) (fun j => ⟨_, hV₂ j, ha₂ j⟩) (fun q hq => hfr q (hqA q hq))
     (fun i => hs₁ ▸ Submodule.subset_span ⟨i, rfl⟩) (fun j => hs₂ ▸ Submodule.subset_span ⟨j, rfl⟩)
     hα hκ hαe hκe hr

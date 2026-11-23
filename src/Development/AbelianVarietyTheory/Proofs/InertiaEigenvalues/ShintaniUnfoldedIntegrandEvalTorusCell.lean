@@ -2,13 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RsTermZero
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LintegralUnipotentCellPosLtTopContinuous
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdelicDiagonalUniformizerCommuteOfOneOffStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdelicDiagonalUniformizerEqProdLocalDiagonalStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IdelicAbsDetPowDiagonalUniformizerMulStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LastRowCongruenceIndicatorDiagonalUniformizerMulStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdelicUnitriangularMulMemUnipotentTimesIntegral
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdelicDiagonalUniformizerCommuteOfOneOff
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRapidInf
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdelicDiagonalUniformizerEqProdLocalDiagonal
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ZintZero
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IdelicAbsDetPowDiagonalUniformizerMul
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LastRowCongruenceIndicatorDiagonalUniformizerMul
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MirabolicCellDecompositionLastRowStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RankinSelbergLocalTermEqSphericalWhittakerProducStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WhittakerDiagonalUniformizerEqZeroOfNotAntitoneStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WhittakerDiagonalUniformizerEqZeroOfNotAntitone
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -152,8 +155,8 @@ theorem uInt_cell_eval : ∀ (E : Type) [Field E] [NumberField E] [_root_.Number
   refine ⟨h12.1, h12.2, fun l => ?_⟩
 
   have hyt := GlobalTheory.ZEul.pInf_lastRow_tl_mul E m ϖ l.1 g
-  obtain ⟨hind1, hind2⟩ := GlobalTheory.T.lastRowCongruenceIndicator_diagonalUniformizer_mul E m S ϖ hϖ N hint hloc l g hg
-  have hdt := GlobalTheory.T.idelicAbsDetPow_diagonalUniformizer_mul E (m + 1) ϖ hϖ l.1 x g
+  obtain ⟨hind1, hind2⟩ := _root_.GlobalTheory.CellLastRow.indN_lastRow_tl E m S ϖ hϖ N hint hloc l g hg
+  have hdt := _root_.GlobalTheory.CellEvalDet.detPow_tl_mul E (m + 1) ϖ hϖ l.1 x g
   have hL : GlobalTheory.ZEul.uInt φ φ' Φ N x (GlobalTheory.CellDec.tl (m + 1) ϖ l.1 * g) =
       GlobalTheory.JSW.whit φ (GlobalTheory.CellDec.tl (m + 1) ϖ l.1 * g *
         infGL E (m + 1) (GlobalTheory.RSJ.secInv fun i => pInf E (GlobalTheory.ZEul.lastRow g i))) *
@@ -195,7 +198,7 @@ theorem uInt_cell_eval : ∀ (E : Type) [Field E] [NumberField E] [_root_.Number
   obtain ⟨u, hu, p, hp, κ, hκ, he, -, e0, -⟩ := hdec hz.1 hz.2
   rw [e0]
   set t := GlobalTheory.CellDec.tl (m + 1) ϖ l.1 with ht
-  have hcomm : p * t = t * p := GlobalTheory.T.adelicDiagonalUniformizer_commute_of_one_off E (m + 1) S ϖ l p hp.1
+  have hcomm : p * t = t * p := _root_.GlobalTheory.CellDec.TlComm.tl_commute_of_one_off E (m + 1) S ϖ l p hp.1
   have hu' : t * u * t⁻¹ ∈ GlobalTheory.JSW.NA (E := E) (a := (m + 1)) :=
     (GlobalTheory.SmGL.mem_unipB (Ad E)).1 (GlobalTheory.CellDec.tl_conj_mem ϖ l.1 ((GlobalTheory.SmGL.mem_unipB (Ad E)).2 hu))
   have hσ : t * g * infGL E (m + 1) (GlobalTheory.RSJ.secInv fun i => pInf E (GlobalTheory.ZEul.lastRow g i)) =
@@ -214,7 +217,7 @@ theorem uInt_cell_eval : ∀ (E : Type) [Field E] [NumberField E] [_root_.Number
     have hw0 : l.1 w ≠ 0 := by rintro h0; rw [h0] at hw; exact hw antitone_const
     have hwS : w ∉ S := fun h => hw0 (l.2 w h)
     have hws : w ∈ l.1.support := Finsupp.mem_support_iff.2 hw0
-    rw [GlobalTheory.T.whittaker_diagonalUniformizer_eq_zero_of_not_antitone E m S J w hwS (hψ w hwS) ϖ (hϖ w) (GlobalTheory.JSW.whit φ) hNφ hKφ l.1 hw p (hp.1 w hwS), hprod0 w hws ?_]
+    rw [_root_.GlobalTheory.CellVanish.eq_zero_of_not_antitone E m S J w hwS (hψ w hwS) ϖ (hϖ w) (GlobalTheory.JSW.whit φ) hNφ hKφ l.1 hw p (hp.1 w hwS), hprod0 w hws ?_]
     · simp
     · rw [GlobalTheory.ZEul.rsTerm, if_neg]; rintro ⟨-, h2⟩; exact hw h2
   have hnn : ∀ w i, 0 ≤ l.1 w i := fun w i => le_trans (hlast w) (hanti w (Fin.le_last i))
@@ -228,7 +231,7 @@ theorem uInt_cell_eval : ∀ (E : Type) [Field E] [NumberField E] [_root_.Number
     constructor
     · intro h h0; apply h; rw [hl'app, h0]; rfl
     · intro h h0; apply h; funext i; have := hl' w i; rw [h0] at this; simpa using this.symm
-  have htl : t = GlobalTheory.JSW.tl ϖ l' := GlobalTheory.T.adelicDiagonalUniformizer_eq_prod_localDiagonal E (m + 1) ϖ l.1 l' hl'
+  have htl : t = GlobalTheory.JSW.tl ϖ l' := _root_.GlobalTheory.CellDecNat.tl_eq_jsw_tl E (m + 1) ϖ l.1 l' hl'
   have hsS : ∀ w ∈ l'.support, w ∉ S := fun w hw hS' => by
     rw [hsupp, Finsupp.mem_support_iff] at hw; exact hw (l.2 w hS')
   rw [hdt, htl, hWφ l' hsS p hp, hWφ' l' hsS p hp, hsupp]

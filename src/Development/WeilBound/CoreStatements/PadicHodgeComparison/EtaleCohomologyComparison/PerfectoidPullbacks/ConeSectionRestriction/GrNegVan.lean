@@ -2,7 +2,7 @@ module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.CapOComp
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.SEqOne
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ThickeningGradedVanishNegativeStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ThickeningGradedVanishNegative
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,6 +53,6 @@ open CategoryTheory AlgebraicGeometry GlobalTheory.LogCris
 namespace CrystallineSemistableComparison.Pb
 
 theorem gr_neg_van : ∀ {b : Base} (L : b.Fun) (Q : ObjectProperty (Thick L)) (r : ℤ), r < 0 → ∀ j : ℕ,
-    Subsingleton (HU (gr (Φ := thP L) (thFil L) r) Q j) := GlobalTheory.T.thickening_graded_vanish_negative
+    Subsingleton (HU (gr (Φ := thP L) (thFil L) r) Q j) := _root_.GlobalTheory.CompanionTheory.Cone.HU_gr_neg
 
 end CrystallineSemistableComparison.Pb

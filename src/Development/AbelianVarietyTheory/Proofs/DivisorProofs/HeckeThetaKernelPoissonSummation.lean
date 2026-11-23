@@ -6,12 +6,19 @@ public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.ExistsLi
 public import Mathlib.Analysis.Fourier.FourierTransform
 public import Mathlib.Topology.Separation.CompletelyRegular
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.SummableLatticeExpNegPiMulNormSqDiv
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FourierCompCoordDilationByHalfExpStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FourierHarmonicMonomialMulGaussianComplexStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FourierProdSingleCoordinateFunctionsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussianHarmonicProductKernelContinuousBoundedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeIdealEuclideanLatticeIsZLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TsumRingEqSumIdealCosetsTsumStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussZero
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FourierCompCoordDilationByHalfExp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FourierHarmonicMonomialMulGaussianComplex
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FourierProdSingleCoordinateFunctions
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussianHarmonicProductKernelContinuousBounded
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeIdealEuclideanLatticeIsZLattice
+public import Mathlib.RingTheory.Ideal.Quotient.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TsumRingEqSumIdealCosetsTsum
+public import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
+public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.LatticeFourierOfContDiffFiniteDimensional
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -26,7 +33,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -59,7 +65,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.LatticeFourierOfContDiffFiniteDimensional
 
 @[expose] public section
 
@@ -83,7 +88,7 @@ theorem norm_toLp_unit (z : ℂ) : ‖(WithLp.toLp 2 (fun _ : Unit => z) : Eucli
 
 theorem integrable_hmon_gauss (k : ℤ) :
     Integrable (fun z : ℂ => hmon k z * Complex.exp ((-2 * Real.pi * ‖z‖ ^ 2 : ℝ) : ℂ)) := by
-  obtain ⟨hc, C, hC⟩ := GlobalTheory.T.gaussianHarmonicProductKernel_continuous_bounded Unit (fun _ => k)
+  obtain ⟨hc, C, hC⟩ := _root_.GlobalTheory.HeckeTheta.GaussBound.gauss_cont_bound Unit (fun _ => k)
   have hcont : Continuous (fun z : ℂ => hmon k z * Complex.exp ((-2 * Real.pi * ‖z‖ ^ 2 : ℝ) : ℂ)) := by
     have : Continuous (fun z : ℂ => (WithLp.toLp 2 (fun _ : Unit => z) : EuclideanSpace ℂ Unit)) := by fun_prop
     simpa [Function.comp_def, gauss_unit] using hc.comp this
@@ -100,12 +105,12 @@ theorem integrable_hmon_gauss (k : ℤ) :
 
 theorem fourier_gauss (n : I → ℤ) (l : EuclideanSpace ℂ I) :
     𝓕 (fun w : EuclideanSpace ℂ I => gauss n (WithLp.ofLp w)) l = kappa n * gauss n (fun i => l i / 2) := by
-  have h := GlobalTheory.T.fourier_prod_single_coordinate_functions I (fun i z => hmon (n i) z * Complex.exp ((-2 * Real.pi * ‖z‖ ^ 2 : ℝ) : ℂ))
+  have h := _root_.GlobalTheory.fourier_prod_coord_complex I (fun i z => hmon (n i) z * Complex.exp ((-2 * Real.pi * ‖z‖ ^ 2 : ℝ) : ℂ))
     (fun i => integrable_hmon_gauss (n i)) l
   have e : (fun w : EuclideanSpace ℂ I => gauss n (WithLp.ofLp w)) =
       fun w => ∏ i, (hmon (n i) (w i) * Complex.exp ((-2 * Real.pi * ‖w i‖ ^ 2 : ℝ) : ℂ)) := rfl
   rw [e, h]
-  simp only [GlobalTheory.T.fourier_harmonicMonomial_mul_gaussian_complex]
+  simp only [_root_.GlobalTheory.HeckeLemma.fourier_hmon_mul_gaussian]
   unfold kappa gauss
   rw [Finset.prod_mul_distrib, Finset.prod_mul_distrib, Finset.prod_const, Finset.prod_pow_eq_pow_sum, Finset.card_univ]
   simp [one_div, inv_pow]
@@ -145,7 +150,7 @@ theorem norm_dil_sq_ge (y : I → ℝ) (w : EuclideanSpace ℂ I) :
 
 theorem gauss_dil_bound (n : I → ℤ) (y : I → ℝ) : ∃ C a : ℝ, 0 ≤ C ∧ 0 < a ∧ ∀ w : EuclideanSpace ℂ I,
     ‖gauss n (dil y (WithLp.ofLp w))‖ ≤ C * Real.exp (-a * ‖w‖ ^ 2) := by
-  obtain ⟨-, C, hC⟩ := GlobalTheory.T.gaussianHarmonicProductKernel_continuous_bounded I n
+  obtain ⟨-, C, hC⟩ := _root_.GlobalTheory.HeckeTheta.GaussBound.gauss_cont_bound I n
   have hC0 : 0 ≤ C := by
     have h := (norm_nonneg _).trans (hC 0)
     exact le_of_mul_le_mul_right (by rw [zero_mul]; exact h) (Real.exp_pos _)
@@ -166,7 +171,7 @@ theorem poisson_coset (L : Submodule ℤ (EuclideanSpace ℂ I)) [DiscreteTopolo
   have hF : ∀ l : EuclideanSpace ℂ I, 𝓕 f l =
       (Real.exp (-∑ i, y i) : ℂ) * kappa n * gauss n (dil (-y) (fun i => l i / 2)) := by
     intro l
-    have h := GlobalTheory.T.fourier_comp_coordDilationByHalfExp I (fun w => gauss n (WithLp.ofLp w)) y l
+    have h := _root_.GlobalTheory.HeckePoisson.Dilation.fourier_comp_dil I (fun w => gauss n (WithLp.ofLp w)) y l
     rw [hf, h, fourier_gauss, mul_assoc]
     congr 3
     funext i
@@ -175,7 +180,7 @@ theorem poisson_coset (L : Submodule ℤ (EuclideanSpace ℂ I)) [DiscreteTopolo
   obtain ⟨C, a, hC0, ha, hC⟩ := gauss_dil_bound n y
   obtain ⟨C', a', hC0', ha', hC'⟩ := gauss_dil_bound n (-y)
   have hcont : Continuous f := by
-    have h1 := (GlobalTheory.T.gaussianHarmonicProductKernel_continuous_bounded I n).1
+    have h1 := (_root_.GlobalTheory.HeckeTheta.GaussBound.gauss_cont_bound I n).1
     have h2 : Continuous (fun w : EuclideanSpace ℂ I => (WithLp.toLp 2 (dil y (WithLp.ofLp w)) : EuclideanSpace ℂ I)) := by
       unfold dil; fun_prop
     have h3 := h1.comp h2
@@ -221,7 +226,7 @@ theorem theta_poisson : ∀ (K : Type) [Field K] [NumberField K] [NumberField.Is
         κ * (Real.exp (-∑ i, y i) : ℂ) * GlobalTheory.HeckeTheta.theta (fun v : I → ℂ => v) a n (-y) := by
   intro K _ _ _ I _ φ hφ n M F hM hF
   classical
-  obtain ⟨hd, hz⟩ := GlobalTheory.T.heckeIdealEuclideanLattice_isZLattice K I φ hφ M hM
+  obtain ⟨hd, hz⟩ := _root_.GlobalTheory.HeckePoisson.lat_isZLattice K I φ hφ M hM
   haveI : Finite (𝓞 K ⧸ M) := Ideal.finiteQuotientOfFreeOfNeBot M hM
   letI : Fintype (𝓞 K ⧸ M) := Fintype.ofFinite _
   set L := lat φ M with hL
@@ -313,7 +318,7 @@ theorem theta_poisson : ∀ (K : Type) [Field K] [NumberField K] [NumberField.Is
     · exact absurd (ha_zero v hv) hav
   ·
     intro y
-    obtain ⟨hd', hz'⟩ := GlobalTheory.T.heckeIdealEuclideanLattice_isZLattice K I φ hφ ⊤ (by simp)
+    obtain ⟨hd', hz'⟩ := _root_.GlobalTheory.HeckePoisson.lat_isZLattice K I φ hφ ⊤ (by simp)
     obtain ⟨C, b, hC0, hb, hC⟩ := gauss_dil_bound n y
     set BF : ℝ := ∑ c : 𝓞 K ⧸ M, ‖F (Quotient.out c)‖ with hBF
     have hFc : ∀ α : 𝓞 K, F α = F (Quotient.out (Ideal.Quotient.mk M α)) := by
@@ -360,7 +365,7 @@ theorem theta_poisson : ∀ (K : Type) [Field K] [NumberField K] [NumberField.Is
       rw [tsum_congr h1, tsum_mul_left,
         e.tsum_eq (fun x : L => gauss n (dil y (WithLp.ofLp ((x : EuclideanSpace ℂ I) + u c)))),
         (poisson_coset L n y (u c)).2]
-    have hLHS := GlobalTheory.T.tsum_ring_eq_sum_ideal_cosets_tsum (𝓞 K) M _ hsum
+    have hLHS := _root_.GlobalTheory.cosets_main (𝓞 K) M _ hsum
     unfold GlobalTheory.HeckeTheta.theta
     rw [hLHS, Finset.sum_congr rfl (fun c _ => hcoset c)]
 

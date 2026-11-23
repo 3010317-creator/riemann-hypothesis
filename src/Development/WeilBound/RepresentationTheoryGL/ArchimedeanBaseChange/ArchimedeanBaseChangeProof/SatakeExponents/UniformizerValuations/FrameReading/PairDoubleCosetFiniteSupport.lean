@@ -1,18 +1,32 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.FrameReading.JoinType
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AdmissibleParabolicInductionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsJointEigenvectorNonzeroStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteDimensionalFixedTensorStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteSupportConvolutionTripleStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteSupportProductQuotientStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsIrreducibleIff
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsSubquotientDetRepParInd
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AdmissibleParabolicInduction
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsJointEigenvectorNonzero
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsUnitarisableOfCharIff
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteDimensionalFixedTensor
+public import Mathlib.RepresentationTheory.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteSupportConvolutionTriple
+public import Mathlib.Algebra.Group.Subgroup.Basic
+public import Mathlib.Algebra.Notation.Support
+public import Mathlib.Basic.Finite.Defs
+public import Mathlib.GroupTheory.Coset.Defs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteSupportProductQuotient
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FinsumCosetSmulLinear
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeckeIntegralFiniteSumStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeckeSumInvariantStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnifAt
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeckeIntegralFiniteSum
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeckeSumInvariant
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IwahoriDoubleCosetFiniteStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IwahoriHeckeSumAdditiveStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MultiplicativeCharacterOnConeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProdRelIndexNeZeroStatement
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Data.Fintype.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MultiplicativeCharacterOnCone
+public import Mathlib.GroupTheory.Index
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProdRelIndexNeZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -98,7 +112,7 @@ theorem hk_mapsTo (ρ : Representation ℂ Γ V) (K : Subgroup Γ) (f : Γ → �
     ∀ v ∈ GlobalTheory.PRep.fixed ρ K, (∑ q ∈ hfin.toFinset, f q.out • ρ q.out) v ∈ GlobalTheory.PRep.fixed ρ K := by
   intro v hv
   rw [hk_apply_sum]
-  exact (mem_fixed_iff' ρ K _).2 (GlobalTheory.T.hecke_sum_invariant Γ V ρ K f hfin hbi v ((mem_fixed_iff' ρ K v).1 hv))
+  exact (mem_fixed_iff' ρ K _).2 (_root_.GlobalTheory.CompanionTheory.Hecke.heckeSum_fixed Γ V ρ K f hfin hbi v ((mem_fixed_iff' ρ K v).1 hv))
 
 def hkW (ρ : Representation ℂ Γ V) (K : Subgroup Γ) (f : Γ → ℂ)
     (hfin : (Function.support fun q : Γ ⧸ K => f q.out).Finite)
@@ -130,7 +144,7 @@ theorem iter_push {X : Type} [AddCommGroup X] [Module ℂ X]
   | succ r ih =>
     obtain ⟨h1, h2, h3⟩ := ih
     have hsm : SmVec R (A^[r] G) := ⟨I, hI, (mem_fixed_iff' R I _).2 h2⟩
-    have hfix := GlobalTheory.T.hecke_sum_invariant Γ X R I f hfin hbi (A^[r] G) h2
+    have hfix := _root_.GlobalTheory.CompanionTheory.Hecke.heckeSum_fixed Γ X R I f hfin hbi (A^[r] G) h2
     rw [Function.iterate_succ_apply', Function.iterate_succ_apply', hA _ h2, ← h3]
     refine ⟨?_, ?_, ?_⟩
     · apply S.smul_mem
@@ -196,7 +210,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {a b : ℕ}
 
 theorem pair_double_coset_finite_support (w : Pl E) (ϖ : (w.adicCompletion E)ˣ) (x : Fin a → ℤ) (y : Fin b → ℤ) :
     (Function.support fun q : (GLw a w × GLw b w) ⧸ I2 a b w => dc2 w ϖ x y q.out).Finite :=
-  GlobalTheory.T.finite_support_product_quotient _ _ _ _ _ _ (GlobalTheory.T.iwahori_double_coset_finite E w a _).1 (GlobalTheory.T.iwahori_double_coset_finite E w b _).1
+  _root_.GlobalTheory.CompanionTheory.ProdQuotient.support_mul_out_finite _ _ _ _ _ _ (GlobalTheory.T.iwahori_double_coset_finite E w a _).1 (GlobalTheory.T.iwahori_double_coset_finite E w b _).1
     (fun k hk g => (dcos_inv a w _ k hk g).2) (fun k hk g => (dcos_inv b w _ k hk g).2)
 
 theorem pair_double_coset_bi_invariant (w : Pl E) (ϖ : (w.adicCompletion E)ˣ) (x : Fin a → ℤ) (y : Fin b → ℤ) :
@@ -233,7 +247,7 @@ theorem core (w : Pl E) (ϖ : (w.adicCompletion E)ˣ) (hϖ : ordL (ϖ : w.adicCo
     intro x x' y y' hx hx' hy hy'
     ext v
     rw [Module.End.mul_apply, hkW_apply, hkW_apply, hkW_apply]
-    exact GlobalTheory.T.finite_support_convolution_triple _ _ _ ρ (iwGL a w) (iwGL b w) (dcos a w (tdiag ϖ x)) (dcos a w (tdiag ϖ x'))
+    exact _root_.GlobalTheory.CompanionTheory.HeckeProduct.product_operators_mul _ _ _ ρ (iwGL a w) (iwGL b w) (dcos a w (tdiag ϖ x)) (dcos a w (tdiag ϖ x'))
       (dcos a w (tdiag ϖ (x + x'))) (dcos b w (tdiag ϖ y)) (dcos b w (tdiag ϖ y'))
       (dcos b w (tdiag ϖ (y + y')))
       (fun f hf => by rcases hf with rfl | rfl | rfl <;> exact ⟨(hIa _).1, dcos_inv a w _⟩)
@@ -275,7 +289,7 @@ theorem core (w : Pl E) (ϖ : (w.adicCompletion E)ˣ) (hϖ : ordL (ϖ : w.adicCo
     intro h0
     apply hne
     rw [hiter m _ hv0, smul_pow, LinearMap.smul_apply, h0, smul_zero, Submodule.coe_zero]
-  obtain ⟨v₀, hv₀, χ, hχ, hsum⟩ := GlobalTheory.T.exists_joint_eigenvector_nonzero (GlobalTheory.PRep.fixed ρ (I2 a b w))
+  obtain ⟨v₀, hv₀, χ, hχ, hsum⟩ := _root_.GlobalTheory.CompanionTheory.LinAlg.exists_joint_eigenvector_combination_ne_zero (GlobalTheory.PRep.fixed ρ (I2 a b w))
     {p : (Fin a → ℤ) × (Fin b → ℤ) // Gap p.1 ∧ Gap p.2} J
     (fun p => hkW ρ (I2 a b w) (dc2 w ϖ p.1.1 p.1.2) (pair_double_coset_finite_support w ϖ _ _) (pair_double_coset_bi_invariant w ϖ _ _)) hcomm c
     (fun j => ⟨(x j, y j), hgap j⟩) ⟨v0, hv0⟩ m hm hTm
@@ -301,7 +315,7 @@ theorem core (w : Pl E) (ϖ : (w.adicCompletion E)ˣ) (hϖ : ordL (ϖ : w.adicCo
     simp only [hχ']
     rw [dite_eq_left (hgap j0)]
     exact right_ne_zero_of_mul hj0
-  obtain ⟨ξa, ξb, hξ⟩ := GlobalTheory.T.multiplicative_character_on_cone a b (qh w) (qh_ne w) χ' hχ'mul hex
+  obtain ⟨ξa, ξb, hξ⟩ := _root_.GlobalTheory.CompanionTheory.StrictCone.mul_on_cone_eq_delta_char a b (qh w) (qh_ne w) χ' hχ'mul hex
   have hev : ∀ x y (h : Gap x ∧ Gap y), ev2 w ξa ξb x y = χ ⟨(x, y), h⟩ := by
     intro x y h
     have := hξ x y h.1 h.2
@@ -330,7 +344,7 @@ theorem rReadT : RReadT := by
     exact (hIa 1).2.1.prod (hIb 1).2.1
   have hK : I2 a b w ≤ K2 a b w := Subgroup.prod_mono (hIa 1).2.2.2.1 (hIb 1).2.2.2.1
   have hidx : (I2 a b w).relIndex (K2 a b w) ≠ 0 :=
-    GlobalTheory.T.prod_rel_index_ne_zero _ _ _ _ _ _ (hIa 1).2.2.2.2 (hIb 1).2.2.2.2
+    _root_.GlobalTheory.CompanionTheory.GroupIndex.RelProd.relIndex_prod_ne_zero_of_ne_zero _ _ _ _ _ _ (hIa 1).2.2.2.2 (hIb 1).2.2.2.2
   obtain ⟨u, hu⟩ : ∃ u : GLw a w × GLw b w → ℂ, u = fun g => ∑ j, c j * dc2 w ϖ (x j) (y j) g := ⟨_, rfl⟩
   rw [← hu] at hne
   have hufin : (Function.support fun q : (GLw a w × GLw b w) ⧸ I2 a b w => u q.out).Finite := by
@@ -361,7 +375,7 @@ theorem rReadT : RReadT := by
       apply hq
       simp [h0]
     show hint (K2 a b w) (fun m => u m * pairRt a b w m F z) = _
-    rw [GlobalTheory.T.hecke_integral_finite_sum _ (K2 a b w) (I2 a b w) (fun m => u m * pairRt a b w m F z) hK hidx hr, ← hκ,
+    rw [_root_.GlobalTheory.CompanionTheory.HintLevelPt.hint_eq_level_of_forall _ (K2 a b w) (I2 a b w) (fun m => u m * pairRt a b w m F z) hK hidx hr, ← hκ,
       finsum_eq_sum_of_support_subset _ hsub, hsum_eq (pairRt a b w) (I2 a b w) u hufin.coe_toFinset.ge F]
     simp only [Pi.smul_apply, Finset.sum_apply, smul_eq_mul]
   have hGI' : ∀ k ∈ I2 a b w, pairRt a b w k G = G := (mem_fixed_iff' _ _ _).1 hGI
@@ -377,9 +391,9 @@ theorem rReadT : RReadT := by
   have hv0 : L j' G ∈ GlobalTheory.PRep.fixed (pairAt Pa Pb w) (I2 a b w) :=
     (mem_fixed_iff' _ _ _).2 fun k hk => (hLeq j' k G hGS hsmG).symm.trans (congrArg (L j') (hGI' k hk))
   haveI hfd : FiniteDimensional ℂ (GlobalTheory.PRep.fixed (pairAt Pa Pb w) (I2 a b w)) :=
-    GlobalTheory.T.finiteDimensional_fixed_tensor _ _ _ _ (lp Pa w) (lp Pb w) (iwGL a w) (iwGL b w)
-      ((GlobalTheory.T.admissible_parabolic_induction (w.adicCompletion E) _ Pa.h (fun i => Pa.σ i w)).2 _ (hIa 1).2.1 (hIa 1).2.2.1)
-      ((GlobalTheory.T.admissible_parabolic_induction (w.adicCompletion E) _ Pb.h (fun i => Pb.σ i w)).2 _ (hIb 1).2.1 (hIb 1).2.2.1)
+    _root_.GlobalTheory.CompanionTheory.ExtTensorFixed.finiteDimensional_fixed_extTensor _ _ _ _ (lp Pa w) (lp Pb w) (iwGL a w) (iwGL b w)
+      ((_root_.GlobalTheory.CompanionTheory.ProdAdm.isAdmissible_multiProd_smIrr (w.adicCompletion E) _ Pa.h (fun i => Pa.σ i w)).2 _ (hIa 1).2.1 (hIa 1).2.2.1)
+      ((_root_.GlobalTheory.CompanionTheory.ProdAdm.isAdmissible_multiProd_smIrr (w.adicCompletion E) _ Pb.h (fun i => Pb.σ i w)).2 _ (hIb 1).2.1 (hIb 1).2.2.1)
   exact core w ϖ hϖ (pairAt Pa Pb w) J c x y hgap m hm κ u hu (L j' G) hv0 fun h => hj' (hLm.trans h)
 
 end PositivityTheory.Rg.BcB.F.Tail

@@ -1,12 +1,19 @@
 module
 
 public import ReciprocityTheory.GaloisValuations.Global
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardQuotientEqOfPowSubSelfMemStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqOfRootCongrOfDerivUnitStatement
+public import Mathlib.RingTheory.Ideal.Maximal
+public import Mathlib.RingTheory.Ideal.Quotient.Defs
+public import Mathlib.SetTheory.Cardinal.Finite
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardQuotientEqOfPowSubSelfMem
+public import Mathlib.RingTheory.Valuation.ValuationSubring
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqOfRootCongrOfDerivUnit
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExtensionUnramifiedAtOnePlace
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusPowApplySubPowLtOneStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NotMemSqOfDerivativeStatement
 public import Development.DiscreteGroups.GlobalIrreducibility.DzIneEq
+import Formalism.ConjugateSelfDual.Statement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusPowApplySubPowLtOne
+import Mathlib.NumberTheory.NumberField.Basic
+import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NotMemSqOfDerivative
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -125,14 +132,14 @@ theorem UpperTheory.exists_numberField_extension_place_frobenius_degree :
     have hτA : A.valuation (τ ζ) ≤ 1 := by
       rw [A.valuation_le_one_iff, ReciprocityTheory.Gal.apply_mem_iff_of_mem_Dec hτ, ← A.valuation_le_one_iff]
       exact hζA
-    refine (GlobalTheory.T.eq_of_roots_congr_of_derivative_unit A f ζ (τ ζ) hζA hτA hfζ (GlobalTheory.UnrCycExt.aeval_apply_eq_zero τ f hfζ) hder ?_).symm
+    refine (_root_.GlobalTheory.eq_of_root_congr_of_deriv_unit A f ζ (τ ζ) hζA hτA hfζ (GlobalTheory.UnrCycExt.aeval_apply_eq_zero τ f hfζ) hder ?_).symm
     rw [Valuation.map_sub_swap]; exact hlt
   have hine : ∀ t ∈ Ine (F := E) A, ∀ x : L, t (algebraMap L Ω x) = algebraMap L Ω x := by
     intro t ht e
     have htζ : t ζ = ζ := hroot t ht.1 (ht.2 ζ hζA)
     exact GlobalTheory.UnrCycExt.fix_adjoin ζ hζE t htζ _ e.2
   have hφn : ∀ x : Ω, A.valuation x ≤ 1 → A.valuation ((φ ^ n) x - x ^ (q ^ n)) < 1 :=
-    GlobalTheory.T.frobenius_pow_apply_sub_pow_lt_one A q φ hφ n
+    _root_.GlobalTheory.frob_pow_apply_sub_lt_one A q φ hφ n
   have hφD : φ ^ n ∈ ReciprocityTheory.Gal.Dec (F := E) A := Subgroup.pow_mem _ hφ.1 n
   have hζQ : ζ ^ (q ^ n) = ζ := by
     rw [show q ^ n = (q ^ n - 1) + 1 by omega, pow_succ, hζ.pow_eq_one, one_mul]
@@ -184,10 +191,10 @@ theorem UpperTheory.exists_numberField_extension_place_frobenius_degree :
         ← IsScalarTower.algebraMap_apply]
     have hder' : aeval ζ' (derivative f) ∉ u.asIdeal := fun hm => hder (by
       rw [← hmap]; exact hm)
-    exact GlobalTheory.T.algebraMap_not_mem_sq_of_derivative_not_mem E L w u ζ' f hf hfζ' (GlobalTheory.UnrCycExt.adjoin_gen_eq_top E ζ hζE) hover hder' c hc
+    exact _root_.GlobalTheory.UnramSimpleGen.not_mem_sq_of_derivative E L w u ζ' f hf hfζ' (GlobalTheory.UnrCycExt.adjoin_gen_eq_top E ζ hζE) hover hder' c hc
   · show Nat.card (𝓞 L ⧸ u.asIdeal) = q ^ n
     haveI : u.asIdeal.IsMaximal := u.isMaximal
-    refine GlobalTheory.T.card_quotient_eq_of_pow_sub_self_mem' u.asIdeal (q ^ n) ζ' (by omega) ?_ ?_ ?_
+    refine _root_.GlobalTheory.card_quotient_eq_of_pow_sub_self_mem u.asIdeal (q ^ n) ζ' (by omega) ?_ ?_ ?_
     · apply Subtype.ext
       exact hζL.pow_eq_one
     · intro j hj0 hjq hm

@@ -3,18 +3,22 @@ module
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GFrames
 public import Mathlib.Algebra.Module.Lattice.Full
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BasisOfIsCompl
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CloseOnCompletedLatticeOfCloseOnFramesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsCommonDenominatorForHermitianLatticeDataStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CloseOnCompletedLatticeOfCloseOnFrames
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsCommonDenominatorForHermitianLatticeData
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GlobalFramesJointGramInvMulSelf
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntCastIsUnitCompletionAlmostAllPlaces
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ComplementReferenceCompactSubgroup
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemMaximalCompactOfIntegral
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsHermND
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PairingConjInverseAdjointCloseToOne
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalPairingMatrixInvMulSelf
+public import Formalism.SharpRestriction.CuspSpanNormBounds.FractionFieldToGenericStalkAlgebraMapEq
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitriangularCloseToOneInverseClose
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FramesCommonStabiliserEqPairingMatrixStabiliser
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GlobalFramesJointGramInvMulSelfStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntCastIsUnitCompletionAlmostAllPlacesStatement
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsIntegralOfQuad
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemMaximalCompactOfIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PairingConjInverseAdjointCloseToOneStatement
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalExtend
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalPairingMatrixInvMulSelfStatement
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SpanToLePerp
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitriangularCloseToOneInverseCloseStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -152,7 +156,7 @@ theorem int_inv (L : LocE F E) {n : ℕ} (s : Matrix (Fin n) (Fin n) E) (hlow : 
     split_ifs
     · exact L.O.one_mem
     · exact L.O.zero_mem
-  obtain ⟨si, -, h2, h3⟩ := GlobalTheory.T.unitriangular_close_to_one_inverse_close L n s 1 L.O.one_mem hlow hdiag
+  obtain ⟨si, -, h2, h3⟩ := _root_.GlobalTheory.unitriangular_inv_close L n s 1 L.O.one_mem hlow hdiag
     (fun i j => ⟨(s - 1) i j, L.O.sub_mem (hO i j) (h1O i j), (one_mul _).symm⟩)
   refine ⟨si, h2, fun i j => ?_⟩
   obtain ⟨o, ho, he⟩ := h3 i j
@@ -222,8 +226,8 @@ theorem loc_close (L : LocE F E) (r k : ℕ) (S : Frames L r k) (c a t e : F)
   have hpair := pair_fix L S.Hm (fun j => cp j • S.f j) (fun j => cp j • S.f' j) h hiso M M' hM hM'
   have htO : algebraMap F E (t * e ^ 2 * a ^ r) ∈ L.O :=
     algebraMap_mem L (mul_mem (mul_mem ht (pow_mem he _)) (pow_mem ha _))
-  obtain ⟨Mi, hMi1, hMi2, hMi⟩ := GlobalTheory.T.unitriangular_close_to_one_inverse_close L (r + 1) M _ htO hMlow hMdiag hcl
-  have hcl' := GlobalTheory.T.pairing_conj_inverseAdjoint_close_to_one L (r + 1) _ Zi M Mi M' _ (algebraMap F E e) htO
+  obtain ⟨Mi, hMi1, hMi2, hMi⟩ := _root_.GlobalTheory.unitriangular_inv_close L (r + 1) M _ htO hMlow hMdiag hcl
+  have hcl' := _root_.GlobalTheory.Sloc.CloseConj.main L (r + 1) _ Zi M Mi M' _ (algebraMap F E e) htO
     (by rw [L.cj_fix]; exact ⟨_, rfl⟩) hZi hZ hZi' hMi1 hMi2 hMi hpair
   have heu : IsUnit (algebraMap F E e) := (IsUnit.mk0 _ he0).map (algebraMap F E)
   have hM'cl : ∀ i j, ∃ o ∈ L.O, (M' - 1) i j = algebraMap F E (t * a ^ r) * o := by
@@ -260,7 +264,7 @@ theorem loc_close (L : LocE F E) (r k : ℕ) (S : Frames L r k) (c a t e : F)
     · rw [hs'.1 i j hij]; exact L.O.zero_mem
   obtain ⟨si, hsi, hsiO⟩ := int_inv L s hs.1 hs.2 hsO
   obtain ⟨si', hsi', hsi'O⟩ := int_inv L s' hs'.1 hs'.2 hs'O
-  exact GlobalTheory.T.mem_maximal_compact_of_integral L r k S h s si s' si' hh hsO hsiO hsi hs'O hsi'O hsi' hsf hsf'
+  exact _root_.GlobalTheory.HL.Frames.mem_K0_of_integral L r k S h s si s' si' hh hsO hsiO hsi hs'O hsi'O hsi' hsf hsf'
 
 end Loc2
 end GlobalTheory.HL.FrameClose
@@ -269,9 +273,9 @@ namespace GlobalTheory.HL.FrameClose
 
 theorem close_lattice : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {sig : E →ₐ[F] E} (A : Places F E sig), ∀ (r k : ℕ) (G : GFrames A r k), ∀ Λ : G.Lt, Submodule.IsFullLattice E Λ → ∃ d : ∀ p, (A.loc p).Fp, (∀ p, d p ≠ 0) ∧ {p | ¬ ∃ u : (𝒪[(A.loc p).Fp])ˣ, ((u : 𝒪[(A.loc p).Fp]) : (A.loc p).Fp) = d p}.Finite ∧ ∀ p (c0 : (A.loc p).Fp) (h : (G.S p).GLV) (M : Matrix (Fin (r + 1)) (Fin (r + 1)) (A.loc p).Ep), c0 ≠ 0 → c0 ∈ 𝒪[(A.loc p).Fp] → h ∈ (G.S p).St → (∀ j, h (A.bc p (G.f j)) = ∑ i, M i j • A.bc p (G.f i)) → (∀ i j, ∃ o ∈ (A.L p).O, (M - 1) i j = algebraMap (A.loc p).Fp (A.loc p).Ep (c0 * d p) * o) → h ∈ (G.S p).K0 ∧ ∀ x ∈ A.lat p Λ, ∃ y ∈ A.lat p Λ, h x - x = algebraMap (A.loc p).Fp (A.loc p).Ep c0 • y := by
   intro F E _ _ _ _ _ sig A r k G Λ hΛ
-  have hZinv := GlobalTheory.T.rationalPairingMatrix_inv_mul_self A r k G
-  have hΓinv := GlobalTheory.T.globalFrames_joint_gram_inv_mul_self A r k G
-  obtain ⟨D, hD0, hDv, hDpair, hDg⟩ := GlobalTheory.T.exists_common_denominator_for_hermitian_lattice_data
+  have hZinv := _root_.GlobalTheory.HL.GFrames.Zh_inv_mul A r k G
+  have hΓinv := _root_.GlobalTheory.HL.GamInv.main A r k G
+  obtain ⟨D, hD0, hDv, hDpair, hDg⟩ := _root_.GlobalTheory.DenClear.den_clear
     (Sum.elim (fun ab : Fin (r + 1) × Fin (r + 1) => G.Zh ab.1 ab.2)
       (Sum.elim (fun ab : Fin (r + 1) × Fin (r + 1) => G.Zh⁻¹ ab.1 ab.2)
         (fun kl : (Fin (r + 1) ⊕ Fin (r + 1)) × (Fin (r + 1) ⊕ Fin (r + 1)) =>
@@ -293,7 +297,7 @@ theorem close_lattice : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Nu
       haveI := (A.loc p).char0
       exact_mod_cast hD0
     exact mul_ne_zero (pow_ne_zero _ this) (pow_ne_zero _ (ha p).2.2)
-  · refine ((GlobalTheory.T.intCast_isUnit_completion_almost_all_places A D hD0).union G.c_unit).subset fun p hp => ?_
+  · refine ((_root_.GlobalTheory.HL.PlacesInt.intCast_isUnit_almost_all A D hD0).union G.c_unit).subset fun p hp => ?_
     by_contra hq
     simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not] at hq
     obtain ⟨⟨u, hu⟩, ⟨v, hv⟩⟩ := hq
@@ -350,7 +354,7 @@ theorem close_lattice : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Nu
         congr 2
         ring)
     refine ⟨hK0, ?_⟩
-    refine GlobalTheory.T.close_on_completed_lattice_of_close_on_frames A r k G Λ D p h M M' c0 hΓinv (fun k l => hDv (Sum.inr (Sum.inr (k, l))))
+    refine _root_.GlobalTheory.HL.LatClose.close_on_lattice A r k G Λ D p h M M' c0 hΓinv (fun k l => hDv (Sum.inr (Sum.inr (k, l))))
       (fun x hx l => hDpair x hx l) hDg hh hM (by simpa only [G.f'_eq p] using hM') ?_ ?_
     · intro i j
       obtain ⟨o, ho, hoe⟩ := hcl i j

@@ -3,11 +3,15 @@ module
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.CmpPair
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.PadicIntegersHenselianFiniteResidue
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.SplitComps
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.HodgeTieGaloisStatement
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.Proportional
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.HodgeTieGalois
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptInteriorGeneric
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeTiesDistinctGenericStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrimeDivisorsOfOmegaBundleStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RootModelOriginCompatibilityStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.RootOnFund
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeTiesDistinctGeneric
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrimeDivisorsOfOmegaBundle
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsSncModel
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.TowerOrigin
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RootModelOriginCompatibility
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -91,21 +95,21 @@ theorem propA_of_origin : CmpPair → TwistAut → ∀ (II : IntersectionSystem)
   have hex : ∀ B a, ∃ t : HodgeTie Y (o.S B) (Module.finrank ℚ c.F) (T.M B a), t.A = (o.Or B a).𝔐 := by
     intro B a
     obtain ⟨-, ⟨x, hx⟩, -⟩ := HodgeCpt.basic _ _ _ _ _ _ _ _ Y _ _ _ _ _ (o.Or B a).𝔐 hinj
-    exact GlobalTheory.T.prime_divisors_of_omega_bundle E H D l Xo c (𝓞 c.F) _ Y (o.S B) (T.M B a) (o.Sys a) (o.Fx a) (o.Or B a) (hOm B a)
-      (hdisc B) (GlobalTheory.T.root_model_origin_compatibility E H D l Xo c (𝓞 c.F) _ Y (o.S B) (T.M B a) (o.Sys a) (o.Fx a) (o.Or B a) x hx
+    exact _root_.GlobalTheory.CompanionTheory.Ar.hodgeTie_of_rootOrigin E H D l Xo c (𝓞 c.F) _ Y (o.S B) (T.M B a) (o.Sys a) (o.Fx a) (o.Or B a) (hOm B a)
+      (hdisc B) (_root_.GlobalTheory.CompanionTheory.Ar.RootAlg.algOver_of_immersion E H D l Xo c (𝓞 c.F) _ Y (o.S B) (T.M B a) (o.Sys a) (o.Fx a) (o.Or B a) x hx
         hmono (hhol a))
   choose tie htie using hex
   have hgen : ∀ B a, genPt (tie B a).A.ξ₀ = genPt (o.Fx a).ξf := by
     intro B a
     rw [htie B a]
     exact genPt_eq_of_factor (o.Or B a).𝔐.fn_over (o.Or B a).g_over
-  refine GlobalTheory.T.hodge_tie_galois hpair htw II hII E H D l Xo c (𝓞 c.F) (algebraMap (𝓞 c.F) c.F) Y T o.S
+  refine _root_.GlobalTheory.CompanionTheory.Ar.Cmp.HodgeA.propA_of_hodgeTower hpair htw II hII E H D l Xo c (𝓞 c.F) (algebraMap (𝓞 c.F) c.F) Y T o.S
     (Module.finrank ℚ c.F) tie hgal hmono hconv ?_ ?_
   · intro B k k' p hp
     rw [htie B k', htie B k]
     exact hR B k k' p hp
   · intro B Φ hΦ
-    refine GlobalTheory.T.hodge_ties_distinct_generic E H D l Xo c (𝓞 c.F) _ Y (o.S B) _ T.Comp (T.M B) (tie B) hmono ?_ ?_ Φ hΦ
+    refine _root_.GlobalTheory.CompanionTheory.Ar.Cmp.PermCpt.exists_perm_isImageCpt E H D l Xo c (𝓞 c.F) _ Y (o.S B) _ T.Comp (T.M B) (tie B) hmono ?_ ?_ Φ hΦ
     · intro k k' h
       apply o.comp_inj
       simpa only [hgen] using h

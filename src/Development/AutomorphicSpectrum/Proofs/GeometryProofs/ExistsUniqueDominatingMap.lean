@@ -1,8 +1,9 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GlueApplyOfNotInFibre
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ChartUnitBasicOpenStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DominatesOfCoordsRegularStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ChartUnitBasicOpen
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EtaleLocalizationAtPrimeTensorOfLowHeight
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DominatesOfCoordsRegular
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenMapStalkMap
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -105,7 +106,7 @@ theorem specializes_of_dominates (M : PModel o x) (M' : PModel o' y) {i : Ω →
     rw [this]
     exact mul_mem (hc' j) hu.2.2
   refine specializes_iff_forall_open.2 fun V hV hq => ?_
-  obtain ⟨a, ha, hau, hU⟩ := GlobalTheory.T.chart_unit_basic_open o Ω κ x M c ⟨f q, h1⟩ ⟨V, hV⟩ ⟨hc0, hc⟩ hq
+  obtain ⟨a, ha, hau, hU⟩ := _root_.GlobalTheory.CompanionTheory.Ar.chRing_basicOpen_basis o Ω κ x M c ⟨f q, h1⟩ ⟨V, hV⟩ ⟨hc0, hc⟩ hq
   have hag : a ∈ regAt M.ξ ⟨g q, h2⟩ := (M.tie.ring c hc0 a).1 ha _ hin
   refine hU ⟨g q, h2⟩ hin (gb a hag ⟨(map_ne_zero i).2 hau.1, fa a hau.2.1, ?_⟩)
   rw [← map_inv₀]
@@ -117,7 +118,7 @@ theorem existsUnique_dominates :
       (M' : PModel o' y) (i : Ω →+* Ω'), (∀ p', p' ∈ ctrSet o x i M'.ξ) →
       ∃! f : M'.X ⟶ M.X, Dominates M'.ξ M.ξ f i := by
   intro o _ Ω _ _ κ _ x M o' _ Ω' _ _ κ' _ y M' i h
-  obtain ⟨f, hf, -⟩ := GlobalTheory.T.dominates_of_coords_regular M.X Ω M.ξ o κ x M'.X Ω' M'.ξ i M.tie M'.tie.gen M'.all
+  obtain ⟨f, hf, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.CoordMap.exists_dominating_map M.X Ω M.ξ o κ x M'.X Ω' M'.ξ i M.tie M'.tie.gen M'.all
     (fun r p' => by
       obtain ⟨c, -, H⟩ := h p'
       exact H _ (Subalgebra.algebraMap_mem _ r))

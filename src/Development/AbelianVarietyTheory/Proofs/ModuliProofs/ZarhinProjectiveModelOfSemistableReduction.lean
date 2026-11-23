@@ -3,8 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.ImmersedBy
 public import Development.AbelianVarietyTheory.PublishedTheorems.SemistableReduction₂.SemistableReductionSt
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSemiAbelianModelOfGeometricHalfStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.UniformisationExistenceAndTorsionStatementsStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ZarhinGeometricOfSemistableReductionStatement
+public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.UTorsSt
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.UniformisationExistenceAndTorsionStatements
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ZarhinGeometricOfSemistableReduction
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHoldStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -53,6 +54,6 @@ open scoped CategoryTheory.Obj
 namespace GlobalTheory
 
 theorem zh_of_semistableReduction : GlobalTheory.Published.SemistableReductionSt → GlobalTheory.ZH.ZHSt :=
-  fun S => GlobalTheory.T.exists_semiAbelianModel_of_geometricHalf S GlobalTheory.T.uniformisationExistence_and_torsion_statements.1 GlobalTheory.T.all_six_abelian_scheme_laws_hold.1 GlobalTheory.T.all_six_abelian_scheme_laws_hold.2.1 GlobalTheory.T.uniformisationExistence_and_torsion_statements.2 (GlobalTheory.T.zarhinGeometric_of_semistableReduction S)
+  fun S => GlobalTheory.T.exists_semiAbelianModel_of_geometricHalf S _root_.GlobalTheory.ZH.thmU_and_uTors.1 GlobalTheory.T.all_six_abelian_scheme_laws_hold.1 GlobalTheory.T.all_six_abelian_scheme_laws_hold.2.1 _root_.GlobalTheory.ZH.thmU_and_uTors.2 (_root_.GlobalTheory.zhGeo_of_semistableReduction S)
 
 end GlobalTheory

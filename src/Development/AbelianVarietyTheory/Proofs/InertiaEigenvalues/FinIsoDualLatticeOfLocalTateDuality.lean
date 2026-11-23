@@ -2,13 +2,17 @@ module
 
 public import ReciprocityTheory.ReductiveGroups.TraceFormulas.LatDefs
 public import Formalism.GaloisCohomology.LocalTateDualityK
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CocycleEqAddUniformizerSmulAddCoboundaryStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CompactDvrAdicCompleteSeparatedUniformizerStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DualLatFiniteFreeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteFreeModuleCompactAdicDvrStatement
+public import ReciprocityTheory.GaloisValuations.SeparatedDvrSecondCohomologyMem
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CocycleEqAddUniformizerSmulAddCoboundary
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Mathlib.Topology.Algebra.Nonarchimedean.AdicTopology
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CompactDvrAdicCompleteSeparatedUniformizer
+public import Formalism.WachLatticeTwists.LatticeDualFibres.StatDualFibreLattice
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DualLatFiniteFree
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteFreeModuleCompactAdicDvr
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteQuotientOfCompleteNakayama
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FreeModuleAdicCompleteSeparated
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModUniformiserCocyclesFiniteClassesLocalStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModUniformiserCocyclesFiniteClassesLocal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,17 +63,17 @@ theorem finIso_of_localTateDuality (hT : Formalism.GaloisCohomology.LocalTateDua
   obtain ⟨hR, hC, hT2, hA, hpm, hp0⟩ := hO
   haveI := hR; haveI := hC; haveI := hT2; haveI := hD.t2'
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
-  obtain ⟨hFin, hFree⟩ := GlobalTheory.T.dualLat_finite_free_of_isLatticeIn D.bT D.T hD.lat hD.perf
+  obtain ⟨hFin, hFree⟩ := _root_.GlobalTheory.dualLat_finite_free D.bT D.T hD.lat hD.perf
   haveI := hFin; haveI := hFree
-  obtain ⟨hcpl, hsep⟩ := GlobalTheory.T.compact_dvr_adic_complete_separated_uniformizer hA ϖ hϖ
+  obtain ⟨hcpl, hsep⟩ := _root_.GlobalTheory.compact_dvr_complete_separated hA ϖ hϖ
   obtain ⟨hcT, hsT⟩ := GlobalTheory.freeModule_adicComplete_separated ϖ hcpl hsep (↥D.T')
-  obtain ⟨hcomp, hopen, hemb⟩ := GlobalTheory.T.finite_free_module_compact_adic_dvr hA (M := ↥D.T') ϖ hϖ
+  obtain ⟨hcomp, hopen, hemb⟩ := _root_.GlobalTheory.finite_free_compact_adic_dvr hA (M := ↥D.T') ϖ hϖ
   haveI := hcomp
   have hρ : ContAction D.ρTl' := sub_contAction D.contT' D.T' D.stT'
   have hpϖ : (p : O) ∈ Ideal.span {ϖ} := by
     rwa [← Irreducible.maximalIdeal_eq hϖ]
-  obtain ⟨s, hs⟩ := GlobalTheory.T.modUniformiser_cocycles_finite_classes_local hT hK i D.ρTl' hρ ϖ hpϖ hopen
-  have hl := GlobalTheory.T.cocycle_eq_add_uniformizer_smul_add_coboundary D.ρTl' hρ ϖ hemb.isEmbedding s hs
+  obtain ⟨s, hs⟩ := _root_.GlobalTheory.modpi_cocycles_finite_classes hT hK i D.ρTl' hρ ϖ hpϖ hopen
+  have hl := _root_.GlobalTheory.cocycle_lift_mod_uniformizer D.ρTl' hρ ϖ hemb.isEmbedding s hs
   have hd : ∀ t : ↥D.T', d0 D.ρTl' t ∈ Z1 D.ρTl' := fun t => by
     refine ⟨?_, fun g h => ?_⟩
     · exact (hρ.comp (continuous_id.prodMk continuous_const)).sub continuous_const

@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsChartOfIsLocalRing
 public import Mathlib.RingTheory.HahnSeries.PowerSeries
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.HasArcDataIff
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NomePowerSeriesDvdOfSumBoundedStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NomePowerSeriesDvdOfSumBounded
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.FrameMatrixHasSum
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HolomorphicHomDetermined
 import Mathlib.Algebra.Order.Floor.Extended
@@ -97,7 +97,7 @@ theorem not_pole_of_bounded : ∀ (X : Scheme.{0}) (U₀ W₀ : X.Opens) (f₀ :
   obtain ⟨T₁, h₁⟩ := harc U₀ (t * s) hχ
   obtain ⟨T₂, h₂⟩ := harc U₀ (s ^ (n + 1)) hχ
   obtain ⟨T₃, C, h₃⟩ := hbd
-  obtain ⟨Q, hQ⟩ := GlobalTheory.T.nomePowerSeries_dvd_of_sum_bounded (valR χ U₀ (t * s)) (valR χ U₀ (s ^ (n + 1))) (max T₁ (max T₂ T₃)) C
+  obtain ⟨Q, hQ⟩ := _root_.GlobalTheory.powerSeries_dvd_of_sum_bounded (valR χ U₀ (t * s)) (valR χ U₀ (s ^ (n + 1))) (max T₁ (max T₂ T₃)) C
     (fun w => valAt' (y w) U₀ (t * s)) (fun w => valAt' (y w) U₀ (s ^ (n + 1))) hH (fun w hw => by
       have hw1 : T₁ < w.im := lt_of_le_of_lt (le_max_left _ _) hw
       have hw2 : T₂ < w.im := lt_of_le_of_lt (le_trans (le_max_left _ _) (le_max_right _ _)) hw

@@ -3,15 +3,15 @@ module
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.SelfDualAt
 public import Formalism.LocalToGlobal.HermitianForms.PsiZeroNontrivialCharacter
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicLatticeCarryIffForallPlace
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicLatticeCarryIffForallPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicLatticeFrameConditionCharacterLocalStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DualLatticeLocalCharacterizationStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsAdelicUnitaryOfFiniteSupportStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsLocallySelfDualOfHermitianLatticeOfLevelStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalLevelCharacterMatchAtTypePrimeStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemAdelicSpanOfLatticeIffForallPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicLatticeFrameConditionCharacterLocal
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DualLatticeLocalCharacterization
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsAdelicUnitaryOfFiniteSupport
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsLocallySelfDualOfHermitianLatticeOfLevel
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalLevelCharacterMatchAtTypePrime
+public import Formalism.LocalToGlobal.HermitianForms.IsLocBasis
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TrivialOnDualQuotientIffMemLocalUnitary
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemAdelicSpanOfLatticeIffForallPlace
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StepLevelTLat
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TrivialOnDualQuotientIffMemLocalUnitaryStatement
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Afsplit
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -109,7 +109,7 @@ theorem prVec_sub_one_mulVec (v : HeightOneSpectrum (𝓞 F)) (y : GL (Fin n) (E
 theorem mem_hat_of_loc {L : Submodule (𝓞 E) (Fin n → E)} (hL : IsLat L) (v : HeightOneSpectrum (𝓞 F))
     (x : Fin n → E ⊗[F] v.adicCompletion F) (hx : x ∈ loc v L) :
     (fun i => Formalism.UG.P.afsplitIE v (x i)) ∈ hat F L := by
-  rw [GlobalTheory.T.mem_adelicSpanOfLattice_iff_forall_place F E n L hL]
+  rw [_root_.GlobalTheory.St.G.mem_hat_iff_forall_loc F E n L hL]
   intro w
   by_cases hw : w = v
   · subst hw; rw [GlobalTheory.St.G.Carry.prVec_single_self]; exact hx
@@ -124,13 +124,13 @@ theorem level_conj_frame : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
   classical
   have hL : IsLat S.Lb := ⟨S.Lb_fin, S.Lb_span⟩
   have hTL : TLat cm.sig J T f S.Lb := GlobalTheory.St.G.stepLevel_tLat F E n cm.sig J T f _ S
-  have hD := GlobalTheory.T.dual_lattice_local_characterization F E cm n J hJ hdet S.Lb hL
+  have hD := _root_.GlobalTheory.St.G.dualL_local_adelic F E cm n J hJ hdet S.Lb hL
   have hLD : IsLat (dualL cm.sig J S.Lb) := hD.1
   have hsd : ∀ v : HeightOneSpectrum (𝓞 F), (T : 𝓞 F) ∉ v.asIdeal →
       ∀ x, x ∈ loc v (dualL cm.sig J S.Lb) ↔ x ∈ loc v S.Lb := by
     intro v hv x
     rw [hD.2.1 v x]
-    exact (GlobalTheory.T.isLocallySelfDual_of_hermitianLatticeOfLevel F E cm n J hJ hdet T f S.Lb hTL v hv x).symm
+    exact (_root_.GlobalTheory.St.G.selfDualAt_of_tLat F E cm n J hJ hdet T f S.Lb hTL v hv x).symm
   have hlevI : ∀ v (g : GL (Fin n) (E ⊗[F] v.adicCompletion F)), g ∈ levelVL cm.sig J v S.Lb ↔
       g ∈ UPts cm.sig J (v.adicCompletion F) ∧ g ∈ stabGL (loc v S.Lb) := fun v g => Iff.rfl
   have hQauto : ∀ v : HeightOneSpectrum (𝓞 F), (T : 𝓞 F) ∉ v.asIdeal →
@@ -142,7 +142,7 @@ theorem level_conj_frame : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     exact Submodule.sub_mem _ ((hg x).mp hx) hx
 
   have gm := fun (i : Fin 2) (v : HeightOneSpectrum (𝓞 F)) (hv : (gp i : 𝓞 F) ∈ v.asIdeal) =>
-    GlobalTheory.T.local_level_character_match_at_type_prime F E cm n J hJ hdet T f t k a sk fc gp S G Gl hk ha hsk hfc hT hgp hne hTg hsplit Fr i v hv
+    _root_.GlobalTheory.St.G.gmatch_local F E cm n J hJ hdet T f t k a sk fc gp S G Gl hk ha hsk hfc hT hgp hne hTg hsplit Fr i v hv
   choose κl hκl hκs using gm
   let hf : ∀ v : HeightOneSpectrum (𝓞 F), GL (Fin n) (E ⊗[F] v.adicCompletion F) := fun v =>
     if h0 : (gp 0 : 𝓞 F) ∈ v.asIdeal then κl 0 v h0
@@ -169,11 +169,11 @@ theorem level_conj_frame : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     by_contra hc
     simp only [Set.mem_union, Set.mem_ofPred_eq, not_or] at hc
     exact hv (hf_one v hc.1 hc.2)
-  obtain ⟨x0, hx0, hx0v⟩ := GlobalTheory.T.exists_adelic_unitary_of_finite_support F E n cm.sig J hf (fun v => ((hlevI v _).mp (hf_lev v)).1) hfin
+  obtain ⟨x0, hx0, hx0v⟩ := _root_.GlobalTheory.St.G.exists_adelic_of_finite_support F E n cm.sig J hf (fun v => ((hlevI v _).mp (hf_lev v)).1) hfin
   let κ : UPts cm.sig J (Ad F) := ⟨x0, hx0⟩
   have hκv : ∀ v, bc (prV (E := E) v) (κ : GL (Fin n) (E ⊗[F] Ad F)) = hf v := hx0v
   refine ⟨κ, ?_, ?_⟩
-  · exact (GlobalTheory.T.adelicLattice_carry_iff_forall_place F E n S.Lb S.Lb hL hL x0).mpr (fun v x => by
+  · exact (_root_.GlobalTheory.St.G.Carry.carry_iff F E n S.Lb S.Lb hL hL x0).mpr (fun v x => by
       rw [hx0v v]; exact ((hlevI v _).mp (hf_lev v)).2 x)
   intro y
   have hbcUP : ∀ v, bc (prV (E := E) v) (y : GL (Fin n) (E ⊗[F] Ad F)) ∈ UPts cm.sig J (v.adicCompletion F) :=
@@ -191,7 +191,7 @@ theorem level_conj_frame : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
 
   have hA : (y : GL (Fin n) (E ⊗[F] Ad F)) ∈ stabGL (hat F S.Lb) ↔
       ∀ v, bc (prV (E := E) v) (y : GL (Fin n) (E ⊗[F] Ad F)) ∈ stabGL (loc v S.Lb) :=
-    GlobalTheory.T.adelicLattice_carry_iff_forall_place F E n S.Lb S.Lb hL hL y
+    _root_.GlobalTheory.St.G.Carry.carry_iff F E n S.Lb S.Lb hL hL y
   have hB : (∀ x, (∀ z ∈ hat F S.Lb, hR cm.sig J (Ad F) z x ∈ OAd F E) → (y.1.1 - 1) *ᵥ x ∈ hat F S.Lb) ↔
       ∀ v, ∀ x ∈ loc v (dualL cm.sig J S.Lb),
         ((bc (prV (E := E) v) (y : GL (Fin n) (E ⊗[F] Ad F))).1 - 1) *ᵥ x ∈ loc v S.Lb := by
@@ -199,18 +199,18 @@ theorem level_conj_frame : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     · intro h v x hx
       have hx' := mem_hat_of_loc hLD v x hx
       have h1 := h _ ((hD.2.2 _).mp hx')
-      rw [GlobalTheory.T.mem_adelicSpanOfLattice_iff_forall_place F E n S.Lb hL] at h1
+      rw [_root_.GlobalTheory.St.G.mem_hat_iff_forall_loc F E n S.Lb hL] at h1
       have h2 := h1 v
       rwa [prVec_sub_one_mulVec, GlobalTheory.St.G.Carry.prVec_single_self] at h2
     · intro h x hx
       have hx' := (hD.2.2 x).mpr hx
-      rw [GlobalTheory.T.mem_adelicSpanOfLattice_iff_forall_place F E n _ hLD] at hx'
-      rw [GlobalTheory.T.mem_adelicSpanOfLattice_iff_forall_place F E n S.Lb hL]
+      rw [_root_.GlobalTheory.St.G.mem_hat_iff_forall_loc F E n _ hLD] at hx'
+      rw [_root_.GlobalTheory.St.G.mem_hat_iff_forall_loc F E n S.Lb hL]
       intro v
       rw [prVec_sub_one_mulVec]
       exact h v _ (hx' v)
   have hIL := fun (hs : (y : GL (Fin n) (E ⊗[F] Ad F)) ∈ stabGL (hat F S.Lb)) =>
-    GlobalTheory.T.adelicLatticeFrame_condition_character_local F E cm n J hJ hdet k gp S.Lb Fr hgp hne hL S.Lb_int y.1 hs
+    _root_.GlobalTheory.St.G.frame_local F E cm n J hJ hdet k gp S.Lb Fr hgp hne hL S.Lb_int y.1 hs
   have hK : Fr.InK y.1 ↔ ∀ v, bc (prV (E := E) v) (y : GL (Fin n) (E ⊗[F] Ad F)) ∈ stabGL (loc v S.Lb) ∧
       (∀ x ∈ loc v (dualL cm.sig J S.Lb),
         ((bc (prV (E := E) v) (y : GL (Fin n) (E ⊗[F] Ad F))).1 - 1) *ᵥ x ∈ loc v S.Lb) ∧
@@ -261,7 +261,7 @@ theorem level_conj_frame : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
       have h1 : (gp 1 : 𝓞 F) ∉ v.asIdeal := fun h => hb (Or.inr h)
       rw [hf_one v h0 h1, inv_one, one_mul, mul_one]
       by_cases hTv : (T : 𝓞 F) ∈ v.asIdeal
-      · have fu := GlobalTheory.T.trivial_on_dual_quotient_iff_mem_localUnitary F E cm n J hJ hdet T f _ S hT hsplitT hdeg v hTv
+      · have fu := _root_.GlobalTheory.St.G.FunFix.trivial_iff_mem_Uloc F E cm n J hJ hdet T f _ S hT hsplitT hdeg v hTv
         constructor
         · intro hu
           have hl := S.Uloc_lev v hu

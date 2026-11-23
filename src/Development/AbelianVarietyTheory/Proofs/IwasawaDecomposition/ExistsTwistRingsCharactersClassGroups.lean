@@ -3,22 +3,29 @@ module
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ConcreteTwistFrameExtraExcludedOverSmallPrimes
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InertialOrderFifteenCharAuxiliaryPrimeSpec
 public import Mathlib.Topology.Sheaves.Presheaf
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DepthZeroLabelsOfLabelLaws
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BlockValAeStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CardPadicAlgClPadicComplexEqComplexStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EtaTildeIsUnitArgAtCmTypePlacesStatement
+public import Mathlib.NumberTheory.Padics.Complex
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CardPadicAlgClPadicComplexEqComplex
+public import Formalism.LocalToGlobal.NormalizedHeckeFactors.ChiDefs
+public import Formalism.LocalToGlobal.UnitaryNorms.CharHost
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EtaTildeIsUnitArgAtCmTypePlaces
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCmConjugationOmega
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCoefficientFieldLowerBoundsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCyclotomicUnramifiedCompletedIntegersStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIntegersToCompletedUnramifiedCompositumStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCoefficientFieldLowerBounds
+public import Formalism.LocalToGlobal.NormalizedHeckeFactors.TwDefs
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCyclotomicUnramifiedCompletedIntegers
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIntegersToCompletedUnramifiedCompositum
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsRingClassHost
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsRingEquivAlgClosedOverNumberFieldCompEqStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsRingEquivFinExtIntegersPadicIntOfStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FinitePrimitiveRootStatement
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsRingEquivAlgClosedOverNumberFieldCompEq
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsRingEquivFinExtIntegersPadicIntOf
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FinitePrimitiveRoot
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteResidueField
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemFiniteExtPadicRingOfIntegersIffNormLeOneStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemMaximalIdealIffNormLtOneStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnramifiedHeckeCharIdeleValueUniformiserStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemFiniteExtPadicRingOfIntegersIffNormLeOne
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemMaximalIdealIffNormLtOne
+public import Formalism.LocalToGlobal.UnitaryNorms.IsUnitaryNormOf
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnramifiedHeckeCharIdeleValueUniformiser
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DepthZeroLabelsOfLabelLaws
 import Mathlib.Algebra.AffineMonoid.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -113,30 +120,30 @@ theorem exists_ringEquiv_over (K Ω₁ Ω₂ : Type) [Field K] [NumberField K] [
     [IsAlgClosed Ω₂] [CharZero Ω₁] [CharZero Ω₂] (a : K →+* Ω₁) (b : K →+* Ω₂)
     (hc : Cardinal.mk Ω₁ = Cardinal.mk Ω₂) (hu : Cardinal.aleph0 < Cardinal.mk Ω₁) :
     ∃ ι : Ω₁ ≃+* Ω₂, ∀ x, ι (a x) = b x :=
-  GlobalTheory.T.exists_ringEquiv_algClosed_over_numberField_comp_eq K Ω₁ Ω₂ a b hc hu
+  _root_.GlobalTheory.AlgClosedIsoOverNumberField.exists_ringEquiv_comp_eq K Ω₁ Ω₂ a b hc hu
 
 theorem card_padicAlgCl (l : ℕ) [Fact l.Prime] : Cardinal.mk (PadicAlgCl l) = Cardinal.mk ℂ :=
-  (GlobalTheory.T.card_padicAlgCl_padicComplex_eq_complex l).1
+  (_root_.GlobalTheory.PadicCard.card_padicAlgCl_padicComplex l).1
 
 theorem card_padicComplex (l : ℕ) [Fact l.Prime] : Cardinal.mk ℂ_[l] = Cardinal.mk ℂ :=
-  (GlobalTheory.T.card_padicAlgCl_padicComplex_eq_complex l).2
+  (_root_.GlobalTheory.PadicCard.card_padicAlgCl_padicComplex l).2
 
 theorem mem_OL_iff (l : ℕ) [Fact l.Prime] (K : Loc.FinExt l) (x : ↥K.1) :
     x ∈ Loc.OL K ↔ ‖(x : PadicAlgCl l)‖ ≤ 1 :=
-  GlobalTheory.T.mem_finiteExtPadic_ringOfIntegers_iff_norm_le_one l K x
+  _root_.GlobalTheory.IntNormFinExt.mem_OL_iff_norm_le_one l K x
 
 theorem mem_maximalIdeal_OL_iff (l : ℕ) [Fact l.Prime] (K : Loc.FinExt l) [IsLocalRing ↥(Loc.OL K)]
     (y : ↥(Loc.OL K)) : y ∈ IsLocalRing.maximalIdeal ↥(Loc.OL K) ↔ ‖((y : ↥K.1) : PadicAlgCl l)‖ < 1 :=
-  GlobalTheory.T.mem_maximalIdeal_OL_iff_norm_lt_one l K y
+  _root_.GlobalTheory.IntMaxFinExt.mem_maximalIdeal_iff_norm_lt_one l K y
 
 theorem exists_equiv_intOf (l : ℕ) [Fact l.Prime] (K : Loc.FinExt l) :
     ∃ e : ↥(Loc.OL K) ≃+* ↥(intOf l K.1), ∀ y, (e y : PadicAlgCl l) = ((y : ↥K.1) : PadicAlgCl l) :=
-  GlobalTheory.T.exists_ringEquiv_finExtIntegers_padicIntOf l K
+  _root_.GlobalTheory.IntOfFinExt.exists_ringEquiv_intOf l K
 
 theorem exists_toClC (l : ℕ) [Fact l.Prime] (K₀ L : Loc.FinExt l) :
     ∃ f : ↥(Loc.OL K₀) →+* ↥(clC l (Kt l K₀ L)),
       ∀ y, (f y : ℂ_[l]) = algebraMap (PadicAlgCl l) ℂ_[l] ((y : ↥K₀.1) : PadicAlgCl l) :=
-  GlobalTheory.T.exists_integers_to_completedUnramifiedCompositum l K₀ L
+  _root_.GlobalTheory.HeightCounting.ToClC.exists_toClC l K₀ L
 
 theorem ok_laws (l : ℕ) [Fact l.Prime] (K₀ L : Loc.FinExt l) (k : ℕ) :
     letI := (Subring.inclusion (clC_mono l (le_sup_left : Kt l K₀ L ≤ Kt l K₀ L ⊔ muK l k))).toAlgebra
@@ -146,12 +153,12 @@ theorem ok_laws (l : ℕ) [Fact l.Prime] (K₀ L : Loc.FinExt l) (k : ℕ) :
           ∃ d : ↥(clC l (Kt l K₀ L)), d ≠ 0 ∧
           x * algebraMap _ (FractionRing ↥(clC l (Kt l K₀ L ⊔ muK l k))) (algebraMap _ ↥(clC l (Kt l K₀ L ⊔ muK l k)) d) =
             algebraMap _ (FractionRing ↥(clC l (Kt l K₀ L ⊔ muK l k))) (Polynomial.aeval (z : ↥(clC l (Kt l K₀ L ⊔ muK l k))) p) :=
-  GlobalTheory.T.finite_primitive_root_of_clC_le l K₀ L k _
+  _root_.GlobalTheory.CycLayers.finite_primitive_root l K₀ L k _
 
 theorem hc_at {E : Type} [Field E] [NumberField E] (χ : HChar E) (h : Formalism.L2.NC.HC E)
     (hh : h.χ = (χ : Ideles E →* ℂˣ)) (v : HeightOneSpectrum (𝓞 E)) :
     (χ.UnrAt v → h.At v (χ.val v)) ∧ (χ.UnrAt v ↔ h.Unr v) :=
-  GlobalTheory.T.unramifiedHeckeChar_idele_value_uniformiser χ h hh v
+  _root_.GlobalTheory.HeckeUnifVal.at_val_and_unr_iff χ h hh v
 
 end GlobalTheory.TwRing
 
@@ -175,7 +182,7 @@ theorem placesOver_inj (E : Type) [Field E] [NumberField E] {p q : ℕ} (hp : p.
 theorem eta_unitArg {R : Ranks} (H : Host R) (χ : HChar H.E) (hχ : IsEtaT H χ) (h : Formalism.L2.NC.HC H.E)
     (hh : h.χ = (χ : Ideles H.E →* ℂˣ)) (g : R.Psi) :
     h.IsUnitArg (H.emb (g : R.GG)) :=
-  GlobalTheory.T.etaTilde_isUnitArg_at_cmType_places H χ hχ h hh g
+  _root_.GlobalTheory.EtaUnitArg.etaT_isUnitArg H χ hχ h hh g
 
 theorem vals_block {E : Type} [Field E] [NumberField E] {K : Type} [Field K] (ε : K →+* ℂ) (μ η : HChar E)
     (hμ : AlmostIn ε μ) (hη : η.ValuesIn (1 / 2) ε) {r : ℕ} (hr : Odd r) (μH ηH : Formalism.L2.NC.HC E)
@@ -236,7 +243,7 @@ theorem exists_padicBaseField_integral_places (D : D7) : ∃ c0 : Big D, ∀ (l 
     ∀ K0 : Loc.FinExt l, (c0 l j).1 ≤ K0.1 → ∀ w ∈ placesOver D.host.E l,
       ∃ Bw : LocBridge l D.host.E D.nd.Om (Dec (F := D.host.E) (D.nd.plOm.1 w)) ↥(Loc.OL K0),
         ∀ x, x ∈ D.nd.plOm.1 w ↔ ‖Bw.j x‖ ≤ 1 :=
-  GlobalTheory.T.exists_coefficientField_lower_bounds D
+  _root_.GlobalTheory.CoeffFieldLower.exists_low D
 
 
 
@@ -254,7 +261,7 @@ theorem exists_ringSpec (hA : GlobalTheory.Published.GlobalArtinReciprocity) : �
   haveI hdvr0 : ∀ w, IsDiscreteValuationRing ↥(Loc.OL (K0 w)) := fun w => (hco w).fst
   haveI hfin0 : ∀ w, Module.Finite ℤ_[lw w] ↥(Loc.OL (K0 w)) := fun w => (hco w).snd.1
   haveI hfr0 : ∀ w, IsFractionRing ↥(Loc.OL (K0 w)) ↥(K0 w).1 := fun w => (hco w).snd.2.2.2.2
-  have hclc := fun w k => GlobalTheory.T.exists_cyclotomic_unramified_completed_integers (lw w) (K0 w) (Lw w) k
+  have hclc := fun w k => _root_.GlobalTheory.CycClosure.exists_cyclotomic_integers (lw w) (K0 w) (Lw w) k
   have hmu0 : ∀ w, muK (lw w) 0 = ⊥ := fun w => (hclc w 0).snd.2.2.2.2.1
   have hkt : ∀ w, Kt (lw w) (K0 w) (Lw w) ⊔ muK (lw w) 0 = Kt (lw w) (K0 w) (Lw w) := fun w => by
     rw [hmu0 w, sup_bot_eq]

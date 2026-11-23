@@ -2,15 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PullSpMapComp
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IndEtOfForallFinset
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyNegativeVanishingDegreeZeroStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DivisorSupportCondition
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyNegativeVanishingDegreeZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyOneCechCocycleOfPullbackZeroStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralSurjectionCechDescentTateTwist
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsZeroChains
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentMapIsIntegral
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimplicialCochainClassesBasicPropertiesStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimplicialCochainCoboundaryOfClassZeroStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpecWidePushoutIsoWidePullbackYonedaStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCohomologyZeroLaurentSurjectiveStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsZeroChains
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -287,7 +288,7 @@ theorem tateTwistCohomology_zero_laurent_from_base (q : ℕ) [NeZero q] (T : Typ
 theorem sec_flat (q : ℕ) [NeZero q] (T : Type) [CommRing T] (hq : IsUnit (q : T)) (i : ℤ)
     (s : Sec (tw q i) (Spec (CommRingCat.of (LaurentPolynomial T)))) :
     Sec.res (Spec.map (CommRingCat.ofHom (flat T))) s = s := by
-  obtain ⟨-, e, he, -⟩ := GlobalTheory.T.etaleCohomology_negative_vanishing_degree_zero (ZMod q) (tw q i)
+  obtain ⟨-, e, he, -⟩ := _root_.GlobalTheory.EtC.etale_cohomology_vanishing_negative_degree_zero (ZMod q) (tw q i)
   apply (e _).injective
   rw [← he]
   obtain ⟨y, hy⟩ := tateTwistCohomology_zero_laurent_from_base q T hq i (e _ s)

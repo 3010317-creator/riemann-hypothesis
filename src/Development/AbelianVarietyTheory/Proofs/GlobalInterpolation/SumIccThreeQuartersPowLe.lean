@@ -1,7 +1,9 @@
 module
 
 public import Mathlib.Analysis.SpecialFunctions.Log.Basic
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.WeightedFejerPositivityStatement
+public import Mathlib.Analysis.Complex.Trigonometric
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.WeightedFejerPositivity
+public import Mathlib.Analysis.SpecialFunctions.Complex.Arg
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,7 +50,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.Analysis.SpecialFunctions.Complex.Arg
 import Mathlib.NumberTheory.DirichletCharacter.Basic
 
 @[expose] public section
@@ -83,7 +84,7 @@ theorem powerSum_weighted_ineq {ι : Type} (S : Finset ι) (z : ι → ℂ) (b :
     rw [inv_le_comm₀ hRpos h1x, ← one_div]; exact hRge
   have hRinv0 : 0 ≤ R⁻¹ := by positivity
   set θ : ℝ := Complex.arg (z i₁) with hθ
-  obtain ⟨hF1, hF2⟩ := GlobalTheory.T.neg_one_le_sum_fejer_cos_re_pow_and_lower_bound J θ
+  obtain ⟨hF1, hF2⟩ := _root_.GlobalTheory.weighted_fejer_positivity J θ
   set c : ℕ → ℝ := fun j => (1 - (j : ℝ) / (J + 1)) * (1 + Real.cos (j * θ)) with hc
   set F : ℂ → ℝ := fun w => ∑ j ∈ Finset.Icc 1 J, c j * (w ^ j).re with hF
   have hF1' : ∀ w : ℂ, ‖w‖ ≤ 1 → -1 ≤ F w := hF1

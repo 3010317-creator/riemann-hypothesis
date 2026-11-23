@@ -4,20 +4,20 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.FinalTheo
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.Brauer
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
 public import Mathlib.RingTheory.AdicCompletion.Noetherian
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CocyclePairAlternatingNeOnCycloKernelStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CohomologyUnramifiedLiftStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CupProductCoboundaryModStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CupProductDualTwistIsTwoCocycleUnramifiedStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CupProductUnramifiedClassesVanishesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EulerSystemTameClassScaleEnlargeCoefficientsStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCommutatorDetNonzeroStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GaloisCocycleIntegralAfterScalingStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GreenbergOrdinaryOfVanishingOnCycloKernelStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeightCommutatorInvarianceStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CocyclePairAlternatingNeOnCycloKernel
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CohomologyUnramifiedLift
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CupProductDualTwistIsTwoCocycleUnramified
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EulerSystemTameClassScaleEnlargeCoefficients
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsComm
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GaloisCocycleIntegralAfterScaling
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GreenbergOrdinaryOfVanishingOnCycloKernel
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeightCommutatorInvariance
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IdealEqComap
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LocalCochainsGlueGlobalStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TateDualCocycleCoboundaryOfVanishOnFixingStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LocalCochainsGlueGlobal
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TateDualCocycleCoboundaryOfVanishOnFixing
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ImportsFurtherRest
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CupProductCoboundaryMod
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CupProductUnramifiedClassesVanishes
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -208,9 +208,9 @@ theorem main : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀ (l : ℕ) [Fact
   by_contra hzB
   obtain ⟨c, y, S', hWc, hy, hyc, hyU, hyG, hT⟩ := hES
 
-  obtain ⟨c1, k1, hcc1, hy1int, hy1loc, -, -⟩ := GlobalTheory.T.galois_cocycle_integral_after_scaling l Ω S W c y hN.cont hWc hN.unr hy hyU A
+  obtain ⟨c1, k1, hcc1, hy1int, hy1loc, -, -⟩ := _root_.GlobalTheory.CocInt.integral_after_scaling l Ω S W c y hN.cont hWc hN.unr hy hyU A
   have hWc1 : ∀ s i j, mat W s i j ∈ c1.O := fun s i j => hcc1 (hWc s i j)
-  obtain ⟨c2, k2, hc12, hz2int, hz2loc, hz2triv, -⟩ := GlobalTheory.T.galois_cocycle_integral_after_scaling l Ω S (dual1 W) c1 z
+  obtain ⟨c2, k2, hc12, hz2int, hz2loc, hz2triv, -⟩ := _root_.GlobalTheory.CocInt.integral_after_scaling l Ω S (dual1 W) c1 z
     (cont_dual1 W hN.cont hN.det2) (dual_representation_integral_entries c1 W hWc1 hN.det2) (unr_dual1 S W hN.above hN.unr) hz hzU A
   have hWc2 : ∀ s i j, mat W s i j ∈ c2.O := fun s i j => hc12 (hWc1 s i j)
   set a1 : Qbar l := ((l : ℕ) : Qbar l) ^ k1 with ha1def
@@ -236,7 +236,7 @@ theorem main : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀ (l : ℕ) [Fact
   have ha1O : a1 ∈ c2.O := pow_mem (natCast_mem _ _) _
   have hT' : ∀ n : ℕ, 1 ≤ n → ∀ w : Pl, w ∉ S' → l ^ n ∣ normV w - 1 → ∀ ψ : G ℚ Ω →* Multiplicative (ZMod (l ^ n)),
       KillsMu (normV w) ψ → Function.Surjective ψ → Tame c2 W y' n w ψ :=
-    fun n hn w hw hd ψ hK hs => GlobalTheory.T.eulerSystemTameClass_scale_enlarge_coefficients l Ω W c c2 y n w ψ a1 (le_trans hcc1 hc12) ha1O (hT n hn w hw hd ψ hK hs)
+    fun n hn w hw hd ψ hK hs => _root_.GlobalTheory.Ord2.tame_scale l Ω W c c2 y n w ψ a1 (le_trans hcc1 hc12) ha1O (hT n hn w hw hd ψ hK hs)
   obtain ⟨xA, hxA, hxAe⟩ := hz2triv hzT
 
   have hloc : ∀ n : ℕ, ∀ v ∈ S, ∃ B : ValuationSubring Ω, IsPlaceOver B v ∧
@@ -247,13 +247,13 @@ theorem main : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀ (l : ℕ) [Fact
       have hv : v = v0 := place_eq (Fact.out : l.Prime) hlv hlv0
       subst hv
       refine ⟨A, hAv0, ?_⟩
-      exact GlobalTheory.T.cup_product_coboundary_mod l Ω c2 n W (Dec (F := ℚ) A) y' z' hN.cont hWc2 hN.det2
+      exact _root_.GlobalTheory.Ord2.CupCob.cup_cob l Ω c2 n W (Dec (F := ℚ) A) y' z' hN.cont hWc2 hN.det2
         (isIntegralCocycleOneModPow_of_integral_cocycle c2 n W _ hy' hy'int) (isIntegralCocycleOneModPow_of_integral_cocycle c2 n (dual1 W) _ hz' hz'int)
         (Or.inr ⟨xA, hxA, fun s hs => cv_of_eq n (hxAe s hs)⟩)
     · obtain ⟨B, hB, -⟩ := hyU v hlv
       obtain ⟨x1, hx1, hx1e⟩ := hy1loc v hlv B hB
       obtain ⟨x2, hx2, hx2e⟩ := hz2loc v hlv B hB
-      exact ⟨B, hB, GlobalTheory.T.cupProduct_unramifiedClasses_vanishes hLit l Ω c2 n W v B y' z' hN.cont hWc2 hN.det2 hB hlv
+      exact ⟨B, hB, _root_.GlobalTheory.Ord2.UnrCup.cup_unr_cob hLit l Ω c2 n W v B y' z' hN.cont hWc2 hN.det2 hB hlv
         (isIntegralCocycleOneModPow_of_integral_cocycle c2 n W _ hy' hy'int) (isIntegralCocycleOneModPow_of_integral_cocycle c2 n (dual1 W) _ hz' hz'int)
         ⟨x1, fun i => hc12 (hx1 i), fun s hs => cv_of_eq n (hx1e s hs)⟩
         ⟨x2, hx2, fun s hs => cv_of_eq n (hx2e s hs)⟩⟩
@@ -262,18 +262,18 @@ theorem main : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀ (l : ℕ) [Fact
     by_contra h
     push_neg at h
     apply hyG
-    refine GlobalTheory.T.greenbergOrdinary_of_vanishing_on_cycloKernel l Ω e S A W hN y hy fun g hg => ?_
+    refine _root_.GlobalTheory.Ord2.GrOfKill.gr_of_vanish_on_trivial l Ω e S A W hN y hy fun g hg => ?_
     have := h g hg
     exact (smul_eq_zero.mp this).resolve_left ha1
   have hzN : ∃ g ∈ N0g W, z' g ≠ 0 := by
     by_contra h
     push_neg at h
     apply hzB
-    refine GlobalTheory.T.tateDual_cocycle_coboundary_of_vanish_on_fixing l Ω e S A W hN z hz fun g hg => ?_
+    refine _root_.GlobalTheory.Ord2.h1dual_of_vanish_fix l Ω e S A W hN z hz fun g hg => ?_
     have := h g hg
     exact (smul_eq_zero.mp this).resolve_left ha2
-  obtain ⟨g, hg, h, hh, hne⟩ := GlobalTheory.T.cocycle_pair_alternating_ne_on_cycloKernel l Ω e S A W hN y' hy' z' hz' hyN hzN
-  obtain ⟨φ, hφ, hde⟩ := GlobalTheory.T.exists_commutator_det_nonzero l Ω e S A W hN
+  obtain ⟨g, hg, h, hh, hne⟩ := _root_.GlobalTheory.Ord2.exists_om_ne_swap_on_N0g l Ω e S A W hN y' hy' z' hz' hyN hzN
+  obtain ⟨φ, hφ, hde⟩ := _root_.GlobalTheory.CommutingExistence.main l Ω e S A W hN
   have hφH : φ ∈ H0g W := commutator_det_one_le W hφ
   have hgW : W g = 1 := (Subgroup.mem_inf.mp hg).2
   have hhW : W h = 1 := (Subgroup.mem_inf.mp hh).2
@@ -290,12 +290,12 @@ theorem main : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀ (l : ℕ) [Fact
 
   have key : ∀ n : ℕ, 1 ≤ n → ‖de ^ 2 * de'‖ ≤ ‖((l : ℕ) : Qbar l) ^ n‖ := by
     intro n hn
-    obtain ⟨u, hu, huint, huS, hucup⟩ := GlobalTheory.T.local_cochains_glue_global hLit l Ω c2 n S (cup W y' z') hN.l_odd hN.above
-      (GlobalTheory.T.cupProductDualTwist_isTwoCocycle_unramified l Ω c2 n S W y' z' hN.cont hWc2 hN.det2 hN.above hN.unr hy' hz' hy'int hz'int hy'U hz'U)
+    obtain ⟨u, hu, huint, huS, hucup⟩ := _root_.GlobalTheory.Ord2.TwistTriv.coboundary_of_locTriv hLit l Ω c2 n S (cup W y' z') hN.l_odd hN.above
+      (_root_.GlobalTheory.Ord2.cupProductDualTwist_isTwoCocycle_unramified_alt l Ω c2 n S W y' z' hN.cont hWc2 hN.det2 hN.above hN.unr hy' hz' hy'int hz'int hy'U hz'U)
       (hloc n)
-    have hr := GlobalTheory.T.cohomology_unramified_lift hLit l Ω e S A W hN c2 y' z' u S' n hn hWc2 hy' hz' hy'int hz'int hy'U hz2loc
+    have hr := _root_.GlobalTheory.Ord2.ht_vanish_commutator hLit l Ω e S A W hN c2 y' z' u S' n hn hWc2 hy' hz' hy'int hz'int hy'U hz2loc
       ⟨xA, hxA, hxAe⟩ (hT' n hn) hu huint huS hucup
-    have hc := GlobalTheory.T.height_commutator_invariance l Ω n c2 W y' z' u hWc2 hy' hz' hucup φ hφH g hg h hh
+    have hc := _root_.GlobalTheory.Ord2.ht_commutator l Ω n c2 W y' z' u hWc2 hy' hz' hucup φ hφH g hg h hh
     have h0 := hr φ hφ
     have h1 := hr _ hφ1
     rw [hmat] at h1

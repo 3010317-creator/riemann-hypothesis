@@ -3,9 +3,13 @@ module
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Mathlib.RingTheory.Smooth.Basic
 public import Mathlib.RingTheory.Spectrum.Prime.Topology
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PreirreducibleFibreStandardEtaleSpreadsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PreirreducibleTensorLocalizationAwayStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RangeComapIncludeRightFieldStatement
+public import Mathlib.RingTheory.Etale.StandardEtale
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PreirreducibleFibreStandardEtaleSpreads
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PreirreducibleTensorLocalizationAway
+public import Mathlib.RingTheory.Spectrum.Prime.RingHom
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RangeComapIncludeRightField
+public import Mathlib.RingTheory.Unramified.LocalStructure
+public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -28,7 +32,6 @@ import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.SimpleRing.Principal
-public import Mathlib.RingTheory.Unramified.LocalStructure
 import Mathlib.Tactic.Echelon.Zsqrtd
 import Mathlib.Tactic.Inclusion.Extension.Core.Core
 import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
@@ -53,7 +56,6 @@ import Std.Tactic.BVDecide.Normalize.Prop
 import Mathlib.CategoryTheory.Monoidal.Cartesian.Basic
 import Mathlib.CategoryTheory.Monoidal.Category
 import Mathlib.CategoryTheory.Monoidal.Mon
-public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
 import Mathlib.Topology.Sheaves.Presheaf
 
 @[expose] public section
@@ -76,8 +78,8 @@ theorem exists_basicOpen_fibres_preirreducible :
   intro A B _ _ _ hsm q Ω _ _ _ hq hΩ
   obtain ⟨b, hbq, n, _, hST, hSE⟩ :=
     Algebra.IsSmoothAt.exists_isStandardEtale_mvPolynomial (R := A) (p := q.asIdeal)
-  have hΩb := GlobalTheory.T.preirreducible_tensor_localization_away A B b Ω hΩ
-  obtain ⟨a, I, haΩ, hIΩ, hall⟩ := GlobalTheory.T.preirreducible_fibre_standardEtale_spreads A (Localization.Away b) n hSE Ω hΩb
+  have hΩb := _root_.GlobalTheory.preirreducibleSpace_primeSpectrum_tensor_localizationAway A B b Ω hΩ
+  obtain ⟨a, I, haΩ, hIΩ, hall⟩ := _root_.GlobalTheory.preirreducibleSpace_fibre_standardEtale_spreads A (Localization.Away b) n hSE Ω hΩb
   have memq : ∀ x : A, algebraMap A B x ∈ q.asIdeal ↔ algebraMap A Ω x = 0 := by
     intro x
     have := congrArg (x ∈ ·) hq
@@ -99,7 +101,7 @@ theorem exists_basicOpen_fibres_preirreducible :
     (PrimeSpectrum.continuous_comap _).continuousOn
   convert himg using 1
   rw [Set.image_univ, PrimeSpectrum.comap_comp, Set.range_comp,
-    GlobalTheory.T.range_comap_includeRight_eq_comap_eq_ker, hker]
+    _root_.GlobalTheory.range_comap_includeRight_field, hker]
   ext r
   simp only [Set.mem_setOf_eq, Set.mem_image]
   constructor

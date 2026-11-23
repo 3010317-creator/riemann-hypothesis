@@ -4,11 +4,12 @@ public import Development.AutomorphicSpectrum.Definitions.AdelicLattices.FactPri
 public import Mathlib.Algebra.AffineMonoid.Basic
 public import Mathlib.NumberTheory.NumberField.Discriminant.Basic
 public import Mathlib.RingTheory.DedekindDomain.Different
-public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.DifferentIdealLogSumRootDiscriminantStatement
-public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.LogIdealSupportFiniteStatement
-public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.LogNormsOfNonzeroAdelicStatement
-public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.ProductFormulaLogNormsStatement
-public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.SumEmbeddingsBaseChangeStatement
+public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.DifferentIdealLogSumRootDiscriminant
+public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.LogIdealSupportFinite
+public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.LogNormsOfNonzeroAdelic
+public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.ProductFormulaLogNorms
+public import Mathlib.NumberTheory.NumberField.InfinitePlace.Embeddings
+public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.SumEmbeddingsBaseChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -104,9 +105,9 @@ theorem deg_of_local_formulas : ∀ (k E : Type) [Field k] [NumberField k] [Fiel
     have h2 : 2 * Real.log ‖j (τ r)‖ = Real.log ‖((d : ℕ) : ℂ_[ℓ])‖ := two_log_norm (j.comp τ) hr
     linear_combination h1 + (((p : ℝ) - q) / 2) * h2
   constructor
-  · have S1 := GlobalTheory.T.log_norms_of_nonzero_adelic k ρ hρ
-    have S4 := GlobalTheory.T.log_norms_of_nonzero_adelic k (d : k) hdk
-    have S3 := GlobalTheory.T.logIdeal_support_finite E (differentIdeal ℤ (𝓞 E)) differentIdeal_ne_bot
+  · have S1 := _root_.GlobalTheory.CompanionTheory.Ar.Fl.LogNorms.isAdelic_ofElt k ρ hρ
+    have S4 := _root_.GlobalTheory.CompanionTheory.Ar.Fl.LogNorms.isAdelic_ofElt k (d : k) hdk
+    have S3 := _root_.GlobalTheory.CompanionTheory.Ar.Fl.finite_logIdeal_ne_zero E (differentIdeal ℤ (𝓞 E)) differentIdeal_ne_bot
     refine (((S1.union S4).union S3).union hfin).subset ?_
     rintro ℓ ⟨j, hj⟩
     by_contra h
@@ -133,8 +134,8 @@ theorem deg_of_local_formulas : ∀ (k E : Type) [Field k] [NumberField k] [Fiel
         + ((-(m / e) * (((p : ℝ) + q) / 2)) * (∑ j : E →+* ℂ_[ℓ], logIdeal (j.comp (algebraMap (𝓞 E) E)) (differentIdeal ℤ (𝓞 E)))
         + (((p : ℝ) + q) / 2) * (LogNorms.ofElt (d : k)).finSum ℓ)) := by
       intro ℓ
-      have f1 := GlobalTheory.T.sum_embeddings_base_change E k ℂ_[ℓ] τ (fun i => Real.log ‖i (t ℓ)‖)
-      have f2 := GlobalTheory.T.sum_embeddings_base_change E k ℂ_[ℓ] τ
+      have f1 := _root_.GlobalTheory.CompanionTheory.Ar.Fl.finrank_mul_sum_comp_eq E k ℂ_[ℓ] τ (fun i => Real.log ‖i (t ℓ)‖)
+      have f2 := _root_.GlobalTheory.CompanionTheory.Ar.Fl.finrank_mul_sum_comp_eq E k ℂ_[ℓ] τ
         (fun i => logIdeal (i.comp (algebraMap (𝓞 E) E)) (differentIdeal ℤ (𝓞 E)))
       have g1 : ∑ j : E →+* ℂ_[ℓ], (Real.log ‖j (t ℓ)‖ + Real.log ‖j (t' ℓ)‖ + Real.log ‖j a‖) =
           ∑ j : E →+* ℂ_[ℓ], -((p : ℝ) + q) * logIdeal (j.comp (algebraMap (𝓞 E) E)) (differentIdeal ℤ (𝓞 E)) :=
@@ -160,10 +161,10 @@ theorem deg_of_local_formulas : ∀ (k E : Type) [Field k] [NumberField k] [Fiel
       have hae : (LogNorms.ofElt a).finSum ℓ = ∑ j : E →+* ℂ_[ℓ], Real.log ‖j a‖ := rfl
       rw [h0, hDd, hT, hD, hae]
       linear_combination (-(m / e) / 2) * g1
-    have hA := GlobalTheory.T.product_formula_log_norms k ρ hρ
-    have hE := GlobalTheory.T.product_formula_log_norms E a ha
-    have hG := GlobalTheory.T.product_formula_log_norms k (d : k) hdk
-    have hΔ := GlobalTheory.T.different_ideal_log_sum_root_discriminant E
+    have hA := _root_.GlobalTheory.CompanionTheory.Ar.Fl.product_formula_embeddings k ρ hρ
+    have hE := _root_.GlobalTheory.CompanionTheory.Ar.Fl.product_formula_embeddings E a ha
+    have hG := _root_.GlobalTheory.CompanionTheory.Ar.Fl.product_formula_embeddings k (d : k) hdk
+    have hΔ := _root_.GlobalTheory.CompanionTheory.Ar.Fl.different_sum_eq_neg_finrank_mul_log_rootDiscr E
     have hfs : ∑ᶠ ℓ, N.finSum ℓ = 1 * (∑ᶠ ℓ, (LogNorms.ofElt ρ).finSum ℓ)
         + (((m / e) * (1 / 2)) * (∑ᶠ ℓ, (LogNorms.ofElt a).finSum ℓ)
         + ((-(m / e) * (((p : ℝ) + q) / 2)) * (∑ᶠ ℓ : Nat.Primes, ∑ j : E →+* ℂ_[ℓ], logIdeal (j.comp (algebraMap (𝓞 E) E)) (differentIdeal ℤ (𝓞 E)))
@@ -181,7 +182,7 @@ theorem deg_of_local_formulas : ∀ (k E : Type) [Field k] [NumberField k] [Fiel
         nsmul_eq_mul, hcardC, ← Finset.sum_div]
     have hAτ : ∑ s : k →+* ℂ, Real.log ‖s (τ a)‖ = (m / e) * ∑ s : E →+* ℂ, Real.log ‖s a‖ := by
       rw [div_mul_eq_mul_div, eq_div_iff he, mul_comm]
-      exact GlobalTheory.T.sum_embeddings_base_change E k ℂ τ (fun i => Real.log ‖i a‖)
+      exact _root_.GlobalTheory.CompanionTheory.Ar.Fl.finrank_mul_sum_comp_eq E k ℂ τ (fun i => Real.log ‖i a‖)
     have hdinf : ∑ s : k →+* ℂ, Real.log ‖s (d : k)‖ = m * Real.log d := by
       simp only [map_natCast, Complex.norm_natCast, Finset.sum_const, Finset.card_univ,
         nsmul_eq_mul, hcardC]

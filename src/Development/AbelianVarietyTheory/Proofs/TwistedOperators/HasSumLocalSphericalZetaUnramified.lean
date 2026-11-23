@@ -4,7 +4,6 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConstMemB
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.PairwiseDisjointCell
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InnerProductFormula
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.BcParamEqOfSatUEq
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCompactAdele
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsDualFamilyOfIsLattice
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIsSplitChartOfBasis
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIsSplitChartOne
@@ -13,13 +12,17 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsSatVecU
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RamificationIdxEqOneOfIsSquare
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjLocalTwistedLFactorRatioInertEqZetaSumStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjLocalTwistedLFactorRatioSplitEqZetaSumStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasSumQuotientTransportStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasSumQuotientTransport
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasSumUnramifiedZetaSumUnitaryInertStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SatakeParameterGLStarEqInvOfUnitarisableStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatVecUOfIsSphericalU
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SatakeParameterGLStarEqInvOfUnitarisable
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SphericalZetaKernelGLRightInvariantIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitarySatakeTransformStarParameterEqOfUnitarisaStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitarySatakeTransformStarParameterEqOfUnitarisa
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnramifiedQuadraticCharSignSplitEqOneInertEqNegStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnramifiedZetaSumGLCosetsStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.TrivialParameterBound
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCompactAdele
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,7 +61,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.TrivialParameterBound
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.RealLowestKTypeCoeffSquareIntegrable
 
 @[expose] public section
@@ -78,7 +80,7 @@ namespace GlobalTheory.LocZeta
 theorem hasSum_quot_of_equiv {G H : Type} [Group G] [Group H] (e : G ≃* H) {K : Subgroup G} {K' : Subgroup H}
     (hK : ∀ g, g ∈ K ↔ e g ∈ K') {f : G → ℂ} (hf : ∀ g, ∀ k ∈ K, f (g * k) = f g) {s : ℂ}
     (h : HasSum (fun b : H ⧸ K' => f (e.symm b.out)) s) : HasSum (fun a : G ⧸ K => f a.out) s :=
-  GlobalTheory.T.hasSum_quotient_of_hasSum_mulEquiv_quotient G H e K K' hK f hf s h
+  _root_.GlobalTheory.hasSum_quotient_transport G H e K K' hK f hf s h
 
 theorem kerGL_mul_right {E : Type} [Field E] [NumberField E] {w : HeightOneSpectrum (𝓞 E)} {r N : ℕ} {z : ℂˣ}
     {φ : GL (Fin r) (w.adicCompletion E) → ℂ} (hφ : KerGL w N z φ) (g k : GL (Fin r) (w.adicCompletion E))
@@ -177,7 +179,7 @@ theorem hasSum_localZeta : GlobalTheory.Published.UnramifiedDoublingGL → ∀ (
       ConjPlace.eq_map_inv_of_isParamVec hc hJ hd hne (hB w h).1 (hB w' h').1
     have hm : val χ w * val χ w' = 1 := ResEta.val_mul_val h2 hχ' hne h h' (hU w h) (hU w' h')
     have hs : (B w).map star = (B w).map (·⁻¹) :=
-      GlobalTheory.T.satakeParameterGL_star_eq_inv_of_unitarisable _ w _ _ _ x (B w) (hρu.imp fun _ hb => ⟨hb.1, hb.2.1, fun g => hb.2.2 (e.symm g)⟩) hsat
+      _root_.GlobalTheory.LFun.UnitaryParam.map_star_eq_map_inv _ w _ _ _ x (B w) (hρu.imp fun _ hb => ⟨hb.1, hb.2.1, fun g => hb.2.2 (e.symm g)⟩) hsat
     have hk := kerGL_conj ((hφ w h).1 hv e he)
     rw [hnV] at hk
     have hbd : ∀ β ∈ B w, ‖(β : ℂ)‖ ≤ (qV D.host.E w : ℝ) ^ (((V.rank : ℝ) - 1) / 2) ∧
@@ -209,7 +211,7 @@ theorem hasSum_localZeta : GlobalTheory.Published.UnramifiedDoublingGL → ∀ (
     have hstarB : (B w).map star = B w := by
       rw [hBw]
       have := bcParam_eq_of_satU_eq (α := fun i => star (α i)) hUI
-        (GlobalTheory.T.unitarySatakeTransform_star_parameter_eq_of_unitarisable _ ϖ c _ _ hUI _ _ x α (hρu.imp fun _ hb => ⟨hb.1, hb.2.1, fun g => hb.2.2 (e.symm g)⟩) hsat)
+        (_root_.GlobalTheory.LFun.ConjParam.satU_star_eq _ ϖ c _ _ hUI _ _ x α (hρu.imp fun _ hb => ⟨hb.1, hb.2.1, fun g => hb.2.2 (e.symm g)⟩) hsat)
       conv_rhs => rw [← this]
       simp [bcParam, star_inv, Function.comp_def]
     have htb : GlobalTheory.IndefiniteRowSideFullHecke.TrivialParameterBound.TrivialBound (qV D.host.F v) V.rank α := by

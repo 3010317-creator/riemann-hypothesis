@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LineBundleGlobalSectionsDimCongrPicardClass
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AsymptoticRiemannRochAmpleCoherentStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AsymptoticRiemannRochAmpleCoherent
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowLeGlobalSectionsDimLineBundlePow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -121,7 +121,7 @@ theorem topSelf_pos : ∀ (k : Type) [Field k] [Infinite k] (X : Scheme.{0}) [Is
     unfold GlobalTheory.QCoh.suppDim
     rw [← hD]
     exact topologicalKrullDim_subspace_le _ _
-  obtain ⟨C, m₀, hb⟩ := GlobalTheory.T.asymptotic_riemannRoch_ample_coherent k X hp D (structureModule X) hsupp A hA
+  obtain ⟨C, m₀, hb⟩ := _root_.GlobalTheory.abs_factorial_mul_hdim_zero_twist_sub_le_of_isAmpleLB k X hp D (structureModule X) hsupp A hA
   rw [topSelf_def]
   exact pos_of_bound hc hf hb
 

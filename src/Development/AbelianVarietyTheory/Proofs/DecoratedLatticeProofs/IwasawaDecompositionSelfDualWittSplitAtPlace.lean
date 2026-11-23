@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsFlagStabiliserMoveLatticeSplitWittStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittCoreEmbeddingPreservesSupportedUnitarySubgro
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsFlagStabiliserMoveLatticeSplitWitt
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlagStabilizerEqUnipotentTorusLeviAtPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsSelfDualLatticeAtPlaceLatticeCompletionStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualLatticesSingleOrbitTamePlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsSelfDualLatticeAtPlaceLatticeCompletion
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualLatticesSingleOrbitTamePlace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,8 +56,8 @@ variable {D : D7}
 
 theorem flag_times_stab : ∀ (D : D7) (S S₀ : HSp D) (ρ : ℕ) (d : HypDec S S₀ ρ) (L : Lat S) (L₀ : Lat S₀) (v : Pl D), Tame D v → IsSelfDualC S L → IsSelfDualC S₀ L₀ → MonoAt d L L₀ v → ∀ h ∈ grpAt S (· = v), ∃ p ∈ grpAt S (· = v), (∃ a : Mx D ρ ρ, (∀ i j, j < i → a i j = 0) ∧ mt S p ⬝ d.jX = d.jX ⬝ a) ∧ Moves S (p⁻¹ * h) L L (· = v) := by
   intro D S S₀ ρ d L L₀ v hT hL hL₀ hM h hh
-  obtain ⟨q, hq, ⟨a, ha, hqa⟩, Λ₀, hΛ, hz⟩ := GlobalTheory.T.exists_flag_stabiliser_move_lattice_split_witt D S S₀ ρ d L L₀ v hT (GlobalTheory.T.isSelfDualLatticeAtPlace_latticeCompletion D S L v hL) hM h hh
-  obtain ⟨γ, hγ, hγL⟩ := GlobalTheory.T.selfDualLattices_single_orbit_tamePlace D S₀ v _ Λ₀ hT (GlobalTheory.T.isSelfDualLatticeAtPlace_latticeCompletion D S₀ L₀ v hL₀) hΛ
+  obtain ⟨q, hq, ⟨a, ha, hqa⟩, Λ₀, hΛ, hz⟩ := _root_.GlobalTheory.IwaPlace.iwasawa_flag_move D S S₀ ρ d L L₀ v hT (_root_.GlobalTheory.IwaPlace.LocSD.isSDAt_latV D S L v hL) hM h hh
+  obtain ⟨γ, hγ, hγL⟩ := _root_.GlobalTheory.IwaOrbit.selfDual_orbit D S₀ v _ Λ₀ hT (_root_.GlobalTheory.IwaPlace.LocSD.isSDAt_latV D S₀ L₀ v hL₀) hΛ
   refine ⟨q * d.emb0 γ, mul_mem hq (wittCoreEmbedding_preserves_supportedUnitarySubgroup d hγ), ⟨a, ha, ?_⟩, ?_⟩
   · rw [mt_mul, Matrix.mul_assoc, d.wittDecomp_anisotropicEmbedding_inclX, hqa]
   · intro y hy

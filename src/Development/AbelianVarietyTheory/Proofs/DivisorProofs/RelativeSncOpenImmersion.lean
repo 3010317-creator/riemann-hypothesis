@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsEtCoord
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsRegularFnIffOfIsAffineOpen
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsEtaleCoordinatesOnOpenPullOpenImmersionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsEtaleCoordinatesOnOpenPullOpenImmersion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,7 +66,7 @@ theorem relSnc_pull_of_isOpenImmersion : ∀ (R : Type) [CommRing R] (X Y : Sche
   refine ⟨{ U := W
             affine := hW
             t := fun a => (e.appLE C.U W hle).hom (C.t a)
-            etale := GlobalTheory.T.isEtaleCoordinatesOnOpen_pull_openImmersion R X Y f e C.U W hle d C.t C.affine hW C.etale
+            etale := _root_.GlobalTheory.LogPair.isEtCoord_openImmersion R X Y f e C.U W hle d C.t C.affine hW C.etale
             c := fun i _ => C.c i
             le := fun i => (hle.trans (e.preimage_mono (C.le i))).trans
               (Cartier.pull_U (L i) e (fun _ => C.c i)).ge

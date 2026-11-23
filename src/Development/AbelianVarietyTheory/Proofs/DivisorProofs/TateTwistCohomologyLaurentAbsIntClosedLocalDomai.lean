@@ -3,8 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DivisorSupportCondition
 public import Mathlib.Tactic.Linter.HaveILetI
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyIndEtaleBaseChangeStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAlgClosedFractionRingOfMonicPolynomialsHaveRoo
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCohomologyLaurentPolynomialOfIsAlgCloseStatement
+import Development.AbelianVarietyTheory.Definitions.Divisors.GalMapMul
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAlgClosedFractionRing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -90,7 +91,7 @@ theorem main : ∀ (q : ℕ) [NeZero q] (T : Type) [CommRing T] [IsDomain T] [Is
     ∀ n i : ℤ, (2 ≤ n → Subsingleton (Ht q (sp (LaurentPolynomial T)) n i)) ∧
       Nonempty (Ht q (sp (LaurentPolynomial T)) 1 i ≃+ ZMod q) := by
   intro q _ T _ _ _ hA hq n i
-  haveI : IsAlgClosed (FractionRing T) := GlobalTheory.isAlgClosed_fractionRing_of_AIC T hA
+  haveI : IsAlgClosed (FractionRing T) := _root_.GlobalTheory.FractionRingRootRange.isAlgClosed_fractionRing T hA
   have hqK : IsUnit (q : FractionRing T) := by
     simpa using hq.map (algebraMap T (FractionRing T))
   obtain ⟨h2, _⟩ := GlobalTheory.T.tateTwistCohomology_laurentPolynomial_of_isAlgClosed q (FractionRing T) hqK n i

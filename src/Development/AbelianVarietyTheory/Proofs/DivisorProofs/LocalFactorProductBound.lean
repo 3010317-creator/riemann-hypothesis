@@ -3,14 +3,16 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EmbGLMemRealSU
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FundamentalDomainPointBound
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.ExistsMulMulConjTransposeEqOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalFactorLowerBoundStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalFactorLowerBound
+public import Mathlib.Analysis.PSeries
+public import Mathlib.NumberTheory.EulerProduct.Basic
+public import ReciprocityTheory.NeutralLocalFields.LocalFieldComparison.ExistsPrimeAbsNormOfHasDirichletDensity
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Ring.IsFormallyReal
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-public import Mathlib.Analysis.PSeries
 import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
@@ -19,7 +21,6 @@ import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.NumberTheory.Chebyshev
-public import Mathlib.NumberTheory.EulerProduct.Basic
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
@@ -52,7 +53,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.NeutralLocalFields.LocalFieldComparison.ExistsPrimeAbsNormOfHasDirichletDensity
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.ArakelovInstances.IsStrictDom
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.LiftFactorization
 
@@ -156,7 +156,7 @@ theorem tprod_locFactor_bound : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   have hloc : ∀ v, g (Ideal.absNorm v.asIdeal) ≤ locFactor E r v := by
     intro v
     by_cases hp : (v.asIdeal.map (algebraMap (𝓞 (maximalRealSubfield E)) (𝓞 E))).IsPrime
-    · exact GlobalTheory.T.local_factor_lower_bound E r v (by omega) hp
+    · exact _root_.GlobalTheory.SUVol.prod_le_locFactor_of_isPrime E r v (by omega) hp
     · exact le_locFactor_of_not_prime E r v (by omega) hp
   let pv : HeightOneSpectrum (𝓞 (maximalRealSubfield E)) → ℕ := ReciprocityTheory.Neutral.Bridge.ratPrimeBelow
   have hN : ∀ v : HeightOneSpectrum (𝓞 (maximalRealSubfield E)),

@@ -1,10 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoboundaryOfPullbackNmulCoboundaryStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFormalChartQuotientByIdealWithPrimePowStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCommFormalGroupLawMapNatMultipleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapCoboundarySwapPullbackCommuteStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoboundaryOfPullbackNmulCoboundary
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ToBaseChangePtsBijective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFormalChartQuotientByIdealWithPrimePow
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCommFormalGroupLawMapNatMultiple
+public import Development.AbelianVarietyTheory.Definitions.Divisors.FormalCoboundarySmul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapCoboundarySwapPullbackCommute
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MvPowerSeriesLiftQuotient
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -44,7 +46,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ToBaseChangePtsBijective
 
 @[expose] public section
 
@@ -73,11 +74,11 @@ theorem coboundary_mod_p : ∀ (p : ℕ) [Fact p.Prime] (O : Type) [CommRing O] 
   intro p _ O _ G d c κ B y hκ0 hcoc hdiv hB
   set I : Ideal O := Ideal.span {(p : O)} with hI
   set r : O →+* O ⧸ I := Ideal.Quotient.mk I with hr
-  obtain ⟨c', hlaw, hev, -⟩ := GlobalTheory.T.exists_formalChart_quotient_by_ideal_with_primePow p O G d c I 1 (by
+  obtain ⟨c', hlaw, hev, -⟩ := _root_.GlobalTheory.QLog.ChartRed.exists_chart p O G d c I 1 (by
     rw [pow_one]; exact Ideal.mem_span_singleton_self _)
   have hconst := c.isLaw.const
-  obtain ⟨hm1, hm2, hm3, -, hm5⟩ := GlobalTheory.T.map_coboundary_swap_pullback_commute O d c.μ hconst (O ⧸ I) r
-  obtain ⟨-, hn⟩ := GlobalTheory.T.isCommFormalGroupLaw_map_natMultiple O d c.μ c.isLaw (O ⧸ I) r
+  obtain ⟨hm1, hm2, hm3, -, hm5⟩ := _root_.GlobalTheory.Katz.map_cob_swap_pull O d c.μ hconst (O ⧸ I) r
+  obtain ⟨-, hn⟩ := _root_.GlobalTheory.isLaw_map_nmul O d c.μ c.isLaw (O ⧸ I) r
   have hnc : ∀ i, constantCoeff (nmul c.μ p i) = 0 := fun i => (hn p i).1
   have hcoc' : IsCoc (fun i => map r (c.μ i)) (map r κ) :=
     ⟨by rw [← hm2, hcoc.1, map_zero], by rw [← hm3, hcoc.2]⟩
@@ -96,7 +97,7 @@ theorem coboundary_mod_p : ∀ (p : ℕ) [Fact p.Prime] (O : Type) [CommRing O] 
     exact Ideal.Quotient.eq_zero_iff_mem.2 (Ideal.mem_span_singleton_self _)
   have hev0 : c'.ev 1 (map r B) = 0 := by
     rw [hev, hB, toBase_app, ← TensorProduct.smul_tmul, hp1, TensorProduct.zero_tmul]
-  obtain ⟨s, hs⟩ := GlobalTheory.T.exists_coboundary_of_pullback_nmul_coboundary p (O ⧸ I) d (G.baseChange (O ⧸ I)) c' _ hlaw (map r κ) (map r B)
+  obtain ⟨s, hs⟩ := _root_.GlobalTheory.Katz.exists_coboundary_of_pullback_nmul_coboundary' p (O ⧸ I) d (G.baseChange (O ⧸ I)) c' _ hlaw (map r κ) (map r B)
     hcoc' heq hev0
   have hs0 : constantCoeff s = 0 := by
     have h1 : constantCoeff (map r κ) = 0 := by

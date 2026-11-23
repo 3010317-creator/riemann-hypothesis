@@ -4,10 +4,14 @@ public import Development.AbelianVarietyTheory.Definitions.Degenerations.LocThet
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.BaseFacts
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.MemNonzeroLocusIffPowFn
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsInvertibleMatrixChangeOfSpanEqStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsLineBundleSectionsOfUnimodularTuplesStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.InducedModelMorphismCompStructureMap
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsInvertibleMatrixChangeOfSpanEq
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsLineBundleSectionsOfUnimodularTuples
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUnitCharts
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsAffineOpenOfLocalSectionCombinationLocusStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.PullChartIsLB
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsAffineOpenOfLocalSectionCombinationLocus
+public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAmpleLBOfRelAmpleOfIsAffine
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,7 +52,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAmpleLBOfRelAmpleOfIsAffine
 
 @[expose] public section
 
@@ -197,7 +200,7 @@ theorem exists_bundle (Q : Clos ρ M U₀ EE) (hs : Function.Surjective Q.P.hom)
   have hne : ∀ (a : A) (K : Type) [Field K] (y : Sp K ⟶ Q.P.left), ⊤ ≤ y ⁻¹ᵁ V a →
       ((W ⊓ Q.W a.1 : M.Z.Opens) : Set M.Z).Nonempty := fun a K _ y h =>
     ⟨_, le1 a (h (x := IsLocalRing.closedPoint K) trivial)⟩
-  obtain ⟨g, T, hT⟩ := GlobalTheory.T.exists_lineBundle_sections_of_unimodular_tuples Q.P.left A S.J V t (fun a p hp => by
+  obtain ⟨g, T, hT⟩ := _root_.GlobalTheory.TupleGlue.exists_sections Q.P.left A S.J V t (fun a p hp => by
     obtain ⟨K, _, y, -, hy⟩ := exists_pt p
     obtain ⟨y, rfl⟩ := exists_lift y _ ((hy _).2 (le0 a hp.1))
     have h := (hy _).2 hp
@@ -261,7 +264,7 @@ theorem cover_affine (Q : Clos ρ M U₀ EE) {W : M.Z.Opens} (hW : IsAffineOpen 
     exact TopologicalSpace.Opens.mem_iSup.2
       ⟨i, (hy _).1 ((CrdCalc.crd_isUnit_iff i (hT l K y w h hw)).1 (Ne.isUnit hi))⟩
   · have := Q.proper
-    refine GlobalTheory.T.isAffineOpen_of_local_sectionCombination_locus Q.P.left M.Z Q.P.hom S.J _ W hW (hle i) fun z _ => ?_
+    refine _root_.GlobalTheory.ZH.CombLocus.isAffineOpen_of_comb Q.P.left M.Z Q.P.hom S.J _ W hW (hle i) fun z _ => ?_
     obtain ⟨l, hl⟩ := TopologicalSpace.Opens.mem_iSup.1 (Q.cover.ge (Set.mem_univ z))
     refine ⟨Q.W l, _, Q.σ l, m l i, hl, Q.aff l, hσ l, fun k => ((Q.imm l).2 k trivial).1, fun K _ y w h hw => ?_⟩
     exact (CrdCalc.crd_isUnit_iff i (hT l K y w h hw)).symm.trans isUnit_iff_ne_zero
@@ -277,7 +280,7 @@ theorem secO : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBa
   rintro o Ω _ _ _ _ S ρ M U₀ EE Q ex Z ⟨e, he, hu₀, hφ⟩ - hAb hind W b hW hb
   have hs : Function.Surjective Q.P.hom := fun z =>
     ⟨(ex.e ≫ Q.G.ι) z, by rw [← Scheme.Hom.comp_apply, Category.assoc, ex.e_sec]; rfl⟩
-  choose m m' hu hm using fun l => GlobalTheory.T.exists_invertible_matrix_change_of_span_eq o Ω M S.J W (Q.W l) b (Q.B l) (Q.c l)
+  choose m m' hu hm using fun l => _root_.GlobalTheory.ZH.exists_matrix_mul_eq_one_of_span_eq o Ω M S.J W (Q.W l) b (Q.B l) (Q.c l)
     (fun z hz => (hb z hz.1).symm.trans (Q.basis l z hz.2)) (Q.c_inv l)
   obtain ⟨L, T, hle, hT⟩ := exists_bundle Q hs W b m (fun l => ⟨_, hu l⟩) hm
   obtain ⟨hcov, haff⟩ := cover_affine Q hW m (fun l => ⟨_, hu l⟩) hle hT

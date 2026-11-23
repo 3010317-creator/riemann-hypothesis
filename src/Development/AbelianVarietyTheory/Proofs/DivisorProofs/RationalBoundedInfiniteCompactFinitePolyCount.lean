@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.DifferentiableAtChart
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardAlgebraicIntegersBoundedArchimedeanLeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCommonDenominatorCompactFiniteAdelesStatement
+public import Mathlib.NumberTheory.NumberField.InfinitePlace.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardAlgebraicIntegersBoundedArchimedeanLe
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCommonDenominatorCompactFiniteAdeles
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -68,9 +69,9 @@ theorem rat_bounded_compact_polynomial : ∀ (E : Type) [Field E] [NumberField E
       ({ξ : E | ‖pInf E (algebraMap E (Ad E) ξ)‖ ≤ T ∧ pFin E (algebraMap E (Ad E) ξ) ∈ Kf}.ncard : ℝ)
         ≤ C * T ^ m := by
   intro E _ _ _
-  obtain ⟨m, C₀, hC₀, hcount⟩ := GlobalTheory.T.card_algebraic_integers_bounded_archimedean_le E
+  obtain ⟨m, C₀, hC₀, hcount⟩ := _root_.GlobalTheory.IntCount.card_bounded_integers_le E
   refine ⟨m, fun Kf hKf => ?_⟩
-  obtain ⟨n, hn, hint⟩ := GlobalTheory.T.exists_common_denominator_compact_finiteAdeles E Kf hKf
+  obtain ⟨n, hn, hint⟩ := _root_.GlobalTheory.AdeleDenom.exists_common_denom E Kf hKf
   have hn' : (1 : ℝ) ≤ n := by exact_mod_cast hn
   refine ⟨C₀ * (n : ℝ) ^ m, by positivity, fun T hT => ?_⟩
   have hnT : (1 : ℝ) ≤ n * T := by nlinarith

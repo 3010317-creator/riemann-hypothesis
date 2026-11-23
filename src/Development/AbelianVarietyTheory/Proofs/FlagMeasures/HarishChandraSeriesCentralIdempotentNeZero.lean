@@ -1,12 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LabelDatum
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CentralIdempotentOfIrrCharacterOrthogonalCentralStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CharacterDecompositionAndClassFunctionExpansionStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteIrrCharactersAndFinsumCentralIdempotentsEqStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GroupAlgebraTraceIdempotentAndIrreducibleDegreeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraProductListDegreeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraProductListIsCharacterAndPermInvariStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CentralIdempotentOfIrrCharacterOrthogonalCentral
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CharacterDecompositionAndClassFunctionExpansion
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GroupAlgebraTraceIdempotentAndIrreducibleDegree
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraProductListDegree
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraProductListIsCharacterAndPermInvari
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteIrrCharactersAndFinsumCentralIdempotentsEq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -101,12 +101,12 @@ theorem exists_irr_hasLabel (g : ℕ) [Fact g.Prime] (L : LabelDatum g) (hG : Gr
     obtain ⟨q, hq, rfl⟩ := List.mem_map.mp hp
     exact (hQ1 q hq).2.1.2.1
   have hch : IsChar (hcL (Q.map Prod.snd) n) :=
-    (GlobalTheory.T.harishChandraProductList_isCharacter_and_perm_invariant g _ (Q.map Prod.snd) n hQ2.symm fun p hp => by
+    (_root_.GlobalTheory.gl_list_product_perm_char g _ (Q.map Prod.snd) n hQ2.symm fun p hp => by
       obtain ⟨V, -, hV⟩ := hirr p hp
       exact ⟨V, hV⟩).1
   have hne : hcL (Q.map Prod.snd) n 1 ≠ 0 := by
     intro h
-    have hd := GlobalTheory.T.harishChandraProductList_degree g (Q.map Prod.snd) n hQ2.symm
+    have hd := _root_.GlobalTheory.GLq.HcDeg.hc_degree g (Q.map Prod.snd) n hQ2.symm
     rw [h, zero_mul] at hd
     refine mul_ne_zero ?_ ?_ hd.symm
     · refine Finset.prod_ne_zero_iff.mpr fun i hi => ?_
@@ -116,11 +116,11 @@ theorem exists_irr_hasLabel (g : ℕ) [Fact g.Prime] (L : LabelDatum g) (hG : Gr
       exact_mod_cast h1.ne'
     · refine List.prod_ne_zero fun hz => ?_
       obtain ⟨p, hp, hp0⟩ := List.mem_map.mp hz
-      obtain ⟨d, hd0, hd1⟩ := (GlobalTheory.T.groupAlgebraTrace_idempotent_and_irreducible_degree (Gn g p.1) 1 p.2).2.1 (hirr p hp)
+      obtain ⟨d, hd0, hd1⟩ := (_root_.GlobalTheory.GLq.trIdem (Gn g p.1) 1 p.2).2.1 (hirr p hp)
       rw [hp0] at hd1
       have : d = 0 := by exact_mod_cast hd1.symm
       omega
-  have hdec := GlobalTheory.T.character_decomposition_and_classFunction_expansion (Gn g n) (hcL (Q.map Prod.snd) n)
+  have hdec := _root_.GlobalTheory.charDec (Gn g n) (hcL (Q.map Prod.snd) n)
   have hsum := hdec.2.1 (hdec.2.2.1 hch)
   by_contra hcon
   push Not at hcon
@@ -135,7 +135,7 @@ theorem exists_irr_hasLabel (g : ℕ) [Fact g.Prime] (L : LabelDatum g) (hG : Gr
 
 theorem zOf_ne_zero_of_isIrr {G : Type} [Group G] [Fintype G] {ρ : G → ℂ} (hρ : IsIrr ρ) : zOf ρ ≠ 0 := by
   intro h
-  obtain ⟨-, h1, h2⟩ := GlobalTheory.T.groupAlgebraTrace_idempotent_and_irreducible_degree G 1 ρ
+  obtain ⟨-, h1, h2⟩ := _root_.GlobalTheory.GLq.trIdem G 1 ρ
   obtain ⟨d, hd0, hd1⟩ := h1 hρ
   have htr : tr (1 : MonoidAlgebra ℂ G) ρ = ρ 1 := by
     unfold tr
@@ -154,14 +154,14 @@ theorem eSerC_ne_zero : ∀ (g : ℕ) [Fact g.Prime] (L : LabelDatum g), Green �
   intro g _ L hG n f hf hn h0 he
   obtain ⟨ρ, hρ, hl⟩ := exists_irr_hasLabel g L hG n f hf hn h0
   have hfin : {χ : Gn g n → ℂ | IsIrr χ ∧ HasLabel L χ f}.Finite :=
-    (GlobalTheory.T.finite_irrCharacters_and_finsum_centralIdempotents_eq_one (Gn g n)).1.subset fun χ hχ => hχ.1
+    (_root_.GlobalTheory.GLq.irr_finite_and_finsum_zOf_eq_one (Gn g n)).1.subset fun χ hχ => hχ.1
   apply zOf_ne_zero_of_isIrr hρ
   have h : zOf ρ * eSerC L n f = zOf ρ := by
     unfold eSerC
     rw [finsum_mem_eq_finite_toFinset_sum _ hfin, Finset.mul_sum, Finset.sum_eq_single ρ]
-    · rw [(GlobalTheory.T.centralIdempotentOfIrrCharacter_orthogonal_central _ ρ ρ hρ hρ).1, if_pos rfl]
+    · rw [(_root_.GlobalTheory.GLq.ZOrth.zorth _ ρ ρ hρ hρ).1, if_pos rfl]
     · intro b hb hne
-      rw [(GlobalTheory.T.centralIdempotentOfIrrCharacter_orthogonal_central _ ρ b hρ (hfin.mem_toFinset.mp hb).1).1, if_neg hne.symm]
+      rw [(_root_.GlobalTheory.GLq.ZOrth.zorth _ ρ b hρ (hfin.mem_toFinset.mp hb).1).1, if_neg hne.symm]
     · intro hb
       exact absurd (hfin.mem_toFinset.mpr ⟨hρ, hl⟩) hb
   rw [← h, he, mul_zero]

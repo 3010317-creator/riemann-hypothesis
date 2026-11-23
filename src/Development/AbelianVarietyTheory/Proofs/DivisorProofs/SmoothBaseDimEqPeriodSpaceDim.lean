@@ -4,8 +4,10 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHolPeriods
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexUniformisationsSamePointDifferByIsometryStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCountableCharts
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicMapLiftsLocallyToPeriodFamiliesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeOfCountableHolomorphicImagesCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeOfInjOnDifferentiableOnComplexStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeOfCountableHolomorphicImagesCover
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeOfInjOnDifferentiableOnComplex
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -221,7 +223,7 @@ theorem dim_eq : ∀ (O : Type) [Ring O] (bar : O → O) (g : ℕ) (ρ : O →+*
     have hUo : IsOpen U := isOpen_near B' hB' (fun b x => P b x) (fun x => (hhol.2 x).continuousOn) s P₀ ε
     have hc₀U : c₀ ∈ U := ⟨hc₀', fun x _ => by simp [hPc₀, hε]⟩
     have hholU : IsHolPeriods D' ρ U P := ⟨fun b hb => hhol.1 b hb.1, fun x => (hhol.2 x).mono fun b hb => hb.1⟩
-    refine GlobalTheory.T.le_of_injOn_differentiableOn_complex d d' U (fun b => Z (P b)) hUo ⟨c₀, hc₀U⟩ (hZhol d U P hUo hholU fun b hb => hb.2) ?_
+    refine _root_.GlobalTheory.InjHol.le_of_injOn_differentiableOn d d' U (fun b => Z (P b)) hUo ⟨c₀, hc₀U⟩ (hZhol d U P hUo hholU fun b hb => hb.2) ?_
     intro b hb b' hb' heq
     have heq' : Z (P b) = Z (P b') := heq
     obtain ⟨-, h1, hh1⟩ := hnear (P b) (hhol.1 b hb.1) hb.2
@@ -253,7 +255,7 @@ theorem dim_eq : ∀ (O : Type) [Ring O] (bar : O → O) (g : ℕ) (ρ : O →+*
     let W := {b | b ∈ BZ ∧ ∀ x ∈ s, ‖Q b x - P₀ x‖ < ε}
     have hWo : IsOpen W := isOpen_near BZ hBZ (fun b x => Q b x) (fun x => (hQ.2 x).continuousOn) s P₀ ε
     have hWne : W.Nonempty := ⟨Z P₀, hZ0, fun x _ => by simp [hQZ0, hε]⟩
-    refine GlobalTheory.T.le_of_countable_holomorphic_images_cover_open d d' J U (fun j c => Z (per j c)) W hUo
+    refine _root_.GlobalTheory.le_of_countable_holomorphic_images_cover d d' J U (fun j c => Z (per j c)) W hUo
       (fun j => hZhol d (U j) (per j) (hUo j) (hperU j) fun c hc => hc.2) hWo hWne ?_
     intro b hb
     have hQb := hQ.1 b hb.1

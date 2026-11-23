@@ -3,9 +3,11 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.ChevalleyUnits
 public import Formalism.ConjugateSelfDual.Statement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChebotarevDegreeOne
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFiniteGaloisContainsRootsOfUnitsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPowDescentCyclotomicStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsFrobFixesRootOfOneModPlaceStatement
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFiniteGaloisContainsRootsOfUnits
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPowDescentCyclotomic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsFrobFixesRootOfOneModPlace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -94,7 +96,7 @@ theorem core (E : Type) [Field E] [NumberField E] (l r b : ℕ) (hl : l.Prime) (
   classical
   have hm : 0 < l ^ r := pow_pos hl.pos r
   set m := l ^ r with hmdef
-  obtain ⟨M, hM0, hmM, hD⟩ := GlobalTheory.T.exists_pow_descent_cyclotomic' E l r hl
+  obtain ⟨M, hM0, hmM, hD⟩ := _root_.GlobalTheory.exists_pow_descent_cyclotomic E l r hl
   let Ω := AlgebraicClosure E
   haveI : NeZero (M : Ω) := ⟨by exact_mod_cast hM0.ne'⟩
   obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot Ω M
@@ -107,7 +109,7 @@ theorem core (E : Type) [Field E] [NumberField E] (l r b : ℕ) (hl : l.Prime) (
   let ζK : K := ⟨ζ, IntermediateField.mem_adjoin_simple_self E ζ⟩
   have hζK : IsPrimitiveRoot ζK M :=
     (show IsPrimitiveRoot (algebraMap K Ω ζK) M from hζ).of_map_of_injective (algebraMap K Ω).injective
-  obtain ⟨L, hLfin, hLgal, hLroots⟩ := GlobalTheory.T.exists_finite_galois_contains_roots_of_units E K Ω M hM0 ⟨ζK, hζK⟩
+  obtain ⟨L, hLfin, hLgal, hLroots⟩ := _root_.GlobalTheory.KummerUnits.exists_finite_galois_mem_of_pow_eq_unit E K Ω M hM0 ⟨ζK, hζK⟩
   let S : Set (HeightOneSpectrum (𝓞 K)) := {v | ((M * b : ℕ) : 𝓞 K) ∈ v.asIdeal}
   have hS : S.Finite := by
     have hne : Ideal.span {((M * b : ℕ) : 𝓞 K)} ≠ 0 := by
@@ -152,7 +154,7 @@ theorem core (E : Type) [Field E] [NumberField E] (l r b : ℕ) (hl : l.Prime) (
     rw [hw]; rfl
   have hfix : ∀ g : L ≃ₐ[K] L, g ⟨w, hwL⟩ = ⟨w, hwL⟩ := by
     intro g
-    have h1 := GlobalTheory.T.isFrob_fixes_root_of_one_mod_place K Ω M ζK hζK (v g) (hvM g) (B g) (hB g) (σ g) (hσ g) x (hx1 g) w hwx
+    have h1 := _root_.GlobalTheory.frob_fixes_root_of_one_mod K Ω M ζK hζK (v g) (hvM g) (B g) (hB g) (σ g) (hσ g) x (hx1 g) w hwx
     rw [← hg g]
     apply Subtype.ext
     rw [AlgEquiv.restrictNormalHom_apply]

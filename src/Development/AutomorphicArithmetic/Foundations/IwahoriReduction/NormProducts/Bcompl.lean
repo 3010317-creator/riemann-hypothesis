@@ -8,7 +8,9 @@ public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
 public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.HopfAlgebra.Basic
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsUnitEvalEqKummerClassStatement
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsUnitEvalEqKummerClass
+public import Mathlib.RingTheory.AdicCompletion.Completeness
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -26,7 +28,6 @@ import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
-public import Mathlib.RingTheory.AdicCompletion.Completeness
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Basify
@@ -151,7 +152,7 @@ private theorem memA (X : Tower Ω ε) (l : ℕ) [Fact l.Prime] {x : ℕ → X.K
   refine Submodule.subset_span fun n => ?_
   obtain ⟨y, hy⟩ := hs n
   obtain ⟨φ, hφ, hd⟩ := X.j_hol
-  obtain ⟨f, hf, e⟩ := GlobalTheory.T.exists_unit_eval_eq_kummer_class ε X ⟨φ, hd, hφ⟩ l n
+  obtain ⟨f, hf, e⟩ := _root_.GlobalTheory.KZ.ES.exists_un_eval_eq_cls ε X ⟨φ, hd, hφ⟩ l n
     (∑ k ∈ Finset.range n, (l : ℤ_[l]) ^ k • x k)
     (Submodule.sum_mem _ fun k _ => Submodule.smul_mem _ _ (hx k))
   refine ⟨f, hf, ?_⟩

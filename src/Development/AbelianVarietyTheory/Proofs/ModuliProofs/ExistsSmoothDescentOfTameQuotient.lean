@@ -6,9 +6,13 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsIsAffineOpenLeOfIsQProjOver
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsQuotientOfFiniteGroup
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSmulApplyEqOfEqOnInvariants
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsPullbackFlatOfTameStatement
+public import Mathlib.AlgebraicGeometry.Morphisms.Flat
+public import Mathlib.AlgebraicGeometry.Noetherian
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsPullbackFlatOfTame
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.QuotientExistsUniqueCompEq
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SmoothOfIsPullbackOfSurjectiveOfFlat
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbProj
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,7 +52,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbProj
 import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.AuxiliaryInertOddPrime
 
 @[expose] public section
@@ -76,7 +79,7 @@ theorem exists_smooth_descent_of_tame_quotient :
     exact ⟨V, hV, fun g => hF ⟨g, rfl⟩⟩)
   obtain ⟨p', hp', -⟩ := quotient_existsUnique_comp_eq Γ G.left Y' τ φ hφ X' (G.hom ≫ π)
     (fun g => by rw [← Category.assoc, hτ g, Category.assoc, hπ.2.1 g])
-  obtain ⟨hpb, hflat, hlft⟩ := GlobalTheory.T.isPullback_flat_of_tame_alt Γ X X' G.left Y' ρ τ π φ G.hom p' hπ hφ hp' hτ hfin
+  obtain ⟨hpb, hflat, hlft⟩ := _root_.GlobalTheory.TameDescent.isPullback_flat_of_tame Γ X X' G.left Y' ρ τ π φ G.hom p' hπ hφ hp' hτ hfin
     inferInstance inferInstance hstab hfib
   have hsurj : Surjective π := (quotient_isIntegral_surjective_orbits Γ X X' ρ π hπ).2.1
   haveI : LocallyOfFinitePresentation p' := inferInstance

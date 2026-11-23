@@ -1,9 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsClosedEmbeddingTopEmb
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsGLMulRightColumnsEqZeroOfRankStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LeftColumnsMulVecInjectiveOfRankEqCardStatement
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
+public import Mathlib.LinearAlgebra.Matrix.Rank
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsGLMulRightColumnsEqZeroOfRank
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LeftColumnsMulVecInjectiveOfRankEqCard
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LocallyConstantExtensionByZero
+public import Mathlib.Topology.Algebra.ClopenNhdofOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,7 +54,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
-public import Mathlib.Topology.Algebra.ClopenNhdofOne
 import Mathlib.Topology.Sheaves.Init
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FibRepApply
 
@@ -138,11 +140,11 @@ variable {k a c d : Type} [Field k] [Fintype a] [DecidableEq a] [Fintype c] [Dec
 
 theorem exists_gl_mul_eq_base (e : c ⊕ d ≃ a) (x : Matrix c a k) (hx : x.rank = Fintype.card c) :
     ∃ g : GL a k, ∀ i s, (x * g.val) i (e s) = Sum.elim (fun j => (1 : Matrix c c k) i j) (fun _ => 0) s := by
-  obtain ⟨g, hg⟩ := GlobalTheory.T.exists_GL_mul_rightColumns_eq_zero_of_rank k c c d a e x hx
+  obtain ⟨g, hg⟩ := _root_.GlobalTheory.exists_gl_mul_cols_eq_zero_of_rank k c c d a e x hx
   have hr : (x * g.val).rank = Fintype.card c := by
     rw [rank_mul_eq_left_of_isUnit_det _ _ ((isUnit_iff_isUnit_det _).1 g.isUnit)]
     exact hx
-  have h := GlobalTheory.T.leftColumns_mulVec_injective_of_rank_eq_card k c c d a e (x * g.val) hr hg
+  have h := _root_.GlobalTheory.mulVec_firstCols_eq_zero_of_rank_eq_card k c c d a e (x * g.val) hr hg
   have hu : IsUnit ((x * g.val).submatrix id fun i => e (.inl i)) :=
     mulVec_injective_iff_isUnit.1 fun v w hvw => sub_eq_zero.1 (h _ (by rw [mulVec_sub, hvw, sub_self]))
   set u : Matrix c c k := (x * g.val).submatrix id fun i => e (.inl i) with hudef

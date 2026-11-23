@@ -1,11 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsMetricFrOfIsMetricOn
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdaptedFrameEventuallyFrameNearComplexPointStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsClosedImmersionGenericPoint
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ValRSpMapFromSpecStalk
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdaptedFrameEventuallyFrameNearComplexPoint
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlaggedBundleMetricSmoothUnitEtaleChartStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramLowerTriangularFactorGradedLengthSmoothStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramLowerTriangularFactorLowerTriangularConjStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramLowerTriangularFactorPosDefPropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramLowerTriangularFactorGradedLengthSmooth
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramLowerTriangularFactorLowerTriangularConj
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramLowerTriangularFactorPosDefProperties
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsHolomorphicUnitMatrixAtRationalMatrixValuesStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -80,12 +82,12 @@ theorem isGramPair_ldPart (F : Type) [Field F] (σ : F →+* ℂ) (X : Var F) (�
     rw [Matrix.map_apply, hp.2.2.2 i j i.2 hij]
     exact ratVal_zero_var w
   refine ⟨fun y => ⟨(hsm y).1, ?_⟩, fun y => ?_⟩
-  · refine ⟨(GlobalTheory.T.gramLowerTriangularFactor_posDef_properties _ _ (hH.posDef y _ (hA y) τ)).2.2.2, fun c hc => ?_⟩
+  · refine ⟨(_root_.GlobalTheory.ChernCalc.ldPart_posDef_spec _ _ (hH.posDef y _ (hA y) τ)).2.2.2, fun c hc => ?_⟩
     filter_upwards [(hsm y).2 c hc] with v hv
-    exact (GlobalTheory.T.gramLowerTriangularFactor_gradedLength_smooth _ _ _ v hv.1 hv.2).1
-  · have h1 := GlobalTheory.T.adaptedFrame_eventually_frame_near_complex_point F σ X ι m m E y _ (hA y)
+    exact (_root_.GlobalTheory.ChernCalc.ldPart_grD_smooth _ _ _ v hv.1 hv.2).1
+  · have h1 := _root_.GlobalTheory.ChernCalc.frame_eventually_near F σ X ι m m E y _ (hA y)
     filter_upwards [h1, h1.eventually_nhds] with z hz hz'
-    have h2 := GlobalTheory.T.adaptedFrame_eventually_frame_near_complex_point F σ X ι m m E z _ (hA z)
+    have h2 := _root_.GlobalTheory.ChernCalc.frame_eventually_near F σ X ι m m E z _ (hA z)
     obtain ⟨hol, tri⟩ := hT _ _ z hz (hA z)
     refine ⟨_, _, fun w => Matrix.diagonal fun i =>
       (((E.nonempty (under z)).choose * (E.nonempty (under y)).choose⁻¹) τ).map (ratVal · w) i i,
@@ -105,6 +107,6 @@ theorem isGramPair_ldPart (F : Type) [Field F] (σ : F →+* ℂ) (X : Var F) (�
       change gramAt E H τ z w = _ * gramAt E H τ y w * _ at e
       refine ⟨e, ?_⟩
       rw [e]
-      exact (GlobalTheory.T.gramLowerTriangularFactor_lowerTriangular_conj _ _ _ (hH.posDef w _ hwA τ) triw holw.1).1
+      exact (_root_.GlobalTheory.ChernCalc.ldPart_conj_lower _ _ _ (hH.posDef w _ hwA τ) triw holw.1).1
 
 end GlobalTheory.ChernCalc

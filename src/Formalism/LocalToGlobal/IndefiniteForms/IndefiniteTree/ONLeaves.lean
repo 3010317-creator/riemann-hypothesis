@@ -4,11 +4,10 @@ public import Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.ExampleSati
 public import Formalism.PeriodIntegrals.MirabIndex
 public import Mathlib.NumberTheory.Cyclotomic.Basic
 public import Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.IsMackeyPiUpperUnipotentProdCharacter
-import Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.Mirabolic
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.IndexUBound
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.MirabIndex
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.MirabolicIndex.RowMulOfMirab
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.UnipVal
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.MirabolicIndex.RowMulOfMirab
+import Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.Mirabolic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -130,7 +129,7 @@ theorem card_Uv (hG : IsLevelGroups kf n Pm Uv) (v : ι) :
 
 theorem card_Pm (hG : IsLevelGroups kf n Pm Uv) (v : ι) :
     Nat.card (Pm v) = Nat.card (Uv v) * ∏ i ∈ Finset.Ico 1 (n + 1), (Fintype.card (kf v) ^ i - 1) := by
-  rw [card_Uv_uni hG v, ← mirabolic_index (kf v) n]
+  rw [card_Uv_uni hG v, ← _root_.PI.MirabolicIndex₂.mirabIndex (kf v) n]
   exact Nat.card_congr (Equiv.subtypeEquivRight (hG.1 v))
 
 theorem index_Uv (hG : IsLevelGroups kf n Pm Uv) (v : ι) :

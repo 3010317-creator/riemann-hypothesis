@@ -1,9 +1,9 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ResAlgSplitTwo
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NormFibreCardNonzeroStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NormFibreCardZeroStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ResidueAlgebraUnramifiedStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NormFibreCardNonzero
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NormFibreCardZero
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ResidueAlgebraUnramified
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -124,10 +124,10 @@ theorem gauss_core (h : ResAlg E τ q ε) (χ : AddChar E ℂ) (A b : E) (hb : �
     rw [hc']
     by_cases h0 : t = 0
     · subst h0
-      rw [GlobalTheory.T.norm_fibre_card_zero E τ q ε h, if_pos rfl]
+      rw [_root_.GlobalTheory.CompanionTheory.UnrDens.NormZero.card_norm_zero E τ q ε h, if_pos rfl]
       push_cast
       ring
-    · rw [GlobalTheory.T.norm_fibre_card_nonzero E τ q ε h t ht' h0, if_neg h0]
+    · rw [_root_.GlobalTheory.CompanionTheory.UnrDens.NormUnit.card_fibre E τ q ε h t ht' h0, if_neg h0]
       push_cast
       ring
   rw [Finset.sum_congr rfl hfib]
@@ -152,7 +152,7 @@ theorem gauss_level_one : ∀ (R : Type) [CommRing R] (σ : R →+* R) (ϖ : R) 
     push_neg at hcon
     exact hna (hψ.prim a ha hcon)
   obtain ⟨b, hb, hχ⟩ := hex
-  refine GaussOne.gauss_core (GlobalTheory.T.residue_algebra_unramified R σ ϖ q ε hR) (ψ 1) _ (Ideal.Quotient.mk _ b) ?_ ?_
+  refine GaussOne.gauss_core (_root_.GlobalTheory.CompanionTheory.UnrDens.resAlg_of_isUnrQuad R σ ϖ q ε hR) (ψ 1) _ (Ideal.Quotient.mk _ b) ?_ ?_
   · rw [barσ_mk, hb]
   · rwa [← map_mul]
 

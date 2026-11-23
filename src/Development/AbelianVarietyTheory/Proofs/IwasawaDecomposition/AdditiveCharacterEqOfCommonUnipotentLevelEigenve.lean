@@ -2,9 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ReadsHecke
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SplitPlaceHeckeOperatorScalarOnSpherical
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitaryFiniteAdelesSplitPlaceDecompositionStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RelIndexLevelUnipotentCoprimePrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RelIndexStabilizerEqLocalRelIndexStatement
+public import Formalism.LocalToGlobal.GaloisLevelStructure.DefsLevel
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RelIndexLevelUnipotentCoprimePrime
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RelIndexStabilizerEqLocalRelIndex
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsReadsAtOfCover
+import Formalism.AlgebraicWeights.IsAlgWeight
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitaryFiniteAdelesSplitPlaceDecomposition
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +53,6 @@ import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.Positi
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RowsRestWordColumnUnitBaseTupleAlt
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.StrictHenselianAcyclic
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCharDescent
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsReadsAtOfCover
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FunKilled
 import Formalism.LocalToGlobal.IndefiniteReal.DoubleCosetOperators.GoodPartLeTypeSubspace
 import Formalism.LocalToGlobal.NormalizedHeckeFactors.TypesDefs
@@ -165,7 +167,7 @@ theorem idx {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ} (s : Sp
     (hp : p.Prime) (hsp : s.Above p) (hrn : r ≤ n)
     (hJ : ∀ κ, TrivOutside {s.v} κ → (κ ∈ J ↔ NG.UniRT s r (s.loc n κ))) :
     Nat.Coprime (J.relIndex (GlobalTheory.HeckeScalarSph.locK n s.v)) p := by
-  obtain ⟨-, -, hlift⟩ := GlobalTheory.T.unitaryFiniteAdeles_splitPlace_decomposition L n s
+  obtain ⟨-, -, hlift⟩ := _root_.GlobalTheory.SplitAdelic.main L n s
   set H := (J ⊓ trivSub n s.v).map (s.loc n) with hH
   have hmemH : ∀ g, g ∈ H ↔ NG.UniRT s r g := by
     intro g
@@ -184,8 +186,8 @@ theorem idx {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ} (s : Sp
     · rintro ⟨κ', ⟨hκ'J, hκ'T⟩, he⟩
       have : κ' = κ := (hlift (s.loc n κ)).unique ⟨hκ'T, he⟩ ⟨hκT, rfl⟩
       exact this ▸ hκ'J
-  rw [GlobalTheory.T.relIndex_stabilizer_eq_local_relIndex L n s J H hJH]
-  exact GlobalTheory.T.relIndex_levelUnipotent_coprime_prime L n s r p H hp hsp hrn hmemH
+  rw [_root_.GlobalTheory.LocRelIndex.main L n s J H hJH]
+  exact _root_.GlobalTheory.UniLevelIndex.relIndex_coprime L n s r p H hp hsp hrn hmemH
 
 end GlobalTheory.PsiCmp
 
@@ -247,7 +249,7 @@ theorem fractionFieldToGenericStalk_algebraMap_eq : ∀ (L : Type) [Field L] [Nu
   let i0 : Fin n := ⟨0, by omega⟩
   let i1 : Fin n := ⟨1, by omega⟩
   have hne : i0 ≠ i1 := by simp [i0, i1, Fin.ext_iff]
-  obtain ⟨x, ⟨hxT, hxA⟩, -⟩ := (GlobalTheory.T.unitaryFiniteAdeles_splitPlace_decomposition L n s).2.2 (tvGL hne y)
+  obtain ⟨x, ⟨hxT, hxA⟩, -⟩ := (_root_.GlobalTheory.SplitAdelic.main L n s).2.2 (tvGL hne y)
   have hent : ∀ a b, ((s.loc n x : GL (Fin n) (s.v.adicCompletion (maximalRealSubfield L))) :
       Matrix (Fin n) (Fin n) (s.v.adicCompletion (maximalRealSubfield L))) a b =
       (if a = b then 1 else 0) + (if a = i0 ∧ b = i1 then y else 0) := by

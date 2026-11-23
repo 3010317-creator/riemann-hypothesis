@@ -1,7 +1,7 @@
 module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.WittExactSequences.IsCompl
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HenselPolynomialRefinementStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HenselPolynomialRefinement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,7 +58,7 @@ theorem mem_pow_smul_top_iff {T : Type} [CommRing T] (t y : T) (n : ℕ) :
 theorem aic_of_isCompl : ∀ (B : Type) [CommRing B] (T : Type) [CommRing T] (π : B) (g : B →+* T),
     IsCompl π g → π ∈ nonZeroDivisors B → AIC B → VAL π → AIC T := by
   intro B _ T _ π g hc hπ hA hV P hP hd
-  have step := GlobalTheory.T.hensel_polynomial_refinement B T π g hc hπ hA hV P hP hd
+  have step := _root_.GlobalTheory.CompanionTheory.AicStep.aic_step B T π g hc hπ hA hV P hP hd
   set d := P.natDegree with hdd
   set t := g π with ht
 

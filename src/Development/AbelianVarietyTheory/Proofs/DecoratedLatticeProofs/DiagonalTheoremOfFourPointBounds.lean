@@ -4,14 +4,18 @@ public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.DiagAtS
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CollSBound
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.VanishingGramTermsBoundParams
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.ThmSOwn
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AbstractDiagonalBoundCollisionsCountedOnceStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.EqualIdentificationPairPriceLeSixFifthsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GramPoincareHilbertSchmidtDeviationLeSplitStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.KernelExpansionAbsoluteConvergenceEqualWordsStatement
-import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.SatGram
-import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.GenericRatioOfBoundHolds
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RowsOther
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AbstractDiagonalBoundCollisionsCountedOnce
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RowsConc
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.EqualIdentificationPairPriceLeSixFifths
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.UnfoldingConstantsPos
+public import Formalism.SharpRestriction.CuspSpanNormBounds.CongruenceAtSplitFrobeniusHolds
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GramPoincareHilbertSchmidtDeviationLeSplit
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.KernelExpansionAbsoluteConvergenceEqualWords
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.DiagCLC
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.KloostermanDiagonalOfConditions
+import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.SatGram
+import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.GenericRatioOfBoundHolds
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -88,20 +92,20 @@ theorem sDiagAt_of_points : ∀ (D : D7) (c : Formalism.L2.SG.ThmSOwn.ConcK D) (
     (c.Y.tO u u).pairSum ((c.Y.tO u u).one (c.Y.tO u u).genSet) ≤ Γ₁ * ddC c.X c.Y u u →
     (c.Y.tO u u).pairSum ((c.Y.tO u u).one (c.Y.tO u u).ngSet) ≤ Γ₂ * ddC c.X c.Y u u → SDiagAt D u Γ (1 / 2) := by
   intro D c large₂ C' Cl Cg cb Cu cT CT C0 Γ₁ Γ₂ Γ u hC' hCl h0 hg1 hg2 hg hG0 hColl hgen hng
-  obtain ⟨hExp, hAbs⟩ := GlobalTheory.T.kernel_expansion_absolute_convergence_equal_words
+  obtain ⟨hExp, hAbs⟩ := _root_.GlobalTheory.Core.Diag.kExp_absConv_tied
   have hT := c.tie
   have hA : (c.Y.tO u u).AbsConv := hAbs D c.X c.Y u u hT
   have hK2 := Formalism.MainNotions.NonGenericAndKTwoTheorems.Hyp_of D large₂ C' Cl Cg cb Cu cT CT C0 h0.2.1 h0.1 h0.2.2 (by linarith)
-  have hPg : PgC c.Y ≤ 6 / 5 := GlobalTheory.T.equalIdentificationPairPrice_le_six_fifths C' Cl Cg cb Cu cT CT C0 D large₂ c.X c.Y hK2
+  have hPg : PgC c.Y ≤ 6 / 5 := _root_.GlobalTheory.Core.Deg.pgC_le_six_fifths C' Cl Cg cb Cu cT CT C0 D large₂ c.X c.Y hK2
   have hPg0 : 0 ≤ PgC c.Y := Finset.prod_nonneg fun v _ => by positivity
   have hGB : (c.Y.tO u u).GGBound (PgC c.Y) :=
     Formalism.L2.SG.TermOp.ggBound c.Y.TR (c.Y.cs u) (c.Y.cs u) (c.Y.FN u) (c.Y.FN u) Formalism.L2.SG.Closed.TermsGGBound_holds
       c.Y.psi_ne (fun v => card_ge_three hK2.2 c.Y.TR v)
   have hNE := normExpSatTied_holds D c.X c.Y u u hT
-  have hK0 := GlobalTheory.T.abstractDiagonalBound_collisions_counted_once _ _ _ _ _ (c.Y.tO u u) (oneC c.X c.Y u) (PgC c.Y) _ _ _ hPg0 hA hNE.1 hNE.2 hGB
+  have hK0 := _root_.GlobalTheory.diag_abstract_collisions_once _ _ _ _ _ (c.Y.tO u u) (oneC c.X c.Y u) (PgC c.Y) _ _ _ hPg0 hA hNE.1 hNE.2 hGB
     (Formalism.L2.SG.TermOp.rowOrth c.Y.TR (c.Y.cs u) (c.Y.cs u) (c.Y.FN u) (c.Y.FN u))
     (Formalism.L2.SG.KappaOffDiagonal.corankPosC_holds D c.X c.Y u u hT) (idOneC_holds D c.X c.Y u hT) hColl hgen hng
-  have hsplit := GlobalTheory.T.gramPoincareHilbertSchmidtDeviation_le_split D u
+  have hsplit := _root_.GlobalTheory.Core.Rk.hsDev_le_split_three_halves D u
   rw [Formalism.L2.SG.ThmSOwn.hsNormSq_diag c.hI (hExp D c.X c.Y u u hT) hA (Formalism.L2.SG.Pf.SatGram.idDegenerate_tO c.Y u u),
     Formalism.L2.SG.ThmSOwn.hsNormSq_Kpp c.hI hA] at hsplit
   have hdd : 0 ≤ ddC c.X c.Y u u := dd_nonneg hT u u

@@ -2,11 +2,13 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsGenOfIsVBOne
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PushInvertible
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FieldPointLiftsGenericFibreStatement
+public import Development.WeilBound.CoreStatements.HodgeTatePoints.MlLift
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericPointsInGenericFibreStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsCptGenResidueFieldGeneric
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProjectiveOverCoordsExistStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProjectiveOverRestrictIntStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProjectiveOverCoordsExist
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProjectiveOverRestrictInt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -133,7 +135,7 @@ theorem exists_cpt_of_genericPoint : ∀ (E : Type) [Field E] [NumberField E] [I
   have hr : Set.range (Y.X.fromSpecResidueField e) ⊆ Set.range Y.j := by
     rw [Scheme.range_fromSpecResidueField]
     exact Set.singleton_subset_iff.2 hj
-  obtain ⟨y, hy⟩ := GlobalTheory.T.field_point_lifts_generic_fibre E H D l Xo c (𝓞 c.F) _ Y hfrac (Y.X.residueField e)
+  obtain ⟨y, hy⟩ := _root_.PositivityTheory.HtPt.Ml.lift_generic_point E H D l Xo c (𝓞 c.F) _ Y hfrac (Y.X.residueField e)
     (Y.X.fromSpecResidueField e) hr
   have hch : CharZero (Y.X.residueField e) := by
     let φ : c.F →+* Y.X.residueField e :=
@@ -145,8 +147,8 @@ theorem exists_cpt_of_genericPoint : ∀ (E : Type) [Field E] [NumberField E] [I
     congr 1
     ext1
     exact Subsingleton.elim (α := ℤ →+* Y.X.residueField e) _ _
-  obtain ⟨n, x, hx⟩ := GlobalTheory.T.projective_over_coords_exist ℤ Y.X (Y.s ≫ spMap (Int.castRingHom (𝓞 c.F)))
-    (GlobalTheory.T.projective_over_restrict_int (𝓞 c.F) Y.X Y.s Y.proj) (Y.X.residueField e) (Y.X.fromSpecResidueField e) hgen hover
+  obtain ⟨n, x, hx⟩ := _root_.GlobalTheory.CompanionTheory.Relay.projective_over_coords_exist ℤ Y.X (Y.s ≫ spMap (Int.castRingHom (𝓞 c.F)))
+    (_root_.GlobalTheory.CompanionTheory.Ar.XR.isProjOver_comp_spMap_int (𝓞 c.F) Y.X Y.s Y.proj) (Y.X.residueField e) (Y.X.fromSpecResidueField e) hgen hover
   refine ⟨Y.X.residueField e, inferInstance, hch, n, x, y, ?_, ?_, ?_⟩
   · rw [hy]; exact hx
   · rw [hy]; exact normalCpt_of_isCptGen hgen Y.normal

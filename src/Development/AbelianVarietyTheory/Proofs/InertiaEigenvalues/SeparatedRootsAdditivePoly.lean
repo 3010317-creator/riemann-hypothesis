@@ -2,9 +2,14 @@ module
 
 public import Mathlib.Analysis.Normed.Field.Instances
 public import Mathlib.NumberTheory.Padics.Complex
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardRootsClosedBallBoundsUltrametricStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FewRootsSmallDiscStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MultisetManySeparatedPointsStatement
+public import Mathlib.Analysis.Normed.Field.Basic
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.Topology.MetricSpace.Ultra.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardRootsClosedBallBoundsUltrametric
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FewRootsSmallDisc
+public import Mathlib.Analysis.Normed.Group.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MultisetManySeparatedPoints
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -79,16 +84,16 @@ theorem separated_roots_additive_poly : ∀ (l : ℕ) [Fact l.Prime] (E M h : �
     split_ifs
     · exact ha1 k (by have := Finset.mem_range.1 hk; omega)
     · simp
-  have hrc := (GlobalTheory.T.card_roots_closedBall_bounds_ultrametric ℂ_[l] G 1 (l ^ (M + h)) one_pos hcd0).1 (by
+  have hrc := (_root_.GlobalTheory.card_roots_le_radius_bounds ℂ_[l] G 1 (l ^ (M + h)) one_pos hcd0).1 (by
     intro j; simp only [one_pow, mul_one]; rw [hcd, haMh]; exact hcle j)
   set s := G.roots.filter fun z => ‖z‖ ≤ 1 with hs
   have hG0 : G ≠ 0 := by
     intro h0; apply hcd0; rw [h0]; simp
-  obtain ⟨Z, hZc, hZs, hZsep⟩ := GlobalTheory.T.exists_finset_separated_of_multiset_bounded_cluster ℂ_[l] s ρ (l ^ h) (l ^ M) hρ0.le
+  obtain ⟨Z, hZc, hZs, hZsep⟩ := _root_.GlobalTheory.multiset_many_separated_points ℂ_[l] s ρ (l ^ h) (l ^ M) hρ0.le
     (pow_pos (by omega) _) (by rw [mul_comm, ← pow_add]; exact hrc) (by
       intro W hW
       have hW1 : ‖W‖ ≤ 1 := (Multiset.mem_filter.1 hW).2
-      refine le_trans (Multiset.card_le_card ?_) (GlobalTheory.T.card_roots_closedBall_le_prime_pow l E M a ρ W (by omega) ha1 hρ0 hρ1 haM hak hW1)
+      refine le_trans (Multiset.card_le_card ?_) (_root_.GlobalTheory.few_roots_small_disc l E M a ρ W (by omega) ha1 hρ0 hρ1 haM hak hW1)
       exact Multiset.monotone_filter_left _ (Multiset.filter_le _ _))
   refine ⟨Z, hZc, fun W hW => ?_, hZsep⟩
   have hWs := Multiset.mem_filter.1 (hZs W hW)

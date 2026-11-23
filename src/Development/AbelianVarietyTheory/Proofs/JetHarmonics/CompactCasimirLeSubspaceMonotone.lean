@@ -2,8 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.SumIoPr
 public import Mathlib.Analysis.InnerProductSpace.Symmetric
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CasKIsSymmetricAndFormStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ReInnerLeOnImageOfIntertwiningStatement
+public import Formalism.RealPlaceAnalysis.StatementKT
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CasKIsSymmetricAndForm
+public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ReInnerLeOnImageOfIntertwining
+public import Mathlib.Analysis.InnerProductSpace.ProdL2
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +49,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.Analysis.InnerProductSpace.ProdL2
 
 @[expose] public section
 
@@ -78,7 +80,7 @@ theorem quadForm_le_on_sup {M : Type} [NormedAddCommGroup M] [InnerProductSpace 
   have hA1 : ∀ z, ((A z).fst : M) = B z.fst := fun z => rfl
   have hA2 : ∀ z, ((A z).snd : M) = B z.snd := fun z => rfl
   have hΦ : ∀ z, Φ z = (z.fst : M) + (z.snd : M) := fun z => rfl
-  have key := GlobalTheory.T.re_inner_le_on_image_of_intertwining' (WithLp 2 (S₁ × S₂)) M Φ A B C
+  have key := _root_.GlobalTheory.re_inner_le_on_image_of_intertwining (WithLp 2 (S₁ × S₂)) M Φ A B C
     (by
       intro z w
       simp only [WithLp.prod_inner_apply, Submodule.coe_inner]
@@ -116,7 +118,7 @@ theorem casKLe_subspace_mono : ∀ (M : Type) [NormedAddCommGroup M] [InnerProdu
       obtain ⟨u, hu, v, hv, rfl⟩ := Submodule.mem_sup.1 hw
       rw [map_add (f := _)]
       exact Submodule.add_mem_sup (s₁ a b hab u hu) (s₂ a b hab v hv)
-    · exact quadForm_le_on_sup _ (GlobalTheory.T.casK_isSymmetric_and_inner_re_eq M n ε E hU).1 _ S₁ S₂
+    · exact quadForm_le_on_sup _ (_root_.GlobalTheory.casK_isSymmetric_and_form M n ε E hU).1 _ S₁ S₂
         (casK_mem_of_compact_stable ε E S₁ s₁) (casK_mem_of_compact_stable ε E S₂ s₂) b₁ b₂
   · rintro c a x ⟨S, f, s, hx, b⟩
     exact ⟨S, f, s, S.smul_mem a hx, b⟩

@@ -1,8 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHolPeriods
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsHolToBaseChangeComplexIffStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsHolToBaseChangeComplexIff
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisationAtCorrespondOfCartesianStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.HolPairA
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -41,7 +43,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.HolPairA
 
 @[expose] public section
 
@@ -107,7 +108,7 @@ theorem unif_of_isBC : ∀ (O : Type) [Ring O] (bar : O → O) (g : ℕ) (ρ : O
     rw [h]
   · intro i m B P hB hP
     obtain ⟨h1, h2⟩ := U'.hol i m B P hB hP
-    refine ⟨(GlobalTheory.T.isHolTo_baseChange_complex_iff R σ F.X F'.X F.s F'.s f hpb (Fin m → ℂ) B (fun b => U'.u i (P b))
+    refine ⟨(_root_.GlobalTheory.PELU.isHolTo_bc_iff R σ F.X F'.X F.s F'.s f hpb (Fin m → ℂ) B (fun b => U'.u i (P b))
       (fun b hb => (U'.unif i (P b) (hP.1 b hb)).1)).1 h1, ?_⟩
     exact ReciprocityTheory.ChartRestriction.G.PullbackSections.isHolTo_comp h2 φ
   · intro m B y hB hy hhol b₀ hb₀
@@ -123,7 +124,7 @@ theorem unif_of_isBC : ∀ (O : Type) [Ring O] (bar : O → O) (g : ℕ) (ρ : O
       intro b hb
       simp only [y', dif_pos (hy b hb)]
       exact IsPullback.lift_fst _ _ _ _
-    have hh : IsHolTo B y' := (GlobalTheory.T.isHolTo_baseChange_complex_iff R σ F.X F'.X F.s F'.s f hpb _ B y' hy'1).2
+    have hh : IsHolTo B y' := (_root_.GlobalTheory.PELU.isHolTo_bc_iff R σ F.X F'.X F.s F'.s f hpb _ B y' hy'1).2
       ((isHolTo_congr_on fun b hb => (hy'2 b hb).symm).1 hhol)
     obtain ⟨B', i, P, hB', hb', hsub, hP, hu⟩ := U'.lift m B y' hB hy'1 hh b₀ hb₀
     refine ⟨B', i, P, hB', hb', hsub, hP, fun b hb => ?_⟩

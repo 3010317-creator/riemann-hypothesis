@@ -3,10 +3,14 @@ module
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DefClassNum
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsLimitOfChart
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.InvSubOneMem
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsRiemannianHaarOnSubgroupSigmaFiniteUniqueStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TendstoRescaledIntegralOfDensityOneStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitarySubgroupChartAlmostIsometricNearOneStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitarySubgroupChartSurjectiveNearOriginStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsRiemannianHaarOnSubgroupSigmaFiniteUnique
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TendstoRescaledIntegralOfDensityOne
+public import Formalism.SharpRestriction.CuspSpanNormBounds.GlobAut
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitarySubgroupChartAlmostIsometricNearOne
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitarySubgroupChartSurjectiveNearOrigin
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -208,10 +212,10 @@ theorem density_bounds {S : Set (Formalism.REAL.UJ ε)} {d : ℕ} {μ : Measure 
 open scoped Matrix.Norms.Frobenius in
 theorem gauge_local_asymptotics : ∀ (n : ℕ) (ε : Fin n → Bool) (A : Submodule ℝ (Matrix (Fin n) (Fin n) ℂ)) (d : ℕ) (E : Fin d → Matrix (Fin n) (Fin n) ℂ), (∀ X ∈ A, ∀ Y ∈ A, X * Y ∈ A) → (∀ i k, ((E i * (E k)ᴴ).trace).re = if i = k then 1 else 0) → (∀ X, (X ∈ A ∧ Formalism.REAL.inG ε X) ↔ X ∈ Submodule.span ℝ (Set.range E)) → ∀ μ : Measure (Formalism.REAL.UJ ε), IsGaugeSub {g | uMat g - 1 ∈ A} d μ → SigmaFinite μ ∧ IsFiniteMeasureOnCompacts μ ∧ (∀ μ', IsGaugeSub {g | uMat g - 1 ∈ A} d μ' → μ' = μ) ∧ ∃ r₀ : ℝ, 0 < r₀ ∧ ∀ r₁ : ℝ, 0 < r₁ → r₁ ≤ r₀ → ∀ φ : (Fin d → ℝ) → ℝ, Continuous φ → HasCompactSupport φ → Filter.Tendsto (fun r : ℝ => (r ^ d)⁻¹ * ∫ g in {g | Formalism.REAL.hs (uMat g - 1) < r₁}, φ (fun i => (((uMat g - 1) * (E i)ᴴ).trace).re / r) ∂μ) (nhdsWithin 0 (Set.Ioi 0)) (nhds (∫ t, φ t)) := by
   intro n ε A d E hA hE hV μ hμ
-  obtain ⟨a1, a2, a3⟩ := GlobalTheory.T.isRiemannianHaarOnSubgroup_sigmaFinite_unique n ε (algSub ε A hA) (isClosed_algSub A hA) d μ hμ
+  obtain ⟨a1, a2, a3⟩ := _root_.GlobalTheory.GaugeSubHaar.isGaugeSub_haar n ε (algSub ε A hA) (isClosed_algSub A hA) d μ hμ
   refine ⟨a1, a2, a3, ?_⟩
-  have hlip := GlobalTheory.T.unitarySubgroupChart_almost_isometric_near_one n ε A d E hA hE hV
-  have hsurj := GlobalTheory.T.unitarySubgroupChart_surjective_near_origin n ε A d E hA hE hV
+  have hlip := _root_.GlobalTheory.GaugeSubLip.chart_almost_isometric n ε A d E hA hE hV
+  have hsurj := _root_.GlobalTheory.GaugeSubChartSurj.chart_surj n ε A d E hA hE hV
   simp only [GlobalTheory.GaugeConst.sqrt_hs] at hlip hsurj
   set ψ : Formalism.REAL.UJ ε → EuclideanSpace ℝ (Fin d) :=
     fun g => WithLp.toLp 2 (fun i => (((uMat g - 1) * (E i)ᴴ).trace).re) with hψdef
@@ -241,7 +245,7 @@ theorem gauge_local_asymptotics : ∀ (n : ℕ) (ε : Fin n → Bool) (A : Submo
     (fun g h hg hh b1 b2 => (h2 g h hg hh (by linarith) (by linarith)).2) hlip hsurj
   let e := EuclideanSpace.equiv (Fin d) ℝ
   have hΦ : Continuous (fun x : EuclideanSpace ℝ (Fin d) => φ (e x)) := hφ.comp e.continuous
-  have hv := GlobalTheory.T.tendsto_rescaled_integral_of_ball_density_bounds d _ inferInstance hd (fun x => φ (e x)) hΦ
+  have hv := _root_.GlobalTheory.tendsto_rescaled_integral_of_density_one d _ inferInstance hd (fun x => φ (e x)) hΦ
     (hφc.comp_homeomorph e.toHomeomorph)
   have hI : ∫ x : EuclideanSpace ℝ (Fin d), φ (e x) = ∫ t, φ t :=
     (EuclideanSpace.volume_preserving_symm_measurableEquiv_toLp (Fin d)).integral_comp' φ

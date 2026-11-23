@@ -3,17 +3,19 @@ module
 public import Development.WeilBound.ThetaLifts.EigenvalueEndgame.SignatureSplitting.AeFacts
 public import Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts
 public import Development.WeilBound.ThetaLifts.EigenvalueEndgame.CuspidalAverages.IsAvLeft
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ColumnWhittakerTransformKeepsLaterLaw
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFundamentalDomainMassOneCocompactLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsStandardAdelicAddCharStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnipotentBlockColumnIndex
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsStandardAdelicAddChar
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsGenericOfIsLocComp
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SetIntegralFundamentalDomainEqMassMulAverageStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WhittakerLawUpperTriangularUnipotentAdelicStatement
 public import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.PfDictSec
 public import Development.WeilBound.ThetaLifts.ConeHypotheses.PureEqPureA
 public import Development.WeilBound.ThetaLifts.EigenvalueEndgame.CuspidalAverages.AvLine
 public import Development.WeilBound.ThetaLifts.EigenvalueEndgame.CuspidalAverages.KillCoef
 public import Development.WeilBound.ThetaLifts.EigenvalueEndgame.TowerCodimensionTwo
+public import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.PfDictDef
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ColumnWhittakerTransformKeepsLaterLaw
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFundamentalDomainMassOneCocompactLattice
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SetIntegralFundamentalDomainEqMassMulAverage
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WhittakerLawUpperTriangularUnipotentAdelic
 import Development.WeilBound.ThetaLifts.EigenvalueEndgame.UnipotentGroups.ContinuousExpG
 import Development.WeilBound.ThetaLifts.TowerModels.LeviAd
 import Formalism.LocalRingCardinality.SpanPowerMembership.LocAtA
@@ -64,7 +66,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.PfDictDef
 
 @[expose] public section
 
@@ -132,7 +133,7 @@ theorem isWh : IsWh W u (chi C ψ) (wh C h ct ψ) := by
       rw [← ct_left C H hf (lev_norm h (th C j x) _ n) (lev h (th C j (x * g'))), map_mul, map_mul, e1]
       simp only [mul_assoc, inv_mul_cancel_left, inv_mul_cancel, mul_one]
     rw [wh, H.right, e2, whit_rt (ψ := ψ) _ (fun x => ct f (lev h (th C j x))), one_mul, ← mul_one g',
-      GlobalTheory.T.whittakerLaw_upperTriangularUnipotent_adelic E j ψ _ (whit_pre hψ _ h0 (pre f hf)).law g' (fun a b q => (congrArg C.ad (g1 a b q)).trans (map_zero _))
+      _root_.GlobalTheory.CuspGeneric.tri_law E j ψ _ (whit_pre hψ _ h0 (pre f hf)).law g' (fun a b q => (congrArg C.ad (g1 a b q)).trans (map_zero _))
         (fun a => (congrArg C.ad (g2 a)).trans (map_one _))]
     exact congrArg (fun z => ψ z * _) (map_sum C.ad _ _).symm
 
@@ -161,10 +162,10 @@ theorem wh_two {u u' : Matrix (Fin d) (Fin 2) E} (h : Fr (σ : E →+* E) W.J u 
   haveI : BorelSpace SL(2, AE F E) := ⟨rfl⟩
   letI : MeasurableSpace (UnipotentBlockColumnIndex 2 1 1 → Ad E) := borel _
   haveI : BorelSpace (UnipotentBlockColumnIndex 2 1 1 → Ad E) := ⟨rfl⟩
-  obtain ⟨μ, 𝓕, m1, m2, m3⟩ := GlobalTheory.T.exists_fundamentalDomain_mass_one_cocompactLattice _ _ (isCoLat_ratV E (UnipotentBlockColumnIndex 2 1 1))
+  obtain ⟨μ, 𝓕, m1, m2, m3⟩ := _root_.GlobalTheory.CuspGeneric.exists_fundamentalDomain_mass_one _ _ (isCoLat_ratV E (UnipotentBlockColumnIndex 2 1 1))
   haveI : IsProbabilityMeasure (μ.restrict 𝓕) := ⟨by simpa using m3⟩
   have av : ∀ Φ, Per (ratV E (UnipotentBlockColumnIndex 2 1 1)) Φ → avg (ratV E (UnipotentBlockColumnIndex 2 1 1)) Φ = ∫ x, Φ x ∂μ.restrict 𝓕 := fun Φ hΦ => by
-    rw [(GlobalTheory.T.setIntegral_fundamentalDomain_eq_mass_mul_average _ _ (isCoLat_ratV E _) μ 𝓕 m1 m2 Φ hΦ).2.2.2, m3]; simp
+    rw [(_root_.GlobalTheory.CuspGeneric.setIntegral_eq_mass_mul_avg _ _ (isCoLat_ratV E _) μ 𝓕 m1 m2 Φ hΦ).2.2.2, m3]; simp
   let t₀ : UnipotentBlockColumnIndex 2 1 1 := ⟨(0, 1), by simp⟩
   haveI : Unique (UnipotentBlockColumnIndex 2 1 1) := ⟨⟨t₀⟩, by decide⟩
   let n : (UnipotentBlockColumnIndex 2 1 1 → Ad E) → SL(2, AE F E) := fun x => uni (.ofAdd (C.ad.symm (x t₀)))
@@ -233,7 +234,7 @@ theorem cuspOfLine_of_keys (hW : WeilConv) (hD : KDecay) (hA : IAut) (h3 : KeyTh
   intro F E _ _ _ _ _ σ B a a' G X om om' t d₁ W₁ H' hH f hf h0
   have C : Ctx σ G.W := ⟨t.base.cm, t.geo.hW.skew, PositivityTheory.ThKG.Tow.Levi.det_ne_zero t.geo.hW⟩
   have ha := sig_isAut hA t hf
-  obtain ⟨ψ, hψ⟩ := GlobalTheory.T.exists_standardAdelicAddChar E
+  obtain ⟨ψ, hψ⟩ := _root_.GlobalTheory.CuspGeneric.exists_stdPsi E
   have key : ∀ j, ∀ u u' : Matrix (Fin (a + a')) (Fin j) E, 0 < j → Fr (σ : E →+* E) G.W.J u u' → Av σ G.W (colSp u) f 0 := by
     intro j
     induction j using Nat.strong_induction_on with

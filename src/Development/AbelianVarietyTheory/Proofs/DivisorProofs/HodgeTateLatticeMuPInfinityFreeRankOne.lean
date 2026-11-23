@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.GhostFrobenius
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AinfGhostThetaFrobIterValuesXiMuPadicStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AinfGhostThetaFrobIterValuesXiMuPadic
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AinfIsDomainMuNeZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AinfTeichmullerMinusOneDvdOfGhostComponentsZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AinfTeichmullerMinusOneDvdOfGhostComponentsZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -93,7 +93,7 @@ theorem toLatt_eps (hε : IsPrimitiveSystem ε) (hμ : ∀ n, ghost p O n (Sandw
 theorem latt_mu_equiv : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [IsDomain O], v.Integers O → ∀ (ε : PreTilt O p) (hε : IsPrimitiveSystem ε), ∃ e : latt (PDivGroup.mu p O) ≃ₗ[Ainf p O] Ainf p O, ∀ y, Sandwich.mu ε * e y = y.1 (epsTate hε) := by
   intro p _ C _ _ _ v O _ _ _ _ _ hv ε hε
   have hμ : ∀ n, ghost p O n (Sandwich.mu ε) = 0 :=
-    (GlobalTheory.T.ainfGhostThetaFrobIter_values_xi_mu_padic p C v O hv ε hε).2.2.1
+    (_root_.GlobalTheory.PDivLat.ghost_values p C v O hv ε hε).2.2.1
   have hdom := GlobalTheory.ainf_isDomain_and_mu_ne_zero p C v O hv ε (by simpa [zeta] using hε 1)
   haveI := hdom.1
   have hbij : Function.Bijective (toLatt hε hμ) := by
@@ -106,7 +106,7 @@ theorem latt_mu_equiv : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlg
       have hg : ∀ n, ghost p O n (y.1 (epsTate hε)) = 0 := fun n => by
         obtain ⟨x, hx⟩ := y.2 n
         rw [hx, Subsingleton.elim (hodgeTate (PDivGroup.mu p O) (epsTate hε)) 0, map_zero]
-      obtain ⟨a, ha⟩ := GlobalTheory.T.ainfTeichmullerMinusOne_dvd_of_ghost_components_zero p C v O hv ε hε _ hg
+      obtain ⟨a, ha⟩ := _root_.GlobalTheory.GhostKer.mu_dvd_of_ghost p C v O hv ε hε _ hg
       refine ⟨a, Subtype.ext (LinearMap.ext fun t => ?_)⟩
       obtain ⟨c, rfl⟩ := (epsEquiv hε).surjective t
       change ofPadic p O ((epsEquiv hε).symm (epsEquiv hε c)) * (Sandwich.mu ε * a) = y.1 (epsEquiv hε c)

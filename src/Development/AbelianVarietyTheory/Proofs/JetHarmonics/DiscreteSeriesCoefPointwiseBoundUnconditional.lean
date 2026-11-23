@@ -3,7 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Statements.DiscreteSeriesShifts.ThmBpDS
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.ActualClassesCompactSupport
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BesselXiIntegrableHolds
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.PointwiseBoundDiscreteSeriesCoefficientsStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.BesselIntegrals.BesselXiIntegrable
+public import Formalism.HermitianCurvature.HerGenC
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.PointwiseBoundDiscreteSeriesCoefficients
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,6 +50,6 @@ open BpJoin
 namespace GlobalTheory
 
 theorem discreteSeriesCoef_pointwiseBound : ThmBpDS :=
-  GlobalTheory.T.pointwiseBound_discreteSeries_coefficients GlobalTheory.besselXiIntegrable_holds GlobalTheory.actualClasses_compactSupport
+  _root_.GlobalTheory.BpDiscreteSeriesTwoInputs.pointwise_bound_discreteSeries GlobalTheory.besselXiIntegrable_holds GlobalTheory.actualClasses_compactSupport
 
 end GlobalTheory

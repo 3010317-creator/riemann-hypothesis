@@ -1,8 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdIPowLe
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsPrismLocalizationAwayOfGeneratedStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrismHomMapIdealEqStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.DeltaStructureOfWittLengthTwoSection
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsPrismLocalizationAwayOfGenerated
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.InvertibleSpanSingleton
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrismHomMapIdealEq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -43,7 +45,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.DeltaStructureOfWittLengthTwoSection
 
 @[expose] public section
 
@@ -98,7 +99,7 @@ theorem stable_of_isLoc : ∀ (l : ℕ) [Fact l.Prime] (R : Type) [CommRing R] (
   ·
     have hgen : GenAway B' (k.f s) (k.f t) := by
       refine ⟨k.f_I t ht, fun x hx => ?_⟩
-      rw [← GlobalTheory.T.prism_hom_map_ideal_eq l R B B' k] at hx
+      rw [← _root_.GlobalTheory.Prism.Rigid.map_I_eq l R B B' k] at hx
       have hx' : x ∈ Ideal.span (k.f '' B.I) := hx
       refine Submodule.span_induction
         (p := fun x _ => ∃ n : ℕ, k.f s ^ n * x ∈ Ideal.span {k.f t}) ?_ ?_ ?_ ?_ hx'
@@ -118,7 +119,7 @@ theorem stable_of_isLoc : ∀ (l : ℕ) [Fact l.Prime] (R : Type) [CommRing R] (
         refine ⟨n, ?_⟩
         rw [smul_eq_mul, mul_left_comm]
         exact Ideal.mul_mem_left _ _ hn
-    obtain ⟨C', h', hloc', -⟩ := GlobalTheory.T.exists_isPrismLocalizationAway_of_generated l R B' (k.f s) (k.f t) hgen
+    obtain ⟨C', h', hloc', -⟩ := _root_.GlobalTheory.BSP.exists_isLoc l R B' (k.f s) (k.f t) hgen
     obtain ⟨k', hk'⟩ := H.univ C' (h'.comp k)
       (show IsUnit (h'.f (k.f s)) from IsLoc.isUnit_of_complete hloc')
     refine ⟨C', k', h', hk', fun m => ?_⟩

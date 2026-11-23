@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsLevelCharacterAtConjugateSplitPlace
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsSubquotientDetRepParInd
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductRepresentationReorderEquivStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductRepresentationReorderEquiv
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NormalisedParabolicInductionReindexEquiv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -193,7 +193,7 @@ theorem multiProd_comp_invTranspose : ∀ (k : Type) [Field k] [ValuativeRel k] 
     refine ⟨⟨_, mem_parab_of_revPlace e p.2⟩, rfl, ?_⟩
     refine (key ⟨_, mem_parab_of_revPlace e p.2⟩ hp).symm.trans ?_
     exact congrArg _ (Subtype.ext (invTranspose_invTranspose n (p : GL (Fin n) k)))
-  obtain ⟨B⟩ := GlobalTheory.T.product_representation_reorder_equiv k h n (fun a => d (Fin.rev a)) (revPlace e) e' (fun a => X (Fin.rev a)) π'
+  obtain ⟨B⟩ := _root_.GlobalTheory.PlacingProd.multiProd_placing_equiv k h n (fun a => d (Fin.rev a)) (revPlace e) e' (fun a => X (Fin.rev a)) π'
   exact ⟨A.symm.trans ((parIndEquiv (revPlace e) (revRepEquiv π')).trans B)⟩
 
 end GlobalTheory.InvTransposeProd

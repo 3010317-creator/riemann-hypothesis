@@ -2,10 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicWeilRepSchrodingerModelUniqueStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EigenIntertwinerPreservesSchwartzSpaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GoodModelsDifferBySymplecticMatrixStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticChangeOfGoodModelsIntertwinesStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicWeilRepSchrodingerModelUnique
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EigenIntertwinerPreservesSchwartzSpace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GoodModelsDifferBySymplecticMatrix
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticChangeOfGoodModelsIntertwines
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -80,14 +81,14 @@ theorem det_ne_zero_of_sig {F E : Type} [Field F] [NumberField F] [Field E] [Num
 
 theorem modelChange (hK : GlobalTheory.FunPr.Hypotheses₂) : GlobalTheory.ThK.ModelChange := by
   intro F E _ _ _ _ _ σ B n d X W M χX χW om r s r' s' hP M₁ om₁ hP₁
-  obtain ⟨a, ha, hco⟩ := GlobalTheory.T.good_models_differ_by_symplectic_matrix F E σ B.ψ n d X W M M₁ hP.good hP₁.good
+  obtain ⟨a, ha, hco⟩ := _root_.GlobalTheory.goodModel_coords_rat_symplectic F E σ B.ψ n d X W M M₁ hP.good hP₁.good
   obtain ⟨e, c, hc, hev, hbij, hθ⟩ :=
-    GlobalTheory.T.symplectic_change_of_good_models_intertwines hK F E σ B n d X W M M₁ r s r' s' hP.base hP.herm hP.skew hP.good hP₁.good a ha hco
-  obtain ⟨om₂, hW₂, hint⟩ := GlobalTheory.T.eigen_intertwiner_preserves_schwartz_space hK F E σ B n d X W M χX χW om r s r' s' hP M₁ hP₁.good e hev hbij
+    _root_.GlobalTheory.RatWeilOp.exists_intertwiner hK F E σ B n d X W M M₁ r s r' s' hP.base hP.herm hP.skew hP.good hP₁.good a ha hco
+  obtain ⟨om₂, hW₂, hint⟩ := _root_.GlobalTheory.ModelTr.exists_isWeil_trans hK F E σ B n d X W M χX χW om r s r' s' hP M₁ hP₁.good e hev hbij
   have hX : X.J.det ≠ 0 :=
     det_ne_zero_of_sig B X.J 1 one_ne_zero (fun w => by simpa using hP.herm.sig w)
   have hWd : W.J.det ≠ 0 := det_ne_zero_of_sig B W.J Complex.I Complex.I_ne_zero hP.skew.sig
-  have huniq := GlobalTheory.T.adelicWeilRep_schrodingerModel_unique F E σ hP.base.cm n d X W M₁ B.ψ χX χW hP.base.std hP.herm.herm hX
+  have huniq := _root_.GlobalTheory.WeilSchUnique.weil_unique F E σ hP.base.cm n d X W M₁ B.ψ χX χW hP.base.std hP.herm.herm hX
     hP.skew.skew hWd om₂ om₁ hW₂ hP₁.weil
   refine ⟨e, c, hc, hev, hbij, fun Φ hΦ => ⟨hθ Φ hΦ, fun x => ?_⟩⟩
   rw [hint x Φ hΦ, huniq x (e Φ) (hbij.mapsTo hΦ)]

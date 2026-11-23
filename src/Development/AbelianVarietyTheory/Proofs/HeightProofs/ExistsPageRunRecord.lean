@@ -2,13 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.HeightFunctions.ConclOfInputs4
 public import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.NusOffLevel
-import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.WindowsAllowOffCentre
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.N0LeNs
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.PageOKRun
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CloudSizesBetweenZeroAndTwiceBStatement
+public import Development.AbelianVarietyTheory.Definitions.Jets.CmQuadraticFormEqAlternatingForm
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CloudSizesBetweenZeroAndTwiceB
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DegreeWeightKappaLePageBound
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MulRowsScaledWeightLeKappaRows
 public import Formalism.SharpRestriction.GenusPolyhedralBounds.RelativeIndexClassSets.PolyConstantLeZBasePowFour
+import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.WindowsAllowOffCentre
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -382,7 +383,7 @@ include h1 h2
 include hx in
 theorem DF_ka_le : (WeightAlgebra.DF (kaR T hK j) : ℝ) ≤ 4 * ((D.R.k : ℝ) * D.R.f * L.sc.b) := by
   have a := (GlobalTheory.RunDepth.DF_kaR_le D L P T hK hx (k_b'_le P hx) j ⟨h1, h2⟩).1
-  have b := (GlobalTheory.T.cloudSizes_between_zero_and_twice_b D L P hx (k_b'_le P hx)).1
+  have b := (_root_.GlobalTheory.RunDepth.sizes_le_two_mul D L P hx (k_b'_le P hx)).1
   refine a.trans ?_
   calc (D.R.k : ℝ) * (2 * (D.R.f : ℝ) * L.sc.b + (D.R.f : ℝ) * (L.Sc + L.etaSz))
       ≤ (D.R.k : ℝ) * (2 * (D.R.f : ℝ) * L.sc.b + (D.R.f : ℝ) * (2 * L.sc.b)) := by gcongr

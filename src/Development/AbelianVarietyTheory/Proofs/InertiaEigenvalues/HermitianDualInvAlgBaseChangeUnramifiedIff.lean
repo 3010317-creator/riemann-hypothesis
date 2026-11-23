@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.OverExtAlgebraMap
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIntegralTraceUnramifiedQuadraticLocalExtStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsLocalRingOfIdem
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIntegralTraceUnramifiedQuadraticLocalExt
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemRangeOfValNonneg
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitTraceUnramifiedExtensionStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitTraceUnramifiedExtension
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsLocalRingOfIdem
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -118,7 +118,7 @@ theorem GlobalTheory.UnitLemma.Unr.dual_iff : ∀ (K K' : UQ) (d : ℕ) (φ : K.
   constructor
   · intro h z hz
     obtain ⟨b, hb⟩ := h z hz
-    obtain ⟨a, ha⟩ := GlobalTheory.T.exists_integral_trace_unramifiedQuadraticLocalExt K K' d φ hU b
+    obtain ⟨a, ha⟩ := _root_.GlobalTheory.UnitLemma.Unr.trace_int K K' d φ hU b
     refine ⟨a, ?_⟩
     calc algebraMap K.O K.E a = Algebra.trace K.E K'.E (algebraMap K'.O K'.E b) := ha.symm
       _ = Algebra.trace K.E K'.E ((overExt φ B ψ hψ hσ).herm x y z) := by rw [hb]
@@ -133,7 +133,7 @@ theorem GlobalTheory.UnitLemma.Unr.dual_iff : ∀ (K K' : UQ) (d : ℕ) (φ : K.
     have hw0 : (overExt φ B ψ hψ hσ).herm x y z₀ ≠ 0 := by
       intro h0
       exact hw ⟨0, by rw [h0, map_zero]⟩
-    obtain ⟨u, a, ha, hua⟩ := GlobalTheory.T.exists_unit_trace_unramifiedInvolutionFieldExt K K' d φ hU
+    obtain ⟨u, a, ha, hua⟩ := _root_.GlobalTheory.UnitLemma.Unr.exists_trace_unit K K' d φ hU
     obtain ⟨π, hπ⟩ := (IsDiscreteValuationRing.maximalIdeal K.O).valuation_exists_uniformizer K.E
     have hπv : val K.O π = 1 := by
       unfold val

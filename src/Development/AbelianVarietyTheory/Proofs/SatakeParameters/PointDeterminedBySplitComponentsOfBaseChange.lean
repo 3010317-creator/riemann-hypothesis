@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.RankOneUnitary
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AutomorphicRepEqOfEqAtAlmostAllSplitPlacesStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AutomorphicRepEqOfEqAtAlmostAllSplitPlaces
+public import Mathlib.RingTheory.DedekindDomain.Factorization
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -40,7 +41,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.RingTheory.DedekindDomain.Factorization
 
 @[expose] public section
 
@@ -60,7 +60,7 @@ theorem eventually_splitOut {R : Ranks} {H : Host R} {what₂ : Rows.Data R} (N 
 
 theorem main : ∀ (R : Ranks) (H : Host R) (what₂ : Rows.Data R) (N : NData R H what₂) (A : NAut N) (i : N.Loc), GlobalTheory.RowTie.BCEx N A i → GlobalTheory.RowTie.SplitBC N A i → GlobalTheory.RowTie.RepOfLoc N A i → GlobalTheory.ThetaExh.PtOfLoc N A i := by
   intro R H what₂ N A i hBC hSp hRep P P' x hx hloc
-  have hPP : P = P' := GlobalTheory.T.automorphicRep_eq_of_eq_at_almost_all_split_places R H what₂ N A i hBC hSp hRep P P' <| by
+  have hPP : P = P' := _root_.GlobalTheory.RowTie.repDet_split R H what₂ N A i hBC hSp hRep P P' <| by
     filter_upwards [eventually_splitOut N i] with w hw hs using hloc w (hw hs)
   rw [hPP]; exact hx
 

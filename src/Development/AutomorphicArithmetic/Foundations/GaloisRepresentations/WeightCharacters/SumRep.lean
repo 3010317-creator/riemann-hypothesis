@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.WeightCharacters.DeltaNear
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInvariantPositivePeterssonFormStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ContinuousMapPFin
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInvariantPositivePeterssonForm
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.EigenFormEqFiniteSumAutRepEigenForms
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.MemISupAutomorphicRepsOfInvariantForm
 import Mathlib.Algebra.Order.Floor.Extended
@@ -53,7 +54,7 @@ theorem UpperTheory.Gal.Wt.sumRep_of :
     UpperTheory.Gal.Wt.SumRep := by
   intro E _ _ _ a S hfin hS
   classical
-  obtain ⟨B₀, -, -, hd, hi⟩ := GlobalTheory.T.exists_invariant_positive_petersson_form E a
+  obtain ⟨B₀, -, -, hd, hi⟩ := _root_.GlobalTheory.DefU.Petersson.exists_invariant_pos_form E a
   obtain ⟨p, hp⟩ := LinearMap.exists_leftInverse_of_injective (autU E a).subtype (autU E a).ker_subtype
   have hpv : ∀ (φ : UA E a → ℂ) (h : IsAutFormU φ), p φ = ⟨φ, h⟩ := fun φ h =>
     LinearMap.congr_fun hp (⟨φ, h⟩ : autU E a)

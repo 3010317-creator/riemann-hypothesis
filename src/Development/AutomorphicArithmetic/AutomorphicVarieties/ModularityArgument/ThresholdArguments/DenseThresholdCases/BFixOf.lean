@@ -2,8 +2,8 @@ module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.AutomorphicPointGalois
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.LinkedUnramifiedChains.RedDefs
-import Development.AbelianVarietyTheory.Definitions.Divisors.IsLocalRingTrivSqZeroExt
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.DeterminantRepresentations.IrrIffSpan
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.IrrIffSpan
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CurveDVRSpecialization.OrbitCount
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CurveDVRSpecialization.SelfTwistEigenvalues.UnipTorsion
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.FrobeniusSmoothVectors.ZpowWNe
@@ -11,6 +11,7 @@ public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityA
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.EigenbasisLifts.AeComm
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.EigenbasisLifts.CocExt
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.EigenbasisLifts.CocRel
+import Development.AbelianVarietyTheory.Definitions.Divisors.IsLocalRingTrivSqZeroExt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -254,7 +255,7 @@ private theorem fx_core (ρD : Fr.NRep F n (DualNumber Q))
     ∃ X : Matrix (Fin n) (Fin n) Q, ∀ h, sn (ρD.r h) = X * (ρD.map (dF Q)).r h - (ρD.map (dF Q)).r h * X := by
   have ht := fx_tan K ρD
   have hfull : Full (K.tw (ρD.map (dF Q))).toHomUnits :=
-    (AlgebraTools.Det.irrIffSpan (W.mat (K.tw (ρD.map (dF Q))).toHomUnits)).1 fun N hN => hirr N fun g _ v hv => hN g v hv
+    (_root_.UpperTheory.Reformulated.B.Qe4.irrIffSpan (W.mat (K.tw (ρD.map (dF Q))).toHomUnits)).1 fun N hN => hirr N fun g _ v hv => hN g v hv
   have c1 : Continuous fun g : G.G₀ => sn (ρD.r (K.π g)) :=
     continuous_matrix fun i j => (hsc i j).comp K.π_cont
   have c2 : Continuous fun g : G.G₀ => (ρD.map (dF Q)).r (K.π g)⁻¹ :=

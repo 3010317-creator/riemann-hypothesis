@@ -4,18 +4,18 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GtBaseChangeSt
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.AuxiliaryInertOddPrime
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CmModelCoefficientInclusionsEtaleOpenImmersionStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CmModelCoefficientSubringDedekindCompatibleEmbedStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CoefficientFieldIntegersDedekindFractionFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsFiniteEtaleSurjectiveLevelMapStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsModelDominatingModelsOnOpenCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsNormalModelAboveFiniteCoverStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CmModelCoefficientInclusionsEtaleOpenImmersion
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CmModelCoefficientSubringDedekindCompatibleEmbed
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CoefficientFieldIntegersDedekindFractionField
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsFiniteEtaleSurjectiveLevelMap
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsModelDominatingModelsOnOpenCover
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsNormalModelAboveFiniteCover
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsReducedIsNormalSchemeIsLocallyNoetherianOfSmoo
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LevelMapFiniteEtaleSurjective
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ModelDominatedOfMapToBaseModelStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ModelFiniteOverModuliModelDescendsStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ModelDominatedOfMapToBaseModel
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ModelFiniteOverModuliModelDescends
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PrimeToPartLevelExistsUniqueMono
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ObjPull
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PrimeToPartLevelExistsUniqueMonoStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -192,7 +192,7 @@ theorem exists_map_to_base {U U'' U₀ : Scheme.{0}} {F F'' F₀ O O'' O₀ R V 
 theorem base_ring (l : Level H) (h : l.A = 1) {S : ℕ} (hS : 0 < S) :
     (∃ β : RZ H S 1 →+* KA l, IsInc (RZ H S 1).subtype (KA l).val.toRingHom β) ∧ Algebra.FiniteType ℤ (RZ H S 1) ∧
       ∀ β : RZ H S 1 →+* KA l, IsInc (RZ H S 1).subtype (KA l).val.toRingHom β → IsDedFrac β := by
-  have := GlobalTheory.T.cmModelCoefficientSubring_dedekind_compatible_embedding E H l S 0 hS (by simp [h])
+  have := _root_.GlobalTheory.BaseRing.isDedFrac_RZ E H l S 0 hS (by simp [h])
   rwa [h] at this
 
 theorem exists_global_model : (∀ (T K : Type) [CommRing T] [IsDomain T] [IsDiscreteValuationRing T] [Field K] [Algebra T K] [IsFractionRing T K] (G G' : Over (Sp T)) [GrpObj G] [GrpObj G'], IsSemiAbelian G → IsSemiAbelian G' → ∀ f : (Over.pullback (spMap (algebraMap T K))).obj G ⟶ (Over.pullback (spMap (algebraMap T K))).obj G', IsMonHom f → ∃! F : G ⟶ G', IsMonHom F ∧ (Over.pullback (spMap (algebraMap T K))).map F = f) → Out.Laws → Out.Laws2 → Out.Laws3 → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (Xo : ∀ l : Level H, Moduli D l), 1 ≤ D.p + D.q → ToroidalLevelCompatibility (H := H) (D := D) → ∀ S : System Xo, N6 S.Y := by
@@ -201,17 +201,17 @@ theorem exists_global_model : (∀ (T K : Type) [CommRing T] [IsDomain T] [IsDis
   have : Finite P := finite_parts l
   have hP : ∀ x : P, x.1.A = 1 ∧ x.1.Dvd l := fun x => by
     obtain ⟨p, hp, h⟩ := x.2
-    exact ⟨h.1, ((GlobalTheory.T.primeToPart_level_exists_unique_mono E H p hp).2.1 l x.1 h).1⟩
+    exact ⟨h.1, ((_root_.GlobalTheory.Models.primeToPart_spec E H p hp).2.1 l x.1 h).1⟩
   have hcop : ∀ (p : ℕ), p.Prime → ∀ l₀ : Level H, IsPrimeToPart l₀ l p → (S.n (S.ch p) * l₀.M).Coprime p :=
     fun p hp l₀ h => Nat.Coprime.mul_left ((Nat.coprime_primes (S.aux _).1 hp).mpr (S.ch_ne p))
-      ((GlobalTheory.T.primeToPart_level_exists_unique_mono E H p hp).2.1 l l₀ h).2.1
+      ((_root_.GlobalTheory.Models.primeToPart_spec E H p hp).2.1 l l₀ h).2.1
   have : Nonempty P := by
-    obtain ⟨l₀, h⟩ := (GlobalTheory.T.primeToPart_level_exists_unique_mono E H 2 Nat.prime_two).1 l (hg 2 Nat.prime_two)
+    obtain ⟨l₀, h⟩ := (_root_.GlobalTheory.Models.primeToPart_spec E H 2 Nat.prime_two).1 l (hg 2 Nat.prime_two)
     exact ⟨⟨l₀, 2, Nat.prime_two, h⟩⟩
   let a : Bool × P → ℕ := fun i => S.n i.1 * i.2.1.M
   have ha : ∀ i, 0 < a i := fun i => Nat.mul_pos (S.aux _).1.pos (lt_of_lt_of_le (by norm_num) i.2.1.three_le)
   let B : ∀ i : Bool × P, BaseModel (S.T i.1) i.2.1 := fun i => S.B i.1 i.2.1 (hP i.2).1
-  choose k r ν hr hk hlev hfin _ using fun x : P => GlobalTheory.T.exists_finite_etale_surjective_levelMap E H D Xo hN x.1 l (hP x).2
+  choose k r ν hr hk hlev hfin _ using fun x : P => _root_.GlobalTheory.LevelMap.exists_levelMap E H D Xo hN x.1 l (hP x).2
   have hnorm : Geo.Tor.IsNormalScheme (Xo l).X := by
     have := (Xo l).smooth
     exact (isReduced_isNormalScheme_isLocallyNoetherian_of_smooth_over_field _ _ (Xo l).s
@@ -220,20 +220,20 @@ theorem exists_global_model : (∀ (T K : Type) [CommRing T] [IsDomain T] [IsDis
   have hω : ∀ i, IsInc (RZ H (a i) 1).subtype (KA l).val.toRingHom (ω i) := fun i x =>
     (hk i.2 _).trans ((B i).β_inc x)
   have hωd : ∀ i, IsDedFrac (ω i) := fun i => (base_ring l hA (ha i)).2.2 _ (hω i)
-  choose C hC using fun i : Bool × P => GlobalTheory.T.exists_normal_model_above_finite_cover E H _ _ _ _ _ (B i).β _ _ _ (Xo l).s (Xo l).univ.t (ω i) (B i).C
+  choose C hC using fun i : Bool × P => _root_.GlobalTheory.Models.Cpt.exists_above E H _ _ _ _ _ (B i).β _ _ _ (Xo l).s (Xo l).univ.t (ω i) (B i).C
     (RingHom.id _) (k i.2) (r i.2) (hr i.2) (ν i.2) ((base_ring i.2.1 (hP i.2).1 (ha i)).2.2 _ (B i).β_inc) (hωd i)
     rfl hnorm (hfin i.2)
   obtain ⟨⟨β₀, hβ₀⟩, hft, hd₀⟩ := base_ring l hA Nat.one_pos
-  choose b₁ hb₁ using fun i : Bool × P => (GlobalTheory.T.cmModelCoefficient_inclusions_etale_openImmersion E H 1 (a i) 1 1 0 (ha i) Nat.one_pos (one_dvd _) dvd_rfl).1
+  choose b₁ hb₁ using fun i : Bool × P => (_root_.GlobalTheory.BaseRing.inclusion_RZ E H 1 (a i) 1 1 0 (ha i) Nat.one_pos (one_dvd _) dvd_rfl).1
   have hωb : ∀ i, (ω i).comp (b₁ i) = β₀ := fun i =>
     RingHom.ext fun x => Subtype.ext ((hω i _).trans ((hb₁ i x).trans (hβ₀ x).symm))
-  obtain ⟨C', hC'⟩ := GlobalTheory.T.exists_model_dominating_models_on_open_cover hExt E H _ _ _ (Xo l).s (Xo l).univ.t β₀ (Bool × P) (fun i => RZ H (a i) 1)
+  obtain ⟨C', hC'⟩ := _root_.GlobalTheory.exists_join_of_models hExt E H _ _ _ (Xo l).s (Xo l).univ.t β₀ (Bool × P) (fun i => RZ H (a i) 1)
     (fun i => (a i : RZ H 1 1)) b₁ ω C (hd₀ _ hβ₀) (fun i => ⟨hωd i, hωb i, isLocalization_away (ha i) _ (hb₁ i)⟩)
     (span_natCast_eq_top a fun p hp => by
-      obtain ⟨l₀, h⟩ := (GlobalTheory.T.primeToPart_level_exists_unique_mono E H p hp).1 l (hg p hp)
+      obtain ⟨l₀, h⟩ := (_root_.GlobalTheory.Models.primeToPart_spec E H p hp).1 l (hg p hp)
       exact ⟨(S.ch p, ⟨l₀, p, hp, h⟩), (Nat.Prime.coprime_iff_not_dvd hp).mp (hcop p hp l₀ h).symm⟩)
     hft (Xo l).univ.proper
-  obtain ⟨hdO, -, hbO, hV⟩ := GlobalTheory.T.coefficientField_integers_dedekind_fractionField E H l c
+  obtain ⟨hdO, -, hbO, hV⟩ := _root_.GlobalTheory.CoeffRings.coeff_isDedFrac E H l c
   obtain ⟨b₀, hb₀⟩ := hbO 1 (one_dvd _)
   have hb₀' : (algebraMap (𝓞 c.F) c.F).comp b₀ = (IntermediateField.inclusion c.le).toRingHom.comp β₀ :=
     RingHom.ext fun x => Subtype.ext ((hb₀ x).trans ((hβ₀ x).symm.trans
@@ -246,25 +246,25 @@ theorem exists_global_model : (∀ (T K : Type) [CommRing T] [IsDomain T] [IsDis
     have : Smooth (Xo l).s := SmoothOfRelativeDimension.smooth D.dim _
     exact (isReduced_isNormalScheme_isLocallyNoetherian_of_smooth_over_field _ _
       (pullback.snd (Xo l).s (spMap (IntermediateField.inclusion c.le).toRingHom)) inferInstance).2.1
-  obtain ⟨C'', ⟨A''⟩⟩ := GlobalTheory.T.exists_normal_model_above_finite_cover E H _ _ _ _ _ β₀ ((Xo l).XF c) _ _ (pullback.snd _ _) oF.t
+  obtain ⟨C'', ⟨A''⟩⟩ := _root_.GlobalTheory.Models.Cpt.exists_above E H _ _ _ _ _ β₀ ((Xo l).XF c) _ _ (pullback.snd _ _) oF.t
     (algebraMap (𝓞 c.F) c.F) C' b₀ (IntermediateField.inclusion c.le).toRingHom (pullback.fst _ _) pullback.condition
     m0.toSABMap (hd₀ _ hβ₀) hdO hb₀' hnormF (by rw [pullback.lift_fst_snd]; infer_instance)
   let Y : Model (Xo l) c (algebraMap (𝓞 c.F) c.F) :=
     ⟨C''.X, C''.s, C''.normal, C''.proj, C''.flat, C''.jQ, C''.jQ_over, C''.jQ_open, C''.jQ_dense, C''.t, oF, m0,
       C''.m, C''.ab_gen⟩
-  refine ⟨Y, GlobalTheory.T.model_finite_over_moduliModel_descends E H D l (Xo l) c _ _ Y _ β₀ C' b₀ A'' (hd₀ _ hβ₀) hdO hb₀', fun p W hp hW b hb => ?_⟩
+  refine ⟨Y, _root_.GlobalTheory.descends_of_above E H D l (Xo l) c _ _ Y _ β₀ C' b₀ A'' (hd₀ _ hβ₀) hdO hb₀', fun p W hp hW b hb => ?_⟩
   obtain ⟨l₀, h, hR⟩ := S.raises p W hp hW ⟨l, c, hg p hp⟩
   let i : Bool × P := (S.ch p, ⟨l₀, p, hp, h⟩)
   obtain ⟨hdV, -, hbV⟩ := hV p W hp hW
   obtain ⟨e, he⟩ := hbV (a i) 1 (hcop p hp l₀ h) Nat.one_pos (hA ▸ c.le (baseKA l).ζ.2)
   obtain ⟨f, t₁, m₁, m₂, -, h₁, h₂⟩ := hC' i
   obtain ⟨A₁⟩ := hC i
-  have := (((GlobalTheory.T.cmModelCoefficient_inclusions_etale_openImmersion E H 1 (a i) 1 1 0 (ha i) Nat.one_pos (one_dvd _) dvd_rfl).2 _ (hb₁ i)).2 rfl).1
+  have := (((_root_.GlobalTheory.BaseRing.inclusion_RZ E H 1 (a i) 1 1 0 (ha i) Nat.one_pos (one_dvd _) dvd_rfl).2 _ (hb₁ i)).2 rfl).1
   obtain ⟨f', τ, n₁, n₂, e₁, e₂⟩ := exists_map_to_base A'' A₁ (b₁ i) (hωb i) f t₁ m₁ m₂ h₁ h₂ b e
     (RingHom.ext fun x => Subtype.ext (Subtype.ext ((he _).trans ((hb₁ i x).trans ((hb₀ x).symm.trans
       (congrArg Subtype.val (hb _)).symm)))))
   obtain ⟨ν', hν'⟩ := LevelCover.sab_comp m0.toSABMap (ν i.2) rfl
-  refine GlobalTheory.T.model_dominated_of_map_to_baseModel L₁ L₂ L₃ E H D Xo _ _ _ l₀ l (B i) c _ _ _ _ Y _ b f' τ n₁ n₂ _ ν'
+  refine _root_.GlobalTheory.Models.Domination.dominates_of_map_to_base L₁ L₂ L₃ E H D Xo _ _ _ l₀ l (B i) c _ _ _ _ Y _ b f' τ n₁ n₂ _ ν'
     ((IntermediateField.inclusion c.le).toRingHom.comp (k i.2)) hdO hdV (RingHom.ext hb) hR ⟨fun x => ?_, fun x => ?_⟩
     (fun x => (IntermediateField.coe_inclusion c.le _).trans (hk i.2 x)) ?_ e₁ (hν' ▸ e₂)
   · rw [hν', ← Category.assoc, LevelCover.sec_pow m0.toSABMap _ _ (m0.eta x), Category.assoc, (hlev i.2).1,

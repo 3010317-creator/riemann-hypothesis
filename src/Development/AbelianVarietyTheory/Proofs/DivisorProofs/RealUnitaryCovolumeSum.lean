@@ -1,10 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.TamagawaSpecialUnitary
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryLieBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralMultipleInLieLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalFactorProductBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RiemannianLieVolumeFormulaStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.Signature
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryLieBasis
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EmbGLMemRealSU
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralMultipleInLieLattice
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FundamentalDomainPointBound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalFactorProductBound
+public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.DefiniteBound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RiemannianLieVolumeFormula
+public import Mathlib.NumberTheory.NumberField.Discriminant.Different
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FinrankEqTwoMulHalfDegree
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FormallyUnramifiedRingOfIntegersIffDifferentIdea
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -22,7 +28,6 @@ import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
-public import Mathlib.NumberTheory.NumberField.Discriminant.Different
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.Radical.NatInt
@@ -56,7 +61,6 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Algebra.Group.Units
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FinrankEqTwoMulHalfDegree
 
 @[expose] public section
 
@@ -127,8 +131,8 @@ theorem exists_lie_basis {E : Type} [Field E] [NumberField E] [IsCMField E] {r :
     (G : Matrix (Fin r) (Fin r) E) (Λ : Submodule (𝓞 E) (Fin r → E)) (hΛ : SelfDualLat G Λ) :
     ∃ e : Fin (r ^ 2 - 1) → Matrix (Fin r) (Fin r) E,
       (∀ i, e i ∈ lieLat G Λ) ∧ LinearIndependent (maximalRealSubfield E) e := by
-  obtain ⟨e, he, hli⟩ := GlobalTheory.T.exists_unitary_lie_basis G hΛ.1 hΛ.2.1
-  choose N hN hmem using fun i => GlobalTheory.T.integral_multiple_in_lie_lattice G Λ hΛ.2.2.1 hΛ.2.2.2.1 (e i) (he i).1 (he i).2
+  obtain ⟨e, he, hli⟩ := _root_.GlobalTheory.suLie_finrank_ge G hΛ.1 hΛ.2.1
+  choose N hN hmem using fun i => _root_.GlobalTheory.DenClear.exists_natSmul_mem_lieLat G Λ hΛ.2.2.1 hΛ.2.2.2.1 (e i) (he i).1 (he i).2
   refine ⟨fun i => (N i : E) • e i, hmem, ?_⟩
   let w : Fin (r ^ 2 - 1) → (maximalRealSubfield E)ˣ :=
     fun i => Units.mk0 (N i : maximalRealSubfield E) (by exact_mod_cast (hN i).ne')
@@ -143,8 +147,8 @@ theorem sum_covolume_le : GlobalTheory.Published.TamagawaSpecialUnitary → ∀ 
   intro hP E _ _ _ r X Λ x _ _ J s hr hU hΛ hx hs
   obtain ⟨e, he, hli⟩ := exists_lie_basis X.Gm Λ hΛ
   obtain ⟨hmult, hP1⟩ := hP E r X.Gm Λ X.Ψ e J s hr hU hΛ X.cmType he hli hs
-  have hlie := GlobalTheory.T.riemannian_lie_volume_formula E r X Λ x e hr hU hΛ hx he hli
-  obtain ⟨hPpos, hPinv⟩ := GlobalTheory.T.local_factor_product_bound E r hr hmult
+  have hlie := _root_.GlobalTheory.LieCovol.riemLie_eq_sqrt_index_smul_formLie E r X Λ x e hr hU hΛ hx he hli
+  obtain ⟨hPpos, hPinv⟩ := _root_.GlobalTheory.EulerLocVol.tprod_locFactor_bound E r hr hmult
   set m : ℝ := ((Submodule.span (𝓞 (maximalRealSubfield E)) (Set.range e)).toAddSubgroup.relIndex
     (lieLat X.Gm Λ) : ℝ) with hm
   set P : ℝ := ∏' v, locFactor E r v with hPdef

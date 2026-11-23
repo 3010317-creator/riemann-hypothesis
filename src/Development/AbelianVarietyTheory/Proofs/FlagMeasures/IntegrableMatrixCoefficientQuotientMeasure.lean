@@ -1,13 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselFormConvergesEquivariantHermitianStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselOpNormPowerIntegralLtTopClosedSubgroupStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupRepTwistedIsUnitaryRepStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupsClosedUnitaryWCompact
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselFormConvergesEquivariantHermitian
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SmoothVectorsDenseInvariant
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnimodularBesselSubgroupsUWNStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.WeilFormulaBesselUnitaryIntegrableStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.WeilFormulaBesselUnitaryIntegrable
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselOpNormPowerIntegralLtTopClosedSubgroup
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupRepTwistedIsUnitaryRep
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupsClosedUnitaryWCompact
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnimodularBesselSubgroupsUWN
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -81,12 +81,12 @@ theorem integrable_Afun_quotMeas : ∀ (k r : ℕ) {H : Type} [NormedAddCommGrou
   have hcl := GlobalTheory.SgInf.closedSub_groups k r z hz hT
   have hG : IsClosedSub k r (GG k r) := hcl.1
   have hS : IsClosedSub k r (Sset k r z) := hcl.2.2.2.1
-  have hunim : IsUnimod (Sset k r z) μS := (GlobalTheory.T.unimodular_besselSubgroups_UW_N k r z hz hT μS).1 hHaarS
-  have hW := GlobalTheory.T.weil_formula_besselUnitary_integrable k r (Sset k r z) μG μS ν hS hHaar hHaarS hunim hν
+  have hunim : IsUnimod (Sset k r z) μS := (_root_.GlobalTheory.SgInf.unimodular_S_N_UW k r z hz hT μS).1 hHaarS
+  have hW := _root_.GlobalTheory.SgInf.weil_integrable k r (Sset k r z) μG μS ν hS hHaar hHaarS hunim hν
   have hνG : ν {x | Matrix.of x ∉ GG k r} = 0 := hW.2.1
   have hstab := (GlobalTheory.SgInfDD.DD_stable_dense k r σ w hrep).1
-  have hD1 := GlobalTheory.T.besselForm_converges_equivariant_hermitian k r σ w a μG d z c π μS hStd hSide (DD σ w : Set H) hstab hdec u hu v hv
-  have hPi := GlobalTheory.T.besselSubgroupRepTwisted_isUnitaryRep k r z c π hz hT hπ
+  have hD1 := _root_.GlobalTheory.SgInf.BeForm.be_converges_equivariant_hermitian_continuous k r σ w a μG d z c π μS hStd hSide (DD σ w : Set H) hstab hdec u hu v hv
+  have hPi := _root_.GlobalTheory.SgInf.PiUnitary.piS_unitary k r z c π hz hT hπ
   have hmeasG : MeasurableSet {x : Mt k r | Matrix.of x ∈ GG k r} :=
     (hG.2.1.preimage (f := fun x : Mt k r => (Matrix.of x : Mat k r)) continuous_id).measurableSet
   have haeG : ∀ᵐ x ∂ν, x ∈ {x : Mt k r | Matrix.of x ∈ GG k r} := by
@@ -149,7 +149,7 @@ theorem integrable_Afun_quotMeas : ∀ (k r : ℕ) {H : Type} [NormedAddCommGrou
         exact_mod_cast (by omega : 1 < 2 * r + k + 1)
       have := pow_lt_pow_right₀ h2 (by norm_num : 2 < 5)
       linarith
-    have hN := GlobalTheory.T.besselOpNormPowerIntegral_lt_top_closedSubgroup k r (GG k r) μG a hG hHaar hn
+    have hN := _root_.GlobalTheory.SgGrowth.normInt_lt_top k r (GG k r) μG a hG hHaar hn
     have heq : ∫⁻ x, f x ∂μG = ENNReal.ofReal (max C 0) * normInt μG a := by
       rw [normInt, ← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
       refine lintegral_congr fun x => ?_

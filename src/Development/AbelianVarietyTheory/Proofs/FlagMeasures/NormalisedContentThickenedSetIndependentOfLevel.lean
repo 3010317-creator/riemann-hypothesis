@@ -1,12 +1,12 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ContentThickenedTupleOrbitNormalSubgroup
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermLat
 public import Mathlib.Order.CompletePartialOrder
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CommensurableCosetUnionContentBiUnionStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianMatrixCongruenceContentJacobianStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MatrixCongruentOneModUniformizerPowGroupAndOrbitStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TupleJacobianRightMulIsometryStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CommensurableCosetUnionContentBiUnion
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianMatrixCongruenceContentJacobian
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MatrixCongruentOneModUniformizerPowGroupAndOrbit
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TupleJacobianRightMulIsometry
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ContentThickenedTupleOrbitNormalSubgroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -96,7 +96,7 @@ theorem cont_nonneg {W : Type} [AddCommGroup W] (W0 : AddSubgroup W) (S : Set W)
 
 theorem cont_mono {W : Type} [AddCommGroup W] (W0 : AddSubgroup W) {S T : Set W}
     (hS : IsCO W0 S) (hT : IsCO W0 T) (h : S ⊆ T) : cont W0 S ≤ cont W0 T := by
-  have h1 := (GlobalTheory.T.commensurableCosetUnionContent_biUnion W0 (Finset.univ : Finset Bool) (fun b => if b then S else T \ S)
+  have h1 := (_root_.GlobalTheory.HL.cont_biUnion W0 (Finset.univ : Finset Bool) (fun b => if b then S else T \ S)
     (by rintro (_ | _) _
         · simpa using isCO_diff W0 hS hT
         · simpa using hS)).2
@@ -122,7 +122,7 @@ theorem finite_pieces {W : Type} [AddCommGroup W] (W0 : AddSubgroup W) {T : Set 
   by_contra hinf
   obtain ⟨N, hN⟩ := exists_nat_gt (cont W0 T / c)
   obtain ⟨s, hs, hcard⟩ := Set.Infinite.exists_subset_card_eq hinf N
-  obtain ⟨h3, h4⟩ := GlobalTheory.T.commensurableCosetUnionContent_biUnion W0 s (fun p => p) (fun p hp => (h1 p (hs hp)).1)
+  obtain ⟨h3, h4⟩ := _root_.GlobalTheory.HL.cont_biUnion W0 s (fun p => p) (fun p hp => (h1 p (hs hp)).1)
   have h5 := h4 (fun p hp q hq => h2 p (hs hp) q (hs hq))
   rw [Finset.sum_congr rfl (fun p hp => (h1 p (hs hp)).2.1), Finset.sum_const, hcard, nsmul_eq_mul] at h5
   have h6 := cont_mono W0 h3 hT (Set.iUnion₂_subset fun p hp => (h1 p (hs hp)).2.2)
@@ -153,8 +153,8 @@ end
 
 theorem main : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] [CharZero F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] (L : LocE F E), ∀ (ϖ : 𝒪[F]), Irreducible ϖ → ∀ {n : ℕ} (Hm : Matrix (Fin n) (Fin n) E), IsHermND L Hm → ∀ Λs, IsSD L Hm Λs → ∀ (m : ℕ) (Γ : Matrix (Fin m) (Fin m) E), IsHerm L Γ → IsUnit Γ.det → ∀ (Ω : Set (Fin m → Fin n → E)), (∀ y ∈ Ω, gramT L Hm y = Γ) → ∀ i i' : ℕ, 1 ≤ i → i ≤ i' → (∀ y ∈ Ω, ∀ A ∈ congK L ϖ m i, cT L A * Γ * A = Γ → rmul y A ∈ Ω) → IsCO (tupLat L Λs m) (thick L ϖ Ω i') → cont (tupLat L Λs m) (thick L ϖ Ω i) * cont (hermLat L m) (horb L ϖ Γ i') = cont (tupLat L Λs m) (thick L ϖ Ω i') * cont (hermLat L m) (horb L ϖ Γ i) := by
   intro F _ _ _ _ _ E _ _ _ L ϖ hϖ n Hm hH Λ hΛ m Γ hΓ hΓu Ω hΩ i i' hi hii hst hco
-  obtain ⟨h1, hK, hO⟩ := GlobalTheory.T.matrixCongruentOneModUniformizerPow_group_and_orbits L ϖ hϖ m i hi
-  obtain ⟨h1', hK', hO'⟩ := GlobalTheory.T.matrixCongruentOneModUniformizerPow_group_and_orbits L ϖ hϖ m i' (hi.trans hii)
+  obtain ⟨h1, hK, hO⟩ := _root_.GlobalTheory.CongGrp.congK_group L ϖ hϖ m i hi
+  obtain ⟨h1', hK', hO'⟩ := _root_.GlobalTheory.CongGrp.congK_group L ϖ hϖ m i' (hi.trans hii)
   obtain ⟨hOco, -⟩ := hO Γ hΓ hΓu
   obtain ⟨hOco', hpos⟩ := hO' Γ hΓ hΓu
   have hsub : ∀ B ∈ congK L ϖ m i', B ∈ congK L ϖ m i := fun B hB =>
@@ -211,7 +211,7 @@ theorem main : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [I
   have hS : ∀ p ∈ S, IsCO (hermLat L m) p ∧ cont (hermLat L m) p = cont (hermLat L m) (horb L ϖ Γ i') ∧
       p ⊆ horb L ϖ Γ i := by
     rintro _ ⟨a, ha, rfl⟩
-    obtain ⟨j1, j2⟩ := (GlobalTheory.T.hermitianMatrix_congruence_content_jacobian L ϖ hϖ m a (hu a ha)).2 _ hOco'
+    obtain ⟨j1, j2⟩ := (_root_.GlobalTheory.HL.HermJacobian.cont_congr L ϖ hϖ m a (hu a ha)).2 _ hOco'
     rw [(hK a ha).2.2.1] at j2
     refine ⟨j1, by simpa using j2, fun X hX => ?_⟩
     obtain ⟨B, hB, rfl⟩ := (memP _ _).1 hX
@@ -223,7 +223,7 @@ theorem main : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [I
     · exact Set.iUnion₂_subset fun p hp => (hS p (hfin.mem_toFinset.1 hp)).2.2
     · rintro _ ⟨A, hA, rfl⟩
       exact Set.mem_iUnion₂.2 ⟨P A, hfin.mem_toFinset.2 ⟨A, hA, rfl⟩, hself A⟩
-  have hc1 := (GlobalTheory.T.commensurableCosetUnionContent_biUnion (hermLat L m) hfin.toFinset (fun p => p)
+  have hc1 := (_root_.GlobalTheory.HL.cont_biUnion (hermLat L m) hfin.toFinset (fun p => p)
     (fun p hp => (hS p (hfin.mem_toFinset.1 hp)).1)).2
     (fun p hp q hq => hdisj p (hfin.mem_toFinset.1 hp) q (hfin.mem_toFinset.1 hq))
   rw [hU1, Finset.sum_congr rfl (fun p hp => (hS p (hfin.mem_toFinset.1 hp)).2.1), Finset.sum_const,
@@ -242,7 +242,7 @@ theorem main : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [I
       cont (tupLat L Λ m) (T p) = cont (tupLat L Λ m) (thick L ϖ Ω i') := by
     intro p hp
     have ha := (hr p hp).1
-    obtain ⟨j1, j2⟩ := (GlobalTheory.T.tuple_jacobian_rightMul_isometry L ϖ hϖ Hm hH Λ hΛ m).1 _ (hu _ ha) _ hco
+    obtain ⟨j1, j2⟩ := (_root_.GlobalTheory.HL.TupleJac.tuple_jacobian L ϖ hϖ Hm hH Λ hΛ m).1 _ (hu _ ha) _ hco
     rw [(hK _ ha).2.2.1] at j2
     exact ⟨j1, by simpa using j2⟩
   have hgram : ∀ p ∈ S, ∀ x ∈ T p, gramT L Hm x ∈ p := by
@@ -274,7 +274,7 @@ theorem main : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [I
       refine ⟨_, ⟨_, hst y hy _ (hmul _ hA _ (hinv _ hBa)) h5, B, hB, rfl⟩, ?_⟩
       simp only [rmul_rmul]
       rw [Matrix.mul_assoc, Matrix.mul_assoc, Matrix.nonsing_inv_mul _ (hu _ hBa), Matrix.mul_one]
-  have hc2 := (GlobalTheory.T.commensurableCosetUnionContent_biUnion (tupLat L Λ m) hfin.toFinset T
+  have hc2 := (_root_.GlobalTheory.HL.cont_biUnion (tupLat L Λ m) hfin.toFinset T
     (fun p hp => (hT p (hfin.mem_toFinset.1 hp)).1)).2
     (fun p hp q hq hne => by
       have hp' := hfin.mem_toFinset.1 hp

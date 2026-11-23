@@ -2,13 +2,19 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagCellFrameChangeTriangular
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CarriesFramedPointOfUnitTriangularChartStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBasicOpenIsUnitOfNotMemMapStatement
+public import Mathlib.GroupTheory.MonoidLocalization.Away
+public import Mathlib.RingTheory.Ideal.Maps
+public import Mathlib.RingTheory.OreLocalization.Ring
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBasicOpenIsUnitOfNotMemMap
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBasicOpenNbhdPointMemOpenStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRowPermLeadingMinorsNotMemStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagCellFramesLastStepEigenmodulesStatement
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Mathlib.RingTheory.Ideal.Prime
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRowPermLeadingMinorsNotMem
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagCellFramesLastStepEigenmodules
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagCellPointImageAndFrameStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrameVectorsEqEigenFrameMulInvertibleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LowerUnitriangularMulUpperTriangularOfIsUnitLeadStatement
+public import Mathlib.LinearAlgebra.Matrix.Block
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LowerUnitriangularMulUpperTriangularOfIsUnitLead
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -74,8 +80,8 @@ theorem exists_cell_lies : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
       ((Ideal.disjoint_powers_iff_notMem _ q.2.isRadical).2 hf₀)
   have hdet : ∀ σ, (T σ).det ∉ Ideal.map (algebraMap S (Localization.Away f₀)) q.asIdeal :=
     fun σ h => hq₀.ne_top (Ideal.eq_top_of_isUnit_mem _ h (hTu σ))
-  choose w hw using fun σ => GlobalTheory.T.exists_perm_leadingMinors_not_mem _ _ (T σ) _ hq₀ (hdet σ)
-  obtain ⟨f, hf, φ, hφ⟩ := GlobalTheory.T.exists_basicOpen_isUnit_of_notMem_map' S f₀ q.asIdeal q.2 hf₀ (Σ σ : E →+* ℂ, Fin (Dw.mult σ + 1))
+  choose w hw using fun σ => _root_.GlobalTheory.exists_rowPerm_leadingMinors_not_mem _ _ (T σ) _ hq₀ (hdet σ)
+  obtain ⟨f, hf, φ, hφ⟩ := _root_.GlobalTheory.exists_basicOpen_isUnit_of_notMem_map S f₀ q.asIdeal q.2 hf₀ (Σ σ : E →+* ℂ, Fin (Dw.mult σ + 1))
     (fun i => (((T i.1).submatrix (w i.1) id).submatrix (Fin.castLE (Nat.lt_succ_iff.1 i.2.2))
       (Fin.castLE (Nat.lt_succ_iff.1 i.2.2))).det) (fun i => hw i.1 _ _)
   refine ⟨f, hf, ?_⟩
@@ -97,7 +103,7 @@ theorem exists_cell_lies : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
           (((T σ).submatrix (w σ) id).submatrix (Fin.castLE hk) (Fin.castLE hk)) := rfl
     rw [e, ← RingHom.map_det]
     exact h
-  choose L U hL0 hL1 hU hUu hLU using fun σ => GlobalTheory.T.exists_lu_of_isUnit_leading_minors (Localization.Away f) (Dw.mult σ)
+  choose L U hL0 hL1 hU hUu hLU using fun σ => _root_.GlobalTheory.lowerUnitriangular_mul_upperTriangular_of_isUnit_leadingMinors (Localization.Away f) (Dw.mult σ)
     (((T σ).map φ').submatrix (w σ) id) (hminor σ)
   let ψ₀ : Γ(Y.X, (A.V b).1) →+* Localization.Away f := ev (frX P₁ ≫ Y.j) _ h₁
   let xc : CellVar Dw.mult → Localization.Away f := fun v => L v.1 v.2.1.1 v.2.1.2
@@ -107,7 +113,7 @@ theorem exists_cell_lies : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   have hx : (spMap (MvPolynomial.eval₂Hom ψ₀ xc) ≫ κ b w) ≫ π = frX P₁ ≫ Y.j :=
     hzπ.trans (spMap_ev _ (A.V b).2 h₁)
   refine GlobalTheory.T.carries_framedPoint_of_unitTriangular_chart E H Dw l Xo c c.F (RingHom.id c.F) Y Z π (cellFrames hZ ht)
-    (GlobalTheory.T.flagCellFrames_lastStep_eigenmodules E H Dw l Xo c Y p A Z π g κ hZ ht) _ P₁ _ ((b, w) : A.B × Pm Dw.mult) hz hx U hU hUu ?_
+    (_root_.GlobalTheory.FlagMod.FieldFlag.cellFrames_topEigen E H Dw l Xo c Y p A Z π g κ hZ ht) _ P₁ _ ((b, w) : A.B × Pm Dw.mult) hz hx U hU hUu ?_
   intro σ i
   rw [hT σ _ φ' P₁ hP₁ h₁ hM₁ i]
   have hcell : Matrix.of (cell xc σ) = L σ := by

@@ -3,10 +3,12 @@ module
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRes
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsPieceDegree
-public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.UnitLogOrthogonalWeightConstantStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PointsIntegralIndependentOfMetricStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PointsIntegralUniqueEmbeddingStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SumOverEmbeddingsUnitInvarianceStatement
+public import Mathlib.NumberTheory.NumberField.InfinitePlace.Embeddings
+public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.UnitLogOrthogonalWeightConstant
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.PenHost
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PointsIntegralIndependentOfMetric
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PointsIntegralUniqueEmbedding
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SumOverEmbeddingsUnitInvariance
 public import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PFsConjInvariant
 import GroundTheory.HeightsAndTheta.Heights.Intersections.StatementsAntisym
 import Mathlib.Algebra.Order.Floor.Extended
@@ -83,14 +85,14 @@ theorem pieceDegree : ArithIntersectionSystemStatement → ResExistsStatement �
       ptsIntegral (mCoordIdeal y) (pot L) ({z | LiesOver y s z}.indicator fun _ => (1 : ℝ)) =
         ptsIntegral (mCoordIdeal y) (pot fun j => fsOfDegree (L j))
           ({z | LiesOver y s z}.indicator fun _ => (1 : ℝ)) := fun s =>
-    GlobalTheory.T.points_integral_independent_of_metric hAr hPts K ι Ω F y D L (fun j => fsOfDegree (L j)) s har hsm hsm₀
+    _root_.GlobalTheory.CompanionTheory.Ar.Giv.mass_eq_of_degrees hAr hPts K ι Ω F y D L (fun j => fsOfDegree (L j)) s har hsm hsm₀
       (fun j => (fsOfDegree_a (L j)).symm) hone
   rw [hind sg, hind sg']
-  exact GlobalTheory.T.unit_log_orthogonal_weight_constant F
+  exact _root_.GlobalTheory.CompanionTheory.Ar.Giv.const_of_orthogonal_log_units F
     (fun s => ptsIntegral (mCoordIdeal y) (pot fun j => fsOfDegree (L j))
       ({z | LiesOver y s z}.indicator fun _ => (1 : ℝ)))
-    (fun s => GlobalTheory.T.points_integral_unique_embedding hRes K ι Ω F y D _ s har hsm₀ hcj₀ hone)
-    (fun θ => GlobalTheory.T.sum_over_embeddings_unit_invariance hAr hPts K ι Ω F y D _ θ har hbir hsm₀ hone) sg sg'
+    (fun s => _root_.GlobalTheory.CompanionTheory.Ar.Giv.conjugate_pieces_same_mass hRes K ι Ω F y D _ s har hsm₀ hcj₀ hone)
+    (fun θ => _root_.GlobalTheory.CompanionTheory.Ar.Giv.sum_log_unit_mul_mass_eq_zero hAr hPts K ι Ω F y D _ θ har hbir hsm₀ hone) sg sg'
 
 end
 

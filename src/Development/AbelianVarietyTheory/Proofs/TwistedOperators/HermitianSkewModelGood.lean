@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaEqB
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFockMap
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MaximalCompactOneParameterLinesOfLieLines
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryLieElementsGenerateOneParamLinesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryLieElementsGenerateOneParamLines
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -160,7 +160,7 @@ theorem exists_line_upq {F E : Type} [Field F] [NumberField F] [Field E] [Number
     simp only [Matrix.map_mul, GlobalTheory.RealLift.KLineProof.map_cA_map hCM, Matrix.transpose_map] at this
     exact this
   choose Y hY using hloc
-  obtain ⟨γ, hγ, hgen⟩ := GlobalTheory.T.unitaryLieElements_generate_oneParamLines F E σ β R S τ J b C hCM hfr Y (fun w => (hY w).1)
+  obtain ⟨γ, hγ, hgen⟩ := _root_.GlobalTheory.RealLift.exists_line_of_upq F E σ β R S τ J b C hCM hfr Y (fun w => (hY w).1)
   refine ⟨γ, hγ, Y, hgen, fun w => (hY w).1, fun w => (hY w).2.1, ?_⟩
   have hw : ∀ w, ((γ (Multiplicative.ofAdd 1)).1 : Matrix β β (AE F E)).map (piInf (τ w)) =
       (k.1 : Matrix β β (AE F E)).map (piInf (τ w)) := by

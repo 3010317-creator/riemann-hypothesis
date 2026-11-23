@@ -4,13 +4,14 @@ public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeil
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.WhitGenOf
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.WhittakerGlobalFactors.MeasurableSetUH
 public import GroundTheory.HeightsAndTheta.Theta.AdelicFourier
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicTupleProjectionsStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CompletionIsLocalRing
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicTupleProjections
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BasicCharacterLocalComponent
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.WhittakerGlobalFactors.EvalVSingleVSame
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.WhittakerGlobalFactors.TrPairGramFE
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.WhittakerGlobalFactors.TupSplit
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CompletionIsLocalRing
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicLocalCompactness.T2SpaceTensorProductFiniteExtension
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.TensTop
 import Mathlib.Algebra.Order.Floor.Extended
@@ -218,7 +219,7 @@ theorem jt_split (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) (M n d : ℕ) (J : 
     haveI := (GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Fv F v)).2.2.2.2.2.2.2.1 n M
     exact (continuous_locI σ hCM ψ hψ.1 v J _ (Φv v) (pure.1 v).1.continuous).aestronglyMeasurable
   have key := hSt S hStS gi gv hmeas
-  have hlat := (GlobalTheory.T.adelic_tuple_projections F E σ hCM d bs n M).2.2.2.2.2.1
+  have hlat := (_root_.GlobalTheory.CompanionTheory.SW.MeasProj.proj_props F E σ hCM d bs n M).2.2.2.2.2.1
   have hpt : ∀ Y, Φ Y * ψ (trPair (AF F) (b : Matrix (Fin n) (Fin n) (AF F ⊗[F] E)) (gramR (AF F) σ J Y)) =
       (GlobalTheory.CompanionTheory.SW.intOff bs S).indicator (fun X => gi (projInf X) * ∏ v ∈ S, gv v (projV v (projFin X))) Y := by
     intro Y

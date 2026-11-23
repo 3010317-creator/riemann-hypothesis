@@ -3,16 +3,17 @@ module
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ExistsReadingLaws
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
-import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.NotInSupportOfSubsingleton
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeviBlockRepEquivFirst
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SupercuspidalSupportUniqueGL
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.NontrivialOfIrreducible
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PiExteriorTensorSmoothIrreducibleIsIrreducible
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.HasSupportOfIsSubquotientProdIrr
+import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.NotInSupportOfSubsingleton
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GeometricLemmaCellOneBlockSwapEquiv
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsCovBySubmodule
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsInSupportOfMultiProd
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.JhMultSubAddQuot
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParIndJacPlacing
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PiExteriorTensorSmoothIrreducibleIsIrreducibleStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.HasSupportOfIsSubquotientProdIrr
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -200,7 +201,7 @@ theorem offdiag_eq_zero (hG : GeometricLemma) (hBZ : BernsteinZelevinskyFinitene
   obtain ⟨s, hrow, hcol⟩ := exists_of_cell (hG k).2 f g (fun i => (p i).smooth)
     (fun i => hasFiniteLength_of_isIrreducible (p i).irr) hτ hτs h0
   have hR : ∀ i, ∃ t : Fin 2 → Multiset (IrrGL (k := k)), (∀ j, HasSupport (s i j).ρ (t j)) ∧ A i = ∑ j, t j :=
-    fun i => exists_sum_of_jac hG hBZ (hA i) (f i) (GlobalTheory.T.piExteriorTensor_smoothIrreducible_isIrreducible hBZ k _ _ fun j => s i j) (hrow i)
+    fun i => exists_sum_of_jac hG hBZ (hA i) (f i) (_root_.GlobalTheory.ExtTensorIrr.piTensor_isIrreducible hBZ k _ _ fun j => s i j) (hrow i)
       (fun j => s i j) (fun j => isSubquotient_comp_mulSingle _ (fun j => (s i j).irr) j)
   choose t ht hAt using hR
   have hC : ∀ j, HasSupport (y j).ρ (∑ i, t i j) := by

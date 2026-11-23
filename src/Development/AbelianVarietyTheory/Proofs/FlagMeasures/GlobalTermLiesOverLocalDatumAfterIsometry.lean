@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.AtBase
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsDatumOfTwoCongruentFramesStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsDatumOfTwoCongruentFrames
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrbitRepsOver
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalFramePairsDifferIsometryUnitriangularStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalIsometryExtendsLocalIsometryStatement
@@ -240,7 +240,7 @@ theorem over_local : ∀ (D : D7) (Z : LocDat D), ∀ (u u' : D.what₂.Word) (F
       tri_map (g : Vp D p →ₗ[(D.s.atP p).Ep] Vp D p) htri0
     rw [hmove (frame F')] at h1
     exact tri_trans ⟨Ap' p, hAp' p⟩ h1
-  obtain ⟨d, hd⟩ := GlobalTheory.T.exists_datum_of_two_congruent_frames (Z.M p) hOK (locH Z p) D.R.rS P (move g t)
+  obtain ⟨d, hd⟩ := _root_.GlobalTheory.LocOver.TermOver.exists_datum (Z.M p) hOK (locH Z p) D.R.rS P (move g t)
     (isTerm_move (locH Z p) hgU ht0) hAt.2.2.1.symm hAt.2.2.2.symm hf hf'
   refine ⟨d, ?_⟩
   unfold Over

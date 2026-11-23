@@ -2,9 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.EeProd
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CompletedLaurentIsDVRStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCombinationMulEqReparametrizationImageStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AlgebraMapZpInjective
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCombinationMulEqReparametrizationImage
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLaurentSeriesSumCongruentModPPowStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegralOfExpansionSumEqPrimePowMulIsEvalStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegralOfExpansionSumEqPrimePowMulIsEval
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemSubfieldOfFixedByGeometricTowerGaloisStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -49,7 +50,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Foundations.Integral
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AlgebraMapZpInjective
 
 @[expose] public section
 
@@ -82,7 +82,7 @@ theorem geofix : ∀ (p : ℕ) [Fact p.Prime], ∀ (Ω : Type) [Field Ω] [Algeb
           exact ⟨0, 1, inR_zero ψ, one_ne_zero, by simp⟩
         · have hψD : ψ D ≠ 0 := fun h0 => hD (h.inj (by rw [h0, map_zero]))
           have hN0 : N ≠ 0 := by rw [← ha]; exact mul_ne_zero ha0 hψD
-          obtain ⟨N', D', hN', hD', hNN⟩ := GlobalTheory.T.exists_combination_mul_eq_reparametrization_image p Ω hc T n ψ h N hN hN0
+          obtain ⟨N', D', hN', hD', hNN⟩ := _root_.GlobalTheory.GeoFix.exists_inR_mul_eq_psi p Ω hc T n ψ h N hN hN0
           refine ⟨ψ D * N', D', inR_mul (inR_psi ψ D) hN', hD', ?_⟩
           rw [← hNN, ← ha]
           field_simp }
@@ -115,7 +115,7 @@ theorem geofix : ∀ (p : ℕ) [Fact p.Prime], ∀ (Ω : Type) [Field Ω] [Algeb
   have hpi : IsInt (p := p) ((p : Ω) ^ k) := by
     rw [IsInt, ← map_natCast (algebraMap (O0 p) Ω), ← map_pow]; exact isIntegral_algebraMap
   have ho' : IsInt (p := p) (o - (p : Ω) ^ k * z) := IsIntegral.sub ho (IsIntegral.mul hpi hz)
-  obtain ⟨c, x', hEv⟩ := GlobalTheory.T.integral_of_expansionSum_eq_primePow_mul_isEval p Ω hc T n ψ h d e a he v _ ho' hsum
+  obtain ⟨c, x', hEv⟩ := _root_.GlobalTheory.GeoFix.Divide.divide_ev p Ω hc T n ψ h d e a he v _ ho' hsum
   exact ⟨c, _, x', hEv, z, hz, by ring⟩
 
 end GlobalTheory.GeoFix

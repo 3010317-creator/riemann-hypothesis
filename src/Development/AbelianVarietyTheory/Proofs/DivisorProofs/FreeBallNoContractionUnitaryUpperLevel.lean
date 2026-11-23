@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.PoincareCuspForms.SmallUnipotentElements
 public import Development.AbelianVarietyTheory.Definitions.UpperBounds.FreeBallIffOfDimXEqZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmallUnipotentUnitaryElementIsOneProofStatement
-import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.MajLactRmul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmallUnipotentUnitaryElementIsOneProof
 public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.OneAddLeLminorSq
+import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.MajLactRmul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -122,7 +122,7 @@ theorem freeBall_at : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r 
   rw [FundSetPf.lact_rmul, rhX_rmul _ _ hb'] at hlt2
   rw [rhX_rmul _ _ hb'] at hlt
   have h2 := isOrth_lact_of_isUStab (hΛ γ hγ) hz1
-  exact hne (GlobalTheory.T.smallUnipotentUnitaryElementIsOne_proof E r X g hsp hg G hL' hU x1 hx1 hNC1 γ hγ
+  exact hne (_root_.GlobalTheory.SmallElement.smallElement E r X g hsp hg G hL' hU x1 hx1 hNC1 γ hγ
     (opNormLe_of_ball hr X.toData h1 hz1 h2 hlt hlt2))
 
 end GlobalTheory.FreeBallAt

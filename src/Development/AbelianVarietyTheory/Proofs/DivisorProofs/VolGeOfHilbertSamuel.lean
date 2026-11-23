@@ -4,17 +4,19 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.Sma
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.VolGe
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqOfIsometricTrivShift
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ExistsAlgClosedBaseChange
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGoodHermitianLineBundlePairStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMetricShiftIsNefPowTensAmpleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLineBundlePairBallsFiniteStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermPairWithSectionsRepresentsTensorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeArithVolumeOfFrequentlySmallSectionsLowerStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogCardSmallSectionsGeOfShiftNefStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepresentsBaseBundlesAndTrivialStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepresentsHermitianLineBundlePowStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmallSectionCountContinuousFromAboveStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmallSectionsTwistedPowerEncardEqBallStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TendstoSelfIntersectionPowTensorDivPowStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.CharZeroFunctionField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGoodHermitianLineBundlePair
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMetricShiftIsNefPowTensAmple
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLineBundlePairBallsFinite
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NefFibOfIsNef
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeArithVolumeOfFrequentlySmallSectionsLower
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogCardSmallSectionsGeOfShiftNef
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmallSectionCountContinuousFromAbove
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TendstoSelfIntersectionPowTensorDivPow
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermPairWithSectionsRepresentsTensor
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepresentsBaseBundlesAndTrivial
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepresentsHermitianLineBundlePow
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmallSectionsTwistedPowerEncardEqBall
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,7 +56,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
-public import Development.AbelianVarietyTheory.Definitions.Divisors.CharZeroFunctionField
 
 @[expose] public section
 
@@ -69,32 +70,32 @@ namespace GlobalTheory.VolBr
 theorem volGe_of_hilbertSamuel :
     GlobalTheory.Published.ArithHilbertSamuel → GlobalTheory.Published.ArCalc → GlobalTheory.Published.NefNumerics → GlobalTheory.Published.VolGe := by
   intro hHS hAC hNN k _ X _ p D hX L a hNF hSP hSI
-  obtain ⟨P, b, s, t, hPL, hG⟩ := GlobalTheory.T.exists_good_hermitian_lineBundle_pair hAC k X p D hX L
+  obtain ⟨P, b, s, t, hPL, hG⟩ := _root_.GlobalTheory.VolBr.exists_good_pair hAC k X p D hX L
   subst hPL
-  obtain ⟨α, hα, hαlim⟩ := GlobalTheory.T.tendsto_selfIntersection_pow_tensor_div_pow hAC k X p D hX P.L P.A a hSI
-  obtain ⟨hRL, hRA, -⟩ := GlobalTheory.T.represents_base_bundles_and_trivial k X p P
-  apply GlobalTheory.T.le_arithVolume_of_frequently_smallSections_lower k X p D P.L a
+  obtain ⟨α, hα, hαlim⟩ := _root_.GlobalTheory.SelfInterGrowth.main hAC k X p D hX P.L P.A a hSI
+  obtain ⟨hRL, hRA, -⟩ := _root_.GlobalTheory.VolBr.Pair.rep_base k X p P
+  apply _root_.GlobalTheory.VolBr.le_arVol_of_frequently_le k X p D P.L a
   intro ε hε
   have hF1 : (1 : ℝ) ≤ ((D + 1).factorial : ℝ) := by exact_mod_cast Nat.factorial_pos _
   have hε3 : 0 < ε / 3 := by positivity
   have hlim : ∀ᶠ n : ℕ in atTop, a - ε / 3 < α n / (n : ℝ) ^ (D + 1) :=
     hαlim.eventually (lt_mem_nhds (by linarith))
   obtain ⟨n, hn1, hnα, hcont⟩ := ((eventually_ge_atTop 1).and
-    (hlim.and (GlobalTheory.T.small_section_count_continuous_from_above hHS hAC k X p D hX P b s t hG (ε / 3) hε3))).exists
+    (hlim.and (_root_.GlobalTheory.VolBr.lc_add_A_le hHS hAC k X p D hX P b s t hG (ε / 3) hε3))).exists
   have hRn : P.Rep (n : ℤ) 1 ((P.L.pow n).tens P.A) := by
-    have h1 := GlobalTheory.T.represents_hermitianLineBundle_pow k X p P 1 0 P.L n hRL
-    have h2 := GlobalTheory.T.hermPairWithSections_represents_tensor k X p P _ _ 0 1 _ P.A h1 hRA
+    have h1 := _root_.GlobalTheory.VolBr.Pair.rep_pow k X p P 1 0 P.L n hRL
+    have h2 := _root_.GlobalTheory.VolBr.Pair.rep_tens k X p P _ _ 0 1 _ P.A h1 hRA
     simpa using h2
-  obtain ⟨t₀, ht₀⟩ := GlobalTheory.T.exists_metricShift_isNef_pow_tens_ample hAC hNN k X p D hX P.L P.A n hSP hNF hG.ample hG.nef
-  have hstep := GlobalTheory.T.log_card_smallSections_ge_of_shift_nef hHS hAC k X p D hX P b s t hG n 1 _ (α n) t₀ hRn (hα n) ht₀ (ε / 3) hε3
+  obtain ⟨t₀, ht₀⟩ := _root_.GlobalTheory.VolBr.exists_isNef_shift_pow_tens hAC hNN k X p D hX P.L P.A n hSP hNF hG.ample hG.nef
+  have hstep := _root_.GlobalTheory.VolBr.log_ncard_ball_one_ge_of_shift_nef hHS hAC k X p D hX P b s t hG n 1 _ (α n) t₀ hRn (hα n) ht₀ (ε / 3) hε3
   rw [Filter.frequently_atTop]
   intro N₀
   obtain ⟨m, hm, hm1, hm2⟩ := ((eventually_ge_atTop (max N₀ 1)).and (hstep.and hcont)).exists
   have hmN : N₀ ≤ m := le_of_max_le_left hm
   refine ⟨n * m, le_trans hmN (Nat.le_mul_of_pos_left m hn1), ?_⟩
-  have hsm := (GlobalTheory.T.smallSections_twistedPower_encard_eq_ball k X p P 1 0 P.L hRL 0 (n * m)).2.1
+  have hsm := (_root_.GlobalTheory.VolBr.SmallBall.main k X p P 1 0 P.L hRL 0 (n * m)).2.1
   rw [mul_one, mul_zero] at hsm
-  have hfin := GlobalTheory.T.hermLineBundlePair_balls_finite hHS k X p D hX P b s t hG ((n * m : ℕ) : ℤ) 0 1 hAC
+  have hfin := _root_.GlobalTheory.VolBr.BallFinite.bl_finite hHS k X p D hX P b s t hG ((n * m : ℕ) : ℤ) 0 1 hAC
   have hnc : (P.L.pow (n * m)).smallSec.ncard = (P.Bl ((n * m : ℕ) : ℤ) 0 1).ncard := by
     rw [Set.ncard_def, Set.ncard_def, hsm]
   refine ⟨Set.encard_lt_top_iff.mp (hsm ▸ Set.encard_lt_top_iff.mpr hfin), ?_⟩

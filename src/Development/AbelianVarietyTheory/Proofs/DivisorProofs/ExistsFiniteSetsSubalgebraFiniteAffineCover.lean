@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubNatCompSubIncl
 public import Mathlib.AlgebraicGeometry.Noetherian
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AffineInterFiniteBasicOpenCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemAdjoinRestrictedSectionsOfLocalStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AffineInterFiniteBasicOpenCover
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemAdjoinRestrictedSectionsOfLocal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -89,7 +89,7 @@ end GlobalTheory.SubChoose
 
 theorem GlobalTheory.sub_choose_finite : ∀ (X : Scheme.{0}), IsNoetherian X → ∀ (F : X.Opensᵒᵖ ⥤ CommRingCat) (α : X.presheaf ⟶ F), ((Scheme.AffineZariskiSite.toOpensFunctor X).op.whiskerLeft α).Coequifibered → ∀ {ι : Type} [Finite ι] (V : ι → X.Opens), (∀ j, IsAffineOpen (V j)) → ∀ (S : ∀ j, Set (F.obj (op (V j)))), (∀ j, (S j).Finite) → ∃ T : ∀ j, Set (F.obj (op (V j))), (∀ j, (T j).Finite) ∧ ∀ i, S i ⊆ sub F α V T (V i) := by
   intro X hX F α hα ι _ V hV S hS
-  choose s hs1 hs2 using fun i j => GlobalTheory.T.exists_finset_basicOpen_cover_inf_of_isAffineOpen X hX (V j) (V i) (hV j) (hV i)
+  choose s hs1 hs2 using fun i j => _root_.GlobalTheory.affine_inter_finite_basicOpen_cover X hX (V j) (V i) (hV j) (hV i)
   have hDi : ∀ i j, ∀ h ∈ s i j, X.basicOpen h ≤ V i := by
     intro i j h hh
     obtain ⟨r, hr⟩ := hs1 i j h hh
@@ -103,7 +103,7 @@ theorem GlobalTheory.sub_choose_finite : ∀ (X : Scheme.{0}), IsNoetherian X �
   intro i x hx
   rw [SetLike.mem_coe, mem_sub]
   intro j W' hW' hWi hWj
-  apply GlobalTheory.T.mem_adjoin_restricted_sections_of_local X F α hα (V j) (V i) (Set.range (a j)) x _ W' hW' hWi hWj
+  apply _root_.GlobalTheory.QcSub.Local.mem_gen_of_local X F α hα (V j) (V i) (Set.range (a j)) x _ W' hW' hWi hWj
   intro y hy
   have hy' : y ∈ ((V j ⊓ V i : X.Opens) : Set X) := ⟨hy.2, hy.1⟩
   have := hs2 i j hy'

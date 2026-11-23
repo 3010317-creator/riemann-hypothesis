@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.OrderedConst
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsTrivialOnUnitsModConductorUnitCharacterValuePr
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrincipalSeriesTypeCharacterTriangularStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrincipalSeriesTypeCharacterTriangular
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -136,7 +136,7 @@ theorem strip_props : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpac
       · rw [strip_off hy i j h, Matrix.one_apply_ne (ne_of_lt hij)]
         exact triv_zero _
   · intro m y hy
-    rw [GlobalTheory.T.principalSeriesTypeCharacter_triangular k n ψ y (fun _ => 1) (fun _ => by simp) (fun i => by simp [strip_diag hy i])
+    rw [_root_.GlobalTheory.PsType.theta_of_triangular k n ψ y (fun _ => 1) (fun _ => by simp) (fun i => by simp [strip_diag hy i])
       (Or.inr fun i j h => strip_lower hy i j h)]
     simp
   · intro y hy

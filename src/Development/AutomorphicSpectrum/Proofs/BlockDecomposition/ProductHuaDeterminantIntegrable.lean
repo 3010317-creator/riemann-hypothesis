@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SecondCountableHermC
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HuaDeterminantIntegrableOfLtStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HuaDeterminantIntegrableOfLt
+public import Mathlib.MeasureTheory.Integral.Pi
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -15,7 +16,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.MeasureTheory.Integral.Pi
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -56,7 +56,7 @@ theorem integrable_prod_detW_rpow : ∀ (W : Type) [Fintype W] (n : ℕ) (s : �
   intro W _ n s hs ν hν
   let μ₀ : Measure (hermC n) := Measure.addHaar
   have hf : ∀ _w : W, Integrable (fun b : hermC n => detW (b : Matrix (Fin n) (Fin n) ℂ) ^ (-s)) μ₀ :=
-    fun _ => GlobalTheory.T.hua_determinant_integrable_of_lt n s hs μ₀ inferInstance
+    fun _ => _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Arch.HuaInt.hua_integrable n s hs μ₀ inferInstance
   have hpi := Integrable.fintype_prod (μ := fun _ : W => μ₀)
     (f := fun _ : W => fun b : hermC n => detW (b : Matrix (Fin n) (Fin n) ℂ) ^ (-s)) hf
   rw [Measure.isAddLeftInvariant_eq_smul ν (Measure.pi fun _ : W => μ₀)]

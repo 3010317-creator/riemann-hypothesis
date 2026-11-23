@@ -1,8 +1,9 @@
 module
 
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.EisensteinSeriesG2.HeisenbergTheta.HeisenbergThetaConstant.ThetaC
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsSummableMajorantLatticeSumStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ThetaSubValueZeroRapidDecayStatement
+public import Development.WeilBound.RepresentationTheoryGL.EisensteinSeries.SiegelEisensteinContinuation.IsEpCont
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsSummableMajorantLatticeSum
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ThetaSubValueZeroRapidDecay
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -80,7 +81,7 @@ theorem ltr_apply_zero (A : GL ι 𝔸[k]) (F : (ι → 𝔸[k]) → ℂ) : ltr 
 
 theorem continuousOn_thetaC {F : (ι → 𝔸[k]) → ℂ} (hF : F ∈ schwartzBruhatPi (K := k) (ι := ι))
     {C : Set (GL ι 𝔸[k])} (hC : IsCompact C) : ContinuousOn (thetaC F) C := by
-  obtain ⟨u, hu, hb⟩ := GlobalTheory.T.exists_summable_majorant_lattice_sum hF hC
+  obtain ⟨u, hu, hb⟩ := _root_.GlobalTheory.CompanionTheory.EisRkNBound.exists_summable_bound_thetaC hF hC
   refine continuousOn_tsum (fun ξ ↦ Continuous.continuousOn ?_) hu fun ξ h hh ↦ hb h hh ξ
   refine (continuous_of_mem_schwartzBruhatPi hF).comp ?_
   exact Units.continuous_val.matrix_mulVec continuous_const
@@ -137,7 +138,7 @@ theorem exists_norm_thetaCInt_sub_le (w : InfinitePlace k) {Ψ : (ι → 𝔸[k]
   have hS : Continuous fun p : normOneSubgroup k × GL ι 𝔸[k] ↦
       p.2 * (scalC (p.1 : IdeleGroup k) : GL ι 𝔸[k]) :=
     continuous_snd.mul (continuous_scalC.comp (continuous_subtype_val.comp continuous_fst))
-  obtain ⟨M, hM⟩ := GlobalTheory.T.theta_sub_value_zero_rapid_decay w hΨ ((hE.prod hC).image hS) r
+  obtain ⟨M, hM⟩ := _root_.GlobalTheory.CompanionTheory.EisThCDecay.exists_norm_thetaC_sub_le w hΨ ((hE.prod hC).image hS) r
   refine ⟨M * (normOneMeasure k).real (normOneFundamentalDomain k), fun A hA t ht ↦ ?_⟩
   rw [thetaCInt_ltr_sub_thetaCConst w hΨ A ω t, ← mul_assoc]
   refine norm_setIntegral_le_of_norm_le_const (normOneMeasure_normOneFundamentalDomain_lt_top k)

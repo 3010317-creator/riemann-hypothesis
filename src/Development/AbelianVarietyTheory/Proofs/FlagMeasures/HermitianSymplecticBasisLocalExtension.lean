@@ -3,9 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemCoord
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSmulIntegral
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsIntegralOfQuad
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GFrames
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StrongApproximationAdditiveQuadraticExtension
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsPrincipalIdealRingOfHenselian
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalExtend
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StrongApproximationAdditiveQuadraticExtensionStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -323,7 +324,7 @@ theorem strong_approx_params : ∀ {F E : Type} [Field F] [NumberField F] [Field
     simp only [δ, Units.val_mk0, he1 p hg, hd'1 p hg, one_pow, mul_one, Units.val_mul,
       MulMemClass.coe_mul, hu2, hud]
 
-  have AP := GlobalTheory.T.strong_approximation_additive_quadratic_extension A δ hδ
+  have AP := _root_.GlobalTheory.HL.StrongApprox.strong_approx_additive A δ hδ
   choose w hw using fun j => AP.2.1 (fun p => up p j) (hint.subset fun p hp h => hp (h.1 j))
   have hv : ∀ p j, Sm (A.L p) (2 * d' p * e p ^ 5) (A.bc p w j - up p j) := fun p j => hw j p
   set u := piQ sig Hm X Y T w with hu
@@ -381,7 +382,7 @@ theorem strong_approx_params : ∀ {F E : Type} [Field F] [NumberField F] [Field
         map_one]
     simp only [y, map_add (f := _), map_mul, map_sub, AlgEquiv.commutes, hcH, hct]
     linear_combination ((A.loc p).ιE t - hf (A.L p) (Hm.map (A.loc p).ιE) (up p) (up p)) * h2 + hs p
-  obtain ⟨s, hs1, hs2⟩ := (GlobalTheory.T.strong_approximation_additive_quadratic_extension A d hd).2.2 t y hyO hytr
+  obtain ⟨s, hs1, hs2⟩ := (_root_.GlobalTheory.HL.StrongApprox.strong_approx_additive A d hd).2.2 t y hyO hytr
   refine ⟨u, s, horthu, hs1, fun p => ⟨fun j => ?_, ?_⟩⟩
   · obtain ⟨k, hk, hk'⟩ := hdk p
     exact sm_of_eq (A.L p) ((LC' p).1 j) (by rw [hk']; ring) ((𝒪[(A.loc p).Fp]).mul_mem (h2O p) hk)

@@ -5,13 +5,15 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.Irr
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.ZelevinskyCosocles.GKLocal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCosocleComp
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnitarisableOfSquareIntegrable
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContragredientPreservesSubquotientAltBis
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContragredientProductIrreducibleStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DoubleContragredientOfInducedProductStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualClassInvolutiveStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsUnitarisableOfCharIff
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContraIsSubquotient
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.LSegJacquet
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContragredientProductIrreducible
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DoubleContragredientOfInducedProduct
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualClassInvolutive
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityOrderEmbedding
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LanglandsSocleOfOrderFree
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductTransposeInverseDualReverseStatement
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductTransposeInverseDualReverse
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,12 +79,12 @@ theorem isSubquotient_prodIrr_rev : ∀ {k : Type} [Field k] [ValuativeRel k] [T
       IsSubquotient σ (prodIrr x hd) → IsSubquotient σ (prodIrr (fun a => x (Fin.rev a)) hd') := by
   intro k _ _ _ _ hA hGK h N x hd hd' W _ _ σ _ hi hsq
 
-  obtain ⟨hdy, ⟨E1⟩⟩ := GlobalTheory.T.contragredient_product_irreducible hA (fun a => x (Fin.rev a)) hd'
+  obtain ⟨hdy, ⟨E1⟩⟩ := _root_.GlobalTheory.CompanionTheory.ContraProd.contra_prodIrr hA (fun a => x (Fin.rev a)) hd'
 
-  obtain ⟨hd2, ⟨E2⟩⟩ := GlobalTheory.T.product_transpose_inverse_dual_reverse hA hGK (fun a => Zc.dualCl (x (Fin.rev a))) hdy
+  obtain ⟨hd2, ⟨E2⟩⟩ := _root_.GlobalTheory.CompanionTheory.ThetaProd.prodIrr_comp_thetaW hA hGK (fun a => Zc.dualCl (x (Fin.rev a))) hdy
   have ex : (fun a => Zc.dualCl ((fun a => Zc.dualCl (x (Fin.rev a))) (Fin.rev a))) = x := funext fun a => by
     simp only [Fin.rev_rev]
-    exact GlobalTheory.T.dual_class_involutive hA (x a)
+    exact _root_.GlobalTheory.CompanionTheory.Zcore.dualCl_dualCl hA (x a)
   obtain ⟨E3⟩ := GlobalTheory.CompanionTheory.LSocle.prodIrr_congr ex hd2 hd
   have h1 : IsSubquotient σ ((prodIrr (fun a => Zc.dualCl (x (Fin.rev a))) hdy).comp (Zc.Cos.thetaW k N)) :=
     isSubquotient_of_equiv hsq (E2.trans E3).symm
@@ -94,8 +96,8 @@ theorem isSubquotient_prodIrr_rev : ∀ {k : Type} [Field k] [ValuativeRel k] [T
     GlobalTheory.CosocleComp.isIrreducible_comp (GlobalTheory.CompanionTheory.LSocle.thetaW_surjective N) hi
   have h3 : IsSubquotient (σ.comp (Zc.Cos.thetaW k N)) (contra (prodIrr (fun a => x (Fin.rev a)) hd')) :=
     isSubquotient_of_equiv h2 E1.symm
-  have h4 := GlobalTheory.T.isSubquotient_contra_of_isSubquotient (GlobalTheory.SqIntUnit.compactOpen_basis k N) _ _ (isSmooth_contra _) h3
-  obtain ⟨E4⟩ := GlobalTheory.T.double_contragredient_of_induced_product hA (fun a => x (Fin.rev a)) hd'
+  have h4 := _root_.GlobalTheory.CompanionTheory.ContraSq.contra_isSubquotient (GlobalTheory.SqIntUnit.compactOpen_basis k N) _ _ (isSmooth_contra _) h3
+  obtain ⟨E4⟩ := _root_.GlobalTheory.CompanionTheory.ContraProd.contra_contra_prodIrr hA (fun a => x (Fin.rev a)) hd'
   obtain ⟨E5⟩ := GlobalTheory.CompanionTheory.LSocle.equiv_contra_comp_thetaW hGK σ hs hi'
   exact isSubquotient_of_equiv_left E5.symm (isSubquotient_of_equiv h4 E4)
 

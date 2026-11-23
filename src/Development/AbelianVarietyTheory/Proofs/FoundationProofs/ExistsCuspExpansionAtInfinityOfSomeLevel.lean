@@ -1,9 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.MemRingOfInR
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCuspExpansionDiscriminantIntegerLeadingOneStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FnHahnSeriesOfHasQStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsCuspExpansionAtInfinityPropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCuspExpansionDiscriminantIntegerLeadingOne
+public import Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative.LeviCivita
+public import Mathlib.RingTheory.HahnSeries.Summable
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsCuspExpansionAtInfinityProperties
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FnHahnSeriesOfHasQ
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,9 +63,9 @@ theorem exists_isExp : ∀ (Ω : Type) [Field Ω] (ε : Ω →+* ℂ) (f : ℍ �
     have := ha τ
     simp only [one_smul] at this
     simpa only [hb] using this
-  obtain ⟨hg', hexg, -, -⟩ := GlobalTheory.T.exists_hahnSeries_isExp_of_hasQ Ω ε N _ b hN hg
-  obtain ⟨hD, hexD, hD0, -, -⟩ := GlobalTheory.T.exists_cuspExpansion_discriminant_integer_leading_one Ω ε
-  obtain ⟨hring, -, hconst, -, hinv⟩ := GlobalTheory.T.isCuspExpansionAtInfinity_properties Ω ε
+  obtain ⟨hg', hexg, -, -⟩ := _root_.GlobalTheory.fn_hahnSeries_of_hasQ Ω ε N _ b hN hg
+  obtain ⟨hD, hexD, hD0, -, -⟩ := _root_.GlobalTheory.FNExpD.expD Ω ε
+  obtain ⟨hring, -, hconst, -, hinv⟩ := _root_.GlobalTheory.FNExp.exp_props Ω ε
   have hDi := hinv DD hD hD0 hexD
   have hpow : ∀ k : ℕ, IsExp ε (DD⁻¹ ^ k) (hD⁻¹ ^ k) := by
     intro k

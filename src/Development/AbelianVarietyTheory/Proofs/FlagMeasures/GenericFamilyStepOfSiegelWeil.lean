@@ -2,12 +2,14 @@ module
 
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.MainEqFam
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.InVolumesAtOfSWS
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DifferentLocalIdentityFamiliesLemmaHStatement
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FamDefs
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DifferentLocalIdentityFamiliesLemmaH
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FamilyGenericMassPositiveBoundedProofStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FamilyGroupSumFactorsRowWeightAmplitudeProofStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FamilyLocalObjectsExistAtTermsProofStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FamilyRowWeightSumUnfoldingIdentityProofStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GenericRowFamilyStepOfLeavesStatement
+public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.FamilyGroupSumFactorsWeightAmplitude
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FamilyGroupSumFactorsRowWeightAmplitudeProof
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FamilyLocalObjectsExistAtTermsProof
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FamilyRowWeightSumUnfoldingIdentityProof
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GenericRowFamilyStepOfLeaves
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GenericScalarClassTermsFormFamilyStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalMassLeGenericMassConstNine
 import Mathlib.Algebra.Order.Floor.Extended
@@ -54,8 +56,8 @@ namespace GlobalTheory.SnFamTop
 
 theorem stepFamG_of_SWXS (hSW : PI.VolStabS.MassDataS.SWXS) :
     Formalism.L2.SG.Pf.MainEqFam.StepFamG :=
-  GlobalTheory.T.genericRow_familyStep_of_leaves
+  _root_.GlobalTheory.SnFam.Gen.stepFamG_of_fam
     (fun D h => GlobalTheory.localMass_le_genericMass_nine _ _ h)
-    GlobalTheory.T.differentLocalIdentity_familiesLemmaH GlobalTheory.T.genericScalarClassTerms_formFamily GlobalTheory.T.familyRowWeightSumUnfoldingIdentity (GlobalTheory.T.familyGenericMassPositiveBounded_proof hSW) GlobalTheory.T.familyGroupSumFactorsRowWeightAmplitude_proof GlobalTheory.T.familyLocalObjectsExistAtTerms_proof
+    _root_.GlobalTheory.HTieLeaf.main GlobalTheory.T.genericScalarClassTerms_formFamily _root_.GlobalTheory.SnFam.familyRowWeightSumUnfoldingIdentity_proof (GlobalTheory.T.familyGenericMassPositiveBounded_proof hSW) _root_.GlobalTheory.FamilyNormRational.familyGroupSumFactorsRowWeightAmplitude _root_.GlobalTheory.SnFam.existFam
 
 end GlobalTheory.SnFamTop

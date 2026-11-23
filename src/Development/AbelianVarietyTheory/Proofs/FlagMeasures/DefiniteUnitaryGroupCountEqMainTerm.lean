@@ -2,13 +2,17 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.SiegelWeilLocal.DefiniteFiniteCount
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ConjPowOfMulEqOne
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DiscreteSeriesCoefficientIntegrableMajorantStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GlobalConvolutionOrthogonalProjectorProofStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegrablePhStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsRadicalSpanPrimeOfNcardPrimesOverEqFinrankStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LogSingularValuesEuclidNormCartanPropertiesStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowsAutIdemElementary
+public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.ConvolutionSmoothL2
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DiscreteSeriesCoefficientIntegrableMajorant
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GlobalConvolutionOrthogonalProjectorProof
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegrablePh
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsRadicalSpanPrimeOfNcardPrimesOverEqFinrank
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LayerProd
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LogSingularValuesEuclidNormCartanProperties
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnipotentIsometryDefiniteEqOne
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermitianFormUnitaryOneOne
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowsAutIdemElementary
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +54,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermitianFormUnitaryOneOne
 
 @[expose] public section
 
@@ -117,9 +120,9 @@ theorem definite_count_of_finite : ∀ (B : RowsAut) (d : InfinitePlace B.I.F �
     have h0 : (uMat g)ᴴ * Formalism.REAL.Jm (B.I.ε v) * uMat g = Formalism.REAL.Jm (B.I.ε v) := g.2
     rwa [hJ v, Matrix.mul_one] at h0
   have hdHS : ∀ v (g : Formalism.REAL.UJ (B.I.ε v)), dHS (uMat g) = 0 := fun v g =>
-    (GlobalTheory.T.logSingularValuesEuclidNorm_cartan_properties B.I.n (B.I.ε v)).2.2.2 (hrk v) g
+    (_root_.GlobalTheory.Count.CartanSize.cartan_size B.I.n (B.I.ε v)).2.2.2 (hrk v) g
 
-  have hrad := GlobalTheory.T.isRadical_span_prime_of_ncard_primesOver_eq_finrank B.I.E B.g₀ hprime hsplit
+  have hrad := _root_.GlobalTheory.SplitRadical.isRadical_span_of_ncard_primesOver B.I.E B.g₀ hprime hsplit
   have hNU := (GlobalTheory.NearElement.near_unipotent B d (1 / 10 ^ 5) (by norm_num) le_rfl hn1 hgt hrad _ _
     rfl rfl).1
   have hkey : ∀ x γ : B.I.GA, γ ∈ B.I.GFset → phe B d (x⁻¹ * γ * x) ≠ 0 → γ = 1 := by
@@ -162,13 +165,13 @@ theorem definite_count_of_finite : ∀ (B : RowsAut) (d : InfinitePlace B.I.F �
     intro v
     rw [hrk v]
     simp
-  obtain ⟨hcont, hbd, hmaj⟩ := GlobalTheory.T.discrete_series_coefficient_integrable_majorant B d 0 hDS hloc
+  obtain ⟨hcont, hbd, hmaj⟩ := _root_.GlobalTheory.Dec.PhMajProof.phMaj B d 0 hDS hloc
   have hm := hmaj 0 le_rfl (fun v => Or.inl (hrk v))
   simp only [zero_mul, Real.exp_zero, mul_one] at hm
   have hint : Integrable (ph B d) (muInf B.I) :=
     hm.mono' hcont.aestronglyMeasurable (Filter.Eventually.of_forall hbd)
-  obtain ⟨T, hT⟩ := (GlobalTheory.T.globalConvolutionOrthogonalProjector_proof B d hDS hint).2.2.1
-  obtain ⟨-, -, -, -, -, -, -, hD, -⟩ := GlobalTheory.T.kernelB' B d 0 hDS hn1 hloc hbig hfin T hT
+  obtain ⟨T, hT⟩ := (_root_.GlobalTheory.GlobProj.globalProj_holds B d hDS hint).2.2.1
+  obtain ⟨-, -, -, -, -, -, -, hD, -⟩ := _root_.GlobalTheory.KernelExpansion.kernelB B d 0 hDS hn1 hloc hbig hfin T hT
   simp_rw [hker] at hD
   rw [setIntegral_const] at hD
   have hphe : phe B d 1 = ((∏ v, d v : ℝ) : ℂ) * B.e 1 := by

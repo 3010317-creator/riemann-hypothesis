@@ -2,12 +2,16 @@ module
 
 public import Mathlib.AlgebraicGeometry.Morphisms.Flat
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosedCoverAffineNbhdMapsIntoAffineStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.JointCoverSectionDetectRestrictOpenStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PointsOfSchemeOverArtinianFibreProductStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchemeHomExtOfJointlyInjectiveStatement
+public import Mathlib.AlgebraicGeometry.Morphisms.ClosedImmersion
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosedCoverAffineNbhdMapsIntoAffine
+public import Mathlib.AlgebraicGeometry.Restrict
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.JointCoverSectionDetectRestrictOpen
+public import Mathlib.AlgebraicGeometry.Scheme
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PointsOfSchemeOverArtinianFibreProduct
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchemeHomExtOfJointlyInjective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionsFlatBaseChangeAffineMilnorSquareOpen
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TrivSqZeroExtPinchExistsExtendBasicOpen
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NotIsIsoSpMapDnFst
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,7 +52,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.NotIsIsoSpMapDnFst
 import Development.AbelianVarietyTheory.Definitions.Divisors.SRelOneOneIff
 import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.GoodClass
 import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.SiegelToroidalIntegral
@@ -90,7 +93,7 @@ theorem main : ∀ (P R₁ R₂ R₀ : CommRingCat.{0}) (f₁ : P ⟶ R₁) (f�
     MorphismProperty.of_isPullback (P := @IsClosedImmersion) h₁.flip (IsClosedImmersion.spec_of_surjective f₁ hf₁)
   haveI : IsClosedImmersion j₂ :=
     MorphismProperty.of_isPullback (P := @IsClosedImmersion) h₂.flip (IsClosedImmersion.spec_of_surjective f₂ hf₂)
-  obtain ⟨hcov, hpts⟩ := GlobalTheory.T.points_of_scheme_over_artinian_fibre_product _ _ _ _ _ _ _ _ hP hloc hart hg₁ hg₂ _ _ _ _ Y.hom Y₁.hom Y₂.hom Y₀.hom
+  obtain ⟨hcov, hpts⟩ := _root_.GlobalTheory.PinchPoints.points_of_pinch _ _ _ _ _ _ _ _ hP hloc hart hg₁ hg₂ _ _ _ _ Y.hom Y₁.hom Y₂.hom Y₀.hom
     j₁ j₂ i₁ i₂ h₁ h₂ h₀ hij
   have hM : GlobalTheory.DualOpen.Milnor (Spec.map f₂) (Spec.map f₁) (Spec.map g₂) (Spec.map g₁) :=
     GlobalTheory.DualOpen.Milnor.of_isPullback hP.flip hg₁
@@ -99,10 +102,10 @@ theorem main : ∀ (P R₁ R₂ R₀ : CommRingCat.{0}) (f₁ : P ⟶ R₁) (f�
   have hinj : ∀ (W : Y.left.Opens) (a b : Γ(Y.left, W)), j₁.app W a = j₁.app W b → j₂.app W a = j₂.app W b → a = b :=
     fun W a b e1 e2 => (SEC W).1 a b e2 e1
   have uniqV := fun (X : Scheme.{0}) (V : Y.left.Opens) =>
-    GlobalTheory.T.scheme_hom_ext_of_jointly_surjective_of_app_injective _ _ _ X _ _ ((GlobalTheory.T.jointCover_sectionDetect_restrict_open _ _ _ j₁ j₂ hcov hinj V).1)
-      ((GlobalTheory.T.jointCover_sectionDetect_restrict_open _ _ _ j₁ j₂ hcov hinj V).2)
+    _root_.GlobalTheory.scheme_hom_ext_of_jointly_injective _ _ _ X _ _ ((_root_.GlobalTheory.cover_and_joint_inj_restrict _ _ _ j₁ j₂ hcov hinj V).1)
+      ((_root_.GlobalTheory.cover_and_joint_inj_restrict _ _ _ j₁ j₂ hcov hinj V).2)
   have uniq : ∀ (X : Scheme.{0}) (a b : Y.left ⟶ X), j₁ ≫ a = j₁ ≫ b → j₂ ≫ a = j₂ ≫ b → a = b :=
-    fun X => GlobalTheory.T.scheme_hom_ext_of_jointly_surjective_of_app_injective _ _ _ X j₁ j₂ hcov hinj
+    fun X => _root_.GlobalTheory.scheme_hom_ext_of_jointly_injective _ _ _ X j₁ j₂ hcov hinj
   have key : ∀ (X : Scheme.{0}) (a₁ : Y₁.left ⟶ X) (a₂ : Y₂.left ⟶ X), i₁ ≫ a₁ = i₂ ≫ a₂ →
       ∃ a : Y.left ⟶ X, j₁ ≫ a = a₁ ∧ j₂ ≫ a = a₂ := by
     intro X a₁ a₂ ha
@@ -111,7 +114,7 @@ theorem main : ∀ (P R₁ R₂ R₀ : CommRingCat.{0}) (f₁ : P ⟶ R₁) (f�
       obtain ⟨y₀, rfl, rfl⟩ := hpts y₁ y₂ h
       have := congrArg (fun q : Y₀.left ⟶ X => q y₀) ha
       simpa using this
-    have hloc := GlobalTheory.T.exists_affine_nbhd_preimage_le_of_closed_cover _ _ _ X j₁ j₂ a₁ a₂ hcov hpa
+    have hloc := _root_.GlobalTheory.closedCover_affine_nbhd_maps_into_affine _ _ _ X j₁ j₂ a₁ a₂ hcov hpa
     let Idx := {p : Y.left.Opens × X.affineOpens //
       IsAffineOpen p.1 ∧ j₁ ⁻¹ᵁ p.1 ≤ a₁ ⁻¹ᵁ p.2.1 ∧ j₂ ⁻¹ᵁ p.1 ≤ a₂ ⁻¹ᵁ p.2.1}
     have hcovI : TopologicalSpace.IsOpenCover (fun p : Idx => p.1.1) := by

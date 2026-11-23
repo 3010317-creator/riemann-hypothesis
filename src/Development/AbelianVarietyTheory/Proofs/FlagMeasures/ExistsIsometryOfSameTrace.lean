@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsHermND
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AlgebraMapMemO
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DualInterSelfDualHermitianLatticeSubspaceStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DualInterSelfDualHermitianLatticeSubspace
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EichlerIsometry
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsPrincipalIdealRingOfHenselian
 import Mathlib.Algebra.Order.Floor.Extended
@@ -134,8 +134,8 @@ end
 
 theorem exists_isometry_of_same_trace : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] [CharZero F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] (L : LocE F E), ∀ {n : ℕ} (Hm : Matrix (Fin n) (Fin n) E), IsHermND L Hm → ∀ La Lb, IsSD L Hm La → IsSD L Hm Lb → ∀ (m : ℕ) (e : Fin m → Fin n → E), LinearIndependent E e → (∀ i j, hf L Hm (e i) (e j) = 0) → (∀ x ∈ perp L Hm (Submodule.span E (Set.range e)), x ∈ La ↔ x ∈ Lb) → ∃ g ∈ isomG L Hm, (∀ x ∈ perp L Hm (Submodule.span E (Set.range e)), g x = x) ∧ g • La = Lb := by
   intro F _ _ _ _ _ E _ _ _ L n Hm hH La Lb hLa hLb m e he hee hab
-  obtain ⟨-, hA, -, b, c, hb, hc, hbc⟩ := GlobalTheory.T.dual_inter_selfDualHermitianLattice_subspace L Hm hH La hLa m e he
-  obtain ⟨-, hB, -, -⟩ := GlobalTheory.T.dual_inter_selfDualHermitianLattice_subspace L Hm hH Lb hLb m e he
+  obtain ⟨-, hA, -, b, c, hb, hc, hbc⟩ := _root_.GlobalTheory.HL.DualInter.dual_inter L Hm hH La hLa m e he
+  obtain ⟨-, hB, -, -⟩ := _root_.GlobalTheory.HL.DualInter.dual_inter L Hm hH Lb hLb m e he
   set X := Submodule.span E (Set.range e) with hX
   have hcj := hf_cj L hH.1
 

@@ -3,12 +3,16 @@ module
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.BoundAtTwoThreeFamilyFon
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleParametersOfLargeScale
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChebotarevDegreeOne
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChosenTwistAnnihilatesSelmerGroupsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsWachFunctorComparisonOfBhattScholzeStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.JointConditionsZpowers.CommutingEndomorphismCondition
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChosenTwistAnnihilatesSelmerGroups
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BhattScholzeIntegral
+public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsWachFunctorComparisonOfBhattScholze
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalGlobalAssembly
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PsiAtPsiAt
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ResidualAbsIrredGoodPointOfResidualIrred
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpecialPrimesSmallAlongFamilyStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.BoundAtTwoThreeFamily
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpecialPrimesSmallAlongFamily
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ExistsHubData
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -56,7 +60,7 @@ theorem exists_setup_large_alt : Hypotheses₂ → ∀ {eps : ℝ} (Fm : FamP ep
   obtain ⟨i0⟩ := Fm.Ix_zero
   have he : 0 < eps := Fm.L_eps 0 i0 ▸ (Fm.L 0 i0).sc.eps_pos
   obtain ⟨xa, hxa⟩ := GlobalTheory.HTW.admissibleParameters_of_large_scale eps (Fm.PK.getD 7 0) he
-  obtain ⟨xb, hxb⟩ := GlobalTheory.T.specialPrimes_small_along_family Fm 1 le_rfl
+  obtain ⟨xb, hxb⟩ := _root_.GlobalTheory.SpecialSmall.special_primes_small Fm 1 le_rfl
   obtain ⟨xc, hxc⟩ := hTw
   refine ⟨max xa (max xb xc), fun x hx hx1 i hsha exc => ?_⟩
   have hxa' : xa ≤ x := le_trans (le_max_left _ _) hx
@@ -64,7 +68,7 @@ theorem exists_setup_large_alt : Hypotheses₂ → ∀ {eps : ℝ} (Fm : FamP ep
   have hxc' : xc ≤ x := le_trans (le_trans (le_max_right _ _) (le_max_right _ _)) hx
   obtain ⟨-, N0, S, hgood⟩ := hxc x hxc' hx1 i
   obtain ⟨hfa, -⟩ := hF x hx1 i
-  obtain ⟨HW, F, ⟨Cm⟩⟩ := GlobalTheory.T.exists_wachFunctor_comparison_of_bhattScholze hP.bs (Fm.D x i)
+  obtain ⟨HW, F, ⟨Cm⟩⟩ := _root_.GlobalTheory.HWL.exists_hw_fon_cmp_of_integral hP.bs (Fm.D x i)
   have hCLw : (Fm.params x hx1 i).CLw ≤ Fm.PK.getD 7 0 := by
     rw [← Fm.params_K x hx1 i]
     exact le_refl _
@@ -77,7 +81,7 @@ theorem exists_setup_large_alt : Hypotheses₂ → ∀ {eps : ℝ} (Fm : FamP ep
     GlobalTheory.Proof.LocalGlobalAssembly.main _ hfa.adm.1.1.1 hfa.Conclusion1.2.2 hfa.Conclusion2.2.2
   have h6 := GlobalTheory.JointSix.main GlobalTheory.Published.cheb_holds (Fm.D x i) (Fm.ex x hx1 i).nch X.r X.ρ hcan.fam hfa.nct hfa.trip
     hfa.same hrow (GlobalTheory.PtCore.residualAbsIrredGoodPoint_of_residualIrred _ hfa.rhoBar)
-  have hkill : KillingConditions.KillAt X.ρ := GlobalTheory.T.chosenTwist_annihilates_selmerGroups (Fm.D x i) (Fm.ex x hx1 i).nch X.I X.ρ hfa.nct (hI ▸ hgood) h6
+  have hkill : KillingConditions.KillAt X.ρ := _root_.GlobalTheory.NLink.twist_kills_selmer (Fm.D x i) (Fm.ex x hx1 i).nch X.I X.ρ hfa.nct (hI ▸ hgood) h6
   exact ⟨HW, F, Cm, X, hexc, hfa.admJ _ hpar, ⟨hfa, hcan, hpar, hpar67, hbig, hsplit, hkill, hsha⟩⟩
 end GlobalTheory.NLink
 end

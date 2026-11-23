@@ -4,7 +4,8 @@ public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KappaConstantMulOfCoprimeEllipticPolynomials
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocElEventuallyMem
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalTwistContinuousInvolutionIntegralProperties
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmFieldStatement
+import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmField
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsNormalisedThetaSub
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -102,7 +103,7 @@ theorem locEl_tw (hU : Unr E) (n : ℕ) (w : Pl E) (z g : GL (Fin n) E) :
   · rw [nrm_tw, map_mul, map_mul, map_inv, MonoidHom.id_apply]
   · have hm : GeneralLinearGroup.map (algebraMap E (w.adicCompletion E)) (thE E n g) =
         thetaGL n (cj w) (GeneralLinearGroup.map (algebraMap E (w.adicCompletion E)) g) :=
-      GlobalTheory.ThetaPull.map_thetaGL _ _ _ (fun x => (((GlobalTheory.T.placeConjugation_properties_cmField E hU w).2.2.2.1 hs).1 x).symm) g
+      GlobalTheory.ThetaPull.map_thetaGL _ _ _ (fun x => (((_root_.GlobalTheory.ConjAtPlace.main E hU w).2.2.2.1 hs).1 x).symm) g
     rw [map_mul, map_mul, map_inv, hm]
 
 theorem locEl_rel (hU : Unr E) (n : ℕ) (w : Pl E) {z z' : GL (Fin n) E} (h : ∃ g, z' = g⁻¹ * z * thE E n g)

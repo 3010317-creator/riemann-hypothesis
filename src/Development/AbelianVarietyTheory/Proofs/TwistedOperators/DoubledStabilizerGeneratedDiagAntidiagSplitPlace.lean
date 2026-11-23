@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AntiCols
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledVacuumStabilizerGaussDecompositionBigCellStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsAdmissibleUnipotentSplitPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsUnipotentDoubledStabilizerAddsDiagonalBlocStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagonalBlockOfMatrix
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledVacuumStabilizerGaussDecompositionBigCell
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsAdmissibleUnipotentSplitPlace
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsUnipotentDoubledStabilizerAddsDiagonalBloc
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -40,7 +41,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagonalBlockOfMatrix
 
 @[expose] public section
 
@@ -57,11 +57,11 @@ theorem gen_diag_anti_split : ∀ (F E : Type) [Field F] [NumberField F] [Field 
       (∀ p ∈ GlobalTheory.DblVac.KD σ G.W v, p ∈ GlobalTheory.DblVac.PDiag σ G.W → p ∈ H) →
       (∀ p ∈ GlobalTheory.DblVac.KD σ G.W v, p ∈ GlobalTheory.DblVac.PAnti σ G.W → p ∈ H) → ∀ g ∈ GlobalTheory.DblVac.KD σ G.W v, g ∈ H := by
   intro F E _ _ _ _ _ σ B a a' G X om om' hT v hv hψ h2 _ H hD hA g hg
-  obtain ⟨Y, hYat, hYlat, hYadm, M, hM, hMlat⟩ := GlobalTheory.T.exists_admissible_unipotent_splitPlace σ B G.W _ _ hT.base hT.geo.hW v hv hψ h2 g hg
-  obtain ⟨p, hpK, hpD, hp⟩ := GlobalTheory.T.exists_unipotent_doubledStabilizer_adds_diagonalBlock σ G.W v h2 Y hYat hYlat hYadm
+  obtain ⟨Y, hYat, hYlat, hYadm, M, hM, hMlat⟩ := _root_.GlobalTheory.SplitChoose.exists_admissible_unipotent_splitPlace_alt σ B G.W _ _ hT.base hT.geo.hW v hv hψ h2 g hg
+  obtain ⟨p, hpK, hpD, hp⟩ := _root_.GlobalTheory.DblVacUnip.exists_unip σ G.W v h2 Y hYat hYlat hYadm
   obtain ⟨hpgK, hpg⟩ := hp g hg
   have hbig : GlobalTheory.DblVac.BigCell G.W v (p * g) := ⟨M, by rw [hpg]; exact hM, hMlat⟩
-  obtain ⟨q, hqK, hqA, p', hp'K, hp'D, he⟩ := GlobalTheory.T.doubledVacuumStabilizer_gaussDecomposition_bigCell σ G.W v h2 (p * g) hpgK hbig
+  obtain ⟨q, hqK, hqA, p', hp'K, hp'D, he⟩ := _root_.GlobalTheory.DblVacGauss.gauss_decomp σ G.W v h2 (p * g) hpgK hbig
   have hg' : g = p⁻¹ * (q * p') := by rw [← he]; group
   rw [hg']
   exact H.mul_mem (H.inv_mem (hD p hpK hpD)) (H.mul_mem (hA q hqK hqA) (hD p' hp'K hp'D))

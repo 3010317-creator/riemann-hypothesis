@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.BasicOpenSections.OpCover
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyCoefficientRingInvarianceStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DivisorSupportCondition
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyCoefficientRingInvariance
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.TranscendenceTraces.AllHolds
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.TranscendenceTraces.BTrPushQ
 import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.TranscendenceTraces.IsolateSpecHolds
@@ -90,7 +91,7 @@ theorem UpperTheory.Gal.Mod.opCover :
   have hmul : Wt.mul c'.p (Wt.const c'.Z 1) (Wt.const S (δ : ℤ)) = Wt.const c'.Z (δ : ℤ) := by
     funext Ω _ _ z
     simp [Wt.mul, Wt.const]
-  rw [Category.comp_id, hmul, TranscendenceTraces.trIdQ_holds GlobalTheory.T.etaleCohomology_coefficientRing_invariance l k i S δ hl,
+  rw [Category.comp_id, hmul, TranscendenceTraces.trIdQ_holds _root_.GlobalTheory.EtC.a8 l k i S δ hl,
     LinearMap.smul_comp, LinearMap.id_comp] at hcomp
   have hpull : pullHQ l (sch.map (u ≫ c'.f)) k i =
       pullHQ l (sch.map u) k i ∘ₗ pullHQ l (sch.map c'.f) k i := by

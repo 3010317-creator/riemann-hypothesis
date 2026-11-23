@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.FormsP
 public import Formalism.SharpRestriction.Divisibility.OrbitPlaces
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ClassSumTermLawStabiliserTargetStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.KerTieEntire
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.KernelOperatorMapsStabiliserEquivariantFormsStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.FormsAre
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.KernelOperatorMapsStabiliserEquivariantForms
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemberFormsStableOfReferenceTuple
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -54,7 +55,7 @@ theorem kFi_of_tie : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (Gi : G.I
   have second : ∀ u μ, DV.Used D μ → ∀ i < D.R.m, ∀ φ ∈ (ex.tw.fm u μ).Fi i, (D.chTw u μ).K i φ ∈ (ex.tw.fm u μ).Fi (i + 1) := by
     intro u μ hμ
     obtain ⟨G, hFA, hSP⟩ := hF u μ hμ
-    exact GlobalTheory.T.kernelOperator_maps_stabiliserEquivariant_forms D u (D.chTw u μ) _ _ (ex.tw.fm u μ) (t.O u μ) G hFA (t.unf u μ)
+    exact _root_.GlobalTheory.KerJ.FiCore.K_mem_Fi D u (D.chTw u μ) _ _ (ex.tw.fm u μ) (t.O u μ) G hFA (t.unf u μ)
       (fun i hi c c' => GlobalTheory.KerTieEntire.kerTie_entire D L hT Gi Gl K Y cX ex t u μ i hi c c')
       (GlobalTheory.T.classSum_term_law_stabiliser_target D L hT Gi Gl K Y cX ex t hC u μ G hSP)
   have h0 : DV.Used D D.what₂.mu0 := by

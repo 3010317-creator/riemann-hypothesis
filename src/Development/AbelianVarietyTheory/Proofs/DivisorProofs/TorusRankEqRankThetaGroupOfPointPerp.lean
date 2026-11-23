@@ -16,11 +16,13 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.JKCompEq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyPerpKerEquivHom
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowFrameOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SupIClosedPointEq
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.WeilIsIffOfIsGrpPullbackComm
-import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsPowEqOfBaseChange
 public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.ExistsValuationClosure
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHold
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UTorsClosed
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ConstGen
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.WeilIsGrpPullbackOfCommute
+import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsPowEqOfBaseChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -232,7 +234,7 @@ theorem isoFree_perp : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] 
     have w := GlobalTheory.CommPairing.weilIs_pull hG ρ.P.isAb ρ.P.isLB h (ρ.weil a b (c₀ ^ (eStd S.g _ a b).val) (by
       rw [pow_mul, map_pow]; rfl))
     rw [← e, ← e'] at w
-    refine (GlobalTheory.weilIs_iff_of_isGrpPullback_comm _ _ _ _ _ _ _ _ ρ.P.isLB A.isLB cart lb _ _ _ _
+    refine (_root_.GlobalTheory.weilIs_grpPullback_of_comm _ _ _ _ _ _ _ _ ρ.P.isLB A.isLB cart lb _ _ _ _
       (Φ (f q)) (Φ (f q')) _ rfl rfl).2 ?_
     convert w using 1
     rw [← map_pow, ← TorusPerp.map_unitOn, ← hh]

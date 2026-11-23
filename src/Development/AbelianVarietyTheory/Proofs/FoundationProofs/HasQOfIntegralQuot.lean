@@ -1,13 +1,19 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasQIff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasQExpansionOfLevelCoeffAndFunctionUniqueStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasQMdifferentiableAndIsBoundedAtImInftyStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasQExpansionOfLevelCoeffAndFunctionUnique
+public import Mathlib.Analysis.Complex.UpperHalfPlane.FunctionsBoundedAtInfty
+public import Mathlib.Analysis.Complex.UpperHalfPlane.Manifold
+public import Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative.LeviCivita
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasQMdifferentiableAndIsBoundedAtImInfty
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasQVadd
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasQExpansionOfPeriodicBoundedHolomorphicStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MonicRootNormLeOneAddSumStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.QuotientIntegralHolomorphicStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UpperHalfPlaneHolomorphicMulEqZeroIffStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasQExpansionOfPeriodicBoundedHolomorphic
+public import Mathlib.Analysis.Complex.Norm
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MonicRootNormLeOneAddSum
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.QuotientIntegralHolomorphic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UpperHalfPlaneHolomorphicMulEqZeroIff
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -74,7 +80,7 @@ theorem hasQ_periodic {N : ℕ} {f : ℍ → ℂ} {a : ℕ → ℂ} (hN : 0 < N)
       push_cast; field_simp
     rw [this, Complex.exp_nat_mul_two_pi_mul_I, mul_one]
   rw [hc] at h1
-  exact congrFun (GlobalTheory.T.hasQExpansionOfLevel_coeff_and_function_unique.2 N _ _ a h1 h) τ
+  exact congrFun (_root_.GlobalTheory.QFam.hasQ_unique_both.2 N _ _ a h1 h) τ
 
 theorem hasQ_of_integral_quot : ∀ (N n : ℕ) (A D : ℍ → ℂ) (s : Fin n → ℍ → ℂ), 0 < N →
     (∃ a, HasQ N A a) → (∃ d, HasQ N D d) → (∀ j, ∃ c, HasQ N (s j) c) → D ≠ 0 →
@@ -82,10 +88,10 @@ theorem hasQ_of_integral_quot : ∀ (N n : ℕ) (A D : ℍ → ℂ) (s : Fin n �
     ∃ (h : ℍ → ℂ) (b : ℕ → ℂ), HasQ N h b ∧ ∀ τ, A τ = h τ * D τ := by
   intro N n A D s hN ⟨a, hA⟩ ⟨d, hD⟩ hs hD0 heq
   choose c hc using hs
-  obtain ⟨hAm, -⟩ := GlobalTheory.T.mdifferentiable_and_isBoundedAtImInfty_of_hasQ N A a hN hA
-  obtain ⟨hDm, -⟩ := GlobalTheory.T.mdifferentiable_and_isBoundedAtImInfty_of_hasQ N D d hN hD
+  obtain ⟨hAm, -⟩ := _root_.GlobalTheory.QFam.hasQ_mdifferentiable_and_isBoundedAtImInfty N A a hN hA
+  obtain ⟨hDm, -⟩ := _root_.GlobalTheory.QFam.hasQ_mdifferentiable_and_isBoundedAtImInfty N D d hN hD
   have hsm : ∀ j, MDifferentiable 𝓘(ℂ) 𝓘(ℂ) (s j) ∧ UpperHalfPlane.IsBoundedAtImInfty (s j) :=
-    fun j => GlobalTheory.T.mdifferentiable_and_isBoundedAtImInfty_of_hasQ N (s j) (c j) hN (hc j)
+    fun j => _root_.GlobalTheory.QFam.hasQ_mdifferentiable_and_isBoundedAtImInfty N (s j) (c j) hN (hc j)
   have hUo : IsOpen {z : ℂ | 0 < z.im} := isOpen_lt continuous_const Complex.continuous_im
   have hUc : IsPreconnected {z : ℂ | 0 < z.im} := (convex_halfSpace_im_gt 0).isPreconnected
   obtain ⟨τ₀, hτ₀⟩ : ∃ τ, D τ ≠ 0 := by
@@ -94,7 +100,7 @@ theorem hasQ_of_integral_quot : ∀ (N n : ℕ) (A D : ℍ → ℂ) (s : Fin n �
     exact hD0 (funext hc')
   have hofc : ∀ z : ℂ, 0 < z.im → ((UpperHalfPlane.ofComplex z : ℍ) : ℂ) = z := fun z hz => by
     rw [UpperHalfPlane.ofComplex_apply_of_im_pos hz]
-  obtain ⟨h₀, hh₀d, hh₀A, hh₀p⟩ := GlobalTheory.T.exists_differentiableOn_quotient_of_integral {z : ℂ | 0 < z.im} n
+  obtain ⟨h₀, hh₀d, hh₀A, hh₀p⟩ := _root_.GlobalTheory.quotient_integral_holomorphic {z : ℂ | 0 < z.im} n
     (A ∘ UpperHalfPlane.ofComplex) (D ∘ UpperHalfPlane.ofComplex)
     (fun j => s j ∘ UpperHalfPlane.ofComplex) hUo hUc (UpperHalfPlane.mdifferentiable_iff.1 hAm)
     (UpperHalfPlane.mdifferentiable_iff.1 hDm) (fun j => UpperHalfPlane.mdifferentiable_iff.1 (hsm j).1)
@@ -121,7 +127,7 @@ theorem hasQ_of_integral_quot : ∀ (N n : ℕ) (A D : ℍ → ℂ) (s : Fin n �
       rw [hasQ_periodic hN hA, hasQ_periodic hN hD, hAh τ] at e1
       simp only
       linear_combination -e1
-    rcases GlobalTheory.T.upperHalfPlane_holomorphic_mul_eq_zero_iff _ D (hhNm.sub hhm) hDm hz with h0 | h0
+    rcases _root_.GlobalTheory.fn_mul_eq_zero_dom _ D (hhNm.sub hhm) hDm hz with h0 | h0
     · exact fun τ => sub_eq_zero.1 (congrFun h0 τ)
     · exact absurd h0 hD0
   have hbd : UpperHalfPlane.IsBoundedAtImInfty h := by
@@ -135,12 +141,12 @@ theorem hasQ_of_integral_quot : ∀ (N n : ℕ) (A D : ℍ → ℂ) (s : Fin n �
       ((Asymptotics.isBigO_refl (1 : ℍ → ℝ) _).add hS).congr_left fun τ => rfl
     have h2 : h =O[UpperHalfPlane.atImInfty] (fun τ => 1 + ∑ j, ‖s j τ‖) := by
       refine Asymptotics.IsBigO.of_bound 1 (Filter.Eventually.of_forall fun τ => ?_)
-      have hb := GlobalTheory.T.norm_root_le_one_add_sum_norm_coeff n (fun j => s j τ) (h τ) (hhp τ)
+      have hb := _root_.GlobalTheory.monic_root_norm_le_one_add_sum n (fun j => s j τ) (h τ) (hhp τ)
       have hnn : (0 : ℝ) ≤ 1 + ∑ j, ‖s j τ‖ := by positivity
       rw [Real.norm_of_nonneg hnn, one_mul]
       exact hb
     exact h2.trans h1
-  obtain ⟨b, hb⟩ := GlobalTheory.T.hasQExpansion_of_periodic_bounded_holomorphic N h hN hhm hper hbd
+  obtain ⟨b, hb⟩ := _root_.GlobalTheory.FN.hasQ_of_periodic_bounded N h hN hhm hper hbd
   exact ⟨h, b, hb, hAh⟩
 
 end GlobalTheory.FN

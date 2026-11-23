@@ -3,12 +3,15 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPairingStdP
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.RealMetaplecticRepresentation
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSymplecticGroupMatrixOfPreservesPhaseSpace
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ContinuousMatrixOneParameterGroupEqExpStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntertwiningSymplecticAndGroupLawStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemSymplecticLieAlgebraOfExpSmulMemSymplecticGroStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MetaplecticOneParameterSchwartzIntertwiningStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OneParamIsometryFamiliesDifferByCharacterStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealPairingSpaceResultOfSchrodingerCoordinatesStatement
+public import Mathlib.Analysis.Normed.Algebra.Exponential
+public import Mathlib.Topology.Instances.Matrix
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ContinuousMatrixOneParameterGroupEqExp
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntertwiningSymplecticAndGroupLaw
+public import Mathlib.Algebra.Lie.Classical
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemSymplecticLieAlgebraOfExpSmulMemSymplecticGro
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MetaplecticOneParameterSchwartzIntertwining
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OneParamIsometryFamiliesDifferByCharacter
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealPairingSpaceResultOfSchrodingerCoordinates
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,11 +65,11 @@ theorem coordAll (hP : GlobalTheory.Published.RealMetaplecticRepresentation) (l 
     (hI : ∀ t w (f f₁ : Sch l), ⇑f₁ = rhoFun w ⇑f → ⇑(T t f₁) = rhoFun (A t w) ⇑(T t f))
     (hiso : ∀ t f, ∫ x, ‖T t f x‖ ^ 2 = ∫ x, ‖f x‖ ^ 2) (hpt : ∀ f y, Continuous fun t => T t f y) :
     ∃ (X : Matrix (l ⊕ l) (l ⊕ l) ℝ) (c : ℂ), ∀ f y, HasDerivAt (fun t => T t f y) (quad X f y + c * f y) 0 := by
-  obtain ⟨hs, hgrp, h0⟩ := GlobalTheory.T.symplectic_and_flow_of_intertwining_unitary l A T hT hT0 hI hiso
+  obtain ⟨hs, hgrp, h0⟩ := _root_.GlobalTheory.RealWeil.intertwining_symplectic_and_group_law l A T hT hT0 hI hiso
   cases isEmpty_or_nonempty l with
   | inl hl =>
     have hq : ∀ f y, quad (0 : Matrix (l ⊕ l) (l ⊕ l) ℝ) f y = 0 := fun f y => by simp [quad]
-    obtain ⟨c, hc⟩ := GlobalTheory.T.isometryFamilies_derivatives_differ_by_scalar_at_zero l (fun t w => A t w) T (fun _ => LinearMap.id) (fun f y => quad 0 f y) hT hT0
+    obtain ⟨c, hc⟩ := _root_.GlobalTheory.famChar_hasDerivAt l (fun t w => A t w) T (fun _ => LinearMap.id) (fun f y => quad 0 f y) hT hT0
       (fun _ _ _ => rfl) (fun _ => rfl) hgrp h0 hI
       (fun t w f f₁ h => by
         rw [LinearMap.id_apply, LinearMap.id_apply, h, Subsingleton.elim (A t w) w]) hiso
@@ -86,9 +89,9 @@ theorem coordAll (hP : GlobalTheory.Published.RealMetaplecticRepresentation) (l 
       intro s t
       have : A (s + t) = (A s).comp (A t) := LinearMap.ext (hgrp s t)
       simp only [M, this, LinearMap.toMatrix'_comp]
-    obtain ⟨X, hX⟩ := GlobalTheory.T.continuous_matrix_oneParameterGroup_eq_exp _ M hMc hM0 hMm
+    obtain ⟨X, hX⟩ := _root_.GlobalTheory.matrix_oneParamGroup_eq_exp _ M hMc hM0 hMm
     have hsp : X ∈ LieAlgebra.Symplectic.sp l ℝ := by
-      refine GlobalTheory.T.mem_symplecticLieAlgebra_of_exp_smul_mem_symplecticGroup l X fun t => ?_
+      refine _root_.GlobalTheory.RealWeil.mem_sp_of_exp_mem_symplecticGroup l X fun t => ?_
       obtain ⟨N, hN⟩ := GlobalTheory.exists_symplecticGroup_of_sympl l (A t) (hs t)
       have e : Matrix.toLin' (N : Matrix (l ⊕ l) (l ⊕ l) ℝ) = A t := LinearMap.ext fun w => by
         rw [Matrix.toLin'_apply, hN]
@@ -96,9 +99,9 @@ theorem coordAll (hP : GlobalTheory.Published.RealMetaplecticRepresentation) (l 
         simp only [M, ← e, LinearMap.toMatrix'_toLin']
       rw [← hX t, ← e2]
       exact N.2
-    obtain ⟨U, hU, hU0, hUI, hUiso, hUd⟩ := GlobalTheory.T.metaplectic_oneParameter_schwartz_intertwining hP l X hsp
+    obtain ⟨U, hU, hU0, hUI, hUiso, hUd⟩ := _root_.GlobalTheory.RealWeil.metaplectic_oneParam_schwartz hP l X hsp
     have hB : ∀ t w, NormedSpace.exp (t • X) *ᵥ w = A t w := fun t w => by rw [← hX, hM]
-    obtain ⟨c, hc⟩ := GlobalTheory.T.isometryFamilies_derivatives_differ_by_scalar_at_zero l (fun t w => A t w) T U (fun f y => quad X f y) hT hT0 hU hU0 hgrp h0 hI
+    obtain ⟨c, hc⟩ := _root_.GlobalTheory.famChar_hasDerivAt l (fun t w => A t w) T U (fun f y => quad X f y) hT hT0 hU hU0 hgrp h0 hI
       (fun t w f f₁ h => by rw [hUI t w f f₁ h, hB]) hiso hUiso hpt hUd
     exact ⟨X, c, hc⟩
 
@@ -116,6 +119,6 @@ theorem deriv_quad : GlobalTheory.Published.RealMetaplecticRepresentation → �
       (∀ i y, g₂ i y = fderiv ℝ (⇑(g₁ i)) y (a i).1 - 2 * Real.pi * Complex.I * (P y (a i).2 : ℂ) * g₁ i y) →
       ∀ y, HasDerivAt (fun t => T t f y) (∑ i, c i * g₂ i y + c₀ * f y) 0 := by
   intro hP V _ _ _ _ _ μ hμ P hp A T hA hT hT0 hI hiso hpt _
-  exact GlobalTheory.T.realPairingSpace_result_of_schrodingerCoordinates V μ hμ P hp _ rfl (fun A' T' => coordAll hP (Fin _) A' T') A T hA hT hT0 hI hiso hpt
+  exact _root_.GlobalTheory.ArchUniq.SchrTransport.transport V μ hμ P hp _ rfl (fun A' T' => coordAll hP (Fin _) A' T') A T hA hT hT0 hI hiso hpt
 
 end GlobalTheory.QuadFam

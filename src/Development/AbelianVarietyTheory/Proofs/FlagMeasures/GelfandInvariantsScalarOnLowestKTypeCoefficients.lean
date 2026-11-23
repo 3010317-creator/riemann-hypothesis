@@ -2,10 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PosPartUnitaryMul
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermitianFormUnitaryOneOne
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DerivativesCoefficientsConvolutionFixedVectorStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSmoothCompactSupportFixLowestKTypeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GelfandInvariantCommRightTranslationStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.KMapLowestKTypeSubspaceEqScalarStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DerivativesCoefficientsConvolutionFixedVector
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSmoothCompactSupportFixLowestKType
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GelfandInvariantCommRightTranslation
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.KMapLowestKTypeSubspaceEqScalar
 import Formalism.RealPlaceAnalysis.RealPlaceTaylor.CartanInvolutionConjTransposeMul
 import Formalism.RealPlaceAnalysis.RealPlaceTaylor.ComplexifiedDerivativeCommutator
 import Mathlib.Algebra.Order.Floor.Extended
@@ -104,8 +105,8 @@ theorem gelf_congr {ε : Fin n → Bool} {f f' : Matrix (Fin n) (Fin n) ℂ → 
 
 theorem centre_scalar_low : ∀ (n : ℕ) (ε : Fin n → Bool) (lam : Fin n → ℝ) (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)), IsURepOn (UJset ε) σ → IsKTypeOf ε σ (lowK ε lam) (lowKSub ε lam σ) → ∃ c : ℕ → ℂ, ∀ s ∈ lowKSub ε lam σ, ∀ u : H, SmoothOnG ε (fun g => ⟪u, σ g s⟫_ℂ) ∧ ∀ m, ∀ g ∈ UJset ε, gelf ε m (fun x => ⟪u, σ x s⟫_ℂ) g = c m * ⟪u, σ g s⟫_ℂ := by
   intro n ε lam H _ _ _ σ hσ hK
-  obtain ⟨α, hα, hαc, hfix⟩ := GlobalTheory.T.exists_smooth_compactSupport_fix_lowestKType n ε lam H σ hσ hK
-  have hD := fun (s : lowKSub ε lam σ) => GlobalTheory.T.derivatives_coefficients_convolutionFixed_vector n ε H σ α s hσ hα hαc (hfix s s.2)
+  obtain ⟨α, hα, hαc, hfix⟩ := _root_.GlobalTheory.exists_smooth_fix_lowKSub n ε lam H σ hσ hK
+  have hD := fun (s : lowKSub ε lam σ) => _root_.GlobalTheory.DerivConv.derivConv n ε H σ α s hσ hα hαc (hfix s s.2)
   have hsm : ∀ (s : lowKSub ε lam σ) (u : H), SmoothOnG ε (fun g => ⟪u, σ g s⟫_ℂ) := fun s => (hD s).1
   have h1 : (1 : Matrix (Fin n) (Fin n) ℂ) ∈ UJset ε := by simp [UJset, inUJ]
   have hone : ∀ v, σ 1 v = v := fun v => by rw [hσ.1.1]; rfl
@@ -129,7 +130,7 @@ theorem centre_scalar_low : ∀ (n : ℕ) (ε : Fin n → Bool) (lam : Fin n →
   have h0 : ∀ m, C m 0 = 0 := fun m => by simpa using hlin m 1 0 0
   have key : ∀ m, ∃ c : ℂ, ∀ s : lowKSub ε lam σ, C m s = c • (s : H) := by
     intro m
-    refine GlobalTheory.T.kMap_lowestKTypeSubspace_eq_scalar n ε lam H σ hσ hK
+    refine _root_.GlobalTheory.KMapInto.kMap_lowKSub_scalar n ε lam H σ hσ hK
       { toFun := C m
         map_add' := fun s t => by simpa using hlin m 1 s t
         map_smul' := fun c t => by simpa [h0] using hlin m c 0 t } ?_
@@ -138,7 +139,7 @@ theorem centre_scalar_low : ∀ (n : ℕ) (ε : Fin n → Bool) (lam : Fin n →
     refine ext_inner_left ℂ fun u => ?_
     change ⟪u, C m s'⟫_ℂ = ⟪u, σ k (C m s)⟫_ℂ
     rw [hC1, ← hC m s u k hkU, ← Matrix.one_mul k,
-      ← GlobalTheory.T.gelfandInvariant_comm_rightTranslation n ε m _ k 1 (hsm s u) hkU h1]
+      ← _root_.GlobalTheory.Dec.GelfAd.gelf_right n ε m _ k 1 (hsm s u) hkU h1]
     refine gelf_congr (fun g hg => ?_) m 1 h1
     rw [e, hmul g hg k hkU]
   choose c hc using key

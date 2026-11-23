@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LocClosed
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagCoefIntegralOfLocalIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FrameAdmissibleOfCongrUnitriangularStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.IsPrimitiveSub
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagCoefIntegralOfLocalIntegral
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FrameAdmissibleOfCongrUnitriangular
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegralRowFrameMapIsometry
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.InvUnitriangularMoveFrameMemFlagSubspaceStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.InvUnitriangularMoveFrameMemFlagSubspace
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.NilradicalLatticeZMemSpan
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.SaturatedPf
 import Mathlib.Algebra.Order.Floor.Extended
@@ -219,7 +220,7 @@ theorem adapt_mat (Λ : Submodule (𝓞 E) S.V) (g : ℕ) {T : E} (F : LFlag S r
       (∀ P : HeightOneSpectrum (𝓞 E), (g : 𝓞 E) ∈ P.asIdeal → ∀ c b, IA P (W c b)) ∧
       ∀ b, a (frame F b) = ∑ c, W c b • frame F c := by
   have hloc := frame_locP Λ g F hconv hl
-  have h := fun b : Fin (r + 1) => GlobalTheory.T.flag_coef_integral_of_local_integral Λ g F hconv b.val (a (frame F b) - frame F b) (haf b)
+  have h := fun b : Fin (r + 1) => _root_.GlobalTheory.FlagCoef.coef_integral_of_flag Λ g F hconv b.val (a (frame F b) - frame F b) (haf b)
     (fun P hP => sub_mem (mem_localization_aut P haΛ (hloc P hP b)) (hloc P hP b))
   choose w hw0 hw1 hw2 using h
   refine ⟨triM w, triM_lower w hw1, triM_diag w hw1, fun P hP => triM_IA P w (fun b c => hw2 b P hP c), fun b => ?_⟩
@@ -243,7 +244,7 @@ theorem isAdmissible_flagPair_of_unitriangular_left_automorphism (Λ : Submodule
   rw [haΛ] at hA2
   obtain ⟨ξ, hξ0, hξ1, hξc⟩ := hA2
   obtain ⟨W, hW0, hW1, hWi, hWe⟩ := adapt_mat Λ g F hconv hl a haΛ haf
-  refine GlobalTheory.T.frame_admissible_of_congr_unitriangular Λ g hg F _ (W * ξ.map (fun x : 𝓞 E => (x : E)))
+  refine _root_.GlobalTheory.admissible_of_congr_unitriangular Λ g hg F _ (W * ξ.map (fun x : 𝓞 E => (x : E)))
     (mul_lower _ _ hW0 (map_lower ξ hξ0)) (mul_diag _ _ hW0 (map_lower ξ hξ0) hW1 (map_diag ξ hξ1))
     (fun P hP => mul_IA P _ _ (hWi P hP) (fun a b => by simpa using IA_coe P (ξ a b)))
     (frame_locP Λ g F hconv hl) (fun b => ?_)
@@ -266,8 +267,8 @@ theorem isAdmissible_flagPair_of_unitriangular_right_automorphism (Λ Λ' : Subm
     IsAdmissible Λ g F (Formalism.L2.SG.Saturated.mapL (γ * a'⁻¹) (Subgroup.mul_mem _ hγ (Subgroup.inv_mem _ ha'I)) F') := by
   obtain ⟨ξ, hξ0, hξ1, hξc⟩ := hA
   obtain ⟨K, hK0, hK1, hKi, hKe⟩ := adapt_mat Λ' g F' hconv' hl' a'⁻¹ (Formalism.L2.SG.Pf.gmap_inv ha'Λ)
-    (GlobalTheory.T.inv_unitriangular_move_frame_mem_flagSubspace F' a' ha'f)
-  refine GlobalTheory.T.frame_admissible_of_congr_unitriangular Λ g hg F _ (ξ.map (fun x : 𝓞 E => (x : E)) * K)
+    (_root_.GlobalTheory.FlagInv.inv_moves F' a' ha'f)
+  refine _root_.GlobalTheory.admissible_of_congr_unitriangular Λ g hg F _ (ξ.map (fun x : 𝓞 E => (x : E)) * K)
     (mul_lower _ _ (map_lower ξ hξ0) hK0) (mul_diag _ _ (map_lower ξ hξ0) hK0 (map_diag ξ hξ1) hK1)
     (fun P hP => mul_IA P _ _ (fun a b => by simpa using IA_coe P (ξ a b)) (hKi P hP))
     hFf (fun b => ?_)

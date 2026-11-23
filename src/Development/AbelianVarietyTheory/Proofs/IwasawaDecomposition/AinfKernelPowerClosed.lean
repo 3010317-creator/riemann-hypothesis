@@ -2,7 +2,8 @@ module
 
 public import Formalism.LocalRingCardinality.AdicCompletionLocal.InstIsAdicCompleteOCSpanSingletonSetCast
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsLogAExtends
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AinfQuotFontaineXiPowTorsionFreeSeparatedStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsCrisP
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AinfQuotFontaineXiPowTorsionFreeSeparated
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PadicIntHomUnique
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -43,7 +44,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsCrisP
 
 @[expose] public section
 
@@ -56,7 +56,7 @@ theorem image_kerP_pow_separated : ∀ (l : ℕ) [Fact l.Prime] (n : ℕ) (a : P
   intro l _ n a h
   obtain ⟨e, he⟩ : ∃ e : Per.Fl l, IsEps e := Model.exists_isEps l
   obtain ⟨-, -, -, -, -, hinj, hk⟩ := thetaP_facts l
-  obtain ⟨h1, h2⟩ := GlobalTheory.T.ainf_quot_fontaineXi_pow_torsionFree_separated l e he n
+  obtain ⟨h1, h2⟩ := _root_.GlobalTheory.MemLoc.ainf_quot_xi_pow_torsionFree_sep l e he n
   have h3 : ∀ (j : ℕ) (c : Per.Ainf l), xi e ^ n ∣ ((l : ℕ) : Per.Ainf l) ^ j * c → xi e ^ n ∣ c := by
     intro j
     induction j with

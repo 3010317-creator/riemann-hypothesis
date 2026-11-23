@@ -1,13 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ComplementReferenceCompactSubgroup
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CommonStabilizerStabilizersCommensurableVolumeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSymmInvariantKernelHermitianFramesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetMassLeAndFiniteStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetTermBasicFacts
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFramesStabilizerActsOnTermsStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CommonStabilizerStabilizersCommensurableVolume
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSymmInvariantKernelHermitianFrames
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetMassLeAndFinite
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormOrbitSumLeOfSymmKernel
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermExponentsNonnegAndDefectGroupBoundStatement
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetTermBasicFacts
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFramesStabilizerActsOnTerms
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermExponentsNonnegAndDefectGroupBound
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermInvariantsIndependentOfWitnesses
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -84,7 +84,7 @@ theorem amp_le_mass {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
     ⟨_, rfl⟩
   have hPiff : ∀ Λ, P Λ ↔ S.IsTerm d Λ ∧ S.InFF β J βJ d Λ := fun Λ => by rw [hP]
   have hPfin : {o : MulAction.orbitRel.Quotient S.St (Submodule L.O S.V) | P o.out}.Finite :=
-    (GlobalTheory.T.hermitianDoubleCoset_mass_le_and_finite L r k S hk1 d).2.subset fun o ho => ((hPiff _).1 ho).1
+    (_root_.GlobalTheory.HL.MassGlue.mass_le_and_finite L r k S hk1 d).2.subset fun o ho => ((hPiff _).1 ho).1
   have hmass : S.mass d (S.InFF β J βJ d) = ENNReal.ofReal (∑' o : MulAction.orbitRel.Quotient S.St (Submodule L.O S.V),
       if P o.out then invVol S.K0 (S.St ⊓ MulAction.stabilizer S.GLV o.out) else 0) := by
     rw [ofReal_tsum_ite (ι := MulAction.orbitRel.Quotient S.St (Submodule L.O S.V)) (fun o => P o.out)
@@ -106,20 +106,20 @@ theorem amp_le_mass {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
         if P o.out then invVol S.K0 (S.St ⊓ MulAction.stabilizer S.GLV o.out) else 0 := by
     by_cases hJ : 1 ≤ J ∧ J ≤ r
     · have hj : ((⟨J - 1, by omega⟩ : Fin r) : ℕ) + 1 = J := by simp only; omega
-      obtain ⟨m, hm_inv, hm⟩ := GlobalTheory.T.exists_symm_invariant_kernel_hermitian_frames L r k S hk ⟨J - 1, by omega⟩ β βJ d P
+      obtain ⟨m, hm_inv, hm⟩ := _root_.GlobalTheory.HL.exists_symm_invariant_kernel L r k S hk ⟨J - 1, by omega⟩ β βJ d P
         (fun Λ => by rw [hj]; exact hPiff Λ)
       have hK0 : S.K0 ≤ S.St := fun g hg => hg.1.1
       have bound := GlobalTheory.HL.norm_orbit_sum_le_of_symm_kernel S.St S.K0 P (S.om d) m
         (24 / 7 * (S.q : ℝ) ^ (1 - ((k : ℤ) - 2 * r - 3))) hK0
         (fun h hh x hx => by
           obtain ⟨hT, hI⟩ := (hPiff x).1 hx
-          have T := GlobalTheory.T.hermitianFrames_stabilizer_acts_on_terms L r k S d x hT h hh
+          have T := _root_.GlobalTheory.FrameAct.stabiliser_acts_on_terms L r k S d x hT h hh
           have hlat := (GlobalTheory.HL.TermBasic.term_basic L r k S d x hT).1.1
           exact ⟨(hPiff _).2 ⟨T.1, (T.2.2.2.2.2.2.2.2.2.1 β J βJ).2 hI⟩, T.2.1,
-            ((GlobalTheory.T.commonStabilizer_stabilizers_commensurable_volume L r k S).1 x hlat).2.2 h hh, fun y hy => hm_inv h hh x y hx hy⟩)
+            ((_root_.GlobalTheory.HL.volSt L r k S).1 x hlat).2.2 h hh, fun y hy => hm_inv h hh x y hx hy⟩)
         (fun x hx => by
           have hb := GlobalTheory.HL.TermBasic.term_basic L r k S d x ((hPiff x).1 hx).1
-          have A := (GlobalTheory.T.commonStabilizer_stabilizers_commensurable_volume L r k S).1 x hb.1.1
+          have A := (_root_.GlobalTheory.HL.volSt L r k S).1 x hb.1.1
           have W := (GlobalTheory.HL.WitIndep.witness_independence L r k S d x _ _ hb.2.1).2.2.2.2
           obtain ⟨h1, h2, h3, h4⟩ := hm x hx
           exact ⟨A.1, A.2.1, W, h1, h2, h3, h4⟩)
@@ -137,7 +137,7 @@ theorem amp_le_mass {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
         · have hJ0 : J = 0 := by omega
           apply hTB.1
           refine le_antisymm (GlobalTheory.HL.TermBasic.term_basic L r k S d Λ hT).2.2.1 fun z hz => ?_
-          refine ((GlobalTheory.T.term_exponents_nonneg_and_defect_group_bound L r k S d Λ hT).2.2.2.2.2.2.2.2.2.1 z hz).1 ?_
+          refine ((_root_.GlobalTheory.HL.Defect.exponents_and_defect L r k S d Λ hT).2.2.2.2.2.2.2.2.2.1 z hz).1 ?_
           have := hle z hz
           omega
       rw [hamp]

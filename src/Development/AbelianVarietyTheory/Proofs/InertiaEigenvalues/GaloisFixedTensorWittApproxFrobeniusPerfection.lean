@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.HTBasis
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoeffZeroEqZeroIff
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleEmbeddingFrobeniusGaloisCompatStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TeichmullerEpsilonRootsMemFrobeniusPerfectionModStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TiltInvariantApproxByEpsilonRootsClosureStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleEmbeddingFrobeniusGaloisCompat
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TeichmullerEpsilonRootsMemFrobeniusPerfectionMod
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TiltInvariantApproxByEpsilonRootsClosure
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -262,7 +262,7 @@ theorem fixSub_approx_perfection (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI :
     unfold fixSub at hy
     simp only [Subring.mem_iInf, RingHom.mem_eqLocus] at hy
     exact hy g hg
-  obtain ⟨hφE, -, hπ, -⟩ := GlobalTheory.T.etaleEmbedding_frobenius_galois_compat l P AI K s LL h W E
+  obtain ⟨hφE, -, hπ, -⟩ := _root_.GlobalTheory.Decompl.ioE_compat l P AI K s LL h W E
   have hφ : ∀ e, ∃ e', φRW LL (E.tie.ioE e) = E.tie.ioE e' := fun e => ⟨W.φE e, (hφE e).symm⟩
   have hcoef : ∀ i, ∀ g ∈ Hinf K, autCb l (AI.actT g) ((crd (basisO LL) i y).coeff 0) =
       (crd (basisO LL) i y).coeff 0 := by
@@ -278,7 +278,7 @@ theorem fixSub_approx_perfection (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI :
       {xb | ∃ c : Om l, c ∈ K0 K ∧ ∃ m : ℕ, 0 < m ∧ ¬ l ∣ m ∧ c ^ m = 1 ∧ IsTiltOf c m xb}),
       ∃ v : OCb l, algebraMap (OCb l) (Cb l) ((AI.εroot s - 1) ^ N) * (crd (basisO LL) i y).coeff 0 =
         algebraMap (OCb l) (Cb l) (u + (AI.εroot s - 1) ^ (N + m) * v) :=
-    fun i => GlobalTheory.T.tilt_invariant_approx_by_epsilonRoots_closure l P AI K s ((crd (basisO LL) i y).coeff 0) (hcoef i) m
+    fun i => _root_.GlobalTheory.FlatInvariants.flat_invariant_approx l P AI K s ((crd (basisO LL) i y).coeff 0) (hcoef i) m
   choose N₀ hN₀ using hap
   have hall : ∀ i, ∃ u ∈ Subring.closure (Set.range AI.εroot ∪
       {xb | ∃ c : Om l, c ∈ K0 K ∧ ∃ m : ℕ, 0 < m ∧ ¬ l ∣ m ∧ c ^ m = 1 ∧ IsTiltOf c m xb}),
@@ -299,7 +299,7 @@ theorem fixSub_approx_perfection (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI :
         (E.tie.ioE.commutes _).symm
       rw [hb]
       exact InPerf.of_ι _
-    · exact GlobalTheory.T.teichmullerEpsilonRoots_mem_frobeniusPerfection_mod_l l P AI K s LL h W E (u i) (hu i)
+    · exact _root_.GlobalTheory.DecomplPerf.teich_mem_perfection l P AI K s LL h W E (u i) (hu i)
   unfold NearPi at hnear
   obtain ⟨y0, hy0, hn0⟩ := exists_inPerf_near (j := (inclR LL : RA LL →+* RW LL)) hφ' W.EE_π hπ hy1 hnear
   obtain ⟨n, e, r, her⟩ := hy0

@@ -6,11 +6,12 @@ public import Mathlib.Analysis.Complex.Norm
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.FlatQuotientIsoOfSameKernel
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.SplitTorusHomProperTrivialField
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AmpleCubPullAndPullPow
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.CardTorsionAbelianVarietyLeConstMulPowStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.CardTorsionPullbackPowerLocusLeStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.CardTorsionAbelianVarietyLeConstMulPow
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.CardTorsionPullbackPowerLocusLe
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsImage
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsPolyNormSqRootsStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsTorusAbelianQuotientPDivisibleSmoothGroupStatement
+public import Mathlib.Basic.Complex.Basic
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsPolyNormSqRoots
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsTorusAbelianQuotientPDivisibleSmoothGroup
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FrobGPowAndClosedSubgroup
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FrobGSplitTorusPow
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.GeometricallyConnectedOfSurjective
@@ -230,9 +231,9 @@ theorem core (k : Type) [Field k] [IsAlgClosed k] (N : Over (Sp k)) [GrpObj N] (
     (GlobalTheory.SS.AmpSub.ampleCub_pull_and_pullPow (Sp k) N L hL).1 B' ν hν hνci
   have hpp : PullPow F'.left (L.pull ν.left) Q :=
     pullPow_pull ν.left (by rw [← Over.comp_left, hF'ν, Over.comp_left]) hE
-  obtain ⟨P, _, hProots, hPkill⟩ := GlobalTheory.T.exists_poly_normSq_roots' k B' hB' (L.pull ν.left) hL' (End.of F') Q hF' hpp
-  obtain ⟨C2, hC2⟩ := GlobalTheory.T.card_torsion_pullbackPowerLocus_le k N hN X B i q hq hB L hL E Q hQ inferInstance hE hi
-  obtain ⟨C3, hC3⟩ := GlobalTheory.T.card_torsion_abelianVariety_le_const_mul_pow k B' hB' (L.pull ν.left) hL' a' ha'
+  obtain ⟨P, _, hProots, hPkill⟩ := _root_.GlobalTheory.SS.exists_poly_normSq_roots k B' hB' (L.pull ν.left) hL' (End.of F') Q hF' hpp
+  obtain ⟨C2, hC2⟩ := _root_.GlobalTheory.SS.PowLocus.card_torsion_powLocus_le k N hN X B i q hq hB L hL E Q hQ inferInstance hE hi
+  obtain ⟨C3, hC3⟩ := _root_.GlobalTheory.SS.card_torsion_le k B' hB' (L.pull ν.left) hL' a' ha'
   have hmono : Mono ν := by
     have : Mono ν.left := inferInstance
     exact (Over.forget _).mono_of_mono_map this
@@ -322,7 +323,7 @@ theorem GlobalTheory.SS.frobenius_on_torsion : ∀ (k : Type) [Field k] [IsAlgCl
     exact (Over.forget _).mono_of_mono_map this
   let F'e : End N := End.of F'
   obtain ⟨g', hg', hgiso⟩ := hdimN g hg
-  obtain ⟨X, _, _, _, B, _, i, qB, hqB, hB, hdimB⟩ := GlobalTheory.T.exists_torus_abelian_quotient_p_divisible_smooth_group k p N hN hdiv
+  obtain ⟨X, _, _, _, B, _, i, qB, hqB, hB, hdimB⟩ := _root_.GlobalTheory.SS.DivSemi.exists_torus_abelian_quotient k p N hN hdiv
   obtain ⟨a, ha, hga⟩ := hdimB g' hg'
   have hFN : FrobG N F'e q :=
     (GlobalTheory.SS.frobG_pow_and_closed_subgroup k G hG F q hF).2 N ν F'e hν hνci hF' hF'ν

@@ -1,13 +1,15 @@
 module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.DeltaInvariantLattices
-import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.KernelDictionary
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqTopOfSpanImage
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LevLawsOfEvLaw
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemWachNOfMapMemSaturatedStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NotFullBot
+public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemWachNOfMapMemSaturated
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.OneNotMemFilOne
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeGaloisTrivialModUniformizer
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeHeightsFromHodgeJumpsStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeHeightsFromHodgeJumps
+import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.KernelDictionary
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -157,7 +159,7 @@ theorem crystalline_extension_integral_cocycle_all_places : ∀ (D : Formalism.B
         exact GlobalTheory.EtaleExact.isUnit_or_dvd_pow (D.loc l) LL) (by
         rw [hp]
         exact GlobalTheory.EtaleExact.sep_RW LL)) T Tp ((HW l).W K s LL h).one ι π hses).2.1
-  have hsat := GlobalTheory.T.mem_wachN_of_map_mem_saturated D HW F l K s LL h T Tp ((HW l).W K s LL h).one ι π hT hTp
+  have hsat := _root_.GlobalTheory.NL.KerSat.mem_N_of_map_mem D HW F l K s LL h T Tp ((HW l).W K s LL h).one ι π hT hTp
     (GlobalTheory.NL.one_crys (HW l) h) hses
   have hjs := GlobalTheory.NL.JumpsSES.jumps_ses_and_one D HW l K s LL h T Tp ((HW l).W K s LL h).one ι π hTp hses
   have hjTp : JumpsLet ((HW l).W K s LL h) Tp M hh := by
@@ -166,7 +168,7 @@ theorem crystalline_extension_integral_cocycle_all_places : ∀ (D : Formalism.B
     · exact hjT τ i hτ a h1
     · rw [hjs.2 τ a h1]
       exact ⟨by simp, by simp⟩
-  have h5 := (GlobalTheory.T.wachLattice_heights_from_hodgeJumps D HW F Cm l K s LL h Tp M hh hTp hjTp).1
+  have h5 := (_root_.GlobalTheory.NL.Heights.heights_from_jumps D HW F Cm l K s LL h Tp M hh hTp hjTp).1
   have h2 := (GlobalTheory.NL.WachLatticeTrivialModUniformizer.wachLattice_galois_trivial_mod_uniformizer D HW F Cm l K s LL h Tp hTp).2.2
   exact core _ T Tp ι π M (fun y hy => (hexact y).1 hy) hsat h5 h2 e hφe hγe x hx c hc
 

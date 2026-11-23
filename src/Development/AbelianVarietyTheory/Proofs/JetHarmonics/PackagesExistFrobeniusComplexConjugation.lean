@@ -6,7 +6,8 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsClosedCompleteFieldOverPlace
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.GapParts
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NotInPsiConj
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RowDataSuppliedAtSelfConjugatePlacesStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.ConjNeSelfOfCM
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RowDataSuppliedAtSelfConjugatePlaces
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.CmHostIdempotentTraceEqOne
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IsCanonGaugeMapFB
 public import Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.HostFacts
@@ -96,7 +97,7 @@ theorem exists_rowFam (hUp : ∀ (p : ℕ) [Fact p.Prime], ReciprocityTheory.Cha
       rw [t0, m0]; omega
     · show Dw.mult (tauC N pl z 1) = N.R.m - j
       rw [t1, m1, hq']
-  obtain ⟨I, J, fI, fJ, X, F, hX, hval⟩ := GlobalTheory.T.rowData_supplied_at_selfConjugate_places hUp E H Dw lv Xo c hstar T io y C3 C V ι hι lv.M Y hY hy
+  obtain ⟨I, J, fI, fJ, X, F, hX, hval⟩ := _root_.GlobalTheory.RowAt.supplyC_selfConj hUp E H Dw lv Xo c hstar T io y C3 C V ι hι lv.M Y hY hy
     (RPl N.R) ⟨tauC N pl, N.R.k - 1, j, N.R.m - j⟩ hA hS hrk (by show N.R.m - j < N.R.k - 1; omega) a hdom nW ν
     (hconv y C3 lv.M a nW ν hν)
   refine ⟨⟨hA.inj, hS⟩, { C := C, V := V, hVl := hVl, I := I, J := J, fI := fI, fJ := fJ, X := X, F := F, hn := ?_ },

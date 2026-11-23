@@ -4,9 +4,9 @@ public import Formalism.AlgebraicWeights.InertDatumExists
 public import Formalism.LocalToGlobal.GaloisLevelStructure.DefsAut
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteInertHeckeSupportCosets
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemMaxCompactOfTrivOutsideLocalIntegralStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemMaxCompactOfTrivOutsideLocalIntegral
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryDoubleCosetFiniteLeftCosets
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryDoubleCosetFiniteLeftCosetsStatement
+public import Formalism.SatakeDualWeyl.StatementF
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsTrivOutsideInertLocalEqStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertLocalIntegralOfMemLatticeStabilizerStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertLocalMemLocalUnitaryGroupStatement
@@ -122,7 +122,7 @@ theorem conv_of (Dv : InertDatum L n v w) (U : Subgroup (GAf L n))
     constructor
     · intro hu; exact hK1 _ ((hU _ ht).1 hu)
     · intro hk
-      exact (hU _ ht).2 (GlobalTheory.T.mem_maxCompact_of_trivOutside_local_integral L n v w Dv _ ht fun i j => GlobalTheory.SatInd.CosetFin.entries_int hk i j)
+      exact (hU _ ht).2 (_root_.GlobalTheory.InertUmax.mem_Umax_of_trivOutside_of_loc_integral L n v w Dv _ ht fun i j => GlobalTheory.SatInd.CosetFin.entries_int hk i j)
   have hCs : ∀ d : GU Dv.σw n ⧸ K, ∃ x : GAf L n, TrivOutside {v} x ∧ lam x = d.out := fun d => by
     obtain ⟨x, hx, e⟩ := hC _ d.out.2
     exact ⟨x, hx, Subtype.ext e⟩
@@ -172,7 +172,7 @@ theorem conv_of (Dv : InertDatum L n v w) (U : Subgroup (GAf L n))
     rw [← mul_assoc, hRi h' hh']
   have hfin : ∀ H ∈ Hecke ℂ K, Set.Finite {d : GU Dv.σw n ⧸ K | H d.out ≠ 0} := by
     rintro H ⟨-, S, hS⟩
-    refine (S.finite_toSet.biUnion fun t _ => GlobalTheory.T.unitary_doubleCoset_finite_left_cosets Dv.ϖ Dv.σw _ n Dv.unram t).subset ?_
+    refine (S.finite_toSet.biUnion fun t _ => _root_.GlobalTheory.SatInd.DCoset.finite_dcoset Dv.ϖ Dv.σw _ n Dv.unram t).subset ?_
     intro d hd
     obtain ⟨t, ht, a, b, hab⟩ := hS _ hd
     refine Set.mem_biUnion ht ⟨(a : GU Dv.σw n), a.2, ?_⟩

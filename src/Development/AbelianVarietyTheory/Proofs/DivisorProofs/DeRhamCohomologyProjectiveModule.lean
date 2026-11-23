@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BcObjIsAbelianScheme
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.SpanSingletonEqTopIffIsUnitOfIsBaseChange
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsAbelianSchemeAndExtendOfGenericHoms
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeFirstDeRhamStructureStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeFirstDeRhamStructure
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -276,7 +277,7 @@ theorem projective_of_baseChange (k K : Type) [Field k] [Field K] [Algebra k K] 
     have := hA.geomConnected
     have : ConnectedSpace A₀.left := GeometricallyConnected.connectedSpace A₀.hom A₀.hom.isOpenMap
     exact exists_dim_of_preconnected A₀.hom (Classical.arbitrary _)
-  obtain ⟨hFree, -, hBC, -, -⟩ := GlobalTheory.T.abelianScheme_firstDeRham_structure
+  obtain ⟨hFree, -, hBC, -, -⟩ := _root_.GlobalTheory.abelianDeRham
   have hh := isGrpPullback_pullback A₀ (spMap (algebraMap k K))
   have hbc := (hBC k A₀ g hA hg K _ _ hh).1
   haveI : Module.Finite k (primDR A₀) := (hFree.prim hA hg).1

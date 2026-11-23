@@ -1,9 +1,9 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.IsInertiaInfiniteCyclotomic
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.CrystallineOrdinaryIdeals.ChosenFrobeniusIsFrobeniusStatement
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.CrystallineOrdinaryIdeals.ChosenFrobeniusIsFrobenius
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.CrystallineOrdinaryIdeals.ExpEqOneAddAddSq
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.CrystallineOrdinaryIdeals.GaloisSubgroupLBasicPropertiesStatement
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.CrystallineOrdinaryIdeals.GaloisSubgroupLBasicProperties
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.CrystallineOrdinaryIdeals.IsUnitCharacterDiffAtChosenInertiaStatement
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.CrystallineOrdinaryIdeals.NilpotentTwistStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -104,8 +104,8 @@ theorem GlobalTheory.OrdLoc.del_unr_twist {l : ℕ} [Fact l.Prime] {O : Type} [C
     ∃ u : GQ l →* Cˣ, QCont l (fun g => (u g : C)) ∧ (∀ g ∈ Iq l, u g = 1) ∧ (∀ g, IsNilpotent ((u g : C) - 1)) ∧
       ∃ (j : ℕ) (v : Cˣ), j ≤ 2 ∧
         GlobalTheory.OrdLoc.del D (r0 D.η ((Units.map (algebraMap O C : O →* C)).comp D.Ψ * u)) = t ^ j * v := by
-  obtain ⟨-, σ₀, m, hF, hm, hI⟩ := GlobalTheory.T.chosenFrobenius_isFrobenius D
-  obtain ⟨-, -, -, -, hs0⟩ := GlobalTheory.T.galoisSubgroupL_basic_properties D
+  obtain ⟨-, σ₀, m, hF, hm, hI⟩ := _root_.GlobalTheory.OrdLoc.fr_isFr D
+  obtain ⟨-, -, -, -, hs0⟩ := _root_.GlobalTheory.OrdLoc.hl_basic D
   obtain ⟨u, hcont, huI, hunil, v, hv⟩ := GlobalTheory.unr_unip_char_frob t ht σ₀ hF
   refine ⟨u, hcont, huI, hunil, ?_⟩
   obtain ⟨b, hb⟩ := hv m

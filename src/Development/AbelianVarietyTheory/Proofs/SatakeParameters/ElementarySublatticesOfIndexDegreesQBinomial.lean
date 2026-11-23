@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.Finite
 public import Mathlib.Algebra.Module.Torsion.Basic
 public import Mathlib.Basic.Complex.Basic
 public import Mathlib.RingTheory.LocalRing.ResidueField.Basic
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.QBinomialSumCardQuotientSubspacesStatement
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.QBinomialSumCardQuotientSubspaces
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -230,7 +231,7 @@ theorem subElem_degrees : ∀ (O K : Type) [CommRing O] [IsDomain O] [IsDiscrete
   refine ⟨subIdx_zero L, subElem_zero L, fun k hk => subElem_eq_empty hk L, fun X => ?_⟩
   haveI := finite_red L
   haveI : Module.Finite (ResidueField O) (Red L.1) := Module.Finite.of_finite
-  have h := GlobalTheory.T.qBinomial_sum_card_quotient_subspaces (ResidueField O) (Red L.1) X
+  have h := _root_.GlobalTheory.qBinomial_subspaces (ResidueField O) (Red L.1) X
   rw [finrank_red L] at h
   simp only [ncard_subElem L]
   exact h

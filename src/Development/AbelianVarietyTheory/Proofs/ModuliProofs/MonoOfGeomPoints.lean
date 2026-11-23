@@ -2,12 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.FiniteHomogeneousInf
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.FormallyUnramifiedOfTangentMapInjective
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsProjCoordRepresentationHomogeneousIdealFlaStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSchemeMapOfProjectiveCoordinatesStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsProjProperRelAmpleOfProjectiveCoordinateRepStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsProjectiveCoordinateRepresentationClosedSubschStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsProjCoordRepresentationHomogeneousIdealFla
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSchemeMapOfProjectiveCoordinates
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsProjProperRelAmpleOfProjectiveCoordinateRep
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsProjectiveCoordinateRepresentationClosedSubsch
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SecCoordBcScaleUnique
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SectionCoordinateVectorExistsLocallyStatement
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SectionCoordinateVectorExistsLocally
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -88,12 +88,12 @@ theorem sp_id {A : Type} [CommRing A] : spMap (RingHom.id A) = 𝟙 _ := Spec.ma
 
 theorem projRep_of_fibres : ∀ (R σ : Type) [CommRing R] [Finite σ] (X : Scheme.{0}) (s : X ⟶ Sp R) (M : LB X) (th : σ → M.Sec), M.IsLB → IsProper s → (∀ (K : Type) [Field K] [IsAlgClosed K] (x : R →+* K), ∃ (X' : Scheme.{0}) (π : X' ⟶ X) (s' : X' ⟶ Sp K) (M' : LB X') (th' : σ → M'.Sec) (I : Ideal (MvPolynomial σ K)), IsPullback π s' s (spMap x) ∧ ProjRep I s' M' th' ∧ ∀ (T : Type) [CommRing T] (y : Sp T ⟶ X') (w : σ → T), SecCoord M' th' y w ↔ SecCoord M th (y ≫ π) w) → ProjRep (idealOf s M th (𝟙 X)) s M th := by
   intro R σ _ _ X s M th hM hs H
-  obtain ⟨P, sP, MP, thP, -, hP, -⟩ := GlobalTheory.T.exists_projCoordRepresentation_homogeneousIdeal_flat R σ ⊥ 0 (by
+  obtain ⟨P, sP, MP, thP, -, hP, -⟩ := _root_.GlobalTheory.ProjFlat.exists_projRep_flat R σ ⊥ 0 (by
     intro F hF e
     rw [Ideal.mem_bot] at hF
     simp [hF])
-  have hPp : IsProper sP := (GlobalTheory.T.isProj_proper_relAmple_of_projectiveCoordinateRep R σ ⊥ (Over.mk sP) MP thP hP).2.1
-  obtain ⟨f, hf, -, hfc, -⟩ := GlobalTheory.T.exists_scheme_map_of_projective_coordinates R σ ⊥ P X sP s MP M thP th hP hM (by
+  have hPp : IsProper sP := (_root_.GlobalTheory.ZM.projRep_projective_ample R σ ⊥ (Over.mk sP) MP thP hP).2.1
+  obtain ⟨f, hf, -, hfc, -⟩ := _root_.GlobalTheory.ZM.RepMap.exists_map_of_coord R σ ⊥ P X sP s MP M thP th hP hM (by
     intro R' _ β y v hy hv
     refine ⟨?_, fun F hF => by rw [Ideal.mem_bot] at hF; simp [hF]⟩
     by_contra hne
@@ -121,7 +121,7 @@ theorem projRep_of_fibres : ∀ (R σ : Type) [CommRing R] [Finite σ] (X : Sche
     have hy' : y' ≫ s = spMap c ≫ spMap x := by
       rw [← hy, ← hf, ← Category.assoc, ← e, Category.assoc]
     obtain ⟨X', π, s', M', th', I, hpb, hrep, hc⟩ := H K x
-    obtain ⟨v, hv⟩ := (GlobalTheory.T.sectionCoordinateVector_exists_locally X M σ th hM).1 T y
+    obtain ⟨v, hv⟩ := (_root_.GlobalTheory.ZM.LocalCoord.secCoord_local X M σ th hM).1 T y
     have hv' : SecCoord M th y' v := (hfc T y' v).2 (e ▸ (hfc T y v).1 hv)
     have a1 : SecCoord M' th' (hpb.lift _ _ hy) v := (hc T _ _).2 (by rw [hpb.lift_fst]; exact hv)
     have a2 : SecCoord M' th' (hpb.lift _ _ hy') v := (hc T _ _).2 (by rw [hpb.lift_fst]; exact hv')
@@ -138,7 +138,7 @@ theorem projRep_of_fibres : ∀ (R σ : Type) [CommRing R] [Finite σ] (X : Sche
       simpa only [Category.assoc, hf] using this
     · simpa only [Category.assoc] using hw
   have hci : IsClosedImmersion f := (IsClosedImmersion.iff_isProper_and_mono f).2 ⟨‹_›, hm⟩
-  have := GlobalTheory.T.isProjectiveCoordinateRepresentation_closedSubscheme R σ ⊥ P X sP MP thP f M th hP hci hM hfc
+  have := _root_.GlobalTheory.ZM.ClosedCoord.projRep_closed R σ ⊥ P X sP MP thP f M th hP hci hM hfc
   rwa [hf] at this
 
 end GlobalTheory.FibreEmbed

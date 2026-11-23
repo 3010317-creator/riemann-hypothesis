@@ -5,10 +5,13 @@ public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLif
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SettingsFormsExistList
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsToricCharactersInTwistCoefficientRingsStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ChebSplitNd
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ConductorPrimesInLowSetStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.SubsetTwistExceptionalPlaces
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ConductorPrimesInLowSet
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsBasisCoordLattice
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCyclotomicUnramifiedCompletedIntegers
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsTwistRingsCharactersClassGroupsStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ConcreteTwistFrameExtraExcludedOverSmallPrimes
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsTwistRingsCharactersClassGroups
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormLeOneOfMemClC
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ReductionSeriesB0
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ExistsGridAtMember
@@ -78,7 +81,7 @@ theorem pointwise_alt_alt (hPr : _root_.GlobalTheory.HeightCounting.Up.Published
     l.mt.M _ (QOf P) l.mt.mt l.Pq_over hgal l.cusp hcheb l.a.elem.star l.a.elem.int l.a.elem.split
   have hJ := fun (p : ℕ) [Fact p.Prime] (v : HeightOneSpectrum (𝓞 ↥(Dof x).LL0))
       (hv : ((p : ℕ) : 𝓞 ↥(Dof x).LL0) ∈ v.asIdeal) => Formalism.BasicNotions.Examples₂.LB.exists_embAt (l := p) v hv
-  obtain ⟨c0r, hr⟩ := GlobalTheory.T.exists_twistRings_characters_classGroups hPr.what₂.art (Dof x) (cfOf x) (fun p _ v hv => (hJ p v hv).choose)
+  obtain ⟨c0r, hr⟩ := _root_.GlobalTheory.TwRing.exists_ringSpec hPr.what₂.art (Dof x) (cfOf x) (fun p _ v hv => (hJ p v hv).choose)
     (fun p _ v hv y => (hJ p v hv).choose_spec y) l.a.val l.a.elem.star l.a.elem.int
   let b0 : Big (Dof x) := fun p _ j =>
     ⟨(c0f p j).1 ⊔ (c0r p j).1, by haveI := (c0f p j).2; haveI := (c0r p j).2; infer_instance⟩
@@ -104,7 +107,7 @@ theorem pointwise_alt_alt (hPr : _root_.GlobalTheory.HeightCounting.Up.Published
     (lowAll (Dof x)) l.Pq l.rat.S l.rat.In.hL l.rat.In.eig l.rat.In.θ b0 b0 Sx T' Sp (GlobalTheory.BigTop.Fun.lamOf G) hC hOk
     (GlobalTheory.BigTop.Fun.lamOf_teich G) l.a.val (fun a => hF.values (a.1 + 1) (by omega) a.2)
     (fun i Q hQ => by
-      obtain ⟨p, hp, hQp⟩ := GlobalTheory.T.conductor_primes_in_low_set (Dof x) _ hOk hq Q hQ
+      obtain ⟨p, hp, hQp⟩ := _root_.GlobalTheory.LamTie.cond0_primes_lowAll (Dof x) _ hOk hq Q hQ
       exact hSxS0 i Q (Finset.mem_coe.1 (hSx1 p hp hQp)))
   obtain ⟨htie, hside⟩ := hLam F
   obtain ⟨th0⟩ := GlobalTheory.HeightCounting.exists_nth_of_fg_full (Dof x) (T'.ntw l.a.A.bare F (TwL.empty T')) ex

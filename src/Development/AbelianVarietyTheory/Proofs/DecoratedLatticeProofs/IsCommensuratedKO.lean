@@ -1,11 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.PairwiseDisjointCell
-import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsBorelSphericalSameDoubleCosetSumsZonalStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HasSumSphericalFunctionDoublingLengthStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasBoundedSumsOne
+public import Formalism.SatakeDualWeyl.Statement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsBorelSphericalSameDoubleCosetSumsZonal
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HasSumSphericalFunctionDoublingLength
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BiInvariantReplaceSameDoubleCosetSums
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegralRightInvariantEqSumOpenSubgroupCosets
+import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormalizedAbsCharacterization
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -181,8 +183,8 @@ theorem unramifiedDoublingGL : GlobalTheory.Published.UnramifiedDoublingGL := by
   have hq : 0 < resCard k := zero_lt_one.trans hq1
   have hqR : (1 : ℝ) < resCard k := by exact_mod_cast hq1
   have hqR0 : (0 : ℝ) < resCard k := zero_lt_one.trans hqR
-  obtain ⟨φ, hφ, hsum⟩ := GlobalTheory.T.exists_borel_spherical_same_double_coset_sums_zonal k n V π α hπ ω hω
-  obtain ⟨δ, hδ, hmain⟩ := GlobalTheory.T.hasSum_sphericalFunction_doublingLength k n _ φ hφ
+  obtain ⟨φ, hφ, hsum⟩ := _root_.GlobalTheory.ZonalBorel.exists_isBorelSph_hAct_eq k n V π α hπ ω hω
+  obtain ⟨δ, hδ, hmain⟩ := _root_.GlobalTheory.DoublingLength.hasSum_doublingLength k n _ φ hφ
     (fun i => mul_ne_zero (α i).ne_zero (Complex.ofReal_ne_zero.2 (Real.rpow_pos_of_pos hqR0 _).ne'))
     ϖ hϖ (cellLen hϖ) (cellLen_eq hϖ)
   refine ⟨-Real.logb (resCard k) δ - n / 2, fun s hs => ?_⟩

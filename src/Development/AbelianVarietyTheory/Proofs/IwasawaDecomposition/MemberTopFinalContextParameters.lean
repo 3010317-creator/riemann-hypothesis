@@ -3,8 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.NotBaseCondFalse
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.ValidForConstructedPointClassesEventuallyWorking
 public import Formalism.SharpRestriction.GlobalSchurBounds.ThickPlacesCorollaryOfAnyTranslate
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLayeredDataOfGoodScaleContextsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LayeredAutomorphicDataExistsOfTwoPassesStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLayeredDataOfGoodScaleContexts
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LayeredAutomorphicDataExistsOfTwoPasses
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.VolumesEqMassesOfUnfold
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -52,8 +52,8 @@ theorem memberTop_final_contextParameters :
       (EvP fun κ K => ∀ β : BPt K, β.Is Q' → QO κ β.D β.O) →
       RecExP (fun κ => DQ.withQD (fun D O => κ.Pos → QO κ D O)) :=
   fun hAll hU KP Q Q' QO hB hF hE hS hEv =>
-    GlobalTheory.T.existsLayeredData_of_goodScaleContexts hAll Q' QO
-      (GlobalTheory.T.layeredAutomorphicData_exists_of_twoPasses (GlobalTheory.Mem.VolMass.volumes_eq_masses_of_unfold hU) KP Q Q' hB hF hE hS)
+    _root_.GlobalTheory.Fc.recExP_of_recAtG hAll Q' QO
+      (_root_.GlobalTheory.Mem.Top.GroupRetwisting.recAtG_of_two_passes (GlobalTheory.Mem.VolMass.volumes_eq_masses_of_unfold hU) KP Q Q' hB hF hE hS)
       hEv
 
 end GlobalTheory.Fc

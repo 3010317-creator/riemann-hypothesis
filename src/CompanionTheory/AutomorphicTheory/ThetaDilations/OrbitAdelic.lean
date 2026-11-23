@@ -2,11 +2,12 @@ module
 
 public import CompanionTheory.AutomorphicTheory.ThetaDilations.IsOpenCoset
 public import CompanionTheory.AutomorphicTheory.ThetaDilations.SqPosOfNe
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicHaarMeasureLinearChangeStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicHaarMeasureScalingStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FiniteAdeleTopologyStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.IwasawaDecompositionAdelicSL2Statement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.WeilRepresentationQuadraticDatumStatement
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.CountData
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicHaarMeasureLinearChange
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.IwasawaDecompositionAdelicSL2
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.WeilRepresentationQuadraticDatum
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicHaarMeasureScaling
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FiniteAdeleTopology
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsUniqueIdeleOfLinearEquivQuotientLocal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -83,7 +84,7 @@ def LN (F ι : Type) [Field F] [NumberField F] (N : ℕ) : AddSubgroup (ι → A
     exact ⟨-y, fun v => neg_mem (hy v), by rw [Pi.neg_apply, e, mul_neg]⟩
 
 theorem co_LN {N : ℕ} (hN : 0 < N) : CO (LN F ι N) := by
-  obtain ⟨-, -, -, h1, -, -, -, -, -, h2⟩ := GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F
+  obtain ⟨-, -, -, h1, -, -, -, -, -, h2⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
   have e : (LN F ι N : Set (ι → A F)) = Set.univ.pi fun _ => (fun y => (N : A F) * y) '' Oh F := by
     ext x
     exact ⟨fun h i _ => (h i).imp fun y hy => ⟨hy.1, hy.2.symm⟩, fun h i => (h i trivial).imp fun y hy => ⟨hy.1, hy.2.symm⟩⟩
@@ -93,7 +94,7 @@ theorem co_LN {N : ℕ} (hN : 0 < N) : CO (LN F ι N) := by
   exact e' ▸ isOpen_iInter_of_finite fun i => (h2 N hN).preimage (continuous_apply i)
 
 theorem LN_small {U : Set (ι → A F)} (hU : U ∈ 𝓝 (0 : ι → A F)) : ∃ N : ℕ, 0 < N ∧ (LN F ι N : Set (ι → A F)) ⊆ U := by
-  obtain ⟨-, -, -, -, -, -, -, h1, -⟩ := GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F
+  obtain ⟨-, -, -, -, -, -, -, h1, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
   rw [nhds_pi, Filter.mem_pi'] at hU
   obtain ⟨I, t, ht, hsub⟩ := hU
   obtain ⟨N, hN, h⟩ := h1 (⋂ i, t i) (Filter.iInter_mem.2 ht)
@@ -125,12 +126,12 @@ theorem orbit_adelic [MeasurableSpace (A F)] {ψ : AddChar (A F) ℂ} {h : A F} 
 
 theorem fstar_decay : ∀ (F : Type) [Field F] [NumberField F] [MeasurableSpace (A F)] [BorelSpace (A F)] (lf : Measure (A F)), lf.IsAddHaarMeasure → lf (Oh F) = 1 → ∀ ψ : AddChar (A F) ℂ, IsStdChar F ψ → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (M : ℕ) (B : Matrix ι ι F) (ρ : InfinitePlace F → (F →+* ℝ)) (P : InfinitePlace F → Matrix ι ι ℝ), QSetup M B ρ P → ∀ φ : (ι → A F) → ℂ, SB φ → ∃ C : ℝ, ∀ b : F, ‖fstar ψ (hf F) (Bf B) (muF B lf) φ (algebraMap F (A F) b)‖ ≤ C * ((den b : ℝ) ^ M)⁻¹ := by
   intro F _ _ _ _ lf hlf h1 ψ hψ ι _ _ M B ρ P hQ φ hφ
-  have H := GlobalTheory.T.weil_representation_quadratic_datum F lf hlf h1 ψ hψ ι B hQ.2.2.1 hQ.2.2.2.1
+  have H := _root_.GlobalTheory.CompanionTheory.SW.Core.SelfDual.naQuad F lf hlf h1 ψ hψ ι B hQ.2.2.1 hQ.2.2.2.1
   obtain ⟨_, _, C, -, hC⟩ := orbit_adelic H hφ
   refine ⟨C, fun b => ?_⟩
-  obtain ⟨y, a, k, hk, e, ha⟩ := GlobalTheory.T.iwasawa_decomposition_adelic_SL2 F b
-  have hden := (GlobalTheory.T.adelic_haar_measure_scaling F lf hlf h1).2.1 b
-  have hO := (GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F).2.2.2.1
+  obtain ⟨y, a, k, hk, e, ha⟩ := _root_.GlobalTheory.CompanionTheory.SW.Iwasawa.iwasawa_w_n F b
+  have hden := (_root_.GlobalTheory.CompanionTheory.SW.Core.Scale.lf_scale F lf hlf h1).2.1 b
+  have hO := (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.2.2.1
   have hd : den b ≠ 0 := fun h0 => by
     have := hlf
     rw [h0, Nat.cast_zero, ENNReal.inv_zero] at hden
@@ -141,7 +142,7 @@ theorem fstar_decay : ∀ (F : Type) [Field F] [NumberField F] [MeasurableSpace 
   have hD := impl_D H a⁻¹ hm fun s hs => by
     have hs' : MeasurableSet ((fun u => ((a⁻¹ : (A F)ˣ) : A F) • u) '' s) :=
       (Homeomorph.smul a⁻¹ : (ι → A F) ≃ₜ (ι → A F)).measurableEmbedding.measurableSet_image.2 hs
-    have h2 := (GlobalTheory.T.adelic_haar_measure_linear_change F lf hlf h1 ι).2 a _ hs'
+    have h2 := (_root_.GlobalTheory.CompanionTheory.SW.Core.PiScale.pi_scale F lf hlf h1 ι).2 a _ hs'
     rw [Set.image_image, ha, hden, hQ.2.1] at h2
     simp only [smul_smul, Units.mul_inv, one_smul, Set.image_id'] at h2
     rw [muF, Measure.smul_apply, Measure.smul_apply, h2, smul_eq_mul, smul_eq_mul, mul_left_comm, ← mul_assoc _ (_ ^ _),

@@ -1,14 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ThetaSetupStructureMapComp
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsMaximalComapMaximalIdealOO
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClassicalTraitsFourierTermsAllLevelsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClassicalTraitsFourierTermsAllLevels
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CongModOfSpan
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsClassicalTraitSystemAtClosedPointStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsClassicalTraitSystemAtClosedPoint
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCommonModule
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PosDefMapIntOfPos
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SqLeOfForallNonneg
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUniformStrictnessAndFaceCutBounds
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsMaximalComapMaximalIdealOO
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -142,8 +142,8 @@ theorem GlobalTheory.Poinc.exists_approxAt : ∀ (g n : ℕ) (F : SFam g n (zeta
   refine ⟨(W 0 0).toNat * d₀, Nat.one_le_iff_ne_zero.2 (Nat.mul_ne_zero (by omega) (by omega)), ?_⟩
   intro p _ z₁ c₀ e
   have hcl : IsClosed ({z₁} : Set X₁.M.Z) := c₀.cen ▸ isClosed_singleton_cPt c₀.y
-  obtain ⟨Φ, hM, hL, hR⟩ := GlobalTheory.T.exists_classicalTrait_system_at_closedPoint g n F W Z i hE hT X₁ p z₁ hcl
-  have hF := GlobalTheory.T.classical_traits_fourier_terms_all_levels g n F W Z i X₁ p z₁ Φ hE.1 hR
+  obtain ⟨Φ, hM, hL, hR⟩ := _root_.GlobalTheory.Poinc.PreSys.main g n F W Z i hE hT X₁ p z₁ hcl
+  have hF := _root_.GlobalTheory.Poinc.four_of_classical g n F W Z i X₁ p z₁ Φ hE.1 hR
   haveI : IsDedekindDomain X₁.o₁ := X₁.ar.ded
   haveI := X₁.M.lft
   haveI : IsLocallyNoetherian X₁.M.Z := LocallyOfFiniteType.isLocallyNoetherian X₁.M.s

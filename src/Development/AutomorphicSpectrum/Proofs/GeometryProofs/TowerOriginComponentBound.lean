@@ -5,13 +5,15 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHomogeneou
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.FrameNormsContinuousAlongEmbeddingFamilies
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagVariablesAlgIndepStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FramePointBorelSectionScaling
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericFlagTriangularRelayStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsGenericFlag
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericFlagTriangularRelay
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PolynomialFieldExtensionDegreeStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginComponentGenericPoint
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginComponentIsoRelayStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginConstantAlgebraPointsStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginGenericFrame
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginGenericFrameConstantsStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.ExpBCChart
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginComponentGenericPoint
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginGenericFrame
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -47,7 +49,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.ExpBCChart
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.FrMapComp
 import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.DefiniteFormStabilizerFiniteAwayFromP
 
@@ -88,7 +89,7 @@ theorem core : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Recip
   obtain ⟨hpt₂, hlie⟩ := GlobalTheory.T.root_origin_component_iso_relay E H Dw l Xo c Y SS RM Sys Fx Or Z ψ hψ1 y₀ hy₀ χ y₂ rfl hy₂
   choose e he hi hev using hlie
   letI fa := Or.𝔐.fn.toAlgebra
-  obtain ⟨v, Tm, hv1, hv0, hvi, hvd, hb, hT0, hTd⟩ := GlobalTheory.T.generic_flag_triangular_relay Or.𝔐.Ω₀ RM.Ω Or.Fl.Li₀ Or.𝔐.Li Or.Fl.j
+  obtain ⟨v, Tm, hv1, hv0, hvi, hvd, hb, hT0, hTd⟩ := _root_.GlobalTheory.CompanionTheory.Relay.generic_flag_triangular_relay Or.𝔐.Ω₀ RM.Ω Or.Fl.Li₀ Or.𝔐.Li Or.Fl.j
     (CMType H ⊕ CMType H) (labelRk Dw) Or.Fl.V₀ Or.Fl.b Or.Fl.deg Or.Fl.generic e he hi
   obtain ⟨T, hTi, hTr, hTv⟩ := GlobalTheory.T.flag_variables_alg_indep E H Dw Or.𝔐.Ω₀ RM.Ω v hvi
   obtain ⟨φ, hφC, hφX, hφd⟩ := GlobalTheory.T.polynomial_field_extension_degree (kap Z) Or.𝔐.Ω₀ RM.Ω (FlagVar Dw) ψ T hTi

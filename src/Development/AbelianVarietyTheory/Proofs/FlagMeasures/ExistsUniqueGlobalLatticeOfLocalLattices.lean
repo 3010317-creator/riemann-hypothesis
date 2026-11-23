@@ -1,17 +1,19 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GFrames
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsNatBoundLocalLatticesStandardAeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsNatMulMemIntegersQuadraticCompletionStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsNatBoundLocalLatticesStandardAe
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsNatMulMemIntegersQuadraticCompletion
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsIntegralOfIntegralAllQuadraticCompletions
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsIntegralOfIntegralAllQuadraticCompletionsStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsLatticeOfSqueezedBetweenNatMultiplesStatement
+public import Mathlib.Algebra.Module.Lattice.Basic
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsLatticeOfSqueezedBetweenNatMultiples
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalLatticeBetweenScaledStandardLatticesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalLatticeLeCompletionGluedLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalLatticeLeCompletionGluedLattice
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NatCastIsUnitQuadraticCompletionAlmostAll
+public import Mathlib.Algebra.Module.Lattice.Full
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NumberFieldLatticeDeterminedByLocalLattices
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StrongApproximationAdditiveQuadraticExtension
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemSpanSingleIff
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NatCastIsUnitQuadraticCompletionAlmostAllStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NumberFieldLatticeDeterminedByLocalLatticesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StrongApproximationAdditiveQuadraticExtensionStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -69,13 +71,13 @@ namespace GlobalTheory.HL.Glue
 theorem glue : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {sig : E →ₐ[F] E} (A : Places F E sig), ∀ (n : ℕ) (Λ : ∀ p, Submodule (A.L p).O (Fin n → (A.loc p).Ep)), (∀ p, IsLat (A.L p) (Λ p)) → {p | Λ p ≠ Submodule.span (A.L p).O (Set.range fun i => (Pi.single i 1 : Fin n → (A.loc p).Ep))}.Finite → ∃! Γ : Submodule (𝓞 E) (Fin n → E), Submodule.IsLattice E Γ ∧ ∀ p, A.lat p Γ = Λ p := by
   intro F E _ _ _ _ _ sig A n Λ hlat hfin
   refine existsUnique_of_exists_of_unique ?_ ?_
-  · have happ1 := (GlobalTheory.T.strong_approximation_additive_quadratic_extension A (fun _ => 1)
+  · have happ1 := (_root_.GlobalTheory.HL.StrongApprox.strong_approx_additive A (fun _ => 1)
       (Set.finite_empty.subset fun p hp => hp ⟨1, by simp⟩)).2.1
     have h3 : ∀ p (y : (A.loc p).Ep), ∃ m : ℕ, m ≠ 0 ∧ (m : (A.loc p).Ep) * y ∈ (A.L p).O :=
-      GlobalTheory.T.exists_nat_mul_mem_integers_quadraticCompletion A (fun y hy => by
+      _root_.GlobalTheory.HL.Glue.exists_nat_mul_mem A (fun y hy => by
         obtain ⟨x, hx⟩ := happ1 y hy
         exact ⟨x, fun p => by simpa using hx p⟩)
-    obtain ⟨N, hN, hb⟩ := GlobalTheory.T.exists_nat_bound_localLattices_standard_ae A n Λ hfin fun p => GlobalTheory.T.local_lattice_between_scaled_standard_lattices A p n (Λ p) (hlat p) (h3 p)
+    obtain ⟨N, hN, hb⟩ := _root_.GlobalTheory.HL.Glue.exists_uniform_bound A n Λ hfin fun p => GlobalTheory.T.local_lattice_between_scaled_standard_lattices A p n (Λ p) (hlat p) (h3 p)
     let Γ : Submodule (𝓞 E) (Fin n → E) :=
       { carrier := {x | ∀ p, A.bc p x ∈ Λ p}
         add_mem' := by
@@ -94,22 +96,22 @@ theorem glue : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
           rw [this]; exact (Λ p).smul_mem _ (hx p) }
     have hΓ : ∀ x, x ∈ Γ ↔ ∀ p, A.bc p x ∈ Λ p := fun x => Iff.rfl
     have hL : Submodule.IsLattice E Γ := by
-      refine GlobalTheory.T.isLattice_of_squeezed_between_nat_multiples n Γ N hN (fun x hx p => ?_) (fun x hx i => ?_)
+      refine _root_.GlobalTheory.glue_latt_isLattice n Γ N hN (fun x hx p => ?_) (fun x hx i => ?_)
       · have : A.bc p ((N : E) • x) = (N : (A.loc p).Ep) • A.bc p x := by
           funext i; simp [Places.bc]
         rw [this]
         exact (hb p).1 _ fun i => ιE_mem A p _ (hx i)
-      · refine GlobalTheory.T.isIntegral_of_integral_all_quadraticCompletions A _ fun p => ?_
+      · refine _root_.GlobalTheory.HL.isIntegral_of_forall_mem_O A _ fun p => ?_
         have := (hb p).2 _ (hx p) i
         simpa [Places.bc] using this
     refine ⟨Γ, hL, fun p => le_antisymm ?_ ?_⟩
     · exact Submodule.span_le.2 (by rintro _ ⟨x, hx, rfl⟩; exact hx p)
     · haveI := (A.loc p).char0
-      refine GlobalTheory.T.localLattice_le_completion_glued_lattice A n Λ Γ N hΓ (fun q => (hb q).1) ?_ p
+      refine _root_.GlobalTheory.HL.Glue.local_le_lat_of_approx A n Λ Γ N hΓ (fun q => (hb q).1) ?_ p
       have hc : ∀ q, (N : (A.loc q).Fp) ≠ 0 := fun q => by
         haveI := (A.loc q).char0; exact_mod_cast hN
-      have happN := (GlobalTheory.T.strong_approximation_additive_quadratic_extension A (fun q => Units.mk0 _ (hc q))
-        (by simpa using GlobalTheory.T.natCast_isUnit_quadraticCompletion_almost_all A N hN)).2.1
+      have happN := (_root_.GlobalTheory.HL.StrongApprox.strong_approx_additive A (fun q => Units.mk0 _ (hc q))
+        (by simpa using _root_.GlobalTheory.HL.Glue.natCast_isUnit_ae A N hN)).2.1
       intro y hy
       obtain ⟨x, hx⟩ := happN y hy
       exact ⟨x, fun q => by simpa using hx q⟩
@@ -150,8 +152,8 @@ theorem glue : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
       simpa only [LinearMap.mem_ker, hψ, LinearMap.zero_apply, map_zero] using hz
     rintro Γ₁ Γ₂ ⟨h1, e1⟩ ⟨h2, e2⟩
     ext x
-    rw [(GlobalTheory.T.numberField_lattice_determined_by_local_lattices A n Γ₁ (full Γ₁ h1 e1)).1 x,
-      (GlobalTheory.T.numberField_lattice_determined_by_local_lattices A n Γ₂ (full Γ₂ h2 e2)).1 x]
+    rw [(_root_.GlobalTheory.HL.PlacesRec.lattice_local A n Γ₁ (full Γ₁ h1 e1)).1 x,
+      (_root_.GlobalTheory.HL.PlacesRec.lattice_local A n Γ₂ (full Γ₂ h2 e2)).1 x]
     simp only [e1, e2]
 
 end GlobalTheory.HL.Glue

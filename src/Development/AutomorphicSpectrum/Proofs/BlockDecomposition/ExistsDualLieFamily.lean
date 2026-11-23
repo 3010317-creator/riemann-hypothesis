@@ -1,8 +1,15 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WtRInjective
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsCompactLieActionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryEuclideanModelStatement
+public import Formalism.RealPlaceAnalysis.StatementA
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+public import Mathlib.Analysis.Normed.Algebra.Exponential
+public import Mathlib.LinearAlgebra.UnitaryGroup
+public import Mathlib.Topology.Instances.Matrix
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsCompactLieAction
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.IsMultZero
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryEuclideanModel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,8 +61,8 @@ namespace GlobalTheory.CompanionTheory.RealCountG
 
 theorem dualFam_exists : ∀ {n : ℕ} (E : KMod n), ∃ G : Fin n → Fin n → Module.End ℂ (E.V →L[ℂ] ℂ), IsDualFam E G := by
   intro n E
-  obtain ⟨e, ρ', hc, hiso, hint⟩ := GlobalTheory.T.unitary_euclidean_model E
-  obtain ⟨F, hgl, -, hder⟩ := GlobalTheory.T.exists_compact_lie_action _ ρ' hc hiso
+  obtain ⟨e, ρ', hc, hiso, hint⟩ := _root_.GlobalTheory.CompanionTheory.RealCount.dualRep_exists E
+  obtain ⟨F, hgl, -, hder⟩ := _root_.GlobalTheory.CompanionTheory.RealCount.DerivRep.derivative_of_rep _ ρ' hc hiso
   refine ⟨fun a b => e.symm.toLinearMap ∘ₗ F a b ∘ₗ e.toLinearMap, ?_, ?_⟩
   · intro a b c d
     ext1 ξ

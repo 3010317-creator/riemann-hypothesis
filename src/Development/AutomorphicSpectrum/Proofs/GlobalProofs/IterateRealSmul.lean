@@ -3,10 +3,11 @@ module
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.IsSmoothVec
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsAdmOnOfFiniteDimensional
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DifferentiableAtOrbit
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AnalyticVectorExponentialSeriesStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.DerivedActionAdditiveStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.DerivedActionOfSmoothVectorStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.LieAlgebraOfLinearGroupClosedStatement
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AnalyticVectorExponentialSeries
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.DerivedActionAdditive
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.DerivedActionOfSmoothVector
+public import Development.AutomorphicSpectrum.PublishedTheorems.Jets₂.IsPermissibleOfCentre
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.LieAlgebraOfLinearGroupClosed
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -72,7 +73,7 @@ theorem iterate_smooth (hG : IsLinRed G) (hrep : Formalism.QuantumDeterminants.I
   | zero => simpa using hs
   | succ m ih =>
     rw [Function.iterate_succ_apply']
-    exact (GlobalTheory.T.derived_action_of_smooth_vector hG hrep ih hX).2
+    exact (_root_.GlobalTheory.CompanionTheory.Hypotheses₂.HCA.hasDerivAt_dRep_and_isSmoothVec hG hrep ih hX).2
 
 theorem iterate_real_smul (hG : IsLinRed G) (hrep : Formalism.QuantumDeterminants.IsCRepOn G π) {v : H} (hs : IsSmoothVec G π v)
     {X : Matrix (Fin n) (Fin n) ℂ} (hX : X ∈ HCSS.lieOf G) (s : ℝ) (m : ℕ) :
@@ -82,7 +83,7 @@ theorem iterate_real_smul (hG : IsLinRed G) (hrep : Formalism.QuantumDeterminant
   | succ m ih =>
     have hsm := iterate_smooth hG hrep hs hX m
     rw [Function.iterate_succ_apply', ih, Function.iterate_succ_apply', GlobalTheory.GKLie.dRep_smul,
-      (GlobalTheory.T.derived_action_additive hG hrep hsm hsm hX hX).2.2, ← Complex.coe_smul, smul_smul, pow_succ']
+      (_root_.GlobalTheory.CompanionTheory.Hypotheses₂.HCA.SmoothLin.dRep_linear hG hrep hsm hsm hX hX).2.2, ← Complex.coe_smul, smul_smul, pow_succ']
 
 theorem analytic_coeff : ∀ {n : ℕ} {G : Set (Matrix (Fin n) (Fin n) ℂ)} {H : Type} [NormedAddCommGroup H]
     [InnerProductSpace ℂ H] [CompleteSpace H] {π : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)} (hG : IsLinRed G)
@@ -90,14 +91,14 @@ theorem analytic_coeff : ∀ {n : ℕ} {G : Set (Matrix (Fin n) (Fin n) ℂ)} {H
     {X : Matrix (Fin n) (Fin n) ℂ} (hX : X ∈ HCSS.lieOf G) (w : H),
     AnalyticOnNhd ℝ (fun t : ℝ => ⟪w, π (NormedSpace.exp (t • X)) v⟫_ℂ) Set.univ := by
   intro n G H _ _ _ π hG hU v hs hw X hX w t₀ _
-  obtain ⟨r, hr, hsum⟩ := GlobalTheory.T.analytic_vector_exponential_series hG hU.1 hU.2.2 hs hw
+  obtain ⟨r, hr, hsum⟩ := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.HCA.hasSum_orbit_of_wordBound hG hU.1 hU.2.2 hs hw
   have hrep := hU.1
   let L : H →L[ℂ] ℂ := (innerSL ℂ w).comp (π (NormedSpace.exp (t₀ • X)))
   let a : ℕ → ℂ := fun m => ((m.factorial : ℂ)⁻¹) * L ((dRep π X)^[m] v)
   have key : ∀ s : ℝ, |s| * mnorm X < r → HasSum (fun m : ℕ => (s : ℂ) ^ m * a m)
       (⟪w, π (NormedSpace.exp ((t₀ + s) • X)) v⟫_ℂ) := by
     intro s hs'
-    have h1 := hsum (s • X) ((GlobalTheory.T.lie_algebra_of_linear_group_closed hG).2.1 s X hX) (by rwa [mnorm_real_smul])
+    have h1 := hsum (s • X) ((_root_.GlobalTheory.CompanionTheory.Hypotheses₂.HCA.lieOf_isLieSubalgebra hG).2.1 s X hX) (by rwa [mnorm_real_smul])
     have h2 := L.hasSum h1
     have e : ⟪w, π (NormedSpace.exp ((t₀ + s) • X)) v⟫_ℂ = L (π (NormedSpace.exp (s • X)) v) := by
       have hc : Commute (t₀ • X) (s • X) := ((Commute.refl X).smul_left t₀).smul_right s

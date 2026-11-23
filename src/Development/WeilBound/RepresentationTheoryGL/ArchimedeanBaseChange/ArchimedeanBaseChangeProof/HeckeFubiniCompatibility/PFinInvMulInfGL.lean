@@ -2,7 +2,8 @@ module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.HeckeFubiniCompatibility.CompatFub
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.InfinitesimalCharacterGL.BridgeSt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CenterActsByScalarOnEigenformsStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ContinuousConjFin
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CenterActsByScalarOnEigenforms
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactConjugateRationalEntriesBounded
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -108,7 +109,7 @@ theorem zfin_of (φ : Sm E a) (c : (E →+* ℂ) → ℂ → ℂ) (hc : ∀ τ u
   have : FiniteDimensional ℂ (Submodule.span ℂ {φ}) := FiniteDimensional.span_of_finite ℂ (Set.finite_singleton φ)
   refine Submodule.finiteDimensional_of_le (S₂ := Submodule.span ℂ {φ}) (Submodule.span_le.2 ?_)
   rintro _ ⟨z, hz, rfl⟩
-  obtain ⟨s, hs⟩ := GlobalTheory.T.center_acts_by_scalar_on_eigenforms E a c z hz
+  obtain ⟨s, hs⟩ := _root_.GlobalTheory.CuspRep.Zalg_acts_by_scalar E a c z hz
   show z φ ∈ _
   rw [hs φ hc]
   exact Submodule.smul_mem _ _ (Submodule.mem_span_singleton_self φ)

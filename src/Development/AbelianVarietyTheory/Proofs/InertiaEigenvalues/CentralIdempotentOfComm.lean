@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.HeckeSplitOne
 public import Development.AbelianVarietyTheory.Counterexamples.NonGaloisSurvey.MemTypeSubspaceIffUnipotentCharacter
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardMulCoeffMemStatement
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardMulCoeffMem
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -72,7 +73,7 @@ theorem idem_integral (i : X.Tw) (b : Bool) :
   have hc := card_eq (N := N)
   have : Finite (G0g N) := Nat.finite_of_card_ne_zero (hc ▸ D.what₂.restRowsFiniteGroupCard_pos.ne')
   let : Fintype (G0g N) := Fintype.ofFinite _
-  choose c hcc using GlobalTheory.T.exists_integral_card_mul_coeff_central_idempotent (G0g N) (X.O i) (FractionRing (X.O i)) (Y.eAlg i b) (Y.eAlg_idem i b)
+  choose c hcc using _root_.GlobalTheory.CentralIdemIntegral.card_mul_coeff_mem (G0g N) (X.O i) (FractionRing (X.O i)) (Y.eAlg i b) (Y.eAlg_idem i b)
     (Y.eAlg_central i b)
   refine ⟨MonoidAlgebra.ofCoeff (Finsupp.equivFunOnFinite.symm c), ?_⟩
   ext g

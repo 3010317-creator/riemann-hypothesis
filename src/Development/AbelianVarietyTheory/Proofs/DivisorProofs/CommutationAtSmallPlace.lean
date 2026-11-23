@@ -1,10 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClassesAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeCosetProductsCommuteSplitPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocalAtPlaceConjProductStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelElementLocalCoprimeActsTriviallyStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalElementsCommuteDistinctFinitePlacesStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.LiftFrameEmbeddingBase
+public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemSum
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeCosetProductsCommuteSplitPlace
+public import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocalAtPlaceConjProduct
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelElementLocalCoprimeActsTrivially
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalElementsCommuteDistinctFinitePlaces
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -94,12 +97,12 @@ theorem commAt_of {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Formalism.
   have hA' := (p.R.B.L j (p.R.mu w)).hecke.hA_loc i'.1 ⟨hi1', hi2'⟩
   by_cases hv : (plOf p j (p.R.mu w) i.1.1).under (𝓞 D.host.F) = (plOf p j (p.R.mu w) i'.1.1).under (𝓞 D.host.F)
   · exact exists_equiv_of_fibre_card (levJ p j (p.R.mu w)) (hkA p j (p.R.mu w) i.1) (hkA p j (p.R.mu w) i'.1) F.Triv
-      (GlobalTheory.T.heckeCosetProducts_commute_splitPlace p j (p.R.mu w) i.1 i'.1 hi1 hi2 hi1' hi2' hv)
-      (fun s hs t ht t' ht' s' hs' hK => GlobalTheory.T.levelElement_local_coprime_acts_trivially p j w e0 b io ev bs rk sh Lf kap chi hc i.1 hi1 hi2 i.2.2.2 _ hK
-        (GlobalTheory.T.isLocalAtPlace_conj_product (Vc D j) p.R.pl (p.P.A3.A.ok (p.R.mu w)) i.1 i'.1 s t t' s' hv (hA s hs) (hA' t ht) (hA' t' ht') (hA s' hs')))
+      (_root_.GlobalTheory.HeckePairCount.card_pairs_comm p j (p.R.mu w) i.1 i'.1 hi1 hi2 hi1' hi2' hv)
+      (fun s hs t ht t' ht' s' hs' hK => _root_.GlobalTheory.FrameTriv.triv_of_isLocEnv p j w e0 b io ev bs rk sh Lf kap chi hc i.1 hi1 hi2 i.2.2.2 _ hK
+        (_root_.GlobalTheory.FrameProdLoc.isLocEnv_prod (Vc D j) p.R.pl (p.P.A3.A.ok (p.R.mu w)) i.1 i'.1 s t t' s' hv (hA s hs) (hA' t ht) (hA' t' ht') (hA s' hs')))
   · refine ⟨Equiv.prodComm _ _, fun x => ?_⟩
     have hcomm : (x.1 : F.G) * (x.2 : F.G) = (x.2 : F.G) * (x.1 : F.G) :=
-      GlobalTheory.T.localElements_commute_distinct_realPlaces (Vc D j) p.R.pl (p.P.A3.A.ok (p.R.mu w)) i.1 i'.1 (x.1 : F.G) (x.2 : F.G) hv (hA _ x.1.2) (hA' _ x.2.2)
+      _root_.GlobalTheory.LocComm.mul_comm_of_isLocEnv (Vc D j) p.R.pl (p.P.A3.A.ok (p.R.mu w)) i.1 i'.1 (x.1 : F.G) (x.2 : F.G) hv (hA _ x.1.2) (hA' _ x.2.2)
     show F.Triv (((x.2 : F.G) * (x.1 : F.G))⁻¹ * ((x.1 : F.G) * (x.2 : F.G)))
     rw [hcomm, inv_mul_cancel]
     exact ⟨one_mem _, map_one _, map_one _⟩

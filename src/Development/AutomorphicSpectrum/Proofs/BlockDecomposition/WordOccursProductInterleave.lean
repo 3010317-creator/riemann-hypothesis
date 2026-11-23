@@ -6,9 +6,11 @@ public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ClOfSelf
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsEquivProdIrrTw
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InstAddCommGroupTwo
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InterleavingTwoColourEmbeddingStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityOrderEmbeddingStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MultiProductSingleFactorEquivStatement
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.ZelevinskyInterleaving.Interleave
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InterleavingTwoColourEmbedding
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.LSegJacquet
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityOrderEmbedding
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MultiProductSingleFactorEquiv
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SocleOfMultiplicityOne
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.GeometricLemma
 import GroundTheory.LocalFields.PadicLogSeries
@@ -70,12 +72,12 @@ theorem row_ne_zero {n p N : ℕ} {V : Type} [AddCommGroup V] [Module ℂ V]
     (c : Fin n → ℕ) (hc : ∀ a, c (σ a) = (zz (σ a)).1) (hc0 : ∀ j, j ∉ Set.range σ → c j = 0)
     (hz : ∑ a, (zz (σ a)).1 = N) (f : (Σ j, Fin (c j)) ≃ Fin N) (h : jm (fun a => zz (σ a)) hz π ≠ 0) :
     jhMult (piTensor fun j => (clOf (zz j) (c j)).rep.ρ) (jac f π) ≠ 0 :=
-  GlobalTheory.T.jacquet_multiplicity_order_embedding π hπ zz σ c hc hc0 hz f h
+  _root_.GlobalTheory.CompanionTheory.WordProd.RowCell.jhMult_row π hπ zz σ c hc hc0 hz f h
 
 theorem col_equiv (a : IrrGL (k := k)) {α : Type} [Fintype α] [LinearOrder α] (b : α → ℕ) (i₀ : α)
     (hb : b i₀ = a.1) (hb0 : ∀ i, i ≠ i₀ → b i = 0) (g : (Σ i, Fin (b i)) ≃ Fin a.1) :
     Nonempty ((multiProd g fun i => (clOf a (b i)).rep.ρ).Equiv a.rep) :=
-  GlobalTheory.T.multi_product_single_factor_equiv a b i₀ hb hb0 g
+  _root_.GlobalTheory.CompanionTheory.WordProd.OneBlockProd.multiProd_clOf_single a b i₀ hb hb0 g
 
 
 omit [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] in
@@ -83,7 +85,7 @@ theorem interleave_embed {T : Type 1} {u v w : List T} (h : Zc.Comb.Interleave u
     ∃ (r : Fin w.length → Fin 2) (σ₀ : Fin u.length ↪o Fin w.length) (σ₁ : Fin v.length ↪o Fin w.length),
       (∀ j, r j = 0 ↔ j ∈ Set.range σ₀) ∧ (∀ j, r j = 1 ↔ j ∈ Set.range σ₁) ∧
         (∀ a, w.get (σ₀ a) = u.get a) ∧ (∀ a, w.get (σ₁ a) = v.get a) :=
-  GlobalTheory.T.interleaving_two_colour_embedding h
+  _root_.GlobalTheory.CompanionTheory.WordProd.Intl.interleave_embeddings h
 
 theorem jm_congr' {h N : ℕ} {x x' : Fin h → IrrGL (k := k)} (e : x = x') (hd : ∑ a, (x a).1 = N)
     (hd' : ∑ a, (x' a).1 = N) {V : Type} [AddCommGroup V] [Module ℂ V] (π : Representation ℂ (GL (Fin N) k) V) :

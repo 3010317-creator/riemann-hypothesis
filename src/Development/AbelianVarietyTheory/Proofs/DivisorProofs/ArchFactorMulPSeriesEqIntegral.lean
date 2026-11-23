@@ -3,11 +3,21 @@ module
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.CompletedLStripBounds
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormWt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasSumIntegralThetaMellinInterchangeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeMellinGaussIntegralNonzeroIntegerStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeMellinGaussIntegrandUnitMulStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrbitUnfoldIntegralPartitionOfUnityStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumNonzeroIntegersPrincipalIdealsUnitsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousTerm
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasSumIntegralThetaMellinInterchange
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeMellinGaussIntegralNonzeroInteger
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsFinSetSplitPlacesCoprimeConductor
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeMellinGaussIntegrandUnitMul
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrbitUnfoldIntegralPartitionOfUnity
+public import Mathlib.Analysis.Normed.Group.Defs
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.Topology.Algebra.InfiniteSum.Defs
+public import Mathlib.Topology.UniformSpace.Cauchy
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumNonzeroIntegersPrincipalIdealsUnits
+public import ReciprocityTheory.Chebotarev.EulerSum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,8 +65,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.Chebotarev.EulerSum
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousTerm
 
 @[expose] public section
 
@@ -94,13 +102,13 @@ theorem archFactor_mul_pSeries_eq_integral : ∀ (K : Type) [Field K] [NumberFie
     intro α
     by_cases h : α = 0
     · subst h; rw [htm0]; exact integrable_zero _ _ _
-    · exact (GlobalTheory.T.heckeMellinGaussIntegral_nonzero_integer K I φ hφ n s hs0 α h).1
+    · exact (_root_.GlobalTheory.HeckeMellinOne.mellin_term K I φ hφ n s hs0 α h).1
   have hshift : ∀ (u : (𝓞 K)ˣ) (α : 𝓞 K) y, tm ((u : 𝓞 K) * α) y =
       GlobalTheory.HeckeStrip.wt φ n ((u : 𝓞 K) : K) * tm α (y + GlobalTheory.HeckeTheta.ulog φ u) := by
     intro u α y
     have : (((u : 𝓞 K) * α : 𝓞 K) : K) = ((u : 𝓞 K) : K) * (α : K) := by push_cast; rfl
     simp only [htm, this]
-    exact GlobalTheory.T.heckeMellinGaussIntegrand_unit_mul K I φ hφ n s u α y
+    exact _root_.GlobalTheory.HeckeShift.term_unit_mul K I φ hφ n s u α y
   have hwtu : ∀ u : (𝓞 K)ˣ, ‖GlobalTheory.HeckeStrip.wt φ n ((u : 𝓞 K) : K)‖ = 1 := fun u =>
     GlobalTheory.HeckeStrip.norm_wt φ n (by
       have := u.ne_zero
@@ -115,7 +123,7 @@ theorem archFactor_mul_pSeries_eq_integral : ∀ (K : Type) [Field K] [NumberFie
   have horb : ∀ g : 𝓞 K, g ≠ 0 → HasSum (fun u : (𝓞 K)ˣ => ∫ y, p y * ‖tm ((u : 𝓞 K) * g) y‖) (∫ y, ‖tm g y‖) ∧
       HasSum (fun u : (𝓞 K)ˣ => F ((u : 𝓞 K) * g) * ∫ y, (p y : ℂ) * tm ((u : 𝓞 K) * g) y) (F g * ∫ y, tm g y) := by
     intro g hg
-    have hO := GlobalTheory.T.orbit_unfold_integral_partition_of_unity I (𝓞 K)ˣ (GlobalTheory.HeckeTheta.ulog φ) p hp hp0 hsum' (tm g) (hint g)
+    have hO := _root_.GlobalTheory.OrbitUnfold.orbit_unfold I (𝓞 K)ˣ (GlobalTheory.HeckeTheta.ulog φ) p hp hp0 hsum' (tm g) (hint g)
     constructor
     · refine (congrArg (fun f => HasSum f _) (funext fun u => ?_)).mpr hO.2
       simp only [hshift, norm_mul, hwtu, one_mul]
@@ -137,17 +145,17 @@ theorem archFactor_mul_pSeries_eq_integral : ∀ (K : Type) [Field K] [NumberFie
   set cst : ℝ := ∏ i, (2 * Real.pi) ^ (-(s.re + (|n i| : ℝ) / 2)) * Real.Gamma (s.re + (|n i| : ℝ) / 2) with hcst
   have hnorm : ∀ J : {J : Ideal (𝓞 K) // J ≠ ⊥ ∧ J.IsPrincipal}, ∫ y, ‖tm (haveI := J.2.2; Submodule.IsPrincipal.generator J.1) y‖ = cst * ((Ideal.absNorm J.1 : ℕ) : ℝ) ^ (-s.re) := by
     intro J
-    rw [(GlobalTheory.T.heckeMellinGaussIntegral_nonzero_integer K I φ hφ n s hs0 _ (hgen J)).2.2, hspan J]
+    rw [(_root_.GlobalTheory.HeckeMellinOne.mellin_term K I φ hφ n s hs0 _ (hgen J)).2.2, hspan J]
   have hb : Summable (fun J : {J : Ideal (𝓞 K) // J ≠ ⊥ ∧ J.IsPrincipal} => ∫ y, ‖tm (haveI := J.2.2; Submodule.IsPrincipal.generator J.1) y‖) := by
     simp only [hnorm]
     exact (((ReciprocityTheory.Cheb.summable_absNorm_rpow_ideal K hs).comp_injective Subtype.val_injective).mul_left cst)
-  have hR := GlobalTheory.T.sum_nonzero_integers_principal_ideals_units K ℝ (fun α => ∫ y, p y * ‖tm α y‖) (by simp [htm0])
+  have hR := _root_.GlobalTheory.sum_over_principal_ideals_units K ℝ (fun α => ∫ y, p y * ‖tm α y‖) (by simp [htm0])
     (fun J => ∫ y, ‖tm (haveI := J.2.2; Submodule.IsPrincipal.generator J.1) y‖) (fun J u => ∫ y, p y * ‖tm ((u : 𝓞 K) * (haveI := J.2.2; Submodule.IsPrincipal.generator J.1)) y‖)
     (fun J => ∫ y, ‖tm (haveI := J.2.2; Submodule.IsPrincipal.generator J.1) y‖) (fun J => (horb _ (hgen J)).1)
     (fun J u => le_of_eq (Real.norm_of_nonneg (integral_nonneg fun y => mul_nonneg (hp0 y) (norm_nonneg _))))
     (fun J => (horb _ (hgen J)).1) hb
-  have hI := GlobalTheory.T.hasSum_integral_theta_mellin_interchange I (𝓞 K) (fun α => GlobalTheory.HeckeTheta.emb φ (α : K)) F C hF n s p hp hp0 hp1 hint hR.summable
-  have hU := GlobalTheory.T.sum_nonzero_integers_principal_ideals_units K ℂ (fun α => F α * ∫ y, (p y : ℂ) * tm α y) (by simp [htm0])
+  have hI := _root_.GlobalTheory.HeckeMellin.hasSum_integral_theta I (𝓞 K) (fun α => GlobalTheory.HeckeTheta.emb φ (α : K)) F C hF n s p hp hp0 hp1 hint hR.summable
+  have hU := _root_.GlobalTheory.sum_over_principal_ideals_units K ℂ (fun α => F α * ∫ y, (p y : ℂ) * tm α y) (by simp [htm0])
     (fun J => F (haveI := J.2.2; Submodule.IsPrincipal.generator J.1) * ∫ y, tm (haveI := J.2.2; Submodule.IsPrincipal.generator J.1) y) (fun J u => C * ∫ y, p y * ‖tm ((u : 𝓞 K) * (haveI := J.2.2; Submodule.IsPrincipal.generator J.1)) y‖)
     (fun J => C * ∫ y, ‖tm (haveI := J.2.2; Submodule.IsPrincipal.generator J.1) y‖) (fun J => (horb _ (hgen J)).2)
     (fun J u => by
@@ -158,7 +166,7 @@ theorem archFactor_mul_pSeries_eq_integral : ∀ (K : Type) [Field K] [NumberFie
     (fun J => (horb _ (hgen J)).1.mul_left C) (hb.mul_left C)
   rw [hI.unique hU, GlobalTheory.HeckeStrip.pSeries, ← tsum_mul_left, ← tsum_mul_left]
   congr 1; funext J
-  have h3 := (GlobalTheory.T.heckeMellinGaussIntegral_nonzero_integer K I φ hφ n s hs0 _ (hgen J)).2.1
+  have h3 := (_root_.GlobalTheory.HeckeMellinOne.mellin_term K I φ hφ n s hs0 _ (hgen J)).2.1
   rw [hspan J] at h3
   simp only [GlobalTheory.HeckeStrip.pval]
   linear_combination (-F (haveI := J.2.2; Submodule.IsPrincipal.generator J.1)) * h3

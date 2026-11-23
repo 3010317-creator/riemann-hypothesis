@@ -2,11 +2,12 @@ module
 
 public import Formalism.PadicSubsetSums.CentralIdempotents.GaloisConjCentralIdempotent
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.CuspidalProductMultiplicity
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMonotoneBlocksSameHarishChandraCharacterStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarishChandraInductionCuspidalParabolicProductStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIrrRepHarishChandraDistinctCuspidalLabelsStatement
-import Formalism.LocalToGlobal.NormalizedHeckeFactors.CoeffZeroNeOfMonicIrr
+public import Formalism.PadicSubsetSums.CentralIdempotents.IsConstituent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMonotoneBlocksSameHarishChandraCharacter
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarishChandraInductionCuspidalParabolicProduct
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIrrRepHarishChandraDistinctCuspidalLabels
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.HarishChandraLabels.Basics
+import Formalism.LocalToGlobal.NormalizedHeckeFactors.CoeffZeroNeOfMonicIrr
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -115,9 +116,9 @@ theorem isCuspProdChar_of_squarefree : ∀ (K : Type) [Field K] [Fintype K] [Dec
     haveI : Nonempty {i // b i = c} := ⟨⟨i, hi⟩⟩
     exact labO_irreducible O (hl c).1 (hl c).2
   have hinj := injective_of_squarefree _ hirrF hsq
-  have hirr := GlobalTheory.T.isIrrRep_harishChandra_distinct_cuspidal_labels K r s b lam hb hl C O hinj
-  obtain ⟨b', lam', hb', hl', hmono, htr⟩ := GlobalTheory.T.exists_monotone_blocks_same_harishChandra_character K r s b lam hb hl
-  have hcp := GlobalTheory.T.harishChandraInduction_cuspidalParabolicProduct K r s b' lam' hb' hl' hmono
+  have hirr := _root_.GlobalTheory.HcIrr.isIrrRep_hcRep K r s b lam hb hl C O hinj
+  obtain ⟨b', lam', hb', hl', hmono, htr⟩ := _root_.GlobalTheory.HCSort.exists_monotone_same_trace K r s b lam hb hl
+  have hcp := _root_.GlobalTheory.HCInduction.isCuspProdChar_trace_hcRep K r s b' lam' hb' hl' hmono
   have hfun : (fun x : GL (Fin r) K => τ.character x) =
       fun x => LinearMap.trace ℂ (hcSpace K b' lam') (hcRep K b' lam' x) := by
     funext x

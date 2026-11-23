@@ -1,14 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TrivIsCr
-import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinLatticeFrameLimitGaloisInvariantStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinPreframeBoundedPolesStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBetaLimitBdRPlusDeRhamFrameStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusGaloisRelationFrameAinfStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinLatticeFrameLimitGaloisInvariant
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinPreframeBoundedPoles
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBetaLimitBdRPlusDeRhamFrame
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusGaloisRelationFrameAinf
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsUnitBdRPlusMatrixOfCongrOneStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.KerQEqMapKerTheta
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ThetaAinfPeriodPowNeZeroStatement
+import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ThetaAinfPeriodPowNeZero
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PeriodRingsGaloisActionLawsFrobeniusComm
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaBdRPlusSurjectiveKerUnitsEquivariant
 import Mathlib.Algebra.Order.Floor.Extended
@@ -124,18 +125,18 @@ theorem isUnit_Etau {K : FinExt l} {bk : BK K} {τ : Ainf l} (hτ : bk.IsPer τ)
     rw [pD_alg_pt] at hu
     rw [aDp, RingHom.comp_apply]
     exact hu
-  · have h := GlobalTheory.T.theta_ainf_period_pow_ne_zero l K bk τ hτ 1
+  · have h := _root_.GlobalTheory.ThetaPer.thetaD_aDp_pow_ne_zero l K bk τ hτ 1
     rw [pow_one] at h
     exact ((GlobalTheory.MemLoc.thetaD_props l).2.2.1 _ h).map _
 
 theorem exists_invariant_basis : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (τ : Ainf l), bk.IsPer τ → ∀ (C : Core l) (N d : ℕ) (ρ : ↥(GK K) → Matrix (Fin d) (Fin d) (ℤ_[l])) (F : Frame bk N d ρ) (Y : Matrix (Fin d) (Fin d) (Ainf l)), F.IsDR → Y.map (inclW l) = inclW l τ ^ N • F.T → ∃ (B : Matrix (Fin d) (Fin d) (Per.BdRp l)) (Q : Matrix (Fin d) (Fin d) (Per.BdR l)), IsUnit B ∧ IsUnit Q ∧ (∀ m : ℕ, ∃ (k : ℕ) (β : Matrix (Fin d) (Fin d) (bk.S)), ∀ i j, aDp l (bk.ev (β i j)) - (l : Per.BdRp l) ^ k * B i j ∈ Per.FilP l m) ∧ (algebraMap (Per.BdRp l) (Per.BdR l)) (aDp l (bk.ev bk.E * τ)) ^ N • Q = ((Y * F.A.map bk.ev).map (aDp l) * B).map (algebraMap (Per.BdRp l) (Per.BdR l)) ∧ ∀ g : ↥(GK K), (ρ g).map (Per.zD l) * Q.map (Per.σD (g : GQ l)) = Q := by
   intro l _ K bk τ hτ C N d ρ F Y hDR hY
-  obtain ⟨B, hB⟩ := GlobalTheory.T.exists_beta_limit_bdRPlus_deRhamFrame l K bk N d ρ F hDR
+  obtain ⟨B, hB⟩ := _root_.GlobalTheory.BKLim.exists_beta_limit l K bk N d ρ F hDR
   obtain ⟨k1, β1, hβ1, hB1⟩ := hB 1
   have hBu : IsUnit B := GlobalTheory.T.isUnit_bdRPlus_matrix_of_congr_one l K bk d k1 β1 B hβ1.1 hB1
-  have hinv := GlobalTheory.T.breuilKisinLatticeFrame_limit_galois_invariant l K bk N d ρ F B hB
+  have hinv := _root_.GlobalTheory.BKLim.BinfInv.inv l K bk N d ρ F B hB
   have hφY := frob_basis_eq hτ F Y hY
-  have hgal := GlobalTheory.T.frobenius_galois_relation_frame_ainf l K bk τ hτ N d ρ F Y hY
+  have hgal := _root_.GlobalTheory.GalPhi.galPhi l K bk τ hτ N d ρ F Y hY
   obtain ⟨v, hv⟩ := isUnit_Etau hτ
   set ι : Per.BdRp l →+* Per.BdR l := algebraMap (Per.BdRp l) (Per.BdR l) with hι
   set j : Ainf l →+* Per.BdR l := ι.comp (aDp l) with hj
@@ -145,7 +146,7 @@ theorem exists_invariant_basis : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk
     rw [Matrix.map_mul, ← hφY, Matrix.map_map]; rfl
   refine ⟨B, ((v⁻¹ : (Per.BdR l)ˣ) : Per.BdR l) ^ N • (((Y * F.A.map bk.ev).map (aDp l) * B).map ι), hBu, ?_,
     fun m => ?_, ?_, ?_⟩
-  · obtain ⟨Y₀, Y₀', hY₀, hYY⟩ := GlobalTheory.T.breuilKisinPreframe_bounded_poles l K bk τ hτ N d ρ F.toPre
+  · obtain ⟨Y₀, Y₀', hY₀, hYY⟩ := _root_.GlobalTheory.BKLim.pre_bounded_poles l K bk τ hτ N d ρ F.toPre
     have hY0 : Y₀ = Y := Matrix.ext fun i k => GlobalTheory.Prism.inclW_injective (by
       have := congrFun (congrFun (hY₀.trans hY.symm) i) k
       simpa using this)

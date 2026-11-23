@@ -2,10 +2,13 @@ module
 
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.ZelevinskyCosocles.LUnlinkedComm
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IrreducibleAdmissibleGL
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PiExteriorTensorSmoothIrreducibleIsIrreducibleStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalCellMultiplicityOfColouringStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalCellMultiplicityZeroOfSplitColumnStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegmentRepJacquetWordMultiplicityStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.NontrivialOfIrreducible
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PiExteriorTensorSmoothIrreducibleIsIrreducible
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalCellMultiplicityOfColouring
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalCellMultiplicityZeroOfSplitColumn
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegmentRepJacquetWordMultiplicity
 import Development.AutomorphicSpectrum.Proofs.GlobalProofs.BernsteinZelevinskyFiniteness
 import Development.AutomorphicSpectrum.Proofs.GlobalProofs.GeometricLemma
 import GroundTheory.LocalFields.PadicLogSeries
@@ -130,7 +133,7 @@ theorem GlobalTheory.CompanionTheory.FineProd.jmL_prodIrr : ∀ {k : Type} [Fiel
   have hc : ∀ (b : SizeMatrix m m') j, ∑ i, b.1 i j = (W.get j).1 := fun b j => by
     simpa [m'] using b.2.2 j
   have hτ : (piTensor fun j => (W.get j).rep).IsIrreducible :=
-    GlobalTheory.T.piExteriorTensor_smoothIrreducible_isIrreducible GlobalTheory.CompanionTheory.Published.bernsteinZelevinskyFiniteness k _ _ fun j => (W.get j).2.rep
+    _root_.GlobalTheory.ExtTensorIrr.piTensor_isIrreducible GlobalTheory.CompanionTheory.Published.bernsteinZelevinskyFiniteness k _ _ fun j => (W.get j).2.rep
   have key := ((GlobalTheory.CompanionTheory.GeoLink.geometricLemma k).1).jhMult_eq (m := m) (m' := m')
     (stdBlocks (fun a => (x a).1) hd) (stdBlocks (fun a => (W.get a).1) hWd)
     (isSmooth_piTensor fun i => (x i).2.rep.smooth)
@@ -142,15 +145,15 @@ theorem GlobalTheory.CompanionTheory.FineProd.jmL_prodIrr : ∀ {k : Type} [Fiel
     intro b
     split_ifs with hb
     · obtain ⟨c, hcS, hbc⟩ := hb
-      rw [GlobalTheory.T.cuspidal_cell_multiplicity_of_colouring x W b.1 (hr b) (hc b) c (fun i j => by rw [hbc]; rfl)]
+      rw [_root_.GlobalTheory.CompanionTheory.FineProdCell.jhMult_cell_colour x W b.1 (hr b) (hc b) c (fun i j => by rw [hbc]; rfl)]
       refine Finset.prod_eq_one fun i _ => ?_
-      refine ((GlobalTheory.T.segment_rep_jacquet_word_multiplicity hA hJ (Γ i) (x i).rep (hΓ i) (sub W c i) fun w hw => ?_).1
+      refine ((_root_.GlobalTheory.CompanionTheory.FineL.jmL_cusp_word hA hJ (Γ i) (x i).rep (hΓ i) (sub W c i) fun w hw => ?_).1
         ((Finset.mem_filter.1 hcS).2 i))
       obtain ⟨p, -, rfl⟩ := List.mem_map.1 hw
       exact hW _ (List.get_mem _ _)
     · by_cases hm : ∃ (j : Fin W.length) (i i' : Fin h), i ≠ i' ∧ b.1 i j ≠ 0 ∧ b.1 i' j ≠ 0
       · obtain ⟨j, i, i', hii, h1, h2⟩ := hm
-        exact GlobalTheory.T.cuspidal_cell_multiplicity_zero_of_split_column hA x (fun j => W.get j) (fun j => hW _ (List.get_mem _ _)) b.1 (hr b) (hc b) j i i' hii h1 h2
+        exact _root_.GlobalTheory.CompanionTheory.FineProd.CellMulti.jhMult_cell_eq_zero hA x (fun j => W.get j) (fun j => hW _ (List.get_mem _ _)) b.1 (hr b) (hc b) j i i' hii h1 h2
       · push_neg at hm
         have hex : ∀ j, ∃ i, b.1 i j ≠ 0 := fun j => by
           by_contra hne
@@ -176,9 +179,9 @@ theorem GlobalTheory.CompanionTheory.FineProd.jmL_prodIrr : ∀ {k : Type} [Fiel
           push_neg at hne
           exact hcS (Finset.mem_filter.2 ⟨Finset.mem_univ _, hne⟩)
         obtain ⟨i, hi⟩ := hex2
-        rw [GlobalTheory.T.cuspidal_cell_multiplicity_of_colouring x W b.1 (hr b) (hc b) c (fun i j => by rw [hbc]; rfl)]
+        rw [_root_.GlobalTheory.CompanionTheory.FineProdCell.jhMult_cell_colour x W b.1 (hr b) (hc b) c (fun i j => by rw [hbc]; rfl)]
         refine Finset.prod_eq_zero (Finset.mem_univ i) ?_
-        refine (GlobalTheory.T.segment_rep_jacquet_word_multiplicity hA hJ (Γ i) (x i).rep (hΓ i) (sub W c i) (fun w hw => ?_)).2 hi
+        refine (_root_.GlobalTheory.CompanionTheory.FineL.jmL_cusp_word hA hJ (Γ i) (x i).rep (hΓ i) (sub W c i) (fun w hw => ?_)).2 hi
         obtain ⟨p, -, rfl⟩ := List.mem_map.1 hw
         exact hW _ (List.get_mem _ _)
   rw [jmL, dite_eq_left hWd]

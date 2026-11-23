@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.WdDefs
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FinrankDpstUnramifiedLeDimRepresentationStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.EqOfPowEqOneOfNormSubLt
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FinrankDpstUnramifiedLeDimRepresentation
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.KummerNotFrac
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.WeilDeligneDpstLeftExact
 import Mathlib.Algebra.Order.Floor.Extended
@@ -83,8 +84,8 @@ theorem UpperTheory.dpst_right_exact :
   haveI : FiniteDimensional ℚ_[l] V' := Module.Finite.of_injective (f.restrictScalars ℚ_[l]) hfi
   haveI : FiniteDimensional ℚ_[l] V'' := Module.Finite.of_surjective (p.restrictScalars ℚ_[l]) hps
   obtain ⟨hdi, hdex⟩ := UpperTheory.weilDeligne_dpst_leftExact l (UpperTheory.V.Loc.PP l) K L V' V V'' ρ' ρ ρ'' f p hf hp hfi hex
-  have h' := GlobalTheory.T.finrank_dpst_unramified_le_dim_representation (UpperTheory.V.Loc.PP l) hdom hreg ρ'
-  have h'' := GlobalTheory.T.finrank_dpst_unramified_le_dim_representation (UpperTheory.V.Loc.PP l) hdom hreg ρ''
+  have h' := _root_.GlobalTheory.PstRank.rank_DpstUr_le (UpperTheory.V.Loc.PP l) hdom hreg ρ'
+  have h'' := _root_.GlobalTheory.PstRank.rank_DpstUr_le (UpperTheory.V.Loc.PP l) hdom hreg ρ''
   have hsum : finrank ℚ_[l] V = finrank ℚ_[l] V' + finrank ℚ_[l] V'' := by
     have hexq : Function.Exact (f.restrictScalars ℚ_[l]) (p.restrictScalars ℚ_[l]) := hex
     have e4 := (p.restrictScalars ℚ_[l]).finrank_range_add_finrank_ker

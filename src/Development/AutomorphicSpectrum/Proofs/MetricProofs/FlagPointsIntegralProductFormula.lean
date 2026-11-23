@@ -1,7 +1,7 @@
 module
 
 public import Development.AutomorphicSpectrum.Statements.MetricStatements.AgreementIffGuarded
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagDegreePolynomialEvalStatement
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagDegreePolynomialEval
 public import GroundTheory.HeightsAndTheta.Heights.Intersections.NotLtLtOfMemMinimalPrimes
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -180,6 +180,6 @@ theorem borel_word : GlobalTheory.CompanionTheory.Ar.PB.Inputs → ReciprocityTh
   rintro hI ⟨II, hII⟩ Ψ _ _ _ N w hN
   refine ptsIntegral_word_eq _ ?_ rfl (fun l => ?_) w
   · simp [Top.dimFl, GroundTheory.Heights₂.Heights.LowerBoundFree.dimFl, GroundTheory.Heights₂.Heights.antisymDegree, Nat.choose_two_right]
-  · exact GlobalTheory.T.flag_degree_polynomial_eval hI II hII Ψ N (fun τ i => l (τ, i)) hN
+  · exact _root_.GlobalTheory.CompanionTheory.Relay.flag_degree_polynomial_eval hI II hII Ψ N (fun τ i => l (τ, i)) hN
 
 end GlobalTheory.CompanionTheory.Ar.Giv

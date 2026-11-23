@@ -1,7 +1,11 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.ContinuousTorusCharacter
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.HidaCompleteRings.LocAbs
+public import Mathlib.Algebra.Algebra.Subalgebra.Lattice
+public import Mathlib.RingTheory.AdicCompletion.Basic
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Defs
+public import Mathlib.RingTheory.Noetherian.Defs
+public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.PrecompleteOfFinite
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.HidaCompleteRings.LocChar
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -116,7 +120,7 @@ theorem UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.heckeRestr :
     rwa [← hj h']
   haveI : IsNoetherian A (Module.End A Y) := isNoetherian_linearMap A Y Y
   haveI : Module.Finite A T := Module.Finite.of_injective j.toLinearMap hj
-  obtain ⟨e, he, hnil, h1e, -, -⟩ := UpperTheory.V.AlgebraTools.AnnihilatorQuotientFinite.locAbs A T ι t a hgen
+  obtain ⟨e, he, hnil, h1e, -, -⟩ := _root_.UpperTheory.Reformulated.B.Qe2.locAbs A T ι t a hgen
   have hI : ∀ μ ∈ (maximalIdeal A).map (algebraMap A T), ∀ y,
       j μ y ∈ maximalIdeal A • (⊤ : Submodule A Y) := by
     intro μ hμ

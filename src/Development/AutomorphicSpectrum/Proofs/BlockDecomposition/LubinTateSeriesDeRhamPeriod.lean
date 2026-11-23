@@ -1,7 +1,7 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EvalMod
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TeichmullerNearPowerExistsStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TeichmullerNearPowerExists
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -209,7 +209,7 @@ theorem evalMod_teichmuller : ∀ {l : ℕ} [Fact l.Prime] (K : FinExt l) (μ : 
     refine ⟨- oB K μ c', S.neg_mem (ho _), ?_⟩
     rw [tchHom_apply, hc', map_add (f := _), map_mul]; ring
   have hϖ0 : thB l (oB K μ π) ≠ 0 := (env.unit.map (thB l)).ne_zero
-  obtain ⟨M, -, s, hs, hM⟩ := GlobalTheory.T.teichmuller_near_power_exists S hw (oB K μ π) hϖ0 x hx
+  obtain ⟨M, -, s, hs, hM⟩ := _root_.GlobalTheory.CompanionTheory.LTPer.TopNil.main S hw (oB K μ π) hϖ0 x hx
   rw [pow_one] at hM
   exact evalMod_of_lift S (FB l) (oB K μ π) (oB K μ) (tchHom l) r (tchHom_zero l)
     (fun a => hw _) env.mem hadd hcoef

@@ -5,10 +5,11 @@ public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.TopForm
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RdLevOn
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsCopy
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevOkTwists
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelReadingRationalAtTwistExtendsIntegralUnitarStatement
+public import Formalism.LocalToGlobal.HermitianForms.IsLocBasis
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelReadingRationalAtTwistExtendsIntegralUnitar
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemCutQGrp
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoords
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TwistedTupleReadingLevelCharacterStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoords
 import Formalism.LocalToGlobal.Columns.RecLevelDiv
 import Formalism.LocalToGlobal.Columns.RowFormsAdelic
 import Mathlib.Algebra.Order.Floor.Extended
@@ -115,7 +116,7 @@ theorem set_univ {F E K : Type} [Field F] [NumberField F] [Field E] [NumberField
     (hR : RdLevOn hc (RatAt Q) S.U S.chi Λ emb Q HQ lamQ)
     (z : GL (Fin n) (AfE F E)) (hz : z ∈ St (1 : GL (Fin n) (AfE F E))) (hu : z ∈ UAd hc n) :
     z ∈ S.U ↔ (∀ w : SG, redAt 1 w.1 ⟨z, hz⟩ ∈ (Λ w).H) ∧ ∀ P : Q, redAt 1 P.1 ⟨z, hz⟩ ∈ HQ P :=
-  (GlobalTheory.T.levelReading_rationalAtTwist_extends_integralUnitary hc hJ { S with chi := 1, chi_triv := fun _ _ => rfl } (fun w => ⟨(Λ w).H, 1⟩) emb HQ (fun _ => 1) h1 h2
+  (_root_.GlobalTheory.SeeSaw.TwLev.Approx.rd_all hc hJ { S with chi := 1, chi_triv := fun _ _ => rfl } (fun w => ⟨(Λ w).H, 1⟩) emb HQ (fun _ => 1) h1 h2
     (Filter.Eventually.of_forall fun _ _ _ => rfl)
     (fun x hx hs hv => ⟨(hR x hx hs hv).1, fun _ _ _ => by simp⟩) z (Set.mem_univ z) hz hu).1
 

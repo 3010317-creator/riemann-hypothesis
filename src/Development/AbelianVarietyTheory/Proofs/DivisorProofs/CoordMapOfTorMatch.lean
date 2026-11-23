@@ -6,8 +6,17 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.SharpOverIff
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DvdOrdSub
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGenericPointsUniformisationsWeilPairingGalStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TauCoordMulSq
+public import Development.AbelianVarietyTheory.BlockTheory.ExistenceTori.GeneratorValues
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CharactersRestrictLinearToTraitUniformisation
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsInertiaMovesTameRootStatement
+import Mathlib.FieldTheory.IsAlgClosed.Basic
+import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+import Mathlib.RingTheory.Flat.TorsionFree
+import Mathlib.RingTheory.Henselian
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
+import Mathlib.RingTheory.SimpleRing.Principal
+import Mathlib.RingTheory.Valuation.ValuationSubring
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsInertiaMovesTameRoot
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -42,7 +51,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.BlockTheory.ExistenceTori.GeneratorValues
 
 @[expose] public section
 
@@ -100,7 +108,7 @@ theorem coordMap_of_torMatch : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocal
   have key : ∀ k : ℕ, IsUnit (k : R) →
       (k : ℤ) ∣ (GlobalTheory.IndefiniteRowSideFullHecke.GeneratorValues.ord_vw V).toFun (Units.map gK.toMonoidHom x) - (GlobalTheory.IndefiniteRowSideFullHecke.GeneratorValues.ord_vw V).toFun x' :=
     fun k hk => by
-      obtain ⟨O, φ, σ, π, h₁, h₂, h₃, h₄, h₅⟩ := GlobalTheory.T.exists_inertia_moves_tame_root V F ϖ hϖ k (by simpa using hk.map g)
+      obtain ⟨O, φ, σ, π, h₁, h₂, h₃, h₄, h₅⟩ := _root_.GlobalTheory.InertiaTameRoot.exists_inertia_moves_root V F ϖ hϖ k (by simpa using hk.map g)
       exact GlobalTheory.TauFormGen.dvd_ord_sub R hR G hG D A U V hVb G' hG' D' A' U' g gK hgK F hF k hk ϖ hϖ O φ σ π h₁ h₂ h₃ h₄ h₅ ρ e
         (he1 k) (he2 σ) (hm k hk) a b x x' hx hx'
   obtain ⟨u, hu⟩ := GlobalTheory.TauForm.exists_unit_of_ord_eq (W := V) (x := Units.map gK.toMonoidHom x) (y := x') (by

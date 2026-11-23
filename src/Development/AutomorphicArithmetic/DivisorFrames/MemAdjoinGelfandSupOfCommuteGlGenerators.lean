@@ -2,11 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsLieDataCircle
 public import Formalism.RealPlaceAnalysis.StatementA
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.BicommutantTensorFactorPermMemSpanStatement
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CommutantLiftModStableSelfAdjointStatement
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CommutatorGlGeneratorTensorWordMapMatrixUnitsStatement
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.MemAdjoinGlActionOfCommuteTensorPermStatement
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.PermutationWordGelfandPolynomialModShorterStatement
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.BicommutantTensorFactorPermMemSpan
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.Matrix.ConjTranspose
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CommutantLiftModStableSelfAdjoint
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CommutatorGlGeneratorTensorWordMapMatrixUnits
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.MemAdjoinGlActionOfCommuteTensorPerm
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.PermutationWordGelfandPolynomialModShorter
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.PolarConjTranspose
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -146,7 +148,7 @@ private theorem Phi_ad (hX : GlRel X) (d : ℕ) {r : ℕ} (b : Fin r → A) (hb 
   rw [Phi_apply, Phi_apply, Finset.mul_sum, Finset.sum_mul, ← Finset.sum_sub_distrib]
   refine Finset.sum_congr rfl fun k _ => ?_
   simp only [blockDiag_sub, Pi.sub_apply, blockDiag_left, blockDiag_right]
-  rw [← GlobalTheory.T.commutator_glGenerator_tensorWordMapMatrixUnits _ _ X hX d i j]
+  rw [← _root_.GlobalTheory.SmoothForms.commutator_wordMap _ _ X hX d i j]
   simp only [sub_mul, mul_assoc, ← hb k i j]
 
 private theorem word_of_comm (hX : GlRel X) (d : ℕ) (M₀ : Matrix (Fin d → Fin n) (Fin d → Fin n) ℂ)
@@ -155,7 +157,7 @@ private theorem word_of_comm (hX : GlRel X) (d : ℕ) (M₀ : Matrix (Fin d → 
   have hcomm : ∀ T : Matrix (Fin d → Fin n) (Fin d → Fin n) ℂ,
       (∀ π, T * permMat n d π = permMat n d π * T) → M₀ * T = T * M₀ := by
     intro T hT
-    have hTa := GlobalTheory.T.mem_adjoin_glAction_of_commute_tensorPerm n d T hT
+    have hTa := _root_.GlobalTheory.SymmTensor.mem_adjoin_polar n d T hT
     have hT' : T ∈ Subalgebra.centralizer ℂ {M₀} := by
       refine Algebra.adjoin_le ?_ hTa
       rintro _ ⟨p, rfl⟩
@@ -163,12 +165,12 @@ private theorem word_of_comm (hX : GlRel X) (d : ℕ) (M₀ : Matrix (Fin d → 
       rintro g rfl
       exact (h2 p.1 p.2).symm
     exact (Subalgebra.mem_centralizer_iff ℂ).1 hT' M₀ rfl
-  have hspan := GlobalTheory.T.bicommutant_tensorFactorPerm_mem_span n d M₀ hcomm
+  have hspan := _root_.GlobalTheory.SmoothForms.bicomm_permMat n d M₀ hcomm
   clear hcomm h2
   induction hspan using Submodule.span_induction with
   | mem x hx =>
     obtain ⟨π, rfl⟩ := hx
-    exact GlobalTheory.T.permutationWord_gelfandPolynomial_mod_shorter _ _ X hX d π
+    exact _root_.GlobalTheory.SmoothForms.PermWord.permWord _ _ X hX d π
   | zero => exact ⟨0, zero_mem _, by simp⟩
   | add x y _ _ hx hy =>
     obtain ⟨c₁, hc₁, h₁⟩ := hx
@@ -245,7 +247,7 @@ private theorem central_of_filtB (hX : GlRel X) (B : Subalgebra ℂ A)
         exact e
       rw [this]
       exact neg_mem (filtB_ad hX B hB d p.1 p.2 hy)
-    obtain ⟨M₀, hMM₀, hM₀⟩ := GlobalTheory.T.commutant_lift_mod_stable_selfAdjoint _ S N hS hN M hM
+    obtain ⟨M₀, hMM₀, hM₀⟩ := _root_.GlobalTheory.matrix_commutant_lift_mod_stable _ S N hS hN M hM
     have h2 : ∀ k i j, polar n d i j * M₀.blockDiag k = M₀.blockDiag k * polar n d i j := by
       intro k i j
       have e := congrArg (fun Q => Q.blockDiag k) (hM₀ _ ⟨(i, j), rfl⟩)

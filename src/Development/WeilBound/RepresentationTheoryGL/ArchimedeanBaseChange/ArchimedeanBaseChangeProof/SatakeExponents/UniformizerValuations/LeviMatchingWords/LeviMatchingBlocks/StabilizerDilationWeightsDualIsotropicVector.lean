@@ -1,8 +1,6 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.LeviMatchingWords.SplitPlaceGeneratorPowers
-import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmFieldStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConstantTermLocallyConstant
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConstantTermMultiplicative
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DoubleCosetMultiplication
@@ -11,8 +9,11 @@ public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsCompac
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocMIterateDiag
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MatchingTransferOf
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SphericalOneOfLocalAlgebra
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryLevelSubgroupProperties
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.MatchTorusOfTwistedMatching
+import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
+import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmField
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryLevelSubgroupProperties
 import GroundTheory.LocalFields.PadicLogSeries
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -491,7 +492,7 @@ theorem matching_at_T (hMT : MT.MatchT) (hU : Unr E) (hm : MOk d) (hT : w ∈ d.
     Match n a (n - a) w 1 (d.gU (m + 1) w) (((d.fixL a).mul (pw (d.betaL a ha) m)).tr d.P d.one w) := by
   obtain ⟨hs, hb, hϖ, hx⟩ := hm.T w hT
   have hx' : ∀ j, StrictAnti (xx d w j) ∧ Cone (lOf (xx d w j)) := fun j => hx j.1 j.2
-  have hc : Continuous (cj w) := (GlobalTheory.T.placeConjugation_properties_cmField E hU w).1
+  have hc : Continuous (cj w) := (_root_.GlobalTheory.ConjAtPlace.main E hU w).1
   have hoU := GlobalTheory.CompanionTheory.IwLevels.isOpen_iwU n w (d.b w)
   have hoG := GlobalTheory.CompanionTheory.MatchPow.iwahori_pair_open a (n - a) w
   obtain ⟨J', _, c', x', -, e1, e2⟩ := GlobalTheory.CompanionTheory.MatchPow.pow_claim GlobalTheory.CompanionTheory.FUMulPf.fuMul GlobalTheory.CompanionTheory.DcosProduct.dcosMul hU hs a

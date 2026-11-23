@@ -2,10 +2,14 @@ module
 
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.NineGeoU
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.CmHostRankBounds
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspVolumeLeftStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspVolumeMiddleStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspVolumeRightStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CuspWeightIntegrableOnFundamentalSetStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsSheetCover
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspVolumeLeft
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspVolumeMiddle
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspVolumeRight
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.TowerOrigin
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsFundSet
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CuspWeightIntegrableOnFundamentalSet
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +49,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsSheetCover
 
 @[expose] public section
 
@@ -91,16 +94,16 @@ theorem top_mean_cusp_weight : Top.Given → ∃ Cu : ℝ, ∀ (E : Type) [Field
   intro hG
   refine ⟨4, ?_⟩
   intro E _ _ _ _ H D Xo l c Y II K _ J _ Ω _ _ W _ _ Dc Hd S₀ Or B₁ U _ _ hU
-  obtain ⟨Q⟩ := GlobalTheory.T.cusp_volume_left hG E H D Xo l c Y II K J Ω W Dc Hd S₀ Or
-  obtain ⟨κ, hκ, htr⟩ := GlobalTheory.T.ptsIntegral_eq_sum_ballDens_integrals E H D Xo l c Y II K J Ω W Dc Hd S₀ Or Q
-  have hw := GlobalTheory.T.cusp_volume_middle E H D Xo l c Y II K J Ω W Dc Hd S₀ Or Q U hU
+  obtain ⟨Q⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.pieces_nonempty hG E H D Xo l c Y II K J Ω W Dc Hd S₀ Or
+  obtain ⟨κ, hκ, htr⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.ptsIntegral_eq_sum_fundamental E H D Xo l c Y II K J Ω W Dc Hd S₀ Or Q
+  have hw := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.WeightSheet.cuspWeight_torus_and_sheets E H D Xo l c Y II K J Ω W Dc Hd S₀ Or Q U hU
   obtain ⟨hrd, ⟨τ₀⟩, -⟩ := GlobalTheory.CompanionTheory.Ar.Top.HostNumbers.host_numbers E H
   intro hj' hN B hB
   have hjN : Dc.j + Dc.j' = Dc.N := by
     have := Dc.j_le; have := Dc.two_le_N
     show Dc.j + (Dc.N - Dc.j) = Dc.N
     omega
-  have hball := fun k => GlobalTheory.T.cusp_weight_integrable_on_fundamental_set E (CMType H) Dc.j Dc.j' Dc.n Q.g (Q.Λ k) H (Q.F k) (Q.Γ k) (Q.FF k)
+  have hball := fun k => _root_.GlobalTheory.CompanionTheory.Ar.Cusp.fund_set_mean_cuspW E (CMType H) Dc.j Dc.j' Dc.n Q.g (Q.Λ k) H (Q.F k) (Q.Γ k) (Q.FF k)
     (Q.arith k) (Q.fund k) hj' (by omega)
   set C : ℝ := (Fintype.card (CMType H) : ℝ) * Dc.j' * (6 + Real.log (2 * Fintype.card (CMType H) * hostRd E) +
     Real.log (2 * Fintype.card (CMType H) * Dc.j' * hostRd E)) with hC

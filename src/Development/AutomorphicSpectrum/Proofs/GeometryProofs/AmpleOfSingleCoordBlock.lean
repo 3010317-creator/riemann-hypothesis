@@ -2,8 +2,12 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EmbedsGeneric
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ArchBetween
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordRelationsHomogeneousStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.HasMultiplier
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordRelationsHomogeneous
 public import GroundTheory.HeightsAndTheta.Heights.ElementarySymmetric.PFibreNormDehomRoots
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.IsHomogeneousGrL
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.IsMultiHomogX
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.IsMultiHomogXpow
 import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsArith
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -46,9 +50,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.IsHomogeneousGrL
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.IsMultiHomogX
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.IsMultiHomogXpow
 import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
@@ -240,7 +241,7 @@ theorem ampleQ_of_forms (y : (Σ k, J k) → Ω) (k₀ : K) (a : K → ℤ) (ha�
 theorem ampleQ_of_embeds : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] [CharZero Ω] (ξ : Spec (CommRingCat.of Ω) ⟶ X) (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (k₀ : K) (a : K → ℤ), CoordTie ℤ ξ (fun c' : (k : K) → J k => ∏ k, y ⟨k, c' k⟩) → EmbedsGeneric ξ (fun i : J k₀ => y ⟨k₀, i⟩) → a k₀ = 1 → (∀ k, k ≠ k₀ → a k = 0) → Ht.AmpleQ y a := by
   intro X Ω _ _ ξ K _ J _ y k₀ a hT hE ha₀ ha
   classical
-  choose l n F hom rel pts using GlobalTheory.T.coord_relations_homogeneous X Ω ξ K J y k₀ hT hE
+  choose l n F hom rel pts using _root_.GlobalTheory.CompanionTheory.Ar.FormFamilies.finite_families X Ω ξ K J y k₀ hT hE
   exact ampleQ_of_forms y k₀ a ha₀ ha l n F hom rel fun k L _ _ z hz => pts k L z hz
 
 end GlobalTheory.CompanionTheory.Ar.AmpleBlock

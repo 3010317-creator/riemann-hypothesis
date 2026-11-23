@@ -2,8 +2,9 @@ module
 
 public import Formalism.AlgebraicWeights.IsAlgWeight
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DoubleCosetMassEqRelIndexMulMassStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFinsetDoubleCosetsConjMaxCompactStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteRationalConjMemBoundedCompactStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFinsetDoubleCosetsConjMaxCompact
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsWildInertiaCyclotomicElement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteRationalConjMemBoundedCompact
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -41,7 +42,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsWildInertiaCyclotomicElement
 import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.RowsExhaust
 
 @[expose] public section
@@ -53,9 +53,9 @@ theorem GlobalTheory.UnimodMass.umax_relIndex_conj : ∀ (L : Type) [Field L] [N
   intro L _ _ _ n h
   set U := Umax L n with hUdef
   set V := U.map (MulAut.conj h).toMonoidHom with hVdef
-  haveI hW : Finite (DC (GQ L n) (U ⊓ V)) := finite_dc_of_cover (GlobalTheory.T.exists_finset_doubleCosets_conj_maxCompact L n h)
+  haveI hW : Finite (DC (GQ L n) (U ⊓ V)) := finite_dc_of_cover (_root_.GlobalTheory.ClassFinConj.exists_finset_double_cosets_conj L n h)
   have hb : IsBounded U := ⟨{1}, fun κ hκ => ⟨1, by simp, by simpa using hκ⟩⟩
-  have hU : ∀ t : GAf L n, Finite {γ : GQ L n // t⁻¹ * (γ : GAf L n) * t ∈ U} := fun t => GlobalTheory.T.finite_rational_conj_mem_boundedCompact L n U hb t
+  have hU : ∀ t : GAf L n, Finite {γ : GQ L n // t⁻¹ * (γ : GAf L n) * t ∈ U} := fun t => _root_.GlobalTheory.StabFin.finite_conj_mem L n U hb t
   have hV : ∀ t : GAf L n, Finite {γ : GQ L n // t⁻¹ * (γ : GAf L n) * t ∈ V} := by
     intro t
     haveI := hU (t * h)

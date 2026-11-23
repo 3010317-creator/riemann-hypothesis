@@ -2,11 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.LatIntZero
 public import Formalism.LocalToGlobal.KernelLattices.LateralTheory
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.CmBaseFieldIntegersAndCurveIdealFactsStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.CpSeriesBoundedThetaLevelValueOneStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.JetsAreBoundedMeasureMomentsOfChartCoeffBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LatticeJetsAreBoundedMomentsOfSpanImagQuadraticStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LatticeJetsAreBoundedMomentsPullbackStatement
+public import Development.AbelianVarietyTheory.Definitions.Jets.CmLatticeCommutatorPairingPowEqOneOfGoodLift
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.IsDiscriminantTwelfthRootOfIdealLattice
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.CmBaseFieldIntegersAndCurveIdealFacts
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.CpSeriesBoundedThetaLevelValueOne
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.JetsAreBoundedMeasureMomentsOfChartCoeffBound
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LatticeJetsAreBoundedMomentsOfSpanImagQuadratic
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LatticeJetsAreBoundedMomentsPullback
 public import Formalism.LocalToGlobal.GlobalTheory.GL3.PStdChar
 public import Formalism.LocalToGlobal.GlobalTheory.GL3.PStdOK
 import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.AnalyticIdentityTheorems.QuasiPeriodConstUniqueOf
@@ -64,7 +66,7 @@ open scoped ComplexConjugate
 
 theorem latInt_th0_of_split_prime : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (B : Base D cc δ), IsCurveIdeal D cc → IsDiscriminantTwelfthRootOfIdealLattice D cc δ → ∀ (q : ℕ) [Fact q.Prime], q ≠ 2 → jacobiSym (-(D.host.d : ℤ)) q = 1 → Nat.Coprime (Ideal.absNorm cc) q → ∀ (ι : ℂ ≃+* ℂ_[q]) (δ₀ : ℂ) (θ : ℂ → ℂ) (Ω : ℂ_[q]), Per D.host.d ι δ₀ θ Ω → LatInt ι (Ω / ι δ₀) (lamOf D cc δ) B.th0 := by
   intro D cc δ B hcc _ q _ hq2 hjac hcop ι δ₀ θ Ω hPer
-  obtain ⟨hdp, hd16, hOK, -, hlat⟩ := GlobalTheory.T.cmBaseField_integers_and_curveIdeal_facts D
+  obtain ⟨hdp, hd16, hOK, -, hlat⟩ := _root_.GlobalTheory.MomDict.main D
   obtain ⟨hTh, -, -, -, -, -, M, hMι, hMOK, hMch⟩ := hPer
   have hcc0 : cc ≠ ⊥ := hcc.1
   obtain ⟨hA, hmem⟩ := hlat cc δ hcc0
@@ -164,11 +166,11 @@ theorem latInt_th0_of_split_prime : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (�
       + (Formalism.L2.Th1.F.th0 B.L (B.ω₀ / 2) (δ * N * z)) * hE
 
   have hbd : Bd 1 (hat ι (PowerSeries.C (Ω / ι δ₀) * logS) G) := by
-    have := GlobalTheory.T.cpSeries_bounded_theta_level_value_one D.host.d q M (Ω / ι δ₀) θ G N hdp hd16 hsplit hq2 hMOK hMch hTh hGd hG0 hlaw' hzer
+    have := _root_.GlobalTheory.MomN.ThetaQuot.bd_one_hat_of_theta_level D.host.d q M (Ω / ι δ₀) θ G N hdp hd16 hsplit hq2 hMOK hMch hTh hGd hG0 hlaw' hzer
     rwa [hMι] at this
-  have hmom := GlobalTheory.T.jetsAreBoundedMeasureMoments_of_chart_coeff_bound q ι (Ω / ι δ₀) G hGd hbd
+  have hmom := _root_.GlobalTheory.MomOneAmice.momInt_of_bd_hat q ι (Ω / ι δ₀) G hGd hbd
   have hspan : LatInt ι (Ω / ι δ₀) (lamOf D ⊤ 1) G := by
-    refine GlobalTheory.T.latticeJetsAreBoundedMoments_of_span_imagQuadratic q ι ℂ D.host.d (Ω / ι δ₀) (lamOf D ⊤ 1) Unit (fun _ => (1 : ℂ)) G hdp hd16 hsplit ?_ ?_
+    refine _root_.GlobalTheory.MomN.latInt_of_span q ι ℂ D.host.d (Ω / ι δ₀) (lamOf D ⊤ 1) Unit (fun _ => (1 : ℂ)) G hdp hd16 hsplit ?_ ?_
     · intro x hx
       obtain ⟨y, -, hy⟩ := (hmem1 x).1 hx
       refine ⟨1, Nat.coprime_one_left _, fun _ => x, fun _ => (hOK x).2 ⟨y, by rw [hy, one_mul]⟩, ?_⟩
@@ -176,7 +178,7 @@ theorem latInt_th0_of_split_prime : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K)) (�
     · convert hmom using 2
       simp
   have hδN : δ * (N : ℂ) ≠ 0 := mul_ne_zero hδ0 hNc
-  have hpull := GlobalTheory.T.latticeJetsAreBoundedMoments_pullback q ι ℂ ℂ (Ω / ι δ₀) (lamOf D ⊤ 1) (lamOf D cc δ)
+  have hpull := _root_.GlobalTheory.MomN.latInt_pull q ι ℂ ℂ (Ω / ι δ₀) (lamOf D ⊤ 1) (lamOf D cc δ)
     ((δ * N)⁻¹ • ContinuousLinearMap.id ℂ ℂ) G hGd.contDiff ?_ hspan
   · convert hpull using 1
     funext z

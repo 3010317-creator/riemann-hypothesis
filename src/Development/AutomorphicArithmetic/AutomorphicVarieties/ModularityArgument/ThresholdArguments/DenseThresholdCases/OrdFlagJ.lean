@@ -3,7 +3,8 @@ module
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.LitAut
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.OrdinaryJacquetModules.FlagJ
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.CoiConjSingle
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.DeterminantRepresentations.IrrIffSpan
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.IrrIffSpan
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.DeterminantRepresentations.MapApi
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.DeterminantRepresentations.RepApi
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.LagNeZero
@@ -13,6 +14,8 @@ public import Development.AutomorphicArithmetic.AutomorphicVarieties.Commutative
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebraHeight.DGmap
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.NmRegArith
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.EigenbasisLifts.RelKill
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.EqLagIff
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.EigenbasisLifts.IsTanZero
 import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.EigenbasisLifts.TrPlus
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -48,8 +51,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.EqLagIff
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.EigenbasisLifts.IsTanZero
 
 @[expose] public section
 
@@ -160,7 +161,7 @@ theorem UpperTheory.V.Z.Ord.flagJ_alt :
     obtain ⟨τ, hτ⟩ : ∃ τ, toGS Ω V.S' τ = g.1 := QuotientGroup.mk_surjective g.1
     obtain ⟨σ, rfl⟩ := (V.hη τ).1 (by rw [hτ]; exact g.2)
     exact ⟨σ, Subtype.ext hτ⟩
-  have hF : Ws.Eb.Full ρ := (AlgebraTools.Det.irrIffSpan (W.mat ρ)).1 fun N hN => by
+  have hF : Ws.Eb.Full ρ := (_root_.UpperTheory.Reformulated.B.Qe4.irrIffSpan (W.mat ρ)).1 fun N hN => by
     rcases hirr.2.2 N le_top fun g v hv => hN g v hv with h1 | h1
     · exact Or.inl h1
     · exact Or.inr h1

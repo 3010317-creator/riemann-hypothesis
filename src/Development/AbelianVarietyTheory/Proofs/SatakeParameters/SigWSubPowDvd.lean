@@ -2,9 +2,11 @@ module
 
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.WittUnramified.GhostComponentG
 public import Formalism.LocalToGlobal.GroupLattices.PendingLemmas.InvarianceIffAdditiveMapsExist
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemRangeWittAlgClosureOfBoundedRingHomStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NonemptyCoefficientFieldEmbeddingPadicComplexStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RingHomWittAlgClosureEqOfCongrModPrimeStatement
+public import Formalism.LocalToGlobal.GroupLattices.PendingLemmas.WittFractionToCpAlgebraMap
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemRangeWittAlgClosureOfBoundedRingHom
+public import Formalism.LocalToGlobal.GroupLattices.PendingLemmas.WittEmbeddingsCompatible
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NonemptyCoefficientFieldEmbeddingPadicComplex
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RingHomWittAlgClosureEqOfCongrModPrime
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -103,7 +105,7 @@ theorem map_sigRes (G : Formalism.MainNotions.G.GAtP p) (v : Fin G.P.nV) (r : G.
     r (sigRes G v x) = Formalism.MainNotions.FormalGroupSystem.sigW p (r x) := by
   have hS := G.P.setting v
   have hq : ∀ x : G.P.W v, (p : G.P.W v) ∣ x ^ (p ^ G.P.n' v) - x := pow_card_sub_dvd hS.p_unif hS.res_card
-  have h := GlobalTheory.T.ringHom_witt_algClosure_eq_of_congr_mod_prime p (G.P.n' v) (G.P.W v) (by have := hS.two_le; omega) hq (r.comp (sigRes G v)) ((Formalism.MainNotions.FormalGroupSystem.sigW p).comp r)
+  have h := _root_.GlobalTheory.ringHom_wittKbar_eq_of_modp p (G.P.n' v) (G.P.W v) (by have := hS.two_le; omega) hq (r.comp (sigRes G v)) ((Formalism.MainNotions.FormalGroupSystem.sigW p).comp r)
     (fun y => by
       obtain ⟨z, hz⟩ := haveI := hS.frac_alt
         PI.WittUnramWork.sigW_lift (IsFractionRing.injective (G.P.W v) (G.P.Qq v)) (G.P.σ v) hS.frob y
@@ -118,7 +120,7 @@ theorem map_sigRes (G : Formalism.MainNotions.G.GAtP p) (v : Fin G.P.nV) (r : G.
 
 theorem nonempty_cEmbC : ∀ (p : ℕ) [Fact p.Prime] (G : GAtP p), 0 < G.P.nV → Nonempty (CEmbC G) := by
   intro p _ G hV
-  obtain ⟨E⟩ := GlobalTheory.T.nonempty_coefficient_field_embedding_padic_complex p G hV
+  obtain ⟨E⟩ := _root_.GlobalTheory.nonempty_cEmb_of_pos_nV p G hV
   let φ : ∀ v, G.P.W v →+* ℂ_[p] := fun v => (E.iK.comp (G.P.ι v)).comp (algebraMap (G.P.W v) (G.P.Qq v))
   have hφ1 : ∀ v x, ‖φ v x‖ ≤ 1 := fun v x => by
     show ‖E.iK (G.P.ι v (algebraMap _ _ x))‖ ≤ 1
@@ -126,7 +128,7 @@ theorem nonempty_cEmbC : ∀ (p : ℕ) [Fact p.Prime] (G : GAtP p), 0 < G.P.nV �
     exact E.int _
   have hφr : ∀ v x, φ v x ∈ (Formalism.L2.G.Pend.wToC p).range := fun v x => by
     have hS := G.P.setting v
-    exact GlobalTheory.T.mem_range_witt_algClosure_of_bounded_ringHom p (G.P.n' v) (G.P.W v) (by have := hS.two_le; omega) (pow_card_sub_dvd hS.p_unif hS.res_card)
+    exact _root_.GlobalTheory.mem_range_wToC_of_pow_congr p (G.P.n' v) (G.P.W v) (by have := hS.two_le; omega) (pow_card_sub_dvd hS.p_unif hS.res_card)
       hS.eq_sum_herm_smul_frame_of_inW (φ v) (hφ1 v) x
   let eW : Formalism.L2.G.Pend.WW p ≃+* (Formalism.L2.G.Pend.wToC p).range :=
     RingEquiv.ofBijective (Formalism.L2.G.Pend.wToC p).rangeRestrict

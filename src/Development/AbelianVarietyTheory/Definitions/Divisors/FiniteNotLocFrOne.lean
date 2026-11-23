@@ -2,16 +2,17 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EigLatLe
 public import Development.AbelianVarietyTheory.Counterexamples.MetricPositivity.PosSemidefOfIsMetric
-import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
-import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.LawsFieldsSeparately
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.AppellHumbertUnifTangentWeilPairing
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LinearIndependentOfIsLieBasis
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.MetricChangeOfFrame
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.TangentVectorExistsUniqueUniformisingVector
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsFinsetIntegralOfDefinite
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsOpenImmersionOfSection
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NvalDetFrChgConst
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PosDefOneSubOfSumSqLt
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsDiscreteValuationRingAndFiniteResidueFieldValu
+import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
+import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.LawsFieldsSeparately
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.TangentVectorExistsUniqueUniformisingVector
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RangeAlgebraMapEqIInfDiscreteValuationSubring
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsAlgebraMapEqOfValVLeOne
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.GenericFrameIntegralOffFinitelyManyFunctions
@@ -21,14 +22,14 @@ import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsIntegralFra
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ThetaUniformisationComplexAbelianVariety
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFramedPointBaseChangeAlgebraMap
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsIntegralFramesModelInvertiblePushforward
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsTangentModuleUniversalGroupStatement
+import Formalism.LocalToGlobal.ProjectiveLattices.IsCombAt
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsTangentModuleUniversalGroup
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameChangeByMatricesReflAndComp
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameChangeCommBaseChange
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameChangeExistsUniqueOfSamePoint
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointBaseChangeUniqueReflIff
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointReducedFromTestRing
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IntegralLatticeStructureUnique
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsDiscreteValuationRingAndFiniteResidueFieldValu
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.NatCastMemMaximalIdealOfOverLa
 import Formalism.LocalToGlobal.ProjectiveLattices.FrameCharts
 import Formalism.LocalToGlobal.ProjectiveLattices.IntAllProofFree
@@ -87,7 +88,7 @@ theorem posDef_of_isMetric {σ : c.F →+* ℂ} {y : FrPt Xo c (CAt σ)} {N : �
   obtain ⟨Φ, u, Hm, χ, θ, Fd, w, W, -, hA, -, -, -, -, h7, h8⟩ := h
   obtain ⟨-, -, -, -, -, t2, -⟩ := GlobalTheory.AHWeil.tangent_and_weil_of_isAH GlobalTheory.thetaUnifAV_all Φ.key.P _ u Hm χ hA
   obtain ⟨l1, l2⟩ := GlobalTheory.MetricChange.lift_comb Φ.m.cart
-  obtain ⟨M, _, _, v, ρ, -, htan, hcomb, -, -⟩ := GlobalTheory.T.exists_tangent_module_universal_group E H Dw l Xo (CAt σ) y.x
+  obtain ⟨M, _, _, v, ρ, -, htan, hcomb, -, -⟩ := _root_.GlobalTheory.TanMod.exists_tangent_module E H Dw l Xo (CAt σ) y.x
   choose β hβ using fun i => (htan (y.u b i)).1 (y.tan b i)
   have hu : y.u b = fun i => v (β i) := funext fun i => (hβ i).symm
   have hw : y.u b = fun i => (w b i).left ≫ Φ.m.φ := funext fun i => (h7 b i).1.symm

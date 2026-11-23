@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.UnifOfSpaceEq
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.EnormPowLeInvMeasureMulLintegralBall
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormFactorAndDensityNearOneInFlagChartStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormFactorAndDensityNearOneInFlagChart
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -134,7 +134,7 @@ theorem submean_chart : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   intro E _ _ _ r X la w x P hr hx hw hP
   set ρ := chartRad E r w with hρdef
   have hρ : 0 < ρ := chartRad_pos X la hr hw
-  have hch := GlobalTheory.T.normFactor_and_density_near_one_in_flagChart E r X la w x hr hx hw
+  have hch := _root_.GlobalTheory.ChartNearOne.chart_near_one E r X la w x hr hx hw
 
   set φ : V (nd X) → ℂ := fun z => P (cpt X x z) with hφdef
   have hφ : DifferentiableOn ℂ φ (Metric.ball 0 ρ) :=

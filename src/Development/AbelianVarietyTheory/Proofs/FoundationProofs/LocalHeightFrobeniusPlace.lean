@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.FinalTheo
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
 public import Mathlib.RingTheory.AdicCompletion.Noetherian
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CupProductCoboundaryMod
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TameCochainCocycleExtensionStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TameCochainCocycleExtension
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.KummerTheory.DecGen
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -417,7 +417,7 @@ theorem GlobalTheory.Ord2.LocW.local_height_at_frobenius : ∀ (l : ℕ) [Fact l
     · exact om_le_right _ _ (hdn s) (mulVec_le _ _ (hDn s) (hX' t ht))
     · exact om_le_left _ _ (fun i => hdc s t i) (mulVec_le _ _ (hDn s) (fun i => mulVec_le _ _ (hDn t) hbn i))
   have hT : Cg n (P * (de * u τ + om (y τ) (mat (dual1 W) τ *ᵥ b))) 0 :=
-    GlobalTheory.T.tame_cochain_cocycle_extension l Ω c n w B ψ (fun t => P * (de * u t + om (y t) (mat (dual1 W) t *ᵥ b))) τ hn hB hw hψram hint' hadd
+    _root_.GlobalTheory.br_tame l Ω c n w B ψ (fun t => P * (de * u t + om (y t) (mat (dual1 W) t *ᵥ b))) τ hn hB hw hψram hint' hadd
       hine hcob' hτD
   show ‖_ - _‖ ≤ _
   have hT' : ‖P * (de * u τ + om (y τ) (mat (dual1 W) τ *ᵥ b))‖ ≤ ‖((l : ℕ) : Qbar l) ^ n‖ := by

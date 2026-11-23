@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmFieldStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmField
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsConjMulEq
 public import Formalism.LocalRingCardinality.SpanPowerMembership.Adelic
 import Mathlib.Algebra.Order.Floor.Extended
@@ -169,7 +169,7 @@ theorem exists_isUnit_conj_mul_eq {R : Type} [CommRing R] [HenselianLocalRing R]
 
 theorem exists_unit_norm_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ (w : Pl E), ¬ IsSplitAt w → ∀ c : w.adicCompletion E, cj w c = c → Valued.v c = 1 → ∃ s : w.adicCompletion E, Valued.v s = 1 ∧ cj w s * s = c := by
   intro E _ _ _ hU w hw c hcj hcv
-  obtain ⟨-, hinv, hval, hns, -⟩ := GlobalTheory.T.placeConjugation_properties_cmField E hU w
+  obtain ⟨-, hinv, hval, hns, -⟩ := _root_.GlobalTheory.ConjAtPlace.main E hU w
   obtain ⟨-, ⟨ϖ, q, hI, -⟩, -, -⟩ := hns hw
   obtain ⟨-, -, -, -, ⟨x₀, hx₀, hx⟩, hq, hcard⟩ := hI
   haveI : HenselianLocalRing (w.adicCompletionIntegers E) := by

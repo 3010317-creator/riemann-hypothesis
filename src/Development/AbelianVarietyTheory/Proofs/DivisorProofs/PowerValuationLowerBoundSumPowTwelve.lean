@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.VpBounds
 public import Mathlib.NumberTheory.Padics.Complex
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowerIntegralValuationLowerBoundIffForallEmbeddiStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.TorsTransport
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowerIntegralValuationLowerBoundIffForallEmbeddi
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -72,8 +73,8 @@ theorem valGe_sum_pow_twelve : ∀ (l : ℕ), l.Prime → ∀ (r : ℝ) (J : Typ
     (∀ j, GlobalTheory.IndefiniteRowSideFullHecke.ClassZetaValuationBounds.ValGe_vp l r (x j ^ 12)) → GlobalTheory.IndefiniteRowSideFullHecke.ClassZetaValuationBounds.ValGe_vp l r ((∑ j, u j * x j) ^ 12) := by
   intro l hl r J _ u x hu hx
   have : Fact l.Prime := ⟨hl⟩
-  have hx' := fun j => (GlobalTheory.T.powerIntegralValuationLowerBound_iff_forall_embedding l r (x j ^ 12)).1 (hx j)
-  refine (GlobalTheory.T.powerIntegralValuationLowerBound_iff_forall_embedding l r _).2 ?_
+  have hx' := fun j => (_root_.GlobalTheory.LadicDenom.valGe_iff_forall_sz l r (x j ^ 12)).1 (hx j)
+  refine (_root_.GlobalTheory.LadicDenom.valGe_iff_forall_sz l r _).2 ?_
   intro lam
 
   have huK : ∀ j, ∃ h : u j ∈ K, ‖lam ⟨u j, h⟩‖ ≤ 1 := by

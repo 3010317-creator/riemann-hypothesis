@@ -1,9 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.GoodTopBot
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.EqOfDominantWeightsLowestAlcoveLinkedStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ResidueMultisetEqOfShiftedSeriesEqStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TraceEPowerHighestWeightValueGeneratingSeriesStatement
+public import Mathlib.Data.Nat.Prime.Defs
+public import Mathlib.Data.ZMod.Defs
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.EqOfDominantWeightsLowestAlcoveLinked
+public import Mathlib.RingTheory.PowerSeries.Basic
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ResidueMultisetEqOfShiftedSeriesEq
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TraceEPowerHighestWeightValueGeneratingSeries
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,16 +58,16 @@ theorem eq_of_hcVal_eq : ∀ (p : ℕ), p.Prime → ∀ (k : Type) [Field k] [Ch
   have hS : PowerSeries.mk (hcVal k fun i => (μ i : k)) = PowerSeries.mk (hcVal k fun i => (ν i : k)) := by
     ext j
     simp [hval j]
-  have gμ := GlobalTheory.T.traceEPowerHighestWeightValue_generating_series k N (fun i => (μ i : k))
-  have gν := GlobalTheory.T.traceEPowerHighestWeightValue_generating_series k N (fun i => (ν i : k))
+  have gμ := _root_.GlobalTheory.Alc.hcVal_generating k N (fun i => (μ i : k))
+  have gν := _root_.GlobalTheory.Alc.hcVal_generating k N (fun i => (ν i : k))
   rw [hS] at gμ
   have cast : ∀ (w : Fin N → ℕ) (i : Fin N),
       shift k (fun i => (w i : k)) i = ((w i + (N - 1 - i.val) : ℕ) : k) := by
     intro w i
     simp [shift]
   simp only [cast] at gμ gν
-  refine GlobalTheory.T.eq_of_dominantWeights_lowestAlcove_linked p N hp ν μ hν hμ hb ?_
-  refine GlobalTheory.T.residue_multiset_eq_of_shifted_series_eq p hp k N (fun i => ν i + (N - 1 - i.val)) (fun i => μ i + (N - 1 - i.val)) ?_
+  refine _root_.GlobalTheory.Alc.eq_of_shifted_residues_eq p N hp ν μ hν hμ hb ?_
+  refine _root_.GlobalTheory.Alc.multiset_eq_of_series_eq p hp k N (fun i => ν i + (N - 1 - i.val)) (fun i => μ i + (N - 1 - i.val)) ?_
   rw [← gν, ← gμ]
   ring
 

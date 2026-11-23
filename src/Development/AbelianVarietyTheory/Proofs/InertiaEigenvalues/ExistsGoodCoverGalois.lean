@@ -1,13 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.RationalRayLevels
-public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.NumericalConsequencesOfPinsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsLevelCoverUniformisationDictionaryStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.CuspidalL2Subspace
+public import Formalism.LocalToGlobal.ProjectiveLattices.IsGenFrGenFr
+public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.NumericalConsequencesOfPins
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IntFormsSubset
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsLevelCoverUniformisationDictionary
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteDimensionalZeta
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UniformisedLevelCoverExistsConstantsDominantWeigStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsModuliSchemePolarizedAbelianLevelStatement
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsDeltaDatumHigherLevel
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UniformisedLevelCoverExistsConstantsDominantWeig
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.HeckeKer
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsModuliSchemePolarizedAbelianLevel
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLevelMulSplit
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsDeltaDatumHigherLevel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -73,12 +77,12 @@ theorem exists_goodCover_galois (D : D7) {G : Type} [Group G] [Fintype G] {Pl0 T
       GlobalTheory.IndefiniteRowSideFullHecke.RationalRayLevels.GoodCover T R i C n := by
   have hσ : GoodEmb T.Q.c T.σ₀ := T.toCore.good_σ₀
   obtain ⟨hodd, -, -, hcop, -⟩ := id haux
-  have hnum := GlobalTheory.T.numerical_consequences_of_pins D T.Q hJ.toLawsM.pins
+  have hnum := _root_.GlobalTheory.PinNum.numerics_of_pins D T.Q hJ.toLawsM.pins
   have hA : T.Q.l.A = 1 := hnum.2.1
   have hpq : 1 ≤ (T.Q.Dw ((i : ℕ) + 1)).p + (T.Q.Dw ((i : ℕ) + 1)).q := by
     have := hnum.2.2.2.2.2.2 _ hj; omega
   obtain ⟨l₂, hd, hM, hMb, hA₂⟩ := (GlobalTheory.exists_level_mul_split _ T.Q.H T.Q.l).1 pd I hodd hcop hK hprod hsup
-  obtain ⟨Xo₂⟩ := GlobalTheory.T.exists_moduli_scheme_polarized_abelian_level _ T.Q.H (T.Q.Dw ((i : ℕ) + 1)) l₂ hpq
+  obtain ⟨Xo₂⟩ := _root_.GlobalTheory.Moduli.moduli_scheme_exists _ T.Q.H (T.Q.Dw ((i : ℕ) + 1)) l₂ hpq
   let c' : Coeff T.Q.l :=
     { F := L, fin := inferInstance, conj := fun τ a => hle (T.Q.c.conj τ a)
       zeta_mem := hle T.Q.c.zeta_mem, le := T.Q.c.le.trans hle }
@@ -95,7 +99,7 @@ theorem exists_goodCover_galois (D : D7) {G : Type} [Group G] [Fintype G] {Pl0 T
   have hσ₂ : σ₂.comp ((d.eF : c'.F →+* d.c₂.F).comp (incF T.Q.c c' hle)) = T.σ₀ := by
     rw [← hσ']; ext x; simp [σ₂, incF]
   have hA1 : d.l₂.A = 1 := by rw [hdl, hA₂, hA]
-  obtain ⟨U₂, dict₂, hU⟩ := GlobalTheory.T.exists_levelCover_uniformisation_dictionary D T hJ _ hj T.σ₀ hσ c' hle d σ₂ hlev hA1 hσ₂
+  obtain ⟨U₂, dict₂, hU⟩ := _root_.GlobalTheory.CoverUnif.exists_unf_dict D T hJ _ hj T.σ₀ hσ c' hle d σ₂ hlev hA1 hσ₂
 
   have hrange : (σ'.toRatAlgHom).fieldRange = L := fieldRange_of_normal L σ'
   have hsurj : ∀ y : L, ∃ z : d.c₂.F, σ₂ z = (y : ℂ) := by
@@ -126,11 +130,11 @@ theorem exists_goodCover_galois (D : D7) {G : Type} [Group G] [Fintype G] {Pl0 T
     ⟨fun _ _ _ _ => le_rfl, hm⟩
   have hauxd : GlobalTheory.IndefiniteRowSideFullHecke.RationalRayLevels.IsAuxiliarySplitSquarefreeLevel D T.Q.l.M d.pd := hdpd ▸ haux
   by_cases hn : Even n
-  · obtain ⟨cc₂, hcc⟩ := GlobalTheory.T.uniformisedLevelCover_exists_constants_dominantWeights D T hJ _ hj T.σ₀ hσ C₀ (hU _) n
+  · obtain ⟨cc₂, hcc⟩ := _root_.GlobalTheory.CoverRead.Cover.exists_pinned_dom D T hJ _ hj T.σ₀ hσ C₀ (hU _) n
     refine ⟨⟨c', hle, d, σ₂, U₂, dict₂, cc₂⟩, hdpd, hdI, hfr, hU cc₂, hcc, hauxd, hsm₂, ?_⟩
     show GlobalTheory.IndefiniteRowSideFullHecke.RationalRayLevels.RayIn D (T.Q.l.M * d.pd) σ₂.fieldRange
     rw [hfr, hdpd]; exact hray
-  · obtain ⟨cc₂, hcc⟩ := GlobalTheory.T.uniformisedLevelCover_exists_constants_dominantWeights D T hJ _ hj T.σ₀ hσ C₀ (hU _) 0
+  · obtain ⟨cc₂, hcc⟩ := _root_.GlobalTheory.CoverRead.Cover.exists_pinned_dom D T hJ _ hj T.σ₀ hσ C₀ (hU _) 0
     refine ⟨⟨c', hle, d, σ₂, U₂, dict₂, cc₂⟩, hdpd, hdI, hfr, hU cc₂, fun a ha => absurd ha.2 hn, hauxd, hsm₂, ?_⟩
     show GlobalTheory.IndefiniteRowSideFullHecke.RationalRayLevels.RayIn D (T.Q.l.M * d.pd) σ₂.fieldRange
     rw [hfr, hdpd]; exact hray

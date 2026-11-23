@@ -1,9 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.CommutativeAlgebra.InvariantSubspaceMobiusInverseRecEqOfFinrankLt
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.CharpolyBlockAndInvariantUnderStabilizerNilradicStatement
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.ConjOfPrimaryFinrankKerPowEqStatement
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.KerAevalAddStabilizerNilradicalSocleStatement
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.CharpolyBlockAndInvariantUnderStabilizerNilradic
+public import Mathlib.Algebra.Polynomial.AlgebraMap
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.ConjOfPrimaryFinrankKerPowEq
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.KerAevalAddStabilizerNilradicalSocle
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -104,10 +106,10 @@ theorem primitive_eq_zero_of_primary : ∀ (F : Type) [Field F] [Finite F] (V : 
       intro h hh
       rw [Set.Finite.mem_toFinset] at hh
       have hcp : LinearMap.charpoly (g + h) = f ^ m := by
-        rw [(GlobalTheory.T.charpoly_block_and_invariant_under_stabilizerNilradical F V _ g hinv).2 h hh, hg]
-      obtain ⟨hle, heq⟩ := GlobalTheory.T.ker_aeval_add_stabilizerNilradical_socle F V g h f hh
+        rw [(_root_.GlobalTheory.CuspGL.charpoly_block F V _ g hinv).2 h hh, hg]
+      obtain ⟨hle, heq⟩ := _root_.GlobalTheory.CuspGL.ker_aeval_add_nilRad F V g h f hh
       split_ifs with hc
-      · obtain ⟨e, he⟩ := GlobalTheory.T.conj_of_primary_finrank_ker_pow_eq F V g (g + h) f m hf (hCH g hg) (hCH _ hcp) (heq hc)
+      · obtain ⟨e, he⟩ := _root_.GlobalTheory.CuspGL.primary_conj_of_finrank_ker_eq F V g (g + h) f m hf (hCH g hg) (hCH _ hcp) (heq hc)
         rw [← he, hcl e g]
       · have hlt : LinearMap.ker (aeval g f) < LinearMap.ker (aeval (g + h) f) :=
           lt_of_le_of_ne hle (Ne.symm hc)

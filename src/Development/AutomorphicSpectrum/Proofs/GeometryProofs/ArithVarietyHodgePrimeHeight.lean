@@ -2,11 +2,20 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsLatFamilyCongr
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyPrimeTorsionStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DualLatticeBaseChangeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FullTorsionInjectiveSubalgebraStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HTChartExistsHoldsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelActionSubalgebraStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyPrimeTorsion
+public import Mathlib.Algebra.Module.Projective
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Mathlib.RingTheory.IsTensorProduct
+public import Mathlib.RingTheory.Localization.FractionRing
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DualLatticeBaseChange
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FullTorsionInjectiveSubalgebra
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.HTChartExists
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HTChartExistsHolds
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelActionSubalgebra
+public import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -23,7 +32,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
@@ -79,8 +87,8 @@ theorem lie_pack (X : Scheme.{0}) (G : Over X) [GrpObj G] [IsCommMonObj G] [Smoo
       (∀ v, (M₀.pt (toLi v)).left = spMap (dualMap (algebraMap R Ω)) ≫ (M.pt v).left) ∧
       IsBaseChange Ω j ∧ (∀ u v, j u (toLi v) = algebraMap R Ω (u v)) ∧
       ∀ a v, toLi (ρ a v) = ρ₀ a (toLi v) := by
-  obtain ⟨L, i1, i2, M, ρ, toLi, hf, hp, ha, hb, hpt, hρ⟩ := GlobalTheory.T.lie_model_action_subalgebra X G Ω ξ Li M₀ B act ρ₀ h₀ O R x hx
-  obtain ⟨j, hj, hj'⟩ := GlobalTheory.T.dual_lattice_base_change Ω O R L Li toLi hb
+  obtain ⟨L, i1, i2, M, ρ, toLi, hf, hp, ha, hb, hpt, hρ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.PackLie.lieModel_along_generic X G Ω ξ Li M₀ B act ρ₀ h₀ O R x hx
+  obtain ⟨j, hj, hj'⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.dual_baseChange_fractionField Ω O R L Li toLi hb
   exact ⟨L, i1, i2, M, ρ, toLi, j, hf, hp, ha, hb, hpt, hj, hj', hρ⟩
 
 theorem isIso_spMap_fracToField {Ω : Type} [Field Ω] {O : Type} [CommRing O] [Algebra O Ω] (R : Subalgebra O Ω)
@@ -130,7 +138,7 @@ theorem qhom_eq_one_iff (E : Type) [Field E] [NumberField E] (N n : ℕ) (y : Fi
 
 theorem chartPack_exists : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O₀ : Type) [CommRing O₀] (β : O₀ →+* c.F) (Y : Model Xo c β) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] [DecidableEq K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (d : ℕ), IsArithVar (mCoordIdeal y) (d + 1) → 0 < D.p + D.q → ∀ (p : ℕ) [Fact p.Prime], p ∈ S → HT.HTFree 𝔐 p → p ≠ 2 → ¬ (p : ℤ) ∣ NumberField.discr E → ∀ (A : Type) [CommRing A] [Algebra A Ω] [IsIntegralClosure A ℤ Ω] (m : Ideal A) [m.IsPrime], (p : A) ∈ m → ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Algebra A O] [IsLocalization.AtPrime O m] [Algebra O Ω] [IsScalarTower A O Ω], ∀ (G : GenTors 𝔐 p) (c' : ∀ k, J k), mseg y c' ≠ 0 → Nonempty (ChartPack G O c') := by
   intro E _ _ _ H D l Xo c O₀ _ β Y S Ω _ K _ _ J _ y 𝔐 d hv hpq p _ hpS hHT hp2 hdisc A _ _ _ m _ hm O _ _ _ _ _ _ _ G c' hc
-  obtain ⟨hΩ, hno, hic, hfr, x, hx⟩ := GlobalTheory.T.arith_variety_prime_torsion E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hv p hpS A m hm O c' hc
+  obtain ⟨hΩ, hno, hic, hfr, x, hx⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.ChartFacts.chartRing_over_place_facts E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hv p hpS A m hm O c' hc
   haveI := hno; haveI := hic; haveI := hfr; haveI := hΩ
   haveI : CharZero (CR O y c') := ⟨fun a b h => by
     have h2 := congrArg (algebraMap (CR O y c') Ω) h
@@ -139,9 +147,9 @@ theorem chartPack_exists : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   obtain ⟨L, i1, i2, M, ρ, toLi, j, hfin, hproj, hact, hbc, hpt, hjbc, hj, hρ⟩ :=
     lie_pack 𝔐.X 𝔐.t.G Ω 𝔐.ξ 𝔐.Li 𝔐.M (𝓞 E) 𝔐.t.act 𝔐.ρ 𝔐.act O (CR O y c') x hx
   have hR : 0 < 𝔐.R p := by have := 𝔐.R_ge p hpS; omega
-  obtain ⟨Γ₁, i₁, ht₁, hp₁⟩ := GlobalTheory.T.full_torsion_injective_subalgebra 𝔐.X 𝔐.t.G 𝔐.t.semi Ω 𝔐.ξ O (CR O y c') x hx _ G.t₁.pt p (p ^ 𝔐.R p)
+  obtain ⟨Γ₁, i₁, ht₁, hp₁⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.torsionAlong_of_fullTorsion 𝔐.X 𝔐.t.G 𝔐.t.semi Ω 𝔐.ξ O (CR O y c') x hx _ G.t₁.pt p (p ^ 𝔐.R p)
     (Fact.out : p.Prime).one_lt.le (dvd_pow_self p hR.ne') (𝔐.tors p hpS) G.t₁.inj G.t₁.onto
-  obtain ⟨Γ₂, i₂', ht₂, hp₂⟩ := GlobalTheory.T.full_torsion_injective_subalgebra 𝔐.X 𝔐.t.G 𝔐.t.semi Ω 𝔐.ξ O (CR O y c') x hx _ G.t₂.pt (p ^ 𝔐.R p) (p ^ 𝔐.R p)
+  obtain ⟨Γ₂, i₂', ht₂, hp₂⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.torsionAlong_of_fullTorsion 𝔐.X 𝔐.t.G 𝔐.t.semi Ω 𝔐.ξ O (CR O y c') x hx _ G.t₂.pt (p ^ 𝔐.R p) (p ^ 𝔐.R p)
     (Nat.one_le_pow _ _ (Fact.out : p.Prime).pos) dvd_rfl (𝔐.tors p hpS) G.t₂.inj G.t₂.onto
   have hn0 : p ^ 𝔐.R p ≠ 0 := (pow_pos (Fact.out : p.Prime).pos _).ne'
   have hmem : ∀ z : Ω, z ^ (p ^ 𝔐.R p) = 1 → z ∈ CR O y c' := fun z hz => by
@@ -179,7 +187,7 @@ theorem chartPack_exists : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
     ext
     rw [H.bar_eq]
     rfl
-  obtain ⟨Dh, hDe, hHT⟩ := GlobalTheory.T.HTChartExists_holds (CR O y c') Ω E (HT.cmConj E) p (𝔐.R p) (D.p + D.q) _ Γ₂ 𝔐.X 𝔐.t.G x i₂' ht₂ hsm
+  obtain ⟨Dh, hDe, hHT⟩ := _root_.GlobalTheory.CompanionTheory.Ar.BT.ChartEx.htChartExists (CR O y c') Ω E (HT.cmConj E) p (𝔐.R p) (D.p + D.q) _ Γ₂ 𝔐.X 𝔐.t.G x i₂' ht₂ hsm
     𝔐.t.act.act 𝔐.t.act.hom L M ρ hact (Module.Dual Ω 𝔐.Li) j hjbc (qhom _ _) hsurj hker hlin ζ hzpow G.e G.alt
     (fun a y₁ z => by rw [hbar]; exact G.adj a y₁ z) G.e_surj G.e_inj
   have hform : ∀ (b : 𝓞 E) (w : Module.Dual (CR O y c') L), j (w ∘ₗ ρ b) = j w ∘ₗ 𝔐.ρ b := by

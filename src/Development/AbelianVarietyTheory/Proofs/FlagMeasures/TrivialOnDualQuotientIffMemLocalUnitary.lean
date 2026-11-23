@@ -2,12 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.SelfDualAt
 public import Formalism.LocalToGlobal.HermitianForms.IsLocBasis
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CmFieldSplitCompletelyPlaceStructureStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeLevelLocalDualQuotientLengthOneStatement
+public import Formalism.LocalToGlobal.HermitianForms.PsiZeroNontrivialCharacter
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CmFieldSplitCompletelyPlaceStructure
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeLevelLocalDualQuotientLengthOne
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StepLevelTLat
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.DualOfDualFrames
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MemDualSetOfMemSpan
-import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SplitIntLoc
+import Formalism.PeriodIntegrals.SplitIntLoc
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SplitPrimeIntegers.ExistsUnitDiff
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -224,12 +226,12 @@ end Local
 
 theorem trivial_iff_mem_Uloc : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E] [Algebra F E] (cm : CMData F E) (n : ℕ) (J : Matrix (Fin n) (Fin n) E), IsHerm (cm.sig : E →+* E) J → J.det ≠ 0 → ∀ (T f : ℕ) (bad : Set (HeightOneSpectrum (𝓞 F))) (S : StepLevel F E cm.sig J T f bad), T.Prime → SplitsIn E T → Module.finrank ℚ E = 2 * f → ∀ (v : HeightOneSpectrum (𝓞 F)), (T : 𝓞 F) ∈ v.asIdeal → ∀ y ∈ levelVL cm.sig J v S.Lb, (∀ x ∈ loc v (dualL cm.sig J S.Lb), (y.1 - 1) *ᵥ x ∈ loc v S.Lb) ↔ y ∈ S.Uloc v := by
   intro F E _ _ _ _ _ _ cm n J hJ hdet T f bad S hT hsp hdeg v hv y hy
-  obtain ⟨-, d, hd, hgen⟩ := GlobalTheory.T.hermitianLattice_level_local_dual_quotient_length_one F E cm n J hJ hdet T f S.Lb hT hsp hdeg
+  obtain ⟨-, d, hd, hgen⟩ := _root_.GlobalTheory.St.G.tLat_local_index F E cm n J hJ hdet T f S.Lb hT hsp hdeg
     (stepLevel_tLat F E n cm.sig J T f bad S) v hv
-  obtain ⟨-, hmax, sp, hsig, hdiag⟩ := (GlobalTheory.T.cmField_splitCompletely_place_structure F E cm T hT hsp).2 v hv
+  obtain ⟨-, hmax, sp, hsig, hdiag⟩ := (_root_.GlobalTheory.St.G.SplitPrime.split_place F E cm T hT hsp).2 v hv
   have hint : ∀ x, x ∈ intV E v ↔
       (sp x).1 ∈ v.adicCompletionIntegers F ∧ (sp x).2 ∈ v.adicCompletionIntegers F :=
-    split_integral_local F E v sp hdiag
+    _root_.PI.SplitIntLoc.Proof.main F E v sp hdiag
   obtain ⟨B, C, hBC, hB, hC⟩ := GlobalTheory.DualFrame.exists_dual_frames F E cm.sig n J (isUnit_iff_ne_zero.2 hdet) S.Lb
     S.Lb_fin S.Lb_span v
   obtain ⟨hD, hL, -⟩ := GlobalTheory.DualFrames.dual_of_dual_frames _ (intV E v) (sigR cm.sig (v.adicCompletion F))

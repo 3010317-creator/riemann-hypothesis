@@ -1,25 +1,29 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.SiegelMeanCc
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicCharacterFrequenciesAndConductorProductStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ArchimedeanDensityProductTestFunctionAtSignStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutInstDegreeRootDiscriminantRankStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.GlobAut
+public import Formalism.SharpRestriction.GlobalSchurBounds.StandardLattice
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicCharacterFrequenciesAndConductorProduct
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ArchimedeanDensityProductTestFunctionAtSign
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DefClassNum
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutInstDegreeRootDiscriminantRank
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutPointLatticeIntersectionSelfDualProperties
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CmEulerProductDiscrUnramified
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CmEulerProductDiscrUnramifiedStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ContinuousDensitySelfDualLatticeIndicatorAtUnitStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EventuallyLocalLatticeCompletionEqCoordinateLattStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsAdelicUnitaryGroupModelsEquivStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSelfDualLatticeCompletionMaxOrderStatement
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.SelfDualUnramifiedPlaces
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ContinuousDensitySelfDualLatticeIndicatorAtUnit
+public import Development.AbelianVarietyTheory.Definitions.Foundations.HermitianSpaceBaseLatticeEqFrameLattice
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EventuallyLocalLatticeCompletionEqCoordinateLatt
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsAdelicUnitaryGroupModelsEquiv
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSelfDualLatticeCompletionMaxOrder
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GaussianTermMeasurableAndStabilizerInvariant
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IndicatorCompletedLatticeEqFinprodLocalStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IndicatorCompletedLatticeEqFinprodLocal
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsOrthComplementOfUnitVectorAtRealPlace
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsSchwartzBruhatIndicatorLocalLatticeCompletionStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemAdelicLatticeClosureIffSwapMemSpanStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemAdelicLatticeClosureIffSwapMemSpan
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalUnitaryPointsDiscreteFundamentalDomain
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SelfDualMeasureGaussian
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SiegelMeanOfWeilSiegel
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnramifiedAdditiveCharacterConductor
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SelfDualMeasureGaussian
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUniqueInfEmb
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -62,7 +66,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Mathlib.Topology.UniformSpace.Uniformizable
-public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.SelfDualUnramifiedPlaces
 
 @[expose] public section
 
@@ -291,7 +294,7 @@ theorem test_eq_term (θ : InfinitePlace I.F → (Ainf I.F ⊗[I.F] I.E →+* �
       ∑ j, (HA.mat (AF I.F) I.cm.sig I.J h⁻¹).1 i j * ((1 : AF I.F) ⊗ₜ[I.F] X 0 j) := fun i => rfl
   have e1 : projFin (h⁻¹ • ratTup (F := I.F) (AF I.F) X) 0 ∈ Formalism.MainNotions.StandardLattice.latHat I.F I.E (I.L : Set (Fin I.n → I.E)) ↔
       X 0 ∈ lamX I (T h) := by
-    rw [GlobalTheory.T.mem_adelicLatticeClosure_iff_swap_mem_span, (GlobalTheory.PointLattice.lamX_selfDual I (T h)).1, show (T h).2⁻¹ = (T h⁻¹).2 by rw [map_inv]; rfl, hf]
+    rw [_root_.GlobalTheory.AdelicLatticeSwap.mem_latHat_iff_comm_mem_lamAf, (GlobalTheory.PointLattice.lamX_selfDual I (T h)).1, show (T h).2⁻¹ = (T h⁻¹).2 by rw [map_inv]; rfl, hf]
     refine iff_of_eq (congrArg (· ∈ I.Lf) (funext fun i => ?_))
 
     simp only [projFin, e0, map_sum, map_mul, Algebra.TensorProduct.map_tmul, map_one]
@@ -349,7 +352,7 @@ theorem test_smooth (θ : InfinitePlace I.F → (Ainf I.F ⊗[I.F] I.E →+* ℂ
 
 theorem siegelMeanCc_of_oneVectorCc : OneVectorCc → SiegelMeanCc := by
   intro hW I hn s μf _ _ fund hfund
-  obtain ⟨hCM, hJ, T, hT1, hT2, hT3⟩ := GlobalTheory.T.exists_adelic_unitaryGroup_models_equiv I
+  obtain ⟨hCM, hJ, T, hT1, hT2, hT3⟩ := _root_.GlobalTheory.AdelicModels.exists_adelic_equiv I
   obtain ⟨a1, b1⟩ := hW I.F I.E I.cm.sig hCM I.n I.J hJ
   choose θ hθ using fun v => (GlobalTheory.Mem.VolEmb.existsUnique_infEmb _ _ _ hCM (I.φ v)).exists
   obtain ⟨μ, S, hμ, hS, hTm, hvol, hint⟩ := GlobalTheory.SiegelWeilMean.exists_transport I T hT1 μf fund hfund
@@ -375,19 +378,19 @@ theorem siegelMeanCc_of_oneVectorCc : OneVectorCc → SiegelMeanCc := by
   have hsg : ∀ (R : Type) [CommRing R] [Algebra I.F R], algebraMap I.F R (sgn I.F s) = sgn R s := fun R _ _ => by
     cases s <;> simp [sgn]
   obtain ⟨⟨ψ, hψ⟩, hB⟩ := b1 hn (sgn I.F s) (hs1 _) _ b _ _ _ _ g1 g2 g3
-    ⟨GlobalTheory.T.isSchwartzBruhat_indicator_localLatticeCompletion I.F I.E I.n I.L hLfull, (GlobalTheory.T.eventually_localLatticeCompletion_eq_coordinateLattice I.F I.E I.n _ b I.L hLfull).mono fun v hv => by rw [hv],
-      GlobalTheory.T.indicator_completedLattice_eq_finprod_local I.F I.E I.n I.L hLfull⟩ fun _ => rfl
+    ⟨GlobalTheory.T.isSchwartzBruhat_indicator_localLatticeCompletion I.F I.E I.n I.L hLfull, (_root_.GlobalTheory.AdelicU.Cofinite.eventually_latLoc_eq_latV I.F I.E I.n _ b I.L hLfull).mono fun v hv => by rw [hv],
+      _root_.GlobalTheory.AdelicU.indicator_latHat_eq_finprod I.F I.E I.n I.L hLfull⟩ fun _ => rfl
   obtain ⟨⟨μi, hμi⟩, ⟨νi, hνi⟩, ⟨μv, hμv⟩, ⟨νv, hνv⟩, hQ⟩ := ((hB ψ hψ).2 μ hμ).2 S hS
   obtain ⟨Fi, Fl, hFi, hFl, -, hmean⟩ := hQ μi νi μv νv hμi hνi hμv hνv
-  obtain ⟨lam, m, hlam, hψi, hm, hdual, hprod⟩ := GlobalTheory.T.adelic_character_frequencies_and_conductor_product I θ hθ ψ hψ
-  obtain ⟨hE1, hE2, hE3⟩ := GlobalTheory.T.cm_euler_product_discr_unramified I I.n (by omega)
-  obtain ⟨n1, n2, n3, -, n5, -⟩ := GlobalTheory.T.autInst_degree_rootDiscriminant_rank I
-  have hreal := GlobalTheory.T.archimedean_density_product_testFunction_at_sign I θ hθ lam _ hlam hψi μi νi hμi hνi φ D (fun v => ⟨hc v, hK v, (hφ v).2.2.2⟩) Fi hFi s
+  obtain ⟨lam, m, hlam, hψi, hm, hdual, hprod⟩ := _root_.GlobalTheory.AdeleCharConductor.real_part_and_conductors I θ hθ ψ hψ
+  obtain ⟨hE1, hE2, hE3⟩ := _root_.GlobalTheory.DensityEuler.euler_product_discr_unramified I I.n (by omega)
+  obtain ⟨n1, n2, n3, -, n5, -⟩ := _root_.GlobalTheory.FlagMeas.instance_numbers I
+  have hreal := _root_.GlobalTheory.GaussMean.RealDensityCc.density_at_sign I θ hθ lam _ hlam hψi μi νi hμi hνi φ D (fun v => ⟨hc v, hK v, (hφ v).2.2.2⟩) Fi hFi s
   have hloc : ∀ u, Fl u (algebraMap I.F (Fv I.F u) (sgn I.F s)) =
       (((GlobalTheory.IndefiniteRowSideFullHecke.SelfDualUnramifiedPlaces.resCard I.F u ^ m u) ^ ((1 / 2 : ℝ) - (I.n : ℝ)) *
         (1 - GlobalTheory.IndefiniteRowSideFullHecke.SelfDualUnramifiedPlaces.eta I.F I.E u ^ I.n * (GlobalTheory.IndefiniteRowSideFullHecke.SelfDualUnramifiedPlaces.resCard I.F u ^ I.n)⁻¹) : ℝ) : ℂ) := fun u => by
-    obtain ⟨Lv, h1, h2⟩ := GlobalTheory.T.exists_selfDualLattice_completion_maxOrder I.F I.E I.cm.sig I.n I.J I.L hJ hL I.L_dual u
-    refine GlobalTheory.T.continuousDensity_selfDualLatticeIndicator_at_unit I.F I.E I.cm.sig hCM I.n (by omega) I.J hJ u (hE3 u) (GlobalTheory.LocalDensityValue.localChar I.F ψ u)
+    obtain ⟨Lv, h1, h2⟩ := _root_.GlobalTheory.CompletedSelfDual.exists_isSelfDualLattice I.F I.E I.cm.sig I.n I.J I.L hJ hL I.L_dual u
+    refine _root_.GlobalTheory.LatticeContDensity.contDensity_unit I.F I.E I.cm.sig hCM I.n (by omega) I.J hJ u (hE3 u) (GlobalTheory.LocalDensityValue.localChar I.F ψ u)
       (GlobalTheory.LocalDensityValue.isLocalChar I.F ψ hψ u (m u) (hdual u)) (m u) (hdual u) Lv h1
       _ _ (hμv u) (hνv u) _ (by simpa only [h2] using hFl u) _ ?_
     rw [hsg]

@@ -3,12 +3,17 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsThetaMeanSquareNorm
 public import GroundTheory.HeightsAndTheta.Heights.KernelsLattice
 public import GroundTheory.HeightsAndTheta.Heights.LatticeLemmas.StatementsBundles
-public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.GramMatrixPosDefConjugateStatement
-public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.HermitianLatticeDegreeEqBundleDegreeStatement
-public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.IdealLineLatticeIndexStatement
-public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.IdealNormPrincipalInExtensionStatement
-public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.LinearIndependentCoordinatesDenominatorStatement
-public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.SpanBaseChangeCoordinatesStatement
+public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.GramMat
+public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.GramMatrixPosDefConjugate
+public import GroundTheory.HeightsAndTheta.Heights.HeightsOfSets.Slopes
+public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.HermitianLatticeDegreeEqBundleDegree
+public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
+public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.IdealLineLatticeIndex
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.IdealNormPrincipalInExtension
+public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.LinearIndependentCoordinatesDenominator
+public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.SpanBaseChangeCoordinates
 public import GroundTheory.HeightsAndTheta.Heights.LatticeLemmas.BaseChangeIndex
 public import GroundTheory.HeightsAndTheta.Heights.WeightedHomogeneous.PLineDegreeBundle
 import Mathlib.Algebra.Order.Floor.Extended
@@ -53,7 +58,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.GramMat
 
 @[expose] public section
 
@@ -145,8 +149,8 @@ theorem lattice_line (K : Type) [Field K] [NumberField K] (n : ℕ) (F : HermLat
     Submodule.span (𝓞 K') ((fun (w : Fin n → K) j => algebraMap K K' (w j)) '' F.lattice) with hMdef
   have hfg : M.FG := ext_span_fg F.lattice F.fg
   have htop : Submodule.span K' (M : Set (Fin n → K')) = ⊤ := ext_span_top F.lattice F.span_eq
-  obtain ⟨I, d, hI, hd, hIv, hidx⟩ := GlobalTheory.T.ideal_line_lattice_index K' n M hfg htop v hv
-  obtain ⟨K'', _, _, _, y, hy0, hyI, hyN⟩ := GlobalTheory.T.ideal_norm_principal_in_extension K' I hI
+  obtain ⟨I, d, hI, hd, hIv, hidx⟩ := _root_.GlobalTheory.CompanionTheory.Adelic.SatLine.saturatedLine_eq_ideal_div K' n M hfg htop v hv
+  obtain ⟨K'', _, _, _, y, hy0, hyI, hyN⟩ := _root_.GlobalTheory.CompanionTheory.Lines.exists_principal_extension K' I hI
   letI algK : Algebra K K'' := ((algebraMap K' K'').comp (algebraMap K K')).toAlgebra
   haveI tower : IsScalarTower K K' K'' := IsScalarTower.of_algebraMap_eq fun _ => rfl
   have hdL : (d : K') ≠ 0 := by rwa [Ne, RingOfIntegers.coe_eq_zero_iff]
@@ -301,8 +305,8 @@ theorem short_vector_of_submodule : LineOfLargeDegree.Statement → ∀ (L : Typ
   set f : Fin i → F := (HermitianBundle.exists_linearIndependent_rank B F).choose with hfdef
   have hf : LinearIndependent (𝓞 L) f := (HermitianBundle.exists_linearIndependent_rank B F).choose_spec
   have hf' : LinearIndependent (𝓞 L) (fun j => (f j : B.carrier)) := hf.map' F.subtype (Submodule.ker_subtype F)
-  obtain ⟨c, hcinj, hcf, hcD⟩ := GlobalTheory.T.linear_independent_coordinates_denominator L F i f hf rfl
-  obtain ⟨hpos, hconj⟩ := GlobalTheory.T.gram_matrix_pos_def_conjugate L B i _ hf'
+  obtain ⟨c, hcinj, hcf, hcD⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Lines.Coords.coordinates_of_maximal_independent L F i f hf rfl
+  obtain ⟨hpos, hconj⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Lines.gramMat_posDef_and_conj L B i _ hf'
   have hspan : Submodule.span L ((LinearMap.range c : Submodule (𝓞 L) (Fin i → L)) : Set (Fin i → L)) = ⊤ := by
     rw [eq_top_iff, ← (Pi.basisFun L (Fin i)).span_eq]
     refine Submodule.span_le.mpr ?_
@@ -321,7 +325,7 @@ theorem short_vector_of_submodule : LineOfLargeDegree.Statement → ∀ (L : Typ
       metric := fun σ => gramMat B σ (fun j => (f j : B.carrier))
       posDef := hpos
       conj := hconj }
-  have hdeg : Fl.degree = B.degreeWith F f := GlobalTheory.T.hermitian_lattice_degree_eq_bundle_degree L B F i f c Fl hf rfl hcinj hcf rfl (fun _ => rfl)
+  have hdeg : Fl.degree = B.degreeWith F f := _root_.GlobalTheory.CompanionTheory.Ar.Lines.degree_eq_degreeWith L B F i f c Fl hf rfl hcinj hcf rfl (fun _ => rfl)
   have hslope : Fl.slope = B.slope F := by
     rw [HermLattice.slope, normalise, hdeg]
     rfl
@@ -339,7 +343,7 @@ theorem short_vector_of_submodule : LineOfLargeDegree.Statement → ∀ (L : Typ
   have hile : i ≤ Module.finrank (𝓞 L) B.carrier := Submodule.finrank_le F
   obtain ⟨K', _, _, _, v, hv, hle⟩ := hS L i hi1 Fl 1 one_pos
   obtain ⟨K'', _, _, _, x, hx0, hxM, hlin⟩ := lattice_line L i Fl K' v hv
-  obtain ⟨X, hX⟩ := GlobalTheory.T.baseChange_inner_self_eq_gramMat_form L B F i f c hcD K'' x hxM
+  obtain ⟨X, hX⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Lines.Lift.lift_length L B F i f c hcD K'' x hxM
   refine ⟨K'', inferInstance, inferInstance, inferInstance, X, ?_, ?_⟩
   · rintro rfl
     obtain ⟨τ⟩ : Nonempty (K'' →+* ℂ) := inferInstance

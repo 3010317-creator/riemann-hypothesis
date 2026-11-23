@@ -3,6 +3,16 @@ module
 public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.StepOrderRes
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.RdBase
+public import Development.WeilBound.CoreStatements.HodgeTatePoints.ProdIccFin
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.StableHopfOrderSubgroupCharacters
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.StableHopfOrderSubgroupRestriction
+public import Development.WeilBound.CoreStatements.HodgeTatePoints.Invres
+public import Development.WeilBound.CoreStatements.HodgeTatePoints.RangeSubtypeEq
+public import Development.WeilBound.CoreStatements.HodgeTatePoints.RcFlag
+public import Mathlib.Basic.NNReal.Defs
+public import Mathlib.NumberTheory.MulChar.Basic
+public import Mathlib.RingTheory.Valuation.Integers
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.TeichmullerCharacterExists
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,11 +59,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.StableHopfOrderFundamentalIdealStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.StableHopfOrderSubgroupCharactersStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.StableHopfOrderSubgroupRestrictionStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.StableHopfOrderSubgroupTranslationStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.TeichmullerCharacterExistsStatement
 
 @[expose] public section
 
@@ -146,8 +151,8 @@ end
 
 section
 
-variable (hex : type_of% @GlobalTheory.T.teichmuller_character_exists) (hsq : type_of% @GlobalTheory.T.stable_hopf_order_subgroup_restriction)
-  (hsplit : type_of% @GlobalTheory.T.stable_hopf_order_fundamental_ideal) (hos : type_of% @GlobalTheory.T.stable_hopf_order_subgroup_characters)
+variable (hex : type_of% @_root_.GlobalTheory.CompanionTheory.Ar.GR.fund_ex_relay) (hsq : type_of% @_root_.GlobalTheory.CompanionTheory.Ar.GR.subquoHopfOrder)
+  (hsplit : type_of% @_root_.PositivityTheory.HtPt.Rc.om_split) (hos : type_of% @_root_.GlobalTheory.CompanionTheory.Relay.stable_hopf_order_subgroup_characters)
   (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C]
   (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C] (hv : v.Integers R)
   (hp : v (p : C) < 1) (F : Type) [Field F] [Fintype F] [DecidableEq F] [CharP F p] (f : ℕ)
@@ -193,7 +198,7 @@ theorem chain_le (χ : MulChar F R) (n : ℕ) : ∀ (N : Type) [AddCommGroup N] 
     rw [Finset.prod_range_one]
     exact mul_le_mul_right h1 _
 
-theorem chain_partial (hstep : type_of% @GlobalTheory.T.stable_hopf_order_subgroup_translation) (χ : MulChar F R) (n : ℕ) (N : Type)
+theorem chain_partial (hstep : type_of% @_root_.PositivityTheory.HtPt.Rc.step) (χ : MulChar F R) (n : ℕ) (N : Type)
     [AddCommGroup N] [Module F N] [Fintype N]
     [DecidableEq N] (AA : HopfOrder (C := C) R N) (hst : FStable F AA.carrier)
     (K : ℕ → Submodule F N) (t : ℕ → N) (h : IsChain n K t) (s : ℕ → NNReal)

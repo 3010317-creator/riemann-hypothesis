@@ -2,8 +2,9 @@ module
 
 public import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.LowKMultOneP
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HolomorphicDiscreteSeries
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KTypeLeKFiniteVectorsFiniteDimensionalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PMinusAnnihilatesLowestKTypeHolomorphicChamberStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KTypeLeKFiniteVectorsFiniteDimensional
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PMinusAnnihilatesLowestKTypeHolomorphicChamber
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -74,7 +75,7 @@ open GlobalTheory.LowKType in
 theorem GlobalTheory.HolDS.lowKSub_kMod : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] (σ : Matrix (Fin n) (Fin n) ℂ → (H →L[ℂ] H)) (D : Submodule ℂ H) (E : Fin n → Fin n → Module.End ℂ D) (lam : Fin n → ℝ), IsHCParam lam → IsHolChamber ε lam → IsDS ε lam σ → IsKMod ε σ D E → lowKSub ε lam σ ≤ D ∧ KStab ε E ((lowKSub ε lam σ).comap D.subtype) ∧ (lowKSub ε lam σ).comap D.subtype ≠ ⊥ ∧ ∀ a b : Fin n, ε a = true → ε b = false → ∀ x ∈ (lowKSub ε lam σ).comap D.subtype, E b a x = 0 := by
   intro n ε H _ _ σ D E lam hHC hch hDS hK
   obtain ⟨hC, _, hU, hI, _, hEx, hmin⟩ := hDS
-  have hT := fun μ S hS => GlobalTheory.T.kType_le_kFiniteVectors_finiteDimensional n ε H σ D E hC hU hI hK μ S hS
+  have hT := fun μ S hS => _root_.GlobalTheory.kTypeInKFinite n ε H σ D E hC hU hI hK μ S hS
   have hD : ∀ S : Submodule ℂ H, IsKTypeOf ε σ (lowK ε lam) S → S ≤ D := fun S hS => (hT _ S hS).1
   have hM : IsMin ε E lam := fun μ x hx0 hx => by
     obtain ⟨T, hT'⟩ := hK.ty μ x hx0 hx
@@ -99,5 +100,5 @@ theorem GlobalTheory.HolDS.lowKSub_kMod : ∀ (n : ℕ) (ε : Fin n → Bool) (H
       (fun S hS y hy => by
         have h := hT _ S hS
         haveI := h.2.1
-        exact GlobalTheory.T.pMinus_annihilates_lowestKType_holomorphicChamber n ε D E lam hK.gl hK.unit hHC.1 hch hM (S.comap D.subtype) h.2.1 h.2.2.1 h.2.2.2
+        exact _root_.GlobalTheory.HolDS.pMinus_kills_lowest n ε D E lam hK.gl hK.unit hHC.1 hch hM (S.comap D.subtype) h.2.1 h.2.2.1 h.2.2.2
           a b ha hb y hy) x hx : x ∈ LinearMap.ker (E b a))

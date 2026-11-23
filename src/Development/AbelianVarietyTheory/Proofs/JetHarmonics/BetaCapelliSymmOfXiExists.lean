@@ -4,12 +4,14 @@ public import Formalism.HermitianCurvature.StatementQ
 public import Development.AbelianVarietyTheory.PublishedTheorems.BesselIntegrals.BesselXiIntegrable
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.XiExistsOfBesselXiIntegrable
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.BXiAsm
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.BetaSesquilinearity
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CapelliDetAdInvariant
+public import Formalism.HermitianCurvature.StatementJF
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CapAdInv
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutERCap
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutERCapAdjAsm
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutERCapAdjFrom
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutERCapAdjS
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutER
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.BetaSesquilinearity
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutERCapAdjFrom
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.OrbitalIntegralAeConvergenceContinuity
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.RegularisedPairingViaPhase
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.SettingExistence
@@ -54,7 +56,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutER
 
 @[expose] public section
 
@@ -190,7 +191,7 @@ theorem beta_capelli_symm_of_xiExists (hXi : B.XiExists) : ∀ (k r : ℕ) (Wp W
     intro p hp f hf g hgG
     rw [hΘ, hord] at hf
     have hs' := B7.sgs_mem D hp hgG
-    rw [hApp _ (B5.ckOn_rho D hp hf) g hgG, capelli_rho_commute k r Wp Wq D (Y : ℂ) f p hp hf g hgG]
+    rw [hApp _ (B5.ckOn_rho D hp hf) g hgG, _root_.Formalism.FourierDecayAlt.P.JFxE.cVRho k r Wp Wq D (Y : ℂ) f p hp hf g hgG]
     simp only [B.rho]
     rw [hApp f hf _ hs', ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_smul]
   have hP : ∀ T ∈ Θ, ∃ C : ℝ, ∀ (u v : List (B.Mat k r)) (g : B.Mat k r),

@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAmbOfIsArithVar
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsMixedHeightByInductionSuccStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsMixedHeightByInductionSucc
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,7 +56,7 @@ theorem exists_isMix_of_arch : ArchInteg → ArchRecip →
     intro m
     induction m with
     | zero => intro k _ Y q _; exact ⟨_, isMix_zero q⟩
-    | succ m ih => exact GlobalTheory.T.isMixedHeightByInduction_succ hI hR m ih
+    | succ m ih => exact _root_.GlobalTheory.MixHt.Step.isMix_succ hI hR m ih
   intro k _ Y q h m
   exact key m k Y q h
 

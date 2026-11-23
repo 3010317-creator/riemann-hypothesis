@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenScaled
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
 public import Mathlib.NumberTheory.NumberField.CanonicalEmbedding.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeriodicTemperedDistPoissonStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeriodicTemperedDistPoisson
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAdelicCharacterNontrivialAtPlaces
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -123,7 +123,7 @@ theorem transfer {E : Type} [NormedAddCommGroup E] [NormedSpace ℝ E] [FiniteDi
     intro y
     rw [hC, hC, hg]
     simp only [hΦs]
-  obtain ⟨c, hc⟩ := GlobalTheory.T.periodic_tempered_dist_poisson n (T.comp C) t1 t2
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.IntComb.dirac_comb_unique n (T.comp C) t1 t2
   refine ⟨c, fun f => ?_⟩
   have hf : C (SchwartzMap.compCLMOfContinuousLinearEquiv ℂ Φ f) = f := by
     ext y; rw [hC]; simp

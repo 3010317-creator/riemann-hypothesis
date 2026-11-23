@@ -1,11 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPolyRep
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CayleyTransformMemRationalUnitaryGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsNormOneCmFieldDetOneAddNeZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MvPolynomialClearDenominatorsEvalStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MvPolynomialEvalZeroOfVanishingRationalSkewHermiStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryFamilyEqCayleyOfSkewFamilyStatement
+public import ReciprocityTheory.Automorphisms.Unitary
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CayleyTransformMemRationalUnitaryGroup
+public import Mathlib.NumberTheory.NumberField.CMField
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsNormOneCmFieldDetOneAddNeZero
+public import Mathlib.Algebra.MvPolynomial.Eval
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MvPolynomialClearDenominatorsEval
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MvPolynomialEvalZeroOfVanishingRationalSkewHermi
+public import Mathlib.NumberTheory.NumberField.InfinitePlace.Embeddings
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryFamilyEqCayleyOfSkewFamily
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -90,7 +95,7 @@ theorem vanish_generic (L : Type) [Field L] [NumberField L] [IsCMField L] (n : �
     fun p => ((1 + V p.1) * (1 - V p.1).adjugate) p.2.1 p.2.2
   let D : (L →+* ℂ) × Fin n × Fin n → MvPolynomial ((L →+* ℂ) × Fin n × Fin n) ℂ :=
     fun p => (1 - V p.1).det
-  obtain ⟨G, M, hGM⟩ := GlobalTheory.T.mvPolynomial_clear_denominators_eval F P D
+  obtain ⟨G, M, hGM⟩ := _root_.GlobalTheory.clearDenominators F P D
   have evV : ∀ (y : (L →+* ℂ) → Matrix (Fin n) (Fin n) ℂ) σ,
       (V σ).map (MvPolynomial.eval (upt y)) = y σ := by
     intro y σ; ext i j; simp [V, upt]
@@ -125,7 +130,7 @@ theorem vanish_generic (L : Type) [Field L] [NumberField L] [IsCMField L] (n : �
     by_cases h0 : (1 - S).det = 0
     · have σ0 : L →+* ℂ := Classical.arbitrary _
       rw [Finset.prod_eq_zero (Finset.mem_univ σ0) (by rw [h0, map_zero]), mul_zero]
-    · obtain ⟨γ₀, hγ, hγv⟩ := GlobalTheory.T.cayleyTransform_mem_rational_unitaryGroup L n S hS h0
+    · obtain ⟨γ₀, hγ, hγv⟩ := _root_.GlobalTheory.CayleyRat.exists_mem_GQ0_eq_cayley_of_skew_hermitian L n S hS h0
       have hne : ∀ σ : L →+* ℂ, (1 - ratPt S σ).det ≠ 0 := fun σ => by
         rw [hdS]; exact (map_ne_zero σ).2 h0
       have hDy : ∀ p, MvPolynomial.eval (upt (ratPt S)) (D p) ≠ 0 := fun p => by
@@ -138,8 +143,8 @@ theorem vanish_generic (L : Type) [Field L] [NumberField L] [IsCMField L] (n : �
         simp only [ratPt, Matrix.map_mul, map_inv_field_hom, Matrix.map_sub _ (map_sub _), Matrix.map_add _ (map_add _),
           Matrix.map_one _ (map_zero _) (map_one _)]
       rw [hc, hF γ₀ hγ, mul_zero, zero_mul]
-  obtain ⟨Y, hYs, hYd, hYX⟩ := GlobalTheory.T.unitary_family_eq_cayley_of_skew_family L n X hX hd
-  have hQY := GlobalTheory.T.mvPolynomial_eval_zero_of_vanishing_rational_skewHermitian L n Q hQ Y hYs
+  obtain ⟨Y, hYs, hYd, hYX⟩ := _root_.GlobalTheory.unitary_isCayley_of_det_ne_zero L n X hX hd
+  have hQY := _root_.GlobalTheory.AlgWtHW.eval_upt_eq_zero_of_skew L n Q hQ Y hYs
   have hDY : ∀ p, MvPolynomial.eval (upt Y) (D p) ≠ 0 := fun p => by
     rw [show MvPolynomial.eval (upt Y) (D p) = _ from evDet _ p.1]; exact hYd p.1
   obtain ⟨hM, hG⟩ := hGM _ hDY
@@ -154,7 +159,7 @@ theorem eval_eq_zero_of_rat : ∀ (L : Type) [Field L] [NumberField L] [IsCMFiel
     (∀ γ₀ : GL (Fin n) L, γ₀ ∈ GQ0 L n → MvPolynomial.eval (upt (ratPt (γ₀ : Matrix (Fin n) (Fin n) L))) F = 0) →
     ∀ X : (L →+* ℂ) → Matrix (Fin n) (Fin n) ℂ, IsUPt X → MvPolynomial.eval (upt X) F = 0 := by
   intro L _ _ _ n F hF X hX
-  obtain ⟨a, ha, hdet⟩ := GlobalTheory.T.exists_normOne_cmField_det_one_add_ne_zero L n X
+  obtain ⟨a, ha, hdet⟩ := _root_.GlobalTheory.exists_normOne_det_one_add_ne_zero L n X
   set c : L →+* L := (IsCMField.complexConj L : L →+* L) with hc
   have hcc : ∀ x, c (c x) = x := complexConj_invol L
   have ha' : c a * a = 1 := by rw [mul_comm]; exact ha

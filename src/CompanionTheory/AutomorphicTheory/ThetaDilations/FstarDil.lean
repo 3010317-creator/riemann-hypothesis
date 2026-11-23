@@ -2,11 +2,11 @@ module
 
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.CountData
 public import CompanionTheory.AutomorphicTheory.ThetaDilations.IntFou
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ThetaFunctionGrowthBound
 import CompanionTheory.AutomorphicTheory.ThetaDilations.IsOpenCoset
 import CompanionTheory.AutomorphicTheory.ThetaDilations.ProdRho
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ArchimedeanGaussianFourierStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ThetaFunctionGrowthBoundStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.WeilRepresentationQuadraticDatumStatement
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ArchimedeanGaussianFourier
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.WeilRepresentationQuadraticDatum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -118,12 +118,12 @@ theorem fstar_dil {R : Type} [CommRing R] {ι : Type} [Fintype ι] [TopologicalS
 
 theorem ei_inv : ∀ (F : Type) [Field F] [NumberField F] [MeasurableSpace (A F)] [BorelSpace (A F)] (lf : Measure (A F)), lf.IsAddHaarMeasure → lf (Oh F) = 1 → ∀ ψ : AddChar (A F) ℂ, IsStdChar F ψ → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (M : ℕ) (B : Matrix ι ι F) (ρ : InfinitePlace F → (F →+* ℝ)) (P : InfinitePlace F → Matrix ι ι ℝ), QSetup M B ρ P → 3 ≤ M → ∀ φ : (ι → A F) → ℂ, SB φ → ∀ τ : InfinitePlace F → ℂ, (∀ w, 0 < (τ w).im) → (∀ b : F, eis ψ lf B ρ P (opU ψ (hf F) (Bf B) (algebraMap F (A F) b) φ) (fun w => τ w + (ρ w b : ℝ)) = eis ψ lf B ρ P φ τ) ∧ (∀ a : F, a ≠ 0 → eis ψ lf B ρ P (opD 1 (algebraMap F (A F) a) φ) (fun w => ((ρ w a : ℝ) : ℂ) ^ 2 * τ w) = eis ψ lf B ρ P φ τ) ∧ (cG B ρ P τ * eis ψ lf B ρ P (fou (chiB ψ (Bf B)) (muF B lf) φ) (fun w => -(τ w)⁻¹) = eis ψ lf B ρ P φ τ) ∧ ∀ c : ℂ, eis ψ lf B ρ P (c • φ) τ = c * eis ψ lf B ρ P φ τ := by
   intro F _ _ _ _ lf hlf h1 ψ hψ ι _ _ M B ρ P hQ hM φ hφ τ hτ
-  have H := GlobalTheory.T.weil_representation_quadratic_datum F lf hlf h1 ψ hψ ι B hQ.2.2.1 hQ.2.2.2.1
+  have H := _root_.GlobalTheory.CompanionTheory.SW.Core.SelfDual.naQuad F lf hlf h1 ψ hψ ι B hQ.2.2.1 hQ.2.2.2.1
   have hD := H.2.2.2.2.2
   have hsum : ∀ φ, SB φ → ∀ τ : InfinitePlace F → ℂ, (∀ w, 0 < (τ w).im) → Summable (eiTerm ψ lf B ρ P φ τ) := by
     intro φ hφ τ hτ
     obtain ⟨w₀, hw₀⟩ := Finite.exists_min fun w => (τ w).im
-    obtain ⟨_, s⟩ := GlobalTheory.T.summable_norm_eiTerm_and_wt_mul_tsum_le F lf hlf h1 ψ hψ ι M B ρ P hQ hM φ hφ _ (hτ w₀)
+    obtain ⟨_, s⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.EiBound.ei_bound F lf hlf h1 ψ hψ ι M B ρ P hQ hM φ hφ _ (hτ w₀)
     exact (s τ hw₀).1.of_norm
   refine ⟨fun b => ?_, fun a ha => ?_, ?_, fun c => ?_⟩
   · rw [eis, eis, ← (Equiv.addLeft b).tsum_eq (eiTerm ψ lf B ρ P φ τ)]
@@ -150,7 +150,7 @@ theorem ei_inv : ∀ (F : Type) [Field F] [NumberField F] [MeasurableSpace (A F)
     have e1 : cG B ρ P τ * fou (chiB ψ (Bf B)) (muF B lf) φ 0 = eiTerm ψ lf B ρ P φ τ 0 := by
       simp [eiTerm, fstar, opU, fou, chiB, mul_comm]
     have e2 : cG B ρ P τ * eiTerm ψ lf B ρ P (fou (chiB ψ (Bf B)) (muF B lf) φ) (fun w => -(τ w)⁻¹) 0 = φ 0 := by
-      have := (GlobalTheory.T.archimedean_gaussian_fourier F ι M B ρ P hQ τ hτ).2.2.1
+      have := (_root_.GlobalTheory.CompanionTheory.SW.GaussFou.gauss_fourier F ι M B ρ P hQ τ hτ).2.2.1
       simp only [eiTerm, fstar, opU, map_zero, zero_mul, AddChar.map_zero_eq_one, one_mul, Complex.ofReal_zero, add_zero,
         int_fou hD hφ]
       rw [mul_left_comm, this, mul_one]

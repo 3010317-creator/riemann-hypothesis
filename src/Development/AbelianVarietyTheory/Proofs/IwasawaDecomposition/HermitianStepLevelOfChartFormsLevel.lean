@@ -2,12 +2,15 @@ module
 
 public import Formalism.LocalToGlobal.Columns.RecLevelLocT
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LatAtLattice
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelActsTriviallyOnDiscriminantGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelPrimeDvdOfAdicValuationLtOneStatement
+public import Formalism.LocalToGlobal.HermitianForms.IsLocBasis
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelActsTriviallyOnDiscriminantGroup
+public import Formalism.LocalToGlobal.HermitianForms.PrkSmul
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelPrimeDvdOfAdicValuationLtOne
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoords
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ULocDualHformOne
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UlocOfTrivDisc
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryScalarEqOneModOfFixesSimpleModuleStatement
+public import Formalism.LocalRingCardinality.DataLevel
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryScalarEqOneModOfFixesSimpleModule
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ValNatCastLtOne
 import Formalism.LocalToGlobal.GlobalTheory.GL6.PSplitT
 import Mathlib.Algebra.Order.Floor.Extended
@@ -126,10 +129,10 @@ theorem uloc_T_iff (σ : E →ₐ[F] E) (hdeg : Module.finrank F E = 2) (hσ : �
   subst hJ
   have hT0 : (T : E) ≠ 0 := Nat.cast_ne_zero.2 hT.ne_zero
   have hp0 : (p : E) ≠ 0 := fun h => hT0 (by rw [← hpq, h, zero_mul])
-  refine ⟨fun hx => ⟨S.Uloc_lev v hx, GlobalTheory.T.level_acts_trivially_on_discriminant_group σ hσ S p q hq hpq hT.ne_zero hL ?_ v hv ?_ x hx⟩, fun h => GlobalTheory.uloc_of_triv_disc σ S v hv x h.1 h.2⟩
+  refine ⟨fun hx => ⟨S.Uloc_lev v hx, _root_.GlobalTheory.uloc_acts_trivially_on_dual_quotient σ hσ S p q hq hpq hT.ne_zero hL ?_ v hv ?_ x hx⟩, fun h => GlobalTheory.uloc_of_triv_disc σ S v hv x h.1 h.2⟩
   · rw [hL]; exact GlobalTheory.uLocDual_eq σ hσ n p q hp0 hq
   · intro m hm d c hd hc
-    exact GlobalTheory.T.unitaryScalar_eq_one_mod_of_fixes_simple_module σ hdeg hσ hfix hun v T hT hunif (S.fM v hv) (S.fM_card v hv) m hm d c hd hc
+    exact _root_.GlobalTheory.UnitaryScalarModT.eq_one_add_of_fixes σ hdeg hσ hfix hun v T hT hunif (S.fM v hv) (S.fM_card v hv) m hm d c hd hc
 
 end W
 
@@ -204,6 +207,6 @@ theorem GlobalTheory.Mem.Col2.TC.level_of_chart : ∀ {B : Base} {X : PreX B.toP
     exact GlobalTheory.Mem.LevCong.mem_Uloc_of_cong _ K.lev F.gl hG a v h x hx hp
   · intro v h x
     exact GlobalTheory.Mem.Col2.Lv.uloc_T_iff (sigD (I.rec7 l Z)) (I.rec7 l Z).sp.cm.deg2 (fun x => star_star x) (fun x hx => ((I.rec7 l Z).sp.cm.fixed x).1 hx)
-      (I.rec7 l Z).sp.cm.cmUnram.2.2 hgram K.lev F.atT.piU (s F.atT.piU) rfl hpq hTp hL v h (GlobalTheory.T.levelPrime_dvd_of_adicValuation_lt_one (I.rec7 l Z) u F.atT v h) x
+      (I.rec7 l Z).sp.cm.cmUnram.2.2 hgram K.lev F.atT.piU (s F.atT.piU) rfl hpq hTp hL v h (_root_.GlobalTheory.LevelUnif.dvd_of_val_lt_one (I.rec7 l Z) u F.atT v h) x
 
 end

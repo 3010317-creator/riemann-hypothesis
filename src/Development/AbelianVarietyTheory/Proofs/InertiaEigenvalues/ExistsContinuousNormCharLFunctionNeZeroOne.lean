@@ -5,7 +5,8 @@ public import Mathlib.Analysis.SpecialFunctions.Pow.Complex
 public import Mathlib.NumberTheory.NumberField.Basic
 public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IdealCharacterLContinuationNeZeroOne
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsMixedSpaceNormSignCharacterStatement
+public import Mathlib.NumberTheory.NumberField.CanonicalEmbedding.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsMixedSpaceNormSignCharacter
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InfinitelyManyPrimesInRayClass
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -157,7 +158,7 @@ theorem exists_continuous_ne_zero_one :
   have hεε : ε * ε = 1 := by
     rw [hε, ← Units.val_mul, ← map_mul]
     simp
-  obtain ⟨φ, hφmul, hφhom, hφsm, hφnorm, hφβ⟩ := GlobalTheory.T.exists_mixedSpace_norm_sign_character K ε hεε
+  obtain ⟨φ, hφmul, hφhom, hφsm, hφnorm, hφβ⟩ := _root_.GlobalTheory.NormSign.exists_normSign K ε hεε
   have hXφ : ∀ β : 𝓞 K, β ≠ 0 → β - 1 ∈ M → X (Ideal.span {β}) = φ (mixedEmbedding K β) := by
     intro β hβ0 hβ1
     rw [hφβ β hβ0]

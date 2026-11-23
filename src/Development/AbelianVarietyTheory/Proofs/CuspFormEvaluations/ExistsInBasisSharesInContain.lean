@@ -3,14 +3,16 @@ module
 public import Development.AbelianVarietyTheory.Definitions.ThetaValues.Generic
 public import Formalism.SharpRestriction.GenusPolyhedralBounds.RelativeIndexClassSets.TheoremZeroOfReducedInputs
 public import Formalism.SharpRestriction.GenusPolyhedralBounds.RelativeIndexClassSets.AdmissibleModuleIffLatticeQuotients
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.AnalyticFactsOfThetaDataOnModelsStatement
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.AnalyticFactsOfThetaDataOnModels
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsValueBasisInSpanningForms
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.InBasisIffPointValuesLinearIndependentSpanStatement
+public import Formalism.SharpRestriction.GenusPolyhedralBounds.RelativeIndexClassSets.PublishedIntClosHolds
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.InBasisIffPointValuesLinearIndependentSpan
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.InContainMROfAnFacts
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.NonemptyHeightOneSpectrumRingOfIntegers
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShareRdOfInBasis
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShareRhoROfAnFacts
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.MaximalCuspsNoLowCoefficientIffFourierJacobiStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.TieUpA
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.MaximalCuspsNoLowCoefficientIffFourierJacobi
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,8 +61,8 @@ theorem exists_inBasis_shares_inContain : ∀ (D : D7) (T : Top D) (h : LawsP T)
   intro D T h j hj n ka wL wF G₀ Tn CR c S hka hd2 hT hArch hRd hMgg hLat hShort Sh hSh
 
   obtain ⟨R, t, δ, xs, hgen, hA⟩ :=
-    GlobalTheory.T.analyticFacts_of_thetaData_on_models D T h j hj n G₀.N ka wL wF G₀.w Tn CR c hka hArch hRd hMgg
-      (GlobalTheory.T.maximalCusps_noLowCoefficient_iff_fourierJacobi D T h j hj ka CR (Tn : ℝ) c)
+    _root_.GlobalTheory.Shares.exists_anFacts_record D T h j hj n G₀.N ka wL wF G₀.w Tn CR c hka hArch hRd hMgg
+      (_root_.GlobalTheory.MaxCuspRecord.tieMaxCusp D T h j hj ka CR (Tn : ℝ) c)
 
   obtain ⟨θ, hθS, hθ⟩ :=
     exists_valueBasis_in_spanning D n.base _ j (recPlusN h j hj n) ka wL wF G₀.N G₀.w R t Tn _ δ xs hA Sh hSh
@@ -72,7 +74,7 @@ theorem exists_inBasis_shares_inContain : ∀ (D : D7) (T : Top D) (h : LawsP T)
   have hA' : AnFacts R (FamilyHypotheses.refill G₀ δ θ rz alz th0 zc rq th iet et).w t ka wF Tn
       (WeightFamilies.MggK n.base CR Tn c j ka) xs := hA
   have hB : ∀ la, InBasis (FamilyHypotheses.refill G₀ δ θ rz alz th0 zc rq th iet et) la := fun la =>
-    (GlobalTheory.T.inBasis_iff_pointValues_linearIndependent_span D n.base _ j (recPlusN h j hj n) ka wL wF (FamilyHypotheses.refill G₀ δ θ rz alz th0 zc rq th iet et)
+    (_root_.GlobalTheory.Shares.inBasis_iff_vals D n.base _ j (recPlusN h j hj n) ka wL wF (FamilyHypotheses.refill G₀ δ θ rz alz th0 zc rq th iet et)
       R t Tn _ δ xs hgen hA' hka la).2 ⟨hθ, rfl⟩
 
   obtain ⟨β, Sg, hSg, hspan, -⟩ := hShort

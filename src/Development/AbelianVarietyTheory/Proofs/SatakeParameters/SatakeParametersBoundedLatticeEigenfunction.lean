@@ -3,9 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.FiniteResidueFieldPadicInt
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 public import Mathlib.RingTheory.MvPolynomial.Symmetric.Defs
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeOperatorAlternatingSeriesIdentityStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NcardSublatticesOfIndexPrimePowerLeStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NormLeOfRecurrenceGrowthStatement
+public import Mathlib.Basic.Complex.Basic
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeOperatorAlternatingSeriesIdentity
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NcardSublatticesOfIndexPrimePowerLe
+public import Mathlib.Analysis.Complex.Norm
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NormLeOfRecurrenceGrowth
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -125,7 +127,7 @@ theorem main : ∀ (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRi
     · funext L
       rw [heckeAll_zero, ha_def, recSeq, one_smul]
     · funext L
-      have hid := GlobalTheory.T.heckeOperator_alternating_series_identity O K r E φ (m + 1) L (by omega)
+      have hid := _root_.GlobalTheory.HeckeSeries.heckeSeries_identity O K r E φ (m + 1) L (by omega)
       rw [Finset.sum_range_succ'] at hid
       have key : ∀ k ∈ Finset.range (m + 1),
           ((-1 : ℂ) ^ (k + 1) * (qRes O : ℂ) ^ ((k + 1) * (k + 1 - 1) / 2)) •
@@ -190,7 +192,7 @@ theorem main : ∀ (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRi
       refine (norm_sum_le _ _).trans ?_
       refine (Finset.sum_le_sum fun M _ => hC M).trans ?_
       rw [Finset.sum_const, nsmul_eq_mul]
-    have h3 := GlobalTheory.T.ncard_sublatticesOfIndexPrimePower_le O K r n L0
+    have h3 := _root_.GlobalTheory.SubIdxCount.ncard_subIdx_le O K r n L0
     rw [show C / ‖φ L0‖ * ((n : ℝ) + 1) ^ r * ((qRes O : ℝ) ^ (r - 1)) ^ n =
         C * (((n : ℝ) + 1) ^ r * ((qRes O : ℝ) ^ (r - 1)) ^ n) / ‖φ L0‖ by ring,
       le_div_iff₀ hnL0, h1]
@@ -199,7 +201,7 @@ theorem main : ∀ (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRi
           mul_le_mul_of_nonneg_right h3 hC0
       _ = C * (((n : ℝ) + 1) ^ r * ((qRes O : ℝ) ^ (r - 1)) ^ n) := by ring
   have hB : 0 < (qRes O : ℝ) ^ (r - 1) := pow_pos hq0 _
-  have hrec := GlobalTheory.T.norm_le_of_recurrence_growth' β a (C / ‖φ L0‖) ((qRes O : ℝ) ^ (r - 1)) r hB
+  have hrec := _root_.GlobalTheory.norm_le_of_recurrence_growth β a (C / ‖φ L0‖) ((qRes O : ℝ) ^ (r - 1)) r hB
     (by rw [ha_def, recSeq]) hrel hbound
   have hxb := hrec ((c : ℂ) * x) (Multiset.mem_map_of_mem _ hx)
   rw [norm_mul, Complex.norm_real, Real.norm_of_nonneg hc0.le] at hxb

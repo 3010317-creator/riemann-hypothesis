@@ -6,13 +6,14 @@ public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsDp
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.FaceMapCompSuccAboveCastSucc
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.FGlob
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.FGlue
-public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.FLineUniv
-public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.FReesDown
-public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.FReesUp
-import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.FRiCalc
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.XSmulSucc
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsLine
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CmpPutSucc
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompShiftZero
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.PropsA
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.PropsE
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.ZariskiCocycleRefinement
+import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.FRiCalc
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -96,7 +97,7 @@ theorem local_of (hD : D.Out l) : Local l := by
     have := fil_le k (base l) n (hε.2.2.1 (base l) n)
     set_option synthInstance.maxHeartbeats 100000 in
       simpa only [map_sum, map_pow] using this
-  obtain ⟨L, hL⟩ := P.line_univ (thU (Lc F κ k n) (ε.qU n) (ε.qU_mem k n)) (fun _ _ i g => (flt F κ ε k n ρ hρ).FAcyc i g)
+  obtain ⟨L, hL⟩ := _root_.GlobalTheory.CompanionTheory.LineUniv.exists_line (thU (Lc F κ k n) (ε.qU n) (ε.qU_mem k n)) (fun _ _ i g => (flt F κ ε k n ρ hρ).FAcyc i g)
     (P.thick_line F (bs l k n) rfl (κb κ k n) ((base l).cris n) ρ hρ ε.μ (ε.μ_mem k (base l) n) (ε.qU n) (ε.qU_mem k n)
       ((base l).cris n (ε.qk 1)) Fact.out hq hμ hξ)
   obtain ⟨L', hL'⟩ := P.cont_line F κ ε k n ρ hρ
@@ -104,8 +105,8 @@ theorem local_of (hD : D.Out l) : Local l := by
     (fun a j => (hA _ _ (𝟙 _) j).trans (congrArg (· * 𝓛.t j) (Units.val_pow_eq_pow_val _ _)))
     (fun a j => (hA' _ _ (𝟙 _) j).trans (congrArg (· * (𝒯.c j 0).val) (Units.val_pow_eq_pow_val _ _)))
   exact hN (flt F κ ε k n ρ hρ).rees (gE F κ k n) (jE _) _ _ A L _ _ A' L' θ hθγ _
-    (fun T => (P.rees_up (flt F κ ε k n ρ hρ) (𝟭 _) 0).2.2 _ _ (hL T)) (P.desc hD F κ ε k n ρ hρ hk)
-    (fun T => (P.rees_up ((flt F κ ε k n ρ hρ).comap (gE F κ k n)) (𝟭 _) 0).2.2 _ _ (hL' T)) ni
+    (fun T => (_root_.GlobalTheory.CompanionTheory.ReesUp.main (flt F κ ε k n ρ hρ) (𝟭 _) 0).2.2 _ _ (hL T)) (P.desc hD F κ ε k n ρ hρ hk)
+    (fun T => (_root_.GlobalTheory.CompanionTheory.ReesUp.main ((flt F κ ε k n ρ hρ).comap (gE F κ k n)) (𝟭 _) 0).2.2 _ _ (hL' T)) ni
 
 theorem ri_pow {R : Type} [CommRing R] {C C' : Type 1} [Category.{0} C] [Category.{0} C'] {F : C ⥤ ModuleCat.{0} R} {G : C' ⥤ C}
     {s : R} {a b n : ℕ} (h : a ≤ b) (H : RI (s ^ a) n F G) : RI (s ^ b) n F G := by
@@ -129,8 +130,8 @@ theorem global_of (h : Local l) (d j : ℕ) : ∃ N : ℕ, ∀ {O : Type} [CommR
     have e : F.Pt.map (CommRingCat.ofHom (Ideal.quotientMap T'.J φ.φ φ.hle)) T.y.1.2 = T'.y.1.2 :=
       congrArg (fun z => z.1.2) φ.pt
     exact e ▸ (𝒜.V α).in_map _ hT
-  · exact (P.rees_up (flt F κ ε k n ρ hρ) _ j).1 fun r => P.zar _ _ _ (onto _) (z₁ (ρ r)) j
-  · exact (P.rees_up ((flt F κ ε k n ρ hρ).comap (gT F κ k n)) _ j).1 fun r => P.zar _ _ _ (onto _) (z₂ (ρ r)) j
+  · exact (_root_.GlobalTheory.CompanionTheory.ReesUp.main (flt F κ ε k n ρ hρ) _ j).1 fun r => P.zar _ _ _ (onto _) (z₁ (ρ r)) j
+  · exact (_root_.GlobalTheory.CompanionTheory.ReesUp.main ((flt F κ ε k n ρ hρ).comap (gT F κ k n)) _ j).1 fun r => P.zar _ _ _ (onto _) (z₂ (ρ r)) j
   · obtain ⟨d', hd', ⟨s⟩⟩ := 𝒜.small S hS
     refine ⟨_, _, _, _, subThick (Fn.Sub.inter 𝒜.V S) (bs l k n) rfl (κb κ k n), subEl κ (Fn.Sub.inter 𝒜.V S),
       gT (Fn.Sub.inter 𝒜.V S).fn κ k n, P.thick_onto _ _ _ _, P.el_onto F κ 𝒜 S k n hn, ⟨eqToIso (subEl_gT κ _ k n)⟩, ?_⟩
@@ -185,7 +186,7 @@ theorem level_zero {O : Type} [CommRing O] (F : Fn O) (κ : O →+* OC l) (k : B
 theorem level_pos {O : Type} [CommRing O] (F : Fn O) (κ : O →+* OC l) (ε : Eps l) (k : Bool) (n j N : ℕ) (ρ : ℕ → ℕ) (hρ : Slow ρ)
     (h : RI ((Polynomial.X : Polynomial ℤ) ^ N) j (flt F κ ε k n ρ hρ).rees (gT F κ k n)) :
     UpTo (ε.μ ^ N) (β F κ k n j) ∧ ∀ y, ∃ x ∈ HcFil F κ k n (ρ N) j, β F κ k n j x = ε.μ ^ N • y :=
-  have H := P.rees_down (flt F κ ε k n ρ hρ) (gT F κ k n) j N (pdFlt_zero _ _ ρ hρ _ _) h j le_rfl
+  have H := _root_.GlobalTheory.CompanionTheory.ReesDown.main (flt F κ ε k n ρ hρ) (gT F κ k n) j N (pdFlt_zero _ _ ρ hρ _ _) h j le_rfl
   transfer (βMor F κ k n) (fun _ => Function.bijective_id) j (ε.μ ^ N) (HcFil F κ k n (ρ N) j) H.1 H.2
 
 theorem slow_zero : Slow 0 := ⟨rfl, fun _ => Nat.zero_le _⟩

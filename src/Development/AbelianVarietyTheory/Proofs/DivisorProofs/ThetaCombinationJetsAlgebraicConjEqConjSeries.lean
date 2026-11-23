@@ -4,15 +4,16 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.NormSumPa
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsTraceCompatibleTorusEmbeddingStandardTorus
 public import Formalism.LocalToGlobal.KernelLattices.ThDistC
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsVacuumMovedThetaVacuum
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CoordsAlongOrthonormalRealSubfieldBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHomLatticeCommensurableOrthonormalStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HalfPeriodThetaDifferentiableAndSignedTranslateIStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IdealPeriodLatticeOfCurveDatumStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NormalisedThetaPullbackMemTorsionTranslatesSpanAStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OrthoProductThetaMemThetaSpaceOfLatticeStatement
+public import Formalism.SharpRestriction.GlobalSchurBounds.StandardLatticesGL3
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CoordsAlongOrthonormalRealSubfieldBasis
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHomLatticeCommensurableOrthonormal
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HalfPeriodThetaDifferentiableAndSignedTranslateI
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NormalisedThetaPullbackMemTorsionTranslatesSpanA
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OrthoProductThetaMemThetaSpaceOfLattice
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaVacuaConjugatesCmPoints
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TorsionTranslateMemThetaPullbackSpanStatement
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IdealPeriodLatticeOfCurveDatum
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutes
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TorsionTranslateMemThetaPullbackSpan
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -105,31 +106,31 @@ theorem conj_jet : ∀ (D : D7), GlobalTheory.NormSum.Inp D → ∀ (δ t0 : ℂ
         GL3Theta.applyAt0 D (MvPolynomial.monomial m 1) (fnConj D Qbar ρ' fun z => κ * ∑ i, (r i : ℂ) * U D (tor0 D D.host.ccK δ) (s i)
           (Iop D (tor0 D D.host.ccK δ) (La0 D (tor0 D D.host.ccK δ) _ _) (La D (tor0 D D.host.ccK δ) Ls Lt) e0) z) := by
   intro D _ δ t0 hc ht0 N N' _ e0 he Ls Lt hL₁ hL₁' κ hκ k₀ n hk₀ r s hs ρ m
-  have hG := (GlobalTheory.T.inducedType_thetaGenusOne_permutes D).1
+  have hG := (_root_.GlobalTheory.InducedType.induced_type D).1
   have hL := GlobalTheory.MovedVacuum.sd_stdL D N
   have hL' := GlobalTheory.MovedVacuum.sd_stdL D N'
   have hGth := he.1
   obtain ⟨b, κ₀, hb, hκ₀, rfl⟩ := he.2.2.2.1
-  obtain ⟨k, hk, hC⟩ := GlobalTheory.T.exists_homLattice_commensurable_orthonormal D N N' _ b _ _ hb hL hL'
+  obtain ⟨k, hk, hC⟩ := _root_.GlobalTheory.ThetaConj.exists_comm_YYl D N N' _ b _ _ hb hL hL'
   have kB : KLat D (tor0 D D.host.ccK δ) (LaB D (tor0 D D.host.ccK δ) b) := Or.inl ⟨_, b, hb, rfl⟩
   have kL : KLat D (tor0 D D.host.ccK δ) (La D (tor0 D D.host.ccK δ) _ _) := Or.inr ⟨_, _, hL, hL', rfl⟩
-  obtain ⟨-, -, c1, c2, -⟩ := GlobalTheory.T.coords_along_orthonormal_realSubfield_basis D hG D.host.ccK δ N N' _ b hb
-  obtain ⟨d1, d2⟩ := GlobalTheory.T.halfPeriodTheta_differentiable_and_signedTranslate_invariant D hG D.host.ccK δ hc t0 ht0
-  have hth0 := GlobalTheory.T.orthoProductTheta_mem_thetaSpace_of_lattice D (tor0 D D.host.ccK δ) N N' _ b _ c1 c2 d1 d2
+  obtain ⟨-, -, c1, c2, -⟩ := _root_.GlobalTheory.OnCoord.coords_of_orthonormal_basis D hG D.host.ccK δ N N' _ b hb
+  obtain ⟨d1, d2⟩ := _root_.GlobalTheory.HalfPeriodTheta.theta_signed_translation D hG D.host.ccK δ hc t0 ht0
+  have hth0 := _root_.GlobalTheory.ProdTheta.pullB_mem_ThSp D (tor0 D D.host.ccK δ) N N' _ b _ c1 c2 d1 d2
   have hCb : Comm D b k (Set.range b) := by simpa using (comm_range D b).mul k
-  obtain ⟨m1, -⟩ := conj_iop hc ρ hb (GlobalTheory.T.pullB_th0_mem_tr D _ δ hc t0 ht0 N N' _ b hb) hk
+  obtain ⟨m1, -⟩ := conj_iop hc ρ hb (_root_.GlobalTheory.ThetaConj.normalisedThetaPullback_mem_torsionTranslatesSpan D _ δ hc t0 ht0 N N' _ b hb) hk
     hCb hC (LaB_eq D _ b ▸ kB) kL (LaB_eq D _ b ▸ hth0)
   rw [← LaB_eq, ← La_eq] at m1
   have hGm := Submodule.smul_mem _ (⟨κ₀, hκ₀.1⟩ : Qbar) m1
-  obtain ⟨k₁, hk₁, hC₁⟩ := GlobalTheory.T.exists_homLattice_commensurable_orthonormal D N N' _ b Ls Lt hb hL₁ hL₁'
+  obtain ⟨k₁, hk₁, hC₁⟩ := _root_.GlobalTheory.ThetaConj.exists_comm_YYl D N N' _ b Ls Lt hb hL₁ hL₁'
   have hC₂ := hC₁.mul k
   rw [mul_comm k k₁] at hC₂
   obtain ⟨m2, -⟩ := conj_iop hc ρ hb hGm (Nat.mul_pos hk₁ hk) (hC.mul k₁) hC₂ kL
       (Or.inr ⟨Ls, Lt, hL₁, hL₁', rfl⟩) hGth
   have hsB : ∀ i, (k₀ * k₁) • s i ∈ LaB D (tor0 D D.host.ccK δ) b := fun i => by
     rw [mul_nsmul]
-    exact nsmul_mem_LaB (isTraceCompatibleTorusEmbedding_standardTorus D hG _ δ) (GlobalTheory.T.idealPeriodLattice_of_curveDatum D hG _ δ hc).2.2.2.2 hC₁ (hs i)
-  have m3 := fun i => GlobalTheory.T.torsionTranslate_mem_thetaPullbackSpan D _ δ hc N N' _ b hb _ m2 (s i) _ (Nat.mul_pos hk₀ hk₁) (hsB i)
+    exact nsmul_mem_LaB (isTraceCompatibleTorusEmbedding_standardTorus D hG _ δ) (_root_.GlobalTheory.CurveLattice.lattice_of_curve D hG _ δ hc).2.2.2.2 hC₁ (hs i)
+  have m3 := fun i => _root_.GlobalTheory.TorsionTranslate.translate_mem D _ δ hc N N' _ b hb _ m2 (s i) _ (Nat.mul_pos hk₀ hk₁) (hsB i)
   choose F' hF' using fun i => galRel_all hc ρ hb (m3 i) one_pos
   exact jet_of_cjF ((CjF.sum Finset.univ fun i _ => (hF' i).1.mul (r i).2).mul hκ.1) m
 

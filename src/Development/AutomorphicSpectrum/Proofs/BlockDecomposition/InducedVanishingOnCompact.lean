@@ -1,10 +1,10 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsUMOfMem
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IwasawaDecompParabolicMaximalCompactStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeviBlockMemParabolicStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IwasawaDecompParabolicMaximalCompact
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeviBlockMemParabolic
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MirProjEqOneOfMem
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnipotentTopMemParabolicStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnipotentTopMemParabolic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,11 +64,11 @@ theorem exists_hpg_mid_levi (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
   have hp : p = GlobalTheory.CompanionTheory.BZPsiPG.uM k (i + t) y *
       GlobalTheory.BZMir.levi k (i + t) (GlobalTheory.BZMir.mirabolicProjection k (i + t) p) := by
     rw [← hy, inv_mul_cancel_right]
-  obtain ⟨q, κ, hκ, hgq⟩ := GlobalTheory.T.iwasawa_decomp_parabolic_maximal_compact k i t (GlobalTheory.BZMir.mirabolicProjection k (i + t) p)
+  obtain ⟨q, κ, hκ, hgq⟩ := _root_.GlobalTheory.CompanionTheory.BZPsiPG.exists_Qp_mul_KO k i t (GlobalTheory.BZMir.mirabolicProjection k (i + t) p)
   obtain ⟨x, v, hxv⟩ := GlobalTheory.CompanionTheory.BZPsiPG.exists_top_mid k i t
     ((((q : GL (Fin (i + t)) k)⁻¹ : GL (Fin (i + t)) k) : Matrix (Fin (i + t)) (Fin (i + t)) k) *ᵥ y)
-  obtain ⟨hq, -⟩ := GlobalTheory.T.levi_block_mem_parabolic k i t q
-  obtain ⟨hx, -⟩ := GlobalTheory.T.unipotent_top_mem_parabolic k i t x
+  obtain ⟨hq, -⟩ := _root_.GlobalTheory.CompanionTheory.BZPsiPG.levi_Qp_mem_pgProj k i t q
+  obtain ⟨hx, -⟩ := _root_.GlobalTheory.CompanionTheory.BZPsiPG.TopCol.main k i t x
   refine ⟨GlobalTheory.BZMir.levi k (i + t) q * GlobalTheory.CompanionTheory.BZPsiPG.uM k (i + t) (GlobalTheory.CompanionTheory.BZPsiPG.topV k i t x),
     mul_mem hq hx, κ, hκ, v, ?_⟩
   have key : GlobalTheory.CompanionTheory.BZPsiPG.uM k (i + t) y * GlobalTheory.BZMir.levi k (i + t) q =

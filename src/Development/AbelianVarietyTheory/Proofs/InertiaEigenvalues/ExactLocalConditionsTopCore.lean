@@ -6,18 +6,23 @@ public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.Invari
 public import Formalism.SharpRestriction.LevelLetterCocycles.TableLineDegreeTwo
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleClassesPropsOfFlatCoefficient
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleOfSurjective
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleQuotientExtensionIffAdmissibleExtStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleStd
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardHodgeTateJumpsCrystallineEqDimStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CocycleClassAdmissibleStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineSumsTwistsCharactersExpectedJumps
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ResBound
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleQuotientExtensionIffAdmissibleExt
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardHodgeTateJumpsCrystallineEqDim
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CocycleClassAdmissible
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DvrComplete
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EquivariantIsoTransportCocyclesExtensionsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsEquivStableLatticeIntegralCharacterStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsNumericalGaloisDataLocalSituationStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteModuleKilledByPowOfNotIsUnitStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PeriodDataDualExactStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistedActionEqTwistedCoefficientsCocycleIffStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EquivariantIsoTransportCocyclesExtensions
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsEquivStableLatticeIntegralCharacter
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsNumericalGaloisDataLocalSituation
+public import Mathlib.Algebra.Module.Defs
+public import Mathlib.Basic.Finite.Defs
+public import Mathlib.RingTheory.LocalRing.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteModuleKilledByPowOfNotIsUnit
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PeriodDataDualExact
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistedActionEqTwistedCoefficientsCocycleIff
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleStd
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineSumsTwistsCharactersExpectedJumps
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,7 +62,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ResBound
 import ReciprocityTheory.BasicDefinitions.ExistsUnique
 
 @[expose] public section
@@ -99,7 +103,7 @@ theorem admissibleExtension_iff_equivariantCoefIso {G : Type} [Group G] [Topolog
     (hzz : ∀ g, z' g = LinearEquiv.rTensor X e (z g)) (hz : z ∈ Z1 (twCoef W χ X) ⊤)
     (hz' : z' ∈ Z1 (twCoef W' χ X) ⊤) {c : O} (hc : ∀ x : X, c • x = 0) :
     Admissible PD emb Γ t Ut (Ea W χ hc ⟨z, hz⟩) ↔ Admissible PD emb Γ t Ut (Ea W' χ hc ⟨z', hz'⟩) := by
-  obtain ⟨f, hf⟩ := (GlobalTheory.T.equivariantIso_transport_cocycles_extensions W W' e he χ X z z' hzz).2.1 hz hz' hc
+  obtain ⟨f, hf⟩ := (_root_.GlobalTheory.TransportCoef.transport W W' e he χ X z z' hzz).2.1 hz hz' hc
   have hf' : ∀ g x, f.symm (Ea W' χ hc ⟨z', hz'⟩ g x) = Ea W χ hc ⟨z, hz⟩ g (f.symm x) :=
     fun g x => f.injective (by rw [hf, LinearEquiv.apply_symm_apply, LinearEquiv.apply_symm_apply])
   exact ⟨fun h => h.of_equiv f hf, fun h => h.of_equiv f.symm hf'⟩
@@ -135,14 +139,14 @@ theorem topCore_of_typings : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI :
   let : Module ↥(OL LL) ↥(OL LL) := Semiring.toModule
   let : Module ↥(OL LL) ↥T₀.T := Submodule.module T₀.T
   let T : LocLat ↥(GK K) ℚ_[l] ↥LL.1 ↥(OL LL) := LocLat.mk V ρ hyp.2.2.1 T₀
-  have hcard := GlobalTheory.T.card_hodgeTate_jumps_crystalline_eq_dim P AI hT H K LL hA V ρ U hyp.2.2.2.1 hyp.2.2.2.2.1
-  obtain ⟨r, D, ε, hHyp, hDt, hcount, hchi⟩ := GlobalTheory.T.exists_numerical_galoisData_localSituation P H K LL hA lam hlam h5 t h w η typ U T χ hyp hcard
+  have hcard := _root_.GlobalTheory.Per.LetterJumps.card_jumps_letter P AI hT H K LL hA V ρ U hyp.2.2.2.1 hyp.2.2.2.2.1
+  obtain ⟨r, D, ε, hHyp, hDt, hcount, hchi⟩ := _root_.GlobalTheory.TopWindow.exists_topData_galData P H K LL hA lam hlam h5 t h w η typ U T χ hyp hcard
   have : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨GlobalTheory.IndefiniteRowSideFullHecke.InvariantsVanishing.letters_ne_zero hHyp.1⟩
   let S : TopSit P := ⟨K, LL, _, r, (H.W K 1 LL hA.2.2).emb, D, ⟨lam, T, χ 1, ε⟩, hHyp⟩
   let : Module S.O S.O := Semiring.toModule
   have hkill : ∃ a : ℕ, ∀ x : X, S.Γ.lam ^ a • x = 0 := by
     obtain ⟨_, -⟩ := GlobalTheory.FinExtIntegers.dvr_complete LL
-    exact GlobalTheory.T.exists_pow_smul_eq_zero_of_finite_of_not_isUnit (↥(OL LL)) lam hlam.not_isUnit X
+    exact _root_.GlobalTheory.finite_module_killed_by_pow_of_not_isUnit (↥(OL LL)) lam hlam.not_isUnit X
   have hCl := GlobalTheory.AdmClosure.admissible_closed S
   obtain ⟨hL0, hLc⟩ := GlobalTheory.AdmClasses.admissibleLocalSituation_admissible_classes S hCl (StdAdm.stdAdm S (CrysRules.crysCalc AI hT S) hCl)
   have hpoly : tableLineDegreeTwo.resPoly ρ χ t = tableLineDegreeTwo.resPoly S.Γ.T₀.ρ S.Γ.chi S.D.t := by
@@ -165,7 +169,7 @@ theorem topCore_of_typings : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI :
         (tableLineDegreeTwo.jTil U w t) p L X (χ 1) z) hpoly
     refine (iff_of_eq hcongr).trans ?_
     exact exists_congr fun a₀ => forall_congr' fun a => forall_congr' fun _ => forall_congr' fun ha =>
-      GlobalTheory.T.admissible_quotientExtension_iff_admissible_ext S (tableLineDegreeTwo.jTil U w t) hcount T' L X z hz a ha
+      _root_.GlobalTheory.AdmQuotExt.admissible_quotientExtension_iff_admissible_ext' S (tableLineDegreeTwo.jTil U w t) hcount T' L X z hz a ha
 
   have ext_iff : ∀ (c : ℕ) {Mc : Type} [AddCommGroup Mc] [Module S.O Mc] (Wc : Representation S.O S.G Mc)
       (e : S.O ≃ₗ[S.O] Mc), (∀ g x, e (S.Γ.Wchi c g x) = Wc g (e x)) →
@@ -191,15 +195,15 @@ theorem topCore_of_typings : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI :
     intro π z hz
     let : Module ↥(OL LL) ↥Lc.T := Submodule.module Lc.T
     have hχc : S.Γ.chi c = χ c := hchi c hc
-    refine (GlobalTheory.T.exists_equiv_stableLattice_integralCharacter LL (χ c) Lc).elim fun e he => ?_
+    refine (_root_.GlobalTheory.CharLat.exists_equiv_charLattice LL (χ c) Lc).elim fun e he => ?_
     have he' : ∀ g x, e (S.Γ.Wchi c g x) = latRep Lc g (e x) := fun g x =>
       (congrArg (fun θ : S.G →* S.Oˣ => e (Formalism.GaloisCohomology.scalRep S.O θ g x)) hχc).trans (he g x)
     let eX := LinearEquiv.rTensor X e
     let z₀ : S.G → S.O ⊗[S.O] X := fun g => eX.symm (z g)
     have hzz : ∀ g, z g = eX (z₀ g) := fun g => (eX.apply_symm_apply (z g)).symm
-    have htransport := GlobalTheory.T.equivariantIso_transport_cocycles_extensions
+    have htransport := _root_.GlobalTheory.TransportCoef.transport
       (S.Γ.Wchi c) (latRep Lc) e he' (χ 1) X z₀ z hzz
-    have hact := GlobalTheory.T.twistedAction_eq_twistedCoefficients_cocycle_iff Lc X (χ 1)
+    have hact := _root_.GlobalTheory.actTw_eq_twCoef_and_isCoc_iff Lc X (χ 1)
     have hz' := (hact.2 z).1 hz
     have hz₀ := htransport.1.2 hz'
     let cocycle : ↥(Z1 π ⊤) := ⟨z₀, hz₀⟩
@@ -208,7 +212,7 @@ theorem topCore_of_typings : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI :
       LocLat.mk ↥LL.1 (charRep (tableLineDegreeTwo.charL (LL := ↥LL.1) (χ c))) (fun x => hcont.mul continuous_const) Lc
     have hc' := Finset.mem_Icc.1 hc
     have hct : c ≤ D.t := hDt.symm ▸ hc'.2
-    have hclass := GlobalTheory.T.cocycle_class_admissible S (S.Γ.Wchi c) X hkill
+    have hclass := _root_.GlobalTheory.admissible_eventually_iff_mem_cls S (S.Γ.Wchi c) X hkill
       ((hLc c hc'.1 hct) X).2.1 cocycle
     refine ⟨cocycle, (hadmCoc Tc Lc z hz').trans
       ((ext_iff c (latRep Lc) e he' z₀ z hzz hz₀ hz').trans hclass), ?_, ?_⟩
@@ -222,13 +226,13 @@ theorem topCore_of_typings : ∀ {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI :
   refine ⟨?_, ?_, ?_⟩
   · intro ρ' T₀' hρ' hTT z hz
     let π := twCoef (latRep T₀) (χ 1) X
-    have hz' : z ∈ Z1 π ⊤ := ((GlobalTheory.T.twistedAction_eq_twistedCoefficients_cocycle_iff T₀ X (χ 1)).2 z).1 hz
+    have hz' : z ∈ Z1 π ⊤ := ((_root_.GlobalTheory.actTw_eq_twCoef_and_isCoc_iff T₀ X (χ 1)).2 z).1 hz
     let cocycle : ↥(Z1 π ⊤) := ⟨z, hz'⟩
-    have hclass := GlobalTheory.T.cocycle_class_admissible S S.Γ.W₀ X hkill (hL0 X).2.1 cocycle
+    have hclass := _root_.GlobalTheory.admissible_eventually_iff_mem_cls S S.Γ.W₀ X hkill (hL0 X).2.1 cocycle
     have hA' := ((hSA K LL _ r (H.W K 1 LL hA.2.2).emb D S.Γ hHyp.1 hHyp.2.1 hHyp.2.2.1 hHyp.2.2.2.1
       hHyp.2.2.2.2).2.2.2.2 X).2
     have hmem := mk_mem_class_congr π cocycle hA'
-    have hdual := GlobalTheory.T.period_data_dual_exact (P.PD K) T₀ ρ' T₀' X (χ 1) hρ' hTT z hz'
+    have hdual := _root_.GlobalTheory.AdmLoc.mk_mem_H1fX_iff_inHfX (P.PD K) T₀ ρ' T₀' X (χ 1) hρ' hTT z hz'
     exact (hadmCoc T T₀ z hz').trans (hclass.trans (hmem.trans hdual))
   · intro c hc Lc z hz
     have hc' := Finset.mem_Icc.1 hc

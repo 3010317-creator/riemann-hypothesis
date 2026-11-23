@@ -4,16 +4,17 @@ public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.NGDat
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.AtBase
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PlacesOf
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsAdmissibleIntegralFrameOfLocalTermsStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GlobalHermitianFramesRationalWitnessesPhaseStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetTermBasicFacts
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GFrames
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GlobalHermitianFramesRationalWitnessesPhase
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeDatumEquivariantFlagIsometries
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsIntegralOfQuad
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MovedTermLatticeIsGlobalTermPhaseStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NumberFieldLatticeDeterminedByLocalLattices
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RatLinkPoints
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalUnipotentGroupsLatticesGlobalCoordinatesStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermRowEqIffMovedLatticeInnerDataEqStatement
 public import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.FibreCountOfPositions
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetTermBasicFacts
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsIntegralOfQuad
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NumberFieldLatticeDeterminedByLocalLattices
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalUnipotentGroupsLatticesGlobalCoordinatesStatement
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -150,8 +151,8 @@ theorem term_eq_map {A : Places F E sig} {r k : ℕ} (G : GFrames A r k) (hk : 4
     {Λ Γ : G.Lt} (hΛ : G.IsTerm d Λ) (hΓ : G.IsTerm d Γ) :
     (∃ x ∈ G.N, Γ = Λ.map ((x : G.V →ₗ[E] G.V).restrictScalars (𝓞 E))) ∧
       ∃ x ∈ G.N', Γ = Λ.map ((x : G.V →ₗ[E] G.V).restrictScalars (𝓞 E)) := by
-  obtain ⟨⟨n0, hn0, n0', hn0', h0⟩, -⟩ := GlobalTheory.T.globalHermitianFrames_rational_witnesses_phase A r k G hk d Λ hΛ
-  obtain ⟨⟨n1, hn1, n1', hn1', h1⟩, -⟩ := GlobalTheory.T.globalHermitianFrames_rational_witnesses_phase A r k G hk d Γ hΓ
+  obtain ⟨⟨n0, hn0, n0', hn0', h0⟩, -⟩ := _root_.GlobalTheory.HL.GlobalWit.global_witnesses A r k G hk d Λ hΛ
+  obtain ⟨⟨n1, hn1, n1', hn1', h1⟩, -⟩ := _root_.GlobalTheory.HL.GlobalWit.global_witnesses A r k G hk d Γ hΓ
   have hΛfull := full_lattice_of_term G hΛ
   have hΓfull := full_lattice_of_term G hΓ
   refine ⟨⟨n1 * n0⁻¹, G.N.mul_mem hn1 (G.N.inv_mem hn0), eq_map_of_local A hΛfull hΓfull _ fun p => ?_⟩,

@@ -4,10 +4,12 @@ public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.CategoryTheory.Category.Basic
 public import Mathlib.Topology.Instances.Matrix
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EntriesBoundedOfConjSpanningBoundedStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsIsHermitianLogOfPosDefGramStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsClosedIsHermitianLogOfPosDefStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MatrixEntriesBoundedOfHermitianLogTraceSqLeStatement
+public import Mathlib.Analysis.Complex.Norm
+public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EntriesBoundedOfConjSpanningBounded
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsIsHermitianLogOfPosDefGram
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsClosedIsHermitianLogOfPosDef
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MatrixEntriesBoundedOfHermitianLogTraceSqLe
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -112,7 +114,7 @@ end GlobalTheory.ClassFin.EnergyMin
 open GlobalTheory.ClassFin.EnergyMin in
 theorem GlobalTheory.ClassFin.exists_energy_min : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (σ : Type) [Fintype σ] (g : σ → Matrix ι ι ℂ), (∀ s, IsUnit (g s).det) → Submodule.span ℂ (Set.range g) = ⊤ → ∃ (P : Matrix ι ι ℂ) (H : σ → Matrix ι ι ℂ), IsUnit P.det ∧ (∀ s, IsLog (H s) ((P * g s * P⁻¹)ᴴ * (P * g s * P⁻¹))) ∧ ∀ (P' : Matrix ι ι ℂ) (H' : σ → Matrix ι ι ℂ), IsUnit P'.det → (∀ s, IsLog (H' s) ((P' * g s * P'⁻¹)ᴴ * (P' * g s * P'⁻¹))) → ∑ s, (Matrix.trace (H s * H s)).re ≤ ∑ s, (Matrix.trace (H' s * H' s)).re := by
   intro ι _ _ σ _ g hg hspan
-  choose H₀ hH₀ using fun s => GlobalTheory.T.exists_isHermitianLogOfPosDef_gram ι (g s) (hg s)
+  choose H₀ hH₀ using fun s => _root_.GlobalTheory.ClassFin.exists_isLog_gram ι (g s) (hg s)
   let En : Matrix ι ι ℂ × (σ → Matrix ι ι ℂ) → ℝ := fun p => ∑ s, (Matrix.trace (p.2 s * p.2 s)).re
   have hEn : Continuous En := by
     refine continuous_finsetSum _ fun s _ => Complex.continuous_re.comp ?_
@@ -132,7 +134,7 @@ theorem GlobalTheory.ClassFin.exists_energy_min : ∀ (ι : Type) [Fintype ι] [
           (continuous_apply s).comp continuous_snd
         have h2 : Continuous fun p : Matrix ι ι ℂ × (σ → Matrix ι ι ℂ) => p.1 * g s * p.1.adjugate :=
           (continuous_fst.matrix_mul continuous_const).matrix_mul continuous_fst.matrix_adjugate
-        exact (GlobalTheory.T.isClosed_isHermitianLogOfPosDef ι).preimage (h.prodMk (h2.matrix_conjTranspose.matrix_mul h2))
+        exact (_root_.GlobalTheory.ClassFin.isClosed_isLog ι).preimage (h.prodMk (h2.matrix_conjTranspose.matrix_mul h2))
       rw [← Set.setOf_forall] at this
       exact this
     have heq : Z = ({p | p.1.det = 1} ∩
@@ -143,8 +145,8 @@ theorem GlobalTheory.ClassFin.exists_energy_min : ∀ (ι : Type) [Fintype ι] [
     rw [heq]
     exact (isClosed_eq continuous_fst.matrix_det continuous_const).inter
       (hlog.inter (isClosed_le hEn continuous_const))
-  obtain ⟨C, hC⟩ := GlobalTheory.T.matrix_entries_bounded_of_hermitian_log_trace_sq_le ι E₀
-  obtain ⟨C', hC'⟩ := GlobalTheory.T.entries_bounded_of_conj_spanning_bounded' ι σ g hspan C
+  obtain ⟨C, hC⟩ := _root_.GlobalTheory.ClassFin.entries_le_of_energy_le ι E₀
+  obtain ⟨C', hC'⟩ := _root_.GlobalTheory.ClassFin.entries_bounded_of_conj_spanning_bounded ι σ g hspan C
   have hK : IsCompact ({x : Matrix ι ι ℂ | ∀ i j, ‖x i j‖ ≤ C'} ×ˢ
       (Set.pi Set.univ fun _ : σ => {x : Matrix ι ι ℂ | ∀ i j, ‖x i j‖ ≤ C})) :=
     (GlobalTheory.ClassFin.EnergyMin.isCompact_box C').prod

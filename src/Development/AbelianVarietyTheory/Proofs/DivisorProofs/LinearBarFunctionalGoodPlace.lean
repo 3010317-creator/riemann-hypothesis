@@ -7,14 +7,16 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.PairsOfSquar
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicHeisenbergActsByLocalSchrodingerStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicTraceSupportedAtSplitPlaceStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfComponentTensorAdelicFunctionEqStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqSmulOfCommuteHeisenbergLinearModelSchwartzBruhStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqSmulOfCommuteHeisenbergLinearModelSchwartzBruh
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplementaryAdelicSchwartzRestFunctionStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitPlaceAdelicMatrixGivenComponentsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianTensorSkewHermitianSplitSymplecticPairStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUnitDetOfCartan
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerPreservesSchwartzBruhat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAdelicCharacterNontrivialAtPlaces
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaActionExistsStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaActionExists
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationPreservesSchwartzStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -76,7 +78,7 @@ theorem local_weil_operator_second_space : GlobalTheory.FunPr.Hypotheses₂ → 
       (∀ φ ∈ SB (Fin a' × Fin (a + a') → Fv F v), S φ = 0 → φ = 0) := by
   intro hP F E _ _ _ _ _ σ B a a' G X om om' hT v h hh
   have hone : (1 : UA σ G.V'.J) ∈ UAt σ G.V' (evFin F v) := fun u _ => by simp [mat]
-  obtain ⟨hex, -, -⟩ := GlobalTheory.T.theta_action_exists hP F E σ B a' (a + a') G.V' G.W G.M' X.α (X.α / X.β) om' G.q (a' - G.q)
+  obtain ⟨hex, -, -⟩ := _root_.GlobalTheory.ThK.LocalOps.actsEx hP F E σ B a' (a + a') G.V' G.W G.M' X.α (X.α / X.β) om' G.q (a' - G.q)
     (a + a' - (G.p + G.q)) (G.p + G.q) (GlobalTheory.ThK.Inhab.pairV' hT) v
   choose! S hS using fun φ (hφ : φ ∈ SB (Fin a' × Fin (a + a') → Fv F v)) => (hex 1 hone h hh φ hφ).exists
   obtain ⟨R, hR0, hR⟩ := GlobalTheory.T.exists_complementary_adelicSchwartz_restFunction (Fin a' × Fin (a + a')) v
@@ -272,7 +274,7 @@ theorem linBar_right_mul : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     rw [show (∑ k, ∑ j, (Y * g.val) k j * l (Matrix.single k j 1)) =
       ∑ k, ∑ j, (Y * g.val) k j * Lm l k j from rfl, sumMulRight]
     simp [Matrix.neg_mul, Finset.sum_neg_distrib]
-  obtain ⟨c, hc⟩ := GlobalTheory.T.eq_smul_of_commute_heisenberg_linearModel_schwartzBruhat (SB (Fin a' × Fin (a + a') → Fv F v)) (GlobalTheory.LatVac.psiAt B.ψ v)
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.LinSchur.eq_smul_of_commute (SB (Fin a' × Fin (a + a') → Fv F v)) (GlobalTheory.LatVac.psiAt B.ψ v)
     (GlobalTheory.SchrSB.continuous_psiAt B.ψ hstd.1 v) (GlobalTheory.PsiNontriv.psiAt_ne_one B.ψ hstd v) ι
     (fun φ Y => ι (S φ) (Y * ((g⁻¹ : GL (Fin (a + a')) (Fv F v)).val))) hι.bij
     (fun x hx y hy c => by

@@ -2,9 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.CthFac
 public import Mathlib.Analysis.Complex.UpperHalfPlane.MoebiusAction
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OddThetaProductSiegelEqZeroIffLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OddThetaProductSiegelModularSTransformStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SmoothedThetaQProductEqOddThetaProductQuotientStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.Imports
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OddThetaProductSiegelEqZeroIffLattice
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OddThetaProductSiegelModularSTransform
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SmoothedThetaQProductEqOddThetaProductQuotient
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +47,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Divisors.HasQIff
-public import Development.AbelianVarietyTheory.Definitions.Foundations.Imports
 
 @[expose] public section
 
@@ -91,12 +91,12 @@ theorem Sieg.cth_modular_S (c : ℕ) (τ : ℍ) (z : ℂ) (h1 : 1 < c) (hc : Nat
 
   have hB : th ((c : ℂ) * z) τ ≠ 0 := by
     intro h
-    obtain ⟨m, n, hmn⟩ := (GlobalTheory.T.oddThetaProductSiegel_eq_zero_iff_lattice τ _).1 h
+    obtain ⟨m, n, hmn⟩ := (_root_.GlobalTheory.ThZero.th_eq_zero_iff τ _).1 h
     exact hz m n hmn
 
   have hB' : th ((c : ℂ) * (z / (τ : ℂ))) (ModularGroup.S • τ) ≠ 0 := by
     intro h
-    obtain ⟨m, n, hmn⟩ := (GlobalTheory.T.oddThetaProductSiegel_eq_zero_iff_lattice _ _).1 h
+    obtain ⟨m, n, hmn⟩ := (_root_.GlobalTheory.ThZero.th_eq_zero_iff _ _).1 h
     rw [hS] at hmn
     apply hz n (-m)
     have : (c : ℂ) * z = (τ : ℂ) * ((c : ℂ) * (z / (τ : ℂ))) := by field_simp
@@ -104,9 +104,9 @@ theorem Sieg.cth_modular_S (c : ℕ) (τ : ℍ) (z : ℂ) (h1 : 1 < c) (hc : Nat
     push_cast
     field_simp
     ring
-  rw [GlobalTheory.T.smoothedThetaQProduct_eq_oddThetaProduct_quotient c _ _ h1 hc hB', GlobalTheory.T.smoothedThetaQProduct_eq_oddThetaProduct_quotient c _ _ h1 hc hB]
+  rw [_root_.GlobalTheory.Sieg.ThQuot.cth_eq_th_quot c _ _ h1 hc hB', _root_.GlobalTheory.Sieg.ThQuot.cth_eq_th_quot c _ _ h1 hc hB]
   rw [show (c : ℂ) * (z / (τ : ℂ)) = ((c : ℂ) * z) / (τ : ℂ) by ring]
-  rw [GlobalTheory.T.oddThetaProductSiegel_modularS_transform τ z, GlobalTheory.T.oddThetaProductSiegel_modularS_transform τ ((c : ℂ) * z)]
+  rw [_root_.GlobalTheory.Sieg.ThInv.th_S τ z, _root_.GlobalTheory.Sieg.ThInv.th_S τ ((c : ℂ) * z)]
   have hee : ee (z ^ 2 / (2 * (τ : ℂ))) ^ (c ^ 2) = ee (((c : ℂ) * z) ^ 2 / (2 * (τ : ℂ))) := by
     rw [Sieg.cthS_ee_pow]
     congr 1

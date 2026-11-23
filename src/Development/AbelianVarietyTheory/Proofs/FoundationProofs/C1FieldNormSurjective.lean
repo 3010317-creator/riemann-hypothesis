@@ -1,7 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsFirstChernClassOfLineBundle
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AlgebraNormEqHomogeneousPolynomialInCoordinatesStatement
+public import Mathlib.LinearAlgebra.FreeModule.PID
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Algebra
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.MvPolynomial.Homogeneous
+public import Mathlib.RingTheory.Norm.Defs
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.Imports
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -93,7 +101,7 @@ theorem norm_surjective_of_norm_form {K L : Type} [Field K] [Field L] [Algebra K
 theorem norm_surjective_of_is_c1 : ∀ (K L : Type) [Field K] [Field L] [Algebra K L] [FiniteDimensional K L], IsFirstChernClassOfLineBundle K →
     ∀ b : K, b ≠ 0 → ∃ x : L, Algebra.norm K x = b := by
   intro K L _ _ _ _ hC b _
-  obtain ⟨f, hf, hnorm⟩ := GlobalTheory.T.algebraNorm_eq_homogeneous_polynomial_in_coordinates K L
+  obtain ⟨f, hf, hnorm⟩ := _root_.GlobalTheory.IdealPowerMembership.main K L
   exact norm_surjective_of_norm_form hC _ Module.finrank_pos (Module.finBasis K L) f hf hnorm
     (fun a => Algebra.norm_algebraMap a) b
 

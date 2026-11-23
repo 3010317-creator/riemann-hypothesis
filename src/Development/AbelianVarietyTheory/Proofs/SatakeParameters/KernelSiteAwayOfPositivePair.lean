@@ -2,15 +2,20 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.IsUnifAt
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.EqOffPrimeKernelLatticesOfAgreeAwayStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsNormOneIdeleOrderOneTrivialElsewhereStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsPrimeUnderFirstFactorAtPlaceOverPStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.SameOffRefl
+public import Formalism.LocalToGlobal.GroupLattices.TiedFamilies.EqOneOfPh
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsNormOneIdeleOrderOneTrivialElsewhere
+public import Formalism.LocalToGlobal.GroupLattices.TiedFamilies.TiePtOne
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.LocSpBot
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsPrimeUnderFirstFactorAtPlaceOverP
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.KernelSiteScalarsAgreeAwayFromPlaceStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LatticeTupleFrameMatricesEqOfSameComponentStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalisationInverseHalfDifferentEqOneUnramifiedStatement
+public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalisationInverseHalfDifferentEqOneUnramified
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MovedDatumEqOfLatticeTuplesAgreeAwayStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PrimeNotStable
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ReaderLevelBadPrimesCoprimeResidueCharStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TwoUnitsAtPlaceUniformizingIdeleStatement
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ReaderLevelBadPrimesCoprimeResidueCharStatement
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.VEqKZeroOfNormOne
 import Formalism.SharpRestriction.GlobalSchurBounds.Joints
 import Mathlib.Algebra.Order.Floor.Extended
@@ -66,7 +71,7 @@ theorem away_of_pos_pair : Sites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H
   have hint := J.one.int
   have hp : (D.what₂.places.resChar w).Prime := Fact.out
   obtain ⟨hcop, hSS, -, -⟩ := GlobalTheory.T.level_badPrimes_coprime_residueChar S hDict hSpl
-  obtain ⟨P, hPof, happ, hpP, hpP2⟩ := GlobalTheory.T.exists_prime_under_firstFactor_at_placeOverP _ _ _ _ _ (A0 J) hint hSpl.1 v
+  obtain ⟨P, hPof, happ, hpP, hpP2⟩ := _root_.GlobalTheory.TwV.Xc.PrimeAt.exists_primeOf_place _ _ _ _ _ (A0 J) hint hSpl.1 v
   obtain ⟨a, b, hab, ha, hb⟩ := GlobalTheory.XcSplit.prime_not_stable _ _ (sigD D) _ _ _ (A0 J) _ hgood hint hSpl.1 v P hPof
   have hpC : (((D.what₂.places.resChar w : ℕ)) : 𝓞 D.host.E) ∈ (Formalism.L2.Col.conjPrime₂ P).asIdeal := by
     rw [Formalism.L2.Col.mem_conjP, map_natCast]; exact hpP
@@ -82,11 +87,11 @@ theorem away_of_pos_pair : Sites (fun {D L hT Gi Gl Kc Dx cX ex u μ w hg Lv I H
   have hab' : (b : D.host.E) = D.host.conj (a : D.host.E) := by
     rw [hab]
     first | exact Formalism.L2.PairingIndexBounds.F.sig_conj D _ | exact Formalism.L2.Fam.sig_eq_conj D.host D.sp.cm _ | exact Formalism.MainNotions.GlobalTheoryTheory.jnt_sig_eq_conj D _
-  refine ⟨P, ⟨a, b, hab', ha, hb⟩, GlobalTheory.T.localisation_inverseHalfDifferent_eq_one_unramified D _ hp P hpP hpP2, fun h => hSS P h hpP, fun h => hSS _ h hpC,
+  refine ⟨P, ⟨a, b, hab', ha, hb⟩, _root_.GlobalTheory.TwV.Xc.inverseHalfDifferent_local_trivial_at_prime_norm D _ hp P hpP hpP2, fun h => hSS P h hpP, fun h => hSS _ h hpC,
     hlev P hpP, hlev _ hpC, hPof, happ, ?_⟩
   by_cases hc : Nonempty ((sysS H X std).Lv.comp j) ∧ Nonempty ((sysS H X std).Lv.comp (j + 1))
   · obtain ⟨⟨c⟩, ⟨c'⟩⟩ := hc
-    obtain ⟨π, hπU, hoff, hord⟩ := GlobalTheory.T.exists_normOne_idele_order_one_trivial_elsewhere _ _ (sigD D) _ _ _ (A0 J) _ hgood v
+    obtain ⟨π, hπU, hoff, hord⟩ := _root_.GlobalTheory.TwV.Xc.Unif.exists_unif _ _ (sigD D) _ _ _ (A0 J) _ hgood v
     have hU : IsUnifAt J v π := ⟨hπU, hoff, hord⟩
     obtain ⟨x, y, hx0, hy0, hx, hy⟩ := GlobalTheory.T.two_units_at_place_uniformizing_idele S hDict hSpl hK hPos v π hU j hj c c'
     refine ⟨x, y, hx0, hy0, ?_⟩

@@ -7,16 +7,19 @@ public import Development.AutomorphicSpectrum.Statements.AlgebraStatements.Ordin
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FamilyExistsPosOfFamilyExists
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsLatFamilyCongr
 public import Development.AutomorphicSpectrum.PublishedTheorems.Algebra₂.FarguesHodgeTate
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ShortExactStandardLatticeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyHodgePrimeBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyHodgePrimeCountStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyHodgePrimeDegreeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyHodgePrimeHeightStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyHodgePrimeTotalStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyModelPrimeBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyModelPrimeDegreeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyModelPrimeHeightStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.OrdinaryCurveHodgePrimeStatement
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.LieLatticeData
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ShortExactStandardLattice
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsLatFlagPair
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyHodgePrimeBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyHodgePrimeCount
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyHodgePrimeDegree
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyHodgePrimeHeight
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyHodgePrimeTotal
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyModelPrimeBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyModelPrimeDegree
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyModelPrimeHeight
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.OrdinaryCurveHodgePrime
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,7 +79,7 @@ theorem gamDel_of_seqHyp {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (R
       (∀ c, (∃ b, (b, c) ∈ delLat R w om q) ↔ w • c ∈ om) ∧ (∀ c, (0, c) ∈ delLat R w om q ↔ c ∈ om) ∧
       ∀ b, (b, 0) ∈ delLat R w om q ↔ ∃ a, (a, b) ∈ gamLat R w W i) := by
   obtain ⟨h1, h2, h3, h4, h5⟩ := h
-  obtain ⟨Gam, Del, hG, hD, hst, hg, hd⟩ := GlobalTheory.T.short_exact_standard_lattice o Ω R w hw hw0 r s n W om hW hom i q h1 h2 h3 h4 h5
+  obtain ⟨Gam, Del, hG, hD, hst, hg, hd⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.glue_gamdel_graphs o Ω R w hw hw0 r s n W om hW hom i q h1 h2 h3 h4 h5
   have eG : Gam = gamLat R w W i := by
     ext ⟨a, b⟩
     exact hG a b
@@ -96,14 +99,14 @@ theorem familyExistsPos_holds : GlobalTheory.CompanionTheory.Ar.HT.FarguesHodgeT
   intro hF hQ hZ hH hOrd E _ _ _ H D l Xo c O₀ _ β Y S Ω _ K _ _ J _ y 𝔐 d ha hpq b hb p hpS hfree h2 hdisc φ hφ A _ _ _ m _ hm O _ _ _ _ _ _ _ t₀
   haveI : Fact p.Prime := ⟨𝔐.S_prime p hpS⟩
   obtain ⟨Sg, _, e, φ', F, _, _, _, pq, sc, w, σ, hO, hS⟩ :=
-    GlobalTheory.T.arith_variety_hodge_prime_bound E H D l Xo c O₀ β Y S Ω K J y 𝔐 d ha hpq p hpS hfree h2 hdisc φ hφ A m hm O t₀
-  obtain ⟨G⟩ := GlobalTheory.T.arith_variety_hodge_prime_degree E H D l Xo c O₀ β Y S Ω K J y 𝔐 d ha hpq p hpS hfree h2 hdisc
-  have hP := GlobalTheory.T.arith_variety_hodge_prime_height E H D l Xo c O₀ β Y S Ω K J y 𝔐 d ha hpq p hpS hfree h2 hdisc A m hm O G
+    _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.Orbit.orbit_exists E H D l Xo c O₀ β Y S Ω K J y 𝔐 d ha hpq p hpS hfree h2 hdisc φ hφ A m hm O t₀
+  obtain ⟨G⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.nonempty_genTors E H D l Xo c O₀ β Y S Ω K J y 𝔐 d ha hpq p hpS hfree h2 hdisc
+  have hP := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.PackEx.chartPack_exists E H D l Xo c O₀ β Y S Ω K J y 𝔐 d ha hpq p hpS hfree h2 hdisc A m hm O G
   let P : ∀ c' : ∀ k, J k, mseg y c' ≠ 0 → ChartPack G O c' := fun c' h => (hP c' h).some
   have hcp : HT.IsCp p (algebraMap O Ω w) := hO.2.2.2.2.2.2.2
-  have hL := GlobalTheory.T.arith_variety_model_prime_bound hF E H D l Xo c O₀ β Y S Ω K J y 𝔐 d ha hpq p hpS hfree h2 hdisc b hb A m hm O w hcp
+  have hL := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamLat.lat_main hF E H D l Xo c O₀ β Y S Ω K J y 𝔐 d ha hpq p hpS hfree h2 hdisc b hb A m hm O w hcp
   have hQs := fun (c' : ∀ k, J k) (h : mseg y c' ≠ 0) (τ : Sg) =>
-    GlobalTheory.T.arith_variety_model_prime_degree hF E H D l Xo c O₀ β Y S Ω K J y 𝔐 d ha hpq p hpS hfree h2 hdisc b hb A m hm O w hcp G c' h (P c' h) (e τ)
+    _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.Seq.seq_holds hF E H D l Xo c O₀ β Y S Ω K J y 𝔐 d ha hpq p hpS hfree h2 hdisc b hb A m hm O w hcp G c' h (P c' h) (e τ)
   classical
   let i : ∀ (c' : ∀ k, J k) (τ : Sg), (Fin (labelRk D (e τ)) → Ω) →ₗ[Ω] (Fin (D.p + D.q) → Ω) :=
     fun c' τ => if h : mseg y c' ≠ 0 then (hQs c' h τ).choose else 0
@@ -122,7 +125,7 @@ theorem familyExistsPos_holds : GlobalTheory.CompanionTheory.Ar.HT.FarguesHodgeT
   have hBase : ∀ (c' : ∀ k, J k) (h : mseg y c' ≠ 0),
       (chartD e b pq sc w (P c' h) (i c')).Base (CR O y c') p (algebraMap O Ω w) := by
     intro c' h
-    obtain ⟨hf1, hf2, hf3, hf4, hf5⟩ := GlobalTheory.T.arith_variety_hodge_prime_count E H D l Xo c O₀ β Y S Ω K J y 𝔐 d ha hpq p hpS hfree h2 hdisc b hb φ hφ A m hm O t₀ Sg e φ' F pq sc w σ hO hS G c' h (P c' h) (i c')
+    obtain ⟨hf1, hf2, hf3, hf4, hf5⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.chartD_fun_clauses E H D l Xo c O₀ β Y S Ω K J y 𝔐 d ha hpq p hpS hfree h2 hdisc b hb φ hφ A m hm O t₀ Sg e φ' F pq sc w σ hO hS G c' h (P c' h) (i c')
     have hG := fun τ : Sg => gamDel_of_seqHyp (CR O y c') (algebraMap O Ω w) (hwR c') hw0
       (coordLat O y (𝔐.HT p (e τ)) (b (e τ)) c')
       (dotDual (CR O y c') (coordLat O y (𝔐.HT p (e τ).swap) (b (e τ).swap) c'))
@@ -140,8 +143,8 @@ theorem familyExistsPos_holds : GlobalTheory.CompanionTheory.Ar.HT.FarguesHodgeT
         gam := fun τ => (hG τ).2.1
         del := fun τ => (hG τ).2.2
         th := fun τ => (hf5 τ).2 }
-  have hFun := GlobalTheory.T.arith_variety_hodge_prime_total E H D l Xo c O₀ β Y S Ω K J y 𝔐 d ha hpq p hpS hfree h2 hdisc b hb φ hφ A m hm O t₀ Sg e φ' F pq sc w σ hO hS G P i
-  have hSf := GlobalTheory.T.arith_variety_model_prime_height hF E H D l Xo c O₀ β Y S Ω K J y 𝔐 d ha hpq p hpS hfree h2 hdisc b hb φ hφ A m hm O t₀ Sg e φ' F pq sc w σ hO hS G P i hi
+  have hFun := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.Over.funfam_holds E H D l Xo c O₀ β Y S Ω K J y 𝔐 d ha hpq p hpS hfree h2 hdisc b hb φ hφ A m hm O t₀ Sg e φ' F pq sc w σ hO hS G P i
+  have hSf := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.SeqFam.seqfam_holds hF E H D l Xo c O₀ β Y S Ω K J y 𝔐 d ha hpq p hpS hfree h2 hdisc b hb φ hφ A m hm O t₀ Sg e φ' F pq sc w σ hO hS G P i hi
   have hpos := fun c' h => famD_pos (O := O) e b pq sc w P i c' h
   refine ⟨Sg, inferInstance, e, φ', F, inferInstance, inferInstance, inferInstance, w, σ, famD e b pq sc w P i, hO.1, hO.2.2.1, ?_, ?_⟩
   · refine ⟨hFun.1, fun τ => ⟨?_, ?_, ?_, ?_, (hSf τ).1, (hSf τ).2, hFun.2 τ⟩, hO.2.2.2.2.2.2.1, ?_, ?_⟩
@@ -154,7 +157,7 @@ theorem familyExistsPos_holds : GlobalTheory.CompanionTheory.Ar.HT.FarguesHodgeT
       exact hBase c' h
     · intro c' h C _ _ _ _ RC hRC χ hχ
       rw [hpos c' h]
-      exact GlobalTheory.T.ordinary_curve_hodge_prime hF hQ hZ hH hOrd E H D l Xo c O₀ β Y S Ω K J y 𝔐 d ha hpq p hpS hfree h2 hdisc b hb φ hφ A m hm O t₀ Sg e φ' F pq sc w σ hO hS G c' h (P c' h) (i c') (hi c' h) (hBase c' h) C RC hRC χ hχ
+      exact _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.TestPt.testFacts hF hQ hZ hH hOrd E H D l Xo c O₀ β Y S Ω K J y 𝔐 d ha hpq p hpS hfree h2 hdisc b hb φ hφ A m hm O t₀ Sg e φ' F pq sc w σ hO hS G c' h (P c' h) (i c') (hi c' h) (hBase c' h) C RC hRC χ hχ
   · intro c' h τ
     rw [hpos c' h]
     exact ⟨rfl, rfl, rfl, rfl⟩

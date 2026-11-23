@@ -2,10 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ComplementReferenceCompactSubgroup
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BasisOfIsCompl
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FrameLatticeTraceInitialSpanVolumeEqStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FrameLatticeTraceInitialSpanVolumeEq
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsHermND
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SelfDualHermitianLatticeTraceOrthogonalVolumeRat
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermExponentsNonnegAndDefectGroupBound
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetTermBasicFacts
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SelfDualHermitianLatticeTraceOrthogonalVolumeRatStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermExponentsNonnegAndDefectGroupBoundStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -118,7 +119,7 @@ theorem relIndex_trace (S : Frames L r k) (J : ℕ) (hJ : J ≤ r + 1) (d : S.Da
     (S.M d Λ ⊓ (S.spanTo S.f J ⊔ S.spanTo S.f' J).restrictScalars L.O).toAddSubgroup.relIndex
       (Λ ⊓ (S.spanTo S.f J ⊔ S.spanTo S.f' J).restrictScalars L.O).toAddSubgroup = S.be d Λ := by
   have hM : S.M d Λ ≤ S.sat Λ := (GlobalTheory.HL.TermBasic.term_basic L r k S d Λ hT).2.2.1
-  have hlev := (GlobalTheory.T.term_exponents_nonneg_and_defect_group_bound L r k S d Λ hT).2.2.2.2.2.2.2.2.2.2
+  have hlev := (_root_.GlobalTheory.HL.Defect.exponents_and_defect L r k S d Λ hT).2.2.2.2.2.2.2.2.2.2
   set Y := (S.spanTo S.f J ⊔ S.spanTo S.f' J).restrictScalars L.O with hY
   have h1 : (S.sat Λ).toAddSubgroup = (Λ ⊓ Y).toAddSubgroup ⊔ (S.M d Λ).toAddSubgroup := by
     apply le_antisymm
@@ -144,19 +145,19 @@ theorem family_vol : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace
   have b1 := relIndex_trace S (j + 1) hJ d Λ hT hF.2.2.1
   have b2 := relIndex_trace S (j + 1) hJ d Λ' hT' hF'.2.2.1
   have hβ : β ≠ 0 := by
-    obtain ⟨i, -, hi⟩ := (GlobalTheory.T.term_exponents_nonneg_and_defect_group_bound L r k S d Λ hT).2.2.2.2.2.1
+    obtain ⟨i, -, hi⟩ := (_root_.GlobalTheory.HL.Defect.exponents_and_defect L r k S d Λ hT).2.2.2.2.2.1
     rw [← hF.2.1, hi]
     exact pow_ne_zero _ (resQ_ne_zero _ S.ϖ_irr)
   rw [hF.2.1] at b1
   rw [hF'.2.1] at b2
   obtain ⟨hS, -, hM, -⟩ := GlobalTheory.HL.TermBasic.term_basic L r k S d Λ hT
   obtain ⟨hS', -, hM', -⟩ := GlobalTheory.HL.TermBasic.term_basic L r k S d Λ' hT'
-  obtain ⟨v1, v2⟩ := GlobalTheory.T.frameLattice_trace_initialSpan_volume_eq L r k S d Λ hT d Λ' hT' (j + 1) _ hJ rfl
+  obtain ⟨v1, v2⟩ := _root_.GlobalTheory.HL.TraceVol.trace_volume L r k S d Λ hT d Λ' hT' (j + 1) _ hJ rfl
   have hY := relIndex_symm_of_sub hβ
     (Submodule.toAddSubgroup_mono (inf_le_inf_right _ (hM.trans inf_le_left)))
     (Submodule.toAddSubgroup_mono (inf_le_inf_right _ (hM'.trans inf_le_left))) b1 b2 v1 v2
   obtain ⟨m, y, hy, hsp⟩ := exists_basis S (j + 1)
-  obtain ⟨p1, p2, p3⟩ := GlobalTheory.T.selfDualHermitianLattice_trace_orthogonal_volume_ratio L S.Hm S.herm Λ Λ' hS hS' m y hy _ _ rfl rfl
+  obtain ⟨p1, p2, p3⟩ := _root_.GlobalTheory.HL.VolPerp.vol_perp L S.Hm S.herm Λ Λ' hS hS' m y hy _ _ rfl rfl
   rw [hsp] at p1 p2 p3
   rcases hYy with rfl | rfl
   · exact ⟨hY, p2, b1⟩

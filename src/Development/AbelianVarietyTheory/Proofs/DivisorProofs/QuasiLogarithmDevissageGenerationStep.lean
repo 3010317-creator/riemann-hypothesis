@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedInOfQuasiLogarithmStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFormalGroupLawLogWithLinearPartStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupLawCoboundarySymmCocycleModStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymmetricCocycleModIdealEqCoboundaryQuasiLogStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedInOfQuasiLogarithm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFormalGroupLawLogWithLinearPart
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymmetricCocycleModIdealEqCoboundaryQuasiLog
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupLawCoboundarySymmCocycleMod
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -269,7 +269,7 @@ theorem step_generation : ∀ (p : ℕ) [Fact p.Prime] (B O Q : Type) [CommRing 
     obtain ⟨c, r, hr, rfl⟩ := dec b hb
     exact ⟨c, r, hr, hb'⟩
   choose w t ht hwt using h2
-  obtain ⟨k1, k2⟩ := GlobalTheory.T.formalGroupLawCoboundary_symmCocycle_mod p B O Q θ hF d μ hμ N f (GlobalTheory.T.divided_in_of_quasi_logarithm p B O Q θ hF d μ hμ N f hf)
+  obtain ⟨k1, k2⟩ := _root_.GlobalTheory.cob_symCoc_mod p B O Q θ hF d μ hμ N f (_root_.GlobalTheory.QLogDiff.dIn_of_QL p B O Q θ hF d μ hμ N f hf)
   have hco : ∀ α, a ∣ coeff α (cob2 (fun i => map θ (μ i)) (map θ c)) := by
     intro α
     rw [← map_formalGroupLawCoboundaryTwo θ hc, coeff_map, ← hna]
@@ -297,8 +297,8 @@ theorem step_generation : ∀ (p : ℕ) [Fact p.Prime] (B O Q : Type) [CommRing 
     rw [e2]
     exact sub_mem (hr α) (swap_mem N' hr α)
   have hc' : ∀ i, constantCoeff (map θ (μ i)) = 0 := hμ.law.const
-  obtain ⟨g₀, g1, g2, g3⟩ := GlobalTheory.T.symmetricCocycle_modIdeal_eq_coboundary_quasiLog p O C hC d _ hμ.law a hap (map θ c) (cc_map θ hcc) hco hsw
-  obtain ⟨l, l1, l2, l3⟩ := GlobalTheory.T.exists_formalGroupLaw_log_with_linearPart p O C hC d _ hμ.law (fun i => θ (w i))
+  obtain ⟨g₀, g1, g2, g3⟩ := _root_.GlobalTheory.CocLift.cocycle_lift p O C hC d _ hμ.law a hap (map θ c) (cc_map θ hcc) hco hsw
+  obtain ⟨l, l1, l2, l3⟩ := _root_.GlobalTheory.QLog.exists_log_of_lin p O C hC d _ hμ.law (fun i => θ (w i))
   have hl : QL (fun i => map θ (μ i)) ⊤ l :=
     ⟨l1, fun i => ⟨_, trivial, l2 i⟩, fun α => ⟨0, trivial, by rw [l3]; simp⟩⟩
   have hg := ql_add hc' g1 hl

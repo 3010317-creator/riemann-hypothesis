@@ -3,13 +3,15 @@ module
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProdUpdateDiv
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ChartFrameMatrixRegularStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DominatingPiecesSmoothStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrameMatricesRegularGenericStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ChartFrameMatrixRegular
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DominatingPiecesSmooth
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.RingHom.Smooth
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrameMatricesRegularGeneric
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PieceLocalizationAtElement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TwistedFrameInChart
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenMapStalkMap
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PieceLocalizationAtElementStatement
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegAtIsLocalRingIsFractionRingStalk
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TwistedFrameInChartStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -89,7 +91,7 @@ theorem flag_smooth : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (Co
   intro X Ω _ ξ E _ _ κ _ x S _ r V L m n φ c X' ξ' f hT hall hVB hTw hc hT' hall' hdom hch
   classical
   have hi : Function.Injective (algebraMap Ω (GenField Ω r)) := (algebraMap Ω (GenField Ω r)).injective
-  refine GlobalTheory.T.dominating_pieces_smooth X X' Ω (GenField Ω r) ξ ξ' f (algebraMap Ω (GenField Ω r)) hT.gen hT'.gen hdom (fun p' => ?_)
+  refine _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.Sm.smooth_of_pieces X X' Ω (GenField Ω r) ξ ξ' f (algebraMap Ω (GenField Ω r)) hT.gen hT'.gen hdom (fun p' => ?_)
   let P' : Cpt ξ' := ⟨p', hall' p'⟩
   obtain ⟨⟨c₀, J⟩, hcJ⟩ := hT'.cover P'
   have hy0 : flagCoord κ x φ c (c₀, J) ≠ 0 := hcJ.1
@@ -115,7 +117,7 @@ theorem flag_smooth : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (Co
     rwa [e] at h
   let P : Cpt ξ := ⟨f p', hall _⟩
   have h2 : InChart ξ x c₀ P := hover P' hcJ
-  have hfr := fun s => GlobalTheory.T.twisted_frame_in_chart X Ω ξ E κ x (r s) (V s) (L s) (m s) (n s) (φ s) (c s) c₀ P hT hall (hVB s) (hTw s) (hc s) h2
+  have hfr := fun s => _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.Sm.exists_chart_frame X Ω ξ E κ x (r s) (V s) (L s) (m s) (n s) (φ s) (c s) c₀ P hT hall (hVB s) (hTw s) (hc s) h2
   choose g hgR hgu T M N hT0 hM hN hNM hφ using hfr
   let g₀ : Ω := ∏ s, g s
   have hg₀R : g₀ ∈ chartSub x c₀ := Subring.prod_mem _ fun s _ => hgR s
@@ -156,16 +158,16 @@ theorem flag_smooth : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (Co
         (fun q => mul_ne_zero (pow_ne_zero _ (pow_ne_zero _ hax)) (hβ0 q)) q J',
       mul_div_mul_left _ _ (pow_ne_zero _ (pow_ne_zero _ hax))] at h
     exact h
-  obtain ⟨t, htR, ht0, htO, htiO, hmap, hsm⟩ := GlobalTheory.T.frame_matrices_regular_generic Ω S r n R (regAt ξ' P') T M N J hRO hT0
+  obtain ⟨t, htR, ht0, htO, htiO, hmap, hsm⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.Sm.Cell.big_cell_smooth Ω S r n R (regAt ξ' P') T M N J hRO hT0
     (fun s j l => hle s (hM s j l)) (fun s l j => hle s (hN s l j)) hNM hβ0 hβJ
-  obtain ⟨hgA, hAeq⟩ := GlobalTheory.T.chart_frame_matrix_regular Ω E κ x S r n m φ c M T c₀ J g₀ hx0 hg₀R hg₀0 hφ hβ0
+  obtain ⟨hgA, hAeq⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.Sm.chartRing_eq_ratioRing Ω E κ x S r n m φ c M T c₀ J g₀ hx0 hg₀R hg₀0 hφ hβ0
   obtain ⟨U₀, hU₀, hU₀m⟩ := isPiece_chart hT hx0
-  obtain ⟨U₁, hU₁, hU₁m⟩ := GlobalTheory.T.piece_localization_at_element X Ω ξ U₀ _ g₀ hT.gen hU₀ hg₀R hg₀0
+  obtain ⟨U₁, hU₁, hU₁m⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.Sm.exists_basicOpen_piece X Ω ξ U₀ _ g₀ hT.gen hU₀ hg₀R hg₀0
   obtain ⟨W₀, hW₀, hW₀m⟩ := isPiece_chart (coordTie_int_inst _ hT') hy0
   have hig0 : algebraMap Ω (GenField Ω r) g₀ ≠ 0 := by simpa using hg₀0
-  obtain ⟨W₁, hW₁, hW₁m⟩ := GlobalTheory.T.piece_localization_at_element X' _ ξ' W₀ _ _ hT'.gen hW₀ hgA hig0
+  obtain ⟨W₁, hW₁, hW₁m⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.Sm.exists_basicOpen_piece X' _ ξ' W₀ _ _ hT'.gen hW₀ hgA hig0
   rw [hAeq] at hW₁
-  obtain ⟨W₂, hW₂, hW₂m⟩ := GlobalTheory.T.piece_localization_at_element X' _ ξ' W₁ _ t hT'.gen hW₁ htR ht0
+  obtain ⟨W₂, hW₂, hW₂m⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.Sm.exists_basicOpen_piece X' _ ξ' W₁ _ t hT'.gen hW₁ htR ht0
   refine ⟨U₁, W₂, R, _, hmap, hU₁, hW₂, ?_, ?_, hsm⟩
   · intro q' hq'
     let Q' : Cpt ξ' := ⟨q', hall' q'⟩

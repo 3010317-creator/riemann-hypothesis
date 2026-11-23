@@ -3,11 +3,13 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.SiegelWeil₂.AutomorphicFormsFiniteIdeal
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HarishChandraFinite
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsSigmaList
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BoundedSubgroupOfIndefiniteUnitaryEqMaximalCompaStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BoundedSubgroupOfIndefiniteUnitaryEqMaximalCompa
+public import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.WordDerivatives
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCompactAdele
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryActionAtRealPlace
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemSmoothFunctionsOfClosedRightDerivatives
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
 import Formalism.RealPlaceAnalysis.RealPlaceTaylor.KoszulLowersPower
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -132,7 +134,7 @@ theorem conj_mem_Kset (hθ : IsInfFam θ) (R : RealPoints θ V) (h : IsFrameFam 
   have f1 : f 1 = 1 := by
     rw [← map_one (frameHom R h), fk]
     rfl
-  have key := GlobalTheory.T.bounded_subgroup_of_indefinite_unitary_eq_maximalCompact V.rank (ε τ) (f '' K') ?_ ?_ ?_ ?_ ?_
+  have key := _root_.GlobalTheory.BoundedUnitary.eq_Kset_of_bounded V.rank (ε τ) (f '' K') ?_ ?_ ?_ ?_ ?_
   · rw [← key]
     exact ⟨g, hg, rfl⟩
   · rintro _ ⟨a, -, rfl⟩

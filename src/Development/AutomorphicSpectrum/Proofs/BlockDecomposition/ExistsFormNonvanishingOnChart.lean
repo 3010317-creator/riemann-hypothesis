@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RatiosEqOfSameOrbit
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DehomogenizedEvalEqRatioStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsSmoothHermCombLine
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DehomogenizedEvalEqRatio
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermRepMetricSmooth
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MemPointIdealIffEvalCoordsZero
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MixedCycleRationalExists
@@ -96,7 +97,7 @@ theorem exists_form_of_mem_open : ∀ (m : ℕ) (n : Fin (m + 1) → ℕ) (X : S
     have hw : PtsOver.map i rfl _ y ∈ ptsIn (mpStr ℤ m n) σ₀ (mchart (ptChart (i (genericPoint X)))) :=
       mem_ptsIn.2 (Set.mem_iInter.2 fun k => mem_ptsIn.1 ((hyz k _).1.2 (hz k)))
     have hev : ev (mpStr ℤ m n) σ₀ _ (dehomog (ptChart (i (genericPoint X))) F) (PtsOver.map i rfl _ y) ≠ 0 := by
-      rw [GlobalTheory.T.dehomogenized_eval_eq_ratio m n _ F a hF _ z hyz hw]
+      rw [_root_.GlobalTheory.CompanionTheory.MixZ.ev_dehomog_of_isUnder m n _ F a hF _ z hyz hw]
       exact div_ne_zero hF0 (Finset.prod_ne_zero_iff.2 fun k _ => pow_ne_zero _ (hz k))
     have hb := mem_ptsIn.1 ((mem_ptsIn_basicOpen hw _).2 hev)
     have hp := hgV hb

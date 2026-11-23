@@ -5,15 +5,16 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.SmallGeneratedCountUpperOfUse
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.DegreeGenericOfDegree
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.DegreeOfIsIntersectionSystem
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.EmbeddingPiecesOfIntersectionAndResolutionStatement
+public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsEmbeddingPieces
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.EmbeddingPiecesOfIntersectionAndResolution
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.SelfIntersectionLeOfBoundedInjectionUse
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.ExistsFormOfMemChartRingZ
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PChartConstantsDetermined
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PConstantsDescend
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PConstantsRegular
-import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PEmbeddingWeight
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PTwistIntersectionInt
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PUnitApprox
+import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PEmbeddingWeight
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,7 +66,7 @@ theorem arithmetic_hilbert_samuel_of_systems :
   intro hSys hU hBig hRes
   exact GroundTheory.Heights₂.Heights.HilbertSamuel.ArithmeticVolumeMultiplicative.proof (selfIntersection_le_of_boundedInjection_use hU hBig)
     GroundTheory.Heights₂.Heights.HilbertSamuel.EmbeddingWeight.proof
-    (GroundTheory.Heights₂.Heights.HilbertSamuel.TwistIntersectionInt.proof (GlobalTheory.T.embedding_pieces_of_intersection_and_resolution hSys hRes)
+    (GroundTheory.Heights₂.Heights.HilbertSamuel.TwistIntersectionInt.proof (_root_.GlobalTheory.CompanionTheory.Ar.Giv.embeddingPieces_of_resK hSys hRes)
       (degreeGeneric_of_degree (degree_of_system hSys)))
     GroundTheory.Heights₂.Heights.HilbertSamuel.UnitApprox.proof
     (GroundTheory.Heights₂.Heights.HilbertSamuel.ConstantsRegular.proof

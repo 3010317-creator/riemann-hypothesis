@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.CuspDiscreteDecompositionGL
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalConvolutionCompactStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalDecompositionOfCompactStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.T2SpaceAdelicGeneralLinearGroupNumberField
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalConvolutionCompact
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalDecompositionOfCompact
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,6 +47,6 @@ open NumberField MeasureTheory Topology GlobalTheory.AutomorphicL2Unitary Global
 namespace GlobalTheory.CompanionTheory.CuspRep
 
 theorem cuspDiscreteDecompositionGL : GlobalTheory.Published.CuspDiscreteDecompositionGL :=
-  GlobalTheory.T.cuspidal_decomposition_of_compact GlobalTheory.T.cuspidal_convolution_compact
+  _root_.GlobalTheory.CompanionTheory.CuspGL.cuspDiscreteDecompositionGL_of_compact _root_.GlobalTheory.CompanionTheory.CuspidalCompact.isCompactOperator_repOp_Rcusp
 
 end GlobalTheory.CompanionTheory.CuspRep

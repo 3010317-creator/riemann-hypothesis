@@ -1,12 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.LocalArtinExists
-import Development.AbelianVarietyTheory.Definitions.Divisors.LineOppositeParabolicUnitaryLeviSectionEq
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsInverseLocalArtinWeilGroupHomStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GlobalArtinReciprocityMapUniqueStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InverseLocalArtinContinuousOnInertiaStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SmoothWeilCharEqOneOfToAbsGaloisAbEqOneStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GlobalArtinReciprocityHolds
+import Development.AbelianVarietyTheory.Definitions.Divisors.LineOppositeParabolicUnitaryLeviSectionEq
+import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
+import CompanionTheory.AutomorphicTheory.PlaceSeparation.IsOpenQuotientMapArt0
 import GroundTheory.GlobalFields.LocalFieldAtPlace
 import GroundTheory.LocalFields.PadicLogSeries
 import Mathlib.Algebra.Order.Floor.Extended
@@ -97,7 +98,7 @@ theorem LocLanglands.isSmoothChar_of_comp {E Ω : Type} [Field E] [NumberField E
 
 theorem localArtinExists_holds : LocalArtinExists := by
   intro E Ω _ _ _ _ _ A w h
-  obtain ⟨art, hart⟩ := globalArtinReciprocity_holds E Ω
+  obtain ⟨art, hart⟩ := _root_.CompanionTheory.FamInh.globalArtin E Ω
   obtain ⟨a, hs, ho, hg⟩ := T.exists_inverse_localArtin_weilGroup_hom E Ω A w h art hart
   have hc := T.inverseLocalArtin_continuousOn_inertia E Ω A w h art a hart ho hg
   refine ⟨a, hs, hc, ho, fun ξ hξ => ?_, fun art' hart' => ?_⟩

@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsTrDataGaussianIntOne
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DerivationOnVanishingOnSubalgebraKilledSqStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DerivationOnVanishingOnSubalgebraKilledSq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,7 +61,7 @@ theorem derOn_mem_span_of_trData : ∀ (A S M : Type) [CommRing A] [CommRing S] 
   have hB : ∀ β ∈ B, N.mkQ (D β) = 0 := fun β hβ => by
     rw [Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]
     exact Submodule.subset_span ⟨β, hβ, rfl⟩
-  have h := GlobalTheory.T.derivationOn_vanishing_on_subalgebra_killed_sq A S (M ⧸ N) B C tr n a b e ht (fun s => N.mkQ (D s)) hD' hB x hx
+  have h := _root_.GlobalTheory.AlmostEt.derOn_killed_sq A S (M ⧸ N) B C tr n a b e ht (fun s => N.mkQ (D s)) hD' hB x hx
   rw [← map_smul, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at h
   exact h
 

@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.HTBasis
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicTowerTraceAlmostSurjectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicTowerTraceAlmostSurjective
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ImportsLast
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormPrimitiveRootPrimePowSubOnePadicComplex
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SumTranslateEq
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormPrimitiveRootPrimePowSubOnePadicComplex
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -170,7 +170,7 @@ theorem rel_trace (hn : ∀ (g : GQ l) (x : Om l), ‖g x‖ = ‖x‖) (K : Fin
       ⟨hp, by simp⟩ ⟨hq, ?_⟩
     have he' : p.1 * p.2 = q.1 * q.2 := he
     rw [he']; simp
-  obtain ⟨e, heL, he1, he⟩ := GlobalTheory.T.cyclotomicTower_trace_almost_surjective l K (L ⊔ E)
+  obtain ⟨e, heL, he1, he⟩ := _root_.GlobalTheory.Cyc.trace_almost_onto l K (L ⊔ E)
     ((S ×ˢ T).image fun p => p.1 * p.2) (hKL.trans le_sup_left) hst'
     (by
       intro s hs
@@ -411,7 +411,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) 
   obtain ⟨r, hr0, hr1, hroot⟩ := approx_root hn K L S hKL hst hS hS'
   obtain ⟨a, ha, hra, ha1⟩ := exists_near_one K (max r (l : ℝ)⁻¹) (le_max_of_le_left hr0)
     (max_lt hr1 (inv_lt_one_of_one_lt₀ hl))
-  obtain ⟨b0, hb0L, hb01, hb0⟩ := GlobalTheory.T.cyclotomicTower_trace_almost_surjective l K L S hKL hst hS hS' a ha ha1
+  obtain ⟨b0, hb0L, hb01, hb0⟩ := _root_.GlobalTheory.Cyc.trace_almost_onto l K L S hKL hst hS hS' a ha ha1
   let X := {c : Om l // ‖c‖ ≤ 1 ∧ ∀ n ∈ L.fixingSubgroup, n c = c}
   have hstep : ∀ b : X, ∃ c : X, ‖c.1 ^ l - b.1‖ ≤ r := fun b => by
     obtain ⟨c, hc, hc'⟩ := hroot b.1 b.2.1 b.2.2

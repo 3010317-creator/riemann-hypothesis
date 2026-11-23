@@ -2,7 +2,8 @@ module
 
 public import Development.WeilBound.CoreStatements.VolumeEquality.DegPushDefs
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.PotentialsBoundedRegSettingEqReference
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DetLatticeFrameGenStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsGenericFlag
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DetLatticeFrameGen
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -215,7 +216,7 @@ theorem mu_side {V : Type} [AddCommGroup V] [Module Ω V] (L : Lat ξ V) {r r' :
     rw [Matrix.mul_apply] at this
     rw [show T₀ k m = Tm m k from rfl, ← this]
     exact Finset.sum_congr rfl fun a _ => mul_comm _ _
-  refine ⟨(Pm⁻¹ * Tm).det, Tm.map i, GlobalTheory.T.det_lattice_frame_gen X Ω ξ V L r s b _ q hs hf hbs, ?_, le_antisymm (Submodule.span_le.2 ?_)
+  refine ⟨(Pm⁻¹ * Tm).det, Tm.map i, _root_.GlobalTheory.CompanionTheory.Relay.det_lattice_frame_gen X Ω ξ V L r s b _ q hs hf hbs, ?_, le_antisymm (Submodule.span_le.2 ?_)
     (Submodule.span_le.2 ?_)⟩
   · rw [← Matrix.det_mul, hPT]
     exact (RingHom.map_det i _).symm

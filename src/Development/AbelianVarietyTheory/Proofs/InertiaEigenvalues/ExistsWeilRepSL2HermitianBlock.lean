@@ -1,14 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsTestRep
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSplitEtaleHermitianPairIsometryStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteEtaleHermitianLinearEquivContinuousStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSelfDualPiHaarTraceStarDotProductUnramifiedStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocallyConstantCompactSupportSlicesOperatorApplyStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TraceEqSumCoordsOfAlgEquivStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TraceTowerFiniteEtaleHermitianPairStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSplitEtaleHermitianPairIsometry
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteEtaleHermitianLinearEquivContinuous
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSelfDualPiHaarTraceStarDotProductUnramified
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FourierMatch
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocallyConstantCompactSupportSlicesOperatorApply
+public import Mathlib.RingTheory.Trace.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TraceEqSumCoordsOfAlgEquiv
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TraceTowerFiniteEtaleHermitianPair
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TransportSelfDualHaarMeasureKernelAddEquiv
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedQuadraticIntegralTraceFormPerfectStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedQuadraticIntegralTraceFormPerfect
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -79,30 +81,30 @@ theorem sl2Map_wS {F K : Type} [Field F] [CommRing K] [Algebra F K] :
 
 theorem weilSL2_hermitian : WeilEt → GammaOne → ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (r : ℕ) (M : Meas r F E) (ψ : AddChar F ℂ), IsStdChar ψ → ∃ W : SpecialLinearGroup (Fin 2) F → (Hn r F E → ℂ) → Hn r F E → ℂ, IsTestRep W ∧ ∀ f, IsTest f → (∀ t X, W (nS t) f X = ψ (t * Algebra.trace F E (star X.2.1 ⬝ᵥ X.2.1) / 2) * f X) ∧ W (wS F) f = fourU M ψ f := by
   intro hW hG F E _ _ _ _ _ r M ψ hψ
-  obtain ⟨A, e, j, hj, hNe⟩ := GlobalTheory.T.exists_split_etaleHermitianPair_isometry F E r
+  obtain ⟨A, e, j, hj, hNe⟩ := _root_.GlobalTheory.JR.exists_split_et F E r
   haveI : LocallyCompactSpace E := Unram.lcE (F := F)
   haveI : ProperSpace E := ProperSpace.of_locallyCompactSpace E
   haveI : SecondCountableTopology E := secondCountable_of_proper
   haveI : CharZero F := Unram.charZero (E := E)
   letI mE : MeasurableSpace E := M.mE
   haveI : BorelSpace E := M.bE
-  obtain ⟨hjc, hjsc⟩ := GlobalTheory.T.finiteEtaleHermitian_linearEquiv_continuous F E A r j
+  obtain ⟨hjc, hjsc⟩ := _root_.GlobalTheory.JR.et_equiv_continuous F E A r j
   let jh : A.L ≃ₜ (Fin r → E) := { j.toEquiv with continuous_toFun := hjc, continuous_invFun := hjsc }
   let μE : Measure (Fin r → E) := Measure.pi fun _ => M.μE
   let B : (Fin r → E) → (Fin r → E) → ℂ := fun c b => ψ (Algebra.trace F E (star c ⬝ᵥ b))
-  have hsd : SelfDual μE B := GlobalTheory.T.isSelfDual_pi_haar_traceStarDotProduct_unramified F E r M ψ hψ
+  have hsd : SelfDual μE B := _root_.GlobalTheory.JR.selfDual_pi_trace F E r M ψ hψ
   obtain ⟨hT1, hT2⟩ := GlobalTheory.transport_selfDual_fourB j.toAddEquiv hjc hjsc μE B
   have hker : A.kerL ψ ((1 : A.Kˣ) : A.K) = fun x y => B (j.toAddEquiv x) (j.toAddEquiv y) := by
     funext x y
     have h1 := hj x y
     simp only [map_one, one_mul] at h1
     show ψ (Algebra.trace F A.K (((1 : A.Kˣ) : A.K) * Algebra.trace A.K A.L (star x * y))) = ψ (Algebra.trace F E (star (j x) ⬝ᵥ j y))
-    rw [Units.val_one, one_mul, GlobalTheory.T.trace_tower_finiteEtaleHermitianPair, h1]
+    rw [Units.val_one, one_mul, _root_.GlobalTheory.trace_tower_et, h1]
   have hsdL : SelfDual (Measure.map j.toAddEquiv.symm μE) (A.kerL ψ ((1 : A.Kˣ) : A.K)) := by
     rw [hker]; exact (hT1 ⟨hsd, fun x => (continuous_const.add continuous_id).aemeasurable⟩).1
   obtain ⟨γ, Wk, hWk⟩ := hW F E A ψ hψ 1 _ hsdL
   have hγ : γ = 1 := hG F E A ψ hψ 1 _ hsdL A.etaK γ Wk hWk r j (by simpa using hj)
-  obtain ⟨hTrE, -, -⟩ := GlobalTheory.T.unramifiedQuadratic_integral_traceForm_perfect F E
+  obtain ⟨hTrE, -, -⟩ := _root_.GlobalTheory.NTr.traceForm_perfect F E
   have htr2 : ∀ a : F, Algebra.trace F E (algebraMap F E a) = 2 * a := by
     intro a
     apply (algebraMap F E).injective
@@ -112,7 +114,7 @@ theorem weilSL2_hermitian : WeilEt → GammaOne → ∀ (F E : Type) [Nontrivial
     have : star (j y) ⬝ᵥ j y = algebraMap F E (∑ i, e (A.NL y) i) := by
       set_option synthInstance.maxHeartbeats 100000 in
         simp only [dotProduct, Pi.star_apply, map_sum, hNe y, mul_comm]
-    rw [this, htr2, GlobalTheory.T.trace_eq_sum_of_algEquiv_pi r e]; field_simp
+    rw [this, htr2, _root_.GlobalTheory.trace_eq_sum_coords_of_algEquiv r e]; field_simp
   have testj : ∀ φ : (Fin r → E) → ℂ, IsTest φ → IsTest (fun y : A.L => φ (j y)) := fun φ hφ =>
     ⟨hφ.1.comp_continuous hjc, hφ.2.comp_homeomorph jh⟩
   have testjs : ∀ φ : A.L → ℂ, IsTest φ → IsTest (fun b => φ (j.symm b)) := fun φ hφ =>
@@ -133,8 +135,8 @@ theorem weilSL2_hermitian : WeilEt → GammaOne → ∀ (F E : Type) [Nontrivial
     have : (fun y => (0 : (Fin r → E) → ℂ) (j y)) = 0 := rfl
     rw [this, hW0]; rfl
   have hsl : ∀ f : Hn r F E → ℂ, IsTest f → ∀ X : Hn r F E, IsTest (fun y : A.L => f (X.1, j y, X.2.2)) :=
-    fun f hf X => testj _ ((GlobalTheory.T.locallyConstantCompactSupport_slices_operator_apply (T 1) (hTt 1) (hT0 1) f hf).1 X.1 X.2.2)
-  refine ⟨fun g f X => T g (fun v => f (X.1, v, X.2.2)) X.2.1, ⟨fun g f hf => (GlobalTheory.T.locallyConstantCompactSupport_slices_operator_apply (T g) (hTt g) (hT0 g) f hf).2, ?_, ?_, ?_⟩, ?_⟩
+    fun f hf X => testj _ ((_root_.GlobalTheory.slices_test' (T 1) (hTt 1) (hT0 1) f hf).1 X.1 X.2.2)
+  refine ⟨fun g f X => T g (fun v => f (X.1, v, X.2.2)) X.2.1, ⟨fun g f hf => (_root_.GlobalTheory.slices_test' (T g) (hTt g) (hT0 g) f hf).2, ?_, ?_, ?_⟩, ?_⟩
   · intro f hf; funext X
     show Wk (ι 1) (fun y => f (X.1, j y, X.2.2)) (j.symm X.2.1) = f X
     rw [map_one, hWk.1.2.1 _ (hsl f hf X)]

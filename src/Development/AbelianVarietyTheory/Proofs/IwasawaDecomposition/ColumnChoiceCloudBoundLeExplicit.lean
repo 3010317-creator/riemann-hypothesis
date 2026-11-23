@@ -1,8 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.TiedColumnData
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExplicitRanksBasicBoundsLargeScaleStatement
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ScalePolynomialQuantitiesComparisonStatement
+import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.PairRowIffQdRows
+import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExplicitRanksBasicBoundsLargeScale
+import Formalism.LocalRingCardinality.DataParams₂
+import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ScalePolynomialQuantitiesComparison
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,8 +55,8 @@ def ScaleOK (K : Ctx) : Prop :=
 
 theorem scaleOK_large (eps : ℝ) (he : 0 < eps) (he' : eps < 1 / 52) (cD : ℝ) (hcD : 0 ≤ cD) :
     ∃ x1 : ℝ, ∀ K : Ctx, K.s.eps = eps → K.cD = cD → x1 ≤ K.s.x → ScaleOK K := by
-  obtain ⟨x2, hx2⟩ := GlobalTheory.T.scale_polynomial_quantities_comparison eps (cD + 6) (1 / 2) he (by norm_num)
-  obtain ⟨x3, hx3⟩ := GlobalTheory.T.explicitRanks_basic_bounds_large_scale eps he he'
+  obtain ⟨x2, hx2⟩ := _root_.GlobalTheory.scale_poly_comparison eps (cD + 6) (1 / 2) he (by norm_num)
+  obtain ⟨x3, hx3⟩ := _root_.GlobalTheory.EX.rank_basic_bounds eps he he'
   refine ⟨max 35 (max x2 x3), fun K e1 e2 hx R hR => ?_⟩
   have h35 : 35 ≤ K.s.x := le_trans (le_max_left _ _) hx
   have hxa : x2 ≤ K.s.x := le_trans (le_trans (le_max_left _ _) (le_max_right _ _)) hx

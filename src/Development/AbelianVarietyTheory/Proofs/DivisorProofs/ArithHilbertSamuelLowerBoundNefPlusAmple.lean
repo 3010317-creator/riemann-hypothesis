@@ -4,12 +4,14 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.SmallFam
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqOfIsometricTrivShift
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermPairWithSectionsRepresentsTensor
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InducedModelDominantCurveRestriction
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAmpleTensorOfNefFibresAmpleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogCountRadiusOneLowerBoundAmpleSemiPosStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NefFibOfIsNef
+public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAmpleLBOfRelAmpleOfIsAffine
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAmpleTensorOfNefFibresAmple
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogCountRadiusOneLowerBoundAmpleSemiPos
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LowerBoundAlongResidues
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemipositiveNonnegCombination
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepresentsBaseBundlesAndTrivial
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepresentsHermitianLineBundlePow
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemipositiveNonnegCombination
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,7 +67,7 @@ theorem lowerBound_along_div : GlobalTheory.Published.ArCalc → AmpleHS → ∀
   have hLn : NefFib (P.L.pow n) := fun Z i _ _ κ _ _ _ hd => by
     rw [NefHodgeTateAt.topSelf_pow hp P.L n Z i κ hd]
     exact mul_nonneg (Nat.cast_nonneg _) (hL Z i κ hd)
-  have hAmp : IsAmpleLB ((P.L.pow n).tens P.A).B := GlobalTheory.T.isAmple_tensor_of_nef_fibres_ample k X p D hX _ _ hLn hA
+  have hAmp : IsAmpleLB ((P.L.pow n).tens P.A).B := _root_.GlobalTheory.AmpleNefFibZ.isAmpleLB_tens_of_nefFib k X p D hX _ _ hLn hA
   have hSP : ((P.L.pow n).tens P.A).SemiPos D := (hLs.pow n).tens hAs
   have hRep : P.Rep (n : ℤ) 1 ((P.L.pow n).tens P.A) := by
     have h1 := Pair.rep_pow k X p P 1 0 P.L n (Pair.rep_base k X p P).1
@@ -73,7 +75,7 @@ theorem lowerBound_along_div : GlobalTheory.Published.ArCalc → AmpleHS → ∀
     simpa using h2
   refine lowerBound_along_residues (D + 1) n (fun M => P.lc M ((M / n : ℕ) - c) 1) (α / (D + 1).factorial) hn
     (fun r hr ε' hε' => ?_) ε hε
-  filter_upwards [GlobalTheory.T.log_count_radius_one_lower_bound_ample_semiPos hHS k X p D hX P n 1 r (-(c : ℤ)) _ α hRep hAmp hSP hα ε' hε'] with q hq
+  filter_upwards [_root_.GlobalTheory.HSNef.lc_one_eventually_ge hHS k X p D hX P n 1 r (-(c : ℤ)) _ α hRep hAmp hSP hα ε' hε'] with q hq
   have e : (n * q + r) / n = q := by
     rw [Nat.add_comm, Nat.add_mul_div_left _ _ hn, Nat.div_eq_of_lt hr, zero_add]
   simp only [e]

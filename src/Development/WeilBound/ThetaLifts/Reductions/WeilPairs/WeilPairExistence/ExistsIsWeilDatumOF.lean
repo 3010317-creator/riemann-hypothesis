@@ -3,11 +3,12 @@ module
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.LatH
 public import Formalism.LocalToGlobal.IndefiniteReal.DatumF
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaFunctionHeisenbergInvariantStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaFunctionHeisenbergInvariant
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumTwistByHeckeCharactersTrivialBaseStatement
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.FixedOfMem
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.IsScalarOneOfComm
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.LatRep
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntAFSmulMemLatOF
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +46,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntAFSmulMemLatOF
 
 @[expose] public section
 
@@ -86,7 +86,7 @@ theorem exists_isWeilDatumOF : ∀ (F E : Type) [Field F] [NumberField F] [Field
   intro F E _ _ _ _ _ σ B hB nS nT JS JT hS hT ξ₀ hξ hξσ hLat χS χT hcS hcT rS rT
   obtain ⟨η, hη1, hη2, hη3, hη4⟩ := PositivityTheory.ThKW.exists_eta F E σ B hB
   obtain ⟨Λ, hΛ1, hΛ2⟩ := hLat
-  have hc : GlobalTheory.FinLatF.HeisClosedF σ JS JT ξ₀ B.ψ := GlobalTheory.T.theta_function_heisenberg_invariant F E σ B hB nS nT JS JT ξ₀
+  have hc : GlobalTheory.FinLatF.HeisClosedF σ JS JT ξ₀ B.ψ := _root_.GlobalTheory.HeisThetaF.isThetaFunOF_heisOF F E σ B hB nS nT JS JT ξ₀
   obtain ⟨w, lam, Om, hO⟩ := PositivityTheory.ThKW.latRep F E σ B hB nS nT JS JT hS hT ξ₀ hξ hξσ Λ hΛ1 hΛ2 hc
   obtain ⟨om, hom⟩ := PositivityTheory.ThKW.datumEta F E σ B hB nS nT JS JT hS hT ξ₀ hξ hξσ Λ hΛ1 hΛ2 hc w lam Om hO η hη1 hη2 hη3 hη4
   obtain ⟨om', hom'⟩ := GlobalTheory.T.weil_datum_twist_by_hecke_characters_trivial_base F E σ B hB nS nT JS JT hS hT ξ₀ hξ hξσ _ _ ((η ^ nS)⁻¹ * χS) ((η ^ nT)⁻¹ * χT) om hom

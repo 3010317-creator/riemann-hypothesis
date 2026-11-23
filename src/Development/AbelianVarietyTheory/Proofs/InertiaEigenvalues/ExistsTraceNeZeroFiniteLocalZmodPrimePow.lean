@@ -4,9 +4,14 @@ public import Mathlib.Algebra.Field.ZMod
 public import Mathlib.RingTheory.AdjoinRoot
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.Trace.Defs
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteFieldExistsGeneratorMinpolyStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpanPowersOfUniformizerOfNilpotentStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TraceAdjoinRootMapStatement
+public import Mathlib.Algebra.Polynomial.AlgebraMap
+public import Mathlib.Algebra.Polynomial.Derivative
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteFieldExistsGeneratorMinpoly
+public import Mathlib.RingTheory.Ideal.Span
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpanPowersOfUniformizerOfNilpotent
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TraceAdjoinRootMap
+public import Mathlib.Algebra.Algebra.ZMod
+public import Mathlib.RingTheory.Trace.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,8 +61,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.Algebra.Algebra.ZMod
-public import Mathlib.RingTheory.Trace.Basic
 
 @[expose] public section
 
@@ -112,7 +115,7 @@ theorem exists_trace_ne_zero : ∀ (l b e : ℕ) [Fact l.Prime] (B : Type) [Comm
     exact hlmax
   letI : Algebra (ZMod l) K := ZMod.algebra K l
   haveI : Finite K := Finite.of_surjective _ IsLocalRing.residue_surjective
-  obtain ⟨a, p, hpm, hpirr, hpa, hpa', hgen, hcardK⟩ := GlobalTheory.T.exists_separable_generator_card_eq_pow_natDegree l K
+  obtain ⟨a, p, hpm, hpirr, hpa, hpa', hgen, hcardK⟩ := _root_.GlobalTheory.finiteField_exists_generator_minpoly l K
   set g : ZMod (l ^ b) →+* ZMod l := ZMod.castHom (dvd_pow_self l hb) (ZMod l) with hg
   have hgs : Function.Surjective g := ZMod.ringHom_surjective g
   obtain ⟨h, hhp, hdeg, hmon⟩ :=
@@ -146,7 +149,7 @@ theorem exists_trace_ne_zero : ∀ (l b e : ℕ) [Fact l.Prime] (B : Type) [Comm
     rw [← Nat.cast_pow, ← map_natCast (algebraMap (ZMod (l ^ b)) B), ZMod.natCast_self, map_zero]
   have hpe : π ^ e ∈ Ideal.span {φ (l : C)} := by
     rw [map_natCast, hspan]; exact Ideal.mem_span_singleton_self _
-  have hE := GlobalTheory.T.exists_sum_mul_pow_of_residue_surjective_of_nilpotent C B φ π (l : C) e b hsurj hpe (by rw [map_natCast]; exact hlb)
+  have hE := _root_.GlobalTheory.span_powers_of_uniformizer_of_nilpotent C B φ π (l : C) e b hsurj hpe (by rw [map_natCast]; exact hlb)
 
   letI : Algebra C B := φ.toAlgebra
   have hsmul : ∀ (c : C) (x : B), c • x = φ c * x := fun c x => Algebra.smul_def c x
@@ -188,7 +191,7 @@ theorem exists_trace_ne_zero : ∀ (l b e : ℕ) [Fact l.Prime] (B : Type) [Comm
       AdjoinRoot.algebraMap_eq]
   have hu : IsUnit (Algebra.trace (ZMod (l ^ b)) C (AdjoinRoot.mk h q')) := by
     apply isUnit_of_cast_ne_zero l b hb
-    rw [← hg, GlobalTheory.T.map_trace_adjoinRoot_eq_trace_map _ _ g h hmon, hmap]; exact hz
+    rw [← hg, _root_.GlobalTheory.trace_adjoinRoot_map _ _ g h hmon, hmap]; exact hz
   refine ⟨φ (AdjoinRoot.mk h q'), ?_⟩
   rw [htr]
   intro h0

@@ -3,10 +3,12 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EmbGLMemRealSU
 public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.DefiniteBound
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryWithDeterminantStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.Signature
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryWithDeterminant
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HatKMConjImp
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsInvertibleUnitaryAdelicMatrixOfRationalUnitaryStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeCongruenceIffCompletionStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsKMOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsInvertibleUnitaryAdelicMatrixOfRationalUnitary
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeCongruenceIffCompletion
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLatticeRationalVectorsInAdelicTranslate
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -65,7 +67,7 @@ theorem GlobalTheory.UCls.exists_special_reduction : ∀ (E : Type) [Field E] [N
   have hRA : ∀ γ : GL (Fin r) E, (∀ x y, herm G ((γ : Matrix (Fin r) (Fin r) E) *ᵥ x)
       ((γ : Matrix (Fin r) (Fin r) E) *ᵥ y) = herm G x y) →
       IsUA (IsCMField.complexConj E) G (ratM (maximalRealSubfield E) (γ : Matrix (Fin r) (Fin r) E)) :=
-    fun γ hγ => GlobalTheory.T.isInvertibleUnitaryAdelicMatrix_of_rational_unitary E r G _ (Matrix.isUnits_det_units γ).ne_zero hγ
+    fun γ hγ => _root_.GlobalTheory.RatUnit.isUA_ratM E r G _ (Matrix.isUnits_det_units γ).ne_zero hγ
   have hR1 : ∀ γ : GL (Fin r) E, ratM (maximalRealSubfield E) (γ : Matrix (Fin r) (Fin r) E) *
       ratM (maximalRealSubfield E) ((γ⁻¹ : GL (Fin r) E) : Matrix (Fin r) (Fin r) E) = 1 := fun γ => by
     rw [← ratM_mul, Units.mul_inv, ratM_one]
@@ -89,7 +91,7 @@ theorem GlobalTheory.UCls.exists_special_reduction : ∀ (E : Type) [Field E] [N
         ((γ : Matrix (Fin r) (Fin r) E) *ᵥ y) = herm G x y) ∧ (0 < r → (γ : Matrix (Fin r) (Fin r) E).det = u) := by
       rcases Nat.eq_zero_or_pos r with hr | hr
       · exact ⟨1, fun x y => by simp, fun h => absurd h (by omega)⟩
-      · obtain ⟨γ, h1, h2⟩ := GlobalTheory.T.exists_unitary_with_determinant E r G u hr hΛ.1 hΛ.2.1 hu
+      · obtain ⟨γ, h1, h2⟩ := _root_.GlobalTheory.UnitDet.main E r G u hr hΛ.1 hΛ.2.1 hu
         exact ⟨γ, h1, fun _ => h2⟩
     refine ⟨γ, k, fun _ => ⟨hγ, hk, ?_, ?_⟩⟩
     · exact isUA_mul _ G (isUA_mul _ G (isUA_mul _ G (hRA _ (hU hγ)) (hg i)) (isUA_inv _ G hk.1))
@@ -178,7 +180,7 @@ theorem GlobalTheory.UCls.exists_special_reduction : ∀ (E : Type) [Field E] [N
         (ratM (maximalRealSubfield E) (((γ i)⁻¹ : GL (Fin r) E) : Matrix (Fin r) (Fin r) E) * g i *
         (k i)⁻¹ * g0⁻¹)) :=
       isUA_mul _ G (isUA_mul _ G (isUA_inv _ G hsUA) (hRA δ hδU)) hsUA
-    have hL5 := GlobalTheory.T.lattice_congruence_iff_completion (maximalRealSubfield E) E r (Λi i) M (γ i * δ * (γ i)⁻¹) hM hrat
+    have hL5 := _root_.GlobalTheory.LocGlob.stab_cong_iff_hat (maximalRealSubfield E) E r (Λi i) M (γ i * δ * (γ i)⁻¹) hM hrat
     rw [hmap, hΓi]
     constructor
     · rintro ⟨⟨-, h1⟩, h2⟩

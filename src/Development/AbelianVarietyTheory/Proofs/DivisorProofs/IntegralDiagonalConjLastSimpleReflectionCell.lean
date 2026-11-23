@@ -2,11 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConvUAbsU
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemShellUIffDepth
+public import Mathlib.MeasureTheory.Group.Measure
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HaarMeasureUniqueSigmaCompactNormalisedCompactOp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HaarMeasureWeylCellOddUnitary
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryWeylCellShellIsOpenCompactSubgroup
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdealWeight
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HaarMeasureUniqueSigmaCompactNormalisedCompactOpStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HaarMeasureWeylCellOddUnitaryStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SwapLtSwapIffOfAddTwo
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryWeylCellShellIsOpenCompactSubgroupStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -147,8 +148,8 @@ theorem integral_conj_diag_cellU_last :
       (∀ F : GU σ n → ENNReal, ∫⁻ u : cellU y, F (t⁻¹ * (u : GU σ n) * t) ∂μ =
         ‖(q : ℂ) ^ (-4 * ordL (((t : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) (lo k) (lo k)))‖ₑ * ∫⁻ u : cellU y, F (u : GU σ n) ∂μ) := by
   intro L _ _ _ ϖ σ q hU n k hk hn y hy hw _ _ μ _ hμ t ht
-  have hsh := (GlobalTheory.T.unitaryWeylCellShell_isOpenCompactSubgroup L ϖ σ q hU n k hk hn y hy hw).1
-  have hvol := GlobalTheory.T.haar_measure_weyl_cell_odd_unitary L ϖ σ q hU n k hk hn y hy hw μ hμ
+  have hsh := (_root_.GlobalTheory.WeylCell.WeylUnipotentShell.shellU_open_compact_subgroup L ϖ σ q hU n k hk hn y hy hw).1
+  have hvol := _root_.GlobalTheory.WeylCell.WeylUnipotentShell.measure_shellU L ϖ σ q hU n k hk hn y hy hw μ hμ
   have hcv := v_cornerU_conj hU.2.1 k t ht
   have hq : (2 : ℕ) ≤ q := hU.2.2.2.2.2.1
   generalize ordL (((t : GL (Fin n) L) : Matrix (Fin n) (Fin n) L) (lo k) (lo k)) = o at hcv ⊢
@@ -183,7 +184,7 @@ theorem integral_conj_diag_cellU_last :
   obtain ⟨b, hb⟩ : ∃ b : ℕ, (b : ℤ) = a - o := ⟨(a - o).toNat, by
     rw [Int.toNat_of_nonneg]; rw [ha]; linarith [le_abs_self o]⟩
   have key : μ.map e = ‖(q : ℂ) ^ (-4 * o)‖ₑ • μ := by
-    refine GlobalTheory.T.haarMeasure_unique_sigmaCompact_normalised_compactOpen (cellU y) μ (μ.map e) (fun j : ℕ => shellU k y j)
+    refine _root_.GlobalTheory.haar_unique_of_sigmaCompact_normalised (cellU y) μ (μ.map e) (fun j : ℕ => shellU k y j)
       (fun j => ⟨(hsh j).2.1, (hsh j).1.measurableSet⟩) ?_ (shellU k y ((2 * a : ℕ) : ℤ)) _ (hsh _).1 (hsh _).2.1
       ⟨1, (hsh _).2.2.1⟩ ?_
     · exact Set.eq_univ_of_forall fun u => Set.mem_iUnion.2 ⟨_, mem_shellU_depth k y u⟩

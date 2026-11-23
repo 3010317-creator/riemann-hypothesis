@@ -1,12 +1,13 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsUMOfMem
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FibreFunctionLocallyConstantCompactStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeviBlockMemParabolicStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MulVecMidBlockDecompStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FibreFunctionLocallyConstantCompact
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeviBlockMemParabolic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MulVecMidBlockDecomp
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothIntegralLinear
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothIntegralLinearChangeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnipotentTopMemParabolicStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OpenFns
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothIntegralLinearChange
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnipotentTopMemParabolic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -90,7 +91,7 @@ theorem smInt_transform {t : ℕ} [MeasurableSpace (Fin t → k)] [BorelSpace (F
     _ = smInt μ (A ∘ ((B ∘ Ψ) ∘ (mulVecHomeo w⁻¹))) := congrArg (smInt μ) (funext h)
     _ = A (smInt μ ((B ∘ Ψ) ∘ (mulVecHomeo w⁻¹))) := SmIntEl.smInt_linear μ A lGL cGL
     _ = A (((detChar (Fin t) (absPow k (1 : ℂ)) w : ℂˣ) : ℂ) • smInt μ (B ∘ Ψ)) :=
-        congrArg A (GlobalTheory.T.smooth_integral_linear_change k t μ w (B ∘ Ψ) lG cG)
+        congrArg A (_root_.GlobalTheory.CompanionTheory.Rodier.SmIntHaar.smInt_comp_inv_mulVec k t μ w (B ∘ Ψ) lG cG)
     _ = ((detChar (Fin t) (absPow k (1 : ℂ)) w : ℂˣ) : ℂ) • A (smInt μ (B ∘ Ψ)) := map_smul A _ _
     _ = ((detChar (Fin t) (absPow k (1 : ℂ)) w : ℂˣ) : ℂ) • A (B (smInt μ Ψ)) :=
         congrArg (fun z => ((detChar (Fin t) (absPow k (1 : ℂ)) w : ℂˣ) : ℂ) • A z) (SmIntEl.smInt_linear μ B lΨ cΨ)
@@ -146,8 +147,8 @@ theorem fibV_mul (τ : Representation ℂ (Mir k i) V) (σ : Representation ℂ 
       topV k i t x + midV k i t u) :
     fibV f ((q : GL (Fin (i + t)) k) * g) v =
       extTensor τ σ (levi k i (qBlocks k i t q).1 * uM k i x, (qBlocks k i t q).2) (fibV f g u) := by
-  obtain ⟨m1, p1⟩ := GlobalTheory.T.levi_block_mem_parabolic k i t q
-  obtain ⟨m2, p2⟩ := GlobalTheory.T.unipotent_top_mem_parabolic k i t x
+  obtain ⟨m1, p1⟩ := _root_.GlobalTheory.CompanionTheory.BZPsiPG.levi_Qp_mem_pgProj k i t q
+  obtain ⟨m2, p2⟩ := _root_.GlobalTheory.CompanionTheory.BZPsiPG.TopCol.main k i t x
   have key := f.1.1.2 ((⟨_, m1⟩ : HPG k i t) * ⟨_, m2⟩) (uM k (i + t) (midV k i t u) * levi k (i + t) g)
   have e : pgProj k i t ((⟨_, m1⟩ : HPG k i t) * ⟨_, m2⟩) =
       (levi k i (qBlocks k i t q).1 * uM k i x, (qBlocks k i t q).2) := by
@@ -164,13 +165,13 @@ end Rep
 
 theorem main : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (i t : ℕ) {V W : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup W] [Module ℂ W] (τ : Representation ℂ (Mir k i) V) (σ : Representation ℂ (GL (Fin t) k) W), IsSmooth τ → IsSmooth σ → ∀ [MeasurableSpace (Fin t → k)] [BorelSpace (Fin t → k)] (μ : MeasureTheory.Measure (Fin t → k)) [μ.IsAddHaarMeasure], ∀ (f : cIndSpace (HPG k i t) (hRep τ σ)) (q : Qp k i t) (g : GL (Fin (i + t)) k), fibInt μ f ((q : GL (Fin (i + t)) k) * g) = qRep τ σ q (fibInt μ f g) := by
   intro k _ _ _ _ i t V W _ _ _ _ τ σ hτ hσ _ _ μ _ f q g
-  have h1 := GlobalTheory.T.fibre_function_locally_constant_compact k i t τ σ hτ hσ f ((q : GL (Fin (i + t)) k) * g)
-  have h2 := GlobalTheory.T.fibre_function_locally_constant_compact k i t τ σ hτ hσ f g
+  have h1 := _root_.GlobalTheory.CompanionTheory.BZPsiPG.FibCompact.fibV_main k i t τ σ hτ hσ f ((q : GL (Fin (i + t)) k) * g)
+  have h2 := _root_.GlobalTheory.CompanionTheory.BZPsiPG.FibCompact.fibV_main k i t τ σ hτ hσ f g
   have hpt : ∀ v, clT τ W (fibV f ((q : GL (Fin (i + t)) k) * g) v) =
       extTensor (psiMinus k τ) σ ((qBlocks k i t q).1, (qBlocks k i t q).2)
         (clT τ W (fibV f g ((((qBlocks k i t q).2⁻¹ : GL (Fin t) k) : Matrix (Fin t) (Fin t) k).mulVec v))) := by
     intro v
-    obtain ⟨x, hx⟩ := GlobalTheory.T.mulVec_mid_block_decomp k i t q⁻¹ v
+    obtain ⟨x, hx⟩ := _root_.GlobalTheory.CompanionTheory.BZPsiPG.qp_mulVec_midV_exists_top k i t q⁻¹ v
     have hb : (qBlocks k i t q⁻¹).2 = (qBlocks k i t q).2⁻¹ := by
       rw [map_inv, Prod.snd_inv]
     rw [hb] at hx

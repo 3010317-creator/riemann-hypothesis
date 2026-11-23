@@ -2,7 +2,9 @@ module
 
 public import Formalism.LocalToGlobal.GroupLattices.AdmissibleAtGeneratorPlaces
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LatAtLattice
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LowerTwistedCompatibleOfEvaluationBranchingStatement
+public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.LowerTieTwAt
+public import Formalism.SharpRestriction.Divisibility.HookProducts.AdmPtTw
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LowerTwistedCompatibleOfEvaluationBranching
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TwistedEvaluationBranchingAllTuplesTrueColumnsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -49,6 +51,6 @@ namespace GlobalTheory.PerQ
 theorem twistedPointIntegral_of_TC_ok : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)) (l0 : I.Law0 l), Formalism.L2.G.Adm2InU.TwistedPointIntegral (I.rec7 l Z) (I.tw l l0 Z) := by
   intro B X I hI l Z l0 u μ _ _
   exact Formalism.MainNotions.DIV.HookProducts.AdmPtTw.lowerTieTwAt_integral
-    (GlobalTheory.T.lowerTwistedCompatible_of_evaluationBranching _ _ u μ (GlobalTheory.T.twistedEvaluation_branching_all_tuples_trueColumns I hI l Z l0 u μ))
+    (_root_.GlobalTheory.PerQ.lowerTieTwAt_to_lib _ _ u μ (GlobalTheory.T.twistedEvaluation_branching_all_tuples_trueColumns I hI l Z l0 u μ))
 
 end GlobalTheory.PerQ

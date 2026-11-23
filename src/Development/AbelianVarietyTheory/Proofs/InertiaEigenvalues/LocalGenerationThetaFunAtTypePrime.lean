@@ -5,38 +5,43 @@ public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RestrictedTensorBasePointNormSq
 public import Formalism.LocalToGlobal.IndefiniteReal.LinksStage
 public import Mathlib.Data.Matrix.ColumnRowPartitioned
-import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.StarPurelyImaginaryEqNeg
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EventuallyFinEqOne
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemLatOIffExistsActO
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.NotMemSpanOfCommute
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.OmVacuumEqSplitFacSmulSum
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CmPlaceOperatorPreservesTypeAveragesShapeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CongruenceInvariantConstOnFrameTranslateStatement
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Mathlib.RingTheory.LocalRing.ResidueField.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CongruenceInvariantConstOnFrameTranslate
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSeparatingCharacterConjugateHalfSplitStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSupportedAtSplitPlaceUnitaryMatrixEqStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteClassesModUniformizerPowMatricesStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteClassesModUniformizerPowMatrices
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteFourierExpansionConjugateHalfSplitPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrameTranslateLatticeCosetSubsetStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrameTranslateLatticeCosetSubset
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HeisenbergRelationsExtendToPlaceCommonEigenStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LatticeCosetTranslateMemOfCoverStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LatticeCosetTranslateMemOfCover
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ParahoricSchwartzVanishOffTranslates
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SchrodingerFunctionInvariantTypePrimeStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SchrodingerHyperplaneAveragesVanishStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SplitPlaceUnitaryIntegralMatrixKeepsLatticeStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ThetaFunctionLevelAndSchrodingerBoundedSupportStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TypePrimeFixedThetaVectorSchrodingerIndicatorStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PostOnGaLMemGoodPart
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaFunctionZeroOfInvariantFunctionals
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelCharactersRamificationLevelPlacesStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitPlaceWeilRepLatticeVacuumCharacter
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TameAtOfUnrAt
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsDetInt
+import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.StarPurelyImaginaryEqNeg
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PostOnGaLMemGoodPart
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsInvariantForm
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DegreeOnePrimeReductionSplitPlaceDictionary
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrameStatement
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelCharactersRamificationLevelPlaces
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelCharactersRamificationLevelPlacesStatement
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitIdempotentPrimeProjectionCorrespondence
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitPlaceAdjointMatrixIsCoordinateEquivariant
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitPlaceWeilRepLatticeVacuumCharacter
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TameAtOfUnrAt
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TameHeckeCharSplitSupportedEqProdResidueStatement
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.GlintPrincRelIndexNeZero
 import Mathlib.Algebra.Order.Floor.Extended
@@ -77,7 +82,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsDetInt
 
 @[expose] public section
 
@@ -111,12 +115,12 @@ theorem exists_finset_trSet (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteVa
     (hΩ : ∀ k x, Φ k x ≠ 0 → ∃ g, x ∈ trSet O K r t ϖ g) :
     ∃ F : Finset (GL (Fin r) K), ∀ k x, Φ k x ≠ 0 → ∃! g, g ∈ F ∧ x ∈ trSet O K r t ϖ g := by
   classical
-  obtain ⟨T, hT⟩ := GlobalTheory.T.finite_classes_mod_uniformizer_pow_matrices O K r t ϖ hϖ N
+  obtain ⟨T, hT⟩ := _root_.GlobalTheory.GenUnr.finite_classes_mod_pow O K r t ϖ hϖ N
   have huniq : ∀ g g' x, x ∈ trSet O K r t ϖ g → x ∈ trSet O K r t ϖ g' → trSet O K r t ϖ g = trSet O K r t ϖ g' := by
     rintro g g' x ⟨z, hz⟩ ⟨z', hz'⟩
     ext y; constructor
-    · rintro ⟨w, hw⟩; exact GlobalTheory.T.frame_translate_lattice_coset_subset O K r t ϖ hϖ x g g' z z' hz hz' y w hw
-    · rintro ⟨w, hw⟩; exact GlobalTheory.T.frame_translate_lattice_coset_subset O K r t ϖ hϖ x g' g z' z hz' hz y w hw
+    · rintro ⟨w, hw⟩; exact _root_.GlobalTheory.ParahoricTranslate.translate_lattice_coset_subset O K r t ϖ hϖ x g g' z z' hz hz' y w hw
+    · rintro ⟨w, hw⟩; exact _root_.GlobalTheory.ParahoricTranslate.translate_lattice_coset_subset O K r t ϖ hϖ x g' g z' z hz' hz y w hw
   let rep : Set (Matrix (Fin r ⊕ Fin t) (Fin r) K) → GL (Fin r) K := fun A =>
     if h : ∃ g, trSet O K r t ϖ g = A then h.choose else 1
   have hrep : ∀ g, trSet O K r t ϖ (rep (trSet O K r t ϖ g)) = trSet O K r t ϖ g := fun g => by
@@ -135,7 +139,7 @@ theorem exists_finset_trSet (O K : Type) [CommRing O] [IsDomain O] [IsDiscreteVa
     exact h.choose_spec
   obtain ⟨z₀, hz₀⟩ := hy'
   have hx' : y + (ϖ ^ N • z').map (algebraMap O K) ∈ trSet O K r t ϖ (gs y) :=
-    GlobalTheory.T.lattice_coset_translate_mem_of_cover O K r t ϖ hϖ N y (gs y) z₀ hz₀ (fun z => hΩ k _ (by rwa [hinv])) z'
+    _root_.GlobalTheory.coset_translate_mem_of_cover O K r t ϖ hϖ N y (gs y) z₀ hz₀ (fun z => hΩ k _ (by rwa [hinv])) z'
   refine ⟨rep (trSet O K r t ϖ (gs y)), ⟨Finset.mem_image_of_mem _ hyT, by rwa [hrep]⟩, ?_⟩
   rintro g ⟨hg, hxg⟩
   obtain ⟨y', -, rfl⟩ := Finset.mem_image.1 hg
@@ -629,8 +633,8 @@ theorem gen_at_type_prime : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T
     fun k => GlobalTheory.parahoric_schwartz_vanish_off_translates (OI v') (Fv D.host.F v') D.R.r D.R.t ϖ hϖ (Φ k) N (hsupp k)
       (h2 k) (h3 k)
   choose P hP1 hP2 hP3 using fun g => piece R hL hω hv i t hP hφ he hϖ hvS hT hC hLk g fun ℓ hℓ x x' hx hx' ⟨z, hz⟩ ⟨z', hz'⟩ => by
-    have a1 := GlobalTheory.T.congruenceInvariant_const_on_frame_translate (OI v') (Fv D.host.F v') D.R.r D.R.t ϖ hϖ (Φ ⟨ℓ, hℓ⟩) (h2 ⟨ℓ, hℓ⟩) _ g z hz
-    have a2 := GlobalTheory.T.congruenceInvariant_const_on_frame_translate (OI v') (Fv D.host.F v') D.R.r D.R.t ϖ hϖ (Φ ⟨ℓ, hℓ⟩) (h2 ⟨ℓ, hℓ⟩) _ g z' hz'
+    have a1 := _root_.GlobalTheory.invariant_const_on_translate (OI v') (Fv D.host.F v') D.R.r D.R.t ϖ hϖ (Φ ⟨ℓ, hℓ⟩) (h2 ⟨ℓ, hℓ⟩) _ g z hz
+    have a2 := _root_.GlobalTheory.invariant_const_on_translate (OI v') (Fv D.host.F v') D.R.r D.R.t ϖ hϖ (Φ ⟨ℓ, hℓ⟩) (h2 ⟨ℓ, hℓ⟩) _ g z' hz'
     have a3 := a1.trans a2.symm
     simp only [Φ] at a3
     rwa [hσx x hx, hσx x' hx'] at a3

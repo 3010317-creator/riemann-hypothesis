@@ -2,9 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
 public import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ArtinRestrictEqArtinNormSinglePlaceStatement
+public import Mathlib.RingTheory.PicardGroup
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ArtinRestrictEqArtinNormSinglePlace
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MinpolyAndNormOfPowEqUniformizer
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TameEisensteinExtensionUniqueTotallyRamifiedPlacStatement
+public import Formalism.ConjugateSelfDual.Statement
+public import Formalism.LocalToGlobal.UnitaryNorms.IsUnitaryNormOf
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TameEisensteinExtensionUniqueTotallyRamifiedPlac
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -67,7 +70,7 @@ theorem exists_frob_fix_of_eisenstein : GlobalTheory.Published.GlobalArtinRecipr
     ⟨IsAlgClosure.isAlgClosed E, Algebra.IsAlgebraic.tower_top (K := E) _⟩
   set K := IntermediateField.adjoin E {π} with hKdef
   obtain ⟨artK, hartK⟩ := hG K Ω
-  obtain ⟨W, hWv, hWuniq, hAW, hnW, hunif⟩ := GlobalTheory.T.tameEisensteinExtension_unique_totallyRamified_place E Ω v A hA ϖ hϖ hϖ2 π hπ
+  obtain ⟨W, hWv, hWuniq, hAW, hnW, hunif⟩ := _root_.GlobalTheory.TameRecPlace.main E Ω v A hA ϖ hϖ hϖ2 π hπ
   obtain ⟨-, hnorm⟩ := GlobalTheory.TameEis.minpoly_and_norm_of_pow_eq_uniformizer E Ω v ϖ hϖ hϖ2 π hπ
   have hπ0 : π ≠ 0 := by
     rintro rfl
@@ -88,7 +91,7 @@ theorem exists_frob_fix_of_eisenstein : GlobalTheory.Published.GlobalArtinRecipr
   set cπ : (W.adicCompletion K)ˣ := Units.map (algebraMap K (W.adicCompletion K)).toMonoidHom yK with hcπ
   have hcu : IsUnifAt W cπ := hunif cπ rfl
   obtain ⟨σ, hσF, hσA⟩ := (hartK.frob W A hAW (artK (localIdele K W cπ))).mp ⟨cπ, hcu, rfl⟩
-  have hN := GlobalTheory.T.artin_restrict_eq_artin_norm_single_place E Ω K art artK hart hartK v W hWv hWuniq yK σ⁻¹ hσA
+  have hN := _root_.GlobalTheory.NormCompat.res_art_eq_art_norm E Ω K art artK hart hartK v W hWv hWuniq yK σ⁻¹ hσA
   refine ⟨σ.restrictScalars E, ?_, ?_, ?_⟩
   · rw [← hnW]; exact hσF
   · have := σ.commutes (IntermediateField.AdjoinSimple.gen E π)

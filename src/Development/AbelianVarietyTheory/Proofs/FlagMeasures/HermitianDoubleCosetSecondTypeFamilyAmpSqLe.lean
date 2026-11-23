@@ -1,11 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ComplementReferenceCompactSubgroup
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeLeMassSecondTypeFamilyStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeLeMassSecondTypeFamily
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BasicInequality
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassDefectOrderLe
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GluingImageCardPowLeDefectGroupCard
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetMassLeAndFiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassDefectOrderLeStatement
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetMassLeAndFinite
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermExponentsNonnegAndDefectGroupBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -141,7 +141,7 @@ theorem family_bound : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpa
       rw [hm, hP.2.1, hβ] at hle
       have := (Nat.pow_le_pow_iff_right (by omega)).1 hle
       exact Finset.mem_range.2 (by omega)
-    · refine (Finset.sum_le_sum fun m _ => (GlobalTheory.T.hermitianDoubleCoset_mass_le_and_finite L r k S hk1 d).1 (S.q ^ m)).trans ?_
+    · refine (Finset.sum_le_sum fun m _ => (_root_.GlobalTheory.HL.MassGlue.mass_le_and_finite L r k S hk1 d).1 (S.q ^ m)).trans ?_
       rw [← ENNReal.ofReal_sum_of_nonneg (fun m _ => by positivity)]
       apply ENNReal.ofReal_le_ofReal
       have hx : (2 : ℝ) ≤ (S.q : ℝ) ^ (k - 1) := by
@@ -154,10 +154,10 @@ theorem family_bound : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpa
       simp only [hc]
       nlinarith [mul_le_mul_of_nonneg_left hg hA0p]
   have h1 := (GlobalTheory.HL.BasicIneq.basic_inequality L r k S hk1).2 (S.InFF β J βJ) _ (7 * e) (by positivity)
-    hmass (fun d => GlobalTheory.T.amplitude_le_mass_secondType_family L r k S hk β J βJ d)
+    hmass (fun d => _root_.GlobalTheory.HL.AmpCancel.amp_le_mass L r k S hk β J βJ d)
   have h2 : (S.sumData fun d => S.mass d (S.InFF β J βJ d)) ≤
       ENNReal.ofReal (A1 * ((β : ℝ) ^ (k - 1))⁻¹) * S.nn :=
-    (sumData_mono S _ _ fun d => mass_mono S d _ _ fun Λ _ h => h.2.1).trans (GlobalTheory.T.sumData_mass_be_eq_le L r k S hk β hβ1)
+    (sumData_mono S _ _ fun d => mass_mono S d _ _ fun Λ _ h => h.2.1).trans (_root_.GlobalTheory.DefectShare.mass_defect_order_le L r k S hk β hβ1)
   refine h1.trans ?_
   refine (mul_le_mul_right h2 _).trans ?_
   rw [← mul_assoc, ← ENNReal.ofReal_mul (by positivity)]

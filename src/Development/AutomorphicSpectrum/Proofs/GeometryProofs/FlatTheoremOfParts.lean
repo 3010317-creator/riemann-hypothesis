@@ -4,14 +4,18 @@ public import Development.AutomorphicSpectrum.Statements.GeometryStatements.ThmF
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.FlatLineGenerator
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.CardComapMulFinsumEqFinsumFibres
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.FinConstFor
-public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.LogIdealSupportFiniteStatement
-public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.PadicEmbeddingDiscreteValuationRingStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PadicEmbeddingValuationSubringStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsClopenIrreducibleCptStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteConstantAllHoldsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteNormZeroOutsideDenomStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlatGenFrameComplexCompatStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericFibreUniformisedFrameStatement
+public import Development.AutomorphicSpectrum.Definitions.AdelicLattices.FactPrimes
+public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.LogIdealSupportFinite
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.PadicEmbeddingDiscreteValuationRing
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PadicEmbeddingValuationSubring
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsFlatAnIffIsConstMul
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsClopenIrreducibleCpt
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteConstantAllHolds
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsConstMul
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteNormZeroOutsideDenom
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlatGenFrameComplexCompat
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericFibreUniformisedFrame
 import Mathlib.Algebra.AffineMonoid.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -93,8 +97,8 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E}
 theorem exists_place {l : Level H} (c : Coeff l) [NumberField c.F] (p : Nat.Primes) (κ : c.F →+* ℂ_[p]) :
     ∃ W : ValuationSubring ℂ, ((p : ℕ) : ℂ) ∈ W.nonunits ∧ IsDiscreteValuationRing (c.V W) ∧
       ∀ x : c.F, ‖κ x‖ ≤ 1 ↔ x ∈ c.V W := by
-  obtain ⟨W, hp, hW⟩ := GlobalTheory.T.padic_embedding_valuation_subring c.F p κ
-  obtain ⟨V, hV, hκ, -, -⟩ := GlobalTheory.T.padic_embedding_discrete_valuation_ring c.F p κ
+  obtain ⟨W, hp, hW⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.exists_valuationSubring_of_padicEmbedding c.F p κ
+  obtain ⟨V, hV, hκ, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fl.ValRing.exists_dvr_of_padic_embedding c.F p κ
   have hmem : ∀ x : c.F, x ∈ c.V W ↔ ‖κ x‖ ≤ 1 := fun x => (hW x).symm
   have heq : c.V W = V := by ext x; rw [hmem, hκ]
   refine ⟨W, hp, ?_, fun x => (hmem x).symm⟩
@@ -105,7 +109,7 @@ theorem exists_cpt {D : Datum H} {l : Level H} (Xo : Moduli D l) (c : Coeff l) {
     (hβ : Function.Injective β ∧ IsNoetherianRing O ∧ ∀ x : c.F, ∃ a b : O, β b ≠ 0 ∧ x * β b = β a)
     {U : Set (Xo.XF c)} (hU : IsClopen U) (hUi : IsIrreducible U) : Nonempty (CptOver Y U) := by
   obtain ⟨u, hu⟩ := hUi.nonempty
-  obtain ⟨U', Z, hu', hc, hi⟩ := GlobalTheory.T.exists_clopen_irreducible_cpt E H D l Xo c O β Y u hβ
+  obtain ⟨U', Z, hu', hc, hi⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.exists_cptOver_mem_isClopen_isIrreducible E H D l Xo c O β Y u hβ
   rw [eq_of_clopen_irred hU hUi hc hi hu hu']
   exact ⟨Z⟩
 
@@ -121,7 +125,7 @@ theorem local_gen (hA0 : FlatLineGenerator) (hA1 : FlatLineGeneratorComponent) (
     ∃ φ : FrameFn Xo c, IsFlatGen U τ φ FU i ∧ (∀ s : c.F →+* ℂ, ∃ t, HasInfNorm U τ φ s t) ∧
       ∃ t, HasFinNorm U τ φ p κ t := by
   obtain ⟨Z⟩ := exists_cpt Xo c Y (model_hyp (c.V W)) hU hUi
-  have hG : Z.IsGeom := GlobalTheory.T.generic_fibre_uniformised_frame E H D l Xo c _ _ Y U Z g ty FU i hty (fun y hy hr => (hP y hy).1 hr)
+  have hG : Z.IsGeom := _root_.GlobalTheory.CompanionTheory.Ar.Flat.isGeom_of_period E H D l Xo c _ _ Y U Z g ty FU i hty (fun y hy hr => (hP y hy).1 hr)
   obtain ⟨φ, hl, hf, -⟩ := hA0 E H D l Xo c _ _ Y U Z τ (model_hyp (c.V W)) hpq hτ hG
   obtain ⟨hinf, hfg⟩ := hA1 E H D l Xo c _ _ Y U Z τ φ (model_hyp (c.V W)) hpq hτ hG hl hf
   refine ⟨φ, hfg g ty FU i hty (fun P y hPer hu hy => (hP y hy).2 ⟨P, hPer, hu⟩), fun s => ?_, ?_⟩
@@ -151,7 +155,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Flat
 open GlobalTheory.CompanionTheory.Ar.Flat.TopA in
 theorem thmFlatA_of_parts : PartI → FlatLineGenerator → FlatLineGeneratorComponent → FinConst → ThmFlatA := by
   intro hI hA0 hA1 _ E _ _ _ H D Xo l c _ U τ g ty FU i hpq hτ hg hty hU hUi hP
-  have hC : FinConstAll := GlobalTheory.T.finite_constant_all_holds
+  have hC : FinConstAll := _root_.GlobalTheory.CompanionTheory.Ar.Flat.FinAll.finConstAll
   obtain ⟨-, hI'⟩ := hI
   obtain ⟨Ys, hYs, -⟩ := hI' E H D hpq Xo
   have key : ∀ (p : Nat.Primes) (κ : c.F →+* ℂ_[p]), ∃ φ : FrameFn (Xo l) c, IsFlatGen U τ φ FU i ∧
@@ -167,7 +171,7 @@ theorem thmFlatA_of_parts : PartI → FlatLineGenerator → FlatLineGeneratorCom
   have hfin : ∀ (p : Nat.Primes) (κ : c.F →+* ℂ_[p]), ∃ t, HasFinNorm U τ φ p κ t := by
     intro p κ
     obtain ⟨φ', hφ', -, t, ht⟩ := key p κ
-    obtain ⟨a, ha, he⟩ := GlobalTheory.T.flat_gen_frame_complex_compat E H D l (Xo l) c U τ φ' φ g ty FU i hty hφ' hφ
+    obtain ⟨a, ha, he⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.flatGen_unique E H D l (Xo l) c U τ φ' φ g ty FU i hty hφ' hφ
       (fun y hy hr => (hP y hy).1 hr)
     exact ⟨_, hasFinNorm_of_eq hφ.line ha he ht⟩
   let N : LogNorms c.F := ⟨fun s => (hinf s).choose, fun p κ => (hfin p κ).choose -
@@ -176,14 +180,14 @@ theorem thmFlatA_of_parts : PartI → FlatLineGenerator → FlatLineGeneratorCom
     simp only [N, sub_add_cancel]
     exact (hfin p κ).choose_spec⟩
   refine ⟨φ, N, hφ, hN, ?_⟩
-  obtain ⟨n, hn, hn0⟩ := GlobalTheory.T.finite_norm_zero_outside_denom E H D l (Xo l) c U τ φ hτ hU.isOpen hUi.nonempty hφ.line
-  have hS := GlobalTheory.T.logIdeal_support_finite E (differentIdeal ℤ (𝓞 E)) differentIdeal_ne_bot
+  obtain ⟨n, hn, hn0⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.line_function_norm_zero_away E H D l (Xo l) c U τ φ hτ hU.isOpen hUi.nonempty hφ.line
+  have hS := _root_.GlobalTheory.CompanionTheory.Ar.Fl.finite_logIdeal_ne_zero E (differentIdeal ℤ (𝓞 E)) differentIdeal_ne_bot
   refine (((finite_primes_dvd hn.ne').union (finite_primes_dvd H.d_prime.ne_zero)).union hS).subset ?_
   rintro p ⟨ι₀, hι⟩
   by_contra hcon
   simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_exists, not_not] at hcon
   obtain ⟨⟨h1, h2⟩, h3⟩ := hcon
-  obtain ⟨-, -, -, -, hd⟩ := GlobalTheory.T.padic_embedding_discrete_valuation_ring c.F p ι₀
+  obtain ⟨-, -, -, -, hd⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fl.ValRing.exists_dvr_of_padic_embedding c.F p ι₀
   have hd' : ‖((H.d : ℕ) : ℂ_[p])‖ = 1 := by simpa using hd H.d h2
   have h0 := hn0 p ι₀ _ h1 (hN.2 p ι₀)
   rw [h3 (ι₀.comp (tauIn c τ)), hd', Real.log_one] at h0

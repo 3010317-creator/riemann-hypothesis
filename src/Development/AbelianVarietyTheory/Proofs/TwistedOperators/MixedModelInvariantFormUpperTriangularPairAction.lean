@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsPairingSingleNe
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryBorelPreservesMixedModelLatticeLowerBlockStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryBorelPreservesMixedModelLatticeLowerBlock
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalThetaInertPlace
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.SphericalA
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -40,7 +41,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalThetaInertPlace
 import Development.AbelianVarietyTheory.Definitions.Divisors.EqOfHasValueAtInfinite
 
 @[expose] public section
@@ -68,12 +68,12 @@ theorem mixLat_form_borel : ∀ (L : Type) [Field L] [Valued L (WithZero (Multip
       ∀ v, ℓ (ω (g, h) v) = ℓ (ω (g, h) s) * ℓ v := by
     intro g h hg hh
     refine huniq (ℓ.comp (ω (g, h))) (fun a ha v => ?_)
-    have hm := (GlobalTheory.T.unitaryBorel_preserves_mixedModelLattice_lowerBlock L ϖ σ q hU n n' g⁻¹ h (isBorelU_inv_mixeq hg) hh).1 a ha
+    have hm := (_root_.GlobalTheory.SphTheta.borel_mixLat_lowBlock L ϖ σ q hU n n' g⁻¹ h (isBorelU_inv_mixeq hg) hh).1 a ha
     show ℓ (ω (g, h) (ρ a v)) = ℓ (ω (g, h) v)
     rw [← Module.End.mul_apply, hnorm, Module.End.mul_apply]
     exact hℓ _ hm _
   refine ⟨c1 g h hg hh, fun z v => ?_⟩
-  obtain ⟨a, ha, ha0, he⟩ := (GlobalTheory.T.unitaryBorel_preserves_mixedModelLattice_lowerBlock L ϖ σ q hU n n' g h⁻¹ hg (isBorelU_inv_mixeq hh)).2 z
+  obtain ⟨a, ha, ha0, he⟩ := (_root_.GlobalTheory.SphTheta.borel_mixLat_lowBlock L ϖ σ q hU n n' g h⁻¹ hg (isBorelU_inv_mixeq hh)).2 z
   have key : ρ (embLow n' n z) * ω (g, h) = ω (g, h) * ρ ((h⁻¹).1.1 * embLow n' n z * g.1.1) := by
     rw [hnorm]
     congr 2

@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.PoitouTateNineTermTransgressionZeroApply
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NormalisedLocalInvariantExistsStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NormalisedLocalInvariantExists
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,7 +57,7 @@ theorem exists_invFam_normalised : ∀ (F Ω : Type) [Field F] [NumberField F] [
       Function.Bijective (inv A) ∧ IsNormalised ζ A v (inv A) := by
   intro F Ω _ _ _ _ _ l _ r hr ζ hζ
   classical
-  have key := GlobalTheory.T.normalised_local_invariant_exists F Ω l r hr ζ hζ
+  have key := _root_.GlobalTheory.CompanionTheory.LocalInvariant.exists_bijective_isNormalised F Ω l r hr ζ hζ
   refine ⟨fun A => if h : ∃ v : HeightOneSpectrum (𝓞 F), IsPlaceOver A v then
     Classical.choose (key A h.choose h.choose_spec) else 0, fun A v hv => ?_⟩
   have h : ∃ v : HeightOneSpectrum (𝓞 F), IsPlaceOver A v := ⟨v, hv⟩

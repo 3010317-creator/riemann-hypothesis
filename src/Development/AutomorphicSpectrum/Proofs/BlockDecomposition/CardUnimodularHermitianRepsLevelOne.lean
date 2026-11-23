@@ -1,7 +1,7 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ResAlgSplitTwo
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CardHermitianRepresentationsResidueStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CardHermitianRepresentationsResidue
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ResidueAlgebraUnramified
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -104,7 +104,7 @@ theorem solCount_one : ∀ (R : Type) [CommRing R] (σ : R →+* R) (ϖ : R) (q 
     rw [← red_cT_one σ ϖ hR.fix_ϖ, hT'.1]
   unfold solCount
   rw [red_image_one σ ϖ hR.fix_ϖ S T]
-  exact GlobalTheory.T.card_hermitian_representations_residue (R ⧸ lev ϖ 1) (barσ σ ϖ hR.fix_ϖ 1) q ε
+  exact _root_.GlobalTheory.CompanionTheory.UnrDens.Emb.card_isometric_embeddings (R ⧸ lev ϖ 1) (barσ σ ϖ hR.fix_ϖ 1) q ε
     (resAlg_of_isUnrQuad R σ ϖ q ε hR) m n hnm (red ϖ 1 S) (red ϖ 1 T) h1
     (isUnit_det_red_one ϖ S hS'.2) h2 (isUnit_det_red_one ϖ T hT'.2)
 

@@ -3,17 +3,18 @@ module
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.T2SpaceNumberFieldInfiniteAdeles
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsGramFibreOfHaar
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.IsSelfDualLatticeIff
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicTupleMeasureExtOfPureTensorIntegralsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFibreFamilyHermitianLengthInfiniteAdelesStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsSelfDualMeasureGlobalConstRankOnlyStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUniqueSelfDualHaarMeasureInfiniteAdelesStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUniqueSelfDualMeasuresFinitePlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FibreFamilyHermitianQuadraticFormAtUnitPropsStatement
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicTupleMeasureExtOfPureTensorIntegrals
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFibreFamilyHermitianLengthInfiniteAdeles
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsSelfDualMeasureGlobalConstRankOnly
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FibreFamilyHermitianQuadraticFormAtUnitProps
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HermitianQuadraticUnitaryLocalComponents
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RestrictedProductIntegralPureTensorEqProd
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RestrictedProductMeasureBasicProperties
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RestrictedProductMeasureSmulFactorsEqSmul
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUniqueSelfDualHaarMeasureInfiniteAdeles
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUniqueSelfDualMeasuresFinitePlace
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsNiceLocalFieldProductRingInfiniteAdelesComplet
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RestrictedProductIntegralPureTensorEqProdStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RestrictedProductMeasureBasicPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RestrictedProductMeasureSmulFactorsEqSmulStatement
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -94,7 +95,7 @@ theorem fib_eq_smul {F E : Type} [Field F] [NumberField F] [Field E] [NumberFiel
     (hfib : IsFibreFamily (r • μ) (fun X => qR R σ J (X 0)) id Set.univ (t • ν) {c | IsUnit c} fib) :
     fib β = (r / t) • m := by
   obtain ⟨fib0, h0, rfl⟩ := hm
-  exact (GlobalTheory.T.fibreFamily_hermitian_quadratic_form_at_unit_props F E σ R hR M J (r • μ) (t • ν) β _ hν hβ
+  exact (_root_.GlobalTheory.GaugeEx.FibBasic.fibAt_basic F E σ R hR M J (r • μ) (t • ν) β _ hν hβ
     ⟨_, GlobalTheory.GramFibreRescale.isFibreFamily_smul h0 r t ht, rfl⟩).2.2 _ ⟨fib, hfib, rfl⟩
 
 end GlobalTheory.GaugeEx.XbetaScale
@@ -105,7 +106,7 @@ open XbetaScale
 
 theorem isXbetaMeasure_iff_smul_std : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (s : StdMeas b), ∃ κ : ℕ → ℝ≥0, (∀ M, κ M ≠ 0) ∧ ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E) (β : F) (ψ : AddChar (AF F) ℂ) (ν : Measure (Fin 1 → Fin M → AF F ⊗[F] E)), 1 ≤ M → IsHermND σ J → β ≠ 0 → IsCharAF F ψ → IsStdX s σ J β ν → ∀ νX, IsXbetaMeasure F E σ M J ψ β νX ↔ νX = κ M • ν := by
   intro F E _ _ _ _ _ σ hσ d b s
-  choose κ hκ0 hκ using GlobalTheory.T.exists_selfDualMeasure_global_const_rank_only F E σ hσ d b s
+  choose κ hκ0 hκ using _root_.GlobalTheory.GaugeSdMain.selfDual_const F E σ hσ d b s
   refine ⟨κ, hκ0, ?_⟩
   intro M J β ψ ν hM hJ hβ hψ hν
   obtain ⟨mi, mv, hmi, hmv, hprod⟩ := hν
@@ -142,18 +143,18 @@ theorem isXbetaMeasure_iff_smul_std : ∀ (F E : Type) [Field F] [NumberField F]
       rw [← e3, ← e4, ← units_fv]
       exact hfv v
     rw [a1, a2, ← hk]
-    exact GlobalTheory.T.restrictedProduct_measure_smul_factors_eq_smul F E d b 1 M ν mi mv (ri / ti) (fun v => r v / t v) hprod hfin
+    exact _root_.GlobalTheory.GaugeEx.ProdScale.isProd_smul F E d b 1 M ν mi mv (ri / ti) (fun v => r v / t v) hprod hfin
 
-  obtain ⟨⟨νi0, hνi0, -⟩, hWi⟩ := GlobalTheory.T.existsUnique_selfDual_haar_measure_infinite_adeles F E σ hσ ψ hψ
+  obtain ⟨⟨νi0, hνi0, -⟩, hWi⟩ := _root_.GlobalTheory.GaugeEx.SdInf.existsUnique_selfDual_inf F E σ hσ ψ hψ
   obtain ⟨μi0, hμi0, -⟩ := hWi M J hJ
-  choose νv0 hνv0 using fun v => (GlobalTheory.T.existsUnique_selfDual_measures_finitePlace F E σ hσ ψ hψ v).1.exists
-  choose μv0 hμv0 using fun v => ((GlobalTheory.T.existsUnique_selfDual_measures_finitePlace F E σ hσ ψ hψ v).2 M J hJ).exists
+  choose νv0 hνv0 using fun v => (_root_.GlobalTheory.SelfDualFinite.existsUnique_selfDual_finite F E σ hσ ψ hψ v).1.exists
+  choose μv0 hμv0 using fun v => ((_root_.GlobalTheory.SelfDualFinite.existsUnique_selfDual_finite F E σ hσ ψ hψ v).2 M J hJ).exists
   have exI : ∀ μi, SdW F E σ M J (Ainf F) (psiInf F ψ) 1 μi →
       ∀ νi, SdR (Ainf F) (psiInf F ψ) νi →
       ∃ fibInf : Ainf F → Measure (Fin 1 → Fin M → Ainf F ⊗[F] E),
       IsFibreFamily μi (fun X => qR (Ainf F) σ J (X 0)) id Set.univ νi
         {c : Ainf F | ∀ w, c w ≠ 0} fibInf :=
-    fun μi hμi νi hνi => GlobalTheory.T.exists_fibreFamily_hermitianLength_infiniteAdeles F E σ hσ M J μi νi hM hJ hμi.1 hνi.1
+    fun μi hμi νi hνi => _root_.GlobalTheory.GaugeEx.FibExist.exists_fibreFamily_ainf F E σ hσ M J μi νi hM hJ hμi.1 hνi.1
   have exV : ∀ μv : ∀ v : HeightOneSpectrum (𝓞 F), Measure (Fin 1 → Fin M → Fv F v ⊗[F] E),
       (∀ v, SdW F E σ M J (Fv F v) (psiV F ψ v) 1 (μv v)) →
       ∀ νv : ∀ v : HeightOneSpectrum (𝓞 F), Measure (Fv F v),
@@ -171,22 +172,22 @@ theorem isXbetaMeasure_iff_smul_std : ∀ (F E : Type) [Field F] [NumberField F]
     obtain ⟨fi, hfi⟩ := exI μi0 hμi0 νi0 hνi0
     obtain ⟨fv, hfv⟩ := exV μv0 hμv0 νv0 hνv0
     have h1 := (((((h.2 μi0 hμi0).2 νi0 hνi0).2 μv0 hμv0).2 νv0 hνv0).2 fi hfi).2 fv hfv
-    have h2 := GlobalTheory.T.restrictedProduct_integral_pureTensor_eq_prod F E d b 1 M _ _ _ (key μi0 hμi0 νi0 hνi0 μv0 hμv0 νv0 hνv0 fi hfi fv hfv)
-    refine GlobalTheory.T.adelicTupleMeasure_ext_of_pureTensor_integrals F E d b 1 M _ _ fun Φ Φinf Φf Φv c1 c2 c3 c4 => ?_
+    have h2 := _root_.GlobalTheory.GaugeEx.ProdInt.integral_pure F E d b 1 M _ _ _ (key μi0 hμi0 νi0 hνi0 μv0 hμv0 νv0 hνv0 fi hfi fv hfv)
+    refine _root_.GlobalTheory.GaugeEx.PureUniq.measure_ext_of_pure F E d b 1 M _ _ fun Φ Φinf Φf Φv c1 c2 c3 c4 => ?_
     obtain ⟨p1, -, p3⟩ := h1 d b Φ Φinf Φf Φv c1 c2 c3 c4
     obtain ⟨q1, -, q3⟩ := h2 d b Φ Φinf Φf Φv c1 c2 c3 c4
     exact ⟨p1, q1, p3.trans q3.symm⟩
   · rintro rfl
     refine ⟨?_, ⟨μi0, hμi0⟩, fun μi hμi => ⟨⟨νi0, hνi0⟩, fun νi hνi => ⟨⟨μv0, hμv0⟩, fun μv hμv =>
       ⟨⟨νv0, hνv0⟩, fun νv hνv => ⟨exI μi hμi νi hνi, fun fi hfi => ⟨exV μv hμv νv hνv, fun fv hfv =>
-      GlobalTheory.T.restrictedProduct_integral_pureTensor_eq_prod F E d b 1 M _ _ _ (key μi hμi νi hνi μv hμv νv hνv fi hfi fv hfv)⟩⟩⟩⟩⟩⟩
-    have hz := (GlobalTheory.T.restrictedProductMeasure_basic_properties F E d b 1 M ν mi mv hprod).2.2.2
+      _root_.GlobalTheory.GaugeEx.ProdInt.integral_pure F E d b 1 M _ _ _ (key μi hμi νi hνi μv hμv νv hνv fi hfi fv hfv)⟩⟩⟩⟩⟩⟩
+    have hz := (_root_.GlobalTheory.GaugeEx.isProd_basic F E d b 1 M ν mi mv hprod).2.2.2
       {Y | qR (Ainf F) σ J (Y 0) = algebraMap F _ β}
       (fun v => {Y | qR (Fv F v) σ J (Y 0) = algebraMap F _ β})
       (isClosed_eq (continuous_qR _ σ J) continuous_const).measurableSet
       (fun v => (isClosed_eq (continuous_qR _ σ J) continuous_const).measurableSet)
-      (GlobalTheory.T.fibreFamily_hermitian_quadratic_form_at_unit_props F E σ _ nI M J _ _ _ mi s.haar_nuI hβi hmi).1
-      (fun v => (GlobalTheory.T.fibreFamily_hermitian_quadratic_form_at_unit_props F E σ _ (nV v) M J _ _ _ (mv v) (s.haar_nuV v) (hβv v) (hmv v)).1)
+      (_root_.GlobalTheory.GaugeEx.FibBasic.fibAt_basic F E σ _ nI M J _ _ _ mi s.haar_nuI hβi hmi).1
+      (fun v => (_root_.GlobalTheory.GaugeEx.FibBasic.fibAt_basic F E σ _ (nV v) M J _ _ _ (mv v) (s.haar_nuV v) (hβv v) (hmv v)).1)
     have hs : {X : Fin 1 → Fin M → AF F ⊗[F] E | qR (AF F) σ J (X 0) ≠ algebraMap F (AF F) β} =
         {X | ¬ (projInf X ∈ {Y : Fin 1 → Fin M → Ainf F ⊗[F] E |
             qR (Ainf F) σ J (Y 0) = algebraMap F _ β} ∧

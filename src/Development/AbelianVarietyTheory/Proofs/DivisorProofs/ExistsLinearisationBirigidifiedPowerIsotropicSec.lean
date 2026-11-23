@@ -2,11 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompEqOneOfTransl
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.GlobalFnsHolds
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BirigidifiedBundleTranslationInvariantFirstFactoStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BirigidifiedBundleTranslationInvariantSecondFactStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BirigidifiedBundleTranslationInvariantFirstFacto
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BirigidifiedBundleTranslationInvariantSecondFact
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLinearisationInvariantRigidifiedBundle
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLinearisationProdStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TranslationIsosCommuteOfCommutatorPairingOneStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.CubicalStructures.CubeSymmetricSwapFirst
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLinearisationProd
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TranslationIsosCommuteOfCommutatorPairingOne
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSingle
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -122,7 +123,7 @@ theorem exists_linearisation_isotropic : ∀ (S : Scheme.{0}) (A : Over S) [GrpO
       rw [← Over.comp_left, ← Over.comp_left]
       congr 1
       apply CartesianMonoidalCategory.hom_ext <;> simp [Hecke.transl, MonObj.mul_comp, MonObj.comp_mul])
-    (fun a => GlobalTheory.T.birigidified_bundle_translation_invariant_first_factor S A hA _ hQ q1 q2 a (hH1 a a.2))
+    (fun a => _root_.GlobalTheory.TranslFst.iso_transl_fst S A hA _ hQ q1 q2 a (hH1 a a.2))
   obtain ⟨v₂, hv₂, cv₂⟩ := GlobalTheory.MumLin.exists_linearisation A.left (G2 A).left (snd A A).left
     (lift (1 : A ⟶ A) (𝟙 A)).left (by rw [← Over.comp_left, lift_snd, Over.id_left]) ss
     (Hecke.lbPow P m) hQ q1 H (fun a => (Hecke.transl (lift 1 (a : 𝟙_ (Over S) ⟶ A) : 𝟙_ (Over S) ⟶ G2 A)).left)
@@ -133,8 +134,8 @@ theorem exists_linearisation_isotropic : ∀ (S : Scheme.{0}) (A : Over S) [GrpO
       rw [← Over.comp_left, ← Over.comp_left]
       congr 1
       apply CartesianMonoidalCategory.hom_ext <;> simp [Hecke.transl, MonObj.mul_comp, MonObj.comp_mul])
-    (fun a => GlobalTheory.T.birigidified_bundle_translation_invariant_second_factor S A hA _ hQ q1 q2 a (hH2 a a.2))
-  exact GlobalTheory.T.exists_linearization_prod (G2 A).left (Hecke.lbPow P m) hQ H H _ _
+    (fun a => _root_.GlobalTheory.TranslInv.translSnd S A hA _ hQ q1 q2 a (hH2 a a.2))
+  exact _root_.GlobalTheory.ProdLin.exists_linearisation_prod (G2 A).left (Hecke.lbPow P m) hQ H H _ _
     (fun p => (Hecke.transl (lift (p.1 : 𝟙_ (Over S) ⟶ A) (p.2 : 𝟙_ (Over S) ⟶ A) : 𝟙_ (Over S) ⟶ G2 A)).left)
     (fun p => by
       show _ = (Hecke.transl _ ≫ Hecke.transl _).left
@@ -143,6 +144,6 @@ theorem exists_linearisation_isotropic : ∀ (S : Scheme.{0}) (A : Over S) [GrpO
     (fun a c => by simp only [hm1, transl_mul', Over.comp_left])
     (fun a c => by simp only [hm2, transl_mul', Over.comp_left])
     v₁ v₂ hv₁ hv₂ cv₁ cv₂
-    (fun a b => GlobalTheory.T.translation_isos_commute_of_commutatorPairing_one S (G2 A) (AbelianSchemeGerms.isAbelianScheme_tensor A A hA hA) _ hQ _ _ (v₁ a) (v₂ b) (hv₁ a) (hv₂ b) (hW a a.2 b b.2))
+    (fun a b => _root_.GlobalTheory.UPel.HT.Hecke.gen_commute_of_weilIs S (G2 A) (AbelianSchemeGerms.isAbelianScheme_tensor A A hA hA) _ hQ _ _ (v₁ a) (v₂ b) (hv₁ a) (hv₂ b) (hW a a.2 b b.2))
 
 end GlobalTheory.IsoLin

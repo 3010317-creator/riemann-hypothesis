@@ -4,9 +4,12 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.FinalTheo
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.LocalPublishedTheorems
 public import Mathlib.RingTheory.AdicCompletion.Noetherian
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CrystallineClassRestrictDecompositionGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CrystallineCocycleCoboundaryOfNegativeWeightStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasWeightNegOfCyclotomicPowOnInertiaStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CrystallineClassRestrictDecompositionGroup
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeightAndVanishing.DirichletPrimeToLPartMulLPowerPart
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CrystallineCocycleCoboundaryOfNegativeWeight
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.FiniteCohomology
+public import Formalism.ConjugateSelfDual.Statement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasWeightNegOfCyclotomicPowOnInertia
 import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.Z1fCoef
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -58,7 +61,7 @@ theorem bk_unr_gr : Loc.LocalPublishedTheorems → ∀ (l : ℕ) [Fact l.Prime] 
   refine ⟨fun w hw => ?_, ?_⟩
   · obtain ⟨B, hB, x, hx⟩ := hbk.away w hw
     exact ⟨B, hB, x, fun s hs => by rw [hx s hs, hcol]⟩
-  obtain ⟨ι, hιc, hιD, hιS, hιI, hιcyc, hιZ⟩ := GlobalTheory.T.crystallineClass_restrict_decompositionGroup l Ω W A hN.atL z hz hbk
+  obtain ⟨ι, hιc, hιD, hιS, hιI, hιcyc, hιZ⟩ := _root_.GlobalTheory.Ord2.bk_locEmb l Ω W A hN.atL z hz hbk
   have hup : ∀ σ, mat W (ι σ) 1 0 = 0 := fun σ => hN.upper _ (hιD σ)
   let k0 : GQ l →* Qbar l :=
     { toFun := fun σ => mat W (ι σ) 1 1
@@ -80,7 +83,7 @@ theorem bk_unr_gr : Loc.LocalPublishedTheorems → ∀ (l : ℕ) [Fact l.Prime] 
   obtain ⟨c, hcO⟩ := hN.int
   obtain ⟨m, hm1, hm⟩ := hN.wt
   have hw : Loc.HasWeight (MonoidHom.id (GQ l)) κ (-(e : ℤ)) := by
-    refine GlobalTheory.T.hasWeight_neg_of_cyclotomic_pow_on_inertia l κ hκc e (2 * m) (by omega) fun σ hσ => ?_
+    refine _root_.GlobalTheory.hasWeight_neg_of_pow_cyc_inertia l κ hκc e (2 * m) (by omega) fun σ hσ => ?_
     have hs := hιI σ hσ
     have h0 := hm _ hs
     have hd : (dt W (ι σ) : Qbar l) ^ 2 = 1 := by
@@ -100,7 +103,7 @@ theorem bk_unr_gr : Loc.LocalPublishedTheorems → ∀ (l : ℕ) [Fact l.Prime] 
     calc (mat W (ι σ) 1 1 * eps l (ι σ) ^ e) ^ (2 * m) = (mat W (ι σ) 1 1) ^ (2 * m) * (eps l (ι σ) ^ (e * m)) ^ 2 := by ring
       _ = ((mat W (ι σ) 0 0 * mat W (ι σ) 1 1) ^ 2) ^ m := by rw [← h0]; ring
       _ = 1 := by rw [hd, one_pow]
-  obtain ⟨x, hx⟩ := GlobalTheory.T.crystallineCocycle_coboundary_of_negative_weight hP l κ hκc c (fun σ => hcO _ 1 1) (-(e : ℤ)) (by have := hN.e_pos; omega) hw _ hc
+  obtain ⟨x, hx⟩ := _root_.GlobalTheory.NegVan.crys_cocycle_coboundary_of_neg_weight hP l κ hκc c (fun σ => hcO _ 1 1) (-(e : ℤ)) (by have := hN.e_pos; omega) hw _ hc
   refine ⟨x, fun s hs => ?_⟩
   obtain ⟨σ, rfl⟩ := hιS s hs
   have := hx σ

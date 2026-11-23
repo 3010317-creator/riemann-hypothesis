@@ -3,9 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsKSValueOneOfRetraction
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystalFiniteFreeReducesToDeRhamStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeRhamCohomologyProjectiveModuleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFlatLiftModPSqPerfectFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProjectiveCharZeroTensorRingOfIntegersStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProjectiveReductionOfFlatLiftStatement
+public import Mathlib.FieldTheory.Perfect
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFlatLiftModPSqPerfectField
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProjectiveCharZeroTensorRingOfIntegers
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProjectiveReductionOfFlatLift
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,17 +68,17 @@ theorem hdR_projective : ∀ (F : Type) [Field F] [NumberField F] (k : Type) [Fi
     intro B₀ _ _ hB b
     set K := AlgebraicClosure k
     haveI : CharP K (ringChar k) := charP_of_injective_algebraMap (algebraMap k K).injective _
-    obtain ⟨Λ, _, π, hπ, hker, hp2, hann⟩ := GlobalTheory.T.exists_flat_lift_mod_p_sq_perfect_field (ringChar k) K
+    obtain ⟨Λ, _, π, hπ, hker, hp2, hann⟩ := _root_.GlobalTheory.exists_flat_lift_mod_p_sq (ringChar k) K
     have hI : RingHom.ker π ^ 2 = 0 := by
       rw [hker, Ideal.span_singleton_pow, hp2, Ideal.span_singleton_eq_bot.2 rfl]; rfl
     obtain ⟨hfin, hfree, f, hf, hk⟩ := GlobalTheory.T.crystal_finite_free_reduces_to_deRham F Λ K π hπ hI B₀ hB b
     letI := tensorModule (divided₂ hI) (spMap π) b
     haveI := isScalarTower_tensorModule (divided₂ hI) (spMap π) b
     letI := tensorModule (dp0 K) (𝟙 _) b
-    exact GlobalTheory.T.projective_of_surjective_ker_le_smul (ringChar k) F Λ K π hπ hker hp2 hann _ hfin hfree _ f hf hk
+    exact _root_.GlobalTheory.FlatLift.projective_reduction_of_flat_lift (ringChar k) F Λ K π hπ hker hp2 hann _ hfin hfree _ f hf hk
   · haveI : CharP k 0 := hp ▸ ringChar.charP k
     haveI : CharZero k := CharP.charP_to_charZero k
     letI := tensorModule (dp0 k) (𝟙 _) a
-    exact GlobalTheory.T.projective_charZero_tensor_ringOfIntegers' F k _
+    exact _root_.GlobalTheory.projective_charZero_tensor_ringOfIntegers F k _
 
 end GlobalTheory.CrysProj

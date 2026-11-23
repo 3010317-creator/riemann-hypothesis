@@ -5,9 +5,9 @@ public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
 public import Mathlib.RingTheory.AdicCompletion.Noetherian
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CupProductCoboundaryMod
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsFrobeniusPowInvMulMemOpenSubgroupStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OpenSubgroupCochainInvarianceStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TwoCocycleModPowCoboundaryOfFrobeniusSplitStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsFrobeniusPowInvMulMemOpenSubgroup
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OpenSubgroupCochainInvariance
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TwoCocycleModPowCoboundaryOfFrobeniusSplit
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -204,10 +204,10 @@ theorem cup_unr_cob_of_vanish [IsAlgClosure ℚ Ω] (c : Coef l) (n : ℕ) (W : 
       funext p; simp only [cup, om, Matrix.mulVec, dotProduct, Fin.sum_univ_two]
     rw [e]
     exact ((h1' 0).mul (h3' 1)).sub ((h1' 1).mul (h3' 0))
-  obtain ⟨K, hIK, hKD, hKo, hepsK, hbiK⟩ := GlobalTheory.T.open_subgroup_cochain_invariance l Ω n D I (cup W a b) (isClosed_Dec B) hID hcont hepsI hbiI
-  obtain ⟨φ, m, hm, hφm, hd⟩ := GlobalTheory.T.exists_frobenius_pow_inv_mul_mem_open_subgroup Ω q B K hB hIK hKo
+  obtain ⟨K, hIK, hKD, hKo, hepsK, hbiK⟩ := _root_.GlobalTheory.Ord2.OpenInv.open_inv l Ω n D I (cup W a b) (isClosed_Dec B) hID hcont hepsI hbiI
+  obtain ⟨φ, m, hm, hφm, hd⟩ := _root_.GlobalTheory.Ord2.exists_frob_pow_inv_mul_mem Ω q B K hB hIK hKo
   obtain ⟨d, hdo, hdK⟩ := hd (l ^ n) (pow_pos (Fact.out : l.Prime).pos n)
-  exact GlobalTheory.T.cob2_of_cocycle_cong_of_invariant l Ω c n D K φ m d (cup W a b) hm hφm hdo hdK hepsK hξint
+  exact _root_.GlobalTheory.Ord2.FrobCob.twoCocycleModPow_coboundary_of_frobenius_split l Ω c n D K φ m d (cup W a b) hm hφm hdo hdK hepsK hξint
     (cup_coc l Ω c n W D a b hint hdet ha hb) hbiK
 
 theorem cup_unr_cob : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (c : Coef l) (n : ℕ) (W : R2 Ω l) (q : Pl) (B : ValuationSubring Ω) (a b : G ℚ Ω → Fin 2 → Qbar l), Continuous W → (∀ s i j, mat W s i j ∈ c.O) → dt W ^ 2 = 1 → IsPlaceOver B q → ((l : ℕ) : 𝓞 ℚ) ∉ q.asIdeal → Coc1 c n W (Dec (F := ℚ) B) a → Coc1 c n (dual1 W) (Dec (F := ℚ) B) b → Cob1 c n W (Ine (F := ℚ) B) a → Cob1 c n (dual1 W) (Ine (F := ℚ) B) b → Cob2 c n (Dec (F := ℚ) B) (cup W a b) := by

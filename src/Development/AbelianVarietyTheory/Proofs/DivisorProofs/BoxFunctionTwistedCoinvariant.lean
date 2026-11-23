@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubMemTwistSpan
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoxFunctionActionBoundedMatrix
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoxFunctionDiagonalAction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralBoxBoundedValuation
 import Development.AbelianVarietyTheory.Definitions.Foundations.SecondCountableAndT2LocalField
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoxFunctionActionBoundedMatrixStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoxFunctionDiagonalActionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralBoxBoundedValuationStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,14 +63,14 @@ theorem GlobalTheory.RankCoinv.boxFn_mem_lowRank_succ_sup_twistSpan_of_zero_row 
   let F : (Fin r → GlobalTheory.SplitFlip.Res k 1) → Matrix A D k → ℂ := fun b => boxFn ϖ (Matrix.updateRow C i₀
     ((fun l => (ϖ : k) ^ (m - 1) * ((Quotient.out (b l) : 𝒪[k]) : k)) ᵥ* (H * C))) (fun _ => m)
 
-  have hz := GlobalTheory.T.box_function_diagonal_action k A D ϖ ν β i₀ C hC0 m (m - 1)
+  have hz := _root_.GlobalTheory.RankCoinv.omA_diag_boxFn_succ k A D ϖ ν β i₀ C hC0 m (m - 1)
   have hupd : Function.update (fun _ : A => m) i₀ m = fun _ => m := Function.update_eq_self _ _
   rw [Nat.sub_add_cancel (by omega : 1 ≤ m), hupd] at hz
   have h3 : lam • g - g' ∈ twistSpan ν β := by
     rw [hlam, hg, ← hz]; exact sub_mem_twistSpan ν β _ (boxFn_mem_SB _ _ _)
 
   have h1 : g' - ∑ b, F b ∈ lowRank (r + 1) :=
-    GlobalTheory.T.integral_box_bounded_valuation k A D ϖ hϖ i₀ r c m C H Q hH0 hHv hcm hHC hQ hHCQ hC0
+    _root_.GlobalTheory.CountTranslates.boxFn_sub_sum_mem_lowRank k A D ϖ hϖ i₀ r c m C H Q hH0 hHv hcm hHC hQ hHCQ hC0
 
   have hv1 : valuation k (ϖ : k) ≤ 1 := by rw [hϖ]; exact (uniformizer_lt_one (R := k)).le
   have h2 : ∀ b, F b - g ∈ twistSpan ν β := by
@@ -81,7 +81,7 @@ theorem GlobalTheory.RankCoinv.boxFn_mem_lowRank_succ_sup_twistSpan_of_zero_row 
       have hout : valuation k ((Quotient.out (b l) : 𝒪[k]) : k) ≤ 1 := (Quotient.out (b l)).2
       rw [map_mul, map_pow, Units.val_pow_eq_pow_val, map_pow]
       exact (mul_le_of_le_one_right' hout).trans (pow_le_pow_right_of_le_one' hv1 (by omega))
-    have hu := GlobalTheory.T.box_function_action_bounded_matrix k A D ϖ ν β i₀ r c m C H _ hH0 hHv ht
+    have hu := _root_.GlobalTheory.RankCoinv.boxFn_unip_row_sub_mem_twistSpan k A D ϖ ν β i₀ r c m C H _ hH0 hHv ht
     have hrow : C i₀ = 0 := funext hC0
     rw [hrow, zero_add] at hu
     exact hu

@@ -5,11 +5,11 @@ public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.QmBorderES
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.QmBorderFull
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.QmCapComm
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.QmSandwich
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.QnGlevImage
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LevelImageArithmetic.GlevImageOf
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.QnHermHaar
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.QnLevBasics
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.QnLevTransfer
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.QnRuleLeft
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LeftPhaseRule.LeftMultiplicationRule
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.QnRuleTorus
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.QnTInv
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.QnTPres
@@ -68,13 +68,13 @@ theorem Formalism.FourierDecayAlt.P.rtt_sandwich : Formalism.FourierDecayAlt.Q.R
 
 theorem Formalism.FourierDecayAlt.P.level_group_image : Formalism.FourierDecayAlt.Q.GlevImage := by
   obtain ⟨hH, hU, -⟩ := level_basics
-  exact gl_level_image hH hU
+  exact _root_.QnGlevImageW.glevImage_of hH hU
 
 theorem Formalism.FourierDecayAlt.P.level_transfer : Formalism.FourierDecayAlt.Q.LevelTransfer := by
   exact level_transfer_of_levHom level_basics.1
 
 theorem Formalism.FourierDecayAlt.P.left_action_rule : Formalism.FourierDecayAlt.Q.RuleLeft := by
-  exact qnRuleLeft
+  exact _root_.Formalism.FourierDecayAlt.Q.LeftMultiplicationRule.left_multiplication_rule
 
 theorem Formalism.FourierDecayAlt.P.torus_action_rule : Formalism.FourierDecayAlt.Q.RuleTorus := by
   exact qnRuleTorus

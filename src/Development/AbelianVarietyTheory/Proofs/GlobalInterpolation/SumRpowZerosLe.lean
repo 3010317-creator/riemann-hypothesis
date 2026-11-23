@@ -3,8 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.ZerosDisc
 public import Mathlib.NumberTheory.DirichletCharacter.Orthogonality
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.IteratedDerivLogDerivDirichletLViaNearbyZerosStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LogFreeZeroDensityDirichletOneModulusStatement
+public import Mathlib.Data.FunLike.Fintype
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.IteratedDerivLogDerivDirichletLViaNearbyZeros
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LogFreeZeroDensityDirichletOneModulus
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -82,7 +83,7 @@ theorem mem_disc {q : ℕ} [NeZero q] (χ : DirichletCharacter ℂ q) {T : ℝ} 
 theorem total_count : ∃ C : ℝ, 0 < C ∧ ∀ (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q) (T : ℝ),
     2 ≤ T → ∃ h : (zerosBox χ (1 / 2) T).Finite,
       ∑ ρ ∈ h.toFinset, (ord χ ρ : ℝ) ≤ C * (q * T ^ 2) := by
-  obtain ⟨C, hC, H⟩ := GlobalTheory.T.iteratedDeriv_logDeriv_dirichletL_via_nearby_zeros
+  obtain ⟨C, hC, H⟩ := _root_.GlobalTheory.LogDerivHigher.main
   refine ⟨12 * C, by positivity, fun q _ χ T hT => ?_⟩
   have hf : ∀ n : ℤ, (zerosDisc χ (2 + ((n : ℝ) : ℂ) * I) 3).Finite :=
     fun n => (H q χ 2 n 0 (by norm_num) le_rfl).1
@@ -170,7 +171,7 @@ theorem layers {ι : Type*} (s : Finset ι) (w δ : ι → ℝ) (hw : ∀ i, 0 �
   · linarith
 
 theorem sum_rpow_zeros_le : ∃ A C η₀ : ℝ, 0 < A ∧ 0 < C ∧ 0 < η₀ ∧ ∀ (q : ℕ) [NeZero q] (T u η : ℝ), 2 ≤ T → ((q : ℝ) * T) ^ A ≤ u → 0 ≤ η → ∑ χ : DirichletCharacter ℂ q, (∑ᶠ ρ ∈ zerosBox χ (1 / 2) T ∩ {ρ | ρ.re ≤ 1 - η}, (ord χ ρ : ℝ) * u ^ (ρ.re - 1)) ≤ C * (u ^ (-η / 2) + u ^ (-η₀)) := by
-  obtain ⟨A₁, C₁, η₁, hA₁, hC₁, hη₁, H₁⟩ := GlobalTheory.T.logFree_zeroDensity_dirichlet_one_modulus
+  obtain ⟨A₁, C₁, η₁, hA₁, hC₁, hη₁, H₁⟩ := _root_.GlobalTheory.Lin.LogFree.zero_density
   obtain ⟨C₂, hC₂, H₂⟩ := total_count
   obtain ⟨e, he0, he1, he2⟩ : ∃ e : ℝ, 0 < e ∧ e ≤ η₁ ∧ e ≤ 1 / 2 :=
     ⟨min η₁ (1 / 2), by positivity, min_le_left _ _, min_le_right _ _⟩

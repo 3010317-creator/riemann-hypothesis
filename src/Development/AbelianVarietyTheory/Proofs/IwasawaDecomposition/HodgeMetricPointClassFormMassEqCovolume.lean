@@ -4,14 +4,14 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Point
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.FirstIndexEqOfUnfolded
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIsLieBase
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.InterPolyProdSum
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ChernTopPartHodgeMetricUniformisationImageStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ComponentUniformisationArithmeticGroupInvariantStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ComponentUniformisationFibreArithmeticGroupRelatStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsComponentUniformisationBoundedDomainCompleStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ChernTopPartHodgeMetricUniformisationImage
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ComponentUniformisationArithmeticGroupInvariant
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ComponentUniformisationFibreArithmeticGroupRelat
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsComponentUniformisationBoundedDomainComple
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MeasurePreservingCurry
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MulConjTransposeEq
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UniformisationImageBoundedDomainEqOpenPartStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UniformisationNullSetsToPointClassNullStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UniformisationNullSetsToPointClassNull
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UniformisationImageBoundedDomainEqOpenPart
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,12 +60,12 @@ theorem mass_openPart_eq_covol : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   intro E _ _ _ H Dw l Xo c O _ β Y T F _ e σ U hg hU Φ k X j f f₀ Eb A₀ hj hL
   have hj' : Dw.p ≤ Dw.p + Dw.q := Nat.le_add_right _ _
   have hp : (U.X k).p0 = Dw.p + Dw.q - Dw.p := by have := (hU.2.1 k).1; omega
-  obtain ⟨ψ, hψ⟩ := GlobalTheory.T.exists_componentUniformisation_boundedDomain_complexPoints E H Dw l Xo c O β Y T F e σ U hg hU Φ k X j f f₀ Eb A₀ hj hL
-  have himg := GlobalTheory.T.uniformisation_image_boundedDomain_eq_openPart E H Dw l Xo c O β Y T F e σ U hg hU Φ k X j f f₀ Eb A₀ hj hL ψ hψ
-  have hfib := GlobalTheory.T.componentUniformisation_fibre_arithmeticGroup_related E H Dw l Xo c O β Y T F e σ U hg hU Φ k X j f f₀ Eb A₀ hj hL ψ hψ
-  have hinv := GlobalTheory.T.componentUniformisation_arithmeticGroup_invariant E H Dw l Xo c O β Y T F e σ U hg hU Φ k X j f f₀ Eb A₀ hj hL ψ hψ
-  have hdens := GlobalTheory.T.chernTopPart_hodgeMetric_uniformisation_image E H Dw l Xo c O β Y T F e σ U hg hU Φ k X j f f₀ Eb A₀ hj hL ψ hψ
-  have hnull := GlobalTheory.T.uniformisation_null_sets_to_pointClass_null E H Dw l Xo c O β Y T F e σ U hg hU Φ k X j f f₀ Eb A₀ hj hL ψ hψ
+  obtain ⟨ψ, hψ⟩ := _root_.GlobalTheory.LieBase.UnifExists.exists_unif E H Dw l Xo c O β Y T F e σ U hg hU Φ k X j f f₀ Eb A₀ hj hL
+  have himg := _root_.GlobalTheory.UnifImage.image_domFlat_eq_ptsIn_openPart E H Dw l Xo c O β Y T F e σ U hg hU Φ k X j f f₀ Eb A₀ hj hL ψ hψ
+  have hfib := _root_.GlobalTheory.UnifFibre.fibre_gamma E H Dw l Xo c O β Y T F e σ U hg hU Φ k X j f f₀ Eb A₀ hj hL ψ hψ
+  have hinv := _root_.GlobalTheory.UnfInv.psi_moebI_eq E H Dw l Xo c O β Y T F e σ U hg hU Φ k X j f f₀ Eb A₀ hj hL ψ hψ
+  have hdens := _root_.GlobalTheory.UnifDens.chernTopPart_image E H Dw l Xo c O β Y T F e σ U hg hU Φ k X j f f₀ Eb A₀ hj hL ψ hψ
+  have hnull := _root_.GlobalTheory.UnifNull.image_null E H Dw l Xo c O β Y T F e σ U hg hU Φ k X j f f₀ Eb A₀ hj hL ψ hψ
   obtain ⟨FD, hFD⟩ := GlobalTheory.BoundedFundDomain.exists_isFD E (Dw.p + Dw.q) Dw.p (U.X k) hj' (U.X k).Ψ (Equiv.refl _) hp
   obtain ⟨hlt, hcov⟩ := GlobalTheory.FlagFibre.covol_eq_muD E (Dw.p + Dw.q) Dw.p (U.X k) hj' (U.X k).Ψ (Equiv.refl _) hp FD hFD
   obtain ⟨hFm, hFsub, hFcov, hFbad⟩ := hFD

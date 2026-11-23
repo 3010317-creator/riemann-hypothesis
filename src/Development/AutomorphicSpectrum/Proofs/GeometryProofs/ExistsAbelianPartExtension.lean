@@ -1,8 +1,12 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.SlopeBoundSt
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsTorusExtensionFiniteStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorusExtensionAbelianQuotientStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsTorusExtensionFinite
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorusExtensionAbelianQuotient
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.LawsProved
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -41,7 +45,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.SabPull
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.LawsProved
 
 @[expose] public section
 
@@ -56,11 +59,11 @@ namespace GlobalTheory.CompanionTheory.Ar
 theorem abPart_exists (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (S : Scheme.{0}) (t : SAB H S)
     (L : Type) [Field L] [NumberField L] (z : Sp L ⟶ S) :
     ∃ (L' : Type) (_ : Field L') (_ : NumberField L') (e : L →+* L'), Nonempty (AbPart t (spMap e ≫ z)) := by
-  obtain ⟨L', _, _, hfin, ⟨τ⟩⟩ := GlobalTheory.T.exists_torus_extension_finite S t.G t.semi L z
+  obtain ⟨L', _, _, hfin, ⟨τ⟩⟩ := _root_.GlobalTheory.CompanionTheory.Ar.exists_finite_torusExtension_fibre S t.G t.semi L z
   have : CharZero L' := charZero_of_injective_algebraMap (algebraMap L L').injective
   have : NumberField L' := NumberField.of_module_finite L L'
   obtain ⟨PP', cub, sym, adj, prim, m, -⟩ := sabPull Out.proved_CubePullSt (spMap (algebraMap L L') ≫ z) t
-  obtain ⟨tB, e, he, ha, hp⟩ := GlobalTheory.T.torus_extension_abelian_quotient E H L'
+  obtain ⟨tB, e, he, ha, hp⟩ := _root_.GlobalTheory.CompanionTheory.Ar.AbB.exists_triple E H L'
     ⟨(Over.pullback (spMap (algebraMap L L') ≫ z)).obj t.G, IsSemiAbelian.pullback _ t.G t.semi,
       OAct.pullback _ t.G t.act, PP', cub, sym, adj, prim⟩ τ
   exact ⟨L', _, inferInstance, algebraMap L L', ⟨⟨_, m, τ, tB, e, he, ha, hp⟩⟩⟩

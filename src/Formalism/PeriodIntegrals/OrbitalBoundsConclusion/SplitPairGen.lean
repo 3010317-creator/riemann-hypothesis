@@ -1,7 +1,8 @@
 module
 
 public import Formalism.LocalToGlobal.PairingIndexBounds.SplitPairEquations.SplitPairGen
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SqPairGlue
+public import Formalism.PeriodIntegrals.SqPair
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SquarePairGluing.SqPairGlueMain
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SqPairLocal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -45,4 +46,4 @@ import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
 
-theorem split_pair_generation : Formalism.L2.PairingIndexBounds.Eq.SqG.SplitPairGen := square_pair_glue square_pair_local
+theorem split_pair_generation : Formalism.L2.PairingIndexBounds.Eq.SqG.SplitPairGen := _root_.PI.SqPairW.sqPairGlue_main square_pair_local

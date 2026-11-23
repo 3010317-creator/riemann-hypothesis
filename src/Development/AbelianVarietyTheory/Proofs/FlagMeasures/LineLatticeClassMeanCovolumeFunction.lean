@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsLatMeasurableConst
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeftQuotientCovolumeWithDensityDetNormSqStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TranslatedLatticeAtInfinityFullCovolumeDualStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DefClassNum
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeftQuotientCovolumeWithDensityDetNormSq
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TranslatedLatticeAtInfinityFullCovolumeDual
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -136,7 +137,7 @@ private theorem covol_covAt (E : Type) [Field E] [NumberField E] (hE : IsTotally
         {g | 0 < detNorm E j g} =
       slabVol E j Λ * ∫⁻ t in Set.Ioi (0 : ℝ), w t / ENNReal.ofReal t := by
   obtain ⟨κ, hκ, hL⟩ :=
-    (GlobalTheory.T.translatedLatticeAtInfinity_full_covolume_dual E hE j).1 Λ hΛ
+    (_root_.GlobalTheory.LatFacts.lattice_facts E hE j).1 Λ hΛ
   have hF : Measurable fun t : ℝ => w (κ / t) := hw.comp (measurable_const.div measurable_id)
   have hd : (haarGL E j).withDensity (fun g => w (covAt E j (latAt E j Λ g)))
       = (haarGL E j).withDensity (fun g => w (κ / detNorm E j g)) := by
@@ -144,7 +145,7 @@ private theorem covol_covAt (E : Type) [Field E] [NumberField E] (hE : IsTotally
     filter_upwards [GlobalTheory.FlagBase.MeanCov.ae_detNorm_pos E j hj] with g hg
     rw [(hL g hg).2.1]
   rw [hd]
-  refine (GlobalTheory.T.leftQuotientCovolume_withDensity_detNormSq E hE j hj _ hΛ
+  refine (_root_.GlobalTheory.DetSlab.covol_withDensity_detNorm E hE j hj _ hΛ
     (fun t => w (κ / t)) hF).trans ?_
   congr 1
   exact GlobalTheory.FlagBase.MeanCov.lintegral_div_inv κ hκ w

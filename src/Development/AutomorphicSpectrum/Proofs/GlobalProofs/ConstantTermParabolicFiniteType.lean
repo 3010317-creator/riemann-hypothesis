@@ -3,35 +3,43 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsBlockEmb
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsSmoothAutomorphicFunctionTranslateAtRealPlace
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.FiniteDimensionalOfSlices
-import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.ConjAtFixedIff
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CenterActionTransportChart
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GodementSectionSmoothBounded
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlacesStatement
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.CommuteGelfandInvariantMatrixUnitsOfGlRel
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousKapSymm
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsContinuousAdelicUnitaryEmbedding
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.QminorPolyMap
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EmbRelAtRealPlaceOfUnitaryEmbedding
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.QdetAddOneSubEqSumQminorStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.QdetPolyMapMonicStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TracedQminorComatrixTruncatedInverseStatement
+public import Formalism.RealPlaceAnalysis.StatementE
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.QdetAddOneSubEqSumQminor
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.QdetPolyMapMonic
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TracedQminorComatrixTruncatedInverse
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CapelliLeviFactorizationSum
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CapelliPolynomialCoefficientsIdeal
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.QuantumDeterminantPolynomialCoefficients
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdaptedBasisConjugateZeroEntriesStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdaptedFrameOrthogonalSubspaceStatement
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdaptedFrameOrthogonalSubspace
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdelicCharacterLocalNontrivialStatement
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ArchimedeanIwasawaMinimalParabolic
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AutomorphicFunctionRestrictBlockStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.BlockBasisChangeEntriesStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Normed.Algebra.Exponential
+public import Mathlib.Topology.Instances.Matrix
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.BlockBasisChangeEntries
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ConjugatedMatrixUnitEntriesStatement
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ContinuousConjBlockEmbeddingStatement
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.GelfandEigenvalueCasimirScalarStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.GlRelationsDerivativePreservedStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.LeviEmbMemNormalizerLower
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.GlRelationsDerivativePreserved
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.LeviNormalizesUnipotentVariant
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.OrthogonalSubspaceWittFrameExtensionStatement
 public import Formalism.LocalToGlobal.IndefiniteReal.RealSeparation.FrameMatEqGlobal
+public import Formalism.LocalToGlobal.GlobalTheory.VolumeCarry.VolumeTheoremTwoOfRationalFrames
+import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.ConjAtFixedIff
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GodementSectionSmoothBounded
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlacesStatement
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.CommuteGelfandInvariantMatrixUnitsOfGlRel
 import Formalism.RealPlaceAnalysis.ThirdArithmeticHolds
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -75,7 +83,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Formalism.LocalToGlobal.GlobalTheory.VolumeCarry.VolumeTheoremTwoOfRationalFrames
 
 @[expose] public section
 
@@ -111,7 +118,7 @@ theorem etr_mem_adjoin_qdet' (A : Type) [Ring A] [Algebra ℂ A] (n : ℕ) (X : 
   | succ m =>
     induction N using Nat.strong_induction_on with
     | _ N ih =>
-      obtain ⟨c, hc1, hc⟩ := GlobalTheory.T.exists_monic_poly_eq_qdet A (m + 1) X
+      obtain ⟨c, hc1, hc⟩ := _root_.GlobalTheory.qdet_polyMap_monic A (m + 1) X
       have hmin : ∀ i j : Fin (m + 1), ∃ c' : ℕ → A, ∀ w : ℂ,
           qminor X (Fin.succAbove j) (Fin.succAbove i) w = ∑ d ∈ range (m + 1), w ^ d • c' d := by
         intro i j
@@ -138,8 +145,8 @@ theorem etr_mem_adjoin_qdet' (A : Type) [Ring A] [Algebra ℂ A] (n : ℕ) (X : 
         exact sum_congr rfl fun i hi => by rw [if_pos (mem_range.mp hi)]
       have hmem : ∀ u, f u ∈ S := by
         intro u
-        have h1 := GlobalTheory.T.traced_qminor_comatrix_truncated_inverse A m X hX u N
-        rw [← GlobalTheory.T.qdet_add_one_sub_eq_sum_qminor', sum_range_succ, Nat.sub_self, pow_zero, mul_one, mul_add] at h1
+        have h1 := _root_.GlobalTheory.TracedComatrix.traced_comatrix A m X hX u N
+        rw [← _root_.GlobalTheory.qdet_add_one_sub_eq_sum_qminor, sum_range_succ, Nat.sub_self, pow_zero, mul_one, mul_add] at h1
         have key : algebraMap ℂ A ((-1) ^ N) * f u = algebraMap ℂ A ((u - m) ^ (N + 1)) * (qdet X (u + 1) - qdet X u)
             - qdet X u * ∑ k ∈ range N, algebraMap ℂ A ((-1) ^ k * (u - m) ^ (N - k)) * etr X k := by
           simp only [f]
@@ -221,7 +228,7 @@ theorem monic_gelf_block {c N : ℕ} (n : Fin c → ℕ) (h : ∑ i, n i = N) (X
     exact this
   have hL : ∀ p q, GlobalTheory.SmGL.blk (GlobalTheory.SmGL.stdBlocks n h) p < GlobalTheory.SmGL.blk (GlobalTheory.SmGL.stdBlocks n h) q → ∀ F ∈ Wn, I.mkQ (Xf p q F) = 0 :=
     fun p q hpq F hF => (Submodule.Quotient.mk_eq_zero I).2 (Submodule.subset_span ⟨p, q, hpq, F, hF, rfl⟩)
-  have hq := GlobalTheory.T.gl_relations_triangular_annihilation W (W ⧸ I) c N n h Xf hX Wn hW I.mkQ hL W₀ h0 hs i
+  have hq := _root_.GlobalTheory.CompanionTheory.Dblock.CentreManyBlocks.monic_relations_along_block W (W ⧸ I) c N n h Xf hX Wn hW I.mkQ hL W₀ h0 hs i
   have hEI : ∀ p q, ∀ G ∈ I, Ei p q G ∈ I := fun p q =>
     block_keeps n h Xf hX Wn hW _ _ (by simp [GlobalTheory.SmGL.blk])
   let pres : Subalgebra ℂ (Module.End ℂ W) := GlobalTheory.CompanionTheory.Dblock.CentreBlocks.preserving I
@@ -306,7 +313,7 @@ theorem s_oneP (hθ : IsInfFam θ) {V V' : HSp D} {ι : V'.V →ₗ[D.host.E] V.
     {A : Matrix (Fin V'.rank) (Fin V'.rank) ℂ} (hA : A ∈ lieAt V' τ) (t : ℝ) :
     s (oneP θ V' τ A t) = oneP θ V τ ((frameMat V V' ι).map (tauE D τ) * A *
       ((gramAt D V' τ)⁻¹ * ((frameMat V V' ι).map (tauE D τ))ᴴ * gramAt D V τ)) t := by
-  obtain ⟨-, -, f3, f4, f5⟩ := GlobalTheory.T.hermitian_form_change_of_basis_lie (gramAt D V τ) (gramAt D V' τ) ((frameMat V V' ι).map (tauE D τ)) (GlobalTheory.SmoothForms.RealPts.gramAt_herm V τ) (GlobalTheory.SmoothForms.RealPts.gramAt_herm V' τ) (GlobalTheory.SmoothForms.RealPts.gramAt_unit V τ) (GlobalTheory.SmoothForms.RealPts.gramAt_unit V' τ) (frame_isom hι τ)
+  obtain ⟨-, -, f3, f4, f5⟩ := _root_.GlobalTheory.CompanionTheory.IsometricMatrix.main (gramAt D V τ) (gramAt D V' τ) ((frameMat V V' ι).map (tauE D τ)) (GlobalTheory.SmoothForms.RealPts.gramAt_herm V τ) (GlobalTheory.SmoothForms.RealPts.gramAt_herm V' τ) (GlobalTheory.SmoothForms.RealPts.gramAt_unit V τ) (GlobalTheory.SmoothForms.RealPts.gramAt_unit V' τ) (frame_isom hι τ)
   have R := (GlobalTheory.T.adelicUnitary_realPoints_structure_realPlaces D).2 θ hθ V
   have R' := (GlobalTheory.T.adelicUnitary_realPoints_structure_realPlaces D).2 θ hθ V'
   obtain ⟨s₀, -, hs₀, -⟩ := GlobalTheory.Mem.UnitaryEmb.exists_embHom D V V' ι hι
@@ -337,7 +344,7 @@ theorem rderC_slice : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.
         RderC θ V τ ((frameMat V V' ι).map (tauE D τ) * Z *
           ((gramAt D V' τ)⁻¹ * ((frameMat V V' ι).map (tauE D τ))ᴴ * gramAt D V τ)) F (s h * y) := by
   intro D θ hθ V V' ι hι s hs τ Z y hy F
-  obtain ⟨-, f2, -, -, -⟩ := GlobalTheory.T.hermitian_form_change_of_basis_lie (gramAt D V τ) (gramAt D V' τ) ((frameMat V V' ι).map (tauE D τ)) (GlobalTheory.SmoothForms.RealPts.gramAt_herm V τ) (GlobalTheory.SmoothForms.RealPts.gramAt_herm V' τ) (GlobalTheory.SmoothForms.RealPts.gramAt_unit V τ) (GlobalTheory.SmoothForms.RealPts.gramAt_unit V' τ) (frame_isom hι τ)
+  obtain ⟨-, f2, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.IsometricMatrix.main (gramAt D V τ) (gramAt D V' τ) ((frameMat V V' ι).map (tauE D τ)) (GlobalTheory.SmoothForms.RealPts.gramAt_herm V τ) (GlobalTheory.SmoothForms.RealPts.gramAt_herm V' τ) (GlobalTheory.SmoothForms.RealPts.gramAt_unit V τ) (GlobalTheory.SmoothForms.RealPts.gramAt_unit V' τ) (frame_isom hι τ)
   obtain ⟨h1, h2⟩ := GlobalTheory.SmoothAutCheck.parts_mem V' τ Z
   have e : ∀ Z, conjAt V τ ((frameMat V V' ι).map (tauE D τ) * Z *
       ((gramAt D V' τ)⁻¹ * ((frameMat V V' ι).map (tauE D τ))ᴴ * gramAt D V τ)) = (frameMat V V' ι).map (tauE D τ) * conjAt V' τ Z *
@@ -362,12 +369,12 @@ theorem mid_frame : ∀ (D : D7) (V V' : HSp D) (ι : V'.V →ₗ[D.host.E] V.V)
   obtain ⟨hdim, B, Bi, hBB, hB, hperp⟩ := GlobalTheory.T.adapted_frame_orthogonal_subspace D V V' ι hι m X Y hW T hr C hC a ham hup
   refine ⟨hdim, fun τ => ⟨B.map (tauE D τ), Bi.map (tauE D τ), ?_, ?_⟩⟩
   · rw [← Matrix.map_mul, hBB, Matrix.map_one _ (map_zero _) (map_one _)]
-  · obtain ⟨f1, -, -, -, -⟩ := GlobalTheory.T.hermitian_form_change_of_basis_lie (gramAt D V τ) (gramAt D V' τ) ((frameMat V V' ι).map (tauE D τ)) (GlobalTheory.SmoothForms.RealPts.gramAt_herm V τ) (GlobalTheory.SmoothForms.RealPts.gramAt_herm V' τ) (GlobalTheory.SmoothForms.RealPts.gramAt_unit V τ) (GlobalTheory.SmoothForms.RealPts.gramAt_unit V' τ) (frame_isom hι τ)
+  · obtain ⟨f1, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.IsometricMatrix.main (gramAt D V τ) (gramAt D V' τ) ((frameMat V V' ι).map (tauE D τ)) (GlobalTheory.SmoothForms.RealPts.gramAt_herm V τ) (GlobalTheory.SmoothForms.RealPts.gramAt_herm V' τ) (GlobalTheory.SmoothForms.RealPts.gramAt_unit V τ) (GlobalTheory.SmoothForms.RealPts.gramAt_unit V' τ) (frame_isom hι τ)
     have hPu : IsUnit (C.1.map (tauE D τ)).det := by
       have h1 : C.1.map (tauE D τ) * ((C⁻¹).1.map (tauE D τ)) = 1 := by
         rw [← Matrix.map_mul, Units.mul_inv, Matrix.map_one _ (map_zero _) (map_one _)]
       exact isUnit_det_of_right_inverse h1
-    refine GlobalTheory.T.block_basis_change_entries V.rank V'.rank a hdim _ hPu _ _ _ _ f1 ?_ ?_ ?_
+    refine _root_.GlobalTheory.CompanionTheory.MidConj.conj_units_of_mid V.rank V'.rank a hdim _ hPu _ _ _ _ f1 ?_ ?_ ?_
     · rw [← Matrix.map_mul, hBB, Matrix.map_one _ (map_zero _) (map_one _)]
     · intro i j
 

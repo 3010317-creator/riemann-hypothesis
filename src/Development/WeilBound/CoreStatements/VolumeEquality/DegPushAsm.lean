@@ -2,10 +2,15 @@ module
 
 public import Development.WeilBound.CoreStatements.VolumeEquality.DegPushDefs
 public import Development.WeilBound.CoreStatements.VolumeEquality.BaseUnifEx2
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.CmHostRankBoundsStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.GoodTowerRealAgreementStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RealTowerProportionalStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.TestPolynomialShiftTotalStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.TowerOrigin
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.CmHostRankBounds
+public import Development.AutomorphicSpectrum.Statements.TowerExistence.GoodTowerExistsX
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.GoodTowerRealAgreement
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.RefLinked
+public import Development.AutomorphicSpectrum.Statements.MetricStatements.AgreementIffGuarded
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RealTowerProportional
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.HeckeSectionsIsotropicCommutatorPairingPower
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.TestPolynomialShiftTotal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -85,9 +90,9 @@ theorem degPush_of (hEq : NumEq) (hPF : GeoPF) (hFib : FibNum) (hTr : TrdegU) (h
     · exact h
   intro _ hProp _ hG hInt E _ _ _ _ H D Xo l c Y _ T o II hY hX hII hp hq hqp a K _ J _ Ω _ _ W _ _ Dc Hd Or eb es _ _ eS eg
   have hIn : PB.Inputs := hG.2.2.2.2.2.2.2.2.2.1
-  have : Nonempty (CMType H) := (GlobalTheory.T.cm_host_rank_bounds E H).2.1
-  have hT : T.Proportional := GlobalTheory.T.real_tower_proportional hProp hIn II hII _ _ T _ (GlobalTheory.T.good_tower_real_agreement hG E H D Xo l c Y T o II hY hX hII hp hq)
-  have htd : 0 < Top.testDeg (CMType H) (D.p + D.q) D.p := (GlobalTheory.T.test_polynomial_shift_total (CMType H) (D.p + D.q) D.p hp (by omega)).2.1
+  have : Nonempty (CMType H) := (_root_.GlobalTheory.CompanionTheory.Ar.Top.HostNumbers.host_numbers E H).2.1
+  have hT : T.Proportional := _root_.GlobalTheory.CompanionTheory.Ar.Top.rootTower_proportional_of_unif hProp hIn II hII _ _ T _ (_root_.GlobalTheory.CompanionTheory.Relay.good_tower_real_agreement hG E H D Xo l c Y T o II hY hX hII hp hq)
+  have htd : 0 < Top.testDeg (CMType H) (D.p + D.q) D.p := (_root_.GlobalTheory.CompanionTheory.Ar.Top.testPoly_facts (CMType H) (D.p + D.q) D.p hp (by omega)).2.1
   have eg' : genPt Or.𝔐.ξ₀ = genPt (o.Or 2 a).𝔐.ξ₀ := by
     have g1 := congrArg (fun f => f (IsLocalRing.closedPoint _)) ((o.Or 2 a).g_over.symm.trans (o.Or 2 a).𝔐.fn_over)
     rw [eg]

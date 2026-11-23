@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedOrbitalIntegralEqSumSmallerLevelStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedOrbitalIntegralEqSumSmallerLevel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -156,7 +156,7 @@ theorem twOrb_indicator_eq_inv_index [TopologicalSpace G] [IsTopologicalGroup G]
     simp only [MulEquiv.coe_toMonoidHom, MulAut.conj_apply] at hj' ⊢
     calc c * p0 * i * (i⁻¹ * j * i) * (c * p0 * i)⁻¹ = c * (p0 * j * p0⁻¹) * c⁻¹ := by group
       _ = y := by rw [hj']; group
-  have key := GlobalTheory.T.twistedOrbitalIntegral_eq_sum_smallerLevel G θ K hKo hKc hθK I ⟨hIo, hIK, hθI⟩ δ (X.indicator 1) hH hb hfin
+  have key := _root_.GlobalTheory.BCT.OrbLev.twOrb_eq_sum_smallerLevel G θ K hKo hKc hθK I ⟨hIo, hIK, hθI⟩ δ (X.indicator 1) hH hb hfin
   rw [key.1, key.2]
   rw [finsum_eq_single _ (DoubleCoset.mk (twCent θ δ) I p0)]
   · obtain ⟨h, hh, k, hk, hq0⟩ := (@DoubleCoset.eq _ _ (twCent θ δ) I _ _).1

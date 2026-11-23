@@ -3,7 +3,7 @@ module
 public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.LieLatticeData
 public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LocFreeMapMkQIff
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LocallyFreeTestPointMembershipStatement
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LocallyFreeTestPointMembership
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,7 +63,7 @@ theorem mem_of_test_ideal : ∀ {o Ω : Type} [CommRing o] [Field Ω] [Algebra o
       rwa [← this]
     · intro hx
       exact ⟨x, hx, rfl⟩
-  refine (hmem v).1 (GlobalTheory.T.locally_free_test_point_membership R p hp hp0 hN hF hI 1 _ hL' (e v) ?_ ?_)
+  refine (hmem v).1 (_root_.GlobalTheory.CompanionTheory.Ar.Num.HaLattice.main R p hp hp0 hN hF hI 1 _ hL' (e v) ?_ ?_)
   · obtain ⟨m, hm⟩ := hm
     refine ⟨m, ?_⟩
     have : (p : Ω) ^ m • e v = e ((p : Ω) ^ m * v) := by

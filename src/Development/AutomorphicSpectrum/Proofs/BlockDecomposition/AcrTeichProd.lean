@@ -2,9 +2,10 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CrystallineSiteZariskiCoveredByAtlas
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.MapAcrFromBase
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IdempotentLocalizationUniversalStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IdempotentRefinementOfUnimodularStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PeriodRingBaseChangeFromUniversalStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.AcrisKummerUnits.MapUgAlgebraMap
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IdempotentLocalizationUniversal
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IdempotentRefinementOfUnimodular
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PeriodRingBaseChangeFromUniversal
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.MapUSharp
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -126,8 +127,8 @@ variable {l : ℕ} [Fact l.Prime]
 
 theorem step_onto {A B : PAlg l} (lam : A ⟶ B) (k : Bool) (n r : ℕ) (hs : Function.Surjective (mapAcr lam n))
     {y : B.Acr n} (hy : y ∈ fil (DD k B n) r) : ∃ x ∈ fil (DD k A n) r, mapAcr lam n x = y := by
-  have hA := (GlobalTheory.T.period_ring_base_change_from_universal A n).2.2.2.2.1 k r
-  have hB := (GlobalTheory.T.period_ring_base_change_from_universal B n).2.2.2.2.1 k r
+  have hA := (_root_.GlobalTheory.CompanionTheory.AcrMod.acr_modp A n).2.2.2.2.1 k r
+  have hB := (_root_.GlobalTheory.CompanionTheory.AcrMod.acr_modp B n).2.2.2.2.1 k r
   have e : (mapAcr lam n).comp (mapAcr A.fromBase n) = mapAcr B.fromBase n :=
     RingHom.ext fun x => mapAcr_fromBase lam n x
   rw [hB, ← e, ← Ideal.map_map, ← hA] at hy
@@ -135,7 +136,7 @@ theorem step_onto {A B : PAlg l} (lam : A ⟶ B) (k : Bool) (n r : ℕ) (hs : Fu
 
 theorem span_acr (A : PAlg l) (n : ℕ) {m : ℕ} (e : Fin m → A.A) (he : Ideal.span (Set.range e) = ⊤) :
     Ideal.span (Set.range fun i => A.toAcr n (WittVector.teichmuller l (e i))) = ⊤ := by
-  obtain ⟨⟨π, hπ, -⟩, -, -, -, -, hnil, -⟩ := GlobalTheory.T.period_ring_base_change_from_universal A n
+  obtain ⟨⟨π, hπ, -⟩, -, -, -, -, hnil, -⟩ := _root_.GlobalTheory.CompanionTheory.AcrMod.acr_modp A n
   exact span_of_nil (A.PFil n) (fun x hx => (hnil x hx).1) _ π e he fun i => hπ _
 
 theorem acr_teich_one {A B : PAlg l} (f : A ⟶ B) (n : ℕ) {a : A.A} (h : Hom.f f a = 1) :
@@ -193,7 +194,7 @@ theorem factors (k : Bool) (n r : ℕ) (T' : El (F.pt κ)) {m : ℕ}
       Nonempty (LocMod (gT F κ k n ⋙ (pdS (Lc F κ k n) ((base l).cris n) r).fn) T' Lc' lamE) := by
   have ha : ∀ S : Finset (Fin m), IsIdempotentElem (∏ i ∈ S, b i) := fun S =>
     Finset.prod_induction _ IsIdempotentElem (fun _ _ h h' => h.mul h') IsIdempotentElem.one fun i _ => hb i
-  choose A' lam htest hlam huniv hacr using fun S => GlobalTheory.T.idempotent_localization_universal T'.1.obj (∏ i ∈ S, b i) (ha S)
+  choose A' lam htest hlam huniv hacr using fun S => _root_.GlobalTheory.CompanionTheory.IdemObj.directFactor T'.1.obj (∏ i ∈ S, b i) (ha S)
   have h1 : ∀ S, ∀ i ∈ S, Hom.f (lam S) (b i) = 1 := fun S i hi => factor_one (Hom.f (lam S)) b hb S (hlam S) hi
   have ht : ∀ S, (A' S).IsTest := fun S => htest S T'.1.property
   refine ⟨fun S => facObj F κ T' (A' S) (lam S) (ht S), fun S => facHom F κ T' (A' S) (lam S) (ht S), h1,
@@ -226,7 +227,7 @@ theorem zarCov_test : ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] (F : 
   refine ⟨fun T T' φ h => (GlobalTheory.CompanionTheory.ThickZar.zarCov_pdS F (bs l k n) rfl (κb κ k n) ((base l).cris n) 𝒜
     (Fact.out : l.Prime).ne_zero r).1 ((gT F κ k n).map φ) h, fun T => ?_⟩
   obtain ⟨m, s, hs, hcov⟩ := 𝒜.cov (CommRingCat.of T.1.obj.U) T.2.1
-  obtain ⟨e, hidem, hspan, hes⟩ := GlobalTheory.T.idempotent_refinement_of_unimodular T.1.obj T.1.property s hs
+  obtain ⟨e, hidem, hspan, hes⟩ := _root_.GlobalTheory.CompanionTheory.TestCover.test_cover T.1.obj T.1.property s hs
   refine ⟨m, fun i _ ψ => Hom.f ψ.1.hom (e i) = 1, fun i T₁ T₂ ψ χ h => ?_,
     fun i T₁ ψ h => chart_of_one F κ 𝒜 k n ψ (s i) (e i) (hes i) (hcov i) h, fun T' φ => ?_⟩
   · have h' : Hom.f ψ.1.hom (e i) = 1 := h

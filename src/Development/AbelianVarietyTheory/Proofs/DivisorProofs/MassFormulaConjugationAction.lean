@@ -7,7 +7,7 @@ public import Mathlib.Basic.Complex.Basic
 public import Mathlib.GroupTheory.Subgroup.Centralizer
 public import Mathlib.SetTheory.Cardinal.Finite
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinsumFiberwiseOfFiniteSupportComplex
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinsumOverConjPairsEqOrbitSum
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HodgeLieBundleIntersection
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinsumStabilizerWeightedPairOrbitsConjClassStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -112,7 +112,7 @@ theorem mass_pt_side : ∀ (H : Type) [Group H] (X : Type) [MulAction H X] (f : 
       (Quotient.mk'' (Quotient.out O).pt : MulAction.orbitRel.Quotient H X)) _
     (finite_support_weighted f hfin)]
   refine finsum_congr fun a => ?_
-  have h := GlobalTheory.T.finsum_over_conj_pairs_eq_orbit_sum H X f hinv hstab hsupp (Quotient.out a)
+  have h := _root_.GlobalTheory.PtFib.ptFib_mass H X f hinv hstab hsupp (Quotient.out a)
   rw [Quotient.out_eq'] at h
   exact h.symm
 

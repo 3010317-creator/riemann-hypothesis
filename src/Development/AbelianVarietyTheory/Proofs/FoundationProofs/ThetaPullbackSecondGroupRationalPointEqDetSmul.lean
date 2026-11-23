@@ -1,12 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MulVSubRight
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DetRationalMatrixTwoSidedMulEqProdEmbeddingsStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DetRationalMatrixTwoSidedMulEqProdEmbeddings
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsDvdMulInvolutionAddOne
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLatticeOfAdelicPoint
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RationalMatrixMulThetaLatticesStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RationalMatrixMulThetaLattices
+public import Formalism.SharpRestriction.GlobalSchurBounds.StandardLatticesGL3
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitaryThetaConstantEqInverseDeterminantPhase
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RationalPointsIntegralPointsMembership
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitaryThetaConstantEqInverseDeterminantPhaseStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -195,7 +196,7 @@ theorem GlobalTheory.RatEqui.pull_right_eq_det_smul : ∀ (D : D7) (cc : Ideal (
   intro D cc δ hc N N' hN hN' th hth γA γ L₁ hrat hdet hmov
   have h1 : γ * adj D γ = 1 := (mem_ratG_intG D N').2.2.2.1 γA γ hrat
   have h2 : adj D γ * γ = 1 := mul_eq_one_comm.1 h1
-  obtain ⟨st1, st2, st3⟩ := GlobalTheory.T.rationalMatrixMul_thetaLattices D cc δ hc N N'
+  obtain ⟨st1, st2, st3⟩ := _root_.GlobalTheory.ThetaStab.mulV_theta_lattices D cc δ hc N N'
   have k0 : KLat D (tor0 D cc δ) (La0 D (tor0 D cc δ) N N') :=
     Or.inr ⟨_, _, sd_of_moves D (moves_one D N), sd_of_moves D (moves_one D N'), rfl⟩
   have k1 : KLat D (tor0 D cc δ) (La D (tor0 D cc δ) (stdL D N) L₁) :=
@@ -213,13 +214,13 @@ theorem GlobalTheory.RatEqui.pull_right_eq_det_smul : ∀ (D : D7) (cc : Ideal (
     rw [hd]; exact (map_ne_zero _).2 hdet
   have hdV : LinearMap.det (LinearMap.id - (u.symm : VC D N N' →ₗ[ℂ] VC D N N')) =
       ∏ τ, embT D τ (1 - adj D γ).det ^ N := by
-    rw [hsub, GlobalTheory.T.det_rationalMatrixTwoSidedMul_eq_prod_embeddings]; simp
+    rw [hsub, _root_.GlobalTheory.TwoSidedDet.det_mulV]; simp
   have hw : ∀ τ, embT D τ (1 - adj D γ).det ≠ 0 := fun τ => (map_ne_zero _).2 hd0
   have i1 : ∀ i j, IsIntegral ℤ ((1 : Matrix (Fin N') (Fin N') D.host.E) i j) := fun i j => by
     rw [Matrix.one_apply]; exact int_ite D _ isIntegral_one
   have comm : ∀ (M : Matrix (Fin N) (Fin N) D.host.E) x, mulV D 1 M (u x) = u (mulV D 1 M x) := fun M x => by
     simp [hu, mulV_mulV]
-  have key := GlobalTheory.T.unitaryThetaConstant_eq_inverseDeterminantPhase D cc δ hc N N' _ _ k0 k1 u
+  have key := _root_.GlobalTheory.SymConst.const_of_symm D cc δ hc N N' _ _ k0 k1 u
     (fun z w => by rw [hu, hu, Hf_mulV, mulV_mulV, h2, adj_one, mul_one, mulV_one])
     (fun x => by
       rw [st3 1 γA 1 γ _ _ (isRat_one D N) hrat (moves_one D N) hmov x, adj_one, hu])

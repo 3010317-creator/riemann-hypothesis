@@ -7,13 +7,14 @@ public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.Loc
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesOfExpansionLawsStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartsIsoLabelsOfThetaPointAndValuesStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationRecognitionOfAbelianPartsIsoLabelsStatement
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationSeriesTermsNestStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FamiliesValuesCorrespond
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionLabelSystemsSeriesScalarIndependentOfLeve
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionPairingValuesOfFamiliesValues
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusTorsionPointsCorrespondValues
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilIsIffPull
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.AdmissibleBaseOfCompleteDvr
+import Development.AbelianVarietyTheory.Definitions.Degenerations.SepticCharacterInjective
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationSeriesTermsNest
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaPointDeterminesAndEndDeterminedTorsion
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
 import Mathlib.Algebra.Order.Floor.Extended
@@ -73,7 +74,7 @@ variable {O : Type} [CommRing O] [TopologicalSpace O] (N : NumD O)
 theorem tx_nest {n m M : ℕ} (hn : Odd n) (hm : Odd m) (hM : M = n * m) (Q : N.QT (M ^ 2)) (q : N.QT (m ^ 2))
     (h₁ : Q.1.1 = q.1.1 ^ n) (h₂ : q.1.2 = Q.1.2 ^ n) : N.tx M Q = N.tx m q := by
   subst hM
-  exact tsum_congr fun χ => GlobalTheory.T.degenerationSeriesTerms_nest O N n m hn hm Q q h₁ h₂ χ
+  exact tsum_congr fun χ => _root_.GlobalTheory.Ex.Nest.txT_nest O N n m hn hm Q q h₁ h₂ χ
 
 end Nest
 

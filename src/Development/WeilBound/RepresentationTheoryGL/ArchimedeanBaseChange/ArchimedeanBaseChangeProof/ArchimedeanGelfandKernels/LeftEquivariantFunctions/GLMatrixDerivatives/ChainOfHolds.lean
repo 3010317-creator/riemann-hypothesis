@@ -1,9 +1,10 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.LeftEquivariantFunctions.ChainOf
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GeneralLinearGroupUnimodularStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LengthFunctionFactsHoldStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RightDerivativeCalculusHoldsStatement
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.WaveSt
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GeneralLinearGroupUnimodular
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LengthFunctionFactsHold
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RightDerivativeCalculusHolds
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.LeftEquivariantFunctions.GLMatrixDerivatives.ChainOfFinal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -46,6 +47,6 @@ import Mathlib.Topology.Sheaves.Init
 
 namespace PositivityTheory.RgBcC.LfSt
 
-theorem chainOf'_holds : PositivityTheory.RgBcC.ChainOf' := ChainPf.chain_identity_multiplier_kernels GlobalTheory.T.general_linear_group_unimodular GlobalTheory.T.right_derivative_calculus_holds GlobalTheory.T.length_function_facts_hold
+theorem chainOf'_holds : PositivityTheory.RgBcC.ChainOf' := ChainPf.chain_identity_multiplier_kernels _root_.GlobalTheory.CompanionTheory.GLUnimod.unimod _root_.GlobalTheory.CompanionTheory.RCalc.rcalc _root_.GlobalTheory.CompanionTheory.LengthGL.lgFacts
 
 end PositivityTheory.RgBcC.LfSt

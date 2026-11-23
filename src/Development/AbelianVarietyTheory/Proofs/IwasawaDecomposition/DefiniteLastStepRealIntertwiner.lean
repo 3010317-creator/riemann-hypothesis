@@ -6,8 +6,11 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.PureTe
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VacuumCharacterPositiveDefiniteSourceStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AllPositiveModelFiniteDimensionalCompactTypeStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEquivariantPiTensorPolynomialBilinearStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLocalHoweContractionCompactUnitaryStatement
+public import Mathlib.LinearAlgebra.PiTensorProduct.Basic
+public import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEquivariantPiTensorPolynomialBilinear
+public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLocalHoweContractionCompactUnitary
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsRealIntertwinerOfCompactGroupIntertwinerStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockPolynomialVectorBasisChangeEqSubstitutionStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockVectorsOfThetaDatumInjectiveStatement
@@ -221,10 +224,10 @@ theorem exists_it (k : Fin D.R.m) (hk : (k : ℕ) + 1 = D.R.m) (a : ℕ) (ha : a
   have hl := fun τ =>
     haveI := (m τ).1
     haveI := (m' τ).1
-    GlobalTheory.T.exists_local_howe_contraction_compact_unitary W.rank V.rank (hn τ) (ν τ) (x₁ τ) (x₃ τ) _ _ (M.H τ) (M.σ τ) (M'.H τ) (M'.σ τ) (n1 τ) (n2 τ) (n3 τ) (n4 τ)
+    _root_.GlobalTheory.CompactHowe.exists_local_contraction W.rank V.rank (hn τ) (ν τ) (x₁ τ) (x₃ τ) _ _ (M.H τ) (M.σ τ) (M'.H τ) (M'.σ τ) (n1 τ) (n2 τ) (n3 τ) (n4 τ)
       (m τ).2.2.1 (m τ).2.2.2 (m' τ).2.2.1 (m' τ).2.2.2
   choose I I0 hI using hl
-  obtain ⟨J, J0, hJ⟩ := GlobalTheory.T.exists_equivariant_piTensor_polynomialBilinear D.what₂.Tau W.rank V.rank M'.H M.H I I0
+  obtain ⟨J, J0, hJ⟩ := _root_.GlobalTheory.CompactHowe.PolyTensor.exists_tensor D.what₂.Tau W.rank V.rank M'.H M.H I I0
   have key : ∀ (g : D.what₂.Tau → Matrix (Fin V.rank) (Fin V.rank) ℂ) (h : D.what₂.Tau → Matrix (Fin W.rank) (Fin W.rank) ℂ),
       (∀ τ, g τ ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ)) → (∀ τ, h τ ∈ Formalism.QuantumDeterminants.UH (gramAt D W τ)) → ∀ φ x,
       J (polAct M M' x₁ x₃ g h φ) (PiTensorProduct.map (fun τ => (M'.σ τ (inFr M' τ (h τ)) : M'.H τ →ₗ[ℂ] M'.H τ)) x) =

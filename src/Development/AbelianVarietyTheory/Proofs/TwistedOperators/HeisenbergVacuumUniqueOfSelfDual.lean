@@ -1,7 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsHeisTrivial
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIntertwinerHeisenbergCocycleOfFixedVector
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.LinearIndependent.Defs
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LinearIndependentOfJointEigenvectors
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalThetaInertPlace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +52,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalThetaInertPlace
 import Development.AbelianVarietyTheory.Definitions.Divisors.EqOfHasValueAtInfinite
 import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
 import Development.AbelianVarietyTheory.Definitions.Foundations.NormEulerPolySubOneLe
@@ -85,7 +87,7 @@ theorem vacuum_unique_of_selfDual {R X M : Type} [CommRing R] [AddCommGroup X] [
     rw [hfix _ hmem, add_sub_cancel] at h1
     rw [h1, smul_smul, inv_mul_cancel₀ (h.ne_zero _ _), one_smul]
   have hli : LinearIndependent ℂ (fun q : X ⧸ Λ => W (Quotient.out q) s) := by
-    refine linearIndependent_of_simultaneous_eigen _ (fun q (a : Λ) => γ a (Quotient.out q)) (fun a : Λ => W a) ?_ ?_ ?_
+    refine _root_.GlobalTheory.JointEigenvectorsIndependent.linearIndependent_of_joint_eigenvectors _ (fun q (a : Λ) => γ a (Quotient.out q)) (fun a : Λ => W a) ?_ ?_ ?_
     · intro q q' hq
       have hm : (Quotient.out q : X) - Quotient.out q' ∈ Λ := by
         rw [hΛ]

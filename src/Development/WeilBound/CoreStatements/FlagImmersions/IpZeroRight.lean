@@ -2,7 +2,9 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsEigFrames
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.HodgeIPIffHodgeFormConj
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HermitianRestrictionOrthonormalCoordsStatement
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.Matrix.Hermitian
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HermitianRestrictionOrthonormalCoords
 public import Development.WeilBound.CoreStatements.VolumeEquality.BaseUnifRiem
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -79,7 +81,7 @@ theorem exists_onb (R : RiemLat E g Λ) (W : Submodule ℂ (Fin g → ℂ)) {m :
     ∃ e : Fin m → Fin g → ℂ, (∀ i, e i ∈ W) ∧ (∀ i j, R.ip (e i) (e j) = if i = j then 1 else 0) ∧
       ∀ z ∈ W, ∃ α : Fin m → ℂ, z = ∑ i, α i • e i := by
   classical
-  obtain ⟨c, hc⟩ := GlobalTheory.T.hermitian_restriction_orthonormal_coords g m R.Hm R.herm R.pos W hm
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HermCoords.exists_coords g m R.Hm R.herm R.pos W hm
   have hinj : Function.Injective (c.comp W.subtype) := by
     refine (injective_iff_map_eq_zero _).2 fun z hz => ?_
     by_contra h0

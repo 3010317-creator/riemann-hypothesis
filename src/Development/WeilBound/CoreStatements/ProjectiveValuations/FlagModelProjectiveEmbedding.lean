@@ -1,12 +1,13 @@
 module
 
 public import Development.WeilBound.CoreStatements.ProjectiveValuations.InitSpanEqOfTri
-import Development.AbelianVarietyTheory.Definitions.Divisors.BarCompSubsetClosure
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CarriesFramedPointOfUnitTriangularChartStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DenseFlagBundlePreimageModuliStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagBundlePointsEqOfSameStepsLocalRingStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagCellFramesLastStepEigenmodulesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagCellsFramesTriangularStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagCellFrameChangeTriangular
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DenseFlagBundlePreimageModuli
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagBundlePointsEqOfSameStepsLocalRing
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagCellFramesLastStepEigenmodules
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagCellsFramesTriangular
+import Development.AbelianVarietyTheory.Definitions.Divisors.BarCompSubsetClosure
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LocallyQuasiFiniteOfFiniteGeometricPoints
 import Development.WeilBound.CoreStatements.ProjectiveValuations.IsIsoOfIntegral
 import Mathlib.Algebra.Order.Floor.Extended
@@ -120,9 +121,9 @@ theorem Rel.step_eq {X : FlagCover Y} {z : Sp S ⟶ X.YY} {z' : Sp S ⟶ Z} (h :
 
 include hZ in
 theorem exists_iso (M : FlagModel Y) : ∃ h : M.YY ⟶ Z, IsIso h ∧ h ≫ π = M.π := by
-  have ht := GlobalTheory.T.flagCellFrameChangeTriangular_of_cells E H Dw l Xo c Y p A Z π g κ hZ
-  have hT := GlobalTheory.T.flagCellFrames_lastStep_eigenmodules E H Dw l Xo c Y p A Z π g κ hZ ht
-  have hu := GlobalTheory.T.flagBundle_points_eq_of_same_steps_localRing E H Dw l Xo c Y p A Z π g κ hZ ht
+  have ht := _root_.GlobalTheory.FlagMod.FieldFlag.flagCells_frames_triangular E H Dw l Xo c Y p A Z π g κ hZ
+  have hT := _root_.GlobalTheory.FlagMod.FieldFlag.cellFrames_topEigen E H Dw l Xo c Y p A Z π g κ hZ ht
+  have hu := _root_.GlobalTheory.FlagMod.FieldFlag.cell_sep E H Dw l Xo c Y p A Z π g κ hZ ht
   obtain ⟨h, hR⟩ := exists_glue (fun S _ _ z z' => Rel hZ ht M.toFlagCover z z')
     (fun S _ _ t z z' h h' => hu S z z' _ h.1 h'.1 fun σ i => (h.2 σ i).trans (h'.2 σ i).symm)
     (exists_local hZ ht M.toFlagCover)
@@ -146,7 +147,7 @@ theorem exists_iso (M : FlagModel Y) : ∃ h : M.YY ⟶ Z, IsIso h ∧ h ≫ π 
   have : IsLocallyNoetherian Z := LocallyOfFiniteType.isLocallyNoetherian (π ≫ Y.s)
   have : IsReduced M.YY := isReduced_flag M.toFlagCover
   refine isIso_of_normal h hZ.normal (π ⁻¹ᵁ LogKS.interior Y)
-    (dense_interior π (GlobalTheory.T.dense_flagBundle_preimage_moduli E H Dw l Xo c Y p A Z π g κ hZ)) ?_ (fun W a a' ha e => ?_) fun w hw => ?_
+    (dense_interior π (_root_.GlobalTheory.FlagMod.FieldFlag.dense_genMap_preimage E H Dw l Xo c Y p A Z π g κ hZ)) ?_ (fun W a a' ha e => ?_) fun w hw => ?_
   · rw [← Scheme.Hom.comp_preimage, hπ]
     exact dense_interior M.π M.dense
   · refine hom_ext_local fun S _ _ t => ?_

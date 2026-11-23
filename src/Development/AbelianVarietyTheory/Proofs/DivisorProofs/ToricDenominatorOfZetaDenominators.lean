@@ -5,10 +5,11 @@ public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.ZetaValue
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClassInvOfUnitTrivial
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEntireLatticeSumOfHeckeLContinuation
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRepTrivialAbove
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinPartEqOneOfLevel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowerValuationLowerBoundSumPowTwelveStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.VpBounds
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowerValuationLowerBoundSumPowTwelve
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValCoordOfMemHatOUnits
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIsHeckeLOfHasInf
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinPartEqOneOfLevel
 import Formalism.LocalToGlobal.UnitaryNorms.CharUniq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -118,7 +119,7 @@ theorem toricDenominator (hZ : GlobalTheory.IndefiniteRowSideFullHecke.ZetaValue
     exact ⟨u, x (S' 0), hu, hlat y' hy' S' hS', by rw [e, hxmul]⟩
   refine ⟨fun y T ⟨S, hS, hT⟩ => ?_, fun ψ T hψ ⟨hfin, S, hS, hT⟩ => ?_⟩
   · obtain ⟨u, w, hu, hw, e⟩ := hterm χ hχ.2.2.1 htriv y S hS
-    have := GlobalTheory.T.powerValuationLowerBound_sum_pow_twelve l hl (betaBound_vp d s κ 𝔣 z l) Unit (fun _ => u) (fun _ => w) (fun _ => hu) (fun _ => hw)
+    have := _root_.GlobalTheory.LatValSum.valGe_sum_pow_twelve l hl (betaBound_vp d s κ 𝔣 z l) Unit (fun _ => u) (fun _ => w) (fun _ => hu) (fun _ => hw)
     rw [hx, hT, e]
     simpa using this
   · have hinf' : HasInf (χ * ψ) φ (fun i => (κ i : ℤ) + s) := hχ.2.2.1.mul_triv hψ.1
@@ -127,7 +128,7 @@ theorem toricDenominator (hZ : GlobalTheory.IndefiniteRowSideFullHecke.ZetaValue
       rw [htriv u hu, hψ.2 u hu, one_mul]
     have := Fintype.ofFinite (PicO c)
     choose u w hu hw e using fun q : PicO c => hterm (χ * ψ) hinf' htriv' q.out (S q) (hS q)
-    have key := GlobalTheory.T.powerValuationLowerBound_sum_pow_twelve l hl (betaBound_vp d s κ 𝔣 z l) (PicO c) u w hu hw
+    have key := _root_.GlobalTheory.LatValSum.valGe_sum_pow_twelve l hl (betaBound_vp d s κ 𝔣 z l) (PicO c) u w hu hw
     rw [hx, hT, finsum_eq_sum_of_fintype]
     have : x (∑ q, ((finPart (χ * ψ) q.out : ℂ) * ((modF q.out ^ s : ℝ) : ℂ))⁻¹ * S q 0) = ∑ q, u q * w q := by
       rw [← Finset.sum_congr rfl fun q _ => e q]

@@ -2,8 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ComparisonMemCechHodgeFiltration
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsKSValueOneOfRetraction
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfForallResidueFieldFunctionalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsReducedOfSmoothOverFieldStatement
+public import Mathlib.RingTheory.LocalRing.ResidueField.Ideal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfForallResidueFieldFunctional
+public import Mathlib.RingTheory.Smooth.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsReducedOfSmoothOverField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -188,8 +190,8 @@ theorem connForm_eq_zero {K : Type} [Field K] {X : Over (Sp K)} (hX : Smooth X.h
   have hsm : Smooth (X.hom ≫ 𝟙 (Sp K)) := by rw [Category.comp_id]; exact hX
   haveI : Algebra.Smooth K (Sec (X.hom ≫ 𝟙 (Sp K)) U.1) := sec_smooth _ hsm U
   haveI : _root_.IsReduced (Sec (X.hom ≫ 𝟙 (Sp K)) U.1) :=
-    GlobalTheory.T.isReduced_of_smooth_over_field' K (Sec (X.hom ≫ 𝟙 (Sp K)) U.1)
-  refine GlobalTheory.T.eq_zero_of_forall_residueField_functional' (Sec (X.hom ≫ 𝟙 (Sp K)) U.1) Ω[Sec (X.hom ≫ 𝟙 (Sp K)) U.1⁄K] _ ?_
+    _root_.GlobalTheory.isReduced_of_smooth_over_field K (Sec (X.hom ≫ 𝟙 (Sp K)) U.1)
+  refine _root_.GlobalTheory.eq_zero_of_forall_residueField_functional (Sec (X.hom ≫ 𝟙 (Sp K)) U.1) Ω[Sec (X.hom ≫ 𝟙 (Sp K)) U.1⁄K] _ ?_
   intro p _ l
   obtain ⟨X', φ, m, hpb, hv⟩ := H p.ResidueField (algebraMap K p.ResidueField)
   let α : Sec (X.hom ≫ 𝟙 (Sp K)) U.1 →ₐ[K] TrivSqZeroExt p.ResidueField p.ResidueField :=

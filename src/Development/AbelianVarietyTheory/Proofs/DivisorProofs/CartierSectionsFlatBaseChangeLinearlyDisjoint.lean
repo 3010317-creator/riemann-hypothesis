@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SubsetSpanBy
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTensorSectionsEmbedFunctionFieldRegularStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTensorSectionsEmbedFunctionFieldRegular
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearlyDisjointOfFlatBaseChangeEmbedsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanIInterSubmodulesOfFlatBaseChangeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanIInterSubmodulesOfFlatBaseChange
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorFractionInjectiveOfTensorInjectiveStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -115,7 +115,7 @@ theorem span_chart {R R₁ : Type} [CommRing R] [CommRing R₁] {ρ : R →+* R�
       {v | ∀ z : V, φ z ∈ U → GlobalTheory.Cartier.RegAt (i z) v} := by
   letI := (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p U).toAlgebra
   letI := ρ.toAlgebra
-  obtain ⟨β, -, hβ, hr⟩ := GlobalTheory.T.exists_tensor_sections_embed_functionField_regular R R₁ ρ X Y V p q i φ θ H hP U hU hg
+  obtain ⟨β, -, hβ, hr⟩ := _root_.GlobalTheory.Desc.BCChart.exists_tensor_fnOf R R₁ ρ X Y V p q i φ θ H hP U hU hg
   rw [← hr]
   ext v; constructor
   · rintro ⟨n, r, t, ht, rfl⟩
@@ -143,7 +143,7 @@ theorem sections_linDisj_flatBaseChange : ∀ (R R₁ : Type) [CommRing R] [Comm
   have hc : ∀ a : R, θ (algebraMap R X.functionField a) = GlobalTheory.Desc.cst q (algebraMap R R₁ a) := by
     intro a
     letI := (ReciprocityTheory.ChartRestriction.G.DVR.FlatBC.algX p U₀).toAlgebra
-    obtain ⟨β, -, hβ, -⟩ := GlobalTheory.T.exists_tensor_sections_embed_functionField_regular R R₁ ρ X Y V p q i φ θ H hP U₀ hU₀ hg₀
+    obtain ⟨β, -, hβ, -⟩ := _root_.GlobalTheory.Desc.BCChart.exists_tensor_fnOf R R₁ ρ X Y V p q i φ θ H hP U₀ hU₀ hg₀
     have e : (algebraMap R Γ(X, U₀) a) ⊗ₜ[R] (1 : R₁) = (1 : Γ(X, U₀)) ⊗ₜ[R] (algebraMap R R₁ a) := by
       rw [Algebra.algebraMap_eq_smul_one, Algebra.algebraMap_eq_smul_one a, TensorProduct.smul_tmul]
     have e' := congrArg β e
@@ -158,7 +158,7 @@ theorem sections_linDisj_flatBaseChange : ∀ (R R₁ : Type) [CommRing R] [Comm
     have hal : ∀ b, algebraMap Γ(X, U₀) X.functionField b = GlobalTheory.Cartier.fnOf U₀ hg₀ b := fun b => rfl
     haveI : IsScalarTower R Γ(X, U₀) X.functionField :=
       IsScalarTower.of_algebraMap_eq fun a => ((hal _).trans (fnOf_algX p U₀ hg₀ a)).symm
-    obtain ⟨β, hβi, hβ, -⟩ := GlobalTheory.T.exists_tensor_sections_embed_functionField_regular R R₁ ρ X Y V p q i φ θ H hP U₀ hU₀ hg₀
+    obtain ⟨β, hβi, hβ, -⟩ := _root_.GlobalTheory.Desc.BCChart.exists_tensor_fnOf R R₁ ρ X Y V p q i φ θ H hP U₀ hU₀ hg₀
     exact GlobalTheory.T.tensor_fraction_injective_of_tensor_injective R R₁ Γ(X, U₀) X.functionField Y.functionField θ (GlobalTheory.Desc.cst q) β hβi
       (fun b r => (hβ b r).trans (by rw [hal]))
   refine ⟨GlobalTheory.T.linearlyDisjoint_of_flat_baseChange_embeds R R₁ X.functionField Y.functionField θ (GlobalTheory.Desc.cst q) hinj, fun k => ?_⟩
@@ -230,7 +230,7 @@ theorem sections_linDisj_flatBaseChange : ∀ (R R₁ : Type) [CommRing R] [Comm
       ⋂ j : t, {v | ∀ z : V, φ z ∈ U j.1 → (k • D₁).RegularAt (i z) v} := by
     ext v; rw [Set.mem_iInter]
     exact ⟨fun h j z _ => h z, fun h z => let ⟨j, hj⟩ := cov (φ z); h j z hj⟩
-  rw [hT, hSec, GlobalTheory.T.span_iInter_submodules_of_flat_baseChange R R₁ X.functionField Y.functionField θ (GlobalTheory.Desc.cst q) hc hinj t N]
+  rw [hT, hSec, _root_.GlobalTheory.Desc.spanBy_iInter_of_flat R R₁ X.functionField Y.functionField θ (GlobalTheory.Desc.cst q) hc hinj t N]
   exact Set.iInter_congr fun j => (hspan j).symm
 
 end GlobalTheory.SecFlatBC

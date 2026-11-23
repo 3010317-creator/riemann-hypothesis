@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CharZeroFunctionField
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAmpleSectionClearingRationalFunctionDenomiStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPosNonzeroPairSectionOfAmpleStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAmpleSectionClearingRationalFunctionDenomi
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPosNonzeroPairSectionOfAmple
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLineBundlePairSectionsMulMemNormMul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -78,8 +78,8 @@ theorem exists_clear_denominators : ∀ (k : Type) [CommRing k] (X : Scheme.{0})
   intro k _ X _ p D hX P hA a J _ f
   classical
   have := Fintype.ofFinite J
-  choose c g hc hg0 hg hgf using fun j => GlobalTheory.T.exists_ampleSection_clearing_rationalFunction_denominator k X p D hX P hA (f j)
-  obtain ⟨c', h, hc', h0, hh⟩ := GlobalTheory.T.exists_pos_nonzero_pairSection_of_ample k X p D hX P hA a
+  choose c g hc hg0 hg hgf using fun j => _root_.GlobalTheory.HSNef.DenOne.exists_den_one k X p D hX P hA (f j)
+  obtain ⟨c', h, hc', h0, hh⟩ := _root_.GlobalTheory.HSNef.exists_pos_nonzero_mem_H k X p D hX P hA a
   refine ⟨c' + ∑ j, c j, h * ∏ j, g j, by omega, mul_ne_zero h0 (Finset.prod_ne_zero_iff.2 fun j _ => hg0 j), ?_, fun j => ?_⟩
   · have := mul_mem_H hh (prod_mem_H Finset.univ c g fun j _ => hg j)
     simpa using this

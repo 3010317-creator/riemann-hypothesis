@@ -6,11 +6,14 @@ public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsE
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.FramePolynomialEquivariantAndNeZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfTvalInvertible
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EvalAtMulTriangularIntVec
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTensorValueOfTriangularLawStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsAlgebraicOfNormConst
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAdelicOne
+public import Formalism.LocalToGlobal.CMDeterminantIdeals.StatementG
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTensorValueOfTriangularLaw
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemSuppOnIffIdemMulOfNatural
 public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.ExistsCompactOfDefinite
 public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.PoincarePointwiseStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.FnDefE
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsAlgebraicOfNormConst
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFrameRingOverTestRing
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUniqueFrameChangeByMatrices
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameChangeByMatricesReflAndComp
@@ -19,7 +22,6 @@ import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameChangeExist
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointBaseChangeUniqueReflIff
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LowerTriIsUnitDet
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ReducedFiniteTypeIffTestRing
-public import Formalism.LocalToGlobal.ProjectiveLattices.FnDefE
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -221,7 +223,7 @@ theorem exists_reads (h₀ : LiesOn Z y₀)
 
 theorem exists_coord {f : Rul Xo c} (hf : f ∈ sec Xo c a n) (hs : f ∈ suppOn Z) : ∃ x, Reads Z y₀ a n x f := by
   obtain ⟨G, hG, -⟩ := GlobalTheory.LamT.FieldPoly.exists_isFrPoly_isHomogeneous E H Dw l Xo c c.F y₀ a n f hf
-  obtain ⟨x, hx⟩ := GlobalTheory.T.exists_tensor_value_of_triangular_law _ Dw.mult (part Dw a) c.F G fun y b hy hb => by
+  obtain ⟨x, hx⟩ := _root_.GlobalTheory.TensorValue.exists_tval_of_triangular _ Dw.mult (part Dw a) c.F G fun y b hy hb => by
     have h := GlobalTheory.LamT.evalFr_mul_tri hf hG inferInstance (AlgHom.id c.F c.F) y b (fun τ => (hy τ).isUnit)
       (fun τ => by
         rw [Matrix.det_of_upperTriangular (hb τ).1]

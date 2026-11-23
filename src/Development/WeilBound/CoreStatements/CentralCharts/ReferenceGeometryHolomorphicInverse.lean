@@ -5,8 +5,11 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EmbedsG
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.CardComapMulFinsumEqFinsumFibres
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.FlatLineGenerator
 public import Development.WeilBound.CoreStatements.CentralCharts.PshAt0
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointsIffCentresStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptFlagXdegStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointsIffCentres
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptFlagXdeg
 public import Development.WeilBound.CoreStatements.CentralCharts.AnalyticAtEval
 public import Development.WeilBound.CoreStatements.CentralCharts.ChartAnalytic
 public import Development.WeilBound.CoreStatements.CentralCharts.IsCoeffAtOfSmul
@@ -94,7 +97,7 @@ theorem central_chart (h0 : Flat.FlatLineGenerator) (h1 : Flat.FlatLineGenerator
     ∃ (F : (Fin n → ℂ) → ℂ) (d : ℝ), AnalyticAt ℂ F 0 ∧ F 0 ≠ 0 ∧
       ∀ᶠ t in 𝓝 (0 : Fin n → ℂ), ∑ i, Real.log ((hx (τ, i)).h (χ.γ t)) = Real.log ‖F t‖ + d := by
   have pts : ∀ w ∈ mcPts (mCoordIdeal y), ∃ z : Spec (CommRingCat.of ℂ) ⟶ 𝔐.X, CoordsAt 𝔐.ξ y z w := fun w hw => by
-    obtain ⟨z, -, hz⟩ := (GlobalTheory.T.complex_points_iff_centres 𝔐.X Ω 𝔐.ξ K J y 𝔐.tie w).1 hw
+    obtain ⟨z, -, hz⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.mem_mcPts_iff_exists_coordsAt 𝔐.X Ω 𝔐.ξ K J y 𝔐.tie w).1 hw
     exact ⟨z, hz⟩
   obtain ⟨z₀, hz₀⟩ := pts _ (χ.mem 0 (Metric.mem_ball_self one_pos))
   obtain ⟨c₁, a, tt, h⟩ := central h0 h1 hS hpq 𝔐 Fl xdeg e hx hroot hhod hdg τ
@@ -207,7 +210,7 @@ theorem reference_geometry_holomorphic_inverse : Top.Given → Flat.FlatLineGene
   intro hG h0 h1 E _ _ _ H D Xo l c Y hGl hS hp hq G
   haveI := c.fin
   haveI : NumberField c.F := {}
-  choose sing hdeg hhod hconj using GlobalTheory.T.hodge_cpt_flag_xdeg E H D l (Xo l) c _ _ Y ∅ G.Ω G.K G.J G.y G.𝔐 G.Fl G.xdeg G.e
+  choose sing hdeg hhod hconj using _root_.GlobalTheory.CompanionTheory.Ar.HodgeLine.exists_hodgeLine E H D l (Xo l) c _ _ Y ∅ G.Ω G.K G.J G.y G.𝔐 G.Fl G.xdeg G.e
     RingOfIntegers.coe_injective G.lines
   have hI : PB.Inputs := hG.2.2.2.2.2.2.2.2.2.1
   exact An.of_local hI hp hq G sing hdeg hhod hconj fun χ τ i =>

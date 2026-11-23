@@ -3,7 +3,11 @@ module
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.NumberTheory.NumberField.CanonicalEmbedding.Basic
 public import Mathlib.RingTheory.ClassGroup.Basic
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.LatticeSumDilateHaarAsymptoticStatement
+public import Mathlib.Algebra.Module.ZLattice.Covolume
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.LatticeSumDilateHaarAsymptotic
+public import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
+public import Mathlib.NumberTheory.NumberField.Discriminant.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -16,12 +20,10 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
-public import Mathlib.NumberTheory.NumberField.Discriminant.Basic
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.Radical.NatInt
@@ -158,7 +160,7 @@ theorem ideal_sum_periodic_dilate : ∀ (K : Type) [Field K] [NumberField K] (m 
     exact ⟨x, hx, by rw [map_add (f := _), Ideal.Quotient.eq_zero_iff_mem.2 hy, add_zero]⟩
   choose s hsb hs using hrep
   let J : (Ideal (𝓞 K))⁰ := ⟨b * m, mem_nonZeroDivisors_iff_ne_zero.2 (mul_ne_zero hb hm)⟩
-  obtain ⟨C, hC⟩ := GlobalTheory.T.lattice_sum_dilate_haar_asymptotic (mixedSpace K) volume
+  obtain ⟨C, hC⟩ := _root_.GlobalTheory.lattice_sum_dilate_haar (mixedSpace K) volume
     (idealLattice K (FractionalIdeal.mk0 K J)) f hf hfc A
   refine ⟨(∑ r : 𝓞 K ⧸ m, ‖ψ (s r)‖) * C, fun t ht ht1 => ?_⟩
   have hsum : Summable fun α : b => ψ α * f (t • mixedEmbedding K ((α : 𝓞 K) : K)) := by

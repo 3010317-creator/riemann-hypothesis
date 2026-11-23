@@ -2,14 +2,17 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsThetaMeanSquareNorm
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LeWchartOne
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsNonzeroSectionPpDataStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsSectionNotInSetStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NonzeroSectionGenericFibreStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PolarizedDataFieldExtensionStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrincipalExtensionProjectiveModuleStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SectionModuleBoundedDenominatorStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SectionModuleDivisibleAtPrimeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SectionModuleFieldExtMapStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EqZeroOfSmulEqZero
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsNonzeroSectionPpData
+public import Mathlib.RingTheory.DedekindDomain.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsSectionNotInSet
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NonzeroSectionGenericFibre
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PolarizedDataFieldExtension
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrincipalExtensionProjectiveModule
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SectionModuleBoundedDenominator
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SectionModuleDivisibleAtPrime
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SectionModuleFieldExtMap
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,7 +51,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.PrecompleteBases.PsbLb
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EqZeroOfSmulEqZero
 
 @[expose] public section
 
@@ -68,8 +70,8 @@ theorem section_and_basis : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   have : QuasiCompact D.t.G.hom := D.t.semi.quasiCompact
   have hN : (LB.LinComb D.t.PP.L (K := Fin 1) (fun _ => 𝟙 _) (fun _ => ((1 : ℕ) : ℤ))).IsLB :=
     LB.isLB_linComb D.t.PP.isLB _ _
-  obtain ⟨t, ht⟩ := GlobalTheory.T.exists_nonzero_section_pp_data E H L D
-  obtain ⟨d₀, hd₀, hb⟩ := GlobalTheory.T.section_module_bounded_denominator (𝓞 L) D.t.G _ hN t ht
+  obtain ⟨t, ht⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Sl.KeyDeg.exists_sec_ne_zero_int E H L D
+  obtain ⟨d₀, hd₀, hb⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Sl.KeyDeg.Denom.bounded_denominators (𝓞 L) D.t.G _ hN t ht
   let I : Ideal (𝓞 L) :=
     { carrier := {x | ∃ u : SecMod D.t.G.hom (LB.LinComb D.t.PP.L (K := Fin 1) (fun _ => 𝟙 _) (fun _ => ((1 : ℕ) : ℤ))), d₀ • u = x • t}
       add_mem' := by
@@ -83,11 +85,11 @@ theorem section_and_basis : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     have : d₀ ∈ I := ⟨t, rfl⟩
     rw [h0] at this
     simpa using this)
-  obtain ⟨L', _, _, _, y, hy, hB⟩ := GlobalTheory.T.principal_extension_projective_module L D.B.carrier I hI
-  obtain ⟨⟨D', m⟩⟩ := (GlobalTheory.T.polarized_data_field_extension E H L D L').1
-  obtain ⟨hgg, -, io, -, hspan, -⟩ := (GlobalTheory.T.polarized_data_field_extension E H L D L').2 D' m
+  obtain ⟨L', _, _, _, y, hy, hB⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Basis.exists_basis_after_extension L D.B.carrier I hI
+  obtain ⟨⟨D', m⟩⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.Sl.ext_baseChange E H L D L').1
+  obtain ⟨hgg, -, io, -, hspan, -⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.Sl.ext_baseChange E H L D L').2 D' m
   obtain ⟨e, he1, he2⟩ := hB D'.B.carrier io hspan hgg
-  obtain ⟨P, hP1, hP2⟩ := GlobalTheory.T.section_module_field_ext_map E H L D L' D' m
+  obtain ⟨P, hP1, hP2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Sl.KeyDeg.exists_pull_sec E H L D L' D' m
   have : Smooth D'.t.G.hom := D'.t.semi.smooth
   let φ := algebraMap (𝓞 L) (𝓞 L')
   let W : Ideal (𝓞 L') :=
@@ -109,11 +111,11 @@ theorem section_and_basis : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   obtain ⟨x, u, hu, yy, hyy, hmem⟩ : ∃ (x : 𝓞 L) (u : SecMod D.t.G.hom (LB.LinComb D.t.PP.L (K := Fin 1) (fun _ => 𝟙 _) (fun _ => ((1 : ℕ) : ℤ)))),
       d₀ • u = x • t ∧ ∃ yy : D.t.G.left, D.t.G.hom yy = b ∧ yy ∈ Out.nonzeroLocus (M := LB.LinComb D.t.PP.L (K := Fin 1) (fun _ => 𝟙 _) (fun _ => ((1 : ℕ) : ℤ))) u := by
     by_cases hb0 : b.asIdeal = ⊥
-    · exact ⟨d₀, t, rfl, GlobalTheory.T.nonzero_section_generic_fibre (𝓞 L) D.t.G _ hN t ht b hb0⟩
+    · exact ⟨d₀, t, rfl, _root_.GlobalTheory.CompanionTheory.Ar.Sl.KeyDeg.Gen.exists_generic_mem_nonzeroLocus (𝓞 L) D.t.G _ hN t ht b hb0⟩
     · have hmax : b.asIdeal.IsMaximal := Ring.DimensionLEOne.maximalOfPrime hb0 b.isPrime
-      obtain ⟨x, u, hu, hV⟩ := GlobalTheory.T.exists_section_not_in_set (𝓞 L) _ (fun a m ha h => eq_zero_of_smul_eq_zero ha h) t ht d₀ hd₀ hb
+      obtain ⟨x, u, hu, hV⟩ := _root_.GlobalTheory.CompanionTheory.Ggeo.KeydegPrimes.exists_multiple_not_mem (𝓞 L) _ (fun a m ha h => eq_zero_of_smul_eq_zero ha h) t ht d₀ hd₀ hb
         {u | ∀ yy : D.t.G.left, D.t.G.hom yy = b → yy ∉ Out.nonzeroLocus (M := LB.LinComb D.t.PP.L (K := Fin 1) (fun _ => 𝟙 _) (fun _ => ((1 : ℕ) : ℤ))) u}
-        b.asIdeal hmax hb0 (fun u hu c e he h => GlobalTheory.T.section_module_divisible_at_prime (𝓞 L) _ D.t.G.hom _ b hmax u hu c e he h)
+        b.asIdeal hmax hb0 (fun u hu c e he h => _root_.GlobalTheory.CompanionTheory.Ar.Sl.KeyDeg.FibDiv.exists_smul_eq_smul (𝓞 L) _ D.t.G.hom _ b hmax u hu c e he h)
       simp only [Set.mem_setOf_eq, not_forall, not_not] at hV
       obtain ⟨yy, hyy, hmem⟩ := hV
       exact ⟨x, u, hu, yy, hyy, hmem⟩

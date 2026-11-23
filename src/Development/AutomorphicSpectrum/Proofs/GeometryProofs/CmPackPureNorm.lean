@@ -3,17 +3,24 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCMFrame
 public import Mathlib.Algebra.AffineMonoid.Basic
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.Rt0ConjNegNeZero
-public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.PadicEmbeddingDiscreteValuationRingStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DifferentTwistedGeneratorExistsStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.EigenLocalBasisLogNormStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ExistsLocalBasisCmOrderStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PureFamilyDecompositionStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CmLieModelActionStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CmPackProductFrameStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CmPackPureFrameStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelEigenvectorsActionStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExtendsOverDvrStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PeriodsSpanPureDecompositionStatement
+public import Development.AutomorphicSpectrum.Definitions.AdelicLattices.FactPrimes
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.PadicEmbeddingDiscreteValuationRing
+public import Mathlib.RingTheory.DedekindDomain.Different
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DifferentTwistedGeneratorExists
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsTransition
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.EigenLocalBasisLogNorm
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ExistsLocalBasisCmOrder
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PureFamilyDecomposition
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CmLieModelAction
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CmPackProductFrame
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CmPackPureFrame
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsConstMul
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExtendsOverDvr
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PeriodsSpanPureDecomposition
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeGram
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelEigenvectorsAction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -149,7 +156,7 @@ theorem scaled {S : Scheme.{0}} {K : Type} [Field K] {G : Over S} [GrpObj G] {x 
     (hδ : δ ≠ 0) (hE : IsEigFrame act x τ (fun k => M.pt (u k))) :
     IsEigFrame act x τ (fun k => M.pt (δ • u k)) ∧
       ∀ a, IsComb ((δ • (1 : Matrix (Fin r) (Fin r) K)) a) (fun k => M.pt (u k)) (M.pt (δ • u a)) := by
-  obtain ⟨hc, hf⟩ := GlobalTheory.T.lie_model_eigenvectors_action S K G x U M
+  obtain ⟨hc, hf⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fl.Bridge.comb_eig_frame S K G x U M
   have hf' := (hf O act ρ τ hact).2 r
   obtain ⟨hli, hsp⟩ := (hf' u).1 hE
   refine ⟨(hf' _).2 ⟨?_, ?_⟩, fun a => ?_⟩
@@ -196,20 +203,20 @@ theorem half {D : Datum H} {l : Level H} {Xo : Moduli D l} {c : Coeff l} {K : Ty
         (fun q : Fin r' × Fin f => ρ (b q.2) (u' q.1)) (e k))).left ∧
       s ≫ m'.φ = spMap (dualMap (algebraMap V K)) ≫ (uV k).left) :
     IsIntFrame m m' (σ.comp (algebraMap (𝓞 E) E)) (fun a => M.pt (δ • HT.eigProj ρ σ (u a))) := by
-  obtain ⟨h1, h2⟩ := GlobalTheory.T.eigen_local_basis_log_norm E H ℓ K j V U ρ σ (Fin r) (Fin r') u u' f b δ hj hcard hb hu hu' hind hδ hlog
-  exact (GlobalTheory.T.lie_model_extends_over_dvr E H D l Xo c K V y T tK m m' U M ρ σ _ n r e uV _ _ hact hσ htan hbas hlink h1 h2).2
+  obtain ⟨h1, h2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fl.EigSubLat.eigSub_span E H ℓ K j V U ρ σ (Fin r) (Fin r') u u' f b δ hj hcard hb hu hu' hind hδ hlog
+  exact (_root_.GlobalTheory.CompanionTheory.Relay.lie_model_extends_over_dvr E H D l Xo c K V y T tK m m' U M ρ σ _ n r e uV _ _ hact hσ htan hbas hlink h1 h2).2
 
 theorem intFrames_fin : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (g : ℕ) (ty : Fin g → (E →+* ℂ)) (FU : FamilyUnif Xo (algebraMap (KA l) ℂ) ty) (i : Fin FU.n) (Z : ∀ b : Bool, Curve0 H (sgnRt H b)) (P : (FU.Di i).La →+ (Fin g → ℂ)) (hP : IsPeriod (FU.Di i) ty P) (X : CMPack Z c FU i hP) (x : Fin D.p ⊕ Fin D.q → (FU.Di i).La) (hx : IsPure hP x) (τ : E →+* ℂ) (ℓ : Nat.Primes) (j : X.K →+* ℂ_[ℓ]) (v : Vecs X.y D.p) (w : Vecs X.y D.q), IsTypeFn H D.p D.q ty → τ (H.rt : E) = H.rt0 → IsLocBasis (𝓞 E) ℓ x → X.IsCMFrame τ hx v w → ∃ (V : Subring X.K) (_ : IsDiscreteValuationRing V) (_ : IsFractionRing V X.K) (T : SAB H (Sp V)) (m'' : SABMap X.t T (spMap (algebraMap V X.K))) (δ δ' : X.K) (v' : Vecs X.y D.p) (w' : Vecs X.y D.q), (∀ a : X.K, ‖j a‖ ≤ 1 ↔ a ∈ (algebraMap V X.K).range) ∧ δ ≠ 0 ∧ δ' ≠ 0 ∧ Real.log ‖j δ‖ = logIdeal ((j.comp (X.β.comp (tauE c τ))).comp (algebraMap (𝓞 E) E)) (differentIdeal ℤ (𝓞 E)) - Real.log ‖j (X.β (tauE c τ (H.rt : E)))‖ ∧ Real.log ‖j δ'‖ = Real.log ‖j δ‖ ∧ (∀ a, IsComb ((δ • (1 : Matrix (Fin D.p) (Fin D.p) X.K)) a) v (v' a)) ∧ (∀ a, IsComb ((δ' • (1 : Matrix (Fin D.q) (Fin D.q) X.K)) a) w (w' a)) ∧ IsFramed (Set.range X.y) τ X.β X.y v' w' ∧ IsIntFrame X.m m'' (X.β.comp (tauIn c τ)) v' ∧ IsIntFrame X.m m'' (X.β.comp (tauIn c (ComplexEmbedding.conjugate τ))) w' := by
   intro E _ _ _ H D l Xo c g ty FU i Z P hP X x hx τ ℓ j v w hty hτ hloc hfr
-  obtain ⟨Vs, hdvr, hVj, hOK, hunit⟩ := GlobalTheory.T.padic_embedding_discrete_valuation_ring X.K ℓ j
+  obtain ⟨Vs, hdvr, hVj, hOK, hunit⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fl.ValRing.exists_dvr_of_padic_embedding X.K ℓ j
   let V : Subring X.K := Vs.toSubring
   haveI : IsDiscreteValuationRing V := hdvr
   haveI : IsFractionRing V X.K := (inferInstance : IsFractionRing Vs X.K)
   have hj : ∀ a : X.K, ‖j a‖ ≤ 1 ↔ a ∈ V := hVj
   have hOK' : ∀ s : 𝓞 X.K, (s : X.K) ∈ V := hOK
-  obtain ⟨f, b, hf, hb⟩ := GlobalTheory.T.exists_local_basis_cm_order E H ℓ ℓ.prop
-  obtain ⟨M, ρ, lam, hact, hIm, hsm, hadd, hrt, hCM⟩ := GlobalTheory.T.cm_lie_model_action E H D l Xo c g ty FU i Z P hP X
-  obtain ⟨δ₀, hδ₀, hδ₀'⟩ := GlobalTheory.T.different_twisted_generator_exists E H ℓ
+  obtain ⟨f, b, hf, hb⟩ := _root_.GlobalTheory.CompanionTheory.Relay.exists_local_basis_cm_order E H ℓ ℓ.prop
+  obtain ⟨M, ρ, lam, hact, hIm, hsm, hadd, hrt, hCM⟩ := _root_.GlobalTheory.CompanionTheory.Relay.cm_lie_model_action E H D l Xo c g ty FU i Z P hP X
+  obtain ⟨δ₀, hδ₀, hδ₀'⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fl.RelDiff.exists_local_generator E H ℓ
   let σ : E →+* X.K := X.β.comp (tauE c τ)
   let σ' : E →+* X.K := X.β.comp (tauE c (ComplexEmbedding.conjugate τ))
   have hσc : ∀ a, ((σ a : X.K) : ℂ) = τ a := fun _ => rfl
@@ -232,8 +239,8 @@ theorem intFrames_fin : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   have hN0 : 0 < N := Nat.pos_of_ne_zero fun h => hN (h ▸ dvd_zero _)
   obtain ⟨n, hn, hnspan⟩ := hloc.2
   have hn0 : 0 < n := Nat.pos_of_ne_zero fun h => hn (h ▸ dvd_zero _)
-  have hdec := (GlobalTheory.T.pure_family_decomposition E H (FU.Di i) g ty P hP D.p D.q x n hx hnspan).1
-  have hg := (GlobalTheory.T.periods_span_pure_decomposition E H (FU.Di i) g ty P hP n hn0 hdec).1
+  have hdec := (_root_.GlobalTheory.CompanionTheory.Ar.Fl.pure_family_spans_pure_sublattice E H (FU.Di i) g ty P hP D.p D.q x n hx hnspan).1
+  have hg := (_root_.GlobalTheory.CompanionTheory.Ar.Fl.exists_pure_vectors_periods_span_of_finite_index E H (FU.Di i) g ty P hP n hn0 hdec).1
   have hcardI : Fintype.card ((Fin D.p × Fin f) ⊕ (Fin D.q × Fin f)) = g := by
     rw [hg, (FU.sig i).1, (FU.sig i).2, ← hf, Nat.mul_div_cancel_left _ (by norm_num : 0 < 2)]
     simp only [Fintype.card_sum, Fintype.card_prod, Fintype.card_fin]
@@ -273,7 +280,7 @@ theorem intFrames_fin : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
       rw [map_inv₀, norm_inv, hunit N hN, inv_one]
     refine IsUnit.of_mul_eq_one (⟨_, hinv⟩ : V) (Subtype.ext ?_)
     simpa using mul_inv_cancel₀ hNK
-  obtain ⟨T, m'', uV, htan, hbas, hlink⟩ := GlobalTheory.T.cm_pack_product_frame E H D l Xo c g ty FU i Z P hP X N
+  obtain ⟨T, m'', uV, htan, hbas, hlink⟩ := _root_.GlobalTheory.CompanionTheory.Relay.cm_pack_product_frame E H D l Xo c g ty FU i Z P hP X N
     (fun k => bI (e k)) (fun k => aI (e k)) V hN0 hspan' hOK' hNu
   have hlink1 : ∀ k, ∃ s : Sp (DualNumber X.K) ⟶ X.t.G.left, s ≫ X.m.φ = (M.pt (fam (e k))).left ∧
       s ≫ m''.φ = spMap (GlobalTheory.CompanionTheory.Ar.dualMap (algebraMap V X.K)) ≫ (uV k).left := fun k => by
@@ -288,7 +295,7 @@ theorem intFrames_fin : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     hOK' ⟨φ a, map_isIntegral_int φ (RingOfIntegers.isIntegral_coe a)⟩
   obtain ⟨r0, v0, hv0, hv0s⟩ := exists_frame V fam (HT.eigSp ρ σ)
   have hind : LinearIndependent X.K fam :=
-    (GlobalTheory.T.lie_model_extends_over_dvr E H D l Xo c X.K V X.y T X.t X.m m'' (Fin g → X.K) M ρ σ _ g r0 e uV fam v0 hact
+    (_root_.GlobalTheory.CompanionTheory.Relay.lie_model_extends_over_dvr E H D l Xo c X.K V X.y T X.t X.m m'' (Fin g → X.K) M ρ σ _ g r0 e uV fam v0 hact
       (hint σ) htan hbas hlink1 hv0 hv0s).1
   have hind' : LinearIndependent X.K fam' := by
     have h := hind.comp _ (Equiv.sumComm (Fin D.q × Fin f) (Fin D.p × Fin f)).injective
@@ -308,7 +315,7 @@ theorem intFrames_fin : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     hne hl1 (hint σ) htan hbas hlink1
   have I2 := half V ℓ j X.y T X.t X.m m'' M ρ σ' D.q D.p f g b u' u (σ' δ₀) (e.trans (Equiv.sumComm _ _)) uV
     hact hj hcard hb hu2 hu2' hind' hne' hl2 (hint σ') htan hbas hlink2
-  have hFr := (GlobalTheory.T.cm_pack_pure_frame E H D l Xo c g ty FU i Z P hP X x hx τ hty hτ hloc.1).2 v w hfr
+  have hFr := (_root_.GlobalTheory.CompanionTheory.Relay.cm_pack_pure_frame E H D l Xo c g ty FU i Z P hP X x hx τ hty hτ hloc.1).2 v w hfr
   have hv : v = fun a => M.pt (HT.eigProj ρ σ (u a)) := funext fun a => (hCM true τ _ _).1 (hfr.1 a)
   have hw : w = fun a => M.pt (HT.eigProj ρ σ' (u' a)) := funext fun a =>
     (hCM false (ComplexEmbedding.conjugate τ) _ _).1 (hfr.2 a)

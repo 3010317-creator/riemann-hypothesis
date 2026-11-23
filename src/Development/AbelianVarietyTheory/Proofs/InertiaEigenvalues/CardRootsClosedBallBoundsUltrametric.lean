@@ -4,7 +4,7 @@ public import Mathlib.Analysis.Normed.Field.Basic
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Mathlib.RingTheory.SimpleRing.Principal
 public import Mathlib.Topology.MetricSpace.Ultra.Basic
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardRootsClosedBallEqDominantIndexStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardRootsClosedBallEqDominantIndex
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,7 +63,7 @@ theorem card_roots_le_radius_bounds :
   have hf : f ≠ 0 := by
     rintro rfl
     exact hd (by simp)
-  obtain ⟨hA, hB⟩ := GlobalTheory.T.card_roots_closedBall_dominant_coeff K f ρ hρ hf
+  obtain ⟨hA, hB⟩ := _root_.GlobalTheory.card_roots_closedBall_eq_dominantIndex K f ρ hρ hf
   set e := Multiset.card (f.roots.filter fun z => ‖z‖ ≤ ρ) with he
   refine ⟨fun H => ?_, fun H => ?_⟩
   · by_contra hlt

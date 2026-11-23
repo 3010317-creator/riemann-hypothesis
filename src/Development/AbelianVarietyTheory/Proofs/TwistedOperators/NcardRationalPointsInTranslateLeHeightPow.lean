@@ -3,10 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OneLeHtE
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsHeightLeTwoMulQuotHeight
 public import Mathlib.NumberTheory.Height.NumberField
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsMulHeightMinpolyCoeffLeRelativeHeight
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FiniteAndNcardMinpolyCoeffHeightLe
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RelativeHeightEntryLeAdelicHeightGL
 import Development.AbelianVarietyTheory.Definitions.Foundations.OfInfProjInfMulOfFinProjFin
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsMulHeightMinpolyCoeffLeRelativeHeightStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FiniteAndNcardMinpolyCoeffHeightLeStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RelativeHeightEntryLeAdelicHeightGLStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -135,7 +135,7 @@ theorem gq_count (hA : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
 
 theorem ncard_rat_mem_translate_le : ∀ {D : D7} {V : HSp D} {Ω : Set (GA D V)}, IsCompact Ω → ∃ (A : ℕ) (C : ℝ), ∀ g x : GA D V, {γ : GQ V | (γ : GA D V) * x ∈ (g * ·) '' Ω}.Finite ∧ ({γ : GQ V | (γ : GA D V) * x ∈ (g * ·) '' Ω}.ncard : ℝ) ≤ C * GlobalTheory.Grow.height V g ^ (2 * A) := by
   intro D V Ω hΩ
-  obtain ⟨C, A, hcount⟩ := gq_count GlobalTheory.T.finite_and_ncard_minpoly_coeff_height_le GlobalTheory.T.exists_mulHeight_minpoly_coeff_le_relativeHeight GlobalTheory.T.relativeHeight_entry_le_adelicHeightGL V
+  obtain ⟨C, A, hcount⟩ := gq_count _root_.GlobalTheory.MinpolyHeightCount.finite_and_ncard_minpoly_height_le _root_.GlobalTheory.RatCount.CoefHt.exists_mulHeight_coeff_minpoly_le _root_.GlobalTheory.RatCount.htE_entry_le_heightGL V
   have hK : IsCompact ((fun p : GA D V × GA D V => p.1 * p.2⁻¹) '' (Ω ×ˢ Ω)) :=
     (hΩ.prod hΩ).image (by fun_prop)
   obtain ⟨C₀, hC₀⟩ := GlobalTheory.Grow.exists_height_le_of_isCompact V hK

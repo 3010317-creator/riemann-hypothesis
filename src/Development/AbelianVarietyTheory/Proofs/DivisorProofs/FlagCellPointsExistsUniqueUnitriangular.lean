@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.BsLApply
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BearsFlagUnitriangularIffMemCellStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BearsFlagUnitriangularIffMemCell
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UpUUniqueOfLower
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -98,7 +98,7 @@ theorem pts_of {F : Type} [Field F] {X Y : Var F} {ι : Type} [Fintype ι] {m : 
 
 theorem cell_points_existsUnique : ∀ (F : Type) [Field F] (X Y : Var F) (ι : Type) [Fintype ι] (m : ι → ℕ) (E : Fr (ratOf X) m 0) (E' : Fr (ratOf Y) m m) (φ : X.Fn →ₐ[F] Y.Fn) (f : Y.X ⟶ X.X), Refines E E' φ f → ∀ (A : Mat m X.Fn) (u : Cell m → Y.Fn), InCell E E' φ f A u (genericPoint Y.X) → ∀ (K : Type) [Field K] (x : Sp K ⟶ X.X), A ∈ E.S (x (IsLocalRing.closedPoint K)) → ∀ y₀ : Cell m → K, ∃! p : Sp K ⟶ Y.X, p ≫ f = x ∧ InCell E E' φ f A u (p (IsLocalRing.closedPoint K)) ∧ ∀ j, (ratOf Y).val p (u j) = y₀ j := by
   intro F _ X Y ι _ m E E' φ f hR A u hg K _ x hA y₀
-  exact pts_of hR hg x hA y₀ (fun p hp => GlobalTheory.T.bearsFlag_unitriangular_iff_mem_cell F X Y ι m E E' φ f hR A K p hp y₀)
+  exact pts_of hR hg x hA y₀ (fun p hp => _root_.GlobalTheory.FlagCell2.BearsCell.bears_iff F X Y ι m E E' φ f hR A K p hp y₀)
     (fun s y y' b hb h => upU_unique_of_lower Y.Fn s y y' b hb h)
 
 end GlobalTheory.FlagCell2

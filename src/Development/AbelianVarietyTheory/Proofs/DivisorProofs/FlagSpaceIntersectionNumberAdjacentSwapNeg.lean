@@ -1,12 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.InterPolyProdSum
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubleSpaceSmallOfFunctionFieldEmbedsRatFuncStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsDominantOfSection
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubleSpaceSmallOfFunctionFieldEmbedsRatFunc
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDivisorsDoubleFlagSpaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDoubleSpaceOfGenericFunctionFieldPairStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGenericPairFlagsDifferingOneStepStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntersectionNumberSwapOfDoubleSpaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAlmostLowerTriangularOfShearParabolicStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDoubleSpaceOfGenericFunctionFieldPair
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGenericPairFlagsDifferingOneStep
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntersectionNumberSwapOfDoubleSpace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAlmostLowerTriangularOfShearParabolic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,7 +45,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsDominantOfSection
 
 @[expose] public section
 
@@ -63,9 +63,9 @@ theorem interPoly_swap_adjacent : ∀ (F : Type) [Field F] (X Y : Var F) (ι : T
   have hlt : a < b := by
     show (a : ℕ) < b
     omega
-  obtain ⟨ψ₂, hgen, hφ, hpar⟩ := GlobalTheory.T.exists_generic_pair_flags_differing_one_step F X Y ι m E E' φ f hR B hB τ a b hlt
-  obtain ⟨W, j, h1, h2⟩ := GlobalTheory.T.exists_doubleSpace_of_genericFunctionFieldPair F Y _ _ _ hgen
-  have hs : W.Small := GlobalTheory.T.doubleSpace_small_of_functionField_embeds_ratFunc F Y W j h1
+  obtain ⟨ψ₂, hgen, hφ, hpar⟩ := _root_.GlobalTheory.FlagPush.Gen.exists_genPair F X Y ι m E E' φ f hR B hB τ a b hlt
+  obtain ⟨W, j, h1, h2⟩ := _root_.GlobalTheory.FlagPush.exists_dbl_of_genPair F Y _ _ _ hgen
+  have hs : W.Small := _root_.GlobalTheory.FlagPush.SmallPf.main F Y W j h1
   have e1 : ∀ u, j (W.α₁ u) = algebraMap Y.Fn (RatFunc Y.Fn) u := fun u => DFunLike.congr_fun h1 u
   have e2 : ∀ u, j (W.α₂ u) = ψ₂ u := fun u => DFunLike.congr_fun h2 u
   have hα : ∀ u : X.Fn, W.α₁ (φ u) = W.α₂ (φ u) := fun u =>
@@ -75,12 +75,12 @@ theorem interPoly_swap_adjacent : ∀ (F : Type) [Field F] (X Y : Var F) (ι : T
   have m2 : (B.map W.α₂).map j = B.map ψ₂ := by
     funext σ; ext i k; exact e2 _
   have hlow : AlmostLow τ a b (B.map W.α₁ * (B.map W.α₂)⁻¹) := by
-    refine GlobalTheory.T.isAlmostLowerTriangular_of_shear_parabolic ι m τ a b hab _ _ j RatFunc.X RatFunc.X_ne_zero _ ?_
+    refine _root_.GlobalTheory.FlagPush.almostLow_of_shear ι m τ a b hab _ _ j RatFunc.X RatFunc.X_ne_zero _ ?_
     rw [Mat.map_mul, Mat.map_inv, m1, m2]
     exact hpar
   obtain ⟨D₁, D₂, Θ, h⟩ := GlobalTheory.T.exists_divisors_doubleFlagSpace F X Y ι m E E' φ f hR gr B hB hBg W hα τ a b hab hlow
   have hne : (⟨τ, a⟩ : Root m) ≠ ⟨τ, b⟩ := fun h => hlt.ne (eq_of_heq (Sigma.mk.inj h).2)
-  have := GlobalTheory.T.intersectionNumber_swap_of_doubleSpace F Y W hs (Root m) _ _ hne gr D₁ D₂ Θ h Q
+  have := _root_.GlobalTheory.FlagPush.Dbl.interPoly_rename_swap F Y W hs (Root m) _ _ hne gr D₁ D₂ Θ h Q
   convert this
 
 end GlobalTheory.FlagPush

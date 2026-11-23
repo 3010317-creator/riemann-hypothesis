@@ -1,8 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.SerFixOne
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsAdelicUnitaryTrivialOutsideSplitPlaceLocEqStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SumProdFixedPlaceAverageStatement
+public import Formalism.AlgebraicWeights.IsAlgWeight
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsAdelicUnitaryTrivialOutsideSplitPlaceLocEq
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Algebra.Module.Defs
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.Data.Fintype.Pi
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SumProdFixedPlaceAverage
 import Formalism.LocalRingCardinality.SpanPowerMembership.LocAtA
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -90,7 +95,7 @@ theorem exists_lifts (n : ℕ) (s : SplitPlace L) (g : ℕ) (hg : g.Prime) :
     have hB : IsUnit B.det := by
       rw [isUnit_iff_ne_zero, ← RingHom.map_det, eq_intCast]
       exact Int.cast_ne_zero.mpr hdet
-    obtain ⟨x, hx, hloc⟩ := GlobalTheory.T.exists_adelicUnitary_trivialOutside_splitPlace_loc_eq n s (Matrix.nonsingInvUnit B hB)
+    obtain ⟨x, hx, hloc⟩ := _root_.GlobalTheory.SplitLift.exists_trivOutside_loc_eq n s (Matrix.nonsingInvUnit B hB)
     refine ⟨x, hx, fun i j => ?_⟩
     have hij : (s.loc n x : Matrix (Fin n) (Fin n) (s.v.adicCompletion (maximalRealSubfield L))) i j =
         ((((γ : Matrix (Fin n) (Fin n) (ZMod g)) i j).val : ℕ) : s.v.adicCompletion (maximalRealSubfield L)) := by
@@ -214,7 +219,7 @@ theorem sum_serCoef_rt : ∀ (D : D7) (X : HidaSetting D) (h : X.B.I = Formalism
           set_option synthInstance.maxHeartbeats 100000 in
             simp only [map_sum, map_smul]
       _ = Formalism.L2.NG.rt D.host.E D.R.r (lf γ) φ := by rw [hser, back]
-  have hfin := GlobalTheory.T.sum_prod_fixed_place_average_alt (ι := Σ k : Fin 2, D.nd.PlG k) (G := fun kv => GL (Fin D.R.r) (ZMod (D.host.g kv.1)))
+  have hfin := _root_.GlobalTheory.sum_prod_fixed_place_average (ι := Σ k : Fin 2, D.nd.PlG k) (G := fun kv => GL (Fin D.R.r) (ZMod (D.host.g kv.1)))
     (fun kv β => (D.ntypes.eSer kv.1 (τ kv.1 kv.2)).coeff β) (fun γ => Formalism.L2.NG.rt D.host.E D.R.r (lf γ) φ) step
   have h1 : Formalism.L2.NG.rt D.host.E D.R.r (lf 1) φ = φ :=
     hfix (sec 1) ((hker _ (hsec 1).1).1 ((hsec 1).2)) _ (hlf 1)

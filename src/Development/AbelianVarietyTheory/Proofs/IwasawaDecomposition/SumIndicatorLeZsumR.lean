@@ -1,7 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ZeroCount
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DirichletLZerosInWindowFiniteAndPosOrderStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.RayPrimes
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DirichletLZerosInWindowFiniteAndPosOrder
+public import Mathlib.NumberTheory.Harmonic.Bounds
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -16,7 +18,6 @@ import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.NumberTheory.Chebyshev
-public import Mathlib.NumberTheory.Harmonic.Bounds
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
@@ -140,8 +141,8 @@ theorem zsumR_recip_le : GlobalTheory.Mem.An.ZeroCount → ∃ C : ℝ, ∀ (q :
   intro q _ χ hχ T hT
   have hq : (1 : ℝ) ≤ q := by exact_mod_cast Nat.one_le_iff_ne_zero.mpr (NeZero.ne q)
   refine ⟨?_, ?_⟩
-  · obtain ⟨hfin, _⟩ := GlobalTheory.T.dirichletLZerosInWindow_finite_and_pos_order q χ 0 T
-    have hfin' : ∀ t : ℝ, (zerosIn χ t 1).Finite := fun t => (GlobalTheory.T.dirichletLZerosInWindow_finite_and_pos_order q χ t 1).1
+  · obtain ⟨hfin, _⟩ := _root_.GlobalTheory.Mem.An.ZeroWindow.finite_and_one_le_zmult q χ 0 T
+    have hfin' : ∀ t : ℝ, (zerosIn χ t 1).Finite := fun t => (_root_.GlobalTheory.Mem.An.ZeroWindow.finite_and_one_le_zmult q χ t 1).1
     have hN1 : 1 ≤ ⌊T⌋₊ := Nat.le_floor (by rw [Nat.cast_one]; linarith)
     have hNT : (⌊T⌋₊ : ℝ) ≤ T := Nat.floor_le (by linarith)
     have hNpos : (0 : ℝ) < ⌊T⌋₊ := by exact_mod_cast hN1

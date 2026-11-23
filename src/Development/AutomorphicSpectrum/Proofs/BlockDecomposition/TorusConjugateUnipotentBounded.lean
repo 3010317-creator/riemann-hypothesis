@@ -1,9 +1,11 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GoodConstOfAniso
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConeFrameWeightRatioBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TorusArchimedeanFrameActionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnipotentFrameLevelTriangularStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SumFrameIdem
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConeFrameWeightRatioBound
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsSmoothModerateOfIsAutFunSm
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TorusArchimedeanFrameAction
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnipotentFrameLevelTriangular
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,7 +58,7 @@ namespace GlobalTheory.CompanionTheory.RapidDecay
 
 theorem torus_contracts_unipRad : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n : ℕ) (J : Matrix (Fin n) (Fin n) E), IsHermND σ J → ∀ (r : ℕ) (X Y : Matrix (Fin n) (Fin r) E), IsWittFrame σ J X Y → ∀ (Q : Set (GAd σ J)) (c : ℝ), IsCompact Q → 0 < c → ∀ s : Fin r, ∃ M : ℝ, 0 ≤ M ∧ ∀ m ∈ Q, m ∈ unipRad σ J (pre X s) → ∀ t ∈ cone r c, ∀ a, IsTorusElt σ J X Y t a → ∀ (w : InfinitePlace F) (τ : EmbOver E w) (i j : Fin n), ‖(archMat σ J τ (projArch σ J w (a⁻¹ * m * a)) - 1) i j‖ ≤ M / ratio t s := by
   intro F E _ _ _ _ _ σ h n J hJ r X Y hW Q c hQ hc s
-  obtain ⟨K, hK0, hK⟩ := GlobalTheory.T.cone_frame_weight_ratio_bound r c hc
+  obtain ⟨K, hK0, hK⟩ := _root_.GlobalTheory.CompanionTheory.RapidDecay.frameWt_div_le_div_ratio r c hc
   have hb : ∀ q : (Σ w : InfinitePlace F, EmbOver E w) × FrameIx r × FrameIx r × Fin n × Fin n, ∃ B : ℝ, ∀ g ∈ Q,
       ‖((frameIdem (σ : E →+* E) J X Y q.2.1).map q.1.2.1 * (archMat σ J q.1.2 (projArch σ J q.1.1 g) - 1) *
         (frameIdem (σ : E →+* E) J X Y q.2.2.1).map q.1.2.1) q.2.2.2.1 q.2.2.2.2‖ ≤ B := fun q => by
@@ -85,7 +87,7 @@ theorem torus_contracts_unipRad : ∀ (F E : Type) [Field F] [NumberField F] [Fi
         rw [map_sum]; rfl
     rw [this, sum_frameIdem, map_one]
   have hTor : ∀ β, A * P β = ((frameWt t β : ℝ) : ℂ) • P β := fun β =>
-    GlobalTheory.T.torus_archimedean_frame_action F E σ h n J hJ r X Y hW t a ha ht.1 w τ β
+    _root_.GlobalTheory.CompanionTheory.RapidDecay.torus_mul_frameIdem F E σ h n J hJ r X Y hW t a ha ht.1 w τ β
   have hA : A = ∑ β, ((frameWt t β : ℝ) : ℂ) • P β := by
     calc A = A * ∑ β, P β := by rw [hP, Matrix.mul_one]
       _ = _ := by rw [Finset.mul_sum]; exact Finset.sum_congr rfl fun β _ => hTor β
@@ -104,7 +106,7 @@ theorem torus_contracts_unipRad : ∀ (F E : Type) [Field F] [NumberField F] [Fi
     rw [smul_mul_assoc, smul_mul_assoc, Matrix.mul_smul, smul_smul]
   have term : ∀ α β, ‖((((frameWt t α : ℝ) : ℂ)⁻¹ * ((frameWt t β : ℝ) : ℂ)) • (P α * M₁ * P β)) i j‖ ≤ K * Bt / ratio t s := fun α β => by
     by_cases hl : frameLev s α ≤ frameLev s β
-    · have h0 : P α * M₁ * P β = 0 := GlobalTheory.T.unipotent_frame_level_triangular F E σ h n J hJ r X Y hW s m hmU w τ α β hl
+    · have h0 : P α * M₁ * P β = 0 := _root_.GlobalTheory.CompanionTheory.RapidDecay.frameIdem_mul_unipRad_mul_frameIdem F E σ h n J hJ r X Y hW s m hmU w τ α β hl
       rw [h0, smul_zero]
       simpa using div_nonneg (mul_nonneg hK0 hBt0) hr.le
     · have h1 := hK s t ht α β (not_le.1 hl)

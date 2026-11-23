@@ -1,12 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CharZeroFunctionField
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DivPowMemSectionsOfMulPowMemTwistedStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DivPowMemSectionsOfMulPowMemTwisted
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EncardMulLeOfQuotEmbed
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLineBundlePairSectionBallFiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLineBundlePairSectionsMulMemNormMulStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermPairPowSectionMemAndNormPowStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSeminormBallFamilySectionBallsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLineBundlePairSectionBallFinite
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLineBundlePairSectionsMulMemNormMul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermPairPowSectionMemAndNormPow
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSeminormBallFamilySectionBalls
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,11 +60,11 @@ namespace GlobalTheory.HSNef
 
 theorem encard_mul_le_at_level_twist : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (D : ℕ), IsArithVar p D → ∀ (P : Pair p) (b : ℕ) (s t : X.functionField), P.Good D b s t → ∀ c : ℕ, ∀ (N m : ℕ), (P.Bl N (m - c) 1).encard * (P.Bl 0 (b * N - c) 1).encard ≤ {f | f ∈ P.H N (-c) ∧ f * s ^ m ∈ P.Bl N (m - c) 2}.encard * (P.Bl 0 (b * N + m - c) 2).encard := by
   intro k _ X _ p D hD P b s t hG c N m
-  have hfin := GlobalTheory.T.hermLineBundlePair_sectionBall_finite k X p D hD P N ((m : ℤ) - c) 1
-  have bf := GlobalTheory.T.isSeminormBallFamily_sectionBalls k X p P
-  have hmul := GlobalTheory.T.hermLineBundlePair_sections_mul_mem_norm_mul k X p P
-  have hpow := GlobalTheory.T.hermPair_pow_section_mem_and_norm_pow k X p P
-  have hreg := GlobalTheory.T.div_pow_mem_sections_of_mul_pow_mem_twisted k X p D hD P b s t hG c N m
+  have hfin := _root_.GlobalTheory.HSNef.bl_finite k X p D hD P N ((m : ℤ) - c) 1
+  have bf := _root_.GlobalTheory.VolBr.Pair.isBallFam k X p P
+  have hmul := _root_.GlobalTheory.VolBr.NuMul.mul_mem_H_and_nu_mul k X p P
+  have hpow := _root_.GlobalTheory.VolBr.NuPow.pow_mem_H_and_nu_pow k X p P
+  have hreg := _root_.GlobalTheory.VolBr.Pair.div_pow_mem_H_of_mul_pow_sub k X p D hD P b s t hG c N m
   have nu_nn : ∀ (a c : ℤ) (σ : k →+* ℂ) (y : CxPts p σ) (f : X.functionField), 0 ≤ P.nu a c σ y f := by
     intro a c σ y f
     unfold Pair.nu

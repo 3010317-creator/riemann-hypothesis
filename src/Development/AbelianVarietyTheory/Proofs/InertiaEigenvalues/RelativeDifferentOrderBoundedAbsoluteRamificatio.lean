@@ -3,10 +3,11 @@ module
 public import Mathlib.Algebra.AffineMonoid.Basic
 public import Mathlib.NumberTheory.NumberField.Basic
 public import Mathlib.RingTheory.DedekindDomain.Different
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsTraceNeZeroFiniteLocalZmodPrimePowStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntCastTraceEqTraceQuotientOfMemStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MaxIdealExactPowDvdSpanPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.QuotPowMaximalCharPLocalCardStatement
+public import Mathlib.RingTheory.Trace.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsTraceNeZeroFiniteLocalZmodPrimePow
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntCastTraceEqTraceQuotientOfMem
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MaxIdealExactPowDvdSpanPrime
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.QuotPowMaximalCharPLocalCard
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -74,11 +75,11 @@ theorem not_pow_dvd_differentIdeal_int : ∀ (L : Type) [Field L] [NumberField L
   intro L _ _ l e hl la _ hla h1 h2 hD
   haveI : Fact l.Prime := ⟨hl⟩
   haveI : la.IsMaximal := Ideal.IsPrime.isMaximal inferInstance hla
-  obtain ⟨e', J, he0, hee, hcop, hfac⟩ := GlobalTheory.T.exists_span_prime_eq_pow_mul_coprime L l e hl la h1 h2
-  obtain ⟨hchar, hfin, ϖ, hϖ, hlϖ, hcard⟩ := GlobalTheory.T.quotient_pow_finite_uniformizer_card_eq L la J l e' e' hl he0 he0 hcop hfac
+  obtain ⟨e', J, he0, hee, hcop, hfac⟩ := _root_.GlobalTheory.maxIdeal_exact_pow_dvd_span_prime L l e hl la h1 h2
+  obtain ⟨hchar, hfin, ϖ, hϖ, hlϖ, hcard⟩ := _root_.GlobalTheory.quot_pow_maximal_charP_local_card L la J l e' e' hl he0 he0 hcop hfac
   letI : Algebra (ZMod (l ^ e')) (𝓞 L ⧸ la ^ (e' * e')) := ZMod.algebra _ _
   have hnd : ¬ l ^ e' ∣ e' := fun h => (Nat.lt_pow_self hl.one_lt).not_ge (Nat.le_of_dvd he0 h)
-  obtain ⟨c, hc⟩ := GlobalTheory.T.exists_trace_ne_zero_finite_local_zmod_prime_pow l e' e' (𝓞 L ⧸ la ^ (e' * e')) ϖ he0 hϖ hlϖ hcard hnd
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.LocalTraceNonzero.exists_trace_ne_zero l e' e' (𝓞 L ⧸ la ^ (e' * e')) ϖ he0 hϖ hlϖ hcard hnd
   obtain ⟨c0, rfl⟩ := Ideal.Quotient.mk_surjective c
   have hIQ : la ^ (e' * e') ⊔ J ^ e' = ⊤ := by
     have h' : IsCoprime la J := Ideal.isCoprime_iff_sup_eq.mpr hcop
@@ -93,7 +94,7 @@ theorem not_pow_dvd_differentIdeal_int : ∀ (L : Type) [Field L] [NumberField L
     rw [Ideal.Quotient.eq]
     have : q * c0 - c0 = -(i * c0) := by linear_combination c0 * hiq
     rw [this]; exact neg_mem (Ideal.mul_mem_right _ _ hi)
-  have htr := GlobalTheory.T.intCast_trace_eq_trace_quotient_of_mem' L l e' (la ^ (e' * e')) (J ^ e') hIQ hmul (q * c0) hx
+  have htr := _root_.GlobalTheory.intCast_trace_eq_trace_quotient_of_mem L l e' (la ^ (e' * e')) (J ^ e') hIQ hmul (q * c0) hx
   rw [hxc] at htr
   have hnot : Algebra.intTrace ℤ (𝓞 L) (q * c0) ∉ Ideal.span {((l ^ e' : ℕ) : ℤ)} := by
     intro hm

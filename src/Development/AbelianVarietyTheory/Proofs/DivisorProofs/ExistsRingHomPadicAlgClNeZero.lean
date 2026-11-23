@@ -1,9 +1,13 @@
 module
 
 public import Mathlib.NumberTheory.Padics.Complex
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinitePadicIntDomainEmbeddingStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInjectiveNormLeOneOfFinitePadicIntDomainStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrimeNotMemForallGtEqMaximalIdealStatement
+public import Mathlib.NumberTheory.Padics.PadicIntegers
+public import Mathlib.RingTheory.LocalRing.ResidueField.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinitePadicIntDomainEmbedding
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInjectiveNormLeOne
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Defs
+public import Mathlib.RingTheory.Noetherian.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrimeNotMemForallGtEqMaximalIdeal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -72,7 +76,7 @@ theorem exists_ringHom_padicAlgCl_ne_zero : ∀ (B : Type) [CommRing B] [IsDomai
     exact ringChar.Nat.cast_ringChar
   have hpB : (p : B) ≠ 0 := Nat.cast_ne_zero.2 hp0
 
-  obtain ⟨q, hq, hxq, hmax⟩ := GlobalTheory.T.exists_prime_not_mem_forall_gt_eq_maximalIdeal' B (h * p) (mul_ne_zero hh hpB) (Ideal.mul_mem_left _ _ hpm)
+  obtain ⟨q, hq, hxq, hmax⟩ := _root_.GlobalTheory.exists_prime_not_mem_forall_gt_eq_maximalIdeal B (h * p) (mul_ne_zero hh hpB) (Ideal.mul_mem_left _ _ hpm)
   have hhq : h ∉ q := fun hq' => hxq (Ideal.mul_mem_right _ _ hq')
   have hpq : (p : B) ∉ q := fun hq' => hxq (Ideal.mul_mem_left _ _ hq')
   have hqm : q ≤ maximalIdeal B := le_maximalIdeal hq.ne_top
@@ -127,10 +131,10 @@ theorem exists_ringHom_padicAlgCl_ne_zero : ∀ (B : Type) [CommRing B] [IsDomai
     refine le_sInf fun P ⟨hle, hP⟩ => ?_
     have hP0 : P ≠ ⊥ := fun h0 => hpC (by rw [h0] at hle; exact (Submodule.mem_bot _).1 (hle (Ideal.mem_span_singleton_self _)))
     exact (hdim P hP hP0).ge
-  obtain ⟨D, _, _, _, hDfin, ι, hι⟩ := GlobalTheory.T.exists_finite_padicInt_domain_embedding p C hfinC hpC hpmC hdim
+  obtain ⟨D, _, _, _, hDfin, ι, hι⟩ := _root_.GlobalTheory.CompletionEmbed.exists_finite_padicInt_domain p C hfinC hpC hpmC hdim
   have hpD : (p : D) ≠ 0 := by
     rw [← map_natCast ι]; exact fun h0 => hpC (hι (by rw [h0, map_zero]))
-  obtain ⟨φ, hφ, hφ1⟩ := GlobalTheory.T.exists_injective_norm_le_one_of_finite_padicInt_domain p D hpD
+  obtain ⟨φ, hφ, hφ1⟩ := _root_.GlobalTheory.InjectiveAlgebraMapTorsionFree.exists_injective_norm_le_one p D hpD
   refine ⟨p, hF, (φ.comp ι).comp π, fun b => hφ1 _, fun b hb => ?_, ?_⟩
   · have hc := hπm b hb
     have hcN : π b ^ N ∈ Ideal.span {(p : C)} := hN (Ideal.pow_mem_pow hc N)

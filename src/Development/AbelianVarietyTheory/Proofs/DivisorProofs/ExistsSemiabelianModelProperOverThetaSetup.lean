@@ -2,14 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.ImmersedBy
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ThetaSetupStructureMapComp
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.InducedModelMorphismCompStructureMap
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsIsoMorphismRestrictOfIsProjOver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLiftOfIsProperOfIsHomId
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FibrePreconnected
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.ArithBase
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteClosureThetaRatiosOfIsCl
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ZarhinNormalProjectiveModelExistsProof
 import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsProjectiveLatticeTwistGenerated
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.HomExtOfIsOpenImmersion
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsIsoMorphismRestrictOfIsProjOverStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLiftOfIsProperOfIsHomIdStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FibrePreconnected
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteClosureThetaRatiosOfIsClStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ZarhinNormalProjectiveModelExistsProof
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,7 +64,7 @@ theorem _root_.GlobalTheory.Poinc.exists_zhModel_proper_over_setup : ∀ (g n : 
     obtain ⟨j, hj⟩ := hc.1 (genericPoint X₁.M.Z)
     exact ⟨j, hj.1⟩
   obtain ⟨Y, U₀, EE, hO, hdiv, hE, ⟨G⟩⟩ := GlobalTheory.zhSt_holds X₁.o₁ X₁.Ω₁ X₁.S X₁.ρ X₁.big (Fin (m + 1)) c hc0
-    (GlobalTheory.T.finite_closure_theta_ratios_of_isCl' X₁.o₁ X₁.Ω₁ X₁.S X₁.M (Fin (m + 1)) c hc)
+    (_root_.GlobalTheory.ZH.finite_closure_theta_ratios_of_isCl X₁.o₁ X₁.Ω₁ X₁.S X₁.M (Fin (m + 1)) c hc)
   obtain ⟨q, hq⟩ := hc.exists_isHom (M' := Y) (φ := AlgHom.id X₁.o₁ X₁.Ω₁) hdiv
   have hYp : IsProper Y.s := ((GlobalTheory.isProjOver_iff_isProper_and_exists_isAmpleLB _).1 hO.proj).1
   have hsep : IsSeparated X₁.M.s := X₁.M.sep
@@ -72,10 +74,10 @@ theorem _root_.GlobalTheory.Poinc.exists_zhModel_proper_over_setup : ∀ (g n : 
   have hpt : Y.pt ≫ q = X₁.M.pt :=
     hq.trans ((congrArg (· ≫ X₁.M.pt) (Spec.map_id _)).trans (Category.id_comp _))
   refine ⟨Y, U₀, EE, G, q, hO, hE, hqp, hpt, ?_, ?_⟩
-  · obtain ⟨U, hU, hiso⟩ := GlobalTheory.T.exists_nonempty_isIso_morphismRestrict_of_isProjOver X₁.o₁ X₁.Ω₁ Y X₁.M hO.proj q hq
+  · obtain ⟨U, hU, hiso⟩ := _root_.GlobalTheory.ZH.RatModel.exists_isIso_morphismRestrict_of_isProjOver X₁.o₁ X₁.Ω₁ Y X₁.M hO.proj q hq
     have : IsDedekindDomain X₁.o₁ := (inferInstance : ArithBase X₁.o₁ X₁.Ω₁).ded
     have := X₁.M.lft
     have : IsLocallyNoetherian X₁.M.Z := LocallyOfFiniteType.isLocallyNoetherian X₁.M.s
     exact GlobalTheory.ZariskiConn.fibre_preconnected Y.Z X₁.M.Z q (fun x => ⟨X₁.normal.isDomain_stalk x, X₁.normal.isIntegrallyClosed_stalk x⟩) U hU hiso
   · intro p _ z₁ c
-    exact GlobalTheory.T.exists_lift_of_isProper_of_isHom_id' X₁.o₁ X₁.Ω₁ Y X₁.M q hq hqp p c.y
+    exact _root_.GlobalTheory.exists_lift_of_isProper_of_isHom_id X₁.o₁ X₁.Ω₁ Y X₁.M q hq hqp p c.y

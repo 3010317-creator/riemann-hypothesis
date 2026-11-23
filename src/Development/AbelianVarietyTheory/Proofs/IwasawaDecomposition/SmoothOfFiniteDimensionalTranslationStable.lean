@@ -4,7 +4,7 @@ public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.Calculus.ContDiff.Defs
 public import Mathlib.Analysis.InnerProductSpace.Basic
 public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContDiffOfContinuousOneParameterStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContDiffOfContinuousOneParameter
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -106,7 +106,7 @@ theorem smooth_of_finiteDimensional_translation_stable :
     exact left_eq_mul.1 this
   have hR : ∀ i, ContDiff ℝ ∞ (R i) := by
     intro i
-    refine GlobalTheory.T.contDiff_of_continuous_oneParameter_hom _ (R i) ?_ ?_ ?_
+    refine _root_.GlobalTheory.contDiff_of_continuous_oneParameter _ (R i) ?_ ?_ ?_
     · refine continuous_clm_apply.2 fun v => ?_
       simp only [hRapp]
       refine Φ.continuous.comp ?_

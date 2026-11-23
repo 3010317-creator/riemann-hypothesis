@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExpoConjOfIsCsd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CapelliOperatorAlgebraStableUnderComplexConjStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CapelliOperatorAlgebraStableUnderComplexConj
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCuspFormOfConjPointwise
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothAdelicGLComplexConjCommutesOperatorsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothAdelicGLComplexConjCommutesOperators
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -72,8 +72,8 @@ def CuspRep.CuspSub.mapConj {E : Type} [Field E] [NumberField E] [_root_.NumberF
 theorem exists_conj_cuspSub : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) (π : CuspSub E a),
     ∃ (π' : CuspSub E a) (J : π.V ≃ₗ⋆[ℂ] π'.V), ∀ o φ, J (π.op o φ) = π'.op o (J φ) := by
   intro E _ _ _ a π
-  obtain ⟨C, hC, hact⟩ := GlobalTheory.T.smooth_adelic_GL_complex_conj_commutes_operators E a
-  have hZ := GlobalTheory.T.capelli_operator_algebra_stable_under_complex_conj E a C hact
+  obtain ⟨C, hC, hact⟩ := _root_.GlobalTheory.smooth_conj_commutes_act E a
+  have hZ := _root_.GlobalTheory.CuspRep.ConjZalg.conj_Zalg E a C hact
   have hcusp := isCuspForm_of_conj_pointwise E a C hC hact hZ
   refine ⟨π.mapConj C hact hcusp, C.submoduleMap π.V, fun o φ => Subtype.ext ?_⟩
   exact (hact o φ.1).symm

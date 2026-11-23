@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.KunnethLefschetz.DiagonalPullbacks.ProjectiveBundleFormulaTorsion
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupUnitAndPrimitiveRootClassesStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PullHlComp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupUnitAndPrimitiveRootClasses
 public import Development.EtaleCohomology.EtaleTrace.LRingPf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -82,7 +83,7 @@ private theorem base (h6 : DivisorRingCompatibility) {q : ℕ} [NeZero q] {E : S
     Ht.cast hn h0 (one q (sch.obj E)) = Ht.cast h1 h2 (cup q (Ht.cast hn hi (one q (sch.obj E))) (rootClass (-i) ζ)) := by
   subst hn hi
   have hr : rootClass (-(0 : ℤ)) ζ = Ht.cast h0 (neg_zero.symm : (0 : ℤ) = -0) (one q (sch.obj E)) := by
-    rw [rootClass_cast ζ (neg_zero.symm : (0 : ℤ) = -0) h0, ((GlobalTheory.T.tateTwistCup_unit_and_primitiveRoot_classes q).2 E ζ 0 0).2]
+    rw [rootClass_cast ζ (neg_zero.symm : (0 : ℤ) = -0) h0, ((_root_.GlobalTheory.EtC.CupGen.main q).2 E ζ 0 0).2]
   rw [hr, cup_cast_left, cup_cast_right, LRingPf.cast_cast, LRingPf.cast_cast, (h6 q _).1 (inv_root ζ) (one q (sch.obj E)),
     LRingPf.cast_cast]
 
@@ -97,7 +98,7 @@ theorem powRoot_holds : PowRoot := by
       cup0 q (by push_cast; ring) (pow0 q (untw q x (rootClass (-1) ζ)) j) (untw q x (rootClass (-1) ζ)) := rfl
     rw [e, ih]
     unfold cup0 untw
-    rw [cup_cast_left, cup_cast_right, LRingPf.cast_cast, LRingPf.cast_cast, four h6, ((GlobalTheory.T.tateTwistCup_unit_and_primitiveRoot_classes q).2 E ζ _ _).1,
+    rw [cup_cast_left, cup_cast_right, LRingPf.cast_cast, LRingPf.cast_cast, four h6, ((_root_.GlobalTheory.EtC.CupGen.main q).2 E ζ _ _).1,
       cup_cast_right, LRingPf.cast_cast, cpow_succ, cup_cast_left,
       rootClass_cast ζ (show -(j : ℤ) + -1 = -((j + 1 : ℕ) : ℤ) by push_cast; ring) (Eq.refl 0), cup_cast_right,
       LRingPf.cast_cast, LRingPf.cast_cast, LRingPf.cast_cast]

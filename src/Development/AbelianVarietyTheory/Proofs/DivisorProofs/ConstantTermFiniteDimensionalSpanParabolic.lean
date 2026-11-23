@@ -2,17 +2,20 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CentralNilGL
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BlkEquivInl
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AevalQuantumDeterminantIntertwiningStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CapelliKilledSmoothFunctionCentreOrbitFiniteDimeStatement
+public import Formalism.RealPlaceAnalysis.StatementE
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AevalQuantumDeterminantIntertwining
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ContinuousConjFin
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CapelliKilledSmoothFunctionCentreOrbitFiniteDime
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConstantTermAutomorphicFormIntegral
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConstantTermCenterActionSmoothFormStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EopPreservesLeftUnipotentInvarianceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarishChandraCapelliUniformDiagonalBlocksStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExpoConjOfIsCsd
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConstantTermCenterActionSmoothForm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EopPreservesLeftUnipotentInvariance
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarishChandraCapelliUniformDiagonalBlocks
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralFundamentalDomainUnipotent
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeviRestrictionVanishingPreservedByOperatorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeviSliceSmoothAndMatrixUnitActionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixUnitOpUpperBlockLeviEqZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RightTranslateHarishChandraFiniteFormPropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeviRestrictionVanishingPreservedByOperator
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeviSliceSmoothAndMatrixUnitAction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixUnitOpUpperBlockLeviEqZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RightTranslateHarishChandraFiniteFormProperties
 import Mathlib.Algebra.AffineMonoid.UniqueSums
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -92,16 +95,16 @@ theorem sliceTwoCentre : ∀ (E : Type) [Field E] [NumberField E] [_root_.Number
         Polynomial.aeval (Formalism.REAL.qdet (fun p p' : Fin (a - r) => Eop τ (GlobalTheory.LeviGA.blkEquiv hra (Sum.inr p))
           (GlobalTheory.LeviGA.blkEquiv hra (Sum.inr p'))) u) (q u) v ∈ K := by
     intro τ
-    obtain ⟨q, hq0, hqK⟩ := GlobalTheory.T.harishChandra_capelli_uniform_diagonalBlocks (Sm E a) a r hra (Eop τ) (glRel_Eop τ) M' K
-      (fun i j f hf => GlobalTheory.T.eop_preserves_left_unipotent_invariance E a r f hf τ i j)
-      (fun i j hi hj f hf => GlobalTheory.T.matrixUnitOp_upperBlock_levi_eq_zero E a r hra f hf τ i j hi hj)
-      (fun i j hij f hf => GlobalTheory.T.levi_restriction_vanishing_preserved_by_operator E a r hra f hf τ i j hij) (Q τ) (hQ τ)
+    obtain ⟨q, hq0, hqK⟩ := _root_.GlobalTheory.LeviHC.CapAlg.capalg (Sm E a) a r hra (Eop τ) (glRel_Eop τ) M' K
+      (fun i j f hf => _root_.GlobalTheory.CuspRep.UnipInv.Eop_unip_left E a r f hf τ i j)
+      (fun i j hi hj f hf => _root_.GlobalTheory.LeviGA.Eop_upper_blkGL_eq_zero E a r hra f hf τ i j hi hj)
+      (fun i j hij f hf => _root_.GlobalTheory.LeviDeriv.Eop_blkGL_eq_zero E a r hra f hf τ i j hij) (Q τ) (hQ τ)
     exact ⟨q, hq0, fun v hv hk u => (hqK v hv hk u).2⟩
   choose q hq0 hqK using hq
-  obtain ⟨X', D, hX', hfin⟩ := GlobalTheory.T.capelliKilled_smoothFunction_centreOrbit_finiteDimensional E (a - r) (fun τ u => q τ (u + (((a - r : ℕ) : ℂ) - 1) / 2))
+  obtain ⟨X', D, hX', hfin⟩ := _root_.GlobalTheory.KilledFinCentre.centre_orbit_finite E (a - r) (fun τ u => q τ (u + (((a - r : ℕ) : ℂ) - 1) / 2))
     (fun τ u => hq0 τ _)
   refine ⟨X', D, hX', fun φ hφ m₁ ψ hψ => hfin ψ fun τ u => ?_⟩
-  obtain ⟨hl, ho, hk⟩ := GlobalTheory.T.rightTranslate_harishChandraFiniteForm_properties E a L W X hX.toFinset (by simp) N φ hφ t κ
+  obtain ⟨hl, ho, hk⟩ := _root_.GlobalTheory.HCF.rt_translate_kill E a L W X hX.toFinset (by simp) N φ hφ t κ
   obtain ⟨hcSm, -⟩ := GlobalTheory.ConstTermSmooth.constTerm_mem_Sm E a r μ 𝓕 hμ h𝓕 h1 _ hl ho
   let c : Sm E a := ⟨_, hcSm⟩
   have hcM : c ∈ M' := fun x g => constTerm_unip_invariant E a r μ 𝓕 hμ h𝓕 _ hl x g
@@ -114,22 +117,22 @@ theorem sliceTwoCentre : ∀ (E : Type) [Field E] [NumberField E] [_root_.Number
       rw [← Polynomial.aeval_subalgebra_coe (Q τ u) (Zalg E a)
         ⟨cap (a := a) τ (u - ((a : ℂ) - 1) / 2), Algebra.subset_adjoin ⟨τ, _, rfl⟩⟩]
       exact SetLike.coe_mem _
-    have h2 := GlobalTheory.T.constant_term_center_action_smooth_form E a r μ 𝓕 hμ h𝓕 h1 _ hl ho _ hz c rfl
+    have h2 := _root_.GlobalTheory.ConstTermZalg.constTerm_zalg E a r μ 𝓕 hμ h𝓕 h1 _ hl ho _ hz c rfl
     refine Subtype.ext (h2.trans (funext fun g => ?_))
     rw [hk τ (u - ((a : ℂ) - 1) / 2)]
     simp
   have hK := hqK τ c hcM hcQ (u + (((a - r : ℕ) : ℂ) - 1) / 2)
   let T : Sm E a →ₗ[ℂ] Sm E (a - r) :=
-    { toFun := fun f => ⟨_, (GlobalTheory.T.leviSlice_smooth_and_matrixUnit_action E a r hra m₁ f).1⟩
+    { toFun := fun f => ⟨_, (_root_.GlobalTheory.LeviSliceGA.slice_smooth_Eop E a r hra m₁ f).1⟩
       map_add' := fun f f' => rfl
       map_smul' := fun c f => rfl }
   have hT : ∀ (p p' : Fin (a - r)) (f : Sm E a),
       T (Eop τ (GlobalTheory.LeviGA.blkEquiv hra (Sum.inr p)) (GlobalTheory.LeviGA.blkEquiv hra (Sum.inr p')) f) = Eop τ p p' (T f) :=
-    fun p p' f => Subtype.ext ((GlobalTheory.T.leviSlice_smooth_and_matrixUnit_action E a r hra m₁ f).2 τ p p' (T f) rfl).symm
+    fun p p' f => Subtype.ext ((_root_.GlobalTheory.LeviSliceGA.slice_smooth_Eop E a r hra m₁ f).2 τ p p' (T f) rfl).symm
   have hψc : T c = ψ := by
     refine Subtype.ext (hψ.symm ▸ funext fun m₂ => ?_)
     simp only [T, c, LinearMap.coe_mk, AddHom.coe_mk, rt_apply, mul_assoc]
-  have h3 := GlobalTheory.T.aeval_quantumDeterminant_intertwining (Sm E a) (Sm E (a - r)) T (a - r)
+  have h3 := _root_.GlobalTheory.capelli_intertw (Sm E a) (Sm E (a - r)) T (a - r)
     (fun p p' => Eop τ (GlobalTheory.LeviGA.blkEquiv hra (Sum.inr p)) (GlobalTheory.LeviGA.blkEquiv hra (Sum.inr p'))) (Eop τ)
     hT (u + (((a - r : ℕ) : ℂ) - 1) / 2) (q τ (u + (((a - r : ℕ) : ℂ) - 1) / 2)) c
   have h0 : T (Polynomial.aeval (Formalism.REAL.qdet (fun p p' : Fin (a - r) => Eop τ (GlobalTheory.LeviGA.blkEquiv hra (Sum.inr p))

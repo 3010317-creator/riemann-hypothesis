@@ -2,14 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoMulInvOf
 public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicRapidDecayOfMemAdelicSchwartzSpaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSymplecticFormRealOneParamLineEqZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasDerivAtSchrodingerLinePureTensorZeroStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.DecayZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicRapidDecayOfMemAdelicSchwartzSpace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSymplecticFormRealOneParamLineEqZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasDerivAtSchrodingerLinePureTensorZero
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsSummableMajorantRationalVectorsLocallyUnif
+public import Mathlib.Analysis.Calculus.SmoothSeries
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
-public import Mathlib.Analysis.Calculus.SmoothSeries
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
@@ -88,7 +90,7 @@ variable {F : Type} [Field F] [NumberField F] {N : ℕ} [Invertible (2 : AF F)]
 theorem schr_line_add (hF : IsTotallyReal F) (ψ : AddChar (AF F) ℂ) {M : ℝ →+ VA F N} (hM : IsRealLine M)
     (t h : ℝ) (Φ : (Fin N → AF F) → ℂ) :
     GlobalTheory.WeilM.schr ψ (M (t + h)) Φ = GlobalTheory.WeilM.schr ψ (M t) (GlobalTheory.WeilM.schr ψ (M h) Φ) := by
-  rw [schr_schr, GlobalTheory.T.adelicSymplecticForm_realOneParamLine_eq_zero F N hF M hM t h, mul_zero, AddChar.map_zero_eq_one, one_smul, map_add (f := _)]
+  rw [schr_schr, _root_.GlobalTheory.ThetaTransform.symV_realLine_eq_zero F N hF M hM t h, mul_zero, AddChar.map_zero_eq_one, one_smul, map_add (f := _)]
 
 theorem exists_deriv_schr (hF : IsTotallyReal F) (ψ : AddChar (AF F) ℂ) (hψ : IsCharAF F ψ)
     {M : ℝ →+ VA F N} (hM : IsRealLine M) {Φ : (Fin N → AF F) → ℂ} (hΦ : Φ ∈ GlobalTheory.WeilM.schA F (Fin N)) :
@@ -96,7 +98,7 @@ theorem exists_deriv_schr (hF : IsTotallyReal F) (ψ : AddChar (AF F) ℂ) (hψ 
   induction hΦ using Submodule.span_induction with
   | mem Φ h =>
     obtain ⟨f, g, hg, rfl⟩ := h
-    obtain ⟨f', hf'⟩ := GlobalTheory.T.hasDerivAt_schrodingerLine_pureTensor_zero F N ψ hF hψ M hM f g hg
+    obtain ⟨f', hf'⟩ := _root_.GlobalTheory.Adopt.hasDerivAt_schrodingerLine_pureTensor_zero F N ψ hF hψ M hM f g hg
     exact ⟨_, Submodule.subset_span ⟨f', g, hg, rfl⟩, hf'⟩
   | zero =>
     refine ⟨0, zero_mem _, fun z => ?_⟩
@@ -151,8 +153,8 @@ theorem GlobalTheory.ThetaTransform.hasDerivAt_heisV_line : ∀ (F : Type) [Fiel
   have hM0 : M 0 = 0 := map_zero M
   set ω : Set (Fin N → AF F) := (fun s : ℝ => w.1 + (M s).1) '' Set.Icc (-1) 1 with hω
   have hωc : IsCompact ω := isCompact_Icc.image (continuous_const.add (continuous_fst.comp hM.1))
-  obtain ⟨C, c, hcs, hc0, hcb⟩ := decay_majorant hF (GlobalTheory.T.adelicRapidDecay_of_mem_adelicSchwartzSpace F N Φ' hΦ'm) ω hωc
-  obtain ⟨C₀, c₀, hcs₀, hc0₀, hcb₀⟩ := decay_majorant hF (GlobalTheory.T.adelicRapidDecay_of_mem_adelicSchwartzSpace F N Φ hΦ) {w.1} isCompact_singleton
+  obtain ⟨C, c, hcs, hc0, hcb⟩ := decay_majorant hF (_root_.GlobalTheory.SchwartzDecay.decay_of_mem_schA F N Φ' hΦ'm) ω hωc
+  obtain ⟨C₀, c₀, hcs₀, hc0₀, hcb₀⟩ := decay_majorant hF (_root_.GlobalTheory.SchwartzDecay.decay_of_mem_schA F N Φ hΦ) {w.1} isCompact_singleton
   set ph : (Fin N → F) → ℂ := fun ξ => ψ (rat ξ ⬝ᵥ w.2 + ⅟(2 : AF F) * (w.1 ⬝ᵥ w.2)) with hph
   have e : (fun t : ℝ => heisV ψ (M t) (thV ψ Φ) w) =
       fun t => ∑' ξ : Fin N → F, ph ξ * GlobalTheory.WeilM.schr ψ (M t) Φ (rat ξ + w.1) := by

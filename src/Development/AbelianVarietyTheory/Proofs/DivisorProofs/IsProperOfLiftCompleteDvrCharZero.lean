@@ -4,8 +4,9 @@ public import Mathlib.AlgebraicGeometry.Morphisms.Flat
 public import Mathlib.AlgebraicGeometry.Morphisms.Proper
 public import Mathlib.RingTheory.DiscreteValuationRing.Basic
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DescendPointValuationRingOfDominatingLocalDomainStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InjectiveOfFlatPointAtGenericPointsStatement
+public import Mathlib.RingTheory.Valuation.ValuationRing
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DescendPointValuationRingOfDominatingLocalDomain
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InjectiveOfFlatPointAtGenericPoints
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsProperOfCompleteDVRLiftGeneric
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -70,9 +71,9 @@ theorem isProper_of_lift_dominating : ∀ (R : Type) [CommRing R] [IsDomain R] [
   have hxs : x ≫ s = spMap ((algebraMap V K).comp β) := by
     rw [hxy, hy, spMap, spMap, ← Spec.map_comp]; rfl
   have hinj : Function.Injective ((algebraMap V K).comp β) :=
-    GlobalTheory.T.injective_of_flat_point_at_generic_points R K X s x _ hflat hx hxs
+    _root_.GlobalTheory.injective_of_flat_of_range_subset_genericPoints R K X s x _ hflat hx hxs
   have : CharZero K := charZero_of_injective_ringHom hinj
   obtain ⟨W, L, _, _, _, _, _, _, _, _, hc, hloc, f, hf⟩ := h V K β x hxs
-  exact GlobalTheory.T.descend_point_valuationRing_of_dominating_local_domain V K W L hc hloc X x f hf
+  exact _root_.GlobalTheory.descend_point_to_valuationRing_of_dominating_local_domain V K W L hc hloc X x f hf
 
 end GlobalTheory.ValuativeFlat

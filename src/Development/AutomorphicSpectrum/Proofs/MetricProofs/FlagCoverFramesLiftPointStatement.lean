@@ -1,13 +1,17 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TransPtBase
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BlockDiagonalMinorVanishingStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CoordinateRatioValueAtPointStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverBasePointMapsToPointsStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GenericBlockMatrixIsBlockDiag
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BlockDiagonalMinorVanishing
+public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.CoordinateIdeals
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CoordinateRatioValueAtPoint
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsPeriodOn
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverBasePointMapsToPoints
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverBasePointRegular
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverFramesLiftPoint
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverFramesPullbackStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagModelBaseProjectionPointsStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AevalNeZeroOfNotMem
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverFramesPullback
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagModelBaseProjectionPoints
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsBlockDiagMapGenBlock
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsValueAtOfTorus
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.MinorIJMap
@@ -55,7 +59,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AevalNeZeroOfNotMem
 
 @[expose] public section
 
@@ -66,8 +69,8 @@ open GlobalTheory.CompanionTheory.Ar.PB.CovGraph GlobalTheory.CompanionTheory.Ar
 theorem _root_.GlobalTheory.T.flag_cover_frames_lift_point : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)] (Φ : Type) [Field Φ] (y : (Σ k, ι k) → Φ) (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N j : ℕ) (M : FlagModel y Ψ N j) (K' : Type) [Fintype K'] (ι' : K' → Type) [∀ k, Fintype (ι' k)] (Φ' : Type) [Field Φ'] (y' : (Σ k, ι' k) → Φ') (M' : FlagModel y' Ψ N j) (Cv : FlagCover M' M) (z₁ : (Σ k, ι' k) → ℂ) (z₀ : (Σ k, ι k) → ℂ) (F' : FrameData ι' Ψ N M'.Ω M'.blk) (F : FrameData ι Ψ N M.Ω M.blk) (h : Ψ → Matrix (Fin N) (Fin N) ℂ) (p : Ψ × Fin N) (k : K), z₁ ∈ mcPts (mCoordIdeal y') → M'.IsFrame F' → M.IsFrame F → M'.GoodAt F' (mCoordIdeal (basePart M'.blk z₁)) → M.GoodAt F (mCoordIdeal (basePart M'.blk z₁ ∘ Cv.v)) → M'.IsFlagOf F' z₁ h → M.IsFlagOf F z₀ (fun τ => Cv.trans F' F (basePart M'.blk z₁) τ * h τ) → SameOrbit (basePart M.blk z₀) (basePart M'.blk z₁ ∘ Cv.v) → M.blk p = some k → ∃ (e : Φ') (s : ι k → Φ') (t : ℂ), e ≠ 0 ∧ t ≠ 0 ∧ ∀ m, transPt Cv ⟨k, m⟩ = e * s m ∧ IsValueAt y' (s m) z₁ (t * z₀ ⟨k, m⟩) := by
   intro K _ ι _ Φ _ y Ψ _ _ N j M K' _ ι' _ Φ' _ y' M' Cv z₁ z₀ F' F h p k hz₁ hF' hF hG' hG hfl' hfl horb hp
   set zb := basePart M'.blk z₁ with hzbdef
-  have hzb : zb ∈ mcPts (mCoordIdeal M'.x) := (GlobalTheory.T.flag_model_base_projection_points K' ι' Φ' y' Ψ N j M').1 z₁ hz₁
-  have hzv := GlobalTheory.T.flag_cover_base_point_maps_to_points K ι Φ y Ψ N j M K' ι' Φ' y' M' Cv zb hzb
+  have hzb : zb ∈ mcPts (mCoordIdeal M'.x) := (_root_.GlobalTheory.CompanionTheory.Ar.PB.CPts.main K' ι' Φ' y' Ψ N j M').1 z₁ hz₁
+  have hzv := _root_.GlobalTheory.CompanionTheory.Ar.PB.CovGraph.comp_v_mem_mcPts K ι Φ y Ψ N j M K' ι' Φ' y' M' Cv zb hzb
   have hstep : IsProperStep N j p.2 := by
     by_contra hn
     rw [(M.blk_none p).2 hn] at hp
@@ -75,11 +78,11 @@ theorem _root_.GlobalTheory.T.flag_cover_frames_lift_point : ∀ (K : Type) [Fin
   obtain ⟨k', hk'⟩ : ∃ k', M'.blk p = some k' :=
     Option.ne_none_iff_exists'.1 fun e => (M'.blk_none p).1 e hstep
   obtain ⟨c', hc'⟩ := hz₁.1 k'
-  obtain ⟨hy0, hratio⟩ := GlobalTheory.T.coordinate_ratio_value_at_point K' ι' Φ' y' z₁ k' c' hz₁ hc'
+  obtain ⟨hy0, hratio⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.CovGraph.isValueAt_coord_ratio K' ι' Φ' y' z₁ k' c' hz₁ hc'
   have ch' : ∀ k, M'.x ⟨k, F'.c k⟩ ≠ 0 := fun k => coord_ne hzb (hG'.1 k)
   have ch : ∀ k, M.x ⟨k, F.c k⟩ ≠ 0 := fun k => coord_ne hzv (hG.1 k)
   obtain ⟨c, hc0, htr⟩ :=
-    GlobalTheory.T.flag_cover_frames_pullback K ι Φ y Ψ N j M K' ι' Φ' y' M' Cv F' F hF' hF ch' ch p k k' hp hk'
+    _root_.GlobalTheory.CompanionTheory.Ar.PB.CovGraph.StepExpr.transPt_eq_smul_sum K ι Φ y Ψ N j M K' ι' Φ' y' M' Cv F' F hF' hF ch' ch p k k' hp hk'
   obtain ⟨a', ha', hz1⟩ := hfl'.2.2 p k' hk'
   obtain ⟨a, ha, hz0⟩ := hfl.2.2 p k hp
   have hcoeff (q : Σ k, ι k) (r : Σ k, ι' k) :
@@ -132,7 +135,7 @@ theorem _root_.GlobalTheory.T.flag_cover_frames_lift_point : ∀ (K : Type) [Fin
     rw [(hin I).2]
     exact Finset.sum_congr rfl fun I' _ => (hterm I I').2
   have hE (m : ι k) (m' : ι' k') := hcoeff ⟨k, m⟩ ⟨k', m'⟩
-  have hmin := GlobalTheory.T.block_diagonal_minor_vanishing ℂ N j p.2 M.j_le
+  have hmin := _root_.GlobalTheory.CompanionTheory.Ar.PB.MinorCalc.minors_main ℂ N j p.2 M.j_le
   have hne : stepCols N j p.2 ≠ ∅ := stepCols_ne p.2 M.j_le
   obtain ⟨cc, hcc, horbE⟩ := horb
   have hval : ∀ s, valAt M.x s (basePart M.blk z₀) = valAt M.x s (zb ∘ Cv.v) := fun s => by

@@ -3,7 +3,7 @@ module
 public import Formalism.SharpRestriction.LevelLetterCocycles.JointConditionsZpowers.CommutingEndomorphismCondition
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsRhoPtOfSplitting
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.GaloisSideTwistedSelmerAuxiliaryPrimes
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ConductorRootSubOneLengthLeTameValueStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ConductorRootSubOneLengthLeTameValue
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SameCharEqOne
 public import Formalism.LocalToGlobal.NormalizedHeckeFactors.TwoPowS0EqTwoPartModulus
 import Mathlib.Algebra.Order.Floor.Extended
@@ -72,7 +72,7 @@ theorem main : GlobalTheory.TwSys.Cheb → ∀ (D : D7) (C : NChoice D)
     rw [h2, psiAt_psiW]
     exact ⟨h3, h4⟩
   · rw [Rat.cast_sum, ← hT.Q_eq i]
-    exact Finset.sum_le_sum fun v hv => GlobalTheory.T.conductorRoot_sub_one_length_le_tameValue D C hT i v hv
+    exact Finset.sum_le_sum fun v hv => _root_.GlobalTheory.CondTieChoice.conductor_le_tameVal D C hT i v hv
 
 end GlobalTheory.JointSix
 

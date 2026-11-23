@@ -3,18 +3,18 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RankOfMulEqOne
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Saturated
 public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WachRingFactsUnramifiedLevelOneStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WachRingFactsUnramifiedLevelOne
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AlgebraMapLocRing
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DvrComplete
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBasisAddPiSmul
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HeightsFromJumpsIff
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JumpsOverLettersOfCrysWith
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LetterSandwichOfFrobMatrices
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalComparisonHolds
+public import Formalism.PieriBlockIdeals.PieriColumnMinors.HeckeLFunctionIdealEulerProduct
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DvrComplete
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LetterSandwichOfFrobMatrices
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemXSmulOfProjective
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeHeightsFromHodgeJumps
 import Formalism.LocalRingCardinality.SpanPowerMembership.NDLocE
-public import Formalism.PieriBlockIdeals.PieriColumnMinors.HeckeLFunctionIdealEulerProduct
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -185,7 +185,7 @@ theorem exists_rem {l : ℕ} [Fact l.Prime] (LL : FinExt l) (g : (↥(OL LL))⟦
 
 theorem exists_frame : ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf D.loc D.locA HW F) (l : ℕ) [Fact l.Prime] (K LL : FinExt l) (hA : CaseA K LL) (T : LocLat ↥(GK K) ℚ_[l] ↥LL.1 ↥(OL LL)) (U : ZMod (Module.finrank ℚ_[l] ↥(K0 K)) → Multiset ℤ) (n : ℕ), GlobalTheory.AdmLoc.CrysWith ((D.loc l).PD K) ((HW l).W K 1 LL hA.2.2).emb T.ρ U → (∀ i, ∀ u ∈ U i, 0 ≤ u) → Module.finrank ↥(OL LL) ↥T.L.T = n → ∀ γ : ((HW l).W K 1 LL hA.2.2).Gam, ∃ (b : Module.Basis (Fin n) (LetA ↥(OL LL) (Module.finrank ℚ_[l] ↥(K0 K))) ↥(((HW l).W K 1 LL hA.2.2).N T)) (N : Lat (ZMod (Module.finrank ℚ_[l] ↥(K0 K))) n ↥(OL LL)), IsFrame ((HW l).W K 1 LL hA.2.2) T γ b N := by
   intro D HW F Cm l _ K LL hA T U n hU hpos hn γ
-  have hR := GlobalTheory.T.wachRingFacts_unramified_levelOne (HW l) K LL hA
+  have hR := _root_.GlobalTheory.WachPlace.ringFacts_of_caseA (HW l) K LL hA
   have hJ := (GlobalTheory.HeightsClauseCompare.heights_iff D HW F Cm).2
     ⟨GlobalTheory.NL.Heights.heights_from_jumps D HW F Cm, GlobalTheory.NL.SandJumps.main D HW F Cm⟩
   have hH := GlobalTheory.WachUse.HeightsProof.heights_of_caseA (D.locA l) (HW l) (F l) (Cm l) ⟨D.locT l⟩

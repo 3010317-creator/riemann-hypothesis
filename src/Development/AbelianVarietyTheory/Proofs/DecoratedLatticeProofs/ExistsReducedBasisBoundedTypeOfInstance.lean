@@ -4,10 +4,11 @@ public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsRealC
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SiegelCover
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CuspIntegralBasisCovolumeConstant
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MulMatTranspose
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ReducedBasisIntegralConjEntriesBoundedStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SiegelReducedIntegralFormBoundedEntriesStatement
+public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.AdelicPair
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ReducedBasisIntegralConjEntriesBounded
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SiegelReducedIntegralFormBoundedEntries
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SiegelSetEntryBoundOfLatticeMin
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TraceFormRealCoordinatesIntegralGramStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TraceFormRealCoordinatesIntegralGram
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -193,8 +194,8 @@ theorem GlobalTheory.CuspGeo.redBasis_holds : ∀ I : AutInst, RedBasis I := by
     rw [integralBasis_apply]
     exact RingOfIntegers.isIntegral_coe _
   choose X hX using fun k => MulCoord.mul_conj_coord I N ρ hρ _ (hint k)
-  choose C2 hC2 using fun k => GlobalTheory.T.reducedBasis_integral_conj_entries_bounded N C0 (entSum (X k))
-  obtain ⟨Xt, μ, c, hμ, hc, hXt⟩ := GlobalTheory.T.traceForm_real_coordinates_integral_gram I N ρ hρ
+  choose C2 hC2 using fun k => _root_.GlobalTheory.ReducedBasisBound.integral_conj_bounded N C0 (entSum (X k))
+  obtain ⟨Xt, μ, c, hμ, hc, hXt⟩ := _root_.GlobalTheory.CuspGeo.TrReal.trace_form_real_coord I N ρ hρ
   obtain ⟨s, hs⟩ : ∃ s : ℝ, lam * s * lam = 1 := ⟨lam⁻¹ * lam⁻¹, by field_simp⟩
   obtain ⟨μ', hμ'0, hμ'⟩ : ∃ μ' : ℝ, μ' ≠ 0 ∧ lam * lam * μ = μ' * s := by
     refine ⟨lam * lam * μ * lam * lam, by positivity, ?_⟩
@@ -203,7 +204,7 @@ theorem GlobalTheory.CuspGeo.redBasis_holds : ∀ I : AutInst, RedBasis I := by
       linarith
     rw [hs']
     field_simp
-  obtain ⟨C3, hC3⟩ := GlobalTheory.T.siegelReduced_integral_form_bounded_entries N C0 (max |μ'| (entSum (s • Xt)))
+  obtain ⟨C3, hC3⟩ := _root_.GlobalTheory.RedBound.reduced_bound N C0 (max |μ'| (entSum (s • Xt)))
   refine ⟨N, max (∑ k, |C2 k|) C3, Real.sqrt N * (lam⁻¹ * C1 / c' ^ N), fun y => ?_⟩
   have hdy := hdet y
   obtain ⟨S, hSu, hSd⟩ : ∃ S : Matrix (Fin N) (Fin N) ℤ, IsUnit S.det ∧

@@ -1,13 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MultipliableTpFactor
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.JacobiTripleFiniteCoeffTendstoAndBoundedStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.JacobiTripleFiniteCoeffTendstoAndBounded
+public import Mathlib.Analysis.Normed.Group.Tannery
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-public import Mathlib.Analysis.Normed.Group.Tannery
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
@@ -60,7 +60,7 @@ theorem tendsto_finCoeff_sum_jacobiTheta₂ : ∀ (τ : ℂ) (z : ℂ), 0 < τ.i
   have ht1 : ‖t‖ < 1 := by
     rw [ht, norm_pow]
     nlinarith [norm_nonneg (cexp (π * I * τ))]
-  obtain ⟨hlim, C, hC⟩ := GlobalTheory.T.jacobiTripleFiniteCoeff_tendsto_and_bounded t ht1
+  obtain ⟨hlim, C, hC⟩ := _root_.GlobalTheory.JacobiTriple.finCoeff_tendsto_and_bounded t ht1
   have hsum : Summable (fun j : ℤ => C * ‖jacobiTheta₂_term j z τ‖) :=
     ((summable_jacobiTheta₂_term_iff z τ).2 hτ).norm.mul_left C
   have hT := tendsto_tsum_of_dominated_convergence (𝓕 := Filter.atTop)

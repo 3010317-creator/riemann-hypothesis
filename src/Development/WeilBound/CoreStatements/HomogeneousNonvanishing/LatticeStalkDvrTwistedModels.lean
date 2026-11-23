@@ -3,8 +3,12 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.AdelicGroupAlgebraActionInjective
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.SabComp
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.MemEigSpOfMemHtDual
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SemiabelianLieModelsAgreeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TwistOkAllStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHTFormOver
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SemiabelianLieModelsAgree
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TwistOkAll
 public import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.Imports
 public import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.LatticeIntegrallyClosedTorsion
 import Mathlib.Algebra.Order.Floor.Extended
@@ -102,14 +106,14 @@ end torsion
 theorem htOm_eq_of_dvr : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (B : Type) [CommRing B] (b : Base l B) (g : HostAut H) (X : Scheme.{0}) (Ω : Type) [Field Ω] [CharZero Ω] (ξ : Sp Ω ⟶ X) (s : Sp Ω ⟶ Sp B) (o : Obj D l b s) (t t' : SAB H X) (m : SABMap o.t t ξ) (m' : SABMap (twistSAB o.t g) t' ξ) (V : Type) [AddCommGroup V] [Module Ω V] (M : LieModel t.G ξ V) (M' : LieModel t'.G ξ V) (n : ℕ) (q : Cpt ξ), IsCptGen ξ → 0 < n → FullTorsion t.G ξ n → (∀ e, ∃ v : epsAt (𝟙 (Sp Ω)) ⟶ o.t.G, v.left ≫ m.φ = (M.pt e).left ∧ v.left ≫ m'.φ = (M'.pt e).left) → (∃ _ : IsDomain (X.presheaf.stalk q.1), IsDiscreteValuationRing (X.presheaf.stalk q.1)) → M'.htOm t'.PP.L n q = M.htOm t.PP.L n q := by
   intro E _ _ _ H D l B _ b g X Ω _ _ ξ s o t t' m m' V _ _ M M' n q hξ hn hf hv hq
   obtain ⟨a⟩ := PositivityTheory.UnitarySelfGeneration.tw_iso E H D g
-  have hok := GlobalTheory.T.twist_ok_all E H D l B b (Sp Ω) s o g a
+  have hok := _root_.GlobalTheory.CompanionTheory.Ar.TwistOk.twOK_obj E H D l B b (Sp Ω) s o g a
   have hf' : FullTorsion t'.G ξ n := fullTorsion_of_common_fibre (G₀ := o.t.G) m.cart m'.cart hf
   obtain ⟨hd, hdvr⟩ := id hq
   have hic : IsIntegrallyClosed (X.presheaf.stalk q.1) := inferInstance
   have hno : IsNoetherianRing (X.presheaf.stalk q.1) := inferInstance
   have e1 := (PositivityTheory.UnitarySelfGeneration.lattice_integrally_closed_torsion E H D l B b X Ω ξ s o t m V M n q hξ hn hf hic hno).2.2
   have e2 := (PositivityTheory.UnitarySelfGeneration.lattice_integrally_closed_torsion E H D l B b X Ω ξ s (twistObj o g a hok) t' m' V M' n q hξ hn hf' hic hno).2.2
-  have e3 := GlobalTheory.T.semiabelian_lie_models_agree X Ω ξ hξ t.G t'.G o.t.G m.φ m'.φ t.semi t'.semi m.cart m'.cart V M M' hv n q hq
+  have e3 := _root_.GlobalTheory.CompanionTheory.Ar.HtDvr.main X Ω ξ hξ t.G t'.G o.t.G m.φ m'.φ t.semi t'.semi m.cart m'.cart V M M' hv n q hq
   rw [e2, e1, e3]
 
 end GlobalTheory.CompanionTheory.Ar.OmDvrK

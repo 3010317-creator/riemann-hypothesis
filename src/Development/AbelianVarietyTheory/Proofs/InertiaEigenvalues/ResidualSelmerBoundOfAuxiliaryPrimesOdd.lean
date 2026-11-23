@@ -5,14 +5,15 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomolog
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.ContinuousCycMod
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.GaloisSideTwistedSelmerAuxiliaryPrimes
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CocycleFormsSpanOddResidueCharStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAuxiliaryPrimesPrescribedFrobeniusStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsElementsSelmerFormsSmallCorankStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FirstHalfLocalCohomologyVanishingOfLocalDualityTStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ReciprocityAuxiliaryPlacesSecondHalfStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ResidualBoundOfComponentsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ResidualSelmerDeterminantOrderBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ResidualSelmerFinrankEqDualStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpanTwoOfGaloisHypothesisStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsDualDualRep
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAuxiliaryPrimesPrescribedFrobenius
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsElementsSelmerFormsSmallCorank
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FirstHalfLocalCohomologyVanishingOfLocalDualityT
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ReciprocityAuxiliaryPlacesSecondHalf
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ResidualBoundOfComponents
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ResidualSelmerDeterminantOrderBound
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ResidualSelmerFinrankEqDual
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpanTwoOfGaloisHypothesis
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +50,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsDualDualRep
 
 @[expose] public section
 
@@ -60,13 +60,13 @@ namespace GlobalTheory.ResSel
 theorem residual_bound_of_parts : Cheb → PoitouTateTotallyComplex → CohDimTwo → TameLocal → LocalFiniteness → LocalTateDuality → LocalEulerChar → GlobalFiniteness → GlobalEulerChar → UnramifiedOrthogonality → Gen.ArchimedeanSignatureMatching → GreenbergWiles → ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.what₂) (X : NTw D.R D.host D.what₂ D.LL0 N) (bkP : BKPh X), ResidualBoundOddPrimes bkP := by
   intro hC hPT hCD hT hLF hLT hLE hGF hGE hU hA _ D N X bkP
   have hgw : ∀ i s, GalHyp bkP i s → EqDim bkP i s := fun i s h =>
-    GlobalTheory.T.residual_selmer_finrank_eq_dual hC hPT hCD hT hLF hLT hLE hGF hGE hU hA D N X bkP i s h
-  refine GlobalTheory.T.residual_bound_of_components D N X bkP (fun i => GlobalTheory.T.exists_auxiliary_primes_prescribed_frobenius hC D N X i)
-    (fun i => GlobalTheory.T.exists_elements_selmerForms_small_corank hGF D N X bkP i fun s h =>
-      ⟨GlobalTheory.T.cocycleFormsSpan_oddResidueChar D N X bkP i s h, GlobalTheory.T.span_two_of_galois_hypothesis D N X bkP i s h, hgw i s h⟩)
+    _root_.GlobalTheory.ResDual.eqDim hC hPT hCD hT hLF hLT hLE hGF hGE hU hA D N X bkP i s h
+  refine _root_.GlobalTheory.ResSel.OddBound.residual_bound_of_parts D N X bkP (fun i => _root_.GlobalTheory.ChosenPrimes.stepAB hC D N X i)
+    (fun i => _root_.GlobalTheory.ChooseForms.chooseH hGF D N X bkP i fun s h =>
+      ⟨GlobalTheory.T.cocycleFormsSpan_oddResidueChar D N X bkP i s h, _root_.GlobalTheory.ResSel.AltSpan.spanTwo_of_galHyp D N X bkP i s h, hgw i s h⟩)
     (fun i s h => ?_)
-  have hk := GlobalTheory.T.firstHalfLocalCohomologyVanishing_of_localDualityTheorems hLF hLT hLE hT D N X bkP i s h
-  exact GlobalTheory.T.residual_selmer_determinant_order_bound hT D N X bkP i s h hk
-    (GlobalTheory.T.reciprocity_auxiliaryPlaces_secondHalf hC hPT hCD hT hLF hLT hLE hGF hGE hU hA D N X bkP i s h hk) (hgw i s h)
+  have hk := _root_.GlobalTheory.ScalarFrob.firstHalf hLF hLT hLE hT D N X bkP i s h
+  exact _root_.GlobalTheory.ResOrder.resBound hT D N X bkP i s h hk
+    (_root_.GlobalTheory.ResRecip.reciprocity hC hPT hCD hT hLF hLT hLE hGF hGE hU hA D N X bkP i s h hk) (hgw i s h)
 
 end GlobalTheory.ResSel

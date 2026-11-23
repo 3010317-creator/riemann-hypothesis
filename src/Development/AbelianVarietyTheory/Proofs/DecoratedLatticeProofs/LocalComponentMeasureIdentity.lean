@@ -13,7 +13,7 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Loc
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalComponentMeasureRelationStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalComponentMeasureScalarStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalComponentMeasureValueStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawLatticeShapeExistsProofStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawLatticeShapeExistsProof
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -143,7 +143,7 @@ theorem exists_shape_integral_in_normal_frames : ∀ {D : D7} {L : SizeData₂ D
     rcases hPP with hg | hq
     · exact Finset.disjoint_left.1 hdisj ((hgP _).2 ⟨PP, hg, rfl⟩) hxT
     · exact hoffT PP hq hxT
-  obtain ⟨N, dT, M, β₀, hN, -, hC, hS⟩ := GlobalTheory.T.seeSawLatticeShapeExists_proof D (commOf (pk W) u (mkGeo m b₀)) { v with gP := G', N := N₁ } k ι
+  obtain ⟨N, dT, M, β₀, hN, -, hC, hS⟩ := _root_.GlobalTheory.SeeSaw.ShapeExProof.shapeEx D (commOf (pk W) u (mkGeo m b₀)) { v with gP := G', N := N₁ } k ι
     { o with M := M₁ } hc hdisj' (by show IsSelfDualC D.sp.X' v.NT; rw [hvNT]; exact hLT)
     ⟨hPre.nodup, hPre.all, hPre.inj, hPre.tP, hPre.char, hPre.latT, hPre.line, hPre.tau, hPre.lam, hPre.normT, hPre.topT⟩
     hN₁sd (fun x hx => by

@@ -3,11 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UniqGapOfUniq
 public import Development.AbelianVarietyTheory.Definitions.Jets.SumIoPr
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.CayleyEndomorphismsModular
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FamiliesHaveLargeGapOfNumericalHypothesesStatement
+public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.IsDSOfIsDG
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FamiliesHaveLargeGapOfNumericalHypotheses
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralLeOfHighest
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassBoundLowTypesSum
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassLowTypesFirst
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CayleyExistsAndAny
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DiscreteSeriesUnitarySmoothBasic
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DominantRootSums
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FrechetContinuousContinuousOnOrbitHasDerivAt
@@ -17,8 +17,9 @@ public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevZeroOfKHig
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.QuotientMeasureAeMemAndMeasurableBesselModel
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SmoothVectorsDiscreteSeriesGlModule
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.TorusWeightEigenAndRootShift
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.ContinuousMulMt
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ReproducingFormulaReduction
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CayleyExistsAndAny
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.ContinuousMulMt
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.UhMeasurableSet
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -147,7 +148,7 @@ theorem weightedMass_bound_lowestType_largeGap (hH : GlobalTheory.GapIn.Hyp) (k 
   choose E hE using hE
   have hbd' := hbd Q E hQ hE
   have hDG : (R ν).IsDG (PI.BesselPeriodGGP.eps48 k r) (fun a => lam a + (ν a : ℝ)) :=
-    GlobalTheory.T.families_have_largeGap_of_numericalHypotheses.1 k r lam u b bv ga h q0 R hNum hFam ν hν0
+    _root_.GlobalTheory.GapSetup.families_gap.1 k r lam u b bv ga h q0 R hNum hFam ν hν0
   have hDS := GlobalTheory.isDS_of_isDG hDG
   have hD := (GlobalTheory.CayleyChoice.cayley_exists_and_any k r).2 _ _ _ hDS Q hQ
   obtain ⟨hG, -, hlen, hmeas⟩ := GlobalTheory.quotMeas_ae_mem_and_measurable hK k r _ _ (R ν) Wp z π u μW μN μG νq hDS hSide

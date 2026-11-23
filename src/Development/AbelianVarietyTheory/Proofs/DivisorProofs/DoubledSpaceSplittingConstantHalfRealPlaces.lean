@@ -2,9 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFockMap
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DblCol
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCentralCircleOneParameterUnitaryRealPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCentralCircleOneParameterUnitaryRealPlace
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockAct2DiagonalOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormExtensionAdelesEqOneOfMulConjEqOneStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormExtensionAdelesEqOneOfMulConjEqOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SupportedAtInfinityAdeleEqZeroOfComplexComponent
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsArchimedeanPairNegativeSymplecticPairing
 import Mathlib.Algebra.Order.Floor.Extended
@@ -115,7 +116,7 @@ theorem cd_eq_half_exp : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
   intro F E _ _ _ _ _ σ α β κ _ _ _ _ _ P Q R S ψ τ JA JB dd a b A C Φd omd χ m cd hCM hψ hFr hWS hχ hAct hl hne hpos w₀
   obtain ⟨l, hladm, hlinv, g, hg, hlint⟩ := hl
   obtain ⟨z, γ, hγ, hgen, hγz, hzat, hzpi⟩ :=
-    GlobalTheory.T.exists_central_circle_oneParameter_unitary_realPlace F E σ (β ⊕ β) (R + S) (S + R) τ (dbl JB) (fun w => dblM (C w)) w₀ hCM
+    _root_.GlobalTheory.CentralLine.exists_central_line F E σ (β ⊕ β) (R + S) (S + R) τ (dbl JB) (fun w => dblM (C w)) w₀ hCM
   have hcard : Fintype.card β = R + S := card_eq_of_isFrame (hFr.2.2 w₀)
   have hzz : ∀ t, (z t : AE F E) * cA σ (z t : AE F E) = 1 := by
     intro t
@@ -162,7 +163,7 @@ theorem cd_eq_half_exp : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
       erw [hγz t]
       rw [htt, Matrix.smul_mul, Matrix.one_mul, Matrix.mul_smul, Matrix.mul_one]
     have hmod : Units.map (Algebra.norm (AF F) : AE F E →* AF F) (z t ^ Fintype.card β) = 1 := by
-      ext; simp [GlobalTheory.T.norm_extensionAdeles_eq_one_of_mul_conj_eq_one F E σ hCM _ (hzz t)]
+      ext; simp [_root_.GlobalTheory.NormOne.norm_eq_one F E σ hCM _ (hzz t)]
     rw [hWS.2.2 l hladm hlinv _ (tt t) hp φ hφ, hdet, hmod, map_one, map_pow, hlφ]
     simp only [NNReal.coe_one, Real.one_rpow, Complex.ofReal_one, mul_one]
     rw [show ((χ (z t) ^ Fintype.card β : Circle) : ℂ) = (χ (z t) : ℂ) ^ Fintype.card β from by simp, hχz, ← Complex.exp_nat_mul, hcard, mul_comm]

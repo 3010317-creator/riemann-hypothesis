@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.DifferentiableAtChart
 public import GroundTheory.AutomorphicForms.ReductionIwasawa
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompactConeDiagonalConjUpperTriangularStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompactConeDiagonalConjUpperTriangular
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -86,7 +86,7 @@ theorem exists_compact_decomp : ∀ (E : Type) [Field E] [NumberField E] [_root_
     have h0 : (b : Matrix (Fin a) (Fin a) (Ad E)) i j = 0 := hωB hb hij
     change pInf E ((b : Matrix (Fin a) (Fin a) (Ad E)) i j) = 0
     rw [h0, map_zero]
-  obtain ⟨Ω0, hΩ0, hΩ⟩ := GlobalTheory.T.exists_compact_coneDiagonal_conj_upperTriangular E a (pI '' ω) hωI hup t ht
+  obtain ⟨Ω0, hΩ0, hΩ⟩ := _root_.GlobalTheory.upperCone_conj_compact E a (pI '' ω) hωI hup t ht
   have hK := isCompact_maxCompact (K := E) (n := a)
   refine ⟨Ω0 * pI '' (maxCompact (K := E) (n := a) : Set (AdelicGLn.AdelicGL E a)),
     pF '' ω * pF '' (maxCompact (K := E) (n := a) : Set (AdelicGLn.AdelicGL E a)),

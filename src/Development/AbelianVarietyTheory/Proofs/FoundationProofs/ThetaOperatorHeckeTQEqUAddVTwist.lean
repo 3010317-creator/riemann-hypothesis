@@ -7,17 +7,23 @@ public import Development.AutomorphicArithmetic.AutomorphicVarieties.Commutative
 public import Mathlib.RingTheory.AdicCompletion.Noetherian
 public import Mathlib.RingTheory.Coalgebra.IsFrobenius
 public import Mathlib.RingTheory.HopfAlgebra.Basic
-import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLogDerivQExpansionModPrimePowOfTranslationStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntMatrixActionMemHomogeneousPolyFunctions
+public import Development.AbelianVarietyTheory.Definitions.Foundations.ApplyEqOfMemAdjoin
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLogDerivQExpansionModPrimePowOfTranslation
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsCuspFunctionalValueModPrimePowDiamondIndepende
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsLogDerivQExpansionUpperTriangularActionStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsLogDerivQExpansionUpperTriangularAction
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsThBActSgDDiamIff
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LogDerivQExpansionMulPrimePowCongrStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularTowerClassEqImpPowRatioStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularTowerRootOfInvariantTInvariantStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SlMulToRingEquiv
+public import Development.AbelianVarietyTheory.Definitions.Foundations.Letter
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularTowerClassEqImpPowRatio
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularTowerRootOfInvariantTInvariant
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaBasisLinearCombination
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntMatrixActionMemHomogeneousPolyFunctions
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SlMulToRingEquiv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -448,7 +454,7 @@ theorem dl_cong [IsAlgClosed Ω] (X : Tower Ω ε) (A : ValuationSubring Ω) {N 
   haveI : IsAlgClosure ℚ Ω := isAlgClosure_of_tower X
   have hy0 : (y : X.K) ^ k ≠ 0 := pow_ne_zero _ y.ne_zero
   have hL : (u : X.K) ^ l ^ n = f / (y : X.K) ^ k := by rw [hu]; field_simp
-  have hT := GlobalTheory.T.modularTower_rootOfInvariant_T_invariant X N l n hl.out hl2 hlN hN (u : X.K) u.ne_zero (by
+  have hT := _root_.GlobalTheory.TInv.sl_T_eq X N l n hl.out hl2 hlN hN (u : X.K) u.ne_zero (by
       intro γ hγ; rw [hL, map_div₀, map_pow, hyI γ hγ, hfI γ hγ]) (by
       intro δ h1 h2
       obtain ⟨g, hgI, hg⟩ := hy δ h1 h2
@@ -464,7 +470,7 @@ theorem isDl_hq [IsAlgClosed Ω] (X : Tower Ω ε) (A : ValuationSubring Ω) (l 
   rw [hq, Finset.smul_sum]
   refine isDl_prod _ _ _ fun k _ => ?_
   have hd : (0 : ℤ) < (!![1, (k : ℤ); 0, (q : ℤ)] : Matrix (Fin 2) (Fin 2) ℤ).det := by simp [Matrix.det_fin_two, hq0]
-  have := GlobalTheory.T.isLogDerivQExpansion_upperTriangular_action Ω ε X A 0 l n (toGQ !![1, (k : ℤ); 0, (q : ℤ)]) (by simp [ent_toGQ _ hd])
+  have := _root_.GlobalTheory.DlUp.isDl_sl_upper Ω ε X A 0 l n (toGQ !![1, (k : ℤ); 0, (q : ℤ)]) (by simp [ent_toGQ _ hd])
     (by simp [ent_toGQ _ hd]) (by simp [ent_toGQ _ hd, hq0]) (by simpa [ent_toGQ _ hd] using hqA) f φ h
   rw [HahnSeries.C_mul_eq_smul] at this
   simpa [ent_toGQ _ hd] using this
@@ -473,7 +479,7 @@ theorem isDl_vq [IsAlgClosed Ω] (X : Tower Ω ε) (A : ValuationSubring Ω) (l 
     (hq0 : 0 < q) {f : X.K} {φ : HahnSeries ℚ Ω} (h : IsDl X A l n 1 f φ) :
     IsDl X A l n 1 (X.sl (toGQ !![(q : ℤ), 0; 0, 1]) f) ((q : Ω) • vq q φ) := by
   have hd : (0 : ℤ) < (!![(q : ℤ), 0; 0, 1] : Matrix (Fin 2) (Fin 2) ℤ).det := by simp [Matrix.det_fin_two, hq0]
-  have := GlobalTheory.T.isLogDerivQExpansion_upperTriangular_action Ω ε X A 0 l n (toGQ !![(q : ℤ), 0; 0, 1]) (by simp [ent_toGQ _ hd])
+  have := _root_.GlobalTheory.DlUp.isDl_sl_upper Ω ε X A 0 l n (toGQ !![(q : ℤ), 0; 0, 1]) (by simp [ent_toGQ _ hd])
     (by simp [ent_toGQ _ hd, hq0]) (by simp [ent_toGQ _ hd]) (by simp [ent_toGQ _ hd]) f φ h
   rw [HahnSeries.C_mul_eq_smul] at this
   rw [← sub_vq (ε := ε)]
@@ -530,8 +536,8 @@ theorem isThB_heckeT : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosed 
     rw [← hf'c, ← X.act_isDiam_eq hb h1, Matrix.SpecialLinearGroup.coe_mul,
       ← StabHecke.act_act X l _ _ (sl_pos _) (sl_pos _),
       eval_act X N l w n b hb _ _ a h00 (by rw [h10]; exact ⟨N * l, by ring⟩) f₀ hf₀c]
-  obtain ⟨u, hu⟩ := GlobalTheory.T.modularTower_class_eq_imp_pow_ratio X l n _ _ hcl
-  obtain ⟨ψ, hψ, -⟩ := GlobalTheory.T.exists_logDerivQExpansion_modPrimePow_of_translationInvariant ε X (by obtain ⟨φ, h1, h2⟩ := X.j_hol; exact ⟨φ, h2, h1⟩) l A hlA n 1
+  obtain ⟨u, hu⟩ := _root_.GlobalTheory.Tower.cls_eq_pow X l n _ _ hcl
+  obtain ⟨ψ, hψ, -⟩ := _root_.GlobalTheory.dl_exists ε X (by obtain ⟨φ, h1, h2⟩ := X.j_hol; exact ⟨φ, h2, h1⟩) l A hlA n 1
     ((su X τ f₀ : X.Kˣ) : X.K) one_pos (Units.ne_zero _) (by
       show X.sl (ofSL (ModularGroup.T ^ 1)) _ = _
       rw [pow_one]

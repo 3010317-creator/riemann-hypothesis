@@ -8,10 +8,14 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqOfNod
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSplitAtOfIsSplitPl
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpehDataUnique
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsContinuousRetractionOntoUnitaryLocalPoints
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsInvariantHermitianFormStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsRightHaarMeasureStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InfinitesimalCharacterConjugateStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MultisetOfStringsDeterminesPointsDegreesStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.CuspDiscreteDecompositionGL
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ClozelPurity.EopV
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsInvariantHermitianForm
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.T2SpaceAdelicGeneralLinearGroupNumberField
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsRightHaarMeasure
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InfinitesimalCharacterConjugate
+public import Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.ResidualRigidity.StringsTwo
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MultisetOfStringsDeterminesPointsDegrees
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.ResidualRigidity.AllPlaceRigidityResidual
 public import Development.WeilBound.RepresentationTheoryGL.ConstantTermFiniteness.LieInvariants.InvariantOfLieOneLEqZero
 public import Development.WeilBound.RepresentationTheoryGL.ResidualSpectrum.SliceTensors.PInfAsc
@@ -194,7 +198,7 @@ theorem rCuspCsd : RCuspCsd := by
   have hstr := GlobalTheory.Rigid.strings_eq_of_equiv
     (fun j => (⟨A j, CG.mk (GlobalTheory.ThetaPull.thetaSub (PP j))⟩ : Σ b, CG E b)) Dd
     (fun j => (⟨A j, CG.mk (PP j)⟩ : Σ b, CG E b)) Dd s fun x => hs x
-  obtain ⟨s0, hs0⟩ := GlobalTheory.T.multiset_of_strings_determines_points_degrees _ Dd _ Dd hDd hDd hstr
+  obtain ⟨s0, hs0⟩ := _root_.GlobalTheory.CompanionTheory.Rigid.strings_rigid _ Dd _ Dd hDd hDd hstr
   have hfix : s0 i = i := by
     obtain ⟨τ⟩ : Nonempty (E →+* ℂ) := inferInstance
     obtain ⟨lam, hlam⟩ := hr τ
@@ -204,11 +208,11 @@ theorem rCuspCsd : RCuspCsd := by
       (ComplexEmbedding.conjugate τ) _ (D.inf i _)
     obtain ⟨m2, hm2, e2⟩ := infAsc_holds E (D.N (s0 i)) (A (s0 i)) (Dd (s0 i)) (D.V (s0 i)) (PP (s0 i))
       (D.discrete _) (hE _) τ _ (D.inf _ τ)
-    obtain ⟨μ, hμ1, hμ2⟩ := GlobalTheory.T.exists_right_haar_measure E (A i)
+    obtain ⟨μ, hμ1, hμ2⟩ := _root_.GlobalTheory.CompanionTheory.AdelicHaar.exists_haar_rightInvariant E (A i)
     have := hμ1
     have := hμ2
-    obtain ⟨B, hB⟩ := GlobalTheory.T.exists_invariant_hermitian_form PositivityTheory.Rg.HF.GL.cuspFormsBoundedGL E (A i) μ (PP i) (hN i)
-    have hconj := GlobalTheory.T.infinitesimal_character_conjugate E (A i) (PP i) B hB τ m0 m1 hm0 hm1
+    obtain ⟨B, hB⟩ := _root_.GlobalTheory.CompanionTheory.ClozelHerm.exists_isHerm PositivityTheory.Rg.HF.GL.cuspFormsBoundedGL E (A i) μ (PP i) (hN i)
+    have hconj := _root_.GlobalTheory.CompanionTheory.Clozel.hasInfChar_conj_eq E (A i) (PP i) B hB τ m0 m1 hm0 hm1
     have hθ := hasInfChar_of_sigma (hs0 i).1 (hasInfChar_thetaSub (PP i) τ m1 hm1)
     have hmem : ∀ z ∈ m0, z + (spehExp (Dd i) ⟨0, hDd i⟩ : ℂ) ∈ D.m i τ := fun z hz => by
       rw [e0]

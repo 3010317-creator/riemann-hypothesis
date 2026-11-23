@@ -1,13 +1,19 @@
 module
 
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.NineGeoU
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AmpleOnGenericFibreOfSemipositiveStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.NefOnFibresAddNonnegStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.MetricsProjectionFormulaNef
+public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FlagIndices
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AmpleOnGenericFibreOfSemipositive
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.NefOnFibresAddNonneg
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularizedLeviLowerBoundEventuallyStatement
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularizedWeightDominatesEventuallyStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SemipositiveLeviOfLogMetricStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.UniformLeviPositivityOnChartsStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.VerticalFactorSmoothHermitianMetricStatement
+public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.CoordinateIdeals
+public import ReciprocityTheory.AnalyticForms.MaIntEmpty
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SemipositiveLeviOfLogMetric
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.UniformLeviPositivityOnCharts
+public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FrameDefinitions.Weights
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.VerticalFactorSmoothHermitianMetric
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -160,7 +166,7 @@ theorem chart_levi_split (D : ComponentData II Ψ K J Ω W) (S : Finset ℕ) (hS
   have hγ : AnalyticAt ℂ (D.chart a).γ t := (D.chart a).analytic t hb
   have hz : ∀ k, ∃ i, (D.chart a).γ t ⟨k, i⟩ ≠ 0 := ((D.chart a).mem t hb).1
   obtain ⟨G, hG, hGe⟩ := exists_analytic_sum S (fun r s => Real.log (D.vertFactor r ((D.chart a).γ s))) t
-    fun r hr => (GlobalTheory.T.vertical_factor_smooth_hermitian_metric K J II Ψ Ω W D r (hS hr)).2 a t hb
+    fun r hr => (_root_.GlobalTheory.CompanionTheory.Relay.vertical_factor_smooth_hermitian_metric K J II Ψ Ω W D r (hS hr)).2 a t hb
   refine levi_split (G := G) (by exact_mod_cast hq) (contDiffAt_logH hA hγ hz)
     (contDiffAt_logH D.A'_pos.1 hγ hz) hG ?_ v
   filter_upwards [hGe, Metric.isOpen_ball.mem_nhds hb] with s h₁ h₂
@@ -193,7 +199,7 @@ theorem chart_levi_sqDiv (D : ComponentData II Ψ K J Ω W) (A : HermLine J) (hA
 
 theorem posU_of_nefOnFibres : PB.Inputs → ∀ (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (II : IntersectionSystem) (Ψ : Type) [Fintype Ψ] (Ω : Type) [Field Ω] [Algebra ℚ Ω] (W : Ψ → Type) [∀ τ, AddCommGroup (W τ)] [∀ τ, Module Ω (W τ)] (D : ComponentData II Ψ K J Ω W) (Hd : HodgeData D) (M : XModel D) (w : ((Σ k, J k) → ℂ) → ℝ) (S' : BoundedRegularisationSetting M D.Xo Hd.aMu w), IsFullIntersectionSystem II → S'.IsTied → (∀ B : ℕ, 4 * D.f + 2 ≤ B → NefOnFibres (mCoordIdeal D.y) (muTwDeg Hd B)) → PosU S' := by
   intro hPB K _ J _ II Ψ _ Ω _ _ W _ _ D Hd M w S' hII hT hNef B p q hB hp hpq
-  obtain ⟨δ₀, hδ₀, hApos⟩ := GlobalTheory.T.uniform_levi_positivity_on_charts K J II Ψ Ω W D
+  obtain ⟨δ₀, hδ₀, hApos⟩ := _root_.GlobalTheory.CompanionTheory.Relay.uniform_levi_positivity_on_charts K J II Ψ Ω W D
   have hp0 : (0 : ℝ) < p := by exact_mod_cast hp
   have hq1 : 1 ≤ q := hp.trans hpq
   have hq0 : (0 : ℝ) < q := by exact_mod_cast hq1
@@ -224,14 +230,14 @@ theorem posU_of_nefOnFibres : PB.Inputs → ∀ (K : Type) [Fintype K] (J : K �
     refine chart_levi_split D (D.SB B) (Finset.filter_subset _ _) A hsm _ a p q (by omega) t ht (fun s hs => ?_) v
     exact hform _ ((D.chart a).mem s hs)
   have hsemi : IsSemipositiveH (mCoordIdeal D.y) A := by
-    refine GlobalTheory.T.semipositive_levi_of_log_metric K J II Ψ Ω W D A hsm fun a t ht v => ?_
+    refine _root_.GlobalTheory.CompanionTheory.Relay.semipositive_levi_of_log_metric K J II Ψ Ω W D A hsm fun a t ht v => ?_
     have e := hsplit a t ht v
     have b1 := hreg a t ht v
     have b2 := hApos a t ht v
     rw [e]
     exact (key _ _ _ (by positivity) b1 b2).1
   have hN : IsSemipositiveH (mCoordIdeal D.y) (sqDiv A D.A' p) := by
-    refine GlobalTheory.T.semipositive_levi_of_log_metric K J II Ψ Ω W D _ (sqDiv_smooth hsm D.A'_pos.1 p) fun a t ht v => ?_
+    refine _root_.GlobalTheory.CompanionTheory.Relay.semipositive_levi_of_log_metric K J II Ψ Ω W D _ (sqDiv_smooth hsm D.A'_pos.1 p) fun a t ht v => ?_
     have e0 := chart_levi_sqDiv D A hsm a p t ht v
     have e := hsplit a t ht v
     have b1 := hreg a t ht v
@@ -240,8 +246,8 @@ theorem posU_of_nefOnFibres : PB.Inputs → ∀ (K : Type) [Fintype K] (J : K �
     exact (key _ _ _ (by positivity) b1 b2).2
   refine ⟨hsemi, ?_, ?_⟩
   · rw [hdeg]
-    exact GlobalTheory.T.nef_on_fibres_add_nonneg hPB K J _ _ _ p q (hNef B hB) fun k => (D.a'_pos k).le
-  · refine GlobalTheory.T.ample_on_generic_fibre_of_semipositive hPB II hII K J _ (sqDiv A D.A' p) A D.a' 2 p hN hsm D.a'_pos (by norm_num) hp ?_
+    exact _root_.GlobalTheory.CompanionTheory.Relay.nef_on_fibres_add_nonneg hPB K J _ _ _ p q (hNef B hB) fun k => (D.a'_pos k).le
+  · refine _root_.GlobalTheory.CompanionTheory.Relay.ample_on_generic_fibre_of_semipositive hPB II hII K J _ (sqDiv A D.A' p) A D.a' 2 p hN hsm D.a'_pos (by norm_num) hp ?_
     ext k
     simp [sqDiv, D.A'_deg]
 

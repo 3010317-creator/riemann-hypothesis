@@ -1,34 +1,36 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsTraceCompatibleTorusEmbeddingStandardTorus
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmThetaComplexConjugationCompatible
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmThetaComplexConjugationCompatibleStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmThetaTaylorCoeffAlgebraicAndConjugateStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ConjProdCompLinearFormsOfCoeffConjStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ConjugateLatticeEqClosureIndependentPairStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CoordsAlongOrthonormalRealSubfieldBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsAlgClosureEmbeddingExtendingOnAlgebraicStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHomLatticeCommensurableOrthonormalStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIntegerMapEqHalfOneAddSqrtStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalStarComplexMultiplicationPointsStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GaloisConjTorsionTranslatesOddThetaProductStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GaloisTaylorSeriesCanonicalOddThetaAllStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HalfPeriodThetaDifferentiableAndSignedTranslateIStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasSumTaylorCoordinateSpaceEntireStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IdealPeriodLatticeOfCurveDatumStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutesStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegralJAndAlgebraicDataStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NormalisedThetaPullbackMemTorsionTranslatesSpanAStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OddThetaFunctionExistenceUniquenessStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OrthoProductThetaMemThetaSpaceOfLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TaylorCoeffConjugateSeriesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaIntertwinerPairEqSumCorrespondingRepresentaStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaSpaceSelfDualPairAtMostLineStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaTranslationIntertwinerUnitaryStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TorsionMapCarriesTorusLatticesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TorsionTranslateMemThetaPullbackSpanStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TorsionTranslatesSpanTaylorCoeffsAlgebraicStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TwistedTranslateClassInvariantOfMemThetaSpaceStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmThetaComplexConjugationCompatible
+public import Formalism.SharpRestriction.GlobalSchurBounds.StandardLatticesGL3
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmThetaTaylorCoeffAlgebraicAndConjugate
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ConjProdCompLinearFormsOfCoeffConj
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ConjugateLatticeEqClosureIndependentPair
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CoordsAlongOrthonormalRealSubfieldBasis
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsAlgClosureEmbeddingExtendingOnAlgebraic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHomLatticeCommensurableOrthonormal
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIntegerMapEqHalfOneAddSqrt
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GaloisConjTorsionTranslatesOddThetaProduct
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HalfPeriodThetaDifferentiableAndSignedTranslateI
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.IsDiscriminantTwelfthRootOfIdealLattice
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasSumTaylorCoordinateSpaceEntire
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NormalisedThetaPullbackMemTorsionTranslatesSpanA
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OddThetaFunctionExistenceUniqueness
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OrthoProductThetaMemThetaSpaceOfLattice
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NormSumPairRankZeroOfCurveCoordNorm
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TaylorCoeffConjugateSeries
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaIntertwinerPairEqSumCorrespondingRepresenta
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaSpaceSelfDualPairAtMostLine
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaTranslationIntertwinerUnitary
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TorsionMapCarriesTorusLattices
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TorsionTranslateMemThetaPullbackSpan
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TorsionTranslatesSpanTaylorCoeffsAlgebraic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TwistedTranslateClassInvariantOfMemThetaSpace
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalStarComplexMultiplicationPoints
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GaloisTaylorSeriesCanonicalOddThetaAll
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IdealPeriodLatticeOfCurveDatum
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutes
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegralJAndAlgebraicData
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -87,7 +89,7 @@ variable {D : D7} {N N' r : ℕ}
 theorem CjF.fnConj_eq {M : IntermediateField ℚ ℂ} {ρ : M →ₐ[ℚ] ℂ} {F F' : VC D N N' → ℂ}
     (h : CjF D M ρ F F') : fnConj D M ρ F = F' := by
   funext z
-  rw [← (GlobalTheory.T.hasSum_taylor_coordinateSpace_entire D N N' F' h.2.1 z).tsum_eq]
+  rw [← (_root_.GlobalTheory.EntireTaylor.hasSum_taylor_mono D N N' F' h.2.1 z).tsum_eq]
   unfold fnConj
   refine tsum_congr fun α => ?_
   rw [(h.2.2 α).2]; rfl
@@ -99,7 +101,7 @@ theorem CjF.unique {M : IntermediateField ℚ ℂ} {ρ : M →ₐ[ℚ] ℂ} {F F
 theorem CjF.eq_zero {M : IntermediateField ℚ ℂ} {ρ : M →ₐ[ℚ] ℂ} {F : VC D N N' → ℂ}
     (h : CjF D M ρ F 0) : F = 0 := by
   funext z
-  rw [← (GlobalTheory.T.hasSum_taylor_coordinateSpace_entire D N N' F h.1 z).tsum_eq]
+  rw [← (_root_.GlobalTheory.EntireTaylor.hasSum_taylor_mono D N N' F h.1 z).tsum_eq]
   have : ∀ α, TaylorLogMetric.taylor D F α = 0 := fun α => by
     have h1 := (h.2.2 α).2
     rw [taylor_zero, cj_mem ρ (h.2.2 α).1] at h1
@@ -113,7 +115,7 @@ theorem cjF_of {M : IntermediateField ℚ ℂ} {ρ : M →ₐ[ℚ] ℂ} {F F' : 
   by_cases hz : F' = 0
   · rw [h0 hz, hz]; exact CjF.zero D M ρ
   · subst he
-    exact ⟨hF, hF', fun α => ⟨hc α, (GlobalTheory.T.taylorCoeff_conjugateSeries D N N' M ρ F hF' hz).1 α⟩⟩
+    exact ⟨hF, hF', fun α => ⟨hc α, (_root_.GlobalTheory.ConjSeries.taylor_fnConj D N N' M ρ F hF' hz).1 α⟩⟩
 
 theorem U_eq_zero {T : Tor D} {x : VC D N N'} {F : VC D N N' → ℂ} (h : U D T x F = 0) : F = 0 := by
   funext z
@@ -129,7 +131,7 @@ theorem pull_cjF (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) {M : IntermediateField 
     (h : ∀ n, coef1 g n ∈ M ∧ coef1 g' n = cj M ρ (coef1 g n)) :
     CjF D M ρ (pullB D (tor0 D cc δ) b g) (pullB D (torConj D (tor0 D cc δ) M ρ) b g') := by
   have hM : ∀ τ x, embT D τ x ∈ M := hD.1
-  refine GlobalTheory.T.conj_prod_comp_linearForms_of_coeff_conj D N N' r M ρ (fun _ => g) (fun _ => g')
+  refine _root_.GlobalTheory.ThetaConj.ProdLin.cjF_prod D N N' r M ρ (fun _ => g) (fun _ => g')
     (fun j τ a c => (starRingEnd ℂ) (embT D τ (b j a c)))
     (fun j τ a c => (starRingEnd ℂ) (cj M ρ (embT D τ (b j a c)))) (fun _ => hg) (fun _ => hg')
     (fun _ => h) (fun j τ a c => ?_)
@@ -256,13 +258,13 @@ variable {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (hc : Crv D cc δ) {ρ : Qbar �
   {b : Fin r → Matrix (Fin N') (Fin N) D.host.E} (hb : OnB D b)
 include hc
 
-theorem dataIn : DataIn D (tor0 D cc δ) Qbar := ((GlobalTheory.T.admJ_and_torsion_data_algebraic D (GlobalTheory.T.inducedType_thetaGenusOne_permutes D).1).2 cc δ hc).1
+theorem dataIn : DataIn D (tor0 D cc δ) Qbar := ((_root_.GlobalTheory.CurveAlgebraic.integral_j_and_algebraic_data D (_root_.GlobalTheory.InducedType.induced_type D).1).2 cc δ hc).1
 
 theorem sg_diff : Differentiable ℂ (sgStar (lamOf D cc δ)) :=
-  (GlobalTheory.T.oddThetaFunction_existence_uniqueness _ (GlobalTheory.T.idealPeriodLattice_of_curveDatum D (GlobalTheory.T.inducedType_thetaGenusOne_permutes D).1 cc δ hc).1).1.1
+  (_root_.GlobalTheory.OddTheta.sgStar_laws _ (_root_.GlobalTheory.CurveLattice.lattice_of_curve D (_root_.GlobalTheory.InducedType.induced_type D).1 cc δ hc).1).1.1
 
 theorem sg_diff' (ρ : Qbar →ₐ[ℚ] ℂ) : Differentiable ℂ (sgStar (lamConj Qbar ρ (lamOf D cc δ))) :=
-  (GlobalTheory.T.oddThetaFunction_existence_uniqueness _ (GlobalTheory.T.conjugateLattice_eq_closure_independent_pair D (GlobalTheory.T.inducedType_thetaGenusOne_permutes D).1 cc δ hc Qbar ρ (dataIn hc).2.1 (dataIn hc).2.2)).1.1
+  (_root_.GlobalTheory.OddTheta.sgStar_laws _ (_root_.GlobalTheory.ConjugateLattice.lamConj_eq_closure_pair D (_root_.GlobalTheory.InducedType.induced_type D).1 cc δ hc Qbar ρ (dataIn hc).2.1 (dataIn hc).2.2)).1.1
 
 include hb
 
@@ -275,9 +277,9 @@ theorem step (hK : FixK D Qbar ρ) {F F' : VC D N N' → ℂ} (hF : F ∈ Tr D (
     CjF D Qbar ρ (U D (tor0 D cc δ) x F) (U D (torConj D (tor0 D cc δ) Qbar ρ) x' F') ∧
       (wdPh D (tor0 D cc δ) x ∈ Qbar →
         cj Qbar ρ (wdPh D (tor0 D cc δ) x) = wdPh D (torConj D (tor0 D cc δ) Qbar ρ) x') := by
-  have hU := GlobalTheory.T.torsionTranslatesSpan_taylorCoeffs_algebraic D cc δ hc N N' r b hb _ (GlobalTheory.T.torsionTranslate_mem_thetaPullbackSpan D cc δ hc N N' r b hb F hF x m hm hx)
-  have h := GlobalTheory.T.galois_conj_torsionTranslates_oddThetaProduct D cc δ hc Qbar ρ hK (dataIn hc) N N' r b hb k c t x x' m hm hx ht ha
-    (he ▸ (GlobalTheory.T.torsionTranslatesSpan_taylorCoeffs_algebraic D cc δ hc N N' r b hb F hF).2) (he ▸ hU.2)
+  have hU := _root_.GlobalTheory.ThetaConj.translates_coef_algebraic D cc δ hc N N' r b hb _ (_root_.GlobalTheory.TorsionTranslate.translate_mem D cc δ hc N N' r b hb F hF x m hm hx)
+  have h := _root_.GlobalTheory.ProdThetaConj.galB_all D cc δ hc Qbar ρ hK (dataIn hc) N N' r b hb k c t x x' m hm hx ht ha
+    (he ▸ (_root_.GlobalTheory.ThetaConj.translates_coef_algebraic D cc δ hc N N' r b hb F hF).2) (he ▸ hU.2)
   rw [← he, hFF.fnConj_eq] at h
   refine ⟨cjF_of hU.1 hU.2 h.1 (differentiable_U D _ _ hFF.2.1) fun h0 => ?_, fun hw => (h.2 hw).1⟩
   have h1 := U_eq_zero h0
@@ -288,20 +290,20 @@ theorem exists_conj_fix (hK : FixK D Qbar ρ) {F : VC D N N' → ℂ} (hF : F �
     ∃ F', CjF D Qbar ρ F F' := by
   have hD := dataIn hc
   have hcoef : ∀ n, coef1 (sgStar (lamOf D cc δ)) n ∈ Qbar := fun n => by
-    have h := (GlobalTheory.T.forall_use1 D cc δ hc).1 0 ⟨1, one_pos, by simpa using zero_mem _⟩ n
+    have h := (_root_.GlobalTheory.ThetaConj.cmTheta_taylorCoeff_algebraic_and_conjugate D cc δ hc).1 0 ⟨1, one_pos, by simpa using zero_mem _⟩ n
     have e : U1 (lamOf D cc δ) 0 (sgStar (lamOf D cc δ)) = sgStar (lamOf D cc δ) := by
       funext z; simp [U1]
     rwa [e] at h
   have hS := pull_cjF cc δ ρ hD b (sg_diff hc) (sg_diff' hc ρ) fun n =>
-    ⟨hcoef n, (GlobalTheory.T.galois_taylorSeries_canonicalOddTheta_all D cc δ hc Qbar ρ hK hD.2.1 hD.2.2 hcoef n).symm⟩
+    ⟨hcoef n, (_root_.GlobalTheory.SigmaConj.galSg_all D cc δ hc Qbar ρ hK hD.2.1 hD.2.2 hcoef n).symm⟩
   have hSm : pullB D (tor0 D cc δ) b (sgStar (lamOf D cc δ)) ∈ Tr D (tor0 D cc δ) b :=
     Submodule.subset_span ⟨0, ⟨1, one_pos, by rw [smul_zero]; exact zero_mem _⟩, (U_zero D _ _).symm⟩
   unfold Tr at hF
   induction hF using Submodule.span_induction with
   | mem F hF =>
     obtain ⟨t, ⟨m, hm, ht⟩, rfl⟩ := hF
-    obtain ⟨t', ht'⟩ := (GlobalTheory.T.torsionMap_carries_torus_lattices D (GlobalTheory.T.inducedType_thetaGenusOne_permutes D).1 (GlobalTheory.T.galStar_complexMultiplication_points D) cc δ hc Qbar ρ hK hD
-      ((GlobalTheory.T.admJ_and_torsion_data_algebraic D (GlobalTheory.T.inducedType_thetaGenusOne_permutes D).1).2 cc δ hc).2 N N' r b hb (2 * m) (by omega)).2.1 t m hm ht
+    obtain ⟨t', ht'⟩ := (_root_.GlobalTheory.ThetaConj.adpB_lattices D (_root_.GlobalTheory.InducedType.induced_type D).1 (_root_.GlobalTheory.ConjPoint.galStar_holds D) cc δ hc Qbar ρ hK hD
+      ((_root_.GlobalTheory.CurveAlgebraic.integral_j_and_algebraic_data D (_root_.GlobalTheory.InducedType.induced_type D).1).2 cc δ hc).2 N N' r b hb (2 * m) (by omega)).2.1 t m hm ht
     refine ⟨_, (step hc hb hK hSm (k := 1) (c := fun _ => 1) (t := fun _ => 0) hm
       (fun _ => by rw [smul_zero]; exact zero_mem _) ?_ hS ht ht').1⟩
     funext z
@@ -318,19 +320,19 @@ theorem exists_conj_fix (hK : FixK D Qbar ρ) {F : VC D N N' → ℂ} (hF : F �
 theorem galRel_fix (hK : FixK D Qbar ρ) {F F' : VC D N N' → ℂ} (hF : F ∈ Tr D (tor0 D cc δ) b)
     (hFF : CjF D Qbar ρ F F') {k : ℕ} (hk : 0 < k) :
     GalRel D (tor0 D cc δ) (torConj D (tor0 D cc δ) Qbar ρ) Qbar ρ b k F F' := by
-  have hG := (GlobalTheory.T.inducedType_thetaGenusOne_permutes D).1
+  have hG := (_root_.GlobalTheory.InducedType.induced_type D).1
   obtain ⟨s, c, t, m, hm, ht, he⟩ := tr_comb hF
   have hmk : 0 < m * k := Nat.mul_pos hm hk
-  obtain ⟨h1, -, h2⟩ := GlobalTheory.T.torsionMap_carries_torus_lattices D hG (GlobalTheory.T.galStar_complexMultiplication_points D) cc δ hc Qbar ρ hK (dataIn hc)
-      ((GlobalTheory.T.admJ_and_torsion_data_algebraic D hG).2 cc δ hc).2 N N' r b hb (2 * (m * k)) (by omega)
+  obtain ⟨h1, -, h2⟩ := _root_.GlobalTheory.ThetaConj.adpB_lattices D hG (_root_.GlobalTheory.ConjPoint.galStar_holds D) cc δ hc Qbar ρ hK (dataIn hc)
+      ((_root_.GlobalTheory.CurveAlgebraic.integral_j_and_algebraic_data D hG).2 cc δ hc).2 N N' r b hb (2 * (m * k)) (by omega)
   refine ⟨AdpB D (tor0 D cc δ) Qbar ρ b (2 * (m * k)), h1, fun Y hY hKL => ?_⟩
   obtain ⟨h3, h4, h5⟩ := h2 k Y hk ⟨2 * m, by ring⟩ hY
   refine ⟨h3, h4, h5, fun x x' hR hx => ?_⟩
   have hx1 : (m * k) • x ∈ LaB D (tor0 D cc δ) b :=
-    nsmul_mem_LaB (isTraceCompatibleTorusEmbedding_standardTorus D hG cc δ) (GlobalTheory.T.idealPeriodLattice_of_curveDatum D hG cc δ hc).2.2.2.2 (hY.mul m) hx
+    nsmul_mem_LaB (isTraceCompatibleTorusEmbedding_standardTorus D hG cc δ) (_root_.GlobalTheory.CurveLattice.lattice_of_curve D hG cc δ hc).2.2.2.2 (hY.mul m) hx
   obtain ⟨h6, h7⟩ := step hc hb hK hF hmk (fun i => by
     rw [mul_nsmul]; exact AddSubgroup.nsmul_mem _ (ht i) k) he hFF hx1 hR
-  obtain ⟨q, hq⟩ := (GlobalTheory.T.theta_space_selfDual_pair_at_most_line D hG cc δ hc N N' _ hKL).2.2.2.2.2.2 x hx
+  obtain ⟨q, hq⟩ := (_root_.GlobalTheory.ThetaLine.theta_line D hG cc δ hc N N' _ hKL).2.2.2.2.2.2 x hx
   obtain ⟨e1, e2⟩ := al_eq hq
   have hpm : (-1 : ℂ) ^ q = 1 ∨ (-1 : ℂ) ^ q = -1 := by
     rcases Int.even_or_odd q with h | h
@@ -460,11 +462,11 @@ theorem galRel_all {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (hc : Crv D cc δ) (�
     (hF : F ∈ Tr D (tor0 D cc δ) b) {k : ℕ} (hk : 0 < k) :
     ∃ F', CjF D Qbar ρ F F' ∧
       GalRel D (tor0 D cc δ) (torConj D (tor0 D cc δ) Qbar ρ) Qbar ρ b k F F' := by
-  rcases (GlobalTheory.T.cmTheta_complexConjugation_compatible D cc δ hc Qbar ρ (dataIn hc)).1 with hK | hK
+  rcases (_root_.GlobalTheory.ThetaConj.useBar_holds D cc δ hc Qbar ρ (dataIn hc)).1 with hK | hK
   · obtain ⟨F', h⟩ := exists_conj_fix hc hb hK hF
     exact ⟨F', h, galRel_fix hc hb hK hF h hk⟩
   · obtain ⟨F', h⟩ := exists_conj_fix hc hb hK hF
-    obtain ⟨-, h1, h2⟩ := GlobalTheory.T.cmTheta_complexConjugation_compatible D cc δ hc Qbar (rhoBar Qbar ρ) (dataIn hc)
+    obtain ⟨-, h1, h2⟩ := _root_.GlobalTheory.ThetaConj.useBar_holds D cc δ hc Qbar (rhoBar Qbar ρ) (dataIn hc)
     have h3 := fun G => (h2 N N' ⊥ ⊥ G).1
     have h4 := (galRel_fix hc hb hK hF h hk).bar h3
     have h5 := h.bar (h3 F)
@@ -486,19 +488,19 @@ theorem conj_iop {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (hc : Crv D cc δ) (ρ 
         CjF D Qbar ρ (Iop D (tor0 D cc δ) (LaS D (tor0 D cc δ) Y₁) (LaS D (tor0 D cc δ) Y₂) F)
           fun z => sg * Iop D (torConj D (tor0 D cc δ) Qbar ρ) (LaS D (torConj D (tor0 D cc δ) Qbar ρ) Y₁)
             (LaS D (torConj D (tor0 D cc δ) Qbar ρ) Y₂) F' z := by
-  have hG := (GlobalTheory.T.inducedType_thetaGenusOne_permutes D).1
+  have hG := (_root_.GlobalTheory.InducedType.induced_type D).1
   have hT := isTraceCompatibleTorusEmbedding_standardTorus D hG cc δ
-  have hst := (GlobalTheory.T.idealPeriodLattice_of_curveDatum D hG cc δ hc).2.2.2.2
+  have hst := (_root_.GlobalTheory.CurveLattice.lattice_of_curve D hG cc δ hc).2.2.2.2
   obtain ⟨F', hFF, R, hsub, hR⟩ := galRel_all hc ρ hb hF hk
   obtain ⟨-, a2, a3, a4⟩ := hR Y₁ h₁ k₁
   obtain ⟨b1, b2, -, b4⟩ := hR Y₂ h₂ k₂
-  obtain ⟨-, -, l1, -, l2, -, l3⟩ := GlobalTheory.T.theta_space_selfDual_pair_at_most_line D hG cc δ hc N N' _ k₂
+  obtain ⟨-, -, l1, -, l2, -, l3⟩ := _root_.GlobalTheory.ThetaLine.theta_line D hG cc δ hc N N' _ k₂
   have hB : ∀ x ∈ LaS D (tor0 D cc δ) Y₂, k • x ∈ LaB D (tor0 D cc δ) b := fun x hx =>
     nsmul_mem_LaB hT hst h₂ hx
   have hfin := finiteIndex_of (A₁ := LaS D (tor0 D cc δ) Y₁) l2 (Nat.mul_pos hk hk) fun x hx => by
     rw [mul_nsmul]; exact nsmul_mem_LaS hT h₁ (hB x hx)
-  obtain ⟨a, ha⟩ := GlobalTheory.T.exists_integer_map_eq_halfOneAddSqrt D
-  have hri := GlobalTheory.T.twistedTranslateClassInvariant_of_mem_thetaSpace D _ N N' _ _ F l3
+  obtain ⟨a, ha⟩ := _root_.GlobalTheory.NormSum.exists_integer_map_eq_w0 D
+  have hri := _root_.GlobalTheory.ThetaConj.repInd_of_thSp D _ N N' _ _ F l3
     (fun x hx y hy => l1 _ (smul_mem_LaS (fun w hw => ha ▸ hst a w hw) hx) y hy) hth
   have hiff : ∀ x x' y y', R x x' → R y y' → (x - y ∈ LaS D (tor0 D cc δ) Y₁ ↔
       x' - y' ∈ LaS D (torConj D (tor0 D cc δ) Qbar ρ) Y₁) := fun x x' y y' hx hy =>
@@ -510,7 +512,7 @@ theorem conj_iop {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (hc : Crv D cc δ) (ρ 
     obtain ⟨y, hy, ry⟩ := b2 y' hy'
     have e := hri x hx y hy ((hiff _ _ _ _ rx ry).2 hd)
     exact (b4 _ _ rx hx).unique (e ▸ b4 _ _ ry hy)
-  obtain ⟨n, x, x', hx, e1, e2⟩ := GlobalTheory.T.thetaIntertwiner_pair_eq_sum_corresponding_representatives D _ _ N N' _ _ _ _ F F' R hfin hri hri' b1 b2 hiff
+  obtain ⟨n, x, x', hx, e1, e2⟩ := _root_.GlobalTheory.ThetaConj.IopRepr.iop_pair D _ _ N N' _ _ _ _ F F' R hfin hri hri' b1 b2 hiff
   have hsq : ((Real.sqrt (n : ℝ) : ℝ) : ℂ) * ((Real.sqrt (n : ℝ) : ℝ) : ℂ) = n := by
     rw [← Complex.ofReal_mul, Real.mul_self_sqrt (Nat.cast_nonneg n)]; simp
   have hsm : ((Real.sqrt (n : ℝ) : ℝ) : ℂ) ∈ Qbar := by
@@ -524,7 +526,7 @@ theorem conj_iop {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (hc : Crv D cc δ) (ρ 
     have hal : ∀ i, al D (tor0 D cc δ) (x i) ∈ Qbar := fun i => zpow_mem (neg_mem (one_mem _)) _
     have := Submodule.smul_mem _ (⟨_, him⟩ : Qbar) (Submodule.sum_mem _ (t := Finset.univ) fun i _ =>
       Submodule.smul_mem _ (⟨_, hal i⟩ : Qbar)
-        (GlobalTheory.T.torsionTranslate_mem_thetaPullbackSpan D cc δ hc N N' r b hb F hF (x i) k hk (hB _ (hx i).1)))
+        (_root_.GlobalTheory.TorsionTranslate.translate_mem D cc δ hc N N' r b hb F hF (x i) k hk (hB _ (hx i).1)))
     convert this using 1
     ext z
     simp only [Pi.smul_apply, Finset.sum_apply, aU, Algebra.smul_def]
@@ -572,9 +574,9 @@ theorem differentiable_thetaTorsionTranslate {Λ : AddSubgroup ℂ} (h : Differe
 
 theorem useConj_all : ∀ D : D7, useConj D := by
   intro D cc δ hc t0 ht0 N N' L L' hL hL' _ G hE M ρ₀ hD₀ hcG
-  have hG := (GlobalTheory.T.inducedType_thetaGenusOne_permutes D).1
+  have hG := (_root_.GlobalTheory.InducedType.induced_type D).1
   have hD := dataIn hc
-  obtain ⟨ρ, hρ⟩ := GlobalTheory.T.exists_algClosure_embedding_extending_on_algebraic M ρ₀
+  obtain ⟨ρ, hρ⟩ := _root_.GlobalTheory.ThetaConj.exists_cj_Qbar_eq M ρ₀
   have hlam : lamConj M ρ₀ (lamOf D cc δ) = lamConj Qbar ρ (lamOf D cc δ) := by
     have h2 := hρ _ hD.2.1 hD₀.2.1
     have h3 := hρ _ hD.2.2 hD₀.2.2
@@ -592,15 +594,15 @@ theorem useConj_all : ∀ D : D7, useConj D := by
     funext z
     exact tsum_congr fun α => congrArg (· * mono D α z) (hρ _ (h1 α) (h2 α))
   obtain ⟨b, κ, hb, hκ, rfl⟩ := hE
-  obtain ⟨k, hk, hC⟩ := GlobalTheory.T.exists_homLattice_commensurable_orthonormal D N N' _ b L L' hb hL hL'
+  obtain ⟨k, hk, hC⟩ := _root_.GlobalTheory.ThetaConj.exists_comm_YYl D N N' _ b L L' hb hL hL'
   have kB : KLat D (tor0 D cc δ) (LaB D (tor0 D cc δ) b) := Or.inl ⟨_, b, hb, rfl⟩
   have kL : KLat D (tor0 D cc δ) (La D (tor0 D cc δ) L L') := Or.inr ⟨L, L', hL, hL', rfl⟩
-  obtain ⟨-, -, c1, c2, -⟩ := GlobalTheory.T.coords_along_orthonormal_realSubfield_basis D hG cc δ N N' _ b hb
-  obtain ⟨d1, d2⟩ := GlobalTheory.T.halfPeriodTheta_differentiable_and_signedTranslate_invariant D hG cc δ hc t0 ht0
-  have hth0 := GlobalTheory.T.orthoProductTheta_mem_thetaSpace_of_lattice D (tor0 D cc δ) N N' _ b _ c1 c2 d1 d2
-  have hI := (GlobalTheory.T.intertwinerUnitary_all D cc δ hc N N' _ _ kB kL _ hth0).2.1
+  obtain ⟨-, -, c1, c2, -⟩ := _root_.GlobalTheory.OnCoord.coords_of_orthonormal_basis D hG cc δ N N' _ b hb
+  obtain ⟨d1, d2⟩ := _root_.GlobalTheory.HalfPeriodTheta.theta_signed_translation D hG cc δ hc t0 ht0
+  have hth0 := _root_.GlobalTheory.ProdTheta.pullB_mem_ThSp D (tor0 D cc δ) N N' _ b _ c1 c2 d1 d2
+  have hI := (_root_.GlobalTheory.theta_translation_intertwiner_unitary D cc δ hc N N' _ _ kB kL _ hth0).2.1
   have hCb : Comm D b k (Set.range b) := by simpa using (comm_range D b).mul k
-  obtain ⟨m1, F₀', m2, -, sg, hsg, m3⟩ := conj_iop hc ρ hb (GlobalTheory.T.pullB_th0_mem_tr D cc δ hc t0 ht0 N N' _ b hb) hk
+  obtain ⟨m1, F₀', m2, -, sg, hsg, m3⟩ := conj_iop hc ρ hb (_root_.GlobalTheory.ThetaConj.normalisedThetaPullback_mem_torsionTranslatesSpan D cc δ hc t0 ht0 N N' _ b hb) hk
     hCb hC (LaB_eq D _ b ▸ kB) kL (LaB_eq D _ b ▸ hth0)
   rw [← LaB_eq, ← La_eq] at m1
   rw [← LaB_eq, ← La_eq, ← LaB_eq, ← La_eq] at m3
@@ -619,13 +621,13 @@ theorem useConj_all : ∀ D : D7, useConj D := by
   refine ⟨?_, fun t0' ht0' => ⟨b, cj Qbar ρ κ * sg, hb, mod1All_cj ρ hκ hsg, ?_⟩, fun L₁ L₁' hL₁ hL₁' hcI => ?_⟩
   · obtain ⟨-, G', n1, n2, -⟩ := conj_iop hc ρ hb hGm hk hC hC kL kL hGth
     rw [n1.fnConj_eq]; exact n2
-  · obtain ⟨-, u1, u2⟩ := GlobalTheory.T.forall_use1 D cc δ hc
+  · obtain ⟨-, u1, u2⟩ := _root_.GlobalTheory.ThetaConj.cmTheta_taylorCoeff_algebraic_and_conjugate D cc δ hc
     have e := m2.unique (pull_cjF cc δ ρ hD b d1 (differentiable_thetaTorsionTranslate (sg_diff' hc ρ) t0') fun n =>
       ⟨u1 t0 ht0 n, (u2 Qbar ρ hD.2.1 hD.2.2 t0 t0' ht0 ht0' (u1 t0 ht0) n).symm⟩)
     rw [m4.fnConj_eq, e]
     funext z
     exact (mul_assoc _ _ _).symm
-  · obtain ⟨k₁, hk₁, hC₁⟩ := GlobalTheory.T.exists_homLattice_commensurable_orthonormal D N N' _ b L₁ L₁' hb hL₁ hL₁'
+  · obtain ⟨k₁, hk₁, hC₁⟩ := _root_.GlobalTheory.ThetaConj.exists_comm_YYl D N N' _ b L₁ L₁' hb hL₁ hL₁'
     have hC₂ := hC₁.mul k
     rw [mul_comm k k₁] at hC₂
     obtain ⟨-, G', n1, -, s, hs, n2⟩ := conj_iop hc ρ hb hGm (Nat.mul_pos hk₁ hk) (hC.mul k₁) hC₂ kL

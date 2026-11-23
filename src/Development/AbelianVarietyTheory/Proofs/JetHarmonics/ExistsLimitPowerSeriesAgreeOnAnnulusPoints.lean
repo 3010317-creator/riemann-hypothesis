@@ -2,13 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.PowerSeriesHasSumAt
 public import Mathlib.Topology.MetricSpace.Ultra.Basic
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormCoeffIntegralPowerSeriesLeProdZerosStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormCoeffIntegralPowerSeriesLeProdZeros
+public import Mathlib.Analysis.Normed.Group.Tannery
+public import Mathlib.Topology.Algebra.InfiniteSum.Nonarchimedean
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-public import Mathlib.Analysis.Normed.Group.Tannery
 import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
@@ -41,7 +42,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Mathlib.Topology.Algebra.InfiniteSum.Nonarchimedean
 import Mathlib.Topology.Connected.Separation
 import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 import Mathlib.Topology.Sheaves.Init
@@ -105,7 +105,7 @@ theorem exists_limit_of_agree_on_points : ∀ (K : Type) [NormedField K] [IsUltr
       unfold ev1 at h3 ⊢
       simp only [map_sub, sub_mul]
       rw [h1.tsum_sub h2, h3, sub_self]
-    have := (GlobalTheory.T.norm_coeff_integral_powerSeries_le_prod_zeros K _ (G n) hI hz).1 r hr hr1 (fun x hxn => (hx n x hxn).1) k
+    have := (_root_.GlobalTheory.ConvSer.norm_coeff_le_prod_zeros K _ (G n) hI hz).1 r hr hr1 (fun x hxn => (hx n x hxn).1) k
     rw [map_sub] at this
     rwa [le_div_iff₀ (by positivity)]
   have hlim : ∀ k, ∃ l, Tendsto (fun n => PowerSeries.coeff k (g n)) atTop (𝓝 l) := by

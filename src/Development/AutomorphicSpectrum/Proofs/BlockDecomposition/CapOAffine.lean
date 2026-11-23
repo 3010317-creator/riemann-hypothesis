@@ -1,16 +1,19 @@
 module
 
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsLocalFrameOfCoords
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.SplittingFieldLattices.BasisB
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.GlobalSerreRelations.GlobSerreSt
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CechRefinementCohomologyBijectiveStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ChartDividedPowersGradedConstantStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.InclStd
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CechRefinementCohomologyBijective
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.SEqOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ChartDividedPowersGradedConstant
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ChartIsGoodStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoordinatesRestrictAffineOpenStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.CapOComp
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoordinatesRestrictAffineOpen
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsChartFromCoordinatesStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteModulesSerreClassStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SheafFiltrationPropertyStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StableFamilyPropertiesStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteModulesSerreClass
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SheafFiltrationProperty
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StableFamilyProperties
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsLocalFrameOfCoords
 import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.MemBoundariesZeroIff
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -159,11 +162,11 @@ theorem van_coord (hLoc : KH.LocGr) (hPoly : KH.PolyTf) (l s : ℕ) (hb : TFBase
     rw [Set.mem_singleton_iff.1 hV] at h
     exact h
   have hD : Q c'.D := ⟨hTF, W, rfl, c'.inV⟩
-  obtain ⟨hpd, hgc⟩ := GlobalTheory.T.chart_divided_powers_graded_constant c' hg Q hQ hD
+  obtain ⟨hpd, hgc⟩ := _root_.GlobalTheory.CompanionTheory.ChartFil.chart_grConst c' hg Q hQ hD
   obtain ⟨P, hP⟩ := hPoly (dividedPowersBot O) q (Ideal.Quotient.mk ⊥) l s {W}
   let E := c'.frame hg Q hQ hD
   let σ : ∀ T, E.D ⟶ T := fun T => (E.ne T).some
-  have main := hLoc P (GlobalTheory.T.sheaf_filtration_property Q) E σ hgc (r : ℤ) (fun r' hr' => (hP r' (by omega)).1) b
+  have main := hLoc P (_root_.GlobalTheory.CompanionTheory.DPFil.isFil_sFil Q) E σ hgc (r : ℤ) (fun r' hr' => (hP r' (by omega)).1) b
   rcases lt_or_gt_of_ne hne with hlt | hgt
   · obtain ⟨k, hk⟩ : ∃ k : ℕ, r = b + k := ⟨r - b, by omega⟩
     have hk1 : 1 ≤ k := by omega
@@ -204,7 +207,7 @@ theorem capO_affine {X : Scheme.{0}} {q : X ⟶ Spec (CommRingCat.of O)} (U : Co
 theorem gr_range [IsNoetherianRing O] (hLoc : KH.LocGr) (hPoly : KH.PolyTf) (hSer : KH.GlobSerreSt) (hCech : KH.GrCechFin)
     (l s : ℕ) (hb : TFBase (dividedPowersBot O) l s) {X : Scheme.{0}} (q : X ⟶ Spec (CommRingCat.of O)) [IsProper q]
     (U : Cov q) (r : ℤ) (hr : r < s) (j : ℕ) : Module.Finite O (HQ (TO q l s (Set.range U.U)) r (r + 1) j) := by
-  obtain ⟨𝒮, h𝒮⟩ := GlobalTheory.T.finite_modules_serre_class O
+  obtain ⟨𝒮, h𝒮⟩ := _root_.GlobalTheory.CompanionTheory.SerreFin.exists_serre_finite O
   rcases lt_or_ge r 0 with h0 | h0
   · refine (h𝒮 _).1 (𝒮.zero _ (sub_CH _ (sq_sub _ _ fun T => ?_) j))
     have e1 : r.toNat = 0 := by omega
@@ -219,8 +222,8 @@ theorem gr_range [IsNoetherianRing O] (hLoc : KH.LocGr) (hPoly : KH.PolyTf) (hSe
     · subst hbn
       exact (h𝒮 _).2 (hCech l s hb q U b hn a)
     · refine 𝒮.zero _ (sub_H _ a ⟨fun x y => funext fun i => ?_⟩)
-      have e := (GlobalTheory.T.stable_family_properties).2.2.2 (TF l s : ObjectProperty (Thick (nlFun (dividedPowersBot O) 0 X q (Ideal.Quotient.mk ⊥)))) U.U i
-      obtain ⟨c', -⟩ := GlobalTheory.T.coordinates_restrict_affine_open (U.c (i 0)) (capO_le U.U i 0) (capO_affine U i)
+      have e := (_root_.GlobalTheory.CompanionTheory.StFam.st_all).2.2.2 (TF l s : ObjectProperty (Thick (nlFun (dividedPowersBot O) 0 X q (Ideal.Quotient.mk ⊥)))) U.U i
+      obtain ⟨c', -⟩ := _root_.GlobalTheory.CompanionTheory.CoordRes.main (U.c (i 0)) (capO_le U.U i 0) (capO_affine U i)
       have hv := van_coord hLoc hPoly l s hb q c' n hn b hbn
       rw [← e] at hv
       exact hv.elim _ _
@@ -229,8 +232,8 @@ theorem range_fin [IsNoetherianRing O] (hLoc : KH.LocGr) (hPoly : KH.PolyTf) (hS
     (l s : ℕ) (hb : TFBase (dividedPowersBot O) l s) {X : Scheme.{0}} (q : X ⟶ Spec (CommRingCat.of O)) [IsProper q]
     (U : Cov q) (n : ℕ) (r r' : ℤ) (hn : r' = r + n) (hs : r' ≤ s) (j : ℕ) :
     Module.Finite O (HQ (TO q l s (Set.range U.U)) r r' j) := by
-  obtain ⟨𝒮, h𝒮⟩ := GlobalTheory.T.finite_modules_serre_class O
-  have hF := GlobalTheory.T.sheaf_filtration_property (TO q l s (Set.range U.U))
+  obtain ⟨𝒮, h𝒮⟩ := _root_.GlobalTheory.CompanionTheory.SerreFin.exists_serre_finite O
+  have hF := _root_.GlobalTheory.CompanionTheory.DPFil.isFil_sFil (TO q l s (Set.range U.U))
   induction n generalizing r with
   | zero =>
     have e : r' = r := by simpa using hn
@@ -270,8 +273,8 @@ theorem finO : KH.LocGr → KH.PolyTf → KH.GlobSerreSt → KH.GrCechFin → Fi
   have c2 : ∀ W ∈ ({⊤} : Set X.Opens), W ≤ sSup 𝒱 := by
     rintro W rfl
     rw [h𝒱]
-  have B1 := (GlobalTheory.T.cech_refinement_cohomology_bijective _ hU _ _ h1 c1 j).1 r r'
-  have B2 := (GlobalTheory.T.cech_refinement_cohomology_bijective _ hU _ _ h2 c2 j).1 r r'
+  have B1 := (_root_.GlobalTheory.CompanionTheory.NlZar.zariski_descent _ hU _ _ h1 c1 j).1 r r'
+  have B2 := (_root_.GlobalTheory.CompanionTheory.NlZar.zariski_descent _ hU _ _ h2 c2 j).1 r r'
   obtain ⟨n, hn⟩ : ∃ n : ℕ, r' = r + n := ⟨(r' - r).toNat, by omega⟩
   have hR := range_fin hLoc hPoly hSer hCech l s hb q U n r r' hn hr' j
   exact fin_surj _ B2.2 (fin_bij _ B1 hR)

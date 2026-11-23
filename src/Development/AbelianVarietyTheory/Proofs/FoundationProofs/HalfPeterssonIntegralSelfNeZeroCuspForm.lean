@@ -1,10 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.PetIPSmulRight
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasModerateGrowthQExpansionOfCoeffPolynomialGrowStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegrablePeterssonIntegrandModerateGrowthStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.QExpansionFunctionInjectiveOfPolynomialGrowthStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.QExpansionPolyGrowthSummableContinuousStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.RepL
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasModerateGrowthQExpansionOfCoeffPolynomialGrow
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegrablePeterssonIntegrandModerateGrowth
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.QExpansionFunctionInjectiveOfPolynomialGrowth
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.QExpansionPolyGrowthSummableContinuous
+public import Mathlib.NumberTheory.DirichletCharacter.Bounds
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -18,7 +20,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.NumberTheory.Chebyshev
-public import Mathlib.NumberTheory.DirichletCharacter.Bounds
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
@@ -122,7 +123,7 @@ theorem pet_self_ne_zero : ∀ (k L N : ℕ) (ε : DirichletCharacter ℂ N) (ρ
     inferInstanceAs (Countable {A : Matrix (Fin 2) (Fin 2) ℤ // A.det = 1})
   have hP : PolyB h := hCF.1.1
   have hInv : Inv k L (ch ε) (qs h) := hCF.1.2
-  have hqc : Continuous (qs h) := (GlobalTheory.T.qExpansion_polyGrowth_summable_continuous h hP).2
+  have hqc : Continuous (qs h) := (_root_.GlobalTheory.EisM.qs_summable_continuous h hP).2
   set Φ : ℍ → ℝ := fun τ => ‖qs h τ‖ ^ 2 * τ.im ^ k with hΦ
   set G : ℍ → ℝ := fun τ => ρ τ * Φ τ with hG
   have hΦc : Continuous Φ := (hqc.norm.pow 2).mul (UpperHalfPlane.continuous_im.pow k)
@@ -134,8 +135,8 @@ theorem pet_self_ne_zero : ∀ (k L N : ℕ) (ε : DirichletCharacter ℂ N) (ρ
     simp only [hG, hΦ]
     push_cast
     ring
-  have hint := GlobalTheory.T.integrable_petersson_integrand_moderateGrowth k L L N ε h ρ (qs h) hk hL hN hW hCF hqc.aestronglyMeasurable
-    (GlobalTheory.T.hasModerateGrowth_qExpansion_of_coeffPolynomialGrowth h hP)
+  have hint := _root_.GlobalTheory.EisM.integrable_pet_integrand k L L N ε h ρ (qs h) hk hL hN hW hCF hqc.aestronglyMeasurable
+    (_root_.GlobalTheory.EisM.mod_qs_of_polyB h hP)
   rw [heq] at hint
   have hGi : Integrable G := by
     have := hint.re
@@ -183,6 +184,6 @@ theorem pet_self_ne_zero : ∀ (k L N : ℕ) (ε : DirichletCharacter ℂ N) (ρ
     have h5 : qs h τ = 0 := by simpa using h4
     rw [h5]
     simp [qs]
-  exact GlobalTheory.T.qExpansionFunction_injective_of_polynomialGrowth h 0 hP ⟨0, 0, fun n => by simp⟩ hq0
+  exact _root_.GlobalTheory.EisM.qs_injective h 0 hP ⟨0, 0, fun n => by simp⟩ hq0
 
 end GlobalTheory.EisM.PetPos

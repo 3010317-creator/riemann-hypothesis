@@ -2,10 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsUnitarisableOfCharIff
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsCuspidalIffCompositions
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InfNotInCodimOneSubmoduleStatement
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.RepresentationTheory.Subrepresentation
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InfNotInCodimOneSubmodule
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IrreducibleSubquotientsEquivOfNotLeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SubquotientEquivOfSupEqStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SupEqOfIrreducibleSubquotientStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SubquotientEquivOfSupEq
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SupEqOfIrreducibleSubquotient
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -87,15 +89,15 @@ theorem nonempty_equiv_of_generic {G V : Type} [Group G] [AddCommGroup V] [Modul
   have hDT : D.toSubmodule ≤ T := le_of_not_le_sup T _ _ hT hC
   have hAT : ¬ A.toSubmodule ≤ T := fun h => hA (h.trans le_sup_right)
   have hCT : ¬ C.toSubmodule ≤ T := fun h => hC (h.trans le_sup_right)
-  have hET : ¬ (A ⊓ C).toSubmodule ≤ T := GlobalTheory.T.inf_not_in_codim_one_submodule ρ T hT A C (hsup A C) hAT hCT
+  have hET : ¬ (A ⊓ C).toSubmodule ≤ T := _root_.GlobalTheory.CompanionTheory.RgGuCore.gen_core_meet ρ T hT A C (hsup A C) hAT hCT
   have hEA : A ⊓ C ≤ A := inf_le_left
   have hEC : A ⊓ C ≤ C := inf_le_right
   have hEB : ¬ A ⊓ C ≤ B := fun h => hET (le_trans h hBT)
   have hED : ¬ A ⊓ C ≤ D := fun h => hET (le_trans h hDT)
-  have hfillB := GlobalTheory.T.sup_eq_of_irreducible_subquotient ρ A B (A ⊓ C) hBA hAB hEA hEB
-  have hfillD := GlobalTheory.T.sup_eq_of_irreducible_subquotient ρ C D (A ⊓ C) hDC hCD hEC hED
-  obtain ⟨e₁⟩ := GlobalTheory.T.subquotient_equiv_of_sup_eq ρ A B (A ⊓ C) hEA hfillB
-  obtain ⟨e₂⟩ := GlobalTheory.T.subquotient_equiv_of_sup_eq ρ C D (A ⊓ C) hEC hfillD
+  have hfillB := _root_.GlobalTheory.CompanionTheory.GenCore.sup_eq_of_isIrreducible_subQuot ρ A B (A ⊓ C) hBA hAB hEA hEB
+  have hfillD := _root_.GlobalTheory.CompanionTheory.GenCore.sup_eq_of_isIrreducible_subQuot ρ C D (A ⊓ C) hDC hCD hEC hED
+  obtain ⟨e₁⟩ := _root_.GlobalTheory.CompanionTheory.RepSecondIso.subQuot_equiv_of_sup ρ A B (A ⊓ C) hEA hfillB
+  obtain ⟨e₂⟩ := _root_.GlobalTheory.CompanionTheory.RepSecondIso.subQuot_equiv_of_sup ρ C D (A ⊓ C) hEC hfillD
   have hiB : (subQuot (A ⊓ C) B).IsIrreducible := GlobalTheory.Parabolic.isIrreducible_of_equiv e₁.symm hAB
   have hiD : (subQuot (A ⊓ C) D).IsIrreducible := GlobalTheory.Parabolic.isIrreducible_of_equiv e₂.symm hCD
   have hnot : ¬ A ⊓ C ≤ (A ⊓ C) ⊓ B ⊔ (A ⊓ C) ⊓ D := by

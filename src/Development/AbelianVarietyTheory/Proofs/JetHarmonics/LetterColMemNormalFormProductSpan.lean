@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.SameFns
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.HatLettersPassDiGIBoundedFactorsStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.WordLDecompositionNfSpanStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.WordMDecompositionSelfAdjointStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.HatLettersPassDiGIBoundedFactors
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.WordLDecompositionNfSpan
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.WordMDecompositionSelfAdjoint
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.AdmissibleRecOfAdmissibleWord
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.LetterLiftOfParts
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.RuleGD
@@ -142,7 +142,7 @@ theorem letterCol_mem : ∀ (P : M.Par) (A : Type) [Ring A] [StarRing A] [Algebr
      fun e => hd l' hl' 2 (by norm_num) (by push_cast; linear_combination e),
      fun e => hd l' hl' 0 (by norm_num) (by push_cast; linear_combination e)⟩)
   have hr : star l.pt = l.pt := hre l (by simp)
-  obtain ⟨-, hb, -⟩ := GlobalTheory.T.hatLetters_pass_Di_gI_boundedFactors P A d hd0
+  obtain ⟨-, hb, -⟩ := _root_.GlobalTheory.HatNF.Den.hat_den P A d hd0
   obtain ⟨ep, epb, ec, eci, ecb, ecbi, eζ, eζi, eζb, eζbi, eG, eGi, -⟩ := hT.2.1
   have eT : L.Tprod l.pt = d.L.Tprod l.pt := by
     unfold LevelData.Tprod LevelData.Tl; rw [ep, ec, eci]
@@ -175,7 +175,7 @@ theorem letterCol_mem : ∀ (P : M.Par) (A : Type) [Ring A] [StarRing A] [Algebr
       rw [TL.aP, eζi, eA, j1]
       exact gen_mem d (one_mem _) hA1
     · simp only [Fin.mk_one, Matrix.cons_val_one, Matrix.cons_val_zero]
-      obtain ⟨E, hE, hl⟩ := GlobalTheory.T.word_l_decomposition_nf_span P A d hd0 L st s hT S w hAw l.pt m0 m1
+      obtain ⟨E, hE, hl⟩ := _root_.GlobalTheory.HatNF.WordL.word_l_shape P A d hd0 L st s hT S w hAw l.pt m0 m1
       rw [hl, eζbi, eG, eA, eB, kapL]
       refine col_mem ?_ (fun f f' => ?_) e e'
       · have := gen_mem d hβ hR1
@@ -188,7 +188,7 @@ theorem letterCol_mem : ∀ (P : M.Par) (A : Type) [Ring A] [StarRing A] [Algebr
       rw [TL.aM, eζbi, eAv, j2]
       exact gen_mem d hβ hA2
     · simp only [Fin.mk_one, Matrix.cons_val_one, Matrix.cons_val_zero]
-      obtain ⟨E, hE, hl⟩ := GlobalTheory.T.word_m_decomposition_self_adjoint P A d hd0 L st s hT S w hAw l.pt m0 hr mm1
+      obtain ⟨E, hE, hl⟩ := _root_.GlobalTheory.HatNF.MShapeNF.mshape P A d hd0 L st s hT S w hAw l.pt m0 hr mm1
       rw [hl, eζi, eG, eAv, eBv]
       refine col_mem ?_ (fun f f' => ?_) e e'
       · have := gen_mem d (one_mem _) hR2

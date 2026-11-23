@@ -1,11 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagonalBlockOfMatrix
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsCmSkewElementUnitAtFinitePlace
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Mathlib.RingTheory.LocalRing.Defs
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsDualPairIsUnitDetBlocks
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMemKAt
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HermitianSelfDualLatticeSplitPlaceDictionary
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitPlaceBigCellExistsAdmissibleInverse
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FiniteResidueFieldAdicCompletionIntegers
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsCmSkewElementUnitAtFinitePlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsDualPairIsUnitDetBlocksStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HermitianSelfDualLatticeSplitPlaceDictionaryStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitPlaceBigCellExistsAdmissibleInverseStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -83,8 +87,8 @@ theorem exists_admissible_unipotent_split_place_hermitian : (∀ {O : Type} [Com
           (GlobalTheory.DblVac.matD g).toBlocks₁₂ - (GlobalTheory.DblVac.matD g).toBlocks₂₁ - (GlobalTheory.DblVac.matD g).toBlocks₂₂))) = 1 ∧
           ∀ z ∈ GlobalTheory.InertSph.latAt V v, M *ᵥ z ∈ GlobalTheory.InertSph.latAt V v := by
   intro _ F E _ _ _ _ _ σ B d V r s hB hV v hv hψ h2 g hg
-  obtain ⟨π₁, π₂, b₁, b₂, hP, S, hS, hSe⟩ := GlobalTheory.T.hermitian_selfDual_lattice_split_place_dictionary σ B V r s hB hV v hv hψ
-  obtain ⟨δ, hδ, u, hu⟩ := GlobalTheory.T.exists_cmSkew_element_unit_at_finitePlace σ hB.cm v π₁ hP.2.2.1
+  obtain ⟨π₁, π₂, b₁, b₂, hP, S, hS, hSe⟩ := _root_.GlobalTheory.SplitDictHerm.split_dict_herm σ B V r s hB hV v hv hψ
+  obtain ⟨δ, hδ, u, hu⟩ := _root_.GlobalTheory.CMSkewUnit.exists_skew_unit_at σ hB.cm v π₁ hP.2.2.1
   have hδ0 : δ ≠ 0 := by
     rintro rfl
     have h0 : ((u : v.adicCompletionIntegers F) : Fv F v) = 0 := by rw [hu, map_zero, map_zero]
@@ -123,7 +127,7 @@ theorem exists_admissible_unipotent_split_place_hermitian : (∀ {O : Type} [Com
     rw [incM_smul, dbl_smul, Matrix.mul_smul, Matrix.smul_mul, h]⟩
   have hg' : g' ∈ GlobalTheory.DblVac.KD σ W' v := hg
   obtain ⟨Y, hYat, hYlat, hYadm, M, hM, hMlat⟩ :=
-    GlobalTheory.T.splitPlace_bigCell_exists_admissible_inverse_alt GlobalTheory.T.exists_dual_pair_isUnit_det_blocks' σ W' v hskew h2' π₁ π₂ b₁ b₂ hP hS' g' hg'
+    _root_.GlobalTheory.SplitPlaceBigCell.splitPlace_bigCell_exists_admissible_inverse _root_.GlobalTheory.exists_dual_pair_isUnit_det_blocks σ W' v hskew h2' π₁ π₂ b₁ b₂ hP hS' g' hg'
   refine ⟨Y, hYat, hYlat, ?_, M, hM, hMlat⟩
   change Yᵀ * incM F (δ • V.J) + incM F (δ • V.J) * Y.map (cA σ) = 0 at hYadm
   rw [incM_smul, Matrix.mul_smul, Matrix.smul_mul, ← smul_add] at hYadm

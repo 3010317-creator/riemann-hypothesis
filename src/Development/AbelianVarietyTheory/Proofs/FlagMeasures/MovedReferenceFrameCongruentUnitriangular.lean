@@ -3,11 +3,14 @@ module
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.NGData
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.AtBase
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PlacesOf
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsGlobalUnitriangularOfLocalCongruenceStatement
+public import Formalism.HermitianLattices.StatementLat
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GFrames
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsGlobalUnitriangularOfLocalCongruence
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FixedFrameMemRowLatticesOfWordStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalScalarEqOneAtPlaceOverTypePrimesStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MovesToGivesIntegralMatricesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermFramesCongrModThetaUnitriangularStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ComplementReferenceCompactSubgroup
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermFramesCongrModThetaUnitriangular
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ThetaSmulCompletedLatticeIffTypePrimeMulStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -106,7 +109,7 @@ theorem loc_cong : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what�
     Submodule.mem_map.2 ⟨v, hv, rfl⟩
   haveI := ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc (below D P)).lf
   haveI := ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).loc (below D P)).char0
-  obtain ⟨ξp, hξO, hξ1, hξ2, hξT⟩ := GlobalTheory.T.term_frames_congr_mod_theta_unitriangular _ D.R.rS D.R.k (G.S (below D P)) (d (below D P))
+  obtain ⟨ξp, hξO, hξ1, hξ2, hξT⟩ := _root_.GlobalTheory.HL.FrameChange.frames_congr _ D.R.rS D.R.k (G.S (below D P)) (d (below D P))
     ((placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).lat (below D P) (c.lat (ρ * n) t₀.lam)) (hloc (below D P))
     (fun b => (placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).bc (below D P) (c.e ((ρ * n) (frame (lf D (X.Fu u)) b))))
     (fun b => (placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)).bc (below D P) (c.e ((ρ * n) (frame (mapLF (n⁻¹ * t₀.lin * m) (lf D (X.Fu u'))) b))))
@@ -121,7 +124,7 @@ theorem loc_cong : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what�
   have hpos : 0 < gS D := by
     unfold gS
     exact Nat.mul_pos (D.host.g_prime 0).pos (D.host.g_prime 1).pos
-  obtain ⟨ξ, hu1, hu2, hPP⟩ := GlobalTheory.T.exists_global_unitriangular_of_local_congruence (placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)) _ D.R.rS (c.lat (ρ * n) t₀.lam) hfg
+  obtain ⟨ξ, hu1, hu2, hPP⟩ := _root_.GlobalTheory.HL.LocCongApprox.loc_cong_approx (placesOf (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D)) _ D.R.rS (c.lat (ρ * n) t₀.lam) hfg
     (gS D) hpos (below D P)
     (fun b => c.e ((ρ * n) (frame (lf D (X.Fu u)) b)))
     (fun b => c.e ((ρ * n) (frame (mapLF (n⁻¹ * t₀.lin * m) (lf D (X.Fu u'))) b))) ξp hξO hξ1 hξ2

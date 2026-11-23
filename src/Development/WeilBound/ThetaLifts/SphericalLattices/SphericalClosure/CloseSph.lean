@@ -18,7 +18,11 @@ public import Development.WeilBound.CoreStatements.GaussianSeminormBounds.RealSe
 public import Development.WeilBound.CoreStatements.LocalThetaKernels.Locpair
 public import Development.WeilBound.CoreStatements.LocalThetaKernels.LocpairU
 public import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.PfDictSec
-public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.HoweMaximalTori.MaxFinTOfPublished
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.HoweMaximalTori.MaxSplit
+public import Development.WeilBound.ThetaLifts.CartanFactorisation.Factor
+public import Development.WeilBound.ThetaLifts.CartanFactorisation.PolCountDef
+public import Development.WeilBound.ThetaLifts.Reductions.JoinDef
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PolReOf2T
 public import Development.WeilBound.ThetaLifts.AgreeOfLeaves
 public import Development.WeilBound.ThetaLifts.CartanFactorisation.ArchimedeanEvaluationVector
 public import Development.WeilBound.ThetaLifts.CartanFactorisation.Cartan
@@ -26,8 +30,6 @@ public import Development.WeilBound.ThetaLifts.CartanFactorisation.ExistsEnlarge
 public import Development.WeilBound.ThetaLifts.CartanFactorisation.FockSecondActionMatrixUnitEq
 public import Development.WeilBound.ThetaLifts.CartanFactorisation.InjPure
 public import Development.WeilBound.ThetaLifts.CartanFactorisation.PolCountFinal
-import Development.WeilBound.ThetaLifts.CartanFactorisation.Unimod
-import Development.WeilBound.ThetaLifts.EigenvalueEndgame.EigenKilling.PolRange
 public import Development.WeilBound.ThetaLifts.FrameEstimates.BlockForm
 public import Development.WeilBound.ThetaLifts.FrameEstimates.FundamentalDomainFiniteVolume
 public import Development.WeilBound.ThetaLifts.FrameEstimates.GrpTop
@@ -47,15 +49,10 @@ public import Development.WeilBound.ThetaLifts.LatticeBasics.ExistsIsGauss
 public import Development.WeilBound.ThetaLifts.LatticeBasics.FinLevel
 public import Development.WeilBound.ThetaLifts.LatticeBasics.FrameConj
 public import Development.WeilBound.ThetaLifts.LatticeBasics.HgtInt
-import Development.WeilBound.ThetaLifts.LatticeBasics.LeviEx
-import Development.WeilBound.ThetaLifts.LatticeBasics.LocMeas
 public import Development.WeilBound.ThetaLifts.LatticeBasics.LocUnrInert
 public import Development.WeilBound.ThetaLifts.LatticeBasics.LocUnrSplit
-import Development.WeilBound.ThetaLifts.LatticeBasics.NonZero
 public import Development.WeilBound.ThetaLifts.LatticeBasics.NormZeta
 public import Development.WeilBound.ThetaLifts.LatticeBasics.PolDense
-import Development.WeilBound.ThetaLifts.LatticeBasics.RatEquiv
-import Development.WeilBound.ThetaLifts.LatticeBasics.RealInv
 public import Development.WeilBound.ThetaLifts.LeviDeterminants.ActsEx
 public import Development.WeilBound.ThetaLifts.LeviDeterminants.MixedModels.MCPure
 public import Development.WeilBound.ThetaLifts.LeviDeterminants.MixedModels.MixWClosed
@@ -65,10 +62,8 @@ public import Development.WeilBound.ThetaLifts.LeviDeterminants.ThetaEvaluationZ
 public import Development.WeilBound.ThetaLifts.LocalTheory.ArchimedeanBumps.ArchHeisOf
 public import Development.WeilBound.ThetaLifts.LocalTheory.ArchimedeanBumps.BumpAFin
 public import Development.WeilBound.ThetaLifts.LocalTheory.ArchimedeanBumps.SlicePol
-import Development.WeilBound.ThetaLifts.LocalTheory.ArchimedeanBumps.TracePiReal
 public import Development.WeilBound.ThetaLifts.LocalTheory.ConeShifts.FubMain
 public import Development.WeilBound.ThetaLifts.LocalTheory.ConeShifts.IdealId0
-import Development.WeilBound.ThetaLifts.LocalTheory.ConeShifts.PresOfHat
 public import Development.WeilBound.ThetaLifts.LocalTheory.ConeShifts.VacShiftOf
 public import Development.WeilBound.ThetaLifts.LocalTheory.HypOf
 public import Development.WeilBound.ThetaLifts.LocalTheory.LocAOf
@@ -89,15 +84,33 @@ public import Development.WeilBound.ThetaLifts.SmallCones.MixABOf
 public import Development.WeilBound.ThetaLifts.SmallCones.NormLeSum
 public import Development.WeilBound.ThetaLifts.SmallCones.SchInt
 public import Development.WeilBound.ThetaLifts.SmallCones.SliceSummable
-import Development.WeilBound.ThetaLifts.SmallCones.SoStab
 public import Development.WeilBound.ThetaLifts.SmallCones.SoZeroAOf
 public import Development.WeilBound.ThetaLifts.SmallCones.SplitInv
 public import Development.WeilBound.ThetaLifts.SmallCones.SplitLatMap
 public import Development.WeilBound.ThetaLifts.SmallCones.StabDec
 public import Development.WeilBound.ThetaLifts.SmallCones.ThetaExp
-import Development.WeilBound.ThetaLifts.SmallCones.UnipEx
 public import Development.WeilBound.ThetaLifts.SphericalLattices.SphericalClosure.EndCore
 public import Development.WeilBound.ThetaLifts.SphericalLattices.ThetaKillsCuspFormsSpherical
+public import Development.WeilBound.ThetaLifts.WeilDomination.ExistsUnitChrWNe
+public import Development.WeilBound.ThetaLifts.WeilDomination.SwAnisoXOf
+public import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.LmOfLinBar
+public import Development.WeilBound.ThetaLifts.CTKernel
+public import Development.WeilBound.ThetaLifts.FrameEstimates.HodgeTateFromSandwich
+public import Development.WeilBound.ThetaLifts.LatticeBasics.LocUnr
+public import Development.WeilBound.ThetaLifts.LocalTheory.AdmissiblePureTensorSchwartz
+public import Development.WeilBound.ThetaLifts.LocalTheory.ConeShifts.ContinuousFc
+public import Development.WeilBound.ThetaLifts.SmallCones.HodgeTateFromSandwich
+import Development.WeilBound.ThetaLifts.CartanFactorisation.Unimod
+import Development.WeilBound.ThetaLifts.EigenvalueEndgame.EigenKilling.PolRange
+import Development.WeilBound.ThetaLifts.LatticeBasics.LeviEx
+import Development.WeilBound.ThetaLifts.LatticeBasics.LocMeas
+import Development.WeilBound.ThetaLifts.LatticeBasics.NonZero
+import Development.WeilBound.ThetaLifts.LatticeBasics.RatEquiv
+import Development.WeilBound.ThetaLifts.LatticeBasics.RealInv
+import Development.WeilBound.ThetaLifts.LocalTheory.ArchimedeanBumps.TracePiReal
+import Development.WeilBound.ThetaLifts.LocalTheory.ConeShifts.PresOfHat
+import Development.WeilBound.ThetaLifts.SmallCones.SoStab
+import Development.WeilBound.ThetaLifts.SmallCones.UnipEx
 import Development.WeilBound.ThetaLifts.SphericalLattices.ThetaSubSup
 import Development.WeilBound.ThetaLifts.TowerModels.LeviEx
 import Development.WeilBound.ThetaLifts.TowerModels.ModelEx
@@ -106,9 +119,7 @@ import Development.WeilBound.ThetaLifts.TowerModels.StabEx
 import Development.WeilBound.ThetaLifts.TowerModels.TowerCodimensionTwo
 import Development.WeilBound.ThetaLifts.TowerModels.TowerCodimensionTwoOf
 import Development.WeilBound.ThetaLifts.WeilDomination.DomWeilOf
-public import Development.WeilBound.ThetaLifts.WeilDomination.ExistsUnitChrWNe
 import Development.WeilBound.ThetaLifts.WeilDomination.MatchEx
-public import Development.WeilBound.ThetaLifts.WeilDomination.SwAnisoXOf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -144,13 +155,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.LmOfLinBar
-public import Development.WeilBound.ThetaLifts.CTKernel
-public import Development.WeilBound.ThetaLifts.FrameEstimates.HodgeTateFromSandwich
-public import Development.WeilBound.ThetaLifts.LatticeBasics.LocUnr
-public import Development.WeilBound.ThetaLifts.LocalTheory.AdmissiblePureTensorSchwartz
-public import Development.WeilBound.ThetaLifts.LocalTheory.ConeShifts.ContinuousFc
-public import Development.WeilBound.ThetaLifts.SmallCones.HodgeTateFromSandwich
 
 @[expose] public section
 
@@ -227,7 +231,7 @@ theorem PositivityTheory.Sph.Tr.closeSph
   have h_Weil6_ThKF_PolCount : PositivityTheory.ThKF.PolCount := (PositivityTheory.ThKF.polCount_of_derEx h_GlobalTheory_RealLift_DerEx)
   have h_Weil6_ThKF_CartanConj : PositivityTheory.ThKF.CartanConj := (PositivityTheory.ThKF.cartan_conjugacy_holds)
   have h_Weil6_ThKF_CartanMove : PositivityTheory.ThKF.CartanMove := (PositivityTheory.ThKF.cartanMove_of h_Weil6_ThKF_ArchOp)
-  have h_GlobalTheory_ThK_PolRe : GlobalTheory.ThK.PolRe := (PositivityTheory.HoweDualityUnitaryAlt.polRe_of2T h_Weil6_ThKR_JoinTri h_Weil6_ThKF_MaxFin h_Weil6_ThKF_ArchOp h_Weil6_ThKF_ArchLie h_Weil6_ThKF_ArchUniq h_Weil6_ThKF_PolCount h_Weil6_ThKF_CartanConj h_Weil6_ThKF_CartanMove h_GlobalTheory_ThK_KCoinv h_Weil6_ThKF_ILeft)
+  have h_GlobalTheory_ThK_PolRe : GlobalTheory.ThK.PolRe := (_root_.GlobalTheory.CompanionTheory.ThetaK.polRe_of2T h_Weil6_ThKR_JoinTri h_Weil6_ThKF_MaxFin h_Weil6_ThKF_ArchOp h_Weil6_ThKF_ArchLie h_Weil6_ThKF_ArchUniq h_Weil6_ThKF_PolCount h_Weil6_ThKF_CartanConj h_Weil6_ThKF_CartanMove h_GlobalTheory_ThK_KCoinv h_Weil6_ThKF_ILeft)
   have h_GlobalTheory_ThK_Dbl_LInt2 : GlobalTheory.ThK.Dbl.LInt2 := GlobalTheory.ThK.Dbl.lInt2
   have h_GlobalTheory_ThK_Dbl_HgtEx : GlobalTheory.ThK.Dbl.HgtEx := (GlobalTheory.ThK.Dbl.hgtEx)
   have h_GlobalTheory_ThK_Dbl_FrameConj : GlobalTheory.ThK.Dbl.FrameConj := (GlobalTheory.ThK.Dbl.frameConj)

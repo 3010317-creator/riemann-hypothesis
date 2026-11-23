@@ -2,8 +2,9 @@ module
 
 public import Formalism.LocalToGlobal.Divisibility.CoefModLemmas
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LatticeHasBasisAtEveryFinitePlace
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NabIndepAndDelIndepLocalConditionsStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NabIndepAndDelIndepLocalConditions
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.StdWeylLatticesFgAndSpanCoeffSpace
+public import Mathlib.RingTheory.DedekindDomain.Factorization
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,7 +52,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.RealCubicMeans.LeafBounds.MeanMaxLeaf.LeafMMFree
 import Formalism.QuotientMetricDivisors.Statement
-public import Mathlib.RingTheory.DedekindDomain.Factorization
 
 @[expose] public section
 
@@ -267,14 +267,14 @@ theorem nabDelLoc_free_leVV : NabDelLoc ∧ NabDelFree ∧ NabLeVV := by
       first
       | exact hM τ
     exact ⟨locP_transLat lam _ (GlobalTheory.StdLatSpan.std_fg_span K ι n lam).2.2.1 M hMfull
-        (fun w B B' => GlobalTheory.T.nabIndep_and_delIndep_local_conditions.1 K ι n lam w M B B') w B hB,
+        (fun w B B' => _root_.GlobalTheory.TestLat.nabIndep_and_delIndep.1 K ι n lam w M B B') w B hB,
       locP_transLat lam _ (GlobalTheory.StdLatSpan.std_fg_span K ι n lam).2.2.2 M hMfull
-        (fun w B B' => GlobalTheory.T.nabIndep_and_delIndep_local_conditions.2 K ι n lam w M B B') w B hB⟩
+        (fun w B B' => _root_.GlobalTheory.TestLat.nabIndep_and_delIndep.2 K ι n lam w M B B') w B hB⟩
   · intro K _ _ ι _ n lam B
     exact ⟨transLat_colLat lam _ B fun w B' hB' F =>
-        (GlobalTheory.T.nabIndep_and_delIndep_local_conditions.1 K ι n lam w _ B B' (fun _ => rfl) hB' F).mp,
+        (_root_.GlobalTheory.TestLat.nabIndep_and_delIndep.1 K ι n lam w _ B B' (fun _ => rfl) hB' F).mp,
       transLat_colLat lam _ B fun w B' hB' F =>
-        (GlobalTheory.T.nabIndep_and_delIndep_local_conditions.2 K ι n lam w _ B B' (fun _ => rfl) hB' F).mp⟩
+        (_root_.GlobalTheory.TestLat.nabIndep_and_delIndep.2 K ι n lam w _ B B' (fun _ => rfl) hB' F).mp⟩
   · intro K _ _ ι _ n lam M hM F hF
     obtain ⟨m, hm⟩ := Ideal.exists_maximal (𝓞 K)
     have hm0 : m ≠ ⊥ := Ring.ne_bot_of_isMaximal_of_not_isField hm (RingOfIntegers.not_isField K)

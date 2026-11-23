@@ -2,8 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.ImportsAlt
 public import Formalism.HermitianCurvature.HerGenC
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CapelliProductLevelZeroPairingSesquilinearStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevelZeroFormEqBigCellIntegralTopDensityCompactStatement
+public import Formalism.HermitianCurvature.StatementQ
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CapelliProductLevelZeroPairingSesquilinear
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevelZeroFormEqBigCellIntegralTopDensityCompact
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.PolarisationOnSubspace
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.TopVectorAddSmulCompactCoefficients
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ExistsNormBoundThreeFamilies
@@ -91,7 +92,7 @@ theorem beta_eq_integral_inner_tv : P5.ThmPActualCpt → ∀ (Wp Wq : Type) [Nor
       (List.foldr (fun (a : Bool × ℝ) G => M.sgn P p.l0 • Q.CV P.k P.r (a.2 : ℂ) G) x w) y)
     (fun x y => ∫ c, inner ℂ (tv p y w c) (tv p x w c)) hS ?_ ?_ ?_ H H' hH hH'
   · intro a x y hx hy
-    have hs := GlobalTheory.T.capelliProduct_levelZeroPairing_sesquilinear P.k P.r Wp Wq p.T.base (M.sgn P p.l0) w (B.AB P.k P.r) le_rfl a
+    have hs := _root_.GlobalTheory.beta_foldCapelli_sesquilinear P.k P.r Wp Wq p.T.base (M.sgn P p.l0) w (B.AB P.k P.r) le_rfl a
     have hz := hS a x y hx hy
     have e1 := (hs x y (x + a • y) x hx.1 hy.1 (hcc x hx _ _) (hcc y hy _ _) (hcc _ hz _ _) (hcc x hx _ _)).1
     have e2 := (hs x y x y hx.1 hy.1 (hcc x hx _ _) (hcc y hy _ _) (hcc x hx _ _) (hcc y hy _ _)).2
@@ -100,8 +101,8 @@ theorem beta_eq_integral_inner_tv : P5.ThmPActualCpt → ∀ (Wp Wq : Type) [Nor
     rw [e1, e2, e3]
     ring
   · intro a x y hx hy
-    have hx2 := (GlobalTheory.T.levelZeroForm_eq_bigCell_integral_topDensity_compact hP Wp Wq P p Cb x w hD hx hw).1
-    have hy2 := (GlobalTheory.T.levelZeroForm_eq_bigCell_integral_topDensity_compact hP Wp Wq P p Cb y w hD hy hw).1
+    have hx2 := (_root_.GlobalTheory.TopVec.levelZero_eq_integral_topVector_of_cpt hP Wp Wq P p Cb x w hD hx hw).1
+    have hy2 := (_root_.GlobalTheory.TopVec.levelZero_eq_integral_topVector_of_cpt hP Wp Wq P p Cb y w hD hy hw).1
     have e : ∀ c, tv p (x + a • y) w c = tv p x w c + a • tv p y w c := fun c =>
       GlobalTheory.TopVec.tv_add_smul Wp Wq P p Cb a x y w c hD hw hx hy
     beta_reduce
@@ -109,7 +110,7 @@ theorem beta_eq_integral_inner_tv : P5.ThmPActualCpt → ∀ (Wp Wq : Type) [Nor
     exact integral_inner_expand hx2 hy2 a
   · intro x hx
     beta_reduce
-    rw [(GlobalTheory.T.levelZeroForm_eq_bigCell_integral_topDensity_compact hP Wp Wq P p Cb x w hD hx hw).2, ← integral_complex_ofReal]
+    rw [(_root_.GlobalTheory.TopVec.levelZero_eq_integral_topVector_of_cpt hP Wp Wq P p Cb x w hD hx hw).2, ← integral_complex_ofReal]
     refine integral_congr_ae (Eventually.of_forall fun c => ?_)
     beta_reduce
     rw [inner_self_eq_norm_sq_to_K]

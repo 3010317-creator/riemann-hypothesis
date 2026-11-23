@@ -2,8 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.CMLattices.IntegralOf
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsProbabilityMeasureMuPart
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsClearDenominatorsFramePolynomialAtPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FramePolynomialCoeffIntegralAlmostAllPrimesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsClearDenominatorsFramePolynomialAtPrime
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
+public import Development.AbelianVarietyTheory.Definitions.Divisors.UnitaryWeightExponentVectorSignatureWeightMuZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FramePolynomialCoeffIntegralAlmostAllPrimes
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -38,10 +40,8 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Definitions.Divisors.CommGroupMulMulEqMulInvMulMulMul
 import Development.AbelianVarietyTheory.Definitions.Divisors.CuspIso
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsoOverOfIsOpenImmersion
 import Development.AbelianVarietyTheory.Definitions.Divisors.LinearIndependentBasisCoords
-public import Development.AbelianVarietyTheory.Definitions.Divisors.UnitaryWeightExponentVectorSignatureWeightMuZero
 
 @[expose] public section
 
@@ -69,8 +69,8 @@ theorem exists_coeff_denom_intWt : ∀ (E : Type) [Field E] [NumberField E] [IsC
         ∀ μ, IsIntegral ℤ ((t : z.K) * AddMonoidAlgebra.coeff G μ) := by
   intro E _ _ _ H Dw l Xo c _ z f La hz e k he0
   classical
-  obtain ⟨S, hS⟩ := GlobalTheory.T.framePolynomial_coeff_integral_almost_all_primes E H Dw l Xo c z f La hz e k he0
-  choose x hx0 hx using GlobalTheory.T.exists_clear_denominators_framePolynomial_at_prime E H Dw l Xo c z f La hz e k he0
+  obtain ⟨S, hS⟩ := _root_.GlobalTheory.CoeffInt.coeff_valuation_le_one_almost_all E H Dw l Xo c z f La hz e k he0
+  choose x hx0 hx using _root_.GlobalTheory.CoeffDenom.exists_clear_coeff_at_prime E H Dw l Xo c z f La hz e k he0
   refine ⟨∏ p ∈ S, x p, Finset.prod_ne_zero_iff.2 fun p _ => hx0 p, fun F hF hv G hG μ => ?_⟩
   have hint : ∀ r : 𝓞 z.K, ∀ p : IsDedekindDomain.HeightOneSpectrum (𝓞 z.K), p.valuation z.K (r : z.K) ≤ 1 :=
     fun r p => p.valuation_le_one r

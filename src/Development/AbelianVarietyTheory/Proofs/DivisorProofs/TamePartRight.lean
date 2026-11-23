@@ -2,8 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjMapApply
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductFunctionOnSumCoordsMemAdelicSchwartzSpace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzProductDecompositionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzTensorRightOperatorStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzProductDecomposition
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasTemperateGrowthElim
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzTensorRightOperator
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -42,7 +44,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasTemperateGrowthElim
 
 @[expose] public section
 
@@ -100,9 +101,9 @@ theorem isTame_partR : ∀ (F : Type) [Field F] [NumberField F] (κ κ' κ₁' :
   haveI := GlobalTheory.AdelicUnitaryTop.locallyCompact_finiteAdele (F := F)
   haveI := GlobalTheory.AdelicUnitaryTop.t2Space_finiteAdeleRing_of_numberField (F := F)
   haveI := totallyDisconnected_finiteAdele F
-  obtain ⟨ι₀, _, g₁, g₂, hg₁, hg₂, rfl⟩ := GlobalTheory.T.schwartz_product_decomposition _ κ κ' g hg
+  obtain ⟨ι₀, _, g₁, g₂, hg₁, hg₂, rfl⟩ := _root_.GlobalTheory.SBProd.exists_sum_box _ κ κ' g hg
   choose ι inst P g' hg' hP using fun i => hT (g₂ i) (hg₂ i)
-  choose Q hQ using fun (p : Σ i, ι i) => GlobalTheory.T.schwartz_tensor_right_operator (mixedEmbedding.mixedSpace F) κ κ' κ₁' (P p.1 p.2)
+  choose Q hQ using fun (p : Σ i, ι i) => _root_.GlobalTheory.SliceOp.exists_tensor_clm (mixedEmbedding.mixedSpace F) κ κ' κ₁' (P p.1 p.2)
   refine ⟨Σ i, ι i, inferInstance, Q, fun p z => g₁ p.1 (z ∘ Sum.inl) * g' p.1 p.2 (z ∘ Sum.inr),
     fun p => GlobalTheory.SchwartzBox.sb_box (hg₁ p.1) (hg' p.1 p.2), fun f => ?_⟩
 

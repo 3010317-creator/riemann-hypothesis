@@ -6,10 +6,11 @@ public import Formalism.SharpRestriction.CuspSpanNormBounds.MassAndBranchingHypo
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.DiscreteSeriesUpqExistsIffDsExists
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.FormalDegreeCompactDualIff
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsWordLetters
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassRatioStatementStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.CongruenceAtSplitFrobeniusHolds
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassRatioStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.AbsoluteAmplitudeSecondOfSource
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ProdSubEqProdFactorial
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StdLatIsOrthoLatticeAndMassProperties
-public import Formalism.SharpRestriction.CuspSpanNormBounds.AbsoluteAmplitudeSecondOfSource
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -155,6 +156,6 @@ theorem along_family_of_massRatio (hM : ∀ D : D7, UnitaryVolumeMass.stMassRati
 
 theorem along_family :
     GlobalTheory.Published.DiscreteSeriesUpqExists → GlobalTheory.Published.FormalDegreeCompactDual → ∀ (eps : ℝ) (Fm : FamP eps) (Cg cb Cu cT CT C0 A : ℝ), 40 ≤ sCl Fm → PX.RanksF Fm C0 Cg cb Cu cT CT → VanishingOnXAndXPlusMass.Conclusion3Family Fm → VanishingOnXAndXPlus.FamilyRowsExist Fm ∧ VanishingOnXAndXPlus.admF6 Fm Cg cb Cu cT CT C0 ∧ VanishingOnXAndXPlus.admF7 Fm Cg cb Cu cT CT C0 ∧ VanishingOnXAndXPlus.admF8 Fm Cg cb Cu cT CT C0 A ∧ VanishingOnXAndXPlus.FamilyWeylDimensionVandermondeQuotient Fm Cg cb Cu cT CT C0 ∧ (OwnEv Fm fun C' Cl x i => Cnt.Hyp0 (Fm.D x i) (Fm.L x i) C' Cl Cg cb Cu cT CT C0 → ∀ u, UnitaryVolumeMass.FormAt (Fm.D x i) u) :=
-  along_family_of_massRatio GlobalTheory.T.mass_ratio_statement
+  along_family_of_massRatio _root_.GlobalTheory.MassAtRecord.massRatio_at_record
 
 end GlobalTheory.CritLevel

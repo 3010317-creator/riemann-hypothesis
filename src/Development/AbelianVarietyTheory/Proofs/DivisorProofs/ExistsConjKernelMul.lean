@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DatumOfIsIntegersLattice
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SqrtNegPrimeKernelCyclicStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SqrtNegPrimeKernelCyclic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -71,7 +71,7 @@ theorem exists_conj_kernel_mul : ∀ (p : ℕ) (F : IntermediateField ℚ ℂ) (
     · rwa [e] at hker
     · rw [e, neg_mul] at hker
       simpa using neg_mem hker
-  obtain ⟨-, hz, -⟩ := GlobalTheory.T.sqrtNegPrime_kernel_cyclic p F L t hp h4 h3 hD
+  obtain ⟨-, hz, -⟩ := _root_.GlobalTheory.CMModel.ker_sqrtNegNat_cyclic p F L t hp h4 h3 hD
   obtain ⟨c, hcp, hcl⟩ := hz t' hker'
   refine ⟨c, fun hdvd => ?_, fun k => ?_⟩
   · have hc0 : c = 0 := Nat.eq_zero_of_dvd_of_lt hdvd hcp

@@ -2,8 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsFinSetSplitPlacesCoprimeConductor
 public import Mathlib.NumberTheory.NumberField.CMField
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmRingClassOrderUnitsEqMaxRealSubfieldUnitsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdelicRingClassLatticeOneEqOrderStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmRingClassOrderUnitsEqMaxRealSubfieldUnits
+public import Development.AbelianVarietyTheory.Definitions.Divisors.EntireEqOfHalfPlane
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdelicRingClassLatticeOneEqOrder
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -137,7 +138,7 @@ theorem exists_equiv : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (�
       ∀ p, ∀ y : (Af E)ˣ, (y : Af E) = algebraMap E (Af E) (p.2.1.out) * (((Quotient.out p.1 : (Af E)ˣ)⁻¹ : (Af E)ˣ) : Af E) →
         (e p).1 = QuotientGroup.mk y := by
   intro E _ _ _ 𝔣 c h𝔣 hc hc0
-  refine ⟨Equiv.ofBijective (toIdele c) ⟨toIdele_injective c (GlobalTheory.T.idelicRingClassLattice_one_eq_order E c hc0) (GlobalTheory.T.cmRingClassOrder_units_eq_maxRealSubfield_units E 𝔣 c h𝔣 hc),
+  refine ⟨Equiv.ofBijective (toIdele c) ⟨toIdele_injective c (_root_.GlobalTheory.CMVal.HatCap.lattice_one E c hc0) (_root_.GlobalTheory.CMVal.OrderUnits.orderC_units E 𝔣 c h𝔣 hc),
     toIdele_surjective c⟩, fun p y hy => ?_⟩
   have : y = diag (rep p.2) * p.1.out⁻¹ := Units.ext hy
   rw [this]

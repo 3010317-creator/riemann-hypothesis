@@ -4,11 +4,11 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OfGroupPullb
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NonemptyHomFixRepTrivial
 public import Mathlib.AlgebraicGeometry.Sites.BigZariski
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.NonzeroLocus
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGlueDataStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlueWitStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomFixRepOfUniversalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalRepUniversalStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGlueData
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtCover
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlueWit
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomFixRepOfUniversalAlt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalRepUniversal
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IsRepresentableOfCover
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -104,7 +104,7 @@ theorem wit_of_eq {S : Scheme.{0}} {A B : Over S} [GrpObj A] [GrpObj B] {L : LB 
 
 theorem glue_pts : (∀ (H : Scheme.{0}) (A B : Over H) [GrpObj A] [IsCommMonObj A] [GrpObj B] [IsCommMonObj B] (L : LB A.left) (M : LB B.left) (Φ : A ⟶ B), IsMonHom Φ → IsAbelianScheme A → IsAbelianScheme B → L.IsLB → M.IsLB → Out.Rigidified A L → Out.Rigidified B M → (∀ h : H, ∃ W : H.Opens, h ∈ W ∧ LBIso (L.pull (A.hom ⁻¹ᵁ W).ι) ((M.pull Φ.left).pull (A.hom ⁻¹ᵁ W).ι)) → LBIso L (M.pull Φ.left)) → ∀ (S : Scheme.{0}) (A B : Over S) [GrpObj A] [IsCommMonObj A] [GrpObj B] [IsCommMonObj B] (L : LB A.left) (M : LB B.left) (hL : L.IsLB) (hM : M.IsLB), IsAbelianScheme A → IsAbelianScheme B → Out.Rigidified A L → Out.Rigidified B M → ∀ (Z : Scheme.{0}) (𝒰 : Z.OpenCover) (x : ∀ i, HomGlue.Pt A B L M (𝒰.X i)), (∀ i j (T : Scheme.{0}) (b : T ⟶ 𝒰.X i) (c : T ⟶ 𝒰.X j), b ≫ 𝒰.f i = c ≫ 𝒰.f j → (x i).map hL hM b = (x j).map hL hM c) → ∃ y : HomGlue.Pt A B L M Z, ∀ i, y.map hL hM (𝒰.f i) = x i := by
   intro hiso S A B _ _ _ _ L M hL hM hA hB hrA hrB Z 𝒰 x hx
-  obtain ⟨t, f, h⟩ := GlobalTheory.T.exists_glued_morphism_of_compatible_family S A B L M hL hM Z 𝒰 x hx
+  obtain ⟨t, f, h⟩ := _root_.GlobalTheory.EndLoc.HomGlue.exists_glue_data S A B L M hL hM Z 𝒰 x hx
   have hw : ∀ i, HomGlue.Wit A B L M (𝒰.f i ≫ t) (HomGlue.pmap A t (𝒰.f i) ≫ f) := by
     intro i
     have hc : pullback.fst A.hom (x i).t ≫ A.hom = (pullback.snd A.hom (x i).t ≫ 𝒰.f i) ≫ t := by
@@ -115,7 +115,7 @@ theorem glue_pts : (∀ (H : Scheme.{0}) (A B : Over H) [GrpObj A] [IsCommMonObj
     apply pullback.hom_ext
     · rw [Category.assoc, pullback.lift_fst, e1, pullback.lift_fst]
     · rw [Category.assoc, pullback.lift_snd, ← Category.assoc, e2, pullback.lift_snd]
-  refine ⟨⟨t, f, GlobalTheory.T.glue_wit_alt hiso S A B L M hL hM hA hB hrA hrB Z 𝒰 t f hw⟩, fun i => ?_⟩
+  refine ⟨⟨t, f, _root_.GlobalTheory.EndLoc.HomGlue.glue_wit hiso S A B L M hL hM hA hB hrA hrB Z 𝒰 t f hw⟩, fun i => ?_⟩
   refine HomGlue.Pt.ext' (h i).1 ?_
   show _ ≫ HomGlue.pmap A t (𝒰.f i) ≫ f = _
   exact (Category.assoc _ _ _).symm.trans ((h i).2 _
@@ -132,7 +132,7 @@ theorem isSheaf_homFun : (∀ (H : Scheme.{0}) (A B : Over H) [GrpObj A] [IsComm
   intro x hx
   exact existsUnique_of_exists_of_unique
     (glue_pts hiso S A B L M hL hM hA hB hrA hrB Y 𝒰 x fun i j T b c h => hx i j T b c h)
-    fun y y' h h' => GlobalTheory.T.homGlue_pt_ext_of_openCover S A B L M hL hM Y 𝒰 y y' fun i => (h i).trans (h' i).symm
+    fun y y' h h' => _root_.GlobalTheory.EndLoc.HomGlue.Pt.ext_cover S A B L M hL hM Y 𝒰 y y' fun i => (h i).trans (h' i).symm
 
 theorem homFixRep_glue : (∀ (H : Scheme.{0}) (A B : Over H) [GrpObj A] [IsCommMonObj A] [GrpObj B] [IsCommMonObj B] (L : LB A.left) (M : LB B.left) (Φ : A ⟶ B), IsMonHom Φ → IsAbelianScheme A → IsAbelianScheme B → L.IsLB → M.IsLB → Out.Rigidified A L → Out.Rigidified B M → (∀ h : H, ∃ W : H.Opens, h ∈ W ∧ LBIso (L.pull (A.hom ⁻¹ᵁ W).ι) ((M.pull Φ.left).pull (A.hom ⁻¹ᵁ W).ι)) → LBIso L (M.pull Φ.left)) → ∀ (S : Scheme.{0}) (A B : Over S) [GrpObj A] [IsCommMonObj A] [GrpObj B] [IsCommMonObj B] (L : LB A.left) (M : LB B.left), IsAbelianScheme A → IsAbelianScheme B → L.IsLB → M.IsLB → Out.Rigidified A L → Out.Rigidified B M → ∀ (Ix : Type) (V : Ix → Scheme.{0}) (j : ∀ i, V i ⟶ S), (∀ i, IsOpenImmersion (j i)) → (∀ s : S, ∃ i, s ∈ Set.range (j i)) → (∀ i, ∃ (A' B' : Over (V i)) (_ : GrpObj A') (_ : GrpObj B') (φA : A'.left ⟶ A.left) (φB : B'.left ⟶ B.left) (R : HomFixRep A' B' (L.pull φA) (M.pull φB)), IsGrpPullback A' A (j i) φA ∧ IsGrpPullback B' B (j i) φB ∧ QuasiCompact R.π ∧ IsSeparated R.π ∧ LocallyOfFiniteType R.π) → ∃ R : HomFixRep A B L M, QuasiCompact R.π ∧ IsSeparated R.π ∧ LocallyOfFiniteType R.π := by
   intro hiso S A B _ _ _ _ L M hA hB hL hM hrA hrB Ix V j hj hcov hR
@@ -141,7 +141,7 @@ theorem homFixRep_glue : (∀ (H : Scheme.{0}) (A B : Over H) [GrpObj A] [IsComm
       (x : HomGlue.Pt A B L M Z) (b : Z ⟶ V i), x.t = b ≫ j i → ∃! c : Z ⟶ (R i).H, y.map hL hM c = x := by
     intro i
     letI := gA i; letI := gB i
-    exact GlobalTheory.T.exists_universal_pt_of_isGrpPullback S A B L M hL hM (V i) (j i) (A' i) (B' i) (φA i) (φB i) (R i) (hpA i) (hpB i)
+    exact _root_.GlobalTheory.EndLoc.HomGlue.localRep_universal S A B L M hL hM (V i) (j i) (A' i) (B' i) (φA i) (φB i) (R i) (hpA i) (hpB i)
   choose y hyt hyu using hy
   let W : Ix → S.Opens := fun i => (j i).opensRange
   have hW : iSup W = ⊤ := by
@@ -169,7 +169,7 @@ theorem homFixRep_glue : (∀ (H : Scheme.{0}) (A B : Over H) [GrpObj A] [IsComm
     refine ⟨F.representableBy.homEquiv.symm x, ?_, fun c hc => ?_⟩
     · dsimp only; rw [key]; exact F.representableBy.homEquiv.apply_symm_apply x
     · dsimp only at hc; rw [key] at hc; rw [← hc]; exact (F.representableBy.homEquiv.symm_apply_apply c).symm
-  obtain ⟨R0, e, he⟩ := GlobalTheory.T.exists_homFixRep_iso_of_universal S A B L M hL hM X u huniv
+  obtain ⟨R0, e, he⟩ := _root_.GlobalTheory.EndLoc.HomGlue.homFixRep_of_universal S A B L M hL hM X u huniv
   have hloc' : ∀ i, ∃ e : (R i).H ≅ (u.t ⁻¹ᵁ W i).toScheme, e.hom ≫ (u.t ∣_ W i) = πW i := fun i =>
     reps_iso S A B L M hL hM X u huniv (W i) (R i).H (y i) (πW i) ((hyt i).trans (hπW i).symm) (hloc i)
   choose ei hei using hloc'

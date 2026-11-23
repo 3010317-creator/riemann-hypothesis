@@ -3,12 +3,15 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FromBaseAlt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoundaryBranchesDistinctPrimesToricChartStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothOfRelativeDimensionOfIsEtaleCompletion
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SncAtOfStalkIdEqSpanProdStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StrictNormalCrossingsDescentEtaleCompletionStatement
+public import ReciprocityTheory.AnalyticForms.RegularLocalRings.FinalTheorems
+public import Mathlib.AlgebraicGeometry.Noetherian
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SncAtOfStalkIdEqSpanProd
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsProperToroidalModelStructureMap
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StrictNormalCrossingsDescentEtaleCompletion
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TrdegResidueFieldOfIsOpenImmersion
+public import GroundTheory.ArithmeticGeometry.SchemeCohomology.RegularSmooth
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsDiscreteValuationRingIntegralClosure
 import Formalism.LocalToGlobal.ProjectiveLattices.KapTrdegPf
-public import GroundTheory.ArithmeticGeometry.SchemeCohomology.RegularSmooth
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -132,6 +135,6 @@ theorem smooth_and_snc : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] 
     have hprod : ∏ i, C.s i = ∏ i : Fin m, bdParam k m e i :=
       Fintype.prod_equiv (finCongr hm) (fun i => C.s i) (fun i => bdParam k m e i) (fun i => by rw [hs i]; rfl)
     rw [hprod] at hid
-    obtain ⟨n, r, T, hr, hD⟩ := GlobalTheory.T.strictNormalCrossings_descent_etale_completion _ k m e _ _ hE hid hs'
-    exact GlobalTheory.T.sncAt_of_stalkId_eq_span_prod_of_isRegularLocalRing S _ _ (isRegularLocalRing_stalk h hU _) n r T hr hD
+    obtain ⟨n, r, T, hr, hD⟩ := _root_.GlobalTheory.SncDescent.exists_rsp_of_isEtaleCompletion _ k m e _ _ hE hid hs'
+    exact _root_.GlobalTheory.sncAt_of_stalkId_eq_span_prod S _ _ (isRegularLocalRing_stalk h hU _) n r T hr hD
 end GlobalTheory.UChartSmooth

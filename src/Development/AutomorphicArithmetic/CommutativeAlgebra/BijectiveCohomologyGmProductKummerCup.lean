@@ -1,7 +1,9 @@
 module
 
 public import Development.AutomorphicArithmetic.CupPullbacks.ConstCompSingle
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafPropertiesStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
+public import Mathlib.Algebra.Homology.HomotopyCategory.KInjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafProperties
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleLocalPropertyCalculusRulesStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchClsCocycleSecStatement
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.CohomologyClassInLSurjectiveAndInjective
@@ -196,7 +198,7 @@ private theorem UpperTheory.Kun.main (q : ℕ) [NeZero q] (E : Spc) (hE : Inv q 
       pull _ (prod.snd : sch.obj (Gq q) ⨯ E ⟶ E) _ _ p.1 +
         cup q (pull _ (prod.snd : sch.obj (Gq q) ⨯ E ⟶ E) _ _ p.2) (pull _ (prod.fst : sch.obj (Gq q) ⨯ E ⟶ _) _ _ (kappa q)) := by
   obtain ⟨κ, hκ⟩ := (kappa q).mk_surjective
-  have hr := fun i : ℤ => GlobalTheory.T.chosenInjectiveResolution_etaleSheaf_properties (ZMod q) (tw q i)
+  have hr := fun i : ℤ => _root_.GlobalTheory.EtC.ResBasic.res_basic (ZMod q) (tw q i)
   haveI := (hr (j + 1)).2.2.1
   haveI := (hr j).2.2.1
   have hmono := GlobalTheory.T.etaleLocal_property_calculus_rules.2.1

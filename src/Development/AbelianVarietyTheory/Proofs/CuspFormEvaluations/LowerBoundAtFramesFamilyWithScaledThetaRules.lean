@@ -8,9 +8,10 @@ public import Formalism.LocalToGlobal.ProjectiveLattices.RecPJThAllNeBot
 public import Formalism.SharpRestriction.GenusPolyhedralBounds.RelativeIndexClassSets.CombBound4Of
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.HalfLevelGeneratorNorm
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.IntegralityBoundOfFamilyContainingScaledThetaRulStatement
-import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.NotIsBlockProdZero
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaRunParametersAtTypePrimesProductStatement
+public import Development.AbelianVarietyTheory.Definitions.TorusSections.IsTorusOf
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaRunParametersAtTypePrimesProduct
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.WeightExponentsEmbeddingsDegree
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.NotIsBlockProdZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -92,7 +93,7 @@ theorem i2iAt_record : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndepS
     tableLineDegreeFive hP14
   obtain ⟨inst, hnab⟩ := h.nabPin j hj
   obtain ⟨α, hα1, hα2⟩ := GlobalTheory.RunIn.half_level_generator_norm D T h EX
-  obtain ⟨hrun, hcc, -, -⟩ := GlobalTheory.T.thetaRunParameters_at_typePrimes_product D _ _ j (recPJ h j hj) K Ch Ah Cq Aq S large₂ H C2 A2 CR CT ka wL wF Tn nP nW h0
+  obtain ⟨hrun, hcc, -, -⟩ := _root_.GlobalTheory.RunParametersAtRecord.run_at_record D _ _ j (recPJ h j hj) K Ch Ah Cq Aq S large₂ H C2 A2 CR CT ka wL wF Tn nP nW h0
     hHP hTie hPage hSupp
   have hM : T.Q.l.M = D.host.g 0 * D.host.g 1 := h.pins.2.1.1
   have hP0 : P₁ ≠ 0 := fun e => GlobalTheory.BlockThInhab.not_isBlockProd_zero (T.Q.Dw j) wL.n T.Q.c.F (e ▸ hB)

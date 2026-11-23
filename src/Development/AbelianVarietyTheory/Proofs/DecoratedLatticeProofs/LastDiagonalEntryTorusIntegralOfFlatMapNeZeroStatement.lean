@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PlacesT
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemRangeOfOneTmulMem
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SmulMemLatO
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HomLatticeCompletionSelfAnnihilatorAtPlacesStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HomLatticeCompletionSelfAnnihilatorAtPlaces
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastDiagonalEntryTorusIntegralOfFlatMapNeZero
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PlaceIdempotentActsOnSupportedAndOff
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WittCoreEmbeddingPreservesSupportedUnitarySubgro
@@ -184,7 +185,7 @@ theorem _root_.GlobalTheory.T.lastDiagonalEntry_torus_integral_of_flatMap_ne_zer
     rwa [← htM, Matrix.sub_apply, Matrix.one_apply_eq] at this
   have hρ : 0 < ρ := by omega
   rw [← hG.last hρ _ ha]
-  refine (GlobalTheory.T.homLatticeCompletion_self_annihilator_atPlaces D ψ hstd B.V₀ J.W LV₀ LW hG.sdV₀ hG.sdW (· = v) _ (hMx _ ha)).2 fun u' hu' => ?_
+  refine (_root_.GlobalTheory.SelfDualAt.latO_ann_at D ψ hstd B.V₀ J.W LV₀ LW hG.sdV₀ hG.sdW (· = v) _ (hMx _ ha)).2 fun u' hu' => ?_
   obtain ⟨ξ, hξdef⟩ : ∃ ξ, ξ = J.d.pX ⬝ u' := ⟨_, rfl⟩
   have hξ : MxAt (· = v) ξ := hξdef ▸ mxAt_mul_left _ (GlobalTheory.FinPl.LatMem.latO_mxAt hu')
   have hu : B.d.ext0 J.W (J.d.incX B.V₀ ξ) ∈ latO B.V J.W (LV : Set _) (LW : Set _) (· = v) :=
@@ -222,7 +223,7 @@ theorem _root_.GlobalTheory.T.lastDiagonalEntry_torus_integral_of_flatMap_ne_zer
       have hk := chi_add ψ J.d B.V₀ (yZero B.V₀ ρ (vecB B.o B.ζ)) t.1 (e • ξ) (cA D e • ξ)
       rw [hsum, h1, h2', mul_one] at hk
       exact hk
-  have hε' := (GlobalTheory.T.homLatticeCompletion_self_annihilator_atPlaces D ψ hstd B.V₀ J.W LV₀ LW hG.sdV₀ hG.sdW (· = v) _ (hMx _ heV_id)).1
+  have hε' := (_root_.GlobalTheory.SelfDualAt.latO_ann_at D ψ hstd B.V₀ J.W LV₀ LW hG.sdV₀ hG.sdW (· = v) _ (hMx _ heV_id)).1
     ((hG.last hρ eV heV_id).2 heV_int) u' hu'
   rw [symplO_incAdj_eq, ← hξdef, Matrix.smul_mul, ← Matrix.mul_smul, hξe] at hε'
   have hχ' := hχ

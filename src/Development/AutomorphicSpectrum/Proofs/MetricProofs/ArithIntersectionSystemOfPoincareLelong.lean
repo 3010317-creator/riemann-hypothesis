@@ -4,18 +4,20 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.BlowupProjections.BlowupProjStatement
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MixedFieldContraction.ContractMixedFieldStatement
 public import Development.AutomorphicSpectrum.PublishedTheorems.Metrics₂.PoincareLelong
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.DegreeAndCoordinatesOfResolutionStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IntersectionExistsOfPoincareLelongStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRes
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.DegreeAndCoordinatesOfResolution
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.RationalSections.ThmISt
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IntersectionExistsOfPoincareLelong
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ResolutionExistsOfResolutionStatementStatement
-import GroundTheory.HeightsAndTheta.Heights.Intersections.EqZeroOfEventuallyEval
-import GroundTheory.HeightsAndTheta.Heights.Intersections.IsMultiProjPrimeImageZ
 public import GroundTheory.HeightsAndTheta.Heights.Intersections.PPFIntZero
 public import GroundTheory.HeightsAndTheta.Heights.Intersections.PPFVert
-import GroundTheory.HeightsAndTheta.Heights.Intersections.PRatioAlgDep
 public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.ArithSystem
-import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.Contract
 public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.ContractMixed
 public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.ContractMixedField
+import GroundTheory.HeightsAndTheta.Heights.Intersections.EqZeroOfEventuallyEval
+import GroundTheory.HeightsAndTheta.Heights.Intersections.IsMultiProjPrimeImageZ
+import GroundTheory.HeightsAndTheta.Heights.Intersections.PRatioAlgDep
+import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.Contract
 import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.ExistsUnique
 import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.GeoNum
 import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.ImageArithClosed
@@ -80,8 +82,8 @@ theorem arithIntersectionSystem_of_poincareLelong_resK :
     GlobalTheory.CompanionTheory.Ar.Pub.PoincareLelong → ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement →
       ReciprocityTheory.ChartRestriction.G.Geo.ArithIntersectionSystemStatement := fun hPL hRK =>
   Targets.ArithIntersectionSystem.of_found
-    (GlobalTheory.T.intersection_exists_of_poincare_lelong hPL (GlobalTheory.T.resolution_exists_of_resolution_statement hRK))
-    (GlobalTheory.T.degree_and_coordinates_of_resolution (GlobalTheory.T.resolution_exists_of_resolution_statement hRK)).2
+    (_root_.GlobalTheory.CompanionTheory.Ar.Pub.thmIExists hPL (GlobalTheory.T.resolution_exists_of_resolution_statement hRK))
+    (_root_.GlobalTheory.CompanionTheory.Ar.Pub.genDeg_and_pfCoord (GlobalTheory.T.resolution_exists_of_resolution_statement hRK)).2
     contractMixed_closed
 
 end GlobalTheory.CompanionTheory.Ar.Pub

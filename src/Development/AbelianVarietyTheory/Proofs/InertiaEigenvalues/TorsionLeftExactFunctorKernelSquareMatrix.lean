@@ -1,11 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.H1MapSubgroup
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChainLeIInfSupPowSmulTopOfPrecompleteStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCompatibleGeneratorsTowerLocalRingStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGeneratorsOfCardHomResidueFieldLeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsTorsionModuleExtendingResidueMapsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LeftExactFunctorRepresentableTorsionModulesStatement
+public import Mathlib.Algebra.Algebra.Pi
+public import Mathlib.RingTheory.AdicCompletion.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChainLeIInfSupPowSmulTopOfPrecomplete
+public import Mathlib.Algebra.Algebra.Operations
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCompatibleGeneratorsTowerLocalRing
+public import Mathlib.RingTheory.LocalRing.ResidueField.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGeneratorsOfCardHomResidueFieldLe
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsTorsionModuleExtendingResidueMaps
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LeftExactFunctorRepresentableTorsionModules
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -297,7 +303,7 @@ theorem few_relations [IsNoetherianRing Λ] [Finite (ResidueField Λ)] (F : Modu
         (∀ c, x'.1 c = f.hom (x.1 c)) → e B' hB' x' = (F.map f).hom (e B hB x)) :
     ∃ v : Fin a → N, Submodule.span Λ (Set.range v) = ⊤ := by
   classical
-  obtain ⟨B, f, hBt, hf, hext⟩ := GlobalTheory.T.exists_torsion_module_extending_residue_maps Λ (Fin a → Λ) N
+  obtain ⟨B, f, hBt, hf, hext⟩ := _root_.GlobalTheory.SelFun.exists_torsion_extension Λ (Fin a → Λ) N
   let K : ModuleCat.{0} Λ := ModuleCat.of Λ (ResidueField Λ)
   let B'' : ModuleCat.{0} Λ := ModuleCat.of Λ (B ⧸ LinearMap.range f)
   let fK : K ⟶ B := ModuleCat.ofHom f
@@ -373,7 +379,7 @@ theorem few_relations [IsNoetherianRing Λ] [Finite (ResidueField Λ)] (F : Modu
           Nat.card_le_card_of_injective _ Subtype.val_injective
       _ = Nat.card (ResidueField Λ) ^ a := by
           rw [Nat.card_fun, Nat.card_eq_fintype_card (α := Fin a), Fintype.card_fin]
-  exact GlobalTheory.T.exists_generators_of_card_hom_residueField_le Λ N a (hle1.trans (hcard.trans hle2))
+  exact _root_.GlobalTheory.exists_span_eq_top_of_card_hom_residueField_le Λ N a (hle1.trans (hcard.trans hle2))
 
 theorem residue_kill : ∀ r ∈ maximalIdeal Λ, ∀ y : ResidueField Λ, r • y = 0 := by
   intro r hr y
@@ -397,7 +403,7 @@ theorem kernelRep : KernelRep := by
     exact (hobs (ModuleCat.of Λ (ResidueField Λ)) (ModuleCat.of Λ (ResidueField Λ)) (ModuleCat.of Λ PUnit.{1})
       hsimple hKt (𝟙 _) 0 (fun _ _ h => h) (fun y => ⟨fun _ => ⟨y, rfl⟩, fun _ => rfl⟩)
       (fun _ => ⟨0, rfl⟩)).1
-  choose M0 ξ0 hfin hkill hmin0 huniv0 using GlobalTheory.T.leftExact_functor_representable_torsion_modules Λ F hlex hFk
+  choose M0 ξ0 hfin hkill hmin0 huniv0 using _root_.GlobalTheory.SelFun.Level.level Λ F hlex hFk
   have : ∀ n, Finite (M0 n) := hfin
   have htr : ∀ n, ∃ t : M0 (n + 1 + 1) ⟶ M0 (n + 1), (F.map t).hom (ξ0 (n + 1 + 1)) = ξ0 (n + 1) :=
     fun n => huniv0 (n + 1 + 1) (M0 (n + 1)) (hfin (n + 1))
@@ -444,11 +450,11 @@ theorem kernelRep : KernelRep := by
     intro y
     have h0 : π.hom y = 0 := by rw [hπ]; rfl
     exact LinearMap.mem_range.mp ((Submodule.Quotient.mk_eq_zero _).mp h0)
-  obtain ⟨a, p, hp, hpt, hp0⟩ := GlobalTheory.T.exists_compatible_generators_tower_local_ring Λ (fun n => M0 (n + 1)) (fun n => (t n).hom) hsurjT
+  obtain ⟨a, p, hp, hpt, hp0⟩ := _root_.GlobalTheory.exists_compatible_generators_tower Λ (fun n => M0 (n + 1)) (fun n => (t n).hom) hsurjT
     (fun n => (hkerT n).trans (Submodule.smul_mono_left (Ideal.pow_le_self (Nat.succ_ne_zero n))))
   let N : Submodule Λ (Fin a → Λ) := ⨅ n, LinearMap.ker (p n)
   have hN' : ∀ n, LinearMap.ker (p n) ≤ N ⊔ maximalIdeal Λ ^ (n + 1) • (⊤ : Submodule Λ (Fin a → Λ)) := by
-    refine GlobalTheory.T.chain_le_iInf_sup_pow_smul_top_of_precomplete Λ (maximalIdeal Λ) a (fun n => LinearMap.ker (p n)) ?_ ?_ ?_
+    refine _root_.GlobalTheory.chain_le_iInf_sup_pow_smul_top Λ (maximalIdeal Λ) a (fun n => LinearMap.ker (p n)) ?_ ?_ ?_
     · intro n c hc
       show p n c = 0
       rw [← hpt n, LinearMap.comp_apply, LinearMap.mem_ker.mp hc, map_zero]

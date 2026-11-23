@@ -7,12 +7,13 @@ public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsNormOne
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsTraceChar
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExpandByConductor
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetTermBasicFacts
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLocalCharacterSumStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsPrincipalIdealRingOfHenselian
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsHermND
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLocalCharacterSum
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormGaussSumLe
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ProperIdealsOfHenselian
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermExponentsNonnegAndDefectGroupBoundStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermExponentsNonnegAndDefectGroupBound
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TwoGeometricSumsIndexBound
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsPrincipalIdealRingOfHenselian
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -168,7 +169,7 @@ theorem prime_share (hH : IsHermND L Hm) (ϖ : 𝒪[F]) (hϖ : Irreducible ϖ)
   obtain ⟨-, -, -, -, -, -, hq, -⟩ := GlobalTheory.UnramOrder.order_facts L ϖ hϖ
   obtain ⟨ψ, hψ1, hψ, -⟩ := GlobalTheory.TraceChar.exists_trace_char L
   obtain ⟨nrm, Q, hnrm, hQ, hdvd⟩ := exists_norm L Hm hH ϖ hϖ UU hUU
-  obtain ⟨hc, hg⟩ := GlobalTheory.T.hermitian_local_character_sum L Hm hH ϖ hϖ ψ hψ1 hψ UU hUU ρ e he hee π j N hπ hπj hπN R nrm hnrm
+  obtain ⟨hc, hg⟩ := _root_.GlobalTheory.HL.DivisibleGauss.share_and_gauss_sum L Hm hH ϖ hϖ ψ hψ1 hψ UU hUU ρ e he hee π j N hπ hπj hπN R nrm hnrm
     hRU hR
   set R' := R.filter fun u => ∀ a, ∃ c ∈ L.O, hf L Hm u (e a) = π * c with hR'
   have hfil : (R.filter fun u => Z u ∧ ∀ a, ∃ c ∈ L.O, hf L Hm u (e a) = π * c)
@@ -332,7 +333,7 @@ theorem shares : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] 
   obtain ⟨-, hcj, -, -, hint, -, hq, -⟩ := GlobalTheory.UnramOrder.order_facts L S.ϖ S.ϖ_irr
   have hSD := (GlobalTheory.HL.TermBasic.term_basic L r k S d Λ hT).1
   have hli := (GlobalTheory.FrameBasic.main L r k S).1
-  obtain ⟨a, ha⟩ := Int.eq_ofNat_of_zero_le (GlobalTheory.T.term_exponents_nonneg_and_defect_group_bound L r k S d Λ hT).1
+  obtain ⟨a, ha⟩ := Int.eq_ofNat_of_zero_le (_root_.GlobalTheory.HL.Defect.exponents_and_defect L r k S d Λ hT).1
   rw [ha] at haN hZ ⊢
   simp only [zpow_natCast] at hZ ⊢
   have haN' : a + 1 ≤ N := by omega

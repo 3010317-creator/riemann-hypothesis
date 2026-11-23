@@ -7,15 +7,18 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSecti
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniqOfChartIndep2
 public import Formalism.LocalToGlobal.ProjectiveLattices.RecPJThAllNeBot
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsFiniteSpanningShortGeneratorsSmallSupNorm
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsShortFiniteGeneratorsThetaLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsShortFiniteGeneratorsThetaLattice
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.PageRowsOfLe
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.PageTwoLeLAndSigns
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.RunScalarsNeZeroAndLogBoundedStatement
+public import Formalism.SharpRestriction.Divisibility.AbelianOpenPart.OEOsInjective
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.RunScalarsNeZeroAndLogBounded
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ScaledFamily
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShortGeneratorsScaledThetaLatticeStatement
-import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.SupBoundsLeGeneratorConstantMulSizeStatement
-import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaLatticeWeightScalarNeZeroAndLogBoundsStatement
+public import Formalism.SharpRestriction.Divisibility.WeightAlgebra
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShortGeneratorsScaledThetaLattice
+public import Development.AbelianVarietyTheory.Definitions.ThetaValues.SWEqSOf
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.WeightsBelow
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.SupBoundsLeGeneratorConstantMulSize
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaLatticeWeightScalarNeZeroAndLogBounds
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +55,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.Definitions.ThetaValues.SWEqSOf
 
 @[expose] public section
 
@@ -73,8 +75,8 @@ theorem scalB_rec : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndepSt2 
   have hj1 : 1 ≤ j := hj.1
   obtain ⟨hL2, -, hr6, hlam, -, -⟩ := GlobalTheory.page_two_le_L_and_signs D _ _ j (recPJ h j hj) large₂ H C2 A2 CR CT ka wL wF Tn nP nW h0 hHP hRows
   have hwb := GlobalTheory.RunWeights.weights_below D _ _ j (recPJ h j hj) large₂ H C2 A2 CR CT ka wL wF Tn nP nW h0 hj1 hHP
-  have hsz := GlobalTheory.T.runScalars_ne_zero_and_log_bounded D (recB h.toLawsCore) hinj EX j p ka wL wF Tn nP nW hp0 (by omega) hLn hIsF hkn
-  have hsW := GlobalTheory.T.thetaLatticeWeightScalar_ne_zero_and_log_bounds D (recB h.toLawsCore) hinj EX j wL
+  have hsz := _root_.GlobalTheory.RunIn.scalOfP_size D (recB h.toLawsCore) hinj EX j p ka wL wF Tn nP nW hp0 (by omega) hLn hIsF hkn
+  have hsW := _root_.GlobalTheory.RunIn.sOf_ne_zero_and_log_bounds D (recB h.toLawsCore) hinj EX j wL
   have hWeq := GlobalTheory.RunIn.sW_eq_sOf (recB h.toLawsCore) hinj EX p ka wL wF Tn
   have hlogp : 0 ≤ Real.log (p : ℝ) := Real.log_natCast_nonneg p
   have hZ : 0 ≤ Zb D large₂ := by
@@ -98,9 +100,9 @@ theorem scalB_rec : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndepSt2 
     have hn8 : 0 < w.n := by omega
     obtain ⟨Sh, hSh1, hSh2⟩ := GlobalTheory.RunIn.exists_short_family_small hCI D T h hGam large₂ j hj w hRw hL2 hrw hlw hSh (hA j hj w.n) hsp
     have hsize : 1 ≤ w.size := WeightFamilies.Wt.one_le_size w
-    have key := GlobalTheory.T.shortGenerators_scaled_thetaLattice D _ _ j (recPJ h j hj) w s Sh c (400 * Zb D large₂ * w.size) hs hc0
+    have key := _root_.GlobalTheory.RunIn.shortG_scaled D _ _ j (recPJ h j hj) w s Sh c (400 * Zb D large₂ * w.size) hs hc0
       (mul_nonneg (by linarith) (by linarith)) hsc hSh1 hSh2
-    have hG := (GlobalTheory.T.supBounds_le_generatorConstant_mul_size D (recB h.toLawsCore) large₂ j w p hL2 hn8).2.1
+    have hG := (_root_.GlobalTheory.RunIn.sup_bounds_le_Gc D (recB h.toLawsCore) large₂ j w p hL2 hn8).2.1
     unfold ShortG at key ⊢
     obtain ⟨S', hS'1, hS'2, hS'3⟩ := key
     exact ⟨S', hS'1, hS'2, fun g hg => (hS'3 g hg).trans (by nlinarith)⟩
@@ -114,8 +116,8 @@ theorem scalB_rec : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndepSt2 
   refine ⟨?_, ?_, ?_, ?_⟩
   · obtain ⟨hRL, hrL, hlL⟩ := hW wL (by simp)
     have hnL : 0 < wL.n := by omega
-    obtain ⟨N, w0, hspan, -, hsup⟩ := GlobalTheory.T.exists_short_finite_generators_thetaLattice hCI D T h hGam large₂ j hj wL hRL hL2 hrL hlL
-    have hG := (GlobalTheory.T.supBounds_le_generatorConstant_mul_size D (recB h.toLawsCore) large₂ j wL p hL2 hnL).2.2
+    obtain ⟨N, w0, hspan, -, hsup⟩ := _root_.GlobalTheory.ThetaFamily.theta_family hCI D T h hGam large₂ j hj wL hRL hL2 hrL hlL
+    have hG := (_root_.GlobalTheory.RunIn.sup_bounds_le_Gc D (recB h.toLawsCore) large₂ j wL p hL2 hnL).2.2
     have hdisc : 0 ≤ Real.log |((NumberField.discr (recB h.toLawsCore).KO : ℤ) : ℝ)| := by
       rw [Real.log_abs]
       exact Real.log_intCast_nonneg _

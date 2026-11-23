@@ -4,19 +4,22 @@ public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicUnitaryTopology
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsInfFamAndStdChar
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AnisotropicTermsMeanZeroUnipotentRadicalStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIsotropicDualFrameOfSplitEmbeddingStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegrableOnOfRapidDec
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsotropicTermMeanInvariantUnipotentRadicalStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LintegralThetaLiftTermSumNeTopStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MixedModelTermsRationalUnipotentInvariantStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MixedModelThetaSeriesModerateGrowthStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RankFacGen
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RationalFrameStabiliserNormalisesUnipotentRadicaStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RestrictedHeisenbergTermsPermutedRationalUnitaryStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaKernelModerateGrowthWithSeminorms
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaRestrictIsotropicQuotientWittTowerPropertieStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaSeriesSummableOnCovolumeDomainStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TsumSetIntegralFundamentalDomainEqZeroByOrbitsStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.MeasureTheory.Group.FundamentalDomain
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TsumSetIntegralFundamentalDomainEqZeroByOrbits
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIsotropicDualFrameOfSplitEmbeddingStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RankFacGen
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaRestrictIsotropicQuotientWittTowerPropertieStatement
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WittTowerRestrictionUnipotentRadicalInvariantStatement
 import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerOrbitVolume.TopoAF
@@ -267,7 +270,7 @@ theorem GlobalTheory.TowerCT.towerConstTermOfCompatible_holds : ∀ D : D7, Glob
 
   have hvanish : ∑' y : {y : Matrix (Fin W.rank) (Fin r) D.host.E // y ≠ 0}, a y.1 = 0 := by
     letI := ratAct W r
-    refine GlobalTheory.T.tsum_setIntegral_fundamentalDomain_eq_zero_by_orbits (GA D W) ν (GQ W) {y : Matrix (Fin W.rank) (Fin r) D.host.E // y ≠ 0} 𝓕 h𝓕
+    refine _root_.GlobalTheory.OrbitUnfold.tsum_setIntegral_eq_zero (GA D W) ν (GQ W) {y : Matrix (Fin W.rank) (Fin r) D.host.E // y ≠ 0} 𝓕 h𝓕
       (fun y h => (∫ n in 𝓝, tm y.1 (ω ((n : GA D V) * g, h) f) ∂κ) * F h)
       (fun y => (hKm y.1).mul hFd.2.1.measurable) ?_ ?_ ?_
     · intro γ y h

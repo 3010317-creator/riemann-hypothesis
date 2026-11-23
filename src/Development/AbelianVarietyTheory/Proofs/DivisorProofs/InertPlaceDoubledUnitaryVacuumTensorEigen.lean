@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FromBlocksMem
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledVacuumConditionStableLatticeStabilizerIneStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledVacuumTwistedVacuumConditionDoubledLatticStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledWeilRepresentationLocalityFinitePlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceDoubledVacuumConditionUniqueStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledVacuumConditionStableLatticeStabilizerIne
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledVacuumTwistedVacuumConditionDoubledLattic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledWeilRepresentationLocalityFinitePlace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceDoubledVacuumConditionUnique
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearFormEqZeroOfKillsProductSchwartzBruhat
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductFunctionOnSumCoordsMemAdelicSchwartzSpace
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StarMemAdelicSchwartzSpaceNumberField
@@ -88,10 +89,10 @@ theorem line : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField
         show (x + z) ∘ Sum.inr = x ∘ Sum.inr + z ∘ Sum.inr from rfl, hR.1 _ _ hl, hR.1 _ _ hr]
     · rw [← hΦ]
       exact GlobalTheory.SchwartzBox.boxFun_mem_schA F _ _ _ hR.2 _ (GlobalTheory.SchAConj.star_mem_schA F _ _ hR.2)
-  obtain ⟨φ₁, hφ₁, hact⟩ := GlobalTheory.T.doubledWeilRepresentation_locality_finitePlace F E σ B a a' G X om om' hTr v dd omd hsp g hg.1 φ₀ hφ₀SB
-  have h₀ := GlobalTheory.T.doubledVacuum_twistedVacuumCondition_doubledLattice F E σ B a a' G X om om' hTr v dd hdd θ hθ hvac
-  have h₁ := GlobalTheory.T.doubledVacuumCondition_stable_latticeStabilizer_inert F E σ B a a' G X om om' hTr v dd omd hsp θ hθ g hg φ₀ hφ₀SB φ₁ hφ₁ h₀ hact
-  obtain ⟨c, hc⟩ := GlobalTheory.T.inertPlace_doubledVacuumCondition_unique F E σ B a a' G X om om' hTr v w hw dd hdd θ hθ hvac φ₁ hφ₁ h₁
+  obtain ⟨φ₁, hφ₁, hact⟩ := _root_.GlobalTheory.WeilLocalityDbl.locality F E σ B a a' G X om om' hTr v dd omd hsp g hg.1 φ₀ hφ₀SB
+  have h₀ := _root_.GlobalTheory.DblVacLine.dbl_vac_acts F E σ B a a' G X om om' hTr v dd hdd θ hθ hvac
+  have h₁ := _root_.GlobalTheory.DblVacTransport.acts_dblVacCond_of_mem_KAtD F E σ B a a' G X om om' hTr v dd omd hsp θ hθ g hg φ₀ hφ₀SB φ₁ hφ₁ h₀ hact
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.DblVacUniq.dbl_vac_unique F E σ B a a' G X om om' hTr v w hw dd hdd θ hθ hvac φ₁ hφ₁ h₁
   refine ⟨c, ?_⟩
   rw [hΦ, hact r₀ hRest, hc]
   funext x

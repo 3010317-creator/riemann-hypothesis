@@ -1,8 +1,12 @@
 module
 
 public import Mathlib.NumberTheory.Padics.Complex
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormEigenvalueLeOneOfIntegralMatrixUltrametricStatement
+public import Mathlib.Analysis.Normed.Field.Basic
+public import Mathlib.Data.Matrix.Mul
+public import Mathlib.Topology.MetricSpace.Ultra.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormEigenvalueLeOneOfIntegralMatrixUltrametric
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.DvdTraceOfBalancedTensor
+public import Mathlib.LinearAlgebra.Matrix.Charpoly.Eigs
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -17,7 +21,6 @@ import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.LinearAlgebra.Eigenspace.Basic
-public import Mathlib.LinearAlgebra.Matrix.Charpoly.Eigs
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -162,7 +165,7 @@ theorem maximal_ideal_eq_joint_eigen : ∀ (l : ℕ) [Fact l.Prime] (O : Type) [
   have hfin : Θ.Finite := finite_joint_eigen T
   have hint : ∀ θ ∈ Θ, ∀ p, ‖eval₂ emb θ p‖ ≤ 1 := by
     rintro θ ⟨c, hc0, hc⟩ p
-    exact GlobalTheory.T.norm_eigenvalue_le_one_of_integral_matrix_ultrametric O K emb h1 n (ρ p) _ c hc0 (mulVec_eval₂ emb ρ θ c hc p)
+    exact _root_.GlobalTheory.eigenvalue_integral_matrix_norm_le_one O K emb h1 n (ρ p) _ c hc0 (mulVec_eval₂ emb ρ θ c hc p)
 
   let J : (I → K) → Ideal (MvPolynomial I O) := fun θ =>
     { carrier := {p | ∀ r, ‖eval₂ emb θ (r * p)‖ < 1}

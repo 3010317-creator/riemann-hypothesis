@@ -4,11 +4,12 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
 public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IdealPart
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HolomorphicHomDetermined
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArcLevelPointTangentVectorTransportIffStatement
+public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IsFShiftZeroIff
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArcLevelPointTangentVectorTransportIff
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.EqSpMapOfInjective
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsTangentConstantCoordsGenericFibre
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.TangentConstantDirectionSpecialisesDeriv
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsSumsAtHalfCurveFraction
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsTangentConstantCoordsGenericFibreStatement
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.TangentConstantDirectionSpecialisesDerivStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -229,7 +230,7 @@ theorem isTanPt_iff {S S' : Scheme.{0}} {t : SAB H S} {t' : SAB H S'} {f : S' �
     {Φ : GenPts A t y} (hw : w.IsGen) (h : GenPts.Rel m w Φ' Φ) (z₀ : A.V)
     {n : Sp (DualNumber ℂ⸨X⸩) ⟶ t'.G.left} (hn : n ≫ t'.G.hom = spMap (algebraMap ℂ⸨X⸩ _) ≫ y') :
     IsTanPt Φ' z₀ n ↔ IsTanPt Φ z₀ (n ≫ m.φ) := by
-  have key := (T.arcLevelPoint_tangentVector_transport_iff E H S S' A t t' f m w y' y Φ' Φ hw h).2 z₀
+  have key := (_root_.GlobalTheory.LevelTransport.levelPt_isTan_iff E H S S' A t t' f m w y' y Φ' Φ hw h).2 z₀
   have hn' : (n ≫ m.φ) ≫ t.G.hom = spMap (algebraMap ℂ⸨X⸩ _) ≫ y := by
     rw [Category.assoc, m.cart.1.w, reassoc_of% hn, h.1]
   constructor
@@ -249,7 +250,7 @@ theorem deriv_sumsAt : Out.Laws → Out.Laws2 → ∀ (E : Type) [Field E] [Numb
     rw [Category.assoc, Over.w v]
     exact (spMap_comp _ _).symm.trans ((congrArg spMap (dual_comp _)).trans (spMap_comp _ _))
   have tW : IsTanPt C.ΦW (K.h.symm z₀) (spMap ρ ≫ v.left) :=
-    ⟨pullback.lift _ _ hW, T.isTangent_constant_coords_generic_fibre hL hL₂ E H D l Xo c O β Y _ a χ W Λ C.Ξ C.ΦW g K.h z₀ ν v ρ _ C.isGen hd
+    ⟨pullback.lift _ _ hW, _root_.GlobalTheory.ConstTan.isTan_of_diffHyp hL hL₂ E H D l Xo c O β Y _ a χ W Λ C.Ξ C.ΦW g K.h z₀ ν v ρ _ C.isGen hd
       (dual_inl _) (dual_eps _) (pullback.lift_fst _ _ _) (pullback.lift_snd _ _ _), pullback.lift_fst _ _ _⟩
   have tY := (isTanPt_iff C.rig₂.1 C.rel₂ _ hW).1 tW
   have hY : ((spMap ρ ≫ v.left) ≫ W.m.φ) ≫ Y.t.G.hom = (spMap (algebraMap ℂ⸨X⸩ _) ≫ C.yF) ≫ Y.j := by
@@ -262,7 +263,7 @@ theorem deriv_sumsAt : Out.Laws → Out.Laws2 → ∀ (E : Type) [Field E] [Numb
   have := Xo.smooth
   have : Smooth Xo.s := SmoothOfRelativeDimension.smooth D.dim _
   have : IsLocallyNoetherian Xo.X := LocallyOfFiniteType.isLocallyNoetherian Xo.s
-  obtain ⟨T₀, -, h₀⟩ := T.tangent_constant_direction_specialises_deriv hL hL₂ E H D l _ _ Xo.X Xo.s Xo.univ Λ.A _ C.Φ Γ Ψ hA hΦ _ νU tU
+  obtain ⟨T₀, -, h₀⟩ := _root_.GlobalTheory.SpecTangent.spec_tangent hL hL₂ E H D l _ _ Xo.X Xo.s Xo.univ Λ.A _ C.Φ Γ Ψ hA hΦ _ νU tU
   have HP : IsPullback Y.m0.toSABMap.φ (Y.oF.t.G.hom ≫ pullback.snd _ _) (Xo.univ.t.G.hom ≫ Xo.s)
       (spMap (IntermediateField.inclusion c.le).toRingHom) :=
     Y.m0.toSABMap.cart.1.paste_vert (IsPullback.of_hasPullback _ _)

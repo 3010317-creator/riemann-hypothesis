@@ -2,12 +2,16 @@ module
 
 public import Development.WeilBound.RepresentationTheoryGL.RegularisedSiegelWeil.SingularNullSets.LApproxIdS
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CompletionIsLocalRing
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ExistsStandardLocalMeasuresStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ArchimedeanHaarScalingNormStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ExistsAdelicHaarCovolumeOneStatement
-import Development.WeilBound.RepresentationTheoryGL.RegularisedSiegelWeil.SingularNullSets.FixMulKer
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ExistsStandardLocalMeasures
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.CoefS
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.IsCovolOne
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ArchimedeanHaarScalingNorm
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ExistsAdelicHaarCovolumeOne
 public import Development.WeilBound.RepresentationTheoryGL.RegularisedSiegelWeil.SingularNullSets.Kdata
 public import Development.WeilBound.RepresentationTheoryGL.RegularisedSiegelWeil.SingularNullSets.LApproxIdC
+public import Development.WeilBound.RepresentationTheoryGL.RegularisedSiegelWeil.SingularNullSets.AddMemIffOfZero
+import Development.WeilBound.RepresentationTheoryGL.RegularisedSiegelWeil.SingularNullSets.FixMulKer
 import Formalism.LocalRingCardinality.DataHost
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicLocalCompactness.AdeleLC
 import GroundTheory.AutomorphicForms.ReductionMeasure
@@ -62,7 +66,6 @@ import Development.AbelianVarietyTheory.PublishedTheorems.SiegelWeil₂.SiegelWe
 import Development.WeilBound.CoreStatements.AutomorphicKernels.UnitarySchrodingerModel.CoefDataExists
 import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.WeilSiegelTheta.BigCellDefs
 import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.WeilSiegelTheta.ThetaOrbits
-public import Development.WeilBound.RepresentationTheoryGL.RegularisedSiegelWeil.SingularNullSets.AddMemIffOfZero
 import Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf
 
 @[expose] public section
@@ -86,10 +89,10 @@ theorem oneD : OneD := by
   intro F _ _ hF ψ hψ S ε hε ν hν
   classical
   haveI : BorelSpace (AF F) := ⟨rfl⟩
-  obtain ⟨db, hdb⟩ := GlobalTheory.T.exists_adelic_haar_covolume_one F
-  obtain ⟨⟨laminf, hinf⟩, hlamex⟩ := GlobalTheory.T.exists_standard_local_measures F
+  obtain ⟨db, hdb⟩ := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.OneV.exists_isCovolOne F
+  obtain ⟨⟨laminf, hinf⟩, hlamex⟩ := _root_.GlobalTheory.CompanionTheory.SW.StdEx.exists_std F
   choose lam hlam using hlamex
-  obtain ⟨S₁, hS₁⟩ := GlobalTheory.T.exists_local_approximate_identity F hF ψ hψ db hdb laminf lam hinf hlam
+  obtain ⟨S₁, hS₁⟩ := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Coef.Test.exists_test_approx F hF ψ hψ db hdb laminf lam hinf hlam
   obtain ⟨ρ, U, hρ, hρt, hU, hUt, hinv, hint, -, hlim⟩ := hS₁ (S ∪ S₁) Finset.subset_union_right
   haveI : db.IsAddHaarMeasure := hdb.1
   have hεε := idF_mul hε

@@ -6,7 +6,11 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.PieceEqPi
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
 public import Mathlib.RingTheory.AdicCompletion.Noetherian
 public import Development.AbelianVarietyTheory.Definitions.Foundations.LiftSLMapMulInvMem
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsUniqueNormalizedCyclotomicTraceStatement
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsUniqueNormalizedCyclotomicTrace
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.EisensteinModularTowers.CardFiberReductionEqTotient
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.EisensteinModularTowers.CmulSmFInvariantOfCongruentMulTPow
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.EisensteinModularTowers.CongruenceActionInvariant
@@ -254,7 +258,7 @@ theorem UpperTheory.Kd.L.arith :
       _ = _ := by rw [h1, map_add (f := _), map_mul, map_mul, map_pow, map_pow, map_natCast]
   have hS2Z : InZl ε l (m + n) S2 := isum _ _ fun y _ => isum _ _ fun r₀ _ => isum _ _ fun γ hγ => irep y _ (hE r₀ γ hγ).1
   have hE0 : InZl ε l (m + n) ((N : Ω) ^ 3 * S2) := imul _ _ iN3 hS2Z
-  obtain ⟨E', hNT', hE'Z, -⟩ := GlobalTheory.T.exists_unique_normalizedCyclotomicTrace ε l (m + n) m hm (by omega) _ hE0
+  obtain ⟨E', hNT', hE'Z, -⟩ := _root_.GlobalTheory.NTr.normTrace_exists_unique ε l (m + n) m hm (by omega) _ hE0
   obtain ⟨τ, hτ, hsum⟩ := hNT
   obtain ⟨τ', hτ', hsum'⟩ := hNT'
   rw [Nat.add_sub_cancel_left] at hsum hsum'

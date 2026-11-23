@@ -1,15 +1,19 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TrivIsCr
-import Development.AbelianVarietyTheory.CrystallinePeriods.RingBasics
-import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BezoutEisensteinDerivativePrimePow
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinPrimeUniformizerClass
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBreuilKisinFrobeniusPeriod
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGaloisMovesFlatByUnitRootStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsOneAddPrimePowMulNotRootOfUnityStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RootOfUnityPadicComplexMemRangeAlgClosureStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ThetaAinfPeriodPowNeZeroStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGaloisMovesFlatByUnitRoot
+public import Mathlib.Analysis.Normed.Field.Instances
+public import Mathlib.NumberTheory.Padics.Complex
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsOneAddPrimePowMulNotRootOfUnity
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RootOfUnityPadicComplexMemRangeAlgClosure
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ThetaAinfPeriodPowNeZero
+import Development.AbelianVarietyTheory.CrystallinePeriods.RingBasics
+import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaBdRPlusSurjectiveKerUnitsEquivariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -163,12 +167,12 @@ theorem GlobalTheory.BKLim.exists_isZ_not_root : ∀ (l : ℕ) [Fact l.Prime] (K
     rw [ha_def, map_mul, map_mul, map_mul]
     refine mul_ne_zero (mul_ne_zero (mul_ne_zero ?_ ?_) (Θ_flat bk)) ?_
     · exact ((Units.isUnit η⁻¹).map (Θ l)).ne_zero
-    · simpa using GlobalTheory.T.theta_ainf_period_pow_ne_zero l K bk τ hτ 1
+    · simpa using _root_.GlobalTheory.ThetaPer.thetaD_aDp_pow_ne_zero l K bk τ hτ 1
     · rw [Θ_apply]; intro h
       apply theta_deriv_ne bk
       exact Subtype.ext h
-  obtain ⟨k, hk0, hk⟩ := GlobalTheory.T.exists_one_add_primePow_mul_not_rootOfUnity l a ha
-  obtain ⟨g, hg⟩ := GlobalTheory.T.exists_galois_moves_flat_by_unit_root l (GlobalTheory.T.rootOfUnity_padicComplex_mem_range_algClosure l) K bk (ε ^ (l ^ k)) (by rw [map_pow, hε.1, one_pow])
+  obtain ⟨k, hk0, hk⟩ := _root_.GlobalTheory.SmallRootCl.exists_one_add_pow_mul_not_root l a ha
+  obtain ⟨g, hg⟩ := _root_.GlobalTheory.BSP.galois_moves_flat_by_unit_root l (_root_.GlobalTheory.rootOfUnity_mem_range_Om l) K bk (ε ^ (l ^ k)) (by rw [map_pow, hε.1, one_pow])
   set μ : Ainf l := WittVector.teichmuller l ε - 1 with hμ_def
   set E : Ainf l := bk.ev bk.E with hE_def
   set P : Polynomial (Ainf l) := bk.Ep.map (wA l bk.a : Wq l bk.a →+* Ainf l) with hP_def

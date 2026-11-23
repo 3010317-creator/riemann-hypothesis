@@ -3,8 +3,10 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.HasBareNormDisc
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsModuliSchemePolarizedAbelianLevel
-public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.PadicEmbeddingDiscreteValuationRingStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PadicEmbeddingValuationSubringStatement
+public import Development.AutomorphicSpectrum.Definitions.AdelicLattices.FactPrimes
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.PadicEmbeddingDiscreteValuationRing
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PadicEmbeddingValuationSubring
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PartIHolds
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -75,8 +77,8 @@ theorem PositivityTheory.Ar2.exists_local_model_dvr : ∀ (E : Type) [Field E] [
   classical
   haveI : FiniteDimensional ℚ c.F := c.fin
   haveI : NumberField c.F := { to_charZero := inferInstance, to_finiteDimensional := c.fin }
-  obtain ⟨W, hWp, hW⟩ := GlobalTheory.T.padic_embedding_valuation_subring c.F p κ
-  obtain ⟨V, hDVR, hVn, -, -⟩ := GlobalTheory.T.padic_embedding_discrete_valuation_ring c.F p κ
+  obtain ⟨W, hWp, hW⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.exists_valuationSubring_of_padicEmbedding c.F p κ
+  obtain ⟨V, hDVR, hVn, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fl.ValRing.exists_dvr_of_padic_embedding c.F p κ
   have hVeq : c.V W = V := by
     ext x
     rw [← hVn x, hW x]

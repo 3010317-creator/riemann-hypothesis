@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.ThetaValues.LeCovCoeff
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.RuleBaseChangeSectionValuesSemilinearStatement
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.RuleBaseChangeSectionValuesSemilinear
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +50,7 @@ theorem frOver_isLev_ddBC : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   intro E _ _ _ H Dw l Xo c c' hle n d
   refine ⟨fun k _ _ _ _ _ _ _ _ _ => Iff.rfl, ?_⟩
   rintro ⟨h1, h2, h3, h4, h5, h6, h7, h8, h9⟩
-  have hB := (GlobalTheory.T.ruleBaseChange_section_values_semilinear E H Dw d.l₂ d.Xo₂ d.c₂ (covCoeff hle d) (le_covCoeff hle d)).1 0 0 d.cδ h8
+  have hB := (_root_.GlobalTheory.FieldBC.rulBC_sec_val_linear E H Dw d.l₂ d.Xo₂ d.c₂ (covCoeff hle d) (le_covCoeff hle d)).1 0 0 d.cδ h8
   refine ⟨h1, h2, h3, h4, h5, h6, ?_, hB.1, ?_⟩
   · intro k _ _ A A₂ hA y
     letI A₂' : Algebra (covCoeff hle d).F k := A₂

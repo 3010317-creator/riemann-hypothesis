@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.AnnihilatorModels.SameNormBasic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsReducedOfSmoothOverFieldStatement
+public import Mathlib.RingTheory.Smooth.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsReducedOfSmoothOverField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,4 +49,4 @@ open UpperTheory.Gal.crystallineComparison
 
 theorem UpperTheory.Gal.crystallineComparison.smoothRed_of :
     SmoothReduced :=
-  GlobalTheory.T.isReduced_of_smooth_over_field'
+  _root_.GlobalTheory.isReduced_of_smooth_over_field

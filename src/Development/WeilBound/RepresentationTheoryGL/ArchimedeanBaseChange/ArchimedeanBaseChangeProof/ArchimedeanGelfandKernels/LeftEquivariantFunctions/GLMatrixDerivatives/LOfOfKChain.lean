@@ -1,9 +1,10 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.LeftEquivariantFunctions.GLMatrixDerivatives.FrameDer
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeightBoundFactsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PositiveConeHomotopyStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PositiveConeStructureStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeightBoundFacts
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.LeftEquivariantFunctions.SymZeroCommFrame
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PositiveConeHomotopy
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PositiveConeStructure
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.LeftEquivariantFunctions.GLMatrixDerivatives.ConjTransposeMemGLs
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.LeftEquivariantFunctions.GLMatrixDerivatives.ContinuousCoords
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.LeftEquivariantFunctions.GLMatrixDerivatives.GelfandReading
@@ -51,7 +52,7 @@ import Mathlib.Topology.Sheaves.Init
 namespace PositivityTheory.RgBcC.LfSt
 
 theorem lOf_of_kChain (h : KChain) : LOf :=
-  lAsm GlobalTheory.T.height_bound_facts (GelfandReading.frameDer_of GlobalTheory.T.height_bound_facts) h (KSuppPf.ksupp_of GlobalTheory.T.height_bound_facts GlobalTheory.T.positive_cone_structure) UnitaryConjTransposeTrace.end1 GLSubgroupConjTransposeClosure.end0
-    GlobalTheory.T.positive_cone_homotopy GlobalTheory.T.positive_cone_structure
+  lAsm _root_.GlobalTheory.CompanionTheory.HbBasis.hbFacts (GelfandReading.frameDer_of _root_.GlobalTheory.CompanionTheory.HbBasis.hbFacts) h (KSuppPf.ksupp_of _root_.GlobalTheory.CompanionTheory.HbBasis.hbFacts _root_.GlobalTheory.CompanionTheory.ConeHaar.coneSt) UnitaryConjTransposeTrace.end1 GLSubgroupConjTransposeClosure.end0
+    _root_.GlobalTheory.CompanionTheory.SuperHomot.homot _root_.GlobalTheory.CompanionTheory.ConeHaar.coneSt
 
 end PositivityTheory.RgBcC.LfSt

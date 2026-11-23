@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.IsPlaceCofactorValuationLowerBound
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LowCoefficientsOfParameterCoefficientsStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MonomialParamAsLogSeriesStatement
+public import Formalism.SharpRestriction.GrowthBounds.FormalGroupSystem
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LowCoefficientsOfParameterCoefficients
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MonomialParamAsLogSeries
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -135,12 +136,12 @@ theorem geC_of_mem {X : Sys p} (Y : Pend X) (g : ℝ) (y : Y.Kc) (hy : y ∈ Y.O
 theorem cofactor_lower_bound_of_place_bound_witt : ∀ (p : ℕ) [Fact p.Prime] (X : Sys p) (Y : Pend X) (j : ℕ) (v : X.Pl) (g : ℝ),
     MvPowerSeries.constantCoeff Y.be = 0 → IsPlaceCofactorValuationLowerBound X Y.be j v g → Y.LowAt j v g := by
   intro p _ X Y j v g _ hL U hU I m
-  choose Un hUn using GlobalTheory.T.exists_inParam_eq_monomial_low_coeff_zero p (X.EA j ⊕ X.EA j)
+  choose Un hUn using _root_.GlobalTheory.TwU.monomial_param_as_log_series p (X.EA j ⊕ X.EA j)
   set P := X.PIv j I v with hP
   set d := P.totalDegree with hd
   have hfin : {n : (X.EA j ⊕ X.EA j) →₀ ℕ | n.degree ≤ d}.Finite := Finsupp.finite_of_degree_le d
   set S := hfin.toFinset with hS
-  have hspan := GlobalTheory.T.lowCoefficients_of_parameterCoefficients p (X.EA j ⊕ X.EA j) Y.Kc Un hUn U d S (fun n hn => hfin.mem_toFinset.mpr hn)
+  have hspan := _root_.GlobalTheory.TwU.low_coeff_of_param p (X.EA j ⊕ X.EA j) Y.Kc Un hUn U d S (fun n hn => hfin.mem_toFinset.mpr hn)
   have hint : ∀ n, IntS p (inParam p (Un n)) := fun n =>
     ⟨MvPowerSeries.monomial n 1, by rw [(hUn n).1, MvPowerSeries.map_monomial, RingHom.map_one]⟩
   choose a ha using fun n => hL (Un n) (hint n) I m

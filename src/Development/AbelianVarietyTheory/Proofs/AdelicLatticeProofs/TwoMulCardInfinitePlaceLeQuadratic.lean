@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.SqSubLeNormSub
 public import Mathlib.NumberTheory.NumberField.InfinitePlace.Basic
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.CardRingHomRealEqNrRealPlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsQuadraticSqrtExtensionBasicFactsStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsQuadraticSqrtExtensionIsGaloisAndEmbeddingStatement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.CardRingHomRealEqNrRealPlaces
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsQuadraticSqrtExtensionBasicFacts
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsQuadraticSqrtExtensionIsGaloisAndEmbedding
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -75,7 +75,7 @@ theorem two_mul_card_pos_le (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     [Algebra F E] (δ : F) (θ : E) (σ : E ≃ₐ[F] E) (h : IsQuad δ θ σ) :
     2 * Nat.card {φ : F →+* ℝ // 0 < φ δ} ≤ Nat.card (E →+* ℝ) := by
   classical
-  have hext := (GlobalTheory.T.isQuadraticSqrtExtension_isGalois_and_embedding F E δ θ σ h).2.2 ℝ
+  have hext := (_root_.GlobalTheory.QNorm.isQuad_galois_and_embedding F E δ θ σ h).2.2 ℝ
   have key : ∀ p : Bool × {φ : F →+* ℝ // 0 < φ δ}, ∃ ψ : E →+* ℝ,
       (∀ a : F, ψ (algebraMap F E a) = p.2.1 a) ∧ (0 < ψ θ ↔ p.1 = true) := by
     rintro ⟨b, φ, hφ⟩
@@ -108,12 +108,12 @@ theorem two_mul_card_infinitePlace_le :
   have hδ : δ ≠ 0 := fun h0 => h.nonsq (h0 ▸ IsSquare.zero)
   have h1 := card_real_eq_pos_add_tReal F δ hδ
   have h2 := two_mul_card_pos_le F E δ θ σ h
-  rw [GlobalTheory.T.card_ringHom_real_eq_nrRealPlaces'] at h1 h2
+  rw [_root_.GlobalTheory.QNorm.card_ringHom_real_eq_nrRealPlaces] at h1 h2
   have h3 := InfinitePlace.card_add_two_mul_card_eq_rank F
   have h4 := InfinitePlace.card_add_two_mul_card_eq_rank E
   have h5 := InfinitePlace.card_eq_nrRealPlaces_add_nrComplexPlaces F
   have h6 := InfinitePlace.card_eq_nrRealPlaces_add_nrComplexPlaces E
-  have h7 : Module.finrank F E = 2 := (GlobalTheory.T.isQuadraticSqrtExtension_basic_facts F E δ θ σ h).2.2.2.2.2.2
+  have h7 : Module.finrank F E = 2 := (_root_.GlobalTheory.QNorm.isQuad_basic F E δ θ σ h).2.2.2.2.2.2
   have h8 := Module.finrank_mul_finrank ℚ F E
   rw [h7] at h8
   omega

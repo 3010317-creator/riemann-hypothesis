@@ -2,7 +2,7 @@ module
 
 public import Formalism.LocalToGlobal.KernelLattices.XiIndCClass
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsNotMemDvdLocallyAway
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HermitianCocycleIntegralOfLocalStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HermitianCocycleIntegralOfLocal
 public import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.AlternatingFormStandardHermitian
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -186,7 +186,7 @@ theorem twO_selfDual : ∀ (E : Type) [Field E] [NumberField E] [StarRing E] (ι
     rw [hv_smul_emb emb δ sc hst, star_mul', algebraMap_cO, star_star, star_inv₀, hstk, hxv]
     exact hv _ ⟨_, hT y hy, rfl⟩
   · rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩
-    refine (GlobalTheory.T.hermitian_cocycle_integral_of_local E ι a b emb δ d sc M hδ hst hSD hSC x y fun Q =>
+    refine (_root_.GlobalTheory.CocIntLoc.integral_of_local E ι a b emb δ d sc M hδ hst hSD hSC x y fun Q =>
       ⟨(c : E) ^ e Q, zpow_ne_zero _ hcE, (mem_twO _ _ _ _).1 hx Q, ?_⟩).1
     rw [hstk]
     have := (mem_twO _ _ _ _).1 hy (conjPrime₂ Q)

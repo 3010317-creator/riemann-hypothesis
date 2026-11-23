@@ -2,12 +2,12 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.GermComp1ZeroPointLeft
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.ConstantCoeffEv
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FormalBilinearTermProductStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.MultiplicationByPFactorsFrobeniusStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PowOnePowTwoCommutationStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PowOneSeriesPFormulaStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PowTwoSymplecticRelationStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PowerSeriesPowPFrobeniusStatement
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FormalBilinearTermProduct
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.MultiplicationByPFactorsFrobenius
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PowOnePowTwoCommutation
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PowOneSeriesPFormula
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PowTwoSymplecticRelation
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PowerSeriesPowPFrobenius
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -168,7 +168,7 @@ theorem calc_cmp {f : PS R 2 d} (hf : AxOne f) {φ ψ : Pt R 1 d} (hφ : ∀ i, 
     (hψ : ∀ i, constantCoeff (ψ i) = 0) :
     AxOne (ev (n := 2) ![comp1 φ P₀, comp1 ψ P₁] f) ∧
       bil (ev (n := 2) ![comp1 φ P₀, comp1 ψ P₁] f) 1 1 = (lin φ 1).transpose * bil f 1 1 * lin ψ 1 :=
-  have t := GlobalTheory.T.formal_bilinear_term_product R d f f φ ψ hf hf hφ hψ
+  have t := _root_.GlobalTheory.CompanionTheory.Ar.Conj.BilCalc.bil_calc R d f f φ ψ hf hf hφ hψ
   ⟨t.2.2.2.1, t.2.2.2.2.1⟩
 
 theorem comp1_identity_left {n : ℕ} (j : Fin n) : comp1 (pt R d 0) (pt R (n := n) d j) = pt R d j :=
@@ -238,16 +238,16 @@ theorem axOne_map {S : Type} [CommRing S] (φ : R →+* S) {f : PS R 2 d} (hf : 
 
 theorem calc_mul {f g : PS R 2 d} (hf : AxOne f) (hg : AxOne g) :
     AxOne (f * g) ∧ bil (f * g) 1 1 = bil f 1 1 + bil g 1 1 :=
-  have t := GlobalTheory.T.formal_bilinear_term_product R d f g (pt R d 0) (pt R d 0) hf hg (pt_noConst 0) (pt_noConst 0)
+  have t := _root_.GlobalTheory.CompanionTheory.Ar.Conj.BilCalc.bil_calc R d f g (pt R d 0) (pt R d 0) hf hg (pt_noConst 0) (pt_noConst 0)
   ⟨t.1, t.2.1 1⟩
 
 theorem calc_swap {f : PS R 2 d} (hf : AxOne f) :
     bil (ev (n := 2) ![P₁, P₀] f) 1 1 = (bil f 1 1).transpose :=
-  (GlobalTheory.T.formal_bilinear_term_product R d f f (pt R d 0) (pt R d 0) hf hf (pt_noConst 0) (pt_noConst 0)).2.2.2.2.2.1 1 1
+  (_root_.GlobalTheory.CompanionTheory.Ar.Conj.BilCalc.bil_calc R d f f (pt R d 0) (pt R d 0) hf hf (pt_noConst 0) (pt_noConst 0)).2.2.2.2.2.1 1 1
 
 theorem calc_pow {f : PS R 2 d} (hf : AxOne f) {p : ℕ} (hp : 1 ≤ p) :
     bil (ev (n := 2) ![ptPow R d p 0, ptPow R d p 1] f) p p = bil f 1 1 :=
-  (GlobalTheory.T.formal_bilinear_term_product R d f f (pt R d 0) (pt R d 0) hf hf (pt_noConst 0) (pt_noConst 0)).2.2.2.2.2.2 p p hp hp
+  (_root_.GlobalTheory.CompanionTheory.Ar.Conj.BilCalc.bil_calc R d f f (pt R d 0) (pt R d 0) hf hf (pt_noConst 0) (pt_noConst 0)).2.2.2.2.2.2 p p hp hp
 
 theorem bil_map_eq_zero {S : Type} [CommRing S] (φ : R →+* S) {f : PS R 2 d} (h : bil f 1 1 = 0) :
     bil (MvPowerSeries.map φ f) 1 1 = 0 := by
@@ -262,8 +262,8 @@ theorem am_mul_hw {p : ℕ} [Fact p.Prime] [CharP R p] (B : FB R d O) :
     am B p * hw B p = (hw B p).transpose * (bil B.sy 1 1 * hw B p + (am B p).transpose) := by
   have hp0 : p ≠ 0 := (Fact.out : p.Prime).ne_zero
   have hp1 : p ≠ 1 := (Fact.out : p.Prime).ne_one
-  obtain ⟨V, hV, hact, hlin⟩ := GlobalTheory.T.multiplication_by_p_factors_frobenius R p d O B
-  obtain ⟨g, hg, ha, hgb⟩ := GlobalTheory.T.pow_one_series_p_formula R p d O B
+  obtain ⟨V, hV, hact, hlin⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Conj.mulp_factors_frobenius R p d O B
+  obtain ⟨g, hg, ha, hgb⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Conj.pow_one_series_in_p R p d O B
   have c0 : ∀ i, constantCoeff (P₀ i) = 0 := pt_noConst 0
   have c1 : ∀ i, constantCoeff (P₁ i) = 0 := pt_noConst 1
   have u0 : ∀ i, constantCoeff (ptPow R (n := 2) d p 0 i) = 0 := ptPow_noConst hp0 0
@@ -280,7 +280,7 @@ theorem am_mul_hw {p : ℕ} [Fact p.Prime] [CharP R p] (B : FB R d O) :
   have hfs : ∀ f : PS R 2 d, f ^ p = ev (n := 2) ![ptPow R d p 0, ptPow R d p 1]
       (MvPowerSeries.map (frobenius R p) f) := by
     intro f
-    rw [GlobalTheory.T.power_series_pow_p_frobenius R p d 2 f]
+    rw [_root_.GlobalTheory.CompanionTheory.Ar.Conj.pow_eq_ev_frobenius R p d 2 f]
     congr 1
     funext j
     fin_cases j <;> rfl
@@ -304,7 +304,7 @@ theorem am_mul_hw {p : ℕ} [Fact p.Prime] [CharP R p] (B : FB R d O) :
     rw [hg', (calc_mul (calc_mul axs2 axg1).1 axt).2, (calc_mul axs2 axg1).2, bs2, bg1, bt, add_zero]
   have cQ := cz_pair c0 u1
   have hb : pow2 B p = ev (n := 2) ![P₀, ptPow R d p 1] g' := by
-    have e1 := GlobalTheory.T.pow_two_symplectic_relation R d O B p
+    have e1 := _root_.GlobalTheory.CompanionTheory.Ar.Conj.pow_sy_exchange R d O B p
     have f1 : ev (n := 2) ![P₀, comp1 (B.A.act (p : O)) P₁] B.sy =
         ev (n := 2) ![P₀, ptPow R d p 1] s2 := by
       rw [hA1, hs2, ev_pair_ev c0 u1 c0 v1, ev_first c0 u1, ev_comp1_pair hV cQ c1, ev_second c0 u1]
@@ -341,7 +341,7 @@ theorem am_mul_hw {p : ℕ} [Fact p.Prime] [CharP R p] (B : FB R d O) :
       ev (n := 2) ![ptPow R d p 0, ptPow R d p 1]
         (MvPowerSeries.map (frobenius R p) (pow1 B p) * g3) := by
     rw [ev_mul cP, ev_mul cP, ← hfs, ← hfs, ← h1, ← h2]
-    exact GlobalTheory.T.pow_one_pow_two_commutation R d O B p p
+    exact _root_.GlobalTheory.CompanionTheory.Ar.Conj.pow_interchange R d O B p p
 
   have axb : AxOne (pow2 B p) := hb ▸ (calc_right axg' hp0 hp1).1
   have bb : bil (pow2 B p) 1 1 = 0 := hb ▸ (calc_right axg' hp0 hp1).2

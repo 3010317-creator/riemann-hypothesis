@@ -4,8 +4,8 @@ public import Development.AbelianVarietyTheory.Definitions.Jets.CmLatticeCommuta
 public import Mathlib.RingTheory.FormalGroup.Basic
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CpTransportedTaylorSeriesInChartRingHomLaws
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsSmallInPrimePow
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsUnitCoeffMulSeriesLeNormStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FormalGroupPadicMulIntegralVanishingOrderStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsUnitCoeffMulSeriesLeNorm
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FormalGroupPadicMulIntegralVanishingOrder
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ImagQuadraticMaximalOrderArithmeticAtSplitPrime
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.UwEllipticFlow
 import Mathlib.Algebra.Order.Floor.Extended
@@ -74,7 +74,7 @@ theorem height_one_of_split : ∀ (d q : ℕ) [Fact q.Prime] (M : Mdl q) (F : Fo
   obtain ⟨ℓ, hchart, hℓX⟩ := Basic.exists_chart M hM
   have hℓ0 : constantCoeff ℓ = 0 := hchart.2.1
   have hUℓ : U.subst ℓ = X := hℓX
-  obtain ⟨P1, P2, P3⟩ := GlobalTheory.T.formalGroup_padicMul_integral_vanishingOrder q F U ℓ hU0 hℓ0 hUℓ hF
+  obtain ⟨P1, P2, P3⟩ := _root_.GlobalTheory.MomOne.FormalMul.padic_multiplications q F U ℓ hU0 hℓ0 hUℓ hF
   refine ⟨ℓ, hℓ0, hUℓ, ?_, ?_⟩
   ·
 
@@ -102,7 +102,7 @@ theorem height_one_of_split : ∀ (d q : ℕ) [Fact q.Prime] (M : Mdl q) (F : Fo
     have hbd : Bd 1 (hat M.ι ℓ (fun z => M.u (β * z))) := by
       rw [hhat]
       exact P1 a
-    obtain ⟨n, hnN, hn1⟩ := GlobalTheory.T.exists_unit_coeff_mul_series_le_norm q M ℓ β N hchart hβ0 hlat hN hbd
+    obtain ⟨n, hnN, hn1⟩ := _root_.GlobalTheory.MomOne.MulDegree.exists_unit_coeff q M ℓ β N hchart hβ0 hlat hN hbd
     have hnlt : n < (2 * q) ^ k := by
       have hq : 0 < q ^ k := pow_pos (Fact.out : q.Prime).pos k
       have h2 : d + 3 < 2 ^ k := Nat.lt_two_pow_self

@@ -1,8 +1,9 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AbelContinuation
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ExistsUnitPowerInCongruenceStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.UnitLogLatticeBoundedTranslateStatement
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ExistsUnitPowerInCongruence
+public import Mathlib.NumberTheory.NumberField.Units.DirichletTheorem
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.UnitLogLatticeBoundedTranslate
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -88,8 +89,8 @@ theorem balance : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (�
     ∃ M : ℝ, ∀ x : F, TotPos F x → ∃ u : (𝓞 F)ˣ, u ∈ congUnits 𝔣 ∧
       ∀ σ τ : F →+* ℝ, σ (((u : 𝓞 F) : F) * x) ≤ M * τ (((u : 𝓞 F) : F) * x) := by
   intro F _ _ _ 𝔣 h𝔣
-  obtain ⟨e, he, hpow⟩ := GlobalTheory.T.exists_unit_power_in_congruence F 𝔣 h𝔣
-  obtain ⟨C, hC, hbound⟩ := GlobalTheory.T.unit_log_lattice_bounded_translate F e he
+  obtain ⟨e, he, hpow⟩ := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.Cones.exists_pow_mem_congUnits F 𝔣 h𝔣
+  obtain ⟨C, hC, hbound⟩ := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.UnitLattice.multiples_relativelyDense F e he
   obtain ⟨n, hn⟩ : ∃ n : ℝ, n = (Fintype.card (InfinitePlace F) : ℝ) := ⟨_, rfl⟩
   refine ⟨Real.exp (2 * (n * C)), fun x hx => ?_⟩
   have hx0 : x ≠ 0 := by

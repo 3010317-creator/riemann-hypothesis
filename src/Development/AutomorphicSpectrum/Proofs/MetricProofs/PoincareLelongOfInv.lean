@@ -4,18 +4,24 @@ public import Development.AutomorphicSpectrum.PublishedTheorems.Metrics₂.Poinc
 public import Development.AutomorphicSpectrum.PublishedTheorems.Metrics₂.PoincareLelong
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.BlowupProjections.BlowupProjStatement
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsHorizontalTwist
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FibreTwistEqUnionEmbeddingsStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FinitePrimesSumSquaresZeroStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HorizontalDivSuppTwistStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MultAtTwistQuadEqStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FibreTwistEqUnionEmbeddings
+public import Mathlib.Algebra.MvPolynomial.Basic
+public import Mathlib.Data.Nat.Prime.Defs
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FinitePrimesSumSquaresZero
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HorizontalDivSuppTwist
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MultAtTwistQuadEq
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PointsIntegrableOfResolutionStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PtsIntegralConjLineEqStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.ResolutionExistsOfResolutionStatementStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RingKrullDimTwistSuccStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwLineSmoothConjInvariantGlueStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwistHeightIntegralDecompositionStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwistIsMultiHomogIdealStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PtsIntegralConjLineEq
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RingKrullDimTwistSucc
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwLineSmoothConjInvariantGlue
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwistHeightIntegralDecomposition
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwistIsMultiHomogIdeal
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwistIsPrimeStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterBridge
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterDivSupp
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.ResolutionExistsOfResolutionStatementStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,8 +66,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterBridge
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterDivSupp
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterFib
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterGood
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRed
@@ -90,7 +94,7 @@ theorem exists_prime_noRoot {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fin
       have h1 : ((a : ℤ) - (b : ℤ)) ∈ W.comap (C : ℤ →+* MRing ι) := h0
       rw [show W.comap (C : ℤ →+* MRing ι) = ⊥ from hh, Ideal.mem_bot] at h1
       omega
-    exact GlobalTheory.T.finite_primes_sum_squares_zero _ _ (Ideal.Quotient.mk W) Ideal.Quotient.mk_surjective
+    exact _root_.GlobalTheory.CompanionTheory.QuadFin.finite_primes_neg_sq _ _ (Ideal.Quotient.mk W) Ideal.Quotient.mk_surjective
   have hfin : (⋃ W ∈ S, {p : ℕ | p.Prime ∧ ∃ a b : MRing ι ⧸ W, b ≠ 0 ∧ a ^ 2 + (p : MRing ι ⧸ W) * b ^ 2 = 0}).Finite :=
     hS.biUnion hbad
   obtain ⟨p, hp, hpn⟩ := (Nat.infinite_setOf_prime.diff hfin).nonempty
@@ -106,10 +110,10 @@ theorem isArithVar_twist {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintyp
     {Q : Ideal (MRing ι)} {d : ℕ} (hQ : IsArithVar Q d) (hR : NoRoot p Q) :
     IsArithVar (twist p Q) d := by
   obtain ⟨hK, hM, hH, hd⟩ := hQ
-  refine ⟨⟨none⟩, ⟨GlobalTheory.T.twist_isPrime_of_isPrime_of_noRoot K ι p Q hM.1 hR, GlobalTheory.T.twist_isMultiHomogIdeal K ι p Q hM.2.1,
+  refine ⟨⟨none⟩, ⟨GlobalTheory.T.twist_isPrime_of_isPrime_of_noRoot K ι p Q hM.1 hR, _root_.GlobalTheory.CompanionTheory.Ar.Tw.isMultiHomogIdeal_twist K ι p Q hM.2.1,
     isRelevant_twist p hM.1.ne_top hM.2.2⟩, isHorizontal_twist p hH, ?_⟩
   haveI := hM.1
-  rw [GlobalTheory.T.ringKrullDim_twist_succ K ι p Q hM.1, hd, Fintype.card_option, ← add_assoc]
+  rw [_root_.GlobalTheory.CompanionTheory.Ar.Tw.ringKrullDim_twist K ι p Q hM.1, hd, Fintype.card_option, ← add_assoc]
   push_cast
   rfl
 
@@ -171,7 +175,7 @@ theorem twist_integral (hI : PtsIntegrableStatement) (hD : PtsIndepStatement)
   classical
   have hQ' : IsArithVar (twist p Q) (e + 1) := isArithVar_twist hQ hR
   have hKne : Nonempty K := hQ.1
-  have hF := fun B : HermLine ι => GlobalTheory.T.twLine_smooth_conjInvariant_glue K ι p B hp
+  have hF := fun B : HermLine ι => _root_.GlobalTheory.CompanionTheory.Ar.Tw.Lines.twLine_main K ι p B hp
   have hL' : ∀ j, IsSmoothHerm (twLine p (L j)) := fun j => (hF _).1 (hL j)
   have hA' : IsSmoothHerm (twLine p A) := (hF _).1 hA
   have hLc : ∀ j, IsSmoothHerm (conjLine (L j)) := fun j => (hF _).2.1 (hL j)
@@ -199,9 +203,9 @@ theorem twist_integral (hI : PtsIntegrableStatement) (hD : PtsIndepStatement)
     rw [dite_eq_left hex]
     exact hD K' ι' P e _ Φ M B t h1 hex.choose_spec h2 h3 h4 h5
   rw [atOf hQ' hΨ hL' hA' hs', atOf hQ gp hL hA hs, atOf hQ gm hLc hAc hsc]
-  have sp := GlobalTheory.T.twist_height_integral_decomposition K ι p Q e Ψ (fun j => twLine p (L j)) (twLine p A) L A s (vPlus p) hp hQ hQ' hΨ hL' hA' hs'
+  have sp := _root_.GlobalTheory.CompanionTheory.Ar.Tw.SheetD.density_twist K ι p Q e Ψ (fun j => twLine p (L j)) (twLine p A) L A s (vPlus p) hp hQ hQ' hΨ hL' hA' hs'
     (Or.inl rfl) (fun j z hz => (hF _).2.2.2.1 z hz.1) (fun z hz => (hF _).2.2.2.1 z hz.1)
-  have sm := GlobalTheory.T.twist_height_integral_decomposition K ι p Q e Ψ (fun j => twLine p (L j)) (twLine p A) (fun j => conjLine (L j)) (conjLine A) s
+  have sm := _root_.GlobalTheory.CompanionTheory.Ar.Tw.SheetD.density_twist K ι p Q e Ψ (fun j => twLine p (L j)) (twLine p A) (fun j => conjLine (L j)) (conjLine A) s
     (vMinus p) hp hQ hQ' hΨ hL' hA' hs' (Or.inr rfl) (fun j z hz => (hF _).2.2.2.2 z hz.1)
     (fun z hz => (hF _).2.2.2.2 z hz.1)
   have hae : ∀ᵐ y, (∑ᶠ w ∈ fibre (twist p Q) Ψ y, sheetDensity (twist p Q) Ψ (pot fun j => twLine p (L j)) (logNorm (twLine p A) (inc s)) y w) =
@@ -233,7 +237,7 @@ theorem twist_integral (hI : PtsIntegrableStatement) (hD : PtsIndepStatement)
       rw [hz, map_zero] at h
       have := congrFun h 0
       simp at this
-    rw [GlobalTheory.T.fibre_twist_eq_union_embeddings K ι p Q e Ψ y hp hKne hQ.2.1.2.1, finsum_mem_union hdis (fpl.image _) (fmi.image _),
+    rw [_root_.GlobalTheory.CompanionTheory.Ar.Tw.Fib.fibre_twist K ι p Q e Ψ y hp hKne hQ.2.1.2.1, finsum_mem_union hdis (fpl.image _) (fmi.image _),
       finsum_mem_image (embL_inj v1p).injOn, finsum_mem_image (embL_inj v1m).injOn]
     simp only [hpl, hmi]
   unfold ptsIntegralAt
@@ -247,7 +251,7 @@ theorem twist_double (hI : PtsIntegrableStatement) (hD : PtsIndepStatement)
     (hA : IsSmoothHerm A) (hs : IsSectionOn Q A s) :
     ptsIntegral (twist p Q) (pot fun j => twLine p (L j)) (logNorm (twLine p A) (inc s)) =
       2 * ptsIntegral Q (pot L) (logNorm A s) := by
-  rw [twist_integral hI hD hp hQ hR hL hA hs, GlobalTheory.T.ptsIntegral_conjLine_eq hD K ι Q e L A s hQ hL hA hs]
+  rw [twist_integral hI hD hp hQ hR hL hA hs, _root_.GlobalTheory.CompanionTheory.Ar.Tw.ptsIntegral_conjLine hD K ι Q e L A s hQ hL hA hs]
   ring
 
 theorem pot_cons {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fintype (ι k)] {e : ℕ}
@@ -325,7 +329,7 @@ theorem poincareLelong_of_inv :
   have hp0 : p ≠ 0 := hp.ne_zero
   have hRP : NoRoot p P := hpS P (Set.mem_insert _ _)
   have hRW : ∀ W ∈ H, NoRoot p W := fun W h => hpS W (Set.mem_insert_of_mem _ h)
-  have hF := fun C : HermLine ι => GlobalTheory.T.twLine_smooth_conjInvariant_glue K ι p C hp0
+  have hF := fun C : HermLine ι => _root_.GlobalTheory.CompanionTheory.Ar.Tw.Lines.twLine_main K ι p C hp0
   have hP' : IsArithVar (twist p P) (n + 2) := isArithVar_twist hP hRP
   have hInv' := hInv (Option K) (Tb ι) (twist p P) n (fun j => twLine p (L j)) (twLine p A) (twLine p B)
     (inc s) hP' (fun j => (hF _).1 (hL j)) ((hF _).1 hA) ((hF _).1 hB)
@@ -351,7 +355,7 @@ theorem poincareLelong_of_inv :
   have hsup : twist p P ⊔ Ideal.span {inc s} =
       (P ⊔ Ideal.span {s}).map inc ⊔ Ideal.span {quad p} := by
     rw [Ideal.map_sup, Ideal.map_span, Set.image_singleton, twist, sup_right_comm]
-  have hdiv := GlobalTheory.T.horizontal_divSupp_twist_eq_image K ι p P s (fun W hW hh =>
+  have hdiv := _root_.GlobalTheory.CompanionTheory.Ar.Tw.horizontal_divSupp_twist K ι p P s (fun W hW hh =>
     GlobalTheory.T.twist_isPrime_of_isPrime_of_noRoot K ι p W (hHar W ⟨hW, hh⟩).2.1.1 (hRW W ⟨hW, hh⟩))
   have hsum : (∑ᶠ (W') (_ : W' ∈ divSupp (twist p P) (inc s) ∧ IsHorizontal W'),
         (multAt (twist p P ⊔ Ideal.span {inc s}) W' : ℝ) *
@@ -369,7 +373,7 @@ theorem poincareLelong_of_inv :
         ∑ᶠ W ∈ H, (multAt (P ⊔ Ideal.span {s}) W : ℝ) * ptsIntegral W (pot L) (fun z => Real.log (B.h z)) := rfl
     rw [h1, h2, hdiv, finsum_mem_image (twist_injective p).injOn, mul_finsum_mem]
     refine finsum_mem_congr rfl fun W hW => ?_
-    rw [e2 W hW, hsup, GlobalTheory.T.multAt_twist_quad_eq K ι p _ W hW.1.1 (GlobalTheory.T.twist_isPrime_of_isPrime_of_noRoot K ι p W (hHar W hW).2.1.1 (hRW W hW))]
+    rw [e2 W hW, hsup, _root_.GlobalTheory.CompanionTheory.Ar.Tw.multAt_twist K ι p _ W hW.1.1 (GlobalTheory.T.twist_isPrime_of_isPrime_of_noRoot K ι p W (hHar W hW).2.1.1 (hRW W hW))]
     ring
   have hInv2 : ptsIntegral (twist p P)
       (Fin.cons (fun z => Real.log ((twLine p B).h z)) (pot fun j => twLine p (L j)))

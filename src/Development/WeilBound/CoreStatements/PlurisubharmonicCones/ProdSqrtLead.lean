@@ -4,8 +4,10 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.HodgeIP
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptFiniteExtension
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptInteriorFlag
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeInnerProductPullbackUniqueStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeEvalAtLocalRingStatement
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeInnerProductPullbackUnique
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
+import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeEvalAtLocalRing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -67,7 +69,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {X X' :
 theorem val_unique (hξ : IsCptGen ξ) (M : LieModel t.G ξ Li) {z : Sp ℂ ⟶ X} (hq : genPt ξ ⤳ centre z) {e : Li}
     {w : epsAt z ⟶ t.G} (hw : M.ValAt z e w) : e ∈ M.lat ⟨centre z, hq⟩ ∧ ∀ w', M.ValAt z e w' → w' = w := by
   obtain ⟨Vz, _, _, ⟨MR⟩⟩ := lieModel_exists X t.G ℂ z
-  obtain ⟨ev, hev1, -, -⟩ := GlobalTheory.T.lie_lattice_eval_at_local_ring X t.G Ω ξ Li M ℂ z hq Vz MR hξ t.semi.smooth
+  obtain ⟨ev, hev1, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieLat_val X t.G Ω ξ Li M ℂ z hq Vz MR hξ t.semi.smooth
   obtain ⟨x, rfl⟩ := MR.onto w (GrNorm.tan_of_valAt hw)
   obtain ⟨he, e2⟩ := (hev1 _ _).1 hw
   refine ⟨he, fun w' hw' => ?_⟩
@@ -86,7 +88,7 @@ theorem gram_up (m : SABMap t' t f) (hξ : IsCptGen ξ) (hξ' : IsCptGen ξ') (h
   classical
   set p' : Cpt ξ' := ⟨centre z, hq⟩ with hp'
   obtain ⟨Vz, _, _, ⟨MR⟩⟩ := lieModel_exists X' t'.G ℂ z
-  obtain ⟨ev, hev1, hev2, -⟩ := GlobalTheory.T.lie_lattice_eval_at_local_ring X' t'.G Ω' ξ' Li' M' ℂ z hq Vz MR hξ' t'.semi.smooth
+  obtain ⟨ev, hev1, hev2, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieLat_val X' t'.G Ω' ξ' Li' M' ℂ z hq Vz MR hξ' t'.semi.smooth
   let eA : X'.presheaf.stalk p'.1 ≃+* regAt ξ' p' :=
     RingEquiv.ofBijective (genMap ξ' p').rangeRestrict ⟨fun a b e => hξ'.inj p' (congrArg Subtype.val e),
       (genMap ξ' p').rangeRestrict_surjective⟩
@@ -128,7 +130,7 @@ theorem gram_up (m : SABMap t' t f) (hξ : IsCptGen ξ) (hξ' : IsCptGen ξ') (h
   simp only [hbv]
   refine HodgePull.gram_comb MR (fun l => val (j (b l))) Γ p (fun a c => ?_) (HodgePull.hodgeInnerProduct_unique m) _ p q
   rw [← hw'e, ← hw'e]
-  refine ((GlobalTheory.T.hodge_inner_product_pullback_unique E H X' X t' t f m z (w' a) (w' c) (w a) (w c) (hww a) (hww c)).1 _).2 ?_
+  refine ((_root_.GlobalTheory.CompanionTheory.Ar.HodgeUnique.main E H X' X t' t f m z (w' a) (w' c) (w a) (w c) (hww a) (hww c)).1 _).2 ?_
   rw [hwv, hwv]
   exact hI a c
 

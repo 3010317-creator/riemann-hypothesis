@@ -2,10 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.NormSmall
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.HeckeFunctionalEquationAbs
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCmValueCharacterConductorExponentsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GridSizesLogBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormCompletedHeckeLCMOneLePhragmenLindelofStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormHeckeLFunctionLeZetaThreeHalvesPowStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.FinitePrimesUnder
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCmValueCharacterConductorExponents
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GridSizesLogBound
+public import Mathlib.NumberTheory.LSeries.RiemannZeta
+public import Mathlib.NumberTheory.NumberField.CMField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormCompletedHeckeLCMOneLePhragmenLindelof
+import Development.AbelianVarietyTheory.Definitions.Divisors.EntireEqOfHalfPlane
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormHeckeLFunctionLeZetaThreeHalvesPow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,7 +58,7 @@ namespace GlobalTheory.SqTop
 theorem lBound_of : GlobalTheory.Published.HeckeFunctionalEquationAbs → GlobalTheory.IndefiniteRowSideFullHecke.CompletedLStripBounds.CompletedLBoundedInStrips → FieldDat → LBound := by
   intro hFE hS hFD
   set c : ℝ := max 0 (Real.log ‖riemannZeta (3 / 2)‖) with hc
-  obtain ⟨CF1, hB⟩ := GlobalTheory.T.gridSizes_log_bound c
+  obtain ⟨CF1, hB⟩ := _root_.GlobalTheory.SqTop.SizesBound.sizes c
   obtain ⟨CF2, hF⟩ := hFD
   refine ⟨max CF1 CF2, fun ε CF hCF => ?_⟩
   obtain ⟨C1, x1, hB⟩ := hB ε CF (le_of_max_le_left hCF)
@@ -81,8 +85,8 @@ theorem lBound_of : GlobalTheory.Published.HeckeFunctionalEquationAbs → Global
   have hpos : 0 < ‖Λ s‖ := norm_pos_iff.2 h0
   have hz : 0 < ‖riemannZeta (3 / 2)‖ := norm_pos_iff.2 (riemannZeta_ne_zero_of_one_lt_re (by norm_num))
   rcases (by omega : s = 1 ∨ 2 ≤ s) with rfl | h2
-  · obtain ⟨a, ha, haN⟩ := GlobalTheory.T.exists_cmValueCharacter_conductorExponents D G 1 _ χ hχ
-    have hA := GlobalTheory.T.norm_completedHeckeL_CM_one_le_phragmenLindelof D.host.E D.what₂.Tau (cmPhi D) hFE hS hFd.2.2.2.2.2.2.1 χ (fun τ => ((κ (π τ) : ℕ) : ℤ) + ((1 : ℕ) : ℤ)) a Λ
+  · obtain ⟨a, ha, haN⟩ := _root_.GlobalTheory.FunObj.SqNum.CondExps.exists_condExps D G 1 _ χ hχ
+    have hA := _root_.GlobalTheory.HeckeLOneBound.norm_heckeL_one_le D.host.E D.what₂.Tau (cmPhi D) hFE hS hFd.2.2.2.2.2.2.1 χ (fun τ => ((κ (π τ) : ℕ) : ℤ) + ((1 : ℕ) : ℤ)) a Λ
       hχ.1 hχ.2.1 hχ.2.2.1 (fun τ => by positivity) ha hΛ
     simp only [Nat.cast_one] at hpos h0 ⊢
     set N : ℕ := (discr D.host.E).natAbs * a.prod fun v k => Ideal.absNorm v.asIdeal ^ k with hN
@@ -119,7 +123,7 @@ theorem lBound_of : GlobalTheory.Published.HeckeFunctionalEquationAbs → Global
     have h4 : Real.log (‖riemannZeta (3 / 2)‖ ^ n) ≤ c * n := by
       rw [Real.log_pow]; nlinarith [(Nat.cast_nonneg n : (0:ℝ) ≤ n)]
     linarith
-  · have h := GlobalTheory.T.norm_heckeLFunction_le_zeta_three_halves_pow D.host.E χ Λ s hχ.1 hΛ (by
+  · have h := _root_.GlobalTheory.HeckeLBound.norm_heckeL_le D.host.E χ Λ s hχ.1 hΛ (by
       simp only [Complex.natCast_re]; have : (2 : ℝ) ≤ s := by exact_mod_cast h2
       linarith)
     have h4 : Real.log ‖Λ s‖ ≤ c * n := by

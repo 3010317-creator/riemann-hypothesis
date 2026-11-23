@@ -4,19 +4,21 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SeriesK
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ParamsEx
 public import Formalism.LocalToGlobal.IndefiniteReal.LinksStage
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.RealLowestKTypeCoeffSquareIntegrable
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CentralIdempotentMulMirabolicDetAverageEqZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CentralIdempotentMulMirabolicDetAverageEqZero
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DefiniteSpaceFormsFunctionalPrincipalTypeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DetCharacterLabelRootOfHarishChandraConstituentStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIrrHarishChandraInductionThetaInvDetStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteIrrCharactersAndFinsumCentralIdempotentsEq
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsCharLab
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DetCharacterLabelRootOfHarishChandraConstituent
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LabelDatum
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIrrHarishChandraInductionThetaInvDet
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodProjectorConvMirabolicAvgEqZeroStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraSeriesCentralIdempotentLaws
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TraceMirabolicDetAverageEqHarishChandraRestrictiStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TraceMirabolicDetCharacterAverageVectorIndepStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TraceMirabolicDetAverageEqHarishChandraRestricti
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TraceMirabolicDetCharacterAverageVectorIndep
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PostOnGaLMemGoodPart
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelCharactersRamificationLevelPlaces
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParahoricLevelLiftsExistStatement
 public import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.GEqAct
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteIrrCharactersAndFinsumCentralIdempotentsEq
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParahoricLevelLiftsExistStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -137,20 +139,20 @@ theorem seriesKillsAvg : SeriesKillsAvg := by
   refine Finset.sum_eq_zero fun ψ hψ => ?_
   simp only [Finset.mem_filter, Set.Finite.mem_toFinset, Set.mem_setOf_eq] at hψ
   obtain ⟨hirr, hlab⟩ := hψ
-  apply GlobalTheory.T.centralIdempotent_mul_mirabolicDetAverage_eq_zero g (n + 1) ψ hirr θ a b
-  rw [GlobalTheory.T.trace_mirabolicDetCharacterAverage_vector_indep g n ψ (isClass_irr hirr) θ a ha b]
+  apply _root_.GlobalTheory.MirAvg.zOf_mul_mirEl_eq_zero g (n + 1) ψ hirr θ a b
+  rw [_root_.GlobalTheory.MirAvg.tr_mirEl_indep g n ψ (isClass_irr hirr) θ a ha b]
   have hinv := charLab_inv hc
   cases b
   · simp only [Bool.false_eq_true, if_false]
-    rw [(GlobalTheory.T.trace_mirabolicDetAverage_eq_harishChandraRestriction g n ψ θ).1]
+    rw [(_root_.GlobalTheory.ResTr.trace_mir g n ψ θ).1]
     by_contra hne
-    obtain ⟨σ, hσ, hip⟩ := (GlobalTheory.T.exists_irr_harishChandraInduction_thetaInv_det g n ψ hirr θ).1 (right_ne_zero_of_mul hne)
-    exact hf' ((GlobalTheory.T.detCharacterLabel_root_of_harishChandraConstituent g L n ψ f hirr hlab σ hσ θ⁻¹ c⁻¹ hinv).1 hip)
+    obtain ⟨σ, hσ, hip⟩ := (_root_.GlobalTheory.GLq.HCFrobWeight.exists_irr_hc_thetaInv g n ψ hirr θ).1 (right_ne_zero_of_mul hne)
+    exact hf' ((_root_.GlobalTheory.GLq.DetRoot.root_of_hc_det g L n ψ f hirr hlab σ hσ θ⁻¹ c⁻¹ hinv).1 hip)
   · simp only [if_true]
-    rw [(GlobalTheory.T.trace_mirabolicDetAverage_eq_harishChandraRestriction g n ψ θ).2]
+    rw [(_root_.GlobalTheory.ResTr.trace_mir g n ψ θ).2]
     by_contra hne
-    obtain ⟨σ, hσ, hip⟩ := (GlobalTheory.T.exists_irr_harishChandraInduction_thetaInv_det g n ψ hirr θ).2 (right_ne_zero_of_mul hne)
-    exact hf' ((GlobalTheory.T.detCharacterLabel_root_of_harishChandraConstituent g L n ψ f hirr hlab σ hσ θ⁻¹ c⁻¹ hinv).2 hip)
+    obtain ⟨σ, hσ, hip⟩ := (_root_.GlobalTheory.GLq.HCFrobWeight.exists_irr_hc_thetaInv g n ψ hirr θ).2 (right_ne_zero_of_mul hne)
+    exact hf' ((_root_.GlobalTheory.GLq.DetRoot.root_of_hc_det g L n ψ f hirr hlab σ hσ θ⁻¹ c⁻¹ hinv).2 hip)
 
 theorem goodNoChi : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type) (A : FamIn D.what₂.LL G Pl0 T D.R.m) (Ks : Type) [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A), GlobalTheory.LiftRows.Given R F → R.FullP → ∀ i t, GoodNoChi R i t := by
   intro D G _ _ Pl0 T A Ks _ _ _ R F hG _ i t

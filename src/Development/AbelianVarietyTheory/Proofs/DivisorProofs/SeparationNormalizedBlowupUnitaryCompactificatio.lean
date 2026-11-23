@@ -1,16 +1,18 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FromBaseAlt
-import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.GlobalFnsHolds
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianPartDescendsOfThetaTermsRatiosStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DescendsAbelianPartOfIsPullDegStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsApproximatingElementsNormalCoverUnitaryStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCommonModule
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSupportingTupleSmoothConeCmFieldStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnimodMod
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSupportingTupleSmoothConeCmField
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryFourierSystemTraitsFamilyStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeriodsInCoordinatesFromBasePullDegStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PoincareApproxValuesAtPointOfElementsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTermCoefficientSqEqMonomialSubfieldStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.OrdGeOfForall
+import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.GlobalFnsHolds
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.TauBimultOfIsPullDeg
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ValEqOfAppInjective
 import Mathlib.Algebra.Order.Floor.Extended
@@ -51,7 +53,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
-public import Development.AbelianVarietyTheory.Definitions.Divisors.OrdGeOfForall
 
 @[expose] public section
 
@@ -144,7 +145,7 @@ theorem GlobalTheory.USep.sepB_of_normBl : ∀ (E : Type) [Field E] [NumberField
     hcov htr hmem K ev k₀ hk hc hdef ga (fun k a b => rfl)
   obtain ⟨d₀, hd₀, hsup⟩ : ∃ d₀, 1 ≤ d₀ ∧ HasSupports (H.bar : 𝓞 E → 𝓞 E) (min Dw.p Dw.q) φ d₀ :=
     exists_hasSupports (𝓞 E) H.bar (min Dw.p Dw.q) φ hpol fun X _ _ _ _ hX r γ hγ =>
-      GlobalTheory.T.exists_supportingTuple_smoothCone_cmField E H φ X (hpol X hX) r γ hγ
+      _root_.GlobalTheory.Poinc.exists_supports_cm E H φ X (hpol X hX) r γ hγ
   have hM' : 1 ≤ l.M' := Nat.one_le_iff_ne_zero.2 (Nat.lcm_ne_zero (by have := l.three_le; omega) l.A_pos.ne')
   have hmem4 := hmem.2.2.2.1
   have hδ : ∀ k, Φ.δ y k = (l.M' : ℤ) • ga k := fun k => LinearMap.ext₂ fun a b => by

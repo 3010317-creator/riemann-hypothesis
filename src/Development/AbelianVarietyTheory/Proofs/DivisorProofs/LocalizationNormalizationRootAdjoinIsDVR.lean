@@ -5,8 +5,10 @@ public import Mathlib.RingTheory.AdjoinRoot
 public import Mathlib.RingTheory.DiscreteValuationRing.Basic
 public import Mathlib.RingTheory.Localization.AtPrime.Basic
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KummerUniformiserAdjoinRootTensorIsReducedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalizationIntegralClosureArtinianReducedDomainStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalisationDvrTensorSeparableFiniteStatement
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalizationIntegralClosureArtinianReducedDomain
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalisationDvrTensorSeparableFinite
+public import Mathlib.RingTheory.DiscreteValuationRing.TFAE
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,7 +57,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.RingTheory.DiscreteValuationRing.TFAE
 
 @[expose] public section
 
@@ -101,10 +102,10 @@ theorem main : ∀ (S K L : Type) [CommRing S] [IsDomain S] [IsDiscreteValuation
       rw [Algebra.algebraMap_eq_smul_one, ← h0, map_smul, Module.Basis.repr_self]
       simp
     rw [← key a, ← key b, h1]
-  haveI : Module.Finite D (integralClosure D (TensorProduct S D L)) := GlobalTheory.T.normalisation_dvr_tensor_separable_finite S K L D
+  haveI : Module.Finite D (integralClosure D (TensorProduct S D L)) := _root_.GlobalTheory.NormFin.main S K L D
   haveI : IsArtinianRing (TensorProduct S D L) := artinian S L D
   haveI : IsReduced (TensorProduct S D L) := GlobalTheory.T.kummer_uniformiser_adjoinRoot_tensor_isReduced S K L π e D ⟨φ⟩ hπ he
-  obtain ⟨hdom, hic⟩ := GlobalTheory.T.localization_integralClosure_artinian_reduced_domain D (TensorProduct S D L) Q
+  obtain ⟨hdom, hic⟩ := _root_.GlobalTheory.localization_integralClosure_isDomain_isIntegrallyClosed D (TensorProduct S D L) Q
   refine ⟨hdom, ?_⟩
   haveI : IsNoetherianRing (integralClosure D (TensorProduct S D L)) :=
     IsNoetherianRing.of_finite D _

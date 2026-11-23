@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Foundations.NormSumPairRankZeroOfCurveCoordNorm
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IdealPeriodLatticeOfCurveDatum
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OddThetaFunctionExistenceUniqueness
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TorsionTranslateThetaJetsDenominatorBoundStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TorsionTranslateThetaJetsDenominatorBound
 import Formalism.SharpRestriction.Divisibility.WeightFamilies
 import Formalism.SharpRestriction.GlobalSchurBounds.GlobalRankLatticeProofs.UnitTraceSumBounds.FamilyLogGammaSmallHolds
 import Mathlib.Algebra.Order.Floor.Extended
@@ -347,7 +347,7 @@ theorem jets_translate_product : ∀ (D : D7), Inp D → ∀ (p : ℕ) [Fact p.P
     (fun j => U1 (lamOf D cc δ) ((Nn : ℂ)⁻¹ * w j) (GL3Theta.th0 (lamOf D cc δ) t0)) (fun _ => 1)
     (fun j => differentiable_U1 _ _ hth) (fun j k => by
       rw [one_mul, ← hAk]
-      refine GlobalTheory.T.torsionTranslate_theta_jets_denominator_bound D hI p lam cc δ hC hcop t0 ht0 _ Nn hN ?_ hsp k
+      refine _root_.GlobalTheory.TorsionJets.jet_translate_le D hI p lam cc δ hC hcop t0 ht0 _ Nn hN ?_ hsp k
       rw [mul_inv_cancel_left₀ hN0]
       exact hw j) hA0 (fun i => embV D (tor0 D cc δ) (y i))
     fun i j => algLe_coord lam hI.g1 cc δ hb.1 hY (hy i) j

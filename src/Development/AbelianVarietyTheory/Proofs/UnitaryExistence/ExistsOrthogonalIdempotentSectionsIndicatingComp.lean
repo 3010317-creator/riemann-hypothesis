@@ -2,8 +2,8 @@ module
 
 public import Formalism.LocalToGlobal.ProjectiveLattices.CompHt
 public import Formalism.LocalToGlobal.ProjectiveLattices.PetersonNormSubspace
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsOrthogonalIdempotentSectionsPeriodSpacesStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedUniformisationComponentsPeriodSpacesBijectStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsOrthogonalIdempotentSectionsPeriodSpaces
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedUniformisationComponentsPeriodSpacesBiject
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,10 +50,10 @@ theorem exists_idempotents_rdU : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   intro E _ _ _ H Dw l Xo c σ r U hr hσ hU hF
   obtain ⟨g, e, F, ik, φ, hφ, hP⟩ := hU.2.2.2.2.2
   have hb : Function.Bijective ik := by
-    refine GlobalTheory.T.framedUniformisation_components_periodSpaces_bijective E H Dw l Xo c σ r U hr hσ hU g e F ik φ hφ (fun k x => ?_)
+    refine _root_.GlobalTheory.CompBij.ik_bijective E H Dw l Xo c σ r U hr hσ hU g e F ik φ hφ (fun k x => ?_)
     obtain ⟨Pm, h1, h2, h3, h4, -⟩ := hP k x
     exact ⟨Pm, h1, h2, h3, h4⟩
-  obtain ⟨χ, h0, h1, h2, h3, h4⟩ := GlobalTheory.T.exists_orthogonal_idempotentSections_periodSpaces E H Dw l Xo c σ g _ F hF
+  obtain ⟨χ, h0, h1, h2, h3, h4⟩ := _root_.GlobalTheory.CompSystem.exists_orthogonal_idempotents E H Dw l Xo c σ g _ F hF
   refine ⟨fun k => χ (ik k), fun k => h0 _, fun k => h1 _, fun k k' h => h2 _ _ (fun h' => h (hb.1 h')), ?_, ?_⟩
   · rw [← h3]
     exact hb.sum_comp χ

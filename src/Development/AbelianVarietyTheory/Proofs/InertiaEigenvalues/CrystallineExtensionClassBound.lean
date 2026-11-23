@@ -2,17 +2,17 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExpStar
 public import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoboundaryBcrisOfDualExponentialZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoboundaryBcrisOfDualExponentialZero
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.Cocycle
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousFixingSubgroupEquiv
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContractEquivariant
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBasisOfSubmodule
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsExpStarZeroNear
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsCocTmulOne
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemLayerIff
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowSmulMemHfDOfRestriction
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SesLatticeTrivialQuotientStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TorsionBoundOfWeightHypStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SesLatticeTrivialQuotient
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TorsionBoundOfWeightHyp
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousFixingSubgroupEquiv
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBasisOfSubmodule
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -226,7 +226,7 @@ theorem scalar_step (D : Formalism.BasicNotions.D7) (h2 : adm2 D) (h4 : Archimed
       convert this using 1
       simp only [hu, map_add (f := _), map_mul, map_pow, map_natCast, hι]
       ring⟩
-  obtain ⟨x, hx⟩ := GlobalTheory.T.coboundary_bcris_of_dualExponential_zero D h2 h4 l K s hs e z' hz'
+  obtain ⟨x, hx⟩ := _root_.GlobalTheory.KerExpCrys.cob_cris_of_expStar_zero D h2 h4 l K s hs e z' hz'
   refine ⟨z', x, hz'.1, hx, fun σ hσ => ?_⟩
   have h1 : z' σ - (l : ℚ_[l]) ^ (N + (e + 2) * s + padicValNat l e + e / (l - 1) + 1 +
         (s + padicValNat l (e + 1))) * c σ =
@@ -412,9 +412,9 @@ theorem class_bound : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F :
     (fun g g' => hc1 (Subgroup.inclusion hle g) (Subgroup.inclusion hle g'))
     (fun n g => (continuous_inclusion hle).continuousAt.eventually
       (hc2 n (Subgroup.inclusion hle g))) one hone
-  have htor := GlobalTheory.T.ses_lattice_trivial_quotient D HW F h5 h7 l K s LL h e Yt Y Z ι π hle hses hZ hcr yt hyt f hf
+  have htor := _root_.GlobalTheory.Adopt.ses_lattice_trivial_quotient D HW F h5 h7 l K s LL h e Yt Y Z ι π hle hses hZ hcr yt hyt f hf
     one hone
-  have hcob := GlobalTheory.T.torsion_bound_of_weight_hyp D HW F h5 h7 l K s LL h Y M0 h0 0 ((e : ℤ) + 1) hle (by omega) hW _
+  have hcob := _root_.GlobalTheory.TorsLL.torsion_bound_at_level D HW F h5 h7 l K s LL h Y M0 h0 0 ((e : ℤ) + 1) hle (by omega) hW _
     hcoc htor
   have key := mem_HfD_of_lattice D h2 h4 K LL s ⟨h.1, h.2.1⟩ hK hle e _ Y Ve hVe φ hφ f hc1 hc2
     one hone hcob

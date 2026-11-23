@@ -10,11 +10,17 @@ public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.JumpDic
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.DeRhamFamilyAway
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.CuspidalGaloisUnramified
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleAtGoodPointsOfCoefRingTakenAtLiveStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AmbientTypeConjugatePlaceAtSplitPrimeStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.JointConditionsZpowers.CommutingEndomorphismCondition
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsRhoPtOfSplitting
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsWildInertiaCyclotomicElement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleAtGoodPointsOfCoefRingTakenAtLive
+public import Formalism.SharpRestriction.LevelLetterCocycles.EmbeddingTypes
+public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.SplitPlaceTypes
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AmbientTypeConjugatePlaceAtSplitPrime
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BlochKatoFiniteTrivialRepUnramifiedColumnPlacesAStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BlockAndTorsionExponentBoundsCanonicalHubData
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FontainePropertiesAllPlacesStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.DecompositionData
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FontainePropertiesAllPlacesAlt
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalGlobalAssembly
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PsiAtPsiAt
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ResidualAbsIrredGoodPointOfResidualIrred
@@ -27,8 +33,8 @@ public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLif
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.JointConditionsRangeBound
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.MainAltAltMoreStatement
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RestPtAtQD
-import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RestPtOfPtFam
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.UnrCrysAtRangePrime
+import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RestPtOfPtFam
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -79,7 +85,7 @@ theorem main_alt_alt : GlobalTheory.Published.FontaineBcris → Formalism.Galois
   have had1 : SumRepresentations.adm1 D := hAA.2.2.1
   have had2 : _root_.Formalism.MainNotions.SumRepresentations.adm2_alt D := hAA.2.2.2.1
   have had5 : SumRepresentations.adm5 D := hAA.2.2.2.2.2.2
-  have hFont : ∀ i, TruncatedSeriesCountingIdentities.FontaineAtPlacesOverL (D := D) i := GlobalTheory.T.fontaineAtPlacesOverL D
+  have hFont : ∀ i, TruncatedSeriesCountingIdentities.FontaineAtPlacesOverL (D := D) i := _root_.GlobalTheory.FontaineAdm.fontaineProperties_all_places D
   have hfam : GlobalTheory.PtCore.PtFam D X.r X.ρ := hX.fam
   have hcB : ∀ i, GlobalTheory.HubLoc.cBnum (D.nd.l i) ⌊2 * L.sc.b⌋₊ D.R.t (4 * D.R.n * D.R.nV) ≤ X.cB i := by
     intro i; rw [hX.cB]; exact le_rfl
@@ -99,11 +105,11 @@ theorem main_alt_alt : GlobalTheory.Published.FontaineBcris → Formalism.Galois
   have hUC := _root_.GlobalTheory.HubX.unrCrysAtRangePrime_alt hFB D L X hfam.good htie had2 had5 hG2 hBC hMU i hTw hg hr hs
   refine ⟨fun hJa => (GlobalTheory.HubX.SplitDecl.main D L HW R X hX hJa i hTw hg hr hs).1,
     (GlobalTheory.HubX.SplitDecl.main D L HW R X hX hJ.1 i hTw hg hr hs).2,
-    fun ep => GlobalTheory.T.ambientType_conjugatePlace_at_splitPrime D i ep hsp, ?_, hUC.1, hUC.2⟩
+    fun ep => _root_.GlobalTheory.TypeConjSplit.ambTypeD_of_splitRow D i ep hsp, ?_, hUC.1, hUC.2⟩
   intro π hπ
   have h78 := _root_.GlobalTheory.T.ambT2_of_deRham_family hFB D L X hG2 hJ.1 hJ.2.2.1 hfam i hg π hπ
   exact ⟨GlobalTheory.T.unramifiedTrivialH1f_of_decl D i (X.dc i), hCl.2.2.1 i hg π hπ, h78.1, h78.2.1, h78.2.2.1, hCl.2.2.2 i π,
-    GlobalTheory.T.admissibleAtGoodPoints_of_coefRing_taken_at_live hCh D X hTA hRes hfam i π hπ,
+    _root_.GlobalTheory.AdmissibleCore.main hCh D X hTA hRes hfam i π hπ,
     _root_.GlobalTheory.HubX.jointCondH0all_canon_alt hFB D L HW R X hX hJ h41 hFont i hTw hg hr hs π hπ⟩
 end GlobalTheory.HubX.Assembly
 end

@@ -3,13 +3,16 @@ module
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousBlkM
 public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DetWBlockMatrixFormulaStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DetWEqNormSqDetOneAddIStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianHaarBlockDecompositionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LintegralComplexPowerFiniteStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LintegralLinearChangeVariablesComplexStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LintegralPowerLineScalingStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OneLeDetWStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DetWBlockMatrixFormula
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SecondCountableHermC
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DetWEqNormSqDetOneAddI
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianHaarBlockDecomposition
+public import Mathlib.MeasureTheory.Constructions.BorelSpace.Complex
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LintegralComplexPowerFinite
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LintegralLinearChangeVariablesComplex
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LintegralPowerLineScaling
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OneLeDetW
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,13 +79,13 @@ theorem inner_eq (n : ℕ) (s : ℝ) (hs : (n : ℝ) + 1 / 2 < s) : ∃ K : ENNR
       ENNReal.ofReal (detW (blk b' u d : Matrix (Fin (n+1)) (Fin (n+1)) ℂ) ^ (-s)) =
       K * ENNReal.ofReal (detW (b' : Matrix (Fin n) (Fin n) ℂ) ^ (-(s - 1))) := by
   have hn : (0:ℝ) ≤ n := Nat.cast_nonneg n
-  obtain ⟨C, hC, hD⟩ := GlobalTheory.T.lintegral_power_line_scaling s (by linarith)
-  have hL := GlobalTheory.T.lintegral_complex_power_finite n (2 * s - 1) (by linarith)
+  obtain ⟨C, hC, hD⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Arch.HuaInt.lintegral_sq_add_sq_rpow_neg s (by linarith)
+  have hL := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Arch.HuaInt.lintegral_one_add_normSq_rpow_ne_top n (2 * s - 1) (by linarith)
   set L := ∫⁻ v : Fin n → ℂ, ENNReal.ofReal ((1 + ∑ i, Complex.normSq (v i)) ^ (-(2 * s - 1))) with hLdef
   refine ⟨C * L, ENNReal.mul_ne_top hC hL, fun b' => ?_⟩
   have hB : (b' : Matrix (Fin n) (Fin n) ℂ).IsHermitian := mem_hermC.1 b'.2
-  have hw1 := GlobalTheory.T.one_le_detW_of_isHermitian n _ hB
-  have hwA := GlobalTheory.T.detW_eq_normSq_det_one_add_I n _ hB
+  have hw1 := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Arch.HuaInt.one_le_detW n _ hB
+  have hwA := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Arch.HuaInt.detW_eq_normSq_det_one_add_I_smul n _ hB
   have hdet : Matrix.det (1 + Complex.I • (b' : Matrix (Fin n) (Fin n) ℂ)) ≠ 0 := by
     intro h0
     rw [h0] at hwA
@@ -96,7 +99,7 @@ theorem inner_eq (n : ℕ) (s : ℝ) (hs : (n : ℝ) + 1 / 2 < s) : ∃ K : ENNR
       (continuous_detW _).comp (continuous_blkM.comp
         (by fun_prop : Continuous fun p : (Fin n → ℂ) × ℝ => ((b' : Matrix (Fin n) (Fin n) ℂ), p.1, p.2)))
     exact (hc.measurable.pow_const _).ennreal_ofReal
-  rw [GlobalTheory.T.lintegral_linear_change_variables_complex n _ hdet _ hgm, ← hwA]
+  rw [_root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Arch.HuaInt.lintegral_eq_normSq_det_mul_lintegral_mulVec n _ hdet _ hgm, ← hwA]
   have hv : ∀ v : Fin n → ℂ, ∫⁻ d : ℝ, ENNReal.ofReal (detW (blk b' ((1 + Complex.I • (b' : Matrix (Fin n) (Fin n) ℂ)) *ᵥ v) d : Matrix (Fin (n+1)) (Fin (n+1)) ℂ) ^ (-s))
       = ENNReal.ofReal (detW (b' : Matrix (Fin n) (Fin n) ℂ) ^ (-s)) *
         (C * ENNReal.ofReal ((1 + ∑ i, Complex.normSq (v i)) ^ (-(2 * s - 1)))) := by
@@ -108,10 +111,10 @@ theorem inner_eq (n : ℕ) (s : ℝ) (hs : (n : ℝ) + 1 / 2 < s) : ∃ K : ENNR
             (d - (star v ⬝ᵥ ((b' : Matrix (Fin n) (Fin n) ℂ) *ᵥ v)).re) ^ 2) ^ (-s)) := by
       intro d
       have hh := mem_hermC.1 (blk b' ((1 + Complex.I • (b' : Matrix (Fin n) (Fin n) ℂ)) *ᵥ v) d).2
-      rw [GlobalTheory.T.detW_eq_normSq_det_one_add_I _ _ hh]
+      rw [_root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Arch.HuaInt.detW_eq_normSq_det_one_add_I_smul _ _ hh]
       have e : ((blk b' ((1 + Complex.I • (b' : Matrix (Fin n) (Fin n) ℂ)) *ᵥ v) d : hermC (n+1)) : Matrix (Fin (n+1)) (Fin (n+1)) ℂ)
           = blkM (b' : Matrix (Fin n) (Fin n) ℂ) ((1 + Complex.I • (b' : Matrix (Fin n) (Fin n) ℂ)) *ᵥ v) d := rfl
-      rw [e, GlobalTheory.T.detW_block_matrix_formula n _ hB hdet v d, ← hwA, Real.mul_rpow (by linarith) (by positivity),
+      rw [e, _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Arch.HuaInt.normSq_det_one_add_I_blkM n _ hB hdet v d, ← hwA, Real.mul_rpow (by linarith) (by positivity),
         ENNReal.ofReal_mul (Real.rpow_nonneg (by linarith) _)]
     simp only [hterm]
     rw [lintegral_const_mul' _ _ ENNReal.ofReal_ne_top, hD (1 + ∑ i, Complex.normSq (v i)) (by linarith)]
@@ -149,20 +152,20 @@ theorem hua_integrable : ∀ (n : ℕ) (s : ℝ), (n : ℝ) - 1 / 2 < s → ∀ 
     intro s hs ν hν
     have hs' : (n : ℝ) + 1 / 2 < s := by push_cast at hs; linarith
     have hpos : ∀ b : hermC (n + 1), 0 ≤ detW (b : Matrix (Fin (n+1)) (Fin (n+1)) ℂ) ^ (-s) := fun b =>
-      Real.rpow_nonneg (by linarith [GlobalTheory.T.one_le_detW_of_isHermitian _ _ (mem_hermC.1 b.2)]) _
+      Real.rpow_nonneg (by linarith [_root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Arch.HuaInt.one_le_detW _ _ (mem_hermC.1 b.2)]) _
     have hmeas := measurable_term (n + 1) s
     have hm2 : Measurable (fun b : hermC (n + 1) => detW (b : Matrix (Fin (n+1)) (Fin (n+1)) ℂ) ^ (-s)) :=
       (((continuous_detW (n + 1)).comp continuous_subtype_val).measurable.pow_const _)
     refine ⟨hm2.aestronglyMeasurable, ?_⟩
     rw [hasFiniteIntegral_iff_ofReal (Filter.Eventually.of_forall hpos)]
-    obtain ⟨c, hc, hF⟩ := GlobalTheory.T.hermitian_haar_block_decomposition n ν (Measure.addHaar) hν inferInstance
+    obtain ⟨c, hc, hF⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Arch.HuaInt.haar_blocks n ν (Measure.addHaar) hν inferInstance
     obtain ⟨K, hK, hI⟩ := inner_eq n s hs'
     rw [hF _ hmeas]
     simp only [hI]
     rw [lintegral_const_mul _ (measurable_term n (s - 1))]
     have h3 := ih (s - 1) (by linarith) Measure.addHaar inferInstance
     have hp3 : ∀ b : hermC n, 0 ≤ detW (b : Matrix (Fin n) (Fin n) ℂ) ^ (-(s - 1)) := fun b =>
-      Real.rpow_nonneg (by linarith [GlobalTheory.T.one_le_detW_of_isHermitian _ _ (mem_hermC.1 b.2)]) _
+      Real.rpow_nonneg (by linarith [_root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Arch.HuaInt.one_le_detW _ _ (mem_hermC.1 b.2)]) _
     have h4 := (hasFiniteIntegral_iff_ofReal (Filter.Eventually.of_forall hp3)).1 h3.2
     exact ENNReal.mul_lt_top (lt_top_iff_ne_top.2 hc)
       (ENNReal.mul_lt_top (lt_top_iff_ne_top.2 hK) h4)

@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.ExistsUniqueEqConstMulOriginSec
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.AddXYZOrChordXYZOrOriginXYZNeZero
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsCommGrpObjWeierstrassSchemeStatement
+public import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.OpensRangeChartYSupOpensRangeChartZ
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsCommGrpObjWeierstrassScheme
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsAbelianSchemeSchemeOver
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.OriginLineBundlePolarisationStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.OriginLineBundlePolarisation
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.SurjectiveFst
 import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsStandardSmoothOfRelativeDimensionAwayJacobian
 import Mathlib.Algebra.Order.Floor.Extended
@@ -60,7 +62,7 @@ theorem polarised_of_grpObj (R : Type) [CommRing R] (W : _root_.WeierstrassCurve
       (originLB W).IsLB ∧ Out.Rigidified (schemeOver W) (originLB W) ∧
       Out.Sym (schemeOver W) (originLB W) ∧ Out.RelAmple (schemeOver W) (originLB W) ∧
       Out.KTriv (schemeOver W) (originLB W) := by
-  obtain ⟨hrig, hsym, hamp, hk⟩ := GlobalTheory.T.originLineBundle_polarisation R W hc hη
+  obtain ⟨hrig, hsym, hamp, hk⟩ := _root_.GlobalTheory.WeierstrassCurve.originLB_polarisation R W hc hη
   exact ⟨isAbelianScheme_schemeOver R W hΔ hc, smoothOfRelativeDimension_toSpec_of_isUnit W hΔ,
     originLB_isLB W, hrig, hsym, hamp, hk⟩
 
@@ -86,7 +88,7 @@ theorem exists_grpObj_polarised (R : Type) [CommRing R] (W : _root_.WeierstrassC
         (∃ h : IsUnimodularSol (W.map (algebraMap R (DualNumber R))) ![DualNumber.eps, -1, 0],
           v.left = ptHom W (algebraMap R (DualNumber R)) ![DualNumber.eps, -1, 0] h) ∧
         IsLieBasis ![v] := by
-  obtain ⟨inst, hc, hη, hadd, hneg⟩ := GlobalTheory.T.exists_commGrpObj_weierstrassScheme R W hΔ
+  obtain ⟨inst, hc, hη, hadd, hneg⟩ := _root_.GlobalTheory.exists_grpObj_weierstrass R W hΔ
   exact ⟨inst, hc, hη, hadd, hneg, polarised_of_grpObj R W hΔ hc hη,
     GlobalTheory.WeierstrassLie.isLieBasis_eps R W hη⟩
 

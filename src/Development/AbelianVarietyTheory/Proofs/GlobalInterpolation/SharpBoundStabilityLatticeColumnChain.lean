@@ -2,14 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.KerIsTerm
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LevelChainSharpColumnValuationOfPointKernelLiftL
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ConjugatePrimeBoundPointKernelOfCoefficientKerneStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.DilateLawPointKernelOfCoefficientKernelStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsCoordinatesValueLatticesEqWeylLatticesStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsLevelPrimePointModelRealisationStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsPointKernelRealisedModelsStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ConjugatePrimeBoundPointKernelOfCoefficientKerne
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.DilateLawPointKernelOfCoefficientKernel
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsCoordinatesValueLatticesEqWeylLattices
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsLevelPrimePointModelRealisation
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsPointKernelRealisedModels
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExtInOfValIn
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.FormsStableOfTgtEq
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HeckeLawPointKernelOfCoefficientKernelStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HeckeLawPointKernelOfCoefficientKernel
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.IntPOfKerP
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LevelChainSharpColumnValuationOfStability
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LevelChainUOperatorCommutationOfPointPairLaw
@@ -64,12 +64,12 @@ theorem sharpBound_stability_latticeColumnChain : ∀ (D : D7) (u : D.what₂.Wo
   intro D u B hsp hsee hker hT hW
 
   have hM : ∀ i (h : i ≤ D.R.m), ∃ M : PtModel B.ch i, Nonempty (B.Real i (hsp i h).some M) :=
-    fun i h => GlobalTheory.T.exists_levelPrimePointModel_realisation D u B i (hsp i h).some
+    fun i h => _root_.GlobalTheory.LvT.Built.RealM.exists_real D u B i (hsp i h).some
   let Lv : LevTie B.ch := fun i h => (hM i h).choose
   have hR : ∀ i (h : i ≤ D.R.m), B.Real i (hsp i h).some (Lv i h) := fun i h => (hM i h).choose_spec.some
 
   have hC : ∀ i (h : i ≤ D.R.m), ∃ Co : (Lv i h).Coord, Co.Ok ∧ (hR i h).ValIs Co :=
-    fun i h => GlobalTheory.T.exists_coordinates_valueLattices_eq_weylLattices D u B i (hsp i h).some (Lv i h) (hR i h) h hsee
+    fun i h => _root_.GlobalTheory.LvT.Built.ValLat.exists_coord D u B i (hsp i h).some (Lv i h) (hR i h) h hsee
   let Vt : ValTie Lv := fun i h => ⟨(hC i h).choose, (hC i h).choose_spec.1⟩
 
   have hk : ∀ i (h : i < D.R.m), ∃ k : B.Ker i, Built.Dat.KerEq k ∧ Built.Dat.KerDil k ∧ Built.Dat.KerUK k ∧
@@ -77,16 +77,16 @@ theorem sharpBound_stability_latticeColumnChain : ∀ (D : D7) (u : D.what₂.Wo
 
   have hK : ∀ i (h : i < D.R.m), ∃ K : KerPt (Lv i h.le) (Lv (i + 1) h),
       K.TgtEq ∧ Built.Dat.KerIs (hR i h.le) (hR (i + 1) h) K (hk i h).choose :=
-    fun i h => GlobalTheory.T.exists_pointKernel_realised_models D u B i (hsp i h.le).some (hsp (i + 1) h).some (Lv i h.le) (Lv (i + 1) h)
+    fun i h => _root_.GlobalTheory.LvT.Built.KerExt.exists_kerPt D u B i (hsp i h.le).some (hsp (i + 1) h).some (Lv i h.le) (Lv (i + 1) h)
       (hR i h.le) (hR (i + 1) h) _ (hk i h).choose_spec.1
   let Kt : KerTie Lv := fun i h => (hK i h).choose
   have laws : KerLaws Vt Kt :=
     { tgt := fun i h => (hK i h).choose_spec.1
-      dil := fun i h => GlobalTheory.T.dilateLaw_pointKernel_of_coefficientKernel D u B i _ _ _ _ (hR i h.le) (hR (i + 1) h) _ _
+      dil := fun i h => _root_.GlobalTheory.LvT.Built.DilPass.dilLaw_of_kerDil D u B i _ _ _ _ (hR i h.le) (hR (i + 1) h) _ _
         (hK i h).choose_spec.1 (hK i h).choose_spec.2 (hk i h).choose_spec.2.1
-      uk := fun i h => GlobalTheory.T.heckeLaw_pointKernel_of_coefficientKernel D u B i _ _ _ _ (hR i h.le) (hR (i + 1) h) _ _
+      uk := fun i h => _root_.GlobalTheory.LvT.Built.UK.ukLaw_of_kerUK D u B i _ _ _ _ (hR i h.le) (hR (i + 1) h) _ _
         (hK i h).choose_spec.1 (hK i h).choose_spec.2 (hk i h).choose_spec.2.2.1
-      bar := fun i h => GlobalTheory.T.conjugatePrimeBound_pointKernel_of_coefficientKernel D u B i _ _ _ _ (hR i h.le) (hR (i + 1) h) _ _ _ _
+      bar := fun i h => _root_.GlobalTheory.LvT.Built.BarPass.intBar_of_kerBar D u B i _ _ _ _ (hR i h.le) (hR (i + 1) h) _ _ _ _
         (hK i h).choose_spec.1 (hK i h).choose_spec.2 (hC i h.le).choose_spec.1 (hC (i + 1) h).choose_spec.1
         (hC i h.le).choose_spec.2 (hC (i + 1) h).choose_spec.2 (hk i h).choose_spec.2.2.2.1
       intP := fun i h => IntPPass.intP_of_kerP D u B i _ _ _ _ (hR i h.le) (hR (i + 1) h) _ _ _ _

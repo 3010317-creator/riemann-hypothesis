@@ -5,7 +5,9 @@ public import Formalism.LocalToGlobal.HermitianForms.RankEqFirstLevel
 public import Formalism.LocalToGlobal.HermitianForms.TiedTwGen
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LatAtLattice
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HermitianClassConditionOfChartClasses
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.OpenCongruenceSubgroupPreservesPrincipalLatticeStatement
+public import Formalism.LocalToGlobal.HermitianColumns.InLocalDiscriminantKernel
+public import Formalism.LocalToGlobal.HermitianForms.IsLocBasis
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.OpenCongruenceSubgroupPreservesPrincipalLattice
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -87,7 +89,7 @@ theorem stepQ_of_reindex (hc : CMData F E) (S : HSpace E) {n : ℕ} (h : S.rank 
       Uloc_g := fun i v hv x hx => (hU v (hgQ i v hv)) ▸ H0.Uloc_g i v hv x hx
       UlocAlt := fun v hv x => (hU v (hTQ v hv)) ▸ H0.UlocAlt v hv x
       Uloc_Q := fun v _ => by
-        obtain ⟨N, hN, hx⟩ := GlobalTheory.T.open_congruence_subgroup_preserves_principal_lattice hc.sig S.gram K v
+        obtain ⟨N, hN, hx⟩ := _root_.GlobalTheory.OpenPrinc.open_princ hc.sig S.gram K v
         exact ⟨N, hN, fun x hx' => hx x (hLb ▸ hx'.1) (hLb ▸ hx'.2)⟩
       U := K.U
       U_eq := K.U_eq }

@@ -2,7 +2,9 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ResAlgSplitTwo
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FixedNondeg
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnramifiedQuotientCardStatement
+public import Development.WeilBound.CoreStatements.AutomorphicKernels.UnitarySchrodingerModel.LocalDefs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnramifiedQuotientCard
+public import Mathlib.NumberTheory.LegendreSymbol.AddCharacter
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,7 +53,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Mathlib.NumberTheory.LegendreSymbol.AddCharacter
 
 @[expose] public section
 
@@ -291,8 +292,8 @@ theorem GlobalTheory.CompanionTheory.GaussRec.gauss_recursion : ∀ (R : Type) [
   have h1 := sum_stationary hR hψ j ha
   rw [sum_filter_eq hR hψ j ha ha1] at h1
   have hc : Fintype.card (R ⧸ lev ϖ (j + 1)) = q ^ 2 * Fintype.card (R ⧸ lev ϖ j) := by
-    have e1 := GlobalTheory.T.unramified_quotient_card R σ ϖ q ε hR (j + 1)
-    have e2 := GlobalTheory.T.unramified_quotient_card R σ ϖ q ε hR j
+    have e1 := _root_.GlobalTheory.CompanionTheory.UnrDens.card_quot_lev R σ ϖ q ε hR (j + 1)
+    have e2 := _root_.GlobalTheory.CompanionTheory.UnrDens.card_quot_lev R σ ϖ q ε hR j
     rw [Nat.card_eq_fintype_card] at e1 e2
     rw [e1, e2, ← pow_add]
     congr 1

@@ -1,8 +1,9 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsThetaMeanSquareNorm
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexAbelianFibreAmpleStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolUnifCompareIsogenyStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexAbelianFibreAmple
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolUnifCompareIsogeny
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TangentSpaceEquivHolUnif
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ThetaFunctionArchimedeanFrame
 import Mathlib.Algebra.Order.Floor.Extended
@@ -56,7 +57,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Sl.FrameGram
 
 theorem inner_eq_pi_herm : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (L : Type) [Field L] [NumberField L] (D : PPData H L) (σ : L →+* ℂ) (a : D.Frame σ) (x y : D.B.carrier) (c c' : Fin D.g → ℂ), D.IsVec a x c → D.IsVec a y c' → ((D.B.metric.form σ).inner ((1 : ComplexAt σ) ⊗ₜ[𝓞 L] x) ((1 : ComplexAt σ) ⊗ₜ[𝓞 L] y) : ℂ) = Real.pi * a.herm c' c := by
   intro E _ _ _ H L _ _ D σ a x y c c' hx hy
-  obtain ⟨t', m, hP, hA⟩ := GlobalTheory.T.complex_abelian_fibre_ample E H L D σ
+  obtain ⟨t', m, hP, hA⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Sl.FibrePol.exists_fibre_pol E H L D σ
   obtain ⟨hab, g, u, Hm, χ, hAH, d₁, d₂⟩ := FrameEx.exists_goodUnif E H _ D.t (emb σ) t' m hP hA
   have hp : IsGrpPullback t'.G D.t.G (emb σ) m.φ := m.cart
   obtain ⟨v, hlift, vA, hvA, hdiff⟩ := hx
@@ -83,10 +84,10 @@ theorem inner_eq_pi_herm : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   have ly₁ : y₁.left ≫ m.φ = w.left := congrArg (fun r => r.left) hy₁
   obtain ⟨cx, hcx, -⟩ := d₁ x₁ tx₁
   obtain ⟨cy, hcy, -⟩ := d₁ y₁ ty₁
-  have T1 := GlobalTheory.T.hol_unif_compare_isogeny (Sp (𝓞 L)) D.t.G D.t.PP.L (emb σ) t'.G a.A m.φ a.φ g D.g u a.u Hm a.Hm χ a.χ D.t.PP.isLB
+  have T1 := _root_.GlobalTheory.CompanionTheory.Ar.HodgeUniq.hermForm_eq_of_pullbacks (Sp (𝓞 L)) D.t.G D.t.PP.L (emb σ) t'.G a.A m.φ a.φ g D.g u a.u Hm a.Hm χ a.χ D.t.PP.isLB
     hab hp a.cart d₁ d₂ hAH a.ah y₁ x₁ wA vA cy cx c' c ty₁ tx₁ (hwA.trans ly₁.symm) (hvA.trans lx₁.symm) hcy hcx
     hdiff' hdiff
-  have T2 := GlobalTheory.T.hol_unif_compare_isogeny (Sp (𝓞 L)) D.t.G D.t.PP.L (emb σ) t'.G A' m.φ φ' g g' u u' Hm Hm' χ χ' D.t.PP.isLB
+  have T2 := _root_.GlobalTheory.CompanionTheory.Ar.HodgeUniq.hermForm_eq_of_pullbacks (Sp (𝓞 L)) D.t.G D.t.PP.L (emb σ) t'.G A' m.φ φ' g g' u u' Hm Hm' χ χ' D.t.PP.isLB
     hab hp hpz d₁ d₂ hAH hah' y₁ x₁ q p cy cx b' a' ty₁ tx₁ (eq'.trans ly₁.symm) (ep.trans lx₁.symm) hcy hcx dq dp
   have hH : a.herm c' c = hermForm Hm' b' a' := T1.trans T2.symm
   rw [hH]

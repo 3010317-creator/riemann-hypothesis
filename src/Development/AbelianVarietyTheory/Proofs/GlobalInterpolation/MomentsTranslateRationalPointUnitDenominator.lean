@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TranslateMomentsAll
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AlgebraicNumbersPadicPlacesFactsStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HeisenbergCocycleFormIntegralSelfDualStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.PerLatticeFactsStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.WeylHeisenbergOperatorCalculusRationalStatement
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.IsDiscriminantTwelfthRootOfIdealLattice
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AlgebraicNumbersPadicPlacesFacts
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HeisenbergCocycleFormIntegralSelfDual
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.PerLatticeFacts
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.WeylHeisenbergOperatorCalculusRational
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,7 +63,7 @@ theorem lamC_mul_of_mem {p : ℕ} [Fact p.Prime] (lam : TaylorLogMetric.Qbar →
 variable {X : Fields} (A : Amb X) {a b : ℕ}
 
 theorem coc_nat_left (n : ℕ) (x y : HomE X.E a b) : coc A ((n : X.E) • x) y = n * coc A x y := by
-  have h := (GlobalTheory.T.weylHeisenbergOperator_calculus_rational X A a b).2.2.2.1
+  have h := (_root_.GlobalTheory.MomT.Heis.calculus X A a b).2.2.2.1
   induction n with
   | zero =>
     have := (h 0 0 y).1
@@ -72,7 +73,7 @@ theorem coc_nat_left (n : ℕ) (x y : HomE X.E a b) : coc A ((n : X.E) • x) y 
   | succ n ih => rw [Nat.cast_succ, add_smul, one_smul, (h _ _ _).1, ih]; push_cast; ring
 
 theorem coc_nat_right (n : ℕ) (x y : HomE X.E a b) : coc A x ((n : X.E) • y) = n * coc A x y := by
-  have h := (GlobalTheory.T.weylHeisenbergOperator_calculus_rational X A a b).2.2.2.1
+  have h := (_root_.GlobalTheory.MomT.Heis.calculus X A a b).2.2.2.1
   induction n with
   | zero =>
     have := (h x 0 0).2.1
@@ -84,8 +85,8 @@ theorem coc_nat_right (n : ℕ) (x y : HomE X.E a b) : coc A x ((n : X.E) • y)
 theorem coc_rat (N : Submodule (𝓞 X.E) (Sp X.E a)) (N' : Submodule (𝓞 X.E) (Sp X.E b)) (hX : X.Ok) (hL : A.LaHyp a b ∅)
     (hA : A.AA ≠ ⊥) (hN : IsSdLat N) (hN' : IsSdLat N') (x y : HomE X.E a b) : ∃ r : ℚ, coc A x y = (r : ℝ) := by
   obtain ⟨hδ, -, -, -, hFG, hLa⟩ := hL
-  have hfull := (GlobalTheory.T.per_relIndex_ne_zero_and_mem_locP_iff X A a b N N' hFG hA hN hN').2.1
-  have hint := (GlobalTheory.T.heisenbergCocycleForm_integral_selfDual X A a b N N' hX hδ (hLa N N' hN hN').2).2.2
+  have hfull := (_root_.GlobalTheory.MomT.LatFin.per_lattice_facts X A a b N N' hFG hA hN hN').2.1
+  have hint := (_root_.GlobalTheory.MomT.CocInt.cocycle_integral X A a b N N' hX hδ (hLa N N' hN hN').2).2.2
   obtain ⟨n, hn, hx⟩ := hfull x
   obtain ⟨n', hn', hy⟩ := hfull y
   obtain ⟨k, hk⟩ := hint ((n : X.E) • x) ((n' : X.E) • y) fun Q =>
@@ -113,8 +114,8 @@ theorem Wx_per (N : Submodule (𝓞 X.E) (Sp X.E a)) (N' : Submodule (𝓞 X.E) 
 theorem moments_unit_translate : ∀ (X : Fields) (A : Amb X) (a b : ℕ) (ϖ : 𝓞 X.E) (p : ℕ) (N : Submodule (𝓞 X.E) (Sp X.E a)) (N' : Submodule (𝓞 X.E) (Sp X.E b)) [Fact p.Prime] (lam : TaylorLogMetric.Qbar →+* ℂ_[p]) (ι : X.K →+* ℂ_[p]) (un : X.Tau → ℂ_[p]), X.Ok → A.LaHyp a b ∅ → A.AA ≠ ⊥ → A.ESmooth a b → ϖ * X.conjO ϖ = (p : 𝓞 X.E) → IsCoprime ϖ (X.conjO ϖ) → IsSdLat N → IsSdLat N' → PtMom A a b lam ι un (star (ϖ : X.E) / (ϖ : X.E)) → ∀ (t : HomE X.E a b) (n : ℕ), Nat.Coprime n p → ((n : X.E) * (ϖ : X.E)) • t ∈ per A N N' → (∀ m, jetC A.cD (Wx A t (A.e a b N N')) m ∈ TaylorLogMetric.Qbar) ∧ InIntClosure (per A N N' : Set (HomE X.E a b)) (ptTab ι un) Set.univ fun m => TaylorLogMetric.lamC lam (jetC A.cD (Wx A t (A.e a b N N')) m) := by
   intro X A a b ϖ p N N' _ lam ι un hX hL hA hS hϖ hcop hN hN' hP t n hn ht
   have hp : p.Prime := Fact.out
-  have hH := GlobalTheory.T.weylHeisenbergOperator_calculus_rational X A a b
-  have hroot := (GlobalTheory.T.algebraicNumbers_padicPlaces_facts X.K p A.σ₀ ι).2.2 lam
+  have hH := _root_.GlobalTheory.MomT.Heis.calculus X A a b
+  have hroot := (_root_.GlobalTheory.MomPlace.places X.K p A.σ₀ ι).2.2 lam
   have hϖE : (ϖ : X.E) * star (ϖ : X.E) = (p : X.E) := by
     have := congrArg (fun z : 𝓞 X.E => (z : X.E)) hϖ
     simpa [Fields.conjO, starRingEnd_apply] using this

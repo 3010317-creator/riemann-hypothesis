@@ -4,17 +4,18 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeri
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FromBlocksSubOne
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsCompactIsOpenUnitsAt
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicHeisenbergActsByLocalSchrodinger
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicTraceSupportedAtSplitPlaceStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplementaryAdelicSchwartzRestFunction
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitPlaceAdelicMatrixGivenComponentsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianSelfDualLatticeSpaceFormHermitianNondeg
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianTensorLocalVanishStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearModelUnitaryConjugate
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceSymplecticFormUnitaryGroupActionInvariant
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepBijectionSchwartz
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicHeisenbergActsByLocalSchrodinger
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplementaryAdelicSchwartzRestFunction
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerPreservesSchwartzBruhat
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAdelicCharacterNontrivialAtPlaces
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceSymplecticFormUnitaryGroupActionInvariant
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepBijectionSchwartzStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -328,7 +329,7 @@ theorem shape_dbl : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Field
         have hx0 : (xY (Y * (locMatD t c p).valᵀ) * Pinvᵀ).map (piW (t.comp σ)) = 0 := by
           rw [Matrix.map_mul]; simp only [xY, hU1, Matrix.zero_mul]
         rw [hs, hMu l _ (hatR _ _ hZ) hx0, hcoH, hcoY, Matrix.mul_assoc, hh', Matrix.mul_one]
-    exact GlobalTheory.T.weil_rep_bijection_schwartz (SB (Fin n × Fin d ⊕ Fin n × Fin d → Fv F v)) (GlobalTheory.LatVac.psiAt B.ψ v) hψc hψ1 ι
+    exact _root_.GlobalTheory.schur_heisenberg_linearModel_fintype (SB (Fin n × Fin d ⊕ Fin n × Fin d → Fv F v)) (GlobalTheory.LatVac.psiAt B.ψ v) hψc hψ1 ι
       (fun φ Y => ι (locOp v (omd p) φ) (Y * (locMatD t c p).valᵀ)) hι.bij hlin
       (fun C φ => schr (GlobalTheory.LatVac.psiAt B.ψ v) (GlobalTheory.LatVac.locCo dd v (xY C)) φ)
       (fun l φ => schr (GlobalTheory.LatVac.psiAt B.ψ v) (GlobalTheory.LatVac.locCo dd v (uM l)) φ) htrS hmuS

@@ -5,9 +5,13 @@ public import ReciprocityTheory.AnalyticForms.LeviForms.IsRegFamilyInhabitStatem
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BdryIsAnalyticSubsetInteriorEmpty
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CompChartEventuallyEq
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FixedMemberBase
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.UniformEnergyBoundOfSectionStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.UniformRestrictionStatementHoldsStatement
+public import GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.Objects
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.UniformEnergyBoundOfSection
+public import ReciprocityTheory.AnalyticForms.LeviForms.UnifInt
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.UniformRestrictionStatementHolds
 public import GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.PGreenMassZero
+public import ReciprocityTheory.AnalyticForms.LeviForms.TailBound
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.Pullback
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,7 +57,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.AnalyticForms.LeviForms.TailBound
 import ReciprocityTheory.AnalyticForms.LeviForms.TailBoundA
 import ReciprocityTheory.AnalyticForms.LeviForms.TailCut
 import ReciprocityTheory.AnalyticForms.LeviForms.TailCutA
@@ -61,7 +64,6 @@ import ReciprocityTheory.AnalyticForms.PotentialTheory.ContDiffAtOfIsPotential
 import ReciprocityTheory.AnalyticForms.PotentialTheory.IntegrableOnTargetOfTsupport
 import ReciprocityTheory.AnalyticForms.PotentialTheory.LogInt
 import ReciprocityTheory.AnalyticForms.PotentialTheory.MaMeasure
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.Pullback
 import ReciprocityTheory.AnalyticForms.PotentialTheory.SNCAtlas
 
 @[expose] public section
@@ -201,7 +203,7 @@ theorem tail_mixed (hTB : TailBoundStatement) {n : ℕ} {Y : Type} [TopologicalS
       TailLogBound A (bdry s)ᶜ (rW L s) T CE := by
   classical
   have h : ∀ b : ℕ, _ := fun b : ℕ =>
-    GlobalTheory.T.uniform_energy_bound_of_section hTB A (fun i : Fin n => if (i : ℕ) < b then P i else Om) L s m W C₁
+    _root_.GlobalTheory.CompanionTheory.Ar.Giv.tailLogBound_of_tailBound hTB A (fun i : Fin n => if (i : ℕ) < b then P i else Om) L s m W C₁
       (fun i => by split_ifs; exacts [hP i, hOm])
       (fun i => by split_ifs; exacts [hPp i, hOmp]) hL hs hsnc hnorm hC₁
   choose CE hCE0 hCE using h
@@ -317,7 +319,7 @@ theorem green_small_core (hUI : GroundTheory.Heights₂.Heights.AnalyticLimit.Un
       mInt A (fun i => potForm (thS i) (uS i t)) (greenEp L' v ε) ≤ η := by
   classical
   obtain ⟨B, hB, n', m', W', hΘB, hposB, hsncB⟩ :=
-    GlobalTheory.T.uniform_restriction_statement_holds A Θ L s m W hΘ hpos hL hs L' v Dg hL' hv hsncv hsncsv
+    _root_.GlobalTheory.CompanionTheory.Ar.Giv.unifRestrict A Θ L s m W hΘ hpos hL hs L' v Dg hL' hv hsncv hsncsv
   haveI : CompactSpace Dg := isCompact_iff_compactSpace.mp
     (show IsClosed Dg from SimpleNormalCrossingSliceCharts.isClosed_divisorComponent A L' v ![1] ![Dg] hsncv 0).isCompact
   have hLB : IsPotential B (L.pullback Subtype.val hB.1) := isPotentialPullback A B _ hB L hL

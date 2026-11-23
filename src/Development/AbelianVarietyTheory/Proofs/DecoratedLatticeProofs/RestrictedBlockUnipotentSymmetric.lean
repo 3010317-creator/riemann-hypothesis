@@ -3,25 +3,27 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlagLevelCharacterEqPsiDivN
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsTransportAdelicCorrection
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RowsJoinPinned
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CharacterArgumentCongrRootEntrySumModStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CharacterResidueFieldsEqProdGenericShiftStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CharacterArgumentCongrRootEntrySumMod
+public import Formalism.LocalToGlobal.Divisibility.DefGroup
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CharacterResidueFieldsEqProdGenericShift
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsDiagonalFrameChangeUnweightingSymEdgesStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsFiniteAdditiveCharNeOneAtEachPrimeStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsIntegralAdelePrescribedResiduesAndConjStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsLatticeFrameLiftingSpanningVectorsModStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlagBasisLiftGramSignedPermutationStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlagRootSumDualEqSymmetricEdgeSumStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlagVecMemAndSpanStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralAdeleCongrZeroOfResiduesSquarefreeStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LevelCongruenceIffFlagConditionsStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlagBasisLiftGramSignedPermutation
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlagRootSumDualEqSymmetricEdgeSum
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlagVecMemAndSpan
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.HidaSetting
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralAdeleCongrZeroOfResiduesSquarefree
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LevelCongruenceIffFlagConditions
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ResidueSupportSinglePlaceToConjugatePairSlotStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymmetricUnipotentMemOfFlagBasisDualStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymmetricUnipotentMemOfFlagCongruenceDualStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymmetricUnipotentMemOfFlagBasisDual
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymmetricUnipotentMemOfFlagCongruenceDual
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TypePrimePlaceMemOrConjGenusTypePlaceSetStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TypePrimesProductNotMemSqPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryLiftedFlagBasisReduceModLevelStatement
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlaces
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryLiftedFlagBasisReduceModLevel
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.EvalTIota
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlaces
 import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LevelSubgroupCharacterUnitary
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -120,10 +122,10 @@ theorem flagCond_iff_unipSym {K : Type} [CommRing K] {n ρ k : ℕ} (hn : n = 2 
     have := congrArg Matrix.transpose h
     rwa [Matrix.transpose_mul, Matrix.transpose_mul, Matrix.transpose_transpose, flagGram_transpose K hn,
       ← Matrix.mul_assoc] at this
-  refine ⟨fun ⟨h1, h2⟩ => ?_, fun hM => ⟨flagCond_of_unipSym _ hM, flagCond_of_unipSym _ (GlobalTheory.T.symmetricUnipotent_mem_of_flagBasisDual K n ρ k hn M M' h hM)⟩⟩
+  refine ⟨fun ⟨h1, h2⟩ => ?_, fun hM => ⟨flagCond_of_unipSym _ hM, flagCond_of_unipSym _ (_root_.GlobalTheory.FlagDual.unipSym_of_dual K n ρ k hn M M' h hM)⟩⟩
   rcases hε with ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩
-  · exact GlobalTheory.T.symmetricUnipotent_mem_of_flagCongruence_dual K n ρ k hn M M' h h1 h2
-  · exact GlobalTheory.T.symmetricUnipotent_mem_of_flagBasisDual K n ρ k hn M' M h' (GlobalTheory.T.symmetricUnipotent_mem_of_flagCongruence_dual K n ρ k hn M' M h' h2 h1)
+  · exact _root_.GlobalTheory.FlagCase.flagCond_dual_unipSym K n ρ k hn M M' h h1 h2
+  · exact _root_.GlobalTheory.FlagDual.unipSym_of_dual K n ρ k hn M' M h' (_root_.GlobalTheory.FlagCase.flagCond_dual_unipSym K n ρ k hn M' M h' h2 h1)
 
 theorem map_eq_zero_of_zmod (I : AutInst) {g : ℕ} {K : Type} [CommRing K] (p : Formalism.L2.Herm.intAf I.F I.E →+* K)
     (hg : (g : K) = 0) {s : Formalism.L2.Herm.intAf I.F I.E} (hs : ZMod' I g s) : p s = 0 := by
@@ -166,7 +168,7 @@ theorem read_in_frame (I : AutInst) (g : ℕ) (hg : g ≠ 0) {ρ k : ℕ} (e0 f0
           ∏ PP ∈ Pg, ψ0 PP (∑ i, ∑ j, if symEdge ρ k i j then
             a PP i j * ((redFn β PP x : GL (Fin I.n) (kP PP)) : Matrix (Fin I.n) (Fin I.n) (kP PP)) i j else 0)) := by
   classical
-  obtain ⟨hew, hG⟩ := GlobalTheory.T.liftFrame_gram_congr_flagGram I g e0 f0 z0 bw bwd ew hF hn β hβ
+  obtain ⟨hew, hG⟩ := _root_.GlobalTheory.FlagBasis.GramLift.gramIn_lift I g e0 f0 z0 bw bwd ew hF hn β hβ
   have hpg : ∀ PP ∈ Pg, (g : kP PP) = 0 := fun PP hPP => by
     rw [← map_natCast (Ideal.Quotient.mk PP.asIdeal)]
     exact Ideal.Quotient.eq_zero_iff_mem.2 (hdiv PP hPP)
@@ -187,7 +189,7 @@ theorem read_in_frame (I : AutInst) (g : ℕ) (hg : g ≠ 0) {ρ k : ℕ} (e0 f0
     · exact Or.inl ⟨by rw [h] at h1'; linear_combination -h1', h⟩
   have hZ : ∀ s : Formalism.L2.Herm.intAf I.F I.E, ZMod' I g s ↔ ∀ PP ∈ Pg, resS I.F PP s = 0 ∧ p' PP s = 0 :=
     fun s => ⟨fun h PP hPP => ⟨map_eq_zero_of_zmod I _ (hpg PP hPP) h, map_eq_zero_of_zmod I _ (hpg PP hPP) h⟩, hN s⟩
-  have hroot := fun (PP : Pl I.E) (hPP : PP ∈ Pg) => GlobalTheory.T.flagRootSum_dual_eq_symmetricEdge_sum (kP PP) I.n ρ k hn _ _ (a₁ PP) (a₂ PP) (hε PP hPP)
+  have hroot := fun (PP : Pl I.E) (hPP : PP ∈ Pg) => _root_.GlobalTheory.RootSumDual.rootSum_dual_edges (kP PP) I.n ρ k hn _ _ (a₁ PP) (a₂ PP) (hε PP hPP)
     (ha PP hPP).1 (ha PP hPP).2
   choose! a ha1 ha2 using hroot
   have hmat : ∀ (x : I.Gf) (m : GL (Fin I.n) (Formalism.L2.Herm.intAf I.F I.E)),
@@ -202,14 +204,14 @@ theorem read_in_frame (I : AutInst) (g : ℕ) (hg : g ≠ 0) {ρ k : ℕ} (e0 f0
     rw [this]
     rfl
   have hrel := fun (x : I.Gf) m hm (PP : Pl I.E) (hPP : PP ∈ Pg) =>
-    GlobalTheory.T.unitary_liftedFlagBasis_reduce_mod_level I g ρ k β hG (kP PP) (resS I.F PP) (hpg PP hPP) x m hm
+    _root_.GlobalTheory.FlagUnit.unitary_reduce I g ρ k β hG (kP PP) (resS I.F PP) (hpg PP hPP) x m hm
   have main : ∀ x : I.Gf, x ∈ K2set I g e0 z0 bw ↔ (x : GL (Fin I.n) (I.E ⊗[I.F] Formalism.MainNotions.S.Af I.F)) ∈ St β ∧
       ∀ PP ∈ Pg, redFn β PP x ∈ unipSym (kP PP) I.n ρ k := by
     intro x
     show x ∈ I.Kset ∧ _ ↔ _
     rw [kset_iff I hβ.1]
     refine and_congr_right fun hS => ?_
-    rw [GlobalTheory.T.levelCongruence_iff_flag_conditions I g e0 f0 z0 bw bwd ew hF hn β hβ x hS]
+    rw [_root_.GlobalTheory.FlagBasis.Cong.k2cong_iff_flagCond I g e0 f0 z0 bw bwd ew hF hn β hβ x hS]
     obtain ⟨m, hm⟩ := hS
     rw [hmat x m hm, ← hm]
     refine (flagCond_map (Formalism.L2.Herm.intAf I.F I.E).subtype (ZMod' I g) ρ k ewS _).trans ?_
@@ -231,7 +233,7 @@ theorem read_in_frame (I : AutInst) (g : ℕ) (hg : g ≠ 0) {ρ k : ℕ} (e0 f0
         fun i j a b c => (hZ _).2 fun PP hPP => ⟨(h PP hPP).1.2.2 i j a b c, (h PP hPP).2.2.2 i j a b c⟩⟩
   refine ⟨a, ha1, fun x => ⟨main x, fun hx => ?_⟩⟩
   obtain ⟨hS, hU⟩ := (main x).1 hx
-  have hc := GlobalTheory.T.characterArgument_congr_rootEntrySum_mod I g e0 f0 z0 bw bwd ew hF hn β hβ hG x hS
+  have hc := _root_.GlobalTheory.FlagChi.chiArg_sub_rootSum I g e0 f0 z0 bw bwd ew hF hn β hβ hG x hS
   obtain ⟨m, hm⟩ := hS
   rw [hmat x m hm] at hc
   have hr := rootSum_map (Formalism.L2.Herm.intAf I.F I.E).subtype ρ k ewS m.1
@@ -283,17 +285,17 @@ theorem GlobalTheory.FlagBasis.read_inst (D : D7) (e0 f0 : Fin D.R.rS → VA (in
     have := D.R.two_le_m
     unfold Ranks.r Ranks.rS
     omega
-  obtain ⟨hs1, hs2⟩ := GlobalTheory.T.flagVec_mem_Lf_and_inMod (instOf D) _ e0 f0 z0 bw bwd ew hF hn'
+  obtain ⟨hs1, hs2⟩ := _root_.GlobalTheory.FlagBasis.flagVec_mem_and_span (instOf D) _ e0 f0 z0 bw bwd ew hF hn'
   obtain ⟨β₀, hβ₀⟩ := GlobalTheory.T.exists_latticeFrame_lifting_spanning_vectors_mod D _ hg _ hs1 hs2
   have hN : ∀ s : Formalism.L2.Herm.intAf D.host.F D.host.E,
       (∀ PP ∈ Pg, resS D.host.F PP s = 0 ∧ resS D.host.F PP (sigInt (instOf D) s) = 0) →
       ZMod' (instOf D) (D.host.g 0 * D.host.g 1) s.1 := by
     intro s hs
-    refine GlobalTheory.T.integralAdele_congr_zero_of_residues_squarefree (instOf D) _ hg (GlobalTheory.T.typePrimes_product_not_mem_sq_place D) s fun Q hQ => ?_
+    refine _root_.GlobalTheory.AdeleSquarefree.zmod_of_forall_resS_eq_zero (instOf D) _ hg (GlobalTheory.T.typePrimes_product_not_mem_sq_place D) s fun Q hQ => ?_
     obtain ⟨PP, hPP, rfl | h⟩ := GlobalTheory.T.typePrimePlace_mem_or_conj_genusTypePlaceSet D Pg hPg Q hQ
     · exact (hs _ hPP).1
     · exact (h s).2 (hs _ hPP).2
-  obtain ⟨a₁, a₂, ha, hχ⟩ := GlobalTheory.T.character_residueFields_eq_prod_genericShift D.host.E (Formalism.L2.Herm.intAf D.host.F D.host.E) Pg (fun PP => resS D.host.F PP)
+  obtain ⟨a₁, a₂, ha, hχ⟩ := _root_.GlobalTheory.LeviBlockCharacter.char_eq_prod_shift D.host.E (Formalism.L2.Herm.intAf D.host.F D.host.E) Pg (fun PP => resS D.host.F PP)
     (fun PP => (resS D.host.F PP).comp (sigInt (instOf D)))
     (fun s => star (psiEf (divN (instOf D) (D.host.g 0 * D.host.g 1) s.1))) ψ0 hψ
     (fun s t => (congrArg (fun z => star (psiEf z))

@@ -3,8 +3,14 @@ module
 public import Mathlib.Basic.Complex.Basic
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.FinrankEigenspaceMonomialMatrixLiftStatement
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.SumCharpolyRootsEqFinsumEigenspaceFinrankStatement
+public import Mathlib.LinearAlgebra.Eigenspace.Basic
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.FinrankEigenspaceMonomialMatrixLift
+public import Mathlib.LinearAlgebra.Charpoly.Basic
+public import Mathlib.LinearAlgebra.FreeModule.PID
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.SumCharpolyRootsEqFinsumEigenspaceFinrank
+public import Mathlib.LinearAlgebra.Matrix.Charpoly.Eigs
+public import Mathlib.RingTheory.RootsOfUnity.EnoughRootsOfUnity
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -19,7 +25,6 @@ import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.LinearAlgebra.Charpoly.ToMatrix
-public import Mathlib.LinearAlgebra.Matrix.Charpoly.Eigs
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -57,7 +62,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.CommutativeAlgebra.AbByPOfComm
 import Development.AbelianVarietyTheory.Definitions.CommutativeAlgebra.InvariantSubspaceMobiusInverseRecEqOfFinrankLt
-public import Mathlib.RingTheory.RootsOfUnity.EnoughRootsOfUnity
 
 @[expose] public section
 
@@ -100,12 +104,12 @@ theorem bijOn_pow_eq_one (k : Type) [Field k] [IsAlgClosed k] (θ : k →* ℂ)
 theorem trace_lift_monomial : ∀ (k : Type) [Field k] [IsAlgClosed k] (θ : k →* ℂ), (∀ x y : k, x ≠ 0 → y ≠ 0 → θ x = θ y → x = y) → ∀ (n N : ℕ) (σ : Equiv.Perm (Fin n)) (c : Fin n → k), (∀ j, c j ≠ 0) → (N : k) ≠ 0 → (Matrix.of fun i j => if i = σ j then c j else 0 : Matrix (Fin n) (Fin n) k) ^ N = 1 → (Matrix.of fun i j => if i = σ j then θ (c j) else 0 : Matrix (Fin n) (Fin n) ℂ) ^ N = 1 → Matrix.trace (Matrix.of fun i j => if i = σ j then θ (c j) else 0 : Matrix (Fin n) (Fin n) ℂ) = ((Matrix.charpoly (Matrix.of fun i j => if i = σ j then c j else 0 : Matrix (Fin n) (Fin n) k)).roots.map θ).sum := by
   intro k _ _ θ hθ n N σ c hc hN hA hB
   have hN0 : N ≠ 0 := by rintro rfl; simp at hN
-  have hE := GlobalTheory.T.finrank_eigenspace_monomial_matrix_lift k θ hθ n σ c hc
+  have hE := _root_.GlobalTheory.MonoEigen.finrank_eigenspace_monomial_lift k θ hθ n σ c hc
   set A : Matrix (Fin n) (Fin n) k := Matrix.of fun i j => if i = σ j then c j else 0 with hAdef
   set B : Matrix (Fin n) (Fin n) ℂ := Matrix.of fun i j => if i = σ j then θ (c j) else 0 with hBdef
-  have h1 := GlobalTheory.T.sum_charpoly_roots_eq_finsum_eigenspace_finrank k (Fin n → k) (Matrix.toLin' A) N hN
+  have h1 := _root_.GlobalTheory.CuspGL.sum_roots_charpoly_eq_finsum_eigenspace k (Fin n → k) (Matrix.toLin' A) N hN
     (by rw [← Matrix.toLin'_pow, hA, Matrix.toLin'_one]; rfl) θ
-  have h2 := GlobalTheory.T.sum_charpoly_roots_eq_finsum_eigenspace_finrank ℂ (Fin n → ℂ) (Matrix.toLin' B) N (by exact_mod_cast hN0)
+  have h2 := _root_.GlobalTheory.CuspGL.sum_roots_charpoly_eq_finsum_eigenspace ℂ (Fin n → ℂ) (Matrix.toLin' B) N (by exact_mod_cast hN0)
     (by rw [← Matrix.toLin'_pow, hB, Matrix.toLin'_one]; rfl) id
   rw [Matrix.charpoly_toLin'] at h1 h2
   rw [Matrix.trace_eq_sum_roots_charpoly, h1]

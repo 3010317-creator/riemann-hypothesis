@@ -2,10 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.RealSizeNonneg
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ComplexEmbeddingHermitianQuadrupleSum
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HasDerivAtSobolevThetaFormHeisenbergAlongRealLinStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HasFDerivAtOfContinuousCoordinatePartials
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInverseChart
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SmulEqZeroOfInf
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HasDerivAtSobolevThetaFormHeisenbergAlongRealLinStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HasFDerivAtOfContinuousCoordinatePartialsStatement
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergTranslateThetaContinuousDifferentiableStatement
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.ContinuousOfHeisenbergLevelAndSmooth
 import Mathlib.Algebra.Order.Floor.Extended
@@ -76,7 +80,7 @@ theorem contDiff_of_partials {k : ℕ} (P : ((Fin k → ℝ) → ℂ) → Prop) 
       choose m a H ha hH hD using hd F hF
       have hGc : ∀ i, Continuous fun t => ∑ j, a i j t * H i j t := fun i =>
         continuous_finsetSum _ fun j _ => ((ha i j).continuous).mul (hc _ (hH i j))
-      have hfd := GlobalTheory.T.hasFDerivAt_of_continuous_coordinate_partials k F (fun i t => ∑ j, a i j t * H i j t) hGc hD
+      have hfd := _root_.GlobalTheory.hasFDerivAt_of_continuous_coordinate_line_derivs k F (fun i t => ∑ j, a i j t * H i j t) hGc hD
       have hfe : fderiv ℝ F = fun t => ∑ i, (∑ j, a i j t * H i j t) •
           (ContinuousLinearMap.proj i : (Fin k → ℝ) →L[ℝ] ℝ).smulRight (1 : ℂ) := by
         funext t

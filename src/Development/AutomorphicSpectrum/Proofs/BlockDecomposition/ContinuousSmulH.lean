@@ -2,7 +2,9 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianMeasureConjugation
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AddHaarCharLeftRightMatrixMulAdeleTensor
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AddEquivAddHaarCharProdCongrStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MulVecCEApply
+import Mathlib.MeasureTheory.Measure.Haar.MulEquivHaarChar
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AddEquivAddHaarCharProdCongr
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRestrictScalarsMatrixLeftRightMulAdeleTens
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -109,7 +111,7 @@ theorem char_restr [IsTopologicalAddGroup M] [LocallyCompactSpace M] [SecondCoun
     rw [hl]
     change U p.1.1 + p.2.1 = U (p.1.1 + p.2.1)
     rw [map_add (f := _), hfix _ p.2.2]
-  rw [← e, GlobalTheory.ModuLR.addEquivAddHaarChar_transport Ψ, GlobalTheory.T.addEquivAddHaarChar_prodCongr, addEquivAddHaarChar_refl, mul_one]
+  rw [← e, GlobalTheory.ModuLR.addEquivAddHaarChar_transport Ψ, _root_.GlobalTheory.ModuLR.addEquivAddHaarChar_prodCE, addEquivAddHaarChar_refl, mul_one]
 
 end Abstract
 

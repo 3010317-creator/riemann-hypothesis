@@ -2,17 +2,20 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUniqueLeftBasisCoordsAdicCompletion
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointsIffCentresStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointsIffCentres
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ConjugatePointSameCentre
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspCorrespondenceBoundStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspCorrespondenceBound
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspVolumeMiddle
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FibreLatticeBaseChangeConj
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FibreLatticeLinearEquiv
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptFlagXdeg
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.InteriorPointLatticeData
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NormalSchemeCoordsInjective
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CuspWeightInvariantUnderConjugationStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.CuspWeightInvariantUnderIsometryStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsEigFrames
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CuspWeightInvariantUnderConjugation
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FibreLatticeLinearEquiv
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptFlagXdeg
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.CuspWeightInvariantUnderIsometry
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -80,7 +83,7 @@ theorem IsWeightAt.unique {Or : CptOrigin Y S₀ Dc Hd} {z : Sp ℂ ⟶ Or.𝔐.
     valAt_eq Or.𝔐.tie.gen (Or.𝔐.all _) (hL' τ a) (hL τ a)
   subst hσ
   obtain ⟨φ, h1, h2, h3, -⟩ := GlobalTheory.CompanionTheory.Ar.Cusp.FibreUnique.exists_linearEquiv_of_fibreLatVec E H Or.𝔐.X Or.𝔐.t z g' g Λ' Λ R' R Empty _ _ _ hF' hF
-  exact (GlobalTheory.T.cusp_weight_invariant_under_isometry E g' Λ' (CMType H) R' σ' g Λ R φ (isCMFam_of_labVal Or hL) h1 h2 h3).1.symm ▸ rfl
+  exact (_root_.GlobalTheory.CompanionTheory.Relay.cusp_weight_invariant_under_isometry E g' Λ' (CMType H) R' σ' g Λ R φ (isCMFam_of_labVal Or hL) h1 h2 h3).1.symm ▸ rfl
 
 theorem IsWeightAt.nonneg {Or : CptOrigin Y S₀ Dc Hd} {z : Sp ℂ ⟶ Or.𝔐.X} {x : ℝ} (h : IsWeightAt Or z x) : 0 ≤ x := by
   obtain ⟨g, Λ, i₁, i₂, R, σ, -, -, rfl⟩ := h
@@ -94,7 +97,7 @@ theorem exists_isWeightAt (hG : Top.Given) (Or : CptOrigin Y S₀ Dc Hd) {z : Sp
     omega
   obtain ⟨g, Λ, i₁, i₂, R, x, hF, -, -⟩ := GlobalTheory.CompanionTheory.Ar.Cusp.FibreEx.exists_riemLat_of_interior hG.2.2.2.2.1 E H D l (Xo l) c Y S₀ Ω K J Dc.y Or.𝔐 z hpq hz hG
     Empty (fun i => i.elim) (fun i => i.elim)
-  obtain ⟨σ₀, h0, -⟩ := GlobalTheory.T.cusp_correspondence_bound E H D l (Xo l) c Y S₀ Ω K J Dc.y Or.𝔐 ℂ z
+  obtain ⟨σ₀, h0, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.LabPt.exists_labVal E H D l (Xo l) c Y S₀ Ω K J Dc.y Or.𝔐 ℂ z
   have hx : x = fun i => i.elim := funext fun i => i.elim
   subst hx
   exact ⟨_, g, Λ, i₁, i₂, R, fun τ => σ₀ (Or.sm τ), hF, fun τ a => h0 (Or.sm τ) a, rfl⟩
@@ -102,7 +105,7 @@ theorem exists_isWeightAt (hG : Top.Given) (Or : CptOrigin Y S₀ Dc Hd) {z : Sp
 theorem IsWeightAt.conj {Or : CptOrigin Y S₀ Dc Hd} {z : Sp ℂ ⟶ Or.𝔐.X} {x : ℝ} (h : IsWeightAt Or z x) :
     IsWeightAt Or (spMap (starRingEnd ℂ) ≫ z) x := by
   obtain ⟨g, Λ, i₁, i₂, R, σ, hF, hL, rfl⟩ := h
-  obtain ⟨-, R', hP, hH, hB, hW⟩ := GlobalTheory.T.cusp_weight_invariant_under_conjugation E g Λ (CMType H) R σ (isCMFam_of_labVal Or hL)
+  obtain ⟨-, R', hP, hH, hB, hW⟩ := _root_.GlobalTheory.CompanionTheory.Relay.cusp_weight_invariant_under_conjugation E g Λ (CMType H) R σ (isCMFam_of_labVal Or hL)
   have hF' : FibreLat Or.𝔐.t (spMap (starRingEnd ℂ) ≫ z) R' :=
     (GlobalTheory.CompanionTheory.Ar.Cusp.FibreMove.fibreLat_move E H Or.𝔐.X Or.𝔐.X Or.𝔐.t Or.𝔐.t (𝟙 _) g Λ R R' z).2 hP hH
       (fun a x => by simpa using hB a (star x)) hF
@@ -179,7 +182,7 @@ theorem exists_cuspWeight : Top.Given → ∀ (E : Type) [Field E] [NumberField 
         have := hx.conj
         rwa [e] at this⟩
       rw [hU0 h, hU0 h']
-  · obtain ⟨z, -, hz⟩ := (GlobalTheory.T.complex_points_iff_centres Or.𝔐.X Ω Or.𝔐.ξ K J Dc.y Or.𝔐.tie w).1 hX.1
+  · obtain ⟨z, -, hz⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.mem_mcPts_iff_exists_coordsAt Or.𝔐.X Ω Or.𝔐.ξ K J Dc.y Or.𝔐.tie w).1 hX.1
     have hi : Or.𝔐.Interior z := by
       by_contra hn
       exact hX.2 ((Or.bd z w hz).2 hn)

@@ -3,13 +3,14 @@ module
 public import Formalism.LocalToGlobal.IndefiniteReal.BridgeTie
 public import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
 public import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.EmbRelExistsUnique
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ClassPresDoubleCosetAdjointCommuteStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.Bridge
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ClassPresDoubleCosetAdjointCommute
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsAntiInvolutionOfChars
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InvolutionSphericalHeckeAntiStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlacesStatement
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotentsStatement
 public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.SecondStepGluing
 public import Formalism.QuotientMetricDivisors.HermitianTwistDivisors.ValBasic
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotentsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -366,7 +367,7 @@ theorem side_adj_comm (V : HSp D) (β : GL (Fin V.rank) (EAf D)) (Λ : Submodule
       obtain ⟨g, hg, rfl⟩ := loc_supp V (T.hA_loc i' hi' x hx) he'
       exact l1 g ((suppAt_conj V he g).1 hg)
     refine ⟨i', fun j hj => ?_⟩
-    have main := GlobalTheory.T.classPres_doubleCoset_adjoint_commute (Bridge.ratF V) S σ ρ (levEnv V β L).J (levEnv V β L).χ Pr Lc (T.hx i) (T.hA i) (T.hA i')
+    have main := _root_.GlobalTheory.classPres_dcOp_adjoint_commute (Bridge.ratF V) S σ ρ (levEnv V β L).J (levEnv V β L).χ Pr Lc (T.hx i) (T.hA i) (T.hA i')
       (T.hA j) (op i) (op i') (op j) hρ (norm_chi V β Λ L hβ) l2 l3 hAL hAL' (T.hDC i hi) hDC' (T.op_eq i hi)
       (T.op_eq i' hi') (T.op_eq j hj)
     refine ⟨main.1, main.2 fun F hF => ?_⟩

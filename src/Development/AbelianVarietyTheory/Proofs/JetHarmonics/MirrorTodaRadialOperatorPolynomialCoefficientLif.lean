@@ -5,13 +5,17 @@ public import Formalism.HermitianCurvature.HermitianCurvatureProofs.RootVectorAc
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.PBGHeadV
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.BaseIndexConstantInjective
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.QuantumMinorSumPolynomialOperator
-import Formalism.FormalDegreeBessel.FinalG
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.BigCellZetaMinors
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ChainX1
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutHLFrozen
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.FiniteSumLocalExpansion
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.HomogeneityNaturalDegree
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.IntegrableCsmul
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.RdVOfEq
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.WeylCellMulVecBasis
+public import Formalism.HermitianCurvature.OperatorsCommuteTranslations
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.HermitianCovectors.HermBvecLeft
+import Formalism.FormalDegreeBessel.FinalG
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.JacquetRaisingOperator
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.LemmaDDeterminantIdentity
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.LevelFormSesquilinearFiniteClass
@@ -19,14 +23,11 @@ import Formalism.HermitianCurvature.HermitianCurvatureProofs.LiftClosedUnderOper
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.OperatorPreservesFusionForms
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.OrbitalIntegralIdentities
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.QxChain
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.RdVOfEq
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.RegularisedPairingViaPhase
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.RestrictionIrrelevantDoubleLevelOperator
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.RightDerivativeRulePsi
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.SandwichRhoAction
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.SecondExpansionIdentity
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.WeylCellMulVecBasis
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.XiYZhatIdentity
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -137,7 +138,7 @@ theorem left_star (z : Fin (2 * r + k + 1) → ℂ) (D : Set (Mx k r)) (f : Mx k
   have hy : yv k r z b.succ (T * g) ⟨2 * r + k - a.val - b.val - 1, hjlt⟩ =
       star (if a.val = b.val + 1 then c a else 0) := by
     simp only [yv, hpos, fvec, dif_pos hb1]
-    obtain ⟨h1, h2⟩ := Formalism.FourierDecayAlt.P.xi_Y_zhat_identity k r z z (T * g) ⟨_, hb1⟩ a hg₁.1
+    obtain ⟨h1, h2⟩ := _root_.CovecW.covec_entries k r z z (T * g) ⟨_, hb1⟩ a hg₁.1
     rw [h2, ← h1]
     congr 1
     rw [Formalism.FourierDecayAlt.P.SignAntidiagonal.herm_bvec_eI, ← Matrix.mulVec_mulVec, hga, hTa]

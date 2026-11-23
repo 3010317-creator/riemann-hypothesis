@@ -2,7 +2,9 @@ module
 
 public import Mathlib.Algebra.FreeAlgebra
 public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CancelArtinianNoetherianSummandStatement
+public import Mathlib.RingTheory.Artinian.Defs
+public import Mathlib.RingTheory.Noetherian.Defs
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CancelArtinianNoetherianSummand
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -109,7 +111,7 @@ theorem endFamily_cancel : ∀ (k ι V V' U : Type) [Field k] [AddCommGroup V] [
   let eR : (V × U) ≃ₗ[(FreeAlgebra k ι)] (V' × U) :=
     { e.toAddEquiv with
       map_smul' := fun r x => key r x }
-  obtain ⟨f⟩ := GlobalTheory.T.cancel_artinian_noetherian_summand (FreeAlgebra k ι) V V' U ⟨eR⟩
+  obtain ⟨f⟩ := _root_.GlobalTheory.ks_cancel (FreeAlgebra k ι) V V' U ⟨eR⟩
   refine ⟨f.restrictScalars k, fun i x => ?_⟩
   have h : f (FreeAlgebra.ι k i • x) = FreeAlgebra.ι k i • f x := f.map_smul _ _
   change f (φa (FreeAlgebra.ι k i) x) = φb (FreeAlgebra.ι k i) (f x) at h

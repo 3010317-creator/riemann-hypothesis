@@ -3,20 +3,20 @@ module
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PushInvertibleModelOfIso
 public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IsThetaL2NormSquared
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.KeyAtIffExistsKeyAtVia
-import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.TangentVectorExistsUniqueUniformisingVector
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsArcFibreUniformisationThetaMultipleStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LieBasisExpCoordsDetBoundedAlongArcStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaCoefficientBoundedAlongHolomorphicArcStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsArcFibreUniformisationThetaMultiple
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LieBasisExpCoordsDetBoundedAlongArc
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaCoefficientBoundedAlongHolomorphicArc
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaKeyRuleValueAtThetaPoint
-import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.NormalFormOfParts
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArcModelWitnessExtension
-import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsNeZeroIff
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.NonemptyUnifWitnessDataOfIsUnf
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ArcClauseClosed
+public import Formalism.LocalToGlobal.ProjectiveLattices.FreeBridge
+import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
+import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.NormalFormOfParts
+import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsNeZeroIff
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUnfFamily
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RelabelEmbeddingsGoodBijectiveConjCompat
-public import Formalism.LocalToGlobal.ProjectiveLattices.FreeBridge
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -315,6 +315,6 @@ end GlobalTheory.ArcNormal
 namespace GlobalTheory.ArcNormal
 
 theorem arc_normal_form : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (V : ValuationSubring c.F) (Y : Model Xo c V.subtype), 1 ≤ Dw.p + Dw.q → PushInvertible Y.t.G Y.t.PP.L → ∀ (a : ArcIn Dw l V.subtype ℂ (c.F.val.toRingHom.comp V.subtype)) (χ : Sp (PowerSeries ℂ) ⟶ Y.X), Y.HasArcData a (Ideal.span {PowerSeries.X}) (PowerSeries.C (R := ℂ)) PowerSeries.X χ → χ ≫ Y.s = spMap (PowerSeries.C (R := ℂ)) ≫ spMap (c.F.val.toRingHom.comp V.subtype) → (∀ x : Sp (PowerSeries ℂ), PowerSeries.X ∉ x.asIdeal → χ x ∈ Set.range Y.j) → ∀ M : GChart Y, ⊤ ≤ χ ⁻¹ᵁ M.U → ∃ y : ℂ → (Sp ℂ ⟶ Y.X), (∀ (U : Y.X.Opens) (f : Γ(Y.X, U)), ⊤ ≤ χ ⁻¹ᵁ U → ∃ T : ℝ, ∀ w : ℂ, T < w.im → ⊤ ≤ y w ⁻¹ᵁ U ∧ SumsAt (valR χ U f) w (valAt' (y w) U f)) ∧ ∃ T C : ℝ, 0 < C ∧ ∀ w : ℂ, T < w.im → ∀ (hz : ⊤ ≤ y w ⁻¹ᵁ M.U) (x : KeyIn ℂ), KeyAt M (y w) hz x → ∃ (τ Mx : Matrix (Fin x.P.g) (Fin x.P.g) ℂ) (a' b' : Fin x.P.g → ℂ) (c₀ : ℂ), GlobalTheory.KeyPow.charHalf _ a' b' ∧ c₀ ≠ 0 ∧ GlobalTheory.KeyPow.NormalAt x τ Mx a' b' c₀ ∧ C⁻¹ ≤ ‖Mx.det‖ / ‖c₀‖ ^ 2 ∧ ‖Mx.det‖ / ‖c₀‖ ^ 2 ≤ C :=
-  main_of_lemmas GlobalTheory.T.exists_arc_fibre_uniformisation_theta_multiple GlobalTheory.T.thetaCoefficient_bounded_along_holomorphicArc GlobalTheory.T.lieBasis_expCoords_det_bounded_along_arc
+  main_of_lemmas _root_.GlobalTheory.ArcNormal.exists_unif_of_arc _root_.GlobalTheory.ArcNormal.theta_const_bounded _root_.GlobalTheory.ArcNormal.lieCoord_det_bounded
 
 end GlobalTheory.ArcNormal

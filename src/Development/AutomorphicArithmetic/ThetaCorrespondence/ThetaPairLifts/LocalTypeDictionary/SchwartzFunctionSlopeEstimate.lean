@@ -3,14 +3,19 @@ module
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPairingStdP
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSymplecticGroupMatrixOfPreservesPhaseSpace
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ArchimedeanLineIntertwinesRealSchrodingerStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ArchimedeanOneParameterFamilyContinuousStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ContinuousMatrixOneParameterGroupEqExpStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntertwiningSymplecticAndGroupLawStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemSymplecticLieAlgebraOfExpSmulMemSymplecticGroStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ArchimedeanLineIntertwinesRealSchrodinger
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ArchimedeanOneParameterFamilyContinuous
+public import Mathlib.Analysis.Normed.Algebra.Exponential
+public import Mathlib.Topology.Instances.Matrix
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ContinuousMatrixOneParameterGroupEqExp
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.RealMetaplecticRepresentation
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntertwiningSymplecticAndGroupLaw
+public import Mathlib.Algebra.Lie.Classical
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemSymplecticLieAlgebraOfExpSmulMemSymplecticGro
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealPairingSpaceResultOfSchrodingerCoordinates
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilLineCmModelAction
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilRepresentationIntegralActionStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilRepresentationIntegralAction
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.MetaplecticScalarDerivativeNonempty
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -78,7 +83,7 @@ theorem schwartz_coordinate_slope_bound (hP : _root_.GlobalTheory.FunPr.ThetaLoc
       ⇑(T t f₁) = GlobalTheory.RealWeil.rhoFun (A t w) ⇑(T t f))
     (hiso : ∀ t f, ∫ x, ‖T t f x‖ ^ 2 = ∫ x, ‖f x‖ ^ 2) (hpt : ∀ f y, Continuous fun t => T t f y) :
     ∀ f, ∃ g, Tendsto (fun t : ℝ => t⁻¹ • (T t f - f)) (𝓝[≠] 0) (𝓝 g) := by
-  obtain ⟨hs, hgrp, h0⟩ := GlobalTheory.T.symplectic_and_flow_of_intertwining_unitary l A T hT hT0 hI hiso
+  obtain ⟨hs, hgrp, h0⟩ := _root_.GlobalTheory.RealWeil.intertwining_symplectic_and_group_law l A T hT hT0 hI hiso
   have hT0' : T 0 = LinearMap.id := LinearMap.ext hT0
   have hTadd : ∀ s t, T (s + t) = T s ∘ₗ T t := fun s t => LinearMap.ext (hT s t)
   have hiso' : ∀ t h, ∫⁻ x, ‖T t h x‖ₑ ^ 2 = ∫⁻ x, ‖h x‖ₑ ^ 2 := fun t h =>
@@ -101,9 +106,9 @@ theorem schwartz_coordinate_slope_bound (hP : _root_.GlobalTheory.FunPr.ThetaLoc
         intro s t
         have : A (s + t) = (A s).comp (A t) := LinearMap.ext (hgrp s t)
         simp only [M, this, LinearMap.toMatrix'_comp]
-      obtain ⟨X, hX⟩ := GlobalTheory.T.continuous_matrix_oneParameterGroup_eq_exp _ M hMc hM0 hMm
+      obtain ⟨X, hX⟩ := _root_.GlobalTheory.matrix_oneParamGroup_eq_exp _ M hMc hM0 hMm
       have hsp : X ∈ LieAlgebra.Symplectic.sp l ℝ := by
-        refine GlobalTheory.T.mem_symplecticLieAlgebra_of_exp_smul_mem_symplecticGroup l X fun t => ?_
+        refine _root_.GlobalTheory.RealWeil.mem_sp_of_exp_mem_symplecticGroup l X fun t => ?_
         obtain ⟨N, hN⟩ := GlobalTheory.exists_symplecticGroup_of_sympl l (A t) (hs t)
         have e : Matrix.toLin' (N : Matrix (l ⊕ l) (l ⊕ l) ℝ) = A t := LinearMap.ext fun w => by
           rw [Matrix.toLin'_apply, hN]
@@ -199,12 +204,12 @@ theorem lift_splits_locally : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀
       Filter.Tendsto (fun t : ℝ => t⁻¹ • (T t f - f)) (nhdsWithin 0 {0}ᶜ) (nhds g) := by
   classical
   intro hP F E _ _ _ _ _ σ n d X W M ψ χX χW om hCM hψ hW γ hγ T hT hadd h0
-  obtain ⟨A, hAc, hA⟩ := GlobalTheory.T.archimedeanLine_intertwines_realSchrodinger M ψ χX χW om hψ hW γ hγ T hT
+  obtain ⟨A, hAc, hA⟩ := _root_.GlobalTheory.ArchFam.schr_equiv M ψ χX χW om hψ hW γ hγ T hT
   haveI : BorelSpace (Fin n × Fin d → mixedEmbedding.mixedSpace F) := Pi.borelSpace
   let μ : Measure (Fin n × Fin d → mixedEmbedding.mixedSpace F) := Measure.addHaar
   have hiso : ∀ t f, ∫ x, ‖T t f x‖ ^ 2 ∂μ = ∫ x, ‖f x‖ ^ 2 ∂μ := fun t f =>
-    GlobalTheory.T.weil_representation_integral_action M ψ χX χW om hW μ inferInstance (γ (Multiplicative.ofAdd t)) f (T t f) (hT t f)
-  obtain ⟨hc1, -⟩ := GlobalTheory.T.archimedeanOneParameterFamily_continuous M ψ χX χW om hW γ hγ T hT
+    _root_.GlobalTheory.ArchIsom.acts_norm_sq_eq M ψ χX χW om hW μ inferInstance (γ (Multiplicative.ofAdd t)) f (T t f) (hT t f)
+  obtain ⟨hc1, -⟩ := _root_.GlobalTheory.ArchFamilyCont.continuous_family M ψ χX χW om hW γ hγ T hT
   have trace_pi_real_eq_sum' {ι : Type} [Fintype ι] (f : ι → ℝ) :
       Algebra.trace ℝ (ι → ℝ) f = ∑ i, f i := by
     rw [Algebra.trace_eq_matrix_trace (Pi.basisFun ℝ ι)]

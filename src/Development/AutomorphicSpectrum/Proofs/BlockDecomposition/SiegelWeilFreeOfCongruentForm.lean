@@ -3,13 +3,14 @@ module
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.SiegelWeilMeasureOfCongruentForm
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TrMMemFramesEIff
 import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelesLocallyCompactSecondCountable
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicUnitaryGroupLocallyCompactStatement
+import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicUnitaryGroupLocallyCompact
 import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CompletionIsLocalRing
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.EulerProductMeasureTransportStatement
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.EulerProductMeasureTransport
 import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteAdelesLocalRingTotallyReal
 import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.LatticeStableAlmostEverywhere
 import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.UnitaryActionEulerProductStatement
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.UnitaryActionEulerProduct
 import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.UnitaryIsomOfIsometry
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -385,8 +386,8 @@ theorem theta_map_frames (σ : E →ₐ[F] E) (hCM : IsCMExt F E σ) {M n : ℕ}
         (actTup (AF F) (bc (inclR (AF F)) g)) =
       thetaMeas σ J μ 𝓕 (framesE σ J T) := by
   have hJ' := isHermND_conj σ hCM J hJ g
-  obtain ⟨tg, -, -, -, bs, hact⟩ := GlobalTheory.T.adelic_unitary_group_locally_compact F E σ hCM M J hJ (AF F)
-  obtain ⟨tg', -, -, -, bs', hact'⟩ := GlobalTheory.T.adelic_unitary_group_locally_compact F E σ hCM M _ hJ' (AF F)
+  obtain ⟨tg, -, -, -, bs, hact⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hCM M J hJ (AF F)
+  obtain ⟨tg', -, -, -, bs', hact'⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hCM M _ hJ' (AF F)
   haveI := tg
   haveI := tg'
   haveI := bs
@@ -438,8 +439,8 @@ theorem swFree_of_isometry : ∀ (F E : Type) [Field F] [NumberField F] [Field E
   haveI := i2
   haveI := i3
   obtain ⟨e, hmat, hrat⟩ := GlobalTheory.CompanionTheory.SW.HIsom.unitaryIsom_of_isometry F E σ hCM M J hJ g _ rfl (AF F)
-  obtain ⟨tg, -, -, -, bs, -⟩ := GlobalTheory.T.adelic_unitary_group_locally_compact F E σ hCM M J hJ (AF F)
-  obtain ⟨tg', -, -, -, bs', -⟩ := GlobalTheory.T.adelic_unitary_group_locally_compact F E σ hCM M _ hJ' (AF F)
+  obtain ⟨tg, -, -, -, bs, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hCM M J hJ (AF F)
+  obtain ⟨tg', -, -, -, bs', -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hCM M _ hJ' (AF F)
   haveI := tg
   haveI := tg'
   haveI := bs
@@ -460,7 +461,7 @@ theorem swFree_of_isometry : ∀ (F E : Type) [Field F] [NumberField F] [Field E
   haveI : ∀ v, BorelSpace (Fv F v) := fun _ => ⟨rfl⟩
   have hWi := haar_of_loc σ hCM (Ainf F) hLi b laminf hinf.1 n M
   have hWv := fun v => haar_of_loc σ hCM (Fv F v) (hLv v) b (lam v) (hlam v).1 n M
-  obtain ⟨cinf, c, hUP, hci, hcv⟩ := GlobalTheory.T.haar_modulus_gl_action_product_formula F E σ hCM n M g
+  obtain ⟨cinf, c, hUP, hci, hcv⟩ := _root_.GlobalTheory.CompanionTheory.SW.PfAct.product_formula_actTup F E σ hCM n M g
   obtain ⟨minf', hminf', hmapi, -⟩ :=
     local_transport σ hCM J g (Ainf F) hLi n _ _ minf hminf cinf (hci _ hWi.1)
   choose m' hm' hmapv hpre using fun v =>
@@ -514,7 +515,7 @@ theorem swFree_of_isometry : ∀ (F E : Type) [Field F] [NumberField F] [Field E
       rw [h1]
       funext a i
       exact map_actTup (evalV F v) g (projFin X) a i
-  have key := GlobalTheory.T.euler_product_measure_transport F E σ hCM d b n M _ (minf' (hermOf (Ainf F) σ T hT))
+  have key := _root_.GlobalTheory.CompanionTheory.SW.EulerMove.euler_move F E σ hCM d b n M _ (minf' (hermOf (Ainf F) σ T hT))
     (minf (hermOf (Ainf F) σ T hT)) (fun v => m' v (hermOf (Fv F v) σ T hT))
     (fun v => m v (hermOf (Fv F v) σ T hT)) (actTup (AF F) (bc (inclR (AF F)) g))
     (actTup (Ainf F) (bc (inclR (Ainf F)) g)) (fun v => actTup (Fv F v) (bc (inclR (Fv F v)) g))

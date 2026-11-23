@@ -1,11 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ActAApply
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CompletedStandardAdelicLatticePropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLatticeOfAdelicPointStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeisenbergRelativeIndexCompletedStandardNeZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SpanHeisenbergTranslatesVacuumEqTopStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaSpaceSelfDualPairAtMostLineStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CompletedStandardAdelicLatticeProperties
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NormSumPairRankZeroOfCurveCoordNorm
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLatticeOfAdelicPoint
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeisenbergRelativeIndexCompletedStandardNeZero
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsHeisTrivial
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SpanHeisenbergTranslatesVacuumEqTop
+public import Formalism.SharpRestriction.GlobalSchurBounds.StandardLatticesGL3
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaSpaceSelfDualPairAtMostLine
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,7 +57,7 @@ open scoped BigOperators
 namespace GlobalTheory.FinWeil.Vacuum
 
 theorem sd_std (D : D7) (N : ℕ) : SD D (stdL D N) := by
-  obtain ⟨Lt, h1, h2, -⟩ := GlobalTheory.T.Lt_eq_iff_inv_mul_mem_intG_and_transport D N
+  obtain ⟨Lt, h1, h2, -⟩ := _root_.GlobalTheory.NormSum.exists_lattice_of_adelic_point D N
   exact h2 ▸ (h1 1).2
 
 theorem pt_nsmul (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) {N N' : ℕ} (m : ℕ)
@@ -81,7 +84,7 @@ theorem level_fixed {D : D7} (hg : admG1 D) {cc : Ideal (𝓞 D.host.K)} {δ : �
     ∀ b ∈ latA D cc N N', WA (m • b) v = v := by
   intro b hb
   obtain ⟨-, -, -, hW, hC⟩ := hM
-  obtain ⟨h1, -, h3, -⟩ := GlobalTheory.T.completedStandardAdelicLattice_properties D hg cc δ hc N N'
+  obtain ⟨h1, -, h3, -⟩ := _root_.GlobalTheory.CompletedLattice.completed_lattice D hg cc δ hc N N'
   obtain ⟨m', hm', h⟩ := hC (m • b) v
   obtain ⟨z, a, ha, hz⟩ := h3 b m' hm'
   have hz' : pt D (tor0 D cc δ) δ z ∈ La0 D (tor0 D cc δ) N N' := by
@@ -96,9 +99,9 @@ theorem level_fixed {D : D7} (hg : admG1 D) {cc : Ideal (𝓞 D.host.K)} {δ : �
 
 theorem vacuum_fixed_span : ∀ (D : D7), admG1 D → ∀ (cc : Ideal (𝓞 D.host.K)) (δ : ℂ), Crv D cc δ → ∀ (N N' : ℕ) w γ WA, GlobalTheory.FinWeil.IsModel D cc δ N N' w γ WA → ∀ e0 ∈ Th D (tor0 D cc δ) (stdL D N) (stdL D N'), e0 ≠ 0 → ∃ h : e0 ∈ TTs D (tor0 D cc δ) N N', Fixes WA (latA D cc N N') ⟨e0, h⟩ ∧ Submodule.span ℂ (Set.range fun ζ => WA ζ ⟨e0, h⟩) = ⊤ := by
   intro D hg cc δ hc N N' w γ WA hM e0 he0 hne
-  obtain ⟨hL, hWd, -⟩ := GlobalTheory.T.theta_space_selfDual_pair_at_most_line D hg cc δ hc N N' (La0 D (tor0 D cc δ) N N')
+  obtain ⟨hL, hWd, -⟩ := _root_.GlobalTheory.ThetaLine.theta_line D hg cc δ hc N N' (La0 D (tor0 D cc δ) N N')
     (Or.inr ⟨_, _, sd_std D _, sd_std D _, rfl⟩)
-  obtain ⟨h1, h2, -⟩ := GlobalTheory.T.completedStandardAdelicLattice_properties D hg cc δ hc N N'
+  obtain ⟨h1, h2, -⟩ := _root_.GlobalTheory.CompletedLattice.completed_lattice D hg cc δ hc N N'
   have h0 : ∀ x ∈ La0 D (tor0 D cc δ) N N', Wd D (tor0 D cc δ) ((1 : ℕ) • x) e0 = e0 := fun x hx => by
     rw [one_smul, hWd x hx]
     funext z
@@ -107,7 +110,7 @@ theorem vacuum_fixed_span : ∀ (D : D7), admG1 D → ∀ (cc : Ideal (𝓞 D.ho
   refine ⟨hT, fun a ha => ?_, ?_⟩
   · have := level_fixed hg hc hM ⟨e0, hT⟩ 1 h0 a ha
     rwa [one_smul] at this
-  refine GlobalTheory.T.span_heisenberg_translates_vacuum_eq_top hM.1 _ hM.2.1 _ (fun v hv => ?_) (fun v => ?_)
+  refine _root_.GlobalTheory.FinWeil.span_translates_vacuum hM.1 _ hM.2.1 _ (fun v hv => ?_) (fun v => ?_)
   · have hv' : (v : VC D N N' → ℂ) ∈ ThSp D (tor0 D cc δ) (La0 D (tor0 D cc δ) N N') := by
       refine ⟨v.2.1, fun x hx y => ?_⟩
       have e := hWd x hx v
@@ -117,7 +120,7 @@ theorem vacuum_fixed_span : ∀ (D : D7), admG1 D → ∀ (cc : Ideal (𝓞 D.ho
     obtain ⟨c, hc'⟩ := hL _ hv' e0 he0 hne
     exact ⟨c, Subtype.ext hc'⟩
   · obtain ⟨-, m, hm, hv⟩ := v.2
-    refine ⟨(latA D cc N N').comap (m • LinearMap.id), GlobalTheory.T.heisenbergRelativeIndex_completedStandard_ne_zero D hg cc δ hc N N' m hm _ (fun ζ hζ => hζ),
+    refine ⟨(latA D cc N N').comap (m • LinearMap.id), _root_.GlobalTheory.FinWeil.idx_latA_ne_zero D hg cc δ hc N N' m hm _ (fun ζ hζ => hζ),
       fun a _ hT' => ?_⟩
     have hb : (m : ℚ)⁻¹ • a ∈ latA D cc N N' := by
       refine (hM.2.1 _).2 fun a' ha' => ?_

@@ -1,24 +1,26 @@
 module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.UsedLocalConclusion
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CokernelCrystallineSurjectionKilledByXPowStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineExtensionIntegralCocycleAllPlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DefectTorsionSecondCohomologyKernelStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleComparisonOfWachBasis
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HerrCocyclePolesFrobeniusQCrystallineStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HerrH1Description
+public import Formalism.SharpRestriction.LevelLetterCocycles.DeltaInvariantLattices
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CokernelCrystallineSurjectionKilledByXPow
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineExtensionIntegralCocycleAllPlaces
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DefectTorsionSecondCohomologyKernel
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LettersFree
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalComparisonHoldsStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalComparisonHolds
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemH1fIffResMem
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachIntegralComplexCocycleClassFiniteStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeComparisonDcris
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeExpansionAtLowLevelPointsStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeExpansionAtLowLevelPoints
+public import Formalism.SharpRestriction.LevelLetterCocycles.GammaSemisimpleLocalOfConsequences
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachModuleConsequencesPoleQuotient
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachModuleDescentToTameSubextension
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachModuleSaturatedExactnessCrystalline
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleComparisonOfWachBasis
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HerrCocyclePolesFrobeniusQCrystalline
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HerrH1Description
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachIntegralComplexCocycleClassFinite
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeGaloisTrivialModUniformizer
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeHeightsFromHodgeJumpsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachModuleConsequencesPoleQuotientStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachModuleDescentToTameSubextensionStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachModuleSaturatedExactnessCrystallineStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachModuleUniquenessCharacterisationStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeHeightsFromHodgeJumps
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachModuleUniquenessCharacterisation
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,12 +68,12 @@ theorem wach_used_clauses (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F :
     (Cm : CmpOf D.loc D.locA HW F) : DeltaInvariantNormBound D HW F Cm := by
   unfold DeltaInvariantNormBound
   refine ⟨GlobalTheory.NL.LetterFree.letters_free D HW F, GlobalTheory.NL.WachLatticeTrivialModUniformizer.wachLattice_galois_trivial_mod_uniformizer D HW F Cm,
-    GlobalTheory.NL.CmpCris.wachLattice_comparison_dcris D HW F Cm, GlobalTheory.T.wach_lattice_expansion_at_low_level_points D HW F Cm, GlobalTheory.T.wachLattice_heights_from_hodgeJumps D HW F Cm,
-    GlobalTheory.T.wachModule_saturated_exactness_crystalline D HW F Cm, GlobalTheory.T.herrCocycle_poles_frobeniusQ_crystalline D HW F, GlobalTheory.T.p8_of_cmpOf D HW F Cm, GlobalTheory.T.wachModule_descent_to_tame_subextension D HW F,
-    GlobalTheory.T.wachModule_uniqueness_characterisation D HW F, GlobalTheory.T.gammaSemisimpleQuotientD_statement D HW F Cm, GlobalTheory.NL.HerrComplexH1.herr_H1_description D HW F,
-    GlobalTheory.NL.FiniteRestrictionH1f.mem_H1f_iff_res_mem D HW F, GlobalTheory.T.wachIntegralComplex_cocycle_class_finite D HW F, GlobalTheory.T.defect_torsion_second_cohomology_kernel D HW F Cm,
-    GlobalTheory.T.cokernel_crystalline_surjection_killed_by_X_pow D HW F Cm, ?_⟩
+    GlobalTheory.NL.CmpCris.wachLattice_comparison_dcris D HW F Cm, _root_.GlobalTheory.NL.LatLevel.lattice_at_level D HW F Cm, _root_.GlobalTheory.NL.Heights.heights_from_jumps D HW F Cm,
+    _root_.GlobalTheory.NL.Exact.exactness_of_N D HW F Cm, _root_.GlobalTheory.NL.PoleCrys.main D HW F, _root_.GlobalTheory.NL.NygaardFrobeniusPower.crystalline_extension_integral_cocycle_all_places D HW F Cm, _root_.GlobalTheory.NL.p9_statement D HW F,
+    _root_.GlobalTheory.NL.FrobeniusMatrixUniqueness.main D HW F, _root_.GlobalTheory.NL.WachModulePoleQuotient.wachModule_consequences_poleQuotient D HW F Cm, GlobalTheory.NL.HerrComplexH1.herr_H1_description D HW F,
+    GlobalTheory.NL.FiniteRestrictionH1f.mem_H1f_iff_res_mem D HW F, _root_.GlobalTheory.NL.IntComplex.main D HW F, _root_.GlobalTheory.NL.DefectTorsion.defect_torsion D HW F Cm,
+    _root_.GlobalTheory.NL.CokerKill.X_pow_kills_coker D HW F Cm, ?_⟩
   unfold ConclusionE
-  exact ⟨GlobalTheory.NL.NygaardExtension.main D HW F, GlobalTheory.T.local_comparison_of_cmpOf D HW F Cm⟩
+  exact ⟨GlobalTheory.NL.NygaardExtension.main D HW F, _root_.GlobalTheory.NL.SandJumps.main D HW F Cm⟩
 
 end GlobalTheory.NL

@@ -3,8 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCharacter
 public import Mathlib.AlgebraicGeometry.Morphisms.Flat
 public import Mathlib.Tactic.ENatToNat
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FaithfullyFlatAppOfIsAffineHomFlatSurjectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocallyTrivialUnitCocycleFaithfullyFlatStatement
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FaithfullyFlatAppOfIsAffineHomFlatSurjective
+public import Mathlib.RingTheory.RingHom.FaithfullyFlat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocallyTrivialUnitCocycleFaithfullyFlat
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.BaseChangeKernels.Affine
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,7 +47,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.BaseChangeKernels.Affine
 
 @[expose] public section
 
@@ -123,7 +125,7 @@ theorem exists_local_charUnit : ∀ (X Y Z W : Scheme.{0}) (p : X ⟶ Y) (a b : 
     rw [Scheme.Hom.app_eq_appLE a, Scheme.Hom.app_eq_appLE m₂₃, Scheme.Hom.appLE_comp_appLE,
       Scheme.Hom.appLE_comp_appLE]
     exact appLE_eq_of_eq' e₁₃a _ _ _ _
-  have FF := GlobalTheory.T.faithfullyFlat_app_of_isAffineHom_flat_surjective' X Y p V hpA hpF hpS hV
+  have FF := _root_.GlobalTheory.faithfullyFlat_app_of_isAffineHom_flat_surjective X Y p V hpA hpF hpS hV
   let c : Γ(Z, a ⁻¹ᵁ (p ⁻¹ᵁ V))ˣ := res le_top χ
   have hc : (m₁₃.appLE _ _ h13).hom (c : Γ(Z, a ⁻¹ᵁ (p ⁻¹ᵁ V))) =
       (m₁₂.appLE _ _ h12).hom (c : Γ(Z, a ⁻¹ᵁ (p ⁻¹ᵁ V))) * (m₂₃.app _).hom (c : Γ(Z, a ⁻¹ᵁ (p ⁻¹ᵁ V))) := by
@@ -134,7 +136,7 @@ theorem exists_local_charUnit : ∀ (X Y Z W : Scheme.{0}) (p : X ⟶ Y) (a b : 
     simp only [c, res, Units.coe_map, MonoidHom.coe_coe]
     rw [appLE_map_top, appLE_map_top, appLE_map_top]
     exact this
-  obtain ⟨s, hs, x, x', hxx', hx⟩ := GlobalTheory.T.locally_trivial_unit_cocycle_faithfully_flat _ _ _ _ (p.app V) _ _ _ _ _ P₁ P₂ E₁ E₂ FF c hc
+  obtain ⟨s, hs, x, x', hxx', hx⟩ := _root_.GlobalTheory.UnitCocycle.exists_local _ _ _ _ (p.app V) _ _ _ _ _ P₁ P₂ E₁ E₂ FF c hc
     (hV.primeIdealOf ⟨y, hyV⟩).asIdeal inferInstance
   have hyS : y ∈ Y.basicOpen s := by
     have h0 : hV.primeIdealOf ⟨y, hyV⟩ ∈ hV.fromSpec ⁻¹ᵁ Y.basicOpen s := by

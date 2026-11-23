@@ -1,7 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DatumOfIsIntegersLattice
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsKernelEquivConjugatePointsStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalStarComplexMultiplicationPoints
+public import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.TranslateProduct
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsKernelEquivConjugatePoints
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,8 +80,8 @@ theorem stable_kerReps_add_sub : ∀ (p : ℕ) (F : IntermediateField ℚ ℂ) (
   rcases ringEquiv_sqrtNegNat σ p with hs | hs
   · have hp : σ ((a : ℂ) + sqrtNegNat p) = (a : ℂ) + sqrtNegNat p := by rw [map_add (f := _), hσa, hs]
     have hm' : σ ((a : ℂ) - sqrtNegNat p) = (a : ℂ) - sqrtNegNat p := by rw [map_sub, hσa, hs]
-    obtain ⟨e, he⟩ := GlobalTheory.T.exists_kernel_equiv_conjugate_points L σ _ S S e2 e3 mp hS (by rw [hp]; exact hS)
-    obtain ⟨e', he'⟩ := GlobalTheory.T.exists_kernel_equiv_conjugate_points L σ _ S' S' e2 e3 mm hS' (by rw [hm']; exact hS')
+    obtain ⟨e, he⟩ := _root_.GlobalTheory.ConjPoint.exists_equiv_kerReps_isConj L σ _ S S e2 e3 mp hS (by rw [hp]; exact hS)
+    obtain ⟨e', he'⟩ := _root_.GlobalTheory.ConjPoint.exists_equiv_kerReps_isConj L σ _ S' S' e2 e3 mm hS' (by rw [hm']; exact hS')
     refine ⟨Equiv.sumCongr e e', ?_⟩
     rintro (t | t)
     · exact he t
@@ -88,8 +90,8 @@ theorem stable_kerReps_add_sub : ∀ (p : ℕ) (F : IntermediateField ℚ ℂ) (
       rw [map_add (f := _), hσa, hs, sub_eq_add_neg]
     have hm' : σ ((a : ℂ) - sqrtNegNat p) = (a : ℂ) + sqrtNegNat p := by
       rw [map_sub, hσa, hs, sub_neg_eq_add]
-    obtain ⟨e, he⟩ := GlobalTheory.T.exists_kernel_equiv_conjugate_points L σ _ S S' e2 e3 mp hS (by rw [hp]; exact hS')
-    obtain ⟨e', he'⟩ := GlobalTheory.T.exists_kernel_equiv_conjugate_points L σ _ S' S e2 e3 mm hS' (by rw [hm']; exact hS)
+    obtain ⟨e, he⟩ := _root_.GlobalTheory.ConjPoint.exists_equiv_kerReps_isConj L σ _ S S' e2 e3 mp hS (by rw [hp]; exact hS')
+    obtain ⟨e', he'⟩ := _root_.GlobalTheory.ConjPoint.exists_equiv_kerReps_isConj L σ _ S' S e2 e3 mm hS' (by rw [hm']; exact hS)
     refine ⟨(Equiv.sumCongr e e').trans (Equiv.sumComm _ _), ?_⟩
     rintro (t | t)
     · exact he t

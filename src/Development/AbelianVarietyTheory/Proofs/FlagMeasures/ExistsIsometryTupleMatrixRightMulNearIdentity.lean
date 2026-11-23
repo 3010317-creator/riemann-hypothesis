@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermLat
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NcardImageOfLe
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIsometryNearIdentityCloseTuplesStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIsometryNearIdentityCloseTuples
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,7 +78,7 @@ theorem exists_isometry_rmul : ∀ {F : Type} [Field F] [ValuativeRel F] [Topolo
   set t := algebraMap F E ((ϖ : F) ^ e) with htdef
   have hΓ' : IsUnit ((t * t) • Γ).det := by
     rw [Matrix.det_smul]; exact ((ht.mul ht).pow _).mul hΓ
-  obtain ⟨N', hN'⟩ := GlobalTheory.T.exists_isometry_near_identity_close_tuples L ϖ hϖ Hm hH Λ hΛ m _ hΓ' N
+  obtain ⟨N', hN'⟩ := _root_.GlobalTheory.HL.CloseTuples.exists_isometry_close L ϖ hϖ Hm hH Λ hΛ m _ hΓ' N
   refine ⟨N', fun i hi x hx hG A hA hAΓ => ?_⟩
   have hϖO : algebraMap F E ((ϖ : F) ^ (i - N')) ∈ L.O := by
     rw [L.O_def]

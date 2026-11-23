@@ -3,14 +3,17 @@ module
 public import Development.WeilBound.ThetaLifts.SmallCones.UnfAbs
 public import Development.AbelianVarietyTheory.Definitions.Foundations.T2SpaceTensorProductFiniteExtension
 public import Development.WeilBound.CoreStatements.ThetaDilations.ParAlg
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdeleRingCocompactDiscreteNumberFieldStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelesLocallyCompactSecondCountableStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicHaarInvariantUnitaryActionStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicUnitaryGroupLocallyCompactStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.RationalTuplesDiscreteCocompactAdelicStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRingStatement
+public import Mathlib.NumberTheory.NumberField.AdeleRing
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdeleRingCocompactDiscreteNumberField
+public import Formalism.UnipotentAdelicQuotients.SWXSDefs
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelesLocallyCompactSecondCountable
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicHaarInvariantUnitaryAction
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicUnitaryGroupLocallyCompact
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.RationalTuplesDiscreteCocompactAdelic
 public import Development.WeilBound.ThetaLifts.SmallCones.UnfMod
 public import Development.WeilBound.ThetaLifts.SmallCones.UnfPar
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -94,17 +97,17 @@ theorem parH (hcm : IsCMExt F E σ) {M : ℕ} {J : Matrix (Fin M) (Fin M) E} (hJ
         ∃ p u, h = nn p * ι u * mm a) ∧
       (∀ p, ∃ R : N → N, MeasurePreserving R μN μN ∧ ∀ x, nn x * nn p = nn (R x)) ∧
       ∃ C : Set N, IsCompact C ∧ ∀ p, ∃ q, HA.mat (AF F) σ (hypJ J) (nn q) ∈ HFin (AF F) σ (hypJ J) ∧ ∃ p' ∈ C, nn q * nn p = nn p' := by
-  obtain ⟨⟨_, _, _⟩, -⟩ := GlobalTheory.T.adeles_locally_compact_second_countable F
-  obtain ⟨_, _, _, _, hsc, -, -, hB, -⟩ := GlobalTheory.T.tensor_locally_compact_ring F E σ hcm (AF F)
+  obtain ⟨⟨_, _, _⟩, -⟩ := _root_.GlobalTheory.CompanionTheory.AdeleTop.adele_top F
+  obtain ⟨_, _, _, _, hsc, -, -, hB, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm (AF F)
   have := hB 1 M
   have : BorelSpace (AF F) := ⟨rfl⟩
-  obtain ⟨-, -, -, -, -, hact⟩ := GlobalTheory.T.adelic_unitary_group_locally_compact F E σ hcm M J hJ (AF F)
+  obtain ⟨-, -, -, -, -, hact⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hcm M J hJ (AF F)
   obtain ⟨nn, ι, mm, c, hval, hΨ, cn, ci, cm, cc, n0, nmul, -, hin, hmn, hmi, -, hdec, rn, -, -⟩ := par2 F E σ hcm M J hJ
   set μW : Measure (Fin 1 → Fin M → AF F ⊗[F] E) := Measure.addHaar with hμW
   set μA : Measure (AF F) := Measure.addHaar with hμA
   obtain ⟨χ, χc, χ1, χ2⟩ := modulus hcm M μW μA inferInstance inferInstance
-  obtain ⟨⟨CW, hCW, hW⟩, -⟩ := GlobalTheory.T.rational_tuples_discrete_cocompact_adelic F E σ hcm 1 M
-  obtain ⟨⟨CA, hCA, hA⟩, -⟩ := GlobalTheory.T.adele_ring_cocompact_discrete_number_field F
+  obtain ⟨⟨CW, hCW, hW⟩, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.CocW.main F E σ hcm 1 M
+  obtain ⟨⟨CA, hCA, hA⟩, -⟩ := _root_.GlobalTheory.CompanionTheory.Adelic.FieldCocompact.discrete_cocompact F
   refine ⟨_, inferInstance, inferInstance, inferInstance, inferInstance, μW.prod μA, inferInstance, inferInstance, nn, ι, mm, χ,
     (0, 0), ⟨cn, ci, cm, χc, hΨ, fun p => ⟨fun x => (p.1 + x.1, p.2 + x.2 + c p.1 x.1), ?_, fun x => nmul _ _ _ _⟩,
       fun u => ⟨Prod.map (actW (AF F) σ J u) id, ?_, fun x => hin u _ _⟩, fun t => ⟨_, ?_, χ1 t, fun x => hmn t _ _⟩, hmi,
@@ -114,7 +117,7 @@ theorem parH (hcm : IsCMExt F E σ) {M : ℕ} {J : Matrix (Fin M) (Fin M) E} (hJ
     · exact ((continuous_const.add continuous_snd).add (cc.comp (continuous_const.prodMk continuous_fst))).measurable
     · simpa only [add_right_comm p.2] using map_add_left_eq_self μA (p.2 + c p.1 w)
   · exact MeasurePreserving.prod ⟨((hact 1).1.comp (continuous_const.prodMk continuous_id)).measurable,
-      GlobalTheory.T.adelic_haar_invariant_unitary_action F E σ hcm M J hJ μW inferInstance u⟩ (MeasurePreserving.id μA)
+      _root_.GlobalTheory.CompanionTheory.SW.HaarInv.actW_map_eq F E σ hcm M J hJ μW inferInstance u⟩ (MeasurePreserving.id μA)
   · exact Continuous.measurable (by fun_prop)
   · obtain ⟨b, r, e1, e2⟩ := hval p u a
     exact ⟨b, r, _, e1, fun hp => ⟨(e2 hp).1, (e2 hp).2, by rw [hp]; exact smul_zero _⟩⟩

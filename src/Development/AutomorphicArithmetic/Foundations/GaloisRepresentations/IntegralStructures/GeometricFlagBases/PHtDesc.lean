@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.FlagBasis
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContConeOfQcqsAffineStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IndEtOfForallFinset
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContConeOfQcqsAffine
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistFinitaryStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -268,6 +269,6 @@ open UpperTheory.Gal.Int.Geo.HeightDescentDirectedColimits in
 theorem UpperTheory.Gal.Int.Geo.htDesc_of :
     HtDesc := by
   intro q k Ω _ _ _ _ X p hqc hqs n i y
-  obtain ⟨L, z, hz⟩ := (GlobalTheory.T.contCone_of_isLimit_of_qcqs_affine_transitions (ZMod q) (tw q i) (GlobalTheory.T.tateTwist_finitary q i) _ (Gd k Ω p) (cn k Ω p) (cnLim p)
+  obtain ⟨L, z, hz⟩ := (_root_.GlobalTheory.EtC.contCone_of_qcqs_affine (ZMod q) (tw q i) (GlobalTheory.T.tateTwist_finitary q i) _ (Gd k Ω p) (cn k Ω p) (cnLim p)
     (fun L => gd_compact p hqc L.unop.1) (fun L => gd_qs p hqs L.unop.1) (fun _ _ f => tr_affine p (leOfHom f.unop)) n).1 y
   exact ⟨L.unop.1, L.unop.2, z, hz⟩

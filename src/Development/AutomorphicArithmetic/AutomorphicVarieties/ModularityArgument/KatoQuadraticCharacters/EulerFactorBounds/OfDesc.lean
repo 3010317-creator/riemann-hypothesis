@@ -2,13 +2,20 @@ module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.KatoQuadraticCharacters.EulerFactorBounds.EsStmt
 public import Development.AbelianVarietyTheory.Definitions.Foundations.OpLDOneSubMemTriv
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLevelPowPrimeFourthPowerDescentStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsUnitEvalEqKummerClassStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DiagMod
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLevelPowPrimeFourthPowerDescent
+public import Development.AbelianVarietyTheory.Definitions.Foundations.Letter
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsUnitEvalEqKummerClass
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularFunctionTowerIntegrality
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TowerUnitClassModPrimePowPropertiesStatement
-import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TowerUnitClassModPrimePowProperties
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.KatoQuadraticCharacters.EulerFactorBounds.KmapComp
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.KatoQuadraticCharacters.EulerFactorBounds.SCls
+import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
 import Formalism.SharpRestriction.GrowthBounds.BinomialRatio.ChainDim
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -61,7 +68,7 @@ theorem UpperTheory.V.Z.Kato.Nb.sEsLev : UpperTheory.V.Z.Kato.Nb.SEsLev := by
   obtain ⟨⟨c, hcA, hbu⟩, hinv⟩ := hb
   have api := sApi Ω ε X l n
   have cls := sCls Ω ε X l n
-  have ev := GlobalTheory.T.towerUnitClassModPrimePow_properties Ω ε X l n
+  have ev := _root_.GlobalTheory.KZ.H3.cls_props Ω ε X l n
   have hsub : ∀ (x y x' y' : ℤ_[l]) (a e : ℕ), (l : ℤ_[l]) ^ n ∣ x - x' → (l : ℤ_[l]) ^ n ∣ y - y' →
       (l : ℤ_[l]) ^ n ∣ x ^ a * y ^ e - x' ^ a * y' ^ e := by
     intro x y x' y' a e hx hy
@@ -91,7 +98,7 @@ theorem UpperTheory.V.Z.Kato.Nb.sEsLev : UpperTheory.V.Z.Kato.Nb.SEsLev := by
       rw [hbu]
       exact Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _ (hcA i)
     obtain ⟨φ0, hφ, hd⟩ := X.j_hol
-    obtain ⟨f, hfU, hf⟩ := GlobalTheory.T.exists_unit_eval_eq_kummer_class ε X ⟨φ0, hd, hφ⟩ l n (b u) hbA
+    obtain ⟨f, hfU, hf⟩ := _root_.GlobalTheory.KZ.ES.exists_un_eval_eq_cls ε X ⟨φ0, hd, hφ⟩ l n (b u) hbA
     obtain ⟨M, hM⟩ : ∃ M : ℕ, M = 6 * l * N * l ^ n := ⟨_, rfl⟩
     have hMpos : 0 < M := by
       rw [hM]
@@ -152,7 +159,7 @@ theorem UpperTheory.V.Z.Kato.Nb.sEsLev : UpperTheory.V.Z.Kato.Nb.SEsLev := by
       refine ⟨g, ?_⟩
       have := congrArg Units.val hg
       simpa using this
-    obtain ⟨k', h, hlev⟩ := GlobalTheory.T.exists_level_pow_prime_fourth_power_descent ε X l n M hl hMpos hMd f hγ
+    obtain ⟨k', h, hlev⟩ := _root_.GlobalTheory.KZ.ES.desc_pow_four ε X l n M hl hMpos hMd f hγ
     refine ⟨n + k', f ^ 4 * h ^ l ^ n, Nat.le_add_right _ _, ?_, ?_, ?_⟩
     · intro W hW
       obtain ⟨g, hg⟩ := hfU W hW

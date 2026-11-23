@@ -5,10 +5,14 @@ public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
 public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsMeromorphicRootOfMemModularFunctionTowerUnStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GlTwoPosRatMobiusUpperHalfPlanePropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TendstoMobCodiscreteWithinStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UpperHalfPlaneCodiscreteGermIdentityAndUnitsStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsMeromorphicRootOfMemModularFunctionTowerUn
+public import Development.AbelianVarietyTheory.Definitions.Foundations.ExpUpper
+public import Mathlib.Analysis.Complex.UpperHalfPlane.MoebiusAction
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GlTwoPosRatMobiusUpperHalfPlaneProperties
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TendstoMobCodiscreteWithin
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UpperHalfPlaneCodiscreteGermIdentityAndUnits
+public import Mathlib.GroupTheory.Schreier
+public import Mathlib.LinearAlgebra.Matrix.FixedDetMatrices
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -22,8 +26,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.GroupTheory.Schreier
-public import Mathlib.LinearAlgebra.Matrix.FixedDetMatrices
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -84,25 +86,25 @@ theorem germ_eq_of_eqOn {φ ψ : ℂ → ℂ} (h : ∀ z ∈ Hs, φ z = ψ z) : 
   rw [Filter.Germ.coe_eq]
   exact Filter.mem_of_superset (Filter.self_mem_codiscreteWithin Hs) h
 
-theorem mob_mem (γ : SL(2, ℤ)) {z : ℂ} (hz : z ∈ Hs) : mob (ofSL γ) z ∈ Hs := GlobalTheory.T.glTwoPosRatMobius_upperHalfPlane_properties.1 _ _ hz
+theorem mob_mem (γ : SL(2, ℤ)) {z : ℂ} (hz : z ∈ Hs) : mob (ofSL γ) z ∈ Hs := _root_.GlobalTheory.FN.mob_props.1 _ _ hz
 
 theorem mob_mul (γ δ : SL(2, ℤ)) {z : ℂ} (hz : z ∈ Hs) :
     mob (ofSL (γ * δ)) z = mob (ofSL γ) (mob (ofSL δ) z) := by
-  rw [map_mul]; exact GlobalTheory.T.glTwoPosRatMobius_upperHalfPlane_properties.2.1 _ _ _ hz
+  rw [map_mul]; exact _root_.GlobalTheory.FN.mob_props.2.1 _ _ _ hz
 
 theorem mob_ofSL_one (z : ℂ) : mob (ofSL 1) z = z := by
-  rw [map_one]; exact GlobalTheory.T.glTwoPosRatMobius_upperHalfPlane_properties.2.2.1 z
+  rw [map_one]; exact _root_.GlobalTheory.FN.mob_props.2.2.1 z
 
 theorem mob_mob_inv (γ : SL(2, ℤ)) {z : ℂ} (hz : z ∈ Hs) : mob (ofSL γ) (mob (ofSL γ⁻¹) z) = z := by
   rw [← mob_mul _ _ hz, mul_inv_cancel, mob_ofSL_one]
 
 theorem diff_comp {a : ℂ → ℂ} (ha : DifferentiableOn ℂ a Hs) (γ : SL(2, ℤ)) :
     DifferentiableOn ℂ (fun z => a (mob (ofSL γ) z)) Hs :=
-  ha.comp (GlobalTheory.T.glTwoPosRatMobius_upperHalfPlane_properties.2.2.2.2.1 _) (fun _ hz => mob_mem γ hz)
+  ha.comp (_root_.GlobalTheory.FN.mob_props.2.2.2.2.1 _) (fun _ hz => mob_mem γ hz)
 
 theorem eqOn_of_germ {a b : ℂ → ℂ} (ha : DifferentiableOn ℂ a Hs) (hb : DifferentiableOn ℂ b Hs)
     (h : (a : Mero) = (b : Mero)) : ∀ z ∈ Hs, a z = b z :=
-  GlobalTheory.T.upperHalfPlaneCodiscreteGerm_identity_and_units.2.1 a b ha hb h
+  _root_.GlobalTheory.FN.germ_main.2.1 a b ha hb h
 
 theorem eqOn_of_eventually {a b : ℂ → ℂ} (ha : DifferentiableOn ℂ a Hs) (hb : DifferentiableOn ℂ b Hs)
     (h : ∀ᶠ z in codiscreteWithin Hs, a z = b z) : ∀ z ∈ Hs, a z = b z :=
@@ -120,7 +122,7 @@ theorem exists_ne_zero {a : ℂ → ℂ} (h : (a : Mero) ≠ 0) : ∃ z ∈ Hs, 
 
 theorem eventually_ne_zero {a : ℂ → ℂ} (ha : DifferentiableOn ℂ a Hs) {z₀ : ℂ} (hz₀ : z₀ ∈ Hs) (h : a z₀ ≠ 0) :
     ∀ᶠ z in codiscreteWithin Hs, a z ≠ 0 :=
-  (GlobalTheory.T.upperHalfPlaneCodiscreteGerm_identity_and_units.2.2 a ha (germ_ne_zero ha hz₀ h)).1
+  (_root_.GlobalTheory.FN.germ_main.2.2 a ha (germ_ne_zero ha hz₀ h)).1
 
 theorem comp_ne_zero {a : ℂ → ℂ} {z₀ : ℂ} (hz₀ : z₀ ∈ Hs) (h : a z₀ ≠ 0) (γ : SL(2, ℤ)) :
     ∃ z ∈ Hs, a (mob (ofSL γ) z) ≠ 0 :=
@@ -136,7 +138,7 @@ theorem exists_both_ne_zero {a b : ℂ → ℂ} (ha : DifferentiableOn ℂ a Hs)
 
 theorem comp_eventually {φ ψ : ℂ → ℂ} (γ : SL(2, ℤ)) (h : ∀ᶠ z in codiscreteWithin Hs, φ z = ψ z) :
     ∀ᶠ z in codiscreteWithin Hs, φ (mob (ofSL γ) z) = ψ (mob (ofSL γ) z) :=
-  (GlobalTheory.T.tendsto_mob_codiscreteWithin_codiscreteWithin (ofSL γ)).eventually h
+  (_root_.GlobalTheory.FN.tendsto_mob_codiscreteWithin (ofSL γ)).eventually h
 
 theorem const_of_pow_eq {u v : ℂ → ℂ} (hu : DifferentiableOn ℂ u Hs) (hv : DifferentiableOn ℂ v Hs) {m : ℕ}
     (hm : 0 < m) (h : ∀ z ∈ Hs, u z ^ m = v z ^ m) {z₀ : ℂ} (hz₀ : z₀ ∈ Hs) (hv0 : v z₀ ≠ 0) :
@@ -284,7 +286,7 @@ theorem quot_pow {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ} (X 
     rw [hψ, ← Filter.Germ.coe_mul, Filter.Germ.coe_eq] at hg₀
     filter_upwards [hg₀] with z hz
     simpa only [Pi.mul_apply] using hz
-  haveI : Nontrivial Mero := GlobalTheory.T.upperHalfPlaneCodiscreteGerm_identity_and_units.1
+  haveI : Nontrivial Mero := _root_.GlobalTheory.FN.germ_main.1
   have hinj : Function.Injective X.an := X.an.injective
   have hpowg : g₀ ^ m = ((f * r⁻¹ : X.Kˣ) : X.K) := by
     apply hinj
@@ -324,7 +326,7 @@ theorem finite_mod_powers : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgCl
   intro Ω _ _ _ ε X hε hj M m hM hm
   classical
   haveI : NeZero M := ⟨hM.ne'⟩
-  haveI : Nontrivial Mero := GlobalTheory.T.upperHalfPlaneCodiscreteGerm_identity_and_units.1
+  haveI : Nontrivial Mero := _root_.GlobalTheory.FN.germ_main.1
   haveI : Group.FG SL(2, ℤ) :=
     Group.fg_iff.mpr ⟨{ModularGroup.S, ModularGroup.T}, SpecialLinearGroup.SL2Z_generators, (Set.finite_singleton _).insert _⟩
   obtain ⟨_, S, _, hS⟩ := (Group.fg_iff' (G := CongruenceSubgroup.Gamma M)).1 ((Group.fg_iff_subgroup_fg (CongruenceSubgroup.Gamma M)).2 (Subgroup.fg_of_index_ne_zero _))
@@ -332,14 +334,14 @@ theorem finite_mod_powers : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgCl
   let Sset := {f : X.Kˣ // f ∈ X.Un m ∧ ∀ γ ∈ CongruenceSubgroup.Gamma M, X.sl (ofSL γ) (f : X.K) = f}
   have hroot : ∀ f : Sset, ∃ a b : ℂ → ℂ, DifferentiableOn ℂ a Hs ∧ DifferentiableOn ℂ b Hs ∧ (b : Mero) ≠ 0 ∧
       X.an (f.1 : X.K) * (b : Mero) ^ m = (a : Mero) ^ m :=
-    fun f => GlobalTheory.T.exists_meromorphic_root_of_mem_modularFunctionTower_Un ε X hε hj m hm f.1 f.2.1
+    fun f => _root_.GlobalTheory.KZ.MeroRoot.exists_mero_root ε X hε hj m hm f.1 f.2.1
   choose A B hA hB hB0 hAB using hroot
   have hAnz : ∀ f : Sset, ∃ z ∈ Hs, A f z ≠ 0 := by
     intro f
     apply exists_ne_zero
     intro h0
     have hu : IsUnit (X.an (f.1 : X.K) * (B f : Mero) ^ m) :=
-      ((f.1.isUnit).map X.an).mul ((GlobalTheory.T.upperHalfPlaneCodiscreteGerm_identity_and_units.2.2 (B f) (hB f) (hB0 f)).2.pow m)
+      ((f.1.isUnit).map X.an).mul ((_root_.GlobalTheory.FN.germ_main.2.2 (B f) (hB f) (hB0 f)).2.pow m)
     rw [hAB f, h0, zero_pow hm.ne'] at hu
     exact not_isUnit_zero hu
   have hBnz : ∀ f : Sset, ∃ z ∈ Hs, B f z ≠ 0 := fun f => exists_ne_zero (hB0 f)

@@ -2,10 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.EvalAtOneExtremalMul
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.IrreducibleDistinctUnitary
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.EquivariantHomMultiplicityFreeIrreducibleStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FockSubstitutionIdentitiesStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeylDeterminantTwistTensorFiniteDimensionalStablStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeylDeterminantTwistTensorUnitIndexIrreducibleUnStatement
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.RepresentationTheory.Irreducible
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.EquivariantHomMultiplicityFreeIrreducible
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FockSubstitutionIdentities
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeylDeterminantTwistTensorFiniteDimensionalStabl
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeylDeterminantTwistTensorUnitIndexIrreducibleUn
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SqRepTopVecOfUnitriangular
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -100,7 +102,7 @@ namespace GlobalTheory.HoweOne
 open GlobalTheory.Branching
 
 theorem vn_stable {a : ℕ} (lam : Unit → DomWeight a) (n : Unit → ℕ) (g : Unit → Matrix (Fin a) (Fin a) ℂ) :
-    ∀ F ∈ Vn lam n, lft g F ∈ Vn lam n := (GlobalTheory.T.weylDeterminantTwistTensor_finiteDimensional_stable Unit a lam n).2 g
+    ∀ F ∈ Vn lam n, lft g F ∈ Vn lam n := (_root_.GlobalTheory.KJInf.vn_finiteDimensional_and_lft_mem Unit a lam n).2 g
 
 def vnMap {a : ℕ} (lam : Unit → DomWeight a) (n : Unit → ℕ) (g : Unit → Matrix (Fin a) (Fin a) ℂ) :
     Vn lam n →ₗ[ℂ] Vn lam n :=
@@ -121,10 +123,10 @@ def vnRep {a : ℕ} (lam : Unit → DomWeight a) (n : Unit → ℕ) :
     rw [vnMap_apply, Module.End.one_apply]
     have : (fun _ : Unit => ((1 : Matrix.unitaryGroup (Fin a) ℂ) : Matrix (Fin a) (Fin a) ℂ)ᵀ) = fun _ => 1 := by
       exact funext fun _ => Matrix.transpose_one
-    rw [this, (GlobalTheory.T.fockSubstitution_identities Unit a a le_rfl).2.2.2.2.1]
+    rw [this, (_root_.GlobalTheory.KJInf.substIdentities Unit a a le_rfl).2.2.2.2.1]
   map_mul' k k' := by
     refine LinearMap.ext fun F => Subtype.ext ?_
-    rw [Module.End.mul_apply, vnMap_apply, vnMap_apply, vnMap_apply, (GlobalTheory.T.fockSubstitution_identities Unit a a le_rfl).2.2.2.1]
+    rw [Module.End.mul_apply, vnMap_apply, vnMap_apply, vnMap_apply, (_root_.GlobalTheory.KJInf.substIdentities Unit a a le_rfl).2.2.2.1]
     congr 2
     refine funext fun _ => ?_
     first | exact (Matrix.transpose_mul _ _).symm | exact Matrix.transpose_mul _ _
@@ -134,7 +136,7 @@ theorem vnRep_apply {a : ℕ} (lam : Unit → DomWeight a) (n : Unit → ℕ) (k
 
 theorem vnRep_irreducible {a : ℕ} (ha : 0 < a) (lam : Unit → DomWeight a) (n : Unit → ℕ) :
     (vnRep lam n).IsIrreducible := by
-  obtain ⟨hne, hirr⟩ := GlobalTheory.T.weylDeterminantTwistTensor_unitIndex_irreducible_unitary a ha lam n
+  obtain ⟨hne, hirr⟩ := _root_.GlobalTheory.KJInf.Vn_unit_irreducible a ha lam n
   obtain ⟨F₀, hF₀, hF₀0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne
   refine { exists_pair_ne := ⟨⊥, ⊤, fun e => ?_⟩, eq_bot_or_eq_top := fun S => ?_ }
   · have e' := congrArg Subrepresentation.toSubmodule e
@@ -201,7 +203,7 @@ theorem subMap_intertwines {a b : ℕ} (hab : a ≤ b) (lam : Unit → DomWeight
     (y' : Unit → Matrix (Fin b) (Fin b) ℂ) (k : Matrix.unitaryGroup (Fin a) ℂ) (F : Vn lam n) :
     subMap hab lam n y' (vnRep lam n k F) =
       polyRep (unitaryIncl a) (MonoidHom.id (GL (Fin b) ℂ)) (k, 1) (subMap hab lam n y' F) := by
-  rw [subMap_apply, subMap_apply, polyRep_apply, (GlobalTheory.T.fockSubstitution_identities Unit a b hab).1, vnRep_apply]
+  rw [subMap_apply, subMap_apply, polyRep_apply, (_root_.GlobalTheory.KJInf.substIdentities Unit a b hab).1, vnRep_apply]
   simp only [Units.val_one, one_mul]
 
 theorem comp_subMap {a b : ℕ} (hab : a ≤ b) (lam : Unit → DomWeight a) (n : Unit → ℕ)
@@ -209,14 +211,14 @@ theorem comp_subMap {a b : ℕ} (hab : a ≤ b) (lam : Unit → DomWeight a) (n 
     polyRep (unitaryIncl a) (MonoidHom.id (GL (Fin b) ℂ)) (1, h) ∘ₗ subMap hab lam n y' =
       subMap hab lam n (fun τ => (h : Matrix (Fin b) (Fin b) ℂ) * y' τ) := by
   refine LinearMap.ext fun F => ?_
-  rw [LinearMap.comp_apply, subMap_apply, subMap_apply, polyRep_apply, (GlobalTheory.T.fockSubstitution_identities Unit a b hab).1]
+  rw [LinearMap.comp_apply, subMap_apply, subMap_apply, polyRep_apply, (_root_.GlobalTheory.KJInf.substIdentities Unit a b hab).1]
   have : (fun _ : Unit => ((1 : Matrix.unitaryGroup (Fin a) ℂ) : Matrix (Fin a) (Fin a) ℂ)ᵀ) = fun _ => 1 :=
     funext fun _ => Matrix.transpose_one
-  rw [this, (GlobalTheory.T.fockSubstitution_identities Unit a a le_rfl).2.2.2.2.1]
+  rw [this, (_root_.GlobalTheory.KJInf.substIdentities Unit a a le_rfl).2.2.2.2.1]
 
 theorem howeSpan_unit : HoweSpan Unit := by
   intro a b hab ha lam n Q hQ
-  haveI : FiniteDimensional ℂ (Vn lam n) := (GlobalTheory.T.weylDeterminantTwistTensor_finiteDimensional_stable Unit a lam n).1
+  haveI : FiniteDimensional ℂ (Vn lam n) := (_root_.GlobalTheory.KJInf.vn_finiteDimensional_and_lft_mem Unit a lam n).1
   have hb : 1 ≤ b := le_trans ha hab
   let S := Submodule.span ℂ (subSet hab lam n)
   have h1 : ∀ T ∈ S, ∀ k F, T (vnRep lam n k F) =
@@ -242,7 +244,7 @@ theorem howeSpan_unit : HoweSpan Unit := by
     | add T T' _ _ hT hT' => rw [LinearMap.comp_add]; exact S.add_mem hT hT'
     | smul c T _ hT => rw [LinearMap.comp_smul]; exact S.smul_mem c hT
   have h3 : S ≠ ⊥ := by
-    obtain ⟨F₀, hF₀, hF₀0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot (GlobalTheory.T.weylDeterminantTwistTensor_unitIndex_irreducible_unitary a ha lam n).1
+    obtain ⟨F₀, hF₀, hF₀0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot (_root_.GlobalTheory.KJInf.Vn_unit_irreducible a ha lam n).1
     have hmem : subMap hab lam n (fun _ => 1) ∈ S :=
       Submodule.subset_span ⟨_, fun _ => by simp, rfl⟩
     intro hS
@@ -257,7 +259,7 @@ theorem howeSpan_unit : HoweSpan Unit := by
     simp only [Q', LinearMap.comp_apply, Submodule.subtype_apply, AlgHom.toLinearMap_apply]
     rw [vnRep_apply, polyRep_apply, hQ _ (fun _ => transpose_uni k) F F.2]
     rfl
-  have key := GlobalTheory.T.equivariantHom_multiplicityFree_irreducible (Matrix.unitaryGroup (Fin a) ℂ) (GL (Fin b) ℂ) (Part (min a b))
+  have key := _root_.GlobalTheory.EquivHomIrr.equivariantHom_mem_of_stable (Matrix.unitaryGroup (Fin a) ℂ) (GL (Fin b) ℂ) (Part (min a b))
     (fun j => nablaSq ℂ a (pad a j)) (fun j => nablaSq ℂ b (pad b j))
     (fun j => smallRep (unitaryIncl a) (pad a j)) (fun j => smallRep (MonoidHom.id (GL (Fin b) ℂ)) (pad b j))
     (irreducibleDistinct_unitary (min_le_left a b)).1 (irreducibleDistinct_gl (min_le_right a b)).1

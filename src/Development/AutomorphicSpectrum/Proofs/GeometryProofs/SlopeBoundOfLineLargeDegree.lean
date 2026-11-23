@@ -2,9 +2,11 @@ module
 
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.ZhangDimensionPushDownGrassmannianHeightBounds
 public import GroundTheory.HeightsAndTheta.Heights.KernelsLattice
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.KeyBadReductionHoldsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.KeyDegreeOfBadReductionStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SlopeBoundOfLargeDegreeLineStatement
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.KeyBadSt
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.KeyBadReductionHolds
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsThetaMeanSquareNorm
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.KeyDegreeOfBadReduction
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SlopeBoundOfLargeDegreeLine
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,6 +55,6 @@ namespace GlobalTheory.CompanionTheory.Ar.Sl
 
 theorem slopeBound_and_lemmaS_of_siegel :
     LineOfLargeDegree.Statement → SlopeBoundSt ∧ Prov.LemmaS := fun hS =>
-  GlobalTheory.T.slope_bound_of_large_degree_line hS (GlobalTheory.T.key_degree_of_bad_reduction GlobalTheory.T.key_bad_reduction_holds)
+  _root_.GlobalTheory.CompanionTheory.Ar.Sl.TopSlope.slopeBound hS (_root_.GlobalTheory.CompanionTheory.Ar.Sl.keyDeg_of_keyBad _root_.GlobalTheory.CompanionTheory.Ar.Sl.KP.key_bad)
 
 end GlobalTheory.CompanionTheory.Ar.Sl

@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinEvWIsUnitInjectiveDvd
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinPeriodIsUnitAndAinfSaturated
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAinfLinearRetractionBreuilKisinStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAinfLinearRetractionBreuilKisin
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -116,7 +116,7 @@ theorem descent : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (d d' 
   choose r yR hRe using fun i j => (h₁ (i, j)).mono bk hM1
   choose ξ z hxe using fun i => (h₂ i).mono bk hM2
   simp only at hRe
-  obtain ⟨c, hc, hc1⟩ := GlobalTheory.T.exists_ainf_linear_retraction_breuilKisin l K bk
+  obtain ⟨c, hc, hc1⟩ := _root_.GlobalTheory.BKLim.AinfRetraction.main l K bk
   have hcev : ∀ s : bk.S, c (bk.ev s) = s := fun s => by
     have := hc s 1; rwa [mul_one, hc1, mul_one] at this
 

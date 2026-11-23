@@ -4,14 +4,16 @@ public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordTieComp
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GlueApplyOfNotInFibre
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsGenericFlag
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagBasisChangeIntegralStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagChartGenericFieldStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrameChangeByUnitMatrixStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrameCoeffsRegularInChartStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagBasisChangeIntegral
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagChartGenericField
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EtaleLocalizationAtPrimeTensorOfLowHeight
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrameChangeByUnitMatrix
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrameCoeffsRegularInChart
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenMapGermEqGenMapGerm
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenMapStalkMap
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeEigenVectorBundle
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.MinorRatioRegularOfInvertibleStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.MinorRatioRegularOfInvertible
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.StalkSpecializesBijective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -73,12 +75,12 @@ theorem pull_isFlagVB_genB : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : S
   intro X Ω _ ξ E _ _ κ _ x S _ r V L m n φ c X' ξ' f hx hgen hVB hTw hc hx' hgen' hd hch s p' _
   classical
   obtain ⟨⟨c₁, J⟩, hcJ⟩ := hx'.cover p'
-  obtain ⟨hx0, hchart, hmin⟩ := GlobalTheory.T.flag_chart_generic_field Ω E κ x S r n φ c X' ξ' p' c₁ J hcJ
+  obtain ⟨hx0, hchart, hmin⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.inChart_flagCoord_ratios Ω E κ x S r n φ c X' ξ' p' c₁ J hcJ
   obtain ⟨hfp, hreg, -⟩ := RegAtDom.regAt_dominates X Ω ξ X' _ ξ' f _ hd p'
   have hInC : InChart ξ x c₁ ⟨f p'.1, hfp⟩ := (hch p' c₁ hfp).2 hchart
   obtain ⟨U, hU, β₀, hspan, hfr⟩ := hVB s ⟨f p'.1, hfp⟩ trivial
   have hfr0 := hfr ⟨f p'.1, hfp⟩ trivial hU
-  obtain ⟨B₀, hBreg, hAreg, hBA⟩ := GlobalTheory.T.frame_coeffs_regular_in_chart X Ω ξ E κ x (L s) (m s) (n s) (r s) (φ s) (hTw s) _ c₁ hInC β₀ hfr0
+  obtain ⟨B₀, hBreg, hAreg, hBA⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.twist_left_inverse X Ω ξ E κ x (L s) (m s) (n s) (r s) (φ s) (hTw s) _ c₁ hInC β₀ hfr0
   have hxΩ : x c₁ ≠ 0 := hInC.1
   have hCex : ∀ l, ∃ C : Fin (r s) → Ω, c s l = ∑ a, C a • β₀ a := by
     intro l
@@ -114,8 +116,8 @@ theorem pull_isFlagVB_genB : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : S
     have := congrArg (fun M : Matrix (Fin (r s)) (Fin (r s)) Ω => M.map ι) hBA
     simpa [B, A, A₀, Matrix.map_mul] using this
   haveI : IsLocalRing (regAt ξ' p') := EigSplit.isLocalRing_regAt p'
-  obtain ⟨P, hPreg, hP0, hPinv, hPflag⟩ := GlobalTheory.T.flag_basis_change_integral (GenField Ω r) (regAt ξ' p') (r s) (fun c i => G i c) (fun k =>
-    GlobalTheory.T.minor_ratio_regular_of_invertible (GenField Ω r) (regAt ξ' p') (n s) (r s) A B G a k (J ⟨s, k⟩)
+  obtain ⟨P, hPreg, hP0, hPinv, hPflag⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.Adapted.exists_adapted (GenField Ω r) (regAt ξ' p') (r s) (fun c i => G i c) (fun k =>
+    _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.split_of_regular_ratios (GenField Ω r) (regAt ξ' p') (n s) (r s) A B G a k (J ⟨s, k⟩)
       (fun j l => hreg _ (hAreg j l)) (fun l j => hreg _ (hBreg l j)) hBA' ha
       (by have := (hmin ⟨s, k⟩).1; rwa [show flagMat φ c (⟨s, k⟩ : Σ s, Fin (r s)).1 = a • (A * G) from hF] at this)
       (by have := (hmin ⟨s, k⟩).2; rwa [show flagMat φ c (⟨s, k⟩ : Σ s, Fin (r s)).1 = a • (A * G) from hF] at this))
@@ -155,6 +157,6 @@ theorem pull_isFlagVB_genB : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : S
     obtain ⟨hqf, -, -⟩ := RegAtDom.regAt_dominates X Ω ξ X' _ ξ' f _ hd q
     have hfq := hfr ⟨f q.1, hqf⟩ trivial hqU
     have hpull := FlagPull.pull_isFrameAt hd hext q hqf hfq
-    exact GlobalTheory.T.frame_change_by_unit_matrix X' _ ξ' _ _ _ β q P hpull (fun a b => hq₁ q hq1 (a, b)) (hq₂ q hq2)
+    exact _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.isFrameAt_matrix_comb X' _ ξ' _ _ _ β q P hpull (fun a b => hq₁ q hq1 (a, b)) (hq₂ q hq2)
 
 end GlobalTheory.CompanionTheory.Ar.FlagBun.Flags

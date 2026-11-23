@@ -3,11 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.CoeEqAlgebraMapZeroEquiv
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.InstFintypeHodgeBidegree
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.HodgeSurjectivity.CosieveBot
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AffineSmoothFormsBijectiveStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HodgeFormCupWedgeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HodgeFormIsoOfBijectiveStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HodgeFormOneStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HodgeFormPullbackCompatStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AffineSmoothFormsBijective
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.DifferentialFormsCech.AffineHodgeIsomorphisms.IsFormT
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HodgeFormCupWedge
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HodgeFormIsoOfBijective
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HodgeFormOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HodgeFormPullbackCompat
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.DifferentialFormsCech.AffineHodgeIsomorphisms.AsmOnto
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -69,6 +70,6 @@ theorem hdg_aff_iso_onto (hA : CrystallineSemistableComparison.Onto.AffOm) (hN :
       (x : HT.Hdg q a a) (y : HT.Hdg q b b),
       e q c (HT.cupH q h h x y) = ε a b • wedgeOm K (Sec q ⊤) h (e q a x) (e q b y)) ∧
     ∀ {X : Scheme.{0}} (q : X ⟶ Spec (CommRingCat.of K)) [IsAffine X] [Smooth q], e q 0 (HT.oneH q) = oneOm K (Sec q ⊤) :=
-  asm_onto hA hN GlobalTheory.T.hodge_form_iso_of_bijective GlobalTheory.T.affine_smooth_forms_bijective GlobalTheory.T.hodge_form_pullback_compat GlobalTheory.T.hodge_form_cup_wedge GlobalTheory.T.hodge_form_one
+  asm_onto hA hN _root_.GlobalTheory.CompanionTheory.HodgeFormTop.main _root_.GlobalTheory.CompanionTheory.OmGlue.om_top _root_.GlobalTheory.CompanionTheory.OmNatT.pull_nat _root_.GlobalTheory.CompanionTheory.OmCup.main _root_.GlobalTheory.CompanionTheory.HodgeFormUnit.e_oneH
 
 end CrystallineSemistableComparison.Om.L2

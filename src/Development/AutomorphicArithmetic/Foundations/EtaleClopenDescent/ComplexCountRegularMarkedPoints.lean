@@ -3,7 +3,6 @@ module
 public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.MarkWeightedFixedPointEqDefinitePairOdd
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FullSumRegroup
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrbitalSumAtPlaceDecomposition
-import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelesSelfDual
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithIntersectionDivisorSupport
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CentralizerOrbitSumConjugate
@@ -12,20 +11,22 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjByCarryi
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjugacyClassPartEqWeightMulKottwitzPointSumStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsConjOfRelSimilitudePairsSameFormStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntOfDenLe
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteMarkedPairClassesDegreeOneTermNeZeroStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PointsNonemptyUnitaryRankOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteMarkedPairClassesDegreeOneTermNeZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteWeightedPairOrbitsOfFiniteWeightedFixedPoiStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinsumRegroupFibreBijStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MarkIffOfRel
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MinpolyOfRegAfOfFixL
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MkEqIffRelAndOutRel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrbitSumConjClasses
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PairWeightInvariantFormGroupConjStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PairWeightSupportFiniteOfFiniteFixingStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuotMkEqIffPositiveScalarFormIsomorphicStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelOfConjInGroupOfCommonFormStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelatedPairsSamePolarization
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SeparableFormGroupElementFixesUniquePositiveLineStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TermEqOfSimilitudeRelStatement
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MinpolyOfRegAfOfFixL
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelatedPairsSamePolarization
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -540,7 +541,7 @@ theorem markSumC_regroup (ha : G.a = 1) (hv : sigPosH (G.gram_herm v) = 1) (w : 
       (Quot.out q).trivAf.choose_spec.choose_spec L.K.toSubgroup f K' f'
       (Classical.choose (ConjClasses.exists_rep c)))
     formCls (fun q Q => phi q Q) ?_ ?_ ?_ ?_
-  · apply (GlobalTheory.T.finite_markedPairClasses_degreeOne_term_ne_zero p G ha L f hf hreg K' f' hf').subset
+  · apply (_root_.GlobalTheory.LKCx.FiniteClassIntegralRoots.finite_cls_term_one_a_one p G ha L f hf hreg K' f' hf').subset
     intro Q hQ
     rw [Function.mem_support] at hQ
     unfold markTerm at hQ

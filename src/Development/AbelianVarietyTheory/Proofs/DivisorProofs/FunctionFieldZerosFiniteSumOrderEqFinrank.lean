@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAdmissibleIntegralBasisChangeOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniquePlaceOrdEqOneStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FunctionFieldOneVariableTranscendentalFiniteAndEStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FunctionFieldPlaceRestrictionExistsPowStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FunctionFieldPlaceSumOrderEqFinrankStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniquePlaceOrdEqOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FunctionFieldOneVariableTranscendentalFiniteAndE
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FunctionFieldPlaceRestrictionExistsPow
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FunctionFieldPlaceSumOrderEqFinrank
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -87,7 +87,7 @@ theorem zeros_finite_sum_eq_degree : ∀ (k F : Type) [Field k] [IsAlgClosed k] 
     ∀ x : F, Transcendental k x → {v : Place k F | v.1 x < 1}.Finite ∧
       ∑ᶠ v ∈ {v : Place k F | v.1 x < 1}, ord v x = Module.finrank k⟮x⟯ F := by
   intro k F _ _ _ _ _ hF x hx
-  haveI : FiniteDimensional k⟮x⟯ F := (GlobalTheory.T.functionFieldOneVariable_transcendental_finite_and_ext k F hF).1 x hx
+  haveI : FiniteDimensional k⟮x⟯ F := (_root_.GlobalTheory.Nef.isFF_main k F hF).1 x hx
   set t : k⟮x⟯ := ⟨x, IntermediateField.mem_adjoin_simple_self k x⟩ with ht
   have htx : algebraMap k⟮x⟯ F t = x := rfl
   have htr : Transcendental k t := by
@@ -100,14 +100,14 @@ theorem zeros_finite_sum_eq_degree : ∀ (k F : Type) [Field k] [IsAlgClosed k] 
     have : Module.Free (⊤ : IntermediateField k k⟮x⟯) k⟮x⟯ :=
       Module.Free.of_divisionRing _ _
     exact Module.finite_of_finrank_eq_succ IntermediateField.finrank_top
-  obtain ⟨v0, hv0, huniq⟩ := GlobalTheory.T.existsUnique_place_ord_eq_one_of_transcendental_generator k k⟮x⟯ t htr htop
-  obtain ⟨ρ, hρ⟩ := (GlobalTheory.T.functionFieldPlace_restriction_exists_pow k k⟮x⟯ F).1
+  obtain ⟨v0, hv0, huniq⟩ := _root_.GlobalTheory.Nef.exists_unique_place_ord_eq_one k k⟮x⟯ t htr htop
+  obtain ⟨ρ, hρ⟩ := (_root_.GlobalTheory.Nef.place_res_exists_pow k k⟮x⟯ F).1
   have ht0 : t ≠ 0 := by
     intro h; apply hx; rw [← htx, h, map_zero]; exact isAlgebraic_zero
-  obtain ⟨hfin, hsum⟩ := GlobalTheory.T.functionFieldPlace_sum_order_eq_finrank k k⟮x⟯ F hL ρ hρ v0 t ht0 hv0
+  obtain ⟨hfin, hsum⟩ := _root_.GlobalTheory.Nef.FundId.sum_ord_eq_finrank k k⟮x⟯ F hL ρ hρ v0 t ht0 hv0
   have hset : {v : Place k F | v.1 x < 1} = {p | ρ p = v0} := by
     ext p
-    obtain ⟨e, he, hpow, -⟩ := (GlobalTheory.T.functionFieldPlace_restriction_exists_pow k k⟮x⟯ F).2 ρ hρ p
+    obtain ⟨e, he, hpow, -⟩ := (_root_.GlobalTheory.Nef.place_res_exists_pow k k⟮x⟯ F).2 ρ hρ p
     simp only [Set.mem_setOf_eq]
     change p.1 (algebraMap k⟮x⟯ F t) < 1 ↔ ρ p = v0
     rw [hpow t]

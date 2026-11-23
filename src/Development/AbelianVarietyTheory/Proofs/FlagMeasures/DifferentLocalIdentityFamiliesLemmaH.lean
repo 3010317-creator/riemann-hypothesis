@@ -2,8 +2,9 @@ module
 
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FamDefs
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HtDelta
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalHeightBasePairEqModuleProductStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ProductModulesTypeUniformisersEqPowerStatement
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.NGHTie
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalHeightBasePairEqModuleProduct
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ProductModulesTypeUniformisersEqPower
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,6 +46,6 @@ import Mathlib.Topology.Sheaves.Init
 namespace GlobalTheory.HTieLeaf
 
 theorem main : Formalism.L2.SG.FamDefs.HTie :=
-  Formalism.L2.SG.NGHTie.hTie_of GlobalTheory.T.local_height_base_pair_eq_module_product GlobalTheory.DiffModProd.htDelta GlobalTheory.T.product_modules_type_uniformisers_eq_power
+  Formalism.L2.SG.NGHTie.hTie_of _root_.GlobalTheory.HTPlaceLeaf.htPlace GlobalTheory.DiffModProd.htDelta _root_.GlobalTheory.HTThetaLeaf.main
 
 end GlobalTheory.HTieLeaf

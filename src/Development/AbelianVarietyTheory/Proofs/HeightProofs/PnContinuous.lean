@@ -6,15 +6,16 @@ public import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt
 public import Formalism.LocalToGlobal.ProjectiveLattices.CompOrd
 public import Formalism.LocalToGlobal.ProjectiveLattices.NormsFree
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.TheoremA
-public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.EvaluationLawsGenericFramesAtlasHoldStatement
-import Development.AbelianVarietyTheory.Proofs.GenericRegularity.FrameBorelGroupoidProperties
-public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.FrameNormConjugatePointsEqPointwiseStatement
-public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.FrameNormsContinuousOnSmoothChartStatement
-public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.PointwiseNormBddAboveISupEqCuspFormSupNormStatement
-import Development.AbelianVarietyTheory.Proofs.GenericRegularity.PointwiseNormSectionEqFlagDomainNormStatement
+public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.EvaluationLawsGenericFramesAtlasHold
+public import Formalism.LocalToGlobal.ProjectiveLattices.AxHSup
+public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.FrameNormConjugatePointsEqPointwise
+public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.FrameNormsContinuousOnSmoothChart
+public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.PointwiseNormBddAboveISupEqCuspFormSupNorm
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.SectionEqZeroOfGenericFramedPointValues
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.DenseMvPolynomialEvalNeZero
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsEmbeddingsOverInjective
+import Development.AbelianVarietyTheory.Proofs.GenericRegularity.FrameBorelGroupoidProperties
+import Development.AbelianVarietyTheory.Proofs.GenericRegularity.PointwiseNormSectionEqFlagDomainNorm
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameChangeCommBaseChange
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointBaseChangeUniqueReflIff
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LowerTriIsUnitDet
@@ -151,7 +152,7 @@ theorem pn_frBor_good (hd : Dom a n) (hg : g ∈ sec Xo c a n) {σ : c.F →+* �
     {t : Ix Dw → (CAt σ)ˣ} {y y' : FrPt Xo c (CAt σ)} (hb : FrBor t y y') : pn fn σ a n g y' = pn fn σ a n g y := by
   obtain ⟨k, x, s, hs⟩ := (hU σ hσ).2.2.1 y
   have hs' := (GlobalTheory.Reg.BorelGroupoid.frBor_groupoid E H Dw l Xo c (CAt σ)).2.1 _ _ _ _ _ hs hb
-  have T := (GlobalTheory.T.pointwise_norm_section_eq_flagDomain_norm E H Dw l Xo c r U hU xR fn hx hfn).2.1 σ hσ k x
+  have T := (_root_.GlobalTheory.FrameNorm.Comparison₂.ptNorm_eq_pnorm E H Dw l Xo c r U hU xR fn hx hfn).2.1 σ hσ k x
   exact (T _ _ hs' a n hd g hg).trans (T _ _ hs a n hd g hg).symm
 
 theorem pn_frBor (hd : Dom a n) (hg : g ∈ sec Xo c a n) {σ : c.F →+* ℂ}
@@ -162,10 +163,10 @@ theorem pn_frBor (hd : Dom a n) (hg : g ∈ sec Xo c a n) {σ : c.F →+* ℂ}
       have := Formalism.L2.PjFree.goodEmb_goodOf c σ
       unfold Formalism.L2.PjFree.goodOf at this
       rwa [if_neg hσ] at this
-    have hL := (GlobalTheory.T.evaluation_laws_generic_frames_atlas_hold E H Dw l Xo c).1
+    have hL := (_root_.GlobalTheory.Reg.evLaws_genFr_atlas E H Dw l Xo c).1
     obtain ⟨z, hz⟩ := hL.bc _ _ (conjAlg σ) y
     obtain ⟨z', hz'⟩ := hL.bc _ _ (conjAlg σ) y'
-    have T := (GlobalTheory.T.pointwise_norm_section_eq_flagDomain_norm E H Dw l Xo c r U hU xR fn hx hfn).2.2 σ
+    have T := (_root_.GlobalTheory.FrameNorm.Comparison₂.ptNorm_eq_pnorm E H Dw l Xo c r U hU xR fn hx hfn).2.2 σ
     exact ((T _ _ hz' a n g hg).symm.trans
       (pn_frBor_good hU hx hfn hd hg hσ' (frBor_of_frMap _ hb hz hz'))).trans (T _ _ hz a n g hg)
 
@@ -177,12 +178,12 @@ theorem pn_generic (hd : Dom a n) (hg : g ∈ sec Xo c a n) {h : GenFrEx Xo c}
     (hxP : ∀ b, Formalism.L2.PjFree.toC (x b) = P b) {z : FrPt Xo c (CAt σ)} (hz : FrMap x C.y z) :
     pn fn σ a n g z = nrmC fn (yP C.Z) (wtZ a n) (valC h a n g C.Z) P := by
   obtain rfl : sgOf P = σ := hP
-  have hL := (GlobalTheory.T.evaluation_laws_generic_frames_atlas_hold E H Dw l Xo c).1
+  have hL := (_root_.GlobalTheory.Reg.evLaws_genFr_atlas E H Dw l Xo c).1
   obtain ⟨w, hw⟩ := hL.bc _ _ (PAlg P) C.yg
   have h1 := frMap_comp _ _ C.gen hw
   obtain rfl : x = (PAlg P).comp C.R.val := AlgHom.ext hxP
   obtain rfl : z = w := (GlobalTheory.Frames.frMap_unique_refl_iff E H Dw l Xo c _ _ _ C.y).1 _ _ hz h1
-  rw [(GlobalTheory.T.frameNorm_conjugate_points_eq_pointwise E H Dw l Xo c r U hU xR fn hx hfn h yP hyP).2.2 C.Z P a n g hg]
+  rw [(_root_.GlobalTheory.FrameNorm.fnConj_valAtCx_nrmC_eq_ptNorm E H Dw l Xo c r U hU xR fn hx hfn h yP hyP).2.2 C.Z P a n g hg]
   exact pn_frBor hU hx hfn hd hg (frBor_of_frMap _ C.bor (hyP C.Z P) hw)
 
 attribute [local instance 1100] Subalgebra.algebra in
@@ -194,14 +195,14 @@ theorem pn_continuous (hg : g ∈ sec Xo c a n) {h : GenFrEx Xo c} (C : FChart h
   letI : TopologicalSpace (C.R →ₐ[c.F] CAt σ) :=
     TopologicalSpace.induced (fun x (b : C.R) => Formalism.L2.PjFree.toC (x b)) inferInstance
   haveI := C.sm
-  have hL := (GlobalTheory.T.evaluation_laws_generic_frames_atlas_hold E H Dw l Xo c).1
+  have hL := (_root_.GlobalTheory.Reg.evLaws_genFr_atlas E H Dw l Xo c).1
   have hc : ∀ b : C.R, Continuous fun x : C.R →ₐ[c.F] CAt σ => Formalism.L2.PjFree.toC (x b) := fun b =>
     (continuous_apply b).comp
       (continuous_induced_dom (f := fun (x : C.R →ₐ[c.F] CAt σ) (b : C.R) => Formalism.L2.PjFree.toC (x b)))
   have hf : ∀ i, Continuous fun x => |fn σ (y x) i| := fun i =>
-    continuousOn_univ.1 (GlobalTheory.T.frameNorms_continuousOn_smoothChart E H Dw l Xo c r U hU xR fn hx hfn σ C.R C.y _ Set.univ (fun x => x) y
+    continuousOn_univ.1 (_root_.GlobalTheory.FrameNorm.fn_continuousOn_smooth E H Dw l Xo c r U hU xR fn hx hfn σ C.R C.y _ Set.univ (fun x => x) y
       (fun b => (hc b).continuousOn) (fun x _ => hy x) i)
-  have hne := (GlobalTheory.T.pointwise_norm_section_eq_flagDomain_norm E H Dw l Xo c r U hU xR fn hx hfn).1
+  have hne := (_root_.GlobalTheory.FrameNorm.Comparison₂.ptNorm_eq_pnorm E H Dw l Xo c r U hU xR fn hx hfn).1
   have e : (fun x => pn fn σ a n g (y x)) =
       fun x => ‖Formalism.L2.PjFree.toC (x (evR Xo c g C.y))‖ * ∏ i, |fn σ (y x) i|⁻¹ ^ ex Dw a n i := by
     funext x
@@ -218,8 +219,8 @@ attribute [local instance 100] IntermediateField.instAlgebraSubtypeMem in
 theorem supC_le_iSup_generic : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), ∀ (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Formalism.L2.PjFree.Unf Xo c σ r), (∀ σ, Formalism.L2.PjFree.GoodEmb c σ → Formalism.L2.PjFree.IsUnf (U σ)) → ∀ (xR : ℝ) (fn : ∀ σ : c.F →+* ℂ, FrPt Xo c (CAt σ) → Ix Dw → ℝ), 0 < xR → FnPin U xR fn → ∀ (h : GenFrEx Xo c) (yP : ∀ Z : Comp Xo c, ∀ P : Om Z →+* ℂ, FrPt Xo c (CAt (sgOf P))), (∀ Z, CBase h Z (yP Z)) → ∀ a n, Dom a n → ∀ (Z : Comp Xo c), ∀ f ∈ Formalism.L2.PjFree.cusp Xo c U a n, ∀ g ∈ Formalism.L2.PjFree.cusp Xo c U a n, evC h Z g = evC h Z f → (∀ Z', Z' ≠ Z → evC h Z' g = 0) → ∀ σ : c.F →+* ℂ, BddAbove (Set.range fun P : T0.PT (Ω := Om Z) σ => nrmC fn (yP Z) (wtZ a n) (valC h a n f Z) P) ∧ Formalism.L2.PjFree.supC Xo c U xR (Formalism.L2.PjFree.goodOf c σ) a n g ≤ ⨆ P : T0.PT (Ω := Om Z) σ, nrmC fn (yP Z) (wtZ a n) (valC h a n f Z) P := by
   intro E _ _ _ H Dw l Xo c r U hU xR fn hx hfn h yP hyP a n hd Z f hf g hg hgf hg0 σ
   have hgs := Formalism.L2.PjFree.cusp_le_sec Xo c U a n hg
-  obtain ⟨hB, hS⟩ := GlobalTheory.T.pointwiseNorm_bddAbove_iSup_eq_cuspForm_supNorm E H Dw l Xo c r U hU xR fn hx hfn a n hd g hg
-  obtain ⟨hL, -, -, hA⟩ := GlobalTheory.T.evaluation_laws_generic_frames_atlas_hold E H Dw l Xo c
+  obtain ⟨hB, hS⟩ := _root_.GlobalTheory.FrameNorm.SupNorm.supBdd_and_supR_eq E H Dw l Xo c r U hU xR fn hx hfn a n hd g hg
+  obtain ⟨hL, -, -, hA⟩ := _root_.GlobalTheory.Reg.evLaws_genFr_atlas E H Dw l Xo c
   have hv : valC h a n f Z = valC h a n g Z := by unfold valC; rw [hgf]
   rw [hv, ← hS σ]
   have hbdd : BddAbove (Set.range fun P : T0.PT (Ω := Om Z) σ => nrmC fn (yP Z) (wtZ a n) (valC h a n g Z) P) := by
@@ -227,7 +228,7 @@ theorem supC_le_iSup_generic : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
     rintro _ ⟨⟨P, hP⟩, rfl⟩
     obtain rfl : sgOf P = σ := hP
     dsimp only
-    rw [(GlobalTheory.T.frameNorm_conjugate_points_eq_pointwise E H Dw l Xo c r U hU xR fn hx hfn h yP hyP).2.2 Z P a n g hgs]
+    rw [(_root_.GlobalTheory.FrameNorm.fnConj_valAtCx_nrmC_eq_ptNorm E H Dw l Xo c r U hU xR fn hx hfn h yP hyP).2.2 Z P a n g hgs]
     exact le_ciSup (hB (sgOf P)) (yP Z P)
   have hnn : 0 ≤ ⨆ P : T0.PT (Ω := Om Z) σ, nrmC fn (yP Z) (wtZ a n) (valC h a n g Z) P :=
     Real.iSup_nonneg fun P => mul_nonneg (norm_nonneg _)

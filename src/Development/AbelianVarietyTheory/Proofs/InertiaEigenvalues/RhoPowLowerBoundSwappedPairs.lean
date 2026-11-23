@@ -1,9 +1,11 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsUnitBasePointAdjoinTwistedSigma
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DltEqZero
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsInjectiveTorusClassesOfIdempotentDecomposiStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteIntegralClosureOfSeparableInvolutionAlgebrStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsInjectiveTorusClassesOfIdempotentDecomposi
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteIntegralClosureOfSeparableInvolutionAlgebr
+public import Mathlib.RingTheory.Ideal.Quotient.Index
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsUnitBasePointAdjoinTwistedSigma
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -22,7 +24,6 @@ import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
-public import Mathlib.RingTheory.Ideal.Quotient.Index
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.Tactic.Echelon.Zsqrtd
@@ -119,7 +120,7 @@ theorem finite_rhoSet (K : UQ) (B : InvAlg K) (hsep : B.P.Separable) (a : K.O) (
   classical
   set R : Submodule K.O B.A := (integralClosure K.O B.A).toSubmodule with hR
   have hRfg : R.FG := by
-    have := GlobalTheory.T.finite_integralClosure_of_separable_involution_algebra K B hsep
+    have := _root_.GlobalTheory.UnitLemma.IntegralFinite.finite_integralClosure K B hsep
     have h2 := Module.Finite.fg_top (R := K.O) (M := integralClosure K.O B.A)
     have h3 := h2.map (integralClosure K.O B.A).val.toLinearMap
     convert h3 using 1
@@ -204,7 +205,7 @@ theorem rho_lower : ∀ (K : UQ) (B : InvAlg K) (ι : Type) [Fintype ι] (e π :
   intro K B ι _ e π S a hsep ha hF k
   classical
   have hfin := finite_rhoSet K B hsep a ha k
-  obtain ⟨f, hf, hint⟩ := GlobalTheory.T.exists_injective_torus_classes_of_idempotent_decomposition K B ι e S a ha hF.1 k
+  obtain ⟨f, hf, hint⟩ := _root_.GlobalTheory.UnitLemma.TorusPts.torus_points K B ι e S a ha hF.1 k
   let g : ({i // i ∉ S} → Fin (k + 1)) → {c : B.T ⧸ (intUnits K.O B.A).subgroupOf B.T //
       IsIntegral K.O ((((Quotient.out c : B.T) : B.Aˣ)⁻¹ : B.Aˣ) * algebraMap K.O B.A a ^ k : B.A)} :=
     fun n => ⟨f n, hint n⟩

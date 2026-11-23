@@ -5,9 +5,11 @@ public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
 public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrimitiveConstMulOfBoundedExpansionStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrincipalCongruenceFunctionMemAdjoinJSiegelUnitsStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SiegelUnitJPolynomialBoundedDenominatorsStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrimitiveConstMulOfBoundedExpansion
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrincipalCongruenceFunctionMemAdjoinJSiegelUnits
+public import Development.AbelianVarietyTheory.Definitions.Foundations.SgC
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SiegelUnitJPolynomialBoundedDenominators
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -111,7 +113,7 @@ theorem exists_prim_frac_level_one : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω]
     simp [Nat.add_mod]
   have hcM : 6 * M + 1 ≡ 1 [MOD M] :=
     ((Nat.modEq_iff_dvd' (by omega)).mpr (by simp)).symm
-  have hfG := GlobalTheory.T.principalCongruenceFunction_mem_adjoin_j_siegelUnits ε X hj M (6 * M + 1) hM hc1 hc6 hcM f hfM
+  have hfG := _root_.GlobalTheory.KZ.FracGen.fracGen ε X hj M (6 * M + 1) hM hc1 hc6 hcM f hfM
   obtain ⟨P, hP, Q, hQ, hPQ⟩ := IntermediateField.mem_adjoin_iff_div.mp hfG
   have hQ0 : Q ≠ 0 := by
     rintro rfl
@@ -143,9 +145,9 @@ theorem exists_prim_frac_level_one : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω]
     simp only [ht]
     rw [tq 1 _ (by rw [← QuotientGroup.eq]; simp), map_one, X.sl_one]
   have hbd : ∀ γ : SL(2, ℤ), Bd X (X.sl (ofSL γ) Q) := fun γ =>
-    GlobalTheory.T.siegelUnit_jPolynomial_bounded_denominators ε X M (6 * M + 1) hM hc1 hc6 hcM Q hQ γ
+    _root_.GlobalTheory.FracBd.frac_bd ε X M (6 * M + 1) hM hc1 hc6 hcM Q hQ γ
   have hPbd : Bd X P := by
-    have := GlobalTheory.T.siegelUnit_jPolynomial_bounded_denominators ε X M (6 * M + 1) hM hc1 hc6 hcM P hP 1
+    have := _root_.GlobalTheory.FracBd.frac_bd ε X M (6 * M + 1) hM hc1 hc6 hcM P hP 1
     rwa [map_one, X.sl_one] at this
   set R : X.K := ∏ q ∈ Finset.univ.erase 1, t q with hR
   have hbR : b0 = R * Q := by
@@ -158,8 +160,8 @@ theorem exists_prim_frac_level_one : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω]
     rw [hb0def]
     exact Finset.prod_ne_zero_iff.mpr (fun q _ => (map_ne_zero _).mpr hQ0)
   have ha0ne : f * b0 ≠ 0 := mul_ne_zero hf hb0ne
-  obtain ⟨κa, hκa, hPa, Sa, hSa⟩ := GlobalTheory.T.primitive_const_mul_of_bounded_expansion ε X hj l A hl (f * b0) ha0ne ha0bd
-  obtain ⟨κb, hκb, hPb, Sb, hSb⟩ := GlobalTheory.T.primitive_const_mul_of_bounded_expansion ε X hj l A hl b0 hb0ne hb0bd
+  obtain ⟨κa, hκa, hPa, Sa, hSa⟩ := _root_.GlobalTheory.PrimConst.prim_of_bounded ε X hj l A hl (f * b0) ha0ne ha0bd
+  obtain ⟨κb, hκb, hPb, Sb, hSb⟩ := _root_.GlobalTheory.PrimConst.prim_of_bounded ε X hj l A hl b0 hb0ne hb0bd
   refine ⟨algebraMap Ω X.K κa * (f * b0), algebraMap Ω X.K κb * b0, κb / κa, Sa ∪ Sb, div_ne_zero hκb hκa, ?_, hPa, hPb,
     ?_, fun r => ⟨?_, ?_⟩⟩
   · have e : algebraMap Ω X.K (κb / κa) * algebraMap Ω X.K κa = algebraMap Ω X.K κb := by

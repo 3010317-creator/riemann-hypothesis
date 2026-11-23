@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ComplementReferenceCompactSubgroup
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CommonStabilizerStabilizersCommensurableVolumeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFramesStabilizerActsOnTermsStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CommonStabilizerStabilizersCommensurableVolume
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFramesStabilizerActsOnTerms
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,8 +59,8 @@ theorem GlobalTheory.HL.amp_summand_orbit : ∀ {F : Type} [Field F] [ValuativeR
   obtain ⟨g, hg⟩ := hrel
   have hout : o.out = (g : S.GLV) • Λ := by rw [← hg]; rfl
   have hgm : (g : S.GLV) ∈ S.St := g.2
-  obtain ⟨hT', hom, -⟩ := GlobalTheory.T.hermitianFrames_stabilizer_acts_on_terms L r k S d Λ hT _ hgm
-  have hmu : S.mu ((g : S.GLV) • Λ) = S.mu Λ := (GlobalTheory.T.commonStabilizer_stabilizers_commensurable_volume L r k S).1 Λ hL |>.2.2 _ hgm
+  obtain ⟨hT', hom, -⟩ := _root_.GlobalTheory.FrameAct.stabiliser_acts_on_terms L r k S d Λ hT _ hgm
+  have hmu : S.mu ((g : S.GLV) • Λ) = S.mu Λ := (_root_.GlobalTheory.HL.volSt L r k S).1 Λ hL |>.2.2 _ hgm
   have hPg : P ((g : S.GLV) • Λ) ↔ P Λ := hP Λ _ hgm
   refine ⟨hout ▸ hT', ⟨_, hgm, hout⟩, ?_, ?_⟩
   · rw [hout]; simp only [hT', true_and, hPg, hmu, hom]

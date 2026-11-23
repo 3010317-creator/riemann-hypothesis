@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.GoodTopBot
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RowPolarizationOperatorsRelationsDivPowBaseChangStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TraceRowOperatorPowerDualWeylHighestWeightStatement
-import Formalism.GradedWeylDivisibility.DualWeylDominanceOf
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RowPolarizationOperatorsRelationsDivPowBaseChang
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TraceRowOperatorPowerDualWeylHighestWeight
 public import Formalism.GradedWeylDivisibility.FinalC
+import Formalism.GradedWeylDivisibility.DualWeylDominanceOf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -69,8 +69,8 @@ theorem hcVal_map {R S : Type} [CommRing R] [CommRing S] (φ : R →+* S) {N : �
 theorem gel_dualWeyl_int (N : ℕ) (ν : Fin N → ℕ) (hν : Antitone ν) (j : ℕ) (f : MvPolynomial (Fin N × Fin N) ℤ)
     (hf : f ∈ dualWeyl ℤ N N ν) : gel ℤ N N j f = hcVal ℤ (fun i => (ν i : ℤ)) j • f := by
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) (RingHom.injective_int _)
-  rw [(GlobalTheory.T.rowPolarizationOperators_relations_divPow_baseChange ℤ N N).2.2 ℚ (Int.castRingHom ℚ) j f,
-    GlobalTheory.T.traceRowOperatorPower_dualWeyl_highestWeight N ν hν j _ (dualWeylMap ℤ ℚ (Int.castRingHom ℚ) N N ν f hf),
+  rw [(_root_.GlobalTheory.Alc.rowOperators_main ℤ N N).2.2 ℚ (Int.castRingHom ℚ) j f,
+    _root_.GlobalTheory.Alc.gel_dualWeyl_rat N ν hν j _ (dualWeylMap ℤ ℚ (Int.castRingHom ℚ) N N ν f hf),
     smul_eq_C_mul, smul_eq_C_mul, map_mul, map_C]
   congr 2
   rw [← hcVal_map]
@@ -91,7 +91,7 @@ theorem gel_dualWeyl_field : ∀ (k : Type) [Field k] (N : ℕ) (ν : Fin N → 
       ext p q
       simp
     have hmem : bideterminant ℤ sz hsz I ∈ dualWeyl ℤ N N ν := hsh ▸ bidetMem ℤ N N K sz hsz I
-    rw [hb, ← (GlobalTheory.T.rowPolarizationOperators_relations_divPow_baseChange ℤ N N).2.2 k (Int.castRingHom k) j, gel_dualWeyl_int N ν hν j _ hmem,
+    rw [hb, ← (_root_.GlobalTheory.Alc.rowOperators_main ℤ N N).2.2 k (Int.castRingHom k) j, gel_dualWeyl_int N ν hν j _ hmem,
       smul_eq_C_mul, smul_eq_C_mul, map_mul, map_C]
     congr 2
     rw [← hcVal_map]

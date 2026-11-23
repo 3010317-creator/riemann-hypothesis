@@ -6,16 +6,19 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForm
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HarishChandraFinite
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ActRep
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ChainStepVectorsAndAdjointVectorsAreThetaStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.StepVecThetaLem
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ChainStepVectorsAndAdjointVectorsAreTheta
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EasyInputs
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockPolynomialVectorsOfSmoothThetaStableStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.TwoSplitIdem
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockPolynomialVectorsOfSmoothThetaStable
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GramMapMulInv
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HcFiniteAndSchurMult
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevOKAll
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StepVecExists
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.VacuumOrientedExists
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilDatumFixesLatticeVacuaAtInertPlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilDatumRealDerivativeFockVectorsAllStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.WeilFull
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilDatumFixesLatticeVacuaAtInertPlaces
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilDatumRealDerivativeFockVectorsAll
 public import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.GinfCSecondCountable
 public import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.MeasLev
 import Mathlib.Algebra.Order.Floor.Extended
@@ -70,14 +73,14 @@ theorem inputs_of_hypotheses : GlobalTheory.Published.WeilRepresentationUnitaryP
   intro hW _ hH hC D
   obtain ⟨hcart, hsd, hsp, hdim, hpet, hsm⟩ := GlobalTheory.Mem.EasyInputs.easy_inputs D
   exact
-    { weil := Formalism.IndefR.WeilFull.weilExistsFull_of (hW D) (GlobalTheory.T.weil_datum_fixes_lattice_vacua_at_inert_places D) (GlobalTheory.T.weilDatum_realDerivative_fockVectors_all D)
+    { weil := Formalism.IndefR.WeilFull.weilExistsFull_of (hW D) (_root_.GlobalTheory.InertAll.inertAllO D) (_root_.GlobalTheory.WeilReal.realAllO D)
       vac := GlobalTheory.Member.vacuum_oriented_exists D
       stepVec := GlobalTheory.PlaceDatum.stepVecExists D
       thPVec := GlobalTheory.PlaceVec.thPVecExists D
-      ptStable := GlobalTheory.T.fockPolynomialVectors_of_smoothTheta_stable D
+      ptStable := _root_.GlobalTheory.FockTheta.ptStable D
       cartan := hcart
       selfDual := hsd
-      vecTheta := GlobalTheory.T.chainStepVectors_and_adjointVectors_areTheta D
+      vecTheta := _root_.GlobalTheory.VecTheta.vecThetaSD D
       measFD := Formalism.IndefR.Eqv.measFDExists_holds D
       measDef := Formalism.IndefR.Eqv.measLevDefExists_holds D
       fund := Formalism.IndefR.Eqv.fundDomExists_holds D

@@ -7,10 +7,12 @@ public import Formalism.LocalToGlobal.ProjectiveLattices.CurveLoc
 public import Formalism.LocalToGlobal.ProjectiveLattices.CurveOpen
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.CountQAtStGenericSectionPrimes
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsRatioFormsAtPoints
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ComponentRingAwayGenericSectionQuotientStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.LaTIsPrime
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ComponentRingAwayGenericSectionQuotient
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsEquivCoverPointsPlacesBaseChangeStatement
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsGaussRingMapToCompletionStatement
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.RealisationValuesEqValuedPointOrdersStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.HDiscAE
 import Formalism.LocalToGlobal.ProjectiveLattices.CurveInj
 import Formalism.LocalToGlobal.ProjectiveLattices.LocalUnitReduction.IsUnitMkOfForallPrime
 import Mathlib.Algebra.Order.Floor.Extended
@@ -50,7 +52,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.HDiscAE
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.OpIsDVR
 
 @[expose] public section
@@ -167,7 +168,7 @@ theorem exists_equiv_places {D : D7} {B : WeightFamilies.Prov D} {P : ModuliInte
     rw [IsLocalRing.ResidueField.map_residue, eq_comm, ← sub_eq_zero, ← map_sub,
       IsLocalRing.residue_eq_zero_iff]
     exact ha
-  let hχ := fun c => GlobalTheory.T.componentRing_away_genericSection_quotient D B P j X la N wL w (Ω c) (gF c) d.D d.N hD' eN (d.jc c) (d.x c)
+  let hχ := fun c => _root_.GlobalTheory.componentRing_away_quotient D B P j X la N wL w (Ω c) (gF c) d.D d.N hD' eN (d.jc c) (d.x c)
     (fun p => IsFractionRing.lift_algebraMap (g := (d.sH c).toRingHom) (hs c) p) hφK hφT (h0 c) (hx c)
   let χ := fun c => Classical.choose (hχ c)
   have hχs := fun c => (Classical.choose_spec (hχ c)).1

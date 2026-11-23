@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.PolyApproxZeroPadic
 public import Formalism.SharpRestriction.LevelLetterCocycles.DataN
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqZeroOfTraceMulEqZeroSemisimpleRepStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqZeroOfTraceMulEqZeroSemisimpleRep
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -71,7 +71,7 @@ theorem ker_of_linApprox : ∀ (l : ℕ) [Fact l.Prime] (Γ : Type) [Group Γ] (
     refine Submodule.sub_mem _ (Submodule.subset_span ⟨s, rfl⟩) ?_
     have : R 1 = 1 := by simp [hR]
     rw [← this]; exact Submodule.subset_span ⟨1, rfl⟩
-  have h0 := GlobalTheory.T.eq_zero_of_trace_mul_eq_zero_semisimple_rep (PadicAlgCl l) Γ a r hss (R s - 1) hM (fun g => by
+  have h0 := _root_.GlobalTheory.TrFormNd.eq_zero_of_trace_mul_eq_zero (PadicAlgCl l) Γ a r hss (R s - 1) hM (fun g => by
     have := htr g
     simp only [trc, map_mul, Units.val_mul] at this
     rw [sub_mul, one_mul, Matrix.trace_sub]

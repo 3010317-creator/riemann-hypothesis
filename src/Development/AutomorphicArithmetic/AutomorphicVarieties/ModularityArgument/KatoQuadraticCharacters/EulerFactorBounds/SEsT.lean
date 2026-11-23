@@ -2,7 +2,15 @@ module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.KatoQuadraticCharacters.EulerFactorBounds.EsStmt
 public import Development.AbelianVarietyTheory.Definitions.Foundations.OpLDOneSubMemTriv
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GaloisCommutesHeckeActionStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.Letter
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
+public import Mathlib.RingTheory.AdicCompletion.Noetherian
+public import Mathlib.RingTheory.Coalgebra.IsFrobenius
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.HopfAlgebra.Basic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GaloisCommutesHeckeAction
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SlMulToRingEquiv
 import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.KatoQuadraticCharacters.EulerFactorBounds.KatoTwistedClassNormCompatibleCyclotomic
 import Mathlib.Algebra.Order.Floor.Extended
@@ -136,4 +144,4 @@ theorem UpperTheory.V.Z.Kato.Nb.sEsT : UpperTheory.V.Z.Kato.Nb.SEsT := by
     · rw [← Tower.act_act Ω ε X l _ _ (by rw [Matrix.SpecialLinearGroup.det_coe]; norm_num) hdq,
         ← Tower.act_act Ω ε X l _ _ (by rw [Matrix.SpecialLinearGroup.det_coe]; norm_num) hdq, hAct]
   · unfold Tower.diam
-    rw [GlobalTheory.T.galois_commutes_hecke_action ε X N l w hN b hb _ hSmem s, hAct]
+    rw [_root_.GlobalTheory.KZ.GamComm.act_galB_comm ε X N l w hN b hb _ hSmem s, hAct]

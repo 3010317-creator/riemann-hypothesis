@@ -9,11 +9,18 @@ public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
 public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.HopfAlgebra.Basic
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsGaloisConjValuationSubringSameTraceStatement
+public import Mathlib.FieldTheory.Galois.Basic
+public import Mathlib.RingTheory.Valuation.ValuationSubring
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsGaloisConjValuationSubringSameTrace
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsTowerPlaceAtUpperHalfPlanePoint
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FiniteDimensionalLevStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularTowerMemAdjoinJOfSlTwoIntInvariantStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FiniteDimensionalLev
+public import Development.AbelianVarietyTheory.Definitions.Foundations.ExpUpper
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularTowerMemAdjoinJOfSlTwoIntInvariant
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.NormProducts.BddOrder
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsRootOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,7 +66,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.Foundations.IsRootOne
 import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.NormProducts.InvMod
 
 @[expose] public section
@@ -407,7 +413,7 @@ theorem UpperTheory.Kd.K4.eb :
   have hxL : x ∈ lev X (CongruenceSubgroup.Gamma M) := (hmemlev _ _).2 hMx
   letI := algRat X (CongruenceSubgroup.Gamma M)
   haveI : FiniteDimensional (RatFunc Ω) (lev X (CongruenceSubgroup.Gamma M)) :=
-    GlobalTheory.T.finiteDimensional_lev_of_gamma_le Ω ε X _ M hM le_rfl
+    _root_.GlobalTheory.K4.finiteDimensional_lev Ω ε X _ M hM le_rfl
   haveI : IsGalois (RatFunc Ω) (lev X (CongruenceSubgroup.Gamma M)) := by
     apply IsGalois.of_fixedField_eq_bot
     rw [eq_bot_iff]
@@ -416,7 +422,7 @@ theorem UpperTheory.Kd.K4.eb :
     have hfix : ∀ γ : SL(2, ℤ), X.sl (ofSL γ) (u : X.K) = u := fun γ =>
       congrArg Subtype.val (hu (resA X M γ) (Subgroup.mem_top _))
     obtain ⟨r, s, hrs⟩ := (IntermediateField.mem_adjoin_simple_iff Ω _).1
-      (GlobalTheory.T.modularTower_mem_adjoin_j_of_slTwoInt_invariant ε X ⟨φ, hφd, hφ⟩ (u : X.K) hfix)
+      (_root_.GlobalTheory.KZ.LevelOneFrac.mem_adjoin_of_sl_inv ε X ⟨φ, hφd, hφ⟩ (u : X.K) hfix)
     rw [IntermediateField.mem_bot]
     refine ⟨algebraMap (Polynomial Ω) (RatFunc Ω) r / algebraMap (Polynomial Ω) (RatFunc Ω) s, ?_⟩
     apply Subtype.ext
@@ -473,7 +479,7 @@ theorem UpperTheory.Kd.K4.eb :
       intro a
       rw [← RatFunc.num_div_denom a, hjRat, hjRat]
       exact ⟨aeval_div_mem_of_mem_of_same_pole X W Wτ hW hWτ c hc hcτ _ _, aeval_div_mem_of_mem_of_same_pole X Wτ W hWτ hW c hcτ hc _ _⟩
-    obtain ⟨σ, hσ⟩ := GlobalTheory.T.exists_galois_conj_valuationSubring_same_trace (RatFunc Ω) (lev X (CongruenceSubgroup.Gamma M))
+    obtain ⟨σ, hσ⟩ := _root_.GlobalTheory.KZ.ES.exists_conj_of_same_trace (RatFunc Ω) (lev X (CongruenceSubgroup.Gamma M))
       (W.comap (lev X (CongruenceSubgroup.Gamma M)).subtype)
       (Wτ.comap (lev X (CongruenceSubgroup.Gamma M)).subtype) hres
     have hxs : ((σ ⟨x, hxL⟩ : lev X (CongruenceSubgroup.Gamma M)) : X.K) ≠ 0 := by
@@ -566,7 +572,7 @@ theorem UpperTheory.Kd.K4.eb :
       intro a
       rw [← RatFunc.num_div_denom a, hjRat]
       exact ⟨fun _ => ValuationSubring.mem_top _, fun _ => aeval_div_mem_of_forall_inv_sub_mem X W hW hcase _ _⟩
-    obtain ⟨σ, hσ⟩ := GlobalTheory.T.exists_galois_conj_valuationSubring_same_trace (RatFunc Ω) (lev X (CongruenceSubgroup.Gamma M))
+    obtain ⟨σ, hσ⟩ := _root_.GlobalTheory.KZ.ES.exists_conj_of_same_trace (RatFunc Ω) (lev X (CongruenceSubgroup.Gamma M))
       (W.comap (lev X (CongruenceSubgroup.Gamma M)).subtype) ⊤ hall
     have hallW : ∀ u : lev X (CongruenceSubgroup.Gamma M), (u : X.K) ∈ W := fun u =>
       ValuationSubring.mem_comap.1 ((hσ u).1 (ValuationSubring.mem_top _))

@@ -2,14 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.UnifOfSpaceEq
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsProbabilityMeasureMuPart
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicProbabilityEqNormalisedFundamentalSetsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspFormSupNormLePeterssonIntegralComponentStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSelfDualDataTransvectionPrincipalLevelStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FramedDictionaryBoundStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicProbabilityEqNormalisedFundamentalSets
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspFormSupNormLePeterssonIntegralComponent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSelfDualDataTransvectionPrincipalLevel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FramedDictionaryBound
+public import Formalism.LocalToGlobal.ProjectiveLattices.RosatiLatticeNorms.LinkFD
 import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.FinMuUnconditional
 import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.MajLactRmul
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsProbabilityMeasureAutQuotientNormalized
-public import Formalism.LocalToGlobal.ProjectiveLattices.RosatiLatticeNorms.LinkFD
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -103,7 +103,7 @@ theorem comp_bound {r : ℕ} (hr : 0 < r) (X : Data E r) (Xx : DataX E r) (hX : 
       ∫⁻ z in FF, ENNReal.ofReal (X.pnorm la (X.dom.piecewise P 0) (ReciprocityTheory.ChartRestriction.G.AR.Inst.cpt X x0 z) ^ 2) ∂(muF X x0) := by
   subst hX
   intro y hy
-  have h := GlobalTheory.T.cuspForm_sup_norm_le_petersson_integral_component E r Xx la P M' w x0 FF hr hP hM' hw hw0 hL
+  have h := _root_.GlobalTheory.supLoc_component E r Xx la P M' w x0 FF hr hP hM' hw hw0 hL
     (fun v hv hiso b hb hbi => by
       obtain ⟨γ, hγ, he⟩ := hT v hv hiso b hb hbi
       exact ⟨γ, hγ, hχ γ hγ, he⟩) ho hF y hy
@@ -129,7 +129,7 @@ theorem GlobalTheory.supPet_principal : GlobalTheory.UCls.MassBound → GlobalTh
     unfold Formalism.BasicNotions.Ranks.r
     omega
   have hcusp := abelian₂.holSub_SS siegelSpaceAlgebra_holds (U σ).X la hP
-  have hdat := fun k => GlobalTheory.T.exists_selfDual_data_transvection_principal_level D j H Dw l Xo c U dict hLw σ hσ k
+  have hdat := fun k => _root_.GlobalTheory.LevGeo.exists_dataX_transv D j H Dw l Xo c U dict hLw σ hσ k
   choose Xx hXx hg hΛ hL' M' hM' hk hT using hdat
   have hfs : ∀ k, ∃ x0, IsOrth ((U σ).X k) x0 ∧ ∃ FF, IsFundSet ((U σ).X k) x0 FF := fun k => by
     obtain ⟨x0, ho, FF, hF, -⟩ := GlobalTheory.DriftCovolume.finMu_unconditional D.R.r ((U σ).X k)
@@ -156,9 +156,9 @@ theorem GlobalTheory.supPet_principal : GlobalTheory.UCls.MassBound → GlobalTh
     simp only [hΦdef]
     rw [pnorm_piecewise_eq _ _ _ hu, pnorm_piecewise_eq _ _ _ hu',
       FrameDegreeData.pnorm_rmul ((U σ).X k) (la k) (P k) (hsec k).2.1 u hu b hb]
-  obtain ⟨hS0, hStop, hΦeq⟩ := GlobalTheory.T.adelicProbability_eq_normalised_fundamentalSets D j H Dw l Xo c U dict hLw σ hσ x0 FF (fun k => ⟨ho k, hF k⟩)
+  obtain ⟨hS0, hStop, hΦeq⟩ := _root_.GlobalTheory.LevGeo.adelicProb_mul_volFund D j H Dw l Xo c U dict hLw σ hσ x0 FF (fun k => ⟨ho k, hF k⟩)
   have heq := hΦeq Φ hΦm hΦΓ hΦB
-  have hms := GlobalTheory.T.framed_dictionary_bound hMB hTB D j H Dw l Xo c U dict hLw σ hσ x0 FF (fun k => ⟨ho k, hF k⟩)
+  have hms := _root_.GlobalTheory.LevGeo.MassLev.mass_components_le hMB hTB D j H Dw l Xo c U dict hLw σ hσ x0 FF (fun k => ⟨ho k, hF k⟩)
 
   obtain ⟨Kf, th, hr', -, -, hU, -⟩ := hLw.dictU σ hσ
   have hdom : ∀ g, (dict σ g).2 ∈ ((U σ).X (dict σ g).1).dom := hU.2.2.2.1

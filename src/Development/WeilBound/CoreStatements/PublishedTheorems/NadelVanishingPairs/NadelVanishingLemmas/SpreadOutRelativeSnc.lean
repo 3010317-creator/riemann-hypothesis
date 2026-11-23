@@ -2,10 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsEtCoord
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSingle
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothOfRelativeDimensionOfRelSncDivisorStatement
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.RelativeSncGenericSpreadStatement
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.RelativeSncSameDivisor
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.SpreadOutSmoothProperStatement
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothOfRelativeDimensionOfRelSncDivisor
+public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsRegularFnIffOfIsAffineOpen
+public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.RelativeSncGenericSpread
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SameDiv
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelativeSncSameDivisor
+public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.SpreadOutSmoothProper
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +48,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsRegularFnIffOfIsAffineOpen
 
 @[expose] public section
 
@@ -97,15 +99,15 @@ namespace GlobalTheory.ModelSnc
 
 theorem exists_model_relSnc : ∀ (k : Type) [Field k] (X : Scheme.{0}) (f : X ⟶ Sp k) (d : ℕ), IsProper f → ∀ (s : ℕ) (L : Fin s → LB X) (σ : ∀ i, (L i).Sec) (h : RelSnc f d L σ) (M : LB X) (hM : M.IsLB), ∃ (R : Subring k) (X₁ : Scheme.{0}) (f₁ : X₁ ⟶ Sp R) (π : X ⟶ X₁) (L₁ : Fin s → LB X₁) (σ₁ : ∀ i, (L₁ i).Sec) (h₁ : RelSnc f₁ d L₁ σ₁) (M₁ : LB X₁) (hM₁ : M₁.IsLB), Algebra.FiniteType ℤ R ∧ IsProper f₁ ∧ IsPullback π f f₁ (spMap R.subtype) ∧ (∀ i, cls (L i) (h.isLB i) = CechPic.pull π (cls (L₁ i) (h₁.isLB i))) ∧ cls M hM = CechPic.pull π (cls M₁ hM₁) := by
   intro k _ X f d hf s L σ h M hM
-  haveI : SmoothOfRelativeDimension d f := GlobalTheory.T.smoothOfRelativeDimension_of_relSncDivisor k X f d s L σ h
+  haveI : SmoothOfRelativeDimension d f := _root_.GlobalTheory.LogPair.smooth_of_relSnc k X f d s L σ h
   have hsm : Smooth f := SmoothOfRelativeDimension.smooth d f
   obtain ⟨R, X₁, f₁, π, L₁, σ₁, h₁, M₁, hM₁, hR, hsm₁, hpr₁, hpb, hcl, hsame, hclM⟩ :=
-    GlobalTheory.T.spread_out_smooth_proper k X f hsm hf s L σ h.isLB M hM
+    _root_.GlobalTheory.LogPair.exists_model_with_sections k X f hsm hf s L σ h.isLB M hM
   have hX : RelSnc f d (fun i => (L₁ i).pull π) (fun i => Cartier.secPull (σ₁ i) π) :=
-    GlobalTheory.T.relative_snc_same_divisor k X f d s L σ _ _ h (fun i => pull_isLB (h₁ i) π) hsame
+    _root_.GlobalTheory.LogPair.relSnc_of_sameDiv k X f d s L σ _ _ h (fun i => pull_isLB (h₁ i) π) hsame
   haveI := hsm₁
   haveI := hpr₁
-  obtain ⟨a, ha, hsp⟩ := GlobalTheory.T.relative_snc_generic_spread R k R.subtype X₁ X f₁ f π d s L₁ σ₁ hpb h₁ hX
+  obtain ⟨a, ha, hsp⟩ := _root_.GlobalTheory.LogPair.relSnc_spread R k R.subtype X₁ X f₁ f π d s L₁ σ₁ hpb h₁ hX
   set R' := adjInv R (a : k)
   set χ := toAdjInv R (a : k)
   have hχ : IsUnit (χ a) := isUnit_toAdjInv R a ha

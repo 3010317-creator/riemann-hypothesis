@@ -5,7 +5,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUSplitting
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdaptedPlanePairRestrictionFirst
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjLinEqOfEqOn
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalOperatorInverseLocalStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjLinApply
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalOperatorInverseLocal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModelEvaluationPreservesAdmissible
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchroedingerPreservesAdelicSchwartz
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardTraceAddCharIsStandardCharOfAdmissibleCM
@@ -61,7 +62,7 @@ theorem hasDbl_transp : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [F
   intro hP F E _ _ _ _ _ σ B n d X W M χX χW om r s r' s' hpair M₁ hM₁ e he hbij T hTe d' d₁' hd' hd₁'
   have hψ : ∀ t, ‖B.ψ t‖ = 1 := GlobalTheory.StdCharWeilDatum.norm_psi hpair.base.std
   have hL : IsLocOp e := isLocOp_of_isEv hpair.good hM₁ he
-  obtain ⟨e', hL', hinv⟩ := GlobalTheory.T.local_operator_inverse_local e hL hbij
+  obtain ⟨e', hL', hinv⟩ := _root_.GlobalTheory.LocOpInv.isLocOp_inv e hL hbij
   have hTe' : ∀ Φ ∈ schA F (Fin n × Fin d), T.symm Φ = e' Φ := by
     intro Φ hΦ
     obtain ⟨Ψ, hΨ, rfl⟩ := hbij.surjOn hΦ

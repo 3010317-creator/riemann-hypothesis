@@ -3,7 +3,7 @@ module
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.NewformCoefficients.CuspCritAlt
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.NewformCoefficients.AutPer
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.NewformCoefficients.AvgZero
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.NewformCoefficients.SmCont
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.EisensteinSmoothContinuous
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.EisensteinConstantTermUpperBlock
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -77,7 +77,7 @@ theorem UpperTheory.V.Af.Nf.cuspCrit :
   intro φ hl ho hct r h0 h1 _ _ μ D hμ hD g
   obtain rfl : r = 1 := by omega
   obtain ⟨i1, i2, -, i3, -, hu, hx⟩ := UpperTheory.eisenstein_constantTerm_upperBlock ℚ
-  have hφ := smCont ℚ 2 φ ho
+  have hφ := _root_.UpperTheory.eisenstein_smooth_continuous ℚ 2 φ ho
   obtain ⟨N, hN, hper⟩ := autPer φ hl ho g
   let e : ℝ → BlockIx 2 1 → Ad ℚ := fun t _ => TR.sInf ℚ (algebraMap ℝ (TR.Rinf ℚ) t)
   have he : Continuous e := continuous_pi fun _ =>

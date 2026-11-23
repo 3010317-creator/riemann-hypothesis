@@ -5,14 +5,16 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.BlowupProjections.BlowupProjStatement
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.DegreeGenericOfDegree
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.DegreeOfIsIntersectionSystem
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.EmbeddingPiecesOfIntersectionAndResolutionStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PackingStatement
+public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsEmbeddingPieces
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.EmbeddingPiecesOfIntersectionAndResolution
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PackingAlt
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.AssemblyBase
-import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PEmbeddingWeight
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PTwistIntersectionAnyDegree
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PTwistMetric
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PUnitApprox
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.SmallSectionCountLeOfIntegralMul
+import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PEmbeddingWeight
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,10 +64,10 @@ theorem smallSections_upper_of_use :
   intro hAIS hU hRes
   have hDG : GroundTheory.Heights₂.Heights.Inter.DegreeGeneric.Statement :=
     degreeGeneric_of_degree (degree_of_system hAIS)
-  have a0 := GroundTheory.Heights₂.Heights.HilbertSamuel.TwistIntersectionAnyDegree.proof (GlobalTheory.T.embedding_pieces_of_intersection_and_resolution hAIS hRes) hDG
+  have a0 := GroundTheory.Heights₂.Heights.HilbertSamuel.TwistIntersectionAnyDegree.proof (_root_.GlobalTheory.CompanionTheory.Ar.Giv.embeddingPieces_of_resK hAIS hRes) hDG
   have a1 := GroundTheory.Heights₂.Heights.HilbertSamuel.TwistMetric.proof
     GroundTheory.Heights₂.Heights.HilbertSamuel.EmbeddingWeight.proof a0
-  exact GroundTheory.Heights₂.Heights.HilbertSamuel.ArithmeticVolumeNefDual.proof hU.g7p GlobalTheory.T.packing'
+  exact GroundTheory.Heights₂.Heights.HilbertSamuel.ArithmeticVolumeNefDual.proof hU.g7p _root_.GlobalTheory.CompanionTheory.Ar.Small.packing
     GroundTheory.Heights₂.Heights.HilbertSamuel.UnitApprox.proof
     GroundTheory.Heights₂.Heights.HilbertSamuel.NonvanishingDense.full a1
 

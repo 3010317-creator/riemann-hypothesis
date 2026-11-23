@@ -2,10 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsOrientedPrismUniformizerFrameBreuilKisinHomStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyBreuilKisinPrismCoproductStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.StratPeriodMatrixEquivariantHomCommFrobeniusStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.StratifiedHomComparisonCompatibleEnvelopeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.StratifiedPhiModuleEquivariantMatrixCommuteStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyBreuilKisinPrismCoproduct
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.StratPeriodMatrixEquivariantHomCommFrobenius
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.StratifiedHomComparisonCompatibleEnvelope
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.StratifiedPhiModuleEquivariantMatrixCommute
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,11 +59,11 @@ theorem isStratHom_of_equivariant : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) 
     ∀ f : Matrix (Fin d') (Fin d) ℤ_[l], (∀ g, f * ρ g = ρ' g * f) →
     ∀ Y : Matrix (Fin d') (Fin d) bk.S, T' * Y.map bk.evW = zW f * T → IsStratHom S S' Y := by
   intro l _ K bk d d' S S' ρ ρ' T T' hT hT' f hf Y hY
-  have hφ := GlobalTheory.T.stratPeriodMatrix_equivariant_hom_comm_frobenius l K bk d d' S S' ρ ρ' T T' hT hT' f hf Y hY
-  have hgal := GlobalTheory.T.stratifiedPhiModule_equivariant_matrix_commute l K bk d d' S S' ρ ρ' T T' hT hT' f hf Y hY
+  have hφ := _root_.GlobalTheory.BSP.mreal_hom_frob l K bk d d' S S' ρ ρ' T T' hT hT' f hf Y hY
+  have hgal := _root_.GlobalTheory.strat_homGal l K bk d d' S S' ρ ρ' T T' hT hT' f hf Y hY
   have hfr : IsFrame bk bk.prism (bk.toP bk.E) (bk.toP X) := GlobalTheory.T.isOrientedPrismUniformizerFrame_breuilKisinHom l K bk bk.prism (Hom.id _)
-  obtain ⟨En⟩ := GlobalTheory.T.nonempty_breuilKisinPrismCoproduct l K bk bk.prism _ _ hfr
-  have h1 := GlobalTheory.T.stratifiedHom_comparison_compatible_envelope l K bk En d d' S S' Y hφ hgal
+  obtain ⟨En⟩ := _root_.GlobalTheory.BSP.nonempty_env l K bk bk.prism _ _ hfr
+  have h1 := _root_.GlobalTheory.BSP.strat_eps_compat_env l K bk En d d' S S' Y hφ hgal
   refine ⟨hφ, ?_⟩
   intro B f₁ g₁
   obtain ⟨k, ⟨hk1, hk2⟩, -⟩ := En.univ B f₁ g₁

@@ -2,12 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsRatPointOfFiniteType
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharacterGroupFinrankLeMinSignatureUnitaryTrait
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteRegularThetaSetupCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPadicTraitLiftFiniteThroughPointStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowNormValLeUnitaryThetaFiniteModelsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsThetaSetupRegularOverModuliPointStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsClosedSingletonOfIsFiniteOfIsClosedImageStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryClassicalTraitPeriodsBoundedBelowStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteRegularThetaSetupCover
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.InducedModelMorphismCompStructureMap
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPadicTraitLiftFiniteThroughPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowNormValLeUnitaryThetaFiniteModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsThetaSetupRegularOverModuliPoint
+public import Mathlib.AlgebraicGeometry.Morphisms.Finite
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsClosedSingletonOfIsFiniteOfIsClosedImage
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryClassicalTraitPeriodsBoundedBelow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -102,9 +105,9 @@ theorem GlobalTheory.UPoinc.lam_of_closed : ∀ (E : Type) [Field E] [NumberFiel
   by_cases hpq : 1 ≤ Dw.p + Dw.q
   swap
   · exact ⟨0, fun t x hx => absurd (eq_zero_of_sum_eq_zero hpq t.T x) hx⟩
-  obtain ⟨m, X', U, hU, hcov⟩ := GlobalTheory.T.exists_finite_regular_thetaSetup_cover E H Dw l Xo c C (GlobalTheory.T.exists_thetaSetup_regular_over_moduliPoint E H Dw hpq l Xo c C)
-  choose K hK using fun k => GlobalTheory.T.unitary_classical_trait_periods_bounded_below E H Dw l Xo c C (X' k) p
-  choose e he1 he using fun k => GlobalTheory.T.exists_pow_norm_val_le_unitaryTheta_finite_models E H Dw l Xo c C X₁ (X' k) z₁
+  obtain ⟨m, X', U, hU, hcov⟩ := _root_.GlobalTheory.UPoinc.exists_fin_uSetup_regular_cover E H Dw l Xo c C (_root_.GlobalTheory.UPoinc.SetupAt.exists_uSetup_regular_at E H Dw hpq l Xo c C)
+  choose K hK using fun k => _root_.GlobalTheory.UPoinc.ShortBound.main E H Dw l Xo c C (X' k) p
+  choose e he1 he using fun k => _root_.GlobalTheory.UPoinc.ValBound.exists_pow_norm_val_le E H Dw l Xo c C X₁ (X' k) z₁
   refine ⟨∑ k, (e k : ℝ) * |K k|, fun t x hx => ?_⟩
   have hzc : IsClosed ({X₁.π z₁} : Set C.Z) := by
     haveI := X₁.fin
@@ -114,12 +117,12 @@ theorem GlobalTheory.UPoinc.lam_of_closed : ∀ (E : Type) [Field E] [NumberFiel
   have hgen : (X' k).π w = (gPt p ≫ (t.y ≫ X₁.π)) (IsLocalRing.closedPoint (PadicAlgCl p)) := by
     rw [hw, t.comm]
     rfl
-  obtain ⟨y', hy'π, hy'w⟩ := GlobalTheory.T.exists_padicTrait_lift_finite_through_point _ _ (X' k).π (X' k).fin p (t.y ≫ X₁.π) w hgen
+  obtain ⟨y', hy'π, hy'w⟩ := _root_.GlobalTheory.UPoinc.exists_lift_finite_through_point _ _ (X' k).π (X' k).fin p (t.y ≫ X₁.π) w hgen
   have hz'π : (X' k).π (y' (cPt p)) = X₁.π z₁ := by
     have := congrArg (fun f => f (cPt p)) hy'π
     simp only [Scheme.Hom.comp_apply] at this
     rw [this, t.cen]
-  have hz'c := GlobalTheory.T.isClosed_singleton_of_isFinite_of_isClosed_image _ _ _ (X' k).fin (y' (cPt p)) (hz'π ▸ hzc)
+  have hz'c := _root_.GlobalTheory.isClosed_singleton_of_isFinite _ _ _ (X' k).fin (y' (cPt p)) (hz'π ▸ hzc)
   let t' : UCTrait (X' k) p (y' (cPt p)) :=
     { y := y', cen := rfl, T := t.T, ι := t.ι, int := t.int, comm := by rw [hy'π]; exact t.comm }
   have hreg : (X' k).S.R ≤ (X' k).M.O ((gPt p ≫ t'.y) (IsLocalRing.closedPoint (PadicAlgCl p))) := by

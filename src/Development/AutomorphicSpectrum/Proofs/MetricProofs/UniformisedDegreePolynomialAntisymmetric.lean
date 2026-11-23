@@ -4,7 +4,8 @@ public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.MetricsP
 public import GroundTheory.HeightsAndTheta.Heights.Antisymmetric.Statements
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AnalyticSystemRegularityProperties
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MongeAmpereSingularTotalMassDegree
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.UniformisedPotentialIntegralFormulaStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsTwiceDifferentiableAt
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.UniformisedPotentialIntegralFormula
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,7 +56,7 @@ theorem anSys_proportional : Inputs → ∀ (Ψ : Type) [Fintype Ψ] [DecidableE
   intro hI Ψ _ _ N j D S hj hD hU
   obtain ⟨hO, hNull, -, -, -⟩ := anSys_open_basics D (Ψ × Fin N) S
   have hInt := AnSys.mIntegrable_potH_and_mInt_eq_degNum hI.convergenceSigned D (Ψ × Fin N) S
-  have hmain := GlobalTheory.T.uniformised_potential_integral_formula D S.X S.A Ψ N j S.open' S.th S.ph hj hD hO hNull
+  have hmain := _root_.GlobalTheory.CompanionTheory.Ar.PB.proportional_on_uniformised D S.X S.A Ψ N j S.open' S.th S.ph hj hD hO hNull
     (fun p => (S.sing p).1) (fun p => (S.sing p).2.1) hU (fun w => (hInt w).1)
   obtain ⟨v, hv, hEq⟩ := hmain
   refine ⟨v, hv, ?_⟩

@@ -3,8 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Foundations.OrderedConst
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationDetBlocks
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsTrivialOnUnitsModConductorUnitCharacterValuePr
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrincipalSeriesCongruenceSubgroupInvMemStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrincipalSeriesCongruenceSubgroupMulClosedStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrincipalSeriesCongruenceSubgroupInvMem
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrincipalSeriesCongruenceSubgroupMulClosed
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ValLeOneOfMemKO
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -155,7 +155,7 @@ theorem clear_upper_right : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologic
     rw [hUv, hUm]; split_ifs
     · exact triv_zero _
     · exact hg.2 a b hab⟩
-  have hy : Ug * Dg⁻¹ ∈ grp ψ := GlobalTheory.T.principalSeriesCongruenceSubgroup_mul_closed k n ψ hord Ug hU _ (GlobalTheory.T.principalSeriesCongruenceSubgroup_inv_mem k n ψ hord Dg hD)
+  have hy : Ug * Dg⁻¹ ∈ grp ψ := _root_.GlobalTheory.PsType.grp_mul_closed k n ψ hord Ug hU _ (_root_.GlobalTheory.PsType.grp_inv_mem k n ψ hord Dg hD)
   set Di : Matrix (Fin n) (Fin n) k := ((Dg⁻¹ : GL (Fin n) k) : Matrix (Fin n) (Fin n) k) with hDi
   have hDi1 : Dm * Di = 1 := by rw [← hDv]; exact Dg.mul_inv
   have hDi2 : Di * Dm = 1 := by rw [← hDv]; exact Dg.inv_mul

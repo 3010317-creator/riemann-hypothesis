@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IndEtOfForallFinset
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafBasicPropertiStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.GalMapMul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafBasicProperti
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyOneCechCocycleOfPullbackZero
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsZeroChains
 import Mathlib.Algebra.Order.Floor.Extended
@@ -57,7 +58,7 @@ theorem _root_.GlobalTheory.T.etaleCohomology_one_cechCocycle_of_pullback_zero :
           cobd (R := R) (E := cech f) (n := 1) s = 0 ∧
             IsCls (R := R) s (pull R (cechAug f) F 1 x) := by
   intro R _ F Y X f x hx
-  obtain ⟨-, hneg, hmono, ⟨w0, hex⟩, -, -⟩ := GlobalTheory.T.chosenInjectiveResolutionEtaleSheaf_basic_properties R F
+  obtain ⟨-, hneg, hmono, ⟨w0, hex⟩, -, -⟩ := _root_.GlobalTheory.EtC.res_basic R F
   obtain ⟨z, hz⟩ := (pull R (cechAug f) F 1 x).mk_surjective
   have h0 : pull R (diag f) F 1 (CohomologyClass.mk z) = 0 := by
     rw [hz, ← pull_comp, diag_aug, hx]

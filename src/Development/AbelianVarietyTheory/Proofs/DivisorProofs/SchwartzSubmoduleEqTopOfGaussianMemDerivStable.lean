@@ -2,14 +2,17 @@ module
 
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEquivEuclideanPiMulNormSqEqReStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFourierStableGaussianSubmoduleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemAllGaussianWidthsOfFourierStableSchwartzStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemClosureWideGaussianMulSchwartzStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemOfClosedSubmoduleGaussianConvolutionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NarrowGaussConvolutionDenseStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzClosureStableLinearFormFourierStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzDensityTransportLinearEquivChirpStatement
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEquivEuclideanPiMulNormSqEqRe
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFourierStableGaussianSubmodule
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemAllGaussianWidthsOfFourierStableSchwartz
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemClosureWideGaussianMulSchwartz
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NarrowGaussConvolutionDense
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzClosureStableLinearFormFourier
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzDensityTransportLinearEquivChirp
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemOfClosedSubmoduleGaussianConvolution
 import GroundTheory.GlobalFields.TateThesis.GaussianSchwartz
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -64,12 +67,12 @@ theorem dense_of_stdGaussian_mem : ∀ (E : Type) [NormedAddCommGroup E] [InnerP
     (∀ (ℓ : E →L[ℝ] ℝ) (f f₁ : SchwartzMap E ℂ), f ∈ N → (∀ x, f₁ x = (ℓ x : ℂ) * f x) → f₁ ∈ N) →
     Dense (N : Set (SchwartzMap E ℂ)) := by
   intro E _ _ _ _ _ N G hG hGN hD hL
-  obtain ⟨W, hWN, hGW, hLW, hFW⟩ := GlobalTheory.T.exists_fourier_stable_submodule_containing_gaussian E N G hG hGN hD hL
-  obtain ⟨hLM, hFM⟩ := GlobalTheory.T.topologicalClosure_stable_linearForm_mul_and_fourier E W hLW hFW
+  obtain ⟨W, hWN, hGW, hLW, hFW⟩ := _root_.GlobalTheory.exists_fourier_stable_gaussian_submodule E N G hG hGN hD hL
+  obtain ⟨hLM, hFM⟩ := _root_.GlobalTheory.schwartz_closure_stable_linearForm_fourier E W hLW hFW
   set M := W.topologicalClosure with hMdef
   have hcl : IsClosed (M : Set (SchwartzMap E ℂ)) := W.isClosed_topologicalClosure
   have hGM : G ∈ M := W.le_topologicalClosure hGW
-  have hgauss := GlobalTheory.T.mem_all_gaussianWidths_of_fourierStable_schwartz E M hcl hLM hFM G hG hGM
+  have hgauss := _root_.GlobalTheory.GaussWidths.all_widths E M hcl hLM hFM G hG hGM
   have key : ∀ (h f : SchwartzMap E ℂ), (∃ b : ℝ, 0 < b ∧ ∀ y, f y = Complex.exp (-((b * ‖y‖ ^ 2 : ℝ) : ℂ)) * h y) →
       f ∈ M := by
     rintro h f ⟨b, hb, hf⟩
@@ -84,13 +87,13 @@ theorem dense_of_stdGaussian_mem : ∀ (E : Type) [NormedAddCommGroup E] [InnerP
           intro y
           rw [SchwartzMap.smul_apply, hu y, smul_eq_mul, ← mul_assoc, inv_mul_cancel₀ hs, one_mul]
           congr 1; funext a; rw [hf a]
-        have hmem := GlobalTheory.T.mem_of_closedSubmodule_gaussian_convolution E M hcl hLM b c hb hc (hgauss c hc) h (s⁻¹ • u) hu'
+        have hmem := _root_.GlobalTheory.ConvSeries.mem_of_conv_gaussian E M hcl hLM b c hb hc (hgauss c hc) h (s⁻¹ • u) hu'
         have : u = s • (s⁻¹ • u) := by rw [smul_smul, mul_inv_cancel₀ hs, one_smul]
         rw [this]; exact M.smul_mem s hmem
-    exact closure_minimal hsub hcl (GlobalTheory.T.mem_closure_gaussian_convolutions E f)
+    exact closure_minimal hsub hcl (_root_.GlobalTheory.narrowGauss_convolution_dense E f)
   have hall : ∀ h : SchwartzMap E ℂ, h ∈ M := by
     intro h
-    exact closure_minimal (fun f hf => key h f hf) hcl (GlobalTheory.T.mem_closure_wideGaussian_mul_schwartz E h)
+    exact closure_minimal (fun f hf => key h f hf) hcl (_root_.GlobalTheory.GaussCutoff.mem_closure_gauss_mul E h)
   have htop : N.topologicalClosure = ⊤ := by
     rw [eq_top_iff]
     intro h _
@@ -104,8 +107,8 @@ theorem dense_of_gaussian_mem : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpa
     (∀ (ℓ : V →L[ℝ] ℝ) (f f₁ : SchwartzMap V ℂ), f ∈ N → (∀ x, f₁ x = (ℓ x : ℂ) * f x) → f₁ ∈ N) →
     Dense (N : Set (SchwartzMap V ℂ)) := by
   intro V _ _ _ N g Q c hc hQ hg hgN hD hL
-  obtain ⟨A, hA⟩ := GlobalTheory.T.exists_euclidean_equiv_pi_mul_norm_sq_eq_re V Q c hc hQ
-  obtain ⟨N₂, hD₂, hL₂, hG₂, hdense⟩ := GlobalTheory.T.schwartz_density_transport_linearEquiv_chirp V _ A Q N hA hD hL
+  obtain ⟨A, hA⟩ := _root_.GlobalTheory.exists_equiv_euclidean_pi_mul_norm_sq_eq_re V Q c hc hQ
+  obtain ⟨N₂, hD₂, hL₂, hG₂, hdense⟩ := _root_.GlobalTheory.GaussTransport.transport V _ A Q N hA hD hL
   apply hdense
   let G := GroundTheory.Global.gaussianSchwartz (EuclideanSpace ℝ (Fin (Module.finrank ℝ V)))
   have hG : ∀ y, G y = Complex.exp (-((Real.pi * ‖y‖ ^ 2 : ℝ) : ℂ)) := by

@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ClosedSubgroupBesselHaarFiniteCompactPosOpenStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ClosedSubgroupBesselHaarFiniteCompactPosOpen
 public import Formalism.FormalDegreeBessel.FormalDegreeRatio.GBasic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -107,7 +107,7 @@ theorem GlobalTheory.SgInf.lint_compact_le_quot : ∀ (k r : ℕ) (S : Set (Mat 
   have hK : IsCompact K := hK₀.inter_right hGc
   have hKd : ∀ x ∈ K, (Matrix.of x : Mat k r).det ≠ 0 := fun x hx => LocEmb.det_ne_zero_of_mem hx.2
   have hKm : MeasurableSet K := hK.isClosed.measurableSet
-  refine ⟨μS (LocEmb.quotSet K), (GlobalTheory.T.closedSubgroupBessel_haar_finite_compact_pos_open k r S μS hS hSH).1 _ (LocEmb.isCompact_quotSet hK hKd), ?_⟩
+  refine ⟨μS (LocEmb.quotSet K), (_root_.GlobalTheory.SgInf.haarOn_locFinite_openPos k r S μS hS hSH).1 _ (LocEmb.isCompact_quotSet hK hKd), ?_⟩
   intro F hF hinv
 
   have hfib : ∀ x : Mt k r, ∫⁻ s, K.indicator F (fun i j => (Matrix.of s * Matrix.of x) i j) ∂μS ≤

@@ -2,10 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsArchOne
 public import Development.AbelianVarietyTheory.Definitions.Divisors.BadElt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DefiniteCuspFormsFiniteRegularRepresentationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoLevelCuspFormsEmbedRegularRepresentationCopieStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoLevelFlagDomainCuspFormRanksShiftedWeightsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoLevelFlagDomainEigenspaceShareStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DefiniteCuspFormsFiniteRegularRepresentation
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoLevelCuspFormsEmbedRegularRepresentationCopie
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoLevelFlagDomainCuspFormRanksShiftedWeights
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoLevelFlagDomainEigenspaceShare
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,7 +62,7 @@ theorem model_bound {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ}
     (H P : Subgroup U) (hH : LevelHyp (GlobalTheory.ShareOn.sub M H)) (hP : LevelHyp (GlobalTheory.ShareOn.sub M P)) (lam : P →* ℂˣ) :
     ∃ n : ℕ, EmbReg ρ H n ∧ (n : ℝ) * Nat.card H ≤ 2 * Nat.card P * finrank ℂ (eig ρ P lam) := by
   rcases hc with hdef | ⟨h0, hr, hA, hs, hbot⟩
-  · obtain ⟨-, hrest⟩ := GlobalTheory.T.definite_cuspForms_finite_regularRepresentation E r U C M hdef ka ρ hρ
+  · obtain ⟨-, hrest⟩ := _root_.GlobalTheory.ShareOn.Definite.share_definite E r U C M hdef ka ρ hρ
     obtain ⟨⟨n, hn, hnc⟩, -⟩ := hrest H hH
     have hP2 := (hrest P hP).2 lam
     refine ⟨n, hn, ?_⟩
@@ -70,9 +70,9 @@ theorem model_bound {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ}
     rw [e]
     have : (0 : ℝ) ≤ Nat.card P * finrank ℂ (eig ρ P lam) := by positivity
     linarith
-  · have hR := GlobalTheory.T.twoLevelFlagDomain_cuspForm_ranks_shifted_weights E r U C M hbot h0 hr ka T hA hs
-    obtain ⟨n, hn, hb⟩ := GlobalTheory.T.twoLevelCuspForms_embed_regularRepresentation_copies E r U C M ka ρ hρ _ _ hR H hH
-    have hS := (GlobalTheory.T.twoLevelFlagDomain_eigenspace_share E r U C M ka ρ hρ _ _ hR P hP lam).1
+  · have hR := _root_.GlobalTheory.ShareRanks.ranks E r U C M hbot h0 hr ka T hA hs
+    obtain ⟨n, hn, hb⟩ := _root_.GlobalTheory.CuspEmb.cusp_embReg E r U C M ka ρ hρ _ _ hR H hH
+    have hS := (_root_.GlobalTheory.ShareEig.share_eig E r U C M ka ρ hρ _ _ hR P hP lam).1
     refine ⟨n, hn, ?_⟩
     have h4 := hR.2.2.2.1
     have hb' : (n : ℝ) * Nat.card H ≤ finrank ℂ (M.cusp (ka + 2 • deMul M.Ψ r M.p0 (GlobalTheory.ShareOn.sOf M))) := by

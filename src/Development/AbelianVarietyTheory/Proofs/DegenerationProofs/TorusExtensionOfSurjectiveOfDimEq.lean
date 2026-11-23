@@ -6,10 +6,12 @@ public import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.PowO
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsIdPowEqOneOfIsFiniteOfFlat
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.IsIntegralOfSmoothFieldOfConnectedSpace
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsMonHomFactorOfFlatSurjective
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FlatAndSurjectiveOfSurjectivePointsStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsFiniteKerOfSurjPointsSameDimensionStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.NonemptyTorusExtensionOfSurjectivePointsStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusExtensionPointsDivisibleStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FlatAndSurjectiveOfSurjectivePoints
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsFiniteKerOfSurjPointsSameDimension
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.NonemptyTorusExtensionOfSurjectivePoints
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusExtensionPointsDivisible
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsGrpObjOfFlatClosed
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -160,8 +162,8 @@ end IsogenyOntoExtension
 open IsogenyOntoExtension RationalPoint in
 theorem torusExtension_of_surjective_of_dim_eq : ∀ (k : Type) [Field k] [IsAlgClosed k] (G G' : Over (Sp k)) [GrpObj G] [GrpObj G'] (g : ℕ), SmConn G → SmConn G' → SmoothOfRelativeDimension g G.hom → SmoothOfRelativeDimension g G'.hom → Nonempty (TorusExtension G') → ∀ i : G ⟶ G', IsMonHom i → (∀ y : (𝟙_ (Over (Sp k)) ⟶ G'), ∃ x : (𝟙_ (Over (Sp k)) ⟶ G), x ≫ i = y) → Nonempty (TorusExtension G) := by
   intro k _ _ G G' _ _ g hG hG' hg hg' hT i hi hs
-  have hker := GlobalTheory.T.isFinite_ker_of_surj_points_same_dimension k G G' g hG hG' hg hg' i hi hs
-  obtain ⟨hfl, hsu⟩ := GlobalTheory.T.flat_and_surjective_of_surjective_points' k G G' hG hG' i hi hs
+  have hker := _root_.GlobalTheory.SS.isFinite_ker_of_surjective_points_of_dim_eq k G G' g hG hG' hg hg' i hi hs
+  obtain ⟨hfl, hsu⟩ := _root_.GlobalTheory.SS.flat_and_surjective_of_surjective_points k G G' hG hG' i hi hs
   obtain ⟨c, s, p, q, n⟩ := id hG
   obtain ⟨c', s', p', q', n'⟩ := id hG'
   obtain ⟨N, hN, hkill⟩ := exists_pow_eq_one_of_finite_kernel i hker
@@ -175,7 +177,7 @@ theorem torusExtension_of_surjective_of_dim_eq : ∀ (k : Type) [Field k] [IsAlg
     | succ m ih => rw [pow_succ]; exact Serre.isMonHom_mul _ _
   obtain ⟨⟨r, hr, hir⟩, -⟩ := exists_monHom_factor_of_flat_surjective _ G G' G i (𝟙 G ^ N) hi hmul
     hfl hsu hqc fun T x hx => by rw [MonObj.comp_pow, Category.comp_id, hkill T x hx]
-  refine GlobalTheory.T.nonempty_torusExtension_of_surjective_points' k G' G hG hT r hr ?_
+  refine _root_.GlobalTheory.SS.nonempty_torusExtension_of_surjective_points k G' G hG hT r hr ?_
   obtain ⟨Z, hZ, hZm⟩ := exists_isClosed_image_of_isClosed_subgroup k G' G r hr inferInstance q'
     inferInstance q ⊤ Set.univ isClosed_univ (by simp)
   let φ : (𝟙_ (Over (Sp k)) ⟶ G') →* (𝟙_ (Over (Sp k)) ⟶ G) :=
@@ -186,7 +188,7 @@ theorem torusExtension_of_surjective_of_dim_eq : ∀ (k : Type) [Field k] [IsAlg
     refine eq_top_of_finite_cover φ.range hZ (fun x => ?_) (finite_kernel_points i hker) fun y => ?_
     · rw [← range_left_subset_iff, ← hZm]
       exact ⟨fun ⟨a, ha⟩ => ⟨a, trivial, ha⟩, fun ⟨a, _, ha⟩ => ⟨a, ha⟩⟩
-    · obtain ⟨z, hz⟩ := GlobalTheory.T.torusExtension_points_divisible' k G' hT N hN (y ≫ i)
+    · obtain ⟨z, hz⟩ := _root_.GlobalTheory.SS.torusExtension_points_divisible k G' hT N hN (y ≫ i)
       obtain ⟨x, rfl⟩ := hs z
       refine ⟨x ^ N * y⁻¹, ?_, x ≫ i, ?_⟩
       · show _ ≫ i = 1

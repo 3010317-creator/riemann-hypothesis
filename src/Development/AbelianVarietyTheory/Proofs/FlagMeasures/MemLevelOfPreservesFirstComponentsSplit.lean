@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.SelfDualAt
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SplitIntLoc
+public import Formalism.PeriodIntegrals.SplitIntLoc
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SplitPrimeIntegers.ExistsUnitDiff
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,7 +55,7 @@ theorem mem_levelVL_of_first_components : ∀ (F E : Type) [Field F] [NumberFiel
   intro F E _ _ _ _ _ _ cm n J v sp hsig hdiag L hsd κ hκ hfirst
   have hint : ∀ x, x ∈ intV E v ↔
       (sp x).1 ∈ v.adicCompletionIntegers F ∧ (sp x).2 ∈ v.adicCompletionIntegers F :=
-    split_integral_local F E v sp hdiag
+    _root_.PI.SplitIntLoc.Proof.main F E v sp hdiag
 
   have pair1 : ∀ z y : Fin n → E ⊗[F] v.adicCompletion F, (sp (hR cm.sig J (v.adicCompletion F) z y)).1 =
       ∑ i, ∑ j, (sp (z i)).2 * (sp (inclE (F := F) (v.adicCompletion F) (J i j))).1 * (sp (y j)).1 := by

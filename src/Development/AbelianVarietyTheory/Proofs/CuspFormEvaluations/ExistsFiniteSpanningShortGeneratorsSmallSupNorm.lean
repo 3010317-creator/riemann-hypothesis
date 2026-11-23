@@ -5,7 +5,7 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSecti
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.LatOfLamSt
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniqOfChartIndep2
 public import Formalism.LocalToGlobal.ProjectiveLattices.RecPJThAllNeBot
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShortGeneratorMemSpanSmallSupNormShortGeneratorsStatement
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShortGeneratorMemSpanSmallSupNormShortGenerators
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -91,7 +91,7 @@ theorem exists_short_family_small : Formalism.MainNotions.ModuliIntegralCharts.H
   have hlp := ReciprocityTheory.ChartRestriction.G.PullbackSections.Pf.lastPos_wtA h hj w hw
   have hdom := dom_wtA w
   have hshC : T.sh j w ⊆ T.C j w := hS.shCusp j hj (wtA w) w.n hdom hlp hdom hlp
-  have hsmall := GlobalTheory.T.shortGenerator_mem_span_small_supNorm_shortGenerators hC D T h hG large₂ j hj w hP hL hn hw hS hA
+  have hsmall := _root_.GlobalTheory.RunIn.sh_mem_span_small hC D T h hG large₂ j hj w hP hL hn hw hS hA
   unfold ReciprocityTheory.ChartRestriction.G.PullbackSections.SpanAt at hsp
   simp only [recPJ, recB, mkX, mkB] at hsp ⊢
   unfold spanIn cutN cutR at *

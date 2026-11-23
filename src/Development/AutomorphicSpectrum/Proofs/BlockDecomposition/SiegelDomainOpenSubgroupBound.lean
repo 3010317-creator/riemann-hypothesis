@@ -2,9 +2,10 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GoodConstOfAniso
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicUnitaryEveryPointHasCuspScale
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MinimalParabolicMemPartialFlagStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TorusConjugateUnipotentBoundedStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnipotentRadicalCompactFundamentalDomainStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MinimalParabolicMemPartialFlag
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TorusConjugateUnipotentBounded
+public import Development.AbelianVarietyTheory.Definitions.Divisors.LocallyCompactUnipFlag
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnipotentRadicalCompactFundamentalDomain
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -117,10 +118,10 @@ theorem near_cusp_one (F E : Type) [Field F] [NumberField F] [Field E] [NumberFi
     (hU.preimage (continuous_ofFin σ J)).mem_nhds (by simp only [Uf, Set.mem_preimage, map_one]; exact U.one_mem)
   let Wn : Set (GFin σ J) := {x | ∀ h ∈ Cf, h⁻¹ * x * h ∈ Uf}
   have hWn : Wn ∈ 𝓝 (1 : GFin σ J) := conj_mem_nhds hCf hUf
-  obtain ⟨Q, hQ, hQm⟩ := GlobalTheory.T.unipotent_radical_compact_fundamental_domain F E σ hCM n J hJ _ (pre X s) hC Wn hWn
+  obtain ⟨Q, hQ, hQm⟩ := _root_.GlobalTheory.CompanionTheory.StrongUnip.strong_approx_unipRad F E σ hCM n J hJ _ (pre X s) hC Wn hWn
   let Q' : Set (GAd σ J) := (fun z : GAd σ J × GAd σ J => z.1⁻¹ * z.2 * z.1) '' (Ω ×ˢ Q)
   have hQ' : IsCompact Q' := (hΩ.prod hQ).image ((continuous_fst.inv.mul continuous_snd).mul continuous_fst)
-  obtain ⟨M₁, hM₁, hM₁b⟩ := GlobalTheory.T.torus_conjugate_unipotent_bounded F E σ hCM n J hJ r X Y hW Q' c hQ' hc s
+  obtain ⟨M₁, hM₁, hM₁b⟩ := _root_.GlobalTheory.CompanionTheory.RapidDecay.torus_contracts_unipRad F E σ hCM n J hJ r X Y hW Q' c hQ' hc s
   obtain ⟨C₀, hC₀, hC₀b⟩ := exists_bound_archMat (σ := σ) (J := J) hCm
   refine ⟨C₀ * M₁, mul_nonneg hC₀ hM₁, ?_⟩
   intro p hp t ht a ha k hk m hm
@@ -131,7 +132,7 @@ theorem near_cusp_one (F E : Type) [Field F] [NumberField F] [Field E] [NumberFi
     mem_finPts.2 (projInf_ofFin σ J _), ?_⟩
   · intro w τ i j
 
-    have hpar : p ∈ GlobalTheory.UAut.parFlag σ J (pre X s) fun _ => 0 := GlobalTheory.T.minimal_parabolic_mem_partial_flag F E σ n J r X p (hΩP hp) s
+    have hpar : p ∈ GlobalTheory.UAut.parFlag σ J (pre X s) fun _ => 0 := _root_.GlobalTheory.CompanionTheory.RapidDecay.mem_parFlag_first_of_minParOne F E σ n J r X p (hΩP hp) s
     have hq' : q ∈ GlobalTheory.UAut.unipFlag σ J (pre X s) fun _ => 0 := by rw [GlobalTheory.UAut.unipFlag_const]; exact hqU
     have hnU : p⁻¹ * q * p ∈ unipRad σ J (pre X s) := by
       have := GlobalTheory.UAut.conj_mem_unipFlag hJ hσ hC (fun _ => 0) (inv_mem hpar) hq'

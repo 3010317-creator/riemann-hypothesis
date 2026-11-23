@@ -3,35 +3,39 @@ module
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsAdmissibleIntegralBasisChangeOne
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsNormalFormLattice
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LatticeNormalFormCoordinates
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ParahoricLeIntegralGl
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.UnfoldingBoundedIntegral
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdmissibleRepresentativesFiniteLevelCosets
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.UnipotentCharacterArgumentMulStabilizer
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AffineEigenvalueEqOneOfBoxSumNeZero
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLevelGroupModTypePrime
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LocalUnfoldingNonvanishingIffEventuallyNonzero
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HasLatticeNormalFormOfBetween
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.LatticeNormalFormUnipotent
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LatticeNormalFormModuloUnipotentSemidirect
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LatticeNormalFormViaMatrix
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelCharacterStepZeroTypePrime
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelGroupReductionStepZeroTypePrime
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelStepZeroAtTwistPrimeFull
+public import Formalism.LocalToGlobal.Columns.FiniteSumNonzeroLargeDepth
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormOneDetEqOne
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ProjConjLevelLeIntegralGLAtTypePrime
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RowTypeMulOnLevelAtTwistPrime
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RowTypeMulOnSymmetricLevelAtTypePrime
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RowTypeOneAddPrimeSmulEqOne
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StepDatumBoundedAtTypePrime
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TameHeckeCharLocalEqInvTypeCharacter
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnfoldingCharArgMulLeftUnipotent
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AbsNormEqOfSplitFactor
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PhiMapsAndOmegaLaw
 import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LocalUnfoldingIntegrandBoundedSchwartz
 import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.NormalFormAtPrime
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ParahoricLeIntegralGl
 import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.UnfoldingAffineSpaceMemIffIntrinsic
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.UnfoldingBoundedIntegral
 import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.UnipotentRadicalsActAffineUnfoldingSpaces
 import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.WeightedBoxSumAtPrimeEqOfBoundedSchwartz
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdmissibleRepresentativesFiniteLevelCosetsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AffineEigenvalueEqOneOfBoxSumNeZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLevelGroupModTypePrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HasLatticeNormalFormOfBetweenStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LatticeNormalFormModuloUnipotentSemidirectStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LatticeNormalFormViaMatrixStatement
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevQFiniteIndexAndRoot
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelCharacterStepZeroTypePrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelGroupReductionStepZeroTypePrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelStepZeroAtTwistPrimeFullStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormOneDetEqOneStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ProjConjLevelLeIntegralGLAtTypePrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RowTypeMulOnLevelAtTwistPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RowTypeMulOnSymmetricLevelAtTypePrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RowTypeOneAddPrimeSmulEqOneStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StepDatumBoundedAtTypePrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TameHeckeCharLocalEqInvTypeCharacter
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnfoldingCharArgMulLeftUnipotentStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AbsNormEqOfSplitFactor
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IntAtNatCast
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LastTwoStepsGuarded
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PhiMapsAndOmegaLaw
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -206,7 +210,7 @@ theorem omPhi_bdd' (hc : cst.Ok) (hD : P.1 ∉ Pr.vGs → 2 * (R.m - 1) + 1 ≤ 
     HomBdd P.1 R.m (omPhi Ch sel mu cst i P hal h) ∧
       ∀ x, omPhi Ch sel mu cst i P hal h x ≠ 0 → IntAt P.1 ((qOf P.1 : X.E) ^ cst.D P * Loc.chArg x) := by
   by_cases hP : P.1 ∈ Pr.vGs
-  · obtain ⟨a, b⟩ := GlobalTheory.T.stepDatum_bounded_at_typePrime Ch sel mu cst i P hi hP hal h (h1.1 hP) (h2.1 hP)
+  · obtain ⟨a, b⟩ := _root_.GlobalTheory.Mem.Col2.BddG.omPhi_bdd_type Ch sel mu cst i P hi hP hal h (h1.1 hP) (h2.1 hP)
     exact ⟨a, fun x hx => intAt_pow_mono (hc.D_pos P) (by rw [pow_one]; exact b x hx)⟩
   · have a := omPhi_bdd (Ch := Ch) (cst := cst) hP (h1.2 hP) (h2.2 hP)
     have := hD hP
@@ -250,11 +254,11 @@ theorem lamRow_mul (hs : cst.sharp = true) {j : ℕ} (hj : j < R.m) {g g' : AutY
       lamRow Ch mu cst.sharp j P.1 g.toLinearMap * lamRow Ch mu cst.sharp j P.1 g'.toLinearMap := by
   by_cases hP : P.1 ∈ Pr.vGs
   · rw [hs] at hg hg' ⊢
-    exact GlobalTheory.T.rowType_mul_on_symmetricLevel_at_typePrime Ch mu j P.1 hj hP g hg g' hg'
-  · exact GlobalTheory.T.rowType_mul_on_level_at_twistPrime Ch mu _ j P.1 hP g hg g' hg'
+    exact _root_.GlobalTheory.SymLevelMul.lamRow_mul Ch mu j P.1 hj hP g hg g' hg'
+  · exact _root_.GlobalTheory.TwistRowMul.lamRow_mul Ch mu _ j P.1 hP g hg g' hg'
 
 theorem lamRow_one {j : ℕ} (hj : j < R.m) : lamRow Ch mu cst.sharp j P.1 (1 : AutY X R j).toLinearMap = 1 := by
-  have := GlobalTheory.T.rowType_one_add_prime_smul_eq_one Ch mu cst.sharp j P.1 hj 0 fun _ _ => zero_mem _
+  have := _root_.GlobalTheory.Mem.Col2.IdxEx.Cong.lamRow_cong Ch mu cst.sharp j P.1 hj 0 fun _ _ => zero_mem _
   rwa [smul_zero, add_zero] at this
 
 theorem chiMul (hc : cst.Ok) (hs : cst.sharp = true) (hD : P.1 ∉ Pr.vGs → 2 * (R.m - 1) + 1 ≤ cst.D P) {j : ℕ} (hj : j < R.m)
@@ -299,7 +303,7 @@ theorem chiTriv_mid (hc : cst.Ok) (hs : cst.sharp = true) (hd : DegOneUnram P.1)
   intro r hr hfix
   have hκ := conj_mem hr
   have hdet : LinearEquiv.det (h⁻¹ * r * h) = 1 := by
-    rw [map_mul, map_mul, GlobalTheory.T.norm_one_det_eq_one X.E _ _ r ⟨hr.1, hfix⟩, map_inv, mul_one, inv_mul_cancel]
+    rw [map_mul, map_mul, _root_.GlobalTheory.Mem.Col2.IdxEx.det_eq_one_of_mem_unip X.E _ _ r ⟨hr.1, hfix⟩, map_inv, mul_one, inv_mul_cancel]
   have hphi : ∀ x, PhiAt Ch mu cst.sharp i P.1 ((h⁻¹ * r * h).toLinearMap ∘ₗ x) =
       lamRow Ch mu cst.sharp (i + 1) P.1 (h⁻¹ * r * h).toLinearMap * PhiAt Ch mu cst.sharp i P.1 x := by
     intro x
@@ -331,10 +335,10 @@ theorem chiTriv_mid (hc : cst.Ok) (hs : cst.sharp = true) (hd : DegOneUnram P.1)
     change _ = r (Loc.xx1 xj' 0 (Loc.inX X.E _ _ v))
     rw [unfoldingAffinePointMap_apply_inclusion, hfix]
   have hn := intAt_n1Arg_of_mem hc hD (by omega) h2 hr
-  refine GlobalTheory.T.affine_eigenvalue_eq_one_of_boxSum_ne_zero X.E X.K P.1 hd _ _ R.m I T b _ (fun t => ?_) ?_
+  refine _root_.GlobalTheory.Proof.affine_eigenvalue_eq_one_of_boxSum_ne_zero.eigen_eq_one X.E X.K P.1 hd _ _ R.m I T b _ (fun t => ?_) ?_
   · have hT' : Loc.xx1 xj' (T t + b) = r.toLinearMap ∘ₗ Loc.xx1 xj' t := (hT t).symm
     unfold integrand chiInv
-    rw [hT', hom, GlobalTheory.T.unfoldingCharArg_mul_left_unipotent X.E _ _ _ _ hc1 hc2 r hr.1]
+    rw [hT', hom, _root_.GlobalTheory.Proof.unfoldingCharArg_mul_left_unipotent.chArg_left X.E _ _ _ _ hc1 hc2 r hr.1]
     by_cases h0 : omPhi Ch sel mu cst i P hal h (Loc.xx1 xj' t) = 0
     · simp [h0]
     · rw [neg_add, hc.psi_add P _ _ (by simpa using IndefiniteRowSideFullHecke.SourceLatticeInvariance.intAt_neg (b2 _ h0)) (by simpa using IndefiniteRowSideFullHecke.SourceLatticeInvariance.intAt_neg hn),
@@ -369,7 +373,7 @@ theorem rep_one (j : ℕ) (P : HeightOneSpectrum (𝓞 X.E)) : Rep Pr j P (1 : A
 theorem Rep.int {j : ℕ} {P : HeightOneSpectrum (𝓞 X.E)} {h : AutY X R j} (H : Rep Pr j P h) (sharp : Bool) :
     prCat (Pr := Pr) sharp j P h ≤ GLint X.E (R.N j) P := by
   by_cases hP : P ∈ Pr.vGs
-  · exact GlobalTheory.T.projConjLevel_le_integralGL_at_typePrime X Pr R sharp j P hP h (H.1.1 hP)
+  · exact _root_.GlobalTheory.Mem.Col2.IdxEx.prCat_le_GLint X Pr R sharp j P hP h (H.1.1 hP)
   · exact GlobalTheory.Proof.parahoric_le_integral_gl.prCat_le_GLint X Pr R sharp j P hP h (H.2 hP)
 
 theorem exists_step (hc : cst.Ok) (hd : DegOneUnram P.1) (hD : P.1 ∉ Pr.vGs → 2 * (R.m - 1) + 1 ≤ cst.D P) {i : ℕ}
@@ -378,7 +382,7 @@ theorem exists_step (hc : cst.Ok) (hd : DegOneUnram P.1) (hD : P.1 ∉ Pr.vGs �
       (∀ h ∈ F, ∀ h' ∈ F, SameDC (Pr := Pr) cst.sharp (i + 1) P.1 h h' → h = h') ∧
       ∀ h, admitted Pr (i + 1) P.1 h → (∃ a ∈ A, FiniteSumNonzeroLargeDepth Ch sel mu cst i P a h) →
         ∃ h' ∈ F, SameDC (Pr := Pr) cst.sharp (i + 1) P.1 h' h := by
-  obtain ⟨ι, _, f, hf⟩ := GlobalTheory.T.admissibleRepresentatives_finite_level_cosets X Pr R cst.sharp (i + 1) P.1
+  obtain ⟨ι, _, f, hf⟩ := _root_.GlobalTheory.Mem.Col2.IdxFin.exists_finite_index_of_adm_cosets X Pr R cst.sharp (i + 1) P.1
   obtain ⟨F, a1, a2, a3, a4⟩ := exists_reps
     ⟨SameDC (Pr := Pr) cst.sharp (i + 1) P.1, sameDC_refl _ _ _, sameDC_symm, sameDC_trans⟩
     {h | admitted Pr (i + 1) P.1 h ∧ ∃ a ∈ A, FiniteSumNonzeroLargeDepth Ch sel mu cst i P a h}
@@ -388,8 +392,8 @@ theorem exists_step (hc : cst.Ok) (hd : DegOneUnram P.1) (hD : P.1 ∉ Pr.vGs �
       by_cases hP : P.1 ∈ Pr.vGs
       · exact ⟨h, sameDC_refl _ _ _ _, ⟨hh, fun e => (e hP).elim⟩, a, ha, hE⟩
       · obtain ⟨ρ, hρ, e, z, hz⟩ := GlobalTheory.QNormalShape.exists_shape
-          (GlobalTheory.Proof.lattice_normal_form_coordinates.latticeNormalFormCoord_of GlobalTheory.T.latticeNormalForm_modulo_unipotentSemidirect) X.E P.1 hd _ _ h
-        have hn := GlobalTheory.T.hasLatticeNormalForm_of_between X Pr R _ P.1 hP h ρ e z hρ (hh.2 hP) hz
+          (GlobalTheory.Proof.lattice_normal_form_coordinates.latticeNormalFormCoord_of _root_.GlobalTheory.Proof.latticeNormalForm_modulo_unipotentSemidirect.latticeNormalForm) X.E P.1 hd _ _ h
+        have hn := _root_.GlobalTheory.Proof.hasLatticeNormalForm_of_between.nf_of_between X Pr R _ P.1 hP h ρ e z hρ (hh.2 hP) hz
         have := hD hP
         refine ⟨ρ * h, sameDC_symm (sameDC_mul _ _ _ hρ), ⟨⟨fun e => (hP e).elim, fun _ => between_of_nf hP hn⟩, fun _ => hn⟩,
           a, ha, ?_⟩
@@ -528,12 +532,12 @@ theorem exists_chIdx_of_cst {G : ChGlob X R.m} (hd : ∀ P : rowSG Pr sel mu, De
     | zero =>
       rw [h0] at hh
       obtain rfl : h = 1 := hh
-      exact ⟨_, GlobalTheory.T.levelGroupReduction_stepZero_typePrime Ch sel mu cst ⟨w.1, Finset.mem_union_left _ w.2⟩ w.2 hs (hd _),
-        GlobalTheory.T.levelCharacter_stepZero_typePrime Ch sel mu cst ⟨w.1, Finset.mem_union_left _ w.2⟩ w.2 hs fun a => hpsi _ a w.2, fun _ => rfl⟩
+      exact ⟨_, _root_.GlobalTheory.Mem.ZeroGrp.grpG_zero Ch sel mu cst ⟨w.1, Finset.mem_union_left _ w.2⟩ w.2 hs (hd _),
+        _root_.GlobalTheory.Proof.levelCharacter_stepZero_typePrime.chrG_zero Ch sel mu cst ⟨w.1, Finset.mem_union_left _ w.2⟩ w.2 hs fun a => hpsi _ a w.2, fun _ => rfl⟩
     | succ i =>
       have hr := (hR _ _).2 h hh
-      obtain ⟨lev, a, b⟩ := GlobalTheory.T.exists_levelGroup_mod_typePrime Ch sel mu cst _ ⟨w.1, Finset.mem_union_left _ w.2⟩ h hc w.2 (hd _) (hr.1.1 w.2)
-        (hr.int _) (GlobalTheory.T.rowType_one_add_prime_smul_eq_one Ch mu _ _ _ (by have := hle _ _ h hh; omega)) (hmul _ _ h hh) (htriv _ _ h hh)
+      obtain ⟨lev, a, b⟩ := _root_.GlobalTheory.Mem.Col2.LevMod.exists_levG Ch sel mu cst _ ⟨w.1, Finset.mem_union_left _ w.2⟩ h hc w.2 (hd _) (hr.1.1 w.2)
+        (hr.int _) (_root_.GlobalTheory.Mem.Col2.IdxEx.Cong.lamRow_cong Ch mu _ _ _ (by have := hle _ _ h hh; omega)) (hmul _ _ h hh) (htriv _ _ h hh)
       exact ⟨lev, a, b, fun e => by omega⟩
   have hlQ : ∀ j (w : {w // w ∈ QE sel (mu : Chr X.F X.E X.K)}), ∀ h ∈ F ⟨w.1, Finset.mem_union_right _ w.2⟩ j,
       ∃ lev : LevI X.E X.K (R.N j) w.1, GrpQ sel mu cst j ⟨w.1, Finset.mem_union_right _ w.2⟩ h lev ∧
@@ -543,7 +547,7 @@ theorem exists_chIdx_of_cst {G : ChGlob X R.m} (hd : ∀ P : rowSG Pr sel mu, De
     | zero =>
       rw [h0] at hh
       obtain rfl : h = 1 := hh
-      obtain ⟨a, b⟩ := GlobalTheory.T.level_stepZero_at_twistPrime_full Ch sel mu cst ⟨w.1, Finset.mem_union_right _ w.2⟩ (hdis _ w.2) hc
+      obtain ⟨a, b⟩ := _root_.GlobalTheory.Mem.Col2.IdxExZeroQ.zero_level Ch sel mu cst ⟨w.1, Finset.mem_union_right _ w.2⟩ (hdis _ w.2) hc
       exact ⟨_, a, b, fun _ => rfl⟩
     | succ i =>
       obtain ⟨lev, a, b⟩ := exists_levQ (hmul _ _ h hh) (htriv _ _ h hh)
@@ -676,7 +680,7 @@ theorem exists_chIdx {X : Fields} {Pr : Primes X} {R : Ranks} (hX : X.Ok) (hPr :
     M A B Dq (by omega) hA hB hD (by omega) hsq hroot
   obtain ⟨L, b1, b2⟩ := IdxEx.exists_chIdx_of_cst (degOneUnram_rowSG hX hPr hsel mu)
     (fun P hP => IdxEx.notMem_vGs_of_mem_QE hX hPr hsel hS mu hP) a1 a3 (a4 ▸ hM) hxi a2 a7 a8 (tameHeckeCharLocal_eq_inv_typeCharacter hT) a9 a10 a11 a12
-  exact ⟨cst, L, a3, a4, a5, a6, a13, b1, b2, fun j b P hP => GlobalTheory.T.latticeNormalForm_via_matrix X Pr R j P.1 hP _ (b2 j b P hP)⟩
+  exact ⟨cst, L, a3, a4, a5, a6, a13, b1, b2, fun j b P hP => _root_.GlobalTheory.Mem.Col2.IdxEx.nf_matrix X Pr R j P.1 hP _ (b2 j b P hP)⟩
 
 end GlobalTheory.Mem.Col2
 

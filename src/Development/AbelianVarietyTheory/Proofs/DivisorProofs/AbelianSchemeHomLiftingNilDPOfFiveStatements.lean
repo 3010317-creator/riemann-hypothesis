@@ -7,7 +7,7 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.Abe
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianLifting
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianUnobstructed
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianLiftingOfDeRhamUnobstructed
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeDeRhamStructureOfCubeDualPoincareStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeDeRhamStructureOfCubeDualPoincare
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeSquareZeroLiftsOfDeRhamCohomologyStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -53,4 +53,4 @@ theorem GlobalTheory.SqLift.abelianLifting_of_known_theorems :
       GlobalTheory.Published.PoincareDeRhamDuality → GlobalTheory.Published.AbelianUnobstructed →
       GlobalTheory.Published.AbelianLifting :=
   fun a b c d e =>
-    GlobalTheory.SqLift.abelianLifting_of_schemeLifts (GlobalTheory.T.abelianSchemeDeRhamStructure_of_cube_dual_poincare a b c d) (GlobalTheory.T.abelianSchemeSquareZeroLifts_of_deRhamCohomology a) e
+    GlobalTheory.SqLift.abelianLifting_of_schemeLifts (_root_.GlobalTheory.abelianDeRham_of_hodge_cube_dual_poincare a b c d) (GlobalTheory.T.abelianSchemeSquareZeroLifts_of_deRhamCohomology a) e

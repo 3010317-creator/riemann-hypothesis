@@ -2,11 +2,17 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EvalMod
 public import GroundTheory.PAdicHodge.UnramifiedClosure
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GaloisActionPeriodProductStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HodgeTateCharacterWeightStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PeriodProductFiltrationLevelsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SenPeriodFiniteExtensionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SenUnramifiedCharacterPeriodStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GaloisActionPeriodProduct
+public import Development.WeilBound.CoreStatements.CrystallinePeriodRings.InstCommRingBcris
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HodgeTateCharacterWeight
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PeriodProductFiltrationLevels
+public import GroundTheory.PAdicHodge.LocalBridge
+public import GroundTheory.PAdicHodge.NormalizedTraceTower
+public import GroundTheory.PAdicHodge.SenTateCharTower
+public import GroundTheory.PAdicHodge.TateCpTwist
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SenPeriodFiniteExtension
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SenUnramifiedCharacterPeriod
 import GroundTheory.PAdicHodge.BdRTGalois
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -98,14 +104,14 @@ theorem exact_degrees_of_product : ∀ {l : ℕ} [Fact l.Prime] (K : FinExt l) (
       (GroundTheory.PAdicHodge.untilt_epsilon (p := l))
     have h3 := h2.symm.trans h1
     exact (algebraMap ℚ_[l] (Formalism.Per6.BdRp l)).injective (mul_right_cancel₀ htirr.ne_zero h3)
-  have hn : n = 1 := GlobalTheory.T.hodge_tate_character_weight L (GlobalTheory.T.sen_period_finite_extension GlobalTheory.T.sen_unramified_character_period L) u n
+  have hn : n = 1 := _root_.GlobalTheory.CompanionTheory.LTPer.eq_one_of_tpow_mul_unit_eigen L (_root_.GlobalTheory.CompanionTheory.LTPer.cycloChar_inertia_image_infinite _root_.GlobalTheory.CompanionTheory.LTPer.exists_pow_eigenvector_of_unramified_units L) u n
     (fun σ => Algebra.norm ℚ_[l] ((χ ⟨res σ, hres σ⟩ : (↥K.1)ˣ) : ↥K.1))
     (fun σ => by
       rw [← hTu']
-      exact GlobalTheory.T.galois_action_period_product K χ t s hs ht (res σ) (hres σ) fun μ x => hresv σ ⟨μ x, hμL μ x⟩)
+      exact _root_.GlobalTheory.CompanionTheory.LTPer.actB_prod_periods K χ t s hs ht (res σ) (hres σ) fun μ x => hresv σ ⟨μ x, hμL μ x⟩)
     (fun σ hσ => (hN (res σ) (hres σ) hσ).trans (hcyc σ))
   subst hn
   intro μ
-  exact GlobalTheory.T.period_product_filtration_levels s t K.1.val (hs _) u (by rw [hTu', pow_one]) ((ht _).2.2 rfl) μ (hs μ)
+  exact _root_.GlobalTheory.CompanionTheory.LTPer.prod_eq_t_mul_unit_count s t K.1.val (hs _) u (by rw [hTu', pow_one]) ((ht _).2.2 rfl) μ (hs μ)
 
 end GlobalTheory.CompanionTheory.LTPer

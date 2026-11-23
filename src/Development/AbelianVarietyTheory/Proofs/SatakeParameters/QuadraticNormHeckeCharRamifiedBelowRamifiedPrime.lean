@@ -3,13 +3,14 @@ module
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PublishedTheorems.CyclicBaseChangeC
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsQuadCharOfOfIsNormChar
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteGaloisInertiaLiftsAbsoluteInertiaRat
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DenseRangeUnits
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsPadicAlgClRingEquivComplexCompEqOfCountabl
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GlobalArtinReciprocityHolds
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeCharacterUnramifiedAeAndExistsLevel
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
+public import CompanionTheory.AutomorphicTheory.PlaceSeparation.IsOpenQuotientMapArt0
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsOpenKerOfInfConn
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.AdTransfer
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.FrobeniusPowerCompatibility
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DenseRangeUnits
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeCharacterUnramifiedAeAndExistsLevel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,7 +61,7 @@ theorem not_unrAt_of_ramified : ∀ (K M : Type) [Field K] [NumberField K] [Fiel
     Module.finrank K M = 2 → ∀ η : HChar K, IsNormChar M η → ∀ w : HeightOneSpectrum (𝓞 M),
     ¬ Algebra.IsUnramifiedAt (𝓞 K) w.asIdeal → ¬ η.UnrAt (w.under (𝓞 K)) := by
   intro F E _ _ _ _ _ h2 η hη w hram hu
-  have hGAR : GlobalTheory.Published.GlobalArtinReciprocity := GlobalTheory.globalArtinReciprocity_holds
+  have hGAR : GlobalTheory.Published.GlobalArtinReciprocity := _root_.CompanionTheory.FamInh.globalArtin
   obtain ⟨hne, hpow, hsplit⟩ := hη
   rw [h2] at hpow
   let Ω := AlgebraicClosure E

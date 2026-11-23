@@ -2,7 +2,8 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FirstOrderPointsCommuteStatement
+public import Mathlib.CategoryTheory.Monoidal.Cartesian.Grp
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FirstOrderPointsCommute
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -169,7 +170,7 @@ theorem tan_local (G : Over S) [GrpObj G] [IsLocalRing B] (φ : C →+* B) (y : 
     rw [hmul]; exact top_le_comp _ _ U hvw
   have hx1 : ⊤ ≤ (1 : Over.mk (spMap (algebraMap B (DualNumber B)) ≫ spMap φ ≫ y) ⟶ G).left ⁻¹ᵁ U := by
     rw [hone]; exact top_le_comp _ _ U h1
-  have key := GlobalTheory.T.first_order_points_commute S G B (spMap φ ≫ y) (DualNumber B) (algebraMap B (DualNumber B)) (epsIdeal B)
+  have key := _root_.GlobalTheory.CompanionTheory.Ar.sqzero_add S G B (spMap φ ≫ y) (DualNumber B) (algebraMap B (DualNumber B)) (epsIdeal B)
     epsIdeal_sq (restr φ y ≫ v) (restr φ y ≫ w) (red_restr G φ y v tv) (red_restr G φ y w tw) U hxv hxw hxvw hx1 s
   rw [map_add (f := _), map_add (f := _),
     appTop_appLE (spMap (dualMap φ)) _ _ hmul U hvw hxvw s,

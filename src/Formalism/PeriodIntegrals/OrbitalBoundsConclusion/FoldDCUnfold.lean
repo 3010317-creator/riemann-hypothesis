@@ -1,7 +1,8 @@
 module
 
 public import Formalism.PeriodIntegrals.FoldDCUnfold
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.FoldUnfold
+public import Formalism.PeriodIntegrals.FoldUnfold
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.UnfoldingIdentity.FoldUnfoldMain
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FoldingUnfolding.DoubleCosetTranslation
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FoldingUnfolding.FoldDCUnfoldOf
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FoldingUnfolding.TranslationIndependent
@@ -50,4 +51,4 @@ import Mathlib.Topology.Sheaves.Init
 theorem fold_dc_unfold : PI.FoldDCUnfold.FoldDCUnfold :=
   PI.FoldDCUnfold.W.foldDCUnfold_of PI.FoldDCUnfold.W.translation_exists
     PI.FoldDCUnfold.W.translation_independent PI.FoldDCUnfold.W.translation_product
-    PI.FoldDCUnfold.W.double_coset_translation lintegralTransversalSum
+    PI.FoldDCUnfold.W.double_coset_translation _root_.PI.FoldUnfold.UnitaryGroupMassFormula.foldUnfold_main

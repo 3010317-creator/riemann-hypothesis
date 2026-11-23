@@ -3,17 +3,21 @@ module
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.Pull1
 public import GroundTheory.HeightsAndTheta.Heights.Intersections.StatementsFibreLocal
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AgreementPositiveStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AnalyticSquareRegularizedConvergenceStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.AnalyticSystemRegularityProperties
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LogSineMongeAmpereIntegralStatement
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.AgreementPos
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AgreementPositive
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AnalyticSquareRegularizedConvergence
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.InFlagDomainOne
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import ReciprocityTheory.AnalyticForms.MaIntEmpty
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LogSineMongeAmpereIntegral
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MongeAmpereIntegralMultilinearExpansion
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MongeAmpereIntegralParametrizedCover
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MongeAmpereSingularTotalMassDegree
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PolarIdentityFromSymmetricFormsStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SquareParametrizedDensityFormulaStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PolarIdentityFromSymmetricForms
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SquareParametrizedDensityFormula
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SquarePolarIntegralIdentity
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SquareSystemPolarVanishingStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SquareSystemPolarVanishing
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.AnalyticSystemRegularityProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -89,13 +93,13 @@ theorem thmA_limit : Inputs → GroundTheory.Heights₂.Heights.Inter.FibreLocal
   intro hI hF II hII K _ ι _ d σ _ SY P Re a₀ ε Q c hc u
   have hpos : 0 < SY.t₀ := (SY.reg a₀).1
   have hposW : 0 < Q.an.SW.t₀ := (Q.an.SW.reg none).1
-  obtain ⟨C₃, s₀, -, hAg⟩ := GlobalTheory.T.agreement_positive hI (d + 1) σ SY 0 hpos
+  obtain ⟨C₃, s₀, -, hAg⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.agreementPos hI (d + 1) σ SY 0 hpos
   have hlim := (hAg II hII K ι P Re).1
   have hev : ∀ᶠ t in 𝓝[>] (0 : ℝ), 0 < t ∧ t ≤ Q.an.SW.t₀ := by
     filter_upwards [Ioc_mem_nhdsGT hposW] with t ht using ⟨ht.1, ht.2⟩
-  refine GlobalTheory.T.polar_identity_from_symmetric_forms σ (d + 1) (Re.limNum II) SY.degNum kappa ε a₀ (Re.limNum_perm hII hpos)
+  refine _root_.GlobalTheory.CompanionTheory.Ar.PB.coefficient_identities_give_operator_identity σ (d + 1) (Re.limNum II) SY.degNum kappa ε a₀ (Re.limNum_perm hII hpos)
     SY.degNum_perm (fun n hn => ?_) c hc u
-  have hsq := GlobalTheory.T.square_system_polar_vanishing hI II hII K ι d σ SY P Re a₀ ε Q n hn
+  have hsq := _root_.GlobalTheory.CompanionTheory.Ar.PB.first_half_at_scale hI II hII K ι d σ SY P Re a₀ ε Q n hn
   refine ⟨?_, fun k hk hk2 => ?_⟩
   · have h1 := tendsto_polar (fun _ (x : σ) => (n x : ℝ)) hlim
     have h2 : Tendsto (fun t => polar (d + 2) (Re.num II t) fun _ (x : σ) => (n x : ℝ)) (𝓝[>] 0) (𝓝 0) :=
@@ -109,7 +113,7 @@ theorem thmA_limit : Inputs → GroundTheory.Heights₂.Heights.Inter.FibreLocal
           (fun w => mInt Q.an.SW.A (fun r => Q.an.SW.potH (w r)) Q.an.gH)
           (Q.an.wcoef (fun a => (n a : ℝ)) k i))) :=
       (tendsto_finsetSum _ fun i _ => tendsto_polar _ fun w =>
-        (GlobalTheory.T.analytic_square_regularized_convergence hI d σ SY a₀ ε Q.an w).2).neg
+        (_root_.GlobalTheory.CompanionTheory.Relay.analytic_square_regularized_convergence hI d σ SY a₀ ε Q.an w).2).neg
     have h3 := tendsto_nhds_unique (h1.congr' (hev.mono fun t ht => (hsq t ht.1 ht.2).2 k hk hk2)) h2
     let square := Q.an
     let coeff : σ → ℝ := fun a => (n a : ℝ)
@@ -120,7 +124,7 @@ theorem thmA_limit : Inputs → GroundTheory.Heights₂.Heights.Inter.FibreLocal
           (square.wcoef coeff k i) =
         2 * kappa k * polar (d + 1) SY.degNum (mix (2 * k - 1) (fun a => (ε a : ℝ)) coeff) := by
       have hSquareLim :=
-        GlobalTheory.T.analytic_square_regularized_convergence hI d σ SY a₀ ε square
+        _root_.GlobalTheory.CompanionTheory.Relay.analytic_square_regularized_convergence hI d σ SY a₀ ε square
       obtain ⟨-, hnW, hC2W, -, -⟩ := anSys_open_basics (d + 2) (Option σ) square.SW
       obtain ⟨-, hnY, hC2Y, -, -⟩ := anSys_open_basics (d + 1) σ SY
       have hhom (w : Fin (d + 1) → σ) :
@@ -180,7 +184,7 @@ theorem thmA_limit : Inputs → GroundTheory.Heights₂.Heights.Inter.FibreLocal
               (fun r => sumPot (mix (2 * k - 1) (fun a => (ε a : ℝ)) coeff r) SY.potH) (square.ΦY n) z := by
         intro n
         let α : (Fin d → ℂ) → ℝ := fun y => ∑ a, coeff a * square.α n a y
-        have hd := GlobalTheory.T.square_parametrized_density_formula d σ SY a₀ ε square coeff hcoeff n k hk hk2
+        have hd := _root_.GlobalTheory.CompanionTheory.Relay.square_parametrized_density_formula d σ SY a₀ ε square coeff hcoeff n k hk hk2
         have hmW : MeasurableSet {z : Fin (d + 2) → ℂ | Fin.tail (Fin.tail z) ∈ square.B n} := (square.coverW.2.1 n).1
         have hmY : MeasurableSet {z : Fin (d + 1) → ℂ | Fin.tail z ∈ square.B n} := (square.coverY.2.1 n).1
         let F : ℕ → (Fin (d + 2) → ℂ) → ℝ := fun i z =>
@@ -213,7 +217,7 @@ theorem thmA_limit : Inputs → GroundTheory.Heights₂.Heights.Inter.FibreLocal
           have hyU : y ∈ square.U n := (square.B_meas n).2 hy
           have hnh : square.U n ∈ 𝓝 y := (square.U_open n).mem_nhds hyU
           have h2 : (2 : WithTop ℕ∞) ≤ ((⊤ : ℕ∞) : WithTop ℕ∞) := ENat.LEInfty.out
-          exact GlobalTheory.T.log_sine_monge_ampere_integral hF d k hk hk2 (square.G n) α y
+          exact _root_.GlobalTheory.CompanionTheory.Ar.PB.FibPt.fibre_integral_any_frame hF d k hk hk2 (square.G n) α y
             (by filter_upwards [hnh] with y' hy' using square.G_pos n y' hy')
             (fun p q => ((square.G_smooth n p q).contDiffAt hnh).of_le h2)
             (ContDiffAt.sum fun a _ => contDiffAt_const.mul (((square.α_smooth n a).contDiffAt hnh).of_le h2))

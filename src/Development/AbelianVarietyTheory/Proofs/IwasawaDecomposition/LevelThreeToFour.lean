@@ -8,7 +8,8 @@ public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StarCoeffOfEqReverse
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LabelEqOfMemSuppSpan
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsColsTiedSym
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsDiscreteSeriesFormalDegreeProductStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.CdScaleTieIff
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsDiscreteSeriesFormalDegreeProduct
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsSpectralObjectsOverReplacedStagesStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RangeEEAndNorm
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueScaleIsScale
@@ -132,11 +133,11 @@ theorem realOf (h1 : Vol.DiscreteSeriesExist) (h2 : Vol.FormalDegreeFormula₂) 
   · intro τ
     unfold Formalism.L2.Theta.IsDsig
     rw [hs, hd τ]
-    exact (GlobalTheory.T.exists_discreteSeries_formalDegree_product h1 h2 D.cd D.R (D.hc τ)).1
+    exact (_root_.GlobalTheory.Mem.Vol.exists_isDS_isFdeg_trueDsig h1 h2 D.cd D.R (D.hc τ)).1
   · intro τ H _ _ σ d hσ hf
     rw [hs] at hf
     rw [hd τ]
-    exact (GlobalTheory.T.exists_discreteSeries_formalDegree_product h1 h2 D.cd D.R (D.hc τ)).2 H σ d hσ hf
+    exact (_root_.GlobalTheory.Mem.Vol.exists_isDS_isFdeg_trueDsig h1 h2 D.cd D.R (D.hc τ)).2 H σ d hσ hf
 
 theorem goodIdempotent_real_of_harishChandra_series (D : D7) (h : GlobalTheory.GLq.ESerTie D) : IdempotentRealFixed D :=
   GlobalTheory.GoodIdemReal.star_coeff_of_reverse D fun k g hm h0 x => by

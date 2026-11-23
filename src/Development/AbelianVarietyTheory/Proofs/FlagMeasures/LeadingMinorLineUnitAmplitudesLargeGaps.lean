@@ -4,27 +4,30 @@ public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UniqG
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DegVand
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TorusNormaliserBessel
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.FamilySetupBesselGrowthStatement
-import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.HaarEqSmul
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.PieriTensorDecompositionStatement
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.TensorMomentEstimateStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeEqSmulNormalisedAmplitudeLargeGapStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeLocalDataMomentPieriHypothesesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudePieriRelevantCellLargeGapStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudePieriRelevantCellLargeGap
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeSizeConsequencesOfWordIndependentHyps
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudesRelevantCellMonomialRepStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselExteriorPowerConstantBoundLargeGapStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DatumDegreeEqMulFormalDegreeGap
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsGoodLocalDatumOfNonzeroPeriodsGapStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUnitaryTorusScaleBesselCharacter
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FamiliesHaveLargeGapOfNumericalHypothesesStatement
+public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.IsDSOfIsDG
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FirstNormAddSubsetIndicatorLe
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagWedgeFixedAndLengthEqProdDistancesStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OpenCellAmplitudeNormEqConstDivDegreeLargeGap
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TrivialWedgeDecompositionDiscreteSeriesLargeGaps
+import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.HaarEqSmul
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUnitaryTorusScaleBesselCharacter
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FamiliesHaveLargeGapOfNumericalHypotheses
+import Development.AbelianVarietyTheory.Definitions.Jets.SumIoPrAlt
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagWedgeFixedAndLengthEqProdDistances
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarLieIsHaarOnUnipotentRadicalStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MomentPieriNumericsOfSizeHypsStatement
+import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.OnePlaceKF
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MomentPieriNumericsOfSizeHyps
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalizedBesselMapsAnyScalePieriConstants
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OpenCellAmplitudeNormEqConstDivDegreeLargeGapStatement
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PairingEqLeadingMinor
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TrivialWedgeDecompositionDiscreteSeriesLargeGapsStatement
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.AbsCoordLeOfLOneNormLe
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DiscreteSeriesUnitarySmoothBasic
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IsFRepExteriorPowerStandardRep
@@ -225,10 +228,10 @@ theorem line_of_tens (hH : GlobalTheory.GapIn.Hyp) (hKF : GlobalTheory.GapIn.Amp
   have hc0 : ((2 * D.host.ka / ((D.host.g 0 : ℝ) * (D.host.g 1 : ℝ)) : ℝ) : ℂ) ≠ 0 := by
     rw [Complex.ofReal_ne_zero, mul_div_assoc]
     exact (mul_pos two_pos hka).ne'
-  have key := GlobalTheory.T.amplitude_pieri_relevantCell_largeGap hH hKF hCC D.R.k D.R.rS _ _ (cmp l) (cmp l (Hpk D.R.k D.R.rS)) l
+  have key := _root_.GlobalTheory.CellPieriG.amp_pieri hH hKF hCC D.R.k D.R.rS _ _ (cmp l) (cmp l (Hpk D.R.k D.R.rS)) l
     (toBessel D τ w w' θ W lam A₀ hW hA₀ hT hT') R RI io pr ep lam lamI h W.μG _ _ B B' BI BI' w0 wI κ₀ κ₁
     hDS hg hDI hok hgc hc0 ENNReal.ofReal_ne_top hW.2.2.2.2.2.2.1 (GlobalTheory.WedgeFRep.isFRep_cmp _ _ l) hTH
-    (GlobalTheory.T.flagWedge_fixed_and_length_eq_prod_distances _ _ l hl W.z hW.2.2.1).1 (GlobalTheory.T.flagWedge_fixed_and_length_eq_prod_distances _ _ l hl W.z' hW.2.2.2.1).1 e1 e2
+    (_root_.GlobalTheory.FlagPartialWedge.fixes_partial_wedge_and_length _ _ l hl W.z hW.2.2.1).1 (_root_.GlobalTheory.FlagPartialWedge.fixes_partial_wedge_and_length _ _ l hl W.z' hW.2.2.2.1).1 e1 e2
     (fun I => ⟨eI1 I, eI2 I⟩) n1 n2 hw0 hwI hκ g₀ μR ν₀ ν hcell
   rw [GlobalTheory.PrincipalMinorExterior.pairing_eq_leading_minor, hd _ (ne_zero_of_low hw0)] at key
   have hDm : DminN W.z W.z' g₀ l =
@@ -300,7 +303,7 @@ omit [FiniteDimensional ℂ Wp] in
 theorem setupG_of {lam u b bv ga h R l dg}
     (hS : Setup (k := k) (r := r) lam u b bv ga h q0 z π μW μN μG νq R l dg) :
     SetupG (k := k) (r := r) lam u b bv ga h q0 z π μW μN μG νq R l dg :=
-  (GlobalTheory.T.families_have_largeGap_of_numericalHypotheses.2 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _).1 hS
+  (_root_.GlobalTheory.GapSetup.families_gap.2 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _).1 hS
 
 theorem side_kappa (hH : GlobalTheory.GapIn.Hyp) (ht : t ∈ GG k r) {lam u u' b bv ga h F F' l₁ m₁ dg dg'}
     {μN' : Measure (Mt k r)}
@@ -334,7 +337,7 @@ theorem side_kappa (hH : GlobalTheory.GapIn.Hyp) (ht : t ∈ GG k r) {lam u u' b
     obtain ⟨v, hv, hv0⟩ := hnz
     exact ⟨_, sig_sm hU (inv_mem ht) (hb.2.2.2.2.1 v (hb.2.2.2.2.2.2.1 v hv)), hv0⟩
   obtain ⟨⟨κ₁, hκ⟩, hdual⟩ := Gp91.GlobalTheory.T.bessel_tensor_projection_scalar_and_adjoint hH.1 k r _ _ _ _ l _ _ io pr ep _ _ _ Wp z π u μW μN' μG _ _
-    (l₁ ν) hRG hRIG (GlobalTheory.WedgeFRep.isFRep_cmp k r l) hT hS.2.2.1 (GlobalTheory.T.flagWedge_fixed_and_length_eq_prod_distances k r l hl z hS.2.2.1.1).1
+    (l₁ ν) hRG hRIG (GlobalTheory.WedgeFRep.isFRep_cmp k r l) hT hS.2.2.1 (_root_.GlobalTheory.FlagPartialWedge.fixes_partial_wedge_and_length k r l hl z hS.2.2.1.1).1
     (hS.2.2.2 ν hν0).1 hnz' I (m₁ _) (hS'.2.2.2 _ (firstNorm_add_subsetIndicator_le hνl I)).1
   have hnI : κ₁ ≠ 0 → NzOn (F' (ν + eZ I.1)) (m₁ (ν + eZ I.1)) := by
     intro h0
@@ -375,7 +378,7 @@ theorem tens_zero : HypsG → ∀ (k r : ℕ) (lam : Fin (2 * r + k + 1) → ℝ
     (F F' : (Fin (2 * r + k + 1) → ℤ) → Rep k r) (ν : Fin (2 * r + k + 1) → ℤ), Num k r lam u b bv ga h q0 →
     IsFamG lam q0 F → IsFamG lam q0 F' → n1 ν + 2 ≤ q0 →
     ∃ io pr ep, TensH (cmp 0) (cmp 0 (Hpk k r)) (F ν) (fun I : Sub (2 * r + k + 1) 0 => F' (ν + eZ I.1)) io pr ep :=
-  GlobalTheory.T.trivialWedgeDecomposition_discreteSeries_largeGaps
+  _root_.GlobalTheory.TrivWedge.tensH_trivial
 
 theorem exists_fams (hH : GlobalTheory.GapIn.Hyp) {lam : Fin (2 * r + k + 1) → ℝ}
     (hlam : ∀ ν : Fin (2 * r + k + 1) → ℤ, n1 ν ≤ q0 → IsHCParam fun a => lam a + (ν a : ℝ))
@@ -415,7 +418,7 @@ theorem exists_fams (hH : GlobalTheory.GapIn.Hyp) {lam : Fin (2 * r + k + 1) →
 theorem minor_line : GlobalTheory.GapIn.Hyp → GlobalTheory.GapIn.AmpKF0 → CellConv → ∀ Cg cb Cu cT CT C0 C1 : ℝ, ∃ C : ℝ, ∀ Cn : ℝ, ∃ m₀ : ℝ, ∀ (D : D7) (large₂ : SizeData₂ D) (C' Cl : ℝ), 1000 ≤ Cl → Big D large₂ Cl m₀ → cdScaleTie D → HypZ D large₂ C' Cl Cg cb Cu cT CT C0 → ∀ τ w w', HypTT D w w' → ∀ θ, normWin D large₂ C1 θ → ∀ W, GoodW D τ w w' θ W → ∀ lam', l1dist lam' (lamD D τ) ≤ Cn * D.R.k * (D.R.m : ℝ) ^ 3 → ∀ A₀ : LocS W, GoodS D lam' A₀ → ∀ l : ℕ, l ≤ D.R.rS + 1 → ∃ s : ℝ, (s = 1 ∨ s = -1) ∧ ∀ AI : Finset (Fin (2 * D.R.rS + D.R.k + 1)) → LocS W, (∀ I, I.card = l → (∃ A : LocS W, GoodS D (lam' + s • epsI I) A) → GoodS D (lam' + s • epsI I) (AI I)) → ∃ a : Finset (Fin (2 * D.R.rS + D.R.k + 1)) → ℂ, (∀ I, I.card = l → (¬ ∃ A : LocS W, GoodS D (lam' + s • epsI I) A) → a I = 0) ∧ (∑ I ∈ univ.filter (fun I => I.card = l), ‖a I‖) ≤ large₂.sc.b ^ (C * (D.R.m : ℝ) ^ 2) ∧ ∀ μsec, IsSection D.R.k D.R.rS W.z W.z' μsec → ∀ γ p, RelPt D W.z W.z' γ p → ∀ θ', normWin D large₂ C1 θ' → ∀ νR, RMeas D W γ θ' νR → DminN W.z W.z' γ l • jhUnit D w w' A₀ μsec νR γ = ∑ I ∈ univ.filter (fun I => I.card = l), a I • jhUnit D w w' (AI I) μsec νR γ := by
   intro hH hKF hCC Cg cb Cu cT CT C0 C1
   refine ⟨2 * (2 * Cg + 2) + 2 * (|CT| + 20 * max 2 Cu) + 2 * max 2 Cu, fun Cn => ?_⟩
-  obtain ⟨m₁, hJ⟩ := GlobalTheory.T.openCellAmplitudeNorm_eq_const_div_degree_largeGap hH hKF hCC Cg cb Cu cT CT C0 C1 (Cn + 1)
+  obtain ⟨m₁, hJ⟩ := _root_.GlobalTheory.Amp.OpenCellNormGap.norm_eq_const_div_deg_gap hH hKF hCC Cg cb Cu cT CT C0 C1 (Cn + 1)
   refine ⟨max m₁ (Cn + 1), fun D large₂ C' Cl hCl hBig hcd hZ τ w w' hTT θ hθw W hW lam' hlam A₀ hA₀ l hl =>
     ⟨1, Or.inl rfl, fun AI hAI => ?_⟩⟩
   classical
@@ -439,7 +442,7 @@ theorem minor_line : GlobalTheory.GapIn.Hyp → GlobalTheory.GapIn.AmpKF0 → Ce
   have hm2 : (D.R.m : ℝ) ^ 2 ≤ D.R.k * (D.R.m : ℝ) ^ 3 := by
     have : (D.R.m : ℝ) ^ 2 ≤ (D.R.m : ℝ) ^ 3 := pow_le_pow_right₀ (by linarith) (by norm_num)
     nlinarith [pow_nonneg (show (0 : ℝ) ≤ D.R.m by linarith) 3]
-  obtain ⟨hNum, hgc, heps⟩ := GlobalTheory.T.momentPieriNumerics_of_sizeHyps D large₂ C' Cl Cg cb Cu cT CT C0 hZ hCl τ w
+  obtain ⟨hNum, hgc, heps⟩ := _root_.GlobalTheory.SizeNum.num_of_size D large₂ C' Cl Cg cb Cu cT CT C0 hZ hCl τ w
     (fun n => if h : n - 1 < D.R.k then uS D w τ ⟨n - 1, h⟩ else 0) (fun i => by simp)
   obtain ⟨⟨hbv, hbv', hnb, -, hok⟩, hnum⟩ := GlobalTheory.NumFam.num_fam _ _ _ _ _ _ _ _ _ hNum
   obtain ⟨ν, rfl⟩ : ∃ ν : Fin (2 * D.R.rS + D.R.k + 1) → ℤ, lam' = fun a => lamD D τ a + (ν a : ℝ) := by

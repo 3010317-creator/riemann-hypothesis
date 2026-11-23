@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.Alternates
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.JumpsMemBoxNegMHStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TwistedDualJumpsMemWindowsStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.JumpsMemBoxNegMH
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TwistedDualJumpsMemWindows
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TwistedDualOrbitPageWordBoxStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -51,9 +51,9 @@ theorem pageWord_T1_and_J1_mem_window_of_roomy : ∀ {D : D7} (L : SizeData₂ D
   intro D L C j ε τ φ hR
   have hT : (pageWord L j ε τ φ).T1 := by
     intro i u hu
-    exact GlobalTheory.T.twistedDualJumps_mem_windows (hcAt D (letter τ φ i)) j (pos ε (letter τ φ i)) L.Sc L.etaSz
+    exact _root_.GlobalTheory.jT1_mem_window_of_bounded_v (hcAt D (letter τ φ i)) j (pos ε (letter τ φ i)) L.Sc L.etaSz
       (fun a => L.cloud_v _ a) (fun a => L.be_close _ a j) u hu
-  refine ⟨hT, GlobalTheory.T.jumps_mem_box_neg_M_h _ (fun i => ?_) hT⟩
+  refine ⟨hT, _root_.GlobalTheory.HTW.WordData.jumps_mem_box _ (fun i => ?_) hT⟩
   have h := (GlobalTheory.T.twistedDualOrbitPageWord_box L C j ε τ φ hR).2.2.2.2.2 i
   exact le_trans (Int.natCast_nonneg _) h.le
 

@@ -1,13 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EndValuedForm11Coeffs
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLogCutoffCoordinateHyperplanesPoincareBounStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.InterPolyProdSum
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLogCutoffCoordinateHyperplanesPoincareBoun
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegrableOnOffCoordinateHyperplanesOfPoincareBoStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralDbarJacobianDetEqZeroOfCompactSupportStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenOffCoordinateHyperplanesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormDetLeOfWeightedEntryBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PoincareCoordinateLengthMemIccAndPosStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PoincareVolumeIntegrableOnCompactPuncturedPolydiStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralDbarJacobianDetEqZeroOfCompactSupport
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenOffCoordinateHyperplanes
+public import Mathlib.Analysis.Complex.Norm
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormDetLeOfWeightedEntryBound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PoincareCoordinateLengthMemIccAndPos
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PoincareVolumeIntegrableOnCompactPuncturedPolydi
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -85,11 +88,11 @@ theorem integral_det_dbar_eq_zero_of_poincare : ∀ {n : ℕ} (S : Finset (Fin n
     IntegrableOn (fun v => (Matrix.of fun i b => dbar (f i) v (coordVec b)).det) (offHyp S U) ∧
       ∫ v in offHyp S U, (Matrix.of fun i b => dbar (f i) v (coordVec b)).det = 0 := by
   intro n S U K f j u c hU hK hKU hsmall hf hf0 hfb hdb
-  have hΩ : IsOpen (offHyp S U) := GlobalTheory.T.isOpen_offCoordinateHyperplanes S U hU
+  have hΩ : IsOpen (offHyp S U) := _root_.GlobalTheory.GoodTop.isOpen_offHyp_of_isOpen S U hU
   have hΩm : MeasurableSet (offHyp S U) := hΩ.measurableSet
   have hKc : IsClosed K := hK.isClosed
   have hwt : ∀ v ∈ offHyp S U, ∀ a, 0 < poinWt S v a := fun v hv =>
-    (GlobalTheory.T.poincareCoordinateLength_mem_Icc_and_pos S v (hsmall v hv.1)).2 hv.2
+    (_root_.GlobalTheory.GoodTop.poinWt_mem_Icc_and_pos S v (hsmall v hv.1)).2 hv.2
   have hoff : ∀ g : Fin n → V n → ℂ, (∀ v ∈ offHyp S U, v ∉ K → g j v = 0) → ∀ v ∈ offHyp S U, v ∉ K →
       (Matrix.of fun i b => dbar (g i) v (coordVec b)).det = 0 := fun g hg v hv hvK =>
     det_dbar_eq_zero_of_row j (Filter.eventually_of_mem ((hΩ.sdiff hKc).mem_nhds ⟨hv, hvK⟩)
@@ -98,11 +101,11 @@ theorem integral_det_dbar_eq_zero_of_poincare : ∀ {n : ℕ} (S : Finset (Fin n
       ‖dbar (g i) v (coordVec b)‖ * (poinWt S v (u i) * poinWt S v b) ≤ c') → ∀ v ∈ offHyp S U, v ∈ K →
       ‖(Matrix.of fun i b => dbar (g i) v (coordVec b)).det‖ ≤
         (n.factorial : ℝ) * |c'| ^ n * ∏ a, (poinWt S v a)⁻¹ ^ 2 :=
-    fun g c' h v hv hvK => GlobalTheory.T.norm_det_le_of_weighted_entry_bound _ u _ c' (hwt v hv) (h v hv hvK)
+    fun g c' h v hv hvK => _root_.GlobalTheory.GoodTop.norm_det_le_of_weighted _ u _ c' (hwt v hv) (h v hv hvK)
   have hint := GlobalTheory.T.integrableOn_offCoordinateHyperplanes_of_poincareBound S U K (fun v => (Matrix.of fun i b => dbar (f i) v (coordVec b)).det) _ hU hK hKU hsmall
     (continuousOn_det_dbar hΩ hf) (hoff f hf0) (hbd f c hdb)
   refine ⟨hint, ?_⟩
-  obtain ⟨C, χ, hχs, hχ01, hχ0, hχ1, hχd⟩ := GlobalTheory.T.exists_logCutoff_coordinateHyperplanes_poincareBound S
+  obtain ⟨C, χ, hχs, hχ01, hχ0, hχ1, hχd⟩ := _root_.GlobalTheory.GoodTop.exists_logCutoff_hyperplanes S
   let F : ℕ → Fin n → V n → ℂ := fun k => Function.update f j (fun x => (χ k x : ℂ) * f j x)
   have hFj : ∀ k, F k j = fun x => (χ k x : ℂ) * f j x := fun k => by simp [F]
   have hFi : ∀ k i, i ≠ j → F k i = f i := fun k i hi => by simp [F, Function.update_of_ne hi]
@@ -121,7 +124,7 @@ theorem integral_det_dbar_eq_zero_of_poincare : ∀ {n : ℕ} (S : Finset (Fin n
       rintro v ⟨hvK, hvt⟩
       refine ⟨hKU hvK, fun a ha h0 => ?_⟩
       exact (notMem_tsupport_iff_eventuallyEq.2 (hχ0 k v ⟨a, ha, h0⟩)) hvt
-    refine GlobalTheory.T.integral_dbarJacobian_det_eq_zero_of_compactSupport (offHyp S U) (K ∩ tsupport (χ k)) (F k) j hΩ (hK.inter_right (isClosed_tsupport _))
+    refine _root_.GlobalTheory.GoodTop.integral_dbarJacobian_eq_zero (offHyp S U) (K ∩ tsupport (χ k)) (F k) j hΩ (hK.inter_right (isClosed_tsupport _))
       hsub (hFs k) ?_
     intro v hv hvn
     by_cases hvK : v ∈ K
@@ -167,7 +170,7 @@ theorem integral_det_dbar_eq_zero_of_poincare : ∀ {n : ℕ} (S : Finset (Fin n
   have hbint : Integrable bound (volume.restrict (offHyp S U)) := by
     rw [integrable_indicator_iff hKc.measurableSet, IntegrableOn,
       Measure.restrict_restrict hKc.measurableSet]
-    exact IntegrableOn.mono_set ((GlobalTheory.T.poincare_volume_integrableOn_compact_punctured_polydisc S K hK fun v hv => hsmall v (hKU hv)).const_mul
+    exact IntegrableOn.mono_set ((_root_.GlobalTheory.GoodTop.integrableOn_poinVol S K hK fun v hv => hsmall v (hKU hv)).const_mul
       ((n.factorial : ℝ) * |(|c| + |C| * |c|)| ^ n)) Set.inter_subset_left
   have hmeas : ∀ k, AEStronglyMeasurable (fun v => (Matrix.of fun i b => dbar (F k i) v (coordVec b)).det)
       (volume.restrict (offHyp S U)) := fun k =>

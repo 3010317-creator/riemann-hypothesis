@@ -1,8 +1,9 @@
 module
 
-import ReciprocityTheory.AnalyticForms.PotentialTheory.Partition
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsLocSec
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CompatibleChartProductProjectionTwistedStatement
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.IsPotentialOfFun
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CompatibleChartProductProjectionTwisted
+import ReciprocityTheory.AnalyticForms.PotentialTheory.Partition
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -115,7 +116,7 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
   obtain ⟨hcomp, -, hne, hbase, -, -⟩ := hW
   obtain ⟨ψb, hψbc, hxb, hψbU, σb, hσi, hσW, ub, hubh, hub0, hs⟩ := BM.snc (pr x)
   obtain ⟨ψ', hψ'c, hsrc, hk1, hk2⟩ :=
-    GlobalTheory.T.compatible_chart_product_projection_twisted e n RW.X BM.Rb.X RW.A BM.Rb.A pr (ψ x) (kb x) (σ x) ψb hcomp hψbc hbase
+    _root_.GlobalTheory.CompanionTheory.Ar.PB.ChartSwap.chart_swap_keep e n RW.X BM.Rb.X RW.A BM.Rb.A pr (ψ x) (kb x) (σ x) ψb hcomp hψbc hbase
   have hsrc'' : (ψ'.restrOpen (V x) hVo).source = ψ'.source ∩ V x := ψ'.restrOpen_source (V x) hVo
   have hcoe : ∀ y, (ψ'.restrOpen (V x) hVo) y = ψ' y := fun y => rfl
   have hmem : ∀ y ∈ (ψ'.restrOpen (V x) hVo).source, y ∈ ψ'.source ∧ y ∈ V x ∧ pr y ∈ ψb.source := by

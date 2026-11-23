@@ -3,12 +3,12 @@ module
 public import Development.WeilBound.ThetaLifts.EigenvalueEndgame.SignatureSplitting.RightOfFd
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnipotentBlockColumnIndex
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ColumnWhittakerTransformKeepsLaterLaw
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousQuotientAveragePeriodicFamilyStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFundamentalDomainMassOneCocompactLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.QuotientAverageAddOfPeriodicStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.QuotientAverageTranslateInvariantStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SetIntegralFundamentalDomainEqMassMulAverageStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousQuotientAveragePeriodicFamily
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.QuotientAverageAddOfPeriodic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.QuotientAverageTranslateInvariant
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnipotentColumnWhittakerTransformMirabolicInvari
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFundamentalDomainMassOneCocompactLattice
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SetIntegralFundamentalDomainEqMassMulAverage
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WhittakerCoefficientRationalMirabolicMulStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -86,7 +86,7 @@ theorem Pre.per (hψ : StdPsi ψ) {m : ℕ} {f : GA E a → ℂ} (hf : Pre ψ m 
 
 theorem pre_colT (hψ : StdPsi ψ) {m : ℕ} {f : GA E a → ℂ} (hma : m + 1 < a) (hf : Pre ψ (m + 1) f) : Pre ψ m (colT ψ (m + 1) f) := by
   refine ⟨?_, fun γ hγ g => ?_, fun k hk y g => ?_⟩
-  · exact GlobalTheory.T.continuous_quotientAverage_periodic_family _ (ratV E (UnipotentBlockColumnIndex a (m + 1) (m + 1))) (isCoLat_ratV E _) (GA E a)
+  · exact _root_.GlobalTheory.CuspGeneric.continuous_avg_of_periodic _ (ratV E (UnipotentBlockColumnIndex a (m + 1) (m + 1))) (isCoLat_ratV E _) (GA E a)
       (fun p => ψ (-dot (eLast a (m + 1)) p.2) * f (blkU p.2 * p.1))
       ((hψ.cont.comp ((continuous_dot _).neg.comp continuous_snd)).mul
         (hf.cont.comp (((continuous_posU _).comp continuous_snd).mul continuous_fst))) fun g γ hγ y => (hf.per hψ g).2 γ hγ y
@@ -113,7 +113,7 @@ theorem pre_colT (hψ : StdPsi ψ) {m : ℕ} {f : GA E a → ℂ} (hma : m + 1 <
       rw [← mul_assoc (blkU x), blkU_mul_blkU h1 x y, mul_assoc, hf.law k h1, dot_eLast_shift h1 x y]
       ring
     · obtain rfl : k = m + 1 := by omega
-      have hT := GlobalTheory.T.quotientAverage_translate_invariant _ _ (isCoLat_ratV E _) _ (hf.per hψ g) y
+      have hT := _root_.GlobalTheory.CuspGeneric.avg_add_right _ _ (isCoLat_ratV E _) _ (hf.per hψ g) y
       simp only [colT, coefF]
       rw [← hT, ← avg_const_mul]
       congr 1
@@ -138,7 +138,7 @@ theorem whit_add' (hψ : StdPsi ψ) (m : ℕ) : (m < a ∨ m = 0) → ∀ {f f' 
     intro h f f' hf hf'
     have e : colT ψ (m + 1) (fun g => f g + f' g) = fun g => colT ψ (m + 1) f g + colT ψ (m + 1) f' g := funext fun g => by
       simp only [colT, coefF, mul_add]
-      exact GlobalTheory.T.quotientAverage_add_of_periodic _ _ (isCoLat_ratV E _) _ _ (hf.per hψ g) (hf'.per hψ g)
+      exact _root_.GlobalTheory.CuspGeneric.avg_add_of_per _ _ (isCoLat_ratV E _) _ _ (hf.per hψ g) (hf'.per hψ g)
     rw [whit_succ, whit_succ, whit_succ, e]
     exact ih (Or.inl (by omega)) (pre_colT hψ (by omega) hf) (pre_colT hψ (by omega) hf')
 
@@ -163,8 +163,8 @@ theorem avg_eq_of_isAv (h : IsCoLat Γ) [MeasurableSpace (Multiplicative X)] [hB
     (hp : Per Γ fun y => f (ι (Multiplicative.ofAdd y) * x)) : avg Γ (fun y => f (ι (Multiplicative.ofAdd y) * x)) = c x := by
   letI : MeasurableSpace X := ‹MeasurableSpace (Multiplicative X)›
   haveI : BorelSpace X := ⟨hB.1⟩
-  obtain ⟨μ, 𝓕, h1, h2, h3⟩ := GlobalTheory.T.exists_fundamentalDomain_mass_one_cocompactLattice X Γ h
-  have h4 := (GlobalTheory.T.setIntegral_fundamentalDomain_eq_mass_mul_average X Γ h μ 𝓕 h1 h2 _ hp).2.2.2
+  obtain ⟨μ, 𝓕, h1, h2, h3⟩ := _root_.GlobalTheory.CuspGeneric.exists_fundamentalDomain_mass_one X Γ h
+  have h4 := (_root_.GlobalTheory.CuspGeneric.setIntegral_eq_mass_mul_avg X Γ h μ 𝓕 h1 h2 _ hp).2.2.2
   rw [h3, ENNReal.toReal_one, Complex.ofReal_one, one_mul] at h4
   rw [← h4]
   exact (ha μ 𝓕

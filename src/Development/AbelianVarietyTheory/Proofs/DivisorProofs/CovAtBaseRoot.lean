@@ -10,10 +10,11 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HxOfIsONFr
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLatOfInt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModelsAtRecordCore
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OscillatorModelValuesFifth
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightZeroConstFrameValueMemCoeffRangeStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.PetersonNormSubspace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightZeroConstFrameValueMemCoeffRange
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCoversOfHalves
-import Development.AbelianVarietyTheory.Proofs.GenericRegularity.IdemMulMemCusp
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoverSectionsLinearIndependentAdelicReadings
+import Development.AbelianVarietyTheory.Proofs.GenericRegularity.IdemMulMemCusp
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AnalyticFibreUnitFrameUniformisation
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsLetterRowWeightDictionary
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.UniformisationComponentLatticesMarkings
@@ -144,7 +145,7 @@ theorem covAt_mem (hR : GlobalTheory.Hk3.Core R F) (hT : TieIn T R κ v₀) (O :
   obtain ⟨hio, hx₀⟩ := GlobalTheory.TupleCover.iotaOK_and_frame T hT.laws _ (inR i) O.s0 (hs0 ▸ T.toCore.good_σ₀) (Wc D i) O.hV
     (rank_Wc i)
   have hpq := hrk ▸ h1
-  obtain ⟨a, ha⟩ := GlobalTheory.T.weightZero_const_frameValue_mem_coeff_range _ _ _ _ _ _ _ _ (O.U₂ ()) hσ hU hpq _ hf c0 fun k x hx => by
+  obtain ⟨a, ha⟩ := _root_.GlobalTheory.FlatLine.const_value_mem_range _ _ _ _ _ _ _ _ (O.U₂ ()) hσ hU hpq _ hf c0 fun k x hx => by
     obtain ⟨h, γ, hγ, b, hb, e⟩ := GlobalTheory.CoverIndep.dict_onto (Wc D i) (rank_Wc i) (O.U₂ ()) (O.dict₂ ()) (iotaW T i) e' F' ik φ
       th _ hσ hA hpq hU hW hD hio hth hx₀ (fun h => (key h).1) k x hx
     have h4 := hv h

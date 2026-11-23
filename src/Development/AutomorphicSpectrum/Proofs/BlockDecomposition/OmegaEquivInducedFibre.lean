@@ -4,11 +4,15 @@ public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FibRepAp
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsClosedEmbeddingTopEmb
 public import Mathlib.Data.Matrix.ColumnRowPartitioned
 public import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
-import Development.AbelianVarietyTheory.Definitions.Foundations.SecondCountableAndT2LocalField
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsGLMulRightColumnsEqZeroOfRankStatement
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
+public import Mathlib.LinearAlgebra.Matrix.Rank
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsGLMulRightColumnsEqZeroOfRank
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IwasawaBlockTriangular
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LeftColumnsMulVecInjectiveOfRankEqCardStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchwartzBruhatSweepSmoothlyInducedStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LeftColumnsMulVecInjectiveOfRankEqCard
+public import Development.AbelianVarietyTheory.Definitions.Foundations.MatrixMeasurableSpace
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsUnitarisableOfCharIff
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchwartzBruhatSweepSmoothlyInduced
+import Development.AbelianVarietyTheory.Definitions.Foundations.SecondCountableAndT2LocalField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -173,7 +177,7 @@ theorem lAct_topEmbR (e : c ⊕ d ≃ b) {κ : ℕ}
 theorem eq_zero_of_vecMul (e : c ⊕ d ≃ b) {κ : ℕ} (hκ : κ = Fintype.card c)
     (y : RankIn (k := k) (a := a) (b := c) {κ})
     (v : c → k) (h : v ᵥ* y.1 = 0) : v = 0 := by
-  refine GlobalTheory.T.leftColumns_mulVec_injective_of_rank_eq_card k a c d b e (topR e y.1)ᵀ
+  refine _root_.GlobalTheory.mulVec_firstCols_eq_zero_of_rank_eq_card k a c d b e (topR e y.1)ᵀ
     ((rank_transpose _).trans (((rank_topR e y.1).trans y.2).trans hκ)) (fun i j => topR_inr e _ j i) v ?_
   have hs : (topR e y.1)ᵀ.submatrix id (fun i => e (.inl i)) = y.1ᵀ := by
     ext i l; simp
@@ -182,7 +186,7 @@ theorem eq_zero_of_vecMul (e : c ⊕ d ≃ b) {κ : ℕ} (hκ : κ = Fintype.car
 theorem exists_topEmbR (e : c ⊕ d ≃ b) {κ : ℕ} (hκ : κ = Fintype.card c)
     (x : RankIn (k := k) (a := a) (b := b) {κ}) :
     ∃ y, ∃ w ∈ KO k b, x = lAct _ (topEmbR e y) w := by
-  obtain ⟨g, hg⟩ := GlobalTheory.T.exists_GL_mul_rightColumns_eq_zero_of_rank k a c d b e x.1ᵀ ((rank_transpose _).trans (x.2.trans hκ))
+  obtain ⟨g, hg⟩ := _root_.GlobalTheory.exists_gl_mul_cols_eq_zero_of_rank k a c d b e x.1ᵀ ((rank_transpose _).trans (x.2.trans hκ))
   obtain ⟨u, hu⟩ := (isUnit_transpose _).2 g.isUnit
   obtain ⟨p, hp, w, hw, h⟩ := iwasawa_blockTriangular k b (fun i => (blk (two e) i).toNat) u
   have hp' : p ∈ parab k (two e) := (mem_parab_two k).2 fun i j => hp (by
@@ -209,7 +213,7 @@ theorem fibStr : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] 
     IsSmoothChar μ → Nonempty ((omegaOn a b μ {κ}).Equiv (indSnd e (fibRep a c d μ κ))) := by
   intro k _ _ _ _ a b c d _ _ _ _ _ _ _ _ e κ hκ μ hμ
   obtain ⟨_, _⟩ := SplitWeil.Model.secondCountable_and_t2_local_field (k := k)
-  obtain ⟨E, hE⟩ := GlobalTheory.T.schwartzBruhat_sweep_smoothly_induced (GL b k)
+  obtain ⟨E, hE⟩ := _root_.GlobalTheory.SBInduced.sb_induced (GL b k)
     (RankIn (k := k) (a := a) (b := b) {κ}) (RankIn (k := k) (a := a) (b := c) {κ})
     (SB (RankIn (k := k) (a := a) (b := c) {κ})) (lAct {κ}) (lAct_one _) (lAct_mul _) (continuous_lAct _)
     (topEmbR e) (isClosedEmbedding_topEmbR e) (parab k (two e)) (KO k b) SplitFlip.isCompact_KO

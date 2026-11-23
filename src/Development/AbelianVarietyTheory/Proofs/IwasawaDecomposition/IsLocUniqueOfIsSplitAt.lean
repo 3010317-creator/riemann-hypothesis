@@ -1,9 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ContinuousMapPFin
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsContinuousRetractionOntoUnitaryLocalPointsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IrreducibleRepIsotypicOfCentraliserFactorStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitPlaceUnitaryLocalPointsEquivGLStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BaseChangeDefiniteUnitary
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsContinuousRetractionOntoUnitaryLocalPoints
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.RepresentationTheory.Irreducible
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IrreducibleRepIsotypicOfCentraliserFactor
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitPlaceUnitaryLocalPointsEquivGL
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,8 +58,8 @@ theorem isLoc_unique_of_isSplitAt : ∀ (E : Type) [Field E] [NumberField E] [Is
   obtain ⟨U, rfl⟩ := AU.mk_surjective π
   obtain ⟨σ, rfl⟩ := Quotient.exists_rep (s := SmIrr.setoid _) σ
   obtain ⟨σ', rfl⟩ := Quotient.exists_rep (s := SmIrr.setoid _) σ'
-  obtain ⟨e, he⟩ := GlobalTheory.T.splitPlace_unitaryLocalPoints_equiv_GL E n w hw
-  obtain ⟨r, -, -, hc⟩ := GlobalTheory.T.exists_continuous_retraction_onto_unitaryLocalPoints E n w
+  obtain ⟨e, he⟩ := _root_.GlobalTheory.locU_equiv_GL E n w hw
+  obtain ⟨r, -, -, hc⟩ := _root_.GlobalTheory.DefU.LocRet.exists_ret E n w
   let s : GL (Fin n) (w.adicCompletion E) →* UA E n :=
     (locU n w).subtype.comp e.symm.toMulEquiv.toMonoidHom
   have hs : ∀ y, cLoc w (s y) = y := fun y => by
@@ -78,6 +82,6 @@ theorem isLoc_unique_of_isSplitAt : ∀ (E : Type) [Field E] [NumberField E] [Is
       have : s (e (r g)) = (r g : UA E n) := congrArg Subtype.val (e.symm_apply_apply (r g))
       rw [this]
       exact hc g (e.symm y)⟩
-  exact Quotient.sound ((GlobalTheory.T.irreducibleRep_isotypic_of_centraliser_factor _ _ _ _ _ U.rep s σ.ρ σ'.ρ U.isIrreducible_rep σ.irred σ'.irred hcomm f hf).2 f' hf')
+  exact Quotient.sound ((_root_.GlobalTheory.CuspRep.CompUniq.isotypic _ _ _ _ _ U.rep s σ.ρ σ'.ρ U.isIrreducible_rep σ.irred σ'.irred hcomm f hf).2 f' hf')
 
 end GlobalTheory.DefU.AU

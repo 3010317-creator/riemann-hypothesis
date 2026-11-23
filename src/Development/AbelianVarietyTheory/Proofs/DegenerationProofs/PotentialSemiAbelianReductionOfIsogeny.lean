@@ -3,10 +3,15 @@ module
 public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.OfDerivationFnOn
 public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.SemistableFin
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIntegralExtIsAlgClosedResidueFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.HenselianIUnionCompleteOfIntegralOverCompleteDvrStatement
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Mathlib.RingTheory.LocalRing.ResidueField.Defs
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIntegralExtIsAlgClosedResidueField
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.HenselianIUnionCompleteOfIntegralOverCompleteDvr
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsSemiAbelianOfProperGenericTorusExtensionSpecialFiber
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SemiAbelianReductionAlongIsogenyStrictHenselianStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SemiAbelianReductionAlongIsogenyStrictHenselian
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SmConnModelDescends
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsProjByBaseChange
 import Mathlib.Algebra.Order.Floor.Extended
@@ -127,7 +132,7 @@ theorem exists_model_of_isogeny (K R K' : Type) [Field K] [CommRing R] [IsDomain
     simp only [Category.assoc]
     rw [← Functor.map_comp_assoc, hri, pullback_map_id_pow, MonObj.pow_comp, MonObj.comp_pow]
     simp
-  obtain ⟨G, _, e₂, hsc, he₂, ht⟩ := GlobalTheory.T.semiAbelian_reduction_along_isogeny_strict_henselian R K' hSH ((Over.pullback (spMap (algebraMap K K'))).obj A) G' g m hA' hP' hG' hgA' hgG
+  obtain ⟨G, _, e₂, hsc, he₂, ht⟩ := _root_.GlobalTheory.IsogRed.semiAbelian_reduction_of_isogeny R K' hSH ((Over.pullback (spMap (algebraMap K K'))).obj A) G' g m hA' hP' hG' hgA' hgG
     ((Over.pullback (spMap (algebraMap K K'))).map i ≫ e.inv) (e.hom ≫ (Over.pullback (spMap (algebraMap K K'))).map r) inferInstance inferInstance hm hri'
   exact ⟨G, inferInstance, hsc, show ∃ _, _ from ⟨e₂, he₂⟩, ht⟩
 
@@ -147,8 +152,8 @@ theorem potModel_semiAbelian_of_isogeny : ∀ (V K : Type) [CommRing V] [IsDomai
   haveI : CharZero L := (RingHom.charZero_iff (algebraMap K L).injective).1 inferInstance
   haveI : CharZero W := (RingHom.charZero_iff (IsFractionRing.injective W L)).2 inferInstance
   haveI : CharZero V := (RingHom.charZero_iff (IsFractionRing.injective V K)).2 inferInstance
-  obtain ⟨R, _, _, _, _, hinj, hint, hac⟩ := GlobalTheory.T.exists_integral_ext_isAlgClosed_residueField' W
-  obtain ⟨-, hhen, -⟩ := GlobalTheory.T.henselian_iUnion_complete_of_integral_over_complete_dvr W R hinj hint
+  obtain ⟨R, _, _, _, _, hinj, hint, hac⟩ := _root_.GlobalTheory.ClosedResidueExt.exists_integral_ext_isAlgClosed_residueField W
+  obtain ⟨-, hhen, -⟩ := _root_.GlobalTheory.henselian_and_union_of_isIntegral_complete W R hinj hint
   have hWK : Function.Injective ((algebraMap R (FractionRing R)).comp (algebraMap W R)) :=
     (IsFractionRing.injective R (FractionRing R)).comp hinj
   obtain ⟨b, hbW⟩ : ∃ b : L →+* FractionRing R,
@@ -181,7 +186,7 @@ theorem potModel_semiAbelian_of_isogeny : ∀ (V K : Type) [CommRing V] [IsDomai
     RingHom.IsIntegral.trans (f := algebraMap V W) (g := algebraMap W R)
       (fun x => Algebra.IsIntegral.isIntegral (R := V) x) (fun x => hint.isIntegral x)
   have hVRinj : Function.Injective (algebraMap V R) := hinj.comp hVW
-  obtain ⟨hlocVR, -, hdescV⟩ := GlobalTheory.T.henselian_iUnion_complete_of_integral_over_complete_dvr V R hVRinj ⟨fun x => hVRi x⟩
+  obtain ⟨hlocVR, -, hdescV⟩ := _root_.GlobalTheory.henselian_and_union_of_isIntegral_complete V R hVRinj ⟨fun x => hVRi x⟩
   obtain ⟨W', _, hsW, hcW, hfW, hlW⟩ := hdescV s
   obtain ⟨GW, _, _, ε, hscW, hε, hcompW, hmodW⟩ := hs W' inferInstance hsW hlW
   haveI := hε

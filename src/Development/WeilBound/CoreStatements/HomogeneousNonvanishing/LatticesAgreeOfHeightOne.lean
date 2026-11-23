@@ -4,8 +4,9 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EtaleLo
 public import Mathlib.AlgebraicGeometry.Noetherian
 public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.QuadraticCharacterPrescribedPlaces
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsPointLocalizationPrimeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegAtFractionNoetherianClosedStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCptGen
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsPointLocalizationPrime
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegAtFractionNoetherianClosed
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,7 +65,7 @@ theorem latagree_le (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (CommRing
     L' p ≤ L p := by
   obtain ⟨U, hU, b, hb, hbq⟩ := hL p hp
   obtain ⟨U', hU', b', hb', hbq'⟩ := hL' p hp
-  obtain ⟨hfr, hno, hic⟩ := GlobalTheory.T.regAt_fraction_noetherian_closed X Ω ξ hξ p
+  obtain ⟨hfr, hno, hic⟩ := _root_.GlobalTheory.CompanionTheory.Ar.RegAtRing.regAt_ring X Ω ξ hξ p
   haveI := hfr
   haveI := hno inferInstance
   haveI := hic (hn p hp)
@@ -76,7 +77,7 @@ theorem latagree_le (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (CommRing
     rw [hc]
     exact Submodule.sum_mem _ fun k _ => Submodule.smul_mem _ (c k) (Submodule.subset_span ⟨k, rfl⟩)
   · intro P hP i
-    obtain ⟨q, hqp, hq⟩ := GlobalTheory.T.exists_point_localization_prime X Ω ξ hξ p P.asIdeal P.isPrime
+    obtain ⟨q, hqp, hq⟩ := _root_.GlobalTheory.CompanionTheory.Ar.regAt_prime_generisation X Ω ξ hξ p P.asIdeal P.isPrime
     have hqT := hT p hp q hqp
     have hle : regAt ξ p ≤ regAt ξ q := fun a ha =>
       (hq a).2 ⟨1, (Ideal.ne_top_iff_one _).1 P.isPrime.ne_top, by simpa using ha⟩

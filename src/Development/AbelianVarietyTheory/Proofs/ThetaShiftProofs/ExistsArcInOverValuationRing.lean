@@ -5,8 +5,8 @@ public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CmCurveBaseChangeComp
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsFibreOfIffIsPolFibre
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArcDataDescendsPrincipalIdealSubringStatement
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsDegenerationDataExtensionOverDvrStatement
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsTauCanonicalIffOfIsPullDegTauBimultStatement
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsDegenerationDataExtensionOverDvr
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsTauCanonicalIffOfIsPullDegTauBimult
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -70,11 +70,11 @@ theorem exists_arcIn_over_valuationRing : Known → ∀ (E : Type) [Field E] [Nu
   have hχ : IsPolFibre ((algebraMap Tv.V Tv.Fr).comp ρ) s.B aK.D₀.P (prj pK ≫ s.φB) :=
     hcomp ▸ GlobalTheory.CM.EllComp.isPolFibre_comp hB (isPolFibre_prj pK)
   obtain ⟨φ, hφψ, hφ⟩ := GlobalTheory.CM.EllComp.exists_isPolFibre_lift hψ hχ
-  obtain ⟨DV, p, rfl, hp, hq⟩ := GlobalTheory.T.exists_degenerationData_extension_over_dvr hK Tv.V Tv.Fr Pv aK.D₀ φ hφ
+  obtain ⟨DV, p, rfl, hp, hq⟩ := _root_.GlobalTheory.DvrDeg.exists_extension hK Tv.V Tv.Fr Pv aK.D₀ φ hφ
   obtain rfl : prj p = φ := eq_of_heq hp
   obtain ⟨oB, hoB⟩ := polOActPull _ _ _ s.B DV.P ψ hψ.2.1 hψ.2.2 (𝓞 E) s.oa
   have htau : TauCan aK.D₀ n' :=
-    (GlobalTheory.T.isTauCanonical_iff_of_isPullDeg_tauBimult hK K₁ Tv.Fr io a.D₀ aK.D₀ pK n' io.injective a.bimult aK.bimult).1 s.tau
+    (_root_.GlobalTheory.TauCanPull.tauCan_iff_of_isPullDeg hK K₁ Tv.Fr io a.D₀ aK.D₀ pK n' io.injective a.bimult aK.bimult).1 s.tau
   have hact : ∀ x, (aK.oa.onB.act x).left ≫ prj p = prj p ≫ (oB.act x).left := fun x => by
     have h₁ : (aK.oa.onB.act x).left ≫ prj pK = prj pK ≫ (a.oa.onB.act x).left := hBC.act x
     have w := hφ.2.1.1.w

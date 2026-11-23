@@ -7,7 +7,9 @@ public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieMod
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenMapFromSpecStalk
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GrGenOfIsFlagVBOn
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GradedSandwichDegreeBound
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeEvalAtLocalRingStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeEvalAtLocalRing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -248,7 +250,7 @@ theorem pick : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp Ω ⟶ X) (K
   have hv0 : ValAt ξ zL ((m : Ω)⁻¹ * π i e) 0 :=
     valAt_zero_factor hg zL h hm hα hκ hκi hκ0 (htg ▸ hu)
   obtain ⟨ER, _, _, ⟨MR⟩⟩ := lieModel_exists X G L zL
-  obtain ⟨ev, hev, hevs, -⟩ := GlobalTheory.T.lie_lattice_eval_at_local_ring X G Ω ξ Li M L zL h ER MR hg inferInstance
+  obtain ⟨ev, hev, hevs, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieLat_val X G Ω ξ Li M L zL h ER MR hg inferInstance
   let ar : regAt ξ ⟨centre zL, h⟩ := ⟨_, hα⟩
   let xb : M.lat ⟨centre zL, h⟩ := ⟨_, hmb i⟩
   let xe : M.lat ⟨centre zL, h⟩ := ⟨e, he_lat⟩

@@ -1,16 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NormalFormDualOrthogonalLast
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagPairDefiniteThetaLatticeLeFixedIndexBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarInvVolumeMiddleLayerEichlerLeStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagPairDefiniteThetaLatticeLeFixedIndexBound
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarInvVolumeMiddleLayerEichlerLe
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairNormalFormInvVolSkewLayerLe
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairNormalFormInvVolTopLayerLe
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RelIndexNeZero
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairCommonUnipotentStabiliserSummary
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairInnerLatticesUnimodularPrimitive
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairInnerLatticesUnimodularPrimitiveStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairNormalFormGeometrySummaryStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairNormalFormInvVolSkewLayerLeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairNormalFormInvVolTopLayerLeStatement
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairNormalFormGeometrySummary
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.InvVolEqInfMulSupAndMono
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RelIndexNeZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,11 +76,11 @@ theorem invVol_nonneg {G : Type} [Group G] (A B : Subgroup G) : 0 ≤ GlobalTheo
 theorem om_le : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCommGroup V] [Module K V] [FiniteDimensional K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] (H : HermSpace K V), Formalism.HermitianLatticesTheory.IsCMUnram K → ∀ (r : ℕ) (N : NF H r), ∀ (g : ℕ) (Λ : Submodule (𝓞 K) V), 1 ≤ g → N.IsTerm g Λ → ∀ 𝔠 : Ideal (𝓞 K), 𝔠 ≠ ⊥ → (∀ x ∈ 𝔠, ∃ y ∈ 𝔠, (y : K) = star (x : K)) → (∀ x ∈ 𝔠, (N.T : 𝓞 K) ∣ x) → (∀ (l : ℕ) (hl : l ≤ r + 1), l ≤ N.j → Dl N.F N.F' l hl ≠ 0 → ∀ x ∈ 𝔠, ∀ y ∈ ipow N.𝔡 (2 * ∑ a ∈ Finset.range l, ((r : ℤ) - a)), (x : K) * y / Dl N.F N.F' l hl ∈ (1 : Submodule (𝓞 K) K) ∧ (x : K) * y / star (Dl N.F N.F' l hl) ∈ (1 : Submodule (𝓞 K) K)) → ∀ e : ℕ, N.Split Λ → N.Near (𝔠 ^ e) Λ → N.om Λ ≤ (N.bI Λ : ℝ) ^ Module.finrank K N.Wt * N.Del ^ r * (Ideal.absNorm 𝔠 : ℝ) ^ (2 * (3 * e + 11) * (2 * r + 1) ^ 2) := by
   intro K V _ _ _ _ _ _ _ _ H hK r N g Λ hg hT 𝔠 hc hs hTd hD e hSp hNe
   obtain ⟨-, -, nM, nZ, hnil⟩ := GlobalTheory.UnipStab.common_unipotent_stabiliser K V H hK r N
-  obtain ⟨-, -, -, -, hRef, -⟩ := GlobalTheory.T.hermFramePair_innerLattices_unimodular_primitive K V H hK r N g Λ hg hT
-  obtain ⟨-, hg0, hi0, -, hgi, -⟩ := GlobalTheory.T.flagPairDefiniteThetaLattice_le_fixed_index_bound K V H hK r N g Λ hg hT
-  have hTop := GlobalTheory.T.hermFramePairNormalForm_invVol_top_layer_le K V H hK r N g Λ hg hT 𝔠 hc hs hTd hD e hSp hNe
-  have hBot := GlobalTheory.T.hermFramePairNormalForm_invVol_skew_layer_le K V H hK r N g Λ hg hT 𝔠 hc hs hTd hD e hSp hNe
-  have hMid := GlobalTheory.T.haarInvVolume_middleLayer_eichler_le K V H hK r N g Λ hg hT hSp
+  obtain ⟨-, -, -, -, hRef, -⟩ := _root_.GlobalTheory.DegCnt.InnerLat.main K V H hK r N g Λ hg hT
+  obtain ⟨-, hg0, hi0, -, hgi, -⟩ := _root_.GlobalTheory.DegCnt.FixIdx.main K V H hK r N g Λ hg hT
+  have hTop := _root_.GlobalTheory.DegCnt.invVol_top_layer_le K V H hK r N g Λ hg hT 𝔠 hc hs hTd hD e hSp hNe
+  have hBot := _root_.GlobalTheory.DegCnt.WtSkew.invVol_skew_le K V H hK r N g Λ hg hT 𝔠 hc hs hTd hD e hSp hNe
+  have hMid := _root_.GlobalTheory.DegCnt.MidLayer.invVol_mid_layer_le K V H hK r N g Λ hg hT hSp
   have hΛ : Submodule.IsFullLattice K Λ := by
     have h := hT.1.1.1
     unfold IsLatMod at h
@@ -94,7 +93,7 @@ theorem om_le : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddComm
   have hRefFull : Submodule.IsFullLattice K (N.Ref (latL N.F N.F' Λ)) := by
     letI := hRef
     obtain ⟨_, _, hC, _, hWn, hUp, _, _, _, _, _, hPi⟩ :=
-      GlobalTheory.T.hermFramePairNormalForm_geometry_summary K V H hK r N
+      _root_.GlobalTheory.DegCnt.NF.geometry K V H hK r N
     have hspan : Submodule.span K (N.Ref (latL N.F N.F' Λ) : Set V) = ⊤ := by
       apply eq_top_iff.mpr
       rw [← hC.sup_eq_top]

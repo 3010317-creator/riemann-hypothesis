@@ -2,9 +2,11 @@ module
 
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.WeilSiegelTheta.EisCellsDefs
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsBlockMatrixTwoByTwoFinEq
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianBlockSolutionExistsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SameSpanTransferMatricesStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SpanRangeComplementTransformStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianBlockSolutionExists
+public import Mathlib.Data.Matrix.Mul
+public import Mathlib.LinearAlgebra.LinearIndependent.Defs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SameSpanTransferMatrices
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SpanRangeComplementTransform
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -168,15 +170,15 @@ theorem bruhat : Bruhat := by
   obtain ⟨A, B, C, D, rfl⟩ := exists_blockMatrixTwoByTwoFin_eq g
   have hiso := isotropic_of_unitary σ hgu
   set U := Submodule.span K (Set.range C) with hU
-  obtain ⟨T, L, hT, -, hLT⟩ := GlobalTheory.T.same_span_transfer_matrices C (c U) (hc U).1 (hc U).2
-  obtain ⟨b, hb, hcond⟩ := GlobalTheory.T.hermitian_block_solution_exists σ hσ (hr U) (c U) (a U) C D T L (ha U) hT hLT hiso
+  obtain ⟨T, L, hT, -, hLT⟩ := _root_.GlobalTheory.CompanionTheory.BruhatCoeffs.exists_coeff_matrices_of_span_eq C (c U) (hc U).1 (hc U).2
+  obtain ⟨b, hb, hcond⟩ := _root_.GlobalTheory.CompanionTheory.BruhatCell.exists_hermitian_lowerLeft σ hσ (hr U) (c U) (a U) C D T L (ha U) hT hLT hiso
   have hS := (siegel_rep_iff σ hσ b (a U) hb (ha U).1 A B C D).2 hcond
   refine ⟨⟨U, b, hb⟩, hS, ?_⟩
   rintro ⟨U', b', hb'⟩ hq
   have hrep' := repMat_unitary σ hσ b' (a U') hb' (ha U').1
   obtain ⟨p', hp', hC', hD'⟩ := factor_of_siegel hg hrep'.1 hq rfl (repMat_eq σ b' (a U'))
   have hUU : U' = U := by
-    rw [← (hc U').2, ← GlobalTheory.T.span_range_complement_transform (hr U') (c U') (a U') p' (ha U') hp', ← hC']
+    rw [← (hc U').2, ← _root_.GlobalTheory.CompanionTheory.BruhatCell.span_range_lowerLeft (hr U') (c U') (a U') p' (ha U') hp', ← hC']
   subst hUU
   have hrep := repMat_unitary σ hσ b (a U) hb (ha U).1
   obtain ⟨p, hp, hC, hD⟩ := factor_of_siegel hg hrep.1 hS rfl (repMat_eq σ b (a U))

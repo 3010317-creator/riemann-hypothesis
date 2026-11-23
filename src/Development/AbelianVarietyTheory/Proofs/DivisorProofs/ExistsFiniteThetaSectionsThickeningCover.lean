@@ -4,10 +4,12 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AppInjective
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsToricRankOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosedFibreThetaSectionGermEqFourierRatioMulStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosedFibreTorusCoordinatesIsImmersionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAffineOpenFractionsProjSpaceImmersionStatement
+public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsClosedImmersionIffPullRatio
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAffineOpenFractionsProjSpaceImmersion
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsExpandsAtSectionUniformised
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegralThetaFamilyPrescribedLeadingTermStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsThetaImmersionTorusExtensionProjectiveStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsLeadOfUnif
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,7 +46,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.DivCalc
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsLeadOfUnif
 
 @[expose] public section
 
@@ -108,7 +109,7 @@ theorem GlobalTheory.Mum.exists_ratio_gen_closed : ∀ (R : Type) [CommRing R] [
   have hφw : φ w ∈ GlobalTheory.ProjSpace.chart R N j := by
     show w ∈ φ ⁻¹ᵁ GlobalTheory.ProjSpace.chart R N j
     rw [hpre]; exact hj
-  obtain ⟨W, hW, hwW, hWV, hWa, hgen⟩ := GlobalTheory.T.exists_affineOpen_fractions_projSpace_immersion R N _ φ inferInstance w (p₀ ⁻¹ᵁ secChart U.LG.L i) j hi hφw
+  obtain ⟨W, hW, hwW, hWV, hWa, hgen⟩ := _root_.GlobalTheory.ProjSpace.exists_affineOpen_fraction_pullRatio R N _ φ inferInstance w (p₀ ⁻¹ᵁ secChart U.LG.L i) j hi hφw
   have hWψ : W ≤ ψ.left ⁻¹ᵁ nonzeroLocus (τ j) := hW.trans (hpre j).le
   have hr : ∀ l, GlobalTheory.ProjSpace.pullRatio φ W j hW l =
       (ψ.left.appLE (nonzeroLocus (τ j)) W hWψ).hom (GlobalTheory.ProjSpace.secRatio (τ j) (τ l)) := by

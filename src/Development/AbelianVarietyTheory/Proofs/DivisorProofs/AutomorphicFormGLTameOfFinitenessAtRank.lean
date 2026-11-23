@@ -3,12 +3,18 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CentralNilGL
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfMemSpanK
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsSpanFormsNeBot
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CenterActsByScalarOnEigenformsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsConjInvariantApproxIdentityRealLieSmoothinStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ContinuousConjFin
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CenterActsByScalarOnEigenforms
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GrowthOfTame
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsConjInvariantApproxIdentityRealLieSmoothin
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteDimensionalSpaceAutomorphicSmoothing
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HarishChandraFinite
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDimensionalMatrixCoefficientSpan
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDimensionalCentreAnnihilatorCompatibleMaps
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDimensionalMatrixCoefficientSpanStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDimensionalOfCommutingFiniteAlgebraJointEiStatement
+import Mathlib.Algebra.Algebra.Subalgebra.Lattice
+import Mathlib.Basic.Complex.Basic
+import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDimensionalOfCommutingFiniteAlgebraJointEi
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealLieSmoothingMemSmoothAdelicFunctionsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -68,7 +74,7 @@ theorem finite_forms (h : ∀ (L' : Subgroup (GL (Fin a) (Af E))), IsOpen (L' : 
     (c : (E →+* ℂ) → ℂ → ℂ) :
     FiniteDimensional ℂ (Submodule.span ℂ (GlobalTheory.Published.AutFinGL.forms L ρ c)) := by
   classical
-  haveI hW' : FiniteDimensional ℂ (GlobalTheory.Published.AutFin.coeffSpan ρ) := GlobalTheory.T.finiteDimensional_matrixCoefficientSpan _ W ρ
+  haveI hW' : FiniteDimensional ℂ (GlobalTheory.Published.AutFin.coeffSpan ρ) := _root_.GlobalTheory.Proof.CoeffSpan.finiteDimensional_coeffSpan _ W ρ
   let χ : Module.End ℂ (Sm E a) → ℂ := fun z =>
     if hz : ∃ s : ℂ, ∀ φ : Sm E a, (∀ τ u, cap τ u φ = c τ u • φ) → z φ = s • φ then hz.choose else 0
   have hsub : GlobalTheory.Published.AutFinGL.forms L ρ c ⊆ formsGL E a L (GlobalTheory.Published.AutFin.coeffSpan ρ) {χ} 1 := by
@@ -78,7 +84,7 @@ theorem finite_forms (h : ∀ (L' : Subgroup (GL (Fin a) (Af E))), IsOpen (L' : 
     match zs, hlen with
     | [z], _ =>
       have hz : z ∈ Zalg E a := hzs z (List.mem_singleton_self z)
-      have hex := GlobalTheory.T.center_acts_by_scalar_on_eigenforms E a c z hz
+      have hex := _root_.GlobalTheory.CuspRep.Zalg_acts_by_scalar E a c z hz
       have hχ : χ z = hex.choose := dif_pos hex
       simp only [List.foldr_cons, List.foldr_nil]
       rw [hχ, hex.choose_spec φ h4, sub_self]
@@ -148,7 +154,7 @@ theorem finiteDimensional_mapsJ_rank (h : ∀ (L' : Subgroup (GL (Fin a) (Af E))
   have hcap : ∀ (τ : E →+* ℂ) (u : ℂ), cap (a := a) τ u ∈ Zalg E a := fun τ u =>
     Algebra.subset_adjoin ⟨τ, u, rfl⟩
   let S : Set (Module.End ℂ (mapsJ φ L)) := {s | ∃ τ u, s = postZ φ L (cap τ u) (hcap τ u)}
-  refine GlobalTheory.T.finiteDimensional_of_commuting_finiteAlgebra_jointEigen (mapsJ φ L) S ?_ ?_ ?_
+  refine _root_.GlobalTheory.AutGrowth.finiteDimensional_of_commuting_finite_eigen (mapsJ φ L) S ?_ ?_ ?_
   · rintro _ ⟨τ, u, rfl⟩ _ ⟨τ', u', rfl⟩
     refine LinearMap.ext fun T => Subtype.ext (LinearMap.ext fun w => ?_)
     show cap τ u (cap τ' u' (T.1 w)) = cap τ' u' (cap τ u (T.1 w))
@@ -214,7 +220,7 @@ theorem tame_of_autForm_rank : ∀ (E : Type) [Field E] [NumberField E] [_root_.
     ∀ φ : Sm E n, IsAutForm φ → φ ∈ GlobalTheory.AutGrowth.tame E n := by
   intro E _ _ _ a hfin φ hφ
   let ν : Measure (Lie E a) := Measure.addHaar
-  obtain ⟨α, hα, hlim⟩ := GlobalTheory.T.exists_conjInvariant_approxIdentity_realLieSmoothing E a ν
+  obtain ⟨α, hα, hlim⟩ := _root_.GlobalTheory.AutGrowth.ApproxId.exists_approx_identity E a ν
   obtain ⟨V, hVf, hVt, hV⟩ := exists_finite_space_rank hfin ν φ hφ
   let V' : Submodule ℂ (GA E a → ℂ) := V.map (Sm E a).subtype
   have hc : IsClosed (V' : Set (GA E a → ℂ)) := Submodule.closed_of_finiteDimensional V'

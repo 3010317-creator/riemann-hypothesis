@@ -1,7 +1,8 @@
 module
 
 public import Development.WeilBound.CoreStatements.SesquilinearFractions.CmPackLieProperties
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelEigenvectorsActionStatement
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeGram
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelEigenvectorsAction
 import Development.WeilBound.CoreStatements.SesquilinearFractions.GLieInt
 import Development.WeilBound.CoreStatements.SesquilinearFractions.GLieIntB
 import Mathlib.Algebra.Order.Floor.Extended
@@ -160,7 +161,7 @@ theorem lamRt : LamRt X := by
 
 theorem cmVecIff : CMVecIff X := by
   intro b τ a v
-  have bridge := (GlobalTheory.T.lie_model_eigenvectors_action Xo.X X.K Xo.univ.t.G (under X.y) (Fin g → X.K) (Mm X)).1
+  have bridge := (_root_.GlobalTheory.CompanionTheory.Ar.Fl.Bridge.comb_eig_frame Xo.X X.K Xo.univ.t.G (under X.y) (Fin g → X.K) (Mm X)).1
   let uv : Module.Free.ChooseBasisIndex ℤ (𝓞 E) → (Fin g → X.K) := fun j => ρm X (RingOfIntegers.basis E j) (lam X b a)
   have hsum : ∀ (n : ℕ) (e : Fin n ≃ Module.Free.ChooseBasisIndex ℤ (𝓞 E)),
       ∑ k, X.β (tauE c τ (HT.dualInt E (e k))) • uv (e k) = HT.eigProj (ρm X) (X.β.comp (tauE c τ)) (lam X b a) := by

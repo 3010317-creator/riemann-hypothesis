@@ -1,8 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DivisorSupportCondition
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CohomologyFieldAddEquivGaloisStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FreeRankOneEtaleSheafEquivLocallyConstantStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IndEtOfForallFinset
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PullHlComp
+public import GroundTheory.ProfiniteCohomology.ContinuousCochains
+public import Mathlib.FieldTheory.KrullTopology
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CohomologyFieldAddEquivGalois
+public import Mathlib.Topology.LocallyConstant.Algebra
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FreeRankOneEtaleSheafEquivLocallyConstant
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocallyConstantSpecLocalRingConstBijectiveStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistFinitaryStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistIsFreeRankOneOnGeneratorSectionStatement
@@ -111,7 +116,7 @@ theorem field_tw_coh_eq_galois : B7 := by
   let ζ0 : Prim q Ω := ⟨ζ, hqΩ, cyclotomic_aeval_eq_zero hζ⟩
   let ζ' : Prim q Γ(S, ⊤) := Prim.map ι ζ0
   let g : Sec (tw q (i : ℤ)) S := twGen (i : ℤ) ζ'
-  obtain ⟨e, he1, -⟩ := GlobalTheory.T.freeRankOne_etaleSheaf_equiv_locallyConstant (ZMod q) (tw q (i : ℤ)) S g (GlobalTheory.T.tateTwist_isFreeRankOne_on_generatorSection q i S ζ')
+  obtain ⟨e, he1, -⟩ := _root_.GlobalTheory.EtC.gen_locallyConstant (ZMod q) (tw q (i : ℤ)) S g (GlobalTheory.T.tateTwist_isFreeRankOne_on_generatorSection q i S ζ')
   have hconst := GlobalTheory.T.locallyConstant_spec_localRing_const_bijective (ZMod q) Ω
   let φ : ZMod q →+ Sec (tw q (i : ℤ)) S :=
     { toFun := fun c => (ULift.up c : ULift.{1} (ZMod q)) • g
@@ -131,7 +136,7 @@ theorem field_tw_coh_eq_galois : B7 := by
   let E1 : ZMod q ≃+ Sec (tw q (i : ℤ)) S := AddEquiv.ofBijective φ hφ
   let E0 : M ≃+ ZMod q := (b.equivFun.trans (LinearEquiv.funUnique Unit (ZMod q) (ZMod q))).toAddEquiv
   have hE0 : ∀ m, E0 m = b.repr m () := fun m => rfl
-  refine GlobalTheory.T.nonempty_cohomology_addEquiv_galois_cohomology (ZMod q) (tw q (i : ℤ)) (GlobalTheory.T.tateTwist_finitary q i) K Ω M (E0.trans E1) ?_ n
+  refine _root_.GlobalTheory.EtC.GalFld.cohomology_field_addEquiv_galois (ZMod q) (tw q (i : ℤ)) (GlobalTheory.T.tateTwist_finitary q i) K Ω M (E0.trans E1) ?_ n
   intro σ m
 
   have hσ : IsPrimitiveRoot (σ ζ) q := hζ.map_of_injective σ.injective

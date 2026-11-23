@@ -2,13 +2,19 @@ module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ThetaNormCommutation.LocalComparisonSplitting.EulerFactorLevels.EulerFinOf
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedGLMassFormula
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsPositiveHermitianFormStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteTorsionCentralizerStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteTorsionLatticeCompactStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IntegralPointsOpenCompactStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwCentRatFCommStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwistedCentralizerUnitaryIffStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryGroupCompactQuotientStatement
+public import Formalism.SatakeDualWeyl.Statement
+public import Mathlib.NumberTheory.NumberField.CMField
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsPositiveHermitianForm
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteTorsionCentralizer
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteTorsionLatticeCompact
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ThetaNormCommutation.LocalComparisonSplitting.GlobalCharacterOfInputs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IntegralPointsOpenCompact
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwCentRatFComm
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwistedCentralizerUnitaryIff
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryGroupCompactQuotient
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -128,9 +134,9 @@ theorem factor (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ) (δ 
     {γ : GL (Fin n) (Af E) | γ ∈ gam1 E n δ ∧ IsOfFinOrder γ}.Finite := by
   have hs : (δ * thE E n δ).val.charpoly.Separable := hδ.2.2.1
   have hr : ∀ τ : E →+* ℂ, ∀ z ∈ ((δ * thE E n δ).val.charpoly.map τ).roots, ‖z‖ = 1 := hδ.2.2.2
-  obtain ⟨H, hu, hh, hN, hp⟩ := GlobalTheory.T.exists_positive_hermitian_form E n _ hs hr
-  obtain ⟨⟨C₀, hC₀, hcov⟩, hfin⟩ := GlobalTheory.T.unitary_group_compact_quotient E n H hu hh hp
-  have hc := GlobalTheory.T.twisted_centralizer_unitary_iff E n δ H hs hu hN
+  obtain ⟨H, hu, hh, hN, hp⟩ := _root_.GlobalTheory.CompanionTheory.TraceHerm.exists_posDef_herm E n _ hs hr
+  obtain ⟨⟨C₀, hC₀, hcov⟩, hfin⟩ := _root_.GlobalTheory.CompanionTheory.DefiniteTransport.cocompact_discrete E n H hu hh hp
+  have hc := _root_.GlobalTheory.CompanionTheory.TwCentNorm.mem_twCent_ratF_iff E n δ H hs hu hN
   set U := UJ (conjFin (IsCMField.complexConj E).toRingEquiv) (H.map (algebraMap E (Af E))) with hU
   set Γ := (UJ (IsCMField.complexConj E).toRingEquiv.toRingHom H).map (ratF E n) with hΓ
   have hΓfin : ∀ X : Set (GL (Fin n) (Af E)), IsCompact X → ((Γ : Set (GL (Fin n) (Af E))) ∩ X).Finite := by
@@ -151,7 +157,7 @@ theorem factor (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ) (δ 
     obtain ⟨γ, hγ, hcm, c, hc', e⟩ := hsel t h1 h2
     obtain ⟨γ₀, hγ₀, rfl⟩ := hγ
     exact ⟨ratF E n γ₀, ⟨⟨γ₀, rfl⟩, (hc _).2 ⟨(ratF_mem_UJ E n H γ₀).2 hγ₀, hcm⟩⟩, c, hc', e⟩
-  · refine ((GlobalTheory.T.finite_torsion_centralizer_alt E n _ hs).image (ratF E n)).subset ?_
+  · refine ((_root_.GlobalTheory.CompanionTheory.TorCent.finite_torsion_centralizer E n _ hs).image (ratF E n)).subset ?_
     rintro y ⟨hy, hfo⟩
     obtain ⟨⟨γ, rfl⟩, ht⟩ := hy
     refine ⟨γ, ⟨ratF_injective E n ?_, ?_⟩, rfl⟩
@@ -182,8 +188,8 @@ theorem ratFin : PositivityTheory.Rg.BcB.G8.Fin.RatFin := by
   obtain ⟨⟨C₂, hC₂, hc₂⟩, hf₂, ht₂⟩ := factor E b δ₂ h₂
   have hs₁ : (δ₁ * thE E a δ₁).val.charpoly.Separable := h₁.2.2.1
   have hs₂ : (δ₂ * thE E b δ₂).val.charpoly.Separable := h₂.2.2.1
-  have hK₁ := GlobalTheory.T.finite_kernel_compact_open E a
-  have hK₂ := GlobalTheory.T.finite_kernel_compact_open E b
+  have hK₁ := _root_.GlobalTheory.CompanionTheory.IntegralPoints.kfOC E a
+  have hK₂ := _root_.GlobalTheory.CompanionTheory.IntegralPoints.kfOC E b
   have hKc : (((Kf E a).prod (Kf E b) : Subgroup (Gf E a b)) : Set (Gf E a b)) = (Kf E a : Set _) ×ˢ (Kf E b : Set _) :=
     Subgroup.coe_prod _ _
   have hKo : IsOpen (((Kf E a).prod (Kf E b) : Subgroup (Gf E a b)) : Set (Gf E a b)) := by
@@ -200,7 +206,7 @@ theorem ratFin : PositivityTheory.Rg.BcB.G8.Fin.RatFin := by
   set T := twCent (thP E a b) (ratF E a δ₁, ratF E b δ₂) with hTdef
   have hcomm : ∀ p ∈ T, ∀ q ∈ T, p * q = q * p := fun p hp q hq => by
     rw [hTdef, mem_twCent_thP] at hp hq
-    exact Prod.ext (GlobalTheory.T.twCent_comm_of_charpoly_separable E a δ₁ hs₁ _ hp.1 _ hq.1) (GlobalTheory.T.twCent_comm_of_charpoly_separable E b δ₂ hs₂ _ hp.2 _ hq.2)
+    exact Prod.ext (_root_.GlobalTheory.CompanionTheory.RatCentComm.twCent_ratF_comm E a δ₁ hs₁ _ hp.1 _ hq.1) (_root_.GlobalTheory.CompanionTheory.RatCentComm.twCent_ratF_comm E b δ₂ hs₂ _ hp.2 _ hq.2)
   have hle : gam δ₁ δ₂ ≤ T := fun p hp => hp.2
   have hcov : ∀ t ∈ T, ∃ γ ∈ gam δ₁ δ₂, ∃ c ∈ C₁ ×ˢ C₂, t = γ * c := fun t ht => by
     rw [hTdef, mem_twCent_thP] at ht
@@ -224,7 +230,7 @@ theorem ratFin : PositivityTheory.Rg.BcB.G8.Fin.RatFin := by
   haveI : T2Space (Gf E a b) := by
     set_option synthInstance.maxHeartbeats 200000 in
       infer_instance
-  have hmain := GlobalTheory.T.finite_torsion_lattice_compact (Gf E a b) ((Kf E a).prod (Kf E b)) T (gam δ₁ δ₂)
+  have hmain := _root_.GlobalTheory.CompanionTheory.CountClosedComm.main (Gf E a b) ((Kf E a).prod (Kf E b)) T (gam δ₁ δ₂)
     (C₁ ×ˢ C₂) hKo hKcp hcl hcomm hle (hC₁.prod hC₂) hcov hfin htor
   exact ⟨⟨hcomm, hmain.1⟩, hmain.2.1, hmain.2.2.1, hmain.2.2.2⟩
 

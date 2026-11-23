@@ -6,18 +6,19 @@ public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.Chart
 public import Mathlib.NumberTheory.NumberField.ClassNumber
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ClassNumberRootDiscFactorLeHHZStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CountTermsGramClassOverSublatticeStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteLatticeDiscriminantModuleCardDetSq
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EncardBiUnionLe
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EncardSublatticesBoundedDetLeSum
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsPartnerLift
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniquePlace
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExponentBookkeepingDivisorSumLeStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeDiscriminantOrderNeZeroUnimodula
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExponentDivisorSumLe
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IdxNOneMulAbsNorm
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsLatticeLatIn
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemOfPerpPerp
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormPowLeCardFlagQuotientStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OneLeProdReal
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteLatticeDiscriminantModuleCardDetSq
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EncardBiUnionLe
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniquePlace
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeDiscriminantOrderNeZeroUnimodula
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsLatticeLatIn
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemOfPerpPerp
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardBaseFlagComplementIntegralLattice
 import Formalism.FlagUnipotentLattices.CardSubgroupsOfIndexLe
 import Formalism.HermitianLattices.HermitianLatticesProofs.DualBasic
@@ -359,7 +360,7 @@ theorem main : ∀ Cg cb Cu cT CT C0 A : ℝ, ∃ C : ℝ, ∀ (D : D7) (large�
     have := Real.pi_pos
     positivity
   have hrd : 0 ≤ D.host.rdE := zero_le_one.trans (GlobalTheory.real_places_facts D).2.2.2.2.1
-  have key := GlobalTheory.T.exponent_divisor_sum_le D.R.k D.R.f D.R.rS G (NT D u) H _
+  have key := _root_.GlobalTheory.exponent_sum_le D.R.k D.R.f D.R.rS G (NT D u) H _
     ((2 * (D.R.k : ℝ) * D.host.rdE ^ ((1 : ℝ) / 2)) ^ D.R.f * (classNumber D.host.E : ℝ) * 2 ^ D.R.f) C hk hs.1 hf
     hlog hG1 hN hGH z1 ha (by positivity) z3 c4
   refine (Finset.sum_le_sum fun de hde => mul_le_mul_left

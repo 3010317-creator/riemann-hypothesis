@@ -3,11 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAdelicOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrameCoord
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeDeterminantLineTwoHermitianLattices
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalBasisLatticeOfInverseAdelicMatrixFamiStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramDeterminantSmulStandardBasisInverseFramesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsGramFrameEmbeddingMatrixNormOfVectorStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLatticeLatticeOfLocalMatrixFamily
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalBasisLatticeOfInverseAdelicMatrixFami
+public import Formalism.HarderNarasimhan.StatementPl
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramDeterminantSmulStandardBasisInverseFrames
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsGramFrameEmbeddingMatrixNormOfVector
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MaxSlopeSqLeOfNoShortVector
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLatticeLatticeOfLocalMatrixFamily
 import Formalism.HarderNarasimhan.HarderNarasimhanProofs.DiscreteSpanOfLinIndep
 import Formalism.HarderNarasimhan.HarderNarasimhanProofs.HtGram
 import Formalism.HarderNarasimhan.HarderNarasimhanProofs.SizeMu
@@ -63,14 +64,14 @@ variable {K : Type} [Field K] [NumberField K]
 theorem exists_locBasis {n : ℕ} (A : HeightOneSpectrum (𝓞 K) → Matrix (Fin n) (Fin n) K) (hA : IsAdelic A)
     (P : HeightOneSpectrum (𝓞 K)) : ∃ s : 𝓞 K, s ∉ P.asIdeal ∧
       GlobalTheory.PtDeg.LocBasis P (locLat A) (fun j => (s : K) • ((A P)⁻¹ *ᵥ (Pi.single j 1 : Fin n → K))) :=
-  GlobalTheory.T.exists_localBasis_lattice_of_inverse_adelicMatrixFamily K n A hA P
+  _root_.GlobalTheory.LocMatBasis.exists_locBasis_inv K n A hA P
 
 theorem det_gramPl [StarRing K] {ι : Type} [Fintype ι] [DecidableEq ι] {n : ℕ} (eqv : ι ≃ Fin n)
     (Y : (K →+* ℂ) → Matrix ι ι ℂ) (hY : ∀ σ, (Y σ).det ≠ 0) (t : K) (v : InfinitePlace K) :
     (Formalism.HN.gramPl (Pi.basisFun K ι) (fun v => (Y v.embedding)⁻¹) v
       (fun k => t • (Pi.single (eqv.symm k) 1 : ι → K))).det.re =
       ‖v.embedding t‖ ^ (2 * n) * ‖(Y v.embedding).det‖ ^ 2 :=
-  GlobalTheory.T.gramDeterminant_smul_standardBasis_inverse_frames K ι n eqv Y hY t v
+  _root_.GlobalTheory.DefPt.det_gramPl_smul_single K ι n eqv Y hY t v
 
 theorem smul_single_mem {ι : Type} [Fintype ι] [DecidableEq ι] (A : HeightOneSpectrum (𝓞 K) → Matrix ι ι K)
     (d : 𝓞 K) (hd : ∀ w, IntAt w ((d : K) • A w)) (i : ι) : (d : K) • (Pi.single i 1 : ι → K) ∈ locLat A := by
@@ -206,7 +207,7 @@ theorem GlobalTheory.LocMatSlope.slope_sq_locLat : ∀ (K : Type) [Field K] [Num
   set n := Fintype.card ι with hn
   set eqv : ι ≃ Fin n := Fintype.equivFin ι with heqv
   have hL := GlobalTheory.LocMatLat.isLattice_locLat K ι A hA
-  have hG := (GlobalTheory.T.isGramFrame_embeddingMatrixNormOfVector K ι Y hY).1
+  have hG := (_root_.GlobalTheory.DefPt.isGram_matNorm K ι Y hY).1
   rw [slope_sq_eq hG hL.fg]
   obtain ⟨d, hd0, hd⟩ := GlobalTheory.LocMatLat.exists_denom A (hA.2.subset fun w hw h => hw h.1)
   have hdK : (d : K) ≠ 0 := by simpa using hd0

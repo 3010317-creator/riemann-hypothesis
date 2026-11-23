@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IntegralBound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HyperplaneSectionVanishingShift
+public import Development.AbelianVarietyTheory.Definitions.Divisors.LineBundleGlobalSectionsDimCongrPicardClass
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ZeroDimSupportEulerChar
 import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.EventuallySubsingletonCohTwistZOfIsProjOver
 import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.IsFiniteLengthOfIsArtinianRingAnnihilator
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HyperplaneSectionVanishingShiftStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ZeroDimSupportEulerCharStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,13 +65,13 @@ theorem choose_mul_interNum_le_hdim : ∀ (k : Type) [Field k] [Infinite k] (Y :
   induction d with
   | zero =>
     intro F _ hF j₀ _ m
-    rw [interNum_of_isEmpty, GlobalTheory.T.zero_dim_support_euler_char k Y hY L hL F (by simpa using hF)]
+    rw [interNum_of_isEmpty, _root_.GlobalTheory.HSCore.hdim_zero_twistZ_eq_chi_of_suppDim_le_zero k Y hY L hL F (by simpa using hF)]
     simp
   | succ d ih =>
     intro F _ hF j₀ hV m
     obtain ⟨c, hc⟩ := exists_sum_mono_cutHom (k := k) F hL b hb'
     set t : L.Sec := ∑ i, algebraMap k Γ(Y, ⊤) (c i) • b i
-    obtain ⟨hV', hr⟩ := GlobalTheory.T.hyperplane_section_vanishing_shift k Y hY L hL F t j₀ hV
+    obtain ⟨hV', hr⟩ := _root_.GlobalTheory.HSCore.vanishFrom_cut_and_hdim k Y hY L hL F t j₀ hV
     have hI : GlobalTheory.interNum k F (fun _ : Fin (d + 1) => L) =
         GlobalTheory.interNum k (GlobalTheory.cut F hL t) (fun _ : Fin d => L) := by
       rw [← interNum_cons_eq_interNum_cut hL t (P := fun _ : Fin d => L) (fun _ => hL)

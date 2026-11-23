@@ -4,7 +4,9 @@ public import Mathlib.Algebra.Algebra.Rat
 public import Mathlib.Algebra.Module.Submodule.Defs
 public import Mathlib.Basic.Complex.Basic
 public import Mathlib.Data.Matrix.Mul
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.GaloisStableSubmoduleLeSpanRationalStatement
+public import Mathlib.LinearAlgebra.Basis.Defs
+public import Mathlib.LinearAlgebra.DFinsupp
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.GaloisStableSubmoduleLeSpanRational
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -86,7 +88,7 @@ theorem exists_rat_idempotent_of_stable (ι : Type) [Fintype ι] [DecidableEq ι
       fun q hq => congrArg Subtype.val (Submodule.projectionOnto_apply_left hC ⟨q, hq⟩)⟩
   have hff : f ∘ₗ f = f := LinearMap.ext fun q => hf2 _ (hf1 q)
 
-  have hstable := GlobalTheory.T.galoisStable_submodule_le_span_rational (ι → ℂ) ι (Pi.basisFun ℂ ι) W
+  have hstable := _root_.GlobalTheory.ClassFin.GaloisDescent.le_span_rational (ι → ℂ) ι (Pi.basisFun ℂ ι) W
     (fun σ w hw => ⟨fun i => σ (w i), hW σ w hw, fun k => by simp⟩)
   refine ⟨LinearMap.toMatrix' f, ?_, ?_⟩
   · rw [← LinearMap.toMatrix'_comp, hff]

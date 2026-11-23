@@ -3,7 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsPairingSingleNe
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatVecUOfIsSphericalU
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweUnram
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsHeckeTranslateOfMemSpanFixedTranslatesStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsHeckeTranslateOfMemSpanFixedTranslates
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalThetaInertPlace
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConstMemBddAut
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.FSatakeA
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -44,7 +46,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ChainParSucc
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConstMemBddAut
 
 @[expose] public section
 
@@ -90,7 +91,7 @@ theorem heckeVec_howe : GlobalTheory.Hk3.HoweUnram → ∀ (L : Type) [Field L] 
     simp only [OneMemClass.coe_one, mul_one] at this
     simp only [Equiv.symm_apply_apply, this, map_mul, LinearMap.toAddMonoidHom_coe, map_smul]
     rfl
-  obtain ⟨h, hh, e⟩ := GlobalTheory.T.exists_hecke_translate_of_mem_span_fixed_translates _ (KU σ n) hK M (ω.comp (MonoidHom.inl _ _)) s w f1 w1
+  obtain ⟨h, hh, e⟩ := _root_.GlobalTheory.SphTheta.AvgHecke.exists_hecke_of_mem_span _ (KU σ n) hK M (ω.comp (MonoidHom.inl _ _)) s w f1 w1
     (hw2 w fun g hg => w2 g (mem_KU_iff.2 hg))
   exact ⟨h, hh, e⟩
 

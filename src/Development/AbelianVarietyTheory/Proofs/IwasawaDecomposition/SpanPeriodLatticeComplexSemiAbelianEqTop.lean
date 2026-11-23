@@ -1,8 +1,10 @@
 module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCompactRepresentativesModTorusPointsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TorusPointsSubsetHolPeriodicOneParamSpanStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPerHolOne
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCompactRepresentativesModTorusPoints
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.Signature
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TorusPointsSubsetHolPeriodicOneParamSpan
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HolomorphicHomDetermined
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -110,8 +112,8 @@ theorem span_ker_eq_top : ∀ (X : Scheme.{0}) (G : Over X) [GrpObj G] (y : Sp �
     show lam (ψ s) = 0
     rw [hh, hlam, hlin, map_smul, h1, smul_zero]
   obtain ⟨E⟩ := hG.fibres ℂ y
-  have htor : ∀ x ∈ torusPts G y E, lam x = 0 := fun x hx => hper (GlobalTheory.T.torusPoints_subset_holPeriodicOneParamSpan X G y E hx)
-  obtain ⟨C, hC, hCz⟩ := GlobalTheory.T.exists_compact_representatives_mod_torusPoints X G y g e E hG hadd hsurj hhol' hd2
+  have htor : ∀ x ∈ torusPts G y E, lam x = 0 := fun x hx => hper (_root_.GlobalTheory.PeriodSpan.torusPts_subset_perHolSub X G y E hx)
+  obtain ⟨C, hC, hCz⟩ := _root_.GlobalTheory.TorusCocompact.exists_isCompact_mod_torusPts X G y g e E hG hadd hsurj hhol' hd2
   obtain ⟨M, hM⟩ := hC.exists_bound_of_continuousOn (LinearMap.continuous_of_finiteDimensional ℓ).continuousOn
   have hbd : ∀ z, ‖ℓ z‖ ≤ M := fun z => by
     obtain ⟨c, hc, hzc⟩ := hCz z

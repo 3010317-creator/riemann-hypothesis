@@ -4,11 +4,15 @@ public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.
 public import Mathlib.Order.Sigma
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FinSigmaFinEquivSymmStrictMonoToLexStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InductionInStagesTwoFactorsEquivStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LexSumSplitFirstBlockStrictMonoStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ParabolicInductionProductBlockRenamingEquivStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ParabolicInductionProductEquivOfNoBlocksStatement
+public import Mathlib.Algebra.BigOperators.Fin
+public import Mathlib.Algebra.Group.End
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FinSigmaFinEquivSymmStrictMonoToLex
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InductionInStagesTwoFactorsEquiv
+public import Mathlib.Order.Fin.Basic
+public import Mathlib.Order.Sum.Order
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LexSumSplitFirstBlockStrictMono
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ParabolicInductionProductBlockRenamingEquiv
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ParabolicInductionProductEquivOfNoBlocks
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsIrreducibleIffOfLinearEquiv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -147,7 +151,7 @@ theorem stages_equiv (s : ℕ) : ∀ (d t : Fin s → ℕ) (d' : ∀ a, Fin (t a
       ⟨fun x => (ofLex x.1).1.elim0⟩
     let E : (Σ c : (Σₗ a : Fin 0, Fin (t a)), Fin (d' (ofLex c).1 (ofLex c).2)) ≃ n :=
       Equiv.equivOfIsEmpty _ _
-    exact ⟨E, GlobalTheory.T.parabolicInductionProduct_equiv_of_no_blocks (k := k) _ _ _ _⟩
+    exact ⟨E, _root_.GlobalTheory.EmptyProd.multiProd_equiv_of_isEmpty (k := k) _ _ _ _⟩
   | succ s ih =>
     intro d t d' e' X _ _ ρ n _ _ e
     have E1 := multiProd_succ_equiv (k := k) (m := fun a => Fin (d a))
@@ -160,7 +164,7 @@ theorem stages_equiv (s : ℕ) : ∀ (d t : Fin s → ℕ) (d' : ∀ a, Fin (t a
       fun c => Fin (d' (ofLex (splitEquiv t c)).1 (ofLex (splitEquiv t c)).2)
     let Es : (Σ c, mS c) ≃ n := (Equiv.sumSigmaDistrib fun x => mS (toLex x)).trans
       ((Equiv.sumCongr (e' 0) Er).trans ((headTail _).trans e))
-    have E4 := GlobalTheory.T.inductionInStages_twoFactors_equiv (k := k) (m := mS)
+    have E4 := _root_.GlobalTheory.SmGL.StagesTwo.ind₂_parInd_parInd_equiv (k := k) (m := mS)
       (a := Fin (d 0)) (b := Σ i : Fin s, Fin (d i.succ)) (V := ⨂[ℂ] b, X 0 b) (W := ⨂[ℂ] c : Σₗ i : Fin s, Fin (t i.succ), X (ofLex c).1.succ (ofLex c).2)
       (U := ⨂[ℂ] c : Fin (t 0) ⊕ₗ (Σₗ i : Fin s, Fin (t i.succ)), X (ofLex (splitEquiv t c)).1 (ofLex (splitEquiv t c)).2) Es ((headTail _).trans e) (e' 0) Er
       (fun _ _ => rfl) (fun _ _ => rfl) (piTensor (ρ 0))
@@ -179,7 +183,7 @@ theorem stages_equiv (s : ℕ) : ∀ (d t : Fin s → ℕ) (d' : ∀ a, Fin (t a
     let Esig : (Σ c : (Σₗ a, Fin (t a)), Fin (d' (ofLex c).1 (ofLex c).2)) ≃ n :=
       (Equiv.sigmaCongrLeft (β := fun c : Σₗ a, Fin (t a) => Fin (d' (ofLex c).1 (ofLex c).2))
         (splitEquiv t)).symm.trans Es
-    have E5 := GlobalTheory.T.parabolicInductionProduct_block_renaming_equiv (k := k) (splitEquiv t) (GlobalTheory.T.lexSum_splitFirstBlock_strictMono s t) (splitEquiv t).surjective
+    have E5 := _root_.GlobalTheory.SmGL.BlockRename.multiProd_rename (k := k) (splitEquiv t) (_root_.GlobalTheory.lexSumSplit_strictMono s t) (splitEquiv t).surjective
       Esig Es (fun c' x => congrArg Es ((Equiv.sigmaCongrLeft
         (β := fun c : Σₗ a, Fin (t a) => Fin (d' (ofLex c).1 (ofLex c).2)) (splitEquiv t)).symm_apply_apply ⟨c', x⟩).symm) fun c => ρ (ofLex c).1 (ofLex c).2
     obtain ⟨E5⟩ := E5
@@ -198,7 +202,7 @@ theorem isSubquotient_multiProd_multiProd (k : Type) [Field k] [ValuativeRel k] 
   let F : Fin (∑ a, t a) ≃ Σₗ a, Fin (t a) := finSigmaFinEquiv.symm.trans toLex
   let E : (Σ c : Fin (∑ a, t a), Fin (d' (finSigmaFinEquiv.symm c).1 (finSigmaFinEquiv.symm c).2)) ≃ Fin n :=
     (Equiv.sigmaCongrLeft (β := fun c : Σₗ a, Fin (t a) => Fin (d' (ofLex c).1 (ofLex c).2)) F).trans E0
-  have hψ := GlobalTheory.T.parabolicInductionProduct_block_renaming_equiv (k := k) F (GlobalTheory.T.finSigmaFinEquiv_symm_strictMono_toLex s t) F.surjective E0 E
+  have hψ := _root_.GlobalTheory.SmGL.BlockRename.multiProd_rename (k := k) F (_root_.GlobalTheory.finSigmaFinEquiv_symm_strictMono_lex s t) F.surjective E0 E
     (fun _ _ => rfl) fun c => ρ (ofLex c).1 (ofLex c).2
   obtain ⟨ψ⟩ := hψ
   exact ⟨E, .of_injective (φ.trans ψ).toIntertwiningMap (φ.trans ψ).toLinearEquiv.injective⟩

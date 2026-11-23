@@ -5,22 +5,30 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.Sie
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.PartialZetaFunctionalEquation
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TorsTransport
 public import ReciprocityTheory.ReductiveGroups.UnramifiedIntegrals.ModDefs
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmLatticeDerivClassInvarianceOfHeckeStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.DefiningCoordinates
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.OmegaFactorization
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmLatticeDerivClassInvarianceOfHecke
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmPeriodConstantEqOfCardCmType
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEquivCmTypeRealEmbeddings
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeWeightTwoContinuationOfFunctionalEquationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertEisensteinExpansionOfLipschitzHeckeZetaStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeWeightTwoContinuationOfFunctionalEquation
+public import Development.AbelianVarietyTheory.Definitions.Divisors.JetAnalytic
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TraceDualDifferent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertEisensteinExpansionOfLipschitzHeckeZeta
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertEisensteinValueDerivativesViaJets
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertFamilyWeierstrassTwist
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ImportsSideAlt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAlgebraicOfIsIntegralAlgebraicNumbers
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LipschitzFormulaTotallyRealPoissonStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LipschitzFormulaTotallyRealPoisson
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemMulMatSmulOneIff
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemOneIffIsIntegral
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModularGroupRowVecAndConjRightActionsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PartialZetaDenominatorsCMFieldOfSiegelKlingenDelStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ZetaActRefl
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.ZetaValueIdeals
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PartialZetaDenominatorsCMFieldOfSiegelKlingenDel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QAllIsAlgebraicHfunTwist
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeierstrassEisensteinNonholomorphicIdentity
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HasLevelStd
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HasQIff
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModularGroupRowVecAndConjRightActions
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,9 +67,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import ReciprocityTheory.ReductiveGroups.UnramifiedIntegrals.ModLatTau
-public import Development.AbelianVarietyTheory.Definitions.Divisors.HasLevelStd
-public import Development.AbelianVarietyTheory.Definitions.Divisors.HasQIff
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ZetaActRefl
 
 @[expose] public section
 
@@ -125,10 +130,10 @@ theorem latAlg_of_siegelKlingen : GlobalTheory.Published.SiegelKlingenDeligneRib
   have hΩ0 : Ω₀ ≠ 0 := by
     rintro rfl
     exact latDisc_ne_zero Λ₀ (by rw [← hΩ]; simp)
-  have hW2 := GlobalTheory.T.heckeWeightTwoContinuation_of_functionalEquation hPZ
-  have hSt := GlobalTheory.T.cmLattice_derivClassInvariance_of_hecke hW2
-  have hEis := GlobalTheory.T.hilbertEisensteinExpansion_of_lipschitz_hecke_zeta GlobalTheory.T.lipschitz_formula_totally_real_poisson hW2 hPZ
-  obtain ⟨⟨z, hz⟩, -⟩ := GlobalTheory.T.partialZetaDenominatorsCMField_of_siegelKlingenDeligneRibet hSKDR E s hs
+  have hW2 := _root_.GlobalTheory.HeckeTwo.heckeWeightTwo_of_fe hPZ
+  have hSt := _root_.GlobalTheory.DerivAtOrigin.statement hW2
+  have hEis := _root_.GlobalTheory.HilbertEis.eisExp _root_.GlobalTheory.LipschitzTR.lipschitz hW2 hPZ
+  obtain ⟨⟨z, hz⟩, -⟩ := _root_.GlobalTheory.ZetaDenom.zetaDenominators hSKDR E s hs
   obtain ⟨⟨g, hg⟩, hD⟩ := (((hSt E I φ hf2 hCM).1 s hs).1 (condQ 𝔣 Q) y hc0).1
   obtain ⟨u, hu⟩ := GlobalTheory.LatAlgebraic.exists_list_count κ
   have hDg := ((hD g hg).2 κ u hu).1 S hS
@@ -172,11 +177,11 @@ theorem latAlg_of_siegelKlingen : GlobalTheory.Published.SiegelKlingenDeligneRib
     intro μ
     have h := GlobalTheory.QFam.fam_value_isAlgebraic (GL (Fin 2) (ZMod N)) (GlobalTheory.WpFam.gact N 1) (GlobalTheory.HilbFam.wt (2 * s) μ) N
       (fun α ↦ GlobalTheory.HilbFam.hfun (2 * s) (GlobalTheory.HilbFam.twist N L ((α : GL (Fin 2) (ZMod N)) : Matrix (Fin 2) (Fin 2) (ZMod N))) μ (wB N (GlobalTheory.WpFam.vmul y₁ α)))
-      τ ω (by omega) (((GlobalTheory.T.modularGroup_rowVec_and_conj_rightActions N).2.1 1).actBij)
+      τ ω (by omega) (((_root_.GlobalTheory.WpFam.Act.rightActions N).2.1 1).actBij)
       (GlobalTheory.HilbFam.isFam_hfun_GL hEis (maximalRealSubfield E) hf2 s N L hs hL y₁ μ)
       (fun α ↦ GlobalTheory.HilbFam.qAll_isAlgebraic_hfun_twist hEis (maximalRealSubfield E) hf2 s N L hs hL z hz μ y₁ hy₁ α)
       hj hωDD 1
-    simpa only [Units.val_one, GlobalTheory.HilbFam.twist_one_of_hasLevel _ N L hL, (GlobalTheory.T.modularGroup_rowVec_and_conj_rightActions N).2.2.2.1] using h
+    simpa only [Units.val_one, GlobalTheory.HilbFam.twist_one_of_hasLevel _ N L hL, (_root_.GlobalTheory.WpFam.Act.rightActions N).2.2.2.1] using h
   have hX : IsAlgebraic ℚ ((((Real.pi / τ.im : ℝ) : ℂ) / (2 * Real.pi * Complex.I) ^ 2 - wB N y₁ τ) / ω ^ 2) := by
     rw [GlobalTheory.wB_nonhol_correction, neg_div, add_div]
     exact ((hG2.add (hwp N y₁))).neg

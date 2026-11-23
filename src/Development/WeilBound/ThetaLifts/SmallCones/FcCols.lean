@@ -3,12 +3,14 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
 public import Development.WeilBound.CoreStatements.ThetaDilations.ParAlg
 public import Development.WeilBound.ThetaLifts.SmallCones.UnfAbs
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelesLocallyCompactSecondCountableStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRingStatement
+public import Formalism.UnipotentAdelicQuotients.SWXSDefs
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelesLocallyCompactSecondCountable
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
 public import Development.WeilBound.CoreStatements.ThetaDilations.ContinuousPm
 public import Development.WeilBound.ThetaLifts.CartanFactorisation.Unimod
 public import Development.WeilBound.ThetaLifts.SmallCones.MatCancel
 public import Development.WeilBound.ThetaLifts.SmallCones.UnfParH
+public import Development.WeilBound.ThetaLifts.SmallCones.ColsOfMul
 import Development.WeilBound.ThetaLifts.TowerModels.LeviAd
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -50,7 +52,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts
-public import Development.WeilBound.ThetaLifts.SmallCones.ColsOfMul
 
 @[expose] public section
 
@@ -103,8 +104,8 @@ theorem conjEx (h : IsCMExt F E σ) {n : ℕ} {J J' : Matrix (Fin n) (Fin n) E} 
     (hA : ξ • (A.1ᵀ * J * A.1.map σ)ᵀ = J') : ∃ Φ : HeckeCharacterZeroLocus.SiegelWeilU.HA (AF F) σ J' ≃ₜ* UA σ J,
       (∀ g, mat (Φ g) * incM F A.1 = incM F A.1 * g.1.val) ∧
       ∀ g, HeckeCharacterZeroLocus.SiegelWeilU.HA.mat (AF F) σ J' g ∈ HeckeCharacterZeroLocus.SiegelWeilU.HFin (AF F) σ J' → Φ g ∈ ratU σ J := by
-  obtain ⟨⟨_, _, _⟩, -⟩ := GlobalTheory.T.adeles_locally_compact_second_countable F
-  haveI : IsTopologicalRing (AE F E) := (GlobalTheory.T.tensor_locally_compact_ring F E σ h (AF F)).1
+  obtain ⟨⟨_, _, _⟩, -⟩ := _root_.GlobalTheory.CompanionTheory.AdeleTop.adele_top F
+  haveI : IsTopologicalRing (AE F E) := (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ h (AF F)).1
   let a : GL (Fin n) (AE F E) := Matrix.GeneralLinearGroup.map (inclR (F := F) (AF F)) A
   have ha : inclR (F := F) (AF F) ξ • (a.1ᵀ * incM F J * a.1.map (cA σ : AE F E →+* AE F E))ᵀ = incM F J' := by
     rw [← hA]

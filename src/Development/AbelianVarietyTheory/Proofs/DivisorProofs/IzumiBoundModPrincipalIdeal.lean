@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NonUnitAt
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.ArithBase
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSpecializesIsLocalization
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IInfIzumiSmallValueIdealMapLeSpanStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLeSpanSupPow
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IInfIzumiSmallValueIdealMapLeSpan
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +46,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsNatDiagIffIsDiag
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsProperToroidalModelStructureMap
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsThetaCompact
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLeSpanSupPow
 
 @[expose] public section
 
@@ -61,7 +61,7 @@ theorem small_mod_principal : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra
   intro o Ω _ _ _ _ M hn U hU x hx f hf hf0
   haveI : IsDedekindDomain o := ArithBase.ded Ω
   haveI : IsNoetherianRing (M.O x) := M.isNoetherianRing_O x
-  have hB := GlobalTheory.T.iInf_izumiSmallValueIdeal_map_le_span o Ω M hn U hU x hx f hf hf0
+  have hB := _root_.GlobalTheory.Izumi.iInf_map_smallIdeal_le_span o Ω M hn U hU x hx f hf hf0
   choose C hC using exists_le_span_sup_pow (M.O x) (smallIdeal M U x f) ⟨f, hf⟩
     (smallIdeal_antitone U x f) (self_mem_smallIdeal U hf) hB
   refine ⟨C, fun e F hF => ?_⟩

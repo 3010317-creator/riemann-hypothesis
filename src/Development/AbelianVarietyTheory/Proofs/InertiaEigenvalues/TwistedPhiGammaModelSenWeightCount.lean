@@ -1,11 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TwistedModelAdmissibleCocycles
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleLetterDataWindowArithmeticStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModelObjAndAbcStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PhiGammaLatticeFamiliesShiftInclusionStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SenMultiplicityLatticeCountRelationStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SenWeightSubquotientModelMemResiduesStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleLetterDataWindowArithmetic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModelObjAndAbc
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PhiGammaLatticeFamiliesShiftInclusion
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.PowerSeriesOneAddConstMulXMulInv
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SenMultiplicityLatticeCountRelation
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SenWeightSubquotientModelMemResidues
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -128,15 +130,15 @@ theorem exists_of_resCount_ne {k : Type} [Field k] {U : Multiset ℤ} {w : ℤ} 
 
 theorem count : ∀ {k G : Type} [Field k] [Group G] {l n : ℕ} [Fact l.Prime] [CharP k l] [NeZero n] {R : RingPG k l} (F : DFun R n G) {r : ℕ} {Dt : TopData n r} (M : ModTh F Dt), Dt.T1 l → Dt.T2 l → Dt.T3 l → ∀ N : Lats k n M.T.m, M.Model M.T N → (∀ i, M.Nstd i ≤ N i) → ∀ i, (∀ a : ℕ, a ≤ Dt.sg l i + 1 → sen ((F.D M.T).γ i) (N i) (a : k) = 0) ∧ (Dt.ty i = LType.G → ∑ j ∈ Finset.range (Dt.w i).toNat, sen ((F.D M.T).γ i) (N i) ((-Dt.w i + j : ℤ) : k) = Dt.d i) ∧ (Dt.ty i = LType.Bd → Dt.d i + ∑ a ∈ Finset.range ((Dt.wst i).toNat + 1), sen ((F.D M.T).γ i) (N i) (a : k) = r) := by
   intro k G _ _ l n _ _ _ R F r Dt M h1 h2 h3 N hN hle i
-  have hNabc := (GlobalTheory.T.obj_and_abc_of_model F M M.T N hN).2
-  have hSabc := (GlobalTheory.T.obj_and_abc_of_model F M M.T M.Nstd M.std_model).2
+  have hNabc := (_root_.GlobalTheory.Models.model_obj_and_abc F M M.T N hN).2
+  have hSabc := (_root_.GlobalTheory.Models.model_obj_and_abc F M M.T M.Nstd M.std_model).2
   have hs : Dt.sg l i = GlobalTheory.PhiGam.sg l Dt.h i := rfl
-  have hsh := GlobalTheory.T.phiGamma_lattice_families_shift_inclusion (F.D M.T) Dt.h Dt.w N M.Nstd hNabc.1 hSabc.1 hNabc.2.1 hSabc.2.1 i
+  have hsh := _root_.GlobalTheory.PhiGam.CloseTw.main (F.D M.T) Dt.h Dt.w N M.Nstd hNabc.1 hSabc.1 hNabc.2.1 hSabc.2.1 i
   rw [← hs] at hsh
   have hP : N i ≤ sh (-(Dt.sg l i : ℤ)) (M.Nstd i) := by
     have h' := sh_le_sh (-(Dt.sg l i : ℤ)) hsh
     rwa [sh_sh_eq, neg_add_cancel, sh_zero_eq] at h'
-  have tel := fun y : ℤ => GlobalTheory.T.senMultiplicity_lattice_count_relation R ((F.D M.T).γ i) ((F.D M.T).γ_semi i) (N i) (M.Nstd i)
+  have tel := fun y : ℤ => _root_.GlobalTheory.PhiGam.Count.sen_count R ((F.D M.T).γ i) ((F.D M.T).γ_semi i) (N i) (M.Nstd i)
     (hNabc.1 i) (hSabc.1 i) (hle i) (hNabc.2.2 i) (hSabc.2.2 i) (Dt.sg l i) hP (y : k)
   have rel : ∀ y : ℤ, sen ((F.D M.T).γ i) (N i) (y : k) + qmult ((F.D M.T).γ i) (N i) (M.Nstd i) ((y + 1 : ℤ) : k) =
       sen ((F.D M.T).γ i) (M.Nstd i) (y : k) + qmult ((F.D M.T).γ i) (N i) (M.Nstd i) (y : k) := by
@@ -154,12 +156,12 @@ theorem count : ∀ {k G : Type} [Field k] [Group G] {l n : ℕ} [Fact l.Prime] 
     linear_combination hux
   have sz : ∀ y : ℤ, sen ((F.D M.T).γ i) (N i) (y : k) ≠ 0 → ∃ u ∈ Dt.U i, (u : k) = ((y + Dt.w i : ℤ) : k) := by
     intro y hy
-    obtain ⟨u, hu, hux⟩ := GlobalTheory.T.senWeight_subquotient_model_mem_residues F M h1 h2 h3 M.T M.T LinearMap.id LinearMap.id N (fun _ _ => rfl)
+    obtain ⟨u, hu, hux⟩ := _root_.GlobalTheory.Models.ModTh.sen_model_subquot_mem_U F M h1 h2 h3 M.T M.T LinearMap.id LinearMap.id N (fun _ _ => rfl)
       (fun _ _ hab => hab) (fun _ _ => rfl) (fun b => ⟨b, rfl⟩) hN i (y : k) hy
     refine ⟨u, hu, ?_⟩
     push_cast at hux ⊢
     linear_combination hux
-  obtain ⟨-, hwin, hG, hB⟩ := GlobalTheory.T.admissibleLetterData_window_arithmetic (k := k) Dt h1 h2 h3 i
+  obtain ⟨-, hwin, hG, hB⟩ := _root_.GlobalTheory.WindowArith.windows (k := k) Dt h1 h2 h3 i
   have hT1 := h1 i
   have ht := Dt.one_le_letterBlockLength
   have e1 : qmult ((F.D M.T).γ i) (N i) (M.Nstd i) ((0 : ℤ) : k) = 0 := by

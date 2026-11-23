@@ -1,10 +1,11 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PullbackPullback
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ElementaryTwistMinorOtherStepsStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GenericBlockMatrixIsBlockDiag
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ElementaryTwistMinorOtherSteps
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HoloOnDivCongr
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsValueAtOfTorus
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwistedAtlasCompatibilityStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwistedAtlasCompatibility
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -179,7 +180,7 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
       exact ⟨z₀, z₁, fun _ => h⟩
     · exact ⟨0, 0, fun h => absurd h hwS⟩
   choose z₀ z₁ hz using hex
-  have hpb := fun w (hwS : w ∈ ψ.source) => GlobalTheory.T.twisted_atlas_compatibility K ι Φ y Ψ N j M n e Rb τ a k₀ ca cb RW pr hk hA w
+  have hpb := fun w (hwS : w ∈ ψ.source) => _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.Sec.PtBase.main K ι Φ y Ψ N j M n e Rb τ a k₀ ca cb RW pr hk hA w
     (z₀ w) (z₁ w) (hz w hwS).1 (hz w hwS).2.1
   have hn₀ : ∀ w ∈ ψ.source, ∀ k, basePart M.blk (z₀ w) ⟨k, F.c k⟩ = 1 := fun w hwS =>
     ((hz w hwS).2.2 τ a).1.1
@@ -322,7 +323,7 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
           have hia : i ≠ a := fun hia => hq₀ (by
             subst hia
             exact Option.some_injective _ (hp.symm.trans hk))
-          exact GlobalTheory.T.elementary_twist_minor_other_steps N j a b ca cb M.j_le hb hab hca hcb _ _ i hia I
+          exact _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.Sec.TransvOther.minorIJ_other_step N j a b ca cb M.j_le hb hab hca hcb _ _ i hia I
         · rw [if_neg ht]
     · obtain ⟨d, hd, hq'⟩ := hb₀ w (hVW hwV)
       rw [hcs' w hwV d hq' q.1]

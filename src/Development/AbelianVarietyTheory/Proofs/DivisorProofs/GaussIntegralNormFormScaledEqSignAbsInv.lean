@@ -2,14 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.UnipVal
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompactOpenSubgroupExhaustionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompactOpenNormClosedBallQuadraticStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussIntegralNormFormNonNormCancelStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussIntegralQuadraticCharEventuallyConstStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasGaussIntegralCompAddEquivRescaleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSelfDualBicharacterPairingOfSymmBilinFormStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapMulLeftEqNormSmulStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuadExtTopologyStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompactOpenSubgroupExhaustion
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompactOpenNormClosedBallQuadratic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussIntegralNormFormNonNormCancel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussIntegralQuadraticCharEventuallyConst
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasGaussIntegralCompAddEquivRescale
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSelfDualBicharacterPairingOfSymmBilinForm
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapMulLeftEqNormSmul
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuadExtTopology
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -165,12 +166,12 @@ open GlobalTheory.KSp.GaussNorm GlobalTheory.SplitWeil
 
 theorem hasGauss_norm_mul : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] (E : Type) [Field E] [Algebra F E] [TopologicalSpace E] [IsModuleTopology F E] (c : E →ₐ[F] E) (δ : E) (hE : IsQuad c δ) (ψ : AddChar F ℂ) (hψ : Continuous ψ) (_ : ∀ t, ‖ψ t‖ = 1) (_ : ψ ≠ 1) [MeasurableSpace E] [BorelSpace E] (μ : Measure E) [μ.IsAddHaarMeasure], ∃ g : ℂ, ∀ t : Fˣ, HasGauss μ (fun z => ψ ((t : F) * Algebra.norm F z)) (g * (sgn E t * ((nabs F t)⁻¹ : ℝ))) := by
   intro F _ _ _ _ _ E _ _ _ _ c δ hE ψ hψ hψ1 hψ0 _ _ μ _
-  obtain ⟨hfin, htr, -, -, -, hNc, -, -⟩ := GlobalTheory.T.quadExt_topological_properties F E c δ hE
+  obtain ⟨hfin, htr, -, -, -, hNc, -, -⟩ := _root_.GlobalTheory.quadExt_topology F E c δ hE
   haveI := hfin
   haveI := htr
-  have hgood : Good E := GlobalTheory.T.isSelfDualCompactOpenGroup_of_finiteDimensional F E
+  have hgood : Good E := _root_.GlobalTheory.KSp.good_of_finiteDimensional F E
   have hpair : IsPair fun x y => ψ (polar hE x y) :=
-    GlobalTheory.T.isSelfDualBicharacterPairing_of_symmBilinForm F E ψ hψ hψ1 hψ0 (polar hE) (polar_symm hE) (polar_nondeg hE)
+    _root_.GlobalTheory.KSp.isPair_addChar_form F E ψ hψ hψ1 hψ0 (polar hE) (polar_symm hE) (polar_nondeg hE)
   set f : E → ℂ := fun z => ψ (Algebra.norm F z) with hf
   have hlc : IsLocallyConstant f := by
     have h := hpair.lc.comp_continuous (show Continuous fun z : E => ((2 : F)⁻¹ • z, z) by fun_prop)
@@ -182,7 +183,7 @@ theorem hasGauss_norm_mul : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRel 
     intro x y
     simp only [f]
     rw [norm_add_eq hE, AddChar.map_add_eq_mul, AddChar.map_add_eq_mul]
-  obtain ⟨γ, K₁, hK₁, hγ⟩ := GlobalTheory.T.gaussIntegral_quadraticChar_eventually_const E hgood μ _ hpair f hlc hf0 hfadd
+  obtain ⟨γ, K₁, hK₁, hγ⟩ := _root_.GlobalTheory.KSp.gauss_integral_eventually_const E hgood μ _ hpair f hlc hf0 hfadd
   have hG : HasGauss μ f γ := by
     intro K hK
     obtain ⟨L, hLc, hLo, hL⟩ := hgood.large (K ∪ K₁) (hK.union hK₁)
@@ -199,10 +200,10 @@ theorem hasGauss_norm_mul : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRel 
         continuous_toFun := continuous_const.mul continuous_id
         continuous_invFun := continuous_const.mul continuous_id }
     have hT : μ.map T = (distribHaarChar F t)⁻¹ • μ := by
-      have h := GlobalTheory.T.map_mul_left_eq_inv_norm_haarChar_smul F E c δ hE μ w
+      have h := _root_.GlobalTheory.KSp.map_mul_left_eq_norm_smul F E c δ hE μ w
       rw [hw] at h
       exact h
-    have h := GlobalTheory.T.hasGaussIntegral_comp_addEquiv_rescale E E μ μ T _ f γ hT hG
+    have h := _root_.GlobalTheory.KSp.hasGauss_comp_equiv E E μ μ T _ f γ hT hG
     have e1 : (fun z : E => ψ ((t : F) * Algebra.norm F z)) = fun x => f (T x) := by
       funext z
       show ψ ((t : F) * Algebra.norm F z) = ψ (Algebra.norm F ((w : E) * z))
@@ -213,15 +214,15 @@ theorem hasGauss_norm_mul : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRel 
       simp [nabs]
     rw [e1, e2]
     exact h
-  · obtain ⟨s₀, hcan⟩ := GlobalTheory.T.gaussIntegral_normForm_nonNorm_cancel F E c δ hE ψ hψ hψ1 hψ0 μ t ht
+  · obtain ⟨s₀, hcan⟩ := _root_.GlobalTheory.KSp.Cancel.gauss_cancel F E c δ hE ψ hψ hψ1 hψ0 μ t ht
     have hs : sgn E t = -1 := by rw [sgn, if_neg ht]
     intro K hK
     obtain ⟨a₁, ha₁⟩ := exists_cball_of_isCompact (hK.image hNc)
     obtain ⟨a₂, ha₂⟩ := exists_cball_of_isCompact (hK₁.image hNc)
     obtain ⟨s', hs'1, hs'2⟩ := exists_cball_sup (t * a₁) a₂
     obtain ⟨s, hs1, hs2⟩ := exists_cball_sup s' s₀
-    obtain ⟨L, hLeq, hLc, hLo⟩ := GlobalTheory.T.exists_compactOpen_normClosedBall_quadratic F E c δ hE (t⁻¹ * s)
-    obtain ⟨L₁, hL₁eq, hL₁c, hL₁o⟩ := GlobalTheory.T.exists_compactOpen_normClosedBall_quadratic F E c δ hE s
+    obtain ⟨L, hLeq, hLc, hLo⟩ := _root_.GlobalTheory.NormBall.exists_normBall F E c δ hE (t⁻¹ * s)
+    obtain ⟨L₁, hL₁eq, hL₁c, hL₁o⟩ := _root_.GlobalTheory.NormBall.exists_normBall F E c δ hE s
     have hset : {z : E | (t : F) * Algebra.norm F z ∈ cball s} = (L : Set E) := by
       rw [hLeq]; ext z; exact mul_mem_cball_iff t s _
     have hK₁L₁ : K₁ ⊆ L₁ := by

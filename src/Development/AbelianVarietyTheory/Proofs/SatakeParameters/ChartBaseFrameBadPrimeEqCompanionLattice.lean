@@ -2,11 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.UnderTie
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.IntegralGLSuccEmbeddingMemParahoricTimesPrincipa
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AdelicPointLatticeMulRationalGLStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CompanionHermitianLatticeFgStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CompanionLatticeAdelicLatticeLocalizationEqStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalisationEqStdAtOfCongruentOneAtPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TransportedFrameStandardLocalEqLocalizationStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ExistsMidLevIff
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AdelicPointLatticeMulRationalGL
+public import Formalism.LocalToGlobal.PairingIndexBounds.OrthogonalChartLevels.IsOrthCo
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CompanionHermitianLatticeFg
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CompanionLatticeAdelicLatticeLocalizationEq
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalisationEqStdAtOfCongruentOneAtPrime
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TransportedFrameStandardLocalEqLocalization
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -96,7 +98,7 @@ open GlobalTheory.BaseFrameLat in
 theorem GlobalTheory.TwV.baseFrame_std_eq_compan : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a => ∀ (i : ℕ) (hi : i ≤ D.R.m) (β : (St i hi).Ch) (x : UA D i hi) p, IsPtAd A a i hi β x p → ∀ P : SB t μ, mvL (A.fb i hi β P) (stdAt D.host.E (D.R.N i) (seamP t.seam P.1)) = Formalism.HermitianLatticesTheory.localization₂ (seamP t.seam P.1).asIdeal (compan (sp := D.sp) (gramN D i hi) a ((St i hi).K β).lev.Lb)) := by
   intro D L hT Gi Gl Kc Y cX ex t u μ St A dtU a hpins htie i hi β x p hp P
   have hd : 1 ≤ (t.cst μ).D P := (t.idx_ok μ).cst_ok.D_pos P
-  have hR := GlobalTheory.T.transportedFrame_standardLocal_eq_localization t.seam P.1 (frsF t.sel (t.tup μ) p P) p.deco.1.N (GlobalTheory.TopStep.frsF_mem p P)
+  have hR := _root_.GlobalTheory.FrameLat.seamGL_stdAt t.seam P.1 (frsF t.sel (t.tup μ) p P) p.deco.1.N (GlobalTheory.TopStep.frsF_mem p P)
   rw [hp.lat] at hR
   have hJ : IsUnit (gramN D i hi).det := by
     rw [← hpins.crd_orth i hi, Matrix.det_mul]
@@ -107,8 +109,8 @@ theorem GlobalTheory.TwV.baseFrame_std_eq_compan : UnderTie (fun {D L hT Gi Gl K
     exact hc.map _
   have hfg : (((St i hi).K β).lev.Lb).FG := Module.Finite.iff_fg.mp ((St i hi).K β).lev.Lb_fin
   have hsp := ((St i hi).K β).lev.Lb_span
-  have h4 := GlobalTheory.T.companionLattice_adelicLattice_localization_eq D.sp (sigD D) rfl (gramN D i hi) hJ a x.1 x.2 _ hfg hsp (seamP t.seam P.1)
-  have hCfg := GlobalTheory.T.companionHermitianLattice_fg D.sp (gramN D i hi) hJ a _ hfg hsp
+  have h4 := _root_.GlobalTheory.CompanLatAd.locP_companion_latAd D.sp (sigD D) rfl (gramN D i hi) hJ a x.1 x.2 _ hfg hsp (seamP t.seam P.1)
+  have hCfg := _root_.GlobalTheory.compan_fg D.sp (gramN D i hi) hJ a _ hfg hsp
   set C := compan (sp := D.sp) (gramN D i hi) a ((St i hi).K β).lev.Lb with hC
   have hCs : Submodule.span D.host.E (C : Set (Fin (D.R.N i) → D.host.E)) = ⊤ := by
     refine eq_top_iff.2 (hsp ▸ Submodule.span_mono ?_)
@@ -117,8 +119,8 @@ theorem GlobalTheory.TwV.baseFrame_std_eq_compan : UnderTie (fun {D L hT Gi Gl K
   unfold latCo at hR
   rw [locP_mvL_comm, h4, ← locP_mvL_comm] at hR
   have e1 : mvL (A.crd i hi) (latAd x.1 C) = latAd (ratA D.host.F (A.crd i hi) * x.1 * ratA D.host.F (A.fb i hi β P)) (mvL (A.fb i hi β P)⁻¹ C) := by
-    rw [GlobalTheory.T.adelicPointLattice_mul_rationalGL, ← mvL_mul, mul_inv_cancel, mvL_one']
+    rw [_root_.GlobalTheory.TwV.latAd_mul_ratA, ← mvL_mul, mul_inv_cancel, mvL_one']
     exact (latAd_rat _ _ _).symm
   rw [e1] at hR
-  have h3 := GlobalTheory.T.localisation_eq_stdAt_of_congruentOne_atPrime (seamP t.seam P.1) _ hd _ _ (mvL (A.fb i hi β P)⁻¹ C) (hCfg.map _) (span_mvL _ _ hCs) (hp.frame P) hR.symm
+  have h3 := _root_.GlobalTheory.CongStdLoc.localization_eq_stdAt_of_congAt (seamP t.seam P.1) _ hd _ _ (mvL (A.fb i hi β P)⁻¹ C) (hCfg.map _) (span_mvL _ _ hCs) (hp.frame P) hR.symm
   rw [← h3, ← locP_mvL_comm, ← mvL_mul, mul_inv_cancel, mvL_one']

@@ -2,7 +2,9 @@ module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.LocCoh
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.EqOfPowEqOneOfNormSubLt
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RTensorPairingEqZeroOfFlipInjectiveStatement
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Mathlib.LinearAlgebra.TensorProduct.Associator
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RTensorPairingEqZeroOfFlipInjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -144,7 +146,7 @@ theorem exists_stPairing : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K : Fi
     · intro x y y' hy hy'
       simp only [map_add (f := _), hy, hy', mul_add]
   · intro y hy
-    refine GlobalTheory.T.eq_zero_of_rTensor_pairing_eq_zero ℚ_[l] (Bst P) V V' m hr y fun v => ?_
+    refine _root_.GlobalTheory.rTensor_pairing_eq_zero_of_flip_injective ℚ_[l] (Bst P) V V' m hr y fun v => ?_
     rw [← tensorPairing_one]
     exact hy v
 

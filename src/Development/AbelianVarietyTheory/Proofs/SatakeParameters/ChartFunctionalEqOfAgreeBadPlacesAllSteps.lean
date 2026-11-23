@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.UnderTie
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CompanionLatticeVectorLocalMemDualBaseCompletionStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ExistsMidLevIff
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CompanionLatticeVectorLocalMemDualBaseCompletion
 public import Formalism.LocalToGlobal.GlobalTheory.GL6.PBwLocBases
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -99,7 +100,7 @@ theorem exists_latS_pullV (sp : Spaces R F E) (J : Matrix (Fin N) (Fin N) E) (cr
     (v : HeightOneSpectrum (𝓞 F)) (u : Fin N → E) (hu : u ∈ latCo sp J crd a x Lb) :
     ∃ z : latS (F := F) (v.adicCompletion F) (intV E v) (Submodule.span (𝓞 E) (dualSet (sp.cm.sig : E →+* E) J Lb)),
       z.1 = fun l => prV (E := E) v (pullV (F := F) (ratA F crd * x) u l) :=
-  GlobalTheory.T.companionLatticeVector_local_mem_dualBaseCompletion sp J crd a x hx hJ Lb hfin hspan hint v u hu
+  _root_.GlobalTheory.CompanLocal.mem_latS_dual_of_mem_latCo sp J crd a x hx hJ Lb hfin hspan hint v u hu
 end Z
 end GlobalTheory.TwV.FnlAwayCpl
 

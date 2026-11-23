@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPotential
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusIntegralityCoeffTensorAinfVectorStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TeichmullerSubOneAinfPropertiesCompatibleRootsStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExistsGenIsUnitSub
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusIntegralityCoeffTensorAinfVector
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TeichmullerSubOneAinfPropertiesCompatibleRoots
 import Development.AutomorphicArithmetic.IntegralCasts.CrystallinePeriods.Kernel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -51,7 +52,7 @@ namespace GlobalTheory.BKGal.LiftStep
 theorem ev_eis_mul_mu {l : ℕ} [Fact l.Prime] (a : ℕ) [NeZero a] {e : ℕ} [NeZero e] (ϖ : PiSys l e)
     {ε δ : OCb l} (hε : IsEps ε) (hδ : δ ^ l = ε) :
     ∃ u : Ainf l, IsUnit u ∧ ϖ.ev a (eis l a e) * muOf δ = u * muOf ε := by
-  obtain ⟨⟨ξ, hξ, hμ⟩, -⟩ := (GlobalTheory.T.teichmullerSubOneAinf_properties_compatibleRoots l).2 ε δ hε hδ
+  obtain ⟨⟨ξ, hξ, hμ⟩, -⟩ := (_root_.GlobalTheory.MuOfEps.main l).2 ε δ hε hδ
   have h : Associated (ϖ.ev a (eis l a e)) ξ := by
     rw [← Ideal.span_singleton_eq_span_singleton, hξ, PiSys.span_ev_eis]
   obtain ⟨v, hv⟩ := h
@@ -113,7 +114,7 @@ theorem GlobalTheory.BKGal.LiftStep.mu_pow_smul_mem : ∀ (l : ℕ) [Fact l.Prim
   intro l _ a e _ _ O K _ _ _ _ _ _ _ _ _ _ t ϖ ι _ _ P T I α β hL hM ε δ hε hδ y hy m₀ hm₀
   classical
   obtain ⟨u, hu, hEu⟩ := ev_eis_mul_mu a ϖ hε hδ
-  have hfr : WittVector.frobenius (muOf δ) = muOf ε := ((GlobalTheory.T.teichmullerSubOneAinf_properties_compatibleRoots l).2 ε δ hε hδ).2.1
+  have hfr : WittVector.frobenius (muOf δ) = muOf ε := ((_root_.GlobalTheory.MuOfEps.main l).2 ε δ hε hδ).2.1
   obtain ⟨-, hXi, hyI⟩ := integral t ϖ P α β hL hM
   choose cXi hcXi using hXi
   choose cy hcy using hyI y hy
@@ -152,7 +153,7 @@ theorem GlobalTheory.BKGal.LiftStep.mu_pow_smul_mem : ∀ (l : ℕ) [Fact l.Prim
 
       simp only [w, map_mul, map_sum]
       rfl
-  have hint := GlobalTheory.T.frobenius_integrality_coeffTensorAinf_vector l O ι Y w z heq
+  have hint := _root_.GlobalTheory.FrobIntO.frobenius_integrality_vec_O l O ι Y w z heq
   choose c hc using hint
   refine ⟨⟨c, funext fun i => hc i⟩, ⟨fun i => frobOA l O (c i), ?_⟩⟩
   rw [inclL_apply, phiW_apply, ← Matrix.mulVec_smul, ← hFz]

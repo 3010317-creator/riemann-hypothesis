@@ -3,7 +3,7 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsTransition
 public import Development.AutomorphicSpectrum.Definitions.AdelicLattices.FactPrimes
 public import Mathlib.Algebra.AffineMonoid.Basic
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DualBasisTraceLogNormStatement
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DualBasisTraceLogNorm
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ProjSumSumEmbeddingsEqTrace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -224,7 +224,7 @@ end Core
 
 theorem eigSub_span : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (ℓ : Nat.Primes) (K : Type) [Field K] [CharZero K] (j : K →+* ℂ_[ℓ]) (V : Subring K) (U : Type) [AddCommGroup U] [Module K U] (ρ : 𝓞 E →+* Module.End K U) (σ : E →+* K) (I J : Type) [Fintype I] [Fintype J] (u : I → U) (u' : J → U) (f : ℕ) (b : Fin f → 𝓞 E) (δ : K), (∀ a : K, ‖j a‖ ≤ 1 ↔ a ∈ V) → Nat.card (E →+* K) = Module.finrank ℚ E → IsLocBasis (Algebra.adjoin ℤ {H.w0}) ℓ b → (∀ a, ρ H.rt (u a) = σ (H.rt : E) • u a) → (∀ a, ρ H.rt (u' a) = -σ (H.rt : E) • u' a) → LinearIndependent K (Sum.elim (fun q : I × Fin f => ρ (b q.2) (u q.1)) (fun q : J × Fin f => ρ (b q.2) (u' q.1))) → δ ≠ 0 → Real.log ‖j δ‖ = logIdeal ((j.comp σ).comp (algebraMap (𝓞 E) E)) (differentIdeal ℤ (𝓞 E)) - Real.log ‖j (σ (H.rt : E))‖ → LinearIndependent K (fun a => δ • HT.eigProj ρ σ (u a)) ∧ Submodule.span V (Set.range (Sum.elim (fun q : I × Fin f => ρ (b q.2) (u q.1)) (fun q : J × Fin f => ρ (b q.2) (u' q.1)))) ⊓ (HT.eigSp ρ σ).restrictScalars V = Submodule.span V (Set.range fun a => δ • HT.eigProj ρ σ (u a)) := by
   intro E _ _ _ H ℓ K _ _ j V U _ _ ρ σ I J _ _ u u' f b δ hV hcard hloc hu hu' hlin hδ0 hδ
-  obtain ⟨b', hb', hj⟩ := GlobalTheory.T.dual_basis_trace_log_norm E H ℓ f b hloc
+  obtain ⟨b', hb', hj⟩ := _root_.GlobalTheory.CompanionTheory.Ar.RelDual.relative_dual E H ℓ f b hloc
   obtain ⟨hpos, hlog⟩ := hj (j.comp σ)
   simp only [RingHom.comp_apply] at hpos hlog
   have hδp : 0 < ‖j δ‖ := norm_pos_iff.2 ((map_ne_zero j).2 hδ0)

@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TwistedModelAdmissibleCocycles
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModelObjAndAbcStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModelSupStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PhiGammaLatticeFamiliesShiftInclusionStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModelObjAndAbc
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModelSup
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PhiGammaLatticeFamiliesShiftInclusion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -86,12 +86,12 @@ theorem exists_greatest_of_sup_closed {S V ι : Type} [CommRing S] [IsNoetherian
 
 theorem exists_largest_model : ∀ {k G : Type} [Field k] [Group G] {l n : ℕ} [Fact l.Prime] [CharP k l] [NeZero n] {R : RingPG k l} (F : DFun R n G) {r : ℕ} {Dt : TopData n r} (M : ModTh F Dt) (A : Ob k G) (N₀ : Lats k n A.m), M.Model A N₀ → ∃ N, M.Model A N ∧ ∀ N', M.Model A N' → ∀ i, N' i ≤ N i := by
   intro k G _ _ l n _ _ _ R F r Dt M A N₀ h₀
-  obtain ⟨-, hl₀, hab₀, -⟩ := GlobalTheory.T.obj_and_abc_of_model F M A N₀ h₀
+  obtain ⟨-, hl₀, hab₀, -⟩ := _root_.GlobalTheory.Models.model_obj_and_abc F M A N₀ h₀
   refine exists_greatest_of_sup_closed (fun N => M.Model A N)
     (fun i => sh (-(sg l Dt.h i : ℤ)) (N₀ i)) N₀ h₀ (fun i => ((hl₀ i).shift _).1) (fun N hN i => ?_)
-    (fun N N' => GlobalTheory.T.model_sup_alt F M A N N')
-  obtain ⟨-, hl, hab, -⟩ := GlobalTheory.T.obj_and_abc_of_model F M A N hN
-  have h := sh_le_sh (-(sg l Dt.h i : ℤ)) (GlobalTheory.T.phiGamma_lattice_families_shift_inclusion (F.D A) Dt.h Dt.w N N₀ hl hl₀ hab hab₀ i)
+    (fun N N' => _root_.GlobalTheory.Models.SupModel.model_sup F M A N N')
+  obtain ⟨-, hl, hab, -⟩ := _root_.GlobalTheory.Models.model_obj_and_abc F M A N hN
+  have h := sh_le_sh (-(sg l Dt.h i : ℤ)) (_root_.GlobalTheory.PhiGam.CloseTw.main (F.D A) Dt.h Dt.w N N₀ hl hl₀ hab hab₀ i)
   rwa [sh_sh_eq, neg_add_cancel, sh_zero_eq] at h
 
 end GlobalTheory.Models

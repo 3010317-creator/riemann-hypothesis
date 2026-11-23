@@ -1,10 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.LocalValuationColumns
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetFactorDepthEqChartValueAndSumStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NonemptyValExtOfOverLa
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetFactorDepthEqChartValueAndSum
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatFrame
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupDeterminantPowDepthBounds
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetProductDepthInChartEqSumFactorDepths
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DifferentialOperatorDepthRestrictColumns
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupDeterminantPowDepthBoundsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -94,12 +96,12 @@ theorem nuH_vp_eq_nuP : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   classical
   letI := H.starRing
   intro p _ T io y Ch X cx
-  have hfac := (GlobalTheory.T.detFactorDepth_eq_chart_value_and_sum E H Dw l Xo c p T io y Ch X).1
+  have hfac := (_root_.GlobalTheory.FactorDepth.nuFac_eq_nuFacC_and_nuProd_eq_nuP E H Dw l Xo c p T io y Ch X).1
   have hsum : nuP p y cx = ∑ f, nuFacC Ch X f (cx f) :=
     Finset.sum_congr rfl fun f _ => hfac f (cx f)
   have hbd : ∀ f, 0 ≤ nuFacC Ch X f (cx f) ∧
       nuFacC Ch X f (cx f) ≤ ((((rk f * cx f : ℕ) : ℝ) / (p - 1) : ℝ) : EReal) := fun f => by
-    have h := GlobalTheory.T.formalGroupDeterminantPowDepth_bounds X.C (vX_vp X) p Fact.out (vX_vp_p X) (rk f) (chD Ch.ch) (cx f) (fgl Ch X)
+    have h := _root_.GlobalTheory.FGDepth.detDepth_bounds X.C (vX_vp X) p Fact.out (vX_vp_p X) (rk f) (chD Ch.ch) (cx f) (fgl Ch X)
       (frame Ch X f) (isSatFrame_frame Ch X f)
     refine ⟨h.1, h.2.2.trans (le_of_eq ?_)⟩
     push_cast; rfl

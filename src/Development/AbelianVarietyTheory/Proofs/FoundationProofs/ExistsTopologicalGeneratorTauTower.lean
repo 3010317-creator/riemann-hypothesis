@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.NotCoboundaryConstantOne
 public import Mathlib.FieldTheory.KrullTopology
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.QNotPthPowInClosureAlgebraicPadicIntStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.QNotPthPowInClosureAlgebraicPadicInt
+public import Mathlib.FieldTheory.KummerExtension
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -16,7 +17,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.FieldTheory.Galois.Profinite
-public import Mathlib.FieldTheory.KummerExtension
 import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
@@ -61,7 +61,7 @@ namespace GlobalTheory.K5.TauGen
 
 theorem not_pow : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Algebra (O0 p) Ω], IsClo p Ω →
     ∀ b ∈ Subfield.closure (Set.range (algebraMap (O0 p) Ω) ∪ {x | IsAlgZp (p := p) x}),
-      b ^ p ≠ algebraMap (O0 p) Ω (qO p) := GlobalTheory.T.q_not_pth_pow_in_closure_algebraic_padicInt
+      b ^ p ≠ algebraMap (O0 p) Ω (qO p) := _root_.GlobalTheory.K5.NotPow.q_not_pow
 
 def geoF (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Algebra (O0 p) Ω] : Subfield Ω :=
   Subfield.closure (Set.range (algebraMap (O0 p) Ω) ∪ {x | IsAlgZp (p := p) x})

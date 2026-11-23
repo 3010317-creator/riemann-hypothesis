@@ -5,9 +5,11 @@ public import Formalism.LocalToGlobal.KernelLattices.AdaptedEnt
 public import Formalism.LocalRingCardinality.CoeNeZeroOfNotMem
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AtLinAdaptedCoefEqStandardSeries
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CombOfTied
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsStandardBasesLatticeAtPlaceOfAdaptedBasesStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.StdBases
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsStandardBasesLatticeAtPlaceOfAdaptedBases
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NormDgenEqOne
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ShapeNormalisedThetaCombinationsDualBasesAtDStatement
+public import Formalism.SharpRestriction.Divisibility.OrbitPlaces
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ShapeNormalisedThetaCombinationsDualBasesAtD
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,7 +46,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.StdBases
 
 @[expose] public section
 
@@ -65,7 +66,7 @@ theorem thetaKernelShapeAtD_ofKer_of_hyp_adapted : GlobalTheory.ThLoc.Inputs →
   have hlev' : LevFree Y u μ w := hlev
   obtain ⟨Pm, hBas, -, hConj, hTh⟩ := hA w hAd u μ hlev'
   have hStd : ∀ j, j ≤ D.R.m → ∀ cl, GlobalTheory.KerStd.StdBases D (t.ent.lam w) ((t.O u μ).lat j cl).1 (Pm j cl) :=
-    fun j hj cl => GlobalTheory.T.isStandardBasesLatticeAtPlace_of_adapted_bases D _ (t.ent.lam w) _ _ _ ((t.O u μ).lat j cl).2.1 (fun τ => hBas j hj cl τ)
+    fun j hj cl => _root_.GlobalTheory.KerStd.stdBases_of_basR D _ (t.ent.lam w) _ _ _ ((t.O u μ).lat j cl).2.1 (fun τ => hBas j hj cl τ)
       (fun τ τ' h => hConj j hj cl τ τ' h)
   have hcomb := GlobalTheory.Ggeo.KerComb.comb_of_tied hIn.algT D L hT Gi Gl K Y cX ex t hH u μ w hlev' i hi c c'
   have hdg : IsDgen D t.cD := by
@@ -77,7 +78,7 @@ theorem thetaKernelShapeAtD_ofKer_of_hyp_adapted : GlobalTheory.ThLoc.Inputs →
     simp
   show OrbitPlaces.ShapeD D _ (t.ent.Th u μ w i c c')
   rw [hTh i hi c c', GlobalTheory.atLin_adCoef_eq_stdSer]
-  exact GlobalTheory.T.shape_normalisedThetaCombinations_dualBases_at_d hIn D t.cc t.δ t.cc_ok t.δ_ok t.B t.χ t.χ_ok t.X t.seam t.seam_ok _ _ _ _ hcomb.1 _ (t.ent.lam w) hpd
+  exact _root_.GlobalTheory.Proof.shape_normalisedThetaCombinations_dualBases_at_d.shapeComb hIn D t.cc t.δ t.cc_ok t.δ_ok t.B t.χ t.χ_ok t.X t.seam t.seam_ok _ _ _ _ hcomb.1 _ (t.ent.lam w) hpd
     t.cD hdg (Pm i c) (Pm (i + 1) c') _ (hStd i hi.le c) (hStd (i + 1) hi c') hnorm _ hcomb.2
 
 end GlobalTheory.Ggeo.KerShapeD

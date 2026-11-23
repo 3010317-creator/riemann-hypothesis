@@ -3,8 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.TeichmullerDepth.HasTeich
 public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.CurveLogarithmsInvNatCastSmulMemStatement
+public import Mathlib.RingTheory.RootsOfUnity.EnoughRootsOfUnity
 import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.GaugedCurveLogarithmsClosedUnderTadicLimits
-import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.GaugedFormalGroupCurveLogarithmsAddSubgroupRescaStatement
+import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.GaugedFormalGroupCurveLogarithmsAddSubgroupResca
 import Formalism.LocalToGlobal.CharacterGerms.ConstMemTypeSetOfNonneg
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -53,7 +54,6 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
 import Formalism.LocalToGlobal.ProjectiveLattices.SubConstMemOrig
-public import Mathlib.RingTheory.RootsOfUnity.EnoughRootsOfUnity
 
 @[expose] public section
 
@@ -186,7 +186,7 @@ theorem filt_not_dvd_mem (hX : RLaw X V) (g : Fin 2) {p : ℕ} (hp : p.Prime) (h
   have : NeZero (p : C) := ⟨by exact_mod_cast hp.ne_zero⟩
   have : NeZero p := ⟨hp.ne_zero⟩
   obtain ⟨ζ, hζ⟩ := HasEnoughRootsOfUnity.exists_primitiveRoot C p
-  obtain ⟨h0, hadd, hneg, hres⟩ := GlobalTheory.T.gaugedFormalGroupCurveLogarithms_addSubgroup_rescale C V d I κ X hX g
+  obtain ⟨h0, hadd, hneg, hres⟩ := _root_.GlobalTheory.RowLaw.cv_group C V d I κ X hX g
   have hζ0 : V.Ge 0 ζ := ge_of_pow_eq_one V hp.pos hζ.pow_eq_one
   have hs : ∀ n : ℕ, ((fun i => ∑ j ∈ Finset.range n, PowerSeries.rescale (ζ ^ j) (a.1 i),
       fun q => ∑ j ∈ Finset.range n, PowerSeries.rescale (ζ ^ j) (a.2 q)) :

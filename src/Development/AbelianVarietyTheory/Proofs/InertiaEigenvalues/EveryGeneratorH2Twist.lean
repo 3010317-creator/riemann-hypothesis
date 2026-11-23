@@ -3,9 +3,9 @@ module
 public import ReciprocityTheory.ReductiveGroups.TraceFormulas.LatDefs
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BijectiveOfRetract
 public import Formalism.GaloisCohomology.LocalTateDualityK
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousCyclotomicCharacterLocalGaloisStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.H2QuotientFiniteCardStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PhiInjectiveQuotientH2Statement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousCyclotomicCharacterLocalGalois
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.H2QuotientFiniteCard
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PhiInjectiveQuotientH2
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,8 +59,8 @@ theorem bijective_phi_quot_pow : ∀ {p : ℕ} [Fact p.Prime] {K : IntermediateF
     rw [h]
     exact i.symm.continuous.comp
       ((i.continuous.comp continuous_fst).mul (i.continuous.comp continuous_snd))⟩
-  have hinj := GlobalTheory.T.phi_injective_quotient_H2 hO (GlobalTheory.T.continuous_cyclotomic_character_localGalois hO i hε) z hz k
-  obtain ⟨_, hcard⟩ := GlobalTheory.T.finite_H2_twist_quotient_pow_and_card_le hT hK hO i hε k
+  have hinj := _root_.GlobalTheory.NatQuot.phi_quot_pow_injective hO (_root_.GlobalTheory.FunctorialityH2.cyc_char_continuous hO i hε) z hz k
+  obtain ⟨_, hcard⟩ := _root_.GlobalTheory.QuotientH2Count.h2_quot_card hT hK hO i hε k
   exact hinj.bijective_of_nat_card_le hcard
 
 end GlobalTheory.FunctorialityH2

@@ -2,8 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.MulSmulIdemMem
 public import Development.AbelianVarietyTheory.Definitions.Foundations.NonnegOfMemCStarSet
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComponentIntegralFramedPointLiesOnStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTwistingSectionMulLatticeValueLeStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsProbabilityMeasureMuPart
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComponentIntegralFramedPointLiesOn
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTwistingSectionMulLatticeValueLe
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -80,7 +81,7 @@ theorem refExp_vp_add_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   intro E _ _ _ H Dw l Xo c r U hU x G G₀ hG cst k q hq t ht
   refine (refExp_vp_le_iff U).2 fun la T io e ho y hy φ hφ => ?_
   have h0 := (refExp_vp_le_iff U).1 (le_refl (refExp_vp U cst G q)) la T io e ho y hy φ hφ
-  obtain ⟨Z, hZ⟩ := GlobalTheory.T.exists_component_integral_framedPoint_liesOn E H Dw l Xo c T io y
+  obtain ⟨Z, hZ⟩ := _root_.GlobalTheory.IntFrComp.exists_liesOn E H Dw l Xo c T io y
   have hv : (fun f => nval T.V e (evI y f)) ∈ valOn Z la.1 := ⟨PtV.mk la.1 ho y ⟨hy, hZ⟩ () trivial, rfl⟩
   have hm : 0 < vAdd la.1 (q : c.F) := vAdd_natCast_pos hq.ne_zero la.2
   have hq' : vV T.V (q : T.Fr) = (e : ℤ) * vAdd la.1 (q : c.F) := by
@@ -92,7 +93,7 @@ theorem refExp_vp_add_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
     rw [← EReal.sub_le_iff_le_add (Or.inl (EReal.coe_ne_bot _)) (Or.inl (EReal.coe_ne_top _))]
     refine le_iInf₂ fun f hf => ?_
     rw [EReal.sub_le_iff_le_add (Or.inl (EReal.coe_ne_bot _)) (Or.inl (EReal.coe_ne_top _))]
-    obtain ⟨g, hg, hle⟩ := GlobalTheory.T.exists_twistingSection_mul_lattice_value_le E H Dw l Xo c r U hU x G G₀ hG Z (t Z) la.1 _ hv f hf
+    obtain ⟨g, hg, hle⟩ := _root_.GlobalTheory.TwMulOne.exists_latW_val_le E H Dw l Xo c r U hU x G G₀ hG Z (t Z) la.1 _ hv f hf
     exact (iInf₂_le g hg).trans (nval_le_add_of_mul ho.1 (Int.cast_pos.2 hm) hn (ht Z la.1 la.2) hle)
   rw [add_right_comm]
   exact hd.trans (add_le_add h0 le_rfl)

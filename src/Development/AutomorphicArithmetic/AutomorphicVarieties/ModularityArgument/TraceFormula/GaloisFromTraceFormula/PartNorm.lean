@@ -2,17 +2,20 @@ module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GaloisFromTraceFormula.DescWeakOfRunTh
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpehDataUnique
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIrreducibleFixed
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GL1SpectralBounds.Thin
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GL1SpectralBounds.UnitOf
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AuxiliaryCuspLemma
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralEigenExponentialStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LieCentralElementTraceStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LimitTwistBound
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TraceOperatorEigenvalueSumStatement
 public import Development.DiscreteGroups.PiInvariants.CompactSupportTwists.SplitAll
-import Development.WeilBound.CoreStatements.PublishedTheorems.JacquetShalikaBound.JacquetShalikaBound
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.SatakeRigidity.LRCuspCsdb
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIrreducibleFixed
+import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BaseChangeDefiniteUnitary
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralEigenExponential
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ContinuousConjFin
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LieCentralElementTrace
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExpoConjOfIsCsd
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TraceOperatorEigenvalueSum
+import Development.WeilBound.CoreStatements.PublishedTheorems.JacquetShalikaBound.JacquetShalikaBound
 import Development.WeilBound.RepresentationTheoryGL.JacquetShalikaBounds.AbsoluteRigidity.DeterminantOneCharacters.DeterminantOneConditionHolds
 import Development.WeilBound.RepresentationTheoryGL.JacquetShalikaBounds.AbsoluteRigidity.SatakeTwists.SatakeTwistHolds
 import Development.WeilBound.RepresentationTheoryGL.ResidualSpectrum.SliceTensors.PStringStepB
@@ -77,11 +80,11 @@ private theorem sum_inf_zero {a : ℕ} (ρ : CuspSub E a) (hn : GlobalTheory.Dis
     push Not at hcon
     exact hx (Subtype.ext (Subtype.ext (funext hcon)))
   have hlie : lie E a (oneL E a) (x : Sm E a) = (∑ τ : E →+* ℂ, ((CG.mk ρ).infChar τ).sum) • (x : Sm E a) := by
-    rw [GlobalTheory.T.lie_central_element_trace E a, LinearMap.sum_apply,
-      Finset.sum_congr rfl fun τ _ => GlobalTheory.T.trace_operator_eigenvalue_sum E a ρ τ _ (GlobalTheory.CuspRep.ParLaws.hasInfChar_infChar (CG.mk ρ) τ) x x.2,
+    rw [_root_.GlobalTheory.CompanionTheory.ClozelLie.lie_oneL_eq_sum_Eop E a, LinearMap.sum_apply,
+      Finset.sum_congr rfl fun τ _ => _root_.GlobalTheory.CompanionTheory.CapelliTrace.trace_Eop_eq E a ρ τ _ (GlobalTheory.CuspRep.ParLaws.hasInfChar_infChar (CG.mk ρ) τ) x x.2,
       ← Finset.sum_smul]
   refine GlobalTheory.CompanionTheory.TotalTrace.eq_zero_of_exp_mul_eq_one fun t => ?_
-  have h1 := GlobalTheory.T.central_eigen_exponential E a _ _ hlie t g₀
+  have h1 := _root_.GlobalTheory.CompanionTheory.Clozel.eigen_along_splitCentre E a _ _ hlie t g₀
   rw [hn _ x.2 t g₀] at h1
   exact mul_right_cancel₀ hg₀ (by rw [one_mul]; exact h1.symm)
 

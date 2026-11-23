@@ -1,12 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.SiegelToroidalIntegral
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInclusionCyclotomicAwayRingFiniteEtaleStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInclusionCyclotomicAwayRingFiniteEtale
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSFamPrimePowSq
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteTypeCycAway
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptySiegelFamilyOfDivisorLevelSamePrimesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelFamilyDeeperLevelOfDvdStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptySiegelFamilyOfDivisorLevelSamePrimes
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.GoodClass
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsSeparatedOfIsQProjOver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelFamilyDeeperLevelOfDvd
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsSiegelFamilyOverNumberField
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteTypeCycAway
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -71,15 +73,15 @@ theorem exists_sFam_cycAway : ∀ g n : ℕ, 1 ≤ g → 3 ≤ n → Odd n → N
   have hkodd : Odd k := (hlodd.pow).pow
   have hN0 : n * k ≠ 0 := by positivity
   have hNodd : Odd (n * k) := hodd.mul hkodd
-  obtain ⟨i, hi, hz, -⟩ := GlobalTheory.T.exists_inclusion_cyclotomicAwayRing_finite_etale k (n * k) hN0 (dvd_mul_left k n)
+  obtain ⟨i, hi, hz, -⟩ := _root_.GlobalTheory.SiegelTor.exists_inclusion_cycAway k (n * k) hN0 (dvd_mul_left k n)
   obtain ⟨F₂⟩ := GlobalTheory.SiegelFamilyNumberField.nonempty_baseChange F i hi
   rw [hz] at F₂
   haveI : IsDedekindDomain (cycAway (n * k)) := (arBase_cycAway (n * k) hN0).1
   have hup : Nonempty (SFam g (n * k) ((cycBase hN0).ζ : cycAway (n * k))) :=
-    GlobalTheory.T.siegelFamily_deeper_level_of_dvd g k (n * k) (cycAway (n * k)) (cycBase hN0) hk3 hNodd (dvd_mul_left k n)
+    _root_.GlobalTheory.SiegLev.sFam_of_dvd g k (n * k) (cycAway (n * k)) (cycBase hN0) hk3 hNodd (dvd_mul_left k n)
       (by rw [cycBase_ζ]; exact ⟨F₂⟩)
   rw [cycBase_ζ] at hup
-  refine GlobalTheory.T.nonempty_siegelFamily_of_divisor_level_same_primes g n (n * k) hn hNodd (dvd_mul_right n k) ⟨2 * j + 1, ?_⟩ hup
+  refine _root_.GlobalTheory.SiegLev.sFam_down g n (n * k) hn hNodd (dvd_mul_right n k) ⟨2 * j + 1, ?_⟩ hup
   rw [pow_succ', hk, ← pow_mul, mul_comm j 2]
   exact mul_dvd_mul_left n (pow_dvd_pow_of_dvd hln _)
 

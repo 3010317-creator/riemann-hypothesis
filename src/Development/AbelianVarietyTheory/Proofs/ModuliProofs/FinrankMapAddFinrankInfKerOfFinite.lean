@@ -2,7 +2,10 @@ module
 
 public import Mathlib.LinearAlgebra.Dimension.Finrank
 public import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPolynomialFinrankHomogeneousSubmoduleStatement
+public import Mathlib.RingTheory.MvPolynomial.Homogeneous
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPolynomialFinrankHomogeneousSubmodule
+public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,8 +53,6 @@ import Mathlib.Topology.Sheaves.Init
 import Mathlib.CategoryTheory.Monoidal.Cartesian.Basic
 import Mathlib.CategoryTheory.Monoidal.Category
 import Mathlib.CategoryTheory.Monoidal.Mon
-public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
-public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 import Mathlib.Topology.Sheaves.Presheaf
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.CubicalStructures.CubeSymmetricSwapFirst
@@ -128,8 +129,8 @@ theorem regularity_comap_rename_of_surjective :
   intro σ σ₀ _ _ _ r Q₀ hr
   obtain ⟨s, hs⟩ := hr.hasRightInverse
   haveI : Nonempty σ := ⟨s (Classical.arbitrary _)⟩
-  obtain ⟨P, hP⟩ := GlobalTheory.T.exists_polynomial_eval_eq_finrank_homogeneousSubmodule σ
-  obtain ⟨P₀, hP₀⟩ := GlobalTheory.T.exists_polynomial_eval_eq_finrank_homogeneousSubmodule σ₀
+  obtain ⟨P, hP⟩ := _root_.GlobalTheory.exists_polynomial_finrank_homogeneousSubmodule σ
+  obtain ⟨P₀, hP₀⟩ := _root_.GlobalTheory.exists_polynomial_finrank_homogeneousSubmodule σ₀
   refine ⟨Q₀ + P - P₀, ?_⟩
   intro K _ I₀ I d hI hd e he
   have hrs : ∀ G : MvPolynomial σ₀ K, rename r (rename s G) = G := by

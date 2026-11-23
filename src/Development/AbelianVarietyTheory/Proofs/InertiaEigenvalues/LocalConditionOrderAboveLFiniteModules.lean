@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.VecPairApply
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BkOnLeMapOfSurjectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BkOnLeMapOfSurjective
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalConditionAboveLCoeffMapFunctorial
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelmerFunctorLeftExactTorsionCoefficients
 import Mathlib.Algebra.Order.Floor.Extended
@@ -235,7 +235,7 @@ theorem locCountFin : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host 
         (fun x => ⟨hL v hv' K Y (tors_of_finite A Y) K.subtype K.subtype_injective x,
           localConditionAboveL_coeffMap_functorial bkP i _ κ K.subtype v x⟩)
         (localConditionAboveL_coeffMap_functorial bkP i _ κ K.mkQ v)
-        (GlobalTheory.T.bkOn_le_map_h1MapSubgroup_of_surjective D N X bkP i s A κ Q hS hK Y (Y ⧸ K) K.mkQ K.mkQ_surjective v)
+        (_root_.GlobalTheory.NewPrime.bkOn_le_map_of_surjective D N X bkP i s A κ Q hS hK Y (Y ⧸ K) K.mkQ K.mkQ_surjective v)
       · choose m' hm' using fun a => (hex (m a)).1 (congrFun hm a)
         exact ⟨m', funext hm'⟩
       · rintro ⟨m', rfl⟩

@@ -2,8 +2,9 @@ module
 
 public import Formalism.HermitianCurvature.HerGenC
 public import Formalism.HermitianCurvature.RealInputsClosedAdmissibleSettings
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevelModuleFormEqIntegralOfCompactCoeffStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.TopDensityBigCellEqProdLevelWeightsMulTopFormStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevelModuleFormEqIntegralOfCompactCoeff
+public import Formalism.HermitianCurvature.StatementTBB
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.TopDensityBigCellEqProdLevelWeightsMulTopForm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -84,10 +85,10 @@ theorem levelZero_im_eq_zero : P5.ThmPActualCpt → ∀ (Wp Wq : Type) [NormedAd
     | zero =>
       intro j hj c hc
       obtain rfl : j = P.r + 1 := hj
-      exact (GlobalTheory.T.topDensity_bigCell_eq_prod_levelWeights_mul_topForm Wp Wq P p H w c hc).2.1
+      exact (_root_.GlobalTheory.TopDensity.topDensity_eq Wp Wq P p H w c hc).2.1
     | succ n ih =>
       intro j hj c hc
-      rw [(GlobalTheory.T.levelModuleForm_eq_integral_of_compactCoeff hP Wp Wq P p Cb H w j _ hD hH hw (by omega) (isLocPt_ofFn c hc)).2]
+      rw [(_root_.GlobalTheory.LevelIntegralStep.levelForm_eq_integral hP Wp Wq P p Cb H w j _ hD hH hw (by omega) (isLocPt_ofFn c hc)).2]
       refine integral_im_eq_zero fun t ht => ?_
       have h := ih (j + 1) (by omega) (Fin.snoc c t) (fun l => by
         refine Fin.lastCases ?_ (fun i => ?_) l

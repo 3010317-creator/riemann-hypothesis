@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCombAt
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PlaceIdempotentActsOnSupportedAndOffStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PlaceIdempotentActsOnSupportedAndOff
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilCharacterSplitPlaceExistsContinuousNontrivia
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsBaseChangeFiniteAdeleRingEquiv
 import Mathlib.Algebra.Order.Floor.Extended
@@ -79,7 +79,7 @@ theorem sec_mem_idAt (a : k) : q.sec a ∈ idAt D (· = q.v) := by
   obtain ⟨ε, hε, hsum⟩ := q.above
   obtain ⟨hee, hec, -⟩ := q.split
   have he : q.e ∈ idAt D (· = q.v) := by
-    refine ((GlobalTheory.T.placeIdempotent_acts_on_supportedAndOff D q.v ε hε).1 q.e).2 ?_
+    refine ((_root_.GlobalTheory.FinPl.placeIdem_acts D q.v ε hε).1 q.e).2 ?_
     rw [← hsum, add_mul, hee, mul_comm (cA D q.e), hec, add_zero]
   have h : q.e * q.sec a = q.sec a := GlobalTheory.LocChar.e_mul_ι (ofSplit q) a
   rw [← h]

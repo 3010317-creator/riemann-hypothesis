@@ -4,7 +4,8 @@ public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.Unita
 public import Formalism.LocalToGlobal.GroupLattices.DownNaturalLevelZero
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LatExistsOfSteps
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIsotropicOrthHyp
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsPrimitiveVectorNormNegHyperbolicPairStatement
+public import Formalism.LocalRingCardinality.DataSpaces
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsPrimitiveVectorNormNegHyperbolicPair
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnramifiedDegreeOneOfNcardPlacesOver
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -51,7 +52,7 @@ namespace GlobalTheory.St.Lat
 theorem latExists_of_forms0 : ∀ D : D7, Formalism.L2.Forms.Forms0 D D.u₀ → LatExists D := by
   intro D hF
   refine GlobalTheory.St.Lat.latExists_of ?_ ?_ D ?_
-  · exact GlobalTheory.T.exists_primitive_vector_norm_neg_hyperbolicPair
+  · exact _root_.GlobalTheory.HypPrimVec.exists_primitive_norm_neg
   · exact GlobalTheory.unramified_degree_one_of_ncard_placesOver
   · exact GlobalTheory.IsoOrthHyp.exists_isotropic_orth_hyp D hF
 

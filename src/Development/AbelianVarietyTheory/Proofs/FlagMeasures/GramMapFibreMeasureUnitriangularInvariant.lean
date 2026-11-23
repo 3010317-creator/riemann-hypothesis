@@ -3,7 +3,7 @@ module
 public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FibreFamilyUnique
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalUnitaryGroupTuplesTopologicalFacts
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitriangularColumnOpsPreserveHaarTuplesHermitiaStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitriangularColumnOpsPreserveHaarTuplesHermitia
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.TensTop
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -241,7 +241,7 @@ theorem fibre_unitri_invariant : ∀ (F E : Type) [Field F] [NumberField F] [Fie
       right_inv := fun T => Subtype.ext (cgr_cgr (Fv F v) σ w u _ hwu)
       continuous_toFun := hcontH u
       continuous_invFun := hcontH w }
-  obtain ⟨hμu, hνu⟩ := GlobalTheory.T.unitriangular_column_ops_preserve_haar_tuples_hermitian F E σ hE n J hJ v a u hdiag htri
+  obtain ⟨hμu, hνu⟩ := _root_.GlobalTheory.UnitriTuple.unitri_haar F E σ hE n J hJ v a u hdiag htri
   have hμe : μ.map e.toMeasurableEquiv = μ := hμu μ hμ
   have hνr : ν.map r.toMeasurableEquiv = ν := hνu ν hν r (fun T => rfl)
   have hf : ∀ X T, gramR (Fv F v) σ J (e X) = ((r T : HermR (Fv F v) σ a) :

@@ -3,15 +3,18 @@ module
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FiniteMinimalPrimes
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsSncModel
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterPC
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MinimalPrimesOfMultihomogSupStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularSystemOfParametersLocalRingStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SncChartMultihomogOrderAtPointStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SncChartParametersAtConePointStatement
+public import ReciprocityTheory.AnalyticForms.RegularLocalRings.MemConePtsIffChartIdeal
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MinimalPrimesOfMultihomogSup
+public import ReciprocityTheory.AnalyticForms.RegularLocalRings.JacChart
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularSystemOfParametersLocalRing
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SncChartMultihomogOrderAtPoint
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SncChartParametersAtConePoint
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SncChartRegularAtConePointStatement
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SncChartRegularWithBoundaryChoiceStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SymbolicPowerFromAffineChartStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SymbolicPowerInAffineChartStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.UnitTimesParameterMonomialStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SymbolicPowerFromAffineChart
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SymbolicPowerInAffineChart
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ChPrime
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.UnitTimesParameterMonomial
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,17 +67,17 @@ theorem exists_sncData_of_isSncModel : ∀ (K : Type) [Fintype K] (ι : K → Ty
   have hDm : ReciprocityTheory.AnForm.R.IsMultiHomogIdeal (pC J) := isMultiHomogIdeal_pC hJ
   have hz : ∀ k, SncRes.rep x ⟨k, p k⟩ ≠ 0 := hx
   have hzc := SncRes.rep_mem x
-  obtain ⟨r, Jf, hIt, hreg, hdim, hspan, hpr⟩ := GlobalTheory.T.snc_chart_parameters_at_cone_point K ι Ω y e J hA hS p (SncRes.rep x) hzc hz
+  obtain ⟨r, Jf, hIt, hreg, hdim, hspan, hpr⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.SncRes.Par.exists_params K ι Ω y e J hA hS p (SncRes.rep x) hzc hz
   have hID : SncRes.ideal (pC (mCoordIdeal y)) p ≤ SncRes.ideal (pC (mCoordIdeal y) ⊔ pC J) p :=
     Ideal.map_mono (sup_le_sup_right le_sup_left _)
-  obtain ⟨h, hh, hmem, hle⟩ := GlobalTheory.T.exists_radical_locally_eq_span_prod _ e _ _ _ r Jf hID hIt hreg hdim hspan hpr
+  obtain ⟨h, hh, hmem, hle⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.BdRad.exists_den_prod_params _ e _ _ _ r Jf hID hIt hreg hdim hspan hpr
   obtain ⟨σ, hinj, hnone, hσ, hcov⟩ := GlobalTheory.T.snc_chart_regular_at_cone_point K ι _ (pC J) e p (SncRes.rep x) r Jf hPm hDm hzc hz hIt hreg hdim hspan hpr
   let d : ReciprocityTheory.AnForm.R.SncData (SncRes.ideal (pC (mCoordIdeal y)) p) (SncRes.bd (pC (mCoordIdeal y)) (pC J) p) (SncRes.coord (pC (mCoordIdeal y)) p x) e (SncRes.rc (pC (mCoordIdeal y)) (pC J)) :=
     { r := r, J := Jf, h := h, σ := σ, σ_injOn := hinj, σ_eq_none := hnone, span_eq := hspan, eval_h := hh,
       mem_bd := hmem, le_span := hle }
   refine ⟨d, GlobalTheory.T.snc_chart_regular_with_boundary_choice K ι _ (pC J) e p x r Jf σ hPm hDm hx hIt hreg hdim hspan hnone (fun l k hl => (hσ l k hl).1) hcov, ?_⟩
   intro f a hf hfP hfz
-  obtain ⟨u, mm, hm0, hfac⟩ := GlobalTheory.T.snc_chart_multihomog_order_at_point K ι _ (pC J) e p (SncRes.rep x) r Jf f a hPm hDm hzc hz hIt hreg hdim hspan hpr hf hfz
+  obtain ⟨u, mm, hm0, hfac⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.SncRes.Mono.exists_unit_mul_monomial K ι _ (pC J) e p (SncRes.rep x) r Jf f a hPm hDm hzc hz hIt hreg hdim hspan hpr hf hfz
   refine ⟨u.val, u.isUnit, ?_⟩
   refine hfac.trans (congrArg (fun w => u.val * w) (Finset.prod_congr rfl fun l hl => ?_))
   have hlJ : l ∈ Jf := hl
@@ -86,18 +89,18 @@ theorem exists_sncData_of_isSncModel : ∀ (K : Type) [Fintype K] (ι : K → Ty
   rw [hdσ]
   obtain ⟨hQc, hX⟩ := hσ l k hk
   have hQmin := SncRes.compIdeal_mem (P := pC (mCoordIdeal y)) (pC J) k
-  have hQm := GlobalTheory.T.minimal_primes_of_multihomog_sup K ι _ _ hPm hDm _ hQmin
+  have hQm := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.MinHom.isMultiHomogIdeal_of_mem_minimalPrimes_sup K ι _ _ hPm hDm _ hQmin
   have hQp : (SncRes.compIdeal (pC (mCoordIdeal y)) (pC J) k).IsPrime := hQmin.1.1
-  have hord := GlobalTheory.T.unit_times_parameter_monomial _ e _ _ r Jf _ u mm hIt hreg hdim hspan hfac l hlJ
+  have hord := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.SncRes.Par.exponent_eq_order_polynomial _ e _ _ r Jf _ u mm hIt hreg hdim hspan hfac l hlJ
   have key : ∀ n : ℕ, (∃ s ∉ SncRes.compIdeal (pC (mCoordIdeal y)) (pC J) k,
       s * f ∈ SncRes.compIdeal (pC (mCoordIdeal y)) (pC J) k ^ n ⊔ pC (mCoordIdeal y)) ↔ n ≤ mm l := by
     intro n
     rw [← hord n, ← hQc]
     constructor
     · rintro ⟨s, hs, hsf⟩
-      exact GlobalTheory.T.symbolic_power_from_affine_chart K ι _ _ p f s a n hPm hQm hQp hX hf hs hsf
+      exact _root_.GlobalTheory.CompanionTheory.Ar.Cmp.SncRes.Dehom.relation_dehom K ι _ _ p f s a n hPm hQm hQp hX hf hs hsf
     · rintro ⟨s', hs, hsf⟩
-      exact GlobalTheory.T.symbolic_power_in_affine_chart K ι _ _ p f a n s' hPm hQm hQp hX hf hs hsf
+      exact _root_.GlobalTheory.CompanionTheory.Ar.Cmp.SncRes.Homog.relation_homogenises K ι _ _ p f a n s' hPm hQm hQp hX hf hs hsf
   have hset : {n : ℕ | ∃ s ∉ SncRes.compIdeal (pC (mCoordIdeal y)) (pC J) k,
       s * f ∈ SncRes.compIdeal (pC (mCoordIdeal y)) (pC J) k ^ n ⊔ pC (mCoordIdeal y)} = Set.Iic (mm l) := by
     ext n

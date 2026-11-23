@@ -1,19 +1,21 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.DepthNumbersThresholdEq
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ComplexConjFrobeniusDepthContentBoundProofStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ComplexConjFrobeniusDepthContentBoundProof
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ErealLeMulOfForallLe
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ForcedContentBoundsProgrammeValueGoodPrime
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.InertPrimeDepthContentBoundProofStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LargePrimePackagesDepthNonposStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.InertPrimeDepthContentBoundProof
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LargePrimePackagesDepthNonpos
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevelLe
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SplitPrimeDepthContentBoundProofStatement
-import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.CharacterBlocksAttainBoundStatement
-import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.MonomialBlockSupplyBothTypingsStatement
-import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.OddLevelBlockBoundAttainedStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SplitPrimeDepthContentBoundProof
 public import Development.AutomorphicArithmetic.OrbitLabellings.FMulLeastAdmissibleLevelRowsLe
 public import Development.AutomorphicArithmetic.OrbitLabellings.PkgZeroCsNuNonposOfMonSupply
 public import Development.AutomorphicArithmetic.OrbitLabellings.RowBoundLeFnumSumAddError
+import Formalism.LocalToGlobal.CharacterGerms.ContentLargeFromSupplies
+import Formalism.LocalToGlobal.CharacterGerms.ContentZeroAt
+import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.CharacterBlocksAttainBound
+import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.MonomialBlockSupplyBothTypings
+import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.OddLevelBlockBoundAttained
 import Formalism.LocalToGlobal.ProjectiveLattices.CrudeVal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -96,11 +98,11 @@ private theorem odd_ordP_of_conjIn {N : NumDatum} {l : ℕ} (h : ConjIn N l) : O
 
 theorem nuGood : NuGoodSt := by
   intro C1 hC1
-  obtain ⟨CI, hCI, HI⟩ := GlobalTheory.T.inertPrimeDepthContentBound_proof C1 hC1
-  obtain ⟨CP, hCP, HP⟩ := GlobalTheory.T.complexConjFrobeniusDepthContentBound_proof C1 hC1
-  obtain ⟨CS, hCS, HS⟩ := GlobalTheory.T.splitPrimeDepthContentBound_proof C1 hC1
-  obtain ⟨CC, hCC, HC⟩ := UpperTheory.rowBound_le_Fnum_sum_add_error GlobalTheory.T.oddLevelBlock_bound_attained.2 GlobalTheory.T.characterBlocks_attain_bound.2 GlobalTheory.T.monomialBlock_supply_both_typings.2 C1 hC1
-  obtain ⟨HZ, -⟩ := GlobalTheory.T.largePrime_packages_depth_nonpos
+  obtain ⟨CI, hCI, HI⟩ := _root_.GlobalTheory.InertContent.main C1 hC1
+  obtain ⟨CP, hCP, HP⟩ := _root_.GlobalTheory.GoodDepth.ConjPkg.phiCBd C1 hC1
+  obtain ⟨CS, hCS, HS⟩ := _root_.GlobalTheory.GoodDepth.splitBd C1 hC1
+  obtain ⟨CC, hCC, HC⟩ := UpperTheory.rowBound_le_Fnum_sum_add_error _root_.GlobalTheory.oddBlock_supply.2 _root_.GlobalTheory.CharBlock.chSupply.2 _root_.GlobalTheory.MonBlock.monSupply.2 C1 hC1
+  obtain ⟨HZ, -⟩ := _root_.GlobalTheory.GoodDepth.zeroBd
   refine ⟨2 * CI + 2 * CP + 2 * CC + CS + 2, by positivity, ?_⟩
   intro E _ _ _ H Dw lv Xo c _ hstar hIC hPk N j pl a nW T b L w hj1 hjm hpl hp hq hdom hG hw hb la h2 hq' hd hg0 hg1 hM
   obtain ⟨PI, PP, PS, PZ, -, PC, PZC⟩ := hPk
@@ -144,7 +146,7 @@ theorem nuGood : NuGoodSt := by
     intro s hs hrow V io e ho y hy C ν hν
     by_cases hc : ConjIn N l
     · obtain ⟨Pk, rfl⟩ := PZC' V io e ho y hy C nW ν hν hc.1 (odd_ordP_of_conjIn hc) hwpos s hs hrow
-      exact UpperTheory.pkgZeroCs_nu_nonpos_of_monSupply GlobalTheory.T.monomialBlock_supply_both_typings.2 _ _ Pk
+      exact UpperTheory.pkgZeroCs_nu_nonpos_of_monSupply _root_.GlobalTheory.MonBlock.monSupply.2 _ _ Pk
     · obtain ⟨d, _, pos, Pk, rfl⟩ := PZ' V io e ho y hy C nW ν hν hc hwpos s hs
         (le_trans (Nat.mul_le_mul_right _ (Nat.mul_le_mul_right _ (Nat.mul_le_mul_right _ (by norm_num)))) hrow)
       exact HZ _ _ Pk

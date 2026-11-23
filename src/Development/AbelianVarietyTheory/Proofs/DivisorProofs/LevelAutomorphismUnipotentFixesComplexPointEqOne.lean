@@ -5,8 +5,13 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinite
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmallTorsionSetForEndomorphismStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUnipotentModIdealLiftLaInvStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelStructureChangeFramedGeometricPointUnique
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NatCardQuotSmulTopLePowFinrankStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateIsometryTorsionEqLevelSmulStatement
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NatCardQuotSmulTopLePowFinrank
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateIsometryTorsionEqLevelSmul
+public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.LevelCarrying
+public import Development.AbelianVarietyTheory.Definitions.Divisors.MemLevEigenIffTransl
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrMoveTransfer
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -169,12 +174,12 @@ theorem free : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Recip
       rw [add_zero] at h0
       simpa using h0
     | succ k ih => rw [Nat.cast_succ, hadd, ih, hone, pow_succ]
-  obtain ⟨t, ht, htor⟩ := GlobalTheory.T.tateIsometry_torsion_eq_level_smul E H Dw l ℂ (Over.mk x ⟶ G) (fun a z => z ≫ Xo.univ.t.act.act a) _ TI et I g
+  obtain ⟨t, ht, htor⟩ := _root_.GlobalTheory.TateTorsion.torsion_eq_level_smul E H Dw l ℂ (Over.mk x ⟶ G) (fun a z => z ≫ Xo.univ.t.act.act a) _ TI et I g
     hadd hone hnat (fun a ha => hTI a ha) hg hnorm hsq hMb
 
   have tor_B : ∀ u : 𝟙_ (Over (Sp ℂ)) ⟶ G0, (∀ a ∈ I, u ≫ act0.act a = 1) → ∃ c' : Dw.La, B u = et (t • c') :=
     fun u hu => htor (B u) fun a ha => by rw [← B_act, hu a ha, B_one]
-  obtain ⟨hfin, hcard⟩ := GlobalTheory.T.natCard_quot_smul_le_pow_finrank E Dw.La Dw.fin Dw.proj I g hg hnorm
+  obtain ⟨hfin, hcard⟩ := _root_.GlobalTheory.natCard_quot_smul_top_le_pow_finrank E Dw.La Dw.fin Dw.proj I g hg hnorm
   classical
   haveI : Fintype (Dw.La ⧸ I • (⊤ : Submodule (𝓞 E) Dw.La)) := Fintype.ofFinite _
   let rep := Function.surjInv (Submodule.Quotient.mk_surjective (I • (⊤ : Submodule (𝓞 E) Dw.La)))

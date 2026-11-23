@@ -1,8 +1,9 @@
 module
 
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsSegreFlagClosure
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.CutEffectiveDivisorStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.VerticalDivisorsCommuteStatement
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.Statements
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.CutEffectiveDivisor
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.VerticalDivisorsCommute
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PPairNumberExpansionIndependence
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PSegreFlagClosureCut
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PSegreFlagCutContraction
@@ -59,8 +60,8 @@ namespace GlobalTheory.CompanionTheory.CommAlg.SegreFlag
 open GroundTheory.Heights₂.Heights.NumbersDVR GroundTheory.Heights₂.Heights.AutoClose
 
 theorem segreFlagClosureCut : SegreFlagClosureCut.Statement :=
-  SegreFlagClosureCut.proof GlobalTheory.T.cut_effective_divisor
-    (PairNumberExpansionIndependence.proof GlobalTheory.T.vertical_divisors_commute)
+  SegreFlagClosureCut.proof _root_.GlobalTheory.CompanionTheory.Ar.Num.CutClosed.main
+    (PairNumberExpansionIndependence.proof _root_.GlobalTheory.CompanionTheory.CommAlg.VerticalDivisors.verticalDivisorsCommute)
     NumbersDVR_SegreFlagClosureModel
     (SegreFlagCutSection.proof NumbersDVR_SegreFlagClosureModel
       SegreFlagCutForms.proof SegreFlagCutDivisor.closed segre_flag_degree_zero_holds)

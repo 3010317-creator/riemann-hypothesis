@@ -3,13 +3,16 @@ module
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UniqGapOfUniq
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RowsPos
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.LocWSOf
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeBoundAtTermsOfLocalDataStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PerRowC
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MomAllP
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeBoundAtTermsOfLocalData
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocDatCOfBesselOfW
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalDataTailBoundClosedFormLargeGapsStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalDataTailBoundClosedFormLargeGaps
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MaximalHermitianLatticeMassRatio
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SiegelMassRatioUnimodularDefinite
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermAmplitudeFactorNonneg
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermPairCountBoundOfSiegelMassRatiosStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermPairCountBoundOfSiegelMassRatios
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +48,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PerRowC
 
 @[expose] public section
 
@@ -56,10 +58,10 @@ theorem typeBound_of_gap :
   intro hH hBW
 
   have hAmp : GlobalTheory.TypeAsm.AmpP :=
-    GlobalTheory.T.amplitudeBound_at_terms_of_localData (GlobalTheory.TypeAsm.locDatC_of_besselOfW hBW) (GlobalTheory.T.localDataTailBound_closedForm_largeGaps hH)
+    _root_.GlobalTheory.TypeAsm.AmpTerms.amplitudeBound_of_localData_of_tailBound (GlobalTheory.TypeAsm.locDatC_of_besselOfW hBW) (_root_.GlobalTheory.TypeAsm.TailTopGap.tailP_of_gap hH)
 
   have hPairs : GlobalTheory.TypeAsm.PairsP :=
-    GlobalTheory.T.termPairCountBound_of_siegelMassRatios GlobalTheory.Mass.MaxFormula.main GlobalTheory.Mass.siegelMassRatio_holds
+    _root_.GlobalTheory.TypeAsm.pair_count_bound_of_siegel_mass GlobalTheory.Mass.MaxFormula.main GlobalTheory.Mass.siegelMassRatio_holds
   exact GlobalTheory.TypeAsm.typeBound_of_amplitude_pairs hAmp hPairs
 
 end GlobalTheory.TypeAsm.TopGap

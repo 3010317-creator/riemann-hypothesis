@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsNormalFormStabilizerMeasure
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotropicLeviEmbeddingHomomorphismPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotropicStabilizerRadicalStructureStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalFormFlagZeroMiddleInverseMinorOrthogonalStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UpperOff
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotropicLeviEmbeddingHomomorphismProperties
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotropicStabilizerRadicalStructure
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalFormFlagZeroMiddleInverseMinorOrthogonal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -196,7 +197,7 @@ theorem top_uEmb_iff (u : Matrix (Fin r) (Fin r) ℂ) (hu : IsUnit u.det) (v : F
     (∀ a, (uEmb k r u *ᵥ v) (esI k r a) = 0) ↔ ∀ a, v (esI k r a) = 0 := by
   refine ⟨fun h a => ?_, top_uEmb u v⟩
   have h1 := top_uEmb u⁻¹ _ h a
-  obtain ⟨hm, h0, -⟩ := GlobalTheory.T.isotropicLeviEmbedding_homomorphism_properties k r
+  obtain ⟨hm, h0, -⟩ := _root_.GlobalTheory.Amp.UEmb.uEmb_hom k r
   rwa [Matrix.mulVec_mulVec, ← hm _ _ (Matrix.isUnit_nonsing_inv_det u hu) hu, Matrix.nonsing_inv_mul u hu, h0,
     Matrix.one_mulVec] at h1
 
@@ -431,9 +432,9 @@ theorem Dj_eq {j : ℕ} (hj : j ≤ r) (z z' : Fin (2 * r + k + 1) → ℂ) (g :
 
 theorem Yj_eq_gramProj : ∀ (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k + 1) → ℂ)), ∀ (g₀ : Mat k r) (β : Fin r → ℕ) (c : ℂ), inWb k r z → inWb k r z' → 0 < Tz k r z → IsNormal0 k r hj β c z z' g₀ → ∀ m ∈ UH (Hb k), ∃ P₀ : Submodule ℂ (EuclideanSpace ℂ (Fin (k + 1))), k - 1 ≤ Module.finrank ℂ P₀ ∧ ∀ (q : PSec k r j × (UToff β → ℂ)) (a : Fin r → ℝ), (∀ b, 0 < a b) → Yj k r hj z z' g₀ (sEl k r j β q * (uEmb k r (Matrix.diagonal fun b => (a b : ℂ)) * mEmb k r m)) = gramProj P₀ fun b : Fin j => m⁻¹ *ᵥ q.1.1 ⟨Fin.castLE hj b, b.2⟩ := by
   intro k r j hj z z' g β c hz hz' hT hN m hm
-  obtain ⟨-, -, -, hD, hD', -, hH⟩ := GlobalTheory.T.normalFormFlagZero_middle_inverse_minor_orthogonal k r j hj z z' g β c hz hz' hT hN
-  obtain ⟨-, -, hU, hup⟩ := GlobalTheory.T.isotropicLeviEmbedding_homomorphism_properties k r
-  obtain ⟨hp, hsk, -, -, hM⟩ := GlobalTheory.T.isotropicStabilizerRadical_structure k r
+  obtain ⟨-, -, -, hD, hD', -, hH⟩ := _root_.GlobalTheory.Amp.NfMid.normal0_middle k r j hj z z' g β c hz hz' hT hN
+  obtain ⟨-, -, hU, hup⟩ := _root_.GlobalTheory.Amp.UEmb.uEmb_hom k r
+  obtain ⟨hp, hsk, -, -, hM⟩ := _root_.GlobalTheory.Amp.Rad.radical k r
   refine ⟨P0 k m (mid k r z'), finrank_lastZeroOrthImageSubspace_ge _ _, fun q a ha => ?_⟩
   have hu : IsUnit (upperOff β q.2).det := by
     unfold upperOff

@@ -1,13 +1,15 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.HolomorphicContinuation.GlobalGaussLaws.FourierZeroN
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ChartSectionExistsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EisensteinFarEstimateStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EisensteinGluingStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EisensteinIwasawaEstimateStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EisensteinTopologyStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ScalarSectionExistsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StandardSectionExistsStatement
+public import Development.WeilBound.RepresentationTheoryGL.EisensteinResidues.AnisotropicGlobalForms.SectionTrace.SecOf
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ChartSectionExists
+public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.IwasawaUnipotent.IwaU
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EisensteinFarEstimate
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EisensteinGluing
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EisensteinIwasawaEstimate
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EisensteinTopology
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ScalarSectionExists
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StandardSectionExists
 public import Development.WeilBound.RepresentationTheoryGL.EisensteinSeries.SiegelEisensteinHalfPlane.SchwartzBruhatMajorants.SiegelMultOf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -52,8 +54,8 @@ namespace PositivityTheory.Rg.SwEis.Hd
 open PositivityTheory.RgEis.Hd
 
 theorem eisStrong : PositivityTheory.Rg.Sw.Glob.EisStrong :=
-  GlobalTheory.T.eisenstein_topology dict dictInf (cmGood_of stdGood dict dictInf) grpTop bdetLaw extLaw (parLaw_of bdetLaw extLaw grpTop)
-    sgAll GlobalTheory.T.standard_section_exists (GlobalTheory.T.eisenstein_iwasawa_estimate (GlobalTheory.T.chart_section_exists dict dictInf GlobalTheory.T.standard_section_exists)) (GlobalTheory.T.scalar_section_exists secLaw (wallLaw_of secLaw))
-    (GlobalTheory.T.eisenstein_far_estimate htLip) GlobalTheory.T.eisenstein_gluing
+  _root_.GlobalTheory.CompanionTheory.SwEisTop.eTop dict dictInf (cmGood_of stdGood dict dictInf) grpTop bdetLaw extLaw (parLaw_of bdetLaw extLaw grpTop)
+    sgAll _root_.GlobalTheory.CompanionTheory.StdChart.tStd (_root_.GlobalTheory.CompanionTheory.SwEisIwa.eIwa (_root_.GlobalTheory.CompanionTheory.TChartProof.tChart dict dictInf _root_.GlobalTheory.CompanionTheory.StdChart.tStd)) (_root_.GlobalTheory.CompanionTheory.ScalWall.tScal secLaw (wallLaw_of secLaw))
+    (_root_.GlobalTheory.CompanionTheory.FarSeries.eFar htLip) _root_.GlobalTheory.CompanionTheory.PolyDenominator.glue
 
 end PositivityTheory.Rg.SwEis.Hd

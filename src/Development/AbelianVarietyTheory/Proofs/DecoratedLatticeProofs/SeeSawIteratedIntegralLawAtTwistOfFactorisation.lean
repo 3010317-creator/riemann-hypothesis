@@ -2,12 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsIteratedQuotientIntegralFinsetSum
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CosInj
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BilinearVacuumCentralCharacter
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleStepAdelicIntegralFiniteTwistPlacesStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleStepEqTwoThetaColumnLifts
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCombAt
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralIndicatorGivesLocalVacuumSplitPlace
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BilinearVacuumCentralCharacter
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HandBFSmul
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationTwoVariableModelAndLineExte
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralIndicatorGivesLocalVacuumSplitPlaceStatement
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemSupportAconvPair
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawUnfoldedDataEqKernelDataAtLevel
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLocalGroupClosedEmbeddingIntegralStatement
@@ -253,7 +254,7 @@ theorem model_of_vac (hc : c.Is) (hv : v.Is) (Q : QAt v χ) (n : ℕ) (hn : n + 
     (h₁ : n + 1 + d = Q.s + 1) {P : Pl D → Prop} (hP : P Q.q.v) {f : WO (c.V n) (c.V (n + 1)) → ℂ}
     (hf : Vac c.ψ _ _ (v.N n) (v.N (n + 1)) P f) :
     ∃ T O, (ofSplit Q.q).IsModel c.ψ (Q.FY n (d + 1) h₀) (Q.FY (n + 1) d h₁) T ∧ IsOne O ∧ T O = f := by
-  obtain ⟨T, hT, hO⟩ := (GlobalTheory.T.integralIndicator_gives_localVacuum_splitPlace D Q.k Q.q Q.unit _ _ _ _ (Q.FY n (d + 1) h₀) (Q.FY (n + 1) d h₁) c.ψ Q.ψk hc.std Q.char
+  obtain ⟨T, hT, hO⟩ := (_root_.GlobalTheory.LocMod.indicator_vac D Q.k Q.q Q.unit _ _ _ _ (Q.FY n (d + 1) h₀) (Q.FY (n + 1) d h₁) c.ψ Q.ψk hc.std Q.char
     Q.cond _ _ (hv.sd n (by omega)) (hv.sd (n + 1) hn) (Q.latY _ _ _) (Q.latY _ _ _)).2 f
     (vac_single hc.std (hv.sd n (by omega)) (hv.sd (n + 1) hn) hP hf)
   obtain ⟨O, h1⟩ := GlobalTheory.BiComb.exists_isOne (k := Q.k) (Q.X (n + 1) ⊕ Fin d) (Q.X n ⊕ Fin (d + 1))

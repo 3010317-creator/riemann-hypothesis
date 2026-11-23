@@ -2,10 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MultOfNotMem
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.InterPolyProdSum
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CharpolyRevMulCharpolyRevEqOneOfTracePowAddEqZerStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ChernCurvatureInvOneSubConjMulTransposeAtZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TopDegreeFormCoeffEqTensorSquareTopCoefficientStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TracePowGrassmannBlockCurvatureSupertraceZeroStatement
+public import Mathlib.LinearAlgebra.Matrix.Charpoly.Coeff
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CharpolyRevMulCharpolyRevEqOneOfTracePowAddEqZer
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExtFormAdjEqNegSecondForm
+public import ReciprocityTheory.L2DbarEstimates.IsLocalHomeomorph
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ChernCurvatureInvOneSubConjMulTransposeAtZero
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.VecMulVecComm
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TopDegreeFormCoeffEqTensorSquareTopCoefficient
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TracePowGrassmannBlockCurvatureSupertraceZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -69,7 +73,7 @@ theorem curvPoly_model {n r s : ℕ} (f g : Fin r → Fin s → Fin n) :
       -Matrix.of fun i j => ∑ c, X (g i c, f j c) := by
   refine Matrix.ext fun i j => ?_
 
-  simp only [curvPoly, Matrix.of_apply, GlobalTheory.T.chernCurvature_inv_one_sub_conj_mul_transpose_at_zero, Matrix.neg_apply, Matrix.mul_apply, Matrix.conjTranspose_apply,
+  simp only [curvPoly, Matrix.of_apply, _root_.GlobalTheory.HermFrame.curv_inv_one_sub_conj_mul_transpose_zero, Matrix.neg_apply, Matrix.mul_apply, Matrix.conjTranspose_apply,
   coordVec, PiLp.single_apply, apply_ite star, star_one, star_zero, mul_ite, mul_one, mul_zero, map_neg, map_sum,
   neg_mul, Finset.sum_neg_distrib, Finset.sum_mul, neg_inj]
   have h (x y : Fin n) (c : Fin s) : C (if f j c = y then if g i c = x then (1 : ℂ) else 0 else 0) * X (x, y) =
@@ -143,7 +147,7 @@ theorem relation_top_zero : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     simp only [map_pow, map_neg, map_one]
     ring
   have hzero : toEven n (((blockPoly e).charpolyRev * (-blockPolyBar e).charpolyRev).coeff k) = 0 := by
-    have h2 := GlobalTheory.T.charpolyRev_mul_eq_one_of_trace_pow_add_eq_zero (K := ℂ) _ _ (GlobalTheory.T.trace_pow_grassmannBlockCurvature_supertrace_zero e)
+    have h2 := _root_.GlobalTheory.charpolyRev_mul_charpolyRev_eq_one_of_trace_pow_add_eq_zero (K := ℂ) _ _ (_root_.GlobalTheory.GrassModel.trace_pow_blockPoly_add_trace_pow_neg_blockPolyBar e)
     have e1 : ((blockPoly e).map (toEven n)).charpolyRev = (blockPoly e).charpolyRev.map (toEven n).toRingHom :=
       (charpolyRev_map' _ _).symm
     have e2 : ((-blockPolyBar e).map (toEven n)).charpolyRev =
@@ -152,7 +156,7 @@ theorem relation_top_zero : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     have h3 := congrArg (fun f => _root_.AddMonoidAlgebra.coeff (M := ℕ) f k) h2
     simp only [Polynomial.coeff_map, Polynomial.coeff_one, if_neg (show k ≠ 0 by omega)] at h3
     exact h3
-  rw [chernTop, map_mul, hrel, GlobalTheory.T.topDegreeFormCoeff_eq_tensorSquareTopCoefficient, map_mul, hzero, zero_mul]
+  rw [chernTop, map_mul, hrel, _root_.GlobalTheory.GrassModel.TopRead.topCoeff_eq_topBig, map_mul, hzero, zero_mul]
   simp
 
 end GlobalTheory.PointChernRel

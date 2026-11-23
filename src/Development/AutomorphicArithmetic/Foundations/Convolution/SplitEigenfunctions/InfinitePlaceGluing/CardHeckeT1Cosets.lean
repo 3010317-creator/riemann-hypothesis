@@ -1,17 +1,20 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.Convolution.SplitEigenfunctions.Entire
-import Development.AbelianVarietyTheory.Definitions.Foundations.NormEulerPolySubOneLe
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspFormSqIntegrableAndIsDiscreteSplitCentreStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspidalLetterCentralExponentPropertiesStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspidalLetterRealExponentEqZeroIffIsUnitaryStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdelicAbsValueCpowCharacterStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeTjCosetsFiniteCardLe
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormHeckeEigenvalueLeCardCosetsStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatVecUOfIsSphericalU
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormHeckeEigenvalueLeCardCosets
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsUnitaryTwistAbsPow
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHasCentChar
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SatakeParameterGLStarEqInvOfUnitarisableStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SatakeParameterGLStarEqInvOfUnitarisable
 public import Development.WeilBound.RepresentationTheoryGL.ResidualSpectrum.SliceTensors.PSatHerm
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsUnitaryOfCharIff
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsSquareIntegrableAutomorphicSpace
+import Development.AbelianVarietyTheory.Definitions.Foundations.NormEulerPolySubOneLe
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdelicAbsValueCpowCharacterStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHasCentChar
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Tjcosets
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -49,8 +52,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsUnitaryOfCharIff
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsSquareIntegrableAutomorphicSpace
 
 @[expose] public section
 
@@ -111,10 +112,10 @@ private theorem loc_sat (w : HeightOneSpectrum (𝓞 E)) {V : Type} [AddCommGrou
     (hB : HasSatGL w ρ {a, b}) :
     ‖(a * b : ℂ)‖ = 1 ∧ starRingEnd ℂ (a + b : ℂ) * (a * b) = a + b ∧ ‖(a : ℂ)‖ ^ 2 ≤ Formalism.UG.qV E w := by
   obtain ⟨x, hx⟩ := hB.exists_vec
-  have hs := GlobalTheory.T.satakeParameterGL_star_eq_inv_of_unitarisable E w 2 V ρ x _ hU hx
+  have hs := _root_.GlobalTheory.LFun.UnitaryParam.map_star_eq_map_inv E w 2 V ρ x _ hU hx
   obtain ⟨ϖ, hϖ⟩ := exists_isUnifV w
   obtain ⟨B0, h1, h2, h3⟩ := hU
-  have k1 := GlobalTheory.T.norm_heckeEigenvalue_le_card_cosets _ (KGL w (n := 2)) V ρ B0.flip (fun u v => h1 v u) (fun u hu => h2 u hu) (fun g u v => h3 g v u) _ x _
+  have k1 := _root_.GlobalTheory.LFun.norm_le_card_of_heckeVec_eq_smul _ (KGL w (n := 2)) V ρ B0.flip (fun u v => h1 v u) (fun u hu => h2 u hu) (fun g u v => h3 g v u) _ x _
     (fun g => by
       unfold Formalism.UG.Tj
       exact (norm_indicator_le_norm_self _ _).trans (by simp))

@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasRigidCoords
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TorusMemOfSepAtBTate
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUnitTauScaledGeneratorTorusMonomialStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemSubfieldOfBilinFormBasisMonomialsStatement
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemSubfieldOfBilinFormBasisMonomials
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeriodGeneratorsAgreeOverAlgClosedSubfieldStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -102,7 +103,7 @@ theorem pointRigid_of_hasRigidCoords : ∀ {E : Type} [Field E] [NumberField E] 
       rw [hA, hU, ← e₄, mul_inv_rev, inv_mul_cancel_right]
     rw [e₅]
     exact (x⁻¹ : k₀ˣ).val.2
-  have := GlobalTheory.T.mem_subfield_of_bilinForm_basis_monomials C.P.D.toPre.X (balForms H.bar C.P.D.toPre.X) (Fin C.m ⊕ Fin N) ε K k₀ hk (l.M')
+  have := _root_.GlobalTheory.mem_subfield_of_bilinForm_monomials C.P.D.toPre.X (balForms H.bar C.P.D.toPre.X) (Fin C.m ⊕ Fin N) ε K k₀ hk (l.M')
     (by exact_mod_cast (level_pos l).ne') t key (.inr j)
   simpa [t, u] using this
 

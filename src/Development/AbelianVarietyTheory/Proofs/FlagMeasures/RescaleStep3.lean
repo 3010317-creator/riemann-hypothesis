@@ -2,15 +2,19 @@ module
 
 public import Formalism.UnipotentAdelicQuotients.SiegelWeilUnitaryConvergent
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LevelMatchIff
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsAdelicTorusMeasureStabiliserHaarStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsFrameStabilizerHaarNormalisedFibreMeasureStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsHaarMeasureUnipotentRadicalCovolumeOneStatement
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.Volumes
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.SiegelWeilNarrowOfWide
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsAdelicTorusMeasureStabiliserHaar
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.LocVol
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsFrameStabilizerHaarNormalisedFibreMeasure
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.Measures
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsHaarMeasureUnipotentRadicalCovolumeOne
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsMeasWPrescribed
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FourMulAddFiveLeRank
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LinearIndependentRatTupOfDetNeZero
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SiegelWeilVolumes
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardFrameGramDetNeZero
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.StdChar
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LinearIndependentRatTupOfDetNeZero
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StandardFrameGramDetNeZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,7 +81,7 @@ theorem rescaleStep3 :
             Formalism.L2.SG.Volumes.IsCompatT X.B.I.F X.B.I.E X.B.I.cm.sig X.B.I.n X.B.I.J X0 X.measG.μG μ' νB) := by
     intro X0
     by_cases hdet : (gramE X.B.I.cm.sig X.B.I.J X0).det ≠ 0
-    · obtain ⟨νX, μ', h1, h2, h3⟩ := GlobalTheory.T.exists_adelicTorusMeasure_stabiliserHaar X.B.I.F X.B.I.E X.B.I.cm.sig hCM X.B.I.n X.B.I.J hH hA hC ψ hψ
+    · obtain ⟨νX, μ', h1, h2, h3⟩ := _root_.GlobalTheory.omT_stab_exist X.B.I.F X.B.I.E X.B.I.cm.sig hCM X.B.I.n X.B.I.J hH hA hC ψ hψ
         (2 * D.R.rS + 2) (by omega) (by omega) X0 (hherm X0) hdet X.measG.μG hμG
       exact ⟨μ', h2, fun _ => ⟨hherm X0, νX, h1, h3⟩⟩
     · exact ⟨X.measG.μB X0, hG.2.2.2.2.1 X0, fun h => absurd h hdet⟩
@@ -97,16 +101,16 @@ theorem rescaleStep3 :
     obtain ⟨T, hP⟩ := hfr u
     obtain ⟨hdet, hT1, -⟩ := GlobalTheory.FrameGram.std_frame_gram X.B.I.F X.B.I.E X.B.I.cm.sig hCM X.B.I.n X.B.I.J hH
       D.R.rS (Formalism.L2.SG.TypedSets.frameOf X u) T hP
-    obtain ⟨νH, μH, h1, h2, h3⟩ := GlobalTheory.T.exists_adelicTorusMeasure_stabiliserHaar X.B.I.F X.B.I.E X.B.I.cm.sig hCM X.B.I.n X.B.I.J hH hA hC ψ hψ
+    obtain ⟨νH, μH, h1, h2, h3⟩ := _root_.GlobalTheory.omT_stab_exist X.B.I.F X.B.I.E X.B.I.cm.sig hCM X.B.I.n X.B.I.J hH hA hC ψ hψ
       (D.R.rS + 1 + D.R.rS) (by omega) (by omega) (tupH (Formalism.L2.SG.TypedSets.frameOf X u)) hT1 hdet
       X.measG.μG hμG
-    obtain ⟨μN, hN, hN1⟩ := GlobalTheory.T.exists_haarMeasure_unipotentRadical_covolume_one X.B.I.F X.B.I.E X.B.I.cm.sig hCM X.B.I.n X.B.I.J hH D.R.rS
+    obtain ⟨μN, hN, hN1⟩ := _root_.GlobalTheory.NsubHaarCovol.exists_haar_covol_one X.B.I.F X.B.I.E X.B.I.cm.sig hCM X.B.I.n X.B.I.J hH D.R.rS
       (Formalism.L2.SG.TypedSets.frameOf X u) T hP
     have hS : ∀ v : HeightOneSpectrum (𝓞 X.B.I.F),
         ∃ μS : Measure (Ssub (Fv X.B.I.F v) X.B.I.cm.sig X.B.I.J (Formalism.L2.SG.TypedSets.frameOf X u)),
           μS.IsHaarMeasure ∧ Formalism.L2.SG.LocVol.LocTieW X.B.I.cm.sig X.B.I.J ψ v
             (Formalism.L2.SG.TypedSets.frameOf X u) (X.measG.μGv v) μS := fun v =>
-      GlobalTheory.T.exists_frameStabilizerHaar_normalised_fibreMeasure X.B.I.F X.B.I.E X.B.I.cm.sig hCM X.B.I.n X.B.I.J hH hA hC ψ hψ hstd' v D.R.rS
+      _root_.GlobalTheory.LocalStabiliserTie.exists_tied_haar X.B.I.F X.B.I.E X.B.I.cm.sig hCM X.B.I.n X.B.I.J hH hA hC ψ hψ hstd' v D.R.rS
         (Formalism.L2.SG.TypedSets.frameOf X u) T hP (by omega) (X.measG.μGv v) (hG.2.2.2.1 v)
     choose μSv hSv hSt using hS
     have hWn := X.measW_norm u

@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.PoitouTateNineTermTransgressionZeroApply
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalBrauerRootsUnityEquivStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalInvariantCupKummerStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalInvariantCupUniformizerStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalBrauerRootsUnityEquiv
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalInvariantCupKummer
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalInvariantCupUniformizer
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,12 +59,12 @@ theorem exists_bijective_isNormalised :
       ∃ f : H2 (muLoc F l r A) →ₗ[ZMod (l ^ r)] ZMod (l ^ r),
         Function.Bijective f ∧ IsNormalised ζ A v f := by
   intro F Ω _ _ _ _ _ l _ r hr ζ hζ A v hA
-  obtain ⟨e⟩ := GlobalTheory.T.local_brauer_roots_unity_equiv F Ω l r hr A v hA
+  obtain ⟨e⟩ := _root_.GlobalTheory.CompanionTheory.LocalInv.nonempty_H2_muLoc_equiv_zmod F Ω l r hr A v hA
   by_cases hN : IsNormalised ζ A v (e : H2 (muLoc F l r A) →ₗ[ZMod (l ^ r)] ZMod (l ^ r))
   · exact ⟨e, e.bijective, hN⟩
   · simp only [IsNormalised, not_forall] at hN
     obtain ⟨ϖ, y, κ, χ, z, h1, h2, h3, h4, h5, h6, h7, h8, -⟩ := hN
-    have hgen := GlobalTheory.T.local_invariant_cup_uniformizer F Ω l r hr ζ hζ A v hA ϖ y κ χ z h1 h2 h3 h4 h5 h6 h7 h8
+    have hgen := _root_.GlobalTheory.CompanionTheory.KummerCup.span_class_eq_top F Ω l r hr ζ hζ A v hA ϖ y κ χ z h1 h2 h3 h4 h5 h6 h7 h8
     set c : H2 (muLoc F l r A) := Submodule.Quotient.mk z with hc
 
     obtain ⟨a, ha⟩ : ∃ a : ZMod (l ^ r), a * e c = 1 := by
@@ -86,7 +86,7 @@ theorem exists_bijective_isNormalised :
       refine ⟨e.symm (e c * t), ?_⟩
       simp [← mul_assoc, ha]
     · intro ϖ' y' κ' χ' z' g1 g2 g3 g4 g5 g6 g7 g8
-      have hz := GlobalTheory.T.local_invariant_cup_kummer F Ω l r hr ζ hζ A v hA ϖ y κ χ z h1 h2 h3 h4 h5 h6 h7 h8
+      have hz := _root_.GlobalTheory.CompanionTheory.KapChi.cup_class_eq F Ω l r hr ζ hζ A v hA ϖ y κ χ z h1 h2 h3 h4 h5 h6 h7 h8
         ϖ' y' κ' χ' z' g1 g2 g3 g4 g5 g6 g7 g8
       rw [← hz]
       simpa using ha

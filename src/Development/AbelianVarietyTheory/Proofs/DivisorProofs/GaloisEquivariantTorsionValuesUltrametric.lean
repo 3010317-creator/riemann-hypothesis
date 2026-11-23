@@ -2,6 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsProjOverWeierstrass
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilIsIffPull
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegenerationThetaSeriesAlgebraicOverFractionFielStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDegenerationDataPullbackInjectiveLocalHom
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPullFib
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsThetaPointOfAlgebraicSeriesOneTrait
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionTowerRecognition
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesOfExpansionLawsStatement
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesTorsionPairingSeparationIntegra
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationDataTorsionStructureAlgClosed
@@ -13,13 +18,10 @@ import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaPointsCoo
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionLabelSystemsSeriesScalarIndependentOfLeve
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusTorsionPointsCorrespondValues
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusTorsionPointsCorrespondValuesStatement
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TxCosetCriterionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegenerationThetaSeriesAlgebraicOverFractionFielStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDegenerationDataPullbackInjectiveLocalHom
+import Development.AbelianVarietyTheory.Definitions.Degenerations.SepticCharacterInjective
+import Mathlib.Topology.MetricSpace.Ultra.Basic
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TxCosetCriterion
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLabelsFinExt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPullFib
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsThetaPointOfAlgebraicSeriesOneTrait
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionTowerRecognition
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.AdmissibleBaseOfCompleteDvr
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.UniformizationLawsAndExpansionStatements
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.GaloisHolds
@@ -131,7 +133,7 @@ theorem recognition_core : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing
     obtain ⟨g', hg'⟩ := (GlobalTheory.Ex.QStr.qStructure C N n _ hnC hT 1).2.1 g
     exact ⟨g', by rw [← hg', pow_one]⟩
   have h0 : ∃ q : N.QT ((n ^ 1) ^ 2), N.tx (n ^ 1) q ≠ 0 := by
-    obtain ⟨h, -, -, hh⟩ := (GlobalTheory.T.tx_coset_norm_one_and_ne_zero C N q₀ hq₀ n _ hn ho h1 hT 1 le_rfl).2.2 1
+    obtain ⟨h, -, -, hh⟩ := (_root_.GlobalTheory.tx_coset_criterion C N q₀ hq₀ n _ hn ho h1 hT 1 le_rfl).2.2 1
     exact ⟨_, hh⟩
   obtain ⟨N', ν', -⟩ := GlobalTheory.T.exists_integral_degeneration_values hL W D'.toPre D'.psi_even D'.tau_bimult C ⊤ fun _ => trivial
 

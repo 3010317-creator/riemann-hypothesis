@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ColHeightSharpWith
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CosetRefinement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BadPrimesSharp
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MovedDatumSmallTypePrimeAnyLevelStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MovedDatumSmallTypePrimeAnyLevel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharacterSumLocalConstantFifth
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IntAtNatCast
 import Mathlib.Algebra.Order.Floor.Extended
@@ -59,7 +59,7 @@ theorem locSmall_XiAt_sharp : ∃ C : ℕ, ∀ (CY : ℝ) (D : D7) (N : NumDatum
   obtain ⟨hvG, hpr, -⟩ := GlobalTheory.Core.Ht2.BadPrimesS.bad_primes_sharp CY D N X s Pr W Ch G sel Sg mu cst I dl χ cD pl u δ H
   have hP : P.1 ∈ Pr.vGs := hvG _ P.2
   obtain ⟨g, -, hg, -, hg2, -⟩ := hpr _ hP
-  have hom := GlobalTheory.T.movedDatum_small_typePrime_any_level CY D N X s Pr W Ch G sel Sg mu cst I dl χ cD pl u δ H i (by omega) P (I.h i al P) (I.h (i + 1) be P)
+  have hom := _root_.GlobalTheory.Core.Ht2.MovedDatumS.omPhi_locSmall_sharp CY D N X s Pr W Ch G sel Sg mu cst I dl χ cD pl u δ H i (by omega) P (I.h i al P) (I.h (i + 1) be P)
   obtain ⟨hH, -, -, -, -, hsharp, hI, -⟩ := H
   have hPr : Pr.Ok := hH.2.2.2.2.2.2.2.2.2.1
   have hq : (Formalism.L2.Col.qOf P.1).Prime := hg ▸ hPr.g_prime g

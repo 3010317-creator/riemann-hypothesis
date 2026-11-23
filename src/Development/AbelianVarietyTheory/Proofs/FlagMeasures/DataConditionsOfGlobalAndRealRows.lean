@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ToGlob0
 public import Formalism.SharpRestriction.CuspSpanNormBounds.StandingHypothesesHoldFamily
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GlobalRankNumberBoundsSizeComparisonsStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.SecondLabelsNonempty
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GlobalRankNumberBoundsSizeComparisons
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,7 +54,7 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.S
 theorem data_of_rows (eps CD : ℝ) (he : 0 < eps) (he' : eps < 1 / 52) (hCD : 3 ≤ CD) :
     ∃ x0 : ℝ, ∀ x, x0 ≤ x → ∀ (D : D7) (Cg C0 : ℝ), Glob0 D x eps CD Cg → Nodes D x eps → ArithmeticConditionsOfDatum D →
       DuWin D C0 → StandingNumericalData D C0 := by
-  obtain ⟨x1, hx1⟩ := GlobalTheory.T.globalRankNumberBounds_size_comparisons eps CD he he' hCD 1 one_pos
+  obtain ⟨x1, hx1⟩ := _root_.GlobalTheory.Diag.PG.SqrtBound.rankNums_sizes eps CD he he' hCD 1 one_pos
   refine ⟨max x1 1, fun x hx D Cg C0 hG hN hA hW => ?_⟩
   have hxx1 : x1 ≤ x := le_trans (le_max_left _ _) hx
   have hxone : 1 ≤ x := le_trans (le_max_right _ _) hx

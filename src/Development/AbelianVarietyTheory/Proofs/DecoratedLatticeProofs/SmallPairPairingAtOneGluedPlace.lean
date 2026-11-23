@@ -4,17 +4,21 @@ public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.SmallPa
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.IndicatorFunctionIdentity
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousIntegralCompactAutomorphicQuotientPara
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsBilinearEquivariantOrthogonalSummandLiftStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GluedPlaceSourceConstantProofStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ValueDoubleUnif
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GluedPlaceSourceConstantProof
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsTameFinitePlaceHermitianAllStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LinearModelSplitPlaceCharacterEquivarianceStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RamifiedOperatorBijectiveFiniteTranslationCombinStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchwartzBruhatTensorIndicatorCharacterFactsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualLatticeStabilizersFixWeilVacuumOnPlaceSeStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PlacesToAdeles
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RamifiedOperatorBijectiveFiniteTranslationCombin
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualLatticeStabilizersFixWeilVacuumOnPlaceSe
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SetIntegralFundamentalDomainRightTranslateInvari
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TensColPhiOneCharIndSmul
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CaRepApply
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LinearModelSplitPlaceCharacterEquivariance
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchwartzBruhatTensorIndicatorCharacterFactsStatement
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SourceLiftAtGluedPlaceProof
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceBaseVacuumDatumExistsUniqueStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceHermitianFramePropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TensColPhiOneCharIndSmul
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceHermitianFrameProperties
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnramifiedCharacterDetLatticeStabilizerEqOneStatement
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumThetaJointlyContinuous
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilRepresentationRationalTranslateSubstitution
@@ -56,7 +60,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CaRepApply
 
 @[expose] public section
 
@@ -180,7 +183,7 @@ theorem SmallPl.integral_sum_translates {D : D7} {ψ : AddChar (AF D.host.F) ℂ
 
 theorem smallOne : ∀ D : D7, SmallOne D := by
   intro D k _ _ _ _ p n n' _ _ _ _ q χ hχ
-  obtain ⟨r₀, e, hr₀, hsrc⟩ := GlobalTheory.T.gluedPlaceSourceConstant_proof D k p n n' q χ hχ
+  obtain ⟨r₀, e, hr₀, hsrc⟩ := _root_.GlobalTheory.FinPl.sourceExact D k p n n' q χ hχ
   obtain ⟨N, hN0, hN⟩ := SmallPl.exists_card_withLat k n
   refine ⟨r₀ * N, e, mul_pos hr₀ (Nat.cast_pos.2 hN0), ?_⟩
   intro ψ V₀ A L S T o ζ hζ hA hS hT χV χW χS χT om₁ omT hW₁ hWT hV hW hχS hχT vA vS vT α α₀ β hsum P Q s L₁ L₂ L₂' L₃
@@ -193,8 +196,8 @@ theorem smallOne : ∀ D : D7, SmallOne D := by
 
   obtain ⟨Ξ'', hΞ'', -⟩ := hob.1 (tensCol (phiOne P (s • Q)) (charInd χr (s • Q)))
     (hsb.1 _ _ (GlobalTheory.IndefiniteRowSideFullHecke.IndicatorFunctionIdentity.phiOne_mem _ _) (hsb.2.2 _ _))
-  have hram := (GlobalTheory.T.ramifiedOperator_bijective_finite_translation_combination D k p n' q χ hχ χr hχr s A α P).2.1 φ hφ
-  have hram1 := ((GlobalTheory.T.ramifiedOperator_bijective_finite_translation_combination D k p n' q χ hχ χr hχr 1 A α P).2.1 φ hφ).1
+  have hram := (_root_.GlobalTheory.FinPl.ramBijective_holds D k p n' q χ hχ χr hχr s A α P).2.1 φ hφ
+  have hram1 := ((_root_.GlobalTheory.FinPl.ramBijective_holds D k p n' q χ hχ χr hχr 1 A α P).2.1 φ hφ).1
   rw [map_one, Module.End.one_apply] at hram1
 
   have hmove : liftA o om₁ vA (FFStar q χr φ P) Ξ'' = liftA o om₁ vA (sOp α P q χr s (φ P)) Ξ' := by
@@ -217,18 +220,18 @@ theorem smallOne : ∀ D : D7, SmallOne D := by
     rw [hram.2, dia_apply, ← hg, hram1.1 g P]
     exact h1.symm
 
-  obtain ⟨lS, lT, -, hlT, -, -, hlin⟩ := GlobalTheory.T.linearModel_splitPlace_characterEquivariance D k p q ψ V₀ S χV χW om₁ hW₁
+  obtain ⟨lS, lT, -, hlT, -, -, hlin⟩ := _root_.GlobalTheory.LinExactAt.linExact D k p q ψ V₀ S χV χW om₁ hW₁
   choose gs hgs using fun Q' : Pair k n => MulAction.exists_smul_eq (GL n k) (s • Q) Q'
   have hstab : ∀ Q' ∈ withLat Q.lat, gs Q' • Q.lat = Q.lat := fun Q' hQ' => by
     rw [← Pair.dia_lat s Q, ← Pair.smul_lat, hgs, mem_withLat.1 hQ', Pair.dia_lat]
   have hfix : ∀ Q' ∈ withLat Q.lat, omT (β.gl (gs Q'), 1) Φ₂ = Φ₂ := by
     intro Q' hQ'
-    obtain ⟨-, -, -, hfr, -, -⟩ := GlobalTheory.T.splitPlaceHermitianFrame_properties D k p S n β
+    obtain ⟨-, -, -, hfr, -, -⟩ := _root_.GlobalTheory.FrameAt.frame_facts D k p S n β
     obtain ⟨Λ', -, hΛ', hK⟩ := hfr L₂' hsd₂
     have hΛQ : Λ' = Q.lat := Submodule.ext fun x => (hΛ' x).trans (hlat x).symm
     have hk1 : InK S L₂' (· = p.v) (β.gl (gs Q')) := (hK _).2 (hΛQ ▸ hstab Q' hQ')
     have hk2 : InK T L₃ (· = p.v) 1 := ⟨one_mem _, fun y _ => by simp [Formalism.L2.Theta.mt]⟩
-    exact GlobalTheory.T.selfDualLatticeStabilizers_fix_weilVacuum_on_placeSet D ψ S T χS χT omT hWT L₂' L₃ hsd₂ hsd₃ (· = p.v)
+    exact _root_.GlobalTheory.StabSetFix.stab_fix_vac D ψ S T χS χT omT hWT L₂' L₃ hsd₂ hsd₃ (· = p.v)
       (fun v hv => by subst hv; exact ⟨GlobalTheory.T.isTameFinitePlaceHermitian_all D _, hχS, hχT⟩) Φ₂ hvac _ _ hk1 hk2
   have hOver : ∀ Q' ∈ withLat Q.lat, Over ψ α₀ β L₁ L₂ f₁ (tensCol (phiOne P Q') (charInd χr Q'))
       (om₁ (1, β.gl (gs Q')) Ξ'') := by

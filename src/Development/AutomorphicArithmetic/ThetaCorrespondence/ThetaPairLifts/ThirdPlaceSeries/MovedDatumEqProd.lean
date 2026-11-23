@@ -2,7 +2,9 @@ module
 
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TrueW
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DescentDataStepExponents
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsFiniteAdeleProjectionIntegralReductionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagonalBlockDetBlockTriangular
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsFiniteAdeleProjectionIntegralReduction
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralFiniteAdeleOfSplitPlaceComponentsStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawLocalFactorEqIteratedChainDatumStatement
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ChiCompatPkStatement
@@ -93,7 +95,7 @@ theorem moved_datum_eq_prod_alt : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies
   intro D L hT Gi Gl Kc Yd cX ex W u f hP hRow v hv hVT n G pl hGP hGR j hj a ha
   refine ⟨1, one_ne_zero, fun x => ?_⟩
   rw [one_mul, isHalf_actO_iff]
-  choose π' hπ hred hint hres using fun i => GlobalTheory.T.exists_finiteAdele_projection_integral_reduction D (G i).k (G i).q (pl i).1 (hGR.idem i).1
+  choose π' hπ hred hint hres using fun i => _root_.GlobalTheory.FinPl.SplitPt.exists_lift_isRed D (G i).k (G i).q (pl i).1 (hGR.idem i).1
   choose ea hea mS using fun i => hGR.frame i j (a i + 1) (by have := ha i; omega)
   choose eb heb mT using fun i => hGR.frame i (j + 1) (a i) (by have := ha i; omega)
   have hC := fun i => _root_.GlobalTheory.MovedDat.phi_down_eq_alt D L hT Gi Gl Kc Yd cX ex W f v (G i) (π' i) (hπ i) j (a i) (ha i) (ea i) (eb i) (mS i) (mT i) x

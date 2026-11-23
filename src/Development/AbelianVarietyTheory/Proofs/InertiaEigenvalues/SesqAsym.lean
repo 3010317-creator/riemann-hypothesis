@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqZeroOfTraceMulOfSeparableGeneratedStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAevalEqOfCharpolySeparableInvolutionStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqZeroOfTraceMulOfSeparableGenerated
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAevalEqOfCharpolySeparableInvolution
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsUnitSigmaEqMulHilbert90InvAlgStatement
+public import Mathlib.RingTheory.Trace.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +51,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.RingTheory.Trace.Basic
 
 @[expose] public section
 
@@ -110,7 +110,7 @@ theorem sesq_asym : ∀ (K : UQ) (B : InvAlg K), B.g * B.σ B.g = 1 → B.P.Sepa
     exact hsg _ _
   have hadj : ∀ a y z, s (a * y) z = s y (B.σ a * z) := by
     intro a
-    obtain ⟨f, rfl⟩ := GlobalTheory.T.exists_aeval_eq_of_charpoly_separable_involution K B hP a
+    obtain ⟨f, rfl⟩ := _root_.GlobalTheory.UnitLemma.InvAlg.exists_aeval_eq_of_separable K B hP a
     induction f using Polynomial.induction_on with
     | C e =>
       intro y z
@@ -133,7 +133,7 @@ theorem sesq_asym : ∀ (K : UQ) (B : InvAlg K), B.g * B.σ B.g = 1 → B.P.Sepa
   have hφi : Function.Injective φ := by
     rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
     intro w hw
-    refine GlobalTheory.T.eq_zero_of_trace_mul_of_separable_generated K B hP (GlobalTheory.T.exists_aeval_eq_of_charpoly_separable_involution K B hP) w fun y => ?_
+    refine _root_.GlobalTheory.UnitLemma.TraceNondeg.eq_zero_of_trace_mul_eq_zero K B hP (_root_.GlobalTheory.UnitLemma.InvAlg.exists_aeval_eq_of_separable K B hP) w fun y => ?_
     have := LinearMap.congr_fun hw y
     simpa [φ, Algebra.traceForm_apply] using this
   have hφs : Function.Surjective φ :=
@@ -164,7 +164,7 @@ theorem sesq_asym : ∀ (K : UQ) (B : InvAlg K), B.g * B.σ B.g = 1 → B.P.Sepa
   refine ⟨⟨β, x, hxβ, by rw [mul_comm]; exact hxβ⟩, ?_, hform⟩
   show B.σ β = β * u
   rw [← sub_eq_zero]
-  refine GlobalTheory.T.eq_zero_of_trace_mul_of_separable_generated K B hP (GlobalTheory.T.exists_aeval_eq_of_charpoly_separable_involution K B hP) _ fun y => ?_
+  refine _root_.GlobalTheory.UnitLemma.TraceNondeg.eq_zero_of_trace_mul_eq_zero K B hP (_root_.GlobalTheory.UnitLemma.InvAlg.exists_aeval_eq_of_separable K B hP) _ fun y => ?_
   have h3 : Algebra.trace K.E B.A (B.σ β * y) = Algebra.trace K.E B.A (β * u * y) := by
     have h2 := hsym y 1
     rw [hform, hform] at h2

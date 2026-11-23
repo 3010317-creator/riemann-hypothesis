@@ -3,12 +3,13 @@ module
 public import Formalism.SharpRestriction.LevelLetterCocycles.LocCoh
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.EqOfPowEqOneOfNormSubLt
 public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSemistableTensorPairingOfDualStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusTensorCrisToSemistableCommStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MonVEqZeroIffExistsCrisInclStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SemistableDieudonneModuleSpansTensorPeriodRingStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SemistableLinearFormOnConstantsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SemistablePeriodRingGaloisInvariantsIffConstStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSemistableTensorPairingOfDual
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusTensorCrisToSemistableComm
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MonVEqZeroIffExistsCrisIncl
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SemistableDieudonneModuleSpansTensorPeriodRing
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LocalPrimeGaloisActionPeriodT
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SemistableLinearFormOnConstants
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SemistablePeriodRingGaloisInvariantsIffConst
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -70,8 +71,8 @@ theorem onB_mulLeft_mem_Dst_of_fixed {l : ℕ} [Fact l.Prime] (P : LocPrime l) {
 
 theorem exists_pairing_Dst_Dcris_phi_one : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (T : LocTied l P AI) (K : FinExt l) (V : Type) [AddCommGroup V] [Module ℚ_[l] V] [FiniteDimensional ℚ_[l] V] (V' : Type) [AddCommGroup V'] [Module ℚ_[l] V'] [FiniteDimensional ℚ_[l] V'] (ρ : Representation ℚ_[l] ↥(GK K) V) (ρ' : Representation ℚ_[l] ↥(GK K) V') (m : V →ₗ[ℚ_[l]] V' →ₗ[ℚ_[l]] ℚ_[l]), IsDual1 (P.PD K) ρ ρ' m → IsSst P ρ → ∃ B : V ⊗[ℚ_[l]] Bst P →ₗ[ℚ_[l]] ↥(Dcris (P.PD K) ρ' ⊓ LinearMap.ker (φVB (P.PD K) (LL := ℚ_[l]) (V := V') - LinearMap.id)) →ₗ[ℚ_[l]] ℚ_[l], (∀ x ∈ Dst P ρ, ∀ w, B (monV P ℚ_[l] V x) w = 0) ∧ (∀ x ∈ Dst P ρ, ∀ w, B ((l : ℚ_[l]) • phiV P ℚ_[l] V x) w = B x w) ∧ ∀ w, (∀ x ∈ Dst P ρ, B x w = 0) → w = 0 := by
   intro l _ P AI T K V _ _ _ V' _ _ _ ρ ρ' m hd hs
-  obtain ⟨pr, hφ, hN, hg, hmul, hnd⟩ := GlobalTheory.T.exists_semistable_tensor_pairing_of_dual l P K V V' ρ ρ' m hd
-  obtain ⟨lam, hlφ, hlnd⟩ := GlobalTheory.T.exists_linearForm_semistable_extending_trace l P K
+  obtain ⟨pr, hφ, hN, hg, hmul, hnd⟩ := _root_.GlobalTheory.PMon.StPairing.exists_stPairing l P K V V' ρ ρ' m hd
+  obtain ⟨lam, hlφ, hlnd⟩ := _root_.GlobalTheory.PMon.exists_phiSt_invariant_nondegenerate_linearForm l P K
   let W := Dcris (P.PD K) ρ' ⊓ LinearMap.ker (φVB (P.PD K) (LL := ℚ_[l]) (V := V') - LinearMap.id)
   let j : ↥W →ₗ[ℚ_[l]] V' ⊗[ℚ_[l]] Bst P := (crisIncl P ℚ_[l] V') ∘ₗ W.subtype
   have hj : ∀ w : ↥W, j w = crisIncl P ℚ_[l] V' (w : V' ⊗[ℚ_[l]] P.R.B) := fun _ => rfl
@@ -83,18 +84,18 @@ theorem exists_pairing_Dst_Dcris_phi_one : ∀ (l : ℕ) [Fact l.Prime] (P : Loc
       rwa [LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.id_apply, sub_eq_zero] at this
     rw [hj, stRep_crisIncl, h2]
   have hjN : ∀ w : ↥W, monV P ℚ_[l] V' (j w) = 0 := fun w =>
-    (GlobalTheory.T.monV_eq_zero_iff_mem_range_crisIncl' l P V' _).mpr ⟨_, (hj w).symm⟩
+    (_root_.GlobalTheory.PMon.monV_eq_zero_iff_exists_crisIncl l P V' _).mpr ⟨_, (hj w).symm⟩
   have hjφ : ∀ w : ↥W, phiV P ℚ_[l] V' (j w) = j w := by
     intro w
     have h2 : φVB (P.PD K) (LL := ℚ_[l]) (V := V') (w : V' ⊗[ℚ_[l]] P.R.B) = w := by
       have := w.2.2
       rwa [SetLike.mem_coe, LinearMap.mem_ker, LinearMap.sub_apply, LinearMap.id_apply,
         sub_eq_zero] at this
-    rw [hj, GlobalTheory.T.frobeniusTensor_crisToSemistable_comm l P K, h2]
+    rw [hj, _root_.GlobalTheory.PMon.phiV_crisIncl_comm l P K, h2]
   have hinv : ∀ x ∈ Dst P ρ, ∀ w : ↥W, ∃ c : ↥(K0 K), Polynomial.C P.tB * pr x (j w) =
       Polynomial.C (algebraMap ↥(K0 K) P.R.B c) := by
     intro x hx w
-    refine (GlobalTheory.T.semistablePeriodRing_galois_invariants_iff_const l P AI T K _).mp fun g => ?_
+    refine (_root_.GlobalTheory.PMon.stInv_iff l P AI T K _).mp fun g => ?_
     have h1 := hg g x (j w)
     rw [(mem_Dst P ρ).mp hx g, hjg] at h1
     rw [map_mul, actSt_C, localPrime_galoisAction_periodT, ← Polynomial.smul_C, smul_mul_assoc, ← mul_smul_comm, ← h1]
@@ -117,14 +118,14 @@ theorem exists_pairing_Dst_Dcris_phi_one : ∀ (l : ℕ) [Fact l.Prime] (P : Loc
       have hc0 : c = 0 := by
         refine hlnd c fun c' => ?_
         have h2 := hw _ (onB_mulLeft_mem_Dst_of_fixed P ρ _
-          ((GlobalTheory.T.semistablePeriodRing_galois_invariants_iff_const l P AI T K _).mpr ⟨c', rfl⟩) x hx)
+          ((_root_.GlobalTheory.PMon.stInv_iff l P AI T K _).mpr ⟨c', rfl⟩) x hx)
         rw [hB, hmul, mul_left_comm, hc] at h2
         exact h2
       rw [hc0, map_zero, map_zero] at hc
       exact ((isUnit_tB P).map Polynomial.C).mul_right_eq_zero.mp hc
     have h1 : j w = 0 := by
       refine hnd _ fun v => ?_
-      obtain ⟨k, a, x, hx, hv⟩ := GlobalTheory.T.semistableDieudonneModule_spans_tensor_periodRing l P AI T K V ρ hs v
+      obtain ⟨k, a, x, hx, hv⟩ := _root_.GlobalTheory.Pst.Dst_spans_tensor_Bst l P AI T K V ρ hs v
 
       rw [hv, map_sum, LinearMap.sum_apply]
       refine Finset.sum_eq_zero fun i _ => ?_

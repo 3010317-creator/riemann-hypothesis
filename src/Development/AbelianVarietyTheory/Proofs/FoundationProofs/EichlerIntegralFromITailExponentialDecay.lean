@@ -4,9 +4,14 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.IsDCReps
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.Complex.UpperHalfPlane.Manifold
 public import Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative.LeviCivita
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CauchyParallelogramUpperHalfPlaneStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegrableOnVerticalRayNormIntegralLeStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TopSideIntegralTendstoZeroStatement
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CauchyParallelogramUpperHalfPlane
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Integral.IntegrableOn
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegrableOnVerticalRayNormIntegralLe
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TopSideIntegralTendstoZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,11 +66,11 @@ theorem eichler_tail_cauchy (g : ℂ → ℂ) (K c : ℝ) (m : ℕ) (τ : ℂ) (
       Complex.I * (∫ s in Ioi (0:ℝ), g (Complex.I + s * Complex.I)) -
         Complex.I * (∫ s in Ioi (0:ℝ), g (τ + s * Complex.I)) := by
   have hI : (1:ℝ) ≤ Complex.I.im := by simp
-  have i1 := (GlobalTheory.T.integrableOn_vertical_ray_norm_integral_le g K c m Complex.I hg.continuousOn hc hb hI).1
-  have i2 := (GlobalTheory.T.integrableOn_vertical_ray_norm_integral_le g K c m τ hg.continuousOn hc hb hτ).1
+  have i1 := (_root_.GlobalTheory.vertRay_integral_expPow_bound g K c m Complex.I hg.continuousOn hc hb hI).1
+  have i2 := (_root_.GlobalTheory.vertRay_integral_expPow_bound g K c m τ hg.continuousOn hc hb hτ).1
   have t1 := intervalIntegral_tendsto_integral_Ioi 0 i1 tendsto_id
   have t2 := intervalIntegral_tendsto_integral_Ioi 0 i2 tendsto_id
-  have t3 := GlobalTheory.T.tendsto_integral_shifted_segment_zero_of_exp_decay g K c m τ hg.continuousOn hc hb hτ
+  have t3 := _root_.GlobalTheory.top_side_integral_tendsto_zero g K c m τ hg.continuousOn hc hb hτ
   have hlim : Tendsto (fun S : ℝ => Complex.I * (∫ s in (0:ℝ)..S, g (Complex.I + s * Complex.I)) -
         Complex.I * (∫ s in (0:ℝ)..S, g (τ + s * Complex.I)) +
         (τ - Complex.I) * ∫ t in (0:ℝ)..1, g (Complex.I + t * (τ - Complex.I) + S * Complex.I)) atTop
@@ -75,7 +80,7 @@ theorem eichler_tail_cauchy (g : ℂ → ℂ) (K c : ℝ) (m : ℕ) (τ : ℂ) (
   rw [mul_zero, add_zero] at hlim
   refine tendsto_nhds_unique (tendsto_const_nhds.congr' ?_) hlim
   filter_upwards [eventually_ge_atTop 0] with S hS
-  exact GlobalTheory.T.integral_segment_eq_parallelogram_sides g τ S hg (by linarith) hS
+  exact _root_.GlobalTheory.cauchy_parallelogram_upper_half_plane g τ S hg (by linarith) hS
 
 theorem eichler_tail : ∀ (w : ℕ) (F : ℍ → ℂ) (C c : ℝ), MDifferentiable 𝓘(ℂ) 𝓘(ℂ) F → 0 < c →
     (∀ τ : ℍ, 1 ≤ τ.im → ‖F τ‖ ≤ C * Real.exp (-c * τ.im)) →
@@ -129,7 +134,7 @@ theorem eichler_tail : ∀ (w : ℕ) (F : ℍ → ℂ) (C c : ℝ), MDifferentia
   have hkey : (eichler w F τ - Lp).coeff j = -((w.choose j : ℂ) * Complex.I * ∫ s in Ioi (0:ℝ), g j ((τ : ℂ) + s * Complex.I)) := by
     rw [Polynomial.coeff_sub, hc1, hc2, hint, hL5]; ring
   rw [hkey, norm_neg, norm_mul, norm_mul, Complex.norm_I, mul_one]
-  have hb3 := (GlobalTheory.T.integrableOn_vertical_ray_norm_integral_le (g j) C c w (τ : ℂ) (hg j).continuousOn hc (hgb j) hτ).2
+  have hb3 := (_root_.GlobalTheory.vertRay_integral_expPow_bound (g j) C c w (τ : ℂ) (hg j).continuousOn hc (hgb j) hτ).2
   have hch : ‖(w.choose j : ℂ)‖ ≤ 2 ^ w := by
     rw [Complex.norm_natCast]; exact_mod_cast Nat.choose_le_two_pow w j
   have hnn : 0 ≤ C * Real.exp (-c * τ.im) * (1 + ‖(τ:ℂ)‖) ^ w * M := (norm_nonneg _).trans hb3

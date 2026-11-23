@@ -5,7 +5,8 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticInt
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.KappaSt
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.EtaleAwayOfIsEtaleAtOffSubmonoid
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HeightPolynomialReflectionSumStatement
+public import GroundTheory.HeightsAndTheta.Heights.Intersections.StatementsFibreLocal
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HeightPolynomialReflectionSum
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.KillNoneFormPoly
 import GroundTheory.HeightsAndTheta.Heights.Intersections.PFibreLocal
 import Mathlib.Algebra.Order.Floor.Extended
@@ -56,7 +57,7 @@ namespace GlobalTheory.CompanionTheory.Ar.PB
 theorem thmA_swap : Inputs → ∀ (II : IntersectionSystem), IsFullIntersectionSystem II → ∀ (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N d : ℕ) (S : AnSys (d + 1) (Ψ × Fin N)) (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)] (P : Ideal (MRing ι)) (Re : Realis S P) (τ : Ψ) (a b : Fin N), (b : ℕ) = a + 1 → SqSys Re (τ, a) (xiCoef τ a) → ∀ lam : Ψ × Fin N → ℝ, eval lam (toWt (Re.PB II)) + eval (lam ∘ Equiv.swap (τ, a) (τ, b)) (toWt (Re.PB II)) = (tsgPoly (d + 1) kappa (linePoly (fun p => gap lam p + gap lam (τ, a) / 2 * (xiCoef τ a p : ℝ)) (xiCoef τ a) S.degPoly)).eval (gap lam (τ, a)) := by
   intro hI II hII Ψ _ _ N d S K _ ι _ P Re τ a b hb Q lam
   obtain ⟨h0, h1, h2⟩ := gap_swap_decomp Ψ N τ a b hb lam
-  have key := GlobalTheory.T.height_polynomial_reflection_sum hI GroundTheory.Heights₂.Heights.Inter.FibreLocal.proof II hII K ι d (Ψ × Fin N) S P Re (τ, a) (xiCoef τ a) Q
+  have key := _root_.GlobalTheory.CompanionTheory.Ar.PB.thmA_limit hI GroundTheory.Heights₂.Heights.Inter.FibreLocal.proof II hII K ι d (Ψ × Fin N) S P Re (τ, a) (xiCoef τ a) Q
     (fun p => gap lam p + gap lam (τ, a) / 2 * (xiCoef τ a p : ℝ)) h0 (gap lam (τ, a))
   rw [eval_toWt_gap, eval_toWt_gap, ← key]
   exact congrArg₂ (· + ·) (congrArg (fun f => eval f (Re.PB II)) (_root_.funext h1))

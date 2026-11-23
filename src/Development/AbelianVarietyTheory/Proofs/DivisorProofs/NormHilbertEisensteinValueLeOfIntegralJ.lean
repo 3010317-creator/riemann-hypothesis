@@ -4,11 +4,11 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.HasLevelStd
 public import Development.AbelianVarietyTheory.Definitions.Divisors.JetAnalytic
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ZetaActRefl
 public import ReciprocityTheory.ReductiveGroups.UnramifiedIntegrals.ModDefs
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertFamilyWeierstrassTwistStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertFamilyWeierstrassTwist
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ImportsSideTer
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemMulMatSmulOneIff
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModularGroupRowVecAndConjRightActions
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SzValueOfFamily
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModularGroupRowVecAndConjRightActions
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,7 +61,7 @@ theorem size_values_hfun : EisExp → ∀ (F : Type) [Field F] [NumberField F] [
   intro hE F _ _ _ hf s N _ L hs hL _ z hz l _ lam κ y M M' b e ρ₀ ρ he hze hlM hML hLsz hNsz hρ hρ0 hlM' hMy hy τ ω hj hω
   have hA := GlobalTheory.WpFam.Act.rightActions N
   have hN : 0 < N := Nat.pos_of_ne_zero (NeZero.ne N)
-  have hfam := GlobalTheory.T.hilbert_family_weierstrass_twist hE F hf s N L hs hL y κ
+  have hfam := _root_.GlobalTheory.HilbFam.isFam_hfun_GL hE F hf s N L hs hL y κ
   have hq := GlobalTheory.HilbFam.SizeGL.main hE F hf s N L hs hL z hz l lam κ y M M' b e ρ₀ ρ he hze hlM hML hLsz hNsz hρ hρ0 hlM' hMy hy
   have key := GlobalTheory.QFam.sz_value_of_family l lam (GL (Fin 2) (ZMod N)) (gact N 1) (wt (2 * s) κ) N _ _ τ ω hN
     ((hA.2.1 1).actBij) hfam hq hj hω 1

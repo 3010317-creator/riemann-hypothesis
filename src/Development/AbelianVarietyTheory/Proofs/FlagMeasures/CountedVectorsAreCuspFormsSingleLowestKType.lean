@@ -1,12 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermitianFormUnitaryOneOne
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CuspidalOfConvolutionFixedModerateGrowthStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DiscreteSeriesCoefficientIntegrableMajorant
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsContinuousRepresentativeBoundedEvaluationStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CuspidalOfConvolutionFixedModerateGrowth
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsContinuousRepresentativeBoundedEvaluation
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GlobalConvolutionOrthogonalProjectorProof
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RealUnipotentIntegralDiscreteSeriesVanish
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DiscreteSeriesCoefficientIntegrableMajorant
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegralInvOfSupport
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RealUnipotentIntegralDiscreteSeriesVanishStatement
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RightRegularRepUnitaryStronglyContinuous
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -143,10 +143,10 @@ theorem row_isCuspFn : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → ℝ) (h : 
     intro k hk
     rw [ContinuousLinearMap.comp_apply, ← ContinuousLinearMap.comp_apply (B.R (1, k)) B.Re,
       level_comp_Re B k hk hg]
-  obtain ⟨C, hC⟩ := GlobalTheory.T.exists_continuousRepresentative_bounded_evaluation B d hd hK hn hg
+  obtain ⟨C, hC⟩ := _root_.GlobalTheory.EvalBound.exists_contRep_bound_of_isKTypeOf B d hd hK hn hg
   obtain ⟨f, hf, hfb⟩ := hC _ hhom hlev
-  have hvan := GlobalTheory.T.realUnipotent_integral_discreteSeries_vanish B d h hd hK hl hh
-  refine (GlobalTheory.T.cuspidal_of_convolution_fixed_moderate_growth B d h hd hvan hl hbig T hT _ f (C * ‖(B.Re.comp A₀) (B.tens B.w)‖) ?_ hf ?_).2
+  have hvan := _root_.GlobalTheory.RealFibre.integral_phe_eq_zero_of_isKTypeOf B d h hd hK hl hh
+  refine (_root_.GlobalTheory.CuspFixed.cusp_of_fixed B d h hd hvan hl hbig T hT _ f (C * ‖(B.Re.comp A₀) (B.tens B.w)‖) ?_ hf ?_).2
   · simpa using hfix
   · intro x
     exact (hfb x).trans_eq (by ring)

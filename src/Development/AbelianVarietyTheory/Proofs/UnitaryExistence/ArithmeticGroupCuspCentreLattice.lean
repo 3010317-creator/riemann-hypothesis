@@ -1,9 +1,9 @@
 module
 
 public import Formalism.LocalToGlobal.ProjectiveLattices.IntegrableOnIntegrand
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FinrankRatSkewHermitianMatricesCmFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.SkewMatrixMultipleInLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.SpanCuspCentreArithmeticGroupFgStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FinrankRatSkewHermitianMatricesCmField
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.SkewMatrixMultipleInLattice
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.SpanCuspCentreArithmeticGroupFg
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ZMatEInjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -88,7 +88,7 @@ theorem latZ : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r ρ : �
     have := Submodule.span_eq (AddSubgroup.toIntSubmodule (zGamSub (X c) cu))
     exact congrArg (fun S : Submodule ℤ (Matrix (Fin ρ) (Fin ρ) E) =>
       (S : Set (Matrix (Fin ρ) (Fin ρ) E))) this
-  have hdim := GlobalTheory.T.finrank_rat_skewHermitian_matrices_cmField E ρ (X c).Ψ (X c).cmType
+  have hdim := _root_.GlobalTheory.finrank_skewHermitian_eq E ρ (X c).Ψ (X c).cmType
     (Submodule.span ℚ (Submodule.span ℤ (FJ.zGam (X c) cu) : Set (Matrix (Fin ρ) (Fin ρ) E))) (by
       rw [hZ]
       intro β
@@ -106,12 +106,12 @@ theorem latZ : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r ρ : �
           rw [Matrix.smul_apply, Matrix.smul_apply, Rat.smul_def, Rat.smul_def, cc_mul', hq, hx]
           ring
       · intro h
-        obtain ⟨n, hn, hm⟩ := GlobalTheory.T.skew_matrix_multiple_in_lattice E r ρ (X c) cu β h
+        obtain ⟨n, hn, hm⟩ := _root_.GlobalTheory.CuspCentre.exists_nsmul_mem_zGam E r ρ (X c) cu β h
         have h1 := Submodule.smul_mem (Submodule.span ℚ (FJ.zGam (X c) cu)) ((n : ℚ)⁻¹)
           (Submodule.subset_span hm)
         rwa [← Nat.cast_smul_eq_nsmul ℚ, smul_smul, inv_mul_cancel₀ (by exact_mod_cast hn.ne'),
           one_smul] at h1)
-  obtain ⟨bs, h1, h2⟩ := exists_int_basis_of_fg _ (GlobalTheory.T.span_cuspCentre_arithmeticGroup_fg E r ρ (X c) cu) hdim
+  obtain ⟨bs, h1, h2⟩ := exists_int_basis_of_fg _ (_root_.GlobalTheory.CuspCentre.span_zGam_fg E r ρ (X c) cu) hdim
   refine ⟨bs, h1, fun β => ?_⟩
   exact ((Set.ext_iff.1 hZ β).symm).trans (SetLike.ext_iff.1 h2 β).symm
 

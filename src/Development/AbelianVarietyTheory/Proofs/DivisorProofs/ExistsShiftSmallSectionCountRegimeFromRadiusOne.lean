@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SmallFam
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqOfIsometricTrivShift
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AmpleArithHilbertSamuelLargeRadiusPairStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AmpleArithHilbertSamuelLargeRadiusPair
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ShiftSecondBundleNormPairNormBallGeneration
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepresentsBaseBundlesAndTrivial
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ShiftSecondBundleNormPairNormBallGenerationStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,13 +56,13 @@ theorem regime_shiftA : GlobalTheory.Published.ArCalc → AmpleHS → ∀ (k : T
   intro hA hHS k _ X _ p D hX P hamp hsemi
   obtain ⟨Φ, hΦ⟩ := ((hA.arExists k X p D hX).2 PUnit fun _ => P.A).1
   have hα := ((hA.arIso k X p D hX).2 PUnit _ Φ hΦ).1 PUnit.unit
-  obtain ⟨t₀, ht₀⟩ := GlobalTheory.T.ampleArithHilbertSamuel_largeRadius_pair hHS k X p D hX P 0 1 0 0 P.A _ (Pair.rep_base k X p P).2.1 hamp hsemi hα
+  obtain ⟨t₀, ht₀⟩ := _root_.GlobalTheory.HSNef.ampleHS_pair hHS k X p D hX P 0 1 0 0 P.A _ (Pair.rep_base k X p P).2.1 hamp hsemi hα
   refine ⟨t₀, fun u hu => ⟨Φ (MvPolynomial.X PUnit.unit ^ (D + 1)) / (D + 1).factorial + ((D : ℝ) + 1) * gdeg P.A D / (D + 1).factorial * u, ((D : ℝ) + 1) * gdeg P.A D / (D + 1).factorial, fun t ht => ?_⟩⟩
   have h := ht₀ (t + u) (by linarith)
   have e : ∀ m : ℕ, (shiftA P u).lc 0 m (Real.exp (t * m)) =
       P.lc ((m : ℤ) * 0 + 0) ((m : ℤ) * 1 + 0) (Real.exp ((t + u) * m)) := by
     intro m
-    simp only [Pair.lc, (GlobalTheory.T.shiftSecondBundleNormPair_norm_ball_generation k X p P u).2.1, mul_zero, add_zero, mul_one, ← Real.exp_add]
+    simp only [Pair.lc, (_root_.GlobalTheory.HSNef.shiftA_props k X p P u).2.1, mul_zero, add_zero, mul_one, ← Real.exp_add]
     congr 4
     push_cast
     ring_nf

@@ -2,7 +2,10 @@ module
 
 public import Mathlib.RingTheory.EssentialFiniteness
 public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsQuasiFinitePolynomialMapStatement
+public import Mathlib.RingTheory.AlgebraicIndependent.Defs
+public import Mathlib.RingTheory.QuasiFinite.Basic
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsQuasiFinitePolynomialMap
+public import Mathlib.RingTheory.ZariskisMainTheorem
 import Mathlib.Algebra.AffineMonoid.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -25,7 +28,6 @@ import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.PicardGroup
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Mathlib.RingTheory.ZariskisMainTheorem
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Echelon.Zsqrtd
@@ -150,7 +152,7 @@ theorem GlobalTheory.normal_local_is_localisation_of_finite_over_polynomial :
   haveI hat : IsLocalization 𝔮.primeCompl A :=
     IsLocalization.of_le M _ hM (fun s hs => hunit s hs)
   haveI : CharZero S₀ := (algebraMap S₀ A).charZero
-  obtain ⟨r, y, hy, hqf⟩ := GlobalTheory.T.exists_quasi_finite_polynomial_map S₀ 𝔮
+  obtain ⟨r, y, hy, hqf⟩ := _root_.GlobalTheory.exists_algebraicIndependent_int_quasiFiniteAt S₀ 𝔮
   let P := MvPolynomial (Fin r) ℤ
   letI algPS : Algebra P S₀ := (MvPolynomial.aeval y : P →ₐ[ℤ] S₀).toRingHom.toAlgebra
   letI algPA : Algebra P A := ((algebraMap S₀ A).comp (algebraMap P S₀)).toAlgebra

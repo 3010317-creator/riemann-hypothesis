@@ -4,12 +4,14 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Exis
 public import Mathlib.NumberTheory.Padics.MahlerBasis
 public import Mathlib.RingTheory.PowerSeries.Binomial
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AlgHomExtOfConstantCoeffZero
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicPowerSeriesAlgHomActionLawsStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MemEurOfTeichmullerSeries
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqTeichmullerOfFrobenius
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIntegralCyclotomicChar
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegersCompleteDVR
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TiltWittEqZeroOfPrimeMulEqZero
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedIntegersTensorEqLetterwiseProductAinf
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ConstantCoeffTeichSub
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicPowerSeriesAlgHomActionLaws
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TiltWittEqZeroOfPrimeMulEqZero
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RootOfUnityPrimeToTeichmullerLift
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -50,8 +52,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MemEurOfTeichmullerSeries
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ConstantCoeffTeichSub
 
 @[expose] public section
 
@@ -89,7 +89,7 @@ theorem γ₀_X_eq {K : FinExt l} {s : ℕ} {LL : FinExt l} {Γ : GamS P K s LL}
     exact this
   have hact := (GlobalTheory.Cyc.act_unique l ↥(OL LL) hl0 hlu (R.γ₀ (Γ.resΓ g)) R.φ₀ c h0
     (R.γ₀_comm _) (R.γ₀_X _).1 ((R.γ₀_X _).2.trans hlin)).2
-  rw [hact, (GlobalTheory.T.cyclotomicPowerSeriesAlgHom_action_laws l ↥(OL LL)).1, GlobalTheory.Cyc.cyc]
+  rw [hact, (_root_.GlobalTheory.Cyc.act_laws l ↥(OL LL)).1, GlobalTheory.Cyc.cyc]
 
 
 

@@ -1,9 +1,9 @@
 module
 
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CompletionIsLocalRingStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.LocalHaarQuadraticSubstitutionInvariantStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.StandardLocalHaarPropertiesStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CompletionIsLocalRing
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.LocalHaarQuadraticSubstitutionInvariant
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.StandardLocalHaarProperties
 import Formalism.LocalRingCardinality.SpanPowerMembership.LocAtA
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -160,10 +160,10 @@ theorem slice (hstd : IsStdV v lam) (h2 : Valued.v (2 : Fv F v) = 1) {a c : Fv F
     lam {t | Valued.v (t - b) < 1 ∧ q + a * (t - b) + c * (t - b) ^ 2 ∈ A} =
       lam (A ∩ {s | Valued.v (s - q) < 1}) := by
   haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  obtain ⟨htop, hlc, hsc, -⟩ := GlobalTheory.T.completion_is_local_ring F v
+  obtain ⟨htop, hlc, hsc, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
   haveI := hstd.1
   have hA' : MeasurableSet ((fun h => q + h) ⁻¹' A) := (measurable_const_add q) hA
-  have key := GlobalTheory.T.local_haar_quadratic_substitution_invariant F v lam hstd h2 a c ha hc _ hA'
+  have key := _root_.GlobalTheory.CompanionTheory.SW.QuadIso.measure_quad_Fv F v lam hstd h2 a c ha hc _ hA'
   have e1 : {t | Valued.v (t - b) < 1 ∧ q + a * (t - b) + c * (t - b) ^ 2 ∈ A} =
       (fun h => -b + h) ⁻¹' {t | Valued.v t < 1 ∧ a * t + c * t ^ 2 ∈ (fun h => q + h) ⁻¹' A} := by
     ext t
@@ -183,7 +183,7 @@ variable {lam : Measure (Fv F v)}
 theorem measurable_form (B : Matrix ι ι (Fv F v)) :
     Measurable fun x : ι → Fv F v => (2 : Fv F v)⁻¹ * (x ⬝ᵥ (B *ᵥ x)) := by
   haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  obtain ⟨htop, hlc, hsc, -⟩ := GlobalTheory.T.completion_is_local_ring F v
+  obtain ⟨htop, hlc, hsc, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
   have : Continuous fun x : ι → Fv F v => (2 : Fv F v)⁻¹ * (x ⬝ᵥ (B *ᵥ x)) := by
     simp only [dotProduct, Matrix.mulVec]
     fun_prop
@@ -302,13 +302,13 @@ end SlopeTestRemainingChoices
 theorem measure_residue_class : ∀ (F : Type) [Field F] [NumberField F] (v : HeightOneSpectrum (𝓞 F)) (lam : Measure (Fv F v)), IsStdV v lam → Valued.v (2 : Fv F v) = 1 → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (B : Matrix ι ι (Fv F v)), B.IsSymm → (∀ i j, B i j ∈ v.adicCompletionIntegers F) → Valued.v B.det = 1 → ∀ x₀ : ι → Fv F v, (∀ i, x₀ i ∈ v.adicCompletionIntegers F) → (∃ i, Valued.v (x₀ i) = 1) → ∀ A : Set (Fv F v), MeasurableSet A → (Measure.pi fun _ : ι => lam) {x | (∀ i, Valued.v (x i - x₀ i) < 1) ∧ (2 : Fv F v)⁻¹ * (x ⬝ᵥ (B *ᵥ x)) ∈ A} = (Ideal.absNorm v.asIdeal : ℝ≥0∞)⁻¹ ^ (Fintype.card ι - 1) * lam (A ∩ {s | Valued.v (s - (2 : Fv F v)⁻¹ * (x₀ ⬝ᵥ (B *ᵥ x₀))) < 1}) := by
   intro F _ _ v lam hstd h2 ι _ _ B hs hB hdet x₀ hx₀ hp A hA
   haveI : BorelSpace (Fv F v) := ⟨rfl⟩
-  obtain ⟨htop, hlc, hsc, -⟩ := GlobalTheory.T.completion_is_local_ring F v
+  obtain ⟨htop, hlc, hsc, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
   haveI := hstd.1
   have hB' : ∀ i j, Valued.v (B i j) ≤ 1 := hB
   have hx₀' : ∀ i, Valued.v (x₀ i) ≤ 1 := hx₀
   obtain ⟨i, hi⟩ := exists_unit_coord hB' hdet hx₀' hp
   set Nn : ℝ≥0∞ := (Ideal.absNorm v.asIdeal : ℝ≥0∞)⁻¹ with hNn
-  have hvol : lam {t | Valued.v t < 1} = Nn := (GlobalTheory.T.standard_local_haar_properties F v lam hstd).1
+  have hvol : lam {t | Valued.v t < 1} = Nn := (_root_.GlobalTheory.CompanionTheory.SW.Vol.volumes_in_completion F v lam hstd).1
   have hball : ∀ b : Fv F v, lam {s | Valued.v (s - b) < 1} = Nn := by
     intro b
     have : {s | Valued.v (s - b) < 1} = (fun h => -b + h) ⁻¹' {t | Valued.v t < 1} := by

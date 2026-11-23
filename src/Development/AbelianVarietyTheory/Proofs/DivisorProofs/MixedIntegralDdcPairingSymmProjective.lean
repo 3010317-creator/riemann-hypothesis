@@ -3,11 +3,14 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DensConst
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict
 public import Development.AbelianVarietyTheory.Definitions.Divisors.AnalyticOnNhdFinChartIff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLogResolutionProjectiveOfPrincipalisationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernFormSignedPartMeasureEqOfIsometricProjStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernIntegralEqMongeAmpereIntegralCompactStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedIntegralPullbackGenericallyFiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothWeightedLineBundleIsometryCalculusStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLogResolutionProjectiveOfPrincipalisation
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernFormSignedPartMeasureEqOfIsometricProj
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernIntegralEqMongeAmpereIntegralCompact
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedIntegralPullbackGenericallyFinite
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothWeightedLineBundleIsometryCalculus
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.IntegrableOnTargetOfTsupport
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.PotentialContDiffAt
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.Stokes
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,9 +48,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.IntegrableOnTargetOfTsupport
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.PotentialContDiffAt
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.Stokes
 
 @[expose] public section
 
@@ -95,15 +95,15 @@ theorem int_cons_ofFun_symm : GlobalTheory.Published.Principalisation → ∀ (F
   intro hP F _ X _ _ p σ e hproj hdim L u v hu hv
   haveI : CharZero F := RingHom.charZero σ
   obtain ⟨Y, hY, π, hsm, hprojY, -, hgen, hdeg, -⟩ :=
-    GlobalTheory.T.exists_logResolution_projective_of_principalisation hP F X p (e + 1) hproj hdim ⊥
+    _root_.GlobalTheory.LogResProj.exists_logResolution hP F X p (e + 1) hproj hdim ⊥
       (by rw [← SetLike.mem_coe, TopologicalSpace.Closeds.coe_bot]; exact Set.notMem_empty _)
   haveI := hsm
   haveI : CompactSpace (CxPts (π ≫ p) σ) := CxPts.compactSpace σ hprojY
   haveI : T2Space (CxPts (π ≫ p) σ) := CxPts.t2Space_cxPts_of_isProjOver σ hprojY
   haveI : SecondCountableTopology (CxPts (π ≫ p) σ) := CxPts.secondCountableTopology_of_isProjOver σ hprojY
   have hA : IsAlgAtlas (AnRead.all (π ≫ p) σ (e + 1)).finAtlas := AnRead.isAlgAtlas_finAtlas _
-  have hiso := GlobalTheory.T.smoothWeightedLineBundle_isometry_calculus F X Y p (π ≫ p) σ π rfl
-  have hisoY := GlobalTheory.T.smoothWeightedLineBundle_isometry_calculus F Y Y (π ≫ p) (π ≫ p) σ (𝟙 Y) (Category.id_comp _)
+  have hiso := _root_.GlobalTheory.Mix.isom_calculus F X Y p (π ≫ p) σ π rfl
+  have hisoY := _root_.GlobalTheory.Mix.isom_calculus F Y Y (π ≫ p) (π ≫ p) σ (𝟙 Y) (Category.id_comp _)
   have key (a b : CxPts p σ → ℝ) (ha : ∀ y, CInfAt a y) (hb : ∀ y, CInfAt b y) :
       Mix.int (Fin.cons (MLine.ofFun a ha) L : Fin (e + 1) → MLine p σ) b =
       mInt (AnRead.all (π ≫ p) σ (e + 1)).finAtlas (fun i => ((Fin.cons (MLine.ofFun (fun z => a (ptMap π rfl σ z))
@@ -112,14 +112,14 @@ theorem int_cons_ofFun_symm : GlobalTheory.Published.Principalisation → ∀ (F
     have hbc : Continuous b := continuous_iff_continuousAt.2 fun y => (hb y).continuousAt
     have hbc' : Continuous fun z : CxPts (π ≫ p) σ => b (ptMap π rfl σ z) :=
       continuous_iff_continuousAt.2 fun z => ((hb _).pull π rfl).continuousAt
-    have h1 := (GlobalTheory.T.mixedIntegral_pullback_genericallyFinite F X Y p (π ≫ p) σ (e + 1) hproj hdim hprojY π rfl hgen
+    have h1 := (_root_.GlobalTheory.PushInt.mixInt_pull F X Y p (π ≫ p) σ (e + 1) hproj hdim hprojY π rfl hgen
       (by rw [hdeg]; exact one_ne_zero) (Fin.cons (MLine.ofFun a ha) L) b hbc.measurable).2
     rw [hdeg, Nat.cast_one, one_mul] at h1
-    have h2 := GlobalTheory.T.mixedChernFormSignedPartMeasure_eq_of_isometric_projOver F Y (π ≫ p) σ hprojY (e + 1)
+    have h2 := _root_.GlobalTheory.Mix.part_eq_of_isom F Y (π ≫ p) σ hprojY (e + 1)
       (fun i => ((Fin.cons (MLine.ofFun a ha) L : Fin (e + 1) → MLine p σ) i).pull π rfl)
       (Fin.cons (MLine.ofFun (fun z => a (ptMap π rfl σ z)) fun z => (ha _).pull π rfl) fun i => (L i).pull π rfl)
       (fun i => Fin.cases (hiso.2.2.2.1 a ha) (fun j => hisoY.1 _) i)
-    have h3 := GlobalTheory.T.mixedChernIntegral_eq_mongeAmpereIntegral_compact F Y (π ≫ p) σ (e + 1) _ hA
+    have h3 := _root_.GlobalTheory.Mix.int_eq_mInt F Y (π ≫ p) σ (e + 1) _ hA
       (Fin.cons (MLine.ofFun (fun z => a (ptMap π rfl σ z)) fun z => (ha _).pull π rfl) fun i => (L i).pull π rfl)
       _ hbc'.measurable
     rw [← h1, ← h3.2 (h3.1.2 (mIntegrableCont _ _

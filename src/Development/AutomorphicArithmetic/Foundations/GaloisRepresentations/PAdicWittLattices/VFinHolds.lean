@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.SplitsSelfOfIso
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyBijectiveOfSupportBijectiveStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyCoefficientLongExactSequenceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyCoefficientRingInvarianceStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DivisorSupportCondition
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyCoefficientRingInvariance
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NeZeroOfDvd
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.EtaleCohomology.EtaleDualityTraceIsomorphism
 public import Development.EtaleCohomology.EtaleDuality.FinAdicFin
@@ -64,7 +65,7 @@ theorem vFin_holds : GlobalTheory.GalV.VFin := by
   have hM : Module.Finite ℤ_[l] (Hl l (sch.obj X) n i) :=
     LateralTheory.EWeil.AdicFinPf.AdicFin_of l _ n i (fun a => hT a n)
       (LateralTheory.EWeil.AdicKerPf.AdicKer_of GlobalTheory.EtC.RedCoef.a11 l _ i
-        (fun b => LateralTheory.Fin.AdicFin.etale_bockstein_sequence_adic_finiteness GlobalTheory.T.etaleCohomology_coefficient_longExactSequence GlobalTheory.T.etaleCohomology_coefficientRing_invariance GlobalTheory.T.etaleCohomology_bijective_of_support_bijective GlobalTheory.EtC.RedCoef.a11 l b _ i
+        (fun b => LateralTheory.Fin.AdicFin.etale_bockstein_sequence_adic_finiteness GlobalTheory.T.etaleCohomology_coefficient_longExactSequence _root_.GlobalTheory.EtC.a8 GlobalTheory.T.etaleCohomology_bijective_of_support_bijective GlobalTheory.EtC.RedCoef.a11 l b _ i
           (LateralTheory.EWeil.FinQCut.inv_of_over hl p)) hT n)
   exact ⟨hM, Module.Finite.base_change ℤ_[l] ℚ_[l] _⟩
 

@@ -2,14 +2,21 @@ module
 
 public import Development.WeilBound.CoreStatements.MultihomogeneousSquares.AntisymmetryFibreSquares
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.CmHostRankBounds
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptBirationalArithVarStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptFlagXdegStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BaseMetricExistsOfGivenStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAnalyticDataUniformisedStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverDegreeOneRealisationStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverRealisationPullbackStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagModelArithDimensionBoundaryStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagModelExistsOfGivenStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptBirationalArithVar
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptFlagXdeg
+public import Development.AutomorphicSpectrum.Statements.MetricStatements.ExistsFlagModelBaseMetric
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BaseMetricExistsOfGiven
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsPeriodOn
+public import GroundTheory.HeightsAndTheta.Heights.Antisymmetric.Statements
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAnalyticDataUniformised
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverDegreeOneRealisation
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GeometricAbelianConnected
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverRealisationPullback
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagModelArithDimensionBoundary
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagModelExistsOfGiven
 public import Development.WeilBound.CoreStatements.FlagImmersions.SumFundOnRoot
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -103,8 +110,8 @@ theorem tie_of (hX : StX) (hAlg : StAlg) (hHt : StHt) (hSing : StSing) (hBase : 
   rw [← PB.card_mul_eq_dim D] at harith hsnc
   obtain ⟨⟨bW⟩, ⟨bO⟩⟩ := PB.nonempty_bases 𝔐
   obtain ⟨K, _, ι, _, Φ, _, y, M, 𝔐₁, tie, κ, v, φ, π, j, 𝔐', Fl, xdeg, e, ⟨-, -, -, -, hov, hR₁, -⟩,
-    ⟨hcov₁, -, hsnc₁⟩, hv, htot, hFl⟩ := GlobalTheory.T.flag_model_exists_of_given hG E H D l Xo c Y S Ω K₀ J₀ x₀ 𝔐 _ dg bW bO harith hcov
-  obtain ⟨BM, hBM, hcj⟩ := GlobalTheory.T.base_metric_exists_of_given hG E H D l Xo c Y S K ι Φ y M 𝔐₁ tie dg hp hq hcov₁ (hsnc₁ _ hsnc)
+    ⟨hcov₁, -, hsnc₁⟩, hv, htot, hFl⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.FMX.flagModelExists hG E H D l Xo c Y S Ω K₀ J₀ x₀ 𝔐 _ dg bW bO harith hcov
+  obtain ⟨BM, hBM, hcj⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.BMx.baseMetricExists_of_given hG E H D l Xo c Y S K ι Φ y M 𝔐₁ tie dg hp hq hcov₁ (hsnc₁ _ hsnc)
   obtain ⟨-, hne, -⟩ := GlobalTheory.CompanionTheory.Ar.Top.HostNumbers.host_numbers E H
   have hcard : 0 < Fintype.card (CMType H) := Fintype.card_pos_iff.2 hne
   have hN : antisymDegree (CMType H) (D.p + D.q) = Fintype.card (CMType H) * D.p * D.q +
@@ -121,14 +128,14 @@ theorem tie_of (hX : StX) (hAlg : StAlg) (hHt : StHt) (hSing : StSing) (hBase : 
   have hv' : IsArithVar (mCoordIdeal y) (d + 2) := by
     rw [show d + 2 = (d + 1) + 1 from rfl, hd, hN]; exact hv
   have hsub : D.p + D.q - D.p = D.q := by omega
-  obtain ⟨FA, hFAc⟩ := GlobalTheory.T.flagModel_arith_dimension_boundary hIn K ι Φ y (CMType H) (D.p + D.q) D.p M _ d BM hv' (by rw [hsub, hd, hN])
+  obtain ⟨FA, hFAc⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.ConjOf.flagAn_exists_conj hIn K ι Φ y (CMType H) (D.p + D.q) D.p M _ d BM hv' (by rw [hsub, hd, hN])
     hcj.1 hcj.2
-  have hU := GlobalTheory.T.flag_analytic_data_uniformised K ι Φ y (CMType H) (D.p + D.q) D.p M _ d BM FA (by rw [hsub]) hd
-  obtain ⟨Cv, CR, hCv, -, hCRl⟩ := GlobalTheory.T.flag_cover_degree_one_realisation K ι Φ y (CMType H) (D.p + D.q) D.p M _ d BM FA
+  have hU := _root_.GlobalTheory.CompanionTheory.Relay.flag_analytic_data_uniformised K ι Φ y (CMType H) (D.p + D.q) D.p M _ d BM FA (by rw [hsub]) hd
+  obtain ⟨Cv, CR, hCv, -, hCRl⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.identity_cover K ι Φ y (CMType H) (D.p + D.q) D.p M _ d BM FA
   have FS : Nonempty (PB.FlagSys CR.Re D.p) := ⟨⟨M.j_le, hd, hU, fun τ a b hab hb =>
-    (GlobalTheory.T.flag_cover_realisation_pullback hIn K ι Φ y (CMType H) (D.p + D.q) D.p M _ d BM FA K ι Φ y M Cv CR hv' τ a b hab hb).some⟩⟩
+    (_root_.GlobalTheory.CompanionTheory.Relay.flag_cover_realisation_pullback hIn K ι Φ y (CMType H) (D.p + D.q) D.p M _ d BM FA K ι Φ y M Cv CR hv' τ a b hab hb).some⟩⟩
   obtain ⟨⟨pr, j', hov', hR', -⟩, hroots, hdy, -⟩ := id htot
-  choose sing hsd hho hsc using GlobalTheory.T.hodge_cpt_flag_xdeg E H D l Xo c _ _ Y S Φ K ι y 𝔐' Fl xdeg e hβ hroots
+  choose sing hsd hho hsc using _root_.GlobalTheory.CompanionTheory.Ar.HodgeLine.exists_hodgeLine E H D l Xo c _ _ Y S Φ K ι y 𝔐' Fl xdeg e hβ hroots
   have hrd : ∀ a, ((FA.Re.comap some).ref a).a = (Top.combLine sing (Cmp.fundOnRoot a)).a := fun a => by
     show (FA.Re.ref (some a)).a = ∑ r, _ • (sing r).a
     rw [FA.ref_some, RootFieldNumerics.Sq.sum_fundOnRoot]
@@ -151,7 +158,7 @@ theorem tie_of (hX : StX) (hAlg : StAlg) (hHt : StHt) (hSing : StSing) (hBase : 
   have hF : 0 < Module.finrank ℚ c.F := by haveI := c.fin; exact Module.finrank_pos
   have hFlpos : 0 < Fl.deg := by rw [hFl]; exact hcov.1
   have hKne : Nonempty K := ⟨(κ k₀).1⟩
-  obtain ⟨hbir, -⟩ := GlobalTheory.T.hodge_cpt_birational_arith_var E H D l Xo c _ _ Y S Φ K ι y 𝔐' Fl hβ
+  obtain ⟨hbir, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.flagged_model_dim E H D l Xo c _ _ Y S Φ K ι y 𝔐' Fl hβ
   have hovT := hov'.trans hov
   have hht := hHt E H D l Xo c Y S Ω Φ K₀ K J₀ ι x₀ y 𝔐 𝔐' _ _ _ hovT (hR'.trans hR₁) hSd fun p hp => (hom p hp).2
   let M' : RootModel (CMType H) (D.p + D.q) :=

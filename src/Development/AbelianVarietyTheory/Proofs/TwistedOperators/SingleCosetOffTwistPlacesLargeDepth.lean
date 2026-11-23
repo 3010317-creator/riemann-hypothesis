@@ -2,27 +2,29 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsRealFam
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.NonemptyOffDatOfTrueD
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicPointComponentsAtPlacesLatticesVacuaStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CarriesLatticeCompletionOfTrivialAtPlaces
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleStepIntegrandBesselPeriodInvariantProof
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.InLatticeStabilizerAtPlacesIffPlaceSetProd
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsFrameFinitePartMulOfCarriesLattice
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LatticeCompletionAtPlacesMemCompletedHermitianLa
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LatticeVacuumIffPlacewiseStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LatticeVacuumIffPlacewise
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LevelStepVectorEqHeisenbergCombinationVacuum
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemHomLatticeCompletionIffSupportedMaps
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemLatticeCompletionAtPlacesOfFinPartMemHatLatti
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MovesLocalSuppIff
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PlaceIdempotentActsOnSupportedAndOff
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainStepFockVectorSphericalOffS
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryFiniteAdelicGroupSplitFinitePlaceSet
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlaces
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AdeleTensorComponentIdempotentSumAddConjEqOne
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InBigFb
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsThetaFunctionFockVectorDownwardArrow
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LastRowLatticesGoodPositionLargeDepthStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnfoldedVacuaDifferByTwistValuesLargeDepthStatement
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicPointComponentsAtPlacesLatticesVacua
+import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.MarkSpec
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LatticeCompletionAtPlacesMemCompletedHermitianLa
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemHomLatticeCompletionIffSupportedMaps
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemLatticeCompletionAtPlacesOfFinPartMemHatLatti
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PlaceIdempotentActsOnSupportedAndOff
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlaces
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -111,7 +113,7 @@ variable {e : AE D} {Z : Finset (Pl D.host.E)} {P : GlobalTheory.FinPl.Pl D → 
 theorem grpOff_of_suppAt (he : IsIdemSum e Z) (hP : ∀ v, P v ↔ ∀ w ∈ Z, w.under (𝓞 D.host.F) ≠ v) {V : HSp D} {g : GA D V}
     (hg : SuppAt e V g) : g ∈ grpOff V P := by
   have h1 := GlobalTheory.StepComb.idemSum_mem_idAt he
-  obtain ⟨ε, -, hc, -, hAt, -⟩ := (GlobalTheory.T.adelicPoint_components_atPlaces_lattices_vacua D fun p => ∃ PP ∈ Z, p = (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP)).1
+  obtain ⟨ε, -, hc, -, hAt, -⟩ := (_root_.GlobalTheory.FinPl.localComponents D fun p => ∃ PP ∈ Z, p = (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP)).1
   have h2 : cA D e ∈ idAt D fun p => ∃ PP ∈ Z, p = (_root_.IsDedekindDomain.HeightOneSpectrum.under (𝓞 D.host.F) PP) := by
     rw [hAt, ← hc, ← map_mul, (hAt e).1 h1]
   refine (GlobalTheory.FinPl.SetCut.mem_grpOff_iff_parts V P g).2 fun i j w hw => ?_
@@ -122,7 +124,7 @@ theorem grpOff_of_suppAt (he : IsIdemSum e Z) (hP : ∀ v, P v ↔ ∀ w ∈ Z, 
 theorem suppAt_of_grpAt (he : IsIdemSum e Z) (hP : ∀ v, P v ↔ ∀ w ∈ Z, w.under (𝓞 D.host.F) ≠ v) {V : HSp D} {g : GA D V}
     (hg : g ∈ grpAt V fun v => ¬ P v) : SuppAt e V g := by
   intro i j
-  obtain ⟨ε, -, -, -, hAt, hOff⟩ := (GlobalTheory.T.adelicPoint_components_atPlaces_lattices_vacua D fun v => ¬ P v).1
+  obtain ⟨ε, -, -, -, hAt, hOff⟩ := (_root_.GlobalTheory.FinPl.localComponents D fun v => ¬ P v).1
   have hy : (mt V g - 1) i j ∈ idAt D fun v => ¬ P v :=
     (GlobalTheory.FinPl.mem_supportedOnPlacesIdeal_iff_components_zero_elsewhere D _ _).2 ((GlobalTheory.FinPl.SetCut.mem_grpAt_iff_parts V _ g).1 hg i j)
   generalize (mt V g - 1) i j = y at hy
@@ -145,7 +147,7 @@ theorem cell_of_inBig (he : IsIdemSum e Z) (hP : ∀ v, P v ↔ ∀ w ∈ Z, w.u
   have hg' : b⁻¹ * g * b ∈ grpOff V P := by
     have := (MonoidHom.normal_ker _).conj_mem g hg b⁻¹
     rwa [inv_inv] at this
-  obtain ⟨x, hx, y, hy, exy⟩ := ((GlobalTheory.T.adelicPoint_components_atPlaces_lattices_vacua D fun v => ¬ P v).2 V).1 (b⁻¹ * g * b)
+  obtain ⟨x, hx, y, hy, exy⟩ := ((_root_.GlobalTheory.FinPl.localComponents D fun v => ¬ P v).2 V).1 (b⁻¹ * g * b)
   have hy' : y ∈ grpOff V P := by
     have e1 : y = x⁻¹ * (b⁻¹ * g * b) := by rw [exy, inv_mul_cancel_left]
     rw [e1]
@@ -220,7 +222,7 @@ theorem vac_moved (W : G.Weil) (ρ : RealMatch W) (t : T) (j : ℕ) (hj : j < D.
   have hth := fun Q => GlobalTheory.DownFock.isThetaFunO_fock_down ρ t D.R.m j le_rfl hj he hf Q
   have h0 : Vac W.ψ _ _ (G.Λ (.grid D.R.m j)) (G.Λ (.grid D.R.m (j + 1))) (· ∉ Sf) (W.fock (.mu t D.R.m j) f Q) :=
     ⟨hth Q, GlobalTheory.FockSph.isLatVac_pureTensorO_off W.θ_is _ _ (ρ.vT_is t D.R.m j le_rfl hj) he hf.2 Sf hS hth Q⟩
-  exact (GlobalTheory.T.latticeVacuum_iff_placewise D W.ψ _ _ _ _ _ (W.om_is (.mu t D.R.m j) ⟨le_rfl, hj⟩) _ _ (sd_row G j hj.le) (sd_row G (j + 1) hj)
+  exact (_root_.GlobalTheory.VacLoc.vac_loc D W.ψ _ _ _ _ _ (W.om_is (.mu t D.R.m j) ⟨le_rfl, hj⟩) _ _ (sd_row G j hj.le) (sd_row G (j + 1) hj)
     (· ∉ Sf) (fun v _ => tame v) _).2.2 h0 b b' N N' hN hN' (moves_of_le (fun _ _ => trivial) hb)
     (moves_of_le (fun _ _ => trivial) hb')
 

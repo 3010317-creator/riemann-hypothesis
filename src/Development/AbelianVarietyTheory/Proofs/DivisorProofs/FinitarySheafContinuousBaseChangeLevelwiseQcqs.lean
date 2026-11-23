@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IndEtOfForallFinset
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CohomologyContinuousBaseChangeOfLevelsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContConeOfQcqsAffineStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContConeOfQcqsAffine
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyEquivalenceBasicProperties
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPullbackSchBc
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OfEtaleCohomologyEquivalenceDiagram
@@ -91,7 +91,7 @@ theorem contCone_bc_sch_qcqs (R : Type) [CommRing R] (F : Shv R) (hF : Finitary 
       · exact (IsPullback.of_hasPullback (G.obj j).hom r).flip
     exact MorphismProperty.of_isPullback (P := @IsAffineHom) hsq.flip (isAffineHom_of_isAffine _)
   have h1 : ContCone R F (sch.mapCone (H.mapCone c)) :=
-    GlobalTheory.T.contCone_of_isLimit_of_qcqs_affine_transitions R F hF I (G ⋙ H) (H.mapCone c) hl hcomp hqsp haff
+    _root_.GlobalTheory.EtC.contCone_of_qcqs_affine R F hF I (G ⋙ H) (H.mapCone c) hl hcomp hqsp haff
   have hb := GlobalTheory.EtC.eqv_basic R F
   refine (GlobalTheory.EtC.ContCone.iff_of_eqv R F I (G ⋙ H ⋙ sch) (G ⋙ bc (sch.map r)) (sch.mapCone (H.mapCone c))
     ((bc (sch.map r)).mapCone c) (Functor.whiskerLeft G e.hom) (e.hom.app c.pt) ?_ ?_ ?_).1 h1

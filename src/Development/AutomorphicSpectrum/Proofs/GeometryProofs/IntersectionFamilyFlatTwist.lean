@@ -2,10 +2,12 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsPowSubMemSpanOfIsUnitModOfIsAlgClosed
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointExistsUniqueEmbeddingStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlatHermUnitSectionAvoidStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointExistsUniqueEmbedding
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlatHermUnitSectionAvoid
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.UnitSectionDivisorEqStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.VerticalStatementHoldsStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.RationalSections.ThmISt
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.VerticalStatementHolds
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterDerived
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +51,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterDerived
 import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
@@ -129,14 +130,14 @@ theorem FlatHerm.inter_eq_neg_integral : ∀ (K : Type) [Fintype K] (ι : K → 
 
   obtain ⟨C, hC, hCa, hCh, hCI⟩ := exists_tensorPow_last hI hW hL hB (m := S.M) S.M_pos
   obtain ⟨f', g', df', dg', hf', hg', hdeg, hfW, hgW, -, hun, hnorm⟩ :=
-    GlobalTheory.T.flat_herm_unit_section_avoid K ι Ω F y φ A S d W hY hP hA hW.2.1 hPW
+    _root_.GlobalTheory.CompanionTheory.Ar.Flat.FlatHerm.exists_rep K ι Ω F y φ A S d W hY hP hA hW.2.1 hPW
   have hunW := IsUnitSec.mono hun hPW
   obtain ⟨c1, c2, c3⟩ := GlobalTheory.T.unit_section_divisor_eq K ι W f' g' hunW
-  have hvert := GlobalTheory.T.vertical_statement_holds K ι I hI W n L C f' g' hW hL hC
+  have hvert := _root_.GlobalTheory.CompanionTheory.Ar.Flat.vertical_holds K ι I hI W n L C f' g' hW hL hC
     ⟨df', dg', hf', hg', hfW, hgW, fun k => by rw [hdeg k, hCa k, hBa k]⟩
     (fun W' _ => by rw [c1]) (fun W' _ hm => c2 W' hm) (fun z hz => by
       have hzP : z ∈ mcPts (mCoordIdeal y) := ⟨hz.1, fun f hf => hz.2 f (hPW hf)⟩
-      obtain ⟨σ, hσ, -⟩ := GlobalTheory.T.complex_point_existsUnique_embedding K ι Ω F y φ hY z hzP
+      obtain ⟨σ, hσ, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.existsUnique_ptOver K ι Ω F y φ hY z hzP
       have hz1 : u z = Real.log (S.κ σ) := (hu.near σ z hσ).self_of_nhds
       have hn := hnorm σ z hσ
       have hCz : C.h z = (S.κ σ * A.h z) ^ S.M := by

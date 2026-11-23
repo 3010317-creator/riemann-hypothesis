@@ -1,10 +1,10 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RiemannianHaarIndependentOfOrthonormalFrame
 public import Formalism.PeriodIntegrals.QuotInv
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UpperOff
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ClosedMatrixSubgroupTheoremStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DensityInChartStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ClosedMatrixSubgroupTheorem
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DensityInChart
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RiemannianHaarIndependentOfOrthonormalFrame
 import Mathlib.Algebra.Order.Archimedean.Real.Hom
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -287,8 +287,8 @@ theorem dens_map {m : ℕ} {H H' A B : Matrix (Fin m) (Fin m) ℂ} (hH : Hᴴ = 
   have hBA : B * A = 1 := mul_eq_one_comm.1 hAB
   set e := (cjM hAB).toMeasurableEquiv with he
   let L : lieE (UH H) ≃L[ℝ] lieE (UH H') := (adL hAB h h').toContinuousLinearEquiv
-  have hLie := (GlobalTheory.T.closed_matrix_subgroup_theorem m (UH H) (isMatGroup_UH H hH2)).1
-  have hmain := GlobalTheory.T.tendsto_measure_image_ball_div_volume m (UH H') μ c (isMatGroup_UH H' hH2') hμ hd (lieE (UH H))
+  have hLie := (_root_.GlobalTheory.ClosedMatGroup.closed_subgroup m (UH H) (isMatGroup_UH H hH2)).1
+  have hmain := _root_.GlobalTheory.ChartDensity.density_in_chart m (UH H') μ c (isMatGroup_UH H' hH2') hμ hd (lieE (UH H))
     (fun x => B * NormedSpace.exp (unrealify (x : EE m)) * A) L
     (by simp only [ZeroMemClass.coe_zero]; rw [show unrealify (0 : EE m) = 0 from
       (rl_symm (0 : EE m)).symm.trans (map_zero _), NormedSpace.exp_zero, Matrix.mul_one, hBA])

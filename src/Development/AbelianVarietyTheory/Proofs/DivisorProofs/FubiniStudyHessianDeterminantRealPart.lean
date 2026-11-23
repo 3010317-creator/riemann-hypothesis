@@ -1,7 +1,8 @@
 module
 
 public import ReciprocityTheory.L2DbarEstimates.IsLocalHomeomorph
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexHessianLogOneAddNormSqStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexHessianLogOneAddNormSq
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.NonzeroLocus
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -80,7 +81,7 @@ namespace GlobalTheory.FSDet
 theorem det_fubiniStudy_hess :
     ∀ (n : ℕ) (v : ReciprocityTheory.L2DbarEstimates.V n), (ReciprocityTheory.L2DbarEstimates.cHess n (fun w => (Real.log (1 + ‖w‖ ^ 2) : ℂ)) v).det.re = ((1 + ‖v‖ ^ 2) ^ (n + 1))⁻¹ := by
   intro n v
-  rw [GlobalTheory.T.complexHessian_log_one_add_normSq n v]
+  rw [_root_.GlobalTheory.FubiniStudyHessian.cHess_log_one_add_normSq n v]
   set t : ℂ := 1 + (‖v‖ : ℂ) ^ 2 with ht
   have htr : t = ((1 + ‖v‖ ^ 2 : ℝ) : ℂ) := by rw [ht]; push_cast; rfl
   have ht0 : t ≠ 0 := by

@@ -1,9 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ZlTowerGen
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EpsilonRootSubOneIsPseudoUniformizerTiltStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HighPowCoeffMemSpanPowStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeaklySmallStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EpsilonRootSubOneIsPseudoUniformizerTilt
+public import Mathlib.RingTheory.WittVector.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HighPowCoeffMemSpanPow
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeaklySmall
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,6 +78,6 @@ theorem glue
   simpa [h0] using hk z n hn
 
 theorem main : ∀ {l : ℕ} [Fact l.Prime] {P : LocPrime l} (AI : LocAinf l P) (s : ℕ), letI := wTop l; ∀ U ∈ 𝓝 (0 : WCb l), ∃ k : ℕ, ∀ z : Ainf l, inclW l ((WittVector.teichmuller l (AI.εroot s) - 1) ^ k * z) ∈ U :=
-  glue GlobalTheory.T.epsilonRoot_sub_one_isPseudoUniformizer_tilt GlobalTheory.T.weakly_small_of_not_isUnit_of_dvd_pow GlobalTheory.T.exists_pow_mul_coeff_mem_span_coeff_zero_pow
+  glue _root_.GlobalTheory.WeakClosed.TiltUnif.main _root_.GlobalTheory.WeakClosed.weakly_small _root_.GlobalTheory.WittHighPow.high_pow_coeff_mem_span_pow
 
 end GlobalTheory.WeakClosed.SmallW

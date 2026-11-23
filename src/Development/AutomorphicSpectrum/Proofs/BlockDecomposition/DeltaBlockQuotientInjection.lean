@@ -2,7 +2,8 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsLatIntVec
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermOf
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CmConjugationPropertiesStatement
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CmConjugationProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -199,7 +200,7 @@ theorem isI_algebraMap {F E : Type} [Field F] [NumberField F] [Field E] [NumberF
 
 theorem hermClass_blocks : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ m : ℕ, ∃ ι : (hermE σ (m + 1) ⧸ hermO σ (m + 1)) → (hermE σ m ⧸ hermO σ m) × ((Fin m → E) ⧸ intVec E m) × FQ F, Function.Injective ι ∧ ∀ x, delta (Quotient.out x).1 = delta (blk σ (Quotient.out (ι x).1).1 (Quotient.out (ι x).2.1) (algebraMap F E ((Quotient.out (ι x).2.2 : Fin 1 → F) 0))) := by
   intro F E _ _ _ _ _ σ hcm m
-  obtain ⟨-, hfix, hsO, -⟩ := GlobalTheory.T.cm_conjugation_properties F E σ hcm
+  obtain ⟨-, hfix, hsO, -⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.isCMExt_conj_fixed_integers F E σ hcm
   have hσ : ∀ x : E, IsI x → IsI (σ x) := by
     rintro x ⟨o, rfl⟩
     exact ⟨sO σ o, hsO o⟩

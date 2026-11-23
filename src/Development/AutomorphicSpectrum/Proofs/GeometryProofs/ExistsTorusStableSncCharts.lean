@@ -6,14 +6,22 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsSncMo
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.CoordinateIdeals
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterPC
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ImportsBis
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AdjoinInverseElementFormStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ChartIdealLocalizationMapStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteTorusTranslatesCoverStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.KaehlerDifferentialsSpanLocalStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RationalRelationInChartIdealStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegularLocalChartCoordsStatement
+public import Mathlib.Algebra.Algebra.Rat
+public import Mathlib.Algebra.MvPolynomial.Eval
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AdjoinInverseElementForm
+public import ReciprocityTheory.AnalyticForms.RegularLocalRings.MemConePtsIffChartIdeal
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ChartIdealLocalizationMap
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteTorusTranslatesCover
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.RingTheory.Kaehler.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.KaehlerDifferentialsSpanLocal
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RationalRelationInChartIdeal
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegularLocalChartCoords
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SncResolutionCoverAndCone
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SncResolutionRegularLocalRingStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SncResolutionRegularLocalRing
+public import ReciprocityTheory.AnalyticForms.RegularLocalRings.ProjectiveLineMultihomogClassify
+public import ReciprocityTheory.AnalyticForms.RegularLocalRings.StalkLocA
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,8 +65,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-public import ReciprocityTheory.AnalyticForms.RegularLocalRings.ProjectiveLineMultihomogClassify
-public import ReciprocityTheory.AnalyticForms.RegularLocalRings.StalkLocA
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterAlgRes
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterMinor
 import Std.Tactic.BVDecide.Normalize.Prop
@@ -167,7 +173,7 @@ theorem snc_params : ∀ (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype
     exact ReciprocityTheory.AnForm.R.renPt_zero _ _ (by rw [← hCI]; exact hz0)
   have hker : ∀ G : MvPolynomial (Σ k, J k) ℚ, aeval u G = (0 : Ω) → map (algebraMap ℚ ℂ) G ∈ CI := by
     rw [hu, hCI]
-    exact GlobalTheory.T.rational_relation_in_chart_ideal K J Ω y c hc
+    exact _root_.GlobalTheory.CompanionTheory.Ar.ChartDehom.map_mem_chartIdeal K J Ω y c hc
   obtain ⟨m, f, aa, hf, ha, hsum, hl⟩ := hS c hc
   rw [← hu] at hf ha
   have hpoly : ∀ s ∈ Algebra.adjoin ℚ (Set.range u), ∃ G : MvPolynomial (Σ k, J k) ℚ, aeval u G = s := by
@@ -202,14 +208,14 @@ theorem snc_params : ∀ (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype
   have hS' : S = Algebra.adjoin ℚ (insert (aeval (fun p : Σ k, J k => y p / y ⟨p.1, c p.1⟩) (F l) : Ω)⁻¹
       (Set.range fun p : Σ k, J k => y p / y ⟨p.1, c p.1⟩)) := by
     rw [← hu, hF, hSdef]
-  have hnum := GlobalTheory.T.adjoin_inverse_element_form (Σ k, J k) Ω u (f l) S hSdef (F l) (hF l) hf0
+  have hnum := _root_.GlobalTheory.CompanionTheory.Ggeo.exists_numerator_of_mem_adjoin_insert_inv (Σ k, J k) Ω u (f l) S hSdef (F l) (hF l) hf0
   choose Z kk hZ using fun i => hnum (z i)
   let fS : S := ⟨f l, by rw [← hF l]; exact hmemS _⟩
   have hhom : ∀ (R : Type) [CommRing R] (θ : MvPolynomial (Σ k, J k) ℂ →+* R), (∀ g ∈ CI, θ g = 0) →
       IsUnit (θ (map (algebraMap ℚ ℂ) (F l))) → ∃ ψ : S →+* R, ∀ (G : MvPolynomial (Σ k, J k) ℚ) (s : S),
         (s : Ω) = aeval u G → ψ s = θ (map (algebraMap ℚ ℂ) G) := by
     intro R _ θ h1 h2
-    have := GlobalTheory.T.chart_ideal_localization_map K J Ω y c hc R θ (by rw [← hCI]; exact h1) (F l) h2 S hS'
+    have := _root_.GlobalTheory.CompanionTheory.Ar.ChartHom.exists_hom_chart K J Ω y c hc R θ (by rw [← hCI]; exact h1) (F l) h2 S hS'
     rwa [← hu] at this
   have hval : ∀ (R : Type) [CommRing R] (θ : MvPolynomial (Σ k, J k) ℂ →+* R) (ψ : S →+* R),
       (∀ (G : MvPolynomial (Σ k, J k) ℚ) (s : S), (s : Ω) = aeval u G → ψ s = θ (map (algebraMap ℚ ℂ) G)) →
@@ -282,7 +288,7 @@ theorem snc_params : ∀ (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype
       refine ⟨Fintype.equivFin (Σ k, J k) p, ?_⟩
       rw [hsp1, hsp2, hιC]
       simp
-  have hgen := GlobalTheory.T.kaehler_differentials_span_local S (locRing I pt) ψ φ0 hmax (Set.range sp) hT n z hsp
+  have hgen := _root_.GlobalTheory.CompanionTheory.Kaehler.maximalIdeal_eq_span_of_span_D S (locRing I pt) ψ φ0 hmax (Set.range sp) hT n z hsp
 
   let Fr := renR (Σ k, J k) (map (algebraMap ℚ ℂ) (F l))
   let Zr : Fin n → MvPolynomial (Fin (Fintype.card (Σ k, J k))) ℂ :=
@@ -422,7 +428,7 @@ theorem reg_at : ∀ (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J 
     obtain ⟨d, hd, he⟩ := hso
     rw [show Cmp.SncRes.rep x ⟨k, c k⟩ = d k * w ⟨k, c k⟩ from congrFun he _]
     exact mul_ne_zero (hd k) (hwc k)
-  have := GlobalTheory.T.snc_resolution_regular_local_ring K J Ω y n bd hA hS c x hx
+  have := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.SncRes.Reg.isRegularLocalRing_chart K J Ω y n bd hA hS c x hx
   rwa [hco] at this
 
 theorem exists_sncCharts : ∀ (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (Ω : Type) [Field Ω] [CharZero Ω] (y : (Σ k, J k) → Ω) (n : ℕ) (bd : Ideal (MRing J)), Cmp.IsSncModel y n bd → IsArithVar (mCoordIdeal y) (n + 1) → (∀ z ∈ mcPts (mCoordIdeal y) ∩ mcPts bd, ∀ c : K → ℂ, (∀ k, c k ≠ 0) → torusSmul c z ∈ mcPts (mCoordIdeal y) ∩ mcPts bd) → ∃ (nc : ℕ) (χ : Fin nc → SncChart (mCoordIdeal y) n (mcPts (mCoordIdeal y) ∩ mcPts bd)), ∀ z ∈ mcPts (mCoordIdeal y), ∃ a, ∃ t : Fin n → ℂ, ‖t‖ ≤ 1 / 2 ∧ ∃ c : K → ℂ, (∀ k, c k ≠ 0) ∧ z = torusSmul c ((χ a).γ t) := by
@@ -441,9 +447,9 @@ theorem exists_sncCharts : ∀ (K : Type) [Fintype K] (J : K → Type) [∀ k, F
       exact (ReciprocityTheory.AnForm.R.mem_conePts_iff_chartIdeal hPh c w hc).1 ((mem_mcPts_iff_conePts_pC _ _).1 hw)
     obtain ⟨hl, hn⟩ := ReciprocityTheory.AnForm.R.locRing_isLocalRing_isNoetherian _ _ hzero
     obtain ⟨a, r, h, ha, hr, hr0, hh, hb⟩ := snc_params K J Ω y n bd hPh hS c w hw hc
-    exact GlobalTheory.T.regular_local_chart_coords K J _ hPh n _ c w hw hc a r h hdim ha hr hr0 hh hb
+    exact _root_.GlobalTheory.CompanionTheory.Ar.ChartParams.sncChart_of_regular_parameters K J _ hPh n _ c w hw hc a r h hdim ha hr hr0 hh hb
   choose χ O hO hwO hcov using key
-  obtain ⟨m, e, he⟩ := GlobalTheory.T.finite_torus_translates_cover K J _ hPh _ O hO (fun z hz => ⟨⟨z, hz⟩, hwO ⟨z, hz⟩⟩)
+  obtain ⟨m, e, he⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ChartCover.mcPts_finite_cover_up_to_torus K J _ hPh _ O hO (fun z hz => ⟨⟨z, hz⟩, hwO ⟨z, hz⟩⟩)
   refine ⟨m, fun a => χ (e a), fun z hz => ?_⟩
   obtain ⟨a, c, hc, h1, h2⟩ := he z hz
   obtain ⟨t, ht, c', hc', h3⟩ := hcov (e a) _ ⟨h1, h2⟩

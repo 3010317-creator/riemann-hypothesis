@@ -2,9 +2,17 @@ module
 
 public import Formalism.LocalToGlobal.TorsionIntegrality.CMGoodModels.Statement
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ChebotarevDegreeOneValuationSubringsStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CmLatticeGoodModelUnramifiedStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIdealClassArtinSymbolOfGlobalArtinStatement
+public import ReciprocityTheory.ReductiveGroups.UnramifiedIntegrals.ModChebOm
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ChebotarevDegreeOneValuationSubrings
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CmLatticeGoodModelUnramified
+public import ReciprocityTheory.ReductiveGroups.UnramifiedIntegrals.ModGDefs
+public import ReciprocityTheory.NeutralLocalFields.HilbertClassField
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIdealClassArtinSymbolOfGlobalArtin
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,6 +57,6 @@ import Mathlib.Topology.Sheaves.Init
 namespace GlobalTheory.Corev.CmTwoClosing
 
 theorem cmGoodModel_of_globalArtinReciprocity (hA : GlobalTheory.Published.GlobalArtinReciprocity) : Formalism.L2.Th1.CM.CM2 :=
-  GlobalTheory.T.cmLattice_good_model_unramified (GlobalTheory.T.exists_idealClass_artinSymbol_of_globalArtin hA) GlobalTheory.T.chebotarev_degreeOne_valuationSubrings
+  _root_.GlobalTheory.ArtinClassCM.good_model (_root_.GlobalTheory.IdealArtinSymbol.exists_artinSymbol hA) _root_.GlobalTheory.chebOmSt_holds
 
 end GlobalTheory.Corev.CmTwoClosing

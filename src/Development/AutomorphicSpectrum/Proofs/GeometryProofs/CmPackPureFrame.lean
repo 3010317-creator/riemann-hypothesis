@@ -2,13 +2,13 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCMFrame
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExponentialDerivativeAtZeroIsTangent
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CmLieModelActionStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CmLieModelAction
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CmPackEigenPeriod
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CurveZNeZero
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelEigenvectorsAction
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelWithCmAction
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PureTypeProjectionIndependent
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TangentVectorsBaseChange
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelEigenvectorsAction
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelWithCmAction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -131,7 +131,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.cm_pack_pure_frame : ∀ (E : 
   have hpq : D.p + D.q = (FU.Di i).p + (FU.Di i).q := by rw [(FU.sig i).1, (FU.sig i).2]
   obtain ⟨⟨hl1, hs1⟩, hl2, hs2⟩ := GlobalTheory.CompanionTheory.Ar.Fl.tyPart_pure_family_bases E H (FU.Di i) g ty P hP D.p D.q x τ hty hpq hτ hx hli
   refine ⟨?_, fun v w hvw => ⟨X.hy, le_refl _, ?_, ?_⟩⟩
-  · obtain ⟨M, ρ, lam, -, -, -, -, -, hcm⟩ := GlobalTheory.T.cm_lie_model_action E H D l Xo c g ty FU i Z P hP X
+  · obtain ⟨M, ρ, lam, -, -, -, -, -, hcm⟩ := _root_.GlobalTheory.CompanionTheory.Relay.cm_lie_model_action E H D l Xo c g ty FU i Z P hP X
     exact ⟨fun a => M.pt (HT.eigProj ρ (X.β.comp (tauE c τ)) (lam true ⟨x (.inl a), hx.1 a⟩)),
       fun j => M.pt (HT.eigProj ρ (X.β.comp (tauE c (ComplexEmbedding.conjugate τ))) (lam false ⟨x (.inr j), hx.2 j⟩)),
       fun a => (hcm _ _ _ _).2 rfl, fun j => (hcm _ _ _ _).2 rfl⟩

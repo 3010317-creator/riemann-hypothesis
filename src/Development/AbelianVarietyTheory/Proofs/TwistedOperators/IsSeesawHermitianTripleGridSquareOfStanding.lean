@@ -8,10 +8,11 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilRe
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsHeckeCharMul
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareThetaTripleExistsSignatureRankSumLt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareThetaTripleHypothesesOfStandingStatement
+public import Formalism.SatakeDualWeyl.Statement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasSignatureFstUniqueSylvester
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SquareTripleFinitePlacesOfOrientedRoutesStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaGridCharactersArchExponentsGapGtRank
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LiftsAtAndSeedFacts
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasSignatureFstUniqueSylvesterStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SquareTripleFinitePlacesOfOrientedRoutesStatement
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasChr
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -136,9 +137,9 @@ theorem isTriple_of_standing : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Con
       have r1 := sgn (↑i + 1) (↑j + 1) (by omega) (by omega) τ₀
       have c1 := hasSignature_add r1
       have c2 := hasSignature_add tW
-      have u := GlobalTheory.T.hasSignature_fst_unique_sylvester tW r1
+      have u := _root_.GlobalTheory.SylvesterInertia.hasSignature_fst_unique tW r1
       omega
-    have hq : Γ.q = (D.R.m - ↑j) / 2 := GlobalTheory.T.hasSignature_fst_unique_sylvester tW₁ (sgnN ↑i ↑j (by omega) (by omega) τ₀)
+    have hq : Γ.q = (D.R.m - ↑j) / 2 := _root_.GlobalTheory.SylvesterInertia.hasSignature_fst_unique tW₁ (sgnN ↑i ↑j (by omega) (by omega) τ₀)
     have h1 := hY.geo.eBig
     have h2 := hY.geo.aBig
     have h3 := hY.geo.lt

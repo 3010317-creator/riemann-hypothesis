@@ -1,10 +1,16 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MemRiemannRochSpaceIffRegularAtEverywhere
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CardAffineHyperplaneStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CardFunctionalsVanishingSubspaceStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CardTwoAffineHyperplanesStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianCountFromHyperplanesStatement
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Data.Matrix.Mul
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CardAffineHyperplane
+public import Development.WeilBound.RepresentationTheoryGL.ResidualSpectrum.ExponentialNegativity.GapAbsOf
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CardFunctionalsVanishingSubspace
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CardTwoAffineHyperplanes
+public import Mathlib.Algebra.Algebra.Basic
+public import Mathlib.Algebra.Module.LinearMap.Star
+public import Mathlib.Basic.Complex.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianCountFromHyperplanes
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -238,8 +244,8 @@ theorem uop_bound (hD : LatData k n B red ρ t v) {gam : (Fin (n + 1) → k) →
       rw [uop_apply, ux_map hD hc hy, hg]
     show (B (ux ρ t gam y x) (ux ρ t gam y x)).re = _
     rw [h1, hD.unit]
-  have key := GlobalTheory.T.hermitian_count_from_hyperplanes k n V B (fun a => ρ (gam a) (t y)) (B y y).re (B (uop ρ t gam y) (uop ρ t gam y)).re
-    hpos (GlobalTheory.T.card_affine_hyperplane k n) (GlobalTheory.T.card_two_affine_hyperplanes k n) hw hc' hA
+  have key := _root_.GlobalTheory.CompanionTheory.GapOpLower.lower_from_counts k n V B (fun a => ρ (gam a) (t y)) (B y y).re (B (uop ρ t gam y) (uop ρ t gam y)).re
+    hpos (_root_.GlobalTheory.CompanionTheory.GapOpCount.card_dotProduct_eq_one k n) (_root_.GlobalTheory.CompanionTheory.GapOpCount.card_two_equations k n) hw hc' hA
   have hrpow : (Fintype.card k : ℝ) ^ ((n : ℝ) - 1) = (Fintype.card k : ℝ) ^ n / Fintype.card k := by
     rw [Real.rpow_sub hq, Real.rpow_one, Real.rpow_natCast]
   rw [hrpow, div_mul_eq_mul_div, div_le_iff₀ hq]
@@ -403,7 +409,7 @@ theorem uop_zx (hD : LatData k n B red ρ t v) {gam : (Fin (n + 1) → k) → Γ
         rw [ha.1] at h3
         exact one_ne_zero h3
       rw [h0, if_pos he, zero_smul, zero_smul]
-    · rw [if_neg he, ← Nat.cast_smul_eq_nsmul ℂ, GlobalTheory.T.card_functionals_vanishing_subspace k n j M he hM, Nat.cast_pow]
+    · rw [if_neg he, ← Nat.cast_smul_eq_nsmul ℂ, _root_.GlobalTheory.CompanionTheory.GapOpCount.card_forms_vanishing_missing_line k n j M he hM, Nat.cast_pow]
   rw [uop_apply]
   unfold ux
   rw [t_zx hD j]

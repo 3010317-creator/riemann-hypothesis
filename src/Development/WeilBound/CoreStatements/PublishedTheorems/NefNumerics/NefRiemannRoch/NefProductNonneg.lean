@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ExistsAlgClosedBaseChange
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NefNumerics.NefRiemannRoch.NefIntersectionNonnegAllDimsStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.LineBundleGlobalSectionsDimCongrPicardClass
+public import Development.WeilBound.CoreStatements.PublishedTheorems.NefNumerics.NefRiemannRoch.NefIntersectionNonnegAllDims
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,6 +51,6 @@ namespace GlobalTheory
 
 theorem nefProductNonneg : GlobalTheory.Published.NefProductNonneg := by
   intro k _ _ X _ d hp hd N hN
-  exact GlobalTheory.T.nef_intersection_nonneg_all_dims k X hp d (structureModule X) (by rw [suppDim_structureModule, hd]) N hN
+  exact _root_.GlobalTheory.kleiman_interNum_nonneg k X hp d (structureModule X) (by rw [suppDim_structureModule, hd]) N hN
 
 end GlobalTheory

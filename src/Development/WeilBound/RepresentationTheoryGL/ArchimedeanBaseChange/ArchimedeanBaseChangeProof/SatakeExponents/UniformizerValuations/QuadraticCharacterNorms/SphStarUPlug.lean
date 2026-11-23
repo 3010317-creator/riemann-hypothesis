@@ -1,7 +1,8 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.SphStarU
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalAlgebraHoldsStatement
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.SetupEig
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalAlgebraHolds
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.FixedSpaceRankOne.SphStar
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -42,6 +43,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 
 namespace PositivityTheory.Rg.BcB.F.Fok
 
-theorem sphStarU : PositivityTheory.Rg.BcB.F.Eig.SphStarU := PositivityTheory.Rg.BcB.F.EigA.sphStar GlobalTheory.T.local_algebra_holds
+theorem sphStarU : PositivityTheory.Rg.BcB.F.Eig.SphStarU := PositivityTheory.Rg.BcB.F.EigA.sphStar _root_.GlobalTheory.CompanionTheory.LocHecke.locAlg
 
 end PositivityTheory.Rg.BcB.F.Fok

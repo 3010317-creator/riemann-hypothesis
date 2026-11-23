@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPotential
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BhattScholzeCrystallineLattices
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinPrismGaloisLiftIsPrismHomStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoversTameActsRingEndoWittPowerSeriesStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RealisesEtaleFCrystalPullbackGaloisStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsAdicCompleteOfPowLe
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinPrismGaloisLiftIsPrismHom
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoversTameActsRingEndoWittPowerSeries
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NormLeOneOfMemOL
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RealisesEtaleFCrystalPullbackGalois
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -111,8 +113,8 @@ theorem GlobalTheory.GKinfStable.main : GlobalTheory.Published.BhattScholzeCryst
   intro BS l _ a e _ _ ϖ LL _ _ ι _ _ P T I hBK g γ hcov v hv
   have he : e + 1 = l ^ a := TameDescentExponentData.succ_eq (K := ↥LL.1)
   choose σ hσ using res_exists (l := l) a e ϖ he (sQ l g)
-  choose ψ hψ using GlobalTheory.T.covers_tame_acts_ringEndo_wittPowerSeries a e ϖ LL (sQ l g) γ hcov
-  choose H hH using GlobalTheory.T.breuilKisinPrism_galoisLift_isPrismHom a e ϖ (sQ l g) σ hσ ψ hψ
+  choose ψ hψ using _root_.GlobalTheory.BKGal.covers_ringEndo a e ϖ LL (sQ l g) γ hcov
+  choose H hH using _root_.GlobalTheory.BKGal.PrismTwist.hom_restrict a e ϖ (sQ l g) σ hσ ψ hψ
   letI := zlLat T
   obtain ⟨E, j, hR, hiff⟩ := hBK
   let ρg : ↥T.L.T ≃ₗ[ℤ_[l]] ↥T.L.T :=
@@ -121,7 +123,7 @@ theorem GlobalTheory.GKinfStable.main : GlobalTheory.Published.BhattScholzeCryst
         ((congrArg (fun k => actZ T k x) (mul_inv_cancel g)).trans (actZ_one_apply T x)))
       (LinearMap.ext fun x => (actZ_mul_apply T g⁻¹ g x).trans
         ((congrArg (fun k => actZ T k x) (inv_mul_cancel g)).trans (actZ_one_apply T x)))
-  have hPR := GlobalTheory.T.realisesEtaleFCrystal_pullback_galois (ϖ.field a) E ↥T.L.T _ j hR (sQ l g) σ hσ
+  have hPR := _root_.GlobalTheory.Prism.PullGal.realises_pullback (ϖ.field a) E ↥T.L.T _ j hR (sQ l g) σ hσ
     (conj_mem (l := l) a e ϖ he (sQ l g)) ρg (fun h h' hh x => by
       have e2 : g * inclG (ϖ.field a) h' = inclG (ϖ.field a) h * g := by
         rw [show inclG (ϖ.field a) h' = g⁻¹ * inclG (ϖ.field a) h * g from Subtype.ext hh]

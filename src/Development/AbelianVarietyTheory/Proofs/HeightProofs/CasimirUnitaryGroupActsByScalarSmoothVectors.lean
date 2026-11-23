@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.InvSqrtTwo
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CasimirDifferenceOperatorEquivariantStatement
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsSmoothEigenvectorCasimirDifferenceOperatorStatement
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.OrthonormalBasesMemUnitaryLieAlgebraStatement
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.InnerDRepSq
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CasimirDifferenceOperatorEquivariant
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsSmoothEigenvectorCasimirDifferenceOperator
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.OrthonormalBasesMemUnitaryLieAlgebra
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,9 +52,9 @@ namespace GlobalTheory.TypeSum.CasBasis
 
 theorem casimir_scalar : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] (σ : Mx n → (H →L[ℂ] H)), Std ε σ → ∃ χ : ℂ, ∀ v, Sm ε σ v → ∑ b, dRep σ (pB ε b) (dRep σ (pB ε b) v) = χ • v + ∑ i, dRep σ (kB ε i) (dRep σ (kB ε i) v) := by
   intro n ε H _ _ _ σ h
-  obtain ⟨hX, hY⟩ := GlobalTheory.T.orthonormalBases_mem_unitaryLieAlgebra n ε
-  have hG := GlobalTheory.T.casimirDifferenceOperator_equivariant n ε H σ h
-  obtain ⟨u, χ, hu, hu0, hχ⟩ := GlobalTheory.T.exists_smooth_eigenvector_casimirDifferenceOperator n ε H σ _ _ (kB ε) (pB ε) h hX hY fun k hk v hv => hG k (K_le_UJ hk) v hv
+  obtain ⟨hX, hY⟩ := _root_.GlobalTheory.TypeSum.CasBasis.bases_mem_lieSet n ε
+  have hG := _root_.GlobalTheory.TypeSum.CasEquiv.casOp_equivariant n ε H σ h
+  obtain ⟨u, χ, hu, hu0, hχ⟩ := _root_.GlobalTheory.TypeSum.CasBasis.exists_eigen_casOp n ε H σ _ _ (kB ε) (pB ε) h hX hY fun k hk v hv => hG k (K_le_UJ hk) v hv
   have hχr : (starRingEnd ℂ) χ = χ := by
     have e := inner_casOp h.1 hX hY hu hu
     rw [hχ, inner_smul_left, inner_smul_right] at e

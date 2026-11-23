@@ -4,18 +4,23 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PadNatZ
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdelicUnitriangularMulMemUnipotentTimesIntegral
 public import GroundTheory.AutomorphicForms.ReductionMeasure
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdelicGLLastRowAndDetModuleUnderLeftMultiplicatiStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspFormRapidSpanContinuousAutomorphicCuspidalStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRapidInf
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnipotentBlockColumnIndex
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.StrongMultiplicityOne
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspFormRapidSpanContinuousAutomorphicCuspidal
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FundamentalDomainPoissonCuspidal
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GlobalWhittakerCoeffEqIteratedColumnTransformStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsFundamentalDomainIUnion
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsEqColGenMulBlkU
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPsiLocNeOne
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GlobalWhittakerCoeffEqIteratedColumnTransform
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsMirabolicWhittakerStageMulInvariantContinuousStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsMirabolicWhittakerStageTopOfVanishingBlockAverStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PartialCoeffGoodOfCuspidal
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PolarisedThetaIntegralUnfoldWhittaker
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SetIntegralMulConjNeZero
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnfoldMirabolic
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.VerticalStatementHoldsStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WhittakerPartialCoeffBlock
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsFundamentalDomainIUnion
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnfoldMirabolic
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIsFundamentalDomain
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -56,8 +61,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Definitions.Divisors.UnrOutside
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsEqColGenMulBlkU
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPsiLocNeOne
 
 @[expose] public section
 
@@ -89,8 +92,8 @@ theorem rs_unfold : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField
   obtain ⟨oc, hoc, hπoc⟩ := hπ
   obtain ⟨oc', hoc', hπoc'⟩ := hπ'
   rw [CuspSub.hasCentral_iff] at hπoc hπoc'
-  obtain ⟨hc, hl, hv⟩ := GlobalTheory.T.cuspFormRapidSpan_continuous_automorphic_cuspidal E (m + r + 1) π oc hoc hπoc φ hφ
-  obtain ⟨hc', hl', hv'⟩ := GlobalTheory.T.cuspFormRapidSpan_continuous_automorphic_cuspidal E m π' oc' hoc' hπoc' φ' hφ'
+  obtain ⟨hc, hl, hv⟩ := _root_.GlobalTheory.JSW.mspanR_cont_left_avg E (m + r + 1) π oc hoc hπoc φ hφ
+  obtain ⟨hc', hl', hv'⟩ := _root_.GlobalTheory.JSW.mspanR_cont_left_avg E m π' oc' hoc' hπoc' φ' hφ'
   have hb : ∃ C : ℝ, ∀ g, ‖φ g‖ ≤ C := (GlobalTheory.JSWPosR.mspanR_le_bddForms hoc hπoc hφ).2.2.2
   have hmk : m + 1 ≤ m + r + 1 := by omega
   obtain ⟨hR1, hR2, hR3, hR4, hR5⟩ := GlobalTheory.T.adelicGLLastRow_and_detModule_under_left_multiplication E m
@@ -170,7 +173,7 @@ theorem rs_unfold : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField
     ring
   have hWg : ∀ f : GA E (m + 1) → ℂ, Good (GlobalTheory.StdCharConductor.psi E) m f → ∀ g,
       GlobalTheory.JSW.whit f g = GlobalTheory.CuspGeneric.whit (GlobalTheory.StdCharConductor.psi E) m f g := fun f hf g =>
-    GlobalTheory.T.globalWhittakerCoeff_eq_iteratedColumnTransform E m f hf.cont (fun γ hγ g => hf.left γ (GlobalTheory.ZUnf.isMir_of_mem_mirU_zero hγ) g) g
+    _root_.GlobalTheory.WhitCols.whit_eq_colWhit E m f hf.cont (fun γ hγ g => hf.left γ (GlobalTheory.ZUnf.isMir_of_mem_mirU_zero hγ) g) g
   have hW1 : ∀ g, GlobalTheory.CuspGeneric.whit (GlobalTheory.StdCharConductor.psi E) m f1 g =
       c1 g * GlobalTheory.JSW.whit φ (blockGL (by omega : m + 1 ≤ m + r + 1 + 1) g) := by
     intro g

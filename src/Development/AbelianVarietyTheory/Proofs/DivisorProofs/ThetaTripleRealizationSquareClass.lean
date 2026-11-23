@@ -4,18 +4,15 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsLocIsoR
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlipAtEq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareStanding
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicHeisenbergActsByLocalSchrodinger
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqSmulOfCommuteHeisenbergLinearModelSchwartzBruhStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqSmulOfCommuteHeisenbergLinearModelSchwartzBruh
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplementaryAdelicSchwartzRestFunction
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHomSuppSplit
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsNatDatumSquareFlip
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemGlLatCongOfSmul
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemMatLatSmulBlockLat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrientedHermitianFormQuadSumEqTrace
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerPreservesSchwartzBruhat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAdelicCharacterNontrivialAtPlaces
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceSymplecticSelfZeroSplitSupported
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnderMemAndPlaceAboveEqOfMem
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationLeOneOfMem
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationLocalityTensorModelVWStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIsSplitChartOne
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsMixedLagrangianChartIntegralRowChangeStatement
@@ -24,6 +21,10 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsPla
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergOperatorIsotropicTranslationCharSplitStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PartialFourierSumInverseOfLatticeDepth
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TensorSymplecticFormAtSplitFinitePlaceStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemGlLatCongOfSmul
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemMatLatSmulBlockLat
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnderMemAndPlaceAboveEqOfMem
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationLeOneOfMem
 import Formalism.LocalRingCardinality.SpanPowerMembership.LocAtA
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -378,7 +379,7 @@ theorem exists_right_translate (hT : IsTriple B G X om om') (dV : G.V.J.det ≠ 
   choose uM m1 m2 m3 using exM
   have p0 : ∀ Z : Matrix (Fin a) (Fin (a + a')) (Fv F v), pairM Z 0 = 0 := fun Z => by simp [pairM]
   have p1 : ∀ Z : Matrix (Fin a) (Fin (a + a')) (Fv F v), pairM 0 Z = 0 := fun Z => by simp [pairM]
-  obtain ⟨c', hc'⟩ := GlobalTheory.T.eq_smul_of_commute_heisenberg_linearModel_schwartzBruhat (GlobalTheory.WeilM.SB (Fin a × Fin (a + a') → Fv F v)) (GlobalTheory.LatVac.psiAt B.ψ v)
+  obtain ⟨c', hc'⟩ := _root_.GlobalTheory.LinSchur.eq_smul_of_commute (GlobalTheory.WeilM.SB (Fin a × Fin (a + a') → Fv F v)) (GlobalTheory.LatVac.psiAt B.ψ v)
     (GlobalTheory.SchrSB.continuous_psiAt _ hstd.1 _) (GlobalTheory.PsiNontriv.psiAt_ne_one _ hstd _) ι (fun x Y => ι (S x) (Y * H.valᵀ)) hι.bij
     (fun x hx y hy r => by funext Y; simp only [hlin x hx y hy r, map_add (f := _), map_smul, Pi.add_apply, Pi.smul_apply])
     (fun C => schr (GlobalTheory.LatVac.psiAt B.ψ v) (GlobalTheory.LatVac.locCo G.M.co v (uT C)))

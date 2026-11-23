@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsConnectedDieudonneFunctorQuasiLogarithmsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEtaleDieudonneBaseByCartierDualityStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDieudonneFunctorGluedConnectedEtaleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsVerschiebungOfDieudonneFunctorBaseStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.RedSurjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEtaleDieudonneBaseByCartierDuality
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDieudonneFunctorGluedConnectedEtale
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsVerschiebungOfDieudonneFunctorBase
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,9 +56,9 @@ namespace GlobalTheory.Dieu
 
 def theory (p : ℕ) [Fact p.Prime] : Theory p :=
   let Bc := (GlobalTheory.T.exists_connected_dieudonne_functor_quasiLogarithms p).choose
-  let Be := (GlobalTheory.T.exists_etaleDieudonneBase_by_cartierDuality p Bc).choose
-  let hB := GlobalTheory.T.exists_dieudonneFunctor_glued_connected_etale p Bc Be (GlobalTheory.T.exists_connected_dieudonne_functor_quasiLogarithms p).choose_spec (GlobalTheory.T.exists_etaleDieudonneBase_by_cartierDuality p Bc).choose_spec
-  let hV := GlobalTheory.T.exists_verschiebung_of_dieudonneFunctorBase p hB.choose
+  let Be := (_root_.GlobalTheory.dieuBase_isEt_of_isConn p Bc).choose
+  let hB := _root_.GlobalTheory.Dieu.Glue.exists_katz_etDual p Bc Be (GlobalTheory.T.exists_connected_dieudonne_functor_quasiLogarithms p).choose_spec (_root_.GlobalTheory.dieuBase_isEt_of_isConn p Bc).choose_spec
+  let hV := _root_.GlobalTheory.Dieu.exists_V_of_base p hB.choose
   { base := hB.choose, katz := hB.choose_spec.1, etDual := hB.choose_spec.2, V := hV.choose,
     F_V := hV.choose_spec.1, V_F := hV.choose_spec.2 }
 

@@ -2,15 +2,22 @@ module
 
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.SquareIntegrableTempered.CasselmanNecTemp
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.PropsCos
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AntitoneWeightedSumZeroStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralCharacterExistsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralCharacterNormEqPowStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsUnitPowTendstoZeroStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExponentLtOfPrecedesStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityPosOfSocleStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MultisetAntitoneEnumerationStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NormLtOneOfPowTendstoZeroStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProdLeRevEqProdGeStatement
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Data.Fintype.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AntitoneWeightedSumZero
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralCharacterExists
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralCharacterNormEqPow
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsUnitPowTendstoZero
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExponentLtOfPrecedes
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.LSegJacquet
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityPosOfSocle
+public import Mathlib.Tactic.Continuity
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MultisetAntitoneEnumeration
+public import Development.AbelianVarietyTheory.Definitions.Foundations.MatrixMeasurableSpace
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NormLtOneOfPowTendstoZero
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProdLeRevEqProdGe
 import GroundTheory.LocalFields.PadicLogSeries
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -68,10 +75,10 @@ theorem exists_lFactors_unitary : ∀ (k : Type) [Field k] [ValuativeRel k] [Top
     rw [← (hyL Δ).deg_eq]
     exact Nat.mul_pos Δ.len_pos Δ.d_pos
   have hs : ∀ Δ : Segment k, ∃ s : ℝ, ∀ (t : kˣ) (c : ℂ), Zl.ScalarBy (y Δ) t c →
-      ‖c‖ = nabs k t ^ (((y Δ).1 : ℝ) * s) := fun Δ => GlobalTheory.T.central_character_norm_eq_pow k (y Δ) (hypos Δ)
+      ‖c‖ = nabs k t ^ (((y Δ).1 : ℝ) * s) := fun Δ => _root_.GlobalTheory.CompanionTheory.CentralExp.norm_scalarBy_eq_nabs_rpow k (y Δ) (hypos Δ)
   choose f hf using hs
-  obtain ⟨h, Δ, hΔ, hanti, hnp⟩ := GlobalTheory.T.multiset_antitone_enumeration 𝔪 f Segment.Precedes (fun a b hab =>
-    GlobalTheory.T.exponent_lt_of_precedes_of_isLSeg k a b (y a) (y b) (f a) (f b) (hyL a) (hyL b) (hf a) (hf b) hab)
+  obtain ⟨h, Δ, hΔ, hanti, hnp⟩ := _root_.GlobalTheory.CompanionTheory.Multiset.exists_antitone_listing 𝔪 f Segment.Precedes (fun a b hab =>
+    _root_.GlobalTheory.CompanionTheory.SegExp.exponent_lt_of_precedes k a b (y a) (y b) (f a) (f b) (hyL a) (hyL b) (hf a) (hf b) hab)
   let x : Fin h → IrrGL (k := k) := fun a => y (Δ a)
   have hLF : LFactors 𝔪 x := ⟨Δ, ⟨hΔ, hnp⟩, fun i => hyL _⟩
   have hsumdeg : ∀ {h' : ℕ} (Δ' : Fin h' → Segment k) (x' : Fin h' → IrrGL (k := k)),
@@ -87,10 +94,10 @@ theorem exists_lFactors_unitary : ∀ (k : Type) [Field k] [ValuativeRel k] [Top
     rw [← hdeg]
     exact Equiv.sum_comp Fin.revPerm (fun a => (x a).1)
   have hsoc := hSoc 𝔪 h N x hdrev hLF π hL
-  have hjm := GlobalTheory.T.jacquet_multiplicity_pos_of_socle k h N (x ∘ Fin.rev) hdrev π hsm (fun a => hypos _) hsoc
+  have hjm := _root_.GlobalTheory.CompanionTheory.SocleFrob.jm_ne_zero_of_isSocle k h N (x ∘ Fin.rev) hdrev π hsm (fun a => hypos _) hsoc
   have hW := hCas N π hN hsm hirr htemp h (x ∘ Fin.rev) hdrev (fun a => hypos _) hjm
-  obtain ⟨t, ht⟩ := GlobalTheory.T.exists_unit_pow_tendsto_zero' k
-  have ht1 : nabs k t < 1 := GlobalTheory.T.norm_lt_one_of_pow_tendsto_zero k t ht
+  obtain ⟨t, ht⟩ := _root_.GlobalTheory.CompanionTheory.LocalFieldPow.exists_unit_pow_tendsto_zero k
+  have ht1 : nabs k t < 1 := _root_.GlobalTheory.CompanionTheory.NabsContract.nabs_lt_one_of_tendsto_pow k t ht
   have ht0 : 0 < nabs k t := by
     have h0 : (MeasureTheory.distribHaarChar k t : NNReal) ≠ 0 := fun h0 => by
       have := map_mul (MeasureTheory.distribHaarChar k) t t⁻¹
@@ -99,7 +106,7 @@ theorem exists_lFactors_unitary : ∀ (k : Type) [Field k] [ValuativeRel k] [Top
   have hge : ∀ r : ℝ, nabs k t ^ r ≤ 1 → 0 ≤ r := fun r hr => by
     by_contra hneg
     exact absurd hr (not_le.2 (Real.one_lt_rpow_of_pos_of_lt_one_of_neg ht0 ht1 (not_le.1 hneg)))
-  choose c hc using fun a => GlobalTheory.T.central_character_exists k (x a) t
+  choose c hc using fun a => _root_.GlobalTheory.CompanionTheory.ScalarEx.exists_scalarBy k (x a) t
   obtain ⟨hpart, htot⟩ := hW t ht (c ∘ Fin.rev) (fun i => hc _)
   let e : Fin h → ℝ := fun i => f (Δ i)
   let d : Fin h → ℝ := fun i => ((x i).1 : ℝ)
@@ -119,7 +126,7 @@ theorem exists_lFactors_unitary : ∀ (k : Type) [Field k] [ValuativeRel k] [Top
     intro j
     by_cases hj : (Fin.rev j).val + 1 < h
     · have h1 := hpart (Fin.rev j) hj
-      have h2 := GlobalTheory.T.prod_le_rev_eq_prod_ge h (fun i => ‖c i‖) (Fin.rev j)
+      have h2 := _root_.GlobalTheory.CompanionTheory.FinReversal.prod_filter_le_rev h (fun i => ‖c i‖) (Fin.rev j)
       rw [Fin.rev_rev] at h2
       have h3 : ∏ i ∈ Finset.univ.filter (fun i => i ≤ Fin.rev j), ‖(c ∘ Fin.rev) i‖ =
           ∏ i ∈ Finset.univ.filter (fun i => j ≤ i), ‖c i‖ := h2
@@ -133,7 +140,7 @@ theorem exists_lFactors_unitary : ∀ (k : Type) [Field k] [ValuativeRel k] [Top
         ext i
         simp [Fin.le_def, hj0]
       rw [hf', hsum]
-  have he := GlobalTheory.T.antitone_weighted_sum_zero h d e (fun i => Nat.cast_pos.2 (hypos (Δ i))) hanti hsum htail
+  have he := _root_.GlobalTheory.CompanionTheory.Tempered.weighted_antitone_eq_zero_of_tails_nonneg h d e (fun i => Nat.cast_pos.2 (hypos (Δ i))) hanti hsum htail
   refine ⟨h, x, hdeg, hLF, fun a t' c' hsc => ?_⟩
   have h1 := hf (Δ a) t' c' hsc
   have h2 : f (Δ a) = 0 := he a

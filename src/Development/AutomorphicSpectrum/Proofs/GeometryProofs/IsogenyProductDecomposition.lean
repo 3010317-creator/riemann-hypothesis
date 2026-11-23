@@ -6,12 +6,15 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ThickTransComp
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsInverseIsogenyRingOfIntegers
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsInverseIsogenySumOfCmHoms
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsPolarisedAbelianSchemePowerStatement
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsProdPolAVStatement
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ImHermFormEqCurveForm
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DimEqOfFiniteSurjective
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ThetaUniformisationComplexAbelianVariety
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsNthRootHomomorphismStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsNthRootHomomorphism
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.DegProd
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.NonzeroLocus
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsPolarisedAbelianSchemePower
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsProdPolAV
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -74,14 +77,14 @@ theorem exists_prodFam (B : Out.PolAV (Sp (𝓞 K))) : ∀ (n : ℕ) (C : Fin n 
   induction n with
   | zero =>
     intro C
-    obtain ⟨P, pP, hP⟩ := GlobalTheory.T.exists_polarisedAbelianScheme_power (𝓞 K) B 0
+    obtain ⟨P, pP, hP⟩ := _root_.GlobalTheory.CM.exists_polAV_isPowGrp (𝓞 K) B 0
     refine ⟨P, fun k => Fin.elim0 k, fun k => Fin.elim0 k, by simp [hP], fun T x => ?_, fun T z z' _ => ?_⟩
     · exact ⟨pP.lim.lift (Fan.mk T fun i => Fin.elim0 i), fun k => Fin.elim0 k⟩
     · exact pP.lim.hom_ext fun j => Fin.elim0 j.as
   | succ n ih =>
     intro C
     obtain ⟨Q', a', ha', hg', hex', hext'⟩ := ih fun k => C k.succ
-    obtain ⟨Q, u, v, hu, hv, huv, hQ⟩ := GlobalTheory.T.exists_prod_polAV_add_g GlobalTheory.CMClaims.laws (𝓞 K) (C 0) Q'
+    obtain ⟨Q, u, v, hu, hv, huv, hQ⟩ := _root_.GlobalTheory.PolProd.exists_prod_polAV GlobalTheory.CMClaims.laws (𝓞 K) (C 0) Q'
     refine ⟨Q, Fin.cases u fun j => v ≫ a' j, fun k => ?_, ?_, fun T x => ?_, fun T z z' h => ?_⟩
     · refine Fin.cases ?_ (fun j => ?_) k
       · exact hu
@@ -177,7 +180,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.isogeny_product_decomposition 
     rw [MonObj.comp_pow]
     simp only [Category.assoc]
     rw [reassoc_of% h1, ← Category.assoc, MonObj.comp_pow, Category.comp_id, ← MonObj.pow_comp, e2, MonObj.one_comp]
-  choose χ hχ hχe using fun k => GlobalTheory.T.exists_nth_root_homomorphism K σ N₀ B (C k) ((ψ₀ ≫ a k) ^ N) (hf k) hN₀ (kill k)
+  choose χ hχ hχe using fun k => _root_.GlobalTheory.CompanionTheory.Relay.exists_nth_root_homomorphism K σ N₀ B (C k) ((ψ₀ ≫ a k) ^ N) (hf k) hN₀ (kill k)
   have key : ∀ k, Φ ≫ χ k = a k ^ N := by
     intro k
     apply cancel (C k)

@@ -3,8 +3,10 @@ module
 public import Formalism.SharpRestriction.LevelLetterCocycles.LocCoh
 public import Formalism.GaloisCohomology.LocalTateDualityK
 public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoefficientRingIntegersCompactAdicPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteH1H2LocalStatement
+public import Mathlib.NumberTheory.Padics.PadicIntegers
+public import Mathlib.RingTheory.IntegralClosure.IsIntegral.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoefficientRingIntegersCompactAdicProperties
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteH1H2Local
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FixingSubgroupEquivBicontinuous
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsOpenOfFgOfSpanEqTop
 import Mathlib.Algebra.Order.Floor.Extended
@@ -218,7 +220,7 @@ theorem cocycles_fg_mod_l : Formalism.GaloisCohomology.LocalTateDualityK → ∀
     haveI : Module.Finite O ↥LA.T := Module.Finite.iff_fg.2 LA.fg
     obtain ⟨n, f, hf⟩ := Module.Finite.exists_fin' O ↥LA.T
     haveI : Finite (O ⧸ Ideal.span {ϖ}) := by
-      have := (GlobalTheory.T.coefficient_ring_integers_compact_adic_properties l LL O hO).2.2.1 1
+      have := (_root_.GlobalTheory.GoodCoeff.good_coeff_integers l LL O hO).2.2.1 1
       simpa [pow_one] using this
     have hqs : Function.Surjective (Ideal.Quotient.mk (Ideal.span {ϖ})) :=
       Ideal.Quotient.mk_surjective
@@ -275,7 +277,7 @@ theorem cocycles_fg_mod_l : Formalism.GaloisCohomology.LocalTateDualityK → ∀
     exact (isLocallyConstant_mk hS (fun g => A.ρ g t) (A.cont _)
       (fun g => hρT g t t.2)).continuous.comp hΦ.2
   have hH1 : Finite (ReciprocityTheory.Gal.H1 ρb) :=
-    (GlobalTheory.T.finite_H1_H2_local hT l K.1 K.2 1 (Red LA.T ϖ) ρb one_pos hρb).1
+    (_root_.GlobalTheory.finite_H1_H2_of_localTateDuality hT l K.1 K.2 1 (Red LA.T ϖ) ρb one_pos hρb).1
   have hcT : ∀ (c : ↥(latticeCocycles LA)) (g : ↥(GK K)), (c : ↥(GK K) → A.V) g ∈ LA.T :=
     fun c g => Submodule.mem_pi.1 (Submodule.mem_inf.1 c.2).2 g (Set.mem_univ g)
   let ev : ↥(latticeCocycles LA) → ↥(GK K) → ↥LA.T := fun c g => ⟨(c : ↥(GK K) → A.V) g, hcT c g⟩

@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsProjOnOne
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ContinuousRepresentativePropertiesStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermitianFormUnitaryOneOne
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ContinuousRepresentativeProperties
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsOrthonormalBasis
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralProductExpChartAllRealPlacesLeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralTranslateLeMultiplicityFundamentalStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralProductExpChartAllRealPlacesLe
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralTranslateLeMultiplicityFundamental
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasureLeCardMul
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SobolevIteratedOneParameterSubgroups
 import Mathlib.Algebra.Order.Floor.Extended
@@ -222,12 +223,12 @@ theorem cube_bound (B : RowsAut) (c : InfinitePlace B.I.F → ℝ) (s : ℝ) {m 
     · congr 2
       funext j
       simp [matAt, onePar, atPlace]
-  obtain ⟨S, hSm, hSd, hSi⟩ := GlobalTheory.T.lintegral_productExpChart_allRealPlaces_le B.I c s (fun v i => (E v i).1) (fun t => (Pr (ψ t)).1) hc
+  obtain ⟨S, hSm, hSd, hSi⟩ := _root_.GlobalTheory.ProductChartAll.lintegral_chart_all_le B.I c s (fun v i => (E v i).1) (fun t => (Pr (ψ t)).1) hc
     (fun v i => (E v i).2) hE hs h3 h5 hΘ
   have hΦm : Measurable fun x => ‖φ x‖ₑ ^ 2 := (hφ.1.measurable.enorm.pow_const 2)
-  have hU := GlobalTheory.T.lintegral_translate_le_multiplicity_fundamental B S y (fun x => ‖φ x‖ₑ ^ 2) hn hg hSm hSd hΦm
+  have hU := _root_.GlobalTheory.BoundedUnfold.lintegral_le_multiplicity B S y (fun x => ‖φ x‖ₑ ^ 2) hn hg hSm hSd hΦm
     (fun γ hγ z => by simp only [hφ.2.1 γ hγ z]) (fun k hk' z => by simp only [hk k hk' z])
-  rw [((GlobalTheory.T.continuous_representative_properties B).2.2.2 F φ hφ).2] at hU
+  rw [((_root_.GlobalTheory.ContRepUniq.contRep_unique_linear B).2.2.2 F φ hφ).2] at hU
   have hJ := hSi (fun a => ‖φ (y * (a, 1))‖ₑ ^ 2)
     (hΦm.comp (continuous_const.mul (continuous_id.prodMk continuous_const)).measurable)
   obtain ⟨-, hK0, hK1⟩ := GlobalTheory.CongIndex.measure_Kset_le B.I B.μf B.g hg

@@ -1,12 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselOpNormPowerIntegralLtTopClosedSubgroupStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupsClosedUnitaryWCompactStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DiffQuotientBesselMapTendstoStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SmoothVectorsDenseInvariantStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnimodularBesselSubgroupsUWNStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.WeilFormulaBesselUnitaryIntegrableStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselOpNormPowerIntegralLtTopClosedSubgroup
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupsClosedUnitaryWCompact
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DiffQuotientBesselMapTendsto
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnimodularBesselSubgroupsUWN
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.WeilFormulaBesselUnitaryIntegrable
+public import Mathlib.MeasureTheory.Function.AEEqOfIntegral
+public import Mathlib.Analysis.Normed.Module.HahnBanach
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SmoothVectorsDenseInvariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -18,7 +20,6 @@ import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.MeasureTheory.Function.AEEqOfIntegral
 import Mathlib.MeasureTheory.Function.L2Space
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
@@ -53,7 +54,6 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UpperOff
-public import Mathlib.Analysis.Normed.Module.HahnBanach
 
 @[expose] public section
 
@@ -206,7 +206,7 @@ theorem integrable_eFun {σ : Mat k r → (H →L[ℂ] H)} {w : H} {a d : ℝ} {
     refine lt_of_lt_of_le ?_ ha
     have := pow_lt_pow_right₀ (a := ((2 * r + k + 1 : ℕ) : ℝ)) (by linarith) (by norm_num : 2 < 5)
     linarith
-  have hfin := GlobalTheory.T.besselOpNormPowerIntegral_lt_top_closedSubgroup k r _ μG a hG hμ hA
+  have hfin := _root_.GlobalTheory.SgGrowth.normInt_lt_top k r _ μG a hG hμ hA
   refine ⟨aesm_of_continuousOn hG.2.1 (continuousOn_eFun hσ w μG) hae, ?_⟩
   have hle : ∫⁻ g, ‖eFun μG σ w (Matrix.of g)‖ₑ ∂μG ≤
       ∫⁻ g, ENNReal.ofReal (|fdegH μG σ w| * |C|) * ENNReal.ofReal (opn (Matrix.of g) ^ (-a)) ∂μG := by
@@ -281,10 +281,10 @@ theorem nonVan_of_bessel : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H] [In
   intro k r H _ _ _ Wp _ _ _ _ σ w a d μG μS ν z c π B hstd hside hq hB h0 htop hnorm
   obtain ⟨hstd, hws⟩ := hstd
   obtain ⟨hz, hT, hπ, hμS, -⟩ := hside
-  obtain ⟨hG, -, -, hS, -⟩ := GlobalTheory.T.bessel_subgroups_closed_unitaryW_compact k r z hz hT
+  obtain ⟨hG, -, -, hS, -⟩ := _root_.GlobalTheory.SgInf.closedSub_groups k r z hz hT
   have he := integrable_eFun hstd hG
   obtain ⟨-, hσ, -, hw, hμ, hsch, -, -, -⟩ := hstd
-  obtain ⟨hσf, hν, -⟩ := GlobalTheory.T.weil_formula_besselUnitary_integrable k r _ μG μS ν hS hμ hμS ((GlobalTheory.T.unimodular_besselSubgroups_UW_N k r z hz hT μS).1 hμS) hq
+  obtain ⟨hσf, hν, -⟩ := _root_.GlobalTheory.SgInf.weil_integrable k r _ μG μS ν hS hμ hμS ((_root_.GlobalTheory.SgInf.unimodular_S_N_UW k r z hz hT μS).1 hμS) hq
   haveI := hμ.1
   haveI : SecondCountableTopology Wp := by
     haveI : ProperSpace Wp := FiniteDimensional.proper_rclike ℂ Wp
@@ -292,10 +292,10 @@ theorem nonVan_of_bessel : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H] [In
   have hνG : ∀ᵐ x ∂ν, Matrix.of x ∈ GG k r := hν
   have hμG : ∀ᵐ x ∂μG, Matrix.of x ∈ GG k r := hμ.2.2.1
   have hμSS : ∀ᵐ x ∂μS, Matrix.of x ∈ Sset k r z := hμS.2.2.1
-  obtain ⟨-, -, hDV, htr, hV⟩ := GlobalTheory.T.smooth_vectors_dense_invariant k r σ w hσ
+  obtain ⟨-, -, hDV, htr, hV⟩ := _root_.GlobalTheory.SgInfDD.DD_stable_dense k r σ w hσ
   have hDs : ∀ v ∈ DD σ w, IsSmoothVec σ v := fun v hv => (hV hws).1 v (hDV hv)
   have hcont : ∀ v, IsSmoothVec σ v → ContinuousOn (fun g => B (σ g v)) (GG k r) := fun v hv =>
-    (GlobalTheory.T.diffQuotient_besselMap_tendsto k r σ z _ π B v 0 hσ hB hv (by simp [InLieHpk])).2.1
+    (_root_.GlobalTheory.diffQuot_bessel k r σ z _ π B v 0 hσ hB hv (by simp [InLieHpk])).2.1
   have hmul : ∀ x ∈ GG k r, ∀ g ∈ GG k r, σ (x * g) w = σ x (σ g w) := fun x hx g hg => by
     rw [hσ.1.2 x hx g hg]; rfl
   have hwD : w ∈ DD σ w := by

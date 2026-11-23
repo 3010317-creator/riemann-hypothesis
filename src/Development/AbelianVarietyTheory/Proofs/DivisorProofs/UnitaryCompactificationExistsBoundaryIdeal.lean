@@ -2,8 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsRatPointOfFiniteType
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.IsFiniteLengthOfIsArtinianRingAnnihilator
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryThetaSetupIdealOverComponentStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdealDescentToComponentCompactificationStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UValThruTopOfDisjoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryThetaSetupIdealOverComponent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdealDescentToComponentCompactification
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IrreducibleComponentsClopenPartition
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -66,8 +67,8 @@ theorem uIdealSt_holds : UIdealSt := by
       (∀ x ∈ J.support, x ∈ (k : Set C.Z) ∧ x ∉ Set.range C.i) ∧ UValThru Xo c C.i (𝟙 C.Z) k φ J d := by
     intro k
     by_cases hk : ((k : Set C.Z) ∩ Set.range C.i).Nonempty
-    · obtain ⟨X₁, ι, J₁, h1, h2, h3, h4⟩ := GlobalTheory.T.exists_unitaryThetaSetup_ideal_over_component E H Dw hpq φ hφ l Xo c C k (hclo k) k.2.1 hk
-      exact GlobalTheory.T.ideal_descent_to_component_compactification E H Dw hpq φ hφ l Xo c C k (hclo k) k.2.1 hk X₁ ι J₁ h1 h2 h3 h4
+    · obtain ⟨X₁, ι, J₁, h1, h2, h3, h4⟩ := _root_.GlobalTheory.UPoinc.exists_uSetup_ideal_over_component E H Dw hpq φ hφ l Xo c C k (hclo k) k.2.1 hk
+      exact _root_.GlobalTheory.UPoincDown.idealDescent E H Dw hpq φ hφ l Xo c C k (hclo k) k.2.1 hk X₁ ι J₁ h1 h2 h3 h4
     · refine ⟨1, ⊤, le_rfl, fun x hx => ?_, uValThru_top_of_disjoint (hclo k).2 (Set.not_nonempty_iff_eq_empty.1 hk) φ 1⟩
       rw [Scheme.IdealSheafData.support_top] at hx
       exact absurd hx (by simp [← SetLike.mem_coe])

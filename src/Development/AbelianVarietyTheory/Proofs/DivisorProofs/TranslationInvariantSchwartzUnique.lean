@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TrPApply
 public import Mathlib.Analysis.InnerProductSpace.EuclideanDist
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzFunctionalDependsOnValueAtZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzFunctionalDependsOnValueAtZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -97,7 +97,7 @@ theorem eq_of_fourier_zero {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V]
     ext x
     simp only [Ci, SchwartzMap.compCLMOfContinuousLinearEquiv_apply, Function.comp_apply]
     rw [SchwartzMap.compSubConstCLM_apply, map_add (f := _), map_neg, ContinuousLinearEquiv.apply_symm_apply, sub_eq_add_neg]
-  have := GlobalTheory.T.schwartz_functional_depends_on_value_at_zero ℓ hinv (𝓕 (C f)) (𝓕 (C g)) hfg
+  have := _root_.GlobalTheory.CharInvAtZero.eq_of_eq_zero ℓ hinv (𝓕 (C f)) (𝓕 (C g)) hfg
   rwa [hℓ, hℓ] at this
 
 theorem dim_le_one : ∀ {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V]

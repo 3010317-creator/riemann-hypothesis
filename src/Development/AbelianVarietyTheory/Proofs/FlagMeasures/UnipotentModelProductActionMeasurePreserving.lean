@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsVolData
 public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarLieNilpotentCoordinatesStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NCoords
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarLieNilpotentCoordinates
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StabilizerMeasureNormalisationSymm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -53,7 +54,7 @@ theorem actM_measurePreserving (E : Type) [Field E] [NumberField E] (k r : ℕ)
     (γ : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) E) (hN : ∀ w, gM A γ w ∈ Nset k r) :
     MeasurePreserving (actM A γ) (Measure.pi fun _ : InfinitePlace E => haarLie (Nset k r) 1)
       (Measure.pi fun _ : InfinitePlace E => haarLie (Nset k r) 1) := by
-  have hH := (GlobalTheory.T.haar_lie_nilpotent_coordinates k r).1
+  have hH := (_root_.GlobalTheory.SnMass.NEntry.haarLie_entries k r).1
   haveI : SigmaFinite (haarLie (Nset k r) 1) := hH.1
   have hf : ∀ w, MeasurePreserving (lmulM (gM A γ w)) (haarLie (Nset k r) 1) (haarLie (Nset k r) 1) :=
     fun w => ⟨GlobalTheory.Amp.StabMeas.meas_lmul _, hH.2.2.2 _ (hN w)⟩

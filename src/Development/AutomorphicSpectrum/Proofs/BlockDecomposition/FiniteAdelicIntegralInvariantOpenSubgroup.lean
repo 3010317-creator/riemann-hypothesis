@@ -1,9 +1,12 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermInf
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FiniteAdeleTopologyStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRingStatement
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.CountData
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FiniteAdeleTopology
+public import Formalism.UnipotentAdelicQuotients.SWXSDefs
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.EqOneOfPowNear
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ModerateGrowthSchwartz
 import Formalism.LocalRingCardinality.DataHost
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -51,8 +54,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.CountData
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ModerateGrowthSchwartz
 import Development.AbelianVarietyTheory.Definitions.Foundations.AestronglyMeasurableQuotMeasureIffLift
 import Development.AbelianVarietyTheory.Definitions.Foundations.EventuallyEqOfIsPreconnected
 import Development.AbelianVarietyTheory.Definitions.Foundations.IsIwasawaOfIsCompact
@@ -153,7 +154,7 @@ namespace GlobalTheory.CompanionTheory.SiegelND.Integ.Period
 
 open GlobalTheory.CompanionTheory.SW.Core in
 theorem hasCO_Af (F : Type) [Field F] [NumberField F] : HasCO (Af F) := by
-  obtain ⟨h1, h2, h3, hOc, hOo, -, -, hB, -, hNo⟩ := GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F
+  obtain ⟨h1, h2, h3, hOc, hOo, -, -, hB, -, hNo⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
   have hadd : ∀ x ∈ Oh F, ∀ y ∈ Oh F, x + y ∈ Oh F := fun x hx y hy v =>
     add_mem (hx v) (hy v)
   have hneg : ∀ x ∈ Oh F, -x ∈ Oh F := fun x hx v => neg_mem (hx v)
@@ -215,11 +216,11 @@ theorem psiFin_trivial (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF F)
 
 theorem hasCO_herm (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (σ : E →ₐ[F] E) (hσ : IsCMExt F E σ) (n : ℕ) : HasCO (HermR (Af F) σ n) := by
-  obtain ⟨a1, a2, a3, -, -, -, -, -, -, -⟩ := GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F
+  obtain ⟨a1, a2, a3, -, -, -, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
   haveI : LocallyCompactSpace (Af F) := a1
   haveI : SecondCountableTopology (Af F) := a2
   haveI : T2Space (Af F) := a3
-  obtain ⟨-, -, -, -, -, -, hh, -, hcl, -⟩ := GlobalTheory.T.tensor_locally_compact_ring F E σ hσ (Af F)
+  obtain ⟨-, -, -, -, -, -, hh, -, hcl, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Af F)
   haveI : Module.Finite F E := Module.Finite.of_restrictScalars_finite ℚ F E
   let b := Module.finBasis F E
   let c : (Af F ⊗[F] E) →+ (Fin (Module.finrank F E) → Af F) :=
@@ -264,11 +265,11 @@ theorem starLoc_periodic : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
       IsCompact (U : Set (HermR (Af F) σ n)) ∧
       ∀ b, ∀ u ∈ U, starLoc (Af F) σ J (psiFin F ψ) μ Q (b + u) = starLoc (Af F) σ J (psiFin F ψ) μ Q b := by
   intro F E _ _ _ _ _ σ hσ M J n ψ hψ μ _ Q hQ
-  obtain ⟨a1, a2, a3, -, -, -, -, -, -, -⟩ := GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F
+  obtain ⟨a1, a2, a3, -, -, -, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
   haveI : LocallyCompactSpace (Af F) := a1
   haveI : SecondCountableTopology (Af F) := a2
   haveI : T2Space (Af F) := a3
-  obtain ⟨t1, -, -, -, -, htr, -, -, -, hG⟩ := GlobalTheory.T.tensor_locally_compact_ring F E σ hσ (Af F)
+  obtain ⟨t1, -, -, -, -, htr, -, -, -, hG⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Af F)
   haveI : IsTopologicalRing (Af F ⊗[F] E) := t1
   obtain ⟨V, hVo, hV⟩ := psiFin_trivial F ψ hψ
   let ph : HermR (Af F) σ n → (Fin n → Fin M → Af F ⊗[F] E) → Af F := fun u X =>

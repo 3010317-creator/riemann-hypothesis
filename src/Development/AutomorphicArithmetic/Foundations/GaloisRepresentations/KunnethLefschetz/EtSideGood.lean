@@ -9,25 +9,28 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CupProductGr
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CupVanishesOnTwoMemberCoverStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyBijectiveOfSupportBijectiveStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyCoefficientLongExactSequenceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyCoefficientRingInvarianceStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DivisorSupportCondition
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyCoefficientRingInvariance
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyFieldEqGaloisCohomologyStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyNegativeVanishingDegreeZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyNegativeVanishingDegreeZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyTwistedFilteredColimitContinuityStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyVanishingAlgebraicOverRatFunc
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelwiseEquivalenceIsEquivalenceStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MayerVietorisEquivalenceOfCoverStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NeZeroOfDvd
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PositiveDegreeClassesDieOnEtaleCoverStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuasiIsoHypercohomologyBijectiveStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothSurjectiveCechDescentCohomologyStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistLocalToGlobalStrictlyHenselianStatement
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.EtaleCohomology.AffineProperBaseChange
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.EtaleCohomology.E4
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.EtaleCohomology.EtaleAxioms.A0Alt
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.EtaleCohomology.N81
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.EtaleCohomology.PurTop
-public import Development.AutomorphicArithmetic.CommutativeAlgebra.EtaleCohomologyExcisionAxiomHolds
-import Development.AutomorphicArithmetic.CommutativeAlgebra.EtaleCohomologyFunctorialityAxiomsHold
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseChangeCechNerveAugmentationIsoStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechLevelRepresentableStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyEquivalenceBasicPropertiesStatement
+public import Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.EquivOfStalkwiseBaseChange
+public import Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.TateTwistFinitary
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IndEtOfForallFinset
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralSurjectionCechDescentTateTwist
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.KunnethLefschetz.DiagonalEtaleThreeOfFirst
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.KunnethLefschetz.DiagonalPullbacks.DiagEt3Of
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.KunnethLefschetz.EtMain
@@ -36,7 +39,6 @@ public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentation
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.KunnethLefschetz.TrInHolds
 public import Development.EtaleCohomology.EtaleSheaves.EtaleEvenCohomologyGradedCommRingOfCupRingAxioms
 public import Development.EtaleCohomology.EtaleSheaves.LeafChernPf
-import Development.EtaleCohomology.EtaleSheaves.LeafCover2Of
 public import Development.EtaleCohomology.EtaleSheaves.LeafGeomPfLoc
 public import Development.EtaleCohomology.EtaleSheaves.LeafLinePf
 public import Development.EtaleCohomology.EtaleSheaves.LeafMapWPf
@@ -46,6 +48,18 @@ public import Development.EtaleCohomology.EtaleSheaves.LeafWhitneyPf
 public import Development.EtaleCohomology.EtaleSheaves.UnimodularBlockEqToHomValEqOne
 public import Development.EtaleCohomology.KummerTheory.GoalHolds
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.BocksteinBaseChange.SmoothGaloisGeometry.Geo
+public import Development.EtaleCohomology.EtaleSheaves.HalfDegreeVanishing.SecondBlockUnimodularLocusInclusionMono
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PositiveDegreeClassesDieOnEtaleCover
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuasiIsoHypercohomologyBijectiveStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothSurjectiveCechDescentCohomology
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafSectionsExactStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleLocallyIffAffineEtalePointCoverStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsZeroChains
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchClsCocycleSec
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StrictlyHenselianIff
+import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StrictlyHenselianLocalRingAcyclicEverySheafStatement
+import Development.EtaleCohomology.EtaleSheaves.LeafCover2Of
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -83,7 +97,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.EtaleCohomology.EtaleSheaves.HalfDegreeVanishing.SecondBlockUnimodularLocusInclusionMono
 
 @[expose] public section
 
@@ -103,8 +116,8 @@ include H
 
 theorem upTo {P : Prop} (h : A1 → A2 → A3 → A4 → A5 → A7 → A8 → A9 → A10 → A11 → B1 → B2 → B3 → B4 → B5 → B7 → C1 → C2 → C3 → C4 →
     C5 → D1 → P) : P :=
-  h GlobalTheory.T.quasiIso_hypercohomology_bijective GlobalTheory.T.etC_a2 GlobalTheory.T.levelwiseEquivalence_isEquivalence GlobalTheory.T.mayerVietoris_equivalence_of_cover GlobalTheory.T.positiveDegreeClasses_die_on_etaleCover GlobalTheory.T.etaleCohomology_coefficient_longExactSequence GlobalTheory.T.etaleCohomology_coefficientRing_invariance GlobalTheory.T.etaleCohomology_negative_vanishing_degree_zero
-    GlobalTheory.T.etaleCohomology_bijective_of_support_bijective RedCoef.a11 GlobalTheory.T.etaleCohomology_twisted_filtered_colimit_continuity UpperTheory.etaleCohomology_functorialityAxioms_hold GlobalTheory.T.etC_b3 UpperTheory.etaleCohomology_excisionAxiom_holds GlobalTheory.T.absolutelyIntegrallyClosed_domain_tateTwistAcyclic GlobalTheory.T.etaleCohomology_field_eq_galoisCohomology
+  h GlobalTheory.T.quasiIso_hypercohomology_bijective _root_.GlobalTheory.EtC.smooth_surjective_cech_descent_cohomology GlobalTheory.T.levelwiseEquivalence_isEquivalence GlobalTheory.T.mayerVietoris_equivalence_of_cover _root_.GlobalTheory.EtC.classes_die_on_etale_cover GlobalTheory.T.etaleCohomology_coefficient_longExactSequence _root_.GlobalTheory.EtC.a8 _root_.GlobalTheory.EtC.etale_cohomology_vanishing_negative_degree_zero
+    GlobalTheory.T.etaleCohomology_bijective_of_support_bijective RedCoef.a11 GlobalTheory.T.etaleCohomology_twisted_filtered_colimit_continuity _root_.GlobalTheory.T.strictlyHenselianLocalRing_acyclic_every_sheaf GlobalTheory.T.etC_b3 _root_.GlobalTheory.EtC.b4 GlobalTheory.T.absolutelyIntegrallyClosed_domain_tateTwistAcyclic GlobalTheory.T.etaleCohomology_field_eq_galoisCohomology
     GlobalTheory.EtC.gaugeSplitting_holds H.c2 H.c3 H.c4 H.c5 H.d1
 
 theorem d2 : D2 := H.upTo (LateralTheory.E.D2.goal_of (LateralTheory.E.D2.LeafRing_of GlobalTheory.T.cup_chern_kummer_pullback_naturality GlobalTheory.T.cupProduct_gradedCommRingAxioms_hold) LateralTheory.E.D2.LeafChern_of
@@ -116,17 +129,17 @@ theorem d2 : D2 := H.upTo (LateralTheory.E.D2.goal_of (LateralTheory.E.D2.LeafRi
 theorem d3 : D3 := H.upTo UpperTheory.Et.D3.intersectionNumber_baseChange H.d2
 
 theorem e3 : E3 :=
-  UpperTheory.Et.E3.main ⟨GlobalTheory.T.quasiIso_hypercohomology_bijective, GlobalTheory.T.etC_a2, GlobalTheory.T.levelwiseEquivalence_isEquivalence, GlobalTheory.T.mayerVietoris_equivalence_of_cover, GlobalTheory.T.positiveDegreeClasses_die_on_etaleCover, GlobalTheory.T.etaleCohomology_negative_vanishing_degree_zero, GlobalTheory.T.etaleCohomology_twisted_filtered_colimit_continuity,
-    UpperTheory.etaleCohomology_functorialityAxioms_hold, UpperTheory.etaleCohomology_excisionAxiom_holds, H.c3, H.c4⟩
+  UpperTheory.Et.E3.main ⟨GlobalTheory.T.quasiIso_hypercohomology_bijective, _root_.GlobalTheory.EtC.smooth_surjective_cech_descent_cohomology, GlobalTheory.T.levelwiseEquivalence_isEquivalence, GlobalTheory.T.mayerVietoris_equivalence_of_cover, _root_.GlobalTheory.EtC.classes_die_on_etale_cover, _root_.GlobalTheory.EtC.etale_cohomology_vanishing_negative_degree_zero, GlobalTheory.T.etaleCohomology_twisted_filtered_colimit_continuity,
+    _root_.GlobalTheory.T.strictlyHenselianLocalRing_acyclic_every_sheaf, _root_.GlobalTheory.EtC.b4, H.c3, H.c4⟩
 
 theorem e4 : E4 := H.upTo UpperTheory.Et.e4 H.d2 H.d3 UpperTheory.Et.affine_proper_base_change (duality_diagonalClass_of_affineProperBaseChange UpperTheory.Et.affine_proper_base_change) H.e3
 
 theorem inputs : In :=
-  ⟨GlobalTheory.T.quasiIso_hypercohomology_bijective, GlobalTheory.T.etC_a2, GlobalTheory.T.levelwiseEquivalence_isEquivalence, GlobalTheory.T.mayerVietoris_equivalence_of_cover, GlobalTheory.T.positiveDegreeClasses_die_on_etaleCover, GlobalTheory.T.cup_chern_kummer_pullback_naturality, GlobalTheory.T.cupProduct_gradedCommRingAxioms_hold, GlobalTheory.T.cup_vanishes_on_two_member_cover,
-    GlobalTheory.T.chernClass_kummerClass_additive, GlobalTheory.T.etaleCohomology_coefficient_longExactSequence, GlobalTheory.T.etaleCohomology_coefficientRing_invariance, GlobalTheory.T.etaleCohomology_negative_vanishing_degree_zero, GlobalTheory.T.etaleCohomology_bijective_of_support_bijective, RedCoef.a11, GlobalTheory.T.etaleCohomology_twisted_filtered_colimit_continuity, UpperTheory.etaleCohomology_functorialityAxioms_hold,
+  ⟨GlobalTheory.T.quasiIso_hypercohomology_bijective, _root_.GlobalTheory.EtC.smooth_surjective_cech_descent_cohomology, GlobalTheory.T.levelwiseEquivalence_isEquivalence, GlobalTheory.T.mayerVietoris_equivalence_of_cover, _root_.GlobalTheory.EtC.classes_die_on_etale_cover, GlobalTheory.T.cup_chern_kummer_pullback_naturality, GlobalTheory.T.cupProduct_gradedCommRingAxioms_hold, GlobalTheory.T.cup_vanishes_on_two_member_cover,
+    GlobalTheory.T.chernClass_kummerClass_additive, GlobalTheory.T.etaleCohomology_coefficient_longExactSequence, _root_.GlobalTheory.EtC.a8, _root_.GlobalTheory.EtC.etale_cohomology_vanishing_negative_degree_zero, GlobalTheory.T.etaleCohomology_bijective_of_support_bijective, RedCoef.a11, GlobalTheory.T.etaleCohomology_twisted_filtered_colimit_continuity, _root_.GlobalTheory.T.strictlyHenselianLocalRing_acyclic_every_sheaf,
     GlobalTheory.T.etC_b3, H.c4, H.d1, duality_diagonalClass_of_affineProperBaseChange UpperTheory.Et.affine_proper_base_change, H.e3, H.e4,
-    UpperTheory.Et.purGysin ⟨GlobalTheory.T.quasiIso_hypercohomology_bijective, GlobalTheory.T.etC_a2, GlobalTheory.T.levelwiseEquivalence_isEquivalence, GlobalTheory.T.mayerVietoris_equivalence_of_cover, GlobalTheory.T.cup_chern_kummer_pullback_naturality, GlobalTheory.T.cupProduct_gradedCommRingAxioms_hold,
-      GlobalTheory.T.etaleCohomology_negative_vanishing_degree_zero, RedCoef.a11, GlobalTheory.T.etaleCohomology_twisted_filtered_colimit_continuity, H.c4, H.d1, UpperTheory.Et.affine_proper_base_change⟩, LateralTheory.KummerTheory.goal_holds⟩
+    UpperTheory.Et.purGysin ⟨GlobalTheory.T.quasiIso_hypercohomology_bijective, _root_.GlobalTheory.EtC.smooth_surjective_cech_descent_cohomology, GlobalTheory.T.levelwiseEquivalence_isEquivalence, GlobalTheory.T.mayerVietoris_equivalence_of_cover, GlobalTheory.T.cup_chern_kummer_pullback_naturality, GlobalTheory.T.cupProduct_gradedCommRingAxioms_hold,
+      _root_.GlobalTheory.EtC.etale_cohomology_vanishing_negative_degree_zero, RedCoef.a11, GlobalTheory.T.etaleCohomology_twisted_filtered_colimit_continuity, H.c4, H.d1, UpperTheory.Et.affine_proper_base_change⟩, LateralTheory.KummerTheory.goal_holds⟩
 
 theorem qDual : QDual := qDual_holds H.inputs trIn_holds
 

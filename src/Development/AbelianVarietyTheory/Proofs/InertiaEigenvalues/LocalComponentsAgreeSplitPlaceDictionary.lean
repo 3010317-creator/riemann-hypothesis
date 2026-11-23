@@ -2,12 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FinIso
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RingSpecNormalisedCharacterEq
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsUniqueIdeleOfLinearEquivQuotientLocal
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsAdelicUnitaryTrivialOutsideSplitPlaceLocEq
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DefiniteUnitaryAutFormEqZeroOfFinitePointsStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHomTrivOutsideLoc
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsLocUniqueOfIsSplitAt
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitPlaceLocalComponentExistsUniqueClassStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitPlaceLocalComponentExistsUniqueClass
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ContinuousMapPFin
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsUniqueIdeleOfLinearEquivQuotientLocal
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitPlaceUnitaryLocalPointsEquivGL
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CmFieldAdeleSplitPlaceSupportIntegral
 import Mathlib.Algebra.Module.StablyFree.Basic
@@ -48,7 +49,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ContinuousMapPFin
 
 @[expose] public section
 
@@ -208,7 +208,7 @@ theorem locComp_agree : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (
     IsCompAlong U (locU n s.w) ((cLoc s.w).comp (locU n s.w).subtype) σ.ρ →
     ∃ τ : GlobalTheory.SmGL.IrrRep (GL (Fin n) (s.w.adicCompletion L)), IsLocS π.S s τ ∧ Nonempty (τ.ρ.Equiv σ.ρ) := by
   intro L _ _ _ n F π U hD s σ hσ
-  obtain ⟨τ, hτ, -⟩ := GlobalTheory.T.splitPlaceLocalComponent_exists_unique_class L n π s
+  obtain ⟨τ, hτ, -⟩ := _root_.GlobalTheory.LocCompSplit.main L n π s
   refine ⟨τ, hτ, ?_⟩
   obtain ⟨i, T, hic, hi, hTinj, hTS, hTeq⟩ := hτ
   have hsplit : IsSplitAt s.w := isSplitAt_w F s i hic hi

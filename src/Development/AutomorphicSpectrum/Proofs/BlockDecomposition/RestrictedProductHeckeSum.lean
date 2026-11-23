@@ -1,8 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnifAt
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteRestrictedProductQuotientStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteSumFiberDecompositionStatement
+public import Mathlib.Algebra.Group.Subgroup.Map
+public import Mathlib.GroupTheory.Coset.Defs
+public import Mathlib.Order.Filter.Cofinite
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteRestrictedProductQuotient
+public import Mathlib.Algebra.BigOperators.Finprod
+public import Mathlib.Basic.Complex.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteSumFiberDecomposition
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FinsumOutOfLe
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -235,7 +240,7 @@ theorem sum_comp {p : ∀ i, Γ →* Hl i} {e : ∀ i, Hl i →* Γ} {KH V : ∀
       rw [prodF_mul hfV _ _ _ (hmem u hu), ← mul_assoc, hg u (hmem u hu)]
     have hfin : {q : Γ ⧸ (⨅ i, (V i).comap (p i)) |
         (fun x => prodF p V f (i :: T) x * g (y * x)) q.out ≠ 0}.Finite := by
-      refine (GlobalTheory.T.finite_restricted_product_quotient p V (fun j => {h | fac V f (i :: T) j h ≠ 0}) ?_ ?_ ?_).subset ?_
+      refine (_root_.GlobalTheory.CompanionTheory.FinActS.finite_cosets_of_components_mem p V (fun j => {h | fac V f (i :: T) j h ≠ 0}) ?_ ?_ ?_).subset ?_
       · intro j x hx u hu
         change fac V f (i :: T) j (x * u) ≠ 0
         rw [fac_mul hfV _ _ _ _ hu]
@@ -262,7 +267,7 @@ theorem sum_comp {p : ∀ i, Γ →* Hl i} {e : ∀ i, Hl i →* Γ} {KH V : ∀
         ∑ᶠ m : Hl i ⧸ V i, ∑ᶠ q : Γ ⧸ (⨅ i, (V i).comap (p i)),
           (V i : Set (Hl i)).indicator (1 : Hl i → ℂ) (p i q.out) *
             (prodF p V f (i :: T) (e i m.out * q.out) * g (y * (e i m.out * q.out))) :=
-      GlobalTheory.T.finite_sum_fiber_decomposition (p i) (e i) (hpe i) (⨅ i, (V i).comap (p i)) (V i)
+      _root_.GlobalTheory.CompanionTheory.FinActS.SumFiber.finsum_cosets_retraction (p i) (e i) (hpe i) (⨅ i, (V i).comap (p i)) (V i)
         (fun u hu => hmem u hu i) (fun x => prodF p V f (i :: T) x * g (y * x)) hφ hfin
     have inner : ∀ m : Hl i ⧸ V i, ∑ᶠ q : Γ ⧸ (⨅ i, (V i).comap (p i)),
         (V i : Set (Hl i)).indicator (1 : Hl i → ℂ) (p i q.out) *

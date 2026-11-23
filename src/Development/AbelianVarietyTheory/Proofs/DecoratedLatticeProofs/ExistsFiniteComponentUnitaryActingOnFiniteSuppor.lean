@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicPointComponentsAtPlacesLatticesVacuaStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicPointComponentsAtPlacesLatticesVacua
+public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.MarkSpec
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -72,7 +73,7 @@ theorem GlobalTheory.GlobFin.mem_GfC {D : D7} {S : HSp D} {x : GA D S} (hx : x �
 
 theorem GlobalTheory.GlobFin.fin_rep : ∀ (D : D7) (S : HSp D) (g : GA D S), ∃ x ∈ GfC S, ∀ (P : Pl D → Prop) (y : Fin S.rank → AE D), (∀ i, y i ∈ idAt D P) → mt S g *ᵥ y = mt S x *ᵥ y := by
   intro D S g
-  obtain ⟨⟨ε, -, -, -, hAt, hOff⟩, hS⟩ := GlobalTheory.T.adelicPoint_components_atPlaces_lattices_vacua D (fun _ => True)
+  obtain ⟨⟨ε, -, -, -, hAt, hOff⟩, hS⟩ := _root_.GlobalTheory.FinPl.localComponents D (fun _ => True)
   obtain ⟨x, hx, u, hu, rfl⟩ := (hS S).1 g
   refine ⟨x, GlobalTheory.GlobFin.mem_GfC hx, fun P y hy => ?_⟩
   have hy0 : ∀ j, y j ∈ idAt D (fun _ => True) := by

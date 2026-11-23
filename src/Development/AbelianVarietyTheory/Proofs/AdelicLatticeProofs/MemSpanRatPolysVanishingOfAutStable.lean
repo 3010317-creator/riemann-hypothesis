@@ -1,7 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.AdelicPair
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.GaloisStableSubmoduleLeSpanRationalStatement
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.Basis.Defs
+public import Mathlib.LinearAlgebra.DFinsupp
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.GaloisStableSubmoduleLeSpanRational
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -82,7 +85,7 @@ theorem mem_span_vanI_of_vanish : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] 
         rw [MvPolynomial.smul_eval, h1, mul_zero] }
   have hrepr : ∀ (p : MvPolynomial (ι × ι) ℂ) k,
       (MvPolynomial.basisMonomials (ι × ι) ℂ).repr p k = AddMonoidAlgebra.coeff p k := fun p k => rfl
-  have key := GlobalTheory.T.galoisStable_submodule_le_span_rational _ _ (MvPolynomial.basisMonomials (ι × ι) ℂ) W (by
+  have key := _root_.GlobalTheory.ClassFin.GaloisDescent.le_span_rational _ _ (MvPolynomial.basisMonomials (ι × ι) ℂ) W (by
     intro σ w hw
     refine ⟨MvPolynomial.map (σ : ℂ →+* ℂ) w, ?_, ?_⟩
     · intro g hg

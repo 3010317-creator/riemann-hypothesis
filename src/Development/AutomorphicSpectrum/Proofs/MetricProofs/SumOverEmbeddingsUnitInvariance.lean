@@ -2,7 +2,8 @@ module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.PenHost
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.UnitRatioDivisorSupportEqStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.UnitRatioDivisorSupportEq
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsSmoothWeightConstNearEmbeddings
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IntersectionLocConstTrivial
 public import GroundTheory.HeightsAndTheta.Heights.ElementarySymmetric.PBoundedSectionTransfer
@@ -103,7 +104,7 @@ theorem sum_log_unit_mul_mass_eq_zero : ArithIntersectionSystemStatement → Pts
   have hRA := (hII K ι).2.2 (mCoordIdeal y) D L A g d hP hL hA hAa hg hgP
   have hRB := (hII K ι).2.2 (mCoordIdeal y) D L (A.tensor B) f d hP hL hAB hABa hf hfP
   have hadd := (hII K ι).2.1 (mCoordIdeal y) D L A B hP hL hA hBs
-  obtain ⟨hsupp, hmult⟩ := GlobalTheory.T.unit_ratio_divisor_support_eq K ι Ω y D d f g (algebraMap F Ω x) hP hf hg hg0 ht0 htI htI' hfg
+  obtain ⟨hsupp, hmult⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Giv.divCycle_eq_of_unit_ratio K ι Ω y D d f g (algebraMap F Ω x) hP hf hg hg0 ht0 htI htI' hfg
   have hlog : ∀ z ∈ mcPts (mCoordIdeal y), logNorm (A.tensor B) f z = logNorm A g z := by
     intro z hz
     obtain ⟨sg, hsg, -⟩ := hex z hz

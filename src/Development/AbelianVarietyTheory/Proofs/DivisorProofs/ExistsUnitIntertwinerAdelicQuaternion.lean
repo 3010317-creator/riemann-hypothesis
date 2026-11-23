@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.OneMemH0WeightZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOrthogonalIdempotentsAdeleUnitCombinationStatement
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOrthogonalIdempotentsAdeleUnitCombination
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -104,7 +105,7 @@ theorem exists_unit_intertwiner : ∀ (F : Type) [Field F] [NumberField F] (a b 
     have h' := h.map (algebraMap F (AF F))
     rwa [map_mul, map_mul, map_mul, map_neg, map_ofNat] at h'
   rw [← hcomb] at hu
-  obtain ⟨η, h1, h2, h3, h4⟩ := GlobalTheory.T.exists_orthogonal_idempotents_adele_unit_combination F (Fin 4) _ _ hu
+  obtain ⟨η, h1, h2, h3, h4⟩ := _root_.GlobalTheory.QSA.exists_idem_pick_unit F (Fin 4) _ _ hu
   refine ⟨∑ i, η i • (p * quatStdBasis _ _ i + quatStdBasis _ _ i * q), ?_, ?_⟩
   · rw [nrm_sum_orthIdem_smul η _ h1 h2 h3]; exact h4
   · rw [Finset.sum_mul, Finset.mul_sum]

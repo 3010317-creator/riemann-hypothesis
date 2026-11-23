@@ -2,7 +2,13 @@ module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.TorusAtData
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FundamentalDomainPointBound
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsThetaRunParametersUniformTorusStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.GCauchyStatement
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsThetaRunParametersUniformTorus
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.MajPos
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.QuadraticCoefficientForms
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.SplitC
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.TorusAtDataPf
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.TorusAtPf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,11 +58,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.MajPos
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.QuadraticCoefficientForms
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.SplitC
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.TorusAtDataPf
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.TorusAtPf
 
 @[expose] public section
 
@@ -237,7 +238,7 @@ theorem growth_decay : TStatement → ∀ (E : Type) [Field E] [NumberField E] [
   have hfR : (0 : ℝ) < PT.f E := by exact_mod_cast hf
   have hcard : Fintype.card X.Ψ = PT.f E := QuadraticCoefficientForms.card_Psi X.toData
   obtain ⟨τ0⟩ : Nonempty X.Ψ := Fintype.card_pos_iff.1 (QuadraticCoefficientForms.card_Psi_pos X.toData)
-  obtain ⟨q, R0, hth, hP⟩ := GlobalTheory.T.exists_thetaRunParameters_uniform_torus E r m (by nlinarith) hm1 hmf hf1 hf2 hrd
+  obtain ⟨q, R0, hth, hP⟩ := _root_.GlobalTheory.ThetaRunParameters.exists_par E r m (by nlinarith) hm1 hmf hf1 hf2 hrd
   have hrd0 : 0 < PT.rd E := by linarith
   have hds : (0 : ℝ) < dstar (E := E) m := by
     unfold dstar; exact_mod_cast Nat.mul_pos (by omega) hm1

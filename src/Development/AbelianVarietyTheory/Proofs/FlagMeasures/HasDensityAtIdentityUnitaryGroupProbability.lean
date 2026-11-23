@@ -4,9 +4,10 @@ public import Formalism.PeriodIntegrals.QuotInv
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UpperOff
 public import Mathlib.Analysis.SpecialFunctions.Complex.Circle
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IntegralConjInnerMulInnerOfIsEmptyEquiv
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniqueHaarDensityAtIdentityStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarUnitaryLastDiagonalEntryLawStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarVolumeThinTubeUnitaryProductAsymptoticStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniqueHaarDensityAtIdentity
+public import Formalism.FormalDegreeBessel.StatementG
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarUnitaryLastDiagonalEntryLaw
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarVolumeThinTubeUnitaryProductAsymptotic
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MatGroupHaarUniqueFiniteCompactOpenPos
 import Mathlib.Algebra.Order.Archimedean.Real.Hom
 import Mathlib.Algebra.Order.Floor.Extended
@@ -302,17 +303,17 @@ theorem hasDens_unitary : ∀ (j : ℕ) (μ : Measure (PI.MtM j)), PI.IsHaarOnM 
     · have : volUn (0 + 1) = 2 * Real.pi := by simp [volUn]
       rw [this]; exact hasDens_one μ hμ h
     obtain ⟨μ₀, hμ₀, h₀⟩ := exists_prob_haar (isMatGroup_UH_one k) (isCompact_UH_one k)
-    obtain ⟨c, hc, hd, -⟩ := GlobalTheory.T.exists_unique_haarDensity_at_identity _ _ μ (isMatGroup_UH_one (k + 1)) hμ
+    obtain ⟨c, hc, hd, -⟩ := _root_.GlobalTheory.MatHaarDensity.exists_hasDens _ _ μ (isMatGroup_UH_one (k + 1)) hμ
     have hD : (Matrix.diagonal fun j : Fin (k + 1) => if j = Fin.last k then ((1 : ℝ) : ℂ) else 1) = 1 := by
       simp
     have hv := volUn_pos k
-    have ht := GlobalTheory.T.haar_volume_thin_tube_unitary_product_asymptotic k 1 hk (Or.inl rfl) μ μ₀ c (volUn k)⁻¹ hc (inv_pos.2 hv) (by rwa [hD]) (by rwa [hD])
+    have ht := _root_.GlobalTheory.Tube.thin_tube k 1 hk (Or.inl rfl) μ μ₀ c (volUn k)⁻¹ hc (inv_pos.2 hv) (by rwa [hD]) (by rwa [hD])
       hμ₀ h₀ (ih μ₀ hμ₀ h₀)
     have h1 : Tendsto (fun t : ℝ => μ {g | |‖g (Fin.last k) (Fin.last k)‖ ^ 2 - 1| ≤ t} / ENNReal.ofReal (t ^ k))
         (𝓝[>] 0) (𝓝 1) := by
       refine tendsto_const_nhds.congr' ?_
       filter_upwards [Ioo_mem_nhdsGT (zero_lt_one' ℝ)] with t ht
-      rw [GlobalTheory.T.haarUnitary_lastDiagonalEntry_law k μ hk hμ h t ht.1.le ht.2.le,
+      rw [_root_.GlobalTheory.Amp.EntryLaw.measure_entry k μ hk hμ h t ht.1.le ht.2.le,
         ENNReal.div_self (by simpa using pow_pos ht.1 k) ENNReal.ofReal_ne_top]
     have h2 := ENNReal.ofReal_eq_one.1 (tendsto_nhds_unique ht h1)
     have h3 : c = (volUn (k + 1))⁻¹ := by

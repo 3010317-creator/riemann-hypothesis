@@ -2,8 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEqAddOfRedVEq
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsStrictIff
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MinkowskiWeylOrthantConeIntegralConstraintsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NonnegSumSmulIntBilinFormToRealMemPsdConeStatement
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Data.Fintype.Basic
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MinkowskiWeylOrthantConeIntegralConstraints
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.SumMulEqZeroOfSumToReal
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NonnegSumSmulIntBilinFormToRealMemPsdCone
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -110,7 +114,7 @@ theorem exists_isCell_of_contact (O : Type) [CommRing O] [IsDedekindDomain O] [C
       (K : ℝ) * evalR ψ (∑ i, t i • toReal (u i)) = evalW Λ (∑ i, t i • toReal (u i))) :
     ∃ (s : ℕ) (γ : Fin s → LinearMap.BilinForm ℤ X), IsCell bar ψ γ ∧
       ∀ B ∈ psdCone (bar := bar) (X := X), (K : ℝ) * evalR ψ B = evalW Λ B → B ∈ rcone γ := by
-  obtain ⟨r, v, hiff, hZ⟩ := GlobalTheory.T.minkowskiWeyl_orthant_cone_integral_constraints m A
+  obtain ⟨r, v, hiff, hZ⟩ := _root_.GlobalTheory.MinkWeylReal.cone_orthant_fg m A
     {b | ∃ (a : O) (y z : X), b = fun i => u i (a • y) z - u i y (bar a • z)} hA
   have hbal := sum_mem_realForms_iff bar u hsym
   have hKr : (0 : ℝ) < K := by exact_mod_cast hK
@@ -156,7 +160,7 @@ theorem exists_isCell_of_contact (O : Type) [CommRing O] [IsDedekindDomain O] [C
   · refine ⟨K, linW Λ, hK, hγval, fun β hβ hp => ?_, fun β hβ hp heq => ?_⟩
     · rw [← evalW_toReal]; exact hle β hβ hp
     · have hpsd : toReal β ∈ psdCone (bar := bar) (X := X) := by
-        have := GlobalTheory.T.nonneg_sum_smul_intBilinFormToReal_mem_psdCone O bar X 1 ![β] ![1] (fun i => by fin_cases i; exact hβ)
+        have := _root_.GlobalTheory.PolFan.ConeSub.sum_smul_toReal_mem_psdCone O bar X 1 ![β] ![1] (fun i => by fin_cases i; exact hβ)
           (fun i y => by fin_cases i; exact hp y) (fun i => by fin_cases i; norm_num)
         simpa using this
       obtain ⟨t, ht0, htA, htB⟩ := hcon _ hpsd (by rw [evalR_toReal, evalW_toReal]; exact heq)

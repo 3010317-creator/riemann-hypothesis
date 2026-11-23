@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NoTowerQ
 public import GroundTheory.LocalFields.HerbrandFunction
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowMemUpperRamificationGroupRealStatement
+public import GroundTheory.LocalFields.SeparableClosure
+public import Mathlib.FieldTheory.Galois.Abelian
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowMemUpperRamificationGroupReal
 import GroundTheory.LocalFields.ConductorTransport
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -63,7 +65,7 @@ theorem pow_mem_upperRamificationGroup_of_comm : ∀ (F M : Type) [Field F] [Val
   have h1 : φ.autCongr σ ∈ upperRamificationGroup F f.fieldRange v := by
     rw [← map_upperRamificationGroup_autCongr φ v]
     exact ⟨σ, hσ, rfl⟩
-  have h2 := GlobalTheory.T.pow_mem_upperRamificationGroup_abelian_real F f.fieldRange p e v hv hord _ h1
+  have h2 := _root_.GlobalTheory.PMon.Ram.pow_mem_upperRamificationGroup_real F f.fieldRange p e v hv hord _ h1
   rw [← map_upperRamificationGroup_autCongr φ] at h2
   obtain ⟨τ, hτ, hτσ⟩ := h2
   have hτ' : τ = σ ^ p := φ.autCongr.injective (by simpa [map_pow] using hτσ)

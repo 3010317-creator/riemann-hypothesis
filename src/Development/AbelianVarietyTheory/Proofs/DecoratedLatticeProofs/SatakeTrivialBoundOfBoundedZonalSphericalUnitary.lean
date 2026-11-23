@@ -5,9 +5,12 @@ public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GradedSeriesMulNeZero
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsOpenIsCompactUnitaryIntegralPoints
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasSumUnramifiedZetaSumUnitaryInert
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsSplitOfIsInertAt
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegralRightInvariantEqSumOpenSubgroupCosetsStatement
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SphericalDoublingSectionGraphDiagonalEqStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SummableNormCosetOutStatement
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.MeasureTheory.Function.L1Space.Integrable
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SummableNormCosetOut
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,7 +51,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsSplitOfIsInertAt
 
 @[expose] public section
 
@@ -234,7 +236,7 @@ theorem trivialBound_of_bounded : GlobalTheory.IndefiniteRowSideFullHecke.Spheri
       rw [hny r hr, mul_right_comm, ← pow_add, ← two_mul]
       exact (mul_lt_mul_of_pos_left hρ (by positivity)).trans_eq (mul_inv_cancel₀ (by positivity))
     have hint := ((H L ϖ σ q n hU μ hμK χ hχ s Φ hΦ α0 _ hw0).1 hdom).1
-    have hs := GlobalTheory.T.summable_norm_coset_out' _ μ (KU σ n) hKo hμK _ (fun g k hk => by simp only [hinv g k hk]) hint
+    have hs := _root_.GlobalTheory.summable_norm_coset_out _ μ (KU σ n) hKo hμK _ (fun g k hk => by simp only [hinv g k hk]) hint
     refine hs.congr fun a => ?_
     simp only [hval, mul_one, norm_pow, Complex.norm_real, Real.norm_of_nonneg hr.le]
 
@@ -252,7 +254,7 @@ theorem trivialBound_of_bounded : GlobalTheory.IndefiniteRowSideFullHecke.Spheri
       have h1 := hw.1 1 ⟨k, hk⟩ g
       simp only [OneMemClass.coe_one, one_mul] at h1
       rw [hinv g k hk, h1]
-    have hs := (GlobalTheory.T.summable_norm_coset_out' _ μ (KU σ n) hKo hμK _ hF hint).of_norm
+    have hs := (_root_.GlobalTheory.summable_norm_coset_out _ μ (KU σ n) hKo hμK _ hF hint).of_norm
     have hci := (GlobalTheory.T.integral_right_invariant_eq_sum_open_subgroup_cosets _ μ (KU σ n) hKo hμK (fun g => Φ (io1 σ n g) * w g) _ hF hs.hasSum).2
     rw [hI, hX, hY] at hci
     rw [← closedForm_mul_denom q n _ _ α hdom, hci]

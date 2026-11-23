@@ -1,18 +1,23 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsTwiceDifferentiableAt
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagPotentialLeviFormCellStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.GramLogUnitaryTriangularInvarianceStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsOpenFlagDomainNondegenerateMinorsStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LocalBruhatCellAnalyticCoordinatesStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LogDetComparableGramBoundStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.InFlagDomainOne
+public import ReciprocityTheory.AnalyticForms.LeviForms.IsRegFamilyInhabitStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagPotentialLeviFormCell
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Topology.Instances.Matrix
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.GramLogUnitaryTriangularInvariance
+public import Mathlib.LinearAlgebra.Matrix.Block
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LocalBruhatCellAnalyticCoordinates
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LogDetComparableGramBound
+public import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsOpenFlagDomainNondegenerateMinors
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
-public import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
@@ -140,14 +145,14 @@ theorem plurRe_stepCorr {z0 : Fin e → ℂ} {b : (Fin e → ℂ) → Matrix (Fi
 theorem stepPot_unitary_mul {j : ℕ} {u : Matrix (Fin N) (Fin N) ℂ}
     (hu : gramOf (sigForm N j) u = diagonal fun i => ((sigForm N j i : ℝ) : ℂ))
     (i : Fin N) (g : Matrix (Fin N) (Fin N) ℂ) : stepPot N j i (u * g) = stepPot N j i g := by
-  have h k := (GlobalTheory.T.gram_log_unitary_triangular_invariance N (sigForm N j) k g u 1).1 hu
+  have h k := (_root_.GlobalTheory.CompanionTheory.Ar.PB.gramLog_inv N (sigForm N j) k g u 1).1 hu
   unfold stepPot
   simp only [h]
 
 theorem stepPot_mul_triangular {j : ℕ} (hj : j ≤ N) {c b : Matrix (Fin N) (Fin N) ℂ}
     (hc : InFlagDomain N j c) (hb : b.BlockTriangular id) (hu : IsUnit b.det) (i : Fin N) :
     stepPot N j i (c * b) = stepPot N j i c + stepCorr N j i b := by
-  have h k := (GlobalTheory.T.gram_log_unitary_triangular_invariance N (sigForm N j) k c 1 b).2 hb hu ((GlobalTheory.T.isOpen_flag_domain_nondegenerate_minors N j hj).2 c hc k)
+  have h k := (_root_.GlobalTheory.CompanionTheory.Ar.PB.gramLog_inv N (sigForm N j) k c 1 b).2 hb hu ((_root_.GlobalTheory.CompanionTheory.Ar.PB.flagDomain_open_and_minors N j hj).2 c hc k)
   unfold stepPot stepCorr diagLog
   split_ifs <;> simp only [h] <;> ring
 
@@ -180,7 +185,7 @@ theorem exists_cell_coords {j : ℕ} (hj : j ≤ N) (gc : (Fin e → ℂ) → Ma
       (∀ i, PlurRe z0 fun w => stepPot N j i (gc w) - stepPot N j i (cellMat N (z w))) ∧
       ∀ v, fderiv ℂ z z0 v = 0 ↔
         ((gc z0)⁻¹ * Matrix.of fun a b => fderiv ℂ (fun w => gc w a b) z0 v).BlockTriangular id := by
-  obtain ⟨u, b₀, hu, hb₀, hdet, hub⟩ := GlobalTheory.T.flag_domain_unitary_triangular N j hj (gc z0) hdom.self_of_nhds
+  obtain ⟨u, b₀, hu, hb₀, hdet, hub⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.exists_unitary_translate_flag N j hj (gc z0) hdom.self_of_nhds
   have hgu : IsUnit (gc z0).det := hdom.self_of_nhds.1
   have huu : IsUnit u.det := by
     have : u.det * (gc z0).det = b₀.det := by rw [← Matrix.det_mul, hub]
@@ -190,7 +195,7 @@ theorem exists_cell_coords {j : ℕ} (hj : j ≤ N) (gc : (Fin e → ℂ) → Ma
     intro a b
     simp only [Matrix.mul_apply]
     exact Finset.analyticAt_fun_sum _ fun c _ => analyticAt_const.fun_mul (han c b)
-  obtain ⟨z, b, hz, hb, hz0, hev, hiff⟩ := GlobalTheory.T.local_bruhat_cell_analytic_coordinates e N (fun w => u * gc w) z0 han'
+  obtain ⟨z, b, hz, hb, hz0, hev, hiff⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.holomorphic_factor_big_cell e N (fun w => u * gc w) z0 han'
     (by simpa only [hub] using hb₀) (by simpa only [hub] using hdet)
   refine ⟨z, hz, hz0, fun i => ?_, fun v => ?_⟩
   · have hcell : ∀ᶠ w in 𝓝 z0, InFlagDomain N j (cellMat N (z w)) := by
@@ -198,7 +203,7 @@ theorem exists_cell_coords {j : ℕ} (hj : j ≤ N) (gc : (Fin e → ℂ) → Ma
         (continuous_cellMat N).continuousAt.comp hz.continuousAt
       have hm : {g : Matrix (Fin N) (Fin N) ℂ | InFlagDomain N j g} ∈ 𝓝 (cellMat N (z z0)) := by
         rw [hz0, cellMat_zero N]
-        exact (GlobalTheory.T.isOpen_flag_domain_nondegenerate_minors N j hj).1.mem_nhds inFlagDomain_base
+        exact (_root_.GlobalTheory.CompanionTheory.Ar.PB.flagDomain_open_and_minors N j hj).1.mem_nhds inFlagDomain_base
       exact hc hm
     obtain ⟨ht, hdb, -⟩ := hev.self_of_nhds
     have hd0 : ∀ a, b z0 a a ≠ 0 := by
@@ -234,7 +239,7 @@ theorem levi_of_cell {j : ℕ} (hj : j ≤ N) (i : Fin N) {z0 : Fin e → ℂ} {
       then (1 / 2 : ℝ) * ‖fderiv ℂ z z0 v p‖ ^ 2 else 0 := by
   obtain ⟨H, hH, hev⟩ := hf
   let φ : (Pairs N → ℂ) → ℝ := fun y => stepPot N j i (cellMat N y)
-  have hφ : ContDiffAt ℝ 2 φ 0 := (GlobalTheory.T.flag_potential_levi_form_cell N j hj i 0).1
+  have hφ : ContDiffAt ℝ 2 φ 0 := (_root_.GlobalTheory.CompanionTheory.Ar.PB.levi_stepPot_cell N j hj i 0).1
   have hφ' : ContDiffAt ℝ 2 φ (z z0) := by rwa [hz0]
   have hzR : ContDiffAt ℝ 2 z z0 := (hz.restrictScalars (𝕜 := ℝ)).contDiffAt
   have hc : ContDiffAt ℝ 2 (φ ∘ z) z0 := hφ'.comp z0 hzR
@@ -246,7 +251,7 @@ theorem levi_of_cell {j : ℕ} (hj : j ≤ N) (i : Fin N) {z0 : Fin e → ℂ} {
     linarith
   refine ⟨(hc.add (contDiffAt_const.mul hHR)).congr_of_eventuallyEq hfe, fun v => ?_⟩
   rw [levi_congr hfe v, levi_add_smul 1 hc hHR v, levi_comp v hz hφ', levi_re_analytic hH v, hz0]
-  have hlev := (GlobalTheory.T.flag_potential_levi_form_cell N j hj i (fderiv ℂ z z0 v)).2
+  have hlev := (_root_.GlobalTheory.CompanionTheory.Ar.PB.levi_stepPot_cell N j hj i (fderiv ℂ z z0 v)).2
   simp [φ, rel] at hlev ⊢
   exact hlev
 

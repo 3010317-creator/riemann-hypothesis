@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUniqueLeftBasisCoordsAdicCompletion
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptAwayFromPrimesStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptAwayFromPrimes
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueAct
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SemiabelianHomLieExtends
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ValuesOfFrame
@@ -70,7 +71,7 @@ theorem finrank_eig' (h : 𝔐.IsLinPtOf z P MV A) (s : CMType H ⊕ CMType H) :
   have h1 := hb _ trivial hU
   have h2 : (𝔐.dR s).IsFrameAt b ⟨centre (spMap (algebraMap (𝓞 L) L) ≫ z), 𝔐.all _⟩ :=
     ⟨h1.1, (Lat.patch_of_not _ _ _ fun p hp => PtHt.FrameVal.not_inFibre _ _ p (𝔐.S_prime p hp)).symm.trans h1.2⟩
-  have hlat := (GlobalTheory.T.hodge_cpt_away_from_primes E H D l Xo c (𝓞 c.F) (algebraMap _ _) Y S Ω K J y 𝔐
+  have hlat := (_root_.GlobalTheory.CompanionTheory.Ar.HodgeChar0.lattices_of_char_zero E H D l Xo c (𝓞 c.F) (algebraMap _ _) Y S Ω K J y 𝔐
     (FaithfulSMul.algebraMap_injective _ _) ⟨centre (spMap (algebraMap (𝓞 L) L) ≫ z), 𝔐.all _⟩
     (fun p hp => PtHt.FrameVal.not_inFibre _ _ p hp)).2.2
   obtain ⟨sL, -, hi, hs⟩ :=

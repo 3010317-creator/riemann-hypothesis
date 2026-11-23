@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.LatticeConditions
 public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.TwistedTriples
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsSSRepOfTraceNondegenerateStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsSSRepTraceNondegenerateStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TraceFormSpanRepNondegenerateMapRepIffStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataN
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsSSRepOfTraceNondegenerate
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsSSRepTraceNondegenerate
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TraceFormSpanRepNondegenerateMapRepIff
+public import Mathlib.RingTheory.DedekindDomain.Factorization
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -43,7 +45,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.RingTheory.DedekindDomain.Factorization
 
 @[expose] public section
 
@@ -56,8 +57,8 @@ namespace GlobalTheory.TwistedSelmerCompare
 
 theorem isSSRep_map_iff {Γ K L : Type} [Group Γ] [Field K] [Field L] [CharZero K] [CharZero L] (f : K →+* L)
     {a : ℕ} (ρ : Γ →* GL (Fin a) K) : IsSSRep (mapRep f ρ) ↔ IsSSRep ρ :=
-  ⟨fun h => GlobalTheory.T.isSSRep_of_trace_nondegenerate' Γ K a ρ ((GlobalTheory.T.traceForm_nondegenerate_span_mapRep_iff Γ K L f a ρ).1 (GlobalTheory.T.eq_zero_of_trace_mul_eq_zero_of_isSSRep Γ L a _ h)),
-    fun h => GlobalTheory.T.isSSRep_of_trace_nondegenerate' Γ L a _ ((GlobalTheory.T.traceForm_nondegenerate_span_mapRep_iff Γ K L f a ρ).2 (GlobalTheory.T.eq_zero_of_trace_mul_eq_zero_of_isSSRep Γ K a ρ h))⟩
+  ⟨fun h => _root_.GlobalTheory.TraceSemisimple.isSSRep_of_trace_nondegenerate Γ K a ρ ((_root_.GlobalTheory.traceForm_span_rep_nondegenerate_mapRep_iff Γ K L f a ρ).1 (_root_.GlobalTheory.isSSRep_trace_nondegenerate Γ L a _ h)),
+    fun h => _root_.GlobalTheory.TraceSemisimple.isSSRep_of_trace_nondegenerate Γ L a _ ((_root_.GlobalTheory.traceForm_span_rep_nondegenerate_mapRep_iff Γ K L f a ρ).2 (_root_.GlobalTheory.isSSRep_trace_nondegenerate Γ K a ρ h))⟩
 
 section Param
 

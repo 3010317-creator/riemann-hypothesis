@@ -2,9 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasLevelStd
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TorsTransport
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlgebraicValuationAtLeastAtEmbeddingRingOpsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlgebraicValuationAtLeastBasicPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemHilbertLatticeTwistIffLiftStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlgebraicValuationAtLeastAtEmbeddingRingOps
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlgebraicValuationAtLeastBasicProperties
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemHilbertLatticeTwistIffLift
+public import Development.AbelianVarietyTheory.Definitions.Divisors.JetAnalytic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +46,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Divisors.HasQIff
-public import Development.AbelianVarietyTheory.Definitions.Divisors.JetAnalytic
 
 @[expose] public section
 
@@ -70,12 +70,12 @@ theorem intVec_mem_std {F : Type} [Field F] [NumberField F] (z : Fin 2 → ℤ) 
 
 theorem main : ∀ (l : ℕ) [Fact l.Prime] (lam : algebraicClosure ℚ ℂ →+* ℂ_[l]), ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (N n : ℕ) (L : Lat F) (α : GL (Fin 2) (ZMod N)) (ρ₀ : ℝ), L ≤ stdLat F → (∀ x ∈ stdLat F, (n : 𝓞 F) • x ∈ L) → (∀ v ∈ L, ∀ (j : Fin 2) (i : Emb F), Sz l lam ρ₀ ((i (v j) : ℝ) : ℂ)) → Sz l lam ρ₀ (N : ℂ) → ![0, (n : F)] ∈ twist N L (α : Matrix (Fin 2) (Fin 2) (ZMod N)) ∧ ∀ v ∈ twist N L (α : Matrix (Fin 2) (Fin 2) (ZMod N)), ∀ i : Emb F, Sz l lam ρ₀ ((i (v 0) : ℝ) : ℂ) := by
   intro l _ lam F _ _ _ N n L α ρ₀ hLs hnL hL hN
-  have hR := GlobalTheory.T.algebraicValuationAtLeastAtEmbedding_ring_ops l lam
-  have hZ := GlobalTheory.T.algebraicValuationAtLeast_basic_properties l lam
+  have hR := _root_.GlobalTheory.QFam.SzSum.sz_ring l lam
+  have hZ := _root_.GlobalTheory.SzRules.main l lam
   let A : Matrix (Fin 2) (Fin 2) ℤ := (α : Matrix (Fin 2) (Fin 2) (ZMod N)).map (ZMod.cast : ZMod N → ℤ)
   have hAα : A.map (Int.cast : ℤ → ZMod N) = (α : Matrix (Fin 2) (Fin 2) (ZMod N)) := by
     ext i j; simp [A, ZMod.intCast_cast, ZMod.cast_id']
-  have hI := (GlobalTheory.T.mem_hilbertLatticeTwist_iff_lift F N L A · hLs)
+  have hI := (_root_.GlobalTheory.HilbFam.TwistMem.mem_twist_iff F N L A · hLs)
   rw [← hAα]
   refine ⟨?_, ?_⟩
   · let B : Matrix (Fin 2) (Fin 2) ℤ :=

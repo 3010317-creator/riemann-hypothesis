@@ -3,11 +3,15 @@ module
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocFacOfNeg
 public import Development.AbelianVarietyTheory.Definitions.Divisors.MirSet
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdelicUnitriangularMulMemUnipotentTimesIntegral
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsMirabolicWhittakerReductionCellStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IdeleModuleDetDiagonalUniformiserMulStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LastRowDiagonalMulMemLatticeIffStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LastRowSubSingleNotMemLatticeOfNegExponentStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SphericalLocalFactorNormSqStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRapidInf
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousOfMemSmoothSpan
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsMirabolicWhittakerReductionCell
+public import GroundTheory.GlobalFields.IdeleGroups.IdeleNorms
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IdeleModuleDetDiagonalUniformiserMul
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MeasurePreservingToMixedPiSymm
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LastRowDiagonalMulMemLatticeIff
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LastRowSubSingleNotMemLatticeOfNegExponent
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SphericalLocalFactorNormSq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -136,7 +140,7 @@ theorem cell_identity : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberF
   by_cases hneg : ∃ w, l.1 w (Fin.last m) < 0
   · obtain ⟨w, hw⟩ := hneg
     have hwT : w ∉ T := fun h => by simp [l.2 w h] at hw
-    rw [bInt_of_not_mem _ _ _ _ _ _ _ (GlobalTheory.T.lastRow_sub_single_not_mem_lattice_of_neg_exponent E m T ϖ hϖ J hJ g hg l w hw)]
+    rw [bInt_of_not_mem _ _ _ _ _ _ _ (_root_.GlobalTheory.CellDec.lastRow_sub_notMem_latt E m T ϖ hϖ J hJ g hg l w hw)]
     have h2 : GlobalTheory.RSCell.cellProd T α x (l.1 - l₀.1) = 0 := by
       refine Finset.prod_eq_zero (i := w) ?_ ?_
       · rw [Finsupp.mem_support_iff]
@@ -150,8 +154,8 @@ theorem cell_identity : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberF
     simp
   push_neg at hneg
   have hl₀n : ∀ w, 0 ≤ l₀.1 w (Fin.last m) := fun w => (hl₀ w).ge
-  have hposl := GlobalTheory.T.lastRow_diagonal_mul_mem_lattice_iff E m T ϖ hϖ J hJ g hg l hneg
-  have hposl₀ := GlobalTheory.T.lastRow_diagonal_mul_mem_lattice_iff E m T ϖ hϖ J hJ g hg l₀ hl₀n
+  have hposl := _root_.GlobalTheory.CellDec.lastRow_tl_mul_mem_latt_iff E m T ϖ hϖ J hJ g hg l hneg
+  have hposl₀ := _root_.GlobalTheory.CellDec.lastRow_tl_mul_mem_latt_iff E m T ϖ hϖ J hJ g hg l₀ hl₀n
   by_cases hI : (fun i => pFin E (g.val (Fin.last m) i)) - Pi.single (Fin.last m) 1 ∈ GlobalTheory.ThetaPoisson.latt (m + 1) J
   swap
   · rw [bInt_of_not_mem _ _ _ _ _ _ _ (fun h => hI (hposl.1 h)),
@@ -164,8 +168,8 @@ theorem cell_identity : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberF
   · simp [hΦu]
   have hunit : IsUnit (pInf E (g.val (Fin.last m) (Fin.last m))) :=
     GlobalTheory.RSTheta.isUnit_of_mem_rowSet (hΦ (subset_tsupport _ hΦu))
-  obtain ⟨p, hp, hpl⟩ := GlobalTheory.T.exists_mirabolic_whittaker_reduction_cell E m T ϖ F U J hU hK hN horb g hg hunit hI
-  rw [hpl l, hpl l₀, GlobalTheory.T.ideleModule_det_diagonalUniformiser_mul E (m + 1) ϖ hϖ l.1 g, GlobalTheory.T.ideleModule_det_diagonalUniformiser_mul E (m + 1) ϖ hϖ l₀.1 g]
+  obtain ⟨p, hp, hpl⟩ := _root_.GlobalTheory.WhitRed.exists_mirabolic E m T ϖ F U J hU hK hN horb g hg hunit hI
+  rw [hpl l, hpl l₀, _root_.GlobalTheory.CellDec.DetMod.ideleModule_det_tl_mul E (m + 1) ϖ hϖ l.1 g, _root_.GlobalTheory.CellDec.DetMod.ideleModule_det_tl_mul E (m + 1) ϖ hϖ l₀.1 g]
   have hpr := hprof p hp ν (fun w => by rw [hνw]; exact hneg w)
   rw [hνl] at hpr
   rw [hpr]
@@ -180,7 +184,7 @@ theorem cell_identity : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberF
     rw [ENNReal.ofReal_prod_of_nonneg (fun w _ => by positivity)]
     refine Finset.prod_congr rfl fun w hw => ?_
     have hwT : w ∉ T := fun h => (Finsupp.mem_support_iff.1 hw) (hνT w h)
-    rw [dite_eq_right hwT, dite_eq_right hwT, ← GlobalTheory.T.spherical_local_factor_norm_sq (Ideal.absNorm w.asIdeal) (Nat.pos_of_ne_zero (by
+    rw [dite_eq_right hwT, dite_eq_right hwT, ← _root_.GlobalTheory.RSCell.locFac_eq_wtS_sphZ (Ideal.absNorm w.asIdeal) (Nat.pos_of_ne_zero (by
       rw [Ne, Ideal.absNorm_eq_zero_iff]; exact w.ne_bot)) m (α ⟨w, hwT⟩) x (ν.1 w) (by rw [hνw]; exact hneg w),
       ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_mul (by positivity), ENNReal.ofReal_pow (norm_nonneg _),
       ofReal_norm_eq_enorm]

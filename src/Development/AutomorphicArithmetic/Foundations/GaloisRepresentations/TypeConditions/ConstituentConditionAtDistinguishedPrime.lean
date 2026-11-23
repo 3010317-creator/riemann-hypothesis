@@ -2,13 +2,18 @@ module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.TypeConditions.DistinctAbsIrredConstituents
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.TypeConditions.TrivialLocalCondition
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsConjDoubleBlockOfIsoSubspacesStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsEmbeddingPadicAlgClPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsFiniteExtAbsIrrSubStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.SumRepresentations
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsConjDoubleBlockOfIsoSubspaces
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.NumberTheory.Padics.Complex
+public import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsEmbeddingPadicAlgClPlace
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataN
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsFiniteExtAbsIrrSub
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeGaloisLocalWeights
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeGaloisLocalWeightsDeRham
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeGaloisRepQbarConjugateUniqueStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsHeckeGaloisQOfIsHeckeGaloisStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeGaloisRepQbarConjugateUnique
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsHeckeGaloisQOfIsHeckeGalois
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplitBCOfGalIso
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.TypeConditions.GoodRCongr
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.TypeConditions.SplitBCOfGalIso
@@ -205,7 +210,7 @@ theorem constituentCondition_of_noRepeatedFactor (D : D7) (i : D.nd.Loc) (r : D.
     rw [← mapRep_comp, ← mapRep_comp, e]
     exact (hr x).2.1
   obtain ⟨K', hF, hA, hFD, hsplit⟩ :=
-    GlobalTheory.T.exists_finiteDimensional_ext_irrSub_absIrr (fun x => mapRep (algebraMap (D.nd.O i) (Kf D.nd i)) (r x)) hss
+    _root_.GlobalTheory.SplitField.exists_finite_ext_absIrrSub (fun x => mapRep (algebraMap (D.nd.O i) (Kf D.nd i)) (r x)) hss
   refine ⟨K', hF, hA, hFD, fun x => ⟨?_, ?_⟩⟩
   · rw [mapRep_comp]; exact hsplit x
   · intro W₁ W₂ h1 h2 hdis hiso
@@ -227,7 +232,7 @@ theorem constituentCondition_of_noRepeatedFactor (D : D7) (i : D.nd.Loc) (r : D.
       apply SumRepresentations.isSSRep_descent (L := Qbar (D.nd.l i))
       show IsSSRep (mapRep f'.toRingHom _)
       rw [hQ]; exact (hr x).2.1
-    obtain ⟨d, u, σ, υ, h, Pm, hd, hrel⟩ := GlobalTheory.T.exists_conj_double_block_of_iso_subspaces _ W₁ W₂ hssK h1.2.1 h2.2.1 h1.1 hdis hiso
+    obtain ⟨d, u, σ, υ, h, Pm, hd, hrel⟩ := _root_.GlobalTheory.DoubleBlock.exists_conj_double _ W₁ W₂ hssK h1.2.1 h2.2.1 h1.1 hdis hiso
     exact hN x K' _ f'.toRingHom e' d u σ υ h Pm hd hrel
 
 theorem constituentCondition_of_hodgeJumps (D : D7) (ht : SumRepresentations.tie0 D) (i : D.nd.Loc)
@@ -235,7 +240,7 @@ theorem constituentCondition_of_hodgeJumps (D : D7) (ht : SumRepresentations.tie
     (hon : ∀ x, ∀ w ∈ placesOver D.host.E (D.nd.l i), D.naut.IsdRW i (mapRep (iotaOQ D.nd D.naut i) (r x)) w ∧
       ∀ τ, InducesW D.nd i τ w → D.naut.jumpsW i (mapRep (iotaOQ D.nd D.naut i) (r x)) τ = D.naut.locAutHodgeTateWeightsLevelZero i τ) :
     DistinctAbsIrredConstituents D.nd i r := by
-  have hr := fun x => GlobalTheory.T.isHeckeGaloisQ_of_isHeckeGalois' D i x (r x) (hg x)
+  have hr := fun x => _root_.GlobalTheory.NRows.isHeckeGaloisQ_of_isHeckeGalois D i x (r x) (hg x)
   refine constituentCondition_of_noRepeatedFactor D i r hr fun x K' _ f f' e' d u σ υ h Pm hd hrel => ?_
   have hQ : mapRep f' (mapRep f (r x)) = mapRep (iotaOQ D.nd D.naut i) (r x) := by rw [← mapRep_comp, e']
   have hrelQ := rel_map' f' h _ σ υ Pm hrel
@@ -245,7 +250,7 @@ theorem constituentCondition_of_hodgeJumps (D : D7) (ht : SumRepresentations.tie
   have hcσ : SumRepresentations.At.ContQ D.nd i (mapRep f' σ) :=
     (continuous_blocks' (SumRepresentations.At.sumRep (mapRep f' σ) (mapRep f' σ)) (mapRep f' σ) (mapRep f' σ) rfl 1 (fun g => by simp) hcA).1
   obtain ⟨P, hP⟩ := D.naut.pt_surj i x
-  obtain ⟨τ, w, hτw⟩ := GlobalTheory.T.exists_padicAlgCl_embedding_and_place_norm_lt_one D.host.E (D.nd.l i)
+  obtain ⟨τ, w, hτw⟩ := _root_.GlobalTheory.exists_embedding_padicAlgCl_place D.host.E (D.nd.l i)
   have hpl : ∀ w', InducesW D.nd i τ w' → w' ∈ placesOver D.host.E (D.nd.l i) :=
     fun w' hw' => mem_of_induces' D.host.E (D.nd.l i) τ w' hw'
   have hτ : InducesW D.nd i τ w := hτw
@@ -257,7 +262,7 @@ theorem constituentCondition_of_hodgeJumps (D : D7) (ht : SumRepresentations.tie
 theorem constituentCondition_at_distinguishedPrime (D : D7) (h5 : SumRepresentations.adm5 D) (i : D.nd.Loc) (k : Fin 2) (hl : D.nd.l i = D.host.g k)
     (hL : GlobalTheory.CoefDuty.Live D.nd i) (r : D.nd.X i → (Formalism.ConjugateSelfDual.G D.host.E D.nd.Om →* GL (Fin D.R.nV) (D.nd.O i)))
     (hg : GoodR D.nd i r) (hb : ResidualCharpolyIndependent D.nd i r) : DistinctAbsIrredConstituents D.nd i r :=
-  constituentCondition_of_noRepeatedFactor D i r (fun x => GlobalTheory.T.isHeckeGaloisQ_of_isHeckeGalois' D i x (r x) (hg x)) fun x _ _ f f' e' _ _ σ υ h Pm hd hrel =>
+  constituentCondition_of_noRepeatedFactor D i r (fun x => _root_.GlobalTheory.NRows.isHeckeGaloisQ_of_isHeckeGalois D i x (r x) (hg x)) fun x _ _ f f' e' _ _ σ υ h Pm hd hrel =>
     noDouble_of_live D h5 i k hl hL r hg hb x f (by
       have := SumRepresentations.iotaOQ_injective D.nd D.naut i
       rw [← e'] at this
@@ -266,7 +271,7 @@ theorem constituentCondition_at_distinguishedPrime (D : D7) (h5 : SumRepresentat
 theorem lgc (D : D7) (t0 : SumRepresentations.tie0 D) (a2 : AutomorphicGaloisAdmissible D.nd D.naut) (a5 : SumRepresentations.adm5 D) : large₂ D := by
   intro i x P Pa hP hPa ρ hρ
   obtain ⟨ρ0, hc, hs, hw, hl⟩ := isoRep D t0 a2 i P Pa hPa
-  obtain ⟨Pm, hPm⟩ := GlobalTheory.T.heckeGaloisRepQbar_conjugate_unique D a5 i x ρ0 ρ (heckeQ D i x P Pa hP hPa ρ0 hc hs hw) hρ
+  obtain ⟨Pm, hPm⟩ := _root_.GlobalTheory.RepConjUniq.main D a5 i x ρ0 ρ (heckeQ D i x P Pa hP hPa ρ0 hc hs hw) hρ
   obtain ⟨c1, c2, c3⟩ := (t0.2.2.2.2.2 i).2.1 _ ρ0 ρ hc Pm hPm
   refine ⟨fun w h => by rw [c2 w (Or.inl h)]; exact hw w h, fun w h hn => ⟨(c1 w h).2 (hl w h hn).1,
     by rw [c2 w (Or.inr (hl w h hn).1)]; exact (hl w h hn).2.1, fun τ hτ => ?_⟩⟩
@@ -297,7 +302,7 @@ theorem heckeGaloisFamilyProperties_of_admissible (D : D7) (t0 : SumRepresentati
   have exq : ∃ rq : D.nd.X i → (G D.host.E D.nd.Om →* GL (Fin D.R.nV) (Qbar (D.nd.l i))),
       ∀ x, SumRepresentations.At.IsHeckeGaloisQ D.nd D.naut i x (rq x) := ⟨fun x => (ex i x).choose, fun x => (ex i x).choose_spec⟩
   refine ⟨⟨exq, SumRepresentations.exists_GoodR D.nd D.naut hO i exq⟩, point_determines D a1 a5 ex lg i, fun r hr => ?_⟩
-  have he := fun x => GlobalTheory.T.isHeckeGaloisQ_of_isHeckeGalois' D i x (r x) (hr x)
+  have he := fun x => _root_.GlobalTheory.NRows.isHeckeGaloisQ_of_isHeckeGalois D i x (r x) (hr x)
   have g1 : SumRepresentations.At.G1 D.nd i r := SumRepresentations.charpoly_clause_of_chebotarev D.nd a5.2.2.1 i r hr
   have gb : ResidualCharpolyIndependent D.nd i r := SumRepresentations.residual_charpoly_of_chebotarev_clause D.nd i r g1
   have cu := crys_unram_of_lgc D t0 a1 lg i r he

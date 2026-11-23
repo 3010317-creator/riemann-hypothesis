@@ -1,9 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.RangeShape
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteDimStablePolyAveragesWeightsStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.TCoefMInMMul
+public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DefsRep
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteDimStablePolyAveragesWeights
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsReproducingPolynomialValueAtOneMaxCompactStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformFinitenessOfReproducingPolynomialAveraginStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformFinitenessOfReproducingPolynomialAveragin
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,6 +47,6 @@ import Mathlib.Topology.Sheaves.Init
 
 namespace GlobalTheory.PsCo.Pc3
 
-theorem uFin : UFin := GlobalTheory.T.uniformFiniteness_of_reproducingPolynomial_averaging GlobalTheory.T.exists_reproducingPolynomial_valueAtOne_maxCompact GlobalTheory.T.exists_finiteDim_stable_polyAverages_weights
+theorem uFin : UFin := _root_.GlobalTheory.PsCo.Pc3.uFin_of' GlobalTheory.T.exists_reproducingPolynomial_valueAtOne_maxCompact _root_.GlobalTheory.PsCo.PolyAvg.polyAvg
 
 end GlobalTheory.PsCo.Pc3

@@ -8,8 +8,10 @@ public import Mathlib.Tactic.ENatToNat
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeTateWeilOpenChart
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NatCastSmulMemHtLat
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SectionExtendsFromStalkPullbackStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionLiftIsClosedImmersionStatement
+import Mathlib.AlgebraicGeometry.Morphisms.ClosedImmersion
+import Mathlib.Combinatorics.Quiver.ReflQuiver
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SectionExtendsFromStalkPullback
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionLiftIsClosedImmersion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -144,7 +146,7 @@ theorem lift_sec {X : Scheme.{0}} (G : Over X) [GrpObj G] [IsSeparated G.hom] {R
       ∀ {B : Type} [CommRing B] (y : Spec (CommRingCat.of B) ⟶ Γ.G.left)
         (b : Spec (CommRingCat.of B) ⟶ Spec (X.presheaf.stalk q)), y ≫ Γ.G.hom = b ≫ a →
         ∀ hy : ⊤ ≤ (y ≫ i) ⁻¹ᵁ W, valAt (y ≫ i) W hy f = valAt y ⊤ le_top s := by
-  haveI := GlobalTheory.T.torsion_lift_is_closed_immersion G R T Γ x N i h
+  haveI := _root_.GlobalTheory.CompanionTheory.Ar.BT.isClosedImmersion_torsion_lift G R T Γ x N i h
   let c : pullback Γ.G.hom a ⟶ pullback G.hom (X.fromSpecStalk q) :=
     pullback.lift (pullback.fst _ _ ≫ i) (pullback.snd _ _) (by
       rw [Category.assoc, h.isOver, ← ha, pullback.condition_assoc])
@@ -167,7 +169,7 @@ theorem lift_sec {X : Scheme.{0}} (G : Over X) [GrpObj G] [IsSeparated G.hom] {R
       rw [Over.w]
       rfl
     exact e
-  obtain ⟨W, f, hW, hf⟩ := GlobalTheory.T.section_extends_from_stalk_pullback G.hom q _ hover c (((pullback.fst Γ.G.hom a).app ⊤).hom s)
+  obtain ⟨W, f, hW, hf⟩ := _root_.GlobalTheory.CompanionTheory.Ggeo.LocalLift.exists_open_extension G.hom q _ hover c (((pullback.fst Γ.G.hom a).app ⊤).hom s)
   refine ⟨W, f, hW, fun {B} _ y b hy hyW => ?_⟩
   let y' : Spec (CommRingCat.of B) ⟶ pullback Γ.G.hom a := pullback.lift y b hy
   have e1 : y ≫ i = y' ≫ c ≫ pullback.fst _ _ := by

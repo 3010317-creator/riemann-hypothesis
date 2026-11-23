@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSubquotientOfEquiv
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MultiProdEquivStandardBlocksStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsSubquotientDetRepParInd
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MultiProdEquivStandardBlocks
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,7 +56,7 @@ theorem hasSupport_std : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalS
   have hd : ∑ a, (x a).1 = N := by
     have := Fintype.card_congr e
     simpa [Fintype.card_sigma] using this
-  obtain ⟨φ⟩ := GlobalTheory.T.multiProd_equiv_standard_blocks k (fun a => (x a).1) hd e _ (fun a => (x a).rep)
+  obtain ⟨φ⟩ := _root_.GlobalTheory.CompanionTheory.GenMultiProd.multiProd_equiv_stdBlocks k (fun a => (x a).1) hd e _ (fun a => (x a).rep)
   exact ⟨h, x, hd, hs, fun a => ⟨(hc a).1, (hc a).2.2⟩, hsq.trans (GlobalTheory.JacStages.isSubquotient_of_equiv φ)⟩
 
 end GlobalTheory.CompanionTheory.GenSupp

@@ -3,11 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsSmoothModerateOfIsAutFunSm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicThetaSumNormLePolynomialScale
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DarbouxCoordsRationalPointsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzThetaPolynomialGrowthStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorusActionModelCoordinatesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationPointwiseArchimedeanDecayBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WittFrameDarbouxCoordinatesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DarbouxCoordsRationalPoints
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzThetaPolynomialGrowth
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EvIInfScaleMul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorusActionModelCoordinates
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationPointwiseArchimedeanDecayBound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WittFrameDarbouxCoordinates
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +47,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EvIInfScaleMul
 
 @[expose] public section
 
@@ -122,12 +122,12 @@ theorem theta_torus_le : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
       (a' : GL (Fin n) (AE F E)) = HA.mat (AF F) σ ((1 : E) • X.J.map σ) a → ∀ (y : UA σ X.J) (h : UA σ W.J),
       ‖theta om Φ (a' * y) h‖ ≤ C * ((ht y : ℝ) * ht h) ^ k * ∏ i, t i ^ (Module.finrank ℚ F * d) := by
   intro F E _ _ _ _ _ σ B n d X W M χX χW om r s r' s' hP r₀ Xf Yf hWitt c hc Φ hΦ
-  obtain ⟨co, blk, hrat, hcard, hact⟩ := GlobalTheory.T.witt_frame_darboux_coordinates F E σ B n d X W M χX χW om r s r' s' hP r₀ Xf Yf hWitt
-  obtain ⟨M₁, om₁, e, c₀, hco, hP₁, hc₀, he⟩ := GlobalTheory.T.darboux_coords_rational_points F E σ B n d X W M χX χW om r s r' s' hP co hrat
+  obtain ⟨co, blk, hrat, hcard, hact⟩ := _root_.GlobalTheory.TorusAdapted.adapted_torus F E σ B n d X W M χX χW om r s r' s' hP r₀ Xf Yf hWitt
+  obtain ⟨M₁, om₁, e, c₀, hco, hP₁, hc₀, he⟩ := _root_.GlobalTheory.ModelChangeTo.change_to_coordinates F E σ B n d X W M χX χW om r s r' s' hP co hrat
   obtain ⟨N₀, k₃, C₃, hlat⟩ := GlobalTheory.LatScaleSum.thetaSum_norm_le_pow F (Fin n × Fin d)
   have heΦ := (he Φ hΦ).1
-  obtain ⟨C₁, k₁, hdec⟩ := GlobalTheory.T.weilRepresentation_pointwise_archimedeanDecay_bound F E σ B n d X W M₁ χX χW om₁ r s r' s' hP₁ (e Φ) heΦ N₀
-  obtain ⟨C₂, k₂, hden⟩ := GlobalTheory.T.schwartz_theta_polynomial_growth F E σ B n d X W M₁ χX χW om₁ r s r' s' hP₁ (e Φ) heΦ
+  obtain ⟨C₁, k₁, hdec⟩ := _root_.GlobalTheory.ArchDecay.om_bound_arch F E σ B n d X W M₁ χX χW om₁ r s r' s' hP₁ (e Φ) heΦ N₀
+  obtain ⟨C₂, k₂, hden⟩ := _root_.GlobalTheory.FinDenom.exists_denominator_of_finite_component F E σ B n d X W M₁ χX χW om₁ r s r' s' hP₁ (e Φ) heΦ
   set c' : ℝ := min 1 c ^ r₀ with hc'def
   have hc'0 : 0 < c' := pow_pos (lt_min one_pos hc) _
   have hc'1 : c' ≤ 1 := pow_le_one₀ (lt_min one_pos hc).le (min_le_left _ _)
@@ -143,7 +143,7 @@ theorem theta_torus_le : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     | none => exact hc'1
     | some i => exact tlow i
   have hupos : ∀ j, 0 < u j := fun j => hc'0.trans_le (hulow j)
-  obtain ⟨κ, hκ, hom⟩ := GlobalTheory.T.torus_action_model_coordinates F E σ B n d X W M₁ χX χW om₁ r s r' s' hP₁ a' u hupos
+  obtain ⟨κ, hκ, hom⟩ := _root_.GlobalTheory.TorusDilate.main F E σ B n d X W M₁ χX χW om₁ r s r' s' hP₁ a' u hupos
     (by rw [hco]; exact hact t tpos a hta a' ha')
 
   have hΨ0 : om (y, h) Φ ∈ schA F (Fin n × Fin d) := (IsUWeilPair.isUSplitting hP.weil).pres _ _ hΦ

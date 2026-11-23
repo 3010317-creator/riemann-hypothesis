@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRapidInf
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AutomorphicFormGLContinuousStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConstantTermEqZeroStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExpoConjOfIsCsd
+public import GroundTheory.AutomorphicForms.AutomorphicFormSpaces.ConstantTerm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConstantTermEqZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsConjFiniteUnipotentMemOpenSubgroup
 public import GroundTheory.AutomorphicForms.MultiplicityOne.Injective
 import Mathlib.Algebra.Order.Floor.Extended
@@ -51,7 +53,7 @@ theorem eq_zero_of_whit_eq_zero : ∀ (E : Type) [Field E] [NumberField E] [_roo
     IsCuspForm φ → (∀ g, GlobalTheory.JSW.whit φ.1 g = 0) → φ = 0 := by
   intro E _ _ _ a φ hφ hW
   have hc : Continuous φ.1 := GlobalTheory.T.automorphicForm_GL_continuous E a φ hφ.1
-  have hcusp := GlobalTheory.T.isCuspidal_of_isCuspForm' E a φ hφ
+  have hcusp := _root_.GlobalTheory.CuspRep.IsCuspForm.constantTerm_eq_zero E a φ hφ
   have hl : GroundTheory.Automorphic.AutomorphicForm.IsLeftInvariant (K := E) (n := a) φ.1 :=
     fun γ g => hφ.1.left γ g
   let V : Subgroup (GL (Fin a) (Af E)) :=

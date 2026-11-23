@@ -3,7 +3,7 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsFlatAnIffIsConstMul
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsGenOfIsVBOne
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LinearIndependentEigProj
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.CmTypeValuationEmbeddingStatement
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.CmTypeValuationEmbedding
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AdaptedBasesChangeByBlockMatricesStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AdaptedBasisSpansEigenspaceStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BasisOfSubmoduleIffUniqueCoordsStatement
@@ -24,7 +24,8 @@ public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeLattice
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IotaMultiLinearCombinationDetStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsCombTangentIffLinearSumStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NumberFieldEmbeddingsIntoCpIntegralStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.OrderValuationCompareStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsGenericFlag
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.OrderValuationCompare
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ReduceLatticeActionToResidueStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ReduceLatticeCoordsToResidueStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ResidueHodgeLatticeAdaptedBasisStatement
@@ -127,7 +128,7 @@ theorem value_at_point : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   have hinv : ∀ a, H.bar (H.bar a) = a := fun a => (GlobalTheory.T.cm_conjugation_compat_complex_conj E H τ a).2
   have hbarF : ∀ a : 𝓞 E, inE c (ComplexEmbedding.conjugate τ) (a : E) = inE c τ (H.bar a : 𝓞 E) := fun a =>
     Subtype.ext (GlobalTheory.T.cm_conjugation_compat_complex_conj E H τ a).1
-  obtain ⟨gm, hgm0, hgm⟩ := GlobalTheory.T.cm_type_valuation_embedding E (OCp p) ℂ_[p] H.bar (κ.comp (inE c τ))
+  obtain ⟨gm, hgm0, hgm⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.det_adapted_eq_unit_mul_const E (OCp p) ℂ_[p] H.bar (κ.comp (inE c τ))
     (κ.comp (inE c (ComplexEmbedding.conjugate τ)))
     (fun s => Module.finrank Z.Ω (HT.eigSp Z.ρ (Z.inc.comp (inE c (f s))))) D.p D.q
     (NormedField.valuation (K := ℂ_[p])) hI hℓ₀ hint hcard (fun a => by simp only [RingHom.comp_apply, hbarF]) hinv
@@ -312,7 +313,7 @@ theorem value_at_point : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   rw [hϖv] at hValϖ
   have hValϖ' := hval dR
   rw [← hdv] at hValϖ'
-  obtain ⟨uV, huV⟩ := GlobalTheory.T.order_valuation_compare Y.X Z.Ω (Z.ξ₀ ≫ Y.j) _ (α / κ') (Z.inc (β ϖ)) M a V K z h₂ (A'Ω * B).det (ψ dR) (βK (β ϖ))
+  obtain ⟨uV, huV⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.z_value_of_order Y.X Z.Ω (Z.ξ₀ ≫ Y.j) _ (α / κ') (Z.inc (β ϖ)) M a V K z h₂ (A'Ω * B).det (ψ dR) (βK (β ϖ))
     Z.gen (hord _) hgen (by rw [hz]; exact hValϖ') (by rw [hz]; exact hValϖ) hβ0
 
   have hmemu : ∀ i, u' i ∈ 𝓗.HL ⟨_, h₁⟩ := hu'm

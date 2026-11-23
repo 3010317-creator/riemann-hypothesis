@@ -1,17 +1,18 @@
 module
 
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ArchimedeanSelfdualMeasurePiStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ArchimedeanSelfdualSymmetricFormUniqueStatement
+public import Formalism.UnipotentAdelicQuotients.SWXSDefs
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ArchimedeanSelfdualMeasurePi
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ArchimedeanSelfdualSymmetricFormUnique
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CompletionIsLocalRing
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ExistsEqAdelicCharMul
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.LinearChangeEulerProduct
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.NonarchimedeanSelfdualMeasurePi
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.NonarchimedeanSelfdualSymmetricFormUnique
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.SelfDualStandardMeasures
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.SelfdualMeasureTwistBySymmetricAuto
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.UnitProductClosureProperties
 import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteAdelesLocalRingTotallyReal
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.LinearChangeEulerProductStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.NonarchimedeanSelfdualMeasurePiStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.NonarchimedeanSelfdualSymmetricFormUniqueStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.SelfDualStandardMeasuresStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.SelfdualMeasureTwistBySymmetricAutoStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.UnitProductClosurePropertiesStatement
 import GroundTheory.GlobalFields.LocalFieldAtPlace
 import GroundTheory.LocalFields.LocalFourierHaar
 import Mathlib.Algebra.Order.Floor.Extended
@@ -95,7 +96,7 @@ theorem selfDual_mat (ψR : R → ℂ) (M : Matrix ι ι R) (hM : M.IsSymm) (hu 
     (μ : Measure (ι → R)) (h : SelfDual μ (fun x y => ψR (x ⬝ᵥ y))) (c : ℝ≥0)
     (hc : μ.map (fun x => M *ᵥ x) = c • μ) :
     SelfDual ((NNReal.sqrt c)⁻¹ • μ) (fun x y => ψR (x ⬝ᵥ (M *ᵥ y))) := by
-  refine GlobalTheory.T.selfdual_measure_twist_by_symmetric_auto (ι → R) μ (fun x y => ψR (x ⬝ᵥ y)) h (matE M hu) (fun x y => ?_) c hc
+  refine _root_.GlobalTheory.CompanionTheory.SW.SdChange.selfDual_twist (ι → R) μ (fun x y => ψR (x ⬝ᵥ y)) h (matE M hu) (fun x y => ?_) c hc
   change ψR (x ⬝ᵥ (M *ᵥ y)) = ψR ((M *ᵥ x) ⬝ᵥ y)
   congr 1
   rw [Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose, hM.eq]
@@ -167,18 +168,18 @@ end Lems
 
 theorem selfDual_coord : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal F → ∀ (laminf : Measure (Ainf F)) (lam : ∀ v : HeightOneSpectrum (𝓞 F), Measure (Fv F v)), IsStdInf laminf → (∀ v, IsStdV v (lam v)) → ∀ ψ, IsCharAF F ψ → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (B : Matrix ι ι F), B.IsSymm → B.det ≠ 0 → ∃ (cinf : ℝ≥0) (c : HeightOneSpectrum (𝓞 F) → ℝ≥0), IsUnitProd cinf c ∧ (∀ μ : Measure (ι → Ainf F), SelfDual μ (fun x y => psiInf F ψ (x ⬝ᵥ (B.map (algebraMap F (Ainf F)) *ᵥ y))) ↔ μ = cinf • Measure.pi fun _ => laminf) ∧ ∀ v : HeightOneSpectrum (𝓞 F), (∀ μ : Measure (ι → Fv F v), SelfDual μ (fun x y => psiV F ψ v (x ⬝ᵥ (B.map (algebraMap F (Fv F v)) *ᵥ y))) ↔ μ = c v • Measure.pi fun _ => lam v) := by
   intro F _ _ hF laminf lam hinf hlam ψ hψ ι _ _ B hB hdet
-  obtain ⟨ψ₀, hψ₀, c₀, e₀, hU0, hsd0, hsdv⟩ := GlobalTheory.T.self_dual_standard_measures F hF laminf lam hinf hlam
+  obtain ⟨ψ₀, hψ₀, c₀, e₀, hU0, hsd0, hsdv⟩ := _root_.GlobalTheory.CompanionTheory.SW.SDOne.selfDual_std F hF laminf lam hinf hlam
   obtain ⟨a, ha, hax⟩ := GlobalTheory.CompanionTheory.SW.char_dual F ψ₀ ψ hψ₀ hψ
   have hAdet : (a • B).det ≠ 0 := by
     rw [Matrix.det_smul]
     exact mul_ne_zero (pow_ne_zero _ ha) hdet
   have hAs : (a • B).IsSymm := by
     rw [Matrix.IsSymm, Matrix.transpose_smul, hB.eq]
-  obtain ⟨c₁, e₁, hU1, hm, hmv⟩ := GlobalTheory.T.addHaar_map_mulVec_eq_smul_at_all_places F ι (a • B) hAdet
-  have hsq := (GlobalTheory.T.unit_product_closure_properties F c₁ c₁ e₁ e₁ hU1 hU1).2.2.2.2.2.1
-  have hinv := (GlobalTheory.T.unit_product_closure_properties F _ _ _ _ hsq hsq).2.2.2.1
-  have hpow := (GlobalTheory.T.unit_product_closure_properties F c₀ c₀ e₀ e₀ hU0 hU0).2.2.2.2.2.2.1 (Fintype.card ι)
-  have hprod := (GlobalTheory.T.unit_product_closure_properties F _ _ _ _ hinv hpow).2.2.1
+  obtain ⟨c₁, e₁, hU1, hm, hmv⟩ := _root_.GlobalTheory.CompanionTheory.SW.ProdFormula.modulus_matrix F ι (a • B) hAdet
+  have hsq := (_root_.GlobalTheory.CompanionTheory.SW.UnitProdAlg.main F c₁ c₁ e₁ e₁ hU1 hU1).2.2.2.2.2.1
+  have hinv := (_root_.GlobalTheory.CompanionTheory.SW.UnitProdAlg.main F _ _ _ _ hsq hsq).2.2.2.1
+  have hpow := (_root_.GlobalTheory.CompanionTheory.SW.UnitProdAlg.main F c₀ c₀ e₀ e₀ hU0 hU0).2.2.2.2.2.2.1 (Fintype.card ι)
+  have hprod := (_root_.GlobalTheory.CompanionTheory.SW.UnitProdAlg.main F _ _ _ _ hinv hpow).2.2.1
   refine ⟨_, _, hprod, ?_, fun v => ?_⟩
   · obtain ⟨h1, h2, h3, h4, -, -, -, -⟩ := isLocR_Ainf F hF
     haveI := h1; haveI := h2; haveI := h3; haveI := h4
@@ -191,9 +192,9 @@ theorem selfDual_coord : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal
     simp only [hA']
     haveI := hinf.1
     exact iff_of (psiInf F ψ₀) ((a • B).map (algebraMap F (Ainf F))) (hAs.map _)
-      (isUnit_det_map _ hAdet) (c₀ • laminf) laminf c₀ c₁ rfl (GlobalTheory.T.archimedean_selfdual_measure_pi F hF ψ₀ hψ₀ _ hsd0 ι)
-      (by haveI := (GlobalTheory.T.archimedean_selfdual_measure_pi F hF ψ₀ hψ₀ _ hsd0 ι).1; exact hm _ inferInstance)
-      (GlobalTheory.T.archimedean_selfdual_symmetric_form_unique F hF ψ₀ hψ₀ _ hsd0 ι (a • B) hAs hAdet) μ
+      (isUnit_det_map _ hAdet) (c₀ • laminf) laminf c₀ c₁ rfl (_root_.GlobalTheory.CompanionTheory.SW.selfDual_pi_inf F hF ψ₀ hψ₀ _ hsd0 ι)
+      (by haveI := (_root_.GlobalTheory.CompanionTheory.SW.selfDual_pi_inf F hF ψ₀ hψ₀ _ hsd0 ι).1; exact hm _ inferInstance)
+      (_root_.GlobalTheory.CompanionTheory.SW.selfDual_rationalForm_Ainf_unique F hF ψ₀ hψ₀ _ hsd0 ι (a • B) hAs hAdet) μ
   · obtain ⟨h1, h2, h3, h4, -, -, -, -⟩ := GlobalTheory.CompanionTheory.SW.LocFv.isLocR_Fv F v
     haveI := h1; haveI := h2; haveI := h3; haveI := h4
     haveI : BorelSpace (Fv F v) := ⟨rfl⟩
@@ -206,8 +207,8 @@ theorem selfDual_coord : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal
     haveI := (hlam v).1
     exact iff_of (psiV F ψ₀ v) ((a • B).map (algebraMap F (Fv F v))) (hAs.map _)
       (isUnit_det_map _ hAdet) (e₀ v • lam v) (lam v) (e₀ v) (e₁ v) rfl
-      (GlobalTheory.T.nonarchimedean_selfdual_measure_pi F ψ₀ hψ₀ v _ (hsdv v) ι)
-      (by haveI := (GlobalTheory.T.nonarchimedean_selfdual_measure_pi F ψ₀ hψ₀ v _ (hsdv v) ι).1; exact hmv v _ inferInstance)
-      (GlobalTheory.T.nonarchimedean_selfdual_symmetric_form_unique F ψ₀ hψ₀ v _ (hsdv v) ι (a • B) hAs hAdet) μ
+      (_root_.GlobalTheory.CompanionTheory.SW.PiV.selfDual_pi_v F ψ₀ hψ₀ v _ (hsdv v) ι)
+      (by haveI := (_root_.GlobalTheory.CompanionTheory.SW.PiV.selfDual_pi_v F ψ₀ hψ₀ v _ (hsdv v) ι).1; exact hmv v _ inferInstance)
+      (_root_.GlobalTheory.CompanionTheory.SW.SdUniq.selfDual_unique_coord F ψ₀ hψ₀ v _ (hsdv v) ι (a • B) hAs hAdet) μ
 
 end GlobalTheory.CompanionTheory.SW.SdCoord

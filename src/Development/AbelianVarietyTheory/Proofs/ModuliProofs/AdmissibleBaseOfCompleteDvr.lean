@@ -9,16 +9,18 @@ public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.Degener
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIntegralGauge
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsNumDHomDegenerationValuesFieldExtension
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsNumOf
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaConstantTermRepresentativeDependenceStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.SepticCharacterInjective
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaConstantTermRepresentativeDependence
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusTorsionPointsCorrespondValues
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TxCosetCriterionStatement
+public import Mathlib.Topology.MetricSpace.Ultra.Basic
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TxCosetCriterion
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsGeometricValuesIsoOfIdentificationDvrStatement
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsIsoPolarisedAbelianSchemesDvrOfFieldExtensStatement
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPullbackDegenerationOfValuesIsoDvrStatement
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsUniqueDescentAutomorphismInvariantMorphismStatement
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PolarisedIsoCommutesFieldAutomorphismOfTorsionStatement
-import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.RelationsAreFunctions
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
+import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.RelationsAreFunctions
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -359,11 +361,11 @@ theorem recognition_iff : RecognitionSt ↔ URecDvrSt := by
       exact ⟨v, (hasSum_qMap I hl ho.pow p v).2 a, by rw [hw₀]; exact (hasSum_qMap I' hl' ho.pow _ _).2 b⟩
     have hc : ∀ i (p p' : M'.QT ((n ^ i) ^ 2)), M'.QEq p p' → M'.tx (n ^ i) p' = M'.tx (n ^ i) p := by
       rintro i p p' ⟨z, a, b⟩
-      exact (tsum_congr fun χ => (GlobalTheory.T.thetaConstantTerm_representative_dependence C M' _ ho.pow p p' χ).1 z a b).trans
+      exact (tsum_congr fun χ => (_root_.GlobalTheory.Ex.txT_shift C M' _ ho.pow p p' χ).1 z a b).trans
         ((Equiv.addRight (n ^ i • z)).tsum_eq fun χ => M'.txT (n ^ i) p χ)
     have h0 : c₀ ≠ 0 := by
       rintro rfl
-      obtain ⟨t, -, -, ht⟩ := (GlobalTheory.T.tx_coset_norm_one_and_ne_zero C M' q' hq' n _ hn ho h1 hT' 1 le_rfl).2.2 1
+      obtain ⟨t, -, -, ht⟩ := (_root_.GlobalTheory.tx_coset_criterion C M' q' hq' n _ hn ho h1 hT' 1 le_rfl).2.2 1
       obtain ⟨p, hp⟩ := w₀.onto 1 (1 * t)
       obtain ⟨v, -, b⟩ := hp₀ 1 p
       exact ht ((hc 1 _ _ hp).trans (b.tsum_eq.trans (zero_mul v)))

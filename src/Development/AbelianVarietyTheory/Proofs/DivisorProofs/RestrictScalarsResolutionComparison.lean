@@ -1,11 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrPreservesHomology
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AcyclicResolutionComputesEtaleCohomologyStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafPropertiesStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AcyclicResolutionComputesEtaleCohomology
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtendChainMapAlongQuasiIsoKInjectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictScalarsInjectiveSheafAcyclicStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.GalMapMul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictScalarsInjectiveSheafAcyclic
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SheafComplexSemilinearMapCompBijectiveStatement
+import Mathlib.Algebra.Homology.HomotopyCategory.KInjective
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -84,8 +87,8 @@ theorem restrRes_comparison : ∀ (R S : Type) [CommRing R] [CommRing S] (φ : R
         Sec.map (resι R ((restr φ).obj F)) (show Sec ((restr φ).obj F) U from a)) ∧
       ∀ (E : Spc) (n : ℤ), Function.Bijective (ρ.op.app E n) := by
   intro R S _ _ φ F
-  obtain ⟨_, hinjS, hgeS, hqS, hιS, -⟩ := GlobalTheory.T.chosenInjectiveResolution_etaleSheaf_properties S F
-  obtain ⟨hKR, -, hgeR, -, hιR, -⟩ := GlobalTheory.T.chosenInjectiveResolution_etaleSheaf_properties R ((restr φ).obj F)
+  obtain ⟨_, hinjS, hgeS, hqS, hιS, -⟩ := _root_.GlobalTheory.EtC.ResBasic.res_basic S F
+  obtain ⟨hKR, -, hgeR, -, hιR, -⟩ := _root_.GlobalTheory.EtC.ResBasic.res_basic R ((restr φ).obj F)
   haveI := hgeS; haveI := hqS; haveI := hKR; haveI := hgeR
   haveI : ((rcx φ).obj (res S F)).IsStrictlyGE 0 := restrRes_strictlyGE φ (res S F)
   haveI : QuasiIso (rAug φ (resAug F)) := rAug_quasiIso φ (resAug F)
@@ -108,10 +111,10 @@ theorem restrRes_comparison : ∀ (R S : Type) [CommRing R] [CommRing S] (φ : R
       (fun U s a => semiOfRestr_app φ (res S F) u U s a)
     have hid := (GlobalTheory.T.sheafComplexSemilinearMap_comp_bijective S R (idSemi φ (res S F)) (idSemi φ (res S F)) (𝟙 _) (fun U s a => rfl)).2
       (fun U s => Function.bijective_id) E n
-    have hpush := GlobalTheory.T.acyclic_resolution_computes_etale_cohomology R ((restr φ).obj F) ((rcx φ).obj (res S F)) (rAug φ (resAug F)) u hu
+    have hpush := _root_.GlobalTheory.EtC.acycRes_computes R ((restr φ).obj F) ((rcx φ).obj (res S F)) (rAug φ (resAug F)) u hu
       (fun t P m hm => by
         haveI := hinjS t
-        exact GlobalTheory.T.restrictScalars_injective_sheaf_acyclic R S φ ((res S F).X t) P m hm) E n
+        exact _root_.GlobalTheory.EtC.restr_injective_acyclic R S φ ((res S F).X t) P m hm) E n
     have heq : (semiOfRestr φ (res S F) u).op.app E n =
         fun x => cpush _ u n ((idSemi φ (res S F)).op.app E n x) := funext (hc.1 E n)
     rw [heq]

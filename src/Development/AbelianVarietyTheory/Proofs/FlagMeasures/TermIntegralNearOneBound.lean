@@ -2,10 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NoLeak
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsPowSmulMemOfIsLat
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetTermBasicFactsStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IndexMeasureIntegralEqMeanOverRepresentativesStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ComplementReferenceCompactSubgroup
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetTermBasicFacts
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.Cint
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IndexMeasureIntegralEqMeanOverRepresentatives
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.QuadricCharacterLeakSharesFinite
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsPrincipalIdealRingOfHenselian
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.QuadricCharacterLeakSharesFiniteStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -225,7 +227,7 @@ theorem cint_eq_mean {W : Type} [AddCommGroup W] (A P : AddSubgroup W) (R : Fins
     (g : W → ℂ) (hR : ∀ w ∈ R, w ∈ A) (hR' : ∀ w ∈ A, ∃! x, x ∈ R ∧ w - x ∈ P)
     (hQ : ∀ w ∈ A, ∀ b ∈ P, Q w → Q (w + b)) (hg : ∀ w, ∀ b ∈ P, g (w + b) = g w) :
     cint A (fun u => ind (fun u => u ∈ A ∧ Q u) u * g u) = (∑ u ∈ R.filter Q, g u) / (R.card : ℂ) := by
-  have := (GlobalTheory.T.indexMeasureIntegral_eq_mean_over_representatives A (P ⊓ A) (fun u => ind (fun u => u ∈ A ∧ Q u) u * g u) R inf_le_right ?_ ?_ hR ?_).2.2
+  have := (_root_.GlobalTheory.IdxInt.cint_eq_mean_reps A (P ⊓ A) (fun u => ind (fun u => u ∈ A ∧ Q u) u * g u) R inf_le_right ?_ ?_ hR ?_).2.2
   · rw [this, Finset.sum_filter]
     congr 1
     refine Finset.sum_congr rfl fun u hu => ?_
@@ -250,7 +252,7 @@ theorem cint_eq_mean {W : Type} [AddCommGroup W] (A P : AddSubgroup W) (R : Fins
 
 theorem shares : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] [CharZero F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] (L : LocE F E), ∀ (r k : ℕ) (S : Frames L r k), 4 * r + 7 ≤ k → ∀ (J : ℕ) (d : S.Datum) (Λ : Submodule L.O S.V), S.IsTerm d Λ → |(cint (S.refU J Λ) (ind fun u => u ∈ S.refU J Λ ∧ S.InZ u)).re * (S.q : ℝ) ^ S.a - 1| ≤ 8 / 7 * (S.q : ℝ) ^ (1 - ((k : ℤ) - 2 * r - 3)) ∧ (cint (S.refU J Λ) (ind fun u => u ∈ S.refU J Λ ∧ S.InZ u ∧ ¬ S.NoLeak Λ u)).re * (S.q : ℝ) ^ S.a ≤ 16 / 7 * (S.q : ℝ) ^ (1 - ((k : ℤ) - 2 * r - 3)) ∧ ∀ y : S.V, (∃ u ∈ S.refU J Λ, L.psi0 (S.h y u) ≠ 1) → ‖cint (S.refU J Λ) (fun u => ind (fun u => u ∈ S.refU J Λ ∧ S.InZ u) u * L.psi0 (S.h y u))‖ * (S.q : ℝ) ^ S.a ≤ 8 / 7 * (S.q : ℝ) ^ (1 - ((k : ℤ) - 2 * r - 3)) := by
   intro F _ _ _ _ _ E _ _ _ L r k S hk J d Λ hT
-  have hΛ : IsSD L S.Hm Λ := (GlobalTheory.T.hermitian_double_coset_term_basic_facts L r k S d Λ hT).1
+  have hΛ : IsSD L S.Hm Λ := (_root_.GlobalTheory.HL.TermBasic.term_basic L r k S d Λ hT).1
   have hq : (0 : ℝ) < (S.q : ℝ) ^ S.a := by
     obtain ⟨-, -, -, -, -, -, h7, -⟩ := GlobalTheory.UnramOrder.order_facts L S.ϖ S.ϖ_irr
     have : 0 < S.q := lt_of_lt_of_le two_pos h7
@@ -267,7 +269,7 @@ theorem shares : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] 
   set ε : ℝ := (S.q : ℝ) ^ (1 - ((k : ℤ) - 2 * r - 3)) with hε
   refine ⟨?_, ?_, ?_⟩
   · obtain ⟨R, h0, h1, h2⟩ := main (S.a.toNat + 1) (by omega) (by omega)
-    have h3 := (GlobalTheory.T.quadric_character_leak_shares_finite L r k S hk J d Λ hT (S.a.toNat + 1) R S.InZ (by omega) (fun _ => Iff.rfl)
+    have h3 := (_root_.GlobalTheory.HL.QuadricShare.shares L r k S hk J d Λ hT (S.a.toNat + 1) R S.InZ (by omega) (fun _ => Iff.rfl)
       h1 (fun u hu hu' => h2 u ⟨hu, hu'⟩)).1
     have h4 := cint_eq_mean _ _ R S.InZ (fun _ => 1) h1 h2 (hZ _ (by omega)) (fun _ _ _ => rfl)
     simp only [mul_one, Finset.sum_const, nsmul_eq_mul] at h4
@@ -283,7 +285,7 @@ theorem shares : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] 
     rw [h6, abs_div, abs_of_pos (div_pos h0 hq), div_le_iff₀ (div_pos h0 hq)]
     exact h3
   · obtain ⟨R, h0, h1, h2⟩ := main (S.a.toNat + 1) (by omega) (by omega)
-    have h3 := (GlobalTheory.T.quadric_character_leak_shares_finite L r k S hk J d Λ hT (S.a.toNat + 1) R S.InZ (by omega) (fun _ => Iff.rfl)
+    have h3 := (_root_.GlobalTheory.HL.QuadricShare.shares L r k S hk J d Λ hT (S.a.toNat + 1) R S.InZ (by omega) (fun _ => Iff.rfl)
       h1 (fun u hu hu' => h2 u ⟨hu, hu'⟩)).2.1
     have h4 := cint_eq_mean _ _ R (fun u => S.InZ u ∧ ¬ S.NoLeak Λ u) (fun _ => 1) h1 h2
       (fun w hw b hb h => ⟨hZ _ (by omega) w hw b hb h.1, fun h' => h.2 (by
@@ -322,7 +324,7 @@ theorem shares : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] 
       rw [mul_one] at this
       unfold Frames.h at this ⊢
       rw [hf_addr, hf_smulr, AlgEquiv.commutes, AddChar.map_add_eq_mul, this, mul_one]
-    have h3 := (GlobalTheory.T.quadric_character_leak_shares_finite L r k S hk J d Λ hT (m + (S.a.toNat + 1)) R S.InZ (by omega) (fun _ => Iff.rfl)
+    have h3 := (_root_.GlobalTheory.HL.QuadricShare.shares L r k S hk J d Λ hT (m + (S.a.toNat + 1)) R S.InZ (by omega) (fun _ => Iff.rfl)
       h1 (fun u hu hu' => h2 u ⟨hu, hu'⟩)).2.2 y (fun u hu => hint u (h1 u hu).1) (by
         obtain ⟨x, ⟨hx, hx'⟩, -⟩ := h2 u hu
         refine ⟨x, hx, ?_⟩

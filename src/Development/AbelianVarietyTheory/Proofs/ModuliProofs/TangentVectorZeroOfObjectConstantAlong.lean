@@ -2,8 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.FiniteHomogeneousInf
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaConstantsLocallyOnBaseStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsIffOfThetaLevelPullbackStatement
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.GoodClass
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaConstantsLocallyOnBase
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsIffOfThetaLevelPullback
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -81,14 +82,14 @@ theorem tangent_eq_constPt_of_tMap : Out.Laws → Out.Laws2 → ∀ (o : Type) [
     exact ⟨fun p q => PrimeSpectrum.ext ((key p).trans (key q).symm)⟩
   have hsub' : Subsingleton (Sp (DualNumber K)) := hsub
   obtain ⟨p⟩ : Nonempty (Sp (DualNumber K)) := inferInstanceAs (Nonempty (PrimeSpectrum (DualNumber K)))
-  obtain ⟨R, _, j, v, hj, ⟨q, _⟩, hv⟩ := GlobalTheory.T.exists_thetaConstants_locally_on_base hL hL2 o g N' J b _ _ t hN p
+  obtain ⟨R, _, j, v, hj, ⟨q, _⟩, hv⟩ := _root_.GlobalTheory.ThetaLocal.exists_hasTh hL hL2 o g N' J b _ _ t hN p
   have hsurj : Function.Surjective j := fun y => ⟨q, Subsingleton.elim _ _⟩
   have hiso : IsIso j := by
     apply isIso_of_isOpenImmersion_of_opensRange_eq_top
     ext y
     simpa using hsurj y
-  have c1 := (hu R _ v).1 ((GlobalTheory.T.hasThetaConstants_iff_of_thetaLevelPullback o g N' J b _ _ u _ _ t x R j v h1).1 hv)
-  have c2 := (hu R _ v).1 ((GlobalTheory.T.hasThetaConstants_iff_of_thetaLevelPullback o g N' J b _ _ u _ _ t (constPt x) R j v h2).1 hv)
+  have c1 := (hu R _ v).1 ((_root_.GlobalTheory.hasTh_iff_of_tmap o g N' J b _ _ u _ _ t x R j v h1).1 hv)
+  have c2 := (hu R _ v).1 ((_root_.GlobalTheory.hasTh_iff_of_tmap o g N' J b _ _ u _ _ t (constPt x) R j v h2).1 hv)
   obtain ⟨β, hβ⟩ := Spec.map_surjective (R := CommRingCat.of o) (S := CommRingCat.of R) (j ≫ x ≫ Y.s)
   have e1 : (j ≫ x) ≫ Y.s = spMap β.hom := by
     rw [Category.assoc]; exact hβ.symm

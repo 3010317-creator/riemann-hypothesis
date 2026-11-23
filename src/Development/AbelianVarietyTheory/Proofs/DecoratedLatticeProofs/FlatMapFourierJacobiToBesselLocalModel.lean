@@ -2,14 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ExistsUnitarySupportedAtPlaceOfMulEqIdem
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PlacesToAdeles
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatFourierJacobiToBesselColumnMulLawsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapLawsFactorFourierJacobiSourceStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierJacobiBesselFlatMapFactorIsLocalModelStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierJacobiBesselFlatMapRowMultiplicationStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierJacobiBesselFlatMapUnipotentLawStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.JacobiToBesselFlatSchwartzAddSmulStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalFlatMapTranslationLawsJacobiToBesselFreeStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilCharacterSplitPlaceExistsContinuousNontriviaStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatFourierJacobiToBesselColumnMulLaws
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ContrFactor
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapLawsFactorFourierJacobiSource
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierJacobiBesselFlatMapFactorIsLocalModel
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierJacobiBesselFlatMapRowMultiplication
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierJacobiBesselFlatMapUnipotentLaw
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsQuasiFam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.JacobiToBesselFlatSchwartzAddSmul
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalFlatMapTranslationLawsJacobiToBesselFree
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilCharacterSplitPlaceExistsContinuousNontrivia
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,22 +59,22 @@ namespace GlobalTheory.LocMod
 theorem flatFB_holds : ∀ (D : D7), FlatLaw D → GlobalTheory.FinPl.FlatLaws D → OmLoc D → FlatFB D := by
   intro D hFL hFLs hOm k _ _ _ _ _ _ p ν hν ψ ψk hχ σ J B st s hs n n' _ _ _ _ c G₀ FW FA F₀ FV hJF hCF hBF Tm hTm
   have hstd : IsStdChar D ψ (-1) := st.weil.std
-  obtain ⟨hcont, hne⟩ := (GlobalTheory.T.weilCharacter_splitPlace_exists_continuous_nontrivial D k p ψ hstd).2.1 ψk hχ
+  obtain ⟨hcont, hne⟩ := (_root_.GlobalTheory.LocChar.weil_char_split D k p ψ hstd).2.1 ψk hχ
   have hc : c = 2 * σ + 1 := hBF.1
   let L : SB (Matrix (n ⊕ Fin c) (n' ⊕ Fin (c + 1)) k) →ₗ[ℂ] (WO J.W₀ B.V₀ → ℂ) :=
     { toFun := fun Φ => flatFB st (Tm Φ)
       map_add' := fun Φ Φ' => by
         simp only [map_add (f := _)]
-        exact (GlobalTheory.T.jacobiToBesselFlatSchwartz_add_smul D hFL ψ hstd σ J B st _ _ (hTm.theta Φ) (hTm.theta Φ')).1
+        exact (_root_.GlobalTheory.FlatAdd.flatFB_add_smul D hFL ψ hstd σ J B st _ _ (hTm.theta Φ) (hTm.theta Φ')).1
       map_smul' := fun a Φ => by
         simp only [map_smul, RingHom.id_apply]
-        exact (GlobalTheory.T.jacobiToBesselFlatSchwartz_add_smul D hFL ψ hstd σ J B st _ _ (hTm.theta Φ) (hTm.theta Φ)).2 a }
-  obtain ⟨L₀, hL₀⟩ := GlobalTheory.T.flatMap_laws_factor_fourierJacobi_source k ψk ν hcont hne hν n n' c σ (WO J.W₀ B.V₀ → ℂ) L hc
-    (GlobalTheory.T.flat_fourierJacobi_to_bessel_column_mul_laws D hFLs hOm k p ψ ψk hχ σ J B st s hs n n' c G₀ FW FA F₀ FV hJF hCF hBF Tm hTm)
-    (GlobalTheory.T.fourierJacobi_bessel_flatMap_row_multiplication D hFLs hOm k p ψ ψk hχ σ J B st s hs n n' c G₀ FW FA F₀ FV hJF hCF hBF Tm hTm)
-    (GlobalTheory.T.localFlatMap_translationLaws_jacobiToBessel_free D hFLs hOm k p ψ ψk hχ σ J B st s hs n n' c G₀ FW FA F₀ FV hJF hCF hBF Tm hTm)
-    (GlobalTheory.T.fourierJacobi_bessel_flatMap_unipotent_law D hFLs hOm k p ψ ψk hχ σ J B st s hs n n' c G₀ FW FA F₀ FV hJF hCF hBF Tm hTm)
-  exact ⟨L₀, GlobalTheory.T.fourierJacobi_bessel_flatMap_factor_isLocalModel D hFLs hOm k p ν hν ψ ψk hχ σ J B st s hs n n' c G₀ FW FA F₀ FV hJF hCF hBF Tm hTm L₀ hL₀, hL₀⟩
+        exact (_root_.GlobalTheory.FlatAdd.flatFB_add_smul D hFL ψ hstd σ J B st _ _ (hTm.theta Φ) (hTm.theta Φ)).2 a }
+  obtain ⟨L₀, hL₀⟩ := _root_.GlobalTheory.PartRed.flRow_factor k ψk ν hcont hne hν n n' c σ (WO J.W₀ B.V₀ → ℂ) L hc
+    (_root_.GlobalTheory.FlatColLawFB.flatFB_mulcol D hFLs hOm k p ψ ψk hχ σ J B st s hs n n' c G₀ FW FA F₀ FV hJF hCF hBF Tm hTm)
+    (_root_.GlobalTheory.LocMod.flatFB_mulrow D hFLs hOm k p ψ ψk hχ σ J B st s hs n n' c G₀ FW FA F₀ FV hJF hCF hBF Tm hTm)
+    (_root_.GlobalTheory.LocMod.flatFB_trans_free D hFLs hOm k p ψ ψk hχ σ J B st s hs n n' c G₀ FW FA F₀ FV hJF hCF hBF Tm hTm)
+    (_root_.GlobalTheory.FlatFBUnip.unip_law D hFLs hOm k p ψ ψk hχ σ J B st s hs n n' c G₀ FW FA F₀ FV hJF hCF hBF Tm hTm)
+  exact ⟨L₀, _root_.GlobalTheory.LocFlatFB.factor_isModel D hFLs hOm k p ν hν ψ ψk hχ σ J B st s hs n n' c G₀ FW FA F₀ FV hJF hCF hBF Tm hTm L₀ hL₀, hL₀⟩
 
 end GlobalTheory.LocMod
 

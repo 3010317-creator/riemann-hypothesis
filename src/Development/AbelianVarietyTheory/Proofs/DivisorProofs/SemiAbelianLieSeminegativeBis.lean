@@ -1,7 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.InterNumDetNonposSplitTorus
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieSheafSemiAbelianSemiNegOfIsAlgClosedStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsIsoFromNormalization
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsIsoQuotToImOmegaLieOfSplit
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieSheafSemiAbelianSemiNegOfIsAlgClosed
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiAbelianLieSeminegativeOfNeron
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiNegativeDescendsFieldExtensionCurveStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -64,6 +66,6 @@ theorem semiAbelianLieSeminegative : GlobalTheory.Published.SemiAbelianLieSemine
   have : IsIntegral C := GlobalTheory.LieSemineg.isIntegral_curve hs hc
   refine hdesc (Lie G) ?_ W r hW i hi
   exact GlobalTheory.NeronCurve.LieDescent.semiNeg_of_iso (GlobalTheory.NeronCurve.LieDescent.lieBaseIso π G).symm
-    (GlobalTheory.T.lieSheaf_semiAbelian_semiNeg_of_isAlgClosed (AlgebraicClosure k) C' hC' _ (IsSemiAbelian.pullback π G hG))
+    (_root_.GlobalTheory.Nef.semiNeg_lie_of_isAlgClosed (AlgebraicClosure k) C' hC' _ (IsSemiAbelian.pullback π G hG))
 
 end GlobalTheory.Nef

@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.InvariantRadonFibre
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsUniqueHaarOfInvariantRadonOnCosetsStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsUniqueHaarOfInvariantRadonOnCosets
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,6 +51,6 @@ namespace GlobalTheory
 
 theorem normaliseGroupClause_holds : NormaliseGroupClause := by
   intro G _ _ _ _ _ _ _ _ H _ _ hH _ _ ν _ μ hμ
-  exact GlobalTheory.T.existsUnique_haar_of_invariantRadonOnCosets G H hH ν μ hμ
+  exact _root_.GlobalTheory.QuotientHaar.existsUnique_haar_of_invariantRadon G H hH ν μ hμ
 
 end GlobalTheory

@@ -1,7 +1,8 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.InfinitesimalCharacterGL.BridgeSt
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TraceElementsActByGelfandValuesStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PosPartUnitaryMul
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TraceElementsActByGelfandValues
 public import Development.WeilBound.CoreStatements.SatakeConjugation.CapEqQdet
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.InfinitesimalCharacterGL.NatDegreeDefectGelf
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.InfinitesimalCharacterGL.PChart
@@ -71,7 +72,7 @@ theorem hasInfCharGL_iff (V : Submodule ℂ (Sm E a)) (τ : E →+* ℂ) (χ' : 
     · intro _ u φ _; simp [Formalism.REAL.qdet, Formalism.REAL.qminor, Formalism.QuantumDeterminants.capP]
   · constructor
     · intro h φ hφ k
-      exact GlobalTheory.T.trace_elements_act_by_gelfand_values (Sm E (m + 1)) m (Eop τ) χ' φ (glRel_Eop τ) (fun Y => h Y φ hφ) k
+      exact _root_.GlobalTheory.CompanionTheory.CapelliGelfand.etr_eq_gelfVal_of_capelli (Sm E (m + 1)) m (Eop τ) χ' φ (glRel_Eop τ) (fun Y => h Y φ hφ) k
     · intro h u φ hφ
       exact gelfToCap (Sm E (m + 1)) m (Eop τ) χ' φ (glRel_Eop τ) (h φ hφ) u
 

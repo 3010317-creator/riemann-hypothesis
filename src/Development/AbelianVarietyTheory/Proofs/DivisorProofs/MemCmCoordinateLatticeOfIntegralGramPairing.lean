@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLinearHomProd
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.EigenvectorLieDegree
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLinearHomPowEqOfKillsComplexTorsionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearHomKillsTorsionOfWeilPairingDivisibleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilPairingLinearHomSpanGramFormStatement
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLinearHomPowEqOfKillsComplexTorsion
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PointShiftSt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearHomKillsTorsionOfWeilPairingDivisible
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilPairingLinearHomSpanGramForm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,12 +79,12 @@ theorem mem_lat_of_dual : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   let x : Fin p → 𝓞 E := fun a => ⟨(n : E) * d a, hint a⟩
   have hx : ∀ a, (x a : E) = n * d a := fun a => rfl
   have hψ := GlobalTheory.FlatCM.HomLat.isLinearHom_prod X x
-  have hk := GlobalTheory.T.linearHom_kills_torsion_of_weilPairing_divisible E H hH K ρ σ₁ p X _ hψ n hn (fun f hf ⟨m, hm, z, hfz⟩ => by
+  have hk := _root_.GlobalTheory.FlatCM.TorsKill.kill E H hH K ρ σ₁ p X _ hψ n hn (fun f hf ⟨m, hm, z, hfz⟩ => by
     have hm' : (m : E) ≠ 0 := by exact_mod_cast hm.ne'
     have hc : (fun a => (z a : E) / m) ∈ GlobalTheory.FlatCM.HomLat.lat X := Submodule.subset_span
       ⟨m, hm, z, fun a => by field_simp, f, hf, hfz⟩
     obtain ⟨w, hw⟩ := hd _ hc
-    refine ⟨w, GlobalTheory.T.weilPairing_linearHom_span_gramForm E H hH K ρ σ₁ p X gP gQ hG m hm z f hf hfz x _ ?_⟩
+    refine ⟨w, _root_.GlobalTheory.FlatCM.HomLat.weilEq_gram E H hH K ρ σ₁ p X gP gQ hG m hm z f hf hfz x _ ?_⟩
     have hb : ∀ b, ((H.bar (x b) : 𝓞 E) : E) = n * barE (d b) := fun b => by
       rw [← hbar, hx, map_mul, map_natCast]
     have key : (m : E) * ((n : E) * (w : E)) =
@@ -95,7 +97,7 @@ theorem mem_lat_of_dual : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     apply RingOfIntegers.coe_injective
     push_cast
     exact key)
-  obtain ⟨χ, hχ, hχn⟩ := GlobalTheory.T.exists_linearHom_pow_eq_of_kills_complex_torsion E H K σ₁ (X.A true) X.B _ hψ n hn hk
+  obtain ⟨χ, hχ, hχn⟩ := _root_.GlobalTheory.DivisibleLinear.exists_linear_pow_eq E H K σ₁ (X.A true) X.B _ hψ n hn hk
   exact Submodule.subset_span ⟨n, hn, x, hx, χ, hχ, hχn⟩
 
 end GlobalTheory.FlatCM.HomLat

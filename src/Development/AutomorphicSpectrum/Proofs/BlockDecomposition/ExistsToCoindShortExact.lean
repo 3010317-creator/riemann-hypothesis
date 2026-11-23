@@ -4,12 +4,17 @@ public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CubeResApply
 public import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.TopologicalKrullDimLeOfIrreducibleCloseds
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.CechModulesFunctorShortExactOfIsAffineOpen
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CechStructureSheafComparisonStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CochainCohomologyNerveHomologyEquivStatement
+public import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.ExistsPowMulPowEqOfIsZeroCechH
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CechStructureSheafComparison
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CochainCohomologyNerveHomologyEquiv
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoinducedCechAcyclicStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoinducedNerveAcyclicStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NaturalDegreeZeroHomologyIsoStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NerveCechDegreeZeroCompatibleStatement
+public import Mathlib.Algebra.Category.ModuleCat.Abelian
+public import Mathlib.Algebra.Homology.ShortComplex.HomologicalComplex
+public import Mathlib.Algebra.Homology.ShortComplex.ShortExact
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NaturalDegreeZeroHomologyIso
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NerveCechDegreeZeroCompatible
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -119,8 +124,8 @@ theorem exists_toCoind_shortExact {R : Type} [CommRing R] {P : Type} [Semilattic
 theorem nonempty_iso {R : Type} [CommRing R] {P : Type} [SemilatticeInf P] {κ : Type} [LinearOrder κ] (e : κ → P)
     (he : Function.Bijective e) (n : ℕ) (G : Pᵒᵖ ⥤ ModuleCat.{0} R) :
     Nonempty ((nerveCx.obj G).homology n ≅ ((cechOf e).obj G).homology n) := by
-  obtain ⟨ε, h1, h2⟩ := GlobalTheory.T.nerve_cech_degree_zero_compatible (R := R) e he
-  refine GlobalTheory.T.natural_degree_zero_homology_iso nerveCx (cechOf e) ε h1 h2 (fun G ↦ ?_) n G
+  obtain ⟨ε, h1, h2⟩ := _root_.GlobalTheory.CompanionTheory.Hodge.Nerve.DegZero.degZero (R := R) e he
+  refine _root_.GlobalTheory.CompanionTheory.Hodge.DimShift.homology_nonempty_iso nerveCx (cechOf e) ε h1 h2 (fun G ↦ ?_) n G
   obtain ⟨Q, p, w, h⟩ := exists_toCoind_shortExact G
   exact ⟨_, Q, toCoind G, p, w, nerveCx_shortExact _ h, cechOf_shortExact e _ h,
     fun n ↦ ⟨GlobalTheory.T.coinduced_nerve_acyclic _ n, GlobalTheory.T.coinduced_cech_acyclic e he.2 _ n⟩⟩
@@ -147,10 +152,10 @@ theorem cmpSt_of_cxSt : CxSt → CmpSt := by
   have key : ∀ n, Nonempty ((nerveCx.obj (toMod (OSys s S))).homology n ≃ₗ[R] GlobalTheory.coh (GlobalTheory.structureModule X) n) := by
     intro n
     obtain ⟨i⟩ := nonempty_iso e' he' n (toMod (OSys s S))
-    obtain ⟨f⟩ := GlobalTheory.T.cech_structure_sheaf_comparison R X s P S e' n
+    obtain ⟨f⟩ := _root_.GlobalTheory.CompanionTheory.Hodge.Nerve.cech_OSys_homology_equiv R X s P S e' n
     letI : (GlobalTheory.structureModule X).IsQuasicoherent := GlobalTheory.QCoh.IsFiniteQC.isQuasicoherent
     exact ⟨i.toLinearEquiv ≪≫ₗ f ≪≫ₗ GlobalTheory.cechHEquivCoh R hc hD (GlobalTheory.structureModule X) n⟩
-  obtain ⟨⟨a⟩, b⟩ := GlobalTheory.T.cochain_cohomology_nerve_homology_equiv (OSys s S)
+  obtain ⟨⟨a⟩, b⟩ := _root_.GlobalTheory.CompanionTheory.Hodge.Nerve.Low.homology_nerveCx (OSys s S)
   obtain ⟨k⟩ := key 0
   refine ⟨⟨a ≪≫ₗ k⟩, fun n ↦ ?_⟩
   obtain ⟨b'⟩ := b n

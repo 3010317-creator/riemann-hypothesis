@@ -3,9 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.LowerTieTwAt
 public import Formalism.LocalToGlobal.GroupLattices.AdmissibleAtGeneratorPlaces
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.StdLvPr
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AdmissiblePeriodTwistsReductionPlaceTuplesStatement
+public import Formalism.SharpRestriction.Divisibility.StatementFT.PeriodPointConditions
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AdmissiblePeriodTwistsReductionPlaceTuples
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.PerDecTwTOfStd
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TwistedPeriodDecompositionOfClasswiseTwistedPairStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TwistedPeriodDecompositionOfClasswiseTwistedPair
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsStandardColumnComparisonsTrueColumnsStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnChoiceExistsStandardChainDataStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -55,8 +56,8 @@ theorem twistedPeriodAdmissible_of_rowInt : ∀ {B : Base} {X : PreX B.toPre} (I
   obtain ⟨C, hC, hLv⟩ := GlobalTheory.T.exists_standardColumnComparisons_trueColumns I hOk hPins l Z
   obtain ⟨t, ht⟩ := GlobalTheory.T.trueColumnChoice_exists_standardChainData I hOk hPins l Z l0 nch tp C hxi hC hLv
   have hT := GlobalTheory.PerTwClose.perDecTwT_of_std I hOk l Z l0 hRow (I.cf l Z) nch tp C t Y ht
-  refine GlobalTheory.T.admissiblePeriodTwists_reduction_placeTuples (I.rec7 l Z) Y (I.tw l l0 Z) ?_
+  refine _root_.GlobalTheory.PerRedU.main (I.rec7 l Z) Y (I.tw l l0 Z) ?_
   intro u μ hμ _
-  exact GlobalTheory.T.twistedPeriodDecomposition_of_classwiseTwistedPairingIntegral (I.rec7 l Z) (I.cf l Z) nch tp C (I.tw l l0 Z) t Y u μ hμ (hT u μ hμ)
+  exact _root_.GlobalTheory.PerRedTw.reduction_perDecTw (I.rec7 l Z) (I.cf l Z) nch tp C (I.tw l l0 Z) t Y u μ hμ (hT u μ hμ)
 
 end GlobalTheory.PerTwClose

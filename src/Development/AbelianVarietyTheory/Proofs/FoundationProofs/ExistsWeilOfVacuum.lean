@@ -2,14 +2,16 @@ module
 
 public import Formalism.SharpRestriction.GlobalSchurBounds.StandardLatticesGL3
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AdelicWeilVacuumFixedAndTranslatesSpanStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsAdelicWeilRepresentationModelStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsGoodIndexNormalizationNegativeInertStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsSplitCharacterUnitaryGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsWeilRepresentationHeisenbergStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeisenbergRelativeIndexTranslateCompletedLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutesStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SumOpTransversalStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ActAApply
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsAdelicWeilRepresentationModel
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsGoodIndexNormalizationNegativeInert
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsSplitCharacterUnitaryGroup
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsHeisTrivial
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsWeilRepresentationHeisenberg
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeisenbergRelativeIndexTranslateCompletedLattice
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutes
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaIntertwinerEqNormalisedAdelicSumStatement
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SumOpTransversal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +48,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ActAApply
 
 @[expose] public section
 
@@ -60,16 +61,16 @@ namespace GlobalTheory.FinWeil
 theorem exists_weil_of_vacuum (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (hc : Crv D cc δ) (N N' : ℕ)
     (e0 : VC D N N' → ℂ) (he : e0 ∈ Th D (tor0 D cc δ) (stdL D N) (stdL D N')) (h0 : e0 ≠ 0) (χ : HeckeU D N) (χ' : HeckeU D N') :
     ∃ W : WeilO D cc δ N N' e0, W.chV = χ ∧ W.chV' = χ' ∧ W.ep = 1 ∧ W.ep' = 1 := by
-  have hg : admG1 D := (GlobalTheory.T.inducedType_thetaGenusOne_permutes D).1
-  obtain ⟨w, γ, WA, hM⟩ := GlobalTheory.T.exists_adelicWeilRepresentationModel D hg cc δ hc N N'
+  have hg : admG1 D := (_root_.GlobalTheory.InducedType.induced_type D).1
+  obtain ⟨w, γ, WA, hM⟩ := _root_.GlobalTheory.FinWeil.Model.exists_isModel D hg cc δ hc N N'
   obtain ⟨hT, hfix, hspan⟩ := GlobalTheory.T.adelicWeil_vacuum_fixed_and_translates_span D hg cc δ hc N N' w γ WA hM e0 he h0
-  obtain ⟨lam, hlam, hsq⟩ := GlobalTheory.T.exists_goodIndexNormalization_negative_inert D
-  obtain ⟨c', hc1', hc2'⟩ := GlobalTheory.T.exists_split_character_unitary_group D N χ N'
-  obtain ⟨c, hc1, hc2⟩ := GlobalTheory.T.exists_split_character_unitary_group D N' χ' N
-  have hidx := GlobalTheory.T.heisenbergRelativeIndex_translate_completed_lattice D hg cc δ hc N N'
+  obtain ⟨lam, hlam, hsq⟩ := _root_.GlobalTheory.FinWeil.exists_goodNorm D
+  obtain ⟨c', hc1', hc2'⟩ := _root_.GlobalTheory.SplitCharacter.exists_split_character D N χ N'
+  obtain ⟨c, hc1, hc2⟩ := _root_.GlobalTheory.SplitCharacter.exists_split_character D N' χ' N
+  have hidx := _root_.GlobalTheory.FinWeil.idx_map_actA D hg cc δ hc N N'
   have hM' := hM
   obtain ⟨hH, hSD, hinv, hrat, hcont⟩ := hM'
-  obtain ⟨Om, hOm1, hOm2⟩ := GlobalTheory.T.exists_weil_representation_heisenberg hH lam hlam _ hSD ⟨e0, hT⟩ (fun h => h0 (congrArg Subtype.val h)) hfix hspan
+  obtain ⟨Om, hOm1, hOm2⟩ := _root_.GlobalTheory.FinWeil.exists_weil_rep hH lam hlam _ hSD ⟨e0, hT⟩ (fun h => h0 (congrArg Subtype.val h)) hfix hspan
     (actA D N N') hinv (fun u => (hidx u.1 u.2).1)
   let O : GA D N → GA D N' → (VC D N N' → ℂ) → (VC D N N' → ℂ) := fun g g' F =>
     if h : F ∈ TTs D (tor0 D cc δ) N N' then
@@ -107,7 +108,7 @@ theorem exists_weil_of_vacuum (D : D7) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (
     have h2 := hrat z ⟨F, hF⟩
     rw [← h2, hO, hO g g' ⟨F, hF⟩, ← hrat, map_smul, hOm1, h1, h (Matrix.of a) ha1]
   · intro k k' hk hk' hs hs'
-    have h3 := (GlobalTheory.T.sumOp_transversal_fixes_linear_and_of_le hH _ _ (hOm2 (k, k')).1).2.2 ((hidx k k').2.2 hk hk')
+    have h3 := (_root_.GlobalTheory.FinWeil.sumOp_transversal hH _ _ (hOm2 (k, k')).1).2.2 ((hidx k k').2.2 hk hk')
     rw [hO k k' ⟨e0, hT⟩, hc1 k hs, hc1' k' hs', mul_one, Units.val_one, one_smul, (hOm2 (k, k')).2, normOp, h3.1,
       h3.2 _ hfix, map_one, inv_one, one_smul]
   · intro g g' x x' L₁ L₁' hs hs' hx h1 h1' hL hL'

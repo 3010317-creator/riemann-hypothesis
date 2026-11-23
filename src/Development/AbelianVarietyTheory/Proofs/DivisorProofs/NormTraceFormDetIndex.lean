@@ -1,12 +1,15 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceProductSkewHermitianRealStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.Signature
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceProductSkewHermitianReal
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EmbGLMemRealSU
 public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.DefiniteBound
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfTraceFormSkewHermitianStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieBasisSpansUnitaryLieStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormGramDetEqIndexStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceIntegralOfPreservedLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfTraceFormSkewHermitian
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieBasisSpansUnitaryLie
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormGramDetEqIndex
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceIntegralOfPreservedLattice
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -91,7 +94,7 @@ def skewSub (G : Matrix (Fin r) (Fin r) E) : Submodule (maximalRealSubfield E) (
 def trForm (G : Matrix (Fin r) (Fin r) E) (hG : ∀ a b, cc (G a b) = G b a) (hd : G.det ≠ 0) :
     LinearMap.BilinForm (maximalRealSubfield E) (skewSub G) :=
   LinearMap.mk₂ (maximalRealSubfield E)
-    (fun X Y => ⟨(X.1 * Y.1).trace, GlobalTheory.T.trace_product_skew_hermitian_real E r G X.1 Y.1 hG hd X.2.2 Y.2.2⟩)
+    (fun X Y => ⟨(X.1 * Y.1).trace, _root_.GlobalTheory.trace_mul_skew_mem_maximalRealSubfield E r G X.1 Y.1 hG hd X.2.2 Y.2.2⟩)
     (fun X₁ X₂ Y => Subtype.ext (by simp [add_mul, trace_add]))
     (fun c X Y => Subtype.ext (by simp [trace_smul]; rfl))
     (fun X Y₁ Y₂ => Subtype.ext (by simp [mul_add, trace_add]))
@@ -122,7 +125,7 @@ theorem abs_norm_gram_eq_index : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     rw [Submodule.map_span, ← Set.range_comp, hve]
   have hspan : ⊤ ≤ Submodule.span (maximalRealSubfield E) (Set.range v) := by
     rintro ⟨X, hX⟩ -
-    have h := GlobalTheory.T.lie_basis_spans_unitary_lie E r G e hG hd heV hli X hX.1 hX.2
+    have h := _root_.GlobalTheory.SkewSpan.mem_span_of_skew E r G e hG hd heV hli X hX.1 hX.2
     rw [← hmapv] at h
     obtain ⟨y, hy, hyX⟩ := h
     have : y = ⟨X, hX⟩ := Subtype.ext hyX
@@ -139,7 +142,7 @@ theorem abs_norm_gram_eq_index : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   have hsep : ∀ X : skewSub G, (∀ Y : skewSub G, B X Y = 0) → X = 0 := by
     intro X hX
     apply Subtype.ext
-    refine GlobalTheory.T.eq_zero_of_trace_form_skew_hermitian E r G X.1 hG hd X.2.1 X.2.2 fun Y hY1 hY2 => ?_
+    refine _root_.GlobalTheory.TraceSkew.traceForm_nondegenerate E r G X.1 hG hd X.2.1 X.2.2 fun Y hY1 hY2 => ?_
     have := congrArg (fun z : maximalRealSubfield E => (z : E)) (hX ⟨Y, hY1, hY2⟩)
     simpa [hB, trForm_apply] using this
   have hnd : B.Nondegenerate := ⟨fun X hX => hsep X hX, fun Y hY => hsep Y fun X => by rw [hsymm.eq]; exact hY X⟩
@@ -157,10 +160,10 @@ theorem abs_norm_gram_eq_index : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   have hint : ∀ x ∈ L', ∀ y ∈ L', IsIntegral ℤ (B x y) := by
     intro x hx y hy
     rw [← isIntegral_coe_iff, hB, trForm_apply]
-    refine GlobalTheory.T.trace_integral_of_preserved_lattice E r Λ _ hfg hsp fun z hz => ?_
+    refine _root_.GlobalTheory.LatTrace.trace_isIntegral_of_preserves_lattice E r Λ _ hfg hsp fun z hz => ?_
     rw [← mulVec_mulVec]
     exact hx.2.2 _ (hy.2.2 z hz)
-  have key := GlobalTheory.T.norm_gram_det_eq_index (maximalRealSubfield E) (skewSub G) (r ^ 2 - 1) b B L' hsymm hnd hbL hsm hint
+  have key := _root_.GlobalTheory.abs_norm_det_gram_eq_relIndex (maximalRealSubfield E) (skewSub G) (r ^ 2 - 1) b B L' hsymm hnd hbL hsm hint
   have hdet : (Matrix.of fun i j => Matrix.trace (e i * e j)).det =
       algebraMap (maximalRealSubfield E) E (Matrix.of fun i j => B (b i) (b j)).det := by
     rw [RingHom.map_det]

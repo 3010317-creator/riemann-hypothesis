@@ -3,14 +3,15 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsArchOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LactMemDomOfIsom
 public import Development.AbelianVarietyTheory.Definitions.Divisors.BadElt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EmbedsInRegularRepresentationCopiesOfGroupDetermStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCocyclePullbackRepresentationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCuspFormIndependentTranslatesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolynomialCHolInvariantMemNonZeroDivisorsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedPullbackPolynomialRightActionOfCocycleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoLevelCuspFormsMulMemAddWeightStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoLevelCuspFormsPullMemStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoLevelCuspFormsRestrictHolInvariantStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EmbedsInRegularRepresentationCopiesOfGroupDeterm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCocyclePullbackRepresentation
+public import Development.AbelianVarietyTheory.BlockTheory.PoincareCuspForms.TwoLevelLogarithm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCuspFormIndependentTranslates
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolynomialCHolInvariantMemNonZeroDivisors
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedPullbackPolynomialRightActionOfCocycle
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoLevelCuspFormsMulMemAddWeight
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoLevelCuspFormsPullMem
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoLevelCuspFormsRestrictHolInvariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -97,8 +98,8 @@ theorem mul_pb_mem_cusp (M : TwoLevels E r U C) (ka mu : Wt M.Ψ r) (u0 : C → 
     obtain ⟨F, hF, rfl⟩ := hf
     have e : M.res F * pb M k (M.res u0) * pb M h (M.res u0) = M.res (F * M.pull k u0 * M.pull h u0) := rfl
     rw [e, two_smul, ← add_assoc]
-    exact Submodule.subset_span ⟨_, GlobalTheory.T.twoLevelCuspForms_mul_mem_add_weight E r U C M _ _ _ _ (GlobalTheory.T.twoLevelCuspForms_mul_mem_add_weight E r U C M _ _ _ _ hF
-      (GlobalTheory.T.twoLevelCuspForms_pull_mem E r U C M mu u0 k hu0)) (GlobalTheory.T.twoLevelCuspForms_pull_mem E r U C M mu u0 h hu0), rfl⟩
+    exact Submodule.subset_span ⟨_, _root_.GlobalTheory.CuspEmb.twoLevels_mul_mem_SS E r U C M _ _ _ _ (_root_.GlobalTheory.CuspEmb.twoLevels_mul_mem_SS E r U C M _ _ _ _ hF
+      (_root_.GlobalTheory.CuspEmb.pull_mem_SS E r U C M mu u0 k hu0)) (_root_.GlobalTheory.CuspEmb.pull_mem_SS E r U C M mu u0 h hu0), rfl⟩
   | zero => simp
   | add f g _ _ hf hg => rw [add_mul, add_mul]; exact add_mem hf hg
   | smul z f _ hf => rw [smul_mul_assoc, smul_mul_assoc]; exact Submodule.smul_mem _ z hf
@@ -114,18 +115,18 @@ theorem GlobalTheory.CuspEmb.cusp_embReg : ∀ (E : Type) [Field E] [NumberField
   intro E _ _ _ r U C _ _ _ _ M ka ρ hρ ep c0 hR H hL
   classical
   haveI : Fintype U := Fintype.ofFinite U
-  obtain ⟨u0, hu0, hdet⟩ := GlobalTheory.T.exists_cuspForm_independent_translates E r H C (sub M H) hL (sOf M) (even_sOf M) (le_sOf M)
+  obtain ⟨u0, hu0, hdet⟩ := _root_.GlobalTheory.TranslatesDet.independentTranslates E r H C (sub M H) hL (sOf M) (even_sOf M) (le_sOf M)
   have hu0' : u0 ∈ M.SS (deMul M.Ψ r M.p0 (sOf M)) := hu0
   have hVHA : ∀ f ∈ M.cusp ka, f ∈ HA M := fun f hf => by
     refine (Submodule.span_le (p := Subalgebra.toSubmodule (HA M))).2 ?_ hf
     rintro _ ⟨F, hF, rfl⟩
-    exact GlobalTheory.T.twoLevelCuspForms_restrict_holInvariant E r U C M ka F hF
+    exact _root_.GlobalTheory.CuspEmb.res_mem_HA E r U C M ka F hF
   have h2HA : ∀ f ∈ M.cusp (ka + 2 • deMul M.Ψ r M.p0 (sOf M)), f ∈ HA M := fun f hf => by
     refine (Submodule.span_le (p := Subalgebra.toSubmodule (HA M))).2 ?_ hf
     rintro _ ⟨F, hF, rfl⟩
-    exact GlobalTheory.T.twoLevelCuspForms_restrict_holInvariant E r U C M _ F hF
-  obtain ⟨a, hcoc, hform⟩ := GlobalTheory.T.exists_cocycle_pullbackRepresentation E r U C M ka ρ hρ (fun f hf => (hVHA f hf).2)
-  obtain ⟨h1, hlaw⟩ := GlobalTheory.T.twistedPullbackPolynomial_rightAction_of_cocycle E r U C M a hcoc
+    exact _root_.GlobalTheory.CuspEmb.res_mem_HA E r U C M _ F hF
+  obtain ⟨a, hcoc, hform⟩ := _root_.GlobalTheory.PullCocycle.exists_cocycle E r U C M ka ρ hρ (fun f hf => (hVHA f hf).2)
+  obtain ⟨h1, hlaw⟩ := _root_.GlobalTheory.CuspEmb.tw_law E r U C M a hcoc
   let act : U →* (Polynomial (HA M) →ₐ[ℂ] Polynomial (HA M)) :=
     { toFun := fun k => tw M (fun c => (a k⁻¹ c : ℂ)) k⁻¹
       map_one' := by
@@ -136,7 +137,7 @@ theorem GlobalTheory.CuspEmb.cusp_embReg : ∀ (E : Type) [Field E] [NumberField
         simp only [mul_inv_rev]
         rw [← hlaw]
         rfl }
-  let ut : HA M := ⟨M.res u0, GlobalTheory.T.twoLevelCuspForms_restrict_holInvariant E r U C M _ u0 hu0'⟩
+  let ut : HA M := ⟨M.res u0, _root_.GlobalTheory.CuspEmb.res_mem_HA E r U C M _ u0 hu0'⟩
   have hact : ∀ k, act k (Polynomial.C ut) = Polynomial.C (pbA M k⁻¹ ut) := fun k => tw_C M _ _ _
   have hactm : ∀ k (f : HA M), act k (Polynomial.monomial 1 f) =
       Polynomial.monomial 1 (cst M (fun c => (a k⁻¹ c : ℂ)) * pbA M k⁻¹ f) := fun k f => tw_monomial_one M _ _ _
@@ -147,7 +148,7 @@ theorem GlobalTheory.CuspEmb.cusp_embReg : ∀ (E : Type) [Field E] [NumberField
       refine Matrix.ext fun h g => ?_
       simp only [Matrix.of_apply, RingHom.mapMatrix_apply, Matrix.map_apply, hact, mul_inv_rev]
     rw [e, ← RingHom.map_det]
-    refine GlobalTheory.T.polynomialC_holInvariant_mem_nonZeroDivisors E r U C M _ fun c => ?_
+    refine _root_.GlobalTheory.CuspEmb.C_mem_nonZeroDivisors E r U C M _ fun c => ?_
     obtain ⟨x, hx, hne⟩ := hdet c
     refine ⟨⟨x, hx⟩, ?_⟩
     let φ : HA M →+* ℂ := ((Pi.evalRingHom _ (⟨x, hx⟩ : M.dom)).comp (Pi.evalRingHom _ c)).comp (HA M).val.toRingHom
@@ -214,7 +215,7 @@ theorem GlobalTheory.CuspEmb.cusp_embReg : ∀ (E : Type) [Field E] [NumberField
     | zero => simp
     | add x y _ _ hx hy => rw [add_mul]; exact add_mem hx hy
     | smul z x _ hx => rw [smul_mul_assoc]; exact Submodule.smul_mem _ z hx
-  obtain ⟨n, ⟨j, hj, hjeq⟩, hn⟩ := GlobalTheory.T.embedsInRegularRepresentationCopies_of_groupDeterminant ℂ U (Polynomial (HA M)) act H (Polynomial.C ut) hnz V V1 V2 ρ' hρ' hV1
+  obtain ⟨n, ⟨j, hj, hjeq⟩, hn⟩ := _root_.GlobalTheory.BadCount.embReg_of_groupDet ℂ U (Polynomial (HA M)) act H (Polynomial.C ut) hnz V V1 V2 ρ' hρ' hV1
     hV1s hV2
   refine ⟨n, ⟨j ∘ₗ e.toLinearMap, hj.comp e.injective, fun h v i => ?_⟩, ?_⟩
   · have := hjeq h (e v) i

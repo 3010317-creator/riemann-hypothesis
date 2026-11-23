@@ -4,7 +4,7 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieMode
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelIsBaseChangeStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelIsBaseChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -119,7 +119,7 @@ theorem exists_isBaseChange (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonO
         simp only [spMap]
         rw [← Category.assoc, ← Category.assoc, ← Spec.map_comp, ← Spec.map_comp, ← CommRingCat.ofHom_comp,
           ← CommRingCat.ofHom_comp, dualMap_comp_epsMul])) }
-  refine ⟨E, iA, iM, M, j, GlobalTheory.T.lie_model_isBaseChange S G R R' x E E' M M' j fun e => ?_, hleft⟩
+  refine ⟨E, iA, iM, M, j, _root_.GlobalTheory.CompanionTheory.Ar.lieModel_isBaseChange S G R R' x E E' M M' j fun e => ?_, hleft⟩
   simpa only [Category.comp_id, j, LinearMap.coe_mk, AddHom.coe_mk] using hleft e
 
 end GlobalTheory.CompanionTheory.Ar.LieBaseChange

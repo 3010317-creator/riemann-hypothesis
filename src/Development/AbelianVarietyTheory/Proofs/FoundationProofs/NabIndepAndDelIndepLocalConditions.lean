@@ -1,8 +1,9 @@
 module
 
 public import Formalism.LocalToGlobal.Divisibility.CoefModLemmas
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ActPMemLocPDelStdOfIsBasisAtStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ActPMemLocPNabStdOfIsBasisAtStatement
+public import Formalism.LocalToGlobal.Divisibility.CoefMod
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ActPMemLocPDelStdOfIsBasisAt
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ActPMemLocPNabStdOfIsBasisAt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -72,8 +73,8 @@ theorem indep_of_stable (lam : ι → DomWeight n) (w : HeightOneSpectrum (𝓞 
 
 theorem nabIndep_and_delIndep : NabIndep ∧ DelIndep :=
   ⟨fun K _ _ ι _ n lam w M B B' h h' F =>
-      indep_of_stable lam w _ (GlobalTheory.T.polyAction_mem_locP_nabStd_of_isBasisAt K ι n lam w) M B B' h h' F,
+      indep_of_stable lam w _ (_root_.GlobalTheory.NabStab.polyAction_mem_locP_nabStd K ι n lam w) M B B' h h' F,
     fun K _ _ ι _ n lam w M B B' h h' F =>
-      indep_of_stable lam w _ (GlobalTheory.T.polyAction_mem_locP_delStd_of_isBasisAt K ι n lam w) M B B' h h' F⟩
+      indep_of_stable lam w _ (_root_.GlobalTheory.TestLat.WeylLocal.polyAction_mem_locP_delStd K ι n lam w) M B B' h h' F⟩
 
 end GlobalTheory.TestLat

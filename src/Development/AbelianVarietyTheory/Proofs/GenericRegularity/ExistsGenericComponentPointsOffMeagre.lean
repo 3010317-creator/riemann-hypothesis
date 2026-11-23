@@ -7,11 +7,19 @@ public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.Contin
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.EvaluationLawsGenericFramesAtlasHold
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsComponentOfModelChartsStatement
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsCountableFlagSpaceAtlasStatement
-public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsCountableHolomorphicFamiliesSmoothStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.Smooth.Basic
+public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsCountableHolomorphicFamiliesSmooth
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.Signature
+public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.PeriodCoordinatesFramesLiftTendsto
+public import Mathlib.Algebra.MvPolynomial.Cardinal
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.PairUnfoldPfA
+public import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsHolomorphicPeriodsAdapted
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.FrameBorelGroupoidProperties
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ImNegOfFramePeriodVector
-public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.PeriodCoordinatesFramesLiftTendstoStatement
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.SupCLeISupGeneric
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.TriangularFrameChangeOfTriangularPeriod
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsInvariantNatLengthLattice
@@ -22,7 +30,6 @@ import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointBaseC
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RelabelEmbeddingsGoodBijectiveConjCompat
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.UniformizationPeriodLatticeChange
 import Formalism.LocalToGlobal.ProjectiveLattices.FreeBridge
-public import Mathlib.Algebra.MvPolynomial.Cardinal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,11 +68,9 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.PairUnfoldPfA
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FourierCoefficientDomain
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.OrthogonalFrameDomain
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.FrMapComp
-public import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt
 
 @[expose] public section
 
@@ -166,7 +171,7 @@ theorem interior_rel (hφ : ∀ v ∈ X.Λ, ∃ a, φ a = v) (hne : ∀ b ∈ B,
   obtain ⟨hx₀d, b₀, hb₀, -, h, hh⟩ := interior_subset hx₀
   choose! x₁ hx₁ hr₁ using honto x₀ hx₀d b₀ hb₀ h hh
   have hBn : ∀ᶠ b in 𝓝 b₀, b ∈ B := hB.mem_nhds hb₀
-  have key := GlobalTheory.T.period_coordinates_frames_lift_tendsto E r X _ (𝓝 b₀) x₀ x₁ hx₀d (hBn.mono hx₁) (fun v hv τ i => by
+  have key := _root_.GlobalTheory.PeriodLift.period_lift E r X _ (𝓝 b₀) x₀ x₁ hx₀d (hBn.mono hx₁) (fun v hv τ i => by
     obtain ⟨a, rfl⟩ := hφ v hv
     obtain ⟨j, hj⟩ := idx.surjective (τ, i)
     obtain ⟨rfl, rfl⟩ : τ = (idx j).1 ∧ i = (idx j).2 := by rw [hj]; exact ⟨rfl, rfl⟩
@@ -397,7 +402,7 @@ theorem isMeagre_chart (U : Formalism.L2.PjFree.Unf Xo c σ r) (hσ : Formalism.
     h0 | ⟨-, -, ψ₀, -⟩
   · rw [h0]
     exact IsMeagre.empty
-  obtain ⟨ι, _, m, B, φ, hB, hφσ, hd, hcov, hne⟩ := GlobalTheory.T.exists_countable_holomorphic_families_smooth c.F C.R σ
+  obtain ⟨ι, _, m, B, φ, hB, hφσ, hd, hcov, hne⟩ := _root_.GlobalTheory.SmoothPointCover.exists_countable_families c.F C.R σ
   let φ' : ∀ i, (Fin (m i) → ℂ) → (C.R →ₐ[c.F] CAt σ) := fun i b =>
     if hb : b ∈ B i then
       { (show C.R →+* CAt σ from φ i b) with commutes' := fun a => RingHom.congr_fun (hφσ i b hb) a }

@@ -7,16 +7,19 @@ public import Development.AbelianVarietyTheory.Definitions.Degenerations.LocThet
 public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.ImmersedBy
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.EndoLbIsoSymmetryHypothesisExtendNormalModelStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.EqOfValFGeneric
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsClosedImmersionProjSpaceOfSectionsStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.PullChartIsLB
+public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.TwistingSheafOneChartEqPreimageStandardChart
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsClosedImmersionProjSpaceOfSections
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsInvertibleMatrixChangeOfSpanEq
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsProjSpaceMapOfLocalSectionsNoCommonZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsClosedImmersionIffPullRatio
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsProjSpaceMapOfLocalSectionsNoCommonZero
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSecOnPowerOfLocalBasesStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSectionsPowLineBundleFromLocalBasisStatement
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUnitCharts
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsImmersionProjSpaceOfLocalLinearChangeStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsImmersionProjSpaceOfLocalLinearChange
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaDividedByConstantNonvanishingFibresStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaModelRelAmpleAndPrincipalAbelianLocusStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.UnifPullbackOfUnifRing
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUnitCharts
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -128,11 +131,11 @@ theorem ZHPre.immersedBy_of_clos (Q : ZHPre ρ M U₀) (C : Clos ρ M U₀ EE) (
     ImmersedBy Q.G.hom M.s (LB.LinComb Q.L.L (K := Fin 1) (fun _ => 𝟙 Q.G.left) (fun _ => (S.N : ℤ))) (Q.G.hom ⁻¹ᵁ W) σ := by
   obtain ⟨m, hm⟩ : ∃ m, Fintype.card S.J = m + 1 := Nat.exists_eq_succ_of_ne_zero Fintype.card_ne_zero
   let e : Fin (m + 1) ≃ S.J := (Fintype.equivFinOfCardEq hm).symm
-  obtain ⟨π, hπ, hcl, hπc⟩ := GlobalTheory.T.exists_projSpace_map_of_local_sections_no_common_zero o _ _ Q.G.hom M.s _ _ _ σ m e (fun i => (hσ i).1) hz
+  obtain ⟨π, hπ, hcl, hπc⟩ := _root_.GlobalTheory.ZH.CoordMap.exists_coordMap o _ _ Q.G.hom M.s _ _ _ σ m e (fun i => (hσ i).1) hz
   refine ⟨m, e, π, hπ, ?_, hcl⟩
   let V := Q.G.hom ⁻¹ᵁ W
   have : IsReduced V.toScheme := isReduced_of_isOpenImmersion V.ι
-  refine GlobalTheory.T.isImmersion_projSpace_of_local_linearChange o _ _ M.s (V.ι ≫ Q.G.hom) m π hπ fun y => ?_
+  refine _root_.GlobalTheory.ZH.LinFrame.isImmersion_lift_of_linear_change o _ _ M.s (V.ι ≫ Q.G.hom) m π hπ fun y => ?_
   have hyW : (V.ι ≫ Q.G.hom) y ∈ W := by
     rw [Scheme.Hom.comp_apply]
     exact y.2
@@ -152,7 +155,7 @@ theorem ZHPre.immersedBy_of_clos (Q : ZHPre ρ M U₀) (C : Clos ρ M U₀ EE) (
   have hκ : κ ≫ (C.P.hom ⁻¹ᵁ C.W l).ι = Y.ι ≫ V.ι ≫ k := IsOpenImmersion.lift_fac _ _ _
   have : IsOpenImmersion (κ ≫ (C.P.hom ⁻¹ᵁ C.W l).ι) := by rw [hκ]; infer_instance
   have : IsOpenImmersion κ := IsOpenImmersion.of_comp κ (C.P.hom ⁻¹ᵁ C.W l).ι
-  obtain ⟨ψ, hψ1, hψ2, hψ3⟩ := GlobalTheory.T.exists_closedImmersion_projSpace_of_sections _ _ _ _ _ (C.σ l) m e (C.imm l)
+  obtain ⟨ψ, hψ1, hψ2, hψ3⟩ := _root_.GlobalTheory.ZH.ImmProj.exists_closedImmersion_of_immBy _ _ _ _ _ (C.σ l) m e (C.imm l)
   obtain ⟨K, _, β, g, r, jP, h1, h2, h3, h4⟩ := Q.exists_generic hU
   have hgen : ∀ T : Q.G.left.Opens, ∀ p ∈ T, Set.range (g ≫ Q.φ) ⊆ T := by
     rintro T p hp _ ⟨w, rfl⟩

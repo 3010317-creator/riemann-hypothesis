@@ -1,8 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRatioOfWeight
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChernFormPowerIntegralHermLineBundlePowStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NefFibOfIsNef
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChernFormPowerIntegralHermLineBundlePow
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfIntersectionContinuousLimit
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NontrivialIsomClassInt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -43,7 +45,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NontrivialIsomClassInt
 
 @[expose] public section
 
@@ -147,7 +148,7 @@ theorem selfInter_poly : GlobalTheory.Published.ArCalc → ∀ (k : Type) [CommR
       refine icls_eq_iff.2 (isometric_of_eqOn fun σ _ y _ => ?_)
       show (t.den : ℤ) * ((t : ℝ) * u.u σ y) = (t.num : ℝ) * u.u σ y
       rw [← hq]; push_cast; ring)
-    have h₄ := GlobalTheory.T.chernFormPowerIntegral_hermLineBundle_pow k X p D hX (up L (u.smul t)) t.den u.u
+    have h₄ := _root_.GlobalTheory.HSAmp.chInt_pow k X p D hX (up L (u.smul t)) t.den u.u
     have h₅ : (lin fun i => (n i : ℝ)) = C (t.den : ℝ) * (C (t : ℝ) * MvPolynomial.X 0 + MvPolynomial.X 1) := by
       simp only [lin, Fin.sum_univ_two, n, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons]
       rw [mul_add, ← mul_assoc, ← C_mul, hq]; push_cast; ring

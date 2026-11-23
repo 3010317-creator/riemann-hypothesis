@@ -5,9 +5,9 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSecti
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieRankAt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAffineNbhdLieMatrixSmoothCommGroupStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdealGeometricRankIffOfLieConditionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorLieConditionAtIffKottwitzModuleCondiStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KottwitzLieConditionModuleIffIdealLeKerStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieMultIffFinrankSimultaneousEigenSubmoduleStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorLieConditionAtIffKottwitzModuleCondi
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KottwitzLieConditionModuleIffIdealLeKer
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieMultIffFinrankSimultaneousEigenSubmodule
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -132,7 +132,7 @@ theorem lieHer_iff_mat {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [CommRi
   rw [hx]
   obtain ⟨e, he⟩ := hM T' (g.comp f)
   refine and_congr ?_ ?_
-  · rw [GlobalTheory.T.harrisTaylorLieConditionAt_iff_kottwitzModuleCondition]
+  · rw [_root_.GlobalTheory.UPel.HT.LieLin.lieAt_iff_lieMod]
     exact lieMod_transport _ _ e he _ _ _
   · refine forall_congr' fun k => forall_congr' fun _ => forall_congr' fun _ => forall_congr' fun h =>
       forall_congr' fun i => ?_
@@ -142,7 +142,7 @@ theorem lieHer_iff_mat {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [CommRi
     obtain ⟨e2, he2⟩ := hM k (h.comp (g.comp f))
     haveI : Module.Finite k (ReciprocityTheory.ChartRestriction.G.PullbackSections.TanM (spMap (h.comp (g.comp f)) ≫ hU.fromSpec) A) :=
       Module.Finite.equiv e2.symm
-    rw [GlobalTheory.T.lieMult_iff_finrank_simultaneousEigenSubmodule _ _ _ _ _ _ _ _ inferInstance, finrank_eigSub_transport _ _ e2 he2]
+    rw [_root_.GlobalTheory.UPel.HT.LieLin.lieMult_iff_finrank _ _ _ _ _ _ _ _ inferInstance, finrank_eigSub_transport _ _ e2 he2]
 
 theorem lieHerMat_iff_le {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [CommRing R] (b : Base D R) {B : Type}
     [CommRing B] (βB : R →+* B) {n : ℕ} (M : 𝓞 D.F →+* Matrix (Fin n) (Fin n) B) (K₂ : Ideal B)
@@ -155,7 +155,7 @@ theorem lieHerMat_iff_le {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [Comm
   constructor
   · intro h
     obtain ⟨hL, hR⟩ := h T (RingHom.id T)
-    have hJ : lieIdeal b βB M ≤ RingHom.ker f := (GlobalTheory.T.kottwitzLieConditionModule_iff_ideal_le_ker _ _ _ b _ βB n M T f).1 hL
+    have hJ : lieIdeal b βB M ≤ RingHom.ker f := (_root_.GlobalTheory.UPel.HT.LieLin.lieMod_matAct_iff_lieIdeal_le_ker _ _ _ b _ βB n M T f).1 hL
     exact sup_le hJ ((hK₂ T f hJ).1 hR)
   · intro hK T' _ g
     have hker : RingHom.ker f ≤ RingHom.ker (g.comp f) := fun x hx => by
@@ -163,7 +163,7 @@ theorem lieHerMat_iff_le {p : ℕ} [Fact p.Prime] {D : Datum p} {R : Type} [Comm
       rw [RingHom.comp_apply, hx, map_zero]
     have hJ : lieIdeal b βB M ≤ RingHom.ker (g.comp f) := le_sup_left.trans (hK.trans hker)
     have h2 : K₂ ≤ RingHom.ker (g.comp f) := le_sup_right.trans (hK.trans hker)
-    exact ⟨(GlobalTheory.T.kottwitzLieConditionModule_iff_ideal_le_ker _ _ _ b _ βB n M T' (g.comp f)).2 hJ, (hK₂ T' (g.comp f) hJ).2 h2⟩
+    exact ⟨(_root_.GlobalTheory.UPel.HT.LieLin.lieMod_matAct_iff_lieIdeal_le_ker _ _ _ b _ βB n M T' (g.comp f)).2 hJ, (hK₂ T' (g.comp f) hJ).2 h2⟩
 
 theorem lieHer_ideal : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRing R] (b : Base D R) (S : Scheme.{0})
   (s : S ⟶ Sp R) (A : Over S) [GrpObj A] [IsCommMonObj A], Smooth A.hom → ∀ (act : OActN D.O A) (z : S),

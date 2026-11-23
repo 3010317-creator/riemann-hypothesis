@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.MemPowSub
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsEqPowMulPthPowAdicCompletionUnitStatement
+public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Completion
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsEqPowMulPthPowAdicCompletionUnit
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsUnitValuationEqOfAdm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -83,7 +84,7 @@ theorem sUnits_union_sup_finPow_eq_top :
         ∀ v' ∈ T, v' ≠ v → w ∈ powSub p (algebraMap F (v'.adicCompletion F)) := by
     intro v hv
     obtain ⟨u, hu, hnu, hu'⟩ := hA v hv
-    obtain ⟨k, r, hr⟩ := GlobalTheory.T.exists_eq_pow_mul_pth_pow_adicCompletion_unit p F v (algebraMap F (v.adicCompletion F) (u : F))
+    obtain ⟨k, r, hr⟩ := _root_.GlobalTheory.CNorm.exists_eq_pow_mul_pow_of_unit p F v (algebraMap F (v.adicCompletion F) (u : F))
       (algebraMap F (v.adicCompletion F) ((a * x : Fˣ) : F)) hp (hS.2 v (hTS v hv))
       (by rw [hval]; exact (mem_sUnits F S u).1 hu v (hTS v hv))
       (by rw [hval]; exact hy v hv) (fun r h => hnu ⟨r, h⟩)

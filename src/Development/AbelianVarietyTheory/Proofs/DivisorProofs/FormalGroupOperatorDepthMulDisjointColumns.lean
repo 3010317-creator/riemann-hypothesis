@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatFrame
 public import Mathlib.Algebra.MvPolynomial.Variables
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivAt0EqSumOfSubset
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupDifferentialOperatorDepthEqIInfMonomiStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupDifferentialOperatorDepthEqIInfMonomi
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupExpTwoSidedInverseUnique
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -345,7 +345,7 @@ theorem exists_monomial_depth_eq (C : Type) [Field C] [CharZero C] (v : AddValua
   obtain ⟨γ, hγ, hmin⟩ := Set.exists_min_image _
     (fun γ => toE (v (derivAt0 R (monAlong G u γ)))) hfin ⟨0, by simp⟩
   refine ⟨γ, ?_⟩
-  rw [GlobalTheory.T.formalGroupDifferentialOperatorDepth_eq_iInf_monomial C v κ d G ι u R]
+  rw [_root_.GlobalTheory.DepthDegree.depth_eq_iInf_monomial_degree_le C v κ d G ι u R]
   exact le_antisymm (iInf₂_le γ hγ) (le_iInf₂ fun β hβ => hmin β hβ)
 
 end

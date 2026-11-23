@@ -1,17 +1,24 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.OmHeightslockG
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointsIffCentresStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ConjugatePointSameCentreStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GramMatrixConjugationStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GramMatrixTwoFramesStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.InteriorPointPolarisedStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalRingPointsExistsUniqueStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ValAtIffValueAtStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointsIffCentres
+public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.CoordinateIdeals
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ConjugatePointSameCentre
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GramMatrixConjugation
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ContDiffUncentre
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GramMatrixTwoFrames
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.InteriorPointPolarised
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ValAtIffValueAt
 public import Development.AutomorphicSpectrum.Statements.MetricStatements.ExistsFlagModelBaseMetric
 public import Development.WeilBound.CoreStatements.PluriharmonicCharts.RefNorm
 public import Development.WeilBound.CoreStatements.PluriharmonicCharts.XCBmExistsBlockpos
 public import Development.WeilBound.CoreStatements.PluriharmonicCharts.XCBmExistsGram
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagModelBaseProjectionPoints
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalRingPointsExistsUnique
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -52,7 +59,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagModelBaseProjectionPoints
 
 @[expose] public section
 
@@ -229,14 +235,14 @@ def Gr (tie : FlagTie M 𝔐) (F : FrameData ι (CMType H) (D.p + D.q) M.Ω M.bl
 theorem gr_good (tie : FlagTie M 𝔐) (F τ w G) (h : Gr tie F τ w G) : M.IsFrame F ∧ w ∈ mcPts (mCoordIdeal M.x) ∧
     M.GoodAt F (mCoordIdeal w) ∧ IsBlockDiag D.p G ∧ G.PosDef := by
   obtain ⟨hF, gd, z, Γ, hw, -, -, hp, rfl⟩ := h
-  exact ⟨hF, (GlobalTheory.T.complex_points_iff_centres 𝔐.X M.Ω 𝔐.ξ _ _ M.x 𝔐.tie w).2 ⟨z, 𝔐.all _, hw⟩, gd,
+  exact ⟨hF, (_root_.GlobalTheory.CompanionTheory.Ar.mem_mcPts_iff_exists_coordsAt 𝔐.X M.Ω 𝔐.ξ _ _ M.x 𝔐.tie w).2 ⟨z, 𝔐.all _, hw⟩, gd,
     PositivityTheory.Xgp.t_c_bm_exists_blockpos _ _ Γ hp⟩
 
 theorem gr_tor (tie : FlagTie M 𝔐) (F τ w G) (cv : NonPluckerBlocks M.blk → ℂ) (hc : ∀ k, cv k ≠ 0) (h : Gr tie F τ w G) :
     Gr tie F τ (torusSmul cv w) G := by
   obtain ⟨hF, gd, z, Γ, hw, h'⟩ := h
   have hz' : CoordsAt 𝔐.ξ M.x z (torusSmul cv w) :=
-    (((GlobalTheory.T.local_ring_points_existsUnique 𝔐.X M.Ω 𝔐.ξ _ _ M.x 𝔐.tie ℂ).2.2 z w (𝔐.all _) hw).2 _).2
+    (((_root_.GlobalTheory.CompanionTheory.Ar.tie_points 𝔐.X M.Ω 𝔐.ξ _ _ M.x 𝔐.tie ℂ).2.2 z w (𝔐.all _) hw).2 _).2
       ⟨fun k => Units.mk0 (cv k) (hc k), rfl⟩
   refine ⟨hF, ?_, z, Γ, hz', h'⟩
   rwa [← ptIdeal_centre hz' (𝔐.all _), ptIdeal_centre hw]
@@ -244,8 +250,8 @@ theorem gr_tor (tie : FlagTie M 𝔐) (F τ w G) (cv : NonPluckerBlocks M.blk �
 theorem gr_conj (tie : FlagTie M 𝔐) (F τ w G) (h : Gr tie F τ w G) :
     Gr tie F τ (conjVec w) (G.map (starRingEnd ℂ)) := by
   obtain ⟨hF, gd, z, Γ, hw, hi, hΓ, hp, rfl⟩ := h
-  have hcc := GlobalTheory.T.conjugate_point_same_centre 𝔐.X M.Ω 𝔐.ξ _ _ M.x z w
-  refine ⟨hF, ?_, _, _, hcc.2 hw, ?_, GlobalTheory.T.gramAt_conj_point_map_conj E H D l Xo c Y S M.Ω _ _ M.x 𝔐 z _ _ _ hΓ, ?_,
+  have hcc := _root_.GlobalTheory.CompanionTheory.Ar.CoordConj.centre_and_coords_conj 𝔐.X M.Ω 𝔐.ξ _ _ M.x z w
+  refine ⟨hF, ?_, _, _, hcc.2 hw, ?_, _root_.GlobalTheory.CompanionTheory.Ar.HodgeMetric.ConjPoint.gramAt_conj_point E H D l Xo c Y S M.Ω _ _ M.x 𝔐 z _ _ _ hΓ, ?_,
     (blockG_conj Γ).symm⟩
   · have e : mCoordIdeal (conjVec w) = mCoordIdeal w :=
       (ptIdeal_centre (hcc.2 hw) (𝔐.all _)).symm.trans
@@ -264,12 +270,12 @@ theorem gr_comp (tie : FlagTie M 𝔐) (F F' τ w G G') (h : Gr tie F τ w G) (h
   have hm := (gr_good tie F τ w G h).2.1
   obtain ⟨hF, gd, z, Γ, hw, hi, hΓ, hp, rfl⟩ := h
   obtain ⟨hF', gd', z', Γ', hw', -, hΓ', hp', rfl⟩ := h'
-  have tp := GlobalTheory.T.local_ring_points_existsUnique 𝔐.X M.Ω 𝔐.ξ _ _ M.x 𝔐.tie ℂ
+  have tp := _root_.GlobalTheory.CompanionTheory.Ar.tie_points 𝔐.X M.Ω 𝔐.ξ _ _ M.x 𝔐.tie ℂ
   obtain rfl : z = z' := (tp.1 w hw.1 (tp.2.2 z w (𝔐.all _) hw).1).unique ⟨𝔐.all _, hw⟩ ⟨𝔐.all _, hw'⟩
-  have hpol := GlobalTheory.T.interior_point_polarised E H D l Xo c Y S M.Ω _ _ M.x 𝔐 z hi
+  have hpol := _root_.GlobalTheory.CompanionTheory.Ar.HodgeMetric.polarisedAt_of_interior E H D l Xo c Y S M.Ω _ _ M.x 𝔐 z hi
   obtain ⟨Rz, hR⟩ := change_reg tie hF hF' τ hw gd gd'
   obtain ⟨Rz', hR'⟩ := change_reg tie hF' hF τ hw gd' gd
-  have tv := GlobalTheory.T.valAt_iff_value_at 𝔐.X M.Ω 𝔐.ξ _ _ M.x 𝔐.tie z w (𝔐.all _) hw
+  have tv := _root_.GlobalTheory.CompanionTheory.Ar.valAt_iff_isValueAt_coords 𝔐.X M.Ω 𝔐.ξ _ _ M.x 𝔐.tie z w (𝔐.all _) hw
   obtain ⟨bR, ew, -⟩ := frames_rel tie hF hF' τ
   obtain ⟨bR', -, -⟩ := frames_rel tie hF' hF τ
   let RA : Matrix (Fin (D.p + D.q)) (Fin (D.p + D.q)) (CPts.regRing M.x w) :=
@@ -295,12 +301,12 @@ theorem gr_comp (tie : FlagTie M 𝔐) (F F' τ w G G') (h : Gr tie F τ w G) (h
     rw [← e2, ← e2', ← Matrix.map_mul, this, Matrix.map_one _ (map_zero _) (map_one _)]
   refine ⟨Rz, fun a b => (tv _ _).1 (hR a b), (Matrix.isUnit_det_of_left_inverse e3).ne_zero,
     blockG_change hp hp' b1 b1' e3 ?_ ?_⟩
-  · refine GlobalTheory.T.gram_matrix_two_frames E H D l Xo c Y S M.Ω _ _ M.x 𝔐 z _ _ _ _ _ (omBlock ((F'.T τ)⁻¹ * F.T τ))ᵀ _ hpol
+  · refine _root_.GlobalTheory.CompanionTheory.Ar.HodgeMetric.gramAt_change E H D l Xo c Y S M.Ω _ _ M.x 𝔐 z _ _ _ _ _ (omBlock ((F'.T τ)⁻¹ * F.T τ))ᵀ _ hpol
       (gramAt_sub hΓ (omEmb D.p D.q)) (gramAt_sub hΓ' (omEmb D.p D.q)) (fun m => ?_) fun a b => hR' _ _
     simp only [gb_om]
     rw [dual_change tie hF hF' τ (dualFam_spec tie hF τ hw gd) (dualFam_spec tie hF' τ hw gd') m]
     simp [colFrame]
-  · refine GlobalTheory.T.gram_matrix_two_frames E H D l Xo c Y S M.Ω _ _ M.x 𝔐 z _ _ _ _ _ (wBlock ((F.T τ)⁻¹ * F'.T τ)) _ hpol
+  · refine _root_.GlobalTheory.CompanionTheory.Ar.HodgeMetric.gramAt_change E H D l Xo c Y S M.Ω _ _ M.x 𝔐 z _ _ _ _ _ (wBlock ((F.T τ)⁻¹ * F'.T τ)) _ hpol
       (gramAt_sub hΓ (wEmb D.p D.q)) (gramAt_sub hΓ' (wEmb D.p D.q)) (fun m => ?_) fun a b => hR _ _
     simp only [gb_w]
     exact congrFun ew m
@@ -313,7 +319,7 @@ theorem PositivityTheory.Xgp.t_c_bm_exists_hom : ∀ (E : Type) [Field E] [Numbe
     (PositivityTheory.Xgp.c_bm_exists_hom.gr_tor tie) (PositivityTheory.Xgp.c_bm_exists_hom.gr_conj tie)
     (PositivityTheory.Xgp.c_bm_exists_hom.gr_comp tie)
   refine ⟨hom, h1, fun i x hx p => h2 p _ _ _ ?_, fun p z _ _ _ _ => h3 p z⟩
-  obtain ⟨z, -, hz⟩ := (GlobalTheory.T.complex_points_iff_centres 𝔐.X M.Ω 𝔐.ξ _ _ M.x 𝔐.tie _).1 (Rb.mem x x (Rb.mem_U x))
+  obtain ⟨z, -, hz⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.mem_mcPts_iff_exists_coordsAt 𝔐.X M.Ω 𝔐.ξ _ _ M.x 𝔐.tie _).1 (Rb.mem x x (Rb.mem_U x))
   have hi := (hInt x z hz).1 hx.2
   obtain ⟨g1, g2, -⟩ := PositivityTheory.Xgp.t_c_bm_exists_gram E H D Xo l c Y S K ι Φ y M 𝔐 tie (F i) (hF i) p.1 _ z hz hi
     (hgd i x hx.1)

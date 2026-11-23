@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.LocalDensityEuler
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.CmLocalDensitiesProductFormulaStatement
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.LocalDualIndex
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.CmLocalDensitiesProductFormula
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MultipliableEulerFac
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -48,6 +49,6 @@ import Mathlib.Topology.Sheaves.Init
 namespace GlobalTheory.DensityProductClosed
 
 theorem eulerProductOfDensities : GlobalTheory.IndefiniteRowSideFullHecke.LocalAdditiveCharacterDual.EulerProductOfDensities :=
-  GlobalTheory.DensityProductCompare.densityProduct_iff.1 GlobalTheory.T.cm_localDensities_productFormula
+  GlobalTheory.DensityProductCompare.densityProduct_iff.1 _root_.GlobalTheory.Proof.cm_localDensities_productFormula.densityProduct
 
 end GlobalTheory.DensityProductClosed

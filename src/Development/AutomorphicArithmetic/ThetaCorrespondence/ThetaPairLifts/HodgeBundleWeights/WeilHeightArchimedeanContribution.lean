@@ -8,7 +8,8 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.SemiposAtOfP
 public import Development.WeilBound.CoreStatements.NefModelVolumes.NV
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PushInvertibleOfHasTheta
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.LocalUnitMapSurjective
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.ExtVanSectionHasCuspFormMatchStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsVanBdOfMemExtVanZ
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.ExtVanSectionHasCuspFormMatch
 public import Development.WeilBound.CoreStatements.NefModelVolumes.NormGenValLe
 public import Development.WeilBound.CoreStatements.ProjectiveValuations.NonemptyToroidalFlagBundle
 import Mathlib.Algebra.Order.Floor.Extended
@@ -86,7 +87,7 @@ theorem weil_height_archimedean_contribution : NV → _root_.GlobalTheory.CovTop
       ∃ Q ∈ Submodule.span ℂ (rdU (Y.U σ) '' (cuspOn Y.U Z (wtOf (T.Q.Dw j) u 0) : Set (Rul Y.d.Xo₂ Y.d.c₂))),
         ∀ w ∈ framesOn (Y.U σ) Z, P w.1 w.2 = Q w.1 w.2 := fun σ hσ P hPh => by
     obtain ⟨m', as, fs, hfs', hPQ⟩ := _root_.PositivityTheory.Xj7N.local_unit_map_surjective hNV hP D T j Y e o hY hf Z TF u hG hB σ hσ P hPh
-    choose g' hg hgf using fun i => GlobalTheory.T.extVan_section_has_cusp_form_match D T j Y e o hY hf Z TF u (fs i) (hfs' i)
+    choose g' hg hgf using fun i => _root_.GlobalTheory.CompanionTheory.Relay.extVan_section_has_cusp_form_match D T j Y e o hY hf Z TF u (fs i) (hfs' i)
     refine ⟨∑ i, as i • rdU (Y.U σ) (g' i), Submodule.sum_mem _ fun i _ => Submodule.smul_mem _ _
       (Submodule.subset_span ⟨g' i, hg i, rfl⟩), fun w hw => ?_⟩
     rw [hPQ w hw]

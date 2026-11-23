@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.QuoIff
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.Realised
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardSmulTwistedProjectorMemIntegralFormsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedProjectorIdempotentOfGroupAlgebraIdemStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedProjectorOrthogonalOfUnitaryActionStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.GramCEqTranspose
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardSmulTwistedProjectorMemIntegralForms
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedProjectorIdempotentOfGroupAlgebraIdem
+public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedProjectorOrthogonalOfUnitaryAction
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ActMemMKStatement
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.GeoUnitaryTiedStatement
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TiedGoodIdemStatement
@@ -57,11 +59,11 @@ theorem cutAt_of_rows_alt {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Fo
     {Kc : Formalism.MainNotions.G.Consts} {Y0 : DivX D} {cX : ExtraC} {ex : Extra D L hT Gi Gl Kc Y0 cX} {Csz : ℝ} (p : PtAt ex Csz)
     (hp : p.PointConditions') (ht : RecTied D L) (i : Fin D.R.m) (PP A : ℝ) (hN : HostNum D L PP A 3) : CutAt p i := by
   obtain ⟨h1, h2, h3, h4⟩ := _root_.GlobalTheory.T.group_idempotent_coefficients_alt p hp ht
-  have hI := GlobalTheory.T.twistedProjector_idempotent_of_groupAlgebra_idem (p.R.toRealDat.FW i) (fun g => (idemOf p.P.A3.A.X).coeff g) h1
+  have hI := _root_.GlobalTheory.eOp_comp_self_of_conv_idem (p.R.toRealDat.FW i) (fun g => (idemOf p.P.A3.A.X).coeff g) h1
   refine ⟨hI, fun σ x y => ?_, fun x hx => ?_, _root_.GlobalTheory.T.two_mul_log_card_Gp_le_b p hp ht PP A hN⟩
-  · exact GlobalTheory.T.twistedProjector_orthogonal_of_unitary_action (p.R.toRealDat.FW i) (fun g => (idemOf p.P.A3.A.X).coeff g) _ hI (_root_.GlobalTheory.T.row_inner_product_invariant_alt p hp ht i σ)
+  · exact _root_.GlobalTheory.twistedProjector_orthogonal_of_unitary (p.R.toRealDat.FW i) (fun g => (idemOf p.P.A3.A.X).coeff g) _ hI (_root_.GlobalTheory.T.row_inner_product_invariant_alt p hp ht i σ)
       (fun g => h4 _ g) x y
-  · exact GlobalTheory.T.card_smul_twistedProjector_mem_integralForms (p.R.toRealDat.FW i) (fun g => (idemOf p.P.A3.A.X).coeff g) h2 h3 (_root_.GlobalTheory.T.rho_mem_MK_of_mem_MK p hp ht i) _ _ x hx
+  · exact _root_.GlobalTheory.card_smul_eOp_mem_Mall (p.R.toRealDat.FW i) (fun g => (idemOf p.P.A3.A.X).coeff g) h2 h3 (_root_.GlobalTheory.T.rho_mem_MK_of_mem_MK p hp ht i) _ _ x hx
 end GlobalTheory.CovTop
 end
 end

@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.UnipVal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FourierIntertwinesWeylHeisenbergSchrodingerStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelParabolicOperatorsHeisenbergCompatStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelParabolicWeylElementGenerateUnitaryStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FourierIntertwinesWeylHeisenbergSchrodinger
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelParabolicOperatorsHeisenbergCompat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelParabolicWeylElementGenerateUnitary
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -86,16 +86,16 @@ theorem weil_heis_intertwine : ∀ (F : Type) [Field F] [CharZero F] [ValuativeR
     intro p hp w
     refine LinearMap.ext fun φ => Subtype.ext ?_
     simp only [Module.End.mul_apply, heis_apply, hK.par p hp]
-    exact GlobalTheory.T.siegelParabolic_operators_heisenberg_compat F E c δ hE α ν Q hQ ψ hψ hψ1 hψne χ hχ hη p hp w φ
+    exact _root_.GlobalTheory.KSp.heisFun_parFun F E c δ hE α ν Q hQ ψ hψ hψ1 hψne χ hχ hη p hp w φ
   have hweyl : weyl c ν ∈ U := by
     intro w
     refine LinearMap.ext fun φ => Subtype.ext ?_
     simp only [Module.End.mul_apply, heis_apply, hK.wey]
     have hs : ∀ f : Matrix α ν E → ℂ, heisFun c ψ Q w (κ • f) = κ • heisFun c ψ Q w f := by
       intro f; funext x; simp only [heisFun, Pi.smul_apply, smul_eq_mul]; ring
-    rw [hs, GlobalTheory.T.fourier_intertwines_weyl_heisenberg_schrodinger F E c δ hE α ν Q hQ ψ μ w φ]
+    rw [hs, _root_.GlobalTheory.KSp.heisFun_fou F E c δ hE α ν Q hQ ψ μ w φ]
     rfl
-  have hU := GlobalTheory.T.siegelParabolic_weylElement_generate_unitary F E c δ hE ν U hsieg hweyl
+  have hU := _root_.GlobalTheory.KSp.sieg_weyl_generate F E c δ hE ν U hsieg hweyl
   intro g w
   have hg : g ∈ U := hU ▸ Subgroup.mem_top g
   exact hg w

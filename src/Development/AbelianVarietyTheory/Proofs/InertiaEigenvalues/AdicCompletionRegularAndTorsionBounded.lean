@@ -1,7 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.DeltaStructureOfWittLengthTwoSection
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemPowOfMulMemPowBoundedTorsionStatement
+public import Mathlib.Algebra.Algebra.Operations
+public import Mathlib.Data.Nat.Prime.Defs
+public import Mathlib.RingTheory.Ideal.Span
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemPowOfMulMemPowBoundedTorsion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,7 +81,7 @@ theorem regular_and_torsion_bounded : ∀ (l : ℕ) [Fact l.Prime] (L : Type) [C
     have h1 : i (d * a) ∈ I ^ (2 * (n + N + 1)) := by
       have e : i (d * a) = i d * z - i d * (z - i a) := by rw [map_mul]; ring
       rw [e]; exact sub_mem hz (Ideal.mul_mem_left _ _ ha)
-    have h2 := GlobalTheory.T.mem_pow_of_mul_mem_pow_bounded_torsion l L d N hd hbd n a (ker _ _ h1)
+    have h2 := _root_.GlobalTheory.div_d_continuous_of_bdd_ltorsion l L d N hd hbd n a (ker _ _ h1)
     have h3 : i a ∈ I ^ n := by rw [← hpow]; exact Ideal.mem_map_of_mem i h2
     have h4 : z - i a ∈ I ^ n := Ideal.pow_le_pow_right (by omega) ha
     simpa using add_mem h4 h3

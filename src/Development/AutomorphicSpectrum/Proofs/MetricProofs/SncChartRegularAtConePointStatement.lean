@@ -3,8 +3,9 @@ module
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FiniteMinimalPrimes
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ChPrime
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AffineChartIdealPrimeAndSaturated
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MinimalPrimesOfMultihomogSupStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularSystemOfParametersLocalRingAltBis
+public import ReciprocityTheory.AnalyticForms.RegularLocalRings.MemConePtsIffChartIdeal
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MinimalPrimesOfMultihomogSup
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PrimesBelowParams
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -128,9 +129,9 @@ theorem _root_.GlobalTheory.T.snc_chart_regular_at_cone_point : ∀ (K : Type) [
         rintro _ ⟨k, rfl⟩
         exact hD (renR_X_sub_one_mem (P ⊔ D) p k)
   have hIDc : SncRes.ideal P p ≤ SncRes.ideal (P ⊔ D) p := ideal_mono le_sup_left p
-  have pr := GlobalTheory.T.regular_system_of_parameters_local_ring_alt _ e (SncRes.ideal P p) (SncRes.ideal (P ⊔ D) p) (renPt (affCoord p z)) r Jf
+  have pr := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.SncRes.Par.primes_below_params _ e (SncRes.ideal P p) (SncRes.ideal (P ⊔ D) p) (renPt (affCoord p z)) r Jf
     hIDc hI reg dim span hprim
-  have hmin := GlobalTheory.T.minimal_primes_of_multihomog_sup K ι P D hP hD
+  have hmin := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.MinHom.isMultiHomogIdeal_of_mem_minimalPrimes_sup K ι P D hP hD
   have chart_prime_and_mem_iff (Q : Ideal (MvPolynomial (Σ k, ι k) ℂ))
       (hQ : IsMultiHomogIdeal Q) (hprime : Q.IsPrime)
       (hX : ∀ k, (X ⟨k, p k⟩ : MvPolynomial (Σ k, ι k) ℂ) ∉ Q) :

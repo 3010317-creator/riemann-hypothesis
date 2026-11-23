@@ -2,10 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDiagonalLagrangianInvariantForm
 public import GroundTheory.AutomorphicForms.GL2.GJMatrixAdelic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzRestrictTranslatedDiagonalMemStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralDiagonalCoordsEqPosMulAdeleHaarStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardTraceAdelicAddCharApplyEqAdelicCharStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SummablePartialFourierAdelicSchwartzRationalPairStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzRestrictTranslatedDiagonalMem
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralDiagonalCoordsEqPosMulAdeleHaar
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import GroundTheory.GlobalFields.TateThesis.AdelicChar
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardTraceAdelicAddCharApplyEqAdelicChar
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SummablePartialFourierAdelicSchwartzRationalPair
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,14 +64,14 @@ open MeasureTheory GroundTheory.Automorphic.GJMatrix
 variable {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ]
 
 theorem char_eq (ψ : AddChar (AF F) ℂ) (hψ : IsStd ψ) (x : AF F) :
-    ψ x = (GroundTheory.Global.adelicChar F x : ℂ) := GlobalTheory.T.standardTraceAdelicAddChar_apply_eq_adelicChar F ψ hψ x
+    ψ x = (GroundTheory.Global.adelicChar F x : ℂ) := _root_.GlobalTheory.StdCharEq.eq_adelicChar F ψ hψ x
 
 theorem glue_integral : ∃ c₀ : ℝ, 0 < c₀ ∧ ∀ H : (κ → AF F) → ℂ,
     (Integrable (fun p => H (GlobalTheory.DiagForm.glue p)) (GlobalTheory.DiagForm.mu F κ) ↔ Integrable H (adeleMeasurePi F)) ∧
-    ∫ p, H (GlobalTheory.DiagForm.glue p) ∂(GlobalTheory.DiagForm.mu F κ) = c₀ * ∫ t, H t ∂(adeleMeasurePi F) := GlobalTheory.T.integral_diagonalCoords_eq_pos_mul_adeleHaar F κ
+    ∫ p, H (GlobalTheory.DiagForm.glue p) ∂(GlobalTheory.DiagForm.mu F κ) = c₀ * ∫ t, H t ∂(adeleMeasurePi F) := _root_.GlobalTheory.diagForm_glue_integral F κ
 
 theorem shift_mem {φ : (κ ⊕ κ → AF F) → ℂ} (hφ : φ ∈ schA F (κ ⊕ κ)) (u : κ → AF F) :
-    (fun t : κ → AF F => φ (Sum.elim (t + u) t)) ∈ schwartzBruhatPi (K := F) (ι := κ) := GlobalTheory.T.adelicSchwartz_restrict_translated_diagonal_mem F κ φ hφ u
+    (fun t : κ → AF F => φ (Sum.elim (t + u) t)) ∈ schwartzBruhatPi (K := F) (ι := κ) := _root_.GlobalTheory.DiagShift.shift_mem_schwartzBruhatPi F κ φ hφ u
 
 theorem schA_le (ι : Type) [Fintype ι] : schA F ι ≤ schwartzBruhatPi (K := F) (ι := ι) := by
   refine Submodule.span_le.mpr ?_
@@ -79,7 +83,7 @@ theorem schA_le (ι : Type) [Fintype ι] : schA F ι ≤ schwartzBruhatPi (K := 
 theorem summable_four {φ : (κ ⊕ κ → AF F) → ℂ} (hφ : φ ∈ schA F (κ ⊕ κ)) :
     Summable fun uv : (κ → F) × (κ → F) => ‖adelicFourierPi F
       (fun t : κ → AF F => φ (Sum.elim (t + fun i => algebraMap F (AF F) (uv.1 i)) t))
-      (fun i => algebraMap F (AF F) (uv.2 i))‖ := GlobalTheory.T.summable_partialFourier_adelicSchwartz_rationalPairs F κ φ hφ
+      (fun i => algebraMap F (AF F) (uv.2 i))‖ := _root_.GlobalTheory.PartialFourierSum.summable_partial_fourier F κ φ hφ
 
 abbrev rv (u : κ → F) : κ → AF F := fun i => algebraMap F (AF F) (u i)
 

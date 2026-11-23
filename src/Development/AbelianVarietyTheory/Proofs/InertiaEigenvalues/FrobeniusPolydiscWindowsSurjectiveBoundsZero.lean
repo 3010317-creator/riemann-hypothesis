@@ -1,15 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RowTEqRowS
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdditiveSystemGeneralLemmaAllOrdersStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardWindowZerosEqIntegralAdditiveSystemStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardWindowZerosInnerEqShiftedOuterStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MooreNorm
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdditiveSystemGeneralLemmaAllOrders
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardWindowZerosEqIntegralAdditiveSystem
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardWindowZerosInnerEqShiftedOuter
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsWindowRadii
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusWindowSeriesTermNormLeRowBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormFrobeniusWindowSeriesTermMonoStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormalOfInvMulStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormalizedRowCoefficientMatricesDetNormStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WindowSummedRowPowEqAdditiveSystemPowerSumStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusWindowSeriesTermNormLeRowBound
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormFrobeniusWindowSeriesTermMono
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormalOfInvMul
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormalizedRowCoefficientMatricesDetNorm
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WindowSummedRowPowEqAdditiveSystemPowerSum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -99,8 +100,8 @@ theorem normalize {F : Type} [NormedField F] [IsUltrametricDist F] (p : ℕ) [Fa
         Φ 0 = 0 ∧ ∀ z b, gsum (p ^ h) (L + U) M z = Φ b ↔ ∀ r, rowS p ϖ lam L U (winPt p π L z) r = b r := by
   set B := coefB p ϖ lam π L U with hBdef
   obtain ⟨hB1, hB2⟩ := coefB_norm p ϖ lam π L U hb
-  obtain ⟨hdet, hdet0⟩ := GlobalTheory.T.normalizedRowCoefficientMatrices_det_norm F p h ϖ hϖ lam π hlam hπ hanti horth L U
-  obtain ⟨hN, hinv⟩ := GlobalTheory.T.normal_inv_mul_and_norm_inv_le_one F (Fin h) L B hB1 hB2 hdet
+  obtain ⟨hdet, hdet0⟩ := _root_.GlobalTheory.PMonE.coefB_det F p h ϖ hϖ lam π hlam hπ hanti horth L U
+  obtain ⟨hN, hinv⟩ := _root_.GlobalTheory.PMonE.normal_of_inv_mul F (Fin h) L B hB1 hB2 hdet
   have hdne : (B L).det ≠ 0 := by
     intro h0
     rw [h0, norm_zero] at hdet
@@ -135,13 +136,13 @@ theorem normalize {F : Type} [NormedField F] [IsUltrametricDist F] (p : ℕ) [Fa
         have := congrArg (fun v => B L *ᵥ v) H
         simpa only [Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv _ hdu, Matrix.one_mulVec] using this
       have H3 := congrFun H2 r
-      rw [← GlobalTheory.T.windowSummedRow_pow_eq_additiveSystemPowerSum F p h ϖ lam π L U hL z r] at H3
+      rw [← _root_.GlobalTheory.PMonE.rowS_winPt_pow_eq_gsum_coefB F p h ϖ lam π L U hL z r] at H3
       have H4 := (iterateFrobenius_inj F p (h - (r : ℕ))).eq_iff.1 (by simpa [iterateFrobenius_def] using H3)
       exact (div_left_inj' (hc r)).1 H4
     · intro H
       have H2 : gsum (p ^ h) (L + U) B z = nb b := by
         funext r
-        rw [← GlobalTheory.T.windowSummedRow_pow_eq_additiveSystemPowerSum F p h ϖ lam π L U hL z r, H r]
+        rw [← _root_.GlobalTheory.PMonE.rowS_winPt_pow_eq_gsum_coefB F p h ϖ lam π L U hL z r, H r]
       rw [H2]
 
 theorem winThm : WinThm := by
@@ -154,17 +155,17 @@ theorem winThm : WinThm := by
       rw [hϖ]
       exact inv_pos.2 (by exact_mod_cast hp.pos)
     exact norm_pos_iff.1 this
-  have hbd := GlobalTheory.T.frobeniusWindowSeriesTerm_norm_le_rowBound F p k ϖ hϖ lam π hlam hanti hlt hπ hrel1 hrel2
+  have hbd := _root_.GlobalTheory.PMonE.WinBounds.term_le_bound F p k ϖ hϖ lam π hlam hanti hlt hπ hrel1 hrel2
   have hb : ∀ (r j : Fin (k + 1)) (n : ℤ), ‖term p ϖ lam π r j n‖ ≤ ‖lam r * π r ^ p ^ (r : ℕ)‖ ∧
       (0 < n → ‖term p ϖ lam π r j n‖ < ‖lam r * π r ^ p ^ (r : ℕ)‖) :=
     fun r j n => ⟨(hbd r j n).1, (hbd r j n).2.1⟩
   have hπ0 : ∀ j, π j ≠ 0 := fun j => (hπ j).1
-  have hGL := GlobalTheory.T.additiveSystem_generalLemma_all_orders
+  have hGL := _root_.GlobalTheory.PMonE.generalLemma_allOrders
   refine ⟨fun j => ‖π j‖, fun r => ‖lam r * π r ^ p ^ (r : ℕ)‖, 2,
     fun j => ⟨norm_pos_iff.2 (hπ j).1, (hπ j).2⟩,
     fun r => norm_pos_iff.2 (mul_ne_zero (hlam r) (pow_ne_zero _ (hπ r).1)), ?_, ?_, ?_⟩
   · intro x hx r j n
-    have hm := GlobalTheory.T.norm_frobeniusWindowSeriesTerm_mono F p (k + 1) ϖ lam π x hx r j n
+    have hm := _root_.GlobalTheory.PMonE.term_norm_mono F p (k + 1) ϖ lam π x hx r j n
     exact ⟨hm.trans (hbd r j n).1, fun hn => hm.trans ((hbd r j n).2.2 (by exact_mod_cast hn))⟩
   · intro b hbnd
     obtain ⟨M, hM, _, Φ, hΦ, _, hiff⟩ :=
@@ -184,9 +185,9 @@ theorem winThm : WinThm := by
       normalize p ϖ hϖ0 lam π hlam hπ0 hanti horth (2 - 1) (2 + 1) (by norm_num) hb
     have c1 := (hGL 2).2 F p (Fin (k + 1)) (k + 1) (2 + 2) (by omega) (by omega) M hM hM0
     have c2 := (hGL (2 - 1)).2 F p (Fin (k + 1)) (k + 1) ((2 - 1) + (2 + 1)) (by omega) (by omega) M' hM' hM0'
-    have d1 := GlobalTheory.T.card_windowZeros_eq_integral_additiveSystem F p (k + 1) ϖ lam π hπ0 2 2 M (fun z => by simpa [hΦ0] using hiff z 0)
-    have d2 := GlobalTheory.T.card_windowZeros_eq_integral_additiveSystem F p (k + 1) ϖ lam π hπ0 (2 - 1) (2 + 1) M' (fun z => by simpa [hΦ0'] using hiff' z 0)
-    have e1 := GlobalTheory.T.card_windowZeros_inner_eq_shifted_outer F p (k + 1) 2 ϖ hϖ0 (by norm_num) lam π
+    have d1 := _root_.GlobalTheory.PMonE.winPt_card F p (k + 1) ϖ lam π hπ0 2 2 M (fun z => by simpa [hΦ0] using hiff z 0)
+    have d2 := _root_.GlobalTheory.PMonE.winPt_card F p (k + 1) ϖ lam π hπ0 (2 - 1) (2 + 1) M' (fun z => by simpa [hΦ0'] using hiff' z 0)
+    have e1 := _root_.GlobalTheory.PMonE.win_inner F p (k + 1) 2 ϖ hϖ0 (by norm_num) lam π
     have hq1 : 1 < p ^ (k + 1) := Nat.one_lt_pow (by omega) hp.one_lt
     have cS : Nat.card {x : Fin (k + 1) → F // (∀ j, ‖x j‖ ≤ ‖π j‖) ∧ ∀ r, rowS p ϖ lam 2 2 x r = 0} =
         (p ^ (k + 1)) ^ ((k + 1) * 2) := by

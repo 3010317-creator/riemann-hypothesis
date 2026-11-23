@@ -6,10 +6,11 @@ public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FractionFieldExtClosureInjectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MdifferentiableOfHasSomeLevelOverStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemModularFunctionRingOverIffHasSomeLevelOverStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UpperHalfPlaneGermRingHomAndRestrictStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FractionFieldExtClosureInjective
+public import Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative.LeviCivita
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MdifferentiableOfHasSomeLevelOver
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UpperHalfPlaneGermRingHomAndRestrict
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemModularFunctionRingOverIffHasSomeLevelOver
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,9 +58,9 @@ namespace GlobalTheory.FN
 
 theorem frac_const_and_quot : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (T : Frac Ω ε), (∀ c : Ω, T.an (algebraMap Ω T.K c) = ((fun _ => ε c : ℂ → ℂ) : Mero)) ∧ ∀ f : T.K, ∃ a b : ℂ → ℂ, DifferentiableOn ℂ a Hs ∧ DifferentiableOn ℂ b Hs ∧ (b : Mero) ≠ 0 ∧ T.an f * (b : Mero) = (a : Mero) := by
   intro Ω _ _ _ ε T
-  have hmem := GlobalTheory.T.mem_modularFunctionRingOver_iff_hasSomeLevelOver ε.range
+  have hmem := _root_.GlobalTheory.FN.mem_ring_iff_inR ε.range
   have hdiff : ∀ a : ring ε.range, DifferentiableOn ℂ (up (a : ℍ → ℂ)) Hs := fun a =>
-    ((GlobalTheory.T.upperHalfPlane_germ_ringHom_and_restrict).2.1 _).1 (GlobalTheory.T.mdifferentiable_of_hasSomeLevelOver ε.range _ ((hmem.1 _).1 a.2))
+    ((_root_.GlobalTheory.FN.germ_ringHom_and_restrict).2.1 _).1 (_root_.GlobalTheory.FN.inR_mdifferentiable ε.range _ ((hmem.1 _).1 a.2))
   refine ⟨fun c => ?_, fun f => ?_⟩
   · have hc : (fun _ : ℍ => ε c) ∈ ring ε.range := (hmem.1 _).2 (hmem.2 _ ⟨c, rfl⟩)
     rw [← T.io_c c ⟨_, hc⟩ rfl, T.an_io]
@@ -69,7 +70,7 @@ theorem frac_const_and_quot : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlg
     · intro h0
       have h1 : T.an (T.io b) = T.an (T.io 0) := by
         rw [T.an_io, map_zero, map_zero]; exact h0
-      exact hb (T.io_inj ((GlobalTheory.T.fractionField_ext_closure_injective Ω ε T).2.2.2 h1))
+      exact hb (T.io_inj ((_root_.GlobalTheory.FN.frac_ext_clo_inj Ω ε T).2.2.2 h1))
     · have := congrArg T.an h
       rw [map_mul, T.an_io, T.an_io] at this
       exact this

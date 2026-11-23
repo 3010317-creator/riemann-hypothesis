@@ -5,11 +5,11 @@ public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.Glo
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsCmTripleMapDescendGroupQuotient
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsIsogenyPullbackHeckeModuliObject
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSabCancel
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HeckeQuotientClassifyingMapIsogenyUniqueStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HeckeQuotientClassifyingMapIsogenyUnique
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsIsogOfSurjectiveBaseChange
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ObjIsAbelianSchemeDimRigidifiedSym
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ObjPull
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.RangeOfIsPullback
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ObjIsAbelianSchemeDimRigidifiedSym
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SeesawReducedBaseAbelianSchemeOfDenseFibres
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -322,7 +322,7 @@ theorem overlap (Xo : Moduli D l) {𝔓 : Ideal (𝓞 E)} {p i : ℕ} {S V₁ V�
   obtain ⟨r₁, b₁, χ₁, k₁, hr₁, hJ₁, hL₁, hk₁⟩ := exists_restrict m₁ hI₁ hK₁ n₁ mT (pullback.fst f₁ f₂) rfl hs₁
   obtain ⟨r₂, b₂, χ₂, k₂, hr₂, hJ₂, hL₂, hk₂⟩ := exists_restrict m₂ hI₂ hK₂ n₂ mT (pullback.snd f₁ f₂) e₂ hs₂
   have hHT := ((GlobalTheory.heckeSets_pull E H D 𝔓 p i S _ o.t oT.t g mT.toSABMap o.proper).2 K).1 hH
-  obtain ⟨h₁, h₂⟩ := GlobalTheory.T.heckeQuotient_classifyingMap_isogeny_unique E H D l Xo 𝔓 p i _ (g ≫ s) oT b₁ b₂ χ₁ χ₂ _ _ _ k₁ k₂ hA hHT
+  obtain ⟨h₁, h₂⟩ := _root_.GlobalTheory.heckeQuot_unique E H D l Xo 𝔓 p i _ (g ≫ s) oT b₁ b₂ χ₁ χ₂ _ _ _ k₁ k₂ hA hHT
     (by rw [Category.assoc, hc₁, hs₁]) (by rw [Category.assoc, hc₂, hs₂]) hJ₁ hJ₂ hL₁ hL₂
   refine ⟨h₁, ?_⟩
   have h₃ : r₁ ≫ ψ₁.left ≫ n₁.cm.F = r₂ ≫ ψ₂.left ≫ n₂.cm.F := hk₁.symm.trans (Eq.trans h₂ hk₂)

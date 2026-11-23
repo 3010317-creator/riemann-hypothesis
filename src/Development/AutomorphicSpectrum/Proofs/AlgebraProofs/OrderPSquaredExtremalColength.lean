@@ -4,7 +4,8 @@ public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.IsF
 public import Mathlib.Algebra.Field.ZMod
 public import Mathlib.RingTheory.Valuation.Integers
 public import ReciprocityTheory.DualLattices.TensorSpan
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HopfOrderContainsAddCharactersStatement
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HopfOrderContainsAddCharacters
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.TensorProductHopfOrdersStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -451,7 +452,7 @@ theorem ord_split : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClos
       rintro _ ⟨ψ, rfl⟩
       let χ : AddChar N C := ψ.compAddMonoidHom
         ((AddMonoidHom.fst (ZMod p) (ZMod p)).comp e.symm.toAddMonoidHom)
-      refine ⟨fun x => χ x, GlobalTheory.T.hopf_order_contains_add_characters p C v R hv hp N AA χ, ?_⟩
+      refine ⟨fun x => χ x, _root_.GlobalTheory.CompanionTheory.Ar.GR.addChar_mem_hopfOrder p C v R hv hp N AA χ, ?_⟩
       funext z
       simp [χ, LinearMap.funLeft_apply]
     exact hle hh

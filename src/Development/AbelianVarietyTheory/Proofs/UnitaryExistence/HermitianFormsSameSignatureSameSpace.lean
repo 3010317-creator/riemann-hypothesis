@@ -6,8 +6,8 @@ public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ConjEqNeg
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.DetMulVolMulConj
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsBinaryEqAdicCompletion
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsHermCoordOfDatum
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.SignatureHermitianModelOfDatum
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FinrankEqOfInjectiveOfSpan
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.SignatureHermitianModelOfDatumStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -187,8 +187,8 @@ theorem model_in_same_space : (∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   obtain ⟨Gm', ψ, hM'⟩ := GlobalTheory.exists_herm_coord_of_datum E H D' ξ hξ h0 r hr
   have hsΨ : ∀ τ : E →+* ℂ, τ (H.rt : E) = H.rt0 → ∃ p0 : ℕ, (∃ Q : Matrix (Fin r) (Fin r) ℂ, Q.det ≠ 0 ∧ FD.gram τ Gm Q = Matrix.diagonal fun a : Fin r => ((FD.sgn p0 (a : ℕ) : ℝ) : ℂ)) ∧ (∃ Q : Matrix (Fin r) (Fin r) ℂ, Q.det ≠ 0 ∧ FD.gram τ Gm' Q = Matrix.diagonal fun a : Fin r => ((FD.sgn p0 (a : ℕ) : ℝ) : ℂ)) := by
     intro τ hτ
-    have s1 := GlobalTheory.T.signature_hermitian_model_of_datum E H D r ξ Gm φ hξ hM τ hτ
-    have s2 := GlobalTheory.T.signature_hermitian_model_of_datum E H D' r ξ Gm' ψ hξ hM' τ hτ
+    have s1 := _root_.GlobalTheory.HermSign.signature_of_model E H D r ξ Gm φ hξ hM τ hτ
+    have s2 := _root_.GlobalTheory.HermSign.signature_of_model E H D' r ξ Gm' ψ hξ hM' τ hτ
     rw [hp, hq] at s2
     rcases lt_or_gt_of_ne (im_ne τ hξ h0) with h | h
     · exact ⟨_, s1.2 h, s2.2 h⟩

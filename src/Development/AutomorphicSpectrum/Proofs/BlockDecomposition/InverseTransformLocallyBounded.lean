@@ -1,7 +1,7 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GaussTubeOfTubeGood
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExponentialFourierIntegralBoundStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExponentialFourierIntegralBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -68,7 +68,7 @@ theorem inv_bounded_on_tube : ∀ (X : Type) [NormedAddCommGroup X] [NormedSpace
   have hlC : ((l.1.re, l.2.re) : ℝ × ℝ) ∈ C := hl
   obtain ⟨x₀, hx₀, h1, h2⟩ := Set.mem_iUnion₂.1 (hcov hlC)
   have hgU : g' ∈ U x₀ := Set.mem_iInter₂.1 hg' x₀ hx₀
-  have hb := (GlobalTheory.T.exponential_fourier_integral_bound X (fun t => φ t g') l (ε x₀) (M x₀) (hε x₀) (hc g')
+  have hb := (_root_.GlobalTheory.CompanionTheory.TubeFourier.integrable_and_norm_integral_le X (fun t => φ t g') l (ε x₀) (M x₀) (hε x₀) (hc g')
     fun t => hM x₀ (l.1.re, l.2.re) h1.le h2.le g' hgU t).2
   have hterm : M x₀ * (2 / ε x₀) ^ 2 ≤ |M x₀| * (2 / ε x₀) ^ 2 :=
     mul_le_mul_of_nonneg_right (le_abs_self _) (sq_nonneg _)

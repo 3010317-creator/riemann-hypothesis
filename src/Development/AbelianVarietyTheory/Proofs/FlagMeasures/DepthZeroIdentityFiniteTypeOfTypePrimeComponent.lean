@@ -9,7 +9,8 @@ public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FiniteTypeEqI
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PrincipalCongruenceMapCompletionSubOneValuedLtStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SplitTrivialTranslateLocalComponentDisjointOrLeStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ValuationLtOneIffNormLtOnePadicCmCompletionStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitaryFiniteAdelesSplitPlaceDecompositionStatement
+import Formalism.AlgebraicWeights.IsAlgWeight
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitaryFiniteAdelesSplitPlaceDecomposition
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -95,7 +96,7 @@ theorem serFix_of_locS {L : Type} [Field L] [NumberField L] [IsCMField L] {n g :
     congr 1
     ext a b
     simp [θ]
-  have hI := GlobalTheory.T.unitaryFiniteAdeles_splitPlace_decomposition L n s
+  have hI := _root_.GlobalTheory.SplitAdelic.main L n s
   haveI := nontrivial_of_irr τ
   intro ℓ hℓ φ hφS hφfix
   let N : {y : GAf L n // TrivOutside {s.v}ᶜ y} → Submodule ℂ (GAf L n → ℂ) :=

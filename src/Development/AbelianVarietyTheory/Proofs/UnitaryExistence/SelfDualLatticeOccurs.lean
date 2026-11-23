@@ -3,8 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.NormConst
 public import Development.AbelianVarietyTheory.PublishedTheorems.Landherr₂.ExistsNormTensor
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AllClassesStOfLandherrOfHasseNorm
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLatticeDatumOfSelfDualLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUnitaryMatrixOfLatticeIsometryStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.Signature
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLatticeDatumOfSelfDualLattice
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUnitaryMatrixOfLatticeIsometry
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,7 +59,7 @@ theorem GlobalTheory.selfDual_lattice_occurs : GlobalTheory.Published.HasseNormS
     rw [(hk _).2] at h
     unfold cc at h ⊢
     rw [map_neg, h]
-  obtain ⟨D', φ', hp, hq, hr, hφ'⟩ := GlobalTheory.T.exists_latticeDatum_of_selfDual_lattice E H Dw r (-ξ₀) Gm φ Λ' hξ hφ hfg hsp hsd
+  obtain ⟨D', φ', hp, hq, hr, hφ'⟩ := _root_.GlobalTheory.LatticeDatum.exists_datum_of_selfDual E H Dw r (-ξ₀) Gm φ Λ' hξ hφ hfg hsp hsd
   let e : D'.La ≃ₗ[𝓞 E] Λ' := (LinearEquiv.ofInjective φ' hφ'.1).trans (LinearEquiv.ofEq _ _ hr)
   have he : ∀ x, φ' (e.symm x) = (x : Fin r → E) := fun x => by
     have : ∀ y, ((e y : Λ') : Fin r → E) = φ' y := fun y => rfl
@@ -97,7 +99,7 @@ theorem GlobalTheory.selfDual_lattice_occurs : GlobalTheory.Published.HasseNormS
       exact (M.φ k a).2
     · intro hv
       exact ⟨(M.φ k).symm ⟨v, hv⟩, by rw [hψ, LinearEquiv.apply_symm_apply]⟩
-  obtain ⟨γ, hγ1, hγ2⟩ := GlobalTheory.T.exists_unitary_matrix_of_lattice_isometry E H D' (F.Di k) r (-ξ₀) Gm φ' ψ gam hξ hφ'
+  obtain ⟨γ, hγ1, hγ2⟩ := _root_.GlobalTheory.IsoExt.exists_unitary_of_isometry E H D' (F.Di k) r (-ξ₀) Gm φ' ψ gam hξ hφ'
     ⟨Subtype.val_injective.comp (M.φ k).injective, by rw [hrange]; exact (M.X k).Λ_span, hφ.2.2.1, hφ.2.2.2.1,
       fun x y => by
         have h := hM.ef k x y

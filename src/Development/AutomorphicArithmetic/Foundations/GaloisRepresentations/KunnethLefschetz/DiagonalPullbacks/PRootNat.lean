@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.KunnethLefschetz.DiagonalPullbacks.ProjectiveBundleFormulaTorsion
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeZeroSectionClassPropertiesStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeZeroSectionClassProperties
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistSectionsLocallyGeneratedStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistUnitClassRootClassSpecStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -53,7 +54,7 @@ theorem UpperTheory.Gal.KunnethLefschetz.Di.rootNat_holds :
     UpperTheory.Gal.KunnethLefschetz.Di.RootNat := by
   intro q _ i V U g ζ
   have hroot := (GlobalTheory.T.tateTwistUnitClass_rootClass_spec q).2.2.2
-  have hnat := (GlobalTheory.T.degreeZeroSectionClass_properties (ZMod q) (tw q i) U).2.2.2.1 g (twGen i ζ)
+  have hnat := (_root_.GlobalTheory.EtC.secClass_props (ZMod q) (tw q i) U).2.2.2.1 g (twGen i ζ)
   have hres := (GlobalTheory.T.tateTwist_sections_locally_generated q i).2.2.2.1 V U g ζ
   rw [hroot i U ζ, hroot i V (ζ.map g.appTop.hom), ← hres]
   exact hnat

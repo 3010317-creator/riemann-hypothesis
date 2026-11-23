@@ -1,8 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ThetaSetupStructureMapComp
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormDescentIdealSheafFiniteOpenClosedImageStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExistsIvDOfDefinite
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormDescentIdealSheafFiniteOpenClosedImage
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraitExistsAfterFiniteExtensionOfCompleteDVRStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsToricRankOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -37,7 +39,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsToricRankOne
 
 @[expose] public section
 
@@ -108,7 +109,7 @@ theorem normDescent : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ (F 
   haveI : IsDedekindDomain X₁.o₁ := X₁.ar.ded
   haveI := X₁.M.lft
   have hLN : IsLocallyNoetherian X₁.M.Z := LocallyOfFiniteType.isLocallyNoetherian X₁.M.s
-  obtain ⟨d, J, hd, hJs, hJl⟩ := GlobalTheory.T.norm_descent_idealSheaf_finite_open_closed_image X₁.M.Z Z X₁.π X₁.fin inferInstance hLN X₁.normal hZ.2.1
+  obtain ⟨d, J, hd, hJs, hJl⟩ := _root_.GlobalTheory.NormSheaf.normDescentSheaf X₁.M.Z Z X₁.π X₁.fin inferInstance hLN X₁.normal hZ.2.1
     (by rw [hπ]; exact hWc.isOpen) hchar J₁
   refine ⟨d, J, hd, fun x hx => ?_, ?_⟩
   · obtain ⟨y, hy, rfl⟩ := hJs x hx

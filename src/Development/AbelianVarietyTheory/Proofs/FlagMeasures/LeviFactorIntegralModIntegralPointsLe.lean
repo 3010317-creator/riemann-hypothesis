@@ -1,12 +1,11 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeftQuotientCovolumeWithDensityDetNormSq
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeftQuotientCovolumeWithDensityDetNormSq
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsLatMeasurableConst
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsScalarStableLatticeAutomorphismFundamental
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsScalarStableLatticeAutomorphismFundamentalStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsScalarStableLatticeAutomorphismFundamental
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DefClassNum
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FiniteAdelicUnitaryCongruenceTopology
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagLeviRealPlacesProductMeasureStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeftQuotientCovolumeWithDensityDetNormSqStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagLeviRealPlacesProductMeasure
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralRpowNegChangeOfVariable
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalUnitaryPointsDiscreteFundamentalDomain
 import Formalism.RealPlaceAnalysis.RealPlaceTaylor.KoszulLowersPower
@@ -423,7 +422,7 @@ theorem exists_dom (hE : IsTotallyComplex E) (hj : 1 ≤ j) {Λ : Submodule (�
       ∀ G : ℝ → ENNReal, Measurable G → ∫⁻ x in D, G ((detNorm E j x / κ) ^ (-(1 / N))) ∂haarGL E j =
         slabVol E j Λ * ∫⁻ t in Set.Ioi (0 : ℝ), G t * ENNReal.ofReal (N / t) := by
   obtain ⟨D, hDm, hDpos, hDcov, -, hDint⟩ :=
-    GlobalTheory.T.exists_scalarStable_latticeAutomorphismFundamentalDomain E hE j Λ hΛ
+    _root_.GlobalTheory.LatDom.exists_cone_domain E hE j Λ hΛ
   refine ⟨D, hDm, hDpos, hDcov, fun G hG => ?_⟩
   have hAm : MeasurableSet {g : MatInf E j | 0 < detNorm E j g} :=
     measurableSet_lt measurable_const measurable_detNorm
@@ -442,7 +441,7 @@ theorem exists_dom (hE : IsTotallyComplex E) (hj : 1 ≤ j) {Λ : Submodule (�
   rw [haarGL_restrict hj, Set.inter_eq_right.2 hDpos] at h1
   beta_reduce at h1
   rw [← h1]
-  have h2 := GlobalTheory.T.leftQuotientCovolume_withDensity_detNormSq E hE j hj Λ hΛ
+  have h2 := _root_.GlobalTheory.DetSlab.covol_withDensity_detNorm E hE j hj Λ hΛ
     (fun t => G ((t / κ) ^ (-(1 / N)))) hF
   beta_reduce at h2
   rw [h2, GlobalTheory.FlagMeas.lintegral_rpow_neg_change_of_variable N κ hN hκ G hG]
@@ -466,7 +465,7 @@ theorem covol_leviGroup_le : ∀ (I I₀ : AutInst) (e : I₀.E ≃+* I.E) (xf :
   have hNpos : ∀ i, (0 : ℝ) < 2 * (I.f : ℝ) * j i := fun i =>
     mul_pos (mul_pos two_pos hfpos) (Nat.cast_pos.2 (by have := hj i; omega))
   obtain ⟨Θ, κ, hΘm, hκ, hΘA, hΘγ, hΘsz, hΘinj, hΘint⟩ :=
-    GlobalTheory.T.flagLevi_realPlaces_product_measure I I₀ e xf a j S Λ x₀ T T' T₀ hj hA μM c₀ hM hc₀
+    _root_.GlobalTheory.LeviIso.levi_product I I₀ e xf a j S Λ x₀ T T' T₀ hj hA μM c₀ hM hc₀
   choose D hDm hDpos hDcov hDint using fun i =>
     exists_dom hE (hj i) (hA.2.2.1 i) (hNpos i) (hκ i)
   refine le_trans (le_mul_covol (latGroup I₀ x₀) (Measure.pi fun v => Formalism.REAL.muG (I₀.ε v))

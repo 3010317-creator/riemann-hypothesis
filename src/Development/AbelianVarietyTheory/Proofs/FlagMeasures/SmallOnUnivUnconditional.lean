@@ -2,14 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.RowsPtAt
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ElementarySizeBoundsOfSizeHypotheses
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsThresholdCriticalLevelLowerBoundStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.CongruenceAtSplitFrobeniusHolds
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsThresholdCriticalLevelLowerBound
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RowColumnShapeOfWindowDataWidthGeOne
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FinprodPlacesOverTypePrimesSplit
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalIndicesColumnRowLevelsExact
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassRatioStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalizedFormalDegreeEqVandermondeOfSizesStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ProdSubEqProdFactorial
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowsRawMassAndGenusMass
+public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.SplitColumnClasses
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FinprodPlacesOverTypePrimesSplit
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalIndicesColumnRowLevelsExact
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ProdSubEqProdFactorial
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StdLatIsOrthoLatticeAndMassProperties
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LevelPrimeSplitsCompletelyInCmField
 import Formalism.HermitianCurvature.HeisenbergConjugationMeasurePreserving
@@ -54,7 +56,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.SplitColumnClasses
 import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.TermTieOf
 
 @[expose] public section
@@ -303,7 +304,7 @@ namespace GlobalTheory.Core.Deg
 theorem smallOn_univ_unconditional : SmallOn Set.univ := by
   intro Cg cb Cu cT CT δ hcb _ hδ
   obtain ⟨t1, h1⟩ := elementary_size_bounds_of_size_hypotheses (8 / Real.log (1 + δ))
-  obtain ⟨t2, h2⟩ := GlobalTheory.T.exists_threshold_criticalLevel_lower_bound cb Cu hcb
+  obtain ⟨t2, h2⟩ := _root_.GlobalTheory.CritLevelSize.tcritLow_sizes cb Cu hcb
   obtain ⟨t3, h3⟩ := GlobalTheory.T.normalizedFormalDegree_eq_vandermonde_of_sizes
   refine ⟨max (max t1 t2) t3, fun C0 _ C' Cl hC' hCl D large₂ hT hR => ?_⟩
   have hC1 : t1 ≤ C' := (le_max_left _ _).trans ((le_max_left _ _).trans hC')

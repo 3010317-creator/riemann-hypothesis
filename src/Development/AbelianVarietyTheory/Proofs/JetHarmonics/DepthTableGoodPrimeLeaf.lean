@@ -1,10 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.DepthNumbersThresholdEq
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ForcedContentBoundsProgrammeValueGoodPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.GoodPlaceDepthBoundProofStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormalizedLatticeExponentEqRoundedDepthGoodPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SumLevelTailMulLogPrimesLeStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ForcedContentBoundsProgrammeValueGoodPrime
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.GoodPlaceDepthBoundProof
+public import Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.ExampleSatisfiesConditionsAtFive
+public import Formalism.LocalToGlobal.ProjectiveLattices.PlaceBelow
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormalizedLatticeExponentEqRoundedDepthGoodPlace
+public import Formalism.DropLevelBounds.ThBounds
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SumLevelTailMulLogPrimesLe
 import Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.DepthTie
 import Formalism.MirabolicMackeyTheory.MirabolicMackeyProofs.RamBasic
 import Mathlib.Algebra.Order.Floor.Extended
@@ -81,7 +84,7 @@ theorem err_mono_leaf (Cc C k m f w Se Se' th l T X : ℝ) (hCc : 0 < Cc) (hC : 
 
 theorem leafGood : LeafGoodSt := by
   intro C1 hC1
-  obtain ⟨Cc, hCc, hnu⟩ := GlobalTheory.T.goodPlaceDepthBound_proof C1 hC1
+  obtain ⟨Cc, hCc, hnu⟩ := _root_.GlobalTheory.GoodDepth.nuGood C1 hC1
   refine ⟨max Cc 20, ?_⟩
   intro E _ _ _ H lv Dw Xo c _ Dd K _ _ _ _ _ _ Bs Df S P _ _ oc O ι Nm N pl hC0 hE hσ hT hpr hsp hlev hstar hEx hPk hPl hj
     hN hPg tF tP
@@ -97,7 +100,7 @@ theorem leafGood : LeafGoodSt := by
   · rw [hN.th_eq]; exact thl_nonneg_leaf _ _
   · rw [hN.ad_eq]
   · simp only [hN.th_eq]
-    refine (GlobalTheory.T.sum_level_tail_mul_log_primes_le.2 N.R.k Q hkN hQ).trans ?_
+    refine (_root_.GlobalTheory.TailPrimeSum.main.2 N.R.k Q hkN hQ).trans ?_
     rw [hN.k_eq]
     exact div_le_div_of_nonneg_right h20 (Nat.cast_nonneg _)
   · simp only [hN.ad_eq, zero_mul, Finset.sum_const_zero, mul_zero]
@@ -115,7 +118,7 @@ theorem leafGood : LeafGoodSt := by
         O.e0 v j ≤ Nm.F0 w j + O.aE j (Formalism.EigenvalueLevelCeiling.plc w) + 1 ∧ (O.Y < (Formalism.EigenvalueLevelCeiling.plc w : ℝ) → O.e0 v j = 0) := by
       intro v hv
       have hr : resCharOf (placeBelow (K := c.F) v) = Formalism.EigenvalueLevelCeiling.plc w := (DepthTie.resChar_below (F := c.F) v).trans hv
-      obtain ⟨e1, e2⟩ := GlobalTheory.T.onObj_exponent_eq_rounded_depth E H lv Dw Xo c Dd K Bs Df S P oc O ι hE hσ hpr hsp hPg v j (by rw [hv]; exact hw)
+      obtain ⟨e1, e2⟩ := _root_.GlobalTheory.GoodDepth.normalizedLattice_exponent_eq_roundedDepth_goodPlace E H lv Dw Xo c Dd K Bs Df S P oc O ι hE hσ hpr hsp hPg v j (by rw [hv]; exact hw)
       have hM : ¬ Formalism.EigenvalueLevelCeiling.plc w ∣ lv.M := by
         intro hd
         have hl : (lv.M : ℕ) = Dd.Q.g1 * Dd.Q.g2 := hlev
@@ -152,6 +155,6 @@ theorem leafGood : LeafGoodSt := by
     refine ⟨fun _ => ⟨k1.1, k2.1⟩, fun hY => ⟨k1.2 hY, k2.2 hY, ?_⟩⟩
     rw [hF]
     obtain ⟨θ0, hdeg⟩ := jG.deg
-    exact (GlobalTheory.T.forcedContent_bounds_programmeValue_goodPrime N (ι j) _ hp (t5 ▸ n2) (t3 ▸ nq) (t4 ▸ nd) (t1 ▸ ng1) (t2 ▸ ng2) (fun z => (hdeg.w_pos z).le) jG.ratio).1
+    exact (_root_.GlobalTheory.ContentValue.main N (ι j) _ hp (t5 ▸ n2) (t3 ▸ nq) (t4 ▸ nd) (t1 ▸ ng1) (t2 ▸ ng2) (fun z => (hdeg.w_pos z).le) jG.ratio).1
 
 end GlobalTheory.GoodDepth

@@ -1,14 +1,18 @@
 module
 
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.HeckeOpen
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsTwistIndexOfCoefficientFieldPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GenericUnipotentCharacterAtSideEqThetaSideStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HasTameBlockCharacterTypePlaceNotOverLStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeComparisonUnitAtFrobeniusEqDeltaStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsCentralGroupAlgebraIdempotentUniversalStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TwistLiftFormsEqBaseChangeRationalDatumFormsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TwistedLatticeFinitelyGeneratedSpanningStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UniversalCharacterAdmissibleConductorInertiaSurjStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ConcreteTwistFrameExtraExcludedOverSmallPrimes
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsTwistIndexOfCoefficientFieldPlace
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExponentAndTwistData
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GenericUnipotentCharacterAtSideEqThetaSide
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HasTameBlockCharacterTypePlaceNotOverL
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeComparisonUnitAtFrobeniusEqDelta
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsCentralGroupAlgebraIdempotentUniversal
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TwistLiftFormsEqBaseChangeRationalDatumForms
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TwistedLatticeFinitelyGeneratedSpanning
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UniversalAnticyclotomicCharacterLaws
+public import Formalism.SharpRestriction.LevelLetterCocycles.TWSet
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UniversalCharacterAdmissibleConductorInertiaSurj
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.HkBCharpolySplitsStatement
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.HkStabAllStatement
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LevDatumFormsStatement
@@ -51,7 +55,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExponentAndTwistData
 
 @[expose] public section
 
@@ -75,12 +78,12 @@ theorem second_step_alt : GlobalTheory.Published.GlobalArtinReciprocity → ∀ 
   have hb2 : ∀ (l : ℕ) [Fact l.Prime] j, (c2 l j).1 ≤ (b0 l j).1 := fun l _ j => le_trans le_sup_right (hc0 l j)
   obtain ⟨rho, hrho, hrhoS⟩ := hc1 b0 b1 Sx T Sp hb1
   obtain ⟨wt, hwt⟩ := hc2 b0 b1 Sx T Sp hb2
-  have hfg := GlobalTheory.T.twisted_lattice_finitely_generated_spanning D S In T
+  have hfg := _root_.GlobalTheory.HeightCounting.FormsStep.bsupT_fg_span_all D S In T
   have hfg' : ∀ i j b, (BsupT D T S i j b).FG := fun i j b => (hfg i j b).1
   have hst := _root_.GlobalTheory.T.hkStab_of_subset_of_star_closed D cf jE A S In b0 b1 Sx T Sp hSb hstar
   obtain ⟨sd, hsd1, hsd2, hsd3, hsd4, hsd5⟩ := _root_.GlobalTheory.T.exists_signature_data_span_alt D cf jE A S In b0 b1 Sx T Sp hst hSb hstar
-  have he := GlobalTheory.T.isCentralGroupAlgebraIdempotent_universal D
-  have hpsi := GlobalTheory.T.genericUnipotentCharacterAtSide_eq_thetaSide D S In T hstar
+  have he := _root_.GlobalTheory.HeightCounting.FormsStep.eIdem_all D
+  have hpsi := _root_.GlobalTheory.HeightCounting.FormsStep.psiUT_eq_thSide D S In T hstar
   refine ⟨mkF D T S In hfg' hst sd rho hrho, mkEx D T S In A.bare hfg' hst sd rho hrho he Pq wt, D.nStage_trivialCharacter_coeff_eq,
     fun i j b => hfg i j b, fun th => ⟨?_⟩⟩
   let N : TwNew D := ⟨T.ntw A.bare (mkF D T S In hfg' hst sd rho hrho) (TwL.empty T),
@@ -102,7 +105,7 @@ theorem second_step_alt : GlobalTheory.Published.GlobalArtinReciprocity → ∀ 
       psiU_xi := hU.2.2.2
       delU_cont := fun (i : T.Tw) Q M => (GlobalTheory.GalChar.universal_anticyclotomic_character_laws D.host T.cc (T.l i)).2.2.2.1 Q M
       delU_ine := fun i Q M hQ P hP =>
-        GlobalTheory.T.inertia_surjective_of_admQ hGAR D cf b0 b1 Sx T Sp A.bare (mkF D T S In hfg' hst sd rho hrho) i Q M hQ P hP
+        _root_.GlobalTheory.HeightCounting.FormsStep.universalCharacter_admissibleConductor_inertia_surjective hGAR D cf b0 b1 Sx T Sp A.bare (mkF D T S In hfg' hst sd rho hrho) i Q M hQ P hP
       thU_empty := fun i j b M d => PEmpty.elim d
       sgnT := 1
       sgnT_one := rfl
@@ -117,7 +120,7 @@ theorem second_step_alt : GlobalTheory.Published.GlobalArtinReciprocity → ∀ 
       sgnG := 1
       sgnG_one := rfl
       tau_galois_first_character := fun (i : T.Tw) j b kv x u h1 h2 hl hu => by
-        have h := GlobalTheory.T.hasTameBlockCharacter_typePlace_not_over_l hGAR D cf b0 b1 Sx T Sp i j b kv h1 h2 hl
+        have h := _root_.GlobalTheory.TameTau.tauTame hGAR D cf b0 b1 Sx T Sp i j b kv h1 h2 hl
         show ((tauT D T i j b kv x : (FractionRing (T.O i))ˣ) : FractionRing (T.O i)) =
           baseCoeffToFractionRing D T i (NX.tameVal (T.chi1 i j b) (NX.pG D kv) ((1 : ℤ) * 1) u).1
         rw [show ((1 : ℤ) * 1) = 1 from rfl]
@@ -180,7 +183,7 @@ theorem second_step_alt : GlobalTheory.Published.GlobalArtinReciprocity → ∀ 
               sig_inj := hsd2
               qs_pos := fun i lam => PEmpty.elim lam
               concreteTwistFrame_extraExcluded_over_smallPrimes := fun i => hlow }
-      cover := fun w => GlobalTheory.T.exists_twistIndex_of_coefficientField_place D cf b0 b1 Sx T Sp w
+      cover := fun w => _root_.GlobalTheory.HeightCounting.FormsStep.CoverPl.exists_setting_of_place D cf b0 b1 Sx T Sp w
       chiD := { mu0 := Sp.mu0H, etaT := Sp.etaH, del := Sp.delH, psi := fun a => A.bare.elim a,
                 chiI := fun s lam => PEmpty.elim lam, embO := Sp.embO }
       chi := { psi := fun a => A.bare.elim a, del_fix := Sp.del_fix, delta := Sp.delta, chi1 := Sp.chi1,
@@ -199,13 +202,13 @@ theorem second_step_alt : GlobalTheory.Published.GlobalArtinReciprocity → ∀ 
       rho := In.rho
       chiL := In.chi
       hs := In.hs
-      eF := fun i j b h1 h2 => (GlobalTheory.T.twistLiftForms_eq_baseChange_rationalDatumForms D S In T A.bare hfg' hst sd rho hrho he Pq wt i j b h1 h2).choose
-      bsup := fun i j b h1 h2 => (GlobalTheory.T.twistLiftForms_eq_baseChange_rationalDatumForms D S In T A.bare hfg' hst sd rho hrho he Pq wt i j b h1 h2).choose_spec.1
-      act := fun i j b h1 h2 => (GlobalTheory.T.twistLiftForms_eq_baseChange_rationalDatumForms D S In T A.bare hfg' hst sd rho hrho he Pq wt i j b h1 h2).choose_spec.2.1
+      eF := fun i j b h1 h2 => (_root_.GlobalTheory.HeightCounting.FormsStep.formsExport_eq D S In T A.bare hfg' hst sd rho hrho he Pq wt i j b h1 h2).choose
+      bsup := fun i j b h1 h2 => (_root_.GlobalTheory.HeightCounting.FormsStep.formsExport_eq D S In T A.bare hfg' hst sd rho hrho he Pq wt i j b h1 h2).choose_spec.1
+      act := fun i j b h1 h2 => (_root_.GlobalTheory.HeightCounting.FormsStep.formsExport_eq D S In T A.bare hfg' hst sd rho hrho he Pq wt i j b h1 h2).choose_spec.2.1
       cHk := fun (i : T.Tw) b P => cHkT D T i b P
       hkEq := fun i j b h1 h2 k P x _ _ _ =>
-        (GlobalTheory.T.twistLiftForms_eq_baseChange_rationalDatumForms D S In T A.bare hfg' hst sd rho hrho he Pq wt i j b h1 h2).choose_spec.2.2 k P x
-      cHk_del := fun i b P hP σ hσ => GlobalTheory.T.heckeComparisonUnitAtFrobenius_eq_delta D T i b P hP σ hσ
+        (_root_.GlobalTheory.HeightCounting.FormsStep.formsExport_eq D S In T A.bare hfg' hst sd rho hrho he Pq wt i j b h1 h2).choose_spec.2.2 k P x
+      cHk_del := fun i b P hP σ hσ => _root_.GlobalTheory.HeightCounting.FormsStep.cHkT_eq_of_isFrob D T i b P hP σ hσ
       hk_emb := fun (i : T.Tw) j b k P x h1 h2 hP hs hk => by
         rcases Nat.eq_zero_or_pos k with rfl | hk0
         · show ((hkB D T S In hst i j b 0 P x : ↥(BI D T S In i j b)) : FmT D T S i j b) =

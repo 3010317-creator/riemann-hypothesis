@@ -2,10 +2,10 @@ module
 
 public import Development.WeilBound.RepresentationTheoryGL.TwistedFactors.LocalBaseChange.StrictDominanceCasselman.IsStrictlyDominant
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ExistsFixedLift
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralStrictlyDominantExistsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetHeckeCompatHoldsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetHeckeConditionHoldsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ModulusTrivialOnLeviCompactStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralStrictlyDominantExists
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetHeckeCompatHolds
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetHeckeConditionHolds
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ModulusTrivialOnLeviCompact
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -113,9 +113,9 @@ namespace GlobalTheory.CompanionTheory.JacquetLemma
 
 theorem jacquet_surjective : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (N h : ℕ) (d : Fin h → ℕ) (hd : ∑ a, d a = N) (J : Subgroup (GL (Fin N) k)), IsOpen (J : Set (GL (Fin N) k)) → IsCompact (J : Set (GL (Fin N) k)) → HasIwahoriFact k N J d hd → (∀ a, 0 < d a) → ∀ (V : Type) [AddCommGroup V] [Module ℂ V] (π : Representation ℂ (GL (Fin N) k) V), IsAdmissible π → ∀ w ∈ fixed (jac (stdBlocks d hd) π) (KM k N J d hd), ∃ v : fixed π J, (Submodule.Quotient.mk (v : V) : Jacquet π (unipRad k (stdBlocks d hd))) = w := by
   intro k _ _ _ _ N h d hd J hJo hJc hI hpos V _ _ π hπ w hw
-  obtain ⟨a, hac, hstrict, hshrink⟩ := GlobalTheory.T.central_strictly_dominant_exists k N h d hd J hJo hJc hI hpos
-  obtain ⟨T, hT⟩ := GlobalTheory.T.jacquet_hecke_condition_holds k N J hJo hJc V π hπ.1 (leviEmb k (stdBlocks d hd) a)
-  have hC2 := GlobalTheory.T.jacquet_hecke_compat_holds k N h d hd J hJo hJc hI hpos V π hπ.1 a hstrict.1 T hT
+  obtain ⟨a, hac, hstrict, hshrink⟩ := _root_.GlobalTheory.CompanionTheory.CentralDom.exists_central_strictlyDominant k N h d hd J hJo hJc hI hpos
+  obtain ⟨T, hT⟩ := _root_.GlobalTheory.CompanionTheory.HeckeExist.exists_heckeOp k N J hJo hJc V π hπ.1 (leviEmb k (stdBlocks d hd) a)
+  have hC2 := _root_.GlobalTheory.CompanionTheory.Lbc.jacquet_hecke_operator_compat k N h d hd J hJo hJc hI hpos V π hπ.1 a hstrict.1 T hT
   haveI : FiniteDimensional ℂ (fixed π J) := hπ.2 J hJo hJc
   set q := twKer π (unipRad k (stdBlocks d hd)) 1 with hq
   let p : fixed π J →ₗ[ℂ] (V ⧸ q) := q.mkQ.comp (fixed π J).subtype
@@ -152,7 +152,7 @@ theorem jacquet_surjective : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologi
     have h1 : jac (stdBlocks d hd) π m (Submodule.Quotient.mk u) = Submodule.Quotient.mk u := by
       have := hw ⟨m, hm⟩
       simpa using this
-    rw [jac_mk, GlobalTheory.T.modulus_trivial_on_levi_compact k N h d hd J hJc m hm] at h1
+    rw [jac_mk, _root_.GlobalTheory.CompanionTheory.HalfModCompact.deltaHalf_eq_one_of_mem_KM k N h d hd J hJc m hm] at h1
     simp only [inv_one, Units.val_one, one_smul] at h1
     have h2 : (Submodule.Quotient.mk (π (leviEmb k (stdBlocks d hd) m) u) : V ⧸ q) = Submodule.Quotient.mk u := h1
     have h3 : jacU (stdBlocks d hd) π (a ^ j) (Submodule.Quotient.mk (π (leviEmb k (stdBlocks d hd) m) u)) =

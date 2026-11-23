@@ -2,12 +2,11 @@ module
 
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.BlowUpPushHypothesesExample
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.Statements
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.BlowUpFibreSemilocalStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ProjectionFormulaDegreeStatement
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsBlowUpFibreDegreeCut
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.BlowUpFibreSemilocal
+public import GroundTheory.HeightsAndTheta.Heights.FieldsOfNumbers.Statements
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ProjectionFormulaDegree
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.AevalChartSubstMemOfMemBlowUpOf
-import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.AssemblyBundles
-import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.AssemblyDimensionInequality
-import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.OfSteps
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PBlowUpDivisorPush
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PBlowUpFibreDegree
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PBlowUpVerticalFibre
@@ -16,6 +15,9 @@ public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PFin
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PHorizontalComponentModel
 public import GroundTheory.HeightsAndTheta.Heights.LocalFiniteness.FieldNumbersLocalIntegralClosureFinite
 public import GroundTheory.HeightsAndTheta.Heights.LocalFiniteness.HilbertSamuelIrreducibleBasicOpenConnected
+import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.AssemblyBundles
+import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.AssemblyDimensionInequality
+import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.OfSteps
 import GroundTheory.HeightsAndTheta.Heights.LocalFiniteness.HilbertSamuelUnbranchedPartConnected
 import GroundTheory.HeightsAndTheta.Heights.LocalFiniteness.NumbersDVRC3ResidualContractionComponent
 import Mathlib.Algebra.Order.Floor.Extended
@@ -68,7 +70,7 @@ open GroundTheory.Heights₂.Heights.NumbersDVR GroundTheory.Heights₂.Heights.
 theorem verticalPush : BlowUpVerticalPush.Statement.{0} :=
   BlowUpVerticalPush.proof (BlowUpVerticalFibre.proof BlowUpModel.full
     (BlowUpFibreDegree.proof NumbersDVR_HomLocRingLocal NumbersDVR_DivCycleHomLoc
-      FiniteBirationalLength.full GlobalTheory.T.blow_up_fibre_semilocal) GlobalTheory.T.projection_formula_degree)
+      FiniteBirationalLength.full _root_.GlobalTheory.CompanionTheory.CommAlg.BlowUpFibre.main) _root_.GlobalTheory.CompanionTheory.FieldNumbers.projectionFormulaDegree)
 
 theorem main : CutByEffectiveDivisor.Statement.{0} :=
   CutByEffectiveDivisor.of_steps NumbersDVR_C3NoCommon

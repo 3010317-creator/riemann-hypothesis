@@ -1,11 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsClosedImmersionGenericPoint
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.CartierDivisorMultCharacterize
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.CodimOnePointMinimalPrime
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.HeightOnePrimePrincipalLocal
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.OrderAtCodimOneEqOne
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.OrderOffCodimOneEqZero
+public import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.IsOpenOfMemIrreducibleComponentsOfFinite
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CartierDivisorMultCharacterize
+public import Mathlib.AlgebraicGeometry.Properties
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CodimOnePointMinimalPrime
+public import Mathlib.RingTheory.Localization.AtPrime.Basic
+public import Mathlib.RingTheory.Noetherian.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeightOnePrimePrincipalLocal
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsEqnIffGeneratesAtInv
+public import Mathlib.AlgebraicGeometry.OrderOfVanishing.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrderAtCodimOneEqOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrderOffCodimOneEqZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,13 +65,13 @@ theorem exists_local_generator (R S : Type) [CommRing R] [IsDomain R] [IsNoether
     [IsLocalization.AtPrime S p] [UniqueFactorizationMonoid S] (hP : P.IsPrime) (hPp : P ≤ p)
     (hP0 : P ≠ ⊥) (hmin : ∀ Q : Ideal R, Q.IsPrime → Q ≠ ⊥ → Q ≤ P → Q = P) :
     ∃ a ∈ P, a ≠ 0 ∧ ∃ t ∉ p, ∀ g ∈ P, ∃ r, t * g = a * r :=
-  GlobalTheory.T.height_one_prime_principal_local R S p P hP hPp hP0 hmin
+  _root_.GlobalTheory.heightOne_prime_locallyPrincipal_of_factorial_localization R S p P hP hPp hP0 hmin
 
 theorem primeIdealOf_minimal (X : Scheme.{0}) [IsIntegral X] (U : X.Opens) (hU : IsAffineOpen U)
     (z : X) (hz : z ∈ U) (h1 : Order.coheight z = 1) :
     (hU.primeIdealOf ⟨z, hz⟩).asIdeal ≠ ⊥ ∧ ∀ Q : Ideal Γ(X, U), Q.IsPrime → Q ≠ ⊥ →
       Q ≤ (hU.primeIdealOf ⟨z, hz⟩).asIdeal → Q = (hU.primeIdealOf ⟨z, hz⟩).asIdeal :=
-  GlobalTheory.T.codim_one_point_minimal_prime X U hU z hz h1
+  _root_.GlobalTheory.primeIdealOf_minimal_of_coheight_eq_one X U hU z hz h1
 
 theorem ord_eq_one (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] (U : X.Opens)
     (hU : IsAffineOpen U) (z : X) (hz : z ∈ U) (a t : Γ(X, U)) (h1 : Order.coheight z = 1)
@@ -73,14 +79,14 @@ theorem ord_eq_one (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] (U : 
     (ht : t ∉ (hU.primeIdealOf ⟨z, hz⟩).asIdeal)
     (hg : ∀ g ∈ (hU.primeIdealOf ⟨z, hz⟩).asIdeal, ∃ r, t * g = a * r) :
     Scheme.ord (fnOf U (gen_mem hz) a) z = 1 :=
-  GlobalTheory.T.order_at_codim_one_eq_one X U hU z hz a t h1 ha0 ha ht hg
+  _root_.GlobalTheory.Cartier.ord_fnOf_eq_one_of_generates X U hU z hz a t h1 ha0 ha ht hg
 
 theorem ord_eq_zero (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X] (U : X.Opens)
     (hU : IsAffineOpen U) (z : X) (hz : z ∈ U) (a t : Γ(X, U)) (h1 : Order.coheight z = 1)
     (hg : ∀ g ∈ (hU.primeIdealOf ⟨z, hz⟩).asIdeal, ∃ r, t * g = a * r)
     (v : X) (hv : v ∈ U) (hvt : v ∈ X.basicOpen t) (hvz : v ≠ z) :
     Scheme.ord (fnOf U (gen_mem hv) a) v = 0 :=
-  GlobalTheory.T.order_off_codim_one_eq_zero X U hU z hz a t h1 hg v hv hvt hvz
+  _root_.GlobalTheory.Cartier.ord_fnOf_eq_zero_off_center X U hU z hz a t h1 hg v hv hvt hvz
 
 
 open Classical in
@@ -135,7 +141,7 @@ theorem GlobalTheory.primeDivisor_isCartier : ∀ (X : Scheme.{0}) [IsIntegral X
   choose U hxU π hπ using exists_local_eqn X hu z h1
   have hunit : ∀ x y, y ∈ U x → UnitAt y ((π x : X.functionField) / π y) := by
     intro x y hy
-    have h := (GlobalTheory.T.cartier_divisor_mult_characterize X (0 : CartierDiv X)).2.2.2 y (π x / π y) (fun v hv => by
+    have h := (_root_.GlobalTheory.Cartier.MultEff.eff_supp_eq_of_mult X (0 : CartierDiv X)).2.2.2 y (π x / π y) (fun v hv => by
       have hvx : v ∈ U x := hv.mem_open (U x).isOpen hy
       have hvy : v ∈ U y := hv.mem_open (U y).isOpen (hxU y)
       have e := Scheme.ord_mul (X := X) (x := v) (Units.ne_zero (π x / π y)) (Units.ne_zero (π y))

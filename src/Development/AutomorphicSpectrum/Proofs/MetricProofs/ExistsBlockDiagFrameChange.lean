@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsBlkCover
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagModelBaseProjectionPointsStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GenericBlockMatrixIsBlockDiag
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagModelBaseProjectionPoints
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsValueAtOfTorus
 import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PCoordConeArithVar
 import Mathlib.Algebra.Order.Floor.Extended
@@ -56,7 +57,7 @@ namespace GlobalTheory.CompanionTheory.Ar.PB.CovMap.LocImg
 
 theorem exists_flags_good : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)] (Φ : Type) [Field Φ] (y : (Σ k, ι k) → Φ) (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N j : ℕ) (M : FlagModel y Ψ N j) (F : FrameData ι Ψ N M.Ω M.blk) (z : (Σ k, ι k) → ℂ), z ∈ mcPts (mCoordIdeal y) → M.IsFrame F → M.GoodAt F (mCoordIdeal (basePart M.blk z)) → ∃ h : Ψ → Matrix (Fin N) (Fin N) ℂ, (∀ τ, IsBlockDiag j (h τ) ∧ (h τ).det ≠ 0) ∧ ∀ (p : Ψ × Fin N) (k : K), M.blk p = some k → ∃ a : ℂ, a ≠ 0 ∧ ∀ m : ι k, z ⟨k, m⟩ = a * CovMap.LocImg.plk M F (basePart M.blk z) p.2 ⟨k, m⟩ (h p.1) := by
   intro K _ ι _ Φ _ y Ψ _ _ N j M F z hz hF hG
-  obtain ⟨h1, -, h3⟩ := GlobalTheory.T.flag_model_base_projection_points K ι Φ y Ψ N j M
+  obtain ⟨h1, -, h3⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.CPts.main K ι Φ y Ψ N j M
   have hch : ∀ k : NonPluckerBlocks M.blk, basePart M.blk z ⟨k, F.c k⟩ ≠ 0 := fun k h0 => hG.1 k (by
     show mConeMap _ (X _) = 0
     simp [mConeMap, h0])

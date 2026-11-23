@@ -4,13 +4,19 @@ public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ColFlags
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsChartOfLineBundle
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GrGenOfIsFlagVBOn
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.EqNegSumIicDifferencesStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HodgeCptFrameTwistCompatStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HodgeCptFrameTwistDegreeStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MinorRatioRegularOfInverseStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ModelMonomialWeightProductStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ProdIicBlockDiagDetFactorsStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RatioSuccessiveNonzeroRegularStatement
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Order.Interval.Finset.Fin
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.EqNegSumIicDifferences
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HodgeCptFrameTwistCompat
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HodgeCptFrameTwistDegree
+public import Mathlib.LinearAlgebra.Matrix.Block
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MinorRatioRegularOfInverse
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ModelMonomialWeightProduct
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ProdIicBlockDiagDetFactors
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Algebra.GroupWithZero.Units.Basic
+public import Mathlib.Algebra.Ring.Subring.Defs
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RatioSuccessiveNonzeroRegular
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -110,7 +116,7 @@ theorem step_unit {n r : ℕ} {Fm : Matrix (Fin n) (Fin r) Ω} {U : Matrix (Fin 
       (Fm.submatrix J (Fin.castLE t.2)).det / (Fm.submatrix J₀ (Fin.castLE t.2)).det ∈ regAt ξ p) :
     unitAt ξ p ((∏ l : Fin ((t : ℕ) + 1), U (Fin.castLE t.2 l) (Fin.castLE t.2 l)) *
       (Fm.submatrix J₀ (Fin.castLE t.2)).det / Xb ^ (((t : ℕ) + 1) * mm)) := by
-  obtain ⟨h1, h2, h3⟩ := GlobalTheory.T.minor_ratio_regular_of_inverse Ω (regAt ξ p) n r Fm U C Z hU hB hC hL ((t : ℕ) + 1) t.2 J₀ hne hr
+  obtain ⟨h1, h2, h3⟩ := _root_.GlobalTheory.CompanionTheory.Metric.UnitMinor.unit_minor Ω (regAt ξ p) n r Fm U C Z hU hB hC hL ((t : ℕ) + 1) t.2 J₀ hne hr
   have hw : unitAt ξ p _ := ⟨h3, h1, h2⟩
   have hb : Xb ≠ 0 := fun hb => hX.1 (by rw [hb, zero_div])
   have hc : Xc ≠ 0 := fun hb => hX.1 (by rw [hb, div_zero])
@@ -167,8 +173,8 @@ theorem point_gen {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E
       exact LatModel.dominates_regAt hO.1 p' hp (hc₁'.2 _)
     · rw [inv_div, hXc, show Xb = ∏ k, yc (.inl k) from rfl, ← Finset.prod_div_distrib]
       exact prod_mem fun k _ => hR (.inl k) (c₁ k)
-  obtain ⟨UW, CW, hUW, hBW, hCW, hLW, hGW⟩ := GlobalTheory.T.hodgeCpt_frame_twist_compat E H D l Xo c Y S Ω K₀ J₀ x₀ 𝔐 bW bO n m φ hF 𝔐' pr j Fl hO hV hC τ p' hp c₁ hc₁'
-  obtain ⟨UO, CO, hUO, hBO, hCO, hLO, hGO⟩ := GlobalTheory.T.hodgeCpt_frame_twist_degree E H D l Xo c Y S Ω K₀ J₀ x₀ 𝔐 bW bO n m φ hF 𝔐' pr j Fl hO hV hC τ p' hp c₁ hc₁'
+  obtain ⟨UW, CW, hUW, hBW, hCW, hLW, hGW⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.FMX.AdFrame.adapted_frame E H D l Xo c Y S Ω K₀ J₀ x₀ 𝔐 bW bO n m φ hF 𝔐' pr j Fl hO hV hC τ p' hp c₁ hc₁'
+  obtain ⟨UO, CO, hUO, hBO, hCO, hLO, hGO⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.FMX.RootsOm.adapted_frame_om E H D l Xo c Y S Ω K₀ J₀ x₀ 𝔐 bW bO n m φ hF 𝔐' pr j Fl hO hV hC τ p' hp c₁ hc₁'
   let tW : Fin D.p → (GenField Ω (rk (CMType H) D.p D.q)) := fun l => UW l l
   let tO : Fin D.q → (GenField Ω (rk (CMType H) D.p D.q)) := fun l => UO l l
   have unitW : ∀ t : Fin D.p, unitAt 𝔐'.ξ p' ((∏ l : Fin ((t : ℕ) + 1), tW (Fin.castLE t.2 l)) *
@@ -188,8 +194,8 @@ theorem point_gen {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E
   have hEe : ∀ i, Ee i ≠ 0 := fun i => Finset.prod_ne_zero_iff.2 fun k _ => zpow_ne_zero _ (hY _)
   have hDE : ∀ i, unitAt 𝔐'.ξ p' ((∏ k ∈ Finset.Iic i, G k) / Ee i) := by
     intro i
-    obtain ⟨e1, e2⟩ := GlobalTheory.T.model_monomial_weight_product (CMType H) D.p D.q Ω n (aOf 𝔐 bW bO φ) K₀ J₀ x₀ m h (GenField Ω (rk (CMType H) D.p D.q)) yc hY τ i
-    obtain ⟨g1, g2⟩ := GlobalTheory.T.prod_Iic_blockDiag_det_factors (GenField Ω (rk (CMType H) D.p D.q)) D.p D.q tW tO G hG1 hG2 i
+    obtain ⟨e1, e2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.FMX.StepMonomial.step_monomial (CMType H) D.p D.q Ω n (aOf 𝔐 bW bO φ) K₀ J₀ x₀ m h (GenField Ω (rk (CMType H) D.p D.q)) yc hY τ i
+    obtain ⟨g1, g2⟩ := _root_.GlobalTheory.CompanionTheory.Metric.GradedLines.prod_first_graded_lines (GenField Ω (rk (CMType H) D.p D.q)) D.p D.q tW tO G hG1 hG2 i
     by_cases hi : (i : ℕ) < D.p
     · have e : Ee i = _ := e1 hi
       rw [e, g1 hi]
@@ -217,7 +223,7 @@ theorem point_gen {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E
         haveI : IsEmpty (Fin D.p) := by rw [hp0]; infer_instance
         rw [eX, pow_zero, Finset.univ_eq_empty, Finset.prod_empty, mul_one, div_one]
         exact ⟨one_ne_zero, one_mem _, by simp⟩
-  have hT := GlobalTheory.T.ratio_successive_nonzero_regular (GenField Ω (rk (CMType H) D.p D.q)) (regAt 𝔐'.ξ p') _ G Ee hEe hDE i
+  have hT := _root_.GlobalTheory.CompanionTheory.Metric.UnitQuotients.consecutive_quotients_units (GenField Ω (rk (CMType H) D.p D.q)) (regAt 𝔐'.ξ p') _ G Ee hEe hDE i
   have hW : (∏ k, yv (p := D.p) (q := D.q) (aOf 𝔐 bW bO φ) x₀ ⟨k, cc k⟩ ^
         (if h0 : (i : ℕ) = 0 then -(model (aOf 𝔐 bW bO φ) x₀ m h).dy (τ, i)
           else (model (aOf 𝔐 bW bO φ) x₀ m h).dy (τ, ⟨(i : ℕ) - 1, by have := i.2; omega⟩) - (model (aOf 𝔐 bW bO φ) x₀ m h).dy (τ, i)) k) =
@@ -258,6 +264,6 @@ theorem rootLines : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
         (model (aOf 𝔐 bW bO φ) x₀ m h).dy r, fun r => ⟨one_ne_zero, fun p' _ cc hc => ?_⟩, fun τ i => ?_⟩
   · obtain ⟨τ, i⟩ := r
     rw [point_gen hF h hO hV hC τ i p' cc hc, smul_eq_mul, mul_one]
-  · exact GlobalTheory.T.eq_neg_sum_Iic_differences _ _ (fun i => (model (aOf 𝔐 bW bO φ) x₀ m h).dy (τ, i)) i
+  · exact _root_.GlobalTheory.CompanionTheory.Metric.Telescope.fin_iic_telescope _ _ (fun i => (model (aOf 𝔐 bW bO φ) x₀ m h).dy (τ, i)) i
 
 end GlobalTheory.CompanionTheory.Ar.PB.FMX.Roots

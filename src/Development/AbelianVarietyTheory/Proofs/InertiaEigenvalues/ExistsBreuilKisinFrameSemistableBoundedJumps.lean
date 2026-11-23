@@ -7,13 +7,13 @@ public import Formalism.WeaklyAdmissibleFiltrations.StatementTor
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBreuilKisinFrameHeightOfJumpsLeStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBreuilKisinFrameSemistablePeriodsStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCrystallineLatticePeriodsOnDisc
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFinExt
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsHodgeBasisDeRhamLatticeStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSemistableLatticePeriodsAcrisStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsTrivialCocycleCrystallinePeriodDataStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsTrivialCocycleCrystallinePeriodData
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SemistableSeedOfAcrisPeriods
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFinExt
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsDeRhamOfIsSemistable
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PeriodRingCoreCrystallineDeRhamInvariants
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SemistableSeedOfAcrisPeriodsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -163,11 +163,11 @@ theorem GlobalTheory.BKLim.exists_frame_sst : ∀ (l : ℕ) [Fact l.Prime] (K : 
   obtain ⟨s, hs⟩ : ∃ s : WSeed bk d (fun g => (ρ g).val) τ, IsCrys (P.PD K) (qRep ρ) → ∀ g, s.κ g = 1 := by
     by_cases hc : IsCrys (P.PD K) (qRep ρ)
     · obtain ⟨sd⟩ := GlobalTheory.BKLim.crys_seed l K bk τ hτ P AI T d ρ hρc hc
-      obtain ⟨s', hs'⟩ := GlobalTheory.T.exists_trivial_cocycle_crystalline_period_data l K bk τ hτ d _ sd
+      obtain ⟨s', hs'⟩ := _root_.GlobalTheory.BKLim.wseed_of_seed l K bk τ hτ d _ sd
       exact ⟨s', fun _ => hs'⟩
     · obtain ⟨N', c₁, c₂, c₃, k₀, F, F', X, X', Z, Z', κ, h1, h2, h3, h4, h5, h6, h7, h8, h9⟩ :=
         GlobalTheory.T.exists_semistable_lattice_periods_acris l K bk P AI T C hC d ρ hsst
-      obtain ⟨s⟩ := GlobalTheory.T.semistableSeed_of_acris_periods l K bk C τ hτ d (fun g => (ρ g).val) N' c₁ c₂ c₃ k₀ F F' X X' Z Z' κ
+      obtain ⟨s⟩ := _root_.GlobalTheory.BKLim.wseed_of_periods l K bk C τ hτ d (fun g => (ρ g).val) N' c₁ c₂ c₃ k₀ F F' X X' Z Z' κ
         ⟨h1, h2, h3, h4, h5, h6, h7, h8, h9⟩
       exact ⟨s, fun h => absurd h hc⟩
   obtain ⟨N', F, hFdr, hFcr⟩ := GlobalTheory.T.exists_breuilKisinFrame_semistablePeriods l K bk τ hτ d _ hunit s

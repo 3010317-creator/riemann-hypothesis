@@ -2,13 +2,16 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsSmoothHermTrivLine
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.CoordinateIdeals
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointsIffCentresStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointsIffCentres
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.MemAbLocusIff
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ValAtIffValueAtStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ValAtIffValueAt
+public import Mathlib.Analysis.Analytic.Polynomial
+public import Mathlib.Topology.Algebra.MvPolynomial
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
-public import Mathlib.Analysis.Analytic.Polynomial
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
@@ -48,7 +51,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
-public import Mathlib.Topology.Algebra.MvPolynomial
 import GroundTheory.HeightsAndTheta.Heights.Intersections.IsSmoothHermFubiniStudyO1
 
 @[expose] public section
@@ -186,11 +188,11 @@ variable {X : Scheme.{0}} {ξ : Spec (CommRingCat.of Ω) ⟶ X} {i : Ω₀ →+*
 theorem isCmp_unique (hT : CoordTie ℤ ξ (fun c' : (k : K) → J k => ∏ k, y ⟨k, c' k⟩))
     (hy : ∀ k a, y ⟨bk k, bx k a⟩ = i (y₀ ⟨k, a⟩)) (hm : w ∈ mcPts (mCoordIdeal y)) {t t' : ℂ}
     (h : IsCmp i y₀ y bk bx a a₀ e e₀ w t) (h' : IsCmp i y₀ y bk bx a a₀ e e₀ w t') : t = t' := by
-  obtain ⟨z, hz, hw⟩ := (GlobalTheory.T.complex_points_iff_centres X Ω ξ K J y hT w).1 hm
+  obtain ⟨z, hz, hw⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.mem_mcPts_iff_exists_coordsAt X Ω ξ K J y hT w).1 hm
   obtain ⟨c, c₀, u, h1, h2, -, hv, rfl⟩ := h
   obtain ⟨c', c₀', u', h1', h2', -, hv', rfl⟩ := h'
-  exact cmpVal_eq hy hz hw h1 h1' h2 h2' ((GlobalTheory.T.valAt_iff_value_at X Ω ξ K J y hT z w hz hw _ _).2 hv)
-    ((GlobalTheory.T.valAt_iff_value_at X Ω ξ K J y hT z w hz hw _ _).2 hv')
+  exact cmpVal_eq hy hz hw h1 h1' h2 h2' ((_root_.GlobalTheory.CompanionTheory.Ar.valAt_iff_isValueAt_coords X Ω ξ K J y hT z w hz hw _ _).2 hv)
+    ((_root_.GlobalTheory.CompanionTheory.Ar.valAt_iff_isValueAt_coords X Ω ξ K J y hT z w hz hw _ _).2 hv')
 
 theorem IsCmp.ne_zero {t : ℂ} (h : IsCmp i y₀ y bk bx a a₀ e e₀ w t) : t ≠ 0 := by
   obtain ⟨c, c₀, u, h1, h2, hu, -, rfl⟩ := h
@@ -202,12 +204,12 @@ theorem IsCmp.smul (hT : CoordTie ℤ ξ (fun c' : (k : K) → J k => ∏ k, y �
     (fun p => s p.1 * w p) ∈ mcPts (mCoordIdeal y) ∧
     IsCmp i y₀ y bk bx a a₀ e e₀ (fun p => s p.1 * w p)
       ((∏ k, s k ^ a k) / (∏ k, s (bk k) ^ a₀ k) * t) := by
-  obtain ⟨z, hz, hw⟩ := (GlobalTheory.T.complex_points_iff_centres X Ω ξ K J y hT w).1 hm
+  obtain ⟨z, hz, hw⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.mem_mcPts_iff_exists_coordsAt X Ω ξ K J y hT w).1 hm
   have hw' : CoordsAt ξ y z (fun p => s p.1 * w p) := coordsAt_orbit hw ⟨s, hs, rfl⟩
-  refine ⟨(GlobalTheory.T.complex_points_iff_centres X Ω ξ K J y hT _).2 ⟨z, hz, hw'⟩, ?_⟩
+  refine ⟨(_root_.GlobalTheory.CompanionTheory.Ar.mem_mcPts_iff_exists_coordsAt X Ω ξ K J y hT _).2 ⟨z, hz, hw'⟩, ?_⟩
   obtain ⟨c, c₀, u, h1, h2, hu, hv, rfl⟩ := h
   refine ⟨c, c₀, u, fun k => mul_ne_zero (hs _) (h1 k), fun k => mul_ne_zero (hs _) (h2 k), hu,
-    (GlobalTheory.T.valAt_iff_value_at X Ω ξ K J y hT z _ hz hw' _ _).1 ((GlobalTheory.T.valAt_iff_value_at X Ω ξ K J y hT z w hz hw _ _).2 hv), ?_⟩
+    (_root_.GlobalTheory.CompanionTheory.Ar.valAt_iff_isValueAt_coords X Ω ξ K J y hT z _ hz hw' _ _).1 ((_root_.GlobalTheory.CompanionTheory.Ar.valAt_iff_isValueAt_coords X Ω ξ K J y hT z w hz hw _ _).2 hv), ?_⟩
   have n1 : (∏ k, s (bk k) ^ a₀ k) ≠ 0 := Finset.prod_ne_zero_iff.2 fun k _ => zpow_ne_zero _ (hs _)
   have n2 : (∏ k, w (blkV bk bx ⟨k, c₀ k⟩) ^ a₀ k) ≠ 0 := Finset.prod_ne_zero_iff.2 fun k _ => zpow_ne_zero _ (h2 k)
   have e1 : (∏ k, (s (blkV bk bx ⟨k, c₀ k⟩).1 * w (blkV bk bx ⟨k, c₀ k⟩)) ^ a₀ k) =
@@ -259,10 +261,10 @@ theorem exists_isRatio : ∀ (X : Scheme.{0}) (Ω Ω₀ : Type) [Field Ω] [Fiel
     intro z w hw c c₀ h1 h2
     obtain ⟨u, hu, hv⟩ := hU z w hw c c₀ h1 h2
     exact ⟨u, hu, hv, c, c₀, u, h1, h2, hu,
-      (GlobalTheory.T.valAt_iff_value_at X Ω ξ K J y hT z w (hall _) hw _ _).1 hv, rfl⟩
+      (_root_.GlobalTheory.CompanionTheory.Ar.valAt_iff_isValueAt_coords X Ω ξ K J y hT z w (hall _) hw _ _).1 hv, rfl⟩
   have hex : ∀ w ∈ mcPts (mCoordIdeal y), ∃ t, IsCmp i y₀ y bk bx a a₀ e e₀ w t := by
     intro w hm
-    obtain ⟨z, -, hw⟩ := (GlobalTheory.T.complex_points_iff_centres X Ω ξ K J y hT w).1 hm
+    obtain ⟨z, -, hw⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.mem_mcPts_iff_exists_coordsAt X Ω ξ K J y hT w).1 hm
     choose c hc using hw.1
     choose c₀ hc₀ using restr_ne (isBlockMap_blkV bx hbk) hm.1
     obtain ⟨u, -, -, h⟩ := hval z w hw c c₀ (fun k => (hc k).ne_zero) hc₀
@@ -318,16 +320,16 @@ theorem exists_isRatio : ∀ (X : Scheme.{0}) (Ω Ω₀ : Type) [Field Ω] [Fiel
       · exact Finset.prod_ne_zero_iff.2 fun k _ => zpow_ne_zero _ (x3 k)
     · rintro x ⟨hx, hxm⟩
       obtain ⟨x1, x2, x3⟩ := mV x hx
-      obtain ⟨z, hz, hw⟩ := (GlobalTheory.T.complex_points_iff_centres X Ω ξ K J y hT x).1 hxm
+      obtain ⟨z, hz, hw⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.mem_mcPts_iff_exists_coordsAt X Ω ξ K J y hT x).1 hxm
       have hv : GroundTheory.Heights₂.Heights.LowerBoundFree.IsValueAt y (cmpFn i y₀ y a a₀ e e₀ c c₀) x (G x / H x) :=
         ⟨d, g, h, hg, hh, hy0, heq, x1, rfl⟩
       obtain ⟨u, hu, hu', hc⟩ := hval z x hw c c₀ x2 x3
       have e1 : u = G x / H x :=
-        CxVal.unique hu' ((GlobalTheory.T.valAt_iff_value_at X Ω ξ K J y hT z x hz hw _ _).2 hv)
+        CxVal.unique hu' ((_root_.GlobalTheory.CompanionTheory.Ar.valAt_iff_isValueAt_coords X Ω ξ K J y hT z x hz hw _ _).2 hv)
       rw [e1] at hc hu
       exact ⟨hc.ne_zero, by show ‖ψ x‖ = _; rw [hψ x hxm _ hc]⟩
   · intro z w hw c c₀ h1 h2
-    have hm : w ∈ mcPts (mCoordIdeal y) := (GlobalTheory.T.complex_points_iff_centres X Ω ξ K J y hT w).2 ⟨z, hall _, hw⟩
+    have hm : w ∈ mcPts (mCoordIdeal y) := (_root_.GlobalTheory.CompanionTheory.Ar.mem_mcPts_iff_exists_coordsAt X Ω ξ K J y hT w).2 ⟨z, hall _, hw⟩
     obtain ⟨u, hu, hv, hc⟩ := hval z w hw c c₀ h1 h2
     refine ⟨u, hu, hv, ?_⟩
     have n : (∏ k, ‖w (blkV bk bx ⟨k, c₀ k⟩)‖ ^ a₀ k) ≠ 0 :=

@@ -3,21 +3,23 @@ module
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CombAtSingleZero
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsOneComb
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagonalBlockDetBlockTriangular
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsFiniteAdeleProjectionIntegralReductionStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsFiniteAdeleProjectionIntegralReduction
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationEqOnVacuaOfEqOneStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationTwoVariableModelAndLineExte
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IdempotentSubMulComplementEqComplement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralFrameMatrixIffMemSplitHalfHomLatticeStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsLocalModelCreationWeilActionMovedFrames
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsLocalModelCreationWeilActionMovedFramesStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ExistsUnitarySupportedAtPlaceOfMulEqIdem
+public import Formalism.LocalToGlobal.IndefiniteReal.DatumVec
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsSchwartzBruhatHalfSplitPlaceProductStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ListConvolutionDistinctPlacesSupportedAndComposiStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MatrixSupportedAtPlaceOfIsHalfSplitPoint
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceBaseEqOfSameIdempotentPrimeStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceFrameMovedBackIsLatticeBasisStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdempotentMulEqZeroOfOrthogonal
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmPureTensorOOfFinite
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PadOneMemSecondBlockTriangular
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdempotentMulEqZeroOfOrthogonal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -161,10 +163,10 @@ theorem puts (q : GlobalTheory.FinPl.SplitPt D k) {ψ : AddChar (AF D.host.F) �
     {c : WO S T →₀ ℂ} (hc : (ofSplit q).IsCombAt ψ GS GT c Ξ) :
     Puts ψ (om (g, h) ∘ₗ Tm) e βS βT P w loc c := by
   intro W hW
-  obtain ⟨π', hπ, hred, hint, hres⟩ := GlobalTheory.T.exists_finiteAdele_projection_integral_reduction D k q w hq
+  obtain ⟨π', hπ, hred, hint, hres⟩ := _root_.GlobalTheory.FinPl.SplitPt.exists_lift_isRed D k q w hq
   obtain ⟨T₁, hT₁, hT'⟩ := model q (moved (ofSplit q) GS g⁻¹) (moved (ofSplit q) GT h⁻¹) hom.std hS hT βS βT he hw hq hint hres W hW
     hf₀ hTm
-  obtain ⟨T₂, hT₂, hT''⟩ := GlobalTheory.T.isLocalModel_creation_weilAction_moved_frames D k (ofSplit q) Y Y' S T _ GS _ GT ψ θ _ _ om hθ hom g h
+  obtain ⟨T₂, hT₂, hT''⟩ := _root_.GlobalTheory.LocModMove.isModel_move D k (ofSplit q) Y Y' S T _ GS _ GT ψ θ _ _ om hθ hom g h
     (β_eq_moved _ GS g) (β_eq_moved _ GT h) 0 0 0 0 1 T₁ hT₁
   simp only [GlobalTheory.FiniteFock.pureTensorO_one] at hT''
   have hco := coords_down (ofSplit q) (moved (ofSplit q) GS g⁻¹) (moved (ofSplit q) GT h⁻¹) hπ

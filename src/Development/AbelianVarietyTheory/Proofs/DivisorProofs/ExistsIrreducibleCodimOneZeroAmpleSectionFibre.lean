@@ -1,11 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRatioOfWeight
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIrreducibleZeroSetSectionClosedIrreducibleStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNormalProjectiveModel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundlePowSectionsRationalFunctionsLociStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopologicalKrullDimLeZeroFibreAffineOpenStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsClosedImmersionGenericPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIrreducibleZeroSetSectionClosedIrreducible
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundlePowSectionsRationalFunctionsLoci
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAmbOfIsArithVar
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopologicalKrullDimLeZeroFibreAffineOpen
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsAffineOpenNonzeroLocusOfUniversallyClosed
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNormalProjectiveModel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,7 +46,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAmbOfIsArithVar
 
 @[expose] public section
 
@@ -77,20 +78,20 @@ theorem exists_irreducible_diff_NV : ∀ (k : Type) [CommRing k] (X : Scheme.{0}
   · refine ⟨C, hCi, hCc, fun x hx => ⟨hx, fun hx' => ?_⟩, ?_⟩
     · exact (Set.eq_empty_iff_forall_notMem.1 h0) x ⟨hx, hx'⟩
     · exact le_trans (by exact_mod_cast Nat.le_succ d) hdim
-  obtain ⟨u, hu⟩ := (GlobalTheory.T.lineBundlePow_sections_rationalFunctions_loci k X p P e).2 f hf
+  obtain ⟨u, hu⟩ := (_root_.GlobalTheory.HSAmp.pow_sec_dict k X p P e).2 f hf
   have hisP : IsProper p := GlobalTheory.CommonModel.isProper_of_isProjOver hX.isProjOver
   have hne : (C ∩ (ReciprocityTheory.ChartRestriction.G.Out.nonzeroLocus u : Set X)).Nonempty := by
     rw [← hu]; exact Set.nonempty_iff_ne_empty.2 h0
   by_cases hsub : C ⊆ (ReciprocityTheory.ChartRestriction.G.Out.nonzeroLocus u : Set X)
   · exfalso
     have haff := IsAmpleLB.isAffineOpen_nonzeroLocus p hA he u
-    have h1 := GlobalTheory.T.topologicalKrullDim_le_zero_fibre_affineOpen k X p (GlobalTheory.MixHt.isAmb_of_isArithVar hX) ℓ _ C hℓ haff hCi hCc hCf hsub
+    have h1 := _root_.GlobalTheory.MixHt.dim_le_zero_of_fib_of_subset_affine k X p (GlobalTheory.MixHt.isAmb_of_isArithVar hX) ℓ _ C hℓ haff hCi hCc hCf hsub
     have h2 := hdim.trans h1
     have : ((d + 1 : ℕ) : WithBot ℕ∞) ≤ ((0 : ℕ) : WithBot ℕ∞) := by simpa using h2
     have := WithBot.coe_le_coe.1 this
     norm_cast at this
   · obtain ⟨C', h1, h2, h3, h4⟩ :=
-      GlobalTheory.T.exists_irreducible_zeroSet_section_closedIrreducible k X p D hX (lbPow P.L.B e) u C (isLB_lbPow hA.isLB e) hCi hCc hne hsub
+      _root_.GlobalTheory.KrullZero.exists_irreducible_zero k X p D hX (lbPow P.L.B e) u C (isLB_lbPow hA.isLB e) hCi hCc hne hsub
     refine ⟨C', h1, h2, ?_, le_of_succ_le_add_one (hdim.trans h4)⟩
     rw [hu]; exact h3
 

@@ -1,7 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrincipalCongruenceFixedVectorsLeSmoothVectors
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SeriesEqProdOfParabolicInductionChainStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.DetCharacterMemPrincipalCongruenceFixedVectors
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemChainVecsDet
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SeriesEqProdOfParabolicInductionChain
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -90,7 +92,7 @@ theorem ine_eq_of_has_le (b : ℕ) (S : Sys g) (teich : Formalism.CyclotomicNorm
     (h : Has S π.2.ρ f) : ine (rec π) = ((Formalism.CyclotomicNorms.rootsBar f).map fun x => X - C (teich x)).prod := by
   obtain ⟨L, hL, hsc, he⟩ := h1 π hπ hs
   have hbL : ∀ ρ ∈ L, ρ.1 ≤ b := fun ρ hρ => (InInd.rank_le hL ρ hρ).trans hb
-  obtain ⟨fs, hfs, rfl⟩ := GlobalTheory.T.series_eq_prod_of_parabolic_induction_chain g S π L hL f h
+  obtain ⟨fs, hfs, rfl⟩ := _root_.GlobalTheory.SerSys.has_prod_of_inInd g S π L hL f h
   rw [he]
   change _ = liftPoly teich fs.prod
   clear he hL h

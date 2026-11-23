@@ -2,16 +2,25 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComponentGenericIsGenericPointStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsAfterFiniteExtensionStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsCompatibleAlongMapStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsFiniteExtensionPrimesStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericPointFactorsOpenStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompComparisonLeftStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompComparisonMiddleStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompComparisonRightStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptLabelBasesStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptProjectiveModelStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCptGen
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PushInvertible
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComponentGenericIsGenericPoint
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GlueApplyOfNotInFibre
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsGenOfIsVBOne
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.BlowupProjections.BlowupProjStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsAfterFiniteExtension
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.MemEigSpOfMemHtDual
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsFiniteExtensionPrimes
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericPointFactorsOpen
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompComparisonLeft
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompComparisonMiddle
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompComparisonRight
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IntegralClosureHeightEqOneOfLiesOver
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptLabelBases
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptProjectiveModel
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsCompatibleAlongMap
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,7 +57,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GlueApplyOfNotInFibre
 
 @[expose] public section
 
@@ -88,22 +96,22 @@ theorem exists_cover : _root_.GlobalTheory.CompanionTheory.Ar.Top.Given → Out.
   intro hG hW E _ _ _ H D l Xo c Y Sys Fx R o S hSp hSd hdeg
   have hRes : ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement := hG.2.2.2.2.1
   have : CharZero R.Ω := charZero_of_injective_ringHom o.𝔐.cst.injective
-  have hgen₀ := GlobalTheory.T.component_generic_is_generic_point E H D l Xo c Y o.𝔐.Ω₀ o.𝔐.ξ₀ o.𝔐.gen₀
+  have hgen₀ := _root_.GlobalTheory.CompanionTheory.Ar.GenPtModel.genPt_mem_genericPoints E H D l Xo c Y o.𝔐.Ω₀ o.𝔐.ξ₀ o.𝔐.gen₀
   have hgen : GlobalTheory.CompanionTheory.Ar.genPt (o.𝔐.ξ ≫ o.𝔐.f) ∈ genericPoints Y.X := by
     have e : o.𝔐.ξ ≫ o.𝔐.f = Spec.map (CommRingCat.ofHom o.𝔐.fn) ≫ o.𝔐.ξ₀ := o.𝔐.fn_over
     rw [e, genPt_comp]; exact hgen₀
-  obtain ⟨Ω, _, _, i, hfin, htors, hroot⟩ := GlobalTheory.T.exists_finite_extension_primes E H D l Xo c Y R.Ω (o.𝔐.ξ ≫ o.𝔐.f) S hgen hSp
+  obtain ⟨Ω, _, _, i, hfin, htors, hroot⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ChgField.exists_field E H D l Xo c Y R.Ω (o.𝔐.ξ ≫ o.𝔐.f) S hgen hSp
   obtain ⟨K₁, _, J₁, _, y₁, bk₁, bx₁, M₁, h₁, hbk₁, hy₁, hdom₁, hnorm₁, hsm₁⟩ :=
-    GlobalTheory.T.coords_after_finite_extension hRes R.K R.ι R.Ω Ω i R.y o.𝔐.X o.𝔐.ξ hfin o.𝔐.all o.𝔐.tie
+    _root_.GlobalTheory.CompanionTheory.Ar.ChangeModel.exists_normal_model hRes R.K R.ι R.Ω Ω i R.y o.𝔐.X o.𝔐.ξ hfin o.𝔐.all o.𝔐.tie
   have hξ₁ : M₁.ξ ≫ h₁ ≫ o.𝔐.f = spMap i ≫ o.𝔐.ξ ≫ o.𝔐.f := by
     have e : M₁.ξ ≫ h₁ = Spec.map (CommRingCat.ofHom i) ≫ o.𝔐.ξ := hdom₁
     rw [← Category.assoc, e, Category.assoc]
   have hgen₁ : GlobalTheory.CompanionTheory.Ar.genPt (M₁.ξ ≫ h₁ ≫ o.𝔐.f) ∈ genericPoints Y.X := by
     rw [hξ₁]; show GlobalTheory.CompanionTheory.Ar.genPt (Spec.map (CommRingCat.ofHom i) ≫ _) ∈ _
     rw [genPt_comp]; exact hgen
-  obtain ⟨y₀, hy₀⟩ := GlobalTheory.T.generic_point_factors_open E H D l Xo c Y Ω (M₁.ξ ≫ h₁ ≫ o.𝔐.f) hgen₁
+  obtain ⟨y₀, hy₀⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ChangeGeo.exists_factor_XF_of_genericPoint E H D l Xo c Y Ω (M₁.ξ ≫ h₁ ≫ o.𝔐.f) hgen₁
   obtain ⟨K₂, _, J₂, _, y₂, bk₂, bx₂, B, g, hbk₂, hy₂, hdom₂, hf₂, hR₂, hfree₂, hiso₂⟩ :=
-    GlobalTheory.T.hodge_cpt_projective_model hW E H D l Xo c Y S (fun _ => 4) Ω K₁ J₁ y₁ M₁ (h₁ ≫ o.𝔐.f) y₀ hnorm₁ hy₀ hgen₁ hSp hSd
+    _root_.GlobalTheory.CompanionTheory.Ar.TopHodge.exists_hodgeCpt_htFree hW E H D l Xo c Y S (fun _ => 4) Ω K₁ J₁ y₁ M₁ (h₁ ≫ o.𝔐.f) y₀ hnorm₁ hy₀ hgen₁ hSp hSd
       (fun _ _ => le_rfl) (fun p hp => by rw [hξ₁]; exact htors p hp) hroot
   have hgB : B.ξ ≫ g = M₁.ξ := by
     have e : B.ξ ≫ g = Spec.map (CommRingCat.ofHom (RingHom.id Ω)) ≫ M₁.ξ := hdom₂
@@ -127,17 +135,17 @@ theorem exists_cover : _root_.GlobalTheory.CompanionTheory.Ar.Top.Given → Out.
     have : NumberField c.F := {}
     exact cst_ext (spMap_inj h4)
   obtain ⟨jA, hext, hpt, hact, hlat⟩ :=
-    GlobalTheory.T.hodge_comp_comparison_left E H D l Xo c Y ∅ S R.Ω Ω R.K R.ι R.y K₂ J₂ y₂ o.𝔐 B i (g ≫ h₁) hdomB hfB
+    _root_.GlobalTheory.CompanionTheory.Ar.CoverLie.main E H D l Xo c Y ∅ S R.Ω Ω R.K R.ι R.y K₂ J₂ y₂ o.𝔐 B i (g ≫ h₁) hdomB hfB
   obtain ⟨Li₀, _, _, M₀, j, V₀, hspan, hj, hV, hflag⟩ :=
-    GlobalTheory.T.hodge_comp_comparison_middle E H D l Xo c Y ∅ S R.Ω Ω R.K R.ι R.y K₂ J₂ y₂ o.𝔐 o.Fl B i (g ≫ h₁) jA hfin hdomB hfB hcst hext hpt hact
-  have hvb := GlobalTheory.T.hodge_comp_comparison_right E H D l Xo c Y ∅ S R.Ω Ω R.K R.ι R.y K₂ J₂ y₂ o.𝔐 o.Fl B i (g ≫ h₁) jA hdomB hfB hcst hext hpt hact hlat
+    _root_.GlobalTheory.CompanionTheory.Ar.FlagRead.generic_read E H D l Xo c Y ∅ S R.Ω Ω R.K R.ι R.y K₂ J₂ y₂ o.𝔐 o.Fl B i (g ≫ h₁) jA hfin hdomB hfB hcst hext hpt hact
+  have hvb := _root_.GlobalTheory.CompanionTheory.Ar.VbGen.isFlagVBOn_genFib E H D l Xo c Y ∅ S R.Ω Ω R.K R.ι R.y K₂ J₂ y₂ o.𝔐 o.Fl B i (g ≫ h₁) jA hdomB hfB hcst hext hpt hact hlat
   obtain ⟨K₃, _, J₃, _, y₃, bk₃, bx₃, 𝔐, g', Fl, xdeg, e, hbk₃, hy₃, hdom₃, hf₃, hR₃, hc₃, hfree₃, hFd, hFb, hlines, -, hiso₃⟩ :=
-    GlobalTheory.T.hodge_cpt_label_bases hW E H D l Xo c Y S Ω K₂ J₂ y₂ B y₀ (fun s a => jA (o.Fl.b s a)) Li₀ _ _ M₀ j V₀ _ hBξ hSd hfree₂
+    _root_.GlobalTheory.CompanionTheory.Ar.HFlag.exists_flag_model hW E H D l Xo c Y S Ω K₂ J₂ y₂ B y₀ (fun s a => jA (o.Fl.b s a)) Li₀ _ _ M₀ j V₀ _ hBξ hSd hfree₂
       (fun p hp => by rw [hR₂]; exact hroot p hp) hspan hj hV hflag
   have hsm₂ : SmoothGenericFibreM y₂ :=
-    GlobalTheory.T.smoothGenericFibre_of_dominates Ω K₁ J₁ y₁ K₂ J₂ y₂ M₁.X B.X M₁.ξ B.ξ g M₁.all B.all M₁.tie B.tie hdom₂ hsm₁ hiso₂
+    _root_.GlobalTheory.CompanionTheory.Ar.SmoothChange.smoothGenericFibreM_of_isoAt Ω K₁ J₁ y₁ K₂ J₂ y₂ M₁.X B.X M₁.ξ B.ξ g M₁.all B.all M₁.tie B.tie hdom₂ hsm₁ hiso₂
   have hsm₃ : SmoothGenericFibreM y₃ :=
-    GlobalTheory.T.smoothGenericFibre_of_dominates Ω K₂ J₂ y₂ K₃ J₃ y₃ B.X 𝔐.X B.ξ 𝔐.ξ g' B.all 𝔐.all B.tie 𝔐.tie hdom₃ hsm₂
+    _root_.GlobalTheory.CompanionTheory.Ar.SmoothChange.smoothGenericFibreM_of_isoAt Ω K₂ J₂ y₂ K₃ J₃ y₃ B.X 𝔐.X B.ξ 𝔐.ξ g' B.all 𝔐.all B.tie 𝔐.tie hdom₃ hsm₂
       (fun q hq => hiso₃ q hq (hvb q hq))
   have hg' : 𝔐.ξ ≫ g' = B.ξ := by
     have e : 𝔐.ξ ≫ g' = Spec.map (CommRingCat.ofHom (RingHom.id Ω)) ≫ B.ξ := hdom₃

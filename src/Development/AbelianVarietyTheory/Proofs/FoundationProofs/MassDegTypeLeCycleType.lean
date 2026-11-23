@@ -1,9 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.SamePartIffOfNeZero
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CardPermPartitionPartsMulCentralizerStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SquarefreeLabelMassDegreeTypeLeStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SquarefreeLabelTorusCardBoundsAndMulStatement
+public import Mathlib.GroupTheory.Perm.Cycle.Type
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CardPermPartitionPartsMulCentralizer
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SquarefreeLabelMassDegreeTypeLe
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SquarefreeLabelTorusCardBoundsAndMul
+public import Mathlib.Algebra.BigOperators.Field
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +47,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Mathlib.Algebra.BigOperators.Field
 
 @[expose] public section
 
@@ -62,7 +63,7 @@ theorem mass_degType_le_cycleType : ∀ (g : ℕ) [Fact g.Prime], ∀ (N : ℕ) 
     intro μ hμ
     obtain ⟨f, hf, rfl⟩ := Finset.mem_image.1 hμ
     rw [Finset.mem_filter] at hf
-    obtain ⟨-, -, hsum, hpos⟩ := (GlobalTheory.T.squarefreeLabelTorusCard_bounds_and_mul g).1 N f hf.1
+    obtain ⟨-, -, hsum, hpos⟩ := (_root_.GlobalTheory.BadShare.torusCard_bounds_mul g).1 N f hf.1
     exact ⟨hf.2, hpos, hsum⟩
   have hfac : (0 : ℝ) < N.factorial := by exact_mod_cast N.factorial_pos
   have hμ : ∀ μ ∈ S, (mass g N fun f => degType g f = μ) ≤
@@ -70,7 +71,7 @@ theorem mass_degType_le_cycleType : ∀ (g : ℕ) [Fact g.Prime], ∀ (N : ℕ) 
         (N.factorial : ℝ) := by
     intro μ hμS
     obtain ⟨-, hpos, hsum⟩ := hmem μ hμS
-    have hc := congrArg (Nat.cast : ℕ → ℝ) (GlobalTheory.T.card_perm_partition_parts_mul_centralizer N μ hpos hsum)
+    have hc := congrArg (Nat.cast : ℕ → ℝ) (_root_.GlobalTheory.BadShare.card_perm_partition_parts_mul N μ hpos hsum)
     push_cast at hc
     have hprod : (0 : ℝ) < ∏ d ∈ μ.toFinset, ((d : ℝ) ^ μ.count d * ((μ.count d).factorial : ℝ)) := by
       refine Finset.prod_pos fun d hd => ?_
@@ -83,7 +84,7 @@ theorem mass_degType_le_cycleType : ∀ (g : ℕ) [Fact g.Prime], ∀ (N : ℕ) 
       intro h0
       rw [h0, zero_mul] at hc
       exact hfac.ne' hc.symm
-    refine (GlobalTheory.T.squarefreeLabelMass_degreeType_le g N μ).trans (le_of_eq ?_)
+    refine (_root_.GlobalTheory.BadShare.mass_degType_le g N μ).trans (le_of_eq ?_)
     rw [← hc]
     field_simp
   have hsplit : (mass g N fun f => A (degType g f)) =

@@ -4,7 +4,10 @@ public import Mathlib.FieldTheory.Galois.Basic
 public import Mathlib.GroupTheory.PGroup
 public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
 public import Mathlib.RingTheory.Valuation.ValuationSubring
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsGaloisConjValuationSubringSameTraceStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsGaloisConjValuationSubringSameTrace
+public import Mathlib.FieldTheory.KummerExtension
+public import Mathlib.GroupTheory.Nilpotent
+public import Mathlib.Algebra.Group.Subgroup.Order
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -17,9 +20,7 @@ import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
-public import Mathlib.FieldTheory.KummerExtension
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.GroupTheory.Nilpotent
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -54,7 +55,6 @@ import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Foundations.ExpUpper
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DiagMod
-public import Mathlib.Algebra.Group.Subgroup.Order
 
 @[expose] public section
 
@@ -165,7 +165,7 @@ theorem valuationSubring_galois_stable_of_kummer : ∀ (l : ℕ), l.Prime → �
   obtain ⟨τ, hτ⟩ : ∃ τ, τ ∉ H := by
     by_contra h
     exact hH.1 (eq_top_iff.2 fun g _ => by_contra fun hg => h ⟨g, hg⟩)
-  obtain ⟨σ, hσ⟩ := GlobalTheory.T.exists_galois_conj_valuationSubring_same_trace (IntermediateField.fixedField H) L W (W.comap (τ : L →+* L))
+  obtain ⟨σ, hσ⟩ := _root_.GlobalTheory.KZ.ES.exists_conj_of_same_trace (IntermediateField.fixedField H) L W (W.comap (τ : L →+* L))
     (fun a => (hW α hθ0 hθl τ a (hKθ a a.2)).symm)
   have hη : σ.restrictScalars F ∈ H := by
     refine (IntermediateField.fixingSubgroup_fixedField H).le ?_

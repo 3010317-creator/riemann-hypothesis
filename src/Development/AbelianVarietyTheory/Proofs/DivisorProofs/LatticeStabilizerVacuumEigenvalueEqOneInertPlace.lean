@@ -1,13 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMemKAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjMemAdelicSchwartzSpaceNumberFieldOfMemStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagonalStabilizerDoubledVacuumEigenvalueEqOneStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplementaryAdelicSchwartzTensorNeZeroStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjMemAdelicSchwartzSpaceNumberFieldOfMem
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AntiCols
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagonalStabilizerDoubledVacuumEigenvalueEqOne
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplementaryAdelicSchwartzTensorNeZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDiagMemDoubledVacuumLatticeStabilizerStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDiagOneNegOneConjAntidiagonalStabilizerMemStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceLatticeStabiliserGeneratedDiagAntidiagStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceLatticeStabilizerScalesDoubledVacuumStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDiagOneNegOneConjAntidiagonalStabilizerMem
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceLatticeStabiliserGeneratedDiagAntidiag
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceLatticeStabilizerScalesDoubledVacuum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +49,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AntiCols
 
 @[expose] public section
 
@@ -64,7 +66,7 @@ theorem eigen_eq_one : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
   dsimp only [Model.IsWeil, IsUWeilPair, IsUWeilB] at hweil
   obtain ⟨⟨_, dd, omd, hdc, hsp, hbox⟩, _⟩ := hweil
   have hvac := hT.geo.hM.vac v
-  obtain ⟨r, hr, hr0⟩ := GlobalTheory.T.exists_complementaryAdelicSchwartz_tensor_ne_zero _ v (G.M.vac v) hvac.1 hvac.2.1
+  obtain ⟨r, hr, hr0⟩ := _root_.GlobalTheory.InertSph.exists_rest_tens_ne_zero _ v (G.M.vac v) hvac.1 hvac.2.1
   set V₀ := tens (evFin F v) (G.M.vac v) r with hV₀
   set S := boxFun V₀ (fun x => star (V₀ x)) with hS
   have hS0 : ∃ x, S x ≠ 0 := by
@@ -83,15 +85,15 @@ theorem eigen_eq_one : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
         conv_lhs => rw [← hx]
         rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
   have hD : ∀ p ∈ GlobalTheory.DblVac.KD σ G.W v, p ∈ GlobalTheory.DblVac.PDiag σ G.W → p ∈ H := fun p hp hpd => by
-    obtain ⟨μ, hμ⟩ := GlobalTheory.T.inertPlace_latticeStabilizer_scales_doubledVacuum F E σ B a a' G X om om' hT v w hw hv dd omd hdc hsp r hr p hp
-    have h1 := GlobalTheory.T.diagonalStabilizer_doubledVacuum_eigenvalue_eq_one F E σ B a a' G X om om' hT v w hw hv dd omd hdc hsp r hr hr0 p hp hpd μ hμ
+    obtain ⟨μ, hμ⟩ := _root_.GlobalTheory.DblVacEigen.eigen_box F E σ B a a' G X om om' hT v w hw hv dd omd hdc hsp r hr p hp
+    have h1 := _root_.GlobalTheory.DblVacSiegel.eigen_eq_one_of_diag F E σ B a a' G X om om' hT v w hw hv dd omd hdc hsp r hr hr0 p hp hpd μ hμ
     show omd p S = S
     rw [hμ, h1, one_smul]
   have hA : ∀ q ∈ GlobalTheory.DblVac.KD σ G.W v, q ∈ GlobalTheory.DblVac.PAnti σ G.W → q ∈ H := fun q hq hqa => by
-    obtain ⟨w₀, hw₀, hW⟩ := GlobalTheory.T.exists_diagOneNegOne_conj_antidiagonalStabilizer_mem σ G.W v
+    obtain ⟨w₀, hw₀, hW⟩ := _root_.GlobalTheory.DblVacFlip.flipPt_conj_anti_diag σ G.W v
     obtain ⟨h1, h2⟩ := hW q hq hqa
     have hq' : omd (w₀ * q * w₀⁻¹) S = S := hD _ h1 h2
-    obtain ⟨μ, hμ⟩ := GlobalTheory.T.inertPlace_latticeStabilizer_scales_doubledVacuum F E σ B a a' G X om om' hT v w hw hv dd omd hdc hsp r hr w₀ hw₀
+    obtain ⟨μ, hμ⟩ := _root_.GlobalTheory.DblVacEigen.eigen_box F E σ B a a' G X om om' hT v w hw hv dd omd hdc hsp r hr w₀ hw₀
     have hinv : μ • omd w₀⁻¹ S = S := by
       rw [← LinearMap.map_smul, ← hμ, ← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one,
         Module.End.one_apply]
@@ -100,8 +102,8 @@ theorem eigen_eq_one : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     rw [e, map_mul, map_mul, Module.End.mul_apply, Module.End.mul_apply, hμ, LinearMap.map_smul, hq',
       LinearMap.map_smul, hinv]
   obtain ⟨gd, hgd, hgdK⟩ := GlobalTheory.T.exists_diag_mem_doubledVacuumLatticeStabilizer σ G.W v k hk
-  have hfix : omd gd S = S := GlobalTheory.T.inertPlace_lattice_stabiliser_generated_diag_antidiag F E σ B a a' G X om om' hT v w hw H hD hA gd hgdK
-  have hb := hbox k gd hgd V₀ hr.2 (fun x => star (V₀ x)) (GlobalTheory.T.conj_mem_adelicSchwartzSpaceNumberField_of_mem _ V₀ hr.2)
+  have hfix : omd gd S = S := _root_.GlobalTheory.DblVac.gen_diag_anti F E σ B a a' G X om om' hT v w hw H hD hA gd hgdK
+  have hb := hbox k gd hgd V₀ hr.2 (fun x => star (V₀ x)) (_root_.GlobalTheory.star_mem_schA_main _ V₀ hr.2)
   have hk1 : (om.comp (MonoidHom.inr _ _)) k V₀ = c • V₀ := by
     rw [MonoidHom.comp_apply, MonoidHom.inr_apply, hV₀, hc r hr]
     funext x

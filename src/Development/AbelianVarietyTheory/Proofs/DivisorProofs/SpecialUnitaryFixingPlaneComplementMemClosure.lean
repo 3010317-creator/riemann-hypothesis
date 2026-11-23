@@ -2,15 +2,18 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.NotIsCompactUnivFv
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmExtensionConjugationInvolutiveFixedField
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousOneAddLowRankEmbeddingQuaternionMatrixStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsQuaternionMatrixEqOfUnitaryDetOneStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixFixesLowRankProjectorOfFixesRationalKernelStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NegInvRatioIsNormOfNegRatioIsNormStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrthogonalAnisotropicPairPlaneMatricesFactsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StrongApproximationQuaternionNormOneSplitStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EmbUnitary
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousOneAddLowRankEmbeddingQuaternionMatrix
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsQuaternionMatrixEqOfUnitaryDetOne
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixFixesLowRankProjectorOfFixesRationalKernel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NegInvRatioIsNormOfNegRatioIsNorm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrthogonalAnisotropicPairPlaneMatricesFacts
+public import Development.AbelianVarietyTheory.Definitions.Divisors.OneMemH0WeightZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StrongApproximationQuaternionNormOneSplit
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryFixingKernelEqOneAddLowRankOfUnitaryStatement
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HermitianFormFiniteZerosOnLineCmExt
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.QuadraticExtNormFormOverAlgebra
+import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HermitianFormFiniteZerosOnLineCmExt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,7 +54,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.Divisors.OneMemH0WeightZero
 
 @[expose] public section
 
@@ -65,7 +67,7 @@ namespace GlobalTheory.PlaneSU
 theorem plane_closure : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ (S₁ : Finset (InfinitePlace F)) (S₂ : Finset (HeightOneSpectrum (𝓞 F))) (ε : AF F), IsPlacesIdem S₁ S₂ ε → (S₁.Nonempty ∨ S₂.Nonempty) → ∀ e₁ e₂ : Fin M → E, hE σ J e₁ e₂ = 0 → hE σ J e₁ e₁ ≠ 0 → hE σ J e₂ e₂ ≠ 0 → (∃ t : AF F ⊗[F] E, algebraMap (AF F) (AF F ⊗[F] E) ε * (t * sigR (AF F) σ t + inclR (AF F) (hE σ J e₁ e₁ / hE σ J e₂ e₂)) = 0) → ∀ g ∈ SUAdelic σ J, (∀ v : Fin M → E, hE σ J e₁ v = 0 → hE σ J e₂ v = 0 → Matrix.mulVec ((HA.mat (AF F) σ J g).1 : Matrix (Fin M) (Fin M) (AF F ⊗[F] E)) (fun i => inclR (AF F) (v i)) = (fun i => inclR (AF F) (v i))) → g ∈ closure {x : HA (AF F) σ J | ∃ γ ∈ SURat σ J, ∃ h ∈ SUSupp σ J ε, x = γ * h} := by
   intro F E _ _ _ _ _ σ hCM M J hJ S₁ S₂ ε hε hS e₁ e₂ h12 h11 h22 ⟨t, ht⟩ g hg hfix
   obtain ⟨hσσ, hfixF⟩ := GlobalTheory.CMConjInvol.cm_conj_invol_fixed F E σ hCM
-  obtain ⟨hs1, hs2, hBA₀, h1₀, h2₀, hker⟩ := GlobalTheory.T.orthogonalAnisotropicPair_planeMatrices_facts F E σ hσσ M J hJ e₁ e₂ h12 h11 h22
+  obtain ⟨hs1, hs2, hBA₀, h1₀, h2₀, hker⟩ := _root_.GlobalTheory.PlaneSU.planeB_facts F E σ hσσ M J hJ e₁ e₂ h12 h11 h22
   obtain ⟨f₁, hf₁⟩ := hfixF _ hs1
   obtain ⟨f₂, hf₂⟩ := hfixF _ hs2
   have hf₁0 : f₁ ≠ 0 := by rintro rfl; exact h11 (by rw [← hf₁, map_zero])
@@ -121,21 +123,21 @@ theorem plane_closure : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     with hGdef
   have hGu : Formalism.UG.cT c G * J.map ιR * G = J.map ιR := ((show HR (AF F) σ J from g).2)
   have hfixM : G * (1 - A * B) = 1 - A * B :=
-    GlobalTheory.T.matrix_fixes_lowRankProjector_of_fixes_rationalKernel F E (AF F) M _ _ hBA₀ G (fun v hv => hfix v ((hker v).1 hv).1 ((hker v).1 hv).2)
+    _root_.GlobalTheory.RatFix.ratfix F E (AF F) M _ _ hBA₀ G (fun v hv => hfix v ((hker v).1 hv).1 ((hker v).1 hv).2)
   obtain ⟨hGemb, hXu⟩ := GlobalTheory.T.unitary_fixing_kernel_eq_oneAddLowRank_of_unitary _ c hcc M (J.map ιR) hJu A B H hBA h1 h2 G hGu hfixM
   have hdetX : (B * G * A).det = 1 := by
     rw [← det_emb hBA, ← hGemb]; exact StrongApprox.mem_SUAdelic.1 hg
-  obtain ⟨x, hxX⟩ := GlobalTheory.T.exists_quaternionMatrix_eq_of_unitary_det_one F E σ δ bs hb0 hb1 hbb f₁ f₂ hf₁0 hf₂0 (AF F) (B * G * A) (hH ▸ hXu) hdetX
+  obtain ⟨x, hxX⟩ := _root_.GlobalTheory.PlaneSU.exists_qm_eq_of_unitary F E σ δ bs hb0 hb1 hbb f₁ f₂ hf₁0 hf₂0 (AF F) (B * G * A) (hH ▸ hXu) hdetX
   have hx1 : nrm x = 1 := by
     apply hιinj
     rw [map_one, ← det_qm ι θ hθ, hxX, hdetX]
   have hpq : ∃ p q : AF F, ε * (algebraMap F (AF F) (-(f₂ / f₁)) - (p ^ 2 - algebraMap F (AF F) δ * q ^ 2)) = 0 := by
-    refine GlobalTheory.T.neg_inv_ratio_isNorm_of_neg_ratio_isNorm F E σ δ bs hb0 hb1 hbb f₁ f₂ hf₁0 hf₂0 (AF F) ε t ?_
+    refine _root_.GlobalTheory.PlaneSU.NormSwap.neg_inv_ratio_norm F E σ δ bs hb0 hb1 hbb f₁ f₂ hf₁0 hf₂0 (AF F) ε t ?_
     have e : inclR (F := F) (AF F) (hE σ J e₁ e₁ / hE σ J e₂ e₂) = algebraMap F (AF F ⊗[F] E) (f₁ / f₂) := by
       rw [← hf₁, ← hf₂, ← map_div₀]; exact hιR _
     rw [← e]; exact ht
   have hxcl : x ∈ closure (H0 (a := δ) (b := -(f₂ / f₁)) ε) :=
-    GlobalTheory.T.strongApproximation_quaternion_normOne_split F δ (-(f₂ / f₁)) hδ0 hbq0 S₁ S₂ ε hε hS hpq x hx1
+    _root_.GlobalTheory.QSA.strongApprox_nrm_one F δ (-(f₂ / f₁)) hδ0 hbq0 S₁ S₂ ε hε hS hpq x hx1
 
   have hunit : ∀ y : DA F δ (-(f₂ / f₁)), nrm y = 1 →
       Formalism.UG.cT c (emb A B (qm ι θ y)) * J.map ιR * emb A B (qm ι θ y) = J.map ιR := by
@@ -161,7 +163,7 @@ theorem plane_closure : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     · exact ((hco 1).neg).congr fun y => by simp [coords]
     · exact ((hco 2).neg).congr fun y => by simp [coords]
     · exact ((hco 3).neg).congr fun y => by simp [coords]
-  have hE0 := GlobalTheory.T.continuous_oneAddLowRankEmbedding_quaternionMatrix F E δ (-(f₂ / f₁)) M A B θ
+  have hE0 := _root_.GlobalTheory.emb_qm_continuous F E δ (-(f₂ / f₁)) M A B θ
   have hnstar : ∀ y : {y : DA F δ (-(f₂ / f₁)) // nrm y = 1}, nrm (star y.1) = 1 := fun y => by
     calc nrm (star y.1) = nrm y.1 := by simp [nrm]
       _ = 1 := y.2

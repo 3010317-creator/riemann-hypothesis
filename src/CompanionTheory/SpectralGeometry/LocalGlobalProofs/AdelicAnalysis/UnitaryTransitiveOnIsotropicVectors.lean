@@ -1,7 +1,7 @@
 module
 
 public import Formalism.UnipotentAdelicQuotients.SWXSDefs
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.WittExtensionGlobalStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.WittExtensionGlobal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -153,7 +153,7 @@ theorem transitive_isotropic : ∀ (F E : Type) [Field F] [NumberField F] [Field
   have hdet : (gramE σ J ![x, x']).det ≠ 0 := by
     rw [Matrix.det_fin_two]
     simp [gramE, hxx, h1, h2, h3]
-  obtain ⟨g, hg, hgX⟩ := GlobalTheory.T.witt_extension_global F E σ hCM M J hJ 2 ![x, x'] ![y, y'] hgram hdet
+  obtain ⟨g, hg, hgX⟩ := _root_.GlobalTheory.CompanionTheory.SW.WittE.witt_tuple F E σ hCM M J hJ 2 ![x, x'] ![y, y'] hgram hdet
   exact ⟨g, hg, by simpa using hgX 0⟩
 
 end GlobalTheory.CompanionTheory.SW.WittIso

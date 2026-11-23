@@ -1,7 +1,7 @@
 module
 
 public import Formalism.LocalRingCardinality.DataSpaces
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIdealCoprimeConjMulEqSpanSingletonStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIdealCoprimeConjMulEqSpanSingleton
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -92,7 +92,7 @@ theorem exists_primitive_norm_neg : ∀ (F E : Type) [Field F] [NumberField F] [
     have h' := congrArg (fun r : 𝓞 E => (r : E)) h
     simpa using h'
 
-  obtain ⟨P, hP0, hPP, ⟨t, p0, hp0, htp⟩, α, hα⟩ := GlobalTheory.T.exists_ideal_coprime_conj_mul_eq_spanSingleton' F E hcm c hc (T : 𝓞 E) hTne
+  obtain ⟨P, hP0, hPP, ⟨t, p0, hp0, htp⟩, α, hα⟩ := _root_.GlobalTheory.exists_ideal_coprime_conj_mul_eq_spanSingleton F E hcm c hc (T : 𝓞 E) hTne
   have htpE : (t : E) * (T : E) + (p0 : E) = 1 := by
     have h' := congrArg (fun r : 𝓞 E => (r : E)) htp
     simpa using h'

@@ -1,12 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsTypeIsRealConst
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteSmoothPartitionUnityHolAtlasStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolAtlasDelFinsetSumStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolAtlasIntegralFinSumCompactStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteSmoothPartitionUnityHolAtlas
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolAtlasDelFinsetSum
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolAtlasIntegralFinSumCompact
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolAtlasIsFormDelDbarSmoothStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralDbarCutoffMulFormEqZeroLocalStokesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralDelChartSupportedMulFormEqZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralDbarCutoffMulFormEqZeroLocalStokes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralDelChartSupportedMulFormEqZero
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFormMul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -104,18 +104,18 @@ theorem stokes : ∀ (M : Type) [TopologicalSpace M] [T2Space M] [SecondCountabl
     [MeasurableSpace M] [BorelSpace M] (n : ℕ) (A : HolAtlas M n),
     ∀ η : A.Fld, A.IsForm η → A.integral (A.del η) = 0 ∧ A.integral (A.dbar η) = 0 := by
   intro M _ _ _ _ _ _ n A η hη
-  obtain ⟨N, c, χ, hs, hsupp, hone⟩ := GlobalTheory.T.exists_finite_smooth_partition_unity_holAtlas A
+  obtain ⟨N, c, χ, hs, hsupp, hone⟩ := _root_.GlobalTheory.exists_finite_smooth_partition_holAtlas A
   have hf : ∀ j, A.IsForm (A.fn (χ j) * η) := fun j =>
     FormMul.isForm_mul A _ _ (A.isForm_fn (hs j)) hη
   have hdiff : ∀ j, A.IsForm (A.del (A.fn (χ j) * η)) ∧ A.IsForm (A.dbar (A.fn (χ j) * η)) :=
     fun j => GlobalTheory.T.holAtlas_isForm_del_dbar_smooth M n A _ (hf j)
   have hdec := eq_sum_fn_mul A χ hone η
   constructor
-  · rw [hdec, GlobalTheory.T.holAtlas_del_finset_sum A _ hf,
-      GlobalTheory.T.holAtlas_integral_fin_sum_compact A _ (fun j => (hdiff j).1)]
-    exact Finset.sum_eq_zero fun j _ => GlobalTheory.T.integral_del_chartSupported_mul_form_eq_zero A η (χ j) (c j) hη (hs j) (hsupp j)
+  · rw [hdec, _root_.GlobalTheory.CxForm.HolAtlas.del_finset_sum A _ hf,
+      _root_.GlobalTheory.CxForm.IntegralSum.integral_sum A _ (fun j => (hdiff j).1)]
+    exact Finset.sum_eq_zero fun j _ => _root_.GlobalTheory.CxForm.LocStokes.integral_del_fn_mul_eq_zero A η (χ j) (c j) hη (hs j) (hsupp j)
   · rw [hdec, dbar_sum A _ hf,
-      GlobalTheory.T.holAtlas_integral_fin_sum_compact A _ (fun j => (hdiff j).2)]
-    exact Finset.sum_eq_zero fun j _ => GlobalTheory.T.integral_dbar_cutoff_mul_form_eq_zero_local_stokes A η (χ j) (c j) hη (hs j) (hsupp j)
+      _root_.GlobalTheory.CxForm.IntegralSum.integral_sum A _ (fun j => (hdiff j).2)]
+    exact Finset.sum_eq_zero fun j _ => _root_.GlobalTheory.CxForm.DbarLocStokes.integral_dbar_fn_mul_eq_zero A η (χ j) (c j) hη (hs j) (hsupp j)
 
 end GlobalTheory.CxFormStokesBoth

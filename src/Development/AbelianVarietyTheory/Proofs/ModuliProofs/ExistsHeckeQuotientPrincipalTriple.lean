@@ -10,8 +10,10 @@ public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsQuotien
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSecImageNonzeroLocus
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaOfTranslDiff
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LbPowDescendsOfIsotropicOfLaws
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SeesawTrivialityOnDenseFibresProductAbelianStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SeesawTrivialityOnDenseFibresProductAbelian
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.TheoremOfCubePolAbelianScheme
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSingle
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +54,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbelianSchemeGerms
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSingle
 
 @[expose] public section
 
@@ -77,7 +78,7 @@ theorem exists_heckeQuotient_triple_of_laws : Out.Laws → ∀ (E : Type) [Field
   have princ := GlobalTheory.kTriv_of_descent laws
   have amp := GlobalTheory.relAmple_finite_pow_iso
   have prim := GlobalTheory.PrimNorm.exists_primitive_normalisation glob
-  have seesaw := GlobalTheory.T.seesaw_triviality_on_dense_fibres_product_abelian glob
+  have seesaw := _root_.GlobalTheory.triv_of_triv_on_dense_fibres_prod_abelian glob
   have hA : IsAbelianScheme t.G := AbelianSchemeGerms.isAbelianScheme_of_proper t.G t.semi
   have hL := t.PP.isLB
   let P : Out.PolAV (Sp k) :=

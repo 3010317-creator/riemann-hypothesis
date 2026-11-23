@@ -2,12 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUnitOneAddPiOMul
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
-public import Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLinks.CharpolyDvdOfAevalEqZero
-public import Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLinks.ConjugateSelfReciprocalCharpoly
-public import Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLinks.EqZeroOfMemAllPowers
-public import Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLinks.NormApproximationFiltration
-public import Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLinks.NormApproximationFirstLevel
-public import Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLinks.NormFiltrationComplete
+public import Mathlib.FieldTheory.Separable
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharpolyDvdOfAevalEqZero
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AevalRootEqZeroIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjugateSelfReciprocalCharpoly
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfMemAllPowers
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormApproximationFiltration
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormApproximationFirstLevel
+public import GroundTheory.LocalFields.FilteredSurj
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormFiltrationComplete
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -113,7 +116,7 @@ theorem normU_surj (L : Type) [Field L] [Valued L (WithZero (Multiplicative ℤ)
   have hE : Antitone E := fun a b hab => Subgroup.comap_mono (filt_antitone h P hab)
   have hsepE : FiltrationSeparated E := by
     intro g hg
-    have h0 : ((g : (Alg P)ˣ) : Alg P) - 1 = 0 := GlobalTheory.T.eq_zero_of_mem_all_powers L σ ϖ q h P _ fun m => hg m
+    have h0 : ((g : (Alg P)ˣ) : Alg P) - 1 = 0 := _root_.GlobalTheory.NormEq.sep L σ ϖ q h P _ fun m => hg m
     exact Subtype.ext (Units.ext (sub_eq_zero.1 h0))
   have hE0 : E (id 0) = ⊤ := by
     ext g; change ((g : (Alg P)ˣ) ∈ filt h P 0) ↔ True
@@ -122,16 +125,16 @@ theorem normU_surj (L : Type) [Field L] [Valued L (WithZero (Multiplicative ℤ)
   have hgr : ∀ n, ∀ z ∈ E (id n), ∃ g ∈ filt h P n, z / f g ∈ E (id (n + 1)) := by
     intro n z hz
     rcases Nat.eq_zero_or_pos n with rfl | hn
-    · obtain ⟨u, hu⟩ := GlobalTheory.T.norm_approximation_first_level L σ ϖ q h P hP z.1 z.2
+    · obtain ⟨u, hu⟩ := _root_.GlobalTheory.NormEq.exists_mul_conj_sub_mem_piPow_one L σ ϖ q h P hP z.1 z.2
       refine ⟨u, by rw [filt_zero]; exact Subgroup.mem_top u, ?_⟩
       show ((z.1 / normU P u : (Alg P)ˣ) : Alg P) - 1 ∈ piPow h P (0 + 1)
       exact div_mem_of_sub_mem hu
-    · obtain ⟨u, hu, hu'⟩ := GlobalTheory.T.norm_approximation_filtration L σ ϖ q h P n hn z.1 z.2 hz
+    · obtain ⟨u, hu, hu'⟩ := _root_.GlobalTheory.NormEq.exists_norm_lift_step L σ ϖ q h P n hn z.1 z.2 hz
       refine ⟨u, hu, ?_⟩
       show ((z.1 / normU P u : (Alg P)ˣ) : Alg P) - 1 ∈ piPow h P (n + 1)
       exact div_mem_of_sub_mem hu'
   obtain ⟨u, hu⟩ := surjective_of_graded_surjective (F := filt h P) (E := E) (filt_antitone h P) hE
-    (GlobalTheory.T.norm_filtration_complete L σ ϖ q h P) hsepE f tendsto_id (filt_zero h P) hE0 hmap hgr ⟨x, hx⟩
+    (_root_.GlobalTheory.NormEq.filtrationComplete_filt L σ ϖ q h P) hsepE f tendsto_id (filt_zero h P) hE0 hmap hgr ⟨x, hx⟩
   exact ⟨u, congrArg Subtype.val hu⟩
 
 end GlobalTheory.NormEq
@@ -153,7 +156,7 @@ theorem hermUnit_eq_norm : ∀ (L : Type) [Field L] [Valued L (WithZero (Multipl
     rw [← hch, ← hyO]
     exact (Matrix.charpoly_map yO (intL L).subtype).symm
   have hyuO : cT sO yO * yO = 1 := hΦinj (by rw [map_mul, hΦcT, hyO, hyu, map_one])
-  have hcsr : IsCsr sO Q₀ := hchO ▸ GlobalTheory.T.conjugate_self_reciprocal_charpoly _ sO n yO hyuO
+  have hcsr : IsCsr sO Q₀ := hchO ▸ _root_.GlobalTheory.UTr.isCsr_charpoly_of_cT_mul_eq_one _ sO n yO hyuO
   let P : Csr sO := ⟨Q₀, hcsr⟩
   have hg : aeval yO P.1 = 0 := by
     show aeval yO Q₀ = 0
@@ -165,7 +168,7 @@ theorem hermUnit_eq_norm : ∀ (L : Type) [Field L] [Valued L (WithZero (Multipl
     intro z hz
     obtain ⟨r, rfl⟩ := exists_aeval_root P z
     rw [hev] at hz
-    have hd := GlobalTheory.T.charpoly_dvd_of_aeval_eq_zero_alt (intL L) n yO r (hchO ▸ hsep) hz
+    have hd := _root_.GlobalTheory.SepCharpoly.charpoly_dvd_of_aeval_eq_zero (intL L) n yO r (hchO ▸ hsep) hz
     rw [hchO] at hd
     exact (aeval_root_eq_zero_iff P).2 hd
   have hevinj' : Function.Injective ev := (injective_iff_map_eq_zero ev).2 hevinj

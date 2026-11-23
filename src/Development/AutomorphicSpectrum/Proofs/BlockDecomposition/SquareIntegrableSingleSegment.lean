@@ -2,13 +2,16 @@ module
 
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.SquareIntegrableTempered.CasselmanNecTemp
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.PropsCos
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralCharacterExistsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralCharacterNormEqPowStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsUnitPowTendstoZeroStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExponentLtOfPrecedesStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityPosOfSocleStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralCharacterExists
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralCharacterNormEqPow
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsUnitPowTendstoZero
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExponentLtOfPrecedes
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.LSegJacquet
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityPosOfSocle
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MultisetAntitoneEnumeration
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NormLtOneOfPowTendstoZeroStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.MatrixMeasurableSpace
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NormLtOneOfPowTendstoZero
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProdLeRevEqProdGe
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WeightedAntitoneLastNonpos
 import Mathlib.Algebra.Order.Floor.Extended
@@ -107,9 +110,9 @@ theorem card_eq_one : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpac
   have hpos : ∀ Δ, 0 < (y Δ).1 := fun Δ => by
     rw [hdeg]
     exact Nat.mul_pos Δ.len_pos Δ.d_pos
-  choose s hs using fun Δ => GlobalTheory.T.central_character_norm_eq_pow k (y Δ) (hpos Δ)
+  choose s hs using fun Δ => _root_.GlobalTheory.CompanionTheory.CentralExp.norm_scalarBy_eq_nabs_rpow k (y Δ) (hpos Δ)
   obtain ⟨h, D, hD, hanti, hno⟩ := GlobalTheory.CompanionTheory.Multiset.exists_antitone_listing 𝔪 s Segment.Precedes
-    fun a b hab => GlobalTheory.T.exponent_lt_of_precedes_of_isLSeg k a b (y a) (y b) (s a) (s b) (hy a) (hy b) (hs a) (hs b) hab
+    fun a b hab => _root_.GlobalTheory.CompanionTheory.SegExp.exponent_lt_of_precedes k a b (y a) (y b) (s a) (s b) (hy a) (hy b) (hs a) (hs b) hab
   let x : Fin h → IrrGL (k := k) := fun i => y (D i)
   have hLF : LFactors 𝔪 x := ⟨D, ⟨hD, hno⟩, fun i => hy (D i)⟩
   have hsum : ∑ a, (x a).1 = N := by
@@ -124,11 +127,11 @@ theorem card_eq_one : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpac
     exact Equiv.sum_comp Fin.revPerm fun a => (x a).1
   have hsoc := hS 𝔪 h N x hsumrev hLF π hL
   have hposrev : ∀ a, 0 < ((x ∘ Fin.rev) a).1 := fun a => hpos _
-  have hjm := GlobalTheory.T.jacquet_multiplicity_pos_of_socle k h N (x ∘ Fin.rev) hsumrev π hsm hposrev hsoc
+  have hjm := _root_.GlobalTheory.CompanionTheory.SocleFrob.jm_ne_zero_of_isSocle k h N (x ∘ Fin.rev) hsumrev π hsm hposrev hsoc
   have hex := hC N π hN hsm hirr hsq h (x ∘ Fin.rev) hsumrev hposrev hjm
-  obtain ⟨t, ht⟩ := GlobalTheory.T.exists_unit_pow_tendsto_zero' k
-  have hnabs := GlobalTheory.T.norm_lt_one_of_pow_tendsto_zero k t ht
-  choose c hc using fun i => GlobalTheory.T.central_character_exists k (x i) t
+  obtain ⟨t, ht⟩ := _root_.GlobalTheory.CompanionTheory.LocalFieldPow.exists_unit_pow_tendsto_zero k
+  have hnabs := _root_.GlobalTheory.CompanionTheory.NabsContract.nabs_lt_one_of_tendsto_pow k t ht
+  choose c hc using fun i => _root_.GlobalTheory.CompanionTheory.ScalarEx.exists_scalarBy k (x i) t
   obtain ⟨hpart, hfull⟩ := hex t ht (c ∘ Fin.rev) fun i => hc (Fin.rev i)
   have hle : h ≤ 1 := length_le_one_of_partial_products (fun i => ((x i).1 : ℝ)) (fun i => s (D i))
     (fun i => ‖c i‖) (nabs_pos' k t) hnabs (fun i => by exact_mod_cast hpos (D i)) hanti

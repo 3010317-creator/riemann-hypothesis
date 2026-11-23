@@ -2,16 +2,18 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass
 public import Mathlib.Analysis.SpecialFunctions.Log.Base
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FewOrbitsSubspacesHermitianLatticeDiscriminantStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianGenusMassEqOrbitStabilizerMassStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassIntegralLatticesDiscriminantOrderLeStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
+public import Formalism.HermitianLattices.StatementMass
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FewOrbitsSubspacesHermitianLatticeDiscriminant
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianGenusMassEqOrbitStabilizerMass
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassIntegralLatticesDiscriminantOrderLe
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrbitStabilizerMassSubspaceCyclicDiscriminantLe
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrbitWeightedStabilizerSumRestrictSlice
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrbitWeightedStabilizerSumTransportEquivariant
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PrimitiveSublatticesMoveWithIsometries
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrbitStabilizerMassEqWeightedSumFibres
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrbitStabilizerMassSubspaceCyclicDiscriminantLeStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrbitWeightedStabilizerSumMonoSubadditiveStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrbitWeightedStabilizerSumRestrictSliceStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrbitWeightedStabilizerSumTransportEquivariantStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PrimitiveSublatticesMoveWithIsometriesStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.WittExtensionTotallyDefiniteHermitianStatement
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrbitWeightedStabilizerSumMonoSubadditive
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.WittExtensionTotallyDefiniteHermitian
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,13 +80,13 @@ theorem orbSum_encard_le (G A B : Type) [Group G] [MulAction G A] [MulAction G B
     (fun p hp => hp.1) hfin
   have h2 : orbSum G Y (fun a => (((P a).encard : ℕ∞) : ℝ≥0∞)) ≤ orbMass G X := by
     rw [h1]
-    refine (GlobalTheory.T.orbitWeightedStabilizerSum_mono_subadditive G A).1 Y Y _ _ subset_rfl fun a ha => ?_
+    refine (_root_.GlobalTheory.Mass.OrbMono.main G A).1 Y Y _ _ subset_rfl fun a ha => ?_
     have : (P a).encard ≤ (X ∩ Prod.fst ⁻¹' {a}).encard :=
       Set.encard_le_encard_of_injOn (f := fun b => (a, b)) (fun b hb => ⟨⟨ha, hb⟩, rfl⟩)
         (fun b _ b' _ e => (Prod.ext_iff.1 e).2)
     exact_mod_cast this
   refine h2.trans ?_
-  have h3 := (GlobalTheory.T.orbitWeightedStabilizerSum_mono_subadditive G (A × B)).2.2.1 B s X (fun b₀ => {p | p ∈ X ∧ ∃ g : G, g • b₀ = p.2})
+  have h3 := (_root_.GlobalTheory.Mass.OrbMono.main G (A × B)).2.2.1 B s X (fun b₀ => {p | p ∈ X ∧ ∃ g : G, g • b₀ = p.2})
     (fun _ => 1) (by
       intro p hp
       obtain ⟨b₀, hb₀, g, hg⟩ := hs _ hp.1 _ hp.2
@@ -97,7 +99,7 @@ theorem orbSum_encard_le (G A B : Type) [Group G] [MulAction G A] [MulAction G B
     change (g : G) • p.2 = b₀
     rw [e]
     exact g.2
-  have h4 := GlobalTheory.T.orbitWeightedStabilizerSum_restrict_slice G (A × B) (MulAction.stabilizer G b₀)
+  have h4 := _root_.GlobalTheory.Mass.Slice.orbSum_restrict G (A × B) (MulAction.stabilizer G b₀)
     {p | p ∈ X ∧ ∃ g : G, g • b₀ = p.2} {p | p ∈ X ∧ p.2 = b₀} (fun _ => 1)
     (fun p hp => ⟨hp.1, 1, by rw [one_smul, hp.2]⟩)
     (by
@@ -117,7 +119,7 @@ theorem orbSum_encard_le (G A B : Type) [Group G] [MulAction G A] [MulAction G B
       rw [e] at e'
       exact e')
   rw [← h4]
-  exact GlobalTheory.T.orbitWeightedStabilizerSum_transport_equivariant (MulAction.stabilizer G b₀) (MulAction.stabilizer G b₀) (A × B) A (MulEquiv.refl _)
+  exact _root_.GlobalTheory.Mass.OrbTransport.main (MulAction.stabilizer G b₀) (MulAction.stabilizer G b₀) (A × B) A (MulEquiv.refl _)
     Prod.fst {p | p ∈ X ∧ p.2 = b₀} {a | a ∈ Y ∧ b₀ ∈ P a} (fun _ => 1) hS
     (by
       rintro g a ⟨ha, hb⟩
@@ -200,7 +202,7 @@ theorem exponents (n X j s l c : ℝ) (m : ℕ) (hm : (m : ℝ) = s) (hn : 1 ≤
 theorem main : MaxMass → ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCommGroup V] [Module K V] [FiniteDimensional K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] (h : V →ₗ⋆[K] V →ₗ[K] K), IsCMUnram K → h.IsSymm → PD h → (∀ (W : Type) [AddCommGroup W] [Module K W] [FiniteDimensional K W] [Module (𝓞 K) W] [IsScalarTower (𝓞 K) K W] (k : W →ₗ⋆[K] W →ₗ[K] K), k.IsSymm → PD k → (∃ L : Submodule (𝓞 K) W, Submodule.IsLattice K L ∧ IsUnimodular k L) → ∃ I : Submodule (𝓞 K) W, IsOrthoLattice k I (Module.finrank K W)) → ∀ (j s : ℕ), 1 ≤ j → 1 ≤ s → j + s = Module.finrank K V → ∀ (V₁ : Type) [AddCommGroup V₁] [Module K V₁] [FiniteDimensional K V₁] [Module (𝓞 K) V₁] [IsScalarTower (𝓞 K) K V₁] (h₁ : V₁ →ₗ⋆[K] V₁ →ₗ[K] K) (I₁ : Submodule (𝓞 K) V₁), h₁.IsSymm → IsOrthoLattice h₁ I₁ j → ∀ (V₂ : Type) [AddCommGroup V₂] [Module K V₂] [FiniteDimensional K V₂] [Module (𝓞 K) V₂] [IsScalarTower (𝓞 K) K V₂] (h₂ : V₂ →ₗ⋆[K] V₂ →ₗ[K] K) (I₂ : Submodule (𝓞 K) V₂), h₂.IsSymm → IsOrthoLattice h₂ I₂ s → ∀ (n N₀ : ℕ), 1 ≤ n → 1 ≤ N₀ → ∀ 𝒢 : Set (Submodule (𝓞 K) V), Stable (isom h) 𝒢 → (∀ L ∈ 𝒢, IsIntLat h L ∧ discN h L = N₀ ∧ (∃ t : Finset V, t.card ≤ 1 ∧ dual h L = L ⊔ Submodule.span (𝓞 K) (t : Set V))) → orbSum (isom h) 𝒢 (fun L => (((primSp h L j n).encard : ℕ∞) : ℝ≥0∞)) ≤ ENNReal.ofReal (mass h₁ I₁ * mass h₂ I₂ * (n : ℝ) ^ ((j : ℝ) / 2) * ((n : ℝ) * N₀) ^ ((9 * (s : ℝ) + 8 + 4 * Real.logb 2 (Module.finrank ℚ K)) / 2)) := by
   intro hM K V _ _ _ _ _ _ _ _ h hK hs hp hLand j s hj hs1 hjs V₁ _ _ _ _ _ h₁ I₁ hs₁ hI₁ V₂ _ _ _ _ _ h₂ I₂ hs₂ hI₂
     n N₀ hn hN 𝒢 hst h𝒢
-  obtain ⟨S, hcard, hdim, hcov⟩ := GlobalTheory.T.few_orbits_subspaces_hermitian_lattice_discriminant K V h hK hs hp hLand j n hn
+  obtain ⟨S, hcard, hdim, hcov⟩ := _root_.GlobalTheory.Mass.FewOrbits.main K V h hK hs hp hLand j n hn
   have hnd : h.Nondegenerate := by
     obtain ⟨τ⟩ : Nonempty (K →+* ℂ) := inferInstance
     refine ⟨fun x hx => ?_, fun x hx => ?_⟩
@@ -215,8 +217,8 @@ theorem main : MaxMass → ∀ (K V : Type) [Field K] [NumberField K] [StarRing 
   have m1 := mass_nonneg h₁ I₁
   have m2 := mass_nonneg h₂ I₂
   have h1 := orbSum_encard_le (isom h) (Submodule (𝓞 K) V) (Submodule K V) 𝒢 (fun L => primSp h L j n)
-    (fun g L U => (GlobalTheory.T.primitive_sublattices_move_with_isometries K V h hK hs hnd g L U j n).1) hst
-    (fun L hL => (GlobalTheory.T.hermitianGenusMass_eq_orbitStabilizerMass K V h hK hs hp L (h𝒢 L hL).1.1).2.2.2.1 L (h𝒢 L hL).1.1) S
+    (fun g L U => (_root_.GlobalTheory.Mass.PrimMove.main K V h hK hs hnd g L U j n).1) hst
+    (fun L hL => (_root_.GlobalTheory.Mass.GenusOrb.main K V h hK hs hp L (h𝒢 L hL).1.1).2.2.2.1 L (h𝒢 L hL).1.1) S
     (fun L hL U hU => hcov U hU.1 ⟨latIn U L, isIntLat_latIn h (h𝒢 L hL).1 U, hU.2⟩)
   refine h1.trans ?_
   set X : ℝ := (n : ℝ) * N₀ with hX
@@ -231,19 +233,19 @@ theorem main : MaxMass → ∀ (K V : Type) [Field K] [NumberField K] [StarRing 
       ENNReal.ofReal C := by
     intro U hU
     have dU := hdim U hU
-    obtain ⟨hc, sU, pU, -⟩ := (GlobalTheory.T.witt_extension_totally_definite_hermitian K V h hK hs hp).2 U
-    obtain ⟨-, sW, pW, -⟩ := (GlobalTheory.T.witt_extension_totally_definite_hermitian K V h hK hs hp).2 (perp h U)
+    obtain ⟨hc, sU, pU, -⟩ := (_root_.GlobalTheory.Mass.Witt.witt_definite K V h hK hs hp).2 U
+    obtain ⟨-, sW, pW, -⟩ := (_root_.GlobalTheory.Mass.Witt.witt_definite K V h hK hs hp).2 (perp h U)
     have dW : Module.finrank K (perp h U) = s := by
       have := Submodule.finrank_add_eq_of_isCompl hc
       omega
-    have a1 := (GlobalTheory.T.orbitWeightedStabilizerSum_mono_subadditive (MulAction.stabilizer (isom h) U) (Submodule (𝓞 K) V)).1
+    have a1 := (_root_.GlobalTheory.Mass.OrbMono.main (MulAction.stabilizer (isom h) U) (Submodule (𝓞 K) V)).1
       {L | L ∈ 𝒢 ∧ U ∈ primSp h L j n}
       {L : Submodule (𝓞 K) V | IsIntLat h L ∧ discN h L = N₀ ∧ (∃ t : Finset V, t.card ≤ 1 ∧
         dual h L = L ⊔ Submodule.span (𝓞 K) (t : Set _)) ∧ discN (hRes h U) (latIn U L) = n}
       (fun _ => 1) (fun _ => 1)
       (fun L hL => ⟨(h𝒢 L hL.1).1, (h𝒢 L hL.1).2.1, (h𝒢 L hL.1).2.2, hL.2.2⟩) (fun _ _ => le_rfl)
-    refine a1.trans ((GlobalTheory.T.orbitStabilizerMass_subspace_cyclicDiscriminant_le K V h hK hs hp U n N₀).trans ?_)
-    have a2 := GlobalTheory.T.mass_integralLattices_discriminantOrder_le hM K U (hRes h U) hK sU pU (dU ▸ hj) V₁ h₁ hs₁ I₁ (dU ▸ hI₁) n hn
+    refine a1.trans ((_root_.GlobalTheory.Mass.FixedSub.orbMass_stabilizer_le K V h hK hs hp U n N₀).trans ?_)
+    have a2 := _root_.GlobalTheory.Mass.SpaceMass.main hM K U (hRes h U) hK sU pU (dU ▸ hj) V₁ h₁ hs₁ I₁ (dU ▸ hI₁) n hn
     rw [dU] at a2
     have a3 : ∑ n' ∈ Finset.Icc 1 (n * N₀), orbMass (isom (hRes h (perp h U)))
         (latsDisc (R := 𝓞 K) (hRes h (perp h U)) n') ≤
@@ -251,7 +253,7 @@ theorem main : MaxMass → ∀ (K V : Type) [Field K] [NumberField K] [StarRing 
       refine (Finset.sum_le_card_nsmul _ _
         (ENNReal.ofReal (mass h₂ I₂ * X ^ (((s : ℝ) + l) / 2))) fun n' hn' => ?_).trans (le_of_eq ?_)
       · obtain ⟨b1, b2⟩ := Finset.mem_Icc.1 hn'
-        have a := GlobalTheory.T.mass_integralLattices_discriminantOrder_le hM K (perp h U) (hRes h (perp h U)) hK sW pW (dW ▸ hs1) V₂ h₂ hs₂ I₂
+        have a := _root_.GlobalTheory.Mass.SpaceMass.main hM K (perp h U) (hRes h (perp h U)) hK sW pW (dW ▸ hs1) V₂ h₂ hs₂ I₂
           (dW ▸ hI₂) n' b1
         rw [dW] at a
         refine a.trans (ENNReal.ofReal_le_ofReal ?_)

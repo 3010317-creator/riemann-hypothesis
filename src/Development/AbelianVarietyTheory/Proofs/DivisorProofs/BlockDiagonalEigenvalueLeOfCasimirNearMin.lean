@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ActAtApply
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BlockCasimirEigenvalueDropsOffBlockStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BlockDiagonalFibreCasimirEigenNonnegRealUnitaryStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuadraticOperatorEigenvectorDiagonalBlockIdentitStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BlockCasimirEigenvalueDropsOffBlock
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BlockDiagonalFibreCasimirEigenNonnegRealUnitary
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuadraticOperatorEigenvectorDiagonalBlockIdentit
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -72,7 +72,7 @@ theorem diag_eig_le_of_cas_min : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (
   refine ⟨max (‖α‖ + ‖β‖ + 1) ((2 * ‖α‖ + Fintype.card ι + 1) / 4), ?_⟩
   intro M _ _ F hGl hq hLoc ω hω x y hy hfalse htrue hcas
   by_cases hz : ∀ j, s j = false → ∑ b, F j b (y b) = 0
-  · have hbc := GlobalTheory.T.quadraticOperator_eigenvector_diagonalBlock_identity ι M s F α β x y hq hfalse htrue hz
+  · have hbc := _root_.GlobalTheory.HoweR.qop_quadratic_on_eigenvector ι M s F α β x y hq hfalse htrue hz
     obtain ⟨a, ha⟩ : ∃ a, y a ≠ 0 := by
       by_contra h
       push_neg at h
@@ -83,10 +83,10 @@ theorem diag_eig_le_of_cas_min : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (
     exact le_max_of_le_left (real_root_quad_le h0)
   · push_neg at hz
     obtain ⟨j, hj, hzj⟩ := hz
-    have hd := GlobalTheory.T.blockCasimir_eigenvalue_drops_offBlock ι M s F α β x ω y hGl hq hfalse htrue hcas j hj
+    have hd := _root_.GlobalTheory.HoweR.cas_drop ι M s F α β x ω y hGl hq hfalse htrue hcas j hj
     obtain ⟨U, hU, hUU⟩ := hLoc {∑ b, F j b (y b)}
     have hzU : ∑ b, F j b (y b) ∈ U := hU _ (Finset.mem_singleton_self _)
-    have him := ((GlobalTheory.T.blockDiagonalFibreCasimir_eigen_nonneg_real_unitary ι M s F U hUU).1 _ _ hzU hzj hd).1
+    have him := ((_root_.GlobalTheory.HoweR.cas_diag_unitOn ι M s F U hUU).1 _ _ hzU hzj hd).1
     set c : ℂ := (ω : ℂ) - 4 * x + 2 * α + ((Finset.univ.filter fun a => s a = true).card : ℂ)
       - ((Finset.univ.filter fun a => s a = false).card : ℂ) with hc
     have hcre : c = ((c.re : ℝ) : ℂ) := Complex.ext (by simp) (by simp [him])

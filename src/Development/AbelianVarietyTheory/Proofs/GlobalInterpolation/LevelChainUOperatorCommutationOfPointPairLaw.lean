@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.FormsStable
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LevelChainTransitionIsExtKernelSumStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LevelPrimeIncidenceFiniteFibresStableStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MemFormsIffExistsEquivariantExtensionStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.UopIsExtStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LevelChainTransitionIsExtKernelSum
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LevelPrimeIncidenceFiniteFibresStable
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MemFormsIffExistsEquivariantExtension
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.UopIsExt
 public import Formalism.GL3MeanSquares.HookFormulaTorsion.DoubleCosetDecompositionAll
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -96,11 +96,11 @@ theorem levelChainUOperatorCommutation_of_pointPairLaw : ∀ (D : D7) (u : D.wha
   let K : KerPt M M' := Kt i hi
   have hT : K.TgtEq := htgt i hi
   have hU : K.UKLaw := huk i hi
-  obtain ⟨Φ, hΦ⟩ := (GlobalTheory.T.mem_forms_iff_exists_equivariant_extension D u X i M φ).1 hφ
-  obtain ⟨hfinI, hstab, -⟩ := GlobalTheory.T.levelPrime_incidence_finite_fibres_stable D u X i M v
-  obtain ⟨hfinI', -, -⟩ := GlobalTheory.T.levelPrime_incidence_finite_fibres_stable D u X (i + 1) M' v
-  have h1 := GlobalTheory.T.isExt_Uop_finsum_inc_of_isExt D u X (i + 1) M' v _ _ (GlobalTheory.T.levelChainTransition_isExt_kernel_sum D u X i M M' K φ Φ hT hΦ)
-  have h2 := GlobalTheory.T.levelChainTransition_isExt_kernel_sum D u X i M M' K _ _ hT (GlobalTheory.T.isExt_Uop_finsum_inc_of_isExt D u X i M v φ Φ hΦ)
+  obtain ⟨Φ, hΦ⟩ := (_root_.GlobalTheory.LvT.PtModel.mem_Fi_iff_exists_isExt D u X i M φ).1 hφ
+  obtain ⟨hfinI, hstab, -⟩ := _root_.GlobalTheory.LvT.inc_finite_stable D u X i M v
+  obtain ⟨hfinI', -, -⟩ := _root_.GlobalTheory.LvT.inc_finite_stable D u X (i + 1) M' v
+  have h1 := _root_.GlobalTheory.LvT.uop_isExt D u X (i + 1) M' v _ _ (_root_.GlobalTheory.LvT.isExt_KT D u X i M M' K φ Φ hT hΦ)
+  have h2 := _root_.GlobalTheory.LvT.isExt_KT D u X i M M' K _ _ hT (_root_.GlobalTheory.LvT.uop_isExt D u X i M v φ Φ hΦ)
   have hpow : ((((X.A.T : ℝ) ^ (((D.R.t : ℝ) + 1) / 2) : ℝ)) : ℂ) = (X.A.T : ℂ) ^ ((D.R.t + 1) / 2) := by
     obtain ⟨k, hk⟩ := D.R.t_odd
     have e1 : (D.R.t + 1) / 2 = k + 1 := by omega

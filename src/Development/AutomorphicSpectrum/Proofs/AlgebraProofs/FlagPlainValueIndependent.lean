@@ -1,7 +1,8 @@
 module
 
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.ImportsTerAlt
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FlagIndependenceStatement
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsBundles
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FlagIndependence
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PTwinFlagPairIff
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PTwinFlagPlainValueIndep
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PTwinVertDivSupportFibre
@@ -51,6 +52,6 @@ namespace GlobalTheory.CompanionTheory.CommAlg.FlagPlainValue
 
 open GroundTheory.Heights₂.Heights.NumbersDVR in
 theorem main : GroundTheory.Heights₂.Heights.NumbersDVR.FlagPlainValueIndependence.Statement :=
-  FlagPlainValueIndependence.proof GlobalTheory.T.flag_independence FlagPairCharacterisation.proof VerticalDivisorSupportFibre.proof
+  FlagPlainValueIndependence.proof _root_.GlobalTheory.CompanionTheory.CommAlg.FlagIndependence.main FlagPairCharacterisation.proof VerticalDivisorSupportFibre.proof
 
 end GlobalTheory.CompanionTheory.CommAlg.FlagPlainValue

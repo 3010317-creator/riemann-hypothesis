@@ -3,9 +3,10 @@ module
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutLimENF
 public import Formalism.HermitianCurvature.HerGenC
 public import Development.AbelianVarietyTheory.PublishedTheorems.BesselIntegrals.BesselXiIntegrable
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevelZeroFormCutoffTendstoOfDensityDominationStatement
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutDec
+public import Formalism.HermitianCurvature.StatementTBB
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevelZeroFormCutoffTendstoOfDensityDomination
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutFpmDecay
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutDec
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,7 +55,7 @@ namespace GlobalTheory
 attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace in
 theorem limEvT_pow_mul_of_topDomination : GlobalTheory.HCXi.BesselXiIntegrable → P5.ThmPActualCpt → NFTopDomAll → ∀ Cb : ℝ, ∃ Cc : ℝ, ∀ (Wp Wq : Type) [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq] (P : M.Par) (p : KB.Pl P Wp Wq) (f : B.Mat P.k P.r → (Wq →L[ℂ] Wp)) (A₀ : ℝ) (p₀ : ℕ) (χ : ℝ → ℝ) (Y : Finset ℝ) (N : ℕ), NFHyp Cb Cc p f A₀ p₀ χ N → LimEvT p χ (Formalism.FourierDecayAlt.P.TBBx4.fpm p f (fun _ => ContinuousLinearMap.id ℂ Wq) p₀) Y N := by
   intro hX hP hDom Cb
-  obtain ⟨C1, h1⟩ := GlobalTheory.T.levelZeroForm_cutoff_tendsto_of_density_domination hX hP Cb
+  obtain ⟨C1, h1⟩ := _root_.GlobalTheory.levelZeroForm_cutoff_tendsto_of_domination hX hP Cb
   obtain ⟨C2, h2⟩ := hDom Cb
   refine ⟨max C1 C2, ?_⟩
   intro Wp Wq _ _ _ _ _ _ P p f A₀ p₀ χ Y N hH

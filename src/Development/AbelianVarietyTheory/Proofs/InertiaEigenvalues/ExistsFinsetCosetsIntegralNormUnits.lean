@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FgUnitsQuotIntegralUnitsFiniteFieldExtStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FgUnitsQuotIntegralUnitsReducedFiniteAlgebraStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsReducedOfSeparableMarkedCharpolyStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FgUnitsQuotIntegralUnitsFiniteFieldExt
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FgUnitsQuotIntegralUnitsReducedFiniteAlgebra
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsReducedOfSeparableMarkedCharpoly
+public import Mathlib.GroupTheory.FiniteAbelian.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -17,7 +18,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.GroupTheory.FiniteAbelian.Basic
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -56,8 +56,8 @@ namespace GlobalTheory.NormUnits
 
 theorem fg_quot_intUnits : ∀ (K : UQ) (B : InvAlg K), B.P.Separable →
     Group.FG (B.Aˣ ⧸ intUnits K.O B.A) := fun K B hP =>
-  haveI := GlobalTheory.T.isReduced_of_separable_markedCharpoly K B hP
-  GlobalTheory.T.fg_units_quot_integralUnits_reduced_finite_algebra K (GlobalTheory.T.fg_units_quot_integralUnits_finite_field_ext K) B.A (GlobalTheory.T.isReduced_of_separable_markedCharpoly K B hP)
+  haveI := _root_.GlobalTheory.UnitLemma.InvAlg.isReduced_of_separable_P K B hP
+  _root_.GlobalTheory.UnitLemma.NormUnits.units_quot_intUnits_fg K (_root_.GlobalTheory.FieldUnitsQuotFG.fg_units_quot K) B.A (_root_.GlobalTheory.UnitLemma.InvAlg.isReduced_of_separable_P K B hP)
 
 theorem exists_finset_sq_mem {G : Type} [CommGroup G] (N : Subgroup G) (hN : Group.FG (G ⧸ N)) :
     ∃ F : Finset G, ∀ u : G, u ^ 2 ∈ N → ∃ f ∈ F, u * f⁻¹ ∈ N := by

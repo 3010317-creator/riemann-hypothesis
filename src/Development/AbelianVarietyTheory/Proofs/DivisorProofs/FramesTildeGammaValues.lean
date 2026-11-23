@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FactorBounds
 public import Formalism.LocalToGlobal.Columns.RecPerFF
 public import Formalism.LocalToGlobal.Divisibility.HeckeCSDICommTrRep
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClassSumLeFrameNormSqGoodPartStatement
+public import Formalism.LocalToGlobal.Columns.ToHLat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClassSumLeFrameNormSqGoodPart
 import Lean.Exception
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -136,7 +137,7 @@ theorem ipAt_le_of_ties {Xf : Fields} [_root_.NumberField.IsTotallyComplex Xf.K]
   subst hp2
   have hmuE : mu = fun t => t.1 := funext muTie
   subst hmuE
-  exact GlobalTheory.T.classSum_le_frameNorm_sq_good_part Xf Pr Rk W Ch sel Sg hX v0 TU Xg ∅ xiVal trIv Lv Zs _ (hP _) ok1 F F' hm hres v X0
+  exact _root_.GlobalTheory.ClassSumLevel.classSum_le_normAt_sq Xf Pr Rk W Ch sel Sg hX v0 TU Xg ∅ xiVal trIv Lv Zs _ (hP _) ok1 F F' hm hres v X0
     (hX0 v).1 (hX0 v).2
 
 end GlobalTheory.ColEvNorm

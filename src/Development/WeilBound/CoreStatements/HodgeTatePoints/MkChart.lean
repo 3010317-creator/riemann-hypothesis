@@ -3,12 +3,14 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsGenOfIsVBOne
 public import Mathlib.AlgebraicGeometry.Noetherian
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsStalkFractionOfGenericStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCptGen
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsStalkFractionOfGeneric
+public import Mathlib.AlgebraicGeometry.SpreadingOut
+public import Mathlib.RingTheory.LocalProperties.IntegrallyClosed
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.AlgebraicGeometry.Modules.Sheaf
-public import Mathlib.AlgebraicGeometry.SpreadingOut
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
@@ -47,7 +49,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Mathlib.RingTheory.LocalProperties.IntegrallyClosed
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.CubicalStructures.CubeSymmetricSwapFirst
 
 @[expose] public section
@@ -79,7 +80,7 @@ theorem stalk_normal₀ {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Spec (Comm
   have : FaithfulSMul (X.presheaf.stalk q.1) Ω := (faithfulSMul_iff_algebraMap_injective _ _).2 (hξ.inj q)
   have hf : IsFractionRing (X.presheaf.stalk q.1) Ω := by
     refine IsFractionRing.of_field _ _ fun a => ?_
-    obtain ⟨b, c, hc, e⟩ := GlobalTheory.T.exists_stalk_fraction_of_generic ξ hξ q a
+    obtain ⟨b, c, hc, e⟩ := _root_.GlobalTheory.CompanionTheory.Ar.exists_frac_genMap ξ hξ q a
     exact ⟨b, c, (eq_div_iff hc).2 e⟩
   refine ⟨hd, ?_, (FractionRing.algEquiv _ Ω).toRingEquiv, RingHom.ext (FractionRing.algEquiv _ Ω).commutes⟩
   rw [isIntegrallyClosed_iff Ω]
@@ -111,7 +112,7 @@ theorem ht_lat_chart : ∀ (X : Scheme.{0}) [IsLocallyNoetherian X] (Ω : Type) 
   have : FaithfulSMul Γ(X, U) Ω := (faithfulSMul_iff_algebraMap_injective _ _).2 hk
   have hf : IsFractionRing Γ(X, U) Ω := by
     refine IsFractionRing.of_field _ _ fun a => ?_
-    obtain ⟨b, c, hc, e⟩ := GlobalTheory.T.exists_stalk_fraction_of_generic ξ hξ q a
+    obtain ⟨b, c, hc, e⟩ := _root_.GlobalTheory.CompanionTheory.Ar.exists_frac_genMap ξ hξ q a
     letI := TopCat.Presheaf.algebra_section_stalk X.presheaf (⟨q.1, hqU⟩ : U)
     have hl := hU.isLocalization_stalk ⟨q.1, hqU⟩
     obtain ⟨⟨b₁, s⟩, hb⟩ := IsLocalization.surj (hU.primeIdealOf ⟨q.1, hqU⟩).asIdeal.primeCompl

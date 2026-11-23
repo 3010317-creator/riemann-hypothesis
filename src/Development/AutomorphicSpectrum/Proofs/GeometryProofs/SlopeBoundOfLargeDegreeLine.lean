@@ -5,8 +5,8 @@ public import Development.AutomorphicSpectrum.Statements.GeometryStatements.Zhan
 public import GroundTheory.HeightsAndTheta.Heights.KernelsLattice
 public import GroundTheory.HeightsAndTheta.Heights.LatticeLemmas.StatementsBundles
 public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.ShortVectorOfSubmodule
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LineOfKeyDegreeStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PolarizedDataFieldExtensionStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LineOfKeyDegree
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PolarizedDataFieldExtension
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -134,7 +134,7 @@ end GlobalTheory.CompanionTheory.Ar.Sl.TopSlope
 namespace GlobalTheory.CompanionTheory.Ar.Sl.TopSlope
 
 theorem slopeBound (hS7 : LineOfLargeDegree.Statement) (hKey : KeyDegSt) : SlopeBoundSt ∧ Prov.LemmaS := by
-  obtain ⟨C, hC0, hC⟩ := GlobalTheory.T.line_of_key_degree hKey
+  obtain ⟨C, hC0, hC⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Sl.LineProof.line_of_key hKey
   have hS : SlopeBoundSt := by
     refine ⟨C + 2, by linarith, ?_⟩
     intro E _ _ _ H L _ _ t tK m princ B MB fib
@@ -157,8 +157,8 @@ theorem slopeBound (hS7 : LineOfLargeDegree.Statement) (hKey : KeyDegSt) : Slope
     refine iSup₂_le fun F hF => ?_
     rw [EReal.coe_le_coe_iff]
     obtain ⟨L', iF, iN, iA, x, -, hx⟩ := GlobalTheory.CompanionTheory.Ar.Lines.short_vector_of_submodule hS7 L B F hF
-    obtain ⟨⟨D', e⟩⟩ := (GlobalTheory.T.polarized_data_field_extension E H L D L').1
-    obtain ⟨hg', hh', io, -, -, hio⟩ := (GlobalTheory.T.polarized_data_field_extension E H L D L').2 D' e
+    obtain ⟨⟨D', e⟩⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.Sl.ext_baseChange E H L D L').1
+    obtain ⟨hg', hh', io, -, -, hio⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.Sl.ext_baseChange E H L D L').2 D' e
     obtain ⟨Φ, hΦ⟩ := exists_isometric_ext D.B D'.B io hio
     have hlen : ∀ σ : L' →+* ℂ, D'.len σ (Φ x) = Real.sqrt ((((B.baseChange L').metric.form σ).inner
         ((1 : ComplexAt σ) ⊗ₜ[𝓞 L'] x) ((1 : ComplexAt σ) ⊗ₜ[𝓞 L'] x) : ℂ).re) := by

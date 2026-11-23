@@ -1,7 +1,7 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GenericBlockMatrixIsBlockDiag
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BlockDiagonalMinorVanishingStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BlockDiagonalMinorVanishing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -167,7 +167,7 @@ theorem coeff_eq (j : ℕ) (hj : j ≤ N) (i : Fin N) (T : Matrix (Fin N) (Fin N
     (I₀ : Finset (Fin N)) (hI : IsStepRows N j i I₀) :
     D * ∑ I, c I * minorIJ T I I₀ = P * u I₀ := by
   have h1 := H (moveMat R I₀ (stepCols N j i) hI.1) (moveMat_blockDiag j _ _ _ (stepRows_same j hj i hI))
-  have cb := (GlobalTheory.T.block_diagonal_minor_vanishing R N j i hj).1
+  have cb := (_root_.GlobalTheory.CompanionTheory.Ar.PB.MinorCalc.minors_main R N j i hj).1
   simp only [cb, minorIJ_moveMat, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true] at h1
   exact h1
 
@@ -178,7 +178,7 @@ theorem map_identity (j : ℕ) (hj : j ≤ N) (i : Fin N) (hC : stepCols N j i �
     (ρ : R →+* S) (h : Matrix (Fin N) (Fin N) S) (hh : IsBlockDiag j h) :
     ρ D * ∑ I, ρ (c I) * minorIJ (T.map ρ * h) I (stepCols N j i) =
       ρ P * ∑ I, ρ (u I) * minorIJ h I (stepCols N j i) := by
-  have cb := (GlobalTheory.T.block_diagonal_minor_vanishing S N j i hj).1
+  have cb := (_root_.GlobalTheory.CompanionTheory.Ar.PB.MinorCalc.minors_main S N j i hj).1
   have l : ρ D * ∑ I, ρ (c I) * minorIJ (T.map ρ * h) I (stepCols N j i) =
       ∑ I', ρ (D * ∑ I, c I * minorIJ T I I') * minorIJ h I' (stepCols N j i) := by
 
@@ -193,7 +193,7 @@ theorem map_identity (j : ℕ) (hj : j ≤ N) (i : Fin N) (hC : stepCols N j i �
   refine Finset.sum_congr rfl fun I' _ => ?_
   by_cases hI : IsStepRows N j i I'
   · rw [coeff_eq j hj i T c u D P H I' hI]
-  · rw [((GlobalTheory.T.block_diagonal_minor_vanishing S N j i hj).2.1 h I' hh hI).resolve_right hC, mul_zero, mul_zero]
+  · rw [((_root_.GlobalTheory.CompanionTheory.Ar.PB.MinorCalc.minors_main S N j i hj).2.1 h I' hh hI).resolve_right hC, mul_zero, mul_zero]
 
 end Minors
 

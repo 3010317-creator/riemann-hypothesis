@@ -5,7 +5,11 @@ public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.OmegaP
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HodgePullHodgePull
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.FiniteDimensionalHodgeCohomologyOfSmoothProj
 public import Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.CompactSpaceOfProjectiveAndOfFinite
-public import Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.ExistsIntegralClopenDecompositionOfSmooth
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.Order.CompletePartialOrder
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIntegralClopenDecompositionOfSmooth
 public import Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.ExistsUniqueComplexPointLiftClopenCover
 public import Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.HodgeTraceEqSumClopenDecomposition
 public import Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.HolomorphicLefschetzFiniteEtaleIntegral
@@ -95,7 +99,7 @@ theorem UpperTheory.Cb.holomorphic_lefschetz_finiteEtale_correspondence :
   haveI cZ : CompactSpace Z := UpperTheory.Cb.compactSpace_of_projective_and_of_finite.1 Z s hP
   haveI cY : CompactSpace Y := UpperTheory.Cb.compactSpace_of_projective_and_of_finite.2 Y Z c1 inferInstance cZ
   haveI sm : SmoothOfRelativeDimension d s' := UpperTheory.Cb.smoothOfRelativeDimension_comp_etale Z Y s s' c1 h1 d inferInstance
-  obtain ⟨J, _, W, hdis, hsup, hint⟩ := UpperTheory.Cb.exists_integral_clopen_decomposition_of_smooth Y s' d
+  obtain ⟨J, _, W, hdis, hsup, hint⟩ := _root_.GlobalTheory.SmoothComponents.main Y s' d
   have hcov : ∀ y : Y, ∃ i, y ∈ W i := fun y => by
     have : y ∈ iSup W := by rw [hsup]; trivial
     exact TopologicalSpace.Opens.mem_iSup.1 this

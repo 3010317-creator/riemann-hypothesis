@@ -1,7 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EtaleEmpty
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicValueDerivativeL2BallStatement
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Mathlib.Topology.Separation.CompletelyRegular
+public import ReciprocityTheory.L2DbarEstimates.IsLocalHomeomorph
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicValueDerivativeL2Ball
+public import ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.AApproxB
+public import ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.AApproxL
+public import ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.ContDiffAtSectionFrameQuotient
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,9 +50,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.AApproxB
-public import ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.AApproxL
-public import ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.ContDiffAtSectionFrameQuotient
 import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.L2ExtensionLogCanonical
 
 @[expose] public section
@@ -102,7 +105,7 @@ theorem main : ∀ (n : ℕ) (Y : Type) [TopologicalSpace Y] [T2Space Y] [Second
     ((A.smooth_ph G i).continuousOn.rexp.mono hsubr)
   have hM0 : 0 ≤ M := (Real.exp_pos _).le.trans (hM p (mem_closedBall_self hrpos.le))
 
-  obtain ⟨C, hC0, hC⟩ := GlobalTheory.T.holomorphic_value_derivative_l2_ball n r hrpos
+  obtain ⟨C, hC0, hC⟩ := _root_.GlobalTheory.l2_value_deriv_ball n r hrpos
 
   have htend : Tendsto (fun k : ℕ => C * M * |K| * Real.exp (-(c / 2) * k)) atTop (𝓝 0) := by
     have h1 : Tendsto (fun k : ℕ => -(c / 2) * (k : ℝ)) atTop atBot :=

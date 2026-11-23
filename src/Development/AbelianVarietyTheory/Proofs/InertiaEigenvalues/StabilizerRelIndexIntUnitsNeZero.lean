@@ -4,8 +4,13 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ComapIn
 public import Mathlib.LinearAlgebra.FreeModule.PID
 public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AlgebraEtaleOfSeparableCharpolyMulLeftStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegralClosureFgFiniteEtaleDvrStatement
+public import Mathlib.FieldTheory.Separable
+public import Mathlib.LinearAlgebra.Charpoly.Basic
+public import Mathlib.RingTheory.Etale.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AlgebraEtaleOfSeparableCharpolyMulLeft
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegralClosureFgFiniteEtaleDvr
+public import Mathlib.RingTheory.Ideal.Quotient.Index
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -24,7 +29,6 @@ import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
-public import Mathlib.RingTheory.Ideal.Quotient.Index
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.WittVector.IsPoly
@@ -183,7 +187,7 @@ theorem stabilizer_relIndex_intUnits_ne_zero : ∀ (O E A : Type) [CommRing O] [
     [Module.Finite E A] (g : A), (LinearMap.mulLeft E g).charpoly.Separable →
     ∀ L : stLat O E g, (MulAction.stabilizer Aˣ L).relIndex (intUnits O A) ≠ 0 := by
   intro O E A _ _ _ _ _ _ _ _ _ _ _ _ g hg L
-  haveI := GlobalTheory.T.algebraEtale_of_separable_charpoly_mulLeft E A g hg
-  exact relIndex_ne_zero_of_fg (GlobalTheory.T.integralClosure_fg_finiteEtale_dvr O E A) L
+  haveI := _root_.GlobalTheory.etale_of_separable_charpoly_mulLeft E A g hg
+  exact relIndex_ne_zero_of_fg (_root_.GlobalTheory.IntegralClosureFG.integralClosure_fg O E A) L
 
 end GlobalTheory.UnitLemma.StabIdx

@@ -1,12 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TypedPartSplitPrimes
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagStepCharactersOfColengthStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobeniusOrbitOfUnramifiedPrimeStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.BigBlockCharacters
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NonemptyValExtOfOverLa
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagStepCharactersOfColength
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.FactorDepthInertBounds
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobeniusOrbitOfUnramifiedPrime
 public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ExistsIntegralChartIntegralFramedPoint
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsCharactersBoundedMinorEigenspace
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NonemptyClosedValuedExtensionOfCDVR
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.UnramifiedCompanionChartCharacters
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NonemptyClosedValuedExtensionOfCDVR
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,8 +49,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.BigBlockCharacters
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.FactorDepthInertBounds
 import Development.AbelianVarietyTheory.Definitions.Divisors.EightDvdNCol
 
 @[expose] public section
@@ -159,14 +160,14 @@ theorem nuFac_le_odd_unram : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   have hp1 : 1 < p := (Fact.out : p.Prime).one_lt
   obtain ⟨X⟩ := GlobalTheory.CharDepth.nonempty_valExt T p hnu
   obtain ⟨Ch⟩ := (GlobalTheory.IntChartExists.intChart_exists E H Dw l Xo c).1 (fun _ => rfl) T io y
-  obtain ⟨hfot, horb⟩ := GlobalTheory.T.frobenius_orbit_of_unramified_prime E H l c p T io X hdisc
+  obtain ⟨hfot, horb⟩ := _root_.GlobalTheory.FrobOrbit.frobOnType_and_orbit E H l c p T io X hdisc
   obtain ⟨τ, i⟩ := f
   obtain ⟨h, hh, -, lab, hl0, hfr, hinj, -⟩ := horb τ
   haveI : NeZero h := ⟨hh.ne'⟩
   subst hl0
   obtain ⟨xs, hxs, hle⟩ := GlobalTheory.CharMinor.colength_bound p (GlobalTheory.ChF.unramified_companion_chart_characters p) hp2 E H Dw l Xo c
     T io y Ch X hy hdisc h lab hinj (fun s x => hfr s x) 0
-  have hnu := (GlobalTheory.T.flagStep_characters_of_colength E H Dw l Xo c p T io y Ch X ⟨lab 0, i⟩ xs _ hxs hle).2 k
+  have hnu := (_root_.GlobalTheory.RefSum.hasChars_frame_of_hasAF E H Dw l Xo c p T io y Ch X ⟨lab 0, i⟩ xs _ hxs hle).2 k
   have hstep : ∀ n : ℕ, lab ((n + 1 : ℕ) : ZMod h) = lab ((n : ZMod h) + 1) := fun n => by push_cast; rfl
   refine ⟨fun hs => ?_, fun hi => ?_⟩
   · have hall : ∀ n : ℕ, InPsi H (lab (n : ZMod h)) := by

@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ConvZero
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowMulMemLatIff
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAddValuationFinExt
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCoeffTensorAcrisWithFrobeniusGaloisStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodOfComplete
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCoeffTensorAcrisWithFrobeniusGalois
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsNormedAway
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemDeRhamFiltrationOfForallAinfLattice
 import Mathlib.Algebra.Order.Floor.Extended
@@ -246,7 +247,7 @@ theorem exists_banach_model : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI 
   intro l _ P AI T LL β hβ
   have hp : 2 ≤ l := (Fact.out : l.Prime).two_le
   obtain ⟨A, iA, b, κ, φ, γ, t, hG, ⟨h1, h2, h3, h4, h5, h6⟩, hnil, hlog, hbd⟩ :=
-    GlobalTheory.T.exists_coeffTensorAcris_with_frobenius_galois l P AI T LL β hβ
+    _root_.GlobalTheory.HWLCris.exists_tensor_acris l P AI T LL β hβ
   obtain ⟨N, iN, cN, aN, hloc, hn, hm⟩ := GlobalTheory.AwayNorm.exists_normed_away l A hp hG
   haveI := away_OL LL
   have uN : IsUnit (l : N) := by

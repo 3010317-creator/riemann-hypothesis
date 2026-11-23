@@ -1,9 +1,11 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.AnnihilatorModels.CommonModel
-import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SemistableDieudonneModuleSpansTensorPeriodRingStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.EqOfPowEqOneOfNormSubLt
+public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SemistableDieudonneModuleSpansTensorPeriodRing
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsPstAtOfIsSstAt
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -75,7 +77,7 @@ theorem UpperTheory.Gal.crystallineComparison.detSpan_of :
   have key : ∀ i : Fin a, (Pi.single i 1 : Fin a → S) ∈ Submodule.span S (Set.range fun (x : ↥(Dpst P ρ)) i =>
       π (co (x : (Fin a → ↥LL.1) ⊗[ℚ_[l]] Bst P) i)) := by
     intro i
-    obtain ⟨k, b, x, hx, hsum⟩ := GlobalTheory.T.semistableDieudonneModule_spans_tensor_periodRing l P AI T K (Fin a → ↥LL.1) (GlobalTheory.PstCoeff.resQ ρ)
+    obtain ⟨k, b, x, hx, hsum⟩ := _root_.GlobalTheory.Pst.Dst_spans_tensor_Bst l P AI T K (Fin a → ↥LL.1) (GlobalTheory.PstCoeff.resQ ρ)
       (GlobalTheory.GalCut.IwaTwist.isSst_resQ P ρ hρ) (Pi.single i 1)
     have hxD : ∀ j, x j ∈ Dpst P ρ := fun j => (mem_Dpst P ρ).mpr ⟨K, fun g _ => by
       have h := (mem_Dst P _).mp (hx j) g

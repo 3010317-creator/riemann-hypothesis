@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DivPowerCompatTwoFormDerivativeCompOneForm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoproductThickeningAffineLiftPoincareStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FourTermComplexQuasiIsoAtFormalPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FourTermComplexRestrictionBijectiveCollapseStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoproductThickeningAffineLiftPoincare
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PullbackBijectiveDegreesOneTwo
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FourTermComplexQuasiIsoAtFormalProperties
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FourTermComplexRestrictionBijectiveCollapse
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,7 +78,7 @@ theorem mem_of_hom {T T' : Thick D.κ D.t} (f : T ⟶ T') {U : D.X.Opens} (h : �
 
 theorem cop_ex (T : CC D n) : ∃ (G : Thick D.κ D.t) (l : T.obj.obj.T ⟶ G) (r : Λ.L.obj ((qq D n).obj T) ⟶ G),
     IsCop (n + 1) l r ∧ (KK D.κ D.t).QAt l :=
-  GlobalTheory.T.exists_coproduct_thickening_affine_lift_poincare D Λ n ((qq D n).obj T) T.obj.obj.T T.property T.obj.obj.mem
+  _root_.GlobalTheory.PDForm.CopPoincare.exists_cop_qAt D Λ n ((qq D n).obj T) T.obj.obj.T T.property T.obj.obj.mem
 
 def GG (T : CC D n) : Thick D.κ D.t := (cop_ex Λ T).choose
 
@@ -150,7 +151,7 @@ theorem qat_rr (U : AffOp D.X) : (KK D.κ D.t).QAt (rr Λ ((ell Λ h).obj U)) :=
       (Category.assoc _ _ _).symm.trans ((congrArg (· ≫ σ) h2).trans h1)⟩).trans
       (hu (𝟙 _) ⟨Category.comp_id _, Category.comp_id _⟩).symm
   have hi : IsIso σ := ⟨σ, hσ, hσ⟩
-  obtain ⟨hiso, hcomp, -⟩ := GlobalTheory.T.fourTermComplex_quasiIsoAt_formal_properties (Thick D.κ D.t) (KK D.κ D.t)
+  obtain ⟨hiso, hcomp, -⟩ := _root_.GlobalTheory.CxCoh.QAtFormal.qAt_formal (Thick D.κ D.t) (KK D.κ D.t)
   exact h1 ▸ hcomp _ _ _ _ _ (qat_ll Λ T) (hiso _ _ σ)
 
 theorem qat_map_id (U : AffOp D.X) {B : Thick D.κ D.t} (f : Λ.L.obj U ⟶ B) (hf : (KK D.κ D.t).QAt f) :
@@ -159,7 +160,7 @@ theorem qat_map_id (U : AffOp D.X) {B : Thick D.κ D.t} (f : Λ.L.obj U ⟶ B) (
   exact hf
 
 theorem resMap_bij : (KL (D := D) (n := n)).resMap (ell Λ h) |>.Bij := by
-  refine GlobalTheory.T.fourTermComplex_restriction_bijective_collapse (CC D n) (AffOp D.X) KL (ell Λ h) (qq D n) (SS Λ) (uu Λ) (ww Λ h) (eps Λ h)
+  refine _root_.GlobalTheory.CxCoh.collapse_resMap_bij (CC D n) (AffOp D.X) KL (ell Λ h) (qq D n) (SS Λ) (uu Λ) (ww Λ h) (eps Λ h)
     (fun T ↦ qat_ll Λ T) (fun U ↦ ?_)
   rw [qat_iff]
   exact qat_map_id Λ U _ (qat_rr Λ h U)

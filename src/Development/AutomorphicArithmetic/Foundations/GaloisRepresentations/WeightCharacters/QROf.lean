@@ -1,7 +1,10 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.WeightCharacters.DeltaNear
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IwasawaUnitaryUpperTriangularStatement
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.Matrix.Block
+public import Mathlib.LinearAlgebra.UnitaryGroup
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IwasawaUnitaryUpperTriangular
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,7 +51,7 @@ open UpperTheory.Gal.Wt
 theorem UpperTheory.Gal.Wt.qR_of :
     UpperTheory.Gal.Wt.QR := by
   intro a y
-  obtain ⟨k, hk, b, hg, hb⟩ := GlobalTheory.T.iwasawa_unitary_upper_triangular (y : Matrix (Fin a) (Fin a) ℂ) y.isUnit
+  obtain ⟨k, hk, b, hg, hb⟩ := _root_.GlobalTheory.CompanionTheory.QR.exists_unitary_mul_blockTriangular (y : Matrix (Fin a) (Fin a) ℂ) y.isUnit
   let u : Matrix.unitaryGroup (Fin a) ℂ := ⟨k, hk⟩
   have hu : ((unitaryIncl a u : GL (Fin a) ℂ) : Matrix (Fin a) (Fin a) ℂ) = k := rfl
   refine ⟨u, (unitaryIncl a u)⁻¹ * y, ?_, (mul_inv_cancel_left _ _).symm⟩

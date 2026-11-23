@@ -1,9 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.CMLattices.IntegralOf
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetBlockChangeOfBasisViaTwoFamiliesImplicitStatement
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetBlockChangeOfBasisViaTwoFamiliesImplicit
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentLettersIntegralLieBasisEigenframeRelationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationDivLeOneCofiniteStatement
+public import Formalism.LocalToGlobal.CMDeterminantIdeals.DetIdeal
+public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Valuation
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationDivLeOneCofinite
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
+public import Development.AbelianVarietyTheory.Definitions.Divisors.UnitaryWeightExponentVectorSignatureWeightMuZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -38,12 +43,10 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Definitions.Divisors.CommGroupMulMulEqMulInvMulMulMul
 import Development.AbelianVarietyTheory.Definitions.Divisors.CuspIso
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsoOverOfIsOpenImmersion
 import Development.AbelianVarietyTheory.Definitions.Divisors.LinearIndependentBasisCoords
 import Development.AbelianVarietyTheory.Definitions.Divisors.MemSubPtsCutBaseChangeIff
 import Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings
-public import Development.AbelianVarietyTheory.Definitions.Divisors.UnitaryWeightExponentVectorSignatureWeightMuZero
 
 @[expose] public section
 
@@ -74,7 +77,7 @@ theorem GlobalTheory.DetInt.det_integral : ∀ (E : Type) [Field E] [NumberField
         GlobalTheory.LamT.LieInt T (iK.comp (algebraMap c.F z.K)) M.m1 M.m2 y'.u →
         (∏ b, (g b).det) ∈ Set.range (algebraMap T.V T.Fr) := by
   intro E _ _ _ H Dw l Xo c _ z f La hz
-  obtain ⟨S, hS⟩ := GlobalTheory.T.exists_finset_valuation_div_le_one_of_isLocGen z.K z.LamL.I z.U.det
+  obtain ⟨S, hS⟩ := _root_.GlobalTheory.LocGenVal.valuation_div_le_one_cofinite z.K z.LamL.I z.U.det
   refine ⟨S, fun p hp T iK _hfin hval M => ?_⟩
   letI := (iK.comp (algebraMap c.F z.K)).toAlgebra
   intro φ yT y' g a hφ hmap hchg hg hint
@@ -84,7 +87,7 @@ theorem GlobalTheory.DetInt.det_integral : ∀ (E : Type) [Field E] [NumberField
   let Cv : Matrix (Fin z.Φ.T.g) (Fin z.Φ.T.g) T.V := Matrix.of fun i k => (hCint (z.e.symm i) k).choose
   have hCv : Cv.map (algebraMap T.V T.Fr) = Matrix.of fun i k => C (z.e.symm i) k := by
     ext i k; exact (hCint (z.e.symm i) k).choose_spec
-  obtain ⟨hUdet, hdet⟩ := GlobalTheory.T.det_block_change_of_basis_via_two_families_implicit Dw.mult z.e (fullB yT) (ReciprocityTheory.ChartRestriction.G.PullbackSections.fullB_basis yT) nu mu
+  obtain ⟨hUdet, hdet⟩ := _root_.GlobalTheory.Div.BlockChangeDet.det_block_change' Dw.mult z.e (fullB yT) (ReciprocityTheory.ChartRestriction.G.PullbackSections.fullB_basis yT) nu mu
     (z.U.map iK) (A.map iK) C g (by simpa using hU) (by simpa using hAmu) hC
   have e1 : (z.U.map iK).det = iK z.U.det := (RingHom.map_det iK z.U).symm
   have e2 : (A.map iK).det = iK A.det := (RingHom.map_det iK A).symm

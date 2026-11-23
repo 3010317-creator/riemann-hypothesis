@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.RankOneUnitary
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DirectSumCancelRightStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LpCharCompatibilitiesStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.WeilDeligneParameterTensorOneDimInjectiveStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.MonodromyZeroOfWeilDeligneRepClassIff
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DirectSumCancelRight
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LpCharCompatibilities
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.WeilDeligneParameterTensorOneDimInjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,20 +66,20 @@ theorem paramLaws_of_tie (T : WDTie N A) : ParamLaws N A := by
   refine ⟨fun a b χ h => (T.e w).injective ?_, fun χ h => (T.e w).injective ?_,
     fun a χ s h => (T.e w).injective ?_, fun a b χ h hab => ?_, fun a b c h => (T.e w).injective ?_⟩
   · rw [T.char _ _ _ h, T.sum, T.sum, T.char _ _ _ h, T.char _ _ _ h]
-    exact (GlobalTheory.T.lp_char_compatibilities _ _ _ _ _ _ _ _ 0).1
+    exact (_root_.GlobalTheory.WeilDeligne.lpChar_laws_closed _ _ _ _ _ _ _ _ 0).1
   · rw [T.char _ _ _ h, T.zero]
-    exact (GlobalTheory.T.lp_char_compatibilities _ _ _ _ _
+    exact (_root_.GlobalTheory.WeilDeligne.lpChar_laws_closed _ _ _ _ _
       (WD.lpZero (h := N.plOm.2 w)) (WD.lpZero (h := N.plOm.2 w)) _ 0).2.2.2.2.1
   · rw [T.char _ _ _ h, T.tw, T.tw, T.char _ _ _ h]
-    exact (GlobalTheory.T.lp_char_compatibilities _ _ _ _ _ _ (WD.lpZero (h := N.plOm.2 w)) _ s).2.1
+    exact (_root_.GlobalTheory.WeilDeligne.lpChar_laws_closed _ _ _ _ _ _ (WD.lpZero (h := N.plOm.2 w)) _ s).2.1
   · apply (T.e w).injective
     have hχ : (T.e w χ).lpDim = 1 := by rw [T.dim, h]
     have := congrArg (T.e w) hab
     rw [T.char _ _ _ h, T.char _ _ _ h] at this
-    exact GlobalTheory.T.weilDeligneParameter_tensor_oneDim_injective _ _ _ _ _ _ _ _ hχ this
+    exact _root_.GlobalTheory.WeilDeligne.lpChar_left_injective_of_lpDim_one _ _ _ _ _ _ _ _ hχ this
   · have := congrArg (T.e w) h
     rw [T.sum, T.sum] at this
-    exact GlobalTheory.T.directSum_cancel_right _ _ _ _ _ _ _ _ this
+    exact _root_.GlobalTheory.WeilDeligne.WD.lpSum_cancel_right _ _ _ _ _ _ _ _ this
 
 theorem cancel_of_tie (T : WDTie N A) : Cancel N A := fun w a b c h => (paramLaws_of_tie T w).2.2.2.2 a b c h
 
@@ -90,16 +91,16 @@ theorem charLaws_of_tie (T : WDTie N A) : CharLaws N A := by
   refine ⟨(T.e w).injective ?_, (T.e w).injective ?_, (T.e w).injective ?_, (T.e w).injective ?_,
     (T.e w).injective ?_⟩
   · rw [T.char _ _ _ h1, T.sum, T.sum, T.char _ _ _ h1, T.char _ _ _ h1]
-    exact (GlobalTheory.T.lp_char_compatibilities _ _ _ _ _ _ _ _ 0).1
+    exact (_root_.GlobalTheory.WeilDeligne.lpChar_laws_closed _ _ _ _ _ _ _ _ 0).1
   · rw [T.char _ _ _ h1, T.tw, T.tw, T.char _ _ _ h1]
-    exact (GlobalTheory.T.lp_char_compatibilities _ _ _ _ _ _ (WD.lpZero (h := N.plOm.2 w)) _ s).2.1
+    exact (_root_.GlobalTheory.WeilDeligne.lpChar_laws_closed _ _ _ _ _ _ (WD.lpZero (h := N.plOm.2 w)) _ s).2.1
   · rw [T.char _ _ _ h3, T.tw, T.tw, T.char _ _ _ h1]
-    exact (GlobalTheory.T.lp_char_compatibilities _ _ _ _ _ _ (WD.lpZero (h := N.plOm.2 w)) _ s).2.2.1
+    exact (_root_.GlobalTheory.WeilDeligne.lpChar_laws_closed _ _ _ _ _ _ (WD.lpZero (h := N.plOm.2 w)) _ s).2.2.1
   · rw [T.char _ _ _ h2, T.char _ _ _ h1, T.char _ _ _ h4, T.char _ _ _ h2]
-    exact (GlobalTheory.T.lp_char_compatibilities _ _ _ _ _ _ _ _ 0).2.2.2.1
+    exact (_root_.GlobalTheory.WeilDeligne.lpChar_laws_closed _ _ _ _ _ _ _ _ 0).2.2.2.1
   · rw [T.char _ _ _ h5]
     obtain ⟨u1, u2, u3⟩ := tie_unit T w
-    exact (GlobalTheory.T.lp_char_compatibilities _ _ _ _ _
+    exact (_root_.GlobalTheory.WeilDeligne.lpChar_laws_closed _ _ _ _ _
       (T.e w a) (WD.lpZero (h := N.plOm.2 w)) _ 0).2.2.2.2.2 u1 u2 u3
 
 end GlobalTheory.RowLaws

@@ -2,8 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.DepthNumbersThresholdEq
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.CharacterBlocksAttainBound
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.MonomialBlockSupplyBothTypingsStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.OddLevelBlockBoundAttainedStatement
+public import Formalism.LocalToGlobal.CharacterGerms.ContentLargeFromSupplies
+public import Formalism.LocalToGlobal.CharacterGerms.ContentZeroAt
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.MonomialBlockSupplyBothTypings
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.OddLevelBlockBoundAttained
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -402,6 +404,6 @@ theorem of_supplies (hB : RF.BiSupply) (hC : RF.CHSupply) (hM : RF.MONSupply) : 
   have r1 : 0 ≤ C1 * (L * A + Cth + L * D) := mul_nonneg hC1 (by linarith)
   nlinarith
 
-theorem phiCBd : PhiCBd := of_supplies GlobalTheory.T.oddLevelBlock_bound_attained.2 GlobalTheory.CharBlock.chSupply.2 GlobalTheory.T.monomialBlock_supply_both_typings.2
+theorem phiCBd : PhiCBd := of_supplies _root_.GlobalTheory.oddBlock_supply.2 GlobalTheory.CharBlock.chSupply.2 _root_.GlobalTheory.MonBlock.monSupply.2
 
 end GlobalTheory.GoodDepth.ConjPkg

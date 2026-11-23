@@ -8,10 +8,9 @@ public import Development.WeilBound.CoreStatements.LocalThetaKernels.Locrep
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.BernsteinNarrowness.BernsteinClosure.RamifiedMultiplicityOne
 public import Development.WeilBound.ThetaLifts.Reductions.ArchLie
 public import Development.WeilBound.ThetaLifts.Reductions.KReal
-import Development.WeilBound.ThetaLifts.Reductions.LieScalar2
 public import Development.WeilBound.ThetaLifts.Reductions.LocalLift
-import Development.WeilBound.ThetaLifts.Reductions.SiegelOfCore
-public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.WeilEx
+public import Development.WeilBound.ThetaLifts.TowerModels.PlaneHerm
+public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.WeilPairExistence.WeilEx
 public import Development.WeilBound.ThetaLifts.SphericalLattices.ExistsFixedSum
 public import Development.WeilBound.ThetaLifts.SphericalLattices.FinInert
 public import Development.WeilBound.ThetaLifts.SphericalLattices.FunTop
@@ -19,6 +18,8 @@ public import Development.WeilBound.ThetaLifts.SphericalLattices.HoweDuality
 public import Development.WeilBound.ThetaLifts.SphericalLattices.ModSt2
 public import Development.WeilBound.ThetaLifts.SphericalLattices.SphericalClosure.CloseSph
 public import Development.WeilBound.ThetaLifts.SphericalSplitting.SphSplitGeo
+import Development.WeilBound.ThetaLifts.Reductions.LieScalar2
+import Development.WeilBound.ThetaLifts.Reductions.SiegelOfCore
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -67,7 +68,7 @@ theorem theoremK_head2_of_mod (hM : PositivityTheory.Sph.ModSt) (h11 : GlobalThe
     PositivityTheory.BernsteinRamification.Close.finSplit (sphTri_of sphSplit_geo (vacInert howeInert))
     (finInert_of (vacInert howeInert) (sphFun_of_modSt hM) PositivityTheory.ThKH.Locrep.locRepEx)
     (lieSecond2 localLift_holds PositivityTheory.RL.derEx) (archLie' localLift_holds) (kReal' localLift_holds)
-    (siegel_of_core PositivityTheory.Prw.siegelCore_holds) h11 h12 PositivityTheory.ThKW.weilEx
+    (siegel_of_core PositivityTheory.Prw.siegelCore_holds) h11 h12 _root_.PositivityTheory.ThKW.S.weilEx
 
 theorem theoremK_head2 (h11 : GlobalTheory.ThK.Dbl.EisBL) (h12 : GlobalTheory.ThK.Dbl.SiegelWeilStd) : ThetaIntegralsAgree ∧ LocalMatching :=
   theoremK_head2_of_mod PositivityTheory.Sph.modSt2 h11 h12

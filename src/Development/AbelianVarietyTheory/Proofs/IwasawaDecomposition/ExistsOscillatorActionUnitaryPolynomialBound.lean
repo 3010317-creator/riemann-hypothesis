@@ -5,17 +5,19 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOscill
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOscillatorActionOfGaussianPairings
 public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 public import Mathlib.Topology.Separation.CompletelyRegular
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussianPairingUnitaryGroupTwoThreeStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HasDerivAtOscillatorIntegralSymplecticPath
+public import Mathlib.Analysis.Calculus.Deriv.Prod
+public import Mathlib.Analysis.Normed.Unbundled.RingSeminorm
+public import Mathlib.LinearAlgebra.Matrix.AbsoluteValue
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousFourierGau
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussianPairingUnitaryGroupTwoThree
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianCongrInvolution
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HasDerivAtOscillatorIntegralSymplecticPathStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Real
-public import Mathlib.Analysis.Calculus.Deriv.Prod
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-public import Mathlib.Analysis.Normed.Unbundled.RingSeminorm
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
@@ -23,7 +25,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.LinearAlgebra.Matrix.AbsoluteValue
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -109,7 +110,7 @@ theorem hasDerivAt_osc (hJ : ∀ x, J (J x) = -x) (h : IsHeis (omJ J) ρ)
     (hX : HasDerivAt (fun t => k (γ t)) X 0) (hcγ : DifferentiableAt ℝ (fun t => c (γ t)) 0)
     {κ : Type} [Fintype κ] (a : κ → ℂ) (p q : κ → V) (hq : IsQuadOf (omJ J) X a p q) :
     ∃ lam : ℂ, ∀ f, Sm ρ f → HasDerivAt (fun t => osc h hk c (γ t) f) (quad ρ a p q f + lam • f) 0 := by
-  obtain ⟨l, hl⟩ := GlobalTheory.T.hasDerivAt_oscillatorIntegral_symplecticPath V B J ρ hJ h (fun t => k (γ t)) X (by simp only [hγ, map_one]) hX
+  obtain ⟨l, hl⟩ := _root_.GlobalTheory.Mem.Lift.OscDeriv.hasDerivAt_osc V B J ρ hJ h (fun t => k (γ t)) X (by simp only [hγ, map_one]) hX
     (fun t => hk (γ t)) κ a p q hq
   refine ⟨l + deriv (fun t => c (γ t)) 0, fun f hf => ?_⟩
   have h1 := hcγ.hasDerivAt.fun_smul (hl f hf)
@@ -235,7 +236,7 @@ theorem detPlus_cocycle {s : Matrix ι ι ℂ} (hs1 : sᴴ = s) (hs2 : s * s = 1
     (∀ g, star (dP s (m g)) * dP s (m g) * lam (kM m g) = 1) ∧
     ∀ g g', dP s (m g) * dP s (m g') * mu (cplx s hs1 hs2) (kM m (g * g')) (kM m g) =
       dP s (m (g * g')) * lam (kM m (g * g')) := by
-  obtain ⟨hl, hmu⟩ := GlobalTheory.T.gaussianPairing_unitaryGroup_two_three (EuclideanSpace ℂ ι) ι (crd ι) norm_sq_crd s hs1 hs2 (cplx s hs1 hs2)
+  obtain ⟨hl, hmu⟩ := _root_.GlobalTheory.RealWeil.GaussPairing.lam_mu_eq (EuclideanSpace ℂ ι) ι (crd ι) norm_sq_crd s hs1 hs2 (cplx s hs1 hs2)
     (crd_cplx s hs1 hs2)
   have hk := crd_kM m
   refine ⟨fun g => ?_, fun g g' => ?_⟩

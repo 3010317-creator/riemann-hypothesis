@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.IsGradedMapLinearCombination
 public import Mathlib.RingTheory.Noetherian.Defs
-public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.CubeComplexGradedModuleExactAtOfLargeDegreeStatement
+public import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.ExistsAwayFracOfMemHomLoc
+public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.CubeComplexGradedModuleExactAtOfLargeDegree
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -43,7 +44,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.ExistsAwayFracOfMemHomLoc
 
 @[expose] public section
 
@@ -60,7 +60,7 @@ theorem mem_span_of_saturating_of_le : ∀ (ι : Type) [LinearOrder ι] [Fintype
   letI : Decomposition (grSub ℳ K) := grSubDecomposition ℳ hhom
   have hfin : Module.Finite (MvPolynomial ι R) K :=
     Module.Finite.span_of_finite _ (Set.finite_range g)
-  obtain ⟨n₀, hn₀⟩ := GlobalTheory.T.cubeComplex_gradedModule_exactAt_of_large_degree ι R K (grSub ℳ K) hfin
+  obtain ⟨n₀, hn₀⟩ := _root_.GlobalTheory.cubeComplex_grCube_exactAt_of_finite ι R K (grSub ℳ K) hfin
   refine ⟨n₀, fun n hn y hy => ?_⟩
   have hf := isGradedMap_subtype ℳ K
   have hb := (grAug_bijective_iff (ι := ι) (grSub ℳ K) n).2 ⟨hn₀ n hn 0, hn₀ n hn 1⟩

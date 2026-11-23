@@ -2,8 +2,9 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.AdelicGroupAlgebraActionInjective
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ExistsSectionLevel
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.TwistedModuleFiniteProjectiveRankStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SabMapIdStatement
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.TwistedModuleFiniteProjectiveRank
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SabMapId
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -68,7 +69,7 @@ theorem tb_etaA (o : Obj D l b s) (x e : D.La) : o.etaA (x + l.A • e) = o.etaA
 
 theorem tb_map (t : SAB H S) (g g' : HostAut H) (h : ∀ a, g.s (g'.s a) = a) :
     ∃ m : SABMap (twistSAB (twistSAB t g) g') t (𝟙 S), m.φ = 𝟙 t.G.left := by
-  obtain ⟨m, hm⟩ := GlobalTheory.T.sab_map_id E H S t
+  obtain ⟨m, hm⟩ := _root_.GlobalTheory.CompanionTheory.Ar.exists_sabMap_id E H S t
   refine ⟨⟨m.cm, m.cart, m.base, fun a => ?_, m.lin⟩, hm⟩
   have := m.act a
   show (t.act.act (g.s (g'.s a))).left ≫ m.cm.F = _
@@ -80,7 +81,7 @@ theorem tw_back : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Ho
   intro E _ _ _ H D g a
   have := D.fin
   have := D.proj
-  obtain ⟨h1, h2, h3⟩ := GlobalTheory.T.twisted_module_finite_projective_rank (𝓞 E) g.s D.La
+  obtain ⟨h1, h2, h3⟩ := _root_.GlobalTheory.CompanionTheory.Ar.TwModule.twMod_finite_projective_finrank (𝓞 E) g.s D.La
   obtain ⟨f, hf1, hf2⟩ := ProIso.exists_isInv (𝓞 E) D.La (TwMod g.s D.La) D.EF (twForm D g) a
   have k1 : ∀ c, g.s (g.symm.s c) = c := fun c => RingOfIntegers.ext (g.σ.apply_symm_apply c)
   have k2 : ∀ c, g.symm.s (g.s c) = c := fun c => RingOfIntegers.ext (g.σ.symm_apply_apply c)

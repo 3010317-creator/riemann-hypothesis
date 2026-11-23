@@ -1,11 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ComplementReferenceCompactSubgroup
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDefectClassMemTraceFirstFrameSpanStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDefectClassMemTraceFirstFrameSpan
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianMovePreservesFrameLatticeLevels
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PairingSecondTypeTestOnRepresentatives
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetTermBasicFacts
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianMovePreservesFrameLatticeLevelsStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PairingSecondTypeTestOnRepresentativesStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermLevelZeroAndBoundedRepresentativesStatement
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermLevelZeroAndBoundedRepresentatives
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -131,10 +131,10 @@ theorem th_ne_zero {L : LocE F E} {r k : ℕ} (S : Frames L r k) : S.th ≠ 0 :=
 
 theorem inFF_moved_of_not_leak : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] [CharZero F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] (L : LocE F E), ∀ (r k : ℕ) (S : Frames L r k), ∀ (j : Fin r) (β βJ : ℕ) (d : S.Datum) (Λ : Submodule L.O S.V), S.IsTerm d Λ → S.InFF β (j + 1) βJ d Λ → ∀ x x' u s, S.IsMove (j + 1) d Λ x x' u s → (∃ y ∈ Λ, y ∈ S.W0 ∧ S.h u y = 1) → ∀ Λ₁ : Submodule L.O S.V, (Λ₁ : Set S.V) = S.moved Λ x u s → S.InFF β (j + 1) βJ d Λ₁ := by
   intro F _ _ _ _ _ E _ _ _ L r k S j β βJ d Λ hT hF x x' u s hMv hleak Λ₁ hΛ₁
-  obtain ⟨hT₁, hY⟩ := GlobalTheory.T.hermitianMove_preserves_frameLattice_levels L r k S j β βJ d Λ hT hF x x' u s hMv Λ₁ hΛ₁
-  have h78 := GlobalTheory.T.hermitianDefectClass_mem_trace_firstFrameSpan L r k S j β βJ d Λ hT hF x x' u s hMv hleak Λ₁ hΛ₁
-  have h64 := GlobalTheory.T.termLevel_zero_and_bounded_representatives L r k S d Λ hT
-  have h64₁ := GlobalTheory.T.termLevel_zero_and_bounded_representatives L r k S d Λ₁ hT₁
+  obtain ⟨hT₁, hY⟩ := _root_.GlobalTheory.HL.MoveSame.move_same L r k S j β βJ d Λ hT hF x x' u s hMv Λ₁ hΛ₁
+  have h78 := _root_.GlobalTheory.HL.TraceRep.class_from_trace L r k S j β βJ d Λ hT hF x x' u s hMv hleak Λ₁ hΛ₁
+  have h64 := _root_.GlobalTheory.HL.LevelRep.level_rep L r k S d Λ hT
+  have h64₁ := _root_.GlobalTheory.HL.LevelRep.level_rep L r k S d Λ₁ hT₁
   have hMs : S.M d Λ ≤ S.sat Λ := (GlobalTheory.HL.TermBasic.term_basic L r k S d Λ hT).2.2.1
   have hMs₁ : S.M d Λ₁ ≤ S.sat Λ₁ := (GlobalTheory.HL.TermBasic.term_basic L r k S d Λ₁ hT₁).2.2.1
   unfold Frames.InFF at hF ⊢
@@ -193,7 +193,7 @@ theorem inFF_moved_of_not_leak : ∀ {F : Type} [Field F] [ValuativeRel F] [Topo
     have hm' : -(y - y₁) ∈ S.M d Λ' := (S.M d Λ').neg_mem hm
     have e₁ : -(y - y₁) = y₁ - y := by abel
     rw [e₁] at hm'
-    have hc := (GlobalTheory.T.termLevel_zero_and_bounded_representatives L r k S d Λ' hT').2.2.1 y hy (y₁ - y) hm'
+    have hc := (_root_.GlobalTheory.HL.LevelRep.level_rep L r k S d Λ' hT').2.2.1 y hy (y₁ - y) hm'
     have e₂ : y + (y₁ - y) = y₁ := by abel
     rw [e₂] at hc
     exact hc
@@ -227,7 +227,7 @@ theorem inFF_moved_of_not_leak : ∀ {F : Type} [Field F] [ValuativeRel F] [Topo
     rw [e] at h2
     exact h2
   have hTB₁ : S.TypeBe d Λ₁ :=
-    GlobalTheory.T.pairing_second_type_test_on_representatives L r k S d Λ₁ hT₁ hnotBB (B₀ : Set S.V)
+    _root_.GlobalTheory.HL.TypeRep.main L r k S d Λ₁ hT₁ hnotBB (B₀ : Set S.V)
       (fun y hy => ⟨hB₀Λ₁ y hy, hYX (hB₀Y y hy)⟩) rep₁
       (fun x₁ hx₁ x₁' hx₁' x₂ hx₂ x₂' hx₂' h1 h2 =>
         hTB.2.2 x₁ hx₁ x₁' hx₁' x₂ hx₂ x₂' hx₂' (hInTh _ h1) (hInTh _ h2))

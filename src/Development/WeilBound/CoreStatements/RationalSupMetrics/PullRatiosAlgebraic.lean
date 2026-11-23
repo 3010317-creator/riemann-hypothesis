@@ -4,14 +4,14 @@ public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsFibre
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsGridSeparation
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsPullFormsGeneric
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsPullRatiosAlgebraic
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.NormFormGaussBoundHoldsStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PullbackConeNullModPHoldsStatement
+public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsNormFormGaussBound
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.NormFormGaussBoundHolds
+public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsPullConeNullModP
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PullbackConeNullModPHolds
 public import GroundTheory.HeightsAndTheta.Heights.ElementarySymmetric.PFibreNormPullbackX
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PAvoidFormFinite
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PChartPrimePowerInverse
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PConductor
-import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PDehomCharpolyForms
-import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PDehomNormPIntegral
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PFibreNormBadPrimesFinite
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PFibreNormBound
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PFibreNormDehomCharpoly
@@ -20,19 +20,13 @@ public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PFibreNormDehom
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PFibreNormGoodPrimeIntegral
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PFibreNormMax
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PFibreNormPrimeBound
-import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PFibreRepresentatives
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PGridSeparation
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PMetricMaxComparison
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PNmSectionsFinite
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PNmSectionsRankBound
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PNormalLocusRep
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PProjAvoidingForm
-import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PPullConeDegree
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PPullConeDegreeInt
-import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PPullConeNull
-import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PPullGradedAlgebraic
-import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PPullRatiosAlgebraic
-import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PPullSectionIntegral
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PPullSectionIntegralInt
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PRootGridLower
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PSecEq
@@ -40,6 +34,14 @@ public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PSecMRankBound
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PSegreArith
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PSmallPacking
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PSmallSectionsSeparated
+import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PDehomCharpolyForms
+import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PDehomNormPIntegral
+import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PFibreRepresentatives
+import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PPullConeDegree
+import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PPullConeNull
+import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PPullGradedAlgebraic
+import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PPullRatiosAlgebraic
+import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PPullSectionIntegral
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -96,9 +98,9 @@ theorem fibre_pull_integral : FibreNormPullback.Statement :=
     (FibreNormDehomCharpoly.proof pull_forms_generic pull_ratios_algebraic PullSectionIntegral.proof
       DehomCharpolyForms.proof)
     (FibreNormDehomIntegral.proof FibreNormBadPrimesFinite.proof
-      (FibreNormGoodPrimeIntegral.proof GlobalTheory.T.pullback_cone_null_mod_p_holds PullConeDegreeInt.proof PullSectionIntegralInt.proof
+      (FibreNormGoodPrimeIntegral.proof _root_.GlobalTheory.CompanionTheory.Ar.Giv.pullConeNullModP PullConeDegreeInt.proof PullSectionIntegralInt.proof
         DehomNormPIntegral.proof)
-      (FibreNormPrimeBound.proof pull_forms_generic GlobalTheory.T.norm_form_gauss_bound_holds ChartPrimePowerInverse.proof))
+      (FibreNormPrimeBound.proof pull_forms_generic _root_.GlobalTheory.CompanionTheory.Ar.Giv.normFormGaussBound ChartPrimePowerInverse.proof))
     FibreNormDehomRoots.full
 
 theorem grid_separation : GridSeparation.Statement :=

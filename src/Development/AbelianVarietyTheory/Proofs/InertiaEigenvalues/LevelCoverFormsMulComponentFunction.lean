@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IntFormsSubset
 public import Development.AbelianVarietyTheory.Definitions.HeightFunctions.XiValIffXiAt
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCoversOfHalves
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoverSectionsMulStableWeberValuesStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.CuspFormsFiniteDimensionalOf
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoverSectionsMulStableWeberValues
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLatticeEmbeddingLiftDatumHermitianSpace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -59,7 +60,7 @@ theorem forms_mul_comp : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, Formalis
     exact h1
   have hMN' : C.d.l₂.M' ∣ N := by
     simpa [Level.M', hA] using hMN
-  have key := GlobalTheory.T.coverSections_mul_stable_weberValues D T.Q hL.pins j hj C.d.l₂ C.d.Xo₂ C.d.c₂ C.σ₂ (T.V j σ) D.R.r hr C.U₂ C.dict₂
+  have key := _root_.GlobalTheory.CompMul.sec_mul_of_weberIn D T.Q hL.pins j hj C.d.l₂ C.d.Xo₂ C.d.c₂ C.σ₂ (T.V j σ) D.R.r hr C.U₂ C.dict₂
     (LinearMap.funLeft (𝓞 D.host.E) D.host.E (Fin.cast hr) ∘ₗ T.iota j) g e F ik φ th (T.x₀ j σ) hio hpos hA hgood hmod hdict hdom
     hUnf N hN hMN' hW w hw1 hw2 hw3 a n
   have hrd : ∀ f f' : Rul C.d.Xo₂ C.d.c₂,

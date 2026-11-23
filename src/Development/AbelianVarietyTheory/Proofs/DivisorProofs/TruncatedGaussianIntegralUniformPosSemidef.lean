@@ -3,7 +3,7 @@ module
 public import ReciprocityTheory.L2DbarEstimates.IsLocalHomeomorph
 public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 public import Mathlib.Topology.Separation.CompletelyRegular
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralExpNegHermitianFormPosDefStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralExpNegHermitianFormPosDef
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -147,8 +147,8 @@ theorem trunc_lower {n : ℕ} (H : Matrix (Fin n) (Fin n) ℂ) (hH : H.PosSemide
   set b : ℝ := m * η / 2 with hb
   have hb0 : 0 < b := by positivity
   have hGpd : ((b : ℂ) • (1 : Matrix (Fin n) (Fin n) ℂ)).PosDef := Matrix.PosDef.one.smul (a := b) hb0
-  obtain ⟨hfi, hfint⟩ := GlobalTheory.T.integral_exp_neg_hermitian_form_posDef n _ hMpd
-  obtain ⟨hgi, hgint⟩ := GlobalTheory.T.integral_exp_neg_hermitian_form_posDef n _ hGpd
+  obtain ⟨hfi, hfint⟩ := _root_.GlobalTheory.GaussHerm.integral_exp_neg_herm n _ hMpd
+  obtain ⟨hgi, hgint⟩ := _root_.GlobalTheory.GaussHerm.integral_exp_neg_herm n _ hGpd
   set f : V n → ℝ := fun w => Real.exp (-(m * ((qf H w).re + η * ‖w‖ ^ 2))) with hf
   set g : V n → ℝ := fun w => Real.exp (-(b * ‖w‖ ^ 2)) with hg
   have ef : (fun w : V n => Real.exp (-(∑ j, ∑ l, ((m : ℂ) • Hη) j l * w j *

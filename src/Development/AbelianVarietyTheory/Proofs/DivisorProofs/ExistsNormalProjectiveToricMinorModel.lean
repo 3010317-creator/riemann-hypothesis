@@ -2,13 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NotSymEOfNe
 public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.ImmersedBy
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.ArithBase
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsNormalModelThetaTupleMaximalMinors
+public import Development.AbelianVarietyTheory.PublishedTheorems.SemistableReduction₂.SemistableReductionSt
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SemistableReductionPpavPadicField
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsNormalModelThetaTupleMaximalMinorsStatement
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsIntegrallyClosedStalkOfRingOn
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SemistableReductionPpavPadicFieldStatement
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaSystemHasTestsOfRealPointStatement
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.UniformisationExistenceAndTorsionStatementsStatement
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ZarhinGeometricOfSemistableReductionStatement
+import Development.AbelianVarietyTheory.Statements.SemistableTorsion.UTorsSt
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.UniformisationExistenceAndTorsionStatements
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ZarhinGeometricOfSemistableReduction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -83,9 +86,9 @@ namespace GlobalTheory.SiegJoin
 theorem minor_model : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] [ArithBase o Ω] (S : ThetaSys o Ω) (ρ : S.Real), S.Big → Module.Finite (Subfield.closure (Set.range (algebraMap o Ω) ∪ {x | ∃ i j, x = S.th j / S.th i})) Ω → ∃ (X M : RatModel o Ω) (U₀ : M.Z.Opens) (EE : M.Lat S.J) (f : M.Z ⟶ X.Z) (Xab : X.Z.Opens) (Zh : ZHOut ρ M U₀ EE), MinorAt S X M U₀ EE f Xab ∧ IsOpen (abLocus Zh.G) ∧ (abLocus Zh.G : Set M.Z) = f ⁻¹' (Xab : Set X.Z) := by
   intro o Ω _ _ _ _ S ρ hB hfin
   have hL := GlobalTheory.abelianSchemeLaws_all
-  have hT : S.HasTests := (GlobalTheory.T.thetaSystem_hasTests_of_real_point GlobalTheory.T.semistableReduction_ppav_padicField GlobalTheory.T.uniformisationExistence_and_torsion_statements.1 hL.1 hL.2 GlobalTheory.T.uniformisationExistence_and_torsion_statements.2 o Ω S ρ).1
-  obtain ⟨n, a, GG, X, M, U₀, EE, f, Xab, hNm, hP, -, hO, hE, hH, hXab, hI, hgen, -⟩ := GlobalTheory.T.exists_normal_model_theta_tuple_maximal_minors o Ω S hT hfin
-  obtain ⟨Zh⟩ := GlobalTheory.T.zarhinGeometric_of_semistableReduction GlobalTheory.T.semistableReduction_ppav_padicField o Ω S ρ hB M U₀ EE hO hE ⟨n, a, GG, hgen⟩
+  have hT : S.HasTests := (GlobalTheory.T.thetaSystem_hasTests_of_real_point _root_.GlobalTheory.SS.semistableReductionSt _root_.GlobalTheory.ZH.thmU_and_uTors.1 hL.1 hL.2 _root_.GlobalTheory.ZH.thmU_and_uTors.2 o Ω S ρ).1
+  obtain ⟨n, a, GG, X, M, U₀, EE, f, Xab, hNm, hP, -, hO, hE, hH, hXab, hI, hgen, -⟩ := _root_.GlobalTheory.ZH.exists_minor_model o Ω S hT hfin
+  obtain ⟨Zh⟩ := _root_.GlobalTheory.zhGeo_of_semistableReduction _root_.GlobalTheory.SS.semistableReductionSt o Ω S ρ hB M U₀ EE hO hE ⟨n, a, GG, hgen⟩
   have hsupI : ∀ z : M.Z, S.supI M z = S.supI X (f z) := fun z =>
     Set.ext fun x => div_iff_of_isHom hH hNm.1 z x
   have key : (abLocus Zh.G : Set M.Z) = f ⁻¹' (Xab : Set X.Z) := by

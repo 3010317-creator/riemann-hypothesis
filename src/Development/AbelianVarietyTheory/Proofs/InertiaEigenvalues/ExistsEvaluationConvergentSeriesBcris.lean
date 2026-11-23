@@ -2,12 +2,16 @@ module
 
 public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CompleteSpaceFinExt
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBanachModelTensorAcrisStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsInvFilD
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PolynomialTeichmullerRootTaylorModFilStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ProductMapTensorAinfToBcrisWachInclusionConstantStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ConvZero
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowMulMemLatIff
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBanachModelTensorAcris
+public import Mathlib.RingTheory.PowerSeries.Exp
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PolynomialTeichmullerRootTaylorModFil
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ProductMapTensorAinfToBcrisWachInclusionConstant
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SummableNorm
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachInclusionLayerIoCommutesFrobeniusGaloisStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExistsOfLayers
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachInclusionLayerIoCommutesFrobeniusGalois
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsInvFilD
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -137,7 +141,7 @@ set_option maxHeartbeats 1000000 in
 theorem exists_eval : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P), LocTied l P AI → ∀ (K : FinExt l) (s : ℕ) (LL : FinExt l), Good K s LL → ∀ (Γ : GamS P K s LL) (R : WSer Γ) (I : IoS AI R), IoW I → ∀ β : RA LL →+* ↥LL.1 ⊗[ℚ_[l]] P.R.B, IsBeta AI β → ∃ J, IsEval I β J := by
   intro l _ P AI T K s LL hG Γ R I hW β hβ
   obtain ⟨N, _, _, c, b, κ, φ, γ, t, ⟨hκb, hφb, hκφ, hγb, hκγ, hκt⟩, hc, hb, hbo, hκc, ⟨hφ, hφc⟩, hγ, hs, hlog, hcl⟩ :=
-    GlobalTheory.T.exists_banachModel_tensor_Acris l P AI T LL β hβ
+    _root_.GlobalTheory.HWL.BanachModel.exists_banach_model l P AI T LL β hβ
   haveI : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨by
     haveI := (P.PD K).finK₀
     exact Module.finrank_pos.ne'⟩
@@ -151,9 +155,9 @@ theorem exists_eval : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAin
   have hint : ∀ a, ev c (μ s) (map (algebraMap ↥(OL LL) ↥LL.1) a) = f (fun _ => a) := fun a =>
     ev_map (algebraMap ↥(OL LL) ↥LL.1) (hμ s) hc' (f.comp (Pi.constRingHom _ _))
       (fun o => (congrArg b (I.io.commutes o)).trans (by exact hbo o)) hfπ (fun _ => hb _) a (sc_map a)
-  have hfφ : ∀ a, f (letφ R.φ₀ a) = φ (f a) := (GlobalTheory.T.wachInclusionLayer_io_commutes_frobenius_galois l P AI K s LL Γ R I N b (φ.comp b)).1 hφb
+  have hfφ : ∀ a, f (letφ R.φ₀ a) = φ (f a) := (_root_.GlobalTheory.HWL.IoComm.main l P AI K s LL Γ R I N b (φ.comp b)).1 hφb
   have hfγ : ∀ (g : ↥(GK K)) a, f (letγ (R.γ₀ (Γ.resΓ g)) a) = γ g (f a) := fun g =>
-    (GlobalTheory.T.wachInclusionLayer_io_commutes_frobenius_galois l P AI K s LL Γ R I N b ((γ g).comp b)).2 g (hγb g)
+    (_root_.GlobalTheory.HWL.IoComm.main l P AI K s LL Γ R I N b ((γ g).comp b)).2 g (hγb g)
   have hsub : ∀ (ψ : N →+* N) (y : (↥(OL LL))⟦X⟧), Continuous ψ → (∀ x, ψ (c x) = c x) → constantCoeff y = 0 →
       f (fun _ => y) = ψ (μ s) → ∀ a, Conv a →
       ev c (μ s) (subst (map (algebraMap ↥(OL LL) ↥LL.1) y) a) = ψ (ev c (μ s) a) := by
@@ -218,7 +222,7 @@ theorem exists_eval : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAin
     have hπ : ∀ x, π x = Algebra.TensorProduct.productMap ι P.ιB (κ x) := fun _ => rfl
     have hπc : ∀ x, π (c x) = ι x := fun x => by rw [hπ, hκc]; simp
     have hπE : ∀ j, π (f (letE j)) = if i = j then 1 else 0 := fun j => by
-      have h := GlobalTheory.T.productMap_tensorAinfToBcris_wachInclusion_constants l P AI T K s LL hG Γ R I hW β hβ i ι hι (Pi.single j 1)
+      have h := _root_.GlobalTheory.EvalIdem.component_const l P AI T K s LL hG Γ R I hW β hβ i ι hι (Pi.single j 1)
       have e1 : (fun k => C ((Pi.single j 1 : ZMod (Module.finrank ℚ_[l] ↥(K0 K)) → ↥(OL LL)) k)) =
           (letE j : LetA ↥(OL LL) _) := by
         ext1 k
@@ -243,7 +247,7 @@ theorem exists_eval : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAin
       refine (tendsto_ev hc' (hμ s) ((conv_iff_sc _).1 (ha i))).sub (tendsto_finsetSum _ fun k _ => ?_)
       exact ((hc'.continuous.tendsto _).comp (tendsto_subtype_rng.2 (he k))).mul_const _
     have hmem := (hcl ι m).mem_of_tendsto hlim (Eventually.of_forall fun M => by
-      have h := GlobalTheory.T.polynomial_teichmullerRoot_taylor_modFil l P AI T LL s ζ ι hζ (trunc M (a i)) m
+      have h := _root_.GlobalTheory.ExpImage.PolyTaylor.poly_taylor l P AI T LL s ζ ι hζ (trunc M (a i)) m
       rw [Set.mem_setOf_eq, ← hπ, map_sub, hev, Polynomial.hom_eval₂, hπμ, show π.comp c = (ι : ↥LL.1 →+* P.R.BdR) from RingHom.ext hπc]
       exact h)
     rw [Set.mem_setOf_eq, ← hπ, map_sub, hev] at hmem

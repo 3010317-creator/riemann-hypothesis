@@ -6,11 +6,14 @@ public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsCuspExpansionAtInfinityPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MdifferentiableOfHasSomeLevelOverStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemModularFunctionRingOverIffHasSomeLevelOverStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UpperHalfPlaneCodiscreteGermIdentityAndUnitsStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UpperHalfPlaneGermRingHomAndRestrictStatement
+public import Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative.LeviCivita
+public import Mathlib.RingTheory.HahnSeries.Summable
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsCuspExpansionAtInfinityProperties
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MdifferentiableOfHasSomeLevelOver
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemModularFunctionRingOverIffHasSomeLevelOver
+public import Development.AbelianVarietyTheory.Definitions.Foundations.ExpUpper
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UpperHalfPlaneCodiscreteGermIdentityAndUnits
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UpperHalfPlaneGermRingHomAndRestrict
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -69,7 +72,7 @@ theorem frac_exp_converges : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgC
     exact hiob (T.exp.toRingHom.injective (by simpa using h))
   have hexpf : T.exp f = T.exp (T.io a) * (T.exp (T.io b))⁻¹ := by
     rw [← hfab, map_mul, mul_assoc, mul_inv_cancel₀ hexb, mul_one]
-  obtain ⟨hops, -, -, -, hinv⟩ := GlobalTheory.T.isCuspExpansionAtInfinity_properties Ω ε
+  obtain ⟨hops, -, -, -, hinv⟩ := _root_.GlobalTheory.FNExp.exp_props Ω ε
   have hEa := T.exp_io a
   have hEb := T.exp_io b
   have hEbi := hinv _ _ hexb hEb
@@ -78,10 +81,10 @@ theorem frac_exp_converges : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgC
   obtain ⟨hden, C, hC⟩ := hE
   refine ⟨hden, up ((a : ℍ → ℂ) * (b : ℍ → ℂ)⁻¹), C, ?_, hC⟩
 
-  obtain ⟨⟨A, hA⟩, hmd, -, -, hHs⟩ := GlobalTheory.T.upperHalfPlane_germ_ringHom_and_restrict
-  obtain ⟨-, hid, hunit⟩ := GlobalTheory.T.upperHalfPlaneCodiscreteGerm_identity_and_units
-  have hbR : InR ε.range (b : ℍ → ℂ) := ((GlobalTheory.T.mem_modularFunctionRingOver_iff_hasSomeLevelOver ε.range).1 _).1 b.2
-  have hbhol : DifferentiableOn ℂ (up (b : ℍ → ℂ)) Hs := (hmd _).1 (GlobalTheory.T.mdifferentiable_of_hasSomeLevelOver _ _ hbR)
+  obtain ⟨⟨A, hA⟩, hmd, -, -, hHs⟩ := _root_.GlobalTheory.FN.germ_ringHom_and_restrict
+  obtain ⟨-, hid, hunit⟩ := _root_.GlobalTheory.FN.germ_main
+  have hbR : InR ε.range (b : ℍ → ℂ) := ((_root_.GlobalTheory.FN.mem_ring_iff_inR ε.range).1 _).1 b.2
+  have hbhol : DifferentiableOn ℂ (up (b : ℍ → ℂ)) Hs := (hmd _).1 (_root_.GlobalTheory.FN.inR_mdifferentiable _ _ hbR)
   have hgb0 : ((up (b : ℍ → ℂ) : ℂ → ℂ) : Mero) ≠ 0 := by
     intro h
     apply hb0

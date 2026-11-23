@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.TeichmullerDepth.HasTeich
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.GaugedCurveLogarithmsClosedUnderTadicLimitsStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.GaugedFormalGroupCurveLogarithmsAddSubgroupRescaStatement
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.GaugedFormalGroupCurveLogarithmsAddSubgroupResca
 import Formalism.LocalToGlobal.CharacterGerms.ConstMemTypeSetOfNonneg
 import Formalism.LocalToGlobal.CharacterGerms.ValNonnegLeadingCoeffOfMemTySet
 import Mathlib.Algebra.Order.Floor.Extended
@@ -131,7 +131,7 @@ namespace GlobalTheory.RowLaw
 open CvDiv in
 theorem cv_inv_natCast_smul_mem : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) [NeZero d] (I : Fin 2 → Type) [∀ g, Fintype (I g)] (κ : Type) [Fintype κ] (X : RawChart C d I κ), RLaw X V → ∀ g (N : ℕ), V.v (N : C) = 0 → ∀ a ∈ Cv X V g, (N : C)⁻¹ • a ∈ Cv X V g := by
   intro C _ V d _ I _ κ _ X hX g N hN a ha
-  obtain ⟨hzero, hadd, hneg, -⟩ := GlobalTheory.T.gaugedFormalGroupCurveLogarithms_addSubgroup_rescale C V d I κ X hX g
+  obtain ⟨hzero, hadd, hneg, -⟩ := _root_.GlobalTheory.RowLaw.cv_group C V d I κ X hX g
   have hN0 : (N : C) ≠ 0 := by
     intro h
     rw [h, V.v.map_zero] at hN

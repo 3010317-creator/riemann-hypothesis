@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.ClozelCohomologicalModel
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsLocallyConstantOrbit
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatVecUOfIsSphericalU
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjugateSymplecticCharacterExistsStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExpoConjOfIsCsd
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjugateSymplecticCharacterExists
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsEquivProdIrrTw
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsIdempotentElemCharIdem
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsNormalisedThetaSub
@@ -11,8 +12,8 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSpher
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SatakeParameterSphericalProductSpehQuotients
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIrreducibleFixed
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsEquivDetCharacterOfIrreducibleRankLeOne
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFixedIff
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.NotIsTemperedGLDetRepTwo
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFixedIff
 import Formalism.LocalRingCardinality.SpanPowerMembership.LocAtA
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -479,7 +480,7 @@ theorem norm_satake_eq_one : GlobalTheory.Published.ClozelCohomological → Glob
           simp [this]) o
       · rw [CG.expo_one]; linear_combination hj / 2 + hi' / 2
     · have hi' : (j : ℂ) - a + 1 = 2 * i + 1 := by exact_mod_cast hi
-      obtain ⟨η, h1, h2, h3⟩ := GlobalTheory.T.conjugate_symplectic_character_exists E
+      obtain ⟨η, h1, h2, h3⟩ := _root_.GlobalTheory.HalfCsd.exists_unitary_csd_half E
       refine ⟨η, h1, h2, fun τ => ?_⟩
       obtain ⟨k, hk⟩ := h3 τ
       exact ⟨i + k + 1, by rw [hk]; push_cast; linear_combination hj / 2 + hi' / 2⟩

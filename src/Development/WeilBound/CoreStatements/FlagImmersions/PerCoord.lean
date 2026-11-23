@@ -2,8 +2,11 @@ module
 
 public import Development.WeilBound.CoreStatements.FlagImmersions.Transport
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.DifferentiableOnOfTendstoLocallyUniformlyOn
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.GenusEqCardMulSignatureStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HolomorphicCoefficientsInFrameStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsEigFrames
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.GenusEqCardMulSignature
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HolomorphicCoefficientsInFrame
 public import Development.WeilBound.CoreStatements.FlagImmersions.IpZeroRight
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -65,7 +68,7 @@ theorem coeff_an {n m g : ℕ} {V : Set (Fin n → ℂ)} (hV : IsOpen V) (x : Fi
       exact ⟨w, fun _ => hw.symm⟩
     · exact ⟨0, fun h => absurd h ht⟩
   choose w hw using h
-  have hd := GlobalTheory.T.holomorphic_coefficients_in_frame n m g V x y w hV (fun i => (hx i).differentiableOn) hy hli hw
+  have hd := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.Dict.Chart.differentiableOn_coeff_of_linearIndependent n m g V x y w hV (fun i => (hx i).differentiableOn) hy hli hw
   exact ⟨w, fun i => GlobalTheory.SCV.analyticOnNhd_of_differentiableOn hV (differentiableOn_pi.1 hd i), hw⟩
 
 end PC
@@ -172,7 +175,7 @@ theorem perCoord : PerCoord := by
       · rw [← (hfr t ht τ).2.2]
         exact Submodule.span_mono (by rintro _ ⟨i, rfl⟩; exact ⟨.inr (τ, i), rfl⟩)
     refine ⟨linearIndependent_of_top_le_span_of_card_eq_finrank hs.ge ?_, hs⟩
-    have hg := GlobalTheory.T.genus_eq_card_mul_signature E Ψ g q p (R t).B σ hσ (hrk t ht)
+    have hg := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.Dict.TangentDim.dim_eq_card_mul E Ψ g q p (R t).B σ hσ (hrk t ht)
     simp only [Fintype.card_sum, Fintype.card_prod, Fintype.card_fin, Module.finrank_fin_fun]
     rw [hg]
     ring

@@ -2,10 +2,11 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.IsScaleStable
 public import GroundTheory.HeightsAndTheta.Heights.ArithmeticBezout.ConeBall
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.CroftonFormulaOpenConeStatement
-import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.IsSigmaCompactConeInter
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.RandomSetSumExpectationStatement
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.CroftonFormulaOpenCone
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.RandomSetSumExpectation
 public import Development.WeilBound.CoreStatements.CommonZeroEvaluation.CroftonFormulaFibreSum
+import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.IsSigmaCompactConeInter
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,7 +64,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.crofton_formula_fibre_sum : �
   have hcnt : ∀ s : ℝ≥0∞, Measurable fun π : Fin (e + 1) → Fin n → ℂ =>
       cntOver (coneSet h W ∩ {y | s < φ y}) π (firstCoordVec (e + 1)) := fun s =>
     ModelDimension.FnCrofton.measurable_cntOver_first (isSigmaCompact_cone_inter h W (hlev s).1)
-  obtain ⟨hm, hi⟩ := GlobalTheory.T.random_set_sum_expectation (planeMass n e • gaussM (e + 1) n)
+  obtain ⟨hm, hi⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Short.Crofton.LayerCake.measurable_lintegral_tsum_of_level_counts (planeMass n e • gaussM (e + 1) n)
     ((Measure.hausdorffMeasure ((2 * (e + 1) : ℕ) : ℝ)).restrict (coneBall h W))
     (fun π => fibrePts (coneSet h W) π) φ (gaussM (e + 1) n Set.univ) hφ
     (fun s => by
@@ -71,7 +72,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.crofton_formula_fibre_sum : �
       exact hcnt s)
     (fun s => by
       have hA := (hlev s).1
-      have T := GlobalTheory.T.crofton_formula_open_cone n e δ h W f hW hf hδ {y | s < φ y} hA (hlev s).2
+      have T := _root_.GlobalTheory.CompanionTheory.Ar.Short.Crofton.setCrofton n e δ h W f hW hf hδ {y | s < φ y} hA (hlev s).2
       simp only [ModelDimension.FnCrofton.encard_fibrePts_inter]
       rw [lintegral_smul_measure, smul_eq_mul, Measure.restrict_apply hA.measurableSet, gaussM,
         lintegral_withDensity_eq_lintegral_mul _ (ModelDimension.FnCrofton.measurable_matrix_gaussian _ _) (hcnt s)]

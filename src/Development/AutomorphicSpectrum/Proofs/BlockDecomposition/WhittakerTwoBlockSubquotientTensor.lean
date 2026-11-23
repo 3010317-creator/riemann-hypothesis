@@ -2,9 +2,10 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhitImgMono
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsEquivPiExteriorTensorBlockLevi
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IrreducibleSubquotientOfExtensionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SubquotientEquivOfIrreducibleImageStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerSubquotientEquivStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsUnitarisableOfCharIff
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IrreducibleSubquotientOfExtension
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SubquotientEquivOfIrreducibleImage
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerSubquotientEquiv
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.BernsteinZelevinskyFiniteness
 import GroundTheory.LocalFields.PadicLogSeries
 import Mathlib.Algebra.Order.Floor.Extended
@@ -102,11 +103,11 @@ theorem exists_constituent_of_whit2 : ∀ (k : Type) [Field k] [ValuativeRel k] 
     ⟨_, subQuot T T', hq.isSmooth hs, isIrreducible_subQuot hcov⟩
   obtain ⟨s, ⟨Φ⟩⟩ := GlobalTheory.LeviFactor.exists_equiv_piTensor_levi GlobalTheory.CompanionTheory.Published.bernsteinZelevinskyFiniteness k (Fin 2)
     (fun a => Fin (d a)) τ
-  have hspan := GlobalTheory.T.whittaker_subquotient_equiv k ψ d X J T T' (fun a => (s a).V) (fun a => (s a).ρ) hT'lt.le Φ
+  have hspan := _root_.GlobalTheory.CompanionTheory.BZNuPair.WhitCover.main k ψ d X J T T' (fun a => (s a).V) (fun a => (s a).ρ) hT'lt.le Φ
   refine ⟨s, (IsSubquotient.of_surjective Φ.toIntertwiningMap Φ.surjective).trans hq, ?_⟩
-  rcases GlobalTheory.T.irreducible_subquotient_of_extension _ _ _ (whit2 ψ d J) S.ρ _ _ (whitImg_mono ψ d J hT'lt.le) S.irr hT with h | h
+  rcases _root_.GlobalTheory.CompanionTheory.SubquotExt.isSubquotient_sub_or_quot _ _ _ (whit2 ψ d J) S.ρ _ _ (whitImg_mono ψ d J hT'lt.le) S.irr hT with h | h
   · exact absurd hT'lt (hmin T' h)
-  · obtain ⟨e⟩ := GlobalTheory.T.subquotient_equiv_of_irreducible_image _ _ _ _ (s 0).ρ _ S.ρ (s 0).irr S.irr hspan h
+  · obtain ⟨e⟩ := _root_.GlobalTheory.CompanionTheory.IsoSub.equiv_of_isSubquotient _ _ _ _ (s 0).ρ _ S.ρ (s 0).irr S.irr hspan h
     exact ⟨e.symm⟩
 
 end GlobalTheory.CompanionTheory.BZNuPair

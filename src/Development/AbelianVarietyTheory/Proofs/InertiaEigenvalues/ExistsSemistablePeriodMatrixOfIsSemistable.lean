@@ -2,8 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.EqOfPowEqOneOfNormSubLt
 public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPeriodMatrixOfFinrankStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TensorProductBasisCoordinatesStatement
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPeriodMatrixOfFinrank
+public import Mathlib.LinearAlgebra.Matrix.ToLin
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TensorProductBasisCoordinates
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.KummerNotFrac
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -57,7 +59,7 @@ namespace GlobalTheory.PMon
 theorem exists_periodMatrix_of_isSst : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (T : LocTied l P AI) (n : Type) [Fintype n] [DecidableEq n] (K : FinExt l) (V : Type) [AddCommGroup V] [Module ℚ_[l] V] (b : Basis n ℚ_[l] V) (ρ : Representation ℚ_[l] ↥(GK K) V), IsSst P ρ → ∃ Q : GL n (Bst P), ∀ g : ↥(GK K), (LinearMap.toMatrix b b (ρ g)).map (algebraMap ℚ_[l] (Bst P)) * (Q : Matrix n n (Bst P)).map (actSt P (g : GQ l)) = Q := by
   intro l _ P AI T n _ _ K V _ _ b ρ h
   obtain ⟨hdom, hreg, hu⟩ := stRegular l P AI ⟨T⟩
-  obtain ⟨e, -, -, he⟩ := GlobalTheory.T.tensorProduct_basis_coordinates ℚ_[l] (Bst P) V n b
+  obtain ⟨e, -, -, he⟩ := _root_.GlobalTheory.tensorBasisCoords ℚ_[l] (Bst P) V n b
   haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
   haveI : FiniteDimensional ℚ_[l] ↥(K0 K) :=
     FiniteDimensional.of_injective
@@ -67,7 +69,7 @@ theorem exists_periodMatrix_of_isSst : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrim
     fun c => rfl
   have hst : ∀ (g : ↥(GK K)) (y : V ⊗[ℚ_[l]] Bst P),
       stRep P ρ g y = TensorProduct.map (ρ g) (actSt P (g : GQ l)).toLinearMap y := fun g y => rfl
-  refine GlobalTheory.T.exists_periodMatrix_of_finrank_alt ℚ_[l] ↥(K0 K) (Bst P) ↥(GK K)
+  refine _root_.GlobalTheory.RegularRing.exists_periodMatrix_of_finrank ℚ_[l] ↥(K0 K) (Bst P) ↥(GK K)
     (fun g => (actSt P (g : GQ l) : Bst P →+* Bst P)) n (fun g => LinearMap.toMatrix b b (ρ g))
     (fun g => ?_) (fun g c => ?_) (fun x x' hx hh => ?_) (fun x hx hh => hu K x hx hh)
     ((Dst P ρ).map e.toLinearMap) (fun x => ?_) ?_

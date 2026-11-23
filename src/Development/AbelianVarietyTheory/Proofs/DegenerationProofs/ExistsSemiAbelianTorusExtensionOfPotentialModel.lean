@@ -2,8 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.SemistableFin
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.GenericFiberGluing.SemistableReductionPlusSplit
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsFiniteDvrTorusExtensionSpecialFibreStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.GroupSchemeModelFiniteRingExtensionStatement
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsFiniteDvrTorusExtensionSpecialFibre
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.GroupSchemeModelFiniteRingExtension
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -69,8 +70,8 @@ theorem exists_semiAbelian_model_torusExtension_of_potModel : ∀ (V : Type) [Co
     haveI : IsScalarTower V K L := IsScalarTower.of_algebraMap_eq' e
     haveI : FaithfulSMul V W := (faithfulSMul_iff_algebraMap_injective V W).2 hinj
     exact Module.Finite.of_isLocalization V W (nonZeroDivisors V)
-  obtain ⟨W', _, _, _, hW', _, hfin', hinj', -, hG', hT⟩ := GlobalTheory.T.exists_finite_dvr_torusExtension_specialFibre' W G hG
-  obtain ⟨_, hK', e', hmod'⟩ := GlobalTheory.T.groupScheme_model_finite_ring_extension V K A L W e G hmod W' hfin' hinj'
+  obtain ⟨W', _, _, _, hW', _, hfin', hinj', -, hG', hT⟩ := _root_.GlobalTheory.exists_finite_dvr_torusExtension_specialFibre W G hG
+  obtain ⟨_, hK', e', hmod'⟩ := _root_.GlobalTheory.SS.model_finite_ext V K A L W e G hmod W' hfin' hinj'
   letI : Algebra V W' := ((algebraMap W W').comp (algebraMap V W)).toAlgebra
   haveI : IsScalarTower V W W' := IsScalarTower.of_algebraMap_eq fun _ => rfl
   exact ⟨FractionRing W', inferInstance, inferInstance, hK', W', inferInstance, inferInstance, inferInstance, hW',

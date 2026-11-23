@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.SameFns
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LetterColMemNormalFormProductSpanStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormalFormProductSpanLeftMulClosedStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LetterColMemNormalFormProductSpan
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormalFormProductSpanLeftMulClosed
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.MatrixUnitZeroZeroEqInsert
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -70,7 +70,7 @@ theorem word_letter_mem_nfSpan (d : Q.NFData P A) (T : Set A) {X : A} (hX : X �
 theorem word_mul_mem_nfSpan (d : Q.NFData P A) (hd : HatHyp d) {n : ℕ} {x y : A}
     (hx : x ∈ nfSpan d (hats d.L) 1 0 1) (hy : y ∈ nfSpan d (hats d.L) n 0 n) :
     x * y ∈ nfSpan d (hats d.L) (n + 1) 0 (n + 1) := by
-  obtain ⟨h1, h2⟩ := GlobalTheory.T.normalFormProductSpan_left_mul_closed P A d hd (hats d.L)
+  obtain ⟨h1, h2⟩ := _root_.GlobalTheory.HatNF.SpanMul.span_mul P A d hd (hats d.L)
   unfold nfSpan at hx
   induction hx using Submodule.span_induction with
   | mem x hx =>
@@ -112,7 +112,7 @@ theorem word_mem_nfSpan : ∀ (P : M.Par) (A : Type) [Ring A] [StarRing A] [Alge
       refine Submodule.sum_mem _ fun e'' _ => ?_
       simp only [eU, Matrix.of_apply]
       split_ifs
-      · rw [one_mul]; exact GlobalTheory.T.letterCol_mem_normalFormProductSpan P A d hd L st s ht S l w hA i e'' e'
+      · rw [one_mul]; exact _root_.GlobalTheory.HatNF.LetterEntries.letterCol_mem P A d hd L st s ht S l w hA i e'' e'
       · rw [zero_mul]; exact zero_mem _
     exact word_mul_mem_nfSpan d hd h1 (ih hAw e')
 

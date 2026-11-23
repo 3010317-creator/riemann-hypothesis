@@ -1,7 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.TateUnramifiedOfTorsionUnramified
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MonicSplitsValuationSubringOfSeparableReductionStatement
+public import Mathlib.FieldTheory.IsSepClosed
+public import Mathlib.RingTheory.Valuation.ValuationSubring
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MonicSplitsValuationSubringOfSeparableReduction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -179,7 +181,7 @@ theorem residueField_inertiaFixed_isAlgClosed : ∀ (R K Ω : Type) [CommRing R]
   haveI : IsSepClosed (ResidueField V) := IsSepClosed.of_exists_root _ fun p hm hirr hsep => by
     obtain ⟨q, hq, -, hqm⟩ := Polynomial.lifts_and_natDegree_eq_and_monic
       ((Polynomial.mem_lifts p).2 (Polynomial.map_surjective _ residue_surjective p)) hm
-    obtain ⟨s, hs⟩ := GlobalTheory.T.monic_splits_valuationSubring_of_separable_reduction Ω V q hqm (by rw [hq]; exact hsep)
+    obtain ⟨s, hs⟩ := _root_.GlobalTheory.monic_splits_of_separable_residue Ω V q hqm (by rw [hq]; exact hsep)
     rw [← hq, hs, hred] at hirr ⊢
     obtain ⟨b, hb⟩ : ∃ b, b ∈ s := by
       by_contra h0
@@ -227,7 +229,7 @@ theorem residueField_inertiaFixed_isAlgClosed : ∀ (R K Ω : Type) [CommRing R]
       rw [hgV, Polynomial.map_map, ← ResidueField.map_comp_residue, ← Polynomial.map_map, hg]
       rfl
     have hsepV : (gV.map (residue V)).Separable := by rw [hgV']; exact hsep.map
-    obtain ⟨s, hs⟩ := GlobalTheory.T.monic_splits_valuationSubring_of_separable_reduction Ω V gV (hgm.map _) hsepV
+    obtain ⟨s, hs⟩ := _root_.GlobalTheory.monic_splits_of_separable_residue Ω V gV (hgm.map _) hsepV
     have hroot : a ∈ (gV.map (residue V)).roots := by
       rw [Polynomial.mem_roots ((hgm.map _).map _).ne_zero, hgV', IsRoot, Polynomial.eval_map]
       exact minpoly.aeval _ a

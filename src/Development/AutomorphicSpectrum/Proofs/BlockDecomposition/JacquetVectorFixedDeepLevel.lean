@@ -1,9 +1,10 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.TwistedFactors.LocalBaseChange.StrictDominanceCasselman.IsStrictlyDominant
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CongruenceSubgroupBasisNhdsStatement
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.SquareIntegrableTempered.CentredSegments.IrreducibleUnif
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CongruenceSubgroupBasisNhds
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeckeOperatorExists
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ModulusTrivialOnLeviCompactStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ModulusTrivialOnLeviCompact
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,10 +59,10 @@ theorem jac_fixed_of_smooth : ∀ {k : Type} [Field k] [ValuativeRel k] [Topolog
         jac (stdBlocks (fun _ : Fin n => 1) hd) π u w = w := by
   intro k _ _ _ _ n hd V _ _ π hπ w
   obtain ⟨v, rfl⟩ := Submodule.Quotient.mk_surjective _ w
-  obtain ⟨m, hm, hK⟩ := GlobalTheory.T.congruence_subgroup_basis_nhds k n {g | π g v = v} (hπ v) (by simp)
+  obtain ⟨m, hm, hK⟩ := _root_.GlobalTheory.CompanionTheory.CongruenceBasis.exists_Km_subset k n {g | π g v = v} (hπ v) (by simp)
   refine ⟨m, hm, fun u hu => ?_⟩
   have hδ : deltaHalf k (PositivityTheory.Lbc.Bl (fun _ : Fin n => 1)) u = 1 :=
-    GlobalTheory.T.modulus_trivial_on_levi_compact k n n (fun _ : Fin n => 1) hd (Zls.Km k n m) (GlobalTheory.CompanionTheory.HeckeKm.isCompact_Km n m) u hu
+    _root_.GlobalTheory.CompanionTheory.HalfModCompact.deltaHalf_eq_one_of_mem_KM k n n (fun _ : Fin n => 1) hd (Zls.Km k n m) (GlobalTheory.CompanionTheory.HeckeKm.isCompact_Km n m) u hu
   have hv : π (leviEmb k (stdBlocks (fun _ : Fin n => 1) hd) u) v = v := hK hu
   rw [jac_mk, hv, hδ]
   simp

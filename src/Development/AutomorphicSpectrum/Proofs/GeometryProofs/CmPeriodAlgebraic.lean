@@ -3,20 +3,24 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCMFrame
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CmCurveBaseChangeComp
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CmFamilyDescendsToNumberFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CmFamilyExtendsOverDedekindDomainStatement
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.ExistsIsThetaDegOfIsLocalModel
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CmFamilyDescendsToNumberField
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CmFamilyExtendsOverDedekindDomain
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.EllMapCancelAndSabMapCancel
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.EllPullExistsOAct
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsCmCurveHomFamilyToFibreAtPeriodStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsCmCurveHomFamilyToFibreAtPeriod
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsGoodReductionModelCmPeriodFibre
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueCmHermitianLatticeFormStatement
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.HomExtDvrOfCardTorsion
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.PrincipalTripleExtendsOfCurveHomomorphismsStatement
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaUniformisationComplexAbelianVarieties
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.CardTorsionPointsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.KernelFiniteFlatHolds
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FamilyPurePeriodsSpanStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PeriodsSpanPureDecompositionStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsTransition
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FamilyPurePeriodsSpan
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PeriodsSpanPureDecomposition
+import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueCmHermitianLatticeForm
+import Development.AbelianVarietyTheory.PublishedTheorems.RelativeAmpleness.RelAmpleAndKTrivIff
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.PrincipalTripleExtendsOfCurveHomomorphisms
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -87,8 +91,8 @@ theorem exists_desc (hU : ThetaUnifAV) (hL : Out.Laws) {D : Datum H} {l : Level 
         ∃ ψ : PureType.lat hP ρ → (C₂.P.A ⟶ T₂.t.G), IsFam C₂ T₂ h _ ψ ∧
           ∀ a (z : ℂ), ((u.ex fun _ => c * z).left ≫ φ₃ ≫ (ψ a).left) ≫ m.φ = (FU.ex i P (z • P a)).left := by
   subst hρ
-  obtain ⟨ψ', hψ', hex⟩ := GlobalTheory.T.exists_cmCurve_homFamily_to_fibre_at_period hU hL E H D l Xo g ty FU i P hP _ C' u c T' n ε _ hu hc hΛ hε hh
-  obtain ⟨k₁, hk₁, hle, hdesc⟩ := GlobalTheory.T.cmFamily_descends_to_numberField hU hL E H k₀ _ C₀ (FU.Di i) _ T _ _ C' φ T' mT ψ' c' hψ'
+  obtain ⟨ψ', hψ', hex⟩ := _root_.GlobalTheory.CM.exists_isFam_complex hU hL E H D l Xo g ty FU i P hP _ C' u c T' n ε _ hu hc hΛ hε hh
+  obtain ⟨k₁, hk₁, hle, hdesc⟩ := _root_.GlobalTheory.CM.isFam_descends_to_numberField hU hL E H k₀ _ C₀ (FU.Di i) _ T _ _ C' φ T' mT ψ' c' hψ'
   refine ⟨k₁, hk₁, hle, fun K e eK ω₂ C₂ φ₂ φ₃ T₂ m₂ m₃ f m c₂ c₃ hφ hm hn => ?_⟩
   obtain ⟨ψ₂, hψ₂, hsq⟩ := hdesc K e eK _ C₂ φ₂ φ₃ T₂ m₂ m₃ c₂ c₃ hφ hm
   refine ⟨ψ₂, hψ₂, fun a z => ?_⟩
@@ -127,8 +131,8 @@ theorem exists_pack_given : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   have hX : HomExtDvr := GlobalTheory.CM.homExtDvr_of_card_torsion GlobalTheory.UU.TorsionCount.card_torsion_points_unconditional
   have hK : Published.KernelFiniteFlatSt := GlobalTheory.kernelFiniteFlat_holds
   have hB := hL.polBaseChange
-  obtain ⟨K₀, hK₀, y₀, _, hy₀, hy₀'⟩ := GlobalTheory.T.family_pure_periods_span E H D l Xo c g ty FU i P hP n hn hy
-  obtain ⟨hg0, bb0, a0, hspan0⟩ := GlobalTheory.T.periods_span_pure_decomposition E H (FU.Di i) g ty P hP n hn hy
+  obtain ⟨K₀, hK₀, y₀, _, hy₀, hy₀'⟩ := _root_.GlobalTheory.CompanionTheory.Ggeo.point_numberField_of_finiteIndex E H D l Xo c g ty FU i P hP n hn hy
+  obtain ⟨hg0, bb0, a0, hspan0⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fl.exists_pure_vectors_periods_span_of_finite_index E H (FU.Di i) g ty P hP n hn hy
 
   obtain ⟨k₀, _, e₁, e₂, e₃, e₆⟩ : ∃ k₀ : IntermediateField ℚ ℂ, FiniteDimensional ℚ k₀ ∧ K₀ ≤ k₀ ∧
       (∀ b, (Z b).M ≤ k₀) ∧ k ≤ k₀ ∧ c.F ≤ k₀ :=
@@ -149,13 +153,13 @@ theorem exists_pack_given : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     _ _ _ _ _ _ mT nT (by rw [← Category.assoc, spMap_comp_spMap]; exact hy₀')
 
   choose ε hε using fun b => exists_sign (H := H) (Z b).hω (sgnRt_sq b)
-  choose h hh _ using fun b => GlobalTheory.T.exists_unique_cmHermitianLatticeForm E H (FU.Di i) (ε b)
+  choose h hh _ using fun b => _root_.GlobalTheory.CM.exists_kForm E H (FU.Di i) (ε b)
   have htw : 2 * (1 - (((Z true).ω : (Z true).M) : ℂ)) - 1 = sgnRt H false := by
     have := (Z true).hω
     simp only [sgnRt, Bool.false_eq_true, if_false, if_true] at this ⊢
     linear_combination -this
   obtain ⟨ε₁, hε₁⟩ := exists_sign (H := H) htw (sgnRt_sq false)
-  obtain ⟨h₁, hh₁, -⟩ := GlobalTheory.T.exists_unique_cmHermitianLatticeForm E H (FU.Di i) ε₁
+  obtain ⟨h₁, hh₁, -⟩ := _root_.GlobalTheory.CM.exists_kForm E H (FU.Di i) ε₁
   choose k₁ hk₁ hle hdesc using fun b => exists_desc hU hL FU i hP k₀ (C₀ b) (Z b).C' (c' b) (Z b).u (Z b).theta
     (Z b).c_ne (Z b).lat (Z b).hω (hε b) (hh b) T T' nT mT'
   obtain ⟨k₂, hk₂, hle₂, hdesc₂⟩ := exists_desc hU hL FU i hP k₀ (twist (C₀ true) false)
@@ -203,14 +207,14 @@ theorem exists_pack_given : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     rintro N rfl
     exact ⟨bb0, a0, hspan0⟩
   obtain ⟨bb, a, hspan⟩ := key _ hgT
-  obtain ⟨B, m', hBg⟩ := GlobalTheory.T.principal_triple_extends_of_curve_homomorphisms hU hL hL₂ hX hK E H (𝓞 K₁) K₁ (algebraMap K₁ ℂ) (C₁ true).P (C₂ true).P
+  obtain ⟨B, m', hBg⟩ := _root_.GlobalTheory.CM.CurveFamily.exists_extension hU hL hL₂ hX hK E H (𝓞 K₁) K₁ (algebraMap K₁ ℂ) (C₁ true).P (C₂ true).P
     (φ₁₂ true) T₂ (fun j => Ψ (bb j) (a j)) (c₁₂ true).2.1 (C₁ true).dim (fun j => hΨm (bb j) (a j))
     (ontoAt_of_exp m.cart _ hyy (FU.ex i P) (FU.ex_add i P hP) (FU.ex_onto i P hP) _ hspan _ fun j z =>
       ⟨Over.homMk _ (hpt true fun _ => (Z true).c * z), by
         rw [← hΨe (bb j) (a j) z]
         simp only [Category.assoc]
         exact Category.assoc _ _ _⟩)
-  choose ψ hψ hsq' using fun b => GlobalTheory.T.cmFamily_extends_over_dedekindDomain hL hX E H (𝓞 K₁) K₁ _ (C₁ b) (FU.Di i) _ B _ _ (C₂ b) (φ₁₂ b)
+  choose ψ hψ hsq' using fun b => _root_.GlobalTheory.isFam_extends_dedekind hL hX E H (𝓞 K₁) K₁ _ (C₁ b) (FU.Di i) _ B _ _ (C₂ b) (φ₁₂ b)
     T₂ m' (ψ₂ b) (c₁₂ b) (hψ₂ b)
   have hcF : c.F ≤ K₁ := e₆.trans e₅
   let yK : Sp K₁ ⟶ Xo.XF c := pullback.lift (spMap (IntermediateField.inclusion (e₁.trans e₅)).toRingHom ≫ y₀)

@@ -5,11 +5,12 @@ public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.Glo
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionFramePowEqIntegralGenerator
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NearIsIsoOfIsProperOfFinitePresentation
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RigidifiedLineBundleTrivialOfTorsionGeometricFib
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TheoremOfCubeAbelianSchemeOverArbitraryBase
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CubeTheorem
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.CubeTheorem.CubeTheoremHolds
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionSubgroupSchemes
-import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsIsoIffBijectiveOverAlgClosed
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.AbelianSchemeIdPowFiniteEtaleSurjective
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.RangeSubsetOfGeom
+import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsIsoIffBijectiveOverAlgClosed
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -225,7 +226,7 @@ private theorem lbIso_of_pull {B : Over S} [GrpObj B] [IsCommMonObj B] (hB : IsA
   have ax2 : pull (lift (𝟙 B) (1 : B ⟶ B)).left (cls (Q₁.div Q₂) hM) = 0 := by
     rw [hc', map_sub, ← cls_pull h₁ _ (pull_isLB h₁ _), ← cls_pull h₂ _ (pull_isLB h₂ _),
       (cls_eq_zero_iff _).2 r₁', (cls_eq_zero_iff _).2 r₂', sub_zero]
-  have hadd := additive_of_cube GlobalTheory.CubeTop.cubeTheorem hB hB hM
+  have hadd := additive_of_cube _root_.GlobalTheory.SpreadingModels.cubeTheorem_holds hB hB hM
     ((triv_ev_iff hM 1 (𝟙 B)).2 ax1) ((triv_ev_iff hM (𝟙 B) 1).2 ax2)
   have htors : (n * n) • cls (Q₁.div Q₂) hM = 0 := by
     rw [← pull_square_pow_eq_sq_smul hM hadd.1 hadd.2 n, hc', map_sub, hp, sub_self]

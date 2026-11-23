@@ -1,9 +1,13 @@
 module
 
 public import Formalism.UnipotentAdelicQuotients.ClassNumberFinite
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ClassNumberFiniteIntegralLevelClosedSubgroupGLStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.CompactMeetsFinitelyManyLeftCosetsOpenStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsCompactIntegralPointsFiniteAdelicAlgebraicGrouStatement
+public import Mathlib.RingTheory.DedekindDomain.FiniteAdeleRing
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ClassNumberFiniteIntegralLevelClosedSubgroupGL
+public import Mathlib.Algebra.Group.Subgroup.Defs
+public import Mathlib.Topology.Algebra.Group.Defs
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.CompactMeetsFinitelyManyLeftCosetsOpen
+public import Mathlib.Topology.Instances.Matrix
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsCompactIntegralPointsFiniteAdelicAlgebraicGrou
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,11 +58,11 @@ namespace GlobalTheory
 theorem classNumberFinite_holds : HeckeCharacterZeroLocus.ClassNumberFinite := by
   classical
   intro F _ _ n S hS U hUo _
-  obtain ⟨T₀, hT₀, hx⟩ := GlobalTheory.T.classNumber_finite_integralLevel_closedSubgroupGL F n S (fun B _ _ =>
+  obtain ⟨T₀, hT₀, hx⟩ := _root_.GlobalTheory.ClassFin.classFinite_integralLevel F n S (fun B _ _ =>
     ⟨(hS B).1, fun g h hg hh => (hS B).2.1 g hg h hh, fun g hg => (hS B).2.2 g hg⟩)
-  have hK := GlobalTheory.T.isCompact_integralPoints_finiteAdelic_algebraicGroup F n S (HeckeCharacterZeroLocus.locusSubgroup S hS (FiniteAdeleRing (𝓞 F) F))
+  have hK := _root_.GlobalTheory.IntegralPointsCompact.isCompact_integral_points F n S (HeckeCharacterZeroLocus.locusSubgroup S hS (FiniteAdeleRing (𝓞 F) F))
     (fun g => Iff.rfl)
-  obtain ⟨T₁, hT₁⟩ := GlobalTheory.T.compact_meets_finitely_many_leftCosets_open _ U _ hUo hK
+  obtain ⟨T₁, hT₁⟩ := _root_.GlobalTheory.ClassFin.compact_subset_finite_leftCosets _ U _ hUo hK
   refine ⟨Finset.image₂ (fun (s : T₀) (t : HeckeCharacterZeroLocus.locusSubgroup S hS (FiniteAdeleRing (𝓞 F) F)) =>
     (⟨s.1, hT₀ s.1 s.2⟩ : HeckeCharacterZeroLocus.locusSubgroup S hS (FiniteAdeleRing (𝓞 F) F)) * t) T₀.attach T₁, ?_⟩
   intro x

@@ -2,20 +2,23 @@ module
 
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.GeneralLinearGroups.FirstIn
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
-import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.NotInSupportOfSubsingleton
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCuspProdCharTransport
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSubquotientRelativeJacquetBlockLevi
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetModuleInStagesRefinedBlocksStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PiExteriorTensorFlattenedIndexEquivNestedStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RelativeJacquetPiExteriorTensorEquivNormalizedStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSubquotientOfEquiv
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetModuleInStagesRefinedBlocks
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PiExteriorTensorFlattenedIndexEquivNested
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RelativeJacquetPiExteriorTensorEquivNormalized
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SupercuspidalSupportUniqueGL
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIrreducibleSubquotientTwoBlockConstituents
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIrreducibleTensorOfJacquetSubquotient
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PiExteriorTensorIsSubquotientOfForall
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.JacquetWordMultiplicityAdditiveJordanHolder
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParIndJacPlacing
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PiExteriorTensorSmoothIrreducibleIsIrreducibleStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.NontrivialOfIrreducible
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PiExteriorTensorSmoothIrreducibleIsIrreducible
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.GeneralLinearGroups.FPiece
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ExistsReadingLaws
+import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.NotInSupportOfSubsingleton
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParIndJacPlacing
 import Development.AutomorphicSpectrum.Proofs.GlobalProofs.HasSupportOfIsSubquotientProdIrr
 import Development.AutomorphicSpectrum.Proofs.GlobalProofs.IsSubquotientCompMulSingle
 import GroundTheory.LocalFields.PadicLogSeries
@@ -61,8 +64,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ExistsReadingLaws
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSubquotientOfEquiv
 
 @[expose] public section
 
@@ -118,12 +119,12 @@ private theorem coarse (hG : GlobalTheory.Published.GeometricLemma) (hBZ : Globa
     rw [← hx, Equiv.sum_comp finSigmaFinEquiv.symm (fun p : (Σ a, Fin (t a)) => (x p.1 p.2).1), Fintype.sum_sigma]
   let e := stdBlocks d hd
   let e' : ∀ a, (Σ b, Fin ((x a b).1)) ≃ Fin (d a) := fun a => stdBlocks (fun i => (x a i).1) rfl
-  obtain ⟨φR⟩ := GlobalTheory.T.piExteriorTensor_flattenedIndex_equiv_nested s t (fun a b => GL (Fin ((x a b).1)) k) _ fun a b => (x a b).rep
-  obtain ⟨φS⟩ := GlobalTheory.T.jacquetModule_in_stages_refined_blocks k s w.1 d e t (fun a b => (x a b).1) e' _ w.rep
+  obtain ⟨φR⟩ := _root_.GlobalTheory.JacStages.piTensor_flatHom_equiv s t (fun a b => GL (Fin ((x a b).1)) k) _ fun a b => (x a b).rep
+  obtain ⟨φS⟩ := _root_.GlobalTheory.JacStagesProof.jac_refinePlace_equiv k s w.1 d e t (fun a b => (x a b).1) e' _ w.rep
   obtain ⟨φP⟩ := (GlobalTheory.SmGL.Placing.parInd_jac_placing k _ _ _ (stdBlocks _ hx) (refinePlace e e') _).2 w.rep
   have hirr0 : (piTensor fun c : Fin (∑ a, t a) =>
       (x (finSigmaFinEquiv.symm c).1 (finSigmaFinEquiv.symm c).2).rep).IsIrreducible :=
-    GlobalTheory.T.piExteriorTensor_smoothIrreducible_isIrreducible hBZ k _ _ fun c => (x (finSigmaFinEquiv.symm c).1 (finSigmaFinEquiv.symm c).2).2.rep
+    _root_.GlobalTheory.ExtTensorIrr.piTensor_isIrreducible hBZ k _ _ fun c => (x (finSigmaFinEquiv.symm c).1 (finSigmaFinEquiv.symm c).2).2.rep
   have hirr1 := GlobalTheory.FinGL.Transport.isIrreducible_comp _
     (flatHom fun a b => GL (Fin ((x a b).1)) k) (flatHom_surjective _) hirr0
   have hirr : (piTensor fun a => piTensor fun b => (x a b).rep).IsIrreducible :=
@@ -139,7 +140,7 @@ private theorem coarse (hG : GlobalTheory.Published.GeometricLemma) (hBZ : Globa
   obtain ⟨σ, hσ⟩ := GlobalTheory.JacTensor.exists_irr_tensor_of_isSubquotient_jac hG k w.1 (Irr.ofIrrRep w.2.rep) s d e _
     (subQuot S T) hτ (isSubquotient_subQuot S T)
   let σ' : Fin s → IrrGL (k := k) := fun a => IrrGL.of (σ a).π (σ a).smooth (σ a).irr
-  have hσi : (piTensor fun a => (σ' a).rep).IsIrreducible := GlobalTheory.T.piExteriorTensor_smoothIrreducible_isIrreducible hBZ k _ _ fun a => (σ' a).2.rep
+  have hσi : (piTensor fun a => (σ' a).rep).IsIrreducible := _root_.GlobalTheory.ExtTensorIrr.piTensor_isIrreducible hBZ k _ _ fun a => (σ' a).2.rep
   have hσs : IsSmooth (piTensor fun a => (σ' a).rep) := isSmooth_piTensor fun a => (σ' a).2.rep.smooth
   have h4 : IsSubquotient (subQuot S T) (piTensor fun a => (σ' a).rep) :=
     hσ.trans (GlobalTheory.piTensor_isSubquotient_of_forall _ _ _ _ _ _ fun a =>
@@ -147,10 +148,10 @@ private theorem coarse (hG : GlobalTheory.Published.GeometricLemma) (hBZ : Globa
   obtain ⟨ψ⟩ := SupportUnique.nonempty_equiv_of_isSubquotient hτ hσi h4
   refine ⟨σ', hd, jhMult_ne_zero_iff.2 ((isSubquotient_of_equiv ψ).trans (isSubquotient_subQuot S T)),
     fun a => ⟨rfl, jhMult_ne_zero_iff.2 ?_⟩⟩
-  obtain ⟨φT⟩ := GlobalTheory.T.relativeJacquet_piExteriorTensor_equiv_normalized k s d t (fun a b => (x a b).1) e' _ fun a => (σ' a).rep
+  obtain ⟨φT⟩ := _root_.GlobalTheory.JacStages.relJacD_piTensor_equiv k s d t (fun a b => (x a b).1) e' _ fun a => (σ' a).rep
   have h5 := h3.trans ((isSubquotient_relJacD k s d t _ e' _ _ _ _ hσs h4).trans (isSubquotient_of_equiv φT))
   have hi : ∀ a, (piTensor fun b => (x a b).rep).IsIrreducible := fun a =>
-    GlobalTheory.T.piExteriorTensor_smoothIrreducible_isIrreducible hBZ k _ _ fun b => (x a b).2.rep
+    _root_.GlobalTheory.ExtTensorIrr.piTensor_isIrreducible hBZ k _ _ fun b => (x a b).2.rep
   exact SupportUnique.isSubquotient_factor (fun a => jac (e' a) (σ' a).rep) a (hi a)
     ((isSubquotient_comp_mulSingle (fun a => piTensor fun b => (x a b).rep) hi a).trans
       (SupportUnique.isSubquotient_comp h5 _))
@@ -160,7 +161,7 @@ private theorem supp_jm (hG : GlobalTheory.Published.GeometricLemma) (hBZ : Glob
     {A : Multiset (IrrGL (k := k))} (hA : HasSupport w.rep A) {T : Fin s → Multiset (IrrGL (k := k))}
     (hT : ∀ a, HasSupport (y a).rep (T a)) : A = ∑ a, T a := by
   obtain ⟨u, hu, rfl⟩ := exists_sum_of_jac hG hBZ hA (stdBlocks (fun a => (y a).1) hy)
-    (GlobalTheory.T.piExteriorTensor_smoothIrreducible_isIrreducible hBZ k _ _ fun a => (y a).2.rep) (jhMult_ne_zero_iff.1 h) (fun a => (y a).2.rep)
+    (_root_.GlobalTheory.ExtTensorIrr.piTensor_isIrreducible hBZ k _ _ fun a => (y a).2.rep) (jhMult_ne_zero_iff.1 h) (fun a => (y a).2.rep)
     (fun a => isSubquotient_comp_mulSingle (fun a => (y a).rep) (fun a => (y a).2.rep.irr) a)
   exact Finset.sum_congr rfl fun a _ => hasSupport_unique hG hBZ (hu a) (hT a)
 
@@ -267,7 +268,7 @@ private theorem cell (hG : GlobalTheory.Published.GeometricLemma) (hBZ : GlobalT
     ∃ s : ∀ i j, IrrCl (GL (Fin (b i j)) k),
       (∀ i, jm (fun j => (⟨b i j, s i j⟩ : IrrGL (k := k))) (hr i) (w i).rep ≠ 0) ∧
         ∀ j, jhMult (w j).rep (prodIrr (fun i => (⟨b i j, s i j⟩ : IrrGL (k := k))) (hc j)) ≠ 0 := by
-  have hτ : (piTensor fun j => (w j).rep).IsIrreducible := GlobalTheory.T.piExteriorTensor_smoothIrreducible_isIrreducible hBZ k _ _ fun j => (w j).2.rep
+  have hτ : (piTensor fun j => (w j).rep).IsIrreducible := _root_.GlobalTheory.ExtTensorIrr.piTensor_isIrreducible hBZ k _ _ fun j => (w j).2.rep
   have hρ : IsSmooth (piTensor fun i => (w i).rep) := isSmooth_piTensor fun i => (w i).2.rep.smooth
   obtain ⟨T, -, hT⟩ := (hG k).2 (Fin h) (Fin h) (fun i => Fin (w i).1) (fun i => Fin (w i).1) _ f g _
     (fun i => (w i).rep) (fun i => (w i).2.rep.smooth) (fun i => hasFiniteLength_of_isIrreducible (w i).2.rep.irr)
@@ -305,7 +306,7 @@ theorem UpperTheory.Lit.Full.diag3 :
     refine ⟨fun i => ?_, fun j => ?_⟩
     · simp [M]
     · simp [M]⟩
-  have hτ : (piTensor fun j => (w j).rep).IsIrreducible := GlobalTheory.T.piExteriorTensor_smoothIrreducible_isIrreducible hBZ k _ _ fun j => (w j).2.rep
+  have hτ : (piTensor fun j => (w j).rep).IsIrreducible := _root_.GlobalTheory.ExtTensorIrr.piTensor_isIrreducible hBZ k _ _ fun j => (w j).2.rep
   have hρ : IsSmooth (piTensor fun i => (w i).rep) := isSmooth_piTensor fun i => (w i).2.rep.smooth
   obtain ⟨f₀, g₀, ⟨E₀⟩⟩ := GlobalTheory.CompanionTheory.Hypotheses₂.TD.cell_diag b₀ (fun i j hj => by simp [b₀, Ne.symm hj]) _ hρ
   let f : ∀ (b : SizeMatrix M M) i, (Σ j, Fin (b.1 i j)) ≃ M i := fun b =>

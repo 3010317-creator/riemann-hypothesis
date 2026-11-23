@@ -2,13 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.RealMetaplecticRepresentation
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianFormConstMulInnerStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixCoeffContinuousRapidDecayStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RhoInvariantFormConstMulInnerStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerOrthogonalityRelationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerRepSchwartzPolynomialBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerRepUnitaryStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzFunctionalIntegralCommStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianFormConstMulInner
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixCoeffContinuousRapidDecay
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RhoInvariantFormConstMulInner
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerOrthogonalityRelation
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerRepSchwartzPolynomialBound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerRepUnitary
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzFunctionalIntegralComm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,12 +78,12 @@ theorem step (n : ℕ) (B : Sch (Fin n) → Sch (Fin n) → ℂ)
   obtain ⟨L, hL⟩ := hB f'
   set ip : ℂ := ∫ x, f x * starRingEnd ℂ (g x) with hip
   set c : (Fin n ⊕ Fin n → ℝ) → ℂ := fun w => starRingEnd ℂ (∫ t, rhoFun w ⇑g t * starRingEnd ℂ (g' t)) with hc
-  have hcc : Continuous c := Complex.continuous_conj.comp (GlobalTheory.T.matrix_coeff_continuous_rapid_decay n g g').1
+  have hcc : Continuous c := Complex.continuous_conj.comp (_root_.GlobalTheory.matrixCoeff_continuous_rapidDecay n g g').1
   have hint : ∀ k m : ℕ, Integrable (fun w => ‖c w‖ * SchwartzMap.seminorm ℂ k m (G w)) := by
     intro k m
     obtain ⟨C, N, hC⟩ := hGb k m
     set d : ℕ := Module.finrank ℝ (Fin n ⊕ Fin n → ℝ)
-    obtain ⟨C', hC'⟩ := (GlobalTheory.T.matrix_coeff_continuous_rapid_decay n g g').2 (N + (d + 1))
+    obtain ⟨C', hC'⟩ := (_root_.GlobalTheory.matrixCoeff_continuous_rapidDecay n g g').2 (N + (d + 1))
     have hsc : Continuous fun w => SchwartzMap.seminorm ℂ k m (G w) :=
       ((schwartz_withSeminorms ℂ (EuclideanSpace ℝ (Fin n)) ℂ).continuous_seminorm (k, m)).comp hGc
     have hI : Integrable (fun w : Fin n ⊕ Fin n → ℝ => (1 + ‖w‖) ^ (-((d + 1 : ℕ) : ℝ))) :=
@@ -115,8 +115,8 @@ theorem step (n : ℕ) (B : Sch (Fin n) → Sch (Fin n) → ℂ)
   have hpt : ∀ x, (ip • g') x = ∫ w, c w * G w x := by
     intro x
     simp only [SchwartzMap.smul_apply, smul_eq_mul, hc, hG]
-    rw [GlobalTheory.T.schrodinger_orthogonality_relation n f g g' x]
-  have key := GlobalTheory.T.schwartz_functional_integral_comm (Fin n ⊕ Fin n → ℝ) volume n L G c (ip • g') hGc hcc hint hpt
+    rw [_root_.GlobalTheory.MoyalPointwise.moyal_pointwise n f g g' x]
+  have key := _root_.GlobalTheory.SchwartzIntegral.clm_integral_interchange (Fin n ⊕ Fin n → ℝ) volume n L G c (ip • g') hGc hcc hint hpt
   calc ip * B g' f' = B (ip • g') f' := by rw [hL, hL, map_smul, smul_eq_mul]
     _ = ∫ w, c w * L (G w) := by rw [hL]; exact key
     _ = ∫ w, c w * B (G w) f' := by simp only [hL]
@@ -128,9 +128,9 @@ theorem core : ∀ (n : ℕ) (B : GlobalTheory.RealWeil.Sch (Fin n) → GlobalTh
       ⇑g' = GlobalTheory.RealWeil.rhoFun w ⇑h' → B g g' = B h h') →
     ∃ c : ℝ, 0 ≤ c ∧ ∀ h h', B h h' = c * ∫ x, h x * starRingEnd ℂ (h' x) := by
   intro n B hB hherm hpos hinv
-  refine GlobalTheory.T.hermitian_form_const_mul_inner n B hherm hpos fun f f' g g' => ?_
-  obtain ⟨G, hGc, hG, hGb⟩ := GlobalTheory.T.schrodinger_rep_schwartz_polynomial_bound n f
-  obtain ⟨G', hG'c, hG', hG'b⟩ := GlobalTheory.T.schrodinger_rep_schwartz_polynomial_bound n f'
+  refine _root_.GlobalTheory.hermitian_form_eq_smul_l2 n B hherm hpos fun f f' g g' => ?_
+  obtain ⟨G, hGc, hG, hGb⟩ := _root_.GlobalTheory.RealWeil.SchrFamily.exists_continuous_schwartz_rhoFun n f
+  obtain ⟨G', hG'c, hG', hG'b⟩ := _root_.GlobalTheory.RealWeil.SchrFamily.exists_continuous_schwartz_rhoFun n f'
   have s1 := step n B hB f f' g g' G hGc hG hGb
   have s2 := step n B hB f' f g' g G' hG'c hG' hG'b
   set mc : Sch (Fin n) → Sch (Fin n) → (Fin n ⊕ Fin n → ℝ) → ℂ :=
@@ -142,7 +142,7 @@ theorem core : ∀ (n : ℕ) (B : GlobalTheory.RealWeil.Sch (Fin n) → GlobalTh
     have e2 : mc g g' w = ∫ t, g t * starRingEnd ℂ (rhoFun (-w) ⇑g' t) := by
       simp only [hmc]
       conv_lhs => rw [← rhoFun_neg_cancel w ⇑g']
-      exact GlobalTheory.T.schrodinger_rep_unitary n w ⇑g (rhoFun (-w) ⇑g')
+      exact _root_.GlobalTheory.RealWeil.integral_rhoFun_mul_conj n w ⇑g (rhoFun (-w) ⇑g')
     rw [e1, hherm, e2, ← integral_conj]
     simp only [hmc, map_mul, Complex.conj_conj]
     congr 1
@@ -175,6 +175,6 @@ theorem schrodinger_intertwiner_l2_const : ∀ (F : Type) [Field F] [NumberField
       ∃ c : ℝ, 0 ≤ c ∧ ∀ μ : @Measure (κ → mixedEmbedding.mixedSpace F) (borel _),
         @Measure.IsAddHaarMeasure _ _ _ (borel _) μ → ∀ f f' : SInf F κ,
           @integral _ ℂ _ _ (borel _) μ (fun x => T f x * starRingEnd ℂ (T f' x)) =
-            (c : ℂ) * @integral _ ℂ _ _ (borel _) μ (fun x => f x * starRingEnd ℂ (f' x)) := GlobalTheory.T.rho_invariant_form_const_mul_inner core
+            (c : ℂ) * @integral _ ℂ _ _ (borel _) μ (fun x => f x * starRingEnd ℂ (f' x)) := _root_.GlobalTheory.ArchUniq.FormTransport.const_of_euclidean core
 
 end GlobalTheory.SvNForm

@@ -1,8 +1,8 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.TwistedFactors.LocalBaseChange.StrictDominanceCasselman.IsStrictlyDominant
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DominantIwahoriCosetRepsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeckeOperatorCosetSumStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DominantIwahoriCosetReps
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeckeOperatorCosetSum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,9 +55,9 @@ namespace GlobalTheory.CompanionTheory.Lbc
 theorem hecke_dominant_mul : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k]
     [IsNonarchimedeanLocalField k], PositivityTheory.Lbc.C1 k := by
   intro k _ _ _ _ N h d hd J hJo hJc hIw hpos V _ _ π hπ t t' ht ht' T T' hT hT' v l hl
-  obtain ⟨r, hr, x, hxN, hx⟩ := GlobalTheory.T.dominant_iwahori_coset_reps k N h d hd J hJo hJc hIw hpos t' ht'
+  obtain ⟨r, hr, x, hxN, hx⟩ := _root_.GlobalTheory.CompanionTheory.Casselman.exists_fin_KN_coset_reps k N h d hd J hJo hJc hIw hpos t' ht'
   have hxJ : ∀ i, x i ∈ J := fun i => (hxN i).1
-  have hform := GlobalTheory.T.hecke_operator_coset_sum k N J hJc V π hπ _ T' hT' r x hr hxJ hx v
+  have hform := _root_.GlobalTheory.CompanionTheory.HeckeAvg.hecke_eq_average k N J hJc V π hπ _ T' hT' r x hr hxJ hx v
   have hr0 : (r : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr hr.ne'
   set g := leviEmb k (stdBlocks d hd) t with hg
   set g' := leviEmb k (stdBlocks d hd) t' with hg'

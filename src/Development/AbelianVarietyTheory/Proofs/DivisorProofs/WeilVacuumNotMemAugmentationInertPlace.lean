@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLagrangianInvariantFormInertVacuumStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLagrAt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLagrangianInvariantFormInertVacuum
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvOfHeisInv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -54,7 +55,7 @@ theorem vac_not_mem_augAt : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
     ∀ (v : Pl (F := F)) (w : HeightOneSpectrum (𝓞 E)), Formalism.UG.IsInertAt F E v w → v ∉ X.T →
     G.M'.vac v ∉ augAt om' v := by
   intro F E _ _ _ _ _ σ B a a' G X om om' hT v w hvw hvT hmem
-  obtain ⟨C, l, hC, hl, hne⟩ := GlobalTheory.T.exists_lagrangian_invariantForm_inertVacuum F E σ B a a' G X om om' hT v w hvw hvT
+  obtain ⟨C, l, hC, hl, hne⟩ := _root_.GlobalTheory.InertVacLagP.exists_lagr_inv_vac F E σ B a a' G X om om' hT v w hvw hvT
   have hle : augAt om' v ≤ LinearMap.ker l := by
     refine Submodule.span_le.2 ?_
     rintro z ⟨g, hg, φ, hφ, φ₁, hφ₁, ha, rfl⟩

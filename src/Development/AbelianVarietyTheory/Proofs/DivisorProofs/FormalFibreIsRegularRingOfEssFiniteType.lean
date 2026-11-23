@@ -3,9 +3,13 @@ module
 public import Mathlib.FieldTheory.Perfect
 public import Mathlib.RingTheory.AdicCompletion.Algebra
 public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdicCompletionTensorQuotientRingEquivStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSurjLocalizationMvPolynomialOfEssFiniteTypStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsRegularRingFormalFibreMvPolynomialPerfectStatement
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Defs
+public import Mathlib.RingTheory.TensorProduct.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdicCompletionTensorQuotientRingEquiv
+public import Mathlib.RingTheory.EssentialFiniteness
+public import Mathlib.RingTheory.Localization.AtPrime.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSurjLocalizationMvPolynomialOfEssFiniteTyp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsRegularRingFormalFibreMvPolynomialPerfect
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,7 +65,7 @@ theorem formalFibre_isRegularRing_of_essFiniteType :
       (∀ a : Λ, algebraMap R K (algebraMap Λ R a) = 0 → a = 0) →
       IsRegularRing (AdicCompletion (maximalIdeal R) R ⊗[R] K) := by
   intro Λ _ _ _ _ R K _ _ _ _ _ _ _ hK
-  obtain ⟨n, P, hP, φ, hφ⟩ := GlobalTheory.T.exists_surj_localization_mvPolynomial_of_essFiniteType_local Λ R
+  obtain ⟨n, P, hP, φ, hφ⟩ := _root_.GlobalTheory.exists_surj_localization_mvPolynomial_of_essFiniteType Λ R
   let R₀ := Localization.AtPrime P
   letI : Algebra R₀ R := φ.toRingHom.toAlgebra
   letI : Algebra R₀ K := ((algebraMap R K).comp φ.toRingHom).toAlgebra
@@ -77,8 +81,8 @@ theorem formalFibre_isRegularRing_of_essFiniteType :
     have h1 : algebraMap R₀ K (algebraMap Λ R₀ a) = algebraMap R K (φ (algebraMap Λ R₀ a)) := rfl
     rw [h1, φ.commutes] at ha
     exact ha
-  have hreg := GlobalTheory.T.isRegularRing_formal_fibre_mvPolynomial_perfect Λ n P K hK₀
-  obtain ⟨e⟩ := GlobalTheory.T.nonempty_adicCompletion_tensor_ringEquiv_of_surjective R₀ R K hsurj
+  have hreg := _root_.GlobalTheory.isRegularRing_adicCompletion_tensor_of_mvPolynomial Λ n P K hK₀
+  obtain ⟨e⟩ := _root_.GlobalTheory.adicCompletion_tensor_quotient_ringEquiv R₀ R K hsurj
   exact IsRegularRing.of_ringEquiv e.symm
 
 end GlobalTheory

@@ -1,11 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NotDvdCondN
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CompletionEmbeddingsSingleFrobeniusOrbitStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsUniqueEmbeddingReadsGaloisElementStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsUniqueEmbeddingRestrictsToWachLetterUnramiStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FrobGIsArithFrobAndSignStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PeriodDatumFrobeniusRestrictHostFieldStatement
+public import Formalism.LocalRingCardinality.DataHost
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CompletionEmbeddingsSingleFrobeniusOrbit
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsUniqueEmbeddingReadsGaloisElement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsUniqueEmbeddingRestrictsToWachLetterUnrami
+public import Formalism.LocalRingCardinality.DataDIV
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FrobGIsArithFrobAndSign
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PeriodDatumFrobeniusRestrictHostField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,8 +60,8 @@ theorem reads_orbit_invFrob : ∀ (D : D7) {l : ℕ} [Fact l.Prime] (P : LocPrim
   intro D l _ P K LL W c κ h2 hq hd hcl hK
   set φ := DV.frobG D l with hφ
   set n := Module.finrank ℚ_[l] ↥(K0 K) with hn
-  have hτ := fun a => GlobalTheory.T.existsUnique_embeddingRestrictsToWachLetter_unramified P K LL W hK a
-  have hg := fun τ => GlobalTheory.T.existsUnique_embeddingReadsGaloisElement D.host K LL c κ τ
+  have hτ := fun a => _root_.GlobalTheory.HTW.Rec.existsUnique_over P K LL W hK a
+  have hg := fun τ => _root_.GlobalTheory.HTW.Rec.existsUnique_reads D.host K LL c κ τ
   let τa : ZMod n → (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) := fun a => (hτ a).exists.choose
   have hover : ∀ a, Over W (τa a) a := fun a => (hτ a).exists.choose_spec
   let g : ZMod n → D.R.GG := fun a => (hg (τa a)).exists.choose
@@ -78,7 +81,7 @@ theorem reads_orbit_invFrob : ∀ (D : D7) {l : ℕ} [Fact l.Prime] (P : LocPrim
       rw [map_one]; rfl
     let y : ↥(K0 K) := ⟨((c x : ↥K.1) : Om l), ⟨(c x).2, hK (c x).2⟩⟩
     have hy : algebraMap ↥(K0 K) ↥K.1 y = c x := Subtype.ext rfl
-    have hσ := GlobalTheory.T.periodDatum_frobenius_restrict_hostField D P K c h2 hq hd x y hy
+    have hσ := _root_.GlobalTheory.FrobPeriod.periodFrob_restrict D P K c h2 hq hd x y hy
     have ov : ∀ b (t : ↥(K0 K)), τa b (algebraMap ↥(K0 K) ↥K.1 t) = W.emb b t := by
       intro b t
       have := congrArg (fun f => f t) (hover b)
@@ -107,11 +110,11 @@ theorem reads_orbit_invFrob : ∀ (D : D7) {l : ℕ} [Fact l.Prime] (P : LocPrim
         rw [this]; exact Ideal.zero_mem _)
     have := hQ
     have : Q.LiesOver (Ideal.span {(l : ℤ)}) := ⟨hQc.symm⟩
-    have hfrob := (GlobalTheory.T.frobG_isArithFrobAt_and_sign_eq_jacobiSym D l h2 hq hd).1 Q
+    have hfrob := (_root_.GlobalTheory.FrobSign.frobG_isArithFrob_and_sign D l h2 hq hd).1 Q
     let c' : D.host.E →+* PadicAlgCl l := (K.1.val : ↥K.1 →ₐ[ℚ_[l]] Om l).toRingHom.comp c
     have hc' : ∀ x, c' x ∈ K.1 := fun x => (c x).2
     have hcl' : (K.1 : Set (PadicAlgCl l)) ⊆ closure (Set.range c') := hcl
-    have := (GlobalTheory.T.completion_embeddings_single_frobenius_orbit D.host l h2 hq hd c' K hc' hcl' Q (D.host.sigmaOf φ) hfrob).1
+    have := (_root_.GlobalTheory.LocalFrobeniusOrbit.embeddings_orbit D.host l h2 hq hd c' K hc' hcl' Q (D.host.sigmaOf φ) hfrob).1
     have hφg : D.host.galE (D.host.sigmaOf φ) = φ :=
       (D.host.gal).apply_symm_apply φ
     rw [hfr, this, hφg]

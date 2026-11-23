@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InfOfNodupAlg
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitPlaceLocalComponentExistsUniqueClassStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RingSpecNormalisedCharacterEq
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitPlaceLocalComponentExistsUniqueClass
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,7 +60,7 @@ theorem conjLoc_exists_split (D : D7) (s : SplitPlace D.host.E) (w : PlE D.host)
 theorem conjLoc (D : D7) (π : NG.AutRep D.host.E D.R.nV) (s : SplitPlace D.host.E) (w : PlE D.host)
     (h : IsConjPl D.host w s.w) : ∃ x, GlobalTheory.AutQuot.LocAt π w x := by
   obtain ⟨s', rfl⟩ := conjLoc_exists_split D s w h
-  obtain ⟨σ, hσ, -⟩ := GlobalTheory.T.splitPlaceLocalComponent_exists_unique_class D.host.E D.R.nV π s'
+  obtain ⟨σ, hσ, -⟩ := _root_.GlobalTheory.LocCompSplit.main D.host.E D.R.nV π s'
   exact ⟨_, s', σ, rfl, hσ, HEq.rfl⟩
 
 end GlobalTheory.AutQuot

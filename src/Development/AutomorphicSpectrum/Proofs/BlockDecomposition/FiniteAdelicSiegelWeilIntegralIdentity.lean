@@ -1,8 +1,10 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermInf
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FiniteAdeleTopologyStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRingStatement
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.CountData
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FiniteAdeleTopology
+public import Formalism.UnipotentAdelicQuotients.SWXSDefs
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteAdelicIntegralInvariantOpenSubgroupStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteLocalOrbitalIntegralBoundedStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianFiniteAdelesDenseRationalStatement
@@ -10,6 +12,7 @@ public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ScaledIn
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SummableDenominatorPowerOfLtStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SummableOverLatticeQuotientLocallyConstantStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SummablePeriodicBoundByDenominatorStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ModerateGrowthSchwartz
 import Formalism.LocalRingCardinality.DataHost
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.TensTop
 import Mathlib.Algebra.Order.Floor.Extended
@@ -52,7 +55,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ModerateGrowthSchwartz
 import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.WeilSiegelTheta.BigCellDefs
 
 @[expose] public section
@@ -75,11 +77,11 @@ theorem integrable_starLoc_fin : ∀ (F E : Type) [Field F] [NumberField F] [Fie
   ∀ Q : (Fin n → Fin M → Af F ⊗[F] E) → ℂ, IsSB Q →
     Integrable (starLoc (Af F) σ J (psiFin F ψ) μ Q) ν := by
   intro F E _ _ _ _ _ σ hCM M J hJ n hn ψ hψ μ hμ ν hν Q hQ
-  obtain ⟨hLC, hSC, hT2, -, -, -, -, -, -, -⟩ := GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F
+  obtain ⟨hLC, hSC, hT2, -, -, -, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
   haveI := hLC
   haveI := hSC
   haveI := hT2
-  obtain ⟨hTR, -, hSC2, -, -, -, -, -, -, -⟩ := GlobalTheory.T.tensor_locally_compact_ring F E σ hCM (Af F)
+  obtain ⟨hTR, -, hSC2, -, -, -, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Af F)
   haveI := hTR
   haveI := hSC2
   haveI : SecondCountableTopology (Matrix (Fin n) (Fin n) (Af F ⊗[F] E)) :=

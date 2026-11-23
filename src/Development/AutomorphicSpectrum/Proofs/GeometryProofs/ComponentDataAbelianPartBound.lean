@@ -2,11 +2,14 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsPeriodAtRestrict
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FrameDefinitions.Weights
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointsIffCentresStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointsIffCentres
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordValuationBoundLocal
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.StalkClosedPointToToStalk
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ValAtComplexEmbedding
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ValAtIffValueAtStatement
+public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.CoordinateIdeals
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ValAtIffValueAt
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.ExistsRingHomComplex
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -131,10 +134,10 @@ theorem vertical_value : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   have hξ := hT.gen
   have hwe := fun e : L →+* ℂ => coords_map Or.𝔐.ξ hw e
   have hm : ∀ e : L →+* ℂ, (fun q => e (w q)) ∈ mcPts (mCoordIdeal Dc.y) := fun e =>
-    (GlobalTheory.T.complex_points_iff_centres _ _ _ K J _ hT _).2 ⟨_, Or.𝔐.all _, hwe e⟩
+    (_root_.GlobalTheory.CompanionTheory.Ar.mem_mcPts_iff_exists_coordsAt _ _ _ K J _ hT _).2 ⟨_, Or.𝔐.all _, hwe e⟩
   have tv : ∀ (e : L →+* ℂ) (a : Ω) (r : ℂ),
       ValAt Or.𝔐.ξ (spMap e ≫ z) a r ↔ IsValueAt Dc.y a (fun q => e (w q)) r :=
-    fun e a r => GlobalTheory.T.valAt_iff_value_at _ _ _ K J _ hT _ _ (Or.𝔐.all _) (hwe e) a r
+    fun e a r => _root_.GlobalTheory.CompanionTheory.Ar.valAt_iff_isValueAt_coords _ _ _ K J _ hT _ _ (Or.𝔐.all _) (hwe e) a r
   have hne := GlobalTheory.CompanionTheory.Ar.ProvConj.valAt_ne_zero (Dc.S_prime p hp).ne_zero (Dc.vertical p hp) (hm e₀) cc
     (fun k => (map_ne_zero e₀).2 (hcc k)) Dc.arith.2.1.2.1
   have hex : ∃ v, IsValueAt Dc.y (MvPolynomial.aeval Dc.y (Dc.vnum p) / MvPolynomial.aeval Dc.y (Dc.vden p) *

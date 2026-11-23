@@ -1,12 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyMeasAndReps
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AddHaarProperSubmoduleEqZeroModuleTopologyStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSubringEqOKStatement
+public import Mathlib.Analysis.Normed.Field.Basic
+public import Mathlib.MeasureTheory.Group.Measure
+public import Mathlib.Topology.Algebra.Module.ModuleTopology
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AddHaarProperSubmoduleEqZeroModuleTopology
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsTestRep
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSubringEqOK
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteUnitsQuotSqFiniteEtaleHermitianPair
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsCompactFiniteEtaleHermitianPairOK
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsOpenFiniteEtaleHermitianPairOK
+public import Mathlib.RingTheory.Norm.Transitivity
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteNormedAlgebraEqModuleTopology
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteUnitsQuotSqFiniteEtaleHermitianPairStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsCompactFiniteEtaleHermitianPairOKStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsOpenFiniteEtaleHermitianPairOKStatement
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.QuadraticStarStructure
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -56,7 +61,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.RingTheory.Norm.Transitivity
 
 @[expose] public section
 
@@ -167,7 +171,7 @@ theorem nonunits_null [U : Unram F E] (A : Et F E) (μ : Measure A.K) (hμ : μ.
     obtain ⟨m, hm, htm⟩ := exists_max_ideal_of_mem_nonunits (show t ∈ nonunits A.K from ht)
     exact Set.mem_biUnion hm htm
   refine measure_mono_null hsub ((measure_biUnion_null_iff hfin.countable).2 fun m hm => ?_)
-  have h := GlobalTheory.T.addHaar_proper_submodule_eq_zero_moduleTopology F A.K μ hμ (m.restrictScalars F) (fun h => hm.ne_top ?_)
+  have h := _root_.GlobalTheory.HaarNullSub.addHaar_submodule_eq_zero F A.K μ hμ (m.restrictScalars F) (fun h => hm.ne_top ?_)
   · exact h
   · rw [Ideal.eq_top_iff_one]
     have : (1 : A.K) ∈ m.restrictScalars F := h ▸ Submodule.mem_top
@@ -178,10 +182,10 @@ theorem main : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedF
   have := U.charZero; have := U.lcF
   have : ProperSpace F := .of_nontriviallyNormedField_of_weaklyLocallyCompactSpace F
   obtain ⟨-, -, hN, htr, -⟩ := GlobalTheory.JR.Et.quadratic_structure F E A
-  have hq := finite_quot A (GlobalTheory.T.finite_units_quot_sq_finiteEtaleHermitianPair F E A)
+  have hq := finite_quot A (_root_.GlobalTheory.Et.finite_units_quot_sq F E A)
   refine ⟨hN, htr, ⟨fun x hx => ?_, fun x hx => ?_⟩, fun y _ => eta_NL A y, eta_neg_one A,
     (GlobalTheory.isOpenUnits_and_eventually_sq F A.K).2, finite_reps_exists A hq, finite_of_reps A hq,
-    nonunits_null A, GlobalTheory.T.isOpen_finiteEtaleHermitianPair_OK F E A, GlobalTheory.T.isCompact_finiteEtaleHermitianPair_OK F E A, GlobalTheory.T.exists_subring_eq_OK F E A⟩
+    nonunits_null A, _root_.GlobalTheory.JR.OKOpen.isOpen_OK F E A, _root_.GlobalTheory.JR.OKCompact.okCompact F E A, _root_.GlobalTheory.JR.Et.OK_isSubring F E A⟩
   · exact EtMeas.eq_zero_of_trace F A.K x fun y => by simpa using hx y
   · exact EtMeas.eq_zero_of_trace F A.K x fun y => by simpa [mul_comm] using hx y
 

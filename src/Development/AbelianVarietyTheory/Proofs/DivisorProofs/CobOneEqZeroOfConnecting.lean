@@ -2,15 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RigOfOmegaInjectiveOfEqZero
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PrismaticDieudonnePerfdIff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdditiveFunctionCartierDualTangentBijectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdditiveFunctionCartierDualTangentBijective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdditiveFunctionsFlatBaseChangeBijectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BialgebraPullbackTwoConvMulSymmetricCocycleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoboundaryTranslationInvariantPTorsionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsExtensionAdditiveFnPDivGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPullbackMulPOfPTorsionInvariantStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqZeroOfCobOneEqZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BialgebraPullbackTwoConvMulSymmetricCocycle
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoboundaryTranslationInvariantPTorsion
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsExtensionAdditiveFnPDivGroup
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPullbackMulPOfPTorsionInvariant
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemSymmetricCocyclesOfPullbackMulPStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OmegaBaseChangeBijectiveOfPEqZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivCocycleMemRangeCobOfPullbackMulPStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivCocycleMemRangeCobOfPullbackMulP
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrimitiveSemilinearLiftBaseChangeBijectiveStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -97,7 +98,7 @@ theorem vecExtMap_add (f g : G ⟶ H) : vecExtMap (f + g) = vecExtMap f + vecExt
   change Submodule.Quotient.mk (cocyclesMap (f + g) c) =
     Submodule.Quotient.mk (cocyclesMap f c + cocyclesMap g c)
   refine (Submodule.Quotient.eq _).2 ⟨B, Subtype.ext (funext fun n => ?_)⟩
-  exact eq_sub_iff_add_eq'.2 (T.bialgebraPullbackTwo_convMul_symmetricCocycle (f.app n) (g.app n) (c.1 n) (c.2 n).1).symm
+  exact eq_sub_iff_add_eq'.2 (_root_.GlobalTheory.PDiv.pullTwo_convMul (f.app n) (g.app n) (c.1 n) (c.2 n).1).symm
 
 theorem SemiHom.ofHom_vecExt (f : G ⟶ H) (x : H.VecExt) :
     (SemiHom.ofHom f).vecExt x = vecExtMap f x := by
@@ -163,8 +164,8 @@ theorem connecting_unique (hp : (p : R) = 0) {x : G.VecExt} {b b' : G.A 1}
 theorem exists_of_cobOne_eq_zero {b : G.A 1} (hb : cobOne R _ b = 0) :
     ∃ x : G.VecExt, (∃ (c : G.cocycles) (B : G.funs), Submodule.Quotient.mk c = x ∧
       G.cob B = cocyclesMap ((p : ℤ_[p]) • 𝟙 G) c ∧ Coalgebra.counit (R := R) b = 0 ∧ B.1 1 = b) := by
-  obtain ⟨B, hB, hB'⟩ := T.exists_extension_additive_fn_pDivGroup G b hb
-  choose c hc using fun n => T.exists_pullback_mulP_of_pTorsion_invariant G n _ (T.coboundary_translation_invariant_pTorsion G n _ b (hB' n)).1 (T.coboundary_translation_invariant_pTorsion G n _ b (hB' n)).2
+  obtain ⟨B, hB, hB'⟩ := _root_.GlobalTheory.PDivGroup.exists_funs_transl_eq_add G b hb
+  choose c hc using fun n => _root_.GlobalTheory.PDivGroup.exists_tensorSquare_mulP_eq G n _ (_root_.GlobalTheory.PDivGroup.cobOne_transl_invariant G n _ b (hB' n)).1 (_root_.GlobalTheory.PDivGroup.cobOne_transl_invariant G n _ b (hB' n)).2
   have h1 : ∀ n, pullbackTwo (G.res n) (c (n + 1)) = c n := fun n => G.pullbackTwo_mulP_injective n (by
     rw [← pullTwo_comp, mulP_comp_res, ← res_comp_mulP, pullTwo_comp, hc, hc, pullTwo_cobOne, B.2])
   let c' : G.cocycles := ⟨c, fun n => ⟨T.mem_symmetricCocycles_of_pullback_mulP G n _ (hc n ▸ cobOne_mem _), h1 n⟩⟩
@@ -200,7 +201,7 @@ theorem extChar_eq_iff (hp : (p : R) = 0) (x : G.VecExt) (b : G.A 1) :
 theorem extChar_bijective (hp : (p : R) = 0) : Function.Bijective (G.extChar hp) := by
   refine ⟨(injective_iff_map_eq_zero _).2 fun x hx => ?_, fun b => ?_⟩
   · obtain ⟨c, B, rfl, h1, -, h3⟩ := (G.extChar_eq_iff hp x 0).1 (congrArg Subtype.val hx)
-    exact (Submodule.Quotient.mk_eq_zero _).2 (T.pDivCocycle_mem_range_cob_of_pullback_mulP G c B h1 h3)
+    exact (Submodule.Quotient.mk_eq_zero _).2 (_root_.GlobalTheory.cocycle_mem_range_cob_of_pullback_mulP G c B h1 h3)
   · obtain ⟨x, hx⟩ := exists_of_cobOne_eq_zero b.2
     exact ⟨x, Subtype.ext ((G.extChar_eq_iff hp x _).2 hx)⟩
 
@@ -238,7 +239,7 @@ theorem extChar_vecExtMap (hp : (p : R) = 0) (f : G ⟶ H) (x : H.VecExt) :
 omit [Fact p.Prime] in
 variable (G) in
 theorem primLie_bijective (hp : (p : R) = 0) : Function.Bijective G.primLie :=
-  (LinearEquiv.ofBijective _ (G.dual.omegaLevel_one_bijective hp)).dualMap.bijective.comp T.additiveFunctionCartierDualTangent_bijective
+  (LinearEquiv.ofBijective _ (G.dual.omegaLevel_one_bijective hp)).dualMap.bijective.comp _root_.GlobalTheory.PDiv.primTangent_bijective
 
 theorem primLie_naturality (f : G ⟶ H) (b : LinearMap.ker (cobOne R (H.A 1)))
     (b' : LinearMap.ker (cobOne R (G.A 1))) (h : b'.1 = f.app 1 b.1) :

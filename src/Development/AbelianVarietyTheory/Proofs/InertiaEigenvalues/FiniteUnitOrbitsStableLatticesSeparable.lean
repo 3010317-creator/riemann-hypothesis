@@ -4,11 +4,19 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ComapIn
 public import Mathlib.LinearAlgebra.FreeModule.PID
 public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqSubmoduleMulLeftImageIntegralClosureOfSeparablStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAevalEqOfMulLeftCharpolySeparableStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCommonDenominatorAevalOfFgStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteSubmodulesBetweenSmulAndSelfStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegralClosureFgDvrOfSeparableCharpolyStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqSubmoduleMulLeftImageIntegralClosureOfSeparabl
+public import Mathlib.FieldTheory.Separable
+public import Mathlib.LinearAlgebra.Charpoly.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAevalEqOfMulLeftCharpolySeparable
+public import Mathlib.Algebra.Polynomial.AlgebraMap
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Mathlib.RingTheory.Localization.FractionRing
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCommonDenominatorAevalOfFg
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Mathlib.RingTheory.LocalRing.ResidueField.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteSubmodulesBetweenSmulAndSelf
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegralClosureFgDvrOfSeparableCharpoly
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -74,9 +82,9 @@ theorem aeval_mul_mem_of_stable {O A : Type} [CommRing O] [CommRing A] [Algebra 
 theorem finite_orbits_stLat_of_separable : ∀ (O E A : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [Finite (IsLocalRing.ResidueField O)] [Field E] [Algebra O E] [IsFractionRing O E] [CommRing A] [Algebra O A] [Algebra E A] [IsScalarTower O E A] [Module.Finite E A] (g : A), (LinearMap.mulLeft E g).charpoly.Separable → Finite (MulAction.orbitRel.Quotient Aˣ (stLat O E g)) := by
   intro O E A _ _ _ _ _ _ _ _ _ _ _ _ g hsep
   set C : Submodule O A := Subalgebra.toSubmodule (integralClosure O A) with hCdef
-  have hCfg : C.FG := GlobalTheory.T.integralClosure_fg_dvr_of_separable_charpoly O E A g hsep
-  obtain ⟨c, hc0, hc⟩ := GlobalTheory.T.exists_common_denominator_aeval_of_fg' O E A g (GlobalTheory.T.exists_aeval_eq_of_mulLeft_charpoly_separable E A g hsep) C hCfg
-  have hfin := GlobalTheory.T.finite_setOf_submodule_between_smul_and_fg O A C hCfg c hc0
+  have hCfg : C.FG := _root_.GlobalTheory.IntClosureSep.integralClosure_fg_of_separable_charpoly O E A g hsep
+  obtain ⟨c, hc0, hc⟩ := _root_.GlobalTheory.exists_common_denominator_aeval_of_fg O E A g (_root_.GlobalTheory.SepGenElt.exists_aeval_eq E A g hsep) C hCfg
+  have hfin := _root_.GlobalTheory.finite_submodules_between_smul_and_self O A C hCfg c hc0
 
   have key : ∀ M : stLat O E g, ∃ t : Aˣ, mulLat O ((t⁻¹ : Aˣ) : A) (M : Submodule O A) ∈
       {N : Submodule O A | N ≤ C ∧ ∀ x ∈ C, c • x ∈ N} := by
@@ -99,7 +107,7 @@ theorem finite_orbits_stLat_of_separable : ∀ (O E A : Type) [CommRing O] [IsDo
         exact Submodule.mul_mem_mul ((integralClosure O A).mul_mem hx ha) hm
       · intro u v hu hv
         rw [mul_add]; exact N.add_mem hu hv
-    obtain ⟨t, ht⟩ := GlobalTheory.T.eq_submoduleMulLeftImage_integralClosure_of_separable O E A g hsep N hNlat hNC
+    obtain ⟨t, ht⟩ := _root_.GlobalTheory.UnitLemma.PrincipalLatDVR.eq_mulLat_integralClosure_of_separable O E A g hsep N hNlat hNC
     have hcN : ∀ y ∈ N, c • y ∈ (M : Submodule O A) := by
       intro y hy
       refine Submodule.mul_induction_on hy ?_ ?_

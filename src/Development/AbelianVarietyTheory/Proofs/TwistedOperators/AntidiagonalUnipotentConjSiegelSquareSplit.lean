@@ -2,11 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FromBlocksMem
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryToDoubledFirstFactorBigCellInertPlace
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiagonalFixingDoublingMatrixMemIntegralSiegelParStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiagonalFixingDoublingMulFirstFactorLagrangianAlStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsAntiInvariantSignAdeleSplitPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NablaUnipotentMemIntegralDoubledUnipotentStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitDoublingTMatrixMulInverseEqOneStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiagonalFixingDoublingMatrix
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiagonalFixingDoublingMatrixMemIntegralSiegelPar
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiagonalFixingDoublingMulFirstFactorLagrangianAl
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMemKAt
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsAntiInvariantSignAdeleSplitPlace
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NablaUnipotentMemIntegralDoubledUnipotent
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitDoublingTMatrixMulInverseEqOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,7 +46,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiagonalFixingDoublingMatrix
 
 @[expose] public section
 
@@ -67,9 +68,9 @@ theorem sq_smul_eq {n : Type} {v : Pl (F := F)} {c : AE F E} (hc : ∀ z : AE F 
 theorem inlD_mem_closure_of_split {σ : E →ₐ[F] E} {B : Base F E} (hB : B.IsGood σ) {d : ℕ} (W : Spc F E d) (v : Pl (F := F))
     (hv : Formalism.MainNotions.SchurIrreducible.IsSplit (E := E) v) (h2 : (2 : 𝓞 F) ∉ v.asIdeal) (k : UA σ W.J) (hk : k ∈ GlobalTheory.InertSph.KAt σ W v) :
     inlD σ W k ∈ Subgroup.closure (ParD σ W v ∪ NabD σ W v) := by
-  obtain ⟨c, hcσ, hcat, hcsq, hclat⟩ := GlobalTheory.T.exists_antiInvariant_sign_adele_splitPlace F E σ B hB v hv
-  obtain ⟨p, hp, hpm⟩ := GlobalTheory.T.exists_parD_matD_eq_diagonalFixingDoublingMatrix F E σ d W v h2 c hcσ hcat (hclat d W)
-  obtain ⟨n, hn, hnm⟩ := GlobalTheory.T.nablaUnipotent_mem_integralDoubledUnipotent F E σ d W v h2 c hcσ (hclat d W) k hk
+  obtain ⟨c, hcσ, hcat, hcsq, hclat⟩ := _root_.GlobalTheory.SplitSign.exists_split_sign F E σ B hB v hv
+  obtain ⟨p, hp, hpm⟩ := _root_.GlobalTheory.SplitDblPar.diagonalFixingDoublingMatrix_mem_integralSiegelParabolic F E σ d W v h2 c hcσ hcat (hclat d W)
+  obtain ⟨n, hn, hnm⟩ := _root_.GlobalTheory.SplitDblNab.nMat_mem_NabD F E σ d W v h2 c hcσ (hclat d W) k hk
   have e1 : mat k * mat k⁻¹ = 1 := by
     show mat (k * k⁻¹) = 1
     rw [mul_inv_cancel]; rfl
@@ -77,8 +78,8 @@ theorem inlD_mem_closure_of_split {σ : E →ₐ[F] E} {B : Base F E} (hB : B.Is
     show mat (k⁻¹ * k) = 1
     rw [inv_mul_cancel]; rfl
   have hsq : (c * c) • (mat k - 1) = mat k - 1 := sq_smul_eq hcsq hk.1
-  have hid := GlobalTheory.T.diagonalFixingDoublingMatrix_mul_fromBlocks_mul_diagCols F E d c (mat k) (mat k⁻¹) e1 e2 hsq
-  have ht := GlobalTheory.T.splitDoublingTMatrix_mul_inverse_eq_one F E d c (mat k) (mat k⁻¹) e1 hsq
+  have hid := _root_.GlobalTheory.SplitDblGen.diagonalFixingDoubling_mul_firstFactor_lagrangian F E d c (mat k) (mat k⁻¹) e1 e2 hsq
+  have ht := _root_.GlobalTheory.SplitDblGen.tMat_mul_tMat_eq_one F E d c (mat k) (mat k⁻¹) e1 hsq
   let t : GL (Fin d) (AE F E) := ⟨GlobalTheory.SplitDblGen.tMat c (mat k), GlobalTheory.SplitDblGen.tMat c (mat k⁻¹), ht, mul_eq_one_comm.1 ht⟩
   have hq : n⁻¹ * (p * inlD σ W k) ∈ ParD σ W v := by
     refine ⟨KAtD_mul (KAtD_inv hn.1) (KAtD_mul hp.1 (inlD_mem hk)), t, ?_⟩

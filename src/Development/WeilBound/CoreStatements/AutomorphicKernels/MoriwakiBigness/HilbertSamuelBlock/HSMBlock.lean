@@ -4,24 +4,22 @@ public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsArith
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.BlowupProjections.BlowupProjStatement
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FibreDim
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.GraphStatementHoldsStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.DegreeAndCoordinatesOfResolutionStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MixedFieldContraction.ContractMixedFieldStatement
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.GraphStatementHolds
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRes
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.DegreeAndCoordinatesOfResolution
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.DegreeGenericOfDegree
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.DegreeOfIsIntersectionSystem
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.GenericDegreeOfArithSystemStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PointsIntegrableOfResolutionStatementStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.ResolutionExistsOfResolutionStatementStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.GenericDegreeOfArithSystem
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PointsIntegrableOfResolutionStatement
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.Assembly
-import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.AssemblyBase
-import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.AssemblyBridge
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.AssemblyConditional
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PBlockGraphDeg
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PBlockImageInverse
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PBlockResolutionDegreeIntegral
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PBlockResolutionImageSup
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PGenDegGeomDeg
-import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PGraphChangeOfModel
-import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PGraphIsometric
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PHSMTransport
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PIsomInvariance
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PKrullDimMatAct
@@ -34,9 +32,14 @@ public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PTwoBlockModule
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PTwoBlockPieceIndex
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PVeroneseGramMono
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PVeroneseGraphDeg
-import GroundTheory.HeightsAndTheta.Heights.Intersections.PConsequences
 public import GroundTheory.HeightsAndTheta.Heights.Intersections.PPtsAbsIntegrable
 public import GroundTheory.HeightsAndTheta.Heights.Intersections.PPtsAbsMeasurable
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.ResolutionExistsOfResolutionStatementStatement
+import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.AssemblyBase
+import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.AssemblyBridge
+import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PGraphChangeOfModel
+import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PGraphIsometric
+import GroundTheory.HeightsAndTheta.Heights.Intersections.PConsequences
 import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.ChangeOfModel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -84,11 +87,11 @@ open GroundTheory.Heights₂.Heights GroundTheory.Heights₂.Heights.HilbertSamu
 
 theorem theoremHSMBlock (hAIS : ArithIntersectionSystemStatement) (hResK : ResK.ResKStatement) :
     TheoremHSMBlock.Statement := by
-  have hGr : GraphStatement := GlobalTheory.T.graph_statement_holds
-  have hAI3 : Inter.PushforwardArithIntersection.Statement := GlobalTheory.T.generic_degree_of_arith_system hAIS
+  have hGr : GraphStatement := _root_.GlobalTheory.CompanionTheory.Ar.Giv.graphStatement
+  have hAI3 : Inter.PushforwardArithIntersection.Statement := _root_.GlobalTheory.CompanionTheory.Ar.Giv.genDeg_of_system hAIS
   have hRes : ResExistsStatement := GlobalTheory.T.resolution_exists_of_resolution_statement hResK
-  have hPts : PtsIntegrableStatement := GlobalTheory.T.points_integrable_of_resolution_statement hResK
-  have hPF : PFCoordStatement := (GlobalTheory.T.degree_and_coordinates_of_resolution hRes).2
+  have hPts : PtsIntegrableStatement := _root_.GlobalTheory.CompanionTheory.Ar.Giv.ptsIntegrable_of_resK hResK
+  have hPF : PFCoordStatement := (_root_.GlobalTheory.CompanionTheory.Ar.Pub.genDeg_and_pfCoord hRes).2
   have hEU : ∀ (F : Type) [Field F] (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)],
       ExistsUniqueStatement F ι := Targets.existsUniqueAll
   have hGF : GenFibreExistsStatement := Targets.genFibreExists

@@ -2,7 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.ImagePolynomialAction
 public import Mathlib.Topology.Algebra.Valued.NormedValued
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeierstrassDivisionEisensteinPowIntegralStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NormPowLeNormFactorial
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeierstrassDivisionEisensteinPowIntegral
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
+public import Mathlib.LinearAlgebra.FreeModule.PID
+public import Mathlib.Topology.Algebra.Valued.LocallyCompact
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,9 +55,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.Analysis.Normed.Module.FiniteDimension
-public import Mathlib.LinearAlgebra.FreeModule.PID
-public import Mathlib.Topology.Algebra.Valued.LocallyCompact
 
 @[expose] public section
 
@@ -103,7 +104,7 @@ theorem exists_eq_add_E_pow_mul (O K : Type) [CommRing O] [NormedField K] [IsUlt
     [NeZero e] (n : ℕ) (f : K⟦X⟧) (hf : f ∈ A O K) :
     ∃ (c : Fin (e * n) → O) (g : K⟦X⟧), g ∈ A O K ∧
       f = ∑ k : Fin (e * n), C (algebraMap O K (c k)) * X ^ (k : ℕ) + E K l e ^ n * g :=
-  GlobalTheory.T.weierstrass_division_eisensteinPow_integral O K l e n f hf
+  _root_.GlobalTheory.weierstrassDiv_E_pow O K l e n f hf
 
 variable {O K : Type} [CommRing O] [NormedField K] [IsUltrametricDist K] [CompleteSpace K] [Algebra O K]
   [IsUnitBall O K] {l e a : ℕ} {ι : Type} [Fintype ι] [DecidableEq ι] [Fact l.Prime]

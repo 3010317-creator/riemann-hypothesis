@@ -4,9 +4,11 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.ESmall
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.FactorDepthInertBounds
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TypedPartSplitPrimes
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CmHostRootNegDiscriminantNeNegSelf
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FactorDepthBetweenZeroAndBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FactorDepthBoundsInertPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductDepthSumRoundingOscillationStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.EightDvdNCol
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FactorDepthBetweenZeroAndBound
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.BigBlockCharacters
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FactorDepthBoundsInertPrime
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductDepthSumRoundingOscillation
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -42,7 +44,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.BigBlockCharacters
 
 @[expose] public section
 
@@ -115,14 +116,14 @@ theorem oscLe_inert_large : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   have key : ∀ f, ∃ ab : ℝ × ℝ, FacBetween Xo la f (cx f) ab.1 ab.2 ∧ ab.2 - ab.1 ≤ w f := by
     intro f
     by_cases hb : IsBig k f
-    · obtain ⟨A, B, hAB, hBA⟩ := GlobalTheory.T.factorDepth_bounds_inert_prime E H Dw l Xo c p la hdisc hin f (cx f) hb.1
+    · obtain ⟨A, B, hAB, hBA⟩ := _root_.GlobalTheory.RefSum.facBetween_inert E H Dw l Xo c p la hdisc hin f (cx f) hb.1
       refine ⟨(A, B), hAB, ?_⟩
       simp only [hw, if_pos hb]
       exact hBA.trans (big_bound (by have := rk_add_one_le f; omega) hkp hSq hp2)
-    · refine ⟨(0, boundAll p (rk f) (cx f)), (GlobalTheory.T.factorDepth_between_zero_and_bound E H Dw l Xo c p la f (cx f)).1, ?_⟩
+    · refine ⟨(0, boundAll p (rk f) (cx f)), (_root_.GlobalTheory.RefSum.facBetween_zero_boundAll E H Dw l Xo c p la f (cx f)).1, ?_⟩
       simp only [hw, if_neg hb, boundAll, sub_zero, le_refl]
   choose g hg using key
-  obtain ⟨n, hn⟩ := ((GlobalTheory.T.productDepth_sum_rounding_oscillation E H Dw l Xo c p la cx).1 (fun f => (g f).1) (fun f => (g f).2) fun f => (hg f).1).2
+  obtain ⟨n, hn⟩ := ((_root_.GlobalTheory.RefSum.nuBetween_sum_and_eLoc_le E H Dw l Xo c p la cx).1 (fun f => (g f).1) (fun f => (g f).2) fun f => (hg f).1).2
   refine ⟨n, nuBetween_mono hn ?_⟩
   have hsum : ∑ f, ((g f).2 - (g f).1) ≤ ∑ f, w f := Finset.sum_le_sum fun f _ => (hg f).2
   suffices hw2 : ∑ f, w f ≤ (6 * F * m * Mb + Sm) / ((p : ℝ) - 1) by linarith

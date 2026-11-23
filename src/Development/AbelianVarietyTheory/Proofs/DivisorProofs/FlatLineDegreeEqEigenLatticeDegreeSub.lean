@@ -2,13 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HtValOnSubset
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.DegOfLatRankEqZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicLineDegreeInvariantFiniteExtensionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConstLengthFlatSectionEqFrameNormComplexEmbeddinStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeDeterminantLineTwoHermitianLatticesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFrameCoordsBasisEigenLatticeSpanStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatSectionConstValuationEigenLatticeAtPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatSectionNeZeroAtNumberFieldPointStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HostIntegerCharacterCompConjEqConjEmbeddingStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsFlatSecRankZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicLineDegreeInvariantFiniteExtension
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrameCoord
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConstLengthFlatSectionEqFrameNormComplexEmbeddin
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeDeterminantLineTwoHermitianLattices
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFrameCoordsBasisEigenLatticeSpan
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatSectionConstValuationEigenLatticeAtPrime
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatSectionNeZeroAtNumberFieldPoint
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsProbabilityMeasureMuPart
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HostIntegerCharacterCompConjEqConjEmbedding
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RamificationWeightedLogNormSum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -56,14 +59,14 @@ theorem lineDeg_eq_deg_eigLat_sub : ∀ (E : Type) [Field E] [NumberField E] [Is
   obtain ⟨m1⟩ := hm1
   obtain ⟨m2⟩ := hm2
   obtain ⟨π, ε, hπ, -⟩ := GlobalTheory.FlatDegreeCompare.exists_under_valuation_sum_log_absNorm c.F K (algebraMap c.F K)
-  have ht' := GlobalTheory.T.hostIntegerCharacter_comp_conj_eq_conjEmbedding E H Dw l Xo c τ K t ht
-  obtain ⟨u, hu, hui, hus⟩ := GlobalTheory.T.exists_frameCoords_basis_eigenLattice_span E H Dw l Xo c K y B t₀ m1 m2 F τ.1 t ht
-  obtain ⟨u', hu', hui', hus'⟩ := GlobalTheory.T.exists_frameCoords_basis_eigenLattice_span E H Dw l Xo c K y B t₀ m1 m2 F (conjEmb τ.1) _ ht'
-  have hfin := GlobalTheory.T.flatSection_constValuation_eigenLattice_at_prime E H Dw l Xo c r U x hL Z τ s ρ hρ K y hy B t₀ m1 m2 F t ht π ε hπ u u' hu hu'
-  have hlat := GlobalTheory.T.degree_determinant_line_two_hermitianLattices K h _ _ (GlobalTheory.CM.DegBound.eigLat_fg F _ _) (GlobalTheory.CM.DegBound.eigLat_fg F _ _) u u' hui hus hui'
-    hus' _ (GlobalTheory.T.flatSection_ne_zero_at_numberField_point E H Dw l Xo c r U x hL Z τ s K y hy) (fun 𝔓 => (ε 𝔓 : ℝ) * ρ (π 𝔓)) hfin
-  have harch := GlobalTheory.T.constLengthFlatSection_eq_frameNorm_complexEmbedding E H Dw l Xo c r U x hL Z τ s K y hy B t₀ m1 m2 F h hh u u' hu hu'
-  obtain ⟨hf, hd⟩ := GlobalTheory.T.adelicLine_degree_invariant_finite_extension c.F K π ε hπ s.cInf ρ hlat.1
+  have ht' := _root_.GlobalTheory.ConjHostChar.conj_char E H Dw l Xo c τ K t ht
+  obtain ⟨u, hu, hui, hus⟩ := _root_.GlobalTheory.PtDeg.exists_frameCoord_basis E H Dw l Xo c K y B t₀ m1 m2 F τ.1 t ht
+  obtain ⟨u', hu', hui', hus'⟩ := _root_.GlobalTheory.PtDeg.exists_frameCoord_basis E H Dw l Xo c K y B t₀ m1 m2 F (conjEmb τ.1) _ ht'
+  have hfin := _root_.GlobalTheory.PtDeg.rho_eq_vAdd_at_prime E H Dw l Xo c r U x hL Z τ s ρ hρ K y hy B t₀ m1 m2 F t ht π ε hπ u u' hu hu'
+  have hlat := _root_.GlobalTheory.LatDetDeg.lineDeg_det_line K h _ _ (GlobalTheory.CM.DegBound.eigLat_fg F _ _) (GlobalTheory.CM.DegBound.eigLat_fg F _ _) u u' hui hus hui'
+    hus' _ (_root_.GlobalTheory.FlatPointNe.evR_sig_ne_zero E H Dw l Xo c r U x hL Z τ s K y hy) (fun 𝔓 => (ε 𝔓 : ℝ) * ρ (π 𝔓)) hfin
+  have harch := _root_.GlobalTheory.PtDegArch.cInf_eq_frame_norm E H Dw l Xo c r U x hL Z τ s K y hy B t₀ m1 m2 F h hh u u' hu hu'
+  obtain ⟨hf, hd⟩ := _root_.GlobalTheory.FlatLine.lineDeg_descent c.F K π ε hπ s.cInf ρ hlat.1
   refine ⟨hf, hd.trans ?_⟩
   rw [← hlat.2]
   congr 1

@@ -2,13 +2,16 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.DetMemSubring
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SpecializesOfUnits
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CauchyBinetSumPositionedMinorsStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsComponentInChartRegularStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LocalFrameOfTwistGenerationStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CauchyBinetSumPositionedMinors
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ColFlags
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsComponentInChartRegular
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordTieCompEquiv
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LocalFrameOfTwistGeneration
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MinorExpansionOfScaledProductStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MinorRatioRegularOfMatrixIdentityStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ProdXbPowEqXcOfPowStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TMatBlockDiagDetFactorsStatement
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MinorRatioRegularOfMatrixIdentity
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ProdXbPowEqXcOfPow
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TMatBlockDiagDetFactors
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.YvEqSumMinorsGMat
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -140,7 +143,7 @@ theorem frames_pure (A : ∀ s, Matrix (Fin (n s)) (Fin (rk Ψ p q s)) Ω) (x₀
   let υs : Ψ ⊕ Ψ → Ω := fun s => ((C s).submatrix (rowsOf c s) id).det
   have hu : ∀ s, υs s ≠ 0 ∧ υs s ∈ R ∧ (υs s)⁻¹ ∈ R ∧
       zOf A c s * (Ts s).det = (xcOf x₀ c ^ m s) ^ rk Ψ p q s * υs s := fun s =>
-    GlobalTheory.T.minor_ratio_regular_of_matrix_identity R (A s) (C s) (B s) (Ts s) _ (hAT s) (pow_ne_zero _ hx) (hT s) (hBC s) (hC s) (hB s) (rowsOf c s)
+    _root_.GlobalTheory.CompanionTheory.Ar.PB.FMX.Frm.minor_isUnit_of_leftInverse R (A s) (C s) (B s) (Ts s) _ (hAT s) (pow_ne_zero _ hx) (hT s) (hBC s) (hC s) (hB s) (rowsOf c s)
       (hz s) (hr s)
   have hW : ∀ s, (Ts s).det = (xcOf x₀ c ^ m s) ^ rk Ψ p q s * υs s * (zOf A c s)⁻¹ := fun s => by
     have := (hu s).2.2.2
@@ -165,7 +168,7 @@ theorem frames_pure (A : ∀ s, Matrix (Fin (n s)) (Fin (rk Ψ p q s)) Ω) (x₀
         (if (r.2 : ℕ) + 1 = p + q then υs (.inr r.1) else 1) }
   refine ⟨F, rfl, ⟨fun τ => ?_, fun r k hk i h hh => ?_, fun r k hk I I' hI hI' => ?_, fun r hr' => ?_⟩,
     fun r I => ⟨?_, ?_⟩, fun r hr' => ?_⟩
-  · obtain ⟨h1, h2, -⟩ := GlobalTheory.T.tMat_blockDiag_det_factors Ts τ
+  · obtain ⟨h1, h2, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.FMX.Frm.tMat_main Ts τ
     exact ⟨h1, by show (tMat Ts τ).det ≠ 0; rw [h2]; exact mul_ne_zero (hT _) (hT _)⟩
   · obtain ⟨hp, rfl⟩ : IsProperStep (p + q) p r.2 ∧ k = .inr (stepOf Ψ p q r) := by
       unfold blkF at hk
@@ -175,7 +178,7 @@ theorem frames_pure (A : ∀ s, Matrix (Fin (n s)) (Fin (rk Ψ p q s)) Ω) (x₀
       (stepCols (p + q) p r.2) (card_stepCols r)
     have key : detFac p r.2 (tMat Ts r.1) * xcOf x₀ c ^ (m (stepOf Ψ p q r).1 * (((stepOf Ψ p q r).2 : ℕ) + 1)) =
         (∏ k', xb A x₀ ⟨k', c k'⟩ ^ bF m r k') * wt (stepOf Ψ p q r) := by
-      rw [GlobalTheory.T.prod_xb_pow_eq_xcOf_pow, (GlobalTheory.T.tMat_blockDiag_det_factors Ts r.1).2.2]
+      rw [_root_.GlobalTheory.CompanionTheory.Ar.PB.FMX.Frm.prod_xb_zpow_bF, (_root_.GlobalTheory.CompanionTheory.Ar.PB.FMX.Frm.tMat_main Ts r.1).2.2]
       have hr2 := r.2.2
       obtain ⟨hp1, hp2⟩ := hp
       by_cases hi : (r.2 : ℕ) < p
@@ -207,7 +210,7 @@ theorem frames_pure (A : ∀ s, Matrix (Fin (n s)) (Fin (rk Ψ p q s)) Ω) (x₀
       unfold blkF at hk
       split_ifs at hk with hp
       exact ⟨hp, (Option.some.inj hk).symm⟩
-    have e2 := GlobalTheory.T.cauchyBinet_sum_positioned_minors C B hBC (stepOf Ψ p q r) I I' (hI.1.trans (card_stepCols r)) (hI'.1.trans (card_stepCols r))
+    have e2 := _root_.GlobalTheory.CompanionTheory.Ar.PB.FMX.Frm.Inv.sum_sMin_mul_cMin C B hBC (stepOf Ψ p q r) I I' (hI.1.trans (card_stepCols r)) (hI'.1.trans (card_stepCols r))
       (stepRows_pos r hI) (stepRows_pos r hI')
     have hw := (hwt (stepOf Ψ p q r)).1
     refine Eq.trans ?_ e2
@@ -224,7 +227,7 @@ theorem frames_pure (A : ∀ s, Matrix (Fin (n s)) (Fin (rk Ψ p q s)) Ω) (x₀
       exact hnp ⟨by omega, by omega⟩
     show detFac p r.2 (tMat Ts r.1) * 1 = (∏ k', xb A x₀ ⟨k', c k'⟩ ^ bF m r k') *
       ((if p ≤ (r.2 : ℕ) + 1 then υs (.inl r.1) else 1) * (if (r.2 : ℕ) + 1 = p + q then υs (.inr r.1) else 1))
-    rw [GlobalTheory.T.prod_xb_pow_eq_xcOf_pow, (GlobalTheory.T.tMat_blockDiag_det_factors Ts r.1).2.2]
+    rw [_root_.GlobalTheory.CompanionTheory.Ar.PB.FMX.Frm.prod_xb_zpow_bF, (_root_.GlobalTheory.CompanionTheory.Ar.PB.FMX.Frm.tMat_main Ts r.1).2.2]
     simp only [if_pos hpi]
     have h3 : (Ts (.inl r.1)).det = (xcOf x₀ c ^ m (.inl r.1)) ^ p * υs (.inl r.1) * (zOf A c (.inl r.1))⁻¹ := hW _
     have h4 : (Ts (.inr r.1)).det = (xcOf x₀ c ^ m (.inr r.1)) ^ q * υs (.inr r.1) * (zOf A c (.inr r.1))⁻¹ := hW _
@@ -276,7 +279,7 @@ theorem frames_main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
   intro E _ _ _ H D l Xo c Y S Ω _ _ K₀ _ J₀ _ x₀ 𝔐 bW bO n m φ hF tie Q hQ hrel hle
   classical
   choose cb hcb using hrel
-  obtain ⟨P, hP, hreg⟩ := GlobalTheory.T.exists_component_in_chart_regular _ tie Q hQ hle cb hcb
+  obtain ⟨P, hP, hreg⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.FMX.Frm.exists_point_of_prime _ tie Q hQ hle cb hcb
   have hc0 := TiePrimes.ne_of_seg hP.1
   have hrat : ∀ k i, xb (aOf 𝔐 bW bO φ) x₀ ⟨k, i⟩ / xb (aOf 𝔐 bW bO φ) x₀ ⟨k, cb k⟩ ∈ regAt 𝔐.ξ P :=
     fun k i => TiePrimes.ratio_mem hP ⟨k, i⟩
@@ -285,7 +288,7 @@ theorem frames_main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     rw [← Finset.prod_div_distrib]
     exact prod_mem fun k _ => hrat (baseInl k) (c' k)
   choose Ts C B hT hAT hBC hC hB using fun s =>
-    GlobalTheory.T.local_frame_of_twist_generation 𝔐.ξ (seg x₀) (LL 𝔐 s) (m s) (n s) (rk (CMType H) D.p D.q s) (VV 𝔐 s) (φ s) (cc 𝔐 bW bO s)
+    _root_.GlobalTheory.CompanionTheory.Ar.PB.FMX.Frm.frames_at_point 𝔐.ξ (seg x₀) (LL 𝔐 s) (m s) (n s) (rk (CMType H) D.p D.q s) (VV 𝔐 s) (φ s) (cc 𝔐 bW bO s)
       (hF.1 s) (hF.2.1 s).1 (hF.2.1 s).2 (hF.2.2.1 s) P _ hin
   obtain ⟨F, rfl, h1, h2, h3⟩ := frames_pure (aOf 𝔐 bW bO φ) x₀ m (regAt 𝔐.ξ P) cb hc0 hrat Ts C B hT hAT hBC hC hB
   exact ⟨F, h1, hcb, fun r I => ⟨hreg _ (h2 r I).1, hreg _ (h2 r I).2⟩,

@@ -1,11 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.StandardFiveNontrivial
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LevelDatumIdempotentRankGeOfGenericFreeRowsFirstStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LevelDatumIdempotentRankLeRootExchangeStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LevelDatumSubgroupCharacterPropertiesStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RankLevelDatumIdempotentEqOfSameShapeStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SubgroupCharacterIdempotentPropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LevelDatumIdempotentRankGeOfGenericFreeRowsFirst
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LevelDatumIdempotentRankLeRootExchange
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LevelDatumSubgroupCharacterProperties
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RankLevelDatumIdempotentEqOfSameShape
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SubgroupCharacterIdempotentProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,9 +58,9 @@ theorem one_le_rk_of_not_sharp (g : ℕ) [Fact g.Prime] (N : ℕ) (M : Type) [Ad
   obtain ⟨L₀, h₀, x, hx, hu⟩ := hρ
   let L' : Lev g N := { L₀ with s := L.s, k := L.k, hk := L.hk }
   have hs : L'.sharp = false := h₀
-  rw [GlobalTheory.T.rank_levelDatum_idempotent_eq_of_same_shape g N M ρ L L' (hL.trans hs.symm) rfl rfl]
-  obtain ⟨a1, a2, a3, a4, -⟩ := GlobalTheory.T.levelDatum_submonoid_chi_mul_unipotent g N L'
-  obtain ⟨-, -, -, h⟩ := GlobalTheory.T.subgroupCharacterIdempotent_properties (GG g N) M ρ L'.Mem L'.chi a1 a2 a3 a4
+  rw [_root_.GlobalTheory.BadShare.CoDiag.rk_e_eq g N M ρ L L' (hL.trans hs.symm) rfl rfl]
+  obtain ⟨a1, a2, a3, a4, -⟩ := _root_.GlobalTheory.BadShare.LevGroup.lev_group g N L'
+  obtain ⟨-, -, -, h⟩ := _root_.GlobalTheory.BadShare.EpsProj.eps_spec (GG g N) M ρ L'.Mem L'.chi a1 a2 a3 a4
   refine h 1 (fun _ => x) (linearIndependent_unique_iff.2 hx) ?_
   intro i u hm
   have hchi : L'.chi u = L₀.chi u := by
@@ -73,13 +73,13 @@ theorem rk_lower_of_sharp (g : ℕ) [Fact g.Prime] (N : ℕ) (M : Type) [AddComm
     [FiniteDimensional ℂ M] (ρ : Representation ℂ (GG g N) M) (hρ : IsGeneric ρ) (s : ℕ) :
     ∀ L : Lev g N, L.sharp = true → L.s = s → (1 - 1 / (g : ℝ)) * (g : ℝ) ^ L.k ≤ (rk ρ L.e : ℝ) := by
   induction s with
-  | zero => exact fun L h1 h2 => GlobalTheory.T.levelDatum_idempotent_rank_ge_of_generic_free_rows_first g N M ρ hρ L h1 h2
+  | zero => exact fun L h1 h2 => _root_.GlobalTheory.BadShare.rk_ge_of_isGeneric_of_s_eq_zero g N M ρ hρ L h1 h2
   | succ s ih =>
     intro L h1 h2
     have hk : s + L.k < N := by have := L.hk; omega
     let L' : Lev g N := { L with s := s, hk := hk }
     have h3 := ih L' h1 rfl
-    have h4 := GlobalTheory.T.levelDatum_idempotent_rank_le_root_exchange g N M ρ L L' h1 h1 rfl h2
+    have h4 := _root_.GlobalTheory.BadShare.RxStep.rk_le_step g N M ρ L L' h1 h1 rfl h2
     exact h3.trans (by exact_mod_cast h4)
 
 theorem rk_lev_lower : ∀ (g : ℕ) [Fact g.Prime] (N : ℕ), ∀ (M : Type) [AddCommGroup M] [Module ℂ M] [FiniteDimensional ℂ M] (ρ : Representation ℂ (GG g N) M), IsGeneric ρ → ∀ L : Lev g N, (1 - 1 / (g : ℝ)) * (g : ℝ) ^ (if L.sharp = true then L.k else 0) ≤ (rk ρ L.e : ℝ) := by

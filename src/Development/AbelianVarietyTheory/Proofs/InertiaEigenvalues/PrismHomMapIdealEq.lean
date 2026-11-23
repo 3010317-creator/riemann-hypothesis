@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.InvertibleSpanSingleton
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InvertibleIdealEqOfNotLeMaximalMulStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrimeNotMemSqAndDeltaNotMemStatement
+public import Mathlib.RingTheory.PicardGroup
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InvertibleIdealEqOfNotLeMaximalMul
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrimeNotMemSqAndDeltaNotMem
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,7 +77,7 @@ theorem map_I_eq (l : ℕ) [hl : Fact l.Prime] (R : Type) [CommRing R] (B B' : O
     B.I.map f.f = B'.I := by
   have hl0 : 0 < l := hl.out.pos
   have hNI : B.I.map f.f ≤ B'.I := Ideal.map_le_iff_le_comap.2 fun a ha => f.f_I a ha
-  refine GlobalTheory.T.eq_of_le_invertible_of_not_le_maximal_mul B'.A B'.I (B.I.map f.f) B'.inv hNI ?_
+  refine _root_.GlobalTheory.invertible_ideal_eq_of_not_le_maximal_mul B'.A B'.I (B.I.map f.f) B'.inv hNI ?_
   intro m hm hN
 
   have hjac : Ideal.span {(l : B'.A)} ⊔ B'.I ≤ m := by
@@ -97,6 +98,6 @@ theorem map_I_eq (l : ℕ) [hl : Fact l.Prime] (R : Type) [CommRing R] (B B' : O
   have hl2 : (l : B'.A) ∈ m ^ 2 := by
     have := hmap B.l_mem
     simpa [map_natCast] using this
-  exact (GlobalTheory.T.prime_not_mem_sq_and_delta_not_mem l B'.A B'.D m hm.ne_top hlm).1 hl2
+  exact (_root_.GlobalTheory.BSP.LSq.l_not_mem_sq l B'.A B'.D m hm.ne_top hlm).1 hl2
 
 end GlobalTheory.Prism.Rigid

@@ -2,11 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HeckeLEntireAndNonzeroAtOne
 public import Development.WeilBound.ThetaLifts.LatticeBasics.PairsStable
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryMatrixEqProdQuasiReflectionsStatement
+public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.IsHermForm
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryMatrixEqProdQuasiReflections
 public import Development.WeilBound.CoreStatements.AbelianHeightsDuality.UnitaryDensity.Cayley
 public import Development.WeilBound.ThetaLifts.LatticeBasics.ConstIdele
 public import Development.WeilBound.ThetaLifts.LatticeBasics.ConstOfGood
 public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.UniqPlugPl
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ContinuousInfiniteAdeleMap
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,8 +51,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.IsHermForm
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ContinuousInfiniteAdeleMap
 
 @[expose] public section
 
@@ -153,7 +153,7 @@ theorem cut_rat (hc : IsCMExt F E σ) (hJ : IsHermND σ Jᵀ) {L : Subgroup (UA 
     exact h1.symm
   have hform : ∀ x y, GlobalTheory.UnRep.hermE c J x y = x ⬝ᵥ J *ᵥ fun b => σ (y b) := fun x y => by
     simp only [GlobalTheory.UnRep.hermE, dotProduct, Matrix.mulVec, Finset.mul_sum, hcσ, mul_assoc]
-  obtain ⟨l, hl, rfl⟩ := GlobalTheory.T.unitaryMatrix_eq_prod_quasiReflections F E c n J ⟨fun x => by rw [hcσ, hcσ]; exact hσ x, hne, fun a b => by rw [hcσ, hh],
+  obtain ⟨l, hl, rfl⟩ := _root_.GlobalTheory.UnRep.isUnE_eq_prod_refl F E c n J ⟨fun x => by rw [hcσ, hcσ]; exact hσ x, hne, fun a b => by rw [hcσ, hh],
     by simpa using hJ.2⟩ γ fun x y => by
       have e1 : (fun b => σ ((γ *ᵥ y) b)) = γ.map σ *ᵥ fun b => σ (y b) :=
         funext fun b => RingHom.map_mulVec (σ : E →+* E) γ y b

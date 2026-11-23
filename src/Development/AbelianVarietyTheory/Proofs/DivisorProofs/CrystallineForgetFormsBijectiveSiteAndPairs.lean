@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DivPowerCompatTwoFormDerivativeCompOneForm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoefficientsAcyclicOfTwoSectionsRetractionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDiagonalFirstNeighbourhoodRetractionFormsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ForgetPositiveH1BijectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ForgetPositiveH2BijectiveStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PullbackBijectiveDegreesOneTwo
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoefficientsAcyclicOfTwoSectionsRetraction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDiagonalFirstNeighbourhoodRetractionForms
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ForgetPositiveH1Bijective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ForgetPositiveH2Bijective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,7 +56,7 @@ namespace GlobalTheory.PDForm
 theorem fnMap_pullbackBijective12_of_acyclic {C : Type 1} [Category.{0} C] (K : Cx C)
     (h1 : K.M1.Ac0 ∧ K.M1.Ac1 ∧ K.M1.Ac2) (h2 : K.M2.Ac0 ∧ K.M2.Ac1 ∧ K.M2.Ac2) (h3 : K.M3.Ac0 ∧ K.M3.Ac1 ∧ K.M3.Ac2) :
     K.fnMap.PullbackBijectiveDegreesOneTwo :=
-  And.intro (GlobalTheory.T.forget_positive_h1_bijective C K h1.1 h1.2.1 h2.1) (GlobalTheory.T.forget_positive_h2_bijective C K h1.2.1 h1.2.2 h2.1 h2.2.1 h3.1)
+  And.intro (_root_.GlobalTheory.CxCoh.Cx.fnMap_h1_bijective C K h1.1 h1.2.1 h2.1) (_root_.GlobalTheory.CxCoh.fnMap_h2_bijective C K h1.2.1 h1.2.2 h2.1 h2.2.1 h3.1)
 
 variable {R : Type} [CommRing R] {I : Ideal R} {κ : DividedPowers I} {X : Scheme.{0}} {t : X ⟶ Sp R}
   {Y : Scheme.{0}} {i : X ⟶ Y}
@@ -85,17 +86,17 @@ theorem acyc_res_pE (M : Coef (Thick κ t)) (S : Thick κ t ⥤ Thick κ t) (u v
     (h : (∀ (T T' : Thick κ t) (φ : T ⟶ T') x, r T' (M.map (S.map φ) x) = M.map φ (r T x)) ∧
       (∀ T x, r T (M.map (u.app T) x) = 0) ∧ (∀ T x, r T (M.map (v.app T) x) = x)) :
     (M.res (pE κ t i)).Ac0 ∧ (M.res (pE κ t i)).Ac1 ∧ (M.res (pE κ t i)).Ac2 :=
-  GlobalTheory.T.coefficients_acyclic_of_two_sections_retraction _ (M.res (pE κ t i)) (liftE κ t i S u) (liftT κ t i S u u) (liftT κ t i S u v) (fun a ↦ r a.obj.T)
+  _root_.GlobalTheory.coef_acyclic_of_two_sections _ (M.res (pE κ t i)) (liftE κ t i S u) (liftT κ t i S u u) (liftT κ t i S u v) (fun a ↦ r a.obj.T)
     (fun a b f x ↦ h.1 a.obj.T b.obj.T f.hom.1 x) (fun a x ↦ h.2.1 a.obj.T x) (fun a x ↦ h.2.2 a.obj.T x)
 
 theorem crystalline_forget_forms_bijective_site_and_pairs : ∀ (R : Type) [CommRing R] (I : Ideal R) (κ : DividedPowers I) (X : Scheme.{0})
     (t : X ⟶ Sp R) (Y : Scheme.{0}) (i : X ⟶ Y),
     (KK κ t).fnMap.PullbackBijectiveDegreesOneTwo ∧ ((KK κ t).res (pE κ t i)).fnMap.PullbackBijectiveDegreesOneTwo := by
   intro R _ I κ X t Y i
-  obtain ⟨S, u, v, r1, r2, r3, h1, h2, h3a, h3b, h3c⟩ := GlobalTheory.T.exists_diagonal_firstNeighbourhood_retraction_forms R I κ X t
+  obtain ⟨S, u, v, r1, r2, r3, h1, h2, h3a, h3b, h3c⟩ := _root_.GlobalTheory.PDForm.Nbhd.exists_retraction R I κ X t
   have h3 := And.intro h3a (And.intro h3b h3c)
-  exact ⟨fnMap_pullbackBijective12_of_acyclic _ (GlobalTheory.T.coefficients_acyclic_of_two_sections_retraction _ _ S u v r1 h1.1 h1.2.1 h1.2.2)
-      (GlobalTheory.T.coefficients_acyclic_of_two_sections_retraction _ _ S u v r2 h2.1 h2.2.1 h2.2.2) (GlobalTheory.T.coefficients_acyclic_of_two_sections_retraction _ _ S u v r3 h3a h3b h3c),
+  exact ⟨fnMap_pullbackBijective12_of_acyclic _ (_root_.GlobalTheory.coef_acyclic_of_two_sections _ _ S u v r1 h1.1 h1.2.1 h1.2.2)
+      (_root_.GlobalTheory.coef_acyclic_of_two_sections _ _ S u v r2 h2.1 h2.2.1 h2.2.2) (_root_.GlobalTheory.coef_acyclic_of_two_sections _ _ S u v r3 h3a h3b h3c),
     fnMap_pullbackBijective12_of_acyclic _ (acyc_res_pE (i := i) _ S u v r1 h1) (acyc_res_pE (i := i) _ S u v r2 h2)
       (acyc_res_pE (i := i) _ S u v r3 h3)⟩
 

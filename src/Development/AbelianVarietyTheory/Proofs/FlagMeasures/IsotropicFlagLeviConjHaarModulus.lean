@@ -1,14 +1,19 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DefClassNum
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DoubledFlagSumEqUnipotentDimAndLayerProdStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsOrthonormalBasisReTraceMulConjTransposeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FinrankAndDetOfRealBasisSkewPartStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagNilradicalFinrankAndAbsDetConjStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotropicFlagLeviMaxCompactClosedSubgroups
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DoubledFlagSumEqUnipotentDimAndLayerProd
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.LinearAlgebra.Matrix.Trace
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsOrthonormalBasisReTraceMulConjTranspose
+public import Formalism.RealPlaceAnalysis.Complexify
+public import Mathlib.LinearAlgebra.Determinant
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FinrankAndDetOfRealBasisSkewPart
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagNilradicalFinrankAndAbsDetConj
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotropicFlagUnipotentRadicalClosedSubgroupKeeps
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MapConjGaugeMeasureEqInvDetSmulStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SignedFormOrthogonalFinrankDetUnitaryStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MapConjGaugeMeasureEqInvDetSmul
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SignedFormOrthogonalFinrankDetUnitary
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotropicFlagLeviMaxCompactClosedSubgroups
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -178,7 +183,7 @@ theorem dblFlag_dual {s : ℕ} (hs : s ≤ 2 * a + 1) :
     have e := dblFlag_sub (ε := ε) (W := W) ht
     rw [show 2 * a + 1 - (2 * a + 1 - s) = s by omega] at e
     rw [e]
-    have h40 := GlobalTheory.T.signedFormOrthogonal_finrank_det_unitary n ε (dblFlag ε W (2 * a + 1 - s)) (perpJ ε (dblFlag ε W (2 * a + 1 - s)))
+    have h40 := _root_.GlobalTheory.PerpModulus.perp_modulus n ε (dblFlag ε W (2 * a + 1 - s)) (perpJ ε (dblFlag ε W (2 * a + 1 - s)))
       (fun y => mem_perpJ)
     apply le_antisymm
     · intro x hx
@@ -374,19 +379,19 @@ theorem modulus : ∀ (n : ℕ) (ε : Fin n → Bool) (a : ℕ) (j : Fin a → �
       exact zero_mem _
     · exact dblFlag_mono hW (Nat.le_succ s) (hX' s (by omega) _ (hY' (s + 1) hs y hy))
   obtain ⟨d, E, hEo, hEli, hEspan⟩ :=
-    GlobalTheory.T.exists_orthonormal_basis_re_trace_mul_conjTranspose' n ((lower (dblFlag ε W) (2 * a + 1)).restrictScalars ℝ ⊓ lieSub ε)
+    _root_.GlobalTheory.exists_orthonormal_basis_re_trace_mul_conjTranspose n ((lower (dblFlag ε W) (2 * a + 1)).restrictScalars ℝ ⊓ lieSub ε)
   have hE : ∀ X, (X ∈ lower (dblFlag ε W) (2 * a + 1) ∧ inG ε X) ↔ X ∈ Submodule.span ℝ (Set.range E) := by
     intro X
     rw [← hEspan]
     exact Iff.rfl
-  have h55 := GlobalTheory.T.finrank_and_det_of_real_basis_skew_part n ε (lower (dblFlag ε W) (2 * a + 1)) d E (fun X hX => adj_mem_lower hX) hEli hE
+  have h55 := _root_.GlobalTheory.RealFormBasis.finrank_and_det n ε (lower (dblFlag ε W) (2 * a + 1)) d E (fun X hX => adj_mem_lower hX) hEli hE
   have hdet1 : ‖(uMat m).det‖ = 1 :=
-    ((GlobalTheory.T.signedFormOrthogonal_finrank_det_unitary n ε ⊥ (perpJ ε ⊥) (fun y => mem_perpJ)).2.2 m).1
-  have h38 := GlobalTheory.T.flagNilradical_finrank_and_abs_det_conj n (uMat m) (uMat m⁻¹) (2 * a + 1) (dblFlag ε W) (lower (dblFlag ε W) (2 * a + 1))
+    ((_root_.GlobalTheory.PerpModulus.perp_modulus n ε ⊥ (perpJ ε ⊥) (fun y => mem_perpJ)).2.2 m).1
+  have h38 := _root_.GlobalTheory.FlagModulus.flag_finrank_det n (uMat m) (uMat m⁻¹) (2 * a + 1) (dblFlag ε W) (lower (dblFlag ε W) (2 * a + 1))
     (GlobalTheory.FlagLeviGroup.uMat_mul_inv m) hdet1 (dblFlag_mono hW) (dblFlag_zero hW) (dblFlag_top hW) hkeep
     (fun X => Iff.rfl)
   have hDpos : ∀ s, 0 < detOn (uMat m) (dblFlag ε W s) := fun s =>
-    (((GlobalTheory.T.signedFormOrthogonal_finrank_det_unitary n ε (dblFlag ε W s) (perpJ ε (dblFlag ε W s)) (fun y => mem_perpJ)).2.2 m).2 (hkeep s)).2.2
+    (((_root_.GlobalTheory.PerpModulus.perp_modulus n ε (dblFlag ε W s) (perpJ ε (dblFlag ε W s)) (fun y => mem_perpJ)).2.2 m).2 (hkeep s)).2.2
   have hD0 : detOn (uMat m) (dblFlag ε W 0) = 1 := by
     rw [dblFlag_zero hW]
     have hb : ∀ y ∈ (⊥ : Submodule ℂ (Fin n → ℂ)), Matrix.toLin' (uMat m) y ∈ (⊥ : Submodule ℂ (Fin n → ℂ)) := by
@@ -401,7 +406,7 @@ theorem modulus : ∀ (n : ℕ) (ε : Fin n → Bool) (a : ℕ) (j : Fin a → �
     rw [dblFlag_succ, dblFlag_castSucc]
     exact hW.2.2.1 i
   have h2ν : 2 * Module.finrank ℂ (dblFlag ε W a) ≤ n := by
-    have h40 := (GlobalTheory.T.signedFormOrthogonal_finrank_det_unitary n ε (dblFlag ε W a) (perpJ ε (dblFlag ε W a)) (fun y => mem_perpJ)).1
+    have h40 := (_root_.GlobalTheory.PerpModulus.perp_modulus n ε (dblFlag ε W a) (perpJ ε (dblFlag ε W a)) (fun y => mem_perpJ)).1
     have hle : dblFlag ε W a ≤ perpJ ε (dblFlag ε W a) := by
       rw [dblFlag_last]
       intro x hx
@@ -413,10 +418,10 @@ theorem modulus : ∀ (n : ℕ) (ε : Fin n → Bool) (a : ℕ) (j : Fin a → �
   have hsym : ∀ s, s ≤ a → detOn (uMat m) (dblFlag ε W (2 * a + 1 - s)) = detOn (uMat m) (dblFlag ε W s) ∧
       Module.finrank ℂ (dblFlag ε W (2 * a + 1 - s)) + Module.finrank ℂ (dblFlag ε W s) = n := by
     intro s hs
-    have h40 := GlobalTheory.T.signedFormOrthogonal_finrank_det_unitary n ε (dblFlag ε W s) (perpJ ε (dblFlag ε W s)) (fun y => mem_perpJ)
+    have h40 := _root_.GlobalTheory.PerpModulus.perp_modulus n ε (dblFlag ε W s) (perpJ ε (dblFlag ε W s)) (fun y => mem_perpJ)
     rw [dblFlag_sub hs]
     exact ⟨((h40.2.2 m).2 (hkeep s)).2.1, h40.1⟩
-  have h56 := GlobalTheory.T.doubledFlag_sum_eq_unipotentDim_and_layerProd n a j (fun s => detOn (uMat m) (dblFlag ε W s))
+  have h56 := _root_.GlobalTheory.DoubledFlag.sum_eq_dimN_and_layerProd_eq n a j (fun s => detOn (uMat m) (dblFlag ε W s))
     (fun s => Module.finrank ℂ (dblFlag ε W s)) hj hDpos hD0 hν0 hνs h2ν hsym
   have hconjE : ∀ k, uMat m * E k * uMat m⁻¹ ∈ Submodule.span ℝ (Set.range E) := by
     intro k
@@ -454,7 +459,7 @@ theorem modulus : ∀ (n : ℕ) (ε : Fin n → Bool) (a : ℕ) (j : Fin a → �
     intro g
     rw [← SetLike.mem_coe, hN]
     exact hNA g
-  have h28 := GlobalTheory.T.map_conj_gaugeMeasure_eq_inv_det_smul n ε ((lower (dblFlag ε W) (2 * a + 1)).restrictScalars ℝ) d E N hAmul hEo hE hNA'
+  have h28 := _root_.GlobalTheory.GaugeConjScale.map_conj_eq_inv_det_smul n ε ((lower (dblFlag ε W) (2 * a + 1)).restrictScalars ℝ) d E N hAmul hEo hE hNA'
     (by rw [hN]; exact hNc) μ (by rw [hN, hd]; exact hμ) m L hS hL hLne
   have hloc : locSize j W (uMat m) = fun i : Fin a =>
       (detOn (uMat m) (dblFlag ε W (i + 1)) / detOn (uMat m) (dblFlag ε W i)) ^ (-(1 : ℝ) / j i) := by

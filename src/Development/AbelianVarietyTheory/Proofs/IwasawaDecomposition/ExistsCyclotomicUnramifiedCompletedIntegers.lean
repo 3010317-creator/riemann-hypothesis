@@ -2,7 +2,9 @@ module
 
 public import Formalism.LocalToGlobal.NormalizedHeckeFactors.TwDefs
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormEqZpowOfMemMaxUnramifiedSubfield
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ClosureAdjoinUnitBallCoeffBoundStatement
+public import Mathlib.Analysis.Normed.Field.Instances
+public import Mathlib.NumberTheory.Padics.Complex
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ClosureAdjoinUnitBallCoeffBound
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIntegersCompletion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -155,7 +157,7 @@ theorem exists_cyclotomic_integers : ∀ (l : ℕ) [Fact l.Prime] (K₀ L : Loc.
   have hn : 0 < l ^ k := pow_pos hp.pos k
   have hint : IsIntegral ℚ_[l] ζ :=
     ⟨X ^ (l ^ k) - C 1, monic_X_pow_sub_C 1 hn.ne', by simp [hζ.pow_eq_one]⟩
-  obtain ⟨n, Cb, hC⟩ := GlobalTheory.T.exists_coeff_bounded_in_closure_of_norm_le_one l (Kt l K₀ L) ζ hint
+  obtain ⟨n, Cb, hC⟩ := _root_.GlobalTheory.closure_adjoin_unitBall_coeff_bound l (Kt l K₀ L) ζ hint
   have hB : ∀ x, x ∈ clC l (Kt l K₀ L ⊔ muK l k) ↔ x ∈ clC l (Kt l K₀ L ⊔ IntermediateField.adjoin ℚ_[l] {ζ}) := by
     intro x; rw [hmu]
   have hl : ‖(l : ℂ_[l])‖ < 1 := by

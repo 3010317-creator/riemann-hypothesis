@@ -1,8 +1,8 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ArchBetween
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RefLowerOfFibreInputStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TowerI5OfReferenceStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RefLowerOfFibreInput
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TowerI5OfReference
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +52,7 @@ theorem i5_of_hasRef_of_fibreInput : ∀ (Ψ : Type) [Fintype Ψ] [DecidableEq �
     (II : IntersectionSystem) (R : T.Comp → RootModel Ψ (j + 1 + (k + 1))), IsIntersectionSystem II → HasRef T R →
     (∀ c, AmpleQ (R c).y (R c).A.a ∧ FlatUnit (R c) ∧ FibreInput (R c)) → T.I5 II := by
   intro Ψ _ _ j k T II R hII hR h
-  exact GlobalTheory.T.tower_i5_of_reference Ψ _ T II R hII hR fun c =>
-    GlobalTheory.T.ref_lower_of_fibre_input Ψ j k (R c) (h c).1 (h c).2.1 (h c).2.2
+  exact _root_.GlobalTheory.CompanionTheory.Ar.Ht.RefTower.i5_of_hasRef_of_refLower Ψ _ T II R hII hR fun c =>
+    _root_.GlobalTheory.CompanionTheory.Ar.Ht.RefLow.refLower_of_fibre Ψ j k (R c) (h c).1 (h c).2.1 (h c).2.2
 
 end GlobalTheory.CompanionTheory.Ar.Ht.TopLower

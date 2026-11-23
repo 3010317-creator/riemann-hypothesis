@@ -4,11 +4,13 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.HasLevelStd
 public import Development.AbelianVarietyTheory.Definitions.Divisors.JetAnalytic
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ZetaActRefl
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlgebraicValuationAtLeastAtEmbeddingRingOps
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertEisensteinCoefficientValuationBoundStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HasQIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertEisensteinCoefficientValuationBound
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertLatticeTwistHasLevel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModularGroupRowVecAndConjRightActions
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedHilbertLatticeContainsAndCoordinateSizeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeierstrassTorsionQExpansionIntegralStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.TorsTransport
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedHilbertLatticeContainsAndCoordinateSize
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeierstrassTorsionQExpansionIntegral
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,13 +65,13 @@ theorem main : EisExp → ∀ (F : Type) [Field F] [NumberField F] [IsTotallyRea
   have hN : 0 < N := Nat.pos_of_ne_zero (NeZero.ne N)
   have hTw : HasLevel N (twist N L ((α : GL (Fin 2) (ZMod N)) : Matrix (Fin 2) (Fin 2) (ZMod N))) :=
     GlobalTheory.HilbFam.hasLevel_twist_of_hasLevel F N L _ hL
-  obtain ⟨hmem, hsz⟩ := GlobalTheory.T.twistedHilbertLattice_contains_and_coordinate_size l lam F N (M * l ^ b) L α ρ₀ hL.2 hML hLsz hNsz
+  obtain ⟨hmem, hsz⟩ := _root_.GlobalTheory.HilbFam.TwistSize.main l lam F N (M * l ^ b) L α ρ₀ hL.2 hML hLsz hNsz
   have hx : M' • vmul y α = 0 := by rw [← hA.2.2.2.2.2.1, hMy]; exact (hA.2.2.2.2.1 0 α).mpr rfl
   have hx0 : vmul y α ≠ 0 := fun h => hy ((hA.2.2.2.2.1 y α).mp h)
-  obtain ⟨hQ, -⟩ := GlobalTheory.T.weierstrassTorsion_qExpansion_integral l lam N M' (vmul y α) hlM' hx hx0
+  obtain ⟨hQ, -⟩ := _root_.GlobalTheory.WpFam.ExpansionIntegral.main l lam N M' (vmul y α) hlM' hx hx0
   have hQρ : QAll (Sz l lam ρ) N (wB N (vmul y α)) := by
     obtain ⟨a, ha, hp⟩ := hQ
     exact ⟨a, ha, fun n => hS.2.2.2.1 0 ρ _ hρ0 (hp n)⟩
-  exact GlobalTheory.T.hilbertEisenstein_coefficient_valuation_bound hE F hf s N _ hs hN hTw z hz l lam κ (wB N (vmul y α)) M b e ρ₀ ρ he hze hlM hmem hsz hρ hQρ
+  exact _root_.GlobalTheory.HilbFam.sz_hfun_coef hE F hf s N _ hs hN hTw z hz l lam κ (wB N (vmul y α)) M b e ρ₀ ρ he hze hlM hmem hsz hρ hQρ
 
 end GlobalTheory.HilbFam.SizeGL

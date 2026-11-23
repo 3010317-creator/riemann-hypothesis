@@ -1,8 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FourierMatch
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetRallisBorderedMatrixNormalFormInvariantsStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetRallisBorderedMatrixNormalFormInvariants
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetRallisTransferFactorKrylovDet
+public import Mathlib.Topology.Algebra.Group.Units
+public import Mathlib.Analysis.Normed.Module.FiniteDimension
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,9 +47,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
-public import Mathlib.Topology.Algebra.Group.Units
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.Analysis.Normed.Module.FiniteDimension
 
 @[expose] public section
 
@@ -106,7 +106,7 @@ private theorem isCompact_unit_box (F : Type) [NontriviallyNormedField F] [Prope
 theorem GlobalTheory.JR.orbG_integrand_hasCompactSupport : ∀ (F : Type) [NontriviallyNormedField F] [LocallyCompactSpace F] (n : ℕ) (Y : Gl n F), Delta (inv Y) ≠ 0 → HasCompactSupport (fun g : GL (Fin n) F => unitG n F (act g Y) * omega (act g Y)) := by
   intro F _ _ n Y hY
   have : ProperSpace F := ProperSpace.of_locallyCompactSpace F
-  obtain ⟨-, -, hCB, -, -⟩ := GlobalTheory.T.jacquetRallis_borderedMatrix_normalForm_invariants F n
+  obtain ⟨-, -, hCB, -, -⟩ := _root_.GlobalTheory.JR.normalForm_invariants F n
   have hdet : (Cm Y).det * (Bm Y).det ≠ 0 := by
     rw [← Matrix.det_mul, hCB Y]
     exact hY

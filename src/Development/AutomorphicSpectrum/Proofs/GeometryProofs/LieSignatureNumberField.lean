@@ -6,15 +6,22 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import Development.AbelianVarietyTheory.Counterexamples.ModuliSurvey.ExistsGoodLevel
 public import Development.AbelianVarietyTheory.Counterexamples.ModuliSurvey.ModuliNonemptyOfObj
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsFullTorsionIsometryOfTateIsoQ
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPushEquiv
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PushEquivSymmLeft
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ObjMapIdCompCancel
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsPrincipalDim
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NumberFieldPointIntegralLiftStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrincipalGoodReductionExtendsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrincipalLieMultiplicityTypeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TateIsoDatumExistsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionPointsNumberFieldStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PushInvertible
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NumberFieldPointIntegralLift
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrincipalGoodReductionExtends
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrincipalLieMultiplicityType
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TateIsoDatumExists
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.NumberTheory.NumberField.Basic
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ThickTransComp
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionPointsNumberField
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.BCRing
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.UnifAt
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPushEquiv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,9 +61,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AmplePt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.BCRing
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.UnifAt
 
 @[expose] public section
 
@@ -82,7 +87,7 @@ theorem exists_obj_ext : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
       (∀ x, ((e x : F) : ℂ) = σ x) ∧ Nonempty (SABMap o.t t (spMap e)) := by
   intro E _ _ _ H D l L _ _ t ht hA ρ σ hσ hs I F₀ hF₀ hK
   have hM : 0 < l.M := by have := l.three_le; omega
-  obtain ⟨F₁, hF₁, e₁, he₁, hT⟩ := GlobalTheory.T.torsion_points_number_field L σ (pol t ht) l.M hM
+  obtain ⟨F₁, hF₁, e₁, he₁, hT⟩ := _root_.GlobalTheory.CompanionTheory.Ar.torsion_defined_over_numberField L σ (pol t ht) l.M hM
   have hfin : FiniteDimensional ℚ ↥(F₀ ⊔ F₁) := inferInstance
   let i₁ : F₁ →+* ↥(F₀ ⊔ F₁) := (IntermediateField.inclusion le_sup_right).toRingHom
   let e : L →+* ↥(F₀ ⊔ F₁) := i₁.comp e₁
@@ -138,7 +143,7 @@ theorem exists_obj_ext : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     refine Eq.trans ?_ (he ρ).symm
     rw [hσ]
     rfl)
-  obtain ⟨o, ho⟩ := GlobalTheory.T.principal_lie_multiplicity_type E H D l (F₀ ⊔ F₁) hK₂ t₂ ht₂ hA (fun k _ _ g τ => by
+  obtain ⟨o, ho⟩ := _root_.GlobalTheory.CompanionTheory.Ar.SabModel.obj_of_sections E H D l (F₀ ⊔ F₁) hK₂ t₂ ht₂ hA (fun k _ _ g τ => by
     have hp : ∀ n, LieMult t₂.act (spMap g) τ n ↔ LieMult t.act (spMap (g.comp e)) τ n := fun n =>
       (GlobalTheory.LiePull.lieMult_pull (𝓞 E) _ _ _ _ _ _ t.act t₂.act m.cart m.act k (spMap g) τ n).trans
         (iff_of_eq (congrArg (fun x => LieMult t.act x τ n) (spMap_comp _ _).symm))
@@ -178,14 +183,14 @@ theorem exists_sab_model : N1ab → PartI → ∀ (E : Type) [Field E] [NumberFi
   intro hN hP E _ _ _ H L _ _ t ht ⟨ρ, p', q', hρ, hs⟩
   by_cases h0 : p' + q' = 0
   · obtain ⟨rfl, rfl⟩ : p' = 0 ∧ q' = 0 := by omega
-    obtain ⟨t', ⟨m⟩⟩ := GlobalTheory.T.principal_good_reduction_extends E H L t ht fun σ τ => by
+    obtain ⟨t', ⟨m⟩⟩ := _root_.GlobalTheory.CompanionTheory.Ar.TrivialModel.exists_model_of_rank_zero E H L t ht fun σ τ => by
       by_cases h : τ H.rt = σ ρ
       · exact (hs ℂ σ τ).1 h
       · exact (hs ℂ σ τ).2 h
     exact ⟨L, inferInstance, inferInstance, RingHom.id L, t', t, ⟨m⟩,
       ⟨ReciprocityTheory.ChartRestriction.G.PullbackSections.sabMapCast (GlobalTheory.ObjComp.sabMapId t) (Spec.map_id _).symm⟩⟩
   · obtain ⟨σ, hσ⟩ := exists_embedding_rt0 H ρ hρ
-    obtain ⟨D, rfl, rfl, ⟨I⟩⟩ := GlobalTheory.T.tate_iso_datum_exists E H L t ht σ p' q' fun τ => by
+    obtain ⟨D, rfl, rfl, ⟨I⟩⟩ := _root_.GlobalTheory.CompanionTheory.Ar.SabModel.datum_tate E H L t ht σ p' q' fun τ => by
       have := hs ℂ σ τ
       rwa [hσ] at this
     have hD : 1 ≤ D.p + D.q := by omega
@@ -204,7 +209,7 @@ theorem exists_sab_model : N1ab → PartI → ∀ (E : Type) [Field E] [NumberFi
       exact congrArg spMap (RingHom.ext fun x => Subtype.ext rfl))
     have hy1 : y ≫ pullback.fst _ _ = f := pullback.lift_fst _ _ _
     have hy2 : y ≫ pullback.snd _ _ = spMap bF := pullback.lift_snd _ _ _
-    obtain ⟨yt, hyt⟩ := GlobalTheory.T.number_field_point_integral_lift E H D l (Xo l) c c.fin Y F bF y hy2
+    obtain ⟨yt, hyt⟩ := _root_.GlobalTheory.CompanionTheory.Ar.model_point_extends_to_integers E H D l (Xo l) c c.fin Y F bF y hy2
     obtain ⟨t', ⟨m'⟩⟩ := exists_sab yt Y.t
     rw [← hy1] at mf
     obtain ⟨m₁, -⟩ := ObjComp.objMap_cancel Y.m0 mf

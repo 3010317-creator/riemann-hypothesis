@@ -1,9 +1,11 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbBound
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianPartBaseChangeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeInnerProductConjugateStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeInnerProductPullbackUniqueStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.SlopeBoundSt
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianPartBaseChange
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.HodgeIPIffHodgeFormConj
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeInnerProductConjugate
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeInnerProductPullbackUnique
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelPullbackEquivalence
 public import Development.WeilBound.CoreStatements.AmpleLineBundles.IsPrincipalIffOfBaseChange
 import Mathlib.Algebra.Order.Floor.Extended
@@ -116,7 +118,7 @@ end PositivityTheory.Xgn.QuotientUniformizationConjugate
 open PositivityTheory.Xgn.QuotientUniformizationConjugate in
 theorem PositivityTheory.Xgn.height_bound_complex_conjugate : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (X : Scheme.{0}) (t : SAB H X) (Ω : Type) [Field Ω] (ξ : Sp Ω ⟶ X) (Li : Type) [AddCommGroup Li] [Module Ω Li] (M : LieModel t.G ξ Li) (K : Type) (J : K → Type) (y : (Σ k, J k) → Ω) (h : LieMetric M y) (C : ℝ) (z : Sp ℂ ⟶ X), AbBound t h C (spMap (starRingEnd ℂ) ≫ z) → AbBound t h C z := by
   intro E _ _ _ H X t Ω _ ξ Li _ _ M K J y h C z hb P
-  obtain ⟨P', mK, mB, c1, c2⟩ := GlobalTheory.T.abelian_part_base_change E H X t ℂ ℂ z P (starRingEnd ℂ)
+  obtain ⟨P', mK, mB, c1, c2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.AbPartFieldChange.exists_baseChange E H X t ℂ ℂ z P (starRingEnd ℂ)
   obtain ⟨hp, hb'⟩ := hb P'
   refine ⟨(CoverDenseAlt.isPrincipal_iff_of_base_change E H ℂ ℂ (starRingEnd ℂ) P.tB P'.tB mB).1 hp, fun v v₀ c hv hv₀ hc => ?_⟩
   have hid : 𝟙 (Sp ℂ) ≫ spMap (starRingEnd ℂ) = spMap (starRingEnd ℂ) ≫ 𝟙 (Sp ℂ) := by
@@ -134,10 +136,10 @@ theorem PositivityTheory.Xgn.height_bound_complex_conjugate : ∀ (E : Type) [Fi
     have s₁ : lf (v' ≫ P'.τ.q ≫ P'.e.hom) = lf v' ≫ (P'.τ.q ≫ P'.e.hom).left := rfl
     have s₂ : lf (v ≫ P.τ.q ≫ P.e.hom) = lf v ≫ (P.τ.q ≫ P.e.hom).left := rfl
     rw [hb₁, s₁, s₂, Category.assoc, ← c2, ← Category.assoc, hv'', Category.assoc]
-  have h₁ := GlobalTheory.T.hodge_inner_product_conjugate E H (Sp ℂ) P.tB (𝟙 _) _ _ a a c ha ha hc
+  have h₁ := _root_.GlobalTheory.CompanionTheory.Ar.HodgeConj.hodgeInnerProduct_conj_abelianScheme E H (Sp ℂ) P.tB (𝟙 _) _ _ a a c ha ha hc
   have hab : lf a = lf b := ha.trans hb₁.symm
   have h₂ := hodge_congr P.tB.PP.L hid.symm hab hab h₁
-  have h₃ := ((GlobalTheory.T.hodge_inner_product_pullback_unique E H (Sp ℂ) (Sp ℂ) P'.tB P.tB (spMap (starRingEnd ℂ)) mB (𝟙 _) _ _ b b e₂ e₂).1 _).2 h₂
+  have h₃ := ((_root_.GlobalTheory.CompanionTheory.Ar.HodgeUnique.main E H (Sp ℂ) (Sp ℂ) P'.tB P.tB (spMap (starRingEnd ℂ)) mB (𝟙 _) _ _ b b e₂ e₂).1 _).2 h₂
   have h₄ := hb' v' v₀' _ (hvt (hut hv)) e₁ h₃
   rw [h.conj z v₀ v₀ v₀' v₀' hv₀' hv₀', Complex.conj_re, Complex.conj_re] at h₄
   exact h₄

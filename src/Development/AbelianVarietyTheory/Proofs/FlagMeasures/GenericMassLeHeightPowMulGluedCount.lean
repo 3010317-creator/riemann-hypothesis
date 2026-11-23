@@ -4,10 +4,12 @@ public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankP
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GlobSet
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsRationalFramesPrescribedLocalClassesStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagPairValueInvariantUnitriangularChangeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FrameDualUnipotentGroupActsUnitriangularOntoStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.AtBase
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FrameDualUnipotentGroupActsUnitriangularOnto
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GlueUnimodularLatticeRepsMoveIsometryFramesStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalPairingClassStableUnitriangularChangeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassClassEqWeightCountStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.IsTermOver
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassClassEqWeightCount
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassPairingClassBounds
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitriangularChangeRationalFlagIffRationalUnipotStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.WeightedCountGluedLatticesEqMassMulLocalStatement
@@ -140,7 +142,7 @@ theorem frameN : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] 
     (A : Matrix (Fin (r + 1)) (Fin (r + 1)) E), (∃ n ∈ Fr.N, g0 = fun b => n (Fr.f b)) → Uni A → Chg g0 A g →
     ∃ n ∈ Fr.N, g = fun b => n (Fr.f b) := by
   intro F _ _ _ E _ _ _ _ M hOK V _ _ H r Fr hT g0 g A hg0 hA hc
-  have u := GlobalTheory.T.frameDual_unipotentGroup_acts_unitriangular_onto M hOK H r Fr hT
+  have u := _root_.GlobalTheory.LocOver.UnipOnto.unipotent_onto M hOK H r Fr hT
   obtain ⟨n, hn, rfl⟩ := hg0
   exact u.2.2 g (tri_trans E V (r + 1) _ _ _ (u.2.1 n hn) ⟨A, hA, hc⟩)
 
@@ -182,8 +184,8 @@ theorem genericMass_le_heightPow_mul_glueSum : ∀ (D : D7) (X : HidaSetting D) 
       Tri (D.s.atP p).Ep (scaled (zOf Y) p (frame F')) (f' p) := by
     intro p hp
     obtain ⟨-, -, ⟨n, hn, hfn, -⟩, ⟨n', hn', hfn', -⟩, -⟩ := htt p hp
-    have u1 := GlobalTheory.T.frameDual_unipotentGroup_acts_unitriangular_onto ((zOf Y).M p) (hOK p) (locH (zOf Y) p) D.R.rS (Fm.FP p).A (hAT p)
-    have u2 := GlobalTheory.T.frameDual_unipotentGroup_acts_unitriangular_onto ((zOf Y).M p) (hOK p) (locH (zOf Y) p) D.R.rS (Fm.FP p).B (hBT p)
+    have u1 := _root_.GlobalTheory.LocOver.UnipOnto.unipotent_onto ((zOf Y).M p) (hOK p) (locH (zOf Y) p) D.R.rS (Fm.FP p).A (hAT p)
+    have u2 := _root_.GlobalTheory.LocOver.UnipOnto.unipotent_onto ((zOf Y).M p) (hOK p) (locH (zOf Y) p) D.R.rS (Fm.FP p).B (hBT p)
     have e1 : f p = (tt p hp).f := dif_pos hp
     have e2 : f' p = (tt p hp).f' := dif_pos hp
     rw [e1, e2, ← hAf p, ← hBf p, hfn, hfn']
@@ -203,7 +205,7 @@ theorem genericMass_le_heightPow_mul_glueSum : ∀ (D : D7) (X : HidaSetting D) 
     have hN := frameN ((zOf Y).M p) (hOK p) (locH (zOf Y) p) D.R.rS (Fm.FP p).A (hAT p) _ _ A ⟨n, hn, hfn⟩ hA hc1
     have hN' := frameN ((zOf Y).M p) (hOK p) (locH (zOf Y) p) D.R.rS (Fm.FP p).B (hBT p) _ _ A' ⟨n', hn', hfn'⟩ hA' hc2
     have hZc := GlobalTheory.T.localPairingClass_stable_unitriangularChange ((zOf Y).M p) (locH (zOf Y) p) D.R.rS (Y0 p) _ _ _ _ A A' hA hA' hint hc1 hc2 (hcls p hp)
-    obtain ⟨wp, h0, h1, h2⟩ := GlobalTheory.T.mass_class_eq_weight_count_alt ((zOf Y).M p) (hOK p) (locH (zOf Y) p) D.R.rS D.R.k (Fm.FP p) hk
+    obtain ⟨wp, h0, h1, h2⟩ := _root_.GlobalTheory.HL.LocGenMass.mass_class_eq_weight_count ((zOf Y).M p) (hOK p) (locH (zOf Y) p) D.R.rS D.R.k (Fm.FP p) hk
       (rank_Vp p) (hRel p) (Fm.R p) (Fm.d0 p) _ _ hN hN' (Y0 p) (clsLoc ((zOf Y).M p) (Y0 p)) rfl hZc
       ⟨dd p hp, tt p hp, htt p hp, hcls p hp⟩
     exact ⟨wp, h0, h1, h2⟩

@@ -1,14 +1,20 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsLogMult
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalTopFormPullbackBijectiveBirationalStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FunctionFieldMapCompConstFn
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalTopFormPullbackBijectiveBirational
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GeometricallyIntegralIffGeometricallyConnectedOf
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.AmpleAddNefIsAmple
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.CanonicalDivisorOfForm
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.CartierDivisorMultCharacterize
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.ExistsMultipleBelowThreshold
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.NefPullbackIsNef
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.SncBoundaryAmpleDecompositionStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.LineBundleGlobalSectionsDimCongrPicardClass
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AmpleAddNefIsAmple
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsEqnIffGeneratesAtInv
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CanonicalDivisorOfForm
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsClosedImmersionGenericPoint
+public import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.IsOpenOfMemIrreducibleComponentsOfFinite
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CartierDivisorMultCharacterize
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMultipleBelowThreshold
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NefPullbackIsNef
+public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAmpleLBOfRelAmpleOfIsAffine
+public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.SncBoundaryAmpleDecomposition
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -122,13 +128,13 @@ theorem GlobalTheory.Discrepancy.vanishing_logRes_floor : ∀ (k : Type) [Field 
   have hR0 : ∀ z, 0 ≤ R.mult z := fun z => (hRm z).symm ▸ Int.emod_nonneg _ hm0
   have hRlt : ∀ z, R.mult z < m := fun z =>
     (hRm z).symm ▸ Int.emod_lt_of_pos _ (by exact_mod_cast hm)
-  have hReff : R.Eff := ((GlobalTheory.T.cartier_divisor_mult_characterize Y R).1).2 hR0
+  have hReff : R.Eff := ((_root_.GlobalTheory.Cartier.MultEff.eff_supp_eq_of_mult Y R).1).2 hR0
   have hRB : R.supp ≤ B := fun x hx => by
-    obtain ⟨z, hzx, hz⟩ := ((GlobalTheory.T.cartier_divisor_mult_characterize Y R).2.1 x).1 hx
-    refine h.supp (((GlobalTheory.T.cartier_divisor_mult_characterize Y Γ).2.1 x).2 ⟨z, hzx, fun e => hz ?_⟩)
+    obtain ⟨z, hzx, hz⟩ := ((_root_.GlobalTheory.Cartier.MultEff.eff_supp_eq_of_mult Y R).2.1 x).1 hx
+    refine h.supp (((_root_.GlobalTheory.Cartier.MultEff.eff_supp_eq_of_mult Y Γ).2.1 x).2 ⟨z, hzx, fun e => hz ?_⟩)
     rw [hRm, e, Int.zero_emod]
 
-  obtain ⟨b, hab, hb⟩ := GlobalTheory.T.exists_multiple_below_threshold Y R Fd m r a hr hRlt
+  obtain ⟨b, hab, hb⟩ := _root_.GlobalTheory.CoefBound.coef_lt_of_large Y R Fd m r a hr hRlt
   set Γ' := (r * b) • R + m • Fd with hΓ'
   have hΓ'eff : Γ'.Eff := (eff_nsmul hReff _).add (eff_nsmul hFd _)
   have hΓ'B : Γ'.supp ≤ B := (CartierDiv.supp_add_le _ _).trans
@@ -136,19 +142,19 @@ theorem GlobalTheory.Discrepancy.vanishing_logRes_floor : ∀ (k : Type) [Field 
 
   have hAm : IsAmpleLB (lbPow A m) := (isAmpleLB_pow_iff hA.isLB hm).2 hA
   letI := algebraΓOfHom (s ≫ p)
-  have hTp : IsNef k (T.pull s) := GlobalTheory.T.nef_pullback_is_nef k X Y p s hp T hT
-  have hMp : IsNef k (M.pull s) := GlobalTheory.T.nef_pullback_is_nef k X Y p s hp M hMn
+  have hTp : IsNef k (T.pull s) := _root_.GlobalTheory.NumPull.isNef_pull_of_isProjOver k X Y p s hp T hT
+  have hMp : IsNef k (M.pull s) := _root_.GlobalTheory.NumPull.isNef_pull_of_isProjOver k X Y p s hp M hMn
   obtain ⟨P, hP, hPc⟩ := cls_surj (b • cls (T.pull s) hTp.isLB + (m * (b - a)) • cls (M.pull s) hMp.isLB)
   have hPn : IsNef k P := (hTp.pow hA b).of_cls_eq_add (hMp.pow hA (m * (b - a))) hA hP
     (by rw [hPc, cls_lbPow hTp.isLB, cls_lbPow hMp.isLB])
   obtain ⟨A', hA'lb, hA'c⟩ := cls_surj (cls (lbPow A m) hAm.isLB + cls P hPn.isLB)
-  have hA' : IsAmpleLB A' := GlobalTheory.T.ample_add_nef_is_ample k Y (s ≫ p) h.proj (lbPow A m) P A' hAm hPn hA'lb hA'c
+  have hA' : IsAmpleLB A' := _root_.GlobalTheory.isAmpleLB_of_cls_eq_ample_add_nef k Y (s ≫ p) h.proj (lbPow A m) P A' hAm hPn hA'lb hA'c
 
   let Kc := CanonLB.all (s ≫ p) n
   have hne : EtaleKlt.ratPull p s n η ≠ 0 := fun e =>
-    hη ((GlobalTheory.T.rationalTopFormPullback_bijective_birational k X Y p s h.bir n).1 (e.trans (map_zero _).symm))
-  have hK : toPic K = cls Kc.bundle Kc.isLB := (GlobalTheory.T.canonical_divisor_of_form k Y (s ≫ p) n _ hne).2 K h.div Kc
-  refine GlobalTheory.T.snc_boundary_ample_decomposition k Y (s ≫ p) n h.proj Kc Q A' hQ hA' B Γ' (m * r * b) h.snc hΓ'eff hΓ'B hb ?_ i hi
+    hη ((_root_.GlobalTheory.EtaleKlt.ratPull_bijective_of_birational k X Y p s h.bir n).1 (e.trans (map_zero _).symm))
+  have hK : toPic K = cls Kc.bundle Kc.isLB := (_root_.GlobalTheory.Discrepancy.exists_isDivOfForm_and_toPic k Y (s ≫ p) n _ hne).2 K h.div Kc
+  refine _root_.GlobalTheory.Div.SncBoundary.vanishing_ample_snc_cartier k Y (s ≫ p) n h.proj Kc Q A' hQ hA' B Γ' (m * r * b) h.snc hΓ'eff hΓ'B hb ?_ i hi
 
   rw [hA'c, cls_lbPow hA.isLB, hPc, cls_pull hTlb, cls_pull hM, hTc, ← hK, hQc]
   obtain ⟨c, rfl⟩ := Nat.exists_eq_add_of_le hab

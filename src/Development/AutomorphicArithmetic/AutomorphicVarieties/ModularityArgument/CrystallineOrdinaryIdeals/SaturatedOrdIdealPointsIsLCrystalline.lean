@@ -2,8 +2,8 @@ module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.IsInertiaInfiniteCyclotomic
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.CrystallineOrdinaryIdeals.ExistsCrOfFinset
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.CrystallineOrdinaryIdeals.GaloisSubgroupLBasicPropertiesStatement
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.CrystallineOrdinaryIdeals.IsLCrystallinePointOfSaturatedOrdIdealStatement
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.CrystallineOrdinaryIdeals.GaloisSubgroupLBasicProperties
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.CrystallineOrdinaryIdeals.IsLCrystallinePointOfSaturatedOrdIdeal
 import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.PtCont
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -60,7 +60,7 @@ def glPart {G R : Type} [Group G] [CommRing R] {m : ℕ} (H : Subgroup G)
 
 theorem ptsCr_IY : LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsDomain O] [IsDiscreteValuationRing O] [CharZero O] [Algebra ℤ_[l] O] [Module.Finite ℤ_[l] O] [IsAdicComplete (maximalIdeal O) O] (D : Dat3 l O) (U : _root_.UpperTheory.V.U3.Univ (_root_.UpperTheory.V.U3.GCond.noCondition O D.η D.Ψ)), GlobalTheory.OrdLoc.PtsCr D U (GlobalTheory.OrdLoc.IY D U) := by
   intro hP l _ O _ _ _ _ _ _ _ D U B _ _ _ _ _ _ _ f hf
-  obtain ⟨-, -, hemb, -, -⟩ := GlobalTheory.T.galoisSubgroupL_basic_properties D
+  obtain ⟨-, -, hemb, -, -⟩ := _root_.GlobalTheory.OrdLoc.hl_basic D
   have hright : ∀ g ∈ D.HL, (push f U.r.hom g).right = 1 := fun g hg => by
     rw [show (push f U.r.hom g).right = (U.r.hom g).right from rfl, U.r.hasMult g]
     exact hg.1
@@ -84,7 +84,7 @@ theorem ptsCr_IY : LocalPublishedTheorems → ∀ {l : ℕ} [Fact l.Prime] {O : 
         commutes' := fun x => by
           change algebraMap B B' (f (algebraMap O U.R x)) = algebraMap B B' (algebraMap O B x)
           rw [f.commutes] }
-    obtain ⟨ρ', hρ', hcr⟩ := GlobalTheory.T.isLCrystalline_point_of_saturatedOrdIdeal hP D U B' f' (fun a ha => by
+    obtain ⟨ρ', hρ', hcr⟩ := _root_.GlobalTheory.OrdLocPt.main hP D U B' f' (fun a ha => by
       change algebraMap B B' (f a) = 0
       rw [show f a = 0 from hf ha, map_zero])
     have e : ρ' = (Matrix.GeneralLinearGroup.map (algebraMap B B')).comp ρ := by

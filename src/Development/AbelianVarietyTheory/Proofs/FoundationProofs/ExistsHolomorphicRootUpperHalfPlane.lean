@@ -3,7 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Foundations.ExpUpper
 public import Mathlib.Analysis.Analytic.Order
 public import Mathlib.Order.CompletePartialOrder
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsRootBallOfAnalyticOrderDvdStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsRootBallOfAnalyticOrderDvd
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +54,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Foundations.IsRootOne
-public import Mathlib.FieldTheory.IsAlgClosed.Basic
 
 @[expose] public section
 
@@ -162,7 +163,7 @@ theorem GlobalTheory.KZ.H3.uhp_root : ∀ (h : ℂ → ℂ) (m : ℕ), 0 < m →
   have han : AnalyticOnNhd ℂ h Hs := hd.analyticOnNhd hHo
   have hr : ∀ k : ℕ, ∃ r : ℂ → ℂ, DifferentiableOn ℂ r (Metric.ball (cen k) (rad k)) ∧
       ∀ z ∈ Metric.ball (cen k) (rad k), r z ^ m = h z := fun k =>
-    GlobalTheory.T.exists_root_ball_of_analyticOrder_dvd h m (cen k) (rad k) hm (rad_pos k) (han.mono (closedBall_sub k))
+    _root_.GlobalTheory.KZ.RootDisc.exists_root_disc h m (cen k) (rad k) hm (rad_pos k) (han.mono (closedBall_sub k))
       (fun τ hτ => hord τ (closedBall_sub k hτ))
   choose r hrd hrp using hr
 

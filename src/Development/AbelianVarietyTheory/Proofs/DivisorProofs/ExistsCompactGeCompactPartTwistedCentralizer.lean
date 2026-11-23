@@ -1,10 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoundedOfIsIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCompactGLBoundedEntriesCompletionFinitePlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralOfIsCompactClosureZpowersStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalTwistContinuousInvolutionIntegralPropertiesStatement
+public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Completion
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoundedOfIsIntegral
+public import Mathlib.Topology.Instances.Matrix
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCompactGLBoundedEntriesCompletionFinitePlace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralOfIsCompactClosureZpowers
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalTwistContinuousInvolutionIntegralProperties
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistedCentralizerIsNormOneTorus
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -58,7 +60,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E]
 
 theorem twCent_commute (hE : Unr E) (n : ℕ) (w : Pl E) (y : GLw n w) {g : GLw n w}
     (hg : g ∈ twCent (thL n w) y) : Commute g (nrmL n w y) := by
-  have hinv : ∀ x, thL n w (thL n w x) = x := (GlobalTheory.T.localTwist_continuous_involution_integral_properties E hE n w).2.1
+  have hinv : ∀ x, thL n w (thL n w x) = x := (_root_.GlobalTheory.BCT.ThBasic.twist_basic E hE n w).2.1
   have hg' : g * y = y * thL n w g := hg
   unfold nrmL
   split_ifs with hs
@@ -118,16 +120,16 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E →
         show IsCompact (closure (Subgroup.zpowers g⁻¹ : Set (GLw n w)))
         rw [Subgroup.zpowers_inv]
         exact hg.2 }
-  obtain ⟨c, hc⟩ := GlobalTheory.T.exists_valuation_bound_of_isIntegral_mem_adjoin E w n N hs
-  have hB := GlobalTheory.T.isCompact_GL_bounded_entries_completion_finitePlace E w n c
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.LocBounded.bounded_of_isIntegral E w n N hs
+  have hB := _root_.GlobalTheory.BoundedGL.isCompact_bounded E w n c
   have hSB : (H0 : Set (GLw n w)) ⊆ {g : GL (Fin n) (w.adicCompletion E) | ∀ i j,
       Valued.v ((g : Matrix (Fin n) (Fin n) (w.adicCompletion E)) i j) ≤ c ∧
       Valued.v (((g⁻¹ : GL (Fin n) (w.adicCompletion E)) : Matrix (Fin n) (Fin n) (w.adicCompletion E)) i j) ≤ c} := by
     intro g hg
     have hg' : g⁻¹ ∈ H0 := H0.inv_mem hg
     intro i j
-    exact ⟨hc _ (hadj g hg.1) (GlobalTheory.T.isIntegral_adicCompletionIntegers_of_isCompact_zpowers E w n g hg.2) i j,
-      hc _ (hadj g⁻¹ hg'.1) (GlobalTheory.T.isIntegral_adicCompletionIntegers_of_isCompact_zpowers E w n g⁻¹ hg'.2) i j⟩
+    exact ⟨hc _ (hadj g hg.1) (_root_.GlobalTheory.isIntegral_of_isCompact_closure_zpowers E w n g hg.2) i j,
+      hc _ (hadj g⁻¹ hg'.1) (_root_.GlobalTheory.isIntegral_of_isCompact_closure_zpowers E w n g⁻¹ hg'.2) i j⟩
   refine ⟨H0.topologicalClosure, ?_, ?_⟩
   · rw [Subgroup.topologicalClosure_coe]
     exact hB.of_isClosed_subset isClosed_closure (closure_minimal hSB hB.isClosed)

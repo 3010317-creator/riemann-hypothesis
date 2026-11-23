@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIsC
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.KerScheme
 public import Development.AbelianVarietyTheory.Definitions.RegularCharts.BaseNorm
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.UnitFramesGeneratorRatioModulusOne
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeckeThetaValueIdentityUnitFramesStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeckeThetaValueIdentityUnitFrames
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ThetaPointsChangeLevelIsometryLinearMap
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -114,7 +114,7 @@ theorem exists_pointwise_bound : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
   obtain ⟨Pm', -, hp', hu', -, hA'⟩ := hP k' x'
   obtain ⟨Hm, χ, fr, θ, Fd, hH, hpos, him, hd, hn, hc, h0, ha, hv, hF, hI⟩ := hA hx
   obtain ⟨Hm', χ', fr', θ', Fd', hH', hpos', him', hd', hn', hc', h0', ha', hv', hF', hI'⟩ := hA' hx'
-  obtain ⟨h, wm, hlat, hHH, hwm, hid⟩ := GlobalTheory.T.hecke_theta_value_identity_unitFrames E H Dw l Xo c σ r U hG hU0 P p i k k' x x' C z t hAd hK hHk hb
+  obtain ⟨h, wm, hlat, hHH, hwm, hid⟩ := _root_.GlobalTheory.HeckeValueId.hecke_theta_value_identity E H Dw l Xo c σ r U hG hU0 P p i k k' x x' C z t hAd hK hHk hb
     g e F ik Pm Pm' hp hp' hu hu' Hm χ fr θ hH hpos him hd hn hc h0 ha hv Hm' χ' fr' θ' hH' hpos' him' hd' hn' hc'
     h0' ha' hv'
   clear hP

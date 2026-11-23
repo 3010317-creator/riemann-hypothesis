@@ -4,19 +4,14 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsRa
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.SeriesRatSOf
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LevelOfOfSameBut
 public import Development.AbelianVarietyTheory.PublishedTheorems.PublishedFoundations.NonemptyAlgHomOfIsRayOfDvd
-import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PredMemGamRanks
-import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.CuspSubsetBaseForms
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ToUnitsCompToCircle
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsOpenCongruenceIdelesAndRealFiniteParts
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DictionaryCharacterTrivialOnPrincipalLevel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtensionOfLowSmoothLines
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinPartConjMem
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicCuspSectionsLeSpanAlgebraicCuspForms
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KapTopLastPosRun
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelCharacterEmbeddingCompatStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHalfOfBasePins
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrimeDvdAbsNormHalfDifferent
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TameHeckeCharTrivialOnFiniteUnitsCongOne
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TensorMapDescent
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChosenPlacesAdmissibleGoodSetup
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ConjPlNeOfSplit
@@ -28,11 +23,11 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsG
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsHalfOfAuxiliarySplitLevel
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsScaleOfChar
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsUnramifiedFieldFibres
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodBaseDataWeightEqLiftCoeffModuleWeightStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarmonicPolynomialEqZeroOfFunctionStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HolomorphicSectionsSpanRestrictionStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IntFormsSubset
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HolomorphicSectionsSpanRestriction
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsLevelDatumReferenceTupleSmallField
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LevelCoverFormsMulComponentFunctionStatement
+public import Development.AbelianVarietyTheory.Definitions.HeightFunctions.XiValIffXiAt
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LevelCoverFormsMulComponentFunction
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LiftDatumThetaSeriesRightInvariantCoreLevel
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemCuspFormsOfReadingBoundedCuspidalHolomorphicStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemSelfDualLatticeIffIntegralFrameMatricesHalf
@@ -41,12 +36,19 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.Rationa
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SmallCoeffFieldEmbeddingCompHostMap
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistingCharValuesMemCoeffFieldRange
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UpperLeftBlockEqOneIffOfMemBlockTri
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.JEvExistsAndJEvBar
+public import Development.AutomorphicArithmetic.CyclotomicBounds.RamifiedDiscriminants.OffSmall
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PredMemGamRanks
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.CuspSubsetBaseForms
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsOpenCongruenceIdelesAndRealFiniteParts
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHalfOfBasePins
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TameHeckeCharTrivialOnFiniteUnitsCongOne
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodBaseDataWeightEqLiftCoeffModuleWeightStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarmonicPolynomialEqZeroOfFunctionStatement
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CompletelySplitPrimeHostPlaceProperties
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdempotentMulEqZeroOfOrthogonal
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.JEvExistsAndJEvBar
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryEqRealMulFiniteSplit
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsAlgebraMapOfSigRFixed
-public import Development.AutomorphicArithmetic.CyclotomicBounds.RamifiedDiscriminants.OffSmall
 import Development.AutomorphicArithmetic.CyclotomicBounds.SmallFacts
 import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.FactPrincipalDatum
 import Formalism.TameInertiaTowers.CentralOrderTwo.OddEqOneOfSubOneMem
@@ -427,7 +429,7 @@ theorem isRat_fibre (hRF : GlobalTheory.NT.RayField) (hT : LawsJ T) (hU : C.IsUn
   have h3 : 3 ≤ C.d.l₂.M := C.d.l₂.three_le
   rw [← hM] at hray hQ
   obtain ⟨l1, l2, l3⟩ := delQ_det_laws hu (T.V ((j : ℕ) + 1) T.σ₀) C.d.l₂.odd hQ
-  have key := (GlobalTheory.T.levelCover_forms_mul_componentFunction D T hT _ (inR j) T.σ₀ T.toCore.good_σ₀ C hU C.d.l₂.M (by omega) dvd_rfl
+  have key := (_root_.GlobalTheory.CoverComp.forms_mul_comp D T hT _ (inR j) T.σ₀ T.toCore.good_σ₀ C hU C.d.l₂.M (by omega) dvd_rfl
     (Or.inr (GlobalTheory.TwistRat.Field.curveOver_of_rayIn hRF D T.Q hT.pins.1 _ h3 _ C.σ₂ hray))
     (fun g => if Multiplicative.toAdd (detChar _ (u.delQ Q) g) = a then 1 else 0)
     (fun g g' e => by rw [l1 g g' e]) (fun γ hγ g => by rw [l2 γ hγ g]) (fun k _ hk g => by rw [l3 k hk g])
@@ -461,7 +463,7 @@ theorem exists_sum_of_isRat (hT : LawsJ T) (hlast : κ.LastPos) (hn : 8 * D.R.f 
     · exact Formalism.L2.Pj.rdU_mem_offZero _ _
   have hinv' : ∀ k ∈ T.Kf ((j : ℕ) + 1) T.σ₀, ∀ g, φ' (g * k) = φ' g := fun k hk g => by
     rw [LevelInv.apply_eq_castDict hV φ' (g * k), LevelInv.apply_eq_castDict hV φ' g, LevelInv.cast_mul hV g k, hinv k hk]
-  obtain ⟨m, xs, ψ, hψ, hφeq⟩ := GlobalTheory.T.holomorphic_sections_span_restriction D T hT _ (inR j) T.σ₀ T.toCore.good_σ₀ C hU (wtA κ) κ.n
+  obtain ⟨m, xs, ψ, hψ, hφeq⟩ := _root_.GlobalTheory.CoverFormDesc.cover_form_desc D T hT _ (inR j) T.σ₀ T.toCore.good_σ₀ C hU (wtA κ) κ.n
     (dom_wtA _) hP hspan hmu φ' hφ'm hinv'
   have hψ' : ∀ k, ∃ f, (f ∈ sec (T.Q.Xo ((j : ℕ) + 1)) T.Q.c (wtA κ) κ.n ∧
       rdU (T.U ((j : ℕ) + 1) T.σ₀) f ∈ Formalism.L2.Pj.holSub0 (T.U ((j : ℕ) + 1) T.σ₀).X

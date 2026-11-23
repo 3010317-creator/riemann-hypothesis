@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NoTo
 public import GroundTheory.LocalFields.HerbrandFunction
 public import GroundTheory.LocalFields.SeparableClosure
 public import Mathlib.FieldTheory.Galois.Abelian
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowMemUpperRamificationGroupAbelianNatStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowMemUpperRamificationGroupAbelianNat
 import GroundTheory.LocalFields.ConductorReciprocity
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -59,7 +59,7 @@ theorem pow_mem_upperRamificationGroup_real : ∀ (F : Type) [Field F] [Valuativ
   have hσn : σ ∈ upperRamificationGroup F ↥M ((⌈v⌉.toNat : ℕ) : ℝ) := by
     rw [hn, ← upperRamificationGroup_eq_ceil]
     exact hσ
-  have hpow := GlobalTheory.T.pow_mem_upperRamificationGroup_abelian_nat' F M p e ⌈v⌉.toNat hOrd σ hσn
+  have hpow := _root_.GlobalTheory.PMon.Ram.pow_mem_upperRamificationGroup_abelian_nat F M p e ⌈v⌉.toNat hOrd σ hσn
 
   have hvn : v ≤ ((⌈v⌉.toNat : ℕ) : ℝ) := by
     rw [hn]; exact Int.le_ceil v

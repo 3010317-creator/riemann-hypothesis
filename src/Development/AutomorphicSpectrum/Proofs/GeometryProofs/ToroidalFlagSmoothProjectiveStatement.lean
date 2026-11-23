@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.BarCompSubsetClosure
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagSpaceComponentSmoothProjectiveConnected
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagAtlasProjectiveEmbeddingStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagModelProjectiveEmbeddingStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagCellFrameChangeTriangular
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagAtlasProjectiveEmbedding
+public import Development.WeilBound.CoreStatements.ProjectiveValuations.FlagModelProjectiveEmbedding
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ToroidalFlagSmoothProjective
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsFlagModelField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -39,7 +41,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsFlagModelField
 
 @[expose] public section
 
@@ -51,8 +52,8 @@ theorem _root_.GlobalTheory.T.toroidal_flag_smooth_projective : ∀ (E : Type) [
   obtain ⟨A⟩ := GlobalTheory.CompanionTheory.FlagSmooth.nonempty_atlas_of_cover T.Y p
     (GlobalTheory.CompanionTheory.FlagSmooth.exists_gChart_of_flagCover T.X)
   obtain ⟨M, g, κ, hκ, hZ⟩ := GlobalTheory.CompanionTheory.FlagSmooth.exists_cellModel T.Y p A
-  obtain ⟨d, hsm, hpr⟩ := GlobalTheory.T.flag_atlas_projective_embedding E H D l Xo c T.Y p A M.YY M.π g κ hκ hZ T.smooth
-  obtain ⟨h, hh, hπ⟩ := GlobalTheory.T.exists_flagModel_isIso_of_open_cells E H D l Xo c T.Y p A M g κ hκ hZ T.smooth T.flag
+  obtain ⟨d, hsm, hpr⟩ := _root_.GlobalTheory.CompanionTheory.FlagMod.cells_smooth_proj E H D l Xo c T.Y p A M.YY M.π g κ hκ hZ T.smooth
+  obtain ⟨h, hh, hπ⟩ := _root_.DifferentiableLines.flag_model_projective_embedding_alt E H D l Xo c T.Y p A M g κ hκ hZ T.smooth T.flag
   have e : flagStr T.X = h ≫ M.π ≫ T.Y.s := by
     rw [← Category.assoc, hπ]
   refine ⟨d, ?_, ?_⟩

@@ -4,13 +4,16 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdjF
 public import Formalism.LocalToGlobal.IndefiniteReal.LinksStage
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffHeckePolyOfComplex
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubleCosetSumFundamentalDomain
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsMulRightInvariantHaarAdelicUnitaryGroupHermitiStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DoubleCosetHeckeSumPreservesPrincipalFormsStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFiniteLocalDoubleCosetRepresentativesStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LevelSubgroupRestrictedProductOfLawsStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalHeckeSumPreservesPrincipalLevelFormsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormIntegralStarMulSqLeMulStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormIntegralStarMulSqLeMul
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubleCosetSumFundamentalDomain
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsMulRightInvariantHaarAdelicUnitaryGroupHermitiStatement
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContDiffDerivSnoc
 import Formalism.LocalToGlobal.GlobalTheory.GL5.FamilyMassVolumeIdentityOfClassDecomp
 import Mathlib.Algebra.Order.Floor.Extended
@@ -71,7 +74,7 @@ theorem norm_integral_star_mul_sq_le {X : Type} [MeasurableSpace X] (μ : Measur
     (hf : AEStronglyMeasurable f μ) (hh : AEStronglyMeasurable h μ)
     (hf2 : Integrable (fun x => star (f x) * f x) μ) (hh2 : Integrable (fun x => star (h x) * h x) μ) :
     ‖∫ x, star (f x) * h x ∂μ‖ ^ 2 ≤ (∫ x, star (f x) * f x ∂μ).re * (∫ x, star (h x) * h x ∂μ).re :=
-  GlobalTheory.T.norm_integral_star_mul_sq_le_mul μ f h hf hh hf2 hh2
+  _root_.GlobalTheory.norm_integral_star_mul_sq_le μ f h hf hh hf2 hh2
 
 theorem exists_cosetRep_levG {D : D7} (V : HSp D) (β : GL (Fin V.rank) (Formalism.IndefR.Lev.EAf D)) (L : LevDat D.host.E ℂ V.rank)
     (v : HeightOneSpectrum (𝓞 D.host.F)) (f : AE D) (hf : IsFinIdem D v f) (α : GA D V) (hα : SuppF V f α) :

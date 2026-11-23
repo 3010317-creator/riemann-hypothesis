@@ -4,7 +4,9 @@ public import GroundTheory.HeightsAndTheta.Heights.Intersections.StatementsFibre
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.EvalW
 public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 public import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SphereMeasureStereographicIntegralStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.KappaSt
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.InFlagDomainOne
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SphereMeasureStereographicIntegral
 public import GroundTheory.HeightsAndTheta.Heights.ElementarySymmetric.PDiagFibreMoment
 import GroundTheory.HeightsAndTheta.Heights.Intersections.PFibreLocal
 import Mathlib.Algebra.Order.Floor.Extended
@@ -108,7 +110,7 @@ theorem stereo_one : ∀ (ℓ : MvPolynomial (Fin 3) ℝ →ₗ[ℝ] ℝ) (N : �
         Integrable (fun m : S2 => f fun i => (m : E3) i) sphereMeasure) ∧
       ∫ a : ℂ, f (nS a) * (Real.pi⁻¹ / (1 + ‖a‖ ^ 2) ^ 2) =
         ∫ m : S2, f (fun i => (m : E3) i) ∂sphereMeasure :=
-    fun f hf => (GlobalTheory.T.sphere_measure_stereographic_integral).1 f hf
+    fun f hf => (_root_.GlobalTheory.CompanionTheory.Relay.sphere_measure_stereographic_integral).1 f hf
   obtain ⟨G, hG⟩ : ∃ G, G = genLin ^ N := ⟨_, rfl⟩
   have hlin : ∀ a, lin3 (nS a) ^ N = MvPolynomial.map (MvPolynomial.eval (nS a)) G := fun a => by
     rw [hG, map_pow, linear_form_eq_map_eval]

@@ -3,12 +3,13 @@ module
 public import Formalism.SharpRestriction.LevelLetterCocycles.LocCoh
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.EqOfPowEqOneOfNormSubLt
 public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoboundaryDeRhamOfCoboundarySemistableStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteDimensionalDstOfIsSstStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinrankAddLeFinrankRangeAddOfComapLeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinrankDcrisPhiFixedAddFinrankMonLeStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MonVEqZeroIffExistsCrisInclStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SemistableCocycleOfFrobeniusMonodromyPairStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoboundaryDeRhamOfCoboundarySemistable
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteDimensionalDstOfIsSst
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinrankAddLeFinrankRangeAddOfComapLe
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinrankDcrisPhiFixedAddFinrankMonLe
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SemistableCocycleOfFrobeniusMonodromyPair
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MonVEqZeroIffExistsCrisIncl
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -95,18 +96,18 @@ theorem exists_stCocycles_lower : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) 
     exact ⟨e.1.2, e.2.2⟩
   refine ⟨LinearMap.range π, h1, h2, h3, fun c hc => ?_, ?_⟩
   · obtain ⟨z, hz⟩ := h3 c hc
-    exact GlobalTheory.T.coboundary_deRham_of_coboundary_semistable l P AI T K V ρ c z hz
+    exact _root_.GlobalTheory.cocycle_dies_dR_of_dies_st l P AI T K V ρ c z hz
   have hφ : ∀ y ∈ Dst P ρ, phiV P ℚ_[l] V y ∈ Dst P ρ := fun y hy =>
     (mem_Dst P ρ).mpr fun g => by
       rw [← End.mul_apply, ← phiV_stRep, End.mul_apply, (mem_Dst P ρ).mp hy g]
   have hN : ∀ y ∈ Dst P ρ, monV P ℚ_[l] V y ∈ Dst P ρ := fun y hy =>
     (mem_Dst P ρ).mpr fun g => by
       rw [← End.mul_apply, ← monV_stRep, End.mul_apply, (mem_Dst P ρ).mp hy g]
-  haveI := GlobalTheory.T.finiteDimensional_Dst_of_isSst' l P K V ρ hs
+  haveI := _root_.GlobalTheory.Pst.finiteDimensional_Dst_of_isSst l P K V ρ hs
   haveI : FiniteDimensional ℚ_[l] ↥(LinearMap.range π) := Submodule.finiteDimensional_of_le h2
   haveI : FiniteDimensional ℚ_[l] ↥(Dst P ρ ⊓ ((Dst P ρ).map (monV P ℚ_[l] V)).comap
       ((l : ℚ_[l]) • phiV P ℚ_[l] V - LinearMap.id)) := Submodule.finiteDimensional_of_le inf_le_left
-  have h4 := GlobalTheory.T.finrank_add_finrank_le_finrank_range_add_finrank ℚ_[l] _ _ _ π ν (finiteCocycles (P.PD K) ρ) ((Dst P ρ).map (monV P ℚ_[l] V))
+  have h4 := _root_.GlobalTheory.finrank_add_le_finrank_range_add_of_comap_le ℚ_[l] _ _ _ π ν (finiteCocycles (P.PD K) ρ) ((Dst P ρ).map (monV P ℚ_[l] V))
     (Dst P ρ ⊓ ((Dst P ρ).map (monV P ℚ_[l] V)).comap ((l : ℚ_[l]) • phiV P ℚ_[l] V - LinearMap.id)) h1
     (by
       rintro _ ⟨y, hy, rfl⟩
@@ -115,7 +116,7 @@ theorem exists_stCocycles_lower : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) 
       rfl)
     (by
       rintro x ⟨hx, y, hy, hxy⟩
-      obtain ⟨z, c, hc1, hc2, hz⟩ := GlobalTheory.T.semistable_cocycle_of_frobenius_monodromy_pair l P AI T K V ρ hc x hx y hy hxy.symm
+      obtain ⟨z, c, hc1, hc2, hz⟩ := _root_.GlobalTheory.semistable_class_of_pair l P AI T K V ρ hc x hx y hy hxy.symm
       exact ⟨⟨(c, z), hc1, hc2⟩, hz⟩)
     (by
       rintro e ⟨-, x, hx⟩
@@ -123,9 +124,9 @@ theorem exists_stCocycles_lower : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) 
       · have := (e.2.2 g).symm.trans (hcris _ x hx g)
         rw [map_sub, sub_eq_sub_iff_sub_eq_sub]
         exact this
-      · rw [map_sub, (GlobalTheory.T.monV_eq_zero_iff_mem_range_crisIncl' l P V _).mpr ⟨x, rfl⟩, sub_zero]
+      · rw [map_sub, (_root_.GlobalTheory.PMon.monV_eq_zero_iff_exists_crisIncl l P V _).mpr ⟨x, rfl⟩, sub_zero]
         rfl)
-  have h5 := GlobalTheory.T.finrank_dcris_phi_fixed_add_finrank_mon_le_alt l P AI T K V V' ρ ρ' m hd hs
+  have h5 := _root_.GlobalTheory.finrank_dcris_phi_fixed_add_finrank_mon_le l P AI T K V V' ρ ρ' m hd hs
   omega
 
 end GlobalTheory.PMon

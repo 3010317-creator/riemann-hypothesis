@@ -7,7 +7,11 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HodgePull
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.HodgeCohomologyOpenRestrictionEquiv
 public import Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.CompactSpaceOfProjectiveAndOfFinite
 public import Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.ExistsFiniteEtaleRestrictClopen
-public import Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.ExistsIntegralClopenDecompositionOfSmooth
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.Order.CompletePartialOrder
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIntegralClopenDecompositionOfSmooth
 public import Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.ExistsUniqueComplexPointLiftClopenCover
 public import Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.HodgePullHodgeTraceEqSumRestrictOpen
 public import Development.AutomorphicArithmetic.Foundations.EtaleClopenDescent.HolomorphicLefschetzFiniteEtaleCorrespondence
@@ -307,7 +311,7 @@ theorem UpperTheory.Cb.lefschetz_fixedPoint_finite_etale_correspondence :
   intro Z s d _ hproj Y s' c1 c2 h1 h2 _ _ f2 t2 F hF A hA a
   classical
   haveI : CompactSpace Z := UpperTheory.Cb.compactSpace_of_projective_and_of_finite.1 Z s hproj
-  obtain ⟨J, _, V, hVd, hVc, hVi⟩ := UpperTheory.Cb.exists_integral_clopen_decomposition_of_smooth Z s d
+  obtain ⟨J, _, V, hVd, hVc, hVi⟩ := _root_.GlobalTheory.SmoothComponents.main Z s d
   have hVd' : ∀ i j (z : Z), z ∈ V i → z ∈ V j → i = j := by
     intro i j z hi hj
     by_contra hne

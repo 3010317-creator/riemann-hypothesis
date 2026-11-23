@@ -1,7 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TCoefMInMMul
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffAllOnesSumAlgEquivMkDerivationStatement
+public import Mathlib.Algebra.MvPolynomial.Derivation
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffAllOnesSumAlgEquivMkDerivation
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +53,7 @@ namespace GlobalTheory.PsCo.Cw2a
 
 theorem exL_dL_holds : GlobalTheory.PsCo.Cw2a.T_exL_dL := by
   intro n L ε x b
-  have h := GlobalTheory.T.coeff_allOnes_sumAlgEquiv_derivation_eq (σ := EntIdx n) (L := L) (dM ε x) b
+  have h := _root_.GlobalTheory.coeff_allOnes_sumAlgEquiv_mkDerivation (σ := EntIdx n) (L := L) (dM ε x) b
   simpa [exL, dL, inL, allOnes] using h
 
 end GlobalTheory.PsCo.Cw2a

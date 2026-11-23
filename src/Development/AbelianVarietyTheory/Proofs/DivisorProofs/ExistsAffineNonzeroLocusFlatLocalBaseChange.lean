@@ -3,12 +3,16 @@ module
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ThickTransComp
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPointTranslatesInOpenSemiAbelianLocalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionSqNonzeroLocusOfTranslateGeneratorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionTranslateBaseChangeOfPointStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAbelianSchemeGenericFibreInjectiveDomainMapStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAffineOpenPreimageTranslatesSeparatedGrpStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StalkNormalFlatOfSmoothOverRegularLocalStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPointTranslatesInOpenSemiAbelianLocal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionSqNonzeroLocusOfTranslateGenerator
+public import Mathlib.CategoryTheory.Monoidal.Cartesian.Grp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionTranslateBaseChangeOfPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAbelianSchemeGenericFibreInjectiveDomainMap
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAffineOpenPreimageTranslatesSeparatedGrp
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StalkNormalFlatOfSmoothOverRegularLocal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -71,12 +75,12 @@ namespace GlobalTheory.AmplePt
 
 theorem exists_affine_nonzeroLocus_of_square : (∀ (R' : Type) [CommRing R'] [IsDomain R'] [IsNoetherianRing R'] [IsIntegrallyClosed R'] [IsLocalRing R'] (G' : Over (Sp R')) [GrpObj G'], IsSemiAbelian G' → IsAbelianScheme ((Over.pullback (jK R')).obj G') → ∀ N : LB G'.left, N.IsLB → ∀ a : 𝟙_ (Over (Sp R')) ⟶ G', ∃ t : LB.Gen (LB.LinComb N (K := Fin 3) ![(𝟙 G' * (toUnit G' ≫ a)).left, (𝟙 G' * (toUnit G' ≫ a⁻¹)).left, 𝟙 G'.left] ![1, 1, -2]), t.IsGen) → ∀ (R : Type) [CommRing R] [IsRegularLocalRing R] [IsDomain R] (G : Over (Sp R)) [GrpObj G], IsSemiAbelian G → IsAbelianScheme ((Over.pullback (jK R)).obj G) → ∀ (M₀ : LB G.left), M₀.IsLB → ∀ s₀ : M₀.Sec, IsAffineOpen (nonzeroLocus s₀) → (∃ y₀ ∈ nonzeroLocus s₀, G.hom y₀ = closedPoint R) → ∀ y : G.left, ∃ (R' : Type) (_ : CommRing R') (ρ : R →+* R'), ρ.Flat ∧ ∃ x' : ↥(pullback G.hom (spMap ρ)), pullback.fst G.hom (spMap ρ) x' = y ∧ ∃ n, 1 ≤ n ∧ ∃ s : (lbPow (M₀.pull (pullback.fst G.hom (spMap ρ))) n).Sec, x' ∈ nonzeroLocus s ∧ IsAffineOpen (nonzeroLocus s) := by
   intro H R _ _ _ G _ hG hab M₀ hM s₀ hV hy₀ y
-  obtain ⟨z, hz1, hz2, hz3⟩ := GlobalTheory.T.exists_point_translates_in_open_semiAbelian_local R G hG (nonzeroLocus s₀) hy₀ y
-  obtain ⟨hd, hn, hic, hfl, hinj⟩ := GlobalTheory.T.stalk_normal_flat_of_smooth_over_regular_local R G.left G.hom hG.smooth ((snd G G).left z)
+  obtain ⟨z, hz1, hz2, hz3⟩ := _root_.GlobalTheory.ShearMeet.exists_fst_mul_mem R G hG (nonzeroLocus s₀) hy₀ y
+  obtain ⟨hd, hn, hic, hfl, hinj⟩ := _root_.GlobalTheory.SmoothStalkNormal.stalk_of_smooth_over_regular R G.left G.hom hG.smooth ((snd G G).left z)
   let R' : Type := G.left.presheaf.stalk ((snd G G).left z)
   let ρ : R →+* R' := (Spec.preimage (G.left.fromSpecStalk ((snd G G).left z) ≫ G.hom)).hom
   have hc : G.left.fromSpecStalk ((snd G G).left z) ≫ G.hom = spMap ρ := (Spec.map_preimage _).symm
-  obtain ⟨a, Φ, hpb, hΦ1, hΦ2, hΦ3⟩ := GlobalTheory.T.exists_section_translate_baseChange_of_point R R' ρ G (G.left.fromSpecStalk ((snd G G).left z)) hc
+  obtain ⟨a, Φ, hpb, hΦ1, hΦ2, hΦ3⟩ := _root_.GlobalTheory.TransBaseChange.exists_section_translate R R' ρ G (G.left.fromSpecStalk ((snd G G).left z)) hc
   obtain ⟨x', hx'⟩ : ∃ x', Φ x' = z := by
     obtain ⟨w, hw1, -⟩ := Scheme.Pullback.exists_preimage_pullback (f := (snd G G).left)
       (g := G.left.fromSpecStalk ((snd G G).left z)) z (closedPoint R') Scheme.fromSpecStalk_closedPoint.symm
@@ -90,14 +94,14 @@ theorem exists_affine_nonzeroLocus_of_square : (∀ (R' : Type) [CommRing R'] [I
       (fst G G * (snd G G)⁻¹).left z := by rw [hΦ3, Scheme.Hom.comp_apply, hx']
   have hsemi' : IsSemiAbelian ((Over.pullback (spMap ρ)).obj G) := IsSemiAbelian.pullback _ G hG
   haveI := hd; haveI := hn; haveI := hic
-  have hab' := GlobalTheory.T.isAbelianScheme_genericFibre_injective_domain_map R R' ρ hinj G hab
+  have hab' := _root_.GlobalTheory.Desc.isAbelianScheme_generic_of_injective R R' ρ hinj G hab
   obtain ⟨t, ht⟩ := H R' ((Over.pullback (spMap ρ)).obj G) hsemi' hab'
     (M₀.pull (pullback.fst G.hom (spMap ρ))) (LB.isLB_pull hM _) a
-  obtain ⟨s, hs⟩ := GlobalTheory.T.exists_section_sq_nonzeroLocus_of_translate_generator _ _ (pullback.fst G.hom (spMap ρ)) M₀ hM s₀ _ _ ⟨t, ht⟩
+  obtain ⟨s, hs⟩ := _root_.GlobalTheory.PullSecSq.exists_sec_lbPow_two_nonzeroLocus _ _ (pullback.fst G.hom (spMap ρ)) M₀ hM s₀ _ _ ⟨t, ht⟩
   haveI : IsAffineHom (pullback.fst G.hom (spMap ρ)) :=
     MorphismProperty.of_isPullback (IsPullback.of_hasPullback G.hom (spMap ρ)).flip inferInstance
   have hW : IsAffineOpen (pullback.fst G.hom (spMap ρ) ⁻¹ᵁ nonzeroLocus s₀) := hV.preimage _
-  have hL := GlobalTheory.T.isAffineOpen_preimage_translates_separated_grp R' ((Over.pullback (spMap ρ)).obj G) hsemi'.separated a _ hW
+  have hL := _root_.GlobalTheory.TransAff.isAffineOpen_translates R' ((Over.pullback (spMap ρ)).obj G) hsemi'.separated a _ hW
   refine ⟨R', inferInstance, ρ, hfl, x', e1.trans hz1, 2, by norm_num, s, ?_, ?_⟩
   · rw [hs]
     exact ⟨(Scheme.Hom.mem_preimage _).2 (e2 ▸ hz2), (Scheme.Hom.mem_preimage _).2 (e3 ▸ hz3)⟩

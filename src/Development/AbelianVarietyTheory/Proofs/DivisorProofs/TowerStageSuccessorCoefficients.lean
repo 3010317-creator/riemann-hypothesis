@@ -3,12 +3,18 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaneSplit
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DownRight
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCartanInvolutionExtendSwappingHyperbolicPaStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCartanInvolutionHyperbolicSwapExtensionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFractionalIdealSmulMemLatticeStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCartanInvolutionExtendSwappingHyperbolicPa
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCartanInvolutionHyperbolicSwapExtension
+public import Mathlib.Algebra.Module.Lattice.Basic
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.FractionalIdeal.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFractionalIdealSmulMemLattice
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHyperbolicPlaneSplitHermitianLatticeSpace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRescalePrimitiveInLatticeAtSplitPrimesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitPlaceLocalLatticeBasisHyperbolicPlaneStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLowLat
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NonemptyAlgHomOfNotIsField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRescalePrimitiveInLatticeAtSplitPrimes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitPlaceLocalLatticeBasisHyperbolicPlane
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SkewHermitianSelfDualLatticeHyperbolicPlaneSplit
 import Formalism.SharpRestriction.GrowthBounds.MonomialOrderSegments.BrData
 import Mathlib.Algebra.Order.Floor.Extended
@@ -110,7 +116,7 @@ theorem IsSum.exists_bases (hCM : IsCMExt F E σ) (B : Base F E) {n₁ : ℕ} {Y
   obtain ⟨hxx₀, hyy₀, hxy₀, horth₀, hg, hlow, hsplit₀, hinj⟩ := h
   have hx₀ : x₀ ≠ 0 := by rintro rfl; simp [form] at hxy₀
   have hy₀ : y₀ ≠ 0 := by rintro rfl; simp [form] at hyx
-  obtain ⟨c, hc, hprim⟩ := GlobalTheory.T.exists_rescale_primitive_in_lattice_at_split_primes F E σ hCM (n₁ + 2) Y.L hL x₀ y₀ hx₀ hy₀ B.P B.τ
+  obtain ⟨c, hc, hprim⟩ := _root_.GlobalTheory.PlaneSkewScale.exists_rescale_primAt F E σ hCM (n₁ + 2) Y.L hL x₀ y₀ hx₀ hy₀ B.P B.τ
   have hσc : σ c ≠ 0 := (map_ne_zero σ).2 hc
   set x := c • x₀ with hxdef
   set y := (σ c)⁻¹ • y₀ with hydef
@@ -130,9 +136,9 @@ theorem IsSum.exists_bases (hCM : IsCMExt F E σ) (B : Base F E) {n₁ : ℕ} {Y
     have e1 : (s' / c) • x = s' • x₀ := by rw [hxdef, smul_smul, div_mul_cancel₀ _ hc]
     have e2 : (t * σ c) • y = t • y₀ := by rw [hydef, smul_smul, mul_assoc, mul_inv_cancel₀ hσc, mul_one]
     exact ⟨s' / c, t * σ c, u, e1 ▸ h1, e2 ▸ h2, h3, by rw [e1, e2]⟩
-  obtain ⟨𝔟, h𝔟⟩ := GlobalTheory.T.exists_fractionalIdeal_mem_iff_smul_mem_lattice E (n₁ + 2) Y.L hL.toIsLattice x (smul_ne_zero hc hx₀)
+  obtain ⟨𝔟, h𝔟⟩ := _root_.GlobalTheory.exists_fractionalIdeal_smul_mem_lattice E (n₁ + 2) Y.L hL.toIsLattice x (smul_ne_zero hc hx₀)
   have eL : lowLat ι Y.L = Y₁.L := Submodule.ext fun u => (hlow u).symm
-  choose βY hβY using fun v : B.P => GlobalTheory.T.exists_splitPlace_localLatticeBasis_hyperbolicPlane F E σ hCM v.1 (B.τ v) n₁ Y.L x y ι (Y₁.bas v) i₀ i₁ h01 h1n
+  choose βY hβY using fun v : B.P => _root_.GlobalTheory.PlaneSkewBasis.exists_isSplitBasis_plane_of_indep F E σ hCM v.1 (B.τ v) n₁ Y.L x y ι (Y₁.bas v) i₀ i₁ h01 h1n
     (fun z hz => by
       obtain ⟨s, t, u, h1, h2, h3, h4⟩ := hsplit z hz
       exact ⟨s, t, u, h1, h2, (hlow u).1 h3, h4⟩)
@@ -152,7 +158,7 @@ theorem IsSum.adapt_herm (hCM : IsCMExt F E σ) {B : Base F E} {n n₁ : ℕ} (h
   obtain ⟨g, hgι⟩ := LinearMap.exists_leftInverse_of_injective (Matrix.mulVecLin ι) (LinearMap.ker_eq_bot.2 hinj)
   have hP : LinearMap.toMatrix' g * ι = 1 := by
     rw [← LinearMap.toMatrix'_toLin' ι, ← LinearMap.toMatrix'_comp, Matrix.toLin'_apply', hgι, LinearMap.toMatrix'_id]
-  choose θ hθ using fun w => GlobalTheory.T.exists_cartanInvolution_extend_swapping_hyperbolicPair _ n₁ (Y.J.map (B.emb w).1) (fun i => (B.emb w).1 (x i)) (fun i => (B.emb w).1 (y i))
+  choose θ hθ using fun w => _root_.GlobalTheory.CartanPlane.extend_swap _ n₁ (Y.J.map (B.emb w).1) (fun i => (B.emb w).1 (x i)) (fun i => (B.emb w).1 (y i))
     (ι.map (B.emb w).1) ((LinearMap.toMatrix' g).map (B.emb w).1) (Y₁.θ w) rfl (GlobalTheory.KTowerPlane.map_herm hCM _ hY.herm)
     (by rw [← GlobalTheory.KTowerPlane.map_form hCM, hxx, map_zero]) (by rw [← GlobalTheory.KTowerPlane.map_form hCM, hyy, map_zero])
     (by rw [← GlobalTheory.KTowerPlane.map_form hCM, hxy, map_one])
@@ -170,7 +176,7 @@ theorem IsSum.adapt_skew (hCM : IsCMExt F E σ) {B : Base F E} {n n₁ : ℕ} (h
   subst hn
   have hτσ : ∀ (τ : E →+* ℂ) (a : E), τ (σ a) = star (τ a) := hCM.2.2.2
   obtain ⟨x, y, 𝔟, β, ⟨hxx, hyy, hxy, horth, hg, hlow, hsplit, hinj⟩, h𝔟, hβ, hβ'⟩ := h.exists_bases hCM B hyx hY.lat hY₁.bas h01 h1n
-  choose θ hθ using fun w => GlobalTheory.T.exists_cartanInvolution_hyperbolicSwap_extension n₁ (Complex.I • Y.J.map (B.emb w).1) (fun i => (B.emb w).1 (x i))
+  choose θ hθ using fun w => _root_.GlobalTheory.PlaneCartan.exists_cartan_hyperbolic_swap n₁ (Complex.I • Y.J.map (B.emb w).1) (fun i => (B.emb w).1 (x i))
     (fun i => (B.emb w).1 (y i)) (ι.map (B.emb w).1) (Y₁.θ w) (herm_map _ (hτσ _) hY.skew)
     (by rw [form_map _ (hτσ _), hxx, map_zero, mul_zero]) (by rw [form_map _ (hτσ _), hyy, map_zero, mul_zero])
     (by rw [form_map _ (hτσ _), hxy, map_one, mul_one])

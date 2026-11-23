@@ -3,18 +3,18 @@ module
 public import Mathlib.Analysis.Normed.Ring.Lemmas
 public import Mathlib.LinearAlgebra.Matrix.PosDef
 public import Mathlib.LinearAlgebra.Matrix.Rank
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightedLeastSquaresBoundStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightedLeastSquaresBound
+public import Mathlib.Analysis.Matrix.Order
+public import Mathlib.Data.Matrix.ColumnRowPartitioned
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-public import Mathlib.Analysis.Matrix.Order
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-public import Mathlib.Data.Matrix.ColumnRowPartitioned
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
@@ -65,7 +65,7 @@ theorem wls_fintype {ι : Type} [Fintype ι] [DecidableEq ι] {g : ℕ} (L : Mat
   let e : Fin (Fintype.card ι) ≃ ι := (Fintype.equivFin ι).symm
   have hr : (L.submatrix e (Equiv.refl (Fin g))).rank = g := by
     rw [Matrix.rank_submatrix]; exact hL
-  obtain ⟨K, hK⟩ := GlobalTheory.T.exists_norm_weighted_least_squares_le _ g _ hr
+  obtain ⟨K, hK⟩ := _root_.GlobalTheory.WeightedLS.weighted_least_squares_bound _ g _ hr
   refine ⟨K, fun D b hD => ?_⟩
   have h := hK (D ∘ e) (b ∘ e) (fun k => hD _)
   have h1 : (L.submatrix e (Equiv.refl (Fin g))).transpose * Matrix.diagonal (D ∘ e) *

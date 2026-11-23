@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnimodMod
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPosCombinationSmoothConeSymmIntFormStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteMinimiserSystemsSmoothConeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntBilinFormToRealMemPsdConeOfPosStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.SumMulEqZeroOfSumToReal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPosCombinationSmoothConeSymmIntForm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteMinimiserSystemsSmoothCone
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntBilinFormToRealMemPsdConeOfPos
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,11 +63,11 @@ theorem finite_minimiser_systems_upTo_aut : ∀ (g : ℕ) (φ : InvFun ℤ), IsP
   let P : ι → Prop := fun i => IsCone id φ (fun j => ((i.2 j : F) : LinearMap.BilinForm ℤ (Fin r → ℤ))) ∧
     ∀ x, x ≠ 0 → 0 < ∑ j, ((i.2 j : F) : LinearMap.BilinForm ℤ (Fin r → ℤ)) x x
   let T : ι → Finset ((Fin 8 → Fin r → ZMod N) → (Fin 8 → Fin r → ℤ)) := fun i =>
-    if h : P i then Classical.choose (GlobalTheory.T.finite_minimiser_systems_smooth_cone φ W hW N hN r i.1.val _ h.1 h.2) else ∅
+    if h : P i then Classical.choose (_root_.GlobalTheory.Poinc.MinSys.finite_minimiser_systems φ W hW N hN r i.1.val _ h.1 h.2) else ∅
   refine ⟨Finset.univ.biUnion T, ?_⟩
   intro b hsym hpos
-  have hpsd := GlobalTheory.T.intBilinFormToReal_mem_psdCone_of_pos r b hsym hpos
-  obtain ⟨m, γ, cf, hcone, hcf, hb⟩ := GlobalTheory.T.exists_pos_combination_smoothCone_symmIntForm g φ hφ r hr b hsym hpsd
+  have hpsd := _root_.GlobalTheory.Poinc.toReal_mem_psdCone_of_pos_int r b hsym hpos
+  obtain ⟨m, γ, cf, hcone, hcf, hb⟩ := _root_.GlobalTheory.ConeInterior.exists_pos_comb_int g φ hφ r hr b hsym hpsd
   obtain ⟨e, he⟩ := hfin m γ hcone
   refine ⟨e, fun μ' h1 h2 => ?_⟩
   let γ' : Fin m → F := fun j => ⟨pull e.toLinearMap (γ j), hS₀.mem_toFinset.2 (he j)⟩
@@ -94,7 +95,7 @@ theorem finite_minimiser_systems_upTo_aut : ∀ (g : ℕ) (φ : InvFun ℤ), IsP
     simp [hz] at this
   have hmem : μ' ∈ T i := by
     simp only [T, dif_pos hPi]
-    refine Classical.choose_spec (GlobalTheory.T.finite_minimiser_systems_smooth_cone φ W hW N hN r i.1.val _ hPi.1 hPi.2) (pull e.toLinearMap b) 1 cf
+    refine Classical.choose_spec (_root_.GlobalTheory.Poinc.MinSys.finite_minimiser_systems φ W hW N hN r i.1.val _ hPi.1 hPi.2) (pull e.toLinearMap b) 1 cf
       one_pos hcf ?_ μ' h1 h2
     ext a c
     simp [i, γ', pull_apply, hb, LinearMap.sum_apply]

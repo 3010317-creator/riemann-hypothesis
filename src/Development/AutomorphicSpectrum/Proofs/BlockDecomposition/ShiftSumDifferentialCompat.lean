@@ -1,11 +1,11 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HodgeXD
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DirectSumComplexCohomologyStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DirectSumSystemDescendsStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DirectSumComplexCohomology
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DirectSumSystemDescends
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MemBOfSub
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ShiftedComplexCohomologyStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ShiftedSystemDescendsStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ShiftedComplexCohomology
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ShiftedSystemDescends
 import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.MapHComp
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -169,12 +169,12 @@ theorem sumHom_nat {E E' : I → Cx.{1} K} {D D' : Cx.{1} K} (φ : ∀ i, Cx.Hom
   | add x y hx hy => simp only [map_add (f := _), hx, hy]
 
 def eSh (ς : ℤˣ) {k : ℕ} (C : Cx.{1} K) {m n : ℕ} (h : m + k = n) : C.H m ≃ₗ[K] (Sh ς k C).H n :=
-  Classical.choose ((GlobalTheory.T.shifted_complex_cohomology ς k C n).2 m h)
+  Classical.choose ((_root_.GlobalTheory.CompanionTheory.KunGlue.ShiftCoh.main ς k C n).2 m h)
 
 theorem eSh_cls (ς : ℤˣ) {k : ℕ} (C : Cx.{1} K) {m n : ℕ} (h : m + k = n) (y : (Sh ς k C).X n)
     (hy : (Sh ς k C).d n y = 0) (hy' : C.d m (y ⟨m, h⟩) = 0) :
     eSh ς C h (C.cls (y ⟨m, h⟩) hy') = (Sh ς k C).cls y hy :=
-  Classical.choose_spec ((GlobalTheory.T.shifted_complex_cohomology ς k C n).2 m h) y hy hy'
+  Classical.choose_spec ((_root_.GlobalTheory.CompanionTheory.KunGlue.ShiftCoh.main ς k C n).2 m h) y hy hy'
 
 variable (k : I → ℕ) (ς : I → ℤˣ) (C : I → Cx.{1} K) (n : ℕ)
 
@@ -205,7 +205,7 @@ theorem reF_reG : reF k ς C n ∘ₗ reG k ς C n = LinearMap.id := by
   by_cases hk : k u ≤ n
   · simp only [reF, reG, LinearMap.comp_apply, DirectSum.toModule_lof, LinearEquiv.coe_coe, dif_pos hk,
       LinearEquiv.apply_symm_apply, LinearMap.id_apply]
-  · have : Subsingleton ((Sh (ς u) (k u) (C u)).H n) := (GlobalTheory.T.shifted_complex_cohomology (ς u) (k u) (C u) n).1 (by omega)
+  · have : Subsingleton ((Sh (ς u) (k u) (C u)).H n) := (_root_.GlobalTheory.CompanionTheory.KunGlue.ShiftCoh.main (ς u) (k u) (C u) n).1 (by omega)
     rw [Subsingleton.elim y 0, map_zero, map_zero]
 
 def reE : (⨁ v : Ix k n, (C v.1.1).H v.1.2) ≃ₗ[K] ⨁ u, (Sh (ς u) (k u) (C u)).H n :=
@@ -218,7 +218,7 @@ theorem exists_P : ∃ P : (⨁ v : Ix k n, (C v.1.1).H v.1.2) ≃ₗ[K] (Dsum f
       P (DirectSum.lof K (Ix k n) (fun v => (C v.1.1).H v.1.2) v ((C v.1.1).cls x hx)) =
         (Dsum fun u => Sh (ς u) (k u) (C u)).cls
           (DirectSum.lof K I (fun u => (Sh (ς u) (k u) (C u)).X n) v.1.1 (shIn (ς v.1.1) (C v.1.1) v.2 x)) hw := by
-  obtain ⟨e1, he1⟩ := GlobalTheory.T.direct_sum_complex_cohomology (fun u => Sh (ς u) (k u) (C u)) n
+  obtain ⟨e1, he1⟩ := _root_.GlobalTheory.CompanionTheory.KunGlue.dsum_coh (fun u => Sh (ς u) (k u) (C u)) n
   refine ⟨(reE k ς C n).trans e1, ?_⟩
   intro v x hx hw
   have hy := shIn_d (ς v.1.1) (C v.1.1) v.2 x hx
@@ -310,6 +310,6 @@ theorem mvSum : MVBij → ∀ {K : Type} [Field K] {ι : Type} [DecidableEq ι] 
   have hiff : ∀ (S : Finset ι) (n : ℕ), Function.Bijective (((mvHom k ς A T g hd hn).φ S).mapH n) ↔ MvE k A T g S n :=
     fun S n => bij_iff k ς (fun u => (A u).K S) n (fun u => g u S) (fun u => hd u S)
   exact (hiff ∅ n).1 (hMV K ι _ T (mvHom k ς A T g hd hn)
-    (GlobalTheory.T.direct_sum_system_descends _ fun u => GlobalTheory.T.shifted_system_descends _ _ _ (hA u)) hT (fun S hS n => (hiff S n).2 (hE S hS n)) n)
+    (_root_.GlobalTheory.CompanionTheory.KunGlue.SumDesc.sum_desc _ fun u => _root_.GlobalTheory.CompanionTheory.KunGlue.ShDesc.sh_desc _ _ _ (hA u)) hT (fun S hS n => (hiff S n).2 (hE S hS n)) n)
 
 end GlobalTheory.CompanionTheory.KunGlue.MvSum

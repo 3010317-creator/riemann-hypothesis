@@ -2,16 +2,20 @@ module
 
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.GrothendieckRingPolynomial.ProdList
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InSupportOfIsSubquotient
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.JhMultSubAddQuot
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CanonicalProductEquivMultiplicityOneStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CanonicalSegmentsReverseOrderedStatement
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.ZelevinskyCosocles.LUnlinkedComm
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IrreducibleAdmissibleGL
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CanonicalProductEquivMultiplicityOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CanonicalSegmentsReverseOrdered
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsCanonicalSegmentOrderStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityOfEquivStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityPosStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JhMultMulLeOfSteps
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductIrreducibleFiniteLengthStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ReverseOrderedProductPermEquivStatement
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.LSegJacquet
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityOfEquiv
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityPos
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductIrreducibleFiniteLength
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ReverseOrderedProductPermEquiv
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.BernsteinZelevinskyGL.TopAdm
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.JhMultSubAddQuot
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JhMultMulLeOfSteps
 import GroundTheory.LocalFields.PadicLogSeries
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -153,8 +157,8 @@ theorem jhMult_mul_jm_le {g N : ℕ} (z : Fin g → IrrGL (k := k)) (hz : ∑ b,
     (fun S T h => le_trans le_self_add (hadd S T h))
     (fun S T h ⟨φ⟩ => by
       have := hadd S T h
-      rwa [GlobalTheory.T.jacquet_multiplicity_of_equiv z hz _ _ ⟨φ⟩] at this)
-  rwa [GlobalTheory.T.jacquet_multiplicity_of_equiv z hz _ _ ⟨topEquiv π⟩] at h
+      rwa [_root_.GlobalTheory.CompanionTheory.JacquetCongr.jm_congr_of_equiv z hz _ _ ⟨φ⟩] at this)
+  rwa [_root_.GlobalTheory.CompanionTheory.JacquetCongr.jm_congr_of_equiv z hz _ _ ⟨topEquiv π⟩] at h
 
 theorem ofFn_perm {α : Type*} {h : ℕ} (x : Fin h → α) (σ : Equiv.Perm (Fin h)) :
     (List.ofFn (x ∘ σ)).Perm (List.ofFn x) := by
@@ -169,7 +173,7 @@ theorem jhMult_le_one_of_equiv (y : IrrGL (k := k)) {V : Type} [AddCommGroup V] 
   have hnt := nontrivial_of_irreducible hirr
   obtain ⟨v, hv⟩ := exists_ne (0 : y.2.rep.V)
   have hpos : 1 ≤ jm z hz (IrrGL.rep y) :=
-    GlobalTheory.T.jacquet_multiplicity_pos hA z hz (IrrGL.rep y) y.2.rep.smooth (e.toIntertwiningMap.comp f)
+    _root_.GlobalTheory.CompanionTheory.FrobJm.one_le_jm hA z hz (IrrGL.rep y) y.2.rep.smooth (e.toIntertwiningMap.comp f)
       ⟨v, fun h0 => hv (hf (e.injective (by simpa using h0)))⟩
   have hle := jhMult_mul_jm_le z hz (prodIrr z hz) (IrrGL.rep y) (isSmooth_prodIrr z hz)
   rw [jhMult_congr_right _ e]
@@ -182,12 +186,12 @@ theorem jhMult_rev_le_one (c : Cls k) (_𝔪 : Multiset (Segment k)) {h : ℕ} (
   have hA := PositivityTheory.Tls2.BZGL.irreducibleAdmissibleGL_top
   have hΓ : IsRevOrdered (Δ ∘ Fin.rev) := fun i j hij => hΔo (Fin.rev j) (Fin.rev i) (Fin.rev_lt_rev.2 hij)
   obtain ⟨σ, hσ⟩ := GlobalTheory.T.exists_canonical_segment_order (Δ ∘ Fin.rev)
-  have hσr := GlobalTheory.T.canonical_segments_reverse_ordered _ hσ
+  have hσr := _root_.GlobalTheory.CompanionTheory.Canon.isRevOrdered_of_isCanon _ hσ
   have hdrs : ∑ a, ((x ∘ Fin.rev) (σ a)).1 = y.1 := by
     rw [← hdr]; exact Equiv.sum_comp σ (fun a => ((x ∘ Fin.rev) a).1)
-  obtain ⟨e1⟩ := GlobalTheory.T.reverse_ordered_product_perm_equiv hA c.com (Δ ∘ Fin.rev) σ (x ∘ Fin.rev) hdr hdrs hΓ hσr (fun i => hΔL (Fin.rev i))
+  obtain ⟨e1⟩ := _root_.GlobalTheory.CompanionTheory.ReorderRev.prodIrr_equiv_of_isRevOrdered hA c.com (Δ ∘ Fin.rev) σ (x ∘ Fin.rev) hdr hdrs hΓ hσr (fun i => hΔL (Fin.rev i))
   obtain ⟨g, z, hz, ⟨e2⟩, hjm⟩ :=
-    GlobalTheory.T.canonical_product_equiv_multiplicity_one hA c.jac c.unl ((Δ ∘ Fin.rev) ∘ σ) ((x ∘ Fin.rev) ∘ σ) hdrs hσ (fun i => hΔL (Fin.rev (σ i)))
+    _root_.GlobalTheory.CompanionTheory.GroupCount.groupCount hA c.jac c.unl ((Δ ∘ Fin.rev) ∘ σ) ((x ∘ Fin.rev) ∘ σ) hdrs hσ (fun i => hΔL (Fin.rev (σ i)))
   have e : (prodIrr (x ∘ Fin.rev) hdr).Equiv (prodIrr z hz) := e1.trans e2
   exact jhMult_le_one_of_equiv y hsoc e hjm
 
@@ -207,7 +211,7 @@ theorem multOne (c : Cls k) (_hm : MulCls k) (ha : Assoc k) (hc : Comm k) (_h1 :
   have hcl : cl0 (prodIrr x hd) = cl0 (prodIrr (x ∘ Fin.rev) hdr) := by
     rw [hl h y.1 x hd, hl h y.1 (x ∘ Fin.rev) hdr]
     exact foldr_perm ha hc (ofFn_perm x Fin.revPerm).symm _
-  rw [jordan_holder_mult_eq_of_class y _ _ (GlobalTheory.T.product_irreducible_finite_length hA x hd) (GlobalTheory.T.product_irreducible_finite_length hA (x ∘ Fin.rev) hdr) hcl]
+  rw [jordan_holder_mult_eq_of_class y _ _ (_root_.GlobalTheory.CompanionTheory.ProdFL.main hA x hd) (_root_.GlobalTheory.CompanionTheory.ProdFL.main hA (x ∘ Fin.rev) hdr) hcl]
   exact le_antisymm (jhMult_rev_le_one c 𝔪 x y Δ hΔo hΔL hdr hsoc)
     (Order.one_le_iff_ne_zero.2 (jhMult_ne_zero_iff.2 hsoc.isSubquotient))
 

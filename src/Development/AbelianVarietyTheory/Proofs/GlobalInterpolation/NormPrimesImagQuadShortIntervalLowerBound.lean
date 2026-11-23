@@ -3,8 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.LamIdealOfNotPrimePow
 public import Development.AbelianVarietyTheory.Definitions.Foundations.RayPrimes
 public import Mathlib.NumberTheory.Chebyshev
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsLFamRayStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TrivialClassShortIntervalStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsLFamRay
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TrivialClassShortInterval
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -140,14 +140,14 @@ theorem sqrt_le_short_main {A K c B X h : ℝ} (hA : 0 < A) (hK : 0 < K) (hc : 0
         rw [← hXe]; gcongr
 
 theorem normPrimes_short_interval_lower : ∃ A c c' : ℝ, 0 < A ∧ 0 < c ∧ 0 < c' ∧ ∀ (d M : ℕ) (X h : ℝ), d.Prime → d % 4 = 3 → 100 ≤ d → 3 ≤ M → 1 ≤ X → Real.log (4 * (d : ℝ) * (M : ℝ) ^ 2) ≤ c * Real.sqrt (Real.log X) → Real.exp (-c * Real.sqrt (Real.log X)) ≤ h → h ≤ 1 → c' * h * X / ((4 * (d : ℝ) * (M : ℝ) ^ 2) ^ A * Real.log X) ≤ ((GlobalTheory.Mem.An.normPrimes d M X (X * (1 + h))).card : ℝ) := by
-  obtain ⟨A, c₀, e, hA, hc₀, he, H⟩ := GlobalTheory.T.exists_lam_zero_sum_shortInterval_ge
+  obtain ⟨A, c₀, e, hA, hc₀, he, H⟩ := _root_.GlobalTheory.Hk.ShortInt.trivialClass_shortInterval
   obtain ⟨C, hC⟩ := Chebyshev.psi_sub_theta_le_mul_sqrt
   set K : ℝ := 8 * (|C| + 1) / e with hKdef
   have hK : 0 < K := by positivity
   refine ⟨A, min c₀ (1 / (2 * (1 + A) + 2 + K)), e / 8, hA, lt_min hc₀ (by positivity),
     by positivity, ?_⟩
   intro d M X h hd hd4 hd100 hM hX hB hh hh1
-  obtain ⟨𝓕, hFB, hN⟩ := GlobalTheory.T.exists_lFam_normOne_of_mod_four_eq_three d M hd hd4 hd100 hM
+  obtain ⟨𝓕, hFB, hN⟩ := _root_.GlobalTheory.Hk.exists_lFam_ray d M hd hd4 hd100 hM
   rw [← hFB] at hB ⊢
   set c := min c₀ (1 / (2 * (1 + A) + 2 + K)) with hc
   have hc0 : 0 < c := lt_min hc₀ (by positivity)

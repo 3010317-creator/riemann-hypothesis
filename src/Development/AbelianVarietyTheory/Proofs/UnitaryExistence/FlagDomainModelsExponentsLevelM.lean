@@ -2,12 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.NormConst
 public import Formalism.LocalToGlobal.ProjectiveLattices.IntegrableOnIntegrand
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CuspPairingIntIffHermitianExponentIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsCuspPseudoBasisAdaptedLatticeStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CuspPairingIntIffHermitianExponentIntegral
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsCuspPseudoBasisAdaptedLattice
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsEqNsmulOfDvdPairing
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExponentMatchingIndependentOfCuspBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.MemDualCuspCharacterLatticeIffAdaptedBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.MemPrincipalCongruenceInterCuspCentreIffStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExponentMatchingIndependentOfCuspBasis
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.MemDualCuspCharacterLatticeIffAdaptedBasis
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.MemPrincipalCongruenceInterCuspCentreIff
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -115,18 +116,18 @@ theorem mem_gamma_iff {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Re
 theorem expoMatch_models : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (σ' : KA l →+* ℂ) (g : ℕ) (ty : Fin g → (E →+* ℂ)) (F : FamilyUnif Xo σ' ty) (r : ℕ) (M : ModelsOf F r) (ρ : ℕ), ModelBase M → l.A = 1 → FJ.ExpoMatch M.X 1 ρ l.M := by
   intro E _ _ _ H Dw l Xo σ' g ty F r M ρ hM hA cu₀
   obtain ⟨k, cu₀⟩ := cu₀
-  obtain ⟨cu, P, cc', hP, hPe, hne, hΛ⟩ := GlobalTheory.T.exists_cusp_pseudoBasis_adapted_lattice E r ρ (M.X k) cu₀
-  refine GlobalTheory.T.exponentMatching_independent_of_cuspBasis E r ρ l.M (M.X k) cu₀ cu P hP hPe ?_
+  obtain ⟨cu, P, cc', hP, hPe, hne, hΛ⟩ := _root_.GlobalTheory.exists_cusp_pseudoBasis E r ρ (M.X k) cu₀
+  refine _root_.GlobalTheory.CuspBasis.expoMatch_of_basis_change E r ρ l.M (M.X k) cu₀ cu P hP hPe ?_
   intro χ hχ
   let φ : (F.Di k).La →ₗ[𝓞 E] (Fin r → E) := (M.X k).Λ.subtype ∘ₗ (M.φ k).toLinearMap
   have hr : LinearMap.range φ = (M.X k).Λ := by
     simp only [φ, LinearMap.range_comp, LinearEquiv.range, Submodule.map_top, Submodule.range_subtype]
-  have hz := GlobalTheory.T.mem_principalCongruence_inter_cuspCentre_iff E H r ρ (M.X k) l.M (F.Di k) φ cu cc' hr
+  have hz := _root_.GlobalTheory.CuspCentre.mem_zGam_principal_iff E H r ρ (M.X k) l.M (F.Di k) φ cu cc' hr
     ⟨Subtype.val_injective.comp (M.φ k).injective,
       by rw [← LinearMap.coe_range, hr]; exact (M.X k).Λ_span,
       (M.X k).Gm_herm, (M.X k).Gm_det, hM.ef k⟩ (mem_gamma_iff hM hA k) hΛ
-  have hd := GlobalTheory.T.mem_dual_cuspCharacterLattice_iff_adapted_basis E r ρ (M.X k) cu cc' hΛ
-  have ht := GlobalTheory.T.cuspPairing_int_iff_hermitianExponent_integral E H r ρ (M.X k) l.M cc' χ (by have := l.three_le; omega) hne hχ
+  have hd := _root_.GlobalTheory.mem_dualOE_xcFD_one_iff_of_adapted E r ρ (M.X k) cu cc' hΛ
+  have ht := _root_.GlobalTheory.ExponentTrace.prE_int_iff_values_integral E H r ρ (M.X k) l.M cc' χ (by have := l.three_le; omega) hne hχ
   constructor
   · intro h u hu m hm
     exact ht.1 (fun β h1 h2 => h β ((hz β).2 ⟨h1, h2⟩)) u m ((hd u).1 hu) ((hd m).1 hm)

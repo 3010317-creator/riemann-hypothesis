@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdmSt
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamPeriodRingFieldTPowFiltrationUnitsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedOfFrobeniusIterateFixedFilZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamPeriodRingFieldTPowFiltrationUnits
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedOfFrobeniusIterateFixedFilZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -99,7 +99,7 @@ theorem mooreDeterminant_eq_unramified_mul_period_alt : ∀ (l : ℕ) [Fact l.Pr
   have hFc : P.ιB c ∈ Fil P 0 := by
     have e : tz P 1 * P.ιB c = P.ιB d := by
       rw [show tz P 1 = P.ιB P.tB by simp [tz], ← map_mul, mul_comm, hct]
-    have key := (GlobalTheory.T.deRhamPeriodRing_field_tPow_filtration_units l P AI T).2.2.1 0 1 (P.ιB c)
+    have key := (_root_.GlobalTheory.PMon.bdR_tied l P AI T).2.2.1 0 1 (P.ιB c)
     rw [zero_add, e] at key
     exact key.2 hF
   have hev : ∀ j < 2, ev P j c ∈ Fil P 0 := by
@@ -112,7 +112,7 @@ theorem mooreDeterminant_eq_unramified_mul_period_alt : ∀ (l : ℕ) [Fact l.Pr
       · rw [h1, neg_one_mul]
         simp only [Fil, SetLike.mem_coe] at hFc ⊢
         exact neg_mem hFc
-  obtain ⟨κ, -, hκ⟩ := GlobalTheory.T.unramified_of_frobeniusIterate_fixed_filZero l P AI T 2 two_pos c hφ2 hev
+  obtain ⟨κ, -, hκ⟩ := _root_.GlobalTheory.PMon.unr_of_iterate_fixed l P AI T 2 two_pos c hφ2 hev
   refine ⟨κ, ?_, ?_⟩
   · rintro rfl
     apply hd

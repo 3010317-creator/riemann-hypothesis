@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.NonemptyHomF
 public import Mathlib.AlgebraicGeometry.Morphisms.FormallyUnramified
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.NonzeroLocus
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteTypeRepresentingPolarizedHomsLocNoetStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormallyUnramifiedHomWithFixedPullbackSchemeStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormallyUnramifiedHomWithFixedPullbackScheme
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFiniteOfIsProperOfFormallyUnramified
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsProperOfFiniteType
 import Mathlib.Algebra.Order.Floor.Extended
@@ -60,7 +61,7 @@ theorem exists_finite_unramified : ∀ (S : Scheme.{0}) [IsLocallyNoetherian S] 
   obtain ⟨R, hqc, hsep, hlft⟩ := GlobalTheory.T.exists_finiteType_representing_polarizedHoms_locNoeth S A B L M hA hB hL hM rA rB aA aB
   have hpr : IsProper R.π :=
     GlobalTheory.EndLoc.HomFixProper.isProper_of_finiteType S A B L M R hA hB hL hM rA rB hqc hsep hlft
-  have hun : FormallyUnramified R.π := GlobalTheory.T.formallyUnramified_homWithFixedPullback_scheme S A B L M R hA hB
+  have hun : FormallyUnramified R.π := _root_.GlobalTheory.EndLoc.formallyUnramified_homFixRep S A B L M R hA hB
   exact ⟨R, GlobalTheory.PropFin.isFinite_of_isProper_of_formallyUnramified _ _ R.π hpr hun, hun⟩
 
 end GlobalTheory.EndLoc.HomFixFinite

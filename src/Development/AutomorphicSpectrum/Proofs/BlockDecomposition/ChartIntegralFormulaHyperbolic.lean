@@ -2,13 +2,16 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FreeCell
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicUnitaryGroupLocallyCompactStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CoordinateHaarMeasureStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicUnitaryGroupLocallyCompact
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CoordinateHaarMeasure
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.GramFiberMeasureOrthogonalExtension
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRingStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.UnitaryActionPreservesHaarLocalStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HyperbolicSumNondegenerateFrameStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsCovolOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TrMMemFramesEIff
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HyperbolicSumNondegenerateFrame
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryMovingUnitVector
+import Formalism.UnipotentAdelicQuotients.SWXSDefs
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.UnitaryActionPreservesHaarLocal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -96,9 +99,9 @@ theorem lintegral_chartS_of_unitary (F E : Type) [Field F] [NumberField F] [Fiel
       ∫⁻ x, ∫⁻ a, ∫⁻ s, ∫⁻ Y, g (chartS R σ J x a s Y) ∂(coordW R b lam n M) ∂(coordW R b lam 1 n)
         ∂(coordW R b lam 1 n) ∂(coordW R b lam 1 (M + 2)) := by
   obtain ⟨i₁, i₂, i₃, i₄, -⟩ := id hR
-  obtain ⟨k₁, k₂, k₃, k₄, -, -, -, hBorel, -⟩ := GlobalTheory.T.tensor_locally_compact_ring F E σ hCM R
-  obtain ⟨hK, hW, -⟩ := GlobalTheory.T.coordinate_haar_measure F E σ hCM R d b lam hlam
-  have hJ' := (GlobalTheory.T.hyperbolic_sum_nondegenerate_frame F E σ hCM M J hJ).1
+  obtain ⟨k₁, k₂, k₃, k₄, -, -, -, hBorel, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R
+  obtain ⟨hK, hW, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hCM R d b lam hlam
+  have hJ' := (_root_.GlobalTheory.CompanionTheory.WeilSiegel.HypStep.hypOne_isHermND_and_e0_mem F E σ hCM M J hJ).1
   have : SigmaFinite (coordK R b lam) := inferInstance
   have hBK : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
   have hBt := hBorel 1 n
@@ -114,9 +117,9 @@ theorem lintegral_chartS_of_unitary (F E : Type) [Field F] [NumberField F] [Fiel
     have hact : Measurable (actW R σ (hypOne J) c :
         (Fin n → Fin (M + 2) → R ⊗[F] E) → Fin n → Fin (M + 2) → R ⊗[F] E) := by
       have := hBorel n (M + 2)
-      have hcont := ((GlobalTheory.T.adelic_unitary_group_locally_compact F E σ hCM (M + 2) (hypOne J) hJ' R).2.2.2.2.2 n).1
+      have hcont := ((_root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hCM (M + 2) (hypOne J) hJ' R).2.2.2.2.2 n).1
       exact (hcont.comp (Continuous.prodMk_right c)).measurable
-    have hinv := GlobalTheory.T.unitary_action_preserves_haar_local F E σ hCM (M + 2) (hypOne J) hJ' R hR n (coordW R b lam n (M + 2)) (hW n (M + 2)) c
+    have hinv := _root_.GlobalTheory.CompanionTheory.SW.HInv.map_actW_eq F E σ hCM (M + 2) (hypOne J) hJ' R hR n (coordW R b lam n (M + 2)) (hW n (M + 2)) c
     have hf : Measurable fun Y : Fin n → Fin (M + 2) → R ⊗[F] E => g (Fin.cons (x 0) Y) :=
       hg.comp (TupFubini.measurable_cons_tail (x 0))
     have hψ := hf.comp hact

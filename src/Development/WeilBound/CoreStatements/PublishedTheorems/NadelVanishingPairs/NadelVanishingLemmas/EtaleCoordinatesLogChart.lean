@@ -4,9 +4,12 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.IsEtCoord
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsEulerContraction
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RegularLocalStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitAtFnOfOfNotMem
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.FractionFieldCoordinatesDlog
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.RootOfMonomialQuotientIntegral
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.UnitOfHeightOnePrimesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FractionFieldCoordinatesDlog
+public import Mathlib.Algebra.Field.ZMod
+public import Mathlib.RingTheory.RingHom.Etale
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RootOfMonomialQuotientIntegral
+public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.UnitOfHeightOnePrimes
+public import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.IsLocalizedModuleGermLinearPointOfPrime
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -42,7 +45,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.IsLocalizedModuleGermLinearPointOfPrime
 
 @[expose] public section
 
@@ -133,7 +135,7 @@ theorem isLogChart_of_isEtCoord : ∀ (p : ℕ) [Fact p.Prime] (X : Scheme.{0}) 
   have ht : ∀ j, algebraMap Γ(X, U) X.functionField (t j) ≠ 0 := fun j => by
     rw [hA, ← hx j]; exact (x j).ne_zero
   have hxt : x = fun j => Units.mk0 _ (ht j) := funext fun j => Units.ext (hx j)
-  have hB := GlobalTheory.T.fraction_field_coordinates_dlog p Γ(X, U) t hEt' X.functionField ht
+  have hB := _root_.GlobalTheory.EtCoordBasis.etale_coords_basis p Γ(X, U) t hEt' X.functionField ht
   have hprod : ∀ S : Finset (Fin n),
       algebraMap Γ(X, U) X.functionField (∏ j ∈ S, t j) = ∏ j ∈ S, (x j : X.functionField) :=
     fun S => by rw [map_prod]; exact Finset.prod_congr rfl fun j _ => (hx j).symm
@@ -161,7 +163,7 @@ theorem isLogChart_of_isEtCoord : ∀ (p : ℕ) [Fact p.Prime] (X : Scheme.{0}) 
       refine Finset.sum_congr rfl fun i _ => ?_
       rw [hx i, smul_smul, ← sub_smul, smul_smul, mul_comm g]
   · intro S g m hm hg
-    obtain ⟨a, b, hb, e⟩ := GlobalTheory.T.root_of_monomial_quotient_integral p Γ(X, U) t hEt' (hU.primeIdealOf ⟨y, hy⟩).asIdeal
+    obtain ⟨a, b, hb, e⟩ := _root_.GlobalTheory.EtRoot.div_prod_coords_mem_of_pow p Γ(X, U) t hEt' (hU.primeIdealOf ⟨y, hy⟩).asIdeal
       X.functionField S g m hm (by
         obtain ⟨a, b, hb, e⟩ := (regAt_iff_frac hU hy _).1 (mem_locRing.1 hg)
         exact ⟨a, b, hb, by rw [hprod]; exact e⟩)
@@ -173,7 +175,7 @@ theorem isLogChart_of_isEtCoord : ∀ (p : ℕ) [Fact p.Prime] (X : Scheme.{0}) 
       refine forall₂_congr fun j _ => ?_
       rw [hx j]
       exact unitAt_fnOf_iff_not_mem hU hz (t j)
-    have hU' := GlobalTheory.T.unit_of_height_one_primes p Γ(X, U) t hEt' (hU.primeIdealOf ⟨y, hy⟩).asIdeal X.functionField J ht g
+    have hU' := _root_.GlobalTheory.EtUnit.unit_mul_monomial_iff p Γ(X, U) t hEt' (hU.primeIdealOf ⟨y, hy⟩).asIdeal X.functionField J ht g
     refine Iff.trans ?_ (hU'.trans ?_)
     · constructor
       · intro hL Q hQ hQP hJ

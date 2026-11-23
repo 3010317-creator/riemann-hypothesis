@@ -2,13 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.SideFam
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BesselGapDimensionFormulaStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BesselGapExistsNonzeroStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BesselGapNormIdentityStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BesselGapExistsNonzero
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BesselGapNormIdentity
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsKTypeNonzeroBessel
+public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.PositiveRankOneProportional
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BesselGapVanishingStatement
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DiscreteSeriesUnitarySmoothBasic
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsKTypeNonzeroBessel
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.HaarEqSmul
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.PositiveRankOneProportionalStatement
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.UhMeasurableSet
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -59,14 +61,14 @@ theorem exists_normalised_bessel_map : Hyps → ∀ (k r : ℕ) (ε : Fin (2 * r
   have hconv := GlobalTheory.T.besselIntegral_integrable_and_cwContinuous_of_gap H k r ε mu h R Wp z π u μW μN μG νq hDS hgap hok hside
   by_cases hz : ∃ w ∈ R.sm, ∃ v ∈ R.TK, be z Formalism.QuantumDeterminants.cStd π R.σ μW μN w v ≠ 0
   · obtain ⟨l₀, La, hB, hnz, hshape⟩ :=
-      GlobalTheory.T.bessel_gap_exists_nonzero H k r ε mu h R Wp z π u μW μN μG νq hDS hgap hok hside hz
+      _root_.GlobalTheory.BesselShape.bessel_shape H k r ε mu h R Wp z π u μW μN μG νq hDS hgap hok hside hz
     have hTK : ∀ v ∈ R.TK, v ∈ R.sm :=
       (GlobalTheory.rep_basic_of_isDS H.1.2.2.1 k r ε mu R hDS).2.2.2.2.1
     obtain ⟨v₀, hv₀, hl₀⟩ := GlobalTheory.bessel_nonzero_on_translates H k r ε mu R Wp z π l₀ hDS hB hnz
     obtain ⟨c₀, -, hc₀⟩ := GlobalTheory.BesselDegree.schur_fdeg H k r ε μG hside.2.2.2.2.2.2.1
     have hP := GlobalTheory.T.bessel_integral_l2_norm_eq_div_formal_degree H k r ε mu h R Wp z π u μW μN μG νq hDS hgap hok hside _ (hc₀ mu R hDS).1
-    have hadj := GlobalTheory.T.adjoint_besselIntegral_eq_swap_of_gap H k r ε mu h R Wp z π u μW μN μG νq hDS hgap hok hside
-    obtain ⟨c, hc, hLa⟩ := GlobalTheory.T.positive_rank_one_proportional R.TK Wp (fun v => l₀ v) (fun v => La v)
+    have hadj := _root_.GlobalTheory.BesselAdjoint.adjoint_be H k r ε mu h R Wp z π u μW μN μG νq hDS hgap hok hside
+    obtain ⟨c, hc, hLa⟩ := _root_.GlobalTheory.hermitian_rankOne_kernel_shape R.TK Wp (fun v => l₀ v) (fun v => La v)
       (fun v w => by
         have := hadj v v.2 w w.2
         rwa [hshape w (hTK _ w.2) v v.2, hshape v (hTK _ v.2) w w.2] at this)

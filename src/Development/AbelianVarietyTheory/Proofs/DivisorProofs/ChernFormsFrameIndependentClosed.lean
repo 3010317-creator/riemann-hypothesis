@@ -1,12 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsTypeIsRealConst
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AntiholomorphicDbarChernFormOfGramMatrixEqZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChernFormOfGramMatrixAtCompHolomorphic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChernFormOfGramMatrixAtHolomorphicFrameChange
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContDiffOnChernFormOfGramMatrixAtCoefficients
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicDelChernFormOfGramMatrixEqZero
 import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.DifferentiableOnOfTendstoLocallyUniformlyOn
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AntiholomorphicDbarChernFormOfGramMatrixEqZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChernFormOfGramMatrixAtCompHolomorphicStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChernFormOfGramMatrixAtHolomorphicFrameChangeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContDiffOnChernFormOfGramMatrixAtCoefficientsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicDelChernFormOfGramMatrixEqZeroStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -120,7 +120,7 @@ theorem chern_frame_closed : ∀ {M : Type} [TopologicalSpace M] {n : ℕ} (A : 
     have hev : (fun v => G b ((A.e x.1.1).symm v)) =ᶠ[𝓝 x.crd]
         fun v => chg (g a b ((A.e x.1.1).symm v)) (G a ((A.e x.1.1).symm v)) :=
       Filter.eventually_of_mem (hN.mem_nhds hx) fun v hv => hGt a b _ hv.2
-    exact (GlobalTheory.T.chernFormOfGramMatrixAt_holomorphic_frameChange _ _ _ _ hK hKu hA hAu hev j).symm
+    exact (_root_.GlobalTheory.CxForm.chernAt_changeFrame _ _ _ _ hK hKu hA hAu hev j).symm
   refine ⟨hfr, fun P hP => ?_⟩
   have hloc : ∀ i a, ∀ v ∈ (A.e i).target ∩ (A.e i).symm ⁻¹' U a,
       A.loc P i v = (chernAt (fun w => G a ((A.e i).symm w)) v j : Alt n) := by
@@ -135,7 +135,7 @@ theorem chern_frame_closed : ∀ {M : Type} [TopologicalSpace M] {n : ℕ} (A : 
   · refine contDiffOn_of_locally_contDiffOn fun v hv => ?_
     obtain ⟨a, ha⟩ := hUc ((A.e i).symm v)
     refine ⟨_, hop i a, ⟨hv, ha⟩, ?_⟩
-    refine ((GlobalTheory.T.contDiffOn_chernFormOfGramMatrixAt_coefficients _ _ (hop i a) (hsm i a) (hun i a) j S).mono inter_subset_right).congr fun w hw => ?_
+    refine ((_root_.GlobalTheory.ChernSmooth.contDiffOn_chernAt _ _ (hop i a) (hsm i a) (hun i a) j S).mono inter_subset_right).congr fun w hw => ?_
     rw [hloc i a w hw.2]
   · obtain ⟨a, ha⟩ := hUc x.pt
     have ha' : x'.pt ∈ U a := hxx ▸ ha
@@ -153,7 +153,7 @@ theorem chern_frame_closed : ∀ {M : Type} [TopologicalSpace M] {n : ℕ} (A : 
         (by norm_cast)
     have hHu : IsUnit (G a (x'.ch.symm ((x'.ch ∘ x.ch.symm) x.crd))).det := by
       rw [hφv]; exact hun x'.1.1 a _ (hpt x' a ha')
-    have key := GlobalTheory.T.chernFormOfGramMatrixAt_comp_holomorphic (fun v => G a (x'.ch.symm v)) (x'.ch ∘ x.ch.symm) x.crd hφ hH2 hHu j
+    have key := _root_.GlobalTheory.CxForm.chernAt_comp (fun v => G a (x'.ch.symm v)) (x'.ch ∘ x.ch.symm) x.crd hφ hH2 hHu j
     rw [hφv] at key
     have hge : (fun v => G a (x.ch.symm v)) =ᶠ[𝓝 x.crd] fun w => G a (x'.ch.symm ((x'.ch ∘ x.ch.symm) w)) :=
       Filter.eventually_of_mem (hW.mem_nhds hxW) fun w hw => by
@@ -165,11 +165,11 @@ theorem chern_frame_closed : ∀ {M : Type} [TopologicalSpace M] {n : ℕ} (A : 
     obtain ⟨a, ha⟩ := hUc x.pt
     show delAt (A.loc P x.1.1) x.crd = 0
     rw [delAt_congr (hgerm _ a _ (hpt x a ha))]
-    exact GlobalTheory.T.holomorphicDel_chernFormOfGramMatrix_eq_zero _ _ (hop _ a) (hsm _ a) (hun _ a) j _ (hpt x a ha)
+    exact _root_.GlobalTheory.CxForm.ChernDel.delAt_chernAt _ _ (hop _ a) (hsm _ a) (hun _ a) j _ (hpt x a ha)
   · funext x
     obtain ⟨a, ha⟩ := hUc x.pt
     show dbarAt (A.loc P x.1.1) x.crd = 0
     rw [dbarAt_congr (hgerm _ a _ (hpt x a ha))]
-    exact GlobalTheory.T.antiholomorphicDbar_chernFormOfGramMatrix_eq_zero _ _ (hop _ a) (hsm _ a) (hun _ a) j _ (hpt x a ha)
+    exact _root_.GlobalTheory.CxForm.ChernDbar.dbarAt_chernAt _ _ (hop _ a) (hsm _ a) (hun _ a) j _ (hpt x a ha)
 
 end GlobalTheory.ChernFrame

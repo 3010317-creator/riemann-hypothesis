@@ -3,7 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Foundations.MemL2OfBoundedContinuousInvariant
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsHeightLeTwoMulQuotHeight
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegrableUnitaryQuotientHeightPowMulRapidlyDecrStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralKernelLiftsFubiniSigmaFiniteStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralKernelLiftsFubiniSigmaFinite
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalVolumeLift
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -42,8 +47,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalVolumeLift
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalZero
 import Development.AbelianVarietyTheory.Definitions.Foundations.EventuallyEqOfIsPreconnected
 import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IntegrandSZero
 
@@ -163,7 +166,7 @@ theorem seesaw_fubini : ∀ (D : D7) (A B : HSp D) (m : Measure (GA D A)) (mH : 
   obtain ⟨hw₂, hf₂⟩ := weight_data m hm hu₂ hc₂0 a₂
   have := hm
   have := hmH
-  have key := GlobalTheory.T.integral_kernel_lifts_fubini_sigmaFinite (autMeasure A m) (autMeasure A m) (autMeasure B mH)
+  have key := _root_.GlobalTheory.AbsFubini.abstract_fubini_two_lifts (autMeasure A m) (autMeasure A m) (autMeasure B mH)
     (fun q y => K₁ q.out y.out) (fun q y => K₂ q.out y.out) (fun q => u₁ q.out) (fun q => u₂ q.out)
     (measurable_kernel_out hc₁ hl₁ hr₁) (measurable_kernel_out hc₂ hl₂ hr₂)
     (measurable_out hu₁.1 hu₁.2.1) (measurable_out hu₂.1 hu₂.2.1) _ _

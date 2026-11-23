@@ -2,11 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.BlockAnti
 public import Formalism.SharpRestriction.CuspSpanNormBounds.NormalizedLocalScale
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DiffQuotientBesselMapTendstoStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagUnipotentLebesgueMeasureIsHaarOnStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarLieNilpotentEqLebesgueStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DiffQuotientBesselMapTendsto
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UpperOff
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagUnipotentLebesgueMeasureIsHaarOn
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarLieNilpotentEqLebesgue
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HcTypeWIrreducibleAndSchurAverage
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SmoothVectorsDenseInvariantStatement
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SmoothVectorsDenseInvariant
 import Formalism.FormalDegreeBessel.FinalG
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -123,12 +125,12 @@ theorem oneSide_of_bessel {k r : ℕ} {H : Type} [NormedAddCommGroup H] [InnerPr
     have hdet : IsUnit (Hpk k r).det :=
       Matrix.isUnit_det_of_right_inverse (hpkFacts k r).2.1
     have hhm : h * m ∈ GG k r := (uHGroup _ _ hdet).2.1 h hh.1 m hm.1
-    have hs : IsSmoothVec σ (σ g v) := ((GlobalTheory.T.smooth_vectors_dense_invariant k r σ v hσ).2.2.2.1 v hv).1 g hg
+    have hs : IsSmoothVec σ (σ g v) := ((_root_.GlobalTheory.SgInfDD.DD_stable_dense k r σ v hσ).2.2.2.1 v hv).1 g hg
     have := hB.2.2.1 h hh m hm (σ g v) hs
     show B (σ (h * m * g) v) = _
     rw [hσ.1.2 _ hhm _ hg]
     exact this
-  · exact (GlobalTheory.T.diffQuotient_besselMap_tendsto k r σ z _ π B v 0 hσ hB hv (by simp [InLieHpk])).2.1
+  · exact (_root_.GlobalTheory.diffQuot_bessel k r σ z _ π B v 0 hσ hB hv (by simp [InLieHpk])).2.1
 
 theorem both_sides : ∀ (D : D7) τ w w' θ (W : LocW D.R.k D.R.rS) lam (A : LocS W), 0 < θ → 0 < D.host.v → HypTT D w w' → GoodW D τ w w' θ W → GoodS D lam A → IsURepOn (GG D.R.k D.R.rS) A.σ ∧ IsIrredOn (GG D.R.k D.R.rS) A.σ ∧ W.μN = ENNReal.ofReal ((2 * D.host.v) ^ (-((D.R.rS : ℝ) * D.R.k)) * θ * 2 ^ (D.R.rS * (D.R.k + 1) + D.R.rS * (D.R.rS - 1))) • lebN D.R.k D.R.rS ∧ OneSide W.z W.π (psiS D W.z) W.μG W.μW W.μN W.νS A.Φ A.cN ∧ OneSide W.z' W.π' (psiS D W.z') W.μG W.μW' W.μN W.νS' A.Φ' A.cN := by
   intro D τ w w' θ W lam A hθ hv hTT hW hA
@@ -140,10 +142,10 @@ theorem both_sides : ∀ (D : D7) τ w w' θ (W : LocW D.R.k D.R.rS) lam (A : Lo
       2 ^ (D.R.rS * (D.R.k + 1) + D.R.rS * (D.R.rS - 1))) • lebN D.R.k D.R.rS := by
     have e : haarLie (Nset D.R.k D.R.rS) (kapN D θ) = kapN D θ • haarLie (Nset D.R.k D.R.rS) 1 := by
       unfold haarLie; rw [one_smul]
-    rw [hN, e, GlobalTheory.T.haar_lie_nilpotent_eq_lebesgue, smul_smul, ENNReal.ofReal_mul hpos.le, ENNReal.ofReal_pow (by norm_num)]
+    rw [hN, e, _root_.GlobalTheory.Amp.NLie.haarLie_eq_lebN, smul_smul, ENNReal.ofReal_mul hpos.le, ENNReal.ofReal_pow (by norm_num)]
     simp [kapN]
   have hNH : IsHaarOn (Nset D.R.k D.R.rS) W.μN := by
-    rw [hμ]; exact isHaarOn_smul (GlobalTheory.T.flagUnipotentLebesgueMeasure_isHaarOn _ _) (by positivity)
+    rw [hμ]; exact isHaarOn_smul (_root_.GlobalTheory.Amp.NHaar.isHaarOn_lebN _ _) (by positivity)
   have hT1 : 0 < Tz D.R.k D.R.rS W.z := by
     rw [t1]; unfold Tr; exact_mod_cast hTT.1.pos
   have hT2 : 0 < Tz D.R.k D.R.rS W.z' := by

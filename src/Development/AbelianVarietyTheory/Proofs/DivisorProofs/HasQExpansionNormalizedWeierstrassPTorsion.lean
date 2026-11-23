@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ZetaActRefl
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeierstrassConstantQExpansionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeierstrassDivisionValueQExpansionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeierstrassConstantQExpansion
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeierstrassDivisionValueQExpansion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,8 +58,8 @@ theorem main : ∀ (N : ℕ) [NeZero N] (x : Fin 2 → ZMod N), HasQ N (wp N x) 
       simp [wp, tors, PeriodPair.weierstrassP_zero]
     simp only [cP, h0, if_true]
     simpa using (hasSum_zero : HasSum (fun _ : ℕ => (0 : ℂ)) 0)
-  · have hB := GlobalTheory.T.weierstrass_division_value_q_expansion N x hx τ
-    have hG := GlobalTheory.T.weierstrass_constant_q_expansion N τ
+  · have hB := _root_.GlobalTheory.WpFam.ExpansionB.main N x hx τ
+    have hG := _root_.GlobalTheory.WpFam.hasQ_gN N τ
     have hd := hB.sub hG
     have hw : wp N x τ = wB N x τ - gN τ := by simp [wB]
     have hf : (fun n : ℕ => cP N x n * Complex.exp (2 * Real.pi * Complex.I * n * τ / N)) =

@@ -5,10 +5,13 @@ public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeterminantInducedIsAdmissible
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.PairwiseDisjointCell
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.GlBridge
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.IndVec
-import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.IwMemMul
+public import Development.AbelianVarietyTheory.Definitions.Foundations.SmoothPartStable
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.ContinuousTorusCharacter
+public import Mathlib.Basic.Complex.Basic
+public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ExistsFun
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.PropCp
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.UOpLevel
+import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.IwMemMul
 import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.UOpMul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -267,7 +270,7 @@ theorem UpperTheory.V.Hi.ordA :
     simp only [χ, dif_pos ha, dif_pos hb, dif_pos (mul_mem ha hb)]
     rw [← Units.val_mul, ← map_mul, ← map_mul]
     rfl
-  obtain ⟨f, hf1, hf⟩ := UpperTheory.V.Hi.indVec _ ((glIwa k n).I1 c) σ (hI c).1 1 (by
+  obtain ⟨f, hf1, hf⟩ := _root_.UpperTheory.Reformulated.B.Gr28.indVec _ ((glIwa k n).I1 c) σ (hI c).1 1 (by
     rintro ⟨p, hp⟩ h
     obtain ⟨x, hx, t, ht, y, hy, rfl⟩ := (iwMem _ _ c p).2.1.1 h
     have hx' := unipRad_le_parab k _ hx.1

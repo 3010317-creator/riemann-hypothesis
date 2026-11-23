@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.HeckeSectionsIsotropicCommutatorPairingPower
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagShiftTotalPowerSumStatement
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.CompactGapsGE
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagShiftTotalPowerSum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -104,10 +105,10 @@ theorem deltaTerm_eq : ∀ (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ) (
   intro p τ k Q hp hk
   have hN' : (N : ℝ) ≠ 0 := by exact_mod_cast hN.ne'
   have hSh : ∑ σ, Sh j σ (pk τ k * Q) = k * degFl (pkLow j τ (k - 1) * Q) := by
-    rw [Finset.sum_congr rfl (fun σ _ => (GlobalTheory.T.flag_shift_total_power_sum Ψ N j τ σ k Q hk).1)]
+    rw [Finset.sum_congr rfl (fun σ _ => (_root_.GlobalTheory.CompanionTheory.Ar.Top.sh_tot_pk_mul Ψ N j τ σ k Q hk).1)]
     simp
   have hTot : ∑ σ, Tot σ (pk τ k * Q) = if k = 1 then N * degFl Q else 0 := by
-    rw [Finset.sum_congr rfl (fun σ _ => (GlobalTheory.T.flag_shift_total_power_sum Ψ N j τ σ k Q hk).2)]
+    rw [Finset.sum_congr rfl (fun σ _ => (_root_.GlobalTheory.CompanionTheory.Ar.Top.sh_tot_pk_mul Ψ N j τ σ k Q hk).2)]
     by_cases h1 : k = 1 <;> simp [h1]
   rw [hSh, hTot]
   by_cases h1 : k = 1

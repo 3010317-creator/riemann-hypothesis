@@ -1,18 +1,21 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsGauss
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisMulEqZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisValuationAtRadiusConcaveContSlopeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisValuationRadiusLawsStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaussNormAcrisRadiusPosDefiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaussNormAcrisTeichmullerTiltSubEqOneStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ISupMonomialHolderLogConvex
+public import Formalism.LocalRingCardinality.AdicCompletionLocal.InstIsAdicCompleteOCSpanSingletonSetCast
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisMulEqZero
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisValuationAtRadiusConcaveContSlope
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisValuationRadiusLaws
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaussNormAcrisTeichmullerTiltSubEqOne
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ImportsTerFurther
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsGaussGCTarget
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormUntiltSubEqOneOfPowFixed
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.OrbitClassTrivial
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PHomogeneousDifferenceLinearStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TeichmullerPowEqOfFrobeniusRatioStatement
+public import Mathlib.Analysis.Convex.Function
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PHomogeneousDifferenceLinear
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TeichmullerPowEqOfFrobeniusRatio
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaussNormAcrisRadiusPosDefinite
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ISupMonomialHolderLogConvex
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsGaussGCTarget
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -85,7 +88,7 @@ theorem vr_iterate_φc (l : ℕ) [Fact l.Prime] (x : Formalism.Per.Acris l) (hx 
     have hrl : r / l ∈ Set.Ioc (0 : ℝ) 1 :=
       ⟨div_pos hr.1 (by linarith), (div_le_one (by linarith)).2 (by linarith [hr.2])⟩
     obtain ⟨h1, h2⟩ := ih (r / l) hrl
-    have V := (GlobalTheory.T.acrisValuation_radius_laws l r hr.1 hr.2).2.1 _ h1
+    have V := (_root_.GlobalTheory.PMon.Gauss.vr_laws l r hr.1 hr.2).2.1 _ h1
     refine ⟨by rw [Function.iterate_succ_apply']; exact V.1, ?_⟩
     rw [Function.iterate_succ_apply', V.2, h2, div_div, pow_succ, mul_comm ((l : ℝ) ^ k) (l : ℝ)]
     ring
@@ -104,11 +107,11 @@ theorem vr_prod_range (l : ℕ) [Fact l.Prime] (x : ℕ → Formalism.Per.Acris 
     have hne : (∏ i ∈ Finset.range (n + 1), x i) ≠ 0 := by
       rw [Finset.prod_range_succ]
       intro h0
-      rcases GlobalTheory.T.acris_eq_zero_or_eq_zero_of_mul_eq_zero l _ _ h0 with h | h
+      rcases _root_.GlobalTheory.PMon.Gauss.acris_mul_eq_zero l _ _ h0 with h | h
       · exact ih.1 h
       · exact hx n h
     refine ⟨hne, fun r hr => ?_⟩
-    rw [Finset.prod_range_succ, Finset.sum_range_succ, (GlobalTheory.T.acrisValuation_radius_laws l r hr.1 hr.2).1 _ _ ih.1 (hx n),
+    rw [Finset.prod_range_succ, Finset.sum_range_succ, (_root_.GlobalTheory.PMon.Gauss.vr_laws l r hr.1 hr.2).1 _ _ ih.1 (hx n),
       ih.2 r hr]
 
 theorem root_cancel_pow_eq_self : ∀ (l : ℕ) [Fact l.Prime] (h s : ℕ), s < h → ∀ (w w' : Formalism.Per.Acris l) (ζ : Formalism.Per.Fl l) (o : ℕ) (ρ₀ : ℝ), (φc l)^[h] w' = (l : Formalism.Per.Acris l) ^ s * w' → w' ≠ 0 → φc l w * w' = w * φc l w' → (∀ ρ : ℝ, (l : ℝ)⁻¹ ≤ ρ → ρ < 1 → gC l ρ w = gC l ρ w') → 0 < o → ζ ^ (l ^ o) = ζ → ζ ≠ 0 → (l : ℝ)⁻¹ ≤ ρ₀ → ρ₀ < 1 → gC l ρ₀ (w - tc l ζ * w') < gC l ρ₀ w' → ζ ^ l = ζ := by
@@ -166,7 +169,7 @@ theorem root_cancel_pow_eq_self : ∀ (l : ℕ) [Fact l.Prime] (h s : ℕ), s < 
   · obtain ⟨i, hi⟩ := hA
     have hwi : w = tc l (F^[i] ζ) * w' := sub_eq_zero.1 hi
     rw [hwi] at hφ
-    have hfix := GlobalTheory.T.teichmuller_pow_eq_of_frobenius_ratio l w' (F^[i] ζ) hw' hφ
+    have hfix := _root_.GlobalTheory.PMon.Gauss.teich_eq_of_phi_ratio l w' (F^[i] ζ) hw' hφ
     apply hmod1 i
     apply hz_eq
     rw [hzsucc]; exact hfix
@@ -175,7 +178,7 @@ theorem root_cancel_pow_eq_self : ∀ (l : ℕ) [Fact l.Prime] (h s : ℕ), s < 
   have h10 : (1 : Formalism.Per.Acris l) ≠ 0 := fun h1 => hw' (by rw [← one_mul w', h1, zero_mul])
   have hrad := fun r (hr : r ∈ Set.Ioc (0 : ℝ) 1) => rootCancel_radius l hr.1 hr.2
   have hpos : ∀ y : Formalism.Per.Acris l, y ≠ 0 → ∀ r ∈ Set.Ioc (0 : ℝ) 1, 0 < gC l ((l : ℝ) ^ (-r)) y :=
-    fun y hy r hr => GlobalTheory.T.gaussNormAcrisRadius_pos_definite l y hy _ (hrad r hr).1 (hrad r hr).2
+    fun y hy r hr => _root_.GlobalTheory.PMon.Gauss.gC_pos_target l y hy _ (hrad r hr).1 (hrad r hr).2
   have hmulw : ∀ r ∈ Set.Ioc (0 : ℝ) 1, ∀ i,
       gC l ((l : ℝ) ^ (-r)) (tc l (F^[i] ζ) * w') = gC l ((l : ℝ) ^ (-r)) w' := by
     intro r hr i
@@ -197,7 +200,7 @@ theorem root_cancel_pow_eq_self : ∀ (l : ℕ) [Fact l.Prime] (h s : ℕ), s < 
     simp only [hfv, vr, sub_nonneg, neg_le_neg_iff]
     exact Real.logb_le_logb_of_le hl (hpos _ (hA i) r hr) (hxle r hr i)
   have hfv_cont : ∀ i, ContinuousOn (fv i) (Set.Ioc 0 1) := fun i =>
-    ((GlobalTheory.T.acrisValuationAtRadius_concave_cont_slope l _ (hA i)).2.1).sub (GlobalTheory.T.acrisValuationAtRadius_concave_cont_slope l _ hw').2.1
+    ((_root_.GlobalTheory.PMon.Gauss.vr_concave_cont_rightSlope l _ (hA i)).2.1).sub (_root_.GlobalTheory.PMon.Gauss.vr_concave_cont_rightSlope l _ hw').2.1
   have hfv_class : ∀ i j, ∀ r ∈ Set.Ioc (0 : ℝ) 1, 0 < fv i r → 0 < fv j r → i % o' = j % o' := by
     intro i j r hr hi hj
     by_cases hzz : F^[i] ζ = F^[j] ζ
@@ -206,7 +209,7 @@ theorem root_cancel_pow_eq_self : ∀ (l : ℕ) [Fact l.Prime] (h s : ℕ), s < 
     have hGr := hG _ (hrad r hr).1 (hrad r hr).2
     have hd : x j - x i = (tc l (F^[i] ζ) - tc l (F^[j] ζ)) * w' := by simp only [hx]; ring
     have hsep := GlobalTheory.TiltAbs.norm_untilt_sub_eq_one_of_pow_fixed l o _ _ ho (hzfix i) (hzfix j) hzz
-    have h1 := GlobalTheory.T.gaussNormAcris_teichmuller_tilt_sub_eq_one l _ _ hsep _ (hrad r hr).1 (hrad r hr).2
+    have h1 := _root_.GlobalTheory.PMon.Gauss.gC_teich_sub_eq_one l _ _ hsep _ (hrad r hr).1 (hrad r hr).2
     have hle := hGr.2.1 (x j) (-(x i))
     rw [← sub_eq_add_neg, hGr.2.2.1, hd, hGr.2.2.2.1, h1, one_mul] at hle
     have := (hfv_pos r hr i).1 hi
@@ -217,7 +220,7 @@ theorem root_cancel_pow_eq_self : ∀ (l : ℕ) [Fact l.Prime] (h s : ℕ), s < 
     intro i r hr0 hr1
     have hlr : (l : ℝ) * r ∈ Set.Ioc (0 : ℝ) 1 :=
       ⟨by positivity, by rw [le_div_iff₀ hl0] at hr1; linarith⟩
-    have V := GlobalTheory.T.acrisValuation_radius_laws l _ hlr.1 hlr.2
+    have V := _root_.GlobalTheory.PMon.Gauss.vr_laws l _ hlr.1 hlr.2
     have hrr : (l : ℝ) * r / l = r := by field_simp
     have e := congrArg (vr l ((l : ℝ) * r)) (hfrob i)
     rw [V.1 _ _ (V.2.1 _ (hA i)).1 hw', V.1 _ _ (hA (i + 1)) (V.2.1 _ hw').1, (V.2.1 _ (hA i)).2,
@@ -234,7 +237,7 @@ theorem root_cancel_pow_eq_self : ∀ (l : ℕ) [Fact l.Prime] (h s : ℕ), s < 
   have hB : ∀ r ∈ Set.Ioc (0 : ℝ) 1, (l : ℝ) ^ h * vr l (r / (l : ℝ) ^ h) w' = vr l r w' + s * r := by
     intro r hr
     have e := (vr_iterate_φc l w' hw' h r hr).2
-    rw [hh, (GlobalTheory.T.acrisValuation_radius_laws l r hr.1 hr.2).2.2.1 w' s hw'] at e
+    rw [hh, (_root_.GlobalTheory.PMon.Gauss.vr_laws l r hr.1 hr.2).2.2.1 w' s hw'] at e
     linarith
   have hAB : ∀ r ∈ Set.Ioc (0 : ℝ) (1 / l), vr l ((l : ℝ) * r) W - (o' : ℝ) * vr l ((l : ℝ) * r) w' =
       (l : ℝ) * (vr l r W - (o' : ℝ) * vr l r w') := by
@@ -251,9 +254,9 @@ theorem root_cancel_pow_eq_self : ∀ (l : ℕ) [Fact l.Prime] (h s : ℕ), s < 
       linarith
     rw [hcyc]
     exact Finset.sum_congr rfl (fun i _ => hfv_shift i r hr.1 hr.2)
-  obtain ⟨n, hn⟩ := GlobalTheory.T.exists_int_sub_mul_eq_int_mul_of_homogeneous l h s o' hlN hsh ho'pos (fun r => vr l r W) (fun r => vr l r w')
-    (GlobalTheory.T.acrisValuationAtRadius_concave_cont_slope l _ hWne).1 (GlobalTheory.T.acrisValuationAtRadius_concave_cont_slope l _ hw').1 (GlobalTheory.T.acrisValuationAtRadius_concave_cont_slope l _ hWne).2.1 (GlobalTheory.T.acrisValuationAtRadius_concave_cont_slope l _ hw').2.1
-    (GlobalTheory.T.acrisValuationAtRadius_concave_cont_slope l _ hWne).2.2 (GlobalTheory.T.acrisValuationAtRadius_concave_cont_slope l _ hw').2.2 hB hAB
+  obtain ⟨n, hn⟩ := _root_.GlobalTheory.PHomCalc.p_homogeneous_difference_linear l h s o' hlN hsh ho'pos (fun r => vr l r W) (fun r => vr l r w')
+    (_root_.GlobalTheory.PMon.Gauss.vr_concave_cont_rightSlope l _ hWne).1 (_root_.GlobalTheory.PMon.Gauss.vr_concave_cont_rightSlope l _ hw').1 (_root_.GlobalTheory.PMon.Gauss.vr_concave_cont_rightSlope l _ hWne).2.1 (_root_.GlobalTheory.PMon.Gauss.vr_concave_cont_rightSlope l _ hw').2.1
+    (_root_.GlobalTheory.PMon.Gauss.vr_concave_cont_rightSlope l _ hWne).2.2 (_root_.GlobalTheory.PMon.Gauss.vr_concave_cont_rightSlope l _ hw').2.2 hB hAB
 
   set r₀ := -Real.logb l ρ₀ with hr₀
   have hρ₀pos : 0 < ρ₀ := lt_of_lt_of_le (inv_pos.2 hl0) hρ₀1

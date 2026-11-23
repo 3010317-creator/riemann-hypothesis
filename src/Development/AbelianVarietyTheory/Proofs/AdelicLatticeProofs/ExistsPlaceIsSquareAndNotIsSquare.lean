@@ -2,12 +2,13 @@ module
 
 public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Completion
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsIsQuadraticSqrtExtensionOfNotSquare
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsPlaceNotIsSquareAdicCompletionStatement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsPlaceNotIsSquareAdicCompletion
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsRingHomAdicCompletionUnder
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsSquareMulOfNonsquareUnits
+public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.SqSubLeNormSub
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsSupersetMemSUnits
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HeightOneSpectrumPlacesOverFiniteSet
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsQuadraticSqrtExtensionBasicFacts
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsSquareMulOfNonsquareUnits
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +53,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.SqSubLeNormSub
 
 @[expose] public section
 
@@ -76,7 +76,7 @@ theorem exists_place_isSquare_and_not_isSquare :
     fun v hv x hx => (mem_sUnits F S x).mp (hSunits S subset_rfl x hx) v hv
   obtain ⟨hover, -, -⟩ := places_over F E
   obtain ⟨SE, hSE⟩ := hover S
-  obtain ⟨w, hwS, hwu⟩ := GlobalTheory.T.exists_place_not_isSquare_adicCompletion E (algebraMap F E u) SE hu0E huE
+  obtain ⟨w, hwS, hwu⟩ := _root_.GlobalTheory.QNorm.exists_not_mem_not_isSquare_completion E (algebraMap F E u) SE hu0E huE
   have hvS : w.under (𝓞 F) ∉ S := fun h => hwS ((hSE w).mpr h)
   obtain ⟨φ, hφ⟩ := exists_ringHom_adicCompletion_under F E w
   have hθ : algebraMap E (w.adicCompletion E) θ ≠ 0 :=

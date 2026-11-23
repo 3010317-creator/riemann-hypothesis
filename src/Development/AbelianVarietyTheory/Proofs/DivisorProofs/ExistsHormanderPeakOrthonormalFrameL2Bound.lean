@@ -1,10 +1,15 @@
 module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.InterpStatementPfL
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHormanderPeakCutoffSingularWeightsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicWeightedSquareIntegrableVanishesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeakExtensionVanishOtherOrbitPointsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlurisubharmonicDecreasingLimitExtensionStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.FundSetMeasStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHormanderPeakCutoffSingularWeights
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Mathlib.Topology.Separation.CompletelyRegular
+public import ReciprocityTheory.L2DbarEstimates.IsLocalHomeomorph
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicWeightedSquareIntegrableVanishes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeakExtensionVanishOtherOrbitPoints
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlurisubharmonicDecreasingLimitExtension
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.KronHolPsiStatementHolds
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,7 +59,6 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.Uppe
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.ExhaustFStatementPfE
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.InterpStatementPfH
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.InterpStatementPfM
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.KronHolPsiStatementHolds
 import Development.AbelianVarietyTheory.Definitions.Divisors.AevalEqZeroOfMemConeIdeal
 import Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings
 import Development.AbelianVarietyTheory.Definitions.Divisors.SemiposAtOfPositive
@@ -75,7 +79,7 @@ open scoped ENNReal
 theorem hormander_peak : ∃ C : ℝ, 0 ≤ C ∧ ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (X : Data E r) (la : ReciprocityTheory.ChartRestriction.G.FD.Wt X.Ψ r) (x : Frame X.Ψ r), 0 < X.p0 → X.p0 < r → ReciprocityTheory.ChartRestriction.G.AR.Up.IsOrth X x → (∀ τ (a b : Fin r), (b : ℕ) = a + 1 → (b : ℕ) ≠ X.p0 → C * ((X.Ψ.card : ℝ) * r) ^ 8 ≤ (la τ a : ℝ) - la τ b) → (∀ τ (a b : Fin r), (a : ℕ) = 0 → (b : ℕ) = r - 1 → C * ((X.Ψ.card : ℝ) * r) ^ 8 ≤ (la τ b : ℝ) - la τ a) → (∀ γ ∈ X.Γ, ∀ z z' : ReciprocityTheory.L2DbarEstimates.V (ReciprocityTheory.ChartRestriction.G.AR.Inst.nd X), ‖z‖ ≤ 1 / (100 * (r : ℝ) ^ 2) → ‖z'‖ ≤ 1 / (100 * (r : ℝ) ^ 2) → ∀ b ∈ Bor X.Ψ r, lact γ (ReciprocityTheory.ChartRestriction.G.AR.Inst.cpt X x z) = rmul (ReciprocityTheory.ChartRestriction.G.AR.Inst.cpt X x z') b → γ = 1) → ∃ (F : ReciprocityTheory.L2DbarEstimates.V (ReciprocityTheory.ChartRestriction.G.AR.Inst.nd X) → ℂ) (P0 : Frame X.Ψ r → ℂ), DifferentiableOn ℂ F (ReciprocityTheory.ChartRestriction.G.AR.Up.OmF X x) ∧ ReciprocityTheory.ChartRestriction.G.AR.Up.IsBEq X la P0 ∧ (∀ z ∈ ReciprocityTheory.ChartRestriction.G.AR.Up.OmF X x, P0 (ReciprocityTheory.ChartRestriction.G.AR.Inst.cpt X x z) = F z) ∧ P0 x = 1 ∧ (∀ γ ∈ X.Γ, γ ≠ 1 → P0 (lact γ x) = 0) ∧ ReciprocityTheory.ChartRestriction.G.AR.Up.InAt X x (ReciprocityTheory.ChartRestriction.G.AR.Up.IW.Wpsi X la (fun _ => 0)) (4 * (X.Ψ.card : ℝ) * (r : ℝ) ^ 2 + 1) F ∧ ∫⁻ z, ENNReal.ofReal (‖F z‖ ^ 2 / ReciprocityTheory.ChartRestriction.G.AR.Up.kaF X x (4 * (X.Ψ.card : ℝ) * (r : ℝ) ^ 2 + 1) z) * ReciprocityTheory.ChartRestriction.G.AR.Up.IW.Wpsi X la (fun _ => 0) (ReciprocityTheory.ChartRestriction.G.AR.Inst.cpt X x z) ∂(ReciprocityTheory.ChartRestriction.G.AR.Up.muF X x) ≤ ENNReal.ofReal (Real.exp (C * ((∑ τ, ∑ a, |(la τ a : ℝ)|) + ((X.Ψ.card : ℝ) * r) ^ 8))) * ReciprocityTheory.ChartRestriction.G.AR.Up.muF X x (Metric.ball 0 (1 / (100 * (r : ℝ) ^ 2)) ∩ ReciprocityTheory.ChartRestriction.G.AR.Up.OmF X x) := by
 
   classical
-  obtain ⟨C1, hC1, hW⟩ := GlobalTheory.T.exists_hormanderPeak_cutoff_singularWeights
+  obtain ⟨C1, hC1, hW⟩ := _root_.GlobalTheory.PeakWeight.peak_weight
   refine ⟨C1 + 2, by linarith, ?_⟩
   intro E _ _ _ r X la x hp0 hp0r ho hgap hbar hinj
   have hr2 : 2 ≤ r := by omega
@@ -118,7 +122,7 @@ theorem hormander_peak : ∃ C : ℝ, 0 ≤ C ∧ ∀ (E : Type) [Field E] [Numb
       muF X x (Metric.ball 0 (1 / (100 * (r : ℝ) ^ 2)) ∩ OmF X x) :=
     measure_mono (Set.inter_subset_inter_left _ (Metric.ball_subset_ball hρR))
   have hA : A < ⊤ := ENNReal.mul_lt_top ENNReal.ofReal_lt_top (hμρ.trans_lt hfin)
-  obtain ⟨F, hFd, hFI⟩ := GlobalTheory.T.plurisubharmonic_decreasing_limit_extension hO (eF X x) (IW.eF_smooth X x ho) (IW.eF_levi X x ho)
+  obtain ⟨F, hFd, hFI⟩ := _root_.GlobalTheory.HormanderLimit.hormander_limit hO (eF X x) (IW.eF_smooth X x ho) (IW.eF_levi X x ho)
     (IW.eF_compact X x ho) φ hφs hφl hφmono F0 hF0s h hhm hdb A hhint
 
   have hexpφ : ∀ k, ∀ z ∈ OmF X x, Real.exp (-φ k z) = Real.exp (-phla X la (cpt X x z)) *
@@ -184,7 +188,7 @@ theorem hormander_peak : ∃ C : ℝ, 0 ≤ C ∧ ∀ (E : Type) [Field E] [Numb
           exact (lintegral_mono_set hball2).trans hFI
       _ < ⊤ := ENNReal.mul_lt_top ENNReal.ofReal_lt_top hA
   have hF0val : F 0 = 1 := by
-    have h0 := GlobalTheory.T.holomorphic_weighted_square_integrable_vanishes hnd (fun z => F0 z - F z) (ρ / 2) (by linarith) hu hint0
+    have h0 := _root_.GlobalTheory.holo_vanish_of_critical_integrable hnd (fun z => F0 z - F z) (ρ / 2) (by linarith) hu hint0
     have h1 := hF01 0 (by rw [norm_zero]; linarith)
     rw [h1] at h0
     exact (sub_eq_zero.1 h0).symm
@@ -353,7 +357,7 @@ theorem hormander_peak : ∃ C : ℝ, 0 ≤ C ∧ ∀ (E : Type) [Field E] [Numb
     rw [IW.cpt_zero] at h0
     rw [h0, hF0val]
   · intro γ hγ hne
-    exact GlobalTheory.T.peakExtension_vanish_other_orbit_points X la x ho hnd Ψw hΨm hΨB hΨΓ c (ρ / 2) hc (by linarith) hpoleψ hinj F0 F hF0R hFd
+    exact _root_.GlobalTheory.PeakOrbit.vanish_translate X la x ho hnd Ψw hΨm hΨB hΨΓ c (ρ / 2) hc (by linarith) hpoleψ hinj F0 F hF0R hFd
       hintT P0 hBE hPF γ hγ hne
 
 end GlobalTheory.HormanderPeak

@@ -4,9 +4,10 @@ public import Mathlib.Algebra.BigOperators.Finprod
 public import Mathlib.Basic.Complex.Basic
 public import Mathlib.GroupTheory.DoubleCoset
 public import Mathlib.GroupTheory.Index
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardFiberDoubleCosetMapEqCardInfConjStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubleCosetCardDivCardInfCommutativeSubgroupStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinsumCompEqFinsumCardFiberMulStatement
+public import Mathlib.SetTheory.Cardinal.Finite
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardFiberDoubleCosetMapEqCardInfConj
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubleCosetCardDivCardInfCommutativeSubgroup
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinsumCompEqFinsumCardFiberMul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -102,9 +103,9 @@ theorem finsum_doubleCoset_regroup (G : Type) [Group G] (T Γ C K' : Subgroup G)
   have hfinal : ∀ p, (Nat.card (π ⁻¹' {p}) : ℂ) * h p
       = a * ((((T ⊓ K'.map (MulAut.conj (Quotient.out p)).toMonoidHom).relIndex C : ℕ) : ℂ) * φ (Quotient.out p)) := by
     intro p
-    have e1 := GlobalTheory.T.card_fiber_doubleCoset_map_eq_card_inf_conj T Γ K' (Quotient.out p)
+    have e1 := _root_.GlobalTheory.doubleCoset_fibre_card T Γ K' (Quotient.out p)
     rw [DoubleCoset.out_eq'] at e1
-    have e2 := GlobalTheory.T.doubleCoset_card_div_card_inf_commutative_subgroup T Γ (T ⊓ K'.map (MulAut.conj (Quotient.out p)).toMonoidHom) C hT (hU _).1 hCT (hU _).2
+    have e2 := _root_.GlobalTheory.DCIndex.index_identity T Γ (T ⊓ K'.map (MulAut.conj (Quotient.out p)).toMonoidHom) C hT (hU _).1 hCT (hU _).2
     show (Nat.card (π ⁻¹' {p}) : ℂ) * (((Nat.card (Γ ⊓ (T ⊓ K'.map (MulAut.conj (Quotient.out p)).toMonoidHom) : Subgroup G) : ℂ))⁻¹ * φ (Quotient.out p)) = _
     rw [e1, ← mul_assoc, ← div_eq_mul_inv, e2, ha_def]
     ring
@@ -131,7 +132,7 @@ theorem finsum_doubleCoset_regroup (G : Type) [Group G] (T Γ C K' : Subgroup G)
         intro e; apply hne; simp [e]
       exact Set.finite_coe_iff.mp (Nat.finite_of_card_ne_zero hn)
   calc _ = ∑ᶠ q, h (π q) := finsum_congr hLHS
-    _ = ∑ᶠ p, (Nat.card (π ⁻¹' {p}) : ℂ) * h p := GlobalTheory.T.finsum_comp_eq_finsum_card_fiber_mul π h hdich
+    _ = ∑ᶠ p, (Nat.card (π ⁻¹' {p}) : ℂ) * h p := _root_.GlobalTheory.finsum_comp_eq_finsum_natCard_fiber_mul π h hdich
     _ = ∑ᶠ p, a * ((((T ⊓ K'.map (MulAut.conj (Quotient.out p)).toMonoidHom).relIndex C : ℕ) : ℂ) * φ (Quotient.out p)) := finsum_congr hfinal
     _ = _ := (hmul a _).symm
 

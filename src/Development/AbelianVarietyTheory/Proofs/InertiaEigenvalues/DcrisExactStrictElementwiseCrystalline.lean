@@ -1,7 +1,8 @@
 module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.CrystallineMapLemmas
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FontaineDcrisStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.RamifiedCoefficientChains
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FontaineDcris
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -47,7 +48,7 @@ namespace GlobalTheory
 
 theorem dcris_exact_strict_elementwise : ∀ D : D7, Formalism.MainNotions.TruncatedSeriesCountingBounds.adm9 D := by
   intro D l _ K LL
-  have hA := (GlobalTheory.T.ramifiedCoefficientChains_adm11 D l K LL).1
+  have hA := (_root_.GlobalTheory.Per.DcrisExact.fontaine_dcris D l K LL).1
   intro hbij V₀ V₁ V₂ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ρ₀ ρ₁ ρ₂ ι π _ _ _ _ _ _ _ _ _ hιe hπe hinj hsurj
     hker c₀ c₁ c₂
   obtain ⟨h1, h2, h3, h4⟩ :=

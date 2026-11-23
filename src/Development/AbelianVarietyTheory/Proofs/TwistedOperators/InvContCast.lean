@@ -1,13 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DefPerEqGenPer
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaIntegrandIntegrable
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicUnitaryTopology
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BesselPeriodCorankConvergesColumn
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DefiniteUnitaryCocompact
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegrableOnFundamentalDomain
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PosDefOfNode
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryEmbeddingContinuousMulRationalStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.BplusOfEquivariant
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryEmbeddingContinuousMulRational
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaIntegrandIntegrable
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicUnitaryTopology
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -103,7 +104,7 @@ theorem genPer_conv : Big fun {D} _ _ _ _ _ _ _ _ _ _ _ ch => ∀ t a, ch.S.SumO
   obtain ⟨hc1, hc2⟩ := GlobalTheory.DefConv.path ch.W M hcol _ _ hcG
   obtain ⟨hr1, hr2⟩ := GlobalTheory.DefConv.path ch.W M hform _ _ hrG
   refine ⟨hc1, hr1, ?_⟩
-  obtain ⟨hac, hamul, haQ⟩ := GlobalTheory.T.unitaryEmbedding_continuous_mul_rational ch.G.sp.topDec
+  obtain ⟨hac, hamul, haQ⟩ := _root_.GlobalTheory.UnitaryEmbeddingProperties.unitaryEmbedding_continuous_hom_rational ch.G.sp.topDec
   have hpos := GlobalTheory.DefConv.posDef_of_node ch.G hL (X := .grid D.R.m D.R.m) ⟨le_rfl, le_rfl⟩ (by simp [Node.neg])
   obtain ⟨Cc, hCc, hcov⟩ := GlobalTheory.definite_unitary_cocompact _ hpos
   obtain ⟨_, _, _, _, _, _, _⟩ := GlobalTheory.Mem.AdelicGroupTop.adelic_unitary_topology D (ch.G.V (.grid D.R.m D.R.m))

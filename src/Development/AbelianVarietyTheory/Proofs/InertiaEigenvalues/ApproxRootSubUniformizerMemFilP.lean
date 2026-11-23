@@ -1,11 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsCrisP
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BdRFiltrationKerThetaGeneratorFacts
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BezoutEisensteinDerivativePrimePow
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsAdicCompleteOfPowLe
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalPeriodRingsSectionEqAinfToBdRPlus
+public import Mathlib.Algebra.Algebra.Operations
+public import Mathlib.Algebra.Polynomial.Derivative
+public import Mathlib.RingTheory.Ideal.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowMulSubMemOfRootsModPow
 import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AcrisTorsionFreeComplete
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BdRFiltrationKerThetaGeneratorFactsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BezoutEisensteinDerivativePrimePowStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalPeriodRingsSectionEqAinfToBdRPlusStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowMulSubMemOfRootsModPowStatement
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaBdRPlusSurjectiveKerUnitsEquivariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -73,7 +78,7 @@ theorem sub_mem_pow {R : Type} [CommRing R] (I : Ideal R) (P : Polynomial R) (s 
   have hy : (P.scaleRoots s).eval (s * r) ∈ I ^ n := by
     rw [Polynomial.scaleRoots_eval_mul, hr, mul_zero]
     exact zero_mem _
-  have h := GlobalTheory.T.pow_mul_sub_mem_pow_of_eval_mem_pow R I (P.scaleRoots s) (s * r) x s (s ^ P.natDegree * (Polynomial.derivative P).eval r) n
+  have h := _root_.GlobalTheory.pow_mul_sub_mem_of_roots_mod_pow R I (P.scaleRoots s) (s * r) x s (s ^ P.natDegree * (Polynomial.derivative P).eval r) n
     hy hx (by rw [← neg_sub]; exact neg_mem hxy)
     (by rw [mul_eval_derivative_scaleRoots, sub_self]; exact zero_mem _)
   rw [Ideal.unit_mul_mem_iff_mem _ (((hs.pow _).mul hd).pow n)] at h
@@ -86,7 +91,7 @@ end GlobalTheory.BSP.ApproxRoot
 open GlobalTheory.BSP.ApproxRoot in
 theorem GlobalTheory.BSP.approxRoot_sub_mem_fil : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (C : Core l) (n m : ℕ) (q : bk.S), bk.E ∣ q - (l : bk.S) ^ m * X → bk.E ^ n ∣ Polynomial.eval₂ PowerSeries.C q (bk.Ep.scaleRoots ((l : Wq l bk.a) ^ m)) → aDp l (bk.ev q) - (l : Per.BdRp l) ^ m * C.o (((bk.str.symm (Ideal.Quotient.mk _ X) : ↥(OL K)) : ↥K.1) : Om l) ∈ Per.FilP l n := by
   intro l _ K bk C n m q hq hroot
-  obtain ⟨hfil, -⟩ := GlobalTheory.T.bdR_filtration_ker_theta_generator_facts l C (bk.ev bk.E) bk.span_ev
+  obtain ⟨hfil, -⟩ := _root_.GlobalTheory.MemLoc.seed_fil l C (bk.ev bk.E) bk.span_ev
   obtain ⟨-, hker, -, hth, -⟩ := thetaD_props l
   let e : bk.S →+* Per.BdRp l := (aDp l).comp bk.ev
   let f : Wq l bk.a →+* Per.BdRp l := (aDp l).comp (wA l bk.a)
@@ -98,7 +103,7 @@ theorem GlobalTheory.BSP.approxRoot_sub_mem_fil : ∀ (l : ℕ) [Fact l.Prime] (
     rw [bk.θ_ev (bk.str.symm (Ideal.Quotient.mk _ s)) s (bk.str.apply_symm_apply _).symm, coe_intToOC]
   have hef : e.comp PowerSeries.C = f := RingHom.ext fun w => congrArg (aDp l) (bk.ev_C w)
   have hgf : g.comp PowerSeries.C = f := RingHom.ext fun w =>
-    GlobalTheory.T.localPeriodRings_section_eq_ainfToBdRPlus l bk.a C w _ (by rw [← bk.ev_C]; exact hθ _)
+    _root_.GlobalTheory.SeedSec.o_eq_aDp_wA l bk.a C w _ (by rw [← bk.ev_C]; exact hθ _)
   have hgE : g bk.E = 0 := by
     rw [hg, Ideal.Quotient.eq_zero_iff_mem.2 (Ideal.mem_span_singleton_self _)]
     simp
@@ -110,7 +115,7 @@ theorem GlobalTheory.BSP.approxRoot_sub_mem_fil : ∀ (l : ℕ) [Fact l.Prime] (
     rw [Polynomial.eval_map, ← hgf, ← Polynomial.hom_eval₂, Polynomial.eval₂_C_X_eq_coe]
     exact hgE
   have hd : IsUnit ((Polynomial.derivative (bk.Ep.map f)).eval (g X)) := by
-    obtain ⟨c, a, b, hab⟩ := GlobalTheory.T.bezout_eisenstein_derivative_prime_pow l K bk
+    obtain ⟨c, a, b, hab⟩ := _root_.GlobalTheory.BSP.bezout_Ep_derivative l K bk
     have h := congrArg (fun t => (Polynomial.map f t).eval (g X)) hab
     simp only [Polynomial.map_add (f := _), Polynomial.map_mul, Polynomial.eval_add, Polynomial.eval_mul, hr, mul_zero,
       zero_add, Polynomial.map_C, Polynomial.eval_C, map_pow f, map_natCast f] at h

@@ -3,12 +3,13 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsMetricFrOfIsMetricOn
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ArBirational
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NefFibOfIsNef
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmoothWeightIntegralCombinationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FirstChernFormOfWeightIsFormDbarEqZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmoothWeightIntegralCombination
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FirstChernFormOfWeightIsFormDbarEqZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolAtlasTopFormIntegralFiniteAdditiveHomogeneous
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomogeneousMemSpanLinearRoots
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PartFirstChernFormOfWeightPowEqChernPartStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PartFirstChernFormOfWeightPowEqChernPart
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothFormsCalculusHolomorphicAtlas
+public import Mathlib.Combinatorics.Nullstellensatz
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -17,7 +18,6 @@ import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
-public import Mathlib.Combinatorics.Nullstellensatz
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Geometry.Euclidean.Volume.Basic
@@ -65,7 +65,7 @@ theorem integral_evalF_c1W_eq_interPoly : GlobalTheory.Published.ChernDegree →
   haveI := CxPts.secondCountableTopology_of_isProjOver σ X.isProjOver
   have hform : ∀ G : MvPolynomial κ ℝ, (atlas X σ).IsForm (evalF (atlas X σ) (fun a => c1W (ψ a)) G) :=
     fun G => ((GlobalTheory.formCalculus _ _ (atlas X σ)).2.2.2.1 κ _ G
-      (fun a => (GlobalTheory.T.firstChernFormOfWeight_isForm_dbar_eq_zero F σ X (L a) (ψ a) (hψ a).2).1)).1
+      (fun a => (_root_.GlobalTheory.ChernCalc.FirstChernW.c1W_isForm_and_dbar_eq_zero F σ X (L a) (ψ a) (hψ a).2).1)).1
   have Pw := GlobalTheory.LineForm.wInt_props (CxPts X.str σ) X.dim (atlas X σ)
   have hint : ∀ G : MvPolynomial κ ℝ, ∀ ε : ℤˣ,
       Integrable (fun _ => (1 : ℝ)) ((atlas X σ).part (evalF (atlas X σ) (fun a => c1W (ψ a)) G) ε) :=
@@ -126,7 +126,7 @@ theorem integral_evalF_c1W_eq_interPoly : GlobalTheory.Published.ChernDegree →
   induction hspan using Submodule.span_induction with
   | mem x hx =>
     obtain ⟨n, rfl⟩ := hx
-    obtain ⟨L', r', ψ', hpr, hci, hc1⟩ := GlobalTheory.T.exists_smoothWeight_integral_combination F σ X κ Δ L r ψ hψ n
+    obtain ⟨L', r', ψ', hpr, hci, hc1⟩ := _root_.GlobalTheory.ChernCalc.exists_comb_smoothWeight F σ X κ Δ L r ψ hψ n
     have e1 : evalF (atlas X σ) (fun a => c1W (ψ a)) (GlobalTheory.ArInt.lin (fun i => (n i : ℝ)) ^ X.dim) =
         fld (atlas X σ) (c1W ψ' ^ X.dim) := by
       funext x
@@ -139,7 +139,7 @@ theorem integral_evalF_c1W_eq_interPoly : GlobalTheory.Published.ChernDegree →
       have := Var.interPoly_prod_sum X Δ (fun _ a => n a)
       rw [Finset.prod_const, Finset.card_univ, Fintype.card_fin] at this
       exact this
-    rw [e1, e2, HolAtlas.integral, GlobalTheory.T.part_firstChernFormOfWeight_pow_eq_chernPart F σ X L' ψ' hci, GlobalTheory.T.part_firstChernFormOfWeight_pow_eq_chernPart F σ X L' ψ' hci,
+    rw [e1, e2, HolAtlas.integral, _root_.GlobalTheory.ChernCalc.TopPow.part_c1W_pow F σ X L' ψ' hci, _root_.GlobalTheory.ChernCalc.TopPow.part_c1W_pow F σ X L' ψ' hci,
       ← (hCD F X σ _ L' r' hpr ψ' hci).2]
     simp only [Weight.chernInt, Measure.restrict_univ, integral_const, smul_eq_mul, mul_one]
   | zero =>

@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMemKAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CayleyTransformMemUnitaryLatticeStabilizerStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSkewCayleyInertPlaceStabilizerStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvTwoSmulMemAdelicLatticeAtFinitePlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CayleyTransformMemUnitaryLatticeStabilizer
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSkewCayleyInertPlaceStabilizer
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvTwoSmulMemAdelicLatticeAtFinitePlace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -87,8 +87,8 @@ theorem twoFac : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFie
       ∀ z ∈ GlobalTheory.InertSph.latAt G.W v, M *ᵥ z ∈ GlobalTheory.InertSph.latAt G.W v) ∧ k = k₁ * k₂ := by
   intro F E _ _ _ _ _ σ B a a' G X om om' hT v w hin k hk
   obtain ⟨Y, hYat, hYint, hYskew, ⟨Np, hNp1, hNp2, hNpi⟩, hm, ⟨ND, hND1, hND2, hNDi⟩⟩ :=
-    GlobalTheory.T.exists_skew_cayley_inertPlace_stabilizer F E σ B a a' G X om om' hT v w hin k hk
-  obtain ⟨h, hh, hhY⟩ := GlobalTheory.T.cayleyTransform_mem_unitaryLatticeStabilizer F E σ (a + a') G.W v Y hYat hYint hYskew ⟨Np, hNp1, hNp2, hNpi⟩ hm
+    _root_.GlobalTheory.TwoFacCore.exists_skew_cayley F E σ B a a' G X om om' hT v w hin k hk
+  obtain ⟨h, hh, hhY⟩ := _root_.GlobalTheory.CayleyStab.cayley_mem_KAt F E σ (a + a') G.W v Y hYat hYint hYskew ⟨Np, hNp1, hNp2, hNpi⟩ hm
   have h2 : (2 : 𝓞 F) ∉ v.asIdeal := (hT.base.inert v w hin).1
   have eH : mat h = (1 - Y) * Np := by rw [← hhY, Matrix.mul_assoc, hNp1, Matrix.mul_one]
   have eH' : (1 + Y) * mat h = 1 - Y := by
@@ -116,6 +116,6 @@ theorem twoFac : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFie
       rw [this, smul_smul, invOf_mul_self, one_smul]
     refine ⟨_, h1, mul_eq_one_comm.1 h1, fun z hz => ?_⟩
     rw [Matrix.smul_mulVec, ← Matrix.mulVec_mulVec]
-    exact GlobalTheory.T.inv_two_smul_mem_adelicLatticeAtFinitePlace F E (a + a') G.W v h2 _ (intY1 _ (hh.2 z hz).1)
+    exact _root_.GlobalTheory.InertSph.invTwo_smul_mem_latAt F E (a + a') G.W v h2 _ (intY1 _ (hh.2 z hz).1)
 
 end GlobalTheory.InertTwoFac

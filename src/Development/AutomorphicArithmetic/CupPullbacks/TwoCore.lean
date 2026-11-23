@@ -2,8 +2,9 @@ module
 
 public import Development.AutomorphicArithmetic.CupPullbacks.ConstCompSingle
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CupHypercohomologyPullbackStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupProductGradedCommStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupUnitAndPrimitiveRootClassesStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PullHlComp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupProductGradedComm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupUnitAndPrimitiveRootClasses
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.MayerVietorisConnectingCupPullback
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.MayerVietorisConnectingExistsUniqueAdditiveExact
 import Mathlib.Algebra.Order.Floor.Extended
@@ -73,7 +74,7 @@ theorem cast_neg {E : Spc} {n i n' i' : ℤ} (hn : n = n') (hi : i = i') (x : Ht
 
 theorem gc {E : Spc} {n m i j : ℤ} (a : Ht q E n i) (b : Ht q E m j) (hn : n + m = m + n) (hi : i + j = j + i) :
     (cup q a b).cast hn hi = (n * m).negOnePow • cup q b a := by
-  rw [GlobalTheory.T.tateTwistCupProduct_graded_comm q E a b, cast_smul, cast_cast, cast_self]
+  rw [_root_.GlobalTheory.EtC.cup_comm q E a b, cast_smul, cast_cast, cast_self]
 
 theorem mvd_cast {U V E : Spc} (f : U ⟶ E) (g : V ⟶ E) {n n' i i' : ℤ} (hn : n = n') (hi : i = i') (hn1 : n + 1 = n' + 1)
     {c : Ht q (pullback f g) n i} {x : Ht q E (n + 1) i} (h : IsMVd f g (tw q i) n c x) :
@@ -261,7 +262,7 @@ theorem cup_cast_left {E : Spc} {n m i j n' i' : ℤ} (x : Ht q E n i) (y : Ht q
 theorem cup_one {E : Spc} (hE : Inv q E) {n i : ℤ} (x : Ht q E n i) (h1 : n + 0 = n) (h2 : i + 0 = i) :
     (cup q x (one q E)).cast h1 h2 = x := by
   have e := gc x (one q E) (by ring : n + 0 = 0 + n) (by ring : i + 0 = 0 + i)
-  rw [show (n * 0).negOnePow = 1 by simp, one_smul, (GlobalTheory.T.tateTwistCup_unit_and_primitiveRoot_classes q).1 E hE x] at e
+  rw [show (n * 0).negOnePow = 1 by simp, one_smul, (_root_.GlobalTheory.EtC.CupGen.main q).1 E hE x] at e
   have e2 := congrArg (Ht.cast (by ring : 0 + n = n) (by ring : 0 + i = i)) e
   rw [cast_cast, cast_cast] at e2
   exact e2
@@ -269,7 +270,7 @@ theorem cup_one {E : Spc} (hE : Inv q E) {n i : ℤ} (x : Ht q E n i) (h1 : n + 
 theorem cpow_one' {E : Spc} (hE : Inv q E) (ξ : Ht q E 2 1) (k : ℕ) (hk : k = 1) (hn : 2 = 2 * (k : ℤ)) (hi : 1 = (k : ℤ)) :
     cpow q ξ k = ξ.cast hn hi := by
   subst hk
-  rw [cpow_succ, cpow_zero, cup_cast_left (h1 := by simp) (h2 := by simp), (GlobalTheory.T.tateTwistCup_unit_and_primitiveRoot_classes q).1 E hE ξ, cast_cast, cast_cast]
+  rw [cpow_succ, cpow_zero, cup_cast_left (h1 := by simp) (h2 := by simp), (_root_.GlobalTheory.EtC.CupGen.main q).1 E hE ξ, cast_cast, cast_cast]
 
 theorem term0 {E X : Spc} (hX : Inv q X) (π : X ⟶ E) (ξ : Ht q X 2 1) (k : ℕ) (hk : k = 0) {N I N' I' : ℤ}
     (a : Ht q E N I) (h1 : N + 2 * (k : ℤ) = N') (h2 : I + (k : ℤ) = I') (h3 : N = N') (h4 : I = I') :

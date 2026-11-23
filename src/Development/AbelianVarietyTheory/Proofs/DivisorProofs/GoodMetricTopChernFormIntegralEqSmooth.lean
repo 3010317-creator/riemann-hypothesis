@@ -1,17 +1,20 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.GoodTopChernForm
+public import Development.AbelianVarietyTheory.Definitions.Divisors.EndValuedForm11Coeffs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousMulTopChernFormIsTopDegree
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGoodPatchOfComplexPointOpenPart
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPoincareGoodPatchOutsideOpen
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.MemRiemannRochSpaceIffRegularAtEverywhere
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsClosedImmersionGenericPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmoothPartitionOfUnityComplexPoints
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasTopFormChartIntegralCongrOn
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasTopFormChartIntegralZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralFiniteSumTopForms
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumTransgressionDensitiesPartitionUnityEqZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransgressionCorrectionIsTopDegreeForm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransgressionTopChernFormGoodPatch
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.T2SpaceComplexPointsOfProjVariety
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousMulTopChernFormIsTopDegreeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGoodPatchOfComplexPointOpenPartStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPoincareGoodPatchOutsideOpenStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmoothPartitionOfUnityComplexPointsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasTopFormChartIntegralCongrOnStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasTopFormChartIntegralZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralFiniteSumTopFormsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumTransgressionDensitiesPartitionUnityEqZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransgressionCorrectionIsTopDegreeFormStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransgressionTopChernFormGoodPatchStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,7 +51,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.EndValuedForm11Coeffs
 
 @[expose] public section
 
@@ -64,29 +66,29 @@ theorem goodTopChernForm : GlobalTheory.Published.GoodTopChernForm := by
   haveI : SecondCountableTopology (CxPts X.str σ) := inferInstance
   have hp : ∀ y : CxPts X.str σ, ∃ e S A W c, y ∈ W ∧ GoodPatch E O H e S A W c := fun y => by
     by_cases hy : y ∈ ptsIn X.str σ O
-    · exact GlobalTheory.T.exists_goodPatch_of_complexPoint_openPart E O H hH y hy
-    · exact GlobalTheory.T.exists_poincareGoodPatch_outside_open E O H hG y hy
+    · exact _root_.GlobalTheory.GoodTop.exists_goodPatch_of_mem E O H hH y hy
+    · exact _root_.GlobalTheory.GoodTop.exists_goodPatch E O H hG y hy
   choose e S A W c hyW hP using hp
-  obtain ⟨s, ρ, hρ, hsupp, hsum⟩ := GlobalTheory.T.exists_smooth_partition_of_unity_complexPoints W fun y => (hP y).isOpen.mem_nhds (hyW y)
-  choose a b ha hb hab using fun i : s => GlobalTheory.T.transgression_topChernForm_goodPatch E O H H₀ hH hH₀ (hP i) (hρ i) (hsupp i)
+  obtain ⟨s, ρ, hρ, hsupp, hsum⟩ := _root_.GlobalTheory.GoodTop.exists_cInf_partition W fun y => (hP y).isOpen.mem_nhds (hyW y)
+  choose a b ha hb hab using fun i : s => _root_.GlobalTheory.GoodTop.hasInt_patch_transgression E O H H₀ hH hH₀ (hP i) (hρ i) (hsupp i)
   have hd : ∀ i j : AlgChart X.str σ X.dim,
       DifferentiableOn ℂ (j.e ∘ i.e.symm) (i.e.target ∩ i.e.symm ⁻¹' j.e.source) := fun i j => i.holo_trans j
   have hcov : ∀ y, ∃ i : AlgChart X.str σ X.dim, y ∈ i.e.source := fun y => AlgChart.exists_mem_source y
   have hm : ∀ U : X.X.Opens, MeasurableSet (ptsIn X.str σ U) := fun U => (isOpen_ptsIn U).measurableSet
   have hc : ∀ i, Continuous (ρ i) := fun i => continuous_iff_continuousAt.2 fun y => (hρ i y).continuousAt
   have h₁ : HasInt (fun c : AlgChart X.str σ X.dim => c.e) (topDens E H) (ptsIn X.str σ O) (∑ i, a i) := by
-    refine GlobalTheory.T.hasTopFormChartIntegral_congr_on _ (hm O) (fun i y _ _ => ?_)
-      (GlobalTheory.T.integral_finite_sum_topForms _ hd hcov (hm O) (fun i => GlobalTheory.T.continuous_mul_top_chern_form_isTopDegree E O H hH (hc i)) ha)
+    refine _root_.GlobalTheory.GoodTop.hasInt_congr_on _ (hm O) (fun i y _ _ => ?_)
+      (_root_.GlobalTheory.GoodTop.hasInt_sum _ hd hcov (hm O) (fun i => _root_.GlobalTheory.GoodTop.isTopForm_mul_topDens E O H hH (hc i)) ha)
     rw [← Finset.sum_mul, hsum, one_mul]
   have h₂ : HasInt (fun c : AlgChart X.str σ X.dim => c.e) (topDens E H₀) (ptsIn X.str σ ⊤) (∑ i, b i) := by
-    refine GlobalTheory.T.hasTopFormChartIntegral_congr_on _ (hm ⊤) (fun i y _ _ => ?_)
-      (GlobalTheory.T.integral_finite_sum_topForms _ hd hcov (hm ⊤) (fun i => GlobalTheory.T.continuous_mul_top_chern_form_isTopDegree E ⊤ H₀ hH₀ (hc i)) hb)
+    refine _root_.GlobalTheory.GoodTop.hasInt_congr_on _ (hm ⊤) (fun i y _ _ => ?_)
+      (_root_.GlobalTheory.GoodTop.hasInt_sum _ hd hcov (hm ⊤) (fun i => _root_.GlobalTheory.GoodTop.isTopForm_mul_topDens E ⊤ H₀ hH₀ (hc i)) hb)
     rw [← Finset.sum_mul, hsum, one_mul]
   have h₃ : HasInt (fun c : AlgChart X.str σ X.dim => c.e) (fun _ _ => 0) (ptsIn X.str σ O) (∑ i, (a i - b i)) :=
-    GlobalTheory.T.hasTopFormChartIntegral_congr_on _ (hm O) (fun i y _ hy => GlobalTheory.T.sum_transgression_densities_partition_unity_eq_zero E O H H₀ ρ hρ hsum i y hy)
-      (GlobalTheory.T.integral_finite_sum_topForms _ hd hcov (hm O) (fun i => GlobalTheory.T.transgression_correction_isTopDegreeForm E O H H₀ hH hH₀ (hρ i)) hab)
+    _root_.GlobalTheory.GoodTop.hasInt_congr_on _ (hm O) (fun i y _ hy => _root_.GlobalTheory.GoodTop.sum_corrDens_eq_zero E O H H₀ ρ hρ hsum i y hy)
+      (_root_.GlobalTheory.GoodTop.hasInt_sum _ hd hcov (hm O) (fun i => _root_.GlobalTheory.GoodTop.isTopForm_corrDens E O H H₀ hH hH₀ (hρ i)) hab)
   have e₂ : ∑ i, b i = t := h₂.2.symm.trans ht.2
-  have e₃ : ∑ i, (a i - b i) = 0 := h₃.2.symm.trans (GlobalTheory.T.hasTopFormChartIntegral_zero _ _).2
+  have e₃ : ∑ i, (a i - b i) = 0 := h₃.2.symm.trans (_root_.GlobalTheory.GoodTop.hasInt_zero _ _).2
   rw [Finset.sum_sub_distrib, sub_eq_zero, e₂] at e₃
   exact e₃ ▸ h₁
 

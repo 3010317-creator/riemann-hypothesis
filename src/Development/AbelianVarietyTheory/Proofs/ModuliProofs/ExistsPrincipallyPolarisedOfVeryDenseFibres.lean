@@ -6,7 +6,7 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.GrpObjOfDenseOpen
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPolarisationDescentMulOddVeryDenseStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPolarisationDescentMulOddVeryDense
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsUniqueSectionOfDense
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.GrpObjOfDenseFibres
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsProjProperRelAmpleOfProjectiveCoordinateRep
@@ -231,7 +231,7 @@ theorem exists_polAV_of_veryDense_fibres :
       exact basis_push (hgp _ _ _ φ hφ.1 (hm K x t' φ hφ)) (h1 t' hφ.2.2.2) (T := Over.mk (𝟙 _)) _ _
         (basis_pow_linComb (pow_two _) (NeZero.ne _) _ t'.pt t'.torsion (t'.bij K (𝟙 _))))
   have hj2 : n ^ j = n ^ 2 * n ^ (j - 2) := by rw [← pow_add]; congr 1; omega
-  obtain ⟨L, l1, l2, l3, l4, l5, l6⟩ := GlobalTheory.T.exists_polarisation_descent_mul_odd_veryDense hL hL2 R Z g (n ^ 2) M _
+  obtain ⟨L, l1, l2, l3, l4, l5, l6⟩ := _root_.GlobalTheory.MulDescent.exists_polarisation_of_veryDense hL hL2 R Z g (n ^ 2) M _
     (fun i => (sc (Pi.single i 1) ^ n ^ (j - 2) : Out.baseOver (Sp R) ⟶ Z)) hab hsm hodd.pow
     (by simpa using hun.pow 2) hrep.1 hamp hVD
     (fun i => by

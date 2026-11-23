@@ -7,7 +7,8 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsFullL
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPushEquiv
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.WeilIsGrpPullbackOfCommute
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsGenericWeilPairing
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProjectiveModuleModNBasisStatement
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProjectiveModuleModNBasis
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TateIsoPullbackEquiv
 import Mathlib.Algebra.AffineMonoid.Basic
 import Mathlib.Algebra.Module.StablyFree.Basic
@@ -163,7 +164,7 @@ theorem torsion_of_tate {E : Type} [Field E] [NumberField E] [IsCMField E] (H : 
     rw [MonObj.comp_mul, hev, hev, hev, I.add])
   have hlin : ∀ (c : 𝓞 E) a, ev (c • a) = ev a ≫ t.act.act c := fun c a => inj _ _ (by
     rw [← Category.assoc, hev, hev]; exact I.lin N c a)
-  obtain ⟨φ, hφ1, hφ2⟩ := GlobalTheory.T.projective_module_mod_N_basis E D.La D.fin D.proj (D.p + D.q) N D.rank hN0
+  obtain ⟨φ, hφ1, hφ2⟩ := _root_.GlobalTheory.CompanionTheory.ModFree.exists_free_map_mod E D.La D.fin D.proj (D.p + D.q) N D.rank hN0
 
   have hζΩ : IsPrimitiveRoot (ζ : Ω) N := hζ.map_of_injective (f := Units.coeHom Ω) Units.val_injective
   have hζK : IsPrimitiveRoot (iK ζ) N := hζΩ.map_of_injective iK.injective

@@ -2,9 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsSubquotientDetRepParInd
 public import GroundTheory.AutomorphicForms.InductionParabolic
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ModulusCharacterLeviStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParabolicEqBlockUpperStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParabolicLeviProjectionStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ModulusCharacterLevi
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.LeviEmbMemNormalizerLower
+public import GroundTheory.AutomorphicForms.Iwasawa
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParabolicEqBlockUpper
+public import GroundTheory.AutomorphicForms.InductionParabolicGroups
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParabolicLeviProjection
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,7 +61,7 @@ namespace GlobalTheory.CompanionTheory.ParIndBridge
 
 theorem parInd_equiv_parabolicInd : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] {α : Type} [Fintype α] [LinearOrder α] {N : ℕ} {m : α → Type} [∀ i, Fintype (m i)] [∀ i, DecidableEq (m i)] (e : (Σ i, m i) ≃ Fin N) (β : Fin N → ℕ), (∀ x y, β x < β y ↔ blk e x < blk e y) → ∀ (φ : Levi k m ≃* levi k N β), (∀ g, ((φ g : levi k N β) : GL (Fin N) k) = leviEmb k e g) → ∀ {W : Type} [AddCommGroup W] [Module ℂ W] (ρ : Representation ℂ (Levi k m) W), Nonempty ((parInd e ρ).Equiv (parabolicInd k N β (ρ.comp φ.symm.toMonoidHom))) := by
   intro k _ _ _ _ α _ _ N m _ _ e β hβ φ hφ W _ _ ρ
-  have hP : parab k e = blockUpper k N β := GlobalTheory.T.parabolic_eq_block_upper k e β hβ
+  have hP : parab k e = blockUpper k N β := _root_.GlobalTheory.CompanionTheory.ParabBridge.parab_eq_blockUpper k e β hβ
   have h12 : ∀ {p : GL (Fin N) k}, p ∈ parab k e → p ∈ blockUpper k N β := fun h => hP ▸ h
   have h21 : ∀ {p : GL (Fin N) k}, p ∈ blockUpper k N β → p ∈ parab k e := fun h => hP ▸ h
   have hchar : ∀ (p : GL (Fin N) k) (h1 : p ∈ parab k e) (h2 : p ∈ blockUpper k N β) (w : W),
@@ -66,8 +69,8 @@ theorem parInd_equiv_parabolicInd : ∀ (k : Type) [Field k] [ValuativeRel k] [T
         sqrtModular k N β ⟨p, h2⟩ •
           ρ (φ.symm (GroundTheory.Automorphic.Parabolic.leviProj k N β ⟨p, h2⟩)) w := by
     intro p h1 h2 w
-    have hL := GlobalTheory.T.parabolic_levi_projection k e β hβ φ hφ p h1 h2
-    rw [← hL, MulEquiv.symm_apply_apply, GlobalTheory.T.modulus_character_levi k e β hβ φ hφ, hL,
+    have hL := _root_.GlobalTheory.CompanionTheory.SmGLBridge.leviProj_found_eq k e β hβ φ hφ p h1 h2
+    rw [← hL, MulEquiv.symm_apply_apply, _root_.GlobalTheory.CompanionTheory.DeltaLevi.deltaHalf_eq_sqrtModular k e β hβ φ hφ, hL,
       GroundTheory.Automorphic.Parabolic.sqrtModular_leviProj]
   let σ := ρ.comp φ.symm.toMonoidHom
   let E : IndSp e ρ ≃ₗ[ℂ] GroundTheory.Automorphic.Parabolic.parabolicIndSpace k N β σ :=

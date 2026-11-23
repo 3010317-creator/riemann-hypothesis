@@ -2,9 +2,9 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsPowSubMemSpanOfIsUnitModOfIsAlgClosed
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsPlaceWeightConjInvariantStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntersectionFamilyFlatTwistStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntersectionFamilyPlaceWeightStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsPlaceWeightConjInvariant
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntersectionFamilyFlatTwist
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntersectionFamilyPlaceWeight
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,9 +58,9 @@ theorem FlatHerm.inter_eq : PtsIntegrableStatement → ∀ (K : Type) [Fintype K
     IsArithVar W (n + 1) → (∀ j, IsSmoothHerm (L j)) → IsSmoothHerm A →
     I W (n + 1) (Fin.snoc L A) = S.ht * ptsIntegral W (pot L) (fun _ => 1) := by
   intro hP K _ ι _ Ω _ F _ _ y φ I W n L A S d hI hY hO hyW hW hL hA
-  obtain ⟨u, hu, -⟩ := GlobalTheory.T.exists_place_weight_conj_invariant K ι Ω F y φ (fun σ => Real.log (S.κ σ)) hO
-  rw [GlobalTheory.T.intersection_family_flat_twist K ι Ω F y φ I W n L A S d u hI hY hO hyW hW hL hA hu,
-    GlobalTheory.T.intersection_family_place_weight hP K ι Ω F y φ I W n L d (fun σ => Real.log (S.κ σ)) u hI hY hO hyW hW hL
+  obtain ⟨u, hu, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.exists_placeWeight K ι Ω F y φ (fun σ => Real.log (S.κ σ)) hO
+  rw [_root_.GlobalTheory.CompanionTheory.Ar.Flat.FlatHerm.inter_eq_neg_integral K ι Ω F y φ I W n L A S d u hI hY hO hyW hW hL hA hu,
+    _root_.GlobalTheory.CompanionTheory.Ar.Flat.ptsIntegral_eq_mean hP K ι Ω F y φ I W n L d (fun σ => Real.log (S.κ σ)) u hI hY hO hyW hW hL
       (fun σ => congrArg Real.log (S.κ_conj σ)) (fun σ z hz => (hu.near σ z hz).self_of_nhds),
     FlatHerm.ht, neg_mul]
 

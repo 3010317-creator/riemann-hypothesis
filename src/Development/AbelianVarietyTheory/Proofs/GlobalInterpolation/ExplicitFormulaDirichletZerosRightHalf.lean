@@ -3,14 +3,16 @@ module
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.ZerosDisc
 public import Development.AbelianVarietyTheory.Definitions.Foundations.RayPrimes
 public import Mathlib.Data.FunLike.Fintype
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.DirichletLZerosEqPrimitiveCharacterZerosStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsDirichletLFunctionZeroGapNearOneStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExplicitFormulaClosedStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.DirichletLZerosEqPrimitiveCharacterZeros
+public import Mathlib.NumberTheory.LSeries.DirichletContinuation
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsDirichletLFunctionZeroGapNearOne
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.FiltrationCocycleLiftCriterion
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExplicitFormulaClosed
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ZeroCountHolds
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DirichletLZeroSymmetry
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DirichletLZerosInWindowFiniteAndPosOrder
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LogDerivSeriesOfExplicit
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SumIndicatorLeZsumR
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DirichletLZerosInWindowFiniteAndPosOrder
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,7 +78,7 @@ theorem recip_bound : ∃ C : ℝ, 0 < C ∧ ∀ (q : ℕ) [NeZero q] (χ : Diri
       zsumR χ 0 T (fun ρ => 1 / ‖ρ‖) ≤
         C * ((q : ℝ) ^ 2 * Real.log (3 * q) ^ 2) + C * Real.log (q * T) ^ 2 := by
   obtain ⟨C₁, H₁⟩ := zsumR_recip_le zeroCount_holds
-  obtain ⟨c, hc, H₂⟩ := GlobalTheory.T.exists_dirichletLFunction_zero_gap_near_one
+  obtain ⟨c, hc, H₂⟩ := _root_.GlobalTheory.ZeroGapNearOne.exists_gap
   refine ⟨|C₁| / c + |C₁| + 1, by positivity, fun q _ χ hχ T hT => ?_⟩
   obtain ⟨h1, h2⟩ := H₁ q χ hχ T hT
   have hq : (1 : ℝ) ≤ q := by exact_mod_cast Nat.one_le_iff_ne_zero.mpr (NeZero.ne q)
@@ -248,7 +250,7 @@ theorem combine {A B S s x K E P D Z₁ Z t₁ t₂ l₃ l₄ N q : ℝ} (hA : 0
   linarith
 
 theorem explicit_formula_right : ∃ C : ℝ, 0 < C ∧ ∀ (q : ℕ) [NeZero q] (χ : DirichletCharacter ℂ q) (u T : ℝ), 2 ≤ T → T ≤ u → (zerosBox χ (1 / 2) T).Finite ∧ ‖(∑ n ∈ Finset.Icc 1 ⌊u⌋₊, ((Λ n : ℝ) : ℂ) * χ (n : ZMod q)) - (if χ = 1 then (u : ℂ) else 0) + ∑ᶠ ρ ∈ zerosBox χ (1 / 2) T, (ord χ ρ : ℂ) * ((u : ℂ) ^ ρ / ρ)‖ ≤ C * (u / T + Real.sqrt u * (q : ℝ) ^ 3) * Real.log (q * u * T) ^ 2 := by
-  obtain ⟨A, HA⟩ := GlobalTheory.T.norm_psi0_add_zsum_le
+  obtain ⟨A, HA⟩ := _root_.GlobalTheory.ExplicitFormulaClosed.explicit_formula_closed
   obtain ⟨B, hB, HB⟩ := recip_bound
   refine ⟨2 + |A| * (2 + B) + 2 * B, by positivity, fun q _ χ u T hT hu => ?_⟩
   refine ⟨(zfin χ 0 T).subset (box_subset χ T), ?_⟩
@@ -267,7 +269,7 @@ theorem explicit_formula_right : ∃ C : ℝ, 0 < C ∧ ∀ (q : ℕ) [NeZero q]
   have hcmp : ∀ ρ : ℂ, 1 / 2 ≤ ρ.re → ρ.re < 1 →
       (LFunction χ ρ = 0 ↔ LFunction χ.primitiveCharacter ρ = 0) ∧
         ord χ ρ = ord χ.primitiveCharacter ρ := fun ρ a b =>
-    GlobalTheory.T.dirichletL_zeros_eq_primitiveCharacter_zeros q χ ρ (by linarith) (Or.inr (by rintro rfl; simp at b))
+    _root_.GlobalTheory.Lin.zeros_eq_zeros_primitiveCharacter q χ ρ (by linarith) (Or.inr (by rintro rfl; simp at b))
   have hbox : zerosBox χ (1 / 2) T = zerosBox χ.primitiveCharacter (1 / 2) T := by
     ext ρ
     constructor

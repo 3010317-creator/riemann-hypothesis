@@ -2,9 +2,13 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsThetaMeanSquareNorm
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SpecMapCompAppLE
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DerivationHolUnifTangentStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IteratedDerivativeFactorStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SectionRatioOverlapStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DerivationHolUnifTangent
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.IteratedDeriv.Defs
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IteratedDerivativeFactor
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SectionRatioOverlap
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.SabPull
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.HolJetC
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,8 +48,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.SabPull
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.HolJetC
 
 @[expose] public section
 
@@ -83,7 +85,7 @@ theorem L_an : ∀ (R : Type) [CommRing R] (G : Over (Sp R)) [GrpObj G] (A : Ove
     have h3 : HasDerivAt (fun τ : ℂ => τ • c) c τ := by
       simpa using (hasDerivAt_id τ).smul_const c
     have h4 := h1.hasFDerivAt.comp_hasDerivAt τ h3
-    rw [GlobalTheory.T.derivation_hol_unif_tangent R G A z φ cart g Lb u v₀ hv₀ c v' hl hd V hV a (τ • c) hτ] at h4
+    rw [_root_.GlobalTheory.CompanionTheory.Ar.InvDer.fderiv_valAt_eq_der R G A z φ cart g Lb u v₀ hv₀ c v' hl hd V hV a (τ • c) hτ] at h4
     exact h4
   have hanal : ∀ a : Γ(G.left, V), AnalyticAt ℂ (fun τ : ℂ => valAt' ((u.ex (τ • c)).left ≫ φ) V a) 0 := fun a =>
     DifferentiableOn.analyticAt (s := (fun τ : ℂ => τ • c) ⁻¹' Z)
@@ -186,7 +188,7 @@ theorem L_int : ∀ (R K A : Type) [CommRing R] [Field K] [CommRing A] [IsLocalR
       have : e ≫ G.hom = 𝟙 _ := Over.w η[G]
       rw [Category.assoc, this, Category.comp_id]
     rw [h1, bmap_spMap]
-  have key := GlobalTheory.T.section_ratio_overlap R K G v₀ hv₀ y V V₁ hV hV₁ h₀ t₁ t r _ _ uu huu hcompat i c (by
+  have key := _root_.GlobalTheory.CompanionTheory.Ar.InvDer.JetCmp.jet_cmp R K G v₀ hv₀ y V V₁ hV hV₁ h₀ t₁ t r _ _ uu huu hcompat i c (by
     simpa only [hb] using hvan)
   simp only [hb] at key
 
@@ -385,7 +387,7 @@ theorem jets : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
       refine (ev_res _ hle hW hτ' _).trans ?_
       refine (valF_eq _ _ hW _).symm.trans ?_
       exact hf j i₀ (τ • v) hU
-    have key := GlobalTheory.T.iterated_derivative_factor r _ c _ _ (fun j => (AN j).1) hFan (by rw [hF0]; exact hσr) hev i
+    have key := _root_.GlobalTheory.CompanionTheory.Ar.JetLeib.jet_first_nonzero r _ c _ _ (fun j => (AN j).1) hFan (by rw [hF0]; exact hσr) hev i
     have hJ : ∀ k : ℕ, ∑ j, c j * σ (ev (spMap (algebraMap (𝓞 L) L) ≫ (eSec D.t.G : Sp (𝓞 L) ⟶ D.t.G.left)) V h₀
         ((der (D.MB.pt x) hv₀ hV)^[k] ((D.t.G.left.presheaf.map (homOfLE hle).op).hom ((s j).f fun _ => i₀))) /
         ev (spMap (algebraMap (𝓞 L) L)) _ hr (D.t.PP.rig.s fun _ => i₀).val ^ n) =

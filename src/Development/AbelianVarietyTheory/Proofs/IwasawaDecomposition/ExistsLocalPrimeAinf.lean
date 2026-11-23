@@ -2,26 +2,28 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CoeffGaloisTilt
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CoeffEqMkRootT
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsConcretePeriodDatumPadicFiniteExtensionStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsRealPD
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsConcretePeriodDatumPadicFiniteExtension
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAddValuationNormalised
 public import Development.AbelianVarietyTheory.CrystallinePeriods.RingBasics
 public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NonemptyLocalPeriodRingsData
 import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AcrisLogTeichmullerUniqueGaloisFrobeniusBdRStatement
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsCrisP
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AcrisLogTeichmullerUniqueGaloisFrobeniusBdR
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AinfIsDomainAndAinfInvPInjective
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AlgebraMapAinfInvPrimeBdRPlusInjectiveStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BdRFiltrationLawsStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BdRPlusFiltrationEqFontaineXiPowStatement
+import Formalism.LocalRingCardinality.AdicCompletionLocal.InstIsAdicCompleteOCSpanSingletonSetCast
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AlgebraMapAinfInvPrimeBdRPlusInjective
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BdRFiltrationLaws
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BdRPlusFiltrationEqFontaineXiPow
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BdRPlusIsDomainBdRIsField
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BdRPlusIsDomainBdRIsFieldStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BdRPlusSimpleRootsSectionUniqueEquivariantStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BdRPlusSimpleRootsSectionUniqueEquivariant
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FontaineThetaEqZeroIffFontaineXiElementDvd
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPrimitiveTiltedRootOfUnityLocalPeriodRingsData
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalPeriodRingsDataUnramifiedLawsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NonemptyLocalPeriodRingsData
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalPeriodRingsDataUnramifiedLaws
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PeriodRingsGaloisActionLawsFrobeniusComm
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ResEqIff
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RootOfUnityPrimeToTeichmullerLiftStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RootOfUnityPrimeToTeichmullerLift
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaBdRPlusSurjectiveKerUnitsEquivariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -98,11 +100,11 @@ variable {l : ℕ} [Fact l.Prime]
 theorem alg_tower (a : Per.Ainf l) : algebraMap (Per.Ainf l) (Per.Acris l) a =
     algebraMap (Per.Acris0 l) (Per.Acris l) (algebraMap (Per.Ainf l) (Per.Acris0 l) a) := GlobalTheory.RingIface.tower l a
 
-theorem dR_inj : Function.Injective (algebraMap (Per.BdRp l) (Per.BdR l)) := (GlobalTheory.T.bdRPlus_isDomain_bdR_isField l).2.1
+theorem dR_inj : Function.Injective (algebraMap (Per.BdRp l) (Per.BdR l)) := (_root_.GlobalTheory.MemLoc.BdRField.bdR_isField l).2.1
 
 theorem ev_zero (y : Per.BdRp l) : y ∈ Per.FilP l 0 := by
   obtain ⟨e, he⟩ := BdRField.exists_isEps l
-  exact ((GlobalTheory.T.bdRPlus_filtration_eq_fontaineXi_pow l e he).1 0 y).2 (by rw [pow_zero]; exact one_dvd y)
+  exact ((_root_.GlobalTheory.MemLoc.filtration_eq_xi_pow l e he).1 0 y).2 (by rw [pow_zero]; exact one_dvd y)
 
 theorem iota_aB (C : Core l) (a : Per.Ainf l) :
     C.ι (Per.aB l a) = algebraMap (Per.BdRp l) (Per.BdR l) (aDp l a) := by
@@ -116,29 +118,29 @@ theorem aB_inj (C : Core l) : Function.Injective (Per.aB l) := by
   intro a b h
   have h1 := congrArg C.ι h
   rw [iota_aB, iota_aB] at h1
-  exact (ainf_isDomain_and_injective l).2.2 (GlobalTheory.T.algebraMap_ainfInvPrime_bdRPlus_injective l (dR_inj h1))
+  exact (ainf_isDomain_and_injective l).2.2 (_root_.GlobalTheory.MemLoc.algebraMap_AinfP_BdRp_injective l (dR_inj h1))
 
 theorem fil0 (C : Core l) (a : Per.Ainf l) : C.ι (Per.aB l a) ∈ Per.FilD l 0 := by
   rw [iota_aB]
-  exact ((GlobalTheory.T.bdR_filtration_laws l).2.2.2.2.2.2 0 _).2 (ev_zero _)
+  exact ((_root_.GlobalTheory.MemLoc.filD_laws l).2.2.2.2.2.2 0 _).2 (ev_zero _)
 
 theorem fil1 (C : Core l) (a : Per.Ainf l) :
     C.ι (Per.aB l a) ∈ Per.FilD l 1 ↔ ∃ b : Per.Ainf l, a = xi C.ε * b := by
   rw [iota_aB]
-  refine ((GlobalTheory.T.bdR_filtration_laws l).2.2.2.2.2.2 1 _).trans ?_
+  refine ((_root_.GlobalTheory.MemLoc.filD_laws l).2.2.2.2.2.2 1 _).trans ?_
   rw [← (thetaD_props l).2.1, (thetaD_props l).2.2.2.1]
   refine Iff.trans ?_ (theta_eq_zero_iff_xi_dvd l C.ε (core_isEps l C) a)
   exact ⟨fun h => Subtype.ext h, fun h => by rw [h]; rfl⟩
 
 theorem teich (C : Core l) (c : ↥(MaximalUnramifiedExtension l)) (m : ℕ) (hm : 0 < m) (hl : ¬ l ∣ m) (hc : (c : Om l) ^ m = 1)
     (xb : Per.Fl l) (h : IsTiltOf (c : Om l) m xb) : Per.aB l (Per.tm xb) = C.u c := by
-  apply (GlobalTheory.T.localPeriodRingsData_unramified_laws l C).2.2.2.1
-  rw [iota_aB, C.ι_u, ((GlobalTheory.T.rootOfUnity_prime_to_teichmuller_lift l C.o C.o_sec c m hm hl hc).2 xb h).2.2]
+  apply (_root_.GlobalTheory.MemLoc.ULaws.u_laws l C).2.2.2.1
+  rw [iota_aB, C.ι_u, ((_root_.GlobalTheory.MemLoc.rootOfUnity_teichmuller l C.o C.o_sec c m hm hl hc).2 xb h).2.2]
 
 theorem sigD_o (C : Core l) (g : GQ l) (x : Om l) :
     Per.σD g (algebraMap (Per.BdRp l) (Per.BdR l) (C.o x)) =
       algebraMap (Per.BdRp l) (Per.BdR l) (C.o (g x)) := by
-  rw [(ActLaws.act_laws l).2.2.2.2.2.2.2.2.2.1, (GlobalTheory.T.bdRPlus_simple_roots_section_unique_equivariant l C.o C.o_sec).2.2]
+  rw [(ActLaws.act_laws l).2.2.2.2.2.2.2.2.2.1, (_root_.GlobalTheory.MemLoc.SecUniq.main l C.o C.o_sec).2.2]
 
 theorem chi_cyc (C : Core l) (g : GQ l) (m : ℕ) (x : Om l) (hx : x ^ (l ^ m) = 1) :
     ∃ a : ℕ, ‖((C.χ g : ℤ_[l]) : ℚ_[l]) - (a : ℚ_[l])‖ ≤ (l : ℝ) ^ (-(m : ℤ)) ∧ g x = x ^ a := by
@@ -173,7 +175,7 @@ def actQ (C : Core l) : GQ l →* ((ringsOf C).B ≃ₐ[ℚ_[l]] (ringsOf C).B) 
     (fun x => (eB C).injective (by simp only [conj_apply]; exact (ActLaws.act_laws l).2.1 _))
     (fun g c => (eB C).injective (by
       rw [conj_apply, algB]
-      exact (GlobalTheory.T.localPeriodRingsData_unramified_laws l C).2.1 g _ _ (g.commutes c)))
+      exact (_root_.GlobalTheory.MemLoc.ULaws.u_laws l C).2.1 g _ _ (g.commutes c)))
 
 theorem actQ_apply (C : Core l) (g : GQ l) (b : (ringsOf C).B) : eB C (actQ C g b) = Per.σB g (eB C b) :=
   conj_apply _ _ _ _
@@ -192,7 +194,7 @@ def phiB (C : Core l) : (ringsOf C).B →ₐ[ℚ_[l]] (ringsOf C).B :=
   { conj (eB C) (eB C) (Per.φB l) with
     commutes' := fun c => (eB C).injective (by
       refine (conj_apply _ _ _ _).trans ?_
-      rw [algB, (GlobalTheory.T.localPeriodRingsData_unramified_laws l C).1, C.σ.commutes]) }
+      rw [algB, (_root_.GlobalTheory.MemLoc.ULaws.u_laws l C).1, C.σ.commutes]) }
 
 theorem phiB_apply (C : Core l) (b : (ringsOf C).B) : eB C (phiB C b) = Per.φB l (eB C b) :=
   conj_apply _ _ _ _
@@ -227,9 +229,9 @@ attribute [local irreducible] actQ actQdR phiB iotaB iA
 
 def pd (C : Core l) (K : FinExt l) :
     WeaklyAdmissibleFiltrations.PeriodData ↥(GK K) ℚ_[l] ↥(K0 K) ↥K.1 (ringsOf C).B (ringsOf C).BdR :=
-  (GlobalTheory.T.exists_concretePeriodDatum_padicFiniteExtension l C K).choose
+  (_root_.GlobalTheory.MemLoc.PdEx.exists_realPD l C K).choose
 
-theorem pd_real (C : Core l) (K : FinExt l) : IsRealPD C K (pd C K) := (GlobalTheory.T.exists_concretePeriodDatum_padicFiniteExtension l C K).choose_spec
+theorem pd_real (C : Core l) (K : FinExt l) : IsRealPD C K (pd C K) := (_root_.GlobalTheory.MemLoc.PdEx.exists_realPD l C K).choose_spec
 
 def prime (C : Core l) : LocPrime l where
   R := ringsOf C
@@ -250,7 +252,7 @@ def prime (C : Core l) : LocPrime l where
   PD_Fil K K' a := Set.ext fun x => ((pd_real C K).fil a x).trans ((pd_real C K').fil a x).symm
   actQ_Kur g c c' h := (eB C).injective (by
     rw [actQ_apply, algU, algU]
-    exact (GlobalTheory.T.localPeriodRingsData_unramified_laws l C).2.1 g c c' h)
+    exact (_root_.GlobalTheory.MemLoc.ULaws.u_laws l C).2.1 g c c' h)
   actQdR_Om g x := (eD C).injective (by rw [actQdR_apply, algO, algO, sigD_o])
   PD_σ K x hx := by
     rw [(pd_real C K).σ x ⟨x, x.2.2⟩ rfl]
@@ -298,7 +300,7 @@ def ainf (C : Core l) : LocAinf l (prime C) where
 def tied (C : Core l) : LocTied l (prime C) (ainf C) where
   eB := eB C
   eD := eD C
-  zB z := (algB C _).trans ((GlobalTheory.T.localPeriodRingsData_unramified_laws l C).2.2.1 z)
+  zB z := (algB C _).trans ((_root_.GlobalTheory.MemLoc.ULaws.u_laws l C).2.2.1 z)
   zD z := (algD C _).trans ((congrArg _ (C.o_sec.z z)).trans (GlobalTheory.RingIface.zD_eq_alg l z).symm)
   om x := ⟨C.o x, algO C x, C.o_sec.th x⟩
   actB := actQ_apply C
@@ -308,9 +310,9 @@ def tied (C : Core l) : LocTied l (prime C) (ainf C) where
     have h : ((eD C).toRingHom.comp (iotaB C : (ringsOf C).B →+* (ringsOf C).BdR)).comp
         (eB C).symm.toRingHom = C.ι :=
       RingHom.ext fun b => (iotaB_apply C _).trans (congrArg C.ι ((eB C).apply_symm_apply b))
-    exact h.symm ▸ (GlobalTheory.T.localPeriodRingsData_unramified_laws l C).2.2.2.2.2
+    exact h.symm ▸ (_root_.GlobalTheory.MemLoc.ULaws.u_laws l C).2.2.2.2.2
   fil K a x := (pd_real C K).fil a x
-  t := ⟨C.j C.t, (GlobalTheory.T.acris_logTeichmuller_unique_galois_frobenius_bdR l C.ε C.t (core_isEps l C).1 C.t_log).2.2.2 C.j C.j_cris,
+  t := ⟨C.j C.t, (_root_.GlobalTheory.MemLoc.LogFun.log_fun l C.ε C.t (core_isEps l C).1 C.t_log).2.2.2 C.j C.j_cris,
     (iotaB_apply C _).trans ((congrArg C.ι ((eB C).apply_symm_apply _)).trans (C.ι_j C.t))⟩
   ιA a := iA_apply C a
 

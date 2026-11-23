@@ -6,13 +6,13 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.AdelicAdmiss
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledSiegelParabolicDiagonalActionIntegral
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTranslationInvariantDoubledFormConjProduct
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergLatticeSelfDualEveryFinitePlace
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalThetaIntegralAtInertPlace
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductFunctionOnSumCoordsMemAdelicSchwartzSpace
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StarMemAdelicSchwartzSpaceNumberField
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnipotentConjugateToSquareStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnipotentConjugateToSquare
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.VacuumSplitPlaceIndicatorDualPair
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.VacuumSplitPlaceIndicatorFinal
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductFunctionOnSumCoordsMemAdelicSchwartzSpace
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StarMemAdelicSchwartzSpaceNumberField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -70,7 +70,7 @@ theorem connection_fixes_split_subspace : _root_.GlobalTheory.FunPr.ThetaLocalIn
     ∀ R : (Fin a' × Fin (a + a') → AF F) → ℂ, R 0 ≠ 0 → Rest (evFin F v) (G.M'.vac v) R →
     ∀ n ∈ GlobalTheory.InertDbl.NabD σ G.V' v, omd n (GlobalTheory.InertDbl.dblFun (tens (evFin F v) (G.M'.vac v) R)) =
       GlobalTheory.InertDbl.dblFun (tens (evFin F v) (G.M'.vac v) R) := by
-  have hConj := GlobalTheory.T.adelicSchwartzSpace_le_span_pureTensors
+  have hConj := _root_.GlobalTheory.SplitConj.conj_to_sq
   intro _ F E _ _ _ _ _ σ B a a' G X om om' hTr v hsp hT hψ h2 _ d' hd' dd omd hdc hws R hR0 hRv n hn
   set Φ := GlobalTheory.InertDbl.dblFun (tens (evFin F v) (G.M'.vac v) R) with hΦdef
   have hLine : ∃ c : ℂ, omd n Φ = c • Φ := by

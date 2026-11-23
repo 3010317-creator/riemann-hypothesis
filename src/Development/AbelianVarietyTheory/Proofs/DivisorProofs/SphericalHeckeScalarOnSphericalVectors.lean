@@ -3,10 +3,17 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.InstCMHostS
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalLabelOperatorsOnHyperspecialFixedVector
 public import Formalism.LocalToGlobal.IndefiniteReal.ConjSubConjSub
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RankLeAleph0SmoothIrreducibleUnitaryAdelicStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumTranslatesEqDoubleCosetAverageStatement
+public import Formalism.LocalToGlobal.GaloisLevelStructure.DefsFinTyp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RankLeAleph0SmoothIrreducibleUnitaryAdelic
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Algebra.Group.Subgroup.Defs
+public import Mathlib.Algebra.Module.LinearMap.End
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.Data.Finset.Card
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumTranslatesEqDoubleCosetAverage
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AlgebraMapIntertwiningMapBijectiveOfIsSmooth
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalHeckeCombinationsCommuteFixedVectorsStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweUnram
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -43,7 +50,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweUnram
 
 @[expose] public section
 
@@ -73,7 +79,7 @@ theorem avg (ρ : G →* Module.End ℂ M) (K : Subgroup G) {ι : Type} (s : Fin
     (hw : ∀ i ∈ s, ∀ k ∈ K, ρ k (w i) = w i)
     (hm : ∀ k ∈ K, ρ k (∑ i ∈ s, ρ (a i) (w i)) = ∑ i ∈ s, ρ (a i) (w i)) :
     ∑ i ∈ s, ρ (a i) (w i) = ∑ i ∈ s, ((R i).card : ℂ)⁻¹ • ∑ γ ∈ R i, ρ γ (w i) :=
-  GlobalTheory.T.sum_translates_eq_doubleCoset_average ρ K s a R w hR hw hm
+  _root_.GlobalTheory.CosetAvg.sum_translates_eq_avg ρ K s a R w hR hw hm
 
 def fixS (ρ : G →* Module.End ℂ M) (S : Submodule ℂ M) (K : Subgroup G) : Submodule ℂ M where
   carrier := {x | x ∈ S ∧ ∀ k ∈ K, ρ k x = x}
@@ -234,7 +240,7 @@ variable {D : D7} {V : HSp D} {n : ℕ}
 
 theorem countRank {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ} (π : Formalism.L2.NG.FinTyp L n) :
     Module.rank ℂ π.S ≤ Cardinal.aleph0 :=
-  GlobalTheory.T.rank_le_aleph0_smooth_irreducible_unitaryAdelic π
+  _root_.GlobalTheory.FinTyp.rank_le_aleph0 π
 
 def rtHom (L : Type) [Field L] [NumberField L] [IsCMField L] (n : ℕ) :
     Formalism.AUTREP.GAf L n →* Module.End ℂ (Formalism.AUTREP.GAf L n → ℂ) where

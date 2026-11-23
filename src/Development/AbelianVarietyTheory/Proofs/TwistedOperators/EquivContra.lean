@@ -4,11 +4,14 @@ public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsHilbertSchmidtOfFiniteDimensional
 public import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.QuotientIntegrationFormulaDiscreteSubgroupLeft
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SmoothContragredientIrreducibleAndReflexiveStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ContraAdmissibleTraceStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsUnitarisableOfCharIff
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SmoothContragredientIrreducibleAndReflexive
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ContraAdmissibleTrace
+public import Mathlib.RepresentationTheory.Irreducible
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NonemptyEquivOfSmoothTraceEqAdmissible
+public import Development.AbelianVarietyTheory.Definitions.Foundations.MatrixMeasurableSpace
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TransposeInvariantOfConjInvariantDistributionGL
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsOpenNormalisedSubgroupSubset
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NonemptyEquivOfSmoothTraceEqAdmissibleStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TransposeInvariantOfConjInvariantDistributionGLStatement
 import Formalism.DoubleCosetMeasures.StatementZ
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -169,18 +172,18 @@ theorem equiv_contra (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] 
       exact ⟨fun h => ⟨fun i j => h.2 j i, fun i j => h.1 j i⟩, fun h => ⟨fun i j => h.2 j i, fun i j => h.1 j i⟩⟩
     rw [e]
     exact haarVol_self isOpen_KO le_rfl
-  obtain ⟨hca, hct⟩ := GlobalTheory.T.isAdmissible_contra_and_smoothTrace_inv _ μ hb V π ha
+  obtain ⟨hca, hct⟩ := _root_.GlobalTheory.SmGL.ContraTrace.contra_admissible_trace _ μ hb V π ha
   let T : SB (GL (Fin n) k) →ₗ[ℂ] ℂ :=
     { toFun := fun φ => smoothTrace π μ φ.1
       map_add' := fun φ ψ => ha.smoothTrace_add φ.2.1 φ.2.2 ψ.2.1 ψ.2.2 isOpen_KO isCompact_KO
       map_smul' := fun c φ => ha.smoothTrace_smul φ.2.1 φ.2.2 isOpen_KO isCompact_KO c }
-  have hT := GlobalTheory.T.transpose_invariant_of_conj_invariant_distribution_GL k (Fin n) T fun g φ ψ h => by
+  have hT := _root_.GlobalTheory.GelfandKazhdan.transpose_invariant k (Fin n) T fun g φ ψ h => by
     change smoothTrace π μ ψ.1 = smoothTrace π μ φ.1
     rw [show ψ.1 = _ from funext h]
     exact smoothTrace_conj ha isOpen_KO isCompact_KO φ.2.1 φ.2.2 g
-  refine GlobalTheory.T.nonempty_equiv_of_smoothTrace_eq_admissible _ μ hb V _ _ _ (isAdmissible_comp _ Φ hΦ ha) hca
+  refine _root_.GlobalTheory.CharIndep.nonempty_equiv_of_smoothTrace_eq _ μ hb V _ _ _ (isAdmissible_comp _ Φ hΦ ha) hca
     (isIrreducible_comp _ (fun g => ⟨_, hinv g⟩) hi)
-    ((GlobalTheory.T.smoothContragredient_irreducible_and_reflexive _ hb V V π π ha ha).1 hi) fun f hf hc => ?_
+    ((_root_.GlobalTheory.ContraRefl.contra_irreducible_reflexive _ hb V V π π ha ha).1 hi) fun f hf hc => ?_
   have h1 := hf.comp_continuous Φ.continuous
   have h2 := hc.comp_homeomorph Φ
   have h3 := smoothTrace_comp _ Φ hΦ hμ ha h1 h2

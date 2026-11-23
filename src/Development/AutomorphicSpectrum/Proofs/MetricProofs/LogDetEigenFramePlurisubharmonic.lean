@@ -2,10 +2,10 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsEigFrames
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PlurisubharmonicLocal
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CuspSubmodulesLocallyFiniteStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CuspSubmodulesLocallyFinite
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LogDetCuspFramePlurisubharmonic
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.HolomorphicFamilySmoothEntries
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsotropicSublatticeCovolumePositiveStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LogDetCuspFramePlurisubharmonicStatement
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsotropicSublatticeCovolumePositive
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -147,10 +147,10 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.log_det_eigen_frame_plurisubha
       ReciprocityTheory.AnForm.A.IsPsh (U ∩ W) (fun t => (R t).logDet (fun τ i => b τ i t) + (R t).cuspW σ) ∧
       ContinuousOn (fun t => (R t).cuspW σ) (U ∩ W) := by
     intro t₀ ht₀
-    obtain ⟨ε, F, hε, hF⟩ := GlobalTheory.T.cusp_submodules_locally_finite E g Λ Ψ n U R σ m hU hH hσ hrank t₀ ht₀
+    obtain ⟨ε, F, hε, hF⟩ := _root_.GlobalTheory.CompanionTheory.Relay.cusp_submodules_locally_finite E g Λ Ψ n U R σ m hU hH hσ hrank t₀ ht₀
     have hVo : IsOpen (U ∩ Metric.ball t₀ ε) := hU.inter Metric.isOpen_ball
     have hVU : U ∩ Metric.ball t₀ ε ⊆ U := Set.inter_subset_left
-    have hphi := fun I : F => GlobalTheory.T.log_det_cusp_frame_plurisubharmonic E g Λ Ψ n (U ∩ Metric.ball t₀ ε) R σ m b I.1 hVo
+    have hphi := fun I : F => _root_.GlobalTheory.CompanionTheory.Ar.Cusp.phi_isPsh_continuous E g Λ Ψ n (U ∩ Metric.ball t₀ ε) R σ m b I.1 hVo
       ⟨fun t ht t' ht' => hH.1 t ht.1 t' ht'.1, fun x => (hH.2 x).mono hVU⟩ hσ
       ⟨fun τ i => (hb.1 τ i).mono hVU, fun t ht => hb.2 t ht.1⟩ (fun t ht => (hF t ht).1 I.1 I.2)
     have heq : ∀ t ∈ U ∩ Metric.ball t₀ ε,
@@ -173,7 +173,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.log_det_eigen_frame_plurisubha
         | some I =>
           refine ContinuousOn.neg ((hphi I).2.log fun t ht => ?_)
           have hI := (hF t ht).1 I.1 I.2
-          obtain ⟨⟨r, v, hv⟩, h2⟩ := GlobalTheory.T.isotropic_sublattice_covolume_positive E g Λ Ψ (R t) σ I.1 hσ hI.2.2 hI.1
+          obtain ⟨⟨r, v, hv⟩, h2⟩ := _root_.GlobalTheory.CompanionTheory.Relay.isotropic_sublattice_covolume_positive E g Λ Ψ (R t) σ I.1 hσ hI.2.2 hI.1
           exact (h2 r v hv).2.1.ne'
       have hs : ContinuousOn (fun t => Finset.univ.sup' Finset.univ_nonempty (fun o => term (R t) σ F o))
           (U ∩ Metric.ball t₀ ε) :=

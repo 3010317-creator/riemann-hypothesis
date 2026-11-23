@@ -1,24 +1,26 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TateH2PeriodDatum
 public import Development.AutomorphicSpectrum.Definitions.NonGaloisLines.TopLine
 public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.TateLocalDualityTopDegree
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsAdicCompleteSpanAlgebraMapOfFreeFinite
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.H2EquivOfTorsionCharacter
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsIntegralOfNormLeOne
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicCharacterPadicBasicProperties
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsCycCycChar
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.CupFlip
 public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.DualDOfDualQ
 public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.DualQOfTopInj
 public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.ExistsFinsetSep
 public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.ExistsLimitOfCauchyAdicFiltration
 public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.ExistsPerfectCharacterQuotient
-import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.GoodOAdicCompleteCompactBasis
-import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.GoodOAdicCompleteCompactBasisStatement
 public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.GrowthGaloisInvariantsModPrimePowerLattice
 public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.H2LineOfTateH2AndCoboundaries
 public import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.T2SpaceOfLatticeNhdsBasis
+public import Development.AbelianVarietyTheory.Definitions.Foundations.HTBasis
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TateH2PeriodDatum
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicCharacterPadicBasicProperties
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsCycCycChar
+import Development.AutomorphicSpectrum.Proofs.NonGaloisProofs.GoodOAdicCompleteCompactBasis
+import Formalism.SharpRestriction.LevelLetterCocycles.LocCoh
+import Mathlib.NumberTheory.Padics.PadicIntegers
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,7 +64,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.Foundations.HTBasis
 
 @[expose] public section
 
@@ -132,7 +133,7 @@ theorem dualDL : ∀ (l : ℕ) [Fact l.Prime] (Lp : LocPrime l) (K : FinExt l), 
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   have hne : algebraMap O LL ϖ ≠ 0 := fun h =>
     hϖ.ne_zero ((IsFractionRing.injective O LL) (by rw [h, map_zero]))
-  obtain ⟨hO, -⟩ := GlobalTheory.T.goodO_adic_complete_compact_basis l LL O hG ϖ hϖ
+  obtain ⟨hO, -⟩ := _root_.GlobalTheory.CompanionTheory.GoodCoeff.goodO_structure l LL O hG ϖ hϖ
   obtain ⟨-, hb, -, -, -⟩ := latTop l Lp K LL O hG A LA ϖ hϖ
   obtain ⟨-, -, -, hbd', -⟩ := latTop l Lp K LL O hG A' LA' ϖ hϖ
   haveI : CompactSpace ↥(GK K) :=
@@ -166,7 +167,7 @@ theorem cobLO : ∀ (l : ℕ) [Fact l.Prime] (Lp : LocPrime l) (K : FinExt l), F
   have hO' := hO
   obtain ⟨⟨hdom, hdvr, hfr⟩, hfd, hmt, htr, hop⟩ := hO'
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
-  obtain ⟨hc, -, -, -, hb, -⟩ := GlobalTheory.T.goodO_adic_complete_compact_basis l LL O hO ϖ hϖ
+  obtain ⟨hc, -, -, -, hb, -⟩ := _root_.GlobalTheory.CompanionTheory.GoodCoeff.goodO_structure l LL O hO ϖ hϖ
   haveI : CompactSpace ↥(GK K) := GlobalTheory.BlochKatoIntegralScalars.compactSpace_GK K
   haveI : ContinuousSMul ℚ_[l] LL := IsModuleTopology.toContinuousSMul ℚ_[l] LL
   have hAlg : Continuous (algebraMap ℚ_[l] LL) := continuous_algebraMap ℚ_[l] LL
@@ -212,7 +213,7 @@ theorem topLine : ∀ (l : ℕ) [Fact l.Prime] (Lp : LocPrime l) (K : FinExt l),
   haveI := hFrac
   haveI := htr
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
-  have hc := (GlobalTheory.T.goodO_adic_complete_compact_basis l LL O hO ϖ hϖ).1
+  have hc := (_root_.GlobalTheory.CompanionTheory.GoodCoeff.goodO_structure l LL O hO ϖ hϖ).1
   have hop : IsOpen (L1.T : Set LL) := by
     have : (L1.T : Set LL) = Set.range (algebraMap O LL) := by
       rw [hL1]
@@ -363,7 +364,7 @@ theorem finrank_H1_rational_eq_lattice : ∀ (l : ℕ) [Fact l.Prime] (Lp : LocP
     intro LL _ _ _ O _ _ hO A LA
     obtain ⟨⟨hD, hV, hF⟩, -, -, hTR, -⟩ := id hO
     obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
-    obtain ⟨-, -, hK, -⟩ := GlobalTheory.T.goodO_adic_complete_compact_basis l LL O hO ϖ hϖ
+    obtain ⟨-, -, hK, -⟩ := _root_.GlobalTheory.CompanionTheory.GoodCoeff.goodO_structure l LL O hO ϖ hϖ
     obtain ⟨-, hB, -⟩ := latTop l Lp K LL O hO A LA ϖ hϖ
     haveI : IsTopologicalAddGroup A.V := IsModuleTopology.topologicalAddGroup LL A.V
     haveI : ContinuousSMul LL A.V := IsModuleTopology.toContinuousSMul LL A.V
@@ -399,6 +400,6 @@ theorem H0_torsion_growth_bound : ∀ (l : ℕ) [Fact l.Prime] (Lp : LocPrime l)
   haveI := hO
   haveI := hD
   haveI := hF
-  exact growth A LA (hcore LL O hG A LA) hϖ (GlobalTheory.T.goodO_adic_complete_compact_basis l LL O hG ϖ hϖ).2.1
+  exact growth A LA (hcore LL O hG A LA) hϖ (_root_.GlobalTheory.CompanionTheory.GoodCoeff.goodO_structure l LL O hG ϖ hϖ).2.1
 
 end GlobalTheory.CompanionTheory.Hypotheses₂.BK

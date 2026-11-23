@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PrimOfIsUnitDet
 public import Mathlib.NumberTheory.LegendreSymbol.AddCharacter
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormGaussSumHermitianFormLinearLeStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormGaussSumHermitianFormLinearLe
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -175,7 +175,7 @@ theorem quad_count {B : Type} [CommRing B] [Fintype B] (c : B →+* B) (hc : ∀
       positivity
     · have hu : IsUnit (a + c a) := hf _ (by rw [map_add (f := _), hc, add_comm])
         (fun h => ha (by linear_combination h))
-      have h1 := GlobalTheory.T.norm_gauss_sum_hermitian_form_linear_le c hc q hq hB χ hχ hχc n a hu (∑ i, c (s i) • x i)
+      have h1 := _root_.GlobalTheory.GramCount.norm_gauss_sum_ip_le c hc q hq hB χ hχ hχc n a hu (∑ i, c (s i) • x i)
       have h2 : F (a, s) = χ (-(a * t + ∑ i, s i * g i)) *
           ∑ y : Fin n → B, χ (a * ip c y y + ip c y (∑ i, c (s i) • x i)) := by
         simp only [F, hv, Finset.mul_sum, ← AddChar.map_add_eq_mul]

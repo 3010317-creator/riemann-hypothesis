@@ -2,11 +2,15 @@ module
 
 public import Mathlib.Basic.Complex.Basic
 public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.CardNonregularResiduesModPowSubOneLeStatement
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.NoNormEightOfFourierVanishingOrderFifteenStatement
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.NoNormTwelveOrderSixtythreeStatement
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.ParsevalBoundIntegerVectorSmallFourierSupportStatement
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.SeparationNumericalIneqCuspidalGLStatement
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Data.Nat.ModEq
+public import Mathlib.Data.Nat.PrimeFin
+public import Mathlib.Order.Interval.Finset.Nat
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.CardNonregularResiduesModPowSubOneLe
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.NoNormEightOfFourierVanishingOrderFifteen
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.NoNormTwelveOrderSixtythree
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.ParsevalBoundIntegerVectorSmallFourierSupport
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.SeparationNumericalIneqCuspidalGL
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -81,12 +85,12 @@ theorem orthogonal_int_vectors_not_agree_on_regular :
     simp only [Int.cast_sub, sub_mul, Finset.sum_sub_distrib, hreg j hj, sub_self]
   by_cases hexc : q = 2 ∧ (n = 4 ∨ n = 6)
   · obtain ⟨rfl, rfl | rfl⟩ := hexc
-    · refine GlobalTheory.T.false_of_sum_sq_eq_eight_of_fourier_vanish_order_15 ω (fun k => a k - b k) (by simpa using hω) (by simpa using hc2)
+    · refine _root_.GlobalTheory.no_norm_eight_of_fourier_vanishing_order_fifteen ω (fun k => a k - b k) (by simpa using hω) (by simpa using hc2)
         (fun j hj h5 => by
           simpa using hcoef j (fun e he1 he2 => by
             revert h5
             interval_cases j <;> interval_cases e <;> decide))
-    · refine GlobalTheory.T.false_of_sum_sq_eq_12_of_fourier_vanish_order_63 ω (fun k => a k - b k) (by simpa using hω) (by simpa using hc2)
+    · refine _root_.GlobalTheory.no_norm_twelve_order_sixtythree ω (fun k => a k - b k) (by simpa using hω) (by simpa using hc2)
         (fun j hj h21 h9 => by
           simpa using hcoef j (fun e he1 he2 => by
             revert h21 h9
@@ -97,15 +101,15 @@ theorem orthogonal_int_vectors_not_agree_on_regular :
       have hB := abs_le.mp ((abs_sum_le_sum_sq_int _ b).trans hb2.le)
       rcases pos_and_pos_or_neg_and_neg_of_mul_pos hpos with ⟨h1, h2⟩ | ⟨h1, h2⟩ <;>
         exact abs_le.mpr ⟨by omega, by omega⟩
-    have h1 := GlobalTheory.T.parseval_bound_integerVector_smallFourierSupport n (q ^ n - 1) ω (fun k => a k - b k)
+    have h1 := _root_.GlobalTheory.parsevalSep_bound n (q ^ n - 1) ω (fun k => a k - b k)
       ((Finset.Ioo 0 (q ^ n - 1)).filter
         (fun j => ∃ e ∈ Finset.Ioo 0 n, j * q ^ e ≡ j [MOD q ^ n - 1]))
       hn hN hω hc2 hsum (fun j hj0 hjN hjS => by
         refine hcoef j (fun e he1 he2 he => hjS ?_)
         simp only [Finset.mem_filter, Finset.mem_Ioo]
         exact ⟨⟨hj0, hjN⟩, e, ⟨he1, he2⟩, he⟩)
-    have h2 := GlobalTheory.T.card_nonregular_residues_mod_pow_sub_one_le q n hq hn
-    have h3 := GlobalTheory.T.separation_numerical_ineq_cuspidalGL q n hq hn hexc
+    have h2 := _root_.GlobalTheory.CuspGL.card_nonregular_residues_le q n hq hn
+    have h3 := _root_.GlobalTheory.CuspGL.sep_numerical_ineq q n hq hn hexc
     exact absurd (lt_of_le_of_lt (h1.trans (Nat.add_le_add_left (Nat.mul_le_mul_left _ h2) _)) h3)
       (lt_irrefl _)
 

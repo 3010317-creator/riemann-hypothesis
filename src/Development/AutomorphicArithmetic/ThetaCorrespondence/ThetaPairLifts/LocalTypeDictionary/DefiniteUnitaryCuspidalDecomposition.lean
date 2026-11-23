@@ -2,16 +2,22 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.CuspAlongSmoothRows
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
-import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGivenStageEqOne
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContDiffDerivSnoc
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiscreteSeriesModelAdjointEqInvFiniteDimensionalStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsDualFrameSpanUnitaryRepresentationStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExpandPiOfExpandEachStatement
+public import Mathlib.Analysis.InnerProductSpace.Adjoint
+public import Mathlib.LinearAlgebra.Trace
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsDualFrameSpanUnitaryRepresentation
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.Data.Fintype.Pi
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExpandPiOfExpandEach
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FiniteDimensionalModel
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsAutFunSmRealProd
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ModelTypeFormExpandsAlongDualFrameStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SumProdUpdateRegroupStatement
+public import Mathlib.Algebra.Module.LinearMap.Defs
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SumProdUpdateRegroup
+import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGivenStageEqOne
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
 import Formalism.LocalToGlobal.BesselHermitianTheta.Lemmas
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -83,7 +89,7 @@ theorem cusp_forms_decompose_definite_unitary : _root_.GlobalTheory.FunPr.ThetaL
       (∀ i, ∀ h ∈ Formalism.QuantumDeterminants.UH (gramAt D N.V τ), B i ∘ₗ (N.M.rep τ h : N.M.H τ →ₗ[ℂ] N.M.H τ) =
         ∑ j, LinearMap.trace ℂ (N.M.H τ) ((N.M.rep τ (k j) : N.M.H τ →ₗ[ℂ] N.M.H τ) ∘ₗ
           (B i ∘ₗ (N.M.rep τ h : N.M.H τ →ₗ[ℂ] N.M.H τ))) • B j) :=
-    fun τ => GlobalTheory.T.exists_dual_frame_span_unitary_representation (Formalism.QuantumDeterminants.UH (gramAt D N.V τ)) (fun g => (N.M.rep τ g : N.M.H τ →ₗ[ℂ] N.M.H τ))
+    fun τ => _root_.GlobalTheory.DualFrameSpan.dual_frame (Formalism.QuantumDeterminants.UH (gramAt D N.V τ)) (fun g => (N.M.rep τ g : N.M.H τ →ₗ[ℂ] N.M.H τ))
       (hmulK τ) (hρ τ) (fun g hg => ⟨g⁻¹, (GlobalTheory.T.discreteSeriesModel_adjoint_eq_inv_finiteDimensional N.M τ hg).1, (GlobalTheory.T.discreteSeriesModel_adjoint_eq_inv_finiteDimensional N.M τ hg).2⟩)
   choose m k B hk hB1 hB2 using hframe
   have hexp : ∀ τ x, ∀ g ∈ Formalism.QuantumDeterminants.UH (gramAt D N.V τ), φ (x * atTau θ N.V τ g) =
@@ -144,7 +150,7 @@ theorem cusp_forms_decompose_definite_unitary : _root_.GlobalTheory.FunPr.ThetaL
       show T a (Function.update v τ₀ w) x = T a v (x * atTau θ N.V τ₀ h)
       rw [hT, hT]
       simp only [hF']
-      have key := GlobalTheory.T.sum_prod_update_regroup_of_update_eq (X := fun _ => Matrix (Fin N.V.rank) (Fin N.V.rank) ℂ) (W := fun τ => N.M.sm τ)
+      have key := _root_.GlobalTheory.sum_prod_update_regroup (X := fun _ => Matrix (Fin N.V.rank) (Fin N.V.rank) ℂ) (W := fun τ => N.M.sm τ)
         k (ℓ a) τ₀ (F x) (fun g => F x (Function.update g τ₀ (h * g τ₀))) (v τ₀) w ?_ v
       · rw [Function.update_eq_self] at key
         exact key
@@ -177,7 +183,7 @@ theorem cusp_forms_decompose_definite_unitary : _root_.GlobalTheory.FunPr.ThetaL
     have h1 : φ x = F x (fun _ => 1) := by
       show φ x = φ (x * realProd θ N.V _)
       rw [realProd_one hθ, mul_one]
-    have h2 := GlobalTheory.T.eq_sum_prod_of_expansion_in_each_coordinate (X := fun _ => Matrix (Fin N.V.rank) (Fin N.V.rank) ℂ)
+    have h2 := _root_.GlobalTheory.expand_pi_of_expand_each (X := fun _ => Matrix (Fin N.V.rank) (Fin N.V.rank) ℂ)
       (fun τ => Formalism.QuantumDeterminants.UH (gramAt D N.V τ)) m k hk
       (fun τ j g => LinearMap.trace ℂ (N.M.H τ) ((N.M.rep τ g : N.M.H τ →ₗ[ℂ] N.M.H τ) ∘ₗ B τ j)) (F x)
       (fun τ₀ g hg => hFexp x τ₀ g hg) (fun _ => 1) (fun τ => GlobalTheory.PointAtPlaceHom.one_mem_UH _)

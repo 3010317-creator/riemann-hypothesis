@@ -3,17 +3,17 @@ module
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.AdjKer0
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.WaveSt
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ActEqSumOfKernel
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GeneralLinearGroupUnimodularStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GeneralLinearGroupUnimodular
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InnerIntegralLeft
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KernelActionEquivariantStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KernelAdjointRegularStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LengthFunctionFactsHoldStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RightDerivativeCalculusHoldsStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LengthFunctionFactsHold
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RightDerivativeCalculusHolds
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SectionOrthCptZero
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WaveKernelDecomposition
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WaveKernelExistence
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WaveKernelUniquenessStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WaveKernelUniqueness
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.WaveFinal
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WaveKernelExistence
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -156,7 +156,7 @@ theorem adjKer₀ : AdjKer0 := by
   intro n μ hμ M g T k hb hk
   haveI : BorelSpace (G n) := ⟨rfl⟩
   haveI := FiniteDimensional.complete ℂ M.V
-  have h := SelfK.self_adj GlobalTheory.T.length_function_facts_hold GlobalTheory.T.general_linear_group_unimodular GlobalTheory.T.right_derivative_calculus_holds wave_existence_speed_multiplicity.2.1 wave_existence_speed_multiplicity.1 GlobalTheory.T.wave_kernel_uniqueness n μ M g T k hb hk
+  have h := SelfK.self_adj _root_.GlobalTheory.CompanionTheory.LengthGL.lgFacts _root_.GlobalTheory.CompanionTheory.GLUnimod.unimod _root_.GlobalTheory.CompanionTheory.RCalc.rcalc wave_existence_speed_multiplicity.2.1 wave_existence_speed_multiplicity.1 _root_.GlobalTheory.CompanionTheory.KerUniq.main n μ M g T k hb hk
   refine ⟨hk.1.congr h, ?_, fun y hy k₁ k₂ => ?_, fun u hu x hx => ?_⟩
   · obtain ⟨R, hR⟩ := hk.2.1
     exact ⟨R, fun y hy hl => (h y hy).trans (hR y hy hl)⟩

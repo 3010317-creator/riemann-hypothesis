@@ -5,15 +5,18 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ModelSm
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.HeckeSectionsIsotropicCommutatorPairingPower
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RealTowerGeometricAgreement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RealTowerNefGeneralStatement
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.RefLinked
+public import Development.AutomorphicSpectrum.Statements.MetricStatements.AgreementIffGuarded
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RealTowerNefGeneral
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithmeticDegreePositiveHermStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericFrameComponentBoundStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SectionsGenericIndicators
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TowerComponentsCompatibleLawsStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TowerWeightOfZeroStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniformNormSectionCountStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.MongeAmpereIntegralMultilinearExpansionStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.NefPolarizationStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.NefPolarization
+import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsTwiceDifferentiableAt
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.MongeAmpereIntegralMultilinearExpansion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -218,7 +221,7 @@ theorem mInt_combLine_expand {P J : Ideal (MRing ι)} {e : ℕ} (R : AnLogRes P 
     show Real.log (∏ a, (L a).h _ ^ n i a) = ∑ a, (n i a : ℝ) * Real.log ((L a).h _)
     rw [Real.log_prod fun a _ => (zpow_pos ((L a).pos _ hm) _).ne']
     exact Finset.sum_congr rfl fun a _ => Real.log_zpow _ _
-  rw [h1, (GlobalTheory.T.monge_ampere_integral_multilinear_expansion e R.X R.A σ Set.univ (fun a => potOf R (L a)) (fun j a => (n j a : ℝ))
+  rw [h1, (_root_.GlobalTheory.CompanionTheory.Ar.PB.mInt_sumPot_expand e R.X R.A σ Set.univ (fun a => potOf R (L a)) (fun j a => (n j a : ℝ))
     (fun _ => 1) (fun j => by simp) (fun a x _ => isC2At_of_isPotential _ (hP a) x)
     (fun w => mIntegrableCont _ _ (fun i => hP _) _ continuous_const)).2]
 
@@ -375,7 +378,7 @@ theorem GlobalTheory.CompanionTheory.Ar.Plug.growth_le_vol_deg : GlobalTheory.Co
     exact_mod_cast this
   have hnef : ∀ W, ReciprocityTheory.ChartRestriction.G.Geo.IsArithVar W 2 → mCoordIdeal M.y ≤ W → 0 ≤ geomDeg W (Top.combLine (M.line 1) (nOf u)) 1 := by
     intro W hW hPW
-    have h1 := (GlobalTheory.T.real_tower_nef_general GlobalTheory.T.nef_polarization hIn II hII _ _ T (Top.realOf o.toTowerOrigin) o.smooth o.flat B (κ Z)).1
+    have h1 := (_root_.GlobalTheory.CompanionTheory.Ar.Top.rt_nefgen _root_.GlobalTheory.CompanionTheory.Ar.PB.nefPol hIn II hII _ _ T (Top.realOf o.toTowerOrigin) o.smooth o.flat B (κ Z)).1
       (reW u) hdom W hW hPW
     rw [geomDeg_combLine_one hIn M (nOf u) W hW]
     simpa only [wtc] using h1

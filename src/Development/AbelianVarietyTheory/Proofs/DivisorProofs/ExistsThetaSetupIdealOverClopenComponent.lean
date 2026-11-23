@@ -3,9 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ThetaSetupStructureMapComp
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DimAddRank
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.E8ThetaSetupGenericPointExists
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdealSheafDescendingDivisorPowerThetaSetupStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdealSheafDescendingDivisorPowerThetaSetup
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMemGenericPointsClosureEqOfIsClopen
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNormalModelCartierDivisorThetaSetupStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNormalModelCartierDivisorThetaSetup
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdealOrdersOfProperModel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ImportsTailTail
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUniformStrictnessAndFaceCutBounds
@@ -60,9 +60,9 @@ theorem _root_.GlobalTheory.Poinc.exists_setup_ideal_over_component : ∀ (g n :
   obtain ⟨X₁, -, hX₁⟩ := GlobalTheory.Poinc.GSetup.exists_setup g n hg hn hodd F Z z i hproj
     (fun x => ⟨hnorm.isDomain_stalk x, hnorm.isIntegrallyClosed_stalk x⟩) hopen hcomp hdense W8 hE8 hTI η hη 0
   have hr := GlobalTheory.Poinc.Setup.range_π_eq g n F W8 Z i X₁ η W hX₁ hcl
-  obtain ⟨ι, Y, πY, D, hι, hhom, hprop, hnY, hsupp, hord⟩ := GlobalTheory.T.exists_normal_model_cartierDivisor_thetaSetup g n hg hn hodd F Z z i hθ φ hφ W8 hE8 hTI X₁
+  obtain ⟨ι, Y, πY, D, hι, hhom, hprop, hnY, hsupp, hord⟩ := _root_.GlobalTheory.Poinc.exists_model_divisor_of_orders g n hg hn hodd F Z z i hθ φ hφ W8 hE8 hTI X₁
   obtain ⟨ι', J₁, hι', hsupp', hord'⟩ :=
-    GlobalTheory.T.exists_idealSheaf_descending_divisor_power_thetaSetup g n hg hn hodd F Z z i hθ φ hφ W8 hE8 hTI X₁ ι Y πY D hι X₁.projM hhom hprop hnY hsupp hord
+    _root_.GlobalTheory.Poinc.DescentPow.exists_idealSheaf_comap_orders g n hg hn hodd F Z z i hθ φ hφ W8 hE8 hTI X₁ ι Y πY D hι X₁.projM hhom hprop hnY hsupp hord
   have hhomog : ∀ (T : Trait F) (k : ℕ), 1 ≤ k → φ.evalZ ((k : ℤ) • T.β) = k * φ.evalZ T.β := by
     intro T k _
     have hrk : Module.finrank ℤ T.D.toPre.X ≤ g := by

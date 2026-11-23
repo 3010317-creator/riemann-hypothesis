@@ -3,7 +3,9 @@ module
 public import Development.WeilBound.ThetaLifts.LeviDeterminants.LagrangianUniqueness.RealTest
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationPreservesSchwartz
 public import Development.AutomorphicSpectrum.Proofs.MembershipProofs.AdelicCharacterRationalDual
-public import Development.AutomorphicSpectrum.Proofs.MembershipProofs.ThetaDistributionHeisenbergInvariantStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.NumberTheory.NumberField.AdeleRing
+public import Development.AutomorphicSpectrum.Proofs.MembershipProofs.ThetaDistributionHeisenbergInvariant
 public import Development.WeilBound.ThetaLifts.LeviDeterminants.LagrangianUniqueness.Imports
 public import Development.WeilBound.ThetaLifts.LeviDeterminants.LagrangianUniqueness.LagAlg
 import Mathlib.Algebra.Order.Floor.Extended
@@ -119,7 +121,7 @@ theorem schr_pure (hψ : IsStd ψ) (w : (κ → AF F) × (κ → AF F)) (f : (κ
 
 theorem nondeg (hψ : IsStd ψ) (x : AF F) (hx : q x = 0 ∨ p2 x = 0)
     (h : ∀ a : F, ψ (x * algebraMap F (AF F) a) = 1) : x = 0 := by
-  obtain ⟨b, rfl⟩ := (GlobalTheory.T.adelic_character_rational_dual F ψ hψ.1 (ne_one hψ) hψ.2.1).2 x h
+  obtain ⟨b, rfl⟩ := (_root_.GlobalTheory.CompanionTheory.AdeleAnn.unitary_and_annihilator_eq F ψ hψ.1 (ne_one hψ) hψ.2.1).2 x h
   have : b = 0 := by
     rcases hx with hx | hx
     · exact (map_eq_zero_iff (q.comp (algebraMap F (AF F))) (RingHom.injective _)).1 hx

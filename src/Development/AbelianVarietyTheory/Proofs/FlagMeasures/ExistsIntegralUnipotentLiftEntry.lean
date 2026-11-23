@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsVolData
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FrameDualTupleIdealsCastAdd
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowEmbeddingMemIntegralOrthogonalGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowIsometryEntriesInModelCoordinatesStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowEmbeddingMemIntegralOrthogonalGroup
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowIsometryEntriesInModelCoordinates
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -123,7 +123,7 @@ theorem lift_entry : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
   simp only at hu hlu hab ⊢
   set y : Fin (2 * r + k + 1) → E := (-(σ u)) • fun i => f i b with hy
   refine ⟨rowE (σ : E →+* E) J (fun i => P i a.castSucc) y 0, ?_, ?_⟩
-  · refine GlobalTheory.T.rowE_mem_GN_of_form_add_trace_eq_zero F E σ k r J Λ P f T A s hV a y 0 (fun c hc => ?_) ?_ (fun c hc => ?_)
+  · refine _root_.GlobalTheory.SnMass.VolN.RowIso.rowE_mem_GN F E σ k r J Λ P f T A s hV a y 0 (fun c hc => ?_) ?_ (fun c hc => ?_)
       (FractionalIdeal.zero_mem _)
     · rw [hy, form_smul_left, form_col, hdu.1]
       have : c.castSucc ≠ b.castSucc := fun h => absurd (Fin.castSucc_injective _ h ▸ hc) (not_le.2 hab)
@@ -153,7 +153,7 @@ theorem lift_entry : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
           (if eI k r a' = j then 1 else 0) - (if a' = a ∧ j = eI k r b then
             (s a : ℂ) * star (-(star (w.embedding u)) * ((s b)⁻¹ : ℂ)) else 0) := by
       intro w a' j
-      rw [GlobalTheory.T.rowIsometry_entries_in_modelCoordinates F E σ k r J Λ P f T A s hV a y 0 w, hv w, herm_single]
+      rw [_root_.GlobalTheory.SnMass.VolN.rowE_entries F E σ k r J Λ P f T A s hV a y 0 w, hv w, herm_single]
       simp [bvec, Pi.single_apply, eI_ne_esI, eI_inj, ite_and]
     refine ⟨fun w => ?_, fun β hβ _ w => ?_⟩
     · change gM A _ w (eI k r a) (eI k r b) = l w

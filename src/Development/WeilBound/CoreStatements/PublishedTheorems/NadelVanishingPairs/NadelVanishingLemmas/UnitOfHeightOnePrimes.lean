@@ -5,11 +5,13 @@ public import Mathlib.RingTheory.Ideal.Height
 public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
 public import Mathlib.RingTheory.RingHom.Etale
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.IsRegularRingOfSmooth
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsStripFinitelyManyPrimeFactorsStatement
+public import Mathlib.RingTheory.Noetherian.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsStripFinitelyManyPrimeFactors
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RegularLocalRingNormalDomain
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.AssociatedOfHeightOneAgree
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.EtaleCoordinateQuotientRegular
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.RegularQuotientPrimeElement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AssociatedOfHeightOneAgree
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCoordinateQuotientRegular
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RegularQuotientPrimeElement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -84,8 +86,8 @@ theorem unit_mul_monomial_of_forall_height_one (R K : Type) [CommRing R] [IsDoma
   have hb0K : algebraMap R K b0 ≠ 0 := by
     rw [Ne, IsFractionRing.to_map_eq_zero_iff]; exact hb0'
   have ha0 : a0 ≠ 0 := by rintro rfl; simp at hx
-  obtain ⟨α, a, ha, hna⟩ := GlobalTheory.T.exists_strip_finitely_many_prime_factors R π J a0 ha0
-  obtain ⟨β, b, hb, hnb⟩ := GlobalTheory.T.exists_strip_finitely_many_prime_factors R π J b0 hb0'
+  obtain ⟨α, a, ha, hna⟩ := _root_.GlobalTheory.strip_prime_factors_target R π J a0 ha0
+  obtain ⟨β, b, hb, hnb⟩ := _root_.GlobalTheory.strip_prime_factors_target R π J b0 hb0'
   have hπ0 : ∀ j ∈ J, π j ≠ 0 := fun j hj =>
     (hπ j hj).elim (fun hu => hu.ne_zero) (fun hp => hp.ne_zero)
   have han : a ≠ 0 := by rintro rfl; rw [zero_mul] at ha; exact ha0 ha
@@ -95,7 +97,7 @@ theorem unit_mul_monomial_of_forall_height_one (R K : Type) [CommRing R] [IsDoma
     intro Q hQ hQJ e hmem
     obtain ⟨j, hj, hjm⟩ := Ideal.IsPrime.prod_mem_iff.mp hmem
     exact hQJ j hj (hQ.mem_of_pow_mem _ hjm)
-  obtain ⟨u, hu⟩ := GlobalTheory.T.associated_of_height_one_agree R π J a b han hbn hπ
+  obtain ⟨u, hu⟩ := _root_.GlobalTheory.exists_unit_eq_mul_of_height_one_avoiding R π J a b han hbn hπ
     (fun j hj hp => ⟨hna j hj hp, hnb j hj hp⟩) (fun Q hQ h1 hQJ => by
       obtain ⟨c, d, hc, hd, hcd⟩ := h Q hQ h1 hQJ
       refine ⟨c * ∏ j ∈ J, π j ^ β j, d * ∏ j ∈ J, π j ^ α j,
@@ -150,8 +152,8 @@ theorem unit_mul_monomial_iff : ∀ (p : ℕ) [Fact p.Prime] (A : Type) [CommRin
       intro j hj
       by_cases hjP : t j ∈ P
       · right
-        refine GlobalTheory.T.regular_quotient_prime_element A P (t j) (fun h0 => ht j (by rw [h0, map_zero])) hjP
-          (GlobalTheory.T.etale_coordinate_quotient_regular p A t het j)
+        refine _root_.GlobalTheory.prime_algebraMap_localization_of_isRegularRing_quotient A P (t j) (fun h0 => ht j (by rw [h0, map_zero])) hjP
+          (_root_.GlobalTheory.isRegularRing_quotient_etaleCoordinate p A t het j)
       · left
         exact IsLocalization.map_units (Localization.AtPrime P) (⟨t j, hjP⟩ : P.primeCompl)
     obtain ⟨u, m, hum⟩ := unit_mul_monomial_of_forall_height_one (Localization.AtPrime P) L

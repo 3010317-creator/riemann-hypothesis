@@ -2,10 +2,12 @@ module
 
 public import Formalism.LocalToGlobal.GaloisLevelStructure.DefsAut
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ClassSumEqConstMulPeterssonStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsWildInertiaCyclotomicElement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ClassSumEqConstMulPetersson
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SphericalHeckeScalarOnTypeSpacesAllPlaces
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AlgWtExistsInvFormStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteDoubleCosetsDefiniteUnitaryMaximalLevelStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AlgWtExistsInvForm
+public import Formalism.AlgebraicWeights.IsAlgWeight
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteDoubleCosetsDefiniteUnitaryMaximalLevel
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TypeSpacesOrthogonalOfClassSumInner
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteDimensionalForms
 import Mathlib.Algebra.Order.Floor.Extended
@@ -68,7 +70,7 @@ theorem isoTyp_indep (a : NG.AlgWt L n) {ι : Type} (S : ι → Submodule ℂ (G
     iSupIndep fun i => NG.isoTyp a.ρ (S i) := by
   classical
   haveI hW : FiniteDimensional ℂ a.W := a.alg.1
-  have hT := GlobalTheory.T.finite_doubleCosets_definiteUnitary_maximalLevel L n
+  have hT := _root_.GlobalTheory.DefiniteClassFinite.exists_finset_double_cosets_Umax L n
   have hfin : ∀ N : ℕ, 0 < N → FiniteDimensional ℂ ↥(Submodule.span ℂ
       {f | f ∈ NG.AFall L n a.ρ ∧ ∀ κ, NG.Cong L n N κ → ∀ g, f (g * κ) = f g}) := by
     intro M hM
@@ -76,8 +78,8 @@ theorem isoTyp_indep (a : NG.AlgWt L n) {ι : Type} (S : ι → Submodule ℂ (G
     refine Submodule.finiteDimensional_of_le (S₂ := GlobalTheory.AlgFormsFin.fixedForms L n a.ρ M) (Submodule.span_le.2 ?_)
     rintro f ⟨hf, hκ⟩
     exact ⟨hf.1, hκ⟩
-  obtain ⟨β, hβ⟩ := GlobalTheory.T.algWt_exists_invForm' L n a
-  obtain ⟨B, hB, -⟩ := GlobalTheory.T.class_sum_eq_const_mul_petersson L n a β hβ
+  obtain ⟨β, hβ⟩ := _root_.GlobalTheory.algWt_exists_invForm L n a
+  obtain ⟨B, hB, -⟩ := _root_.GlobalTheory.ClassPet.classSum_eq_pet L n a β hβ
   have hG : GlobalTheory.TypeOrthogonality.Good a.ρ B := hB
   exact indep_of_orth (fun x => B x) _ (fun i x hx h0 => pos_zero hG (isoTyp_le _ hx) h0)
     (fun i j hij => isoTyp_orth hG hfin (hS i) (hS j) (fun h => hij (hinj i j h)))

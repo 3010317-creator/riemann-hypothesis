@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KFacDifferentiable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBalancedUnitMultipleTotallyRealStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FTermIteratedFDerivBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeEisensteinFourierTermMoveUnitStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SummableHeckeBalancedLatticeDoubleSumStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.OmegaFactorization
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBalancedUnitMultipleTotallyReal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FTermIteratedFDerivBound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeEisensteinFourierTermMoveUnit
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SummableHeckeBalancedLatticeDoubleSum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,9 +64,9 @@ theorem fTerm_deriv_summable_bound : ∀ (F : Type) [Field F] [NumberField F] [N
     ∃ u : Quotient (unitRel (𝔟 : FractionalIdeal (𝓞 F)⁰ F)) × NZ (𝔞 : FractionalIdeal (𝓞 F)⁰ F) → ℝ, Summable u ∧
       ∀ p, ∀ σ ∈ K, ∀ z ∈ L, ‖iteratedFDeriv ℝ n (fun z : Emb F → ℂ => fTerm σ z p.1.out.1 p.2.1) z‖ ≤ u p := by
   intro F _ _ _ 𝔞 𝔟 K hK hKH L hL hLU n
-  obtain ⟨m, hm⟩ := GlobalTheory.T.norm_iteratedFDeriv_fTerm_le_of_isCompact F K hK hKH L hL hLU n
-  obtain ⟨C₀, -, hC₀⟩ := GlobalTheory.T.exists_balanced_unit_multiple_totallyReal F
-  obtain ⟨N, hN⟩ := GlobalTheory.T.summable_heckeBalancedLatticeDoubleSum F 𝔞 𝔟 C₀ m
+  obtain ⟨m, hm⟩ := _root_.GlobalTheory.HeckeTwo.TermBound.fTerm_iteratedFDeriv_bound F K hK hKH L hL hLU n
+  obtain ⟨C₀, -, hC₀⟩ := _root_.GlobalTheory.BalancedUnits.balanced_unit_multiple F
+  obtain ⟨N, hN⟩ := _root_.GlobalTheory.HeckeTwo.summable_balanced_latSum F 𝔞 𝔟 C₀ m
   obtain ⟨C, hC⟩ := hm N
   choose ε hε using fun c : Quotient (unitRel (𝔟 : FractionalIdeal (𝓞 F)⁰ F)) => hC₀ c.out.1 c.out.2.2
   refine ⟨fun p => C * ∏ τ : Emb F, (|τ (((ε p.1 : 𝓞 F) : F) * p.1.out.1)| + |τ (((ε p.1 : 𝓞 F) : F) * p.1.out.1)|⁻¹) ^ m /
@@ -78,7 +79,7 @@ theorem fTerm_deriv_summable_bound : ∀ (F : Type) [Field F] [NumberField F] [N
     have hb : c.out.1 = ((((ε c)⁻¹ : (𝓞 F)ˣ) : 𝓞 F) : F) * (((ε c : 𝓞 F) : F) * c.out.1) := by
       rw [← mul_assoc, hee, one_mul]
     conv_lhs => rw [hb]
-    exact GlobalTheory.T.heckeEisensteinFourierTerm_move_unit F σ z _ _ (ε c)⁻¹
+    exact _root_.GlobalTheory.HeckeTwoUnit.fTerm_unit_move F σ z _ _ (ε c)⁻¹
   have hb0 : ((ε c : 𝓞 F) : F) * c.out.1 ≠ 0 := mul_ne_zero (right_ne_zero_of_mul_eq_one hee) c.out.2.2
   have hν0 : ((((ε c)⁻¹ : (𝓞 F)ˣ) : 𝓞 F) : F) * ν.1 ≠ 0 := mul_ne_zero (left_ne_zero_of_mul_eq_one hee) ν.2.2
   dsimp only

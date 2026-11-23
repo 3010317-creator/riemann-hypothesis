@@ -1,15 +1,17 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.RegularisedSiegelWeil.SingularNullSets.WeakApproximationFinitePlace
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AlternativeLocalComputationOfComponentsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactnessStatementStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeightBoundStatementStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IwasawaDecompositionStatementStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PositivityStatementStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SectionEigenfunctionMaximalCompactBis
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SplitPlaceRankCutOfAlternativeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UniformBoundednessStatementStatement
-public import Development.WeilBound.RepresentationTheoryGL.RegularisedSiegelWeil.ThetaIdempotents.ThetaCoefficients.JacquetPiatetskiBoundHolds
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JpUnif
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AlternativeLocalComputationOfComponents
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactnessStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeightBoundStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IwasawaDecompositionStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PositivityStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SectionEigenfunctionMaximalCompact
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EigenOfRightInvariant
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SplitPlaceRankCutOfAlternative
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UniformBoundednessStatement
+public import Development.WeilBound.RepresentationTheoryGL.RegularisedSiegelWeil.ThetaIdempotents.GoodPlacesOutsideFiniteSet
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +47,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SectionEigenfunctionMaximalCompact
 
 @[expose] public section
 
@@ -55,11 +56,11 @@ namespace GlobalTheory.CompanionTheory.Jp
 
 theorem jPos_of_idemEx : IdemEx → JPos := by
   intro _ D n r t hrt hr ψ hψ χ hχ hres nb hnb S
-  have hB2 : SplitPlaceRankCutEigenvalue := GlobalTheory.T.split_place_rank_cut_of_alternative (GlobalTheory.T.alternative_local_computation_of_components GlobalTheory.T.iwasawa_decomposition_statement GlobalTheory.T.height_bound_statement GlobalTheory.T.uniform_boundedness_statement GlobalTheory.T.compactness_statement GlobalTheory.T.positivity_statement)
-  obtain ⟨v, hvS, hpsi, τ, hchi⟩ := GlobalTheory.T.jacquet_piatetski_bound_holds D r ψ hψ χ hχ hres S
+  have hB2 : SplitPlaceRankCutEigenvalue := _root_.GlobalTheory.CompanionTheory.Jp.split_place_rank_cut_of_local_computation (_root_.GlobalTheory.CompanionTheory.Jp.jpAlt_of_steps _root_.GlobalTheory.CompanionTheory.Jp.Iw.jpIw _root_.GlobalTheory.CompanionTheory.Jp.Hgt.jpHgt _root_.GlobalTheory.CompanionTheory.Jp.Unif.jpUnif _root_.GlobalTheory.CompanionTheory.Jp.Cmp.jpCmp _root_.GlobalTheory.CompanionTheory.Jp.Pos.jpPos)
+  obtain ⟨v, hvS, hpsi, τ, hchi⟩ := _root_.PositivityTheory.Rg.Rsw.jacquet_piatetski_first_bound D r ψ hψ χ hχ hres S
   obtain ⟨C, c, hK, hd, hc, hint⟩ := hB2 D n r t hrt hr ψ hψ nb hnb v hpsi τ
   refine ⟨v, hvS, C, c, hK, hd, hc, ?_⟩
   intro νv hH hP z f _ hlaw hinv g
-  exact GlobalTheory.T.section_eigenfunction_maximal_compact D n χ nb hnb v τ hchi C νv hH z (c z) (hint νv hH hP z) f hlaw hinv g
+  exact _root_.GlobalTheory.CompanionTheory.Jp.B3.eigen_of_rightInvariant D n χ nb hnb v τ hchi C νv hH z (c z) (hint νv hH hP z) f hlaw hinv g
 
 end GlobalTheory.CompanionTheory.Jp

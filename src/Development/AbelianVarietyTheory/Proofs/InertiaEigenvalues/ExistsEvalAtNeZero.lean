@@ -3,7 +3,8 @@ module
 public import Formalism.LocalToGlobal.ProjectiveLattices.CuspFormsFiniteDimensionalOf
 public import Formalism.LocalToGlobal.ProjectiveLattices.FamilyUniformisationBasePointOrthogonalBis
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RdIndepOfLawsM
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LinearRelationSectionsSpanEqStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.CuspFDOf
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LinearRelationSectionsSpanEq
 public import Formalism.LocalToGlobal.ProjectiveLattices.CuspMulOf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -217,7 +218,7 @@ theorem span_of_products : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, Formal
     show (∑ l, cf e.1 l • rdU (T.U j σ) (g e.1 l)) * rdU (T.U j σ) (t e.2) -
       (∑ l, cf e.2 l • rdU (T.U j σ) (g e.2 l)) * rdU (T.U j σ) (t e.1) = 0
     rw [hsum, hsum]; ring
-  have hzspan := GlobalTheory.T.linear_relation_sections_span_eq D T j σ (GlobalTheory.rdIndep_of_lawsM D T.toCore hT.toLawsM j hj σ hσ) _ _ hdom κ (Fin N × Fin N) A hA z hz
+  have hzspan := _root_.GlobalTheory.kerC_span_rat D T j σ (GlobalTheory.rdIndep_of_lawsM D T.toCore hT.toLawsM j hj σ hσ) _ _ hdom κ (Fin N × Fin N) A hA z hz
 
   let S := Submodule.span ℂ (rdU (T.U j σ) '' (sec (T.Q.Xo j) T.Q.c a n : Set (Rul (T.Q.Xo j) T.Q.c)))
   let Z : Submodule ℂ (κ → ℂ) :=

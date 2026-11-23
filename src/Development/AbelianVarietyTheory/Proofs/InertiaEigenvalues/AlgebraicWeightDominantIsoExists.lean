@@ -4,16 +4,18 @@ public import Formalism.LocalToGlobal.Columns.MtAdWtIrr
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPolyRep
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.HighestWeightConjugacy.DetLowUni
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MulVecEqProdSmul
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AlgWeightHighestWeightExistsUniqueAntitoneStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AlgebraicWeightPolyMatrixMultiplicativeStatement
+public import Formalism.LocalToGlobal.GaloisLevelStructure.DefsAut
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AlgWeightHighestWeightExistsUniqueAntitone
+public import Formalism.PeriodIntegrals.HwFixedLine
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.HighestWeightFixedVectors.HwFixedExMain
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.HighestWeightFixedLine.HwFixedLineMain
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AlgebraicWeightPolyMatrixMultiplicative
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ConjugateNeSelf
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsBorelEigenvectorOfPolynomialRepGLComplexStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPolynomialRepGLComplexAlgebraicWeightEvalPointStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsBorelEigenvectorOfPolynomialRepGLComplex
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPolynomialRepGLComplexAlgebraicWeightEvalPoint
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SpanRationalPointOrbitAlgebraicWeight
 import Formalism.PadicSubsetSums.StableGradedCounts.ZBrauerNesbittAlg
 import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.AlgWtHwUnq
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.HwFixEx
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.HwFixLine
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.HighestWeightConjugacy.GLDense
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -109,7 +111,7 @@ theorem exists_beig_mem {Ψ : GL (Fin n) ℂ → Matrix κ κ ℂ} (hΨ : IsPoly
       refine ⟨∑ l, (∑ k, MvPolynomial.C (Pm i k) * Q k l) * MvPolynomial.C (I l j), fun B => ?_⟩
 
       simp only [Matrix.mul_apply, map_sum, map_mul, MvPolynomial.eval_C, hQ]
-  obtain ⟨w, lam, hw0, hw⟩ := GlobalTheory.T.exists_borelEigenvector_of_polynomialRepGLComplex n _ _ hR
+  obtain ⟨w, lam, hw0, hw⟩ := _root_.GlobalTheory.AlgWtHW.exists_isBEig_of_isPolyRep n _ _ hR
   refine ⟨e w, heS w, lam, fun h => hw0 (he (by rw [h, map_zero])), fun B hB => ?_⟩
   have h1 := hw B hB
   simp only [hact] at h1
@@ -460,14 +462,14 @@ theorem iso_of_hwAt (a a' : AlgWt L n) (lam : ι → Fin n → ℤ) (ha : ∀ τ
       exact bot_ne_top (α := Subrepresentation c.ρ)
         (Subrepresentation.toSubmodule_injective (Subsingleton.elim _ _))
     haveI := b.index_nonempty
-    obtain ⟨h1, h2⟩ := GlobalTheory.T.algebraicWeight_polyMatrix_multiplicative L n c κ b P hP'
+    obtain ⟨h1, h2⟩ := _root_.GlobalTheory.AlgWtMul.evM_mul L n c κ b P hP'
     have hone : evM P (upt (ptOf emb (1 : ι → GL (Fin n) ℂ))) = 1 := by rw [ptOf_one emb hinj hcm hall, h1]
     have hmul : ∀ g h : ι → GL (Fin n) ℂ, evM P (upt (ptOf emb (g * h))) =
         evM P (upt (ptOf emb g)) * evM P (upt (ptOf emb h)) := fun g h => by
       rw [ptOf_mul emb hinj hcm hall, h2 _ _ (isUPt_ptOf emb hinj hcm hall g) (isUPt_ptOf emb hinj hcm hall h)]
     have hpoly : ∀ τ, IsPolyRep fun B => evM P (upt (ptOf emb (Pi.mulSingle τ B))) := fun τ => by
       simp only [ptOf_single emb hinj hcm hall]
-      exact GlobalTheory.T.isPolynomialRepGLComplex_algebraicWeight_evalPoint L n c κ b P hP' (emb τ)
+      exact _root_.GlobalTheory.AlgWtHW.isPolyRep_evPt L n c κ b P hP' (emb τ)
     obtain ⟨v, mu, hv0, hv⟩ := exists_joint_beig (Φ := fun g => evM P (upt (ptOf emb g))) hmul hpoly
     obtain ⟨u, hu0, hu⟩ := exists_covec (Φ := fun g => evM P (upt (ptOf emb g))) hone hmul hpoly
     have hmu : mu = lam := by
@@ -514,10 +516,10 @@ theorem exists_equiv_VV : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L]
     obtain ⟨t, h | h⟩ := hall σ
     · exact ⟨t, Or.inr (by rw [h, mtwConj, conj_conj])⟩
     · exact ⟨t, Or.inl h⟩
-  choose mu hmu using fun τ => (GlobalTheory.T.algWeight_highestWeight_exists_unique_antitone L n a (mtwConj emb τ)).1.exists
-  let lam : ι → DomWeight n := fun τ => ⟨mu τ, (GlobalTheory.T.algWeight_highestWeight_exists_unique_antitone L n a (mtwConj emb τ)).2 _ (hmu τ)⟩
+  choose mu hmu using fun τ => (_root_.GlobalTheory.AlgWtHW.hw_exists_unique_antitone L n a (mtwConj emb τ)).1.exists
+  let lam : ι → DomWeight n := fun τ => ⟨mu τ, (_root_.GlobalTheory.AlgWtHW.hw_exists_unique_antitone L n a (mtwConj emb τ)).2 _ (hmu τ)⟩
   have hirr : TenIrr (mtwConj (mtwConj emb)) lam :=
-    tenIrr_of' highest_weight_fixed_exists highest_weight_fixed_line _ (mtwConj_injective _ hinj') (mtwConj_cm _ hcm') lam
+    tenIrr_of' _root_.PI.HwFix.UnitaryGroupMassFormula.hwFixedEx_main _root_.PI.HwFix.Line.hwFixedLine_main _ (mtwConj_injective _ hinj') (mtwConj_cm _ hcm') lam
   obtain ⟨T, hT⟩ := iso_of_hwAt (mtwConj emb) hinj' hcm' hall' a (tenWt (mtwConj emb) lam hirr) mu hmu
     (fun τ => tenWt_hwAt (mtwConj emb) hinj' hcm' lam hirr τ)
   refine ⟨lam, T, fun γ γ₀ hγ x => ?_⟩

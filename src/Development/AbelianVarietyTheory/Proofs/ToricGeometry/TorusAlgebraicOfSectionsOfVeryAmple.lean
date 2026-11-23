@@ -23,9 +23,16 @@ public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.ExistsMulDot
 public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.ExistsMvPolynomialOfPolyBoundOffHypersurface
 public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.ExistsNhdsSubsetRange
 public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.ExistsPrimitiveElementDiscriminantMultiple
-public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.ExistsProjectiveModelPolarisedTorusThetaStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsLieBasis
+public import ReciprocityTheory.ThetaQuasiPeriods.PeriodLattice
+public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.ExistsProjectiveModelPolarisedTorusTheta
 public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.ExistsTestFunctionsSubsetOfMemNhds
-public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.ExistsThetaSeriesApplyNeZeroOfLargeFormStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+public import Mathlib.LinearAlgebra.Matrix.Hermitian
+public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.ExistsThetaSeriesApplyNeZeroOfLargeForm
 public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.ExistsTopLePreimageOfISupEqTop
 public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.ExistsUniqueHomOfLocallyRegular
 public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.ExistsUniquePointOfRingHom
@@ -53,13 +60,16 @@ public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.MulVecOfReal
 public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.PolarisedTorusAlgebraicOfParts
 public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.PrincipalOpenDenseComplexPoints
 public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.ReFormPosOfThetaNeZero
-public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.RelAmpleThetaBundleProjectiveModelStatement
+public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.RelAmpleThetaBundleProjectiveModel
 public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.RiemannThetaLevelOneNeZero
 public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.TangentBijectionOfValues
 public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.ThetaConeIdealIsPrimeAndRingKrullDimLe
+public import Mathlib.Basic.Complex.Basic
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.NonzeroLocus
+public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.TranslateTrivialEqOneOfFiniteTypePoints
+public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.TranslationFixingBundleArtinPointEqOne
 import Development.AbelianVarietyTheory.Proofs.ToricGeometry.TopLePreimageOfValAtNeZero
-public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.TranslateTrivialEqOneOfFiniteTypePointsStatement
-public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.TranslationFixingBundleArtinPointEqOneStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -138,7 +148,7 @@ theorem polarisedTorus_algebraic :
   have f26 := @GlobalTheory.theta_ring_generated_in_degree_one f3 f7 f24 f25
   have f27 := @GlobalTheory.theta_projectiveNormality_even f3 f7 f26
   have f28 := @GlobalTheory.existsUnique_point_of_ringHom
-  have f29 := @GlobalTheory.T.exists_projectiveModel_polarisedTorus_theta f28 f3 f7 f9 f12 f14 f22
+  have f29 := @_root_.GlobalTheory.exists_projModel_torus f28 f3 f7 f9 f12 f14 f22
   have f30 := @GlobalTheory.valAt'_rules
   have f31 := @GlobalTheory.eq_of_valAt'_eq f30 f28
   have f32 := @GlobalTheory.theta_quotient_regular f31
@@ -153,17 +163,17 @@ theorem polarisedTorus_algebraic :
   have f41 := @GlobalTheory.ProjModelDim.isAbelianScheme_and_dim f38 f40 f3 f7 f13
   have f42 := @GlobalTheory.exists_thetaBundle_holUnif f31 f0.1 f2 f8 f10
   have f43 := @GlobalTheory.ThetaBundleSym.rigidified_sym_section f31 f0.1 f2
-  have f44 := @GlobalTheory.T.relAmple_thetaBundle_projectiveModel f31 f3
+  have f44 := @_root_.GlobalTheory.ThetaAmple.relAmple_thetaBundle f31 f3
   have f45 := @GlobalTheory.exists_coord_adapted f40
   have f46 := @GlobalTheory.kTriv_of_global
-  have f47 := @GlobalTheory.T.translate_trivial_eq_one_of_finiteType_points
+  have f47 := @_root_.GlobalTheory.translDiff_gen_eq_one_of_finiteType
   have f48 := @GlobalTheory.translDiff_triv_of_artin_local
   have f49 := @GlobalTheory.TangentOrigin.tangent_bijection_of_values f30
-  have f50 := @GlobalTheory.T.translation_fixing_bundle_artin_point_eq_one f33 f49
+  have f50 := @_root_.GlobalTheory.ArtinKernel.eq_one_of_gen_translDiff f33 f49
   have f51 := @GlobalTheory.thetaBundle_kTriv f10 f13 f3 f7 f45 f46 f47 f48 f50
   have f52 := @GlobalTheory.appellHumbert_normal_form_of_linear_exponent
   have f53 := @GlobalTheory.ThetaPositivity.re_form_pos_of_theta_ne_zero
-  have f54 := @GlobalTheory.T.exists_thetaSeries_apply_ne_zero_of_large_form
+  have f54 := @_root_.GlobalTheory.ThetaLarge.exists_theta_apply_ne_zero
   have f55 := @GlobalTheory.exists_complementary_theta_of_linear_map f10 f8 f52 f53 f54
   have f56 := @GlobalTheory.exists_isMonHom_of_map_periodLattice f31 f34 f35 f55 f3
   exact @GlobalTheory.polarisedTorus_algebraic_of_parts f27 f29 f32 f37 f41 f42 f43 f44 f51 f56
@@ -265,7 +275,7 @@ theorem torusAlgebraic_of_sections_of_veryAmple :
   have f26 := @GlobalTheory.theta_ring_generated_in_degree_one f3 f7 f24 f25
   have f27 := @GlobalTheory.theta_projectiveNormality_even f3 f7 f26
   have f28 := @GlobalTheory.existsUnique_point_of_ringHom
-  have f29 := @GlobalTheory.T.exists_projectiveModel_polarisedTorus_theta f28 f3 f7 f9 f12 f14 f22
+  have f29 := @_root_.GlobalTheory.exists_projModel_torus f28 f3 f7 f9 f12 f14 f22
   have f30 := @GlobalTheory.valAt'_rules
   have f31 := @GlobalTheory.eq_of_valAt'_eq f30 f28
   have f32 := @GlobalTheory.theta_quotient_regular f31
@@ -280,17 +290,17 @@ theorem torusAlgebraic_of_sections_of_veryAmple :
   have f41 := @GlobalTheory.ProjModelDim.isAbelianScheme_and_dim f38 f40 f3 f7 f13
   have f42 := @GlobalTheory.exists_thetaBundle_holUnif f31 f0.1 f2 f8 f10
   have f43 := @GlobalTheory.ThetaBundleSym.rigidified_sym_section f31 f0.1 f2
-  have f44 := @GlobalTheory.T.relAmple_thetaBundle_projectiveModel f31 f3
+  have f44 := @_root_.GlobalTheory.ThetaAmple.relAmple_thetaBundle f31 f3
   have f45 := @GlobalTheory.exists_coord_adapted f40
   have f46 := @GlobalTheory.kTriv_of_global
-  have f47 := @GlobalTheory.T.translate_trivial_eq_one_of_finiteType_points
+  have f47 := @_root_.GlobalTheory.translDiff_gen_eq_one_of_finiteType
   have f48 := @GlobalTheory.translDiff_triv_of_artin_local
   have f49 := @GlobalTheory.TangentOrigin.tangent_bijection_of_values f30
-  have f50 := @GlobalTheory.T.translation_fixing_bundle_artin_point_eq_one f33 f49
+  have f50 := @_root_.GlobalTheory.ArtinKernel.eq_one_of_gen_translDiff f33 f49
   have f51 := @GlobalTheory.thetaBundle_kTriv f10 f13 f3 f7 f45 f46 f47 f48 f50
   have f52 := @GlobalTheory.appellHumbert_normal_form_of_linear_exponent
   have f53 := @GlobalTheory.ThetaPositivity.re_form_pos_of_theta_ne_zero
-  have f54 := @GlobalTheory.T.exists_thetaSeries_apply_ne_zero_of_large_form
+  have f54 := @_root_.GlobalTheory.ThetaLarge.exists_theta_apply_ne_zero
   have f55 := @GlobalTheory.exists_complementary_theta_of_linear_map f10 f8 f52 f53 f54
   have f56 := @GlobalTheory.exists_isMonHom_of_map_periodLattice f31 f34 f35 f55 f3
   have hτ : τ ∈ SiegelH (Fin g) := ⟨hs, hp⟩

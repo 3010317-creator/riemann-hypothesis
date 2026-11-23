@@ -3,16 +3,20 @@ module
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.BeData
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ExistsConstantCoeffOne
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIntegralOrbitSeries
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExpFactorAllOrbitsEqProdOrbitsStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HyperbolicPairAdditiveCoordsLinearFormsStatement
+public import Formalism.GaussJetBounds.StatementP
+public import Formalism.SharpRestriction.Divisibility.OrbitPlaces
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExpFactorAllOrbitsEqProdOrbits
+public import Formalism.LocalToGlobal.TorsionIntegrality.UniformGaussModels.UniformGaussModelCondition
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HyperbolicPairAdditiveCoordsLinearForms
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.StandardSeriesBConditionsLargePrime
+public import Formalism.LocalToGlobal.TorsionIntegrality.UniformGaussModels.OrthogonalGaussModels.KappaIntegralOfCalculation
+public import Formalism.LocalToGlobal.TorsionIntegrality.UniformGaussModels.OrthogonalGaussModels.OfClosedInt
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetDegreeBound.JetTdegEqDegree
+public import Formalism.PeriodIntegrals.OrbJetBase
 import Formalism.GaussJetBounds.GaussJetProofs.LogarithmWeightComparison
 import Formalism.GaussJetBounds.GaussJetProofs.OrbMul
 import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.BiextensionHypothesesOfLevelOne
 import Formalism.LocalToGlobal.TorsionIntegrality.GaussSumParity.KummerThetaLogarithms.BiextensionOfExpSpec
-public import Formalism.LocalToGlobal.TorsionIntegrality.UniformGaussModels.OrthogonalGaussModels.KappaIntegralOfCalculation
-public import Formalism.LocalToGlobal.TorsionIntegrality.UniformGaussModels.OrthogonalGaussModels.OfClosedInt
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetDegreeBound.JetTdegEqDegree
 import Formalism.SharpRestriction.Divisibility.JetPolynomialLogs.OneLetterJetKernel
 import Formalism.ThetaLogCoordinates.UniformThetaSubstitution.FrobeniusLiftNorms.LogarithmEquivalence
 import Mathlib.Algebra.Order.Floor.Extended
@@ -52,7 +56,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Formalism.PeriodIntegrals.OrbJetBase
 
 @[expose] public section
 
@@ -227,7 +230,7 @@ theorem orbitIdentity_all_of_integralClass_hostLog : ∀ (D : D7) (p : ℕ) [Fac
       ⟨σ, F, _, om, oms, ζ, hBd, rfl⟩).2.2.1
   have hπe : πs = fun y : ZV (nP D p) M N' =>
       (X (OrbitPlaces.orbMap D p (eA y.2.1).1 y.1, (eA y.2.1).2, y.2.2) : MvPowerSeries (OrbitPlaces.Pl D × Fin N × Fin N') ℂ_[p]) := rfl
-  have hc := GlobalTheory.T.orbitPlaces_thetaSeries_subst_orbMap_eq D p h5 σ om oms R eA f f' Θ
+  have hc := _root_.GlobalTheory.KerStd.HypOrbit.hypZ_of_inHyp D p h5 σ om oms R eA f f' Θ
   rw [← hρe, ← hπe] at hc
   have hA := congrArg (subst πs) hZ
   rw [hR1, hc] at hA
@@ -237,7 +240,7 @@ theorem orbitIdentity_all_of_integralClass_hostLog : ∀ (D : D7) (p : ℕ) [Fac
       funext fun x => Formalism.DworkPowerSeriesWeights.OrbMul.linSub_idM x
     rw [this, subst_self]; rfl
   rw [hlin, subst_comp_subst_apply hgs hπs] at hA
-  have hexp := GlobalTheory.T.expFactor_allOrbits_eq_prod_orbits D p R (N' := N') eA (beOf p (nP D p) σ (cob F (phFF p g2 g3 s2 ε)) om oms ζ) hbe0
+  have hexp := _root_.GlobalTheory.ExpFacOrbits.expFactor_allOrbits D p R (N' := N') eA (beOf p (nP D p) σ (cob F (phFF p g2 g3 s2 ε)) om oms ζ) hbe0
   rw [← hπe] at hexp
   rw [show (MvPowerSeries.map (MaximalUnramifiedExtension p).subtype (Formalism.L2.Th1.D.beMean p σ (cob F (phFF p g2 g3 s2 ε)) om oms ζ)) =
     beOf p (nP D p) σ (cob F (phFF p g2 g3 s2 ε)) om oms ζ from rfl] at hA

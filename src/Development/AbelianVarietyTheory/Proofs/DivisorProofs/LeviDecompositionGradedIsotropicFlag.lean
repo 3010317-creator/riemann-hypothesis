@@ -1,11 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LocallyCompactUnipFlag
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeightPreservingPartNonLoweringUnitStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsotropicFlagStabilizerNotLowerWeightStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemIsotropicFlagLeviOfKeepsWeightsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OppositeIsotropicFlagStabilizerNotRaiseWeightStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SplitTorusElementMemIsotropicFlagLeviStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsotropicUnipotentRadicalsRationalCocompact
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeightPreservingPartNonLoweringUnit
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsotropicFlagStabilizerNotLowerWeight
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemIsotropicFlagLeviOfKeepsWeights
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OppositeIsotropicFlagStabilizerNotRaiseWeight
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SplitTorusElementMemIsotropicFlagLevi
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -132,10 +133,10 @@ private theorem exists_unipFlag_mul_leviFlag_eq_of_mem_parFlag (F E : Type) [Fie
     rw [map_inv]
     exact Units.inv_mul _
   obtain ⟨m, m', hmm', hm'm, hstm, hmd, hm'd, hraise, hsub⟩ :=
-    GlobalTheory.T.exists_weightPreservingPart_nonLowering_unit (adjA σ J) (fam (adjA σ J) (idemA X (Formalism.UG.cT (σ : E →+* E) Y * J)))
+    _root_.GlobalTheory.WeightPart.exists_weightPart (adjA σ J) (fam (adjA σ J) (idemA X (Formalism.UG.cT (σ : E →+* E) Y * J)))
       (wt d (∑ i, d i + 1)) (Option.map Sum.swap) hm hi hε hτ hw hττ _ _ hxy1 hyx1 (adjA_mat hJ p)
-      (GlobalTheory.T.isotropicFlagStabilizer_not_lower_weight F E σ h n J hJ r X Y d _ hdM hxx hyy hxy p hp)
-      (GlobalTheory.T.isotropicFlagStabilizer_not_lower_weight F E σ h n J hJ r X Y d _ hdM hxx hyy hxy p⁻¹ (inv_mem hp))
+      (_root_.GlobalTheory.UAut.NoLower.parFlag_no_lower F E σ h n J hJ r X Y d _ hdM hxx hyy hxy p hp)
+      (_root_.GlobalTheory.UAut.NoLower.parFlag_no_lower F E σ h n J hJ r X Y d _ hdM hxx hyy hxy p⁻¹ (inv_mem hp))
   let U : GL (Fin n) (AF F ⊗[F] E) := ⟨m, m', hmm', hm'm⟩
   have hU : U ∈ HR (AF F) σ J := (adjA_mul_self_iff hJ U).1 (by
     show adjA σ J m * m = 1
@@ -146,7 +147,7 @@ private theorem exists_unipFlag_mul_leviFlag_eq_of_mem_parFlag (F E : Type) [Fie
     rw [map_inv]
     rfl
   have hgl : g ∈ leviFlag σ J X Y d :=
-    GlobalTheory.T.mem_isotropicFlagLevi_of_keeps_weights F E σ h n J hJ r X Y d _ hdM hxx hyy hxy g (by rw [hg1]; exact hmd) (by rw [hg2]; exact hm'd)
+    _root_.GlobalTheory.UAut.mem_leviFlag_of_keeps_weights F E σ h n J hJ r X Y d _ hdM hxx hyy hxy g (by rw [hg1]; exact hmd) (by rw [hg2]; exact hm'd)
   refine ⟨p * g⁻¹, ?_, g, hgl, (inv_mul_cancel_right p g).symm, ?_⟩
   · rw [mem_unipFlag_iff_raise hJ hσ X _ hL hxx hLL hdM, map_mul, Units.val_mul, hg2]
     exact hraise
@@ -228,7 +229,7 @@ private theorem unipFlag_inf_leviFlag_eq_bot (F E : Type) [Field F] [NumberField
   have hu' : ∀ a b, wt d (∑ i, d i + 1) a ≤ wt d (∑ i, d i + 1) b + ((0 : ℕ) : ℤ) →
       fam (adjA σ J) (idemA X (Formalism.UG.cT (σ : E →+* E) Y * J)) a * ((matHom _ σ J g).1 - 1) *
         fam (adjA σ J) (idemA X (Formalism.UG.cT (σ : E →+* E) Y * J)) b = 0 := hu
-  have hY := GlobalTheory.T.oppositeIsotropicFlagStabilizer_not_raise_weight F E σ h n J hJ r X Y d _ hdM hxx hyy hxy g (Subgroup.mem_inf.1 hl').2
+  have hY := _root_.GlobalTheory.UAut.OppFlagWeight.not_raise_of_mem_parFlag F E σ h n J hJ r X Y d _ hdM hxx hyy hxy g (Subgroup.mem_inf.1 hl').2
   have hz : ∀ a b, fam (adjA σ J) (idemA X (Formalism.UG.cT (σ : E →+* E) Y * J)) a * ((matHom _ σ J g).1 - 1) *
       fam (adjA σ J) (idemA X (Formalism.UG.cT (σ : E →+* E) Y * J)) b = 0 := by
     intro a b
@@ -253,7 +254,7 @@ theorem levi_decomposition : ∀ (F E : Type) [Field F] [NumberField F] [Field E
   intro F E _ _ _ _ _ σ h n J hJ r X Y d hxx hyy hxy
   refine ⟨fun p hp => exists_unipFlag_mul_leviFlag_eq_of_mem_parFlag F E σ h n J hJ r X Y d hxx hyy hxy p hp,
     unipFlag_inf_leviFlag_eq_bot F E σ h n J hJ r X Y d hxx hyy hxy, ?_,
-    fun t a ht hta => GlobalTheory.T.splitTorusElement_mem_isotropicFlagLevi F E σ h n J hJ r X Y d hxx hyy hxy t a ht hta⟩
+    fun t a ht hta => _root_.GlobalTheory.UAut.TorusLevi.torus_mem_leviFlag F E σ h n J hJ r X Y d hxx hyy hxy t a ht hta⟩
   apply le_antisymm
   · show unipFlag σ J X d ⊔ (ratPts σ J ⊓ parFlag σ J X d) ≤ _
     refine sup_le le_sup_left ?_

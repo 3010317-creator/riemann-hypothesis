@@ -1,11 +1,17 @@
 module
 
 public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Completion
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGlobalElementNearIdempotentAdicCompletionStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsTensorIdempotentOfAlgHomToBaseStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormEqMulNormIdempotentCornerStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ValuationLeOneOfSqSubSelfIntegralBasisStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGlobalElementNearIdempotentAdicCompletion
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Mathlib.RingTheory.TensorProduct.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsTensorIdempotentOfAlgHomToBase
+public import Mathlib.RingTheory.Norm.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormEqMulNormIdempotentCorner
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Valuation
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ValuationLeOneOfSqSubSelfIntegralBasis
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormCloseToOneOfCloseAbovePlace
+public import Mathlib.LinearAlgebra.Charpoly.BaseChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -19,7 +25,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.LinearAlgebra.Charpoly.BaseChange
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -82,7 +87,7 @@ theorem norm_div_close_to_one : ∀ (E E' : Type) [Field E] [NumberField E] [Fie
   let ψ : K ⊗[E] E' →ₐ[K] K := Algebra.TensorProduct.lift (Algebra.ofId K K) σA (fun _ _ => Commute.all _ _)
   have hψ : ∀ x : E', ψ ((1 : K) ⊗ₜ x) = σ x := fun x => by
     simp [ψ, σA, Algebra.TensorProduct.lift_tmul]
-  obtain ⟨e, he1, he⟩ := GlobalTheory.T.exists_tensor_idempotent_of_algHom_to_base E K E' ψ
+  obtain ⟨e, he1, he⟩ := _root_.GlobalTheory.exists_tensor_idem_of_algHom E K E' ψ
   have hee : e * e = e := by rw [he, he1, map_one, one_mul]
   obtain ⟨s, b, hb⟩ := FiniteDimensional.exists_is_basis_integral (𝓞 E) E E'
   have hb' : ∀ i, IsIntegral ℤ (b i) := fun i => isIntegral_trans _ (hb i)
@@ -91,7 +96,7 @@ theorem norm_div_close_to_one : ∀ (E E' : Type) [Field E] [NumberField E] [Fie
   have hβ : ∀ x : E', x ≠ 0 → algebraMap E K (Algebra.norm E x) / σ x =
       Algebra.norm K (e + (1 - e) * ((1 : K) ⊗ₜ x)) := by
     intro x hx
-    have h2 := GlobalTheory.T.norm_eq_mul_norm_idempotent_corner K (K ⊗[E] E') ψ e he1 he ((1 : K) ⊗ₜ x)
+    have h2 := _root_.GlobalTheory.norm_eq_mul_norm_idem_corner K (K ⊗[E] E') ψ e he1 he ((1 : K) ⊗ₜ x)
     rw [norm_one_tmul', hψ] at h2
     rw [h2, mul_div_cancel_left₀ _ ((map_ne_zero σ).2 hx)]
   let Z : K ⊗[E] E' := (1 : K) ⊗ₜ z
@@ -100,7 +105,7 @@ theorem norm_div_close_to_one : ∀ (E E' : Type) [Field E] [NumberField E] [Fie
   obtain ⟨K₀, hK₂, hK₁, hK₃⟩ : ∃ K₀ : ℕ, M ≤ K₀ ∧ M₁ ≤ K₀ ∧ 1 ≤ K₀ := ⟨M + M₁ + 1, by omega, by omega, by omega⟩
   set m : ℤ := (w'.valuation E' (z - 1)).log with hm
   obtain ⟨n, hn1, hn2⟩ : ∃ n : ℕ, M ≤ n ∧ (K₀ : ℤ) + m ≤ n := ⟨M + K₀ + m.toNat, by omega, by omega⟩
-  obtain ⟨ε, hε1, hε2, hε3⟩ := GlobalTheory.T.exists_global_element_near_idempotent_adicCompletion E E' w b ψ e hee he1 p q n
+  obtain ⟨ε, hε1, hε2, hε3⟩ := _root_.GlobalTheory.exists_global_near_idempotent E E' w b ψ e hee he1 p q n
   set y : E' := ε + (1 - ε) * z with hy
   have hy1 : y - 1 = (1 - ε) * (z - 1) := by rw [hy]; ring
   have hw'ε : w'.valuation E' (ε - 1) ≤ WithZero.exp (-(n : ℤ)) := by
@@ -122,7 +127,7 @@ theorem norm_div_close_to_one : ∀ (E E' : Type) [Field E] [NumberField E] [Fie
     · subst h2
       exact hw'y.trans (WithZero.exp_le_exp.2 (by omega))
     rw [hy1, map_mul]
-    have hi := GlobalTheory.T.valuation_le_one_of_sq_sub_self_integral_basis E E' b hb' w w'' h1 ε hε1
+    have hi := _root_.GlobalTheory.integral_of_sq_sub_integral E E' b hb' w w'' h1 ε hε1
     have h1e : w''.valuation E' (1 - ε) ≤ 1 :=
       (Valuation.map_sub _ _ _).trans (max_le (by simp) hi)
     calc w''.valuation E' (1 - ε) * w''.valuation E' (z - 1) ≤ 1 * WithZero.exp (-(M₁ : ℤ)) :=

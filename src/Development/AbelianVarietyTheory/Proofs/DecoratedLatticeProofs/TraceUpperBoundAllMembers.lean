@@ -4,8 +4,11 @@ public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.ValidF
 public import Formalism.SharpRestriction.CuspSpanNormBounds.StandingNumericalData
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HypOver
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdmissibleRanksAllMembers
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CloudAddNodeLeTenBaseSizeStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FdegHCRowsMulSuperfactorialLeVandermondeStatement
+public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.PairRowIffQdRows
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CloudAddNodeLeTenBaseSize
+public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GapAtLeast
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FdegHCRowsMulSuperfactorialLeVandermonde
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BinaryHermitianFormRepresentsTotallyPositive
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SzRowNumAt
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.EventuallyConstructedPointHostSizeNumerical
@@ -352,8 +355,8 @@ theorem tr_le_of (C : Formalism.MainNotions.Inhab.FC) (hC : C.CTu = 25) (cD ch :
     have h1 : ∀ ρ ∈ (Finset.univ : Finset D.what₂.Tau), Real.log (D.dsig ρ * facProd D.R.r / vand (uColR D u ρ)) ≤
         ((D.R.k : ℝ) * D.R.m + (D.R.m : ℝ) ^ 2) * (L.sc.L + 3) := by
       intro ρ _
-      have hnb := GlobalTheory.T.cloud_add_node_le_ten_base_size C cD ch D L hv N.sizes hX ρ
-      have hP := GlobalTheory.T.fdegHC_rows_mul_superfactorial_le_vandermonde D.R (D.hc ρ) (D.hcW u ρ) (by rw [D.hcW_v]) (by rw [D.hcW_b]) (10 * L.sc.b)
+      have hnb := _root_.GlobalTheory.cloud_add_node_le_ten_b C cD ch D L hv N.sizes hX ρ
+      have hP := _root_.GlobalTheory.FdegRowsBound.fdeg_rows_le D.R (D.hc ρ) (D.hcW u ρ) (by rw [D.hcW_v]) (by rw [D.hcW_b]) (10 * L.sc.b)
         (by linarith) hnb.1 hnb.2
       have hdim := dim_weyl_pos_of_strictAnti _ (column_param_strictAnti D u ρ)
       have hvd : 0 < vand (uColR D u ρ) := by

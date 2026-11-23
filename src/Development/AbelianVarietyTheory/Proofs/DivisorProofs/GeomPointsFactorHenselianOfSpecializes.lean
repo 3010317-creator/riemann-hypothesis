@@ -5,9 +5,9 @@ public import Mathlib.RingTheory.Henselian
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbsIntClosedLocalizationAndQuotient
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAffineRingHomPairOfSpecializes
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegralDomainExtensionWithMonicRootsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegralDomainExtensionWithMonicRoots
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRootSubMemOfEvalMem
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RingHomExtendOfIsIntegralIsAlgClosedStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RingHomExtendOfIsIntegralIsAlgClosed
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -73,9 +73,9 @@ theorem geomPoints_factor_henselian_of_specializes :
   let h' : D →+* k' := RingHom.kerLift g'
   have h'inj : Function.Injective h' := RingHom.kerLift_injective g'
   let h : D →+* k := Ideal.Quotient.lift q g (fun b hb => hker hb)
-  obtain ⟨C, _, _, hCdom, hCint, hCinj, hCroot, hCext⟩ := GlobalTheory.T.exists_integral_domain_extension_with_monic_roots D
+  obtain ⟨C, _, _, hCdom, hCint, hCinj, hCroot, hCext⟩ := _root_.GlobalTheory.exists_integral_domain_extension_monic_roots D
   obtain ⟨e', he'inj, he'⟩ := hCext k' h' h'inj
-  obtain ⟨ψ, hψ⟩ := GlobalTheory.T.exists_ringHom_extend_of_isIntegral_of_isAlgClosed D C k h (by
+  obtain ⟨ψ, hψ⟩ := _root_.GlobalTheory.ringHom_extend_of_isIntegral_isAlgClosed D C k h (by
     intro a ha; rw [RingHom.mem_ker] at ha ⊢
     rw [show a = 0 from hCinj (by rw [ha, map_zero])]; exact map_zero h)
   let P := RingHom.ker ψ

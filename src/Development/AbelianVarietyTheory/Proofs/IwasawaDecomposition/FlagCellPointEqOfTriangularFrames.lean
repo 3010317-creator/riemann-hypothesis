@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsFrameCover
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PluckerVectorBlockTriangularFrameChangeStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PluckerVectorBlockTriangularFrameChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -93,7 +93,7 @@ theorem cell_pt_eq_of_tri (O K : Type) [CommRing O] [Field K] (β : O →+* K) (
       rintro f g v v' hv hv' rfl hh
       exact (pt_eq_pt_iff f hv hv').2 hh
     refine key _ _ _ _ _ _ hO ⟨Units.mk0 (∏ l, d (en.2.1 l)) (Finset.prod_ne_zero_iff.2 fun l _ => hd _), ?_⟩
-    rw [map_plk, map_plk, GlobalTheory.T.pluckerVector_blockTriangular_frame_change T m k M _ _ d en.1 en.2.1 ht en.2.2]
+    rw [map_plk, map_plk, _root_.GlobalTheory.FlagEmb.plk_tri T m k M _ _ d en.1 en.2.1 ht en.2.2]
     rfl
 
 end GlobalTheory.FlagEmb

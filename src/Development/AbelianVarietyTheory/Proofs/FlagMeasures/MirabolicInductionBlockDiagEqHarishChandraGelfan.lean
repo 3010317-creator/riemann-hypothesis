@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsMirClass
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BlockParabolicUnitriangularSubgroupsGLnPrimeFielStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LabelDatum
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BlockParabolicUnitriangularSubgroupsGLnPrimeFiel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -70,7 +71,7 @@ theorem sum_par (a b n : ℕ) (hn : n = a + b) (Φ : Gn g a → Gn g b → ℂ) 
     (∑ x : Gn g n, if InPar a (x : Mt g n) then
       Φ (toG (tl a (x : Mt g n))) (toG (br a b (x : Mt g n))) else 0) =
       (g : ℂ) ^ (a * b) * ∑ h₁, ∑ h₂, Φ h₁ h₂ := by
-  obtain ⟨-, -, hU, -, hcard, -⟩ := GlobalTheory.T.blockParabolic_unitriangular_subgroups_GLnPrimeField g a b n hn
+  obtain ⟨-, -, hU, -, hcard, -⟩ := _root_.GlobalTheory.GLm.ParBasic.par_basic g a b n hn
   have key : ∀ x : Gn g n, (if InPar a (x : Mt g n) then
       Φ (toG (tl a (x : Mt g n))) (toG (br a b (x : Mt g n))) else 0) =
       ∑ h₁ : Gn g a, ∑ h₂ : Gn g b, if (InPar a (x : Mt g n) ∧ tl a (x : Mt g n) = (h₁ : Mt g a) ∧
@@ -122,7 +123,7 @@ theorem conj_par (a b n : ℕ) (hn : n = a + b) (p z : Gn g n) (hp : InPar a (p 
         (toG (tl a (p : Mt g n)))⁻¹ * toG (tl a (z : Mt g n)) * toG (tl a (p : Mt g n)) ∧
       toG (br a b ((p⁻¹ * z * p : Gn g n) : Mt g n)) =
         (toG (br a b (p : Mt g n)))⁻¹ * toG (br a b (z : Mt g n)) * toG (br a b (p : Mt g n))) := by
-  obtain ⟨⟨Q, hQ⟩, -, hU, hM, -, -⟩ := GlobalTheory.T.blockParabolic_unitriangular_subgroups_GLnPrimeField g a b n hn
+  obtain ⟨⟨Q, hQ⟩, -, hU, hM, -, -⟩ := _root_.GlobalTheory.GLm.ParBasic.par_basic g a b n hn
   have hpQ : p ∈ Q := (hQ p).2 hp
   have hpi : InPar a ((p⁻¹ : Gn g n) : Mt g n) := (hQ _).1 (Q.inv_mem hpQ)
   have h1Q : InPar a (1 : Mt g n) := by
@@ -192,7 +193,7 @@ theorem supFrom_eq (i n : ℕ) (M : Mt g n) :
 theorem fR_eq (ψ : AddChar (ZMod g) ℂ) (i n : ℕ) (hi : i ≤ n) (ρ : Gn g i → ℂ) (z : Gn g n) :
     fR ψ i ρ z = if InPar i (z : Mt g n) then
       ρ (toG (tl i (z : Mt g n))) * fU ψ (toG (br i (n - i) (z : Mt g n))) else 0 := by
-  obtain ⟨-, -, hU, -, -, -⟩ := GlobalTheory.T.blockParabolic_unitriangular_subgroups_GLnPrimeField g i (n - i) n (by omega)
+  obtain ⟨-, -, hU, -, -, -⟩ := _root_.GlobalTheory.GLm.ParBasic.par_basic g i (n - i) n (by omega)
   unfold fR fU InR
   by_cases hp : InPar i (z : Mt g n)
   · rw [if_pos hp, coe_toG (hU z hp).2, supFrom_eq]
@@ -238,7 +239,7 @@ theorem card_inR (i n : ℕ) (hi : i ≤ n) :
       (g : ℂ) ^ (i * (n - i)) * Fintype.card (Gn g i) *
         (Finset.univ.filter fun u : Gn g (n - i) => IsUniUp (u : Mt g (n - i))).card := by
   have hn : n = i + (n - i) := by omega
-  obtain ⟨-, -, hU, -, -, -⟩ := GlobalTheory.T.blockParabolic_unitriangular_subgroups_GLnPrimeField g i (n - i) n hn
+  obtain ⟨-, -, hU, -, -, -⟩ := _root_.GlobalTheory.GLm.ParBasic.par_basic g i (n - i) n hn
   have h := sum_par i (n - i) n hn (fun (_ : Gn g i) (h₂ : Gn g (n - i)) => if IsUniUp (h₂ : Mt g (n - i)) then (1 : ℂ) else 0)
   have e : (∑ x : Gn g n, if InR i (x : Mt g n) then (1 : ℂ) else 0) =
       ∑ x : Gn g n, if InPar i (x : Mt g n) then
@@ -385,7 +386,7 @@ theorem inMir_iff' {k : ℕ} (M : Mt g (k + 1)) : InMir M ↔ InPar k M ∧ br k
 theorem sum_mir (k : ℕ) (f : Gn g k → ℂ) :
     (∑ x : Gn g (k + 1), if InMir (x : Mt g (k + 1)) then f (toG (tl k (x : Mt g (k + 1)))) else 0) =
       (g : ℂ) ^ k * ∑ h, f h := by
-  obtain ⟨-, -, hU, -, -, -⟩ := GlobalTheory.T.blockParabolic_unitriangular_subgroups_GLnPrimeField g k 1 (k + 1) rfl
+  obtain ⟨-, -, hU, -, -, -⟩ := _root_.GlobalTheory.GLm.ParBasic.par_basic g k 1 (k + 1) rfl
   have h := sum_par k 1 (k + 1) rfl (fun (h₁ : Gn g k) (h₂ : Gn g 1) => if (h₂ : Mt g 1) = 1 then f h₁ else 0)
   have e : ∀ x : Gn g (k + 1), (if InMir (x : Mt g (k + 1)) then f (toG (tl k (x : Mt g (k + 1)))) else 0) =
       if InPar k (x : Mt g (k + 1)) then
@@ -592,7 +593,7 @@ theorem fR_conj_diag1 (ψ : AddChar (ZMod g) ℂ) (i k : ℕ) (hi : i ≤ k) (ρ
     (y : Gn g (k + 1)) (hy : InMir (y : Mt g (k + 1))) :
     fR ψ i ρ (y⁻¹ * diag1 h (k + 1) * y) =
       fR ψ i ρ ((toG (tl k (y : Mt g (k + 1))))⁻¹ * h * toG (tl k (y : Mt g (k + 1)))) := by
-  obtain ⟨-, -, hU, -, -, -⟩ := GlobalTheory.T.blockParabolic_unitriangular_subgroups_GLnPrimeField g k 1 (k + 1) rfl
+  obtain ⟨-, -, hU, -, -, -⟩ := _root_.GlobalTheory.GLm.ParBasic.par_basic g k 1 (k + 1) rfl
   have hDm : InMir ((diag1 h (k + 1) : Gn g (k + 1)) : Mt g (k + 1)) := by
     rw [coe_diag1]
     exact (inMir_iff _).2 ⟨fun b => dM_lc _ b, dM_ll _⟩
@@ -656,7 +657,7 @@ theorem fR_conj_diag1 (ψ : AddChar (ZMod g) ℂ) (i k : ℕ) (hi : i ≤ k) (ρ
 theorem card_inR_succ (i k : ℕ) (hi : i ≤ k) :
     ((Finset.univ.filter fun p : Gn g (k + 1) => InR i (p : Mt g (k + 1))).card : ℂ) =
       (g : ℂ) ^ k * (Finset.univ.filter fun p : Gn g k => InR i (p : Mt g k)).card := by
-  obtain ⟨-, -, hU, -, -, -⟩ := GlobalTheory.T.blockParabolic_unitriangular_subgroups_GLnPrimeField g k 1 (k + 1) rfl
+  obtain ⟨-, -, hU, -, -, -⟩ := _root_.GlobalTheory.GLm.ParBasic.par_basic g k 1 (k + 1) rfl
   have h := sum_mir k (fun t : Gn g k => if InR i (t : Mt g k) then (1 : ℂ) else 0)
   simp only [Finset.card_filter, Nat.cast_sum, Nat.cast_ite, Nat.cast_one, Nat.cast_zero]
   rw [← h]

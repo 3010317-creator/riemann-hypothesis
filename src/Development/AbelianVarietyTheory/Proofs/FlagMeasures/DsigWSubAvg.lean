@@ -5,13 +5,18 @@ public import Formalism.DoubleCosetMeasures.StatementZ
 public import Formalism.SharpRestriction.CuspSpanNormBounds.FrobeniusCoefficientMemLp.AmpOrbOfAmpDD
 public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselFrameTranslatedPerpOfIsFrame
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIsHaarProbabilityMaxCompactHermitianStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HasDerivAtDerivedActionMaxCompactAverageStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegralTranslateFamilyIsKFiniteHermitianStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TendstoIntegralNormalisedPowPeakStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryRealTraceBumpPeakPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryRealTraceBumpPowFiniteTranslationStablePoStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsCompactKH
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIsHaarProbabilityMaxCompactHermitian
+public import Formalism.PeriodIntegrals.UpqRep
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HasDerivAtDerivedActionMaxCompactAverage
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegralTranslateFamilyIsKFiniteHermitian
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TendstoIntegralNormalisedPowPeak
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryRealTraceBumpPeakProperties
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryRealTraceBumpPowFiniteTranslationStablePo
 public import Formalism.SharpRestriction.CuspSpanNormBounds.FamilyDoubleCosetBesselBoundOfGap
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.Admissible
 import Formalism.SharpRestriction.CuspSpanNormBounds.LowestKTypeMultiplicity
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -51,7 +56,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.Admissible
 
 @[expose] public section
 
@@ -90,9 +94,9 @@ theorem dsigW_sub_avg {μ : Measure (Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + 
 theorem kDense : Formalism.MainNotions.S.Pv.AmpDD.KDense := by
   intro k r ε lam H _ _ _ σ _ hDS v hv Ws hWs e he
   obtain ⟨-, hU, -⟩ := GlobalTheory.BesselMapOne.rep_of_isDSHpk hDS
-  obtain ⟨μ, hμ⟩ := GlobalTheory.T.exists_isHaarProbabilityMaxCompactHermitian k r
+  obtain ⟨μ, hμ⟩ := _root_.GlobalTheory.KFinAvg.exists_isHaarKH k r
   have hv' : Formalism.MainNotions.S.IsSmoothVec (k := k) (r := r) σ v := hv
-  obtain ⟨hpc, hp1, hp01, hpδ⟩ := GlobalTheory.T.unitaryRealTraceBump_peak_properties (2 * r + k + 1) (Nat.succ_pos _)
+  obtain ⟨hpc, hp1, hp01, hpδ⟩ := _root_.GlobalTheory.KFinAvg.peak_properties (2 * r + k + 1) (Nat.succ_pos _)
   have hKc : IsCompact (GlobalTheory.ThA.KH k r) := isCompact_KH k r
   have hK1 : (1 : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) ∈ GlobalTheory.ThA.KH k r :=
     ⟨by show (1 : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ)ᴴ * _ * 1 = _; simp,
@@ -109,7 +113,7 @@ theorem kDense : Formalism.MainNotions.S.Pv.AmpDD.KDense := by
     intro w hw
     have hc := (Formalism.MainNotions.LowestKTypeMultiplicity.orbit_cont hU hv' w (hWs w hw)).mono
       (Set.inter_subset_left : GlobalTheory.ThA.KH k r ⊆ _)
-    have := GlobalTheory.T.tendsto_integral_normalised_pow_smul_of_unique_peak _ μ hμ.1 _ 1 _ hKc hμ.2.1 hK1 hμ.2.2.2 hpc hp1 hpK hpU H _ hc
+    have := _root_.GlobalTheory.tendsto_integral_normalised_pow_peak _ μ hμ.1 _ 1 _ hKc hμ.2.1 hK1 hμ.2.2.2 hpc hp1 hpK hpU H _ hc
     rw [hσ1, one_apply_eq_self] at this
     exact this
   set L := Ws.length
@@ -119,7 +123,7 @@ theorem kDense : Formalism.MainNotions.S.Pv.AmpDD.KDense := by
         (Formalism.MainNotions.S.dsigW (k := k) (r := r) σ w v) < e / (L + 1) :=
     (Filter.eventually_all_finite Ws.finite_toSet).2 fun w hw => Metric.tendsto_nhds.1 (hconv w hw) _ hε
   obtain ⟨m, hm⟩ := hev.exists
-  obtain ⟨N, b, c, hbc, hpoly, htr⟩ := GlobalTheory.T.unitaryRealTraceBump_pow_finite_translation_stable_polys (2 * r + k + 1) m
+  obtain ⟨N, b, c, hbc, hpoly, htr⟩ := _root_.GlobalTheory.KFinAvg.peak_pow_polynomial (2 * r + k + 1) m
   set Z : ℝ := ∫ h, peak (2 * r + k + 1) h ^ m ∂μ
   have e1 : ∀ g, peakN μ m g = ∑ j, (c j / (Z : ℂ)) * b j g := fun g => by
     show ((peak (2 * r + k + 1) g ^ m / Z : ℝ) : ℂ) = _
@@ -127,9 +131,9 @@ theorem kDense : Formalism.MainNotions.S.Pv.AmpDD.KDense := by
     refine Finset.sum_congr rfl fun j _ => ?_
     ring
   refine ⟨∫ g, peakN μ m g • σ g v ∂μ, ?_, ?_⟩
-  · have := GlobalTheory.T.integral_translate_family_isKFinite_hermitian k r H σ μ hU hμ N b hbc htr (fun j => c j / (Z : ℂ)) v
+  · have := _root_.GlobalTheory.KFinAvg.isKFinHpk_integral_translates k r H σ μ hU hμ N b hbc htr (fun j => c j / (Z : ℂ)) v
     simpa only [← e1] using this
-  · have hD' := fun D X hD hX => GlobalTheory.T.hasDerivAt_derived_action_max_compact_average k r H σ μ (peakN μ m) v D X hU hμ
+  · have hD' := fun D X hD hX => _root_.GlobalTheory.KFinAvg.hasDerivAt_exp_integral_dsigW k r H σ μ (peakN μ m) v D X hU hμ
       (by rw [show peakN μ m = fun g => ∑ j, (c j / (Z : ℂ)) * b j g from funext e1]
           exact continuous_finsetSum _ fun j _ => continuous_const.mul (hbc j)) hv' hD hX
     have hterm : ∀ w ∈ Ws, ‖PI.UpqRep.dsigW (k := k) (r := r) σ w (v - ∫ g, peakN μ m g • σ g v ∂μ)‖ ≤ e / (L + 1) := by

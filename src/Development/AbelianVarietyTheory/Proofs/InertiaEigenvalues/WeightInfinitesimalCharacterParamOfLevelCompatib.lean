@@ -4,9 +4,10 @@ public import Formalism.LocalToGlobal.GaloisLevelStructure.TiedLevel
 public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.JumpDictionary
 public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.JumpDictCrysAtOfWeights
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HighestWeightAtConjugateEmbeddingRevNegStatement
+public import Formalism.LocalToGlobal.GaloisLevelStructure.DefsAut
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HighestWeightAtConjugateEmbeddingRevNeg
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AlgWeightContragredientExistsUnique
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AlgWeightHighestWeightExistsUniqueAntitoneStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AlgWeightHighestWeightExistsUniqueAntitone
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -86,10 +87,10 @@ theorem weightParam_of_levelTied : ∀ (D : D7) (M : Formalism.L2.MtFam D) (tup 
   intro D M tup hL hEta hLoc i ρ
   set a := GlobalTheory.WtDual.dualWt (M.loc i).wt with ha
   have hd : (M.loc i).wt.IsDual a := GlobalTheory.WtDual.isDual_dualWt _
-  obtain ⟨⟨lam, hlam, -⟩, -⟩ := GlobalTheory.T.algWeight_highestWeight_exists_unique_antitone _ _ a (embT D ρ)
-  obtain ⟨⟨lam', hlam', -⟩, -⟩ := GlobalTheory.T.algWeight_highestWeight_exists_unique_antitone _ _ a (ComplexEmbedding.conjugate (embT D ρ))
-  have huniq := (GlobalTheory.T.algWeight_highestWeight_exists_unique_antitone _ _ a (embT D ρ)).1
-  have hsw := GlobalTheory.T.highestWeightAt_conjugate_embedding_rev_neg _ _ a (embT D ρ) lam' hlam'
+  obtain ⟨⟨lam, hlam, -⟩, -⟩ := _root_.GlobalTheory.AlgWtHW.hw_exists_unique_antitone _ _ a (embT D ρ)
+  obtain ⟨⟨lam', hlam', -⟩, -⟩ := _root_.GlobalTheory.AlgWtHW.hw_exists_unique_antitone _ _ a (ComplexEmbedding.conjugate (embT D ρ))
+  have huniq := (_root_.GlobalTheory.AlgWtHW.hw_exists_unique_antitone _ _ a (embT D ρ)).1
+  have hsw := _root_.GlobalTheory.hwAt_conj_swap _ _ a (embT D ρ) lam' hlam'
   have heq : lam = fun k => -lam' (Fin.rev k) := huniq.unique hlam hsw
   have hlam'eq : lam' = fun k => -lam (Fin.rev k) := by
     funext k; rw [heq]; simp [Fin.rev_rev]

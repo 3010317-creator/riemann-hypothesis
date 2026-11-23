@@ -1,13 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermitianFormUnitaryOneOne
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CountRationalElementsBoundedDistanceStatement
+public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.ConvolutionSmoothL2
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CountRationalElementsBoundedDistance
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MajorantIntegrable
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormPosOfIsUnit
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowsAutIdemElementary
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ShellSumMajorant
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SummableAndTsumLeOfBoxCount
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TruncatedLeastLatticeSizeLipschitzPropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TruncatedLeastLatticeSizeLipschitzProperties
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormPosOfIsUnit
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -88,7 +89,7 @@ theorem kernel_abs_bound : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → ℝ) (
   intro B d h hd hn hl hb x y
   obtain ⟨-, he0, -, -⟩ := GlobalTheory.rowsAut_idem_elementary B
   have hd0 : 0 ≤ ∏ v, d v := Finset.prod_nonneg fun v _ => (hd v).2.2.2.1.le
-  have ht := (GlobalTheory.T.truncatedLeastLatticeSize_lipschitz_properties B.I hn).1
+  have ht := (_root_.GlobalTheory.TauLipschitz.tauLip B.I hn).1
   have hx := ht x
   have hy := ht y
   have hn' : (1 : ℝ) ≤ B.I.n := by exact_mod_cast hn
@@ -106,7 +107,7 @@ theorem kernel_abs_bound : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → ℝ) (
     (fun γ => ⟨norm_nonneg _, norm_phe_le_floor B d h hd hn hl hb _⟩)
     (by
       intro r hr
-      obtain ⟨hf, hcnt⟩ := GlobalTheory.T.count_rational_elements_bounded_distance B.I x y r hn hr
+      obtain ⟨hf, hcnt⟩ := _root_.GlobalTheory.Dec.BoundedDistance.countRat B.I x y r hn hr
       have hsub : Subtype.val '' {γ : B.I.GFset | ‖phe B d (x⁻¹ * γ.1 * y)‖ ≠ 0 ∧
             ∀ v, dOp (uMat ((x⁻¹ * γ.1 * y).1 v)) ≤ r v} ⊆
           {γ ∈ B.I.GFset | (x⁻¹ * γ * y).2 ∈ B.I.Kset ∧ ∀ v, dOp (uMat ((x⁻¹ * γ * y).1 v)) ≤ r v} := by

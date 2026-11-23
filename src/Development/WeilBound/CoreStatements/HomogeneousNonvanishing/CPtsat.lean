@@ -2,12 +2,12 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ConjugateHermitianLineIsometries
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexConjugationHermCompatStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexConjugationHermCompat
 public import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.CMadens
+public import Mathlib.Analysis.Calculus.FDeriv.Star
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
-public import Mathlib.Analysis.Calculus.FDeriv.Star
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
@@ -68,7 +68,7 @@ theorem ptsat_cons (y : Fin e → ℂ) : star (Fin.cons 1 y : Fin (e + 1) → �
   refine Fin.cases ?_ (fun j => ?_) i <;> simp
 
 theorem ptsat_mem {z : (Σ k, ι k) → ℂ} (hz : z ∈ mcPts P) : star z ∈ mcPts P :=
-  ((GlobalTheory.T.complex_conjugation_herm_compat K ι).1 P z).2 hz
+  ((_root_.GlobalTheory.CompanionTheory.Ar.Cmp.conj_basic K ι).1 P z).2 hz
 
 theorem ptsat_symm (h : ∀ w, Ψ' w = star (Ψ (star w))) (w) : Ψ w = star (Ψ' (star w)) := by
   rw [h, star_star, star_star]
@@ -108,7 +108,7 @@ theorem c_ptsat : SheetIndepStatement → ∀ (K : Type) [Fintype K] (ι : K →
   by_cases h1 : ∃ γ, IsSheet P Ψ' y w γ
   · have h2 : ∃ γ, IsSheet P Ψ (star y) (star w) γ := ⟨_, ptsat_sheet h h1.choose_spec⟩
     rw [dite_eq_left h1, dite_eq_left h2, hy _ _ _ h2.choose_spec (ptsat_sheet h h1.choose_spec),
-      (GlobalTheory.T.complex_conjugation_herm_compat K ι).2.2.2.1]
+      (_root_.GlobalTheory.CompanionTheory.Ar.Cmp.conj_basic K ι).2.2.2.1]
     have h3 := c_madens e (fun j y' => pot L j ((star ∘ h1.choose ∘ star) y')) y
     congr 1
     · simp only [Function.comp_apply, star_star]

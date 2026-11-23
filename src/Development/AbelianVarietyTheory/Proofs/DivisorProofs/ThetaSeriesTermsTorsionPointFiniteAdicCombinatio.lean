@@ -3,11 +3,15 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.CharZeroOfIsPrimitiveRoot
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsToricRankOne
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TateProductRigidificationTrivial
+public import Mathlib.Algebra.Algebra.Operations
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Defs
+public import Mathlib.RingTheory.Noetherian.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdicCoeffsTendstoZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegralGaugeFiniteExtensionStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.SepticCharacterInjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaSeriesTermSmulAddDecomposition
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsNumDHomDegenerationValuesFieldExtension
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.HomTransport
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdicCoeffsTendstoZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegralGaugeFiniteExtensionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaSeriesTermSmulAddDecompositionStatement
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.AdmissibleBaseOfCompleteDvr
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -95,7 +99,7 @@ theorem core {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoetherianR
   set y := q.1.1.toAdd with hy
   have hh : h ^ m = N.io y := by rw [hdef, ← pow_mul, ← sq]; exact N.mem_QT.1 q.2
   obtain ⟨mu, rh, hrf, hχ⟩ := decomp N.X m hm
-  choose w hwS hw using GlobalTheory.T.thetaSeriesTerm_smul_add_decomposition (Kb R) N S.toSubring m h y hh hθ hσ
+  choose w hwS hw using _root_.GlobalTheory.theta_term_smul_add (Kb R) N S.toSubring m h y hh hθ hσ
   obtain ⟨r, s, hs⟩ := Module.Finite.exists_fin (R := R) (M := S)
   obtain ⟨e, he⟩ : ∃ e, m ^ 2 = e + 1 := ⟨m ^ 2 - 1, by have := pow_pos hm 2; omega⟩
   let K : N.X → Kb R := fun b => ((N.wQ q / mulq N.θ N.σ m q.1.2.b : (Kb R)ˣ) : Kb R) *
@@ -126,7 +130,7 @@ theorem core {R : Type} [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoetherianR
       exact mul_mem_smul_top _ _ _ hs'
     · change m • (mu χ + (m • rh χ + y) - (m • rh χ + y)) + rh χ = χ
       rw [add_sub_cancel_right]; exact (hχ χ).symm
-  obtain ⟨c, hc, hcn⟩ := GlobalTheory.T.exists_coeffs_adic_finite_of_span_eq_univ R S r s hs N.X zS hzn
+  obtain ⟨c, hc, hcn⟩ := _root_.GlobalTheory.adic_coeffs_tendsto_zero R S r s hs N.X zS hzn
   haveI : Fintype (Set.range rh) := hrf.fintype
   refine ⟨Fin r × Set.range rh, inferInstance, fun k => K k.2 * (s k.1 : Kb R),
     fun χ k => if (⟨rh χ, Set.mem_range_self χ⟩ : Set.range rh) = k.2 then c χ k.1 else 0, fun χ => ?_, fun n => ?_⟩

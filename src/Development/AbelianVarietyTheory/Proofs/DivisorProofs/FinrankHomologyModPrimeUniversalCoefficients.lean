@@ -7,11 +7,19 @@ public import Mathlib.Algebra.Homology.ShortComplex.HomologicalComplex
 public import Mathlib.GroupTheory.Nilpotent
 public import Mathlib.LinearAlgebra.Dimension.Finrank
 public import Mathlib.RingTheory.Finiteness.Defs
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardQuotPrimeSmulEqCardKerMulPowFinrankStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardZmodTensorEqCardQuotPrimeMultiplesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NatCardHomologyOfShortExactMulStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NatCardHomologyRestrictScalarsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ShortExactMulPrimeZmodTensorComplexStatement
+public import Mathlib.Data.Nat.Prime.Defs
+public import Mathlib.LinearAlgebra.Quotient.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardQuotPrimeSmulEqCardKerMulPowFinrank
+public import Mathlib.LinearAlgebra.TensorProduct.Defs
+public import Mathlib.SetTheory.Cardinal.Finite
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardZmodTensorEqCardQuotPrimeMultiples
+public import Mathlib.Algebra.Homology.ShortComplex.ShortExact
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NatCardHomologyOfShortExactMul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NatCardHomologyRestrictScalars
+public import Mathlib.Algebra.Homology.Additive
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ShortExactMulPrimeZmodTensorComplex
+public import Mathlib.FieldTheory.Finiteness
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +60,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.FieldTheory.Finiteness
 
 @[expose] public section
 
@@ -62,14 +69,14 @@ namespace GlobalTheory
 
 theorem uct_mod_p : ∀ (C : CochainComplex (ModuleCat.{0} ℤ) ℕ) (p : ℕ) [Fact p.Prime], (∀ (n : ℕ) (x : C.X n), (p : ℤ) • x = 0 → x = 0) → (∀ n, Module.Finite ℤ (C.homology n)) → ∀ n : ℕ, (Module.finrank (ZMod p) ((((ModuleCat.extendScalars (Int.castRingHom (ZMod p))).mapHomologicalComplex (ComplexShape.up ℕ)).obj C).homology n) : ℤ) = Module.finrank (ZMod p) (TensorProduct ℤ (ZMod p) (C.homology n)) + Module.finrank (ZMod p) (TensorProduct ℤ (ZMod p) (C.homology (n + 1))) - Module.finrank ℤ (C.homology (n + 1)) := by
   intro C p _ hinj hfin n
-  obtain ⟨π, hz, hS⟩ := GlobalTheory.T.shortExact_mul_prime_zmod_tensor_complex C p hinj
-  have e := GlobalTheory.T.natCard_homology_of_shortExact_mul' p C _ π hz hS n
-  rw [GlobalTheory.T.natCard_homology_restrictScalars_alt] at e
+  obtain ⟨π, hz, hS⟩ := _root_.GlobalTheory.shortExact_mul_p_modP C p hinj
+  have e := _root_.GlobalTheory.natCard_homology_of_shortExact_mul p C _ π hz hS n
+  rw [_root_.GlobalTheory.natCard_homology_restrictScalars] at e
   haveI := hfin n
   haveI := hfin (n + 1)
-  have a1 := GlobalTheory.T.card_quot_range_prime_smul_eq_card_ker_mul_pow_finrank (C.homology n) p
-  have a2 := GlobalTheory.T.card_quot_range_prime_smul_eq_card_ker_mul_pow_finrank (C.homology (n + 1)) p
-  rw [← GlobalTheory.T.card_zmod_tensor_eq_card_quot_prime_multiples] at a1 a2 e
+  have a1 := _root_.GlobalTheory.card_quot_prime_smul_eq_card_ker_mul_pow_finrank (C.homology n) p
+  have a2 := _root_.GlobalTheory.card_quot_prime_smul_eq_card_ker_mul_pow_finrank (C.homology (n + 1)) p
+  rw [← _root_.GlobalTheory.card_zmod_tensor_eq_card_quot'] at a1 a2 e
   have hp : 1 < p := (Fact.out : p.Prime).one_lt
   have hcp : Nat.card (ZMod p) = p := by simp
   have c1 := Module.natCard_eq_pow_finrank (K := ZMod p) (V := TensorProduct ℤ (ZMod p) (C.homology n))

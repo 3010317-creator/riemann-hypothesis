@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleLocallyIffAffineEtalePointCover
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEtaleQuasiSectionOfSmoothSchemeHomStatement
+public import Mathlib.AlgebraicGeometry.Morphisms.Etale
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEtaleQuasiSectionOfSmoothSchemeHom
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,7 +57,7 @@ theorem smooth_surjective_loc_sections : ∀ {Y X : Scheme.{0}} (f : Y ⟶ X) [S
   · rintro V W g k ⟨x, hx⟩
     exact ⟨k ≫ x, by simp [Category.assoc, hx]⟩
   · intro u
-    obtain ⟨V, s, hE, hu⟩ := GlobalTheory.T.exists_etale_quasiSection_of_smooth_scheme_hom f (y u) (f.surjective (y u))
+    obtain ⟨V, s, hE, hu⟩ := _root_.GlobalTheory.exists_etale_quasiSection_of_smooth f (y u) (f.surjective (y u))
     obtain ⟨v, hv⟩ := hu
     obtain ⟨w, hw1, hw2⟩ := Scheme.Pullback.exists_preimage_pullback v u hv
     let W := pullback (s ≫ f) y

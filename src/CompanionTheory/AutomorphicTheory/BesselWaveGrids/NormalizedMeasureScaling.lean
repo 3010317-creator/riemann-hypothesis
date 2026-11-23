@@ -2,16 +2,17 @@ module
 
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.TBBTie
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.DensityConstantOfParts
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BesselNormSqEqBigCellNormSqStatement
+public import Formalism.HermitianCurvature.StatementTBB
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BesselNormSqEqBigCellNormSq
+public import Formalism.SharpRestriction.CuspSpanNormBounds.BesselShellMomentBounds
+public import Formalism.SharpRestriction.CuspSpanNormBounds.FrobeniusCoefficientMemLp.AmpBig
+public import Formalism.SharpRestriction.CuspSpanNormBounds.SpanMemOfImage
 import Formalism.FormalDegreeBessel.FinalBF
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.CompactCoefficientAppend
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.ComponentFamilySettingOfSetting
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutLemB
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.VectorVanishesBigCell
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.WittOrthonormalBasis
-public import Formalism.SharpRestriction.CuspSpanNormBounds.BesselShellMomentBounds
-public import Formalism.SharpRestriction.CuspSpanNormBounds.FrobeniusCoefficientMemLp.AmpBig
-public import Formalism.SharpRestriction.CuspSpanNormBounds.SpanMemOfImage
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -121,7 +122,7 @@ theorem energy_identity : EnergyTie := by
   intro k r L f μsec u u' p _ hc _ _ htie _ _ hsec
   obtain ⟨hz, hz', hπ, hπ', hW, hN, hW'⟩ := htie
   have e : TBB.jN2 p f = jNorm2 L f μsec := by
-    refine (GlobalTheory.T.jN2_eq_normSq_base (parOfL L u u') L.Wp L.Wq p f).trans ?_
+    refine (_root_.GlobalTheory.jN2_eq_normSq_base.besselNormSq_eq_bigCellNormSq (parOfL L u u') L.Wp L.Wq p f).trans ?_
     have h := normSq_sec (k := k) (r := r) p.hl.2.2 p.T.base f μsec (by
       have e1 : (p.T.base.z : Fin (2 * r + k + 1) → ℂ) = L.z := hz
       have e2 : (p.T.base.z' : Fin (2 * r + k + 1) → ℂ) = L.z' := hz'

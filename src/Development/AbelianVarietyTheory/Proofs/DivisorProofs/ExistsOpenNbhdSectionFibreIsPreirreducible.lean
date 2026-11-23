@@ -2,9 +2,16 @@ module
 
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAffineChartPreirreducibleFiberStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBasicOpenFibresPreirreducibleSmoothStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PreirreducibleSpaceTensorOfPullbackStatement
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAffineChartPreirreducibleFiber
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.RingTheory.Smooth.Basic
+public import Mathlib.RingTheory.Spectrum.Prime.Topology
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBasicOpenFibresPreirreducibleSmooth
+public import Mathlib.AlgebraicGeometry.Pullbacks
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PreirreducibleSpaceTensorOfPullback
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,7 +70,7 @@ theorem exists_open_nbhd_section_fibre_isPreirreducible : ∀ (X S : Scheme.{0})
       V₀ ≤ V ∧ s ∈ V₀ ∧ e s ∈ U ∧ (∀ c ∈ I, s ∉ S.basicOpen c) ∧
       ∀ t ∈ V₀, (∀ c ∈ I, t ∉ S.basicOpen c) → IsPreirreducible ((U : Set X) ∩ f ⁻¹' {t}) := by
   intro X S f e hf hef s
-  obtain ⟨V, W, hWV, hV, hW, hes, hirr⟩ := GlobalTheory.T.exists_affine_chart_preirreducible_fiber' X S f e hf hef s
+  obtain ⟨V, W, hWV, hV, hW, hes, hirr⟩ := _root_.GlobalTheory.exists_affine_chart_preirreducible_fiber X S f e hf hef s
   have hfes : f (e s) = s := by rw [← Scheme.Hom.comp_apply, hef]; rfl
   have hsV : s ∈ V := by have h := hWV hes; rwa [Scheme.Hom.mem_preimage, hfes] at h
   letI : Algebra Γ(S, V) Γ(X, W) := (f.appLE V W hWV).hom.toAlgebra
@@ -97,8 +104,8 @@ theorem exists_open_nbhd_section_fibre_isPreirreducible : ∀ (X S : Scheme.{0})
     show hV.fromSpec (Spec.map (CommRingCat.ofHom (algebraMap Γ(S, V) Ω)) (IsLocalRing.closedPoint Ω)) = s
     rw [this, hp₀def, hV.fromSpec_primeIdealOf]
   have h1 := hirr Ω _ hpt
-  have h2 := GlobalTheory.T.preirreducibleSpace_tensor_of_pullback' X S f V W hWV hV hW Ω rfl h1
-  obtain ⟨b, a, I, hb, ha, hI, hmain⟩ := GlobalTheory.T.exists_basicOpen_fibres_preirreducible_smooth Γ(S, V) Γ(X, W) hsm q Ω (hq.trans hker.symm) h2
+  have h2 := _root_.GlobalTheory.preirreducibleSpace_tensor_of_pullback X S f V W hWV hV hW Ω rfl h1
+  obtain ⟨b, a, I, hb, ha, hI, hmain⟩ := _root_.GlobalTheory.exists_basicOpen_fibres_preirreducible Γ(S, V) Γ(X, W) hsm q Ω (hq.trans hker.symm) h2
   refine ⟨X.basicOpen b, S.basicOpen a, V, I, S.basicOpen_le a, ?_, ?_, ?_, ?_⟩
   · have h := (affineOpen_fromSpec_mem_basicOpen_iff hV a p₀).mpr (by rw [← hq]; exact ha)
     rwa [hp₀def, hV.fromSpec_primeIdealOf] at h

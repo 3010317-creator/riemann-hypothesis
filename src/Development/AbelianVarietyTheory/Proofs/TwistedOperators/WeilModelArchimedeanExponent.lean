@@ -2,24 +2,28 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsPairReading
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUSplittingInl
-import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.StarPurelyImaginaryEqNeg
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.LowVanishFockOfLowVanish
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EqZeroOfLintegralEqZero
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInverseChart
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchActionReadingsCompatible
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchHeisenbergDerivativesExistStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchimedeanTracePairingBilinearNondegenerateStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFockMap
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchHeisenbergDerivativesExist
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TrPairApply
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchimedeanTracePairingBilinearNondegenerate
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumTransportAdelicSchwartzThetaTrans
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasArchimedeanCharExponentsConjOfHasInfExp
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasDerivAtThetaTransformHeisenbergRealLine
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzComplexStructureVacuumSolutionEqSmulStatement
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.CmTypeRestrictRealSubfieldInfinitePlaceBijective
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzComplexStructureVacuumSolutionEqSmul
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ArchimedeanLineEqRealScalarSmulSupported
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsDarbouxComplexStructureTwoInvolutionsStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsDarbouxComplexStructureTwoInvolutions
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFockPolynomialOperatorHeisenbergDerivative
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRationalDarbouxOrientedPairTransport
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockCreationPreservesFockVectorsTwoFrames
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LieActionFockOperatorsScalarsTrace
+import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.StarPurelyImaginaryEqNeg
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EqZeroOfLintegralEqZero
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInverseChart
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.CmTypeRestrictRealSubfieldInfinitePlaceBijective
 import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasWeil
 import Mathlib.Algebra.Order.Floor.Extended
@@ -94,8 +98,8 @@ theorem gauss_line : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Numbe
     (∀ w, X.θ w * X.θ w = 1) → (∀ w, W.θ w * W.θ w = 1) →
     ∀ f g : GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.SInf F (Fin n × Fin d), M.IsGauss ψ τ g → g ≠ 0 → M.IsGauss ψ τ f → ∃ z : ℂ, f = z • g := by
   intro F E _ _ _ _ _ σ n d X W M ψ τ hCM hStd hX hW f g ⟨ε, hg⟩ hg0 ⟨ε', hf⟩
-  obtain ⟨D, hDu⟩ := GlobalTheory.T.archHeisenbergDerivatives_exist F E σ (Fin n) (Fin d) (Fin n × Fin d) ψ _ _ M.co hStd
-  obtain ⟨J, e, e', hJ, he, hJe, he1, he2, hy⟩ := GlobalTheory.T.exists_darboux_complex_structure_two_involutions F E σ (Fin n) (Fin d) (Fin n × Fin d) τ _ _ M.co X.θ W.θ
+  obtain ⟨D, hDu⟩ := _root_.GlobalTheory.HeisDer.derEx F E σ (Fin n) (Fin d) (Fin n × Fin d) ψ _ _ M.co hStd
+  obtain ⟨J, e, e', hJ, he, hJe, he1, he2, hy⟩ := _root_.GlobalTheory.SignInvolDarboux.exists_bridge F E σ (Fin n) (Fin d) (Fin n × Fin d) τ _ _ M.co X.θ W.θ
     ε ε' hCM hX hW
   have hz : ∀ (u : Matrix (Fin n) (Fin d) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))) (t : ℝ), M.co.rho ψ (realAd F t • u) 0 = 0 := by
     intro u t; funext x; simp [Darboux.rho, schr]
@@ -103,7 +107,7 @@ theorem gauss_line : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Numbe
     (GlobalTheory.RealLift.actsLaws F _ h (D u h) h).1 _ (hz u) (hDu u hu h).1
   have hDx : ∀ u, At (evI F) u → ∀ (h : SInf F (Fin n × Fin d)) x, D u h x = fderiv ℝ h x (coord M.co u).1 -
       2 * Real.pi * Complex.I * (trPair F _ x (coord M.co u).2 : ℝ) * h x := fun u hu h x => (hDu u hu h).2 x
-  refine GlobalTheory.T.schwartz_complexStructure_vacuum_solution_eq_smul (trPair F _) (fun y h => GlobalTheory.T.archimedeanTracePairingBilinear_nondegenerate y h) J e e' hJ he hJe he1 he2 f g hg0 (fun y x => ?_)
+  refine _root_.GlobalTheory.VacCore.schwartz_vacuum_eq_smul (trPair F _) (fun y h => _root_.GlobalTheory.VacLn.trPair_nondeg y h) J e e' hJ he hJe he1 he2 f g hg0 (fun y x => ?_)
     fun y x => ?_
   · obtain ⟨u, -, u₁, hu, -, hu₁, -, hc₁, h0, -, h1⟩ := hy y
     have := congrArg (fun k : SInf F _ => k x) (hg u u₁ hu hu₁ hc₁ _ _ (hA u hu g) (hA u₁ hu₁ g))
@@ -121,7 +125,7 @@ theorem exists_der {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
       (∀ u, At (evI F) u → ∀ f f₁ : SInf F (Fin n × Fin d), ActsD (evI F) (M.heisLine ψ u) f f₁ → f₁ = Dr u f) ∧
       ∀ (ι : Type) (s : Finset ι) (u : ι → Matrix (Fin n) (Fin d) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))), (∀ i, At (evI F) (u i)) →
         ∀ f, Dr (∑ i ∈ s, u i) f = ∑ i ∈ s, Dr (u i) f := by
-  obtain ⟨D, hDu⟩ := GlobalTheory.T.archHeisenbergDerivatives_exist F E σ (Fin n) (Fin d) (Fin n × Fin d) ψ _ _ M.co hStd
+  obtain ⟨D, hDu⟩ := _root_.GlobalTheory.HeisDer.derEx F E σ (Fin n) (Fin d) (Fin n × Fin d) ψ _ _ M.co hStd
   have hz : ∀ (u : Matrix (Fin n) (Fin d) (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E))) (t : ℝ), M.co.rho ψ (realAd F t • u) 0 = 0 := by
     intro u t; funext x; simp [Darboux.rho, schr]
   have hA : ∀ u, At (evI F) u → ∀ h : SInf F (Fin n × Fin d), ActsD (evI F) (M.heisLine ψ u) h (D u h) := fun u hu h =>

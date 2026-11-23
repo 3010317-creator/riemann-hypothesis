@@ -1,8 +1,11 @@
 module
 
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.CountData
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ArchimedeanGaussianFourierStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.SchurFunctionCompactSupportModuloUnipotentStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ArchimedeanGaussianFourier
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.SchurFunctionCompactSupportModuloUnipotent
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -140,7 +143,7 @@ theorem density_of_q : ∀ (F : Type) [Field F] [NumberField F], ∀ (ι : Type)
   have hSc : (S : ℂ) ≠ 0 := by exact_mod_cast hSpos.ne'
 
   have hgi : Integrable (gW P) := by
-    have h0 := (GlobalTheory.T.archimedean_gaussian_fourier F ι M B ρ P h (fun _ => Complex.I) (fun _ => by simp)).1
+    have h0 := (_root_.GlobalTheory.CompanionTheory.SW.GaussFou.gauss_fourier F ι M B ρ P h (fun _ => Complex.I) (fun _ => by simp)).1
     have h1 := h0.re
     refine h1.congr (Filter.Eventually.of_forall fun x => ?_)
     simp [gauss_I]
@@ -189,13 +192,13 @@ theorem density_of_q : ∀ (F : Type) [Field F] [NumberField F], ∀ (ι : Type)
     refine (prod_integrable (F := F) M hM).mono' hcc.aestronglyMeasurable
       (Filter.Eventually.of_forall fun t => ?_)
     have him : ∀ w, 0 < ((t w : ℂ) + Complex.I).im := fun w => by simp
-    exact ((GlobalTheory.T.archimedean_gaussian_fourier F ι M B ρ P h _ him).2.1).le
+    exact ((_root_.GlobalTheory.CompanionTheory.SW.GaussFou.gauss_fourier F ι M B ρ P h _ him).2.1).le
   have hχi : Integrable fun t : InfinitePlace F → ℝ =>
       ∫ z, Complex.exp ((2 * (Real.pi : ℂ) * Complex.I) * ((∑ w, z w * t w : ℝ) : ℂ)) ∂m := by
     refine (hcGi.const_mul ((S : ℂ)⁻¹)).congr (Filter.Eventually.of_forall fun t => ?_)
     simp only [hcG]
     rw [inv_mul_cancel_left₀ hSc]
-  obtain ⟨D, hDc, hD0, hDf, hDm⟩ := GlobalTheory.T.schur_function_compact_support_modulo_unipotent (InfinitePlace F) m inferInstance hχi
+  obtain ⟨D, hDc, hD0, hDf, hDm⟩ := _root_.GlobalTheory.CompanionTheory.SW.CharDensity.density_of_integrable_charFun (InfinitePlace F) m inferInstance hχi
   refine ⟨D, hDc, hD0, fun U hU => ?_, hcGi, fun z => ?_⟩
   · rw [← hDm U hU, Measure.map_apply hQ.measurable hU, withDensity_apply _ (hQ.measurable hU)]
     rfl

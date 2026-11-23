@@ -3,7 +3,8 @@ module
 public import Mathlib.RingTheory.Etale.Basic
 public import Mathlib.RingTheory.Ideal.Height
 public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleOfEtaleHeightOneOfRegularLocalRingStatement
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleOfEtaleHeightOneOfRegularLocalRing
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsIntegralPi
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RegularLocalRingNormalDomain
 import Mathlib.Algebra.Order.Floor.Extended
@@ -168,7 +169,7 @@ theorem etale_integralClosure_of_isArtinianRing : ∀ (A E : Type) [CommRing A] 
       exact ⟨x, by simp [hx]⟩)
   haveI : ∀ I, Algebra.Etale A (C I) := by
     intro I
-    have key := GlobalTheory.T.etale_of_etale_height_one_of_regularLocalRing A (C I)
+    have key := _root_.GlobalTheory.BranchPurity.etale_of_etale_height_one A (C I)
     refine key ?_ ?_ ?_ ?_
     · exact IsRegularLocalRing.spanFinrank_maximalIdeal
     · rw [← IsLocalRing.maximalIdeal_height_eq_ringKrullDim]

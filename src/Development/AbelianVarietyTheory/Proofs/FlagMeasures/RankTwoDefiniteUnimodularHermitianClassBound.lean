@@ -1,13 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.SameKindIsometric
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardRankOneHermitianLatticeClassesLeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardUnimodularGluingsTwoLinesLeStatement
+public import Formalism.HermitianLattices.StatementMass
+public import Mathlib.NumberTheory.NumberField.ClassNumber
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardRankOneHermitianLatticeClassesLe
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardUnimodularGluingsTwoLinesLe
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ClassNumberLeMinkowskiCount
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteUnimodularPlaneSplitAlongVectorStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsShortVectorUnimodularHermitianLatticeRankTStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NcardRealGeneratedIdealsLeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RootDiscrGeThreeHalvesOfIsTotallyComplexStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsShortVectorUnimodularHermitianLatticeRankT
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NcardRealGeneratedIdealsLe
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RootDiscrGeThreeHalvesOfIsTotallyComplex
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -238,10 +240,10 @@ theorem card_glueData_le (hE : Formalism.HermitianLatticesTheory.IsCMUnram E) (Y
       | _ X =>
         exact ⟨Quot.mk _ ⟨X.1, X.2.1, X.2.2.1, hfull X, X.2.2.2.2⟩, rfl⟩
     exact (enat_card_le_of_rel (fun q p => f p = q) (fun q => hs q) (by intros; subst_vars; rfl)).trans
-      (GlobalTheory.T.card_rankOne_hermitian_lattice_classes_le E hE N)
+      (_root_.GlobalTheory.RankOneClasses.card_classes_le E hE N)
   refine enat_card_sigma_le _ _ ?_ fun 𝔫 => enat_card_sigma_le _ _ (hline 𝔫) fun q₁ =>
     enat_card_sigma_le _ _ (hline 𝔫) fun q₂ => ?_
-  · have hf : (realIdeals E Y).Finite := (GlobalTheory.T.ncard_realGenerated_ideals_le E hE Y hY).1
+  · have hf : (realIdeals E Y).Finite := (_root_.GlobalTheory.RealIdealCount.ncard_real_ideals_le E hE Y hY).1
     rw [hf.cast_ncard_eq]
     exact le_rfl
   · obtain ⟨a1, a2, a3, a4⟩ := (Quot.out q₁).2
@@ -249,7 +251,7 @@ theorem card_glueData_le (hE : Formalism.HermitianLatticesTheory.IsCMUnram E) (Y
     obtain ⟨φ⟩ : Nonempty (E →+* ℂ) := inferInstance
     have ha : (Quot.out q₁).1.1 ≠ 0 := fun h => by simpa [h] using a2 φ
     have hb : (Quot.out q₂).1.1 ≠ 0 := fun h => by simpa [h] using b2 φ
-    refine (GlobalTheory.T.card_unimodular_gluings_two_lines_le E hE _ _ _ _ 𝔫.1 a1 b1 ha hb a3 b3 a4).trans ?_
+    refine (_root_.GlobalTheory.GlueLines.card_gluings_le E hE _ _ _ _ 𝔫.1 a1 b1 ha hb a3 b3 a4).trans ?_
     exact_mod_cast Nat.le_floor 𝔫.2.2.2
 
 theorem defClassNum_le_card (hE : Formalism.HermitianLatticesTheory.IsCMUnram E) :
@@ -259,7 +261,7 @@ theorem defClassNum_le_card (hE : Formalism.HermitianLatticesTheory.IsCMUnram E)
     X.1 = (Matrix.diagonal ![(Quot.out t.2.1).1.1, (Quot.out t.2.2.1).1.1], t.2.2.2.1)) ?_ ?_
   · intro c
     obtain ⟨⟨⟨J, Λ⟩, hJ, hpos, hlat, huni⟩, rfl⟩ := Quot.exists_rep c
-    obtain ⟨u, hu, hu0, hub⟩ := GlobalTheory.T.exists_short_vector_unimodular_hermitian_lattice_rank_two E hE J hJ hpos Λ hlat huni
+    obtain ⟨u, hu, hu0, hub⟩ := _root_.GlobalTheory.ShortVec.exists_short_vector E hE J hJ hpos Λ hlat huni
     obtain ⟨γ, β₁, β₂, N₁, N₂, 𝔫, hγ, s₁, s₂, hp, l₁, l₂, m₁, m₂, e₁, e₂, n0, nr, nb⟩ :=
       GlobalTheory.T.definiteUnimodularPlane_split_along_vector E hE J hJ hpos Λ hlat huni u hu hu0 _ hub
     have h𝔫 : 𝔫 ∈ realIdeals E ((2 * Formalism.HermitianLatticesTheory.vInv E) ^ Formalism.HermitianLatticesTheory.fDeg E) :=
@@ -295,14 +297,14 @@ theorem defClassNum_le_card (hE : Formalism.HermitianLatticesTheory.IsCMUnram E)
 
 theorem rankTwoClasses : RankTwoClasses := by
   intro E _ _ _ hE
-  obtain ⟨hdeg, -, hrd, hsq⟩ := GlobalTheory.T.rootDiscr_ge_three_halves_of_isTotallyComplex E hE.1
+  obtain ⟨hdeg, -, hrd, hsq⟩ := _root_.GlobalTheory.rootDiscr_ge_three_halves_of_totallyComplex E hE.1
   set f := Formalism.HermitianLatticesTheory.fDeg E with hf
   set ρ := 2 * Formalism.HermitianLatticesTheory.vInv E with hρ
   have hρ1 : 1 ≤ ρ := by linarith
   have hY : 1 ≤ ρ ^ f := one_le_pow₀ hρ1
   have h1 := (defClassNum_le_card hE).trans (card_glueData_le hE _ hY)
   have h2 : ((realIdeals E (ρ ^ f)).ncard : ℝ) ≤ ρ ^ f * (1 + Real.log (ρ ^ f)) ^ f :=
-    (GlobalTheory.T.ncard_realGenerated_ideals_le E hE _ hY).2
+    (_root_.GlobalTheory.RealIdealCount.ncard_real_ideals_le E hE _ hY).2
   have h3 := GlobalTheory.classNumber_le_minkowski_count E
   rw [← hf, ← hρ] at h1
   rw [hsq, hdeg] at h3

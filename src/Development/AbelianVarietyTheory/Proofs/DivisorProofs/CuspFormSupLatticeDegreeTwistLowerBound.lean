@@ -2,11 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.MulSmulIdemMem
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHomogeneousCompIdeal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegAddLeDegOfIdealSmulLeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdealRoundingRealExponentsBadPrimesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLinearEquivMulTwistingSectionIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeterssonNormMulTwistingSectionEqConstMulStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistingSectionPreservesHermitianLatticesRanksStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsProbabilityMeasureMuPart
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegAddLeDegOfIdealSmulLe
+public import Formalism.LocalRingCardinality.DataArith
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdealRoundingRealExponentsBadPrimes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLinearEquivMulTwistingSectionIntegral
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeterssonNormMulTwistingSectionEqConstMul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistingSectionPreservesHermitianLatticesRanks
 import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -93,10 +95,10 @@ theorem degOn_add_rank_mul_degLo_le : ∀ (E : Type) [Field E] [NumberField E] [
   let _ : SMul (𝓞 c.F) C' := integerModule'.toSMul
   have : IsScalarTower (𝓞 c.F) c.F C := subRulesTower pts C
   have : IsScalarTower (𝓞 c.F) c.F C' := subRulesTower pts C'
-  obtain ⟨a, 𝔞, ha, h𝔞, hint, hsum⟩ := GlobalTheory.T.exists_ideal_rounding_realExponents_badPrimes c.F B s.lo hB s.finite_lo hInt
-  obtain ⟨φ, hφ, -, hlat, -⟩ := GlobalTheory.T.exists_linearEquiv_mul_twistingSection_integral E H Dw l Xo c r U x Z G₀ s G hG
+  obtain ⟨a, 𝔞, ha, h𝔞, hint, hsum⟩ := _root_.GlobalTheory.Rounding.exists_rounding c.F B s.lo hB s.finite_lo hInt
+  obtain ⟨φ, hφ, -, hlat, -⟩ := _root_.GlobalTheory.FlatTw.Mul.twSec_mulEquiv_integral E H Dw l Xo c r U x Z G₀ s G hG
   have ⟨hGood', hrk⟩ :=
-    GlobalTheory.T.twistingSection_preserves_hermitianLattices_ranks E H Dw l Xo c r U x D V dict Z G₀ s G hU hG hGood
+    _root_.GlobalTheory.FlatTw.Good.twist_goodOn E H Dw l Xo c r U x D V dict Z G₀ s G hU hG hGood
   have hna : ∀ σ : c.F →+* ℂ, 0 < ‖σ a‖ := fun σ => norm_pos_iff.2 ((map_ne_zero σ).2 ha)
   set t : (c.F →+* ℂ) → ℝ := fun σ => ‖σ a‖ * s.cInf σ with ht
   have ht0 : ∀ σ, 0 < t σ := fun σ => mul_pos (hna σ) (s.cInf_pos σ)
@@ -110,7 +112,7 @@ theorem degOn_add_rank_mul_degLo_le : ∀ (E : Type) [Field E] [NumberField E] [
       congrArg (fun y : Rul Xo c => a • y) (hφ f)
     have hpet : petOn U x V dict Z (G + G₀) σ ((f : Rul Xo c) * s.sig) =
         s.cInf σ * petOn U x V dict Z G σ f :=
-      GlobalTheory.T.petersson_norm_mul_twistingSection_eq_const_mul
+      _root_.GlobalTheory.FlatTw.PetTw.petAt_mul_sig
         E H Dw l Xo c r U x Z G₀ s G hG f f.2.2 σ D (V (goodOf c σ)) (dict (goodOf c σ))
         (muOn (U (goodOf c σ)) (V (goodOf c σ)) (dict (goodOf c σ)) Z)
     change petOn U x V dict Z (G + G₀) σ (ψ f) ≤
@@ -123,7 +125,7 @@ theorem degOn_add_rank_mul_degLo_le : ∀ (E : Type) [Field E] [NumberField E] [
       exact congrArg (fun y : C' => (y : Rul Xo c))
         (@mul_smul c.F C' _ fieldModule'.toDistribMulAction.toMulAction.toSemigroupAction
           (b : c.F) a (φ f)).symm)
-  have key := GlobalTheory.T.deg_add_le_deg_of_ideal_smul_le_alt c.F C C'
+  have key := _root_.GlobalTheory.TwistIdeal.deg_add_le_deg_of_ideal_smul_le c.F C C'
     (normOn U x V dict Z G) (normOn U x V dict Z (G + G₀)) ψ.toLinearMap t
     (latOn U Z G) (latOn U Z (G + G₀)) 𝔞 hGood.1 hGood'.1 ψ.injective ht0 htc hN
     hGood.2.1 hGood'.2.1 h𝔞 hL hrk

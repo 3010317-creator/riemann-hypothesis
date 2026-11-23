@@ -1,10 +1,10 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.EisensteinSeries.SiegelEisensteinContinuation.StripEntire
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoarseLipschitzExponentialEstimateStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CosetSeriesSummableShiftedStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HolomorphicSeriesUniformTubeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SectionInvarianceCosetSumStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoarseLipschitzExponentialEstimate
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CosetSeriesSummableShifted
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HolomorphicSeriesUniformTube
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SectionInvarianceCosetSum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -135,18 +135,18 @@ theorem cross (hSec : SecLaw) (hHt : HtLip) (hSt : PiLocalization₂) (hWL : Wal
       exact mul_le_mul_of_nonneg_left (hA g u hu) (abs_nonneg b)
     have hl : |x.2 - ε - x.2| ≤ ε := by rw [sub_sub_cancel_left, abs_neg, abs_of_pos hε]
     have hr : |x.2 + ε - x.2| ≤ ε := by rw [add_sub_cancel_left, abs_of_pos hε]
-    obtain ⟨U, hU, u, hu, hb⟩ := GlobalTheory.T.coarse_lipschitz_exponential_estimate G (L →L[ℂ] W) Γ (Γ ⊓ Q) P P' ξ (fun x => a * η x) (fun x => β x - b * η' x) H a b
+    obtain ⟨U, hU, u, hu, hb⟩ := _root_.GlobalTheory.CompanionTheory.EisCross.dom G (L →L[ℂ] W) Γ (Γ ⊓ Q) P P' ξ (fun x => a * η x) (fun x => β x - b * η' x) H a b
       (x.2 - ε) (x.2 + ε) M mξ m₁ m₂ (hW.convR a hRa) (hW.convL b hbR) hM
-      (GlobalTheory.T.coset_series_summable_shifted hSt G Γ Q P ξ _ _ hPQ hξinv inv₁ (hconv _ hl).1)
-      (GlobalTheory.T.coset_series_summable_shifted hSt G Γ Q P ξ _ _ hPQ hξinv inv₁ (hconv _ hr).1)
-      (GlobalTheory.T.coset_series_summable_shifted hSt G Γ Q P' ξ _ _ hP'Q hξinv inv₂ (hconv _ hl).2)
-      (GlobalTheory.T.coset_series_summable_shifted hSt G Γ Q P' ξ _ _ hP'Q hξinv inv₂ (hconv _ hr).2) g
+      (_root_.GlobalTheory.CompanionTheory.RgEis.cross_stage_pos hSt G Γ Q P ξ _ _ hPQ hξinv inv₁ (hconv _ hl).1)
+      (_root_.GlobalTheory.CompanionTheory.RgEis.cross_stage_pos hSt G Γ Q P ξ _ _ hPQ hξinv inv₁ (hconv _ hr).1)
+      (_root_.GlobalTheory.CompanionTheory.RgEis.cross_stage_pos hSt G Γ Q P' ξ _ _ hP'Q hξinv inv₂ (hconv _ hl).2)
+      (_root_.GlobalTheory.CompanionTheory.RgEis.cross_stage_pos hSt G Γ Q P' ξ _ _ hP'Q hξinv inv₂ (hconv _ hr).2) g
     refine ⟨Set.Icc b a ×ˢ Set.Icc (x.2 - ε) (x.2 + ε),
       prod_mem_nhds (Icc_mem_nhds hbx hxa) (Icc_mem_nhds (by linarith) (by linarith)), U, hU, u, hu, ?_⟩
     intro l hl g' hg' r
     obtain ⟨h1, h2⟩ := hl
     exact hb l h1.1 h1.2 h2.1 h2.2 g' hg' r
-  obtain ⟨hTG, hsum⟩ := GlobalTheory.T.holomorphic_series_uniform_tube _ _ _ t Ω hhol hcont hdom
+  obtain ⟨hTG, hsum⟩ := _root_.GlobalTheory.CompanionTheory.RgEisCross.tubeGood_tsum _ _ _ t Ω hhol hcont hdom
   have key : ∀ l ∈ tube Ω, ∀ g (w : L), outer Γ (Γ ⊓ Q) ξ H l g w =
       ∑' r : Cos (Γ ⊓ Q) Γ, Complex.exp (l.2 * ξ (rep r * g)) • H l.1 (rep r * g) w := by
     intro l hl g w
@@ -166,7 +166,7 @@ theorem cross (hSec : SecLaw) (hHt : HtLip) (hSt : PiLocalization₂) (hWL : Wal
     simp_rw [e]
     rw [tsum_const_smul'']
     congr 1
-    refine GlobalTheory.T.section_invariance_coset_sum hSt G W Γ K Q P c ρ ξ (fun x => l.1.re * η x + l.2.re * ξ x) (fun x => l.1 * η x) l.2 w
+    refine _root_.GlobalTheory.CompanionTheory.RgEisCross.stage_eis hSt G W Γ K Q P c ρ ξ (fun x => l.1.re * η x + l.2.re * ξ x) (fun x => l.1 * η x) l.2 w
       (Ms * ‖(w : W)‖) hPQ hξinv ?_ (sec_inv hP (law w hw)) (fun x => hMs x w) hconv ?_ g
     · intro γ h1 h2 x
       simp only [htinv P η hη γ h1 h2 x]
@@ -181,7 +181,7 @@ theorem cross (hSec : SecLaw) (hHt : HtLip) (hSt : PiLocalization₂) (hWL : Wal
       intro r
       rw [hW.eqL l.1 hRl]
     simp_rw [e]
-    refine GlobalTheory.T.section_invariance_coset_sum hSt G W Γ K Q P' c ρ ξ (fun x => β x - l.1.re * η' x + l.2.re * ξ x)
+    refine _root_.GlobalTheory.CompanionTheory.RgEisCross.stage_eis hSt G W Γ K Q P' c ρ ξ (fun x => β x - l.1.re * η' x + l.2.re * ξ x)
       (fun x => (β x : ℂ) - l.1 * η' x) l.2 _ (Ms' * ‖((Op l.1 w : secSp K P' c ρ) : W)‖) hP'Q hξinv ?_
       (sec_inv hP' (law' _ hw)) (fun x => hMs' x _) hconv ?_ g
     · intro γ h1 h2 x

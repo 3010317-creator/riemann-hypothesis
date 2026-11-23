@@ -3,17 +3,21 @@ module
 public import Development.AbelianVarietyTheory.Definitions.CMLattices.ExistsIsThetaDegOfIsLocalModel
 public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.OneAddZeta21PowSevenAddPowFourteenEqZero
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CmCurveLieCharacterOfAdjoinGenerator
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsFractionalIdealTraceFormRankOneStatement
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsLieRepresentationEigenLatticesStatement
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueCmHermitianLatticeFormStatement
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsFractionalIdealTraceFormRankOne
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsLieRepresentationEigenLattices
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueCmHermitianLatticeForm
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueExtendRingOfIntegersHom
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.HermFormSumSum
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IntegersOfCmFieldConjStructure
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IntegralTangentVectorCoordinates
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LieAlgebraSquaredLengthCompPairingHomStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LieAlgebraSquaredLengthCompPairingHom
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LieTensorLine
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.SingleMemSpanIffOfSelfDual
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.TwoMulDegDualLineCmIdealStatement
+public import Mathlib.NumberTheory.NumberField.CMField
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import ReciprocityTheory.GeometryOfNumbers.LatticeCovolumes.ConjSymm
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.TwoMulDegDualLineCmIdeal
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IntegersOfCmFieldConjStructure
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IntegralTangentVectorCoordinates
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -280,11 +284,11 @@ theorem two_mul_deg_eigLat : ThetaUnifAV → Out.Laws → ∀ (E : Type) [Field 
     set_option synthInstance.maxHeartbeats 100000 in
       simp only [map_add (f := _), map_mul, map_intCast, ← hw]
     simp [wK]
-  obtain ⟨𝔞, e, β, h𝔞, he, hrange, hβc, hβ, hform, hnorm⟩ := GlobalTheory.T.exists_fractionalIdeal_traceForm_rank_one E H D ε hK hrk hKF hpos
-  obtain ⟨k, hk, hku, -, -, -, -, N, xs, ys, hdual⟩ := GlobalTheory.T.exists_unique_cmHermitianLatticeForm E H D ε
+  obtain ⟨𝔞, e, β, h𝔞, he, hrange, hβc, hβ, hform, hnorm⟩ := _root_.GlobalTheory.CM.exists_ideal_traceForm_of_rank_one E H D ε hK hrk hKF hpos
+  obtain ⟨k, hk, hku, -, -, -, -, N, xs, ys, hdual⟩ := _root_.GlobalTheory.CM.exists_kForm E H D ε
   obtain rfl := hku hK hKF
   obtain ⟨c1, c2, c3, c4, c5, -⟩ := integral_tangent_coordinates K T.pol F
-  obtain ⟨r, hr, hr'⟩ := GlobalTheory.T.exists_lieRepresentation_eigenLattices K T.pol F (𝓞 E) T.t.act
+  obtain ⟨r, hr, hr'⟩ := _root_.GlobalTheory.CM.GenFib.exists_lieRep_eigLat K T.pol F (𝓞 E) T.t.act
   letI : Algebra (OK H) (𝓞 K) := τ₀.toAlgebra
   obtain ⟨hfin, hproj, -⟩ := (OK_isDedekindDomain_and_projective E H).2.2.2.2.2 D.La D.fin D.proj
   obtain ⟨f, -, f2, f3, f4, f5⟩ := lie_tensor_line (𝓞 K) (OK H) C.P.A T.t.G C.act _ D.La t.ten C.v hfin hproj C.basis hτ₀
@@ -348,11 +352,11 @@ theorem two_mul_deg_eigLat : ThetaUnifAV → Out.Laws → ∀ (E : Type) [Field 
       refine (c1 _ (hc _).1).unique (hc _) ?_
       rw [t.lin, ← Category.assoc]
       exact hr s _ _ (hc a))
-    (fun s a => GlobalTheory.T.lieAlgebraSquaredLength_comp_pairing_hom hU hL (𝓞 K) C.P T.pol (t.ten.tmul a) (C.act.act (k a a)) C.v (τ₀ (k a a))
+    (fun s a => _root_.GlobalTheory.NormHom.lieNormSq_comp hU hL (𝓞 K) C.P T.pol (t.ten.tmul a) (C.act.act (k a a)) C.v (τ₀ (k a a))
       (s.comp (algebraMap (𝓞 K) K)) (n s) _ inferInstance (C.act.hom _) (t.lam a a) (C.basis.1 0) (hτ₀ _)
       (((hn s).2 _).2 rfl) (HermNorm.isLieNormSq_form hU hL K T.pol F h hh s _ _ (hc a)))
   have hE : (Module.finrank ℚ E : ℝ) ≠ 0 := by exact_mod_cast Module.finrank_pos.ne'
-  rw [GlobalTheory.T.two_mul_deg_dual_line_cmIdeal E K _ h _ v τ' 𝔞 β n h𝔞 hv0 (fun s => (hn s).1) hβ' hvn fun z => ?_, hnorm, ← hx]
+  rw [_root_.GlobalTheory.CM.two_mul_deg_dual_line E K _ h _ v τ' 𝔞 β n h𝔞 hv0 (fun s => (hn s).1) hβ' hvn fun z => ?_, hnorm, ← hx]
   · field_simp
     ring
   · rw [(hr' τ z).1, hlat]

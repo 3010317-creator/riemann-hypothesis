@@ -3,13 +3,18 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsModelOf
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.ToKnownTheoremsOf
 public import Development.AbelianVarietyTheory.Definitions.Divisors.GenRatios
-import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverMorphismRestrictOfRelAmple
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFlatProjectiveModelOverRingOfIntegersStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsClosedImmersionGenericPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFlatProjectiveModelOverRingOfIntegers
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegralProjectiveClosureOfLinearSystemPoi
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNormalArithmeticVarietyModelProjectiveSpacStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrameConjugateEmbeddingEqConjMulUnitaryStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FubiniStudyCoordinateCombinationsNoCommonZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PulledBackCoordinateCombinationRatioAndVanishStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNormalArithmeticVarietyModelProjectiveSpac
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PointHeight
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrameConjugateEmbeddingEqConjMulUnitary
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NefFibOfIsGenerated
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FubiniStudyCoordinateCombinationsNoCommonZero
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsEqnIffGeneratesAtInv
+public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.TwistingSheafOneChartEqPreimageStandardChart
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PulledBackCoordinateCombinationRatioAndVanish
+import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverMorphismRestrictOfRelAmple
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -85,12 +90,12 @@ theorem exists_model_of_image : _root_.GlobalTheory.CovTop.PublishedHodgeBundleT
   have hy0 : y ≠ 0 := fun h0 => hR.1 (LinearMap.ext_on_range hspan fun k => by
     simpa using congrFun h0 k)
   obtain ⟨Y, _, q, B₀, hB₀, t, ψ₀, h1, h2, h3, h4, h5, h6⟩ := GlobalTheory.T.exists_integral_projective_closure_of_linearSystem_point K V Ω ev D m u hspan hR hD
-  obtain ⟨X₀, _, p₀, g₀, ψ₁, e⟩ := GlobalTheory.T.exists_flat_projective_model_over_ringOfIntegers K Ω D m y Y q B₀ hB₀ t ψ₀ h1 h2 h3 h4 h5 h6
-  obtain ⟨X, _, p, g, ψ, hgp, har, hnorm, hbij, hbase, hrat⟩ := GlobalTheory.T.exists_normal_arithmeticVariety_model_projectiveSpace K Ω D m y X₀ p₀ g₀ ψ₁ e
+  obtain ⟨X₀, _, p₀, g₀, ψ₁, e⟩ := _root_.GlobalTheory.SpreadModel.exists_spread K Ω D m y Y q B₀ hB₀ t ψ₀ h1 h2 h3 h4 h5 h6
+  obtain ⟨X, _, p, g, ψ, hgp, har, hnorm, hbij, hbase, hrat⟩ := _root_.GlobalTheory.NormalModel.exists_normal_model K Ω D m y X₀ p₀ g₀ ψ₁ e
   let B := (ProjSpace.O1 (𝓞 K) m).pull g
   have hB : B.IsLB := LB.isLB_pull (ProjSpace.O1_isLB _ m) g
   let sk : Fin (m + 1) → B.Sec := fun k => secPull (ProjSpace.coord (𝓞 K) m k) g
-  obtain ⟨hlin, hrel⟩ := GlobalTheory.T.pulledBack_coordinate_combination_ratio_and_vanish K Ω m y X p g ψ hbase hrat
+  obtain ⟨hlin, hrel⟩ := _root_.GlobalTheory.PullCoordComb.linComb_ratio_and_vanish K Ω m y X p g ψ hbase hrat
   have hev : ∀ lam : Fin (m + 1) → 𝓞 K, ev (∑ k, lam k • u k) = ∑ k, algebraMap K Ω (lam k : K) * y k := by
     intro lam
 
@@ -119,11 +124,11 @@ theorem exists_model_of_image : _root_.GlobalTheory.CovTop.PublishedHodgeBundleT
     ProjSpace.iSup_nonzeroLocus_secPull (ProjSpace.iSup_nonzeroLocus_coord (𝓞 K) m) g
   let A' : (𝓞 K →+* ℂ) → Matrix (Fin (m + 1)) (Fin N) ℂ := fun τ =>
     c.map (OfLattice.extEmb τ) * A (OfLattice.extEmb τ)
-  have hnz := GlobalTheory.T.fubiniStudy_coordinate_combinations_noCommonZero K V m N X p g u b c A hgp hrelV (fun j => (hcc j).symm) hF.herm
+  have hnz := _root_.GlobalTheory.FubiniStudyFrame.noCommonZero_comb K V m N X p g u b c A hgp hrelV (fun j => (hcc j).symm) hF.herm
   have hcU : ∀ τ : 𝓞 K →+* ℂ, ∃ U ∈ Matrix.unitaryGroup (Fin N) ℂ,
       A' ((starRingEnd ℂ).comp τ) = (A' τ).map (starRingEnd ℂ) * U := by
     intro τ
-    obtain ⟨U, hU, eU⟩ := GlobalTheory.T.frame_conjugate_embedding_eq_conj_mul_unitary K N A hF.conj hF.herm (OfLattice.extEmb τ)
+    obtain ⟨U, hU, eU⟩ := _root_.GlobalTheory.ConjUnitary.conj_frame_unitary K N A hF.conj hF.herm (OfLattice.extEmb τ)
     have he : OfLattice.extEmb ((starRingEnd ℂ).comp τ) = (starRingEnd ℂ).comp (OfLattice.extEmb τ) :=
       OfLattice.extEmb_eq (by rw [RingHom.comp_assoc, OfLattice.extEmb_comp])
     refine ⟨U, hU, ?_⟩

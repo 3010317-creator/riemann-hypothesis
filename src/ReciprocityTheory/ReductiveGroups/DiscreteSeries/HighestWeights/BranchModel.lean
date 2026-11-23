@@ -4,7 +4,8 @@ public import Formalism.LocalRingCardinality.DataCoeff
 public import Formalism.PeriodIntegrals.UpqRep
 public import Formalism.GradedWeylDivisibility.DualWeylDominanceOf
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.HwIrred
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.PolyCoef
+public import Formalism.PeriodIntegrals.WeylForU
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CompactGroupIntegrability.IsPositiveDefiniteMatrixCoefficientOfMemAlgA
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.UnitaryDense
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PolynomialModelIsometry.Assembly
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PolynomialModelIsometry.DetSplit
@@ -12,6 +13,7 @@ public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PolynomialModelI
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PolynomialModelIsometry.ModelMap
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PolynomialModelIsometry.PolyExt
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PolynomialModelIsometry.TorusEigenvalueFormula
+public import Formalism.PeriodIntegrals.HwIrred
 import Mathlib.Algebra.AffineMonoid.UniqueSums
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -57,7 +59,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Formalism.LocalRingCardinality.Params
-public import Formalism.PeriodIntegrals.HwIrred
 
 @[expose] public section
 
@@ -77,7 +78,7 @@ theorem highest_weight_model_equiv (N : ℕ) (Λ : Fin N → ℝ) (H : Type) [No
         ∀ (g : GL (Fin N) ℂ) (hg : (g : Matrix (Fin N) (Fin N) ℂ) ∈ Kset (allPos N)) (x : S),
           ((e ⟨σ g x, hK.2.1 _ hg _ x.2⟩ : nablaSq ℂ N lam) : MvPolynomial (Fin N × Fin N) ℂ) =
             sqAct ℂ N lam g (e x) := by
-  have hA : PolyExt := polyExt_of polynomial_coefficients unitaryGroupDense_holds
+  have hA : PolyExt := polyExt_of _root_.PI.UnitaryGroupMassFormula.PolyCoef.polyCoef unitaryGroupDense_holds
   have hI : LamInt := lambda_integrality
   have hT : TorusEig := torus_eigenvalue_formula
   have hL : LowerInv := lower_triangular_invariance

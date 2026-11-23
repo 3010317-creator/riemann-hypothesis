@@ -2,10 +2,10 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.AdelicLattices.FactPrimes
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PlaceOverPInducedByAlgebraicPadicEmbedding
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AlgebraicNumbersPadicPlacesFacts
-public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.ProductFormulaLogNormsStatement
+public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.ProductFormulaLogNorms
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ExistsPowPrincipal
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ProdNormEmbeddingsEqAbsNorm
+import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AlgebraicNumbersPadicPlacesFacts
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -163,7 +163,7 @@ theorem deg_eq_places : ∀ (F : Type) [Field F] [NumberField F] (N : LogNorms F
     rw [this]
     exact hv
   have h1 := sum_log_embeddings_eq F n α hα hn'
-  have h2 := (GlobalTheory.T.product_formula_log_norms F α hα).2
+  have h2 := (_root_.GlobalTheory.CompanionTheory.Ar.Fl.product_formula_embeddings F α hα).2
   have h3 : ∀ p, (LogNorms.ofElt α).finSum p = M * N.finSum p := by
     intro p
     simp only [LogNorms.finSum, LogNorms.ofElt, Finset.mul_sum, key]

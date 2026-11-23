@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.GalMapMul
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAlgClosedFractionRingOfMonicPolynomialsHaveRoo
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAlgClosedFractionRing
+public import Mathlib.RingTheory.Smooth.IntegralClosure
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -23,7 +24,6 @@ import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Etale.Weakly
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.SimpleRing.Principal
-public import Mathlib.RingTheory.Smooth.IntegralClosure
 import Mathlib.RingTheory.TotallySplit
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Echelon.Zsqrtd
@@ -166,7 +166,7 @@ theorem UpperTheory.exists_orthogonalIdempotents_isDomain_of_etale :
     ∀ (T C : Type) [CommRing T] [IsDomain T] [CommRing C] [Algebra T C] [Algebra.Etale T C], GlobalTheory.EtC.AIC T →
       ∃ (n : ℕ) (e : Fin n → C), CompleteOrthogonalIdempotents e ∧ ∀ j, IsDomain (Localization.Away (e j)) := by
   intro T C _ _ _ _ _ hT
-  haveI := GlobalTheory.isAlgClosed_fractionRing_of_AIC T hT
+  haveI := _root_.GlobalTheory.FractionRingRootRange.isAlgClosed_fractionRing T hT
   haveI := isIntegrallyClosed_of_AIC T hT
   let e0 := Algebra.FormallyEtale.equivPiOfIsSepClosed (FractionRing T) (FractionRing T ⊗[T] C)
   haveI := Algebra.FormallyUnramified.finite_of_free (FractionRing T) (FractionRing T ⊗[T] C)

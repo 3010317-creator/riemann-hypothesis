@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RigOfOmegaInjectiveOfEqZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdditiveFunctionCartierDualTangentBijectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdditiveFunctionCartierDualTangentBijective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -102,7 +102,7 @@ theorem liftSemi_prim_toBaseChange_bijective {R A : Type} (R' : Type) [CommRing 
     Function.Bijective (liftSemi (toBaseChange R R' A).prim) := by
   let u := (CartierDual.toDual R (Cot R (CartierDual R A))).symm.toLinearMap ∘ₗ primTangent R A
   have hu : Function.Bijective u :=
-    (CartierDual.toDual R _).symm.bijective.comp (GlobalTheory.T.additiveFunctionCartierDualTangent_bijective (R := R) (A := A))
+    (CartierDual.toDual R _).symm.bijective.comp (_root_.GlobalTheory.PDiv.primTangent_bijective (R := R) (A := A))
   have key : ⇑(primTangent R' (R' ⊗[R] A)) ∘ ⇑(liftSemi (toBaseChange R R' A).prim) =
       ⇑(CartierDual.toDual R' _) ∘
         ⇑(CartierDual.transpose (cotBaseChange (R := R) (A := A) R').toLinearMap) ∘
@@ -123,7 +123,7 @@ theorem liftSemi_prim_toBaseChange_bijective {R A : Type} (R' : Type) [CommRing 
         (cotBaseChange R' (dUnit (R := R') (CartierDual.baseChange R R' A ((1 : R') ⊗ₜ φ)))) = _
       rw [cotBaseChange_d, CartierDual.baseChangeLinear_tmul_tmul, mul_one]
       exact congrArg (· • r) (primTangent_d b φ)
-  refine (Function.Bijective.of_comp_iff' (GlobalTheory.T.additiveFunctionCartierDualTangent_bijective (R := R') (A := R' ⊗[R] A)) _).1 ?_
+  refine (Function.Bijective.of_comp_iff' (_root_.GlobalTheory.PDiv.primTangent_bijective (R := R') (A := R' ⊗[R] A)) _).1 ?_
   rw [key]
   exact (CartierDual.toDual R' _).bijective.comp <|
     (CartierDual.transpose_bijective (cotBaseChange R').bijective).comp <|

@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ShareWSt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BadShareSizeBoundsAlongFamilyStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.TupleReadBaseTupleEqFamily
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BadShareSizeBoundsAlongFamily
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankInfRangeAddInfKer
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RankAtPlacesFromComparison
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.Links2OfRowsStatement
@@ -109,7 +110,7 @@ namespace GlobalTheory.BigOn
 attribute [local instance] Formalism.BasicNotions.Host.cmStar
 theorem badSt_of_badW_alt : _root_.GlobalTheory.ShareOn.BadWeightStatement → _root_.GlobalTheory.BigOn.BadPlacesStatement := by
   intro hB
-  refine (hB.and GlobalTheory.T.badShareSize_bounds_along_family).imp fun Fm CH _ H => ?_
+  refine (hB.and _root_.GlobalTheory.BadNumOnto.badShare_numbers_onto).imp fun Fm CH _ H => ?_
   obtain ⟨⟨x1, H1⟩, ⟨x2, H2⟩⟩ := H
   refine ⟨0, fun c _ _ => ⟨max x1 x2, fun x hx hle i p hR hm r O hrec => ?_⟩⟩
   have hb := H1 x hx ((le_max_left _ _).trans hle) i p hR hm r hrec.1.ok hrec.2

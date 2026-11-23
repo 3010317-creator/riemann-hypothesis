@@ -4,8 +4,9 @@ public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsSepara
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsCyclotomicBaseRingInvertingPrime
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSiegelFamilyLocalisedCyclotomicIntegersStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.NonemptySiegelFamilyOverArithmeticBaseStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSiegelFamilyLocalisedCyclotomicIntegers
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.ExistsArBaseAway
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.NonemptySiegelFamilyOverArithmeticBase
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,7 +67,7 @@ theorem isAlgebraic_of_mem_ZP {p M : ℕ} (hM : M ≠ 0) {x : ℂ} (hx : x ∈ Z
 
 theorem exists_siegelFamily_sRep : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{0}) (P : Out.PolAV S) (M : LB P.A.left), M.IsLB → ∃ t : LB.Gen (Theta P.A M), t.IsGen) → ThetaUnifAV → ∀ (h n : ℕ), 1 ≤ h → n.Prime → Odd n → ∃ j₀ : ℕ, ∀ j ≥ j₀, ∀ p : ℕ, p.Prime → n ≠ p → ∃ Ag : SiegelFamily h p ((n ^ j) ^ 2), SRep Ag := by
   intro L L2 hθ hU h n hh hn hodd
-  obtain ⟨j₀, hj₀⟩ := GlobalTheory.T.nonempty_siegelFamily_over_arithmetic_base L L2 hθ hU h n hh hn hodd
+  obtain ⟨j₀, hj₀⟩ := _root_.GlobalTheory.ZM.SiegelArithFamily.nonempty_sFam L L2 hθ hU h n hh hn hodd
   refine ⟨max j₀ 1, fun j hj p hp hnp => ?_⟩
   have hj1 : 1 ≤ j := le_trans (le_max_right _ _) hj
   obtain ⟨o, _, b, em, i, hem, hζ, hi, hconst⟩ :=
@@ -86,6 +87,6 @@ theorem exists_siegelFamily_sRep : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{
       rw [← hi]
       exact isAlgebraic_of_mem_ZP (by omega) (i x).2
     exact (isAlgebraic_algHom_iff em.toIntAlgHom hem.2.2).1 hx⟩
-  exact GlobalTheory.T.exists_siegelFamily_localised_cyclotomic_integers L L2 h _ p o _ i (hodd.pow.pow) hk hp hinj hζ hconst halg F
+  exact _root_.GlobalTheory.SiegelFamilyBaseChange.exists_siegelFamily L L2 h _ p o _ i (hodd.pow.pow) hk hp hinj hζ hconst halg F
 
 end GlobalTheory.ZM.SiegelLargeLevel

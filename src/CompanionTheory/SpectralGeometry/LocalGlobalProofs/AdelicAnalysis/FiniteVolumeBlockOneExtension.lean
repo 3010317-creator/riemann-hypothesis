@@ -3,17 +3,20 @@ module
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.HypJ
 public import Formalism.UnipotentAdelicQuotients.SiegelWeilUnitaryConvergent
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelesLocallyCompactSecondCountable
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicUnitaryGroupLocallyCompactStatement
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicUnitaryGroupLocallyCompact
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ArithmeticUnitaryGroupDiscrete
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.BlockOneRightInjective
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FundamentalDomainOfSubgroupFromCosetRepsStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.GramOrbitCompactRepresentativeStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HaarFundamentalDomainExistsUnitaryStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HyperbolicAndBlockOneNondegenerateStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InvariantMeasureCompactCoverBoundStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.RationalGramAdelicCompactFiniteStatement
+public import Mathlib.MeasureTheory.Group.FundamentalDomain
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FundamentalDomainOfSubgroupFromCosetReps
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.GramOrbitCompactRepresentative
+public import Formalism.UnipotentAdelicQuotients.SWXSDefs
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HaarFundamentalDomainExistsUnitary
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HyperbolicAndBlockOneNondegenerate
+public import CompanionTheory.AutomorphicTheory.ThetaDilations.Nuabs
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.WittExtensionGlobal
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.RationalGramAdelicCompactFinite
 import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.WittExtensionGlobalStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -102,8 +105,8 @@ theorem mean_lt_top {G G₁ : Type} [Group G] [TopologicalSpace G] [IsTopologica
     have h2 : 0 < μ₁ (ι ⁻¹' U) := μ₁.measure_pos_of_mem_nhds h1
     have h3 : μ₁ (ι ⁻¹' U) ≤ (μ₁.map ι) U := Measure.le_map_apply hme.measurable.aemeasurable U
     exact (h2.trans_le h3).ne'
-  obtain ⟨C', K, hC', hK, hcover⟩ := GlobalTheory.T.invariant_measure_compact_cover_bound G μ ι.range (μ₁.map ι) hνinv hνpos C hC
-  obtain ⟨𝓕', h𝓕', hunf⟩ := GlobalTheory.T.fundamental_domain_of_subgroup_from_coset_reps G μ Γ (Γ ⊓ ι.range) inf_le_left 𝓕 h𝓕 Q r hr hQ
+  obtain ⟨C', K, hC', hK, hcover⟩ := _root_.CompanionTheory.PlacePermOperatorBicommutantSpan.cover G μ ι.range (μ₁.map ι) hνinv hνpos C hC
+  obtain ⟨𝓕', h𝓕', hunf⟩ := _root_.GlobalTheory.CompanionTheory.Adelic.unfold_coset_sum_fundamentalDomain G μ Γ (Γ ⊓ ι.range) inf_le_left 𝓕 h𝓕 Q r hr hQ
   rw [hunf f hf]
   haveI : Countable ↥(Γ ⊓ ι.range) :=
     (Subgroup.inclusion_injective (inf_le_left : Γ ⊓ ι.range ≤ Γ)).countable
@@ -161,7 +164,7 @@ end Rat
 
 theorem count_lt_top : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → FinVol F E σ M J → ∀ t : F, t ≠ 0 → ∀ (μ : Measure (HA (AF F) σ (blockOne (algebraMap F E t) J))) (𝓕 : Set (HA (AF F) σ (blockOne (algebraMap F E t) J))), IsHaarH F E σ (M + 1) (blockOne (algebraMap F E t) J) μ → IsFDH F E σ (M + 1) (blockOne (algebraMap F E t) J) μ 𝓕 → ∀ Ω : Set (Fin 1 → Fin (M + 1) → AF F ⊗[F] E), IsCompact Ω → cntI σ _ μ 𝓕 {X | gramE σ (blockOne (algebraMap F E t) J) X = fun _ _ => algebraMap F E t} (Set.indicator Ω (fun _ => (1 : ℝ≥0∞))) < ⊤ := by
   intro F E _ _ _ _ _ σ hσ M J hJ hvol t ht μ 𝓕 hμ h𝓕 Ω hΩ
-  have hJb : IsHermND σ (blockOne (algebraMap F E t) J) := (GlobalTheory.T.hyperbolic_and_block_one_nondegenerate F E σ hσ M J hJ).2 t ht
+  have hJb : IsHermND σ (blockOne (algebraMap F E t) J) := (_root_.GlobalTheory.CompanionTheory.SW.BlockForm.blockForms_isHermND F E σ hσ M J hJ).2 t ht
   obtain ⟨⟨a1, a2, a3⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
   haveI := a1
   haveI := a2
@@ -170,8 +173,8 @@ theorem count_lt_top : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
   haveI : Nontrivial (AF F) := inferInstanceAs (Nontrivial (Ainf F × Af F))
   haveI : Nontrivial (AF F ⊗[F] E) := inferInstance
   obtain ⟨tg, lc, sc, t2, bs, hact⟩ :=
-    GlobalTheory.T.adelic_unitary_group_locally_compact F E σ hσ (M + 1) (blockOne (algebraMap F E t) J) hJb (AF F)
-  obtain ⟨tg₁, lc₁, sc₁, t2₁, bs₁, -⟩ := GlobalTheory.T.adelic_unitary_group_locally_compact F E σ hσ M J hJ (AF F)
+    _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hσ (M + 1) (blockOne (algebraMap F E t) J) hJb (AF F)
+  obtain ⟨tg₁, lc₁, sc₁, t2₁, bs₁, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hσ M J hJ (AF F)
   haveI := tg
   haveI := lc
   haveI := sc
@@ -207,7 +210,7 @@ theorem count_lt_top : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     intro X Y h
     funext a i
     exact hinj (congrFun (congrFun h a) i)
-  obtain ⟨hgr1, hgr2, -⟩ := GlobalTheory.T.rational_gram_adelic_compact_finite F E σ hσ (M + 1) (blockOne (algebraMap F E t) J) hJb
+  obtain ⟨hgr1, hgr2, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.FinQ.gram_rational_finite F E σ hσ (M + 1) (blockOne (algebraMap F E t) J) hJb
   obtain ⟨ι, hιc, hιm, hιs, hιr, -⟩ := GlobalTheory.CompanionTheory.SW.StabFirst.stab_first F E σ hσ M J hJ t ht (AF F)
   have hstab : ∀ h, h ∈ ι.range ↔ actW (AF F) σ (blockOne (algebraMap F E t) J) h e0 = e0 := by
     intro h
@@ -228,7 +231,7 @@ theorem count_lt_top : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     intro q
     have hq : gramE σ (blockOne (algebraMap F E t) J) q.1 = gramE σ (blockOne (algebraMap F E t) J) e0E :=
       q.2.trans hg0.symm
-    exact GlobalTheory.T.witt_extension_global F E σ hσ (M + 1) _ hJb 1 q.1 e0E hq (hq ▸ hdet)
+    exact _root_.GlobalTheory.CompanionTheory.SW.WittE.witt_tuple F E σ hσ (M + 1) _ hJb 1 q.1 e0E hq (hq ▸ hdet)
   choose g hg hgq using hrep
   let r : Q → HA (AF F) σ (blockOne (algebraMap F E t) J) := fun q => ratH (AF F) σ _ (g q) (hg q)
   have hrq : ∀ q : Q, actW (AF F) σ (blockOne (algebraMap F E t) J) (r q) (ratTup (AF F) q.1) = e0 := by
@@ -269,7 +272,7 @@ theorem count_lt_top : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
         actW (AF F) σ (blockOne (algebraMap F E t) J) x⁻¹ e0 := by
       rw [mul_inv_rev, hmul, (hstab _).1 hp']
     simp only [f, this]
-  obtain ⟨C₀, hC₀, hC₀p⟩ := GlobalTheory.T.gram_orbit_compact_representative F E σ hσ (M + 1) _ hJb 1 e0E hdet Ω hΩ
+  obtain ⟨C₀, hC₀, hC₀p⟩ := _root_.GlobalTheory.CompanionTheory.SW.Proper.compact_gram_fibre F E σ hσ (M + 1) _ hJb 1 e0E hdet Ω hΩ
   have hsupp : ∀ x, f x ≠ 0 → ∃ p ∈ ι.range, ∃ c ∈ (fun c => c⁻¹) '' C₀, x = p * c := by
     intro x hx
     have hxΩ : actW (AF F) σ (blockOne (algebraMap F E t) J) x⁻¹ e0 ∈ Ω := by
@@ -321,7 +324,7 @@ theorem count_lt_top : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
 
   obtain ⟨⟨μ₁, hμ₁⟩, hall⟩ := hvol
   haveI : μ₁.IsHaarMeasure := hμ₁
-  obtain ⟨𝓕₁, hm₁, hFD₁, hcov₁⟩ := ((GlobalTheory.T.haar_fundamental_domain_exists_unitary F E σ hσ M J hJ).2 μ₁ hμ₁).2.1
+  obtain ⟨𝓕₁, hm₁, hFD₁, hcov₁⟩ := ((_root_.GlobalTheory.CompanionTheory.SW.haar_fundamental_exist F E σ hσ M J hJ).2 μ₁ hμ₁).2.1
   have hfin : μ₁ 𝓕₁ < ⊤ := (hall μ₁ hμ₁).2 𝓕₁ hFD₁
   have key := mean_lt_top μ μ₁ ι hιc Γ Γ₁ hΓ 𝓕 h𝓕 𝓕₁ hm₁ hfin
     (fun u => by

@@ -2,11 +2,11 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.IsSmoothVec
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsAdmOnOfFiniteDimensional
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.DerivedActionOfSmoothVectorStatement
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.DerivedActionOfSmoothVector
+public import Mathlib.Analysis.Calculus.Deriv.Prod
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Prod
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
@@ -84,7 +84,7 @@ theorem abs_two_re_form_dRep_le : ∀ {n : ℕ} {G : Set (Matrix (Fin n) (Fin n)
   intro n G H _ _ π hG hrep Q Mb a hadd hsmul hconj hbd hgrow X hX x hx
   have hB := isBoundedBilinearMap_re_form Q Mb hadd hsmul hconj hbd
   have hv : HasDerivAt (fun t : ℝ => π (NormedSpace.exp (t • X)) x) (dRep π X x) 0 :=
-    (GlobalTheory.T.derived_action_of_smooth_vector hG hrep hx hX).1
+    (_root_.GlobalTheory.CompanionTheory.Hypotheses₂.HCA.hasDerivAt_dRep_and_isSmoothVec hG hrep hx hX).1
   have hv0 : π (NormedSpace.exp ((0 : ℝ) • X)) x = x := by
     rw [zero_smul, NormedSpace.exp_zero, hrep.1]
     rfl

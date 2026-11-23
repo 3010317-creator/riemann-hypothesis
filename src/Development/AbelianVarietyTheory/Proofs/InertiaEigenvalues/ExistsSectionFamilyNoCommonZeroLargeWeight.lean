@@ -6,7 +6,8 @@ public import Formalism.LocalToGlobal.ProjectiveLattices.ThProps
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemGroupOfCongruent
 public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ChartIndependenceUnconditional
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.EvaluationLawsGenericFramesAtlasHold
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsDominantWeightCuspSectionsNoCommonZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsDominantWeightCuspSectionsNoCommonZero
+public import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.UnfoldingConstantTermsAgreeAtGoodEmbeddings
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.FramedPointEvalNaturalWeightScaling
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.MemHolSubIff
@@ -55,7 +56,6 @@ import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.CoeSelfD
 import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.PermutesRefl
 import Development.AbelianVarietyTheory.Definitions.HeightFunctions.XiValIffXiAt
 import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IntFormsSubset
-public import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt
 
 @[expose] public section
 
@@ -116,7 +116,7 @@ set_option synthInstance.maxHeartbeats 200000 in
 set_option maxHeartbeats 1000000 in
 theorem exists_family : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, Formalism.L2.Pj.InR D j → ∀ σ : T.Q.c.F →+* ℂ, GoodEmb T.Q.c σ → ∀ (a : (D.host.E →+* ℂ) × ℕ → ℕ) (n : ℕ), Dom a n → ∃ (b : (D.host.E →+* ℂ) × ℕ → ℕ) (m N : ℕ) (t : Fin N → Rul (T.Q.Xo j) T.Q.c), Dom b m ∧ (∀ i, t i ∈ sec (T.Q.Xo j) T.Q.c b m) ∧ (∀ (p : TRing T.Q.c.F) (y : FrPt (T.Q.Xo j) T.Q.c p.R), Ideal.span (Set.range fun i => t i p y) = ⊤) ∧ ∀ P ∈ holSub0 (T.U j σ).X (laU (T.U j σ) a n), ∀ i, P * rdU (T.U j σ) (t i) ∈ Submodule.span ℂ (rdU (T.U j σ) '' (sec (T.Q.Xo j) T.Q.c (a + b) (n + m) : Set (Rul (T.Q.Xo j) T.Q.c))) := by
   intro D T h j hj σ hσ a n hdom
-  obtain ⟨b, m, hbm, hlast, hm, hnz⟩ := GlobalTheory.T.exists_dominantWeight_cuspSections_noCommonZero D T h j hj σ hσ
+  obtain ⟨b, m, hbm, hlast, hm, hnz⟩ := _root_.GlobalTheory.BpfUniform.exists_weight_noCommonZero D T h j hj σ hσ
   haveI : FiniteDimensional T.Q.c.F (T.cuspA j b m) := h.cuspFD j hj b m hbm
   haveI : Module.Free T.Q.c.F (T.cuspA j b m) := Module.Free.of_divisionRing _ _
   let B := Module.finBasis T.Q.c.F (T.cuspA j b m)

@@ -1,13 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCommonDenominatorConjLocalCoordsLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegerDenominatorNotMemOfValuationLeOneStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInverseDifferentMaxValuationStatement
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Valuation
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCommonDenominatorConjLocalCoordsLattice
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegerDenominatorNotMemOfValuationLeOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInverseDifferentMaxValuation
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalBasisAtPrimeOfIsLattice
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualLatticeInverseGramLocalBasisIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationAlgHomEqOfInertPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationAlgebraMapEqOfInertPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualLatticeInverseGramLocalBasisIntegral
+public import Formalism.SatakeDualWeyl.StatementG
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationAlgHomEqOfInertPrime
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationAlgebraMapEqOfInertPlace
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HermitianFormFiniteZerosOnLineCmExt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -62,16 +65,16 @@ variable {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algeb
 
 theorem val_sigma (σ : E →ₐ[F] E) (v : HeightOneSpectrum (𝓞 F)) (w : HeightOneSpectrum (𝓞 E))
     (h : Formalism.UG.IsInertAt F E v w) (x : E) : w.valuation E (σ x) = w.valuation E x :=
-  GlobalTheory.T.valuation_algHom_eq_of_inertPrime F E σ v w h x
+  _root_.GlobalTheory.InertConjVal.val_conj F E σ v w h x
 
 theorem val_algebraMap (v : HeightOneSpectrum (𝓞 F)) (w : HeightOneSpectrum (𝓞 E))
     (h : Formalism.UG.IsInertAt F E v w) (x : F) : w.valuation E (algebraMap F E x) = v.valuation F x :=
-  GlobalTheory.T.valuation_algebraMap_eq_of_inertPlace F E v w h x
+  _root_.GlobalTheory.InertValRestr.valuation_algebraMap_of_isInertAt F E v w h x
 
 theorem exists_max_dual (w : HeightOneSpectrum (𝓞 E)) : ∃ e : E, e ≠ 0 ∧
     (∀ o : 𝓞 E, IsIntegral ℤ (Algebra.trace ℚ E ((o : E) * e))) ∧
     ∀ f : E, (∀ o : 𝓞 E, IsIntegral ℤ (Algebra.trace ℚ E ((o : E) * f))) → w.valuation E f ≤ w.valuation E e :=
-  GlobalTheory.T.exists_inverseDifferent_max_valuation E w
+  _root_.GlobalTheory.invDifferent_exists_max_valuation E w
 
 theorem exists_local_basis (w : HeightOneSpectrum (𝓞 E)) (n : ℕ) (L : Submodule (𝓞 E) (Fin n → E))
     (hL : L.IsFullLattice E) : ∃ X : Matrix (Fin n) (Fin n) E, IsUnit X.det ∧ (∀ j, (fun i => X i j) ∈ L) ∧
@@ -80,7 +83,7 @@ theorem exists_local_basis (w : HeightOneSpectrum (𝓞 E)) (n : ℕ) (L : Submo
 
 theorem exists_den (w : HeightOneSpectrum (𝓞 E)) (a : E) (ha : w.valuation E a ≤ 1) :
     ∃ s : 𝓞 E, s ∉ w.asIdeal ∧ ∃ r : 𝓞 E, (s : E) * a = r :=
-  GlobalTheory.T.exists_integer_denominator_not_mem_of_valuation_le_one E w a ha
+  _root_.GlobalTheory.IntegralDenom.exists_denom_not_mem E w a ha
 
 theorem exists_common_den (σ : E →ₐ[F] E) (w : HeightOneSpectrum (𝓞 E))
     (hσ : ∀ x, w.valuation E (σ x) = w.valuation E x)
@@ -88,7 +91,7 @@ theorem exists_common_den (σ : E →ₐ[F] E) (w : HeightOneSpectrum (𝓞 E))
     (n : ℕ) (L : Submodule (𝓞 E) (Fin n → E)) (hL : L.FG) (X : Matrix (Fin n) (Fin n) E)
     (hX : ∀ x ∈ L, ∀ i, w.valuation E ((X⁻¹ *ᵥ x) i) ≤ 1) :
     ∃ s : 𝓞 E, s ∉ w.asIdeal ∧ ∀ x ∈ L, ∀ i, ∃ r : 𝓞 E, (s : E) * σ ((X⁻¹ *ᵥ x) i) = r :=
-  GlobalTheory.T.exists_common_denominator_conj_localCoords_lattice F E σ w hσ hden n L hL X hX
+  _root_.GlobalTheory.ConjCoordDenom.exists_common_denom_conj_coords F E σ w hσ hden n L hL X hX
 
 theorem dual_bound (σ : E →ₐ[F] E) (n : ℕ) (J : Matrix (Fin n) (Fin n) E) (L : Submodule (𝓞 E) (Fin n → E))
     (w : HeightOneSpectrum (𝓞 E))
@@ -98,7 +101,7 @@ theorem dual_bound (σ : E →ₐ[F] E) (n : ℕ) (J : Matrix (Fin n) (Fin n) E)
     (s : 𝓞 E) (hs : s ∉ w.asIdeal) (hsr : ∀ x ∈ L, ∀ i, ∃ r : 𝓞 E, (s : E) * σ ((X⁻¹ *ᵥ x) i) = r)
     (e : E) (he : ∀ o : 𝓞 E, IsIntegral ℤ (Algebra.trace ℚ E ((o : E) * e))) :
     ∀ i k, w.valuation E (e * (Xᵀ * J * X.map σ)⁻¹ i k) ≤ 1 :=
-  GlobalTheory.T.selfDualLattice_inverseGram_localBasis_integral F E σ n J L w hdual X hX hG hXc s hs hsr e he
+  _root_.GlobalTheory.selfDual_inv_gram_integral F E σ n J L w hdual X hX hG hXc s hs hsr e he
 
 theorem val_det_le (w : HeightOneSpectrum (𝓞 E)) {n : ℕ} (M : Matrix (Fin n) (Fin n) E)
     (c : WithZero (Multiplicative ℤ)) (h : ∀ i j, w.valuation E (M i j) ≤ c) :

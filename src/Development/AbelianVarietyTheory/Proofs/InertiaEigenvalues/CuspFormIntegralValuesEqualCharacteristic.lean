@@ -5,17 +5,25 @@ public import Formalism.LocalToGlobal.ProjectiveLattices.VAtVNeBot
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.SubsingletonOfScalar
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspFormBoundGoodPointsExtendsAllPoints
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspFormIntegralArcSectionEqualCharStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsArcDataOfBadReductionFiniteExtensionStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsComplexEmbeddingFractionFieldFiniteOverCdvStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SectionIntegralEqualCharAbelianLocusStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExtIn
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspFormIntegralArcSectionEqualChar
+public import Formalism.LocalToGlobal.ProjectiveLattices.OneLtAbsNormReal
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsComplexEmbeddingFractionFieldFiniteOverCdv
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SectionIntegralEqualCharAbelianLocus
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SupSetFinitelyGenerated
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.BddGood
+public import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsArcDataOfBadReductionFiniteExtension
 import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.IntegralFramedPointBaseChangeStable
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.FramedPointEvalNaturalWeightScaling
 import Development.AbelianVarietyTheory.Proofs.TorusSplitting.FiniteExtensionRamificationEmbedding
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFramedPointBaseChangeAlgebraMap
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedModuliAlgebraicLawsChartWeightIntegralityStatement
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointReducedFromTestRingStatement
+import Formalism.LocalToGlobal.ProjectiveLattices.UnitIndepOfCharts
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedModuliAlgebraicLawsChartWeightIntegrality
+import Formalism.LocalToGlobal.ProjectiveLattices.AllTest
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointReducedFromTestRing
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ValuationExtension
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -54,8 +62,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.BddGood
-public import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt
 
 @[expose] public section
 
@@ -108,7 +114,7 @@ theorem integral_of_eqChar : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   have hA : ∀ Y : Model Xo c (la.valuation c.F).valuationSubring.subtype, PushInvertible Y.t.G Y.t.PP.L →
       ∀ y' : Sp T.V ⟶ Y.X, z ≫ Y.j = spMap (algebraMap T.V T.Fr) ≫ y' → Set.range y' ⊆ abLocus Y.t.G →
       evI y f ∈ (algebraMap T.V T.Fr).range := fun Y hP y' h3 hr =>
-    GlobalTheory.T.section_integral_equalChar_abelianLocus E H Dw l Xo c a n f hf.1 la Y hP T io hint y ⟨y', z, hz₁, hz₂, h3, hr⟩
+    _root_.GlobalTheory.EqCharGood.inV_of_extIn_eqChar E H Dw l Xo c a n f hf.1 la Y hP T io hint y ⟨y', z, hz₁, hz₂, h3, hr⟩
   rcases Nat.eq_zero_or_pos (Dw.p + Dw.q) with hD | hD
   · obtain ⟨Y, hP⟩ := GlobalTheory.SupFinite.exists_model_rank_zero Xo c hD (la.valuation c.F).valuationSubring.subtype
     obtain ⟨⟨y', ⟨-, hz₃⟩, -⟩, -⟩ :=
@@ -121,18 +127,18 @@ theorem integral_of_eqChar : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     GlobalTheory.ValuativeExtension.valuation_extension E H Dw l Xo c _ _ Y T.V T.Fr b io z hb hz₂
   by_cases hr : Set.range y' ⊆ abLocus Y.t.G
   · exact hA Y hP y' hz₃.symm hr
-  obtain ⟨T', g, ϖ, a₀, hg₁, hg₂, hϖ, hA'⟩ := GlobalTheory.T.exists_arcData_of_badReduction_finiteExtension E H Dw l Xo c _ Y h3 hS T io b y' z hb hy' hz₂ hz₃.symm hr
+  obtain ⟨T', g, ϖ, a₀, hg₁, hg₂, hϖ, hA'⟩ := _root_.GlobalTheory.ArcOfPoint.exists_arcIn_of_bad_reduction E H Dw l Xo c _ Y h3 hS T io b y' z hb hy' hz₂ hz₃.symm hr
   obtain ⟨i, ρ, hρ, hi, hv, -⟩ := GlobalTheory.EtaVal.finite_extension_ramification_embedding T T' g hg₁ hg₂
   obtain ⟨y₁, φ, hφ, hy₁⟩ := GlobalTheory.IntFrBaseChange.exists_intFr_baseChange E H Dw l Xo c T T' io y i ρ hρ
     (fun x _ => hv x)
   let _ := (i.comp io).toAlgebra
   have e₁ : (algebraMap T'.V T'.Fr).comp g = i.comp (algebraMap T.V T.Fr) := RingHom.ext fun x => (hi x).symm
-  obtain ⟨κ, hκ⟩ := GlobalTheory.T.exists_complex_embedding_fractionField_finite_over_cdvr c.F c.F.val.toRingHom T T' g hg₁ hg₂ hcnt (i.comp io)
+  obtain ⟨κ, hκ⟩ := _root_.GlobalTheory.ComplexEmbedding.exists_embedding_fractionField_of_finite c.F c.F.val.toRingHom T T' g hg₁ hg₂ hcnt (i.comp io)
   have hint' : ∀ k : c.F, (i.comp io) k ∈ (algebraMap T'.V T'.Fr).range := fun k => by
     obtain ⟨v, hv'⟩ := hint k
     exact ⟨g v, by rw [RingHom.comp_apply, ← hv', hi]⟩
-  have key := GlobalTheory.T.cuspForm_integral_arc_section_equalChar E H Dw l Xo c r U hU la Y hP hop h4 a n f hd hf
-    (fun T₁ io₁ h₁ y₂ hy₂ => GlobalTheory.T.section_integral_equalChar_abelianLocus E H Dw l Xo c a n f hf.1 la Y hP T₁ io₁ h₁ y₂ hy₂)
+  have key := _root_.GlobalTheory.GoodTransfer.inV_of_arc_of_extIn E H Dw l Xo c r U hU la Y hP hop h4 a n f hd hf
+    (fun T₁ io₁ h₁ y₂ hy₂ => _root_.GlobalTheory.EqCharGood.inV_of_extIn_eqChar E H Dw l Xo c a n f hf.1 la Y hP T₁ io₁ h₁ y₂ hy₂)
     T' (i.comp io) hint' ⟨κ, hκ⟩ (g.comp b)
     (by rw [← RingHom.comp_assoc, e₁, RingHom.comp_assoc, hb]; rfl) ϖ hϖ a₀ (spMap g ≫ y')
     (by rw [Category.assoc, hy', sp_comp]) hA' y₁ (spMap i ≫ z)
@@ -140,10 +146,10 @@ theorem integral_of_eqChar : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     (by rw [Category.assoc, ← hz₃, ← Category.assoc, ← Category.assoc, sp_comp, sp_comp, e₁])
   have hE : GlobalTheory.Reg.EvLaws Xo c := by
     have hB : Out.SecBaseChangeSt := GlobalTheory.abelianSchemeLaws_all.1.secBaseChange
-    obtain ⟨-, -, hwd, hwt, hint, -⟩ := GlobalTheory.T.framedModuli_algebraicLaws_chart_weight_integrality hB E H Dw l Xo c
+    obtain ⟨-, -, hwd, hwt, hint, -⟩ := _root_.GlobalTheory.Frames.algebraic_laws hB E H Dw l Xo c
     have hbc : GlobalTheory.Reg.FrBC Xo c := fun S T _ _ _ _ φ y =>
       GlobalTheory.Frames.FramedBaseChange.exists_frMap hB E H Dw l Xo c S T φ y
-    exact ⟨hwd, GlobalTheory.T.framedPoint_reduced_from_testRing hB E H Dw l Xo c, hwt, hbc⟩
+    exact ⟨hwd, _root_.GlobalTheory.Frames.allTest_of_secBaseChange hB E H Dw l Xo c, hwt, hbc⟩
   have e₂ : evI y₁ f = φ (evI y f) :=
     (GlobalTheory.ArcQ.evR_natural_weight_scaling E H Dw l Xo c hE a n f hf.1 T.Fr).1 _ φ _ _ hy₁
   have e₃ : φ (evI y f) = i (evI y f) := RingHom.congr_fun hφ _

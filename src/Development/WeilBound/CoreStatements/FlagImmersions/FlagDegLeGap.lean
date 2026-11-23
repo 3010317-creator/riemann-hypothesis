@@ -1,7 +1,7 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.CompactGapsGE
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagDegreeWeightFormulaStatement
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagDegreeWeightFormula
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -112,7 +112,7 @@ theorem flagDeg_le_gap : ∀ (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ)
     (fun x => (hfac x.1 x.2.1 x.2.2).1) (fun x => (hfac x.1 x.2.1 x.2.2).2)
     (τ₀, ⟨j - 1, hj1⟩, ⟨j, hjN⟩) _ hx0
   simp only [Fintype.prod_prod_type] at key
-  obtain ⟨hdeg, -, -⟩ := GlobalTheory.T.flag_degree_weight_formula Ψ N lam
+  obtain ⟨hdeg, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Top.flagDeg_eq_weyl Ψ N lam
   rw [hdeg, hgap]
   calc _ ≤ ((GlobalTheory.CompanionTheory.Ar.Top.dimFl Ψ N).factorial : ℝ) *
         ((lam τ₀ ⟨j - 1, hj1⟩ - lam τ₀ ⟨j, hjN⟩) * 2 ^ Fintype.card (Ψ × Fin N × Fin N)) :=

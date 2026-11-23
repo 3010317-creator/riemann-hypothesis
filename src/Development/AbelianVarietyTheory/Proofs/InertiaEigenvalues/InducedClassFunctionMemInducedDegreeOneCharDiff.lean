@@ -1,8 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IndApplyOne
+public import Development.AbelianVarietyTheory.Definitions.CommutativeAlgebra.AbByPOfComm
+public import Mathlib.Basic.Complex.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InducedClassFunctionFromSubgroupTrans
 import Development.AbelianVarietyTheory.Proofs.CharacterTheory.VirtualCharactersMulComapConjIndLinear
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InducedClassFunctionFromSubgroupTransStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -92,8 +94,8 @@ theorem ind_mem_D0_of_mem_D0 : ∀ {G : Type} [Group G] [Finite G] (E : Subgroup
     have h1 : ind E (ind ((H.map E.subtype).subgroupOf E) (fun k =>
         ((χ ((Subgroup.equivMapOfInjective H E.subtype Subtype.val_injective).symm
           ⟨((k : E) : G), k.2⟩) : ℂˣ) : ℂ))) = ind (H.map E.subtype) (fun k => (χ' k : ℂ)) :=
-      GlobalTheory.T.inducedClassFunctionFromSubgroup_trans (H.map E.subtype) E hK (fun k => (χ' k : ℂ))
-    have h2 := GlobalTheory.T.inducedClassFunctionFromSubgroup_trans (H.map E.subtype) E hK (fun _ => (1 : ℂ))
+      _root_.GlobalTheory.BrauerZero.ind_ind_of_le (H.map E.subtype) E hK (fun k => (χ' k : ℂ))
+    have h2 := _root_.GlobalTheory.BrauerZero.ind_ind_of_le (H.map E.subtype) E hK (fun _ => (1 : ℂ))
     rw [h1, h2]
     exact AddSubgroup.subset_closure ⟨H.map E.subtype, χ', rfl⟩
   | zero =>

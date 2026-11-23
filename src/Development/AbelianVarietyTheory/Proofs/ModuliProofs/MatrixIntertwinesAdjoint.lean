@@ -3,8 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsInvDer
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CohomologyLogDerivativeAdjointEndomorphismsStatement
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.KodairaSpencerClassCohomologousAlongEndomorphismStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LogDerivativePrincipalPolarisationIndependent
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LeISupInfPreimage
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LogDerivativePrincipalPolarisationIndependentStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -101,7 +101,7 @@ theorem matrix_intertwines_adjoint : ∀ (K : Type) [Field K] (P₀ : Out.PolAV 
   have hA := GlobalTheory.T.kodairaSpencerClass_cohomologous_along_endomorphism K P₀.A g v dd hsm hv hdd R x₀ P.A.left P.A.hom m hpb.1 L.ι L.U D d θ f.left f₀ F hKS hf₀
     (Over.w f) hfm hF
   have hB := GlobalTheory.T.cohomology_logDerivative_adjoint_endomorphisms K P₀ g v dd hv hdd P.A.left m L φ f₀ f₀' F' hL hLB hφ hf₀ hf₀' hcube hF'
-  have hI := (GlobalTheory.T.logDerivative_principalPolarisation_independent K P₀ g v dd hv hdd P.A.left m L hL hLB).2 φ hφ |>.2
+  have hI := (_root_.GlobalTheory.KS.DlogPol.dlog_independent K P₀ g v dd hv hdd P.A.left m L hL hLB).2 φ hφ |>.2
   have hcov : ⨆ i, m ⁻¹ᵁ L.U i = ⊤ := by
     rw [← Scheme.Hom.preimage_iSup, hL.cover]; rfl
   have hrow : ∀ x, (F * Θ - Θ * F'.transpose) x = 0 := by

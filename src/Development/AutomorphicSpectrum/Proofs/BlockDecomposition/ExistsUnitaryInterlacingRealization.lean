@@ -2,9 +2,9 @@ module
 
 public import Development.WeilBound.RepresentationTheoryGL.HolomorphicDiscreteSeries.EmbeddedFrames.PfD
 public import Formalism.RealPlaceAnalysis.Complexify
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PartialFractionDiagonalIdentityStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PartialFractionOffDiagonalIdentityStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PartialFractionSquareIdentityStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PartialFractionDiagonalIdentity
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PartialFractionOffDiagonalIdentity
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PartialFractionSquareIdentity
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -149,7 +149,7 @@ lemma gram {ε : Fin (n + 1) → Bool} {d : Fin (n + 1) → ℝ} {ε' : Fin n �
   rw [hz1]
   by_cases hik : i = k
   · subst hik
-    have h1 := GlobalTheory.T.partial_fraction_square_identity d d' hinj i
+    have h1 := _root_.GlobalTheory.CompanionTheory.RgHeFrame.pfDer d d' hinj i
     have h2 := cc_sq (hD i)
     simp only [if_true]
     have h3 : ∑ j, pfR d d' j / ((d i - d' j) * (d i - d' j)) =
@@ -158,7 +158,7 @@ lemma gram {ε : Fin (n + 1) → Bool} {d : Fin (n + 1) → ℝ} {ε' : Fin n �
       rw [sq]
     rw [h3]
     linear_combination (cc d d' i * cc d d' i) * h1 + h2
-  · have h1 := GlobalTheory.T.partial_fraction_off_diagonal_identity d d' hinj i k hik
+  · have h1 := _root_.GlobalTheory.CompanionTheory.RgHeFrame.pfOrth d d' hinj i k hik
     simp only [hik, if_false]
     linear_combination (cc d d' i * cc d d' k) * h1
 
@@ -179,7 +179,7 @@ lemma inter {d : Fin (n + 1) → ℝ} {ε' : Fin n → Bool} {d' : Fin n → ℝ
     field_simp
     ring
   · simp only [X0, G0, Sum.elim_inl, Sum.elim_inr, univ_unique, sum_singleton]
-    have h0 := GlobalTheory.T.partial_fraction_diagonal_identity d d' hinj i
+    have h0 := _root_.GlobalTheory.CompanionTheory.RgHe.Frame.pfZero d d' hinj i
     have h1 : ∑ j, sg (ε' j) * yy ε' d d' j * (cc d d' i * yy ε' d d' j / (d i - d' j)) =
         -(cc d d' i * ∑ j, pfR d d' j / (d i - d' j)) := by
       rw [mul_sum, ← sum_neg_distrib]

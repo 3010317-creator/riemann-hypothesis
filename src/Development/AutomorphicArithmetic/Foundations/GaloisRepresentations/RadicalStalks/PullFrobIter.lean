@@ -3,7 +3,8 @@ module
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RadicalStalks.IsConst
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeFirstDeRhamStructure
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobeniusPullbackDeRhamMapExists
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorRelDimAndDiagonalIsLineBundleStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.Uniformised
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorRelDimAndDiagonalIsLineBundle
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -42,7 +43,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
-public import Development.AbelianVarietyTheory.Definitions.Divisors.Uniformised
 
 @[expose] public section
 
@@ -220,7 +220,7 @@ theorem UpperTheory.Gal.Ord.desc :
   haveI := o₀.act.hom ((algebraMap (𝓞 D.F) D.O) π.g)
   haveI := o'.act.hom ((algebraMap (𝓞 D.F) D.O) π.ε)
   haveI := o'.act.hom ((algebraMap (𝓞 D.F) D.O) π.g)
-  have hd := GlobalTheory.T.harrisTaylor_relDim_and_diagonal_isLineBundle p D R b N _ s o
+  have hd := _root_.GlobalTheory.HTDim.relDim_and_isLB p D R b N _ s o
   have h1 : NOo hκ o π :=
     no_down p hκ hk m₀.cart D.g o.ab hd.1 (o.act.act ((algebraMap (𝓞 D.F) D.O) π.ε))
       (o.act.act ((algebraMap (𝓞 D.F) D.O) π.g)) (o₀.act.act ((algebraMap (𝓞 D.F) D.O) π.ε))

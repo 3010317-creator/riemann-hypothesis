@@ -2,16 +2,25 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExponentAndTwistData
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.HeckeOpen
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CharZeroFractionRingCoefficientRingStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CmTypeEmbeddingAtSideDistinctNonconjugateStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.TwistBaseCoefficientRingResidueFieldFinite
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CharZeroFractionRingCoefficientRing
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IncludeLInjective
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CmTypeEmbeddingAtSideDistinctNonconjugate
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContragredientIsIrreducibleFiniteDimensionalStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HighestWeightDoubleDualCoefficientSpaceUniqueStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsAlgWeightFWeightTensorDualRepOfEmbeddingsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsIrreducibleBaseChangeWeightTensorDualRepOfEmbeStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LiftWeightParamEqInfinitesimalCharacterOfHalfIntStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeightTensorDualRepDualHighestWeightAtEmbeddingStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeightTensorRepOfEmbeddingsIsIrreducibleStatement
+public import Formalism.LocalToGlobal.NormalizedHeckeFactors.RingHomOfBaseOrderToFraction
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HighestWeightDoubleDualCoefficientSpaceUnique
+public import Formalism.LocalToGlobal.NormalizedHeckeFactors.ExpDefs
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsAlgWeightFWeightTensorDualRepOfEmbeddings
+public import Formalism.LocalToGlobal.IndefiniteReal.DoubleCosetOperators.TwistedCharacterValue
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsIrreducibleBaseChangeWeightTensorDualRepOfEmbe
+public import Formalism.LocalRingCardinality.DataCoeff
+public import Formalism.LocalToGlobal.GaloisLevelStructure.DefsAut
+public import Formalism.LocalToGlobal.GaloisLevelStructure.DefsLevel
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LiftWeightParamEqInfinitesimalCharacterOfHalfInt
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeightTensorDualRepDualHighestWeightAtEmbedding
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ShHalfStatement
+import Mathlib.RepresentationTheory.Irreducible
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeightTensorRepOfEmbeddingsIsIrreducible
 import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -79,7 +88,7 @@ theorem wt_weights_alt : GlobalTheory.Published.GlobalArtinReciprocity → ∀ (
     intro j t
     by_cases h : ∃ sh, D.naut.infG D.naut.etaT (embT D t) = {sh}
     · obtain ⟨sh, hs⟩ := h
-      obtain ⟨lam, hl⟩ := GlobalTheory.T.liftWeightParam_eq_infinitesimalCharacter_of_halfInt D.R (D.hc t) j sh (_root_.GlobalTheory.T.infG_eq_half_integer D cf jE A t sh hs)
+      obtain ⟨lam, hl⟩ := _root_.GlobalTheory.WtComb.paramV_eq_infOf D.R (D.hc t) j sh (_root_.GlobalTheory.T.infG_eq_half_integer D cf jE A t sh hs)
       refine ⟨lam, fun sh' hs' => ?_⟩
       rw [hs, Multiset.singleton_inj] at hs'
       rw [← hs']
@@ -93,15 +102,15 @@ theorem wt_weights_alt : GlobalTheory.Published.GlobalArtinReciprocity → ∀ (
   refine ⟨{ Wt := fun i j _ => Module.Dual (FractionRing (T.O i)) (Formalism.L2.DIV.VV (FractionRing (T.O i)) (lamD j))
             fd := fun i j _ => GlobalTheory.AlgWtF.finDualVV (lamD j)
             rhoW := fun i j b => GlobalTheory.AlgWtF.wtRepF (kEmbT D T i b) (lamD j) }, fun i j b hj hjm => ?_⟩
-  haveI := GlobalTheory.T.charZero_fractionRing_coefficientRing D T i
-  have hE := GlobalTheory.T.cmTypeEmbeddingAtSide_distinct_nonconjugate D T i b
+  haveI := _root_.GlobalTheory.HeightCounting.TwR.charZero_fractionRing_O D T i
+  have hE := _root_.GlobalTheory.HeightCounting.FormsStep.kEmbT_cmDist D T i b
   have hl : lamD j = lamF ⟨j - 1, by omega⟩ := by
     simp only [lamD, dif_pos (And.intro hj hjm)]
-  refine ⟨GlobalTheory.T.contragredient_isIrreducible_finiteDimensional _ _ _ _ (GlobalTheory.T.weightTensorRepOfEmbeddings_isIrreducible _ _ _ _ _ _ hE), GlobalTheory.T.isAlgWeightF_weightTensorDualRepOfEmbeddings _ _ _ _ _ _,
-    fun k => @GlobalTheory.T.isIrreducible_baseChange_weightTensorDualRepOfEmbeddings _ _ _ _ _ _ _ _ _ _ _ _ hE (FractionRing (T.Ok i k)) _ (algKkT D T i k),
-    fun t => ⟨_, hc ▸ GlobalTheory.T.weightTensorDualRep_dual_highestWeight_at_embedding _ _ _ _ _ _ hE t⟩, fun t sh lam hs hw => ?_⟩
+  refine ⟨GlobalTheory.T.contragredient_isIrreducible_finiteDimensional _ _ _ _ (_root_.GlobalTheory.AlgWtF.tenRepF_isIrreducible _ _ _ _ _ _ hE), _root_.GlobalTheory.AlgWtF.wtRepF_alg _ _ _ _ _ _,
+    fun k => @_root_.GlobalTheory.AlgWtBC.isIrreducible_bcRep_wtRepF _ _ _ _ _ _ _ _ _ _ _ _ hE (FractionRing (T.Ok i k)) _ (algKkT D T i k),
+    fun t => ⟨_, hc ▸ _root_.GlobalTheory.AlgWtF.DDHw.dd_hwAt _ _ _ _ _ _ hE t⟩, fun t sh lam hs hw => ?_⟩
   rw [hc] at hw
-  have h1 := GlobalTheory.T.highestWeight_doubleDual_coefficientSpace_unique _ _ _ _ _ _ hE t lam hw
+  have h1 := _root_.GlobalTheory.AlgWtF.DDHw.dd_hw_unique _ _ _ _ _ _ hE t lam hw
   rw [h1]
   show NG.infOf (lamD j t).w = _
   rw [hl]

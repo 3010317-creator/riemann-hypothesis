@@ -1,8 +1,10 @@
 module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.GenericFiberGluing.PlusConditionToZeroCondition
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianVarietyPotentialSemiAbelianModelStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SemistableOfPotentialSemiAbelianModelStatement
+public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.SemistableFin
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianVarietyPotentialSemiAbelianModel
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.GenericFiberGluing.SemistableCompleteSplit
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SemistableOfPotentialSemiAbelianModel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,6 +53,6 @@ open GlobalTheory.SS
 
 namespace GlobalTheory.SS
 
-theorem semistableReduction_zero : SemistableReductionZero := (GlobalTheory.T.semistable_of_potential_semiAbelian_model GlobalTheory.T.abelianVariety_potential_semiAbelian_model).1
+theorem semistableReduction_zero : SemistableReductionZero := (_root_.GlobalTheory.SS.semistable_of_potModel_semiAbelian _root_.GlobalTheory.SS.potModel_isSemiAbelian).1
 
 end GlobalTheory.SS

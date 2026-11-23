@@ -3,12 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DblActId
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealisedOne
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsoRows
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DarbouxChangeRealisedCompAndReindexStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DarbouxChangeRealisedCompAndReindex
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DarbouxRationalBasisCompatible
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDarbouxChangeOperatorWithDoubleLowerUnipotStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDarbouxOperatorsLeviAndDoubleStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDarbouxChangeOperatorWithDoubleLowerUnipot
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDarbouxOperatorsLeviAndDouble
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticMemClosureGenerators
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeylElementRealisedByFourierTransformsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeylElementRealisedByFourierTransforms
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -101,13 +101,13 @@ theorem realised_of_sp {F : Type} [Field F] [NumberField F] (ψ : AddChar (AF F)
   induction hcl using Submonoid.closure_induction with
   | mem x hx =>
     rcases hx with (⟨A, hA, rfl⟩ | ⟨C, hC, rfl⟩) | hx
-    · exact GlobalTheory.T.exists_darbouxOperators_levi_and_double F ψ hψ κ A hA
-    · exact GlobalTheory.T.exists_darbouxChangeOperatorWithDouble_lowerUnipotent F ψ hψ κ C hC
+    · exact _root_.GlobalTheory.TowU.realised_levi2 F ψ hψ κ A hA
+    · exact _root_.GlobalTheory.TowU.UnipOp.main F ψ hψ κ C hC
     · rw [Set.mem_singleton_iff] at hx
       subst hx
-      exact GlobalTheory.T.weylElement_realised_by_fourierTransforms F ψ hψ κ
+      exact _root_.GlobalTheory.TowU.realised_weyl2 F ψ hψ κ
   | one =>
-    obtain ⟨S, S', h⟩ := (GlobalTheory.T.darbouxChange_realised_comp_and_reindex F ψ hψ).2 κ κ (Equiv.refl κ)
+    obtain ⟨S, S', h⟩ := (_root_.GlobalTheory.TowU.RealComp.realised_comp_reix F ψ hψ).2 κ κ (Equiv.refl κ)
     refine ⟨S, S', ?_⟩
     have : GlobalTheory.AdelicSvN.act (1 : Matrix (κ ⊕ κ) (κ ⊕ κ) F) = fun w : (κ → AF F) × (κ → AF F) => (w.1 ∘ Equiv.refl κ, w.2 ∘ Equiv.refl κ) := by
       funext w; rw [GlobalTheory.AdelicSvN.act_one]; rfl
@@ -118,7 +118,7 @@ theorem realised_of_sp {F : Type} [Field F] [NumberField F] (ψ : AddChar (AF F)
     have : GlobalTheory.AdelicSvN.act (x * y) = GlobalTheory.AdelicSvN.act x ∘ GlobalTheory.AdelicSvN.act (R := AF F) y := by
       funext w; exact GlobalTheory.AdelicSvN.act_mul x y w
     rw [this]
-    exact ⟨S ∘ₗ T, T' ∘ₗ S', (GlobalTheory.T.darbouxChange_realised_comp_and_reindex F ψ hψ).1 κ κ κ _ _ T T' S S' hT hS⟩
+    exact ⟨S ∘ₗ T, T' ∘ₗ S', (_root_.GlobalTheory.TowU.RealComp.realised_comp_reix F ψ hψ).1 κ κ κ _ _ T T' S S' hT hS⟩
 
 theorem darboux_change : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ ψ : AddChar (AF F) ℂ, IsStd ψ → ∀ (α β κ κ' : Type) [Fintype α] [Fintype β] [Fintype κ] [Fintype κ'] (B : Matrix α β (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) → Matrix α β (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) → AF F) (d : Darboux B κ) (d' : Darboux B κ'), IsRat d → IsRat d' → ∃ (S : ((κ → AF F) → ℂ) →ₗ[ℂ] ((κ' → AF F) → ℂ)) (S' : ((κ' → AF F) → ℂ) →ₗ[ℂ] ((κ → AF F) → ℂ)), IsOp2 ψ (fun w => d'.e (d.e.symm w)) S S' := by
   intro F E _ _ _ _ _ σ _ ψ hψ α β κ κ' _ _ _ _ B d d' hd hd'
@@ -133,7 +133,7 @@ theorem darboux_change : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     rw [reindexD_e, h]; rfl
   obtain ⟨g, hg, hgd⟩ := GlobalTheory.RatDarboux.exists_rat_symplectic F E α β κ B d d'' hc hd hd''
   obtain ⟨S, S', hS⟩ := realised_of_sp ψ hψ g hg
-  obtain ⟨T, T', hT⟩ := (GlobalTheory.T.darbouxChange_realised_comp_and_reindex F ψ hψ).2 κ κ' e
+  obtain ⟨T, T', hT⟩ := (_root_.GlobalTheory.TowU.RealComp.realised_comp_reix F ψ hψ).2 κ κ' e
   have hs : (fun w => d'.e (d.e.symm w)) = (fun w : (κ → AF F) × (κ → AF F) => (w.1 ∘ e, w.2 ∘ e)) ∘ GlobalTheory.AdelicSvN.act g := by
     funext w
     have := hgd (d.e.symm w)
@@ -141,6 +141,6 @@ theorem darboux_change : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     rw [Function.comp_apply, ← this, reindexD_e]
     ext i <;> simp
   rw [hs]
-  exact ⟨T ∘ₗ S, S' ∘ₗ T', (GlobalTheory.T.darbouxChange_realised_comp_and_reindex F ψ hψ).1 κ κ κ' _ _ S S' T T' hS hT⟩
+  exact ⟨T ∘ₗ S, S' ∘ₗ T', (_root_.GlobalTheory.TowU.RealComp.realised_comp_reix F ψ hψ).1 κ κ κ' _ _ S S' T T' hS hT⟩
 
 end GlobalTheory.TowU

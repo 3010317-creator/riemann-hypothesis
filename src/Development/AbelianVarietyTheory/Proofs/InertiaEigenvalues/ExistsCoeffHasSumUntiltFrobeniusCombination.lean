@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ImportsAlt
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UntiltFrobeniusLaurentSeriesHasSumBoundFrobeniusStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UntiltFrobeniusLaurentSeriesHasSumBoundFrobenius
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -134,7 +134,7 @@ theorem exists_coef_hasSum_lam : ∀ (l : ℕ) [Fact l.Prime] (h : ℕ) (μ : Fi
         have e' : a * (h : ℤ) = b * h := by simpa using e
         exact mul_right_cancel₀ h0 e'
       rw [← hg.hasSum_iff]
-      · have := ((GlobalTheory.T.untiltFrobeniusLaurentSeries_hasSum_bound_frobenius l h i ‖sh x‖ x hh hx le_rfl).1).mul_left (μ i)
+      · have := ((_root_.GlobalTheory.PSer.lam_hasSum_norm_le_frob l h i ‖sh x‖ x hh hx le_rfl).1).mul_left (μ i)
         have heq : (F i ∘ fun n : ℤ => n * h + ((i : ℕ) : ℤ)) =
             fun n : ℤ => μ i * ((l : ℂ_[l]) ^ (-n) * sh (pw (n * h + ((i : ℕ) : ℤ)) x)) := by
           funext n

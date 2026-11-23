@@ -3,13 +3,14 @@ module
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntAFSmulMemLatOF
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.GoodLat
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilRepresentationOfLatticeVacuaStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergCMRealLineAddNoPhase
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanHeisenbergTranslatesOfLatticeVacuaEqTopStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsHeisTrivial
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilRepresentationOfLatticeVacua
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanHeisenbergTranslatesOfLatticeVacuaEqTop
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaFunctionHeisenbergInvariant
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.LatRepA
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.LatRepB
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.LatRepC
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergCMRealLineAddNoPhase
 import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.SumFourEqTrace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -120,13 +121,13 @@ theorem latRep : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFie
   obtain ⟨lam, hlam, hsq⟩ := exists_good_norm_character σ B hB
   have H := isHeis_opFF hσ hS hT hξ hc hw
   have hA := LatC.lat_sd hσ hB.std hg hsd
-  have hspan := GlobalTheory.T.span_heisenberg_translates_of_lattice_vacua_eq_top H _ hA (LatC.smooth_theta hg H hA)
+  have hspan := _root_.GlobalTheory.FinWeil.span_translates_vacua H _ hA (LatC.smooth_theta hg H hA)
   have hidx : ∀ p, idx (latF F E nS nT Λ) ((latF F E nS nT Λ).map (rhoFF σ JS JT p)) ≠ 0 := fun p => by
     refine LatC.idx_ne_zero hg _ (AddMonoidHom.mk' (actOF σ JS JT p.1 p.2) (actOF_add _ _))
       (LatC.continuous_act_right p.1 p.2) (fun l hl => actOF_mem_finSubF _ _ (lat_fin hl)) ?_
     rintro _ ⟨a, ha, rfl⟩
     exact ⟨a, ha, rfl⟩
-  obtain ⟨Om, h1, h2⟩ := GlobalTheory.T.exists_weil_representation_of_lattice_vacua H lam hlam _ hA hspan (rhoFF σ JS JT) (LatA.gamFF_rhoFF hS) hidx
+  obtain ⟨Om, h1, h2⟩ := _root_.GlobalTheory.FinWeil.exists_weil_rep_of_vacua H lam hlam _ hA hspan (rhoFF σ JS JT) (LatA.gamFF_rhoFF hS) hidx
   refine ⟨w, lam, Om, hw, hA, hspan, hidx, h1, fun p => (h2 p).1, fun p => (h2 p).2, hlam, hsq, fun x => ?_,
     LatC.near hg, LatC.near' hg, lattice_stable_under_idempotents σ B hB Λ, lattice_index_prime_to_inert σ B hB JS JT Λ hidx⟩
   obtain ⟨M, hM, hx⟩ := lat_den hg (x : WOF F E nS nT) x.fin

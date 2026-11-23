@@ -1,8 +1,8 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ResAlgSplitTwo
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CardOrthonormalFramesHermitianSpaceStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsHermitianCongrToOneStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CardOrthonormalFramesHermitianSpace
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsHermitianCongrToOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -147,14 +147,14 @@ theorem card_isometric_embeddings : ∀ (E : Type) [CommRing E] (τ : E →+* E)
     (Nat.card {x : Matrix (Fin m) (Fin n) E // cT τ x * S * x = T} : ℝ) =
       (q : ℝ) ^ (2 * m * n - n ^ 2) * ∏ i : Fin n, (1 - ((ε : ℝ) / q) ^ (m - (i : ℕ))) := by
   intro E _ τ q ε hR m n hnm S T hS hSd hT hTd
-  obtain ⟨g, hg, hgT⟩ := GlobalTheory.T.exists_hermitian_congr_to_one E τ q ε hR n T hT hTd
+  obtain ⟨g, hg, hgT⟩ := _root_.GlobalTheory.CompanionTheory.UnrDens.exists_congr_one E τ q ε hR n T hT hTd
   have hcard : Nat.card (Fin m → E) = q ^ (2 * m) := by
     rw [Nat.card_fun, hR.card, Nat.card_eq_fintype_card, Fintype.card_fin, pow_mul]
   have hq : (q : ℝ) ≠ 0 := by
     have := hR.one_lt
     exact_mod_cast (by omega : q ≠ 0)
   rw [card_eq_card_one S T g hg hgT, card_one_eq_orthonormal hR.inv S hS hSd,
-    GlobalTheory.T.card_orthonormal_frames_hermitian_space E τ q ε hR n m hnm (Fin m → E) (HermSp.ofMatrix hR.inv S hS hSd) hcard,
+    _root_.GlobalTheory.CompanionTheory.UnrDens.card_orthonormal_tuples E τ q ε hR n m hnm (Fin m → E) (HermSp.ofMatrix hR.inv S hS hSd) hcard,
     Finset.prod_mul_distrib, prod_pow_div _ hq n m hnm]
 
 end GlobalTheory.CompanionTheory.UnrDens.Emb

@@ -1,11 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.DoubleCollapse
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.KernelsCommuteExplicitConstStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LinearModelSplitPlaceCharacterEquivarianceStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.IndicatorFunctionIdentity
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.KernelsCommuteExplicitConst
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ValueDoubleUnif
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LinearModelSplitPlaceCharacterEquivariance
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RamifiedThetaLiftCommutesSplitPlaceOperators
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ValueDoubleExact
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceBaseVacuumDatumExistsUniqueStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLinearModelLatticeVacuumBaseStatement
+import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLinearModelLatticeVacuumBase
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,8 +49,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.IndicatorFunctionIdentity
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ValueDoubleExact
 
 @[expose] public section
 
@@ -85,9 +87,9 @@ theorem liftExact : ∀ D : D7, GlobalTheory.FinPl.LiftExact D := by
   intro n n' _ _ _ _ ψ S T hS vS χS χT om hW hχS hχT α β P Q a ha LS LT f₀ f hOv φ₀ hφ₀ ε
   have haq : a = p.idele q.unit := Units.ext (by rw [SplitPt.idele_val, ha]; abel)
   subst haq
-  obtain ⟨lS, lT, hlS, hlT, hlSq, hlTq, hlinE⟩ := GlobalTheory.T.linearModel_splitPlace_characterEquivariance D k p q ψ S T χS χT om hW
-  obtain ⟨lS₀, lT₀, -, -, hlin⟩ := GlobalTheory.T.splitPlace_linearModel_latticeVacuum_base D k p ψ S T χS χT om hW
-  have hK := GlobalTheory.T.kernelsCommuteExplicitConstAlt k n n' q χ hχ lS lT (hlS hχT) (hlT hχS) P Q
+  obtain ⟨lS, lT, hlS, hlT, hlSq, hlTq, hlinE⟩ := _root_.GlobalTheory.LinExactAt.linExact D k p q ψ S T χS χT om hW
+  obtain ⟨lS₀, lT₀, -, -, hlin⟩ := _root_.GlobalTheory.SplitLinAt.linModelAt D k p ψ S T χS χT om hW
+  have hK := _root_.GlobalTheory.KernelCommExplicit.kernelsCommuteExplicitConst k n n' q χ hχ lS lT (hlS hχT) (hlT hχS) P Q
   have hOv2 := hOv
   obtain ⟨hLS, hLT, hVac, -, -⟩ := hOv2
   obtain ⟨hex, hth, -⟩ := GlobalTheory.T.splitPlace_baseVacuum_datum_exists_unique D k p n n' ψ hW.std S T α β LS LT hLS hLT f₀ hVac

@@ -1,13 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsHeatZero
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdmissibleLatticeFamilyHermitianWeilActionStatement
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.FirstCoordinateAdmissible
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdmissibleLatticeFamilyHermitianWeilAction
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FiniteClsAndStab
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.SiegelOperatorHermitianEisensteinSeriesStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.SiegelWeilDifferenceAutomorphyLinearityStatement
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThHSiegelOperatorStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.SiegelOperatorHermitianEisensteinSeries
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.SiegelWeilDifferenceAutomorphyLinearity
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThHSiegelOperator
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.UnitaryActHalfSpace
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.WeilActionLevelSupNormUniformInLatticeStatement
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.WeilActionLevelSupNormUniformInLattice
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -184,7 +185,7 @@ theorem isSB_of_adm {Ψ : Finset (E →+* ℂ)} (hΨ : IsType Ψ) (hn : Even n) 
     {φ : Fam E n N} (hφ : admitted M R φ) : ∀ Λ ∈ Vset E n M, IsSB (φ Λ) := by
   intro Λ hΛ
   obtain ⟨c, hc, hd⟩ := exists_den (1 : M2 E N)
-  obtain ⟨_, _, -, h⟩ := GlobalTheory.T.weil_action_level_supNorm_uniform_in_lattice E Ψ hΨ n N hn c R hc hφ.pos.2
+  obtain ⟨_, _, -, h⟩ := _root_.GlobalTheory.SW.weil_level_and_sup E Ψ hΨ n N hn c R hc hφ.pos.2
   exact (h M Λ hΛ 1 Base.one_mem_UU hd (φ Λ) ⟨hφ.supp Λ hΛ, hφ.per Λ hΛ⟩).1
 
 theorem tendsto_first {Ψ : Finset (E →+* ℂ)} (hΨ : IsType Ψ) (hn : Even n)
@@ -194,13 +195,13 @@ theorem tendsto_first {Ψ : Finset (E →+* ℂ)} (hΨ : IsType Ψ) (hn : Even n
   have hsb := isSB_of_adm hΨ hn hφ
   haveI : Finite (Cls E n M) := (finite_cls_and_stab E n M hφ.pos.1).1
   letI : Fintype (Cls E n M) := Fintype.ofFinite _
-  have hZ' : dropZ Ψ Z ∈ Hn Ψ N := ((GlobalTheory.T.tendsto_thH_pushZ_atTop_thH_dropF E Ψ hΨ n N 0 isSB_zero).2 Z hZ).1
+  have hZ' : dropZ Ψ Z ∈ Hn Ψ N := ((_root_.GlobalTheory.SW.thH_siegel_operator E Ψ hΨ n N 0 isSB_zero).2 Z hZ).1
   rw [← hsw M R _ (admissibleLatticeFamily_restrictFirstColumnZero hφ) _ hZ']
   unfold swd classSum
   simp only [finsum_eq_sum_of_fintype]
   refine tendsto_finsetSum _ fun c _ => Tendsto.const_mul _ (Tendsto.sub ?_ ?_)
-  · exact ((GlobalTheory.T.tendsto_thH_pushZ_atTop_thH_dropF E Ψ hΨ n N _ (hsb _ (Quot.out c).2)).2 Z hZ).2.2 0 0
-  · exact GlobalTheory.T.siegelOperator_hermitianEisensteinSeries E Ψ hΨ n N hn hN _ (hsb _ (Quot.out c).2) Z hZ
+  · exact ((_root_.GlobalTheory.SW.thH_siegel_operator E Ψ hΨ n N _ (hsb _ (Quot.out c).2)).2 Z hZ).2.2 0 0
+  · exact _root_.GlobalTheory.SW.eis_siegel_operator E Ψ hΨ n N hn hN _ (hsb _ (Quot.out c).2) Z hZ
 
 end GlobalTheory.SW.Cusp
 
@@ -211,7 +212,7 @@ theorem GlobalTheory.SW.swd_tendsto_zero_at_cusps : ∀ (E : Type) [Field E] [Nu
   obtain ⟨a, b, hba, hav⟩ := exists_inv v hv
   have hγ := levi_mem hba
   obtain ⟨c, hc, hd⟩ := exists_den (Matrix.fromBlocks a 0 0 (ccT b) : M2 E (N + 1))
-  obtain ⟨R', hR'⟩ := GlobalTheory.T.admissibleLatticeFamily_hermitianWeilAction E Ψ hΨ n (N + 1) hn c R hc
+  obtain ⟨R', hR'⟩ := _root_.GlobalTheory.SW.weil_admissible E Ψ hΨ n (N + 1) hn c R hc
   have hact := (unitary_act_halfSpace E Ψ (N + 1) _ hγ).2 Z hZ
   have hlim := tendsto_first hΨ hn hN hsw (hR' M φ hφ _ hγ hd) hact.2.1
   have hne : (∏ τ : Ψ, ((ccT b).map τ.1).det ^ n) ≠ 0 := by
@@ -221,7 +222,7 @@ theorem GlobalTheory.SW.swd_tendsto_zero_at_cusps : ∀ (E : Type) [Field E] [Nu
   rw [mul_zero] at h2
   refine h2.congr' ?_
   filter_upwards [eventually_ge_atTop (0 : ℝ)] with t ht
-  have h3 := (GlobalTheory.T.siegelWeilDifference_automorphy_linearity E Ψ hΨ n (N + 1) hn hN M φ hφ.pos.1 (isSB_of_adm hΨ hn hφ) _
+  have h3 := (_root_.GlobalTheory.SW.swd_automorphy_linear E Ψ hΨ n (N + 1) hn hN M φ hφ.pos.1 (isSB_of_adm hΨ hn hφ) _
     (pushZ_mem Ψ hZ v ht)).1 _ hγ
   rw [hAct_pushZ Ψ hba, hav, hFac_levi] at h3
   rw [h3, inv_mul_cancel_left₀ hne]

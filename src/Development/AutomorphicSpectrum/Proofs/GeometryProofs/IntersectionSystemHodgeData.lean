@@ -1,11 +1,15 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsPeriodAtRestrict
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointsIffCentresStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComponentDataHodgeSecondStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GramMatrixTwoFramesStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.InteriorPointPolarisedStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ValAtIffValueAtStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointsIffCentres
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComponentDataHodgeSecond
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ContDiffUncentre
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GramMatrixTwoFrames
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.InteriorPointPolarised
+import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.CoordinateIdeals
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ValAtIffValueAt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,11 +63,11 @@ theorem gramAt_eq_hodge : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   classical
   haveI : CharZero Ω := algebraRat.charZero Ω
   have hw : w ∈ mcPts (mCoordIdeal Dc.y) :=
-    (GlobalTheory.T.complex_points_iff_centres Or.𝔐.X Ω Or.𝔐.ξ K J Dc.y Or.𝔐.tie w).2 ⟨z, h, hco⟩
+    (_root_.GlobalTheory.CompanionTheory.Ar.mem_mcPts_iff_exists_coordsAt Or.𝔐.X Ω Or.𝔐.ξ K J Dc.y Or.𝔐.tie w).2 ⟨z, h, hco⟩
   have hnb : w ∉ Dc.Bd := fun hb => (Or.bd z w hco).1 hb hint
   have hex : ∃ a, InFrameDomain Dc.y ((Dc.h τ).chart a) ((Dc.h τ).fr a) w :=
     (Dc.h τ).cover w ⟨hw, hnb⟩
-  have hsib := GlobalTheory.T.component_data_hodge_second E H D l Xo c Y II K J Ω W Dc Hd S₀ Or z w τ ((Dc.h τ).chart hex.choose)
+  have hsib := _root_.GlobalTheory.CompanionTheory.Ar.BlockSumFrame.frame_at E H D l Xo c Y II K J Ω W Dc Hd S₀ Or z w τ ((Dc.h τ).chart hex.choose)
     ((Dc.h τ).fr hex.choose) ((Dc.h τ).b hex.choose) h hco ((Dc.h τ).isFrame _) hex.choose_spec
   have hmem : ∀ q, b q ∈ Submodule.span (regAt Or.𝔐.ξ ⟨centre z, h⟩) (Set.range ((Dc.h τ).b hex.choose)) := by
     intro q
@@ -87,10 +91,10 @@ theorem gramAt_eq_hodge : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   have hmat : (Matrix.of fun p q => valAt Dc.y (hS.choose p q) w) =
       Matrix.of fun p q => (Scheme.stalkClosedPointTo z).hom (s p q) := by
     ext p q
-    exact valAt_eq hw ((GlobalTheory.T.valAt_iff_value_at Or.𝔐.X Ω Or.𝔐.ξ K J Dc.y Or.𝔐.tie z w h hco _ _).1 (hval p q))
+    exact valAt_eq hw ((_root_.GlobalTheory.CompanionTheory.Ar.valAt_iff_isValueAt_coords Or.𝔐.X Ω Or.𝔐.ξ K J Dc.y Or.𝔐.tie z w h hco _ _).1 (hval p q))
   rw [gramAt, dite_eq_left hex, dite_eq_left hS, hmat]
-  refine (GlobalTheory.T.gram_matrix_two_frames E H D l Xo c Y S₀ Ω K J Dc.y Or.𝔐 z Dc.N (fun k => Or.i τ ((Dc.h τ).b hex.choose k))
-    (fun k => Or.i τ (b k)) _ G hS.choose _ (GlobalTheory.T.interior_point_polarised E H D l Xo c Y S₀ Ω K J Dc.y Or.𝔐 z hint)
+  refine (_root_.GlobalTheory.CompanionTheory.Ar.HodgeMetric.gramAt_change E H D l Xo c Y S₀ Ω K J Dc.y Or.𝔐 z Dc.N (fun k => Or.i τ ((Dc.h τ).b hex.choose k))
+    (fun k => Or.i τ (b k)) _ G hS.choose _ (_root_.GlobalTheory.CompanionTheory.Ar.HodgeMetric.polarisedAt_of_interior E H D l Xo c Y S₀ Ω K J Dc.y Or.𝔐 z hint)
     (Or.metric τ hex.choose z w hco hint hex.choose_spec) hG ?_ hval).symm
   intro q
 

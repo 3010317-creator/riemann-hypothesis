@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.HzUnit
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSelfDualLatticePrescribedSplitPlaceStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ExistsUnitarySupportedAtPlaceOfMulEqIdem
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSelfDualLatticePrescribedSplitPlace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,7 +61,7 @@ theorem exists_selfDual_frames : ∀ (D : D7) (S : HSp D) (L₀ : GlobalTheory.F
     refine Finset.induction_on s ⟨L₀, hL₀, by simp⟩ ?_
     intro j s hj ih
     obtain ⟨L, hL, hs⟩ := ih
-    obtain ⟨L', hL', hother, hq⟩ := GlobalTheory.T.exists_selfDualLattice_prescribed_splitPlace D (K j) (q j) S (Y j) (F j) L hL
+    obtain ⟨L', hL', hother, hq⟩ := _root_.GlobalTheory.SplitLat.exists_selfDual_frame D (K j) (q j) S (Y j) (F j) L hL
     refine ⟨L', hL', ?_⟩
     intro i hi
     rcases Finset.mem_insert.mp hi with rfl | hi'

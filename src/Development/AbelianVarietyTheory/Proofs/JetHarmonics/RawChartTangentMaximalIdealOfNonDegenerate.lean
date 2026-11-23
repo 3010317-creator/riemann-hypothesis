@@ -2,9 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.IsSelfOf
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.AdjointEndPairMemGaugedCurveLogarithms
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FormalGroupCocycleLthPowerCoboundaryModMaximalStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IntegralSmulCurveCoeffSeriesOfChartHOfLinearLogStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MvPowerSeriesLthPowerOfPderivVanishModMaximalStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FormalGroupCocycleLthPowerCoboundaryModMaximal
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IntegralSmulCurveCoeffSeriesOfChartHOfLinearLog
+public import Formalism.LocalToGlobal.CharacterGerms.IntSubst
+public import Formalism.LocalToGlobal.CharacterGerms.Interface
+public import Mathlib.RingTheory.MvPowerSeries.Derivative
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MvPowerSeriesLthPowerOfPderivVanishModMaximal
 import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsNotMemForallMem
 import Formalism.LocalToGlobal.CharacterGerms.ConstMemTypeSetOfNonneg
 import Mathlib.Algebra.Order.Floor.Extended
@@ -141,8 +144,8 @@ theorem cob_root (H : RLaw Y V) {c : MvPowerSeries (Fin 2 × κ) C} (hc : IntS V
     (h : ∀ μ, V.MM (MvPowerSeries.coeff μ (c ^ V.l + cob Y b))) :
     ∃ b' : MvPowerSeries κ C, IntS V b' ∧ ∀ μ, V.MM (MvPowerSeries.coeff μ (c - cob Y b')) := by
   haveI := H.closed
-  obtain ⟨b', hb', hbb⟩ := (GlobalTheory.T.mvPowerSeries_lthPower_of_pderiv_vanish_mod_maximal C V κ).1 b hb hd
-  obtain ⟨-, hroot, hfr⟩ := GlobalTheory.T.mvPowerSeries_lthPower_of_pderiv_vanish_mod_maximal C V (Fin 2 × κ)
+  obtain ⟨b', hb', hbb⟩ := (_root_.GlobalTheory.SeriesFrobRoot.main C V κ).1 b hb hd
+  obtain ⟨-, hroot, hfr⟩ := _root_.GlobalTheory.SeriesFrobRoot.main C V (Fin 2 × κ)
   have s0 := MvPowerSeries.hasSubst_of_constantCoeff_zero (gp_const (C := C) (κ := κ) (0 : Fin 2))
   have s1 := MvPowerSeries.hasSubst_of_constantCoeff_zero (gp_const (C := C) (κ := κ) (1 : Fin 2))
   have sa := MvPowerSeries.hasSubst_of_constantCoeff_zero
@@ -372,8 +375,8 @@ theorem tangent_mm_of_nonDeg : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) [Ne
       split_ifs
       · rw [PowerSeries.coeff_smul, tl, hx1 c, smul_zero]
       · exact map_zero _
-  obtain ⟨hbi, hbd⟩ := GlobalTheory.T.integral_smul_curveCoeffSeriesOfChartH_of_linear_log C V d I κ Y H γ hγ hlow
-  obtain ⟨hci, hcb⟩ := GlobalTheory.T.formalGroupCocycle_lthPower_coboundary_mod_maximal C V d I κ Y H γ hγ hlow
+  obtain ⟨hbi, hbd⟩ := _root_.GlobalTheory.GaugeCoef.main C V d I κ Y H γ hγ hlow
+  obtain ⟨hci, hcb⟩ := _root_.GlobalTheory.CocyclePow.cocycle_pow_coboundary C V d I κ Y H γ hγ hlow
   have hcob := cob_root H hci hbi (hbd (sg_all H hP hγ h1 hq)) hcb
   have htan : ∀ i, V.MM (PowerSeries.coeff 1 (γ i)) := by
     by_contra hne

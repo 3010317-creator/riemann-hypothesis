@@ -3,8 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.ThetaValues.LetAct
 public import Formalism.LocalToGlobal.ProjectiveLattices.ThClassPinsRec
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FrameLetterGLActionRepresentationKeepsHarmonic
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FrameReadingLeadingMinorProductExtremalStatement
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.HodgeWeightDominanceConditionStatement
+public import Formalism.LocalToGlobal.Divisibility.CoefMod
+public import Formalism.LocalToGlobal.ProjectiveLattices.ThClass
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FrameReadingLeadingMinorProductExtremal
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.HodgeWeightDominanceCondition
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.InPsiOrConjugateUnit
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.LeadingMinorProductHarmonicGenerates
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.MemNabStdOfDetMulIntegral
@@ -122,8 +124,8 @@ theorem isIntegral_coeff_cof {K : Type} [Field K] (P : MvPolynomial (LtN Dw n) K
 
 theorem exists_ioLFRec : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (n : ℕ) (Ix : Type) [Fintype Ix] (pl : Ix → (E →+* ℂ)), IsEnum H pl → Dw.p + Dw.q ≤ n → ∀ (l : Level H) (c : Coeff l) (a : (E →+* ℂ) × ℕ → ℕ) (s : Ix → ℤ) (lam : Ix → DomWeight n), (∀ τ, Antitone fun i => a (τ, i)) → WtIs Dw pl a s lam → ∃ (io : VVc c lam →ₗ[c.F] MvPolynomial (LtN Dw n) c.F) (hw : VVc c lam), IoLFRec c (fun t => embF c (pl t)) lam a io hw := by
   intro E _ _ _ H Dw n Ix _ pl he hn l c a s lam ha hwt
-  obtain ⟨ε, hε⟩ := GlobalTheory.T.frameReading_leadingMinorProduct_extremal E H Dw n Ix pl he hn l c a s lam ha hwt
-  obtain ⟨him, hex, heq⟩ := GlobalTheory.T.hodge_weight_dominance_condition E H Dw n Ix pl he hn l c a s lam ha hwt
+  obtain ⟨ε, hε⟩ := _root_.GlobalTheory.FrameReadHw.cof_pG E H Dw n Ix pl he hn l c a s lam ha hwt
+  obtain ⟨him, hex, heq⟩ := _root_.GlobalTheory.FrameRead.cof_image E H Dw n Ix pl he hn l c a s lam ha hwt
   obtain ⟨hpG, -, -⟩ := pG_mem_ne_zero_generates E H Dw n Ix pl he hn l c a ha
   obtain ⟨-, -, hstab⟩ := letAct_mul_one_mem_HHa E H Dw n Ix pl he hn c.F a
   obtain ⟨hs1, hs2, hs3⟩ := GlobalTheory.StdNab.nabAtr_stdLat E c.F Ix n (fun t => embF c (pl t)) lam

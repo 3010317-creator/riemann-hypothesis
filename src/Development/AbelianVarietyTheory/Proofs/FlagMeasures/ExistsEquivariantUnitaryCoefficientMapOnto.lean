@@ -4,7 +4,9 @@ public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.Level
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsOrthonormalFrameComplementRealPlacesStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HcParamEqWeightStepZeroAddRho
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MapFnOfEqValC
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TensorTypesRealPlacesEquivSpanWeylModulesStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
+public import Formalism.LocalToGlobal.HermitianForms.IsLocBasis
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TensorTypesRealPlacesEquivSpanWeylModules
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -69,7 +71,7 @@ theorem coefficient_map_exists_onto : ∀ (D : D7) (X : HidaSetting D) (u : D.wh
     intro τ
     have h := X.piLoc_type u (X.pl.symm τ)
     rwa [X.pl.apply_symm_apply] at h
-  obtain ⟨Jp, hJv, hJs, hJi, hJe⟩ := GlobalTheory.T.tensor_types_realPlaces_equiv_span_weylModules D.what₂.Tau D.R.k (D.R.N 0) D.R.N_zero.symm
+  obtain ⟨Jp, hJv, hJs, hJi, hJe⟩ := _root_.GlobalTheory.TenTypes.tensor_dict D.what₂.Tau D.R.k (D.R.N 0) D.R.N_zero.symm
     (Formalism.L2.Forms.lamT u 0) (fun τ i => (((D.hcW u τ).u i : ℚ) : ℝ))
     (fun τ i => GlobalTheory.hcParam_eq_weight_step_zero_add_rho D u τ i)
     (fun τ => X.Vloc u (X.pl.symm τ)) (fun τ => X.piLoc u (X.pl.symm τ)) hty (X.Vpi u) tens hin hsp

@@ -3,9 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsLv
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LocallyCompactUnipFlag
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SummableOfCount
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardRationalPointsFixerTorusClassesLeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLowerBoundDiagonalExponentsRationalPointStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReductionLeviGLIsotropicFrameStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardRationalPointsFixerTorusClassesLe
+public import Development.AbelianVarietyTheory.Definitions.Divisors.LocallyCompactSpaceAxis
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLowerBoundDiagonalExponentsRationalPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReductionLeviGLIsotropicFrame
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -43,7 +44,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.Divisors.LocallyCompactSpaceAxis
 
 @[expose] public section
 
@@ -75,10 +75,10 @@ theorem summable_absDet : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
   have hfp : fixG σ J C ≤ parFlag σ J C (fun _ => 0) := fun g hg =>
     ⟨⟨1, Matrix.blockTriangular_one, by rw [Matrix.mul_one]; exact hg⟩, 1, Matrix.blockTriangular_one, by
       rw [Matrix.mul_one]; exact inv_mem hg⟩
-  obtain ⟨W, B, hW, hR⟩ := GlobalTheory.T.reduction_leviGL_isotropicFrame F E σ n J j m C D Z J₀ hF lv hlv
+  obtain ⟨W, B, hW, hR⟩ := _root_.GlobalTheory.SphEis.reduce_levi F E σ n J j m C D Z J₀ hF lv hlv
   choose γ hγ hγP q hq l w hw hred hle using fun i => hR (p i) (β i) (hβ i)
   have hWK : IsCompact (W * K) := hW.mul hK
-  obtain ⟨m₀, hm₀⟩ := GlobalTheory.T.exists_lowerBound_diagonalExponents_rationalPoint F E σ n J j m C D Z J₀ hF lv hlv (W * K) hWK
+  obtain ⟨m₀, hm₀⟩ := _root_.GlobalTheory.SphEis.exists_bound_exponents F E σ n J j m C D Z J₀ hF lv hlv (W * K) hWK
   have hl : ∀ i r, -(m₀ : ℤ) ≤ l i r := fun i =>
     hm₀ (q i) (hq i) (l i) (w i * k i) (Set.mul_mem_mul (hw i) (hk i)) (by
       have := mul_mem (hγ i) (hx i)
@@ -87,7 +87,7 @@ theorem summable_absDet : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [
     ⟨fun i r => (l i r + m₀).toNat, fun i => funext fun r => by have := hl i r; beta_reduce; omega⟩
   obtain ⟨a, ha⟩ : ∃ a, a = lv (tor F E fun _ => -(m₀ : ℤ)) := ⟨_, rfl⟩
   have hW' : IsCompact ((fun g => a * g) '' (W * K)) := hWK.image (continuous_const_mul a)
-  obtain ⟨N, hN⟩ := GlobalTheory.T.card_rationalPoints_fixer_torusClasses_le F E σ n J j m C D Z J₀ hF lv hlv _ hW'
+  obtain ⟨N, hN⟩ := _root_.GlobalTheory.SphEis.card_ratPts_fixG_tor_le F E σ n J j m C D Z J₀ hF lv hlv _ hW'
   have hz : ∀ i, γ i * x i = q i * lv (tor F E fun r => (μ i r : ℤ)) * (a * (w i * k i)) := fun i => by
     rw [e, ← mul_assoc, hred, hμ, tor_add, map_mul, ← ha]
     simp only [mul_assoc]

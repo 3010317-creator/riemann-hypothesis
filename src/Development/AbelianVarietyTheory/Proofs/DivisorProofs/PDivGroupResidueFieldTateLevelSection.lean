@@ -2,7 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ToSpanSingletonConstGenInjective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConvEqOneOfForallPairing
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAlgHomLiftResiduePointFiniteFlatStatement
+public import Mathlib.Basic.NNReal.Defs
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.RingTheory.AdicCompletion.Basic
+public import Mathlib.RingTheory.Flat.Basic
+public import Mathlib.RingTheory.LocalRing.ResidueField.Basic
+public import Mathlib.RingTheory.Valuation.Integers
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAlgHomLiftResiduePointFiniteFlat
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -71,7 +77,7 @@ theorem main : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C]
 
   have hlift : ∀ (n : ℕ) (c : G.A n →ₐ[O] k), ∃ t : G.Tate, (π t).pt n = c := by
     intro n c
-    obtain ⟨x, hx⟩ := GlobalTheory.T.exists_algHom_lift_residuePoint_finite_flat p C v O hv (G.A n) c
+    obtain ⟨x, hx⟩ := _root_.GlobalTheory.ResiduePointLift.exists_algHom_lift p C v O hv (G.A n) c
     obtain ⟨t, ht⟩ := G.pt_surjective C n x
     refine ⟨t, AlgHom.ext fun a => ?_⟩
     rw [tatePush_pt]

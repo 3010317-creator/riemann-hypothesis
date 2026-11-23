@@ -2,13 +2,19 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsoOverOfIsOpenImmersion
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict
-import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsModificationExtendingMapFromOpenStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GeometricallyConnectedSmoothProjModificationOffOStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsModificationExtendingMapFromOpen
+public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.LevelCarrying
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsCoprimeOfNatCast
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHomogeneousCompIdeal
+public import Development.AbelianVarietyTheory.Definitions.Divisors.MemLevEigenIffTransl
+public import Development.AbelianVarietyTheory.Definitions.Divisors.UnitaryWeightExponentVectorSignatureWeightMuZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GeometricallyConnectedSmoothProjModificationOffO
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KawamataViehwegVanishingNumberFieldTwist
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopologicalKrullDimEqOfOpenImmersionIntegralSche
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeakResolutionOfPrincipalisation
+import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemNonzeroLocusFormMap
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopologicalKrullDimEqOfOpenImmersionIntegralScheStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeakResolutionOfPrincipalisationStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,13 +55,8 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.LevelCarrying
 import Development.AbelianVarietyTheory.Definitions.Divisors.CuspIso
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsCoprimeOfNatCast
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHomogeneousCompIdeal
-public import Development.AbelianVarietyTheory.Definitions.Divisors.MemLevEigenIffTransl
 import Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings
-public import Development.AbelianVarietyTheory.Definitions.Divisors.UnitaryWeightExponentVectorSignatureWeightMuZero
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GapGeSubKapBase
 
 @[expose] public section
@@ -128,14 +129,14 @@ theorem exists_resolved_modification : GlobalTheory.Published.Principalisation �
 
   have hdW : topologicalKrullDim W = n := by
     have hdX : topologicalKrullDim X = n := GlobalTheory.HSCore.VanishNumberField.topologicalKrullDim_eq_of_smooth sX n inferInstance
-    have hdV := GlobalTheory.T.topologicalKrullDim_eq_of_openImmersion_integral_scheme F X V sX i
-    have hdV' := GlobalTheory.T.topologicalKrullDim_eq_of_openImmersion_integral_scheme F X' V (φ ≫ sX) ℓ
+    have hdV := _root_.GlobalTheory.OpenImmDim.topologicalKrullDim_eq_of_isOpenImmersion F X V sX i
+    have hdV' := _root_.GlobalTheory.OpenImmDim.topologicalKrullDim_eq_of_isOpenImmersion F X' V (φ ≫ sX) ℓ
     have h₁ := PosBaseChange.dim_le_of_isClosedMap q.isClosedMap q.surjective
     have h₂ := PosBaseChange.dim_le_of_isDiscrete q.continuous q.isDiscrete_preimage_singleton
     rw [← hdX, ← hdV, hdV']
     exact le_antisymm h₁ h₂
 
-  obtain ⟨W', s, UW, hW', hsm, hpj, hUW, hiso⟩ := GlobalTheory.T.weak_resolution_of_principalisation hP F W sW n hsW hdW
+  obtain ⟨W', s, UW, hW', hsm, hpj, hUW, hiso⟩ := _root_.GlobalTheory.WeakRes.weak_resolution hP F W sW n hsW hdW
   haveI := hW'
   haveI := hiso
   have hηUW : genericPoint W ∈ UW := genericPoint_mem UW hUW
@@ -171,7 +172,7 @@ theorem exists_resolved_modification : GlobalTheory.Published.Principalisation �
     simp only [r₀, pullback.lift_snd_assoc, Category.assoc]
     rw [reassoc_of% hb, reassoc_of% hcf, hw, reassoc_of% hℓi, reassoc_of% he]
   obtain ⟨M, r, hMi, hrt, hrM⟩ :=
-    GlobalTheory.T.exists_modification_extending_map_from_open hP F X (pullback q s) sX n (pullback.snd q s ≫ s ≫ sW) U r₀ inferInstance hsX ht hUne hr₀
+    _root_.GlobalTheory.CompHS.exists_modif_map_of_open hP F X (pullback q s) sX n (pullback.snd q s ≫ s ≫ sW) U r₀ inferInstance hsX ht hUne hr₀
   haveI := hMi
   have hsep : IsSeparated sX := inferInstance
   haveI : IsDominant M.opn.ι := ⟨show Dense (Set.range M.opn.ι) by rw [Scheme.Opens.range_ι]; exact M.dense⟩
@@ -223,7 +224,7 @@ theorem exists_resolved_modification : GlobalTheory.Published.Principalisation �
     exact genericPoint_eq_of_isOpenImmersion b
   have hfsurj : Surjective f :=
     surjective_of_isProjOver M.str (s ≫ sW) f hfp M.proj hpj (z j₀ o₀) (by rw [← Scheme.Hom.comp_apply]; exact hgen' j₀ o₀)
-  have hgcM : GeometricallyConnected M.str := GlobalTheory.T.geometricallyConnected_smoothProjModification_offOpen F X sX n U M hUne
+  have hgcM : GeometricallyConnected M.str := _root_.GlobalTheory.ModifGeomConn.geometricallyConnected_modif F X sX n U M hUne
   have hgcW : GeometricallyConnected (s ≫ sW) := by
     rw [← hfp] at hgcM
     exact geometricallyConnected_of_surjective f (s ≫ sW)

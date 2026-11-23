@@ -1,7 +1,11 @@
 module
 
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.AuxiliaryPrimeFunction
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SchwartzFourierTransformMatrixStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SchwartzFourierTransformMatrix
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.CayleyTransform.CompFinFinOne
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.FockSpaces.ContinuousLoc
 import Development.WeilBound.ThetaLifts.TowerModels.LeviAd
@@ -269,7 +273,7 @@ theorem locFT_sw {m n : ℕ} (C s : ℂ) (hs : s ≠ 0) (f : (Fin m → Fin n �
     IsSw (fun u => C * ∫ v : Fin m → Fin n → ℂ,
       Complex.exp (2 * Real.pi * Complex.I * ((s * Matrix.trace ((Matrix.of u)ᴴ * Matrix.of v)).re : ℂ)) * f v) := by
   obtain ⟨φ, rfl⟩ := hf
-  obtain ⟨ψ, hψ⟩ := GlobalTheory.T.schwartz_fourier_transform_matrix m n C s hs φ
+  obtain ⟨ψ, hψ⟩ := _root_.GlobalTheory.CompanionTheory.FourierMatrix.exists_schwartz_trace_transform m n C s hs φ
   exact ⟨ψ, hψ⟩
 
 end PositivityTheory.SiegelWeilFormula.KW

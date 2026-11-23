@@ -2,11 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelPosOfCoprime
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteEtaleLevelLiftScheme
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteEtaleLevelLiftSchemeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniquePointOfLevelLiftHarrisTaylorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorHigherLevelPointsEqOfSameImageStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorIsLevelLiftOfPointStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateSimilitudeIffOfSpecializesGeometricPointsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniquePointOfLevelLiftHarrisTaylor
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorHigherLevelPointsEqOfSameImage
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorIsLevelLiftOfPoint
+import Development.AbelianVarietyTheory.Definitions.Divisors.NotCompactOfMEqOne
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateSimilitudeIffOfSpecializesGeometricPoints
 import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsIsoIffBijectiveOverAlgClosed
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -63,7 +63,7 @@ theorem forget_map_finite_etale_surjective : ∀ (p : ℕ) [Fact p.Prime] (D : D
   haveI := M.smooth
   haveI : Smooth M.s := SmoothOfRelativeDimension.smooth (D.a * (D.n - 1)) M.s
   haveI : IsLocallyNoetherian M.X := LocallyOfFiniteType.isLocallyNoetherian M.s
-  obtain ⟨Y, ηu, hYf, hYe, HY⟩ := GlobalTheory.T.exists_finite_etale_level_lift_scheme p D R b N N' hc hd M.X M.s M.univ
+  obtain ⟨Y, ηu, hYf, hYe, HY⟩ := _root_.GlobalTheory.UPel.HT.exists_liftScheme p D R b N N' hc hd M.X M.s M.univ
   let T0 : Over M.X := Over.mk π
   have hw : ∀ a, ((M'.univ.eta a).left ≫ om.φ) ≫ M.univ.A.hom = T0.hom := fun a => by
     have w : (om.φ : M'.univ.A.left ⟶ M.univ.A.left) ≫ M.univ.A.hom = M'.univ.A.hom ≫ π := om.cart.1.w
@@ -72,13 +72,13 @@ theorem forget_map_finite_etale_surjective : ∀ (p : ℕ) [Fact p.Prime] (D : D
     erw [Category.assoc, w, ← Category.assoc, w2, Category.id_comp]
   let lv0 : D.La → (T0 ⟶ M.univ.A) := fun a => Over.homMk ((M'.univ.eta a).left ≫ om.φ) (hw a)
   have hl0 : IsLift M.univ N' T0 lv0 :=
-    GlobalTheory.T.harrisTaylor_isLevelLift_of_point p D R b N N' hd hc M.X M'.X M.s M'.s M.univ M'.univ π om T0 (𝟙 M'.X) lv0
+    _root_.GlobalTheory.UPel.HT.isLift_of_point p D R b N N' hd hc M.X M'.X M.s M'.s M.univ M'.univ π om T0 (𝟙 M'.X) lv0
       (Category.id_comp π) fun a => (Category.id_comp _).symm
   obtain ⟨g0, hg0, -⟩ := (HY T0 lv0).1 hl0
   have hlY : IsLift M.univ N' Y ηu := (HY Y ηu).2 ⟨𝟙 Y, fun a => Category.id_comp _⟩
-  obtain ⟨h, hh, hha⟩ := GlobalTheory.T.exists_unique_point_of_level_lift_harrisTaylor p D R b N N' h3 hd hc M M' π hπ om Y ηu hlY
+  obtain ⟨h, hh, hha⟩ := _root_.GlobalTheory.UPel.HT.OfLift.ofLift p D R b N N' h3 hd hc M M' π hπ om Y ηu hlY
   have e1 : g0.left ≫ h = 𝟙 M'.X := by
-    refine GlobalTheory.T.harrisTaylor_higherLevel_points_eq_of_same_image p D R b N N' hd hc M.X M.s M.univ M' π hπ om M'.X _ _ ?_ fun a => ?_
+    refine _root_.GlobalTheory.UPel.HT.LiftUniq.eq_of_same_image p D R b N N' hd hc M.X M.s M.univ M' π hπ om M'.X _ _ ?_ fun a => ?_
     · rw [Category.assoc, hh, Over.w g0, Category.id_comp]
       rfl
     · rw [Category.id_comp, Category.assoc, ← hha a, ← Over.comp_left, hg0 a]
@@ -128,7 +128,7 @@ theorem forget_map_finite_etale_surjective : ∀ (p : ℕ) [Fact p.Prime] (D : D
       have h1 : TateAt M.univ N' (𝟙 T.left ≫ T.hom)
           (fun a => (Over.homMk (𝟙 T.left) rfl : Over.mk (𝟙 T.left ≫ T.hom) ⟶ T) ≫ lv a) :=
         tateAt_congr M.univ N' (Category.id_comp g).symm _ _ (fun a => by congr 1) h0
-      exact (GlobalTheory.T.tateSimilitude_iff_of_specializes_geometric_points p D R b N N' hc M.X M.s M.univ T lv hadd hker hlin (𝟙 T.left) x'
+      exact (_root_.GlobalTheory.HTSpecTate.tateIsoO_iff_of_specializes p D R b N N' hc M.X M.s M.univ T lv hadd hker hlin (𝟙 T.left) x'
         (x'.base (⊥ : PrimeSpectrum k')) (⊥ : PrimeSpectrum k') (by
           first
           | exact specializes_rfl

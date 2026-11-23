@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAmbOfIsArithVar
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinsumMultResCycIndicatorSymmStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinsumMultResCycIndicatorSymm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -128,6 +128,6 @@ theorem iterDiv_symm : ∀ (k : Type) [CommRing k] (Y : Scheme.{0}) [IsIntegral 
     exact Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => by ring
   rw [Ls, Lt, Es, Et]
   refine Finset.sum_congr rfl fun x _ => ?_
-  rw [← Ls, ← Lt, GlobalTheory.T.finsum_mult_resCyc_indicator_symm' k Y q hq A B hA hB s t hs ht hst x]
+  rw [← Ls, ← Lt, _root_.GlobalTheory.MixHt.finsum_mult_resCyc_indicator_symm k Y q hq A B hA hB s t hs ht hst x]
 
 end GlobalTheory.MixHt

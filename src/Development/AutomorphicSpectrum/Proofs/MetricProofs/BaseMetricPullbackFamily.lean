@@ -1,11 +1,12 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BasePartFlagPt
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BaseChartHolomorphicCompositionStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.BaseVectorProperties
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BaseChartHolomorphicComposition
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsNullOfLocallyInZeros
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PluckerNonvanishingOrbitInvariant
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SncAdaptedAtlasProjection
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.HomogeneousLiftHolomorphicOnSnd
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.BaseVectorProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,7 +45,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.HomogeneousLiftHolomorphicOnSnd
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.PullbackPullback
 
 @[expose] public section
@@ -97,7 +97,7 @@ theorem isNull_off_bigCell : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k
       intro p c
       have hV : IsOpen ((A'.chart c).target ∩ (A'.chart c).symm ⁻¹' Wd x) :=
         (A'.chart c).isOpen_inter_preimage_symm (hWo x)
-      have hval := GlobalTheory.T.base_chart_holomorphic_composition K ι Φ y Ψ N j M n BM l e _ (pr' ∘ (A'.chart c).symm) hV
+      have hval := _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.FC.bvec_val_analytic K ι Φ y Ψ N j M n BM l e _ (pr' ∘ (A'.chart c).symm) hV
         (hpr.1.comp_continuousOn ((A'.chart c).continuousOn_symm.mono fun t ht => ht.1))
         (fun k => (hpr.2 c k).mono fun t ht => ⟨ht.1.1, ht.2⟩)
         (fun t ht => ht.2.2.1)

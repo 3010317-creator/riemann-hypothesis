@@ -2,14 +2,21 @@ module
 
 public import Mathlib.Basic.Real.Basic
 public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CoordsEqPairingsRationalSymplecticBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsDotProductMulVecEqOfLinearIndependentStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIsotropicDualOfSkewMatrixStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLagrangianContainingIsotropicRatStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLinearIndependentRatBasisAdaptedSubspaceStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsMemPairingEqSingleNonradicalStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RatAlternatingOrthogonalOrthogonalLeStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RatMemSpanOfRealMemSpanFinStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CoordsEqPairingsRationalSymplecticBasis
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsDotProductMulVecEqOfLinearIndependent
+public import Mathlib.Algebra.Ring.Rat
+public import Mathlib.Data.Matrix.Mul
+public import Mathlib.LinearAlgebra.Span.Defs
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIsotropicDualOfSkewMatrix
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLagrangianContainingIsotropicRat
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAdaptedFamily
+public import Mathlib.LinearAlgebra.LinearIndependent.Defs
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsMemPairingEqSingleNonradical
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RatAlternatingOrthogonalOrthogonalLeAlt
+public import Mathlib.Algebra.Module.Pi
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RatMemSpanOfRealMemSpanFin
+public import Mathlib.CategoryTheory.Monoidal.Cartesian.Over
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -18,7 +25,6 @@ import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-public import Mathlib.CategoryTheory.Monoidal.Cartesian.Over
 import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
@@ -104,7 +110,7 @@ theorem exists_adapted_rational_symplectic_basis : ∀ (g r r₀ : ℕ) (M : Mat
   have hcqV : ∀ m, cq m ∈ V := fun m => Submodule.subset_span ⟨m, rfl⟩
   have hV : ∀ v : Fin r → ℚ, (∀ w ∈ V, v ⬝ᵥ Mq *ᵥ w = 0) → v ∈ V := by
     intro v hv
-    apply GlobalTheory.T.rat_mem_span_of_real_mem_span_fin r₀ r (fun i j => (c i j : ℚ)) v
+    apply _root_.GlobalTheory.rat_mem_span_of_real_mem_span r₀ r (fun i j => (c i j : ℚ)) v
     have hfun : (fun i j => (((c i j : ℚ)) : ℝ)) = fun i j => (c i j : ℝ) := by
       funext i j; simp
     rw [hfun]
@@ -128,10 +134,10 @@ theorem exists_adapted_rational_symplectic_basis : ∀ (g r r₀ : ℕ) (M : Mat
   have hmemI : ∀ y, y ∈ I ↔ ∀ w ∈ V, y ⬝ᵥ Mq *ᵥ w = 0 := fun y => Iff.rfl
   have hIiso : ∀ x ∈ I, ∀ y ∈ I, x ⬝ᵥ Mq *ᵥ y = 0 :=
     fun x hx y hy => (hmemI x).mp hx y (hV y ((hmemI y).mp hy))
-  obtain ⟨L, hIL, hLiso, hLdim⟩ := GlobalTheory.T.exists_lagrangian_containing_isotropic_rat' g r Mq I hr hskq hdq hIiso
+  obtain ⟨L, hIL, hLiso, hLdim⟩ := _root_.GlobalTheory.exists_lagrangian_containing_isotropic_rat g r Mq I hr hskq hdq hIiso
   have hLV : ∀ x ∈ L, x ∈ V := fun x hx =>
-    GlobalTheory.T.mem_of_orthogonal_orthogonal_of_skew_det_ne_zero r Mq V hskq hdq x (fun y hy => hLiso x hx y (hIL ((hmemI y).mpr hy)))
-  obtain ⟨rk, hrk, ε, hεind, hεL, hεI, hIspan⟩ := GlobalTheory.T.exists_linearIndependent_rat_basis_adapted_subspace g r I L hIL hLdim
+    _root_.GlobalTheory.rat_alternating_orthogonal_orthogonal_le r Mq V hskq hdq x (fun y hy => hLiso x hx y (hIL ((hmemI y).mpr hy)))
+  obtain ⟨rk, hrk, ε, hεind, hεL, hεI, hIspan⟩ := _root_.GlobalTheory.AdaptedFamilyIwasawaDecomposition.exists_adapted_family g r I L hIL hLdim
   have hεiso : ∀ i j, ε i ⬝ᵥ Mq *ᵥ ε j = 0 := fun i j => hLiso _ (hεL i) _ (hεL j)
   have hεV : ∀ i, ε i ∈ V := fun i => hLV _ (hεL i)
   have hεperp : ∀ i : Fin g, i.val < rk → ∀ w ∈ V, ε i ⬝ᵥ Mq *ᵥ w = 0 :=
@@ -140,13 +146,13 @@ theorem exists_adapted_rational_symplectic_basis : ∀ (g r r₀ : ℕ) (M : Mat
       ∀ i, x ⬝ᵥ Mq *ᵥ ε i = if i = j then 1 else 0 := by
     intro j
     by_cases hj : rk ≤ j.val
-    · obtain ⟨x, hxV, hx⟩ := GlobalTheory.T.exists_mem_pairing_eq_single_nonradical r g rk Mq V ε hskq hεind hεperp
+    · obtain ⟨x, hxV, hx⟩ := _root_.GlobalTheory.dualV_pairing_exists r g rk Mq V ε hskq hεind hεperp
         (fun y hy => hIspan y ((hmemI y).mpr hy)) j hj
       exact ⟨x, fun _ => hxV, hx⟩
-    · obtain ⟨x, hx⟩ := GlobalTheory.T.exists_dotProduct_mulVec_eq_of_linearIndependent' r g Mq ε hdq hεind (fun i => if i = j then 1 else 0)
+    · obtain ⟨x, hx⟩ := _root_.GlobalTheory.exists_dotProduct_mulVec_eq_of_linearIndependent r g Mq ε hdq hεind (fun i => if i = j then 1 else 0)
       exact ⟨x, fun h => absurd h hj, hx⟩
   choose ψ hψV hψε using hψ
-  obtain ⟨φ, hφiso, hφε, hφψ⟩ := GlobalTheory.T.exists_isotropic_dual_of_skew_matrix' r g Mq ε ψ hskq hεiso (fun i j => hψε j i)
+  obtain ⟨φ, hφiso, hφε, hφψ⟩ := _root_.GlobalTheory.exists_isotropic_dual_of_skew_matrix r g Mq ε ψ hskq hεiso (fun i j => hψε j i)
   have hspanV : Submodule.span ℚ (Set.range ε) ≤ V :=
     Submodule.span_le.mpr (by rintro _ ⟨i, rfl⟩; exact hεV i)
   have hφV : ∀ j : Fin g, rk ≤ j.val → φ j ∈ V := fun j hj => by
@@ -197,7 +203,7 @@ theorem exists_adapted_rational_symplectic_basis : ∀ (g r r₀ : ℕ) (M : Mat
     rw [skew_swap Mq hskq, hεperp j hj _ (hcqV m), neg_zero]
   · rw [hαc]
     ext m k
-    have h := congrFun (GlobalTheory.T.coords_eq_pairings_rational_symplectic_basis g r Mq ε φ hr hskq hdq hεiso hφiso hφε (cq m)) k
+    have h := congrFun (_root_.GlobalTheory.coords_in_rational_symplectic_basis g r Mq ε φ hr hskq hdq hεiso hφiso hφε (cq m)) k
     simp only [Pi.add_apply, Finset.sum_apply, Pi.smul_apply, smul_eq_mul] at h
     rw [Matrix.add_apply, Matrix.mul_apply, Matrix.mul_apply]
     exact h

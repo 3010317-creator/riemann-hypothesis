@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupRepTwistedIsUnitaryRepStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnimodularBesselSubgroupsUWNStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupRepTwistedIsUnitaryRep
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnimodularBesselSubgroupsUWN
 import Formalism.FormalDegreeBessel.FinalG
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -152,7 +152,7 @@ theorem pis_inv {Wp : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [
   have heq : (h * n)⁻¹ = h⁻¹ * (h * n⁻¹ * h⁻¹) := by
     rw [Matrix.mul_inv_rev, ← Matrix.mul_assoc, ← Matrix.mul_assoc, Matrix.nonsing_inv_mul _ hd,
       Matrix.one_mul]
-  rw [heq, psi_eq_psiGen, ((GlobalTheory.T.besselSubgroupRepTwisted_isUnitaryRep k r z (fun _ => c) π hz hT hπ).1 h⁻¹ (uw_inv hh) _ hm.1).2,
+  rw [heq, psi_eq_psiGen, ((_root_.GlobalTheory.SgInf.PiUnitary.piS_unitary k r z (fun _ => c) π hz hT hπ).1 h⁻¹ (uw_inv hh) _ hm.1).2,
     ← psi_eq_psiGen, psi_congr hm.2]
 
 theorem adj_inv {Wq : Type*} [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [CompleteSpace Wq]
@@ -236,7 +236,7 @@ theorem splitS_mul {Wp : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp
     (p : Mt k r × Mt k r) (hh : Matrix.of p.1 ∈ UWset k r z) (hn : Matrix.of p.2 ∈ Nset k r) :
     splitS (lmulM (Matrix.of p.1) p.2) = p := by
   have hP : hPart k r (Matrix.of p.1 * Matrix.of p.2) = Matrix.of p.1 :=
-    ((GlobalTheory.T.besselSubgroupRepTwisted_isUnitaryRep k r z (fun _ => 0) π hz hT hπ).1 _ hh _ hn).1
+    ((_root_.GlobalTheory.SgInf.PiUnitary.piS_unitary k r z (fun _ => 0) π hz hT hπ).1 _ hh _ hn).1
   have hd := unit_of_mem hh.1
   unfold splitS
   refine Prod.ext ?_ ?_
@@ -287,9 +287,9 @@ theorem part2 {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     filter_upwards [a1, a2, a3, a4] with p h1 h2 h3 h4
     exact ⟨h1, h2, h3, h4⟩
 
-  have hWi : μW.map invM = μW := ((GlobalTheory.T.unimodular_besselSubgroups_UW_N k r z hz hT μW).2.2 hμW).1.2
-  have hW'i : μW'.map invM = μW' := ((GlobalTheory.T.unimodular_besselSubgroups_UW_N k r z' hz' hT' μW').2.2 hμW').1.2
-  have hNi : μN.map invM = μN := ((GlobalTheory.T.unimodular_besselSubgroups_UW_N k r z hz hT μN).2.1 hμN).1.2
+  have hWi : μW.map invM = μW := ((_root_.GlobalTheory.SgInf.unimodular_S_N_UW k r z hz hT μW).2.2 hμW).1.2
+  have hW'i : μW'.map invM = μW' := ((_root_.GlobalTheory.SgInf.unimodular_S_N_UW k r z' hz' hT' μW').2.2 hμW').1.2
+  have hNi : μN.map invM = μN := ((_root_.GlobalTheory.SgInf.unimodular_S_N_UW k r z hz hT μN).2.1 hμN).1.2
   have hinv4 : ((μW.prod μN).prod (μW'.prod μN)).map inv4 = (μW.prod μN).prod (μW'.prod μN) := by
     unfold inv4
     rw [← Measure.map_prod_map _ _ (measurable_invM.prodMap measurable_invM)

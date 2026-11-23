@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AinfDivisibilityBreuilKisinFactsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoeffZeroMapPowNullFactsStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AinfDivisibilityBreuilKisinFacts
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MemBallOfGaugeLt
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoeffZeroMapPowNullFacts
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,7 +54,7 @@ theorem TopBasis.dvd_iff_dvd_coeff {S A ι : Type} [CommRing S] [CommRing A] {s 
     (tb : TopBasis s I ι) (hI : IsHausdorff I S) (p : S)
     (hp : ∀ (n : ℕ) (y : S), p * y ∈ I ^ (2 * n + 2) → y ∈ I ^ n) (x : A) :
     s p ∣ x ↔ ∀ i, p ∣ tb.c i x := by
-  obtain ⟨h0, -, h2⟩ := GlobalTheory.T.coeff_zero_map_pow_null_facts S A ι s I tb
+  obtain ⟨h0, -, h2⟩ := _root_.GlobalTheory.BSP.TopBasis.coeff_facts S A ι s I tb
   refine ⟨?_, fun h => ?_⟩
   · rintro ⟨y, rfl⟩ i
     exact ⟨_, tb.c_mul i p y⟩
@@ -72,7 +73,7 @@ theorem TopBasis.mod_props {S A ι : Type} [CommRing S] [CommRing A] {s : S →+
       ∀ x : A, (∀ m : ℕ, ∃ z, (l : A) ∣ x - s u ^ m * z) → (l : A) ∣ x := by
   have key := tb.dvd_iff_dvd_coeff hI (l : S) hp
   rw [← map_natCast s l]
-  refine ⟨fun x hx => (GlobalTheory.T.coeff_zero_map_pow_null_facts S A ι s I tb).1 x fun i => h1 _ ?_, fun x hx => (key x).2 fun i => h2 _ ?_,
+  refine ⟨fun x hx => (_root_.GlobalTheory.BSP.TopBasis.coeff_facts S A ι s I tb).1 x fun i => h1 _ ?_, fun x hx => (key x).2 fun i => h2 _ ?_,
     fun x hx => (key x).2 fun i => h3 _ fun m => ?_⟩
   · rw [← tb.c_mul, hx, map_zero]
   · rw [← tb.c_mul]
@@ -84,7 +85,7 @@ theorem TopBasis.mod_props {S A ι : Type} [CommRing S] [CommRing A] {s : S →+
 
 theorem env_ainf_mod : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (En : Env bk (ainfObj K) (bk.ev bk.E) (bk.ev X)), (∀ x : En.Q.A, ((l : ℕ) : En.Q.A) * x = 0 → x = 0) ∧ (∀ x : En.Q.A, ((l : ℕ) : En.Q.A) ∣ En.inl.f (bk.ev X) * x → ((l : ℕ) : En.Q.A) ∣ x) ∧ ∀ x : En.Q.A, (∀ m : ℕ, ∃ z, ((l : ℕ) : En.Q.A) ∣ x - En.inl.f (bk.ev X) ^ m * z) → ((l : ℕ) : En.Q.A) ∣ x := by
   intro l _ K bk En
-  obtain ⟨hp, h2, h3, -⟩ := GlobalTheory.T.ainf_divisibility_breuilKisin_facts l K bk
+  obtain ⟨hp, h2, h3, -⟩ := _root_.GlobalTheory.BSP.AinfDiv.main l K bk
   exact En.tb.mod_props (ainfObj K).complete.toIsHausdorff l (bk.ev X) hp ainf_torsionFree h2 h3
 
 end GlobalTheory.BSP

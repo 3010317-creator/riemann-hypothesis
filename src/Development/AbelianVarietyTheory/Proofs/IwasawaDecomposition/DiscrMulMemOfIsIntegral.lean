@@ -2,10 +2,20 @@ module
 
 public import Mathlib.RingTheory.Flat.Basic
 public import Mathlib.RingTheory.Trace.Basic
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsBasisInFiniteDomainTraceMemStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FlatTensorEmbedsTensorFractionFieldsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IntegralOfFiniteBaseChangeImageStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsUnitMapOfMemNonZeroDivisorsTensorStatement
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+public import Mathlib.RingTheory.Trace.Defs
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsBasisInFiniteDomainTraceMem
+public import Mathlib.RingTheory.Localization.FractionRing
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FlatTensorEmbedsTensorFractionFields
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Mathlib.RingTheory.IntegralClosure.IsIntegral.Defs
+public import Mathlib.RingTheory.TensorProduct.Basic
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IntegralOfFiniteBaseChangeImage
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsUnitMapOfMemNonZeroDivisorsTensor
+public import Mathlib.FieldTheory.IsAlgClosed.Spectrum
+public import Mathlib.LinearAlgebra.Matrix.Charpoly.Eigs
+public import Mathlib.Algebra.Algebra.Spectrum.Basic
+public import Mathlib.RingTheory.Discriminant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -18,9 +28,7 @@ import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
-public import Mathlib.FieldTheory.IsAlgClosed.Spectrum
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.LinearAlgebra.Matrix.Charpoly.Eigs
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -51,8 +59,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.Algebra.Algebra.Spectrum.Basic
-public import Mathlib.RingTheory.Discriminant
 
 @[expose] public section
 
@@ -134,9 +140,9 @@ theorem exists_conductor_of_fractionFields
       ∃ s : (U ⊗[T] C), algebraMap (U ⊗[T] C) (FractionRing (U ⊗[T] C)) s =
         algebraMap (U ⊗[T] C) (FractionRing (U ⊗[T] C)) (algebraMap T (U ⊗[T] C) d) * c := by
   classical
-  obtain ⟨n, b, hbC, hbT⟩ := GlobalTheory.T.exists_basis_of_integral_with_trace_in_base T C F K
-  obtain ⟨φ, hφi, hφ⟩ := GlobalTheory.T.exists_injective_tensor_into_tensor_fractionFields T U C F K L
-  have hφu := GlobalTheory.T.isUnit_map_of_mem_nonZeroDivisors_tensor' T U C F K L φ hφi hφ
+  obtain ⟨n, b, hbC, hbT⟩ := _root_.GlobalTheory.exists_basis_in_finite_domain_trace_mem T C F K
+  obtain ⟨φ, hφi, hφ⟩ := _root_.GlobalTheory.flat_tensor_embeds_tensor_fractionFields T U C F K L
+  have hφu := _root_.GlobalTheory.isUnit_map_of_mem_nonZeroDivisors_tensor T U C F K L φ hφi hφ
   choose t ht using hbT
   choose e he using hbC
   let Gt : Matrix (Fin n) (Fin n) T := Matrix.of t
@@ -180,14 +186,14 @@ theorem exists_conductor_of_fractionFields
     exact (IsLocalization.map_units (FractionRing (U ⊗[T] C)) r).mul_left_eq_zero.1 h
   have hω : IsIntegral U (ψ c) := by
     obtain ⟨p, hp, hpc⟩ := hc
-    refine GlobalTheory.T.isIntegral_of_monic_eval_tmul_map_eq_zero T U C F K L φ hφ (ψ c) p hp ?_
+    refine _root_.GlobalTheory.integral_of_finite_base_change_image T U C F K L φ hφ (ψ c) p hp ?_
     have h1 := congrArg ψ hpc
     rw [hom_eval₂, map_zero] at h1
     have h2 : ψ.comp (algebraMap (U ⊗[T] C) _) = φ := RingHom.ext hψ
     rwa [h2] at h1
   have hBi : ∀ i, IsIntegral U (B i) := by
     intro i
-    refine GlobalTheory.T.isIntegral_of_monic_eval_tmul_map_eq_zero T U C F K L φ hφ (B i) (X - Polynomial.C (1 ⊗ₜ e i))
+    refine _root_.GlobalTheory.integral_of_finite_base_change_image T U C F K L φ hφ (B i) (X - Polynomial.C (1 ⊗ₜ e i))
       (monic_X_sub_C _) ?_
     rw [eval₂_sub, eval₂_X, eval₂_C, hφ, map_one, he, hB, sub_self]
   obtain ⟨v, hv⟩ := det_smul_eq_sum U L (L ⊗[F] K) (Fin n) B (ψ c)

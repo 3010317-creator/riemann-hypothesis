@@ -1,13 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTransportF
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContDiffThetaTransformArchimedeanCmStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUSplittingInl
+public import Formalism.LocalToGlobal.IndefiniteReal.DatumF
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContDiffThetaTransformArchimedeanCm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousAtCharSeriesCoefZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousThetaTransformSchwartzCmStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalFiniteDimensionalFinitePartsWeilTransStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousThetaTransformSchwartzCm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalFiniteDimensionalFinitePartsWeilTrans
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSummableMajorantAdelicSchwartzLocallyUnifo
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryPairPartnerCmExtensionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTransformAdelicSchwartzHasFiniteLevelCMStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryPairPartnerCmExtension
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTransformAdelicSchwartzHasFiniteLevelCM
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTransformRationalTranslateQuasiInvariantCmStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumTransportArchimedeanSliceSchwartzBoundsStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -82,13 +85,13 @@ theorem continuous_transportF_apply : ∀ (F E : Type) [Field F] [NumberField F]
     have hex : ∀ p : UG (cA σ) (incM F JA) × UG (cA σ) (incM F JB),
         ∃ (g : GAF σ JS) (h : GAF σ JT),
           mtF σ JT h = p.1.1.1 ∧ mtF σ JS g = (p.2⁻¹).1.1ᵀ := fun p =>
-      GlobalTheory.T.exists_unitaryPair_partner_cmExtension F E σ B hB hstd nS nT JS JT hJS hJT ξ₀ hξ0 hσξ JA JB ξ hJA hJB p.1 p.2
+      _root_.GlobalTheory.WeilPairPartnerF.pair_partnerF F E σ B hB hstd nS nT JS JT hJS hJT ξ₀ hξ0 hσξ JA JB ξ hJA hJB p.1 p.2
     choose g h hh hg using hex
     have hθ : IsThetaFunOF σ JS JT ξ₀ B.ψ (GlobalTheory.WeilSchrodinger.thetaTr F co B.ψ Φ) :=
       ⟨GlobalTheory.T.thetaTransform_rationalTranslate_quasiInvariant_cm F E σ B hB hstd nS nT JS JT hJS hJT ξ₀ hξ0 hσξ JA JB ξ hJA hJB κ co hco Φ hΦ,
-        GlobalTheory.T.thetaTransform_adelicSchwartz_hasFiniteLevel_CM F E σ B hB hstd nS nT JS JT hJS hJT ξ₀ hξ0 hσξ JA JB ξ hJA hJB κ co hco Φ hΦ,
-        GlobalTheory.T.continuous_thetaTransform_schwartz_cm F E σ B hB hstd nS nT JS JT hJS hJT ξ₀ hξ0 hσξ JA JB ξ hJA hJB κ co hco Φ hΦ,
-        GlobalTheory.T.contDiff_thetaTransform_archimedean_cm F E σ B hB hstd nS nT JS JT hJS hJT ξ₀ hξ0 hσξ JA JB ξ hJA hJB κ co hco Φ hΦ⟩
+        _root_.GlobalTheory.ThetaLevelF.thetaTr_levelF F E σ B hB hstd nS nT JS JT hJS hJT ξ₀ hξ0 hσξ JA JB ξ hJA hJB κ co hco Φ hΦ,
+        _root_.GlobalTheory.ThetaTrContF.continuous_thetaTrF F E σ B hB hstd nS nT JS JT hJS hJT ξ₀ hξ0 hσξ JA JB ξ hJA hJB κ co hco Φ hΦ,
+        _root_.GlobalTheory.ThetaSmoothF.contDiff_thetaTr_realF F E σ B hB hstd nS nT JS JT hJS hJT ξ₀ hξ0 hσξ JA JB ξ hJA hJB κ co hco Φ hΦ⟩
     have hhU : ∀ p, matHomF σ JT (h p) = p.1.1 := fun p => Units.ext (hh p)
     have hgU : ∀ p, (matHomF σ JS (g p))⁻¹.1 = p.2.1.1ᵀ := by
       intro p
@@ -119,7 +122,7 @@ theorem continuous_transportF_apply : ∀ (F E : Type) [Field F] [NumberField F]
     exact ((hω.om_cont _ hθ w).comp (hcG.prodMk hcH)).congr fun p => (heq p).symm
   refine continuous_iff_continuousAt.2 fun p0 => ?_
   obtain ⟨N, hN, m, g, y, hg, hy, hf⟩ :=
-    GlobalTheory.T.exists_local_finiteDimensional_finite_parts_weil_transport F E σ B hB nS nT JS JT hJS hJT ξ₀ hξ0 hσξ χS χT hS hT rS rT ω hω JA JB ξ hJA hJB κ co hco om htr Φ hΦ p0
+    _root_.GlobalTheory.WeilContF.exists_local_finite_parts_F F E σ B hB nS nT JS JT hJS hJT ξ₀ hξ0 hσξ χS χT hS hT rS rT ω hω JA JB ξ hJA hJB κ co hco om htr Φ hΦ p0
   let f : _ → Fin m → SchwartzMap (κ → mixedEmbedding.mixedSpace F) ℂ :=
     fun p => if h : p ∈ N then Classical.choose (hf p h) else 0
   have hfe : ∀ p ∈ N, om p Φ = ∑ i, pureA F (f p i) (g i) := fun p hp => by

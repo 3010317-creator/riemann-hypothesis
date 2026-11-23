@@ -3,14 +3,15 @@ module
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.UpVApply
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BlockDiagonalMinorVanishing
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BlockMapFrameRestriction
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BlockMapFrameRestrictionRegularStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsLowerUniBlockDiagFactorizationStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BlockMapFrameRestrictionRegular
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GenericBlockMatrixIsBlockDiag
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsLowerUniBlockDiagFactorization
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAdjacentArithmeticHeight
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAdjacentChartSeventh
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FrameDataLocalResolutionOpen
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsValueAtOfTorus
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MinorIJLowerUniSwap
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PMatStepColsEntry
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsValueAtOfTorus
 import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PCoordConeArithVar
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -182,7 +183,7 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
     fun p k hp hk m => upV_scale hbm c z ((hκ k).2 (Or.inr ⟨p, hp, hk⟩)) (fun k' e' => by
       have hk' : ¬ ∀ p, M.blk p ≠ some (κ k') := fun hn => hn p (hk.trans (by rw [e']))
       simp only [c, dif_neg hk']) m
-  obtain ⟨H, hH, hHf⟩ := GlobalTheory.T.blockMap_frame_restriction_regular K ι Φ y Ψ N j M keep Kk ιk κ v hbm hκ F z' hF hz' (hbp ▸ hblgood)
+  obtain ⟨H, hH, hHf⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.PFl.Fwd.main K ι Φ y Ψ N j M keep Kk ιk κ v hbm hκ F z' hF hz' (hbp ▸ hblgood)
     (by rw [hbp]; exact hblnorm)
   rw [hbp] at hHf
   have hmin : ∀ p k, keep p → M.blk p = some k → ∃ α : ℂ, α ≠ 0 ∧
@@ -204,7 +205,7 @@ theorem main : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι 
     rw [(M.blk_none p).2 hn] at hk
     exact absurd hk (by simp)
   have hjN := M.j_le
-  have hdec := fun τ => GlobalTheory.T.exists_lowerUni_blockDiag_factorization N j (fun i => keep (τ, i)) ((h τ)⁻¹ * H τ) hjN
+  have hdec := fun τ => _root_.GlobalTheory.CompanionTheory.Ar.PB.BigCellLU.exists_lu N j (fun i => keep (τ, i)) ((h τ)⁻¹ * H τ) hjN
     (((hh τ).1.inv (hh τ).2.isUnit).mul (hH τ).1)
     (by
       rw [Matrix.det_mul]

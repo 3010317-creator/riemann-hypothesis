@@ -2,12 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdIPowLe
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.RealisesUnitPow
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFiniteProjectiveDescentPrismCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPrismCoverReceivingBreuilKisinStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrismCoverInjectiveAndDescentStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SemilinearProjectiveModuleComposeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.StableAndCoverPrismHomOfPushoutStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.StratifiedCoordinatesOfPrismCoverStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFiniteProjectiveDescentPrismCover
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPrismCoverReceivingBreuilKisin
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrismCoverInjectiveAndDescent
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SemilinearProjectiveModuleCompose
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.StableAndCoverPrismHomOfPushout
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.StratifiedCoordinatesOfPrismCover
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -104,16 +104,16 @@ namespace GlobalTheory.BSP
 theorem exists_eval : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (d : ℕ) (S : Strat bk d)
     (B : Obj l ↥(OL K)), ∃ (N : Type) (_ : AddCommGroup N) (_ : Module B.A N), Nonempty (Eval S B N) := by
   intro l _ K bk d S B
-  obtain ⟨C, h, ⟨f⟩, hc⟩ := GlobalTheory.T.exists_prism_cover_receiving_breuilKisin l K bk B
-  obtain ⟨P, _, _, _, _, u, hu, hcoc⟩ := GlobalTheory.T.exists_finiteProjective_descent_prismCover l K bk d S B C h f hc
-  have hv := GlobalTheory.T.stratifiedCoordinates_of_prismCover l K bk d S B C h f hc P u hcoc
+  obtain ⟨C, h, ⟨f⟩, hc⟩ := _root_.GlobalTheory.BSP.exists_cover_receiving_bk l K bk B
+  obtain ⟨P, _, _, _, _, u, hu, hcoc⟩ := _root_.GlobalTheory.BSP.CoverDesc.exists_descent l K bk d S B C h f hc
+  have hv := _root_.GlobalTheory.BSP.SiteCoord.coords_of_cover l K bk d S B C h f hc P u hcoc
   choose vv hvv using hv
   have po : ∀ (Q : Obj l ↥(OL K)) (a : Hom B Q), ∃ (Q₀ : Obj l ↥(OL K)) (a₀ : Hom C Q₀) (h₀ : Hom Q Q₀),
       a₀.comp h = h₀.comp a ∧ Cover h₀ ∧ Function.Injective h₀.f := by
     intro Q a
     obtain ⟨Q₀, a₀, h₀, hpo⟩ := hc.stable.po Q a
-    have hc₀ := (GlobalTheory.T.stable_and_cover_prismHom_of_pushout l _ B C Q Q₀ h a a₀ h₀ hpo).2 hc
-    exact ⟨Q₀, a₀, h₀, hpo.comm, hc₀, (GlobalTheory.T.prism_cover_injective_and_descent l _ Q Q₀ h₀ hc₀).1⟩
+    have hc₀ := (_root_.GlobalTheory.BSP.stable_cover_of_isPO l _ B C Q Q₀ h a a₀ h₀ hpo).2 hc
+    exact ⟨Q₀, a₀, h₀, hpo.comm, hc₀, (_root_.GlobalTheory.BSP.cover_injective_and_descent l _ Q Q₀ h₀ hc₀).1⟩
   refine ⟨P, inferInstance, inferInstance, ⟨{
     fin := inferInstance
     proj := inferInstance
@@ -147,7 +147,7 @@ theorem exists_eval : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (d
           simp only [LinearMap.map_smulₛₗ, Pi.smul_apply, smul_eq_mul, map_mul, RingHom.comp_apply, hf] }
     have hw0 : SemiBC w0 := EvalEx.semiBC_comp u (piMap a₀.f (Fin d)) w0 (fun y => (hf y).symm)
       (fun x => rfl) hu (semiBC_piMap a₀.f _)
-    exact GlobalTheory.T.semilinear_projective_module_compose l _ Q Q₀ h₀ hc₀ B.A a.f P (Fin d → Q.A) (Fin d → Q₀.A) (vv Q a g)
+    exact _root_.GlobalTheory.BSP.semiBC_of_cover l _ Q Q₀ h₀ hc₀ B.A a.f P (Fin d → Q.A) (Fin d → Q₀.A) (vv Q a g)
       (piMap h₀.f (Fin d)) (s.toLinearMap.comp w0) (fun x => (hvv Q a g Q₀ h₀ a₀ hcomm x).symm)
       (semiBC_piMap h₀.f _) (hw0.comp_equiv s)
   · intro Q a g g' x

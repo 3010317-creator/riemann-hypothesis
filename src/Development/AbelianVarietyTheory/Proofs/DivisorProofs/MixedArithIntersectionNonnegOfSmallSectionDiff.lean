@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SmallFam
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqOfIsometricTrivShift
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLBLeBySmallSectionIffExistsSmallSectionDiffe
 import Development.AbelianVarietyTheory.Definitions.Divisors.LineBundleGlobalSectionsDimCongrPicardClass
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLBLeBySmallSectionIffExistsSmallSectionDiffeStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NontrivialIsomClassInt
 import Mathlib.Algebra.AffineMonoid.UniqueSums
 import Mathlib.Algebra.Order.Floor.Extended
@@ -60,7 +60,7 @@ theorem mixed_diff_nonneg : GlobalTheory.Published.ArCalc → ∀ (k : Type) [Co
   intro hC k _ X _ p D hX A B Φ hΦ hle x y hN
   classical
   haveI := hX.isLocallyNoetherian
-  obtain ⟨s, hs, hs0⟩ := (GlobalTheory.T.hermLBLeBySmallSection_iff_exists_smallSection_difference k X p A B).1 hle
+  obtain ⟨s, hs, hs0⟩ := (_root_.GlobalTheory.HSNef.le_iff_exists_smallSec k X p A B).1 hle
   have hg :=  (sec_ne_zero_iff s).1 hs0
   let L : Fin 2 → HermLB p := ![A, B]
   let F : Option (Fin 2) → HermLB p := fun o => o.elim (A.tens B.dual) L

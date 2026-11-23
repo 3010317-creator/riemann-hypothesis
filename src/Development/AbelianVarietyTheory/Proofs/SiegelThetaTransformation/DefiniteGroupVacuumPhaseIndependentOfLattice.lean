@@ -7,11 +7,12 @@ public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsVacuaInnerEqConstMulTestInnerStatement
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FiniteAdelicLatticeTransportLawsStatement
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FinitePointsCarryLatticeVacuumToMovedVacuumStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LevelStructurePropertiesStatement
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LevelStructureProperties
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LevelTestFunctionFiniteSumEquivariant
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.NeBotOfNorm
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RationalUnitaryGroupStructureStatement
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.SelfDualLatticesAtLevelStatement
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RationalUnitaryGroupStructureStatement
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.TensorLatticeVacuaExistUnique
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaFunctionFundamentalDomainInnerProductBasic
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaKernelOrthonormalFrameInDomainPeriodLinearStatement
@@ -90,7 +91,7 @@ theorem phase_indep : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), ∀ om : GA D S 
   have hx : C.xB B ∈ C.X.dom := ((GlobalTheory.T.thetaKernel_orthonormalFrame_inDomain_periodLinear D S T C).2 B hB).2.1
   have hΛM : Λ ∈ Vset D.host.E S.rank M := (GlobalTheory.T.self_dual_lattices_at_level D S T C).1 M h Λ hM htriv hfg hmov
   have hstd : stdL D.host.E S.rank ∈ Vset D.host.E S.rank M := GlobalTheory.SW.stdL_mem_Vset M
-  have h6833 := GlobalTheory.T.level_structure_properties D.host.E T.rank C.X C.g C.bas C.idx S.rank C.sympl C.even Lv hn
+  have h6833 := _root_.GlobalTheory.SW.level_laws D.host.E T.rank C.X C.g C.bas C.idx S.rank C.sympl C.even Lv hn
   have fmt_one : ∀ V : HSp D, fmt V 1 = 1 ∧ fmtC V 1 = 1 := fun V =>
     ⟨(((GlobalTheory.T.rational_unitary_group_structure D S T C).2.2.2 V).2.2.2.1 1 (one_mem _)).1,
       (((GlobalTheory.T.rational_unitary_group_structure D S T C).2.2.2 V).2.2.2.1 1 (one_mem _)).2.1⟩

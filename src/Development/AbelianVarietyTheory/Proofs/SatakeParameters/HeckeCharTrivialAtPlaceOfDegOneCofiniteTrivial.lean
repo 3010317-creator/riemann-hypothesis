@@ -5,11 +5,14 @@ public import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ContinuousIdeleCharLocalFactorizationStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsCongrModPowResidueDegreeOneFactorsStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsPowValuationDivSubOneLeOfCongrStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsWeakApproxUnitFinitePlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.QuadraticRingOfIntegersMulMemSpanOneGenStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ContinuousIdeleCharLocalFactorization
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsCongrModPowResidueDegreeOneFactors
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Valuation
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsPowValuationDivSubOneLeOfCongr
+public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Completion
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsWeakApproxUnitFinitePlace
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.QuadraticRingOfIntegersMulMemSpanOneGen
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -96,7 +99,7 @@ theorem val_coe_sub_one (E : Type) [Field E] [NumberField E] (v : HeightOneSpect
 theorem trivAt_of_degOne_cofinite : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] [IsTotallyReal F] [_root_.NumberField.IsTotallyComplex E] [Algebra.IsQuadraticExtension F E] (χ : Ideles E →* ℂˣ), IsHeckeChar E χ → (∀ᶠ w in Filter.cofinite, DegOne F w → TrivAt χ w) → (∀ x : (InfiniteAdeleRing E)ˣ, χ (infIdele E x) = 1) → ∀ w, TrivAt χ w := by
   intro F E _ _ _ _ _ _ _ _ χ hχ hdeg hinf w x
   classical
-  obtain ⟨hunr, hloc, hfac⟩ := GlobalTheory.T.continuous_ideleChar_local_factorization E χ hχ.1
+  obtain ⟨hunr, hloc, hfac⟩ := _root_.GlobalTheory.HeckeSplit.continuous_char_factor E χ hχ.1
   choose nf hnf using hloc
   have hU := Filter.eventually_cofinite.mp hunr
   have hX := Filter.eventually_cofinite.mp hdeg
@@ -108,7 +111,7 @@ theorem trivAt_of_degOne_cofinite : ∀ (F E : Type) [Field F] [NumberField F] [
     intro v hv; by_contra h
     exact hv (by simp only [hS, Finset.mem_union, Set.Finite.mem_toFinset, Set.mem_setOf_eq]; exact Or.inl (Or.inr h))
   have hwS : w ∈ S := by simp [hS]
-  obtain ⟨θ, D, hD0, hθ⟩ := GlobalTheory.T.exists_denom_mul_mem_span_one_gen_of_finrank_two F E (Algebra.IsQuadraticExtension.finrank_eq_two F E)
+  obtain ⟨θ, D, hD0, hθ⟩ := _root_.GlobalTheory.quadratic_ringOfIntegers_mul_mem_span_one_gen F E (Algebra.IsQuadraticExtension.finrank_eq_two F E)
   set ι := algebraMap (𝓞 F) (𝓞 E) with hι
   have hιinj : Function.Injective ι := by
     first
@@ -144,7 +147,7 @@ theorem trivAt_of_degOne_cofinite : ∀ (F E : Type) [Field F] [NumberField F] [
   have hε : ε < 1 := by rw [hεdef, ← WithZero.exp_zero, WithZero.exp_lt_exp]; omega
   have hεv : ∀ v ∈ S', ε ≤ WithZero.exp (-(nf v : ℤ)) := by
     intro v hv; rw [hεdef, WithZero.exp_le_exp]; have := Finset.le_sup (f := nf) hv; omega
-  obtain ⟨y, hy0, hyw, hyv⟩ := GlobalTheory.T.exists_weak_approx_unit_finite_place E S' w x n
+  obtain ⟨y, hy0, hyw, hyv⟩ := _root_.GlobalTheory.HkFin.exists_weak_approx_unit E S' w x n
   obtain ⟨y1, y2, hy2, rfl⟩ := IsFractionRing.div_surjective (A := 𝓞 E) y
   have hy2' : y2 ≠ 0 := nonZeroDivisors.ne_zero hy2
   have hy1' : y1 ≠ 0 := by rintro rfl; simp at hy0
@@ -152,10 +155,10 @@ theorem trivAt_of_degOne_cofinite : ∀ (F E : Type) [Field F] [NumberField F] [
     intro h; apply hD0; apply hιinj; rw [h, map_zero]
   have hc1 : ι D * y1 ≠ 0 := mul_ne_zero hDι hy1'
   have hc2 : ι D * y2 ≠ 0 := mul_ne_zero hDι hy2'
-  choose Nf hNf using fun (v : HeightOneSpectrum (𝓞 E)) (c : 𝓞 E) (hc : c ≠ 0) => GlobalTheory.T.exists_pow_valuation_div_sub_one_le_of_congr E v c hc n
+  choose Nf hNf using fun (v : HeightOneSpectrum (𝓞 E)) (c : 𝓞 E) (hc : c ≠ 0) => _root_.GlobalTheory.exists_pow_valuation_div_sub_one_le E v c hc n
   set N : ℕ := S'.sup (fun v => Nf v _ hc1 ⊔ Nf v _ hc2) with hN
-  obtain ⟨k1, hk1, hk1P⟩ := GlobalTheory.T.exists_congr_mod_pow_residueDegreeOne_factors F E θ D hθ m hm0 hmD y1 N
-  obtain ⟨k2, hk2, hk2P⟩ := GlobalTheory.T.exists_congr_mod_pow_residueDegreeOne_factors F E θ D hθ m hm0 hmD y2 N
+  obtain ⟨k1, hk1, hk1P⟩ := _root_.GlobalTheory.exists_shift_mod_pow_degOne F E θ D hθ m hm0 hmD y1 N
+  obtain ⟨k2, hk2, hk2P⟩ := _root_.GlobalTheory.exists_shift_mod_pow_degOne F E θ D hθ m hm0 hmD y2 N
   have hmem : ∀ v ∈ S', ∀ (k c : 𝓞 E), k - c ∈ Ideal.map ι (m ^ N) → ∀ M ≤ N, k - c ∈ v.asIdeal ^ M := by
     intro v hv k c h M hM
     have h1 : Ideal.map ι (m ^ N) ≤ v.asIdeal ^ N := by

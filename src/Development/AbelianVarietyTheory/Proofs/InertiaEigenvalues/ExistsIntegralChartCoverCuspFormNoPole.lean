@@ -7,9 +7,11 @@ public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.Abe
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.EvaluationLawsGenericFramesAtlasHold
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsFiniteIntegralChartCoverFlagSpace
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspFormBoundGoodPointsExtendsAllPoints
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspFormIntegralValuesEqualCharacteristicStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIntegralFlagChartEnlargeContainingValueStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsIntegralAdjoinOfForallCdvrStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.VAtVNeBot
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspFormIntegralValuesEqualCharacteristic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIntegralFlagChartEnlargeContainingValue
+public import Formalism.LocalToGlobal.ProjectiveLattices.OneLtAbsNormReal
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsIntegralAdjoinOfForallCdvr
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SupSetFinitelyGenerated
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.FramedPointEvalNaturalWeightScaling
 import Mathlib.Algebra.Order.Floor.Extended
@@ -79,7 +81,7 @@ theorem exists_cover_noPole : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     exact (evR Xo c f ((P j).y e he)).2
   have hint : ∀ j, IsIntegral (Algebra.adjoin c.F ((P j).gens : Set (P j).Ω)) (evR Xo c f (P j).yg) := by
     intro j
-    refine GlobalTheory.T.isIntegral_adjoin_of_forall_dvr_map_mem c.F (P j).Ω (P j).gens (P j).frac _ fun T hT φ hK hgn => ?_
+    refine _root_.GlobalTheory.isIntegral_adjoin_of_forall_cdvr c.F (P j).Ω (P j).gens (P j).frac _ fun T hT φ hK hgn => ?_
     obtain ⟨e, he⟩ := (P j).es_ne
     let io : c.F →+* T.Fr := φ.comp (algebraMap c.F (P j).Ω)
     letI := io.toAlgebra
@@ -87,7 +89,7 @@ theorem exists_cover_noPole : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
       { toRingHom := φ.comp ((P j).R e).val.toRingHom, commutes' := fun k => rfl }
     obtain ⟨z, hz⟩ := hE.bc _ _ ψ ((P j).y e he)
     have hzI := (P j).int e he T io ψ (fun a => hK _) (fun g hg' => hgn _ hg') z hz
-    have h1 := GlobalTheory.T.cuspForm_integral_values_equal_characteristic E H Dw l Xo c r U hU a n f hd hf T hT io hK ⟨z, hE.test _ z, hzI⟩
+    have h1 := _root_.GlobalTheory.EqCharCusp.integral_of_eqChar E H Dw l Xo c r U hU a n f hd hf T hT io hK ⟨z, hE.test _ z, hzI⟩
     have e1 : evR Xo c f z = ψ (evR Xo c f ((P j).y e he)) := (hev _).1 _ ψ _ _ hz
     have e2 : evR Xo c f (P j).yg = ((P j).R e).val (evR Xo c f ((P j).y e he)) :=
       (hev _).1 _ ((P j).R e).val _ _ ((P j).gen e he)
@@ -95,7 +97,7 @@ theorem exists_cover_noPole : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     change evR Xo c f z ∈ _ at h1
     rw [e1] at h1
     exact h1
-  choose P' hP'1 hP'2 using fun j => GlobalTheory.T.exists_integralFlagChart_enlarge_containing_value E H Dw l Xo c (la.valuation c.F).valuationSubring f (P j) (hmem j) (hint j)
+  choose P' hP'1 hP'2 using fun j => _root_.GlobalTheory.Reg.Enlarge.enlarge_exists E H Dw l Xo c (la.valuation c.F).valuationSubring f (P j) (hmem j) (hint j)
   refine ⟨J, hJ, P', fun L _ _ W hW y => ?_, hP'1⟩
   obtain ⟨j, hj⟩ := hC L W hW y
   exact ⟨j, hP'2 j L W hW y hj⟩

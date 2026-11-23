@@ -2,10 +2,11 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCMFrame
 public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.ExistsEquivOfSumEq
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PureFamilyDecompositionStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PurePeriodLocalBasisExistsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CmPackPureFrameStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CmPeriodAlgebraicStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsTransition
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PureFamilyDecomposition
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PurePeriodLocalBasisExists
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CmPackPureFrame
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CmPeriodAlgebraic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,12 +56,12 @@ theorem exists_cmPoint_locBasis_frames :
   obtain ⟨P₀, hP₀⟩ := PeriodNonempty.exists_isPeriod E H (FU.Di i) g ty
     (by rw [(FU.sig i).1, (FU.sig i).2]; exact hty)
   have hsum : D.p + D.q = (FU.Di i).p + (FU.Di i).q := by rw [(FU.sig i).1, (FU.sig i).2]
-  obtain ⟨P, hP, x, hloc, hx⟩ := GlobalTheory.T.pure_period_local_basis_exists E H (FU.Di i) g ty P₀ D.p D.q ℓ hP₀ hty hsum
+  obtain ⟨P, hP, x, hloc, hx⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fl.DSplit.exists_split_period E H (FU.Di i) g ty P₀ D.p D.q ℓ hP₀ hty hsum
   obtain ⟨hli, n, hn, hspan⟩ := id hloc
   have hn0 : 0 < n := Nat.pos_of_ne_zero (by rintro rfl; exact hn (dvd_zero _))
-  obtain ⟨hsplit, -, -⟩ := GlobalTheory.T.pure_family_decomposition E H (FU.Di i) g ty P hP D.p D.q x n hx hspan
-  obtain ⟨X, hkX⟩ := GlobalTheory.T.exists_cmPack_field_ge_of_isPeriod E H D l Xo c g ty FU i Z P hP n k hk hn0 hsplit
-  obtain ⟨⟨v, w, hvw⟩, -⟩ := GlobalTheory.T.cm_pack_pure_frame E H D l Xo c g ty FU i Z P hP X x hx τ hty hτ hli
+  obtain ⟨hsplit, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fl.pure_family_spans_pure_sublattice E H (FU.Di i) g ty P hP D.p D.q x n hx hspan
+  obtain ⟨X, hkX⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fl.CMGiven.exists_pack_given E H D l Xo c g ty FU i Z P hP n k hk hn0 hsplit
+  obtain ⟨⟨v, w, hvw⟩, -⟩ := _root_.GlobalTheory.CompanionTheory.Relay.cm_pack_pure_frame E H D l Xo c g ty FU i Z P hP X x hx τ hty hτ hli
   exact ⟨P, hP, x, hx, X, v, w, hkX, hloc, hvw⟩
 
 end GlobalTheory.CompanionTheory.Ar.Fl

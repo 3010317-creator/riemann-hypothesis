@@ -3,8 +3,11 @@ module
 public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
 public import Mathlib.RingTheory.Length
 public import Mathlib.RingTheory.Localization.FractionRing
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LengthLeOfForallFgSubmoduleLengthLeStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LengthQuotientScalarMulStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LengthLeOfForallFgSubmoduleLengthLe
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LengthQuotientScalarMul
+public import Mathlib.LinearAlgebra.Dimension.Finite
+public import Mathlib.LinearAlgebra.FreeModule.PID
+public import Mathlib.RingTheory.Localization.Module
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,9 +52,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.LinearAlgebra.Dimension.Finite
-public import Mathlib.LinearAlgebra.FreeModule.PID
-public import Mathlib.RingTheory.Localization.Module
 
 @[expose] public section
 
@@ -62,7 +62,7 @@ namespace GlobalTheory
 theorem length_quotient_smul_range_le_finrank_mul : ∀ (O K : Type) [CommRing O] [IsDomain O] [IsPrincipalIdealRing O] [Field K] [Algebra O K] [IsFractionRing O K] (W M : Type) [AddCommGroup W] [Module K W] [Module O W] [IsScalarTower O K W] [FiniteDimensional K W] [AddCommGroup M] [Module O M] (f : M →ₗ[O] W), Function.Injective f → ∀ a : O, Module.length O (M ⧸ LinearMap.range (a • (LinearMap.id : M →ₗ[O] M))) ≤ (Module.finrank K W : ℕ∞) * Module.length O (O ⧸ Ideal.span {a}) := by
   intro O K _ _ _ _ _ _ W M _ _ _ _ _ _ _ f hf a
   set R := LinearMap.range (a • (LinearMap.id : M →ₗ[O] M)) with hR
-  refine GlobalTheory.T.length_le_of_forall_fg_submodule_length_le O (M ⧸ R) _ ?_
+  refine _root_.GlobalTheory.length_le_of_forall_fg_length_le O (M ⧸ R) _ ?_
   intro N hN
   obtain ⟨s, hs⟩ := hN
   set g := Function.surjInv (Submodule.mkQ_surjective R) with hg
@@ -117,7 +117,7 @@ theorem length_quotient_smul_range_le_finrank_mul : ∀ (O K : Type) [CommRing O
     obtain ⟨x, rfl⟩ := hp y
     exact ⟨R'.mkQ x, by simp [q]⟩
   calc Module.length O N ≤ Module.length O (N' ⧸ R') := Module.length_le_of_surjective q hq
-    _ = (Module.finrank O N' : ℕ∞) * Module.length O (O ⧸ Ideal.span {a}) := GlobalTheory.T.length_quotient_scalar_mul O N' a
+    _ = (Module.finrank O N' : ℕ∞) * Module.length O (O ⧸ Ideal.span {a}) := _root_.GlobalTheory.length_quot_smul_range_finite_free O N' a
     _ ≤ _ := by
       gcongr
 

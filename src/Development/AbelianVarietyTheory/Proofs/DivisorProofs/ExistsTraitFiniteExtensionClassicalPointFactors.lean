@@ -1,10 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsThetaCompact
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteExtensionCompleteDvrPadicAlgClStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PadicMemRangeCompleteDvrPadicAlgClStatement
+public import Mathlib.NumberTheory.Padics.Complex
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteExtensionCompleteDvrPadicAlgCl
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PadicMemRangeCompleteDvrPadicAlgCl
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraitExistsAfterFiniteExtensionOfCompleteDVR
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraitLatticesIsoFormsProportionalRamification
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsToricRankOne
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitBallEqOfIntegralDvr
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -41,7 +44,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsToricRankOne
 
 @[expose] public section
 
@@ -64,9 +66,9 @@ theorem main : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (o Ω : Type) [CommRi
   haveI : Algebra.FiniteType ℤ o := ArithBase.ft (o := o) (Ω := Ω)
   haveI : Algebra.FiniteType o S.R := (Subalgebra.fg_iff_finiteType _).1 S.fg
   haveI : Algebra.FiniteType ℤ S.R := Algebra.FiniteType.trans (S := o) inferInstance inferInstance
-  have hQ := GlobalTheory.T.padic_mem_range_complete_dvr_padicAlgCl p T.V T.complete ι hι
+  have hQ := _root_.GlobalTheory.PadicUnitBall.padic_mem_range p T.V T.complete ι hι
   obtain ⟨W, _, _, _, hWc, _, fV, fK, κ, hfV, hfVl, -, hfK, hκι, hκ, hy₀⟩ :=
-    GlobalTheory.T.exists_finite_extension_complete_dvr_padicAlgCl p T.V T.complete ι hι hQ S.R y₀
+    _root_.GlobalTheory.DvrFinExt.exists_finite_extension p T.V T.complete ι hι hQ S.R y₀
   have hbase : GlobalTheory.Mum.Base W := ⟨⟨inferInstance, inferInstance, inferInstance, hWc⟩, inferInstance⟩
   obtain ⟨T', f, gK, hf, hfl, hff, hgK, hTy⟩ :=
     traitExtSt g n _ (zetaAway n) F W hbase inferInstance (spMap fK ≫ T.y)

@@ -5,7 +5,10 @@ public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.Goo
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CompLawsModelRootBoundStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolomorphicDiscComponentGrowthStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolomorphicDiscOrbitBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolomorphicDiscRatioGrowthStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Mathlib.RingTheory.Smooth.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolomorphicDiscRatioGrowth
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginExistsFormStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginWeightSectionStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -59,7 +62,7 @@ theorem cusp_mem_chartLatNm : _root_.GlobalTheory.CompanionTheory.Ar.Top.Given �
   obtain ⟨R, w, hw, hval⟩ := GlobalTheory.T.comp_laws_model_root_bound hG E H Dw l Xo c r U h e hL x hx _ _ Y _ _ _ _ _ Fr Z Rd u f hf
   obtain ⟨f₀, hf₀, hint⟩ := GlobalTheory.T.root_origin_exists_form E H Dw l Xo c _ _ Y _ _ _ _ (o.toTowerOrigin.Or B b)
   obtain ⟨hJ, inst, hsm⟩ := o.smooth B b
-  refine GlobalTheory.T.holomorphic_disc_component_growth GlobalTheory.T.holomorphic_disc_ratio_growth _ _ _ (T.M B b).y (degOf (T.M B b) u) _
+  refine GlobalTheory.T.holomorphic_disc_component_growth _root_.GlobalTheory.CompanionTheory.Ar.Flat.PoleDisc.pole_disc _ _ _ (T.M B b).y (degOf (T.M B b) u) _
     (fun z => R * ∏ r, ((o.toTowerOrigin.Or B b).sing r).h z ^ nOf u (some r)) w f₀ (T.M B b).birational hsm hw hf₀
     hval ?_
   intro Zf hol hmem hne

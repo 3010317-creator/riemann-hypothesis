@@ -1,12 +1,13 @@
 module
 
 public import GroundTheory.HeightsAndTheta.Heights.ArithmeticBezout.StatementsMahler
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.MahlerMeasureOfProductStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.MahlerMinusConeIntegralIndepStatement
+public import GroundTheory.HeightsAndTheta.Heights.ArithmeticBezout.Statements
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.MahlerMeasureOfProduct
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.MahlerMinusConeIntegralIndep
+public import GroundTheory.HeightsAndTheta.Heights.LocalFiniteness.TargetsProjRegularDens
 import GroundTheory.HeightsAndTheta.Heights.ArithmeticBezout.ChowDegree
 import GroundTheory.HeightsAndTheta.Heights.ArithmeticBezout.PSpecFirstHomog
 import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.Assembly
-public import GroundTheory.HeightsAndTheta.Heights.LocalFiniteness.TargetsProjRegularDens
 import Mathlib.Algebra.MvPolynomial.Nilpotent
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -76,7 +77,7 @@ theorem mahlerDefect_eq_sum {n e δ : ℕ} (h : HermNorm n) {Z : ProjCycle ℂ n
   have hq : ∀ W ∈ Z.support, specFirst (g W) u ≠ 0 ∧ IsMultiHomog (d W) (specFirst (g W) u) :=
     fun W hW => ⟨SpecFirstNe.full ℂ n e W (g W) u (hd.prime W hW) (hg W hW) (hu W hW),
       SpecFirstHomog.proof n e (d W) (g W) u (hdW W hW)⟩
-  rw [mahlerDefect, hspec, GlobalTheory.T.mahler_measure_of_product n e h Z.support (fun W => specFirst (g W) u) d (fun W => Z W) c hc hq,
+  rw [mahlerDefect, hspec, _root_.GlobalTheory.CompanionTheory.Ar.Short.Crofton.mahler_C_mul_prod_pow n e h Z.support (fun W => specFirst (g W) u) d (fun W => Z W) c hc hq,
     cycleIntegral]
   simp only [mul_sub, Finset.sum_sub_distrib]
   ring
@@ -86,7 +87,7 @@ theorem defectConstDim (e : ℕ) : DefectConstDim e := by
   obtain ⟨c, g, d, hg, hsum⟩ := mahlerDefect_eq_sum h hd
   have hW : ∀ W ∈ Z.support, (Z W : ℝ) * (mahler h e (specFirst (g W) u) - coneIntegral h W e (fsLog h u)) =
       (Z W : ℝ) * (mahler h e (specFirst (g W) u') - coneIntegral h W e (fsLog h u')) := fun W hW => by
-    have := GlobalTheory.T.mahler_minus_cone_integral_indep n e (d W) h W (g W) u u' (hd.prime W hW) (hg W hW).1 (hg W hW).2 (hu W hW)
+    have := _root_.GlobalTheory.CompanionTheory.Ar.Short.Crofton.defect_eq_of_linForm_notMem n e (d W) h W (g W) u u' (hd.prime W hW) (hg W hW).1 (hg W hW).2 (hu W hW)
       (hu' W hW)
     rw [this]
   rw [hsum u hu, hsum u' hu', Finset.sum_congr rfl hW]

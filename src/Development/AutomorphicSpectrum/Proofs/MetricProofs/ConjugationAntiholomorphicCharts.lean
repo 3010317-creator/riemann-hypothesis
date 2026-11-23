@@ -2,11 +2,15 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SameOrbitRefl
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.DifferentiableOnOfTendstoLocallyUniformlyOn
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AnalyticOfImmersionCompositionStatement
+public import Mathlib.Analysis.Analytic.Basic
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AnalyticOfImmersionComposition
+public import Mathlib.Analysis.Calculus.FDeriv.Star
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
-public import Mathlib.Analysis.Calculus.FDeriv.Star
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
@@ -147,7 +151,7 @@ theorem conj_analytic : ∀ {K : Type} [Fintype K] {ι : K → Type} [∀ k, Fin
     hcs (((A.chart k).open_source.inter (hUo x₁)).mem_nhds (by
       change c ((A.chart j).symm w) ∈ _
       rw [hx₀, hx₁]; exact ⟨hw2', hUm x₁⟩))
-  refine GlobalTheory.T.analytic_of_immersion_composition (fun z => star (A.chart k (c ((A.chart j).symm z))))
+  refine _root_.GlobalTheory.CompanionTheory.Metric.Rigid.analyticAt_of_comp_immersion (fun z => star (A.chart k (c ((A.chart j).symm z))))
     (star ∘ (fun w' => affCoord p (lift x₁ ((A.chart k).symm w'))) ∘ star)
     (fun y => affCoord p (lift x₀ ((A.chart j).symm y))) w ?_ ?_ hHa hFc ?_
   · rw [hFw]; exact analyticAt_star_comp hψ

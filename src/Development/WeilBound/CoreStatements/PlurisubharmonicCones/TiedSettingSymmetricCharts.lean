@@ -3,7 +3,8 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.PotentialsBoundedRegSettingEqReference
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.NineGeoU
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularizedWeightDominatesEventuallyStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.VerticalFactorSmoothHermitianMetricStatement
+public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FrameDefinitions.Weights
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.VerticalFactorSmoothHermitianMetric
 import Development.WeilBound.CoreStatements.PlurisubharmonicCones.VerticalFactorSmoothLine
 import GroundTheory.HeightsAndTheta.Heights.Regularisation.RegMaxReindex
 import Mathlib.Algebra.Order.Floor.Extended
@@ -206,7 +207,7 @@ theorem LevelTowerAlt.tied_setting_symmetric_charts : ∀ (K : Type) [Fintype K]
   have h3 : ∀ r ∈ D.SB B, D.vertFactor r (conjVec z) = D.vertFactor r z := by
     intro r hr
     have hrS : r ∈ D.S := (Finset.mem_filter.1 hr).1
-    obtain ⟨A, -, -, hAc, hAv⟩ := (GlobalTheory.T.vertical_factor_smooth_hermitian_metric K J II Ψ Ω W D r hrS).1
+    obtain ⟨A, -, -, hAc, hAv⟩ := (_root_.GlobalTheory.CompanionTheory.Relay.vertical_factor_smooth_hermitian_metric K J II Ψ Ω W D r hrS).1
     rw [← hAv _ hz, ← hAv _ hcz]
     exact hAc z
   have h4 : D.A'.h (conjVec z) = D.A'.h z := D.A'_conj z

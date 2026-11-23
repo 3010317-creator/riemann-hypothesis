@@ -2,12 +2,13 @@ module
 
 public import Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.WhittakerVanishingImpliesZero
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsGenericOfIsLocComp
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.QuotientAverageAddOfPeriodicStatement
+public import Mathlib.Analysis.Normed.Module.HahnBanach
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnipotentBlockColumnIndex
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.QuotientAverageAddOfPeriodic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-public import Mathlib.Analysis.Normed.Module.HahnBanach
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.CategoryTheory.Countable
 import Mathlib.Combinatorics.Enumerative.DyckWord
@@ -96,7 +97,7 @@ theorem good_add {m : ℕ} {f f' : GA E a → ℂ} (hf : Good ψ m f) (hf' : Goo
   · intro k hk y g
     simp only [hf.law k hk y g, hf'.law k hk y g, mul_add]
   · intro r hr hrm g
-    have := GlobalTheory.T.quotientAverage_add_of_periodic _ (ratV E (UnipotentBlockColumnIndex a r m)) (isCoLat_ratV E _) _ _
+    have := _root_.GlobalTheory.CuspGeneric.avg_add_of_per _ (ratV E (UnipotentBlockColumnIndex a r m)) (isCoLat_ratV E _) _ _
       (per_blk hf.cont (fun c g => hf.left _ (isMir_blkU c) g) g)
       (per_blk hf'.cont (fun c g => hf'.left _ (isMir_blkU c) g) g)
     rw [this, hf.van r hr hrm g, hf'.van r hr hrm g, add_zero]

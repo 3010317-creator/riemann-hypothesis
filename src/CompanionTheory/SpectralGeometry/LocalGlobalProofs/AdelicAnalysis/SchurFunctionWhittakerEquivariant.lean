@@ -1,12 +1,12 @@
 module
 
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.CountData
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelesSelfDualStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.DenominatorPowerSummableStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FiniteAdeleTopologyStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FourierCoefficientGrowthBoundStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.PositiveDefiniteDensityStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.WeilOperatorIntegralInvarianceStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelesSelfDual
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.DenominatorPowerSummable
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FourierCoefficientGrowthBound
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.PositiveDefiniteDensity
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.WeilOperatorIntegralInvariance
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FiniteAdeleTopology
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -80,7 +80,7 @@ lemma oh_mul {x y : A F} (hx : x ∈ Oh F) (hy : y ∈ Oh F) : x * y ∈ Oh F :=
   fun v => mul_mem (hx v) (hy v)
 
 lemma oh_alg (r : 𝓞 F) : algebraMap F (A F) (r : F) ∈ Oh F :=
-  (((GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F).2.2.2.2.2.2.1) (r : F)).2 ⟨r, rfl⟩
+  (((_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.2.2.2.2.2.1) (r : F)).2 ⟨r, rfl⟩
 
 lemma nat_cast_eq (n : ℕ) : (n : A F) = algebraMap F (A F) (n : F) := (map_natCast _ n).symm
 
@@ -94,11 +94,11 @@ lemma nat_inv_mul {N : ℕ} (hN : 0 < N) : algebraMap F (A F) (1 / (N : F)) * (N
   rw [nat_cast_eq, ← map_mul, one_div, inv_mul_cancel₀ hN', map_one]
 
 lemma setS_isOpen (a : ℕ) : IsOpen {x : A F | (a : A F) * x ∈ Oh F} :=
-  ((GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F).2.2.2.2.1).preimage (continuous_const.mul continuous_id)
+  ((_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.2.2.2.1).preimage (continuous_const.mul continuous_id)
 
 lemma setS_isCompact {a : ℕ} (ha : 0 < a) : IsCompact {x : A F | (a : A F) * x ∈ Oh F} := by
   have hc : IsCompact ((fun x : A F => algebraMap F (A F) (1 / (a : F)) * x) '' Oh F) :=
-    ((GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F).2.2.2.1).image (continuous_const.mul continuous_id)
+    ((_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.2.2.1).image (continuous_const.mul continuous_id)
   convert hc using 1
   ext y
   constructor
@@ -127,7 +127,7 @@ lemma setL_isOpen (ι : Type) [Fintype ι] (a : ℕ) :
 
 lemma indL_SB (ι : Type) [Fintype ι] {a : ℕ} (ha : 0 < a) :
     SB (indL a : (ι → A F) → ℂ) := by
-  haveI : T2Space (A F) := (GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F).2.2.1
+  haveI : T2Space (A F) := (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.2.1
   have hK := setL_isCompact (F := F) ι ha
   have hO := setL_isOpen (F := F) ι a
   refine ⟨?_, ?_⟩
@@ -165,7 +165,7 @@ lemma hs_sub_oh {N : ℕ} {x : A F} (hx : x ∈ Hs F N) : x ∈ Oh F := by
   exact oh_mul (oh_nat N) hu
 
 lemma hs_isOpen {N : ℕ} (hN : 0 < N) : IsOpen (Hs F N) :=
-  (GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F).2.2.2.2.2.2.2.2.2 N hN
+  (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.2.2.2.2.2.2.2.2 N hN
 
 lemma hs_alg_iff {N : ℕ} (hN : 0 < N) {c : F} (h : algebraMap F (A F) c ∈ Hs F N) :
     ∃ r : 𝓞 F, c = (N : F) * (r : F) := by
@@ -175,7 +175,7 @@ lemma hs_alg_iff {N : ℕ} (hN : 0 < N) {c : F} (h : algebraMap F (A F) c ∈ Hs
     have : c / (N : F) = (1 / (N : F)) * c := by field_simp
     rw [this, map_mul, he, ← mul_assoc, nat_inv_mul hN, one_mul]
   have h3 : algebraMap F (A F) (c / (N : F)) ∈ Oh F := h2 ▸ hu
-  obtain ⟨r, hr⟩ := ((GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F).2.2.2.2.2.2.1 _).1 h3
+  obtain ⟨r, hr⟩ := ((_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.2.2.2.2.2.1 _).1 h3
   exact ⟨r, by rw [hr]; field_simp⟩
 
 def congN (F : Type) [Field F] [NumberField F] (N : ℕ) : Setoid F where
@@ -194,8 +194,8 @@ theorem integrable_of_periodic [MeasurableSpace (A F)] [BorelSpace (A F)] (lf : 
     (hper : ∀ x ∈ Oh F, ∀ y, f (y + (N : A F) * x) = f y) {C : ℝ} {M : ℕ} (hM : 3 ≤ M)
     (hdec : ∀ b : F, ‖f (algebraMap F (A F) b)‖ ≤ C * ((den b : ℝ) ^ M)⁻¹) : Integrable f lf := by
   haveI := hlf
-  haveI : SecondCountableTopology (A F) := (GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F).2.1
-  have hdense : DenseRange (algebraMap F (A F)) := (GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F).2.2.2.2.2.1
+  haveI : SecondCountableTopology (A F) := (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.1
+  have hdense : DenseRange (algebraMap F (A F)) := (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.2.2.2.2.1
   have hHo : IsOpen (Hs F N) := hs_isOpen hN
   let st := congN F N
   let s : Set F := Set.range (fun q : Quotient st => q.out)
@@ -203,8 +203,8 @@ theorem integrable_of_periodic [MeasurableSpace (A F)] [BorelSpace (A F)] (lf : 
     rintro _ ⟨q, rfl⟩ _ ⟨q', rfl⟩ h
     have : q = q' := Quotient.out_equiv_out.1 h
     rw [this]
-  have hsum := ((GlobalTheory.T.denominator_power_summable F M hM N hN).2.2 s hs)
-  have hden0 := (GlobalTheory.T.denominator_power_summable F M hM N hN).2.1
+  have hsum := ((_root_.GlobalTheory.CompanionTheory.SW.DenSum.summable_den F M hM N hN).2.2 s hs)
+  have hden0 := (_root_.GlobalTheory.CompanionTheory.SW.DenSum.summable_den F M hM N hN).2.1
   have hscount : Countable s := by
     have hc := hsum.countable_support
     have : Function.support (fun b : s => ((den (b : F) : ℝ) ^ M)⁻¹) = Set.univ := by
@@ -279,7 +279,7 @@ theorem integrable_of_periodic [MeasurableSpace (A F)] [BorelSpace (A F)] (lf : 
 theorem density_main : ∀ (F : Type) [Field F] [NumberField F] [MeasurableSpace (A F)] [BorelSpace (A F)] (lf : Measure (A F)), lf.IsAddHaarMeasure → lf (Oh F) = 1 → ∀ ψ : AddChar (A F) ℂ, IsStdChar F ψ → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (M : ℕ) (B : Matrix ι ι F) (ρ : InfinitePlace F → (F →+* ℝ)) (P : InfinitePlace F → Matrix ι ι ℝ), QSetup M B ρ P → 3 ≤ M → ∀ a : ℕ, 0 < a → ∃ Df : A F → ℝ, Continuous Df ∧ (∀ y, 0 ≤ Df y) ∧ (∀ U : Set (A F), MeasurableSet U → (Measure.pi fun _ : ι => lf) {x | (∀ i, (a : A F) * x i ∈ Oh F) ∧ qf (hf F) (Bf B) x ∈ U} = ∫⁻ y in U, ENNReal.ofReal (Df y) ∂lf) ∧ Integrable (fstar ψ (hf F) (Bf B) (muF B lf) (indL a)) lf ∧ ∀ z : A F, ∫ y, fstar ψ (hf F) (Bf B) (muF B lf) (indL a) y * ψ (-z * y) ∂lf = ((kap F ^ (2 * M - 2) * (Real.sqrt |((Algebra.norm ℚ B.det : ℚ) : ℝ)|)⁻¹ * Df z : ℝ) : ℂ) := by
   intro F _ _ _ _ lf hlf h1 ψ hψ ι _ _ M B ρ P hQ hM a ha
   haveI := hlf
-  obtain ⟨hLC, hSC, hT2, hOc, hOo, -⟩ := GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F
+  obtain ⟨hLC, hSC, hT2, hOc, hOo, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
   haveI := hLC
   haveI := hSC
   haveI := hT2
@@ -334,8 +334,8 @@ theorem density_main : ∀ (F : Type) [Field F] [NumberField F] [MeasurableSpace
       simp only [opU, indL]
       rw [Set.indicator_of_notMem hu, mul_zero]
   have hint : Integrable fs lf := by
-    obtain ⟨N, hN, hper⟩ := GlobalTheory.T.weil_operator_integral_invariance F lf hlf h1 ψ hψ ι M B ρ P hQ' (indL a) (indL_SB ι ha)
-    obtain ⟨C, hC⟩ := GlobalTheory.T.fourier_coefficient_growth_bound F lf hlf h1 ψ hψ ι M B ρ P hQ' (indL a) (indL_SB ι ha)
+    obtain ⟨N, hN, hper⟩ := _root_.GlobalTheory.CompanionTheory.SW.FstarPer.fstar_periodic F lf hlf h1 ψ hψ ι M B ρ P hQ' (indL a) (indL_SB ι ha)
+    obtain ⟨C, hC⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.norm_fstar_le_den F lf hlf h1 ψ hψ ι M B ρ P hQ' (indL a) (indL_SB ι ha)
     exact integrable_of_periodic lf hlf h1 fs hN (fun x hx y => (hper x hx).2 y) hM hC
   have hmh : mh = fun y => ((c : ℂ))⁻¹ * fs y := by
     funext y
@@ -344,8 +344,8 @@ theorem density_main : ∀ (F : Type) [Field F] [NumberField F] [MeasurableSpace
     rw [hmh]; exact hint.const_mul _
   have hint'' : Integrable mh (ENNReal.ofReal (kap F) • lf) :=
     hint'.smul_measure ENNReal.ofReal_ne_top
-  obtain ⟨D, hDc, hD0, hDe, hDm⟩ := GlobalTheory.T.positive_definite_density (A F) (fun x y => ψ (x * y)) _
-    (GlobalTheory.T.adeles_self_dual F lf hlf h1 ψ hψ) m hmfin hint''
+  obtain ⟨D, hDc, hD0, hDe, hDm⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.Density.exists_density (A F) (fun x y => ψ (x * y)) _
+    (_root_.GlobalTheory.CompanionTheory.SW.Core.SelfDual.finiteAdeles_selfDual F lf hlf h1 ψ hψ) m hmfin hint''
   refine ⟨fun y => kap F * D y, continuous_const.mul hDc, fun y => mul_nonneg hk0.le (hD0 y), ?_, hint, ?_⟩
   · intro U hU
     have e1 := hDm U hU

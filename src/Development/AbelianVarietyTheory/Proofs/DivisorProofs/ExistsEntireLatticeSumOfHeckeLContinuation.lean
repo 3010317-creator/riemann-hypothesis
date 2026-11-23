@@ -3,14 +3,16 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsFinSetSplitPlacesCoprimeConductor
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DifferentiableZterm
 public import Mathlib.NumberTheory.NumberField.CMField
-import Development.AbelianVarietyTheory.Definitions.Divisors.HasSumZeroOfTwoLe
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.TsumIdealMulAbsNormCpowEqExpTsum
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmRingClassOrderUnitsEqMaxRealSubfieldUnitsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegralResidueSystemFiniteAdelesModStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniformiserIdeleMultiplicativeOnIdealsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmRingClassOrderUnitsEqMaxRealSubfieldUnits
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegralResidueSystemFiniteAdelesMod
+public import Development.AbelianVarietyTheory.Definitions.Divisors.EntireEqOfHalfPlane
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniformiserIdeleMultiplicativeOnIdeals
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdelicRingClassLatticeOneEqOrder
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralUnitCongruenceSubgroupRelIndexNeZero
+public import Mathlib.GroupTheory.FiniteAbelian.Duality
+import Development.AbelianVarietyTheory.Definitions.Divisors.HasSumZeroOfTwoLe
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteRingClassGroupOfConductorNeZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdelicRingClassLatticeOneEqOrderStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralUnitCongruenceSubgroupRelIndexNeZeroStatement
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RayLSeriesEulerProduct
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ValuedEqOneOfLe
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IntegralFiniteAdeleCompleteSeparated
@@ -27,7 +29,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.GroupTheory.FiniteAbelian.Duality
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.EulerProduct.ExpLog
 import Mathlib.NumberTheory.Height.NumberField
@@ -101,7 +102,7 @@ open Classical in
 theorem box_euler (hu : IsUnitary χ) (hr : ∀ w, r w ≤ 1) (hχ : ∀ u ∈ congr r, finPart χ u = 1) {s : ℂ} (hs : 1 < s.re) :
     ∃ Z, QSum (congr r) ((box r).indicator (zterm χ s)) Z ∧
       HasProd (fun w => if r w = 1 then (1 - (val χ w : ℂ) * ((Ideal.absNorm w.asIdeal : ℕ) : ℂ) ^ (-s))⁻¹ else 1) Z := by
-  obtain ⟨t, t1, tmul, tv, tmod, tco, tinj, tsurj⟩ := GlobalTheory.T.exists_uniformiserIdele_multiplicative_on_ideals E
+  obtain ⟨t, t1, tmul, tv, tmod, tco, tinj, tsurj⟩ := _root_.GlobalTheory.CMVal.IdealIdele.main E
   let C : Ideal (𝓞 E) → Prop := fun I => I ≠ ⊥ ∧ ∀ w, r w ≠ 1 → ¬ w.asIdeal ∣ I
   let X : Ideal (𝓞 E) → ℂ := fun I => if C I then (finPart χ (t I) : ℂ) else 0
   have hX : ∀ I, ‖X I‖ ≤ 1 := fun I => by
@@ -311,7 +312,7 @@ theorem class_entire (hu : IsUnitary χ) {Λ : ℂ → ℂ} (hΛ : IsHeckeL χ �
       (fun z => if ∀ w, Valued.v ((z : Af E) w - a w) ≤ radN E N w then zterm χ s z else 0) (Z s) := by
   obtain ⟨t, r, hr, hr', hfin, ht⟩ := exists_box hN ha
   obtain ⟨Z, hZ, h⟩ := box_entire hu hΛ hr hfin (congr_mono hr')
-    (mt (Subgroup.relIndex_eq_zero_of_le_right (congr_mono hr)) (GlobalTheory.T.integralUnitCongruenceSubgroup_relIndex_ne_zero E N hN)) hχ
+    (mt (Subgroup.relIndex_eq_zero_of_le_right (congr_mono hr)) (_root_.GlobalTheory.CMVal.LatEnt.relIndex_congr_radN_ne_zero E N hN)) hχ
   refine ⟨fun s => zterm χ s t * Z s, (differentiable_zterm χ t).mul hZ, fun s hs => ?_⟩
   refine (((h s hs).translate (indicator_box_mul (congr_mono hr') hχ s) t⁻¹).mul_left (zterm χ s t)).congr_fun fun q => ?_
   simp only [Set.indicator_apply, ht]
@@ -340,9 +341,9 @@ theorem order_entire (hu : IsUnitary χ) {Λ : ℂ → ℂ} (hΛ : IsHeckeL χ �
   generalize Ideal.absNorm c = N at hN hNc
   have hle := congr_le_hatOUnits hN hNc
   have hn : (congr (radN E N)).relIndex (hatOUnits c) ≠ 0 :=
-    mt (Subgroup.relIndex_eq_zero_of_le_right (hatOUnits_le_congr c)) (GlobalTheory.T.integralUnitCongruenceSubgroup_relIndex_ne_zero E N hN)
+    mt (Subgroup.relIndex_eq_zero_of_le_right (hatOUnits_le_congr c)) (_root_.GlobalTheory.CMVal.LatEnt.relIndex_congr_radN_ne_zero E N hN)
   have hn' : (((congr (radN E N)).relIndex (hatOUnits c) : ℕ) : ℂ) ≠ 0 := Nat.cast_ne_zero.2 hn
-  obtain ⟨R, hR, hR'⟩ := GlobalTheory.T.exists_integral_residue_system_finiteAdeles_mod E N hN
+  obtain ⟨R, hR, hR'⟩ := _root_.GlobalTheory.CMVal.LatEnt.Res.exists_residues E N hN
   choose! Z hZ h using fun (a : Af E) (ha : ∀ w, Valued.v (a w) ≤ 1) =>
     class_entire hu hΛ hN (fun u hu => hχ u (hle hu)) ha
   refine ⟨fun s => (((congr (radN E N)).relIndex (hatOUnits c) : ℕ) : ℂ)⁻¹ * ∑ a ∈ R.filter (· ∈ hatO c), Z a s,
@@ -460,13 +461,13 @@ theorem exists_isLatSum : (∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   let A : modUnits (lattice c y) → Eˣ := fun q => Units.mk0 q.1.out (out_mem_lattice q).2
   let f : modUnits (lattice c y) → (Af E)ˣ ⧸ hatOUnits c := fun q => QuotientGroup.mk (P (A q) * y⁻¹)
   have hO : ∀ a : Eˣ, ((P a : (Af E)ˣ) : Af E) ∈ hatO c → (a : E) ∈ orderC c := fun a ha => by
-    rw [← SetLike.mem_coe, ← GlobalTheory.T.idelicRingClassLattice_one_eq_order E c hc, mem_lattice, inv_one, Units.val_one, mul_one]
+    rw [← SetLike.mem_coe, ← _root_.GlobalTheory.CMVal.HatCap.lattice_one E c hc, mem_lattice, inv_one, Units.val_one, mul_one]
     exact ha
   have hf : Function.Injective f := fun q q' h => by
     have h2 := QuotientGroup.eq.1 h
     rw [show (P (A q) * y⁻¹)⁻¹ * (P (A q') * y⁻¹) = P (A q' * (A q)⁻¹) by
       rw [map_mul, map_inv]; simp [mul_comm, mul_left_comm, mul_assoc]] at h2
-    obtain ⟨u, hu⟩ := GlobalTheory.T.cmRingClassOrder_units_eq_maxRealSubfield_units E 𝔣 c h𝔣 hd _ (A q' * (A q)⁻¹).ne_zero (hO _ h2.1) (by
+    obtain ⟨u, hu⟩ := _root_.GlobalTheory.CMVal.OrderUnits.orderC_units E 𝔣 c h𝔣 hd _ (A q' * (A q)⁻¹).ne_zero (hO _ h2.1) (by
       rw [← Units.val_inv_eq_inv_val]
       exact hO _ (by rw [map_inv]; exact h2.2))
     refine Subtype.ext ?_

@@ -5,9 +5,9 @@ public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.CharacterIdealPrincipalEigen
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FrobeniusChainCarry
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FundamentalCharacterIdealPowers
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FundamentalIdealFrobeniusPowersStatement
-import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.TeichmullerCharacterOrderGenerates
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FundamentalIdealFrobeniusPowers
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.RbProj
+import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.TeichmullerCharacterOrderGenerates
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -173,7 +173,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.fundamental_ideal_frobenius_pr
   have hord : orderOf σ = p ^ f - 1 := (FundGen.main p C v R hv hp F f hf σ hσ).1
   obtain ⟨h0, -⟩ := exists_inv_card hv hp hf
   have hprin := eig_rank_one p C v R hv hp F f hf AA hst
-  have hmono := (GlobalTheory.T.fundamental_ideal_frobenius_powers p C v R hv hp F f hf AA hst σ hσ c hc).2
+  have hmono := (_root_.GlobalTheory.CompanionTheory.Relay.fundamental_ideal_frobenius_powers p C v R hv hp F f hf AA hst σ hσ c hc).2
   have hq : 1 ≤ p ^ f := Nat.one_le_pow _ _ (by omega)
   have hsq : ∀ n, (fun a => algebraMap R C (c n ^ p * (σ ^ p ^ (n + 1)) a)) ∈
       sqIdeal (augIdeal AA.carrier) := fun n => by

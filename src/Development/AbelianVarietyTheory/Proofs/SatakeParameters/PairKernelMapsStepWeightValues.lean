@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.JetLL
 public import Formalism.LocalToGlobal.HermitianForms.TiedTwGen
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaDistributionUnfolded
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TrueWeightConsecutiveStepsPartitionStatement
+public import Formalism.LocalToGlobal.KernelLattices.FirstKernelLawReading
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TrueWeightConsecutiveStepsPartition
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,7 +59,7 @@ theorem evG_id_smul {ι Yv : Type} [Fintype ι] {n : ℕ} (fr : Yv → ι → Ma
 theorem Kmap_isVal : ∀ (D : D7) (u : D.what₂.Word) (C : ColumnChain D.R D.what₂.Tau (D.hcW u)) (A : ColumnsAtT D.R C) (Pm : PeriodMap D.R C) (M : MemberForms D.what₂.LL D.what₂.embLL D.what₂.places D.what₂.Tau (D.hcW u) C A Pm) (O : GL3Theta.LiftObj D C) (i : ℕ), i < D.R.m → UnfIs O i (nuT D u i) → ∀ (c : C.cls i) (c' : C.cls (i + 1)) f, IsVal (O.frm i) (lamTG M i) (RingHom.id ℂ) f → IsVal (O.frm (i + 1)) (lamTG M (i + 1)) (RingHom.id ℂ) (C.Kmap i c c' f) := by
   intro D u C A Pm M O i hi hU c c' f hf
   obtain ⟨P, hP, rfl⟩ := hf
-  obtain ⟨n, h1, h2, h3, h4⟩ := GlobalTheory.T.trueWeight_consecutive_steps_partition D u C A Pm M i hi
+  obtain ⟨n, h1, h2, h3, h4⟩ := _root_.GlobalTheory.KerWtStep.trueWt_step D u C A Pm M i hi
   have hle : D.R.N i ≤ D.R.N (i + 1) := by
     unfold Ranks.N
     exact Nat.add_le_add_left (Nat.mul_le_mul_right _ (Nat.le_succ _)) _

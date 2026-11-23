@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.UpperBounds.FreeBallI
 public import Development.AbelianVarietyTheory.BlockTheory.PoincareCuspForms.SpanSubtraction
 public import Development.AbelianVarietyTheory.BlockTheory.PoincareCuspForms.TwoLevelLogarithm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBlockDetGe
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FreeBallCentreInterpolationDetWeightSmallSignatuStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FreeBallCentreInterpolationDetWeightSmallSignatu
 import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.DivisionWithBasisOfDivision
 import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.ExistsMixedProj
 import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.ExistsPhlaBound
@@ -136,6 +136,6 @@ theorem orbit_interp_deMul : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   intro E _ _ _ r X hχ G x0 hx0 hFB h0 h1 s hs hsb
   by_cases hq : 4 ≤ X.p0 * (r - X.p0)
   · exact large r X G x0 hx0 hFB h0 h1 hq s hs hsb
-  · exact GlobalTheory.T.freeBallCentre_interpolation_detWeight_smallSignature E r X hχ G x0 hx0 hFB h0 h1 (by omega) s hs hsb
+  · exact _root_.GlobalTheory.Up.OrbitInterpSmall.orbit_interp_small E r X hχ G x0 hx0 hFB h0 h1 (by omega) s hs hsb
 
 end GlobalTheory.OrbitInterpWeight

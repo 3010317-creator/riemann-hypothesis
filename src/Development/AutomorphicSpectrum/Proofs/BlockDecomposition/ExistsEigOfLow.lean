@@ -2,14 +2,17 @@ module
 
 public import Development.WeilBound.RepresentationTheoryGL.HolomorphicDiscreteSeries.SchurEigenProjections.EigA
 public import Mathlib.Analysis.Normed.Operator.Compact.Basic
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CyclicVectorIntertwinerDeterminedStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FormalDegreeMatrixCoefficientNormStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FormalDegreeSchurOrthogonalityStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MatrixCoefficientIntertwinerAdjointStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MatrixCoefficientOrthogonalityRelationStatement
-import Development.WeilBound.CoreStatements.BranchingTraces.HilbertSchmidtTraces.UnitaryMatrixCoefficientDecay
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsNormEmbId
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CyclicVectorIntertwinerDetermined
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IntegrableMulInner
+public import GroundTheory.AutomorphicForms.HilbertSchmidt
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FormalDegreeMatrixCoefficientNorm
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FormalDegreeSchurOrthogonality
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MatrixCoefficientIntertwinerAdjoint
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MatrixCoefficientOrthogonalityRelation
 public import GroundTheory.AutomorphicForms.CompactSelfAdjoint
 public import GroundTheory.AutomorphicForms.HilbertSchmidtCompact
+import Development.WeilBound.CoreStatements.BranchingTraces.HilbertSchmidtTraces.UnitaryMatrixCoefficientDecay
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -123,15 +126,15 @@ theorem eigA : EigA := by
     refine PositivityTheory.UnitaryDecomposition.X4.eq_zero_of_orth hd hne fun g => ?_
     have hg : σ g w₀ ∈ Submodule.span ℂ (Set.range fun x => σ x w₀) := Submodule.subset_span ⟨g, rfl⟩
     exact Submodule.inner_left_of_mem_orthogonal hg hu
-  have hlow := GlobalTheory.T.cyclic_vector_intertwiner_determined σ ρ d hd.1 hσ hρ w₀ v i hi.1 hdense
+  have hlow := _root_.GlobalTheory.CompanionTheory.RgHeA.lower_bound_of_cyclic_coef σ ρ d hd.1 hσ hρ w₀ v i hi.1 hdense
     (coefOp ν σ hσ (fun g => star ⟪v, ρ g v⟫_ℂ) hm) (coefOp ν ρ hρ (fun g => star ⟪w₀, σ g w₀⟫_ℂ) hc)
-    (GlobalTheory.T.matrix_coefficient_intertwiner_adjoint ν σ ρ hσ hρ w₀ v hc hm) (GlobalTheory.T.formal_degree_schur_lower_bound ν σ ρ d hσ hρ hd w₀ hw₀ hc i hi)
+    (_root_.GlobalTheory.CompanionTheory.RgHeA.TwPf.coefOp_translate ν σ ρ hσ hρ w₀ v hc hm) (_root_.GlobalTheory.CompanionTheory.RgHeA.avg_conj_coef_ge ν σ ρ d hσ hρ hd w₀ hw₀ hc i hi)
   have hlow' : ∀ a, ‖⟪ContinuousLinearMap.adjoint i v, a⟫_ℂ‖ ^ 2 / d ≤
       (⟪a, coefOp ν σ hσ (fun g => star ⟪v, ρ g v⟫_ℂ) hm a⟫_ℂ).re := fun a => by
     rw [ContinuousLinearMap.adjoint_inner_left]
     exact hlow a
   obtain ⟨w, c, hw, hcb, hTw⟩ := exists_eig_of_low _ (GroundTheory.Automorphic.IsHilbertSchmidt.isCompactOperator
-    (GlobalTheory.T.formal_degree_matrix_coefficient_norm ν σ ρ d hσ hρ hd v hm)) (GlobalTheory.T.matrix_coefficient_orthogonality_relation ν σ ρ hσ hρ v hm) w₀ hne _ d hd.1 hlow'
+    (_root_.GlobalTheory.CompanionTheory.RgHeA.CoefHS.isHilbertSchmidt_coefOp ν σ ρ d hσ hρ hd v hm)) (_root_.GlobalTheory.CompanionTheory.RgHeA.isSelfAdjoint_coefOp ν σ ρ hσ hρ v hm) w₀ hne _ d hd.1 hlow'
   refine ⟨w, c, hw, hcb, fun b => ⟨integrable_mul_inner hσ hm b w, ?_⟩⟩
   rw [← inner_coefOp ν σ hσ _ hm, hTw, inner_smul_right]
 

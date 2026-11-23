@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Statements.PrincipalLattices.LogHermFormOfUnitDiscriminant
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.HolomorphicUniformisationTangentUnimodularRiemanStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.HolomorphicUniformizationTangentUnimodularRiemann
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,7 +52,7 @@ theorem lattice_unif_fibre_eq_of_period : ThetaUnifAV → ∀ (R : Type) [CommRi
   intro hU R _ P v s L c₀ ω hg hv H hc hL P' φ hφ u
   obtain ⟨v', hv', -⟩ := existsUnique_isVecOver hφ.2.1.1 v
   have htan : IsTangent v' := IsVecOver.isTangent hφ.2.1 hv' hv
-  obtain ⟨w, hw, -⟩ := (GlobalTheory.T.holomorphicUniformisation_tangent_unimodular_riemannForm hU P' u).1 v' htan
+  obtain ⟨w, hw, -⟩ := (_root_.GlobalTheory.AnyUnif.tangent_and_unimodular hU P' u).1 v' htan
   obtain ⟨hw0, hwL⟩ := H P' φ v' u w hφ hv' hw
 
   have hg' : P'.g = 1 := hφ.1.trans hg

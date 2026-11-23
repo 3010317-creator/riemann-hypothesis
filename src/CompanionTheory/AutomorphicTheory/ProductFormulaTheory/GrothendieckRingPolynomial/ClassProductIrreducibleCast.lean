@@ -5,12 +5,17 @@ public import CompanionTheory.AutomorphicTheory.TemperedLocalSpectra.BernsteinZe
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsEquivProdIrrTw
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SmoothContragredientIrreducibleAndReflexive
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnitarisableOfSquareIntegrable
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParabolicProductHasFiniteLengthGLStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContragredientProductIrreducibleStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualClassInvolutiveStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GelfandKazhdanContragredientStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalLanglandsOfIrreducibleAdmissibleStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductTransposeInverseDualReverseStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParabolicProductHasFiniteLengthGL
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.LSegJacquet
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IrreducibleAdmissibleGL
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContragredientProductIrreducible
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualClassInvolutive
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.ZelevinskyCosocles.GKLocal
+public import Mathlib.Topology.Algebra.Group.Units
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GelfandKazhdanContragredient
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalLanglandsOfIrreducibleAdmissible
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductTransposeInverseDualReverse
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.BernsteinZelevinskyFiniteness
 import GroundTheory.LocalFields.PadicLogSeries
 import Mathlib.Algebra.Order.Floor.Extended
@@ -281,16 +286,16 @@ theorem class_eq_of_jordan_holder_mult {N : ℕ} {V W : Type} [AddCommGroup V] [
 theorem jhMult_pair_le (x y : IrrGL (k := k)) {N : ℕ} (h1 : ∑ a, (![x, y] a).1 = N) (h2 : ∑ a, (![y, x] a).1 = N)
     (σ : IrrRep (GL (Fin N) k)) : jhMult σ.ρ (prodIrr ![x, y] h1) ≤ jhMult σ.ρ (prodIrr ![y, x] h2) := by
   have hA := CompanionTheory.Tls2.BZGL.irreducibleAdmissibleGL_top
-  have hGK : GKLocal k := GlobalTheory.T.local_langlands_of_irreducible_admissible hA
-  obtain ⟨hd', ⟨E1⟩⟩ := GlobalTheory.T.product_transpose_inverse_dual_reverse hA hGK ![x, y] h1
-  obtain ⟨hd'', ⟨E2⟩⟩ := GlobalTheory.T.contragredient_product_irreducible hA (fun a => dualCl (![x, y] (Fin.rev a))) hd'
+  have hGK : GKLocal k := _root_.GlobalTheory.CompanionTheory.GKLocalProof.gkLocal hA
+  obtain ⟨hd', ⟨E1⟩⟩ := _root_.GlobalTheory.CompanionTheory.ThetaProd.prodIrr_comp_thetaW hA hGK ![x, y] h1
+  obtain ⟨hd'', ⟨E2⟩⟩ := _root_.GlobalTheory.CompanionTheory.ContraProd.contra_prodIrr hA (fun a => dualCl (![x, y] (Fin.rev a))) hd'
   have hz : (fun a => dualCl (dualCl (![x, y] (Fin.rev a)))) = ![y, x] := by
     funext a
     fin_cases a
-    · exact GlobalTheory.T.dual_class_involutive hA y
-    · exact GlobalTheory.T.dual_class_involutive hA x
+    · exact _root_.GlobalTheory.CompanionTheory.Zcore.dualCl_dualCl hA y
+    · exact _root_.GlobalTheory.CompanionTheory.Zcore.dualCl_dualCl hA x
   obtain ⟨E3⟩ := prodIrr_congr hz hd'' h2
-  obtain ⟨G1⟩ := GlobalTheory.T.gelfand_kazhdan_contragredient hGK N σ.ρ σ.smooth σ.irr
+  obtain ⟨G1⟩ := _root_.GlobalTheory.CompanionTheory.ThetaW.comp_thetaW_equiv_contra hGK N σ.ρ σ.smooth σ.irr
   have hG := GlobalTheory.SqIntUnit.compactOpen_basis k N
   have hσa : IsAdmissible σ.ρ := hA k N _ σ.ρ σ.smooth σ.irr
   calc jhMult σ.ρ (prodIrr ![x, y] h1)
@@ -321,9 +326,9 @@ theorem comm (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonar
   obtain ⟨E1⟩ := nonempty_prod₂_equiv_prodIrr_pair x y hxy
   obtain ⟨E2⟩ := nonempty_prod₂_equiv_prodIrr_pair y x hyx
   have hBZ := GlobalTheory.CompanionTheory.Published.bernsteinZelevinskyFiniteness
-  have f1 : HasFiniteLength (prod₂ x.rep y.rep) := GlobalTheory.T.parabolicProduct_hasFiniteLength_GL hBZ k _ _ _ _ _ _
+  have f1 : HasFiniteLength (prod₂ x.rep y.rep) := _root_.GlobalTheory.ProdLength.prod₂_hasFiniteLength hBZ k _ _ _ _ _ _
     x.2.rep.hasFiniteLength y.2.rep.hasFiniteLength x.2.rep.smooth y.2.rep.smooth
-  have f2 : HasFiniteLength (prod₂ y.rep x.rep) := GlobalTheory.T.parabolicProduct_hasFiniteLength_GL hBZ k _ _ _ _ _ _
+  have f2 : HasFiniteLength (prod₂ y.rep x.rep) := _root_.GlobalTheory.ProdLength.prod₂_hasFiniteLength hBZ k _ _ _ _ _ _
     y.2.rep.hasFiniteLength x.2.rep.hasFiniteLength y.2.rep.smooth x.2.rep.smooth
   rw [class_congr_equiv E1, class_congr_equiv E2, ← class_product_irreducible_cast (add_comm x.1 y.1) ![y, x] hyx' hyx]
   exact class_eq_of_jordan_holder_mult (f1.of_equiv E1)

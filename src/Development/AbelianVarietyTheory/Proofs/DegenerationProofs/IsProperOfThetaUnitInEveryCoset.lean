@@ -7,18 +7,20 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesOfExpansionLawsStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartValuesTorsionPairingSeparationIntegraStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationDataTorsionStructureAlgClosedStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.SepticCharacterInjective
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationDataTorsionStructureAlgClosed
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationValuesIntOfAdmissibleBaseStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIntegralDegenerationValues
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FamiliesValuesCorrespondStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaConstantsEqDegenerationSeriesStatement
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaCoordinatesExistUniqueSeparatePointsStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusTorsionPointsCorrespondValuesStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TxCosetCriterionStatement
+public import Mathlib.Topology.MetricSpace.Ultra.Basic
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TxCosetCriterion
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsIffOfThetaLevelPullback
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSchemeOfUnifOfSubsingleton
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.UniformisationTorsionIdentificationWithPairingStatement
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsMulEquivOfIsGrpPullback
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaCoordinatesExistUniqueSeparatePointsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -87,7 +89,7 @@ theorem subsingleton_of_labels {C : Type} [NontriviallyNormedField C] [IsUltrame
     (v : La → C) (hv : ∀ q : La → N.QT ((n ^ j) ^ 2), (∀ a, r (q a) a) → ∃ c : C, ∀ a, v a = c * N.tx (n ^ j) (q a))
     (hle : ∀ a, ‖v a‖ ≤ 1) (hco : ∀ a, ∃ h, ‖v (a + n ^ (j - 1) • h)‖ = 1) : Subsingleton N.X := by
   classical
-  obtain ⟨hA, hB, -⟩ := GlobalTheory.T.tx_coset_norm_one_and_ne_zero C N Q hQ n g hn ho h1 hT j (by omega)
+  obtain ⟨hA, hB, -⟩ := _root_.GlobalTheory.tx_coset_criterion C N Q hQ n g hn ho h1 hT j (by omega)
   obtain ⟨q₀, -, -, hq₀⟩ := hB 1 rfl
   obtain ⟨a₀, ha₀⟩ := cot (1 * q₀)
   have tot' : ∀ a, ∃ q, r q a ∧ (a = a₀ → q = 1 * q₀) := fun a => by
@@ -119,7 +121,7 @@ theorem subsingleton_of_labels {C : Type} [NontriviallyNormedField C] [IsUltrame
     rwa [map_add, map_nsmul, nsmul_eq_mul, Nat.cast_pow, ZMod.natCast_self, zero_pow (by omega), zero_mul,
       add_zero] at e
   have hn0 : (n : C) ≠ 0 := fun e => by rw [e, norm_zero] at h1; exact zero_ne_one h1
-  have hs := (GlobalTheory.T.degenerationData_torsion_structure_algClosed C N n g hn0 hT (j * 2)).2.2.1 y
+  have hs := (_root_.GlobalTheory.Ex.QStr.qStructure C N n g hn0 hT (j * 2)).2.2.1 y
   rw [pow_mul] at hs
   obtain ⟨p, rfl⟩ := hs
   obtain ⟨a, ha⟩ := cot p

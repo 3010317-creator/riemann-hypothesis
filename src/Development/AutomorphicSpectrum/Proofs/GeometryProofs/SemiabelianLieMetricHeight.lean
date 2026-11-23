@@ -3,20 +3,32 @@ module
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ToXQFst
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocRatio
 public import Development.AbelianVarietyTheory.PublishedTheorems.SemiabelianTori.GeometricallyConnectedSplitTorusAff
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AnalyticPointsFiniteCompactStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CharValMultiplicativeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsFiniteTypeOverIntegersStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsCocharacterLieModelStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteSurjectiveLiftsPointsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HermitianSquareNormGramStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IrreducibleClosedIntegralSubschemeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieMetricFinitePullbackStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieMetricTorusPullbackStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AnalyticPointsFiniteCompact
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCocharLie
+public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.LocallyOfFinitePresentationDiagMap
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CharValMultiplicative
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.SplitTori.SplitTorusAff
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsFiniteTypeOverIntegers
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsCocharacterLieModel
+public import Mathlib.AlgebraicGeometry.Morphisms.Finite
+public import Mathlib.FieldTheory.IsAlgClosed.AlgebraicClosure
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteSurjectiveLiftsPoints
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsOrthFull
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HermitianSquareNormGram
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IrreducibleClosedIntegralSubscheme
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieMetricFinitePullback
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieMetricTorusPullback
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelValueLift
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SemiabelianFiniteCoverTorusStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorusInjectiveOnOpenStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorusSplitPullbackGenericStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SemiabelianFiniteCoverTorus
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorusInjectiveOnOpen
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorusSplitPullbackGeneric
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsCompactSphere
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,7 +72,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.SabPull
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
 
 @[expose] public section
 
@@ -184,7 +195,7 @@ theorem gram_bound (X : Scheme.{0}) (Ω : Type) [Field Ω] (K : Type) [Fintype K
         (star w ⬝ᵥ (RootHt.gramAt h zX v *ᵥ w)).re ≤ C * ∑ a, ‖w a‖ ^ 2 := by
   set ρ : Z' ⟶ X := f ≫ XQ.fst X with hρ
   have hM : ∀ zc : Sp ℂ ⟶ Z', ∃ Mz : LieModel (splitTorus Z' Xc) zc (Xc →+ ℂ), IsCocharLie Mz :=
-    fun zc => GlobalTheory.T.exists_cocharacter_lie_model Z' Xc ℂ zc
+    fun zc => _root_.GlobalTheory.CompanionTheory.Ar.TorusLie.exists_lieModel_splitTorus Z' Xc ℂ zc
   choose Mz hMz using hM
   have hv : ∀ (zc : Sp ℂ ⟶ Z') (Mz' : LieModel (splitTorus Z' Xc) zc (Xc →+ ℂ)) (a : Fin r),
       ∃ v : epsAt (zc ≫ ρ) ⟶ G, v.left = (Mz'.pt ((Int.castAddHom ℂ).comp (β a)) ≫ u).left ≫ Φ := by
@@ -201,17 +212,17 @@ theorem gram_bound (X : Scheme.{0}) (Ω : Type) [Field Ω] (K : Type) [Fintype K
         H zc = RootHt.gramAt h (zc ≫ ρ) v := by
     intro zc Mz' hMz' v hv'
     have e : ∀ d, Mz'.pt d = (Mz zc).pt d := fun d =>
-      (GlobalTheory.T.charVal_multiplicative Z' Xc (DualNumber ℂ) _).1 _ _ (fun χ => by rw [hMz', hMz])
+      (_root_.GlobalTheory.CompanionTheory.Ar.TorusPoints.main Z' Xc (DualNumber ℂ) _).1 _ _ (fun χ => by rw [hMz', hMz])
     have : vv zc = v := by
       funext a
       apply Over.OverMorphism.ext
       rw [hvv, hv', e]
     simp only [H, this]
-  have hcont := GlobalTheory.T.gram_matrix_continuous X Ω K J y ξ hall hT G Li M h Z' ρ G' Φ hP Xc u r (fun a => β a) H hH
+  have hcont := _root_.GlobalTheory.CompanionTheory.Ar.TorusUnif.gramAt_continuous_anTop X Ω K J y ξ hall hT G Li M h Z' ρ G' Φ hP Xc u r (fun a => β a) H hH
   letI := anTop Z'
-  haveI := GlobalTheory.T.analytic_points_finite_compact X Ω K J y ξ hall hT Z' f hf
+  haveI := _root_.GlobalTheory.CompanionTheory.Ar.TorusUnif.compact_of_finite_generic X Ω K J y ξ hall hT Z' f hf
   obtain ⟨C, hC, hb⟩ := GlobalTheory.CompanionTheory.GramCompact.exists_bounds (Sp ℂ ⟶ Z') Set.univ (Fin r) H isCompact_univ
-    hcont.continuousOn (fun zc _ => GlobalTheory.T.lie_metric_torus_pullback X Ω K J y ξ G Li M h Z' ρ G' Φ hP Xc u r β zc (Mz zc) (hMz zc)
+    hcont.continuousOn (fun zc _ => _root_.GlobalTheory.CompanionTheory.Ar.TorusUnif.GramPos.gramAt_posDef_of_diff_injective X Ω K J y ξ G Li M h Z' ρ G' Φ hP Xc u r β zc (Mz zc) (hMz zc)
       (hinj zc _ (hMz zc)) (vv zc) (hvv zc))
   refine ⟨C, hC, fun zc zX hz Mz' hMz' v hv' w => ?_⟩
   subst hz
@@ -245,7 +256,7 @@ theorem stratum_good : GlobalTheory.Published.SemiAbelianHomExtension → ∀ (X
       IsGrpPullback GK G (spMap (algebraMap (𝓞 L) L) ≫ z) φ → ∀ zZ : Sp L ⟶ Z,
       zZ ≫ i = toXQ (spMap (algebraMap (𝓞 L) L) ≫ z) → ⊤ ≤ zZ ⁻¹ᵁ U → GoodAt h C z φ τ := by
   intro hFC X Ω _ K _ J _ y ξ hall hT G _ _ hG Li _ _ M h Z _ i hi
-  have hfin := GlobalTheory.T.coords_finite_type_over_integers X Ω K J y ξ hall hT
+  have hfin := _root_.GlobalTheory.CompanionTheory.Ar.TorusUnif.closure_finiteType_over_int X Ω K J y ξ hall hT
   obtain ⟨hq1, hq2, hq3, hq4⟩ := xq_facts X hfin
   haveI := hG.smooth
   haveI := hG.separated
@@ -255,7 +266,7 @@ theorem stratum_good : GlobalTheory.Published.SemiAbelianHomExtension → ∀ (X
   let io : Z ⟶ X := i ≫ XQ.fst X
   have hGZ : IsSemiAbelian ((Over.pullback io).obj G) := IsSemiAbelian.pullback io G hG
   obtain ⟨Z', hZ', π, G', hG', φ', Xc, _, _, _, u, U, hπf, hπs, hnorm, hpb, hu, hU, hpt⟩ :=
-    GlobalTheory.T.semiabelian_finite_cover_torus hFC Z s ((Over.pullback io).obj G) hGZ
+    _root_.GlobalTheory.CompanionTheory.Ar.StratOpen.strat_open hFC Z s ((Over.pullback io).obj G) hGZ
   let f : Z' ⟶ XQ X := π ≫ i
   haveI hff : IsFinite f := inferInstance
   have hP : IsGrpPullback G' G (f ≫ XQ.fst X) (φ' ≫ pullback.fst G.hom io) := by
@@ -270,14 +281,14 @@ theorem stratum_good : GlobalTheory.Published.SemiAbelianHomExtension → ∀ (X
     obtain ⟨p, hp⟩ := hU
     obtain ⟨q, rfl⟩ := hπs.surj p
     exact ⟨q, hp⟩
-  have hinj0 := GlobalTheory.T.torus_injective_on_open Z' G' Xc u (π ⁻¹ᵁ U) hU' (fun k _ x hx A _ g t ht => (hpt k x hx).1 A g t ht)
+  have hinj0 := _root_.GlobalTheory.CompanionTheory.Ar.StratLie.lie_injective Z' G' Xc u (π ⁻¹ᵁ U) hU' (fun k _ x hx A _ g t ht => (hpt k x hx).1 A g t ht)
   obtain ⟨C, hC, hb⟩ := gram_bound X Ω K J y ξ hall hT G Li M h Z' f hff G' _ hP Xc u
     (fun zc Mz hMz δ hδ => hinj0 ℂ zc Mz hMz δ hδ) r β
   refine ⟨U, C, hU, hC, ?_⟩
   intro L _ _ z GK _ φ τ hGK zZ hzZ hzU
   letI := τ.addCommGroup
   let Lb := AlgebraicClosure L
-  obtain ⟨x, hx⟩ := GlobalTheory.T.finite_surjective_lifts_points Z' Z π hπf hπs L zZ
+  obtain ⟨x, hx⟩ := _root_.GlobalTheory.CompanionTheory.Ar.TorusUnif.exists_lift_algClosure Z' Z π hπf hπs L zZ
   have hxρ : x ≫ f ≫ XQ.fst X = spMap (algebraMap L Lb) ≫ (spMap (algebraMap (𝓞 L) L) ≫ z) := by
     have e : zZ ≫ i ≫ XQ.fst X = spMap (algebraMap (𝓞 L) L) ≫ z := by
       rw [← CategoryTheory.Category.assoc, hzZ, toXQ_fst]
@@ -289,7 +300,7 @@ theorem stratum_good : GlobalTheory.Published.SemiAbelianHomExtension → ∀ (X
     have h1 : spMap (algebraMap L (AlgebraicClosure L)) p ∈ zZ ⁻¹ᵁ U := hzU (TopologicalSpace.Opens.mem_top _)
     simpa using h1
   obtain ⟨hi1, hi2⟩ := hpt Lb x hxU
-  obtain ⟨e, he⟩ := GlobalTheory.T.torus_split_pullback_generic X Z' G G' (f ≫ XQ.fst X) _ hP Xc u L Lb x _ hxρ GK φ hGK τ hi1 hi2
+  obtain ⟨e, he⟩ := _root_.GlobalTheory.CompanionTheory.Ar.TorusUnif.torus_stratum_cocharacters_compare X Z' G G' (f ≫ XQ.fst X) _ hP Xc u L Lb x _ hxρ GK φ hGK τ hi1 hi2
   refine ⟨r, β.map (dualEquiv e), fun MT hMT B MB hF ε hε σ w => ?_⟩
   letI : Algebra L ℂ := σ.toAlgebra
   let σ' : Lb →+* ℂ := (IsAlgClosed.lift : Lb →ₐ[L] ℂ).toRingHom
@@ -306,7 +317,7 @@ theorem stratum_good : GlobalTheory.Published.SemiAbelianHomExtension → ∀ (X
     show (spMap σ' ≫ x) ≫ f ≫ XQ.fst X = spMap c ≫ z
     rw [CategoryTheory.Category.assoc, hxρ, ← e1]
     simp only [CategoryTheory.Category.assoc]
-  obtain ⟨Mz, hMz⟩ := GlobalTheory.T.exists_cocharacter_lie_model Z' Xc ℂ zc
+  obtain ⟨Mz, hMz⟩ := _root_.GlobalTheory.CompanionTheory.Ar.TorusLie.exists_lieModel_splitTorus Z' Xc ℂ zc
   let v : Fin r → (epsAt zX ⟶ G) := fun a => LieTangent.epsBase c rfl ≫ MB.pt (ε a)
   have hv : ∀ a, (v a).left = (Mz.pt ((Int.castAddHom ℂ).comp (β a)) ≫ u).left ≫ (φ' ≫ pullback.fst G.hom io) := by
     intro a
@@ -321,7 +332,7 @@ theorem stratum_good : GlobalTheory.Published.SemiAbelianHomExtension → ∀ (X
         rfl)
     have hchar : ∀ χ, charVal t' χ = charVal (Mz.pt ((Int.castAddHom ℂ).comp (β a))) (e χ) := by
       intro χ
-      have e1 := (GlobalTheory.T.charVal_multiplicative (Sp L) τ.X (DualNumber L) a0).2.2.2.2.2 (DualNumber ℂ) g1 (MT.pt δ') t' rfl χ
+      have e1 := (_root_.GlobalTheory.CompanionTheory.Ar.TorusPoints.main (Sp L) τ.X (DualNumber L) a0).2.2.2.2.2 (DualNumber ℂ) g1 (MT.pt δ') t' rfl χ
       rw [e1, hMT, hMz]
       simp only [g1, hδ']
       ext <;> simp [dualMap, dualEquiv]
@@ -353,7 +364,7 @@ theorem stratum_good : GlobalTheory.Published.SemiAbelianHomExtension → ∀ (X
       ((1 : GroundTheory.Heights₂.Heights.ComplexAt σ) ⊗ₜ[𝓞 L] ε b) := by
     intro a b
     exact (hF σ (ε a) (ε b) (v a) (v b) rfl rfl).symm
-  rw [GlobalTheory.T.hermitian_square_norm_gram L B σ r ε _ hΓ w]
+  rw [_root_.GlobalTheory.CompanionTheory.Ar.TorusUnif.sqAt_sum_eq_gram L B σ r ε _ hΓ w]
   exact ⟨hlo, hhi⟩
 
 end GlobalTheory.CompanionTheory.Ar.TorusUnif
@@ -377,7 +388,7 @@ theorem goodAt_mono {X : Scheme.{0}} {Ω : Type} [Field Ω] {K : Type} [Fintype 
 
 theorem torus_unif : GlobalTheory.Published.SemiAbelianHomExtension → ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (ξ : Sp Ω ⟶ X), CharZero Ω → (∀ q : X, genPt ξ ⤳ q) → CoordTie ℤ ξ (fun c' : (k : K) → J k => ∏ k, y ⟨k, c' k⟩) → ∀ (G : Over X) [GrpObj G] [IsCommMonObj G], IsSemiAbelian G → ∀ (Li : Type) [AddCommGroup Li] [Module Ω Li] (M : LieModel G ξ Li) (h : LieMetric M y), ∃ C : ℝ, 1 ≤ C ∧ ∀ (L : Type) [Field L] [NumberField L] (z : Sp (𝓞 L) ⟶ X) (GK : Over (Sp L)) [GrpObj GK] (φ : GK.left ⟶ G.left) (τ : TorusExtension GK), letI := τ.addCommGroup; IsGrpPullback GK G (spMap (algebraMap (𝓞 L) L) ≫ z) φ → ∃ (r : ℕ) (bs : Module.Basis (Fin r) ℤ (τ.X →+ ℤ)), ∀ (MT : LieModel (splitTorus (Sp L) τ.X) (𝟙 _) (τ.X →+ L)), IsCocharLie MT → ∀ (B : GroundTheory.Heights₂.Heights.HermitianBundle.{0} L) (MB : LieModel G z B.carrier), IsFibre (fun z v w c => c = h.ip z v w) z B MB → ∀ ε : Fin r → B.carrier, (∀ a, ((MT.pt ((Int.castAddHom L).comp (bs a)) ≫ τ.i).left ≫ φ = ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (GlobalTheory.CompanionTheory.Ar.dualMap (algebraMap (𝓞 L) L)) ≫ (MB.pt (ε a)).left)) → ∀ (σ : L →+* ℂ) (w : Fin r → ℂ), C⁻¹ * ∑ a, ‖w a‖ ^ 2 ≤ sqAt B σ (∑ a, GroundTheory.Heights₂.Heights.ComplexAt.ofComplex σ (w a) ⊗ₜ[𝓞 L] ε a) ∧ sqAt B σ (∑ a, GroundTheory.Heights₂.Heights.ComplexAt.ofComplex σ (w a) ⊗ₜ[𝓞 L] ε a) ≤ C * ∑ a, ‖w a‖ ^ 2 := by
   intro hFC X Ω _ K _ J _ y ξ hc hall hT G _ _ hG Li _ _ M h
-  obtain ⟨hq1, hq2, hq3, hq4⟩ := xq_facts X (GlobalTheory.T.coords_finite_type_over_integers X Ω K J y ξ hall hT)
+  obtain ⟨hq1, hq2, hq3, hq4⟩ := xq_facts X (_root_.GlobalTheory.CompanionTheory.Ar.TorusUnif.closure_finiteType_over_int X Ω K J y ξ hall hT)
   let Good : ℝ → XQ X → Prop := fun C t => 1 ≤ C ∧ ∀ (L : Type) [Field L] [NumberField L] (z : Sp (𝓞 L) ⟶ X)
       (GK : Over (Sp L)) [GrpObj GK] (φ : GK.left ⟶ G.left) (τ : TorusExtension GK),
       IsGrpPullback GK G (spMap (algebraMap (𝓞 L) L) ≫ z) φ →
@@ -387,7 +398,7 @@ theorem torus_unif : GlobalTheory.Published.SemiAbelianHomExtension → ∀ (X :
   · obtain ⟨C, hC, hg⟩ := key
     exact ⟨C, hC, fun L _ _ z GK _ φ τ hP => (hg _).2 L z GK φ τ hP rfl⟩
   · intro F hF hFi
-    obtain ⟨Z, hZ, i, hi, hr, hlift⟩ := GlobalTheory.T.irreducible_closed_integral_subscheme (XQ X) F hF hFi
+    obtain ⟨Z, hZ, i, hi, hr, hlift⟩ := _root_.GlobalTheory.CompanionTheory.Ar.TorusUnif.exists_integral_closed_subscheme (XQ X) F hF hFi
     obtain ⟨U, C, hU, hC, hgood⟩ := stratum_good hFC X Ω K J y ξ hall hT G hG Li M h Z i hi
     refine ⟨i '' (U : Set Z)ᶜ, hi.isClosedEmbedding.isClosedMap _ U.isOpen.isClosed_compl, ?_, C, hC, fun t ht hnt => ?_⟩
     · have hsub : i '' (U : Set Z)ᶜ ⊆ F := by

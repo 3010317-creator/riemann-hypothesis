@@ -7,9 +7,11 @@ public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Mathlib.RingTheory.SimpleRing.Principal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitOfCocycleRightActionCharZero
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHomToKernelSqCentralExtensionSlTwoZModStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.JTranslatesLevelAndScalarModStatement
+public import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHomToKernelSqCentralExtensionSlTwoZMod
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.JTranslatesLevelAndScalarMod
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SpecialLinearGroupIntMapZmodSurjective
+public import Mathlib.GroupTheory.SemidirectProduct
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -23,7 +25,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.GroupTheory.SemidirectProduct
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -317,7 +318,7 @@ theorem descent : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ 
       exact ⟨u g hg1, Subtype.ext hg2⟩)
     (fun a ha q => Subtype.ext (sl_root X (pow_pos hl.pos n) (congrArg Subtype.val ha) _))
     (fun q hq => by
-      obtain ⟨h1, h2⟩ := GlobalTheory.T.jTranslates_level_and_scalar_mod ε X Mb hMb
+      obtain ⟨h1, h2⟩ := _root_.GlobalTheory.KZ.ES.Scal.lev_and_scalar ε X Mb hMb
       obtain ⟨e1, e2, e3⟩ := h2 (s q) (fun g hg =>
         congrArg Subtype.val (hq ⟨_, fun γ hγ => h1 g hg γ (gamma_mono (dvd_mul_left Mb Ma) hγ)⟩))
       have key : ∀ i j, (en (s q) i j : ZMod Mb) = q i j := fun i j =>
@@ -329,7 +330,7 @@ theorem descent : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ 
       fin_cases i <;> fin_cases j <;>
         simp [Matrix.mul_apply, Fin.sum_univ_two, e1, e2] <;>
         first | (simpa [e3] using hd))
-    (GlobalTheory.T.exists_hom_to_kernel_sq_centralExtension_slTwoZMod l n Mb hl hMb (Nat.Coprime.coprime_dvd_right h6 hco.symm))
+    (_root_.GlobalTheory.CentralExt.exists_hom_to_kernel_eq_sq_on_kernel_of_central_ext_sl2 l n Mb hl hMb (Nat.Coprime.coprime_dvd_right h6 hco.symm))
   refine ⟨Units.map (levSub X (Ma * Mb)).subtype.toMonoidHom h, fun γ hγ => ?_⟩
   have e := congrArg Subtype.val (hh (ρ γ))
   have hw : ∀ w : levSub X (Ma * Mb), Lev X (Ma * Mb) (w : X.K) := fun w => w.2

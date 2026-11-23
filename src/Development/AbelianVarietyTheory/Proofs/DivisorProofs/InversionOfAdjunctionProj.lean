@@ -2,14 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict
 public import Development.AbelianVarietyTheory.Definitions.Divisors.AdjKltOfLtDisc
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConnectednessLemmaAtNormalPointLogResolutionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscrepancyAddOrdGtNegOneLogResolutionStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscrepancyFormulaDivisor
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsLogMult
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConnectednessLemmaAtNormalPointLogResolution
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscrepancyAddOrdGtNegOneLogResolution
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DvrPlaceTopFormOrdersApi
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogResidueDominantCartier
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscrepancyFormulaDivisor
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNormalProjectiveModel
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrimeDivisorOverSourceBirational
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormOrderBirationalPullback
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogResidueDominantCartierStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrdFunctionFieldPullbackPrimeDivisorOver
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalTopFormPullbackBijectiveBirational
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitAtFnOfOfNotMem
@@ -53,7 +54,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsLogMult
 
 @[expose] public section
 
@@ -68,7 +68,7 @@ theorem inversion_of_adjunction_proj : GlobalTheory.Published.Principalisation �
   have hη : (dForm (Cartier.constFn p) x : RatForms p n) ≠ 0 := fun h =>
     one_ne_zero ((isFreeGen_dForm_of_trBasis _ hx).1 (a₁ := 1) (a₂ := 0) (by simp [h]))
   obtain ⟨Y, hYi, hYn, s, hsd, K, B, hres, hB, hconn⟩ :=
-    GlobalTheory.T.connectedness_lemma_at_normal_point_logResolution hP X p n hproj hdim (dForm (Cartier.constFn p) x) m (CartierDiv.principal g)
+    _root_.GlobalTheory.connectedness_at_normal_point hP X p n hproj hdim (dForm (Cartier.constFn p) x) m (CartierDiv.principal g)
       (CartierDiv.principal f).supp hη hm (CartierDiv.supp_ne_top _)
   haveI := hYi; haveI := hYn; haveI := hsd
   obtain ⟨z, hzy, hSz⟩ := (isPrimeOf_placeEquiv S y).1 hS
@@ -108,10 +108,10 @@ theorem inversion_of_adjunction_proj : GlobalTheory.Published.Principalisation �
     simp only [discrep] at h1 ⊢
     rw [h2]
     exact h1
-  have hnb := GlobalTheory.T.log_residue_dominant_cartier X p n hproj hdim x m g Y s K B y σ S S' hx hm hres hS' hS'σ hmult hadj
+  have hnb := _root_.GlobalTheory.FieldPair.mult_lt_of_adjKlt X p n hproj hdim x m g Y s K B y σ S S' hx hm hres hS' hS'σ hmult hadj
   have hlt := hconn y σ hnorm heff hmult hsσ hnb
   have hordσ : Scheme.ord ((fnPull s f : Y.functionFieldˣ) : Y.functionField) σ = 1 := by
     rw [← hS'σ.ord_eq, DivOver.Over.ord_fnPull_of_bijective ℂ X Y p s hbir S' S hS' f, hSf]
-  exact GlobalTheory.T.discrepancy_add_ord_gt_neg_one_log_resolution X p n hproj hdim _ m g f Y s K B y σ hη hm hres hB hreg hordσ hmult hlt E hEy
+  exact _root_.GlobalTheory.Discrepancy.neg_one_lt_discrep_add_ord_of_logRes X p n hproj hdim _ m g f Y s K B y σ hη hm hres hB hreg hordσ hmult hlt E hEy
 
 end GlobalTheory

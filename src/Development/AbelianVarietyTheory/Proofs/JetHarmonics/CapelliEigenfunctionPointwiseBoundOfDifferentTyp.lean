@@ -4,8 +4,10 @@ public import Development.AbelianVarietyTheory.Definitions.Jets.SupWOfSup
 public import Development.AbelianVarietyTheory.PublishedTheorems.BesselIntegrals.BesselXiIntegrable
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutLimENF
 public import Formalism.HermitianCurvature.HerGenC
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CapelliEigenfunctionBoundThreePlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.GridsAtPlaceLongCutNormaliserPositiveStatement
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.Cut_BPEq
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.OnePointBasisFundamentalDomainVolume
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CapelliEigenfunctionBoundThreePlaces
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.GridsAtPlaceLongCutNormaliserPositive
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.WignerMapsThreePlacesExists
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.WithRightAction
 import Mathlib.Algebra.Order.Floor.Extended
@@ -76,7 +78,7 @@ theorem thmBp_eigen_different_types : GlobalTheory.HCXi.BesselXiIntegrable → P
   intro hX hP5 hNF C C₃ C₀ hC hC₃ hC₀
   obtain ⟨Cb, -, hsh⟩ := GlobalTheory.WithRightAction.exists_place_other_right_type
   obtain ⟨c₃, hA⟩ := GlobalTheory.WigSh.amapsShExists
-  obtain ⟨C₄, Cc, hreg⟩ := GlobalTheory.T.capelli_eigenfunction_bound_three_places hX hP5 hNF Cb C₃ (7 + C) C₀ hC₃ (by linarith) hC₀
+  obtain ⟨C₄, Cc, hreg⟩ := _root_.GlobalTheory.EigenThreePlaces.main hX hP5 hNF Cb C₃ (7 + C) C₀ hC₃ (by linarith) hC₀
   refine ⟨C₄, max (max Cc c₃) 0, ?_⟩
   intro P Wp Wq _ _ _ _ _ _ p f b c A₀ n₀ p₀ lam lam' hS hcase hN hp₀ hE hdec hlam h92
   obtain ⟨rfl, l, hl, hgap⟩ := hcase
@@ -105,7 +107,7 @@ theorem thmBp_eigen_different_types : GlobalTheory.HCXi.BesselXiIntegrable → P
       (le_max_right _ _) hr0 (by linarith) (Nat.cast_nonneg _) (Nat.cast_nonneg _) hdec
     push_cast
     exact this) (hE.2.1 1)
-  obtain ⟨hpos, hone, Y, hW, hL⟩ := GlobalTheory.T.grids_at_place_longCut_normaliserPositive C b c (shP P P.u P.u') Wp Wq q lam hC
+  obtain ⟨hpos, hone, Y, hW, hL⟩ := _root_.GlobalTheory.GridAtPlace.main C b c (shP P P.u P.u') Wp Wq q lam hC
     (by subst hq0; exact hG) (by subst hq0; exact hgap)
   refine hreg P Wp Wq Wq Wq P.u P.u' P.u P.u' p q q f Ap Am ApPt AmPt b
     (b ^ ((7 + C) * ((2 * P.r + 2 : ℕ) : ℝ))) A₀ 0 p₀ (0 * (P.r + 1)) (Pst lam c) (Pst lam c) Y Y 3 (3 * (P.r + 1))

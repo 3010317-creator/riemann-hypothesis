@@ -1,19 +1,25 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocRatio
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointsClosureCoordsStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsAtSmul
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsNeighbourhoodInOpenStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointsClosureCoords
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsNeighbourhoodInOpen
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GradedSandwichDegreeBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeEvalAtLocalRingStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieMetricFrameProjectionAtStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieMetricFrameProjectionStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegularFunctionContinuousAtStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegularSectionsOpenNeighbourhoodStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SmoothGroupRelDimGenericStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniformBoundOnClosedConeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ValAtGenIndependentChoiceStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GradedSandwichDegreeBound
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeEvalAtLocalRing
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieMetricFrameProjectionAt
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegularFunctionContinuousAt
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegularSectionsOpenNeighbourhood
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCptGen
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SmoothGroupRelDimGeneric
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniformBoundOnClosedCone
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ValAtGenIndependentChoice
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsAtSmul
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieMetricFrameProjection
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -69,7 +75,7 @@ theorem exists_lieVal {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Sp Ω ⟶ X}
     (z : Sp ℂ ⟶ X) (hz : genPt ξ ⤳ centre z) {e : Li} (he : e ∈ M.lat ⟨centre z, hz⟩) :
     ∃ v : epsAt z ⟶ G, M.ValAt z e v := by
   obtain ⟨E, _, _, ⟨MR⟩⟩ := lieModel_exists X G ℂ z
-  obtain ⟨ev, hev, -, -⟩ := GlobalTheory.T.lie_lattice_eval_at_local_ring X G Ω ξ Li M ℂ z hz E MR hξ inferInstance
+  obtain ⟨ev, hev, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieLat_val X G Ω ξ Li M ℂ z hz E MR hξ inferInstance
   exact ⟨MR.pt (ev ⟨e, he⟩), (hev e _).2 ⟨he, rfl⟩⟩
 
 theorem lat_of_lieVal {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Sp Ω ⟶ X} {G : Over X} [GrpObj G]
@@ -93,13 +99,13 @@ theorem local_bound : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp Ω �
         Real.log ‖u‖ - ∑ k, (A.a k : ℝ) * Real.log ‖w ⟨k, c₀ k⟩‖ + Real.log (A.h w)| ≤ C := by
   intro X Ω _ ξ K _ J _ y G _ _ _ Li _ _ M V r b₀ m i e₀ h A hc hall htie hm hind hsw hdeg hsm z₀ w₀ hw₀
   have hξ := htie.gen
-  obtain ⟨g, hg⟩ := GlobalTheory.T.smooth_group_rel_dim_generic X Ω ξ G hall
+  obtain ⟨g, hg⟩ := _root_.GlobalTheory.CompanionTheory.Ar.RootHt.ArchB.smoothGrp_relDim X Ω ξ G hall
   choose c₁ hc₁ using fun k => hw₀.1 k
   have hc₁' : ∀ k, w₀ ⟨k, c₁ k⟩ ≠ 0 := fun k => (hc₁ k).ne_zero
   have h₀ := hall (centre z₀)
   obtain ⟨b, π, κ, hfl, hfr, hmb, hd, hmπ, hκ0, hκr, hκi, hκ⟩ :=
-    GlobalTheory.T.exists_graded_sandwich_coordinates X Ω ξ K J y G Li M V r b₀ m i A.a e₀ hind hsw hdeg ⟨centre z₀, h₀⟩ c₁ (in_chart h₀ hw₀ hc₁')
-  obtain ⟨U, hU, hnear⟩ := GlobalTheory.T.regular_sections_open_neighbourhood X Ω ξ G g Li M hξ hg ⟨centre z₀, h₀⟩ r (fun j => (m : Ω) • b j)
+    _root_.GlobalTheory.CompanionTheory.Ar.RootHt.cls_frame X Ω ξ K J y G Li M V r b₀ m i A.a e₀ hind hsw hdeg ⟨centre z₀, h₀⟩ c₁ (in_chart h₀ hw₀ hc₁')
+  obtain ⟨U, hU, hnear⟩ := _root_.GlobalTheory.CompanionTheory.Ar.RootHt.ArchB.lie_near X Ω ξ G g Li M hξ hg ⟨centre z₀, h₀⟩ r (fun j => (m : Ω) • b j)
     (fun j => (m : Ω) • π j) hmb (fun j e he => by simpa using hmπ j e he)
   have hm0 : (m : ℂ) ≠ 0 := by exact_mod_cast hm.ne'
   have hm1 : (m : Ω) ≠ 0 := by exact_mod_cast hm.ne'
@@ -122,8 +128,8 @@ theorem local_bound : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp Ω �
     have h3 : (m : Ω)⁻¹ * ((m : Ω) • π j) e = π j e := by
       simp [hm1]
     rwa [h3] at h2
-  obtain ⟨N1, hN1, hN1'⟩ := GlobalTheory.T.coords_neighbourhood_in_open X Ω ξ K J y hall htie z₀ w₀ U hw₀ hU
-  obtain ⟨φ, hφc, N2, hN2, hN2'⟩ := GlobalTheory.T.regular_function_continuous_at X Ω ξ K J y hall htie z₀ w₀ h₀ κ hw₀ hκr
+  obtain ⟨N1, hN1, hN1'⟩ := _root_.GlobalTheory.CompanionTheory.Ar.RootHt.ArchB.open_near X Ω ξ K J y hall htie z₀ w₀ U hw₀ hU
+  obtain ⟨φ, hφc, N2, hN2, hN2'⟩ := _root_.GlobalTheory.CompanionTheory.Ar.RootHt.ArchB.val_near X Ω ξ K J y hall htie z₀ w₀ h₀ κ hw₀ hκr
   choose F hFc hFe using fun (a c : Fin r) => h.cont (b a) (b c)
   have hφ0 : φ w₀ ≠ 0 := by
     have hv := hN2' z₀ w₀ (mem_of_mem_nhds hN2) hw₀
@@ -168,10 +174,10 @@ theorem local_bound : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp Ω �
   have hπ₀ := hπq z₀ h₀ (hN1' z₀ w₀ (mem_of_mem_nhds hN1) hw₀)
   have hne1 : (G₁ w₀).det ≠ 0 := by
     rw [← hg1 z₀ w₀ B₀ hw₀ hB₀]
-    exact GlobalTheory.T.gramAt_det_ne_zero_of_dual_frame X Ω ξ K J y G Li M h z₀ h₀ r b π B₀ hξ hd hπ₀ hB₀ _ _ (Fin.castLE_injective _)
+    exact _root_.GlobalTheory.CompanionTheory.Ar.RootHt.ArchB.gramAt_det_ne_zero X Ω ξ K J y G Li M h z₀ h₀ r b π B₀ hξ hd hπ₀ hB₀ _ _ (Fin.castLE_injective _)
   have hne0 : (G₀ w₀).det ≠ 0 := by
     rw [← hg0 z₀ w₀ B₀ hw₀ hB₀]
-    exact GlobalTheory.T.gramAt_det_ne_zero_of_dual_frame X Ω ξ K J y G Li M h z₀ h₀ r b π B₀ hξ hd hπ₀ hB₀ _ _ (Fin.castLE_injective _)
+    exact _root_.GlobalTheory.CompanionTheory.Ar.RootHt.ArchB.gramAt_det_ne_zero X Ω ξ K J y G Li M h z₀ h₀ r b π B₀ hξ hd hπ₀ hB₀ _ _ (Fin.castLE_injective _)
   have hd1 : ContinuousWithinAt (fun w => (G₁ w).det) S₀ w₀ :=
     (Continuous.matrix_det continuous_id).continuousAt.comp_continuousWithinAt
       (continuousWithinAt_pi.2 fun a => continuousWithinAt_pi.2 fun c => hFw _ _)
@@ -207,14 +213,14 @@ theorem local_bound : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp Ω �
   have hκv := hN2' z w hwN.1.1.2 hz
   have hmul := val_mul hs hκv
   rw [← hκ e t he hcls] at hmul
-  have hr := GlobalTheory.T.val_at_gen_independent_choice X Ω ξ K J y z w A.a e₀ t c₀ c₁ u (s * φ w) hξ hdeg.1 hz hc₀ hc₁w hu hmul
+  have hr := _root_.GlobalTheory.CompanionTheory.Ar.RootHt.ArchB.gen_chart_change X Ω ξ K J y z w A.a e₀ t c₀ c₁ u (s * φ w) hξ hdeg.1 hz hc₀ hc₁w hu hmul
   have hp0 : ∏ k, w ⟨k, c₀ k⟩ ^ A.a k ≠ 0 := Finset.prod_ne_zero_iff.2 fun k _ => zpow_ne_zero _ (hc₀ k)
   have hp1 : ∏ k, w ⟨k, c₁ k⟩ ^ A.a k ≠ 0 := Finset.prod_ne_zero_iff.2 fun k _ => zpow_ne_zero _ (hc₁w k)
   have hs0 : s ≠ 0 := by
     rintro rfl
     rw [zero_mul, zero_mul] at hr
     exact mul_ne_zero hu0 hp0 hr
-  have hgv := GlobalTheory.T.lie_metric_frame_projection_at X Ω ξ K J y G Li M h z hzq r b π B i hξ hd (hπq z hzq hzU) hB f e v ve s
+  have hgv := _root_.GlobalTheory.CompanionTheory.Ar.RootHt.ArchB.gram_val X Ω ξ K J y G Li M h z hzq r b π B i hξ hd (hπq z hzq hzU) hB f e v ve s
     (fun j => by rw [hfl]; exact hf j) (by rw [hfl]; exact he) hv hve hs hs0 hG
   rw [hg1 z w B hz hB, hg0 z w B hz hB] at hgv
   have hlog : ∀ c : K → ℂ, (∀ k, c k ≠ 0) → Real.log ‖∏ k, c k ^ A.a k‖ = ∑ k, (A.a k : ℝ) * Real.log ‖c k‖ := by
@@ -262,9 +268,9 @@ theorem arch_bound : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp Ω ⟶
       ∃ (f : Fin i → Li) (e : Li) (v : Fin i → (epsAt z ⟶ G)) (ve : epsAt z ⟶ G) (t : Ω) (u : ℂ),
       (∀ j, f j ∈ flagStep Ω b₀ i) ∧ e ∈ flagStep Ω b₀ (i + 1) ∧ (∀ j, M.ValAt z (f j) (v j)) ∧ M.ValAt z e ve ∧
       IsCls b₀ i e t ∧ ValAt ξ z (t / gen y A.a e₀ c₀) u ∧ u ≠ 0 ∧ (gramAt h z v).det ≠ 0 ∧ x = Ex z w c₀ v ve u
-  obtain ⟨C, hC⟩ := GlobalTheory.T.uniform_bound_on_closed_cone K J {w | ∃ z : Sp ℂ ⟶ X, CoordsAt ξ y z w} Bd
+  obtain ⟨C, hC⟩ := _root_.GlobalTheory.CompanionTheory.Ar.RootHt.bound_of_local_bounds_of_blockScale K J {w | ∃ z : Sp ℂ ⟶ X, CoordsAt ξ y z w} Bd
     (fun w ⟨z, hz⟩ k => (hz.1 k).imp fun c hc => hc.ne_zero)
-    (fun w hw hb => GlobalTheory.T.complex_points_closure_coords X Ω ξ K J y hall htie w hw hb)
+    (fun w hw hb => _root_.GlobalTheory.CompanionTheory.Ar.RootHt.ArchC.closed_coords' X Ω ξ K J y hall htie w hw hb)
     (fun w x ⟨z, hz, _⟩ => ⟨z, hz⟩)
     (by
       rintro w x c hc ⟨z, hz, c₀, hc₀, f, e, v, ve, t, u, h1, h2, h3, h4, h5, h6, h7, h8, rfl⟩

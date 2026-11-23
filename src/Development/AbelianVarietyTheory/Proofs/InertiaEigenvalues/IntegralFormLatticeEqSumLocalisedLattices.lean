@@ -1,7 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.RowsExhaust
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GeneralizedEigenPartProjectorMemHeckeAlgebraStatement
+public import Formalism.LocalToGlobal.NormalizedHeckeFactors.CoverAlg
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GeneralizedEigenPartProjectorMemHeckeAlgebra
 public import Formalism.LocalToGlobal.NormalizedHeckeFactors.CoverEta
 import Formalism.LocalToGlobal.NormalizedHeckeFactors.CoverThm
 import Mathlib.Algebra.Order.Floor.Extended
@@ -155,7 +157,7 @@ theorem exists_proj (T : NormalizedLocalCompatibility D M) (hstd : HeckeStdTw T.
   obtain ⟨hfd, -⟩ := finrank_V T.B j w
   haveI := hfd
   obtain ⟨hS, hsplit, hint⟩ := gens_hypsTw T.B hstd h1 h2 (Or.inl hw)
-  exact GlobalTheory.T.generalizedEigenPartProjector_mem_heckeAlgebra (T.B.Oc j w) (FractionRing (T.B.Oc j w)) (T.B.V j w) (heckeGens T.B j w) hS hsplit hint
+  exact _root_.GlobalTheory.part_projector_mem_adjoin (T.B.Oc j w) (FractionRing (T.B.Oc j w)) (T.B.V j w) (heckeGens T.B j w) hS hsplit hint
     (latLoc T.B j w) (latLoc_fg T.B j w) (latLoc_span T.B j w)
     (fun a ha x hx => alg_stable T.B hl a (Algebra.subset_adjoin ha) x hx) I
 

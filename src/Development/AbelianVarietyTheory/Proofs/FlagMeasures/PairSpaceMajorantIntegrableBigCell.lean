@@ -2,10 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.OnePlaceKF
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.CellDataExists
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BigCellQuotientNormalisesUnipotentStatement
+public import Formalism.FormalDegreeBessel.StatementBF
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BigCellQuotientNormalisesUnipotent
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CellConv
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegrableBesselPairMajorantMulRightStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MapConjUnipotentHaarEqSmulStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegrableBesselPairMajorantMulRight
+public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MapConjUnipotentHaarEqSmul
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UniformBesselConstant
 import Formalism.FormalDegreeBessel.FinalBF
 import Formalism.FormalDegreeBessel.FormalDegreeRatio.BFCell
@@ -148,13 +150,13 @@ theorem bigConv : ∀ (k r : ℕ) (L : Formalism.MainNotions.S.LocBessel k r) (h
   have hu₁ := Formalism.QuantumDeterminants.WeylGroupFacts.isUnit_of_uh hg₁
   set a := (Formalism.QuantumDeterminants.bigCell k r c μ₁)⁻¹ * Formalism.QuantumDeterminants.bigCell k r c μ with ha
   have haU : a ∈ Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk k r) := Formalism.QuantumDeterminants.WeylGroupFacts.uh_mul (Formalism.QuantumDeterminants.WeylGroupFacts.uh_inv hg₁) hg
-  have hN := GlobalTheory.T.bigCell_quotient_normalises_unipotent k r c μ₁ μ hc hμ₁ hμ
-  obtain ⟨C, hC, hmap⟩ := GlobalTheory.T.map_conj_unipotentHaar_eq_smul k r L hκ0 hκ a haU hN
+  have hN := _root_.GlobalTheory.BigConvLevi.levi_conj_mem_iff k r c μ₁ μ hc hμ₁ hμ
+  obtain ⟨C, hC, hmap⟩ := _root_.GlobalTheory.NConjHaar.map_conj_eq_smul k r L hκ0 hκ a haU hN
   refine ⟨b, hb0, hb1, ?_⟩
   have e : Formalism.QuantumDeterminants.bigCell k r c μ₁ * a = Formalism.QuantumDeterminants.bigCell k r c μ := by
     rw [ha, Matrix.mul_nonsing_inv_cancel_left _ _ hu₁]
   rw [← e]
-  exact GlobalTheory.T.integrable_besselPairMajorant_mul_right k r L _ a b C hκ0 hκ hb0 hg₁ haU hC hmap hint
+  exact _root_.GlobalTheory.CellMajTransfer.integrable_mul_right k r L _ a b C hκ0 hκ hb0 hg₁ haU hC hmap hint
 
 end GlobalTheory.BigConv
 end

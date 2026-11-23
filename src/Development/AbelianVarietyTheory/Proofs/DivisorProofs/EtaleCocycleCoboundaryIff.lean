@@ -8,7 +8,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLimitWideP
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLimitWidePullbackConeSpecTensorSquareStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimplicialCochainClassesBasicPropertiesStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimplicialCochainCoboundaryOfClassZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothSurjectiveCechDescentCohomologyStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DivisorSupportCondition
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothSurjectiveCechDescentCohomology
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TripleTensorWidePullbackLimitStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -121,7 +122,7 @@ theorem rel_unique [Algebra.Etale A B] [Module.FaithfullyFlat A B] (R : Type) [C
   subst hss
   have := (GlobalTheory.T.simplicialCochain_classes_basic_properties R F (cech (fB A B)) 1).2.2.1 s _ _ hx hx'
   obtain ⟨h1, h2⟩ := smooth_surj A B
-  exact (GlobalTheory.T.etC_a2 R (fB A B) F ((1 : ℕ) : ℤ)).1 this
+  exact (_root_.GlobalTheory.EtC.smooth_surjective_cech_descent_cohomology R (fB A B) F ((1 : ℕ) : ℤ)).1 this
 
 theorem rel_exists [Algebra.Etale A B] [Module.FaithfullyFlat A B] (R : Type) [CommRing R] (F : Shv R) (u : Z1 F A B) :
     ∃ x, Rel A B R F u x := by
@@ -131,7 +132,7 @@ theorem rel_exists [Algebra.Etale A B] [Module.FaithfullyFlat A B] (R : Type) [C
   have hc : cobd s = 0 := (cobd_eq_zero_iff A B R F s).2 (by rw [hs']; exact (mem_Z1_iff_cocycle A B R F _).1 u.2)
   obtain ⟨y, hy⟩ := (GlobalTheory.T.simplicialCochain_classes_basic_properties R F (cech (fB A B)) 1).1 s hc
   obtain ⟨h1, h2⟩ := smooth_surj A B
-  obtain ⟨x, hx⟩ := (GlobalTheory.T.etC_a2 R (fB A B) F ((1 : ℕ) : ℤ)).2 y
+  obtain ⟨x, hx⟩ := (_root_.GlobalTheory.EtC.smooth_surjective_cech_descent_cohomology R (fB A B) F ((1 : ℕ) : ℤ)).2 y
   exact ⟨x, s, hs', hx ▸ hy⟩
 
 variable {A B} in

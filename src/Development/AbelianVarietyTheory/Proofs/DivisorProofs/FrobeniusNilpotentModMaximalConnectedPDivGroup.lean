@@ -3,12 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.EpsilonPairingZeta
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConstantCoeffNmul
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConstantCoeffQuasiLogarithmMultiplicationDefectStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPDivGroupChartLevelOneNilpotentModPStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsQuasiLogarithmModIdealTopLinearCombinationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelOneDefectsIndependentModMaximalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowerSeriesFrobeniusTwistLinearCombinationModIntStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuasiLogarithmLevelOneDefectFrobeniusPowStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConstantCoeffQuasiLogarithmMultiplicationDefect
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPDivGroupChartLevelOneNilpotentModP
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsQuasiLogarithmModIdealTopLinearCombination
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelOneDefectsIndependentModMaximal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowerSeriesFrobeniusTwistLinearCombinationModInt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuasiLogarithmLevelOneDefectFrobeniusPow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -107,9 +107,9 @@ theorem isNil_frobenius_chart : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C
       refine fun h => nu_add _ _ ?_ ?_ (isUnit_of_mul_isUnit_right h)
       · exact fun h' => hw j ((isUnit_pow_iff (Fact.out : p.Prime).ne_zero).1 h')
       · exact fun h' => hp (isUnit_of_mul_isUnit_left h')
-  have hQL : ∀ w : Fin d ⊕ Fin k → F.B, QL μ' ⊤ (comb w e) := fun w => GlobalTheory.T.isQuasiLogarithmModIdeal_top_linearCombination _ _ _ F.θ d μ' hlift _ e hbas.1 w
+  have hQL : ∀ w : Fin d ⊕ Fin k → F.B, QL μ' ⊤ (comb w e) := fun w => _root_.GlobalTheory.QLog.ql_comb_top _ _ _ F.θ d μ' hlift _ e hbas.1 w
   have hstep : ∀ w : Fin d ⊕ Fin k → F.B, In (⊤ : Ideal F.B) (frob p F.s (comb w e) - comb (T w) e) :=
-    fun w => GlobalTheory.T.powerSeriesFrobeniusTwist_linearCombination_mod_integral p F.B F.Q F.σ F.s F.s_alg d _ e M hU w
+    fun w => _root_.GlobalTheory.FrobStep.frob_comb_step p F.B F.Q F.σ F.s F.s_alg d _ e M hU w
   have hlf : ∀ w : Fin d ⊕ Fin k → F.B, ∃ a : MvPowerSeries (Fin d) F.B,
       map (algebraMap F.B F.Q) a = defect μ' p (comb w e) := by
     intro w
@@ -121,7 +121,7 @@ theorem isNil_frobenius_chart : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C
   let δ : (Fin d ⊕ Fin k → F.B) → G.A 1 := fun w => c.ev 1 (map F.θ (A w))
   set I := Ideal.span (algebraMap O (G.A 1) '' {o | ¬IsUnit o}) with hI
   have hδstep : ∀ w : Fin d ⊕ Fin k → F.B, δ (T w) - δ w ^ p ∈ I := fun w =>
-    GlobalTheory.T.quasiLogarithm_levelOne_defect_frobenius_pow p C v O hv ε hε F G d c μ' hlift hmap _ _ _ _ (hQL w) (hQL (T w)) (hstep w) (hA w) (hA (T w))
+    _root_.GlobalTheory.QLog.defect_frob_pow p C v O hv ε hε F G d c μ' hlift hmap _ _ _ _ (hQL w) (hQL (T w)) (hstep w) (hA w) (hA (T w))
   have hδit : ∀ n w, δ (T^[n] w) - δ w ^ (p ^ n) ∈ I := by
     intro n
     induction n with
@@ -136,11 +136,11 @@ theorem isNil_frobenius_chart : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C
       rwa [sub_add_sub_cancel] at this
   have hconst : ∀ w : Fin d ⊕ Fin k → F.B, constantCoeff (map F.θ (A w)) = 0 := by
     intro w
-    have h0 := GlobalTheory.T.constantCoeff_quasiLogarithmMultiplicationDefect p F.B O F.Q F.θ F.frame d μ' hlift _ (hQL w) p
+    have h0 := _root_.GlobalTheory.QLogDefect.constantCoeff_defect p F.B O F.Q F.θ F.frame d μ' hlift _ (hQL w) p
     rw [← hA w, MvPowerSeries.constantCoeff_map] at h0
     have h2 : constantCoeff (A w) = 0 := F.frame.inj (by rw [h0, map_zero])
     rw [MvPowerSeries.constantCoeff_map, h2, map_zero]
-  obtain ⟨N0, hN0⟩ := GlobalTheory.T.exists_pDivGroupChart_level_one_nilpotent_mod_p p O G d c
+  obtain ⟨N0, hN0⟩ := _root_.GlobalTheory.AugNil.aug_nil p O G d c
   have hsmallp : ∀ x : G.A 1, (p : G.A 1) ∣ x → x ∈ I := by
     rintro x ⟨y, rfl⟩
     apply I.mul_mem_right
@@ -156,7 +156,7 @@ theorem isNil_frobenius_chart : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C
   rw [Function.iterate_succ_apply']
   apply stepA
   intro j
-  apply GlobalTheory.T.levelOne_defects_independent_mod_maximal p C v O hv ε hε F G d c μ' hlift hmap k e hbas hadp _ (A _) (hA _)
+  apply _root_.GlobalTheory.LevelOneIndep.defect_level_one_nonunit p C v O hv ε hε F G d c μ' hlift hmap k e hbas hadp _ (A _) (hA _)
   have := I.add_mem (hδit N0 w) (hδ0 w)
   rwa [sub_add_cancel] at this
 

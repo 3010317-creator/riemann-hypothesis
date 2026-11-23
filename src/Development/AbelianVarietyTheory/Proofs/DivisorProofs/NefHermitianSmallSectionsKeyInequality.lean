@@ -2,18 +2,18 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SmallFam
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqOfIsometricTrivShift
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithSelfIntersectionMonoOfIsNefStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithSelfIntersectionMonoOfIsNef
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoxFamilyMovingPartsChainBound
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBirationalModelTotallyOrderedFamilyStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFubiniStudyOfTotallyOrderedRatFnFamilyStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FubiniStudyBundleIsNefOfNonnegWeightsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FubiniStudyLeShiftOfSmallSectionsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBirationalModelTotallyOrderedFamily
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FubiniStudyLeShiftOfSmallSections
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GeometricDegreePullBirationalModel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLBLeBySmallSectionTensorIsometricTransShiftStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianLineBundleIsNefPullbackStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianLineBundleIsNefShiftOfNonneg
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLBLeBySmallSectionTensorIsometricTransShift
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsometricShiftOfIsometric
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RatFnFamilySmallPullbackBirationalModelStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RatFnFamilySmallPullbackBirationalModel
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFubiniStudyOfTotallyOrderedRatFnFamily
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FubiniStudyBundleIsNefOfNonnegWeights
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianLineBundleIsNefPullback
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianLineBundleIsNefShiftOfNonneg
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -73,7 +73,7 @@ theorem key_ineq : GlobalTheory.Published.ArCalc → AmpleHS → SemiPull → �
     simp only [boxFam]
     refine mul_ne_zero (he.ne_zero c.1) ?_
     exact Finset.prod_ne_zero_iff.2 fun i _ => hx.ne_zero i
-  obtain ⟨Y, hY, π, φ, hvarY, hmod, htot⟩ := GlobalTheory.T.exists_birationalModel_totallyOrdered_family k X p D hX (J × Finset (Fin D)) (boxFam e x) hne
+  obtain ⟨Y, hY, π, φ, hvarY, hmod, htot⟩ := _root_.GlobalTheory.HSNef.exists_model_total k X p D hX (J × Finset (Fin D)) (boxFam e x) hne
   haveI := hY
   set q := π ≫ p with hq
   set f : J × Finset (Fin D) → Y.functionField := fun c => φ (boxFam e x c) with hf
@@ -84,7 +84,7 @@ theorem key_ineq : GlobalTheory.Published.ArCalc → AmpleHS → SemiPull → �
   have he' : LinearIndependent ℤ (φ ∘ e) :=
     he.map' φ.toIntAlgHom.toLinearMap (LinearMap.ker_eq_bot.2 φ.injective)
   set w : J × Finset (Fin D) → ℝ := fun c => n c.1 * Δ with hw
-  obtain ⟨M, hM⟩ := GlobalTheory.T.exists_fubiniStudy_of_totallyOrdered_ratFnFamily k Y q (J × Finset (Fin D)) f w htot
+  obtain ⟨M, hM⟩ := _root_.GlobalTheory.HSNef.exists_isFS k Y q (J × Finset (Fin D)) f w htot
   obtain ⟨μ, hμ⟩ : ∃ μ, M.IsSelfInter μ := by
     obtain ⟨Φ, hΦ⟩ := ((hA.arExists k Y q D hvarY).2 PUnit fun _ => M).1
     exact ⟨_, ((hA.arIso k Y q D hvarY).2 PUnit _ Φ hΦ).1 PUnit.unit⟩
@@ -95,18 +95,18 @@ theorem key_ineq : GlobalTheory.Published.ArCalc → AmpleHS → SemiPull → �
 
   set s : ℝ := Real.log (Fintype.card (J × Finset (Fin D))) / 2 with hs
   set B' := B.pull π rfl with hB'
-  have hsmall : SmallFam B' f w := GlobalTheory.T.ratFnFamilySmall_pullback_birationalModel k X Y p q π rfl φ hmod B _ (boxFam e x) w hsm
-  have hle : Le M (B'.shift (fun _ => s) fun _ => rfl) := GlobalTheory.T.fubiniStudy_le_shift_of_smallSections k Y q M B' _ f w hM hsmall
-  have hle' := (GlobalTheory.T.hermLBLeBySmallSection_tensor_isometric_trans_shift k Y q (B'.shift (fun _ => s) fun _ => rfl) M M).2.2.2 Δ hle
+  have hsmall : SmallFam B' f w := _root_.GlobalTheory.HSNef.smallFam_pull k X Y p q π rfl φ hmod B _ (boxFam e x) w hsm
+  have hle : Le M (B'.shift (fun _ => s) fun _ => rfl) := _root_.GlobalTheory.HSNef.le_shift_of_isFS k Y q M B' _ f w hM hsmall
+  have hle' := (_root_.GlobalTheory.HSNef.le_tens_isometric_trans_shift k Y q (B'.shift (fun _ => s) fun _ => rfl) M M).2.2.2 Δ hle
 
   have hs0 : 0 ≤ s := by
     rw [hs]
     have : (1 : ℝ) ≤ Fintype.card (J × Finset (Fin D)) := by exact_mod_cast Fintype.card_pos
     have := Real.log_nonneg this
     linarith
-  have hMnef : M.IsNef D := GlobalTheory.T.fubiniStudy_bundle_isNef_of_nonneg_weights hA k Y q D hvarY M _ f w hM fun c => by
+  have hMnef : M.IsNef D := _root_.GlobalTheory.HSNef.FSNef.isNef_of_isFS hA k Y q D hvarY M _ f w hM fun c => by
     simp only [hw]; exact mul_nonneg (Nat.cast_nonneg _) hΔ.le
-  have hB'nef : B'.IsNef D := GlobalTheory.T.hermitianLineBundle_isNef_pullback hA hSP k X Y p q D D hX hvarY π rfl B hB
+  have hB'nef : B'.IsNef D := _root_.GlobalTheory.HSNef.isNef_pull hA hSP k X Y p q D D hX hvarY π rfl B hB
   have hA1 := GlobalTheory.NefShift.isNef_shift_nonneg k Y q D hvarY B' s hs0 hB'nef
   have hA2 := GlobalTheory.NefShift.isNef_shift_nonneg k Y q D hvarY _ Δ hΔ.le hA1
   have hM2 := GlobalTheory.NefShift.isNef_shift_nonneg k Y q D hvarY M Δ hΔ.le hMnef
@@ -115,7 +115,7 @@ theorem key_ineq : GlobalTheory.Published.ArCalc → AmpleHS → SemiPull → �
   have h1 := hgs β s hβ
   have h2 := hA.arShift k Y q D hvarY _ _ Δ h1
   have h3 := hA.arShift k Y q D hvarY M μ Δ hμ
-  have hmono := GlobalTheory.T.arithSelfIntersection_mono_of_isNef hA hAmp hSP k Y q D hvarY _ _ _ _ hA2 hM2 hle' h2 h3
+  have hmono := _root_.GlobalTheory.HSNefMono.selfInter_mono_of_isNef hA hAmp hSP k Y q D hvarY _ _ _ _ hA2 hM2 hle' h2 h3
   rw [GlobalTheory.CovTest.GeoSwap.gdeg_shift_const, hg] at hmono
 
   have hcard : s = Real.log (Fintype.card J) / 2 + D * Real.log 2 / 2 := by

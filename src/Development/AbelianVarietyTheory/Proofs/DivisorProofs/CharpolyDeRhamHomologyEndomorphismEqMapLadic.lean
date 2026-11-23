@@ -8,7 +8,7 @@ public import Mathlib.RingTheory.Flat.TorsionFree
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeFieldSmoothOfRelativeDimensionExist
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharpolyDeRhamHomologyAbelianVarietyCharPStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharpolyDeRhamHomologyAbelianVarietyCharZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LPowerTorsionEndomorphismEvaluation
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowerSumsVanishAtPlaces
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -84,7 +84,7 @@ theorem charpoly_push_eq : ∀ (k : Type) [Field k] [IsAlgClosed k] (A : Over (S
   obtain ⟨g, hg⟩ := GlobalTheory.AV.exists_smoothOfRelativeDimension_of_isAbelianScheme k A hA
   let B : GlobalTheory.AV.AbVar k := ⟨A, hA, g, hg⟩
   let f' : B ⟶ B := GlobalTheory.AV.AbVar.Hom.mk (A := B) (B := B) f
-  rw [GlobalTheory.T.l_power_torsion_endomorphism_evaluation k B f' L φ l hl hlk ev hadd hφ hker him]
+  rw [_root_.GlobalTheory.AV.AbVar.charpoly_eq_lattice_model k B f' L φ l hl hlk ev hadd hφ hker him]
   exact charpoly_push_eq_map_charpoly k B f'
 
 end GlobalTheory.DeRham

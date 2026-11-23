@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenericMultOneDimOf
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.CuspidalInducedCharacter
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspidalIdempotentCharacters
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WhittakerSpaceDimParabolicInductionCuspidalEqOneStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SplitDoublingNBlock
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WhittakerSpaceDimParabolicInductionCuspidalEqOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +46,7 @@ import Mathlib.Topology.Sheaves.Init
 
 namespace GlobalTheory.GenericProduct
 
-theorem oneGenericVector : OneGenericVector := GlobalTheory.T.whittakerSpaceDim_parabolicInduction_cuspidal_eq_one
+theorem oneGenericVector : OneGenericVector := _root_.GlobalTheory.FinGL.whDim_parInd_eq_one
 
 theorem genericMultOne_holds : GlobalTheory.IndefiniteRowSideFullHecke.GenericMultiplicityOne.GenericMultOne := genericMultOne oneGenericVector
 

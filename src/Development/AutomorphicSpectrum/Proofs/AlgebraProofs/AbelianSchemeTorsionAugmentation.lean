@@ -5,8 +5,9 @@ public import Development.AutomorphicSpectrum.PublishedTheorems.Algebra₂.Quoti
 public import Development.AutomorphicSpectrum.PublishedTheorems.Algebra₂.ZarhinStatement
 public import Development.AutomorphicSpectrum.Statements.AlgebraStatements.HodgeTateDatumStatement
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ExistsAddEquiv
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.GenerationAlongInvariantsStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HopfOrderPullbackAlongHomStatement
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.GenerationAlongInvariants
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HopfOrderPullbackAlongHom
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.TorsionPointsFiniteFlatSubgroupStatement
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.TorsionPointsHomomorphismCompatibleStatement
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.TorsionPointsHopfOrderStatement
@@ -105,9 +106,9 @@ theorem sub_abelianScheme : QuotientByFiniteFlatStatement → ZarhinStatement �
     hj jN hjN
   obtain ⟨⟨AA, hAA⟩, -⟩ := GlobalTheory.T.torsion_points_hopf_order p C v R hint hp A T N pt hpt
   obtain ⟨⟨AP, hAP⟩, -⟩ := GlobalTheory.T.torsion_points_hopf_order p C v R hint hp P.A T' _ pt' hpt'
-  have hinv := GlobalTheory.T.hopf_order_pullback_along_hom p C v R hint hp N AA _ AP jN
+  have hinv := _root_.GlobalTheory.CompanionTheory.Relay.hopf_order_pullback_along_hom p C v R hint hp N AA _ AP jN
     (by rw [hAA, hAP]; exact hpull) (by rw [hAA, hAP]; exact hid)
   rw [hAA, hAP, hK] at hinv
-  exact GlobalTheory.T.generation_along_invariants p C R N _ _ _ jN K hinv (gp_polAV hD p C v R hint hp hc P T' _ pt' hpt').1
+  exact _root_.GlobalTheory.CompanionTheory.Ar.GR.genAF_of_map_eq_invFun p C R N _ _ _ jN K hinv (gp_polAV hD p C v R hint hp hc P T' _ pt' hpt').1
 
 end GlobalTheory.CompanionTheory.Ar.GR

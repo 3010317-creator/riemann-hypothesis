@@ -1,7 +1,6 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.PowerMatchingTraces.MatchPowAlt
-import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
 public import Development.AutomorphicArithmetic.Foundations.Convolution.BlockEvaluation.Ci
 public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.LocIff
 public import Development.AutomorphicArithmetic.Foundations.Convolution.GeneralizedMeasures.Outright
@@ -9,31 +8,33 @@ public import Development.AutomorphicArithmetic.Foundations.Convolution.Integrab
 public import Development.AutomorphicArithmetic.Foundations.Convolution.IntegrableConvolution.TwistY
 public import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.ExistsPowerSums
 public import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.LocGalEx
-import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.OccursBasics
 public import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.OccursIff
 public import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.TermEV
 public import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.CarryLift
 public import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.CoreDescOf
 public import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.CoreLift
 public import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.FamParts
-import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.GoodEx
 public import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.LiftAll
 public import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.LiftStep
 public import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.OneTerm
 public import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.PickInf
 public import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.PickS
-import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.Places
 public import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.SideSum
 public import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.TyEx
-import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.UnitTrace
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.PowerMatchingTraces.BaseTw
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.PowerMatchingTraces.CmpIso
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.PowerMatchingTraces.FibTrace
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.PowerMatchingTraces.LevEx
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.PowerMatchingTraces.MatchCutAlt
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.PowerMatchingTraces.PowNe
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.PowerMatchingTraces.TrBasic
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.PowerMatchingTraces.TrEx
+import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
+import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.SummandFactor
+import Development.WeilBound.CuspidalAdmissibility.OccursIff
+import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.GoodEx
+import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.Places
+import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.UnitTrace
+import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.PowerMatchingTraces.TrBasic
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerOrbitVolume.DetAdmA
 import GroundTheory.AutomorphicForms.LocallyProfinite
 import Mathlib.Algebra.Module.StablyFree.Basic
@@ -209,7 +210,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.G.core :
     · rw [Function.update_of_ne h]; exact hm₁ x
   have hoccE : ∀ x : Pl E, ∃ ρ : SmIrr (Gw n x), Occurs μE V x ρ := fun x => by
     haveI := hm x
-    exact (occursBasics E n μE V x (m x) hV).1
+    exact (_root_.PositivityTheory.TfC.OccursBasics_holds E n μE V x (m x) hV).1
   obtain ⟨X, hX, hXv⟩ : ∃ X : ∀ y : Pl F, Σ ρ : SmIrr (Gw n (T.mk' y).1), (Gw n (T.mk' y).1 →* Gw n (T.mk' y).1) × (ρ.V ≃ₗ[ℂ] ρ.V),
       (∀ y, Occurs μE V (T.mk' y).1 (X y).1 ∧ (¬ GM.Split E y → IsLocGal σ (T.mk' y) (X y).2.1 ∧
         ∀ g x, (X y).2.2 ((X y).1.ρ g x) = (X y).1.ρ ((X y).2.1 g) ((X y).2.2 x))) ∧ X v = ⟨τ', s₀, I₀⟩ := by
@@ -303,7 +304,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.G.core :
       by_cases hy : y ∈ S
       · haveI := (hm' y).1
         have ht := L₁.test y (hL₁S ▸ hy)
-        obtain ⟨z, hz⟩ := (occursBasics F n μF (V₀ i) y (m' y) (hι i).1).2.2 _ ((hι i).2.2.2 y) (L₁.f y) ⟨ht.2.2.1, ht.2.2.2⟩
+        obtain ⟨z, hz⟩ := (_root_.PositivityTheory.TfC.OccursBasics_holds F n μF (V₀ i) y (m' y) (hι i).1).2.2 _ ((hι i).2.2.2 y) (L₁.f y) ⟨ht.2.2.1, ht.2.2.2⟩
         exact ⟨z, fun _ => hz⟩
       · exact ⟨0, fun h => absurd h hy⟩
     choose s₁ hs₁ using hs₁
@@ -406,7 +407,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.G.core :
   have hne0 := (main (ψ v) _ _ z₀ (tb v) (hbase v hvT hv).1 hb1 hb2 hb3 hz₀ hr₀).1
   refine ⟨tb v / (L₁.c v * z₀), div_ne_zero hr0 hne0, fun φ f c₁ z hφ hf hmat hsup hz => ?_⟩
   haveI := hmE
-  obtain ⟨z', hz'⟩ := (occursBasics E n μE V (T.mk' v).1 mE hV).2.2 τ' hocc' φ hφ
+  obtain ⟨z', hz'⟩ := (_root_.PositivityTheory.TfC.OccursBasics_holds E n μE V (T.mk' v).1 mE hV).2.2 τ' hocc' φ hφ
   obtain ⟨r, hr⟩ := (trBasic _ mE τ' I₀ φ).1 z' hz'
   have h := (main φ f c₁ z r hφ hf hmat hsup hz hr).2
   have : tb v / (L₁.c v * z₀) * c₁ * z = r := by

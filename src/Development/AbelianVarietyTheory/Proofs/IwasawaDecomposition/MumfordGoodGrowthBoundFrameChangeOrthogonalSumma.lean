@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.InterPolyProdSum
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HolomorphicFrameChangeLocalBoundsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MumfordGoodGrowthBoundBlocksOfBlockDiagonalStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MumfordGoodGrowthBoundCongrGermGramStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MumfordGoodGrowthBoundHolomorphicFrameChangeStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HolomorphicFrameChangeLocalBounds
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MumfordGoodGrowthBoundBlocksOfBlockDiagonal
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MumfordGoodGrowthBoundCongrGermGram
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MumfordGoodGrowthBoundHolomorphicFrameChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -96,10 +96,10 @@ theorem frame_summands_goodBound : ∀ (n g : ℕ) (S : Finset (Fin n)) (W : Set
     obtain ⟨h1, h2, h3⟩ := hG₀ v hv
     exact ⟨by simpa [G₁, det_submatrix_equiv_self] using h1, fun i k => h2 (e i) (e k),
       goodBound_submatrix e h3⟩
-  obtain ⟨r₁, hr₁, -, B, hB⟩ := GlobalTheory.T.holomorphicFrameChange_local_bounds n K P r hr hP hP0
-  obtain ⟨c₁, hc₁⟩ := GlobalTheory.T.mumfordGoodGrowthBound_holomorphic_frameChange n K S c N B
+  obtain ⟨r₁, hr₁, -, B, hB⟩ := _root_.GlobalTheory.HermFrame.holoFrame_local_bounds n K P r hr hP hP0
+  obtain ⟨c₁, hc₁⟩ := _root_.GlobalTheory.GoodMetric.FrameChange.goodBound_changeFrame n K S c N B
   let Gb : V n → Matrix K K ℂ := fun u => blockDiagonal' fun τ => Q τ u * G₀ u * (Q τ u)ᴴ
-  obtain ⟨c', N', h3⟩ := GlobalTheory.T.mumfordGoodGrowthBound_blocks_of_blockDiagonal n S ι m (fun τ u => Q τ u * G₀ u * (Q τ u)ᴴ) c₁ N
+  obtain ⟨c', N', h3⟩ := _root_.GlobalTheory.GoodMetric.goodBound_of_blockDiagonal' n S ι m (fun τ u => Q τ u * G₀ u * (Q τ u)ᴴ) c₁ N
   refine ⟨min r₁ (1 / 2), by positivity, c', N', fun v hv hvr τ => ?_⟩
   have hv1 : ‖v‖ < r₁ := hvr.trans_le (min_le_left _ _)
   have hv2 : ‖v‖ < 1 / 2 := hvr.trans_le (min_le_right _ _)
@@ -128,6 +128,6 @@ theorem frame_summands_goodBound : ∀ (n g : ℕ) (S : Finset (Fin n)) (W : Set
   · intro p q
     exact (c1 p q).congr_of_eventuallyEq (hev.mono fun u hu => by
       exact (congrFun (congrFun hu p) q).symm)
-  · exact GlobalTheory.T.mumfordGoodGrowthBound_congr_germ_gram n K S c₁ N _ Gb v hev g1
+  · exact _root_.GlobalTheory.GoodMetric.goodBound_congr_nhds n K S c₁ N _ Gb v hev g1
 
 end GlobalTheory.FrameGood

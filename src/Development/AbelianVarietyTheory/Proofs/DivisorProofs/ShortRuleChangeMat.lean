@@ -5,7 +5,8 @@ public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.
 public import Formalism.LocalToGlobal.IndefiniteReal.ThPinsR
 public import Formalism.LocalToGlobal.ProjectiveLattices.FullExists
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShortThetaValueExistsUniqueNaturalOfLaws
-public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.HarmonicGermValueChartIndependentStatement
+public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniqOfChartIndep2
+public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.HarmonicGermValueChartIndependent
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.HostFieldGaloisDegreeDiscrConjMovesPrimes
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ShortRuleChangeOfCongr
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.TotalDegreeLeOfRowDeg
@@ -80,7 +81,7 @@ theorem shortRule_change_mat (D : D7) (T : Full D) (hF : LawsFull T) (j : ℕ) (
         IsShortRule (T.Q.Xo j) T.Q.c (T.dδ j n) (actLat g Λ) N' x0 P' (ζ • f) := by
   set d := T.dδ j n with hd
   obtain ⟨_, hnab⟩ := hF.sh.dNab j hj n
-  have hCI := GlobalTheory.T.harmonic_germ_value_chart_independent
+  have hCI := _root_.GlobalTheory.harmonicValue_chart_independent
   have hbad := GlobalTheory.ShortChange.badOK_host D T.Q.H d.l₂
   have hdv : D.host.QS * D.host.q * D.host.d ∣ badN D := Dvd.intro _ rfl
   have hb1 : D.host.QS * D.host.q * D.host.d * d.l₂.M ≠ 1 := fun h => by

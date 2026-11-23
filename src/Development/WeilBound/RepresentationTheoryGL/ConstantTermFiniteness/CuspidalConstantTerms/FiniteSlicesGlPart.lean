@@ -2,7 +2,9 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.FiniteDimensionalOfSlices
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.AffineGLForms.GenSpace
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsMaxCompactRealPointsOfOrthonormalFramesStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.SiegelWeil₂.AutomorphicFormsFiniteIdeal
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HarishChandraFinite
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsMaxCompactRealPointsOfOrthonormalFrames
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FrameFamilyCompactRepresentation
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousOfIsBlockEmb
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspBlockConstantTermVanishing
@@ -13,9 +15,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KinfFinite
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MaxCompactBlockLeviSecond
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MulVecInv
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryLieOneParameterIsRealOneParamSubgroupAdelStatement
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlacesStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CmDataIsCMExtAndGramIsHermND
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CofiniteOfCapelliMonicStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CofiniteOfCapelliMonic
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InvariantOfLieOneLEqZero
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.DerEndMemLeftInv
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.IsBlockPointStatement
@@ -23,6 +23,8 @@ public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.UnitaryAdelicU
 public import Development.WeilBound.HeckeVectors.SmoothVectors.ContinuousUnits.LocInCompT
 public import Development.WeilBound.RepresentationTheoryGL.ConstantTermFiniteness.CuspidalConstantTerms.EnvRepAllInjective
 public import Development.WeilBound.RepresentationTheoryGL.ConstantTermFiniteness.CuspidalConstantTerms.IsCuspidalCompBlockEmb
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlacesStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CmDataIsCMExtAndGramIsHermND
 import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
 import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemElt
 import Mathlib.Algebra.Order.Floor.Extended
@@ -247,7 +249,7 @@ theorem finite_slices_glPart : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host
   obtain ⟨ι, hι⟩ := GlobalTheory.BlockFormsEmb.exists_blockEmb _ _ D.sp.cm.sig hcm _ V.gram hJ m X Y hW l d hl
   have hrange := GlobalTheory.T.block_embedding_parabolic_compatibility _ _ D.sp.cm.sig hcm _ V.gram hJ m X Y hW T k hk l d hl ι hι hkl hd hblk hprev
   have hιH : ∀ x, ι x ∈ glPart D.sp.cm.sig V.gram X Y T k := fun x => hrange ▸ ⟨x, rfl⟩
-  obtain ⟨K, hKm, j, hjs, hj⟩ := GlobalTheory.T.exists_maxCompact_realPoints_of_orthonormalFrames D θ hθ V ε fr hfr
+  obtain ⟨K, hKm, j, hjs, hj⟩ := _root_.GlobalTheory.FrameCompact.exists_maxCompact_of_frames D θ hθ V ε fr hfr
   have hK : IsMaxCpt D.sp.cm.sig V.gram K :=
     ⟨⟨fun x hx => hKm.1 x hx, hKm.2.1⟩, fun K' hK' hle => (hKm.2.2 K' (fun x hx => hK'.1 hx) hK'.2 hle).le⟩
   obtain ⟨u, hu, -, y₁, g₀, hb, hg₀⟩ := GlobalTheory.T.parabolic_block_embedding_compact _ _ D.sp.cm.sig hcm _ V.gram hJ m X Y hW K hK T l d hl ι hι hd hblk hend hprev b
@@ -278,7 +280,7 @@ theorem finite_slices_glPart : ∀ (D : D7) (θ : D.what₂.Tau → (Ainf D.host
     change Polynomial.aeval _ _ ∈ Zalg D.host.E d
     rw [Polynomial.aeval_eq_sum_range]
     exact Subalgebra.sum_mem _ fun i _ => Subalgebra.smul_mem _ (pow_mem h i) _
-  have hCof := GlobalTheory.T.cofinite_of_capelli_monic D.host.E d Js hJs fun τ v => ⟨q τ v, hq τ v, ⟨(τ, v), rfl⟩⟩
+  have hCof := _root_.GlobalTheory.CompanionTheory.CTFin.MonicCofin.cofin_of_monic D.host.E d Js hJs fun τ v => ⟨q τ v, hq τ v, ⟨(τ, v), rfl⟩⟩
   have hfin := GlobalTheory.CompanionTheory.CuspFinGL.Split.cuspFin D.host.E d L hL S ρ' hρ' Js hCof
   have hnorm : (finPts D.sp.cm.sig V.gram).Normal := by
     unfold finPts

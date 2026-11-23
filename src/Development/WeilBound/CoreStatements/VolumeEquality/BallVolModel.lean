@@ -1,9 +1,11 @@
 module
 
 public import Development.WeilBound.CoreStatements.VolumeEquality.BallVolDefs
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsLatticeEmbeddingStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.SkewHermitianFormExists
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IntEmbInjective
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsLatticeEmbedding
 public import Development.WeilBound.CoreStatements.EqualVolumeCompactOpens.RmulScalOne
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.SkewHermitianFormExists
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -69,7 +71,7 @@ theorem sgI_sq (j j' : ℕ) : sgI j j' * sgI j j' = 1 := by
 
 theorem stdModel_of (h : StdZ) : StdModel := by
   intro E _ _ _ Ψ _ _ j j' n g Λ _ _ H F ξ c₀ hc₀ hξ
-  obtain ⟨C⟩ := GlobalTheory.T.exists_lattice_embedding E Ψ j j' n g Λ H F
+  obtain ⟨C⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.Dict.LatEmbEx.exists_latEmb E Ψ j j' n g Λ H F
   obtain ⟨A, hA, Z, hbij, hmeas, hZ⟩ := h E Ψ j j' n g Λ F C
   obtain ⟨τ₀⟩ := ‹Nonempty Ψ›
   have hc := C.c_pos

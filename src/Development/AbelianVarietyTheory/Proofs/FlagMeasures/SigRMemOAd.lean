@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.SelfDualAt
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegralExtensionFiniteAdelesBasicPropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegralExtensionFiniteAdelesBasicProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,8 +78,8 @@ theorem iota_sigR (F E F' E' : Type) [Field F] [NumberField F] [Field E] [Number
     (hι : ∀ x, ι (inclE (F := F) (Ad F) x) = inclE (F := F') (Ad F') (e x))
     (hO : ∀ a, a ∈ OAd F E ↔ ι a ∈ OAd F' E') (a : E ⊗[F] Ad F) :
     ι (sigR σ (Ad F) a) = sigR σ' (Ad F') (ι a) := by
-  obtain ⟨-, h2, -, h4, -⟩ := GlobalTheory.T.integralExtensionFiniteAdeles_basic_properties F E
-  obtain ⟨-, -, h3', -, -⟩ := GlobalTheory.T.integralExtensionFiniteAdeles_basic_properties F' E'
+  obtain ⟨-, h2, -, h4, -⟩ := _root_.GlobalTheory.St.G.IntAd.integral_adeles_properties F E
+  obtain ⟨-, -, h3', -, -⟩ := _root_.GlobalTheory.St.G.IntAd.integral_adeles_properties F' E'
 
   set D : E ⊗[F] Ad F → E' ⊗[F'] Ad F' :=
     fun b => ι (sigR σ (Ad F) b) - sigR σ' (Ad F') (ι b) with hD

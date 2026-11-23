@@ -1,13 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
-import Development.AbelianVarietyTheory.CrystallinePeriods.RingBasics
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinFlatRadiusIdealFactsStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinFlatRadiusIdealFacts
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGaussNormExtensionAcris
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsAlgClosedTiltFieldAndValuationRing
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UntiltNormUltrametricEqZeroStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WittVectorGaussNormMulStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WittVectorGaussNormUltrametricStatement
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+import Development.AbelianVarietyTheory.CrystallinePeriods.RingBasics
+import Formalism.LocalRingCardinality.AdicCompletionLocal.InstIsAdicCompleteOCSpanSingletonSetCast
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UntiltNormUltrametricEqZero
+import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import Mathlib.RingTheory.WittVector.Defs
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WittVectorGaussNormMul
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WittVectorGaussNormUltrametric
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -17,7 +21,6 @@ import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
-public import Mathlib.Analysis.SpecialFunctions.Log.Base
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
@@ -161,8 +164,8 @@ theorem exists_gauss (l : ℕ) [hl : Fact l.Prime] (R : Type) [CommRing R] [Char
     | succ k ih => rw [pow_succ, amul, ih, pow_succ]
   obtain ⟨N, hN⟩ : ∃ N : WittVector l R → ℝ,
       ∀ x, N x = ⨆ n : ℕ, a (x.coeff n) ^ ((1 : ℝ) / (l : ℝ) ^ n) * r ^ n := ⟨_, fun _ => rfl⟩
-  obtain ⟨Nadd, Nneg, -⟩ := GlobalTheory.T.witt_vector_gauss_norm_ultrametric l R a a01 a0 a1 amul aadd r hr0 hr1 N hN
-  have Nmul := GlobalTheory.T.wittVector_gaussNorm_mul l R a a01 a0 a1 amul aadd r hr0 hr1 N hN
+  obtain ⟨Nadd, Nneg, -⟩ := _root_.GlobalTheory.WittGauss.gaussNorm_ultrametric_submul l R a a01 a0 a1 amul aadd r hr0 hr1 N hN
+  have Nmul := _root_.GlobalTheory.witt_gaussNorm_mul l R a a01 a0 a1 amul aadd r hr0 hr1 N hN
   have he : ∀ n : ℕ, (0 : ℝ) < 1 / (l : ℝ) ^ n := fun n => by positivity
   have ht0 : ∀ (y : R) (n : ℕ), 0 ≤ a y ^ ((1 : ℝ) / (l : ℝ) ^ n) * r ^ n := fun y n =>
     mul_nonneg (Real.rpow_nonneg (a01 y).1 _) (pow_nonneg hr0.le _)
@@ -247,7 +250,7 @@ theorem dvd_of_norm_le {l : ℕ} [Fact l.Prime] (x y : Per.Fl l)
 
 theorem exists_gauss_disc : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (ρ : ℝ≥0), 0 < ρ → ρ < 1 → ∃ N : Ainf l → ℝ, (∀ x y, N (x * y) = N x * N y) ∧ (∀ x y, N (x + y) ≤ max (N x) (N y)) ∧ N (l : Ainf l) = (l : ℝ)⁻¹ ∧ (∀ x, N x ≤ ‖toDisc l (bk.ev X) ρ x‖) ∧ ∀ x, (ρ : ℝ) * ‖toDisc l (bk.ev X) ρ x‖ ≤ N x := by
   intro l _ K bk ρ h0 h1
-  obtain ⟨hf0, hfu, -⟩ := GlobalTheory.T.breuilKisin_flat_radius_ideal_facts l K bk
+  obtain ⟨hf0, hfu, -⟩ := _root_.GlobalTheory.BSP.flat_disc l K bk
   have h0' : (0 : ℝ) < ρ := h0
   have h1' : (ρ : ℝ) < 1 := h1
   let v : Per.Fl l → ℝ := fun x => ‖((x.untilt : Per.OC l) : ℂ_[l])‖
@@ -255,9 +258,9 @@ theorem exists_gauss_disc : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK
   have v0 : v 0 = 0 := by simp only [v, GlobalTheory.GaussExt.untilt_zero]; simp
   have v1 : v 1 = 1 := by simp [v]
   have vmul : ∀ x y, v (x * y) = v x * v y := by intro x y; simp [v]
-  have vadd : ∀ x y, v (x + y) ≤ max (v x) (v y) := fun x y => (GlobalTheory.T.untilt_norm_ultrametric_eq_zero l x y).1
+  have vadd : ∀ x y, v (x + y) ≤ max (v x) (v y) := fun x y => (_root_.GlobalTheory.TiltAbs.untilt_ultrametric_definite l x y).1
   have vdvd : ∀ x y, v x ≤ v y → y ∣ x := dvd_of_norm_le
-  have vf0 : 0 < v bk.flat := norm_pos_iff.2 fun h => hf0 ((GlobalTheory.T.untilt_norm_ultrametric_eq_zero l bk.flat 0).2 (Subtype.ext h))
+  have vf0 : 0 < v bk.flat := norm_pos_iff.2 fun h => hf0 ((_root_.GlobalTheory.TiltAbs.untilt_ultrametric_definite l bk.flat 0).2 (Subtype.ext h))
   have vf1 : v bk.flat < 1 := lt_of_not_ge fun h => hfu (isUnit_of_dvd_one (vdvd 1 _ (v1 ▸ h)))
   obtain ⟨t, ht, hρ⟩ : ∃ t : ℝ, 0 < t ∧ v bk.flat ^ t = ρ :=
     ⟨Real.logb (v bk.flat) ρ, Real.logb_pos_of_base_lt_one vf0 vf1 h0' h1', Real.rpow_logb vf0 vf1.ne h0'⟩

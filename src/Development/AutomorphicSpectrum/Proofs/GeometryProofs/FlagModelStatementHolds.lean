@@ -1,10 +1,14 @@
 module
 
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.FlagModelStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagModelCommonRefinementStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GlueApplyOfNotInFibre
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsGenOfIsVBOne
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagModelCommonRefinement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsGenericFlag
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeFlagVectorBundle
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenMapStalkMap
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeFlagVectorBundleStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeSubQuotientSplitStatement
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EtaleLocalizationAtPrimeTensorOfLowHeight
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeSubQuotientSplit
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -132,7 +136,7 @@ theorem flagModel : FlagModelStatement := by
     rw [← hW]
     exact FiniteDimensional.span_of_finite Ω (Set.finite_range b)
   obtain ⟨κ', hκ', y, M', f, hdom, hnorm, hchart, hvb, hat⟩ :=
-    GlobalTheory.T.flag_model_common_refinement o Ω κ x M A κa w (Σ σ, Fin (r σ + 1))
+    _root_.GlobalTheory.CompanionTheory.Relay.flag_model_common_refinement o Ω κ x M A κa w (Σ σ, Fin (r σ + 1))
       (fun q => E ⧸ flagStep Ω (b₀ q.1) q.2)
       (fun q => (L q.1).map (flagStep Ω (b₀ q.1) q.2).mkQ)
       (fun q => (W q.1).map (flagStep Ω (b₀ q.1) q.2).mkQ) hw
@@ -146,9 +150,9 @@ theorem flagModel : FlagModelStatement := by
     rw [pull_map] at h
     exact ⟨_, _, h⟩
   refine ⟨κ', hκ', y, M', f, hdom, hnorm, hchart, fun σ => ?_, fun σ n p' => ?_, fun p hp hfr => ?_⟩
-  · exact GlobalTheory.T.lattice_flag_vector_bundle _ _ _ _ _ _ _ _ _ _ (hb σ) (hbW σ) (hpull σ) (hquot σ)
+  · exact _root_.GlobalTheory.CompanionTheory.Ar.isFlagVBOn_inter_of_steps _ _ _ _ _ _ _ _ _ _ (hb σ) (hbW σ) (hpull σ) (hquot σ)
   · obtain ⟨s, W', h⟩ := hquot σ n
-    exact (GlobalTheory.T.lattice_sub_quotient_split _ _ _ _ _ _ _ _ _ _ _ (flagStep_le (hbW σ) n) (hpull σ) h).2 p' (Set.mem_univ _)
+    exact (_root_.GlobalTheory.CompanionTheory.Ar.inter_isVBOn_of_map _ _ _ _ _ _ _ _ _ _ _ (flagStep_le (hbW σ) n) (hpull σ) h).2 p' (Set.mem_univ _)
   · exact hat p hp fun q => hfr q.1 q.2
 
 end GlobalTheory.CompanionTheory.Ar.FlagModel

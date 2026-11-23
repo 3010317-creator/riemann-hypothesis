@@ -1,14 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RestrictJumps
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicCocycleMemImageOfCrystallineStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicCocycleMemImageOfCrystalline
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NotFullBot
+public import Formalism.SharpRestriction.LevelLetterCocycles.DeltaInvariantLattices
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.H1fClassFromWachPair
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HerrClassOfCocycleValues
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HerrCocycleOfWittTensorRelations
+public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HodgeTateJumpRestrictFiniteExt
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InvQPowNygaardExtComesFromBaseField
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.XNygaardExtComesFromBaseField
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusSubOneWittTensorLatticeSurjectiveFixed
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.H1fClassFromWachPairStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HerrClassOfCocycleValuesStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HerrCocycleOfWittTensorRelationsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HodgeTateJumpRestrictFiniteExtStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InvQPowNygaardExtComesFromBaseFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.XNygaardExtComesFromBaseFieldStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,7 +65,7 @@ private theorem descend_element_of_le_of_eq_K0 (D : Formalism.BasicNotions.D7) (
     (hy' : y' ∈ invN ((HW l).W K' s LL h') (resLt (K := K) (K' := K') (LL := LL) hle T) (((HW l).W K' s LL h').Q ^ m)) :
     ∃ y ∈ invN ((HW l).W K s LL h) T (((HW l).W K s LL h).Q ^ m),
       ((F l).E K s LL h).tie.jD T y = toTW hle T (((F l).E K' s LL h').tie.jD (resLt (K := K) (K' := K') (LL := LL) hle T) y') :=
-  GlobalTheory.T.inv_Q_pow_nygaard_ext_comes_from_base_field D HW F l K s LL h K' h' hle hK0 T hT m y' hy'
+  _root_.GlobalTheory.NL.TransitionThirdCase.main D HW F l K s LL h K' h' hle hK0 T hT m y' hy'
 
 set_option maxHeartbeats 60000000 in
 private theorem descend_of_eq_K0_of_isCrys (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (l : ℕ) [Fact l.Prime]
@@ -85,7 +88,7 @@ private theorem descend_of_eq_K0_of_isCrys (D : Formalism.BasicNotions.D7) (HW :
   let f := @fMap l _ K K' W.GKs W'.GKs hm' htop
   -- Direct elimination avoids the cost of `cases` on the dependent goal.
   refine (descend_element_of_le_of_eq_K0 D HW F l K s LL h K' h' hle hK0 T hT m y' hy').elim fun y hy => ?_
-  refine (GlobalTheory.T.X_nygaard_ext_comes_from_base_field D HW F l K s LL h K' h' hle hK0 T hT z' hz').elim fun z hz => ?_
+  refine (_root_.GlobalTheory.NL.XNTransfer.main D HW F l K s LL h K' h' hle hK0 T hT z' hz').elim fun z hz => ?_
   refine ((GlobalTheory.WittTensorFixed.main l K' LL T').1
     (((F l).E K' s LL h').tie.jD T' y')).elim fun b' hb' => ?_
   refine (@cl_fit l _ D HW F K' s LL h' T' y' z' hyz' b' hb').elim fun c' hc' => ?_
@@ -111,13 +114,13 @@ private theorem descend_of_eq_K0_of_isCrys (D : Formalism.BasicNotions.D7) (HW :
   have hZ₁ := (hZf b' g₁).trans
     ((congrArg (fun g => toBase (Zf (D.locA l) T' W'.GKs c' b' g)) hfe).trans
       ((congrArg toBase (hc'.2.2 g' ((hlam'.2.2.1 g').1 hg'))).trans hz.2.symm))
-  have hall := GlobalTheory.T.cyclotomicCocycle_mem_image_of_crystalline D HW F l K s LL h T hT c b lam hlamc hlam1 hzero g₁ hg₁ z hz.1 hZ₁
+  have hall := _root_.GlobalTheory.NL.ZVal.zval D HW F l K s LL h T hT c b lam hlamc hlam1 hzero g₁ hg₁ z hz.1 hZ₁
   refine (@lam_exists l _ D HW K s LL h).elim fun _ hlamK => ?_
   refine hlamK.2.2.2.1.elim fun g₀ hg₀ => ?_
   have hγ := (hlamK.2.2.1 g₀).1 hg₀
   refine (hall g₀).elim fun z₀ hz₀ => ?_
-  have hyz := GlobalTheory.T.herr_cocycle_of_witt_tensor_relations D HW F l K s LL h T c b y z₀ g₀ hγ hb hz₀.2
-  have hcl := GlobalTheory.T.herr_class_of_cocycle_values D HW F l K s LL h T c b y z₀ hyz g₀ hγ hb hzero hz₀.2
+  have hyz := _root_.GlobalTheory.NL.HerrCocycleCriterion.cocyc D HW F l K s LL h T c b y z₀ g₀ hγ hb hz₀.2
+  have hcl := _root_.GlobalTheory.NL.HerrClassUniq.class_of_values D HW F l K s LL h T c b y z₀ hyz g₀ hγ hb hzero hz₀.2
   exact ⟨y, z₀, hyz, hy.1, hz₀.1, c, c', hcl, hc'.1, hc.1⟩
 
 
@@ -150,11 +153,11 @@ private theorem wach_pow_smul_of_good_ext : ∀ (D : Formalism.BasicNotions.D7) 
   have hm' : ∀ g : ↥W.GKs, (g.1 : GQ l) ∈ GK K' := fun g => (hiff g.1).1 g.2
   have hT' := @restrict_crys l p D K K' LL hle T hT
   have hJ' := @restrict_jumps l p D HW K s LL h K' h' hle T hT M hh hJ
-    (@GlobalTheory.T.hodgeTateJump_restrict_finite_ext l p (D.loc l) (D.locA l) (D.locT l)
+    (@_root_.GlobalTheory.Per.JumpRestrict.jump_restrict l p (D.loc l) (D.locA l) (D.locT l)
       K K' LL hle T.V T.acg T.modLL T.modQp T.towQp T.fdim T.ρ hT)
   refine (@pull_h1f l p (D.loc l) K K' LL hle T W.GKs W'.GKs hm κ hκ).elim fun cκ hcκ =>
     hcκ.elim fun cκ' hκ' => ?_
-  refine (@GlobalTheory.T.H1f_class_of_wach_pair D HW F Cm l p K' s LL h' T' hT' htop
+  refine (@_root_.GlobalTheory.NL.ExtClassKs.main D HW F Cm l p K' s LL h' T' hT' htop
     (fun _ => mx M) (fun _ => mx hh) hJ' (Submodule.Quotient.mk cκ') hκ'.2.1).elim
     fun n hn => hn.elim fun y' hy' => hy'.elim fun z' hz' => hz'.elim fun hyz' hpair' => ?_
   have : Nonempty (Let K') := ⟨0⟩

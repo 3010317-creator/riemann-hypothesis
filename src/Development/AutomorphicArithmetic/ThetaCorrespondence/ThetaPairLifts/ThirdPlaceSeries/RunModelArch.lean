@@ -4,16 +4,17 @@ public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLif
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ComponentModelWeightDimensionDictionary
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ValAtAlgebraMap
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsRec
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RunNumericalConditionsHoldAlongFamilyStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.TupleReadBaseTupleEqFamily
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RunNumericalConditionsHoldAlongFamily
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsPageRunRecordSubFour
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsThresholdRunHolds
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.FieldSmallIffOpo
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ParametersOkOfLaws
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.RunNumericalConditionsOfIndexBoundBeyondThreshol
-import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.CuspFormBasisSharesDefiniteLiftIndex
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsArchOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RunModel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RunWeightArch
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.RunNumericalConditionsOfIndexBoundBeyondThreshol
+import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.CuspFormBasisSharesDefiniteLiftIndex
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,7 +79,7 @@ theorem p0_extreme_or_archOn_of_runModel : _root_.GlobalTheory.BigOn.ForallTwoRu
   obtain ⟨x₀, hrun⟩ := GlobalTheory.FinalJoin.runHolds_of_parOK
   obtain ⟨CK, hCK⟩ := GlobalTheory.FinalJoin.RecordRun.exists_pageRun_record_sub_four
   obtain ⟨x₂, hpg⟩ := GlobalTheory.FinalJoin.pageOK_of_pageRun_beyond (fun _ _ => 0)
-  refine Formalism.MainNotions.Closed.imp (GlobalTheory.T.runNumericalConditions_hold_along_family (max ((10 : ℝ) ^ 60) (max (x₀ 20 CK) (x₂ 20 CK)))) ?_
+  refine Formalism.MainNotions.Closed.imp (_root_.GlobalTheory.OntoNum.pageNum_along (max ((10 : ℝ) ^ 60) (max (x₀ 20 CK) (x₂ 20 CK)))) ?_
   intro eps Fm CH _ hx0
   obtain ⟨x0, hx0⟩ := hx0
   refine ⟨x0, fun x hx hle ι p _ hmore r hr hown i C _ _ M ka hRM => ?_⟩

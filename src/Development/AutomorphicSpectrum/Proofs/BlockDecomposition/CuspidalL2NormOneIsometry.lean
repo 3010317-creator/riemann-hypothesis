@@ -3,11 +3,15 @@ module
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousResQ
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.T2SpaceAdelicGeneralLinearGroupNumberField
 public import GroundTheory.AutomorphicForms.CuspidalDiscreteness.CuspCompact
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactSupportSplitCentreFactorStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalRestrictMemCuspidalL2Statement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FundamentalDomainSplitCentreProductStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HaarMeasureNormOneProductStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IntegralSplitCentreInvariantStatement
+public import GroundTheory.AutomorphicForms.ReductionMahler
+public import Mathlib.Topology.ContinuousMap.CompactlySupported
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactSupportSplitCentreFactor
+public import GroundTheory.AutomorphicForms.CuspidalDiscreteness.ExistsLintegralConstantTermL2SqLe
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalRestrictMemCuspidalL2
+public import GroundTheory.AutomorphicForms.Reduction
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FundamentalDomainSplitCentreProduct
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HaarMeasureNormOneProduct
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IntegralSplitCentreInvariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -93,11 +97,11 @@ theorem lintegral_resQ (ha : 0 < a) (μ : Measure (GA E a)) [μ.IsHaarMeasure] (
     (hz : ∀ t g, φ (splitCentre E a t * g) = φ g) :
     ∫⁻ q, ‖resQ φ q‖ₑ ^ 2 ∂(RightCosetSpace.quotientMeasure (rationalGLOne (K := E) (n := a)) ν) =
       c * ∫⁻ q, ‖descend (latticeGL E a) φ q‖ₑ ^ 2 ∂(GlobalTheory.AutomorphicL2Unitary.quotMeasure (latticeGL E a) μ) := by
-  have hd := GlobalTheory.T.fundamental_domain_split_centre_product E a ha μ
+  have hd := _root_.GlobalTheory.CompanionTheory.CuspTransfer.isFundamentalDomain_splitFd E a ha μ
   have hL : LeftInv (latticeGL E a) φ := leftInv_latticeGL hl hz
   rw [RightCosetSpace.lintegral_quotientMeasure, lintegral_quotMeasure hd]
   simp only [resQ_mk hl, hL.descend_mk]
-  rw [← GlobalTheory.T.integral_split_centre_invariant E a ha μ ν c hmap φ hc hz, Measure.restrict_smul, lintegral_smul_measure]
+  rw [← _root_.GlobalTheory.CompanionTheory.CuspTransfer.lintegral_productDomain_norm_sq E a ha μ ν c hmap φ hc hz, Measure.restrict_smul, lintegral_smul_measure]
   rfl
 
 def cuspidalL2Functions (μ : Measure (GA E a)) [μ.IsHaarMeasure] : Submodule ℂ (GA E a → ℂ) where
@@ -133,7 +137,7 @@ theorem denseRange_toL2cusp : DenseRange (toL2cusp μ) := by
 variable {μ ν} in
 def toCusp (hm : ∀ φ : cuspidalL2Functions μ, MemLp (resQ φ.1) 2 (RightCosetSpace.quotientMeasure (rationalGLOne (K := E) (n := a)) ν)) :
     cuspidalL2Functions μ →ₗ[ℂ] cuspidalL2 ν where
-  toFun φ := ⟨(hm φ).toLp _, GlobalTheory.T.cuspidal_restrict_mem_cuspidal_l2 E a ν φ.1 φ.2.1 (hm φ)⟩
+  toFun φ := ⟨(hm φ).toLp _, _root_.GlobalTheory.CompanionTheory.CuspTransfer.toLp_restrict_mem_cuspidalL2 E a ν φ.1 φ.2.1 (hm φ)⟩
   map_add' φ ψ := Subtype.ext (MemLp.toLp_add (hm φ) (hm ψ))
   map_smul' z φ := Subtype.ext (MemLp.toLp_const_smul z (hm φ))
 
@@ -264,10 +268,10 @@ theorem transfer : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.
           ∃ f₁ : CompactlySupportedContinuousMap (GroundTheory.Automorphic.Reduction.normOneGL (K := E) (n := a)) ℂ,
             Φ ∘L repOp (Rcusp μ) μ f = (GroundTheory.Automorphic.CuspidalSpectrum.cuspRep ν).integrated ν
               (GroundTheory.Automorphic.UnitaryRep.ccToL1 ν f₁) ∘L Φ := fun E _ _ _ a ha μ _ _ ν _ =>
-  (GlobalTheory.T.haar_measure_norm_one_product E a ha μ ν).elim fun c h =>
+  (_root_.GlobalTheory.CompanionTheory.HaarSplit.map_prod_eq_smul E a ha μ ν).elim fun c h =>
     (exists_transfer_op ha c h.2.1 h.2.2).elim fun Φ h' =>
       ⟨Φ, Real.sqrt c.toReal, Real.sqrt_pos.2 (ENNReal.toReal_pos h.1 h.2.1), h'.1, fun f hf hfc =>
-        (GlobalTheory.T.compact_support_split_centre_factor E a ha μ ν c h.1 h.2.1 h.2.2 f hf hfc).elim fun f₁ h₁ =>
+        (_root_.GlobalTheory.CompanionTheory.CuspTransfer.FubiniCentre.exists_normOne_integral E a ha μ ν c h.1 h.2.1 h.2.2 f hf hfc).elim fun f₁ h₁ =>
           ⟨f₁, comp_repOp_eq Φ h'.2 hf hfc f₁ fun K _ _ _ W => h₁ K W⟩⟩
 
 end GlobalTheory.CompanionTheory.CuspTransfer

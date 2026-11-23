@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAdelicOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualWeylOrthonormalBasisValuesAtUnitarySumSqLeOnStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualWeylTensorEvaluationTranslateKroneckerStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KroneckerProductFamilyMulOneDetStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsUnitaryMulTriangular
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualWeylOrthonormalBasisValuesAtUnitarySumSqLeOn
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualWeylTensorEvaluationTranslateKronecker
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KroneckerProductFamilyMulOneDet
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -86,9 +87,9 @@ theorem mul_norm_tval_le_fibNorm : ∀ (T : Type) [Fintype T] [DecidableEq T] (N
   intro T _ _ N la hla x X u s hs
   have h1 : tval la x (fun t => X t * (u t).1) =
       tval la ((kron fun t => rhoMat (la t) (X t)) *ᵥ x) (fun t => (u t).1) := by
-    have h := GlobalTheory.T.dualWeylTensorEvaluation_translate_kronecker T N la ℂ ℂ (RingHom.id ℂ) x X (fun t => (u t).1)
+    have h := _root_.GlobalTheory.DefPt.tval_translate T N la ℂ ℂ (RingHom.id ℂ) x X (fun t => (u t).1)
     simpa only [RingHom.id_apply, RingHom.coe_id, Matrix.map_id] using h
-  have hk := (GlobalTheory.T.kroneckerProductFamily_mul_one_det T (fun t => Idx (la t)) ℂ (fun t => onMat (la t)) (fun t => rhoMat (la t) (X t))).1
+  have hk := (_root_.GlobalTheory.DefPt.kronFamily_mul_one_det T (fun t => Idx (la t)) ℂ (fun t => onMat (la t)) (fun t => rhoMat (la t) (X t))).1
   set E : TIdx la → ℂ := fun J => ∏ t, evalAt (u t).1
     (((toSpace (la t)).symm (onBasis (la t) (J t)) : nabla (la t) ℂ) : Pol (N t) ℂ) with hE
   have h2 : (s : ℂ) * tval la x (fun t => X t * (u t).1) = ∑ J, (fibY la s X *ᵥ x) J * E J := by
@@ -108,7 +109,7 @@ theorem mul_norm_tval_le_fibNorm : ∀ (T : Type) [Fintype T] [DecidableEq T] (N
       simp only [hE, norm_prod, Finset.prod_pow]
     rw [this]
     exact Finset.prod_le_one₀ (fun t _ => Finset.sum_nonneg fun _ _ => by positivity)
-      (fun t _ => GlobalTheory.T.dualWeyl_orthonormal_basis_values_at_unitary_sum_sq_le_one (N t) (la t) (hla t) (u t))
+      (fun t _ => _root_.GlobalTheory.DualWeyl.EvBound.sum_sq_norm_evalAt_onBasis_le_one (N t) (la t) (hla t) (u t))
   have h4 : s * ‖tval la x (fun t => X t * (u t).1)‖ = ‖(s : ℂ) * tval la x (fun t => X t * (u t).1)‖ := by
     rw [norm_mul, Complex.norm_real, Real.norm_of_nonneg hs]
   rw [h4, h2]

@@ -1,16 +1,18 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRatioOfWeight
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithHilbertSamuelLowerBoundCountRankAmpleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithHilbertSamuelUpperBoundCountRankAmpleStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousHermSectionValueMulConjAndNormBoundedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBasepointFreeSectionTupleAmpleArithStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteHomogeneousGeneratorsGradedSubgroupStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankFunctionFieldQuotientSubfieldEqDegreeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithHilbertSamuelLowerBoundCountRankAmple
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithHilbertSamuelUpperBoundCountRankAmple
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBasepointFreeSectionTupleAmpleArith
+public import Mathlib.RingTheory.MvPolynomial.Homogeneous
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteHomogeneousGeneratorsGradedSubgroup
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankFunctionFieldQuotientSubfieldEqDegree
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TendstoRankDivPowOfChooseBounds
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousHermSectionValueMulConjAndNormBounded
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLineBundlePairSectionsMulMemNormMul
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermPairPowSectionMemAndNormPow
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionsEqSumAevalBoundedIntCoeffAmpleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TendstoRankDivPowOfChooseBoundsStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionsEqSumAevalBoundedIntCoeffAmple
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -104,14 +106,14 @@ namespace GlobalTheory.HSAmp.GoodH
 theorem goodFam_H : GlobalTheory.Published.ArCalc → ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (D : ℕ),
     IsArithVar p D → ∀ (P : Pair p), IsAmpleLB P.L.B → GoodFam P D (gdeg P.L D / D.factorial) fun m => P.H m 1 := by
   intro hAr k _ X _ p D hX P hL
-  obtain ⟨e, x, hx⟩ := GlobalTheory.T.exists_basepointFreeSectionTuple_ample_arith k X p D hX P hL
+  obtain ⟨e, x, hx⟩ := _root_.GlobalTheory.HSAmp.NoethGens.exists_gens k X p D hX P hL
   have he : 0 < e := hx.pos
 
   have hup : ∀ s : ℕ, ∃ c : ℕ, ∀ q : ℕ, (P.H ((e * q + s : ℕ) : ℤ) 1).FG ∧
       Module.finrank ℤ (P.H ((e * q + s : ℕ) : ℤ) 1) ≤
         Module.finrank (ratF x) X.functionField * (q + c + D).choose D := by
     intro s
-    obtain ⟨c, C, -, h⟩ := GlobalTheory.T.arithHilbertSamuel_upperBound_count_rank_ample k X p D hX P hL e x hx (s : ℤ) 1
+    obtain ⟨c, C, -, h⟩ := _root_.GlobalTheory.HSAmp.HSUpper.upper_bound k X p D hX P hL e x hx (s : ℤ) 1
     refine ⟨c, fun q => ?_⟩
     have e1 : ((e * q + s : ℕ) : ℤ) = (e : ℤ) * (q : ℤ) + (s : ℤ) := by push_cast; ring
     rw [e1]
@@ -120,7 +122,7 @@ theorem goodFam_H : GlobalTheory.Published.ArCalc → ∀ (k : Type) [CommRing k
   have hlow : ∀ s : ℕ, ∃ c : ℕ, ∀ q : ℕ, Module.finrank (ratF x) X.functionField * (q + D).choose D ≤
       Module.finrank ℤ (P.H ((e * (q + c) + s : ℕ) : ℤ) 1) := by
     intro s
-    obtain ⟨c, C, -, h⟩ := GlobalTheory.T.arithHilbertSamuel_lowerBound_count_rank_ample k X p D hX P hL e x hx (s : ℤ) 1
+    obtain ⟨c, C, -, h⟩ := _root_.GlobalTheory.HSAmp.FLower.count_rank_lower k X p D hX P hL e x hx (s : ℤ) 1
     obtain ⟨c', hc'⟩ := hup s
     refine ⟨c, fun q => ?_⟩
     obtain ⟨v, hv, hli⟩ := (h q).1
@@ -134,12 +136,12 @@ theorem goodFam_H : GlobalTheory.Published.ArCalc → ∀ (k : Type) [CommRing k
     have hw : LinearIndependent ℤ w :=
       LinearIndependent.of_comp (P.H ((e : ℤ) * ((q + c : ℕ) : ℤ) + (s : ℤ)) 1).subtype.toIntLinearMap hli
     simpa using hw.fintype_card_le_finrank
-  have hrank := GlobalTheory.T.tendsto_div_pow_of_choose_bounds D e (Module.finrank (ratF x) X.functionField)
+  have hrank := _root_.GlobalTheory.tendsto_rank_div_pow_of_choose_bounds D e (Module.finrank (ratF x) X.functionField)
     (fun m => Module.finrank ℤ (P.H (m : ℤ) 1)) he (fun s _ => by
       obtain ⟨c, hc⟩ := hlow s
       obtain ⟨c', hc'⟩ := hup s
       exact ⟨c, c', fun q => ⟨hc q, (hc' q).2⟩⟩)
-  have hdeg := GlobalTheory.T.finrank_functionField_quotientSubfield_eq_degree hAr k X p D hX P hL e x hx
+  have hdeg := _root_.GlobalTheory.HSAmp.finrank_ratF_eq_gdeg hAr k X p D hX P hL e x hx
   have hg : (Module.finrank (ratF x) X.functionField : ℝ) / ((e : ℝ) ^ D * D.factorial) = gdeg P.L D / D.factorial := by
     have : (e : ℝ) ^ D ≠ 0 := pow_ne_zero _ (by exact_mod_cast he.ne')
     rw [hdeg]
@@ -150,7 +152,7 @@ theorem goodFam_H : GlobalTheory.Published.ArCalc → ∀ (k : Type) [CommRing k
         AddSubgroup.closure (ballIn P (P.H ((e * q + s : ℕ) : ℤ) 1) ((e * q + s : ℕ) : ℤ) 1 (C ^ (e * q + s))) := by
     intro s
     classical
-    obtain ⟨c, w, Cr, -, hrep⟩ := GlobalTheory.T.sections_eq_sum_aeval_boundedIntCoeff_ample k X p D hX P hL e x hx (s : ℤ) 1
+    obtain ⟨c, w, Cr, -, hrep⟩ := _root_.GlobalTheory.HSRep.sections_eq_sum_aeval_bounded k X p D hX P hL e x hx (s : ℤ) 1
     let Λ : ℕ → AddSubgroup X.functionField := fun q => P.H ((e : ℤ) * (q : ℤ) + (s : ℤ)) 1
     have hmul : ∀ q l, ∀ f ∈ Λ q, x l * f ∈ Λ (q + 1) := by
       intro q l f hf
@@ -162,10 +164,10 @@ theorem goodFam_H : GlobalTheory.Published.ArCalc → ∀ (k : Type) [CommRing k
       intro q f hf
       obtain ⟨T, h1, h2, -⟩ := hrep q f hf
       exact ⟨T, h1, h2⟩
-    obtain ⟨G, hG, hcl⟩ := GlobalTheory.T.exists_finite_homogeneous_generators_graded_subgroup X.functionField D c x _ w Λ hmul hrepr
+    obtain ⟨G, hG, hcl⟩ := _root_.GlobalTheory.HSAmpGen.exists_finite_homogeneous_generators X.functionField D c x _ w Λ hmul hrepr
     have hb : ∀ (a b : ℤ) (f : X.functionField), f ∈ P.H a b → ∃ C : ℝ, 0 ≤ C ∧ ∀ σ y, P.nu a b σ y f ≤ C := by
       intro a b f hf
-      obtain ⟨C, hC⟩ := ((GlobalTheory.T.continuous_hermSectionValue_mul_conj_and_norm_bounded k X p D hX P a b).2 f hf).2
+      obtain ⟨C, hC⟩ := ((_root_.GlobalTheory.HSAmp.continuous_val_and_bounded k X p D hX P a b).2 f hf).2
       exact ⟨|C|, abs_nonneg _, fun σ y => (hC σ y).trans (le_abs_self _)⟩
     choose Cx hCx0 hCx using fun l => hb _ _ _ (hx.mem l)
     have hbG : ∀ g : ℕ × X.functionField, ∃ C : ℝ, 0 ≤ C ∧

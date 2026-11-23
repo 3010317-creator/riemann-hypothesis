@@ -2,15 +2,16 @@ module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.TriDefs
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
-import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.CrystallineOrdinaryIdeals.FiltByPositiveWeightOfTwoCharacterExtensionStatement
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.CrystallineOrdinaryIdeals.FinrankCocyclesEqCrysAddDualInvOfPositiveStatement
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.CrystallineOrdinaryIdeals.PositiveScalarRepOfCharacterPositiveWeightStatement
-import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.AdmRes
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.LocalPublishedTheorems
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.CrystallineOrdinaryIdeals.FinrankCocyclesEqCrysAddDualInvOfPositive
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.CrystallineOrdinaryIdeals.PositiveScalarRepOfCharacterPositiveWeight
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.CycInertia
-import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.IsCrysOfInertia
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.IsCrystallineExtensionIffMemFiniteCocycles
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.PosExact
+import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
+import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.AdmRes
+import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.IsCrysOfInertia
 import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.Z1fMap
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -113,9 +114,9 @@ theorem GlobalTheory.crystalline_cocycle_twisted_extension_of_quotient : LocalPu
     simp only [Pi.sub_apply, hzm, hcm, chRep_apply]
     ring
   have hd' : z - (fun g => (c g).1) ∈ Z1 (resCoef E (chRep (κ 0 / κ 2))) := hd
-  obtain ⟨hcχ, pχ⟩ := GlobalTheory.T.positive_scalar_rep_of_character_positive_weight φ hφ π hπ (κ 0 / κ 2) (cd 0 2) (2 * (e : ℤ)) (by omega) hin02
+  obtain ⟨hcχ, pχ⟩ := _root_.GlobalTheory.PosModule.main φ hφ π hπ (κ 0 / κ 2) (cd 0 2) (2 * (e : ℤ)) (by omega) hin02
     (resCoef E (chRep (κ 0 / κ 2))) (fun g v => rfl)
-  obtain ⟨hfin, hdim⟩ := GlobalTheory.T.finrank_cocycles_eq_crys_add_dual_inv_of_positive hP φ hφ (resCoef E (chRep (κ 0 / κ 2))) hcχ pχ
+  obtain ⟨hfin, hdim⟩ := _root_.GlobalTheory.cocycleDim_positive hP φ hφ (resCoef E (chRep (κ 0 / κ 2))) hcχ pχ
   have hinj : Function.Injective (algebraMap ℤ_[l] E) := by
     rw [IsScalarTower.algebraMap_eq ℤ_[l] ℚ_[l] E]
     exact (algebraMap ℚ_[l] E).injective.comp Subtype.val_injective

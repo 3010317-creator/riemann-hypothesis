@@ -1,12 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DatumOfIsIntegersLattice
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntVVariableChangeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaloisStableLatticePointsSymmetricMemStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralJOfNonrealMultiplierStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionCoordsMemOfOddStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationDerivWeierstrassPOddTorsionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeierstrassCoeffsIntegralAverageChangeOfVariableStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntVVariableChange
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaloisStableLatticePointsSymmetricMem
+public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsVariableChangeEqLatticeCurve
+public import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.TranslateProduct
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralJOfNonrealMultiplier
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionCoordsMemOfOdd
+public import Mathlib.RingTheory.Valuation.ValuationSubring
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationDerivWeierstrassPOddTorsion
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeierstrassCoeffsIntegralAverageChangeOfVariable
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,19 +60,19 @@ theorem GlobalTheory.CMModel.modelAt_of_stable_torsion : ∀ (L : PeriodPair) (�
     rw [map_zero, zero_pow (by norm_num)] at hu12
     exact hΔ ((Valuation.zero_iff _).mp hu12.symm)
   have hj : (latticeCurve L).j ∈ V := by
-    have hi : _root_.IsIntegral V (latticeCurve L).j := (GlobalTheory.T.isIntegral_j_of_nonreal_multiplier L β hβ hβim).tower_top
+    have hi : _root_.IsIntegral V (latticeCurve L).j := (_root_.GlobalTheory.CMModel.LatticeJInt.main L β hβ hβim).tower_top
     obtain ⟨y, hy⟩ := IsIntegrallyClosed.isIntegral_iff.mp hi
     rw [← hy]; exact y.2
-  obtain ⟨r, s, t, hint⟩ := GlobalTheory.T.exists_variableChange_intV_of_j_mem (latticeCurve L) V (Units.mk0 u hu) hj hu12
-  have htm := fun i => GlobalTheory.T.torsion_weierstrass_coords_mem_of_intV L β u V N hβ hβim hu12 hN hNodd hu r s t hint (T i) (hT i).1 (hT i).2
-  have hud := fun i => GlobalTheory.T.valuation_derivWeierstrassP_oddTorsion L β u V N hβ hβim hu12 hN hNodd (T i) (hT i).1 (hT i).2
-  have havg := GlobalTheory.T.weierstrassCoeffs_integral_average_change_of_variables V (-L.g₂ / 4) (-L.g₃ / 4) r s t (Units.mk0 u hu) ι
+  obtain ⟨r, s, t, hint⟩ := _root_.GlobalTheory.CMModel.exists_intV_variableChange (latticeCurve L) V (Units.mk0 u hu) hj hu12
+  have htm := fun i => _root_.GlobalTheory.CMModel.torsion_coords_mem_of_odd L β u V N hβ hβim hu12 hN hNodd hu r s t hint (T i) (hT i).1 (hT i).2
+  have hud := fun i => _root_.GlobalTheory.valuation_derivWeierstrassP_torsion_odd L β u V N hβ hβim hu12 hN hNodd (T i) (hT i).1 (hT i).2
+  have havg := _root_.GlobalTheory.CMModel.intV_average V (-L.g₂ / 4) (-L.g₃ / 4) r s t (Units.mk0 u hu) ι
     (fun i => L.weierstrassP (T i)) (fun i => L.derivWeierstrassP (T i) / 2) hint hcard
     (fun i => (htm i).1) (fun i => (htm i).2)
     (fun i => by
       show V.valuation (2 * (L.derivWeierstrassP (T i) / 2)) = V.valuation u ^ 3
       rw [mul_div_cancel₀ _ two_ne_zero]; exact hud i)
-  obtain ⟨h1, h2, h3, -⟩ := GlobalTheory.T.galoisStable_lattice_points_symmetric_mem F L ι T hg2 hg3 hst (fun i => (hT i).1)
+  obtain ⟨h1, h2, h3, -⟩ := _root_.GlobalTheory.CMModel.stable_sym_mem F L ι T hg2 hg3 hst (fun i => (hT i).1)
   have hnF : ((Fintype.card ι : ℕ) : ℂ) ∈ F := natCast_mem F _
   refine ⟨⟨Units.mk0 u hu, (∑ i, L.weierstrassP (T i)) / Fintype.card ι,
     (∑ i, (3 * L.weierstrassP (T i) ^ 2 + -L.g₂ / 4) / (2 * (L.derivWeierstrassP (T i) / 2))) / Fintype.card ι,

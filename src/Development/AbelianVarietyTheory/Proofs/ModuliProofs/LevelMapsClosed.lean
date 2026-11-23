@@ -8,11 +8,11 @@ public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsObjTwis
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSabCancel
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSabMapOfBaseEq
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsReducedIsNormalSchemeIsLocallyNoetherianOfSmoo
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LevelMapFibreOrbit
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LevelMapFibreSimplyTransitiveOfLaws
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LevelMapFiniteEtaleSurjectiveOfLaws
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LevelMapsOfParts
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ModuliRepOfBase
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.NsmulMemSmulTop
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ModuliRepOfBase
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ObjIsAbelianSchemeDimRigidifiedSym
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ObjPull
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ObjRigidClosed
@@ -75,7 +75,7 @@ theorem levelMaps_closed : Out.Laws → ∀ (E : Type) [Field E] [NumberField E]
     (exists_obj_twist_by_similitude hsim) hsim
   exact levelMaps_of_parts (exists_levelMap hsm hid hlow hrep) hact
     (LevCover.levelMap_finite_etale_surjective_of_laws hL)
-    (levelMap_fibre_orbit hL obj_pull hid obj_isAbelianScheme_dim_rigidified_sym hlow
+    (_root_.GlobalTheory.LevelFibre.levelMap_fibre_simply_transitive_of_laws hL obj_pull hid obj_isAbelianScheme_dim_rigidified_sym hlow
       (obj_rigid_closed hL) hrep tateIso_differ_by_similitude hsim hact)
 
 end GlobalTheory

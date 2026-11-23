@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.TeichmullerDepth.HasTeich
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.AddCurveStableOfIntegralGaugedFormalGroupLawStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsPureTypicalCurveWithIntegralTangentStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.FrobeniusMemTypicalCurveSetStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IntegralGaugeBilinearTermOfTypeNeStatement
+public import Formalism.LocalToGlobal.CharacterGerms.NegMem
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.AddCurveStableOfIntegralGaugedFormalGroupLaw
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsPureTypicalCurveWithIntegralTangent
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.FrobeniusMemTypicalCurveSet
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IntegralGaugeBilinearTermOfTypeNe
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ShiftedSumMemTypicalCurveSetStatement
 import Formalism.LocalToGlobal.CharacterGerms.ConstMemTypeSetOfNonneg
 import Formalism.LocalToGlobal.CharacterGerms.ValNonnegLeadingCoeffOfMemTySet
@@ -63,15 +64,15 @@ theorem cartHyp_of_rlaw : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) [NeZero 
   have hh := hL.axes 0
   refine
     { zero := X.zero_mem hlg0 hh V g
-      add := X.add_mem V g (GlobalTheory.T.addCurveStable_of_integralGaugedFormalGroupLaw C V d I κ X hL) hL.uint
+      add := X.add_mem V g (_root_.GlobalTheory.RowLaw.addCvSt_of_rlaw C V d I κ X hL) hL.uint
       neg := X.neg_mem V g hL.odd
       teich := X.teich_mem V g
       Vm := X.V_mem V g
-      Fm := GlobalTheory.T.frobenius_mem_typicalCurveSet C V d I κ X hL g
+      Fm := _root_.GlobalTheory.RowLaw.FrobCurve.frob_mem_tySet C V d I κ X hL g
       sumV := GlobalTheory.T.shiftedSum_mem_typicalCurveSet C V d I κ X hL g
-      t2 := X.val_nonneg_leading_coeff_of_mem_tySet V g hL.lin hh ?_ (GlobalTheory.T.integral_gaugeBilinearTerm_of_type_ne C V d I κ X hL g (hT g))
+      t2 := X.val_nonneg_leading_coeff_of_mem_tySet V g hL.lin hh ?_ (_root_.GlobalTheory.RowLaw.ge_zero_sg1_of_ty_ne C V d I κ X hL g (hT g))
       t3 := X.const_mem_type_set_of_nonneg hlg0 hh V g
-      t4 := GlobalTheory.T.exists_pure_typical_curve_with_integral_tangent C V d I κ X hL hP g (hT g) }
+      t4 := _root_.GlobalTheory.RowLaw.exists_pure_typical C V d I κ X hL hP g (hT g) }
   obtain ⟨w, hw, huw⟩ := hL.sat g
   refine ⟨w, hw, fun c c' => ?_⟩
   split_ifs with h

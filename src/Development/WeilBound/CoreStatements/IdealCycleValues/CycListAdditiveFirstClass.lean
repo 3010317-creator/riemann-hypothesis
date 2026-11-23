@@ -1,11 +1,12 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.BundleChernComparison
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.VerticalNumberZeroOfHorizontalStatement
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.BundleObjects
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.VerticalNumberZeroOfHorizontal
 public import Development.WeilBound.CoreStatements.IdealCycleValues.IntNumLCons
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.WithBotLtOfAddOneLe
 import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.AssemblyCN
 import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.OfSteps
-public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.WithBotLtOfAddOneLe
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,6 +77,6 @@ theorem BaseChangeColon.cycList_additive_first_class : ∀ (O : Type) [CommRing 
       (AdditivityInDivisor.withBot_lt_of_add_one_le hdim) b b' l.get
     rw [← BaseChangeColon.intNumL_cons, ← BaseChangeColon.intNumL_cons, ← BaseChangeColon.intNumL_cons] at key
     exact key
-  · have h0 := GlobalTheory.T.vertical_number_zero_of_horizontal O ϖ hϖ K ι P d hP a f hf hfP W hW hϖW
+  · have h0 := _root_.GlobalTheory.CompanionTheory.Ar.Num.horizontal_vNumL_eq_zero O ϖ hϖ K ι P d hP a f hf hfP W hW hϖW
     show vNumL W _ = vNumL W _ + vNumL W _
     rw [h0 _ (by simpa using hl), h0 _ (by simpa using hl), h0 _ (by simpa using hl), add_zero]

@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.DifferentiableAtChart
 public import Development.AutomorphicArithmetic.IntegralCasts.IsOpenStabOfMemNhds
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BlockUnipotentConjConeDiagonalBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieDerivativeLeOfBoundOnFiniteDirectionsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormSubLeOfLieDerivativeUnipotentSegmentStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BlockUnipotentConjConeDiagonalBound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieDerivativeLeOfBoundOnFiniteDirections
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormSubLeOfLieDerivativeUnipotentSegment
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealLieSmoothingMemSlowlyIncreasing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -126,8 +126,8 @@ theorem GlobalTheory.rap_vari : ∀ (E : Type) [Field E] [NumberField E] [_root_
     ∀ z : BlockIx a j → Cinf E, ‖z‖ ≤ R →
     ‖ψ.1 (infGL E a (unip z * (d * c))) - ψ.1 (infGL E a (d * c))‖ ≤ C * (r j / r i) * M := by
   intro E _ _ _ a t ht i j hij Ω hΩ R hR
-  obtain ⟨C0, hC0, hconj⟩ := GlobalTheory.T.blockUnipotent_conj_coneDiagonal_bound E a t ht i j hij
-  obtain ⟨B, Cb, hCb, hbasis⟩ := GlobalTheory.T.lieDerivative_le_of_bound_on_finiteDirections E a
+  obtain ⟨C0, hC0, hconj⟩ := _root_.GlobalTheory.unip_mul_diag_cone E a t ht i j hij
+  obtain ⟨B, Cb, hCb, hbasis⟩ := _root_.GlobalTheory.CuspRapid.lieD_le_of_basis E a
   obtain ⟨A, hA, hAc⟩ := exists_bound_compact hΩ
   have ha : (0 : ℝ) ≤ a := Nat.cast_nonneg a
   have haA : (0 : ℝ) ≤ a * a * A * A := mul_nonneg (mul_nonneg (mul_nonneg ha ha) hA) hA
@@ -166,7 +166,7 @@ theorem GlobalTheory.rap_vari : ∀ (E : Type) [Field E] [NumberField E] [_root_
     refine ⟨(τ • z', c), ⟨?_, hc⟩, rfl⟩
     rw [Metric.mem_closedBall, dist_zero_right, norm_smul, Real.norm_eq_abs, abs_of_nonneg hτ.1]
     exact (mul_le_of_le_one_left (norm_nonneg _) hτ.2).trans hz'R'
-  have key := GlobalTheory.T.norm_sub_le_of_lieDerivative_unipotentSegment E a ψ (infGL E a (d * c)) _ (fun τ => c⁻¹ * unip (τ • z') * c)
+  have key := _root_.GlobalTheory.CuspRapid.norm_sub_le_of_lieD_unipotent_segment E a ψ (infGL E a (d * c)) _ (fun τ => c⁻¹ * unip (τ • z') * c)
     (Cb * (a * a * A * A * (C0 * (r j / r i) * R)) * M) hNN hu (by
       intro τ hτ
       have e : infGL E a (d * c) * infGL E a (c⁻¹ * unip (τ • z') * c) =

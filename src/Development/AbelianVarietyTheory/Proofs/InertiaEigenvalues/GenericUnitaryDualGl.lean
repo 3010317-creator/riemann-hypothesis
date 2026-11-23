@@ -4,10 +4,11 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomolog
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.GenericUnlinkedGL
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.LanglandsMultisegments
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.StandardCosocleGL
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LanglandsClassificationUnitaryStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SegmentLinkedShiftStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpehLanglandsQuotientStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.StandardModulePropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LanglandsClassificationUnitary
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SegmentLinkedShift
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpehLanglandsQuotient
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.StandardModuleProperties
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitarisableSegmentTwistPrecedesAddOneLe
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -159,6 +160,6 @@ theorem of_lemmas (hA : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
 theorem genericUnitaryDualGL_of_hypotheses : GlobalTheory.Published.UnitaryDualGL → GlobalTheory.Published.SquareIntegrableSegment →
     GlobalTheory.Published.GenericUnlinkedGL → GlobalTheory.Published.LanglandsMultisegments → GlobalTheory.Published.StandardCosocleGL →
     GlobalTheory.Published.GenericUnitaryDualGL :=
-  of_lemmas GlobalTheory.T.langlands_classification_unitary GlobalTheory.T.standard_module_properties GlobalTheory.T.speh_langlands_quotient GlobalTheory.T.segment_linked_shift
+  of_lemmas _root_.GlobalTheory.LocGL.exists_isL_of_unitary_twists _root_.GlobalTheory.LocGL.IrrProdL.isL_sum_of_isIrreducible _root_.GlobalTheory.LocGL.isL_speh_nu _root_.GlobalTheory.SmGL.Segment.linked_nu_nu_sub_one
 
 end GlobalTheory.GenericUnitaryBridge

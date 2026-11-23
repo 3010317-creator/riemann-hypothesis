@@ -2,11 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsWeakOfDatum
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdelicZakThetaExistsUniqueStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.MeanRealTorusNormalisedThetaMulConjStatement
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.Fischer
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.MeanRealTorusNormalisedThetaMulConj
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaInnerProductEqRealTorusMeanStatement
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RealPointsClassicalModelRealVectorSpaceStatement
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.SymplecticCharacterRealFinitePointsMatchStatement
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaFunctionSpaceHeisenbergLawsStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaInnerProductEqRealTorusMeanStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -82,7 +83,7 @@ theorem ipO_rho_Th : ∀ (D : D7) (S T : HSp D) (C : Ctx S T), ∀ (μ : Measure
     unfold heisO
     rw [hψ w w₀ hw hw₀, hZ.2 _ (isRealPt_add hw hw₀), hadd]
   obtain ⟨N₀, hN₀, hip⟩ := GlobalTheory.T.thetaInnerProduct_eq_realTorusMean D S T C μ 𝓕 hF _ _ hT₁ hT₂
-  obtain ⟨N₁, hN₁, hsw⟩ := GlobalTheory.T.mean_realTorus_normalisedTheta_mul_conj D.host.E T.rank C.X C.g C.q0 C.hr C.bas C.idx S.rank C.sympl C.even
+  obtain ⟨N₁, hN₁, hsw⟩ := _root_.GlobalTheory.Ker.Mean.mean_thR_mul_conj D.host.E T.rank C.X C.g C.q0 C.hr C.bas C.idx S.rank C.sympl C.even
     x₁ hx₁ x₂ hx₂ φ₁ φ₂ hφ₁ hφ₂
   obtain ⟨⟨Fd, hFd⟩, hint⟩ := hip (N₀ * N₁) (Nat.mul_pos hN₀ hN₁) (dvd_mul_right _ _)
   rw [hint Fd hFd (fun v => cexp (π * I * (EFR C.X v (C.realPt w₁ - C.realPt w₂) : ℝ)) *

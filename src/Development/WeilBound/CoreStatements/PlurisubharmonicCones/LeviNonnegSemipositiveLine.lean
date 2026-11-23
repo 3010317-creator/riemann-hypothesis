@@ -3,12 +3,11 @@ module
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.CoordinateIdeals
 public import ReciprocityTheory.AnalyticForms.MaIntEmpty
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ConeTangentLiftInChart
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ConeTangentLiftInChartStatement
 public import Development.WeilBound.CoreStatements.PlurisubharmonicCones.ContDiffAtLogH
+public import Mathlib.Analysis.Calculus.Deriv.Prod
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
-public import Mathlib.Analysis.Calculus.Deriv.Prod
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
@@ -155,7 +154,7 @@ theorem levi_nonneg_semipositive_line : ∀ (K : Type) [Fintype K] (J : K → Ty
   obtain ⟨a, t, ht, c, hc, rfl⟩ := D.chart_cover z hz
   have ht' : t ∈ Metric.ball (0 : Fin (Fintype.card Ψ * D.j * (D.N - D.j)) → ℂ) 1 :=
     mem_ball_zero_iff.2 (ht.trans_lt (by norm_num))
-  obtain ⟨u, c', hu⟩ := GlobalTheory.T.cone_tangent_lift_in_chart K J II Ψ Ω W D a t ht' _
+  obtain ⟨u, c', hu⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.coneTangent_eq_fderiv_add_torusSmul K J II Ψ Ω W D a t ht' _
     (coneTangent_inv D.arith.2.1.2.1 ((D.chart a).mem t ht') hc hw)
   exact (h a t ht u).trans_eq (levi_of_chart (D.chart a) hA ht' hc hu).symm
 

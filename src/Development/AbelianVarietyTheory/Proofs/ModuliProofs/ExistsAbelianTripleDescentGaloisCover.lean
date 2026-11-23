@@ -4,16 +4,17 @@ public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsGalois
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSingle
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsAbelianSchemeAndExtendOfGenericHoms
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.AbelianSchemeDescendsGaloisCoverStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.AbelianSchemeDescendsGaloisCover
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.EqOneOfSurjectiveAppTopOfSection
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsDescentLinearisedLineBundleGaloisCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsGenOfRigidifiedFaithfullyFlatDescentStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsDescentLinearisedLineBundleGaloisCover
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsGenOfRigidifiedFaithfullyFlatDescent
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLinearisation
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPrimitiveNormalisation
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.GaloisCoverDescentAndCartesianSquares
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsProperAndExistsIsAmpleLB
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsQProjOverCompOfIsFiniteNoetherianBase
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.RelAmpleKTrivOfFiniteEtaleCover
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.GaloisCoverDescentAndCartesianSquares
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -189,7 +190,7 @@ theorem eq_zero_of_pull (hG : Out.GlobalFnsSt) {S S' : Scheme.{0}} (π : S' ⟶ 
     [QuasiCompact π] {A : Over S} [GrpObj A] (hA : IsAbelianScheme A) (c : Pic A.left)
     (h₀ : pull (η[A]).left c = 0) (h₁ : pull (fibreProj A π).left c = 0) : c = 0 := by
   obtain ⟨N, hN, rfl⟩ := cls_surj c
-  exact (cls_eq_zero_iff hN).2 (T.exists_gen_of_rigidified_faithfullyFlat_descent hG S S' π A N hA hN ‹_› ‹_› ‹_›
+  exact (cls_eq_zero_iff hN).2 (_root_.GlobalTheory.exists_gen_of_rigidified_of_flat_baseChange hG S S' π A N hA hN ‹_› ‹_› ‹_›
     ((cls_eq_zero_iff (pull_isLB hN _)).1 h₀) ((cls_eq_zero_iff (pull_isLB hN _)).1 h₁))
 
 section Triple
@@ -281,7 +282,7 @@ theorem exists_sab_descent_of_galoisCover : Out.Laws → Out.Laws2 → (∀ (S :
     have := isProper_str K N
     exact LocallyOfFiniteType.isLocallyNoetherian (i ≫ PSpace.str K N)
   have hB : IsAbelianScheme t.G := AbelianSchemeGerms.isAbelianScheme_of_proper _ t.semi
-  obtain ⟨A, _, φ, hA, gp, hφ⟩ := T.exists_abelianScheme_descent_of_galoisCover K X Y π sY Ga ρ t.G (fun a => (ν a).φ) hπ
+  obtain ⟨A, _, φ, hA, gp, hφ⟩ := _root_.GlobalTheory.abelianScheme_descends_galoisCover K X Y π sY Ga ρ t.G (fun a => (ν a).φ) hπ
     (RelAmpleQProj.isQProjOver_of_relAmple K X (π ≫ sY) t.G t.PP.L
       (isQProjOver_comp_of_isFinite_noetherian K X Y π sY hπ.fin hq) t.PP.isLB ha) hB (fun a => (ν a).cart) ν₁ νm
   have := hA.comm
@@ -299,7 +300,7 @@ theorem exists_sab_descent_of_galoisCover : Out.Laws → Out.Laws2 → (∀ (S :
     (fun a => (ν a).φ) hπ.mul νm (fun a => one_comm (ν a).cart) t.PP.rig t.PP.rigGen fun a => by
       obtain ⟨w, hw, -⟩ := (ν a).lin
       exact ⟨w, hw⟩
-  obtain ⟨M, hM, iM⟩ := T.exists_descent_linearised_lineBundle_galoisCover _ _ φ Ga _ t.PP.L hφ t.PP.isLB u hu₁ hu₂
+  obtain ⟨M, hM, iM⟩ := _root_.GlobalTheory.LinDescent.exists_descent_of_isGaloisCover _ _ φ Ga _ t.PP.L hφ t.PP.isLB u hu₁ hu₂
   have hc : pull φ (cls M hM) = cls t.PP.L t.PP.isLB := ((cls_eq_iff _ (pull_isLB hM φ)).2 iM).symm
   obtain ⟨PP, cub, sym, iso, -, prim, adj⟩ := PrimNorm.exists_primitive_normalisation hG E H Y A act M hA hM
     ((cls_eq_zero_iff (isLB_cube _ hM)).1 ((cls_cube _ hM).trans (theorem_of_cube_descends hG t hA gp _ hc)))

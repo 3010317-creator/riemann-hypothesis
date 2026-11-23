@@ -4,8 +4,9 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowMulM
 public import Mathlib.RingTheory.Nilpotent.Exp
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFontaineThetaOnAinf
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyThetaOnBdRPlusPeriodData
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TeichmullerEpsilonSubExpMemHodgeFiltrationStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaBdRPlusSurjectiveKerUnitsEquivariantStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TeichmullerEpsilonSubExpMemHodgeFiltration
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsCrisP
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaBdRPlusSurjectiveKerUnitsEquivariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +47,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsCrisP
 
 @[expose] public section
 
@@ -162,7 +162,7 @@ theorem epsT_sub_mem {P : LocPrime l} {AI : LocAinf l P} (T : LocTied l P AI) (s
     io AI (epsT AI s) - oB P (P.ζQ s) ∈ FilB P 1 := by
   obtain ⟨y, h1, h2⟩ := T.om (P.ζQ s)
   refine (GlobalTheory.ThetaTie.fil_nat T 1 _).2 ⟨GlobalTheory.MemLoc.aDp l (epsT AI s) - y, ?_, ?_⟩
-  · rw [← (GlobalTheory.T.thetaBdRPlus_surjective_ker_units_equivariant l).2.1, map_sub, h2, (GlobalTheory.T.thetaBdRPlus_surjective_ker_units_equivariant l).2.2.2.1, epsT,
+  · rw [← (_root_.GlobalTheory.MemLoc.thetaD_props l).2.1, map_sub, h2, (_root_.GlobalTheory.MemLoc.thetaD_props l).2.2.2.1, epsT,
       WittVector.fontaineTheta_teichmuller, untilt_εroot, AI.ζ_eq, sub_self]
   · rw [map_sub, map_sub, h1, io_apply, GlobalTheory.ThetaTie.eD_ιA]
 
@@ -205,7 +205,7 @@ theorem epsT_pow_taylor : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : Lo
       rw [hs (fun j => (j.factorial : ℚ_[l])⁻¹), ← map_pow, hπ, hc]
       change io AI (epsT AI s) ^ l ^ s - _ ∈ _
       rw [← map_pow, epsT_pow]
-      exact GlobalTheory.T.teichmullerEpsilon_sub_exp_mem_hodgeFiltration l P AI T M)
+      exact _root_.GlobalTheory.ExpImage.TaylorEps.eps_sub_exp l P AI T M)
   rw [hs (fun j => ((m : ℚ_[l]) / ((l ^ s : ℕ) : ℚ_[l])) ^ j / (j.factorial : ℚ_[l])), ← map_pow,
     ← map_pow, ← map_mul, hπ, Subalgebra.coe_mul, hc, Nat.cast_pow] at key
   rw [map_pow, map_pow]

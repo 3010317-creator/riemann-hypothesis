@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.AdmissibleBaseOfCompleteDvr
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIsoOnGStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaRecognitionLabelsAgreeOfIsoStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaRecognitionLatticeIsoAndTermsAgreeStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaRecognitionMatchedPartsDimEqStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.NotAllMatchRankZero
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsIsoOnG
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaRecognitionLabelsAgreeOfIso
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaRecognitionLatticeIsoAndTermsAgree
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaRecognitionMatchedPartsDimEq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,10 +56,10 @@ namespace GlobalTheory.Ex.Recognition
 
 theorem urec_of_abelian : UrCSt → URecSt := by
   intro hC R _ _ D D' h1 h2 h3 h4 C _ _ _ _ _ N N' ν ν' q q' n hp ho hn hi hi' ht ht' mt
-  obtain ⟨hA, hg⟩ := GlobalTheory.T.thetaRecognition_matched_parts_dim_eq C N N' q q' n _ _ hp ho hn hi hi' ht ht' mt
-  obtain ⟨e, hB, hT⟩ := GlobalTheory.T.thetaRecognition_lattice_iso_and_terms_agree C N N' q q' n _ _ hp ho hn hi hi' ht ht' mt hA
+  obtain ⟨hA, hg⟩ := _root_.GlobalTheory.MatchParts.match_parts C N N' q q' n _ _ hp ho hn hi hi' ht ht' mt
+  obtain ⟨e, hB, hT⟩ := _root_.GlobalTheory.MatchTerm.main C N N' q q' n _ _ hp ho hn hi hi' ht ht' mt hA
   obtain ⟨I, hOB, hl, hG⟩ := hC R D D' h1 h2 h3 h4 C N N' ν ν' q q' n hp ho hn hi hi' ht ht' mt hA hg e hB hT
-  obtain ⟨J, hJ, hJe, hOG⟩ := GlobalTheory.T.exists_numD_iso_onG_of_allMatch C N N' q q' n _ _ hp ho hn hi hi' ht ht' mt hA e hB hT I hOB
+  obtain ⟨J, hJ, hJe, hOG⟩ := _root_.GlobalTheory.Ex.RecPeriods.exists_iso_onG C N N' q q' n _ _ hp ho hn hi hi' ht ht' mt hA e hB hT I hOB
   subst hJ hJe
-  exact ⟨J, GlobalTheory.T.thetaRecognition_labels_agree_of_iso C N N' q q' n _ _ hp ho hn hi hi' ht ht' mt hA J hB hOG hl, hG⟩
+  exact ⟨J, _root_.GlobalTheory.LabelsAgree.main C N N' q q' n _ _ hp ho hn hi hi' ht ht' mt hA J hB hOG hl, hG⟩
 end GlobalTheory.Ex.Recognition

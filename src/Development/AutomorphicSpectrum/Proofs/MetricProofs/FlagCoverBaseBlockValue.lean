@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TransPtBase
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CoordinateRatioValueAtPointStatement
+public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.CoordinateIdeals
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CoordinateRatioValueAtPoint
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,7 +56,7 @@ theorem transPt_block_base : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k
   intro K _ ι _ Φ _ y Ψ _ _ N j M K' _ ι' _ Φ' _ y' M' Cv z₁ z₀ kb hz hO
   obtain ⟨c₀, hc₀, e₀⟩ := hO
   obtain ⟨c, hc⟩ := hz.1 (Cv.κ kb).1
-  obtain ⟨hy, hv⟩ := GlobalTheory.T.coordinate_ratio_value_at_point K' ι' Φ' y' z₁ (Cv.κ kb).1 c hz hc
+  obtain ⟨hy, hv⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.CovGraph.isValueAt_coord_ratio K' ι' Φ' y' z₁ (Cv.κ kb).1 c hz hc
   have hw : ∀ i : ι kb.1, ∃ m : ι' (Cv.κ kb).1, Cv.v ⟨kb, i⟩ = ⟨Cv.κ kb, m⟩ := fun i => by
     have h1 := Cv.block.2.2.1 ⟨kb, i⟩
     rcases hq : Cv.v ⟨kb, i⟩ with ⟨k, m⟩

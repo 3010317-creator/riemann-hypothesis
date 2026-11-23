@@ -6,7 +6,9 @@ public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.Glo
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CubWeilOneOfTrivPull
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemKernelOfCubWeilOrthogonal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PdivisibleBaseChangeIsoSemiabelian
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TheoremOfCubeAbelianSchemeOverArbitraryBase
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CubeTheorem
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.CubeTheorem.CubeTheoremHolds
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.PointEqOfSubsingleton
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.CubWeilOneLeft
 import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrystallinePull2SumCup
 import Mathlib.Algebra.Order.Floor.Extended
@@ -53,7 +55,6 @@ import Development.AbelianVarietyTheory.Definitions.Degenerations.MorAlgSt
 import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGDatumOneOneOne
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsEtPlace
 import Development.AbelianVarietyTheory.Definitions.Divisors.NotCompactOfMEqOne
-public import Development.AbelianVarietyTheory.Definitions.Uniformization.PointEqOfSubsingleton
 import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.HenselianLocalRingOfIsAdicComplete
 
 @[expose] public section
@@ -77,7 +78,7 @@ theorem triv_slice_of_forall_weilIs_one : ∀ (S : Scheme.{0}) (A : Over S) [Grp
       ext <;> simp [Hom.one_def]
     rw [AbDual.ev, e'] at e
     exact e
-  obtain ⟨t, ht⟩ := WeilIntegral.triv_theta CubeTop.cubeTheorem hB hL
+  obtain ⟨t, ht⟩ := WeilIntegral.triv_theta _root_.GlobalTheory.SpreadingModels.cubeTheorem_holds hB hL
   obtain ⟨t', ht', hn'⟩ := AbLaw.Cube.exists_normalised hL t ht
   let M : RigLB (A ⊗ A) := ⟨P, r, hL, hr⟩
   have c : CubicalStr (A ⊗ A) M := AbLaw.Cube.cubicalOfNormalised globalFns_holds hB M t' ht' hn'

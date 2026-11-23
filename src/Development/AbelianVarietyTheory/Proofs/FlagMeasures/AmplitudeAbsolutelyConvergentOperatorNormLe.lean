@@ -1,19 +1,23 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeDegenerateOperatorNormLeRealPlace
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.BlockAnti
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ExistsIsFolnerUWset
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplificationAbsoluteSidePieceBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeOperatorNormFinalArithmeticLeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselZhatInvAndRegularIffStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ContinuousOnMajorantFlagLengthsStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegrableAndNormAmplitudeLeOfPairingsStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralBoundByDyadicSummationStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MajorantFlagLengthsInvarianceTorusPositivityStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalFormRootMeasureHaarUnimodularStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TopMinorAndGramNumberLeMajorantLengthsStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TwoFlagsGramNumberAndFibreSetsMeasurableStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TwoFlagsGramNumberMulTopMinorNormLeTwoPowStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplificationAbsoluteSidePieceBound
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeOperatorNormFinalArithmeticLe
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselZhatInvAndRegularIff
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UpperOff
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ContinuousOnMajorantFlagLengths
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegrableAndNormAmplitudeLeOfPairings
+public import Mathlib.Analysis.Real.Sqrt
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralBoundByDyadicSummation
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MajorantFlagLengthsInvarianceTorusPositivity
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TopMinorAndGramNumberLeMajorantLengths
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TwoFlagsGramNumberMulTopMinorNormLeTwoPow
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeDegenerateOperatorNormLeRealPlace
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalFormRootMeasureHaarUnimodular
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TwoFlagsGramNumberAndFibreSetsMeasurable
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -69,7 +73,7 @@ variable {k r : ℕ}
 theorem dmin_inv (z z' : Fin (2 * r + k + 1) → ℂ) {γ : Mat k r} (hγ : γ ∈ GG k r) (l : Fin (r + 2)) :
     Dmin k r z' z γ⁻¹ l = star (Dmin k r z z' γ l) := by
   unfold Dmin
-  rw [(GlobalTheory.T.besselZhat_inv_and_regular_iff k r z z' γ hγ).1, ← Matrix.det_conjTranspose, Matrix.conjTranspose_submatrix]
+  rw [(_root_.GlobalTheory.SgInf.RegInv.zhat_inv_and_reg k r z z' γ hγ).1, ← Matrix.det_conjTranspose, Matrix.conjTranspose_submatrix]
 
 theorem dr_inv (z z' : Fin (2 * r + k + 1) → ℂ) {γ : Mat k r} (hγ : γ ∈ GG k r) :
     Dr k r z' z γ⁻¹ = Dr k r z z' γ := by
@@ -152,7 +156,7 @@ theorem side {Wq : Type} [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [Fin
   have q2 : (2 : ℝ) ^ i' * H₁ ≤ 2 ^ (i + i') * H₁ := by
     rw [pow_add]; gcongr; exact le_mul_of_one_le_left (by positivity) p1
   have hR : (1 : ℝ) ≤ 2 ^ (i + i') * H₁ := one_le_mul_of_one_le_of_one_le (one_le_pow₀ one_le_two) hH
-  have key := (GlobalTheory.T.amplification_absolute_side_piece_bound k r z z' π' ψ' μG μW' νS' μR νR Φ' γ c κ s H₁ De _ hr hk hκ hs hH h1 h2 h3 h4 h5 h6).2
+  have key := (_root_.GlobalTheory.Amp.AbsSide.abs_side k r z z' π' ψ' μG μW' νS' μR νR Φ' γ c κ s H₁ De _ hr hk hκ hs hH h1 h2 h3 h4 h5 h6).2
     w hw i' _ y hR hy
   refine le_trans (lintegral_mono' (Measure.restrict_mono ?_ le_rfl) fun x => ?_) (key.trans (le_of_eq ?_))
   · rintro x ⟨a1, a2, a3, a4, a5⟩
@@ -197,14 +201,14 @@ theorem abs_core : ∀ (k r : ℕ) {Wp : Type} [NormedAddCommGroup Wp] [InnerPro
   have cΦ' : ContinuousOn Φ' (GG k r) := o2.2.2.2.2.2.2.2.2.2.2.2.2.1
   have tf' := twoFl_inv tf
   have de' := deOK_inv hγ de
-  have nr' := (GlobalTheory.T.normalFormRootMeasure_haar_unimodular k r γ s μR hs nr).2.2.2
+  have nr' := (_root_.GlobalTheory.Amp.RootMeas.normR_facts k r γ s μR hs nr).2.2.2
   have qm' := quot_map hγ hG qm
   have hD0 : Dr k r z z' γ ≠ 0 := tf.2.2.2.2.2.2
   have hD : 0 < Dr k r z z' γ := lt_of_le_of_ne (norm_nonneg _) hD0.symm
   have hDe : (Dr k r z z' γ)⁻¹ ≤ De := de.2 ⟨r, by omega⟩ le_rfl (norm_ne_zero_iff.1 hD0)
   have hDe1 : 1 ≤ De := de.1
-  have n1 := (GlobalTheory.T.amplification_absolute_side_piece_bound k r z z' π' ψ' μG μW' νS' μR νR Φ' γ c κ s H₁ De _ hr hk hκ hs hH o2 m2 tf de nr qm).1
-  have n2 := (GlobalTheory.T.amplification_absolute_side_piece_bound k r z' z π ψ μG μW νS _ _ Φ γ⁻¹ c κ s H₁ De _ hr hk hκ hs hH o1 m1 tf' de' nr' qm').1
+  have n1 := (_root_.GlobalTheory.Amp.AbsSide.abs_side k r z z' π' ψ' μG μW' νS' μR νR Φ' γ c κ s H₁ De _ hr hk hκ hs hH o2 m2 tf de nr qm).1
+  have n2 := (_root_.GlobalTheory.Amp.AbsSide.abs_side k r z' z π ψ μG μW νS _ _ Φ γ⁻¹ c κ s H₁ De _ hr hk hκ hs hH o1 m1 tf' de' nr' qm').1
   rw [MeasurableEquiv.map_apply] at n2
   have a1 : ∀ᵐ x ∂νR, Matrix.of x ∈ GG k r ∧ Yv k r z z' γ (Matrix.of x) ≠ 0 := by
     filter_upwards [compl_mem_ae_iff.2 n1] with x hx
@@ -220,20 +224,20 @@ theorem abs_core : ∀ (k r : ℕ) {Wp : Type} [NormedAddCommGroup Wp] [InnerPro
     unfold Kc
     positivity
   have me : Measurable (lmulM γ : Mt k r → Mt k r) := (continuous_lmul γ).measurable
-  have main := GlobalTheory.T.integrable_and_norm_amplitude_le_of_pairings k r νR Φ Φ' γ c (κ / s * Kc k r De * c * 24 * (r : ℝ) ^ (2 * r) * H₁ ^ (24 * r ^ 3) *
+  have main := _root_.GlobalTheory.Amp.OpNorm.integrable_and_norm_ampJ_le k r νR Φ Φ' γ c (κ / s * Kc k r De * c * 24 * (r : ℝ) ^ (2 * r) * H₁ ^ (24 * r ^ 3) *
     De ^ (2 * r) * (2 ^ r / Dr k r z z' γ) ^ (k - 2 - r)) hγ n0 cΦ cΦ' hc (by positivity) ?_
   · refine ⟨main.1, main.2.trans ?_⟩
-    have := GlobalTheory.T.amplitudeOperatorNorm_finalArithmetic_le k r H₁ De _ hr hk hH hDe1 hD
+    have := _root_.GlobalTheory.Amp.absArith k r H₁ De _ hr hk hH hDe1 hD
     refine le_trans (le_of_eq ?_) (mul_le_mul_of_nonneg_left this (by positivity : 0 ≤ κ / s))
     unfold Kc
     field_simp
   intro v w hv hw
   have mA : Measurable (ext0 fun g => ‖⟪v, Φ g⟫_ℂ‖) := measurable_amplifierAbsConvExtendByZero (ContinuousOn.inner (𝕜 := ℂ) continuousOn_const cΦ).norm
   have mB : Measurable (ext0 fun g => ‖⟪w, Φ' g⟫_ℂ‖) := measurable_amplifierAbsConvExtendByZero (ContinuousOn.inner (𝕜 := ℂ) continuousOn_const cΦ').norm
-  have mS : ∀ z, Measurable (ext0 (Sg k r z)) := fun z => measurable_amplifierAbsConvExtendByZero (GlobalTheory.T.continuousOn_majorantFlagLengths k r z).2
-  have mY : Measurable (ext0 (Yv k r z' z γ⁻¹)) := (GlobalTheory.T.twoFlagsGramNumber_and_fibre_sets_measurable k r z' z γ⁻¹ tf'.2.2.2.2.1).1
-  have mY' : Measurable (ext0 (Yv k r z z' γ)) := (GlobalTheory.T.twoFlagsGramNumber_and_fibre_sets_measurable k r z z' γ hγ).1
-  have dy := GlobalTheory.T.lintegral_bound_by_dyadic_summation (Mt k r) νR (fun x => ext0 (fun g => ‖⟪v, Φ g⟫_ℂ‖) (lmulM γ x))
+  have mS : ∀ z, Measurable (ext0 (Sg k r z)) := fun z => measurable_amplifierAbsConvExtendByZero (_root_.GlobalTheory.Amp.LenCont.lA_Sg_continuousOn k r z).2
+  have mY : Measurable (ext0 (Yv k r z' z γ⁻¹)) := (_root_.GlobalTheory.Amp.YMeas.yv_measurable k r z' z γ⁻¹ tf'.2.2.2.2.1).1
+  have mY' : Measurable (ext0 (Yv k r z z' γ)) := (_root_.GlobalTheory.Amp.YMeas.yv_measurable k r z z' γ hγ).1
+  have dy := _root_.GlobalTheory.Dyadic.dyadic_summation (Mt k r) νR (fun x => ext0 (fun g => ‖⟪v, Φ g⟫_ℂ‖) (lmulM γ x))
     (ext0 fun g => ‖⟪w, Φ' g⟫_ℂ‖) (fun x => ext0 (Sg k r z) (lmulM γ x)) (ext0 (Sg k r z'))
     (fun x => ext0 (Yv k r z' z γ⁻¹) (lmulM γ x)) (ext0 (Yv k r z z' γ)) r (k - 2 - r) H₁ De (Dr k r z z' γ) _ _
     (mA.comp me) mB ((mS z).comp me) (mS z') (mY.comp me) mY' hr hkk hH hDe1 hD hK hK ?_ ?_
@@ -248,16 +252,16 @@ theorem abs_core : ∀ (k r : ℕ) {Wp : Type} [NormedAddCommGroup Wp] [InnerPro
     have hx' : γ * Matrix.of x ∈ GG k r := isClosedSub_GG.2.2.2.1 _ hγ _ hx.1
     have e1 : ∀ f : Mat k r → ℝ, ext0 f (lmulM γ x) = f (γ * Matrix.of x) := fun f => cochainExtendByZeroSubgroup_of_mem f hx'
     simp only [e1, cochainExtendByZeroSubgroup_of_mem _ hx.1]
-    have s1 : 1 ≤ Sg k r z (γ * Matrix.of x) := ((GlobalTheory.T.majorant_flag_lengths_invariance_torus_positivity k r z tf.1).2.2 _).1
-    have s2 : 1 ≤ Sg k r z' (Matrix.of x) := ((GlobalTheory.T.majorant_flag_lengths_invariance_torus_positivity k r z' tf.2.1).2.2 _).1
-    obtain ⟨b1, b2, b3⟩ := GlobalTheory.T.top_minor_and_gram_number_le_majorant_lengths k r z z' γ tf _ hx.1
-    obtain ⟨-, b5, b6⟩ := GlobalTheory.T.top_minor_and_gram_number_le_majorant_lengths k r z' z γ⁻¹ tf' _ hx'
+    have s1 : 1 ≤ Sg k r z (γ * Matrix.of x) := ((_root_.GlobalTheory.Amp.LInv.lengths_basic k r z tf.1).2.2 _).1
+    have s2 : 1 ≤ Sg k r z' (Matrix.of x) := ((_root_.GlobalTheory.Amp.LInv.lengths_basic k r z' tf.2.1).2.2 _).1
+    obtain ⟨b1, b2, b3⟩ := _root_.GlobalTheory.Amp.YBound.dr_y_le k r z z' γ tf _ hx.1
+    obtain ⟨-, b5, b6⟩ := _root_.GlobalTheory.Amp.YBound.dr_y_le k r z' z γ⁻¹ tf' _ hx'
     rw [Matrix.nonsing_inv_mul_cancel_left γ (Matrix.of x) (isUnit_det_of_mem_GG hγ), dr_inv z z' hγ] at b6
     refine ⟨norm_nonneg _, norm_nonneg _, s1, s2, lt_of_le_of_ne b5 hx2.symm, lt_of_le_of_ne b2 hx.2.symm, ?_, ?_,
       max_bounds hr s1 hDe1 hDe (zero_le_one.trans s2) (le_max_right _ _) b6,
       max_bounds hr s1 hDe1 hDe (zero_le_one.trans s1) (le_max_left _ _) b3⟩
     · rw [mul_comm (Yv k r z' z γ⁻¹ _)]
-      exact GlobalTheory.T.twoFlagsGramNumber_mul_topMinorNorm_le_two_pow k r z z' γ tf _ hx.1
+      exact _root_.GlobalTheory.Amp.LemA.Yv_mul_Yv_mul_Dr_le k r z z' γ tf _ hx.1
     · refine b1.trans ?_
       rw [show ∀ t : ℝ, t ^ (2 * r) = t ^ r * t ^ r from fun t => by ring]
       exact mul_le_mul (pow_le_pow_left₀ (zero_le_one.trans s2) (le_max_right _ _) _)

@@ -1,14 +1,23 @@
 module
 
-import Formalism.SharpRestriction.CuspSpanNormBounds.NonemptyParameterModels.UnitaryPointsRankZeroSubsingleton
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DefClassNum
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CompleteIsotropicFrameSignatureEigenvectorsStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsBlockDiagUnitaryProductHomStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsOrthonormalFrameOfFlagStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemMaxCompactInterLeviIffFrameStatement
+public import Formalism.RealPlaceAnalysis.Complexify
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CompleteIsotropicFrameSignatureEigenvectors
+public import Formalism.SharpRestriction.CuspSpanNormBounds.GlobAut
+public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsBlockDiagUnitaryProductHom
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Mathlib.LinearAlgebra.Matrix.ConjTranspose
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsOrthonormalFrameOfFlag
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemMaxCompactInterLeviIffFrame
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RiemannianHaarGaugeExistsPosUnique
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RiemannianHaarGaugeVolumeUnitaryGroupEqStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SmallBallAsymptoticsPiWeightedStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RiemannianHaarGaugeVolumeUnitaryGroupEq
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SmallBallAsymptoticsPiWeighted
+import Formalism.SharpRestriction.CuspSpanNormBounds.NonemptyParameterModels.UnitaryPointsRankZeroSubsingleton
 import Formalism.RealPlaceAnalysis.FinalF
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -151,7 +160,7 @@ theorem volume_range : ∀ (n : ℕ) (ε : Fin n → Bool) (ι : Type) [Fintype 
     simp only [hνi, Measure.smul_apply, smul_eq_mul]
     rw [ENNReal.ofReal_div_of_pos (pow_pos hr _), ENNReal.ofReal_mul (hcpos i).le,
       ENNReal.ofReal_toReal (measure_lt_top _ _).ne]
-  have hprod := GlobalTheory.T.smallBall_asymptotics_pi_weighted ι (fun i => Formalism.REAL.UJ (allPos (m i))) νi (fun i x => Formalism.REAL.hs (uMat x - 1))
+  have hprod := _root_.GlobalTheory.smallBall_pi_weight ι (fun i => Formalism.REAL.UJ (allPos (m i))) νi (fun i x => Formalism.REAL.hs (uMat x - 1))
     (fun i => m i ^ 2) w (fun i => (continuous_hs_uMat _).measurable)
     (fun i x => Finset.sum_nonneg fun _ _ => Finset.sum_nonneg fun _ _ => by positivity) hw hfac
   set K : ℝ := ∏ i, w i ^ (-(((m i ^ 2 : ℕ) : ℝ) / 2)) with hK
@@ -172,12 +181,12 @@ theorem volume_range : ∀ (n : ℕ) (ε : Fin n → Bool) (ι : Type) [Fintype 
       _ = 1 := ENNReal.div_self hV0 hVtop
   have hKpos : 0 < K := Finset.prod_pos fun i _ => Real.rpow_pos_of_pos (hw i) _
   have hvol0 : ∀ i, 0 ≤ volU (m i) := fun i => by
-    rw [← GlobalTheory.T.riemannianHaarGauge_volume_unitaryGroup_eq (m i) (c i) (hcg i)]; exact mul_nonneg (hcpos i).le ENNReal.toReal_nonneg
+    rw [← _root_.GlobalTheory.UnitaryVolume.volume_unitary (m i) (c i) (hcg i)]; exact mul_nonneg (hcpos i).le ENNReal.toReal_nonneg
   have hνu : ν Set.univ = ∏ i, ENNReal.ofReal (volU (m i)) := by
     rw [hν, Measure.pi_univ]
     refine Finset.prod_congr rfl fun i _ => ?_
     simp only [hνi, Measure.smul_apply, smul_eq_mul]
-    rw [← GlobalTheory.T.riemannianHaarGauge_volume_unitaryGroup_eq (m i) (c i) (hcg i), ENNReal.ofReal_mul (hcpos i).le,
+    rw [← _root_.GlobalTheory.UnitaryVolume.volume_unitary (m i) (c i) (hcg i), ENNReal.ofReal_mul (hcpos i).le,
       ENNReal.ofReal_toReal (measure_lt_top _ _).ne]
   rw [hα, Set.preimage_univ, hνu, ENNReal.eq_inv_of_mul_eq_one_left h1, ← ENNReal.ofReal_inv_of_pos hKpos,
     ← ENNReal.ofReal_prod_of_nonneg (fun i _ => hvol0 i), ← ENNReal.ofReal_mul (inv_nonneg.2 hKpos.le)]
@@ -198,7 +207,7 @@ private theorem fintype_sum_matrix_mul_eq_sum_mul {n m : ℕ} {ι : Type} [Finty
 theorem exists_frame : ∀ (n : ℕ) (ε : Fin n → Bool) (p q : ℕ), (univ.filter fun a => ε a = true).card = p → (univ.filter fun a => ε a = false).card = q → ∀ (a : ℕ) (j : Fin a → ℕ) (W : Fin (a + 1) → Submodule ℂ (Fin n → ℂ)), IsIsoFlag ε j W → ∃ (T : ∀ i, Matrix (Fin n) (Fin (j i)) ℂ) (P : Matrix (Fin n) (Fin (p - ∑ i, j i)) ℂ) (Q : Matrix (Fin n) (Fin (q - ∑ i, j i)) ℂ), (∀ i, (T i)ᴴ * T i = 1) ∧ (∀ i k, i ≠ k → (T i)ᴴ * T k = 0) ∧ (∀ i k, (T i)ᴴ * Formalism.REAL.Jm ε * T k = 0) ∧ (∀ i, (T i)ᴴ * P = 0) ∧ (∀ i, (T i)ᴴ * Q = 0) ∧ Pᴴ * P = 1 ∧ Qᴴ * Q = 1 ∧ Formalism.REAL.Jm ε * P = P ∧ Formalism.REAL.Jm ε * Q = -Q ∧ (∑ i, (T i * (T i)ᴴ + Formalism.REAL.Jm ε * T i * (T i)ᴴ * Formalism.REAL.Jm ε)) + P * Pᴴ + Q * Qᴴ = 1 ∧ ∀ (l : Fin (a + 1)) (y : Fin n → ℂ), y ∈ W l ↔ (∑ i ∈ univ.filter (fun i : Fin a => i.val < l.val), T i * (T i)ᴴ) *ᵥ y = y := by
   intro n ε p q hp hq a j W hW
   obtain ⟨h0, hmono, hrk, hiso⟩ := hW
-  obtain ⟨T, hTT, hTo, hmem⟩ := GlobalTheory.T.exists_orthonormal_frame_of_flag_alt n a j W h0 hmono hrk
+  obtain ⟨T, hTT, hTo, hmem⟩ := _root_.GlobalTheory.exists_orthonormal_frame_of_flag n a j W h0 hmono hrk
   have hcol : ∀ k (d : Fin (j k)), (fun r => T k r d) ∈ W (Fin.last a) := by
     intro k d
     rw [hmem]
@@ -222,7 +231,7 @@ theorem exists_frame : ∀ (n : ℕ) (ε : Fin n → Bool) (p q : ℕ), (univ.fi
       Finset.sum_mul, Finset.mul_sum]
     rw [Finset.sum_comm]
     exact Finset.sum_congr rfl fun r _ => Finset.sum_congr rfl fun s _ => by ring
-  obtain ⟨P, Q, h1, h2, h3, h4, h5, h6, h7⟩ := GlobalTheory.T.complete_isotropicFrame_signature_eigenvectors n ε p q hp hq a j T hTT hTo hTJT
+  obtain ⟨P, Q, h1, h2, h3, h4, h5, h6, h7⟩ := _root_.GlobalTheory.IsoFrame.complete_isotropic_frame n ε p q hp hq a j T hTT hTo hTJT
   exact ⟨T, P, Q, hTT, hTo, hTJT, h1, h2, h3, h4, h5, h6, h7, hmem⟩
 
 private theorem levi_lemma {n a p' q' : ℕ} {j : Fin a → ℕ} (J : Matrix (Fin n) (Fin n) ℂ)
@@ -336,7 +345,7 @@ theorem volume_maxK_inter_flagM : ∀ (n : ℕ) (ε : Fin n → Bool) (p q : ℕ
     simp only [Fintype.sum_sum_type, Fintype.sum_unique]
     exact levi_lemma (Formalism.REAL.Jm ε) T P Q (fun i => k (Sum.inl i)) (k (Sum.inr (Sum.inl default)))
       (k (Sum.inr (Sum.inr default))) hJJ hJP hJQ e1 e2 hJH
-  obtain ⟨Φ, hΦc, hΦi, hΦu, hΦhs⟩ := GlobalTheory.T.exists_blockDiag_unitary_product_hom n ε _ _ π m S hsurj horth hcross hsumS hcomm
+  obtain ⟨Φ, hΦc, hΦi, hΦu, hΦhs⟩ := _root_.GlobalTheory.BlockDiagEmb.exists_blockDiag_hom n ε _ _ π m S hsurj horth hcross hsumS hcomm
   have hform : ∀ x : ∀ i, Formalism.REAL.UJ (allPos (m i)), uMat (Φ x) =
       (∑ i, (T i * (show Matrix (Fin (j i)) (Fin (j i)) ℂ from uMat (x (Sum.inl i))) * (T i)ᴴ +
         Formalism.REAL.Jm ε * T i * (show Matrix (Fin (j i)) (Fin (j i)) ℂ from uMat (x (Sum.inl i))) * (T i)ᴴ * Formalism.REAL.Jm ε)) +
@@ -350,7 +359,7 @@ theorem volume_maxK_inter_flagM : ∀ (n : ℕ) (ε : Fin n → Bool) (p q : ℕ
     abel
   have hrange : Set.range Φ = maxK ε ∩ flagM ε W := by
     ext g
-    rw [GlobalTheory.T.mem_maxCompact_inter_levi_iff_frame n ε a j W _ _ T P Q ⟨hTT, hTo, hTJT, hTP, hTQ, hPP, hQQ, hJP, hJQ, hsum, hmem⟩ g]
+    rw [_root_.GlobalTheory.FlagLeviRange.mem_maxK_inter_flagM_iff n ε a j W _ _ T P Q ⟨hTT, hTo, hTJT, hTP, hTQ, hPP, hQQ, hJP, hJQ, hsum, hmem⟩ g]
     constructor
     · rintro ⟨x, rfl⟩
       exact ⟨fun i => x (Sum.inl i), x (Sum.inr (Sum.inl default)), x (Sum.inr (Sum.inr default)), hform x⟩

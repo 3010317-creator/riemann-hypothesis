@@ -5,19 +5,23 @@ public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsF
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.MeanLogCovolumeEqMeanClassGroup
 public import Formalism.SharpRestriction.GlobalSchurBounds.StandardLatticesGL3
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditionalStatement
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.EllipticCurveLatticeBaseChangeStable
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsCmCurvesOfWeierstrassCurves
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsEllipticCurvePolarisedLatticeFamilyStatement
+public import Development.AbelianVarietyTheory.Statements.PrincipalLattices.LogHermFormOfUnitDiscriminant
+public import Mathlib.AlgebraicGeometry.EllipticCurve.Weierstrass
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsEllipticCurvePolarisedLatticeFamily
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsIntegralDerivativeCurveHomGoodReductionStatement
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LatticeDeterminedByInvariants
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LogPiSubMeanLogLatticeNormDisc
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.MeanLogLieNormSqEqMeanLogEta
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.MultiplierIffExistsHom
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.SumLogNormEmbeddingEqFinrankMulLogAbsNorm
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IdealPeriodLatticeOfCurveDatum
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LatticeInvariantsPeriodPairDictionaryStatement
+public import Mathlib.Analysis.SpecialFunctions.Elliptic.Weierstrass
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LatticeInvariantsPeriodPairDictionary
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SemiAbelianHomExtensionDvrStatement
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ThetaUniformisationComplexAbelianVarietyStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.Rationality.QCoreGlobPf
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.EllipticCurveLatticeBaseChangeStable
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LatticeDeterminedByInvariants
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.MultiplierIffExistsHom
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.SumLogNormEmbeddingEqFinrankMulLogAbsNorm
 import Formalism.FrobeniusOrbits.FrobeniusOrbitsProofs.SplitK
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -57,7 +61,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.Rationality.QCoreGlobPf
 import Development.AbelianVarietyTheory.Definitions.Foundations.NormSumPairRankZeroOfCurveCoordNorm
 
 @[expose] public section
@@ -109,7 +112,7 @@ theorem exists_family (h2 : Module.finrank ℚ K = 2) (σ : K →+* ℂ) (hσ : 
   obtain ⟨k, hk, hσk, HI⟩ := CMData.exists_field h2 σ hσ
   have hNF : NumberField k := ⟨⟩
   choose W hW hc using HI
-  choose P v Lf h₁ h₂ using fun I ↦ GlobalTheory.T.exists_ellipticCurve_polarised_lattice_family hU hB (𝓞 k) (W I) (hW I)
+  choose P v Lf h₁ h₂ using fun I ↦ _root_.GlobalTheory.exists_polAV_latticeFamily hU hB (𝓞 k) (W I) (hW I)
   choose c hc0 hc using fun I ↦ hc I (Lf I _) (h₂ I _).1 (h₂ I _).2.2
   let J : ClassGroup (𝓞 K) → (FractionalIdeal (𝓞 K)⁰ K)ˣ := fun C ↦ (FractionalIdeal.mk0 K (𝔟 C))⁻¹ * I
   obtain ⟨N₀, hN₀, hk₀, e₀⟩ := exists_field hU hB (algebraMap (𝓞 k) k) (h₁ I) (h₁ I)
@@ -261,7 +264,7 @@ theorem mean_log_period : ∀ (D : D7), admG1 D → ∀ (cc : Ideal (𝓞 D.host
   have hL₀ : ∀ z, z ∈ lamOf D cc δ ↔ z ∈ L₀.lattice := fun z => by
     rw [hΛ, AddSubgroup.mem_closure_pair, PeriodPair.mem_lattice]
     simp only [zsmul_eq_mul, L₀]
-  obtain ⟨e2, e3, -, -, -, -, hex⟩ := GlobalTheory.T.latticeInvariants_periodPair_dictionary L₀ _ hL₀
+  obtain ⟨e2, e3, -, -, -, -, hex⟩ := _root_.GlobalTheory.LatticeInvariants.invariants_dictionary L₀ _ hL₀
   let σ : D.host.K →+* ℂ := D.host.φ₀.comp D.host.K.val.toRingHom
   have hσ : ¬ ComplexEmbedding.IsReal σ := fun h => by
     obtain ⟨r, hr⟩ : ∃ r : D.host.K, r ^ 2 = -(D.host.d : D.host.K) :=
@@ -291,7 +294,7 @@ theorem mean_log_period : ∀ (D : D7), admG1 D → ∀ (cc : Ideal (𝓞 D.host
   refine Eq.trans ?_ key
   congr 1
   refine (Fintype.sum_equiv (RingHom.equivRatAlgHom M ℂ) _ _ fun s => ?_).symm
-  obtain ⟨f2, f3, -, fa, -, fu, -⟩ := GlobalTheory.T.latticeInvariants_periodPair_dictionary (L s) (L s).lattice.toAddSubgroup fun _ => Iff.rfl
+  obtain ⟨f2, f3, -, fa, -, fu, -⟩ := _root_.GlobalTheory.LatticeInvariants.invariants_dictionary (L s) (L s).lattice.toAddSubgroup fun _ => Iff.rfl
   have hs : g2 (lamConj M (RingHom.equivRatAlgHom M ℂ s) (lamOf D cc δ)) = s (TaylorLogMetric.liftM M (g2 (lamOf D cc δ))) ∧
       g3 (lamConj M (RingHom.equivRatAlgHom M ℂ s) (lamOf D cc δ)) = s (TaylorLogMetric.liftM M (g3 (lamOf D cc δ))) :=
     Classical.epsilon_spec (p := fun Λ' : AddSubgroup ℂ => g2 Λ' = s (TaylorLogMetric.liftM M (g2 (lamOf D cc δ))) ∧

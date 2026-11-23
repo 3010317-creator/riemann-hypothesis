@@ -1,9 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRatPath
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsScalingCompatibleExpansionAtInfinityStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalSquaringPathUniqueConstantLocalRingStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpecInjectiveRingMapCancellationStatement
+public import Mathlib.RingTheory.LaurentSeries
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsScalingCompatibleExpansionAtInfinity
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalSquaringPathUniqueConstantLocalRing
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpecInjectiveRingMapCancellation
+public import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.IsQuasicoherentOfLocallyIso
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,14 +62,14 @@ theorem ratRigid_of_isProper_of_charZero : ∀ (Ω : Type) [Field Ω] [CharZero 
     IsProper H.hom → RatRigid H (𝟙 (Sp Ω)) := by
   intro Ω _ _ H _ hP ξ hξ hrat
   obtain ⟨β, hβ⟩ := hrat
-  obtain ⟨σ, j, r₂, rh, h1, h2, h3, h4, h5, h6⟩ := GlobalTheory.T.exists_scaling_compatible_expansion_at_infinity Ω
+  obtain ⟨σ, j, r₂, rh, h1, h2, h3, h4, h5, h6⟩ := _root_.GlobalTheory.Nef.InfScale.scaling_expansion_infinity Ω
   have comp : ∀ {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C),
       spMap g ≫ spMap f = spMap (g.comp f) := fun f g => by rw [← Spec.map_comp]; rfl
   have compA : ∀ {A B C : Type} [CommRing A] [CommRing B] [CommRing C] (f : A →+* B) (g : B →+* C)
       {Z : Scheme.{0}} (h : Sp A ⟶ Z), spMap g ≫ spMap f ≫ h = spMap (g.comp f) ≫ h := by
     intros; rw [← Category.assoc, comp]
-  have canc := (GlobalTheory.T.spec_injectiveRingMap_cancellation).1
-  have cancS := (GlobalTheory.T.spec_injectiveRingMap_cancellation).2
+  have canc := (_root_.GlobalTheory.Nef.spMap_injective_cancel).1
+  have cancS := (_root_.GlobalTheory.Nef.spMap_injective_cancel).2
   haveI := hP
   haveI : IsSeparated H.hom := inferInstance
   have sqr_hom : sqr H ≫ H.hom = H.hom := Over.w (𝟙 H * 𝟙 H)
@@ -128,12 +132,12 @@ theorem ratRigid_of_isProper_of_charZero : ∀ (Ω : Type) [Field Ω] [CharZero 
     have e' : (2 : ℕ) ^ (n + 1) = 1 := by exact_mod_cast e
     have : 1 < (2 : ℕ) ^ (n + 1) := Nat.one_lt_two_pow (by omega)
     omega
-  have hz := (GlobalTheory.T.formalSquaringPath_unique_constant_localRing (Sp Ω) H Ω).2.1 (spMap (PowerSeries.constantCoeff (R := Ω)) ≫ l.l)
+  have hz := (_root_.GlobalTheory.Nef.triv_unique (Sp Ω) H Ω).2.1 (spMap (PowerSeries.constantCoeff (R := Ω)) ≫ l.l)
     (by rw [Category.assoc, ← hζs, compA, hcc])
   have hzero : spMap (PowerSeries.constantCoeff (R := Ω)) ≫ l.l = 𝟙 (Sp Ω) ≫ unitSec H := by
     rw [hz, Category.assoc (spMap _) l.l H.hom, hζ2, comp, hcC, show spMap (RingHom.id Ω) = 𝟙 (Sp Ω) from Spec.map_id _]
   have hζt : l.l = triv H (𝟙 (Sp Ω)) :=
-    (GlobalTheory.T.formalSquaringPath_unique_constant_localRing (Sp Ω) H Ω).2.2 inferInstance (2⁻¹) hunit (𝟙 _) l.l
+    (_root_.GlobalTheory.Nef.triv_unique (Sp Ω) H Ω).2.2 inferInstance (2⁻¹) hunit (𝟙 _) l.l
       ⟨by rw [Category.comp_id]; exact hζ2, hzero, hζs⟩
 
   have hβu : β = spMap RatFunc.C ≫ unitSec H := by

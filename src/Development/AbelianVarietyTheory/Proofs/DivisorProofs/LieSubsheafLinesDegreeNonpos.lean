@@ -1,12 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRatPath
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFormalSquaringPathWithTangentVectorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FunctionFieldPlaceOrderCalculusStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenericFormalPathEqScalingValuationRingPathStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsRationalFormalPathOfIntegralAllPlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalSquaringPathsRigidOfIsSemiAbelianStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentConstantPathEqZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFormalSquaringPathWithTangentVector
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAdmissibleIntegralBasisChangeOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FunctionFieldPlaceOrderCalculus
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenericFormalPathEqScalingValuationRingPath
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsRationalFormalPathOfIntegralAllPlaces
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalSquaringPathsRigidOfIsSemiAbelian
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentConstantPathEqZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -82,7 +83,7 @@ theorem linesLE_zero_of_sub_lie : ∀ (k K : Type) [Field k] [IsAlgClosed k] [Ch
     show b.base z ∈ V₀
     simpa [hb] using hz
   haveI : QuasiSeparated G.hom := inferInstance
-  obtain ⟨ξ, hξ, htan⟩ := GlobalTheory.T.exists_formalSquaringPath_with_tangentVector C G E hG.smooth inferInstance b r V₀ (fun j => i.app V₀ (s j)) w hbV
+  obtain ⟨ξ, hξ, htan⟩ := _root_.GlobalTheory.Nef.exists_path_tan C G E hG.smooth inferInstance b r V₀ (fun j => i.app V₀ (s j)) w hbV
 
   have hvec : ∀ p : Place k E, (pullAd ρ g p).mulVec w ≠ 0 := by
     intro p h
@@ -96,7 +97,7 @@ theorem linesLE_zero_of_sub_lie : ∀ (k K : Type) [Field k] [IsAlgClosed k] [Ch
   have hu : ∀ p : Place k E, ∃ u : E, u ≠ 0 ∧ p.1 u = nrm p ((pullAd ρ g p).mulVec w) ∧
       ordVec p ((pullAd ρ g p).mulVec w) = ord p u := by
     intro p
-    obtain ⟨j, hj0, hj1, hj2, -⟩ := ((GlobalTheory.T.functionFieldPlaceOrder_calculus k E p).2.2.2.2.2.2.1) r _ (hvec p)
+    obtain ⟨j, hj0, hj1, hj2, -⟩ := ((_root_.GlobalTheory.Nef.ord_calculus k E p).2.2.2.2.2.2.1) r _ (hvec p)
     exact ⟨_, hj0, hj1.symm, hj2⟩
   choose u hu0 hu1 hu2 using hu
   have hsum : ∑ᶠ p, ord p (u p) = degLine (pullAd ρ g) w := by
@@ -105,10 +106,10 @@ theorem linesLE_zero_of_sub_lie : ∀ (k K : Type) [Field k] [IsAlgClosed k] [Ch
     by_contra hinf
     have : ∑ᶠ p, ord p (u p) = 0 := finsum_of_infinite_support (by simpa [Function.support] using hinf)
     omega
-  have hint := fun p => GlobalTheory.T.genericFormalPath_eq_scaling_valuationRingPath k K E C x hx G hG W r i V₀ s ρ hρ p (g (ρ p)) (hloc (ρ p)) w (u p) (hu0 p) (hu1 p) ξ hξ htan
-  have hrat := GlobalTheory.T.isRationalFormalPath_of_integral_allPlaces k K E C x hx G ξ u hu0 hfin (by omega) hint
-  have htriv : ξ = triv G b := GlobalTheory.T.rationalSquaringPathsRigid_of_isSemiAbelian C G hG E b ξ hξ hrat
+  have hint := fun p => _root_.GlobalTheory.Nef.genPath_scaling k K E C x hx G hG W r i V₀ s ρ hρ p (g (ρ p)) (hloc (ρ p)) w (u p) (hu0 p) (hu1 p) ξ hξ htan
+  have hrat := _root_.GlobalTheory.Nef.isRatPath_of_integral_at_places k K E C x hx G ξ u hu0 hfin (by omega) hint
+  have htriv : ξ = triv G b := _root_.GlobalTheory.Nef.ratRigid_of_isSemiAbelian C G hG E b ξ hξ hrat
   rw [htriv] at htan
-  exact hw (GlobalTheory.T.tangent_constantPath_eq_zero k K E C x hx G hG W r i hi V₀ s hV₀ hs w htan)
+  exact hw (_root_.GlobalTheory.Nef.tan_triv_eq_zero k K E C x hx G hG W r i hi V₀ s hV₀ hs w htan)
 
 end GlobalTheory.Nef

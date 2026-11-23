@@ -3,12 +3,13 @@ module
 public import Formalism.LocalToGlobal.KernelLattices.KerStd
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ThetaZJetsThree
 public import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.IntEasy
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalNormalisationTransportIsometryStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NormalisedThetaFamilyNormalisedAtStandardPrimeStatement
+public import Formalism.LocalToGlobal.TorsionIntegrality.GaussianEigenFrames.StatementC
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalNormalisationTransportIsometry
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NormalisedThetaFamilyNormalisedAtStandardPrime
 public import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.IntPull
 public import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.IntWAPlaces
-import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.SelfDualComap
 public import Formalism.LocalToGlobal.PairingIndexBounds.SplitPairEquations.FinalEq
+import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.SelfDualComap
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -171,7 +172,7 @@ theorem GlobalTheory.ThLoc.latAt_all : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K))
   obtain ⟨γ', M', hM', hEq', hLM'⟩ := Formalism.L2.KerInert.wa_main Formalism.L2.KerInert.weak_approximation_places hCM p hp N' L' hL'
   have hAM : TaylorLogMetric.admitted D N N' M M' := ⟨hN, hN', hM, hM'⟩
   have hAL : TaylorLogMetric.admitted D N N' L L' := ⟨hN, hN', hL, hL'⟩
-  have hStd := GlobalTheory.T.normalisedThetaFamily_normalised_at_standardPrime D cc δ hcc hδ B χ hχ X s hs a₀ b₀ c₀ ha hd lam hlam hcm hlat N N' M M' hAM p ι hEq hEq'
+  have hStd := _root_.GlobalTheory.ThLoc.LocStd.latAt_std D cc δ hcc hδ B χ hχ X s hs a₀ b₀ c₀ ha hd lam hlam hcm hlat N N' M M' hAM p ι hEq hEq'
 
   let φ : (DVar X.Tau N N' → ℂ) ≃ₗ[ℂ] (DVar X.Tau N N' → ℂ) :=
     (s.flatV N N').trans ((tPullEquiv cc δ γ γ').trans (s.flatV N N').symm)
@@ -186,7 +187,7 @@ theorem GlobalTheory.ThLoc.latAt_all : ∀ (D : D7) (cc : Ideal (𝓞 D.host.K))
     show matH _ (φ x) (φ y) = _
     rw [KS.Lat.form_flat s, KS.Lat.form_flat s, hφ, hφ, formV_eq_Hf, formV_eq_Hf,
       Formalism.L2.KerInert.PullbackComparison.Hf_tPull cc δ _ _ (Matrix.mem_unitaryGroup_iff.mp γ.2) (Matrix.mem_unitaryGroup_iff.mp γ'.2)]
-  have hloc := GlobalTheory.T.localNormalisation_transport_isometry a₀ b₀ D.host.d ha hd lam hlam (DVar X.Tau N N') _ (s.laF B.tor M M')
+  have hloc := _root_.GlobalTheory.ThLoc.LocPull.locNorm_pull a₀ b₀ D.host.d ha hd lam hlam (DVar X.Tau N N') _ (s.laF B.tor M M')
     (fun z => B.eNat χ N N' M M' (s.flatV N N' z)) p ι φ hI hStd.locNorm
   have hΛ : (s.laF B.tor M M').comap (φ : (DVar X.Tau N N' → ℂ) →ₗ[ℂ] _).toAddMonoidHom = s.laF B.tor L L' := by
     ext x

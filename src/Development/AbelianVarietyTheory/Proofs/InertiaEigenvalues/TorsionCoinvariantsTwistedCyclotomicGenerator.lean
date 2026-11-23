@@ -1,11 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.HTBasis
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AevalProdEqZeroHodgeTateCyclotomicFrameStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormPrimitiveRootPrimePowSubOnePadicComplex
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AevalProdEqZeroHodgeTateCyclotomicFrame
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormZpowSubOneLeTer
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormPrimitiveRootPrimePowSubOnePadicComplex
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PadicNormZpowSubOnePadicValInt
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TateDecompositionCompletedCyclotomicIntegersStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TateDecompositionCompletedCyclotomicIntegers
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -223,10 +223,10 @@ theorem twAct_add (act : GQ l →* (PadicComplex l ≃+* PadicComplex l)) (χ : 
 
 theorem torsion_coinvariants : ∀ (l : ℕ) [Fact l.Prime] (act : GQ l →* (PadicComplex l ≃+* PadicComplex l)) (χ : GQ l →* ℚ_[l]ˣ), IsActC act → IsCyc χ → ∀ (K : FinExt l), ∀ (m r : ℕ), Lev l m → ∀ (U : GQ l → Matrix (Fin r) (Fin r) (PadicComplex l)) (g : GQ l), Frame χ K m U g → ∀ J : Finset ℤ, HTBasis act χ (Gj K m) U (J : Set ℤ) → ∀ (i : ℤ) (w w' : Fin r → PadicComplex l) (k : ℕ), (∀ a, w a ∈ Ohat K) → (∀ a, w' a ∈ Ohat K) → twAct act χ i U g w' - w' = (l : PadicComplex l) ^ k • w → ∃ y : Fin r → PadicComplex l, (∀ a, y a ∈ Ohat K) ∧ twAct act χ i U g y - y = (l : PadicComplex l) ^ (max 1 (∑ u ∈ J.erase i, (m + padicValInt l (u - i)))) • w := by
   intro l hl act χ hact hχ K m r hm U g hF J hHT i w w' k hw hw' h
-  have heig := GlobalTheory.T.aeval_prod_eq_zero_hodgeTate_cyclotomicFrame l act χ hact hχ K m r hm U g hF J hHT
+  have heig := _root_.GlobalTheory.CycEigen.aeval_prod_eq_zero l act χ hact hχ K m r hm U g hF J hHT
   obtain ⟨hg, -, hUO, -, -, hU1⟩ := hF
   have hU : ∀ a b, U g a b ∈ intR (Ks K m) := hUO g hg.1
-  obtain ⟨hdec, huniq, hXO, hmul, hstab, -⟩ := GlobalTheory.T.tate_decomposition_completed_cyclotomic_integers l act χ hact hχ K m hm.1
+  obtain ⟨hdec, huniq, hXO, hmul, hstab, -⟩ := _root_.GlobalTheory.TateDecomp.tate_decomposition l act χ hact hχ K m hm.1
   have hgX := hstab g (IntermediateField.fixingSubgroup_antitone (le_sup_left : K0 K ≤ Ks K m) hg.1)
   choose w0 hw0 wx hwx hwe using fun a => hdec _ (hw a)
   choose v0 hv0 vx hvx hve using fun a => hdec _ (hw' a)

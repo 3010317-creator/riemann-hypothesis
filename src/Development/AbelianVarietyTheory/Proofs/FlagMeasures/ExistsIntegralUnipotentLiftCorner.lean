@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsVolData
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowEmbeddingMemIntegralOrthogonalGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowIsometryEntriesInModelCoordinatesStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowEmbeddingMemIntegralOrthogonalGroup
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowIsometryEntriesInModelCoordinates
 import Mathlib.Algebra.AffineMonoid.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -105,7 +105,7 @@ theorem lift_corner : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
   have hd : ∀ j, dInv E j ≠ 0 := fun j =>
     pow_ne_zero _ (inv_ne_zero (FractionalIdeal.coeIdeal_ne_zero.2 differentIdeal_ne_bot))
   have hG : rowE (σ : E →+* E) J (fun i => P i b.castSucc) y 0 ∈ GN (σ : E →+* E) J Λ P := by
-    refine GlobalTheory.T.rowE_mem_GN_of_form_add_trace_eq_zero F E σ k r J Λ P f T A s hV b y 0 ?_ ?_ ?_ ?_
+    refine _root_.GlobalTheory.SnMass.VolN.RowIso.rowE_mem_GN F E σ k r J Λ P f T A s hV b y 0 ?_ ?_ ?_ ?_
     · intro c' _
       show form _ J (c • e) _ = 0
       rw [form_smul_left, hiso, mul_zero]
@@ -138,7 +138,7 @@ theorem lift_corner : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
         (if i = eI k r a ∧ j = esI k r b then (s a : ℂ) * s b * w.embedding c else 0) -
         (if i = eI k r b ∧ j = esI k r a then (s b : ℂ) * star (w.embedding c * (s a : ℂ)) else 0) := by
     intro w i j
-    rw [GlobalTheory.T.rowIsometry_entries_in_modelCoordinates F E σ k r J Λ P f T A s hV b y 0 w i j, hAy w, herm_bvec]
+    rw [_root_.GlobalTheory.SnMass.VolN.rowE_entries F E σ k r J Λ P f T A s hV b y 0 w i j, hAy w, herm_bvec]
     simp only [bvec, Pi.smul_apply, Pi.single_apply, smul_eq_mul, map_zero, mul_zero, add_zero, ite_and]
     split_ifs <;> ring
   refine ⟨_, hG, fun w => ?_, fun β hβ _ w => ?_⟩

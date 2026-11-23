@@ -2,12 +2,18 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NonemptyCuspFrame
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualNumberDeformationExtendsAwayStatement
+public import Mathlib.Algebra.DualNumber
+public import Mathlib.RingTheory.Localization.Away.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualNumberDeformationExtendsAway
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAffineCoverWithDualNumberDerivationsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBasicOpenKodairaSpencerLeftInverseStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsChartFrameDeformationOfDerivationCombinatiStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsKodairaSpencerMatrixFirstOrderDeformationStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RingHomDualNumberSndEqZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBasicOpenKodairaSpencerLeftInverse
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsKodairaSpencerMatrixFirstOrderDeformation
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsChartFrameDeformationOfDerivationCombinati
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.FieldTheory.IntermediateField.Basic
+import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RingHomDualNumberSndEqZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -122,7 +128,7 @@ theorem GlobalTheory.HorFrame.exists_horizontal_lift : ∀ {E : Type} [Field E] 
   have hdalg : ∀ b, (d b).comp (algebraMap c.F Γ(M.X, W₁)) = algebraMap c.F (DualNumber Γ(M.X, W₁)) :=
     fun b => RingHom.ext fun a => TrivSqZeroExt.ext
       (by rw [RingHom.comp_apply, hd]; rfl) (by
-      rw [GlobalTheory.T.ringHom_numberField_dualNumber_snd_eq_zero c.F ((d b).comp (algebraMap c.F _)) a]; rfl)
+      rw [_root_.GlobalTheory.ringHom_dualNumber_snd_eq_zero c.F ((d b).comp (algebraMap c.F _)) a]; rfl)
   have hx1 : ∀ b, (spMap (d b) ≫ Q₀.x) ≫ Xo.s = sOf c (DualNumber Γ(M.X, W₁)) := fun b => by
     rw [Category.assoc, Q₀.x_over]
     unfold sOf
@@ -134,15 +140,15 @@ theorem GlobalTheory.HorFrame.exists_horizontal_lift : ∀ {E : Type} [Field E] 
       RingHom.ext fun s => hd b s
     rw [this]
     exact (congrArg (· ≫ Q₀.x) (Spec.map_id _)).trans (Category.id_comp _)
-  choose Mx hMx using fun b => GlobalTheory.T.exists_kodairaSpencerMatrix_firstOrderDeformation hP Q₀ (spMap (d b) ≫ Q₀.x) (hx1 b) (hx2 b)
-  obtain ⟨B, hB⟩ := GlobalTheory.T.exists_basicOpen_kodairaSpencer_left_inverse M hKS k hW₁ hoff hk₁ Q₀ hQ₀ d hd hspan Mx hMx p hpW₁
+  choose Mx hMx using fun b => _root_.GlobalTheory.KSFam.ksFamily hP Q₀ (spMap (d b) ≫ Q₀.x) (hx1 b) (hx2 b)
+  obtain ⟨B, hB⟩ := _root_.GlobalTheory.HorFrame.exists_basicOpen_det_ks M hKS k hW₁ hoff hk₁ Q₀ hQ₀ d hd hspan Mx hMx p hpW₁
   set MxM : Matrix (Fin (dimFlag Dw)) (HIx Dw (psiSet H)) Γ(M.X, W₁) := Matrix.of (fun a h => Mx a h) with hMxM
   set g : Γ(M.X, W₁) := (B * MxM).det with hg
   have hW' : IsAffineOpen (M.X.basicOpen g) := hW₁.basicOpen g
   have hW'W₁ : M.X.basicOpen g ≤ W₁ := M.X.basicOpen_le g
   haveI := hW₁.isLocalization_basicOpen g
   set ρ := algebraMap Γ(M.X, W₁) Γ(M.X, M.X.basicOpen g) with hρ
-  choose d' hd'1 hd'2 using fun b => GlobalTheory.T.exists_dualNumber_deformation_extend_away (S' := Γ(M.X, M.X.basicOpen g)) g (d b) (hd b)
+  choose d' hd'1 hd'2 using fun b => _root_.GlobalTheory.dualNumber_deformation_extends_away (S' := Γ(M.X, M.X.basicOpen g)) g (d b) (hd b)
   have hunit : IsUnit ((B * MxM).map ρ).det := by
     have : ((B * MxM).map ρ).det = ρ (B * MxM).det := by rw [RingHom.map_det]; rfl
     rw [this]
@@ -164,7 +170,7 @@ theorem GlobalTheory.HorFrame.exists_horizontal_lift : ∀ {E : Type} [Field E] 
   have hk' : ⊤ ≤ ((spMap (ψ.comp ρ) ≫ tau hW₁) ≫ toFlag M) ⁻¹ᵁ X.F.U k := ez ▸ hk
   have hQ' : X.F.ChartFr k _ hk' Q :=
     hQ.frMap (frMap_refl Q) ((spMap_algId _).trans ez) hk'
-  obtain ⟨w, hwD, hwKS, hwpt⟩ := GlobalTheory.T.exists_chart_frame_deformation_of_derivation_combination M hKS k hW₁ hk₁ Q₀ hQ₀ d hd Mx hMx K (ψ.comp ρ) hk' Q hQ'
+  obtain ⟨w, hwD, hwKS, hwpt⟩ := _root_.GlobalTheory.HorFrame.exists_deform_of_comb M hKS k hW₁ hk₁ Q₀ hQ₀ d hd Mx hMx K (ψ.comp ρ) hk' Q hQ'
     ((dualMap ψ).comp ((combDer d' hd'1 (fun a => A b a)).comp ρ)) (fun a => ψ (A b a))
     (fun s => by rw [RingHom.comp_apply, fst_dualMap, RingHom.comp_apply, combDer_fst]; rfl)
     (fun s => by

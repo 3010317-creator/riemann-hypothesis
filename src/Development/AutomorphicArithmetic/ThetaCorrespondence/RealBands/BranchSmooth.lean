@@ -2,7 +2,8 @@ module
 
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.RealBands.BranchDefs
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ProjectionSmooth
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryStabiliserEmbeddingNormLawsStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.OneMemNbh
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryStabiliserEmbeddingNormLaws
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +50,7 @@ open GlobalTheory.SepReal.ProjSm in
 theorem UpperTheory.Lit.Branch.mapSmooth :
     MapSmooth := by
   intro n e ε lam ε' mu B hpar H H' _ _ _ _ π σ hπ hσ T hT v hv
-  obtain ⟨-, -, -, -, -, -, hlie, hexp, -⟩ := GlobalTheory.T.unitary_stabiliser_embedding_norm_laws n e ε ε' hpar.signs
+  obtain ⟨-, -, -, -, -, -, hlie, hexp, -⟩ := _root_.GlobalTheory.SepReal.embLaws n e ε ε' hpar.signs
   intro k Xs hXs
   have key : (fun t : Fin k → ℝ => σ ((List.ofFn fun i => NormedSpace.exp (t i • Xs i)).prod) (T v)) =
       fun t => T (π ((List.ofFn fun i => NormedSpace.exp (t i • embL e (Xs i))).prod) v) := by

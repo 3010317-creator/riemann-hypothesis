@@ -3,9 +3,13 @@ module
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRes
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.PenHost
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsSmoothWeightConstNearEmbeddings
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PointsIntegralConjugationSymmetryStatement
-import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PEmbeddingWeight
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PointsIntegralConjugationSymmetry
 public import GroundTheory.HeightsAndTheta.Heights.Intersections.PRFormula
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterBridge
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRed
+import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PEmbeddingWeight
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -47,8 +51,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterBridge
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRed
 import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.ArithModel
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.ProjDefs
 
@@ -144,7 +146,7 @@ theorem conjugate_pieces_same_mass :
         ⟨fun h => by simpa using congrArg ComplexEmbedding.conjugate h, fun h => by rw [h]⟩
       rw [hBv' _ hzc _ hsc, hBv z hz s hs]
       simp only [hiff]
-    obtain ⟨hΨ', hI⟩ := GlobalTheory.T.points_integral_conjugation_symmetry K ι (mCoordIdeal y) D Ψ (conjugateProjection Ψ) L B B' hP hΨ
+    obtain ⟨hΨ', hI⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Giv.ptsIntegralAt_conj K ι (mCoordIdeal y) D Ψ (conjugateProjection Ψ) L B B' hP hΨ
       (conjugateProjection_star Ψ) hL hC hBa hBs hBa' hBs' hstar
     rw [ptsIntegral_eq_at hRes resBridge hP hΨ' hL hBs' (isSectionOn_one_of_degree_zero hP hBa'),
       ptsIntegral_eq_at hRes resBridge hP hΨ hL hBs (isSectionOn_one_of_degree_zero hP hBa), hI]

@@ -3,10 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.LamIdealOfNotPrimePow
 public import Mathlib.Analysis.Analytic.Order
 public import Mathlib.NumberTheory.LSeries.Basic
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RayClassFamilyLogDerivReGtOneStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RayClassLFunctionFamilyContinuationGrowthStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RayClassLFunctionFamilyLogDerivPositivityStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RayClassLFunctionLogDerivLocalFormulaStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RayClassFamilyLogDerivReGtOne
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RayClassLFunctionFamilyContinuationGrowth
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RayClassLFunctionFamilyLogDerivPositivity
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RayClassLFunctionLogDerivLocalFormula
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,12 +63,12 @@ namespace GlobalTheory.Hk.RealZero
 
 theorem order_ne_top (𝓕 : LFam) (χ : AddChar 𝓕.G ℂ) {z : ℂ} (hz : 1 / 2 < z.re) :
     analyticOrderAt (𝓕.F χ) z ≠ ⊤ := by
-  have hA := (GlobalTheory.T.rayClassLFunctionFamily_continuation_growth 𝓕 χ).1
+  have hA := (_root_.GlobalTheory.Hk.RayCont.continuation_growth 𝓕 χ).1
   have hU : IsPreconnected {s : ℂ | 1 / 2 < s.re} := (convex_halfSpace_re_gt (1 / 2)).isPreconnected
   have h2 : (2 : ℂ) ∈ {s : ℂ | 1 / 2 < s.re} := by
     show (1 : ℝ) / 2 < (2 : ℂ).re
     norm_num
-  have hF2 : 𝓕.F χ 2 ≠ 0 := (GlobalTheory.T.rayClassFamily_logDeriv_re_gt_one 𝓕 χ 2 (by norm_num)).2.2.1
+  have hF2 : 𝓕.F χ 2 ≠ 0 := (_root_.GlobalTheory.Hk.LogDeriv.logDeriv_F 𝓕 χ 2 (by norm_num)).2.2.1
   have h2top : analyticOrderAt (𝓕.F χ) 2 ≠ ⊤ := by
     rw [(hA 2 h2).analyticOrderAt_eq_zero.mpr hF2]
     exact ENat.zero_ne_top
@@ -77,7 +77,7 @@ theorem order_ne_top (𝓕 : LFam) (χ : AddChar 𝓕.G ℂ) {z : ℂ} (hz : 1 /
 theorem le_order (𝓕 : LFam) (χ : AddChar 𝓕.G ℂ) {z : ℂ} (hz : 1 / 2 < z.re) (n : ℕ)
     (hn : ∀ i < n, iteratedDeriv i (𝓕.F χ) z = 0) :
     n ≤ analyticOrderNatAt (𝓕.F χ) z := by
-  have hA := (GlobalTheory.T.rayClassLFunctionFamily_continuation_growth 𝓕 χ).1 z hz
+  have hA := (_root_.GlobalTheory.Hk.RayCont.continuation_growth 𝓕 χ).1 z hz
   have h := (natCast_le_analyticOrderAt_iff_iteratedDeriv_eq_zero hA).mpr hn
   rw [← Nat.cast_analyticOrderNatAt (order_ne_top 𝓕 χ hz)] at h
   exact_mod_cast h
@@ -85,7 +85,7 @@ theorem le_order (𝓕 : LFam) (χ : AddChar 𝓕.G ℂ) {z : ℂ} (hz : 1 / 2 <
 theorem re_le_one (𝓕 : LFam) (χ : AddChar 𝓕.G ℂ) {z : ℂ}
     (hz : 𝓕.F χ z = 0) : z.re ≤ 1 := by
   by_contra h
-  exact (GlobalTheory.T.rayClassFamily_logDeriv_re_gt_one 𝓕 χ z (not_le.mp h)).2.2.1 hz
+  exact (_root_.GlobalTheory.Hk.LogDeriv.logDeriv_F 𝓕 χ z (not_le.mp h)).2.2.1 hz
 
 private lemma sum_real_zeros_div_sub_le_re_finsum_div_sub (m : ℂ → ℕ) (σ : ℝ) (S : Set ℂ) (hS : S.Finite) (T : Finset ℝ)
     (hTS : ∀ β ∈ T, (β : ℂ) ∈ S) (hre : ∀ w ∈ S, w.re < σ) :
@@ -125,12 +125,12 @@ theorem exists_bound : ∃ C : ℝ, 0 < C ∧ ∀ (𝓕 : LFam) (χ : AddChar �
     (∀ β ∈ T, 3 / 4 ≤ β ∧ 𝓕.F χ β = 0) →
     (LSeries (𝓕.lamChi χ) σ).re ≤ (if χ = 1 then 1 / (σ - 1) else 0) + C * 𝓕.ell 0
       - ∑ β ∈ T, (analyticOrderNatAt (𝓕.F χ) β : ℝ) / (σ - β) := by
-  obtain ⟨C, hC, hmain⟩ := GlobalTheory.T.rayClassLFunction_logDeriv_local_formula
+  obtain ⟨C, hC, hmain⟩ := _root_.GlobalTheory.HkLocal.logDeriv_local
   refine ⟨C, hC, fun 𝓕 χ σ hσ1 hσ2 T hT => ?_⟩
   obtain ⟨hfin, -, happ⟩ := hmain 𝓕 χ 0
   simp only [Complex.ofReal_zero, zero_mul, add_zero] at hfin happ
   have hs1 : 1 < (σ : ℂ).re := by simpa using hσ1
-  obtain ⟨-, -, hFs, hL⟩ := GlobalTheory.T.rayClassFamily_logDeriv_re_gt_one 𝓕 χ σ hs1
+  obtain ⟨-, -, hFs, hL⟩ := _root_.GlobalTheory.Hk.LogDeriv.logDeriv_F 𝓕 χ σ hs1
   have hnear : ‖(σ : ℂ) - 5 / 4‖ ≤ 1 / 2 := by
     have e : (σ : ℂ) - 5 / 4 = ((σ - 5 / 4 : ℝ) : ℂ) := by push_cast; ring
     rw [e, Complex.norm_real, Real.norm_eq_abs, abs_le]
@@ -262,13 +262,13 @@ theorem main : ∃ c : ℝ, 0 < c ∧ ∀ (𝓕 : LFam) (χ ψ : AddChar 𝓕.G 
     · subst h1
       have hB := hb 𝓕 1 σ hσ1 hσ2 T hT
       rw [if_pos rfl, hpole] at hB
-      have h0 := (GlobalTheory.T.rayClassLFunctionFamily_logDeriv_positivity 𝓕 1 1 σ 0 hσ1).2.1
+      have h0 := (_root_.GlobalTheory.Hk.LFamPos.positivity 𝓕 1 1 σ 0 hσ1).2.1
       exact false_of_le_of_mul_hundred_mul_add_one_eq_one hC hℓ hcC hc hXT (by linarith)
     · have hB := hb 𝓕 χ σ hσ1 hσ2 T hT
       rw [if_neg h1] at hB
       have hB1 := hb 𝓕 1 σ hσ1 hσ2 ∅ (by simp)
       rw [if_pos rfl, hpole, Finset.sum_empty] at hB1
-      have h0 := ((GlobalTheory.T.rayClassLFunctionFamily_logDeriv_positivity 𝓕 χ χ σ 0 hσ1).2.2 hχ hχ).1
+      have h0 := ((_root_.GlobalTheory.Hk.LFamPos.positivity 𝓕 χ χ σ 0 hσ1).2.2 hχ hχ).1
       exact false_of_le_of_mul_hundred_mul_add_one_eq_one hC hℓ hcC hc hXT (by linarith)
   · exfalso
     by_cases h1 : χ = 1
@@ -278,7 +278,7 @@ theorem main : ∃ c : ℝ, 0 < c ∧ ∀ (𝓕 : LFam) (χ ψ : AddChar 𝓕.G 
       rw [if_pos rfl, hpole, Finset.sum_singleton] at hB1
       have hBψ := hb 𝓕 ψ σ hσ1 hσ2 {β'} (sg ψ β' hβ' hz')
       rw [if_neg hψ1, Finset.sum_singleton] at hBψ
-      have h0 := ((GlobalTheory.T.rayClassLFunctionFamily_logDeriv_positivity 𝓕 ψ ψ σ 0 hσ1).2.2 hψ hψ).1
+      have h0 := ((_root_.GlobalTheory.Hk.LFamPos.positivity 𝓕 ψ ψ σ 0 hσ1).2.2 hψ hψ).1
       exact false_of_le_of_mul_hundred_mul_add_one_eq_one hC hℓ hcC hc (X := (analyticOrderNatAt (𝓕.F 1) β : ℝ) / (σ - β) +
         (analyticOrderNatAt (𝓕.F ψ) β' : ℝ) / (σ - β')) (by linarith) (by linarith)
     · by_cases h2 : ψ = 1
@@ -287,7 +287,7 @@ theorem main : ∃ c : ℝ, 0 < c ∧ ∀ (𝓕 : LFam) (χ ψ : AddChar 𝓕.G 
         rw [if_pos rfl, hpole, Finset.sum_singleton] at hB1
         have hBχ := hb 𝓕 χ σ hσ1 hσ2 {β} (sg χ β hβ hz)
         rw [if_neg h1, Finset.sum_singleton] at hBχ
-        have h0 := ((GlobalTheory.T.rayClassLFunctionFamily_logDeriv_positivity 𝓕 χ χ σ 0 hσ1).2.2 hχ hχ).1
+        have h0 := ((_root_.GlobalTheory.Hk.LFamPos.positivity 𝓕 χ χ σ 0 hσ1).2.2 hχ hχ).1
         exact false_of_le_of_mul_hundred_mul_add_one_eq_one hC hℓ hcC hc (X := (analyticOrderNatAt (𝓕.F χ) β : ℝ) / (σ - β) +
           (analyticOrderNatAt (𝓕.F 1) β' : ℝ) / (σ - β')) (by linarith) (by linarith)
       · have hχψ : χ * ψ ≠ 1 := by
@@ -304,7 +304,7 @@ theorem main : ∃ c : ℝ, 0 < c ∧ ∀ (𝓕 : LFam) (χ ψ : AddChar 𝓕.G 
         rw [if_neg h2, Finset.sum_singleton] at hBψ
         have hBχψ := hb 𝓕 (χ * ψ) σ hσ1 hσ2 ∅ (by simp)
         rw [if_neg hχψ, Finset.sum_empty] at hBχψ
-        have h0 := ((GlobalTheory.T.rayClassLFunctionFamily_logDeriv_positivity 𝓕 χ ψ σ 0 hσ1).2.2 hχ hψ).2
+        have h0 := ((_root_.GlobalTheory.Hk.LFamPos.positivity 𝓕 χ ψ σ 0 hσ1).2.2 hχ hψ).2
         exact false_of_le_of_mul_hundred_mul_add_one_eq_one hC hℓ hcC hc (X := (analyticOrderNatAt (𝓕.F χ) β : ℝ) / (σ - β) +
           (analyticOrderNatAt (𝓕.F ψ) β' : ℝ) / (σ - β')) (by linarith) (by linarith)
 

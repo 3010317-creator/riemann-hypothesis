@@ -4,8 +4,8 @@ public import Formalism.LocalToGlobal.GaloisLevelStructure.DefsLevel
 public import Formalism.LocalToGlobal.GaloisLevelStructure.TiedHecke
 public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SplitPlaceHeckeOperatorScalarOnSpherical
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SplitPlaceHeckeOperatorScalarOnSphericalStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteCosetsHeckeSetAtSplitPlaceOutsideLevelStatement
+public import Formalism.LocalToGlobal.GaloisLevelStructure.DefsAut
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteCosetsHeckeSetAtSplitPlaceOutsideLevel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -97,7 +97,7 @@ theorem isoTyp_scalar (a : NG.AlgWt L n) (J : Subgroup (GAf L n)) (χ : J →* �
     hκ v fun h => hv (by rw [Set.mem_compl_iff, Set.mem_singleton_iff.1 h]; exact hsB)
   have hJU : ∀ κ, TrivOutside {s.v} κ → (κ ∈ J ↔ κ ∈ Umax L n) := fun κ hκ => (hyp κ (tc κ hκ)).1
   have hfin : ((fun x : GAf L n => (x : GAf L n ⧸ Umax L n)) '' tSet L n s ϖ k).Finite :=
-    GlobalTheory.T.finite_cosets_heckeSet_at_splitPlace_outside_level L n (Umax L n) 1 ∅ (fun κ _ => ⟨Iff.rfl, fun _ => MonoidHom.one_apply _⟩) s ϖ k
+    _root_.GlobalTheory.TSetFin.finite_image_tSet L n (Umax L n) 1 ∅ (fun κ _ => ⟨Iff.rfl, fun _ => MonoidHom.one_apply _⟩) s ϖ k
       (Set.notMem_empty _) hϖ
   obtain ⟨R, hR1, hR2⟩ := GlobalTheory.HeckeScalarSph.exists_reps (Umax L n) _ hfin
   have hD : ∀ x ∈ tSet L n s ϖ k, TrivOutside {s.v} x := fun _ hx => hx.1
@@ -108,7 +108,7 @@ theorem isoTyp_scalar (a : NG.AlgWt L n) (J : Subgroup (GAf L n)) (χ : J →* �
   have hUeq : ∀ f : GAf L n → a.W, (∀ κ ∈ Umax L n, TrivOutside {s.v} κ → NG.rt L n κ f = f) →
       NG.tN (Umax L n) s ϖ k f = q • ∑ γ ∈ R, NG.rt L n γ f := fun f hf => by
     rw [NG.tN, GlobalTheory.HeckeScalarSph.heckeD_eq_sum (v := s.v) hD hR1 hR2 hf]
-  obtain ⟨c, hc⟩ := GlobalTheory.T.splitPlace_heckeOperator_scalar_on_spherical L n a S hS s ϖ k hϖ
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.HeckeScalarSph.tN_scalar L n a S hS s ϖ k hϖ
   have hS0 : ∀ f ∈ S, (∀ κ ∈ Umax L n, TrivOutside {s.v} κ → NG.rt L n κ f = f) →
       q • ∑ γ ∈ R, NG.rt L n γ f = c • f := fun f hf hx => (hUeq f hx).symm.trans (hc f hf hx)
 

@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SubsetSpanBy
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMulPowMemCartierMultipleOfRegularLocusStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalFunctionAppOfPreservesGenericPointStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMulPowMemCartierMultipleOfRegularLocus
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalFunctionAppOfPreservesGenericPoint
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -87,7 +87,7 @@ theorem app_surjective_of_factor {R F : Type} [CommRing R] [Field F] {c₀ : R �
   have hbsec : θ b ∈ Sec D₁ k := by
     rw [hspan k]
     exact subset_spanBy _ _ ⟨b, hb, rfl⟩
-  obtain ⟨n, hn⟩ := GlobalTheory.T.exists_mul_pow_mem_cartierMultiple_of_regular_locus Y D₁ k (θ b) hbsec _ hreg
+  obtain ⟨n, hn⟩ := _root_.GlobalTheory.Desc.exists_mul_pow_mem_sec Y D₁ k (θ b) hbsec _ hreg
   rw [hspan] at hn
   obtain ⟨M, r, t, ht, hsum⟩ := hn
   choose u hu hut using ht
@@ -103,7 +103,7 @@ theorem app_surjective_of_factor {R F : Type} [CommRing R] [Field F] {c₀ : R �
       cst (f ≫ c) (r i) * t i / θ b ^ n := by
     intro i
     rw [map_mul, map_mul, fnOf_app_const f c _ hW (r i)]
-    have e := GlobalTheory.T.rationalFunction_app_of_preservesGenericPoint P Y (f ≫ a) (θ.comp ψ) hff (Dp k b) hPg hW (A i)
+    have e := _root_.GlobalTheory.Desc.fnOf_app_of_pff P Y (f ≫ a) (θ.comp ψ) hff (Dp k b) hPg hW (A i)
     rw [hA i, RingHom.comp_apply, hvψ i, map_div₀, map_pow, hut i] at e
     rw [mul_div_assoc, ← e]
     rfl

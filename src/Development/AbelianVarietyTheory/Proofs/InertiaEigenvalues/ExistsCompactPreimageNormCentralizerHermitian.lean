@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FourierMatch
 public import Mathlib.FieldTheory.Separable
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsotropicIdempotentCentralizerHermitianStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsCompactPreimageMulStarAnisotropicSubmoduleStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MatrixCommuteOfCommuteSeparableCharpolyStatement
+public import Mathlib.LinearAlgebra.Matrix.Hermitian
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsotropicIdempotentCentralizerHermitian
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsCompactPreimageMulStarAnisotropicSubmodule
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MatrixCommuteOfCommuteSeparableCharpoly
+public import Mathlib.Topology.Algebra.Group.Units
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -47,7 +49,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
-public import Mathlib.Topology.Algebra.Group.Units
 import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
@@ -60,8 +61,8 @@ theorem normsec : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNorm
   intro F E _ _ _ _ hU r A₀ hA hsep M hM
   classical
   have hA' : star A₀ = A₀ := by rw [Matrix.star_eq_conjTranspose]; exact hA
-  obtain ⟨f, hfA, hff, hffs, haniso⟩ := GlobalTheory.T.exists_isotropic_idempotent_centralizer_hermitian E r A₀ hA hsep
-  have hcomm := GlobalTheory.T.matrix_commute_of_commute_separable_charpoly E r A₀ hsep
+  obtain ⟨f, hfA, hff, hffs, haniso⟩ := _root_.GlobalTheory.IsoIdem.isoIdem E r A₀ hA hsep
+  have hcomm := _root_.GlobalTheory.CommSep.commute_of_commute_separable E r A₀ hsep
   have hstarC : ∀ m : Matrix (Fin r) (Fin r) E, m * A₀ = A₀ * m → star m * A₀ = A₀ * star m := by
     intro m hm
     have := congrArg star hm
@@ -104,8 +105,8 @@ theorem normsec : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNorm
   let B₂ := (fun x => x * e) '' M₂
   have hB₁ : IsCompact B₁ := hM₁.image (continuous_mul_const e)
   have hB₂ : IsCompact B₂ := hM₂.image (continuous_mul_const e)
-  have hT₁ := GlobalTheory.T.isCompact_preimage_mul_star_anisotropic_submodule F E r V hV B₁ hB₁
-  have hT₂ := GlobalTheory.T.isCompact_preimage_mul_star_anisotropic_submodule F E r V hV B₂ hB₂
+  have hT₁ := _root_.GlobalTheory.mul_star_anisotropic_proper F E r V hV B₁ hB₁
+  have hT₂ := _root_.GlobalTheory.mul_star_anisotropic_proper F E r V hV B₂ hB₂
   let P₁ := (fun p : Matrix (Fin r) (Fin r) E × Matrix (Fin r) (Fin r) E => p.1 + p.2 * f + g) ''
     ({z | z ∈ V ∧ z * star z ∈ B₁} ×ˢ M₁)
   let P₂ := (fun p : Matrix (Fin r) (Fin r) E × Matrix (Fin r) (Fin r) E => p.1 + p.2 * f + g) ''

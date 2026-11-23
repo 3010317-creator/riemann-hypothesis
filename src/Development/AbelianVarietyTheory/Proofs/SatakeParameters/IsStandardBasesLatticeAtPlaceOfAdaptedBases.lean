@@ -5,7 +5,8 @@ public import Formalism.LocalToGlobal.KernelLattices.AdaptedEnt
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutes
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsRBasisOfLocBasis
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NormTauEmbPosPlConjEq
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PartnerPlaceInvolutiveNormConjEqStatement
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.IsDiscriminantTwelfthRootOfIdealLattice
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PartnerPlaceInvolutiveNormConjEq
 import Formalism.SharpRestriction.GlobalSchurBounds.GlobalRankLatticeProofs.EqOfLeOfAbsNormEq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -290,7 +291,7 @@ theorem stdBases_of_basR : ∀ (D : D7) (p : ℕ) [Fact p.Prime] (lam : Qbar →
       rw [norm_tauEmb_posPl_conj_eq D p lam hcl z]
     rw [hconj _ _ hc]
     exact dualM_left _ (hdet _)
-  · obtain ⟨-, -, hn⟩ := GlobalTheory.T.partnerPlace_involutive_norm_conj_eq D p lam hd τ
+  · obtain ⟨-, -, hn⟩ := _root_.GlobalTheory.KerStd.tauSg_invol_norm_conj_eq D p lam hd τ
     have hc : Formalism.L2.Ker.ConjPr lam τ (tauSg D τ) := fun x => by rw [hn]
     rw [hconj _ _ hc]
     exact dualM_left _ (hdet _)

@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelPosOfCoprime
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateSimilitudePrimeToPPullbackSquareStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NotCompactOfMEqOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateSimilitudePrimeToPPullbackSquare
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -91,7 +92,7 @@ theorem isLift_of_point : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) 
     rw [hlv', he, Over.comp_left, Over.toUnit_left]
     exact (Category.assoc _ _ _).symm
   · obtain ⟨I', hI'⟩ := o'.geom k (x ≫ g) (Spec.preimage ((x ≫ g) ≫ s')).hom (Spec.map_preimage _).symm
-    have h3 := (GlobalTheory.T.tateSimilitude_prime_to_p_pullback_square p D R b N N' S S' s s' o o' f φ om.φ₂ cart sq ha om.pol k (x ≫ g)).1 I'
+    have h3 := (_root_.GlobalTheory.UPel.HT.tateIsoO_pullback p D R b N N' S S' s s' o o' f φ om.φ₂ cart sq ha om.pol k (x ≫ g)).1 I'
     rw [Category.assoc] at h3
     obtain ⟨I, hI⟩ := h3
     refine ⟨I, fun y => ?_⟩

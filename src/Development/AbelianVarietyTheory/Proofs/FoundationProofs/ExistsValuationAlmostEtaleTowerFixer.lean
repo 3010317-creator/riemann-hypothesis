@@ -2,10 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.CosetTrace
 public import Development.AbelianVarietyTheory.Definitions.Foundations.NotCoboundaryConstantOne
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AlmostPurityOfNormalFiniteIndexSubgroupStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ApproxPthRootFixedFieldCyclotomicTowerStatement
+public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AlmostPurityOfNormalFiniteIndexSubgroup
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ApproxPthRootFixedFieldCyclotomicTower
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsGaloisInvariantValuationIntegersEqIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsNormalFiniteIndexFixingStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsNormalFiniteIndexFixing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -88,11 +89,11 @@ theorem GlobalTheory.ValuationAlmostSeparation.exists_valuation_almostSep : ∀ 
   intro p _ Ω _ _ hp2 hclo T
   obtain ⟨v, hint, hinv, hp0, hp1⟩ := GlobalTheory.T.exists_galoisInvariant_valuation_integers_eq_integral p Ω hclo
   refine ⟨v, hint, hinv, hp0, hp1, fun S => ?_⟩
-  obtain ⟨U, hUn, hUf, hUS, hUsep⟩ := GlobalTheory.T.exists_normal_finiteIndex_fixing_finite_orbits Ω (↥(⨅ n, Gn T n)) S
+  obtain ⟨U, hUn, hUf, hUS, hUsep⟩ := _root_.GlobalTheory.AlmostEt.exists_normal_finiteIndex_fixing Ω (↥(⨅ n, Gn T n)) S
     (fun s _ => orbit_finite hclo _ s)
   refine ⟨U, hUn, hUf, hUS, ?_⟩
-  have hR := GlobalTheory.T.approxPthRoot_fixedField_cyclotomic_tower p Ω hp2 hclo T v hint hp0 hp1
-  refine GlobalTheory.T.almostPurity_of_normal_finiteIndex_subgroup Ω v p (Fact.out) hp0 hp1 (↥(⨅ n, Gn T n)) (fun g x => hinv g.1 x)
+  have hR := _root_.GlobalTheory.K5.TopRoots.approxRoot_fix_tower p Ω hp2 hclo T v hint hp0 hp1
+  refine _root_.GlobalTheory.AlmostEt.almostSep_of_normal_finiteIndex Ω v p (Fact.out) hp0 hp1 (↥(⨅ n, Gn T n)) (fun g x => hinv g.1 x)
     (T.ζ 1) (by simpa using T.prim 1) ?_ (by rw [fix_top]; exact hR) U hUn hUf hUsep
   intro g
   have hg : (g : Gal p Ω) ∈ Gn T 1 := (iInf_le (fun n => Gn T n) 1) g.2

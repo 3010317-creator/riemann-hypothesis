@@ -7,7 +7,6 @@ public import Development.AutomorphicArithmetic.Foundations.Convolution.Convolut
 public import Development.AutomorphicArithmetic.Foundations.Convolution.IntegrableConvolution.EigBasic
 public import Development.AutomorphicArithmetic.Foundations.Convolution.IntegrableConvolution.TwistY
 public import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.LocGalEx
-import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.OccursBasics
 public import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.OlocEx
 public import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.TwistFactorAlt
 public import Development.AutomorphicArithmetic.TwistedTraces.ArchimedeanBaseChangeTraceComparison
@@ -21,6 +20,9 @@ public import Development.AutomorphicArithmetic.TwistedTraces.IntegralOpEigenlin
 public import Development.AutomorphicArithmetic.TwistedTraces.ProdLocalOperatorsMemFixedAndOffNCMDatum
 public import Development.AutomorphicArithmetic.TwistedTraces.TrOnProdEigenProjectionsEqTrOnJointEigenspace
 public import Development.AutomorphicArithmetic.TwistedTraces.TraceEigenspaceOfSelfAdjointInvariantSubspaces
+public import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.TvDefs
+import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.SummandFactor
+import Development.WeilBound.CuspidalAdmissibility.OccursIff
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicLocalCompactness.AdeleLC
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -62,7 +64,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
 import PositivityTheory.AutomorphicForms.PublishedInputs.CyclicBaseChange.PSConjSpaceR
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.TvDefs
 
 @[expose] public section
 
@@ -361,7 +362,7 @@ theorem UpperTheory.ConvolutionTheory.C.termEV :
     haveI := hmmH (w i)
     obtain ⟨e, he0, he1, he2⟩ := UpperTheory.exists_unique_eigenline_of_rankOne_occurs E n μ V hV (w i) (τ (p₂ i)) (hocc _ hv.1) (T.J (w i)) (T.χ (w i))
       (T.co _) (T.chr _) h1 h2
-    obtain ⟨-, -, h3⟩ := UpperTheory.ConvolutionTheory.C.occursBasics E n μ V (w i) (mm (w i)) hV
+    obtain ⟨-, -, h3⟩ := _root_.PositivityTheory.TfC.OccursBasics_holds E n μ V (w i) (mm (w i)) hV
     obtain ⟨_, A, hA, -⟩ := h3 (τ (p₂ i)) (hocc _ hv.1) _ (test_ind (T.co (w i)) (T.chr (w i)))
     exact UpperTheory.integralOp_eigenline_scalar_of_twist (Gw n (w i)) (mm (w i)) (τ (p₂ i)) (I (p₂ i)) (g (p₂ i)) (T.J (w i)) (T.χ (w i)) A e (T.co _) (T.chr _)
       (hmm1 _) hA he0 he1 he2 (stabV T _ (hU _ (hm₂ i)) (hI _ hv.1 hv.2).1) (hI _ hv.1 hv.2).2

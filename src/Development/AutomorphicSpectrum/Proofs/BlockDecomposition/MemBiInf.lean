@@ -4,8 +4,11 @@ public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmulMPul
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.GlobalSerreRelations.GlobSerreSt
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.GradedChartDegrees.ChartGrConst
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.SplittingFieldLattices.GrSplit
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ChartLiftTensorCompatStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoordinatesRestrictAffineOpenStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.GradedChartDegrees.ThickeningIdealNilpotent
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ChartLiftTensorCompat
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.CapOComp
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.SEqOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoordinatesRestrictAffineOpen
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FlatBaseChangeCohomology
 import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.FaceMapCompSuccAboveCastSucc
 import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.MapHComp
@@ -145,7 +148,7 @@ theorem local_bij (hLoc : DH.LocCmpq) (hPA : DH.PolyAll) (hPT : KH.PolyTf) (hCA 
   have hT : Good (l := l) cO.D m := hQ _ hDQ
   have hevt : ∀ i, ev cO.D cO.inV (c.t i) = Ideal.Quotient.mk _ (cO.t i) := fun i => by rw [hev, ht]
   obtain ⟨σ, hσ⟩ := exists_sig h c m cL hgL hcL cO hevt hT
-  have hσb := GlobalTheory.T.chart_lift_tensor_compat h c m cL hcL cO e hi ht hev hT σ hσ
+  have hσb := _root_.GlobalTheory.CompanionTheory.DisoHm.cmp_bij h c m cL hcL cO e hi ht hev hT σ hσ
   let E := frameC (Ideal.Quotient.mk (Ideal.span {(l : O) ^ m}))
     (cL.frame hgL (St (⊤ : ObjectProperty (Thick (Lm h q m))) {W}) (fun T hT => by
       obtain ⟨-, V, rfl, hV⟩ := hT
@@ -369,7 +372,7 @@ theorem main : ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] (h : OL l O)
     exact ⟨trivial, V, hV, inU_G h T.obj m _ hin⟩
   have g := glue h U s m hQ hP (fun S hS j => by
     obtain ⟨α, hα⟩ := hS
-    obtain ⟨c', -⟩ := GlobalTheory.T.coordinates_restrict_affine_open (U.c α) (iInf₂_le α hα : (⨅ α ∈ S, U.U α) ≤ U.U α) (U.inter S ⟨α, hα⟩)
+    obtain ⟨c', -⟩ := _root_.GlobalTheory.CompanionTheory.CoordRes.main (U.c α) (iInf₂_le α hα : (⨅ α ∈ S, U.U α) ≤ U.U α) (U.inter S ⟨α, hα⟩)
     exact local_bij hLoc hPA hPT hCA hCP hCG h c' s (hs α) m _ _ j) j
   have tL := top_L hZ h q m _ hUs j
   have tO := top_O hZ q l s _ hUs (htop _) ((l : O) ^ m) j

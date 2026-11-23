@@ -1,11 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.SameFns
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MinusHatsTaylorCoeffLeibnizRuleStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormalFormProductSpanLeftMulClosedStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.PlusHatsTaylorCoeffLeibnizRuleStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.R0MemNfSpanOfHatHypStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.VecPolyMemSpanValuesStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MinusHatsTaylorCoeffLeibnizRule
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormalFormProductSpanLeftMulClosed
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.PlusHatsTaylorCoeffLeibnizRule
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.R0MemNfSpanOfHatHyp
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.Span.Defs
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.VecPolyMemSpanValues
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -89,7 +91,7 @@ theorem hats_mem_nfSpan : ∀ (P : M.Par) (A : Type) [Ring A] [StarRing A] [Alge
     refine Submodule.span_le.2 ?_
     rintro x ⟨b, hb, H, hH, hHT, rfl⟩
     obtain ⟨h, rfl⟩ := List.length_eq_one_iff.1 hH
-    have h1 := ((GlobalTheory.T.normalFormProductSpan_left_mul_closed P A d hd T).1 0 a 1 h (hT h (hHT h (List.mem_singleton_self h)))).1 b hb
+    have h1 := ((_root_.GlobalTheory.HatNF.SpanMul.span_mul P A d hd T).1 0 a 1 h (hT h (hHT h (List.mem_singleton_self h)))).1 b hb
     simpa [nfSpan] using h1
   obtain ⟨y, hy, hreg⟩ := hatExp_exists_nodes P (P.r + 2)
   have hyc : Function.Injective fun i => (y i : ℂ) := fun i j h => hy (Complex.ofReal_injective h)
@@ -98,23 +100,23 @@ theorem hats_mem_nfSpan : ∀ (P : M.Par) (A : Type) [Ring A] [StarRing A] [Alge
       (∀ s : ℂ, Z s = ∑ j ∈ Finset.range (P.r + 2), s ^ j • X j) →
       (∀ i, Z (ν i) ∈ nfSpan d T 0 a 1) → ∀ s, Z s ∈ nfSpan d T 0 a 1 := by
     intro Z X ν hν hZ hi s
-    refine (Submodule.span_le.2 ?_) ((GlobalTheory.T.mem_span_values_of_vector_polynomial A (P.r + 2) Z X ν hν hZ).2 s)
+    refine (Submodule.span_le.2 ?_) ((_root_.GlobalTheory.vecPoly_mem_span_values A (P.r + 2) Z X ν hν hZ).2 s)
     rintro _ ⟨i, rfl⟩
     exact hi i
-  obtain ⟨Xa, Xr, hXa, hXr, -⟩ := GlobalTheory.T.plusHats_taylorCoeff_leibniz_rule A P.r d.L 0
-  obtain ⟨Va, Vr, hVa, hVr, -⟩ := GlobalTheory.T.minusHats_taylorCoeff_leibniz_rule A P.r d.L 0
+  obtain ⟨Xa, Xr, hXa, hXr, -⟩ := _root_.GlobalTheory.HatTaylorPlus.taylor_plus A P.r d.L 0
+  obtain ⟨Va, Vr, hVa, hVr, -⟩ := _root_.GlobalTheory.HatNF.TaylorMinus.taylor_minus A P.r d.L 0
   rintro X (((⟨s, rfl⟩ | ⟨s, rfl⟩) | ⟨s, rfl⟩) | ⟨s, rfl⟩)
   · have := key (fun s => d.L.Ahat (0 + s)) Xa _ hyc hXa
       (fun i => by simpa using hT _ ⟨y i, hreg i, Or.inl rfl⟩) s
     simpa using this
   · have := key (fun s => d.L.R0 (0 + s)) Xr _ hyc hXr
-      (fun i => by simpa using hle (GlobalTheory.T.R0_and_R0v_mem_nfSpan_basics_of_xC_ne_zero P A d hd (y i) (hreg i)).1) s
+      (fun i => by simpa using hle (_root_.GlobalTheory.HatNF.r0_mem_nfSpan_basics P A d hd (y i) (hreg i)).1) s
     simpa using this
   · have := key (fun s => d.L.Ahatv (0 - s)) Va _ hyn hVa
       (fun i => by simpa using hT _ ⟨y i, hreg i, Or.inr (Or.inl rfl)⟩) (-s)
     simpa using this
   · have := key (fun s => d.L.R0v (0 - s)) Vr _ hyn hVr
-      (fun i => by simpa using hle (GlobalTheory.T.R0_and_R0v_mem_nfSpan_basics_of_xC_ne_zero P A d hd (y i) (hreg i)).2) (-s)
+      (fun i => by simpa using hle (_root_.GlobalTheory.HatNF.r0_mem_nfSpan_basics P A d hd (y i) (hreg i)).2) (-s)
     simpa using this
 
 end GlobalTheory.HatNF

@@ -8,7 +8,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicC
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KapTopLastPosRun
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DictionaryCharacterRightInvariantCoreLevelStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGoodCoverLevelOneOverSmallFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HolomorphicSectionsSpanRestrictionStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IntFormsSubset
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HolomorphicSectionsSpanRestriction
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsLevelDatumReferenceTupleSmallFieldStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LiftDatumThetaSeriesRightInvariantCoreLevelStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemCuspFormsOfReadingBoundedCuspidalHolomorphicStatement
@@ -126,7 +127,7 @@ theorem expands_of_isRatPhase : ∀ (D : D7) (Γ : Type) [Group Γ] [Fintype Γ]
   have hmu := GlobalTheory.T.dictionaryCharacter_right_invariant_coreLevel D Γ Pl0 I0 T0 A3 hRF T Rl cG S YS F κ v₀ O hT hcore hfw hti hio hQ hgal hval hray hroots j hV hpins hfp
   have hinv := GlobalTheory.T.liftDatum_thetaSeries_right_invariant_coreLevel D Γ Pl0 I0 T0 A3 hRF T Rl cG S YS F κ v₀ O hT hcore hfw hti hio hQ hgal hval hray hroots j hV hpins hfp
     u h hh (c x) ph₀ φ' hφ'e
-  obtain ⟨m, xs, ψ, hψ, hφeq⟩ := GlobalTheory.T.holomorphic_sections_span_restriction D T hT _ hInR T.σ₀ T.toCore.good_σ₀ C hgood.1 (wtA (κ j)) (κ j).n
+  obtain ⟨m, xs, ψ, hψ, hφeq⟩ := _root_.GlobalTheory.CoverFormDesc.cover_form_desc D T hT _ hInR T.σ₀ T.toCore.good_σ₀ C hgood.1 (wtA (κ j)) (κ j).n
     (dom_wtA _) (hgood.2.1 _ (dom_wtA _)) hspan hmu φ' hφ'm hinv
   have hψ' : ∀ k, ∃ f, (f ∈ sec (T.Q.Xo ((j : ℕ) + 1)) T.Q.c (wtA (κ j)) (κ j).n ∧
       rdU (T.U ((j : ℕ) + 1) T.σ₀) f ∈ Formalism.L2.Pj.holSub0 (T.U ((j : ℕ) + 1) T.σ₀).X

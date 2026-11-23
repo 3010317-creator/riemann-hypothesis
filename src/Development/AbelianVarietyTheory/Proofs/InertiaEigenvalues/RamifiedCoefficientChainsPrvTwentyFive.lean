@@ -3,14 +3,18 @@ module
 public import Formalism.SharpRestriction.LevelLetterCocycles.RamifiedCoefficientChains
 public import Formalism.GaloisCohomology.LocalTateDualityK
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.RationalDualityOfAllCoefficients
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EigenvalueProductMapsLetterLatticeOfConclusionsAStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FontaineFullFaithfulExactPsiStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.LetterConditionGlobal
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EigenvalueProductMapsLetterLatticeOfConclusionsA
+public import Formalism.SharpRestriction.LevelLetterCocycles.InvariantsGenerators
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FontaineFullFaithfulExactPsi
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ImportsBisRest
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JumpsExactAdm
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalLiftingTheoremCHypothesesAdmittedStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalLiftingTheoremCHypothesesAdmitted
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.OnePlaceAdmissibleOfGapConstantLe
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TheoremCConst25OfHypothesesStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeLaterClausesHoldStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.CrystallineLiftingBounds
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TheoremCConst25OfHypotheses
+import Formalism.SharpRestriction.LevelLetterCocycles.UsedLocalConclusion
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeLaterClausesHold
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,12 +63,12 @@ theorem ramifiedCoefficientChains_prv_twenty_five :
       ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf D.loc D.locA HW F),
         RamifiedCoefficientChains.aux₃ D HW F 25 := by
   intro hBK hTD hEC D HW F Cm
-  have hadm := GlobalTheory.T.localLifting_theoremC_hypotheses_admitted hBK hTD hEC D HW F Cm
+  have hadm := _root_.GlobalTheory.TheoremCAdm.admissible_ranks_of_CMDatum hBK hTD hEC D HW F Cm
   have h23 : LiftingTheory.adm23 D HW F := (GlobalTheory.jumps_exact_adm D HW F).2
-  have hC4 : LetterConditionGlobal D HW F := GlobalTheory.T.letterConditionGlobal_of_N1used D HW F Cm (GlobalTheory.T.wachLattice_laterClauses_hold D HW F Cm)
+  have hC4 : LetterConditionGlobal D HW F := _root_.GlobalTheory.PrimeSequence.eigenvalue_product_maps_letter_lattice_of_conclusions D HW F Cm (_root_.GlobalTheory.NL.wach_used_clauses D HW F Cm)
   have hH : ElementDenominator.HerrClassNaturalExtension D.loc D.locA HW F := GlobalTheory.AdmHerrLocal.main D HW F
   have h22 : CrystallineLiftingBounds.adm22 D HW F := GlobalTheory.FontaineIneq.one_place_admissible_of_gap_constant_le D HW F
-  have hL : InvariantsGenerators.LitFont D HW F := GlobalTheory.T.fontaine_fullFaithful_exact_psi D HW F
-  exact GlobalTheory.T.ramified_coefficient_chains_of_hypotheses D HW F Cm 10 23 32 32 h23 hC4 hH h22 hL hadm
+  have hL : InvariantsGenerators.LitFont D HW F := _root_.GlobalTheory.fontaine_litFont_assembled D HW F
+  exact _root_.GlobalTheory.theoremC_of_admitted_inputs D HW F Cm 10 23 32 32 h23 hC4 hH h22 hL hadm
 
 end GlobalTheory

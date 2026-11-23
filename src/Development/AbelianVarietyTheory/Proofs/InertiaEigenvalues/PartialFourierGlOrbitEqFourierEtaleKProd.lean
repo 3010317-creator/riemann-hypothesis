@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LeftMulTau
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetRallisInvKRegularIffIsUnit
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelfDualIffLatticeVolumeAndPlancherelStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsTestRep
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelfDualIffLatticeVolumeAndPlancherel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -171,7 +172,7 @@ theorem pi_selfDual (F E : Type) [NontriviallyNormedField F] [NontriviallyNormed
     | exact ⟨fun x y => by simp [hβ, dotProduct_comm]⟩
     | exact fun x y => by simp [hβ, dotProduct_comm]
   have hβn : β.Nondegenerate := Matrix.Nondegenerate.toBilin' (Matrix.nondegenerate_of_det_ne_zero (by simp))
-  have key := (GlobalTheory.T.selfDual_iff_lattice_volume_and_plancherel_alt F E ψ hψ (Fin r → F) β hβs hβn (Measure.pi fun _ => μF) inferInstance).1 Mg
+  have key := (_root_.GlobalTheory.JR.selfDual_iff_lattice_volume_and_plancherel F E ψ hψ (Fin r → F) β hβs hβn (Measure.pi fun _ => μF) inferInstance).1 Mg
     (by rw [hMg]; exact hSo) (by rw [hMg]; exact hSc)
   have hdual : {y | ∀ x ∈ Mg, ψ (β x y) = 1} = S := by
     ext y

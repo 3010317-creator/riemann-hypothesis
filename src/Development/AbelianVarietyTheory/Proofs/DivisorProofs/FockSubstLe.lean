@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DualWeylE
 public import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsUnitaryMulTriangular
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RenameMemDualWeyl
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ColumnInclusionRenaming
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DualWeylExtremalReproducingNormSqOneStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DualWeylExtremalReproducingNormSqOne
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExtremalRowWeight
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.NormLeOfCoord
 import Formalism.GradedWeylDivisibility.FinalC
@@ -207,8 +207,8 @@ theorem fock_mul_det {n : ℕ} (μ : Fin n → ℕ) (hμ : Antitone μ) (e : ℕ
       simp
     rw [map_mul, map_pow, h1, norm_mul, norm_pow,
       CStarRing.norm_of_mem_unitary (Matrix.det_of_mem_unitary g.2), one_pow, mul_one]
-  have h1 := (GlobalTheory.T.dualWeyl_extremal_reproducing_normSq_one n μ hμ).2
-  have h2 := (GlobalTheory.T.dualWeyl_extremal_reproducing_normSq_one n _ hν).2
+  have h1 := (_root_.GlobalTheory.DualWeyl.Repro.extremal_reproducing n μ hμ).2
+  have h2 := (_root_.GlobalTheory.DualWeyl.Repro.extremal_reproducing n _ hν).2
   rw [GlobalTheory.DualWeyl.extremal, hw_add] at h2
   simp only [GlobalTheory.DualWeyl.normSq, hn] at h2
   rw [GlobalTheory.DualWeyl.normSq, GlobalTheory.DualWeyl.extremal] at h1

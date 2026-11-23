@@ -1,17 +1,18 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ArchBetween
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BoundedHeightPointsDenseStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DominantWeightGapShiftStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.JoinModelPointsLiftStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LineHeightInvariantScalingStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NumberFieldPointHeightStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootHeightDifferenceBoundStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BoundedHeightPointsDense
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.CompactGapsGE
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DominantWeightGapShift
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.JoinModelPointsLift
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LineHeightInvariantScaling
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NumberFieldPointHeight
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootHeightDifferenceBound
+public import Mathlib.Analysis.Complex.ExponentialBounds
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Real
-public import Mathlib.Analysis.Complex.ExponentialBounds
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
@@ -118,9 +119,9 @@ theorem tower_upper : ∀ (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ) (T
     (R : T.Comp → RootModel Ψ N), IsIntersectionSystem II → HasRef T R → T.I6 II := by
   intro Ψ _ _ N T II R hII href c₀ hc₀
   obtain ⟨C, s₀, hs₀, href⟩ := href
-  obtain ⟨θ₁, hθ₁, hθ₁1, hwt⟩ := GlobalTheory.T.dominant_weight_gap_shift Ψ N T.j T.nu c₀ T.j_pos T.j_lt hc₀
+  obtain ⟨θ₁, hθ₁, hθ₁1, hwt⟩ := _root_.GlobalTheory.CompanionTheory.Ar.WtShift.sub_small_dominant Ψ N T.j T.nu c₀ T.j_pos T.j_lt hc₀
   choose D hD using fun c : T.Comp =>
-    GlobalTheory.T.bounded_height_points_dense (R c).K (R c).ι (R c).P _ (R c).arith _ ((R c).line 1) (line_smooth (R c) 1)
+    _root_.GlobalTheory.CompanionTheory.Ar.Dense0.dense_bounded_lines (R c).K (R c).ι (R c).P _ (R c).arith _ ((R c).line 1) (line_smooth (R c) 1)
   set D' : ℝ := ∑ c, |D c| with hD'
   have hDle : ∀ c, D c ≤ D' := fun c =>
     (le_abs_self _).trans (Finset.single_le_sum (f := fun c => |D c|) (fun _ _ => abs_nonneg _) (Finset.mem_univ c))
@@ -149,23 +150,23 @@ theorem tower_upper : ∀ (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ) (T
     fun W hW => hW⟩
   intro f hf hfP
   obtain ⟨L, _, _, L', _, _, e, w, z, hz, hw, hQ, hze, hfz⟩ :=
-    GlobalTheory.T.join_model_points_lift Ψ N (T.M B c) (R c) i
+    _root_.GlobalTheory.CompanionTheory.Ar.CoverDense.preimage_dense Ψ N (T.M B c) (R c) i
       (fun L _ w => ∀ _ : NumberField L, ∀ j, |lineHt ((R c).line 1 j) L w| ≤ D c)
       (fun g hg hgP => by
         obtain ⟨L, _, _, w, hw, hgw, hb⟩ := hD c g hg hgP
         exact ⟨L, inferInstance, inferInstance, w, hw, hgw, fun _ => hb⟩) f hf hfP
   have hz₁ : (fun p => z (joinInl (T.M B c).ι (R c).ι p)) ∈ ptsOver L' (T.M B c).P := proj_inl_mem _ _ hz
-  obtain ⟨hA, hle, hmem, hht⟩ := GlobalTheory.T.number_field_point_height _ _ II hII _ _ (T.M B c).arith L' _ hz₁
+  obtain ⟨hA, hle, hmem, hht⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Ht.pointCurve_height _ _ II hII _ _ (T.M B c).arith L' _ hz₁
   refine ⟨mCoordIdeal fun p => z (joinInl (T.M B c).ι (R c).ι p), ⟨⟨hA, hle⟩, ?_⟩, fun h => hfz ((hmem f hf).1 h)⟩
   have e1 : T.mbarHt II B c lam s (mCoordIdeal fun p => z (joinInl (T.M B c).ι (R c).ι p)) =
       rootHt (T.M B c) (scale s) (T.lamS lam s) s L' (fun p => z (joinInl (T.M B c).ι (R c).ι p)) := by
     simp only [RootTower.mbarHt, RootModel.ht, rootHt, Finset.sum_div, mul_div_assoc]
     exact Finset.sum_congr rfl fun j _ => by rw [hht _ (line_smooth _ _ j)]
-  have hcl := (GlobalTheory.T.root_height_difference_bound Ψ N (T.M B c) (R c) i u _ _ _ _ _ _ hclose harch' L' z hz).2
+  have hcl := (_root_.GlobalTheory.CompanionTheory.Ar.Ht.CloseHt.close_ht Ψ N (T.M B c) (R c) i u _ _ _ _ _ _ hclose harch' L' z hz).2
   have hR : rootHt (R c) 1 (T.lamS lam s) s L' (fun p => z (joinInr (T.M B c).ι (R c).ι p)) ≤
       (l1 (T.lamS lam s) + |(s : ℝ)|) * D' := by
     refine rootHt_le _ _ _ _ _ _ _ fun j => ?_
-    have h := GlobalTheory.T.line_height_invariant_scaling _ _ ((R c).line 1 j) L L' e w (fun _ => 1) hw.1 (fun _ => one_ne_zero)
+    have h := _root_.GlobalTheory.CompanionTheory.Ar.Ht.lineHt_map_scale _ _ ((R c).line 1 j) L L' e w (fun _ => 1) hw.1 (fun _ => one_ne_zero)
     simp only [one_mul] at h
     rw [hze, h]
     exact (hQ inferInstance j).trans (hDle c)

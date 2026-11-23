@@ -5,14 +5,15 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRapidInf
 public import Development.AbelianVarietyTheory.Definitions.Divisors.MemL2OfSmoothVector
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.CuspDiscreteDecompositionGL
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AutomorphicFormGLContinuous
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HasFDerivAtRealLieChartKernelOperatorAtOneStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegralFderivRealLieChartEqSumKernelOperatorsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsBoundedContinuousCuspidalAutomorphicZeroAddSmuStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsCuspidalArchimedeanKernelConvolutionOperatorStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.KernelOperatorIntegrableContinuousSmoothStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemSmoothOfChartDerivativesAtIdentityStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RapidlyDecreasingKernelMulAdjointConjCoefficientStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HasFDerivAtRealLieChartKernelOperatorAtOne
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegralFderivRealLieChartEqSumKernelOperators
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsBoundedContinuousCuspidalAutomorphicZeroAddSmu
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsCuspidalArchimedeanKernelConvolutionOperator
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.KernelOperatorIntegrableContinuousSmooth
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.DifferentiableAtChart
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemSmoothOfChartDerivativesAtIdentity
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CapCommuteRtInfGL
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RapidlyDecreasingKernelMulAdjointConjCoefficient
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -113,9 +114,9 @@ theorem word_rt (h : GA E a) : ∀ (l : List (Lie E a)) (φ : Sm E a),
 variable (E a) in
 def bccSub : Submodule ℂ (GA E a → ℂ) where
   carrier := {F | IsBCC F}
-  zero_mem' := (GlobalTheory.T.isBoundedContinuousCuspidalAutomorphic_zero_add_smul E a).1
-  add_mem' {F G} hF hG := by simpa using (GlobalTheory.T.isBoundedContinuousCuspidalAutomorphic_zero_add_smul E a).2 1 F G hF hG
-  smul_mem' c F hF := by simpa using (GlobalTheory.T.isBoundedContinuousCuspidalAutomorphic_zero_add_smul E a).2 c F 0 hF (GlobalTheory.T.isBoundedContinuousCuspidalAutomorphic_zero_add_smul E a).1
+  zero_mem' := (_root_.GlobalTheory.JSW.isBCC_zero_and_add E a).1
+  add_mem' {F G} hF hG := by simpa using (_root_.GlobalTheory.JSW.isBCC_zero_and_add E a).2 1 F G hF hG
+  smul_mem' c F hF := by simpa using (_root_.GlobalTheory.JSW.isBCC_zero_and_add E a).2 c F 0 hF (_root_.GlobalTheory.JSW.isBCC_zero_and_add E a).1
 
 def dSub (π : CuspSub E a) : Submodule ℂ (Sm E a) :=
   ⨅ l : List (Lie E a), (mspanR π ⊓ bccSub E a).comap ((Sm E a).subtype ∘ₗ GlobalTheory.GLFin.word l)
@@ -159,8 +160,8 @@ theorem mem_dSub_of_mem (hB : GlobalTheory.Published.CuspFormsBoundedGL) {π : C
 theorem isBCC_kerOp {X : Type} [MeasurableSpace X] (ν : Measure X) [SFinite ν] (k : X → ℂ)
     (γ : X → GL (Fin a) (Cinf E)) (hk : IsRapidInf ν k γ) (φ : Sm E a) (hφ : IsBCC φ.1) :
     IsBCC (kerOp ν k γ φ.1) := by
-  refine ⟨(GlobalTheory.T.kernelOperator_integrable_continuous_smooth E a X ν k γ hk φ hφ.cont hφ.bdd).2,
-    ?_, GlobalTheory.T.isCuspidal_archimedeanKernelConvolutionOperator E a X ν k γ hk φ hφ, ?_⟩
+  refine ⟨(_root_.GlobalTheory.JSW.kerOp_integrable_continuous E a X ν k γ hk φ hφ.cont hφ.bdd).2,
+    ?_, _root_.GlobalTheory.JSW.isCuspidal_kerOp E a X ν k γ hk φ hφ, ?_⟩
   · obtain ⟨C, hC⟩ := hφ.bdd
     have hi : Integrable (fun x => ‖k x‖) ν := by simpa using hk.2.2 0
     refine ⟨C * ∫ x, ‖k x‖ ∂ν, fun g => ?_⟩
@@ -177,8 +178,8 @@ theorem hasFDerivAt_kerOp {X : Type} [MeasurableSpace X] (ν : Measure X) (k : X
     HasFDerivAt (chart (kerOp ν k γ φ.1) g)
       (∑ p, kerOp ν (fun x => k x * adCoef (γ x) p) γ (lie E a (lieBasis E a p.1) φ).1 g • lieCoord E a p.2)
       (oneL E a) := by
-  rw [← GlobalTheory.T.integral_fderiv_realLieChart_eq_sum_kernelOperators E a X ν k γ hk φ hd g]
-  exact GlobalTheory.T.hasFDerivAt_realLieChart_kernelOperator_at_one E a X ν k γ hk φ hb hd g
+  rw [← _root_.GlobalTheory.JSW.integral_fderiv_chart_eq E a X ν k γ hk φ hd g]
+  exact _root_.GlobalTheory.JSW.hasFDerivAt_chart_kerOp E a X ν k γ hk φ hb hd g
 
 theorem kerOp_mem_dSub {π : CuspSub E a} {φ : Sm E a} (hφ : φ ∈ dSub π) {X : Type} [MeasurableSpace X]
     (ν : Measure X) [SFinite ν] (k : X → ℂ) (γ : X → GL (Fin a) (Cinf E)) (hk : IsRapidInf ν k γ) :
@@ -192,9 +193,9 @@ theorem kerOp_mem_dSub {π : CuspSub E a} {φ : Sm E a} (hφ : φ ∈ dSub π) {
     have hd : ∀ i, ∃ C : ℝ, ∀ g, ‖(lie E a (lieBasis E a i) φ).1 g‖ ≤ C := fun i => by
       simpa [word_single] using (mem_dSub.1 hφ [lieBasis E a i]).2.bdd
     exact ⟨fun p => kerOp ν (fun x => k x * adCoef (γ x) p) γ (lie E a (lieBasis E a p.1) φ).1,
-      fun p => ⟨X, _, ν, inferInstance, _, γ, _, GlobalTheory.T.rapidlyDecreasingKernel_mul_adjointConjCoefficient E a X ν k γ hk p, lie_mem_dSub hφ _, rfl⟩,
+      fun p => ⟨X, _, ν, inferInstance, _, γ, _, _root_.GlobalTheory.JSW.isRapidInf_mul_adCoef E a X ν k γ hk p, lie_mem_dSub hφ _, rfl⟩,
       hasFDerivAt_kerOp ν k γ hk φ hb hd⟩
-  have hSm : ∀ f ∈ K, f ∈ Sm E a := GlobalTheory.T.mem_smooth_of_chart_derivatives_at_identity E a K fun f hf => by
+  have hSm : ∀ f ∈ K, f ∈ Sm E a := _root_.GlobalTheory.SmOfDeriv.mem_Sm_of_hasFDerivAt E a K fun f hf => by
     obtain ⟨fs, h1, h2⟩ := hder f hf
     exact ⟨_, inferInstance, fs, fun p => lieCoord E a p.2, h1, h2⟩
   have hspan : Submodule.span ℂ K ≤ Sm E a := Submodule.span_le.2 hSm

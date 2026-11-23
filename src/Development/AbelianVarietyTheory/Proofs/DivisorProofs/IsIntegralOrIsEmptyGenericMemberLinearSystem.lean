@@ -2,10 +2,18 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.BijectiveSmulChartSec
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.SecEqZeroAndHomEqOfThickenings
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AffineBaseChangeOverFieldExtensionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FromSpecComapEqBotEqGenericPointStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenericMemberSectionNeZeroIsPrimeAffineChartStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralOrIsEmptySubschemeOfPrimeChartsStatement
+public import Mathlib.AlgebraicGeometry.AffineScheme
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Mathlib.Tactic.ENatToNat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AffineBaseChangeOverFieldExtension
+public import Mathlib.AlgebraicGeometry.Properties
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FromSpecComapEqBotEqGenericPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenVar
+public import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenericMemberSectionNeZeroIsPrimeAffineChart
+public import Mathlib.AlgebraicGeometry.IdealSheaf.Subscheme
+public import Mathlib.Order.CompletePartialOrder
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralOrIsEmptySubschemeOfPrimeCharts
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,7 +52,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenVar
 
 @[expose] public section
 
@@ -76,25 +83,25 @@ theorem GenericMember.isIntegral_or_isEmpty_zeroScheme : ∀ (k : Type) [Field k
     erw [← CommRingCat.comp_apply, ← Functor.map_comp]
     rfl
   choose V c hVc j hVa hxV hu using loc
-  have hW : ∀ x, IsAffineOpen (π ⁻¹ᵁ V x) := fun x => (GlobalTheory.T.affine_base_change_over_field_extension k _ X X' f f' π hP (V x) (hVa x)).1
+  have hW : ∀ x, IsAffineOpen (π ⁻¹ᵁ V x) := fun x => (_root_.GlobalTheory.isAffineOpen_preimage_and_tensor_equiv_of_isPullback k _ X X' f f' π hP (V x) (hVa x)).1
   have key : ∀ x, (genSec k N f' π L b).f (fun _ => c x) ≠ 0 ∧
       ((secIdeal (LB.isLB_pull hL π) (genSec k N f' π L b)).ideal ⟨π ⁻¹ᵁ V x, hW x⟩ = ⊤ ∨
         ((secIdeal (LB.isLB_pull hL π) (genSec k N f' π L b)).ideal ⟨π ⁻¹ᵁ V x, hW x⟩).IsPrime ∧
         ((secIdeal (LB.isLB_pull hL π) (genSec k N f' π L b)).ideal ⟨π ⁻¹ᵁ V x, hW x⟩).comap
           (π.app (V x)).hom = ⊥) := fun x => by
-    obtain ⟨-, e, he1, he2⟩ := GlobalTheory.T.affine_base_change_over_field_extension k _ X X' f f' π hP (V x) (hVa x)
-    exact GlobalTheory.T.genericMemberSection_ne_zero_isPrime_affineChart k N X X' f f' π L hL b (V x) ⟨x, hxV x⟩ (hW x) (c x) (hVc x) (j x) (hu x) e he1 he2
+    obtain ⟨-, e, he1, he2⟩ := _root_.GlobalTheory.isAffineOpen_preimage_and_tensor_equiv_of_isPullback k _ X X' f f' π hP (V x) (hVa x)
+    exact _root_.GlobalTheory.GenericMember.genSec_chart_ne_zero_and_isPrime k N X X' f f' π L hL b (V x) ⟨x, hxV x⟩ (hW x) (c x) (hVc x) (j x) (hu x) e he1 he2
   refine ⟨genSec k N f' π L b, fun h0 => ?_, ?_⟩
   · obtain ⟨x⟩ := (inferInstance : Nonempty X)
     exact (key x).1 (by rw [h0]; rfl)
-  · refine GlobalTheory.T.isIntegral_or_isEmpty_subscheme_of_prime_charts X' _ X (fun x => ⟨π ⁻¹ᵁ V x, hW x⟩) ?_ (fun x => ?_) (fun x y hx hy => ?_)
+  · refine _root_.GlobalTheory.SubschemeIntegral.isIntegral_or_isEmpty_subscheme X' _ X (fun x => ⟨π ⁻¹ᵁ V x, hW x⟩) ?_ (fun x => ?_) (fun x y hx hy => ?_)
     · refine eq_top_iff.2 fun z _ => Opens.mem_iSup.2 ⟨π z, hxV (π z)⟩
     · rcases (key x).2 with h | h
       · exact Or.inl h
       · exact Or.inr h.1
     · rcases (key x).2 with h | h
       · exact absurd h hx.ne_top
-      · have hg := GlobalTheory.T.fromSpec_comap_eq_bot_eq_genericPoint X X' π (V x) (hVa x) (hW x) _ hx h.2
+      · have hg := _root_.GlobalTheory.fromSpec_prime_comap_bot_lies_over_genericPoint X X' π (V x) (hVa x) (hW x) _ hx h.2
         show π _ ∈ V y
         rw [hg]
         exact (genericPoint_spec X).mem_open_set_iff (V y).isOpen |>.2 ⟨y, trivial, hxV y⟩

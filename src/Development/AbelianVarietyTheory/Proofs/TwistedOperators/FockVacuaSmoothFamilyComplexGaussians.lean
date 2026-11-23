@@ -3,13 +3,19 @@ module
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PairInfApply
 public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
 public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ContDiffFockGaussianFormOfLinearMapFamilyStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ContDiffProdLinearMapUpperRightLowerRightBlocksStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EqExpFockGaussianFormOfHeisenbergDerivativeEqStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasDerivAtDiagSumProdPairingStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockFormApply
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ContDiffFockGaussianFormOfLinearMapFamily
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ContDiffProdLinearMapUpperRightLowerRightBlocks
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EqExpFockGaussianFormOfHeisenbergDerivativeEq
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasDerivAtDiagSumProdPairing
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsUnitUpperRightBlockOfHeisenbergDerivativeSolutStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchwartzGaussianFormReNegStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UniformlyNegDefiniteNearOfContinuousQuadFormFamiStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchwartzGaussianFormReNeg
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UniformlyNegDefiniteNearOfContinuousQuadFormFami
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -72,14 +78,14 @@ theorem fock_vacua_family : ∀ {V : Type} [NormedAddCommGroup V] [NormedSpace �
   choose g0 hg0ne hg0 using hex
   have hunit : ∀ t, IsUnit (GlobalTheory.FockFamily.blockB (J t)) := fun t =>
     GlobalTheory.T.isUnit_upperRightBlock_of_heisenbergDerivative_solution β hβ (J t) (g0 t) (g0 t).continuous (fun h => hg0ne t (SchwartzMap.ext (fun x => congrFun h x))) (hg0 t)
-  obtain ⟨hB, hD⟩ := GlobalTheory.T.contDiff_prodLinearMap_upperRight_lowerRight_blocks J hJ
-  obtain ⟨hsm, hjoint⟩ := GlobalTheory.T.contDiff_fockGaussianFormOfLinearMap_family β J hB hD hunit
+  obtain ⟨hB, hD⟩ := _root_.GlobalTheory.FockFamily.contDiff_blockB_blockD J hJ
+  obtain ⟨hsm, hjoint⟩ := _root_.GlobalTheory.FockFamily.fockForm_family_contDiff β J hB hD hunit
   have hray : ∀ t (g : SchwartzMap V ℂ), (∀ w x, GlobalTheory.GaussLine.dHeis β (J t w) ⇑g x =
       Complex.I * GlobalTheory.GaussLine.dHeis β w ⇑g x) → ∀ x, g x = g 0 * Complex.exp (GlobalTheory.FockFamily.fockForm β (J t) x x) :=
-    fun t g hg => GlobalTheory.T.eq_exp_fockGaussianForm_of_heisenbergDerivative_eq β (J t) (hunit t) g g.differentiable hg
+    fun t g hg => _root_.GlobalTheory.FockFamily.solution_eq_gauss β (J t) (hunit t) g g.differentiable hg
   refine ⟨fun t => GlobalTheory.FockFamily.fockForm β (J t), hsm, hjoint, ?_, hray, ?_⟩
-  · exact GlobalTheory.T.uniformly_negDefinite_near_of_continuous_quadForm_family (fun t => GlobalTheory.FockFamily.fockForm β (J t)) hjoint.continuous
-      (fun t v hv => GlobalTheory.T.gaussian_form_re_neg_of_ne_zero _ (g0 t) (hg0ne t) (hray t (g0 t) (hg0 t)) v hv)
-  · exact GlobalTheory.T.exists_hasDerivAt_diag_eq_sum_mul_pairings β hβ _ (fun x y => ((hsm x y).differentiable (by simp)).differentiableAt)
+  · exact _root_.GlobalTheory.quadForm_unif_target (fun t => GlobalTheory.FockFamily.fockForm β (J t)) hjoint.continuous
+      (fun t v hv => _root_.GlobalTheory.schwartz_gaussian_form_re_neg _ (g0 t) (hg0ne t) (hray t (g0 t) (hg0 t)) v hv)
+  · exact _root_.GlobalTheory.hasDerivAt_diag_sum_prod_pairing β hβ _ (fun x y => ((hsm x y).differentiable (by simp)).differentiableAt)
 
 end GlobalTheory.FockFamily

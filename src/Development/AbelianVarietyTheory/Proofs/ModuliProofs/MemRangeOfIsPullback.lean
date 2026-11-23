@@ -6,8 +6,8 @@ public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsP
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaLevelAbelianSchemePullback
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsGrpPullbackLocalOnBase
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SurjectiveAppOfPullbackSnd
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelIsoUniqueOfDenseCommonFibresStatement
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelPullbackIdCompCancelStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelIsoUniqueOfDenseCommonFibres
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelPullbackIdCompCancel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -141,7 +141,7 @@ theorem TBy.unique (hL : Out.Laws) (hL2 : Out.Laws2) (hm : 2 ≤ m) (hd : m ^ 2 
     (h : TBy u t x φ) (h' : TBy u t x φ') : φ = φ' := by
   obtain ⟨e, he, e₁⟩ := grpPullback_iso h'.1 h.1
   have : IsMonHom (Iso.refl u.A).hom := inferInstanceAs (IsMonHom (𝟙 u.A))
-  have hd := (GlobalTheory.T.thetaLevel_iso_unique_of_dense_common_fibres hL hL2 o g N' J b m R β u u hm hd ho (fun p => subset_closure (by
+  have hd := (_root_.GlobalTheory.TUniq.iso_unique_of_dense hL hL2 o g N' J b m R β u u hm hd ho (fun p => subset_closure (by
     obtain ⟨K, _, _, y, hy⟩ := exists_geomPt _ p
     obtain ⟨w, hw⟩ := GlobalTheory.tObj_pull o g _ J b _ _ (spMap β) _ y u rfl
     exact ⟨K, inferInstance, y, w, hy, hw, hw⟩))).2 e.hom.left (Iso.refl u.A).hom.left
@@ -169,13 +169,13 @@ theorem exists_common (hL : Out.Laws) (hL2 : Out.Laws2) (hm : 2 ≤ m) (hd : m ^
     intro K _ _ y sy u e
     subst e
     exact h K y u
-  have h₁ : TMap u u' (𝟙 _) := (GlobalTheory.T.thetaLevel_iso_unique_of_dense_common_fibres hL hL2 o g N' J b m R β u u' hm hd ho (fun p => subset_closure (by
+  have h₁ : TMap u u' (𝟙 _) := (_root_.GlobalTheory.TUniq.iso_unique_of_dense hL hL2 o g N' J b m R β u u' hm hd ho (fun p => subset_closure (by
     obtain ⟨K, _, _, y, hy⟩ := exists_geomPt _ p
     obtain ⟨w, hw⟩ := GlobalTheory.tObj_pull o g _ J b _ _ (spMap β) _ y u rfl
-    refine ⟨K, inferInstance, y, w, hy, hw, ((GlobalTheory.T.thetaLevelPullback_id_comp_cancel o g _ J b _ _ _ _ _ _ t' u' w).2 x y hu').2 ?_⟩
+    refine ⟨K, inferInstance, y, w, hy, hw, ((_root_.GlobalTheory.ZM.tmap_id_comp_cancel o g _ J b _ _ _ _ _ _ t' u' w).2 x y hu').2 ?_⟩
     exact h' K _ _ w (by rw [Category.assoc, hβ])
-      (((GlobalTheory.T.thetaLevelPullback_id_comp_cancel o g _ J b _ _ _ _ _ _ t u w).2 x y ⟨a, ha⟩).1 hw)))).1
-  have h₂ := ((GlobalTheory.T.thetaLevelPullback_id_comp_cancel o g _ J b _ _ _ _ _ _ t' u' u).2 x _ hu').1 h₁
+      (((_root_.GlobalTheory.ZM.tmap_id_comp_cancel o g _ J b _ _ _ _ _ _ t u w).2 x y ⟨a, ha⟩).1 hw)))).1
+  have h₂ := ((_root_.GlobalTheory.ZM.tmap_id_comp_cancel o g _ J b _ _ _ _ _ _ t' u' u).2 x _ hu').1 h₁
   rw [Category.id_comp] at h₂
   obtain ⟨φ, hφ⟩ := h₂
   exact ⟨u, a, φ, ha, hφ⟩
@@ -205,7 +205,7 @@ theorem tMap_id_of_geomPt (hL : Out.Laws) (hL2 : Out.Laws2) (hm : 2 ≤ m) (hd :
     intro V W hle
     have := hx V
     have e := IsOpenImmersion.lift_fac (x V) (x W) (by rw [rx, rx]; exact hle)
-    obtain ⟨c, hc⟩ := ((GlobalTheory.T.thetaLevelPullback_id_comp_cancel o g _ J b _ _ _ _ _ _ t (u V) (u W)).2 (x V) _ ⟨_, ha V⟩).2
+    obtain ⟨c, hc⟩ := ((_root_.GlobalTheory.ZM.tmap_id_comp_cancel o g _ J b _ _ _ _ _ _ t (u V) (u W)).2 (x V) _ ⟨_, ha V⟩).2
       (by rw [e]; exact ⟨_, ha W⟩)
     have h₁ := TBy.comp hc (ha V)
     have h₂ := TBy.comp hc (hφ V)

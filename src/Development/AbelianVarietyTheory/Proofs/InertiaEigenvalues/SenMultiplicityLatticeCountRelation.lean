@@ -1,10 +1,10 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GmultEqZeroOfInj
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.PowerSeriesOneAddConstMulXMulInv
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GenEigenMultiplicityQuotientAdditiveChain
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NabBijectiveWindow
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.QuotientMultiplicityShiftLatticeQuotientStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.QuotientMultiplicityShiftLatticeQuotient
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GmultEqZeroOfInj
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -169,7 +169,7 @@ theorem sen_count : ∀ {k : Type} [Field k] {l : ℕ} [Fact l.Prime] [CharP k l
       ((sh 1 Q).restrictScalars k) (fun _ hy => h1 Q hy) (fun _ hy => hQP hy)
       (fun _ hy => Window.nab_mem cP hy) (fun _ hy => Window.nab_mem cQ hy)
       (fun _ hy => Window.nab_mem_sh R hg cQ 1 hy) hfin x
-    rw [← GlobalTheory.T.quotientMultiplicity_shift_lattice_quotient R g hg P Q hP hQ hQP cP cQ x]
+    rw [← _root_.GlobalTheory.PhiGam.QuotShift.main R g hg P Q hP hQ hQP cP cQ x]
     unfold sen qmult
     omega
   · intro hne

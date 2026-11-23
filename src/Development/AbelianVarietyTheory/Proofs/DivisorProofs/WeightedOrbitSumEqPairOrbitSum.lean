@@ -2,9 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StabilizerEqCentralizer
 public import Mathlib.Algebra.Group.Subgroup.Actions
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteSupportStabilizerWeightedPairTermStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinsumOrbitRelFibredEquivariantStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinsumOrbitsInvStabilizerCardMassStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteSupportStabilizerWeightedPairTerm
+public import Mathlib.Algebra.BigOperators.Finprod
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.GroupTheory.GroupAction.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinsumOrbitRelFibredEquivariant
+public import Mathlib.SetTheory.Cardinal.Finite
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinsumOrbitsInvStabilizerCardMass
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -91,7 +95,7 @@ theorem inner_sum_eq (F : Y → Γ → ℂ)
     rw [hk] at e2
     rw [e1, e2]
   have hs : (Function.support (fun z : ConjSelf Γ => F y (val z))).Finite := hsupp
-  have key := GlobalTheory.T.finsum_orbits_inv_stabilizer_card_mass (K := MulAction.stabilizer Γ y) (Z := ConjSelf Γ)
+  have key := _root_.GlobalTheory.finsum_orbits_stabilizer_mass (K := MulAction.stabilizer Γ y) (Z := ConjSelf Γ)
     (fun z => F y (val z)) hinv hs
   refine Eq.trans ?_ key
   refine finsum_congr fun o' => ?_
@@ -106,7 +110,7 @@ theorem orbitSum_eq_pairSum (F : Y → Γ → ℂ)
     ∑ᶠ o : MulAction.orbitRel.Quotient Γ Y,
         ((Nat.card (MulAction.stabilizer Γ (Quotient.out o)) : ℕ) : ℂ)⁻¹ * ∑ᶠ γ : Γ, F (Quotient.out o) γ =
       pairSum F := by
-  have hg := GlobalTheory.T.finite_support_stabilizerWeightedPairTerm F hF hsupp horb
+  have hg := _root_.GlobalTheory.OrbitUnfold.finite_support_pairTerm F hF hsupp horb
   have hπ : ∀ (h : Γ) (x : Y × ConjSelf Γ), (h • x).1 = h • x.1 := fun _ _ => rfl
   have hinj : ∀ y : Y, Function.Injective (fun γ : ConjSelf Γ => (y, γ)) :=
     fun y a b hab => (Prod.mk.inj hab).2
@@ -118,7 +122,7 @@ theorem orbitSum_eq_pairSum (F : Y → Γ → ℂ)
     intro y h hh e
     have hh' : h • y = y := hh
     rw [Prod.smul_mk, hh']
-  have h := GlobalTheory.T.finsum_orbitRel_fibred_equivariant (H := Γ) (X := Y × ConjSelf Γ) (B := Y) (E := ConjSelf Γ) Prod.fst
+  have h := _root_.GlobalTheory.finsum_orbitRel_fibred (H := Γ) (X := Y × ConjSelf Γ) (B := Y) (E := ConjSelf Γ) Prod.fst
     hπ (fun y => MulAction.stabilizer Γ y) (fun _ => le_rfl)
     (fun y γ => (y, γ)) hinj (fun _ _ => rfl) hsurj hequi
     Quotient.out (fun q => Quotient.out_eq q)

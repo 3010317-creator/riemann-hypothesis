@@ -3,7 +3,10 @@ module
 public import Formalism.SharpRestriction.LevelLetterCocycles.LocCoh
 public import Mathlib.NumberTheory.Padics.PadicIntegers
 public import Mathlib.RingTheory.IntegralClosure.IsIntegral.Defs
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoefficientRingIntegersCompactAdicPropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoefficientRingIntegersCompactAdicProperties
+public import Mathlib.LinearAlgebra.BilinearForm.Properties
+public import Mathlib.LinearAlgebra.FreeModule.PID
+public import Mathlib.RingTheory.DedekindDomain.IntegralClosure
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,9 +55,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
-public import Mathlib.LinearAlgebra.BilinearForm.Properties
-public import Mathlib.LinearAlgebra.FreeModule.PID
-public import Mathlib.RingTheory.DedekindDomain.IntegralClosure
 
 @[expose] public section
 
@@ -102,7 +102,7 @@ theorem intDual_coef : ∀ (l : ℕ) [Fact l.Prime] (LL : Type) [Field LL] [Alge
       (∀ o : O, ∃ z : ℤ_[l], lam (algebraMap O LL o) = (z : ℚ_[l])) ∧
       (∀ x : LL, x = ∑ i, lam (algebraMap O LL (f i) * x) • algebraMap O LL (e i)) := by
   intro l _ LL _ _ _ O _ _ hO
-  have H := GlobalTheory.T.coefficient_ring_integers_compact_adic_properties l LL O hO
+  have H := _root_.GlobalTheory.GoodCoeff.good_coeff_integers l LL O hO
   obtain ⟨⟨hdom, hdvr, hfrac⟩, hfd, -, -, -⟩ := hO
   haveI := hdom
   haveI := hdvr

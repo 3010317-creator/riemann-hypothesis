@@ -2,10 +2,11 @@ module
 
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.JacConstBHR
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.JacConstBHDim
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SwBigCellG
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SwGaussUniq
+public import Formalism.PeriodIntegrals.LongWeylElementSquare
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BigCellConjugation.Monomial
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.GaussianUniqueness.GaussUniqMain
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SwPhiDeriv
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SwPhiForm
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PhiBigCellForm.BigCellEqW0BMulTM
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SwSandwichOf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -48,7 +49,7 @@ import Mathlib.Topology.Sheaves.Init
 namespace Formalism.L2.SG.Pf.BH
 
 theorem sandwich' : Sandwich := by
-  refine sandwich_of_chart Sw.lieG' Sw.lieWb' gauss_sum_unique phi_form' big_cell_g
+  refine sandwich_of_chart Sw.lieG' Sw.lieWb' _root_.PI.SwBig.GU.gaussUniq_main _root_.PI.SwBig.PhiFormProof.phiForm _root_.PI.SwBig.BigCellGProof.bigCellG
     (phiDeriv_of Sw.w0Sq) Sw.lIso Sw.w0Sq ?_ ?_
   · unfold PI.SwSand.LieEN
     intros

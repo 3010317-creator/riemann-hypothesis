@@ -1,8 +1,12 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.StrictDominance.JointGeneralisedEigenvectors.IsJointGenEig
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactFixedVectorProjectionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactGroupFiniteCosetRepsStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.SmoothPartStable
+public import Mathlib.Basic.Complex.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactFixedVectorProjection
+public import Mathlib.Algebra.Group.Subgroup.Defs
+public import Mathlib.Topology.Algebra.Group.Defs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactGroupFiniteCosetReps
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -114,7 +118,7 @@ theorem exists_avg (K : Subgroup G) (hK : IsCompact (K : Set G)) (π : Represent
   have hH' : IsOpen (H' : Set K) := (hπ u).preimage continuous_subtype_val
   have hcomp : IsCompact (((⊤ : Subgroup K)) : Set K) := by
     simpa using (isCompact_univ : IsCompact (Set.univ : Set K))
-  obtain ⟨r, hr, x, hxA, hx⟩ := GlobalTheory.T.compact_group_finite_coset_reps K ⊤ H' (A.subgroupOf K) hcomp hH' le_top le_top (by
+  obtain ⟨r, hr, x, hxA, hx⟩ := _root_.GlobalTheory.CompanionTheory.CosetReps.exists_fin_coset_reps K ⊤ H' (A.subgroupOf K) hcomp hH' le_top le_top (by
     intro y _
     obtain ⟨a, ha, hau⟩ := hc y y.2
     refine ⟨⟨a, hA ha⟩, Subgroup.mem_subgroupOf.2 ha, ?_⟩
@@ -183,7 +187,7 @@ theorem exists_fixed_proj_eq_piN_pow : ∀ (G : Type) [Group G] [TopologicalSpac
     congr 2
     group
 
-  obtain ⟨E1, hE1fix, -, -, -, hE1⟩ := GlobalTheory.T.compact_fixed_vector_projection G (D.J ⊓ D.T) hKc V π hπ
+  obtain ⟨E1, hE1fix, -, -, -, hE1⟩ := _root_.GlobalTheory.CompanionTheory.CompactAvg.exists_average G (D.J ⊓ D.T) hKc V π hπ
   obtain ⟨r, b, hr, hb, hy⟩ := exists_avg (D.J ⊓ D.T) hKc π hπ E1 hE1 x (D.J ⊓ D.T) le_rfl
     (fun y hy => ⟨y, hy, by simp⟩)
   obtain ⟨y, hydef⟩ : ∃ y, y = E1 x := ⟨_, rfl⟩
@@ -227,7 +231,7 @@ theorem exists_fixed_proj_eq_piN_pow : ∀ (G : Type) [Group G] [TopologicalSpac
       rfl
     rw [h6, h5]
 
-  obtain ⟨E2, hE2fix, -, -, -, hE2⟩ := GlobalTheory.T.compact_fixed_vector_projection G D.J D.isCompact_J V π hπ
+  obtain ⟨E2, hE2fix, -, -, -, hE2⟩ := _root_.GlobalTheory.CompanionTheory.CompactAvg.exists_average G D.J D.isCompact_J V π hπ
   obtain ⟨r2, c, hr2, hc, hv⟩ := exists_avg D.J D.isCompact_J π hπ E2 hE2 y (D.J ⊓ D.N) inf_le_left
     (fun g hg => by
       obtain ⟨c, hc, b', hb', a, ha, rfl⟩ := D.fact_up g hg

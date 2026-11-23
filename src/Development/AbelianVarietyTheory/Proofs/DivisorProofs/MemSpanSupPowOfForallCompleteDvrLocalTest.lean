@@ -3,7 +3,7 @@ module
 public import Mathlib.RingTheory.DiscreteValuationRing.Basic
 public import Mathlib.RingTheory.EssentialFiniteness
 public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DvdOfForallCompleteDvrDominatingStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DvdOfForallCompleteDvrDominating
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CompletionIsDomainAndIsIntegrallyClosed
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsNoetherianRingAdicCompletionOfNoetherian
 import Mathlib.Algebra.Order.Floor.Extended
@@ -102,7 +102,7 @@ theorem mem_span_sup_pow_of_forall_complete_dvr : ∀ (O : Type) [CommRing O] [I
 
   have hgR : ι g ≠ 0 := fun h => hg (hinj (by rw [h, map_zero]))
   have hdvd : ι g ∣ F := by
-    refine GlobalTheory.T.dvd_of_forall_complete_dvr_dominating R F (ι g) hgR ?_
+    refine _root_.GlobalTheory.Poinc.dvd_of_forall_complete_dvr R F (ι g) hgR ?_
     intro V _ _ _ hVc ρ' hρ' _
     let ρ : O →+* V := ρ'.comp ι
     have hρ : Function.Injective ρ := hρ'.comp hinj

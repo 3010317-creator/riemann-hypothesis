@@ -2,9 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.IsHermHyperbolic
 public import Mathlib.Order.Filter.Cofinite
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsIsotropicBasisNonorthogonalTwoVectorsStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.QuasiReflectionEqMulTransvectionsOfHyperbolicPlaStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryTransvectionSubmonoidNormalDetOneStatement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsIsotropicBasisNonorthogonalTwoVectors
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.QuasiReflectionEqMulTransvectionsOfHyperbolicPla
+public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryTransvectionSubmonoidNormalDetOne
+public import Mathlib.Algebra.Polynomial.Roots
+public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,8 +56,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.Hat1
-public import Mathlib.Algebra.Polynomial.Roots
-public import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 
 @[expose] public section
 
@@ -143,7 +144,7 @@ theorem eventually_chain (σ : E →+* E) (G : Matrix (Fin n) (Fin n) E) (hG : I
       abel
     rw [hsplit] at h3 ⊢
     obtain ⟨m', hm', hm'eq⟩ :=
-      GlobalTheory.T.quasiReflection_eq_mul_transvections_of_hyperbolicPlane E n σ G hG _ (z j) ((t : E) * l j) u (hz j) h1 h2 h3 hu
+      _root_.GlobalTheory.UTrans.PlaneRefl.quasiRefl_eq_mul_of_plane E n σ G hG _ (z j) ((t : E) * l j) u (hz j) h1 h2 h3 hu
     exact ⟨m * m', (TvGen σ G).mul_mem hm hm', by rw [hmeq, hm'eq, mul_assoc]⟩
 
 end GlobalTheory.UTrans.Chain
@@ -157,7 +158,7 @@ theorem GlobalTheory.UTrans.quasiReflection_eq_tvGen_mul : ∀ (E : Type) [Field
   have hy0 : y ≠ 0 := by
     rintro rfl
     exact hy (by simp [hf])
-  obtain ⟨z, hli, hzp⟩ := GlobalTheory.T.exists_isotropic_basis_nonorthogonal_two_vectors E n σ G hG hiso x y hx0 hy0
+  obtain ⟨z, hli, hzp⟩ := _root_.GlobalTheory.UTrans.IsoBasis.exists_isotropic_basis E n σ G hG hiso x y hx0 hy0
   have : Nonempty (Fin n) := by
     by_contra hne
     exact hx0 (funext fun i => (hne ⟨i⟩).elim)
@@ -187,7 +188,7 @@ theorem GlobalTheory.UTrans.quasiReflection_eq_tvGen_mul : ∀ (E : Type) [Field
           (x + (t : E) • ∑ i ∈ Finset.univ, l i • z i)) := by
     rw [← hv]
     exact e2
-  obtain ⟨-, hdet, hinv, -⟩ := (GlobalTheory.T.unitaryTransvectionSubmonoid_normal_det_one E n σ G hG).2 m2 hm2
+  obtain ⟨-, hdet, hinv, -⟩ := (_root_.GlobalTheory.UTrans.tvGen_normal E n σ G hG).2 m2 hm2
   have hunit : IsUnit m2.det := by
     rw [hdet]
     exact isUnit_one

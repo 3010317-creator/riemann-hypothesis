@@ -5,7 +5,7 @@ public import Mathlib.LinearAlgebra.FreeModule.PID
 public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.SimpleRing.Principal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasFderivAtSchwartzOperatorFirstStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzSliceSeminormLeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzSliceSeminormLe
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -100,7 +100,7 @@ theorem slice_sup_le (f : 𝓢(V × V', ℂ)) (x' : V') (s : Finset (ℕ × ℕ)
   have h1 : ∀ m ∈ s, c * schwartzSeminormFamily ℂ V ℂ m (sliceCLM x' f) ≤ R := by
     intro m hm
     have a1 : ‖x'‖ ^ k * SchwartzMap.seminorm ℂ m.1 m.2 (sliceCLM x' f) ≤
-        SchwartzMap.seminorm ℂ (m.1 + k) m.2 f := GlobalTheory.T.schwartz_slice_seminorm_le f x' m.1 k m.2
+        SchwartzMap.seminorm ℂ (m.1 + k) m.2 f := _root_.GlobalTheory.SchwartzFstOp.norm_pow_mul_seminorm_sliceCLM_le f x' m.1 k m.2
     have a2 : schwartzSeminormFamily ℂ (V × V') ℂ ((m.1 + k, m.2) : ℕ × ℕ) f ≤ R :=
       Seminorm.le_finset_sup_apply (p := schwartzSeminormFamily ℂ (V × V') ℂ)
         (Finset.mem_image_of_mem (fun m : ℕ × ℕ => ((m.1 + k, m.2) : ℕ × ℕ)) hm)

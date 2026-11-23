@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.AdelicPair
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsLeftTranslationReynoldsOperatorStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HilbertFinitenessLeftInvariantMatrixPolyStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.InvariantFormEqSumInvariantTensorsStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemSpanRationalKroneckerInvariantsStatement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsLeftTranslationReynoldsOperator
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HilbertFinitenessLeftInvariantMatrixPoly
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.InvariantFormEqSumInvariantTensors
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemSpanRationalKroneckerInvariants
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -93,7 +93,7 @@ theorem good_sum {Γ : Set (Matrix ι ι ℂ)} {β : Type} (s : Finset β) (φ :
 
 theorem good_coord {Γ : Set (Matrix ι ι ℂ)} (hΓ : IsPre Γ) (n : ℕ) (l : (Fin n → ι) → ℂ)
     (hl : ∀ g ∈ Γ, l ᵥ* tpow n g = l) (b : Fin n → ι) : Good Γ (fun y => (l ᵥ* tpow n y) b) := by
-  have h := GlobalTheory.T.mem_span_rational_kroneckerInvariants ι Γ hΓ.aut_mem n l hl
+  have h := _root_.GlobalTheory.ClassFin.RationalInvariants.mem_span_rational ι Γ hΓ.aut_mem n l hl
   clear hl
   induction h using Submodule.span_induction with
   | mem μ hμ =>
@@ -121,7 +121,7 @@ theorem good_coord {Γ : Set (Matrix ι ι ℂ)} (hΓ : IsPre Γ) (n : ℕ) (l :
 
 theorem good_homog {Γ : Set (Matrix ι ι ℂ)} (hΓ : IsPre Γ) (hS : SS Γ) (n : ℕ)
     (F : MvPolynomial (ι × ι) ℂ) (hF : IsInv Γ F) (hn : F.IsHomogeneous n) : Good Γ (evC F) := by
-  obtain ⟨l, hl, hev⟩ := GlobalTheory.T.invariant_form_eq_sum_invariant_tensors' ι Γ hΓ hS n F hF hn
+  obtain ⟨l, hl, hev⟩ := _root_.GlobalTheory.ClassFin.invariant_form_eq_sum_invariant_tensors ι Γ hΓ hS n F hF hn
   have : evC F = ∑ b, fun y => (l b ᵥ* tpow n y) b := by
     funext y; rw [hev, Finset.sum_apply]
   rw [this]
@@ -130,8 +130,8 @@ theorem good_homog {Γ : Set (Matrix ι ι ℂ)} (hΓ : IsPre Γ) (hS : SS Γ) (
 theorem exists_finite_family {Γ : Set (Matrix ι ι ℂ)} (hΓ : IsPre Γ) (hS : SS Γ) :
     ∃ S : Set (Σ n : ℕ, ((Fin n → ι) → ℚ)), S.Finite ∧ AllFixed Γ S ∧
       ∀ f, IsInv Γ f → evC f ∈ coordAlg S := by
-  obtain ⟨Rey, hR⟩ := GlobalTheory.T.exists_leftTranslation_reynoldsOperator ι Γ hΓ hS
-  obtain ⟨s, hs, hgen⟩ := GlobalTheory.T.hilbert_finiteness_leftInvariantMatrixPoly ι Γ Rey hR
+  obtain ⟨Rey, hR⟩ := _root_.GlobalTheory.ClassFin.ReynoldsLtr.exists_isReynolds ι Γ hΓ hS
+  obtain ⟨s, hs, hgen⟩ := _root_.GlobalTheory.ClassFin.HilbertFin.hilbert_finiteness ι Γ Rey hR
   have hg : ∀ F : s, Good Γ (evC F.1) := fun F => by
     obtain ⟨h1, n, h2⟩ := hs F.1 F.2
     exact good_homog hΓ hS n F.1 h1 h2

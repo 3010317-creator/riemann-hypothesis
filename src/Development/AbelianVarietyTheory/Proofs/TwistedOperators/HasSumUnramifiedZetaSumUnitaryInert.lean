@@ -5,13 +5,16 @@ public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.TrivialParameterBound
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsSymmetricElementaryDivisorsUnitary
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsOpenIsCompactUnitaryIntegralPoints
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitaryDoubleCosetOfGLintDoubleCosetStatement
+public import Formalism.SatakeDualWeyl.StatementF
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitaryDoubleCosetOfGLintDoubleCoset
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BiInvariantReplaceSameDoubleCosetSumsStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsZonalSphericalFunctionUnramifiedUnitaryStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsZonalSphericalFunctionUnramifiedUnitary
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegralRightInvariantEqSumOpenSubgroupCosetsStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SphericalDoublingSectionGraphDiagonalEqStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SummableNormCosetOutStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnramifiedDoublingIntegralInertPlaceStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.MeasureTheory.Function.L1Space.Integrable
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SummableNormCosetOut
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnramifiedDoublingIntegralInertPlace
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.FIwasawa
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.FSatakeA
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.FSatakeB
@@ -86,7 +89,7 @@ theorem cartan_complete : ∀ (L : Type) [Field L] [Valued L (WithZero (Multipli
   obtain ⟨t, ht, -⟩ := Formalism.UG.P.fSatake_diag_exists (σ := σ)
     (fun i : Fin n => ϖ ^ d.getD i.1 0) fun i => by
       rw [map_zpow₀, hU.2.2.1, hd.rev, ← zpow_add₀ hϖ, add_neg_cancel, zpow_zero]
-  obtain ⟨k₁, h₁, k₂, h₂, e'⟩ := GlobalTheory.T.unitaryDoubleCoset_of_GLintDoubleCoset L ϖ σ q n hU t g a b ha hb (Units.ext (by rw [e, ← ht]; rfl))
+  obtain ⟨k₁, h₁, k₂, h₂, e'⟩ := _root_.GlobalTheory.UnramDoubleCoset.doubleCoset_GU_of_GL L ϖ σ q n hU t g a b ha hb (Units.ext (by rw [e, ← ht]; rfl))
   exact ⟨fun i => d.getD i.1 0, t, ht, k₁, h₁, k₂, h₂, e'⟩
 
 section
@@ -216,7 +219,7 @@ theorem hasSum_zetaSum_inert : ∀ (L : Type) [Field L] [Valued L (WithZero (Mul
   have hKo := (GlobalTheory.LFun.IntPtsUnitary.isOpen_isCompact_KU L ϖ σ q r hU).1
   have hright : ∀ g, ∀ k ∈ KU σ r, φ (g * k) = φ g := fun g k hk => by
     simpa using kerU_biInv hU hφ g (one_mem _) hk
-  have hdouble := GlobalTheory.T.unramifiedDoublingIntegral_inert_place L ϖu σ q r hUu μ hμK χ hχ _ Φ hΦ
+  have hdouble := _root_.GlobalTheory.InertZeta.unramDoublingInert L ϖu σ q r hUu μ hμK χ hχ _ Φ hΦ
   have hzχ : ((χ ϖu : ℂˣ) : ℂ) = z := by rw [hχϖ]
   have hdom : ∀ β : Fin (r / 2) → ℂˣ, GlobalTheory.IndefiniteRowSideFullHecke.TrivialParameterBound.TrivialBound q r β →
       Domain (varY q (χ ϖu) ((t : ℂ) / 2)) β := fun β hβ => by
@@ -226,20 +229,20 @@ theorem hasSum_zetaSum_inert : ∀ (L : Type) [Field L] [Valued L (WithZero (Mul
   have hint1 := ((hdouble α0 _ hw0).1 (hdom α0 (tb_triv q r hq2 α0 hα0))).1
   have hintφ : Integrable φ μ := by simpa [hΦφ] using hint1
 
-  obtain ⟨w, hw⟩ := GlobalTheory.T.exists_zonalSphericalFunction_unramifiedUnitary L ϖ σ q r hU α
+  obtain ⟨w, hw⟩ := _root_.GlobalTheory.IndefiniteRowSideFullHecke.ZonalExists.exists_isZonal L ϖ σ q r hU α
   obtain ⟨hintw, hval, -⟩ := (hdouble α w hw).1 (hdom α hα)
   simp only [hΦφ] at hintw hval
   have hFw : ∀ g, ∀ k ∈ KU σ r, φ (g * k) * w (g * k) = φ g * w g := fun g k hk => by
     have h1 := hw.1 1 ⟨k, hk⟩ g
     simp only [OneMemClass.coe_one, one_mul] at h1
     rw [hright g k hk, h1]
-  have hsw := (GlobalTheory.T.summable_norm_coset_out' _ μ (KU σ r) hKo hμK _ hFw hintw).of_norm
+  have hsw := (_root_.GlobalTheory.summable_norm_coset_out _ μ (KU σ r) hKo hμK _ hFw hintw).of_norm
   have hci := (GlobalTheory.T.integral_right_invariant_eq_sum_open_subgroup_cosets _ μ (KU σ r) hKo hμK (fun g => φ g * w g) _ hFw hsw.hasSum).2
   have hS1 : HasSum (fun a : GU σ r ⧸ KU σ r => φ a.out * w a.out)
       (closedForm q r (varX q r (χ ϖu) ((t : ℂ) / 2)) (varY q (χ ϖu) ((t : ℂ) / 2)) α) := by
     rw [← hval, hci]; exact hsw.hasSum
 
-  have hsφ := GlobalTheory.T.summable_norm_coset_out' _ μ (KU σ r) hKo hμK φ hright hintφ
+  have hsφ := _root_.GlobalTheory.summable_norm_coset_out _ μ (KU σ r) hKo hμK φ hright hintφ
   have hsψ : Summable (fun a : GU σ r ⧸ KU σ r => φ a.out * ℓ (ρ a.out x)) := by
     refine Summable.of_norm_bounded (hsφ.mul_left C) fun a => ?_
     rw [norm_mul, mul_comm]

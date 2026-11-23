@@ -2,7 +2,7 @@ module
 
 public import Mathlib.RingTheory.MvPolynomial.Homogeneous
 public import Mathlib.RingTheory.Noetherian.Defs
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformSerreSectionsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformSerreSections
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -93,7 +93,7 @@ theorem GlobalTheory.homogeneous_correction_next_level : ∀ (R : Type) [CommRin
     have : (X i : MvPolynomial (Fin (n + 1)) R) ^ N * (C a * F) = C a * (X i ^ N * F - G) + C a * G := by ring
     rw [this]
     exact add_mem ((K (e + 1)).mul_mem_left _ hk) h1
-  obtain ⟨d₀, hd₀⟩ := GlobalTheory.T.uniform_serre_sections_alt R I n K hJ
+  obtain ⟨d₀, hd₀⟩ := _root_.GlobalTheory.uniform_serre_sections R I n K hJ
   refine ⟨d₀, fun t ht e F hF hFK => ?_⟩
   choose N G hG hGc hk using hstep e t F hF hFK
   obtain ⟨M, hNM⟩ : ∃ M, ∀ i, N i ≤ M :=

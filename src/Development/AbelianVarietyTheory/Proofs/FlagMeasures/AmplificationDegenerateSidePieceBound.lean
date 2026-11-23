@@ -2,14 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsNormalFormStabilizerMeasure
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ExistsIsFolnerUWset
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeOneSideUnfoldingStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CutoffComputesBesselQuotientIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FibreVolumeNormalFormStabiliserStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagGramNumberNormalizedInvarianceStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableFlagGramNumberNormalizedIndicatorStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.BlockAnti
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeOneSideUnfolding
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UpperOff
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CutoffComputesBesselQuotientIntegral
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FibreVolumeNormalFormStabiliser
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableSetNotGG
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StabilizerMeasureNormalisationSymmStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TwoSidedSizeFunctionPosInvariantContinuousStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StabilizerMeasureNormalisationSymm
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagGramNumberNormalizedInvariance
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableFlagGramNumberNormalizedIndicator
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TwoSidedSizeFunctionPosInvariantContinuous
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.EqSmulOfTwoSided
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -124,7 +126,7 @@ theorem mem_Sset_of_mem_Nset (z : Fin (2 * r + k + 1) → ℂ) {n : Mat k r} (hn
 
 theorem Sg2_left {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0 < Tz k r z) {s x : Mat k r}
     (hs : s ∈ Sset k r z) (hx : x ∈ GG k r) : Sg2 k r z (s * x) = Sg2 k r z x := by
-  have := (GlobalTheory.T.two_sided_size_function_pos_invariant_continuous k r z hz hT).2.1 x hx s hs 1 ⟨isClosedSub_GG.2.2.1, one_mem _⟩
+  have := (_root_.GlobalTheory.Amp.TwoSided.Sg2_invariant_continuousOn_one_le_bounds k r z hz hT).2.1 x hx s hs 1 ⟨isClosedSub_GG.2.2.1, one_mem _⟩
   rwa [Matrix.mul_one] at this
 
 theorem tail {Wq : Type} [NormedAddCommGroup Wq] {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0 < Tz k r z)
@@ -150,7 +152,7 @@ theorem tail {Wq : Type} [NormedAddCommGroup Wq] {z : Fin (2 * r + k + 1) → �
     refine lintegral_mono (Set.indicator_le_indicator_of_subset (fun x hx => ?_) fun _ => zero_le)
     have hx' := (hsub x hx).resolve_left hi.ne'
     have h1 : (1 : ℝ) ≤ 2 ^ i := one_le_pow₀ one_le_two
-    rcases ((GlobalTheory.T.two_sided_size_function_pos_invariant_continuous k r z hz hT).2.2.2 (Matrix.of x)).2.2.2 with h' | ⟨a, ha⟩
+    rcases ((_root_.GlobalTheory.Amp.TwoSided.Sg2_invariant_continuousOn_one_le_bounds k r z hz hT).2.2.2 (Matrix.of x)).2.2.2 with h' | ⟨a, ha⟩
     · exfalso
       rw [h'] at hx'
       nlinarith
@@ -162,12 +164,12 @@ theorem side_bound : ∀ (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k + 
   obtain ⟨hz', hT', hnt, hπ, -, hG, hW, -, hN, hqS, hψ, hΦ, hΦc, hc, hl2⟩ := hO'
   have hz := hNR.1
   have hT := hNR.2.2.1
-  obtain ⟨hγ, hRc, hRh, hRu, -⟩ := GlobalTheory.T.stabilizer_measure_normalisation_symm k r j hj z z' γ s μR hs hNR
-  obtain ⟨hoff, hnull, φ, hφ, hcut⟩ := GlobalTheory.T.cutoff_computes_besselQuotientIntegral k r _ μG μR νR hRc hG hRh hRu hqR
-  have hV := GlobalTheory.T.fibreVolume_normalFormStabiliser k r j hj z z' γ De s μR hj1 hjk hDe hs hNR
-  obtain ⟨hYm, hEm⟩ := GlobalTheory.T.measurable_flagGramNumberNormalized_indicator k r j hj z z' γ hz hz' hT hT' hγ
+  obtain ⟨hγ, hRc, hRh, hRu, -⟩ := _root_.GlobalTheory.Amp.StabMeas.stabilizer_measure_normalisation k r j hj z z' γ s μR hs hNR
+  obtain ⟨hoff, hnull, φ, hφ, hcut⟩ := _root_.GlobalTheory.Amp.CutQuot.cut_quotient k r _ μG μR νR hRc hG hRh hRu hqR
+  have hV := _root_.GlobalTheory.Amp.FibreVolume.fibre_volume k r j hj z z' γ De s μR hj1 hjk hDe hs hNR
+  obtain ⟨hYm, hEm⟩ := _root_.GlobalTheory.Amp.YMeas.yj_measurable k r j hj z z' γ hz hz' hT hT' hγ
   have hYi : ∀ ρ ∈ Rset k r γ, ∀ x ∈ GG k r, Yj k r hj z z' γ (ρ * x) = Yj k r hj z z' γ x :=
-    fun ρ hρ x hx => (GlobalTheory.T.flagGramNumberNormalized_invariance k r j hj z z' γ hz hz' hγ x hx).2.2 ρ hρ
+    fun ρ hρ x hx => (_root_.GlobalTheory.Amp.YjInv.yj_invariant k r j hj z z' γ hz hz' hγ x hx).2.2 ρ hρ
   have hmul : ∀ a ∈ GG k r, ∀ b ∈ GG k r, a * b ∈ GG k r := isClosedSub_GG.2.2.2.1
   refine ⟨?_, fun w hw i R₀ y hR hy => ?_⟩
   · set A : Set (Mt k r) := {x | Matrix.of x ∈ GG k r ∧ Yj k r hj z z' γ (Matrix.of x) = 0} with hAdef
@@ -197,7 +199,7 @@ theorem side_bound : ∀ (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k + 
   · set E := Eset0 k r hj z z' γ R₀ y with hE
     set Q : Set (Mt k r) := {x | Matrix.of x ∈ GG k r ∧ (i = 0 ∨ 2 ^ i * H₁ < Sg2 k r z' (Matrix.of x))} with hQdef
     have hQ : MeasurableSet Q := by
-      have h1 := measurable_indicator_GG (GlobalTheory.T.two_sided_size_function_pos_invariant_continuous k r z' hz' hT').2.2.1
+      have h1 := measurable_indicator_GG (_root_.GlobalTheory.Amp.TwoSided.Sg2_invariant_continuousOn_one_le_bounds k r z' hz' hT').2.2.1
       have h2 := measurableSet_GG.inter ((MeasurableSet.const (i = 0)).union (measurableSet_lt
         (measurable_const (a := 2 ^ i * H₁)) h1))
       convert h2 using 1
@@ -246,7 +248,7 @@ theorem side_bound : ∀ (k r j : ℕ) (hj : j ≤ r) (z z' : (Fin (2 * r + k + 
       by_cases h : x ∈ E ∩ Q
       · rw [Set.indicator_of_mem h, Set.indicator_of_mem (hiff.2 h), hgi ρ hρ.1 x hx]
       · rw [Set.indicator_of_notMem h, Set.indicator_of_notMem (mt hiff.1 h)]
-    have hP := GlobalTheory.T.amplitude_one_side_unfolding k r z' π' ψ' μG μW' _ νS' Φ' c hO (fun x => φ x * E.indicator 1 x) Q
+    have hP := _root_.GlobalTheory.Amp.OnePiece.one_piece k r z' π' ψ' μG μW' _ νS' Φ' c hO (fun x => φ x * E.indicator 1 x) Q
       (ENNReal.ofReal κ * ENNReal.ofReal (fibVol0 k r j R₀ De y / s))
       (hφ.1.mul (measurable_one.indicator (hEm R₀ y))) hQ hQi (fun g hg => by
         rw [lintegral_smul_measure, smul_eq_mul]

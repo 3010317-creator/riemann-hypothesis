@@ -4,14 +4,16 @@ public import CompanionTheory.AutomorphicTheory.BesselWaveGrids.SpanBall
 public import CompanionTheory.AutomorphicTheory.BesselWaveGrids.ProductMoment
 public import CompanionTheory.AutomorphicTheory.BesselWaveGrids.EigStrOfMem
 public import CompanionTheory.AutomorphicTheory.SchurLimitBounds.ZuckermanDuality.GeneratingFunctionPolynomial
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutNFIdPolTop
+public import CompanionTheory.AutomorphicTheory.BesselWaveGrids.CoefFacts
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BaseRepCapelliEigenDual
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BesselNormSqEqBigCellNormSqStatement
+import Formalism.HermitianCurvature.StatementTBB
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BesselNormSqEqBigCellNormSq
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DiscreteSeriesUnitarySmoothBasic
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.AdjointnessPolynomiallyBounded
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.BXiAsm
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.BigCellZetaMinors
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutLemB
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutNFIdPolTop
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.LevelFormSesquilinearFiniteClass
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.NormSqUnitNormalizationLe
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.TriangleInequalityAtPlace
@@ -57,7 +59,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-public import CompanionTheory.AutomorphicTheory.BesselWaveGrids.CoefFacts
 
 @[expose] public section
 
@@ -321,7 +322,7 @@ theorem weighted : ∃ c₃ : ℝ, ∀ {t : ∀ n : ℕ, (Fin n → Bool) → �
         have := congrFun e s
         simp only [add_right_inj, Int.cast_inj] at this
         exact this)) (hF _) (hF _)) hν
-    rw [← GlobalTheory.T.jN2_eq_normSq_base, ← GlobalTheory.T.jN2_eq_normSq_base] at h1
+    rw [← _root_.GlobalTheory.jN2_eq_normSq_base.besselNormSq_eq_bigCellNormSq, ← _root_.GlobalTheory.jN2_eq_normSq_base.besselNormSq_eq_bigCellNormSq] at h1
     refine h1.trans (lintegral_mono fun c => ENNReal.ofReal_le_ofReal ?_)
     by_cases hc : D.IsLocPt (TBB.bigPt P.r c) (P.r + 1) ∧ 0 < TBB.Gp p (TBB.bigPt P.r c)
     · have hne : mnr hj (TBB.bigPt P.r c) ^ a ≠ 0 := pow_ne_zero _ (mnr_bigPt_ne hj c hc.1)

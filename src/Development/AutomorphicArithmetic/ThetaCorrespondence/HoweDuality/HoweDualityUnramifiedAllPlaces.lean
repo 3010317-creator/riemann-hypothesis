@@ -6,13 +6,14 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AlgAtLeAl
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RelInfAlt
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.HoweDuality.FactorApply
 public import Development.WeilBound.ThetaLifts.SphericalLattices.HoweInert
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsLinearTensorPolyVacuumPureTensorsStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FirstMemberLieAlgebraPreservesPolynomialFockStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FirstMemberMaximalCompactPreservesPolynomialFockStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HoweDualityRealPlacesPolynomialVectorsSmallPairStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsLinearTensorPolyVacuumPureTensors
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FirstMemberLieAlgebraPreservesPolynomialFock
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FirstMemberMaximalCompactPreservesPolynomialFock
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HoweDualityRealPlacesPolynomialVectorsSmallPair
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MatchedMapsGaussianKernel
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RankSchwartzBruhatAdicCompletionPiLeAleph0
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryDualPairGlobalToLocalTensorTransferStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryDualPairGlobalToLocalTensorTransfer
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.HoweDuality.Imports
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.HoweDuality.KerV
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.HoweDuality.KerVp
@@ -120,14 +121,14 @@ theorem stageVp : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFi
   have dW : G.W.J.det ≠ 0 := det_ne_sig_map (Bs.emb w₀).1 Complex.I (hg.hW.sig w₀)
   have hres := resEta_div hc.resα hc.resβ (Nat.add_comm a a')
   have hhk := hecke_div hc.heckeα hc.heckeβ
-  have hlie := GlobalTheory.T.firstMember_lieAlgebra_preserves_polynomialFock F E σ hTr.base.cm a' (a + a') G.V' G.W G.M' Bs.ψ Xc.α (Xc.α / Xc.β) om' hTr.base.std
+  have hlie := _root_.GlobalTheory.RealLieFockX.lie_deriv_polX F E σ hTr.base.cm a' (a + a') G.V' G.W G.M' Bs.ψ Xc.α (Xc.α / Xc.β) om' hTr.base.std
     hg.hV'.herm dV' hg.hW.skew dW hc.resα hres hc.heckeα hhk hTr.weil' Bs.emb hg.hV'.cartan hg.hW.cartan
-  have hcpt := GlobalTheory.T.firstMember_maximalCompact_preserves_polynomialFock F E σ hTr.base.cm a' (a + a') G.V' G.W G.M' Bs.ψ Xc.α (Xc.α / Xc.β) om' hTr.base.std
+  have hcpt := _root_.GlobalTheory.FockCompactX.pol_stable_compact_left F E σ hTr.base.cm a' (a + a') G.V' G.W G.M' Bs.ψ Xc.α (Xc.α / Xc.β) om' hTr.base.std
     hg.hV'.herm dV' hg.hW.skew dW hc.resα hres hc.heckeα hhk hTr.weil' Bs.emb hg.hV'.cartan hg.hW.cartan
-  obtain ⟨L, hL, hrange⟩ := GlobalTheory.T.exists_linear_tensor_polyVacuum_pureTensors G.M' Bs.ψ Bs.emb hg.hM'.std T
-  have hloc := GlobalTheory.T.howeDuality_realPlaces_polynomialVectors_smallPair F E σ Bs a a' G Xc om om' R Rf hM hreal hlie hcpt
+  obtain ⟨L, hL, hrange⟩ := _root_.GlobalTheory.HoweGlobal.TensorMap.exists_tensL G.M' Bs.ψ Bs.emb hg.hM'.std T
+  have hloc := _root_.GlobalTheory.HoweGlobalPair.RealPlaceSmall.realTransfer' F E σ Bs a a' G Xc om om' R Rf hM hreal hlie hcpt
   have hfl := fun v => locVp hM v
-  obtain ⟨h1, h2, h3, h4⟩ := GlobalTheory.T.unitaryDualPair_global_to_local_tensor_transfer G.M' Bs.ψ Bs.emb om' (fun v => (hg.hM'.vac v).1) hg.hM'.std N hN T L hL
+  obtain ⟨h1, h2, h3, h4⟩ := _root_.GlobalTheory.HoweGlobalPair.tensor_transfer G.M' Bs.ψ Bs.emb om' (fun v => (hg.hM'.vac v).1) hg.hM'.std N hN T L hL
   have key := tens (ι := T) (M₀ := ↥(G.M'.Pol Bs.ψ Bs.emb))
     (M := fun v : T => ↥(SB (Fin a' × Fin (a + a') → Fv F v.1)))
     (opInf G.M' Bs.ψ Bs.emb om') (fun v => opFin om' v.1)

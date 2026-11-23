@@ -2,9 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.MemRingOfInR
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QAllQConjOfDvd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QExpansionCoeffsInSubringRingClosedStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularDiscriminantDivQIntegerQExpansionsStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.QExpansionAllCoeffsCompUpperTriangularStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HasQIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QExpansionCoeffsInSubringRingClosed
+public import ReciprocityTheory.ReductiveGroups.UnramifiedIntegrals.ModDefs
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularDiscriminantDivQIntegerQExpansions
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.QExpansionAllCoeffsCompUpperTriangular
+public import ReciprocityTheory.ReductiveGroups.UnramifiedIntegrals.ModBasic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -43,7 +46,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.ReductiveGroups.UnramifiedIntegrals.ModBasic
 import Development.AbelianVarietyTheory.Definitions.Divisors.ZetaActRefl
 
 @[expose] public section
@@ -82,12 +84,12 @@ theorem qAll_pole_affine : ∀ (E : Subring ℂ) (N w a d : ℕ) (b : ℤ) (φ :
   intro E N w a d b φ hE hN ha hd hφ
   obtain ⟨d', rfl⟩ : ∃ d', d = d' + 1 := ⟨d - 1, by omega⟩
   have hM : 0 < N * (a * (d' + 1)) := by positivity
-  have RC := GlobalTheory.T.qExpansionCoeffsInSubring_ring_closed E (N * (a * (d' + 1))) hM
-  obtain ⟨hDq, hqD⟩ := GlobalTheory.T.modularDiscriminant_div_q_integer_qExpansions
+  have RC := _root_.GlobalTheory.QFam.QAllSubring.ring_closed E (N * (a * (d' + 1))) hM
+  obtain ⟨hDq, hqD⟩ := _root_.GlobalTheory.FN.dd_div_q_and_q_div_dd
   have h1 := QAll.of_dvd hM ⟨a, by ring⟩ E.zero_mem
-    (GlobalTheory.T.qExpansionAllCoeffs_comp_upper_triangular E N a (d' + 1) b _ hE hN ha (by omega) hφ)
+    (_root_.GlobalTheory.FNQ.qAll_affine E N a (d' + 1) b _ hE hN ha (by omega) hφ)
   have h2 := QAll.of_dvd hM ⟨N * a, by ring⟩ E.zero_mem
-    (GlobalTheory.T.qExpansionAllCoeffs_comp_upper_triangular E 1 a (d' + 1) b _ hE one_pos ha (by omega) (qAll_of_int E hqD))
+    (_root_.GlobalTheory.FNQ.qAll_affine E 1 a (d' + 1) b _ hE one_pos ha (by omega) (qAll_of_int E hqD))
   have h3 := QAll.of_dvd hM (one_dvd _) E.zero_mem (qAll_of_int E hDq)
   have h2w := RC.2.2.2.2.1 _ w h2
   have h3w := RC.2.2.2.2.1 _ (w * (a * (d' + 1))) h3

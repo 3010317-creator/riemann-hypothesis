@@ -3,10 +3,12 @@ module
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LocalSystemQuotients.InUQT
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ChartIsGood
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FlatOfEtalePoly
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FlatThickeningQuotientStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MapHBijOfRes
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WittChartDescendLevelStatement
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.ChartGrConst
+import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LocalSystemQuotients.RedMk
+import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.InclStd
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FlatThickeningQuotient
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -105,7 +107,7 @@ theorem local_bij (q : X ⟶ Spec (CommRingCat.of O)) (ρ : O →+* k) {n : ℕ}
   obtain ⟨c', hF', -⟩ := GlobalTheory.CompanionTheory.FlatChartP.exists_flat_chart (Wc.pd l k (n + 1)) l hl0 (nil_m k (n + 1)) q
     ((Wc.res l k (n + 1)).comp ρ) cW
   obtain ⟨c, e, hec, hfl⟩ := GlobalTheory.T.witt_chart_descend_level q ρ hn c'
-  have hF : FlatT c.D := hfl (GlobalTheory.T.flat_thickening_quotient l k O (B.schFn q) ρ n hn c'.D hF')
+  have hF : FlatT c.D := hfl (_root_.GlobalTheory.CompanionTheory.FlatThick.flatT_qT l k O (B.schFn q) ρ n hn c'.D hF')
   obtain ⟨PA, hPA⟩ := poly_all (Wc.pd l k n) l hl0 q ((Wc.res l k n).comp ρ) FlatT (Or.inr rfl) {W}
   obtain ⟨PB, hPB⟩ := poly_all (Wc.pd l k (n + 1)) l hl0 q ((Wc.res l k (n + 1)).comp ρ) FlatT (Or.inr rfl) {W}
   have hgA := GlobalTheory.CompanionTheory.ChartMaps.good c

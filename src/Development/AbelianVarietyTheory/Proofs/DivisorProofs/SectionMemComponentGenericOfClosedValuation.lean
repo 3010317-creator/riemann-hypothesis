@@ -4,12 +4,13 @@ public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
 public import Mathlib.Order.CompletePartialOrder
 public import Mathlib.RingTheory.Valuation.ValuationRing
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenConnectedComponentOfIsLocallyNoetherianStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothGenericFibreClosurePartitionStatement
+public import Mathlib.AlgebraicGeometry.Noetherian
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenConnectedComponentOfIsLocallyNoetherian
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothGenericFibreClosurePartition
+public import Mathlib.AlgebraicGeometry.Fiber
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
-public import Mathlib.AlgebraicGeometry.Fiber
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
@@ -98,7 +99,7 @@ theorem isOpen_component_fibre_subtype {X S : Scheme.{0}} (f : X ⟶ S) [Locally
     inferInstanceAs (LocallyOfFiniteType (pullback.snd f (S.fromSpecResidueField s)))
   have hn : IsLocallyNoetherian (f.fiber s) :=
     LocallyOfFiniteType.isLocallyNoetherian (f.fiberToSpecResidueField s)
-  have ho := GlobalTheory.T.isOpen_connectedComponent_of_isLocallyNoetherian' _ hn ((f.fiberHomeo s).symm a)
+  have ho := _root_.GlobalTheory.isOpen_connectedComponent_of_isLocallyNoetherian _ hn ((f.fiberHomeo s).symm a)
   have h := (f.fiberHomeo s).isOpenMap _ ho
   have h2 : (f.fiberHomeo s) '' connectedComponent ((f.fiberHomeo s).symm a)
       = connectedComponent a := by
@@ -123,7 +124,7 @@ theorem section_mem_component_generic_of_closed :
   have ha : e g₀ ∈ f ⁻¹' {g₀} := hfe g₀
   obtain ⟨h1, h2⟩ := separated_of_isOpen_component_subtype (f ⁻¹' {g₀}) (e g₀) ha
     (isOpen_component_fibre_subtype f g₀ ⟨e g₀, ha⟩)
-  obtain ⟨hd, hu⟩ := GlobalTheory.T.disjoint_closure_and_union_eq_univ_of_genericFibre_partition V X f hf (connectedComponentIn (f ⁻¹' {g₀}) (e g₀))
+  obtain ⟨hd, hu⟩ := _root_.GlobalTheory.smooth_genericFibre_closure_partition V X f hf (connectedComponentIn (f ⁻¹' {g₀}) (e g₀))
     (f ⁻¹' {g₀} \ connectedComponentIn (f ⁻¹' {g₀}) (e g₀))
     (Set.union_diff_cancel (connectedComponentIn_subset _ _)) h1 h2
   by_contra hne

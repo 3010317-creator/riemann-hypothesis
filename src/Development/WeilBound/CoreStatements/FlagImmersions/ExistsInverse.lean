@@ -2,7 +2,7 @@ module
 
 public import ReciprocityTheory.AnalyticForms.PotentialTheory.IsPotentialPullbackStatement
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRes
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LiftToLogResolutionAnalyticStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LiftToLogResolutionAnalytic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -117,7 +117,7 @@ theorem exists_inverse {P J : Ideal (MRing ι)} {e : ℕ} (R : AnLogRes P J e) (
     obtain ⟨O, μ, hO, h1, h2, h3⟩ := key (ψ ((A.chart j).symm t))
     rw [r] at h1
     have hV : IsOpen ((A.chart j).target ∩ (A.chart j).symm ⁻¹' O) := (A.chart j).isOpen_inter_preimage_symm hO
-    refine ⟨_, hV, ⟨ht, h1⟩, GlobalTheory.T.lift_to_log_resolution_analytic K ι P J e e R hJ _ (fun u => μ ((A.chart j).symm u)) _ hV (fun q => h2 q j)
+    refine ⟨_, hV, ⟨ht, h1⟩, _root_.GlobalTheory.CompanionTheory.Ar.PB.HoloLift.holo_of_analytic_lift K ι P J e e R hJ _ (fun u => μ ((A.chart j).symm u)) _ hV (fun q => h2 q j)
       fun u hu => ?_⟩
     have := h3 (ψ ((A.chart j).symm u)) (by rw [r]; exact hu.2)
     rwa [r] at this

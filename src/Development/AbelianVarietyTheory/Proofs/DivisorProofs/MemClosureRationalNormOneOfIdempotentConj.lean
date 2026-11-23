@@ -1,11 +1,11 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StrongApproximationSL2Adeles
 public import Development.AbelianVarietyTheory.Definitions.Divisors.OneMemH0WeightZero
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.NotIsCompactUnivFv
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosureNormOneProductsSubgroupPropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosureNormOneProductsSubgroupProperties
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousAtInvS
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousLocAdele
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StrongApproximationSL2Adeles
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -171,7 +171,7 @@ theorem conj_mem_closure_normOne_of_idempotent : ∀ (F : Type) [Field F] [Numbe
     c' * c = 1 → c * g * c' ∈ closure (H0 (a := a) (b := b) ε) → g ∈ closure (H0 (a := a) (b := b) ε) := by
   intro F _ _ a b _ _ T₁ T₂ η hη ε hε g _ hgη c c' hcc' hc'c hx
   have hηη := isPlacesIdem_mul_self hη
-  obtain ⟨-, -, hconj, -⟩ := GlobalTheory.T.closure_normOneProducts_h0_properties F a b ε hε
+  obtain ⟨-, -, hconj, -⟩ := _root_.GlobalTheory.QSA.Grp.closure_normOneProducts_subgroup_properties F a b ε hε
   by_cases hη0 : η = 0
   · have hg1 : g = 1 := by
       rw [hη0, zero_smul] at hgη

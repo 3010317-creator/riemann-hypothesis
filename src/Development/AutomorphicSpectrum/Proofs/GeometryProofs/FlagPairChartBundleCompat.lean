@@ -2,12 +2,17 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.LieLatticeData
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.BundleObjects
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DualLatticeFlagFrameStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ChartBundleFinitelyGeneratedStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ChartBundleLatticeGeneratorsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ChartBundleLocalGenerationStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsReversedDualBasisStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ReversedDualTriangularStatement
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.TrivFlagMod
+public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.XFlagframeDual
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.Bundle
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ChartBundleFinitelyGenerated
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ChartBundleLatticeGenerators
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ChartBundleLocalGeneration
+public import Mathlib.Data.Matrix.Mul
+public import Mathlib.LinearAlgebra.Basis.Defs
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsReversedDualBasis
+public import Mathlib.LinearAlgebra.DFinsupp
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ReversedDualTriangular
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +57,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.TrivFlagMod
 import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.CompactGapsGE
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DualRevDualRev
 import Mathlib.Topology.Sheaves.Presheaf
@@ -82,8 +86,8 @@ def dualBundle {O : Type} [CommRing O] {Ω : Type} [Field Ω] [Algebra O Ω] {ι
     intro l hl
     rw [dotProduct_smul, smul_eq_mul]
     exact mul_mem ha (he l hl)
-  frame := GlobalTheory.T.chart_bundle_local_generation O Ω ι x r B (GlobalTheory.T.chart_bundle_finitely_generated O Ω ι x r B)
-  overlap := GlobalTheory.T.chart_bundle_lattice_generators O Ω ι x r B.lat B.stable B.overlap (GlobalTheory.T.chart_bundle_finitely_generated O Ω ι x r B)
+  frame := _root_.GlobalTheory.CompanionTheory.Ar.Num.chartBundle_dotDual_localFrame O Ω ι x r B (_root_.GlobalTheory.CompanionTheory.Ar.Geo.chartBundle_lat_fg O Ω ι x r B)
+  overlap := _root_.GlobalTheory.CompanionTheory.Ar.Num.dotDual_overlap O Ω ι x r B.lat B.stable B.overlap (_root_.GlobalTheory.CompanionTheory.Ar.Geo.chartBundle_lat_fg O Ω ι x r B)
 
 def dotForm (Ω : Type) [Field Ω] (r : ℕ) : (Fin r → Ω) →ₗ[Ω] (Fin r → Ω) →ₗ[Ω] Ω :=
   LinearMap.mk₂ Ω (fun a b => a ⬝ᵥ b) add_dotProduct (fun c a b => smul_dotProduct c a b) dotProduct_add
@@ -131,9 +135,9 @@ theorem dualPair : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuation
       IsFlagPair ϖ y C C' v v' (fun i => -x (Fin.rev i)) (fun i => -x' (Fin.rev i)) (fun i => g (Fin.rev i))
         (fun i => f (Fin.rev i)) := by
   intro O _ _ _ Ω _ _ K _ _ J _ y ϖ r B B' w w' x x' f g h
-  obtain ⟨v, hv⟩ := GlobalTheory.T.exists_reversed_dual_basis Ω r w
-  obtain ⟨v', hv'⟩ := GlobalTheory.T.exists_reversed_dual_basis Ω r w'
-  obtain ⟨htri, hdiag⟩ := GlobalTheory.T.reversed_dual_triangular Ω r w w' v v' hv hv' h.sameFlag
+  obtain ⟨v, hv⟩ := _root_.GlobalTheory.CompanionTheory.Ar.DualRev.dotDualRevBasis Ω r w
+  obtain ⟨v', hv'⟩ := _root_.GlobalTheory.CompanionTheory.Ar.DualRev.dotDualRevBasis Ω r w'
+  obtain ⟨htri, hdiag⟩ := _root_.GlobalTheory.CompanionTheory.Ar.DualPair.dualRevTri Ω r w w' v v' hv hv' h.sameFlag
   have hdual : ∀ B₀ : ChartBundle O (segreVec y) r (Fin r → Ω),
       IsDualLat O y (dotForm Ω r) B₀.lat (dualBundle B₀).lat := by
     intro B₀
@@ -141,9 +145,9 @@ theorem dualPair : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuation
     exact mem_dualBundle _ _ _
   refine ⟨dualBundle B, dualBundle B', v, v', fun c _ => ⟨rfl, rfl⟩, ?_⟩
   refine ⟨?_, ?_, htri, fun i => ?_, fun i => ?_⟩
-  · exact GlobalTheory.T.dual_lattice_flag_frame O Ω K J y r (Fin r → Ω) (Fin r → Ω) B (dualBundle B) (dotForm Ω r) (hdual B) w x h.flag v
+  · exact _root_.PositivityTheory.Xgn.t_flagframe_dual O Ω K J y r (Fin r → Ω) (Fin r → Ω) B (dualBundle B) (dotForm Ω r) (hdual B) w x h.flag v
       (fun i j => by rw [dotForm_apply]; exact hv i j)
-  · exact GlobalTheory.T.dual_lattice_flag_frame O Ω K J y r (Fin r → Ω) (Fin r → Ω) B' (dualBundle B') (dotForm Ω r) (hdual B') w' x'
+  · exact _root_.PositivityTheory.Xgn.t_flagframe_dual O Ω K J y r (Fin r → Ω) (Fin r → Ω) B' (dualBundle B') (dotForm Ω r) (hdual B') w' x'
       h.flag' v' (fun i j => by rw [dotForm_apply]; exact hv' i j)
   · have := isVerticalDivisor_swap (h.vertical i.rev)
     convert this using 1

@@ -5,7 +5,10 @@ public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.Component
 public import Development.AbelianVarietyTheory.Definitions.Divisors.MulSmulIdemMem
 public import Development.AbelianVarietyTheory.Definitions.Divisors.QuoIff
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatBoundOfAnchor
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatLineThetaRootTwistTwistingSectionStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHomogeneousCompIdeal
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
+public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatLineThetaRootTwistTwistingSection
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.UnramifiedPointsAtDeepLevel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -78,7 +81,7 @@ theorem flat_at_of_split_covering (p : PtAt ex Csz) (i : Fin D.R.m) (Y : Cov p i
   have hUn := _root_.GlobalTheory.T.unramified_points_of_deep_cover hP D p.T ((i : ℕ) + 1) Y _ _ p.fw.laws hj hY.1
   have hrank : 1 ≤ (dat p i).p + (dat p i).q := Inhab.rank_pos p.T.toCore p.fw.laws.pins ((i : ℕ) + 1) hj
   have hev : Even (p.κ i).n := hW.dom.2
-  have hFL := ((GlobalTheory.T.flatLine_thetaRoot_twist_twistingSection hP.p5 D p.T.Q.H (dat p i) Y.d.l₂ Y.d.Xo₂ Y.d.c₂ D.R.r Y.U (fun _ => D.sp.W ((i : ℕ) + 1))
+  have hFL := ((_root_.GlobalTheory.FlatRootTwist.flat_root_twist hP.p5 D p.T.Q.H (dat p i) Y.d.l₂ Y.d.Xo₂ Y.d.c₂ D.R.r Y.U (fun _ => D.sp.W ((i : ℕ) + 1))
     Y.dict hcx hY.1.geo hrank hgood hflat hUn (anchor (dat p i) (wtA (p.κ i)) (p.κ i).n (D.R.k - 1))
     ((p.κ i).n / 2)).2 (uM p i) 0).2 hDG.2.2.2.1
   obtain ⟨-, hrk, hdeg⟩ := hFL

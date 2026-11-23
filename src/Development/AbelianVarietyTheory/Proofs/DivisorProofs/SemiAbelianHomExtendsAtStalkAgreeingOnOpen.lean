@@ -2,7 +2,8 @@ module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ThickTransComp
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.SemiAbelianHomExtensionUnique
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiAbelianHomExtendsFromGenericFibreStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiAbelianHomExtendsFromGenericFibre
 import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsSchemeTheoreticallyDominantSpecOfInjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -80,7 +81,7 @@ theorem exists_agree_of_generic {U S : Scheme.{0}} (j : U ⟶ S) [IsOpenImmersio
 
   obtain ⟨g, hg, hA⟩ := GlobalTheory.DedekindExt.exists_agree_of_extend (k := Out.jK R) (t := t) rfl G H
     (a.hom ≫ (Over.pullback k).map f ≫ b.inv) fun f' hf' => by
-      obtain ⟨F, ⟨-, hF⟩, -⟩ := GlobalTheory.T.semiAbelian_hom_extends_from_generic_fibre R ((Over.pullback t).obj G) ((Over.pullback t).obj H)
+      obtain ⟨F, ⟨-, hF⟩, -⟩ := _root_.GlobalTheory.Desc.semiAbelian_hom_extend_generic R ((Over.pullback t).obj G) ((Over.pullback t).obj H)
         (IsSemiAbelian.pullback t G hG) (IsSemiAbelian.pullback t H hH) f' hf'
       exact ⟨F, hF⟩
 

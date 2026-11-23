@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.ImagePolynomialAction
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinDescentOperatorPreservesLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoeffZeroSmulMemMapOfAevalMulEqZero
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TameDescentConnectionSemisimpleEigenvaluesStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinDescentOperatorPreservesLattice
+public import Mathlib.Algebra.Polynomial.AlgebraMap
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoeffZeroSmulMemMap
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TameDescentConnectionSemisimpleEigenvalues
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -142,7 +143,7 @@ theorem eval_polyRK_root {U : Finset ℤ} {n : ℤ} (hn : n ∈ shifts U η) (hn
 
 theorem polyRK_mul_eq_zero (U : Finset ℤ) (hS : D.jumps ⊆ U) :
     Polynomial.aeval D.LcZ ((polyR l e U η).map (Int.castRingHom K)) * D.LcZ = 0 := by
-  obtain ⟨-, -, htop⟩ := GlobalTheory.T.tameDescent_connection_semisimple_eigenvalues O K l e a ι η H D U hS
+  obtain ⟨-, -, htop⟩ := _root_.GlobalTheory.LcSemisimple.lc_semisimple O K l e a ι η H D U hS
   have hle : ⨆ n ∈ shifts U η, D.LcZ.eigenspace ((n * e * l : ℤ) : K) ≤
       LinearMap.ker (Polynomial.aeval D.LcZ ((polyR l e U η).map (Int.castRingHom K)) * D.LcZ) := by
     refine iSup₂_le fun n hn x hx => ?_
@@ -205,7 +206,7 @@ theorem image (U : Finset ℤ) (hS : D.jumps ⊆ U) : Image D U := by
   · apply le_antisymm
     · intro w hw
       obtain ⟨hwR, hwW⟩ := Submodule.mem_inf.1 hw
-      have h := GlobalTheory.coeff_zero_smul_mem_map_of_aeval_mul_eq_zero D.LcZ ((polyR l e U η).map (Int.castRingHom K))
+      have h := _root_.GlobalTheory.CoefficientMembership.coeff_zero_smul_mem_map D.LcZ ((polyR l e U η).map (Int.castRingHom K))
         (polyRK_mul_eq_zero D U hS) W (fun z hz => hW hz) w hwW hwR
       rw [Polynomial.coeff_map, Polynomial.coeff_zero_eq_eval_zero] at h
       have hne := castK_ne_zero (K := K) (l := l) (e := e) (η := η) U
@@ -251,4 +252,4 @@ theorem GlobalTheory.LcImage.image_valuation_integralImage : ∀ (O K : Type) [C
   intro O K _ _ _ _ _ _ l e a ι _ _ _ _ _ _ _ η H D U N hS hU hN hηH
   refine ⟨GlobalTheory.LcImage.image D U hS, fun hl => ?_, fun hl => ?_⟩
   · exact GlobalTheory.LcImage.valuation (TameDescentExponentData.succ_eq (K := K)) (NeZero.ne a) (NeZero.ne e) U η H N hU hN hl
-  · exact GlobalTheory.LcImage.integralImage D U hS (GlobalTheory.T.breuilKisin_descent_operator_preserves_lattice O K l e a ι η H D hηH hl)
+  · exact GlobalTheory.LcImage.integralImage D U hS (_root_.GlobalTheory.Proof.breuilKisin_descent_operator_preserves_lattice.integral O K l e a ι η H D hηH hl)

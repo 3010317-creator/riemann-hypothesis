@@ -4,8 +4,11 @@ public import Mathlib.Basic.NNReal.Defs
 public import Mathlib.RingTheory.Algebraic.Defs
 public import Mathlib.RingTheory.DiscreteValuationRing.Basic
 public import Mathlib.RingTheory.IntegralClosure.IsIntegral.Defs
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsAbsoluteValueCompleteSpaceOfDvrStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsSpectralValuationAlgebraicExtensionStatement
+public import Mathlib.Analysis.Normed.Field.WithAbs
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsAbsoluteValueCompleteSpaceOfDvr
+public import Mathlib.RingTheory.Valuation.Basic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsSpectralValuationAlgebraicExtension
+public import Mathlib.FieldTheory.Minpoly.IsIntegrallyClosed
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,7 +51,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.FieldTheory.Minpoly.IsIntegrallyClosed
 
 @[expose] public section
 
@@ -67,8 +69,8 @@ theorem valuation_le_one_iff_isIntegral_of_complete_dvr :
   haveI : IsScalarTower R (FractionRing R) Ω := FractionRing.isScalarTower_liftAlgebra R Ω
   haveI : Algebra.IsAlgebraic (FractionRing R) Ω :=
     Algebra.IsAlgebraic.extendScalars (IsFractionRing.injective R (FractionRing R))
-  obtain ⟨f, hna, hnt, hball, hcomp⟩ := GlobalTheory.T.exists_absoluteValue_completeSpace_of_dvr R (FractionRing R)
-  obtain ⟨v, -, hv⟩ := GlobalTheory.T.exists_spectral_valuation_algebraic_extension (FractionRing R) Ω f hna hnt hcomp
+  obtain ⟨f, hna, hnt, hball, hcomp⟩ := _root_.GlobalTheory.KLC.exists_absoluteValue_completeSpace_of_isDiscreteValuationRing R (FractionRing R)
+  obtain ⟨v, -, hv⟩ := _root_.GlobalTheory.exists_spectralValuation (FractionRing R) Ω f hna hnt hcomp
   refine ⟨v, fun x => ?_⟩
   rw [hv]
   simp only [hball]

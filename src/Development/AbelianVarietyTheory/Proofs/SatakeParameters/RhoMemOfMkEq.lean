@@ -2,12 +2,18 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweUnram
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemIntMat
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsConjugateModelExtremalDualParameterStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIntGramOfFixedStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FixedMemOfOrbitHeightStatement
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LatticeModelVacuumTranslateClassesIndependentStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MatrixLatticeIndexIntegralTranslationInvarianceStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnramifiedLocalDualPairSwapHermitianAdjointStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsConjugateModelExtremalDualParameter
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIntGramOfFixed
+public import Mathlib.Algebra.Module.Submodule.Map
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.Span.Defs
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.Order.SupIndep
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FixedMemOfOrbitHeight
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MatrixLatticeIndexIntegralTranslationInvariance
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnramifiedLocalDualPairSwapHermitianAdjoint
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LatticeModelVacuumTranslateClassesIndependent
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -155,10 +161,10 @@ theorem step (hP : GlobalTheory.Hk3.LocPair ϖ σ q δ JS JT ψ ρ ω) (s : M) (
       ∃ u ∈ Submodule.span ℂ {v : M | ∃ y : Matrix (Fin n') (Fin n) L, latIdx y < latIdx x ∧ v = ρ y s},
         v - u ∈ Submodule.span ℂ {v : M | ∃ h : Formalism.UG.UJ σ (JT : Matrix (Fin n') (Fin n') L), (h : GL (Fin n') L) ∈ Formalism.UG.GLint (Fin n') (Formalism.UG.intL L) ∧
           v = ρ (((h : GL (Fin n') L) : Matrix (Fin n') (Fin n') L) * x) s} ∧ v - u ≠ 0 := by
-  obtain ⟨l, hl, hg⟩ := GlobalTheory.T.exists_int_gram_of_fixed_alt L ϖ σ q δ n n' JS JT ψ M ρ ω hP s hs0 hs hspan x hfix
-  obtain ⟨v, hv, u, hu, h1, h2⟩ := GlobalTheory.T.exists_conjugateModel_extremal_dual_parameter L ϖ σ q δ n n' JS JT ψ M ρ ω hP s hs0 hs hspan (x - l) hg
+  obtain ⟨l, hl, hg⟩ := _root_.GlobalTheory.Hk3.HoweDuality.exists_int_gram_of_fixed L ϖ σ q δ n n' JS JT ψ M ρ ω hP s hs0 hs hspan x hfix
+  obtain ⟨v, hv, u, hu, h1, h2⟩ := _root_.GlobalTheory.Hk3.HoweG.gramClass_orbit_mod_lower L ϖ σ q δ n n' JS JT ψ M ρ ω hP s hs0 hs hspan (x - l) hg
   have hidx : latIdx (x - l) = latIdx x := by
-    rw [sub_eq_add_neg]; exact (GlobalTheory.T.matrixLatticeIndex_integral_translation_invariance L n' n x).1 _ (neg_mem hl)
+    rw [sub_eq_add_neg]; exact (_root_.GlobalTheory.Hk3.HoweDuality.latIdx_invariance L n' n x).1 _ (neg_mem hl)
   refine ⟨v, hv, u, by rwa [hidx] at hu, ?_, h2⟩
   refine Submodule.span_le.2 ?_ h1
   rintro _ ⟨h, hh, rfl⟩
@@ -204,7 +210,7 @@ theorem fixed_mem_span (hP : GlobalTheory.Hk3.LocPair ϖ σ q δ JS JT ψ ρ ω)
     intro x
     have hu : -Quotient.out (QuotientAddGroup.mk x : Matrix (Fin n') (Fin n) L ⧸ intMat L n' n) + x ∈ intMat L n' n :=
       QuotientAddGroup.eq.1 (QuotientAddGroup.out_eq' _)
-    have := (GlobalTheory.T.matrixLatticeIndex_integral_translation_invariance L n' n (Quotient.out (QuotientAddGroup.mk x : Matrix (Fin n') (Fin n) L ⧸ intMat L n' n))).1 _ hu
+    have := (_root_.GlobalTheory.Hk3.HoweDuality.latIdx_invariance L n' n (Quotient.out (QuotientAddGroup.mk x : Matrix (Fin n') (Fin n) L ⧸ intMat L n' n))).1 _ hu
     rw [add_neg_cancel_left] at this
     exact this.symm
   have hmemV : ∀ x, ρ x s ∈ V (QuotientAddGroup.mk x) := fun x => Submodule.subset_span ⟨x, rfl, rfl⟩
@@ -213,7 +219,7 @@ theorem fixed_mem_span (hP : GlobalTheory.Hk3.LocPair ϖ σ q δ JS JT ψ ρ ω)
     refine Submodule.span_le.2 ?_
     rintro _ ⟨y, hy, rfl⟩
     exact rho_mem_of_mk_eq hP hs hy
-  have hind := GlobalTheory.T.latticeModel_vacuumTranslate_classes_independent L ϖ σ q δ n n' JS JT ψ M ρ ω hP s hs
+  have hind := _root_.GlobalTheory.Hk3.locVac_span_classes_indep L ϖ σ q δ n n' JS JT ψ M ρ ω hP s hs
   have htop : (⨆ c, V c) = ⊤ := by
     refine eq_top_iff.2 ?_
     rw [← hspan]
@@ -236,7 +242,7 @@ theorem fixed_mem_span (hP : GlobalTheory.Hk3.LocPair ϖ σ q δ JS JT ψ ρ ω)
     induction c using QuotientAddGroup.induction_on with
     | H x =>
       rw [hsmul, hμmk, hμmk]
-      exact (GlobalTheory.T.matrixLatticeIndex_integral_translation_invariance L n' n x).2 _ (Subgroup.mem_comap.1 k.2)
+      exact (_root_.GlobalTheory.Hk3.HoweDuality.latIdx_invariance L n' n x).2 _ (Subgroup.mem_comap.1 k.2)
   have hS : ∀ v ∈ S, ∀ k, π k v = v := by
     intro v hv k
     have hle : S ≤ LinearMap.eqLocus (π k) LinearMap.id := by
@@ -279,7 +285,7 @@ theorem fixed_mem_span (hP : GlobalTheory.Hk3.LocPair ϖ σ q δ JS JT ψ ρ ω)
       refine Submodule.mem_iSup_of_mem (QuotientAddGroup.mk y) (Submodule.mem_iSup_of_mem ?_ (hmemV y))
       rw [hμmk, hμmk]
       exact hy
-  exact GlobalTheory.T.invariant_mem_of_orbit_height_separation π V hind htop hline hπ μ hμ S hS hstep w (fun k => hw k (Subgroup.mem_comap.1 k.2))
+  exact _root_.GlobalTheory.fixed_mem_of_orbit_height π V hind htop hline hπ μ hμ S hS hstep w (fun k => hw k (Subgroup.mem_comap.1 k.2))
 
 end Half
 
@@ -293,7 +299,7 @@ theorem howeUnram_holds : HoweUnram := by
   intro L _ _ _ _ ϖ σ q δ n n' JS JT ψ M _ _ ρ ω hP s hs0 hs hspan
   refine ⟨?_, fixed_mem_span hP s hs0 hs hspan⟩
   intro w hw
-  obtain ⟨hP', hv', hsp'⟩ := GlobalTheory.T.unramifiedLocalDualPair_swap_hermitianAdjoint L ϖ σ q δ n n' JS JT ψ M ρ ω hP
+  obtain ⟨hP', hv', hsp'⟩ := _root_.GlobalTheory.Hk3.HoweSwap.locPair_swap L ϖ σ q δ n n' JS JT ψ M ρ ω hP
   have := fixed_mem_span hP' s hs0 (hv' s hs) (hsp' s hspan) w (fun h hh => by simpa using hw h hh)
   simpa using this
 

@@ -1,12 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KFacDifferentiable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeYDerivativeTermIntegralPolynomialDecayStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCompactPiUpperHalfPlaneImBoundsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IteratedDerivHeckePhiFourierTransformBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IteratedDerivHeckePhiFourierTransformReprStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormIteratedFDerivHeckeFourierFactorLeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormIteratedFDerivProdCoordLeLeibnizStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContDiffOnHeckeEisensteinFourierTerm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeYDerivativeTermIntegralPolynomialDecay
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCompactPiUpperHalfPlaneImBounds
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IteratedDerivHeckePhiFourierTransformBound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IteratedDerivHeckePhiFourierTransformRepr
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormIteratedFDerivHeckeFourierFactorLe
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormIteratedFDerivProdCoordLeLeibniz
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +50,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContDiffOnHeckeEisensteinFourierTerm
 
 @[expose] public section
 
@@ -77,8 +80,8 @@ theorem fTerm_iteratedFDeriv_bound : ∀ (F : Type) [Field F] [NumberField F] (K
         ‖iteratedFDeriv ℝ n (fun z : Emb F → ℂ => fTerm σ z b ν) z‖ ≤
           C * ∏ τ : Emb F, (|τ b| + |τ b|⁻¹) ^ m / (1 + |τ ν * τ b|) ^ N := by
   intro F _ _ K hK hKH L hL hLH n
-  obtain ⟨c, c', hc, hcc⟩ := GlobalTheory.T.exists_im_bounds_of_isCompact_upperHalfPlane (Emb F) L hL (fun z hz τ => hLH hz τ)
-  have hfb := GlobalTheory.T.norm_iteratedFDeriv_heckeFourierFactor_le (GlobalTheory.T.iteratedDeriv_heckePhiFourierTransform_bound GlobalTheory.T.iteratedDeriv_heckePhiFourierTransform_repr GlobalTheory.T.heckeYDerivativeTermIntegral_polynomial_decay) K hK hKH c c' hc
+  obtain ⟨c, c', hc, hcc⟩ := _root_.GlobalTheory.isCompact_pi_upperHalfPlane_im_bounds (Emb F) L hL (fun z hz τ => hLH hz τ)
+  have hfb := _root_.GlobalTheory.HeckeTwo.FactorBound.norm_iteratedFDeriv_fourierFactor_le (_root_.GlobalTheory.HeckeTwo.TermBoundDeriv.iteratedDeriv_hTrans_bound _root_.GlobalTheory.HeckeTwo.TermSmooth.iteratedDeriv_hTrans_repr _root_.GlobalTheory.HeckeTwo.TermDecay.intT_bound) K hK hKH c c' hc
   choose mk hmk using hfb
   refine ⟨(Finset.range (n + 1)).sup mk, fun N => ?_⟩
   choose Ck hCk using fun k => hmk k N
@@ -95,7 +98,7 @@ theorem fTerm_iteratedFDeriv_bound : ∀ (F : Type) [Field F] [NumberField F] (K
   have hsm : ∀ τ, ContDiffOn ℝ ∞ (g τ) {w : ℂ | 0 < w.im} := fun τ => factorSmooth σ hσH (τ ν) (τ b) (hτb τ)
   have hopen : ∀ τ : Emb F, IsOpen {w : ℂ | 0 < w.im} := fun _ => isOpen_lt continuous_const Complex.continuous_im
   rw [hfun]
-  refine (GlobalTheory.T.norm_iteratedFDeriv_prod_coord_le_leibniz (Emb F) g (fun _ => {w : ℂ | 0 < w.im}) hopen hsm z (fun τ => hLH hz τ) n).trans ?_
+  refine (_root_.GlobalTheory.LeibnizProd.norm_iteratedFDeriv_prod_apply_le (Emb F) g (fun _ => {w : ℂ | 0 < w.im}) hopen hsm z (fun τ => hLH hz τ) n).trans ?_
   have hfac : ∀ τ, ∑ k ∈ Finset.range (n + 1), ‖iteratedFDeriv ℝ k (g τ) (z τ)‖ ≤
       C0 * ((|τ b| + |τ b|⁻¹) ^ m / (1 + |τ ν * τ b|) ^ N) := by
     intro τ

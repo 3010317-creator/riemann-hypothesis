@@ -1,14 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.CMLattices.IntegralOf
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsIntegralEigenbasisOfFrameAtLocalModelStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsIntegralEigenbasisOfFrameAtLocalModel
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsLieBasisLocalModel
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUnitIntegralGeneratorPrincipalLocalModelStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUnitIntegralGeneratorPrincipalLocalModel
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.PrincipalTriplePullback
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.SabMapCancelAndCompOver
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegralUnimodularMulLowerTriangularOfDetNStatement
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUniqueFrameChangeByMatrices
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegralUnimodularMulLowerTriangularOfDetN
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameChangeByMatricesReflAndComp
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUniqueFrameChangeByMatrices
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -99,9 +101,9 @@ theorem intPt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Reci
   obtain ⟨k2, hk2⟩ := sab_comp' n' m2 _ rfl
   obtain ⟨m2', h2⟩ := sab_cancel' n k2 (spMap (algebraMap T.V T.Fr))
     (by rw [← spMap_comp', ← spMap_comp', hρV])
-  obtain ⟨⟨g0, hg0u, hg0⟩, -⟩ := GlobalTheory.T.exists_integralEigenbasis_of_frame_at_localModel E H Dw l Xo c T (iK.comp (algebraMap c.F K)) G.t _ yT.x m1' m2' yT rfl
-  obtain ⟨a0, ha0⟩ := GlobalTheory.T.exists_unit_integral_generator_principal_local_model E H Dw l Xo c T (iK.comp (algebraMap c.F K)) G _ yT.x m1' m2' yT rfl
-  choose k hk using fun σ => GlobalTheory.T.exists_integral_unimodular_mul_lowerTriangular_of_det_ne_zero T.V T.Fr (Dw.mult σ) (g0 σ) (hg0u σ).ne_zero
+  obtain ⟨⟨g0, hg0u, hg0⟩, -⟩ := _root_.GlobalTheory.LamT.lieInt_exists_and_change E H Dw l Xo c T (iK.comp (algebraMap c.F K)) G.t _ yT.x m1' m2' yT rfl
+  obtain ⟨a0, ha0⟩ := _root_.GlobalTheory.LamT.LocSec.exists_unit_secInt E H Dw l Xo c T (iK.comp (algebraMap c.F K)) G _ yT.x m1' m2' yT rfl
+  choose k hk using fun σ => _root_.GlobalTheory.iwasawa_lowerTriangular_of_det T.V T.Fr (Dw.mult σ) (g0 σ) (hg0u σ).ne_zero
   have hkdet : ∀ σ, IsUnit (((k σ).map (algebraMap T.V T.Fr))).det := fun σ => by
     rw [← RingHom.mapMatrix_apply, ← RingHom.map_det]
     exact (hk σ).1.map _
@@ -125,7 +127,7 @@ theorem intPt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Reci
   have h1y : y1 = y' := hyu y1 (by simpa [C] using hc)
   have hL0 : LieInt T (iK.comp (algebraMap c.F K)) m1' m2' y0.u := hg0 a0 y0 hy0
   have hL1 : LieInt T (iK.comp (algebraMap c.F K)) m1' m2' y1.u :=
-    (GlobalTheory.T.exists_integralEigenbasis_of_frame_at_localModel E H Dw l Xo c T (iK.comp (algebraMap c.F K)) G.t _ yT.x m1' m2' y0 hy0.1).2 hL0 k _ y1
+    (_root_.GlobalTheory.LamT.lieInt_exists_and_change E H Dw l Xo c T (iK.comp (algebraMap c.F K)) G.t _ yT.x m1' m2' y0 hy0.1).2 hL0 k _ y1
       (fun σ => (hk σ).1) hy1
   rw [h1y] at hL1
   refine ⟨ρV, hρV, G, _, n, n', m1', m2', h1, h2.trans hk2, C, td, y', hlow, fun σ i => rfl, hy', hL1, ?_⟩

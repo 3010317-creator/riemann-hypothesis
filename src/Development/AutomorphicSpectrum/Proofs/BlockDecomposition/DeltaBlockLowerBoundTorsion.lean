@@ -2,13 +2,14 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsLatIntVec
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermOf
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CmConjugationPropertiesStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DeltaBlockMatrixMultiplicativeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DenominatorIndexBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DenominatorNormQuadraticExtensionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LamIsLatticeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RelativeNormCmAbsNormStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TorsionOrthogonalityIntegralSolutionStatement
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CmConjugationProperties
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DeltaBlockMatrixMultiplicative
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DenominatorIndexBound
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DenominatorNormQuadraticExtension
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LamIsLattice
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RelativeNormCmAbsNorm
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TorsionOrthogonalityIntegralSolution
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -126,7 +127,7 @@ theorem one_le_lastFib {m : ℕ} (C : Matrix (Fin (m + 1)) (Fin (m + 1)) E) :
 
 theorem lastFib_fg {m : ℕ} (C : Matrix (Fin (m + 1)) (Fin (m + 1)) E) :
     (lastFib C).FG := by
-  have hfg : (lam C).FG := (GlobalTheory.T.lam_is_lattice E (m + 1) C).1
+  have hfg : (lam C).FG := (_root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.isLat_lam_of_matrix E (m + 1) C).1
   have hmap : ((lastFib C).map
       (LinearMap.single (𝓞 E) (fun _ : Fin (m + 1) => E) (Fin.last m))).FG :=
     Submodule.FG.of_le hfg (Submodule.map_comap_le _ _)
@@ -162,7 +163,7 @@ open GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS
 
 theorem GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.LocalBound.local_bound : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (m : ℕ) (c : Matrix (Fin m) (Fin m) E), (∀ a b, σ (c b a) = c a b) → ∀ (u : Fin m → E) (t : 𝓞 E), t ∈ tor c u → t ≠ 0 → ∃ f : F, ∀ d : F, delta c * Ideal.absNorm (tor c u) ^ 2 * Ideal.absNorm (den F (f + ((RingOfIntegers.norm F t : 𝓞 F) : F) * d)) ^ 2 ≤ delta (blk σ c u (algebraMap F E d)) := by
   intro F E _ _ _ _ _ σ hCM m c hc u t ht ht0
-  obtain ⟨hinv, hfix, hsO, hN⟩ := GlobalTheory.T.cm_conjugation_properties F E σ hCM
+  obtain ⟨hinv, hfix, hsO, hN⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.isCMExt_conj_fixed_integers F E σ hCM
   obtain ⟨yo, lo, hyl⟩ := LocalBound.tor_decomp c u t ht
   have hf0 : σ (-∑ j, σ ((c *ᵥ fun j => algebraMap (𝓞 E) E (yo j)) j) * algebraMap (𝓞 E) E (yo j)) =
       -∑ j, σ ((c *ᵥ fun j => algebraMap (𝓞 E) E (yo j)) j) * algebraMap (𝓞 E) E (yo j) := by
@@ -202,7 +203,7 @@ theorem GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.LocalBound.local_boun
   have hinvb : ∀ b : E, (∀ a ∈ (tor c u).map (sO σ), (a : E) * b ∈ (1 : Submodule (𝓞 E) E)) →
       b ∈ lastFib (blk σ c u (algebraMap F E d)) := by
     intro b hb
-    obtain ⟨y, hy, hby⟩ := GlobalTheory.T.torsion_orthogonality_integral_solution F E σ hCM m c hc u b (fun t' h' => by
+    obtain ⟨y, hy, hby⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.dual_cover F E σ hCM m c hc u b (fun t' h' => by
       have := hb _ (hmem t' h')
       rwa [show ((sO σ t' : 𝓞 E) : E) = σ (t' : E) from hsO t'] at this)
     choose lo' hlo' using hy
@@ -216,7 +217,7 @@ theorem GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.LocalBound.local_boun
       simp only [map_zero, mul_zero, add_zero]
       exact add_sub_cancel _ _
     rwa [h4] at h3
-  have hnorm := (GlobalTheory.T.relative_norm_cm_absNorm F E σ hCM t).1
+  have hnorm := (_root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.NormSig.norm_eq_mul_conj_and_absNorm F E σ hCM t).1
   have hkey : ((sO σ t : 𝓞 E) : E) * (∑ j, σ (u j) * algebraMap (𝓞 E) E (yo j) +
       algebraMap F E d * algebraMap (𝓞 E) E t) -
       algebraMap F E (f + ((RingOfIntegers.norm F t : 𝓞 F) : F) * d) ∈ (1 : Submodule (𝓞 E) E) := by
@@ -240,11 +241,11 @@ theorem GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.LocalBound.local_boun
     have hnorm' : (t : E) = algebraMap (𝓞 E) E t := rfl
     rw [hnorm']
     linear_combination -hsum
-  have hmain := GlobalTheory.T.denominator_index_bound E ((tor c u).map (sO σ)) h𝔱
+  have hmain := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.IdxGe.absNorm_mul_den_le_idx E ((tor c u).map (sO σ)) h𝔱
     (lastFib (blk σ c u (algebraMap F E d))) (LocalBound.lastFib_fg _)
     (LocalBound.one_le_lastFib _) hinvb (sO σ t) _ _ (hmem t ht) hw hkey
-  rw [hN, GlobalTheory.T.denominator_norm_quadratic_extension F E hCM.2.2.1] at hmain
-  rw [GlobalTheory.T.delta_block_matrix_multiplicative F E σ m c u (algebraMap F E d)]
+  rw [hN, _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.DenMap.absNorm_den_algebraMap F E hCM.2.2.1] at hmain
+  rw [_root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.IndexFormula.delta_blk F E σ m c u (algebraMap F E d)]
   calc delta c * Ideal.absNorm (tor c u) ^ 2 *
         Ideal.absNorm (den F (f + ((RingOfIntegers.norm F t : 𝓞 F) : F) * d)) ^ 2
       = delta c * Ideal.absNorm (tor c u) * (Ideal.absNorm (tor c u) *

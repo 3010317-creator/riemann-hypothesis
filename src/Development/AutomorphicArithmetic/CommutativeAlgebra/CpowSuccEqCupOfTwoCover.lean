@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PullHlComp
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafBasicPropertiStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.GalMapMul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafBasicProperti
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CupProductEqZeroOfVanishingOnCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupProductAssocStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupProductGradedCommStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupProductAssoc
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupProductGradedComm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,13 +62,13 @@ private theorem cup_cast_left' {q : ℕ} {E : Spc} {n m i j n' i' : ℤ} (x : Ht
 private theorem cup_self_eq (q : ℕ) [NeZero q] {U V B : Spc} (g₁ : U ⟶ B) (g₂ : V ⟶ B) (ξ h : Ht q B 2 1)
     (hc : Cover2 (ZMod q) g₁ g₂) (h₁ : pull _ g₁ _ _ ξ = 0) (h₂ : pull _ g₂ _ _ ξ = pull _ g₂ _ _ h) :
     cup q ξ ξ = cup q h ξ := by
-  have inj := (GlobalTheory.T.chosenInjectiveResolutionEtaleSheaf_basic_properties (ZMod q) (tw q 1)).1
+  have inj := (_root_.GlobalTheory.EtC.res_basic (ZMod q) (tw q 1)).1
   have hz : cup q ξ (ξ - h) = 0 :=
     GlobalTheory.T.cupProduct_eq_zero_of_vanishing_on_cover (ZMod q) (twPair q 1 1) inj inj g₁ g₂ hc _ ξ (ξ - h) h₁ (by
       rw [map_sub]
       exact sub_eq_zero.mpr h₂)
   rw [map_sub, sub_eq_zero] at hz
-  rw [hz, GlobalTheory.T.tateTwistCupProduct_graded_comm q B ξ h]
+  rw [hz, _root_.GlobalTheory.EtC.cup_comm q B ξ h]
   norm_num
   rw [Int.negOnePow_even 4 ⟨2, rfl⟩, one_smul]
   rfl
@@ -82,6 +83,6 @@ theorem UpperTheory.cpow_succ_eq_cup_of_two_cover :
     rw [cpow_succ]
     rfl
   | succ j ih =>
-    rw [cpow_succ q ξ (j + 1), ih, cup_cast_left', ht_cast_cast', GlobalTheory.T.tateTwistCupProduct_assoc,
+    rw [cpow_succ q ξ (j + 1), ih, cup_cast_left', ht_cast_cast', _root_.GlobalTheory.EtC.CupAssoc.main,
       ht_cast_cast', cup_self_eq q g₁ g₂ ξ h hc h₁ h₂]
-    rw [cpow_succ q h j, cup_cast_left', ht_cast_cast', GlobalTheory.T.tateTwistCupProduct_assoc, ht_cast_cast']
+    rw [cpow_succ q h j, cup_cast_left', ht_cast_cast', _root_.GlobalTheory.EtC.CupAssoc.main, ht_cast_cast']

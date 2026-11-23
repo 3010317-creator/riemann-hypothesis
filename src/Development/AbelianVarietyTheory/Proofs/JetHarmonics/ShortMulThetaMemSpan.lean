@@ -9,17 +9,18 @@ public import Development.AbelianVarietyTheory.Counterexamples.LevelGroupExample
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CardLatticeQuotientHalfLevel
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.EqOfForallAlgClosed
-import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FramedPointBaseChangeLaws
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.HarmAMemSpanShort
-import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShortThetaValueExistsUniqueNaturalOfLaws
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaRuleExistsAndEval
-import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaRuleMemSec
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CoeffMoreColumns
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsSimInducing
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IsBetaUnitBlock
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ShortSeriesBlockProduct
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.StandardCoverShortValueEqThetaValueStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.ThShort
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.StandardCoverShortValueEqThetaValue
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.TotalDegreeLeOfRowDeg
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FramedPointBaseChangeLaws
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShortThetaValueExistsUniqueNaturalOfLaws
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaRuleMemSec
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -349,7 +350,7 @@ theorem mul_mem_span (hC : ChartIndepSt2) [StarRing (𝓞 E)] {nab : NabV Xo c} 
       (fun q : Fin m → LevQ Dw d.l₂ => if q = fun b => Submodule.Quotient.mk ((d.pd : 𝓞 E) • x b) then
         (Nat.card (Fin m → LevQ Dw d.l₂) : d.c₂.F) else 0) 1).1 k y₂
     have e₂ : v₂ = evR Xo c f y :=
-      GlobalTheory.T.standardCover_shortValue_eq_thetaValue hC E H Dw l Xo c nab n d hd hn hn₂ m N a' x P _ hu₂ hP
+      _root_.GlobalTheory.shortValAt_std_cover_eq_thValAt hC E H Dw l Xo c nab n d hd hn hn₂ m N a' x P _ hu₂ hP
         (fun b => (eq_mk_iff d hd (x b) _).1 rfl) k hk y y₂ hy v₂ _ hv₂
         ((GlobalTheory.thetaRule_exists_and_eval hC E H Dw l Xo c nab hn a' m x P hP).2 f hfr k y)
     have n₁ : d.eF (betaH (Dw := Dw) c Λ) ≠ 0 := (map_ne_zero _).2 b₁.1

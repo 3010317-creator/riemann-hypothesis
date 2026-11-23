@@ -6,10 +6,14 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GlueApp
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EtaleSpaceCohomologyEqZeroOfSimplicialRowExact
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FibrePowerFreePullbackStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FinrankFiniteFlatTorsionSubschemeEqCardPoints
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptInteriorGenericStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeTensorPowerLineBundleStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptInteriorGeneric
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsGenericFlag
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeTensorPowerLineBundle
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PowFnsOfAbelianGenericStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegAtNoetherianModelNoetherianStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+public import Mathlib.AlgebraicGeometry.Noetherian
+public import Mathlib.AlgebraicGeometry.Properties
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegAtNoetherianModelNoetherian
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -105,7 +109,7 @@ theorem exists_gen {Λ : Lat ξ Ω} {T : Set (Cpt ξ)} (h : Λ.IsVBOn T 1 ⊤) {
 
 theorem tens_gen {G : Lat ξ Ω} {T : Set (Cpt ξ)} (hG : G.IsVBOn T 1 ⊤) (n : ℤ) {p : Cpt ξ} (hp : p ∈ T) {s : Ω}
     (hs : G.IsGenAt p s) : (Lat.tens (fun _ : Unit => G) fun _ => n).IsGenAt p (s ^ n) := by
-  have h := (GlobalTheory.T.lattice_tensor_power_line_bundle X Ω ξ Unit (fun _ => G) T (fun _ => hG) fun _ => n).2 p hp (fun _ => s) fun _ => hs
+  have h := (_root_.GlobalTheory.CompanionTheory.Ar.LatTens.tens_isVBOn X Ω ξ Unit (fun _ => G) T (fun _ => hG) fun _ => n).2 p hp (fun _ => s) fun _ => hs
   simpa using h
 
 theorem span_inv (R : Subring Ω) {s w : Ω} (hs : s ≠ 0) (h : Submodule.span R {s⁻¹} = Submodule.span R {w}) :
@@ -212,10 +216,10 @@ end Main
 
 theorem drTie_of_hodgeCpt : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) [Fintype (CMType H)] (M : GlobalTheory.CompanionTheory.Ar.Top.RootModel (CMType H) (D.p + D.q)) (𝔐 : HodgeCpt Y S M.y) (Fl : 𝔐.Flag) (e : CMType H × Fin (D.p + D.q) → M.Ω), Fl.RootLines M.xdeg e → ∀ p : ℕ, p.Prime → p ∉ S → ¬ (p : ℤ) ∣ NumberField.discr E → (∀ z : Y.X, (p : Y.X.residueField z) = 0 → FibPF Y.t z) → Nonempty (DRTie M D.p p H) := by
   intro E _ _ _ H D l Xo c Y S _ M 𝔐 Fl e hR p hp hS hd hfib
-  obtain ⟨hint, -, -, hinj, -, -, -, hreg⟩ := GlobalTheory.T.hodge_cpt_interior_generic E H D l Xo c (𝓞 c.F) (algebraMap (𝓞 c.F) c.F) Y S M.Ω M.K M.ι
+  obtain ⟨hint, -, -, hinj, -, -, -, hreg⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HodgeCpt.basic E H D l Xo c (𝓞 c.F) (algebraMap (𝓞 c.F) c.F) Y S M.Ω M.K M.ι
     M.y 𝔐 Subtype.val_injective
   have hcard := (LabelCount.labels_injective_card E H l c M.Ω 𝔐.cst).2
-  have hnoeth := (GlobalTheory.T.regAt_noetherian_model_noetherian 𝔐.X M.Ω 𝔐.ξ ℤ ((k : M.K) → M.ι k) _ 𝔐.tie).2 𝔐.all
+  have hnoeth := (_root_.GlobalTheory.CompanionTheory.Ar.CoordNoeth.noetherian_of_coordTie 𝔐.X M.Ω 𝔐.ξ ℤ ((k : M.K) → M.ι k) _ 𝔐.tie).2 𝔐.all
   haveI := hnoeth.1
   haveI := hnoeth.2
   have hpow : PowFns 𝔐.t := GlobalTheory.T.powFns_of_abelian_generic E H 𝔐.X 𝔐.t inferInstance inferInstance fun z hz => by

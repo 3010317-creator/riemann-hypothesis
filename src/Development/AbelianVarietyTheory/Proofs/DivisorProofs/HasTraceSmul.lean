@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.RangeShape
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IndefiniteUnitaryLieAlgebraMemIffEntriesStatement
+public import Formalism.RealPlaceAnalysis.Complexify
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IndefiniteUnitaryLieAlgebraMemIffEntries
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousExpGAndToMInv
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HaarRinvUJ
 import Mathlib.Algebra.Order.Floor.Extended
@@ -74,7 +75,7 @@ theorem trace_adBas (hSh : StShape) (hBD : StBasDeriv) (hUF : UFin) (hRS : Range
     (hZ : LieU ε Z) (hH : IsCutFn H) :
     HasTrace (repOp π μ fun g => adBas ε Z H P (toM g)) 0 := by
   have := GlobalTheory.CompanionTheory.HaarUJ.haar_rinv_UJ n ε μ
-  have hZG : inG ε Z := (GlobalTheory.T.indefiniteUnitaryLieAlgebra_mem_iff_entries n ε Z).2 hZ
+  have hZG : inG ε Z := (_root_.GlobalTheory.pcLieEntry n ε Z).2 hZ
   obtain ⟨hxc, hxinv⟩ := GlobalTheory.CompanionTheory.ExpOneParam.continuous_expG_and_toM_inv n ε Z hZG
   obtain ⟨hadS, hder⟩ := hBD n ε Z H P hZ hH
   have hbS : bas ε H P ∈ ShapeM ε (P.totalDegree + 2) := Submodule.subset_span ⟨H, P, hH, by omega, rfl⟩

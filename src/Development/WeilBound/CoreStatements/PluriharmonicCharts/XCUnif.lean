@@ -1,15 +1,18 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsPeriodOn
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BaseVectorPropertiesStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAnalyticProjectionBijectiveStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagPointInMultiprojectivePointsStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsClosedSectionBoundaryStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BasePartFlagPt
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BaseVectorProperties
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAnalyticProjectionBijective
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagPointInMultiprojectivePoints
+public import ReciprocityTheory.AnalyticForms.LeviForms.IsRegFamilyInhabitStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsClosedSectionBoundary
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwoPointFibreChartFirst
 public import Development.WeilBound.CoreStatements.PluriharmonicCharts.AnalyticAtDetFac
+public import Development.WeilBound.CoreStatements.PluriharmonicCharts.NotMemOfEqTop
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PullbackPullback
 import Development.WeilBound.CoreStatements.PluriharmonicCharts.AnalyticAtFlagPt
 import Development.WeilBound.CoreStatements.PluriharmonicCharts.ExistsHoloOnOfGerm
-public import Development.WeilBound.CoreStatements.PluriharmonicCharts.NotMemOfEqTop
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,8 +54,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BasePartFlagPt
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PullbackPullback
 
 @[expose] public section
 
@@ -74,11 +75,11 @@ theorem chart_over (FA : FlagAn BM d) (x : FA.S.X) {l : Fin BM.q} (hl : FA.pr x 
         (∀ τ (a b : Fin N), N - j ≤ (a : ℕ) → (b : ℕ) < N - j → ((Pi τ (FA.pr x))⁻¹ * Matrix.of fun a b =>
           fderiv ℂ (fun w => Pi τ ((BM.Rb.A.chart k).symm w) a b) (BM.Rb.A.chart k (FA.pr x)) v) a b = 0) → v = 0) →
         IsFlagImmersionAt (FA.S.comap some).A g x) := by
-  have hb := GlobalTheory.T.flag_analytic_projection_bijective K ι Φ y Ψ N j M n d BM FA
+  have hb := _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.FC.re_pi_bijective K ι Φ y Ψ N j M n d BM FA
   have hd := FA.Re.degree
   rw [FA.deg_one, FA.br_empty] at hd
   obtain ⟨σ, h1, h2, hσ, hinj⟩ := exists_inv FA.S.A FA.Re.R.A FA.Re.π FA.Re.holo hd hb
-  have hcl : IsClosed (bdry BM.s) := GlobalTheory.T.isClosed_section_boundary n _ BM.Rb.A BM.L BM.s BM.sec
+  have hcl : IsClosed (bdry BM.s) := _root_.GlobalTheory.CompanionTheory.Ar.PB.CWeight.isClosed_bdry_of_isSection n _ BM.Rb.A BM.L BM.s BM.sec
   have hW : IsOpen (σ ⁻¹' FA.Re.R.U (σ x) ∩ FA.pr ⁻¹' ((BM.O l \ bdry BM.s) ∩ Vb)) :=
     ((FA.Re.R.isOpen_U _).preimage hσ.1).inter ((((BM.O_open l).sdiff hcl).inter hPi.1).preimage FA.pr_holo.1)
   have hcomp : ∀ x', σ x' ∈ FA.Re.R.U (σ x) → SameOrbit (FA.Re.R.lift (σ x) (σ x')) (FA.Re.R.lift (σ x') (σ x')) :=
@@ -102,12 +103,12 @@ theorem chart_over (FA : FlagAn BM d) (x : FA.S.X) {l : Fin BM.q} (hl : FA.pr x 
   exact ⟨V, _, hV, fun himm => flag_immersion FA hσ hinj hPi hWo hxW hl.1 hVb hh₀ hL hLb ho himm⟩
 
 theorem exists_over (FA : FlagAn BM d) {l : Fin BM.q} {b : BM.Rb.X} (hb : b ∈ BM.O l) : ∃ x, FA.pr x = b := by
-  obtain ⟨x₀, hx₀⟩ := FA.Re.R.surj _ (GlobalTheory.T.flag_point_in_multiprojective_points K ι Φ y Ψ N j M n BM l b hb (fun _ => 1)
+  obtain ⟨x₀, hx₀⟩ := FA.Re.R.surj _ (_root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.FC.flagPt_mem_mcPts K ι Φ y Ψ N j M n BM l b hb (fun _ => 1)
     fun _ => ⟨isBlockDiag_one, by simp⟩) (not_mem_of_eq_top FA.J_top _)
   refine ⟨FA.Re.π x₀, BM.Rb.inj _ _ (not_mem_of_eq_top rfl _) ?_⟩
   have h := Fib.sameOrbit_basePart M.blk hx₀
   rw [FC.basePart_flagPt] at h
-  exact orbit_trans (orbit_symm (FA.pr_eq x₀)) (orbit_trans h (GlobalTheory.T.base_vector_properties K ι Φ y Ψ N j M n BM l b hb).2.2.2)
+  exact orbit_trans (orbit_symm (FA.pr_eq x₀)) (orbit_trans h (_root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.FC.bvec_good K ι Φ y Ψ N j M n BM l b hb).2.2.2)
 
 theorem mem_open_iff (FA : FlagAn BM d) (x : FA.S.X) : x ∈ (FA.S.comap some).open' ↔ FA.pr x ∉ bdry BM.s := by
   show ¬ FA.S.s x x = 0 ↔ _

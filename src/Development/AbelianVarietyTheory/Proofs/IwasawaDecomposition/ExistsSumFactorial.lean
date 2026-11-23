@@ -5,8 +5,8 @@ public import Development.AbelianVarietyTheory.CrystallinePeriods.RingBasics
 public import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Acris0TorsionFree
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AcrisLogTeichmullerUniqueGaloisFrobeniusBdR
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CanonicalAcrisToBdRPlusUniqueEquivariantApproxStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLogTeichmullerAcrisEqMuMulUnit
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CanonicalAcrisToBdRPlusUniqueEquivariantApprox
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -115,7 +115,7 @@ theorem exists_log : ∀ (l : ℕ) [Fact l.Prime] (j : Per.Acris l →+* Per.BdR
       ∑ k ∈ Finset.range n, (-1) ^ k * ((n.factorial / (k + 1) : ℕ) : Per.AinfP l) *
         (algebraMap (Per.Ainf l) (Per.AinfP l) z) ^ (k + 1) :=
     ⟨d * _, by rw [← mul_assoc, hd, one_mul]⟩
-  have key := (GlobalTheory.T.canonicalAcrisToBdRPlus_unique_equivariant_approx l j hj).2.2 n Y (algebraMap (Per.AinfP l) (Per.BdRp l) c) (by
+  have key := (_root_.GlobalTheory.MemLoc.crisP_unique_equivariant l j hj).2.2 n Y (algebraMap (Per.AinfP l) (Per.BdRp l) c) (by
     intro r
     obtain ⟨w, hw⟩ := hY r (max (l ^ r) n) (le_max_left _ _)
     refine ⟨_, w, 0, hw, ?_⟩

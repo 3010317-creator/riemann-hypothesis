@@ -1,13 +1,14 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.IwahoriBlocks.SimpleIn
-import Development.AbelianVarietyTheory.Definitions.Foundations.MeasurePreservingRmulQuotMeas
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.IwahoriBlocks.IwahoriCentralBorel.ExistsInjectionIntoL2Cusp
+public import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.SummandFactor
+public import Development.WeilBound.CuspidalAdmissibility.OccursIff
+import Development.AbelianVarietyTheory.Definitions.Foundations.MeasurePreservingRmulQuotMeas
 import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.IwahoriBlocks.IwahoriCentralBorel.LevLaws
 import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.IwahoriBlocks.IwahoriCentralBorel.OpenStab
 import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.InductionEstimates.IwahoriBlocks.IwahoriCentralBorel.PiHomExt
 import Development.AutomorphicArithmetic.Foundations.Convolution.ConvolutionKernels.KernelTransforms.LocEmb
-public import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.OccursBasics
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -255,7 +256,7 @@ theorem UpperTheory.V.Z.InvariantSubmoduleMonicPolynomial.IwahoriBlocks.xOcc :
   haveI : BorelSpace (Gw 2 (w i)) := ⟨rfl⟩
   let K₀ : TopologicalSpace.PositiveCompacts (Gw 2 (w i)) :=
     ⟨⟨U (w i), (hU (w i)).1.1⟩, ⟨1, mem_interior_iff_mem_nhds.2 ((hU (w i)).1.2.mem_nhds (U (w i)).one_mem)⟩⟩
-  obtain ⟨⟨σ, hσ⟩, -, -⟩ := UpperTheory.ConvolutionTheory.C.occursBasics K 2 μ τ (w i) (Measure.haarMeasure K₀) hSum
+  obtain ⟨⟨σ, hσ⟩, -, -⟩ := _root_.PositivityTheory.TfC.OccursBasics_holds K 2 μ τ (w i) (Measure.haarMeasure K₀) hSum
   obtain ⟨f₀, hf₀, hf₀τ, hf₀e⟩ := id hσ
   obtain ⟨P, hP⟩ := pClm μ hp
   let L : Gw 2 (w i) →* G1 K 2 := (MultiplicityOne.finProj K 2).comp (AdelicGLn.localEmbedding (w i))

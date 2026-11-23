@@ -9,7 +9,8 @@ public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsTensorS
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.HypAndAdj
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IsTypeOfIrreducibleStable
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.OpNormSumSmulSqLe
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.PieriRaisingSubmoduleGlSuccStatement
+public import Formalism.HermitianCurvature.CapelliDeterminantAndBranching
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.PieriRaisingSubmoduleGlSucc
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.FrameExtension
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -79,7 +80,7 @@ theorem wigner_step_raise : ∀ (V : Type) [NormedAddCommGroup V] [InnerProductS
   obtain ⟨πt, ht1, ht2, ht3⟩ :=
     GlobalTheory.exists_tensor_standard_rep V (n + 1) r z π B hz hT hrep hπ.2.2.2.1 hB
   have hE := GlobalTheory.TensorStd.EB_tensor_std V (n + 1) r z π B πt hz hT hrep ht1 hB ht3
-  obtain ⟨S, hS1, hS2, hS3, hS4, hS5⟩ := GlobalTheory.T.pieri_raising_submodule_glSucc V n (EB π B) (EB πt B) β L l hH hadj hE hl
+  obtain ⟨S, hS1, hS2, hS3, hS4, hS5⟩ := _root_.GlobalTheory.WigSh.pieri_step_raise V n (EB π B) (EB πt B) β L l hH hadj hE hl
   have hq : ∀ (w : ℂ), ∀ y ∈ S, qdet (EB πt B) w y = (∏ i ∈ Finset.Icc 1 (n + 1),
       (w - ((n + 1 : ℕ) : ℂ) / 2 + 1 / 2 +
         ((Function.update u ((l : ℕ) + 1) (u ((l : ℕ) + 1) + 1) i : ℝ) : ℂ))) • y := by

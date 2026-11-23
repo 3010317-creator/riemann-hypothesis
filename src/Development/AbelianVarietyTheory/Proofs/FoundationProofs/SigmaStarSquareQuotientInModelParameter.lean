@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DifferentiableSqTh
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsUniqueIsWeierstrassPSeriesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsWeierstrassPSeriesAndSigmaStarQuotientSeriStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.WeierstrassPFormalGroupLogUniformisesStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsUniqueIsWeierstrassPSeries
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsWeierstrassPSeriesAndSigmaStarQuotientSeri
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.WeierstrassPFormalGroupLogUniformises
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -125,11 +125,11 @@ theorem exists_algebraic_series (Λ : AddSubgroup ℂ) (hL : IsLat Λ) (a b w : 
     ∃ P₀ S : PowerSeries Qbar, IsWpSer a b P₀ ∧
       PowerSeries.mk (coef1 (sgStar Λ)) = PowerSeries.map (algebraMap Qbar ℂ) (X * S) ∧
       PowerSeries.mk (coef1 (sqTh Λ v)) = PowerSeries.map (algebraMap Qbar ℂ) (S ^ 2 * lineSer P₀ w) := by
-  obtain ⟨P, hP, hPv⟩ := GlobalTheory.T.exists_weierstrassPSeries_and_sigmaStarQuotientSeries Λ hL
-  obtain ⟨P₀, hP₀, -⟩ := GlobalTheory.T.existsUnique_isWeierstrassPSeries Qbar a b
+  obtain ⟨P, hP, hPv⟩ := _root_.GlobalTheory.WpSeries.exists_wpSer Λ hL
+  obtain ⟨P₀, hP₀, -⟩ := _root_.GlobalTheory.WpSeries.existsUnique_isWpSer Qbar a b
   rw [ha, hb] at hP
   have hPP : P = PowerSeries.map (algebraMap Qbar ℂ) P₀ :=
-    (GlobalTheory.T.existsUnique_isWeierstrassPSeries ℂ a b).unique hP (isWpSer_map (algebraMap Qbar ℂ) hP₀)
+    (_root_.GlobalTheory.WpSeries.existsUnique_isWpSer ℂ a b).unique hP (isWpSer_map (algebraMap Qbar ℂ) hP₀)
   have h0 : coef1 (sgStar Λ) 0 = 0 := by
     simp [coef1, (hL.sg_eq_zero 0).2 (zero_mem _)]
   obtain ⟨S, hS⟩ : ∃ S : PowerSeries Qbar,
@@ -194,7 +194,7 @@ theorem sqTh_atU : ∀ (p : ℕ) [Fact p.Prime] (g : GL3Theta.G1 p), IsWq g.W g.
     rw [this]
     exact SetLike.coe_mem _
   obtain ⟨i4, i6, i2⟩ := invariants g a b ha hb
-  have hform := GlobalTheory.T.weierstrassP_formalGroupLog_uniformises p g.W g.wq
+  have hform := _root_.GlobalTheory.WpForm.wp_flog p g.W g.wq
     (rescale ((g.C.u⁻¹ : ℂ_[p]ˣ) : ℂ_[p]) (PowerSeries.map g.lam P₀)) hq
     (by rw [i4, i6]; exact isWpSer_rescale _ (isWpSer_map g.lam hP₀))
   rw [i2, ← GL3Theta.G1.l] at hform

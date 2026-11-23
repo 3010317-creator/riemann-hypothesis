@@ -1,12 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatVecUOfIsSphericalU
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeTjCosetsFiniteCardLe
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeTnScalarUniformiserSingleTranslation
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormHeckeEigenvalueLeCardCosets
+public import Mathlib.Analysis.Complex.Norm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormInvLePowCardOfNormProdEqOne
+public import Mathlib.RingTheory.MvPolynomial.Symmetric.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormUnitLeOfEsymm
 import Development.AbelianVarietyTheory.Definitions.Foundations.NormEulerPolySubOneLe
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeTjCosetsFiniteCardLeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeTnScalarUniformiserSingleTranslationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormHeckeEigenvalueLeCardCosetsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormInvLePowCardOfNormProdEqOneStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormRootLeCardMulBoundOfEsymmNormLeStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -70,11 +72,11 @@ theorem local_bound (E : Type) [Field E] [NumberField E] (w : HeightOneSpectrum 
 
   have he : ∀ j, 1 ≤ j → j ≤ n → ‖(B.map fun b : ℂˣ => (b : ℂ)).esymm j‖ ≤ (q : ℝ) ^ (n * n) := by
     intro j _ hjn
-    obtain ⟨hfin, hc⟩ := GlobalTheory.T.heckeTj_cosets_finite_card_le E w n ϖ hϖ j hjn
+    obtain ⟨hfin, hc⟩ := _root_.GlobalTheory.TjCount.tj_cosets_finite_card_le E w n ϖ hϖ j hjn
     have hh : ∀ g, ‖Formalism.UG.Tj ℂ n (Formalism.UG.Ov E w) ϖ j g‖ ≤ 1 := fun g => by
       unfold Formalism.UG.Tj
       exact (norm_indicator_le_norm_self _ _).trans (by simp)
-    have k1 := GlobalTheory.T.norm_heckeEigenvalue_le_card_cosets _ (GlobalTheory.LFun.KGL w (n := n)) V ρ Bf h1 h2 h3 _ x _ hh hfin hx0 (hT ϖ hϖ j hjn)
+    have k1 := _root_.GlobalTheory.LFun.norm_le_card_of_heckeVec_eq_smul _ (GlobalTheory.LFun.KGL w (n := n)) V ρ Bf h1 h2 h3 _ x _ hh hfin hx0 (hT ϖ hϖ j hjn)
     have k2 : ‖(B.map fun b : ℂˣ => (b : ℂ)).esymm j‖ ≤ ‖GlobalTheory.LFun.satEig q n B j‖ := by
       unfold GlobalTheory.LFun.satEig
       rw [norm_mul, Complex.norm_natCast_cpow_of_pos (by omega)]
@@ -94,12 +96,12 @@ theorem local_bound (E : Type) [Field E] [NumberField E] (w : HeightOneSpectrum 
     linarith
   have hup : ∀ b ∈ B, ‖(b : ℂ)‖ ≤ (q : ℝ) ^ (n * n + n) := by
     intro b hb
-    refine (GlobalTheory.T.norm_root_le_card_mul_bound_of_esymm_norm_le n B _ hcard (one_le_pow₀ hq1) he b hb).trans ?_
+    refine (_root_.GlobalTheory.ElementarySymmetricNormBound.norm_unit_le_of_esymm n B _ hcard (one_le_pow₀ hq1) he b hb).trans ?_
     rw [pow_add, mul_comm]
     exact mul_le_mul_of_nonneg_left hnq (by positivity)
   refine fun b hb => ⟨hup b hb, ?_⟩
 
-  obtain ⟨g, hg⟩ := GlobalTheory.T.heckeTn_scalar_uniformiser_single_translation E w n V ρ ϖ hϖ x hxK
+  obtain ⟨g, hg⟩ := _root_.GlobalTheory.LFun.tn_single E w n V ρ ϖ hϖ x hxK
   have hn := hT ϖ hϖ n le_rfl
   have hsat : GlobalTheory.LFun.satEig q n B n = (B.map fun b : ℂˣ => (b : ℂ)).prod := by
     unfold GlobalTheory.LFun.satEig
@@ -124,7 +126,7 @@ theorem local_bound (E : Type) [Field E] [NumberField E] (w : HeightOneSpectrum 
       have : (Complex.normSq c : ℂ) = 1 := by rw [Complex.normSq_eq_conj_mul_self]; exact e2
       exact_mod_cast this
     nlinarith [norm_nonneg c]
-  have := GlobalTheory.T.norm_inv_le_pow_card_of_norm_prod_eq_one' B _ (one_le_pow₀ hq1) hup hp b hb
+  have := _root_.GlobalTheory.norm_inv_le_pow_card_of_norm_prod_eq_one B _ (one_le_pow₀ hq1) hup hp b hb
   rwa [hcard] at this
 
 end GlobalTheory.HenQ

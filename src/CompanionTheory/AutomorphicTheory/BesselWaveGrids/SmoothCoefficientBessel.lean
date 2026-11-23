@@ -2,20 +2,21 @@ module
 
 public import CompanionTheory.AutomorphicTheory.BesselWaveGrids.CoefFacts
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.TransferSmoothOfRegularity
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.CapelliDetAdInvariant
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ClassicalToWeakSolution
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutEllRegW
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutGradedRegFFM
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutJfSSymbolLevi
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.GroupEquationsPostHolds
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.InvariantOperatorUnderJacquet
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.JfSmoothBuiltOfRest
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.NilpotentDerivative
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.SmoothOfCoefficientsHolds
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.TransferSmoothAtBuiltPlace
+import Formalism.HermitianCurvature.StatementJF
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.CapAdInv
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutGradedRegFFM
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.InvariantOperatorUnderJacquet
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.OrbitalIntegralAeConvergenceContinuity
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.RegularisedPairingViaPhase
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.SmoothOfCoefficientsHolds
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.StabilizerFixesTailCoords
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.TransferSmoothAtBuiltPlace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -82,7 +83,7 @@ theorem smooth_coefficient_bessel : SmoothKB := by
       JF.xiP p.T.base q • Q.CV P.k P.r (Y : ℂ) (B.rho p.T.base q f) g =
         c • (JF.xiP p.T.base q • B.rho p.T.base q f g) := by
     filter_upwards [B7.ae_inSS p.T.base] with q hq
-    rw [capelli_rho_commute P.k P.r _ _ p.T.base (Y : ℂ) f q hq hCkn _ hgG]
+    rw [_root_.Formalism.FourierDecayAlt.P.JFxE.cVRho P.k P.r _ _ p.T.base (Y : ℂ) f q hq hCkn _ hgG]
     have hs := B7.sgs_mem p.T.base hq hgG
     simp only [B.rho]
     rw [hc _ hs, ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_smul, smul_comm]

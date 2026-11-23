@@ -1,18 +1,21 @@
 module
 
 public import Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.WhittakerVanishingImpliesZero
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsIsOpenIsCompact
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfMemWeakIn
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LieSkewAdjointMatrix
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOfIsOpenStab
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspFiniteVectorsHoldsStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalConvolutionCompactStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalKTypeFiniteStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsNonnegBump
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.CuspDiscreteDecompositionGL
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspFiniteVectorsHolds
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InvariantOfLieOneLEqZero
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NormalisedCuspFormL2Bounded
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieDerivativeL2InnerProduct
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsIsOpenIsCompact
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOfIsOpenStab
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.T2SpaceAdelicGeneralLinearGroupNumberField
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalConvolutionCompact
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalKTypeFinite
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsNonnegBump
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IrreducibleCuspidalFormL2Mem
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IrreducibleSmoothModuleUnique
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NormalisedCuspFormL2Bounded
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,7 +51,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieDerivativeL2InnerProduct
 
 @[expose] public section
 
@@ -68,7 +70,7 @@ theorem enoughCompact_Rcusp : EnoughCompact (Rcusp μ) := by
   obtain ⟨φ, hφ, hs, h0, h1, hsupp⟩ := GlobalTheory.CompanionTheory.Bump.exists_nonneg_bump (1 : GA E a) N hN
   have hf : Continuous fun g => (φ g : ℂ) := Complex.continuous_ofReal.comp hφ
   have hfs : HasCompactSupport fun g => (φ g : ℂ) := hs.comp_left (g := Complex.ofReal) Complex.ofReal_zero
-  exact ⟨_, GlobalTheory.T.cuspidal_convolution_compact E a μ _ hf hfs, fun S hS x =>
+  exact ⟨_, _root_.GlobalTheory.CompanionTheory.CuspidalCompact.isCompactOperator_repOp_Rcusp E a μ _ hf hfs, fun S hS x =>
     (DFunLike.congr_fun ((isUnitaryRep_Rcusp μ).comp_repOp (isUnitaryRep_Rcusp μ) hf hfs S hS.2) x).symm,
     h φ hφ hs h0 h1 hsupp⟩
 
@@ -187,7 +189,7 @@ theorem mem_of_toL2_mem_irreducible {W : Submodule ℂ (Sm E a)} (hW : _root_.Gl
     ⨆ (T : Y₀ →ₗ[ℂ] L2 (latticeGL E a) μ) (_ : (∀ k w, T (ρ k w) = piInf E a μ k (T w)) ∧ ∀ w, P (T w)), LinearMap.range T
   let M₀ : Submodule ℂ (L2 (latticeGL E a) μ) :=
     ⨆ (T : Y₀ →ₗ[ℂ] L2 (latticeGL E a) μ) (_ : (∀ k w, T (ρ k w) = piInf E a μ k (T w)) ∧ ∀ w, P₀ (T w)), LinearMap.range T
-  haveI hM₀f : FiniteDimensional ℂ M₀ := GlobalTheory.T.cuspidal_K_type_finite E a μ H hcusp hirr U hUo Y₀ ρ
+  haveI hM₀f : FiniteDimensional ℂ M₀ := _root_.GlobalTheory.CompanionTheory.IsoTypes.finiteDimensional_isotypic E a μ H hcusp hirr U hUo Y₀ ρ
   have hMP : M ≤ C ⊓ fixedBy μ U := iSup₂_le fun T hT => by
     rintro _ ⟨w, rfl⟩
     exact hT.2 w
@@ -281,7 +283,7 @@ theorem exists_isFinitePartOf (π : CuspSub E a) (hπ : IsNormalised π) :
       toL2_ne_zero (hm φ hφ) (ContAut.continuous_of_isOpen_stab E a φ (hWa φ hφ).level) fun e => h0 (Subtype.ext e)⟩
   obtain ⟨H, hHC, hi⟩ := exists_irred_le hC hCc hC0
   have hcusp : H ≤ L2cusp μ := hHC.trans hCc
-  obtain ⟨π₀, hf⟩ := GlobalTheory.T.cusp_finite_vectors_holds E a μ H hcusp hi
+  obtain ⟨π₀, hf⟩ := _root_.GlobalTheory.CompanionTheory.Published.cuspFiniteVectorsGL E a μ H hcusp hi
   obtain ⟨φ, hφ, h0⟩ := (Submodule.ne_bot_iff _).1 π₀.ne_bot
   have hφπ : φ ∈ π.V := mem_of_toL2_mem_irreducible π.stable hWa hm hC rfl hcusp hi hHC
     (fun ψ hψ => eq_zero_of_mem_orthogonal hm hi.1 hi.2.1 hHC ψ hψ) φ (π₀.cusp φ hφ).1 (hf.finitePartMemL2 φ hφ)

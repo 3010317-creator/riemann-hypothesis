@@ -7,13 +7,14 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Com
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.EqOfSameDoubleCosetCompletionRowRepresentativesStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsRationalDoubleCosetRepresentativeBoundsStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsTwistIndexRepresentativeOfBoundsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsUniqueCompletionMatrixOfRationalTwistAutStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsUniqueCompletionMatrixOfRationalTwistAut
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FirstStepCompletionRepresentativesEqOneStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ParahoricLevelsCharactersDoubleCosetsAgreeRationStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistParahoricChainLastStepsAgreeColumnsStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ParahoricLevelsCharactersDoubleCosetsAgreeRation
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistParahoricChainLastStepsAgreeColumns
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsConjReferenceChartIndex
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnfoldedDatumNeZeroIffDoubleCosetStatement
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
+import Formalism.LocalToGlobal.Columns.FiniteSumNonzeroLargeDepth
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnfoldedDatumNeZeroIffDoubleCoset
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LatticeClasses
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TwistSupportPeriodicLevels
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ZpowMulMemPow
@@ -145,7 +146,7 @@ theorem exists_system {σ₀ : X.K →+* ℂ} {P : rowSG Pr sel mu} {k : Type} [
   classical
   have hc := hL.cst_ok
   have hm : R.m = s + 2 := hA.steps
-  have hLev := GlobalTheory.T.parahoricLevels_characters_doubleCosets_agree_rational X Pr R Ch sel S₀ mu cst σ₀ P k ι s W ν hν hc hA
+  have hLev := _root_.GlobalTheory.TwBridge.Lev.levelAgree X Pr R Ch sel S₀ mu cst σ₀ P k ι s W ν hν hc hA
   have hmaps := GlobalTheory.T.completion_representative_mem_previous_index_set X Pr R Ch sel S₀ mu cst σ₀ P k ι s W ν hν hc hA L G hL hI
   have hnorm := GlobalTheory.T.completion_representatives_normal_form_mod_unipotent X Pr R Ch sel S₀ mu cst σ₀ P k ι s W ν hν hc hA L G hL hI hmaps
   have honto := GlobalTheory.T.exists_rational_double_coset_representative_bounds X Pr R Ch sel S₀ mu cst σ₀ P k ι s W ν hν hc hA L G hL hI
@@ -189,7 +190,7 @@ theorem exists_system {σ₀ : X.K →+* ℂ} {P : rowSG Pr sel mu} {k : Type} [
         obtain ⟨h', rfl, hf⟩ := hβ
         obtain ⟨γ, ⟨g', hg', hdc⟩, hbd, hE⟩ := honto j c h al g hg (hnorm j (c + 1) (by omega) al g hg) h' hf
         obtain ⟨b, hb⟩ := GlobalTheory.T.exists_twistIndex_representative_of_bounds X Pr R Ch sel S₀ mu cst σ₀ P k ι s W ν hν hc hA L G hL hI j c h γ hbd ⟨al, hE⟩ hne
-        obtain ⟨g'', hg'', -⟩ := GlobalTheory.T.existsUnique_completionMatrix_of_rationalTwistAut X R k ι (j + 1) (c + 1) (by simp only [cOf]; omega) (L.h (j + 1) b P)
+        obtain ⟨g'', hg'', -⟩ := _root_.GlobalTheory.TwBridge.existsUnique_isGL X R k ι (j + 1) (c + 1) (by simp only [cOf]; omega) (L.h (j + 1) b P)
         refine ⟨g'', ⟨b, hg''⟩, ?_⟩
         rw [← hdc]
         exact ((hLev (j + 1) (c + 1) (by omega) (L.h (j + 1) b P) g'' hg'').2.2 (by omega) γ g' hg').1 hb
@@ -203,7 +204,7 @@ theorem exists_system {σ₀ : X.K →+* ℂ} {P : rowSG Pr sel mu} {k : Type} [
   · by_cases hne : Nonempty (L.β s)
     · rw [hrat _ _ _ hne] at hg
       obtain ⟨al, hg⟩ := hg
-      exact ((GlobalTheory.T.twistParahoricChain_lastSteps_agree_columns X Pr R Ch sel S₀ mu cst σ₀ P k ι s W ν hν hc hA L G hL).1 al g hg).1
+      exact ((_root_.GlobalTheory.TwLast.lastAgree X Pr R Ch sel S₀ mu cst σ₀ P k ι s W ν hν hc hA L G hL).1 al g hg).1
     · refine adapted_of_normal hϖ hb hs hp hM ?_
       obtain ⟨r, hr, hn⟩ := GlobalTheory.LatClass.exists_normal hϖ W.cond hb hs hp hJ hsys s 0 rfl g hg
       have key : ∀ j c h, ¬ Nonempty (L.β j) → ∀ g ∈ A j c h, ∃ β, g = σ j c h β := by
@@ -233,7 +234,7 @@ theorem idx_succ (hX : X.Ok) (hPr : Pr.Ok) (hCh : Ch.Ok) (hsel : IsSel X sel) (h
     (fun P hP => by rw [dite_eq_left hP]; exact one_mem _) (fun P hP => by rw [dite_eq_right hP]; exact h1 P hP) (fun P => by
       by_cases hP : P.1 ∈ Pr.vGs
       · rw [dite_eq_left hP]
-        exact ⟨al, (GlobalTheory.T.unfoldedDatum_ne_zero_iff_doubleCoset Ch sel mu cst L G s hX hPr hCh hsel hs hL j hj P hP _ _ (hL.stabG j al P hP) (one_mem _)
+        exact ⟨al, (_root_.GlobalTheory.SrcDoubleCoset.unfoldedDatum_ne_zero_iff_doubleCoset' Ch sel mu cst L G s hX hPr hCh hsel hs hL j hj P hP _ _ (hL.stabG j al P hP) (one_mem _)
           (by rw [hs]; exact GlobalTheory.Mem.Col2.TC.ChTw.Match.IdxMatch.cosetOne hX hPr hCh hsel hs hL j (by omega) al P hP)).2
           (twNonVanG G.σ₀ hB hj P hP)⟩
       · rw [dite_eq_right hP]

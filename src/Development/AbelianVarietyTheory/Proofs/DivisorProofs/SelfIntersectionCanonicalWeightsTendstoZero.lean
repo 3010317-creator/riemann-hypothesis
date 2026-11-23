@@ -1,11 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRatioOfWeight
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsProjectiveSpaceMorphismOfGeneratingSectionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankFunctionFieldQuotientSubfieldEqDegreeStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GeometricDegreeProjectionFormulaSelfInterPowStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormBasepointFreeSectionsLeOneFubiniStudyStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProjectiveSpaceOrderArithVarietyFubiniStudyDegreStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsProjectiveSpaceMorphismOfGeneratingSection
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankFunctionFieldQuotientSubfieldEqDegree
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormBasepointFreeSectionsLeOneFubiniStudy
+import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqOfIsometricTrivShift
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GeometricDegreeProjectionFormulaSelfInterPow
+import Development.AbelianVarietyTheory.Definitions.Divisors.NefFibOfIsNef
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProjectiveSpaceOrderArithVarietyFubiniStudyDegre
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,8 +65,8 @@ theorem selfInter_canWeight_le : GlobalTheory.Published.ArCalc → ∀ (k : Type
   haveI := hX.charZero_base
   have hf : 0 < Module.finrank ℤ k := Module.finrank_pos
   have he : 0 < e := hG.pos
-  obtain ⟨hPI, -, -, -, -, -, -⟩ := GlobalTheory.T.exists_projectiveSpace_morphism_of_generating_sections k X p D hX P hA e x hG
-  obtain ⟨hPV, -, -⟩ := GlobalTheory.T.projectiveSpace_order_arithVariety_fubiniStudyDegree k D
+  obtain ⟨hPI, -, -, -, -, -, -⟩ := _root_.GlobalTheory.HSAmp.toProj_gens k X p D hX P hA e x hG
+  obtain ⟨hPV, -, -⟩ := _root_.GlobalTheory.PSpaceDeg.main k D
 
   obtain ⟨Φ₀, hΦ₀⟩ := ((hC.arExists k (PSpace k D) (PSpace.str k D) D hPV).2 Unit
     fun _ => ProjSpace.hermitianTwistingSheaf k D).1
@@ -72,10 +74,10 @@ theorem selfInter_canWeight_le : GlobalTheory.Published.ArCalc → ∀ (k : Type
   set H := Φ₀ (MvPolynomial.X () ^ (D + 1)) with hHdef
   set g := gdeg P.L D
   refine ⟨|g * H| / ((Module.finrank ℤ k : ℝ) * e), fun n u a hn hu ha => ?_⟩
-  obtain ⟨-, -, -, hG', hu'⟩ := GlobalTheory.T.norm_basepointFree_sections_le_one_fubiniStudy k X p D hX P e x hG n u hn hu
-  obtain ⟨hPI', π, hπ, hgen, hd, hdf, hiso⟩ := GlobalTheory.T.exists_projectiveSpace_morphism_of_generating_sections k X p D hX P hA (e * n) _ hG'
-  have hdeg := GlobalTheory.T.finrank_functionField_quotientSubfield_eq_degree hC k X p D hX P hA (e * n) _ hG'
-  have hpow := (GlobalTheory.T.geometricDegree_projectionFormula_selfInter_pow hC k X p D hX).2 (up P.L u) (e * n) a ha
+  obtain ⟨-, -, -, hG', hu'⟩ := _root_.GlobalTheory.HSAmp.canNorms k X p D hX P e x hG n u hn hu
+  obtain ⟨hPI', π, hπ, hgen, hd, hdf, hiso⟩ := _root_.GlobalTheory.HSAmp.toProj_gens k X p D hX P hA (e * n) _ hG'
+  have hdeg := _root_.GlobalTheory.HSAmp.finrank_ratF_eq_gdeg hC k X p D hX P hA (e * n) _ hG'
+  have hpow := (_root_.GlobalTheory.HSAmp.PullPow.gdeg_pull_and_isSelfInter_pow hC k X p D hX).2 (up P.L u) (e * n) a ha
   have hpull := ((hC.arProj k (PSpace k D) X (PSpace.str k D) p D hPV hX π hπ hgen hd).1 _ H hH)
 
   obtain ⟨Φ, hΦ⟩ := ((hC.arExists k X p D hX).2 Unit fun _ => (up P.L u).pow (e * n)).1

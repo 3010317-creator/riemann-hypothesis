@@ -1,11 +1,13 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TrMMemFramesEIff
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CoordinateHaarMeasureStatement
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CoordinateHaarMeasure
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ExistsStandardLocalMeasures
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsFibreMeasuresArchimedeanGramMapStatement
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicLocalCompactness.AdeleLC
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsFibreMeasuresArchimedeanGramMap
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.HaarFibreUniqueness.GramMapFibreExistence
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicLocalCompactness.AdeleLC
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerOrbitVolume.TensTop
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.DensFibV
 import Mathlib.Algebra.Order.Floor.Extended
@@ -64,8 +66,8 @@ theorem exists_coord_fibres : ∀ (F E : Type) [Field F] [NumberField F] [Field 
   obtain ⟨laminf, hinf⟩ := GlobalTheory.CompanionTheory.SW.StdEx.exists_isStdInf F
   choose lam hlam using GlobalTheory.CompanionTheory.SW.StdEx.exists_isStdV F
   have hB : BorelSpace (HeckeCharacterZeroLocus.SiegelWeilU.Ainf F) := ⟨rfl⟩
-  obtain ⟨-, hWi, hHi⟩ := GlobalTheory.T.coordinate_haar_measure F E σ hCM (HeckeCharacterZeroLocus.SiegelWeilU.Ainf F) _ b laminf hinf.1
-  obtain ⟨minf, hminf⟩ := GlobalTheory.T.exists_fibreMeasures_archimedeanGramMap F E σ hCM M n J hJ
+  obtain ⟨-, hWi, hHi⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hCM (HeckeCharacterZeroLocus.SiegelWeilU.Ainf F) _ b laminf hinf.1
+  obtain ⟨minf, hminf⟩ := _root_.GlobalTheory.ArchGramFibre.exists_fibreFamily F E σ hCM M n J hJ
     (GlobalTheory.CompanionTheory.SW.coordW (HeckeCharacterZeroLocus.SiegelWeilU.Ainf F) b laminf n M)
     (GlobalTheory.CompanionTheory.SW.coordHerm (HeckeCharacterZeroLocus.SiegelWeilU.Ainf F) σ b laminf n) (hWi n M) (hHi n)
   have hfV : ∀ v : IsDedekindDomain.HeightOneSpectrum (NumberField.RingOfIntegers F),
@@ -76,7 +78,7 @@ theorem exists_coord_fibres : ∀ (F E : Type) [Field F] [NumberField F] [Field 
     have := PI.VolStabS.secondCountable_Fv F v
     have := PI.VolStabS.locallyCompact_Fv F v
     have hBv : BorelSpace (HeckeCharacterZeroLocus.SiegelWeilU.Fv F v) := ⟨rfl⟩
-    obtain ⟨-, hWv, hHv⟩ := GlobalTheory.T.coordinate_haar_measure F E σ hCM (HeckeCharacterZeroLocus.SiegelWeilU.Fv F v) _ b (lam v) (hlam v).1
+    obtain ⟨-, hWv, hHv⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hCM (HeckeCharacterZeroLocus.SiegelWeilU.Fv F v) _ b (lam v) (hlam v).1
     exact PI.OmFibreUniq.W.gram_map_fibre_existence σ J v n hCM hJ _ _ (hWv n M) (hHv n)
   choose m hm using hfV
   exact ⟨_, b, laminf, lam, minf, m, hinf, hlam, hminf, hm⟩

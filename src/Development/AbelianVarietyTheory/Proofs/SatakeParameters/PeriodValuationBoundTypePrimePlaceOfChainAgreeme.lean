@@ -2,24 +2,24 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.JetSplitAmb
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemRatIdxOfJetsRatDeg
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.NonnegSubOfLt
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.StatementWithTransposeOfBranching
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AbsNormEqOfSplitFactor
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsStdSplit
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeUnit
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IntOfHomAt
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NotDvdCardOfInjective
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NuRowSuccEqWt
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PeriodBoundOfJetLoss
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SmulMemLocPOfVal
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SubHalfRankInt
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaJetIntegralityTypePrimeOfSplitTableBoundStatement
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnfoldingIsGoodCyclotomicInvariantReferenceLatti
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ThetaJetIntegralityTypePrimeOfSplitTableBound
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ValLocCharUnit
+public import Formalism.LocalToGlobal.Divisibility.BrJoint
+import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.NonnegSubOfLt
+import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.StatementWithTransposeOfBranching
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AbsNormEqOfSplitFactor
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeUnit
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IntOfHomAt
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NotDvdCardOfInjective
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SubHalfRankInt
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnfoldingIsGoodCyclotomicInvariantReferenceLatti
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ValuationFinOrderApply
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ValuationLeOneOfPow
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.VolqExistsPow
-public import Formalism.LocalToGlobal.Divisibility.BrJoint
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -148,7 +148,7 @@ theorem boundAt_of_ties : JetSplitAmb → ∀ (D : D7) (L : SizeData₂ D) (EX :
     TiesAt D EX Dx μ → ∀ i : Fin 2, GlobalTheory.IndefiniteRowSideFullHecke.BadPrimesPeriodBound.SizeAt D i → ∀ w, LiftErrorLocal.Over D i w → ∀ u : D.what₂.Word,
       D.what₂.places.resChar w ≠ (D.mem u).A.T → GlobalTheory.IndefiniteRowSideFullHecke.BadPrimesPeriodBound.BoundAt L EX 1 i w u μ := by
   intro hJS D L EX Dx μ ⟨Ch, mu0, eta, sel, δ, B, χ, cD, hH, hCT, hA, hCh⟩ i hS w hw u _
-  have hJ : JetLossAll D EX sel B χ cD := GlobalTheory.T.thetaJetIntegrality_typePrime_of_splitTableBound hJS D EX sel δ B χ cD
+  have hJ : JetLossAll D EX sel B χ cD := _root_.GlobalTheory.JetsFromTables.jetLossAll_of_jetSplitAmb hJS D EX sel δ B χ cD
   exact boundAt_of_chainTie D L EX Dx Ch mu0 eta sel B χ cD 1
     (GlobalTheory.BranchFormula.integrality Formalism.L2.DIV.BrJ.branching_interlacing_pairs) hJ le_rfl
     hH hCT hA i hS w hw u μ (hCh u)

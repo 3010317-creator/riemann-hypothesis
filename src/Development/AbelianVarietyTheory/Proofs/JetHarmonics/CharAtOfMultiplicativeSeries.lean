@@ -5,18 +5,21 @@ public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsCharact
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsUniqueJet
 public import Development.AbelianVarietyTheory.Definitions.Jets.ColValMonomial
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifBaseChangeSt
-import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ExistsToJetEq
 public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.RelatedMap
 public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.RepJetAugCompTrunc
 public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ToJetOneEqSum
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DualNumberValueToJet
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsAlgHomValuationSubring
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FiniteAugmentedConnectedPartLocalisation
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.RingTheory.Valuation.ValuationSubring
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MonicEqProd
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IsAdicCompleteOfFiniteBasis
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IsFiniteFlatTorsionOfIsGt
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IsReducedTorsionGeometricFibre
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MapDofIterate
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.TorusExtensionOverCompleteLocalDvrStatement
+public import Mathlib.RingTheory.DualNumber
+import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ExistsToJetEq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -34,7 +37,6 @@ import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
-public import Mathlib.RingTheory.DualNumber
 import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.PicardGroup
 import Mathlib.RingTheory.Radical.NatInt
@@ -138,7 +140,7 @@ theorem exists_connected_part {F : Type} [Field F] [IsAlgClosed F] (W : Valuatio
   obtain ⟨aug, haug⟩ := exists_ptMap (torsionLift (1 : specO W W ⟶ Gt) (one_pow N) ≫ i.inv)
   have haug' : ptMap aug ≫ i.hom ≫ torsion.ι Gt N = 1 := by
     rw [← haug, Category.assoc, Iso.inv_hom_id_assoc, torsionLift_ι]
-  obtain ⟨s, hs, ⟨m, hm⟩, hu⟩ := GlobalTheory.finite_augmented_connected_part_localisation F W p hp A aug
+  obtain ⟨s, hs, ⟨m, hm⟩, hu⟩ := _root_.GlobalTheory.MonicSeparableProduct.main F W p hp A aug
   let loc := IsScalarTower.toAlgHom W A (Localization.Away s)
   have lift : ∀ (R : Type) [CommRing R] [Algebra W R] (w : A →ₐ[W] R), (∀ t ∈ RingHom.ker aug, IsNilpotent (w t)) →
       ∃ w' : Localization.Away s →ₐ[W] R, w'.comp loc = w := fun R _ _ w hw =>

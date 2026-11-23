@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ClosedPhiFunctoriality.IntBasisAlt
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisTorsionFreeCompleteFrobeniusPropertiesStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisTorsionFreeCompleteFrobeniusProperties
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EisensteinDistinguishedPowerSeriesAdicComplete
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -78,7 +79,7 @@ theorem UpperTheory.Gal.ClosedPhiFromClosedTrace.linkQ_holds :
   obtain ⟨n, hn⟩ := hZ l K bk (3 * N) M
   refine ⟨n, ?_⟩
   intro k d d' A A₁ A₁' Q Q' Q₁ Q₁' R hA hS hS₁ hRel
-  obtain ⟨-, -, ⟨v, hv⟩, hφι, -⟩ := GlobalTheory.T.acris_torsionFree_complete_frobenius_properties l K bk
+  obtain ⟨-, -, ⟨v, hv⟩, hφι, -⟩ := _root_.GlobalTheory.AcrisFrobE.main l K bk
   have hv' : fA bk bk.E = (l : Per.Acris l) * v := hv
   obtain ⟨w₀, hw₀⟩ : ∃ w₀ : (Per.Acris l)ˣ, f0 bk bk.E = (l : Per.Acris l) * w₀ := by
     obtain ⟨w, hw⟩ := bk.coeff_zero

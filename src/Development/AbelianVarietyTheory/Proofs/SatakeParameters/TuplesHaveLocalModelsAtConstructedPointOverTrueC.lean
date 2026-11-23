@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.HasPartAnd
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ThetaSeriesDataHypothesesBelowMaximalLevel
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TuplesHaveLocalModelsOfStandardColumnObjectsStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TuplesLocalModelsOfOtherDivisionLatticesHeightsStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TuplesHaveLocalModelsOfStandardColumnObjects
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TuplesLocalModelsOfOtherDivisionLatticesHeights
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,8 +50,8 @@ theorem modelsAt_bpt : GlobalTheory.TwV.Lt.AdmAtEnt2 → GlobalTheory.TwV.Lt.Cur
     intro K B f T w Z c hc O hO
     obtain ⟨b⟩ := hc
     have b' : Part w Z (ofObj O) := hO ▸ b
-    exact GlobalTheory.T.tuplesHaveLocalModels_of_standardColumnObjects h1 h2 B f T w Z O b'
+    exact _root_.GlobalTheory.Svd.modelsAt_of_part h1 h2 B f T w Z O b'
   have hm := key (β.Y.obj β.p) (by rw [ofObj_obj]; exact β.hY)
-  exact GlobalTheory.T.tuplesLocalModels_of_otherDivisionLatticesHeights β.X.toD7 (β.Y.obj β.p) (nPrime β.p.L) β.p.ht hm
+  exact _root_.GlobalTheory.Svd.modelsAt_tr β.X.toD7 (β.Y.obj β.p) (nPrime β.p.L) β.p.ht hm
 
 end GlobalTheory.Svd

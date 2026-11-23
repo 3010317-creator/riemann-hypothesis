@@ -1,7 +1,9 @@
 module
 
 public import Mathlib.RingTheory.RingHom.Etale
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KaehlerFibreEquivPushoutFormallyEtale
+public import Mathlib.RingTheory.Etale.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ImportsMoreSide
+public import Mathlib.CategoryTheory.Monoidal.Cartesian.Over
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -10,7 +12,6 @@ import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
-public import Mathlib.CategoryTheory.Monoidal.Cartesian.Over
 import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
@@ -98,9 +99,9 @@ theorem mapBaseChange_residueField_bijective_of_etale_fibre :
       ← IsScalarTower.algebraMap_apply]
   letI : Algebra C Q'.ResidueField := ((algebraMap B Q'.ResidueField).comp (algebraMap C B)).toAlgebra
   haveI : IsScalarTower C B Q'.ResidueField := IsScalarTower.of_algebraMap_eq fun _ => rfl
-  obtain ⟨eB, heB⟩ := GlobalTheory.kaehler_fibre_equiv_pushout_formallyEtale A Ω B (TensorProduct A Ω B)
+  obtain ⟨eB, heB⟩ := _root_.GlobalTheory.AuxiliaryLemmaFirst.main A Ω B (TensorProduct A Ω B)
     (Localization.Away f) Q'.ResidueField (fun x => by rw [hlift, hBK])
-  obtain ⟨eC, heC⟩ := GlobalTheory.kaehler_fibre_equiv_pushout_formallyEtale A Ω C (TensorProduct A Ω C)
+  obtain ⟨eC, heC⟩ := _root_.GlobalTheory.AuxiliaryLemmaFirst.main A Ω C (TensorProduct A Ω C)
     (Localization.Away f) Q'.ResidueField (fun x => by
       change algebraMap B Q'.ResidueField (algebraMap C B x) =
         algebraMap (Localization.Away f) Q'.ResidueField (ψ ((1 : Ω) ⊗ₜ[A] x))

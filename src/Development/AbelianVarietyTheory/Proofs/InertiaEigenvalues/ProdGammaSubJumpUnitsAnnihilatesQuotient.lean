@@ -3,13 +3,14 @@ module
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NotFullBot
 public import Formalism.SharpRestriction.LevelLetterCocycles.DeltaInvariantLattices
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnramifiedSubfieldLeCyclotomicExt
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemWachNIffExpansionStatement
+public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemWachNIffExpansion
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowerSeriesTwistedScalingTriangularLaurentStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedSubfieldLeCyclotomicExt
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachExpansionBasisDivisibility
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeEqFiltrationSumAtLevel
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeEqStdPowerSeriesAtZero
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachNInvQPowGammaStableStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachNInvQPowGammaStable
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedSubfieldLeCyclotomicExt
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachExpansionBasisDivisibility
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -327,7 +328,7 @@ theorem annihilate : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : 
   classical
   intro D HW F Cm l _ K s LL h W T hT y hy Fs hFs x hx
   have hx' : W.Q ^ y • x ∈ W.N T := by simpa [invN, smulA] using hx
-  obtain ⟨hγ, hgam⟩ := GlobalTheory.T.wachN_invQPow_gamma_stable D HW F Cm l K s LL h T hT y
+  obtain ⟨hγ, hgam⟩ := _root_.GlobalTheory.NL.GamQ.gam_Q_pow D HW F Cm l K s LL h T hT y
   let S : W.DD T → Prop := fun z => W.Q ^ y • z ∈ W.N T
   let op : (↥(OL LL))ˣ → W.DD T → W.DD T := fun d z => W.γ T z - (d : ↥(OL LL)) • z
   let Pf : Finset (↥(OL LL))ˣ → W.DD T → W.DD T := fun A z =>
@@ -345,7 +346,7 @@ theorem annihilate : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : 
       rw [hP (insert d A) d z (Finset.mem_insert_self d A), Finset.erase_insert hd]
       exact ih _ (hS d z hz)
   have hQ : S (Pf Fs x) := hSA Fs x hx'
-  refine (GlobalTheory.T.mem_wachN_iff_expansion D HW F Cm l K s LL h T hT y (Pf Fs x) hQ).2 ?_
+  refine (_root_.GlobalTheory.NL.WachModulePoleQuotient.mem_N_iff_expansion D HW F Cm l K s LL h T hT y (Pf Fs x) hQ).2 ?_
   intro i ζ hζ
   obtain ⟨τ, hτ⟩ := (GlobalTheory.NL.Points.points D HW l K s LL h).1 i ζ hζ
   obtain ⟨w, hw0, hw⟩ := hgam i ζ hζ

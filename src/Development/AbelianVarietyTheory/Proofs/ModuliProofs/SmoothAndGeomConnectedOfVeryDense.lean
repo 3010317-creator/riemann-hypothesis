@@ -3,8 +3,9 @@ module
 public import Mathlib.AlgebraicGeometry.Geometrically.Connected
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSmoothOfRelDimOfIsUnitProperFlatStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.GeometricallyConnectedOpenConditionSmoothProjectStatement
+public import Mathlib.AlgebraicGeometry.Morphisms.Proper
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSmoothOfRelDimOfIsUnitProperFlat
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.GeometricallyConnectedOpenConditionSmoothProject
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -80,7 +81,7 @@ theorem smooth_and_geomConnected_of_veryDense : ∀ (R : Type) [CommRing R] [IsN
     refine of_local_near_veryDense (@SmoothOfRelativeDimension.{0} g) R Z s P hP ?_
     intro q hq
     obtain ⟨K, _, x, hx, h1, -⟩ := h q hq
-    obtain ⟨f, hf, H⟩ := GlobalTheory.T.exists_smoothOfRelDim_of_isUnit_proper_flat R Z s g K x (projProper R Z s hproj) hflat h1
+    obtain ⟨f, hf, H⟩ := _root_.GlobalTheory.SmoothNearFibre.exists_smoothOfRelativeDimension_of_isUnit R Z s g K x (projProper R Z s hproj) hflat h1
     exact ⟨f, by rw [← hx]; exact hf, H⟩
   refine ⟨hsm, ?_⟩
   have : IsZariskiLocalAtTarget (@GeometricallyConnected.{0}) := by
@@ -88,7 +89,7 @@ theorem smooth_and_geomConnected_of_veryDense : ∀ (R : Type) [CommRing R] [IsN
   refine of_local_near_veryDense (@GeometricallyConnected.{0}) R Z s P hP ?_
   intro q hq
   obtain ⟨K, _, x, hx, -, h2⟩ := h q hq
-  obtain ⟨f, hf, H⟩ := GlobalTheory.T.geometricallyConnected_open_condition_smooth_projective R Z s K x hproj (SmoothOfRelativeDimension.smooth g s) h2
+  obtain ⟨f, hf, H⟩ := _root_.GlobalTheory.ConnOpen.geometricallyConnected_near R Z s K x hproj (SmoothOfRelativeDimension.smooth g s) h2
   exact ⟨f, by rw [← hx]; exact hf, H⟩
 
 end GlobalTheory

@@ -1,7 +1,7 @@
 module
 
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.FinConstFor
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteConstantAllHoldsStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteConstantAllHolds
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -41,6 +41,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 namespace GlobalTheory.CompanionTheory.Ar.Flat
 
 theorem finConst_of_all_hosts : FinConst :=
-  FinConstAll.finConst GlobalTheory.T.finite_constant_all_holds
+  FinConstAll.finConst _root_.GlobalTheory.CompanionTheory.Ar.Flat.FinAll.finConstAll
 
 end GlobalTheory.CompanionTheory.Ar.Flat

@@ -3,10 +3,13 @@ module
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.BlowupProjections.BlowupProjStatement
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsEmbeddingPieces
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PieceDegreeOfIntersectionAndResolutionStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PointsIntegrableOfResolutionStatementStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.ResolutionExistsOfResolutionStatementStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRes
+public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsPieceDegree
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PieceDegreeOfIntersectionAndResolution
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PointsIntegrableOfResolutionStatement
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PEmbeddingPieces
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.ResolutionExistsOfResolutionStatementStatement
 import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PPiecesAdditive
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -55,10 +58,10 @@ namespace GlobalTheory.CompanionTheory.Ar.Giv
 theorem embeddingPieces_of_resK (hA : ArithIntersectionSystemStatement)
     (hR : ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement) :
     GroundTheory.Heights₂.Heights.HilbertSamuel.EmbeddingPieces.Statement :=
-  have hInt : PtsIntegrableStatement := GlobalTheory.T.points_integrable_of_resolution_statement hR
+  have hInt : PtsIntegrableStatement := _root_.GlobalTheory.CompanionTheory.Ar.Giv.ptsIntegrable_of_resK hR
   have hRes : ResExistsStatement := GlobalTheory.T.resolution_exists_of_resolution_statement hR
   GroundTheory.Heights₂.Heights.HilbertSamuel.EmbeddingPieces.proof
     (GroundTheory.Heights₂.Heights.HilbertSamuel.PiecesAdditive.proof hInt)
-    (GlobalTheory.T.piece_degree_of_intersection_and_resolution hA hRes hInt)
+    (_root_.GlobalTheory.CompanionTheory.Ar.Giv.pieceDegree hA hRes hInt)
 
 end GlobalTheory.CompanionTheory.Ar.Giv

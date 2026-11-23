@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TrivIsCr
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinDescentCoefficientsAinfModPowStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinPeriodIsUnitWittTiltAndNeZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinPreframeBoundedPolesStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinDescentCoefficientsAinfModPow
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinPeriodIsUnitWittTiltAndNeZero
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinPreframeBoundedPoles
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FlatPowDvdPerPowMod
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -81,10 +82,10 @@ theorem mittagLeffler_approx : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk :
   obtain ⟨c, y, hcy⟩ := GlobalTheory.BKLim.flatPow_dvd_perPow_mod l K bk τ hτ (2 * N) n
   refine ⟨c, fun m hnm s => ?_⟩
 
-  obtain ⟨Yn, Y'n, hYn, -⟩ := GlobalTheory.T.breuilKisinPreframe_bounded_poles l K bk τ hτ N (tw.d' n) _ (F n)
-  obtain ⟨Ym, Y'm, hYm, hYYm⟩ := GlobalTheory.T.breuilKisinPreframe_bounded_poles l K bk τ hτ N (tw.d' m) _ (F m)
+  obtain ⟨Yn, Y'n, hYn, -⟩ := _root_.GlobalTheory.BKLim.pre_bounded_poles l K bk τ hτ N (tw.d' n) _ (F n)
+  obtain ⟨Ym, Y'm, hYm, hYYm⟩ := _root_.GlobalTheory.BKLim.pre_bounded_poles l K bk τ hτ N (tw.d' m) _ (F m)
   obtain ⟨Sm, hSm⟩ := (tw.onto m).surj
-  have hu : IsUnit (inclW l τ ^ N) := (GlobalTheory.T.breuilKisin_period_isUnit_wittTilt_and_ne_zero l K bk τ hτ).1.pow N
+  have hu : IsUnit (inclW l τ ^ N) := (_root_.GlobalTheory.BSP.isUnit_inclW_of_isPer l K bk τ hτ).1.pow N
 
   have hTY : (F m).T * Y'm.map (inclW l) = inclW l τ ^ N • (1 : Matrix _ _ (WCb l)) := by
     have h1 : (Ym * Y'm).map (inclW l) = (τ ^ (2 * N) • (1 : Matrix _ _ (Ainf l))).map (inclW l) := by rw [hYYm]
@@ -181,7 +182,7 @@ theorem mittagLeffler_approx : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk :
   have hxOE : ∀ i, (R n *ᵥ fun j => bk.evW (X ^ c * s j)) i ∈ bk.OE := fun i => by
     simp only [Matrix.mulVec, dotProduct]
     exact Subring.sum_mem _ fun j _ => Subring.mul_mem _ (hR n i j) (hev _)
-  obtain ⟨s', hs'⟩ := GlobalTheory.T.breuilKisin_descent_coefficients_ainf_mod_pow l K bk d (tw.d' m) n (R m) (R n *ᵥ fun j => bk.evW (X ^ c * s j)) a (hR m) hxOE
+  obtain ⟨s', hs'⟩ := _root_.GlobalTheory.descentCoefficients l K bk d (tw.d' m) n (R m) (R n *ᵥ fun j => bk.evW (X ^ c * s j)) a (hR m) hxOE
     (fun i => by
       rw [hq, Pi.sub_apply, map_sub, sub_eq_zero]
       have h1 : q ((R n *ᵥ fun j => bk.evW (X ^ c * s j)) i) =

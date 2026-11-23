@@ -1,8 +1,10 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.StrictDominance.JointGeneralisedEigenvectors.IsJointGenEig
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CasselmanFirstPropertyStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FixedVectorZeroOfDualStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CasselmanFirstProperty
+public import Development.AbelianVarietyTheory.Definitions.Foundations.SmoothPartStable
+public import Mathlib.Basic.Complex.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FixedVectorZeroOfDual
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsDomMonoid
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -76,7 +78,7 @@ theorem hecke_pow_kills_of_proj_eq_zero : ∀ (G : Type) [Group G] [TopologicalS
       simp
     | succ r ih =>
       rw [pow_succ, pow_succ U]
-      exact GlobalTheory.T.casselman_first_property G D V π hπ (t ^ r) t (hdom r) ht.1 _ _ ih hU
+      exact _root_.GlobalTheory.CompanionTheory.Casselman.hecke_dominant_mul_abstract G D V π hπ (t ^ r) t (hdom r) ht.1 _ _ ih hU
 
   have key : ∀ u ∈ twKer π D.N 1, ∃ R : ℕ, ∀ r ≥ R,
       ∀ l : Module.Dual ℂ V, (∀ x ∈ D.J, l ∘ₗ π x = l) → l (π ((t : G) ^ r) u) = 0 := by
@@ -117,7 +119,7 @@ theorem hecke_pow_kills_of_proj_eq_zero : ∀ (G : Type) [Group G] [TopologicalS
   obtain ⟨R, hR⟩ := key _ ((Submodule.Quotient.mk_eq_zero _).1 hv)
   refine ⟨R, ?_⟩
   have h0 : (((U ^ R) v : fixed π D.J) : V) = 0 := by
-    refine GlobalTheory.T.fixed_vector_zero_of_dual G D.J D.isCompact_J V π hπ _ ((U ^ R) v).2 fun l hl => ?_
+    refine _root_.GlobalTheory.CompanionTheory.CompactAvg.invariant_forms_separate_fixed G D.J D.isCompact_J V π hπ _ ((U ^ R) v).2 fun l hl => ?_
     rw [← hecke R v l hl, Subgroup.coe_pow]
     exact hR R le_rfl l hl
   exact Subtype.ext h0

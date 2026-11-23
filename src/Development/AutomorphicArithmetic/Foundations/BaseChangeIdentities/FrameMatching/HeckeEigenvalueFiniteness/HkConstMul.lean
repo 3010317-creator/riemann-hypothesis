@@ -1,13 +1,16 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.BaseChangeIdentities.FrameMatching.HeckeEigenvalueFiniteness.PowEigAlt
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasSatakeGLOfIsSatVecGL
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteLengthOfProductsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteSubquotientsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsolateRepresentationAtCharacterStatement
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.SubOfNonNil
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteLengthOfProducts
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.SubOfEig
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteSubquotients
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsolateRepresentationAtCharacter
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalAlgebraHolds
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SplitDictionaryHolds
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.ShuffleChoices.FixedEquiv
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasSatakeGLOfIsSatVecGL
 import GroundTheory.LocalFields.PadicLogSeries
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -82,9 +85,9 @@ theorem UpperTheory.HeckeLevelFrameExistence.locE :
     ⟨T y₀, ((hd 0 hz).2 y₀ hy₀).1, fun h => hy₀0 (T.map_eq_zero_iff.1 h)⟩
   have hchoice : PositivityTheory.Rg.BcB.F.Choice.ChoiceS :=
     PositivityTheory.Rg.BcB.F.Choice.choiceS_of
-      (fun E _ _ _ n w => GlobalTheory.T.isolate_representation_at_character (w.adicCompletion E) (Fin n))
-      (fun E _ _ _ n w => GlobalTheory.T.finite_subquotients (w.adicCompletion E) (Fin n))
-      (fun E _ _ _ n w => GlobalTheory.T.finite_length_of_products (w.adicCompletion E) (Fin n))
+      (fun E _ _ _ n w => _root_.GlobalTheory.CompanionTheory.Isolate.isolateAt (w.adicCompletion E) (Fin n))
+      (fun E _ _ _ n w => _root_.GlobalTheory.CompanionTheory.RepFinSubq.finSubq (w.adicCompletion E) (Fin n))
+      (fun E _ _ _ n w => _root_.GlobalTheory.CompanionTheory.ProdLen.prodFinLen (w.adicCompletion E) (Fin n))
   obtain ⟨e₀, hIk, ⟨v₀, hv₀, l, hl1, hl⟩, hkill⟩ :=
     hchoice E n w K' hKo hKc P hP0 k D
   set r : ℂ := (((K'.subgroupOf (UL n w)).relIndex (KL n w) : ℕ) : ℂ) with hr

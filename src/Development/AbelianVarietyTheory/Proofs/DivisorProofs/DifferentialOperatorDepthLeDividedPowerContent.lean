@@ -3,8 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatFrame
 public import Mathlib.RingTheory.MvPolynomial.Homogeneous
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.EqZeroOrSingleOfDegreeLtTwo
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupExpTwoSidedInverseUniqueStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrameDualStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupExpTwoSidedInverseUnique
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrameDual
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -200,8 +200,8 @@ theorem depth_le_content : ∀ (C : Type) [Field C] [CharZero C] (v : AddValuati
       depth G (ι := fun b => Fin (n b)) u P ≤ content v P := by
   intro C _ _ v κ _ _ d n G u P D hP hu
   classical
-  choose l hlint hldual using fun b => GlobalTheory.T.exists_integral_dual_frame_of_isSatFrame C v (n b) (d b) (u b) (hu b)
-  have hexp : ∀ b, IsExp (G b) (expOf (G b)) := fun b => (GlobalTheory.T.formalGroupExp_twoSided_inverse_unique C v (d b) (G b)).1
+  choose l hlint hldual using fun b => _root_.GlobalTheory.FrameDual.frameDual C v (n b) (d b) (u b) (hu b)
+  have hexp : ∀ b, IsExp (G b) (expOf (G b)) := fun b => (_root_.GlobalTheory.FGDepth.expOf_twoSided_unique C v (d b) (G b)).1
   have hlin0 : ∀ b (e : Fin (d b)), constantCoeff
       (∑ a, u b a e • (X ⟨b, a⟩ : MvPowerSeries (Σ b, Fin (n b)) C)) = 0 := by
     intro b e; simp

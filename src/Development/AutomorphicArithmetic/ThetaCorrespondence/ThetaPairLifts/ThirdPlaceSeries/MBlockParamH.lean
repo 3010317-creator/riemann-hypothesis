@@ -8,7 +8,8 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Exist
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Mono0OfLpDimEqOne
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.FixedNeBotOfEquiv
 public import Development.AutomorphicArithmetic.Foundations.UnitarySphericalFixing.SatakeParameters.GoodLem
-import Development.AutomorphicSpectrum.Proofs.GlobalProofs.BernsteinZelevinskyFinitenessStatement
+import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
+import Development.AutomorphicSpectrum.Proofs.GlobalProofs.BernsteinZelevinskyFiniteness
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -84,7 +85,7 @@ theorem split_local_of_blockVec {rc : ∀ n, Irr k n → WD h} (hB : BlockSplit 
       ∀ σ, b.charPol (ineIncl h σ) = (X - C (c σ)) ^ t := by
   classical
   rcases hB r t χ π v hχ ht hv hvb with ⟨π₁, π₂, hsph, e⟩ | ⟨s, d, σ, hsupp, hcard⟩
-  · have hg : GoodI π₂ := GlobalTheory.AVGood.good_of_isSpherical GlobalTheory.T.bernstein_zelevinsky_finiteness _
+  · have hg : GoodI π₂ := GlobalTheory.AVGood.good_of_isSpherical _root_.GlobalTheory.CompanionTheory.Published.bernsteinZelevinskyFiniteness _
       (fixed_ne_bot_of_equiv (equivRep ⟨π₂.V, π₂.π, π₂.smooth, π₂.irr⟩) hsph)
     have h1 := _root_.UpperTheory.One.M.RecLawsH.twist hrc t χ (detIrr 1 χ hχ) π₂ (twistIrr π₂ χ hχ) hg ⟨.refl _⟩ ⟨.refl _⟩
     have hu := (hrc.sph t π₂).2 hsph

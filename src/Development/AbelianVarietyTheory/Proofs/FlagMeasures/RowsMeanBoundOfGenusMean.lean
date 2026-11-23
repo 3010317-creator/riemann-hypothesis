@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowsMeanC
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BaseLatticeConstructionHoldsStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BaseLatticeConstructionHolds
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LatsDiscStable
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowsGenusWeightedSumComparisonStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowsGenusWeightedSumComparison
 import Formalism.HermitianLattices.HermitianLatticesProofs.GenusBasic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -185,8 +185,8 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem rowsMean : RowsMeanC := by
   intro D large₂ X Y u hStd W HW hEmb φ B hB hφ hbd
-  have hOrb := GlobalTheory.T.rowsGenus_weightedSumComparison D large₂ X Y u hStd W HW hEmb
-  have hLat := GlobalTheory.T.base_lattice_construction_holds D large₂ X Y u hStd W HW hEmb
+  have hOrb := _root_.GlobalTheory.RowsOrb.rowsOrbC D large₂ X Y u hStd W HW hEmb
+  have hLat := _root_.GlobalTheory.TypeAsm.lat0C D large₂ X Y u hStd W HW hEmb
   have hw : ∀ Λ, 0 ≤ wRow D (X.Fu u) Λ := fun Λ => by unfold wRow; positivity
   have hm : 0 ≤ massRows D (X.Fu u) (Y.what₂ u) := Finset.sum_nonneg fun Λ _ => hw Λ
   rw [ENNReal.ofReal_mul hm]

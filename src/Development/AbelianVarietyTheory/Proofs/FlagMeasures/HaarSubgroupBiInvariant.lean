@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermitianFormUnitaryOneOne
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotropicSplitTorusIwasawaUnitaryGroupStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotropicSplitTorusIwasawaUnitaryGroup
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnimodularOfContracted
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -74,7 +74,7 @@ end General
 
 theorem unimodular_NW : ∀ (n : ℕ) (ε : Fin n → Bool) (W : Submodule ℂ (Fin n → ℂ)) (ν : Measure (UJ ε)), IsIsoC ε W → IsHaarSub (NW ε W) ν → (∀ m ∈ NW ε W, ν.map (fun x => x * m) = ν) ∧ ν.map (fun x => x⁻¹) = ν := by
   intro n ε W ν hW hν
-  obtain ⟨a, Hm, -, ha, -, h1, h3, -⟩ := GlobalTheory.T.isotropic_splitTorus_iwasawa_unitaryGroup n ε W hW
+  obtain ⟨a, Hm, -, ha, -, h1, h3, -⟩ := _root_.GlobalTheory.IsoTorus.split_torus n ε W hW
   have hinv : ∀ s, a (-s) = (a s)⁻¹ := fun s => by
     refine eq_inv_of_mul_eq_one_left (Subtype.ext (Units.ext ?_))
     change umat (a (-s)) * umat (a s) = 1

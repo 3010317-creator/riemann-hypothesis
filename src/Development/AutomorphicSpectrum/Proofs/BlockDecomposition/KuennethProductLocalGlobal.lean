@@ -2,11 +2,11 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HodgeXD
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.HodgeSurjectivity.FirstChernCoboundary
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KuennethMayerVietorisLeftStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KuennethOfRestrictBijectiveStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KuennethProductLocalCoordsStatement
-import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.MemBoundariesZeroIff
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KuennethMayerVietorisLeft
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KuennethOfRestrictBijective
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KuennethProductLocalCoords
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.ChartGrConst
+import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.MemBoundariesZeroIff
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -138,8 +138,8 @@ theorem kun_right : SiteLaws → MVBij → CovDesc → ZarAbs → AffOm → KunA
     obtain ⟨α₀, hα₀⟩ := id hne
     obtain ⟨c', -⟩ := coord_res (U.c α₀) (iInf₂_le α₀ hα₀) (U.inter S hne)
     exact kun_congr E (eV S hne).symm (eW S hne).symm (l₁ _) (l₂ _) _ _
-      (GlobalTheory.T.kuenneth_product_local_coords hs hA hK K X X' P q q' p₁ p₂ hP V _ d _ cV ⟨c'⟩ (l₁ _) (l₂ _))
-  have hglue := GlobalTheory.T.kuenneth_mayer_vietoris_left hmv hcd E (inU q V) Vv Ww (fun α => hcos' _) (fun α => hcosP _) g₁ g₂ hS
+      (_root_.GlobalTheory.CompanionTheory.KunGlue.Aff.kun_aff hs hA hK K X X' P q q' p₁ p₂ hP V _ d _ cV ⟨c'⟩ (l₁ _) (l₂ _))
+  have hglue := _root_.GlobalTheory.CompanionTheory.KunGlue.glue_r hmv hcd E (inU q V) Vv Ww (fun α => hcos' _) (fun α => hcosP _) g₁ g₂ hS
   have k₂ : capU Vv ∅ ≤ inU q' ⊤ := fun T _ => htop' T
   have k₃ : capU Ww ∅ ≤ inU (p₁ ≫ q) (p₁ ⁻¹ᵁ V ⊓ p₂ ⁻¹ᵁ ⊤) := by
     rintro T ⟨⟨α, hα⟩, -⟩
@@ -149,7 +149,7 @@ theorem kun_right : SiteLaws → MVBij → CovDesc → ZarAbs → AffOm → KunA
     congr 1
     ext x
     simp [TopologicalSpace.Opens.mem_iSup]
-  refine (GlobalTheory.T.kuenneth_of_restrict_bijective E h₁ h₂ (g₁ ∅) (g₂ ∅) (le_refl _) k₂ k₃ ?_ ?_ ?_).2 hglue
+  refine (_root_.GlobalTheory.CompanionTheory.KunGlue.kun_res E h₁ h₂ (g₁ ∅) (g₂ ∅) (le_refl _) k₂ k₃ ?_ ?_ ?_).2 hglue
   · exact fun a n => res_self_bij _ _ _ n
   · intro a n
     exact res_bij_of_eq (G q' a) (capU_empty_eq Vv) (fun _ _ => htop' _) k₂ n

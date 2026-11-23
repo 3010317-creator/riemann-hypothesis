@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SmallFam
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyLeAtNearbyIndices
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLineBundlePairSectionBallFiniteStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.CharZeroFunctionField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLineBundlePairSectionBallFinite
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +53,7 @@ namespace GlobalTheory.HSNef
 theorem lc_mono_radius {k : Type} [CommRing k] {X : Scheme.{0}} [IsIntegral X] {p : X ⟶ Sp k} {D : ℕ}
     (hX : IsArithVar p D) (P : Pair p) (a b : ℤ) {R R' : ℝ} (h : R ≤ R') : P.lc a b R ≤ P.lc a b R' := by
   have hsub : P.Bl a b R ⊆ P.Bl a b R' := fun f hf => ⟨hf.1, fun σ y => (hf.2 σ y).trans h⟩
-  have hfin : (P.Bl a b R').Finite := GlobalTheory.T.hermLineBundlePair_sectionBall_finite k X p D hX P a b R'
+  have hfin : (P.Bl a b R').Finite := _root_.GlobalTheory.HSNef.bl_finite k X p D hX P a b R'
   have hle : (P.Bl a b R).ncard ≤ (P.Bl a b R').ncard := Set.ncard_le_ncard hsub hfin
   unfold VolBr.Pair.lc
   rcases Nat.eq_zero_or_pos (P.Bl a b R).ncard with h0 | h0

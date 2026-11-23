@@ -5,7 +5,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfEvEqOfSm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEqOfContinuousQuotientAlgHom
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMulEqOfPolynomialGrowth
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOpenIsDomainOfSmoothComplex
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.HolomorphicSectionModerateGrowthStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NoCommonZeroCombVal
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.HolomorphicSectionModerateGrowth
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,7 +65,7 @@ theorem holomorphicSections_algebraic_of_isProper : ∀ (Y : Scheme.{0}) (p : Y 
     have hi := hV.trans inf_le_right
     have hd := hU V (hV.trans inf_le_left) hx
     have hh := (hsec.2 i).mono (ptsIn_mono hi)
-    obtain ⟨n, u, C, m, hC⟩ := GlobalTheory.T.holomorphic_section_moderate_growth Y p hp B hB s hsec.1 hcont i V ha hi
+    obtain ⟨n, u, C, m, hC⟩ := _root_.GlobalTheory.CompanionTheory.Gaga.continuous_section_polynomial_growth_of_isProper Y p hp B hB s hsec.1 hcont i V ha hi
     obtain ⟨a, b, hb, e⟩ := SerreSections.exists_mul_eq_of_polynomial_growth Y p D hs R V ha hd _ hh n u C m hC
     exact ⟨V, hx, hi, GlobalTheory.exists_ev_eq_of_continuousOn_quotient Y p D hs V ha hd _ (hh.continuousOn (isOpen_ptsIn _)) a b hb e⟩
   choose V hx hV c hc using loc

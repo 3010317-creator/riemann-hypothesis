@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LaurentMapIsIntegral
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IndEtOfForallFinset
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafBasicPropertiStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.GalMapMul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafBasicProperti
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeraySimplicialCocycleCoboundaryOfAcyclicLevels
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimplicialCochainClassesBasicProperties
 import Mathlib.Algebra.Order.Floor.Extended
@@ -60,7 +61,7 @@ theorem cobd_disc (P : PSh) (s : (free R).obj ((disc.obj P).obj (op ⦋0⦌)) �
   simp [cobd, Fin.sum_univ_two, SimplicialObject.δ]
 
 theorem exists_rep (E : Spc) (x : H R E F 0) : ∃ s : (free R).obj (E.obj (op ⦋0⦌)) ⟶ F, IsCls s x := by
-  obtain ⟨-, hneg, hmono, ⟨w, hex⟩, -, hpos⟩ := GlobalTheory.T.chosenInjectiveResolutionEtaleSheaf_basic_properties R F
+  obtain ⟨-, hneg, hmono, ⟨w, hex⟩, -, hpos⟩ := _root_.GlobalTheory.EtC.res_basic R F
   obtain ⟨z, rfl⟩ := x.mk_surjective
   let b := (z.1 : Cochain ((chains R).obj E) (res R F) 0).v 0 0 (add_zero 0)
   have hb : b ≫ (res R F).d 0 1 = 0 := by

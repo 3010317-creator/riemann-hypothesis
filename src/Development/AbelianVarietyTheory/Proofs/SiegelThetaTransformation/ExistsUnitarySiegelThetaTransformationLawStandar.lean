@@ -2,12 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.EchEqOneIff
 public import Mathlib.LinearAlgebra.SymplecticGroup
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.PoissonSummationThetaSeriesRowTermCosetStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RationalSchwartzBruhatAlgebraIntegralLinearStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.SchwartzBruhatIntegralEqSumResidueRepresentativeStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.PoissonSummationThetaSeriesRowTermCoset
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IMemSiegel
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RationalSchwartzBruhatAlgebraIntegralLinear
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.SchwartzBruhatIntegralEqSumResidueRepresentative
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.SummableNormSiegelThetaSeriesTerms
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.SymplecticSiegelActionMemUpperHalfSpaceAndCocyclStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.TsumSchwartzBruhatLevelEqSumResidueCosetsStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.SymplecticSiegelActionMemUpperHalfSpaceAndCocycl
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.TsumSchwartzBruhatLevelEqSumResidueCosets
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -208,7 +209,7 @@ theorem ft_eq [DecidableEq κ] [DecidableEq ι] {R : ℕ} (hR : 0 < R) {φ : Mat
     (h : HasLevel R φ) {y : Matrix κ ι ℚ} (hy : IntM ((R : ℚ) • y)) :
     ft φ y = ((R : ℂ) ^ (Fintype.card κ * Fintype.card ι))⁻¹ *
       ∑ n : κ → ι → Fin (R * R), φ (rep R n) * ech (pr (rep R n) y) :=
-  GlobalTheory.T.schwartzBruhatIntegral_eq_sum_residueRepresentatives κ ι R _ hR (level_ch h hy)
+  _root_.GlobalTheory.SW.FourierJ.haar_eq_sum_rep κ ι R _ hR (level_ch h hy)
 
 theorem ft_supp {R : ℕ} (hR : 0 < R) {φ : Matrix κ ι ℚ → ℂ}
     (h : HasLevel R φ) (y : Matrix κ ι ℚ) (hy : ft φ y ≠ 0) : IntM ((R : ℚ) • y) := by
@@ -218,7 +219,7 @@ theorem ft_supp {R : ℕ} (hR : 0 < R) {φ : Matrix κ ι ℚ → ℂ}
   have hsb : IsSB fun x => φ x * ech (pr x y) := by
     refine ⟨R * S, Nat.mul_pos hR hS, level_ch (level_mul h S) ?_⟩
     rw [Nat.cast_mul, ← smul_smul]; exact intM_nsmul hSy R
-  obtain ⟨-, -, -, -, -, hsm, -, htr⟩ := GlobalTheory.T.rationalSchwartzBruhat_algebra_integral_linear ℚ κ ι _ _ hsb hsb
+  obtain ⟨-, -, -, -, -, hsm, -, htr⟩ := _root_.GlobalTheory.SW.isSB_algebra_haar_linear ℚ κ ι _ _ hsb hsb
   set z : Matrix κ ι ℚ := -Matrix.single k i 1 with hz
   have hzi : IntM (-z) := by
     intro k' i'
@@ -269,8 +270,8 @@ theorem plancherel {R : ℕ} (hR : 0 < R) {φ ψ : Matrix κ ι ℚ → ℂ} (h 
     ip (fun y => c * ft φ y) (fun y => c * ft ψ y) = ip φ ψ := by
   classical
   unfold ip
-  rw [GlobalTheory.T.schwartzBruhatIntegral_eq_sum_residueRepresentatives κ ι R _ hR (level_mul_conj (ft_level hR h c) (ft_level hR h' c)),
-    GlobalTheory.T.schwartzBruhatIntegral_eq_sum_residueRepresentatives κ ι R _ hR (level_mul_conj h h')]
+  rw [_root_.GlobalTheory.SW.FourierJ.haar_eq_sum_rep κ ι R _ hR (level_mul_conj (ft_level hR h c) (ft_level hR h' c)),
+    _root_.GlobalTheory.SW.FourierJ.haar_eq_sum_rep κ ι R _ hR (level_mul_conj h h')]
   congr 1
   set V : ℂ := (R : ℂ) ^ (Fintype.card κ * Fintype.card ι) with hV
   have hV0 : V ≠ 0 := pow_ne_zero _ (by exact_mod_cast hR.ne')
@@ -344,16 +345,16 @@ theorem trans_J [DecidableEq ι] {p : ℕ} (hp : Fintype.card κ = p + p) {R : �
   intro τ hτ ζ
   have hR0 : (R : ℚ) ≠ 0 := by exact_mod_cast hR.ne'
   have hRc : (R : ℂ) ≠ 0 := by exact_mod_cast hR.ne'
-  obtain ⟨hd, hs, -⟩ := GlobalTheory.T.symplecticSiegelAction_mem_upperHalfSpace_and_cocycle ι _ (SymplecticGroup.J_mem ι ℚ) τ hτ
+  obtain ⟨hd, hs, -⟩ := _root_.GlobalTheory.SiegelAction.symplectic_action ι _ (SymplecticGroup.J_mem ι ℚ) τ hτ
   rw [spAct_J] at hs
   rw [spDen_J] at hd
-  obtain ⟨c, hc, hrow⟩ := GlobalTheory.T.poisson_summation_thetaSeriesRowTerm_coset ι R hR τ hτ hs (Ne.isUnit hd)
+  obtain ⟨c, hc, hrow⟩ := _root_.GlobalTheory.SW.FourierJ.Row.poisson_class ι R hR τ hτ hs (Ne.isUnit hd)
   rw [spAct_J, spDen_J, qm_J, Matrix.mul_one, thS_eq, thS_eq,
     tsum_supp hR (ft_level hR h _)]
   have hsum : Summable fun x : Matrix κ ι ℚ => φ x * ∏ k, gs τ (ζ k) (x k) := by
     have := (GlobalTheory.SW.SiegelSum.summable_norm_thetaTerm κ ι φ ⟨R, hR, h⟩ τ hτ ζ).of_norm
     simpa only [gs, ← Complex.exp_sum, Finset.mul_sum] using this
-  rw [GlobalTheory.T.tsum_schwartzBruhatLevel_eq_sum_residueCosets κ ι R φ _ hR h hsum]
+  rw [_root_.GlobalTheory.SW.FourierJ.tsum_level_eq_sum_cosets κ ι R φ _ hR h hsum]
   set V : ℂ := (R : ℂ) ^ (Fintype.card κ * Fintype.card ι) with hV
   set T : (κ → ι → Fin (R * R)) → κ → (ι → ℤ) → ℂ := fun n k m =>
     ech (rep R n k ⬝ᵥ ((R : ℚ)⁻¹ • zv m)) * gs (-τ⁻¹) (ζ k ᵥ* τ⁻¹) ((R : ℚ)⁻¹ • zv m) with hT

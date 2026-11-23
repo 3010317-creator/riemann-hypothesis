@@ -2,12 +2,12 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.PotentialsBoundedRegSettingEqReference
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.NineGeoU
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AdaptedSubsetsForPotentialCharts
+public import Development.WeilBound.CoreStatements.PlurisubharmonicCones.PotentialChartsRegularBound
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsConjInvariantMollifier
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsCutoffFamilySymmetric
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsPotentialChartsWithRadii
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsSmoothConjInvariantMetric
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SymmetricChartsOfRegularization
+public import Development.WeilBound.CoreStatements.PlurisubharmonicCones.TiedSettingSymmetricCharts
 public import GroundTheory.HeightsAndTheta.Heights.Regularisation.PBoundedChartComparison
 public import GroundTheory.HeightsAndTheta.Heights.Regularisation.PMaxOscillation
 public import GroundTheory.HeightsAndTheta.Heights.Regularisation.PMollifierLowerBound
@@ -69,7 +69,7 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.exists_regularization_setting 
   obtain ⟨ref, hra, hrs, hrc⟩ := GlobalTheory.CompanionTheory.Relay.exists_smooth_conj_invariant_metric K J Hd.aMu
   obtain ⟨P, S, κ, hth, had, -, hsym, -⟩ :=
     GlobalTheory.CompanionTheory.Relay.exists_potential_charts_with_radii K J II Ψ Ω W D M ref (fun _ _ => 1) hrs hrc fun _ _ => one_pos
-  obtain ⟨B, rfl, hph, hcj⟩ := GlobalTheory.CompanionTheory.Relay.adapted_subsets_for_potential_charts K J II Ψ Ω W D M ref w P S hrs hth had (hra ▸ hL) hP hC hB
+  obtain ⟨B, rfl, hph, hcj⟩ := _root_.LevelTowerAlt.potential_charts_regular_bound K J II Ψ Ω W D M ref w P S hrs hth had (hra ▸ hL) hP hC hB
   obtain ⟨ρ, hρ⟩ := GlobalTheory.CompanionTheory.Relay.exists_conj_invariant_mollifier D.n
   obtain ⟨cut, Cη, hcut, hcc⟩ := GlobalTheory.CompanionTheory.Relay.exists_cutoff_family_symmetric K J II Ψ Ω W D M _ κ hsym
   obtain ⟨C, t₀, ht₀, hcmp⟩ := GroundTheory.Heights₂.Heights.Regular.BoundedChartComparison.proof
@@ -83,4 +83,4 @@ theorem _root_.GlobalTheory.CompanionTheory.Relay.exists_regularization_setting 
     refine ⟨GlobalTheory.CompanionTheory.Ar.Cusp.breg_margin_tendsto C, ?_⟩
     filter_upwards [Ioo_mem_nhdsGT ht₀] with t ht j k x hx
     exact (hcmp t ht.1 ht.2 j k x hx).trans (le_max_right _ _)
-  exact ⟨S', hT, GlobalTheory.CompanionTheory.Relay.symmetric_charts_of_regularization K J II Ψ Ω W D Hd M w S' κ hT hsym hρ hcc hrc (hcj hrc hO)⟩
+  exact ⟨S', hT, _root_.LevelTowerAlt.tied_setting_symmetric_charts K J II Ψ Ω W D Hd M w S' κ hT hsym hρ hcc hrc (hcj hrc hO)⟩

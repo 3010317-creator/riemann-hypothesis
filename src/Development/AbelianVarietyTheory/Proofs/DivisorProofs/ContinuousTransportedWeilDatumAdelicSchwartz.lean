@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUSplittingInl
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousTransportedWeilOperatorGroupVariableStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzContinuousAtOfPointwiseOfBounded
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledUnitaryPartnerDiagStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalFiniteDimFinitePartsWeilOperatorsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzContinuousAtOfPointwiseOfBoundedStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilOperatorArchimedeanSliceSchwartzSeminormBounStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -77,7 +79,7 @@ theorem continuous_transport : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), Is
   have hpres := (GlobalTheory.T.transportedWeil_preserves_schwartz_heisenberg_equivariant D ψ hψ S T χS χT hS hT rS rT JA JB ξ hJA hJB κ co hco ω hω om htr).1
   refine GlobalTheory.WeilCont.isContOn_of_local D.host.F hfin (fun Φ hΦ y => ?_)
   choose s hs using fun p => GlobalTheory.WeilCont.exists_slice D.host.F (hpres p Φ hΦ) y
-  refine ⟨s, continuous_iff_continuousAt.2 fun p0 => GlobalTheory.T.schwartz_continuousAt_of_continuousAt_apply_of_bounded s p0 (fun v => ?_) (fun k n => ?_), hs⟩
+  refine ⟨s, continuous_iff_continuousAt.2 fun p0 => _root_.GlobalTheory.schwartz_continuousAt_of_pointwise_of_bounded s p0 (fun v => ?_) (fun k n => ?_), hs⟩
   · simp_rw [hs]
     exact (hpt Φ hΦ _).continuousAt
   · obtain ⟨C, hC⟩ := hbd Φ hΦ y p0 k n

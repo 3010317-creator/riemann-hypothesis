@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.MeasurableCompInfGL
 public import Development.AbelianVarietyTheory.Definitions.Divisors.MirSet
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KirillovArchimedeanTotallyComplexMirabolicStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRapidInf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KirillovArchimedeanTotallyComplexMirabolic
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MeasurePreservingToMixedPiSymm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -177,7 +178,7 @@ theorem kirillov_arch : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberF
       intro F hF u hu y
       rw [map_mul, ← mul_assoc, comm_infGL hq u, mul_assoc, hF _ (infGL_mem_NA hu), psiN_infGL]
     obtain ⟨C, hC, hCp⟩ := hbC
-    obtain ⟨X, _, ν, _, k, γ, hk, hK⟩ := GlobalTheory.T.kirillov_archimedean_totallyComplex_mirabolic E m (fun y => b (q * infGL E (m + 1) y))
+    obtain ⟨X, _, ν, _, k, γ, hk, hK⟩ := _root_.GlobalTheory.JSW.MirCinf.kirillov_cinf E m (fun y => b (q * infGL E (m + 1) y))
       (fun y => W (q * infGL E (m + 1) y)) (heq b hbe) ⟨chart b q, hbs, fun y => chart_val b q y⟩
       ⟨GeneralLinearGroup.map (pInf E) '' C, hC.image continuous_map_pInf_here, fun y hy hb0 => by
         obtain ⟨u, hu, hu'⟩ := hCp _ ((hiff y).2 hy) hb0

@@ -2,15 +2,18 @@ module
 
 public import Formalism.LocalToGlobal.ProjectiveLattices.CurveAsm
 public import Formalism.LocalToGlobal.ProjectiveLattices.TieUpC
-public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.BirationalOfFormRatiosFullTrdegStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.CurveInstSt
+public import Formalism.LocalToGlobal.ProjectiveLattices.CurveOpen
+public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.BirationalOfFormRatiosFullTrdeg
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.CompSplitRecord
-public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.CountQAtStGenericSectionPrimesStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.CurveLocInst
+public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.CountQAtStGenericSectionPrimes
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.CurveLocOfCountQAt
-public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.CurveModelExistsAllPrimesAllPointsStatement
+public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.CurveModelExistsAllPrimesAllPoints
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.CuspEqZeroOfGenericValues
+public import Formalism.LocalToGlobal.ProjectiveLattices.CurveSec
 import Formalism.LocalToGlobal.ProjectiveLattices.CompFin
 import Formalism.LocalToGlobal.ProjectiveLattices.CurveInj
-public import Formalism.LocalToGlobal.ProjectiveLattices.CurveSec
 import Formalism.LocalToGlobal.ProjectiveLattices.LocalUnitReduction.IsUnitMkOfForallPrime
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -259,10 +262,10 @@ theorem tieS : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (hj : InR D j) (
   haveI : Finite (Comp (T.Q.Xo j) T.Q.c) := CompFin.finite_comp _ _
   have hV := GlobalTheory.Reg.genValInj_record D T h j hj hG
   have hC := GlobalTheory.Reg.compSplit_record D T h j hj hG
-  obtain ⟨M⟩ := GlobalTheory.T.curveModel_exists_all_primes_allPoints D T h j hj hG hT hV hC
-    (fun ka wL wF G => (GlobalTheory.T.birational_of_formRatios_full_trdeg D T h j hj hG ka wL wF G).2) hG ka wL wF G la S g0 hH.1 hH.2.1 hH.2.2.1 hH.2.2.2
+  obtain ⟨M⟩ := _root_.GlobalTheory.CurveRecord.curveInst D T h j hj hG hT hV hC
+    (fun ka wL wF G => (_root_.GlobalTheory.Reg.birSt_of_ratios_trdeg D T h j hj hG ka wL wF G).2) hG ka wL wF G la S g0 hH.1 hH.2.1 hH.2.2.1 hH.2.2.2
   exact tie_of (recPlus h j hj) G la (fun Z : Comp (T.Q.Xo j) T.Q.c => Om Z) (fun Z => formsEvR j hG hT Z) g0
     (curveInj h j hj hG hT hV G la) (hone_of h j hj hG hT hC ka wL wF G S g0 la hH)
-    (GlobalTheory.curveLoc_of_countQAt D T h j hj hG hT (GlobalTheory.T.countQAtSt_generic_section_primes D T h j hj hG hT) ka wL wF G S g0 la hH) M.isGen hB
+    (GlobalTheory.curveLoc_of_countQAt D T h j hj hG hT (_root_.GlobalTheory.SecCount.countQAtSt D T h j hj hG hT) ka wL wF G S g0 la hH) M.isGen hB
 
 end GlobalTheory.SectionProduct

@@ -1,9 +1,10 @@
 module
 
 public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.StSliceBranches
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BranchProperAtPointHoldsStatement
-import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.Assembly
+public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.StBranchProperAtPoint
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BranchProperAtPointHolds
 public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PSliceBranches
+import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.Assembly
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +53,7 @@ namespace GlobalTheory.CompanionTheory.Ar.SliceBranch
 theorem sliceBranches : GroundTheory.Heights₂.Heights.SliceBranches.Statement :=
   GroundTheory.Heights₂.Heights.SliceBranches.proof
     GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.ComplexSets.SliceImmersiveGeneral.full
-    GlobalTheory.T.branch_proper_at_point_holds
+    _root_.GlobalTheory.CompanionTheory.Ar.Branch.branchProperAtPoint
     GroundTheory.Heights₂.Heights.SliceMatricesOpen.full
     GroundTheory.Heights₂.Heights.ImplicitCurve.full
 

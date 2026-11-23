@@ -6,9 +6,11 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Cover
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinRepApply
 public import Development.AbelianVarietyTheory.Definitions.Divisors.OfDat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneFormMapRowThreeLevelOfCharacterisation
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CuspParamOfGreenParametrisationStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.GreenCuspidalIff
+public import Formalism.LocalToGlobal.NormalizedHeckeFactors.CoeffZeroNeOfMonicIrr
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CuspParamOfGreenParametrisation
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEquivariantLabelMapTwistCuspidalLabel
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GreenSeriesIdempotentEqClassFunctionIdempotentStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GreenSeriesIdempotentEqClassFunctionIdempotent
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertJunkColIn3
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GoodTypesOfTypesTrue
 import Mathlib.Algebra.Order.Floor.Extended
@@ -68,9 +70,9 @@ theorem serClause_of_typesTrue (hG : GlobalTheory.Published.GreenCuspidal) (D : 
     obtain ⟨e, rfl⟩ := hdd
     exact (GlobalTheory.Mem.TypePl.labDat (D.host.g k)).gen_norm d e hd (Nat.pos_of_mul_pos_left hd')
   obtain ⟨O, -, -, hO⟩ := GlobalTheory.CuspTwist.exists_labelMap_twist_cuspLabel (ZMod (D.host.g k)) _
-    (GlobalTheory.T.cuspParam_of_greenParametrisation hG (D.host.g k) (D.ntypes.teichC k) (D.ntypes.teichC_inj k) _ hζ)
+    (_root_.GlobalTheory.GreenParam.cuspParam_of_green hG (D.host.g k) (D.ntypes.teichC k) (D.ntypes.teichC_inj k) _ hζ)
   have hr : 1 ≤ D.R.r := by unfold Ranks.r; have := D.R.two_le_m; omega
-  exact ⟨_, O, fun f => (h.ser k f).trans (GlobalTheory.T.greenSeriesIdempotent_eq_classFunctionIdempotent hG _ _ _ _ _ (h.teich k) O hO D.R.r f hr)⟩
+  exact ⟨_, O, fun f => (h.ser k f).trans (_root_.GlobalTheory.SerCmp.eSerC_eq_eSerO hG _ _ _ _ _ (h.teich k) O hO D.R.r f hr)⟩
 
 def Closes (X : Stages) : Prop :=
   ∀ (px : PreX X.B.toPre) (I : ColIn X.B px) (hX : X.B.fields.Ok) (Tw : TwDat X.B) (Wt : Set X.B.places.Pl) (z : Dat X I hX Tw Wt),

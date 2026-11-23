@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SumLieCoord
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRapidInf
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormFderivChartLeOfBoundedLieDerivativesStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormFderivChartLeOfBoundedLieDerivatives
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -210,6 +210,6 @@ theorem hasFDerivAt_chart_kerOp : ∀ (E : Type) [Field E] [NumberField E] [_roo
       HasFDerivAt (chart (kerOp ν k γ φ.1) g)
         (∫ x, k x • (fderiv ℝ (chart φ.1 g) (toL (γ x).val)).comp (rmul (toL (γ x).val)) ∂ν) (oneL E a) :=
   fun E _ _ _ a _ _ ν k γ hk φ hφ hL g =>
-    KerDeriv.hasFDerivAt_chart_kerOp_of_bound ν k γ hk φ hφ (GlobalTheory.T.norm_fderiv_chart_le_of_bounded_lieDerivatives E a φ hL) g
+    KerDeriv.hasFDerivAt_chart_kerOp_of_bound ν k γ hk φ hφ (_root_.GlobalTheory.JSW.norm_fderiv_chart_le E a φ hL) g
 
 end GlobalTheory.JSW

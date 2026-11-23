@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsActIffIsDiagEnd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDiscreteValuationCentredCompleteNormalStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HomExtNormalSt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDiscreteValuationCentredCompleteNormal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsThetaConstantValueNeZeroStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaConstantLeCommonBoundMonomialStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -90,7 +91,7 @@ theorem label_zero_of_mem_supI : ∀ (g n : ℕ) (F : SFam g n (zetaAway n)) (W 
     obtain ⟨v, hv⟩ := ratio 𝔪 ha' b₀
     rw [h0, mul_zero] at hv
     exact hb₀ hv
-  obtain ⟨ν, hν1, hνm⟩ := GlobalTheory.T.exists_discreteValuation_centred_completeNormal V 𝔪.cn
+  obtain ⟨ν, hν1, hνm⟩ := _root_.GlobalTheory.DivVal.exists_valuation_centre V 𝔪.cn
   have hmax : ∀ b, ν (𝔪.yK ⟨X₁.S.th b, X₁.S.th_mem b⟩) ≤ ν (𝔪.yK ⟨X₁.S.th a, X₁.S.th_mem a⟩) := fun b => by
     obtain ⟨v, hv⟩ := ratio 𝔪 ha' b
     rw [hv, map_mul]

@@ -1,11 +1,12 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TupleJacobianRightMulIsometry
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermLat
 public import Mathlib.RingTheory.Norm.Defs
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsEqZpowMulUnit
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RelativeLatticeVolumeOfDetValuation
+public import Mathlib.RingTheory.Norm.Transitivity
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TupleJacobianRightMulIsometry
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsPrincipalIdealRingOfHenselian
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RelativeLatticeVolumeOfDetValuationStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +53,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.RingTheory.Norm.Transitivity
 
 @[expose] public section
 
@@ -112,7 +112,7 @@ theorem index_rmul : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace
   set W0 := (AddSubgroup.pi Set.univ fun _ : Fin m => L.O.toAddSubgroup) with hW0
   have hmem : ∀ x, x ∈ W0 ↔ ∀ i, x i ∈ L.O := fun x => by
     simp [hW0, AddSubgroup.mem_pi]
-  obtain ⟨h1, -, h3⟩ := GlobalTheory.T.relative_lattice_volume_of_det_valuation ϖ hϖ (Pi.basis fun _ : Fin m => b) φ a u (hdet.trans hu') W0
+  obtain ⟨h1, -, h3⟩ := _root_.GlobalTheory.HL.LatDet.relVol_map ϖ hϖ (Pi.basis fun _ : Fin m => b) φ a u (hdet.trans hu') W0
     (fun x => by
       simp only [hmem, hbO, Pi.basis_repr, Sigma.forall])
   have hle : W0.map φ.toAddEquiv.toAddMonoidHom ≤ W0 := by

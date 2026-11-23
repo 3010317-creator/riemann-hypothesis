@@ -2,8 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DltEqZero
 public import Mathlib.Data.Int.Interval
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardLatticesIdempotentPositionBoundedStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RhoPowLowerBoundSwappedPairsStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardLatticesIdempotentPositionBounded
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RhoPowLowerBoundSwappedPairs
+public import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +51,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Mathlib.Analysis.SpecificLimits.Basic
 
 @[expose] public section
 
@@ -104,8 +104,8 @@ namespace GlobalTheory.UnitLemma.Desc
 theorem tendsto_badWindow_div_rho : ∀ (K : UQ) (B : InvAlg K) (ι : Type) [Fintype ι] (e π : ι → B.A) (S : Finset ι) (a : K.O), B.P.Separable → K.Small a → IsFrame B e π S → ∀ (I I' : Finset ι), (∀ i ∈ S, i ∈ I ∨ i ∈ I') → ∀ (N L : ℕ) (D : ℚ) (f : ℕ → Submodule K.O B.A → ℚ), (∀ M ∈ B.Lin, ∃ p, Pos B a e N M p) → (∀ k M, |f k M| ≤ D) → (∀ k, L ≤ k → ∀ M ∈ B.Lin, ∀ p, Pos B a e N M p → f k M ≠ 0 → Win I I' L k p ∧ ¬ Mid S L k p) → Tendsto (fun k : ℕ => ((∑ᶠ M ∈ B.Lin, f k M : ℚ) : ℝ) / (B.rho (algebraMap K.O B.A a ^ k) : ℝ)) atTop (𝓝 0) := by
   intro K B ι _ e π S a hsep ha hfr I I' hI N L D f hpos hD hsupp
   classical
-  obtain ⟨C, hC⟩ := GlobalTheory.T.card_lattices_idempotent_position_bounded K B ι e π S a hsep ha hfr N
-  have hrho := GlobalTheory.T.rho_pow_lower_bound_swappedPairs K B ι e π S a hsep ha hfr
+  obtain ⟨C, hC⟩ := _root_.GlobalTheory.UnitLemma.Desc.PosCount.card_pos_le K B ι e π S a hsep ha hfr N
+  have hrho := _root_.GlobalTheory.UnitLemma.Desc.rho_lower K B ι e π S a hsep ha hfr
   have hD0 : 0 ≤ D := le_trans (abs_nonneg _) (hD 0 ⊥)
   set n := Fintype.card ι
   set m := n - S.card

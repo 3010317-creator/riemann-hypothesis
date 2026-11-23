@@ -2,11 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.SemistableFin
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NotCompactOfMEqOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEmbeddingLieMultiplicityZeroCharZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEmbeddingLieMultiplicityZeroCharZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRelativeDimensionAbelianVarietyField
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PotentialGoodReductionOfLieMultZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PotentialGoodReductionOfOrderLeftActionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoMulRelDimEqFinrankHarrisTaylorLatticeStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PotentialGoodReductionOfLieMultZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PotentialGoodReductionOfOrderLeftAction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoMulRelDimEqFinrankHarrisTaylorLattice
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,11 +67,11 @@ theorem potGood : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRin
     have hx : spMap (algebraMap K Ω) ≫ spMap β = spMap ((algebraMap K Ω).comp β) := by
       simp only [spMap, ← Spec.map_comp]
       rfl
-    obtain ⟨σ, hσ⟩ := GlobalTheory.T.exists_embedding_lie_multiplicity_zero_char_zero p D R b N (Sp K) (spMap β) o h Ω (spMap (algebraMap K Ω))
+    obtain ⟨σ, hσ⟩ := _root_.GlobalTheory.HTLie.exists_lieMult_zero p D R b N (Sp K) (spMap β) o h Ω (spMap (algebraMap K Ω))
       ((algebraMap K Ω).comp β) hx
-    exact GlobalTheory.T.potentialGoodReduction_of_lieMult_zero V K o.A o.ab D.F (o.act.toF D) Ω (algebraMap K Ω) σ hσ
+    exact _root_.GlobalTheory.PotGoodLie.potGood_of_lieMult_zero V K o.A o.ab D.F (o.act.toF D) Ω (algebraMap K Ω) σ hσ
   · obtain ⟨g, hg⟩ := GlobalTheory.AbVarRelDim.exists_relDim K o.A o.ab
-    have h2g := GlobalTheory.T.two_mul_relDim_eq_finrank_harrisTaylor_lattice p D R b N K β o g hg
+    have h2g := _root_.GlobalTheory.UPel.HT.two_mul_relDim_eq_finrank p D R b N K β o g hg
     rw [D.rankLa] at h2g
     haveI := D.freeO
     haveI := D.finO
@@ -83,6 +84,6 @@ theorem potGood : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type) [CommRin
         exact Nat.mul_lt_mul_of_pos_left hn hm
       have h2 : D.m * (2 * D.m) * Module.finrank ℚ D.F = 2 * (D.m ^ 2 * Module.finrank ℚ D.F) := by ring
       omega
-    exact GlobalTheory.T.potentialGoodReduction_of_order_leftAction V K o.A g o.ab hg D.O o.act.act o.act.hom o.act.one o.act.mul o.act.add hdiv hlt
+    exact _root_.GlobalTheory.potModel_of_intDivOrder_leftAction V K o.A g o.ab hg D.O o.act.act o.act.hom o.act.one o.act.mul o.act.add hdiv hlt
 
 end GlobalTheory.HTPotGood

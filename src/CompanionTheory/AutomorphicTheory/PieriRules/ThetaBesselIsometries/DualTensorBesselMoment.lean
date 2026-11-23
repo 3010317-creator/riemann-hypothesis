@@ -5,11 +5,14 @@ public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.BesselLieTriangularVanishingStatement
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.DualTensorCayleyCompatibleStatement
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.QuantumDeterminantEigenvalueStatement
+public import Development.AbelianVarietyTheory.Definitions.Jets.SumIoPr
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CasimirScalarOfCapelliDeterminantEigenvalue
+public import Formalism.HermitianCurvature.StatementQ
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ProjectorEntryValueUnderLinearFunctional
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SplitCasimirEigenvalueOnDualTensorSummand
 import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.SmoothVectorsDiscreteSeriesGlModuleStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CasimirScalarOfCapelliDeterminantEigenvalueStatement
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FrameWConjMatrixUnitsStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ProjectorEntryValueUnderLinearFunctionalStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SplitCasimirEigenvalueOnDualTensorSummandStatement
+import Development.AbelianVarietyTheory.Definitions.Jets.SumIoPrAlt
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FrameWConjMatrixUnits
 import Formalism.FormalDegreeBessel.FormalDegreeRatio.GBasic
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.ContinuousMulMt
 import Mathlib.Algebra.Order.Floor.Extended
@@ -130,7 +133,7 @@ theorem bessel_ev_projector_value : HypsG → ∀ (k r : ℕ) (ε : Fin (2 * r +
   obtain ⟨hz, hTz, ⟨u₀, hu₀⟩, hcap, -⟩ := hS
   have hπ1 : π 1 = 1 := (Formalism.FourierDecayAlt.P.MatrixMultiplicationContinuity.piW_facts hTz hu₀).1
   obtain ⟨g, hg, -⟩ := hu₀
-  obtain ⟨hgu, hN, ⟨hfr, hunit⟩, hf, hω⟩ := GlobalTheory.T.frameW_conj_matrix_units k r z g hz hTz hg
+  obtain ⟨hgu, hN, ⟨hfr, hunit⟩, hf, hω⟩ := _root_.GlobalTheory.CapFrame.frame_matrix_units k r z g hz hTz hg
   have hd : IsUnit g.det := (Matrix.isUnit_iff_isUnit_det g).1 hgu
   have hQ : IsUnit g⁻¹ := (Matrix.isUnit_nonsing_inv_iff).2 hgu
   have hgi : g⁻¹⁻¹ = g := Matrix.nonsing_inv_nonsing_inv g hd
@@ -140,10 +143,10 @@ theorem bessel_ev_projector_value : HypsG → ∀ (k r : ℕ) (ε : Fin (2 * r +
     GlobalTheory.T.dual_tensor_cayley_compatible hK k r ε mu R hR RI _ io pr g⁻¹ E F hRI hT hQ hE hF
   have hn : 2 ≤ 2 * r + k + 1 := by omega
   have hqE := GlobalTheory.T.quantum_determinant_eigenvalue hy k r ε mu R hR g⁻¹ E hQ hE
-  have hcE := GlobalTheory.T.casimir_scalar_of_capelliDeterminant_eigenvalue _ _ E mu hn hEg hqE
-  have hcF := fun t => GlobalTheory.T.casimir_scalar_of_capelliDeterminant_eigenvalue _ _ (F t) _ hn (hFg t)
+  have hcE := _root_.GlobalTheory.CapelliCasimir.cas_of_capelli _ _ E mu hn hEg hqE
+  have hcF := fun t => _root_.GlobalTheory.CapelliCasimir.cas_of_capelli _ _ (F t) _ hn (hFg t)
     (GlobalTheory.T.quantum_determinant_eigenvalue hy k r ε _ (RI t) (hRI t) g⁻¹ (F t) hQ (hF t))
-  have hsp := fun t => GlobalTheory.T.splitCasimir_eigenvalue_on_dualTensor_summand _ _ _ E (F t) (io' t) mu t hcE (hcF t) (hcomm t)
+  have hsp := fun t => _root_.GlobalTheory.splitCas_on_summand _ _ _ E (F t) (io' t) mu t hcE (hcF t) (hcomm t)
   let L : R.smSub →ₗ[ℂ] Wp :=
     { toFun := fun v => l v
       map_add' := fun v w => hB.1 _ v.2 _ w.2
@@ -152,7 +155,7 @@ theorem bessel_ev_projector_value : HypsG → ∀ (k r : ℕ) (ε : Fin (2 * r +
   have hE' : ∀ a b (v : R.smSub), ((E a b v : R.smSub) : R.H) = R.dC (g * Matrix.single a b 1 * g⁻¹) v := by
     intro a b v
     rw [hE a b v, hgi]
-  obtain ⟨c, hc, hcv⟩ := GlobalTheory.T.projector_entry_value_under_linear_functional R.smSub Wp k r E L
+  obtain ⟨c, hc, hcv⟩ := _root_.GlobalTheory.capelli_projector_entry_value R.smSub Wp k r E L
     (fun a b => Formalism.QuantumDeterminants.ell k r z (g * Matrix.single a b 1 * g⁻¹) - star (Formalism.QuantumDeterminants.ell k r z
       (-((Formalism.QuantumDeterminants.Hpk k r) * (g * Matrix.single a b (1 : ℂ) * g⁻¹)ᴴ * (Formalism.QuantumDeterminants.Hpk k r)))))
     (Real.sqrt (Formalism.QuantumDeterminants.Tz k r z)) hk hEg

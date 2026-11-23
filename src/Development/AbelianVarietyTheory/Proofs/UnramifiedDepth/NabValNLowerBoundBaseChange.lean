@@ -2,7 +2,7 @@ module
 
 public import Formalism.LocalToGlobal.ProjectiveLattices.PlaceBelow
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsIntegralCombinationOfMemHaO
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.NabValNEqSumCoeffStatement
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.NabValNEqSumCoeff
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.NabValNMap
 import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.NablaValueCopiesBilinear
 import Mathlib.Algebra.Order.Floor.Extended
@@ -67,7 +67,7 @@ theorem nabValN_lower_bound_baseChange : ∀ (T : CDVR) (C : Type) [Field C] [Ch
       have := hsm 0 g 0
       simpa using this
     | insert j S hj ih => rw [Finset.sum_insert hj, Finset.sum_insert hj, hadd, ih]
-  obtain ⟨S, hS⟩ := GlobalTheory.T.exists_finset_nabValN_eq_sum_coeff_mul_monomial C d O B' (MvPowerSeries.map ι h) w0 m n
+  obtain ⟨S, hS⟩ := _root_.GlobalTheory.nabValN_eq_sum_coeff C d O B' (MvPowerSeries.map ι h) w0 m n
     (Letter Ty r n) cp (fun l j => ι (u l j))
     (∑ j, MvPolynomial.C (c j) * MvPolynomial.map ι (Q j))
   rw [hS f]

@@ -6,15 +6,17 @@ public import Formalism.LocalToGlobal.IndefiniteReal.ThPinsR
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceIdempotentComponentsConjValuationStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsBaseChangeFiniteAdeleRingEquiv
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsFinitePlaceIdempotentBaseChangeAdeles
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdelicMatrixBoundedDenominatorPrimeToOfIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdelicMatrixExistsPrimePowClearsDenominatorsOverStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BndMul
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdelicMatrixBoundedDenominatorPrimeToOfIntegral
+public import Mathlib.RingTheory.DedekindDomain.FiniteAdeleRing
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdelicMatrixExistsPrimePowClearsDenominatorsOver
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BoundedDenomRationalMatrixOfFinitePartStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteMatrixEqOneOfEqOneAtPlacesOverStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IdempotentAddConjSupportFinitePrimeToPStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsBoundedPrimeToDenomGLAndInvOfEqOneOffFinite
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsBoundedPrimeToDenomGLAndInvOfEqOneOffFiniteStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LatAtTrivAtOfSplit
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SupportedAdelicPointEqOneWhereIdempotentVanishesStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsBoundedPrimeToDenomGLAndInvOfEqOneOffFinite
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,19 +79,19 @@ theorem denomAt_of_move : ∀ (D : D7) (V : HSp D), Bridge.hLat V 1 = Formalism.
   intro D V hstd l hl s
   obtain ⟨ι, h1, h2, h3⟩ := GlobalTheory.HostAdeleIso.exists_finiteAdele_equiv D
   set M := Matrix.GeneralLinearGroup.map (n := Fin V.rank) ι.toRingHom with hM
-  obtain ⟨c1, hc1⟩ := GlobalTheory.T.adelicMatrix_exists_prime_pow_clears_denominators_over l hl V.rank (M (fin V s).1).1
-  obtain ⟨c2, hc2⟩ := GlobalTheory.T.adelicMatrix_exists_prime_pow_clears_denominators_over l hl V.rank (M (fin V s).1)⁻¹.1
+  obtain ⟨c1, hc1⟩ := _root_.GlobalTheory.StdAtPrime.exists_pow_clears_denom_over l hl V.rank (M (fin V s).1).1
+  obtain ⟨c2, hc2⟩ := _root_.GlobalTheory.StdAtPrime.exists_pow_clears_denom_over l hl V.rank (M (fin V s).1)⁻¹.1
   refine ⟨max c1 c2, ?_⟩
   intro z hz γ h γ' k bad hrat hlb hsob hk hk' heq
   set C : FiniteAdeleRing (𝓞 D.host.E) D.host.E := ((l ^ max c1 c2 : ℕ) : FiniteAdeleRing (𝓞 D.host.E) D.host.E) with hC
-  have bs : Bnd l (C • (M (fin V s).1).1) := GlobalTheory.T.adelicMatrix_boundedDenominator_primeTo_of_integral l hl _ _ fun Q hQ i j => by
+  have bs : Bnd l (C • (M (fin V s).1).1) := _root_.GlobalTheory.StdAtPrime.bnd_of_integral_over_prime l hl _ _ fun Q hQ i j => by
     rw [Matrix.smul_apply, smul_eq_mul]; exact hc1 _ (le_max_left _ _) Q hQ i j
-  have bs' : Bnd l (C • (M (fin V s).1)⁻¹.1) := GlobalTheory.T.adelicMatrix_boundedDenominator_primeTo_of_integral l hl _ _ fun Q hQ i j => by
+  have bs' : Bnd l (C • (M (fin V s).1)⁻¹.1) := _root_.GlobalTheory.StdAtPrime.bnd_of_integral_over_prime l hl _ _ fun Q hQ i j => by
     rw [Matrix.smul_apply, smul_eq_mul]; exact hc2 _ (le_max_right _ _) Q hQ i j
   have ez := GlobalTheory.T.finiteMatrix_apply_eq_one_at_places_over_of_oneAt D ι h1 h2 h3 V l z hz
-  have bz : Bnd l (M (fin V z).1).1 := GlobalTheory.T.adelicMatrix_boundedDenominator_primeTo_of_integral l hl _ _ fun Q hQ i j => by
+  have bz : Bnd l (M (fin V z).1).1 := _root_.GlobalTheory.StdAtPrime.bnd_of_integral_over_prime l hl _ _ fun Q hQ i j => by
     rw [ez Q hQ i j]; exact one_entry_v_le_one _ Q i j
-  have bz' : Bnd l (M (fin V z).1)⁻¹.1 := GlobalTheory.T.adelicMatrix_boundedDenominator_primeTo_of_integral l hl _ _ fun Q hQ i j => by
+  have bz' : Bnd l (M (fin V z).1)⁻¹.1 := _root_.GlobalTheory.StdAtPrime.bnd_of_integral_over_prime l hl _ _ fun Q hQ i j => by
     rw [inv_eq_one_off _ _ Q (ez Q hQ) i j]; exact one_entry_v_le_one _ Q i j
   have bk' : Bnd l (M k.1)⁻¹.1 := bnd_inv_of_hLat_std D ι h1 h2 V hstd l k hk
   have bk : Bnd l (M k.1).1 := by

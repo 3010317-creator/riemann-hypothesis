@@ -1,12 +1,22 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdeleJoinZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousMultilinearMapNormLeSumBasisValuesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMixedSpaceDualVectorTraceFormStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralSqLeSumLintegralEnormSqOfPointwiseStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IteratedFDerivApplyEqFoldrDirectionalFderivStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormPowLeConstMulOneAddSumAbsBasisCoordPowStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SliceMultiplicationDerivativeWordIteratedFDerivStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.Normed.Module.Multilinear.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousMultilinearMapNormLeSumBasisValues
+public import Mathlib.NumberTheory.NumberField.CanonicalEmbedding.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMixedSpaceDualVectorTraceForm
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralSqLeSumLintegralEnormSqOfPointwise
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IteratedFDerivApplyEqFoldrDirectionalFderiv
+public import Mathlib.Analysis.Normed.Module.Basic
+public import Mathlib.LinearAlgebra.Basis.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormPowLeConstMulOneAddSumAbsBasisCoordPow
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SliceMultiplicationDerivativeWordIteratedFDeriv
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Mathlib.Algebra.Order.Chebyshev
 import Formalism.LocalRingCardinality.DataHost
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -54,11 +64,9 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
 import Formalism.LocalRingCardinality.DataTheta
 import Formalism.LocalToGlobal.BesselHermitianTheta.NoncompactGapAtLeastRange
 import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
-public import Mathlib.Algebra.Order.Chebyshev
 
 @[expose] public section
 
@@ -81,9 +89,9 @@ theorem adelic_schwartz_slice_l2_word_bound : ∀ (F : Type) [Field F] [NumberFi
   obtain ⟨ℓ, hnd, hℓ⟩ := hψ
   obtain ⟨n, ⟨b⟩⟩ : ∃ n, Nonempty (Module.Basis (Fin n) ℝ (κ → mixedEmbedding.mixedSpace F)) :=
     ⟨_, ⟨Module.finBasis ℝ _⟩⟩
-  obtain ⟨K4, hK4, hb4⟩ := GlobalTheory.T.continuousMultilinearMap_norm_le_sum_basis_values (κ → mixedEmbedding.mixedSpace F) _ b j
-  obtain ⟨K5, hK5, hb5⟩ := GlobalTheory.T.norm_pow_le_const_mul_one_add_sum_abs_basisCoord_pow (κ → mixedEmbedding.mixedSpace F) _ b i
-  choose u hu using fun c => GlobalTheory.T.exists_mixedSpace_dual_vector_traceForm F κ ℓ hnd (b.coord c)
+  obtain ⟨K4, hK4, hb4⟩ := _root_.GlobalTheory.continuousMultilinear_norm_le_basis_sum (κ → mixedEmbedding.mixedSpace F) _ b j
+  obtain ⟨K5, hK5, hb5⟩ := _root_.GlobalTheory.norm_pow_le_const_mul_one_add_sum_abs_coord_pow (κ → mixedEmbedding.mixedSpace F) _ b i
+  choose u hu using fun c => _root_.GlobalTheory.dualform F κ ℓ hnd (b.coord c)
   let ia : Option (Fin n) → ℕ := fun a => a.elim 0 (fun _ => i)
   let ua : Option (Fin n) → (κ → mixedEmbedding.mixedSpace F) := fun a => a.elim 0 u
   let wd : Option (Fin n) × (Fin j → Fin n) →
@@ -99,7 +107,7 @@ theorem adelic_schwartz_slice_l2_word_bound : ∀ (F : Type) [Field F] [NumberFi
       (2 * Real.pi * Complex.I * (ℓ (∑ k, x k * ua p.1 k) : ℂ)) ^ (ia p.1) *
         iteratedFDeriv ℝ j (fun x => Φ (GlobalTheory.WeilCont.adeleJoin F x y)) x (fun r => b (p.2 r)) := by
     intro p x
-    rw [GlobalTheory.T.slice_multiplicationDerivativeWord_iteratedFDeriv F κ ψ ℓ hℓ Φ y hsm, GlobalTheory.T.iteratedFDeriv_apply_eq_foldr_directional_fderiv _ _ hsm]
+    rw [_root_.GlobalTheory.WeilL2Words.slice_word_mul_fderivs F κ ψ ℓ hℓ Φ y hsm, _root_.GlobalTheory.iteratedFDeriv_apply_eq_foldr_fderiv _ _ hsm]
   have hcont : ∀ p, Continuous fun x => GlobalTheory.WeilL2Words.word F ψ (wd p) Φ (GlobalTheory.WeilCont.adeleJoin F x y) := by
     intro p
     simp_rw [key]
@@ -109,7 +117,7 @@ theorem adelic_schwartz_slice_l2_word_bound : ∀ (F : Type) [Field F] [NumberFi
     exact ((continuous_const.mul (Complex.continuous_ofReal.comp (hℓc.comp h1))).pow _).mul
       ((ContinuousMultilinearMap.apply ℝ _ ℂ (fun r => b (p.2 r))).continuous.comp h2)
   rw [List.map_map, Finset.sum_map_toList]
-  refine GlobalTheory.T.integral_sq_le_sum_lintegral_enorm_sq_of_pointwise _ MeasureTheory.volume _ _ _ _ hcont fun x => ?_
+  refine _root_.GlobalTheory.sq_le_sum_enorm_sq_lintegral_bound _ MeasureTheory.volume _ _ _ _ hcont fun x => ?_
   have hterm : ∀ p : Option (Fin n) × (Fin j → Fin n),
       p.1.elim 1 (fun c => |b.coord c x| ^ i) *
           ‖iteratedFDeriv ℝ j (fun x => Φ (GlobalTheory.WeilCont.adeleJoin F x y)) x (fun r => b (p.2 r))‖ ≤

@@ -3,10 +3,14 @@ module
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.SmallPair
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsFractionalIdealOfHermIdeleStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsIdeleChangeFinitelyManySplitPlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSplitPointFrameCharacterStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
+public import Formalism.LocalToGlobal.Divisibility.DefGroup
+public import Formalism.LocalToGlobal.HeckeThetaElements.IsHeckeElt
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSplitPointFrameCharacter
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FractionalIdealHermitianSelfDualOfLocalGeneratorStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LineLatticeSelfDual
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ValuationXiZeroEqOne
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.NotLineLatAtZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +49,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.NotLineLatAtZero
 
 @[expose] public section
 
@@ -104,7 +107,7 @@ theorem exists_sumFrame' (p : SplitPt D k) {S A L : HSp D} (o : OrthDec S A L) {
     have := o.rank_add; have := hζ.1
     simp only [Fintype.card_fin, Fintype.card_sum, hn]; omega
   have g2 : (bE.map f * X) * (X' * bE'.map f) = 1 := (Matrix.mul_eq_one_comm_of_equiv (Fintype.equivOfCardEq hc)).2 g1
-  obtain ⟨β₀, h₀⟩ := ((GlobalTheory.T.exists_splitPoint_frame_character D).2 k p).1 S (n ⊕ Fin 1) _ _ g2 g1
+  obtain ⟨β₀, h₀⟩ := ((_root_.GlobalTheory.InhPt.exists_splitPt_frame_char D).2 k p).1 S (n ⊕ Fin 1) _ _ g2 g1
   refine ⟨β₀, ?_⟩
   rw [IsSumFrame, h₀]
   simp only [bE, X, fromCols_map, fromCols_mul_fromBlocks, Matrix.mul_zero, add_zero, zero_add, Matrix.mul_one]

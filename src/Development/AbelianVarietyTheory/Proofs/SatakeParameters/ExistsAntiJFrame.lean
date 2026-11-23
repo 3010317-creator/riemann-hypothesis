@@ -4,10 +4,13 @@ public import Development.AbelianVarietyTheory.BlockTheory.ThetaLiftGeometry.Ine
 public import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
 public import Formalism.SatakeDualWeyl.StatementE
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryDivisorDualLabel
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsNormEqXModMonicOfAdicCompleteInvolutionStatement
+public import Mathlib.Algebra.Polynomial.Degree.Defs
+public import Mathlib.RingTheory.AdicCompletion.Basic
+public import Mathlib.RingTheory.Noetherian.Defs
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsNormEqXModMonicOfAdicCompleteInvolution
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertPlaceHeckeDoubleCosetsInverseRepsLabel
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FiniteResidueFieldAdicCompletionIntegers
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnitaryMemIntegralUnitaryDoubleCosetOfGLnDoubleC
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnitaryMemIntegralUnitaryDoubleCosetOfGLnDoubleCStatement
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Cartan
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.FSatakeA
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.FSatakeB
@@ -54,7 +57,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FiniteResidueFieldAdicCompletionIntegers
 
 @[expose] public section
 
@@ -395,7 +397,7 @@ theorem exists_antiJ_frame (hU : IsUnramInv ϖ σ q) (n : ℕ) :
     show (B * B).map ι = (1 : Matrix _ _ _).map ι
     rw [Matrix.map_mul, hBι, GlobalTheory.DualDivU.antiJ_sq, Matrix.map_one _ (map_zero ι) (map_one ι)])
   obtain ⟨p, hp⟩ := GlobalTheory.UnitaryDoubleCoset.exists_poly_norm hc
-    (GlobalTheory.T.exists_norm_eq_X_mod_monic_of_adicComplete_involution (v.adicCompletionIntegers K) _ c hc hI hω) hB (IsUnit.of_mul_eq_one _ hBB)
+    (_root_.GlobalTheory.InertNorm.exists_dvd_mul_map_sub_X (v.adicCompletionIntegers K) _ c hc hI hω) hB (IsUnit.of_mul_eq_one _ hBB)
   have h1 : (B * cT c (Polynomial.aeval B p)) * Polynomial.aeval B p = 1 := by rw [Matrix.mul_assoc, hp, hBB]
   refine ⟨bc ι ⟨Polynomial.aeval B p, _, mul_eq_one_comm.1 h1, h1⟩, ⟨_, rfl⟩, ?_⟩
   show cT σ ((Polynomial.aeval B p).map ι) * 1 * (Polynomial.aeval B p).map ι = _
@@ -405,7 +407,7 @@ theorem dc_GU (hU : IsUnramInv ϖ σ q) {g g' : GU σ n} {a b : GL (Fin n) (v.ad
     (ha : a ∈ GLint (Fin n) (intL (v.adicCompletion K))) (hb : b ∈ GLint (Fin n) (intL (v.adicCompletion K)))
     (e : (g' : GL (Fin n) (v.adicCompletion K)) = a * g * b) : ∃ k₁ ∈ KU σ n, ∃ k₂ ∈ KU σ n, g' = k₁ * g * k₂ := by
   obtain ⟨h, hh, eh⟩ := exists_antiJ_frame hU n
-  obtain ⟨k₁, h₁, k₂, h₂, e'⟩ := GlobalTheory.T.unitary_mem_integralUnitary_doubleCoset_of_GLn_doubleCoset K v σ n hU.1 hU.2.1 hU.2.2.2.2.1 _
+  obtain ⟨k₁, h₁, k₂, h₂, e'⟩ := _root_.GlobalTheory.UnitaryDoubleCoset.doubleCoset_unitary_of_GL K v σ n hU.1 hU.2.1 hU.2.2.2.2.1 _
     (conj_mem_UJ σ (inv_frame σ eh) g.2) _ (conj_mem_UJ σ (inv_frame σ eh) g'.2) (h * a * h⁻¹)
     (mul_mem (mul_mem hh ha) (inv_mem hh)) (h * b * h⁻¹) (mul_mem (mul_mem hh hb) (inv_mem hh)) (by rw [e]; group)
   have m : ∀ k ∈ UJ σ (1 : Matrix (Fin n) (Fin n) (v.adicCompletion K)) ⊓ GLint (Fin n) (Ov K v),

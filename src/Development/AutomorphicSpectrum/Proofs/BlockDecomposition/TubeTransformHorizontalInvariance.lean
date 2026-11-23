@@ -1,7 +1,11 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GaussTubeOfTubeGood
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContourShiftGaussianDecayStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContourShiftGaussianDecay
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -173,6 +177,6 @@ theorem GlobalTheory.CompanionTheory.TubeFourier.phi_shift_fst :
     refine (hM (z, ⟨c, y₂⟩) hz rfl).trans (mul_le_mul_of_nonneg_left (Real.exp_le_exp.2 ?_) hM0)
     show -(z.im ^ 2 + y₂ ^ 2) ≤ -z.im ^ 2
     linarith [sq_nonneg y₂]
-  exact GlobalTheory.T.contour_shift_gaussian_decay X
+  exact _root_.GlobalTheory.CompanionTheory.TubeFourier.ShiftLine.shift_vertical_line X
     (fun z : ℂ => Complex.exp (-GlobalTheory.CompanionTheory.TubeFourier.dot (z, ⟨c, y₂⟩) t) • G (z, ⟨c, y₂⟩))
     a b M hab hdiff hbound

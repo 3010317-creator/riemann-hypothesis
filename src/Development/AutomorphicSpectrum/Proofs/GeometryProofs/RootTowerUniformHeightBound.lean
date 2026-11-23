@@ -2,16 +2,24 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.HasMultiplierLine
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelSummationBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.JoinCoordsUnitValuesStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.JoinModelPointsProjectStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LogHermitianSumBoundedStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PotentialBoundedPshBothStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootModelFlagCompareStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginCompareFirstStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginCompareSecondStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginCompareThirdStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginPointCompareStatement
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Order.Interval.Finset.Fin
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelSummationBound
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ArchBetween
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.JoinCoordsUnitValues
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.IsIntersectionFamily
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LogHermitianSumBounded
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsTwiceDifferentiableAt
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PotentialBoundedPshBoth
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootModelFlagCompare
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.TowerOrigin
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginCompareFirst
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginCompareSecond
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginCompareThird
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginPointCompare
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.JoinModelPointsProject
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -99,7 +107,7 @@ theorem comp_bound (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
   have hb : ∀ r : RootIx D, ∃ Cr : ℝ, ∀ z : (Σ k, R.ι k) → ℂ, (∀ k, ∃ a, z ⟨k, a⟩ ≠ 0) →
       |Real.log ((o₀.Re.ref (some r)).h z) + ∑ k ∈ Finset.Iic r.2, Real.log ((R.x 1 (r.1, k)).h z)| ≤ Cr := by
     rintro ⟨τ, p⟩
-    refine GlobalTheory.T.log_hermitian_sum_bounded R.K R.ι (Fin (D.p + D.q)) (o₀.Re.ref (some (τ, p))) (fun k => R.x 1 (τ, k)) (Finset.Iic p)
+    refine _root_.GlobalTheory.CompanionTheory.Ar.CancelBound.log_metrics_bounded R.K R.ι (Fin (D.p + D.q)) (o₀.Re.ref (some (τ, p))) (fun k => R.x 1 (τ, k)) (Finset.Iic p)
       (o₀.Re.ref_smooth _) (fun k => R.x_smooth _ _) ?_
     rw [o₀.fund_deg]
     simp only [R.x_deg]
@@ -109,7 +117,7 @@ theorem comp_bound (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
       |Sys.phT (some r) t x| ≤ Cr := by
     rintro ⟨τ, p⟩
     by_cases hp : (p : ℕ) + 1 = D.p + D.q
-    · obtain ⟨C, hC⟩ := GlobalTheory.T.potential_bounded_psh_both _ _ Sys (some (τ, p)) (hflat τ p hp)
+    · obtain ⟨C, hC⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FlatBound.flat_phT_bounded _ _ Sys (some (τ, p)) (hflat τ p hp)
       exact ⟨C, fun _ => hC⟩
     · exact ⟨0, fun h => absurd h hp⟩
   choose Cc hCc using hc
@@ -131,23 +139,23 @@ theorem comp_bound (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
   obtain ⟨hs1, hst⟩ := le_min_iff.1 hs'
   obtain ⟨hsc0, hsct, hsll⟩ := scale_facts ht₀ ht₁ hs hst
   have hlog : 0 ≤ Real.log (1 / s) := Real.log_nonneg (by rw [le_div_iff₀ hs]; linarith)
-  obtain ⟨f, hf, hfp⟩ := GlobalTheory.T.root_origin_compare_second E H D l Xo c Y S S₀ M R Sys Fx o o₀ i hi hJ hJ₀
-  have hG := (GlobalTheory.T.root_origin_compare_third E H D l Xo c Y S S₀ M R Sys Fx o o₀ i hi)
+  obtain ⟨f, hf, hfp⟩ := _root_.GlobalTheory.CompanionTheory.Ar.JoinPts.join_points E H D l Xo c Y S S₀ M R Sys Fx o o₀ i hi hJ hJ₀
+  have hG := (_root_.GlobalTheory.CompanionTheory.Ar.Ht.ALine.main E H D l Xo c Y S S₀ M R Sys Fx o o₀ i hi)
   have hunit : ∀ j, Ht.GenUnit (Ht.joinOf M R i) (Ht.joinDeg M R j)
       ((fun j => j.elim 1 fun r => i (o₀.e r) / o.e r : Option (RootIx D) → M.Ω) j) := by
     rintro (_ | r)
     · exact hG.1
-    · refine GlobalTheory.T.root_model_flag_compare E H D l Xo c Y S S₀ M R o.𝔐 o₀.𝔐 o.Fl o₀.Fl i o.e o₀.e ?_ ?_ o.lines o₀.lines r
+    · refine _root_.GlobalTheory.CompanionTheory.Ar.Ht.CloseGen.genUnit_join E H D l Xo c Y S S₀ M R o.𝔐 o₀.𝔐 o.Fl o₀.Fl i o.e o₀.e ?_ ?_ o.lines o₀.lines r
       · rw [o.g_over, o₀.g_over, ← hi, ← Category.assoc, ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp]
       · intro s' k
         have hd : dualMap o.g = (dualMap i).comp (dualMap o₀.g) := by
           rw [← hi]
           ext a <;> simp [dualMap]
         rw [o.g_flag, o₀.g_flag, hd, ← Category.assoc, ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap_comp]
-  refine GlobalTheory.T.join_coords_unit_values _ _ M R i _ _ mu s _ _ f hf hunit ?_
+  refine _root_.GlobalTheory.CompanionTheory.Ar.OrArch.Ext.archBetween_of_off_form _ _ M R i _ _ mu s _ _ f hf hunit ?_
   intro w hw hwf val hval
   obtain ⟨x, x', z₁, z₂, ho₁, ho₂, hπ, hop, hc₁, hc₂, hi₁, hi₂⟩ := hfp w hw hwf
-  obtain ⟨hw₁, hw₂⟩ := (GlobalTheory.T.join_model_points_project _ _ M R i).2.2.1 ℂ w hw
+  obtain ⟨hw₁, hw₂⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.Ht.JoinFacts.main _ _ M R i).2.2.1 ℂ w hw
   have hw₁' : (fun p => w (Cmp.joinInl M.ι R.ι p)) ∈ mcPts M.P := by
     rw [← Small.LineModel.ptsOver_complex]; exact hw₁
   have hw₂' : (fun p => w (Cmp.joinInr M.ι R.ι p)) ∈ mcPts R.P := by
@@ -155,13 +163,13 @@ theorem comp_bound (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
   set w₁ := fun p => w (Cmp.joinInl M.ι R.ι p) with hw₁d
   set w₂ := fun p => w (Cmp.joinInr M.ι R.ι p) with hw₂d
   have hsing : ∀ r, ‖val (some r)‖ * (o₀.sing r).h w₂ = (o.sing r).h w₁ := fun r =>
-    GlobalTheory.T.root_origin_compare_first E H D l Xo c Y S S₀ M R Sys Fx o o₀ i hi z₁ z₂ w hw hc₁ hc₂ hi₁ hi₂ r _ (hval (some r))
+    _root_.GlobalTheory.CompanionTheory.Ar.SingCmp.sing_agree E H D l Xo c Y S S₀ M R Sys Fx o o₀ i hi z₁ z₂ w hw hc₁ hc₂ hi₁ hi₂ r _ (hval (some r))
   have hpos : ∀ r, 0 < ‖val (some r)‖ := fun r => by
     have h1 := (o.sing r).pos w₁ hw₁'.1
     have h2 := (o₀.sing r).pos w₂ hw₂'.1
     rw [← hsing r] at h1
     exact (mul_pos_iff_of_pos_right h2).1 h1
-  have hid := GlobalTheory.T.root_origin_point_compare E H D l Xo c Y S S₀ M R Sys Fx o o₀ x x' w₁ w₂ (fun r => ‖val (some r)‖) (Top.scale s) hsc0 hsct hw₁'
+  have hid := _root_.GlobalTheory.CompanionTheory.Ar.OrArch.defect_eq_regWeight_add_bracket E H D l Xo c Y S S₀ M R Sys Fx o o₀ x x' w₁ w₂ (fun r => ‖val (some r)‖) (Top.scale s) hsc0 hsct hw₁'
     hw₂' ho₁ ho₂ hπ hop fun r => ⟨hpos r, hsing r⟩
 
   have hA : Real.log (M.A.h w₁) - Real.log (R.A.h w₂) - Real.log ‖val none‖ = 0 := by
@@ -193,7 +201,7 @@ theorem comp_bound (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host 
     have hY : ∀ p : Fin (D.p + D.q), -∑ k ∈ Finset.Iic p, Dd (τ, k) =
         Sys.phT (some (τ, p)) (Top.scale s) (o.Re.π x) + (Real.log ((o₀.Re.ref (some (τ, p))).h w₂) +
           ∑ k ∈ Finset.Iic p, Real.log ((R.x 1 (τ, k)).h w₂)) := fun p => hid τ p
-    refine GlobalTheory.T.abel_summation_bound _ (mu τ) (fun p => Dd (τ, p)) (Creg + B₀) (2 * Creg * Real.log (1 / s) + B₀) (C₀ + B₀)
+    refine _root_.GlobalTheory.CompanionTheory.AbelBounds.abel_bound _ (mu τ) (fun p => Dd (τ, p)) (Creg + B₀) (2 * Creg * Real.log (1 / s) + B₀) (C₀ + B₀)
       (by positivity) (by positivity) (by positivity) (hmu τ) (fun p => ?_) (fun p _ => ?_) (fun p hp => ?_)
     · have := ((norm_le_pi_norm (mu τ) p).trans (norm_le_pi_norm mu τ)).trans hmu2
       simpa [Real.norm_eq_abs] using this

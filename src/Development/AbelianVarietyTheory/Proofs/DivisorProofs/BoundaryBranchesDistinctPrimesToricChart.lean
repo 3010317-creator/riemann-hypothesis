@@ -2,17 +2,20 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FromBaseAlt
 public import Development.AbelianVarietyTheory.Counterexamples.ModuliSurvey.PremisesOfProper
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ModuliModelUltrametricPoints
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalHomCompleteDVRPrincipalMaximalIdealStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalPushoutUnramifiedCharZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdClassGroupMk0EqOfLinearEquivPiStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SteinitzPiIdealsLinearEquivOfClassGroupProdStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.AdmissiblePadicIntMaximalIdeal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalHomCompleteDVRPrincipalMaximalIdeal
+public import Mathlib.RingTheory.RingHom.Flat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalPushoutUnramifiedCharZero
+public import Mathlib.RingTheory.ClassGroup.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdClassGroupMk0EqOfLinearEquivPi
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SteinitzPiIdealsLinearEquivOfClassGroupProd
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BoundaryFormBaseChangeDvr
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ConeAtOfToricChart
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnramifiedUniformisationPolarisedTripleStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FinitelyManyIsoClassesProjectiveNumberField
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnramifiedUniformisationPolarisedTriple
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PolarizationTransferModels
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PolynomialSupportHolds
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ModuliModelUltrametricPoints
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FinitelyManyIsoClassesProjectiveNumberField
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LinearUniformisationTorsionIsomorphism
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.DegenerationDataCoordsNeZeroLatticesIsomorphic
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LevelOfSplitAndLevelCoeffExist
@@ -99,10 +102,10 @@ theorem exists_equiv_comp_eq {X X' : Type} [AddCommGroup X] [Module O X] [Module
     e₁.trans ((eB.prodCongr eA).trans (piSumEquiv B A).symm)
   let E₂ : X ≃ₗ[O] ((i : ι ⊕ μ) → ((Sum.elim B'' A i : (Ideal O)⁰) : Ideal O)) :=
     e₂.trans ((eB''.prodCongr eA).trans (piSumEquiv B'' A).symm)
-  have h1 := GlobalTheory.T.prod_classGroup_mk0_eq_of_linearEquiv_pi O (ι ⊕ μ) (Sum.elim B A) (Sum.elim B'' A) ⟨E₁.symm.trans E₂⟩
+  have h1 := _root_.GlobalTheory.prod_classGroup_mk0_eq_of_pi_linearEquiv O (ι ⊕ μ) (Sum.elim B A) (Sum.elim B'' A) ⟨E₁.symm.trans E₂⟩
   rw [Fintype.prod_sum_type, Fintype.prod_sum_type] at h1
   simp only [Sum.elim_inl, Sum.elim_inr] at h1
-  obtain ⟨eBB⟩ := GlobalTheory.T.steinitz_pi_ideals_linearEquiv_of_classGroup_prod O ι B B'' (mul_right_cancel h1)
+  obtain ⟨eBB⟩ := _root_.GlobalTheory.SteinitzProd.steinitz O ι B B'' (mul_right_cancel h1)
   let κ : (LinearMap.ker ρ) ≃ₗ[O] (LinearMap.ker ρ') := eB.trans (eBB.trans eB''.symm)
   refine ⟨e₂.trans ((κ.symm.prodCongr (LinearEquiv.refl O X')).trans e₁.symm), fun x => ?_⟩
   rw [← he₁, ← he₂, LinearEquiv.trans_apply, LinearEquiv.trans_apply, LinearEquiv.apply_symm_apply]
@@ -245,7 +248,7 @@ theorem exists_two_traits {A : Type} [CommRing A] [CharZero k] (θ : A →+* Cha
   set a := algebraMap (ChartRing k m e) V
   set a' := algebraMap (ChartRing k m e) V'
   obtain ⟨B, _, _, g0, g0', hcomp, hg0, hgm, hgm'⟩ :=
-    GlobalTheory.T.exists_local_pushout_unramified_charZero A V V' (a.comp θ) (a'.comp θ) hf' (hcm.trans (hc.trans hcm'.symm)) hmap hmap' hch
+    _root_.GlobalTheory.UnramPushout.exists_local_pushout A V V' (a.comp θ) (a'.comp θ) hf' (hcm.trans (hc.trans hcm'.symm)) hmap hmap' hch
   set ϖ := g0 (a (bdParam k m e i))
   set ϖ' := g0' (a' (bdParam k m e i'))
   have hB : maximalIdeal B = Ideal.span {ϖ} := by
@@ -267,7 +270,7 @@ theorem exists_two_traits {A : Type} [CommRing A] [CharZero k] (θ : A →+* Cha
     exact mem_nonZeroDivisors_iff.2 ⟨key, fun x hx => key x (by rw [mul_comm]; exact hx)⟩
   have hchB : CharZero (ResidueField B) :=
     (RingHom.charZero_iff (ResidueField.map g0).injective).1 hch
-  obtain ⟨W, _, _, _, h, hW, hloc, hϖ⟩ := GlobalTheory.T.exists_localHom_completeDVR_principal_maximalIdeal B ϖ hB hreg hchB
+  obtain ⟨W, _, _, _, h, hW, hloc, hϖ⟩ := _root_.GlobalTheory.PrincDvr.exists_cDvr_localHom B ϖ hB hreg hchB
   have hmem : ∀ j, bdParam k m e j ∈ maximalIdeal (ChartRing k m e) := fun j =>
     (mem_maximalIdeal _).2 (prime_mvX (k := k) _).not_unit
   have hϖn : ¬ IsUnit ϖ := (mem_maximalIdeal ϖ).1 (hB ▸ Ideal.mem_span_singleton_self ϖ)
@@ -413,7 +416,7 @@ theorem branch_sep : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H :
 
   have hpol : GlobalTheory.LN.PolAt tW (jK W) := GlobalTheory.DatUniq.polAt_pull m1 (GlobalTheory.DatUniq.polAt_of_unif C.P) (jK W) κ hκ
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible W
-  obtain ⟨V', _, _, _, f, hV', hf, hfl, hfϖ, t', m', ⟨P'⟩⟩ := GlobalTheory.T.exists_unramified_uniformisation_polarisedTriple E H W hW ϖ hϖ tW hpol
+  obtain ⟨V', _, _, _, f, hV', hf, hfl, hfϖ, t', m', ⟨P'⟩⟩ := _root_.GlobalTheory.TorRef.exists_unif_unram E H W hW ϖ hϖ tW hpol
   obtain ⟨n3⟩ := GlobalTheory.TraitOrder.comp (GlobalTheory.Ex.UnifModel.spMap_comp (d := f.comp g) fun _ => rfl) m1 m'
   obtain ⟨n4⟩ := GlobalTheory.TraitOrder.comp (GlobalTheory.Ex.UnifModel.spMap_comp (d := f.comp g') fun _ => rfl) m2' m'
 

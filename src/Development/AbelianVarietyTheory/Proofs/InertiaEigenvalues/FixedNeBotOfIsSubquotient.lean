@@ -3,8 +3,9 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.DepthZeroInduction
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.EmbedsLevelZeroDepthZero
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSubquotientJacquetModuleOfSupercuspidalSupStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetProUnipotentRadicalFixedVectorsLiftStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSubquotientJacquetModuleOfSupercuspidalSup
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetProUnipotentRadicalFixedVectorsLift
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IwahoriProjSurjective
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
@@ -105,7 +106,7 @@ theorem isCompact_leviKOne {k : Type} [Field k] [ValuativeRel k] [TopologicalSpa
 theorem depthZeroInduction : GlobalTheory.Published.GeometricLemma → GlobalTheory.Published.BernsteinZelevinskyFiniteness →
     GlobalTheory.Published.ZelevinskyPolynomialRing → GlobalTheory.Published.DepthZeroInduction := by
   intro hG hBZ hZ k _ _ _ _ _ x s hs hfix
-  obtain ⟨r, u, e, hu, hsq⟩ := GlobalTheory.T.exists_subquotient_jacquetModule_of_supercuspidalSupport hG hBZ hZ k x s hs
+  obtain ⟨r, u, e, hu, hsq⟩ := _root_.GlobalTheory.CuspQuot.exists_isSubquotient_jac_of_hasSupport hG hBZ hZ k x s hs
   have hxs : IsSmooth x.rep := x.2.rep.smooth
   have h1 : fixed (piTensor fun a => (u a).rep) (leviKOne k fun a => Fin (u a).1) ≠ ⊥ :=
     fixed_piTensor_ne_bot _ _ fun a => hfix _ (hu a)
@@ -116,7 +117,7 @@ theorem depthZeroInduction : GlobalTheory.Published.GeometricLemma → GlobalThe
     have h4 : deltaHalf k (fun a => Fin (u a).1) g = 1 :=
       deltaHalf_of_mem_leviK fun a _ => StepData.KOne_le_KO (hg a trivial)
     simpa [jac, twist_apply, h4] using h3
-  obtain ⟨v, hv, rfl⟩ := GlobalTheory.T.jacquet_proUnipotentRadical_fixed_vectors_lift k e x.rep ((hBZ k).1 _ _ x.rep hxs x.2.rep.irr) y hy2
+  obtain ⟨v, hv, rfl⟩ := _root_.GlobalTheory.LocGL.ProRadOnto.exists_proRad_fixed_mk_eq k e x.rep ((hBZ k).1 _ _ x.rep hxs x.2.rep.irr) y hy2
   refine (Submodule.ne_bot_iff _).2 ⟨v, mem_fixed.2 fun g hg => mem_fixed.1 hv g (KOne_le_proRad e hg), ?_⟩
   rintro rfl
   exact hy0 rfl

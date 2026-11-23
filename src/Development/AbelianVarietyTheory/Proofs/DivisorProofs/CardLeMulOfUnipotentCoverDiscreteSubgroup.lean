@@ -1,10 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LocallyCompactSpaceAxis
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HaarFundDomainLeCardMulOfTranslateCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralConjNormalizerEqConstMulHaarStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeasureTranslateShellLeDivModulusStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PackingCountInequivalentDiscreteSubgroupStatement
+public import Mathlib.MeasureTheory.Group.FundamentalDomain
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HaarFundDomainLeCardMulOfTranslateCover
+public import Mathlib.MeasureTheory.Group.Measure
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralConjNormalizerEqConstMulHaar
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeasureTranslateShellLeDivModulus
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PackingCountInequivalentDiscreteSubgroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,15 +62,15 @@ theorem card_le_mul_of_unip_cover : ∀ (G : Type) [Group G] [TopologicalSpace G
   obtain ⟨U, hUc, hU1⟩ := exists_compact_mem_nhds (1 : G)
   have hU0 : μ U ≠ 0 := (lt_of_lt_of_le (isOpen_interior.measure_pos μ ⟨1, mem_interior_iff_mem_nhds.2 hU1⟩) (measure_mono interior_subset)).ne'
   have hUt : μ U ≠ ⊤ := hUc.measure_ne_top
-  obtain ⟨k, hk⟩ := GlobalTheory.T.packing_count_inequivalent_discreteSubgroup G Γ Λ μ D U hΛΓ hdisc hμ hD hUc
-  obtain ⟨B₀, hB₀t, hB₀⟩ := GlobalTheory.T.measure_translate_shell_le_div_modulus G N M Λ ν π DN DM H μ D hμ hD (W * U) (hW.mul hUc)
+  obtain ⟨k, hk⟩ := _root_.GlobalTheory.Packing.packing_count G Γ Λ μ D U hΛΓ hdisc hμ hD hUc
+  obtain ⟨B₀, hB₀t, hB₀⟩ := _root_.GlobalTheory.ResLine.modulus_mul_measure_shell_le G N M Λ ν π DN DM H μ D hμ hD (W * U) (hW.mul hUc)
   have hνV : ν {u : N | (u : G) ∈ V} ≠ ⊤ :=
     (H.closedN.isClosedEmbedding_subtypeVal.isCompact_preimage hV).measure_ne_top
   have hDN0 : ν DN ≠ 0 := GlobalTheory.ResLine.Inhab.semiLat_ne_zero H
   have hDNt : ν DN ≠ ⊤ := H.finN
   refine ⟨(ν {u : N | (u : G) ∈ V} * k * B₀ / (ν DN * μ U)).toReal, ENNReal.toReal_nonneg, ?_⟩
   intro a Y T haM haN hY hcov hTΓ hTsep hTQ
-  obtain ⟨κ, hκ⟩ := GlobalTheory.T.lintegral_conj_normalizer_eq_const_mul_haar G N ν a⁻¹ H.closedN H.haarN (fun u => by rw [inv_inv]; exact haN u)
+  obtain ⟨κ, hκ⟩ := _root_.GlobalTheory.SphEis.lintegral_conj_eq_const_mul G N ν a⁻¹ H.closedN H.haarN (fun u => by rw [inv_inv]; exact haN u)
   let S : Set G := (Q : Set G) * (a • (W * U))
   have hSc : IsClosed S := hQ.mul_right_of_isCompact ((hW.mul hUc).smul a)
   have hSm : MeasurableSet S := hSc.measurableSet
@@ -92,7 +94,7 @@ theorem card_le_mul_of_unip_cover : ∀ (G : Type) [Group G] [TopologicalSpace G
     have e : m * a = a * m := (haM m hm).symm
     simp only [smul_eq_mul, mul_assoc]
     rw [← mul_assoc m a c, e, mul_assoc a m c]
-  have hcover := GlobalTheory.T.haar_fundDomain_le_card_mul_of_translateCover G N Λ ν DN a⁻¹ κ V Y H.haarN H.domN hV hκ hY fun u hu => by
+  have hcover := _root_.GlobalTheory.SphEis.measure_fund_le_card_mul_of_cover G N Λ ν DN a⁻¹ κ V Y H.haarN H.domN hV hκ hY fun u hu => by
     obtain ⟨γ, hγ, hγN, y, hy, w, hw, e⟩ := hcov u hu
     exact ⟨γ, hγ, hγN, y, hy, w, hw, by rw [inv_inv]; exact e⟩
   have key : ν DN * (T.card * μ U) ≤ Y.card * (ν {u : N | (u : G) ∈ V} * k * B₀) := calc

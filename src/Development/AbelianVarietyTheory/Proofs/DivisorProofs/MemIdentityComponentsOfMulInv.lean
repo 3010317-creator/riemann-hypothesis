@@ -1,8 +1,9 @@
 module
 
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdentityComponentsSmoothGroupSchemeMulMemStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvMemConnectedComponentInFibreStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdentityComponentsSmoothGroupSchemeMulMem
+public import Mathlib.AlgebraicGeometry.Pullbacks
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvMemConnectedComponentInFibre
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -67,13 +68,13 @@ theorem mem_identityComponents_of_mul_inv :
     rw [← Scheme.Hom.comp_apply, ← Scheme.Hom.comp_apply, Over.w, Over.w]
   have zf := hU _ hf hbf
   have zm := hU _ hm hbm
-  have zi := GlobalTheory.T.inv_mem_identity_component_fibre S G _ zf
+  have zi := _root_.GlobalTheory.inv_mem_connectedComponentIn_fibre S G _ zf
   set φ : G ⊗ G ⟶ G ⊗ G := lift (fst G G ≫ ι[G]) μ[G] with hφ
   have e1 : (fst G G).left (φ.left w) = (ι[G]).left ((fst G G).left w) := by
     rw [← Scheme.Hom.comp_apply, ← Scheme.Hom.comp_apply, ← Over.comp_left, ← Over.comp_left, hφ, lift_fst]
   have e2 : (snd G G).left (φ.left w) = (μ[G]).left w := by
     rw [← Scheme.Hom.comp_apply, ← Over.comp_left, hφ, lift_snd]
-  have key := GlobalTheory.T.identityComponents_smooth_groupScheme_mul_mem S G hs (φ.left w) (e1 ▸ zi) (e2 ▸ zm)
+  have key := _root_.GlobalTheory.IdCompMul.mul_mem S G hs (φ.left w) (e1 ▸ zi) (e2 ▸ zm)
   have e3 : (μ[G]).left (φ.left w) = (snd G G).left w := by
     rw [← Scheme.Hom.comp_apply, ← Over.comp_left, hφ, identityComponent_shear_mul]
   rwa [e3] at key

@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.SiegelToroidalIntegral
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrincipalSiegelObjectExistsCharZeroLiftStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrincipalSiegelObjectExistsCharZeroLift
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelPullbackIdCompCancel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -65,7 +65,7 @@ theorem dense_generic {A V : Type} [CommRing A] [CommRing V] [IsDomain V] (β : 
 
 theorem classifies_algClosed : ∀ (g n : ℕ), 1 ≤ g → 3 ≤ n → Odd n → ∀ F : SFam g n (zetaAway n), ∀ (K : Type) [Field K] [IsAlgClosed K] (β : cycAway n →+* K) (c : SiegPre g n (zetaAway n) (spMap β)), c.Principal → ∃ f : Sp K ⟶ F.X, f ≫ F.s = spMap β ∧ SiegPB c F.univ f := by
   intro g n hg hn hodd F K _ _ β c hc
-  obtain ⟨V, _, _, βV, π, cV, hinj, hcomp, hpr, hpb⟩ := GlobalTheory.T.principal_siegel_object_exists_charZero_lift g n hg hn hodd K β c hc
+  obtain ⟨V, _, _, βV, π, cV, hinj, hcomp, hpr, hpb⟩ := _root_.GlobalTheory.SiegLift0.exists_lift_domain g n hg hn hodd K β c hc
   obtain ⟨f, hf, hfpb⟩ := F.rep (Sp V) (spMap βV) cV inferInstance (dense_generic βV hinj) hpr
   refine ⟨spMap π ≫ f, ?_, GlobalTheory.SiegelPullComp.pb_comp hfpb hpb⟩
   rw [Category.assoc, hf, ← hcomp]

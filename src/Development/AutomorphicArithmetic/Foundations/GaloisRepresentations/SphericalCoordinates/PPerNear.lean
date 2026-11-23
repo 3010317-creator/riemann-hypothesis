@@ -2,8 +2,10 @@ module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SphericalCoordinates.DetOfCharpoly
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyPosDefHermFormNearZeroMatrixStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPeriodMapCompInjectiveRealLinearStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RiemannRelationConverseConjAffineStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHolPeriods
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPeriodMapCompInjectiveRealLinear
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RiemannRelationConverseConjAffine
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,9 +64,9 @@ theorem perNear_of : PerNear := by
   · intro b hb
     obtain ⟨h1, h2, h3⟩ := ht (co b) hb
     have hT : (co b)ᵀ * M₀ ∈ Tsp bar ρ := hco b
-    obtain ⟨hH, hF⟩ := T.riemann_relation_converse_conjAffine M₀ (co b) hHerm hdet hT.1 h1
+    obtain ⟨hH, hF⟩ := _root_.GlobalTheory.PeriodCoord.riemann_converse M₀ (co b) hHerm hdet hT.1 h1
     have hcomm := comm_of_mem_Tsp hP hIm hdet hT
-    refine T.isPeriodMap_comp_injective_realLinear D ρ P₀ (realMap 1 (co b)) (M₀ * (1 - (co b).map star * co b)⁻¹) hP
+    refine _root_.GlobalTheory.PELU.isPeriod_comp_realLinear D ρ P₀ (realMap 1 (co b)) (M₀ * (1 - (co b).map star * co b)⁻¹) hP
       (realMap_one_injective h2) ?_ hH h3 ?_
     · intro a x
       simp only [realMap_apply, Matrix.one_mulVec, Matrix.mulVec_add, star_mulVec_map,

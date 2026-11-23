@@ -2,14 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IdempotentMulAddOneSubInverse
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceSectionAddComplementMul
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsSchwartzBruhatHalfSplitDatumCompletedLatticeStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsThetaFunSplitPlaceSchroedingerModelStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceBaseVacuumDatumExistsUniqueStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceHermitianFramePropertiesStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLinearLawHalfVacuumStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLocalCharacterIsUnramifiedOfHeckeUnramStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilHomActionFixOfTrivialAtSplitPlaceStatement
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
+import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceHermitianFrameProperties
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilRepThetaDatumHalfEqSmul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -232,7 +233,7 @@ theorem extFun_lin (α : Frame p S n') (β : Frame p T n) (Ψ Ψ' : Matrix n n' 
   split_ifs <;> simp
 
 theorem detFrame (β : Frame p S n) (g : GL n k) : IsDetAt p.e S (β.gl g) (idl p (Matrix.GeneralLinearGroup.det g)) := by
-  obtain ⟨x, hx, hpx⟩ := (GlobalTheory.T.splitPlaceHermitianFrame_properties D k p S n β).2.2.2.2.2 g
+  obtain ⟨x, hx, hpx⟩ := (_root_.GlobalTheory.FrameAt.frame_facts D k p S n β).2.2.2.2.2 g
   have he : p.e * p.e = p.e := p.split.1
   have e1 : ((Matrix.GeneralLinearGroup.det g : kˣ) : k) = p.pr x := by rw [hpx]; rfl
   unfold IsDetAt

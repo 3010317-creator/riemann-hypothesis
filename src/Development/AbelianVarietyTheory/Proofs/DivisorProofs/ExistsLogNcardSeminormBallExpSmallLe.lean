@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CharZeroFunctionField
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EncardSeminormBallPowLeRadiusChangeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EncardSeminormBallPowLeRadiusChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -75,7 +75,7 @@ theorem log_ncard_ball_exp_le : ∀ (G : Type) [AddCommGroup G] (Λ : ℕ → Ad
   have hQ4 : (Q : ℝ) ≤ 4 * R := by
     have := Nat.ceil_lt_add_one (show (0 : ℝ) ≤ 2 * R + 1 by linarith)
     linarith
-  have key := GlobalTheory.T.encard_seminormBall_pow_le_radius_change G (Λ m) (B m) (hB m) R Q e hR1 hQ (hfin m R)
+  have key := _root_.GlobalTheory.VolBr.encard_ball_pow_le G (Λ m) (B m) (hB m) R Q e hR1 hQ (hfin m R)
   have mono : ∀ r s : ℝ, r ≤ s → B m r ⊆ B m s := by
     intro r s hrs x hx
     have := (hB m).sub_mem r (s - r) x 0 hx ((hB m).zero_mem _ (by linarith))

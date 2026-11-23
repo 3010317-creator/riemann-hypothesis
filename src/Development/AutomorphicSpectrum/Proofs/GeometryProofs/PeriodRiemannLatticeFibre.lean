@@ -2,9 +2,10 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUniqueLeftBasisCoordsAdicCompletion
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FamilyPeriodRiemannLatticeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FibreLatticeBaseChangeConjStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsRiemannLatticeOfPeriodStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FamilyPeriodRiemannLattice
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FibreLatticeBaseChangeConj
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsEigFrames
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsRiemannLatticeOfPeriod
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -196,15 +197,15 @@ theorem period_lattice_fibre_and_conj : ∀ (E : Type) [Field E] [NumberField E]
   intro E _ _ _ H D l Xo σ g ty FU i P hty hP
   have hty' : IsTypeFn H (FU.Di i).p (FU.Di i).q ty := by
     rw [(FU.sig i).1, (FU.sig i).2]; exact hty
-  obtain ⟨R, hRP, hRf, -, hrk⟩ := GlobalTheory.T.exists_riemann_lattice_of_period E H (FU.Di i) g ty P hty' hP
+  obtain ⟨R, hRP, hRf, -, hrk⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.riemLat_of_period E H (FU.Di i) g ty P hty' hP
   have hF : FibreLat Xo.univ.t (FU.u i P) R :=
-    GlobalTheory.T.family_period_riemann_lattice E H D l Xo σ g ty FU i R P 1 hP hRf (by simp) (fun x => by simp [hRP]) Empty
+    _root_.GlobalTheory.CompanionTheory.Ar.Cusp.FibreAtPeriod.fibreLatVec_of_period E H D l Xo σ g ty FU i R P 1 hP hRf (by simp) (fun x => by simp [hRP]) Empty
       (fun e => e.elim) (fun e => e.elim) (fun e => e.elim)
   refine ⟨⟨R, hRf, hF, fun s => ?_⟩, ⟨conjLat R, ?_, ?_, fun s => ?_⟩⟩
   · rw [hrk s, (FU.sig i).1, (FU.sig i).2]
   · show -R.form = _
     rw [hRf]
-  · exact (GlobalTheory.T.fibre_lattice_base_change_conj E H Xo.X Xo.X Xo.univ.t Xo.univ.t (𝟙 _) g _ R (conjLat R) (FU.u i P)).2
+  · exact (_root_.GlobalTheory.CompanionTheory.Ar.Cusp.FibreMove.fibreLat_move E H Xo.X Xo.X Xo.univ.t Xo.univ.t (𝟙 _) g _ R (conjLat R) (FU.u i P)).2
       (fun _ => rfl) rfl (fun _ _ => rfl) hF
   · have h1 : Module.finrank ℂ (eigSp (conjLat R).B (s.comp (algebraMap (𝓞 E) E))) =
         Module.finrank ℂ (eigSp R.B (((starRingEnd ℂ).comp s).comp (algebraMap (𝓞 E) E))) :=

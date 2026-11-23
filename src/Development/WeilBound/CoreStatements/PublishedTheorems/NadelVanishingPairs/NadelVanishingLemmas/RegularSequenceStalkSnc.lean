@@ -3,9 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsEtCoord
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import ReciprocityTheory.AnalyticForms.RegularLocalRings.FinalTheorems
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.FinrankKaehlerAffineChartStatement
+public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.FinrankKaehlerAffineChart
 public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.FinrankKaehlerResidueField
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.RegularLocalDifferentialsLinearIndependent
+public import Mathlib.RingTheory.KrullDimension.Basic
+public import Mathlib.RingTheory.Smooth.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RegularLocalDifferentialsBasis
 public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.ResidueFieldFormallySmooth
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -135,7 +137,7 @@ theorem relSnc_of_regular_params : ∀ (k : Type) [Field k] [PerfectField k] (X 
     exact ⟨V, hV, hxV, fun i y hy => Set.mem_iInter.1 (hVW hy) i⟩
   letI iBK : Algebra Γ(X, U) (IsLocalRing.ResidueField (X.presheaf.stalk x)) :=
     ((IsLocalRing.residue (X.presheaf.stalk x)).comp (X.presheaf.germ U x hxU).hom).toAlgebra
-  refine GlobalTheory.T.finrank_kaehler_affine_chart k X f d s L σ U c hUc x (IsLocalRing.ResidueField (X.presheaf.stalk x)) hUa hxU ?_ ?_
+  refine _root_.GlobalTheory.LogPair.ChartPt.exists_chart k X f d s L σ U c hUc x (IsLocalRing.ResidueField (X.presheaf.stalk x)) hUa hxU ?_ ?_
   · intro a
     rw [X.mem_basicOpen a x hxU]
     change ¬ IsLocalRing.residue _ ((X.presheaf.germ U x hxU).hom a) = 0 ↔ _
@@ -147,7 +149,7 @@ theorem relSnc_of_regular_params : ∀ (k : Type) [Field k] [PerfectField k] (X 
   haveI : IsScalarTower k Γ(X, U) (X.presheaf.stalk x) := IsScalarTower.of_algebraMap_eq' rfl
   haveI : IsScalarTower Γ(X, U) (X.presheaf.stalk x) (IsLocalRing.ResidueField (X.presheaf.stalk x)) := IsScalarTower.of_algebraMap_eq' rfl
   haveI := GlobalTheory.T.residue_field_formally_smooth k X f U x hxU hx
-  have hli := GlobalTheory.T.regular_local_differentials_linearIndependent k (X.presheaf.stalk x) n t hrsp.1 hrsp.2
+  have hli := _root_.GlobalTheory.linearIndependent_tmul_D_of_regular_system k (X.presheaf.stalk x) n t hrsp.1 hrsp.2
   have htm : ∀ a, t a ∈ IsLocalRing.maximalIdeal (X.presheaf.stalk x) := fun a => hrsp.1 ▸ Ideal.subset_span ⟨a, rfl⟩
   let g : Fin s → X.presheaf.stalk x := fun i => X.presheaf.germ U x hxU (resG X (hUc i) ((σ i).f (c i)))
   have hg : ∀ i, g i = (X.presheaf.germ _ x (hc i)).hom ((σ i).f (c i)) := by

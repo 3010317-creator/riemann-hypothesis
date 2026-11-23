@@ -1,10 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPotential
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsUnitCoeffWittTiltRelationStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteLengthCokerOfSurjectiveModUniformizerStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PhiModuleHomShortExactSplitWittTiltStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TameSettingGroupActionCompatStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExistsGenIsUnitSub
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsUnitCoeffWittTiltRelation
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExistsEqAlgebraMapAddPowMul
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.InstTameDescentExponentDataPadicThree
+public import Mathlib.RingTheory.FiniteLength
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteLengthCokerOfSurjectiveModUniformizer
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExistsIterateDerivative
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PhiModuleHomShortExactSplitWittTilt
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TameSettingGroupActionCompat
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -104,7 +109,7 @@ theorem exists_right {l : ℕ} [Fact l.Prime] {a : ℕ} [NeZero a] {e : ℕ} {O 
       inclO l O (ϖ.iTot t K (M.submatrix id f).det) := fun f => by
     exact (RingHom.map_det φ (M.submatrix id f)).symm
   simp only [h2] at h1
-  obtain ⟨f, k, hk⟩ := GlobalTheory.T.exists_unit_coeff_wittTilt_relation t ϖ (fun f => (M.submatrix id f).det) _ h1 τ
+  obtain ⟨f, k, hk⟩ := _root_.GlobalTheory.ResidueUnitCoeff.exists_norm_coeff_eq_one t ϖ (fun f => (M.submatrix id f).det) _ h1 τ
   let N : Matrix m n (A O K) := fun i j => M i j τ
   have h3 : (M.submatrix id f).det τ = (N.submatrix id f).det :=
     RingHom.map_det (Pi.evalRingHom (fun _ : ZMod a => A O K) τ) (M.submatrix id f)
@@ -122,8 +127,8 @@ theorem isExactTriple_of_isSESLat_gen {l : ℕ} [Fact l.Prime] {a : ℕ} [NeZero
     {T₀ T₁ T₂ : LocLat G ℚ_[l] K O} {I₀ : Ident t ϖ P₀ T₀} {I₁ : Ident t ϖ P₁ T₁} {I₂ : Ident t ϖ P₂ T₂}
     {f : LatHom T₀.L T₁.L} {g : LatHom T₁.L T₂.L} {F : BK.Hom P₀ P₁} {H : BK.Hom P₁ P₂}
     (hS : IsSESLat (Qp := ℚ_[l]) f g) (hF : IsMapOf I₀ I₁ f F) (hH : IsMapOf I₁ I₂ g H) : IsExactTriple F H := by
-  obtain ⟨⟨Z, hZ⟩, ⟨Yw, hYw⟩⟩ := GlobalTheory.T.phiModuleHom_shortExact_split_wittTilt_alt t ϖ hS hF hH
-  have hex := GlobalTheory.T.tame_setting_group_action_compat t ϖ hS hF hH
+  obtain ⟨⟨Z, hZ⟩, ⟨Yw, hYw⟩⟩ := _root_.GlobalTheory.phiModuleHom_shortExact_split_wittTilt t ϖ hS hF hH
+  have hex := _root_.GlobalTheory.BKReal.SESExact.homW_exact_middle t ϖ hS hF hH
   let φ : (ZMod a → A O K) →+* OW l O := (inclO l O).toRingHom.comp (ϖ.iTot t K).toRingHom
   have hφ : Function.Injective φ := inclO_injective.comp (ϖ.iTot_injective t K)
   let ψ : ZMod a → (ZMod a → A O K) →+* K⟦X⟧ := fun τ =>
@@ -165,7 +170,7 @@ theorem isExactTriple_of_isSESLat_gen {l : ℕ} [Fact l.Prime] {a : ℕ} [NeZero
   · intro v hv
     constructor
     · intro hHv
-      refine (GlobalTheory.T.finiteLength_coker_of_surjective_mod_uniformizer O K l e a ι κ P₀ P₁ F).2 (fun τ => ⟨YF τ, cF τ, hYF τ, hkF τ, hFY τ⟩) v hv
+      refine (_root_.GlobalTheory.BK.Hom.finiteLength_coker_of_generic O K l e a ι κ P₀ P₁ F).2 (fun τ => ⟨YF τ, cF τ, hYF τ, hkF τ, hFY τ⟩) v hv
         (∏ τ, cF τ) (prod_mem fun τ _ => hcF τ) (Finset.prod_ne_zero_iff.2 fun τ _ => hne (hkF τ)) ?_
       let Yt : Matrix ι κ (ZMod a → A O K) := fun i j τ => ⟨YF τ i j, hYF τ i j⟩
       let gt : ZMod a → A O K := fun τ => ⟨cF τ, hcF τ⟩
@@ -240,7 +245,7 @@ theorem isExactTriple_of_isSESLat_gen {l : ℕ} [Fact l.Prime] {a : ℕ} [NeZero
       funext τ
       rw [Hom.app_apply, Hom.app_apply, Matrix.mulVec_mulVec, hHF τ, Matrix.zero_mulVec]
       rfl
-  · exact (GlobalTheory.T.finiteLength_coker_of_surjective_mod_uniformizer O K l e a κ μ P₁ P₂ H).1 fun τ => ⟨YH τ, cH τ, hYH τ, hkH τ, hHY τ⟩
+  · exact (_root_.GlobalTheory.BK.Hom.finiteLength_coker_of_generic O K l e a κ μ P₁ P₂ H).1 fun τ => ⟨YH τ, cH τ, hYH τ, hkH τ, hHY τ⟩
 
 theorem isExactTriple_of_isSESLat : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (ϖ : PiSys l e) (LL : FinExt l) [HasUnr a LL] [TameDescentExponentData ↥LL.1 l e a] (ι : Type) [Fintype ι] [DecidableEq ι] (κ : Type) [Fintype κ] [DecidableEq κ] (μ : Type) [Fintype μ] [DecidableEq μ] (P₀ : PhiMod ↥(OL LL) ↥LL.1 l e a ι) (P₁ : PhiMod ↥(OL LL) ↥LL.1 l e a κ) (P₂ : PhiMod ↥(OL LL) ↥LL.1 l e a μ) (T₀ T₁ T₂ : QLat LL) (I₀ : Ident (thetaW a LL) ϖ P₀ T₀) (I₁ : Ident (thetaW a LL) ϖ P₁ T₁) (I₂ : Ident (thetaW a LL) ϖ P₂ T₂) (f : LatHom T₀.L T₁.L) (g : LatHom T₁.L T₂.L) (F : GlobalTheory.BK.Hom P₀ P₁) (G : GlobalTheory.BK.Hom P₁ P₂), IsSESLat (Qp := ℚ_[l]) f g → IsMapOf I₀ I₁ f F → IsMapOf I₁ I₂ g G → IsExactTriple F G := by
   intro l _ a e _ _ ϖ LL _ _ ι _ _ κ _ _ μ _ _ P₀ P₁ P₂ T₀ T₁ T₂ I₀ I₁ I₂ f g F G hS hF hG

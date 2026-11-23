@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AevalRootEqZeroIff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjOfCharpolyLocalStatement
+public import Mathlib.FieldTheory.Separable
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjOfCharpolyLocal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteTwistedClassesCharpoly
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalRingExistsAevalOfCommuteSeparableStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalRingExistsAevalOfCommuteSeparable
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmField
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLinks.IntegralUnitaryConjugacyLatticeStatement
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLinks.SeparableIntegralModelAlmostAllStatement
@@ -83,7 +85,7 @@ theorem locConj [CompleteSpace L] {σ : L →+* L} {ϖ : L} {q : ℕ} (hσ : IsU
   set φ := (intL L).subtype with hφ
   have hv := hσ.2.1
   have hinv := hσ.1
-  obtain ⟨k, hk⟩ := GlobalTheory.T.exists_conj_of_charpoly_eq_of_separable_local (intL L) n Y.val Y'.val hc hs
+  obtain ⟨k, hk⟩ := _root_.GlobalTheory.ConjLocal.conj_of_charpoly_local (intL L) n Y.val Y'.val hc hs
   have hk' : Y' = k⁻¹ * Y * k := Units.ext (by rw [Units.val_mul, Units.val_mul]; exact hk)
   set g : GL (Fin n) L := bc φ k with hg
   set y := bc φ Y with hydef
@@ -133,7 +135,7 @@ theorem locConj [CompleteSpace L] {σ : L →+* L} {ϖ : L} {q : ℕ} (hσ : IsU
     apply Matrix.map_injective (f := φ) Subtype.val_injective
     show (T₀ * Y.val).map φ = (Y.val * T₀).map φ
     rw [Matrix.map_mul, Matrix.map_mul, hT₀, hYm, hTy]
-  obtain ⟨p, hp⟩ := GlobalTheory.T.localRing_exists_aeval_of_commute_separable (intL L) n Y.val T₀ hs hT₀c
+  obtain ⟨p, hp⟩ := _root_.GlobalTheory.LocalCommutant.exists_aeval_of_comm (intL L) n Y.val T₀ hs hT₀c
   have hTp : tU.val = aeval ym (p.map φ) := by
     change T = _
     rw [← hT₀, hp, ← hYm, GlobalTheory.UTr.aeval_map_map]

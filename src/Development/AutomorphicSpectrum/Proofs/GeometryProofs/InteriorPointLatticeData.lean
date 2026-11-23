@@ -7,8 +7,6 @@ public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ContDiffUnce
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueLinearLiftOfHolomorphicAbelianVariet
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.TorsionEqAndWeilIsOfIsHolTo
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.SmulPeriodMapMkZeroFstEqNegForm
-import Development.AbelianVarietyTheory.Proofs.ToricGeometry.TangentBijectionOfValues
-import Development.AbelianVarietyTheory.Proofs.ToricGeometry.TopLePreimageOfValAtNeZero
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ConnectedSpaceSpecOfIsLocalRing
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsDerivAt0OfIsPullback
 public import Development.AbelianVarietyTheory.Statements.HyperbolicHypotheses.HypothesesInhabitedHyperbolic
@@ -18,10 +16,13 @@ public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsExpCha
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.InteriorPointPolarised
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsDerivAt0CompLinMap
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.MemAbLocusIff
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PeriodRiemannLatticeFibreStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RiemannLatticeOverPointStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PeriodRiemannLatticeFibre
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RiemannLatticeOverPoint
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RingOfIntegersHomInjective
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TangentSpaceEquivHolUnif
+import Development.AbelianVarietyTheory.Proofs.ToricGeometry.TangentBijectionOfValues
+import Development.AbelianVarietyTheory.Proofs.ToricGeometry.TopLePreimageOfValAtNeZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -212,9 +213,9 @@ theorem exists_fibreLat_rank : Top.Given → ∀ (E : Type) [Field E] [NumberFie
   by_cases hρ : κ ρF = H.rt0
   · obtain ⟨FU⟩ := hN E H D l Xo (κ.comp j) g ty hD hρ hty
     obtain ⟨i, P, hP, hu⟩ := FU.onto p hσ
-    obtain ⟨⟨R, -, hF, hr⟩, -⟩ := GlobalTheory.T.period_riemann_lattice_fibre E H D l Xo (κ.comp j) g ty FU i P hty hP
+    obtain ⟨⟨R, -, hF, hr⟩, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.FamEx.period_lattice_fibre_and_conj E H D l Xo (κ.comp j) g ty FU i P hty hP
     refine ⟨κ, p, g, _, inferInstance, inferInstance, R, hO,
-      GlobalTheory.T.riemann_lattice_over_point E H D l Xo c Y S Ω K J y 𝔐 z κ p g _ _ hO (hu ▸ hF), fun s => ?_⟩
+      _root_.GlobalTheory.CompanionTheory.Ar.Cusp.FamEx.fibreLat_of_isOver E H D l Xo c Y S Ω K J y 𝔐 z κ p g _ _ hO (hu ▸ hF), fun s => ?_⟩
     obtain ⟨τ, hτ, hτρ⟩ := exists_emb_label E H l c κ s
     have h := hτρ ρF hρF
     rw [hτ, hr τ]
@@ -232,14 +233,14 @@ theorem exists_fibreLat_rank : Top.Given → ∀ (E : Type) [Field E] [NumberFie
       rw [Category.assoc, hσ]
       exact (Chg.spMap_comp' _ _).symm
     obtain ⟨i, P, hP, hu⟩ := FU.onto _ hσ₁
-    obtain ⟨-, R, -, hF, hr⟩ := GlobalTheory.T.period_riemann_lattice_fibre E H D l Xo _ g ty FU i P hty hP
+    obtain ⟨-, R, -, hF, hr⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.FamEx.period_lattice_fibre_and_conj E H D l Xo _ g ty FU i P hty hP
     have hcc : spMap (starRingEnd ℂ) ≫ spMap (starRingEnd ℂ) ≫ p = p := by
       have e : (starRingEnd ℂ).comp (starRingEnd ℂ) = RingHom.id ℂ := RingHom.ext fun x => by simp
       rw [← Category.assoc, ← Chg.spMap_comp', e]
       simp [spMap]
     rw [hu, hcc] at hF
     refine ⟨κ, p, g, _, inferInstance, inferInstance, R, hO,
-      GlobalTheory.T.riemann_lattice_over_point E H D l Xo c Y S Ω K J y 𝔐 z κ p g _ _ hO hF, fun s => ?_⟩
+      _root_.GlobalTheory.CompanionTheory.Ar.Cusp.FamEx.fibreLat_of_isOver E H D l Xo c Y S Ω K J y 𝔐 z κ p g _ _ hO hF, fun s => ?_⟩
     obtain ⟨τ, hτ, hτρ⟩ := exists_emb_label E H l c κ s
     have h := hτρ ρF hρF
     rw [hτ, hr τ]

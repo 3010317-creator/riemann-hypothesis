@@ -7,11 +7,12 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsRep
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCoeffExtRationalFormsValuesFieldStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsNumberFieldHeckeCharacterSqrtNormValues
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsOmegaField
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InverseSelfDualFrameStandardSpaceIntegralStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LawOfSquaresSelfDualSplitLatticeStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CoversAtOverField
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LocKIntMem
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PbEqOfTie
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InverseSelfDualFrameStandardSpaceIntegralStatement
+import Formalism.LocalToGlobal.ProjectiveLattices.ThClass
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LawOfSquaresSelfDualSplitLattice
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFirstOfSecond
 import Formalism.LocalToGlobal.IndefiniteReal.FWExist
 import Formalism.LocalToGlobal.ProjectiveLattices.LevelPb
@@ -257,7 +258,7 @@ theorem pinsOverL : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 : Type
     simp only [Ranks.sigW, Ranks.r]
     omega
   choose epF hepF using fun t => (GlobalTheory.ClassTieCompare.exists_epIs_iff (n := (Vc D i).rank) (Dw := T.Q.Dw ((i : ℕ) + 1))
-    (bad t) (B t)).2 fun L cc g d => GlobalTheory.T.law_of_squares_selfDual_splitLattice _ _ _ _ hodd L cc g.1 g.2.2 d.1 d.2
+    (bad t) (B t)).2 fun L cc g d => _root_.GlobalTheory.LawOfSquares.law_of_squares _ _ _ _ hodd L cc g.1 g.2.2 d.1 d.2
   choose φ hφis using fun t => exists_phi_over R i hR hV t (iotaW T i) (latEmb_iotaW T hT i) (O i).c'.F hc'
     (hhalf t).2.2 (Mfr (dδ t).l₂) fun PP hPP c hc => by
     have hM : (dδ t).l₂.Mb ≤ PP.asIdeal := by

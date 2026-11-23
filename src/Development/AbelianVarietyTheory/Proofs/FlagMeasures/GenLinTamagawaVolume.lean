@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.SameKindIsometric
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GlNormOneAdelicQuotientVolumeOneEqResidueStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GlNormOneAdelicQuotientVolumeSiegelStepStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OneLeDedekindZetaRealValueAndLeZetaPowStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DefClassNum
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GlNormOneAdelicQuotientVolumeOneEqResidue
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GlNormOneAdelicQuotientVolumeSiegelStep
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OneLeDedekindZetaRealValueAndLeZetaPow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,13 +53,13 @@ namespace GlobalTheory.FlagMeas
 theorem genLinVolume : GenLinVolume := by
   intro E _ _ hE j hj
   induction j, hj using Nat.le_induction with
-  | base => simpa using GlobalTheory.T.glNormOneAdelicQuotientVolume_one_eq_residue E hE
+  | base => simpa using _root_.GlobalTheory.NormOneVol.glVol_one E hE
   | succ j hj ih =>
     have hv : 0 ≤ Formalism.HermitianLatticesTheory.vInv E := by
       unfold Formalism.HermitianLatticesTheory.vInv
       positivity
-    have hz : 0 ≤ zetaE E (j + 1) := zero_le_one.trans (GlobalTheory.T.one_le_dedekindZetaRealValue_and_le_zeta_pow E (j + 1) (by omega)).1
-    have h := GlobalTheory.T.glNormOneAdelicQuotientVolume_siegel_step E hE (j + 1) (by omega)
+    have hz : 0 ≤ zetaE E (j + 1) := zero_le_one.trans (_root_.GlobalTheory.DedekindZetaBound.one_le_zetaE_and_le E (j + 1) (by omega)).1
+    have h := _root_.GlobalTheory.FlagBase.SiegelStep.glVol_step E hE (j + 1) (by omega)
       (by rw [Nat.add_sub_cancel, ih]; exact ENNReal.ofReal_lt_top)
     rw [h, Nat.add_sub_cancel, ih, ← ENNReal.ofReal_mul' (mul_nonneg (pow_nonneg hv _) hz),
       Finset.prod_Icc_succ_top (by omega)]

@@ -2,7 +2,7 @@ module
 
 public import Formalism.RealPlaceAnalysis.Complexify
 public import Formalism.HarderNarasimhan.StatementPl
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIsometricRealisationOfSublatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIsometricRealisationOfSublattice
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LatticePairVolumeBoundsStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.QuotientLatticeRealizedIsometricallyStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -92,7 +92,7 @@ theorem subquot_cover : ∀ (K : Type) [Field K] [NumberField K] [StarRing K] [_
   obtain ⟨m, q, X', Q, hm, hX', hQ, hqf, -, hQS, hqS, hspan, hN⟩ :=
     GlobalTheory.T.quotient_lattice_realized_isometrically K n X A S hX hA hSat
   obtain ⟨r, e, X'', P, B, hr, hX'', hP, hPe, hB, hBspan, heB, hRB, hlB⟩ :=
-    GlobalTheory.T.exists_isometric_realisation_of_sublattice' K n X R hX hR
+    _root_.GlobalTheory.exists_isometric_realisation_of_sublattice K n X R hX hR
   obtain ⟨φ', hφ'B, hbound⟩ := GlobalTheory.T.lattice_pair_volume_bounds K m r X' X''
     (A.map ((Matrix.toLin' q).restrictScalars (𝓞 K))) B lo hi hX' hX'' (hA.map _) hB hspan
     hBspan hlo hhi

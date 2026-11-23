@@ -5,8 +5,10 @@ public import Formalism.SharpRestriction.CuspSpanNormBounds.PExtra
 public import Development.AbelianVarietyTheory.Statements.DiscreteSeriesShifts.ThmBpDS
 public import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.FamilyStatementOfAbsAndVandermonde
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DegVand
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FormalDegreeRatioEqHarishChandraRatioLargeGapStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GapNearPlaceParameterHalfNoncompactGapStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.NormalizedLocalScale
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FormalDegreeRatioEqHarishChandraRatioLargeGap
+public import Formalism.HermitianCurvature.BesselNonvanishingReduction
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GapNearPlaceParameterHalfNoncompactGap
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SizesLargeOfPowerBounds
 public import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.FamilyStatementOfItemsFourSeven
 import Mathlib.Algebra.Order.Floor.Extended
@@ -74,7 +76,7 @@ theorem vandLine (hH : GlobalTheory.GapIn.Hyp) (Cn m₀ : ℝ)
     le_trans (Formalism.MainNotions.BridgeLemma.l1_distance_sign_step _ _ s hs I) (by linarith)
   obtain ⟨g1, gok⟩ := hnear D large₂ C' Cl Cg cb Cu cT CT C0 hZ hCl hm τ lam' h1
   obtain ⟨g2, _⟩ := hnear D large₂ C' Cl Cg cb Cu cT CT C0 hZ hCl hm τ _ h2
-  exact GlobalTheory.T.formalDegree_ratio_eq_harishChandra_ratio_largeGap hH D W lam' (lam' + s • epsI I) A A' _ hA hA' g1 g2 gok
+  exact _root_.GlobalTheory.GapDegreeRatio.deg_ratio hH D W lam' (lam' + s • epsI I) A A' _ hA hA' g1 g2 gok
 
 theorem degI_along_family : Formalism.HermitianLatticesTheory.SiegelMassRatio → GlobalTheory.GapIn.Hyp → BpJoin.ThmBpDS →
     ∀ Cg cb Cu cT CT C0 C1 : ℝ, ∃ C thr : ℝ, 0 ≤ C ∧ ∀ (eps : ℝ) (Fm : FamP eps), thr ≤ sC' Fm → thr ≤ sCl Fm →
@@ -82,7 +84,7 @@ theorem degI_along_family : Formalism.HermitianLatticesTheory.SiegelMassRatio �
         OwnEv Fm fun C' Cl x i => Formalism.MainNotions.BridgeLemma.DegreeRatioUnitShiftBound (Fm.D x i) (Fm.L x i) C' Cl Cg cb Cu cT CT C0 Cn C1 C := by
   intro _ hH _ Cg cb Cu cT CT C0 C1
   refine ⟨1, 1000, zero_le_one, fun eps Fm _ hCl _ Cn => ?_⟩
-  obtain ⟨m₀, hnear⟩ := GlobalTheory.T.gap_near_placeParameter_half_noncompactGap Cn
+  obtain ⟨m₀, hnear⟩ := _root_.GlobalTheory.GapNear.gap_near Cn
   obtain ⟨x0, hx0⟩ := GlobalTheory.family_sizes_eventually_large eps Fm m₀
   refine ⟨x0, fun x hx i => ?_⟩
   exact Formalism.MainNotions.BridgeLemma₂.degree_ratio_one_of_vandermonde _ _ _ _ _ _ _ _ _ _ _ _

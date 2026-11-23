@@ -2,18 +2,23 @@ module
 
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.FineJacquetModules.SegDefs
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IrreducibleAdmissibleGL
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DerivativeCuspidalPairLengthStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EquivOfMultiplicityOneUniqueFactorStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsSegmentRepresentationStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IrreducibleSubquotientCuspidalPermutationStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IrreducibleSubquotientJacquetSegmentStatement
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.LSegJacquet
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DerivativeCuspidalPairLength
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsUnitarisableOfCharIff
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EquivOfMultiplicityOneUniqueFactor
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsSegmentRepresentation
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IrreducibleSubquotientCuspidalPermutation
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IrreducibleSubquotientJacquetSegment
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicitySubquotientLe
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegmentRepSplitIntertwiner
+public import Mathlib.Order.Fin.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StrictAntiOfTwoExceptions
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityCuspidalProductStatement
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityPos
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicitySubquotientLeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegmentRepSplitIntertwinerStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegmentTermInjectiveStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StrictAntiOfTwoExceptionsStatement
-import Development.AutomorphicSpectrum.Proofs.GlobalProofs.JacquetModuleFiniteLengthStatement
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegmentTermInjective
+import Development.AutomorphicSpectrum.Proofs.GlobalProofs.JacquetModuleFiniteLength
 import GroundTheory.LocalFields.PadicLogSeries
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -58,7 +63,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
 
 @[expose] public section
 
@@ -134,7 +138,7 @@ theorem word_eq_decreasing {X : Type*} (l : ℕ) (hl : 3 ≤ l) (t : ℕ → X)
     have h4 := jb.2
     rw [hwf, hwf]
     omega
-  have hanti : StrictAnti w := GlobalTheory.T.strict_anti_of_two_exceptions l hl w hw i i' hwi hwi' h1 h2
+  have hanti : StrictAnti w := _root_.GlobalTheory.CompanionTheory.Segments.shufcomb l hl w hw i i' hwi hwi' h1 h2
   let φ : Fin l → Fin l := fun a => Fin.rev ⟨w a, hw a⟩
   have hφ : StrictMono φ := fun a b hab => Fin.rev_lt_rev.2 (Fin.lt_def.2 (hanti hab))
   have h3 : φ a = a := le_antisymm hφ.apply_le hφ.le_apply
@@ -182,16 +186,16 @@ theorem dec_segHigh (Δ : Segment k) (a : ℕ) (h1 : a < Δ.len) (j : Fin (segHi
 
 theorem exists_class (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (Γ : Segment k) :
     ∃ u : IrrGL (k := k), u.1 = Γ.deg ∧ IsLSeg Γ u.rep := by
-  obtain ⟨τ, hd, hc⟩ := GlobalTheory.T.exists_segment_representation hA Γ
+  obtain ⟨τ, hd, hc⟩ := _root_.GlobalTheory.CompanionTheory.SegExists.exists_isLSeg hA Γ
   exact ⟨IrrGL.of τ.ρ τ.smooth τ.irr, rfl, hd, hc.of_equiv (IrrGL.equivOf _ _ _) (Representation.Equiv.refl _)⟩
 
 theorem fine_tensor (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (Γ : Segment k) (hF : FineJac Γ) (u : IrrGL (k := k))
     (hu : IsLSeg Γ u.rep) (hs : ∑ i, (dec Γ i).1 = u.1) :
     Nonempty ((jac (stdBlocks (fun i => (dec Γ i).1) hs) u.rep).Equiv (piTensor fun i => (dec Γ i).rep)) := by
   have hJ : HasFiniteLength (jac (stdBlocks (fun i => (dec Γ i).1) hs) u.rep) :=
-    GlobalTheory.T.jacquet_module_finite_length k _ _ _ _ _ _ u.2.rep.smooth (hasFiniteLength_of_isIrreducible u.2.rep.irr)
-  exact GlobalTheory.T.equiv_of_multiplicity_one_unique_factor _ _ (GlobalTheory.CompanionTheory.FrobJm.piTensor_rep_isIrreducible hA (dec Γ)) hJ ((hF u.rep hu).1 hs)
-    fun X _ _ ρ hi hq => GlobalTheory.T.irreducible_subquotient_jacquet_segment hA Γ hF u hu hs X ρ hi hq
+    _root_.GlobalTheory.CompanionTheory.JacquetBridge.jacquetFiniteLength k _ _ _ _ _ _ u.2.rep.smooth (hasFiniteLength_of_isIrreducible u.2.rep.irr)
+  exact _root_.GlobalTheory.CompanionTheory.FineStep.nonempty_equiv_of_jhMult_eq_one _ _ (GlobalTheory.CompanionTheory.FrobJm.piTensor_rep_isIrreducible hA (dec Γ)) hJ ((hF u.rep hu).1 hs)
+    fun X _ _ ρ hi hq => _root_.GlobalTheory.CompanionTheory.SegFineCons.equiv_piTensor_dec hA Γ hF u hu hs X ρ hi hq
 
 theorem shuffle_step (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (Δ : Segment k) {N : ℕ} {V : Type} [AddCommGroup V]
     [Module ℂ V] (π : Representation ℂ (GL (Fin N) k) V) (hπ : IsLSeg Δ π) (a : ℕ) (h0 : 0 < a) (h1 : a < Δ.len)
@@ -212,11 +216,11 @@ theorem shuffle_step (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (Δ :
     rw [Fin.sum_univ_two]
     show u.1 + v.1 = N
     rw [hu1, hv1, e1, e2, ← Nat.add_mul, Nat.add_sub_cancel' h1.le, hN]
-  obtain ⟨φ, hφ⟩ := GlobalTheory.T.segment_rep_split_intertwiner hA Δ π hπ a h0 h1 u v hu hv hd
-  have hle := GlobalTheory.T.jacquet_multiplicity_subquotient_le y hy π _ (isSmooth_prodIrr _ hd) (.of_surjective φ hφ)
+  obtain ⟨φ, hφ⟩ := _root_.GlobalTheory.CompanionTheory.SegQuotTwo.quottwo hA Δ π hπ a h0 h1 u v hu hv hd
+  have hle := _root_.GlobalTheory.CompanionTheory.JmMono.jm_le_of_isSubquotient y hy π _ (isSmooth_prodIrr _ hd) (.of_surjective φ hφ)
   have hs : ∑ i, (dec (segLow Δ a h0) i).1 = u.1 := by rw [sum_dec_fst, hu1]
   have ht : ∑ i, (dec (segHigh Δ a h1) i).1 = v.1 := by rw [sum_dec_fst, hv1]
-  exact GlobalTheory.T.derivative_cuspidal_pair_length hA u v _ _ hs ht Δ.d (fun _ => rfl) (fun _ => rfl) (isCusp_dec _) (isCusp_dec _)
+  exact _root_.GlobalTheory.CompanionTheory.Shuffle2.shuffle2 hA u v _ _ hs ht Δ.d (fun _ => rfl) (fun _ => rfl) (isCusp_dec _) (isCusp_dec _)
     (fine_tensor hA _ hlow u hu hs) (fine_tensor hA _ hhigh v hv ht) hd y hy hyc (h.trans hle)
 
 theorem fineJac_step (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (Δ : Segment k) (h3 : 3 ≤ Δ.len)
@@ -252,7 +256,7 @@ theorem fineJac_step (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (Δ :
       rfl
     have hinj : ∀ a b, a < Δ.len → b < Δ.len →
         Δ.first.nu ((a : ℕ) : ℂ) = Δ.first.nu ((b : ℕ) : ℂ) → a = b := fun a b ha hb hab =>
-      congrArg Fin.val (GlobalTheory.T.segment_term_injective hA Δ (a₁ := ⟨a, ha⟩) (a₂ := ⟨b, hb⟩) hab)
+      congrArg Fin.val (_root_.GlobalTheory.CompanionTheory.SegTerm.term_injective hA Δ (a₁ := ⟨a, ha⟩) (a₂ := ⟨b, hb⟩) hab)
     have z₁ : 0 < (segLow Δ 1 one_pos).len := one_pos
     have z₂ : 0 < (segHigh Δ (Δ.len - 1) hl2).len := by
       show 0 < Δ.len - (Δ.len - 1)
@@ -286,7 +290,7 @@ theorem fineJac_step (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (Δ :
       show _ = Δ.first.nu (((Fin.rev (Fin.cast rfl a) : Fin Δ.len) : ℕ) : ℂ)
       rw [e₂]
   refine ⟨fun hd => ?_, shape⟩
-  have hinj := GlobalTheory.T.segment_term_injective hA Δ
+  have hinj := _root_.GlobalTheory.CompanionTheory.SegTerm.term_injective hA Δ
   have hset : {e : Fin Δ.len ≃ Fin Δ.len | ∀ a, dec Δ a = Δ.term (e a)} = {Fin.revPerm} := by
     ext e
     simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
@@ -296,10 +300,10 @@ theorem fineJac_step (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (Δ :
     · rintro rfl a
       rfl
   have hup : jm (dec Δ) hd π ≤ 1 := by
-    refine (GlobalTheory.T.jacquet_multiplicity_subquotient_le (dec Δ) hd π _ (isSmooth_prodIrr _ hd0) hsub).trans ?_
+    refine (_root_.GlobalTheory.CompanionTheory.JmMono.jm_le_of_isSubquotient (dec Δ) hd π _ (isSmooth_prodIrr _ hd0) hsub).trans ?_
     rw [GlobalTheory.T.jacquet_multiplicity_cuspidal_product hA Δ.term (dec Δ) hd0 hd Δ.isCusp_term (isCusp_dec Δ), hset, Set.ncard_singleton]
     simp
-  obtain ⟨e, he, h1⟩ := GlobalTheory.T.irreducible_subquotient_cuspidal_permutation hA Δ.term hd0 Δ.isCusp_term π hsm hc.1 hsub
+  obtain ⟨e, he, h1⟩ := _root_.GlobalTheory.CompanionTheory.SegNcjm.exists_perm_one_le_jm hA Δ.term hd0 Δ.isCusp_term π hsm hc.1 hsub
   obtain ⟨h, hh⟩ := shape Δ.len _ he (fun a => Δ.isCusp_term _) h1
   have hfun : (fun a => Δ.term (e a)) = dec Δ := funext fun a => hh a
   rw [jm_congr hfun he hd] at h1

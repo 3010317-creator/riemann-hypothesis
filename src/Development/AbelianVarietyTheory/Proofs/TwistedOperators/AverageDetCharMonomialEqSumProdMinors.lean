@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdMinorsMemInv
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockDetCharInvariantsLeSpanProdMaximalMinorsStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRationalFockProjectionMaximalMinorsStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegralDetCharacterFockColumnSubstitutionEqZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryAverageKillsFockComplementRelInvariantsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockDetCharInvariantsLeSpanProdMaximalMinors
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRationalFockProjectionMaximalMinors
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegralDetCharacterFockColumnSubstitutionEqZero
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryAverageKillsFockComplementRelInvariants
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -142,14 +142,14 @@ theorem average_monomial_eq_sum_prodMinors : ∀ {ι : Type} [Fintype ι] (a d :
   by_cases hpos : 0 < a ∧ ∃ τ₀, 0 < m τ₀
   · obtain ⟨ha, τ₀, hτ₀⟩ := hpos
     refine ⟨0, Fin.elim0, Fin.elim0, fun p => p.elim0, ?_⟩
-    rw [GlobalTheory.T.integral_detCharacter_fockColumnSubstitution_eq_zero a d m τ₀ ha hτ₀ ν hP hInv hleft ρ hmeas hsurj Λ _]
+    rw [_root_.GlobalTheory.MinorFrame.integral_detZpow_colSub_eq_zero a d m τ₀ ha hτ₀ ν hP hInv hleft ρ hmeas hsurj Λ _]
     simp
-  obtain ⟨M, r, U, hR⟩ := GlobalTheory.T.exists_rational_fock_projection_maximal_minors (ι := ι) a d (fun τ => (-m τ).toNat) k
+  obtain ⟨M, r, U, hR⟩ := _root_.GlobalTheory.MinorFrame.RatProj.exists_rat_proj (ι := ι) a d (fun τ => (-m τ).toNat) k
   refine ⟨M, fun p => ((r p : ℚ) : ℂ), U, fun p => isAlgebraic_ratCast ℚ (r p), ?_⟩
   set R : Pol ι d a := MvPolynomial.monomial k 1 - ∑ p, ((r p : ℚ) : ℂ) • prodMinors (U p) with hRdef
   have hperp : ∀ I ∈ inv a d (fun τ => (-m τ).toNat), Formalism.L2.DIV.fockS I R = 0 := by
     intro I hI
-    have hspan := GlobalTheory.T.fockDetCharInvariants_le_span_prodMaximalMinors a d (fun τ => (-m τ).toNat) hI
+    have hspan := _root_.GlobalTheory.MinorFrame.inv_le_span_prodMinors a d (fun τ => (-m τ).toNat) hI
     clear hI
     show Formalism.L2.DIV.fockL I R = 0
     induction hspan using Submodule.span_induction with
@@ -157,7 +157,7 @@ theorem average_monomial_eq_sum_prodMinors : ∀ {ι : Type} [Fintype ι] (a d :
     | zero => rw [map_zero, LinearMap.zero_apply]
     | add x y _ _ hx hy => rw [map_add (f := _), LinearMap.add_apply, hx, hy, add_zero]
     | smul c x _ hx => rw [map_smulₛₗ, LinearMap.smul_apply, hx, smul_zero]
-  have h0 := GlobalTheory.T.unitaryAverage_kills_fock_complement_relInvariants a d (fun τ => (-m τ).toNat) ν hP hInv hleft ρ hmeas hsurj Λ R hperp
+  have h0 := _root_.GlobalTheory.UnitaryAvg.avg_perp a d (fun τ => (-m τ).toNat) ν hP hInv hleft ρ hmeas hsurj Λ R hperp
   have hdet0 : ∀ g τ, (ρ g τ : Matrix (Fin a) (Fin a) ℂ).det ≠ 0 := fun g τ => by
     rw [← norm_ne_zero_iff, norm_det_unitary]; exact one_ne_zero
   have hD : ∀ g, (∏ τ, (ρ g τ : Matrix (Fin a) (Fin a) ℂ).det ^ (m τ)) =

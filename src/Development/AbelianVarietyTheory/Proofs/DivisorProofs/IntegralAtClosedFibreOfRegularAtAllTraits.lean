@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChartValEq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChartValueMemDominatingValuationSubringStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMulIsIntegralElemOfForallDiscreteValuationStatement
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Mathlib.RingTheory.Valuation.ValuationSubring
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMulIsIntegralElemOfForallDiscreteValuation
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenericChartFunctionsFractionsSmoothStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralAtBasicOpenOfIntegralMulChartValueStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralOfSmoothGeomIrreducibleOverModificatioStatement
@@ -71,7 +73,7 @@ theorem intAt_closed_of_traitReg : ∀ (R : Type) [CommRing R] [IsDomain R] [IsL
   haveI : Nonempty W := ⟨⟨x, hxW⟩⟩
   haveI : IsNoetherianRing Γ(G.left, W) := IsLocallyNoetherian.component_noetherian ⟨W, hWa⟩
   let p : Ideal Γ(G.left, W) := RingHom.ker ((G.left.residue x).hom.comp (G.left.presheaf.germ W x hxW).hom)
-  obtain ⟨d, hd, hi⟩ := GlobalTheory.T.exists_mul_isIntegralElem_of_forall_dvr Γ(G.left, W) Γ(Y, α ⁻¹ᵁ W) (α.app W).hom hinj hloc p (RingHom.ker_isPrime _)
+  obtain ⟨d, hd, hi⟩ := _root_.GlobalTheory.exists_mul_isIntegralElem_of_forall_discreteValuationSubring Γ(G.left, W) Γ(Y, α ⁻¹ᵁ W) (α.app W).hom hinj hloc p (RingHom.ker_isPrime _)
     (chartVal L α s j W hW) (fun F _ β V hV h1 h2 =>
       GlobalTheory.T.chartValue_mem_dominating_valuationSubring R M G hsm hqc hgi L hL Y α t hpb k s hs j U W hW hWU hWa hUa x hxW hx F β V hV h1
         (fun c hc => h2 c (RingHom.mem_ker.2 hc)))

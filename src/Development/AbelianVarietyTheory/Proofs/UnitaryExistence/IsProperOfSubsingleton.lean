@@ -1,16 +1,17 @@
 module
 
-import Mathlib
 public import Mathlib.AlgebraicGeometry.Morphisms.Etale
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsSplitTorusPointsMulEquiv
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUnramifiedExtTorsionPointsGoodReduction
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CardTorsionAbelianVariety
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CardTorsionMulCardToricTorsion
+import Mathlib
 import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.BijectiveRestrictPointsOfEtaleOfHenselian
 import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.FormallyUnramifiedOfTangentMapInjective
 import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.HomBaseChangeBijectiveOfLeNilradical
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CardTorsionAbelianVarietyStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CardTorsionMulCardToricTorsion
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsMulEquivOfIsGrpPullback
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -217,7 +218,7 @@ theorem isOpen_abLocus {S : Scheme.{0}} (G : Over S) [GrpObj G] (hG : IsSemiAbel
   have hB : IsAbelianScheme ((Over.pullback t).obj G) :=
     ⟨inferInstance, inferInstanceAs (Smooth (pullback.snd _ _)), hs K t ⟨p, ht⟩,
       inferInstanceAs (GeometricallyConnected (pullback.snd _ _))⟩
-  have hc := GlobalTheory.T.card_torsion_eq_pow_two_mul_dim K _ g n hB (hd K t) (hK K t)
+  have hc := _root_.GlobalTheory.card_torsion_abelianVariety K _ g n hB (hd K t) (hK K t)
   have := Nat.finite_of_card_ne_zero (hc ▸ pow_ne_zero _ (by omega : n ≠ 0))
   obtain ⟨e⟩ := nonempty_torsion_equiv G n t
   let x := ((Finite.equivFinOfCardEq hc).symm.trans e.symm)

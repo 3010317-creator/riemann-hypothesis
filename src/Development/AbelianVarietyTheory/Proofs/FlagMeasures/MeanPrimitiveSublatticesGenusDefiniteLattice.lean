@@ -2,13 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NormalFormDualOrthogonalLast
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CyclicDiscriminantLatticesFormOneGenusStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
+public import Formalism.HermitianLattices.StatementMass
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CyclicDiscriminantLatticesFormOneGenus
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsBoundedBasis
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianGenusMassEqOrbitStabilizerMassStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianGenusMassEqOrbitStabilizerMass
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ImportsBisTail
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassGenusCyclicDiscriminantSplitPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PrimitiveSublatticeMeanCountBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnimodularHermitianMassMulLeMassStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassGenusCyclicDiscriminantSplitPrime
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PrimitiveSublatticeMeanCountBound
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnimodularHermitianMassMulLeMass
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -200,10 +203,10 @@ theorem main : GlobalTheory.Mass.MaxMass → Formalism.HermitianLatticesTheory.S
   obtain ⟨ms, hms0, hms⟩ := GlobalTheory.OrthoMass.main K hK
   have hsymm : H.B.flip.IsSymm := GlobalTheory.HermLat.flip_isSymm H
   have hnd : H.B.flip.Nondegenerate := nondeg_of_pd H.B.flip hPD
-  have hgen := GlobalTheory.T.cyclicDiscriminant_lattices_form_one_genus K V H.B.flip hK hsymm hnd T hT hTP
-  obtain ⟨-, -, hstab, -⟩ := GlobalTheory.T.hermitianGenusMass_eq_orbitStabilizerMass K V H.B.flip hK hsymm hPD L₀ hL₀.1
+  have hgen := _root_.GlobalTheory.Mass.CyclicGenus.main K V H.B.flip hK hsymm hnd T hT hTP
+  obtain ⟨-, -, hstab, -⟩ := _root_.GlobalTheory.Mass.GenusOrb.main K V H.B.flip hK hsymm hPD L₀ hL₀.1
   have hsk' : Module.finrank K V - s + s = Module.finrank K V := Nat.sub_add_cancel hsk.le
-  have key := GlobalTheory.T.primitiveSublattice_mean_count_bound hMax K V H.B.flip hK hsymm hPD hO (Module.finrank K V - s) s (by omega) hs hsk'
+  have key := _root_.GlobalTheory.Mass.PrimMean.main hMax K V H.B.flip hK hsymm hPD hO (Module.finrank K V - s) s (by omega) hs hsk'
     (Fin (Module.finrank K V - s) → K) (Formalism.HermitianLatticesTheory.massTelescope_form K _) (Formalism.HermitianLatticesTheory.massTelescope_lat K _)
     (Formalism.HermitianLatticesTheory.massTelescope_symm K _) (Formalism.HermitianLatticesTheory.massTelescope_ortho K _)
     (Fin s → K) (Formalism.HermitianLatticesTheory.massTelescope_form K s) (Formalism.HermitianLatticesTheory.massTelescope_lat K s)
@@ -215,7 +218,7 @@ theorem main : GlobalTheory.Mass.MaxMass → Formalism.HermitianLatticesTheory.S
   have hm : ∀ j, Formalism.HermitianLatticesTheory.mass (Formalism.HermitianLatticesTheory.massTelescope_form K j) (Formalism.HermitianLatticesTheory.massTelescope_lat K j) = ms j :=
     fun j => hms j _ _ _ (Formalism.HermitianLatticesTheory.massTelescope_symm K j) (Formalism.HermitianLatticesTheory.massTelescope_ortho K j)
   rw [hm, hm] at key
-  have hmass := GlobalTheory.T.mass_genus_cyclicDiscriminant_splitPrime hMax K V H.B.flip hK hsymm hPD (by omega) (Fin (Module.finrank K V) → K)
+  have hmass := _root_.GlobalTheory.Mass.CyclicDisc.main hMax K V H.B.flip hK hsymm hPD (by omega) (Fin (Module.finrank K V) → K)
     (Formalism.HermitianLatticesTheory.massTelescope_form K _) (Formalism.HermitianLatticesTheory.massTelescope_symm K _) (Formalism.HermitianLatticesTheory.massTelescope_lat K _)
     (Formalism.HermitianLatticesTheory.massTelescope_ortho K _) T hT hTP L₀ hL₀ hq
   rw [hm] at hmass
@@ -224,7 +227,7 @@ theorem main : GlobalTheory.Mass.MaxMass → Formalism.HermitianLatticesTheory.S
   have hsmall : ∀ j, 1 ≤ j → j ≤ 2 → ms j ≤ Mb := fun j h1 h2 => by
     rw [← hm j]
     exact (GlobalTheory.SmallRankMass.mass_small hK hv h1 h2).trans hMbB
-  have h10 := GlobalTheory.T.unimodularHermitianMass_mul_le_mass hS K hK hv (Module.finrank K V) s Mb ms hk hs hsk hms
+  have h10 := _root_.GlobalTheory.MassRatioBound.mass_mul_mass_le hS K hK hv (Module.finrank K V) s Mb ms hk hs hsk hms
     (hsmall 1 le_rfl (by norm_num)) (hsmall 2 (by norm_num) le_rfl) hMb1
   have hexp := exponents (n : ℝ) ((T : ℝ) ^ (2 * Formalism.HermitianLatticesTheory.fDeg K)) (Module.finrank K V : ℝ) (s : ℝ)
     (Real.logb 2 (Module.finrank ℚ K)) (by exact_mod_cast hn) (one_le_pow₀ (by exact_mod_cast hT.one_lt.le))

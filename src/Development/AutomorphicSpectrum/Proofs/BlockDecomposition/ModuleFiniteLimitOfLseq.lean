@@ -3,8 +3,10 @@ module
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.TwistedRepresentations.Tens
 public import Mathlib.RingTheory.AdicCompletion.Basic
 public import Mathlib.RingTheory.FiniteLength
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteLengthOfLseqFirstStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteLengthOfLseqFirst
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LimitDivisibleOfVanishingLevelStatement
+public import Mathlib.RingTheory.AdicCompletion.Functoriality
+public import ReciprocityTheory.GroupCohomology.FinGen
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -23,7 +25,6 @@ import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
-public import Mathlib.RingTheory.AdicCompletion.Functoriality
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.HopfAlgebra.Basic
 import Mathlib.RingTheory.Radical.NatInt
@@ -47,7 +48,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.GroupCohomology.FinGen
 
 @[expose] public section
 
@@ -58,7 +58,7 @@ namespace GlobalTheory.CompanionTheory.TowerLim
 theorem module_finite_lim : ∀ (W : Type) [CommRing W] (l : ℕ) [IsAdicComplete (Ideal.span {(l : W)}) W]
     (S S' : Sys.{1} W) (_ : LSeq l S S'), IsFiniteLength W (S.M 1) → Module.Finite W S.lim := by
   intro W _ l _ S S' L h1
-  have hfl := GlobalTheory.T.finite_length_of_lseq_first W l S S' L h1
+  have hfl := _root_.GlobalTheory.CompanionTheory.TowerLen.isFiniteLength_level W l S S' L h1
   have hart : ∀ n, IsArtinian W (S.M n) := fun n =>
     (isFiniteLength_iff_isNoetherian_isArtinian.1 (hfl n)).2
   have hinj := GlobalTheory.T.limit_divisible_of_vanishing_level W l S S' L hart

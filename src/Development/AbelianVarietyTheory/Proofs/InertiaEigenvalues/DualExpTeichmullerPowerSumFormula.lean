@@ -2,11 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExpStar
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowMulMemLatIff
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AinfCocycleSolutionTeichmullerEpsilonRootPowStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsDeRhamElementOfCocycleRecursionStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsLiftsOfNormLeOneStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExpStarOfLowTermsRemovedStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusSolutionExpansionModFiltrationStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AinfCocycleSolutionTeichmullerEpsilonRootPow
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsDeRhamElementOfCocycleRecursion
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsLiftsOfNormLeOne
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExpStarOfLowTermsRemoved
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusSolutionExpansionModFiltration
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -102,19 +102,19 @@ theorem expStar_levSum : ∀ (LT : LocTheory) (l : ℕ) [Fact l.Prime] (AI : Loc
   have hw : ∀ i, ∃ w : Ainf l, i ∈ T → Lifts AI K w (c i) := by
     intro i
     by_cases hi : i ∈ T
-    · obtain ⟨w, hw⟩ := GlobalTheory.T.exists_lifts_of_norm_le_one_alt l (LT l) AI hT K (c i) (hc i hi).1
+    · obtain ⟨w, hw⟩ := _root_.GlobalTheory.ExpImage.exists_lifts_of_norm_le_one l (LT l) AI hT K (c i) (hc i hi).1
       exact ⟨w, fun _ => hw⟩
     · exact ⟨0, fun h => absurd h hi⟩
   choose w hw using hw
-  obtain ⟨y, hy, hexp⟩ := GlobalTheory.T.frobeniusSolution_expansion_mod_filtration l (LT l) AI hT K s ι T w c m (e + 1) d (by omega) hw
+  obtain ⟨y, hy, hexp⟩ := _root_.GlobalTheory.ExpImage.Expand.expand l (LT l) AI hT K s ι T w c m (e + 1) d (by omega) hw
     (fun j hj => hd j (by omega))
   have hsolv : Solv AI K s g U (y - WittVector.frobenius y) := by
     rw [hy]
     refine Solv.sum T _ fun i hi => ?_
-    exact (GlobalTheory.T.ainfCocycleSolution_teichmullerEpsilonRoot_pow l (LT l) AI K s hs g hχ U hU1 (m i) (hc i hi).2).mul
+    exact (_root_.GlobalTheory.ExpImage.EpsSolve.main l (LT l) AI K s hs g hχ U hU1 (m i) (hc i hi).2).mul
       ((hw i hi).act (Gj_le_fix s hg)) (fun h hh => (hw i hi).act (Hinf_le_fix hh))
-  obtain ⟨b, hb0, hbH, z₀, hz₀⟩ := GlobalTheory.T.exists_deRham_element_of_cocycleRecursion l (LT l) AI hT K s hs g U (e + 1) (by omega) y hsolv
-  obtain ⟨z, hz, hE⟩ := GlobalTheory.T.expStar_of_low_terms_removed LT l AI hT K s hs e g hgen
+  obtain ⟨b, hb0, hbH, z₀, hz₀⟩ := _root_.GlobalTheory.ExpImage.Sum.main l (LT l) AI hT K s hs g U (e + 1) (by omega) y hsolv
+  obtain ⟨z, hz, hE⟩ := _root_.GlobalTheory.ExpImage.LowTerms.expStar_of_sum LT l AI hT K s hs e g hgen
     (fun j => algebraMap ℚ_[l] (Om l) ((j.factorial : ℚ_[l]) * (l : ℚ_[l]) ^ (s * j))⁻¹ *
       levSum (LT l) K s j T c m (d j))
     (fun j => mul_mem (IntermediateField.algebraMap_mem _ _) (levSum_mem_Ks _ _ _ _ _ _ _ _))

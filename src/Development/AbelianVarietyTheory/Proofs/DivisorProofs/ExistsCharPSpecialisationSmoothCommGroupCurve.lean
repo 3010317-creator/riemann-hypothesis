@@ -7,7 +7,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBasicO
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBasicOpenSectionsDistinctInFibresStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBasicOpenSmoothOfRelativeDimensionOfGeneriStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFgSubringDescentGroupSectionsCurveStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMaximalPrimeCharNotMemFiniteTypeIntStatement
+public import Mathlib.RingTheory.FiniteType
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMaximalPrimeCharNotMemFiniteTypeInt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -127,7 +128,7 @@ theorem exists_charP_specialization : ∀ (k : Type) [Field k] [IsAlgClosed k] [
     rw [map_zero, hfdef] at this
     simp only [map_mul] at this
     exact (mul_ne_zero (mul_ne_zero (mul_ne_zero (mul_ne_zero hf₁ hf₂) hf₃) hf₄) hlc) this
-  obtain ⟨M, hM, hfM, p, hp, hpM⟩ := GlobalTheory.T.exists_maximal_prime_char_not_mem_finiteType_int R f hf
+  obtain ⟨M, hM, hfM, p, hp, hpM⟩ := _root_.GlobalTheory.closedPt_of_finiteType_int R f hf
   letI := Ideal.Quotient.field M
   let ψ : R →+* AlgebraicClosure (R ⧸ M) := (algebraMap (R ⧸ M) _).comp (Ideal.Quotient.mk M)
   have hψ : ∀ r, r ∉ M → IsUnit (ψ r) := by

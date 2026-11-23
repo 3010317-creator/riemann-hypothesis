@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LocallyCompactSpaceAxis
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeightFunctionCompactLevelContinuousStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeightFunctionCompactLevelContinuous
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,7 +62,7 @@ theorem iwasawaHeight_isHt : ∀ (F E : Type) [Field F] [NumberField F] [Field E
     intro p l e g
     obtain ⟨p', l', e', k, hk, rfl⟩ := D.iwa g
     rw [← mul_assoc, D.ht _ _ (e.mul_scales e') k hk, D.ht _ _ e' k hk, map_mul, NNReal.coe_mul]
-  refine ⟨⟨fun g => ?_, (GlobalTheory.T.height_function_compact_level_continuous F E σ n J r X Y L a h D).2, fun k hk => ?_, fun g => ?_⟩, law⟩
+  refine ⟨⟨fun g => ?_, (_root_.GlobalTheory.ResLine.HtCont.isCompact_and_continuous F E σ n J r X Y L a h D).2, fun k hk => ?_, fun g => ?_⟩, law⟩
   · obtain ⟨p, l, e, k, hk, rfl⟩ := D.iwa g
     rw [D.ht _ _ e k hk]
     have h1 : absE F E l * absE F E l⁻¹ = 1 := by rw [← map_mul, mul_inv_cancel, map_one]

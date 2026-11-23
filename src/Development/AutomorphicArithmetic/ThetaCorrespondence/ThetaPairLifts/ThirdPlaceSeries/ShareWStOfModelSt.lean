@@ -2,7 +2,8 @@ module
 
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ShareWSt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankEqOfSemilinear
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ShareSizeBoundsAlongFamilyStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.TupleReadBaseTupleEqFamily
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ShareSizeBoundsAlongFamily
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.BaseLevelIsWhitStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -69,7 +70,7 @@ theorem shareWSt_of_modelSt_alt : _root_.GlobalTheory.ShareOn.ModelStatement →
   intro hM
   unfold _root_.GlobalTheory.ShareOn.ModelStatement _root_.GlobalTheory.BigOn.ForallTwoRuns _root_.GlobalTheory.BigOn.AtPtsAlt at hM
   unfold _root_.GlobalTheory.ShareOn.SharedWeightStatement _root_.GlobalTheory.BigOn.ForallTwoRuns _root_.GlobalTheory.BigOn.AtPtsAlt
-  refine (hM.and GlobalTheory.T.shareSize_bounds_along_family).imp ?_
+  refine (hM.and _root_.GlobalTheory.ShareNumbers.numbers_along_family).imp ?_
   intro eps Fm CH _ h
   obtain ⟨⟨x1, h1⟩, ⟨x2, h2⟩⟩ := h
   refine ⟨max x1 x2, fun x hx hle ι p hp hmore r hr hown i => ?_⟩

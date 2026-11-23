@@ -2,8 +2,11 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.GermComp1ZeroPointLeft
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ToFirst
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrimitiveDerivationPairingStatement
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.RingTheory.HopfAlgebra.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrimitiveDerivationPairing
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProperGroupGermFiniteSubschemeStatement
+public import Mathlib.LinearAlgebra.Matrix.Rank
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -15,7 +18,6 @@ import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.LinearAlgebra.Matrix.Rank
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -135,7 +137,7 @@ theorem lemF_ker_order_dvd : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     (Wd g.B a).comap (LinearMap.ker (Matrix.toLin' (rho g.B a))).subtype
   have hW0 : Module.finrank k W0 = Module.finrank k (Wd g.B a) :=
     (Submodule.comapSubtypeEquivOfLe (Wd_le g.B a)).finrank_eq
-  have hc := GlobalTheory.T.primitive_derivation_pairing k p A' (LinearMap.range T) (W0.map D)
+  have hc := _root_.GlobalTheory.CompanionTheory.Ar.HopfCount.primitive_tangent_dvd_finrank k p A' (LinearMap.range T) (W0.map D)
     (by rintro _ ⟨z, rfl⟩; exact hprim z)
     (by rintro _ ⟨u, -, rfl⟩; exact hder u)
     (by

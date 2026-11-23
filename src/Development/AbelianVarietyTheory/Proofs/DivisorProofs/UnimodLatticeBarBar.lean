@@ -2,7 +2,8 @@ module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCmFieldTraceFormGramMatrixPosDefStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnimodularPosDefAdjointActionStatement
+public import Mathlib.LinearAlgebra.Matrix.PosDef
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnimodularPosDefAdjointAction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -102,7 +103,7 @@ theorem unimodLattice :
   intro E _ _ _ H
   obtain ⟨m, B0, ρ0, hm, hsym, hpd, hadj⟩ := GlobalTheory.T.exists_cmField_traceForm_gram_matrix_posDef E H
   obtain ⟨r, b, ρ, hr, hbs, hbpd, hbu, hbadj⟩ :=
-    GlobalTheory.T.exists_unimodular_posDef_form_adjoint_rep_of_posDef (𝓞 E) (H.bar : 𝓞 E →+* 𝓞 E) (unimodLattice_bar_bar H) m B0 ρ0 hm hsym hpd hadj
+    _root_.GlobalTheory.exists_unimodular_posDef_adjoint_action (𝓞 E) (H.bar : 𝓞 E →+* 𝓞 E) (unimodLattice_bar_bar H) m B0 ρ0 hm hsym hpd hadj
   have hW : b * ρ H.w0 + (b * ρ H.w0).transpose = b := by
     rw [Matrix.transpose_mul, hbs, hbadj, ← Matrix.mul_add, ← map_add (f := _)]
     erw [unimodLattice_w0_add H]

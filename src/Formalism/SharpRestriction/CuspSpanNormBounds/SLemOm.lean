@@ -1,7 +1,8 @@
 module
 
 public import Formalism.SharpRestriction.CuspSpanNormBounds.RootMeasBig
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.StabBig
+public import Formalism.PeriodIntegrals.StabBig
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LargeStabilizerInverse.GLeftInv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -43,6 +44,6 @@ import Mathlib.Topology.Sheaves.Init
 
 namespace Formalism.MainNotions.S.Lem
 
-theorem orbRStabBig : Formalism.MainNotions.S.OrbRStabBig := stabilizer_large
+theorem orbRStabBig : Formalism.MainNotions.S.OrbRStabBig := _root_.PI.StabBigW.stabBig
 
 end Formalism.MainNotions.S.Lem

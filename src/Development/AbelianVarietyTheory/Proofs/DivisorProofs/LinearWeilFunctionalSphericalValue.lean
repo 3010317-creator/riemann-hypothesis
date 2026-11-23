@@ -5,7 +5,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUnitDetOfC
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsPairOfIsTriple
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlCharacterFactorsThroughDetOfTwoNeZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LiftVOneMul
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaActionExistsStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaActionExists
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceSymplecticSelfZeroSplitSupported
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -136,7 +137,7 @@ theorem GlobalTheory.SchurCharV.exists_char_of_schur : GlobalTheory.FunPr.Hypoth
   set L := GlobalTheory.SplitUnitLift.liftU hcm t G.V.J 1 herm hJ with hLdef
   have hLmem : ∀ x, L x ∈ UAt σ G.V (evFin F v) := fun x => GlobalTheory.SplitUnitLift.liftU_mem_UAt hcm t G.V 1 herm hJ x
   have hLt : ∀ x, (mat (L x)).map (piW t) = x.val := fun x => GlobalTheory.SplitUnitLift.liftU_piW hcm t G.V.J 1 herm hJ x
-  have hEx := (GlobalTheory.T.theta_action_exists hP F E σ B a (a + a') G.V G.W G.M X.β (X.β / X.α) om _ _ _ _
+  have hEx := (_root_.GlobalTheory.ThK.LocalOps.actsEx hP F E σ B a (a + a') G.V G.W G.M X.β (X.β / X.α) om _ _ _ _
     (GlobalTheory.ThK.Check.isPair_of_isTriple hT).1 v).1
   have h1mem : (1 : UA σ G.W.J) ∈ UAt σ G.W (evFin F v) := by
     intro u _

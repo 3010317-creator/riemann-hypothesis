@@ -3,8 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FinitePrimesUnder
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CondEIsCoprimeHalfDifferent
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBetaInvHeckeU
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBottomPairBigMemberReferenceTupleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBottomPairSmallMemberReferenceTupleStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBottomPairBigMemberReferenceTuple
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBottomPairSmallMemberReferenceTuple
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHeckeUAlphaH
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHeckeUNuInv
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsTwoTorsionCMPointAllConjugates
@@ -68,8 +68,8 @@ theorem exists_isBottom_of_isCoprime (hL : L.Is μ₀) (G : GridData L sc)
   obtain ⟨χν, hν, hw⟩ := GlobalTheory.BottomNu.exists_heckeU_nu_inv hL G i j
   obtain ⟨χβ, hβ⟩ := exists_betaInv_heckeU hL G i j
   obtain ⟨χα, hα⟩ := exists_heckeU_alphaH hL G i j
-  obtain ⟨P, h1, h2, h3, h4, h5⟩ := GlobalTheory.T.exists_bottomPair_bigMember_reference_tuple hL G hm hδ ht i j χβ hβ χν hν hw
-  obtain ⟨P', h1', h2', h3', h4', h5'⟩ := GlobalTheory.T.exists_bottomPair_smallMember_reference_tuple hL G hm' hδ ht i j χα hα χν hν hw
+  obtain ⟨P, h1, h2, h3, h4, h5⟩ := _root_.GlobalTheory.FunObj.StdDatum.exists_bottom_big hL G hm hδ ht i j χβ hβ χν hν hw
+  obtain ⟨P', h1', h2', h3', h4', h5'⟩ := _root_.GlobalTheory.BotPairSmall.smallPair_exists hL G hm' hδ ht i j χα hα χν hν hw
   exact ⟨P, P', ⟨⟨h1, h1', h2, h2'.trans h2.symm⟩, h3, h3', h4, h4', ⟨h5, h5'⟩⟩⟩
 
 theorem exists_isBottom (hL : L.Is μ₀) (G : GridData L sc) (hq : Nat.Coprime D.host.pde (D.host.QS * D.host.q) ∧ Nat.Coprime D.host.pde' (D.host.QS * D.host.q)) :

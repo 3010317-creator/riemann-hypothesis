@@ -3,11 +3,13 @@ module
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.GrothendieckRingPolynomial.ProdList
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IrreducibleAdmissibleGL
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.ZelevinskyInterleaving.LInjective
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalTwistInjectiveStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductIrreducibleFiniteLengthStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegmentProductJacquetShuffleCountStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegmentProductWordInShuffleStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WordOccursOfSubquotientStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalTwistInjective
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductIrreducibleFiniteLength
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.ZelevinskyCosocles.LUnlinkedComm
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegmentProductJacquetShuffleCount
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegmentProductWordInShuffle
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WordOccursOfSubquotient
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -100,8 +102,8 @@ theorem msupp_eq_of_isL (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (h
     {x : IrrGL (k := k)} (hx : IsL 𝔫 x.rep) (w : List (IrrGL (k := k))) (hc : ∀ c ∈ w, c.IsCusp) (hw : Wd x.rep w) :
     (w : Multiset (IrrGL (k := k))) = msupp 𝔫 := by
   obtain ⟨h, y, hd, ⟨Δ, hΔ, hL⟩, hcos⟩ := hx
-  have h1 : Wd (prodIrr y hd) w := GlobalTheory.T.word_occurs_of_subquotient _ _ (isSmooth_prodIrr y hd) hcos.isSubquotient w hw
-  have h2 := GlobalTheory.T.segment_product_word_in_shuffle hA hj y hd Δ hL w hc h1
+  have h1 : Wd (prodIrr y hd) w := _root_.GlobalTheory.CompanionTheory.Words.wd_of_isSubquotient _ _ (isSmooth_prodIrr y hd) hcos.isSubquotient w hw
+  have h2 := _root_.GlobalTheory.CompanionTheory.CuspShuffle.inShW_of_wd hA hj y hd Δ hL w hc h1
   rw [hΔ.1] at h2
   exact coe_eq_msupp_of_inShW h2
 
@@ -132,7 +134,7 @@ theorem seg_eq_of_ms_eq (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) {�
   obtain ⟨b, -, hb⟩ := Segment.mem_carrier.1 (Segment.mem_ms.1 hΔ)
   have h0 : Δ.first.nu ((a + b : ℕ) : ℂ) = Δ.first.nu ((0 : ℕ) : ℂ) := by
     rw [Nat.cast_zero, IrrGL.nu_zero, Nat.cast_add, ← IrrGL.nu_nu, ha, hb]
-  have hab := GlobalTheory.T.cuspidal_twist_injective hA Δ.first Δ.isCusp_first _ _ h0
+  have hab := _root_.GlobalTheory.CompanionTheory.SegNu.nu_natCast_inj hA Δ.first Δ.isCusp_first _ _ h0
   have ha0 : a = 0 := by omega
   subst ha0
   refine Segment.ext_first ?_ hlen
@@ -234,8 +236,8 @@ theorem ell_prod (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (hj : LSe
   refine Finset.sum_congr rfl fun S _ => ?_
   congr 1
   rw [(hJ (vWord Δ S) N _ (prodIrr (fun a => Lseg (Γ a)) hd) (isSmooth_prodIrr _ hd)
-      (GlobalTheory.T.product_irreducible_finite_length hA _ hd)).2,
-    GlobalTheory.T.segment_product_jacquet_shuffle_count hA hj Γ (fun a => Lseg (Γ a)) hd (fun i => hL (Γ i)) (vWord Δ S) (cusp_vWord Δ S)]
+      (_root_.GlobalTheory.CompanionTheory.ProdFL.main hA _ hd)).2,
+    _root_.GlobalTheory.CompanionTheory.FineProd.jmL_prodIrr hA hj Γ (fun a => Lseg (Γ a)) hd (fun i => hL (Γ i)) (vWord Δ S) (cusp_vWord Δ S)]
   simp
 
 theorem vars_lt (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) {Δ : Segment k} (p : MvPolynomial (Segment k) ℤ)

@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoeffZeroEqZeroIff
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleComparisonPiAdicFiltrationModEllStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NearPiSepCompleteStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleComparisonPiAdicFiltrationModEll
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NearPiSepComplete
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -130,8 +130,8 @@ theorem near_closed_abstract {A E S R : Type} [CommRing A] [CommRing E] [CommRin
 private theorem ioE_closed_lemma (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (K : FinExt l)
     (s : ℕ) (LL : FinExt l) (h : Good K s LL) (W : Wach P K LL) (E : EtSit P AI K s LL h W) (x : RW LL)
     (hx : ∀ m, ∃ e, NearPi AI LL s m (x - E.tie.ioE e)) : ∃ e r, x - E.tie.ioE e = (l : RW LL) * r := by
-  obtain ⟨hsep, -⟩ := GlobalTheory.T.nearPi_sep_complete_alt l P AI LL s
-  obtain ⟨hE, -⟩ := GlobalTheory.T.etaleComparison_piAdic_filtration_mod_ell l P AI K s LL h W E
+  obtain ⟨hsep, -⟩ := _root_.GlobalTheory.Decompl.nearPi_sep_complete l P AI LL s
+  obtain ⟨hE, -⟩ := _root_.GlobalTheory.Decompl.near_ioE l P AI K s LL h W E
   have hext : ∀ a, E.tie.ioE (algebraMap (LetA ↥(OL LL) (Module.finrank ℚ_[l] ↥(K0 K))) W.EE a) =
       inclR LL (E.tie.io a) := by
     intro a

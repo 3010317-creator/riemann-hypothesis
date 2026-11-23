@@ -2,11 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FinPartIdemMulMemIff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzMemL2Statement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzMemL2
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfComponentTensorAdelicFunctionEq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeasurableThetaSumOfSchrodinger
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyIntegralPointsIndicatorIsVacuum
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFactorPureTensorComponentAtPlace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeasurableThetaSumOfSchrodinger
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -184,7 +185,7 @@ include hS in
 theorem nu_box_lt_top (μA : Measure (κ → AF F)) [μA.IsAddHaarMeasure] (y₀ : κ → Fv F v) :
     nu v r μA (box v y₀) < ⊤ := by
   rw [nu_box_eq, lintegral_nu_sq v r hS μA (sb_box v y₀).1.continuous]
-  have hL := GlobalTheory.T.adelic_schwartz_mem_L2 F κ μA inferInstance _ (hS _ (sb_box v y₀))
+  have hL := _root_.GlobalTheory.WeilM.schA_memLp_two F κ μA inferInstance _ (hS _ (sb_box v y₀))
   have := lintegral_rpow_enorm_lt_top_of_eLpNorm_lt_top two_ne_zero ENNReal.ofNat_ne_top hL.eLpNorm_lt_top
   simpa using this
 

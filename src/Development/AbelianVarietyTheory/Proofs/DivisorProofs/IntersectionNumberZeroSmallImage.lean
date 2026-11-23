@@ -1,10 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LineBundleGlobalSectionsDimCongrPicardClass
-import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.EventuallyExistsFiniteSubsetNonzeroLocus
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeNatCastOfAddOneLe
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LtNatCastOfAddOneLtSucc
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalSectionCycleFormulaProjectiveStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsClosedImmersionGenericPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalSectionCycleFormulaProjective
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsEqnIffGeneratesAtInv
+import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.EventuallyExistsFiniteSubsetNonzeroLocus
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -43,8 +45,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsEqnIffGeneratesAtInv
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsClosedImmersionGenericPoint
 import Development.AbelianVarietyTheory.Definitions.Divisors.NefFibOfIsNef
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolEqMultiDiff
 
@@ -180,7 +180,7 @@ theorem interNum_pull_eq_zero : ∀ (κ : Type) [Field κ] (e r : ℕ) (Z W : Sc
         interNum κ (structureModule Z) (Fin.cons M Q : Fin (e + r + 1) → LB Z) := by
       rw [← interNum_comp_equiv κ _ (isLB_cons hM hQ) (frontEquiv e r)]
       exact congrArg _ (cons_comp_frontEquiv P (fun a => (A a).pull g)).symm
-    rw [key, GlobalTheory.T.rational_section_cycle_formula_projective κ Z hp (e + r) hd M hM Q hQ _ hs]
+    rw [key, _root_.GlobalTheory.ratSec_cycle_formula κ Z hp (e + r) hd M hM Q hQ _ hs]
     refine finsum_eq_zero_of_forall_eq_zero fun w => ?_
     by_cases hw : (divOfRatSec hM hs).mult w = 0
     · rw [hw, zero_mul]

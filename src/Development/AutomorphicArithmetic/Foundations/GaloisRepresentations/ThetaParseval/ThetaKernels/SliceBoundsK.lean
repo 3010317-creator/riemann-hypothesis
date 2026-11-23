@@ -3,14 +3,18 @@ module
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.HalfIndexLattices.SplitStab
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsContOnOfLocal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTransportF
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStandardArchimedeanAddCharOfIsStandardTraceAdeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzSeminormL2BoundStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationDarbouxCoordinatesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationL2IsometryStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdeleJoinZero
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStandardArchimedeanAddCharOfIsStandardTraceAde
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzSeminormL2Bound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationDarbouxCoordinates
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationL2Isometry
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilTransportArchimedeanSliceSobolevBounds
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.WeilPairCommutingActions
-import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.WeilRepresentationPairContinuous
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.WeilRepresentationPairUnitary
+import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.WeilRepresentationPairContinuous
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -80,11 +84,11 @@ theorem GlobalTheory.WeilContF.slice_bounds_k : ∀ (F E : Type) [Field F] [Numb
     MeasureTheory.Measure.pi.isAddHaarMeasure _
   have hI := _root_.GlobalTheory.T.weil_representation_pair_continuous F E σ B hB nS nT JS JT hS hT ξ₀ hξ hσ χS χT cS cT rS rT ω hω JA JB ξ hJA hJB κ co hco om htr
   have hU := _root_.GlobalTheory.T.weil_representation_pair_unitary F E σ B hB nS nT JS JT hS hT ξ₀ hξ hσ χS χT cS cT rS rT ω hω JA JB ξ hJA hJB κ co hco om htr
-  obtain ⟨M, himpl, hM⟩ := GlobalTheory.T.weil_representation_darboux_coordinates F E σ B.ψ nT nS JA JB ξ κ co om hI.2
-  obtain ⟨μ, hμ, hiso⟩ := GlobalTheory.T.weil_representation_l2_isometry F κ om hI.1 hU
+  obtain ⟨M, himpl, hM⟩ := _root_.GlobalTheory.ArchTransportDir.archDir_transport F E σ B.ψ nT nS JA JB ξ κ co om hI.2
+  obtain ⟨μ, hμ, hiso⟩ := _root_.GlobalTheory.WeilL2Isometry.l2A_eq_of_isUnitaryOn F κ om hI.1 hU
   have hfin := _root_.GlobalTheory.T.weil_pair_commuting_actions F E σ B hB nS nT JS JT hS hT ξ₀ hξ hσ χS χT cS cT rS rT ω hω JA JB ξ hJA hJB κ co hco om htr Φ hΦ p0
-  obtain ⟨N, C, hC, hsob⟩ := GlobalTheory.T.schwartz_seminorm_l2_bound (MeasureTheory.volume : MeasureTheory.Measure (κ → mixedEmbedding.mixedSpace F)) k n
-  choose Bd hBd using fun i j => GlobalTheory.WeilL2Words.slice_l2_of (GlobalTheory.T.isStandardArchimedeanAddChar_of_isStandardTraceAdelic F B.ψ hB.std) om hI.1 M himpl hM μ hμ hiso hΦ p0 hfin y i j
+  obtain ⟨N, C, hC, hsob⟩ := _root_.GlobalTheory.schwartz_pow_mul_iteratedFDeriv_le_sqrt_sum_weighted_sq (MeasureTheory.volume : MeasureTheory.Measure (κ → mixedEmbedding.mixedSpace F)) k n
+  choose Bd hBd using fun i j => GlobalTheory.WeilL2Words.slice_l2_of (_root_.GlobalTheory.WeilL2Words.StdArch.isStdInf_of_isStd F B.ψ hB.std) om hI.1 M himpl hM μ hμ hiso hΦ p0 hfin y i j
   have hev : ∀ᶠ p in nhds p0, ∀ i ∈ Finset.range (N + 1), ∀ j ∈ Finset.range (N + 1),
       ∫ x, (‖x‖ ^ i * ‖iteratedFDeriv ℝ j (fun x => om p Φ (GlobalTheory.WeilCont.adeleJoin F x y)) x‖) ^ 2 ≤ Bd i j :=
     (Filter.eventually_all_finset _).2 fun i _ => (Filter.eventually_all_finset _).2 fun j _ => hBd i j

@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.Commut
 public import Mathlib.Basic.Complex.Basic
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.Sl2NonnegWeightOfHighestWeightVector
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ISupEigenspaceEqTop
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SumRowDegreeEqOfHarmonicHighestCasimirStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SumRowDegreeEqOfHarmonicHighestCasimir
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -317,7 +317,7 @@ theorem column_degrees (σ : Type) [Fintype σ] [DecidableEq σ] (k l n : ℕ)
       rw [ha i, ← ha' i, Int.cast_natCast]
     have hyb : ∀ i, rowOp ℂ y i i v = (b' i : ℂ) • v := fun i => by
       rw [hb i, ← hb' i, Int.cast_natCast]
-    have hT := GlobalTheory.T.sum_row_degree_eq_of_harmonic_highest_casimir σ k l n z y hz hy hzy v a' b' κ hv0 ha'a hb'b hκ hvz hza hvy hyb hvH hvU hvK
+    have hT := _root_.GlobalTheory.HarmRowDegree.sum_row_degree_eq σ k l n z y hz hy hzy v a' b' κ hv0 ha'a hb'b hκ hvz hza hvy hyb hvH hvU hvK
     have hEv : E v = ((∑ i, (a' i : ℤ) : ℤ) : ℂ) • v := by
       rw [hE, LinearMap.sum_apply]
       simp only [hza]

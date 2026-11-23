@@ -9,14 +9,16 @@ public import Development.AbelianVarietyTheory.BlockTheory.SiegelWeilLocal.DeepS
 public import Development.AbelianVarietyTheory.BlockTheory.SiegelWeilLocal.LatticeCountingTheorem
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AbsIntegralSubConstMulLeOfSplit
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AbsSubLeExpNegSixteenthMul
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutomorphicKernelConvergencePropertiesStatement
+public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.ConvolutionSmoothL2
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutomorphicKernelConvergenceProperties
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CountHypPAtAddQAt
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteUnitaryGroupCountEqMainTermStatement
+public import Development.AbelianVarietyTheory.BlockTheory.SiegelWeilLocal.DefiniteFiniteCount
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteUnitaryGroupCountEqMainTerm
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NearAbsMeasurableAndSplit
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DiscreteSeriesCoefficientIntegrableMajorant
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FiniteAdelicUnitaryCongruenceTopology
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GlobalConvolutionOrthogonalProjectorProof
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegrablePhStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NearAbsMeasurableAndSplit
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegrablePh
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TruncatedLeastLatticeSizeRightTranslateLowerBoun
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -92,7 +94,7 @@ theorem countingTheorem_of_finite_of_bounds :
   have H4 := countHyp_mono H (n₁ := n₄) (by omega)
   obtain ⟨hDS, hsig, hn, hq2, hrd, hlf, -, -, -, hg, -, hpr, h4, hsp, -⟩ := H
   rcases Nat.eq_zero_or_pos q with rfl | hq
-  · have e := GlobalTheory.T.definiteUnitaryGroup_count_eq_mainTerm B d p ⟨hDS, hsig, by omega, hg, hpr, h4, hsp⟩ hfin
+  · have e := _root_.GlobalTheory.Dec.definite_count_of_finite B d p ⟨hDS, hsig, by omega, hg, hpr, h4, hsp⟩ hfin
     rw [← e, sub_self, abs_zero]
     positivity
   have hn1 : 1 ≤ B.I.n := by omega
@@ -114,8 +116,8 @@ theorem countingTheorem_of_finite_of_bounds :
     simp only [zero_mul, Real.exp_zero, mul_one] at h0
     exact h0.mono' hc.aestronglyMeasurable (Filter.Eventually.of_forall hle)
   obtain ⟨-, -, ⟨T, hT⟩, -⟩ := GlobalTheory.GlobProj.globalProj_holds B d hDS hI
-  obtain ⟨-, Fc, -, -, -, hexp, hKi, hD, -⟩ := GlobalTheory.T.kernelB' B d h hDS hn1 hloc h32 hfin T hT
-  obtain ⟨hsum, -⟩ := GlobalTheory.T.automorphicKernel_convergence_properties B d h hDS hn1 hloc h32
+  obtain ⟨-, Fc, -, -, -, hexp, hKi, hD, -⟩ := _root_.GlobalTheory.KernelExpansion.kernelB B d h hDS hn1 hloc h32 hfin T hT
+  obtain ⟨hsum, -⟩ := _root_.GlobalTheory.KernelConv.kernelA B d h hDS hn1 hloc h32
   obtain ⟨hmeas, hsplit⟩ := GlobalTheory.NearMeas.nearAbs_measurable_and_split B d hDS
   have hcl : Continuous (least B.I) := (GlobalTheory.LeastVar.least_variation_continuity B.I hn1).2.1
   set μ := (B.I.muA B.μf).restrict B.fund with hμ

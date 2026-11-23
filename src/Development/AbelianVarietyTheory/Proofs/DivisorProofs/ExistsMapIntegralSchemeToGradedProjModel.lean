@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SubsetSpanBy
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGlueMorphismsIntegralAgreeAtGenericPointStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHomToAffineOpenOfFunctionFieldMapRegularStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenericPointCompStructureEqSpecMapConstantsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RegularAndUnitPreservedByFunctionFieldCompatibleStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGlueMorphismsIntegralAgreeAtGenericPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHomToAffineOpenOfFunctionFieldMapRegular
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenericPointCompStructureEqSpecMapConstants
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RegularAndUnitPreservedByFunctionFieldCompatible
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -171,13 +171,13 @@ theorem exists_map_to_model : ∀ (R F : Type) [CommRing R] [IsDomain R] [Field 
     show RegAt z (θ (ψ _))
     rw [he, map_div₀, map_pow]
     exact reg_div Y D₁ (k y) m (θ (b y)) (θ a) z (hsec _ a ha) hz
-  choose f hfV hf using fun y => GlobalTheory.T.exists_hom_to_affineOpen_of_functionField_map_regular Y P (U y) (hgen y) (Dp (k y) (b y)) (hM.affine _ (hk y) _ (hb y)) (hPη y)
+  choose f hfV hf using fun y => _root_.GlobalTheory.Desc.exists_hom_of_regAt_fnOf Y P (U y) (hgen y) (Dp (k y) (b y)) (hM.affine _ (hk y) _ (hb y)) (hPη y)
     (θ.comp ψ) (hreg y)
-  obtain ⟨m, hmU, hmg⟩ := GlobalTheory.T.exists_glue_morphisms_integral_agree_at_genericPoint Y P U hyU f (spMap (θ.comp ψ) ≫ gp P) hf
+  obtain ⟨m, hmU, hmg⟩ := _root_.GlobalTheory.Desc.GenGlue.exists_glue Y P U hyU f (spMap (θ.comp ψ) ≫ gp P) hf
   refine ⟨m, ?_, ⟨gp Y, Category.comp_id _, hmg⟩, ?_⟩
   · haveI := gp_dom Y
     refine ext_of_isDominant (gp Y) ?_
-    rw [reassoc_of% hmg, GlobalTheory.T.genericPoint_comp_structure_eq_specMap_constants P R p, ← Category.assoc, GlobalTheory.T.genericPoint_comp_structure_eq_specMap_constants Y R₁ q, ← Spec.map_comp, ← Spec.map_comp]
+    rw [reassoc_of% hmg, _root_.GlobalTheory.Desc.gp_comp_eq_spMap_cst P R p, ← Category.assoc, _root_.GlobalTheory.Desc.gp_comp_eq_spMap_cst Y R₁ q, ← Spec.map_comp, ← Spec.map_comp]
     congr 1
     ext x
     change θ (ψ (cst p x)) = cst q (ρ x)
@@ -193,7 +193,7 @@ theorem exists_map_to_model : ∀ (R F : Type) [CommRing R] [IsDomain R] [Field 
     rw [hM.mem _ (hk y) _ (hb y) _ hmy k' hk' b' hb']
     obtain ⟨v₀, hv₀, hψ⟩ := (hM.ring _ (hk y) _ (hb y) (hb0 y) (b' ^ (k y) / b y ^ k')).2
       ⟨k', b' ^ (k y), by rw [mul_comm]; exact pow_mem hN hb' _, rfl⟩
-    have hst := GlobalTheory.T.regular_and_unit_preserved_by_functionField_compatible Y P m (θ.comp ψ) hmg y v₀ (hv₀ _ hmy)
+    have hst := _root_.GlobalTheory.Desc.regAt_map_of_gp Y P m (θ.comp ψ) hmg y v₀ (hv₀ _ hmy)
     have hl := locus_iff D₁ (hk y) (hy y) (hsec _ _ hb')
     have e : (θ.comp ψ) v₀ = θ b' ^ (k y) / θ (b y) ^ k' := by
       rw [RingHom.comp_apply, hψ, map_div₀, map_pow, map_pow]

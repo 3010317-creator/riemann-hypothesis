@@ -1,10 +1,11 @@
 module
 
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.TensAll
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramMapPreimageVolumeLowerBoundStatement
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramMapPreimageVolumeLowerBound
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.FibUniq
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicLocalCompactness.T2SpaceTensorProductFiniteExtension
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.DensFibV
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.FibUniq
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.TensTop
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -224,6 +225,6 @@ theorem fibre_nonzero_finite : ∀ (F E : Type) [Field F] [NumberField F] [Field
   have hσ : ∀ y, σ (σ y) = y := PI.VolStabS.sigma_invol σ hCM.2.2.2
   exact fib_tens σ hσ J hJ.1 a (Fv F v) (PI.VolStabS.isOpen_units_Fv F v)
     (PI.VolStabS.TensAllW.lip_field _) μ ν fib h x S hx
-    (GlobalTheory.T.gramMap_preimage_volume_lower_bound F E σ hCM n J hJ v a μ ν hμ hν x S hx hS)
+    (_root_.GlobalTheory.GramPreimageLB.lb_gram_preimage F E σ hCM n J hJ v a μ ν hμ hν x S hx hS)
 
 end GlobalTheory.LocalFibreNonzero

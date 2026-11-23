@@ -3,11 +3,11 @@ module
 public import ReciprocityTheory.L2DbarEstimates.IsLocalHomeomorph
 public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 public import Mathlib.Topology.Separation.CompletelyRegular
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexHessianPosSemidefOfLeviFormNonnegStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousOnComplexHessianOfContDiffOnTwoStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormSqMulIntegralBallLeOfCircleInvariantStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TruncatedGaussianIntegralUniformPosSemidefStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformTaylorBoundLeviPluriharmonicSplitStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexHessianPosSemidefOfLeviFormNonneg
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousOnComplexHessianOfContDiffOnTwo
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormSqMulIntegralBallLeOfCircleInvariant
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TruncatedGaussianIntegralUniformPosSemidef
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformTaylorBoundLeviPluriharmonicSplit
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -86,7 +86,7 @@ theorem morse_local : ∀ (n : ℕ) (U K : Set (V n)) (φ g : V n → ℝ) (ε :
           ∫ w in ball z δ, ‖f w‖ ^ 2 * Real.exp (-(m * φ w)) * g w := by
   intro n U K φ g ε hU hK hKU hφ hlevi hg hgpos hε
   have hcont : ∀ j l, ContinuousOn (fun z => cHess n (fun v => (φ v : ℂ)) z j l) U :=
-    GlobalTheory.T.continuousOn_complex_hessian_of_contDiffOn_two n U φ hU hφ
+    _root_.GlobalTheory.continuousOn_cHess_of_contDiffOn_two n U φ hU hφ
 
   obtain ⟨C, hC⟩ : ∃ C, ∀ z ∈ K, ∀ j l, ‖cHess n (fun v => (φ v : ℂ)) z j l‖ ≤ C := by
     have hc : ContinuousOn (fun z => ∑ j, ∑ l, ‖cHess n (fun v => (φ v : ℂ)) z j l‖) K :=
@@ -149,8 +149,8 @@ theorem morse_local : ∀ (n : ℕ) (U K : Set (V n)) (φ g : V n → ℝ) (ε :
     have := hcK z hz
     nlinarith
 
-  obtain ⟨η, hη, htr⟩ := GlobalTheory.T.truncatedGaussianIntegral_uniform_posSemidef n C (ε / 2) (by positivity)
-  obtain ⟨δ₁, hδ₁, hty⟩ := GlobalTheory.T.uniform_taylor_bound_levi_pluriharmonic_split n U K φ η hU hK hKU hφ hη
+  obtain ⟨η, hη, htr⟩ := _root_.GlobalTheory.TruncGauss.trunc_gauss n C (ε / 2) (by positivity)
+  obtain ⟨δ₁, hδ₁, hty⟩ := _root_.GlobalTheory.PluriTaylor.taylor_levi_unif n U K φ η hU hK hKU hφ hη
   refine ⟨min δ₁ δ₃, lt_min hδ₁ hδ₃0, fun z hz =>
     (closedBall_subset_closedBall (min_le_left _ _)).trans (hty z hz).1, ?_⟩
   set δ : ℝ := min δ₁ δ₃ with hδ
@@ -160,7 +160,7 @@ theorem morse_local : ∀ (n : ℕ) (U K : Set (V n)) (φ g : V n → ℝ) (ε :
   obtain ⟨hzU, h, hh, hh0, hbd⟩ := hty z hz
   set H := cHess n (fun v => (φ v : ℂ)) z with hH
   have hpsd : H.PosSemidef :=
-    GlobalTheory.T.complexHessian_posSemidef_of_leviForm_nonneg n φ z (hφ.contDiffAt (hU.mem_nhds (hKU hz))) (hlevi z (hKU hz))
+    _root_.GlobalTheory.cHess_posSemidef_of_levi_nonneg n φ z (hφ.contDiffAt (hU.mem_nhds (hKU hz))) (hlevi z (hKU hz))
   have hT := hm H hpsd (hC z hz)
   set d := H.det.re / Real.pi ^ n with hd
   have hd0 : 0 ≤ d := by
@@ -201,7 +201,7 @@ theorem morse_local : ∀ (n : ℕ) (U K : Set (V n)) (φ g : V n → ℝ) (ε :
           = H j l * w j * (starRingEnd ℂ) (w l) * (θ * (starRingEnd ℂ) θ) := by ring
         _ = _ := by rw [hθ', mul_one]
     simp only [hWf, hsum, norm_smul, hθ, one_mul]
-  have hcirc := GlobalTheory.T.norm_sq_mul_integral_ball_le_of_circle_invariant' n δ U' F Wf hδ0 hU'o hball' hFd hWc.continuousOn hW0 hWinv
+  have hcirc := _root_.GlobalTheory.norm_sq_mul_integral_ball_le_of_circle_invariant n δ U' F Wf hδ0 hU'o hball' hFd hWc.continuousOn hW0 hWinv
   have hF0 : F 0 = f z := by simp [hF, hh0]
   rw [hF0] at hcirc
 

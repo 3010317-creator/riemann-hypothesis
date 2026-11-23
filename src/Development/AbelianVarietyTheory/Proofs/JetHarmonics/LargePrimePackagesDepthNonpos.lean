@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.DepthNumbersThresholdEq
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsCutIntoBoundedGroupsFinset
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.MonomialBlockSupplyBothTypingsStatement
+public import Formalism.LocalToGlobal.CharacterGerms.ContentLargeFromSupplies
+public import Formalism.LocalToGlobal.CharacterGerms.ContentZeroAt
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.MonomialBlockSupplyBothTypings
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -246,5 +248,5 @@ theorem zero_of_pkgC (hM : RF.MONSupply) (P : RF.Par) (l : ℕ) (Pk : RF.PkgZero
 end GlobalTheory.GoodDepth.Zero
 
 theorem GlobalTheory.GoodDepth.zeroBd : GlobalTheory.GoodDepth.ZeroBd :=
-  ⟨fun P l Pk => GlobalTheory.GoodDepth.Zero.zero_of_pkg GlobalTheory.T.monomialBlock_supply_both_typings.2 P l Pk,
-    fun P l Pk => GlobalTheory.GoodDepth.Zero.zero_of_pkgC GlobalTheory.T.monomialBlock_supply_both_typings.2 P l Pk⟩
+  ⟨fun P l Pk => GlobalTheory.GoodDepth.Zero.zero_of_pkg _root_.GlobalTheory.MonBlock.monSupply.2 P l Pk,
+    fun P l Pk => GlobalTheory.GoodDepth.Zero.zero_of_pkgC _root_.GlobalTheory.MonBlock.monSupply.2 P l Pk⟩

@@ -1,15 +1,16 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.CrystallineBaseChange.RnStmt
-import Aesop.Main
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsPosNatMemOpenAdeleSubgroup
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.NewformCoefficients.AvgZero
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.NewformCoefficients.SmCont
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.NewformCoefficients.CuspCritAlt
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.EisensteinSmoothContinuous
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.EisensteinConstantTermUpperBlock
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.PeriodicIntegralFundamentalDomainInvariant
 public import GroundTheory.AutomorphicForms.AutomorphicFormSpaces.ConstantTerm
-import GroundTheory.AutomorphicForms.ReductionMeasure
 public import GroundTheory.AutomorphicForms.StrongApproximationSLDense
+import Aesop.Main
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsPosNatMemOpenAdeleSubgroup
+import GroundTheory.AutomorphicForms.ReductionMeasure
 import GroundTheory.GlobalFields.Adele.Topology
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -174,7 +175,7 @@ theorem UpperTheory.V.Br.cuspMean :
   obtain ⟨_, _, μ, D, hμ, hD⟩ := cm_fund
   obtain ⟨i1, i2, i3, i4, hco, hcu, hx⟩ := UpperTheory.eisenstein_constantTerm_upperBlock ℚ
   have hψ : Continuous fun x : BlockIx 2 1 → Ad ℚ => φ.1 (unip x * (g * upR y)) :=
-    (smCont ℚ 2 φ ho).comp (hcu.mul continuous_const)
+    (_root_.UpperTheory.eisenstein_smooth_continuous ℚ 2 φ ho).comp (hcu.mul continuous_const)
   have hinv : ∀ γ ∈ ratN ℚ 2 1, ∀ x, φ.1 (unip (γ + x) * (g * upR y)) = φ.1 (unip x * (g * upR y)) := by
     rintro _ ⟨q, rfl⟩ x
     rw [hx, hx]

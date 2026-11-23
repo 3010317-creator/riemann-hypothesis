@@ -1,15 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsApprox
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SmulMemLatO
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjSmulConjSmul
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergFinitePointReadsClassicalTranslation
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdealIndicatorReadsNormPowMulIntertwinedVacuum
+public import Formalism.SharpRestriction.GlobalSchurBounds.StandardLatticesGL3
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaTranslationIntertwinerUnitary
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SmulMemLatO
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSelfDualCOfSd
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutes
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaTranslationIntertwinerUnitaryStatement
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.VacuumUnderAdelicPairModulusOne
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdempotentMulEqZeroOfOrthogonal
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IdempotentSumInfPartIntegralOneSubMem
@@ -288,7 +289,7 @@ theorem _root_.GlobalTheory.T.cosetIndicator_reads_as_translate_curveTheta : ∀
   have k0 : Formalism.MainNotions.StandardLatticesGL3.KLat D (tor0 D ⊤ δ) (La0 D (tor0 D ⊤ δ) S.rank T.rank) :=
     GlobalTheory.NormSum.VacMove.klat _ (GlobalTheory.NormSum.VacMove.moves_one D _) (GlobalTheory.NormSum.VacMove.moves_one D _)
   have kB := klat_skew δ h𝔪 S.rank T.rank
-  have hH := (GlobalTheory.T.intertwinerUnitary_all D ⊤ δ hs.crv _ _ _ _ k0 kB G hG).2.1
+  have hH := (_root_.GlobalTheory.theta_translation_intertwiner_unitary D ⊤ δ hs.crv _ _ _ _ k0 kB G hG).2.1
   have htop : (⊤ : Ideal (𝓞 D.host.E)) ≠ ⊥ := top_ne_bot
   have hz1 : z ∈ skewMat D ⊤ S.rank T.rank := by
     simpa using mem_skewMat htop hz (c := 1) trivial

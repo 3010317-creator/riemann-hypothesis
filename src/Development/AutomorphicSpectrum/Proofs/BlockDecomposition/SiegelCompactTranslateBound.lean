@@ -3,12 +3,16 @@ module
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GoodConstOfAniso
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SumFrameIdem
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AdeleSplitSndDiagonal
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactFiniteAdelicDenominatorStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConeFrameWeightRatioBoundStatement
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactFiniteAdelicDenominator
+public import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsAuxiliaryPlaceNotMemFinset
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConeFrameWeightRatioBound
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EqZeroOfIsIntegralMulOfSmall
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FrameBlockZeroStabilizesFlagStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MinimalParabolicFrameBlockZeroStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TorusArchimedeanFrameActionStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FrameBlockZeroStabilizesFlag
+public import Development.WeilBound.ThetaLifts.Reductions.SiegelCore
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MinimalParabolicFrameBlockZero
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsSmoothModerateOfIsAutFunSm
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TorusArchimedeanFrameAction
 public import Development.WeilBound.ThetaLifts.Reductions.SiegelAbs
 public import Development.WeilBound.ThetaLifts.Reductions.SiegelPar
 import Mathlib.Algebra.Order.Floor.Extended
@@ -106,7 +110,7 @@ theorem exists_denom : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     Units.continuous_val.comp (isEmbedding_matHom (Af F) σ J).continuous
   have hf : ∀ q, Continuous (f q) := fun q =>
     ((continuous_const.matrix_mul hcont).matrix_mul continuous_const).matrix_elem _ _
-  obtain ⟨d, hd, h⟩ := GlobalTheory.T.compact_finite_adelic_denominator F E (⋃ q, f q '' Cf) (isCompact_iUnion fun q => hCf.image (hf q))
+  obtain ⟨d, hd, h⟩ := _root_.GlobalTheory.CompanionTheory.AdeleDenom.exists_nat_mul_isIntegral_of_isCompact F E (⋃ q, f q '' Cf) (isCompact_iUnion fun q => hCf.image (hf q))
   refine ⟨d, hd, fun p hp a ha m hm γ hγ α β u v => h _ (Set.mem_iUnion.2 ⟨(α, β, u, v), projFin σ J (ratEmb σ J γ), ⟨(p, m), ⟨hp, hm⟩, ?_⟩, ?_⟩)⟩
   · have ha' : projFin σ J a = 1 := mem_infPts.1 ha
     simp only [hγ, map_mul, map_inv, ha', mul_one, one_mul, inv_one]
@@ -124,7 +128,7 @@ theorem frameLev_le (s : Fin r) (α : FrameIx r) : frameLev s α ≤ 2 := by
 
 theorem block_bound : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (n : ℕ) (J : Matrix (Fin n) (Fin n) E), IsHermND σ J → ∀ (r : ℕ) (X Y : Matrix (Fin n) (Fin r) E), IsWittFrame σ J X Y → ∀ (Ω C : Set (GAd σ J)), IsCompact Ω → Ω ⊆ minParOne σ J X → IsCompact C → ∀ c : ℝ, 0 < c → ∃ B : ℝ, 0 ≤ B ∧ ∀ p ∈ Ω, ∀ t ∈ cone r c, ∀ a, IsTorusElt σ J X Y t a → ∀ m ∈ C, ∀ (w : InfinitePlace F) (τ : EmbOver E w) (s : Fin r) (α β : FrameIx r), frameLev s α < 2 → frameLev s β = 2 → ∀ u v : Fin n, ‖((frameIdem (σ : E →+* E) J X Y α).map τ.1 * archMat σ J τ (projArch σ J w (p * a * m * a⁻¹ * p⁻¹)) * (frameIdem (σ : E →+* E) J X Y β).map τ.1) u v‖ ≤ B / ratio t s := by
   intro F E _ _ _ _ _ σ h n J hJ r X Y hW Ω C hΩ hΩP hC c hc
-  obtain ⟨K, hK0, hK⟩ := GlobalTheory.T.cone_frame_weight_ratio_bound r c hc
+  obtain ⟨K, hK0, hK⟩ := _root_.GlobalTheory.CompanionTheory.RapidDecay.frameWt_div_le_div_ratio r c hc
   have hb : ∀ q : (Σ w : InfinitePlace F, EmbOver E w) × FrameIx r × FrameIx r × FrameIx r × FrameIx r × Fin n × Fin n,
       ∃ B : ℝ, ∀ x ∈ Ω ×ˢ C,
       ‖((frameIdem (σ : E →+* E) J X Y q.2.1).map q.1.2.1 * archMat σ J q.1.2 (projArch σ J q.1.1 x.1) *
@@ -160,7 +164,7 @@ theorem block_bound : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
         rw [map_sum]; rfl
     rw [this, sum_frameIdem, map_one]
   have hTor : ∀ β, A * P β = ((frameWt t β : ℝ) : ℂ) • P β := fun β =>
-    GlobalTheory.T.torus_archimedean_frame_action F E σ h n J hJ r X Y hW t a ha ht.1 w τ β
+    _root_.GlobalTheory.CompanionTheory.RapidDecay.torus_mul_frameIdem F E σ h n J hJ r X Y hW t a ha ht.1 w τ β
   have hA : A = ∑ β, ((frameWt t β : ℝ) : ℂ) • P β := by
     calc A = A * ∑ β, P β := by rw [hP, Matrix.mul_one]
       _ = _ := by rw [Finset.mul_sum]; exact Finset.sum_congr rfl fun β _ => hTor β
@@ -184,7 +188,7 @@ theorem block_bound : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
       (P α * G * P α' * M₁ * P β' * G' * P β)) u v‖ ≤ K * Bt / ratio t s := fun α' β' => by
     have hnn : 0 ≤ K * Bt / ratio t s := div_nonneg (mul_nonneg hK0 hBt0) hr.le
     by_cases h1 : frameLev s α' = 2
-    · have h0 : P α * G * P α' = 0 := GlobalTheory.T.minimal_parabolic_frame_block_zero F E σ h n J hJ r X Y hW p hp' w τ s α α' hα h1
+    · have h0 : P α * G * P α' = 0 := _root_.GlobalTheory.CompanionTheory.RapidDecay.minPar_frame_block_eq_zero F E σ h n J hJ r X Y hW p hp' w τ s α α' hα h1
       simpa [h0] using hnn
     by_cases h2 : frameLev s β' = 2
     · have h3 : frameLev s α' < frameLev s β' := by
@@ -201,7 +205,7 @@ theorem block_bound : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
       calc _ ≤ K / ratio t s * Bt := mul_le_mul h4 h5 (norm_nonneg _) (div_nonneg hK0 hr.le)
         _ = _ := by ring
     · have h3 : frameLev s β' < 2 := lt_of_le_of_ne (frameLev_le s β') h2
-      have h0 : P β' * G' * P β = 0 := GlobalTheory.T.minimal_parabolic_frame_block_zero F E σ h n J hJ r X Y hW p⁻¹ hp'' w τ s β' β h3 hβ
+      have h0 : P β' * G' * P β = 0 := _root_.GlobalTheory.CompanionTheory.RapidDecay.minPar_frame_block_eq_zero F E σ h n J hJ r X Y hW p⁻¹ hp'' w τ s β' β h3 hβ
       have h7 : P α * G * P α' * M₁ * P β' * G' * P β = 0 := by
         simp only [Matrix.mul_assoc] at h0 ⊢
         simp [h0]
@@ -255,7 +259,7 @@ theorem flag_key : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
         rw [← mul_div_assoc, div_lt_one hr0]
         nlinarith
       exact pow_lt_one₀ (by positivity) h2 Module.finrank_pos.ne'
-  exact GlobalTheory.T.frame_block_zero_stabilizes_flag E (σ : E →+* E) n r J X Y (gram_YX hcm hJ hW) γ.1.1 j hzero l hl
+  exact _root_.GlobalTheory.CompanionTheory.RapidDecay.stabilises_flag_span E (σ : E →+* E) n r J X Y (gram_YX hcm hJ hW) γ.1.1 j hzero l hl
 
 end GlobalTheory.CompanionTheory.FlagKey
 

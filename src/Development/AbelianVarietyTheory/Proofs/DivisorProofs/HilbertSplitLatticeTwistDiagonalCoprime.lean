@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasLevelStd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemHilbertLatticeTwistIffLiftStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemHilbertLatticeTwistIffLift
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,7 +78,7 @@ theorem twist_split_diagonal : ∀ (F : Type) [Field F] [NumberField F] [IsTotal
     rw [← zsmul_eq_mul]
     exact zsmul_mem hm n
   ext v
-  rw [hA, GlobalTheory.T.mem_hilbertLatticeTwist_iff_lift F N _ _ v hlev.2]
+  rw [hA, _root_.GlobalTheory.HilbFam.TwistMem.mem_twist_iff F N _ _ v hlev.2]
   constructor
   · rintro ⟨y, hy, w, hw, rfl⟩
     rw [hv0]

@@ -3,10 +3,13 @@ module
 public import Development.AbelianVarietyTheory.Definitions.CommutativeAlgebra.InvariantSubspaceMobiusInverseRecEqOfFinrankLt
 public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.CharpolyBlockAndInvariantUnderStabilizerNilradic
 public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.FinsumMobiusInverseCharpolyInvariantLe
-import Development.AbelianVarietyTheory.Proofs.CharacterTheory.InvariantSubspaceMobiusInverseCharpolyLinearEqui
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AevalApplyMem
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSurjectivePiAdjoinRootKerEqRangeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MobiusInversionAffineFinrankSubspacesStatement
+public import Mathlib.RingTheory.AdjoinRoot
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSurjectivePiAdjoinRootKerEqRange
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MobiusInversionAffineFinrankSubspaces
+import Development.AbelianVarietyTheory.Proofs.CharacterTheory.InvariantSubspaceMobiusInverseCharpolyLinearEqui
 import Mathlib.Algebra.AffineMonoid.UniqueSums
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -172,7 +175,7 @@ theorem psi_primary : ∀ (F : Type) [Field F] [Finite F] (V : Type) [AddCommGro
   haveI : Fact (Irreducible f) := ⟨hi⟩
   have he : 0 < f.natDegree := hi.natDegree_pos
   have he' : (f.natDegree : ℂ) ≠ 0 := by exact_mod_cast he.ne'
-  obtain ⟨t', π, hsurj, hπ, hker, ht'⟩ := GlobalTheory.T.exists_surjective_pi_adjoinRoot_ker_eq_range' F V g f
+  obtain ⟨t', π, hsurj, hπ, hker, ht'⟩ := _root_.GlobalTheory.exists_surjective_pi_adjoinRoot_ker_eq_range F V g f
   obtain rfl : t' = t := Nat.eq_of_mul_eq_mul_left he (ht'.symm.trans ht)
   haveI : Module.Finite F (AdjoinRoot f) := (AdjoinRoot.powerBasis hi.ne_zero).finite
   have hK : Module.finrank F (AdjoinRoot f) = f.natDegree := (AdjoinRoot.powerBasis hi.ne_zero).finrank
@@ -209,7 +212,7 @@ theorem psi_primary : ∀ (F : Type) [Field F] [Finite F] (V : Type) [AddCommGro
   let G : Submodule (AdjoinRoot f) (Fin t' → AdjoinRoot f) → ℂ :=
     fun B => ∑ W ∈ Finset.univ.filter (fun W => Φ W = B), P W
   have hrk : Module.finrank (AdjoinRoot f) (Fin t' → AdjoinRoot f) = t' := by simp
-  have main := GlobalTheory.T.mobiusInversion_affine_finrank_subspaces (AdjoinRoot f) (Fin t' → AdjoinRoot f) G
+  have main := _root_.GlobalTheory.CuspGL.moebius_affine_finrank (AdjoinRoot f) (Fin t' → AdjoinRoot f) G
     ((Module.finrank F (LinearMap.ker π) : ℂ) * s f / f.natDegree) (s f) (by rw [hrk]; exact htpos) (by
       intro A
       have hA : ∀ x ∈ (A.restrictScalars F).comap π, g x ∈ (A.restrictScalars F).comap π := by

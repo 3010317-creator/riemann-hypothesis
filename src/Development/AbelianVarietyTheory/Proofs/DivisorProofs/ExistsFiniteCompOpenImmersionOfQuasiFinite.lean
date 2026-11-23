@@ -4,11 +4,16 @@ public import Mathlib.AlgebraicGeometry.Morphisms.QuasiFinite
 public import Mathlib.AlgebraicGeometry.Normalization
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
 public import Mathlib.Order.CompletePartialOrder
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AwayMapBijectiveOfRangeEqSubalgebraStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteCoequifiberedSubalgebraStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinsetAwayMapSubalgebraBijectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalizationBasicOpenCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelSpecMapIsIsoOverBasicOpenStatement
+public import Mathlib.Algebra.Algebra.Subalgebra.Basic
+public import Mathlib.RingTheory.Localization.Away.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AwayMapBijectiveOfRangeEqSubalgebra
+public import Mathlib.AlgebraicGeometry.Noetherian
+public import Mathlib.AlgebraicGeometry.Sites.SmallAffineZariski
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteCoequifiberedSubalgebra
+public import Mathlib.RingTheory.FiniteType
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinsetAwayMapSubalgebraBijective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalizationBasicOpenCover
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelSpecMapIsIsoOverBasicOpen
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -160,7 +165,7 @@ theorem isIso_restrict_basicOpen (X : Scheme.{0}) (F F' : X.AffineZariskiSiteᵒ
     IsIso (g ∣_ W) ∧ ((g ⁻¹ᵁ W : (relativeGluingData hα).glued.Opens) : Set (relativeGluingData hα).glued) =
       (relativeGluingData hα).cover.f V '' (PrimeSpectrum.basicOpen ((ι.app (Opposite.op V)).hom b) :
         Set (PrimeSpectrum (F.obj (Opposite.op V)))) :=
-  GlobalTheory.T.relSpec_map_isIso_over_basicOpen_alt X F F' α α' hα hα' ι hι g hg₁ hg₂ V b hb W hW
+  _root_.GlobalTheory.relSpec_map_isIso_over_basicOpen X F F' α α' hα hα' ι hι g hg₁ hg₂ V b hb W hW
 
 theorem exists_basicOpen_cover (U X : Scheme.{0}) (f : U ⟶ X) (h₁ : IsSeparated f)
     (h₂ : LocallyOfFiniteType f) (h₃ : QuasiCompact f) (h₄ : LocallyQuasiFinite f)
@@ -171,14 +176,14 @@ theorem exists_basicOpen_cover (U X : Scheme.{0}) (f : U ⟶ X) (h₁ : IsSepara
       ∀ x : U, f x ∈ V.1 → ∃ b ∈ G, f.toNormalization x ∈
         f.normalizationOpenCover.f V '' (PrimeSpectrum.basicOpen b :
           Set (PrimeSpectrum (f.normalizationDiagram.obj (Opposite.op V.1)))) :=
-  GlobalTheory.T.normalization_basicOpen_cover' U X f V
+  _root_.GlobalTheory.normalization_basicOpen_cover U X f V
 
 theorem bijective_awayMap_of_range (R A B : Type) [CommRing R] [CommRing A] [CommRing B]
     [Algebra R B] (C : Subalgebra R B) (φ : A →+* B) (hφ : Function.Injective φ)
     (hC : ∀ x, x ∈ C ↔ ∃ y, φ y = x) (a : A) (b : B) (hab : φ a = b)
     (h : ∀ hb : b ∈ C, Function.Bijective (Localization.awayMap C.val.toRingHom (⟨b, hb⟩ : C))) :
     Function.Bijective (Localization.awayMap φ a) :=
-  GlobalTheory.T.awayMap_bijective_of_injective_of_range_eq_subalgebra R A B C φ hφ hC a b hab h
+  _root_.GlobalTheory.awayMap_bijective_of_range_eq_subalgebra R A B C φ hφ hC a b hab h
 
 
 set_option backward.isDefEq.respectTransparency false in
@@ -207,7 +212,7 @@ theorem exists_finite_openImmersion : ∀ (U X : Scheme.{0}) (f : U ⟶ X), IsNo
           Function.Bijective (Localization.awayMap C.val.toRingHom (⟨b, hb⟩ : C)) := by
     intro k
     letI := (f.normalizationDiagramMap.app (Opposite.op (V k).1)).hom.toAlgebra
-    exact GlobalTheory.T.exists_finset_awayMap_bijective_of_subalgebra_ge _ _ (G k) (hGfin k)
+    exact _root_.GlobalTheory.exists_finset_awayMap_subalgebra_bijective _ _ (G k) (hGfin k)
   choose s hGs hsC using hs
   have hint : ∀ W : X.Opens, IsAffineOpen W →
       (f.normalizationDiagramMap.app (Opposite.op W)).hom.IsIntegral := by
@@ -215,7 +220,7 @@ theorem exists_finite_openImmersion : ∀ (U X : Scheme.{0}) (f : U ⟶ X), IsNo
     letI := (f.app W).hom.toAlgebra
     change (algebraMap Γ(X, W) (integralClosure Γ(X, W) Γ(U, f ⁻¹ᵁ W))).IsIntegral
     exact algebraMap_isIntegral_iff.mpr inferInstance
-  obtain ⟨F', α', ι, hα', hι, hιinj, hfin, hιS⟩ := GlobalTheory.T.exists_finite_coequifibered_subalgebra_alt X hX f.normalizationDiagram
+  obtain ⟨F', α', ι, hα', hι, hιinj, hfin, hιS⟩ := _root_.GlobalTheory.QcSub.exists_finite_coequifibered_subalgebra X hX f.normalizationDiagram
     f.normalizationDiagramMap f.coequifibered_normalizationDiagramMap hint n V s
   obtain ⟨g, hg₁, hg₂⟩ := exists_glued_map X _ F' _ α' f.coequifibered_normalizationDiagramMap hα' ι hι
   refine ⟨_, (relativeGluingData hα').toBase, f.toNormalization ≫ g,

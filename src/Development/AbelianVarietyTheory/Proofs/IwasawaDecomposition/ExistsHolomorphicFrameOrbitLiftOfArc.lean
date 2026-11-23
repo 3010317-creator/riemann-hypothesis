@@ -2,20 +2,24 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MonoSpMapRingOfIntegersAlt
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CongruenceActionMemFrameOrbit
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ArcOffBoundaryDescendsToModuliLocalization
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsConstSubstitutionOfHolomorphicFamilies
+public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsGenericComponentPointsOffMeagre
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHolomorphicFramesSamePeriodCoordinates
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnipotentTriangularOfPeriodCoordinatesEq
+public import Mathlib.Analysis.Convex.Basic
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GermSectionsHalfPlaneGlobalSection
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FamilyUnifFibreLatticeEqOfPullback
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsHolomorphicPeriodsAdapted
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ImNegOfFramePeriodVector
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ArcOffBoundaryDescendsToModuliLocalizationStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsConstSubstitutionOfHolomorphicFamiliesStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHolomorphicFramesSamePeriodCoordinatesStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnipotentTriangularOfPeriodCoordinatesEqStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GermSectionsHalfPlaneGlobalSectionStatement
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLevelBlockOfEq
 import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ContinuousOnThetaFrameValueHolomorphicFamily
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsInvariantNatLengthLattice
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HolomorphicHomDetermined
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.DifferentiableOnExponentialFrameMatrix
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExponentialDerivativeAtZeroIsTangent
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FamilyUnifFibreLatticeEqOfPullback
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsDerivAt0CompLinear
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.UniformizationPeriodLatticeChange
 import Formalism.LocalToGlobal.ProjectiveLattices.FreeBridge
@@ -55,7 +59,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
-public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsGenericComponentPointsOffMeagre
 
 @[expose] public section
 
@@ -214,10 +217,10 @@ theorem exists_adp_global (y : ℂ → FrPt Xo c (CAt σ)) (T : ℝ) (hper : ∀
       (∀ z ∈ U, Adp F (y z) k (s z) ∧ ∀ a, DifferentiableAt ℂ (fun b => s b a) z) →
       (∀ z ∈ U, Adp F (y z) k (s' z) ∧ ∀ a, DifferentiableAt ℂ (fun b => s' b a) z) →
       ∃ δ : Lev (F.Di k) l, ∀ w ∈ U, ∀ a, s' w a = s w (δ.1 a) := fun U s s' h1 h2 h3 h4 h5 =>
-    GlobalTheory.T.exists_const_substitution_of_holomorphic_families' _ (Lev (F.Di k) l) g (fun δ a => δ.1 a) U (fun w a => s w a) (fun w a => s' w a) h1 h2.isPreconnected h3
+    _root_.GlobalTheory.exists_const_substitution_of_holomorphic_families _ (Lev (F.Di k) l) g (fun δ a => δ.1 a) U (fun w a => s w a) (fun w a => s' w a) h1 h2.isPreconnected h3
       (fun a z hz => ((h4 z hz).2 a).differentiableWithinAt) (fun a z hz => ((h5 z hz).2 a).differentiableWithinAt)
       fun w hw => (h4 w hw).1.exists_lev (h5 w hw).1
-  obtain ⟨P, hP⟩ := GlobalTheory.T.germSections_halfPlane_global_section _ (fun w (s : ℂ → ((F.Di k).La →+ (Fin g → ℂ))) =>
+  obtain ⟨P, hP⟩ := _root_.GlobalTheory.germSections_halfPlane_global _ (fun w (s : ℂ → ((F.Di k).La →+ (Fin g → ℂ))) =>
       Adp F (y w) k (s w) ∧ ∀ a, DifferentiableAt ℂ (fun b => s b a) w) T
     (fun w s s' h h' => ⟨h.self_of_nhds ▸ h'.1, fun a =>
       (h'.2 a).congr_of_eventuallyEq (h.mono fun z hz => by simp only [hz])⟩) hidx
@@ -318,7 +321,7 @@ theorem exists_orbit_lift : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   obtain ⟨k, x₀, t, hx₀⟩ := hcov (y (eTwoPi (((T + 1 : ℝ) : ℂ) * Complex.I)))
   obtain ⟨P₀, hP₀e, hP₀, hu₀, -⟩ := hpt k x₀
   obtain ⟨P, δ, hPd, hP⟩ := exists_adp_global F (fun w => y (eTwoPi w)) T (fun w => by rw [he1]) (fun w hw => by
-    have hdesc := GlobalTheory.T.arc_off_boundary_descends_to_moduli_localization E H Dw l Xo c O β Z σ A φ x fr ψ r y harc hm
+    have hdesc := _root_.GlobalTheory.ShFam.BdArc.arc_descends_to_moduli E H Dw l Xo c O β Z σ A φ x fr ψ r y harc hm
       (eTwoPi w) (hT w hw) (Complex.exp_ne_zero _)
     rcases hdesc with ⟨R, instR, hdesc⟩
     letI : CommRing R := instR
@@ -346,7 +349,7 @@ theorem exists_orbit_lift : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
     exact h a j
   haveI : Inhabited (Frame (U.X k).Ψ N) := inferInstance
   choose! x₁ hx₁ hr₁ using fun (w : ℂ) (hw : T < w.im) => honto (P w) (hP w hw).1.1
-  obtain ⟨xx, hxd, hxx⟩ := GlobalTheory.T.exists_holomorphicFrames_same_periodCoordinates E N (U.X k) {w : ℂ | T < w.im} x₁ hx₁
+  obtain ⟨xx, hxd, hxx⟩ := _root_.GlobalTheory.HolFrameLift.exists_holomorphic_frames E N (U.X k) {w : ℂ | T < w.im} x₁ hx₁
     (hall fun a j => (differentiableOn_pi.1 (hPd a) j).congr fun w hw => hr₁ w hw a j)
   have hxP : ∀ w : ℂ, T < w.im → ∀ a j,
       GlobalTheory.GenericFrames.pc (U.X k) (xx w) (φL k a : Fin N → E) (idx j).1 (idx j).2 = P w a j :=
@@ -363,7 +366,7 @@ theorem exists_orbit_lift : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   refine ⟨k, T, M, γ, xx, hT, ⟨hM, hγ, hxd, fun w hw => (hxx w hw).1, fun w hw => ?_⟩,
     fun w hw => ⟨(hxx w hw).1, ?_⟩⟩
   · have hw' : T < (w + M).im := by simpa using hw
-    refine GlobalTheory.T.exists_unipotentTriangular_of_periodCoordinates_eq E N (U.X k) _ _ (dom_lact _ (hxx w hw).1 ((U.X k).Γ_stab γ hγ)) (hxx _ hw').1
+    refine _root_.GlobalTheory.PeriodUnipotent.exists_unipotent_of_pc_eq E N (U.X k) _ _ (dom_lact _ (hxx w hw).1 ((U.X k).Γ_stab γ hγ)) (hxx _ hw').1
       (hall fun a j => ?_)
     rw [hxP _ hw', hsh M w hw, ← hxP w hw, ← hper, ← hper,
       ← GlobalTheory.CongrOrbit.perFr_lact _ _ γ ((U.X k).Γ_stab γ hγ).1]

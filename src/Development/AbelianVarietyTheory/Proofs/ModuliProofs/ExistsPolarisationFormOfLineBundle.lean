@@ -5,13 +5,15 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDesc
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsPicardGroup
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.DenseTorsionAndEqOne
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsClosedTriv
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsTorsionCubeLBIsoPolarisationTranslateStatement
-import Development.AbelianVarietyTheory.Proofs.ThetaFamilyOrigin.IsIntegralOfIsAbelianSchemeField
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsTorsionCubeLBIsoPolarisationTranslate
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.KTrivExternalTensorPowerLineBundle
+public import Mathlib.AlgebraicGeometry.ZariskisMainTheorem
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.LocGenOfTrivial
+import Development.AbelianVarietyTheory.Proofs.ThetaFamilyOrigin.IsIntegralOfIsAbelianSchemeField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
-public import Mathlib.AlgebraicGeometry.ZariskisMainTheorem
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
@@ -53,7 +55,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.LocGenOfTrivial
 
 @[expose] public section
 
@@ -191,7 +192,7 @@ theorem exists_formIs : Out.Laws → Out.Laws2 → ∀ (K : Type) [Field K] [IsA
     rw [← Set.range_eq_univ, ← q.isClosedEmbedding.isClosed_range.closure_eq]
     refine ((GlobalTheory.PrimePowerTorsion.dense_torsion_and_eq_one hA hB K P l hl1 hl2).1.mono ?_).closure_eq
     refine Set.iUnion₂_subset fun x ⟨j, hj⟩ => ?_
-    obtain ⟨y, -, hy⟩ := GlobalTheory.T.exists_torsion_cubeLB_iso_polarisation_translate hA hB K P M (l ^ j) x hM (by push_cast; exact pow_ne_zero _ hl2) hj
+    obtain ⟨y, -, hy⟩ := _root_.GlobalTheory.exists_torsion_lbIso_cubeLB hA hB K P M (l ^ j) x hM (by push_cast; exact pow_ne_zero _ hl2) hj
     rw [← hiso _ _ _ (ci hM _ _) (ci P.isLB _ _), cc hM, cc P.isLB] at hy
     have hy' := congrArg (pl (snd (𝟙_ (Over (Sp K))) P.A).left) hy
     rw [pl_lam @pl hc, pl_lam @pl hc, Category.comp_id, ← Category.assoc, ← Category.assoc,

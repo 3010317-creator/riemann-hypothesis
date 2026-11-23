@@ -3,15 +3,16 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFockMap
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchActionReadingsCompatibleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchHeisenbergDerivativesExistStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EigenIntertwinerGoodModelsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHeckeCharacterRestrictionStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasCompactSupportFinprodSchwartzBruhatFiniteAdel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchActionReadingsCompatible
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchHeisenbergDerivativesExist
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EigenIntertwinerGoodModels
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHeckeCharacterRestriction
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeCharactersRestrictionEta
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatFiniteAdelesMemSpanRestrictedProdu
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaModelChange
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasCompactSupportFinprodSchwartzBruhatFiniteAdel
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocallyConstantFinprodSchwartzBruhatFiniteAdel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatFiniteAdelesMemSpanRestrictedProduStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaModelChangeStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -149,7 +150,7 @@ end
 
 theorem exists_chr (B : Base F E) (hB : B.IsGood σ) (m : ℕ) :
     ∃ χ : Chr F E, IsHecke F E χ ∧ ResEtaPow (Units.map (algebraMap F (AF F)).toMonoidHom).range χ m := by
-  obtain ⟨χ, hχ, hr⟩ := GlobalTheory.T.exists_hecke_character_restriction F E σ B hB
+  obtain ⟨χ, hχ, hr⟩ := _root_.GlobalTheory.CMHeckeEta.exists_hecke_resEtaPow_one F E σ B hB
   refine ⟨χ ^ m, ⟨hχ.1.pow m, fun x => ?_⟩, fun a => ?_⟩
   · rw [MonoidHom.pow_apply, hχ.2 x, one_pow]
   · rw [MonoidHom.pow_apply, Circle.coe_pow, hr a]
@@ -170,7 +171,7 @@ theorem exists_modelChange_pol : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E :
   obtain ⟨χW, hcW, rW⟩ := exists_chr B hB d
   obtain ⟨om, hom⟩ := GlobalTheory.WeilExGen.exists_isWeil hK F E σ B hB n d X W r s r' s' hX hW M hM χX χW hcX hcW rX rW
   obtain ⟨om', hom'⟩ := GlobalTheory.WeilExGen.exists_isWeil hK F E σ B hB n d X W r s r' s' hX hW M' hM' χX χW hcX hcW rX rW
-  obtain ⟨e, -, -, hE, hbij, -⟩ := GlobalTheory.T.theta_model_change hK F E σ B n d X W M χX χW om r s r' s'
+  obtain ⟨e, -, -, hE, hbij, -⟩ := _root_.GlobalTheory.ModelChg.modelChange hK F E σ B n d X W M χX χW om r s r' s'
     ⟨hB, hX, hW, hM, hcX, hcW, rX, rW, hom⟩ M' om' ⟨hB, hX, hW, hM', hcX, hcW, rX, rW, hom'⟩
   obtain ⟨ei, ev, -, hv, hl⟩ := hE.loc
   have hg : finPr M.vac ∈ SB _ := finPr_mem _ (fun v => (hM.vac v).1) hM.std
@@ -204,7 +205,7 @@ theorem exists_modelChange_pol : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E :
       exact ⟨c • f, fun x => by simp [hf]⟩
     | mem Φ hΦ =>
       obtain ⟨f, g, hg, rfl⟩ := hΦ
-      replace hg := GlobalTheory.T.schwartzBruhat_finiteAdeles_mem_span_restrictedProducts F _ g hg
+      replace hg := _root_.GlobalTheory.SBSpan.mem_span_restrictedProd F _ g hg
       induction hg using Submodule.span_induction with
       | zero => exact ⟨0, fun x => by
           rw [show pureA F f 0 = 0 from funext fun _ => mul_zero _]; simp⟩
@@ -234,8 +235,8 @@ theorem exists_modelChange_pol : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E :
     rw [h1, pureA_pt] at h2
     rw [map_smul, smul_apply, ← h2, smul_eq_mul]
     field_simp
-  obtain ⟨D, hD⟩ := GlobalTheory.T.archHeisenbergDerivatives_exist F E σ _ _ _ B.ψ _ _ M.co hB.std
-  obtain ⟨D', hD'⟩ := GlobalTheory.T.archHeisenbergDerivatives_exist F E σ _ _ _ B.ψ _ _ M'.co hB.std
+  obtain ⟨D, hD⟩ := _root_.GlobalTheory.HeisDer.derEx F E σ _ _ _ B.ψ _ _ M.co hB.std
+  obtain ⟨D', hD'⟩ := _root_.GlobalTheory.HeisDer.derEx F E σ _ _ _ B.ψ _ _ M'.co hB.std
   have Heisenberg₂ : ∀ u, ∀ Φ ∈ schA F (Fin n × Fin d), e (M.co.rho B.ψ u Φ) = M'.co.rho B.ψ u (e Φ) := by
     intro u Φ hΦ
     have h1 : ∀ m : ℕ, incM F (1 : Matrix (Fin m) (Fin m) E) = 1 := fun m => Matrix.map_one _ (map_zero _) (map_one _)
@@ -243,10 +244,10 @@ theorem exists_modelChange_pol : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E :
     rwa [h1, h1, Matrix.transpose_one, Matrix.one_mul, Matrix.mul_one] at this
   refine ⟨e, hE, ei, ev, hsurj, ?_, hv, hl⟩
   refine pol_map M M' B.ψ B.emb (fun u f => D u f) (fun u f => D' u f)
-    (fun u hu f => actsD_iff GlobalTheory.T.archActionReadings_compatible M B.ψ u f _ (hD u hu f).1) (fun u hu f => actsD_iff GlobalTheory.T.archActionReadings_compatible M' B.ψ u f _ (hD' u hu f).1)
+    (fun u hu f => actsD_iff _root_.GlobalTheory.RealLift.actsLaws M B.ψ u f _ (hD u hu f).1) (fun u hu f => actsD_iff _root_.GlobalTheory.RealLift.actsLaws M' B.ψ u f _ (hD' u hu f).1)
     _ ⟨hinj, hsurj⟩ fun u hu f => ?_
   refine SchwartzMap.ext fun x => ?_
-  have h1 := (hD u hu f).1 _ hg _ (GlobalTheory.T.eigen_intertwiner_good_models F E σ B n d n d X W X W M M' 1 1 ∅ e hM hM' hE _ (proj_adm x y'))
+  have h1 := (hD u hu f).1 _ hg _ (_root_.GlobalTheory.EvAdm.comp_mem_adm F E σ B n d n d X W X W M M' 1 1 ∅ e hM hM' hE _ (proj_adm x y'))
   have h2 := (hD' u hu (ei f)).1 _ hg' _ (proj_adm x y')
   simp only [LinearMap.comp_apply, hvac] at h1
   have heq : (fun (t : ℝ) => (LinearMap.proj (pt x y') : Fn F n d →ₗ[ℂ] ℂ) (e (M.co.rho B.ψ (realAd F t • u) (pureA F f (finPr M.vac))))) =

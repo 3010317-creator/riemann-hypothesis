@@ -4,13 +4,13 @@ public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentation
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.AdDecompK
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsSmoothModerateOfIsAutFunSm
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.DilationDecomposition.LocDerBig
+public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelWeilKsplitSplitW
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.SiegelSetUnitary
+public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.DilationDecomposition.Bridge
 import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelWeilKdilAssembly
 import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelWeilKdilSplit
 import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelWeilKdilTbBdd
 import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelWeilKdilTheta
-public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.ThetaKernels.SiegelWeilKsplitSplitW
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.SiegelSetUnitaryStatement
-public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.DilationDecomposition.Bridge
 import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.FockSpaces.ProdGenMem
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -65,7 +65,7 @@ theorem gIdil_k (hT : _root_.PositivityTheory.SiegelWeilFormula.TAll_k) (hAux : 
   _root_.PositivityTheory.SiegelWeilFormula.Kdil.gIdil_of_k hT hAux hLE (_root_.PositivityTheory.SiegelWeilFormula.Kdil.thetaPt_of_k hT) (fun _ _ P => KFock.isSw_fP P) matCount (_root_.PositivityTheory.SiegelWeilFormula.Kdil.splitDom_of_k hT hAw _root_.PositivityTheory.SiegelWeilFormula.Kdil.decompW_k)
     (_root_.PositivityTheory.SiegelWeilFormula.Kdil.thetaBdd_of_k hS) hLF hBD holMean derCont stripOK
 theorem gIdil'_k (hT : _root_.PositivityTheory.SiegelWeilFormula.TAll_k) (hAux : _root_.PositivityTheory.SiegelWeilFormula.SiegelWeilDatumProperties) (hLE : _root_.PositivityTheory.SiegelWeilFormula.LocOpEx_k) (hAw : _root_.PositivityTheory.SiegelWeilFormula.AwayAct_k) (hLF : _root_.PositivityTheory.SiegelWeilFormula.Kdil.LocFamG_k) : _root_.PositivityTheory.SiegelWeilFormula.GIdil_k :=
-  _root_.PositivityTheory.SiegelWeilFormula.Kdil.gIdil_k hT hAux hLE hAw GlobalTheory.T.siegel_set_unitary hLF bigDense
+  _root_.PositivityTheory.SiegelWeilFormula.Kdil.gIdil_k hT hAux hLE hAw _root_.GlobalTheory.CompanionTheory.SiegelRed.siegelSetUnitary hLF bigDense
 end PositivityTheory.SiegelWeilFormula.Kdil
 end
 end

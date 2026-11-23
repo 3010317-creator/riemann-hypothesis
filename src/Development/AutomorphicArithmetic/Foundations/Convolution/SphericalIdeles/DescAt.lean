@@ -3,7 +3,8 @@ module
 public import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.NormCharSplit
 public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.ParEx
 public import Development.AutomorphicArithmetic.Foundations.Convolution.IntegrableConvolution.EigBasic
-public import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.OccursBasics
+public import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.SummandFactor
+public import Development.WeilBound.CuspidalAdmissibility.OccursIff
 public import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.AbsLast
 public import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.CoreDescOf
 public import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.FdFixed
@@ -87,7 +88,7 @@ theorem _root_.UpperTheory.ConvolutionTheory.Sph.descAt (hCI : CI) (hGM : GM.GM)
   have hTE := termE
   have hGood := goodEx
   have hPl := places
-  have hOcc := C.occursBasics
+  have hOcc := _root_.PositivityTheory.TfC.OccursBasics_holds
   have hEig := L1.eigBasic
   obtain ⟨hInf, hUnr, hNe, -, -, -⟩ := places F E hp
   obtain ⟨-, -, h0⟩ := Dp.parEx E n hn μE V hV

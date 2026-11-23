@@ -4,11 +4,15 @@ public import Mathlib.AlgebraicGeometry.Morphisms.SchemeTheoreticallyDominant
 public import Mathlib.AlgebraicGeometry.Morphisms.Separated
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AnnihilatorAvoidsFibreMinimalPrimesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FibreDenseAffineChartPrimesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonZeroDivisorLocalizationGeneralOfNoetherianStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchemeTheoreticallyDominantOfGermInjectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothAlgebraLocalizationEqZeroOfAvoidFibreMinimStatement
+public import Mathlib.RingTheory.Spectrum.Prime.Topology
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AnnihilatorAvoidsFibreMinimalPrimes
+public import Mathlib.AlgebraicGeometry.AffineScheme
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FibreDenseAffineChartPrimes
+public import Mathlib.RingTheory.Localization.AtPrime.Basic
+public import Mathlib.RingTheory.Smooth.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonZeroDivisorLocalizationGeneralOfNoetherian
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchemeTheoreticallyDominantOfGermInjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothAlgebraLocalizationEqZeroOfAvoidFibreMinim
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -72,17 +76,17 @@ theorem alg (A B : Type) [CommRing A] [CommRing B] [Algebra A B] [Algebra.Smooth
     exact hb this
   obtain ⟨m, hm, hle⟩ := Ideal.exists_le_maximal I hI
   let u : PrimeSpectrum B := ⟨m, hm.isPrime⟩
-  obtain ⟨g, hg, hgQ⟩ := GlobalTheory.T.exists_annihilator_not_mem_minimalPrimes_le A B b h u
-  have h0 := GlobalTheory.T.nonZeroDivisor_localization_general_of_noetherian GlobalTheory.T.smooth_algebra_localization_eq_zero_of_avoid_fibre_minimal A B b g u hg hgQ
+  obtain ⟨g, hg, hgQ⟩ := _root_.GlobalTheory.annihilator_avoids_fibre_minimalPrimes A B b h u
+  have h0 := _root_.GlobalTheory.NzdDescent.of_noetherian _root_.GlobalTheory.FlatFibreRegular.localization_eq_zero_of_mul_eq_zero A B b g u hg hgQ
   obtain ⟨s, hs⟩ := (IsLocalization.map_eq_zero_iff u.asIdeal.primeCompl _ b).1 h0
   exact s.2 (hle (by simpa [I] using hs))
 
 theorem dense (X T : Scheme.{0}) (p : X ⟶ T) [Smooth p] (W : X.Opens)
     (hW : ∀ x : X, x ∈ closure ((W : Set X) ∩ p ⁻¹' {p x})) : IsSchemeTheoreticallyDominant W.ι := by
-  refine GlobalTheory.T.schemeTheoreticallyDominant_of_germ_injective X T p W fun U V hU hV e b hb => ?_
+  refine _root_.GlobalTheory.isSchemeTheoreticallyDominant_ι_of_germ_eq_zero_over_affine X T p W fun U V hU hV e b hb => ?_
   letI := (p.appLE V U e).hom.toAlgebra
   haveI : Algebra.Smooth Γ(T, V) Γ(X, U) := HasRingHomProperty.appLE @Smooth p ‹_› ⟨V, hV⟩ ⟨U, hU⟩ e
-  exact alg Γ(T, V) Γ(X, U) b (GlobalTheory.T.mem_closure_annihilator_primes_inter_fibre X T p W U V hU hV e hW b hb)
+  exact alg Γ(T, V) Γ(X, U) b (_root_.GlobalTheory.fibre_dense_affine_chart_primes X T p W U V hU hV e hW b hb)
 
 theorem ext_of_dominant {W X Y Z : Scheme.{0}} {f g : X ⟶ Y} (s : Y ⟶ Z) [IsSeparated s] (h : f ≫ s = g ≫ s)
     (d : W ⟶ X) [IsSchemeTheoreticallyDominant d] (hU : d ≫ f = d ≫ g) : f = g := by

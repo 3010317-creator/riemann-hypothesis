@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsRealCoord
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsIntegralMatrixRelatingIntegralVectorZBasesStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryOfPreservesHermitianTraceFormIntegralBasiStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsIntegralMatrixRelatingIntegralVectorZBases
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryOfPreservesHermitianTraceFormIntegralBasi
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -170,13 +170,13 @@ theorem bases_finite_classes : ∀ (I : AutInst) (N : ℕ) (R : ℝ), ∃ S : Se
     have htA : t ∈ A := ⟨fun k _ j _ i _ => hzb k j i, fun i _ j _ => ⟨hb.2 i j, hc _ _ (hint i) (hint j)⟩⟩
     have hex : ∃ e', IsZBasis I e' ∧ has e' t := ⟨e, he, ht⟩
     obtain ⟨he₀, ht₀⟩ := hpick t hex
-    obtain ⟨M, hMi, hMe⟩ := GlobalTheory.T.exists_integralMatrix_relating_integralVectorZBases I e (pick t) he he₀ (compat e (pick t) t he ht ht₀)
-    obtain ⟨M', hM'i, hM'e⟩ := GlobalTheory.T.exists_integralMatrix_relating_integralVectorZBases I (pick t) e he₀ he (compat (pick t) e t he₀ ht₀ ht)
+    obtain ⟨M, hMi, hMe⟩ := _root_.GlobalTheory.CuspGeo.exists_integral_matrix_of_same_mul I e (pick t) he he₀ (compat e (pick t) t he ht ht₀)
+    obtain ⟨M', hM'i, hM'e⟩ := _root_.GlobalTheory.CuspGeo.exists_integral_matrix_of_same_mul I (pick t) e he₀ he (compat (pick t) e t he₀ ht₀ ht)
     have h1 : M' * M = 1 := fix_one I e _ he fun j => by rw [← Matrix.mulVec_mulVec, hMe, hM'e]
     have h2 : M * M' = 1 := (mul_eq_one_comm_of_card_eq (Fin I.n) (Fin I.n) I.E rfl).mp h1
     let γ : GL (Fin I.n) I.E := ⟨M, M', h2, h1⟩
     refine ⟨pick t, ⟨t, ⟨htA, hex⟩, rfl⟩, γ, ?_, hMi, hM'i, hMe⟩
     show Formalism.UG.cT (starRingEnd I.E) M * I.J * M = I.J
-    exact GlobalTheory.T.unitary_of_preserves_hermitianTraceForm_integralBasis I e M he fun i j => by rw [hMe, hMe]; exact ht₀.2 i j
+    exact _root_.GlobalTheory.CuspGeo.unitary_of_trForm_zBasis I e M he fun i j => by rw [hMe, hMe]; exact ht₀.2 i j
 
 end GlobalTheory.BasesFin

@@ -1,8 +1,10 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ArchBetween
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArchimedeanValueBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.VerticalBoundHeightCompareStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.HasMultiplier
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArchimedeanValueBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.VerticalBoundHeightCompare
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRedA
 import GroundTheory.HeightsAndTheta.Heights.ElementarySymmetric.PBoundedSectionTransfer
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -47,7 +49,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRedA
 
 @[expose] public section
 
@@ -113,8 +114,8 @@ theorem exists_arch_bound {y : (Σ k, ι k) → Ω} {d : ℕ} (hAr : IsArithVar 
       |(k : ℝ) * Real.log (A.h z) - Real.log ‖val‖| ≤ C := by
   obtain ⟨hu, q, m, hq, hm, -, h1, h2⟩ := hV
   have hP := isSmoothHerm_powH hS k
-  obtain ⟨C₁, hC₁⟩ := GlobalTheory.T.archimedean_value_bound K ι Ω y d hAr hB (powH A k) q m u hP hq hm h1
-  obtain ⟨C₂, hC₂⟩ := GlobalTheory.T.archimedean_value_bound K ι Ω y d hAr hB (powH A k).inv q m u⁻¹ (isSmoothHerm_inv hP) hq hm h2
+  obtain ⟨C₁, hC₁⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ArchBd.section_bound K ι Ω y d hAr hB (powH A k) q m u hP hq hm h1
+  obtain ⟨C₂, hC₂⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ArchBd.section_bound K ι Ω y d hAr hB (powH A k).inv q m u⁻¹ (isSmoothHerm_inv hP) hq hm h2
   refine ⟨max C₁ C₂, fun z hz val hv hval => ?_⟩
   have hp : 0 < A.h z := A.pos z hz.1
   have hn : 0 < ‖val‖ := norm_pos_iff.2 hv
@@ -143,7 +144,7 @@ theorem GlobalTheory.CompanionTheory.Ar.Ht.lineHt_bounded_of_genUnit : ∀ (K : 
   obtain ⟨C, hC⟩ := exists_arch_bound hAr hB hS hV
   refine ⟨(c + C) / k, fun L _ _ w hw => ?_⟩
   obtain ⟨val, hv, hval⟩ := hG L w hw
-  have hU := GlobalTheory.T.vertical_bound_height_compare K ι Ω y d hAr hB (fun b => k * A.a b) u c hV
+  have hU := _root_.GlobalTheory.CompanionTheory.Ar.Ht.abs_ptHt_sub_le_of_vertBound K ι Ω y d hAr hB (fun b => k * A.a b) u c hV
     (fun z => (k : ℝ) * Real.log (A.h z)) L w hw val hv hval
   rw [ptHt_pow] at hU
   have hk' : (0 : ℝ) < k := by exact_mod_cast hk

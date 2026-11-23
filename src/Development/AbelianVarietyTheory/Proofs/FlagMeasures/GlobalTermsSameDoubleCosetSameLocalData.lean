@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.AtBase
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.NGData
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IdentificationCompatPassesToLocalCongruenceStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalTermsSameDoubleCosetSameDatumStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalTermsSameDoubleCosetSameDatum
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalIsometryExtendsLocalIsometryStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnsignedLocalTermRowLatticeIsTerm
 import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.TermDefPf
@@ -255,7 +255,7 @@ theorem over_same : ∀ (D : D7) (Z : LocDat D), ∀ (u u' : D.what₂.Word) (F0
     have := D.R.two_le_m
     unfold Ranks.r Ranks.rS
     omega
-  refine GlobalTheory.T.localTerms_same_doubleCoset_same_datum (Z.M p) hOK (locH Z p) D.R.rS D.R.k P hfin hP
+  refine _root_.GlobalTheory.LocOver.SameDC.same_datum (Z.M p) hOK (locH Z p) D.R.rS D.R.k P hfin hP
     (locU Z p Λ (lf D F0) F₁ (Tu D u) (Tu D u')) (locU Z p Λ (lf D F0) F₂ (Tu D u) (Tu D u')) hT₁ hT₂
     rfl rfl rfl gn hn' gm hm' himg (tri_refl _) htri ?_ d hd
   intro hs x' hx' x hx hx'p hxp

@@ -3,18 +3,18 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Jets.PowerSeriesHasSumAt
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Mathlib.Topology.MetricSpace.Ultra.Basic
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FormalGroupNatMulSeriesEvalOpenDiscPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FormalGroupNatMulSeriesPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FormalGroupTorsionTowerExactOrderStatement
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MvPowerSeriesIntegralBoundedClosureStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormCoeffIntegralPowerSeriesLeProdZerosStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FormalGroupNatMulSeriesEvalOpenDiscProperties
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FormalGroupNatMulSeriesProperties
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FormalGroupTorsionTowerExactOrder
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormCoeffIntegralPowerSeriesLeProdZeros
+public import Mathlib.Analysis.Normed.Ring.Ultra
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MvPowerSeriesIntegralBoundedClosure
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.PowerSeriesEvalTsumUnitDiscPropertiesStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-public import Mathlib.Analysis.Normed.Ring.Ultra
 import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
@@ -105,11 +105,11 @@ theorem prod_fibre (f : PowerSeries K) (p : ℕ) (hp : 0 < p) (hf : Intg f)
     (hinj : Set.InjOn x T) (hx : ∀ b ∈ T, ‖x b‖ < 1 ∧ ev1 f (x b) = c) :
     ∏ b ∈ T, ‖x b‖ = ‖c‖ := by
   classical
-  obtain ⟨A1, A2, A3, A4, -⟩ := GlobalTheory.T.mvPowerSeries_integral_bounded_closure K Unit
+  obtain ⟨A1, A2, A3, A4, -⟩ := _root_.GlobalTheory.BddAlg.bdd_alg K Unit
   have hC : Intg (PowerSeries.C c : PowerSeries K) := (A4 c).2.1 hc.le
   have hI : Intg (f - PowerSeries.C c) := (A1 _ _ hf hC).2.1
   have hcard : (T.image x).card = p := by rw [Finset.card_image_of_injOn hinj, hT]
-  have key := (GlobalTheory.T.norm_coeff_integral_powerSeries_le_prod_zeros K (f - PowerSeries.C c) (T.image x) hI (by
+  have key := (_root_.GlobalTheory.ConvSer.norm_coeff_le_prod_zeros K (f - PowerSeries.C c) (T.image x) hI (by
     intro y hy
     obtain ⟨b, hb, rfl⟩ := Finset.mem_image.1 hy
     refine ⟨(hx b hb).1, ?_⟩
@@ -135,7 +135,7 @@ theorem prod_zero_fibre (f : PowerSeries K) (p : ℕ) (hp : 0 < p) (hf : Intg f)
     (hinj : Set.InjOn x T) (hx : ∀ b ∈ T, ‖x b‖ < 1 ∧ ev1 f (x b) = 0 ∧ x b ≠ 0) :
     ∏ b ∈ T, ‖x b‖ = ‖PowerSeries.coeff 1 f‖ := by
   classical
-  obtain ⟨A1, A2, A3, A4, A5, -, -, -, -, A10⟩ := GlobalTheory.T.mvPowerSeries_integral_bounded_closure K Unit
+  obtain ⟨A1, A2, A3, A4, A5, -, -, -, -, A10⟩ := _root_.GlobalTheory.BddAlg.bdd_alg K Unit
   set h : PowerSeries K := PowerSeries.mk fun n => PowerSeries.coeff (n + 1) f with hh
   have hco : ∀ k, PowerSeries.coeff k h = PowerSeries.coeff (k + 1) f := by
     intro k; simp [hh]
@@ -146,7 +146,7 @@ theorem prod_zero_fibre (f : PowerSeries K) (p : ℕ) (hp : 0 < p) (hf : Intg f)
     rw [h0, map_zero, add_zero] at this
     exact this
   have hcard : (T.image x).card = p - 1 := by rw [Finset.card_image_of_injOn hinj, hT]
-  have key := (GlobalTheory.T.norm_coeff_integral_powerSeries_le_prod_zeros K h (T.image x) hI (by
+  have key := (_root_.GlobalTheory.ConvSer.norm_coeff_le_prod_zeros K h (T.image x) hI (by
     intro y hy
     obtain ⟨b, hb, rfl⟩ := Finset.mem_image.1 hy
     refine ⟨(hx b hb).1, ?_⟩
@@ -165,9 +165,9 @@ end
 theorem tower_norm : ∀ (K : Type) [NormedField K] [IsUltrametricDist K] [CompleteSpace K] [IsAlgClosed K] [CharZero K] (p : ℕ) [Fact p.Prime] (F : FormalGroup K), Intg F.toPowerSeries → ‖PowerSeries.coeff p (nMul F p)‖ = 1 → (∀ k < p, ‖PowerSeries.coeff k (nMul F p)‖ < 1) → ∀ t : ℕ → K, (∀ n, ‖t n‖ < 1) → t 0 = 0 → t 1 ≠ 0 → (∀ n, ev1 (nMul F p) (t (n + 1)) = t n) → ‖t 1‖ ^ (p - 1) = ‖(p : K)‖ ∧ ‖(p : K)‖ < 1 ∧ (∀ n j, ¬ p ^ n ∣ j → ‖t 1‖ ≤ ‖ev1 (nMul F j) (t n)‖) ∧ ∀ n, ∏ j ∈ Finset.Ico 1 (p ^ n), ‖ev1 (nMul F j) (t n)‖ = ‖(p : K)‖ ^ n := by
   intro K _ _ _ _ _ p hpf F hF h1 hl t ht ht0 ht1 htt
   have hp : p.Prime := hpf.out
-  obtain ⟨M1, -⟩ := GlobalTheory.T.formalGroupNatMulSeries_properties K F
-  obtain ⟨P0, P⟩ := GlobalTheory.T.formalGroupNatMulSeries_eval_openDisc_properties K F hF
-  obtain ⟨O1, O2, O3⟩ := GlobalTheory.T.formalGroup_torsionTower_exact_order K p F hF t ht ht0 ht1 htt
+  obtain ⟨M1, -⟩ := _root_.GlobalTheory.ConvSer.nMul_props K F
+  obtain ⟨P0, P⟩ := _root_.GlobalTheory.ConvSer.nMul_point K F hF
+  obtain ⟨O1, O2, O3⟩ := _root_.GlobalTheory.ConvSer.tower_exact_order K p F hF t ht ht0 ht1 htt
   have hpn : ‖(p : K)‖ < 1 := by
     have := hl 1 hp.one_lt
     rwa [(M1 p).2] at this

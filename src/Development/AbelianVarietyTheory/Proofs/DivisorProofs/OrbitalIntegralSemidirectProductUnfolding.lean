@@ -1,15 +1,20 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnifAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubleCosetRelIndexInfConjConstStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubleCosetSemidirectRepSurjectiveStatement
+public import Mathlib.GroupTheory.Index
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubleCosetRelIndexInfConjConst
+public import Mathlib.GroupTheory.DoubleCoset
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubleCosetSemidirectRepSurjective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinsumCompEqFinsumCardFiberMul
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinsumFiberwiseOfFiniteSupportComplexStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrbitCountParabolicUnfoldLeviStatement
+public import Mathlib.Algebra.BigOperators.Finprod
+public import Mathlib.Basic.Complex.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinsumFiberwiseOfFiniteSupportComplex
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrbitCountParabolicUnfoldLevi
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrbitalIntegralEqClosedSubgroupConjAverage
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexUnfoldSemidirectProductStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StabilizerRelIndexNeZeroParabolicStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnfoldSumInvariantLeviConjStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexUnfoldSemidirectProduct
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StabilizerRelIndexNeZeroParabolic
+public import Mathlib.GroupTheory.Coset.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnfoldSumInvariantLeviConj
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -115,7 +120,7 @@ theorem rhs_eq (P M N : Type) [Group P] [Group M] [Group N] [TopologicalSpace M]
         (s k)⁻¹ * s ((Quotient.out q)⁻¹ * γ * Quotient.out q) * s k := by
       simp only [MonoidHom.id_apply, map_mul, map_inv]
       group
-    rw [e, GlobalTheory.T.unfold_sum_invariant_levi_conj P M N s π u hs hinj hker KP KM L hsK hπK huK F hF k k.2]
+    rw [e, _root_.GlobalTheory.unfold_sum_conj_invariant P M N s π u hs hinj hker KP KM L hsK hπK huK F hF k k.2]
     refine finsum_congr fun x => ?_
     congr 1
     simp only [map_mul, map_inv]
@@ -158,7 +163,7 @@ theorem core : ∀ (P M N : Type) [Group P] [Group M] [Group N] (s : M →* P) (
   have hsupp : (Function.support fun d : DoubleCoset.Quotient (TP : Set P) (KP : Set P) =>
       (((TP ⊓ KP.map (MulAut.conj (Quotient.out d)).toMonoidHom).relIndex CP : ℕ) : ℂ) * G (Quotient.out d)).Finite :=
     hfin.subset fun d hd => right_ne_zero_of_mul hd
-  rw [GlobalTheory.T.finsum_fiberwise_of_finite_support_complex ρ _ hsupp]
+  rw [_root_.GlobalTheory.finsum_fiberwise_of_finite_support ρ _ hsupp]
   refine finsum_congr fun q => ?_
   set q0 := Quotient.out q with hq0def
   have hq0 : DoubleCoset.mk TM KM q0 = q := DoubleCoset.out_eq' q
@@ -169,12 +174,12 @@ theorem core : ∀ (P M N : Type) [Group P] [Group M] [Group N] (s : M →* P) (
   have hfib : ∀ d : {d // ρ d = q}, ∃ X : N, DoubleCoset.mk TP KP (s q0 * u X) = d.1 ∧
       Nat.card (ψ ⁻¹' {d}) = (TM.map (MulAut.conj q0⁻¹).toMonoidHom ⊓ KM ⊓ KP.comap ((MulAut.conj (u X)⁻¹).toMonoidHom.comp s)).relIndex (TM.map (MulAut.conj q0⁻¹).toMonoidHom ⊓ KM) := by
     intro d
-    obtain ⟨X, hX⟩ := GlobalTheory.T.doubleCoset_semidirect_rep_surjective P M N s π u hs hinj hker KP KM L hsK hπK huK TM CM TP CP hCT hTP hCP hTC d.1
+    obtain ⟨X, hX⟩ := _root_.GlobalTheory.doubleCoset_semidirect_surj P M N s π u hs hinj hker KP KM L hsK hπK huK TM CM TP CP hCT hTP hCP hTC d.1
     have e : Quotient.out (DoubleCoset.mk TM KM (π (Quotient.out d.1))) = q0 := by
       rw [show DoubleCoset.mk TM KM (π (Quotient.out d.1)) = q from d.2]
     rw [e] at hX
     refine ⟨X, hX, ?_⟩
-    rw [← GlobalTheory.T.orbit_count_parabolic_unfold_levi P M N s π u hs hinj hker KP KM L hsK hπK huK TM CM TP CP hCT hTP hCP hTC q0 X]
+    rw [← _root_.GlobalTheory.orbit_count_parabolic_unfold P M N s π u hs hinj hker KP KM L hsK hπK huK TM CM TP CP hCT hTP hCP hTC q0 X]
     apply Nat.card_congr
     refine Equiv.subtypeEquivRight fun x => ?_
     rw [Set.mem_preimage, Set.mem_singleton_iff, Subtype.ext_iff, hX]
@@ -184,8 +189,8 @@ theorem core : ∀ (P M N : Type) [Group P] [Group M] [Group N] (s : M →* P) (
     intro d
     obtain ⟨X, hX, hc⟩ := hfib d
     obtain ⟨t, ht, k, hk, he⟩ := (@DoubleCoset.eq _ _ _ _ _ _).1 (hX.trans (DoubleCoset.out_eq' d.1).symm)
-    rw [he, GlobalTheory.T.doubleCoset_relIndex_inf_conj_const P TP CP KP hTCP t ht k hk,
-      GlobalTheory.T.relIndex_unfold_semidirect_product P M N s π u hs hinj hker KP KM L hsK hπK huK TM CM TP CP hCT hTP hCP hTC q0 X, hc]
+    rw [he, _root_.GlobalTheory.doubleCoset_relIndex_const P TP CP KP hTCP t ht k hk,
+      _root_.GlobalTheory.relIndex_unfold_semidirect P M N s π u hs hinj hker KP KM L hsK hπK huK TM CM TP CP hCT hTP hCP hTC q0 X, hc]
     push_cast
     rfl
   have hR : ∑ᶠ x : N ⧸ L, G (s q0 * u (Quotient.out x)) =
@@ -194,7 +199,7 @@ theorem core : ∀ (P M N : Type) [Group P] [Group M] [Group N] (s : M →* P) (
     · exact finsum_congr fun x => (hGout _).symm
     · intro d _
       obtain ⟨X, -, hc⟩ := hfib d
-      have h0 := GlobalTheory.T.stabilizer_relIndex_ne_zero_parabolic P M N s π u hs hinj hker KP KM L hsK hπK huK TM hU q0 X
+      have h0 := _root_.GlobalTheory.stab_relIndex_ne_zero P M N s π u hs hinj hker KP KM L hsK hπK huK TM hU q0 X
       rw [← hc] at h0
       haveI := Nat.finite_of_card_ne_zero h0
       exact Set.toFinite _

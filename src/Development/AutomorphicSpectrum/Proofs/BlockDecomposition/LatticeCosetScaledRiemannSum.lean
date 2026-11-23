@@ -3,9 +3,13 @@ module
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CosetOff
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteAdelesLocalRingTotallyReal
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanFundamentalDomainIntegersStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LatticePointCountScalingStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ScalingMeasureProductArchimedeanStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanFundamentalDomainIntegers
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LatticePointCountScaling
+public import Formalism.UnipotentAdelicQuotients.SWXSDefs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ScalingMeasureProductArchimedean
+public import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -19,7 +23,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -137,7 +140,7 @@ theorem GlobalTheory.CompanionTheory.Equi.lat_sum : ∀ (F : Type) [Field F] [Nu
   haveI := hSC
   haveI := hT2
   haveI : li.IsAddHaarMeasure := hli.1
-  obtain ⟨D₀, K₀, hDm, hK, hDK, hD1, htile⟩ := GlobalTheory.T.archimedean_fundamental_domain_integers F hF li hli
+  obtain ⟨D₀, K₀, hDm, hK, hDK, hD1, htile⟩ := _root_.GlobalTheory.CompanionTheory.Equi.exists_bounded_infDomain F hF li hli
   have hg : Function.Injective (algebraMap F (Ainf F)) := (algebraMap F (Ainf F)).injective
   let j : 𝓞 F →+ Ainf F := ((algebraMap F (Ainf F)).comp (algebraMap (𝓞 F) F)).toAddMonoidHom
   have hj : Function.Injective j := hg.comp (IsFractionRing.injective (𝓞 F) F)
@@ -163,7 +166,7 @@ theorem GlobalTheory.CompanionTheory.Equi.lat_sum : ∀ (F : Type) [Field F] [Nu
   have hjoint : Continuous fun p : ℝ × (ι → Ainf F) => T p.1 p.2 :=
     continuous_pi fun i => (hθ.comp continuous_fst).mul ((continuous_apply i).comp continuous_snd)
   have hθ0 : θ 0 = 0 := map_zero θ
-  have key := GlobalTheory.T.lattice_point_count_scaling (ι → Ainf F) (Measure.pi fun _ => li) Λ (Set.pi Set.univ fun _ => D₀)
+  have key := _root_.GlobalTheory.CompanionTheory.RiemannCore.main (ι → Ainf F) (Measure.pi fun _ => li) Λ (Set.pi Set.univ fun _ => D₀)
     (Set.pi Set.univ fun _ => K₀) (reps (ι := ι) j rep) T (Module.finrank ℚ F * Fintype.card ι)
     (MeasurableSet.univ_pi fun _ => hDm) (isCompact_univ_pi fun _ => hK)
     (Set.pi_mono fun _ _ => hDK)
@@ -180,7 +183,7 @@ theorem GlobalTheory.CompanionTheory.Equi.lat_sum : ∀ (F : Type) [Field F] [Nu
       · funext i
         show θ ε * (θ ε⁻¹ * y i) = y i
         rw [← mul_assoc, h2, one_mul])
-    (fun ε hε => GlobalTheory.T.scaling_measure_product_archimedean F hF θ hθ li hli.1 ι ε hε)
+    (fun ε hε => _root_.GlobalTheory.CompanionTheory.Equi.InfScale.map_theta_mul_pi F hF θ hθ li hli.1 ι ε hε)
     (fun B hB U hU => by
       have h0 : ∀ b ∈ B, ∀ᶠ z : ℝ × (ι → Ainf F) in 𝓝 ((0 : ℝ), b), T z.1 z.2 ∈ U := by
         intro b _

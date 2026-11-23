@@ -6,10 +6,13 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EighthPowerO
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInjectionsEighthPowerGrpObjStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsGrpPullbackOfCompatibleRetractsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMatrixUnitsExtendNormalNoetherianStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HodgeLineBundleEighthPowerIsoPowStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.SiegelToroidalIntegral
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HodgeLineBundleEighthPowerIsoPow
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsNoetherianFunctionFieldModelArithBaseStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSeparatedSiegelModuliOverIntegersStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiAbelianDirectFactorOfIdempotentStatement
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiAbelianDirectFactorOfIdempotent
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiAbelianPullbackAbelianOverOpenStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothOfRelativeDimensionOfEighthPowerStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -77,14 +80,14 @@ theorem GlobalTheory.SiegFactor.firstFactor : ∀ (g n : ℕ), 1 ≤ g → 3 ≤
     ((Over.pullback Zh.u₀).obj ρ.P.A) ρ.P.A Zh.u₀ Zh.φ (pullback.fst _ _) Zh.cart (isGrpPullback_pullback _ _)
     E' hE' hrel' hsum
   have hidem : E 0 0 ≫ E 0 0 = E 0 0 := by rw [hrel]; simp
-  obtain ⟨H, _, i, r, hi, hr, hir, hri, hH⟩ := GlobalTheory.T.semiAbelian_direct_factor_of_idempotent M.Z Zh.G Zh.semi (E 0 0) (hE 0 0) hidem
+  obtain ⟨H, _, i, r, hi, hr, hir, hri, hH⟩ := _root_.GlobalTheory.SiegMin.exists_semiAbelian_idempotent_image M.Z Zh.G Zh.semi (E 0 0) (hE 0 0) hidem
   haveI : IsCommMonObj H := hH.comm
   have huniv8 := GlobalTheory.T.eighthPower_of_matrixUnits_idempotent_split Zh.G H E hE hrel hsumE i r hi hr hir hri
   have hpr8 : ∀ a, IsMonHom (E a 0 ≫ r) := fun a => by
     haveI := hE a 0; haveI := hr; exact inferInstanceAs (IsMonHom (E a 0 ≫ r))
   have hdimG : SmoothOfRelativeDimension (8 * g) Zh.G.hom := hSg ▸ Zh.dim
   have hdim : SmoothOfRelativeDimension g H.hom := GlobalTheory.T.smoothOfRelativeDimension_of_eighth_power H Zh.G g (fun a => E a 0 ≫ r) huniv8 hH hdimG
-  have hhodge := GlobalTheory.T.hodgeLineBundle_eighthPower_iso_pow M.Z H Zh.G g (fun a => E a 0 ≫ r) hpr8 huniv8 hH hdim
+  have hhodge := _root_.GlobalTheory.HodgePow.hodge_eight_mul_iso_hodge_pow_eight M.Z H Zh.G g (fun a => E a 0 ≫ r) hpr8 huniv8 hH hdim
   obtain ⟨e', he'm, h1, h2⟩ := hcompat 0 0
   obtain ⟨C', _, a, b, ha, hb⟩ := GlobalTheory.T.exists_isGrpPullback_of_compatible_retracts U₀.ι Zh.u₀ Zh.G ((Over.pullback Zh.u₀).obj ρ.P.A) ρ.P.A Zh.φ
     (pullback.fst _ _) Zh.cart (isGrpPullback_pullback _ _) (E 0 0) (E' 0 0) e' he'm h1 h2 H i r hi hr hir hri

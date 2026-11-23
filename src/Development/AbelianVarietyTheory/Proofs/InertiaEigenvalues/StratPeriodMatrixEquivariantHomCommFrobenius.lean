@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinEvWIsUnitInjectiveDvdStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinEvWIsUnitInjectiveDvd
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,7 +78,7 @@ theorem mreal_hom_frob : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K)
     have := congrArg (fun M => (↑u⁻¹ : Matrix (Fin d') (Fin d') (WCb l)) * M) key
     simp only [← hu, ← Matrix.mul_assoc, Units.inv_mul, Matrix.one_mul] at this
     exact this
-  have hinj := (GlobalTheory.T.breuilKisin_evW_isUnit_injective_dvd l K bk).2.1
+  have hinj := (_root_.GlobalTheory.BSP.BK.evW_isUnit_injective_dvd l K bk).2.1
   refine Matrix.ext fun i j => ?_
   exact hinj (congrFun (congrFun key2 i) j)
 

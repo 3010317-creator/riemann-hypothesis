@@ -7,10 +7,10 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Exi
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntIndFromCols
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchwartzBruhatMatrixTranslationModulationIrreduc
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSchroedingerEigenvectorCompactCocycle
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsVacuumTransverseLagrangianLocalFieldStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsVacuumTransverseLagrangianLocalField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchroedingerOperatorHeisenbergPreservesSchwartzB
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatVectorIrreducibleTranslationsChara
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSplittingSplitOm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchroedingerOperatorHeisenbergPreservesSchwartzBStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatVectorIrreducibleTranslationsCharaStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -198,7 +198,7 @@ theorem intertwiner_matrix : ∀ {k : Type} [Field k] [ValuativeRel k] [Topologi
     rw [hτa, hμa, hμa, hτa, GlobalTheory.VacLoc.schr_comm, hTM]
   have hτ0 : ∀ f, τ 0 f = f := fun f => by rw [hτa, map_zero]; exact GlobalTheory.VacLoc.schr_zero_vec ψ0 f
   have hμ0 : ∀ f, μ 0 f = f := fun f => by rw [hμa, map_zero]; exact GlobalTheory.VacLoc.schr_zero_vec ψ0 f
-  obtain ⟨f₀, hf₀SB, hf₀ne, hf₀T, hf₀M⟩ := GlobalTheory.T.exists_vacuum_transverseLagrangian_localField ψ0 hcont hc wT wM hTT hMM hTM hspan
+  obtain ⟨f₀, hf₀SB, hf₀ne, hf₀T, hf₀M⟩ := _root_.GlobalTheory.LagVac.exists_vacuum ψ0 hcont hc wT wM hTT hMM hTM hspan
   have hint : ∀ z : Matrix (Fin n) (Fin d) k,
       (∀ u : Matrix (Fin n) (Fin d) k, (∀ r q, u r q ∈ 𝒪[k]) → χ u z = 1) → ∀ r q, z r q ∈ 𝒪[k] := by
     intro z hz r q
@@ -240,7 +240,7 @@ theorem intertwiner_matrix : ∀ {k : Type} [Field k] [ValuativeRel k] [Topologi
     intro Φ
     refine (Submodule.span_le.2 ?_) (hTmspan Φ)
     rintro _ ⟨w, rfl⟩
-    exact GlobalTheory.T.schroedingerOperatorHeisenberg_preserves_schwartzBruhat ψ0 hcont _ _ (GlobalTheory.T.schroedingerOperatorHeisenberg_preserves_schwartzBruhat ψ0 hcont _ _ hf₀SB)
+    exact _root_.GlobalTheory.Adopt.schroedingerOperatorHeisenberg_preserves_schwartzBruhat ψ0 hcont _ _ (_root_.GlobalTheory.Adopt.schroedingerOperatorHeisenberg_preserves_schwartzBruhat ψ0 hcont _ _ hf₀SB)
   have hmodSB : ∀ Φ ∈ GlobalTheory.WeilM.SB (Matrix (Fin n) (Fin d) k), ∀ z,
       (fun t => χ t z * Φ t) ∈ GlobalTheory.WeilM.SB (Matrix (Fin n) (Fin d) k) :=
     fun Φ hΦ z => modul_mem ψ0 hcont hc hΦ z
@@ -294,7 +294,7 @@ theorem intertwiner_matrix : ∀ {k : Type} [Field k] [ValuativeRel k] [Topologi
         rw [h2, h1, hτa, hμa, GlobalTheory.WeilM.schr_schr, ← hcdef, smul_smul, inv_mul_cancel₀ hne, one_smul]
       rw [e]
       exact (LinearMap.range Tm).smul_mem _ ⟨Φ2, rfl⟩
-    have hW := GlobalTheory.T.schwartzBruhat_vector_irreducible_translations_characters ψ0 hcont hc (LinearMap.range Tm) (by rintro _ ⟨Φ, rfl⟩; exact hrange Φ)
+    have hW := _root_.GlobalTheory.IrredSBVec.sb_irreducible_vec ψ0 hcont hc (LinearMap.range Tm) (by rintro _ ⟨Φ, rfl⟩; exact hrange Φ)
       (fun φ h v => by
         have h' := hstab φ h (v, 0)
         have e : GlobalTheory.WeilM.schr ψ0 (v, 0) φ = fun x => φ (x + v) := by

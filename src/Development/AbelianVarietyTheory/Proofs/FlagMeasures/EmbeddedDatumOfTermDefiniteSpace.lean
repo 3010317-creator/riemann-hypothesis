@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.AdaptSelf
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteLiftEmbeddedDatumOfTermStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NormalFormDualOrthogonalLast
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteLiftEmbeddedDatumOfTerm
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagFramesSameGradedDefinitePartLatticeEq
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagPairDefiniteThetaLatticeLeFixedIndexBound
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairNormalFormGeometrySummary
@@ -279,7 +280,7 @@ theorem isDat_datOf : ∀ (K V W : Type) [Field K] [NumberField K] [StarRing K] 
   obtain ⟨hfull, ⟨hW1, hW2, hW3⟩, -, hrank, hWn, huP, hwSp, hwSp', -, -, -, -⟩ :=
     NF.geometry K V H hK r N
   obtain ⟨-, -, -, -, -, hFX, -, hlF, -⟩ := hfull
-  obtain ⟨H', hH', hH'PD, -, -, -, hDat⟩ := GlobalTheory.T.definiteLift_embedded_datum_of_term K V H hK r N g Λ hg hT
+  obtain ⟨H', hH', hH'PD, -, -, -, hDat⟩ := _root_.GlobalTheory.DegCnt.ToLift.main K V H hK r N g Λ hg hT
   obtain ⟨-, hgI, hiI, -, hle, -⟩ := GlobalTheory.DegCnt.FixIdx.main K V H hK r N g Λ hg hT
   have frame : ∀ v : V, (∀ a, H.B (F.e a) v = 0) ↔ (∀ a, H.B (N.F.e a) v = 0) := by
     intro v

@@ -3,17 +3,19 @@ module
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCoType
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasBoundedSumsOne
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SatakeTrivialRangeBound
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CartanAntitoneStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.PairwiseDisjointCell
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CartanAntitone
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CartanDecompositionDominanceLocalFieldStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CartanDecompositionDominanceOrderStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsBorelSphericalFunctionStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsParahoricAndIntegralGLDoubleCosetRepsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SatakeSubsetSumStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SumBorelSphericalDoubleCosetRepsMulStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SumBorelSphericalOverDiagonalDoubleCosetRepsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ZonalIntBiInvariantStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ZonalIntEigStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ZonalIntOneEqOneStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsBorelSphericalFunction
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsParahoricAndIntegralGLDoubleCosetReps
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SatakeSubsetSum
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SumBorelSphericalDoubleCosetRepsMul
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SumBorelSphericalOverDiagonalDoubleCosetReps
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BorelParam
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ZonalIntBiInvariant
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ZonalIntEig
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ZonalIntOneEqOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -83,20 +85,20 @@ theorem eq_mul_zonalInt : ∀ (k : Type) [Field k] [ValuativeRel k] [Topological
     refine mul_ne_zero (α i).ne_zero ?_
     rw [Ne, Complex.cpow_eq_zero_iff]
     exact fun h => by exact_mod_cast (show resCard k ≠ 0 by omega) (by exact_mod_cast h.1)
-  obtain ⟨ψ, hψ⟩ := GlobalTheory.T.exists_borelSphericalFunction k N _ hγ
+  obtain ⟨ψ, hψ⟩ := _root_.GlobalTheory.BorelSphExist.exists_isBorelSph k N _ hγ
   refine ⟨ψ, hψ, fun f hf he m => ?_⟩
   have hr : ∀ g, ∀ x ∈ KO k (Fin N), ψ (g * x) = ψ g := hψ.1
-  have hωb := GlobalTheory.T.zonalInt_mul_KO_invariant k N μK hK ψ hr
-  have hω1 := GlobalTheory.T.zonalInt_one_eq_one_of_isBorelSph k N μK hK _ ψ hψ
+  have hωb := _root_.GlobalTheory.ZonalBi.zonalInt_biInvariant k N μK hK ψ hr
+  have hω1 := _root_.GlobalTheory.ZonalOne.zonalInt_one_eq_one k N μK hK _ ψ hψ
   have hωe : ∀ (s : Finset (Fin N)) R, IsRepsK (torusElt k (Fin N) ϖ (indic s)) R → ∀ m,
       ∑ g ∈ R, zonalInt μK ψ (m * g) = genVal (resCard k) 0 N (Finset.univ.val.map α) s.card * zonalInt μK ψ m := by
     intro s R hR
-    refine GlobalTheory.T.sum_zonalInt_mul_eq_of_eigen k N μK hK ψ hr R _ fun m => ?_
-    rw [GlobalTheory.T.sum_borelSpherical_doubleCosetReps_mul k N _ ψ hψ hγ _ R hR m, GlobalTheory.T.sum_borelSpherical_over_diagonalDoubleCosetReps k N ϖ hϖ _ ψ hψ hγ s R hR,
-      GlobalTheory.T.sum_powersetCard_borelParam_eq_genVal (resCard k) N (by omega) α s.card, mul_comm]
+    refine _root_.GlobalTheory.ZonalEig.zonalInt_eig k N μK hK ψ hr R _ fun m => ?_
+    rw [_root_.GlobalTheory.ZonalSum.sum_mul_eq k N _ ψ hψ hγ _ R hR m, _root_.GlobalTheory.BorelCosetSum.sum_cosets_eq k N ϖ hϖ _ ψ hψ hγ s R hR,
+      _root_.GlobalTheory.SatakeSubsetSum.satake_subset_sum (resCard k) N (by omega) α s.card, mul_comm]
   have hcN : genVal (resCard k) 0 N (Finset.univ.val.map α) N ≠ 0 := genVal_top_ne_zero _ N α
   have key := GlobalTheory.T.cartan_decomposition_dominance_order k N ϖ (fun n => genVal (resCard k) 0 N (Finset.univ.val.map α) n) hcN
-    (GlobalTheory.T.exists_antitone_cartan_decomposition k N ϖ hϖ) (GlobalTheory.T.cartan_decomposition_dominance_local_field k N ϖ hϖ) (fun g => (GlobalTheory.T.exists_parahoric_and_integralGL_doubleCosetReps k Unit (Fin N)).2 g)
+    (_root_.GlobalTheory.SortedCartan.cartan_antitone k N ϖ hϖ) (GlobalTheory.T.cartan_decomposition_dominance_local_field k N ϖ hϖ) (fun g => (_root_.GlobalTheory.ParHeckeReps.exists_reps_both k Unit (Fin N)).2 g)
     (fun m => f m - f 1 * zonalInt μK ψ m)
     (fun κ hκ m => ⟨by rw [(hf κ hκ m).1, (hωb κ hκ m).1], by rw [(hf κ hκ m).2, (hωb κ hκ m).2]⟩)
     (fun s R hR m => by

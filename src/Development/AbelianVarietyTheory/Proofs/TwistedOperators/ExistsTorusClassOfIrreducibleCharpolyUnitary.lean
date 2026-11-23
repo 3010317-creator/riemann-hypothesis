@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsHasCls
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CharpolyUnitaryEqConjugateReciprocalStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsAdjoinRootLinearEquivOfCharpolyEqStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsNormClassOfRationalIsometryTraceFormStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsUnitaryTorusTraceFormOfHermitianStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.EllipticPartTestData
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CharpolyUnitaryEqConjugateReciprocal
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsAdjoinRootLinearEquivOfCharpolyEq
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsNormClassOfRationalIsometryTraceForm
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsUnitaryTorusTraceFormOfHermitian
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryRationalDiagonalHomBijectiveStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -66,7 +67,7 @@ theorem exists_cls_of_irreducible : ∀ (F E : Type) [Field F] [NumberField F] [
   refine ⟨GlobalTheory.T.unitaryRationalDiagonalHom_bijective F E σ n J, ?_⟩
   intro γ hirr
   have hm : Formalism.UG.cT (σ : E →+* E) γ.1.1 * J * γ.1.1 = J := γ.2
-  have hs := GlobalTheory.T.charpoly_unitary_eq_conjugateReciprocal F E σ n J hJ.2 γ
+  have hs := _root_.GlobalTheory.TrEll.charpoly_eq_sharp F E σ n J hJ.2 γ
   have hdet : γ.1.1.det ≠ 0 := ((Matrix.isUnit_iff_isUnit_det _).mp γ.1.isUnit).ne_zero
   have h0 : eval 0 γ.1.1.charpoly ≠ 0 := by
     rw [← coeff_zero_eq_eval_zero]
@@ -78,8 +79,8 @@ theorem exists_cls_of_irreducible : ∀ (F E : Type) [Field F] [NumberField F] [
     ⟨Matrix.charpoly_monic _, hirr, by rw [Matrix.charpoly_natDegree_eq_dim, Fintype.card_fin], h0, hs⟩
   let P : PPol σ n := ⟨γ.1.1.charpoly, hP⟩
   refine ⟨P, rfl, ?_⟩
-  obtain ⟨φ, hφ⟩ := GlobalTheory.T.exists_adjoinRoot_linearEquiv_of_charpoly_eq F E σ n P γ.1.1 rfl
-  obtain ⟨x, hx0, hxs, hxf⟩ := GlobalTheory.T.exists_unitaryTorus_traceForm_of_hermitian F E σ (sig_sig hσ) n P J hJ γ.1.1 hm φ hφ
-  exact GlobalTheory.T.exists_normClass_of_rationalIsometry_traceForm F E σ n P J φ x hx0 hxs hxf γ hφ
+  obtain ⟨φ, hφ⟩ := _root_.GlobalTheory.TrEll.exists_linearEquiv_mulVec_of_charpoly F E σ n P γ.1.1 rfl
+  obtain ⟨x, hx0, hxs, hxf⟩ := _root_.GlobalTheory.TrEll.HermTrace.exists_trace_form F E σ (sig_sig hσ) n P J hJ γ.1.1 hm φ hφ
+  exact _root_.GlobalTheory.RatCls.hasCls_of_ratIsom F E σ n P J φ x hx0 hxs hxf γ hφ
 
 end GlobalTheory.TrEll.RatEll

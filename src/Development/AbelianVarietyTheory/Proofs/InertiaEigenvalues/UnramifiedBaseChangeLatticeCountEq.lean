@@ -1,11 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.OverExtAlgebraMap
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HermitianDualInvAlgBaseChangeUnramifiedIffStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsFullLatticeOverUnramifiedExtIffStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsIntegralUnramifiedExtIffIsIntegralBaseStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HermitianDualInvAlgBaseChangeUnramifiedIff
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsFullLatticeOverUnramifiedExtIff
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsIntegralUnramifiedExtIffIsIntegralBase
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeightedOrbitSumCongrCoefficientRing
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemRangeOfValNonneg
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeightedOrbitSumCongrCoefficientRingStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,7 +57,7 @@ open GlobalTheory.UnitLemma Polynomial
 
 theorem N_overExt : ∀ (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E), IsUnrExt K K' d φ → ∀ (B : InvAlg K) (ψ : K'.E →+* B.A) (hψ : ∀ e, ψ (φ e) = algebraMap K.E B.A e) (hσ : ∀ e, B.σ (ψ e) = ψ (K'.c e)), (∀ y : K'.O, ψ (algebraMap K'.O K'.E y) ∈ Algebra.adjoin K.O ({B.g} : Set B.A)) → ∀ x : B.A, (overExt φ B ψ hψ hσ).N x = B.N x := by
   intro K K' d φ hU B ψ hψ hσ hO x
-  refine (@GlobalTheory.T.weightedOrbitSum_congr_coefficientRing K.O K'.O B.A _ _ B.cA B.aO (overExt φ B ψ hψ hσ).aO B.T (B.X x) ((overExt φ B ψ hψ hσ).X x) ?_ ?_ ?_)
+  refine (@_root_.GlobalTheory.UnitLemma.Orbit.orbSum_congr_coe K.O K'.O B.A _ _ B.cA B.aO (overExt φ B ψ hψ hσ).aO B.T (B.X x) ((overExt φ B ψ hψ hσ).X x) ?_ ?_ ?_)
   · intro L hL
     let S : Subalgebra K.O B.A :=
       { carrier := {a | ∀ z ∈ L, a * z ∈ L}
@@ -71,8 +72,8 @@ theorem N_overExt : ∀ (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E), IsUnrExt K 
         add_mem' := fun ha hb => L.add_mem ha hb
         zero_mem' := L.zero_mem
         smul_mem' := fun c z hz => hS (hO c) z hz }
-    refine ⟨L', ⟨(GlobalTheory.T.isFullLatticeOver_unramifiedExt_iff K K' d φ hU B ψ hψ hσ L' L rfl).2 hL.1, fun y hy => hL.2.1 y hy, fun y => ?_⟩, rfl⟩
-    exact (hL.2.2 y).trans (GlobalTheory.T.hermitianDual_invAlgBaseChangeUnramified_iff K K' d φ hU B ψ hψ hσ L' x y).symm
+    refine ⟨L', ⟨(_root_.GlobalTheory.UnitLemma.Unr.isLat_overExt_iff K K' d φ hU B ψ hψ hσ L' L rfl).2 hL.1, fun y hy => hL.2.1 y hy, fun y => ?_⟩, rfl⟩
+    exact (hL.2.2 y).trans (_root_.GlobalTheory.UnitLemma.Unr.dual_iff K K' d φ hU B ψ hψ hσ L' x y).symm
   · intro L' hL'
     let M : Submodule K.O B.A :=
       { carrier := (L' : Set B.A)
@@ -83,13 +84,13 @@ theorem N_overExt : ∀ (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E), IsUnrExt K 
           have h : c • z = ψ (algebraMap K'.O K'.E b) * z := by
             rw [Algebra.smul_def, hb, hψ, ← IsScalarTower.algebraMap_apply]
           rw [h]; exact L'.smul_mem b hz }
-    refine ⟨M, ⟨(GlobalTheory.T.isFullLatticeOver_unramifiedExt_iff K K' d φ hU B ψ hψ hσ L' M rfl).1 hL'.1, fun y hy => hL'.2.1 y hy, fun y => ?_⟩, rfl⟩
-    exact (hL'.2.2 y).trans (GlobalTheory.T.hermitianDual_invAlgBaseChangeUnramified_iff K K' d φ hU B ψ hψ hσ L' x y)
+    refine ⟨M, ⟨(_root_.GlobalTheory.UnitLemma.Unr.isLat_overExt_iff K K' d φ hU B ψ hψ hσ L' M rfl).1 hL'.1, fun y hy => hL'.2.1 y hy, fun y => ?_⟩, rfl⟩
+    exact (hL'.2.2 y).trans (_root_.GlobalTheory.UnitLemma.Unr.dual_iff K K' d φ hU B ψ hψ hσ L' x y)
   · ext t
     simp only [Subgroup.mem_inf]
     refine and_congr_left' ?_
     change (IsIntegral K.O (t : B.A) ∧ IsIntegral K.O ((t⁻¹ : B.Aˣ) : B.A)) ↔
       (@IsIntegral K'.O (overExt φ B ψ hψ hσ).A _ _ _ (t : B.A) ∧ @IsIntegral K'.O (overExt φ B ψ hψ hσ).A _ _ _ ((t⁻¹ : B.Aˣ) : B.A))
-    rw [GlobalTheory.T.isIntegral_unramifiedExt_iff_isIntegral_base K K' d φ hU B ψ hψ hσ, GlobalTheory.T.isIntegral_unramifiedExt_iff_isIntegral_base K K' d φ hU B ψ hψ hσ]
+    rw [_root_.GlobalTheory.UnitLemma.Unr.isIntegral_overExt_iff K K' d φ hU B ψ hψ hσ, _root_.GlobalTheory.UnitLemma.Unr.isIntegral_overExt_iff K K' d φ hU B ψ hψ hσ]
 
 end GlobalTheory.UnitLemma.Unr

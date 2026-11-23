@@ -4,16 +4,18 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.Irr
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.LSegJacquet
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.PropsCos
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsEquivProdIrrTw
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LanglandsClassificationOrderFreeEquivStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LanglandsRepOrderedWordOccursStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OrderedFormsInterleaveSumStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OrderedFormsMutualShuffleEqStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OrderedWordLettersCuspidalStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LanglandsClassificationOrderFreeEquiv
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.ZelevinskyInterleaving.LInjective
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LanglandsRepOrderedWordOccurs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OrderedFormsInterleaveSum
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OrderedFormsMutualShuffleEq
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OrderedWordLettersCuspidal
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductIrreducibleFiniteLength
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductLanglandsSubquotientSegmentsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegmentProductWordInShuffleStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WordOccursIrreducibleSubquotientStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WordOccursOfSubquotientStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductLanglandsSubquotientSegments
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegmentProductWordInShuffle
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WordOccursIrreducibleSubquotient
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WordOccursOfSubquotient
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WordOccursProductInterleaveStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -79,32 +81,32 @@ theorem isSubquotient_prodIrr {k : Type} [Field k] [ValuativeRel k] [Topological
   obtain ⟨φ⟩ := nonempty_prod₂_equiv_prodIrr_rep x hd
   have hPs : IsSmooth (prodIrr x hd) := isSmooth_prodIrr x hd
   have hPf := GlobalTheory.CompanionTheory.ProdFL.hasFiniteLength_prodIrr hA x hd
-  obtain ⟨h₁, h₂, h, Δ₁, Δ₂, Δ, hΔ₁, hΔ₂, hΔ, hI⟩ := GlobalTheory.T.ordered_forms_interleave_sum hA 𝔪 𝔫
-  have w0 : Wd (x 0).rep (wtW Δ₁) := GlobalTheory.T.langlands_rep_ordered_word_occurs hA hSoc hSeg 𝔪 (x 0).rep h0 h₁ Δ₁ hΔ₁
-  have w1 : Wd (x 1).rep (wtW Δ₂) := GlobalTheory.T.langlands_rep_ordered_word_occurs hA hSoc hSeg 𝔫 (x 1).rep h1 h₂ Δ₂ hΔ₂
+  obtain ⟨h₁, h₂, h, Δ₁, Δ₂, Δ, hΔ₁, hΔ₂, hΔ, hI⟩ := _root_.GlobalTheory.CompanionTheory.ZcMerge.exists_common_orderedForm hA 𝔪 𝔫
+  have w0 : Wd (x 0).rep (wtW Δ₁) := _root_.GlobalTheory.CompanionTheory.ZWordL.wd_wtW_of_isL hA hSoc hSeg 𝔪 (x 0).rep h0 h₁ Δ₁ hΔ₁
+  have w1 : Wd (x 1).rep (wtW Δ₂) := _root_.GlobalTheory.CompanionTheory.ZWordL.wd_wtW_of_isL hA hSoc hSeg 𝔫 (x 1).rep h1 h₂ Δ₂ hΔ₂
   have wp : Wd (prod₂ (x 0).rep (x 1).rep) (wtW Δ) :=
-    GlobalTheory.T.word_occurs_product_interleave hA (x 0) (x 1) _ _ _ (GlobalTheory.T.ordered_word_letters_cuspidal Δ₁) (GlobalTheory.T.ordered_word_letters_cuspidal Δ₂) w0 w1 hI
-  have wP : Wd (prodIrr x hd) (wtW Δ) := GlobalTheory.T.word_occurs_of_subquotient (prodIrr x hd) (prod₂ (x 0).rep (x 1).rep) hPs
+    GlobalTheory.T.word_occurs_product_interleave hA (x 0) (x 1) _ _ _ (_root_.GlobalTheory.CompanionTheory.ZcWords.wtW_isCusp Δ₁) (_root_.GlobalTheory.CompanionTheory.ZcWords.wtW_isCusp Δ₂) w0 w1 hI
+  have wP : Wd (prodIrr x hd) (wtW Δ) := _root_.GlobalTheory.CompanionTheory.Words.wd_of_isSubquotient (prodIrr x hd) (prod₂ (x 0).rep (x 1).rep) hPs
     (.of_injective φ.toIntertwiningMap φ.toLinearEquiv.injective) _ wp
-  have hτ := GlobalTheory.T.word_occurs_irreducible_subquotient hA (prodIrr x hd) hPs hPf (wtW Δ) wP
+  have hτ := _root_.GlobalTheory.CompanionTheory.WordIrr.exists_irrRep_wd hA (prodIrr x hd) hPs hPf (wtW Δ) wP
   obtain ⟨τ, hτP, hτW⟩ := hτ
   obtain ⟨𝔭, hτL⟩ := isL_of_exhaust hEx τ
   obtain ⟨h', z, hz, ⟨Γ, hΓ, hzL⟩, hcos⟩ := id hτL
   have s1 : InShW 𝔭 (wtW Δ) := by
-    have := GlobalTheory.T.segment_product_word_in_shuffle hA hSeg z hz Γ hzL (wtW Δ) (GlobalTheory.T.ordered_word_letters_cuspidal Δ)
-      (GlobalTheory.T.word_occurs_of_subquotient _ _ (isSmooth_prodIrr z hz) hcos.isSubquotient _ hτW)
+    have := _root_.GlobalTheory.CompanionTheory.CuspShuffle.inShW_of_wd hA hSeg z hz Γ hzL (wtW Δ) (_root_.GlobalTheory.CompanionTheory.ZcWords.wtW_isCusp Δ)
+      (_root_.GlobalTheory.CompanionTheory.Words.wd_of_isSubquotient _ _ (isSmooth_prodIrr z hz) hcos.isSubquotient _ hτW)
     rwa [hΓ.1] at this
-  have wΓ : Wd τ.ρ (wtW Γ) := GlobalTheory.T.langlands_rep_ordered_word_occurs hA hSoc hSeg 𝔭 τ.ρ hτL h' Γ hΓ
-  have wΓP : Wd (prodIrr x hd) (wtW Γ) := GlobalTheory.T.word_occurs_of_subquotient _ _ hPs hτP _ wΓ
-  have wΓ2 : Wd (prod₂ (x 0).rep (x 1).rep) (wtW Γ) := GlobalTheory.T.word_occurs_of_subquotient _ _ (isSmooth_prod₂ _ _)
+  have wΓ : Wd τ.ρ (wtW Γ) := _root_.GlobalTheory.CompanionTheory.ZWordL.wd_wtW_of_isL hA hSoc hSeg 𝔭 τ.ρ hτL h' Γ hΓ
+  have wΓP : Wd (prodIrr x hd) (wtW Γ) := _root_.GlobalTheory.CompanionTheory.Words.wd_of_isSubquotient _ _ hPs hτP _ wΓ
+  have wΓ2 : Wd (prod₂ (x 0).rep (x 1).rep) (wtW Γ) := _root_.GlobalTheory.CompanionTheory.Words.wd_of_isSubquotient _ _ (isSmooth_prod₂ _ _)
     (.of_surjective φ.toIntertwiningMap φ.toLinearEquiv.surjective) _ wΓP
-  obtain ⟨h'', z', Δ', hz', hz'L, hmap, hsub⟩ := GlobalTheory.T.product_langlands_subquotient_segments hA 𝔪 𝔫 (x 0) (x 1) h0 h1
+  obtain ⟨h'', z', Δ', hz', hz'L, hmap, hsub⟩ := _root_.GlobalTheory.CompanionTheory.LProd.prod₂_isSubquotient_prodIrr_lseg hA 𝔪 𝔫 (x 0) (x 1) h0 h1
   have s2 : InShW (𝔪 + 𝔫) (wtW Γ) := by
-    have := GlobalTheory.T.segment_product_word_in_shuffle hA hSeg z' hz' Δ' hz'L (wtW Γ) (GlobalTheory.T.ordered_word_letters_cuspidal Γ)
-      (GlobalTheory.T.word_occurs_of_subquotient _ _ (isSmooth_prodIrr z' hz') hsub _ wΓ2)
+    have := _root_.GlobalTheory.CompanionTheory.CuspShuffle.inShW_of_wd hA hSeg z' hz' Δ' hz'L (wtW Γ) (_root_.GlobalTheory.CompanionTheory.ZcWords.wtW_isCusp Γ)
+      (_root_.GlobalTheory.CompanionTheory.Words.wd_of_isSubquotient _ _ (isSmooth_prodIrr z' hz') hsub _ wΓ2)
     rwa [hmap] at this
-  have he : 𝔪 + 𝔫 = 𝔭 := GlobalTheory.T.ordered_forms_mutual_shuffle_eq hA (𝔪 + 𝔫) 𝔭 h h' Δ Γ hΔ hΓ s1 s2
-  obtain ⟨ψ⟩ := GlobalTheory.T.langlands_classification_order_free_equiv hFree (𝔪 + 𝔫) τ.ρ (IrrGL.rep ⟨_, c⟩) (he ▸ hτL) hy
+  have he : 𝔪 + 𝔫 = 𝔭 := _root_.GlobalTheory.CompanionTheory.ZcWords.eq_of_inShW_wtW hA (𝔪 + 𝔫) 𝔭 h h' Δ Γ hΔ hΓ s1 s2
+  obtain ⟨ψ⟩ := _root_.GlobalTheory.CompanionTheory.LUniq.isL_unique hFree (𝔪 + 𝔫) τ.ρ (IrrGL.rep ⟨_, c⟩) (he ▸ hτL) hy
   exact (IsSubquotient.of_surjective ψ.toIntertwiningMap ψ.toLinearEquiv.surjective).trans hτP
 
 theorem main : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]

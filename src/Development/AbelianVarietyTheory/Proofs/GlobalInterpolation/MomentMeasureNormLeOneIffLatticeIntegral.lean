@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.LatIntZero
 public import Formalism.LocalToGlobal.KernelLattices.DeterminantCokernelCount.CokernelIndexFactors.StatementB
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsDualBasisOfUnimodularLatticeAtPrimeStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsDualBasisOfUnimodularLatticeAtPrime
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.JetsAreBoundedMeasureMomentsPadicIntMatrixChange
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LatticeJetsAreBoundedMomentsOfSpanImagQuadraticStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LatticeJetsAreBoundedMomentsOfSpanImagQuadratic
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MeasureEqOfMoments
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -223,7 +223,7 @@ theorem norm_le_one_iff_latInt : ∀ (q : ℕ) [Fact q.Prime] (ι : ℂ ≃+* �
     MomentProperty lam Ω δ₀ S b (fun _ : Fin 1 => t) μ G → (‖μ‖ ≤ 1 ↔ LatInt ι (Ω / ι δ₀) S.La.toAddSubgroup G) := by
   intro q _ ι lam δ₀ Ω g S r b t G μ hι hδ hΩ hOk hsplit hb ht _ hM
   have hΩ0 : Ω ≠ 0 := by rintro rfl; simp at hΩ
-  obtain ⟨s', c, hs'q, hcLa, hcb, hsp⟩ := GlobalTheory.T.exists_dualBasis_of_unimodular_lattice_at_prime q g S r b hOk hb
+  obtain ⟨s', c, hs'q, hcLa, hcb, hsp⟩ := _root_.GlobalTheory.MomDual.dual_basis q g S r b hOk hb
   have hs'0 : s' ≠ 0 := by
     rintro rfl
     exact (Fact.out : q.Prime).one_lt.ne' (Nat.coprime_zero_left q |>.1 hs'q)
@@ -237,7 +237,7 @@ theorem norm_le_one_iff_latInt : ∀ (q : ℕ) [Fact q.Prime] (ι : ℂ ≃+* �
           fun j => (ι.symm (Ω / ι δ₀) / (s' : ℂ)) • c j := by
         funext j; simp only [smul_smul, div_eq_mul_inv]
       rw [e]; exact hmom
-    refine GlobalTheory.T.latticeJetsAreBoundedMoments_of_span_imagQuadratic q ι (Fin g → ℂ) S.d (Ω / ι δ₀) S.La.toAddSubgroup (Fin r) (fun j => (s' : ℂ)⁻¹ • c j) G
+    refine _root_.GlobalTheory.MomN.latInt_of_span q ι (Fin g → ℂ) S.d (Ω / ι δ₀) S.La.toAddSubgroup (Fin r) (fun j => (s' : ℂ)⁻¹ • c j) G
       hdp hd16 hsplit ?_ hM'
     intro x hx
     rw [Submodule.mem_toAddSubgroup] at hx

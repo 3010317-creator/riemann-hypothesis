@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.CentralIdemCoeff
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsDeRhamOfIsCrystallineSpan
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RestrictCrystallineDeRhamFiniteExtStatement
+public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
+public import Formalism.SharpRestriction.LevelLetterCocycles.LocCoh
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RestrictCrystallineDeRhamFiniteExt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +51,7 @@ namespace GlobalTheory.Pass
 theorem potDRL_of_tied : ∀ (L : LocTheory) (A : ∀ (l : ℕ) [Fact l.Prime], LocAinf l (L l)), (∀ (l : ℕ) [Fact l.Prime], Nonempty (LocTied l (L l) (A l))) → PotDRL L := by
   intro L A hT l _ K K' LL h R hc
   obtain ⟨T⟩ := hT l
-  exact (GlobalTheory.T.restrict_crystalline_deRham_finiteExt l (L l) (A l) T K K' LL h R.V R.ρ).2.2
+  exact (_root_.GlobalTheory.Per.TiedRestrict.restrict_crys_deRham l (L l) (A l) T K K' LL h R.V R.ρ).2.2
     (GlobalTheory.Per.CrisDR.isDR_of_isCrys l (L l) (A l) T K' LL R.V _ hc).1
 
 end GlobalTheory.Pass

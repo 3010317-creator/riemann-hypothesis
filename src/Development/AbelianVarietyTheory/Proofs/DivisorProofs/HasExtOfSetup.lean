@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SubsetSpanBy
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeDescentDataChartsCommonStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalGroupRangeUnionClosedFibresStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtendsToSemiAbelianOfLocalGroupsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyDescentSeparatedEmbeddingStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeDescentDataChartsCommon
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalGroupRangeUnionClosedFibres
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtendsToSemiAbelianOfLocalGroups
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyDescentSeparatedEmbedding
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,9 +57,9 @@ open GlobalTheory.Desc
 namespace GlobalTheory.Desc
 
 theorem Setup.hasExt (σ : Setup) : HasExt (awayMap σ.f) σ.A := by
-  have hc : σ.Common := GlobalTheory.T.abelianSchemeDescentData_charts_common σ
-  obtain ⟨E⟩ := GlobalTheory.T.nonempty_descentSeparatedEmbedding σ hc
-  exact GlobalTheory.T.extendsToSemiAbelian_of_local_groups σ E hc (GlobalTheory.T.exists_localGroup_range_union_closedFibres σ E hc)
+  have hc : σ.Common := _root_.GlobalTheory.Desc.setup_common σ
+  obtain ⟨E⟩ := _root_.GlobalTheory.Desc.nonempty_emb σ hc
+  exact _root_.GlobalTheory.Desc.Emb.hasExt_of_locGrp σ E hc (_root_.GlobalTheory.Desc.UnionLocal.exists_locGrp_range_eq σ E hc)
 
 theorem hasExt_of_setup : ∀ σ : Setup, HasExt (awayMap σ.f) σ.A := Setup.hasExt
 

@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHolPeriods
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueLinearLiftOfAbelianEndomorphismStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueLinearLiftOfAbelianEndomorphism
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,7 +51,7 @@ namespace GlobalTheory.ExpLin
 
 theorem exists_ringHom_matrix_lift : ∀ (X : Scheme.{0}) (G : Over X) [GrpObj G] [IsCommMonObj G] (g : ℕ) (O : Type) [Ring O] (act : O → (G ⟶ G)), IsAbelianScheme G → SmoothOfRelativeDimension g G.hom → (∀ a, IsMonHom (act a)) → act 1 = 𝟙 G → (∀ a b, act (a * b) = act b ≫ act a) → (∀ a b, act (a + b) = act a * act b) → ∀ (y : Sp ℂ ⟶ X) (e : (Fin g → ℂ) → (Over.mk y ⟶ G)), IsExp y e → ∃ ρ' : O →+* Matrix (Fin g) (Fin g) ℂ, ∀ a z, e (ρ' a *ᵥ z) = e z ≫ act a := by
   intro X G _ _ g O _ act hab hsm hhom h1 hmul hadd y e he
-  have H := fun a => GlobalTheory.T.existsUnique_linear_lift_of_abelianEndomorphism X G g hab hsm y e e (act a) he he (hhom a)
+  have H := fun a => _root_.GlobalTheory.ExpLin.existsUnique_linear_lift X G g hab hsm y e e (act a) he he (hhom a)
   let M : O → (Fin g → ℂ) →ₗ[ℂ] (Fin g → ℂ) := fun a => (H a).exists.choose
   have hM : ∀ a z, e (M a z) = e z ≫ act a := fun a => (H a).exists.choose_spec
   have key : ∀ a (N : (Fin g → ℂ) →ₗ[ℂ] (Fin g → ℂ)), (∀ z, e (N z) = e z ≫ act a) → N = M a :=

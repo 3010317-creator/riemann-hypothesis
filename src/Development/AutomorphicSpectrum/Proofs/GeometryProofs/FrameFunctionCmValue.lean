@@ -1,11 +1,14 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCMFrame
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ExistsTransitionMatrixGramStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LocalBasisGramDetLogNormStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PureTypeLatticesOrthogonalStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CmPackPureFrameOpenStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsCmPeriodEmbeddingStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsTransition
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ExistsTransitionMatrixGram
+public import Development.AutomorphicSpectrum.Definitions.AdelicLattices.FactPrimes
+public import Mathlib.Algebra.AffineMonoid.Basic
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LocalBasisGramDetLogNorm
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PureTypeLatticesOrthogonal
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CmPackPureFrameOpen
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsCmPeriodEmbedding
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,15 +67,15 @@ theorem const_algebraic : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
       (r : ℂ) * (Z true).z ^ D.p = ρ * (Z false).z ^ D.q := by
   intro E _ _ _ H D l Xo c g ty FU i Z U τ φ e ρ hty hrt hmem hline he hconst
   obtain ⟨P, hP, x, hx, X, v, w, hk, hloc, hfr⟩ :=
-    GlobalTheory.T.exists_cm_period_embedding E H D l Xo c g ty FU i Z τ ⟨2, Nat.prime_two⟩ τ.toRatAlgHom.fieldRange (finite_fieldRange τ) hty hrt
+    _root_.GlobalTheory.CompanionTheory.Ar.Fl.exists_cmPoint_locBasis_frames E H D l Xo c g ty FU i Z τ ⟨2, Nat.prime_two⟩ τ.toRatAlgHom.fieldRange (finite_fieldRange τ) hty hrt
   have hcard : Fintype.card (Fin D.p ⊕ Fin D.q) = (FU.Di i).p + (FU.Di i).q := by
     simp [(FU.sig i).1, (FU.sig i).2]
-  obtain ⟨T, hT, -, hdet, -⟩ := GlobalTheory.T.exists_transition_matrix_gram E H (FU.Di i) _ x e hcard he
+  obtain ⟨T, hT, -, hdet, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fl.transition_matrix_exists E H (FU.Di i) _ x e hcard he
   have hT0 : T.det ≠ 0 := hdet hloc.1
   have horth : ∀ a b, sesq (FU.Di i) (x (.inl a)) (x (.inr b)) = 0 := fun a b =>
-    (GlobalTheory.T.pure_type_lattices_orthogonal E H (FU.Di i) g ty P hP _ _ (hx.1 a) (hx.2 b)).1
-  have hG0 := (GlobalTheory.T.local_basis_gram_det_log_norm E H (FU.Di i) D.p D.q x ⟨2, Nat.prime_two⟩ hloc horth).1
-  obtain ⟨hfm, hval⟩ := GlobalTheory.T.cm_pack_pure_frame_open E H D l Xo c g ty FU i Z P hP X x hx U τ φ e ρ T v w hty hrt hmem hline he
+    (_root_.GlobalTheory.CompanionTheory.Ar.PureOrth.sesq_eq_zero_of_opposite_pure E H (FU.Di i) g ty P hP _ _ (hx.1 a) (hx.2 b)).1
+  have hG0 := (_root_.GlobalTheory.CompanionTheory.Ar.Fl.orthogonalBlock_gram_det_log_norm E H (FU.Di i) D.p D.q x ⟨2, Nat.prime_two⟩ hloc horth).1
+  obtain ⟨hfm, hval⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fl.CMValue.value_on_cmFrame E H D l Xo c g ty FU i Z P hP X x hx U τ φ e ρ T v w hty hrt hmem hline he
     hconst hloc.1 hT hfr
   have hφ : φ X.K X.y v w ≠ 0 := hline.ne X.K X.β X.y v w hfm
   have hmemK : ∀ t : E, τ t ∈ X.K := fun t => hk (τ.toRatAlgHom.mem_fieldRange.2 ⟨t, rfl⟩)

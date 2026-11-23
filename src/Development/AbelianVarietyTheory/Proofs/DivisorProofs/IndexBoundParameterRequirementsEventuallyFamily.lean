@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThreeLeScaleOfPowBound
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TupleReadBaseTupleEqFamily
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiveElementaryInequalitiesEventuallyStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThickSetDensityLeInvFourLwStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoPiMulWeightLengthLeMaxWeightDegreeSqStatement
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiveElementaryInequalitiesEventually
+public import Formalism.LocalRingCardinality.DataParams₂
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThickSetDensityLeInvFourLw
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoPiMulWeightLengthLeMaxWeightDegreeSq
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsPageRunRecord
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -68,7 +70,7 @@ theorem sizeRows_at {D : D7} {L : SizeData₂ D} {Pm : ParameterChoice' D L} (Tp
   have hel := L.sc.eps_lt
   have hm0 : (1 : ℝ) ≤ D.R.m := by exact_mod_cast (show 1 ≤ D.R.m by have := D.R.two_le_m; omega)
   have hn0 : (0 : ℝ) < D.R.n := by have : 1 ≤ D.R.n := Formalism.HC.Frame.ord_pos _; exact_mod_cast this
-  refine ⟨?_, h2, GlobalTheory.T.two_pi_mul_weightLength_le_maxWeightDegree_sq D L Pm Tp hK, by rw [hC], sDe2, ?_, ?_, ?_, GlobalTheory.FinalJoin.RecordRun.k_b'_le Pm
+  refine ⟨?_, h2, _root_.GlobalTheory.TopDegLower.two_pi_nW_le_topDeg_sq D L Pm Tp hK, by rw [hC], sDe2, ?_, ?_, ?_, GlobalTheory.FinalJoin.RecordRun.k_b'_le Pm
     (GlobalTheory.IndexAssembly.three_le_scale_of_pow_bound h2), ?_, by exact_mod_cast (show (44 : ℝ) ≤ D.R.m by linarith), hn0.le⟩
   ·
     have hlogeta := Pm.logeta
@@ -105,7 +107,7 @@ theorem sizeRows_at {D : D7} {L : SizeData₂ D} {Pm : ParameterChoice' D L} (Tp
         = L.sc.x * (L.etaSz * L.sc.X' * D.R.n) * Real.exp (L.sc.L * (4 / 5)) := by ring
       _ ≤ L.sc.x * Real.exp (L.sc.L / 5) * Real.exp (L.sc.L * (4 / 5)) := by gcongr
       _ = L.sc.x * L.sc.b := by rw [mul_assoc, e5]
-  · apply GlobalTheory.T.thickSet_density_le_inv_four_Lw
+  · apply _root_.GlobalTheory.thick_density_le
     have a1 : L.sc.x ^ (2 : ℝ) ≤ L.sc.x ^ (2 + 8 * L.sc.eps) :=
       Real.rpow_le_rpow_of_exponent_le hx1.le (by linarith)
     rw [Real.rpow_two] at a1
@@ -152,7 +154,7 @@ theorem sizeRows_along : Closed FamHyp fun Fm _ => ∃ x0 : ℝ, ∀ (x : ℝ) (
     exact (Fm.L 0 i).sc.ez_pos
   have hev : ∀ᶠ x : ℝ in Filter.atTop, 11 ≤ x ^ (Fm.ez / 5) :=
     (tendsto_rpow_atTop (by positivity : 0 < Fm.ez / 5)).eventually_ge_atTop 11
-  obtain ⟨x0, hx0⟩ := Filter.eventually_atTop.1 ((GlobalTheory.T.eventually_rpow_log_inequalities eps he (by linarith)).and hev)
+  obtain ⟨x0, hx0⟩ := Filter.eventually_atTop.1 ((_root_.GlobalTheory.five_elementary_inequalities_eventually eps he (by linarith)).and hev)
   refine ⟨x0, fun x hx hx0' ι => ?_⟩
   have hsx := Fm.L_x x ι hx
   have hse := Fm.L_eps x ι

@@ -3,11 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TorMatch
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsToricRankOne
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.ExistsArBaseAway
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsGrpPullbackGenMap
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemSmulOfForallCharPowEqOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilPairingMumfordLambdaSquareStatement
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.GlobalFnsHolds
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsoFreePerpLabelKernelWeights
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsGrpPullbackGenMap
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemSmulOfForallCharPowEqOneStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilPairingMumfordLambdaSquareStatement
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsIsPELTripleOfDenseFibres
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaLinComb
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaOfTranslDiff
@@ -194,7 +195,7 @@ theorem label_proj_eq : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R]
       exact this
     obtain ⟨z, hz, -⟩ := (q₁ (qw v) q).1 (by rw [hqw, hav])
     rw [ofAdd_sub, map_div, h₁, hz, ofAdd_add, map_mul, ofAdd_nsmul, map_pow, hτk, _root_.mul_one, div_self']
-  obtain ⟨z, hz⟩ := GlobalTheory.T.exists_eq_nsmul_of_forall_char_pow_eq_one _ F k hkF _ key
+  obtain ⟨z, hz⟩ := _root_.GlobalTheory.mem_smul_of_forall_char_pow_eq_one _ F k hkF _ key
   exact ⟨z, by rw [← hz]; abel⟩
 
 end GlobalTheory.Poinc.Eq8.Labels

@@ -1,8 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.CosetTrace
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsPthPowerScaleThinShellStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NatCastEqOneOfCoprimeStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsPthPowerScaleThinShell
+public import Mathlib.Basic.NNReal.Defs
+public import Mathlib.RingTheory.Valuation.Basic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NatCastEqOneOfCoprime
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,7 +59,7 @@ theorem moves_top_of_coprime_order : ∀ (L : Type) [Field L] (v : Valuation L �
     (∃ y : L, σ • y ≠ y) → Moves v ⊤ σ := by
   intro L _ v p hp F hF hp0 hp1 G _ _ hv σ hσF l hl hσl ⟨y, hy⟩ r hr
   obtain ⟨d, hdF, _hd0, hrx, hx1⟩ :=
-    GlobalTheory.T.exists_pth_power_scale_thin_shell L v p hp F hF hp0 hp1 r hr (σ • y - y) (sub_ne_zero.mpr hy)
+    _root_.GlobalTheory.AlmostEt.klc_scale L v p hp F hF hp0 hp1 r hr (σ • y - y) (sub_ne_zero.mpr hy)
   set x := (σ • y - y) * d ^ p with hxdef
   refine ⟨x, Subfield.mem_top x, hx1, ?_⟩
   by_contra hle
@@ -92,7 +94,7 @@ theorem moves_top_of_coprime_order : ∀ (L : Type) [Field L] (v : Valuation L �
     intro j _
     rw [← Valuation.map_neg, neg_sub]
     exact hstep j
-  rw [map_mul, GlobalTheory.T.valuation_natCast_eq_one_of_coprime' L v p l hp1 hl, one_mul] at h1
+  rw [map_mul, _root_.GlobalTheory.AlmostEt.natCast_eq_one_of_coprime L v p l hp1 hl, one_mul] at h1
   exact absurd (lt_of_lt_of_le hrx h1) (lt_irrefl _)
 
 end GlobalTheory.AlmostEt

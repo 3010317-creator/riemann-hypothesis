@@ -4,13 +4,14 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForm
 public import Mathlib.FieldTheory.Galois.Abelian
 public import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HilbertClassFieldOfGlobalArtinReciprocity
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemConnectedComponentOfOneOfPos
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsHcharPrescribedTrivial
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsQuadraticCharOfSplitTwoGroup
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalArtinExistsHolds
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GlobalArtinReciprocityHolds
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeilDeligneRelUnique
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsLocalComponentEigenvectorAtSplitPlaceIsoty
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemConnectedComponentOfOneOfPos
+import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
+import CompanionTheory.AutomorphicTheory.PlaceSeparation.IsOpenQuotientMapArt0
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -132,7 +133,7 @@ theorem one_char (Ω : Type) [Field Ω] (F : Type) [Field F] [NumberField F] [Al
       (∀ (j : Ω →+* ℂ) (c : G F Ω), (∀ x, j (c x) = starRingEnd ℂ (j x)) → r c = 1) ∧
       ∀ u ∈ T, ∀ A' : ValuationSubring Ω, IsPlaceOver A' u → ∀ g ∈ Dec (F := F) A', r g = 1 := by
   classical
-  obtain ⟨art, ha⟩ := GlobalTheory.globalArtinReciprocity_holds F Ω
+  obtain ⟨art, ha⟩ := _root_.CompanionTheory.FamInh.globalArtin F Ω
   obtain ⟨a, haL⟩ := GlobalTheory.localArtinExists_holds F Ω A v h
   obtain ⟨θ, hθs, hθf, hθ⟩ := loc_char Ω F A v h a haL χ hχ
   have hne : ∀ u ∈ T, u ≠ v := fun u hu e => hT (e ▸ hu)

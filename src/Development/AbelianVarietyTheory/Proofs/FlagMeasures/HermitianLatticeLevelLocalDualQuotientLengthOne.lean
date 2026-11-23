@@ -2,10 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.SelfDualAt
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CmFieldSplitCompletelyPlaceStructure
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalHermitianDualQuotientCyclicSplitPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PrimeSqLeLocalHermitianDualIndexStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ProdLocalRelIndexDvdHermitianDualStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SplitPlaceDualQuotientComponentsIffStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalHermitianDualQuotientCyclicSplitPlace
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PrimeSqLeLocalHermitianDualIndex
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ProdLocalRelIndexDvdHermitianDual
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SplitPlaceDualQuotientComponentsIff
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -90,10 +90,10 @@ theorem tLat_local_index : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     intro w hw h0
     have hw' : (T : 𝓞 F) ∈ w.asIdeal := (Set.Finite.mem_toFinset hfin).mp hw
     obtain ⟨_, _, sp, hsp1, hsp2⟩ := hloc w hw'
-    exact GlobalTheory.T.prime_sq_le_local_hermitian_dual_index F E cm n J hJ hdet T f L hT hs hdeg hL w hw' sp hsp1 hsp2
-      (GlobalTheory.T.split_place_dual_quotient_components_iff F E cm n J hJ hdet T f L hT hs hdeg hL w hw' sp hsp1 hsp2) h0
+    exact _root_.GlobalTheory.St.G.IdxLower.sq_le_local_index F E cm n J hJ hdet T f L hT hs hdeg hL w hw' sp hsp1 hsp2
+      (_root_.GlobalTheory.St.G.dual_components_iff F E cm n J hJ hdet T f L hT hs hdeg hL w hw' sp hsp1 hsp2) h0
 
-  have hdvd := GlobalTheory.T.prod_local_relIndex_dvd_hermitian_dual F E cm n J hJ hdet T f L hT hs hdeg hL hfin.toFinset
+  have hdvd := _root_.GlobalTheory.St.G.GlobIdx.prod_loc_relIndex_dvd F E cm n J hJ hdet T f L hT hs hdeg hL hfin.toFinset
     (fun w hw => (Set.Finite.mem_toFinset hfin).mp hw)
   rw [hL.2.2.2.1] at hdvd
   have heq := tidx_arith hfin.toFinset
@@ -101,7 +101,7 @@ theorem tLat_local_index : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     T f hT hcard hdvd hlow v ((Set.Finite.mem_toFinset hfin).mpr hv)
   refine ⟨heq, ?_⟩
   obtain ⟨_, _, sp, hsp1, hsp2⟩ := hloc v hv
-  exact GlobalTheory.T.local_hermitian_dual_quotient_cyclic_split_place F E cm n J hJ hdet T f L hT hs hdeg hL v hv sp hsp1 hsp2
-    (GlobalTheory.T.split_place_dual_quotient_components_iff F E cm n J hJ hdet T f L hT hs hdeg hL v hv sp hsp1 hsp2) heq
+  exact _root_.GlobalTheory.St.G.CyclicQuot.local_dual_cyclic F E cm n J hJ hdet T f L hT hs hdeg hL v hv sp hsp1 hsp2
+    (_root_.GlobalTheory.St.G.dual_components_iff F E cm n J hJ hdet T f L hT hs hdeg hL v hv sp hsp1 hsp2) heq
 
 end GlobalTheory.St.G

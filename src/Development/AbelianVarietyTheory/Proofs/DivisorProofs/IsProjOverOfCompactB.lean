@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CompactBIffCompact
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorIntegralModelIsProperOfCompactStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NotCompactOfMEqOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorIntegralModelIsProperOfCompact
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsProjOverOfIsQProjOverOfIsProper
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -52,6 +53,6 @@ theorem Model.isProjOver_of_compactB (p : ℕ) [Fact p.Prime] (D : GlobalTheory.
     [IsDomain R] [CharZero R] [IsNoetherianRing R] (b : Base D R) (N : ℕ) (_hN : 3 ≤ N) (_hNp : N.Coprime p)
     (hD : D.CompactB) (M : Model b N) : IsProjOver M.s :=
   GlobalTheory.UPel.isProjOver_of_isQProjOver_of_isProper R M.X M.s M.qproj
-    (GlobalTheory.T.harrisTaylor_integralModel_isProper_of_compact p D R b N M hD)
+    (_root_.GlobalTheory.UPel.HT.isProper_model_of_compact p D R b N M hD)
 
 end GlobalTheory.UPel.HT

@@ -3,11 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMemKAt
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplementaryAdelicSchwartzRestFunction
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StarMemAdelicSchwartzSpaceNumberField
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AntidiagonalUnipotentConjSiegelSquareSplitStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FromBlocksMem
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AntidiagonalUnipotentConjSiegelSquareSplit
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ConnectionFixesSplitSubspace
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.SplitParallelDerivativeLeftFixed
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -40,7 +41,6 @@ import Mathlib.Tactic.NormNum.NatSqrt
 import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FromBlocksMem
 
 @[expose] public section
 
@@ -74,7 +74,7 @@ theorem scalar_eq_one_of_split_left : _root_.GlobalTheory.FunPr.ThetaLocalInputs
         simp only [Set.mem_setOf_eq] at *
         conv_lhs => rw [← hx]
         rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply] }
-  have hgen := (GlobalTheory.T.antidiagonalUnipotent_conj_siegel_square_split) F E σ B a a' G X om om' hTr v hsp hψ h2 k hk
+  have hgen := (_root_.GlobalTheory.SplitDblGenLeft.inlD_mem_closure_left) F E σ B a a' G X om om' hTr v hsp hψ h2 k hk
   have hle : Subgroup.closure (GlobalTheory.InertDbl.ParD σ G.V' v ∪ GlobalTheory.InertDbl.NabD σ G.V' v) ≤ H := by
     rw [Subgroup.closure_le]
     rintro g (hg | hg)

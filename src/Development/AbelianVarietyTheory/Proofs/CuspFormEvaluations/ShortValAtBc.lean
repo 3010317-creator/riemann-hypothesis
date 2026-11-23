@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.ThetaValues.LeCovCoeff
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ConnectionPolynomialExpressionCoeffFieldExtensioStatement
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ConnectionPolynomialExpressionCoeffFieldExtensio
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -70,7 +70,7 @@ theorem shortExpr_bc {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Hos
   · refine finsum_congr fun q => ?_
     rw [h']
     congr 1
-    exact Finset.sum_congr rfl fun i _ => (GlobalTheory.T.connectionPolynomialExpression_coeffFieldExtension E H Dw l Xo c c' hle nab n P S h y k (F q i)).2
+    exact Finset.sum_congr rfl fun i _ => (_root_.GlobalTheory.FieldBC.polyNab_fieldBC E H Dw l Xo c c' hle nab n P S h y k (F q i)).2
 
 theorem shortValAt_bc : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c c' : Coeff l) (hle : c.F ≤ c'.F) (nab : NabV Xo c) (n : ℕ) (w : (Fin n → LevQ Dw l) → c.F) (Λ : GenLat E n) (β : c.F) (N : ℕ) (P : MvPolynomial (LtN Dw n) c.F) (S : Type) [CommRing S] [Algebra c.F S] [Algebra c'.F S] (h : AlgOver c c' hle S) (y : FrPt Xo c' S) (v : S), ShortValAt Xo c' (nabBC hle nab) (fun q => incF c c' hle (w q)) Λ (incF c c' hle β) N (MvPolynomial.map (incF c c' hle) P) y v ↔ ShortValAt Xo c nab w Λ β N P (y.res hle h) v := by
   intro E _ _ _ H Dw l Xo c c' hle nab n w Λ β N P S _ _ _ h y v

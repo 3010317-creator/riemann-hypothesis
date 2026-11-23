@@ -1,8 +1,9 @@
 module
 
 public import Development.WeilBound.CoreStatements.FiniteTypeHarishChandra.FiniteDimensionalHcSpace
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralIdempotentPropertiesStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SimpleIffIrreducibleStatement
+public import Development.WeilBound.CoreStatements.FiniteTypeHarishChandra.SupportExistsAll
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralIdempotentProperties
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SimpleIffIrreducible
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,13 +57,13 @@ section Gen
 
 variable {Γ : Type} [Group Γ] [Fintype Γ]
 
-theorem isIrr_of_simple (τ : FDRep ℂ Γ) [h : Simple τ] : IsIrr τ.ρ := (GlobalTheory.T.simple_iff_irreducible.1 Γ τ).1 h
+theorem isIrr_of_simple (τ : FDRep ℂ Γ) [h : Simple τ] : IsIrr τ.ρ := (_root_.GlobalTheory.CompanionTheory.TyFin.simpleIffIrr.1 Γ τ).1 h
 
 theorem zIdemIdemCentral_holds (Γ : Type) [Group Γ] [Fintype Γ] (τ : FDRep ℂ Γ) (hτ : Simple τ) :
-    zIdem τ * zIdem τ = zIdem τ ∧ ∀ a, zIdem τ * a = a * zIdem τ := GlobalTheory.T.central_idempotent_properties.1 Γ τ hτ
+    zIdem τ * zIdem τ = zIdem τ ∧ ∀ a, zIdem τ * a = a * zIdem τ := _root_.GlobalTheory.CompanionTheory.TyFin.zIdemFacts.1 Γ τ hτ
 
 theorem zIdemOrthogonal_holds (Γ : Type) [Group Γ] [Fintype Γ] (τ σ : FDRep ℂ Γ) (hτ : Simple τ) (hσ : Simple σ)
-    (h : ¬ Nonempty (τ ≅ σ)) : zIdem τ * zIdem σ = 0 := GlobalTheory.T.central_idempotent_properties.2.1 Γ τ σ hτ hσ h
+    (h : ¬ Nonempty (τ ≅ σ)) : zIdem τ * zIdem σ = 0 := _root_.GlobalTheory.CompanionTheory.TyFin.zIdemFacts.2.1 Γ τ σ hτ hσ h
 
 end Gen
 

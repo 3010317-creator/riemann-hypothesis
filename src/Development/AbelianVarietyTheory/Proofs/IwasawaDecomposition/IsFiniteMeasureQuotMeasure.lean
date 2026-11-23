@@ -2,16 +2,20 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.T2SpaceAdelicGeneralLinearGroupNumberField
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.IdeleClassFiniteness.OhatCompact
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAdelicGLHomeomorphInfiniteFiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFiniteMeasureReductionDomainInfinityStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.DifferentiableAtChart
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAdelicGLHomeomorphInfiniteFinite
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BaseChangeDefiniteUnitary
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFiniteMeasureReductionDomainInfinity
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLatticeStabilizerConjFiniteAdeleGLIntegralStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteVolumeAdelicUnitaryQuotient
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsCompactIntegralGLFiniteAdelesStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IwasawaDecompositionFiniteAdelesGLStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StrongApproximationUpperUnitriangularFiniteAdeleStatement
+public import Mathlib.Topology.Instances.Matrix
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsCompactIntegralGLFiniteAdeles
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.IdeleClassFiniteness.BorelGL
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IwasawaDecompositionFiniteAdelesGL
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StrongApproximationUpperUnitriangularFiniteAdele
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsMulRightInvariantOfFundamentalDomain
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.IdeleClassFiniteness.LatticeIdealNonzero
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -98,13 +102,13 @@ theorem isFiniteMeasure_quotMeasure (μ : Measure (GA E a)) [μ.IsHaarMeasure] :
   haveI : BorelSpace (GL (Fin a) (Af E)) := ⟨rfl⟩
   obtain ⟨_, _⟩ := lcsc_GL (Cinf E) a
   obtain ⟨_, _⟩ := lcsc_GL (Af E) a
-  obtain ⟨e, he⟩ := GlobalTheory.T.exists_adelicGL_homeomorph_infinite_finite E a
-  obtain ⟨S, hS⟩ := PIW.ClassFinD.borelKGL_of GlobalTheory.T.iwasawaDecomposition_finiteAdeles_GL GlobalTheory.T.strongApproximation_upperUnitriangular_finiteAdeles PIW.ClassFinD.idele_class_finite E a
+  obtain ⟨e, he⟩ := _root_.GlobalTheory.CuspRep.GASplit.exists_split E a
+  obtain ⟨S, hS⟩ := PIW.ClassFinD.borelKGL_of _root_.GlobalTheory.IwasawaFinAd.iwasawaAf _root_.GlobalTheory.UnipApproxGL.unipApprox PIW.ClassFinD.idele_class_finite E a
   choose Λ hΛ hΛK using fun s => GlobalTheory.T.exists_lattice_stabilizer_conj_finiteAdeleGL_integral E a s
-  choose Ω hΩ hcov using fun s => GlobalTheory.T.exists_finite_measure_reduction_domain_infinity E a (Λ s) (hΛ s) (Measure.haar : Measure (GL (Fin a) (Cinf E)))
+  choose Ω hΩ hcov using fun s => _root_.GlobalTheory.GLInfReduction.exists_cover_of_finite_measure E a (Λ s) (hΛ s) (Measure.haar : Measure (GL (Fin a) (Cinf E)))
   refine ⟨?_⟩
   rw [quotMeasure_univ (isFundamentalDomain_stdDom (latticeGL E a) μ)]
-  refine GlobalTheory.Mem.VolFin.measure_lt_top_of_cover e (latticeGL E a) μ S (PIW.ClassFinD.KGL E a) (GlobalTheory.T.isCompact_integralGL_finiteAdeles E a) Ω hΩ
+  refine GlobalTheory.Mem.VolFin.measure_lt_top_of_cover e (latticeGL E a) μ S (PIW.ClassFinD.KGL E a) (_root_.GlobalTheory.isCompact_KGL E a) Ω hΩ
     (fun g => ?_) _ (isFundamentalDomain_stdDom _ μ)
   obtain ⟨γ, s, hs, k, hk, hx⟩ := hS (GeneralLinearGroup.map (pFin E) g)
   obtain ⟨η, hη, n, hn⟩ := hcov s (GeneralLinearGroup.map (pInf E) (ratGL E a γ⁻¹ * g))

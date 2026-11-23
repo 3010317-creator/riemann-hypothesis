@@ -6,10 +6,11 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealId
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselLineContractionHeisenbergInvariantStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselLinkKappaSurjectiveSupportedConjugateHalfStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HomLatticeCompletionLeClosureIsotropicHalvesStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HomLatticeCompletionSelfAnnihilatorAtPlacesStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HomLatticeCompletionSelfAnnihilatorAtPlaces
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.KappaMapsBesselLineLatticeIffSplitStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LineProjectionMemHomLatticeCompletionStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemHomLatticeCompletionIffSupportedMapsStatement
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemHomLatticeCompletionIffSupportedMaps
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -122,7 +123,7 @@ theorem step3 : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [TopologicalS
           rw [neg_add_cancel, GlobalTheory.SplitScalar.symplO_zero_left] at this
           exact eq_neg_of_add_eq_zero_left this.symm
         rw [h0]; exact hneg _ ha }
-  rw [GlobalTheory.T.homLatticeCompletion_self_annihilator_atPlaces D ψ hψ V T LV LT hLV hLT P y hy]
+  rw [_root_.GlobalTheory.SelfDualAt.latO_ann_at D ψ hψ V T LV LT hLV hLT P y hy]
   intro u' hu'
   have hle : AddSubgroup.closure {x : WO V T | x ∈ latO V T (LV : Set _) (LT : Set _) P ∧
       ∃ e, IsSplitIdem D e ∧ IsHalf e x} ≤ K := by
@@ -149,7 +150,7 @@ theorem vanish : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [Topological
     GlobalTheory.T.lineProjection_mem_homLatticeCompletion D k ι p I P hP n' ρ B S α α₀ M LS Λ hM hLS (fun i => ⟨(hfr i).1, (hfr i).2.2.1⟩) u hu
   have hhalf : IsHalf e h := isHalf_mul_right heu _
   have hhmx : MxAt P h := by
-    have := ((GlobalTheory.T.mem_homLatticeCompletion_iff_supported_maps D B.V₀ S M LS hM hLS P _).1 hhN).1
+    have := ((_root_.GlobalTheory.FinPl.LatMem.mem_latO_iff D B.V₀ S M LS hM hLS P _).1 hhN).1
     have h2 : (B.o.resS S ((B.o.resS S).symm (0, h))).2 = h := by rw [AddEquiv.apply_symm_apply]
     rw [← h2]; exact mxAt_mul_right' this _
   have hpair : symplO B.V₀ S ((B.o.resS S).symm (0, h)) ((B.o.resS S).symm (0, y)) =

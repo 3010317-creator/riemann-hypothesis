@@ -5,7 +5,8 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFor
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.PseudoCoefficientSeparation
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.EllipticPartTestData
 public import Development.AbelianVarietyTheory.Definitions.Foundations.InnerEqZeroOfNotUEquiv
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryIrreducibleIsAdmissibleStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.ExistsStandardIndModule
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryIrreducibleIsAdmissible
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OfClassification
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MeasurableEmbeddingEquiv
 import Mathlib.Algebra.Order.Floor.Extended
@@ -163,7 +164,7 @@ theorem trace_pseudoCoeff_arch : GlobalTheory.Published.DiscreteSeriesClassifica
   have hπi : GlobalTheory.AutomorphicL2Unitary.IsTopIrreducible π :=
     ⟨hδ.irred.1, fun W hW => hδ.irred.2 W ⟨hW.1, fun h v hv => by simpa [π] using hW.2 (frameEquiv M ρ h) v hv⟩⟩
   have hU := matRep_isURepOn π hπu hs
-  have hadm : IsIrrAdm (M.ε ρ) (matRep (M.ε ρ) π) := GlobalTheory.T.unitary_irreducible_is_admissible _ _ X _ hU (matRep_isIrredOn π hπi)
+  have hadm : IsIrrAdm (M.ε ρ) (matRep (M.ε ρ) π) := _root_.GlobalTheory.IrrAdm.isIrrAdm_of_irred _ _ X _ hU (matRep_isIrredOn π hπi)
   obtain ⟨Θ, hΘ⟩ := hHC.1 V.rank (M.ε ρ) ((μa (placeOf D ρ)).map (frameEquiv M ρ)) X (matRep (M.ε ρ) π) hadm
   obtain ⟨c, htr⟩ : ∃ c, HasTrace (repOp (groupRep (M.ε ρ) hadm.2.1.1) ((μa (placeOf D ρ)).map (frameEquiv M ρ))
       (fa (placeOf D ρ) ∘ (frameEquiv M ρ).symm)) c := ⟨_, hΘ.1.2.2 _ hpc.mem⟩

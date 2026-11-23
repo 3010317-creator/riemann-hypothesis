@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdIPowLe
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FaithfullyFlatDescentElementsPushoutStatement
+public import Mathlib.RingTheory.RingHom.FaithfullyFlat
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FaithfullyFlatDescentElementsPushout
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -73,7 +74,7 @@ theorem cover_injective_and_descent : ∀ (l : ℕ) [Fact l.Prime] (R : Type) [C
     rw [map_sub, hxy, sub_self]; exact Ideal.zero_mem _
   ·
     have happ : ∀ m : ℕ, ∃ b : B.A, h.f b - c ∈ adI C ^ m := fun m => by
-      have hd := (GlobalTheory.T.faithfullyFlat_descent_elements_pushout _ _ _ (qmap h m) (qmap p m) (qmap q m) (hc.ff m) (hpo.po m)).2
+      have hd := (_root_.GlobalTheory.BSP.ff_descent_elem_pushout _ _ _ (qmap h m) (qmap p m) (qmap q m) (hc.ff m) (hpo.po m)).2
         (Ideal.Quotient.mk _ c) (by rw [qmap_mk, qmap_mk, hpq])
       obtain ⟨b', hb'⟩ := hd
       obtain ⟨b, rfl⟩ := Ideal.Quotient.mk_surjective b'

@@ -1,7 +1,8 @@
 module
 
 public import Formalism.SharpRestriction.Divisibility.SchurIrreducible
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HighestWeightIsoOfEqualCasimirStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsFockIPOfFockData
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HighestWeightIsoOfEqualCasimir
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -80,7 +81,7 @@ theorem embeds_of_lowest_type : admQ7 → admQ8 → ∀ (p q : ℕ) (lam : Ix p 
   have g2 : GapGt lam (((p + q : ℕ) : ℝ) - 1) :=
     gapGt_of_cube hgap (fun h2 => (cube_div_add_one_le_cube_and_sub_one_le h2).2)
   obtain ⟨⟨e, he, hcomm, heu, -⟩, -⟩ :=
-    GlobalTheory.T.highest_weight_iso_of_equal_casimir hQ7 hQ8 p q lam hlam g1 g2 A B u v hu hv hcu hcv hirr
+    _root_.GlobalTheory.LowGen.gen_iso_of_lowest_type hQ7 hQ8 p q lam hlam g1 g2 A B u v hu hv hcu hcv hirr
   exact ⟨e, he, heu, hcomm⟩
 
 end GlobalTheory.LowestType

@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.CMLattices.LamLetters
 public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LieLatticeLocalizationModelLieAlgebraStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LieLatticeLocalizationModelLieAlgebra
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.PointsSumsEqProducts
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.PolFibreIdCompCancel
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.RangeEqValuationRingIffIsLocalization
@@ -78,7 +78,7 @@ theorem isModelAt_integral_iff_mem_lieLat : ∀ (K : Type) [Field K] [NumberFiel
     · rw [Category.assoc, e₁, hwK' k, Category.assoc, points_sums_eq_products.2]
     · rw [Category.assoc, Category.assoc, e₂, Over.w (xR.v _), ← Category.assoc, Over.w (wK k)]
       exact (PolFibre.spMap_dual_hom _).symm
-  obtain ⟨h1, h2⟩ := GlobalTheory.T.lieLattice_localization_modelLieAlgebra K A (GenFib.mk x.P φ hf x.v x.basis) R p.asIdeal.primeCompl xR.P.A φR ψ _ wK M
+  obtain ⟨h1, h2⟩ := _root_.GlobalTheory.CM.LieLoc.lieLat_localization K A (GenFib.mk x.P φ hf x.v x.basis) R p.asIdeal.primeCompl xR.P.A φR ψ _ wK M
     hG hψ e₁ hb fun i => ⟨hov i, hwK i⟩
   have hU : IsUnit M.det := hdet.isUnit
   constructor

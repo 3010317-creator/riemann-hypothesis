@@ -2,8 +2,9 @@ module
 
 public import Development.AutomorphicArithmetic.ResidueCharacters.TwistedPlaces
 public import Formalism.SharpRestriction.ParConsts
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LogCardLevelGroupLeScalePowMulLengthStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LogHostClassNumberLeScalePowFamilyStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LogCardLevelGroupLeScalePowMulLength
+public import Formalism.SharpRestriction.LevelLetterCocycles.QuotientHomNonvanishingBound
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LogHostClassNumberLeScalePowFamily
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,8 +57,8 @@ theorem mul_rpow_self_le {x c C : ℝ} (hx : 1 ≤ x) (hc : c ≤ C) (hC : 0 ≤
 theorem admissible_parameters_design_family : ∀ {eps : ℝ} (Fm : FamP eps), ∃ C x0 : ℝ, 1 ≤ C ∧ ∀ x ≥ x0, ∀ (hx : Fm.x1 < x)
     (i : Fm.Ix x), TwistedPlaces.ParametersPolynomiallyBounded (Fm.L x i) C (Fm.params x hx i) := by
   intro eps Fm
-  obtain ⟨C1, y1, h1⟩ := GlobalTheory.T.log_hostClassNumber_le_scale_pow_family Fm
-  obtain ⟨C2, y2, h2⟩ := GlobalTheory.T.exists_log_card_restRows_le_pow_mul_length Fm
+  obtain ⟨C1, y1, h1⟩ := _root_.GlobalTheory.log_hE_le_pow Fm
+  obtain ⟨C2, y2, h2⟩ := _root_.GlobalTheory.NLink.log_card_levelGroup_le_scale_pow_mul_length Fm
   set C : ℝ := max 1 (max (Fm.PK.getD 7 0) (max (Fm.PK.getD 19 0) (max (9 / 2 + 10 * eps + eps / 100)
     (max (2 + 8 * eps + eps / 100) (max (Fm.Ct + eps / 100) (max C1 C2)))))) with hCdef
   have hC1 : 1 ≤ C := le_max_left _ _

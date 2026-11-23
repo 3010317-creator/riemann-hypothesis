@@ -1,8 +1,12 @@
 module
 
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.SiegelWeilActions.SplitPrimeIdeals
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AdelicSkewMatricesLocallyCompactGroupStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HaarMeasureSplitExactSequenceStatement
+public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.DefsPlus
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AdelicSkewMatricesLocallyCompactGroup
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.MeasureTheory.Group.FundamentalDomain
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HaarMeasureSplitExactSequence
 import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.AdelicFormCongruences.ExistsGlCol
 import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.UnfoldingCompactness.MatrixOfUnipotentFrame
 import Mathlib.Algebra.Order.Floor.Extended
@@ -160,7 +164,7 @@ theorem padN_nF {β : nA σ L.Y L.b} (h : β ∈ nF σ L.Y L.b) : padN L β ∈ 
 theorem nA_inst (n : ℕ) (Y : Spc F E n) (b : GL (Fin n ⊕ Fin n) E) (ε : ℤˣ)
     (hε : b.1ᵀ * dbl Y.J * b.1.map σ = Matrix.fromBlocks 0 1 (((ε : ℤ) : E) • 1) 0) :
     LocallyCompactSpace (nA σ Y b) ∧ T2Space (nA σ Y b) := by
-  have h := GlobalTheory.T.adelic_skew_matrices_locally_compact_group F E σ n Y b ε (fun β => by
+  have h := _root_.GlobalTheory.CompanionTheory.SiegelRadTop.nA_top F E σ n Y b ε (fun β => by
     rw [kunf.mem_nA_iff hε, ← sub_eq_zero, sub_neg_eq_add])
   exact ⟨h.2.2.1, h.2.2.2.2.1⟩
 
@@ -172,7 +176,7 @@ theorem fiber {nb : nA σ d.Y d.b → d.G} {lam : Measure (nA σ d.Y d.b)} {𝓖
   obtain ⟨ε, hε, hε'⟩ := eps_common L
   obtain ⟨h1, h2⟩ := nA_inst d.n d.Y d.b ε hε
   obtain ⟨h3, h4⟩ := nA_inst L.n L.Y L.b ε hε'
-  exact GlobalTheory.T.haar_measure_split_exact_sequence (prj L) (padN L) (continuous_prj L) (continuous_padN L) (prj_padN L)
+  exact _root_.GlobalTheory.CompanionTheory.FiberInt.integral_comp_eq (prj L) (padN L) (continuous_prj L) (continuous_padN L) (prj_padN L)
     (nF σ d.Y d.b) (nF σ L.Y L.b) (countable_nF _ _ _) (countable_nF _ _ _) (fun γ hγ => prj_nF L hγ)
     (fun γ hγ => padN_nF L hγ) lam lam' hc.2.1 hc'.2.1 𝓖 𝓖' hc.2.2.1 hc.2.2.2 hc'.2.2.1 hc'.2.2.2 G hG
     (fun γ hγ x => hper γ hγ x)

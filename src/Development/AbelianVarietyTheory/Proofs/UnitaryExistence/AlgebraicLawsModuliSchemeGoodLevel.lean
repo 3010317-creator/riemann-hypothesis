@@ -6,18 +6,19 @@ public import Formalism.LocalToGlobal.ProjectiveLattices.AllTest
 public import Formalism.LocalToGlobal.ProjectiveLattices.L2DefiniteCuspForms
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.SChartsAndTransferOfGoodLevel
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CmModuliConsequenceOfAbelianSchemeLaws
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CompactifiedModuliPartOneStatement
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsModuliSchemePolarizedAbelianLevel
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CompactifiedModuliPartOne
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CuspFormsDominantWeightFiniteDimensional
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedModuliAlgebraicLawsChartWeightIntegrality
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointReducedFromTestRing
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IntAll
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IntegralAlgebraicFramedPointExists
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.MemHolSubIff
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.SupNormDefiniteOnCuspFormsGoodEmbedding
 public import Formalism.LocalToGlobal.ProjectiveLattices.FreeBridge
 public import Formalism.LocalToGlobal.ProjectiveLattices.FreeBridgeU
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsModuliSchemePolarizedAbelianLevel
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedModuliAlgebraicLawsChartWeightIntegrality
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointReducedFromTestRing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -68,7 +69,7 @@ theorem algebraic_laws_of_good_level :
   intro E _ _ _ H Dw l Xo c hpq hg
   have hS : ReciprocityTheory.ChartRestriction.G.Out.SecBaseChangeSt := GlobalTheory.firstFiveLaws.1.secBaseChange
   have hT : ReciprocityTheory.ChartRestriction.G.Out.SecTwistSt := GlobalTheory.firstFiveLaws.2.1.secTwist
-  have hP : PartI := GlobalTheory.T.compactifiedModuli_partOne
+  have hP : PartI := _root_.GlobalTheory.partI_closed
   have hA : N1ab := GlobalTheory.Moduli.moduli_scheme_exists
   have hC : N1c := GlobalTheory.closing_of_abelianSchemeLaws
   have h3 := GlobalTheory.Frames.algebraic_laws hS E H Dw l Xo c

@@ -1,12 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClassesAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteAdeleEmbeddingExtensionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDoubleClassesRationalLiftFormsLevelStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteAdeleEmbeddingExtension
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDoubleClassesRationalLiftFormsLevel
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsPadicAlgClRingEquivComplexCompEqOfCountabl
 public import Formalism.LocalRingCardinality.SpanPowerMembership.NDLocE
-import Formalism.LocalRingCardinality.SpanPowerMembership.NDLocG
 public import Formalism.LocalToGlobal.GlobalTheory.GL3.CubicFields.ComplexMultiplication.ExtEmbEquivComp
+import Formalism.LocalRingCardinality.SpanPowerMembership.NDLocG
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -227,7 +227,7 @@ theorem frameAt_of (p : PtAt ex Csz) (j : Fin D.R.m) (P : Par) (W : Wts D.what�
   obtain ⟨io, hio⟩ := g_io D.what₂.LL (Formalism.EigenvalueLevelCeiling.plc w) e0 D.what₂.embLL
   obtain ⟨b, sh, hR⟩ := hr
   have hev0 : ∀ τ, ∃ ev : (FiniteAdeleRing (𝓞 D.host.F) D.host.F) ⊗[D.host.F] D.host.E →+* PadicAlgCl (Formalism.EigenvalueLevelCeiling.plc w),
-      EvOk (incOf D e0 b τ) ev := fun τ => GlobalTheory.T.exists_finiteAdeleEmbeddingExtension D.host.F D.host.E (Formalism.EigenvalueLevelCeiling.plc w) (incOf D e0 b τ)
+      EvOk (incOf D e0 b τ) ev := fun τ => _root_.GlobalTheory.EvExtend.exists_evOk D.host.F D.host.E (Formalism.EigenvalueLevelCeiling.plc w) (incOf D e0 b τ)
   choose ev hev using hev0
   let rk : Fin P.Nr ≃o Fin (Vc D j).rank := Fin.castOrderIso hD
   obtain ⟨bs, hb1, hbs⟩ := hk e0 b ev rk he0 hev
@@ -250,7 +250,7 @@ theorem frameAt_of (p : PtAt ex Csz) (j : Fin D.R.m) (P : Par) (W : Wts D.what�
     ⟨he0, fun x => hLf (IntermediateField.subset_adjoin _ _ ⟨x, rfl⟩), hio, hev, hkap, hchi⟩
   obtain ⟨R, hRe, hRix⟩ := hR e0 io ev bs rk Lf kap chi hC hb1
   refine ⟨frameOf p j (p.R.mu w) (Formalism.EigenvalueLevelCeiling.plc w) P.Nr Lf kap chi, R, incOf D e0 b,
-    ⟨⟨hring.1, Lf, inferInstance, hring.2⟩, GlobalTheory.T.finiteDoubleClasses_rational_liftFormsLevel p j (p.R.mu w), ht, hp e0 b io ev bs rk sh Lf kap chi hC,
+    ⟨⟨hring.1, Lf, inferInstance, hring.2⟩, _root_.GlobalTheory.FrameOf.classesAt p j (p.R.mu w), ht, hp e0 b io ev bs rk sh Lf kap chi hC,
       hcm e0 b io ev bs rk sh Lf kap chi hC⟩, ⟨?_⟩⟩
   rw [hRe, hRix]
   exact

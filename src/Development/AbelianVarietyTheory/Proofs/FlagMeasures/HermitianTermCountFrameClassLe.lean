@@ -2,11 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ComplementReferenceCompactSubgroup
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EncardGluingHomKernelsLeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GluingCountStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GluingCount
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LatticeCountBoundFrames
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetFrameClassProperties
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetTermBasicFacts
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LatticeCountBoundFramesStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermExponentsNonnegAndDefectGroupBoundStatement
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermExponentsNonnegAndDefectGroupBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -81,7 +81,7 @@ theorem nT_cardI_le {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
   set s : Set (Submodule L.O S.V) := {Λ | S.IsTerm d Λ ∧ S.cardI d Λ = j ∧ S.Fr d Λ = C} with hs
   rcases s.eq_empty_or_nonempty with he | ⟨Λ₁, hΛ₁, -, hC₁⟩
   · simp [he]
-  obtain ⟨ha, -, -, hq, hH1, -⟩ := GlobalTheory.T.term_exponents_nonneg_and_defect_group_bound L r k S d Λ₁ hΛ₁
+  obtain ⟨ha, -, -, hq, hH1, -⟩ := _root_.GlobalTheory.HL.Defect.exponents_and_defect L r k S d Λ₁ hΛ₁
   have hcls : S.IsCls C := hC₁ ▸ (GlobalTheory.HL.TermBasic.term_basic L r k S d Λ₁ hΛ₁).2.2.2.2.2.2.1.1
   have hp : (S.fr d Λ₁, S.fr' d Λ₁) ∈ C :=
     hC₁ ▸ (GlobalTheory.HL.FrameClass.frame_classes L r k S (S.fr d Λ₁) (S.fr' d Λ₁)).1
@@ -97,7 +97,7 @@ theorem nT_cardI_le {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
   have hmain : (s.encard : ℝ≥0∞) ≤ (S.q : ℝ≥0∞) ^ (2 * S.a.toNat * (2 * r + 2)) *
       (((S.q : ℝ≥0∞) ^ (S.a.toNat * (2 * r + 2)) * (j : ℝ≥0∞) ^ (k - 1)) *
         (S.q : ℝ≥0∞) ^ (2 * S.a.toNat * (2 * r + 2))) := by
-    refine encard_le_mul s S.sat _ _ _ ?_ (GlobalTheory.T.lattice_count_bound_frames L r k S C hcls _ hp ha) ?_
+    refine encard_le_mul s S.sat _ _ _ ?_ (_root_.GlobalTheory.FrameOver.encard_overlattices_le L r k S C hcls _ hp ha) ?_
     · intro Λ hΛ
       refine ⟨hM Λ hΛ, fun x hx => hx.2, fun x hx y hy => ?_⟩
       exact ((GlobalTheory.HL.TermBasic.term_basic L r k S d Λ hΛ.1).1.2 y).2 hy.1 x hx.1
@@ -107,7 +107,7 @@ theorem nT_cardI_le {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
       · rintro Λ ⟨⟨h1, h2, h3⟩, h4⟩
         exact ⟨Λ, ⟨h1, h3, h4, h2⟩, rfl⟩
       · intro Λ₀ _
-        refine le_trans ?_ (GlobalTheory.T.encard_selfDual_sat_inf_W0_le_q_pow L r k S C hcls _ hp Mh Λ₀ hMh.1)
+        refine le_trans ?_ (_root_.GlobalTheory.HL.Gluing.gluing_count L r k S C hcls _ hp Mh Λ₀ hMh.1)
         refine ENat.toENNReal_le.2 (Set.encard_le_encard ?_)
         rintro Λ ⟨⟨⟨h1, -, -⟩, h4⟩, h5⟩
         exact ⟨(GlobalTheory.HL.TermBasic.term_basic L r k S d Λ h1).1, h4, h5⟩

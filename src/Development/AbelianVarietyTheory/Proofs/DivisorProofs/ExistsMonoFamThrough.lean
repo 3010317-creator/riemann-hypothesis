@@ -1,14 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FromBaseAlt
-import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IsCoprimeTwoSubRtTwoAddRt
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsIsoOfIsFiniteOfUniqueLiftOfClassicalPoints
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDvrLiftOfGeometricPoint
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmoothConeInteriorDefiniteBalancedForm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryTraitRamifiedExtensionFormMultipleStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryTraitThroughModuliGenericPointStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsRatPointOfFiniteType
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryTraitRamifiedExtensionFormMultiple
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsProjOverLocallyOfFiniteTypeStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AmplePointsLocalizedModel
+import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IsCoprimeTwoSubRtTwoAddRt
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsIsoOfIsFiniteOfUniqueLiftOfClassicalPoints
+import Development.AbelianVarietyTheory.Definitions.Divisors.SpecializesGenericImage
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryTraitThroughModuliGenericPoint
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FormallyUnramifiedEtaleCompletion
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsIsoOfDensePartOfIsIntegral
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsIsoStalkMapOfFlatOfSurjectiveOnStalks
@@ -182,7 +184,7 @@ theorem exists_monoFam_through : ∀ {E : Type} [Field E] [NumberField E] [IsCMF
   have hb₀ : spMap b₀ = a ≫ π ≫ zs := Spec.map_preimage _
   haveI : CharZero W := charZero_of_injective_ringHom b₀.injective
   have hW : GlobalTheory.Mum.Base W := ⟨⟨inferInstance, inferInstance, inferInstance, inferInstance⟩, inferInstance⟩
-  obtain ⟨T, f₁, fK₁, -, hloc₁, -, hc₁, hTy⟩ := GlobalTheory.T.exists_unitaryTrait_through_moduliGenericPoint E H Dw l Xo c W hW inferInstance y₀
+  obtain ⟨T, f₁, fK₁, -, hloc₁, -, hc₁, hTy⟩ := _root_.GlobalTheory.UTraitExt.uTraitExtSt E H Dw l Xo c W hW inferInstance y₀
 
   haveI := hloc₁
   obtain ⟨_, _, _⟩ := T.cdvr
@@ -194,7 +196,7 @@ theorem exists_monoFam_through : ∀ {E : Type} [Field E] [NumberField E] [IsCMF
   obtain ⟨r, gm, k, cc, hgm, hk, hcc, hsum⟩ := GlobalTheory.Poinc.Cover.exists_cone (𝓞 E) (H.bar : 𝓞 E → 𝓞 E) φ
     T.P.D.toPre.X hpolT T.be hbal (fun y hy => trait_be_pos T hy)
   have hM : 0 < l.M' := Nat.lcm_pos (by have := l.three_le; omega) l.A_pos
-  obtain ⟨T₂, g, gK, e, q, -, hgloc, hgK, hT₂y, hq, hbe⟩ := GlobalTheory.T.exists_unitaryTrait_ramifiedExtension_form_multiple T (k * l.M') (Nat.mul_pos hk hM)
+  obtain ⟨T₂, g, gK, e, q, -, hgloc, hgK, hT₂y, hq, hbe⟩ := _root_.GlobalTheory.UPoinc.uTrait_ramExt T (k * l.M') (Nat.mul_pos hk hM)
   haveI := hgloc
   obtain ⟨_, _, _⟩ := T₂.cdvr
 

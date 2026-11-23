@@ -1,16 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.CmLatticeCommutatorPairingPowEqOneOfGoodLift
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmEvenThetaSeriesChartCoeffIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmLatticeHeisenbergRelationsOneVariableStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmLatticeWeylOperatorEqThetaRootOfUnityShiftStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmEvenThetaSeriesChartCoeffIntegral
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmLatticeHeisenbergRelationsOneVariable
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmLatticeWeylOperatorEqThetaRootOfUnityShift
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ScaledThetaTranslationQuotientElliptic
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ConstantCoeffShiftS
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CpBinomialPowerSubOneSeriesIntegralityCompositio
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CpSeriesMultiplicativeShiftCompAndSubstStatement
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CpSeriesMultiplicativeShiftCompAndSubst
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CpTransportedTaylorSeriesInChartRingHomLaws
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CpTransportedTaylorSeriesMultiplicativeChart
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CpTransportedTaylorSeriesShiftEqTranslateStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ScaledThetaTranslationQuotientEllipticStatement
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CpTransportedTaylorSeriesShiftEqTranslate
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -129,7 +129,7 @@ theorem main : ∀ (d q : ℕ) [Fact q.Prime] (M : Mdl q) (ω : ℂ_[q]) (θ : �
   have hζζ : M.ι (kap1 d 1 y) = M.ι (kap1 d 1 y') ^ s := by rw [hyy, cmLatticeCommutatorPairing_natMul_right, map_pow]
   have hℓ : constantCoeff (C ω * logS : ℂ_[q]⟦X⟧) = 0 := hM.2.1
   obtain ⟨hring, -⟩ := TaylorRead.hat_laws q M.ι (C ω * logS) hℓ
-  obtain ⟨-, -, hdiff, -⟩ := GlobalTheory.T.cmLattice_heisenberg_relations_one_variable d hd.pos
+  obtain ⟨-, -, hdiff, -⟩ := _root_.GlobalTheory.MomOne.heisenbergOne d hd.pos
   have hθd : Differentiable ℂ θ := hθ.1
   have hθ0 : θ 0 ≠ 0 := by rw [hθ.2.1]; exact one_ne_zero
   have hUd : Differentiable ℂ (U1 d t θ) := (hdiff t θ hθd).1
@@ -137,7 +137,7 @@ theorem main : ∀ (d q : ℕ) [Fact q.Prime] (M : Mdl q) (ω : ℂ_[q]) (θ : �
   have hWd : Differentiable ℂ (W1 d y θ) := (hdiff y _ hθd).2
   set f : ℂ → ℂ := fun z => U1 d t θ z / θ z with hf
   have hfa : AnalyticAt ℂ f 0 := (hUd.analyticAt 0).div (hθd.analyticAt 0) hθ0
-  obtain ⟨hEll, hφa, -, -, hφb⟩ := GlobalTheory.T.scaledThetaTranslationQuotient_elliptic d q M ω θ hd hd16 hsp hOK hM hθ t s hs0 hs ht
+  obtain ⟨hEll, hφa, -, -, hφb⟩ := _root_.GlobalTheory.MomOne.ScaledQuot.scaled_quotient_elliptic d q M ω θ hd hd16 hsp hOK hM hθ t s hs0 hs ht
   have hscale : ∀ G : ℂ → ℂ, AnalyticAt ℂ G 0 → hat M.ι (C ω * logS) (fun z => G ((s : ℂ) * z)) =
       (hat M.ι (C ω * logS) G).subst (mulS (s : ℤ_[q]) : ℂ_[q]⟦X⟧) :=
     fun G hG => (hat_multiplicative_chart q M.ι ω G hG).2.2.1 _ _ hιs
@@ -147,10 +147,10 @@ theorem main : ∀ (d q : ℕ) [Fact q.Prime] (M : Mdl q) (ω : ℂ_[q]) (θ : �
     obtain ⟨B, hB⟩ := hφb
     rw [hφf] at hB
     exact ⟨B, ((MulSeries.mulS_laws q).2.2.2.1 _ _ B hsn).mp hB⟩
-  have hθb : Bdd (hat M.ι (C ω * logS) θ) := ⟨1, GlobalTheory.T.cm_even_theta_series_chart_coeff_integral d q M ω θ hd hd16 hsp hOK hM hθ⟩
-  obtain ⟨ψ, hψa, hψ, hψh⟩ := GlobalTheory.T.cpTransportedTaylorSeries_shift_eq_translate q M ω _ y' _ hM hAt' hEll hφa hφb
+  have hθb : Bdd (hat M.ι (C ω * logS) θ) := ⟨1, _root_.GlobalTheory.MomOne.theta_series_integral d q M ω θ hd hd16 hsp hOK hM hθ⟩
+  obtain ⟨ψ, hψa, hψ, hψh⟩ := _root_.GlobalTheory.MomOne.Transfer.shift_eq_hat_translate q M ω _ y' _ hM hAt' hEll hφa hφb
   rw [hφf] at hψh
-  have hsc := ((GlobalTheory.T.cpSeriesMultiplicativeShift_comp_and_subst q).2 _ n s (s : ℤ_[q]) _ hζ' (by
+  have hsc := ((_root_.GlobalTheory.MomOne.ShiftComp.main q).2 _ n s (s : ℤ_[q]) _ hζ' (by
     rw [sub_self, norm_zero]; positivity) hfb).2
   rw [hsc, ← hζζ] at hψh
 
@@ -181,7 +181,7 @@ theorem main : ∀ (d q : ℕ) [Fact q.Prime] (M : Mdl q) (ω : ℂ_[q]) (θ : �
     field_simp
   rw [(hring _ _ hψa hWs).2.1, hψh, hscale _ (hWd.analyticAt 0), hscale _ (hWUd.analyticAt 0),
     ← subst_mul (hasSubst_mulS _)] at hprod
-  rw [← subst_mulS_cancel hsn hprod, GlobalTheory.T.cmLatticeWeylOperator_eq_theta_rootOfUnity_shift d q M ω θ hd hd16 hsp hOK hM hθ hgood n y hg,
+  rw [← subst_mulS_cancel hsn hprod, _root_.GlobalTheory.MomOne.ThShift.theta_shift d q M ω θ hd hd16 hsp hOK hM hθ hgood n y hg,
     ← ((Shift.shift_laws q _ hAt.2.1).2.1 _ _ hfb hθb).2, ← (hring _ _ hfa (hθd.analyticAt 0)).2.1]
   congr 1
   refine (hring _ _ (hfa.mul (hθd.analyticAt 0)) (hUd.analyticAt 0)).2.2.1 ?_

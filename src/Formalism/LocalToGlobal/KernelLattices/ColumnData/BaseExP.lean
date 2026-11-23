@@ -1,13 +1,14 @@
 module
 
 public import Formalism.LocalToGlobal.KernelLattices.ColumnData
+public import Formalism.PeriodIntegrals.KerLat
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PeriodPairIndependence.IndepOfImNe
+public import Mathlib.Algebra.Polynomial.SpecificDegree
 import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.KerPerPair
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Rat
-public import Mathlib.Algebra.Polynomial.SpecificDegree
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
@@ -157,7 +158,7 @@ variable {D : Car}
 
 theorem periodExists_of (h2 : KQuad D) (hn : PhiNonReal D) : PeriodExists D :=
   fun cc δ hcc hδ =>
-    exists_periodPairOfIdeal D.host.K (D.host.φ₀.comp (algebraMap D.host.K D.host.E)) cc δ h2 hn hcc hδ
+    _root_.PI.KerLat.PerPairProof.perPair D.host.K (D.host.φ₀.comp (algebraMap D.host.K D.host.E)) cc δ h2 hn hcc hδ
 
 end Exist
 

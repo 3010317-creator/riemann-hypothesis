@@ -3,11 +3,12 @@ module
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.LocalPublishedTheorems
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamDieudonneSpansTensorDeRhamPeriods
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSumOfIsCrys
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PeriodRingsRegularPhiSurjectiveFilStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RatioInvariantInK0
+public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PeriodRingsRegularPhiSurjectiveFil
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.BasisOfUnit
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.IsCrField
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.IsCrIff
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RatioInvariantInK0
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -86,7 +87,7 @@ theorem char_cr (κ : GQ l →* Eˣ) (h : IsCr (GK (botExt l)).subtype (chRep (�
     rw [mul_comm, h1, mul_comm]
   have hu : GlobalTheory.RegularRing.LineUnit ((PP l).PD (botExt l)) := by
     intro b hb h
-    refine (GlobalTheory.T.periodRings_regular_phi_surjective_fil l _ _ T).1 (botExt l) b hb fun g hg => ?_
+    refine (_root_.GlobalTheory.MemLoc.tied_regular_and_onto l _ _ T).1 (botExt l) b hb fun g hg => ?_
     obtain ⟨x, hx⟩ := h ⟨g, hg⟩
     exact ⟨x, by rw [← (PP l).PD_actB (botExt l) ⟨g, hg⟩, hx, Algebra.smul_def]⟩
   obtain ⟨m, b, d, hd, h1⟩ := GlobalTheory.Per.TiedSpan.exists_sum_of_isCrys _ hf hu _ hc 1

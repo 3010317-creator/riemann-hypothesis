@@ -3,11 +3,12 @@ module
 public import Formalism.PadicSubsetSums.CentralIdempotents.GaloisConjCentralIdempotent
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.BlockEmbeddingFactors
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ParabLeBlockTri
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspidalPiTensorNoBlockUnipotentFixedStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspidalPiTensorNoBlockUnipotentFixed
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDimensionalOfIrr
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasCuspidalFactorAtBlockLeviPiTensorStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasCuspidalFactorAtBlockLeviPiTensor
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IrrParIffCuspidalProduct
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeviPiTensorRepresentationIsIrreducibleStatement
+public import Mathlib.RepresentationTheory.Irreducible
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeviPiTensorRepresentationIsIrreducible
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HasLabelTransportEquiv
 import Formalism.LocalToGlobal.NormalizedHeckeFactors.CoeffZeroNeOfMonicIrr
 import Mathlib.Algebra.Order.Floor.Extended
@@ -188,8 +189,8 @@ theorem distinctFactors {C : LabelConv K} (O : LabelMap K C) (b : Fin r → Fin 
     (hinj : Function.Injective (fun c => labO O (lam c))) :
     GlobalTheory.IndefiniteRowSideFullHecke.BlockEmbeddingFactors.DistinctFactors (natBlocks b) (leviTensor b lam) := by
   rintro _ ⟨i, rfl⟩ _ ⟨j, rfl⟩ hne ⟨d, h, h', W, _, _, ρ, hf, hf'⟩
-  obtain ⟨e, L, hL⟩ := GlobalTheory.T.hasCuspidalFactorAtBlock_leviPiTensor K r s b lam hs (b i) d h W ρ hf
-  obtain ⟨e', L', hL'⟩ := GlobalTheory.T.hasCuspidalFactorAtBlock_leviPiTensor K r s b lam hs (b j) d h' W ρ hf'
+  obtain ⟨e, L, hL⟩ := _root_.GlobalTheory.HcIrr.Factor.factor_iso K r s b lam hs (b i) d h W ρ hf
+  obtain ⟨e', L', hL'⟩ := _root_.GlobalTheory.HcIrr.Factor.factor_iso K r s b lam hs (b j) d h' W ρ hf'
   have hlab : labO O (lam (b i)) = labO O (lam (b j)) := by
     refine labO_eq_of_readings O d e e' _ _ (L.symm.trans L') fun g v => ?_
     obtain ⟨w, rfl⟩ := L.surjective v
@@ -203,7 +204,7 @@ theorem isIrrRep_of_monotone {C : LabelConv K} (O : LabelMap K C) (b : Fin r →
     (hinj : Function.Injective (fun c => labO O (lam c))) (hm : Monotone b) : IsIrrRep (hcRep K b lam) := by
   have hd : GlobalTheory.FinGL.IsCuspDatum (natBlocks b) (leviTensor b lam) :=
     { mono := fun i j hij => hm hij
-      irr := GlobalTheory.T.leviPiTensorRepresentation_isIrreducible K r s b lam fun c => (hl c).1
+      irr := _root_.GlobalTheory.HcIrr.leviTensor_isIrreducible K r s b lam fun c => (hl c).1
       infl := fun p hp => by
         rw [leviTensor_apply]
         have : ∀ c, (lam c).ρ (levi K b c (Subgroup.inclusion (blockTri_le_parab b) p)) = LinearMap.id := by
@@ -219,7 +220,7 @@ theorem isIrrRep_of_monotone {C : LabelConv K} (O : LabelMap K C) (b : Fin r →
           rfl
         simp only [this]
         exact PiTensorProduct.map_id
-      cusp := fun S hS y hy => GlobalTheory.T.cuspidal_piTensor_no_blockUnipotent_fixed K r s b lam (fun c => (hl c).2) S hS y hy }
+      cusp := fun S hS y hy => _root_.GlobalTheory.HcIrr.cuspidal_tensor_no_unip_fixed K r s b lam (fun c => (hl c).2) S hS y hy }
   exact isIrrRep_hcRep_of_parInd b lam
     ((GlobalTheory.CuspFactor.irrPar_iff_cuspidalProduct.1 GlobalTheory.FinGL.IrrProduct.irrPar).1 K r _ _ _ hd
       (distinctFactors O b lam (fun c => (hl c).1) hinj))

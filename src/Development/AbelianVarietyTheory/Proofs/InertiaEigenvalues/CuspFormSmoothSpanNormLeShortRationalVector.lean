@@ -2,11 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.KSpan
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DecaysAtShortRationalVectorsRapidKernelOperatorStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodSmoothDecayModerateGrowthRightTranslateStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HasFDerivAtRealChartRapidKernelOperatorStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LeSmoothOfChartDifferentiableLieDerivStableStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModerateGrowthRapidKernelOperatorStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RapidKernelIntegralConjLieDerivativeMemSpanStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WordAppendSingle
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodSmoothDecayModerateGrowthRightTranslate
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRapidInf
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HasFDerivAtRealChartRapidKernelOperator
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.DifferentiableAtChart
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LeSmoothOfChartDifferentiableLieDerivStable
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModerateGrowthRapidKernelOperator
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RapidKernelIntegralConjLieDerivativeMemSpan
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -73,7 +76,7 @@ theorem kSpan_diff : ∀ F ∈ kSpan E a, ∀ g : GA E a, DifferentiableOn ℝ (
     obtain ⟨u, hu⟩ := id hx
     have e : x = toL u.val := hu.symm
     subst e
-    obtain ⟨L, hL, -⟩ := GlobalTheory.T.hasFDerivAt_realChart_rapidKernelOperator E a G X ν k γ hk hG g u
+    obtain ⟨L, hL, -⟩ := _root_.GlobalTheory.MSpanDecay.KernelDeriv.hasFDerivAt_chart_kernel E a G X ν k γ hk hG g u
     exact hL.differentiableAt.differentiableWithinAt
   | zero => intro g; rw [chart_zero]; exact differentiableOn_const 0
   | add F G _ _ hF hG => intro g; rw [chart_add]; exact (hF g).add (hG g)
@@ -91,12 +94,12 @@ theorem kSpan_lie : ∀ F ∈ kSpan E a, ∀ Y : Lie E a, lieD Y F ∈ kSpan E a
     have e : lieD Y (fun g : GA E a => ∫ x, k x * G (g * infGL E a (γ x)) ∂ν) = fun g : GA E a =>
         ∫ x, k x * lieD (toL (((γ x)⁻¹).val * Matrix.of Y * (γ x).val)) G (g * infGL E a (γ x)) ∂ν := by
       funext g
-      obtain ⟨L, hL, hZ⟩ := GlobalTheory.T.hasFDerivAt_realChart_rapidKernelOperator E a G X ν k γ hk hG g 1
+      obtain ⟨L, hL, hZ⟩ := _root_.GlobalTheory.MSpanDecay.KernelDeriv.hasFDerivAt_chart_kernel E a G X ν k γ hk hG g 1
       have e1 : toL (1 : GL (Fin a) (Cinf E)).val = oneL E a := rfl
       rw [lieD, ← e1, hL.fderiv, hZ Y]
       simp
     rw [e]
-    exact GlobalTheory.T.rapidKernel_integral_conjLieDerivative_mem_span E a G X ν k γ Y hk hG
+    exact _root_.GlobalTheory.MSpanDecay.integral_lieD_conj_mem_kSpan E a G X ν k γ Y hk hG
   | zero =>
     have e : lieD Y (0 : GA E a → ℂ) = 0 := by
       funext g; simp [lieD, chart_zero]
@@ -116,14 +119,14 @@ theorem kSpan_lie : ∀ F ∈ kSpan E a, ∀ Y : Lie E a, lieD Y F ∈ kSpan E a
       rfl
     rw [e]; exact Submodule.smul_mem _ z hF
 
-theorem kSpan_le_Sm : kSpan E a ≤ Sm E a := GlobalTheory.T.le_smooth_of_chartDifferentiable_lieDerivStable E a _ kSpan_diff kSpan_lie
+theorem kSpan_le_Sm : kSpan E a ≤ Sm E a := _root_.GlobalTheory.SmoothClosure.le_Sm E a _ kSpan_diff kSpan_lie
 
 theorem kSpan_decays_growth : ∀ F ∈ kSpan E a, GlobalTheory.ShortVecDecay.Decays F ∧ Growth F := by
   intro F hF
   induction hF using Submodule.span_induction with
   | mem F hF =>
     obtain ⟨X, _, ν, _, k, γ, G, hk, hG, rfl⟩ := hF
-    exact ⟨GlobalTheory.T.decaysAtShortRationalVectors_rapidKernelOperator E a G X ν k γ hk hG.decays, GlobalTheory.T.moderateGrowth_rapidKernelOperator E a G X ν k γ hk hG.growth⟩
+    exact ⟨GlobalTheory.T.decaysAtShortRationalVectors_rapidKernelOperator E a G X ν k γ hk hG.decays, _root_.GlobalTheory.MSpanDecay.growth_kernel E a G X ν k γ hk hG.growth⟩
   | zero => exact ⟨GlobalTheory.ShortVecDecay.Decays.zero, Growth.zero⟩
   | add F G _ _ hF hG => exact ⟨hF.1.add hG.1, hF.2.add hG.2⟩
   | smul z F _ hF => exact ⟨hF.1.smul z, hF.2.smul z⟩
@@ -150,7 +153,7 @@ def goodSub : Submodule ℂ (GA E a → ℂ) where
   smul_mem' c _ h := h.smul c
 
 theorem mspanR_le_goodSub {π : CuspSub E a} (hπ : π.IsUnitary) : GlobalTheory.JSW.mspanR π ≤ goodSub E a :=
-  sInf_le ⟨fun φ hφ => good_of_mem hπ hφ, fun F hF h => GlobalTheory.T.goodSmoothDecayModerateGrowth_rightTranslate E a F h hF,
+  sInf_le ⟨fun φ hφ => good_of_mem hπ hφ, fun F hF h => _root_.GlobalTheory.RtGood.good_mul_right E a F h hF,
     fun F hF X _ ν _ k γ hk => Good.kernel (G := F) hF hk⟩
 
 theorem norm_le_of_short_vector_mspanR : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ)

@@ -3,8 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.PermutesRefl
 public import Formalism.LocalToGlobal.ProjectiveLattices.CompHt
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CmModuliConsequenceOfAbelianSchemeLaws
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CoefficientFieldAlgClosedInFunctionFieldsOfPerioStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.PermutesPeriodSpacesIdOfFixesCmCurveTorsionStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CoefficientFieldAlgClosedInFunctionFieldsOfPerio
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.PermutesPeriodSpacesIdOfFixesCmCurveTorsion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,8 +66,8 @@ theorem fnAlgClosed_of_curveOver : ∀ (E : Type) [Field E] [NumberField E] [IsC
     exact ⟨_, fun i => (e i).1, fun τ => ⟨fun hτ => by rw [h]; simp [m, hτ], fun hτ => by rw [h]; simp [m, hτ]⟩⟩
   obtain ⟨g, ty, hty⟩ := hex
   obtain ⟨F⟩ := GlobalTheory.closing_of_abelianSchemeLaws E H D l Xo (algebraMap (KA l) ℂ) g ty hD rfl hty
-  refine GlobalTheory.T.coefficientField_algClosed_in_functionFields_of_periodSpaces E H D l Xo _ g ty F hD rfl hty hA c fun τ hτ => ?_
+  refine _root_.GlobalTheory.CompRat.FixedConst.fnAlgClosed_of_permutes_id E H D l Xo _ g ty F hD rfl hty hA c fun τ hτ => ?_
   have h1 : H.rt0 ∈ KA l := IntermediateField.subset_adjoin _ _ (by simp)
-  exact GlobalTheory.T.permutes_periodSpaces_id_of_fixes_cm_curve_torsion E H D l Xo _ g ty F hD rfl hty hA hsig τ (hτ _ (c.le h1)) (hC τ hτ)
+  exact _root_.GlobalTheory.CompRat.permutes_id_of_fixesCurve E H D l Xo _ g ty F hD rfl hty hA hsig τ (hτ _ (c.le h1)) (hC τ hτ)
 
 end GlobalTheory.CompRat

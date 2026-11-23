@@ -1,8 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNonnegAdelicSchwartzBumpTestStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRationalProjectionSectionIsotropicSpanStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNonnegAdelicSchwartzBumpTest
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRationalProjectionSectionIsotropicSpan
 public import GroundTheory.GlobalFields.Adele.Discrete
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -82,7 +84,7 @@ theorem exists_theta_re_nonneg : ∀ (F : Type) [Field F] [NumberField F] (ψ : 
       (∀ s ∈ S, 0 ≤ (thetaSum F (schr ψ s Φ)).re) ∧ 0 < (thetaSum F (schr ψ 0 Φ)).re := by
   intro F _ _ ψ hψ κ _ S hiso hspan
   classical
-  obtain ⟨P, Q, hP, hQ, hker⟩ := GlobalTheory.T.exists_rational_projection_section_isotropicSpan F κ S hspan
+  obtain ⟨P, Q, hP, hQ, hker⟩ := _root_.GlobalTheory.rational_proj_section_of_span F κ S hspan
   obtain ⟨D, hD, hDξ⟩ := disc F κ
   set PA := P.map (algebraMap F (AF F)) with hPA
   set QA := Q.map (algebraMap F (AF F)) with hQA
@@ -98,7 +100,7 @@ theorem exists_theta_re_nonneg : ∀ (F : Type) [Field F] [NumberField F] (ψ : 
     refine Filter.inter_mem (Filter.inter_mem (Filter.inter_mem hV₀ (neg_mem_nhds_zero _ hV₀)) ?_) ?_
     · exact (continuous_const.matrix_mulVec continuous_id).tendsto' (0 : κ → AF F) 0 (by simp) hD
     · exact ((Complex.continuous_re.comp hg).tendsto 0).eventually (lt_mem_nhds hg0)
-  obtain ⟨Φ, hΦS, hΦc, hΦV, hΦr, hΦ0⟩ := GlobalTheory.T.exists_nonneg_adelicSchwartz_bump_test F κ V hV
+  obtain ⟨Φ, hΦS, hΦc, hΦV, hΦr, hΦ0⟩ := _root_.GlobalTheory.AdelicBumpTest.exists_nonneg_test F κ V hV
   have hsub : ∀ ξ ξ' : κ → F, (fun i => algebraMap F (AF F) ((ξ - ξ') i)) =
       (fun i => algebraMap F (AF F) (ξ i)) - (fun i => algebraMap F (AF F) (ξ' i)) := by
     intro ξ ξ'; funext i; simp [map_sub]

@@ -1,14 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NotCompactOfMEqOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorOrderFaithfulLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorOrderFaithfulLattice
+public import Mathlib.Analysis.InnerProductSpace.Trace
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Archimedean.Real.Hom
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-public import Mathlib.Analysis.InnerProductSpace.Trace
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
@@ -166,7 +166,7 @@ theorem trace_mul_star_pos : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel
     have hz : ∀ y : D.La, (D.star x).unop • y = 0 := fun y => hinj _ (by
       have := LinearMap.congr_fun h0 ((1 : ℝ) ⊗ₜ y)
       rwa [hA, LinearMap.zero_apply] at this)
-    have h1 := GlobalTheory.T.harrisTaylor_order_faithful_lattice p D _ hz
+    have h1 := _root_.GlobalTheory.HTFaith.faithful p D _ hz
     rw [← D.star_star x, h1]
     simp
   have htr := trace_comp_pos_of_adjoint (D.EF.baseChange ℝ ∘ₗ J)

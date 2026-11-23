@@ -6,9 +6,14 @@ public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CochainCoboundaryProdHomIdentitiesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KummerExponentOfGaloisElementIsKummerCharacterStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KummerGeneratorOfCharStatement
+public import Mathlib.Algebra.Group.End
+public import Mathlib.Data.ZMod.Defs
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CochainCoboundaryProdHomIdentities
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KummerExponentOfGaloisElementIsKummerCharacter
+public import Mathlib.FieldTheory.KrullTopology
+public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
+public import Mathlib.Topology.LocallyConstant.Basic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KummerGeneratorOfChar
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -90,13 +95,13 @@ theorem eta_kummer_galoisInvariant : ∀ (K Ω : Type) [Field K] [CharZero K] [F
     rintro rfl; rw [zero_pow hN.ne'] at hα; exact ha ((map_eq_zero _).mp hα.symm)
   have hβ0 : β ≠ 0 := by
     rintro rfl; rw [zero_pow hN.ne'] at hβ; exact hb ((map_eq_zero _).mp hβ.symm)
-  obtain ⟨-, hαapp, hαmul, hαker⟩ := GlobalTheory.T.kummerExponentOfGaloisElement_isKummerCharacter K Ω N ζ α hN hζ hfix hα0 ⟨a, hα.symm⟩
-  obtain ⟨-, hβapp, hβmul, hβker⟩ := GlobalTheory.T.kummerExponentOfGaloisElement_isKummerCharacter K Ω N ζ β hN hζ hfix hβ0 ⟨b, hβ.symm⟩
+  obtain ⟨-, hαapp, hαmul, hαker⟩ := _root_.GlobalTheory.NeedB.KumLemma.kummer_character_main K Ω N ζ α hN hζ hfix hα0 ⟨a, hα.symm⟩
+  obtain ⟨-, hβapp, hβmul, hβker⟩ := _root_.GlobalTheory.NeedB.KumLemma.kummer_character_main K Ω N ζ β hN hζ hfix hβ0 ⟨b, hβ.symm⟩
   let x : (Ω ≃ₐ[K] Ω) →* Multiplicative (ZMod N) :=
     MonoidHom.mk' (fun g => Multiplicative.ofAdd (kum ζ α g)) (fun g h => by simp [hαmul, ofAdd_add])
   let y : (Ω ≃ₐ[K] Ω) →* Multiplicative (ZMod N) :=
     MonoidHom.mk' (fun g => Multiplicative.ofAdd (kum ζ β g)) (fun g h => by simp [hβmul, ofAdd_add])
-  obtain ⟨-, hconj, hhom⟩ := GlobalTheory.T.eta_one_conj_mul_of_cup_coboundary (Ω ≃ₐ[K] Ω) N x y η (fun g h => hcob g h)
+  obtain ⟨-, hconj, hhom⟩ := _root_.GlobalTheory.cochain_coboundary_prod_hom_identities (Ω ≃ₐ[K] Ω) N x y η (fun g h => hcob g h)
 
   have memH : ∀ g : Ω ≃ₐ[K] Ω, g ∈ E.fixingSubgroup ↔ g α = α ∧ g β = β := by
     intro g
@@ -122,7 +127,7 @@ theorem eta_kummer_galoisInvariant : ∀ (K Ω : Type) [Field K] [CharZero K] [F
   have kβ0 : ∀ g ∈ E.fixingSubgroup, kum (N := N) ζ β g = 0 := fun g hg => (hβker g).2 ((memH g).1 hg).2
   have hηhom : ∀ g ∈ E.fixingSubgroup, ∀ h ∈ E.fixingSubgroup, η (g * h) = η g + η h :=
     fun g hg h _ => hhom g h (kα0 g hg)
-  obtain ⟨θ, hθ0, hθE, hθapp⟩ := GlobalTheory.T.exists_kummer_generator_of_locallyConstant_hom K Ω N ζ hN hζ hfix E η hη hηhom
+  obtain ⟨θ, hθ0, hθE, hθapp⟩ := _root_.GlobalTheory.kummer_generator_of_char K Ω N ζ hN hζ hfix E η hη hηhom
   have hkθ : ∀ g ∈ E.fixingSubgroup, η g = kum ζ θ g := fun g hg =>
     (kum_eq_of_apply hN hζ hθ0 g (η g) (hθapp g hg)).symm
   refine ⟨θ, hθ0, hθE, hkθ, fun s => ?_⟩

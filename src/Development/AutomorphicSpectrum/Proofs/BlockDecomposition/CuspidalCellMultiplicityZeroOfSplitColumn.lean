@@ -3,13 +3,15 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IrreducibleAdmissibleGL
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SupercuspidalSupportUniqueGL
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.JhMultSubAddQuot
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PiExteriorTensorSmoothIrreducibleIsIrreducibleStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalMultiplicityProductZeroStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InducedProductDropZeroFactorsStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.NontrivialOfIrreducible
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PiExteriorTensorSmoothIrreducibleIsIrreducible
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalMultiplicityProductZero
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InducedProductDropZeroFactors
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.BernsteinZelevinskyFiniteness
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.GeometricLemma
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.IsSubquotientCompMulSingle
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.JhMultSubAddQuot
 import GroundTheory.LocalFields.PadicLogSeries
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -67,7 +69,7 @@ theorem jhMult_cell_eq_zero : ∀ {k : Type} [Field k] [ValuativeRel k] [Topolog
   classical
   by_contra h0
   have hBZ := GlobalTheory.CompanionTheory.Published.bernsteinZelevinskyFiniteness
-  have hτ : (piTensor fun j => (y j).rep).IsIrreducible := GlobalTheory.T.piExteriorTensor_smoothIrreducible_isIrreducible hBZ k _ _ fun j => (y j).2.rep
+  have hτ : (piTensor fun j => (y j).rep).IsIrreducible := _root_.GlobalTheory.ExtTensorIrr.piTensor_isIrreducible hBZ k _ _ fun j => (y j).2.rep
   have hτs : IsSmooth (piTensor fun j => (y j).rep) := isSmooth_piTensor fun j => (y j).2.rep.smooth
   obtain ⟨s, -, hS⟩ := GlobalTheory.CompanionTheory.Hypotheses₂.TD.exists_of_cell (GlobalTheory.CompanionTheory.GeoLink.geometricLemma k).2 _ _
     (fun i => (x i).2.rep.smooth) (fun i => hasFiniteLength_of_isIrreducible (x i).2.rep.irr) hτ hτs h0
@@ -91,10 +93,10 @@ theorem jhMult_cell_eq_zero : ∀ {k : Type} [Field k] [ValuativeRel k] [Topolog
       Fintype.sum_equiv (S.orderIsoOfFin rfl).toEquiv _ _ fun a => rfl
     rw [e1, Finset.sum_coe_sort S (fun c => b c j), ← hcol j]
     exact Finset.sum_subset (Finset.subset_univ _) fun c _ hc => by simpa [S] using hc
-  obtain ⟨E⟩ := GlobalTheory.T.induced_product_drop_zero_factors Y (hcol j) o o.strictMono hrange hsum
+  obtain ⟨E⟩ := _root_.GlobalTheory.CompanionTheory.FineProd.ProdDrop.prodIrr_drop Y (hcol j) o o.strictMono hrange hsum
   have h3 := h2.trans (.of_injective E.toIntertwiningMap E.toLinearEquiv.injective)
   refine jhMult_ne_zero_iff.2 h3
-    (GlobalTheory.T.cuspidal_multiplicity_product_zero hA (y j) (fun a => Y (o a)) hsum (hy j) hcard fun a => Nat.pos_of_ne_zero ?_)
+    (_root_.GlobalTheory.CompanionTheory.CuspNotInd.jhMult_eq_zero_of_isCusp hA (y j) (fun a => Y (o a)) hsum (hy j) hcard fun a => Nat.pos_of_ne_zero ?_)
   have := ho a
   simpa [S, hYb] using this
 

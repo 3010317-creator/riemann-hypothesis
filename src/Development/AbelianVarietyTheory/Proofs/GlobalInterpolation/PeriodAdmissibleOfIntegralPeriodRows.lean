@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.LowerTieTwAt
 public import Formalism.SharpRestriction.Divisibility.WeightDegreeSizes
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AdmissiblePeriodZeroOfClassPeriodDecompositionAlStatement
+public import Formalism.SharpRestriction.Divisibility.StatementFT.PeriodPointConditions
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AdmissiblePeriodZeroOfClassPeriodDecompositionAl
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.VAddNonnegOfInt
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsStandardColumnComparisonsTrueColumnsStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -48,5 +49,5 @@ attribute [local instance] GlobalTheory.Mem.Col2.starE Formalism.BasicNotions.Ho
 theorem GlobalTheory.PerAdm0.periodAdmissible_of_integralPeriodRows : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC.Pins B X → ∀ (l : I.Laws) (Z : TC.Later B (I.cols l)), GlobalTheory.PerQ.RowInt I l Z → Formalism.MainNotions.WeightDegreeSizes.PeriodClassSumWeyl (I.rec7 l Z) := by
   intro B X I hI hP l Z hR
   obtain ⟨C, hC, _⟩ := GlobalTheory.T.exists_standardColumnComparisons_trueColumns I hI hP l Z
-  exact GlobalTheory.T.admissiblePeriodZero_of_classPeriodDecomposition_all _ (Formalism.MainNotions.RT.PeriodPointConditions.perDec0_of_cols C
+  exact _root_.GlobalTheory.PerRed.periodClassSumWeyl_of_forall_perDec0 _ (Formalism.MainNotions.RT.PeriodPointConditions.perDec0_of_cols C
     (fun u => GlobalTheory.PerDecAtRef.perDec0At_std I hI l Z hR u _ _ (C.forms u) (hC u)))

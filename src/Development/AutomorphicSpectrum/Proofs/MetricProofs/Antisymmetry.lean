@@ -1,15 +1,21 @@
 module
 
 public import Development.AutomorphicSpectrum.Statements.MetricStatements.AgreementIffGuarded
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AdjacentSwapHeightPolynomialRelationStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GeometricAbelianConnected
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.CompRightEqZero
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.KappaSt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AdjacentSwapHeightPolynomialRelation
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.EtaleLocalizationAtPrimeTensorOfEtaleAway
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagHeightPolynomialWeightForm
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagVarietyAnalyticSystemExistsStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.FormPolyIsHomogeneousAndEval
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagVarietyAnalyticSystemExists
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.GapEqWeightSubNextStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ProportionalStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.RealisationPotentialDegreeCompatibilityStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.WeightTransformInjectiveLinearStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.Proportional
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.PairRelationOfScaledRatio
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.WeightTransformInjectiveLinear
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.FormPolyIsHomogeneousAndEval
+import Development.AutomorphicSpectrum.Definitions.MetricPeriods.MetricsProjectionFormulaNef
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.RealisationPotentialDegreeCompatibility
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,11 +65,11 @@ namespace GlobalTheory.CompanionTheory.Ar.PB.Top
 
 theorem antisymmetry : Antisymmetry := by
   intro hIn II hII Ψ _ _ _ N j d hN S K _ ι _ P Re hF
-  obtain ⟨d₀, S₀, Re₀, hd₀, hdeg₀, href₀, hline₀, ⟨hF₀⟩⟩ := GlobalTheory.T.flag_variety_analytic_system_exists hIn Ψ N hN
+  obtain ⟨d₀, S₀, Re₀, hd₀, hdeg₀, href₀, hline₀, ⟨hF₀⟩⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.flagVarieties_flagSys hIn Ψ N hN
   have hdim : d + 1 = antisymDegree Ψ N := hF.dim
   obtain rfl : d = d₀ := by omega
-  have hS := ((GlobalTheory.T.proportional' hIn Ψ N j hN hF.j_le).2 (d + 1) S hdim hF.unif).2
-  have hpot := GlobalTheory.T.realisation_potential_degree_compatibility hIn.2.1.1 (FlBlock Ψ N) (FlIdx Ψ N) (d + 1) (Ψ × Fin N) S₀ (PFl Ψ N) Re₀
+  have hS := ((_root_.GlobalTheory.CompanionTheory.Ar.PB.proportional hIn Ψ N j hN hF.j_le).2 (d + 1) S hdim hF.unif).2
+  have hpot := _root_.GlobalTheory.CompanionTheory.Ar.PB.re_pot hIn.2.1.1 (FlBlock Ψ N) (FlIdx Ψ N) (d + 1) (Ψ × Fin N) S₀ (PFl Ψ N) Re₀
   have harith : IsArithVar (PFl Ψ N) (antisymDegree Ψ N + 1) := by
     rw [← hdim]; exact Re₀.arith
   have hfl := flLines_polys hIn II hII Ψ N hN harith
@@ -93,7 +99,7 @@ theorem antisymmetry : Antisymmetry := by
     exact tendsto_const_nhds.limUnder_eq
 
   have hdegS : S.degPoly = C (volOf S) * S₀.degPoly := by
-    apply (GlobalTheory.T.weight_transform_injective_linear).2.2 Ψ N
+    apply (_root_.GlobalTheory.CompanionTheory.Ar.PB.tsgPoly_linePoly_smul_toWt_injective).2.2 Ψ N
     rw [hS, map_mul, hdeg0]
     congr 1
     simp [toWt, MvPolynomial.aeval_C, MvPolynomial.algebraMap_eq]
@@ -112,11 +118,11 @@ theorem antisymmetry : Antisymmetry := by
     exact (mem_homogeneousSubmodule _ _).1 hm
   refine mem_antisymSpace_of_pointwise Ψ N j _ hhom ?_
   intro τ a b hab hj lam
-  have e1 := GlobalTheory.T.adjacent_swap_height_polynomial_relation hIn II hII Ψ N d S K ι P Re τ a b hab (hF.sq τ a b hab hj) lam
-  have e0 := GlobalTheory.T.adjacent_swap_height_polynomial_relation hIn II hII Ψ N d S₀ (FlBlock Ψ N) (FlIdx Ψ N) (PFl Ψ N) Re₀ τ a b hab
+  have e1 := _root_.GlobalTheory.CompanionTheory.Ar.PB.thmA_swap hIn II hII Ψ N d S K ι P Re τ a b hab (hF.sq τ a b hab hj) lam
+  have e0 := _root_.GlobalTheory.CompanionTheory.Ar.PB.thmA_swap hIn II hII Ψ N d S₀ (FlBlock Ψ N) (FlIdx Ψ N) (PFl Ψ N) Re₀ τ a b hab
     (hF₀.sq τ a b hab (Or.inl b.isLt)) lam
   rw [hPB0] at e0
-  rw [hdegS, (GlobalTheory.T.weight_transform_injective_linear).2.1, (GlobalTheory.T.weight_transform_injective_linear).1, Polynomial.eval_mul, Polynomial.eval_C, ← e0] at e1
+  rw [hdegS, (_root_.GlobalTheory.CompanionTheory.Ar.PB.tsgPoly_linePoly_smul_toWt_injective).2.1, (_root_.GlobalTheory.CompanionTheory.Ar.PB.tsgPoly_linePoly_smul_toWt_injective).1, Polynomial.eval_mul, Polynomial.eval_C, ← e0] at e1
   simp only [map_sub, smul_eval]
   linarith
 

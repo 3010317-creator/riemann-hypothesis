@@ -2,12 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsRealFam
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExOneEqSelf
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinsetCosetRepsBoundedHalfPointsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IndicatorSmallCosetHalfIsSchwartzBruhatStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSBArgs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinsetCosetRepsBoundedHalfPoints
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IndicatorSmallCosetHalfIsSchwartzBruhat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumOKEx
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RowTestExistsCombinationsOfExpansion
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationLeOneOfMem
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NsmulProjectionXColumnsMemSelfDualLattice
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RowTestExistsCombinationsOfExpansion
 import Development.AutomorphicArithmetic.CyclotomicBounds.RamifiedDiscriminants.FunKit
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -173,7 +174,7 @@ theorem colFlat_expansion : Big fun {D} _ _ _ _ {T} _ _ _ _ _ _ ch => ∀ (t : T
     (depthAt ch.G w.1) _ (keepAt ch.G w.1) ((repsAt ch.G t w.1).elt (β w)) hm h00.unif h00.cond hT
   set Fl := flatTensor one_le_sLen (psiAt ch.W w.1) (unitVol w.1) (moved (locGrid ch.G t w.1) (keepAt ch.G w.1)
     ((repsAt ch.G t w.1).elt (β w)) ((locGrid ch.G t w.1).lines₂ (GlobalTheory.SplitFlip.oppositePath D.R.m) (exInd φ))) with hFl
-  choose Rp hR1 hR2 hR3 using fun j : Fin D.R.m => GlobalTheory.T.exists_finset_cosetReps_bounded_half_points (ch.S.βp (j + 1)) (ch.S.βp j) {w.1} eL N heL
+  choose Rp hR1 hR2 hR3 using fun j : Fin D.R.m => _root_.GlobalTheory.FunObj.exists_finset_cosetReps (ch.S.βp (j + 1)) (ch.S.βp j) {w.1} eL N heL
   have sdT : ∀ j, j ≤ D.R.m → IsSelfDualC (ch.G.V (.top j)) (ch.G.Λ (.top j)) := fun j hj =>
     (ch.G.isV (X := .top j) hj fun _ h => by cases h).sd
   let d : (∀ j : Fin D.R.m, Rp j) → ∀ j : Fin D.R.m, FinDatum ch.G t (.top t j) := fun κ j =>
@@ -182,7 +183,7 @@ theorem colFlat_expansion : Big fun {D} _ _ _ _ {T} _ _ _ _ _ _ ch => ∀ (t : T
         subst hw'
         exact (Good.locPl_cases w.2).elim (fun h => .inl h.1) fun h => .inr ⟨_, h.2.2, rfl⟩) eL heL with
       fn := cosLoc {w.1} eL (ch.S.βp (j + 1)) (ch.S.βp j) (N : ℤ) (κ j).1
-      sb := GlobalTheory.T.indicator_smallCoset_half_isSchwartzBruhat (ch.G.V (.top j)) (ch.G.V (.top (j + 1))) (ch.G.Λ (.top j)) (ch.G.Λ (.top (j + 1))) (ch.S.βp j)
+      sb := _root_.GlobalTheory.FunObj.CosSB.isSBHalf_cosLoc (ch.G.V (.top j)) (ch.G.V (.top (j + 1))) (ch.G.Λ (.top j)) (ch.G.Λ (.top (j + 1))) (ch.S.βp j)
         (ch.S.βp (j + 1)) {w.1} eL N (κ j).1 (by first | exact GlobalTheory.ProjXCols.selfDual_isFullLattice _ _ (sdT j j.2.le) | exact (sdT j j.2.le).1)
         (by first | exact GlobalTheory.ProjXCols.selfDual_isFullLattice _ _ (sdT (j + 1) j.2) | exact (sdT (j + 1) j.2).1) (ch.S.βp_is j j.2.le)
         (ch.S.βp_is (j + 1) j.2) heL (hR1 j _ (κ j).2).1 }

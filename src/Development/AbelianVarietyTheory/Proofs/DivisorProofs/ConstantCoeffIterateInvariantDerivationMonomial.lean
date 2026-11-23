@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvDer
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FormalCoboundarySmul
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantDerivationCoeffEqZeroOfDegreeLtStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantDerivationFormalGroupLawIsLinearStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantDerivationFormalGroupLawLeibnizStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantDerivationCoeffEqZeroOfDegreeLt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantDerivationFormalGroupLawIsLinear
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantDerivationFormalGroupLawLeibniz
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -201,7 +201,7 @@ theorem invDer_monomial (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) R)
       (∀ β : Fin d →₀ ℕ, β.degree < n → coeff β G = 0) ∧
       invDer μ u (monomial α 1) =
         ∑ j, ((α j : R) * u j) • monomial (α - Finsupp.single j 1) (1 : R) + G := by
-  obtain ⟨hadd, hsmul, hC⟩ := GlobalTheory.T.invariantDerivationFormalGroupLaw_isLinear R d μ hc u
+  obtain ⟨hadd, hsmul, hC⟩ := _root_.GlobalTheory.LawDer.Linear.invDer_linear R d μ hc u
   intro n
   induction n with
   | zero =>
@@ -287,7 +287,7 @@ theorem invDer_monomial (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) R)
         · rfl
       rw [h1, h2, add_zero]
     · have hXi : invDer μ u (X i) = C (u i) + Ri := by rw [hRi]; ring
-      rw [hmono, GlobalTheory.T.invariantDerivationFormalGroupLaw_leibniz R d μ hc hunit u, hD, hXi, ← Finset.sum_congr rfl (fun j _ => hterm j),
+      rw [hmono, _root_.GlobalTheory.LawDer.invDer_mul R d μ hc hunit u, hD, hXi, ← Finset.sum_congr rfl (fun j _ => hterm j),
         Finset.sum_add_distrib, Finset.sum_ite_eq' Finset.univ i, if_pos (Finset.mem_univ _)]
       rw [add_mul, Finset.sum_mul, smul_eq_C_mul (monomial α' (1 : R)) (u i)]
       ring
@@ -302,7 +302,7 @@ theorem iterate_order (μ : Fin d → MvPowerSeries (Fin d ⊕ Fin d) R)
   | succ k ih =>
     intro m F h β hβ
     rw [Function.iterate_succ_apply]
-    refine ih m _ (fun γ hγ => GlobalTheory.T.invariantDerivation_coeff_eq_zero_of_degree_lt R d μ hc u F (m + k) ?_ γ hγ) β hβ
+    refine ih m _ (fun γ hγ => _root_.GlobalTheory.invDer_coeff_eq_zero_of_degree_lt R d μ hc u F (m + k) ?_ γ hγ) β hβ
     intro δ hδ
     exact h δ (by omega)
 
@@ -317,7 +317,7 @@ theorem constantCoeff_iterate_invDer_monomial : ∀ (R : Type) [CommRing R] (d :
     constantCoeff ((invDer μ u)^[α.degree] (monomial α (1 : R))) =
       (α.degree.factorial : R) * ∏ i, u i ^ α i := by
   intro R _ d μ hc hunit hswap u
-  obtain ⟨hadd, hsmul, hC⟩ := GlobalTheory.T.invariantDerivationFormalGroupLaw_isLinear R d μ hc u
+  obtain ⟨hadd, hsmul, hC⟩ := _root_.GlobalTheory.LawDer.Linear.invDer_linear R d μ hc u
   let L : Module.End R (MvPowerSeries (Fin d) R) :=
     { toFun := invDer μ u, map_add' := hadd, map_smul' := hsmul }
   have hL : ∀ (k : ℕ) (F : MvPowerSeries (Fin d) R), (invDer μ u)^[k] F = (L ^ k) F :=

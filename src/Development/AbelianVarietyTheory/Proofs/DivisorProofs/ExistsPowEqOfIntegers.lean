@@ -1,11 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ToSpanSingletonConstGenInjective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BialgHomCotangentPullbackInjectiveOfSqStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.KerIdealCompOfSurjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BialgHomCotangentPullbackInjectiveOfSq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DUnitMemRangeOfMemKerIdeal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MulPMemSqCounitKerStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivGroupOmegaNoPTorsionOfCotangentInjectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MulPMemSqCounitKer
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivGroupOmegaNoPTorsionOfCotangentInjective
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsDiscreteValuationRingIntegralClosurePadicInt
+public import Mathlib.RingTheory.Flat.TorsionFree
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,7 +46,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Mathlib.RingTheory.Flat.TorsionFree
 
 @[expose] public section
 
@@ -74,8 +75,8 @@ theorem omega_finite_projective (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [I
     rw [map_natCast, map_zero] at this
     exact (Fact.out : p.Prime).ne_zero (Nat.cast_eq_zero.1 this)
   have htf : ∀ w : G.omega, (p : O) • w = 0 → w = 0 :=
-    GlobalTheory.T.pDivGroup_omega_noPTorsion_of_cotangent_injective p O G fun n => GlobalTheory.T.bialgHomCotangentPullback_injective_of_sq O _ _ (G.mulP n)
-      (GlobalTheory.T.mulP_mem_sq_counit_ker p O hp Fact.out (exists_pow_eq_of_integers hv (Fact.out : p.Prime).pos) G n)
+    _root_.GlobalTheory.omega_eq_zero_of_p_smul_eq_zero p O G fun n => _root_.GlobalTheory.PDiv.cotMap_injective_of_sq O _ _ (G.mulP n)
+      (_root_.GlobalTheory.PDivGroup.mulP_mem_sq_counit p O hp Fact.out (exists_pow_eq_of_integers hv (Fact.out : p.Prime).pos) G n)
   have htfk : ∀ (k : ℕ) (w : G.omega), (p : O) ^ k • w = 0 → w = 0 := fun k => by
     induction k with
     | zero => intro w hw; rwa [pow_zero, one_smul] at hw

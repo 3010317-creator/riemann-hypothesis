@@ -2,9 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsConstMulEqUnit
 public import Mathlib.AlgebraicGeometry.Geometrically.Integral
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFibreGenericPointDvrOfPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrimeEqSpanOfCoheightLeOneStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteCoheightOneNotMemOpenGenericPointStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsLieBasis
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFibreGenericPointDvrOfPrime
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrimeEqSpanOfCoheightLeOne
+public import Mathlib.AlgebraicGeometry.Noetherian
+public import Mathlib.AlgebraicGeometry.Properties
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteCoheightOneNotMemOpenGenericPoint
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -96,15 +100,15 @@ theorem exists_const_mul_unitAt_coheight_one : ∀ (R K : Type) [CommRing R] [Is
     let p₀ : PrimeSpectrum R := ⟨⊥, Ideal.isPrime_bot⟩
     obtain ⟨y, -, hy⟩ := hgz ((PrimeSpectrum.le_iff_specializes p₀ (q (genericPoint X))).1 bot_le)
     exact (genericPoint_specializes y).mem_open hS (hgen y (by rw [hy]))
-  have hB := GlobalTheory.T.finite_coheight_one_notMem_open_genericPoint X S hS hg
+  have hB := _root_.GlobalTheory.VerticalUnit.finite_coheight_one_notMem X S hS hg
   set B : Set X := {x : X | Order.coheight x = 1 ∧ x ∉ S} with hBdef
   have key : ∀ b ∈ B, ∃ π : R, Prime π ∧ (q b).asIdeal = Ideal.span {π} ∧
       (∀ x : X, (q x).asIdeal = Ideal.span {π} → b ⤳ x) ∧ IsDiscreteValuationRing (X.presheaf.stalk b) ∧
       Irreducible (X.presheaf.germ ⊤ b trivial (constFn q ⊤ π)) := by
     rintro b ⟨h1, hbS⟩
     have hb0 : (q b).asIdeal ≠ ⊥ := fun h => hbS (hgen b h)
-    obtain ⟨π, hπ, hqb⟩ := GlobalTheory.T.exists_prime_eq_span_of_coheight_le_one' R X q hgz b h1.le hb0
-    obtain ⟨ξ, -, hξ, hd, hirr⟩ := GlobalTheory.T.exists_fibre_genericPoint_dvr_of_prime R X q π hπ
+    obtain ⟨π, hπ, hqb⟩ := _root_.GlobalTheory.exists_prime_eq_span_of_coheight_le_one R X q hgz b h1.le hb0
+    obtain ⟨ξ, -, hξ, hd, hirr⟩ := _root_.GlobalTheory.VerticalUnit.exists_fibre_generic_of_prime R X q π hπ
     have hξ1 : Order.coheight ξ = 1 := by
       have e := IsDiscreteValuationRing.ringKrullDim_eq_one (X.presheaf.stalk ξ)
       rw [ringKrullDim_stalk_eq_coheight] at e
@@ -115,7 +119,7 @@ theorem exists_const_mul_unitAt_coheight_one : ∀ (R K : Type) [CommRing R] [Is
   have hstar : ∀ b ∈ B, ∀ x : X, Order.coheight x = 1 → π b ∈ (q x).asIdeal → x = b := by
     intro b hb x hx hmem
     have hx0 : (q x).asIdeal ≠ ⊥ := fun h => (hπ b hb).ne_zero (by rw [h, Ideal.mem_bot] at hmem; exact hmem)
-    obtain ⟨π', hπ', hqx⟩ := GlobalTheory.T.exists_prime_eq_span_of_coheight_le_one' R X q hgz x hx.le hx0
+    obtain ⟨π', hπ', hqx⟩ := _root_.GlobalTheory.exists_prime_eq_span_of_coheight_le_one R X q hgz x hx.le hx0
     have hdvd : π' ∣ π b := Ideal.mem_span_singleton.1 (hqx ▸ hmem)
     have hq : (q x).asIdeal = Ideal.span {π b} :=
       hqx.trans (Ideal.span_singleton_eq_span_singleton.2 (hπ'.associated_of_dvd (hπ b hb) hdvd))

@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselFormConvergesEquivariantHermitianStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupRepTwistedIsUnitaryRepStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupsClosedUnitaryWCompactStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnimodularBesselSubgroupsUWNStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselFormConvergesEquivariantHermitian
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupRepTwistedIsUnitaryRep
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupsClosedUnitaryWCompact
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnimodularBesselSubgroupsUWN
 import Formalism.FormalDegreeBessel.FinalG
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -109,9 +109,9 @@ theorem GlobalTheory.SgInf.inner_integral_eq_be : ∀ (k r : ℕ) {H : Type} [No
   have hT := hside.2.1
   have hπ := hside.2.2.1
   have hhaar := hside.2.2.2.1
-  have hSG : Sset k r z ⊆ GG k r := (GlobalTheory.T.bessel_subgroups_closed_unitaryW_compact k r z hz hT).2.2.2.1.1
-  have hpis := GlobalTheory.T.besselSubgroupRepTwisted_isUnitaryRep k r z c π hz hT hπ
-  have huni := (GlobalTheory.T.unimodular_besselSubgroups_UW_N k r z hz hT μS).1 hhaar
+  have hSG : Sset k r z ⊆ GG k r := (_root_.GlobalTheory.SgInf.closedSub_groups k r z hz hT).2.2.2.1.1
+  have hpis := _root_.GlobalTheory.SgInf.PiUnitary.piS_unitary k r z c π hz hT hπ
+  have huni := (_root_.GlobalTheory.SgInf.unimodular_S_N_UW k r z hz hT μS).1 hhaar
   have hstab : ∀ g ∈ GG k r, ∀ v ∈ (DD σ w : Set H), σ g v ∈ (DD σ w : Set H) := by
     intro g hg v hv
     have hle : Submodule.map (σ g).toLinearMap (DD σ w) ≤ DD σ w := by
@@ -121,7 +121,7 @@ theorem GlobalTheory.SgInf.inner_integral_eq_be : ∀ (k r : ℕ) {H : Type} [No
         rw [hσ.1.2 g hg g' hg']; rfl
       rw [this]; exact mem_DD σ w (gg_mul hg hg')
     exact hle ⟨v, hv, rfl⟩
-  have hD := GlobalTheory.T.besselForm_converges_equivariant_hermitian k r σ w a μG d z c π μS hstd hside (DD σ w : Set H) hstab hdec
+  have hD := _root_.GlobalTheory.SgInf.BeForm.be_converges_equivariant_hermitian_continuous k r σ w a μG d z c π μS hstd hside (DD σ w : Set H) hstab hdec
     (σ y w) (mem_DD σ w hy) (σ (Matrix.of x) w) (mem_DD σ w hx)
   have hFi := hD.1
   have hGi := hFi.apply_continuousLinearMap (W (Matrix.of x))

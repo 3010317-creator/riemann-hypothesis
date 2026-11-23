@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.GenRatios
 public import Development.AbelianVarietyTheory.Definitions.Divisors.Multiplier
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLinearSystemRatioOfDegreeOfGeneratesByRatiosStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLinearSystemRatioOfDegreeOfGeneratesByRatios
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +49,7 @@ namespace GlobalTheory.DegVal
 set_option synthInstance.maxHeartbeats 1000000 in
 theorem ratioOn_of_birOn : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (r : ℕ) (U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r), ∀ (Z : Comp Xo c) (G : WTZ E), BirOn U Z G → RatioOn U Z G := by
   intro E _ _ _ H Dw l Xo c r U Z G hB τ t _
-  exact GlobalTheory.T.isLinearSystemRatioOfDegree_of_generatesByRatios _ _ _ _ hB τ _
+  exact _root_.GlobalTheory.DegVal.isRatio_of_genRatios _ _ _ _ hB τ _
 
 end GlobalTheory.DegVal
 

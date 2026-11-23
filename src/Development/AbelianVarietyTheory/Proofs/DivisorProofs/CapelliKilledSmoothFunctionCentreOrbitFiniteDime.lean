@@ -1,10 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ContinuousConjFin
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EigencharactersFiniteOfCommutingAnnihilatedStatement
+public import Mathlib.Algebra.Polynomial.AlgebraMap
+public import Mathlib.Basic.Complex.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EigencharactersFiniteOfCommutingAnnihilated
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDimensionalCentreAnnihilatorCompatibleMaps
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDimensionalSpanAlgebraOrbitOfAnnihilatedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ZalgEqAdjoinFiniteCapelliStatement
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDimensionalSpanAlgebraOrbitOfAnnihilated
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ZalgEqAdjoinFiniteCapelli
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +53,7 @@ namespace GlobalTheory.KilledFinCentre
 theorem centre_orbit_finite : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (b : ℕ) (q : (E →+* ℂ) → ℂ → Polynomial ℂ), (∀ τ u, q τ u ≠ 0) → ∃ (X' : Set (Module.End ℂ (Sm E b) → ℂ)) (D : ℕ), X'.Finite ∧ ∀ ψ : Sm E b, (∀ τ u, Polynomial.aeval (cap τ u) (q τ u) ψ = 0) → FiniteDimensional ℂ (Submodule.span ℂ ((fun z : Module.End ℂ (Sm E b) => z ψ) '' Zalg E b)) ∧ Module.finrank ℂ (Submodule.span ℂ ((fun z : Module.End ℂ (Sm E b) => z ψ) '' Zalg E b)) ≤ D ∧ ∀ (χ' : Module.End ℂ (Sm E b) → ℂ) (u : Sm E b), u ∈ Submodule.span ℂ ((fun z : Module.End ℂ (Sm E b) => z ψ) '' Zalg E b) → u ≠ 0 → (∀ z ∈ Zalg E b, z u = χ' z • u) → ∃ χ ∈ X', ∀ z ∈ Zalg E b, χ' z = χ z := by
   intro E _ _ _ b q hq
   classical
-  obtain ⟨T, hT, hZ⟩ := GlobalTheory.T.zalg_eq_adjoin_finite_capelli E b
+  obtain ⟨T, hT, hZ⟩ := _root_.GlobalTheory.CuspRep.zalg_eq_adjoin_finite_caps E b
   let p : Module.End ℂ (Sm E b) → Polynomial ℂ := fun t =>
     if h : ∃ τ u, t = cap τ u then q h.choose h.choose_spec.choose else 1
   have hp : ∀ t ∈ T, p t ≠ 0 := by
@@ -69,10 +72,10 @@ theorem centre_orbit_finite : ∀ (E : Type) [Field E] [NumberField E] [_root_.N
     exact key _ _ h.choose_spec.choose_spec
   have hc : ∀ s ∈ T, ∀ t ∈ T, Commute s t := fun s hs t ht =>
     GlobalTheory.AutGrowth.KilledFin.Zalg_commute (hZ ▸ Algebra.subset_adjoin hs) (hZ ▸ Algebra.subset_adjoin ht)
-  obtain ⟨X', hX', hX'e⟩ := GlobalTheory.T.exists_mem_eigencharacters_of_eigenvector _ T p hc hp
+  obtain ⟨X', hX', hX'e⟩ := _root_.GlobalTheory.eigencharacters_finite_of_commuting_annihilated _ T p hc hp
   refine ⟨X', ∏ t ∈ T, (p t).natDegree, hX', fun ψ hψ => ?_⟩
   rw [hZ]
-  obtain ⟨h1, h2⟩ := GlobalTheory.T.finiteDimensional_span_algebra_orbit_of_annihilated _ T p hc hp ψ (hkill ψ hψ)
+  obtain ⟨h1, h2⟩ := _root_.GlobalTheory.killed_span_adjoin_finrank_le _ T p hc hp ψ (hkill ψ hψ)
   exact ⟨h1, h2, hX'e ψ (hkill ψ hψ)⟩
 
 end GlobalTheory.KilledFinCentre

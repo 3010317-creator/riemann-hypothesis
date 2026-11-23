@@ -3,8 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.CMLattices.IntegralOf
 public import Formalism.LocalToGlobal.ProjectiveLattices.L2DefiniteCuspForms
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.LawsFieldsSeparately
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CuspFormValueLeSupNormAtOrthonormalFrameStatement
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsMetricConjugateFramedPointStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CuspFormValueLeSupNormAtOrthonormalFrame
+public import Development.AbelianVarietyTheory.Definitions.RegularCharts.BaseNorm
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsMetricConjugateFramedPoint
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFramedPointBaseChangeAlgebraMap
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedModuliAlgebraicLawsChartWeightIntegrality
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointReducedFromTestRing
@@ -41,7 +42,6 @@ import Mathlib.Tactic.NormNum.NatSqrt
 import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.RegularCharts.BaseNorm
 
 @[expose] public section
 
@@ -57,18 +57,18 @@ theorem cusp_bound_allEmb : ∀ (E : Type) [Field E] [NumberField E] [IsCMField 
   by_cases hσ : GoodEmb c σ
   · have e : goodOf c σ = σ := if_pos hσ
     rw [e]
-    exact GlobalTheory.T.cuspForm_value_le_supNorm_at_orthonormal_frame E H Dw l Xo c r U ξ hU hξ hpq a n hd F hF σ hσ y N hm
+    exact _root_.GlobalTheory.LamT.OrthoBound.cabs_evR_le_supC E H Dw l Xo c r U ξ hU hξ hpq a n hd F hF σ hσ y N hm
   · have e : goodOf c σ = (starRingEnd ℂ).comp σ := if_neg hσ
     have hg : GoodEmb c ((starRingEnd ℂ).comp σ) := e ▸ goodEmb_goodOf c σ
     rw [e]
     have hB : Out.SecBaseChangeSt := GlobalTheory.lawsFieldsSeparately.2.1
     obtain ⟨y', hy'⟩ := GlobalTheory.Frames.FramedBaseChange.exists_frMap hB E H Dw l Xo c (CAt σ)
       (CAt ((starRingEnd ℂ).comp σ)) (FrameNorm.conjAlg σ) y
-    have hm' := GlobalTheory.T.isMetric_conjugate_framedPoint E H Dw l Xo c σ y y' N (fun _ => 1) hpq hy' hm
+    have hm' := _root_.GlobalTheory.LamT.isMetric_conj E H Dw l Xo c σ y y' N (fun _ => 1) hpq hy' hm
     have h1 : (fun b : E →+* ℂ => ((1 : Matrix (Fin (Dw.mult b)) (Fin (Dw.mult b)) ℂ)).map (starRingEnd ℂ)) =
         fun _ => 1 := funext fun b => Matrix.map_one _ (map_zero _) (map_one _)
     rw [h1] at hm'
-    have hb := GlobalTheory.T.cuspForm_value_le_supNorm_at_orthonormal_frame E H Dw l Xo c r U ξ hU hξ hpq a n hd F hF _ hg y' N hm'
+    have hb := _root_.GlobalTheory.LamT.OrthoBound.cabs_evR_le_supC E H Dw l Xo c r U ξ hU hξ hpq a n hd F hF _ hg y' N hm'
     haveI : IsReduced (CAt σ) := inferInstanceAs (IsReduced ℂ)
     have hev := evR_frMap (GlobalTheory.Frames.algebraic_laws hB E H Dw l Xo c).2.2.1 F (cusp_le_sec Xo c U a n hF).1
       (FrameNorm.conjAlg σ) y (GlobalTheory.Frames.allTest_of_secBaseChange hB E H Dw l Xo c (CAt σ) y) y' hy'

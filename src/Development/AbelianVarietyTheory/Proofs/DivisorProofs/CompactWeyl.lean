@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.DiscreteSeriesCharacter
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsHasCls
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompactUnitaryTorusRealPlaceTensorEqComplexPowStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.EllipticPartTestData
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompactUnitaryTorusRealPlaceTensorEqComplexPow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -89,7 +90,7 @@ theorem of_cosets (hR : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar) (M
   obtain ⟨T, b, hbij, hconj⟩ := hR'
   have hfin : (XSet P (placeOf D ρ).Completion V.gram).Finite :=
     Set.finite_coe_iff.1 (Finite.of_equiv _ b.symm)
-  have h1 := @GlobalTheory.T.compact_unitaryTorus_real_place_tensor_eq_complex_pow D.host.F D.host.E _ _ _ _ _ D.sp.cm.sig (GlobalTheory.AdelicU.isCMExt_host D) V.rank P
+  have h1 := @_root_.GlobalTheory.TrEll.realTorus_split D.host.F D.host.E _ _ _ _ _ D.sp.cm.sig (GlobalTheory.AdelicU.isCMExt_host D) V.rank P
     (placeOf D ρ) (embOverOf D ρ)
   have hnorm : ∀ i, ‖cxRoots (embOverOf D ρ).1 P i‖ = 1 := by
     obtain ⟨Ψ, h3⟩ := h1 (by convert hc using 0)

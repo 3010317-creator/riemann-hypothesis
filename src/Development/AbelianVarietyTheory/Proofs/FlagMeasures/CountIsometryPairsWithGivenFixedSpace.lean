@@ -1,13 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NormalFormDualOrthogonalLast
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardEmbeddedDataWithGivenFixedLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardIsometriesFixingSubspaceDefiniteLatticesLeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DiscriminantOrderCommonFixedLatticeEmbeddedDataStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EncardSublatticesIndexFixedTraceLeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FixedLatticeInfEqAndPairingOfIsometryStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeDiscriminantOrderNeZeroUnimodula
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardEmbeddedDataWithGivenFixedLattice
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.FlagPairDefinitePartLattice
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardIsometriesFixingSubspaceDefiniteLatticesLe
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DiscriminantOrderCommonFixedLatticeEmbeddedData
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EncardSublatticesIndexFixedTraceLe
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FixedLatticeInfEqAndPairingOfIsometry
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PrimitiveSublatticeMeanCountBound
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeDiscriminantOrderNeZeroUnimodula
 import Formalism.FlagUnipotentLattices.MinkowskiFactorialBounds.MinkowskiNumberDvdFactorial
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -212,12 +214,12 @@ theorem dat_count (H : HermSpace K V) (hK : Formalism.HermitianLatticesTheory.Is
       ENNReal.ofReal ((x : ℝ) ^ (2 * (((Module.finrank K V) - Module.finrank K U : ℕ) : ℝ) + cf K)) *
         ((x : ℝ≥0∞) * D₀) ^ (3 * (2 * j + 1)) := by
   haveI : IsTotallyComplex K := hK.1
-  refine encard_le_mul _ _ (fun d => fixLat d.2) _ _ ?_ (GlobalTheory.T.encard_sublattices_index_fixed_trace_le K V L₀ M U x hL.1.toIsLattice hx) ?_
+  refine encard_le_mul _ _ (fun d => fixLat d.2) _ _ ?_ (_root_.GlobalTheory.TraceCount.main K V L₀ M U x hL.1.toIsLattice hx) ?_
   · rintro d ⟨hd, hM⟩
     exact ⟨fixLat_le hd, hd.2.2.2.1, hM⟩
   · intro La _
     refine le_trans (ENat.toENNReal_le.2 (Set.encard_le_encard ?_))
-      (GlobalTheory.T.card_embeddedData_with_given_fixedLattice K V H hK hP L₀ g j D₀ hL hD hG hg La x)
+      (_root_.GlobalTheory.DegCnt.DatCount.main K V H hK hP L₀ g j D₀ hL hD hG hg La x)
     rintro d ⟨⟨hd, -⟩, h⟩
     exact ⟨hd, h⟩
 
@@ -295,7 +297,7 @@ theorem main : MinkowskiBound → ∀ (K V : Type) [Field K] [NumberField K] [St
     have hi : idx L₀ (fixLat p.1.2) = x := hp.1.2.2.2.1
     have hi0 : idx L₀ (fixLat p.1.2) ≠ 0 := by omega
     obtain ⟨h1, h2⟩ := disc_trace H hK hP hL (fixLat_le hp.1) hi0 U
-    have h3 := GlobalTheory.T.discriminantOrder_common_fixedLattice_embeddedData K V H hK hP L₀ g j D₀ hL hD hG hg x x' hx hx' p hp
+    have h3 := _root_.GlobalTheory.DegCnt.FixDisc.main K V H hK hP L₀ g j D₀ hL hD hG hg x x' hx hx' p hp
     rw [hU, hsub, h2, hdisc] at h3
     refine ⟨Submodule.comap_mono (fixLat_le hp.1), Nat.one_le_iff_ne_zero.2 h1,
       hi ▸ idx_latIn_le U _ _ hi0, ?_⟩
@@ -333,11 +335,11 @@ theorem main : MinkowskiBound → ∀ (K V : Type) [Field K] [NumberField K] [St
       intro d hd
       refine encard_le_mul _ _ (fun p : (Submodule (𝓞 K) V × Submodule (𝓞 K) (V × V)) × (Submodule (𝓞 K) V × Submodule (𝓞 K) (V × V)) × (V ≃ₗ[K] V) => p.2.1) _ _ ?_ c2 ?_
       · rintro p ⟨⟨⟨hp, hU⟩, e⟩, -⟩
-        have h42 := (GlobalTheory.T.fixedLattice_inf_eq_and_pairing_of_isometry K V H hK hP L₀ g j D₀ hL hD hG hg x x' p hp).1
+        have h42 := (_root_.GlobalTheory.DegCnt.trip_fixLat_inf_eq_and_pairing K V H hK hP L₀ g j D₀ hL hD hG hg x x' p hp).1
         rw [hU] at h42
         exact ⟨hp.2.1, by rw [← h42, inf_eq_map, e]⟩
       intro d' hd'
-      have c3 := GlobalTheory.T.card_isometries_fixing_subspace_definite_lattices_le hM K V H hK hP U d'.1 d.1 hd'.1.1.1 hd.1.1.1
+      have c3 := _root_.GlobalTheory.IsoCount.isoCnt hM K V H hK hP U d'.1 d.1 hd'.1.1.1 hd.1.1.1
       rw [hsub] at c3
       refine le_trans (ENat.toENNReal_le.2 ?_) c3
       refine Set.encard_le_encard_of_injOn (f := fun p : (Submodule (𝓞 K) V × Submodule (𝓞 K) (V × V)) × (Submodule (𝓞 K) V × Submodule (𝓞 K) (V × V)) × (V ≃ₗ[K] V) => p.2.2) ?_ ?_

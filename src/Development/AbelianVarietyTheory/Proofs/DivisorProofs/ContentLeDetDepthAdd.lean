@@ -3,13 +3,15 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatFrame
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Mathlib.RingTheory.PowerSeries.Substitution
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DifferentialOperatorDepthIntegralCoordinatesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTypicalCurveBasisAdaptedToSaturatedFrameStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupDeterminantPowDepthBasisChangeInvariaStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeFormalGroupDeterminantPowDepthOfRadiiStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrdGeExpOfLogSumTwoRadiiStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsExpEqOfSubstLg
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DifferentialOperatorDepthIntegralCoordinates
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.TypicalCurveStructureConstants
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTypicalCurveBasisAdaptedToSaturatedFrame
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupDeterminantPowDepthBasisChangeInvaria
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeFormalGroupDeterminantPowDepthOfRadii
+public import ReciprocityTheory.DualLattices.VEqZeroOfPowEqOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrdGeExpOfLogSumTwoRadii
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ChainLemmaMultivariatePowerSeriesCoordinateForm
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsExpEqOfSubstLg
 import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.TypicalBasisCoordinates
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -209,10 +211,10 @@ theorem content_le_detDepth_add :
   intro C _ _ _ v p hp hv d h hh ty G μ τ j i c hcard u hu hsupp
   classical
   obtain ⟨γ, r, g, hB, -, hgdet, htan, hgood⟩ :=
-    GlobalTheory.T.exists_typicalCurve_basis_adapted_to_saturated_frame C v p hp hv d h hh ty G μ τ j i hcard u hu hsupp
+    _root_.GlobalTheory.FGDepth.exists_basis_adapted_frame C v p hp hv d h hh ty G μ τ j i hcard u hu hsupp
   obtain ⟨hγ, hγty, hdet⟩ := hB
   have e1 : detDepth G u c = detDepth G (fun a => tangent (γ (r a))) c := by
-    rw [← GlobalTheory.T.formalGroupDeterminantPowDepth_basis_change_invariant C v i d c G u g hgdet]
+    rw [← _root_.GlobalTheory.DetDepthBasis.main C v i d c G u g hgdet]
     congr 1
     funext a
     exact (htan a).symm
@@ -298,9 +300,9 @@ theorem content_le_detDepth_add :
       · simp
     · rw [zero_smul]
       exact ord_zero _
-  have hD := GlobalTheory.T.ordGe_exp_of_logSum_two_radii C v p hp hv d i good c' hc0 hcn hcg ρ z' t hz ht0 hlg'
+  have hD := _root_.GlobalTheory.ExpWeightTwoRadii.ordGe_of_lgSum_twoRadii C v p hp hv d i good c' hc0 hcn hcg ρ z' t hz ht0 hlg'
   have htord : ∀ b, OrdGe v ρ (t b) 0 := fun b => ord_mono (hD b) (hrad0 b)
-  have e2 := GlobalTheory.T.differentialOperatorDepth_integral_coordinates C v i d c G (fun a => tangent (γ (r a))) (basisMap G γ) Ψ
+  have e2 := _root_.GlobalTheory.FGDepth.Coord.depth_in_coords C v i d c G (fun a => tangent (γ (r a))) (basisMap G γ) Ψ
     (fun a => by
       rw [basisMap_eq_ptBasisMap]
       exact ⟨(hΦg a).2, (hΦg a).1, hΨi a, hΨ0 a⟩)
@@ -319,7 +321,7 @@ theorem content_le_detDepth_add :
     intro B hB
     rw [e2]
     refine le_iInf fun f => ?_
-    have := GlobalTheory.T.le_formalGroupDeterminantPowDepth_of_radii C v i d c ρ t B ht0 htord hB f.1 f.2
+    have := _root_.GlobalTheory.DepthCount.depth_count C v i d c ρ t B ht0 htord hB f.1 f.2
     exact WithBot.coe_le_coe.2 this
   by_cases hfin : ∃ α ∈ (detPow C i c).support, v ((detPow C i c).coeff α * mfact α) ≠ ⊤
   · obtain ⟨α1, hα1, hne⟩ := hfin

@@ -2,9 +2,14 @@ module
 
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.HodgeLatticeFlagBound
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.TrivFlagOnHodge
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.LocalizationModelOverPlaceStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.PowerSumsVanishOfTrivialFlagsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyCoordIdealStatement
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.LaurentCechNerveLevelSpecTensorPower
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.LocalizationModelOverPlace
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.BundleChernComparison
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.PowerSumsVanishOfTrivialFlags
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.InstFintypeSumElim
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyCoordIdeal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,7 +62,7 @@ theorem linked_two_levels : GroundTheory.Heights₂.Heights.NumbersDVR.Numerical
   refine ⟨?_, ?_⟩
   · obtain ⟨_, _, _, _, _, _, _, _, hvert⟩ := hTL
     exact hvert
-  · obtain ⟨hded, hfin, hinj, hcst, -⟩ := GlobalTheory.T.arith_variety_coord_ideal E H D l Xo c O₀ β Y S M.Ω M.K M.ι M.y 𝔐 (dimFl (CMType H) (D.p + D.q)) M.arith (integralClosure ℤ M.Ω)
+  · obtain ⟨hded, hfin, hinj, hcst, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.ConstClosure.const_closure E H D l Xo c O₀ β Y S M.Ω M.K M.ι M.y 𝔐 (dimFl (CMType H) (D.p + D.q)) M.arith (integralClosure ℤ M.Ω)
     refine ⟨integralClosure ℤ M.Ω, inferInstance, hded, hfin, inferInstance, hinj, hcst, ?_⟩
     intro p hp m _ hpm O _ _ _ _ _ _ _
     have hp' : (p : ℕ) ∈ S ∧ (p : ℕ) ∉ S₀ := Finset.mem_sdiff.1 (Finset.mem_preimage.1 hp)
@@ -67,8 +72,8 @@ theorem linked_two_levels : GroundTheory.Heights₂.Heights.NumbersDVR.Numerical
     · exact hM3 E H D l Xo c O₀ β Y S M.Ω M.K M.ι M.y 𝔐 _ M.arith Fl S₀ R.pairs hTL p hp'.1 hp'.2 hHT h2 hd (φ p) (hφ p hp'.1 hp'.2) (integralClosure ℤ M.Ω) m hpm O
     · intro τ
       obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
-      have hmod := (GlobalTheory.T.localization_model_over_place M.K M.ι M.Ω M.y (integralClosure ℤ M.Ω) hinj hcst _ M.arith m O).2.1
-      exact GlobalTheory.T.power_sums_vanish_of_trivial_flags hseg O ϖ hϖ M.K M.ι _ _ hmod _ _ fun W hW =>
+      have hmod := (_root_.GlobalTheory.CompanionTheory.Ar.Num.pl_model M.K M.ι M.Ω M.y (integralClosure ℤ M.Ω) hinj hcst _ M.arith m O).2.1
+      exact _root_.GlobalTheory.CompanionTheory.Ar.Num.ZTop.powerSumsVanish_of_trivFlagAt hseg O ϖ hϖ M.K M.ι _ _ hmod _ _ fun W hW =>
         hTriv E H D l Xo c O₀ β Y S M.Ω M.K M.ι M.y 𝔐 _ M.arith Fl R.pairs.x' e hrl p hp'.1 hHT (integralClosure ℤ M.Ω) m hpm O τ W hW
 
 end GlobalTheory.CompanionTheory.Ar.Num

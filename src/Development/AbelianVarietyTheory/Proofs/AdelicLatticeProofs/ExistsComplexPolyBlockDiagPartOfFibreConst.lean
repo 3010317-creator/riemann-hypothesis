@@ -2,10 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.AdelicPair
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.BlockDiagPartOfRatIdempotentOneAndMulOfTriangula
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EvalComplexPolyEqZeroOnRatZariskiClosureStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsMultiplierDescendBlockDiagPartOfRatIdempotStatement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EvalComplexPolyEqZeroOnRatZariskiClosure
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsMultiplierDescendBlockDiagPartOfRatIdempot
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsAutStableSLMatrixGroupImageBlockDiagPart
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RatZariskiClosurePointsIsGroupStatement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RatZariskiClosurePointsIsGroup
+public import Mathlib.RingTheory.Nullstellensatz
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -24,7 +25,6 @@ import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
-public import Mathlib.RingTheory.Nullstellensatz
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Echelon.Zsqrtd
@@ -176,9 +176,9 @@ theorem GlobalTheory.ClassFin.exists_evC_blk_of_fibre_const : ∀ (ι : Type) [F
   have hmul : ∀ x ∈ Γ, ∀ y ∈ Γ, blk e (x * y) = blk e x * blk e y := fun x hx y hy =>
     ((GlobalTheory.ClassFin.blk_mul_of_triangular ι e ℂ he).2.1 x y (htri x hx) (htri y hy)).1
   have hpre : IsPre (blk e '' Γ) := GlobalTheory.ClassFin.isPre_blk_image ι Γ e hΓ.toIsPre he htri
-  obtain ⟨-, hm, hadj, hdet⟩ := GlobalTheory.T.ratZariskiClosurePoints_isGroup ι _ hpre ℂ
+  obtain ⟨-, hm, hadj, hdet⟩ := _root_.GlobalTheory.ClassFin.pts_group ι _ hpre ℂ
   obtain ⟨s, hs, hspan⟩ := exists_finset_rtr Γ f
-  obtain ⟨b₀, ⟨x₀, hx₀, hb₀⟩, hb⟩ := GlobalTheory.T.exists_multiplier_descend_blockDiagPartOfRatIdempotent ι Γ e hΓ.closed ⟨1, hΓ.one_mem⟩ s (by
+  obtain ⟨b₀, ⟨x₀, hx₀, hb₀⟩, hb⟩ := _root_.GlobalTheory.ClassFin.exists_multiplier_descend_blk ι Γ e hΓ.closed ⟨1, hΓ.one_mem⟩ s (by
     intro p hp x hx x' hx' hxx
     obtain ⟨g, hg, rfl⟩ := hs p hp
     rw [evC_rtr, evC_rtr]
@@ -217,7 +217,7 @@ theorem GlobalTheory.ClassFin.exists_evC_blk_of_fibre_const : ∀ (ι : Type) [F
       rw [evC_map, hp _ ⟨x, hx, rfl⟩]
       simp [evC]
     have hx₀p : blk e x₀ ∈ pts (blk e '' Γ) ℂ := fun p hp => hp _ ⟨x₀, hx₀, rfl⟩
-    have := GlobalTheory.T.evalComplexPoly_eq_zero_on_ratZariskiClosure ι _ hpre.aut_mem (ltr z b₀) (by
+    have := _root_.GlobalTheory.ClassFin.evC_eq_zero_of_mem_pts_of_stable ι _ hpre.aut_mem (ltr z b₀) (by
       rintro _ ⟨h, hh, rfl⟩
       rw [evC_ltr, ← evC_rtr]
       exact hz _ (hstab h hh)) _ (hm _ (hadj z hzp) _ hx₀p)

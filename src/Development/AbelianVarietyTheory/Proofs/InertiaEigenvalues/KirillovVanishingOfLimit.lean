@@ -2,10 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsTestRep
 public import Mathlib.Analysis.CStarAlgebra.Classes
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqZeroOfTruncatedFourierTendstoZeroEtaleStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnimodularHeightSqLintegralLtTopStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WhittakerBoundBigCellStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WhittakerFunctionalWeylVanishOfWeylUnipotentZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqZeroOfTruncatedFourierTendstoZeroEtale
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnimodularHeightSqLintegralLtTop
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WhittakerBoundBigCell
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WhittakerFunctionalWeylVanishOfWeylUnipotentZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -82,7 +82,7 @@ theorem u_locallyConstant (A : Et F E) (Ψ : SpecialLinearGroup (Fin 2) A.K → 
 theorem absK_nonneg (A : Et F E) (t : A.K) : 0 ≤ A.absK t := by
   unfold Et.absK; split_ifs <;> simp
 
-theorem weyl_unipotent_l2_finite [Unram F E] (hB1 : type_of% GlobalTheory.T.whittaker_bound_big_cell) (hB2 : type_of% GlobalTheory.T.unimodularHeight_sq_lintegral_lt_top) (A : Et F E) (μ : Measure A.K) (hμ : μ.IsAddHaarMeasure)
+theorem weyl_unipotent_l2_finite [Unram F E] (hB1 : type_of% _root_.GlobalTheory.JR.LamBound.main) (hB2 : type_of% _root_.GlobalTheory.JR.HeightSquareIntegrable.height_sq_lintegral_lt_top) (A : Et F E) (μ : Measure A.K) (hμ : μ.IsAddHaarMeasure)
     (Ψ : SpecialLinearGroup (Fin 2) A.K → ℂ) (h : A.InI Ψ) :
     ∫⁻ z, ‖Ψ (wS A.K * nS z)‖ₑ ^ 2 ∂μ < ⊤ := by
   obtain ⟨C, hC⟩ := hB1 F E A Ψ h
@@ -118,6 +118,6 @@ theorem GlobalTheory.JR.kirillov_vanishing_l2 : ∀ (F E : Type) [NontriviallyNo
   intro F E _ _ _ _ _ A ψ hψ μK hsd Ψ hI hlim
   have hμ : μK.IsAddHaarMeasure := hsd.1
   have hu : (fun z => Ψ (wS A.K * nS z)) = 0 :=
-    GlobalTheory.T.eq_zero_of_truncatedFourier_tendsto_zero_etale F E A ψ hψ μK hsd _ (u_locallyConstant A Ψ hI) (weyl_unipotent_l2_finite GlobalTheory.T.whittaker_bound_big_cell GlobalTheory.T.unimodularHeight_sq_lintegral_lt_top A μK hμ Ψ hI) hlim
+    _root_.GlobalTheory.PlancherelZero.eq_zero_of_tendsto_fourier F E A ψ hψ μK hsd _ (u_locallyConstant A Ψ hI) (weyl_unipotent_l2_finite _root_.GlobalTheory.JR.LamBound.main _root_.GlobalTheory.JR.HeightSquareIntegrable.height_sq_lintegral_lt_top A μK hμ Ψ hI) hlim
   have h1 : ∀ z, Ψ (wS A.K * nS z) = 0 := fun z => congrFun hu z
-  exact ⟨h1, GlobalTheory.T.whittakerFunctional_weyl_vanish_of_weylUnipotent_zero F E A ψ μK hμ Ψ hI h1⟩
+  exact ⟨h1, _root_.GlobalTheory.JR.lam_flip_eq_zero F E A ψ μK hμ Ψ hI h1⟩

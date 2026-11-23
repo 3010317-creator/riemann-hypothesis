@@ -3,8 +3,10 @@ module
 public import Mathlib.Analysis.Calculus.ContDiff.Defs
 public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
 public import Mathlib.MeasureTheory.Group.Measure
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralUnitBallRayAverageLeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormLeLintegralRayIteratedFDerivStatement
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralUnitBallRayAverageLe
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormLeLintegralRayIteratedFDeriv
+public import Mathlib.Analysis.Normed.Module.HahnBanach
 import Mathlib.Algebra.Order.Archimedean.Real.Hom
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -12,7 +14,6 @@ import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-public import Mathlib.Analysis.Normed.Module.HahnBanach
 import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
@@ -116,7 +117,7 @@ theorem weighted_lintegral_sobolev_pointwise : ∀ {E : Type} [NormedAddCommGrou
         exact mul_le_mul_of_nonneg_right (le_abs_self t) (norm_nonneg v)
       show t * ‖v‖ + -‖x‖ ≤ ‖x + t • v‖
       linarith
-    have hR := GlobalTheory.T.norm_le_lintegral_ray_iteratedFDeriv' G m x v hG hray
+    have hR := _root_.GlobalTheory.norm_le_lintegral_ray_iteratedFDeriv G m x v hG hray
     have hxk : (0:ℝ) ≤ ‖x‖ ^ k := by positivity
     calc a = ENNReal.ofReal (‖x‖ ^ k) * ENNReal.ofReal ‖G x‖ := by rw [ha, ENNReal.ofReal_mul hxk]
       _ ≤ ENNReal.ofReal (‖x‖ ^ k) * ∫⁻ t in Ioi (0:ℝ), ENNReal.ofReal (t ^ m / (m.factorial : ℝ) *
@@ -178,7 +179,7 @@ theorem weighted_lintegral_sobolev_pointwise : ∀ {E : Type} [NormedAddCommGrou
           exact inter_subset_left
       _ ≤ ENNReal.ofReal (1 / (m.factorial : ℝ)) * (ENNReal.ofReal (1 / ((m : ℝ) + 1)) * ∫⁻ y, Ψ y ∂μ) := by
           gcongr
-          exact GlobalTheory.T.lintegral_unit_ball_ray_average_le μ Ψ m hΨm hdim
+          exact _root_.GlobalTheory.rayAvg_bound μ Ψ m hΨm hdim
       _ = c * ∫⁻ z, ENNReal.ofReal (‖z‖ ^ k * ‖iteratedFDeriv ℝ (m + 1) G z‖) ∂μ := by
           rw [hI, hc, mul_assoc]
   have h2 : a * β ≤ 2 * (c * ∫⁻ z, ENNReal.ofReal (‖z‖ ^ k * ‖iteratedFDeriv ℝ (m + 1) G z‖) ∂μ) := by

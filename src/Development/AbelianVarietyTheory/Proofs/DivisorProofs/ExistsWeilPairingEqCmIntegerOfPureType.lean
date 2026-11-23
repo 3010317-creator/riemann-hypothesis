@@ -4,12 +4,13 @@ public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.AppellHumbertUnifTangentWeilPairing
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsHomFamilyOfPureTypeComplexTriple
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLinearEndomorphismOfConjugateAdjointForm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmulOfRankOne
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ThetaUniformisationComplexAbelianVariety
 import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsLinearOfIsMonHom
 import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.WeilEqIffHermFormEqComplex
 import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.WeilPairingEqOfIsomorphicCubePairings
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLinearEndomorphismOfConjugateAdjointFormStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmulOfRankOneStatement
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ThetaUniformisationComplexAbelianVariety
 import Development.AbelianVarietyTheory.Statements.HyperbolicHypotheses.HypothesesInhabitedHyperbolic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -141,8 +142,8 @@ theorem exists_weilEq_smul_of_pure : ∀ (E : Type) [Field E] [NumberField E] [I
     have e : (β (s • x) y : ℝ) = β x (H.bar s • y) := by
       rw [hβ, hβ, ← hGP, ← hGP, hcomm f₁ hf₁ F₁ hF₁, hcomm f₂ hf₂ F₂ hF₂, hadj]
     exact_mod_cast e
-  obtain ⟨γ, hγ, hβγ⟩ := GlobalTheory.T.exists_linear_endomorphism_of_conjugate_adjoint_form E H D β hadd₁ hadd₂ hadjβ
-  obtain ⟨c, hc⟩ := GlobalTheory.T.exists_smul_of_rank_one' E H D (by rw [hp, hq]; exact hpq) γ hγ
+  obtain ⟨γ, hγ, hβγ⟩ := _root_.GlobalTheory.GramAdj.exists_endo_of_adjoint E H D β hadd₁ hadd₂ hadjβ
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.FlatCM.exists_smul_of_rank_one E H D (by rw [hp, hq]; exact hpq) γ hγ
   refine ⟨c, (weilEq_iff_hermForm_eq hT hL A.pol A.pol B.pol A.pol uA uA uB uA HB HA χB χA hB hA f₁ f₂
     (A.t.act.act c) (𝟙 _) F₁ F₂ (G c) LinearMap.id hF₁ hF₂ (hG c) (fun _ => (Category.comp_id _).symm)).2 ?_⟩
   refine HermWeil.hermForm_eq_of_im HB HA F₁ F₂ (G c) LinearMap.id uA.full uA.full fun z hz w hw => ?_

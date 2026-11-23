@@ -2,10 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsMetricFrOfIsMetricOn
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ArBirational
-import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.T2SpaceComplexPointsOfProjVariety
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolAtlasTopFormIntegralFiniteAdditiveHomogeneous
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralChernFormPolynomialEqIntersectionNumberStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopDensityHermitianFormsEqZeroOffDegreeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralChernFormPolynomialEqIntersectionNumber
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsTypeIsRealConst
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopDensityHermitianFormsEqZeroOffDegree
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.T2SpaceComplexPointsOfProjVariety
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -102,8 +103,8 @@ theorem integral_evalF_c1W_eq_interPoly : GlobalTheory.Published.ChernDegree →
           simp only [evalF, LineForm.fld, map_add (f := _), Subalgebra.coe_add]
           exact LineForm.TopInt.dens_add _ _ }
     refine eq_homogeneousComponent f X.dim (fun d hd Q hQ => ?_) P
-    exact GlobalTheory.T.topDensity_hermitianForms_eq_zero_offDegree X.dim κ _ d Q hQ hd
-  rw [hR, ← GlobalTheory.T.integral_chernForm_polynomial_eq_intersectionNumber hC F σ X κ Δ L r ψ hψ _ (homogeneousComponent_isHomogeneous _ P)]
+    exact _root_.GlobalTheory.ChernCalc.dens_aeval_ofValues_offDeg X.dim κ _ d Q hQ hd
+  rw [hR, ← _root_.GlobalTheory.ChernCalc.integral_evalF_c1W_eq_interPoly hC F σ X κ Δ L r ψ hψ _ (homogeneousComponent_isHomogeneous _ P)]
   simp only [HolAtlas.integral, LineForm.TopInt.part_congr _ hL]
 
 end GlobalTheory.ChernLine

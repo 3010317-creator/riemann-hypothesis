@@ -4,7 +4,6 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.HtValOnSubse
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolSub0LeSpanShortGenUpto
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings
 public import Formalism.LocalToGlobal.ProjectiveLattices.CuspFree
-import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.UnfGroupContainsCongruenceUptoRootsOfUnity
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsIsNab
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShortValTotOfPinned
@@ -13,18 +12,25 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommutingMul
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousOnReadingIntegerExponentSection
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspSectionAnnihilator
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCuspFormPairQuotientHorizontalGenerator
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionQuotientOfContinuousReading
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModuliLawsOfPrincipalLevelFieldOfDefinition
+public import Formalism.LocalToGlobal.ProjectiveLattices.TieGenDense
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
+public import Development.AbelianVarietyTheory.Definitions.Divisors.UnitaryWeightExponentVectorSignatureWeightMuZero
+import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCuspOnRestrict
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDominantWeightShiftFlatLineDet
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNonzeroCuspFormParallelWeightEachComponent
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNonzeroCuspSectionLargeEvenScalarWeightStatement
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.ModerateCoefficientPositivity
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNonzeroCuspSectionLargeEvenScalarWeight
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNonzeroScalarWeightCuspFormComponent
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRationalMultiplierOfComplexMultiplierStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionQuotientOfContinuousReading
+import Mathlib.Basic.Complex.Basic
+import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRationalMultiplierOfComplexMultiplier
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicRestrictionSubalgebraFrameDomainIsDom
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HorizGenZpowMulMemSS
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HorizontalGeneratorZpowMulCuspFormMemSpan
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegerExponentSectionEqZeroOfIncreasingFlag
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModuliLawsOfPrincipalLevelFieldOfDefinition
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SecZEqZeroOfGenVal
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnfoldingSectionsFiniteType
 import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ChartIndependenceUnconditional
@@ -49,7 +55,6 @@ import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsIntegralDetSub
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ReadingLinearIndependentAndInjective
 import Formalism.LocalToGlobal.ProjectiveLattices.CompSplitPfD
 import Formalism.LocalToGlobal.ProjectiveLattices.FreeBridge
-public import Formalism.LocalToGlobal.ProjectiveLattices.TieGenDense
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -91,10 +96,8 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.S
 import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AbelianVarietyTheory.Definitions.Divisors.CommGroupMulMulEqMulInvMulMulMul
 import Development.AbelianVarietyTheory.Definitions.Divisors.CuspIso
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsoOverOfIsOpenImmersion
 import Development.AbelianVarietyTheory.Definitions.Divisors.LinearIndependentBasisCoords
-public import Development.AbelianVarietyTheory.Definitions.Divisors.UnitaryWeightExponentVectorSignatureWeightMuZero
 import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.DatEqZero
 
 @[expose] public section
@@ -377,7 +380,7 @@ theorem exists_model_cusp {U : ∀ σ : c.F →+* ℂ, Unf Xo c σ r} (hL : Neat
         if ((U σ).X k).p0 ≤ (j : ℕ) then ((n / 2 : ℕ) : ℤ) else -((n / 2 : ℕ) : ℤ) := fun n => by
       funext τ j
       simp [laU]
-    obtain ⟨n, hn, hev, P, hPm, y, hy, hne⟩ := GlobalTheory.T.exists_nonzero_cuspSection_large_evenScalarWeight E r ((U σ).X k) (by omega) (by omega)
+    obtain ⟨n, hn, hev, P, hPm, y, hy, hne⟩ := _root_.GlobalTheory.ScalarPoin.exists_cusp_ne_some E r ((U σ).X k) (by omega) (by omega)
       (fun n hn γ hγ => by rw [← hla]; exact hL.chi σ hσ 0 n ⟨fun _ => antitone_const, hn⟩ k γ hγ) 1
     exact ⟨n, hn, hev, P, hla n ▸ hPm, y, hy, hne⟩
 
@@ -570,7 +573,7 @@ theorem exists_flat_pair : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
     rw [mul_comm]
     exact mul_mem_suppOn g (hsupp _ hf)
   obtain ⟨k0, hτ0, hk0, hA0, -⟩ := pk σ0 hσ0
-  obtain ⟨T, hT0, hTc⟩ := GlobalTheory.T.exists_rational_multiplier_of_complex_multiplier c.F (Rul Xo c) (↥((U σ0).X k0).dom → ℂ) σ0 (resRd (U σ0) hT k0)
+  obtain ⟨T, hT0, hTc⟩ := _root_.GlobalTheory.exists_rational_multiplier_of_complex c.F (Rul Xo c) (↥((U σ0).X k0).dom → ℂ) σ0 (resRd (U σ0) hT k0)
     (resRd_smul (U σ0) hT k0) (cuspOn U Z (wtZ a n)) (cuspOn U Z (wtZ a' n))
     (fun m b hb hli => by
       have hb' : ∀ i, b i ∈ sec Xo c (a + a') (n + n) ⊓ suppOn Z := fun i =>

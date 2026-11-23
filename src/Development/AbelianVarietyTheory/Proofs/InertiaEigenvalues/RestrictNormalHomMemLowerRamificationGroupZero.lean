@@ -3,7 +3,9 @@ module
 public import GroundTheory.LocalFields.Examples
 public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
 public import GroundTheory.LocalFields.Ramification
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalFieldIntegerIffAlgebraicClosureNormStatement
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Mathlib.NumberTheory.Padics.ValuativeRel
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalFieldIntegerIffAlgebraicClosureNorm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,11 +58,11 @@ theorem restrictNormalHom_mem_lowerRamificationGroup_zero : ∀ (l : ℕ) [Fact 
   intro x
   have h01 : ((0 : ℤ) + 1).toNat = 1 := rfl
   rw [h01, pow_one]
-  have hx : ‖algebraMap L (Om l) (x : L)‖ ≤ 1 := ((GlobalTheory.T.localFieldInteger_iff_algebraicClosureNorm l L (x : L)).1).1 x.2
+  have hx : ‖algebraMap L (Om l) (x : L)‖ ≤ 1 := ((_root_.GlobalTheory.PMon.Ram.mem_integer_iff_norm_le_and_valuation_lt_one_iff_norm_lt l L (x : L)).1).1 x.2
   have hc : algebraMap L (Om l) (AlgEquiv.restrictNormalHom L σ (x : L)) = σ (algebraMap L (Om l) (x : L)) :=
     AlgEquiv.restrictNormal_commutes σ L (x : L)
   have hlt : valuation L (AlgEquiv.restrictNormalHom L σ (x : L) - (x : L)) < 1 := by
-    rw [(GlobalTheory.T.localFieldInteger_iff_algebraicClosureNorm l L _).2, map_sub, hc]
+    rw [(_root_.GlobalTheory.PMon.Ram.mem_integer_iff_norm_le_and_valuation_lt_one_iff_norm_lt l L _).2, map_sub, hc]
     exact hσ _ hx
   intro hu
   have h1 := (Valuation.integer.integers (valuation L)).isUnit_iff_valuation_eq_one.1 hu

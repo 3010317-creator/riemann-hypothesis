@@ -1,13 +1,17 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GermSys
-import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ProjectiveLinePlaceTrivialOnConstants
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FormalIsomorphismTransportStatement
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.GermComp1ZeroPointLeft
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FormalIsomorphismTransport
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsSubMemEigW
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FibreCurveDegreeCompareStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GenericCentreSpecializes
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LocalComponentsSurjective
+public import Mathlib.AlgebraicGeometry.Morphisms.Separated
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FibreCurveDegreeCompare
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FibrePowerFreeConjInjectiveStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FormalGermBaseChangeStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntersectionHiddenFirstStatement
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ProjectiveLinePlaceTrivialOnConstants
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FormalGermBaseChangeStatement
 import Mathlib.Algebra.CharP.Subring
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -51,7 +55,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Development.AutomorphicSpectrum.Definitions.AdelicLattices.FactPrimes
 import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsGenOfIsVBOne
-public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LocalComponentsSurjective
 
 @[expose] public section
 
@@ -235,9 +238,9 @@ theorem integral_at (S : GermSys t ξ M) {ϖ : Ω} (Γ : FibreCurve ξ ϖ) (hξ 
     Γ.C.v i (lin (fun l => MvPowerSeries.map (Scheme.stalkClosedPointTo Γ.η).hom (φ' l)) 1 a b) ≤ 1 ∧
       Γ.C.v i (lin (fun l => MvPowerSeries.map (Scheme.stalkClosedPointTo Γ.η).hom (ψ' l)) 1 a b) ≤ 1 ∧
       Γ.C.v i (bil (MvPowerSeries.map (Scheme.stalkClosedPointTo Γ.η).hom lam') 1 1 a b) ≤ 1 := by
-  have h0 := (GlobalTheory.T.formal_isomorphism_transport Ω d (𝓞 E) S.g₀.B (S.BK ⟨centre Γ.η, Γ.η_spec⟩) _ _ _
+  have h0 := (_root_.GlobalTheory.CompanionTheory.Ar.Conj.Iso.rho_pairing Ω d (𝓞 E) S.g₀.B (S.BK ⟨centre Γ.η, Γ.η_spec⟩) _ _ _
     (S.iso ⟨centre Γ.η, Γ.η_spec⟩)).2.2.1.1
-  have h1 := (GlobalTheory.T.formal_isomorphism_transport _ d (𝓞 E) _ _ _ _ _ hiso).2.1
+  have h1 := (_root_.GlobalTheory.CompanionTheory.Ar.Conj.Iso.rho_pairing _ d (𝓞 E) _ _ _ _ _ hiso).2.1
   have h2 : lin (fun l => MvPowerSeries.map (genMap ξ ⟨centre Γ.η, Γ.η_spec⟩) (ψ' l)) 1 *
       lin (fun l => MvPowerSeries.map (genMap ξ ⟨centre Γ.η, Γ.η_spec⟩) (φ' l)) 1 = 1 := by
     rw [lin_map, lin_map, ← Matrix.map_mul]
@@ -311,7 +314,7 @@ theorem germ_family : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     exact ⟨gi.B, gK.B, Bk, φ', ψ', lam', mi, mK, mk, hk,
       GlobalTheory.T.intersection_first _ _ _ d _ _ _ _ _ _ _ _ m0 hK hiso, he, fun hl a b => integral_at S Γ hξ i hiso he hl a b⟩
   choose Bi BK Bk φ' ψ' lam' mi mK mk hk hiso he hint using place
-  obtain ⟨Y, hY, -⟩ := GlobalTheory.T.fibre_curve_degree_compare X Ω ξ O s ϖ Γ hξ
+  obtain ⟨Y, hY, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.fibreCurve_curveIn_degree X Ω ξ O s ϖ Γ hξ
   obtain ⟨U, hU, hloc⟩ := S.loc ⟨centre Γ.η, Γ.η_spec⟩
   have hfin := Y.ae U hU
   rw [hY] at hfin

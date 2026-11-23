@@ -4,8 +4,13 @@ public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.Cubic
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.CubicalExtendsAndExtendGen
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ForallGeometricallyIntegralOfSmoothOfGeometrical
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsRigidifiedCubicalSymmetricExtensionNormalB
+public import Mathlib.AlgebraicGeometry.Geometrically.Integral
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.CubicalStructures.CubeSymmetricSwapFirst
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUniqueGeneratorExtendDenseProOpen
+public import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.IsOpenOfMemIrreducibleComponentsOfFinite
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GeometricallyIntegralIffGeometricallyConnectedOf
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUniqueGeneratorExtendDenseProOpenStatement
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsCubicalSymmetricExtension
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsRigidifiedIso
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsSymmetricIffExistsGen
@@ -49,7 +54,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.LBPull
-public import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.IsOpenOfMemIrreducibleComponentsOfFinite
 
 @[expose] public section
 
@@ -216,7 +220,7 @@ theorem exists_extension {S : Scheme.{0}} [IsLocallyNoetherian S] (hS : Geo.Tor.
     exact exists_up hw hL hL' s hg
   obtain ⟨t, ht, hv⟩ := key _ hφ
   obtain ⟨ρ, hρ, vρ⟩ := exists_gen hL f₁ (LB.oneGen L) (LB.isGen_oneGen L)
-  obtain ⟨c, ⟨hc₁, hc₂⟩, -⟩ := GlobalTheory.T.existsUnique_generator_extend_dense_proOpen S U H HU X j hS p e jH pU eU hs
+  obtain ⟨c, ⟨hc₁, hc₂⟩, -⟩ := _root_.GlobalTheory.GenExtendDense.existsUnique_gen_extend S U H HU X j hS p e jH pU eU hs
     (forall_geometricallyIntegral_of_smooth_of_geometricallyConnected _ _ _ hs hc) he hp heU L hL K φ ε t ρ ht hρ
     (corr_of_val hL fun y J hJ => by
       refine (val_pull hJ _ _ _).trans (Eq.trans ?_

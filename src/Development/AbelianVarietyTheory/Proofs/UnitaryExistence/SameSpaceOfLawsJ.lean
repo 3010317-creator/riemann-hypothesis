@@ -10,12 +10,16 @@ public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ModuliSchemeL
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.CuspFormsLeSpanShortThetaSeriesStatement
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ShortThetaSeriesDominantWeightIsCuspFormStatement
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.UnitCOfFiniteCharacter
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CoreArithmeticGroupContainsPrincipalCongruenceStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.CuspidalL2Subspace
+public import Formalism.LocalToGlobal.ProjectiveLattices.FreeBridge
+public import Development.AbelianVarietyTheory.Definitions.RegularCharts.BaseNorm
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CoreArithmeticGroupContainsPrincipalCongruence
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsCharacter
+public import Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.HostFacts
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsStabForm
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedModuliAlgebraicLawsChartWeightIntegrality
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointReducedFromTestRing
-public import Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.HostFacts
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +54,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsStabForm
 
 @[expose] public section
 
@@ -135,7 +138,7 @@ theorem lawsSh_of_pinned (hC : Formalism.MainNotions.ModuliIntegralCharts.H1.Cha
     (fun σ => Formalism.L2.PjFree.Unf.ofPj (T.U j σ)) T.σ₀ T.good_σ₀ (hM.unf j hj _ T.good_σ₀) (hnum j hj).2.1 hA
     (hsp j hj) ?_ (fun a n hdom k => hM.chiTriv j hj _ T.good_σ₀ a n hdom k) (T.nab j) (badN D) D.R.nV (T.dδ j) hb ?_
   · intro k ga hga hv
-    refine GlobalTheory.T.coreArithmeticGroup_contains_principalCongruence D T.toCore h.toLawsCore j hj _ T.good_σ₀ k ga hga fun x hx => ?_
+    refine _root_.GlobalTheory.PrincCore.hasPrinc_core D T.toCore h.toLawsCore j hj _ T.good_σ₀ k ga hga fun x hx => ?_
     obtain ⟨u, hu, he⟩ := hv x hx
     refine ⟨u, hu, ?_⟩
     rw [he, Nat.cast_smul_eq_nsmul]

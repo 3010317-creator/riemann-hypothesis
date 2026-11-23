@@ -3,10 +3,11 @@ module
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.HypJ
 public import Formalism.UnipotentAdelicQuotients.SiegelWeilUnitaryConvergent
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelesLocallyCompactSecondCountable
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FiniteVolumeBlockOneExtensionStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FundamentalDomainTransportCongruentFormStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FiniteVolumeBlockOneExtension
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FundamentalDomainTransportCongruentForm
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.SplitAnisotropic
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRingStatement
+import Formalism.UnipotentAdelicQuotients.SWXSDefs
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -134,11 +135,11 @@ theorem finite_count : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
       exact ht ((map_eq_zero (algebraMap F E)).1 hx.symm)
     | succ M₁ =>
       obtain ⟨⟨hlc, hsc, ht2⟩, -⟩ := GlobalTheory.CompanionTheory.AdeleTop.adele_top F
-      have htop := (GlobalTheory.T.tensor_locally_compact_ring F E σ hcm (AF F)).1
+      have htop := (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm (AF F)).1
       obtain ⟨g, J₁, hJ₁, hblock, -⟩ :=
         GlobalTheory.CompanionTheory.SW.AlgSplit.split_anisotropic F E σ hcm M₁ J hJ t (X₀ 0) ht hx
       obtain ⟨μ', 𝓕', hμ', h𝓕', -, hcnt⟩ :=
-        GlobalTheory.T.fundamental_domain_transport_congruent_form F E σ hcm (M₁ + 1) J hJ g _ hblock μ 𝓕 hμ h𝓕
+        _root_.GlobalTheory.CompanionTheory.SW.FTransfer.cntI_transfer F E σ hcm (M₁ + 1) J hJ g _ hblock μ 𝓕 hμ h𝓕
       rw [hcnt 1 _ _]
       have hset : {X : Fin 1 → Fin (M₁ + 1) → E |
           (fun a => (g : Matrix (Fin (M₁ + 1)) (Fin (M₁ + 1)) E) *ᵥ X a) ∈
@@ -154,7 +155,7 @@ theorem finite_count : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
         · rw [Set.indicator_of_mem hY, Set.indicator_of_mem (Set.mem_preimage.2 hY)]
         · rw [Set.indicator_of_notMem hY, Set.indicator_of_notMem (fun h => hY (Set.mem_preimage.1 h))]
       rw [hset, hfun]
-      exact GlobalTheory.T.finite_volume_block_one_extension F E σ hcm M₁ J₁ hJ₁ (hvol M₁ (Nat.lt_succ_self M₁) J₁ hJ₁) t ht μ' 𝓕' hμ' h𝓕' _
+      exact _root_.GlobalTheory.CompanionTheory.SW.Aniso.count_lt_top F E σ hcm M₁ J₁ hJ₁ (hvol M₁ (Nat.lt_succ_self M₁) J₁ hJ₁) t ht μ' 𝓕' hμ' h𝓕' _
         (isCompact_preimage_actTup (AF F) _ hΩ)
   · have hemp : {X : Fin 1 → Fin M → E | gramE σ J X = fun _ _ => algebraMap F E t} = ∅ := by
       ext X

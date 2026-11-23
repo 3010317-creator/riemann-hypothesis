@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqZeroOfCobOneEqZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EvResCounitCompatStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EvResCounitCompat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalChartNatMultipleEvalPropertiesStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -69,9 +69,9 @@ theorem Chart.ev_nmul_pow : ∀ (p : ℕ) (O : Type) [CommRing O] [IsAdicComplet
   intro p O _ _ G d c n
   refine ⟨fun f => ?_, fun s => ?_, fun f => ?_⟩
   · rw [(GlobalTheory.T.formalChart_natMultiple_eval_properties p O G d c n (p ^ n)).2.1, G.mulBy_pow_self,
-      ((GlobalTheory.T.ev_res_counit_compat p O G d c n).1 f).2]
+      ((_root_.GlobalTheory.QLog.Chart.ev_res_counit p O G d c n).1 f).2]
   · rw [(GlobalTheory.T.formalChart_natMultiple_eval_properties p O G d c n (p ^ n)).2.2, pullTwo_mulBy_pow_self,
-      (GlobalTheory.T.ev_res_counit_compat p O G d c n).2]
-  · rw [(GlobalTheory.T.formalChart_natMultiple_eval_properties p O G d c (n + 1) p).2.1, ← ((GlobalTheory.T.ev_res_counit_compat p O G d c n).1 f).1, mulP_res]
+      (_root_.GlobalTheory.QLog.Chart.ev_res_counit p O G d c n).2]
+  · rw [(GlobalTheory.T.formalChart_natMultiple_eval_properties p O G d c (n + 1) p).2.1, ← ((_root_.GlobalTheory.QLog.Chart.ev_res_counit p O G d c n).1 f).1, mulP_res]
 
 end GlobalTheory.QLog

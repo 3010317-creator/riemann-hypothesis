@@ -3,9 +3,15 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Foundations.MemRingOfInR
 public import Mathlib.RingTheory.HahnSeries.Summable
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FnHasSumReindexNat
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HahnSeriesCommonDenominatorEqMonomialMulPowerSerStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasSumPowerSeriesInvOfConvergentStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PowerSeriesAsRatHahnSeriesFractionalQStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HahnSeriesCommonDenominatorEqMonomialMulPowerSer
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.RingTheory.MvPowerSeries.Inverse
+public import Mathlib.RingTheory.PowerSeries.Basic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasSumPowerSeriesInvOfConvergent
+public import Mathlib.NumberTheory.ModularForms.EisensteinSeries.Basic
+public import ReciprocityTheory.ReductiveGroups.UnramifiedIntegrals.ModDefs
+public import Mathlib.RingTheory.HahnSeries.Multiplication
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PowerSeriesAsRatHahnSeriesFractionalQ
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,8 +64,8 @@ namespace GlobalTheory
 
 theorem fn_hahnSeries_inv_converges : ∀ (Ω : Type) [Field Ω] (ε : Ω →+* ℂ) (C : ℝ) (φ : ℂ → ℂ) (h : HahnSeries ℚ Ω), Den h → h ≠ 0 → HS ε C φ h → Den h⁻¹ ∧ ∃ C' : ℝ, HS ε C' φ⁻¹ h⁻¹ := by
   intro Ω _ ε C φ h hD hne hS
-  obtain ⟨N, n₀, a, hN, ha0, hcoef, hzero⟩ := GlobalTheory.T.hahnSeries_commonDenominator_eq_monomial_mul_powerSeries Ω h hD hne
-  obtain ⟨Φ, hΦ1, hΦ0⟩ := GlobalTheory.T.powerSeries_as_rat_hahnSeries_fractional_q Ω N hN
+  obtain ⟨N, n₀, a, hN, ha0, hcoef, hzero⟩ := _root_.GlobalTheory.fnShape Ω h hD hne
+  obtain ⟨Φ, hΦ1, hΦ0⟩ := _root_.GlobalTheory.powerSeries_to_hahnSeries_rat Ω N hN
   set p : PowerSeries Ω := PowerSeries.mk a with hpdef
   have hp0 : PowerSeries.constantCoeff p ≠ 0 := by simpa [p] using ha0
   set q : PowerSeries Ω := p⁻¹ with hqdef
@@ -127,7 +133,7 @@ theorem fn_hahnSeries_inv_converges : ∀ (Ω : Type) [Field Ω] (ε : Ω →+* 
   have hsum0 := hred z0 hz0im
   have hconv : ∀ x : ℂ, ‖x‖ < ‖x0‖ → Summable fun n => A n * x ^ n := fun x hx =>
     summable_powerSeries_of_norm_lt hsum0.tendsto_sum_nat.cauchySeq hx
-  obtain ⟨ρ', hρ', hmain⟩ := GlobalTheory.T.hasSum_powerSeries_inv_of_convergent A ‖x0‖ hx0pos hA0 hconv
+  obtain ⟨ρ', hρ', hmain⟩ := _root_.GlobalTheory.PowerSeriesInv.hasSum_inv A ‖x0‖ hx0pos hA0 hconv
   have hmk : PowerSeries.mk A = PowerSeries.map ε p := by
     ext k
     simp [p, A]

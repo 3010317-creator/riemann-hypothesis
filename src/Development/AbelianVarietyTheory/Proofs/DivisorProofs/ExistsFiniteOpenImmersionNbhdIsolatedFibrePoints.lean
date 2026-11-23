@@ -2,11 +2,11 @@ module
 
 public import Mathlib.AlgebraicGeometry.Morphisms.QuasiFinite
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteCompOpenImmersionOfQuasiFiniteStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteCompOpenImmersionOfQuasiFinite
+public import Mathlib.AlgebraicGeometry.ZariskisMainTheorem
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
-public import Mathlib.AlgebraicGeometry.ZariskisMainTheorem
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
@@ -92,7 +92,7 @@ theorem exists_finite_openImmersion_nbhd : ∀ (H X : Scheme.{0}) (φ : H ⟶ X)
     exact quasiFiniteAt_of_isolated H X φ hloft z O hzO hO
   have : IsLocallyNoetherian H := LocallyOfFiniteType.isLocallyNoetherian φ
   have : QuasiCompact H'.ι := inferInstance
-  obtain ⟨T, q, j, hq, hj, hjq⟩ := GlobalTheory.T.exists_finite_comp_openImmersion_of_quasiFinite H'.toScheme X (H'.ι ≫ φ) hX inferInstance
+  obtain ⟨T, q, j, hq, hj, hjq⟩ := _root_.GlobalTheory.ZMTFin.exists_finite_openImmersion H'.toScheme X (H'.ι ≫ φ) hX inferInstance
     inferInstance inferInstance inferInstance
   have : QuasiCompact j := by
     have : QuasiCompact (j ≫ q) := by rw [hjq]; infer_instance

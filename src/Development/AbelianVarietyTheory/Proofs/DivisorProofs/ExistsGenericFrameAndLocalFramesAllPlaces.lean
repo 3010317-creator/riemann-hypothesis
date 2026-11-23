@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRatPath
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueCentreFunctionFieldPlaceCurveStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinitePlacesCentreOutsideOpenStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueCentreFunctionFieldPlaceCurve
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinitePlacesCentreOutsideOpen
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -109,7 +109,7 @@ theorem exists_frame_locFrames : ∀ (k K : Type) [Field k] [IsAlgClosed k] [Cha
   obtain ⟨V₀, s, hη, hs⟩ := hW (x (IsLocalRing.closedPoint K))
   have hV₀ : (V₀ : Set C).Nonempty := ⟨_, hη⟩
   have hcen : ∀ v : Place k K, ∃ b : Sp v.O ⟶ C, spMap v.O.subtype ≫ b = x := fun v => by
-    obtain ⟨b, hb, -⟩ := GlobalTheory.T.existsUnique_centre_functionFieldPlace_curve k K K C x hx v
+    obtain ⟨b, hb, -⟩ := _root_.GlobalTheory.Nef.existsUnique_centre k K K C x hx v
     exact ⟨b, hb.trans hxx⟩
   choose b hb using hcen
   have key : ∀ v, ∃ gv : Matrix (Fin r) (Fin r) K,
@@ -130,7 +130,7 @@ theorem exists_frame_locFrames : ∀ (k K : Type) [Field k] [IsAlgClosed k] [Cha
       exact ⟨_, h1, h2, fun h => absurd h hv⟩
   choose g hg1 hg2 hg3 using key
   refine ⟨V₀, s, g, hV₀, hs, ⟨hg2, ?_⟩, hg1⟩
-  refine (GlobalTheory.T.finite_places_centre_outside_open k K K C x hx V₀ hV₀).subset fun v hv => ⟨b v, (hb v).trans hxx.symm, fun h => hv ?_⟩
+  refine (_root_.GlobalTheory.Nef.finite_centre_not_mem k K K C x hx V₀ hV₀).subset fun v hv => ⟨b v, (hb v).trans hxx.symm, fun h => hv ?_⟩
   rw [hg3 v h]
   exact unimod_one' v
 

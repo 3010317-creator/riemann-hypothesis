@@ -4,10 +4,13 @@ public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsHe
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.DifferentiableOnOfTendstoLocallyUniformlyOn
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DerivDerivConstMulCexpBilinearAtZero
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.EisAutomorphyLinear
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HermitianThetaEisensteinConvergeBoundedStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.ExhaustStatementPfA
+import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.FirstCoordinateAdmissible
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HermitianThetaEisensteinConvergeBounded
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.PosSemidefSubMulConjTranspose
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.QuadCocycle
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.SchwartzBruhatInnerProductSelfNonnegBoundsStatement
+import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IMemSiegel
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.SchwartzBruhatInnerProductSelfNonnegBounds
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.UnitaryActHalfSpace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -57,7 +60,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.ExhaustStatementPfA
 import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
@@ -269,9 +271,9 @@ theorem GlobalTheory.SW.isHeat_eis : ∀ (E : Type) [Field E] [NumberField E] [I
   rintro E _ _ _ Ψ hΨ n N hn hN φ ⟨R, hR, hφ⟩
   refine isHeat_tsum Ψ (D := fun U : Lag E N => eisTerm Ψ U.2.choose φ)
     (fun U => isHeat_const_mul Ψ (isHeat_hFac_inv E Ψ n N _ U.2.choose_spec.1) _) fun p hp => ?_
-  obtain ⟨B, hB⟩ := (GlobalTheory.T.schwartzBruhatInnerProduct_self_nonneg_bounds E _ _ R φ hR hφ).2.2.2.2.1
+  obtain ⟨B, hB⟩ := (_root_.GlobalTheory.SW.ip_self_nonneg_and_bounds E _ _ R φ hR hφ).2.2.2.2.1
   obtain ⟨δ₀, hδ₀, hI⟩ := EisTrans.exists_mem_HnGe Ψ (Base.I_mem_Hn (N := N) Ψ)
-  obtain ⟨C, hC⟩ := GlobalTheory.T.hermitianTheta_eisenstein_converge_bounded E Ψ hΨ n N hn hN R δ₀ hR hδ₀
+  obtain ⟨C, hC⟩ := _root_.GlobalTheory.SW.theta_eis_bounded E Ψ hΨ n N hn hN R δ₀ hR hδ₀
   have hs := (hC φ hφ B hB _ hI).1
   obtain ⟨δ, hδ, hp'⟩ := EisTrans.exists_mem_HnGe Ψ hp
   have h1 := eventually_posDef Ψ (δ / 2) (p := p) fun τ => by

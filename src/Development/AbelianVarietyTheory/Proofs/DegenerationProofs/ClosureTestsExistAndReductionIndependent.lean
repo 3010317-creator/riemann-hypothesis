@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.BaseFacts
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsGeometricTestMapClassicalPointStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniformisationTestOfGeometricTestStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IndepOfNestedSpecialFibreImagesStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.IsNormalSchemeSp
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IndepOfNestedSpecialFibreImages
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SpecialFibreImageTestIndependentStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -92,7 +93,7 @@ theorem GlobalTheory.ZH.Clos.Ext.hasTests_and_indep : GlobalTheory.UT.LL → ∀
   intro hL o Ω _ _ _ _ S ρ M U₀ EE hB Q ex hS hG
   have key := GlobalTheory.ZH.CoreTests.exists_test hL o Ω S ρ M U₀ EE hB Q ex hS hG
   have hT : ex.core.HasTests := fun p _ y hy => ⟨(key p y hy).choose⟩
-  refine ⟨hT, GlobalTheory.T.indep_of_nested_special_fibre_images _ hT fun p _ y y' hy hy' hr => ?_⟩
+  refine ⟨hT, _root_.GlobalTheory.ZJ.Core.indep_of_special_fibres _ hT fun p _ y y' hy hy' hr => ?_⟩
   obtain ⟨τ, hτ⟩ := key p y hy
   obtain ⟨τ', hτ'⟩ := key p y' hy'
   refine ⟨τ, τ', fun c hc => ?_⟩

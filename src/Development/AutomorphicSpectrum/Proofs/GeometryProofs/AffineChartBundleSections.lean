@@ -7,13 +7,19 @@ public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsAf
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSabCancel
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BoundaryChartFrameGrowthStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsBdryChartOfHol
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModelStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolomorphicAffinePolydiscChartStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolomorphicAffinePolydiscChart
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeDominantCompat
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelBaseChangeMapStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelEigenvectorsActionStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeGram
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelEigenvectorsAction
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.VectorsAtComplexPoint
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModelOfIsLieBasis
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenMapFromSpecStalk
+import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelBaseChangeMap
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelPullbackCorrespondence
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.VectorsAtComplexPointStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,8 +69,6 @@ import Mathlib.Tactic.ReduceModChar
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.BCRing
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.UnLocal
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModelOfIsLieBasis
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenMapFromSpecStalk
 
 @[expose] public section
 
@@ -242,11 +246,11 @@ theorem indep_of_frame {S : Scheme.{0}} {G : Over S} [GrpObj G] [IsCommMonObj G]
   classical
   subst hy
   letI := ψ.toAlgebra
-  obtain ⟨E', i1, i2, ⟨M'⟩⟩ := GlobalTheory.T.exists_lie_model S G ℂ (spMap ψ ≫ xR)
-  obtain ⟨j, hj, hlin, hb⟩ := GlobalTheory.T.lie_model_base_change_map S G R ℂ xR (Fin g → R) E' M M'
+  obtain ⟨E', i1, i2, ⟨M'⟩⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_exists S G ℂ (spMap ψ ≫ xR)
+  obtain ⟨j, hj, hlin, hb⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_baseChange S G R ℂ xR (Fin g → R) E' M M'
   have hv' : v = fun i => M'.pt (j (u i)) :=
     funext fun i => Over.OverMorphism.ext ((hu i).trans (hj _).symm)
-  have hcomb := (GlobalTheory.T.lie_model_eigenvectors_action S ℂ G _ E' M').1
+  have hcomb := (_root_.GlobalTheory.CompanionTheory.Ar.Fl.Bridge.comb_eig_frame S ℂ G _ E' M').1
   have hind : LinearIndependent ℂ (fun i => j (u i)) := by
     rw [Fintype.linearIndependent_iff]
     intro c hc i
@@ -395,7 +399,7 @@ theorem chart_unit (Y : Model Xo c β) (τ : E →+* ℂ) (σ : c.F →+* ℂ) (
     have hy : (C.pt z ≫ k') ≫ Y.j = spMap ((C.ψ z).comp fR) ≫ hA.fromSpec := by
       rw [Category.assoc, hkj, ← Category.assoc, hp, spMap_comp', Category.assoc, hf]
     have hf2 := hframe ((C.ψ z).comp fR) ((C.pt z ≫ k') ≫ Y.j) v₀ w₀ hy (by rw [hy]; exact hover z hz.1) c1 c2
-    exact ⟨v, w, v₀, w₀, GlobalTheory.T.vectors_at_complex_point E H D l Xo c O β Y τ σ _ v w v₀ w₀ (hsnd z hz) a1 b1 hf2.1 hf2.2, a1, b1,
+    exact ⟨v, w, v₀, w₀, _root_.GlobalTheory.CompanionTheory.Ar.Flat.isFramed_of_model E H D l Xo c O β Y τ σ _ v w v₀ w₀ (hsnd z hz) a1 b1 hf2.1 hf2.2, a1, b1,
       c1, c2, fun i => ⟨uu i, a2 i, a3 i⟩, fun j => ⟨uw j, b2 j, b3 j⟩⟩
   choose v w v₀ w₀ hF hS₁ hS₂ hc₁ hc₂ hl₁ hl₂ using key
   let φ : (Fin d → ℂ) → ℂ := fun z => if hz : z ∈ punct d a 1 then Φ (C.pt z ≫ k') (v z hz) (w z hz) else 0
@@ -417,7 +421,7 @@ theorem GlobalTheory.CompanionTheory.Ar.Flat.flat_unit_along_families : ∀ (E :
   intro E _ _ _ H D l Xo c O _ β Y τ σ Φ X' π s' d W' jW A hA EB _ _ MB e₁ e₂ x h1 hr1 hr2 hU hπ hsm hsnc hj1 hj2 hxs hxA
     hframe m B y hB hy hyσ b₀ hb₀ hyb
   obtain ⟨V, hV, a, ψ, hVA, ha, hol, h0, -, hpts, hfam⟩ :=
-    GlobalTheory.T.holomorphic_affine_polydisc_chart c.F σ X' s' d ((W' : Set X')ᶜ) hsm hsnc x (π ⁻¹ᵁ A) hxs hxA
+    _root_.GlobalTheory.CompanionTheory.Ar.Flat.hol_polydisc_chart c.F σ X' s' d ((W' : Set X')ᶜ) hsm hsnc x (π ⁻¹ᵁ A) hxs hxA
   have hpt : ∀ z ∈ punct d a 1, spMap (ψ z) ≫ hV.fromSpec ≫ s' = spMap σ ∧
       centre (spMap (ψ z) ≫ hV.fromSpec) ∈ W' := fun z hz =>
     ⟨(hpts z hz.1).1, not_not.1 ((hpts z hz.1).2.2 hz)⟩

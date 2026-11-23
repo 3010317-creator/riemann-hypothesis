@@ -1,14 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsLogMult
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CartierDivisorPullbackSupportAndEffectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CartierDivisorPullbackSupportAndEffective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNormalProjectiveModel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrimeDivisorOverSourceBirationalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrdFunctionFieldPullbackPrimeDivisorOverStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalTopFormPullbackBijectiveBirationalStatement
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.DivisorCenterProperLift
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.FormOrderBirationalPullback
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.KltOfSncCoefficientsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrimeDivisorOverSourceBirational
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrdFunctionFieldPullbackPrimeDivisorOver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FunctionFieldMapCompConstFn
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalTopFormPullbackBijectiveBirational
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DivisorCenterProperLift
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormOrderBirationalPullback
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsLogCanonicalMultipleCanonical
+public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.KltOfSncCoefficients
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -114,13 +116,13 @@ theorem GlobalTheory.Discrepancy.neg_one_lt_discrep_add_ord_of_logRes : ∀ (X :
   haveI : IsProper (s ≫ p) := GlobalTheory.CommonModel.isProper_of_isProjOver hres.proj
   haveI : IsProper s := IsProper.of_comp s p
   haveI := hres.smooth
-  obtain ⟨E', hE'E⟩ := GlobalTheory.T.exists_primeDivisor_over_source_birational ℂ X Y p s hres.bir E
-  obtain ⟨y', rfl, hE'⟩ := GlobalTheory.T.divisor_center_proper_lift ℂ X Y p s hres.bir inferInstance E' E hE'E _ hE
+  obtain ⟨E', hE'E⟩ := _root_.GlobalTheory.Discrepancy.DivOver.exists_over ℂ X Y p s hres.bir E
+  obtain ⟨y', rfl, hE'⟩ := _root_.GlobalTheory.Discrepancy.DivOver.exists_through_of_isProper ℂ X Y p s hres.bir inferInstance E' E hE'E _ hE
   have hη' : EtaleKlt.ratPull p s n η ≠ 0 := fun h0 =>
-    hη ((GlobalTheory.T.rationalTopFormPullback_bijective_birational ℂ X Y p s hres.bir n).1 (h0.trans (map_zero _).symm))
+    hη ((_root_.GlobalTheory.EtaleKlt.ratPull_bijective_of_birational ℂ X Y p s hres.bir n).1 (h0.trans (map_zero _).symm))
   set F := pullCart s (CartierDiv.principal f) with hFdef
   set G := pullCart s (CartierDiv.principal g) with hGdef
-  have hFsupp : F.supp ≤ B := fun v hv => hfB v ((GlobalTheory.T.cartierDivisorPullback_support_and_effective X Y s _).1 v hv)
+  have hFsupp : F.supp ≤ B := fun v hv => hfB v ((_root_.GlobalTheory.Discrepancy.pullCart_supp_and_eff X Y s _).1 v hv)
   have e : G - m • F - m • K = (G - m • K) + -(m • F) := by abel
   have hsupp : (G - m • F - m • K).supp ≤ B := by
     rw [e]
@@ -149,16 +151,16 @@ theorem GlobalTheory.Discrepancy.neg_one_lt_discrep_add_ord_of_logRes : ∀ (X :
       have h2 : (0 : ℤ) ≤ m * Scheme.ord ((fnPull s f : Y.functionFieldˣ) : Y.functionField) w :=
         mul_nonneg (Int.natCast_nonneg m) h0
       linarith
-  have hcrit := (GlobalTheory.T.klt_of_snc_coefficients ℂ Y (s ≫ p) n (EtaleKlt.ratPull p s n η) hη' K (G - m • F) m B hm
+  have hcrit := (_root_.GlobalTheory.Discrepancy.coeff_criterion_snc ℂ Y (s ≫ p) n (EtaleKlt.ratPull p s n η) hη' K (G - m • F) m B hm
     hres.div hres.snc hsupp y' _ hEqn E' hE').1 hlt'
   have hd : discrep E' (EtaleKlt.ratPull p s n η) m (fnPull s g / fnPull s f ^ m) =
       discrep E η m g + E.ord f := by
     simp only [discrep]
-    have hform := GlobalTheory.T.form_order_birational_pullback ℂ X Y p s hres.bir E' E hE'E n η hη
+    have hform := _root_.GlobalTheory.BirOrd.formOrd_ratPull_of_over ℂ X Y p s hres.bir E' E hE'E n η hη
     change E'.formOrd (EtaleKlt.ratPull p s n η) = E.formOrd η at hform
     rw [hform, div_eq_mul_inv (fnPull s g), E'.ord_mul, E'.ord_inv,
-      E'.ord_pow, GlobalTheory.T.ord_functionField_pullback_primeDivisor_over ℂ X Y p s hres.bir E' E hE'E g,
-      GlobalTheory.T.ord_functionField_pullback_primeDivisor_over ℂ X Y p s hres.bir E' E hE'E f]
+      E'.ord_pow, _root_.GlobalTheory.Discrepancy.DivOver.Over.ord_fnPull_of_bijective ℂ X Y p s hres.bir E' E hE'E g,
+      _root_.GlobalTheory.Discrepancy.DivOver.Over.ord_fnPull_of_bijective ℂ X Y p s hres.bir E' E hE'E f]
     have hm' : (m : ℚ) ≠ 0 := by exact_mod_cast hm.ne'
     push_cast
     field_simp

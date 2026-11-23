@@ -1,11 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DensConst
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHolomorphicChartsGenericPointProjectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOpenComplexPointsCoveringGenericDegreeStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DetJacMatCoordsEqTransitionJacobianDet
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHolomorphicChartsGenericPointProjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOpenComplexPointsCoveringGenericDegree
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.L2DbarChartMeasureTransfer
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernFormDensityChangeOfChartStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernFormDensityPullbackMatchingChartsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernFormDensityChangeOfChart
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernFormDensityPullbackMatchingCharts
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VolumeComplexPointsProperClosedChartField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -69,8 +70,8 @@ theorem GlobalTheory.Mix.map_part_pull_of_genFinite : ∀ (F : Type) [Field F] (
     obtain ⟨N, i, _, rfl⟩ := hp
     have := ReciprocityTheory.ChartRestriction.G.Geo.Tor.isProper_str F N
     exact LocallyOfFiniteType.isLocallyNoetherian (i ≫ PSpace.str F N)
-  obtain ⟨U, hU, hfibU, hchU⟩ := GlobalTheory.T.exists_open_complexPoints_covering_generic_degree F X Y p q σ D hp hq π hπ hgen hdeg
-  obtain ⟨U', hU', hcharts⟩ := GlobalTheory.T.exists_holomorphic_charts_genericPoint_projective F X p σ D hp hD
+  obtain ⟨U, hU, hfibU, hchU⟩ := _root_.GlobalTheory.CoverDegProj.exists_open_covering_charts F X Y p q σ D hp hq π hπ hgen hdeg
+  obtain ⟨U', hU', hcharts⟩ := _root_.GlobalTheory.GenericCharts.exists_generic_charts F X p σ D hp hD
   set m := ptMap π hπ σ with hm_def
   set Z : Set X := ((U ⊓ U' : X.Opens) : Set X)ᶜ with hZ_def
   have hZ : IsClosed Z := (U ⊓ U').isOpen.isClosed_compl
@@ -96,11 +97,11 @@ theorem GlobalTheory.Mix.map_part_pull_of_genFinite : ∀ (F : Type) [Field F] (
     (fun i j => i.holo_trans j) ?_ (fun i j => i.holo_trans j) ?_ m hm T
     (isOpen_ptsIn _).isClosed_compl ?_ ?_ _ ?_ ?_
   · intro i j y hi hj
-    rw [GlobalTheory.T.mixedChernFormDensity_change_of_chart F X p σ D L i j y hi hj, ← ENNReal.ofReal_mul (by positivity)]
+    rw [_root_.GlobalTheory.Mix.ChartChange.dens_change_chart F X p σ D L i j y hi hj, ← ENNReal.ofReal_mul (by positivity)]
     congr 1
     ring
   · intro i j y hi hj
-    rw [GlobalTheory.T.mixedChernFormDensity_change_of_chart F Y q σ D _ i j y hi hj, ← ENNReal.ofReal_mul (by positivity)]
+    rw [_root_.GlobalTheory.Mix.ChartChange.dens_change_chart F Y q σ D _ i j y hi hj, ← ENNReal.ofReal_mul (by positivity)]
     congr 1
     ring
   · intro c
@@ -117,4 +118,4 @@ theorem GlobalTheory.Mix.map_part_pull_of_genFinite : ∀ (F : Type) [Field F] (
     obtain ⟨c, hc⟩ := hcharts (m z) hz'.2
     obtain ⟨c', hzc', hw⟩ := hchU z hz'.1 c hc
     refine ⟨c, c', hzc', hc, fun w hwc' _ => ⟨(hw w hwc').2, ?_⟩⟩
-    rw [GlobalTheory.T.mixedChernFormDensity_pullback_matching_charts F X Y p q σ D π hπ L c c' hw w hwc']
+    rw [_root_.GlobalTheory.MixPull.dens_pull F X Y p q σ D π hπ L c c' hw w hwc']

@@ -3,7 +3,7 @@ module
 public import Mathlib.Data.ZMod.Defs
 public import Mathlib.RingTheory.Ideal.Maps
 public import Mathlib.RingTheory.PowerSeries.Basic
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowerSeriesExistsUniqueDecompOverFrobeniusLikeEnStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowerSeriesExistsUniqueDecompOverFrobeniusLikeEn
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,16 +64,16 @@ variable {O : Type} [CommRing O] (l : ℕ) (hl : 2 ≤ l) (φ : O⟦X⟧ →ₐ[
     if l ∣ m then PowerSeries.coeff (m / l) f else 0)
 
 noncomputable def comps (f : O⟦X⟧) : Fin l → O⟦X⟧ :=
-  (GlobalTheory.T.powerSeries_existsUnique_decomp_over_frobeniusLike_endo l hl φ hφ f).exists.choose
+  (_root_.GlobalTheory.InertiaEigenvalues.PowerSeriesFree.main l hl φ hφ f).exists.choose
 
 include hφ in
 lemma comps_spec (f : O⟦X⟧) :
     f = ∑ j : Fin l, PowerSeries.X ^ j.val * φ (comps l hl φ hφ f j) :=
-  (GlobalTheory.T.powerSeries_existsUnique_decomp_over_frobeniusLike_endo l hl φ hφ f).exists.choose_spec
+  (_root_.GlobalTheory.InertiaEigenvalues.PowerSeriesFree.main l hl φ hφ f).exists.choose_spec
 
 lemma comps_eq {f : O⟦X⟧} {c : Fin l → O⟦X⟧}
     (h : f = ∑ j : Fin l, PowerSeries.X ^ j.val * φ (c j)) : comps l hl φ hφ f = c :=
-  (GlobalTheory.T.powerSeries_existsUnique_decomp_over_frobeniusLike_endo l hl φ hφ f).unique (comps_spec l hl φ hφ f) h
+  (_root_.GlobalTheory.InertiaEigenvalues.PowerSeriesFree.main l hl φ hφ f).unique (comps_spec l hl φ hφ f) h
 
 lemma comps_add (f f' : O⟦X⟧) :
     comps l hl φ hφ (f + f') = comps l hl φ hφ f + comps l hl φ hφ f' := by

@@ -2,12 +2,20 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCocharLie
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieChart
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DualModuleFiniteProjectiveStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DualNumberPointsGlueStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueSemilinearStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalizationSheafGlueModulesStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalizedModuleBaseChangeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProjectiveModulesGlueCoverStatement
+public import Mathlib.Algebra.Module.Projective
+public import Mathlib.GroupTheory.MonoidLocalization.Away
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Mathlib.RingTheory.OreLocalization.Ring
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DualModuleFiniteProjective
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DualNumberPointsGlue
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueSemilinear
+public import Mathlib.Algebra.Module.LocalizedModule.Basic
+public import Mathlib.RingTheory.Ideal.Span
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalizationSheafGlueModules
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalizedModuleBaseChange
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProjectiveModulesGlueCover
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -85,7 +93,7 @@ theorem exists_tr {A B : Type} [CommRing A] [CommRing B] (a : Sp A ⟶ S) (b : S
     (M : LieModel G a E) (M' : LieModel G b E') :
     ∃ j : E →ₛₗ[c] E', ∀ e, (M'.pt (j e)).left = spMap (dualMap c) ≫ (M.pt e).left := by
   subst h
-  obtain ⟨j, hj, -⟩ := GlobalTheory.T.lie_model_existsUnique_semilinear S G A B c a E E' M M'
+  obtain ⟨j, hj, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieBaseChange.existsUnique_semilinear_lifts S G A B c a E E' M M'
   refine ⟨j, fun e => ?_⟩
   have := hj e
   simpa [LieModel.Lifts] using this
@@ -192,8 +200,8 @@ theorem loc_of_family {R : Type} [CommRing R] (x : Sp R ⟶ S) {J : Type} [Finit
       ((mg g).pt (r e)).left = spMap (dualMap (algebraMap R (Localization.Away g.1))) ≫ (M.pt e).left :=
     fun g => exists_trL (R := R) x (ptAt x g.1) (algebraMap R _) (fun _ => rfl) rfl M (mg g)
   choose ρ hρ using hρ
-  have hglue := fun X => GlobalTheory.T.dual_number_points_glue X R J f hf
-  refine ⟨ρ, hρ, GlobalTheory.T.localization_sheaf_glue_modules R E J f hf F res ρ ?_ ?_ ?_ ?_ ?_ ?_ ?_⟩
+  have hglue := fun X => _root_.GlobalTheory.CompanionTheory.Ar.LieFinGlue.dual_glue X R J f hf
+  refine ⟨ρ, hρ, _root_.GlobalTheory.CompanionTheory.BasicCover.isLocalizedModule_of_basic_cover R E J f hf F res ρ ?_ ?_ ?_ ?_ ?_ ?_ ?_⟩
   · intro g h y
     apply pt_left_inj (mg g)
     rw [hres, cmap_self, spMap_dual_id, Category.id_comp]
@@ -345,7 +353,7 @@ theorem fin_of_charts {R : Type} [CommRing R] (x : Sp R ⟶ S) {J : Type} [Finit
       unit_of_dvd ((hix g).trans h)
     obtain ⟨e, he⟩ := exists_equiv (R := R) (ptAt x g'.1) (m (ix g) _ hu') (m (ix g') _ (unit_of_dvd (hix g')))
     haveI := cmap_loc h ht
-    haveI hcr := GlobalTheory.T.localized_module_base_change R (P (ix g)) (Localization.Away g.1) (Localization.Away g'.1) (f (ix g)) t
+    haveI hcr := _root_.GlobalTheory.CompanionTheory.LocHom.isLocalizedModule_compRight_away R (P (ix g)) (Localization.Away g.1) (Localization.Away g'.1) (f (ix g)) t
       (unit_of_dvd (hix g)) (cmap h) (cmap_loc h ht)
     have hrr : r = (e : _ →ₗ[R] _) ∘ₗ LinearMap.compRight R (cmap h).toLinearMap := by
       refine LinearMap.ext fun y => pt_left_inj (m (ix g') _ (unit_of_dvd (hix g'))) ?_
@@ -364,10 +372,10 @@ theorem fin_of_charts {R : Type} [CommRing R] (x : Sp R ⟶ S) {J : Type} [Finit
     exact ⟨e, trivial⟩
   choose e _ using hcmp
   haveI : ∀ i, Module.Finite (Localization.Away (f i)) (P i →ₗ[R] Localization.Away (f i)) :=
-    fun i => (GlobalTheory.T.dual_module_finite_projective R (P i) (f i)).1
+    fun i => (_root_.GlobalTheory.CompanionTheory.Ggeo.HomDual.finite_projective_hom R (P i) (f i)).1
   haveI : ∀ i, Module.Projective (Localization.Away (f i)) (P i →ₗ[R] Localization.Away (f i)) :=
-    fun i => (GlobalTheory.T.dual_module_finite_projective R (P i) (f i)).2
-  refine GlobalTheory.T.projective_modules_glue_cover R E J f hf (fun i => P i →ₗ[R] Localization.Away (f i))
+    fun i => (_root_.GlobalTheory.CompanionTheory.Ggeo.HomDual.finite_projective_hom R (P i) (f i)).2
+  refine _root_.GlobalTheory.CompanionTheory.Ggeo.finite_projective_of_isLocalizedModule_cover R E J f hf (fun i => P i →ₗ[R] Localization.Away (f i))
     (fun i => (e i : _ →ₗ[R] _) ∘ₗ ρ ⟨f i, i, dvd_rfl⟩) fun i => ?_
   haveI := hloc i
   exact IsLocalizedModule.of_linearEquiv _ _ _

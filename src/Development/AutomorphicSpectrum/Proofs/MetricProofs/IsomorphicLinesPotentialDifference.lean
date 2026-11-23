@@ -3,14 +3,24 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ConjugateHermitianLineIsometries
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.MetricsProjectionFormulaNef
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.TelescopingCoordinateDifferenceStatement
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Data.Fintype.Basic
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.TelescopingCoordinateDifference
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodProjExistsStatementHolds
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntersectionFamilySymmetricStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ResolutionStatementHoldsStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IntersectionFamilyDefectFormulaStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LineIsomorphismDefectFunctionStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MongeAmpereDifferenceTendstoZeroStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.IsIntersectionFamily
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntersectionFamilySymmetric
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRes
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ResolutionStatementHolds
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.RationalSections.ThmISt
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IntersectionFamilyDefectFormula
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LineIsomorphismDefectFunction
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsTwiceDifferentiableAt
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MongeAmpereDifferenceTendstoZero
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MongeAmpereIntegralCongrPotentials
+public import ReciprocityTheory.AnalyticForms.LeviForms.UnifInt
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.ContDiffAtOfIsPotential
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.DegreeInt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,9 +61,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.AnalyticForms.LeviForms.UnifInt
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.ContDiffAtOfIsPotential
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.DegreeInt
 import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
@@ -156,8 +163,8 @@ theorem step_eq (hR : RatRStatement) (hB : ResBridgeStatement) (hG : GoodProjExi
   have hIso : IsLineIso P (Re.line a₁ t).a (Re.line a₂ t).a f g := by
     rw [Re.line_deg, Re.line_deg]
     exact hiso
-  obtain ⟨w, hw, -, -⟩ := GlobalTheory.T.line_isomorphism_defect_function K ι P Re.J D Re.R (Re.line a₁ t) (Re.line a₂ t) f g Re.arith.2.1 hIso hl₁ hl₂
-  have h := GlobalTheory.T.intersection_family_defect_formula hR hB hG hA K ι (II K ι) hI P Re.J D Re.R (fun j => Re.line (u j) t) (Re.line a₁ t)
+  obtain ⟨w, hw, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.defect_exists_smooth K ι P Re.J D Re.R (Re.line a₁ t) (Re.line a₂ t) f g Re.arith.2.1 hIso hl₁ hl₂
+  have h := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.OneSlot.inter_sub_eq_neg_mInt hR hB hG hA K ι (II K ι) hI P Re.J D Re.R (fun j => Re.line (u j) t) (Re.line a₁ t)
     (Re.line a₂ t) f g w Re.arith (fun j => Re.line_smooth _ t h0 h1) hl₁ hl₂ hIso hw
   rw [h]
   have hval : ∀ x, w (Re.R.lift x x) = -(S.phT a₁ t (Re.π x) - S.phT a₂ t (Re.π x) - d (Re.π x)) := by
@@ -205,7 +212,7 @@ theorem cmp_one : Inputs → AvoidStatement → ∀ (II : IntersectionSystem), I
     let c : Fin (D + 1) → σ ⊕ σ := fun j => if j < i then Sum.inr (w j) else Sum.inl (w j)
     let c' : Fin (D + 1) → σ ⊕ σ := fun j => if j ≤ i then Sum.inr (w j) else Sum.inl (w j)
     let u : Fin D → σ ⊕ σ := fun j => c (i.succAbove j)
-    have hT := GlobalTheory.T.monge_ampere_difference_tendsto_zero hIn.convergenceSigned D σ S d hd hph (w i) u
+    have hT := _root_.GlobalTheory.CompanionTheory.Ar.PB.an_two_weights_close hIn.convergenceSigned D σ S d hd hph (w i) u
     refine hT.congr' ?_
     filter_upwards [Ioc_mem_nhdsGT ht] with t ht'
     have h0 := ht'.1
@@ -217,12 +224,12 @@ theorem cmp_one : Inputs → AvoidStatement → ∀ (II : IntersectionSystem), I
       have hne : i.succAbove j ≠ i := Fin.succAbove_ne i j
       have hiff : i.succAbove j ≤ i ↔ i.succAbove j < i := ⟨fun h => lt_of_le_of_ne h hne, le_of_lt⟩
       simp only [c', u, c, hiff]
-    have s₁ := GlobalTheory.T.intersection_family_symmetric K ι (II K ι) hI P D (fun j => Re.line (c j) t) i Re.arith
+    have s₁ := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.movePositionToLast K ι (II K ι) hI P D (fun j => Re.line (c j) t) i Re.arith
       (fun j => Re.line_smooth _ t h0 h1)
-    have s₂ := GlobalTheory.T.intersection_family_symmetric K ι (II K ι) hI P D (fun j => Re.line (c' j) t) i Re.arith
+    have s₂ := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.movePositionToLast K ι (II K ι) hI P D (fun j => Re.line (c' j) t) i Re.arith
       (fun j => Re.line_smooth _ t h0 h1)
     simp only [hci, hci', hcc] at s₁ s₂
-    have hs := step_eq hIn.ratR (GlobalTheory.T.resolution_statement_holds) GlobalTheory.CompanionTheory.Ar.Link.goodProjExistsStatement_holds hA II hI Re
+    have hs := step_eq hIn.ratR (_root_.GlobalTheory.CompanionTheory.Ar.Link.resBridgeStatement_holds) GlobalTheory.CompanionTheory.Ar.Link.goodProjExistsStatement_holds hA II hI Re
       (Sum.inl (w i)) (Sum.inr (w i)) (f (w i)) (g (w i)) (d (w i)) (hiso (w i)) (hd (w i)) (hlog (w i)) u t h0 h1
     show mInt S.A _ _ = Re.num II t c - Re.num II t c'
     simp only [Realis.num]
@@ -230,6 +237,6 @@ theorem cmp_one : Inputs → AvoidStatement → ∀ (II : IntersectionSystem), I
   have hsum := tendsto_finsetSum Finset.univ fun i (_ : i ∈ Finset.univ) => hstep i
   simp only [Finset.sum_const_zero] at hsum
   refine hsum.congr fun t => ?_
-  exact (GlobalTheory.T.telescoping_coordinate_difference (σ ⊕ σ) (D + 1) (Re.num II t) _ _).symm
+  exact (_root_.GlobalTheory.CompanionTheory.Telescope.telescope_fin_positions (σ ⊕ σ) (D + 1) (Re.num II t) _ _).symm
 
 end GlobalTheory.CompanionTheory.Ar.Cmp.OneModel

@@ -2,18 +2,21 @@ module
 
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FamDefs
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LocClosed
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsComplementUnitaryMulActionLocalInnerDatumStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.IsTermOver
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsComplementUnitaryMulActionLocalInnerDatum
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsTermLatticeBaseFramesOfBasePointStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDatumEqOfSameLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDatumEqOfSameLattice
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeLocalGlobalPrinciple
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeLocalGlobalPrincipleStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsIntegralOfQuad
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalDataOfTermLatticeAndOrbitsStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalTermLatticeOverInnerDatumFgSpanStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalisedBaseFramesRelevantPairStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermAtBasePointOfFramesStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnfoldingGenusWeightsSumToMassStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryComplementMovesLocalTermsWithDataStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GFrames
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PlacesOf
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsIntegralOfQuad
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermAtBasePointOfFramesStatement
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryComplementMovesLocalTermsWithData
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -54,8 +57,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GFrames
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PlacesOf
 
 @[expose] public section
 
@@ -75,7 +76,7 @@ variable {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
 theorem rel_symm (hM : M.OK) (hk : Module.finrank E V = k + 2 * r + 1)
     (hR : P.RelG (Formalism.MainNotions.S.LocNG.theta M)) {d d' : Formalism.MainNotions.S.LocNG.Datum P}
     (h : Formalism.MainNotions.S.LocNG.Datum.Rel d d') : Formalism.MainNotions.S.LocNG.Datum.Rel d' d := by
-  obtain ⟨act, hmv, -⟩ := GlobalTheory.T.exists_complementUnitary_mulAction_localInnerDatum M hM H r k P hk hR
+  obtain ⟨act, hmv, -⟩ := _root_.GlobalTheory.InnerDatumAct.exists_mulAction M hM H r k P hk hR
   obtain ⟨g, hg, hm⟩ := h
   have e1 : act.smul ⟨g, hg⟩ d = d' := (hmv ⟨g, hg⟩ d d').1 hm
   refine ⟨((⟨g, hg⟩ : P.UW0)⁻¹ : P.UW0).1, ((⟨g, hg⟩ : P.UW0)⁻¹ : P.UW0).2, (hmv _ d' d).2 ?_⟩
@@ -88,7 +89,7 @@ theorem rel_trans (hM : M.OK) (hk : Module.finrank E V = k + 2 * r + 1)
     (hR : P.RelG (Formalism.MainNotions.S.LocNG.theta M)) {a b c : Formalism.MainNotions.S.LocNG.Datum P}
     (h1 : Formalism.MainNotions.S.LocNG.Datum.Rel a b) (h2 : Formalism.MainNotions.S.LocNG.Datum.Rel b c) :
     Formalism.MainNotions.S.LocNG.Datum.Rel a c := by
-  obtain ⟨act, hmv, -⟩ := GlobalTheory.T.exists_complementUnitary_mulAction_localInnerDatum M hM H r k P hk hR
+  obtain ⟨act, hmv, -⟩ := _root_.GlobalTheory.InnerDatumAct.exists_mulAction M hM H r k P hk hR
   obtain ⟨g, hg, hm⟩ := h1
   obtain ⟨g', hg', hm'⟩ := h2
   have e1 : act.smul ⟨g, hg⟩ a = b := (hmv ⟨g, hg⟩ a b).1 hm
@@ -112,7 +113,7 @@ theorem term_of_rel (hM : M.OK) (hk : Module.finrank E V = k + 2 * r + 1)
     ∃ τ, Formalism.MainNotions.S.LocNG.IsTermOver P d' τ := by
   obtain ⟨g, hg, hm⟩ := h
   obtain ⟨τ, hτ⟩ := ht
-  exact ⟨_, (GlobalTheory.T.unitaryComplement_moves_local_terms_with_data M hM H r k P hk hR g hg d d' τ hτ hm).1⟩
+  exact ⟨_, (_root_.GlobalTheory.HL.LocalMove.main M hM H r k P hk hR g hg d d' τ hτ hm).1⟩
 
 end Loc
 
@@ -175,7 +176,7 @@ theorem rows_mass_genus : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : 
   have hrk : ∀ p : PlF D, Module.finrank (D.s.atP p).Ep (Vp D p) = D.R.k + 2 * D.R.rS + 1 := fun p => rank_Vp p
   have luniq : ∀ p (a b : Formalism.MainNotions.S.LocNG.Datum (Fm.FP p)) (τ τ' : Formalism.MainNotions.S.Loc.Term (Vp D p) ((zOf Y).M p) D.R.rS),
       Formalism.MainNotions.S.LocNG.IsTermOver (Fm.FP p) a τ → Formalism.MainNotions.S.LocNG.IsTermOver (Fm.FP p) b τ' → τ.abelian₂ = τ'.abelian₂ → a = b :=
-    fun p a b τ τ' h1 h2 h3 => GlobalTheory.T.hermitianDatum_eq_of_same_lattice _ (hMo p) _ _ _ _ (hrk p) (hRG p) a b τ τ' h1 h2 h3
+    fun p a b τ τ' h1 h2 h3 => _root_.GlobalTheory.HL.LatUniq.datum_of_lattice _ (hMo p) _ _ _ _ (hrk p) (hRG p) a b τ τ' h1 h2 h3
   have hA : ∀ t ∈ TS, ptPN t = toPts w → (∀ p (hp : p ∈ Fm.P), OverOrb Fm t p (d ⟨p, hp⟩).1) →
       ∃ (Λ : LV D) (y : Dat (zOf Y) Fm.FP), TG F F' t Λ ∧ LocOver Λ y ∧ InGen dd y ∧
         ∀ p a, OverOrb Fm t p a ↔ Formalism.MainNotions.S.LocNG.Datum.Rel a (y p) := by

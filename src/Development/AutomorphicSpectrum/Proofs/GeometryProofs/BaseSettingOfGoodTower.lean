@@ -8,11 +8,15 @@ public import Development.AutomorphicSpectrum.Statements.GeometryStatements.CmpS
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.NineGeoU
 public import Development.AutomorphicSpectrum.Statements.MetricStatements.AgreementIffGuarded
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.CmHostRankBounds
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspWeightRegularisationsTiedStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FullIntersectionGenericBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodOriginIntersectionTowerStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntersectionFinalEstimateStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CorrectedWeightRegularizationStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspWeightRegularisationsTied
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsPeriodAtRestrict
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IntegralClosureHeightEqOneOfLiesOver
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FullIntersectionGenericBound
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUniqueLeftBasisCoordsAdicCompletion
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodOriginIntersectionTower
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntersectionFinalEstimate
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CorrectedWeightRegularization
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -101,7 +105,7 @@ theorem base_setting_of_good_origin : ∀ Ch Cu : ℝ, NineGeoU Ch Cu → Out.We
   have hdisc : ∀ p : ℕ, p.Prime → (p : ℤ) ∣ discr E → p ∈ T.bad := fun p hp hd =>
     (o.bad_iff p).2 ⟨hp, Dvd.dvd.mul_right (Dvd.dvd.mul_left hd 2) _⟩
   have horigin :=
-    GlobalTheory.T.full_intersection_generic_bound hGiven hWeil E H D Xo l c Y II hFull hGlob hp hq _ (o.Or B a).𝔐.ξ₀ (o.Or B a).𝔐.gen₀ T.bad S₁
+    _root_.GlobalTheory.CompanionTheory.Ar.exists_componentData_origin hGiven hWeil E H D Xo l c Y II hFull hGlob hp hq _ (o.Or B a).𝔐.ξ₀ (o.Or B a).𝔐.gen₀ T.bad S₁
       false hbadP hS₁P hdisj hdisc
   obtain ⟨K, _, J, _, Ω, _, _, W, _, _, Dc, Hd, Or, hgen', hS, hj, hbg, -, hHT⟩ := horigin
   simp only [Bool.false_eq_true, ite_false] at hj hbg
@@ -123,17 +127,17 @@ theorem base_setting_of_good_origin : ∀ Ch Cu : ℝ, NineGeoU Ch Cu → Out.We
     · show Dc.N - Dc.j ≤ Dc.j
       rw [hN, hj]; omega
   obtain ⟨U, M, S, S', hcw, hU0, hUt, hSt, hS't, hconj⟩ :=
-    GlobalTheory.T.cusp_weight_regularisations_tied hGiven E H D Xo l c Y II K J Ω W Dc Hd T.bad Or
+    _root_.GlobalTheory.CompanionTheory.Relay.cusp_weight_regularisations_tied hGiven E H D Xo l c Y II K J Ω W Dc Hd T.bad Or
   obtain ⟨hpos, hht, hmean⟩ := hNine E H D Xo l c Y II K J Ω W Dc Hd T.bad Or B U M S' hFull hAdm hcw hS't
   obtain ⟨X, hXH, hXU, hXrd, hXL, hX1, hX2, hX3, hX4, hX5⟩ :=
-    GlobalTheory.T.corrected_weight_regularization K J II (CMType H) Ω W Dc Hd M U S S' (hostRd E) (hostLval H) Ch Cu hSt hS't hU0 hUt hpos hconj
+    _root_.GlobalTheory.CompanionTheory.Relay.corrected_weight_regularization K J II (CMType H) Ω W Dc Hd M U S S' (hostRd E) (hostLval H) Ch Cu hSt hS't hU0 hUt hpos hconj
       hht hmean
   subst hXH
-  obtain ⟨hdeg, hlim, hPP⟩ := GlobalTheory.T.good_origin_intersection_tower hAgr hProp hCmp hGiven hPts E H D Xo l c Y T o II hGlob hExtra hFull hp hq
+  obtain ⟨hdeg, hlim, hPP⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.testPoly_eq_slX hAgr hProp hCmp hGiven hPts E H D Xo l c Y T o II hGlob hExtra hFull hp hq
     B B a K J Ω W Dc ℤ (Fin 2 → ℤ) X Or hB2 le_rfl hqp hbg hsm hGood (hgen'.trans hgen) hSc
   obtain ⟨-, -, hSemi, -, hResK, -, -, hGaga, -, hInputs, -, hAn, -, -⟩ := hGiven
   have hStk : Top.StokesAt X B :=
-    GlobalTheory.T.intersection_final_estimate hInputs hAn hResK hGaga hSemi E H D Xo l c Y II K J Ω W Dc X.H T.bad Or B U hFull hAdm hcw ℤ
+    _root_.GlobalTheory.CompanionTheory.Relay.intersection_final_estimate hInputs hAn hResK hGaga hSemi E H D Xo l c Y II K J Ω W Dc X.H T.bad Or B U hFull hAdm hcw ℤ
       (Fin 2 → ℤ) X rfl hXU hX1 B hB4 hlim
   exact ⟨K, inferInstance, J, inferInstance, Ω, inferInstance, inferInstance, W, inferInstance, inferInstance, Dc, ℤ,
     Fin 2 → ℤ, inferInstance, inferInstance, inferInstance, X, hN, hj.trans o.j_eq.symm, hXrd, hXL, hX1, hX2, hX3, hX4,

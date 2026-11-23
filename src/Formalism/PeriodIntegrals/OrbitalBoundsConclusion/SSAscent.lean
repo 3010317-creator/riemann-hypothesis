@@ -4,7 +4,8 @@ public import Formalism.PeriodIntegrals.SSAscent
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SemisimpleTraceForm.RangeMapRep
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SemisimpleTraceForm.SemisimpleOfTraceFormNondegenerate
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SemisimpleTraceForm.TraceFormNondegenerateBaseChange
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SemisimpleTraceForm.TraceNilpotentAscent
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SemisimpleTraceForm.TraceNilStep
+public import Lemmata.IdempotentTraceVanishing.TraceAevalEqZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,6 +50,6 @@ import Mathlib.Topology.Sheaves.Init
 
 theorem ssAscent : PI.SSAscent :=
   PI.SSAscent.UnitaryGroupMassFormula.ssAscent_of
-    (PI.SSAscent.UnitaryGroupMassFormula.downStep_of PI.SSAscent.UnitaryGroupMassFormula.trace_nilpotent_ascent)
+    (PI.SSAscent.UnitaryGroupMassFormula.downStep_of _root_.Bl.IdempotentTraceVanishing.goal1)
     PI.SSAscent.UnitaryGroupMassFormula.traceFormNondegenerate_baseChange
     PI.SSAscent.UnitaryGroupMassFormula.semisimpleOfTraceFormNondegenerate

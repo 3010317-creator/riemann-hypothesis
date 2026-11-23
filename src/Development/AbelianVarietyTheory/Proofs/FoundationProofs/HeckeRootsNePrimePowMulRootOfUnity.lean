@@ -2,9 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.PetIPSmulRight
 public import Mathlib.NumberTheory.Padics.Complex
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DepletedCuspEigenformHeckeRelationsStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RankinMeanSquareCuspFormStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RootsNormLeOfBoundedTwoStepRecurrenceStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DepletedCuspEigenformHeckeRelations
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RankinMeanSquareCuspForm
+public import Mathlib.Analysis.Complex.Norm
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RootsNormLeOfBoundedTwoStepRecurrence
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -101,8 +102,8 @@ theorem factors_ne_zero : ∀ (l : ℕ) [Fact l.Prime] (ι : PadicAlgCl l ≃+* 
       have h := congrArg norm hp
       rw [norm_mul, norm_mul, hcα, hcu, norm_pow, Complex.norm_natCast, one_mul, one_mul] at h
       exact h
-    obtain ⟨_, hrec, _⟩ := GlobalTheory.T.depletedCuspEigenform_heckeRelations (2 * e + 1) N χ g (by omega) hN hP
-    obtain ⟨_, ⟨C, hC⟩, _⟩ := GlobalTheory.T.rankin_mean_square_cuspForm (2 * e + 1) N (ch χ) g (by omega) hP.cf
+    obtain ⟨_, hrec, _⟩ := _root_.GlobalTheory.EisM.hecke_relations (2 * e + 1) N χ g (by omega) hN hP
+    obtain ⟨_, ⟨C, hC⟩, _⟩ := _root_.GlobalTheory.rankin_mean_square (2 * e + 1) N (ch χ) g (by omega) hP.cf
     set u := χ⁻¹ (l : ZMod N) with hu_def
     let c : ℕ → ℂ := fun r => u ^ r * g (l ^ r)
     have hc0 : c 0 = 1 := by simp [c, hP.one]
@@ -128,7 +129,7 @@ theorem factors_ne_zero : ∀ (l : ℕ) [Fact l.Prime] (ι : PadicAlgCl l ≃+* 
         rw [← hX]; exact (hC _).trans (mul_le_mul_of_nonneg_right (le_max_left _ _) (by positivity))
       rw [h1, ← Real.sqrt_sq (norm_nonneg _), ← Real.sqrt_sq (pow_nonneg hR0 r), ← Real.sqrt_mul (le_max_right _ _)]
       exact Real.sqrt_le_sqrt h2
-    obtain ⟨_, hβR⟩ := GlobalTheory.T.roots_norm_le_of_bounded_two_step_recurrence α β c (Real.sqrt (max C 0)) R hR0 hc0 hc1 hcr hbound
+    obtain ⟨_, hβR⟩ := _root_.GlobalTheory.roots_norm_le_of_bounded_two_step_recursion α β c (Real.sqrt (max C 0)) R hR0 hc0 hc1 hcr hbound
     rw [hβn, ← hs2, ← pow_mul, hR] at hβR
     have : s ^ (2 * e + 1) < s ^ (2 * (2 * e)) := pow_lt_pow_right₀ hs1 (by omega)
     linarith

@@ -4,7 +4,10 @@ public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLif
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.SerFixOne
 public import Formalism.UnipotentAdelicQuotients.SiegelWeilUnitaryConvergent
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CountConstantsOfSiegelWeil
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IrreducibilityRowOfConcreteAutomorphicDataStatement
+public import Formalism.LocalToGlobal.GlobalTheory.IrreducibleOfCountSizes
+public import Formalism.LocalToGlobal.HilbertRowConditions.AllJoin
+public import Formalism.SharpRestriction.ParamsHeightRankConstant
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IrreducibilityRowOfConcreteAutomorphicData
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowsFinDimLink
 import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.AllRowsWt
 import Mathlib.Algebra.Order.Floor.Extended
@@ -53,7 +56,7 @@ theorem row_counts_of_ties_alt : HeckeCharacterZeroLocus.SiegelWeilU.SiegelWeilU
       AutTie D X.B X.pl ∧ RowDictTie X G ι ∧ GlobalTheory.LabPin.LabTie X ι) → _root_.GlobalTheory.Fc.R1.CountsIrreducibilityConstants' Q Lk := by
   intro hSW Q Lk hrow
   obtain ⟨c30, -, h1, -, -, h4⟩ := GlobalTheory.CountConstants.count_constants_of_siegelWeil hSW
-  obtain ⟨cIc, hc, H⟩ := GlobalTheory.T.irreducibilityRow_of_concreteAutomorphicData hSW GlobalTheory.rowsFinDim_link
+  obtain ⟨cIc, hc, H⟩ := _root_.GlobalTheory.IrrRowConcrete.irr_row_closed hSW GlobalTheory.rowsFinDim_link
   refine ⟨c30, cIc, h1, hc, hrow.imp fun 𝒜 σ _ hA => ⟨?_, ?_⟩⟩
   · exact Formalism.MainNotions.Pk.Closed.of_class fun Fm _ _ => h4 _ Fm
   · exact H (D3 3 𝒜) (fun Fm hw => hw.2.2.1)

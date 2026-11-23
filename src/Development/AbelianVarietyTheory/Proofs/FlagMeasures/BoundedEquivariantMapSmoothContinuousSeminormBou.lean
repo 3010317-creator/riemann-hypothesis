@@ -1,12 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BallMeanContinuousLinearFunctionalStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsContinuousLimitUniformCauchyStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SmoothFunctionalOrbitSmoothVectorStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SobolevIneqTranslateCompactStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SobolevInequalityAtIdentityBesselModelUnitaryGroStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TendstoAverageL2CompactStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarCompactLtTop
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BallMeanContinuousLinearFunctional
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsContinuousLimitUniformCauchy
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SmoothFunctionalOrbitSmoothVector
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SobolevIneqTranslateCompact
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SobolevInequalityAtIdentityBesselModelUnitaryGro
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TendstoAverageL2Compact
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -119,8 +120,8 @@ theorem reg_main : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H] [InnerProdu
       Λ'.continuous.comp_continuousOn (hσ.2.2 v)
     have := hc.aestronglyMeasurable (μ := μ) hGm
     rwa [hrest] at this
-  obtain ⟨C₀, Ws, K₀, hK₀, hWs, hsob⟩ := GlobalTheory.T.sobolev_inequality_at_identity_besselModelUnitaryGroup k r μ hμ
-  have hsu := GlobalTheory.T.sobolev_ineq_translate_compact k r μ C₀ Ws K₀ hμ hK₀ hsob
+  obtain ⟨C₀, Ws, K₀, hK₀, hWs, hsob⟩ := _root_.GlobalTheory.SobAtOne.sobolev_at_one_G k r μ hμ
+  have hsu := _root_.GlobalTheory.SgInf.SobTranslate.sobolev_translate k r μ C₀ Ws K₀ hμ hK₀ hsob
   have hclm : ∀ Q : Set (Mt k r), IsCompact Q → ∃ K₂ : Set (Mt k r), IsCompact K₂ ∧
       ∀ (Λ' : H →L[ℂ] Wp) (u : H), IsSmoothVec (k := k) (r := r) σ u → ∀ x ∈ Q,
       (Matrix.of x : Mat k r) ∈ GG k r →
@@ -129,7 +130,7 @@ theorem reg_main : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H] [InnerProdu
     intro Q hQ
     obtain ⟨K₂, hK₂, h⟩ := hsu Q hQ
     refine ⟨K₂, hK₂, fun Λ' u hu x hx hxG => ?_⟩
-    obtain ⟨hs, hd⟩ := GlobalTheory.T.smooth_functional_orbit_smoothVector k r σ Λ' hσ u hu
+    obtain ⟨hs, hd⟩ := _root_.GlobalTheory.SgInfOrb.smooth_rdWord_functional k r σ Λ' hσ u hu
     have hcont : ∀ ws ∈ Ws, ContinuousOn (rdWord ws fun g : Mat k r => Λ' (σ g u)) (GG k r) := by
       intro ws hws
       have h1 : ContinuousOn (fun g : Mat k r => Λ' (σ g (dsigW σ ws u))) (GG k r) :=
@@ -143,7 +144,7 @@ theorem reg_main : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H] [InnerProdu
     rw [hd ws (hWs ws hws) _ hy]
   obtain ⟨K₁, hK₁, hone⟩ := hclm {oneM k r} isCompact_singleton
   obtain ⟨c₁, hc₁⟩ := hbd K₁ hK₁
-  choose Λ hΛ using GlobalTheory.T.ballMean_continuousLinearFunctional k r σ μ T hμ hadd hsm hbd heq
+  choose Λ hΛ using _root_.GlobalTheory.SgInf.ballMean_clm k r σ μ T hμ hadd hsm hbd heq
   refine ⟨Real.sqrt (|C₀| * (2 * |c₁|)), Ws, hWs, fun u hu => ?_⟩
   have hloc : ∀ (v : H) (K : Set (Mt k r)), IsCompact K →
       AEStronglyMeasurable (fun z : Mt k r => T v (Matrix.of z)) (μ.restrict K) ∧
@@ -154,7 +155,7 @@ theorem reg_main : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H] [InnerProdu
   have hconv : ∀ (v : H) (K : Set (Mt k r)), IsCompact K → Filter.Tendsto (fun j : ℕ =>
       ∫⁻ x in K, (‖avgR μ j (fun z : Mt k r => T v (Matrix.of z)) x - T v (Matrix.of x)‖₊ : ENNReal) ^ 2 ∂μ)
       Filter.atTop (nhds 0) :=
-    fun v K hK => GlobalTheory.T.tendsto_average_L2_compact k r μ hμ _ (hloc v) K hK
+    fun v K hK => _root_.GlobalTheory.SgInf.tendsto_average_L2 k r μ hμ _ (hloc v) K hK
 
   have hAm : ∀ (j : ℕ) (v : H) (K : Set (Mt k r)), IsCompact K → AEMeasurable (fun y : Mt k r =>
       (‖avgR μ j (fun z : Mt k r => T v (Matrix.of z)) y - T v (Matrix.of y)‖₊ : ENNReal) ^ 2) (μ.restrict K) := by
@@ -224,7 +225,7 @@ theorem reg_main : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H] [InnerProdu
     have h4 : ‖(Λ j - Λ l) (σ (Matrix.of x) u)‖ ^ 2 ≤ ε ^ 2 := by linarith
     have h5 := (pow_le_pow_iff_left₀ (norm_nonneg _) hε.le (by norm_num)).1 h4
     simpa using h5
-  obtain ⟨F, hFc, hFae, hFl⟩ := GlobalTheory.T.exists_continuous_limit_uniformCauchy k r μ hμ (fun j g => Λ j (σ g u))
+  obtain ⟨F, hFc, hFae, hFl⟩ := _root_.GlobalTheory.SgInf.RegLimit.exists_continuous_limit k r μ hμ (fun j g => Λ j (σ g u))
     (fun z : Mt k r => T u (Matrix.of z)) (fun j => (Λ j).continuous.comp_continuousOn (hσ.2.2 u))
     (fun Q hQ => (hloc u Q hQ).1) hCau (fun Q hQ => by
       refine (hconv u Q hQ).congr fun j => ?_

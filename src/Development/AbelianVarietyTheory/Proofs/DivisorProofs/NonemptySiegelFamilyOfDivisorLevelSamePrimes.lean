@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.SiegelToroidalIntegral
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInclusionCyclotomicAwayRingFiniteEtaleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptySiegelLevelLoweringQuotientFamilyStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelLevelLoweringQuotientRepresentsReducedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelQuotientFamilyLocalPointsEqOfObjectStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInclusionCyclotomicAwayRingFiniteEtale
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SRelOneOneIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptySiegelLevelLoweringQuotientFamily
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelLevelLoweringQuotientRepresentsReduced
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelQuotientFamilyLocalPointsEqOfObject
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -39,7 +40,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.SRelOneOneIff
 
 @[expose] public section
 
@@ -54,9 +54,9 @@ theorem sFam_down : ∀ h n N : ℕ, 3 ≤ n → Odd N → n ∣ N → (∃ a, N
     Nonempty (SFam h n (zetaAway n)) := by
   intro h n N hn hN hnN hpow ⟨F⟩
   have hN0 : N ≠ 0 := by rintro rfl; exact (Nat.not_odd_zero hN)
-  obtain ⟨j, hinj, hζ, hfes⟩ := GlobalTheory.T.exists_inclusion_cyclotomicAwayRing_finite_etale n N hN0 hnN
+  obtain ⟨j, hinj, hζ, hfes⟩ := _root_.GlobalTheory.SiegelTor.exists_inclusion_cycAway n N hN0 hnN
   obtain ⟨hfin, het, hsurj⟩ := hfes hpow
-  obtain ⟨Q⟩ := GlobalTheory.T.nonempty_siegelLevelLoweringQuotientFamily h n N F j hn hN hnN hζ hfin het
+  obtain ⟨Q⟩ := _root_.GlobalTheory.SiegLev.nonempty_sQuot h n N F j hn hN hnN hζ hfin het
   exact ⟨{
     X := Q.X
     s := Q.s
@@ -65,8 +65,8 @@ theorem sFam_down : ∀ h n N : ℕ, 3 ≤ n → Odd N → n ∣ N → (∃ a, N
     univ := Q.univ
     princ := Q.princ
     rep := fun S s' c hred hdense hpr =>
-      GlobalTheory.T.siegelLevelLoweringQuotient_represents_reduced h n N F j Q hn hN hnN hinj hζ hfin het hsurj S s' c hred hdense hpr
+      _root_.GlobalTheory.quotFam_represents h n N F j Q hn hN hnN hinj hζ hfin het hsurj S s' c hred hdense hpr
     inj := fun R _ _ x y s' c hs h₁ h₂ =>
-      GlobalTheory.T.siegelQuotientFamily_local_points_eq_of_object h n N _ _ (zetaAway n) (zetaAway N) F j Q R x y s' c hs h₁ h₂ }⟩
+      _root_.GlobalTheory.SiegLev.SQuot.eq_of_siegPB h n N _ _ (zetaAway n) (zetaAway N) F j Q R x y s' c hs h₁ h₂ }⟩
 
 end GlobalTheory.SiegLev

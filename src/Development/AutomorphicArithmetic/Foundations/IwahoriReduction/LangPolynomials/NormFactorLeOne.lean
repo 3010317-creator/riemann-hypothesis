@@ -3,7 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Foundations.HTPresNuOfPolys
 public import Development.AbelianVarietyTheory.Definitions.Foundations.ZetaElementsUnramifiedOrdinaryOfEulerSystemInert
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NonvanishingTransferCharacterSumsPowerSeriesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.QuotientCharTrivialInertiaCyclotomicTowerStatement
+public import Development.AbelianVarietyTheory.Statements.CuspidalUnitaryTwists.ZetaUr
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
+public import Mathlib.RingTheory.AdicCompletion.Noetherian
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.QuotientCharTrivialInertiaCyclotomicTower
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.LangPolynomials.FrobEx
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.LangPolynomials.MemOfMulMem
 import Mathlib.Algebra.Order.Floor.Extended
@@ -201,4 +204,4 @@ end UpperTheory.Kd.C7.LocalUnitsRoots
 
 theorem UpperTheory.Kd.C7.pLocu :
     GlobalTheory.KZ.ZetaEulerSystemNonvanishing GlobalTheory.KZ.Pin7 :=
-  UpperTheory.Kd.C7.LocalUnitsRoots.main GlobalTheory.T.nonvanishing_transfer_characterSums_powerSeries GlobalTheory.T.quotient_char_trivial_inertia_cyclotomic_tower
+  UpperTheory.Kd.C7.LocalUnitsRoots.main GlobalTheory.T.nonvanishing_transfer_characterSums_powerSeries _root_.GlobalTheory.quot_eq_one_of_cycBar_eq_one

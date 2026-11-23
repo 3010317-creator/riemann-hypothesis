@@ -10,11 +10,11 @@ public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmpBoundsUnif
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeNormDegreeAlongFamilyOfKFiniteIdentity
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DegIAlongFamily
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsWordLetters
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ProdSubEqProdFactorial
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PtDlAlongFamilyGap
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SchurAlongFamily
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TcritLowAlongFamilyGap
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UniformAmplitudeBoundWideRangeLargeGapStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UniformAmplitudeBoundWideRangeLargeGap
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ProdSubEqProdFactorial
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,7 +64,7 @@ theorem weyl_fam_gap : ∀ (eps : ℝ) (Fm : FamP eps), VanishingOnXAndXPlusBran
 
 theorem amplitude_bounds_uniform_gap : Formalism.HermitianLatticesTheory.SiegelMassRatio → GlobalTheory.GapIn.Hyp → BpJoin.ThmBpDS → ∀ Cg cb Cu cT CT C0 A C1 : ℝ, ∃ C C2 Ch thr : ℝ, 0 ≤ C ∧ 0 ≤ Ch ∧ ∀ (eps : ℝ) (Fm : FamP eps), thr ≤ sC' Fm → thr ≤ sCl Fm → PX.RanksF Fm C0 Cg cb Cu cT CT → ∀ Cpr : ℝ, ∀ δ > 0, (OwnEv Fm fun C' Cl x i => VanishingOnXAndXPlus.AmplitudeBoundsConjunction (Fm.D x i) (Fm.L x i) C' Cl Cg cb Cu cT CT C0 A C1 Cpr C C2 Ch δ) := by
   intro hM hH hB Cg cb Cu cT CT C0 A C1
-  obtain ⟨CPT, t1, hPT⟩ := GlobalTheory.T.uniform_amplitude_bound_wide_range_large_gap hM hH hB Cg cb Cu cT CT C0 C1
+  obtain ⟨CPT, t1, hPT⟩ := _root_.GlobalTheory.UnifPTGap.uniformPT_gap hM hH hB Cg cb Cu cT CT C0 C1
   obtain ⟨CDl, t2, hDl⟩ := GlobalTheory.FamDlGap.ptDl_along_family_gap hM hH hB Cg cb Cu cT CT C0 C1
   obtain ⟨t3, h5⟩ := GlobalTheory.CritLevelGap.tcritLow_along_family_gap hM hH hB Cg cb Cu cT CT C0
   obtain ⟨t4, h9⟩ := GlobalTheory.AmpFamGap.amplitudeNormDegree_along_family_largeGaps hM hH hB Cg cb Cu cT CT C0 C1

@@ -1,13 +1,15 @@
 module
 
 public import Mathlib.MeasureTheory.Group.FundamentalDomain
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ModularCharacterTrivialFiniteCovolumeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParabolicFundamentalDomainSplitStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ModularCharacterTrivialFiniteCovolume
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParabolicFundamentalDomainSplit
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParabolicFundamentalDomainVolumeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParabolicHaarDecompositionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParabolicIntegralUnfoldingStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParabolicLeviIntegralFormulaStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParabolicQuotientMeasureStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParabolicHaarDecomposition
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SplitHomeoApply
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParabolicIntegralUnfolding
+public import Mathlib.MeasureTheory.Group.Measure
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParabolicLeviIntegralFormula
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParabolicQuotientMeasure
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,17 +67,17 @@ theorem exists_haar_fundamentalDomain : ∀ (P G₁ : Type) [Group P] [Topologic
     have : (π.ker : Set P) = π ⁻¹' {1} := by ext; simp [MonoidHom.mem_ker]
     rw [this]; exact isClosed_singleton.preimage hπ
   haveI : LocallyCompactSpace π.ker := hcl.isClosedEmbedding_subtypeVal.locallyCompactSpace
-  obtain ⟨D, hDm, hDu, hD⟩ := GlobalTheory.T.parabolic_fundamental_domain_split P G₁ ι π hι hπ hπι Γ hU hK
+  obtain ⟨D, hDm, hDu, hD⟩ := _root_.GlobalTheory.CompanionTheory.SplitExtLat.exists_borel_section_ker P G₁ ι π hι hπ hπι Γ hU hK
   let ν : Measure π.ker := Measure.haar
   obtain ⟨hνF, hν0, hνfin⟩ := hD ν
-  obtain ⟨δ, hδm, hδΓ, hδ⟩ := GlobalTheory.T.parabolic_haar_decomposition P G₁ ι π hι hπ hπι Γ Γ₁ hΓ₁ ν D hDm hνF hν0 hνfin
-  have hδ1 := GlobalTheory.T.modular_character_trivial_finite_covolume G₁ Γ₁ μ₁ 𝓕₁ h𝓕₁ hfin δ hδm hδΓ
+  obtain ⟨δ, hδm, hδΓ, hδ⟩ := _root_.GlobalTheory.CompanionTheory.SplitExtLat.conj_haar_character P G₁ ι π hι hπ hπι Γ Γ₁ hΓ₁ ν D hDm hνF hν0 hνfin
+  have hδ1 := _root_.GlobalTheory.CompanionTheory.SW.CharacterTrivial.eq_one_of_isFundamentalDomain G₁ Γ₁ μ₁ 𝓕₁ h𝓕₁ hfin δ hδm hδΓ
   have hmap : ∀ u, Measure.map (fun m : π.ker => MulAut.conjNormal (ι u) m) ν = ν := by
     intro u; rw [hδ u, hδ1 u, one_smul]
-  have hH := GlobalTheory.T.parabolic_quotient_measure P G₁ ι π hι hπ hπι ν μ₁ hmap
-  obtain ⟨hnull, hint⟩ := GlobalTheory.T.parabolic_levi_integral_formula P G₁ ι π hι hπ hπι ν μ₁ D 𝓕₁ hDm h𝓕₁.nullMeasurableSet
+  have hH := _root_.GlobalTheory.CompanionTheory.SplitExtLat.isHaarMeasure_map_splitHomeo P G₁ ι π hι hπ hπι ν μ₁ hmap
+  obtain ⟨hnull, hint⟩ := _root_.GlobalTheory.CompanionTheory.SplitExtLat.setLIntegral_splitHomeo_image_prod P G₁ ι π hι hπ hπι ν μ₁ D 𝓕₁ hDm h𝓕₁.nullMeasurableSet
   have hcov := GlobalTheory.T.parabolic_fundamental_domain_volume P G₁ ι π hι hπ hπι Γ Γ₁ hΓ₁ ν μ₁ D 𝓕₁ hDu h𝓕₁
-  have hdis := GlobalTheory.T.parabolic_integral_unfolding P G₁ ι π hι hπ hπι Γ Γ₁ hΓ ν μ₁ D 𝓕₁ hDu h𝓕₁
+  have hdis := _root_.GlobalTheory.CompanionTheory.SplitExtLat.aedisjoint_smul_image_prod P G₁ ι π hι hπ hπι Γ Γ₁ hΓ ν μ₁ D 𝓕₁ hDu h𝓕₁
   refine ⟨ν, D, _, _, inferInstance, hνF, hν0, hνfin, hH,
     IsFundamentalDomain.mk'' hnull hcov hdis (fun γ => (measurePreserving_smul γ _).quasiMeasurePreserving), ?_, hint⟩
   have h1 := hint (fun _ => 1) measurable_const

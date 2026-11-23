@@ -3,7 +3,8 @@ module
 public import Mathlib.Basic.Complex.Basic
 public import Mathlib.NumberTheory.NumberField.Basic
 public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.FrobeniusFixesOfSplitsCompletelyIntermediateStatement
+public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.SmulCommClassGalIntegers
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.FrobeniusFixesOfSplitsCompletelyIntermediate
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.NcardPrimesEqFinrankOfFrobeniusFixes
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -47,7 +48,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.SmulCommClassGalIntegers
 import Development.AbelianVarietyTheory.Definitions.HeightFunctions.FiniteDimensionalOfSz
 
 @[expose] public section
@@ -134,7 +134,7 @@ theorem ncard_eq_finrank_of_generated (K L M M' : Type) [Field K] [NumberField K
       Module.finrank K g.fieldRange := by
     rw [ncard_over_congr g.equivFieldRange 𝔭, hsplit]
     exact g.equivFieldRange.toLinearEquiv.finrank_eq
-  have hfix1 := GlobalTheory.T.frobenius_fixes_of_splitsCompletely_intermediate K N g.fieldRange 𝔭 h1
+  have hfix1 := _root_.GlobalTheory.SplitCriterion.frob_fix_of_ncard_primes_eq_finrank K N g.fieldRange 𝔭 h1
   have hfix2 : ∀ σ : N ≃ₐ[L] N, GlobalTheory.NT.IsFrob N 𝔓 σ → ∀ x ∈ ι.fieldRange, σ x = x := by
     intro σ hσ
     have hK : GlobalTheory.NT.IsFrob N 𝔭 (σ.restrictScalars K) := by

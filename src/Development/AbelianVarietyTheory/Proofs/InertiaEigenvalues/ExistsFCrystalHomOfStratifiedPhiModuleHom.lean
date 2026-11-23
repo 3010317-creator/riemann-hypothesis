@@ -1,12 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdIPowLe
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPrismCoverReceivingBreuilKisinStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsStratifiedPhiModuleHomValueMapStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FramedFCrystalExistsCoordsEveryPrismStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InjectiveAndRangeOfPrismCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSemilinearBaseChangeExistsBasisEqImageOfBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.StratifiedCrystalValueMapCommFrobeniusStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPrismCoverReceivingBreuilKisin
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsStratifiedPhiModuleHomValueMap
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FramedFCrystalExistsCoordsEveryPrism
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.InvertibleSpanSingleton
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSemilinearBaseChangeExistsBasisEqImageOfBasis
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.StratifiedCrystalValueMapCommFrobenius
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InjectiveAndRangeOfPrismCover
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,7 +62,7 @@ variable {l : ℕ} [Fact l.Prime] {K : FinExt l} {bk : BK K} {d : ℕ} {S : Stra
 theorem IsCoord.v_eq_of_sum {B Q : Obj l ↥(OL K)} {V : Eval S B (M.M B)} (hV : IsCoord e V) (a : Hom B Q)
     (g : Hom bk.prism Q) (x : M.M B) (z : Fin d → Q.A) (hz : M.tr a x = ∑ i, z i • M.tr g (e i)) :
     V.v a g x = z := by
-  obtain ⟨b, hb⟩ := GlobalTheory.T.isSemilinearBaseChange_exists_basis_eq_image_of_basis _ _ g.f _ _ (M.tr g) (M.tr_bc g) _ e
+  obtain ⟨b, hb⟩ := _root_.GlobalTheory.Prism.semiBC_basis _ _ g.f _ _ (M.tr g) (M.tr_bc g) _ e
   have h := (hV a g x).symm.trans hz
   simp only [← hb] at h
   funext i
@@ -79,14 +80,14 @@ theorem exists_fHom_of_isStratHom : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) 
     Framed S M e → Framed S' M' e' → ∀ Y : Matrix (Fin d') (Fin d) bk.S, IsStratHom S S' Y →
     ∃ u : FHom M M', ∀ j, u.u bk.prism (e j) = ∑ i, bk.toP (Y i j) • e' i := by
   intro l _ K bk d d' S S' M M' e e' hF hF' Y hY
-  choose V hV using GlobalTheory.T.framedFCrystal_exists_coords_every_prism l K bk d S M e hF
-  choose V' hV' using GlobalTheory.T.framedFCrystal_exists_coords_every_prism l K bk d' S' M' e' hF'
-  choose w hw using fun B => GlobalTheory.T.exists_stratifiedPhiModuleHom_valueMap l K bk d d' S S' Y hY B (M.M B) (M'.M B) (V B) (V' B)
+  choose V hV using _root_.GlobalTheory.BSP.CoordEx.main l K bk d S M e hF
+  choose V' hV' using _root_.GlobalTheory.BSP.CoordEx.main l K bk d' S' M' e' hF'
+  choose w hw using fun B => _root_.GlobalTheory.BSP.evalHom l K bk d d' S S' Y hY B (M.M B) (M'.M B) (V B) (V' B)
   refine ⟨⟨w, fun {P P'} k x => ?_, fun P t x m k h =>
-    GlobalTheory.T.stratifiedCrystalValueMap_comm_frobenius l K bk d d' S S' M e M' e' hF hF' Y hY P (V P) (V' P) (hV P) (hV' P) (w P) (hw P) t x m k h⟩,
+    _root_.GlobalTheory.BSP.eval_map_Φ l K bk d d' S S' M e M' e' hF hF' Y hY P (V P) (V' P) (hV P) (hV' P) (w P) (hw P) t x m k h⟩,
     fun j => ?_⟩
-  · obtain ⟨C, h, ⟨f⟩, hc⟩ := GlobalTheory.T.exists_prism_cover_receiving_breuilKisin l K bk P'
-    apply (GlobalTheory.T.injective_and_range_of_prism_cover l K bk d' S' P' C (M'.M P') (V' P') h f hc).1
+  · obtain ⟨C, h, ⟨f⟩, hc⟩ := _root_.GlobalTheory.BSP.exists_cover_receiving_bk l K bk P'
+    apply (_root_.GlobalTheory.BSP.Eval.effective_of_cover l K bk d' S' P' C (M'.M P') (V' P') h f hc).1
     rw [hw, IsCoord.v_tr (hV P) (hV P'), IsCoord.v_tr (hV' P) (hV' P'), hw]
   · have h1 := hV' bk.prism (Hom.id _) (Hom.id _) (w bk.prism (e j))
     have h2 : (V bk.prism).v (Hom.id _) (Hom.id _) (e j) = Pi.single j 1 :=

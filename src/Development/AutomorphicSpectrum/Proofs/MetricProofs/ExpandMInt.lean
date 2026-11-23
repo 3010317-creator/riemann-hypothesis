@@ -1,7 +1,9 @@
 module
 
 public import ReciprocityTheory.AnalyticForms.PotentialTheory.IsPotentialOfFun
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LocalDensityInclusionExclusionStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LocalDensityInclusionExclusion
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.PotentialContDiffAt
+public import Mathlib.MeasureTheory.Integral.Bochner.Set
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -43,8 +45,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.PotentialContDiffAt
-public import Mathlib.MeasureTheory.Integral.Bochner.Set
 import ReciprocityTheory.AnalyticForms.LeviForms.IsRegFamilyInhabitStatement
 
 @[expose] public section
@@ -67,7 +67,7 @@ theorem expand_mInt : ∀ {e : ℕ} {X : Type} [TopologicalSpace X] [CompactSpac
     refine measure_mono_null (fun y hy => ?_) (hnull j)
     simp only [Set.mem_ofPred_eq, Classical.not_imp] at hy
     refine ⟨hy.1, fun hyU => hy.2 ?_⟩
-    exact GlobalTheory.T.local_density_inclusion_exclusion A U P f Θ hU hP hΘ hf j y ⟨hy.1, hyU⟩
+    exact _root_.GlobalTheory.CompanionTheory.Ar.Giv.locDens_expand_ofFun A U P f Θ hU hP hΘ hf j y ⟨hy.1, hyU⟩
   refine ⟨?_, ?_⟩
   · intro j K hK hKc
     have hsum : IntegrableOn (fun y => ∑ T : Finset (Fin e), (-1 : ℝ) ^ (e - T.card) *

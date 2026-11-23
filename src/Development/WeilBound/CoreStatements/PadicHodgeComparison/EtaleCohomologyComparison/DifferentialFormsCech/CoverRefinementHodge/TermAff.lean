@@ -4,11 +4,13 @@ public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCoh
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.CoeEqAlgebraMapZeroEquiv
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.DifferentialFormsCech.GlobalDifferentialForms.PullHEq
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.CapOComp
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FormsRestrictOpenBijectiveStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GradedRestrictPullBijectiveStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RestrictGradedPullNaturalStatement
-import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.FaceMapCompSuccAboveCastSucc
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FormsRestrictOpenBijective
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.HodgeTateResidues.IsDlogFirstChernClass
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.InclStd
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GradedRestrictPullBijective
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RestrictGradedPullNatural
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.DifferentialFormsCech.AffineHodgeIsomorphisms.HodgeAffineIsoType
+import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.FaceMapCompSuccAboveCastSucc
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -92,7 +94,7 @@ def fb (q : X ⟶ Spec (CommRingCat.of K)) (V : X.Opens) (a : ℕ) : OmU q V a �
   (formRes (V.ι ≫ q) (show (⊤ : V.toScheme.Opens) ≤ V.ι ⁻¹ᵁ V by simp) a).comp (formPull (f := V.ι) rfl V a)
 
 theorem fb_bij (q : X ⟶ Spec (CommRingCat.of K)) (V : X.Opens) (a : ℕ) : Function.Bijective (fb q V a) :=
-  GlobalTheory.T.forms_restrict_open_bijective q V a
+  _root_.GlobalTheory.CompanionTheory.FormOpen.formRes_formPull_open_bijective q V a
 
 theorem over_res {q : X ⟶ Spec (CommRingCat.of K)} {p : Y ⟶ Spec (CommRingCat.of K)} {u : X ⟶ Y} (hu : u ≫ p = q)
     {V : X.Opens} {W : Y.Opens} (h : V ≤ u ⁻¹ᵁ W) : u.resLE W V h ≫ (W.ι ≫ p) = V.ι ≫ q := by
@@ -131,7 +133,7 @@ abbrev trM (q : X ⟶ Spec (CommRingCat.of K)) (s a : ℕ) :
   CH.Mor.restrict (HT.grT (smFun X q) a) (KS q s {⊤}).ι
 
 theorem trM_bij (q : X ⟶ Spec (CommRingCat.of K)) (s a : ℕ) (h : a < s) (n : ℕ) : Function.Bijective ((trM q s a).pull n) :=
-  GlobalTheory.T.graded_restrict_pull_bijective q {⊤} (by simp) a s h n
+  _root_.GlobalTheory.CompanionTheory.OmLoc.grT_restrict_bijective q {⊤} (by simp) a s h n
 
 theorem ks_top {q : X ⟶ Spec (CommRingCat.of K)} {p : Y ⟶ Spec (CommRingCat.of K)} (r : X ⟶ Y) (hr : r ≫ p = q) (s a : ℕ)
     (T) (hT : KS q s {⊤} T) : KS p s {⊤} ((pullM r hr a).G.obj T) :=
@@ -191,7 +193,7 @@ theorem term_aff : ∀ (K : Type) [Field K] [CharZero K],
         formRes q h a (formPull hu W a (t p W hW a x)) := by
   intro K _ _
   obtain ⟨e, ε, -, he, -, -⟩ := CrystallineSemistableComparison.Om.L2.hodge_affine_iso_sign K
-  obtain ⟨m, hm, hn⟩ := GlobalTheory.T.restrict_graded_pull_natural K
+  obtain ⟨m, hm, hn⟩ := _root_.GlobalTheory.CompanionTheory.OpenThick.open_thick K
   refine ⟨fun q _ V hV a => tq (@e) (@m) (@hm) q V hV a, ?_⟩
   intro X Y q p _ _ u hu V W hV hW h a hG x
   haveI : IsAffine V.toScheme := hV

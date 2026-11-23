@@ -2,11 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsHermND
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PrimOfIsUnitDet
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardHermitianMatricesDvdSqStatement
+public import Mathlib.LinearAlgebra.Matrix.Defs
+public import Mathlib.SetTheory.Cardinal.Finite
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardHermitianMatricesDvdSq
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsPrincipalIdealRingOfHenselian
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NcardPrimitiveTuplesGramModNilpotentStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NcardPrimitiveTuplesWithGramMatrixResidueRingStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PrimitiveTuplesWithGramMatrixHenselCountStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NcardPrimitiveTuplesGramModNilpotent
+public import Mathlib.Basic.Real.Basic
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NcardPrimitiveTuplesWithGramMatrixResidueRing
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PrimitiveTuplesWithGramMatrixHenselCount
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -181,10 +184,10 @@ theorem count_quot (c : O →+* O) (hc : ∀ u, c (c u) = u) (ω : O) (hω : IsU
     rw [← Nat.card_eq_fintype_card]
     exact h1
 
-  have h29 := GlobalTheory.T.primitiveTuplesWithGramMatrix_hensel_count cA hcA _ hωA pA hpA hnil m n GA hGA
-  have h31 := GlobalTheory.T.ncard_primitive_tuples_gram_mod_nilpotent cA cB hcA pA hnil φ hsurj hφc hker m n GA
-  have h33 := GlobalTheory.T.card_hermitian_matrices_dvd_sq cA hcA _ hωA pA hpA m
-  have h62 := GlobalTheory.T.ncard_primitiveTuplesWithGramMatrix_residueRing cB hcB _ hωB hKB q hq hcardB m n hmn (GA.map φ) hGB
+  have h29 := _root_.GlobalTheory.GramCount.hensel_count cA hcA _ hωA pA hpA hnil m n GA hGA
+  have h31 := _root_.GlobalTheory.GramCount.ncard_gram_mod_eq_card_ker_pow_mul cA cB hcA pA hnil φ hsurj hφc hker m n GA
+  have h33 := _root_.GlobalTheory.GramCount.card_hermitian_dvd_sq cA hcA _ hωA pA hpA m
+  have h62 := _root_.GlobalTheory.GramCount.ncard_sols_residue cB hcB _ hωB hKB q hq hcardB m n hmn (GA.map φ) hGB
 
   have hD : Nat.card {u : O ⧸ Ideal.span {p ^ j} // pA ∣ u} = q ^ (2 * (j - 1)) := by
     have hcard := AddSubgroup.card_eq_card_quotient_mul_card_addSubgroup

@@ -3,15 +3,16 @@ module
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UniqGapOfUniq
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DegVand
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.BesselGapExistsFunctionalStatement
-public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.GapCoefficientDerivativeBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselMapsProportionalDiscreteSeriesLargeGapStatement
+public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.IsDSOfIsDG
+public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.GapCoefficientDerivativeBound
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselMapsProportionalDiscreteSeriesLargeGap
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CapParamOfIsHCTypeW
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsKFiniteBesselPeriodNeZeroGapStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsKFiniteBesselPeriodNeZeroGap
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUnitaryTorusScaleBesselCharacter
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarLieIsHaarOnUnipotentRadical
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableEmbeddingLmul
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MomentPieriNumericsOfSizeHyps
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalizedBesselMapsAnyScalePieriConstantsStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalizedBesselMapsAnyScalePieriConstants
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CayleyExistsAndAny
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DiscreteSeriesUnitarySmoothBasic
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.HaarEqSmul
@@ -122,7 +123,7 @@ theorem exists_mass_eq (hH : GlobalTheory.GapIn.Hyp) {k r : ℕ} {ε : Fin (2 * 
   have hDG : R.IsDG ε mu := ⟨hDS.1, hDS.2, h, hgap, hok⟩
   obtain ⟨t, htG, htN, htz, -⟩ := GlobalTheory.TorusScale.exists_torus_scale k r c hc
   obtain ⟨-, htW, htψ⟩ := htz z hS.1
-  obtain ⟨hS', hR⟩ := GlobalTheory.T.isBesselMap_conj_iff_and_besselFn_eq_rankOne hH k r Wp z π u c μW μN μG νq t htG htN htW htψ hS
+  obtain ⟨hS', hR⟩ := _root_.GlobalTheory.BesselMoveGap.bessel_move_gap hH k r Wp z π u c μW μN μG νq t htG htN htW htψ hS
   obtain ⟨hmul, hone, hinn, hsm, hTK, -, hKT, -, hcont⟩ :=
     GlobalTheory.rep_basic_of_isDS hH.1.1.2.2.1 k r ε mu R hDS
   have hU : Formalism.MainNotions.S.IsURepOn (BranchingSupport.GG k r) R.σ := by
@@ -152,15 +153,15 @@ theorem exists_mass_eq (hH : GlobalTheory.GapIn.Hyp) {k r : ℕ} {ε : Fin (2 * 
         Matrix.one_mul]
     exact congrArg (fun y => ((‖B y‖₊ : ℝ≥0∞)) ^ 2) e
   obtain ⟨l, hl⟩ := Gp91.GlobalTheory.T.bessel_gap_exists_functional hH.1 k r ε mu h R Wp z π u _ _ _ _ hDG hgap hok hS'
-  obtain ⟨v₁, hv₁, hlv⟩ := GlobalTheory.T.exists_kFinite_besselPeriod_ne_zero_gap hH k r ε mu h R Wp z π u _ _ _ _ _ l w hDS hgap hok hS' hB' hw
+  obtain ⟨v₁, hv₁, hlv⟩ := _root_.GlobalTheory.BesselPeriodNonzeroGap.exists_kFin_period_ne_zero hH k r ε mu h R Wp z π u _ _ _ _ _ l w hDS hgap hok hS' hB' hw
     (by rw [hmove]; exact h0) (by rw [hmove]; exact h1) hl
   obtain ⟨c₀, hc₀, hfd⟩ := schur_fdeg_gap hH.1 k r ε μG hS.2.2.2.2.2.2.1
   have hdd : 0 < c₀ * Formalism.QuantumDeterminants.fdegHC mu := mul_pos hc₀ (GlobalTheory.BesselSchur.fdegHC_pos hDS.1.1)
   have hv₁s : v₁ ∈ R.sm := hTK _ (hKT _ hv₁)
-  have hiso := Gp91.GlobalTheory.T.isIsoB_sqrt_fdeg_smul_of_gap hH.1 k r ε mu h R Wp z π u _ _ _ _ l _ hDG hgap hok hS' hl
+  have hiso := _root_.Gp91.GlobalTheory.scaled_bessel_isometric hH.1 k r ε mu h R Wp z π u _ _ _ _ l _ hDG hgap hok hS' hl
     (hfd mu R hDG).1 ⟨v₁, hv₁s, hlv⟩
   obtain ⟨hb, hiso⟩ := hiso
-  obtain ⟨a, ha⟩ := GlobalTheory.T.besselMaps_proportional_discreteSeries_largeGap hH k r ε mu R Wp z π u _ _ _ _ _ _ hDG hS' hb
+  obtain ⟨a, ha⟩ := _root_.GlobalTheory.GapLine.bessel_line_gap hH k r ε mu R Wp z π u _ _ _ _ _ _ hDG hS' hb
     ⟨v₁, hv₁s, smul_ne_zero (Complex.ofReal_ne_zero.2 (Real.sqrt_pos.2 hdd).ne') hlv⟩ hB'
   refine ⟨(‖a‖₊ : ℝ≥0∞) ^ 2, fun v hv => ?_⟩
   have e : ((‖v‖₊ : ℝ≥0∞)) ^ 2 = ENNReal.ofReal (‖v‖ ^ 2) := by

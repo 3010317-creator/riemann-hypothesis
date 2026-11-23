@@ -9,16 +9,17 @@ public import Formalism.SharpRestriction.Divisibility.LiftErrorLocal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommTensCastRSymmMap
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CmFieldFiniteAdeleTensorEquivMemIntegralAdelesStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsDegreeOnePrimeFrameReducedMatricesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIntegralIdempotentSplitPlaceCmFiniteAdelesStatement
+public import ReciprocityTheory.Automorphisms.Unitary
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIntegralIdempotentSplitPlaceCmFiniteAdeles
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsRectangularConjInstanceMatrixStandardPsiStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSplitPlaceEqFixedTypePrimePlace
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FiniteAdelesCmFieldEqZeroOfComponentsStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FiniteAdelesCmFieldEqZeroOfComponents
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemMaximalCompactOfTrivialOffSplitPairStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemMaximalCompactUnitaryOfSplitPlaceLiftStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemMaximalCompactUnitaryOfSplitPlaceLift
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ResidueCmFieldFiniteAdeleTensorEquivEqNatCastStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SplitPlaceBaseNeOfDistinctTypePrimesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SplitPlaceProjectionEqZeroOfPlaceComponentEqZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryConjugatorOfSplitIdempotentsStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SplitPlaceProjectionEqZeroOfPlaceComponentEqZero
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryConjugatorOfSplitIdempotents
 public import Formalism.LocalToGlobal.Divisibility.DefGroupLemmas
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -228,7 +229,7 @@ theorem core0 (D : D7) (t : Formalism.L2.Theta.GA D (D.sp.Y 0)) (PY : RowPsi (Yc
   obtain ⟨U, U', hUU, hUU', hFM⟩ := GlobalTheory.T.exists_rectangular_conj_instanceMatrix_standardPsi D hF PY t hStd
   have hsp := fun kv : Σ k : Fin 2, D.nd.PlG k => GlobalTheory.SplitPlaceOfFixed.exists_splitPlace_plGw D kv
   choose sp hsp using hsp
-  have hid := fun kv : Σ k : Fin 2, D.nd.PlG k => GlobalTheory.T.exists_integralIdempotent_splitPlace_cmFiniteAdeles D.host.E (sp kv)
+  have hid := fun kv : Σ k : Fin 2, D.nd.PlG k => _root_.GlobalTheory.SplitIdem.exists_idem D.host.E (sp kv)
   choose ε₀ hε₀ using hid
   let σ : Formalism.IndefR.Lev.EAf D →+* Formalism.IndefR.Lev.EAf D := Formalism.L2.SG.HidaSetting.sigA (Formalism.L2.SG.InstExistsPf.instOf D)
   let θ : ReciprocityTheory.Aut.AL D.host.E ≃+* Formalism.IndefR.Lev.EAf D := adeleEquiv D hF
@@ -243,7 +244,7 @@ theorem core0 (D : D7) (t : Formalism.L2.Theta.GA D (D.sp.Y 0)) (PY : RowPsi (Yc
       ε₀ kv * ε₀ kv' = 0 ∧ ε₀ kv * conjAL D.host.E (ε₀ kv') = 0 := by
     intro kv kv' hne
     constructor <;>
-    · apply GlobalTheory.T.finiteAdelesCmField_eq_zero_of_components
+    · apply _root_.GlobalTheory.AL_eq_zero_of_compAt
       intro v
       rw [map_mul]
       by_cases hv : v = (sp kv).v
@@ -263,7 +264,7 @@ theorem core0 (D : D7) (t : Formalism.L2.Theta.GA D (D.sp.Y 0)) (PY : RowPsi (Yc
     exact ⟨rfl, rfl⟩
   obtain ⟨Z, P, Z', P', hZZ', hZ'Z, hPP', hP'P, hZ, hZ', hPXP⟩ :=
     frame_algebra (R := Formalism.IndefR.Lev.EAf D) hn U U' hUU hUU' β₀
-  obtain ⟨cE, hcE, hcZ⟩ := GlobalTheory.T.exists_unitary_conjugator_of_split_idempotents (Formalism.IndefR.Lev.EAf D) σ hσσ (Formalism.L2.SG.InstExistsPf.instOf D).n D.R.r
+  obtain ⟨cE, hcE, hcZ⟩ := _root_.GlobalTheory.unitary_conjugator_of_split_idempotents (Formalism.IndefR.Lev.EAf D) σ hσσ (Formalism.L2.SG.InstExistsPf.instOf D).n D.R.r
     (Σ k : Fin 2, D.nd.PlG k) ε hεidem hεσ hεorth Z P Z' P' hZZ' hZ'Z hPP' hP'P
   obtain ⟨cA, hcA1, hcA2, hcA3⟩ := exists_unitary_transport θ (conjAL D.host.E) σ hθσ D.R.r cE hcE
   let c : GAf D.host.E D.R.r := ⟨cA, hcA1⟩
@@ -277,7 +278,7 @@ theorem core0 (D : D7) (t : Formalism.L2.Theta.GA D (D.sp.Y 0)) (PY : RowPsi (Yc
   have hgw : ((D.host.g kv.1 : ℕ) : 𝓞 D.host.E) ∈ (sp kv).w.asIdeal := by
     rw [hsp kv]; exact D.naut.plGw_over kv.1 kv.2
   have hxU : x ∈ Umax D.host.E D.R.r :=
-    GlobalTheory.T.mem_maximalCompactUnitary_of_splitPlaceLift D.host.E D.R.r (sp kv) (D.host.g kv.1) (D.host.g_prime kv.1) hgw x γ hlift
+    _root_.GlobalTheory.LiftInt.mem_Umax_of_isLift D.host.E D.R.r (sp kv) (D.host.g kv.1) (D.host.g_prime kv.1) hgw x γ hlift
   have hKof : ∀ z : GAf D.host.E D.R.r,
       (Formalism.L2.SG.InstExistsPf.instOf D).fmat (Formalism.IndefR.RationalEmbedding.iota D (MulAut.conj t (PY.ψ (c * z * c⁻¹)))).2 =
         U * ((cE : Matrix (Fin D.R.r) (Fin D.R.r) (Formalism.IndefR.Lev.EAf D)) *
@@ -320,7 +321,7 @@ theorem core0 (D : D7) (t : Formalism.L2.Theta.GA D (D.sp.Y 0)) (PY : RowPsi (Yc
       (((x : GL (Fin D.R.r) (AL D.host.E)) : Matrix (Fin D.R.r) (Fin D.R.r) (AL D.host.E)) i j -
         (1 : Matrix (Fin D.R.r) (Fin D.R.r) (AL D.host.E)) i j) = 0 := by
     intro i j
-    apply GlobalTheory.T.finiteAdelesCmField_eq_zero_of_components
+    apply _root_.GlobalTheory.AL_eq_zero_of_compAt
     intro v
     rw [map_mul, map_sub, map_sub, map_one]
     by_cases hv : v = (sp kv).v
@@ -401,7 +402,7 @@ theorem core0 (D : D7) (t : Formalism.L2.Theta.GA D (D.sp.Y 0)) (PY : RowPsi (Yc
       rw [map_add (f := _), this.1, this.2, add_zero]
     have hres0 : Formalism.L2.DIV.resS (↥D.host.F) (sp kv').w ⟨_, he⟩ = 0 := by
       have h1 := GlobalTheory.T.residue_cmFieldFiniteAdeleTensorEquiv_eq_natCast D hF (sp kv') (ε₀ kv + conjAL D.host.E (ε₀ kv)) he 0 hemem
-        (by rw [GlobalTheory.T.splitPlaceProjection_eq_zero_of_placeComponent_eq_zero D.host.E (sp kv') _ hcomp, Nat.cast_zero, sub_zero, map_zero]; exact zero_lt_one)
+        (by rw [_root_.GlobalTheory.SplitProj.proj_eq_zero_of_compAt_eq_zero D.host.E (sp kv') _ hcomp, Nat.cast_zero, sub_zero, map_zero]; exact zero_lt_one)
       rw [Nat.cast_zero] at h1
       exact h1
     have h3 := smul_conj_sub_one' ((β₀⁻¹ : GL _ _).val : Matrix (Fin (Formalism.L2.SG.InstExistsPf.instOf D).n) (Fin (Formalism.L2.SG.InstExistsPf.instOf D).n) (Formalism.IndefR.Lev.EAf D))

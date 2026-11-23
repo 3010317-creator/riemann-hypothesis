@@ -6,11 +6,11 @@ public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FiniteSupport
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsRealIntertwinerNeZeroKFiniteTensorStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.KFiniteVectorsDiscreteSeriesSmoothAbsolutelyIrreStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PiTensorSubmoduleEqTopOfAbsolutelyIrreducibleStaStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PiTensorSubmoduleEqTopOfAbsolutelyIrreducibleSta
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RealIntertwinerValuesKFiniteStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LieActionFockOperatorsScalarsTraceStatement
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIntegralForm
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InclTprodUpdate
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LieActionFockOperatorsScalarsTraceStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -122,7 +122,7 @@ theorem kfinSpan_le_span_it : GlobalTheory.Published.DiscreteSeriesCover → Glo
     have : I φ y ∈ N := hNd ▸ Submodule.subset_span ⟨φ, y, rfl⟩
     rw [e, Submodule.mem_bot] at this
     rw [← hI, this, map_zero]
-  have htop := GlobalTheory.T.piTensor_submodule_eq_top_of_absolutely_irreducible_stable D.what₂.Tau (fun τ => kFin M τ) (fun τ => lieAt V τ) (fun τ X => a τ X) hirr N hN h0
+  have htop := _root_.GlobalTheory.TensorIrr.eq_top_of_stable D.what₂.Tau (fun τ => kFin M τ) (fun τ => lieAt V τ) (fun τ X => a τ X) hirr N hN h0
   intro w hw
   obtain ⟨z, rfl⟩ := span_le_range M h hw
   have hz : z ∈ N := htop ▸ Submodule.mem_top

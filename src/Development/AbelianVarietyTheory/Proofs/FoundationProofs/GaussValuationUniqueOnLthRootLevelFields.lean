@@ -6,8 +6,9 @@ public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
 public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsFinsetSpanPrincipalCongruenceLevelFunctionStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GaussExtensionUniqueOfGaussStatement
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsFinsetSpanPrincipalCongruenceLevelFunction
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GaussExtensionUniqueOfGauss
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularTowerUnitsFiniteModPowersAtLevel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -137,7 +138,7 @@ theorem gauss_unique_root : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgCl
     convert halgΩ
     exact Subsingleton.elim _ _
   obtain ⟨R, hR⟩ := GlobalTheory.KZ.FinLev.finite_mod_powers ε X ε.injective hj M₀ l hM hl.pos
-  obtain ⟨T, -, hT⟩ := GlobalTheory.T.exists_finset_span_principalCongruenceLevel_functions ε X hj M₀ hM
+  obtain ⟨T, -, hT⟩ := _root_.GlobalTheory.KZ.ES.LevFin.exists_finset_span ε X hj M₀ hM
   let E := AlgebraicClosure X.K
   let ι : X.K →ₐ[Ω] E := IsScalarTower.toAlgHom Ω X.K E
   let t : E := algebraMap X.K E X.jK
@@ -169,7 +170,7 @@ theorem gauss_unique_root : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgCl
     intro h
     have h1 : IsAlgebraic Ω (ι X.jK) := h.algHom L.val
     exact transcendental_j X ((isAlgebraic_algHom_iff ι ι.toRingHom.injective).1 h1)
-  obtain ⟨S, hS⟩ := GlobalTheory.T.gauss_valuationSubring_unique_away_finset (F := Ω) (⟨t, ht⟩ : L) htr hfin
+  obtain ⟨S, hS⟩ := _root_.GlobalTheory.BertiniNoether.gauss_extension_unique_of_gauss (F := Ω) (⟨t, ht⟩ : L) htr hfin
   have hlev : ∀ f : X.K, Lev X M₀ f → algebraMap X.K E f ∈ L := by
     intro f hf
     have hsp := hT f hf

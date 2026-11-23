@@ -1,7 +1,7 @@
 module
 
 public import Formalism.SharpRestriction.CuspSpanNormBounds.IsTermOver
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnipotentRadicalIsotropicFlagMovesStepIntoPrevStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnipotentRadicalIsotropicFlagMovesStepIntoPrev
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -86,7 +86,7 @@ theorem locStd_exists_flag_coef_one : ∀ {F : Type} [Field F] [ValuativeRel F] 
     Submodule.subset_span ⟨a, Nat.lt_succ_self _, rfl⟩
   have hle : a.val + 1 ≤ r := a.isLt
   have hdiff : n (Fr.e a) - Fr.e a ∈ Fr.Fj a.val := by
-    have := (T.unipotentRadical_isotropicFlag_moves_step_into_prev Fr n hn (a.val + 1) hle (Fr.e a) hmem).1
+    have := (_root_.GlobalTheory.unipRadical_moves_step_into_prev Fr n hn (a.val + 1) hle (Fr.e a) hmem).1
     simpa using this
   have hmono : Fr.Fj a.val ≤ Fr.Fj (a.val + 1) :=
     Submodule.span_mono (Set.image_mono fun b (hb : b.val < a.val) => Nat.lt_succ_of_lt hb)

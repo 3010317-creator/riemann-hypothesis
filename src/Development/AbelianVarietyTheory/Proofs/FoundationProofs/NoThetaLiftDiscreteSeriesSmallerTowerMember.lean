@@ -1,11 +1,12 @@
 module
 
 public import Formalism.SharpRestriction.Divisibility.SchurIrreducible
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LowestKTypesJointShapeBlockInUnitarySStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LowestKTypesJointShapeBlockUnitaryStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LowestTypeNotJointShapeSmallerPairsStatement
+public import Formalism.LocalRingCardinality.DataTheta
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LowestKTypesJointShapeBlockInUnitaryS
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LowestTypeNotJointShapeSmallerPairs
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NoIntertwinerSmallerFockToDiscreteSeries
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NoThetaTensorIntertwinerLowerTowerMembers
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LowestKTypesJointShapeBlockUnitary
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,9 +59,9 @@ theorem archimedeanRallisFourth_of_discreteSeriesBlattner : ∀ X : ProvA, admH1
     have ht : 1 ≤ t := hA.1
     have hn : 1 ≤ al.length + be.length + ga.length + de.length := hA.2.1
     have ht0 : (0 : ℚ) ≤ t := Nat.cast_nonneg t
-    obtain ⟨-, hpar, -⟩ := GlobalTheory.T.lowest_kTypes_jointShape_block_unitary t al be ga de hA
-    obtain ⟨-, -, hsign, -⟩ := GlobalTheory.T.lowestKTypes_jointShape_block_in_unitaryS t al be ga de hA
-    have hno := (GlobalTheory.T.lowestType_not_jointShape_smaller_pairs t al be ga de hA i hi).2.1 hr hs
+    obtain ⟨-, hpar, -⟩ := _root_.GlobalTheory.LowestTypes.lowest_types t al be ga de hA
+    obtain ⟨-, -, hsign, -⟩ := _root_.GlobalTheory.TypesMirror.types_mirror t al be ga de hA
+    have hno := (_root_.GlobalTheory.LowestTypeDrop.lowestType_not_jointShape t al be ga de hA i hi).2.1 hr hs
     refine GlobalTheory.LowerTower.tensNo_first X hD h5 (by omega) _ hpar 0 ?_ hno MM f hf
     rw [GlobalTheory.SmallerSource.cPair_sub hr hs]
     refine fun a => ⟨(hsign a).1, fun h => (hsign a).2 (lt_of_le_of_ne h fun h0 => ?_)⟩

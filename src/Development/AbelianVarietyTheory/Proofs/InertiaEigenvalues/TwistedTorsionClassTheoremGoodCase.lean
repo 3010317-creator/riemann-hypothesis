@@ -2,7 +2,7 @@ module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.LocalSituation
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineExtensionClassBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeightGoodReductionAtPrimeStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeightGoodReductionAtPrime
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,6 +49,6 @@ namespace GlobalTheory.TheoremTB
 theorem tb_assembled : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW),
     admitted D HW F → Conclusion5 D → Conclusion4 D HW F := by
   intro D HW F hA h5 l _ K s LL h
-  exact ⟨GlobalTheory.T.crystalline_extension_class_bound D HW F hA l K s LL h, GlobalTheory.T.weight_good_reduction_at_prime D HW F hA h5 l K s LL h⟩
+  exact ⟨GlobalTheory.T.crystalline_extension_class_bound D HW F hA l K s LL h, _root_.GlobalTheory.TwistTors.twist_torsion_facts D HW F hA h5 l K s LL h⟩
 
 end GlobalTheory.TheoremTB

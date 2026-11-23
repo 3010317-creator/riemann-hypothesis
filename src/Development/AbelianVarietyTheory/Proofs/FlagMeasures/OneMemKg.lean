@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.EigenfunctionFiniteCoefficients
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermitianFormUnitaryOneOne
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CompletedTensorDiscreteSeriesIrreducibleFormalDe
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CountedVectorIsCuspFormStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CountedVectorIsCuspForm
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CuspidalSubspaceClosedRightTranslationStable
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DiscreteSeriesCoefficientIntegrableMajorant
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FiniteAdelicUnitaryCongruenceTopology
@@ -112,7 +112,7 @@ theorem cusp_all : GlobalTheory.DSId.StrictLow → ∀ (B : RowsAut) (d : Infini
   refine ⟨hle hT, fun u => ⟨?_, fun k hk => ?_⟩⟩
   · have hw' : T (B.tens B.w) ∈ S := by
       rw [hSm]
-      exact GlobalTheory.T.countedVector_isCuspForm hS B d h hd hg hgap hl hb Rφ hR T hT
+      exact _root_.GlobalTheory.RowCusp.row_isCuspFn hS B d h hd hg hgap hl hb Rφ hR T hT
     have hcl : IsClosed ((S.comap (T : B.Hs →ₗ[ℂ] B.I.L2 B.μf B.fund) : Submodule ℂ B.Hs) : Set B.Hs) :=
       hScl.preimage T.continuous
     rcases hirr _ hcl (fun g v hv => by

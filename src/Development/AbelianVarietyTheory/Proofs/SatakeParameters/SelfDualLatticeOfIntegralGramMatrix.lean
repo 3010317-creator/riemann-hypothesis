@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SelfDualOne
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HermitianDualSubsetOfIntegralGramStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HermitianFormIntegralPreimageLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IntegralPreimageAddImageEqLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HermitianDualSubsetOfIntegralGram
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HermitianFormIntegralPreimageLattice
+public import Formalism.SatakeDualWeyl.StatementF
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IntegralPreimageAddImageEqLattice
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -96,9 +97,9 @@ theorem GlobalTheory.Hk3.HoweG.selfDual_lattice_of_gram_int : ∀ (L : Type) [Fi
         (JT : Matrix (Fin n') (Fin n') L) := by
       simp only [hy, GlobalTheory.Hk3.HoweG.adj, Formalism.UG.cT, Matrix.mul_assoc]
     rw [this]; exact iMM _ _ hx eJT
-  have T4 := GlobalTheory.T.integral_preimage_add_image_eq_lattice
-  have T5 := GlobalTheory.T.hermitianDual_subset_of_integral_gram
-  have FreeQuotientRank := GlobalTheory.T.hermitianForm_integral_preimage_lattice
+  have T4 := _root_.GlobalTheory.Hk3.HoweG.latA_basis
+  have T5 := _root_.GlobalTheory.Hk3.HoweG.hermDual_subset_of_gram_int
+  have FreeQuotientRank := _root_.GlobalTheory.Hk3.HoweG.GramA.hform_integral
   obtain ⟨a, ha⟩ := T4 L n n' x y
   have hcol : ∀ j, ∃ u : Fin n → L, ∃ w : Fin n' → L, (∀ i, u i ∈ Formalism.UG.intL L) ∧ (∀ i, (x *ᵥ u) i ∈ Formalism.UG.intL L) ∧
       (∀ i, w i ∈ Formalism.UG.intL L) ∧ (fun k => (a : Matrix (Fin n) (Fin n) L) k j) = u + y *ᵥ w := by

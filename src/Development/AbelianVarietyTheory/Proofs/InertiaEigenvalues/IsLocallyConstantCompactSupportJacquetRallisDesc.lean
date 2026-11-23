@@ -1,7 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LeftMulTau
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetRallisInvKRegularIffIsUnitStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsTestRep
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetRallisInvKRegularIffIsUnit
+public import Mathlib.Analysis.Normed.Group.Ultra
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,7 +53,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Algebra.Group.Units
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.Analysis.Normed.Group.Ultra
 
 @[expose] public section
 
@@ -104,7 +105,7 @@ theorem desc_isTest : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivially
     LinearMap.pi fun i => (Algebra.trace F A.K).comp (LinearMap.mulLeft F (τ ^ (i : ℕ)))
   have hρL : ∀ c, ρL c = fun i : Fin r => Algebra.trace F A.K (τ ^ (i : ℕ) * c) := fun c => rfl
   have hbij : Function.Bijective ρL := by
-    have := (GlobalTheory.T.jacquetRallis_invK_regular_iff_isUnit F E A r τ p lam hG).1
+    have := (_root_.GlobalTheory.JR.EtInv.invK_regular_iff_isUnit F E A r τ p lam hG).1
     rw [show (⇑ρL) = fun (a : A.K) (i : Fin r) => Algebra.trace F A.K (τ ^ (i : ℕ) * a) from funext hρL]
     exact this
   let ρE : A.K ≃ₗ[F] (Fin r → F) := LinearEquiv.ofBijective ρL hbij

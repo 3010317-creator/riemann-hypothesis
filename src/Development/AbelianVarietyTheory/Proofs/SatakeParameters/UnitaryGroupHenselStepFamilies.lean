@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DvdPowZeroIff
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CayleyTransformIntegralUnitaryCongruentOneStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIntegralDualOfIndependentModUniformizerStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIntegralSkewHermitianLiftModUniformizerStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CayleyTransformIntegralUnitaryCongruentOne
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIntegralDualOfIndependentModUniformizer
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIntegralSkewHermitianLiftModUniformizer
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MatrixLatticeIndexIntegralTranslationInvariance
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -113,9 +113,9 @@ theorem hensel_step : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicati
       rw [← mul_assoc, ← pow_add]; congr 2; omega
     have := GlobalTheory.Hk3.IntWitt.dvdPow_sub h1 h2
     simpa using this
-  obtain ⟨a, haI, ha⟩ := GlobalTheory.T.exists_integral_dual_of_independentModUniformizer L ϖ hv n' ι z hz hind
-  obtain ⟨C, hCs, hCI, hCz⟩ := GlobalTheory.T.exists_integral_skew_hermitian_lift_mod_uniformizer L ϖ σ q hU hq n' JT hJT hherm ι z w a hz hwI haI ha hgram1
-  obtain ⟨g, hgI, hg1, hg2⟩ := GlobalTheory.T.cayley_transform_integral_unitary_congruent_one L ϖ σ q hU hq n' JT hJT hherm C hCs hCI k hk
+  obtain ⟨a, haI, ha⟩ := _root_.GlobalTheory.Hk3.IntWitt.exists_dual_of_indepMod L ϖ hv n' ι z hz hind
+  obtain ⟨C, hCs, hCI, hCz⟩ := _root_.GlobalTheory.Hk3.SkewLift.skew_lift L ϖ σ q hU hq n' JT hJT hherm ι z w a hz hwI haI ha hgram1
+  obtain ⟨g, hgI, hg1, hg2⟩ := _root_.GlobalTheory.Hk3.CayleyCong.cayley_cong L ϖ σ q hU hq n' JT hJT hherm C hCs hCI k hk
   refine ⟨g, hgI, hg1, fun i r => ?_⟩
   set G : Matrix (Fin n') (Fin n') L := ((g : GL (Fin n') L) : Matrix (Fin n') (Fin n') L) with hGdef
   have e : G *ᵥ z i - z' i = (G - 1 - ϖ ^ k • (Ji * C)) *ᵥ z i + ϖ ^ k • (Ji *ᵥ (C *ᵥ z i - J *ᵥ w i)) := by

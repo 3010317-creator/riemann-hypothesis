@@ -1,13 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LiftFrameEmbeddingBase
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsJointRowWeightDualWeylModuleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueDualWeylWeightProjectorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenericRowCoefMemCoefAlgebraOfDomainStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HighestWeightBaseChangeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.JointRowWeightAntitoneOfMaxPotentialStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.JointRowWeightBoundsDualWeylModuleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimpleSubquotientEmbedsDualWeylReductionMaxWeighStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseChange
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsJointRowWeightDualWeylModule
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HasBlockOfOccurs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueDualWeylWeightProjector
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenericRowCoefMemCoefAlgebraOfDomain
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HighestWeightBaseChange
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.JointRowWeightAntitoneOfMaxPotential
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.JointRowWeightBoundsDualWeylModule
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimpleSubquotientEmbedsDualWeylReductionMaxWeigh
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -42,7 +44,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseChange
 
 @[expose] public section
 
@@ -56,8 +57,8 @@ theorem GlobalTheory.HighWt.simpleSubquot_embeds : ∀ (O : Type) [CommRing O] [
   intro O _ _ _ _ N ι _ _ lam ϖ hϖ hlam Gm _ _ hs hsub
   classical
   haveI : Nontrivial Gm := IsSimpleModule.nontrivial (alg O N lam) Gm
-  obtain ⟨w0, hw0⟩ := GlobalTheory.T.exists_jointRowWeight_dualWeylModule O N ι lam Gm inferInstance
-  have hB := GlobalTheory.T.jointRowWeight_bounds_dualWeylModule O N ι lam hlam Gm
+  obtain ⟨w0, hw0⟩ := _root_.GlobalTheory.HighWt.exists_jointWt O N ι lam Gm inferInstance
+  have hB := _root_.GlobalTheory.HighWt.jointWt_bounds O N ι lam hlam Gm
   let S : Set (ι → Fin N → ℕ) := {w | GlobalTheory.HighWt.JointWt O N lam Gm w}
   have hfin : S.Finite := by
     refine Set.Finite.subset (Set.Finite.pi (t := fun τ => Set.pi Set.univ fun _ : Fin N => Set.Iic (lam τ 0))
@@ -70,15 +71,15 @@ theorem GlobalTheory.HighWt.simpleSubquot_embeds : ∀ (O : Type) [CommRing O] [
   rw [Set.Finite.mem_toFinset] at hwS
   have hmax' : ∀ w', GlobalTheory.HighWt.JointWt O N lam Gm w' → GlobalTheory.HighWt.pot N w' ≤ GlobalTheory.HighWt.pot N w :=
     fun w' h' => hmax w' (hfin.mem_toFinset.2 h')
-  have hanti := GlobalTheory.T.jointRowWeight_antitone_of_maxPotential O N ι lam Gm w hwS hmax'
-  refine ⟨GlobalTheory.HighWt.extW N w, fun τ => ?_, GlobalTheory.T.simple_subquotient_embeds_dualWeyl_reduction_maxWeight O N ι lam ϖ hϖ hlam GlobalTheory.T.highest_weight_base_change (GlobalTheory.T.genericRowCoef_mem_coefAlgebra_of_domain O N ι lam) Gm hs hsub w hanti hwS hmax'⟩
+  have hanti := _root_.GlobalTheory.HighWt.antitone_of_pot_max O N ι lam Gm w hwS hmax'
+  refine ⟨GlobalTheory.HighWt.extW N w, fun τ => ?_, _root_.GlobalTheory.HighWtEmb.embeds_of_maxWeight O N ι lam ϖ hϖ hlam _root_.GlobalTheory.HighWt.baseChange_holds (_root_.GlobalTheory.HighWt.coefIn_of_domain O N ι lam) Gm hs hsub w hanti hwS hmax'⟩
   rw [GlobalTheory.HighWt.res_extW]
   refine ⟨hanti τ, ?_, ?_, ?_⟩
   · have := (hB w hwS τ).1
     simpa [GlobalTheory.HighWt.extW, Fin.is_lt] using this
   · intro a
     simpa [GlobalTheory.HighWt.extW, Fin.is_lt] using (hB w hwS τ).2 a
-  · obtain ⟨a, ha, -⟩ := GlobalTheory.T.existsUnique_dualWeylWeightProjector O N ι lam τ (w τ)
+  · obtain ⟨a, ha, -⟩ := _root_.GlobalTheory.ExpFrame.exists_unique_isProj O N ι lam τ (w τ)
     obtain ⟨z, hz, hfix⟩ := hwS
     let e : alg O N lam := ⟨a, Algebra.subset_adjoin (Or.inr ⟨τ, w τ, ha⟩)⟩
     refine ⟨e, z, ha, ?_⟩

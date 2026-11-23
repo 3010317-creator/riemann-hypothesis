@@ -2,11 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable
-import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGivenStageEqOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompactSubgroupUnitaryPointsSupportedAtPlaStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplementaryAdelicSchwartzRestFunctionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNhdsFixOfContinuousCoefficientsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanFiniteDimensionalOfBoundedFormsStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNhdsFixOfContinuousCoefficients
+public import Mathlib.Analysis.Complex.Norm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanFiniteDimensionalOfBoundedForms
+import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGivenStageEqOne
 import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsSmoothModerateOfIsAutFunSm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -247,7 +250,7 @@ theorem weil_smooth_at : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [N
       fun x hx => hsub ⟨hK1U hx.1, hK2U hx.2⟩⟩
     rw [Subgroup.coe_prod]
     exact hK1c.prod hK2c
-  obtain ⟨U, hU, hfix⟩ := GlobalTheory.T.exists_nhds_fix_of_continuous_coefficients GlobalTheory.T.finiteDimensional_span_of_forall_linear_bounded H S hmul hone hcont hbasis ⟨φ, hφ⟩
+  obtain ⟨U, hU, hfix⟩ := _root_.GlobalTheory.SmoothFix.exists_nhds_fix _root_.GlobalTheory.span_finiteDimensional_of_bounded_forms H S hmul hone hcont hbasis ⟨φ, hφ⟩
   refine ⟨U, hU, fun x hxU hx1 hx2 => ?_⟩
   have hx : x ∈ H := ⟨hx1, hx2⟩
   have e := congrArg Subtype.val (hfix x hxU hx)

@@ -2,7 +2,8 @@ module
 
 public import Development.AutomorphicArithmetic.Foundations.Convolution.TraceSplitting.SplitStable
 public import Development.AutomorphicArithmetic.Foundations.Convolution.IntegrableConvolution.SplitLoc
-public import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.OccursBasics
+public import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.SummandFactor
+public import Development.WeilBound.CuspidalAdmissibility.OccursIff
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerOrbitVolume.DetAdmA
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -66,7 +67,7 @@ private theorem exists_fixed {K : Type} [Field K] [NumberField K] {n : ℕ} (μ 
     ∃ (S : Subgroup (Gw n w)) (x : LL μ), IsOpen (S : Set (Gw n w)) ∧ x ∈ V ∧ x ≠ 0 ∧ ∀ g ∈ S, rhoL μ w g x = x := by
   letI : MeasurableSpace (Gw n w) := borel _
   haveI : BorelSpace (Gw n w) := ⟨rfl⟩
-  obtain ⟨⟨σ, f, hf0, hfV, hfe⟩, -, -⟩ := UpperTheory.ConvolutionTheory.C.occursBasics K n μ V w (Measure.haar) hV
+  obtain ⟨⟨σ, f, hf0, hfV, hfe⟩, -, -⟩ := _root_.PositivityTheory.TfC.OccursBasics_holds K n μ V w (Measure.haar) hV
   obtain ⟨x, hx⟩ : ∃ x, f x ≠ 0 := by
     by_contra hc
     push_neg at hc

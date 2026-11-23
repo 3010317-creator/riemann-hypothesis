@@ -1,9 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.BaseIdealIdeal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseIdealSheafOfIdealComapSpecMapSupportStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosedEmptyOfUniversallyClosedOfLeJacobsonStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KrullIntersectionIdealLocalFormStatement
+public import Mathlib.AlgebraicGeometry.IdealSheaf.Functorial
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseIdealSheafOfIdealComapSpecMapSupport
+public import Mathlib.AlgebraicGeometry.Morphisms.UniversallyClosed
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosedEmptyOfUniversallyClosedOfLeJacobson
+public import Mathlib.Algebra.Algebra.Operations
+public import Mathlib.RingTheory.Noetherian.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KrullIntersectionIdealLocalForm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -92,12 +97,12 @@ theorem le_of_le_reductions : ∀ (R : Type) [CommRing R] (I : Ideal R), I ≤ I
     intro x hx
     obtain ⟨U, hU⟩ := exists_affineOpen_mem x
     haveI : IsNoetherianRing Γ(V, U) := IsLocallyNoetherian.component_noetherian U
-    obtain ⟨r, hr, hr'⟩ := GlobalTheory.T.krull_intersection_ideal_local_form Γ(V, U) (I.map (cst p U.1)) (a.ideal U) (a'.ideal U)
+    obtain ⟨r, hr, hr'⟩ := _root_.GlobalTheory.krull_inter_ideal_local Γ(V, U) (I.map (cst p U.1)) (a.ideal U) (a'.ideal U)
       (fun e => by
         have := hle e U
         rwa [Scheme.IdealSheafData.ideal_sup, Pi.sup_apply, baseIdeal_ideal, Ideal.map_pow] at this)
     refine ⟨⟨V.affineBasicOpen (1 - r), ideal_le_on_basicOpen a a' U _ hr'⟩, ?_⟩
-    have hsupp : x ∈ (baseIdeal p I).support := (GlobalTheory.T.baseIdealSheafOfIdeal_comap_specMap_support.2.2 R V p I x).2 hx
+    have hsupp : x ∈ (baseIdeal p I).support := (_root_.GlobalTheory.FormalAlg.baseIdeal_calculus.2.2 R V p I x).2 hx
     rw [Scheme.IdealSheafData.mem_support_iff_of_mem hU, baseIdeal_ideal, Scheme.mem_zeroLocus_iff]
       at hsupp
     have hxr := hsupp r hr
@@ -106,7 +111,7 @@ theorem le_of_le_reductions : ∀ (R : Type) [CommRing R] (I : Ideal R), I ≤ I
     rw [map_sub, map_one]
     exact IsLocalRing.isUnit_one_sub_self_of_mem_nonunits _ hxr
   let O : V.Opens := ⨆ U : S, U.1.1
-  have hZ := GlobalTheory.T.eq_empty_of_isClosed_of_universallyClosed_of_le_jacobson R I hI a'.subscheme (a'.subschemeι ≫ p) hUC
+  have hZ := _root_.GlobalTheory.closed_empty_of_universallyClosed_of_le_jacobson R I hI a'.subscheme (a'.subschemeι ≫ p) hUC
     (a'.subschemeι ⁻¹' (O : Set V)ᶜ) (O.isOpen.isClosed_compl.preimage a'.subschemeι.continuous)
     (fun z hz hIz => hz (by
       obtain ⟨U, hU⟩ := h2 (a'.subschemeι z) (by simpa using hIz)

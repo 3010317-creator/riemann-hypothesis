@@ -2,8 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.TiedColumnData
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelsTwG
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocLEqIntVOfDvdUnitStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplittingFstMemIntegersStatement
+public import Formalism.LocalToGlobal.HermitianColumns.InLocalDiscriminantKernel
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocLEqIntVOfDvdUnit
+public import Formalism.LocalRingCardinality.DataLevel
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplittingFstMemIntegers
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoords
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -138,8 +140,8 @@ theorem stepBasis_std : ∀ {K : Ctx} {B : Base} {f : Fr B.toPre} {T : TwDat B} 
     have hπ : (w.px.piT u : 𝓞 (w.D Z).host.E) * (B.fields.conjO (w.px.piT u) : 𝓞 (w.D Z).host.E) =
         ((((w.D Z).mem u).A.T : ℕ) : 𝓞 (w.D Z).host.E) :=
       B.primes_piT_norm w.px u
-    have L := @GlobalTheory.T.mem_locL_iff_forall_mem_intV_of_not_mem (w.D Z).host.F (w.D Z).host.E _ _ _ _ _ _ w' _ _ _ _ _ _ hT hπ hLb
-    have PI := @GlobalTheory.T.splitting_fst_mem_integers' (w.D Z).host.F (w.D Z).host.E _ _ _ _ _ w' _ ((t.g.herm.g u v hg).spl_alg w' h)
+    have L := @_root_.GlobalTheory.locL_eq_intV_of_dvd_unit (w.D Z).host.F (w.D Z).host.E _ _ _ _ _ _ w' _ _ _ _ _ _ hT hπ hLb
+    have PI := @_root_.GlobalTheory.splitting_fst_mem_integers (w.D Z).host.F (w.D Z).host.E _ _ _ _ _ w' _ ((t.g.herm.g u v hg).spl_alg w' h)
     constructor
     · rintro ⟨y, hy, hyx⟩ a
       rw [← hyx a]

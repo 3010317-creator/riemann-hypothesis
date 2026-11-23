@@ -2,8 +2,10 @@ module
 
 public import Formalism.LocalToGlobal.IndefiniteReal.RationalEmbedding
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicTransportMeasureFirst
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StrongApproximationUnitaryUnipotentRadicalStatement
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.EvalTIota
+public import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.InfFam
+import Formalism.SharpRestriction.CuspSpanNormBounds.GlobAut
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StrongApproximationUnitaryUnipotentRadical
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -39,7 +41,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.InfFam
 
 @[expose] public section
 
@@ -75,7 +76,7 @@ theorem mem_NI_iff_iota : ∀ (D : D7) {r : ℕ} (C : Matrix (Fin (D.sp.Y 0).ran
       exact hb.symm
   have hW : I.IsIsot (Submodule.span I.E (Set.range (C : Matrix (Fin I.n) (Fin r) I.E).col)) :=
     (GlobalTheory.CuspCompare.isIsot_iff I _).2 ⟨r, C, hC, rfl⟩
-  refine GlobalTheory.CuspCompare.mem_closure_iff_of_equiv T (GlobalTheory.T.strong_approximation_unitaryUnipotentRadical I _ hW).1 (fun g => ?_) g
+  refine GlobalTheory.CuspCompare.mem_closure_iff_of_equiv T (_root_.GlobalTheory.UnipApprox.strong_approximation I _ hW).1 (fun g => ?_) g
   rw [key]
   exact and_congr Iff.rfl (and_congr Iff.rfl (GlobalTheory.CuspCompare.perp_cond (incA D) hL hR _).2)
 

@@ -6,9 +6,13 @@ public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.E
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogAtSmulMem
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyLatModelTwist
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmulMemSpanFormsOfMulMem
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.CechLatticeCohomologyVanish
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.ExistsLatticeModel
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.LogFormsLatticeFiniteStatement
+public import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.HdimEqZeroOfSubsingleton
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechLatticeCohomologyVanish
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsEulerContraction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLatticeModel
+public import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.TopologicalKrullDimLeOfIrreducibleCloseds
+public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.LogFormsLatticeFinite
+public import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.FiniteCohPushforwardIffOfIsClosedImmersion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,7 +52,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsEtCoord
-public import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.FiniteCohPushforwardIffOfIsClosedImmersion
 
 @[expose] public section
 
@@ -108,9 +111,9 @@ theorem exists_cechZero_cechFam_nsmul_add : ∀ (k : Type) [Field k] (X : Scheme
   have key : ∀ (j : Fin B) (a : Fin (n + 2)), ∃ q₀ : ℕ, ∀ q, q₀ ≤ q → ∀ b : ℕ, 0 < b →
       DI.CechZero (cechFam 𝒜 (q • H + R j) a) b := by
     intro j a
-    obtain ⟨F, ⟨lm⟩⟩ := GlobalTheory.T.exists_lattice_model X (logAt (suppAll E) (R j) a)
+    obtain ⟨F, ⟨lm⟩⟩ := _root_.GlobalTheory.LogDR.exists_latModel X (logAt (suppAll E) (R j) a)
       (fun y g v hg hv => logAt_smul_mem X _ _ _ y g v hg hv)
-    haveI : IsFiniteQC F := GlobalTheory.T.log_forms_lattice_finite X E 𝒜 (R j) a F lm
+    haveI : IsFiniteQC F := _root_.GlobalTheory.LogDR.latModel_logAt_isFiniteQC X E 𝒜 (R j) a F lm
     have hev := eventually_subsingleton_coh_twistZ_of_isProjOver (f := f) (fun _ => rfl) F hf hH
     obtain ⟨q₀, hq₀⟩ := Filter.eventually_atTop.1 (tendsto_natCast_atTop_atTop.eventually hev)
     refine ⟨q₀, fun q hq b hb => ?_⟩
@@ -118,7 +121,7 @@ theorem exists_cechZero_cechFam_nsmul_add : ∀ (k : Type) [Field k] (X : Scheme
       (logAt (suppAll E) (q • H + R j) a) F (q • H) (toLB (q • H)) _ (presents_toLB _)
       (fun y g v hD => by rw [add_comm]; exact logtwist X _ _ _ _ y g v hD) lm
     haveI : IsFiniteQC (twist F (toLB (q • H))) := isFiniteQC_twist (isLB_toLB _)
-    have hc := GlobalTheory.T.cech_lattice_cohomology_vanish X (logAt (suppAll E) (q • H + R j) a) (twist F (toLB (q • H))) 𝒜.U lm'
+    have hc := _root_.GlobalTheory.cechZero_latSec_iff_subsingleton_coh X (logAt (suppAll E) (q • H + R j) a) (twist F (toLB (q • H))) 𝒜.U lm'
       𝒜.affine 𝒜.gen 𝒜.cover b hb
     refine hc.2 ?_
     haveI hs : Subsingleton (coh (twist F (lbZPow (toLB H) (q : ℤ))) b) := hq₀ q hq b hb

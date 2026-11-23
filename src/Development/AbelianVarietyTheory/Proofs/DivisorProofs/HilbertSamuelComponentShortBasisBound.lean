@@ -3,10 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HermSysHypOneLeLambdaZero
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NonemptyCuspFrame
 public import Development.AbelianVarietyTheory.Definitions.Divisors.WellChosen
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithHilbertSamuelBoundOfQuotedTheoremsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithmeticHilbertSamuelBound
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AsIdealSpMapClosedPoint
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeSupLatticeComponentEqStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeightBirationalImageEqTupleHeightStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeSupLatticeComponentEq
+public import Development.AbelianVarietyTheory.Definitions.Divisors.AevalEqZeroOfMemConeIdeal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeightBirationalImageEqTupleHeight
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ImageDegEqDel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -62,9 +63,9 @@ theorem hsClaimS_component_geo : Quoted → ∀ (E : Type) [Field E] [NumberFiel
   have hp := CompHS.compPresents_data E H Dw l Xo c Y X Z r U P R ω x D V dict h f₁ f₂ th k
   have hb : (h.data f₁ f₂ th k).Birational := hH.bir
   have hd := ImageDegree.imageDeg_eq_del hQ c.F (h.data f₁ f₂ th k).toTuple _ _ _ _ _ (h.data f₁ f₂ th k).geom hb hp.2
-  have hh := GlobalTheory.T.height_birationalImage_eq_tuple_height hQ c.F (h.data f₁ f₂ th k).toTuple _ _ _ _ _ hH.totallyComplex (h.data f₁ f₂ th k).geom hb hp.2
-  have hc := GlobalTheory.T.arithmeticHilbertSamuelBound hQ c.F (h.data f₁ f₂ th k) Λ₀ hH _ hh
-  have hm := GlobalTheory.T.degree_supLattice_component_eq E H Dw l Xo c Y X Z r U P R ω x D V dict h f₁ f₂ th k P.T le_rfl
+  have hh := _root_.GlobalTheory.HSCore.isHeight_imageHeight hQ c.F (h.data f₁ f₂ th k).toTuple _ _ _ _ _ hH.totallyComplex (h.data f₁ f₂ th k).geom hb hp.2
+  have hc := _root_.GlobalTheory.HSShort.geoBound_of_quoted' hQ c.F (h.data f₁ f₂ th k) Λ₀ hH _ hh
+  have hm := _root_.GlobalTheory.CompHS.Ready.degM_eq E H Dw l Xo c Y X Z r U P R ω x D V dict h f₁ f₂ th k P.T le_rfl
   have hD : (h.data f₁ f₂ th k).D = CompHt.dimFlag Dw := hp.1
   obtain ⟨-, eT, -, en, eL, eb, eD, eT', -⟩ := h.data_numbers f₁ f₂ th k
   rw [← hd, h.d_eq f₁ f₂ th k, eT, en, eL, eb, eD, eT', hm, hD, Int.cast_natCast] at hc

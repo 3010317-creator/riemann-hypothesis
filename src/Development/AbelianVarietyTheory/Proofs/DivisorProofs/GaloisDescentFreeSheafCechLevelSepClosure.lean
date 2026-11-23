@@ -7,9 +7,10 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FreeEtaleMod
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FreeSheafHomValueAtCechNerveSimplexBijective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaloisActionFinitarySheafSectionLocallyConstant
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaloisLocallyConstantTupleRingTensorPowerUniversStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PreservesFilteredColimitsModuleCatIffForgetIffElStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SecLocallyConstant
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpecWidePushoutIsLimitWidePullbackStatement
+public import Mathlib.AlgebraicGeometry.Scheme
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpecWidePushoutIsLimitWidePullback
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PreservesFilteredColimitsModuleCatIffForgetIffElStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -355,7 +356,7 @@ theorem gal_sec : ∀ (R : Type) [CommRing R] (F : Shv R), Finitary F → ∀ (K
       exact RingHom.eqOn_set_closure hs a.2
     rw [restrict_eq τ, restrict_eq τ₀, hc]
   exact gal_sec_of GlobalTheory.T.galoisLocallyConstantTupleRing_tensorPower_universal
-    GlobalTheory.T.spec_widePushout_isLimit_widePullback hsections haction
+    _root_.GlobalTheory.spec_widePushout_isLimit hsections haction
 
 end GlobalTheory.EtC.GalSec
 

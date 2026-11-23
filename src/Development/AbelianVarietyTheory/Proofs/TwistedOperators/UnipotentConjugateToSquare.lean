@@ -1,8 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FromBlocksMem
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIntegralGeneratorSplitPlaceCmExtensionStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIntegralSiegelParabolicOfConjugateIdempoteStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIntegralGeneratorSplitPlaceCmExtension
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIntegralSiegelParabolicOfConjugateIdempote
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LiftVAlgebraMapMul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -39,7 +41,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable
 
 @[expose] public section
 
@@ -52,9 +53,9 @@ theorem conj_to_sq : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
     B.IsGood σ → ∀ (d : ℕ) (W : Spc F E d) (v : Pl (F := F)), Formalism.MainNotions.SchurIrreducible.IsSplit (E := E) v → (2 : 𝓞 F) ∉ v.asIdeal →
     ∀ n ∈ GlobalTheory.InertDbl.NabD σ W v, ∃ s ∈ GlobalTheory.InertDbl.ParD σ W v, s * n * s⁻¹ = n * n := by
   intro F E _ _ _ _ _ σ B hB d W v hsplit h2 n hn
-  obtain ⟨a, b, c, hq, hσa, hc, hb⟩ := GlobalTheory.T.exists_integral_generator_splitPlace_cmExtension F E σ B hB v hsplit
+  obtain ⟨a, b, c, hq, hσa, hc, hb⟩ := _root_.GlobalTheory.SplitGen.exists_integral_gen_split F E σ B hB v hsplit
   obtain ⟨Eid, E1, E2, E3, E4⟩ := GlobalTheory.SplitConj.exists_adelic_idem σ W v a b c hq hσa hc hb
-  obtain ⟨s, hs, hd, ha⟩ := GlobalTheory.T.exists_integralSiegelParabolic_of_conjugateIdempotent F E σ B hB d W v h2 Eid E1 E2 E3 E4
+  obtain ⟨s, hs, hd, ha⟩ := _root_.GlobalTheory.SplitConjPar.exists_par F E σ B hB d W v h2 Eid E1 E2 E3 E4
   refine ⟨s, hs, GlobalTheory.SplitConj.conj_eq_sq n hn s _ _ (GlobalTheory.LatVac.liftV v 1 - 1) ?_ ?_ hd ha⟩
   · rw [map_sub (evFin F v), GlobalTheory.LatVac.evFin_liftV, map_one (evFin F v), sub_self]
   · have h2' : (2 : _root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)) * ((⅟2 : AF F) • Eid) = Eid := by

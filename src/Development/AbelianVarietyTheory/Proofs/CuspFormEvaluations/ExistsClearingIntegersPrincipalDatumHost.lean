@@ -4,10 +4,13 @@ public import Formalism.LocalToGlobal.ProjectiveLattices.CuspidalL2Subspace
 public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
 public import Mathlib.Algebra.AffineMonoid.Basic
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FundamentalDomainPointBound
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsNatCastMemDifferentIdealPowLeStatement
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
+public import Mathlib.RingTheory.DedekindDomain.Different
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsNatCastMemDifferentIdealPowLe
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.NumericalConsequencesOfPins
-import Formalism.LocalRingCardinality.ConjSqrtMinusD
 public import Formalism.LocalToGlobal.ProjectiveLattices.HostInt
+import Formalism.LocalRingCardinality.ConjSqrtMinusD
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -126,7 +129,7 @@ theorem host_clear : ∀ (D : D7) (L : ℝ), 2 ≤ L → lrd D ≤ 2 * L → Rea
     linarith
   refine ⟨?_, absNorm_mem_AA D, hN, ?_, ?_, hfd, ?_, ?_, ?_, hf1, conj_xi0_alt D, ?_, ?_⟩
   · have : IsGalois ℚ D.host.E := D.host.hostE_isGalois
-    obtain ⟨N, hN0, hNm, hNle⟩ := GlobalTheory.T.exists_natCast_mem_differentIdeal_pow_le_discr_sq D.host.E
+    obtain ⟨N, hN0, hNm, hNle⟩ := _root_.GlobalTheory.exists_natCast_mem_differentIdeal_pow_le D.host.E
     refine ⟨N, hN0, fun a ha => ?_, ?_⟩
     · have := isIntegral_mul_of_mem D (different_le D hNm) ha
       simpa using this

@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.StabilizerLattices
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SelfDualLatticesUnramifiedPlaceNoHypothesisStatement
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.SelfDualLatticeActions
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SelfDualLatticesUnramifiedPlaceNoHypothesis
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SelfDualStabilizer
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.StabTransitiveOfLemmas
 import Mathlib.Algebra.Order.Floor.Extended
@@ -45,6 +46,6 @@ import Mathlib.Topology.Sheaves.Init
 namespace GlobalTheory.StabOrbit
 
 theorem stabTransitive : GlobalTheory.IndefiniteRowSideFullHecke.SelfDualLatticeStabilizers.StabTransitive :=
-  GlobalTheory.Proof.SelfDualStabilizer.stabTransitive_iff.1 (stabTransitive_of_lemmas GlobalTheory.T.selfDual_lattices_unramified_place_no_hypothesis)
+  GlobalTheory.Proof.SelfDualStabilizer.stabTransitive_iff.1 (stabTransitive_of_lemmas _root_.GlobalTheory.UnramSelfDualClosed.selfDualLatticeLemmas)
 
 end GlobalTheory.StabOrbit

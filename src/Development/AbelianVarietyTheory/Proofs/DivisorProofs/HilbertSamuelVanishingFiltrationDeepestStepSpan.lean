@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.InclEquiv
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FilSpaceVEqSpaceP
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertSamuelSectionShiftCommSingleMonomialStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertSamuelSectionShiftCommSingleMonomial
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MulPowMemAndSpaceVLe
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -73,7 +73,7 @@ theorem totFil_deepest : FilMono → ∀ (K : Type) [Field K] [NumberField K] (X
         LinearMap.single K (fun j => X.Sec j) X.T ∘ₗ mulPow X.toGeo s (add_sub_D X) α := by
       refine LinearMap.ext fun m => ?_
       simp only [LinearMap.comp_apply, LinearMap.coe_single]
-      exact (GlobalTheory.T.hilbertSamuelSectionShift_comm_single_monomial K X.toGeo).2.2 s (X.T - X.D) X.D X.T (add_sub_D X) α m
+      exact (_root_.GlobalTheory.HSShort.shift_comm_single_mono K X.toGeo).2.2 s (X.T - X.D) X.D X.T (add_sub_D X) α m
     rw [show incl X X.D = LinearMap.single K (fun j => X.Sec j) X.D ∘ₗ (X.V X.D).subtype from rfl,
       LinearMap.range_comp, Submodule.range_subtype, ← Submodule.map_comp, he, Submodule.map_comp]
   rw [hL, iSup_congr hR, ← Submodule.map_iSup]

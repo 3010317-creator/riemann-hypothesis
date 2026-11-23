@@ -4,10 +4,10 @@ public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.AtBas
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PlacesOf
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RowsConc
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdmissibilityWitnessesCongrModThetaLocalStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsDatumOfTwoCongruentFramesStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsDatumOfTwoCongruentFrames
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUnitaryExtensionRationalIsometryStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FramePairGramInvariantUnchangedIsometryStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFrameWitnessIntegralChangeStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFrameWitnessIntegralChange
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsTermUnitaryMoveLocalTermStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalUnipotentGroupsLatticesGlobalCoordinatesStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalUnitriangularFrameChangeLocalScalings
@@ -160,7 +160,7 @@ theorem main : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂.W
     obtain ⟨Ap, hAp, -⟩ := tri_scaled D (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) (frame F'0) (fun b => ∑ a, B0 a b • frame F'0 a) B0 hB0u (fun b => rfl)
     rw [(hAt p).1.2.1]
     exact ⟨Ap p, (hAp p).1, fun b => by rw [hf' b]; exact (hAp p).2 b⟩
-  obtain ⟨d, hd⟩ := GlobalTheory.T.exists_datum_of_two_congruent_frames (Y.M p) (Y.agree p).1 (locH (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) p) D.R.rS (FP p) (move g t0) hTg
+  obtain ⟨d, hd⟩ := _root_.GlobalTheory.LocOver.TermOver.exists_datum (Y.M p) (Y.agree p).1 (locH (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) p) D.R.rS (FP p) (move g t0) hTg
     (hAt p).1.2.2.1.symm (hAt p).1.2.2.2.symm hTri1 hTri2
 
   set A' : Matrix (Fin (D.R.rS + 1)) (Fin (D.R.rS + 1)) (D.s.atP p).Ep :=
@@ -220,7 +220,7 @@ theorem main : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.what₂.W
           rw [Matrix.one_apply_ne (ne_of_lt hab), zero_sub, e1, ← neg_mul]
           have := Submodule.smul_mem _ (⟨-k, Subring.neg_mem _ hkO⟩ : (Y.M p).L.O) hc
           exact this
-  have hT := GlobalTheory.T.hermitian_frame_witness_integral_change (Y.M p) (Y.agree p).1 (locH (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) p) D.R.rS D.R.k (FP p) hfin (hAt p).2 d (move g t0) hd
+  have hT := _root_.GlobalTheory.LocOver.WitChange.witness_change (Y.M p) (Y.agree p).1 (locH (⟨Y.δ, Y.M, Y.agree⟩ : LocDat D) p) D.R.rS D.R.k (FP p) hfin (hAt p).2 d (move g t0) hd
     1 A' (move g t0).f tf' (⟨fun a b h => Matrix.one_apply_ne (ne_of_lt h).symm, fun a => Matrix.one_apply_eq a⟩)
     hA'u hint hChg1 hChg2
   have hlat := (GlobalTheory.T.rational_unipotent_groups_lattices_global_coordinates D X Y u u' hSt hk w F00 F'0 FP hZ hG hAt G c t₀ ρ U U' hMv).2.2.2.2.1 ρ hMv.1 p g

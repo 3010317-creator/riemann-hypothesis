@@ -1,11 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoePolyMapX
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTrBasisInImageOfFractionFieldStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsLocModelIsPrimeOf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTrBasisInImageOfFractionField
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatAevalDvrPlaceRingUniformiserResidueLiftsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatTensorSubalgebraMvPolynomialEvalOfFlatAevalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GraphIdealLocalizationMaximalIdealEqSpanStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocalRingOfVarietyPointLocalizationPlaceTensorStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatTensorSubalgebraMvPolynomialEvalOfFlatAeval
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToQMemMaximalIdealIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GraphIdealLocalizationMaximalIdealEqSpan
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocalRingOfVarietyPointLocalizationPlaceTensor
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -131,7 +133,7 @@ theorem dim_locAt_graph : ∀ {K κ κ' L : Type} [Field K] [Field κ] [Field κ
   ringKrullDim (locAt (L := L) 𝔭) = k + 1 := by
   intro K κ κ' L _ _ _ _ _ _ _ _ _ k R π ρ E 𝔭 _ hO' hc1 hc2 hfrac hER hcent hz h𝔭
   have hinj : Function.Injective (algebraMap (K ⊗[ℂ] κ') L) := IsFractionRing.injective _ L
-  obtain ⟨zR, hzR⟩ := GlobalTheory.T.exists_trBasis_in_image_of_fractionField k R π hfrac hz
+  obtain ⟨zR, hzR⟩ := _root_.GlobalTheory.GraphLocal.exists_trBasis_lift k R π hfrac hz
   obtain ⟨t, ht⟩ := IsDiscreteValuationRing.exists_irreducible E.ring
   rw [ringKrullDim_locAt 𝔭 hinj]
   apply le_antisymm
@@ -139,13 +141,13 @@ theorem dim_locAt_graph : ∀ {K κ κ' L : Type} [Field K] [Field κ] [Field κ
     rw [← ringKrullDim_locAt 𝔭 hinj]
     letI : Algebra ℂ L := ((algebraMap (K ⊗[ℂ] κ') L).comp (algebraMap ℂ (K ⊗[ℂ] κ'))).toAlgebra
     haveI : IsScalarTower ℂ (K ⊗[ℂ] κ') L := IsScalarTower.of_algebraMap_eq' rfl
-    have hQ := GlobalTheory.T.isLocalRingOfVarietyPoint_localization_placeTensor (L := L) E 𝔭 hO'
+    have hQ := _root_.GlobalTheory.GraphLocal.isLocModel_locAt (L := L) E 𝔭 hO'
     letI : IsLocalRing (locAt (L := L) 𝔭) := isLocalRing_locAt 𝔭 hinj
     letI : Algebra ℂ (locAt (L := L) 𝔭) :=
       ((algebraMap ℂ L).codRestrict _ hQ.const_mem).toAlgebra
     haveI : Algebra.EssFiniteType ℂ (locAt (L := L) 𝔭) := hQ.essFiniteType
     haveI : IsNoetherianRing (locAt (L := L) 𝔭) := Algebra.EssFiniteType.isNoetherianRing ℂ _
-    have hmax := GlobalTheory.T.graphIdeal_localization_maximalIdeal_eq_span (L := L) k R π ρ E hER t zR 𝔭 hO' hc1 hc2 hfrac hcent ht hzR h𝔭
+    have hmax := _root_.GlobalTheory.GraphLocal.MaxGen.maximalIdeal_locAt_eq_span (L := L) k R π ρ E hER t zR 𝔭 hO' hc1 hc2 hfrac hcent ht hzR h𝔭
     refine (ringKrullDim_le_spanFinrank_maximalIdeal _).trans ?_
     rw [hmax]
     have h1 := Submodule.spanFinrank_span_le_ncard_of_finite (R := locAt (L := L) 𝔭)
@@ -163,7 +165,7 @@ theorem dim_locAt_graph : ∀ {K κ κ' L : Type} [Field K] [Field κ] [Field κ
       unfold TrBasis at hzR; rw [e] at hzR; exact hzR
     let v : Fin (k + 1) → placeAlg E := Fin.cons (⟨(t : K), t.2⟩ : placeAlg E)
         (fun i => (⟨(zR i : K), hER _ (zR i).2⟩ : placeAlg E))
-    have hf := GlobalTheory.T.flat_tensorSubalgebraMvPolynomialEval_of_flat_aeval (κ' := κ') (placeAlg E) (k + 1) v
+    have hf := _root_.GlobalTheory.GraphLocal.flat_polyMap_of_flat_aeval (κ' := κ') (placeAlg E) (k + 1) v
       (GlobalTheory.T.flat_aeval_dvrPlaceRing_uniformiser_residueLifts k R π E hER t zR hc1 hc2 hcent ht hzR'.1)
     have hle := height_le_height_of_flat v hf 𝔭
     have hgr : graphIdeal E R π ρ ≤ 𝔭 := h𝔭.1.2

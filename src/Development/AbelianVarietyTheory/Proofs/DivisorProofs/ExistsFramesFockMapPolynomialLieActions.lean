@@ -2,10 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FramedDConst
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFockMapSignaturesDependOnPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSignatureOrthonormalFrameEigenOfCartanInvoStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FirstMemberLieActionFockPlusTraceStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HoweSplittingActsFockActionPlusTraceMultiplesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolynomialFockSpaceEqRangeFockMapVariableSignatuStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFockMap
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSignatureOrthonormalFrameEigenOfCartanInvo
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FirstMemberLieActionFockPlusTrace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolynomialFockSpaceEqRangeFockMapVariableSignatu
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HoweSplittingActsFockActionPlusTraceMultiples
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -69,14 +70,14 @@ theorem exists_fock_data : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
   have hX : ∀ w, ∃ (r s : ℕ) (A : Matrix (Fin n) (Ix r s) ℂ),
       IsFrame (X.J.map (τ w).1) A ∧ X.θ w * A = A * Jm r s := by
     intro w
-    refine GlobalTheory.T.exists_signatureOrthonormalFrame_eigen_of_cartanInvolution n _ _ ?_ (det_map_ne_zero _ _ hXd) (hXc w)
+    refine _root_.GlobalTheory.HoweD.FrameCartan.frame_of_cartan n _ _ ?_ (det_map_ne_zero _ _ hXd) (hXc w)
     intro i j
     simp only [Matrix.map_apply]
     rw [← hCM.2.2.2 (τ w).1, hXh]
   have hW' : ∀ w, ∃ (r s : ℕ) (C : Matrix (Fin d) (Ix r s) ℂ),
       IsFrame (Complex.I • W.J.map (τ w).1) C ∧ W.θ w * C = C * Jm r s := by
     intro w
-    refine GlobalTheory.T.exists_signatureOrthonormalFrame_eigen_of_cartanInvolution d _ _ ?_ ?_ (hWc w)
+    refine _root_.GlobalTheory.HoweD.FrameCartan.frame_of_cartan d _ _ ?_ ?_ (hWc w)
     · intro i j
       simp only [Matrix.smul_apply, Matrix.map_apply, smul_eq_mul, star_mul']
       rw [← hCM.2.2.2 (τ w).1, hWs, map_neg, show star Complex.I = -Complex.I from Complex.conj_I]
@@ -96,12 +97,12 @@ theorem exists_fock_data : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     hCM hψ hF
 
   obtain ⟨hB, ⟨d', hd', hA'⟩, -⟩ := hW
-  obtain ⟨c, hc⟩ := GlobalTheory.T.firstMember_lieAction_fock_plus_trace F E σ (Fin n) (Fin d) (Fin n × Fin d) P Q R S ψ τ _ _ M.co d' 1 Complex.I A C Φ
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.HoweD.LieFirstD.lieFirstD F E σ (Fin n) (Fin d) (Fin n × Fin d) P Q R S ψ τ _ _ M.co d' 1 Complex.I A C Φ
     (om.comp (MonoidHom.inl _ _)) hCM hψ hF hΦ hd' hA'.1
-  obtain ⟨c', hc'⟩ := GlobalTheory.T.howeSplitting_acts_fockAction_plus_traceMultiples F E σ (Fin n) (Fin d) (Fin n × Fin d) P Q R S ψ τ _ _ M.co 1 Complex.I A C Φ
+  obtain ⟨c', hc'⟩ := _root_.GlobalTheory.HoweD.lieScalarD F E σ (Fin n) (Fin d) (Fin n × Fin d) P Q R S ψ τ _ _ M.co 1 Complex.I A C Φ
     (om.comp (MonoidHom.inr _ _)) hCM hψ hF hΦ hB.1
   exact ⟨P, Q, R, S, A, C, Φ, c, c', hF, hΦ.1,
-    GlobalTheory.T.polynomialFockSpace_eq_range_fockMap_variable_signature F E σ n d P Q R S X W M ψ τ A C Φ hCM hψ hF hθA hθC hΦ, hc, hc'⟩
+    _root_.GlobalTheory.HoweD.PolRangeD.polRangeD F E σ n d P Q R S X W M ψ τ A C Φ hCM hψ hF hθA hθC hΦ, hc, hc'⟩
 
 end GlobalTheory.HoweD.FockData
 

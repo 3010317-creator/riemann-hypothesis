@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAmbOfIsArithVar
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoheightOneIffPointClosureDimProjArithStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IteratedWeilDivisorSumSymmNoCommonDivisorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedArchRestrictedEqZeroOfNoComplexPointsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProjArithAmbientVerticalOrArithmeticVarietyStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoheightOneIffPointClosureDimProjArith
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IteratedWeilDivisorSumSymmNoCommonDivisor
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedArchRestrictedEqZeroOfNoComplexPoints
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProjArithAmbientVerticalOrArithmeticVariety
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -67,7 +67,7 @@ theorem mixRecVal_cons_eq_resCyc_sub_resArch {k : Type} [CommRing k] {Y : Scheme
     rw [cloι_genericPoint]
     exact hzt
   have hd : topologicalKrullDim (clo z) = ((e + 1 : ℕ) : WithBot ℕ∞) :=
-    ((GlobalTheory.T.coheight_one_iff_pointClosure_dim_projArith k Y q hA (e + 1) hdim).2 z (genericPoint (clo z)) hz).1
+    ((_root_.GlobalTheory.MixHt.dimOne k Y q hA (e + 1) hdim).2 z (genericPoint (clo z)) hz).1
   have h := hT.recur (clo z) (cloι z ≫ q) (cloι z) rfl e le_rfl hd N L (N.restr (cloι z))
     (fun a => (L a).restr (cloι z)) (HermLB.Isometric.refl _) (fun _ => HermLB.Isometric.refl _) _
     (isRatSec_ratOfSec _ hg)
@@ -112,10 +112,10 @@ theorem recVal_cons_recip : ArchRecip → ∀ (k : Type) [CommRing k] (Y : Schem
         mixArch (Fin.cons M L : Fin (e + 1) → HermLB q) N (isRatSec_ratOfSec t ht) := by
     rw [recVal, finsum_congr (key N M t s ht fun z hz => (hcov z hz).symm),
       finsum_sub_distrib (finite_support_mult_mul _ _) (finite_support_mult_mul _ _)]
-  have hC := GlobalTheory.T.iteratedWeilDivisorSum_symm_no_common_divisor k Y q hA M.B N.B M.isLB N.isLB s t hs ht hcov (T e L)
+  have hC := _root_.GlobalTheory.MixHt.iterDiv_symm k Y q hA M.B N.B M.isLB N.isLB s t hs ht hcov (T e L)
   rw [hL, hR, hC]
-  rcases GlobalTheory.T.projArithAmbient_vertical_or_arithmeticVariety k Y q hA (e + 1 + 1) hdim with ⟨l, _, _, hno⟩ | ⟨e', he', hav⟩
-  · have z₀ := GlobalTheory.T.mixedArch_restricted_eq_zero_of_no_complexPoints k Y q hno
+  rcases _root_.GlobalTheory.MixHt.amb_vertical_or_arithVar k Y q hA (e + 1 + 1) hdim with ⟨l, _, _, hno⟩ | ⟨e', he', hav⟩
+  · have z₀ := _root_.GlobalTheory.MixHt.mixArch_resArch_eq_zero_of_noCxPts k Y q hno
     rw [(z₀ (e + 1) (Fin.cons N L) M).1, (z₀ (e + 1) (Fin.cons M L) N).1]
     simp only [(z₀ e L N).2, (z₀ e L M).2, mul_zero, finsum_zero]
   · obtain rfl : e' = e + 1 := by omega

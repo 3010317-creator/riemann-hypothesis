@@ -6,15 +6,17 @@ public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.E
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.AppellHumbertUnifTangentWeilPairing
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CubeLBPairingIsoIffWeilPairingCompatibleOverRing
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsInverseIsogenySumOfCmHoms
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsLinearOfIsMonHom
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LieAlgebraEigenDecompositionCMSignature
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.NonemptyPolAVGenericFibreWithLieBasisStatement
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.NonemptyPolAVGenericFibreWithLieBasis
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.PrincipalTriplePullback
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.WeilEqIffHermFormEqComplex
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.WeilPairingEqOfIsomorphicCubePairings
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsUniformisationOfPoint
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ThetaUniformisationComplexAbelianVariety
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsMulEquivOfIsGrpPullback
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.LamLetters
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsLinearOfIsMonHom
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.WeilPairingEqOfIsomorphicCubePairings
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,7 +63,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.BCTools
-public import Development.AbelianVarietyTheory.Definitions.CMLattices.LamLetters
 
 @[expose] public section
 
@@ -254,7 +255,7 @@ theorem dims : (∀ b, (X.A b).g = Module.finrank ℚ E / 2) ∧ X.B.g = Module.
     0 < Module.finrank ℚ E / 2 := by
   have key : ∀ (T : PAT H (Sp (𝓞 K))) (m n : ℕ), HasType H T.t.act ρ m n → T.g = Module.finrank ℚ E / 2 * (m + n) :=
     fun T m n h => by
-      obtain ⟨F⟩ := GlobalTheory.T.nonempty_polAVGenericFibreWithLieBasis abelianSchemeLaws_all.1.polBaseChange K T.pol
+      obtain ⟨F⟩ := _root_.GlobalTheory.CM.GenFib.nonempty_of_baseChange abelianSchemeLaws_all.1.polBaseChange K T.pol
       exact (EigDec.eigen_decomposition E H K ρ T F m n X.split h X.ρ_sq).2.2.2.1
   refine ⟨fun b => ?_, key _ _ _ X.typeB, ?_⟩
   · cases b

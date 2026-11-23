@@ -1,11 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowMulMemLatIff
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AinfMuFrobeniusEquationSolvableAndTendstoStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BoundedAndEventuallySubMemLatStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsLiftsOfNormLeOneStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemDeRhamFiltrationOfForallAinfLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TeichmullerEpsilonRootPowSubZetaExpMemFiltrationStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AinfMuFrobeniusEquationSolvableAndTendsto
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BoundedAndEventuallySubMemLat
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsLiftsOfNormLeOne
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemDeRhamFiltrationOfForallAinfLattice
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TeichmullerEpsilonRootPowSubZetaExpMemFiltration
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -104,7 +105,7 @@ theorem u_mem (j : ℕ) : u P j ∈ FilB P 0 := by
 theorem taylor0 (hT : LocTied l P AI) (m M : ℕ) :
     io AI (WittVector.teichmuller l AI.ε ^ m) - ∑ j ∈ Finset.range M, (m : P.R.BdR) ^ j * u P j ∈
       FilB P (M : ℤ) := by
-  have h := GlobalTheory.T.teichmullerEpsilonRoot_pow_sub_zeta_exp_mem_filtration l P AI hT 0 m M
+  have h := _root_.GlobalTheory.ExpImage.epsT_pow_taylor l P AI hT 0 m M
   rw [P.ζQ_zero, one_pow, map_one, one_mul] at h
   convert h using 3 with j hj
   · rfl
@@ -132,7 +133,7 @@ theorem tail (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (hT : 
   have hD : ∀ j, ∃ D : Ainf l, j < M → Lifts AI K D (d j) := by
     intro j
     by_cases hj : j < M
-    · obtain ⟨D, hD⟩ := GlobalTheory.T.exists_lifts_of_norm_le_one_alt l P AI hT K (d j) (hd j hj).1
+    · obtain ⟨D, hD⟩ := _root_.GlobalTheory.ExpImage.exists_lifts_of_norm_le_one l P AI hT K (d j) (hd j hj).1
       exact ⟨D, fun _ => hD⟩
     · exact ⟨0, fun h => absurd h hj⟩
   choose D hD using hD
@@ -146,7 +147,7 @@ theorem tail (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (hT : 
     refine Finset.dvd_sum fun i _ => Dvd.dvd.mul_left ?_ _
     have := sub_dvd_pow_sub_pow (WittVector.teichmuller l AI.ε) 1 (m i)
     rwa [one_pow] at this
-  obtain ⟨hc1, hc2⟩ := GlobalTheory.T.ainf_mu_frobenius_equation_solvable_and_tendsto l P AI
+  obtain ⟨hc1, hc2⟩ := _root_.GlobalTheory.ExpImage.Conv.main l P AI
   obtain ⟨y', hy'⟩ := hc1 q
   have hy : (D 0 + AI.μ * y') - WittVector.frobenius (D 0 + AI.μ * y') =
       ∑ i ∈ T, w i * WittVector.teichmuller l AI.ε ^ m i := by
@@ -205,10 +206,10 @@ theorem tail (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (hT : 
       have := add_mem ih (hstep n)
       rwa [sub_add_sub_cancel] at this
   have hE0 : E 0 ∈ FilB P (M : ℤ) := by
-    refine GlobalTheory.T.mem_deRhamFiltration_of_forall_ainfLattice l P AI hT M _ fun r => ?_
+    refine _root_.GlobalTheory.ExpImage.mem_FilB_of_forall_Lat l P AI hT M _ fun r => ?_
     obtain ⟨k₀, hk₀⟩ := hc2 M r
     have hk : ∀ j, ∃ k : ℕ, (l : P.R.BdR) ^ k * u P j ∈ Lat AI M r := fun j =>
-      (GlobalTheory.T.bounded_and_eventually_sub_mem_Lat_alt l P AI hT _ (u_mem j) M r).1
+      (_root_.GlobalTheory.ExpImage.bounded_and_eventually_sub_mem_Lat l P AI hT _ (u_mem j) M r).1
     choose k hk using hk
     set n := k₀ + ∑ j ∈ Finset.range M, k j with hn
     have hEn : E n ∈ Lat AI M r := by

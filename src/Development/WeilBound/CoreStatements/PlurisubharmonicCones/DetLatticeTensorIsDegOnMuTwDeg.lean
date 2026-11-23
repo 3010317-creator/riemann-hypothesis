@@ -5,14 +5,21 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.Potenti
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComponentDataHodgeSecond
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntersectionSystemHodgeDegree
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NotInFibreOfIsUnit
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PairLatticeSumComapStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SegreChartBundleStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SumLatticeWedgeComapStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TensorWedgeDetChangeStatement
 public import Development.WeilBound.CoreStatements.PlurisubharmonicCones.ComponentDataHeightIdentity
 public import Development.WeilBound.CoreStatements.PlurisubharmonicCones.DeterminantLatticeGenerator
 public import Development.WeilBound.CoreStatements.PlurisubharmonicCones.DeterminantLatticeGradedTensor
 public import Development.WeilBound.CoreStatements.PlurisubharmonicCones.ExistsUnitOfSum
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SpecializesOfUnits
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PairLatticeSumComap
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EtaleLocalizationAtPrimeTensorOfLowHeight
+import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.CoordinateIdeals
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SegreChartBundle
+import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FrameDefinitions.IsFrameOverLine
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SumLatticeWedgeComap
+import Mathlib.LinearAlgebra.ExteriorPower.Basic
+import Mathlib.LinearAlgebra.PiTensorProduct.Basic
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TensorWedgeDetChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,7 +60,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SpecializesOfUnits
 
 @[expose] public section
 
@@ -100,13 +106,13 @@ theorem local_frame (Or : CptOrigin Y S₀ Dc Hd) {bb : ∀ τ, Fin Dc.N → W �
     have hrk : labelRk D (Or.bg τ) + labelRk D (Or.sm τ) = Dc.N := by
       rw [Or.rk_bg, Or.rk_sm]
       exact Nat.add_sub_cancel' Dc.j_le_N
-    have hsum := GlobalTheory.T.pair_lattice_sum_comap E H D l Xo c Y S₀ Ω K J Dc.y Or.𝔐 (Or.bg τ) (Or.sm τ) (Or.bg_ne_sm τ τ)
+    have hsum := _root_.GlobalTheory.CompanionTheory.Ar.HodgeSum.isVB_sup E H D l Xo c Y S₀ Ω K J Dc.y Or.𝔐 (Or.bg τ) (Or.sm τ) (Or.bg_ne_sm τ τ)
     rw [hrk] at hsum
     have hvb : (Lat.comap (fun p => Or.𝔐.V (Or.bg τ) p ⊔ Or.𝔐.V (Or.sm τ) p) (Or.i τ)).IsVB Dc.N ⊤ :=
       BlockSumFrame.isVB_comap_of_range _ _ (Or.i τ) (Or.i_inj τ) (Or.i_range τ) hsum
-    have h1 := (GlobalTheory.T.segre_chart_bundle Or.𝔐.X Ω Or.𝔐.ξ K J Dc.y (W τ) Dc.N (Dc.W τ) _ hT hvb (Or.lat τ) ch (f i) (b τ)
+    have h1 := (_root_.GlobalTheory.CompanionTheory.Ar.isFrameOver_iff_forall_isFrameAt Or.𝔐.X Ω Or.𝔐.ξ K J Dc.y (W τ) Dc.N (Dc.W τ) _ hT hvb (Or.lat τ) ch (f i) (b τ)
       hq.1 (hf i) hi.1).1 (hb τ).1 q hq hi
-    exact (GlobalTheory.T.is_frame_at_tail_of_is_frame_at_comap_sup_lattice Or.𝔐.X Ω Or.𝔐.ξ Or.𝔐.Li (W τ) (Or.i τ) (Or.𝔐.V (Or.bg τ)) (Or.𝔐.V (Or.sm τ))
+    exact (_root_.GlobalTheory.CompanionTheory.Ar.BlockFrame.frame_of_sum_frame Or.𝔐.X Ω Or.𝔐.ξ Or.𝔐.Li (W τ) (Or.i τ) (Or.𝔐.V (Or.bg τ)) (Or.𝔐.V (Or.sm τ))
       (Or.𝔐.Vgen (Or.bg τ)) (Or.𝔐.Vgen (Or.sm τ)) Dc.N Dc.j Dc.j_le_N (b τ) (s' τ) q (Or.i_inj τ)
       (Or.i_range τ) (MuIndep.blocks_disjoint Or τ) (fun _ hx => MuIndep.stalk_le_gen _ _ _ hx)
       (fun _ hx => MuIndep.stalk_le_gen _ _ _ hx) h1 (by rw [(hb τ).2.2, Or.F_eq τ]) (hs' τ)).1
@@ -137,7 +143,7 @@ theorem local_frame (Or : CptOrigin Y S₀ Dc Hd) {bb : ∀ τ, Fin Dc.N → W �
     show s τ k - ∑ a, t τ k a • s' τ a ∈ _
     rw [e]
     exact add_mem (sub_mem h1 (hs τ k).2) (sum_mem fun a _ => Submodule.smul_mem _ _ (hs' τ a).2)
-  · exact GlobalTheory.T.tensor_wedge_det_change (CMType H) Ω (fun τ => W τ ⧸ Hd.F τ) (Dc.N - Dc.j)
+  · exact _root_.GlobalTheory.CompanionTheory.Ar.TopWedge.eq_mul_prod_det (CMType H) Ω (fun τ => W τ ⧸ Hd.F τ) (Dc.N - Dc.j)
       (fun τ a => (Hd.F τ).mkQ (b τ (tailIdx Dc.j_le_N a)))
       (fun τ a => (Hd.F τ).mkQ (bb τ (tailIdx Dc.j_le_N a))) (fun τ => Matrix.of fun a k => t τ k a) _ _
       (fun τ => (hq' τ).1) (fun τ => (hq' τ).2) (fun τ k => (ht τ k).symm) (hΛ'.symm.trans hΛ)

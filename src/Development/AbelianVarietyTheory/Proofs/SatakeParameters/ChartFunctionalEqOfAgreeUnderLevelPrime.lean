@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.UnderTie
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalizedLatticeEqOfAdelicMatricesAgreeAtPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PlaceComponentPullbackLatticeVectorMemDualSpanStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.StepPointPulledDualVectorMemLocalBaseLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PlaceComponentPullbackLatticeVectorMemDualSpan
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.StepPointPulledDualVectorMemLocalBaseLattice
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -118,14 +118,14 @@ theorem exists_unit_one_add_generator {D : D7} (i : ℕ) (hi : i ≤ D.R.m) {T f
     intro l hl
     obtain ⟨l₁, h₁, l₂, h₂, rfl⟩ := Submodule.mem_sup.1 hl
     rw [hadd]
-    refine M.add_mem (GlobalTheory.T.placeComponent_pullback_latticeVector_mem_dual_span i hi lev x v l₁ h₁) ?_
+    refine M.add_mem (_root_.GlobalTheory.AwayLat.prV_pullV_mem_latS_dual i hi lev x v l₁ h₁) ?_
     refine Submodule.smul_induction_on h₂ ?_ ?_
     · intro r hr s hs
       obtain ⟨c, rfl⟩ := Ideal.mem_span_singleton'.1 hr
       rw [hsmul]
       refine M.smul_mem _ ?_
       induction hs using Submodule.span_induction with
-      | mem s hs => exact GlobalTheory.T.stepPoint_pulledDualVector_mem_localBaseLattice i hi lev x v s hs
+      | mem s hs => exact _root_.GlobalTheory.ZDual.pullV_dual_mem_latS i hi lev x v s hs
       | zero => rw [hzero]; exact M.zero_mem
       | add p q _ _ hp hq => rw [hadd]; exact M.add_mem hp hq
       | smul c s _ h => rw [hsmul]; exact M.smul_mem _ h

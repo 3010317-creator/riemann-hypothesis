@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnimodMod
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymmBilinFormEqZeroOfWeightedQuadraticSumLifts
 import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.GlActionMemBalFormsOfSemilinear
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymmBilinFormEqZeroOfWeightedQuadraticSumLiftsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -163,7 +163,7 @@ theorem linForm_eq_sum_qW_lifts : ∀ (W : Matrix (Fin 8) (Fin 8) ℤ), PosW W �
       simp only [LinearMap.comp_apply, Submodule.subtype_apply, LinearMap.coe_mk, AddHom.coe_mk, Φ] at this
       simp only [qW, LinearMap.sub_apply, mul_sub, Finset.sum_sub_distrib] at this ⊢
       rw [this, sub_self]
-    exact sub_eq_zero.mp (GlobalTheory.T.symm_bilinForm_eq_zero_of_weightedQuadraticSum_lifts W hW N hN r hε μ hμ _ hs h0)
+    exact sub_eq_zero.mp (_root_.GlobalTheory.Poinc.symm_eq_zero_of_qW_lifts W hW N hN r hε μ hμ _ hs h0)
   obtain ⟨D, hD, ν, hν⟩ := exists_nat_mul_eq_sum_of_injective (Φ ∘ₗ S.subtype) hinj (ℓ ∘ₗ S.subtype)
   exact ⟨D, ν, hD, fun b hb => hν ⟨b, hb⟩⟩
 

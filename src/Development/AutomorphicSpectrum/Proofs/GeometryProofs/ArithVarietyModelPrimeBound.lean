@@ -3,15 +3,27 @@ module
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsLatFamilyCongr
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsLatFlagPair
 public import Development.AutomorphicSpectrum.PublishedTheorems.Algebra₂.FarguesHodgeTate
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyCoordIdealStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyHodgePrimeDegreeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CmFlagUnramifiedPrimeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CpRatioUnramifiedOddPrimeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DotDualLatticeFamilyStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DvrLocalizationConstantsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsSandwichOfHodgeTateFreeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericTorsionUnramifiedPrimeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegularLatticeLocalFreeStatement
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.LaurentCechNerveLevelSpecTensorPower
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.InstFintypeSumElim
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyCoordIdeal
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyHodgePrimeDegree
+public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CmFlagUnramifiedPrime
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IntegralClosureHeightEqOneOfLiesOver
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CpRatioUnramifiedOddPrime
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.LieLatticeData
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.TrivFlagMod
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DotDualLatticeFamily
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DvrLocalizationConstants
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsSandwichOfHodgeTateFree
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericTorsionUnramifiedPrime
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.FlagMinor
+public import Mathlib.RingTheory.Ideal.Prime
+public import Mathlib.RingTheory.LocalRing.Defs
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegularLatticeLocalFree
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -79,7 +91,7 @@ theorem coordLat_locFree (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (Com
       (∀ q : Cpt ξ, InChart ξ (mseg y) c q → (∀ o : O, algebraMap O Ω o ∈ regAt ξ q) → g ≠ 0 → g⁻¹ ∈ regAt ξ q →
         Fintype.linearCombination Ω b e ∈ L q) → ∃ n : ℕ, g ^ n • e ∈ coordLat O y L b c := by
   classical
-  obtain ⟨h1, h2, h3, h4⟩ := GlobalTheory.T.dvr_localization_constants X Ω ξ K J y hT A hA m O c hc
+  obtain ⟨h1, h2, h3, h4⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.chart_points_over_place X Ω ξ K J y hT A hA m O c hc
   let Q : Type := {q : Cpt ξ // InChart ξ (mseg y) c q ∧ ∀ o : O, algebraMap O Ω o ∈ regAt ξ q}
   let Λ : Q → AddSubgroup (Fin r → Ω) := fun q =>
     (L q.1).toAddSubgroup.comap (Fintype.linearCombination Ω b).toAddMonoidHom
@@ -128,7 +140,7 @@ theorem coordLat_locFree (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (Com
         refine Finset.sum_congr rfl fun i _ => ?_
         rw [map_smul, hf']
         rfl
-  have key := GlobalTheory.T.regular_lattice_local_free (chartRing O (mseg y) c) Q (fun q => regAt ξ q.1) r Λ (fun q => isLocalRing_regAt q.1)
+  have key := _root_.GlobalTheory.CompanionTheory.Ar.Num.SecAlg.locFree_and_extend (chartRing O (mseg y) c) Q (fun q => regAt ξ q.1) r Λ (fun q => isLocalRing_regAt q.1)
     (fun q a ha => h1 a ha q.1 q.2.1 q.2.2)
     (fun P hP => by
       obtain ⟨q, hq1, hq2, hq⟩ := h2 P hP
@@ -236,11 +248,11 @@ theorem lat_main : GlobalTheory.CompanionTheory.Ar.HT.FarguesHodgeTate → ∀ (
   intro hF E _ _ _ H D l Xo c O₀ _ β Y S Ω _ K _ _ J _ y 𝔐 d hvar hpq p _ hpS hfree hp2 hdisc b hb A _ _ _ m _ hpm O _ _ _ _
     _ _ _ w hw t
   have hpp : p.Prime := Fact.out
-  have hG : Nonempty (GenTors 𝔐 p) := GlobalTheory.T.arith_variety_hodge_prime_degree E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hvar hpq p hpS hfree hp2 hdisc
-  obtain ⟨κ, hκ, hS⟩ := GlobalTheory.T.exists_sandwich_of_hodge_tate_free hF E H D l Xo c O₀ β Y S Ω K J y 𝔐 p hpS hpq hfree
-  obtain ⟨-, -, -, hcon, -⟩ := GlobalTheory.T.arith_variety_coord_ideal E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hvar A
-  have hE := GlobalTheory.T.generic_torsion_unramified_prime E H D l Xo c O₀ β Y S Ω K J y 𝔐 p hpS hG hdisc
-  obtain ⟨hV1, hV2⟩ := GlobalTheory.T.cm_flag_unramified_prime E H D l Xo c O₀ β Y S Ω K J y 𝔐 p hpS hdisc hE t
+  have hG : Nonempty (GenTors 𝔐 p) := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.nonempty_genTors E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hvar hpq p hpS hfree hp2 hdisc
+  obtain ⟨κ, hκ, hS⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HT.ModelSandwich.sandwich_of_htFree hF E H D l Xo c O₀ β Y S Ω K J y 𝔐 p hpS hpq hfree
+  obtain ⟨-, -, -, hcon, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.ConstClosure.const_closure E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hvar A
+  have hE := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.htLattice_eq_dR_of_charZero E H D l Xo c O₀ β Y S Ω K J y 𝔐 p hpS hG hdisc
+  obtain ⟨hV1, hV2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.hodgeLattices_isVBOn_overPrime E H D l Xo c O₀ β Y S Ω K J y 𝔐 p hpS hdisc hE t
   have hT : CoordTie ℤ 𝔐.ξ (mseg y) := 𝔐.tie
   have hO : ∀ q : Cpt 𝔐.ξ, (∀ o : O, algebraMap O Ω o ∈ regAt 𝔐.ξ q) → q ∈ overPrime 𝔐.ξ p :=
     fun q h => unit_of_place (A := A) (m := m) (O := O) hpm hpp h
@@ -255,13 +267,13 @@ theorem lat_main : GlobalTheory.CompanionTheory.Ar.HT.FarguesHodgeTate → ∀ (
     fun c' hc' => (coordLat_locFree _ Ω 𝔐.ξ K J y hT A hcon m O _ (𝔐.dR t) _ _ (b t) (hb t).1 (hb t).2 (hres _ hV1) c' hc').1
   have hhL : ∀ c', mseg y c' ≠ 0 → LocFree (chartRing O (mseg y) c') (labelRk D t) (coordLat O y (𝔐.HT p t) (b t) c') :=
     fun c' hc' => (coordLat_locFree _ Ω 𝔐.ξ K J y hT A hcon m O _ (𝔐.HT p t) _ _ (b t) (hb t).1 (hb t).2 (hres _ hV2) c' hc').1
-  obtain ⟨hdD, hdDL⟩ := GlobalTheory.T.dot_dual_lattice_family O Ω K J y _ _ hdF hdL
-  obtain ⟨hhD, hhDL⟩ := GlobalTheory.T.dot_dual_lattice_family O Ω K J y _ _ hhF hhL
+  obtain ⟨hdD, hdDL⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.dotDual_latFamily O Ω K J y _ _ hdF hdL
+  obtain ⟨hhD, hhDL⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.dotDual_latFamily O Ω K J y _ _ hhF hhL
   have hpt : ∀ q : Cpt 𝔐.ξ, (∀ o : O, algebraMap O Ω o ∈ regAt 𝔐.ξ q) →
       𝔐.dR t q ≤ 𝔐.HT p t q ∧ ∀ e ∈ 𝔐.HT p t q, algebraMap O Ω w • e ∈ 𝔐.dR t q := by
     intro q hq
     by_cases hf : InFibre 𝔐.ξ p q
-    · exact GlobalTheory.T.cp_ratio_unramified_odd_prime E H D l Xo c O₀ β Y S Ω K J y 𝔐 p hpS hp2 hdisc κ _ hκ hw hS q hf (hq w) t
+    · exact _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.SandPt.sandwich_at_point E H D l Xo c O₀ β Y S Ω K J y 𝔐 p hpS hp2 hdisc κ _ hκ hw hS q hf (hq w) t
     · have hall : ∀ r : ℕ, r.Prime → ¬ InFibre 𝔐.ξ r q := fun r hr => by
         by_cases hrp : r = p
         · exact hrp ▸ hf

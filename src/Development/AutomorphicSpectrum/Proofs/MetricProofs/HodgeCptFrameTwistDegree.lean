@@ -3,14 +3,17 @@ module
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ColFlags
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsChartOfLineBundle
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsVBOnDualAndBidual
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatRestrictComapSpan
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.StalkSpecializesBijective
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.DetFacGMatEqOne
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsLocalTwistTrivializationStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsReversedTriangularFrameChangeStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsTriangularRegularFrameChangeStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.FiniteEtaleSurjectiveOfPullback
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordTieCompEquiv
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsLocalTwistTrivialization
+public import Mathlib.LinearAlgebra.Matrix.Block
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsReversedTriangularFrameChange
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsTriangularRegularFrameChange
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HodgeCptBasesLinearIndependentSpan
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsVBOnDualAndBidual
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatRestrictComapSpan
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -205,7 +208,7 @@ theorem adapted_frame_om : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   unfold HodgeOver at hO
   unfold ColFlags at hC
   obtain ⟨hd, -, -, hj, -⟩ := hO
-  obtain ⟨T, C₀, hT, hfr, hreg, hC₀, hinv⟩ := GlobalTheory.T.exists_local_twist_trivialization 𝔐.X Ω 𝔐.ξ (EE 𝔐) (∀ k, J₀ k) (seg x₀)
+  obtain ⟨T, C₀, hT, hfr, hreg, hC₀, hinv⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.FMX.RootsBase.frame_values 𝔐.X Ω 𝔐.ξ (EE 𝔐) (∀ k, J₀ k) (seg x₀)
     (LL 𝔐 (.inr τ)) (m (.inr τ)) _ (n (.inr τ)) (VV 𝔐 (.inr τ)) (φ (.inr τ)) (cc 𝔐 bW bO (.inr τ))
     (hF.2.2.1 _) (hF.1 _) (hF.2.1 _).1 (hF.2.1 _).2 ⟨pr p'.1, hp⟩ c₁ hI
   have e1 : colFrame (cc 𝔐 bW bO (.inr τ)) T = fun a => inO 𝔐 τ (colFrame (bO τ) T a) := by
@@ -278,13 +281,13 @@ theorem adapted_frame_om : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
     rw [← hFl]
     exact Fl.sub (.inr τ)
   obtain ⟨U₀, Rm, Rm', hU₀, hRm, hRm', hRR, hgU, hgr⟩ :=
-    GlobalTheory.T.exists_triangular_regular_frame_change 𝔐'.X _ 𝔐'.ξ 𝔐'.Li (𝔐'.V (.inr τ)) _ (fun a => j (v a : 𝔐.Li)) _ _ p' hw hgdet hpull hsub
+    _root_.GlobalTheory.CompanionTheory.Ar.PB.FrameTrans.exists_adapted 𝔐'.X _ 𝔐'.ξ 𝔐'.Li (𝔐'.V (.inr τ)) _ (fun a => j (v a : 𝔐.Li)) _ _ p' hw hgdet hpull hsub
   have hTi : IsUnit (T.map (algebraMap Ω (GenField Ω (rk (CMType H) D.p D.q)))).det := by
     have h := hT.map (algebraMap Ω (GenField Ω (rk (CMType H) D.p D.q)))
     rw [RingHom.map_det] at h
     exact h
   obtain ⟨U₂, R₂, R₂', hU₂, hU₂d, hR₂, hR₂', hRR₂, hu⟩ :=
-    GlobalTheory.T.exists_reversed_triangular_frame_change _ (regAt 𝔐'.ξ p') _ (genU Ω (rk (CMType H) D.p D.q) (.inr τ)) _ U₀ Rm Rm'
+    _root_.GlobalTheory.CompanionTheory.AdaptedFrame.reversed_dual_frame _ (regAt 𝔐'.ξ p') _ (genU Ω (rk (CMType H) D.p D.q) (.inr τ)) _ U₀ Rm Rm'
       (by rw [DetG.det_genU]; exact isUnit_one) hTi hU₀ (fun l => (hgr l).1) hRm hRm' hRR hgU
   obtain ⟨C, hC1, hC2, hC3⟩ := forms_quotient (algebraMap Ω (GenField Ω (rk (CMType H) D.p D.q)))
     (regAt 𝔐.ξ ⟨pr p'.1, hp⟩) (regAt 𝔐'.ξ p') (fun a ha => LatModel.dominates_regAt hd p' hp ha)

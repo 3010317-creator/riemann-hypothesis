@@ -1,8 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsSquareIntegrableIffMemL2
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInvariantPosDefHermitianStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianPosDefSimultaneousNormalFormStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Topology.Instances.Matrix
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInvariantPosDefHermitian
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
+public import Mathlib.LinearAlgebra.Matrix.Hermitian
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianPosDefSimultaneousNormalForm
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIsLatticeFrameIsMajorantFrame
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -78,13 +83,13 @@ theorem exists_frame_le_majCpt : ∀ (F E : Type) [Field F] [NumberField F] [Fie
         (continuous_projArch σ J w))).matrix_map (GlobalTheory.Orb.continuous_infEmb τ)
     have hφ : Continuous φ := Units.continuous_iff.2 ⟨hcv, by
       simp only [← map_inv]; exact hcv.comp continuous_inv⟩
-    obtain ⟨P, hPh, hPpos, hPinv⟩ := GlobalTheory.T.exists_posDef_hermitian_invariant_of_isCompact (K.map φ) (by rw [Subgroup.coe_map]; exact hK.image hφ)
+    obtain ⟨P, hPh, hPpos, hPinv⟩ := _root_.GlobalTheory.CompactAvg.exists_invariant_posDef_hermitian (K.map φ) (by rw [Subgroup.coe_map]; exact hK.image hφ)
     have hG : (J.map τ.1).IsHermitian := by
       ext i j
       exact (h.2.2.2 τ.1 _).symm.trans (congrArg _ (hJ.1 i j))
     have hd : (J.map τ.1).det ≠ 0 := by
       rw [← RingHom.mapMatrix_apply, ← RingHom.map_det]; exact (map_ne_zero _).2 hJ.2
-    obtain ⟨ε, Q, hQ, hQu⟩ := GlobalTheory.T.hermitian_posDef_simultaneous_normal_form hG hd hPh hPpos
+    obtain ⟨ε, Q, hQ, hQu⟩ := _root_.GlobalTheory.SimNormal.simultaneous_normal_form hG hd hPh hPpos
     have h1 : (Formalism.UG.bc e.symm.toRingHom Q).1.map (infEmb τ) = Q.1 := Matrix.ext fun i j => e.apply_symm_apply _
     have h1' : ((Formalism.UG.bc e.symm.toRingHom Q)⁻¹).1.map (infEmb τ) = (Q⁻¹).1 :=
       Matrix.ext fun i j => e.apply_symm_apply _

@@ -1,9 +1,12 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AbelContinuation
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.CardRealEmbeddingsEqFinrankStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.NearIdentityMatrixPositiveSolutionStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.TotallyRealFieldDenseEmbeddingsStatement
+public import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.CardRealEmbeddingsEqFinrank
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Basic.Real.Basic
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.NearIdentityMatrixPositiveSolution
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.TotallyRealFieldDenseEmbeddings
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,12 +63,12 @@ theorem exists_totPos_basis : ∀ (F : Type) [Field F] [NumberField F] [IsTotall
       ∀ x : F, TotPos F x → (∀ σ τ : F →+* ℝ, σ x ≤ M * τ x) → ∀ i, 0 < b.repr x i := by
   intro F _ _ _ M
   classical
-  obtain ⟨hfin, hcard⟩ := GlobalTheory.T.card_real_embeddings_eq_finrank F
+  obtain ⟨hfin, hcard⟩ := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.EmbCard.finite_and_card_realEmbeddings F
   letI : Fintype (F →+* ℝ) := Fintype.ofFinite _
-  obtain ⟨ε, hε, hW⟩ := GlobalTheory.T.near_identity_matrix_positive_solution (κ := F →+* ℝ) M
+  obtain ⟨ε, hε, hW⟩ := _root_.GlobalTheory.CompanionTheory.DiagDom.small_perturbation_injective_pos (κ := F →+* ℝ) M
   have hex : ∀ i : F →+* ℝ, ∃ v : F, ∀ σ : F →+* ℝ,
       |σ v - ((if σ = i then 1 else 0) + ε / 2)| < ε / 2 :=
-    fun i => GlobalTheory.T.totally_real_field_dense_embeddings F (fun σ => (if σ = i then 1 else 0) + ε / 2) (ε / 2) (by positivity)
+    fun i => _root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.Density.exists_approx F (fun σ => (if σ = i then 1 else 0) + ε / 2) (ε / 2) (by positivity)
   choose v hv using hex
   have hclose : ∀ σ i : F →+* ℝ, |σ (v i) - if σ = i then 1 else 0| < ε := by
     intro σ i

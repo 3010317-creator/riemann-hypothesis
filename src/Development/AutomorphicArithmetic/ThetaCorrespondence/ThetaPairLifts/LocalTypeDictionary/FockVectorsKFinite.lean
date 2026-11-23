@@ -3,10 +3,13 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolActs
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompactUnitaryMovesHeisenbergDerivativeStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFiniteDimensionalOrbitOfBoundedRankGeneratStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVacuaSpanFiniteDimensionalStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergLineDerivativeFiniteSpanStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompactUnitaryMovesHeisenbergDerivative
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFiniteDimensionalOrbitOfBoundedRankGenerat
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVacuaSpanFiniteDimensional
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergLineDerivativeFiniteSpan
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.IsGaussianOfFockVacuumStabilizerActs
 import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.MemPolarizationStabilizerOfDualPair
 import Mathlib.Algebra.Order.Floor.Extended
@@ -56,7 +59,7 @@ theorem fock_space_kFinite : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ 
         GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.Acts (GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.evI F) (om (k, 1)) f f₁ → f₁ ∈ S := by
   intro hPr F E _ _ _ _ _ σ B n d X W M χX χW om r s r' s' hP f hf
   have hPA := _root_.GlobalTheory.T.dualPair_preserves_polarization hPr F E σ B n d X W M χX χW om r s r' s' hP
-  obtain ⟨m, L, hD⟩ := GlobalTheory.T.heisenbergLine_derivative_finite_span F E σ n d X W M B.ψ hP.base.std
+  obtain ⟨m, L, hD⟩ := _root_.GlobalTheory.HeisDerivSpan.heisLine_deriv_finite_span F E σ n d X W M B.ψ hP.base.std
   choose! Dfun hDiff hDspan using hD
   have hK := hPA.2.1
   simp only [GlobalTheory.RealActs.OpOn] at hK
@@ -73,16 +76,16 @@ theorem fock_space_kFinite : _root_.GlobalTheory.FunPr.ThetaLocalInputs → ∀ 
     exact hN u hu g hg
   have hAt : ∀ k : UA σ X.J, ∀ u : Matrix (Fin n) (Fin d) (AE F E), At (evI F) u → At (evI F) (mat k * u) :=
     fun k u hu c hc => by rw [← Matrix.mul_smul, hu c hc, Matrix.mul_zero]
-  obtain ⟨S, hS, hSk⟩ := GlobalTheory.T.exists_finiteDimensional_orbit_of_boundedRank_generated (SInf F (Fin n × Fin d)) (Matrix (Fin n) (Fin d) (AE F E))
+  obtain ⟨S, hS, hSk⟩ := _root_.GlobalTheory.exists_finiteDimensional_orbit_of_generated (SInf F (Fin n × Fin d)) (Matrix (Fin n) (Fin d) (AE F E))
     {k // k ∈ KInf σ X B.emb} {u | At (evI F) u} {f₀ | M.IsGauss B.ψ B.emb f₀} (M.Pol B.ψ B.emb) Dfun m L
-    (fun k => Tk k.1) (fun k u => mat k.1 * u) (GlobalTheory.T.fockVacua_span_finiteDimensional F E σ B n d X W M χX χW om r s r' s' hP)
+    (fun k => Tk k.1) (fun k u => mat k.1 * u) (_root_.GlobalTheory.FockVac.span_finiteDimensional F E σ B n d X W M χX χW om r s r' s' hP)
     (fun u hu g => hDspan u hu g) (fun f₀ h => hGP f₀ h) (fun u hu g hg => hclos u hu g hg) hmin
     (fun k g hg => Submodule.subset_span
       (_root_.GlobalTheory.T.fock_vacuum_stabilized_is_gaussian hPr F E σ B n d X W M χX χW om r s r' s' hP k.1 k.2 g hg _
         ((hTacts k.1 k.2 g (hGP g hg) _).2 rfl)))
     (fun k u hu => hAt k.1 u hu)
     (fun k u hu g hg => (hDiff _ (hAt k.1 u hu) _ _).1
-      (GlobalTheory.T.compactUnitary_moves_heisenbergDerivative F E σ B n d X W M χX χW om r s r' s' hP k.1 k.2 u hu g (Dfun u g) (Tk k.1 g)
+      (_root_.GlobalTheory.KHeisComm.actsD_heisLine_mat_mul F E σ B n d X W M χX χW om r s r' s' hP k.1 k.2 u hu g (Dfun u g) (Tk k.1 g)
         (Tk k.1 (Dfun u g)) ((hDiff u hu g _).2 rfl) ((hTacts k.1 k.2 g hg _).2 rfl)
         ((hTacts k.1 k.2 _ (hclos u hu g hg) _).2 rfl)))
     f hf

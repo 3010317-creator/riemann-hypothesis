@@ -1,17 +1,20 @@
 module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LevelChainValuations.RhoFirstChernLaw
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsRealizationOfCompatibleStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RealizationAddStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RealizationFunctorialStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RealizationSmulStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RealizationUniqueStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LevelChainValuations.OneSTr
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsRealizationOfCompatible
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RealizationAdd
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RealizationFunctorial
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RealizationSmul
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RealizationUnique
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LevelChainValuations.GaloisCupProducts.HomSGood
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LevelChainValuations.RhoActionCup.RHofTrGen
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LevelChainValuations.ValuationChainProofs.CovSm
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LevelChainValuations.ValuationChainProofs.CrystallineFirstChernLevelCompat
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LevelChainValuations.ValuationChainProofs.RHofIncl
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LevelChainValuations.ValuationChainProofs.fil_lev
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LevelChainValuations.CrystallineFirstChernLevelCompat
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LevelChainValuations.GaloisCupProducts.HomLevGood
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,8 +52,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LevelChainValuations.CrystallineFirstChernLevelCompat
-public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LevelChainValuations.GaloisCupProducts.HomLevGood
 
 @[expose] public section
 
@@ -81,7 +82,7 @@ theorem chK_good (M : Model l K) (hM : M.Sm) (m : ℕ) :
 theorem rho_mono (M : Model l K) (m : ℕ) {s s' : ℕ} (h : s ≤ s') (hG : (chK S hS hC M m s).Good)
     (hG' : (chK S hS hC M m s').Good) {j : ℕ} (x : ∀ n, M.Hc false n j) (f : Module.Dual K (HdR M.q j) →+ (S.L m).B)
     (hf : (chK S hS hC M m s').Rho x f) : (chK S hS hC M m s).Rho x f := by
-  have H := GlobalTheory.T.realization_functorial (chK S hS hC M m s') (chK S hS hC M m s)
+  have H := _root_.GlobalTheory.CompanionTheory.KapRhoHom.rho_hom (chK S hS hC M m s') (chK S hS hC M m s)
     (homS (hS.lev m) M h (qb_le (hS.lev m) M s) (qb_le (hS.lev m) M s')
       (rHof (dOf S hS hC m) (hcOf S hS hC m) M s) (rHof (dOf S hS hC m) (hcOf S hS hC m) M s'))
     hG' hG (homS_good_of_inclHM _ _ _ _ _ _ _ (rHof_incl_pf S hS hC M m h)) x f hf
@@ -96,30 +97,30 @@ theorem rho_uniq_pf : ∀ {M : Model l K} (a : (dat Amp).Ch M), M.Sm → ∀ j m
     rhoK S hS hC a j m x f → rhoK S hS hC a j m x f' → f = f' := by
   intro M a hM j m x f f' ⟨_, s₀, h⟩ ⟨_, s₀', h'⟩
   obtain ⟨s₁, hg⟩ := chK_good S hS hC M hM m
-  exact GlobalTheory.T.realization_unique (chK S hS hC M m (max s₁ (max s₀ s₀'))) (hg _ (le_max_left _ _)) _ f f'
+  exact _root_.GlobalTheory.CompanionTheory.KapUniq.rho_unique (chK S hS hC M m (max s₁ (max s₀ s₀'))) (hg _ (le_max_left _ _)) _ f f'
     (h _ (le_trans (le_max_left _ _) (le_max_right _ _))) (h' _ (le_trans (le_max_right _ _) (le_max_right _ _)))
 
 theorem rho_ex_pf : ∀ {M : Model l K} (a : (dat Amp).Ch M), M.Sm → ∀ j m x, ∃ f, rhoK S hS hC a j m x f := by
   intro M a hM j m x
   obtain ⟨s₁, hg⟩ := chK_good S hS hC M hM m
-  obtain ⟨f, hf⟩ := GlobalTheory.T.exists_realization_of_compatible (chK S hS hC M m s₁) (hg s₁ le_rfl) (show (M.HS false j).lim from x).1
+  obtain ⟨f, hf⟩ := _root_.GlobalTheory.CompanionTheory.KapRho.exists_rho (chK S hS hC M m s₁) (hg s₁ le_rfl) (show (M.HS false j).lim from x).1
     (fun n => (show (M.HS false j).lim from x).2 n)
   refine ⟨f, hM, s₁, fun s hs => ?_⟩
-  obtain ⟨g, hgs⟩ := GlobalTheory.T.exists_realization_of_compatible (chK S hS hC M m s) (hg s hs) (show (M.HS false j).lim from x).1
+  obtain ⟨g, hgs⟩ := _root_.GlobalTheory.CompanionTheory.KapRho.exists_rho (chK S hS hC M m s) (hg s hs) (show (M.HS false j).lim from x).1
     (fun n => (show (M.HS false j).lim from x).2 n)
-  have e : g = f := GlobalTheory.T.realization_unique _ (hg s₁ le_rfl) _ g f (rho_mono S hS hC M m hs (hg s₁ le_rfl) (hg s hs) _ g hgs) hf
+  have e : g = f := _root_.GlobalTheory.CompanionTheory.KapUniq.rho_unique _ (hg s₁ le_rfl) _ g f (rho_mono S hS hC M m hs (hg s₁ le_rfl) (hg s hs) _ g hgs) hf
   rwa [e] at hgs
 
 theorem rho_add_pf : ∀ {M : Model l K} (a : (dat Amp).Ch M), M.Sm → ∀ j m x y f g,
     rhoK S hS hC a j m x f → rhoK S hS hC a j m y g → rhoK S hS hC a j m (x + y) (f + g) := by
   intro M a hM j m x y f g ⟨_, s₀, h⟩ ⟨_, s₀', h'⟩
-  exact ⟨hM, max s₀ s₀', fun s hs => GlobalTheory.T.realization_add (chK S hS hC M m s) _ _ f g
+  exact ⟨hM, max s₀ s₀', fun s hs => _root_.GlobalTheory.CompanionTheory.KapRho.rho_add (chK S hS hC M m s) _ _ f g
     (h s (le_trans (le_max_left _ _) hs)) (h' s (le_trans (le_max_right _ _) hs))⟩
 
 theorem rho_smul_pf : ∀ {M : Model l K} (a : (dat Amp).Ch M), M.Sm → ∀ j m (c : (per l K).A) x f, rhoK S hS hC a j m x f →
     rhoK S hS hC a j m (c • x) ((AddMonoidHom.mulLeft ((S.L m).ι ((S.L m).lam c))).comp f) := by
   intro M a hM j m c x f ⟨_, s₀, h⟩
-  exact ⟨hM, s₀, fun s hs => GlobalTheory.T.realization_smul (chK S hS hC M m s) c _ f (h s hs)⟩
+  exact ⟨hM, s₀, fun s hs => _root_.GlobalTheory.CompanionTheory.KapChain.rho_smul (chK S hS hC M m s) c _ f (h s hs)⟩
 
 theorem rho_lin'_pf : ∀ {M : Model l K} (a : (dat Amp).Ch M), M.Sm → ∀ j m x f, rhoK S hS hC a j m x f →
     ∀ (k : K) φ, f (k • φ) = algebraMap K (S.L m).B k * f φ := by
@@ -146,7 +147,7 @@ theorem rho_firstChern_formula : ∀ {M : Model l K} (a : (dat Amp).Ch M), M.Sm 
     have := Finset.le_sup (f := U.d) (Finset.mem_univ α)
     omega
   have H := crystalline_firstChern_level (hS.lev m) (dOf S hS hC m) (hcOf S hS hC m) M _ hM U hU (by omega) a x hx c hc
-  have e := GlobalTheory.T.realization_unique (chK S hS hC M m _) (hg _ (by omega)) _ f (evB M c) (h _ (by omega)) H
+  have e := _root_.GlobalTheory.CompanionTheory.KapUniq.rho_unique (chK S hS hC M m _) (hg _ (by omega)) _ f (evB M c) (h _ (by omega)) H
   rw [e]
   rfl
 

@@ -1,16 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.OfDerivationFnOn
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianVarietyAutomorphismShiftsJacobianOrderStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsModelMapDefinedWeakNeronFamilyStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniqueModelHasJacobianOrderStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsVectorFieldFrameSmoothCommGrpSchemeStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.JacobianOrderMonotoneSemistableModelStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ModelMapGenericallyOpenImmersionCalculusStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ProdIrrAndWeakNeronStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.VectorFieldOrderAddOfProdStrictHenselianStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GeometricallyIntegralIffGeometricallyConnectedOf
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianVarietyAutomorphismShiftsJacobianOrder
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsModelMapDefinedWeakNeronFamily
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsUniqueModelHasJacobianOrder
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsVectorFieldFrameSmoothCommGrpScheme
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.JacobianOrderMonotoneSemistableModel
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ModelMapGenericallyOpenImmersionCalculus
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ProdIrrAndWeakNeron
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.VectorFieldOrderAddOfProdStrictHenselian
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ConnectedSpaceSpecOfIsLocalRing
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbelianSchemeGerms
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GeometricallyIntegralIffGeometricallyConnectedOf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +53,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbelianSchemeGerms
 import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
@@ -82,22 +82,22 @@ theorem exists_genIso_of_max_ord (R K : Type) [CommRing R] [IsDomain R] [IsLocal
     (ho : ∀ j, HasOrd (M j) D π (o j)) (ρ : ℤ) (hρ : ∀ j, o j ≤ ρ) (f : A ≅ A) (i : J) (hi : o i = ρ) :
     ∃ i', o i' = ρ ∧ GenIso (M i) (M i') f.hom := by
   have hint := isIntegral_of_abelian A hA
-  obtain ⟨-, -, h3, -⟩ := GlobalTheory.T.modelMapGenericallyOpenImmersion_calculus R K hSH
+  obtain ⟨-, -, h3, -⟩ := _root_.GlobalTheory.SS.GI.genIso_calculus R K hSH
   obtain ⟨hdvr, -, -, hfr⟩ := hSH
   have bound : ∀ (N : Model R A) (m : ℤ), N.Irr → HasOrd N D π m →
       m ≤ ρ ∧ (m = ρ → ∃ i', o i' = ρ ∧ GenIso N (M i') (𝟙 A)) := by
     intro N m hN hm
-    obtain ⟨j, hj⟩ := GlobalTheory.T.exists_modelMapDefined_weakNeronFamily R K A J M hW N hN
-    obtain ⟨h₁, h₂⟩ := GlobalTheory.T.jacobian_order_monotone_semistableModel R K π hπ A I D hD N (M j) m (o j) hN (hI j) hm (ho j) hj
+    obtain ⟨j, hj⟩ := _root_.GlobalTheory.SS.exists_defAt_of_weakNeron R K A J M hW N hN
+    obtain ⟨h₁, h₂⟩ := _root_.GlobalTheory.SS.OrdMono.ord_mono R K π hπ A I D hD N (M j) m (o j) hN (hI j) hm (ho j) hj
     have := hρ j
     exact ⟨h₁.trans this, fun e => ⟨j, by omega, h₂ (by omega)⟩⟩
-  obtain ⟨c, hc⟩ := GlobalTheory.T.abelianVariety_automorphism_shifts_jacobianOrder R K π hπ A hA I D hD f
-  obtain ⟨c', hc'⟩ := GlobalTheory.T.abelianVariety_automorphism_shifts_jacobianOrder R K π hπ A hA I D hD f.symm
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.SS.OrdTwist.main R K π hπ A hA I D hD f
+  obtain ⟨c', hc'⟩ := _root_.GlobalTheory.SS.OrdTwist.main R K π hπ A hA I D hD f.symm
   have t₁ := hc _ _ (ho i)
   have t₂ := hc' _ _ (ho i)
   have t₃ := hc' _ _ t₁
   rw [Model.twist_twist_symm] at t₃
-  have e₃ := (GlobalTheory.T.existsUnique_modelHasJacobianOrder R K π hπ A I D hD (M i) (hI i)).unique t₃ (ho i)
+  have e₃ := (_root_.GlobalTheory.SS.Ord.existsUnique_hasOrd R K π hπ A I D hD (M i) (hI i)).unique t₃ (ho i)
   have i₁ : ((M i).twist f).Irr := hI i
   have i₂ : ((M i).twist f.symm).Irr := hI i
   obtain ⟨b₁, b₁'⟩ := bound _ _ i₁ t₁
@@ -121,8 +121,8 @@ theorem exists_permuted_members : ∀ (R K : Type) [CommRing R] [IsDomain R] [Is
   have hfr := hSH.2.2.2
   obtain ⟨π, hπ⟩ := IsDiscreteValuationRing.exists_irreducible R
   obtain ⟨g, hg⟩ := GlobalTheory.AbelianDim.exists_relDim K A hA
-  obtain ⟨D, hD⟩ := GlobalTheory.T.exists_vectorFieldFrame_smooth_commGrpScheme K A g hg
-  choose o ho using fun i => (GlobalTheory.T.existsUnique_modelHasJacobianOrder R K π hπ A (Fin g) D hD (M i) (hI i)).exists
+  obtain ⟨D, hD⟩ := _root_.GlobalTheory.SS.exists_isFrame K A g hg
+  choose o ho using fun i => (_root_.GlobalTheory.SS.Ord.existsUnique_hasOrd R K π hπ A (Fin g) D hD (M i) (hI i)).exists
   obtain ⟨i₀, hi₀⟩ := Finite.exists_max o
   refine ⟨Finset.univ.filter fun i => o i = o i₀, ⟨i₀, by simp⟩, ?_, ?_⟩
   · intro f i hi
@@ -132,8 +132,8 @@ theorem exists_permuted_members : ∀ (R K : Type) [CommRing R] [IsDomain R] [Is
   · intro Θ i hi j hj
     have hi : o i = o i₀ := by simpa using hi
     have hj : o j = o i₀ := by simpa using hj
-    obtain ⟨D₂, hD₂, hp⟩ := GlobalTheory.T.vectorFieldOrder_add_of_prod_strictHenselian R K hSH π hπ A A _ _ D D hD hD
-    obtain ⟨p₁, p₂⟩ := GlobalTheory.T.prod_irr_and_weakNeron' R K hSH A A
+    obtain ⟨D₂, hD₂, hp⟩ := _root_.GlobalTheory.SS.OrdProd.ord_prod R K hSH π hπ A A _ _ D D hD hD
+    obtain ⟨p₁, p₂⟩ := _root_.GlobalTheory.SS.prod_irr_and_weakNeron R K hSH A A
     obtain ⟨⟨i', j'⟩, h', h⟩ := exists_genIso_of_max_ord R K hSH π hπ (A ⊗ A)
       (AbelianSchemeGerms.isAbelianScheme_tensor A A hA hA) _ D₂ hD₂ (Fin n × Fin n)
       (fun p => (M p.1).prod (M p.2)) (fun p => p₁ _ _ (hI _) (hI _)) (p₂ _ _ M M hW hW)

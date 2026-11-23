@@ -3,10 +3,11 @@ module
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
 public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussianMulMultilinearDiagonalMemSchwartzSubmoduStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasSumGaussianConvolutionSeriesTermIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SummableSchwartzOfSummableSeminormsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SummableSeminormGaussianConvolutionSeriesTermStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussianMulMultilinearDiagonalMemSchwartzSubmodu
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowForm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasSumGaussianConvolutionSeriesTermIntegral
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SummableSchwartzOfSummableSeminorms
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SummableSeminormGaussianConvolutionSeriesTerm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,12 +67,12 @@ theorem mem_of_conv_gaussian : ∀ (E : Type) [NormedAddCommGroup E] [InnerProdu
   intro E _ _ _ _ _ M hM hℓ b c hb hc hg h u hu
   have ht : ∀ j, ∃ t ∈ M, ∀ y, t y = term b c h j y := by
     intro j
-    obtain ⟨t, htM, ht⟩ := GlobalTheory.T.gaussian_mul_multilinear_diagonal_mem_schwartzSubmodule E M hℓ c hc hg j (coef b c h j)
+    obtain ⟨t, htM, ht⟩ := _root_.GlobalTheory.ConvSeries.gauss_mul_diag_mem E M hℓ c hc hg j (coef b c h j)
     refine ⟨(((2 * c) ^ j / (j.factorial : ℝ) : ℝ) : ℂ) • t, M.smul_mem _ htM, fun y => ?_⟩
     simp only [SchwartzMap.smul_apply, ht, term, smul_eq_mul]
     ring
   choose t htM hty using ht
-  have hs : Summable t := GlobalTheory.T.summable_schwartz_of_summable_seminorms E t (GlobalTheory.T.summable_seminorm_gaussianConvolutionSeriesTerm E b c hb hc h t hty)
+  have hs : Summable t := _root_.GlobalTheory.ConvSeries.summable_of_summable_seminorm E t (_root_.GlobalTheory.ConvSeries.summable_seminorm_term E b c hb hc h t hty)
   have hL := hs.hasSum
   have hev : ∀ y, (∑' j, t j) y = u y := by
     intro y
@@ -80,7 +81,7 @@ theorem mem_of_conv_gaussian : ∀ (E : Type) [NormedAddCommGroup E] [InnerProdu
     have h1 : HasSum (fun j => t j y) ((∑' j, t j) y) := hL.mapL φ
     have h2 : HasSum (fun j => t j y) (u y) := by
       rw [hu y]
-      exact (GlobalTheory.T.hasSum_gaussianConvolutionSeriesTerm_integral E b c hb hc h y).congr_fun (fun j => hty j y)
+      exact (_root_.GlobalTheory.ConvSeries.hasSum_term_integral E b c hb hc h y).congr_fun (fun j => hty j y)
     exact h1.unique h2
   have hLu : (∑' j, t j) = u := SchwartzMap.ext hev
   rw [← hLu]

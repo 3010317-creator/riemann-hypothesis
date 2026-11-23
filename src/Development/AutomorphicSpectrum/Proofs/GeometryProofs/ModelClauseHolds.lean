@@ -3,7 +3,7 @@ module
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.HeckeKer
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LevelAndHeckeOfZeroSignatureStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LevelAndHeckeOfZeroSignature
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ModelClauseOfRankZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -54,6 +54,6 @@ theorem modelClause_holds :
     PartI ∧ N1ab ∧ N1c ∧
       ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H),
         ToroidalLevelCompatibility (D := D) ∧ ToroidalHeckeCompatibility (D := D) :=
-  modelClause_of_rankZero GlobalTheory.T.level_and_hecke_of_zero_signature
+  modelClause_of_rankZero _root_.GlobalTheory.CompanionTheory.Ar.Top.LevelZero.main
 
 end GlobalTheory.CompanionTheory.Ar.Top

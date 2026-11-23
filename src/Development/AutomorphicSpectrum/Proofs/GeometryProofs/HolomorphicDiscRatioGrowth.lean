@@ -3,10 +3,13 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.InjectiveOfIsCptGen
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.BdryChart
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEqAlgebraMapOfIntegralAtHeightOnePrimesStatement
+public import Mathlib.RingTheory.Ideal.Height
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEqAlgebraMapOfIntegralAtHeightOnePrimes
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsDomainAndIsIntegrallyClosedAtPrimeOfSmoothOfCo
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalizationAtPrimeIsDiscreteValuationRingOfHeigStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DvrPointAnalyticDiscStatement
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalizationAtPrimeIsDiscreteValuationRingOfHeig
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DvrPointAnalyticDisc
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericPointComponentLocalRing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -88,7 +91,7 @@ theorem isDVR_regAt {R K : Type} [CommRing R] [IsDomain R] [IsNoetherianRing R] 
     {φ : R →+* K} (hξ : IsCptGen (pt φ)) (x : Cpt (pt φ)) (h1 : x.1.asIdeal.height = 1) :
     IsDiscreteValuationRing (regAt (pt φ) x) := by
   haveI : (x.1 : PrimeSpectrum R).asIdeal.IsPrime := PrimeSpectrum.isPrime _
-  have hd := GlobalTheory.T.isDiscreteValuationRing_localization_of_height_eq_one' R x.1.asIdeal h1
+  have hd := _root_.GlobalTheory.localizationAtPrime_isDiscreteValuationRing_of_height_eq_one R x.1.asIdeal h1
   have key : ∀ (q : PrimeSpectrum R), Nonempty (Localization.AtPrime q.asIdeal ≃+* (Spec.structureSheaf R).presheaf.stalk q) :=
     fun q => ⟨(IsLocalization.algEquiv q.asIdeal.primeCompl _ _).toRingEquiv⟩
   obtain ⟨e⟩ := key x.1
@@ -106,7 +109,7 @@ theorem exists_pole_prime {R K : Type} [CommRing R] [IsDomain R] [IsNoetherianRi
   by_contra hcon
   push Not at hcon
   let e : FractionRing R ≃ₐ[R] K := FractionRing.algEquiv R K
-  obtain ⟨a, ha⟩ := GlobalTheory.T.exists_eq_algebraMap_of_integral_at_height_one_primes R (e.symm t) fun q hq h1 => by
+  obtain ⟨a, ha⟩ := _root_.GlobalTheory.integral_of_forall_height_one R (e.symm t) fun q hq h1 => by
     obtain ⟨a, c, hc, hac⟩ := hcon q hq h1
     refine ⟨a, c, hc, e.injective ?_⟩
     rw [map_mul, e.apply_symm_apply, e.commutes, e.commutes]
@@ -144,7 +147,7 @@ theorem exists_disc {R K : Type} [CommRing R] [IsDomain R] [IsNoetherianRing R] 
   have hxW : x.1 ∉ (PrimeSpectrum.basicOpen f : (Spec (CommRingCat.of R)).Opens) := fun hm => (show f ∉ x.1.asIdeal from hm) hxf
   have hlft : LocallyOfFiniteType (spMap (algebraMap ℚ R)) :=
     HasRingHomProperty.Spec_iff.2 (RingHom.finiteType_algebraMap.2 inferInstance)
-  obtain ⟨V, hV, ψ, r, C, -, hhol, -, hz⟩ := GlobalTheory.T.dvr_point_analytic_disc ℚ (algebraMap ℚ ℂ) (Spec (CommRingCat.of R))
+  obtain ⟨V, hV, ψ, r, C, -, hhol, -, hz⟩ := _root_.GlobalTheory.CompanionTheory.Relay.dvr_point_analytic_disc ℚ (algebraMap ℚ ℂ) (Spec (CommRingCat.of R))
     (spMap (algebraMap ℚ R)) K (pt (algebraMap R K)) (PrimeSpectrum.basicOpen f) x ⊤ t hlft hξ hgW hxW trivial
     (isDVR_regAt hξ x hx1) hxt
   obtain ⟨c, hc⟩ := exists_ringHom (S := Γ(Spec (CommRingCat.of R), V)) hV.fromSpec

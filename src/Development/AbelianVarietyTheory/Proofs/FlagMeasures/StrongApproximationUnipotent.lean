@@ -2,12 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GFrames
 public import Mathlib.Algebra.Module.Lattice.Full
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianEichlerProductContinuousOnLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianEichlerProductParamsIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFlagUnipotentNormalFormRescaledStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianSymplecticBasisLocalExtensionStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsHermND
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianEichlerProductContinuousOnLattice
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianEichlerProductParamsIntegral
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ComplementReferenceCompactSubgroup
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFlagUnipotentNormalFormRescaled
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemCoord
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianSymplecticBasisLocalExtension
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NumberFieldLatticeDeterminedByLocalLattices
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsIntegralOfQuad
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NumberFieldLatticeDeterminedByLocalLatticesStatement
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalExtend
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -153,7 +156,7 @@ theorem core {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [A
     intro p
     have := (A.loc p).lf
     have := (A.loc p).char0
-    exact GlobalTheory.T.hermitianFlagUnipotent_normalForm_rescaled (A.L p) r k (G.S p) (gF p) (gsF p) (hsel p) (fun i => G.c p ^ (r - (i : ℕ)))
+    exact _root_.GlobalTheory.HL.nof_normal_form_rescaled (A.L p) r k (G.S p) (gF p) (gsF p) (hsel p) (fun i => G.c p ^ (r - (i : ℕ)))
       (fun i => A.bc p (X i)) (fun i => A.bc p (Y i)) (hXa p) (hYa p)
   choose up sp ep hup hn_eq using fun p => ((hR p).2.2.2 (n p)).1 (hnN p)
   have hXY : ∀ a b, hq sig G.Hm (X a) (Y b) = if a = b then 1 else 0 := fun a b => by
@@ -174,7 +177,7 @@ theorem core {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [A
     (⋃ i, ⋃ j, {p | (A.loc p).ιE (G.Hm i j) ∉ (A.L p).O}) ∪
     (⋃ a, ⋃ j, {p | (A.loc p).ιE (X a j) ∉ (A.L p).O}) ∪
     (⋃ a, ⋃ j, {p | (A.loc p).ιE (Y a j) ∉ (A.L p).O}) with hBad
-  have hlatP := GlobalTheory.T.numberField_lattice_determined_by_local_lattices A (k + 2 * r + 1) Λ hΛ
+  have hlatP := _root_.GlobalTheory.HL.PlacesRec.lattice_local A (k + 2 * r + 1) Λ hΛ
   have hBadF : Bad.Finite := by
     have hi := (PlacesInt.integers_local A).2.1
     refine ((((hc.union hlatP.2.2).union hn).union ?_).union ?_).union ?_ <;>
@@ -214,7 +217,7 @@ theorem core {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [A
     obtain ⟨-, -, -, hHm, hXi, hYi⟩ := hgood p hp
     have := (A.loc p).lf
     have := (A.loc p).char0
-    exact GlobalTheory.T.hermitianEichlerProduct_params_integral (A.L p) _ r (G.S p).Hm (G.S p).herm.1
+    exact _root_.GlobalTheory.HL.SAN.IntParam.eich_prod_params_int (A.L p) _ r (G.S p).Hm (G.S p).herm.1
       (fun i j => by rw [G.Hm_eq p]; exact hHm i j) (fun i => A.bc p (X i)) (fun i => A.bc p (Y i))
       (up p) (sp p) (ep p) (fun i j => hXi i j) (fun i j => hYi i j) (hR p).1 (hR p).2.1
       (fun i j hj => (hup p i).1 j hj) (fun i => (hup p i).2.1) (fun i v => (hup p i).2.2 v) (hstd p hp)
@@ -232,7 +235,7 @@ theorem core {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [A
     have := (A.loc p).lf
     have := (A.loc p).char0
     by_cases hp : p ∈ Bad
-    · obtain ⟨d, hd⟩ := GlobalTheory.T.hermitianEichlerProduct_continuous_on_lattice (A.L p) (k + 2 * r + 1) r (G.S p).Hm (fun i => A.bc p (X i))
+    · obtain ⟨d, hd⟩ := _root_.GlobalTheory.HL.EichCont.prod_eich_cont (A.L p) (k + 2 * r + 1) r (G.S p).Hm (fun i => A.bc p (X i))
         (up p) (sp p) (ep p) (fun i v => (hup p i).2.2 v) (A.lat p Λ) (hlatP.2.1 p) (c p)
       exact ⟨d, fun h => absurd hp h, hd⟩
     · refine ⟨1, fun _ => rfl, ?_⟩
@@ -278,7 +281,7 @@ theorem core {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [A
         ∃ o ∈ (A.L p).O, (A.loc p).ιE s - sp p i =
           algebraMap (A.loc p).Fp (A.loc p).Ep (d p : (A.loc p).Fp) * o := by
     intro i
-    refine GlobalTheory.T.hermitian_symplectic_basis_local_extension A (k + 2 * r + 1) r G.Hm hH X Y (Finset.univ.filter fun j : Fin r => j ≤ i)
+    refine _root_.GlobalTheory.HL.EichlerParams.strong_approx_params A (k + 2 * r + 1) r G.Hm hH X Y (Finset.univ.filter fun j : Fin r => j ≤ i)
       hXY hXX hYY (fun p => up p i) (fun p => sp p i) (fun p a ha => ?_) (fun p => ?_) ?_ d ?_
     · have h := (hup p i).1 a (Finset.mem_filter.1 ha).2
       simp only [Frames.h, G.Hm_eq p] at h

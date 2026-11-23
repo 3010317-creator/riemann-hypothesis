@@ -3,9 +3,13 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Foundations.PetIPSmulRight
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.Newform
 public import Mathlib.NumberTheory.LSeries.Basic
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CoefQExpansionFunctionUpperHalfPlaneStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCuspFormGamma1OfIsCuspFormCoeffSeqStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RankinMeanSquareCuspFormStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CoefQExpansionFunctionUpperHalfPlane
+public import Mathlib.NumberTheory.ModularForms.Basic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCuspFormGamma1OfIsCuspFormCoeffSeq
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RankinMeanSquareCuspForm
+public import Mathlib.NumberTheory.LSeries.Deriv
+public import Mathlib.NumberTheory.ModularForms.LFunction
+public import Mathlib.NumberTheory.LSeries.Convergence
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -18,9 +22,7 @@ import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
-public import Mathlib.NumberTheory.LSeries.Deriv
 import Mathlib.NumberTheory.LucasLehmer
-public import Mathlib.NumberTheory.ModularForms.LFunction
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.Tactic.Echelon.Zsqrtd
@@ -45,7 +47,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.NumberTheory.LSeries.Convergence
 
 @[expose] public section
 
@@ -90,13 +91,13 @@ theorem lseries_cusp_entire : ∀ (k L N : ℕ) (ε : DirichletCharacter ℂ N) 
       ∀ s : ℂ, ((k : ℝ) + 1) / 2 < s.re → LSeriesSummable g s ∧ LSeries g s = Λ s := by
   intro k L N ε g hk hL hNL hcf
   haveI : NeZero L := ⟨hL.ne'⟩
-  obtain ⟨f, hf⟩ := GlobalTheory.T.exists_cuspForm_gamma1_of_isCuspFormCoeffSeq k L N ε g hk hL hNL hcf
+  obtain ⟨f, hf⟩ := _root_.GlobalTheory.EisM.cuspForm_of_CF k L N ε g hk hL hNL hcf
   have hcoef : ∀ n, (qExpansion 1 ⇑f).coeff n = g n := fun n => by
-    have h := GlobalTheory.T.coef_qExpansionFunctionUpperHalfPlane g hcf.1.1 n
+    have h := _root_.GlobalTheory.EisM.coef_qs g hcf.1.1 n
     rw [coef, ← hf] at h
     exact h
   have hk0 : (0 : ℤ) < (k : ℤ) := by exact_mod_cast hk
-  have hsq := (GlobalTheory.T.rankin_mean_square_cuspForm k L (ch ε) g hk hcf).2.2.1
+  have hsq := (_root_.GlobalTheory.rankin_mean_square k L (ch ε) g hk hcf).2.2.1
   have hsum : ∀ s : ℂ, ((k : ℝ) + 1) / 2 < s.re → LSeriesSummable g s := lseriesSummable_of_sq g k hsq
   have habs : LSeries.abscissaOfAbsConv g ≤ (((((k : ℝ) + 1) / 2 : ℝ)) : EReal) :=
     LSeries.abscissaOfAbsConv_le_of_forall_lt_LSeriesSummable fun y hy => hsum y (by simpa using hy)

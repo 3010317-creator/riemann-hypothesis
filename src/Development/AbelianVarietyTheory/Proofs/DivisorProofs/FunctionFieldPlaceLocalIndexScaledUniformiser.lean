@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAdmissibleIntegralBasisChangeOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FunctionFieldPlaceLocalIndexColengthStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FunctionFieldPlaceOrderCalculusStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FunctionFieldPlaceLocalIndexColength
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FunctionFieldPlaceOrderCalculus
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,7 +64,7 @@ theorem local_index_scaled : ∀ (k F : Type) [Field k] [IsAlgClosed k] [CharZer
       ∀ p : Fin n → F, (∀ i, v.1 (p i) ≤ WithZero.exp (d : ℤ)) → φ p = 0 →
         ∀ i, v.1 (M.mulVec p i) ≤ 1 := by
   intro k F _ _ _ _ _ hFF v n M d hM hMinv
-  obtain ⟨hmul, hzpow, -, -, -, ⟨π, hπ0, hπ⟩, -⟩ := GlobalTheory.T.functionFieldPlaceOrder_calculus k F v
+  obtain ⟨hmul, hzpow, -, -, -, ⟨π, hπ0, hπ⟩, -⟩ := _root_.GlobalTheory.Nef.ord_calculus k F v
 
   have hvπ : v.1 π = WithZero.exp (-1) := by
     have hne : v.1 π ≠ 0 := by simpa using hπ0
@@ -91,7 +91,7 @@ theorem local_index_scaled : ∀ (k F : Type) [Field k] [IsAlgClosed k] [CharZer
     calc WithZero.exp (-(d : ℤ)) * v.1 (M⁻¹ i j) ≤ WithZero.exp (-(d : ℤ)) * WithZero.exp (d : ℤ) :=
           by gcongr; exact hMinv i j
       _ = 1 := by rw [← WithZero.exp_add]; simp
-  obtain ⟨N, φ₀, hN, hφ₀⟩ := GlobalTheory.T.functionFieldPlace_local_index_colength k F hFF v n h hdet0 hinvb
+  obtain ⟨N, φ₀, hN, hφ₀⟩ := _root_.GlobalTheory.Nef.local_index k F hFF v n h hdet0 hinvb
 
   have hord : ord v h.det = -(n * d : ℤ) + ord v M.det := by
     have e : (c⁻¹) ^ n = π ^ (-(n * d : ℤ)) := by

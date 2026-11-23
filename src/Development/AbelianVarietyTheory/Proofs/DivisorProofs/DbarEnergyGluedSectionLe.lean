@@ -1,8 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EtaleEmpty
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DbarGlueSectionByPartitionEqStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralNsqCanonicalAddChartPartStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DbarGlueSectionByPartitionEq
+public import ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.FamilyLeCoords
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralNsqCanonicalAddChartPart
+public import Mathlib.Algebra.Order.Chebyshev
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +52,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.L2ExtensionLogCanonical
-public import Mathlib.Algebra.Order.Chebyshev
 
 @[expose] public section
 
@@ -141,7 +142,7 @@ theorem energy_glue_le : ∀ (n : ℕ) (Y : Type) [TopologicalSpace Y] [T2Space 
   have hk : ∀ b a, ∫⁻ y in (A.chart (C.idx b)).source ∩ A.chart (C.idx b) ⁻¹' W b a,
       ENNReal.ofReal (A.nsq (A.kap + la) (D a) y) ∂A.mu = ∫⁻ v in W b a, f b a v := by
     intro b a
-    refine GlobalTheory.T.lintegral_nsq_canonical_add_chart_part n Y ι La A la (C.idx b) (W b a) (D a) (hWo b a).measurableSet
+    refine _root_.GlobalTheory.OTY.lintegral_nsq_chart_part n Y ι La A la (C.idx b) (W b a) (D a) (hWo b a).measurableSet
       (fun v hv => hv.2.1) (fun y hy hy' => hcomp a _ y hy ?_)
       ((hDc b a).aemeasurable (hWo b a).measurableSet)
     have := hy'.2.2.1
@@ -194,7 +195,7 @@ theorem energy_glue_le : ∀ (n : ℕ) (Y : Type) [TopologicalSpace Y] [T2Space 
     have h1 : ∀ j, ‖wdb n j (glue C la u (C.idx b) ∘ (A.chart (C.idx b)).symm) v‖ ^ 2 ≤
         C.m * B ^ 2 * ∑ a, e a := by
       intro j
-      rw [GlobalTheory.T.dbar_glueSectionByPartition_eq n Y ι La A C la u (C.idx b) v (F0 (C.idx b) ((A.chart (C.idx b)).symm v))
+      rw [_root_.GlobalTheory.glue_wdb_eq n Y ι La A C la u (C.idx b) v (F0 (C.idx b) ((A.chart (C.idx b)).symm v))
         j hu (hbt b hv)]
       apply sq_sum_le
       intro a

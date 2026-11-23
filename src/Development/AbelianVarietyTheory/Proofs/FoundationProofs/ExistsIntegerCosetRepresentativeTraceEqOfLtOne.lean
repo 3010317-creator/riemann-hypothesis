@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.CosetTrace
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CosetRepresentativeTraceFixedProperties
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SumMulCosetRepresentativeTraceEqStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SumMulCosetRepresentativeTraceEq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,7 +58,7 @@ theorem exists_integer_coset_trace_eq (L : Type) [Field L] (v : Valuation L ℝ�
     [Fintype (G ⧸ U)] (hU : AlmostSep v U) (e : L) (he : ∀ g : G, g • e = e) (he1 : v e < 1) :
     ∃ y ∈ Fix L U, v y ≤ 1 ∧ cosetTrace U y = e := by
   obtain ⟨n, a, b, c, hs, hc⟩ := hU (v e) he1
-  have hid := GlobalTheory.T.sum_mul_cosetRepresentativeTrace_eq L v G U n a b c hs 1 (one_mem _)
+  have hid := _root_.GlobalTheory.AlmostEt.sum_mul_cosetTrace_eq L v G U n a b c hs 1 (one_mem _)
   simp only [mul_one] at hid
 
   obtain ⟨i, hi⟩ : ∃ i, v e < v (cosetTrace U (b i)) := by

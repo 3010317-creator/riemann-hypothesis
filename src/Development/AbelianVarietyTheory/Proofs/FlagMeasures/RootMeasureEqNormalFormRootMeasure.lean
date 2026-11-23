@@ -2,8 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.BlockAnti
 public import Formalism.SharpRestriction.CuspSpanNormBounds.NormalizedLocalScale
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CommonStabilizerNormalFormBlockUnitriangularStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsRadicalNormalFormPairOfFlagsStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CommonStabilizerNormalFormBlockUnitriangular
+public import Formalism.SharpRestriction.CuspSpanNormBounds.RootMeasBig
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsRadicalNormalFormPairOfFlags
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotropicLeviEmbeddingHomomorphismProperties
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotropicStabilizerRadicalStructure
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnipotentLeviRadicalCoordsHomeomorph
@@ -180,7 +181,7 @@ theorem eq_map (z' : Fin (2 * r + k + 1) → ℂ) (p : Point ℂ (r + 1))
       conjM (pOf k r p₀)⁻¹ (Matrix.of.symm (uEmb k r (upperIn β (E (rootCoords k r z' p x))))) = x := by
     intro x hx
     have h2 := conj_mem (pOf_mem p₀) (pOf_mem p₁) hg hx
-    rw [(GlobalTheory.T.commonStabilizer_normalForm_blockUnitriangular k r _ _ hN).1] at h2
+    rw [(_root_.GlobalTheory.Amp.StabNormal.stabiliser_normal k r _ _ hN).1] at h2
     obtain ⟨y, hy⟩ := h2
     have hx' : Matrix.of x = (pOf k r p₀)⁻¹ * uEmb k r (upperIn β y) * pOf k r p₀ := by
       simp only at hy
@@ -216,7 +217,7 @@ theorem rootMeas_normR : ∀ (D : D7) (z z' : (Fin (2 * D.R.rS + D.R.k + 1) → 
   intro D z z' p γ μR θ' hT hR hθ _
   obtain ⟨n, hn, n', hn', g, rfl, hZ, μ, h0, h1, rfl⟩ := hR
   have hg := twoFl_of hn hn' hT
-  obtain ⟨p₁, p₀, -, hN, -, h⟩ := GlobalTheory.T.exists_radical_normalForm_pair_of_flags _ _ z z' g p hg hZ
+  obtain ⟨p₁, p₀, -, hN, -, h⟩ := _root_.GlobalTheory.Amp.NormalEx.normal_form _ _ z z' g p hg hZ
   have N := nSubgroup D.R.k D.R.rS
   have hu₀ := unit_det (pOf_mem p₀).1
   have hu₁ := unit_det (pOf_mem p₁).1

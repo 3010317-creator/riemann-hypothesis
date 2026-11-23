@@ -1,12 +1,15 @@
 module
 
 public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ConjCoefficientsWeylModuleRowActNormFockStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DelSqIrreducibleUnitaryStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.InvariantPosDefFormEqSmulInnerOfIrreducibleStatement
+public import Formalism.LocalRingCardinality.DataCoeff
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ConjCoefficientsWeylModuleRowActNormFock
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DelSqIrreducibleUnitary
+public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.InvariantPosDefFormEqSmulInnerOfIrreducible
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalizedFockFormPureTensorProperties
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHarishChandraTypeDualWeylModuleFockNormStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIntertwinerOfSameHarishChandraParamUnitaryStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHarishChandraTypeDualWeylModuleFockNorm
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIntertwinerOfSameHarishChandraParamUnitary
 import Formalism.GradedWeylDivisibility.DualWeylDominanceOf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -251,14 +254,14 @@ theorem exists_conj_weyl : ∀ (k n : ℕ) (h : k = n) (lam : DomWeight n) (u : 
     rw [hu i]
     simp
   obtain ⟨hnt, hfd, hrep, hK⟩ := hπ
-  obtain ⟨H, iN, iI, π0, e, hπ0, he_inj, he_mem, he_eq⟩ := GlobalTheory.T.exists_harishChandraType_dualWeylModuleFockNorm k lam
+  obtain ⟨H, iN, iI, π0, e, hπ0, he_inj, he_mem, he_eq⟩ := _root_.GlobalTheory.NablaType.exists_isHCTypeU_nablaSq k lam
   have hπ0' : IsHCTypeU k u π0 := by
     rw [hufun]
     exact hπ0
   have hπ' : IsHCTypeU k u π := ⟨hnt, hfd, hrep, hK⟩
-  obtain ⟨A, hA⟩ := GlobalTheory.T.exists_intertwiner_of_same_harishChandraParam_unitary k u W H π π0 hπ' hπ0'
-  obtain ⟨hfin, hdn, hstab, hirr⟩ := GlobalTheory.T.delSq_unitary_stable_and_irreducible k lam
-  obtain ⟨hcmem, hcrow, hcnf⟩ := GlobalTheory.T.conj_coefficients_weylModule_rowAct_normFock k lam
+  obtain ⟨A, hA⟩ := _root_.GlobalTheory.UnitaryHighestWeightUnique.exists_equiv_of_isHCTypeU k u W H π π0 hπ' hπ0'
+  obtain ⟨hfin, hdn, hstab, hirr⟩ := _root_.GlobalTheory.WeylUnitary.delSq_irreducible_unitary k lam
+  obtain ⟨hcmem, hcrow, hcnf⟩ := _root_.GlobalTheory.ConjCoeff.conj_coefficients k lam
 
   obtain ⟨j0, hj0⟩ : ∃ j0 : W →ₗ[ℂ] MvPolynomial (Fin k × Fin k) ℂ, ∀ ξ, j0 ξ = e (A ξ) :=
     ⟨e.comp A.toLinearMap, fun _ => rfl⟩
@@ -318,7 +321,7 @@ theorem exists_conj_weyl : ∀ (k n : ℕ) (h : k = n) (lam : DomWeight n) (u : 
   have hE := fockF_ext_real lam
   have hEim : (Formalism.REAL.fockF (extremal ℂ k lam) (extremal ℂ k lam)).im = 0 :=
     (Formalism.GradedWeylDivisibility.fockPos _ _ (extremal_ne_zero' lam)).2
-  obtain ⟨c, hc, hcB⟩ := GlobalTheory.T.invariant_posDef_form_eq_smul_inner_of_irreducible' W (unitaryGroup (Fin k) ℂ) (fun i => π i.1) B
+  obtain ⟨c, hc, hcB⟩ := _root_.GlobalTheory.invariant_posDef_form_eq_smul_inner_of_irreducible W (unitaryGroup (Fin k) ℂ) (fun i => π i.1) B
     (fun i v => hrep.2.1 i.1 (mem_UJset_of_unitary i.2) v)
     (fun S hS => hK.2.2.1 S le_top (fun g hg v hv => hS ⟨g, hg.1⟩ v hv))
     (fun i x y => by

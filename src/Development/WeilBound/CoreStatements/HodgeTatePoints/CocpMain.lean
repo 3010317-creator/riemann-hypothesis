@@ -3,13 +3,13 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ToFirst
 public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.GermComp1ZeroPointLeft
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.AlphaKernelDerivativeVanishesStatement
-import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PowOneSeriesPFormulaStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DeltaExpansionRestrictionStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FormalGermJetLiftStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PderivZeroOfJetPthPowerDiffStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.UnitsMulRelationRearrangeCommRing
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.IsPullbackWhisker
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.QamCore
+import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PowOneSeriesPFormula
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,7 +64,7 @@ theorem cocycle_p : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
     have := congrArg Prod.fst hα
     rwa [alpha_apply] at this
   have hyp := hy1 hwv
-  obtain ⟨gs, hax, hpow, -⟩ := GlobalTheory.T.pow_one_series_p_formula k p d (𝓞 E) g.B
+  obtain ⟨gs, hax, hpow, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Conj.pow_one_series_in_p k p d (𝓞 E) g.B
   have hkill := GlobalTheory.T.alpha_kernel_derivative_vanishes k p d (𝓞 E) g.B (fun i => w i ^ p) gs hα hpow
   have hf : ∀ q, MvPowerSeries.pderiv (R := k) q (dSer gs fun i => w i ^ p) = 0 := by
     rintro ⟨i, j⟩

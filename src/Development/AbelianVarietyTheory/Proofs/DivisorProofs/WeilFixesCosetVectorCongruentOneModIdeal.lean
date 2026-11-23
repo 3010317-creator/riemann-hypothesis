@@ -1,14 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CosetVecEq
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdealMatrixApproxCongruentOneTranslateStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitInertFactorizationUnitaryLatticeStabiStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitSupportedUnitaryMovingToSelfDualSkewLStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeIntertwinerStandardToSkewMemThetaSpaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaPointMemStandardAndSkewLatticeOfEntriesMemStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryCongruentOneDetSubOneMemIdealMulConjStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutes
+public import Development.AbelianVarietyTheory.Definitions.Divisors.FinitePrimesUnder
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdealMatrixApproxCongruentOneTranslate
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NormSumPairRankZeroOfCurveCoordNorm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitInertFactorizationUnitaryLatticeStabi
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitSupportedUnitaryMovingToSelfDualSkewL
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeIntertwinerStandardToSkewMemThetaSpace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaPointMemStandardAndSkewLatticeOfEntriesMem
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryCongruentOneDetSubOneMemIdealMulConj
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.VacuumUnderAdelicPairModulusOne
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutes
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.WeilOperatorRationalTranslateMemThetaFunctions
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -123,13 +125,13 @@ theorem om_cosetV_of_congOne : ∀ (D : D7) (δ t0 : ℂ), Crv D ⊤ δ → ∀ 
   have hT := VacMove.vac_TT h1 hc he
 
   have hk0 : W.Om k 1 e0 = e0 := by
-    obtain ⟨ks, ki, x, hkk, hks, hki, hss, hsi, hxq, hxd, hxu, η, hη, hx1⟩ := GlobalTheory.T.exists_split_inert_factorization_unitaryLatticeStabilizer D k hk
+    obtain ⟨ks, ki, x, hkk, hks, hki, hss, hsi, hxq, hxd, hxu, η, hη, hx1⟩ := _root_.GlobalTheory.UnitaryFactor.exists_split_inert_factor D k hk
     have hi : W.Om ki 1 e0 = e0 :=
       W.inert ki 1 ((mem_intG ki).1 hki) ((mem_intG 1).1 (one_mem _)) hsi (suppInert_one D d)
     have hs : W.Om ks 1 e0 = e0 := by
       have hm : Moves D (ks : GL (Fin a) (AE D)) (stdL D a) := by
         simpa using VacMove.moves_mul_int hks (VacMove.moves_one D a)
-      have hx : W.chV'.f x = 1 := hch x hxu (by rw [hx1]; exact hatId_mul hη (GlobalTheory.T.unitary_congruent_one_det_sub_one_mem_ideal_mul_conj D 𝔪 hcop k hk hck))
+      have hx : W.chV'.f x = 1 := hch x hxu (by rw [hx1]; exact hatId_mul hη (_root_.GlobalTheory.FunObj.StdDatum.DetCong.det_sub_one_mem D 𝔪 hcop k hk hck))
       rw [W.split ks 1 x 1 (stdL D a) (stdL D d) hss (suppSplit_one D d)
         (fun q hq hi => ⟨hxq q hq hi, by simpa using zeroAt_zero D q⟩) hxd (by simp) hm (VacMove.moves_one D d)]
       simp only [hx, map_one, one_zpow, mul_one, Units.val_one, one_mul]
@@ -138,7 +140,7 @@ theorem om_cosetV_of_congOne : ∀ (D : D7) (δ t0 : ℂ), Crv D ⊤ δ → ∀ 
     rw [mul_one, ← hkk] at this
     rw [this, hi, hs]
 
-  obtain ⟨g', x', hg's, hg'm, hx'q, hx'd⟩ := GlobalTheory.T.exists_splitSupported_unitary_moving_to_selfDualSkewLattice D 𝔪 h𝔪 hcop d
+  obtain ⟨g', x', hg's, hg'm, hx'q, hx'd⟩ := _root_.GlobalTheory.SkewMove.exists_skew_move D 𝔪 h𝔪 hcop d
   have hsd : SD D (skewLat D 𝔪 d) := VacMove.sd_of_moves hg'm
   have hJ : W.Om 1 g' e0 = ((W.chV.f x' ^ W.ep * W.chV'.f 1 ^ W.ep' : ℂˣ) : ℂ) •
       Iop D (tor0 D ⊤ δ) (La0 D (tor0 D ⊤ δ) a d) (La D (tor0 D ⊤ δ) (stdL D a) (skewLat D 𝔪 d)) e0 := by
@@ -162,11 +164,11 @@ theorem om_cosetV_of_congOne : ∀ (D : D7) (δ t0 : ℂ), Crv D ⊤ δ → ∀ 
 
   have hx₀ := pt_unitBlock_mem (D := D) δ o a d
   obtain ⟨m, hm, hlift⟩ := W.lift k 1 (unitBlock D o a d) _ hJT
-  obtain ⟨w, hw𝔪, hclose⟩ := GlobalTheory.T.exists_ideal_matrix_approx_congruent_one_translate D 𝔪 h𝔪 k hk hck (unitBlock D o a d) (unitBlock_int D o a d) m hm
-  have hw := GlobalTheory.T.thetaPoint_mem_standard_and_skewLattice_of_entries_mem D δ 𝔪 w hw𝔪
+  obtain ⟨w, hw𝔪, hclose⟩ := _root_.GlobalTheory.CongApprox.exists_closeTo_congOne D 𝔪 h𝔪 k hk hck (unitBlock D o a d) (unitBlock_int D o a d) m hm
+  have hw := _root_.GlobalTheory.FunObj.SqNum.pt_mem_of_entries_mem D δ 𝔪 w hw𝔪
   have hBk : KLat D (tor0 D ⊤ δ) (La D (tor0 D ⊤ δ) (stdL D a) (skewLat D 𝔪 d)) :=
     VacMove.klat _ (VacMove.moves_one D a) hg'm
-  have hJB := GlobalTheory.T.latticeIntertwiner_standard_to_skew_mem_thetaSpace D δ hc e0 he 𝔪 hsd
+  have hJB := _root_.GlobalTheory.SkewTheta.iop_mem_thSp D δ hc e0 he 𝔪 hsd
   have hWJ := hlift _ hclose
   rw [hkJ, VacMove.pt_add, ← weylTranslate_add_of_mem_baseLattice hc he W.nz hx₀ hw.1, VacMove.wd_fix h1 hc hBk hJB hw.2] at hWJ
   unfold cosetV

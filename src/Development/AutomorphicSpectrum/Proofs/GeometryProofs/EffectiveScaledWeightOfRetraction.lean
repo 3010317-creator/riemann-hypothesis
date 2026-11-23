@@ -3,13 +3,18 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EmbedsGeneric
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ArchBetween
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.SplitComps
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AlgebraicConstantsInRangeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AmpleOfSingleCoordBlockStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptBirationalArithVarStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolomorphicAtlasCoordCompatStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolomorphicInverseChartValueStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelPushAlongMapStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SameOrbitOfProportionalCoordsStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AlgebraicConstantsInRange
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AmpleOfSingleCoordBlock
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptBirationalArithVar
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolomorphicAtlasCoordCompat
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.IsPotentialOfFun
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolomorphicInverseChartValue
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelPushAlongMap
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SameOrbitOfProportionalCoords
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -359,9 +364,9 @@ theorem refRoot : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Ho
       exact ⟨(ix ij.1, ix ij.2), rfl⟩
     · rintro ⟨ij, rfl⟩
       exact ⟨(ix.symm ij.1, ix.symm ij.2), by simp⟩
-  obtain ⟨Mf, hMf⟩ := GlobalTheory.T.lie_model_push_along_map E H _ _ G.𝔐.t Y.t G.𝔐.f G.𝔐.m G.Ω G.𝔐.ξ G.𝔐.Li G.𝔐.M
+  obtain ⟨Mf, hMf⟩ := _root_.GlobalTheory.CompanionTheory.Ar.SabLie.lieModel_of_sabMap E H _ _ G.𝔐.t Y.t G.𝔐.f G.𝔐.m G.Ω G.𝔐.ξ G.𝔐.Li G.𝔐.M
   haveI : Nonempty G.K := ⟨G.k₀⟩
-  have hb : Birational G.y := (GlobalTheory.T.hodge_cpt_birational_arith_var E H D l Xo c (𝓞 c.F) (algebraMap _ _) Y ∅ G.Ω G.K G.J G.y G.𝔐 G.Fl
+  have hb : Birational G.y := (_root_.GlobalTheory.CompanionTheory.Ar.flagged_model_dim E H D l Xo c (𝓞 c.F) (algebraMap _ _) Y ∅ G.Ω G.K G.J G.y G.𝔐 G.Fl
     (RingOfIntegers.coe_injective)).1
   have hδ : 0 < Module.finrank ℚ c.F * G.Fl.deg := by
     rw [G.deg_one, _root_.mul_one]
@@ -377,13 +382,13 @@ theorem refRoot : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Ho
     obtain ⟨i, hi⟩ := (hmem (inv x)).1 G.k₀
     exact hi (by simpa [pt] using congrFun h (ix.symm i))
   have pt_inj : ∀ x x' (a : ℂ), pt x = a • pt x' → x = x' := fun x x' a h => by
-    have ho := GlobalTheory.T.same_orbit_of_proportional_coords G.𝔐.X G.Ω G.𝔐.ξ G.K G.J G.y G.k₀ G.𝔐.tie G.embeds _ (hmem (inv x)) _ (hmem (inv x')) a
+    have ho := _root_.GlobalTheory.CompanionTheory.Ar.OrbitBlock.sameOrbit_of_block G.𝔐.X G.Ω G.𝔐.ξ G.K G.J G.y G.k₀ G.𝔐.tie G.embeds _ (hmem (inv x)) _ (hmem (inv x')) a
       (fun i => by simpa [pt] using congrFun h (ix.symm i))
     have := A.embedded.inj _ _ ho
     rw [← hcov x, this, hcov]
   have hpt : ∀ x, ∃ a : ℂ, (fun i => A.Re.R.lift x x ⟨G.k₀, ix i⟩) = a • pt (A.Re.π x) := fun x =>
     ⟨1, by simp [pt, hinv]⟩
-  have hconst := GlobalTheory.T.algebraic_constants_in_range E H D l Xo c Y ∅ G.Ω G.K G.J G.y G.𝔐 G.Fl hsplit G.deg_one
+  have hconst := _root_.GlobalTheory.CompanionTheory.Ar.FlagConst.isAlgebraic_mem_cst_range E H D l Xo c Y ∅ G.Ω G.K G.J G.y G.𝔐 G.Fl hsplit G.deg_one
   refine ⟨refFixed A Mf m ix gen pt pt_ne pt_inj k q' hq (fun r => (k * q' : ℕ) * ν r) s hs,
     refModel A hb k hk _ hδ,
     refOrigin A hb k hk hδ Mf hMf m ix gen pt pt_ne pt_inj hpt q' hq _ s hs hconst heff,
@@ -392,7 +397,7 @@ theorem refRoot : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Ho
     have e : G.𝔐.ξ ≫ G.𝔐.f = spMap G.𝔐.fn ≫ G.𝔐.ξ₀ := G.𝔐.fn_over
     rw [e]
     exact genPt_comp_spMap _ _
-  · exact GlobalTheory.T.ample_of_single_coord_block G.𝔐.X G.Ω G.𝔐.ξ G.K G.J G.y G.k₀ _ G.𝔐.tie G.embeds A.none_deg.1 A.none_deg.2
+  · exact _root_.GlobalTheory.CompanionTheory.Ar.AmpleBlock.ampleQ_of_embeds G.𝔐.X G.Ω G.𝔐.ξ G.K G.J G.y G.k₀ _ G.𝔐.tie G.embeds A.none_deg.1 A.none_deg.2
   · intro x
     have hx₁ := A.Re.R.mem_U (inv x)
     refine ⟨inv ⁻¹' A.Re.R.U (inv x), fun y i => A.Re.R.lift (inv x) (inv y) ⟨G.k₀, ix i⟩,
@@ -402,9 +407,9 @@ theorem refRoot : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Ho
       exact ⟨c' G.k₀, hc' _, funext fun i => congrFun e ⟨G.k₀, ix i⟩⟩
     · intro p hp j hj
       obtain ⟨j₁, hj₁⟩ := A.Re.R.A.cover (inv x)
-      obtain ⟨h1, h2⟩ := GlobalTheory.T.holomorphic_atlas_coord_compat G.𝔐.X G.Ω G.𝔐.ξ G.K G.J G.y G.k₀ G.𝔐.tie G.embeds _ _ A.Re.R.A _ _ A.embedded
+      obtain ⟨h1, h2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ImmBlock.immersion_block G.𝔐.X G.Ω G.𝔐.ξ G.K G.J G.y G.k₀ G.𝔐.tie G.embeds _ _ A.Re.R.A _ _ A.embedded
         (Fin (m + 1)) ix (inv x) p hp j₁ hj₁
-      exact GlobalTheory.T.holomorphic_inverse_chart_value _ _ _ _ A.Re.R.A A.Sys.A A.Re.π inv A.Re.holo hinvH A.π_bij hinv
+      exact _root_.GlobalTheory.CompanionTheory.Ar.ImmersionBiholo.ker_fderiv_comp_biholo _ _ _ _ A.Re.R.A A.Sys.A A.Re.π inv A.Re.holo hinvH A.π_bij hinv
         (fun y i => A.Re.R.lift (inv x) y ⟨G.k₀, ix i⟩ / A.Re.R.lift (inv x) y ⟨G.k₀, ix p⟩) x j₁ j hj₁ hj h1 h2
 
 end GlobalTheory.CompanionTheory.Ar.RefRoot

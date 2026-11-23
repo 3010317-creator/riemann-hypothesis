@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCoType
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CardParahoricDoubleCosetRepsInvEqStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsParahoricAndIntegralGLDoubleCosetRepsStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParahoricDatumEigenvectorTwoBlockParahoricStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TwoBlockParahoricLowerBlockDetTameCharacterStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CardParahoricDoubleCosetRepsInvEq
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsParahoricAndIntegralGLDoubleCosetReps
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.VolumeFlatSection
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParahoricDatumEigenvectorTwoBlockParahoric
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TwoBlockParahoricLowerBlockDetTameCharacter
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,8 +79,8 @@ theorem sum_eq_genVal : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
     intro j hj
     obtain ⟨hjJ, hdj⟩ := hR.1 j hj
     have hjiJ : j⁻¹ ∈ parahoric k A D := inv_mem hjJ
-    have hne := (GlobalTheory.T.twoBlockParahoric_lowerBlock_det_tameCharacter k A D ξ hξ j⁻¹ hjiJ).1
-    have hprod := (GlobalTheory.T.twoBlockParahoric_lowerBlock_det_tameCharacter k A D ξ hξ j hjJ).2 (d j) (Units.mk0 _ hne) hdj rfl
+    have hne := (_root_.GlobalTheory.ParahoricLowerBlock.lower_block_tame k A D ξ hξ j⁻¹ hjiJ).1
+    have hprod := (_root_.GlobalTheory.ParahoricLowerBlock.lower_block_tame k A D ξ hξ j hjJ).2 (d j) (Units.mk0 _ hne) hdj rfl
     have hx1 : ρ j⁻¹ x = (ξ (Units.mk0 _ hne) : ℂ) • x := hx.1 j⁻¹ hjiJ (Units.mk0 _ hne) rfl
     have he := hb (j * g⁻¹) 1 Φ (ρ (g * j⁻¹) x)
     have hone : (j * g⁻¹) * (g * j⁻¹) = 1 := by group
@@ -97,7 +98,7 @@ theorem sum_eq_genVal : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
       ∀ z, b Φ (ρ j z) = (ξ dd : ℂ) • b Φ z := by
     intro j hj dd hdd z
     have hom : omTwo μS μT j (1 : GL (A ⊕ D') k) (datum ξ⁻¹) = ((ξ⁻¹ dd : ℂˣ) : ℂ) • datum ξ⁻¹ := by
-      have := GlobalTheory.T.parahoricDatum_eigenvector_twoBlockParahoric k A D D' ξ⁻¹ (μT⁻¹ * ξ) htame hunr j hj dd hdd
+      have := _root_.GlobalTheory.DatumEigen.om_datum k A D D' ξ⁻¹ (μT⁻¹ * ξ) htame hunr j hj dd hdd
       rw [show μT⁻¹ * ξ * ξ⁻¹ = μT⁻¹ by rw [mul_assoc, mul_inv_cancel, mul_one]] at this
       unfold omTwo
       rw [this]
@@ -109,8 +110,8 @@ theorem sum_eq_genVal : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
     rw [← he, smul_smul]
     simp
 
-  obtain ⟨R'', d'', hR''⟩ := (GlobalTheory.T.exists_parahoric_and_integralGL_doubleCosetReps k A D).1 g
-  have hcard := (GlobalTheory.T.card_parahoricDoubleCosetReps_inv_eq k A D g R'' R d'' d hR'' hR).1
+  obtain ⟨R'', d'', hR''⟩ := (_root_.GlobalTheory.ParHeckeReps.exists_reps_both k A D).1 g
+  have hcard := (_root_.GlobalTheory.ParHeckeCard.card_isReps_inv k A D g R'' R d'' d hR'' hR).1
   have hT := hx.2.2 s R'' d'' hR''
   have hsum2 : genVal (resCard k) (Fintype.card A) (Fintype.card D) B s.card • b Φ x = R''.card • b Φ (ρ g x) := by
 

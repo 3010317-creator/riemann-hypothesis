@@ -2,7 +2,9 @@ module
 
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdentityAsSumExpMinusOneStatement
+public import Mathlib.Analysis.Distribution.TemperateGrowth
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdentityAsSumExpMinusOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -79,7 +81,7 @@ theorem kills_linear_mul : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace �
     (∀ (L : V →L[ℝ] ℝ) (f f' : SchwartzMap V ℂ), (∀ x, f' x = Complex.exp (Complex.I * (L x : ℂ)) * f x) → T f' = T f) →
     ∀ (L : V →L[ℝ] ℝ) (h g : SchwartzMap V ℂ), (∀ x, g x = (L x : ℂ) * h x) → T g = 0 := by
   intro V _ _ _ T hT L h g hg
-  obtain ⟨n, a, A, hA, hdiv⟩ := GlobalTheory.T.identity_as_sum_exp_minus_one
+  obtain ⟨n, a, A, hA, hdiv⟩ := _root_.GlobalTheory.ExpDivision.exists_division
   have hAL : ∀ j, Function.HasTemperateGrowth (fun x : V => A j (L x)) := fun j =>
     (hA j).comp L.hasTemperateGrowth
   have hE : ∀ j, Function.HasTemperateGrowth

@@ -2,9 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobKerIdealLeAugIdeal
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ToSpanSingletonConstGenInjective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankLeFrobeniusKernelMulSpanPrimePowersStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankRigidExtensionsEqHeightAndDimAddDualStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankSpanPowPDivGroupLevelLeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankLeFrobeniusKernelMulSpanPrimePowers
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqZeroOfCobOneEqZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankRigidExtensionsEqHeightAndDimAddDual
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankSpanPowPDivGroupLevelLe
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,9 +64,9 @@ theorem pow_finrank_omega_le_finrank_frobKer : ∀ (p : ℕ) [Fact p.Prime] (K :
   have hN : Module.finrank K (G.A r) = p ^ (r * G.height) := by
     have := G.rank_eq r (IsLocalRing.closedPoint K)
     rwa [Module.rankAtStalk_eq_finrank_of_free] at this
-  have hdim := (GlobalTheory.T.finrank_rigidExtensions_eq_height_and_dim_add_dual p K h G).2.2.2
-  have hord := GlobalTheory.T.finrank_le_frobeniusKernel_mul_span_primePowers p K (G.A r) r
-  have hspan := GlobalTheory.T.finrank_span_pow_pDivGroup_level_le p K h G r
+  have hdim := (_root_.GlobalTheory.PDivGroup.finrank_rigExt_omega p K h G).2.2.2
+  have hord := _root_.GlobalTheory.PDiv.finrank_le_frobKer_mul_span_pow p K (G.A r) r
+  have hspan := _root_.GlobalTheory.finrank_span_pow_le p K h G r
   have hpos : 0 < (p ^ r) ^ Module.finrank K G.dual.omega :=
     pow_pos (pow_pos (Fact.out : p.Prime).pos _) _
   have key : (p ^ r) ^ Module.finrank K G.omega * (p ^ r) ^ Module.finrank K G.dual.omega ≤

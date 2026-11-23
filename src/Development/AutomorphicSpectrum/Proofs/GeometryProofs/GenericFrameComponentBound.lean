@@ -7,13 +7,18 @@ public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.Goo
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.StrictWeightGrowthBoundStatement
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.DegreeGenericOfDegree
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.NefPolarization
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.WeightThresholdLimitCoefficientsStatement
-import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.AssemblyBridgeFull
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.HasMultiplier
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.WeightThresholdLimitCoefficients
 public import GroundTheory.HeightsAndTheta.Heights.ElementarySymmetric.PFibreNormDehomRoots
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PLiftBirationalAmple
+public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PSectionSupBound
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.IsHomogeneousGrL
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.IsMultiHomogX
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterDerived
+import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.AssemblyBridgeFull
 import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PNefAmpleGeneric
 import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PNefOnGenericOfSemipos
-public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PSectionSupBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,9 +54,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.IsHomogeneousGrL
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.IsMultiHomogX
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterDerived
 import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.DefiniteFormStabilizerFiniteAwayFromP
 
 @[expose] public section
@@ -322,7 +324,7 @@ theorem exists_small_basis : GlobalTheory.CompanionTheory.Ar.Top.Given → ∀ (
     have := hW.2.1 τ a b' hab
     simpa [reW] using this
   obtain ⟨C, s, q, m, θ, hC, hs, hs0, hq, hm, hsm⟩ := GlobalTheory.T.strict_weight_growth_bound hG E H Dw l Xo c Y T o B b u hStrict
-  obtain ⟨hnefE, hdeg, -, hposV⟩ := GlobalTheory.T.weight_threshold_limit_coefficients (CMType H) (Dw.p + Dw.q) T II B (reW u) g b s q m hII hT1 hW hB hs hs0
+  obtain ⟨hnefE, hdeg, -, hposV⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Small.tower_seq (CMType H) (Dw.p + Dw.q) T II B (reW u) g b s q m hII hT1 hW hB hs hs0
     (fun n => (hq n).1) hm
   have hδ : (0 : ℝ) < ((T.M B b).δ : ℝ) := by exact_mod_cast (T.M B b).δ_pos
   have hdegE := hdeg.eventually_const_lt (mul_pos hδ hposV)

@@ -1,11 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExistsIvDOfDefinite
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsSpecTensorToPullbackSectionsCompatStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FlatComapMapOfOneTmulMemStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IInfMapLeMapIInfOfFlatStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemIdealMapOfGermsAffineSchemeStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemIdealSheafMapOfAffineCoverPreimageStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsSpecTensorToPullbackSectionsCompat
+public import Mathlib.RingTheory.Flat.Basic
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FlatComapMapOfOneTmulMem
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IInfMapLeMapIInfOfFlat
+public import ReciprocityTheory.AnalyticForms.RegularLocalRings.FinalTheorems
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemIdealMapOfGermsAffineScheme
+public import Mathlib.AlgebraicGeometry.IdealSheaf.Functorial
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Mathlib.Order.CompletePartialOrder
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemIdealSheafMapOfAffineCoverPreimage
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StalkIdComapOfAffine
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -80,7 +86,7 @@ theorem tmul_mem_of_germ {X Y' : Scheme.{0}} (ρ : Y' ⟶ X) (I : Y'.IdealSheafD
       (Algebra.TensorProduct.includeLeftRingHom : Γ(Y', W) →+* Γ(Y', W) ⊗[Γ(X, U)] R) := by
   letI := (ρ.appLE U W hW).hom.toAlgebra
   letI := (ξ.appLE U ⊤ hle ≫ (Scheme.ΓSpecIso (CommRingCat.of R)).hom).hom.toAlgebra
-  obtain ⟨κ, hκ, hL, hR⟩ := GlobalTheory.T.exists_specTensor_to_pullback_sections_compat ρ ξ U hle W hW
+  obtain ⟨κ, hκ, hL, hR⟩ := _root_.GlobalTheory.specTensor_to_pullback ρ ξ U hle W hW
   obtain ⟨s0, hs0⟩ : ∃ s0, (pullback.fst ξ ρ).appTop.hom ((Scheme.ΓSpecIso (CommRingCat.of R)).inv.hom h) = s0 :=
     ⟨_, rfl⟩
   rw [hs0] at hh
@@ -94,7 +100,7 @@ theorem tmul_mem_of_germ {X Y' : Scheme.{0}} (ρ : Y' ⟶ X) (I : Y'.IdealSheafD
       Ideal.mem_map_of_mem _ (hh (κ t))
     rw [e] at this
     exact this
-  have h4 := GlobalTheory.T.mem_ideal_map_of_germs_affineScheme (κ ≫ pullback.snd ξ ρ) I W hκ _ hs
+  have h4 := _root_.GlobalTheory.GermAff.mem_map_of_germ (κ ≫ pullback.snd ξ ρ) I W hκ _ hs
   have h5 := Ideal.mem_map_of_mem (Scheme.ΓSpecIso (CommRingCat.of (Γ(Y', W) ⊗[Γ(X, U)] R))).hom.hom h4
   rw [Ideal.map_map] at h5
   have e1 : (Scheme.ΓSpecIso _).hom.hom (κ.appTop.hom s0) = (1 : Γ(Y', W)) ⊗ₜ[Γ(X, U)] h := by
@@ -137,11 +143,11 @@ theorem mem_idlAlong_map_of_flat : ∀ {X Y' : Scheme.{0}} (ρ : Y' ⟶ X) [Quas
   haveI : Module.Flat Γ(X, U) R := GlobalTheory.FlatPush.flat_sections_to_chart ξ U hle hx hfl
   let K : ι → Ideal Γ(X, U) := fun i => (I.ideal (W i)).comap (ρ.appLE U (W i) (hW i)).hom
   have h1 : ⨅ i, K i ≤ (I.map ρ).ideal U := fun b hb =>
-    GlobalTheory.T.mem_idealSheaf_map_of_affineCover_preimage ρ I U W hW hcov b fun i => (Ideal.mem_iInf.1 hb i)
+    _root_.GlobalTheory.IdealPushCover.mem_map_ideal_of_cover ρ I U W hW hcov b fun i => (Ideal.mem_iInf.1 hb i)
   have h2 : h ∈ ⨅ i, (K i).map (algebraMap Γ(X, U) R) := by
     refine Ideal.mem_iInf.2 fun i => ?_
     letI : Algebra Γ(X, U) Γ(Y', W i) := (ρ.appLE U (W i) (hW i)).hom.toAlgebra
-    exact GlobalTheory.T.mem_map_comap_of_one_tmul_mem_map (I.ideal (W i)) h (tmul_mem_of_germ ρ I ξ U hle (W i) (hW i) h hh)
-  exact Ideal.map_mono h1 (GlobalTheory.T.iInf_map_le_map_iInf_of_flat K h2)
+    exact _root_.GlobalTheory.flat_comap_map_of_one_tmul_mem (I.ideal (W i)) h (tmul_mem_of_germ ρ I ξ U hle (W i) (hW i) h hh)
+  exact Ideal.map_mono h1 (_root_.GlobalTheory.FlatIdealInf.iInf_map_le_map_iInf K h2)
 
 end GlobalTheory.FlatPush

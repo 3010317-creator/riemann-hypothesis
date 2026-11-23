@@ -6,7 +6,6 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodge
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LevelSectionsExactKernelLocusOpen
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsCoordsAtOfCoordTie
-import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ProjectiveLinePlaceTrivialOnConstants
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HermitianSignatureCharacterStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AdaptedSpan
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BaseConstantsRegularStatement
@@ -14,26 +13,30 @@ public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CharpolySpli
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DvrModelOfNumberFieldPlace
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigProjMemOfFree
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenLinePAdicBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExtFrameOfQuotientKernel
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FibrePowerFreePullbackStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GlobalModelPowerFreeStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeLatticeGenericAgree
+public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.AdaptedEigenbasisExists
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsGenOfIsVBOne
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ProjectiveLinePlaceTrivialOnConstants
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsGermSystemStatement
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsHodgeLatticeGermSystemStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExtFrameOfQuotientKernel
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FibreCurveGermPowersStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FibrePowerFreePullbackStatement
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteTypeOverIntegersModel
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GermSystemHeightFreeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GlobalModelPowerFreeStatement
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeLatticeDvrDegree
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeLatticeGenericAgree
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeLatticeGermEigenStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeLatticeSpanIndependentStatement
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LinearIndependentEigProj
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeLatticeSpanIndependent
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeLatticeTransportEquivStatement
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntersectionHiddenSecondStatement
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeEigenVectorBundle
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueEquivStatement
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueEquiv
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PowFnsOfAbelianGenericStatement
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ValuationBoundedFrameStatement
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.WedgeEqSpanOfIsFrameAt
-public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.AdaptedEigenbasisExists
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,7 +79,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsGenOfIsVBOne
 
 @[expose] public section
 
@@ -122,7 +124,7 @@ theorem germ_degZero_prime : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   obtain ⟨F, hF0, hFi⟩ := GlobalTheory.T.fibre_curve_germ_powers E H hstar X t Ω ξ d M S O' s _ p Γ hξ hpow hfib
   choose hFB φ' ψ' lam' he hφ hψ hlam using hFi
   choose xs A hxs hfr hpr using GlobalTheory.T.hodge_lattice_germ_eigen E H X t Ω ξ d r M S ρ 𝓗 σ u hξ hgive hσ hu hsp
-  have hdet := fun q => (GlobalTheory.T.hodge_lattice_span_independent X Ω ξ E (Fin d → Ω) M.lat ρ H.bar r 𝓗 σ u hσ hu hsp).2.2 q (A q) (hfr q)
+  have hdet := fun q => (_root_.GlobalTheory.CompanionTheory.Ar.Flat.HodgeLat.quot_det_bundle X Ω ξ E (Fin d → Ω) M.lat ρ H.bar r 𝓗 σ u hσ hu hsp).2.2 q (A q) (hfr q)
   choose Mt hAM hMt using fun i => exists_trans S hgive σ (qi i) q0 (FibreCurve.generic_centre_specializes Γ i) (τ q0) (hτ q0)
     (he i) (hxs q0) hu (hpr (qi i)) (hpr q0)
   let χ : 𝓞 E →+* Γ.κ := v0.comp (τ q0)
@@ -601,7 +603,7 @@ theorem exists_hodgeLat (𝔐 : HodgeCpt Y S y)
       rw [← emb_inr 𝔐 ⟨τ', h⟩]
       exact finrank_of_isVB (𝔐.vb (.inr ⟨τ', h⟩))⟩
   obtain ⟨d, M, ⟨G⟩⟩ := GlobalTheory.T.exists_germ_system E H hstar 𝔐.X 𝔐.t Ω 𝔐.ξ hPow hgen
-  obtain ⟨e, he, -⟩ := GlobalTheory.T.lie_model_existsUnique_equiv 𝔐.X 𝔐.t.G Ω 𝔐.ξ (Fin d → Ω) 𝔐.Li M 𝔐.M
+  obtain ⟨e, he, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_existsUnique_equiv 𝔐.X 𝔐.t.G Ω 𝔐.ξ (Fin d → Ω) 𝔐.Li M 𝔐.M
   let ρ' : 𝓞 E →+* Module.End Ω (Fin d → Ω) := (e.symm.conjRingEquiv : _ ≃+* _).toRingHom.comp 𝔐.ρ
   have hρ' : ∀ a v, e (ρ' a v) = 𝔐.ρ a (e v) := fun a v => by
     simp [ρ', LinearEquiv.conjRingEquiv, LinearEquiv.conj_apply]

@@ -1,15 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Imports
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinComparisonUnitCocycleEveryPrismStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinEnvelopesAdicTopologicalBasisStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DiscPeriodComparisonRelationMapPrismHomStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsComparisonMatrixPrismCoproductStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsRealizationMatrixStratifiedPhiModuleStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusEqOfPowSmulComparisonMatrixStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinComparisonUnitCocycleEveryPrism
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsComparisonMatrixPrismCoproduct
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsRealizationMatrixStratifiedPhiModule
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.StratifiedPhiModuleOfCoproductCocycle
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinEnvelopesAdicTopologicalBasis
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DiscPeriodComparisonRelationMapPrismHom
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusEqOfPowSmulComparisonMatrix
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsOrientedPrismUniformizerFrameBreuilKisinHomStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyBreuilKisinPrismCoproductStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.StratifiedPhiModuleOfCoproductCocycleStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyBreuilKisinPrismCoproduct
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -68,7 +69,7 @@ theorem rel_gal_of_env {l : ℕ} [Fact l.Prime] {K : FinExt l} {bk : BK K} {τ :
     ht.Rel (B := ainfObj K) (BK.hf bk.ι X) bk.ι ((ainfHom K g).comp bk.ι)
       ((S.ε bk.ι ((ainfHom K g).comp bk.ι)).map bk.iA) := by
     obtain ⟨σ, ⟨h1, h2⟩, -⟩ := En.univ (ainfObj K) bk.ι ((ainfHom K g).comp bk.ι)
-    have hn := GlobalTheory.T.discPeriod_comparison_relation_map_prismHom l K bk d ρ τ s ht En.Q (ainfObj K) En.inl En.inl En.inr bk.ι σ
+    have hn := _root_.GlobalTheory.BSP.Height.rel_map l K bk d ρ τ s ht En.Q (ainfObj K) En.inl En.inl En.inr bk.ι σ
       (ε.map (toDisc l (BK.hf En.inl X) bk.ρ₀)) hε
     obtain ⟨Fk, hFk⟩ := hn.1
     have hr := hn.2 Fk hFk
@@ -95,21 +96,21 @@ theorem exists_strat_mreal : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : B
     Height s → ∃ (S : Strat bk d) (T : Matrix (Fin d) (Fin d) (WCb l)), MReal S ρ T := by
   intro l _ K bk τ hτ d ρ hρ s ht
 
-  obtain ⟨En⟩ := GlobalTheory.T.nonempty_breuilKisinPrismCoproduct l K bk bk.prism (bk.toP bk.E) (bk.toP X)
+  obtain ⟨En⟩ := _root_.GlobalTheory.BSP.nonempty_env l K bk bk.prism (bk.toP bk.E) (bk.toP X)
     (GlobalTheory.T.isOrientedPrismUniformizerFrame_breuilKisinHom l K bk bk.prism (Hom.id bk.prism))
 
-  obtain ⟨En₂⟩ := GlobalTheory.T.nonempty_breuilKisinPrismCoproduct l K bk En.Q (BK.hf En.inl bk.E) (BK.hf En.inl X)
+  obtain ⟨En₂⟩ := _root_.GlobalTheory.BSP.nonempty_env l K bk En.Q (BK.hf En.inl bk.E) (BK.hf En.inl X)
     (GlobalTheory.T.isOrientedPrismUniformizerFrame_breuilKisinHom l K bk En.Q En.inl)
-  obtain ⟨⟨tb⟩, -⟩ := GlobalTheory.T.breuilKisinEnvelopes_adicTopologicalBasis l K bk En En₂
+  obtain ⟨⟨tb⟩, -⟩ := _root_.GlobalTheory.BSP.envelopes_topBasis l K bk En En₂
 
-  obtain ⟨ε, hε⟩ := GlobalTheory.T.exists_comparison_matrix_prismCoproduct l K bk d ρ τ s ht hτ hρ En
-  have hφ := GlobalTheory.T.frobenius_eq_of_pow_smul_comparisonMatrix l K bk d ρ τ s ht hτ En.Q En.inl En.inr (Digits l) tb 0 ε
+  obtain ⟨ε, hε⟩ := _root_.GlobalTheory.BSP.Height.exists_rel_env l K bk d ρ τ s ht hτ hρ En
+  have hφ := _root_.GlobalTheory.BSP.Height.phi_eq_of_rel_pow l K bk d ρ τ s ht hτ En.Q En.inl En.inr (Digits l) tb 0 ε
     (ε.map (toDisc l (BK.hf En.inl X) bk.ρ₀)) hε
     ((congrArg (fun c => c • ε.map (toDisc l (BK.hf En.inl X) bk.ρ₀))
       (pow_zero ((l : ℕ) : Disc l (BK.hf En.inl X) bk.ρ₀))).trans (one_smul _ _)).symm
-  have hc := GlobalTheory.T.breuilKisin_comparison_unit_cocycle_every_prism l K bk d ρ τ s ht En ε hε
-  obtain ⟨S, hSa, hSA, hSε⟩ := GlobalTheory.T.stratifiedPhiModule_of_coproduct_cocycle l K bk En d (ht.a + s.N) ht.b ht.A ht.A' ht.A_mul ε hφ hc
-  obtain ⟨T, hT⟩ := GlobalTheory.T.exists_realization_matrix_stratifiedPhiModule l K bk d ρ τ s ht hτ S hSa hSA (rel_gal_of_env ht En ε hε S hSε)
+  have hc := _root_.GlobalTheory.BSP.StratCocycle.unit_cocycle l K bk d ρ τ s ht En ε hε
+  obtain ⟨S, hSa, hSA, hSε⟩ := _root_.GlobalTheory.BSP.strat_of_envCocycle l K bk En d (ht.a + s.N) ht.b ht.A ht.A' ht.A_mul ε hφ hc
+  obtain ⟨T, hT⟩ := _root_.GlobalTheory.BSP.RealMatrix.exists_mreal l K bk d ρ τ s ht hτ S hSa hSA (rel_gal_of_env ht En ε hε S hSε)
   exact ⟨S, T, hT⟩
 
 end GlobalTheory.BSP

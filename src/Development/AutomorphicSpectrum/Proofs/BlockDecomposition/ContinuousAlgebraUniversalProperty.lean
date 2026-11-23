@@ -1,12 +1,14 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MulSubEqZeroOfSum
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EpsilonCyclotomicElementPropertiesStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.MapUSharp
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.WittExactSequences.ObFacts
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EpsilonCyclotomicElementProperties
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsContinuousEpsilonPower
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsLimHom
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IdempotentsCoarsenToLowerLevelStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IdempotentsUniqueForEpsilonRootStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SharpEpsilonRootIdempotentSumStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IdempotentsUniqueForEpsilonRoot
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SharpEpsilonRootIdempotentSum
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsLimHom
 import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.AcrisKummerUnits.ValuationOfValuationModSquare
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -213,7 +215,7 @@ theorem map_existsUnique : ∀ {l : ℕ} [Fact l.Prime] (A t : PAlg l) (φ : A �
 theorem level : ∀ {l : ℕ} [Fact l.Prime] (ε : Eps l) (t : PAlg l), t.IsTest → ∀ (r : ℕ → t.A), (∀ m, r (m + 1) ^ l = r m) → t.sharp (r 0) = 1 →
   ∀ m, ∃ e : ZMod (l ^ m) → t.A, CompleteOrthogonalIdempotents e ∧ ∀ c, t.sharp (e c) * (t.sharp (r m) - t.sharp (t.s (ε.e m)) ^ c.val) = 0 := by
   intro l _ ε t ht r hr h1 m
-  have hp := (GlobalTheory.T.epsilon_cyclotomic_element_properties ε).2.2.2.2 m
+  have hp := (_root_.GlobalTheory.CompanionTheory.EpsFacts.eps_facts ε).2.2.2.2 m
   have hz : t.sharp (r m) ^ l ^ m = 1 := by
     have : ∀ m, r m ^ l ^ m = r 0 := fun m => by
       induction m with
@@ -264,7 +266,7 @@ theorem continuous_algebra_universal_existsUnique (ε : Eps l) {ρ : ℕ → ((b
   have hcomp : ∀ (m n : ℕ) (h : m ≤ n) (c : ZMod (l ^ m)),
       e m c = ∑ c' with ZMod.castHom (pow_dvd_pow l h) (ZMod (l ^ m)) c' = c, e n c' := fun m n h c => by
     obtain ⟨h1, h2⟩ := GlobalTheory.T.idempotents_coarsen_to_lower_level ε t r hr h (e n) (he n) (hrel n)
-    exact congrFun (GlobalTheory.T.idempotents_unique_for_epsilon_root ε t m (t.sharp (r m)) (e m) _ (he m) h1 (hrel m) h2) c
+    exact congrFun (_root_.GlobalTheory.CompanionTheory.ContUniv.idem_unique ε t m (t.sharp (r m)) (e m) _ (he m) h1 (hrel m) h2) c
   obtain ⟨ψ, ⟨hψ1, hψ2⟩, hψ⟩ := map_existsUnique A t φ e he hcomp
   have hv : ∀ (ψ' : A.cont ℤ_[l] ⟶ t) (m : ℕ), Hom.f ψ' (Hom.f (contMap A.fromBase ℤ_[l]) (ρ (m + 1))) ^ l =
       Hom.f ψ' (Hom.f (contMap A.fromBase ℤ_[l]) (ρ m)) := fun ψ' m => by
@@ -281,7 +283,7 @@ theorem continuous_algebra_universal_existsUnique (ε : Eps l) {ρ : ℕ → ((b
     exact (congrFun key 0).trans hr0
   · have key : (fun m => Hom.f ψ' (Hom.f (contMap A.fromBase ℤ_[l]) (ρ m))) = r :=
       roots_unique t (h2.trans hr0.symm) (hv ψ') hr
-    refine congrFun (GlobalTheory.T.idempotents_unique_for_epsilon_root ε t m (t.sharp (r m)) _ (e m) (coi_map ψ' m) (he m) (fun c => ?_) (hrel m)) c
+    refine congrFun (_root_.GlobalTheory.CompanionTheory.ContUniv.idem_unique ε t m (t.sharp (r m)) _ (e m) (coi_map ψ' m) (he m) (fun c => ?_) (hrel m)) c
     have := rel_of_formula (coi_map ψ' m) (formula ε hF ψ' m) c
     rwa [show Hom.f ψ' (Hom.f (contMap A.fromBase ℤ_[l]) (ρ m)) = r m from congrFun key m] at this
 
@@ -307,7 +309,7 @@ theorem main : ∀ {l : ℕ} [Fact l.Prime] (ε : Eps l),
     rw [map_mul, hev]
     exact hshift z
   obtain ⟨ρ, h0, hρ⟩ := exists_roots ((base l).cont ℤ_[l]) η
-  have hF := GlobalTheory.T.sharp_epsilon_root_idempotent_sum ε ρ (fun m z => h0 ▸ hη m z) hρ
+  have hF := _root_.GlobalTheory.CompanionTheory.ContUniv.sharp_roots_universal ε ρ (fun m z => h0 ▸ hη m z) hρ
   have h1 : ((base l).cont ℤ_[l]).sharp η = 1 := by
     have h := hF 0
     rw [h0] at h

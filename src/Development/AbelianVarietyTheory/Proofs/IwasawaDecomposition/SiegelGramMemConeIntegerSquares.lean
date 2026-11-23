@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsSiegelZeroFront
 public import Mathlib.Topology.Instances.Matrix
 public import Mathlib.Topology.MetricSpace.Pseudo.Defs
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFinsetSquaresConeOfCompactPosDefStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFinsetSquaresConeOfCompactPosDef
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -201,7 +201,7 @@ theorem gram_mem_cone : ∀ n : ℕ, ∃ S : Finset (Fin n → ℤ), ∀ (d : Fi
   intro n
   have hK : ∀ k : Fin n, ∃ T : Finset (Tail k → ℤ), ∀ P ∈ tailForm k '' unip n, ∃ c : (Tail k → ℤ) → ℝ,
       (∀ l, 0 ≤ c l) ∧ P = ∑ l ∈ T, c l • vecMulVec (fun i => (l i : ℝ)) (fun i => (l i : ℝ)) := fun k =>
-    GlobalTheory.T.exists_finset_squares_cone_of_compact_posDef (Tail k) (tailForm k '' unip n) ((isCompact_unip n).image (continuous_tailForm k))
+    _root_.GlobalTheory.ConeSq.exists_finset_cone (Tail k) (tailForm k '' unip n) ((isCompact_unip n).image (continuous_tailForm k))
       (by rintro _ ⟨u, hu, rfl⟩; exact tailForm_posDef k hu)
   choose T hT using hK
   refine ⟨Finset.univ.biUnion fun k => (T k).image (extZ k), ?_⟩

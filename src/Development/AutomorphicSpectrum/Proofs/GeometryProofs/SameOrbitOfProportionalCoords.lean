@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EmbedsGeneric
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SmallPointsCoordRatioBoundStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.HasMultiplier
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SmallPointsCoordRatioBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -42,7 +43,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.HasMultiplier
 
 @[expose] public section
 
@@ -127,7 +127,7 @@ theorem sameOrbit_of_block : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] [CharZe
     intro k
     obtain ⟨c, hc⟩ := hw.1 k
     obtain ⟨n, F, hF, hrel, hne⟩ :=
-      GlobalTheory.T.small_points_coord_ratio_bound X Ω ξ K J y k₀ hT hE ℂ w hpts i k c hi hc
+      _root_.GlobalTheory.CompanionTheory.Ar.BlockRatio.ratios_quotients_of_forms X Ω ξ K J y k₀ hT hE ℂ w hpts i k c hi hc
     have hscale : ∀ t, MvPolynomial.aeval (fun i' : J k₀ => w ⟨k₀, i'⟩) (F t) =
         u ^ n * MvPolynomial.aeval (fun i' : J k₀ => w' ⟨k₀, i'⟩) (F t) := by
       intro t

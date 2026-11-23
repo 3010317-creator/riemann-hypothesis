@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IndEtOfForallFinset
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CohomologyContinuousBaseChangeQcqsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CohomologyContinuousBaseChangeQcqs
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CohomologyContinuousOnConeOfWhiskerStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyEquivalenceBasicPropertiesStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OfEtaleCohomologyEquivalenceDiagramStatement
@@ -57,7 +57,7 @@ theorem contCone_of_qcqs_affine : ∀ (R : Type) [CommRing R] (F : Shv R), Finit
   have hc' : IsLimit ((Over.conePost G i₀).obj c) := Over.isLimitConePost i₀ hc
   haveI := hcp i₀
   haveI := hqs i₀
-  have hcore := GlobalTheory.T.cohomologyContinuous_baseChange_qcqs R F hF (G.obj i₀) (Over i₀) (Over.post G) ((Over.conePost G i₀).obj c) hc'
+  have hcore := _root_.GlobalTheory.contCone_bc_of_qcqs R F hF (G.obj i₀) (Over i₀) (Over.post G) ((Over.conePost G i₀).obj c) hc'
     (fun j => haff _ _ j.hom) (G.obj i₀) (𝟙 _)
   have hb := GlobalTheory.T.etaleCohomologyEquivalence_basic_properties R F
   haveI : IsIso (sch.map (𝟙 (G.obj i₀))) := inferInstance

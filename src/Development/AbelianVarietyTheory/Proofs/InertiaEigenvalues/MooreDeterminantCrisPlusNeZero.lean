@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TwistStep
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BcrisPlusFrobeniusStableSubringInFilZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrisPlusFrobEigenvectorRatioPadicStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamPeriodRingFieldTPowFiltrationUnitsStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdmSt
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BcrisPlusFrobeniusStableSubringInFilZero
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrisPlusFrobEigenvectorRatioPadic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamPeriodRingFieldTPowFiltrationUnits
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -200,8 +201,8 @@ namespace GlobalTheory.PMon
 
 theorem moore_statement : Moore := by
   intro l _ P AI T h k hk a hPa hfa ha
-  obtain ⟨hF, hinj, -⟩ := GlobalTheory.T.deRhamPeriodRing_field_tPow_filtration_units l P AI T
-  obtain ⟨hpφ, -, hpR, hpQ, -⟩ := GlobalTheory.T.bcrisPlus_frobeniusStable_subring_in_filZero l P AI T
+  obtain ⟨hF, hinj, -⟩ := _root_.GlobalTheory.PMon.bdR_tied l P AI T
+  obtain ⟨hpφ, -, hpR, hpQ, -⟩ := _root_.GlobalTheory.PMon.CrisPlus.plus_props l P AI T
   haveI : IsDomain P.R.BdR := hF.isDomain
   haveI : IsDomain P.R.B := Function.Injective.isDomain (P.ιB : P.R.B →+* P.R.BdR) hinj
   cases k with
@@ -209,7 +210,7 @@ theorem moore_statement : Moore := by
   | succ n =>
     exact GlobalTheory.PMon.MooreDeterminant.moore_core (Q := ℚ_[l]) (P.φB : P.R.B →+* P.R.B) (Plus T) hpφ hpQ
       (fun a b ha hb => (hpR a b ha hb).1) (fun a b ha hb => (hpR a b ha hb).2) (l : P.R.B) (map_natCast _ l) h
-      (fun s hs ω ω' h1 h2 h3 h4 h5 h6 => GlobalTheory.T.crisPlus_frob_eigenvector_ratio_padic l P AI T h s hs ω ω' h1 h2 h3 h4 h5 h6)
+      (fun s hs ω ω' h1 h2 h3 h4 h5 h6 => _root_.GlobalTheory.PMon.ratio_holds l P AI T h s hs ω ω' h1 h2 h3 h4 h5 h6)
       n a hk hPa hfa ha
 
 end GlobalTheory.PMon

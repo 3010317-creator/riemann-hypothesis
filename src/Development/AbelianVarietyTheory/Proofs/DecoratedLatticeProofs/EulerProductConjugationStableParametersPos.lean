@@ -2,9 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsSplitOfIsInertAt
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIsSplitChartOne
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.QuadraticPowerCharacterSplitPlacesValuesInverseStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SqValueEqOneAtInertPlaceOfRestrictsToQuadraticStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.QuadraticPowerCharacterSplitPlacesValuesInverse
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SqValueEqOneAtInertPlaceOfRestrictsToQuadratic
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TendstoOneOfSummable
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.HalfLinearCocycle
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.UnitarySphericalReps
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.VolumeFlatSection
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -40,9 +43,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.HalfLinearCocycle
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.UnitarySphericalReps
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.VolumeFlatSection
 import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ChainParSucc
 import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsLevMeas
 import Formalism.LocalToGlobal.IndefiniteReal.IndefiniteWeightData
@@ -92,7 +92,7 @@ theorem lsd_pos : ∀ (D : D7) (S : Finset (HeightOneSpectrum (𝓞 D.host.F))) 
       have e : Formalism.L2.Host.aboveF (L := D.host.E) D.host.F v.1 = {w, w'} := by ext u; simp [mem_aboveF, hall]
       have e2 : npow w' (-(s : ℂ)) = npow w (-(s : ℂ)) := by rw [npow, npow, hN, hN']
       have e3 : twist B (val μ)⁻¹ w' = (twist B (val μ)⁻¹ w).map star := by
-        have hm := GlobalTheory.T.quadraticPowerCharacter_splitPlaces_values_inverse _ _ _ hc μ 0 hb' w w' (hw.trans hw'.symm) hne (hun w hw) (hun w' hw')
+        have hm := _root_.GlobalTheory.LFun.SplitVal.val_mul_val_eq_one _ _ _ hc μ 0 hb' w w' (hw.trans hw'.symm) hne (hun w hw) (hun w' hw')
         have hs' : (val μ w')⁻¹ = star (val μ w)⁻¹ := by
           rw [star_inv, star_eq_inv (norm_val μ w), inv_inv, eq_comm, eq_inv_iff_mul_eq_one, hm]
         simp only [twist, Pi.inv_apply, hs', Multiset.map_map, Function.comp_def, star_mul',
@@ -108,7 +108,7 @@ theorem lsd_pos : ∀ (D : D7) (S : Finset (HeightOneSpectrum (𝓞 D.host.F))) 
       refine isPosReal_eulerFac ?_ (star_npow _ _) (hlt w hw)
       have hs' : star (val μ w)⁻¹ = (val μ w)⁻¹ := by
         rw [star_inv, star_eq_inv (norm_val μ w), inv_inv, eq_inv_iff_mul_eq_one, ← sq,
-          GlobalTheory.T.sq_value_eq_one_at_inert_place_of_restrictsToQuadratic _ _ _ hc μ 0 hb' _ w hi (hun w hw)]
+          _root_.GlobalTheory.LFun.val_sq_eq_one_of_isInertAt _ _ _ hc μ 0 hb' _ w hi (hun w hw)]
       have hBw := (hst w (hnot w hw)).2 (by rw [hw]; exact hv)
       conv_rhs => rw [twist, ← hBw]
       simp only [twist, Pi.inv_apply, hs', Multiset.map_map, Function.comp_def, star_mul']

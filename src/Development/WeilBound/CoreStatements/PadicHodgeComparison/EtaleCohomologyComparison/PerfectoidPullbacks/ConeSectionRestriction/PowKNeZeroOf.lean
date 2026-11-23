@@ -1,9 +1,13 @@
 module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.ConeSectionRestriction.ConeHyp
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConeLiftRatioMemIdealStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsConeLiftStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsDualDerivationsOfCoordsStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.ConeSectionRestriction.IsTautologicalLineAt
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConeLiftRatioMemIdeal
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.ConeSectionRestriction.Precomp
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.InclStd
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsConeLift
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.SEqOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsDualDerivationsOfCoords
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.MapHComp
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.ChartGrConst
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.ConeSectionRestriction.CechRel
@@ -129,7 +133,7 @@ theorem powK_ne_zero_of (hG : LocalCohomologySetup.GeoSetupP) (hR : LocalCohomol
       hG q n N i hci hiq
     let _ : Algebra K Γ(X, V) := (strV q V).toAlgebra
     have _ := hdom
-    obtain ⟨Dv, hDv⟩ := GlobalTheory.T.exists_dual_derivations_of_coords q V (n + 1) cc
+    obtain ⟨Dv, hDv⟩ := _root_.GlobalTheory.CompanionTheory.ConeDerivs.exists_dual_derivations q V (n + 1) cc
 
     have hsQ : ∀ T : (wU q i y (n + 2)).FullSubcategory, T.obj.pdPow (n + 2) = ⊥ := fun T => by
       obtain ⟨k, hk, -⟩ := T.property
@@ -140,7 +144,7 @@ theorem powK_ne_zero_of (hG : LocalCohomologySetup.GeoSetupP) (hR : LocalCohomol
       obtain ⟨σ, hσ⟩ := wch_mem D N i hO j
       exact ⟨wch i j, σ, hσ, fun x hx => (hW hx).2⟩
     let Λ : CLiftK (wU q i y (n + 2)).ι D :=
-      (GlobalTheory.T.exists_cone_lift q D (n + 2)).some.precomp (ObjectProperty.ιOfLE (wU_le q D i y (n + 2) hO))
+      (_root_.GlobalTheory.CompanionTheory.ConeLiftEx.nonempty_cLiftK q D (n + 2)).some.precomp (ObjectProperty.ιOfLE (wU_le q D i y (n + 2) hO))
     obtain ⟨z, hz, hzf, hzc⟩ := hc (n + 2) _ (wU q i y (n + 2)).ι hsQ hVQ Λ
     obtain ⟨hzp, hzp0⟩ := powK_pull q (wU q i y (n + 2)).ι c z hz hzc (n + 1)
     rw [h0, map_zero] at hzp0
@@ -177,7 +181,7 @@ theorem powK_ne_zero_of (hG : LocalCohomologySetup.GeoSetupP) (hR : LocalCohomol
     have hze : CH.d _ 2 (e • zK Λ (n + 2)) = 0 := by rw [map_nsmul, hz, smul_zero]
     have hz1 : ∀ σ, (e • zK Λ (n + 2)) σ ∈ (thFil (smFun X q) 1).S _ := fun σ => by
       have h := mem_pdP_one ((wU q i y (n + 2)).ι.obj (σ.obj (Fin.last 2))).δ
-        (plogK_mem' ((wU q i y (n + 2)).ι.obj (σ.obj (Fin.last 2))).δ (n + 2) (GlobalTheory.T.cone_lift_ratio_mem_ideal Λ σ))
+        (plogK_mem' ((wU q i y (n + 2)).ι.obj (σ.obj (Fin.last 2))).δ (n + 2) (_root_.GlobalTheory.CompanionTheory.ConeUnit.r_sub_one Λ σ))
       exact nsmul_mem h e
     have hzero : ∀ h, (CH.cx _).cls (cupPowC ((ObjectProperty.ι fun T => ∃ α, W α T) ⋙ thA (smFun X q))
         (e • zK Λ (n + 2)) (n + 1)) h = 0 := by

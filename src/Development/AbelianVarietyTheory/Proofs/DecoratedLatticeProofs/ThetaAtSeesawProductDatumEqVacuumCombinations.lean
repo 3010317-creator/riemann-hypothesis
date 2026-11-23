@@ -7,13 +7,14 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Exi
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationDisjointPlacesCommuteVacua
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HomLatticeAtPlacesCongrLocalLatticesStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IndicatorLocalHomLatticeMemSchwartzBruhatStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralIndicatorGivesLocalVacuumSplitPlaceStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCombAt
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralIndicatorGivesLocalVacuumSplitPlace
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsPlaceModelTensorIntegralIndicator
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsPlaceModelTensorSplitPlaceLatticeIndicatorStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsThetaFunOSplitPlacesSchrodingerModelSumStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MatrixSupportedSplitPlaceOfIsHalfConjSumStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchwartzBruhatHalfTensorSplitPlaceSelfDualStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceIdempotentMulEqZeroOfNePlaceStatement
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchwartzBruhatHalfTensorSplitPlaceSelfDualStatement
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasWeil
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -396,7 +397,7 @@ theorem vac_at_of_model (hψ : IsStdChar D ψ (-1)) (P : LocPl ψ S T M M') (N :
     (hTm : (ofSplit P.q).IsModel ψ P.FS P.FT Tm)
     (hg : Tm ⟨Place.intInd P.Y P.Y', Place.intInd_mem_SB _ _ _⟩ = g) : Vac ψ S T N N' (· = P.q.v) g := by
   obtain ⟨ψk, hch, hcond⟩ := GlobalTheory.T.exists_splitPoint_weilChar_conductor_one_of_units D P.k P.q ψ hψ P.unit
-  have h := (GlobalTheory.T.integralIndicator_gives_localVacuum_splitPlace D P.k P.q P.unit P.Y P.Y' S T P.FS P.FT ψ ψk hψ hch hcond N N' hN hN' hI.1 hI.2).1
+  have h := (_root_.GlobalTheory.LocMod.indicator_vac D P.k P.q P.unit P.Y P.Y' S T P.FS P.FT ψ ψk hψ hch hcond N N' hN hN' hI.1 hI.2).1
     Tm _ hTm (isOne_intInd P)
   rwa [hg] at h
 

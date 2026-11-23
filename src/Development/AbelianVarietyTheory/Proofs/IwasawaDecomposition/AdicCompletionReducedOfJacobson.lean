@@ -4,13 +4,19 @@ public import Mathlib.RingTheory.AdicCompletion.Algebra
 public import Mathlib.RingTheory.EssentialFiniteness
 public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
 public import Mathlib.RingTheory.KrullDimension.Basic
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdicCompletionQuotientRingEquivStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AssociatedPrimeLocalizationDvrStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsInjectiveAdicCompletionMapOfFiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteIntegralClosureOfEssFiniteTypeIntDomainStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsNoetherianRingAdicCompletionOfNoetherianStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsReducedOfNonZeroDivisorMemJacobsonOfAssociatedStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RingKrullDimLtTopOfEssFiniteTypeStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdicCompletionQuotientRingEquiv
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Mathlib.RingTheory.Flat.Basic
+public import Mathlib.RingTheory.Ideal.AssociatedPrime.Basic
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AssociatedPrimeLocalizationDvr
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsInjectiveAdicCompletionMapOfFinite
+public import Mathlib.RingTheory.IntegralClosure.Algebra.Basic
+public import Mathlib.RingTheory.Localization.FractionRing
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteIntegralClosureOfEssFiniteTypeIntDomain
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsNoetherianRingAdicCompletionOfNoetherian
+public import Mathlib.RingTheory.Localization.AtPrime.Basic
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsReducedOfNonZeroDivisorMemJacobsonOfAssociated
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RingKrullDimLtTopOfEssFiniteType
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -109,7 +115,7 @@ theorem isReduced_of_normal (n : ℕ)
       (AdicCompletion.ofAlgEquiv (⊥ : Ideal N)).symm.injective
   obtain ⟨x, hxI, hx0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hbot
   let R := AdicCompletion I N
-  haveI : IsNoetherianRing R := GlobalTheory.T.isNoetherianRing_adicCompletion_of_noetherian N I
+  haveI : IsNoetherianRing R := _root_.GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion N I
   haveI : Module.Flat N R := AdicCompletion.flat_of_isNoetherian I
   have hxR : algebraMap N R x ∈ nonZeroDivisors R := by
     have hxA : IsSMulRegular N x := IsSMulRegular.of_ne_zero hx0
@@ -124,7 +130,7 @@ theorem isReduced_of_normal (n : ℕ)
     exact IsAdicComplete.le_jacobson_bot (I.map (algebraMap N R)) (Ideal.mem_map_of_mem _ hxI)
   have hredq : ∀ q : Ideal N, q.IsPrime → x ∈ q → IsReduced (R ⧸ q.map (algebraMap N R)) := by
     intro q hq hxq
-    obtain ⟨e⟩ := GlobalTheory.T.nonempty_adicCompletion_quotient_ringEquiv N I q
+    obtain ⟨e⟩ := _root_.GlobalTheory.adicCompletion_quotient_ringEquiv N I q
     haveI : IsDomain (N ⧸ q) := Ideal.Quotient.isDomain q
     haveI : Algebra.EssFiniteType N (N ⧸ q) := inferInstance
     haveI hess : @Algebra.EssFiniteType ℤ (N ⧸ q) _ _ (Ring.toIntAlgebra _) := by
@@ -143,9 +149,9 @@ theorem isReduced_of_normal (n : ℕ)
     obtain ⟨m, hmn, hm⟩ := exists_lt_of_add_one_le _ n ringKrullDim_nonneg_of_nontrivial hd1
     haveI := ih m hmn (N ⧸ q) hm _ hj
     exact isReduced_of_injective e.toRingHom e.injective
-  refine GlobalTheory.T.isReduced_of_nonZeroDivisor_mem_jacobson_of_assocPrimes R (algebraMap N R x) hxR hxjac ?_
+  refine _root_.GlobalTheory.isReduced_of_nonZeroDivisor_mem_jacobson_of_associatedPrimes R (algebraMap N R x) hxR hxjac ?_
   intro P _ hP
-  obtain ⟨h1, -⟩ := GlobalTheory.T.associated_prime_localization_dvr N R x hx0 hredq P hP
+  obtain ⟨h1, -⟩ := _root_.GlobalTheory.exists_isDiscreteValuationRing_of_mem_associatedPrimes_quotient N R x hx0 hredq P hP
   exact h1
 
 theorem isReduced_of_dim_le : ∀ (n : ℕ) (D : Type) [CommRing D] [IsDomain D] [Algebra.EssFiniteType ℤ D],
@@ -158,7 +164,7 @@ theorem isReduced_of_dim_le : ∀ (n : ℕ) (D : Type) [CommRing D] [IsDomain D]
   haveI : IsNoetherianRing D := Algebra.EssFiniteType.isNoetherianRing ℤ D
 
   let N := integralClosure D (FractionRing D)
-  haveI : Module.Finite D N := GlobalTheory.T.finite_integralClosure_of_essFiniteType_int_domain D
+  haveI : Module.Finite D N := _root_.GlobalTheory.finite_integralClosure_of_essFiniteType_int D
   haveI : IsIntegrallyClosed N := integralClosure.isIntegrallyClosedOfFiniteExtension (FractionRing D)
   have hinj : Function.Injective (algebraMap D N) := by
     intro a b hab
@@ -174,14 +180,14 @@ theorem isReduced_of_dim_le : ∀ (n : ℕ) (D : Type) [CommRing D] [IsDomain D]
   have hIjac : J.map (algebraMap D N) ≤ Ideal.jacobson (⊥ : Ideal N) :=
     map_le_jacobson_of_comap_isMaximal _
       (fun M hM => Ideal.isMaximal_under_of_isIntegral_of_isMaximal (R := D) M) J hJ
-  obtain ⟨f, hf⟩ := GlobalTheory.T.exists_injective_adicCompletion_map_of_finite D N hinj J
+  obtain ⟨f, hf⟩ := _root_.GlobalTheory.adicCompletion_injective_ringHom_of_finite D N hinj J
   haveI := isReduced_of_normal n ih N hdimN _ hIjac
   exact isReduced_of_injective f hf
 
 theorem isReduced_adicCompletion : ∀ (D : Type) [CommRing D] [IsDomain D] [Algebra.EssFiniteType ℤ D]
     (J : Ideal D), J ≤ Ideal.jacobson (⊥ : Ideal D) → IsReduced (AdicCompletion J D) := by
   intro D _ _ _ J hJ
-  have hlt := GlobalTheory.T.ringKrullDim_finite_of_essFiniteType_int D
+  have hlt := _root_.GlobalTheory.ringKrullDim_lt_top_of_essFiniteType D
   obtain ⟨m, hm⟩ : ∃ m : ℕ, ringKrullDim D ≤ (m : WithBot ℕ∞) := by
     generalize ringKrullDim D = e at hlt ⊢
     induction e using WithBot.recBotCoe with

@@ -1,7 +1,7 @@
 module
 
 public import Formalism.LocalRingCardinality.DataCoeff
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DualWeylModuleSimpleCharZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DualWeylModuleSimpleCharZero
 import Formalism.GradedWeylDivisibility.DualWeylDominanceOf
 import Formalism.GradedWeylDivisibility.FinalD
 import Mathlib.Algebra.Order.Floor.Extended
@@ -123,7 +123,7 @@ theorem nablaSq_le_span_extremal : ∀ (K : Type) [Field K] [CharZero K] (n : �
       have hs : sqAct K n lam g (c • x) = c • sqAct K n lam g x := by
         unfold sqAct; rw [map_smul, smul_comm]
       rw [hs]; exact M.smul_mem c hx
-  rcases GlobalTheory.T.dualWeylModule_simple_charZero K n lam M hle hMstab with h0 | h1
+  rcases _root_.GlobalTheory.AlcZero.nablaSq_simple_charZero K n lam M hle hMstab with h0 | h1
   · exfalso
     have hmem : extremal K n lam ∈ M := by
       have : sqAct K n lam 1 (extremal K n lam) ∈ M := Submodule.subset_span ⟨1, rfl⟩

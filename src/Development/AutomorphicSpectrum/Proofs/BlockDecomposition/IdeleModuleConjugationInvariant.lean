@@ -3,10 +3,12 @@ module
 public import Formalism.UnipotentAdelicQuotients.SWXSDefs
 public import GroundTheory.GlobalFields.IdeleGroups.IdeleNorms
 public import GroundTheory.IdeleRoots.TorusPowers.HeckeTensor
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRingStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
+public import GroundTheory.GlobalFields.TateThesis.AdeleScaling
+public import GroundTheory.GlobalFields.TateThesis.AdeleMeasurable
+public import GroundTheory.GlobalFields.TateThesis.AdeleMeasure
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicLocalCompactness.AdeleLC
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.TopoAF
-public import GroundTheory.GlobalFields.TateThesis.AdeleScaling
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,8 +50,6 @@ import Mathlib.Topology.Sheaves.Init
 import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.MatrixTransvectionDiagonalDecomposition
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OfE
 import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.BaseOneSide.PsiSide
-public import GroundTheory.GlobalFields.TateThesis.AdeleMeasurable
-public import GroundTheory.GlobalFields.TateThesis.AdeleMeasure
 
 @[expose] public section
 
@@ -107,7 +107,7 @@ theorem sig_sig {σ : E →ₐ[F] E} (hσ : ∀ x, σ (σ x) = x) (z : AF F ⊗[
   | add a b ha hb => simp only [map_add (f := _), ha, hb]
 
 theorem continuous_sig {σ : E →ₐ[F] E} (hcm : IsCMExt F E σ) : Continuous (sigR (AF F) σ) :=
-  (GlobalTheory.T.tensor_locally_compact_ring F E σ hcm (AF F)).2.2.2.2.1
+  (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm (AF F)).2.2.2.2.1
 
 theorem sigma_sigma {σ : E →ₐ[F] E} (hcm : IsCMExt F E σ) (x : E) : σ (σ x) = x := by
   obtain ⟨τ⟩ : Nonempty (E →+* ℂ) := inferInstance

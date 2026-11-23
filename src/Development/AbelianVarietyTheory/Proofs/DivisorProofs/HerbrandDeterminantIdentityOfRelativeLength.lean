@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PreEig
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.IsSaturatedSubmoduleIffExistsIsComplOfValuationR
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjoinRootProdLinearFactorsLatticeFactsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteEigenFiltrationPiecesAddValIntStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankAddValuationIntegerSubmoduleEqFinrankSpanStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjoinRootProdLinearFactorsLatticeFacts
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteEigenFiltrationPiecesAddValInt
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.MultiplicationKernelIdentity
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankAddValuationIntegerSubmoduleEqFinrankSpan
+public import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
 import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -56,7 +58,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.LinearAlgebra.Matrix.ToLinearEquiv
 
 @[expose] public section
 
@@ -379,8 +380,8 @@ theorem detIdentity_of_relLen : ∀ (C : Type) [Field C] (v : AddValuation C (Wi
         DetIdentity v a Fil τ := by
   intro C _ v S _ _ a ha N Fil hsat τ r hr hRL
   obtain ⟨hd, -, -, hE4, -, hE6, hE7, hE8, hE9, hE10, -, -⟩ :=
-    GlobalTheory.T.adjoinRootProdLinearFactors_lattice_facts C v S a ha N Fil hsat τ
-  obtain ⟨hfFil, -, -, -, hfLie, -, -⟩ := GlobalTheory.T.finite_eigenFiltration_pieces_addValInt C v S a ha N Fil hsat τ
+    _root_.GlobalTheory.herbrand_lattice_facts C v S a ha N Fil hsat τ
+  obtain ⟨hfFil, -, -, -, hfLie, -, -⟩ := _root_.GlobalTheory.HerbFin.finite_main C v S a ha N Fil hsat τ
 
   haveI : Module.IsTorsionFree (Int0 v) (eigSub a τ ((Fin N → RS a) ⧸ Fil)) :=
     Module.IsTorsionFree.of_smul_eq_zero fun c m hcm => by
@@ -406,7 +407,7 @@ theorem detIdentity_of_relLen : ∀ (C : Type) [Field C] (v : AddValuation C (Wi
     Module.Finite.map (Fil.restrictScalars (Int0 v)) (comp a N τ)
   haveI := GlobalTheory.free_of_finite_of_isTorsionFree_of_valuationRing (R := Int0 v) (M := eigQuot a Fil τ)
   have hrk : finrank (Int0 v) (eigQuot a Fil τ) = eigRank v a Fil τ :=
-    GlobalTheory.T.finrank_int0_submodule_eq_finrank_span C v N (eigQuot a Fil τ) hfQ
+    _root_.GlobalTheory.finrank_addValuationInteger_submodule_eq_finrank_span C v N (eigQuot a Fil τ) hfQ
   have bF := Module.finBasisOfFinrankEq (Int0 v) (eigQuot a Fil τ) hrk
   have bLie := Module.finBasis (Int0 v) (eigSub a τ ((Fin N → RS a) ⧸ Fil))
   obtain ⟨bH⟩ := exists_basis_eigSub (ev a τ (cofac a τ)) hd hE6 hE7

@@ -3,9 +3,14 @@ module
 public import Formalism.LocalToGlobal.ProjectiveLattices.IsLevMove
 public import Development.AbelianVarietyTheory.Counterexamples.LevelGroupExamples.LevelGroupEqTopOfCoprime
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSimilitudeOfAutModLevelIdeal
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUniqueFramedPointMoveUniversalTripleStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LevelMoveModuliUniqueUniversalTripleStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUniqueFramedPointMoveUniversalTriple
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.HeckeKer
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LevelMoveModuliUniqueUniversalTriple
 public import Formalism.LocalRingCardinality.DataHost
+public import Formalism.LocalRingCardinality.DataSpaces
+public import Formalism.LocalRingCardinality.DataTheta
+public import Formalism.LocalToGlobal.HermitianColumns.InLocalDiscriminantKernel
+public import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,11 +51,7 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.UnipotentLatticeMembership
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCentralIdempotentOfGoodSeriesIdempotent
-public import Formalism.LocalRingCardinality.DataSpaces
-public import Formalism.LocalRingCardinality.DataTheta
 import Formalism.LocalToGlobal.Divisibility.DefGroup
-public import Formalism.LocalToGlobal.HermitianColumns.InLocalDiscriminantKernel
-public import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
 
 @[expose] public section
 
@@ -111,9 +112,9 @@ theorem levR_unique (hpq : 1 ≤ Dw.p + Dw.q) (hA : l.A.Coprime l.M) (gM : Dw.La
       rw [Category.assoc, y.x_over]
       unfold sOf spMap
       rw [← Spec.map_comp]; rfl)
-  obtain ⟨rfl, e⟩ := GlobalTheory.T.levelMove_moduli_unique_universalTriple E H Dw l Xo c ρ ρ' ν ν' _ _ _ _ hpq (fun a => by simp) (fun a => ⟨0, by simp⟩) i i' h g
+  obtain ⟨rfl, e⟩ := _root_.GlobalTheory.levMove_unique E H Dw l Xo c ρ ρ' ν ν' _ _ _ _ hpq (fun a => by simp) (fun a => ⟨0, by simp⟩) i i' h g
     (GlobalTheory.exists_sim_of_aut_mod E H Dw l l.A gM hpq l.A_pos hA hinj)
-  exact (GlobalTheory.T.existsUnique_framedPoint_move_universalTriple E H Dw l Xo c ρ ν h.1 S y).2 y' y'' ν' e.symm hm gm
+  exact (_root_.GlobalTheory.exists_unique_frMove E H Dw l Xo c ρ ν h.1 S y).2 y' y'' ν' e.symm hm gm
 
 end Move
 

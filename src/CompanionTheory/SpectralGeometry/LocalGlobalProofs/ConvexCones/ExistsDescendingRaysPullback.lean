@@ -6,7 +6,8 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NotIs
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PullLinInjective
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.EvalPullbackSemilinearSurjective
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCellQuotientByRadicalOfMemCone
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIntBilinFormDescendAlongSurjectiveStatement
+public import Mathlib.LinearAlgebra.BilinearMap
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIntBilinFormDescendAlongSurjective
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPrimitiveBalancedFormPrimitiveAmongIntForms
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NonnegSumSmulIntBilinFormToRealMemPsdCone
 import Mathlib.Algebra.Order.Floor.Extended
@@ -136,7 +137,7 @@ theorem exists_desc_rays_pullAdd : ∀ (O : Type) [CommRing O] [IsDedekindDomain
         · have hk0' : (k : ℤ) ≠ 0 := by exact_mod_cast hk0.ne'
           have hval : ∀ x y, (k : ℤ) * β' x y = u i (f x) (f y) := fun x y => by
             rw [← pullAdd_apply, ← hk]; simp
-          obtain ⟨ζ, hζ⟩ := GlobalTheory.T.exists_intBilinForm_descend_along_surjective f hf β'
+          obtain ⟨ζ, hζ⟩ := _root_.GlobalTheory.exists_bilinForm_descend_of_surjective f hf β'
             (fun x hx y => by
               have := hval x y
               rw [hx, map_zero, LinearMap.zero_apply] at this

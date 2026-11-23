@@ -3,8 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AutCongrContinuousCycInertia
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSSRepMapOfAbsIrrDistinct
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BrauerNesbittSemisimpleMatrixRepresentationsStatement
+public import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BrauerNesbittSemisimpleMatrixRepresentations
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteLengthOfFiniteDimensional
+public import Mathlib.LinearAlgebra.Charpoly.BaseChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -16,7 +19,6 @@ import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.LinearAlgebra.Charpoly.BaseChange
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -237,7 +239,7 @@ variable {k G : Type} [Field k] [Group G]
 
 theorem brauerNesbitt : GlobalTheory.ConstituentsCompare.BrauerNesbitt := by
   intro Γ k _ _ a ρ ρ' h h' hc
-  obtain ⟨P, hP⟩ := GlobalTheory.T.brauer_nesbitt_semisimple_matrix_representations a ((Units.coeHom _).comp ρ) ((Units.coeHom _).comp ρ')
+  obtain ⟨P, hP⟩ := _root_.GlobalTheory.BrauerNesbittMatrix.main a ((Units.coeHom _).comp ρ) ((Units.coeHom _).comp ρ')
     (fun W hW => (h W hW).imp fun _ h => ⟨h.2, h.1⟩) (fun W hW => (h' W hW).imp fun _ h => ⟨h.2, h.1⟩) hc
   refine ⟨P, fun g => ?_⟩
   rw [eq_mul_inv_iff_mul_eq]

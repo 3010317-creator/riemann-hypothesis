@@ -1,13 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowSection
-import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.DenseGenericOfFlat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCycAwayHomComplex
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSiegelObjectLoweredLevelStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SRelOneOneIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSiegelObjectLoweredLevel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrincipalSiegelObjectOddLevelRigid
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelLevelChangeBySymplecticSimilitudeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelObjectPullbackLevelPowerCalculusStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticSimilitudeInvertibleModNStatement
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.GoodClass
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.Clauses
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelLevelChangeBySymplecticSimilitude
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelObjectPullbackLevelPowerCalculus
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticSimilitudeInvertibleModN
+import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.DenseGenericOfFlat
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelObjectPullbackExistsAndPrincipal
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelPullbackIdCompCancel
 import Mathlib.Algebra.Order.Floor.Extended
@@ -107,7 +110,7 @@ theorem exists_twist (hN : N ≠ 0) {T : (Fin h ⊕ Fin h → ℤ) →ₗ[ℤ] (
     (root : σ (zetaAway N) = zetaAway N ^ m) (fix : σ.comp j = j)
     (symp : ∀ x y, omegaStd (T x) (T y) ≡ m * omegaStd x y [ZMOD N])
     (low : ∀ x, F.univ.lev (T x) ^ (N / n) = F.univ.lev x ^ (N / n)) : ∃ f, Twist F j T m σ f := by
-  obtain ⟨hinj, hsurj, -⟩ := GlobalTheory.T.symplecticSimilitude_invertible_modN h N m T hN cop symp
+  obtain ⟨hinj, hsurj, -⟩ := _root_.GlobalTheory.SympModN.symplecticSimilitude_modN h N m T hN cop symp
   obtain ⟨hr, hd⟩ := F.isReduced_and_dense
   obtain ⟨f, hf, H⟩ := F.rep F.X (F.s ≫ spMap σ) (relabel F.univ T σ hN (zeta_pow hN) root symp hinj hsurj) hr
     (hd.mono fun x hx => by
@@ -123,7 +126,7 @@ theorem exists_twist (hN : N ≠ 0) {T : (Fin h ⊕ Fin h → ℤ) →ₗ[ℤ] (
 theorem Twist.unique (hN : N ≠ 0) {T T' : (Fin h ⊕ Fin h → ℤ) →ₗ[ℤ] (Fin h ⊕ Fin h → ℤ)} {m m' : ℕ}
     {σ σ' : cycAway N →+* cycAway N} {f f' : F.X ⟶ F.X} (t : Twist F j T m σ f) (t' : Twist F j T' m' σ' f')
     (hσ : σ = σ') (hT : ∀ x, F.univ.lev (T x) = F.univ.lev (T' x)) : f = f' := by
-  obtain ⟨hinj, hsurj, -⟩ := GlobalTheory.T.symplecticSimilitude_invertible_modN h N m T hN t.cop t.symp
+  obtain ⟨hinj, hsurj, -⟩ := _root_.GlobalTheory.SympModN.symplecticSimilitude_modN h N m T hN t.cop t.symp
   refine F.hom_ext (relabel F.univ T σ hN (zeta_pow hN) t.root t.symp hinj hsurj) f f' (by rw [t.comm, t'.comm, hσ])
     (t.siegPB hN hinj hsurj) ?_
   obtain ⟨ν, a, ⟨ν₂, b, c⟩, d⟩ := t'.map
@@ -145,9 +148,9 @@ theorem rig (hn : 3 ≤ n) (hN : Odd N) (hnN : n ∣ N) (hj : j (zetaAway n) = z
     (hφ' : SRelBy c' F.univ (N / n) (N / n) g φ') : φ = φ' := by
   have hN0 : N ≠ 0 := hN.pos.ne'
   have hn0 : n ≠ 0 := by omega
-  obtain ⟨c₀, hC0, h0C⟩ := GlobalTheory.T.exists_siegelObject_lowered_level h n N (cycAway n) (cycAway N) (zetaAway n) (zetaAway N) j F.X F.s F.univ
+  obtain ⟨c₀, hC0, h0C⟩ := _root_.GlobalTheory.SiegLower.exists_lower h n N (cycAway n) (cycAway N) (zetaAway n) (zetaAway N) j F.X F.s F.univ
     hN0 (isUnit_natCast hN0) hnN hj
-  have hc₀ : c₀.Principal := (GlobalTheory.T.siegelObjectPullbackLevelPower_calculus h N n n (cycAway N) (cycAway n) (cycAway n) (zetaAway N) (zetaAway n)
+  have hc₀ : c₀.Principal := (_root_.GlobalTheory.SiegLevCalc.sRel_calculus h N n n (cycAway N) (cycAway n) (cycAway n) (zetaAway N) (zetaAway n)
     (zetaAway n) F.X F.X F.X F.s (F.s ≫ spMap j) (F.s ≫ spMap j) F.univ c₀ c₀ (𝟙 _) (𝟙 _) (N / n) 1 1 h0C).2.1 F.princ
   obtain ⟨ψ, hψ⟩ := hC0
   have e₁ := sRelBy_comp hψ hφ
@@ -169,13 +172,13 @@ variable {h n n' n'' : ℕ} {B B' B'' : Type} [CommRing B] [CommRing B'] [CommRi
   {d d' d'' : ℕ}
 
 theorem sRel_comp (h₁ : SRel c' c d' d f) (h₂ : SRel c'' c' d'' d' f') : SRel c'' c d'' d (f' ≫ f) :=
-  ((GlobalTheory.T.siegelObjectPullbackLevelPower_calculus h n n' n'' B B' B'' ζ ζ' ζ'' S S' S'' s s' s'' c c' c'' f f' d d' d'' h₁).1).1 h₂
+  ((_root_.GlobalTheory.SiegLevCalc.sRel_calculus h n n' n'' B B' B'' ζ ζ' ζ'' S S' S'' s s' s'' c c' c'' f f' d d' d'' h₁).1).1 h₂
 
 theorem sRel_cancel (h₁ : SRel c' c d' d f) (h₂ : SRel c'' c d'' d (f' ≫ f)) : SRel c'' c' d'' d' f' :=
-  ((GlobalTheory.T.siegelObjectPullbackLevelPower_calculus h n n' n'' B B' B'' ζ ζ' ζ'' S S' S'' s s' s'' c c' c'' f f' d d' d'' h₁).1).2 h₂
+  ((_root_.GlobalTheory.SiegLevCalc.sRel_calculus h n n' n'' B B' B'' ζ ζ' ζ'' S S' S'' s s' s'' c c' c'' f f' d d' d'' h₁).1).2 h₂
 
 theorem sRel_scale (h₁ : SRel c' c 1 1 f) (e : ℕ) : SRel c' c e e f := by
-  simpa using (GlobalTheory.T.siegelObjectPullbackLevelPower_calculus h n n' n' B B' B' ζ ζ' ζ' S S' S' s s' s' c c' c' f (𝟙 S') 1 1 1 h₁).2.2 e
+  simpa using (_root_.GlobalTheory.SiegLevCalc.sRel_calculus h n n' n' B B' B' ζ ζ' ζ' S S' S' s s' s' c c' c' f (𝟙 S') 1 1 1 h₁).2.2 e
 
 end Calc2
 
@@ -273,7 +276,7 @@ theorem exists_twist_of_points (hn : 3 ≤ n) (hN : Odd N) (hnN : n ∣ N) (hj :
   have a3 : SRel Cy' Cy (N / n) (N / n) (𝟙 _ ≫ 𝟙 _) := sRel_comp a1 a2
   rw [Category.comp_id] at a3
   obtain ⟨φ, hφ, ⟨φ₂, hsq, hP⟩, hl⟩ := a3
-  obtain ⟨T, hTω, hTl⟩ := (GlobalTheory.T.siegel_level_change_by_symplectic_similitude h N (cycAway N) (cycBase hN0) hN).2 R β m β' Cy Cy' φ φ₂ hm hφ hsq hP
+  obtain ⟨T, hTω, hTl⟩ := (_root_.GlobalTheory.siegel_level_change_by_similitude h N (cycAway N) (cycBase hN0) hN).2 R β m β' Cy Cy' φ φ₂ hm hφ hsq hP
 
   have low : ∀ x, F.univ.lev (T x) ^ (N / n) = F.univ.lev x ^ (N / n) := fun x => by
     have e1 := pow_section hφ _ _ ((hTl x).trans (Category.id_comp _).symm) (N / n)
@@ -301,7 +304,7 @@ theorem exists_twist_of_points (hn : 3 ≤ n) (hN : Odd N) (hnN : n ∣ N) (hj :
   have fix : σ.toRingHom.comp j = j := (cycAway_galois n hn0).2.1 _ _ _ (by
     rw [RingHom.comp_apply, hj, RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom, map_pow, hσ, ← pow_mul, e6])
   obtain ⟨f, t⟩ := exists_twist (F := F) hN0 σ.injective hmc hσ fix hTω low
-  obtain ⟨hinj, hsurj, -⟩ := GlobalTheory.T.symplecticSimilitude_invertible_modN h N m T hN0 hmc hTω
+  obtain ⟨hinj, hsurj, -⟩ := _root_.GlobalTheory.SympModN.symplecticSimilitude_modN h N m T hN0 hmc hTω
   have X0 : SiegPB Cy' (relabel Cy T σ.toRingHom hN0 (zeta_pow hN0) hσ hTω hinj hsurj) (𝟙 _) :=
     ⟨φ, φ₂, hφ, hsq, hP, fun x => (hTl x).trans (Category.id_comp _).symm⟩
   obtain ⟨p, p₂, hp1, hp2, hp3, hp4⟩ := hCy
@@ -326,7 +329,7 @@ theorem Twist.exists_inv (hN : N ≠ 0) (hN1 : 1 < N) (hn0 : n ≠ 0) (hj : j (z
     (t : Twist F j T m σ f) :
     ∃ (T' : (Fin h ⊕ Fin h → ℤ) →ₗ[ℤ] (Fin h ⊕ Fin h → ℤ)) (m' : ℕ) (σ' : cycAway N →+* cycAway N) (f' : F.X ⟶ F.X),
       Twist F j T' m' σ' f' ∧ f ≫ f' = 𝟙 _ := by
-  obtain ⟨-, -, T', hT', hω'⟩ := GlobalTheory.T.symplecticSimilitude_invertible_modN h N m T hN t.cop t.symp
+  obtain ⟨-, -, T', hT', hω'⟩ := _root_.GlobalTheory.SympModN.symplecticSimilitude_modN h N m T hN t.cop t.symp
   haveI : NeZero N := ⟨hN⟩
   set m' : ℕ := (((ZMod.unitOfCoprime m t.cop)⁻¹ : (ZMod N)ˣ) : ZMod N).val with hm'
   have hmm : m * m' ≡ 1 [MOD N] := by

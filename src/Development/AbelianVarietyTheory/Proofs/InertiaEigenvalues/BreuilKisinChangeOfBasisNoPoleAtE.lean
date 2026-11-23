@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinPrismHomsAgreeWittAndModIdealStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinPrismHomsAgreeWittAndModIdeal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -160,8 +160,8 @@ theorem GlobalTheory.seed_nopole : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (
   have hX'X := mul_eq_smul_one_comm X X' _ hc hXX'
   choose k hk using fun (p : Fin d × Fin m) => hs p.1 p.2 B f g
   obtain ⟨v, hv⟩ : ∃ v, v * BK.hf f bk.E = BK.hf g bk.E := by
-    have h1 := (GlobalTheory.T.breuilKisinPrism_homs_agree_witt_and_mod_ideal l K bk B f g).2.2
-    have h2 := (GlobalTheory.T.breuilKisinPrism_homs_agree_witt_and_mod_ideal l K bk B g f).2.2
+    have h1 := (_root_.GlobalTheory.BSP.IdealSubMembership.main l K bk B f g).2.2
+    have h2 := (_root_.GlobalTheory.BSP.IdealSubMembership.main l K bk B g f).2.2
     have : BK.hf g bk.E ∈ B.I := by rw [h2]; exact Ideal.mem_span_singleton_self _
     rw [h1] at this
     exact Ideal.mem_span_singleton'.1 this

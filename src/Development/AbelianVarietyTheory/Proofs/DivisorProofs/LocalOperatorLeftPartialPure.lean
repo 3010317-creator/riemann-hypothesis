@@ -2,10 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjLinApply
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSchwartzNe
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzFunctionFactorizableSumStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzFunctionFactorizableSum
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictedProductMemSchwartz
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatSumSplitTensorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzOperatorParametricExtensionStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatSumSplitTensor
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzOperatorParametricExtension
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -88,7 +92,7 @@ theorem exists_partL_pureA : ∀ {F : Type} [Field F] [NumberField F] {κ κ₁ 
     (LinearEquiv.sumArrowLequivProdArrow κ κ' ℝ _).toContinuousLinearEquiv
   let eq₁ : (κ₁ ⊕ κ' → mixedEmbedding.mixedSpace F) ≃L[ℝ] (κ₁ → mixedEmbedding.mixedSpace F) × (κ' → mixedEmbedding.mixedSpace F) :=
     (LinearEquiv.sumArrowLequivProdArrow κ₁ κ' ℝ _).toContinuousLinearEquiv
-  obtain ⟨P₀, hP₀⟩ := GlobalTheory.T.schwartz_operator_parametric_extension (V' := κ' → mixedEmbedding.mixedSpace F) ei
+  obtain ⟨P₀, hP₀⟩ := _root_.GlobalTheory.SchwartzFstOp.exists_tensorId (V' := κ' → mixedEmbedding.mixedSpace F) ei
   let P : SInf F (κ ⊕ κ') →L[ℂ] SInf F (κ₁ ⊕ κ') := (SchwartzMap.compCLMOfContinuousLinearEquiv ℂ eq₁).comp
     (P₀.comp (SchwartzMap.compCLMOfContinuousLinearEquiv ℂ eq₀.symm))
   have hP : ∀ (f : SInf F (κ ⊕ κ')) (y : κ₁ → mixedEmbedding.mixedSpace F) (x' : κ' → mixedEmbedding.mixedSpace F)
@@ -99,8 +103,8 @@ theorem exists_partL_pureA : ∀ {F : Type} [Field F] [NumberField F] {κ κ₁ 
     exact hP₀ _ x' h (fun x => (hh x).trans rfl) y
   refine ⟨P, fun g hg => ?_⟩
   have hE : ∀ (z : AF F) (v : Pl (F := F)), evFin F v z = evalV F v z.2 := fun _ _ => rfl
-  obtain ⟨m, a, b, ha, hb, hab⟩ := GlobalTheory.T.schwartz_bruhat_sum_split_tensor g hg
-  choose n φ hφSB hφstd hφ using fun k => GlobalTheory.T.adelic_schwartz_function_factorizable_sum (a k) (ha k)
+  obtain ⟨m, a, b, ha, hb, hab⟩ := _root_.GlobalTheory.SBBlocks.sum_prod_blocks g hg
+  choose n φ hφSB hφstd hφ using fun k => _root_.GlobalTheory.SBRestrProd.sb_eq_sum_restrProd (a k) (ha k)
   let g₁ : (κ₁ ⊕ κ' → Af F) → ℂ := ∑ k, ∑ j : Fin (n k), fun z =>
     (∏ᶠ v, ev v (φ k j v) fun i => evalV F v (z (Sum.inl i))) * b k (z ∘ Sum.inr)
   have hev : ∀ k j, ∀ᶠ v in cofinite, ev v (φ k j v) = stdInd F κ₁ v := fun k j => by

@@ -2,11 +2,14 @@ module
 
 public import Development.AutomorphicSpectrum.Statements.MetricStatements.AgreementIffGuarded
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AbsCoeffProdXLeOne
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AgreementPositiveStatement
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.AgreementPos
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AgreementPositive
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FormPolyIsHomogeneousAndEval
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.GapEqWeightSubNextStatement
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.KillNoneFormPoly
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RealisationHeightIndependenceStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.MetricsProjectionFormulaNef
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RealisationHeightIndependence
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,12 +68,12 @@ theorem abs_limNum_sub_le {D : ℕ} {σ : Type} {S : AnSys D σ} {K : Type} [Fin
 
 theorem coefficients : Coefficients := by
   intro hI D N Ψ _ S thH hth
-  obtain ⟨C₂', hC⟩ := GlobalTheory.T.realisation_height_independence hI D (Option (Ψ × Fin N)) S thH hth
+  obtain ⟨C₂', hC⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.abs_num_sub_num_le hI D (Option (Ψ × Fin N)) S thH hth
   obtain ⟨Cst, hW, hWS⟩ := GlobalTheory.T.weighted_polynomial_homogeneous_coeff_bound Ψ N (D + 1)
   have ht : 0 < S.t₀ := (S.reg none).1
   refine ⟨Cst * ((Fintype.card (Option (Ψ × Fin N)) : ℝ) ^ (D + 1)) * C₂',
     fun II hII K _ ι _ P Re => ?_⟩
-  obtain ⟨C₃, s₀, -, hag⟩ := GlobalTheory.T.agreement_positive hI D (Option (Ψ × Fin N)) S 0 ht
+  obtain ⟨C₃, s₀, -, hag⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.agreementPos hI D (Option (Ψ × Fin N)) S 0 ht
   have hPB : ∀ R : Realis S P, R.PBs II = toWtS (formPoly (D + 1) (R.limNum II)) := fun R => rfl
   have hPBwt : ∀ R : Realis S P,
       R.PBwt II = toWt (formPoly (D + 1) fun w => R.limNum II (some ∘ w)) := fun R => rfl

@@ -6,7 +6,8 @@ public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.Contin
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaRuleMemSec
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaValueExistsUniqueOfChartIndependence
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AnalyticFibreDescriptionUniqueStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLevelOneThetaNeZeroOnIdealHalfLatticeStatement
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsStabForm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLevelOneThetaNeZeroOnIdealHalfLattice
 public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ExistsIsNabUncond
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LevelMapFibreSimplyTransitive
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AnalyticFibreUnitFrameUniformisation
@@ -16,11 +17,11 @@ public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsSymplOfSelfDual
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FockHxDifferentiable
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FramedPointGeneratorIsThetaLevelOne
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HMatMulVecPerCrd
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HermitianFormAtFrameLaws
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ProdLevelOneThetaEqVacuumTheta
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RdUEqConstMulClsSum
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ReadingEqThP
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HMatMulVecPerCrd
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HermitianFormAtFrameLaws
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ReadsExistsUniqueTheta
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaSeriesTestFunctionHolomorphicWeight
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaValueStandardLatticeEqClassicalTheta
@@ -245,7 +246,7 @@ theorem exists_root_ne_zero {X : Data E r} {bas : (Fin g ⊕ Fin g → ℤ) ≃�
   have hM : 0 < l.M := lt_of_lt_of_le (by norm_num) l.three_le
   have hM0 : (l.M : E) ≠ 0 := Nat.cast_ne_zero.2 hM.ne'
   obtain ⟨-, -, h1, h2, -⟩ := DualMark.dual_marking E H Dw l r X L mk _ hL hmk (Complex.isPrimitiveRoot_exp l.M hM.ne')
-  obtain ⟨u, hu, hne⟩ := GlobalTheory.T.exists_levelOne_theta_ne_zero_on_ideal_half_lattice E r X g bas idx hs w L hL x hx (Mfr l) l.M (le_trans (by norm_num) l.three_le)
+  obtain ⟨u, hu, hne⟩ := _root_.GlobalTheory.Dict.ThetaHalf.exists_ne_zero_on_half E r X g bas idx hs w L hL x hx (Mfr l) l.M (le_trans (by norm_num) l.three_le)
     (by rw [h1, h2]) ϑ h h0
   obtain ⟨a, ha, t, ht, rfl⟩ := hmk.surj u hu
   refine ⟨fun _ => Submodule.Quotient.mk a, fun b hb => hne ?_⟩

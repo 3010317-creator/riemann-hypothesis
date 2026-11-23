@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LineBundleGlobalSectionsDimCongrPicardClass
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleIntersectionNumberNonnegOfAmple
 import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.EventuallySubsingletonCohTwistZOfIsProjOver
 import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ExistsLinearMapMultilinearMapBaseChange
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleIntersectionNumberNonnegOfAmpleStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,7 +65,7 @@ theorem interNum_nonneg_of_isNef_of_ample_tens_nef (k : Type) [Field k] [Infinit
       (∀ i ∉ S, IsAmpleLB (Q i)) → 0 ≤ interNum k F Q := by
     intro S
     induction S using Finset.induction_on with
-    | empty => exact fun Q _ h ↦ GlobalTheory.T.lineBundleIntersectionNumber_nonneg_of_ample k X hX d F hd Q fun i ↦ h i (by simp)
+    | empty => exact fun Q _ h ↦ _root_.GlobalTheory.interNum_nonneg_of_isAmpleLB_of_isProjOver k X hX d F hd Q fun i ↦ h i (by simp)
     | insert i S hi ih =>
       intro Q hn ha
       have hi' : IsNef k (Q i) := hn i (Finset.mem_insert_self _ _)

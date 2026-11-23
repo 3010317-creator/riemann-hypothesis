@@ -1,8 +1,9 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.IsScaleStable
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.GaussianProjectionBallIndicatorStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.GaussianProjectionConeCoareaStatement
+public import GroundTheory.HeightsAndTheta.Heights.ArithmeticBezout.StatementsConeTangentAverage
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.GaussianProjectionBallIndicator
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.GaussianProjectionConeCoarea
 import GroundTheory.HeightsAndTheta.Heights.ArithmeticBezout.PConeFibreAverage
 import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.Assembly
 import Mathlib.Algebra.Order.Floor.Extended
@@ -84,7 +85,7 @@ theorem PositivityTheory.Xgn.t_xgz_chow_mahler_fibreavg : ∀ n m : ℕ, 0 < m �
           (Metric.ball (0 : EuclideanSpace ℂ (Fin m)) 1).indicator 1 (linProj π y) *
             ENNReal.ofReal (coneJac h J π y) ∂μ := by
     intro π
-    have harea := GlobalTheory.T.gaussian_projection_cone_coarea n m h J hJ hm hmn hfib π A hA
+    have harea := _root_.GlobalTheory.CompanionTheory.Ar.Short.Crofton.coneArea_inter n m h J hJ hm hmn hfib π A hA
       ((Metric.ball (0 : EuclideanSpace ℂ (Fin m)) 1).indicator 1)
       (measurable_one.indicator Metric.isOpen_ball.measurableSet)
     have hind : ∫⁻ w, cntOver (coneSet h J ∩ A) π w *
@@ -101,7 +102,7 @@ theorem PositivityTheory.Xgn.t_xgz_chow_mahler_fibreavg : ∀ n m : ℕ, 0 < m �
   have hlhs : ∫⁻ π : Fin m → Fin n → ℂ, matGauss π *
       ∫⁻ w in Metric.ball (0 : EuclideanSpace ℂ (Fin m)) 1, cntOver (coneSet h J ∩ A) π w =
       H⁻¹ * V * ∫⁻ y in coneSet h J ∩ A, k ‖y‖ ∂μ := by
-    rw [← GlobalTheory.T.gaussian_projection_ball_indicator n m h J hJ hm hmn hfib A hA, ← lintegral_const_mul' _ _ hctop]
+    rw [← _root_.GlobalTheory.CompanionTheory.Ar.Short.Crofton.coneTangentAverage_inter n m h J hJ hm hmn hfib A hA, ← lintegral_const_mul' _ _ hctop]
     refine lintegral_congr fun π => ?_
     rw [hin π]
     ring

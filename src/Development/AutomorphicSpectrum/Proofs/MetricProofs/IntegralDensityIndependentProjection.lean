@@ -6,9 +6,9 @@ public import Mathlib.Order.CompletePartialOrder
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AemeasurableCxPosDensity
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CxSheetSimpleNull
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FibreDensityIndependentProjectionStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FibreDensityIndependentProjection
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.VolumeNonsimpleFibresEqZero
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.SetFibreFiniteOfGoodProj
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.VolumeNonsimpleFibresEqZeroStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -130,7 +130,7 @@ theorem cx_posPart_indep : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, 
           ∫⁻ y, ENNReal.ofReal (cxPosDens (conePts Q) Ψ' (pot L) (E.indicator g) y) := by
     intro z
     by_cases hz : Gd z
-    · obtain ⟨W, hW, hzW, hWi, hWE⟩ := GlobalTheory.T.fibre_density_independent_projection K ι Q e Ψ Ψ' L g z hP hΨ hΨ' hLs hg hg0 hz.1 hz.2.1 hz.2.2
+    · obtain ⟨W, hW, hzW, hWi, hWE⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Pub.CxPosLocal.cxPosPart_local K ι Q e Ψ Ψ' L g z hP hΨ hΨ' hLs hg hg0 hz.1 hz.2.1 hz.2.2
       exact ⟨W, hW, hWi, fun _ => hzW, hWE⟩
     · refine ⟨∅, isOpen_empty, fun _ _ _ => Iff.rfl, fun h => absurd h hz, fun E _ _ hE => ?_⟩
       rw [Set.subset_empty_iff.1 hE, Set.indicator_empty]
@@ -166,7 +166,7 @@ theorem cx_posPart_indep : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, 
       ∀ᵐ y, ENNReal.ofReal (cxPosDens (conePts Q) B (pot L) g y) =
         ∑' k, ENNReal.ofReal (cxPosDens (conePts Q) B (pot L) ((E k).indicator g) y) := by
     intro B B' hB hB' hc
-    have hnull := measure_union_null (cx_simple_null K ι Q e B hP hB) (GlobalTheory.T.volume_nonsimple_fibres_eq_zero K ι Q e B B' hP hB hB')
+    have hnull := measure_union_null (cx_simple_null K ι Q e B hP hB) (_root_.GlobalTheory.CompanionTheory.Ar.Pub.CxOnly.cxSimple_only_null K ι Q e B B' hP hB hB')
     filter_upwards [measure_eq_zero_iff_ae_notMem.1 hnull] with y hy
     refine cxPosDens_split _ _ E y (cx_fibre_finite K ι Q e B hP hB y) hEd fun w hw hs z hz hzw => ?_
     have hw1 : B w 0 = 1 := by

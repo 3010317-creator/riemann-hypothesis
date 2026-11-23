@@ -3,7 +3,7 @@ module
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.LaurentCechNerveLevelSpecTensorPower
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EtaleLocalizationAtPrimeTensorOfLowHeight
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.DegreeLatticePrimeScalingStatement
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.DegreeLatticePrimeScaling
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrimeChartExistsUniquePoint
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegAtIffChartLocalization
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PGenericProjClosureDim
@@ -170,7 +170,7 @@ theorem lat_vertOff : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Spec (Co
     GroundTheory.Heights₂.Heights.NumbersDVR.GenericProjClosureDim.isMultiProjPrime_pointIdeal y hrel
   have he : e ≠ 0 := hL.1
   have he' : e' ≠ 0 := hL'.1
-  refine GlobalTheory.T.degree_lattice_prime_scaling K J Ω y hproj S a a' (e' / e) (div_ne_zero he' he) ?_ hA.2.2.1
+  refine _root_.GlobalTheory.CompanionTheory.Ar.Num.lineVert_of_eq_off K J Ω y hproj S a a' (e' / e) (div_ne_zero he' he) ?_ hA.2.2.1
   intro c hc
   have hc' : ∏ k, y ⟨k, c k⟩ ≠ 0 := hc
   obtain ⟨⟨n, hn⟩, ⟨n', hn'⟩⟩ := exists_pow_chart_quotients T hL hL' S hS c hc'

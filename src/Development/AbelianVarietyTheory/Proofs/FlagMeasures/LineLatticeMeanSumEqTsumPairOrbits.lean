@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsLatMeasurableConst
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSmallEqZero
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LatticeNonzeroVectorPairNormalForms
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableTranslatedLatticeFunctionsStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableTranslatedLatticeFunctions
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurePreservingMulLeft
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -449,7 +449,7 @@ theorem latMean_sum_eq_tsum_orbits : ∀ (E : Type) [Field E] [NumberField E], I
       rw [tsum_latAt _ (hDU c hg), ENNReal.tsum_mul_left]
     · intro y
       refine AEMeasurable.mul ?_ (hΦ.comp (measurable_vecAt _)).aemeasurable
-      have hweight := (GlobalTheory.T.measurable_translatedLattice_functions E hE (k + 1)
+      have hweight := (_root_.GlobalTheory.LatMeasurable.measurable_latFun E hE (k + 1)
         w Φ hw hΦ (Quot.out c).1 (Quot.out c).2).1
       refine hweight.aemeasurable.congr ?_
       filter_upwards [ae_restrict_mem (hD c)] with g hg

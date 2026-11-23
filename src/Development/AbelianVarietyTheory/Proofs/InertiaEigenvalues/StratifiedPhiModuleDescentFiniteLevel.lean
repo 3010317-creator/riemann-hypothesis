@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdIPowLe
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DescentFreeModuleCocycleStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrismPushoutModAdicPowUniversalStatement
+public import Mathlib.RingTheory.RingHom.FaithfullyFlat
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DescentFreeModuleCocycle
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrismPushoutModAdicPowUniversal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -89,7 +90,7 @@ theorem lev_ring {A B D T : Type} [CommRing A] [CommRing B] [CommRing D] [CommRi
         have e2 : (fun i => q ((c • z) i)) = q (algebraMap A B c) • fun i => q (z i) := by
           funext i; simp [Algebra.smul_def, map_mul]
         rw [e1, e2, Matrix.mulVec_smul, hz] }
-  exact ⟨N, fun z => Iff.rfl, GlobalTheory.T.descent_free_module_cocycle A B D T p q q₁₂ q₂₃ q₁₃ q₃ hff hpo1 hpo2 e1 e2 e3 e4 d ε hε hc N
+  exact ⟨N, fun z => Iff.rfl, _root_.GlobalTheory.descent_free_cocycle A B D T p q q₁₂ q₂₃ q₁₃ q₃ hff hpo1 hpo2 e1 e2 e3 e4 d ε hε hc N
     fun z => Iff.rfl⟩
 
 variable {l : ℕ} {R : Type} [CommRing R]
@@ -112,9 +113,9 @@ theorem lev_prism [Fact l.Prime] {B C D : Obj l R} (h : Hom B C) (p q : Hom C D)
   refine Exists.elim (hc.stable.po D (p.comp h)) fun T hT => Exists.elim hT fun q₃ hT => Exists.elim hT
     fun q₁₂ hT => ?_
   have c2 : q₃.comp h = q₁₂.comp (p.comp h) := hT.comm
-  refine Exists.elim (GlobalTheory.T.prismPushoutModAdicPow_universal l R B C C D h h p q hpo T (q₁₂.comp q) q₃ (by
+  refine Exists.elim (_root_.GlobalTheory.BSP.PoUniv.isPO_univ l R B C C D h h p q hpo T (q₁₂.comp q) q₃ (by
       rw [hom_comp_assoc, ← c1, c2])) fun q₂₃ h23 => ?_
-  refine Exists.elim (GlobalTheory.T.prismPushoutModAdicPow_universal l R B C C D h h p q hpo T (q₁₂.comp p) q₃ (by
+  refine Exists.elim (_root_.GlobalTheory.BSP.PoUniv.isPO_univ l R B C C D h h p q hpo T (q₁₂.comp p) q₃ (by
       rw [hom_comp_assoc, c2])) fun q₁₃ h13 => ?_
   have hpo2 := hT.po m
   have hq : qmap (p.comp h) m = (qmap p m).comp (qmap h m) :=

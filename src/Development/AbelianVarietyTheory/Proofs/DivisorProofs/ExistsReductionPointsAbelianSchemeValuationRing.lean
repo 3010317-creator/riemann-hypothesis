@@ -3,7 +3,10 @@ module
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsThetaLocal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProperGroupSchemePointsValuationRingMulEquiv
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionLiftUniqueValuationRingAlgClosedStatement
+public import Mathlib.RingTheory.Valuation.ValuationRing
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionLiftUniqueValuationRingAlgClosed
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -83,13 +86,13 @@ theorem reduction_points : ∀ (U Ω k : Type) [CommRing U] [IsDomain U] [Valuat
     · intro y (hy : y ^ n = 1) y' (hy' : y' ^ n = 1) hyy
       have hP : (e.symm y) ^ n = 1 := by rw [← map_pow, hy, map_one]
       have hP' : (e.symm y') ^ n = 1 := by rw [← map_pow, hy', map_one]
-      obtain ⟨Q, -, hQ⟩ := GlobalTheory.T.torsion_lift_unique_valuationRing_algClosed U Ω k h S G hA u n hn
+      obtain ⟨Q, -, hQ⟩ := _root_.GlobalTheory.TorsionLiftVal.torsion_lift_unique U Ω k h S G hA u n hn
         ((φ.comp e.symm.toMonoidHom) y) (by rw [← map_pow, hy, map_one])
       have h1 := hQ (e.symm y) ⟨hP, rfl⟩
       have h2 := hQ (e.symm y') ⟨hP', by rw [hyy]; rfl⟩
       exact e.symm.injective (h1.trans h2.symm)
     · intro y₀ (hy₀ : y₀ ^ n = 1)
-      obtain ⟨P, ⟨hP, hPy⟩, -⟩ := GlobalTheory.T.torsion_lift_unique_valuationRing_algClosed U Ω k h S G hA u n hn y₀ hy₀
+      obtain ⟨P, ⟨hP, hPy⟩, -⟩ := _root_.GlobalTheory.TorsionLiftVal.torsion_lift_unique U Ω k h S G hA u n hn y₀ hy₀
       refine ⟨e P, (show e P ^ n = 1 by rw [← map_pow, hP, map_one]), ?_⟩
       apply Over.OverMorphism.ext
       simp only [MonoidHom.comp_apply, MulEquiv.coe_toMonoidHom, MulEquiv.symm_apply_apply]

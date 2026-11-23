@@ -1,16 +1,20 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TranslateMomentsAll
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AddSubgroupRepsExistenceCardSumStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AlgebraicNumbersPadicPlacesFactsStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsLiftHalfLatticeRationalStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HeisenbergCocycleFormIntegralSelfDualStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MomentsTranslateRationalPointUnitDenominatorStatement
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.PerLatticeFactsStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.PeriodLatticeHalfLatticeInclusionsSplitPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RelIndexEqOfSelfDualAlternatingStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ThetaMovedCosetIndicatorVacuumShapeStatement
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.WeylHeisenbergOperatorCalculusRationalStatement
+public import Formalism.LocalToGlobal.TorsionIntegrality.QuadraticSemicharacters.IsSemiChar
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AddSubgroupRepsExistenceCardSum
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.IsDiscriminantTwelfthRootOfIdealLattice
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AlgebraicNumbersPadicPlacesFacts
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsLiftHalfLatticeRational
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HeisenbergCocycleFormIntegralSelfDual
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MomentsTranslateRationalPointUnitDenominator
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.PeriodLatticeHalfLatticeInclusionsSplitPrime
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.GroupTheory.Index
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RelIndexEqOfSelfDualAlternating
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ThetaMovedCosetIndicatorVacuumShape
+import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.PerLatticeFacts
+import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.WeylHeisenbergOperatorCalculusRational
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -294,7 +298,7 @@ theorem idx (M M'' B Z : Submodule (𝓞 X.E) (HomE X.E a b)) (π : 𝓞 X.E) (f
     (hfin : (smulLat ((g : X.E) * (π : X.E)) M).toAddSubgroup.relIndex M.toAddSubgroup ≠ 0) (J : Finset (HomE X.E a b))
     (hJ : IsReps Z.toAddSubgroup (smulLat f (M ⊓ M'')).toAddSubgroup J) :
     ∃ u : ℕ, ¬ p ∣ u ∧ B.toAddSubgroup.relIndex M.toAddSubgroup ∣ u * (J.card * M''.toAddSubgroup.relIndex M.toAddSubgroup) := by
-  obtain ⟨-, r2, -, -, r5⟩ := GlobalTheory.T.addSubgroup_reps_existence_card_sum (HomE X.E a b)
+  obtain ⟨-, r2, -, -, r5⟩ := _root_.GlobalTheory.RepsMod.reps_facts (HomE X.E a b)
   have l1 : (smulLat ((g : X.E) * (π : X.E)) M).toAddSubgroup ≤ (smulLat (π : X.E) M).toAddSubgroup := by
     rintro _ ⟨y, hy, rfl⟩
     exact (mem_smulLat _ _ _).2 ⟨(g : X.E) • y, sm M g hy rfl, by
@@ -341,7 +345,7 @@ theorem Wx_mul (x : HomE X.E a b) (c : ℂ) (F : VCx X.Tau a b → ℂ) (z : VCx
 theorem Wx_add {x y : HomE X.E a b} (h : ∃ n : ℤ, coc A x y = n) (F : VCx X.Tau a b → ℂ) :
     Wx A x (Wx A y F) = Wx A (x + y) F := by
   obtain ⟨n, hn⟩ := h
-  rw [(GlobalTheory.T.weylHeisenbergOperator_calculus_rational X A a b).1, hn]
+  rw [(_root_.GlobalTheory.MomT.Heis.calculus X A a b).1, hn]
   have : Complex.exp (-(2 * (Real.pi : ℂ)) * Complex.I * (((n : ℝ)) : ℂ)) = 1 :=
     Complex.exp_eq_one_iff.2 ⟨-n, by push_cast; ring⟩
   rw [this]; simp
@@ -352,7 +356,7 @@ theorem charsum (e : VCx X.Tau a b → ℂ) (M B Z C B' : AddSubgroup (HomE X.E 
     (hB' : ∀ y, y ∈ B' ↔ y ∈ B ∧ ∀ c ∈ C, ∃ n : ℤ, imH A c y = n) (J R : Finset (HomE X.E a b)) (hJ : IsReps Z C J)
     (hR : ∀ y ∈ R, y ∈ B) (z : VCx X.Tau a b) :
     ∑ j ∈ J, Wx A (-j) (fun z => ∑ y ∈ R, Wx A y e z) z = J.card * ∑ y ∈ R.filter (· ∈ B'), Wx A y e z := by
-  obtain ⟨-, h2, -, h4, h5, h6, -⟩ := GlobalTheory.T.weylHeisenbergOperator_calculus_rational X A a b
+  obtain ⟨-, h2, -, h4, h5, h6, -⟩ := _root_.GlobalTheory.MomT.Heis.calculus X A a b
   have e1 : ∀ j ∈ J, Wx A (-j) (fun z => ∑ y ∈ R, Wx A y e z) z = ∑ y ∈ R, brkE A y (-j) * Wx A y e z := by
     intro j hj
     rw [Wx_sum']
@@ -361,7 +365,7 @@ theorem charsum (e : VCx X.Tau a b → ℂ) (M B Z C B' : AddSubgroup (HomE X.E 
   rw [Finset.sum_congr rfl e1, Finset.sum_comm, Finset.sum_filter, Finset.mul_sum]
   refine Finset.sum_congr rfl fun y hy => ?_
   rw [← Finset.sum_mul]
-  obtain ⟨c1, c2⟩ := (GlobalTheory.T.addSubgroup_reps_existence_card_sum (HomE X.E a b)).2.2.2.1 ℂ Z C J (fun j => brkE A y (-j)) hJ
+  obtain ⟨c1, c2⟩ := (_root_.GlobalTheory.RepsMod.reps_facts (HomE X.E a b)).2.2.2.1 ℂ Z C J (fun j => brkE A y (-j)) hJ
     (fun u _ v _ => by
       simp only [h5]
       rw [neg_add, (h4 _ _ _).2.2.1, ← Complex.exp_add]
@@ -380,7 +384,7 @@ theorem prodsum (e e'' : VCx X.Tau a b → ℂ) (c : ℂ) (M B' B₁ B₂ : AddS
     (R R₁ R₂ : Finset (HomE X.E a b)) (hR : IsReps M B' R) (hR₁ : IsReps M B₁ R₁) (hR₂ : IsReps M B₂ R₂)
     (he : ∀ z, ∑ y ∈ R₁, Wx A y e z = c * e'' z) (z : VCx X.Tau a b) :
     ∑ y ∈ R, Wx A y e z = ∑ y ∈ R₂, c * Wx A y e'' z := by
-  rw [(GlobalTheory.T.addSubgroup_reps_existence_card_sum (HomE X.E a b)).2.2.1 ℂ M B' B₁ B₂ R R₁ R₂ (fun y => Wx A y e z) l1 l2 hs hu hR hR₁ hR₂
+  rw [(_root_.GlobalTheory.RepsMod.reps_facts (HomE X.E a b)).2.2.1 ℂ M B' B₁ B₂ R R₁ R₂ (fun y => Wx A y e z) l1 l2 hs hu hR hR₁ hR₂
     (fun y hy l hl hl' => by
       show Wx A (y + l) e z = Wx A y e z
       rw [← Wx_add A (hB y hy l hl'), hfix l hl])]
@@ -390,7 +394,7 @@ theorem prodsum (e e'' : VCx X.Tau a b → ℂ) (c : ℂ) (M B' B₁ B₂ : AddS
   rw [Wx_add A (hB _ (l2 (hR₂.1 _ h₂)) _ (l1 (hR₁.1 _ h₁))), add_comm]
 
 theorem coc_nsmul (n : ℕ) (x y : HomE X.E a b) : coc A ((n : X.E) • x) y = n * coc A x y := by
-  have h4 := (GlobalTheory.T.weylHeisenbergOperator_calculus_rational X A a b).2.2.2.1
+  have h4 := (_root_.GlobalTheory.MomT.Heis.calculus X A a b).2.2.2.1
   induction n with
   | zero => have := (h4 0 0 y).1; simp only [add_zero] at this; simp only [Nat.cast_zero, zero_smul]; linarith
   | succ n ih => rw [Nat.cast_succ, add_smul, one_smul, (h4 _ _ _).1, ih]; push_cast; ring
@@ -411,16 +415,16 @@ theorem per_smul {X : Fields} (A : Amb X) {a b : ℕ} (N : Submodule (𝓞 X.E) 
 theorem moments_coset_sum : ∀ (X : Fields) (A : Amb X) (a b : ℕ) (S SG : Finset (HeightOneSpectrum (𝓞 X.E))) (ϖ : 𝓞 X.E) (p g cA : ℕ) (N : Submodule (𝓞 X.E) (Sp X.E a)) (N' : Submodule (𝓞 X.E) (Sp X.E b)) (N'' : Submodule (𝓞 X.E) (Sp X.E b)) [Fact p.Prime] (lam : TaylorLogMetric.Qbar →+* ℂ_[p]) (ι : X.K →+* ℂ_[p]) (un : X.Tau → ℂ_[p]) (κ : ℂ) (F : ℕ), Ctx A a b S SG ϖ p g cA → IsSdLat N → IsSdLat N' → IsSdLat N'' → (∀ y ∈ N', (ϖ : X.E) • y ∈ N'') → (∀ y ∈ N'', star (ϖ : X.E) • y ∈ N') → PtMom A a b lam ι un (star (ϖ : X.E) / (ϖ : X.E)) → κ ∈ TaylorLogMetric.Qbar → ‖TaylorLogMetric.lamC lam κ‖ ^ 2 ≤ (p : ℝ) ^ F → (per A N N'').toAddSubgroup.relIndex (per A N N').toAddSubgroup ∣ p ^ F → (∀ R : Finset (HomE X.E a b), IsReps (per A N N').toAddSubgroup (per A N N'').toAddSubgroup R → ∀ z, ∑ y ∈ R, Wx A y (A.e a b N N') z = ((Real.sqrt (R.card : ℝ) : ℝ) : ℂ) * κ * A.e a b N N'' z) → ∀ J : Finset (HomE X.E a b), IsReps (mulLat (p * g) (homAt S N N')).toAddSubgroup (smulLat (((cA * g : ℕ) : X.E) * star (ϖ : X.E)) (per A N N' ⊓ per A N N'')).toAddSubgroup J → ∀ x ∈ divLat cA (homAt S N N'), x ∈ homAt (divs ϖ) N N' → InIntClosure (per A N N'' : Set (HomE X.E a b)) (fun t m => ((p : ℂ_[p]) ^ F)⁻¹ * ptTab ι un t m) Set.univ fun m => TaylorLogMetric.lamC lam (∑ j ∈ J, jetC A.cD (A.thInd S N N' (p * g) (x + j)) m) := by
   classical
   intro X A a b S SG ϖ p g cA N N' N'' _ lam ι un κ F hctx hN hN' hN'' hn1 hn2 hpt hκ hκ' hk hmove J hJ x hx hx'
-  obtain ⟨hAA, b1, b2, b3, b4, -, b6, b7⟩ := GlobalTheory.T.periodLattice_halfLattice_inclusions_splitPrime X A a b S SG ϖ p g cA N N' hctx hN hN'
+  obtain ⟨hAA, b1, b2, b3, b4, -, b6, b7⟩ := _root_.GlobalTheory.MomT.HalfIncl.half_inclusions X A a b S SG ϖ p g cA N N' hctx hN hN'
   obtain ⟨hX, hLa, -, hsm, hp, hϖ, hcop, -, -, hg, hcA⟩ := hctx
   have hLa' := hLa
   obtain ⟨hδ, hne, hS, hAU, hFG, hL⟩ := hLa'
   have hLa0 : A.LaHyp a b ∅ := ⟨hδ, hne, by simp, by simp [Amb.AAUnit], hFG, hL⟩
-  obtain ⟨h1, -, h3, h4, -, -, h7, h8⟩ := GlobalTheory.T.weylHeisenbergOperator_calculus_rational X A a b
-  obtain ⟨c1, c2, -⟩ := GlobalTheory.T.heisenbergCocycleForm_integral_selfDual X A a b N N' hX hδ (hL N N' hN hN').2
-  obtain ⟨-, c2'', -⟩ := GlobalTheory.T.heisenbergCocycleForm_integral_selfDual X A a b N N'' hX hδ (hL N N'' hN hN'').2
-  obtain ⟨-, -, f3, -⟩ := GlobalTheory.T.per_relIndex_ne_zero_and_mem_locP_iff X A a b N N' hFG hAA hN hN'
-  obtain ⟨r1, r2, -⟩ := GlobalTheory.T.addSubgroup_reps_existence_card_sum (HomE X.E a b)
+  obtain ⟨h1, -, h3, h4, -, -, h7, h8⟩ := _root_.GlobalTheory.MomT.Heis.calculus X A a b
+  obtain ⟨c1, c2, -⟩ := _root_.GlobalTheory.MomT.CocInt.cocycle_integral X A a b N N' hX hδ (hL N N' hN hN').2
+  obtain ⟨-, c2'', -⟩ := _root_.GlobalTheory.MomT.CocInt.cocycle_integral X A a b N N'' hX hδ (hL N N'' hN hN'').2
+  obtain ⟨-, -, f3, -⟩ := _root_.GlobalTheory.MomT.LatFin.per_lattice_facts X A a b N N' hFG hAA hN hN'
+  obtain ⟨r1, r2, -⟩ := _root_.GlobalTheory.RepsMod.reps_facts (HomE X.E a b)
   have hg0 : 0 < g := Nat.pos_of_ne_zero fun h => hp.one_lt.ne' (by simpa [h] using hg)
   have hcA0 : 0 < cA := Nat.pos_of_ne_zero fun h => hp.one_lt.ne' (by simpa [h] using hcA)
   have hσ : star (ϖ : X.E) = (X.conjO ϖ : 𝓞 X.E) := rfl
@@ -463,13 +467,13 @@ theorem moments_coset_sum : ∀ (X : Fields) (A : Amb X) (a b : ℕ) (S SG : Fin
     simpa using sub_mem hy (l3 _ (sub_mem (l0 hy) (hR.1 u hu)) hu')
   have hcard : R₁.card = M''.toAddSubgroup.relIndex M.toAddSubgroup := by
     rw [r2 _ _ _ (hrep R₁ hR₁)]
-    exact GlobalTheory.T.relIndex_eq_of_selfDual_alternating _ (imH A) _ _ (fun u v w => (h4 u v w).2.2.1) hanti c2 c2'' fM fM'
+    exact _root_.GlobalTheory.MomT.DualCount.relIndex_eq_of_selfDual _ (imH A) _ _ (fun u v w => (h4 u v w).2.2.1) hanti c2 c2'' fM fM'
   obtain ⟨u, hup, hud⟩ := idx M M'' B _ ϖ _ g p hp hg m1 hb (fun y hy => (b4 y hy).2.2.2)
     (by simpa using f3 (g * ϖ) fun h => mul_ne_zero hgE hπ0 (by exact_mod_cast congrArg (fun x : 𝓞 X.E => (x : X.E)) h)) J hJ
   rw [← hcard] at hud hk
 
-  obtain ⟨t₀, ht₀, ht₀'⟩ := GlobalTheory.T.exists_lift_halfLattice_rational X A a b S N N' cA (p * g) hFG hAA hS hAU hN hN' hcA0 (Nat.mul_pos hp.pos hg0) x hx
-  obtain ⟨n, hn0, hnd, hth⟩ := GlobalTheory.T.theta_movedCosetIndicator_vacuum_shape X A a b S N N' cA (p * g) hX hLa hAA hN hN' hcA0 (Nat.mul_pos hp.pos hg0)
+  obtain ⟨t₀, ht₀, ht₀'⟩ := _root_.GlobalTheory.MomT.exists_lift_halfAO X A a b S N N' cA (p * g) hFG hAA hS hAU hN hN' hcA0 (Nat.mul_pos hp.pos hg0) x hx
+  obtain ⟨n, hn0, hnd, hth⟩ := _root_.GlobalTheory.MomT.ThShape.thInd_shape X A a b S N N' cA (p * g) hX hLa hAA hN hN' hcA0 (Nat.mul_pos hp.pos hg0)
   have hγt := b3 x hx hx' t₀ ht₀ ht₀'
   have hCM : (smulLat (((cA * g : ℕ) : X.E) * (σ : X.E)) (M ⊓ M'')).toAddSubgroup ≤ M.toAddSubgroup := by
     rintro _ ⟨y, hy, rfl⟩
@@ -509,7 +513,7 @@ theorem moments_coset_sum : ∀ (X : Fields) (A : Amb X) (a b : ℕ) (S SG : Fin
       refine and_congr_right fun _ => ⟨?_, fun h m hm => h _ ⟨m, hm, rfl⟩⟩
       rintro h _ ⟨m, hm, rfl⟩
       exact h m hm
-  have hunit : ∀ y ∈ R₂, _ := fun y hy => GlobalTheory.T.moments_translate_rationalPoint_unitDenominator X A a b ϖ p N N'' lam ι un hX hLa0 hAA hsm hϖ hcop hN hN'' hpt
+  have hunit : ∀ y ∈ R₂, _ := fun y hy => _root_.GlobalTheory.MomT.UnitTr.moments_unit_translate X A a b ϖ p N N'' lam ι un hX hLa0 hAA hsm hϖ hcop hN hN'' hpt
     (-t₀ + y) (cA * g) (Nat.Coprime.mul_left hcA hg) (by
       have := m1 _ (add_mem (neg_mem hγt) (sm M cA (hg₂ y (hR₂.1 y hy)) rfl))
       convert this using 1
@@ -528,7 +532,7 @@ theorem moments_coset_sum : ∀ (X : Fields) (A : Amb X) (a b : ℕ) (S SG : Fin
       rw [Rat.cast_div, Rat.cast_intCast, Rat.cast_natCast, eq_div_iff hne, ← hk, mul_comm]
     simp only [hζ]
     rw [e1]
-    exact (GlobalTheory.T.algebraicNumbers_padicPlaces_facts X.K p A.σ₀ ι).2.2 lam _
+    exact (_root_.GlobalTheory.MomPlace.places X.K p A.σ₀ ι).2.2 lam _
   have hsz := fun y hy => size lam κ (ζ y) F n J.card R₁.card u hκ hκ' (hroot y hy).1 (hroot y hy).2 hn0 hk hup (hnd.trans hud)
   have hp0 : ((p : ℂ_[p]) ^ F)⁻¹ ≠ 0 := inv_ne_zero (pow_ne_zero _ (by exact_mod_cast hp.ne_zero))
   refine clo_congr (clo_sum R₂ _ fun y hy => clo_smul (hunit y hy).2 _ _ hp0 (hsz y hy).2) le_rfl le_rfl fun m _ => ?_

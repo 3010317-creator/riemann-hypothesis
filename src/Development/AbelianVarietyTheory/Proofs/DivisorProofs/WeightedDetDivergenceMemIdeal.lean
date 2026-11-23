@@ -3,8 +3,9 @@ module
 public import Mathlib.LinearAlgebra.Matrix.Adjugate
 public import Mathlib.RingTheory.Derivation.Basic
 public import Mathlib.RingTheory.Ideal.Defs
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivationDetEqDoubleSumAdjugateEntryStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PiolaIdentityAdjugateDivergenceFreeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivationDetEqDoubleSumAdjugateEntry
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PiolaIdentityAdjugateDivergenceFree
+public import Mathlib.RingTheory.Ideal.BigOperators
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,7 +49,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.RingTheory.Ideal.BigOperators
 
 @[expose] public section
 
@@ -60,8 +60,8 @@ theorem weighted_det_divergence_mem_ideal : ∀ {K R : Type} [CommRing K] [CommR
   intro K R _ _ _ ι _ _ δ δ0 I M a b w t ρ h0 hM hw hI hρ
   set c : ι → R := fun i => ∑ j, M.adjugate j i * a j with hc
   have hdet : δ0 M.det = ∑ i, δ i (c i) := by
-    rw [GlobalTheory.T.derivation_det_eq_double_sum_adjugate_entry δ0 M]
-    have hp := GlobalTheory.T.piola_identity_adjugate_divergence_free δ M hM
+    rw [_root_.GlobalTheory.DetDeriv.main δ0 M]
+    have hp := _root_.GlobalTheory.PiolaAlg.piola_identity δ M hM
     have h1 : ∀ i, δ i (c i) = ∑ j, M.adjugate j i * δ0 (M i j) + ∑ j, a j * δ i (M.adjugate j i) := by
       intro i
 

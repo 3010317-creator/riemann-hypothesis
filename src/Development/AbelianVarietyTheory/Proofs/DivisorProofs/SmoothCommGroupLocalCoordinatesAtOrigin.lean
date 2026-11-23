@@ -2,16 +2,17 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasDefect
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntDerApply
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivationFamilyCotangentBasisStatement
+public import Mathlib.RingTheory.Ideal.Cotangent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivationFamilyCotangentBasis
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTangentVectorOfOriginDerivationStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GermOriginConstantSectionEqOriginStalkConstants
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GroupSchemeStalkEvalAtOriginOriginStalkConstants
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantVectorFieldApplyConstantEqZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantVectorFieldEvalOriginEqTangentDerivativStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OriginLocalRingNoetherianFreeUnitSectionConormalStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentDerivativeAtOriginAddTangentVectorStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentDerivativeAtOriginSmulTangentVectorStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentVectorEqOfTangentDerivativeAtOriginEqStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GroupSchemeStalkEvalAtOriginOriginStalkConstants
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -108,7 +109,7 @@ theorem coords_at_origin : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing
       have hw' : ∑ a, c a • v a = w := GlobalTheory.T.tangentVector_eq_of_tangentDerivativeAtOrigin_eq R G _ _ fun f => by rw [hlin, hw, hc' f]
       funext a
       rw [← hw', v.repr_sum_self]
-  obtain ⟨z, hz0, hz1, hz2⟩ := GlobalTheory.T.derivation_family_cotangent_basis R _ (evO G) (GlobalTheory.FormalOrigin.evO_constO R G) hF hFin n
+  obtain ⟨z, hz0, hz1, hz2⟩ := _root_.GlobalTheory.CoordsAlg.coords_of_derivation_basis R _ (evO G) (GlobalTheory.FormalOrigin.evO_constO R G) hF hFin n
     (fun a => tanDer G (v a)) hadd hmul hc hbasis
   exact ⟨z, hz0, fun a i => by rw [key]; exact hz1 a i, hz2⟩
 

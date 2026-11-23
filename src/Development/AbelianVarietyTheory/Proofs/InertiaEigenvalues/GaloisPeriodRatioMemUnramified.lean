@@ -1,8 +1,8 @@
 module
 
 public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InvMemDeRhamFilNegOfExactDegreeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemUnramifiedOfFrobeniusIterateFixedFilStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InvMemDeRhamFilNegOfExactDegree
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemUnramifiedOfFrobeniusIterateFixedFil
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -138,7 +138,7 @@ theorem galois_periodRatio_mem_unramified : ∀ (l : ℕ) [Fact l.Prime] (P : Lo
     obtain ⟨d, hd1, hd2⟩ := hdeg j
     have hinv : P.ιB ((⇑P.φB)^[j] (u : P.R.B)) * P.ιB ((⇑P.φB)^[j] y) = 1 := by
       rw [← map_mul, ← iter_mul, huy, iter_one, map_one]
-    have hyF := GlobalTheory.T.inv_mem_deRhamFil_neg_of_exact_degree l P AI hT K d _ _ hinv hd1 hd2
+    have hyF := _root_.GlobalTheory.FilInv.inv_mem_Fil_neg l P AI hT K d _ _ hinv hd1 hd2
     have hgF : P.ιB (P.actQ (g : GQ l) ((⇑P.φB)^[j] (u : P.R.B))) ∈ (P.PD K).Fil d := by
       have := (P.PD K).ι_comm g ((⇑P.φB)^[j] (u : P.R.B))
       rw [P.PD_ι, P.PD_actB, P.PD_ι] at this
@@ -148,7 +148,7 @@ theorem galois_periodRatio_mem_unramified : ∀ (l : ℕ) [Fact l.Prime] (P : Lo
     rw [add_neg_cancel] at this
     rw [hc, iter_mul, hcommj, map_mul]
     exact this
-  obtain ⟨a, ha⟩ := GlobalTheory.T.mem_unramified_of_frobenius_iterate_fixed_fil l P AI hT K c hφc hF
+  obtain ⟨a, ha⟩ := _root_.GlobalTheory.CrisPerFix.mem_unramified_of_frobenius_iterate_fixed_fil_alt l P AI hT K c hφc hF
   exact ⟨a, by rw [hcx, ha]⟩
 
 end GlobalTheory.PeriodQuot

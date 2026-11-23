@@ -7,17 +7,28 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodge
 public import Mathlib.Algebra.AffineMonoid.Basic
 public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PushInvertibleIffOfIsReduced
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenLatticeConstantRankStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsGenericWeilPairingStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeTateEigenLatticeEqStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeTateOmegaCoherentStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IdealSaturatedVectorBundleStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LabelEmbeddingInjectiveStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeEigenVectorBundleStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeGlueOverPrimesStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieOmegaLatticeVectorBundleStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenLatticeConstantRank
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.MemEigSpOfMemHtDual
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsGenericWeilPairing
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeTateEigenLatticeEq
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GlueApplyOfNotInFibre
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeTateOmegaCoherent
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EtaleLocalizationAtPrimeTensorOfLowHeight
+public import Mathlib.RingTheory.DedekindDomain.Basic
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IdealSaturatedVectorBundle
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LabelEmbeddingInjective
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+public import Mathlib.Order.CompletePartialOrder
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeEigenVectorBundle
+public import Mathlib.AlgebraicGeometry.Noetherian
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeGlueOverPrimes
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NotInFibreOfIsUnit
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PredualVectorBundleStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PredualVectorBundle
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.LawsProved
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
+import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieOmegaLatticeVectorBundle
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,8 +69,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.LawsProved
-public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GlueApplyOfNotInFibre
 
 @[expose] public section
 
@@ -153,7 +162,7 @@ theorem exists_genWeil (hW : Out.WeilSt) {Xo : Moduli D l} {c : Coeff l} (Y : Mo
   obtain ⟨n₂, -⟩ := sabComp pullCubComp E H _ _ _ _ _ _ _ _ m n₁
   rw [hj] at n₂
   obtain ⟨n₃, -⟩ := sabCancel pullCubCancel E H _ _ _ _ _ _ _ _ Y.m n₂
-  have := GlobalTheory.T.exists_generic_weil_pairing hW E H D l _ _ _ X _ (GlobalTheory.ModelCompare.objOfSABMap Y.oF n₃) t ξ n₁ Ω (𝟙 _) n hn
+  have := _root_.GlobalTheory.CompanionTheory.Ar.WeilObj.genWeil_of_obj hW E H D l _ _ _ X _ (GlobalTheory.ModelCompare.objOfSABMap Y.oF n₃) t ξ n₁ Ω (𝟙 _) n hn
     (by rwa [Category.id_comp]) hζ
   rwa [Category.id_comp] at this
 
@@ -165,9 +174,9 @@ theorem hodgeLattices_isVB : Out.WeilSt → ∀ (E : Type) [Field E] [NumberFiel
   intro hW E _ _ _ H D l Xo c Y X Ω _ _ ξ f y₀ t m Li _ _ M ρ cst S R _ hj hs hact hgen hN hSp hdisc htors hζ hVB s
   classical
   have hsm : Smooth t.G.hom := t.semi.smooth
-  obtain ⟨hLat, -⟩ := GlobalTheory.T.lie_omega_lattice_vector_bundle X Ω ξ t.G Li M hgen hsm
-  obtain ⟨hfd, hrk⟩ := GlobalTheory.T.eigen_lattice_constant_rank E H D l Xo c Y X Ω ξ f y₀ t m Li M ρ cst hj hs hact
-  obtain ⟨hinj, hcard⟩ := GlobalTheory.T.label_embedding_injective E H l c
+  obtain ⟨hLat, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieLat_isVB_of_smooth X Ω ξ t.G Li M hgen hsm
+  obtain ⟨hfd, hrk⟩ := _root_.GlobalTheory.CompanionTheory.Ar.EigRank.eig_finrank_label E H D l Xo c Y X Ω ξ f y₀ t m Li M ρ cst hj hs hact
+  obtain ⟨hinj, hcard⟩ := _root_.GlobalTheory.CompanionTheory.Ar.labels_all_once E H l c
   haveI := hfd
   let σ : CMType H ⊕ CMType H → (𝓞 E →+* Ω) := fun s' => cst.comp (labelEmb c s')
   have hσinj : Function.Injective σ := fun a b hab => hinj (RingHom.ext fun x => cst.injective (RingHom.congr_fun hab x))
@@ -176,7 +185,7 @@ theorem hodgeLattices_isVB : Out.WeilSt → ∀ (E : Type) [Field E] [NumberFiel
   letI : Fintype (CMType H ⊕ CMType H) := Fintype.ofFinite _
 
   have hA : (M.eigLat ρ (σ s)).IsVBOn {q | ∀ l ∈ S, ¬ InFibre ξ l q} (labelRk D s) (eigSp ρ (σ s)) := by
-    have h := (GlobalTheory.T.lattice_eigen_vector_bundle X Ω ξ Li E ρ M.lat {q | ∀ l ∈ S, ¬ InFibre ξ l q} (Module.finrank Ω Li)
+    have h := (_root_.GlobalTheory.CompanionTheory.Ar.EigSplit.isVBOn_eigSp X Ω ξ Li E ρ M.lat {q | ∀ l ∈ S, ¬ InFibre ξ l q} (Module.finrank Ω Li)
       (CMType H ⊕ CMType H) σ hgen hσinj (by rw [← Nat.card_eq_fintype_card]; exact hcard)
       (HcVb.isVBOn_of_isVB hLat _)
       (fun p _ a e he => by
@@ -195,7 +204,7 @@ theorem hodgeLattices_isVB : Out.WeilSt → ∀ (E : Type) [Field E] [NumberFiel
       ext v
       exact M.mem_htDual_iff t.PP.L (p ^ R p) ρ (σ s') q v
     rw [e]
-    exact GlobalTheory.T.predual_vector_bundle X Ω ξ Li _ T _ _ (HcVb.isVBOn_of_isVB (hVB p hp s') T)
+    exact _root_.GlobalTheory.CompanionTheory.Ar.Lat.predualIn_isVBOn X Ω ξ Li _ T _ _ (HcVb.isVBOn_of_isVB (hVB p hp s') T)
   have hB : ∀ p ∈ S, ∀ (T : Set (Cpt ξ)),
       (htLabel M t.PP.L (p ^ R p) ρ σ s).IsVBOn T (labelRk D s) (eigSp ρ (σ s)) := by
     intro p hp T
@@ -207,7 +216,7 @@ theorem hodgeLattices_isVB : Out.WeilSt → ∀ (E : Type) [Field E] [NumberFiel
         have h1 := cst.injective hab
         have h2 : τ.1 (a : E) = τ.1 (b : E) := congrArg Subtype.val h1
         exact RingOfIntegers.ext (τ.1.injective h2)
-      exact GlobalTheory.T.ideal_saturated_vector_bundle X Ω ξ Li (𝓞 E) (σ (.inl τ)) (differentIdeal ℤ (𝓞 E)) _ T _ _
+      exact _root_.GlobalTheory.CompanionTheory.Relay.ideal_saturated_vector_bundle X Ω ξ Li (𝓞 E) (σ (.inl τ)) (differentIdeal ℤ (𝓞 E)) _ T _ _
         hσ1 differentIdeal_ne_bot (fun q _ a => hreg _ q a) (hDual p hp T (.inl τ))
 
   have hC : ∀ p ∈ S, ∀ q : Cpt ξ, (∀ l' : ℕ, l'.Prime → ¬ InFibre ξ l' q) →
@@ -216,7 +225,7 @@ theorem hodgeLattices_isVB : Out.WeilSt → ∀ (E : Type) [Field E] [NumberFiel
     have hpp := hSp p hp
     have hn : 1 ≤ p ^ R p := Nat.one_le_pow _ _ hpp.pos
     obtain ⟨e, he⟩ := HcVb.exists_genWeil hW Y ξ f y₀ t m hj (p ^ R p) hn (htors p hp) (hζ p hp)
-    have hco := GlobalTheory.T.hodge_tate_omega_coherent X Ω ξ hgen hN t.G t.semi t.PP.L (p ^ R p) hn (htors p hp) e he Li M
+    have hco := _root_.GlobalTheory.CompanionTheory.Ar.HTCoh.htOm_coherent X Ω ξ hgen hN t.G t.semi t.PP.L (p ^ R p) hn (htors p hp) e he Li M
     obtain ⟨h1, h2, -⟩ := hco.2 q
     have hu : unitAt ξ q ((p ^ R p : ℕ) : Ω) := by
       rw [Nat.cast_pow]
@@ -227,14 +236,14 @@ theorem hodgeLattices_isVB : Out.WeilSt → ∀ (E : Type) [Field E] [NumberFiel
         show ((p ^ R p : ℕ) : Ω)⁻¹ • ((p ^ R p) • u) = u
         rw [← Nat.cast_smul_eq_nsmul Ω, inv_smul_smul₀ hu.1]
       rwa [e2] at h3
-    obtain ⟨g1, g2⟩ := GlobalTheory.T.hodge_tate_eigen_lattice_eq X Ω ξ t.G Li M t.PP.L (p ^ R p) (Module.finrank Ω Li) (𝓞 E) ρ (σ s) q
+    obtain ⟨g1, g2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieModel.htDual_htW_eq_eigLat_of_htOm_eq_omLat X Ω ξ t.G Li M t.PP.L (p ^ R p) (Module.finrank Ω Li) (𝓞 E) ρ (σ s) q
       (HcVb.isVBOn_of_isVB hLat _) heq
     rcases s with τ | τ
     · refine g2 _ (fun a => hreg _ q a) ⟨_, HcVb.natAbs_discr_mem_different E, ?_⟩
       rw [map_natCast]
       exact HcVb.unitAt_natAbs_discr fun r hr _ => not_not.1 (hq r hr)
     · exact g1
-  obtain ⟨L, hL, hL0, hLp⟩ := GlobalTheory.T.lattice_glue_over_primes X Ω ξ Li S (M.eigLat ρ (σ s))
+  obtain ⟨L, hL, hL0, hLp⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lat_glue X Ω ξ Li S (M.eigLat ρ (σ s))
     (fun p => htLabel M t.PP.L (p ^ R p) ρ σ s) (labelRk D s) (eigSp ρ (σ s)) hgen hSp hA
     (fun p hp => hB p hp _) hC
   have e : Lat.patch S (M.eigLat ρ (σ s)) (fun p => htLabel M t.PP.L (p ^ R p) ρ σ s) = L := by

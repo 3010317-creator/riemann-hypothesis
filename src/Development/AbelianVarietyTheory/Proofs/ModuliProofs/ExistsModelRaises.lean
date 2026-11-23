@@ -4,8 +4,8 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GtBaseChangeSt
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.AuxiliaryInertOddPrime
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CmModelCoefficientSubringDedekindCompatibleEmbedStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsNormalModelAboveFiniteCoverStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CmModelCoefficientSubringDedekindCompatibleEmbed
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsNormalModelAboveFiniteCover
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsReducedIsNormalSchemeIsLocallyNoetherianOfSmoo
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LevelDescentCoefficientField
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ObjPull
@@ -70,7 +70,7 @@ theorem exists_model_raises : Out.Laws → Out.Laws2 → Out.Laws3 → ∀ (E : 
         IsInc (RZ H (n * l₀.M) a).subtype (KA l₀).val.toRingHom β₀ → IsDedFrac β₀ := by
       intro a ha h1
       subst ha
-      exact (GlobalTheory.T.cmModelCoefficientSubring_dedekind_compatible_embedding E H l₀ (n * l₀.M) 0 hpos (by simp [h1])).2.2
+      exact (_root_.GlobalTheory.BaseRing.isDedFrac_RZ E H l₀ (n * l₀.M) 0 hpos (by simp [h1])).2.2
     exact aux 1 B.A_one rfl B.β B.β_inc
   have hcomp : β.comp b = k.comp B.β := by
     refine RingHom.ext fun x => Subtype.ext ?_
@@ -80,7 +80,7 @@ theorem exists_model_raises : Out.Laws → Out.Laws2 → Out.Laws3 → ∀ (E : 
     have : Smooth (Xo l).s := SmoothOfRelativeDimension.smooth D.dim _
     infer_instance
   have hnorm := (GlobalTheory.isReduced_isNormalScheme_isLocallyNoetherian_of_smooth_over_field _ _ _ hsm).2.1
-  obtain ⟨C, hC⟩ := GlobalTheory.T.exists_normal_model_above_finite_cover E H _ _ _ (Xo l₀).s (Xo l₀).univ.t B.β _ _ _
+  obtain ⟨C, hC⟩ := _root_.GlobalTheory.Models.Cpt.exists_above E H _ _ _ (Xo l₀).s (Xo l₀).univ.t B.β _ _ _
     (pullback.snd (Xo l).s (spMap (IntermediateField.inclusion c.le).toRingHom)) o.t β B.C b k r hr ν hB hβ hcomp
     hnorm hfin
   exact ⟨⟨C.X, C.s, C.normal, C.proj, C.flat, C.jQ, C.jQ_over, C.jQ_open, C.jQ_dense, C.t, o, m0, C.m, C.ab_gen⟩,

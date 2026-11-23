@@ -2,11 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TwistedModelAdmissibleCocycles
 public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.OnePlusPowerAssembly
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleLetterDataWindowArithmeticStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleLetterDataWindowArithmetic
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoeSmulMem
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GammaMinusOneDivVariablePolarKernelLeSenWeightsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GammaNablaMemOfKillingPolynomialStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PolarPartFinrankAddSenWeightsLeRankStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.PowerSeriesOneAddConstMulXMulInv
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GammaMinusOneDivVariablePolarKernelLeSenWeights
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GammaNablaMemOfKillingPolynomial
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PolarPartFinrankAddSenWeightsLeRank
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -160,7 +162,7 @@ theorem span_prop {s : ℕ} (c : Fin s → Vc k m) (g : Vc k m →ₗ[k] Vc k m)
 
 theorem main : GlobalTheory.IndefiniteRowSideFullHecke.OnePlusPowerCharacters.LemmaPsi → ∀ {k : Type} [Field k] {l n m : ℕ} [Fact l.Prime] [CharP k l] [NeZero n] {R : RingPG k l} (D : ModPG R n (Vc k m)) (ι : k⸨X⸩ →ₐ[k] k⸨X⸩) (Dt : TopData n m) (N : Lats k n m), GlobalTheory.IndefiniteRowSideFullHecke.OnePlusPowerCharacters.IsCyclotomic R ι → Dt.T1 l → Dt.T2 l → Dt.T3 l → ABC D Dt.w Dt.wst N → (∀ i, (∀ a : ℕ, a ≤ Dt.sg l i + 1 → sen (D.γ i) (N i) (a : k) = 0) ∧ (Dt.ty i = LType.G → ∑ j ∈ Finset.range (Dt.w i).toNat, sen (D.γ i) (N i) ((-Dt.w i + j : ℤ) : k) = Dt.d i) ∧ (Dt.ty i = LType.Bd → Dt.d i + ∑ a ∈ Finset.range ((Dt.wst i).toNat + 1), sen (D.γ i) (N i) (a : k) = m ∧ EPoly (D.γ i) (N i) (Dt.wst i + 1))) → ∀ (s : ℕ) (z : Fin s → (ZMod n → Vc k m) × (ZMod n → Vc k m)), (∀ a, InZZ D Dt N (z a).1 (z a).2) → LinearIndependent k (fun a => (herrB D).mkQ (z a)) → s ≤ Dt.dsum := by
   intro hΨ k _ l n m _ _ _ R D ι Dt N hι T1 T2 T3 hN hs s z hz hli
-  have hW := GlobalTheory.T.admissibleLetterData_window_arithmetic (k := k) Dt T1 T2 T3
+  have hW := _root_.GlobalTheory.WindowArith.windows (k := k) Dt T1 T2 T3
   have hw : ∀ i, 0 ≤ Dt.w i ∧ 0 ≤ Dt.wst i := fun i => by
     have h1 := Dt.one_le_letterBlockLength
     have := Dt.range i (Dt.w i) (Multiset.mem_add.2 (Or.inr (mem_block.2 ⟨le_rfl, by omega⟩)))
@@ -175,7 +177,7 @@ theorem main : GlobalTheory.IndefiniteRowSideFullHecke.OnePlusPowerCharacters.Le
   · cases h : Dt.ty i with
     | G =>
       have e : ((Dt.w i).toNat : ℤ) = Dt.w i := Int.toNat_of_nonneg (hw i).1
-      have := GlobalTheory.T.gammaMinusOneDivVariable_polar_kernel_le_senWeights R (D.γ i) (D.γ_semi i) (N i) (hL i) (hC i) (Dt.w i).toNat
+      have := _root_.GlobalTheory.PhiGam.PolarKernel.main R (D.γ i) (D.γ_semi i) (N i) (hL i) (hC i) (Dt.w i).toNat
         (LinearMap.range (Fintype.linearCombination k fun a => c a i)) (fun x hx => by
           have := span_prop _ (D.γ i) _ _ (fun a => (hc a i).2.2.2.1 h) x hx
           rw [e]
@@ -191,7 +193,7 @@ theorem main : GlobalTheory.IndefiniteRowSideFullHecke.OnePlusPowerCharacters.Le
       have h2 := T1 i
       have h3 := (hW i).1
       obtain ⟨s1, s2⟩ := (hs i).2.2 h
-      have := GlobalTheory.T.polarPart_finrank_add_senWeights_le_rank R D Ψ ψ hΨ1 p1 (by simpa using p2 1) hΨ2
+      have := _root_.GlobalTheory.PhiGam.PolarCount.main R D Ψ ψ hΨ1 p1 (by simpa using p2 1) hΨ2
         (fun a ha ha' => by rw [p4 a ha ha']; ext x; simp [eq_comm]) i (N (i - 1)) (N i) (Dt.wst i).toNat
         (Dt.sg l (i - 1)) (Dt.w i) (hL _) (hL _) (hC _) (hC _) (by omega) (by omega) (by rw [e]; exact (hAB i).2)
         (hAB i).1 (by rw [e]; unfold TopData.wst; nlinarith) (hs _).1
@@ -203,7 +205,7 @@ theorem main : GlobalTheory.IndefiniteRowSideFullHecke.OnePlusPowerCharacters.Le
           rw [← h4] at h5
           obtain ⟨x, ⟨hx, hx0⟩, hxy⟩ := h5
           exact ⟨x, hx, hx0, hxy⟩)
-        (by rw [e]; exact GlobalTheory.T.gammaNabla_mem_of_killing_polynomial D i (N i) _ (hC i) s2)
+        (by rw [e]; exact _root_.GlobalTheory.GenKernelFit.nab_mem_of_ePoly D i (N i) _ (hC i) s2)
         (LinearMap.range (Fintype.linearCombination k fun a => c a i)) (by
           rw [e]; exact span_prop _ (D.γ i) _ _ (fun a => (hc a i).2.2.2.2 h))
       rw [Module.finrank_fin_fun] at this

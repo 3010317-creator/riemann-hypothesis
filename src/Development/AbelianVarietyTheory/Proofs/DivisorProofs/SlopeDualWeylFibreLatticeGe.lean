@@ -2,10 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAdelicOne
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsTvalNeZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualWeylGramDeterminantLeDimPowDimStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualWeylGramDeterminantLeDimPowDim
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FibreActionPreservesAdelicMatrices
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KroneckerProductFamilyMulOneDet
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeSlopeSqLocalMatricesEqDeterminantsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeSlopeSqLocalMatricesEqDeterminants
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatCharPowEqDetPow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -162,7 +162,7 @@ theorem log_det_fibY (hla : ∀ t, Antitone (la t)) {s : ℝ} (hs : 0 < s) {X : 
       Fintype.card (TIdx la) * (Real.log s + ∑ t, (Real.log ‖(onMat (la t)).det‖ / dim (la t) +
         (size (la t) : ℝ) / (N t : ℝ) * Real.log ‖(X t).det‖)) := by
   have hρ := fun t => log_det_rhoMat (φ := fun x : ℂ => Real.log ‖x‖) log_norm_mul (hla t) (hX t)
-  have ho := fun t => (GlobalTheory.T.dualWeyl_gramDeterminant_le_dim_pow_dim _ (la t) (hla t)).1
+  have ho := fun t => (_root_.GlobalTheory.OnMatGram.norm_det_onMat_sq_le _ (la t) (hla t)).1
   have h := log_det_kron (φ := fun x : ℂ => Real.log ‖x‖) log_norm_mul (c := (s : ℂ))
     (Complex.ofReal_ne_zero.2 hs.ne') (fun t => onMat (la t) * rhoMat (la t) (X t))
     (fun t => by rw [Matrix.det_mul]; exact mul_ne_zero (ho t) (hρ t).1)
@@ -176,7 +176,7 @@ theorem log_det_fibY (hla : ∀ t, Antitone (la t)) {s : ℝ} (hs : 0 < s) {X : 
 
 theorem log_det_onMat_le {n : ℕ} {la : Fin n → ℕ} (hla : Antitone la) :
     Real.log ‖(onMat la).det‖ / dim la ≤ Real.log (dim la) / 2 := by
-  obtain ⟨h0, h⟩ := GlobalTheory.T.dualWeyl_gramDeterminant_le_dim_pow_dim _ la hla
+  obtain ⟨h0, h⟩ := _root_.GlobalTheory.OnMatGram.norm_det_onMat_sq_le _ la hla
   have hd : (0 : ℝ) < dim la := Nat.cast_pos.2 (dim_pos hla)
   have h1 := Real.log_le_log (pow_pos (norm_pos_iff.2 h0) 2) h
   rw [Real.log_pow, Real.log_pow] at h1
@@ -194,7 +194,7 @@ theorem slope_fibre_ge : ∀ (K : Type) [Field K] [NumberField K] [_root_.Number
   haveI : Nonempty (TIdx la) := Fintype.card_pos_iff.1 hD
   have hD' : (Fintype.card (TIdx la) : ℝ) ≠ 0 := Nat.cast_ne_zero.2 hD.ne'
   have hK : (0 : ℝ) < finrank ℚ K := Nat.cast_pos.mpr finrank_pos
-  rw [GlobalTheory.T.latticeSlopeSq_localMatrices_eq_determinants K (TIdx la) _ _ (GlobalTheory.FibAdel.fibA_isAdelic K T N la a B ha hfa hB) (fun σ => (hY σ).1)
+  rw [_root_.GlobalTheory.LocMatSlope.slope_sq_locLat K (TIdx la) _ _ (GlobalTheory.FibAdel.fibA_isAdelic K T N la a B ha hfa hB) (fun σ => (hY σ).1)
     (fun σ => Real.log_injOn_pos (norm_pos_iff.2 (hY _).1) (norm_pos_iff.2 (hY _).1) (by
       rw [(hY _).2, (hY _).2]; simp only [hsc, hXc]))]
   have hfa' : (Function.support fun w => (vAdd w (a w) : ℝ)).Finite := hfa.subset fun w hw h => hw (by

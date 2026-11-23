@@ -1,11 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KFacDifferentiable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasSumAbsNormCpowUnitClassesPartialZetaStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckePhiFourierTransformZeroEqStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeWeightTwoPoissonSummationFractionalIdealStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SummableHilbertEisensteinLatticeClassWeightTwoStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TsumLatticePairUnitQuotientRegroupStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasSumAbsNormCpowUnitClassesPartialZeta
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckePhiFourierTransformZeroEq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeWeightTwoPoissonSummationFractionalIdeal
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.OmegaFactorization
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SummableHilbertEisensteinLatticeClassWeightTwo
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TsumLatticePairUnitQuotientRegroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -124,12 +125,12 @@ theorem fTerm_zero [IsTotallyReal F] (hzero : ∀ (σ : ℂ) (y : ℝ), y ≠ 0 
 
 theorem gFun_eq_eisSum : ∀ (F : Type) [Field F] [NumberField F] [NumberField.IsTotallyReal F] (𝔞 𝔟 : GlobalTheory.IndefiniteRowSideFullHecke.OmegaFactorization.Frac F) (Zb : ℂ → ℂ), GlobalTheory.IndefiniteRowSideFullHecke.OmegaFactorization.IsPartialZeta (ClassGroup.mk F 𝔟)⁻¹ Zb → ∀ σ : ℂ, 0 < σ.re → ∀ z ∈ GlobalTheory.IndefiniteRowSideFullHecke.OmegaFactorization.upperHalf F, Summable (GlobalTheory.IndefiniteRowSideFullHecke.OmegaFactorization.eisClass 𝔞 𝔟 2 σ z) ∧ GlobalTheory.HeckeTwo.gFun Zb 𝔞 𝔟 σ z = GlobalTheory.IndefiniteRowSideFullHecke.OmegaFactorization.eisSum 𝔞 𝔟 2 σ z := by
   intro F _ _ _ 𝔞 𝔟 Zb hZ σ hσ z hz
-  have hS := GlobalTheory.T.summable_hilbertEisensteinLatticeClass_weight_two F 𝔞 𝔟 σ hσ z hz
+  have hS := _root_.GlobalTheory.HeckeTwo.summable_eisClass_two F 𝔞 𝔟 σ hσ z hz
   refine ⟨hS, ?_⟩
   have hinv : ∀ (ε : (𝓞 F)ˣ) (a b : F),
       eisTerm 2 σ z (((ε : 𝓞 F) : F) * a, ((ε : 𝓞 F) : F) * b) = eisTerm 2 σ z (a, b) :=
     fun ε a b => eisTerm_unit even_two σ z ε a b
-  obtain ⟨-, -, hBs, hsum⟩ := GlobalTheory.T.tsum_latticePair_unitQuotient_regroup F 𝔞 𝔟 (eisTerm 2 σ z) hinv hS
+  obtain ⟨-, -, hBs, hsum⟩ := _root_.GlobalTheory.HeckeTwo.Regroup.tsum_latRel_regroup F 𝔞 𝔟 (eisTerm 2 σ z) hinv hS
   have hσ0 : σ ≠ 0 := by rintro rfl; simp at hσ
   set P : ℂ := ∏ τ : Emb F, (cConst σ * (((z τ).im : ℝ) : ℂ) ^ (-1 - 2 * σ)) with hPdef
   set K : ℂ := kFac F σ * (omegaFactor 𝔞 : ℂ) with hKdef
@@ -139,11 +140,11 @@ theorem gFun_eq_eisSum : ∀ (F : Type) [Field F] [NumberField F] [NumberField.I
           K * ∑' ν : NZ (𝔞 : FractionalIdeal (𝓞 F)⁰ F), fTerm σ z c.out.1 ν.1 := by
     intro c
     have hb : c.out.1 ≠ 0 := c.out.2.2
-    obtain ⟨hfs, hP⟩ := GlobalTheory.T.heckeWeightTwo_poisson_summation_fractionalIdeal F 𝔞 σ hσ z hz c.out.1 hb
+    obtain ⟨hfs, hP⟩ := _root_.GlobalTheory.HeckeTwoPoisson.poisson F 𝔞 σ hσ z hz c.out.1 hb
     simp_rw [eisTerm_eq_kFac]
-    rw [tsum_mul_left, hP.tsum_eq, split_zero _ _ hfs, fTerm_zero GlobalTheory.T.heckePhiFourierTransform_zero_eq σ hz hb]
+    rw [tsum_mul_left, hP.tsum_eq, split_zero _ _ hfs, fTerm_zero _root_.GlobalTheory.HeckeTwo.hTrans_zero_eq σ hz hb]
     ring
-  have hz2 := GlobalTheory.T.hasSum_abs_norm_cpow_unitClasses_partialZeta F 𝔟 Zb hZ (1 + 2 * σ) (by simp; linarith)
+  have hz2 := _root_.GlobalTheory.PartialZetaSum.hasSum_norm_cpow F 𝔟 Zb hZ (1 + 2 * σ) (by simp; linarith)
   rw [show -(1 + 2 * σ) = -1 - 2 * σ by ring] at hz2
   have hX := hz2.mul_left (K * P)
   have hT : Summable (fun c : Quotient (unitRel (𝔟 : FractionalIdeal (𝓞 F)⁰ F)) =>

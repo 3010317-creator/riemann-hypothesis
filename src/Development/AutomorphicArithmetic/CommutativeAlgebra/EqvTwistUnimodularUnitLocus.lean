@@ -1,13 +1,15 @@
 module
 
 public import Development.AutomorphicArithmetic.BlowupCategories.SpanScale
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupProductGradedCommStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupUnitAndPrimitiveRootClassesStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PullHlComp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupProductGradedComm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupUnitAndPrimitiveRootClasses
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.AffineLineActionFstTwistEquiv
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.IsIsoStackProductMapOfBijective
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.IsIsoStackProductPairOfBijective
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.ProjBundleFormulaIffPglForm
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.ProjectiveBundleFormulaRankOneOfHomotopyInvarian
+public import Development.AutomorphicArithmetic.BlowupCategories.AffC
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,7 +50,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
-public import Development.AutomorphicArithmetic.BlowupCategories.AffC
 
 @[expose] public section
 
@@ -67,7 +68,7 @@ private theorem cast_cast {X : Spc} {n i n' i' n'' i'' : ℤ} (h1 : n = n') (h2 
 
 private theorem cup_one' [NeZero q] {X : Spc} (hX : Inv q X) {n i : ℤ} (x : Ht q X n i) :
     cup q x (one q X) = x.cast (by ring) (by ring) := by
-  rw [GlobalTheory.T.tateTwistCupProduct_graded_comm q X x (one q X), (GlobalTheory.T.tateTwistCup_unit_and_primitiveRoot_classes q).1 X hX x, cast_cast, mul_zero, Int.negOnePow_zero, one_smul]
+  rw [_root_.GlobalTheory.EtC.cup_comm q X x (one q X), (_root_.GlobalTheory.EtC.CupGen.main q).1 X hX x, cast_cast, mul_zero, Int.negOnePow_zero, one_smul]
 
 private theorem cup_one_cast [NeZero q] {X : Spc} (hX : Inv q X) {n i m j : ℤ} (x : Ht q X n i) (hm : 0 = m) (hj : 0 = j) :
     cup q x ((one q X).cast hm hj) = x.cast (by omega) (by omega) := by

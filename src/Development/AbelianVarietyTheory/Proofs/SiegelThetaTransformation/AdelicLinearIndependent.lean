@@ -5,19 +5,20 @@ public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.Law
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.ExistsIsFundamentalDomainAndQuotMeasureEq
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.HaarUpqIsMulRightInvariant
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdelicCuspFormAutomorphicBoundedSquareIntegrableStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdelicCuspFormAutomorphicBoundedSquareIntegrable
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DiscreteTopologyRationalPointsHermitianSpaceStatement
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsCompactLatticeStabilizerBoundedRealStatement
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.IsOpenStabilizerCompletedLatticeAdelicUnitaryStatement
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LeftInvOfUnitary
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ArchimedeanMatrixUnitaryContinuousMultiplicative
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ReadingLinearIndependentAndInjective
+public import Formalism.LocalToGlobal.ProjectiveLattices.FreeBridge
+public import Formalism.LocalToGlobal.ProjectiveLattices.ReadQuot
+public import Formalism.LocalToGlobal.ProjectiveLattices.ReadProofs
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RealAdelesCmFieldEquivComplexCmType
 import Formalism.LocalToGlobal.GlobalTheory.GL5.FamilyMassVolumeIdentityOfClassDecomp
-public import Formalism.LocalToGlobal.ProjectiveLattices.FreeBridge
 import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
-public import Formalism.LocalToGlobal.ProjectiveLattices.ReadQuot
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,7 +56,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Formalism.LocalToGlobal.ProjectiveLattices.ReadProofs
 
 @[expose] public section
 
@@ -244,7 +244,7 @@ theorem adelic_linearIndependent : ∀ (D : D7) (T : CoreJ D) (h : LawsJ T) (j :
   refine h1 w ?_
   have hs : (T.V j σ).SigOK := by rw [h.spaceW j hj σ hσ]; exact D.sp.W_sig j
   have hQ : QuotSupp (T.V j σ) := quotSupp_of _ (h.finVol j hj σ hσ) (exists_volPair _ hs)
-  have had := fun i => GlobalTheory.T.adelic_cuspForm_automorphic_bounded_square_integrable D T h j hj σ hσ a n hD (b i) (b i).2
+  have had := fun i => _root_.GlobalTheory.AdelicCusp.phiJ_automorphic D T h j hj σ hσ a n hD (b i) (b i).2
   have hae := sum_toLp_ae (muQ1 (T.V j σ))
     (fun i => jFn (T.V j σ) σ (rdC (T.U j) σ a n) (T.dict j σ) (T.mu j σ) (b i))
     (fun i => h.cuspidalL2Subspace j hj σ hσ a n hD (b i)) w Finset.univ

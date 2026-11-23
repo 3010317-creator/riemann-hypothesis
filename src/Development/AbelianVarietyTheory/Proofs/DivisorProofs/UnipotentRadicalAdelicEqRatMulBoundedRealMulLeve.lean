@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.DifferentiableAtChart
 public import Development.AutomorphicArithmetic.IntegralCasts.IsOpenStabOfMemNhds
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChartUnipotentFderivContinuousOn
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRationalSubBoundedInfiniteSmallFiniteStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRationalSubBoundedInfiniteSmallFinite
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExpoConjOfIsCsd
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -40,7 +41,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExpoConjOfIsCsd
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfMemWeakIn
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GrowthOfTame
 import GroundTheory.AutomorphicForms.LocallyProfinite
@@ -70,7 +70,7 @@ theorem unip_eq_rat_mul_inf_mul_fin : ∀ (E : Type) [Field E] [NumberField E] [
   rw [nhds_pi, Filter.mem_pi] at hpre
   obtain ⟨I, -, t, ht, hsub⟩ := hpre
   have hU : (⋂ p, t p) ∈ nhds (0 : Af E) := Filter.iInter_mem.2 fun p => by simpa using ht p
-  obtain ⟨R, hR, hx⟩ := GlobalTheory.T.exists_rational_sub_bounded_infinite_small_finite E (⋂ p, t p) hU
+  obtain ⟨R, hR, hx⟩ := _root_.GlobalTheory.AdeleApprox.exists_rat_sub_bounded_small E (⋂ p, t p) hU
   refine ⟨R, hR, fun x => ?_⟩
   choose ξ hξ1 hξ2 using fun p => hx (x p)
   refine ⟨ξ, fun p => pInf E (x p - algebraMap E (Ad E) (ξ p)),

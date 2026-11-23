@@ -3,8 +3,12 @@ module
 public import Mathlib.RingTheory.Ideal.Height
 public import Mathlib.RingTheory.Length
 public import Mathlib.RingTheory.Support
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LengthCokerLsmulEqLengthKerAddSumStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LengthKerCokerLsmulQuotientSpanSwapStatement
+public import Mathlib.RingTheory.KrullDimension.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LengthCokerLsmulEqLengthKerAddSum
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LengthKerCokerLsmulQuotientSpanSwap
+public import Mathlib.Data.ENat.BigOperators
+public import Mathlib.RingTheory.OrderOfVanishing.Basic
+public import Mathlib.RingTheory.KrullDimension.Zero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -15,7 +19,6 @@ import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-public import Mathlib.Data.ENat.BigOperators
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
@@ -28,7 +31,6 @@ import Mathlib.Order.CompletePartialOrder
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.HopfAlgebra.Basic
 import Mathlib.RingTheory.KrullDimension.NonZeroDivisors
-public import Mathlib.RingTheory.OrderOfVanishing.Basic
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Echelon.Zsqrtd
@@ -52,7 +54,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.RingTheory.KrullDimension.Zero
 
 @[expose] public section
 
@@ -213,7 +214,7 @@ theorem side {A : Type} [CommRing A] [IsDomain A] [IsNoetherianRing A] [IsLocalR
     intro p hp
     obtain ⟨h1, h2⟩ := (hP p).1 hp
     exact ⟨h1, h2, fun hb => Finset.disjoint_left.1 hdis hp ((hQ p).2 ⟨h1, hb⟩)⟩
-  have key := GlobalTheory.T.length_coker_lsmul_eq_length_ker_add_sum' A b P
+  have key := _root_.GlobalTheory.length_coker_lsmul_eq_length_ker_add_sum A b P
     (fun p hp => ⟨dim_quotient_eq_one hA p.asIdeal (hmem p hp).1, (hmem p hp).2.2⟩)
     (A ⧸ Ideal.span {a}) (support_cases hA a ha P hP)
   refine ⟨key.1, key.2.trans ?_⟩
@@ -244,7 +245,7 @@ theorem intersection_symm : ∀ (A : Type) [CommRing A] [IsDomain A] [IsNoetheri
   intro A _ _ _ _ hA a b ha hb P Q hP hQ hdis
   obtain ⟨hK, hC⟩ := side hA a b ha P Q hP hQ hdis
   obtain ⟨_, hC'⟩ := side hA b a hb Q P hQ hP hdis.symm
-  obtain ⟨hk, hc⟩ := GlobalTheory.T.length_ker_coker_lsmul_quotient_span_swap A a b ha hb
+  obtain ⟨hk, hc⟩ := _root_.GlobalTheory.kernel_cokernel_length_swap A a b ha hb
   have hS := hC.symm.trans (hc.trans hC')
   rw [← hk] at hS
   have hS' := WithTop.add_left_cancel hK hS

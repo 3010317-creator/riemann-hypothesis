@@ -3,8 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CorrFamAddTwo
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoefficientReductionFirstChernClassTateTwistAltI
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleLocalPrimitiveRootAndRootsOfUnityStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleSheafSectionsExtAndGlueStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KummerReductionChernDefectRestrictStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleSheafSectionsExtAndGlue
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KummerReductionChernDefectRestrict
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,13 +57,13 @@ theorem defectSec_res : ∀ (Q q : ℕ) [NeZero Q], q ∣ Q → ∀ (U : Scheme.
   have hQV : IsUnit (Q : Γ(V, ⊤)) := by
     have := hQ.map g.appTop.hom
     simpa using this
-  apply (GlobalTheory.T.etaleSheafSections_ext_and_glue _ _ V).1
+  apply (_root_.GlobalTheory.EtC.sec_ext_glue _ _ V).1
   refine loc_mono ((GlobalTheory.T.etaleLocal_primitiveRoot_and_roots_of_unity Q V).2.2.2 hQV (Units.map g.appTop.hom.toMonoidHom u)) ?_
   rintro W h ⟨v, hv⟩
   have hres : Sec.res h (Sec.res g (defectSec Q q U u)) = Sec.res (h ≫ g) (defectSec Q q U u) := by
     simp only [Sec.res, op_comp, Functor.map_comp, ModuleCat.hom_comp, LinearMap.comp_apply]
-  rw [hres, GlobalTheory.T.kummerReductionChernDefect_restrict Q q hqQ V _ hQV W h v hv]
-  refine GlobalTheory.T.kummerReductionChernDefect_restrict Q q hqQ U u hQ W (h ≫ g) v ?_
+  rw [hres, _root_.GlobalTheory.EtC.RedChern.res_defectSec Q q hqQ V _ hQV W h v hv]
+  refine _root_.GlobalTheory.EtC.RedChern.res_defectSec Q q hqQ U u hQ W (h ≫ g) v ?_
   rw [hv]
   ext
   simp [Scheme.Hom.comp_appTop] <;> rfl

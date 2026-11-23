@@ -3,10 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasDefect
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsFiniteAffineCharts
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BasisTangentModuleAbelianSchemeOfRelDimStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCechOneCocycleOnAffineCoverMixedStatement
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsInvDer
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCechOneCocycleOnAffineCoverMixed
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSubfamilyUniqueReprOfSpanningLocalRingStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantVectorFieldsBasisTangentStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCechOneCoboundaryOfMixedOverlapsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCechOneCoboundaryOfMixedOverlaps
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPolarisationDescentMulOddVeryDense
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LeISupInfPreimage
 import Mathlib.Algebra.Order.Floor.Extended
@@ -142,7 +143,7 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoeth
   obtain ⟨e, he⟩ := GlobalTheory.T.exists_subfamily_unique_repr_of_spanning_of_local R _ Dd.toPre.P.g g ⟨bs⟩ w hspan
   have hI := GlobalTheory.T.invariant_vector_fields_basis_tangent R Dd.toPre.P.A Dd.toPre.P.g _ hab Dd.toPre.P.smoothDim hL' hA' hK' hWa hκ
     (fun a => w (e a)) (fun a => dd' (e a)) (fun a => hinv (e a)) he
-  obtain ⟨z', b, hz'c, hR1, hR2⟩ := GlobalTheory.T.exists_cechOneCocycle_on_affine_cover_mixed _ J κ V W hV hWa z hz
+  obtain ⟨z', b, hz'c, hR1, hR2⟩ := _root_.GlobalTheory.CechMixed.exists_cocycle_on_affine _ J κ V W hV hWa z hz
   obtain ⟨cc, ⟨y', hy'⟩, -⟩ := hI z' hz'c
 
   obtain ⟨φV, hφV⟩ : ∃ φV : Fin g → C1 V, φV = fun a i i' => rsT (dlg Dd.toPre.P.A (𝟙 _) Dd.toPre.P.L (dd' a)
@@ -183,7 +184,7 @@ theorem main : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [IsNoeth
     abel
 
   set q := Dd.toPre.P.A.hom
-  have hmix := GlobalTheory.T.isCechOneCoboundary_of_mixed_overlaps _ J κ V W hWcov
+  have hmix := _root_.GlobalTheory.KS.isCob_of_mixed _ J κ V W hWcov
     (fun i i' => z i i' - ∑ a, constFn q _ (cc a) * φV (e a) i i')
     (fun k k' => z' k k' - ∑ a, constFn q _ (cc a) * φU (e a) k k')
     (fun i k => b i k - ∑ a, constFn q _ (cc a) * β (e a) i k)

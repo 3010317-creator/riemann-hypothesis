@@ -1,9 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Statements.HeightBoundStatement.HTBoundSt
-import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.FormallyUnramifiedOfTangentMapInjective
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DerivationDivisibleOfCocommStatement
+public import Formalism.SharpRestriction.Divisibility.AbelianOpenPart.IsOpenPart
+public import Mathlib.RingTheory.Bialgebra.Basic
+public import Mathlib.RingTheory.Coalgebra.GroupLike
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DerivationDivisibleOfCocomm
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TorsionRepresentableFiniteFreeStatement
+import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.FormallyUnramifiedOfTangentMapInjective
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ValuationRingHenselianAndSmoothPointsLift
 import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
 import Mathlib.Algebra.Module.StablyFree.Basic
@@ -420,7 +423,7 @@ theorem htBound : HTBoundSt := by
     rw [Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_span_singleton]
   letI := h.bialgebra
   haveI := h.isCocomm
-  have key := GlobalTheory.T.derivation_divisible_of_cocomm C p hp A _ hq D (fun r s => by
+  have key := _root_.GlobalTheory.GroupLikeDerivation.dvd_mul_of_groupLike C p hp A _ hq D (fun r s => by
       change _ ∣ D (r * s) - h.counit r * D s - h.counit s * D r
       rw [hdvd, map_sub, map_sub, map_mul (Ideal.Quotient.mk I), map_mul (Ideal.Quotient.mk I), hD, hD, hD, ← hfst,
         ← hfst, map_mul φ, DualNumber.snd_mul]

@@ -4,13 +4,13 @@ public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.Semi
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.RigGen
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsCompleteDvrIntegralClosureFinite
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsProperSemiAbelianFamilyStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsProperSemiAbelianFamily
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSemiAbelianModelOfProperBase
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.HomPairDescendsToFinite
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsLocalizationOfLeClosure
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsPrimitiveRootUnitOnIff
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.LineBundleSymmetryHypothesisBaseChange
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.NonemptyLevelOfIsAlgClosed
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.LineBundleSymmetryHypothesisBaseChange
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSchemeOfIsGrpPullback
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -168,7 +168,7 @@ theorem exists_factor {Ω W L : Type} [Field Ω] [CharZero Ω] [CommRing W] [Fie
 theorem potModel_semiAbelian_of_hypS : ∀ (V K : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [IsAdicComplete (IsLocalRing.maximalIdeal V) V] [Field K] [CharZero K] [Algebra V K] [IsFractionRing V K] (Q : Out.PolAV (Sp K)), (letI := Q.isAb.comm; GlobalTheory.ZH.HypS Q.A Q.L) → PotModel V K Q.A (fun _ _ _ G _ => IsSemiAbelian G) := by
   intro V K _ _ _ _ _ _ _ _ Q hS
   obtain ⟨n, np, nodd, nu⟩ := exists_odd_prime_isUnit V
-  obtain ⟨a, fam⟩ := GlobalTheory.T.exists_proper_semiAbelian_family' Q.g n np nodd
+  obtain ⟨a, fam⟩ := _root_.GlobalTheory.exists_proper_semiAbelian_family Q.g n np nodd
   let Ω := AlgebraicClosure K
   obtain ⟨o, ze, ded, ft, no, prim, ho⟩ := GlobalTheory.CycAway.exists_base Ω n a np
   obtain ⟨P, α, hg, hα, hL⟩ := exists_polarised_pull (spMap (algebraMap K Ω)) Q

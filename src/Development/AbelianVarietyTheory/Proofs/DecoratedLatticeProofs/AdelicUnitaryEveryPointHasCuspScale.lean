@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsRealCoord
 public import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.UnimodInst
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicPointNearCuspScaleStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicPointNearCuspScale
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryGroupTwoModelsRationalRealUnipotentDictioStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsModGrowthExpLeNormInfPow
 public import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.LevelADef
@@ -160,7 +160,7 @@ theorem near (D : D7) (θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F] D.hos
   obtain ⟨d, hd⟩ := GlobalTheory.Grow.height_le_normInf_pow (θ := θ) V hθ
   have hKp : IsOpen ((U.comap (brgFin (UI.framesV D V)) : Subgroup _) : Set (UI.instV (UI.framesV D V)).Gf) :=
     hU.preimage (continuous_brgFin _)
-  obtain ⟨b, C, δ₀, K, hδ₀, hK, hx⟩ := GlobalTheory.T.adelicPoint_nearCusp_scale (UI.instV (UI.framesV D V)) _ hKp
+  obtain ⟨b, C, δ₀, K, hδ₀, hK, hx⟩ := _root_.GlobalTheory.CuspGeo.nearInst (UI.instV (UI.framesV D V)) _ hKp
   obtain ⟨Ck, hCk⟩ := GlobalTheory.Grow.exists_height_le_of_isCompact V (hK.image (continuous_brgFin (UI.framesV D V)))
   refine ⟨b * d, max (Ck * (S * C) ^ d) (S * C), δ₀, hδ₀, fun g => ?_⟩
   set fr := UI.framesV D V with hfr

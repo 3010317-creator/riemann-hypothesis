@@ -3,9 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.IsOpenOfMemIrreducibleComponentsOfFinite
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FamIdeal
 public import Mathlib.AlgebraicGeometry.Morphisms.Finite
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffNormFormOfFamilyMemRangeIntegrallyClosedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormFormCoefficientIdealMapLocalizationAwayStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionsIsFractionRingStalkImageOfGenericPointStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormIdeal
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffNormFormOfFamilyMemRangeIntegrallyClosed
+public import Mathlib.RingTheory.Localization.Away.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormFormCoefficientIdealMapLocalizationAway
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionsIsFractionRingStalkImageOfGenericPoint
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,8 +79,8 @@ theorem famIdeal_map_basicOpen : ∀ (Y Z : Scheme.{0}) (π : Y ⟶ Z) [IsFinite
       fun x hx => hU (Z.basicOpen_le f hx)
     letI := fieldK π hK
     letI := algKL π
-    obtain ⟨hdomA, hfrA⟩ := GlobalTheory.T.sections_isFractionRing_stalk_imageOfGenericPoint Y Z π U.1 U.2 hU hζU
-    obtain ⟨_, hfrA'⟩ := GlobalTheory.T.sections_isFractionRing_stalk_imageOfGenericPoint Y Z π (Z.basicOpen f) (Z.affineBasicOpen f).2 hUD hD
+    obtain ⟨hdomA, hfrA⟩ := _root_.GlobalTheory.NormSheafDescent.sections_isDomain_isFractionRing_stalk Y Z π U.1 U.2 hU hζU
+    obtain ⟨_, hfrA'⟩ := _root_.GlobalTheory.NormSheafDescent.sections_isDomain_isFractionRing_stalk Y Z π (Z.basicOpen f) (Z.affineBasicOpen f).2 hUD hD
     letI iA := algAK π U.1 hζU
     letI iB := algBL π U.1 hζU
     letI iA' := algAK π (Z.basicOpen f) hD
@@ -123,7 +126,7 @@ theorem famIdeal_map_basicOpen : ∀ (Y Z : Scheme.{0}) (π : Y ⟶ Z) [IsFinite
       let φ : Γ(Y, π ⁻¹ᵁ U.1) →ₐ[Γ(Z, U)] Y.functionField :=
         { algebraMap Γ(Y, π ⁻¹ᵁ U.1) Y.functionField with
           commutes' := fun a => (congrArg (fun h => h a) h3).symm }
-      refine GlobalTheory.T.coeff_normFormOfFamily_mem_range_integrallyClosed Γ(Z, U) (Z.presheaf.stalk (genPt π)) Y.functionField _ (fun i => ?_) s
+      refine _root_.GlobalTheory.NormSheaf.IntegralCoeff.coeff_normForm_mem_range Γ(Z, U) (Z.presheaf.stalk (genPt π)) Y.functionField _ (fun i => ?_) s
       have hi : IsIntegral Γ(Z, U) (g i) := hfin.to_isIntegral (g i)
       exact hi.map φ
     have hJ : I.ideal ⟨π ⁻¹ᵁ (Z.affineBasicOpen f).1, (Z.affineBasicOpen f).2.preimage π⟩ =
@@ -133,7 +136,7 @@ theorem famIdeal_map_basicOpen : ∀ (Y Z : Scheme.{0}) (π : Y ⟶ Z) [IsFinite
         (V := ⟨π ⁻¹ᵁ U.1, U.2.preimage π⟩) hleY).symm
     simp only [famIdeal, dif_pos hζU, dif_pos hD']
     rw [hJ]
-    exact GlobalTheory.T.normFormCoefficientIdeal_map_localizationAway Γ(Z, U) (Z.presheaf.stalk (genPt π)) Y.functionField Γ(Y, π ⁻¹ᵁ U.1)
+    exact _root_.GlobalTheory.NormSheaf.normIdeal_map_away Γ(Z, U) (Z.presheaf.stalk (genPt π)) Y.functionField Γ(Y, π ⁻¹ᵁ U.1)
       Γ(Z, Z.basicOpen f) Γ(Y, π ⁻¹ᵁ Z.basicOpen f) f h1 h2 h3 h4 h5 _
   · have hbot : Z.basicOpen f = ⊥ := by
       ext x

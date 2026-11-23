@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtendByZeroOnSubsetApplyCoe
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HoloEtaleIffChartsStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.EtaleEmpty
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HoloEtaleIffCharts
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,7 +55,7 @@ theorem GlobalTheory.OTY.TwEst.isSecOn_frame_mul_ext0_and_measurable : ∀ (n : 
   intro n Y _ _ _ _ _ ι La _ A la U z β F0 hE hβ hF
   have hfun : (fun y : U => GlobalTheory.OTY.TwEst.ext0 U F0 y) = F0 :=
     funext fun y => GlobalTheory.OTY.TwEst.extendByZeroOnSubset_apply_coe U F0 y
-  have hd := (GlobalTheory.T.holo_iff_differentiableOn_charts_of_etale n Y ι La A U z hE (GlobalTheory.OTY.TwEst.ext0 U F0)).1 (by rw [hfun]; exact hF)
+  have hd := (_root_.GlobalTheory.holo_etale_iff_charts n Y ι La A U z hE (GlobalTheory.OTY.TwEst.ext0 U F0)).1 (by rw [hfun]; exact hF)
   refine ⟨⟨fun i => (hβ.1.1 i).mul (hd i), fun i j y hy hi hj => ?_⟩, ?_⟩
   · show β i y * _ = _ * (β j y * _)
     rw [hβ.1.2 i j y hy hi hj, mul_assoc]

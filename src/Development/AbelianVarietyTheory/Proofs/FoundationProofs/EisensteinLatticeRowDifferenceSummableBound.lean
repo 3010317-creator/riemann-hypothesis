@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.PetIPSmulRight
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FirstDiffStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FirstDiff
+public import Mathlib.NumberTheory.ModularForms.EisensteinSeries.Summable
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -18,7 +19,6 @@ import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
-public import Mathlib.NumberTheory.ModularForms.EisensteinSeries.Summable
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.WittVector.IsPoly
@@ -167,7 +167,7 @@ theorem rowbd : ∀ j L : ℕ, 2 ≤ j → 0 < L → ∃ (C : ℝ) (A : ℕ), �
     ∀ (s : ℝ) (x : ℤ × ℤ), 0 ≤ s → s ≤ 1 →
       ‖dif L (0, 1) (fun y : ℤ × ℤ => trm j s ((y.1 : ℂ) * τ + y.2)) x‖ ≤ u x := by
   intro j L hj hL
-  obtain ⟨C1, hC1⟩ := GlobalTheory.T.norm_trm_sub_trm_add_le j
+  obtain ⟨C1, hC1⟩ := _root_.GlobalTheory.EisM.TermDiff.first_diff j
   set C1' := max C1 0 with hC1'
   have hC1'0 : 0 ≤ C1' := le_max_right _ _
   have hLr : (1:ℝ) ≤ L := by exact_mod_cast hL

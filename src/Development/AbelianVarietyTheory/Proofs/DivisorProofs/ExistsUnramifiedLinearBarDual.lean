@@ -5,7 +5,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FullRk
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PairsOfSquareTriple
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicHeisenbergActsByLocalSchrodingerStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfComponentTensorAdelicFunctionEqStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqSmulOfCommuteHeisenbergLinearModelSchwartzBruhStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqSmulOfCommuteHeisenbergLinearModelSchwartzBruh
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplementaryAdelicSchwartzRestFunctionStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLinearBarGoodPlaceStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearBarFunctionalGoodPlaceStatement
@@ -16,8 +17,10 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Schroedinger
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothCharacterOfTrivialNearOneStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SplitPlaceEmbeddingExistsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SplitUnitaryLiftTendstoOneStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaActionExistsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationLocalityUnitaryGroupVStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUnitDetOfCartan
+import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaActionExists
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationPreservesSchwartzStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -52,7 +55,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUnitDetOfCartan
 
 @[expose] public section
 
@@ -175,7 +177,7 @@ theorem transfer : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Field 
     simp only [zero_add] at e
     rw [e]; exact hY₀
 
-  obtain ⟨-, -, hcont⟩ := GlobalTheory.T.theta_action_exists hP F E σ B a' (a + a') G.V' G.W G.M' X.α (X.α / X.β) om' G.q (a' - G.q)
+  obtain ⟨-, -, hcont⟩ := _root_.GlobalTheory.ThK.LocalOps.actsEx hP F E σ B a' (a + a') G.V' G.W G.M' X.α (X.α / X.β) om' G.q (a' - G.q)
     (a + a' - (G.p + G.q)) (G.p + G.q) (GlobalTheory.ThK.Inhab.pairV' hT) v
   obtain ⟨U, hU, hUact⟩ := hcont φ₀ hφ₀
   have hKt : Tendsto K (𝓝 1) (𝓝 1) := GlobalTheory.T.split_unitary_lift_tendsto_one hcm t G.V'.J 1 herm hdet
@@ -204,7 +206,7 @@ theorem transfer : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Field 
     · rintro ⟨-, ι₂, hι₂, hvan⟩ Y hY
       have hι₂' : G.M'.IsLinBar B'.ψ B'.τ₁ 1 1 ι₂ := hι₂
       obtain ⟨hT₂, hM₂, -, -⟩ := hA ι₂ hι₂'
-      obtain ⟨c, hc⟩ := GlobalTheory.T.eq_smul_of_commute_heisenberg_linearModel_schwartzBruhat (SB (Fin a' × Fin (a + a') → Fv F v)) (GlobalTheory.LatVac.psiAt B'.ψ B'.v₁) hψc hψ1 ι₂ ι
+      obtain ⟨c, hc⟩ := _root_.GlobalTheory.LinSchur.eq_smul_of_commute (SB (Fin a' × Fin (a + a') → Fv F v)) (GlobalTheory.LatVac.psiAt B'.ψ B'.v₁) hψc hψ1 ι₂ ι
         hι₂.bij (fun x _ y _ c => by rw [map_add (f := _), map_smul])
         (fun C => GlobalTheory.WeilM.schr (GlobalTheory.LatVac.psiAt B'.ψ B'.v₁) (wT C))
         (fun l => GlobalTheory.WeilM.schr (GlobalTheory.LatVac.psiAt B'.ψ B'.v₁) (wM l))

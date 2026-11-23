@@ -2,7 +2,9 @@ module
 
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.LeibnizDerivatives.HighestDerivProd
 public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.GlCongr
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactOpenSubgroupsBasisStatement
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Mathlib.Topology.Instances.Matrix
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactOpenSubgroupsBasis
 public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.UnitaryLattices.UnitaryHypotheses.ExistsOrthOfFinset
 public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.UnitaryLattices.UnitaryHypotheses.TwistedKernelFormsNonvanishing
 import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.UnitaryLattices.UnitaryHypotheses.UnipBLeColFixOne
@@ -128,7 +130,7 @@ theorem top_core {n N : ℕ} (h : n ≤ N) {V D : Type} [AddCommGroup V] [Module
     rw [← hqe, ← hqe, hdesc, hdesc, hE4]
   refine ⟨?_, ⟨Bt, hBh, hBp, fun g x y => ?_⟩⟩
   · apply twist_irr
-    obtain ⟨K₁, hK₁o, hK₁c, -⟩ := GlobalTheory.T.compact_open_subgroups_basis k n Set.univ Filter.univ_mem
+    obtain ⟨K₁, hK₁o, hK₁c, -⟩ := _root_.GlobalTheory.CompanionTheory.SmGL.exists_compact_open_subgroup_subset k n Set.univ Filter.univ_mem
     refine irr_of_forms ρ hadm K₁ hK₁o hK₁c (fun g => nabs k (GeneralLinearGroup.det g) ^ s) Bt hBh hBp hBe ?_
     intro Ct hCh hCp hCle hCe
     set C : V →ₗ[ℂ] V →ₗ⋆[ℂ] ℂ := (Ct ∘ₗ q).compl₂ q with hC

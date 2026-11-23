@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleSheafSectionsExtAndGlueStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SheafComplexPairingTensorUniversalPropertyStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleSheafSectionsExtAndGlue
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SheafComplexPairingTensorUniversalProperty
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -128,7 +128,7 @@ theorem semiMap_of_tensorPair : ∀ (Q : ℕ) (R : Type) [CommRing R] {I J T : C
     ∀ (U : Scheme.{0}) (s t w : ℤ) (h : s + t = w) (a : Sec (I.X s) U) (b : Sec (J.X t) U),
       σ.app U w (τ.mul U s t w h a b) = ν.mul U s t w h (ρ₁.app U s a) (ρ₂.app U t b) := by
   intro Q R _ I J T I' J' K' τ hτ ν ρ₁ ρ₂
-  have H := fun w => GlobalTheory.T.sheafComplexPairing_tensor_universal_property (ZMod Q) R τ hτ w (K'.X w) (fun U => bmap ν ρ₁ ρ₂ U w)
+  have H := fun w => _root_.GlobalTheory.EtC.tens_fam (ZMod Q) R τ hτ w (K'.X w) (fun U => bmap ν ρ₁ ρ₂ U w)
     (fun V U g x => bmap_nat ν ρ₁ ρ₂ g w x)
   choose φ hnat hlift using H
   have hmul : ∀ (U : Scheme.{0}) (s t w : ℤ) (h : s + t = w) (a : Sec (I.X s) U) (b : Sec (J.X t) U),
@@ -156,7 +156,7 @@ theorem semiMap_of_tensorPair : ∀ (Q : ℕ) (R : Type) [CommRing R] {I J T : C
   by_cases hst : (ComplexShape.up ℤ).Rel s t
   · have ht : t = s + 1 := hst.symm
     subst ht
-    apply (GlobalTheory.T.etaleSheafSections_ext_and_glue R (K'.X (s + 1)) U).1
+    apply (_root_.GlobalTheory.EtC.sec_ext_glue R (K'.X (s + 1)) U).1
     obtain ⟨S, hS, hP⟩ := hτ.1 U s y
     refine ⟨S, hS, fun V g hg => ?_⟩
     obtain ⟨x, hx⟩ := hP V g hg

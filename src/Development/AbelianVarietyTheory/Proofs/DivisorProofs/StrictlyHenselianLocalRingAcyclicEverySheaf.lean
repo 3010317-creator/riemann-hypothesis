@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DivisorSupportCondition
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleSurjectiveSectionOfSHStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PositiveDegreeClassesDieOnEtaleCoverStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.GalMapMul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleSurjectiveSectionOfSH
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PositiveDegreeClassesDieOnEtaleCover
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,6 +64,6 @@ theorem heightFunctionalStatement_of_pairingProperties (hA5 : A5)
       _ = 0 := by rw [hx, map_zero]
   exact ⟨fun x y => by rw [key x, key y]⟩
 
-theorem b2 : B2 := heightFunctionalStatement_of_pairingProperties GlobalTheory.T.positiveDegreeClasses_die_on_etaleCover GlobalTheory.T.exists_section_of_etale_surjective_of_SH
+theorem b2 : B2 := heightFunctionalStatement_of_pairingProperties _root_.GlobalTheory.EtC.classes_die_on_etale_cover _root_.GlobalTheory.EtC.etale_surjective_section_of_SH
 
 end GlobalTheory.EtC

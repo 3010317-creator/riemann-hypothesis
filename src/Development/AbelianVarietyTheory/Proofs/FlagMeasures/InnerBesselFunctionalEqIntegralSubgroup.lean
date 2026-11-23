@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselFormConvergesEquivariantHermitianStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupRepTwistedIsUnitaryRepStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupsClosedUnitaryWCompactStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SmoothVectorsDenseInvariantStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselFormConvergesEquivariantHermitian
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SmoothVectorsDenseInvariant
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupRepTwistedIsUnitaryRep
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupsClosedUnitaryWCompact
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,14 +59,14 @@ theorem afun_inner_eq_integral : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup 
   have hTz : 0 < Tz k r z := hSide.2.1
   have hπ : IsURepOn (UWset k r z) π := hSide.2.2.1
   have hμS : IsHaarOn (Sset k r z) μS := hSide.2.2.2.1
-  have hstab := (GlobalTheory.T.smooth_vectors_dense_invariant k r σ w hσ).1
-  have hSsub : Sset k r z ⊆ GG k r := (GlobalTheory.T.bessel_subgroups_closed_unitaryW_compact k r z hzb hTz).2.2.2.1.1
-  have hD1 := GlobalTheory.T.besselForm_converges_equivariant_hermitian k r σ w a μG d z c π μS hStd hSide (DD σ w) hstab hDec
+  have hstab := (_root_.GlobalTheory.SgInfDD.DD_stable_dense k r σ w hσ).1
+  have hSsub : Sset k r z ⊆ GG k r := (_root_.GlobalTheory.SgInf.closedSub_groups k r z hzb hTz).2.2.2.1.1
+  have hD1 := _root_.GlobalTheory.SgInf.BeForm.be_converges_equivariant_hermitian_continuous k r σ w a μG d z c π μS hStd hSide (DD σ w) hstab hDec
   have hxu : σ (Matrix.of x) u ∈ DD σ w := hstab _ hx u hu
   have hxu₁ : σ (Matrix.of x) u₁ ∈ DD σ w := hstab _ hx u₁ hu₁
   obtain ⟨hint, -, -, -⟩ := hD1 _ hxu v hv
   obtain ⟨-, heq₁, -, -⟩ := hD1 _ hxu₁ v hv
-  have hPi := GlobalTheory.T.besselSubgroupRepTwisted_isUnitaryRep k r z c π hzb hTz hπ
+  have hPi := _root_.GlobalTheory.SgInf.PiUnitary.piS_unitary k r z c π hzb hTz hπ
   have hae : ∀ᵐ s ∂μS, Matrix.of s ∈ Sset k r z := by rw [ae_iff]; exact hμS.2.2.1
   show ⟪Afun (psiGen k r z c) π μS σ u₁ v ξ (Matrix.of x),
       be (psiGen k r z c) π μS σ (σ (Matrix.of x) u) v ξ⟫_ℂ = _

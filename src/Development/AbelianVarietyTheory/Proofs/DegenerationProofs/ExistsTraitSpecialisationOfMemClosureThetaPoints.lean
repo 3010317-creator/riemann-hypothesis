@@ -6,11 +6,16 @@ public import Development.AbelianVarietyTheory.Statements.TorsionEndomorphisms.E
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.UnifUniqSt
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsTateIsoZetaEq
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ConeClosureArcOfIntegralImageReductionStatement
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Mathlib.RingTheory.FiniteType
+public import Mathlib.RingTheory.IntegralClosure.IsIntegral.Defs
+public import Mathlib.RingTheory.MvPolynomial.Homogeneous
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ConeClosureArcOfIntegralImageReduction
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsCharts
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsCompleteDiscreteValuationRingOfMemClosureCBis
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsCompleteDiscreteValuationRingOfMemClosureCones
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsCompleteIsAlgClosedCExt
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsFieldOfIsIntegralImageStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsFieldOfIsIntegralImage
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FullTorsionObjectExistsUniqueModuliPointStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ModuliModelUltrametricPointsStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaCoordinatesExistUniqueSeparatePointsStatement
@@ -179,7 +184,7 @@ theorem exists_trait : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory.
     simpa [sub_eq_zero] using this
   letI : ∀ i, Algebra ℚ (A i) := fun i => (((gam i).comp (algebraMap c.F L)).comp (algebraMap ℚ c.F)).toAlgebra
   haveI := Fintype.ofFinite J
-  obtain ⟨i, W, _, _, _, _, f, s, w', hW, hs0, hf, hw⟩ := GlobalTheory.T.cone_closure_arc_of_integral_image_reduction_alt GlobalTheory.T.exists_complete_discreteValuationRing_of_mem_closure_cones_alt GlobalTheory.T.exists_field_of_isIntegral_image' _
+  obtain ⟨i, W, _, _, _, _, f, s, w', hW, hs0, hf, hw⟩ := _root_.GlobalTheory.cone_closure_arc_of_integral_image_reduction _root_.GlobalTheory.exists_complete_discreteValuationRing_of_mem_closure_cones _root_.GlobalTheory.exists_field_of_isIntegral_image _
     (cf (zeta (m ^ 2)) H.rt0) (fun p => by
       have h1 : IsIntegral ℤ H.rt0 := IsIntegral.of_pow two_pos (by
         rw [H.sqrt_neg_disc_sq]; exact (isIntegral_natCast H.d).neg)

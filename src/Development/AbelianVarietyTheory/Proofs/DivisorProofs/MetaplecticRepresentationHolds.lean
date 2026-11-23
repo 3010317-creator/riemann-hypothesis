@@ -1,13 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.MetaplecticRepresentation
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSiegelUpperHalfSpaceNegMulInvSymplecticStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MetaplecticCoverWeilRepresentationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrthogonalSymplecticFixesSiegelPointIStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerProductEuclideanModelsAgreeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzL2EuclideanIdentificationStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticHolPartDetNeZeroAndIsSymmStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VacuumMatrixCoefficientSqStatement
+public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.ExistsEventuallyNormRiemannThetaTermLe
+public import Mathlib.LinearAlgebra.SymplecticGroup
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSiegelUpperHalfSpaceNegMulInvSymplectic
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.RealMetaplecticRepresentation
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MetaplecticCoverWeilRepresentation
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrthogonalSymplecticFixesSiegelPointI
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerProductEuclideanModelsAgree
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzL2EuclideanIdentification
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VacuumMatrixCoefficientSq
+import Mathlib.Basic.Complex.Basic
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticHolPartDetNeZeroAndIsSymm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,8 +60,8 @@ namespace GlobalTheory
 theorem metaplecticRepresentation_holds : GlobalTheory.Published.MetaplecticRepresentation := by
   intro ι _ _
   obtain ⟨G, iG, tG, tgG, pr, om, omS, φ, hcov, hsurj, ⟨ε, hε1, hker, hεf⟩, hcont, hint, hcompat, hφ, hjc,
-    hgauss⟩ := GlobalTheory.T.metaplectic_cover_weil_representation ι
-  obtain ⟨e, u, he, hu⟩ := GlobalTheory.T.schwartz_L2_euclidean_identification ι
+    hgauss⟩ := _root_.GlobalTheory.metaplectic_euclidean_gaussian ι
+  obtain ⟨e, u, he, hu⟩ := _root_.GlobalTheory.EuclidTransport.exists_schwartz_L2_transport ι
   have hes : ∀ (ψ : Sch ι) (x : ι → ℝ), e.symm ψ x = ψ (WithLp.toLp 2 x) := by
     intro ψ x
     simpa using (he (e.symm ψ) (WithLp.toLp 2 x)).symm
@@ -99,9 +103,9 @@ theorem metaplecticRepresentation_holds : GlobalTheory.Published.MetaplecticRepr
     apply e.injective
     apply inj
     rw [heω, ← hcompat]
-    rw [GlobalTheory.T.schrodinger_product_euclidean_models_agree ι w ψ (e ψ) (e (GlobalTheory.Published.Metaplectic.rho w ψ)) (he ψ) (he _)]
+    rw [_root_.GlobalTheory.Proof.schrodinger_models_agree ι w ψ (e ψ) (e (GlobalTheory.Published.Metaplectic.rho w ψ)) (he ψ) (he _)]
     rw [hint, hcompat]
-    rw [GlobalTheory.T.schrodinger_product_euclidean_models_agree ι (GlobalTheory.Published.Metaplectic.act (pr g).1 w) (ω g ψ) (e (ω g ψ))
+    rw [_root_.GlobalTheory.Proof.schrodinger_models_agree ι (GlobalTheory.Published.Metaplectic.act (pr g).1 w) (ω g ψ) (e (ω g ψ))
       (e (GlobalTheory.Published.Metaplectic.rho (GlobalTheory.Published.Metaplectic.act (pr g).1 w) (ω g ψ))) (he _) (he _)]
     rw [heω]
     congr 2
@@ -121,8 +125,8 @@ theorem metaplecticRepresentation_holds : GlobalTheory.Published.MetaplecticRepr
       (fun a b => rfl) (fun a b => rfl)
     have hdet : (Matrix.of fun a b => ((pr g).1 (.inl a) (.inl b) : ℂ) - I * ((pr g).1 (.inl a) (.inr b) : ℂ)).det ≠ 0 := by
       intro h0; rw [h0, mul_zero] at hc; exact zero_ne_one hc
-    obtain ⟨-, hsymm⟩ := GlobalTheory.T.symplectic_holPart_det_ne_zero_and_isSymm ι (pr g).1 (Matrix.of fun a b => ((pr g).1 (.inl a) (.inl b) : ℂ) - I * ((pr g).1 (.inl a) (.inr b) : ℂ)) (Matrix.of fun a b => ((pr g).1 (.inr a) (.inl b) : ℂ) - I * ((pr g).1 (.inr a) (.inr b) : ℂ)) (fun a b => rfl) (fun a b => rfl) (pr g).2
-    have hsieg := GlobalTheory.T.isSiegelUpperHalfSpace_neg_mul_inv_symplectic ι (pr g).1 (Matrix.of fun a b => ((pr g).1 (.inl a) (.inl b) : ℂ) - I * ((pr g).1 (.inl a) (.inr b) : ℂ)) (Matrix.of fun a b => ((pr g).1 (.inr a) (.inl b) : ℂ) - I * ((pr g).1 (.inr a) (.inr b) : ℂ)) (fun a b => rfl) (fun a b => rfl) (pr g).2 hdet hsymm
+    obtain ⟨-, hsymm⟩ := _root_.GlobalTheory.SympBlocks.det_ne_zero_and_isSymm ι (pr g).1 (Matrix.of fun a b => ((pr g).1 (.inl a) (.inl b) : ℂ) - I * ((pr g).1 (.inl a) (.inr b) : ℂ)) (Matrix.of fun a b => ((pr g).1 (.inr a) (.inl b) : ℂ) - I * ((pr g).1 (.inr a) (.inr b) : ℂ)) (fun a b => rfl) (fun a b => rfl) (pr g).2
+    have hsieg := _root_.GlobalTheory.IsSiegel.neg_mul_inv_of_symplectic ι (pr g).1 (Matrix.of fun a b => ((pr g).1 (.inl a) (.inl b) : ℂ) - I * ((pr g).1 (.inl a) (.inr b) : ℂ)) (Matrix.of fun a b => ((pr g).1 (.inr a) (.inl b) : ℂ) - I * ((pr g).1 (.inr a) (.inr b) : ℂ)) (fun a b => rfl) (fun a b => rfl) (pr g).2 hdet hsymm
     have hωx : ∀ x : ι → ℝ, ω g (e.symm φ) x = c * cexp (π * I * ((fun i => (x i : ℂ)) ⬝ᵥ
         (-((Matrix.of fun a b => ((pr g).1 (.inr a) (.inl b) : ℂ) - I * ((pr g).1 (.inr a) (.inr b) : ℂ)) *
           (Matrix.of fun a b => ((pr g).1 (.inl a) (.inl b) : ℂ) - I * ((pr g).1 (.inl a) (.inr b) : ℂ))⁻¹)) *ᵥ
@@ -130,14 +134,14 @@ theorem metaplecticRepresentation_holds : GlobalTheory.Published.MetaplecticRepr
       intro x
       rw [hω, e.apply_symm_apply, hes, hcx]
     simp only [hωx, hφ₀]
-    exact GlobalTheory.T.vacuum_matrix_coefficient_sq ι (pr g).1 (Matrix.of fun a b => ((pr g).1 (.inl a) (.inl b) : ℂ) - I * ((pr g).1 (.inl a) (.inr b) : ℂ)) (Matrix.of fun a b => ((pr g).1 (.inr a) (.inl b) : ℂ) - I * ((pr g).1 (.inr a) (.inr b) : ℂ)) (fun a b => rfl) (fun a b => rfl) hdet hsieg c hc
+    exact _root_.GlobalTheory.vacuum_coef_sq ι (pr g).1 (Matrix.of fun a b => ((pr g).1 (.inl a) (.inl b) : ℂ) - I * ((pr g).1 (.inl a) (.inr b) : ℂ)) (Matrix.of fun a b => ((pr g).1 (.inr a) (.inl b) : ℂ) - I * ((pr g).1 (.inr a) (.inr b) : ℂ)) (fun a b => rfl) (fun a b => rfl) hdet hsieg c hc
   · intro g horth
     obtain ⟨c, hc, hcx⟩ := hgauss g (Matrix.of fun a b => ((pr g).1 (.inl a) (.inl b) : ℂ) - I * ((pr g).1 (.inl a) (.inr b) : ℂ))
       (Matrix.of fun a b => ((pr g).1 (.inr a) (.inl b) : ℂ) - I * ((pr g).1 (.inr a) (.inr b) : ℂ))
       (fun a b => rfl) (fun a b => rfl)
     have hdet : (Matrix.of fun a b => ((pr g).1 (.inl a) (.inl b) : ℂ) - I * ((pr g).1 (.inl a) (.inr b) : ℂ)).det ≠ 0 := by
       intro h0; rw [h0, mul_zero] at hc; exact zero_ne_one hc
-    obtain ⟨hP, hq⟩ := GlobalTheory.T.orthogonal_symplectic_fixes_siegel_point_i ι (pr g).1 (Matrix.of fun a b => ((pr g).1 (.inl a) (.inl b) : ℂ) - I * ((pr g).1 (.inl a) (.inr b) : ℂ)) (Matrix.of fun a b => ((pr g).1 (.inr a) (.inl b) : ℂ) - I * ((pr g).1 (.inr a) (.inr b) : ℂ)) (fun a b => rfl) (fun a b => rfl) (pr g).2 horth hdet
+    obtain ⟨hP, hq⟩ := _root_.GlobalTheory.holPart_eq_and_gaussian_of_orthogonal_symplectic ι (pr g).1 (Matrix.of fun a b => ((pr g).1 (.inl a) (.inl b) : ℂ) - I * ((pr g).1 (.inl a) (.inr b) : ℂ)) (Matrix.of fun a b => ((pr g).1 (.inr a) (.inl b) : ℂ) - I * ((pr g).1 (.inr a) (.inr b) : ℂ)) (fun a b => rfl) (fun a b => rfl) (pr g).2 horth hdet
     refine ⟨c, by rw [hP]; exact hc, ?_⟩
     ext x
     rw [hω, e.apply_symm_apply, hes, hcx, SchwartzMap.smul_apply, smul_eq_mul, hφ₀]

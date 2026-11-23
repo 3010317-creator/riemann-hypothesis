@@ -3,10 +3,10 @@ module
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.SquareIntegrableTempered.CentredSegments.IrreducibleUnif
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IrreducibleAdmissibleGL
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.StandardFunctorsFiniteLength
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeckeOperatorJacquetEigenLeftStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeckeOperatorJacquetEigenRightStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetQuotientEigenvectorStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UniformizerPowTendstoZeroStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeckeOperatorJacquetEigenLeft
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeckeOperatorJacquetEigenRight
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetQuotientEigenvector
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UniformizerPowTendstoZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -88,17 +88,17 @@ theorem heckeSpectral_of_maxExpStrict (k : Type) [Field k] [ValuativeRel k] [Top
   have hTw : T w = μ • w := hw.apply_eq_smul
   have hmk : (Submodule.Quotient.mk (w : V) : Jacquet π (unipRad k (stdBlocks d hd))) ≠ 0 := by
     intro h0
-    obtain ⟨r, hr⟩ := GlobalTheory.T.hecke_operator_jacquet_eigen_left k N V π hs m hm d hd hd0 hd1 T hT' w h0
+    obtain ⟨r, hr⟩ := _root_.GlobalTheory.CompanionTheory.HeckeNilp.hecke_nilpotent k N V π hs m hm d hd hd0 hd1 T hT' w h0
     rw [hw.pow_apply r] at hr
     exact (smul_ne_zero (pow_ne_zero r hμ0) hw.2) hr
-  have hjac := GlobalTheory.T.hecke_operator_jacquet_eigen_right k N V π hs m hm d hd hd0 hd1 T hT' w
+  have hjac := _root_.GlobalTheory.CompanionTheory.HeckeJacquet.hecke_omega_jacquet k N V π hs m hm d hd hd0 hd1 T hT' w
   have heig : (Submodule.Quotient.mk (π (Zls.diagPow k N (Zls.omegaVec N (d 0))) (w : V)) :
       Jacquet π (unipRad k (stdBlocks d hd))) =
       μ • (Submodule.Quotient.mk (w : V) : Jacquet π (unipRad k (stdBlocks d hd))) := by
     rw [← hjac, hTw]
     rfl
   obtain ⟨x, hx, hxd, hjm, hs0, c1, hs1⟩ :=
-    GlobalTheory.T.jacquet_quotient_eigenvector k N V π hs hi hA hF d hd hd0 hd1 μ w hmk heig
+    _root_.GlobalTheory.CompanionTheory.JacExp.exists_constituent_of_eigen k N V π hs hi hA hF d hd hd0 hd1 μ w hmk heig
   have hpos : ∀ a, 0 < (x a).1 := by
     intro a
     rw [hxd a]
@@ -106,7 +106,7 @@ theorem heckeSpectral_of_maxExpStrict (k : Type) [Field k] [ValuativeRel k] [Top
     · exact hd0
     · exact hd1
   have hE := hM x hx hpos hjm
-  have hc := (hE (Zls.unifU k) (GlobalTheory.T.uniformizer_pow_tendsto_zero k)
+  have hc := (hE (Zls.unifU k) (_root_.GlobalTheory.CompanionTheory.UnifPow.tendsto_unifU_pow k)
     ![μ * (Nat.card 𝓀[k] : ℂ) ^ (((d 0 * d 1 : ℕ) : ℂ) / 2), c1]
     (by
       intro i

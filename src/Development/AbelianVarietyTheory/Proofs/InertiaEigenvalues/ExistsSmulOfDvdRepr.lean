@@ -4,9 +4,9 @@ public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NotFullBot
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NBasisLoc
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachExpansionBasisDivisibilityStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeExpansionsStdBelowLevelStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachWeierstrassTestAndDensityStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachExpansionBasisDivisibility
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeExpansionsStdBelowLevel
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachWeierstrassTestAndDensity
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -119,13 +119,13 @@ theorem sub_mem_X_of_val : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc)
   let x' : ↥(W.N T) := ⟨x, hx⟩
   let g' : ↥(W.N T) := ⟨_, W.N_Γ T g x hx⟩
   refine exists_smul_of_dvd_repr (W.N T) nb W.X (g' - x') fun j => ?_
-  refine (GlobalTheory.T.wachWeierstrass_test_and_density D HW l K s LL h).2.1 1 _ fun i ζ hζ => ?_
-  have hS := GlobalTheory.T.wachLattice_expansions_std_below_level D HW F Cm l K s LL h T hT i ζ hζ
+  refine (_root_.GlobalTheory.NL.WDiv.weierstrass_dense D HW l K s LL h).2.1 1 _ fun i ζ hζ => ?_
+  have hS := _root_.GlobalTheory.NL.LatLow.lat_low D HW F Cm l K s LL h T hT i ζ hζ
   have hprim : ∃ j : ℕ, IsPrimitiveRoot ζ (l ^ j) := by
     obtain ⟨j, -, hord⟩ :=
       (Nat.dvd_prime_pow (Fact.out : l.Prime)).1 (orderOf_dvd_of_pow_eq_one hζ)
     exact ⟨j, hord ▸ IsPrimitiveRoot.orderOf ζ⟩
-  have hI := (GlobalTheory.T.wachExpansion_basis_divisibility D HW F Cm l K s LL h T hT i ζ hprim (full_of_std hS)).2 _ nb
+  have hI := (_root_.GlobalTheory.NL.LevInj.expansion_basis D HW F Cm l K s LL h T hT i ζ hprim (full_of_std hS)).2 _ nb
   refine (hI.2.2 (g' - x') 1).1 ?_ j
   refine shift_mem hS (ex (Cm l) h T i ζ x') _ ?_
     (algebraMap ↥(OL LL) ↥LL.1 (W.χΓ g : ↥(OL LL))) fun k => ?_

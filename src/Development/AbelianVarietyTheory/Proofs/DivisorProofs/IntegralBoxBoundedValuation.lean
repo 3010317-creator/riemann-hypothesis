@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubMemTwistSpan
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RowsInSpanOfRankNormalFormStatement
+public import Mathlib.LinearAlgebra.Matrix.Rank
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RowsInSpanOfRankNormalForm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -274,7 +275,7 @@ theorem boxFn_sub_sum_mem_lowRank : ∀ (k : Type) [Field k] [ValuativeRel k] [T
         funext l
         have := val_le_of_add_vecMul hu (s - s') E hE (t := 0) (fun l => by rw [h0]; simp) l
         exact sub_eq_zero.1 ((Valuation.zero_iff _).1 (le_zero_iff.1 this))
-      obtain ⟨s, hs⟩ := GlobalTheory.T.rows_in_span_of_rank_normal_form k A D r X H Q hXr hunit i₀
+      obtain ⟨s, hs⟩ := _root_.GlobalTheory.rows_mem_span_of_isUnit_mul k A D r X H Q hXr hunit i₀
       have hsv : ∀ l, valuation k (s l) ≤ valuation k (ϖ : k) ^ (m - 1) := by
         refine val_le_of_add_vecMul hu s E hE fun l => ?_
         have e : s + s ᵥ* E = X i₀ ᵥ* Q := by

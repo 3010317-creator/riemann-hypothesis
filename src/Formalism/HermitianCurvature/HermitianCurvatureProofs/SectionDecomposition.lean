@@ -2,13 +2,13 @@ module
 
 public import Formalism.HermitianCurvature.FiniteOrderIntersectionInSmooth
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.FlagSpanVanishing
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.HermitianFormFlagVector
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.InverseSplitting
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.LowerParabolicCoordinates
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.SectionDecompositionOfParts
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.StabilizerPairs
+public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.StabPairs
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.StabilizerSplit
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ZhatSectionExists
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.HermitianFormFlagVector
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,7 +53,7 @@ import Mathlib.Topology.Sheaves.Init
 namespace Formalism.FourierDecayAlt.P
 
 theorem c2_section_decomp : Formalism.FourierDecayAlt.C2.SectionDecomp :=
-  c2_section_decomp_of_pieces stabilizer_split stabilizer_pairs unipotent_radical_image upper_splitting standard_flag_property
+  c2_section_decomp_of_pieces stabilizer_split _root_.stabPairs unipotent_radical_image upper_splitting standard_flag_property
     unipotent_map_frame zhat_equivalence c2_tau_mem
 
 end Formalism.FourierDecayAlt.P

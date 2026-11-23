@@ -2,10 +2,12 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeGram
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenFrameIffEigenspaceBasis
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModelStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelBaseChangeMapStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelBaseChangeMap
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelPullbackCorrespondence
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -79,11 +81,11 @@ theorem mem_span_iff : ∀ (V K : Type) [CommRing V] [IsDomain V] [IsDiscreteVal
         ∀ r, ρK r w = algebraMap V K (σV r) • w := by
   intro V K _ _ _ _ _ _ T _ _ GK _ φ₀ Oe _ actT actK g n ML ρK σV vV b hpull hact hML hF hb w
   have halg : Function.Injective (algebraMap V K) := IsFractionRing.injective V K
-  obtain ⟨ET, _, _, ⟨MT⟩⟩ := GlobalTheory.T.exists_lie_model (Sp V) T V (𝟙 _)
+  obtain ⟨ET, _, _, ⟨MT⟩⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_exists (Sp V) T V (𝟙 _)
   have hpt : 𝟙 (Sp K) ≫ spMap (algebraMap V K) =
       Spec.map (CommRingCat.ofHom (algebraMap V K)) ≫ 𝟙 (Sp V) := by simp
   obtain ⟨M', hM'⟩ := model_cast hpt (LieMove.pushModel hpull ML)
-  obtain ⟨j, hj1, hj2, -⟩ := GlobalTheory.T.lie_model_base_change_map (Sp V) T V K (𝟙 _) ET (Fin g → K) MT M'
+  obtain ⟨j, hj1, hj2, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_baseChange (Sp V) T V K (𝟙 _) ET (Fin g → K) MT M'
   have key1 : ∀ e, (ML.pt (j e)).left ≫ φ₀ = spMap (dualMap (algebraMap V K)) ≫ (MT.pt e).left := fun e =>
     (hM' (j e)).symm.trans (hj1 e)
   have uniq : ∀ u u' : Fin g → K, (ML.pt u).left ≫ φ₀ = (ML.pt u').left ≫ φ₀ → u = u' := fun u u' h =>

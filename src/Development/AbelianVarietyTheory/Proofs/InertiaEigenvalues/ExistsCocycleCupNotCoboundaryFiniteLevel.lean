@@ -3,13 +3,21 @@ module
 public import Formalism.GaloisCohomology.LocalTateDualityK
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FactorMemCocyclesPowQuot
 public import Mathlib.Topology.Algebra.Nonarchimedean.AdicTopology
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicCharacterCongrRootOfUnityPowStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DualLatticeCompactPowSmulNhdsBasisStatement
+public import Formalism.GaloisCohomology.StatementLoc
+public import Mathlib.NumberTheory.Cyclotomic.CyclotomicCharacter
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicCharacterCongrRootOfUnityPow
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DualLatticeCompactPowSmulNhdsBasis
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsDualLatticePairingEqInvUniformizerStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPadicIntRingHomCongrToZModPowStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsTorsionPairingEqInvUniformizerStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinitePowSmulTorsionLatticeQuotientStatement
+public import Mathlib.NumberTheory.Padics.RingHoms
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPadicIntRingHomCongrToZModPow
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsTorsionPairingEqInvUniformizer
+public import Formalism.WachLatticeTwists.LatticeDualFibres.StatDualFibreLattice
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinitePowSmulTorsionLatticeQuotient
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TatePairingLatticeQuotientsNondegenerate
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousFixingSubgroupEquiv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,7 +59,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousFixingSubgroupEquiv
 
 @[expose] public section
 
@@ -111,7 +118,7 @@ theorem exists_cocycle_cup_not_cob : Formalism.GaloisCohomology.LocalTateDuality
       MonoidHom.ext fun g => congrArg (Formalism.GaloisCohomology.cycK p K (k + 1)) (i.apply_symm_apply g)
     rw [h1]
     exact hTate p K hK (k + 1) M _ (Nat.succ_pos _) (contAction_comp i.symm hrho)
-  obtain ⟨ι, hι⟩ := GlobalTheory.T.exists_padicInt_ringHom_congr_toZModPow hOr hOc hOt hOa hpm
+  obtain ⟨ι, hι⟩ := _root_.GlobalTheory.ZpHomAdic.zp_ringHom hOr hOc hOt hOa hpm
   have hspan : Ideal.span {(p : O)} ≠ ⊤ := fun h =>
     (IsLocalRing.mem_maximalIdeal _).1 hpm (Ideal.span_singleton_eq_top.1 h)
   have hkrull : ∀ a b : O, (∀ k : ℕ, a - b ∈ Ideal.span {(p : O) ^ k}) → a = b := by
@@ -124,7 +131,7 @@ theorem exists_cocycle_cup_not_cob : Formalism.GaloisCohomology.LocalTateDuality
   have hιε : ∀ g, ι (χ g : ℤ_[p]) = (D.ε g : O) := by
     intro g
     refine hkrull _ _ fun k => ?_
-    obtain ⟨ζ, hζ, hζa⟩ := GlobalTheory.T.cyclotomicCharacter_congr_root_of_unity_pow K (i g) k
+    obtain ⟨ζ, hζ, hζa⟩ := _root_.GlobalTheory.LocDualInt.exists_root_pow_cyclotomicCharacter_congr K (i g) k
     obtain ⟨a, ha, hεa⟩ := hcyc g k ζ hζ
     have e1 : (a : ZMod (p ^ k)) = PadicInt.toZModPow k (χ g : ℤ_[p]) := hζa a ha
     have e2 := hι (χ g : ℤ_[p]) k
@@ -156,8 +163,8 @@ theorem exists_cocycle_cup_not_cob : Formalism.GaloisCohomology.LocalTateDuality
   set X := LinearMap.ker (LinearMap.lsmul O (VT ⧸ D.T) (ϖ ^ n)) with hXdef
   have memX : ∀ x : VT ⧸ D.T, x ∈ X ↔ ϖ ^ n • x = 0 := fun x => by
     rw [hXdef, LinearMap.mem_ker, LinearMap.lsmul_apply]
-  haveI : Finite X := GlobalTheory.T.finite_pow_smul_torsion_lattice_quotient D.T hOr hOc hOa hlat ϖ hϖ n
-  obtain ⟨hcT', hopen, -⟩ := GlobalTheory.T.dualLattice_compact_powSmul_nhds_basis D hOc hemb hlat hperf hT2' ϖ hϖ
+  haveI : Finite X := _root_.GlobalTheory.LatTorsFinite.finite_ker_pow_smul D.T hOr hOc hOa hlat ϖ hϖ n
+  obtain ⟨hcT', hopen, -⟩ := _root_.GlobalTheory.LocDualTop.dualLat_compact_powSub_nhds D hOc hemb hlat hperf hT2' ϖ hϖ
   haveI : CompactSpace ↥D.T' := hcT'
   haveI : Finite (↥D.T' ⧸ powSub (M := ↥D.T') ϖ n) :=
     AddSubgroup.quotient_finite_of_isOpen (powSub (M := ↥D.T') ϖ n).toAddSubgroup (hopen n)
@@ -218,7 +225,7 @@ theorem exists_cocycle_cup_not_cob : Formalism.GaloisCohomology.LocalTateDuality
     intro y hy
     obtain ⟨f, rfl⟩ := Submodule.Quotient.mk_surjective _ y
     have hf : f ∉ powSub (M := ↥D.T') ϖ n := fun h => hy ((Submodule.Quotient.mk_eq_zero _).2 h)
-    obtain ⟨x, hx1, hx2⟩ := GlobalTheory.T.exists_torsion_pairing_eq_inv_uniformizer D ϖ hϖ n f hf
+    obtain ⟨x, hx1, hx2⟩ := _root_.GlobalTheory.LocDualInt.exists_pairKO_eq_inv_unif D ϖ hϖ n f hf
     exact ⟨⟨x, (memX x).2 hx1⟩, hx2⟩
   have hcX : ∀ g, c g ∈ X := fun g => (memX _).2 (by
     rw [← Nat.sub_add_cancel hrn, pow_add, mul_smul, hr, smul_zero])

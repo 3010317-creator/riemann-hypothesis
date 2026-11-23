@@ -1,9 +1,9 @@
 module
 
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.VoronoiMeans.VorFunEvalEqFineMean
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.PsdConeFinitelyManyOrbitsStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.PsdConeFinitelyManyOrbits
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.VorFunHomogSuperadd
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.VoronoiFunctionIntegralPositiveStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.VoronoiFunctionIntegralPositive
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,12 +53,12 @@ theorem vorFun_isPolyFan : ∀ (O : Type) [CommRing O] [IsDedekindDomain O] [Cha
     Module.finrank ℤ O * q ≤ g → IsPolyFan bar q (vorFun O g) := by
   intro O _ _ _ _ bar g q hred hg X _ _ _ _ hX
   obtain ⟨hhom, hsup⟩ := vorFun_homog_superadd O bar g X
-  obtain ⟨hint, hpos⟩ := GlobalTheory.T.voronoi_function_integral_positive O bar g q X hg hX
+  obtain ⟨hint, hpos⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fan.vorFun_int_pos O bar g q X hg hX
   exact
     { homog := hhom
       superadd := hsup
       integral := fun β _ h => hint β h
       pos := fun β hβ h h0 => hpos β hβ.1 h h0
-      finite := GlobalTheory.T.psd_cone_finitely_many_orbits O bar g hred X }
+      finite := _root_.GlobalTheory.CompanionTheory.Ar.Fan.exists_vorFun_cells O bar g hred X }
 
 end GlobalTheory.CompanionTheory.Ar.Fan

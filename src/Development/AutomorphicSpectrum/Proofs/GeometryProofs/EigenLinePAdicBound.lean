@@ -4,17 +4,20 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsFlatA
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LinearIndependentEigProj
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AmplePointsLocalizedModel
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.GenericPartDenseProOpen
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HermitianSignatureCharacterStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsGermSystemStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsHodgeLatticeGermSystemStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GermSystemHeightFreeStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeLatticeDvrDegreeStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeLatticeTransportEquivStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueEquivStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueEquiv
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ModelFibresPowerFreeStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PowFnsOfAbelianGenericStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProperNormalCompactificationStatement
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.GermComp1ZeroPointLeft
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GermSys
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.GenericPartDenseProOpen
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,8 +59,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.GermComp1ZeroPointLeft
-public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GermSys
 
 @[expose] public section
 
@@ -254,7 +255,7 @@ theorem hodgeLat_model : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   obtain ⟨hprop, -, hover, -, hfd, -, -⟩ := facts τ₀ hτ₀
   haveI : IsProper Y.s := hprop
   obtain ⟨d, M, ⟨S⟩⟩ := GlobalTheory.T.exists_germ_system E H hstar Y.X Y.t Z.Ω (Z.ξ₀ ≫ Y.j) hPow Z.gen
-  obtain ⟨e, he, -⟩ := GlobalTheory.T.lie_model_existsUnique_equiv Y.X Y.t.G Z.Ω (Z.ξ₀ ≫ Y.j) (Fin d → Z.Ω) Z.V M Z.M
+  obtain ⟨e, he, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_existsUnique_equiv Y.X Y.t.G Z.Ω (Z.ξ₀ ≫ Y.j) (Fin d → Z.Ω) Z.V M Z.M
   let ρ' : 𝓞 E →+* Module.End Z.Ω (Fin d → Z.Ω) := (e.symm.conjRingEquiv : _ ≃+* _).toRingHom.comp Z.ρ
   have hρ' : ∀ a v, e (ρ' a v) = Z.ρ a (e v) := fun a v => by
     simp [ρ', LinearEquiv.conjRingEquiv, LinearEquiv.conj_apply]

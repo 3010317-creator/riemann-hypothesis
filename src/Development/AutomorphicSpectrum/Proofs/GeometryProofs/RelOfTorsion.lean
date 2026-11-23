@@ -4,12 +4,16 @@ public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DerRingInjec
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.HasValues
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import Mathlib.Tactic.ENatToNat
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderEmbeddingOpenImmersionStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderValueEvalStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DualLatticePointUniversalStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsUniqueBtOrderEmbeddingStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HomAddMulOfUnitSectionStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFiniteBaseChangeStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUnitFormLocalizationEtaleNbhd
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderEmbeddingOpenImmersion
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderValueEval
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DualLatticePointUniversal
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HomAddMulOfUnitSection
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsUniqueBtOrderEmbedding
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFiniteBaseChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -342,14 +346,14 @@ theorem hom_add' {S : Scheme.{0}} {R : Type} [CommRing R] (x : Spec (CommRingCat
     [AddCommGroup V] [Module R V] [Module Rᵐᵒᵖ V] [IsCentralScalar R V]
     (u : ob x P ⟶ G) (hu : zsec x ≫ u = 1) (f g : P →ₗ[R] V) :
     hom x (f + g) ≫ u = (hom x f ≫ u) * (hom x g ≫ u) :=
-  GlobalTheory.T.hom_add_mul_of_unit_section S R x G P V u hu f g
+  _root_.GlobalTheory.CompanionTheory.Ar.LieEx.ModSrc.hom_add_mod_closed S R x G P V u hu f g
 
 theorem val_of_emb {R : Type} [CommRing R] [IsDomain R] {T : Type} [CommGroup T] [Finite T] (Γ : QFGroup R T)
     {j : Γ.G.left ⟶ Spec (CommRingCat.of (Γ.btOrder ⊤))} (hj : Γ.IsEmb (Γ.btOrder ⊤) j)
     (f : Γ.btOrder ⊤) (s : Γ(Γ.G.left, ⊤)) (hs : Γ.HasValues s (f : T → R))
     {B : Type} [CommRing B] (y : Spec (CommRingCat.of B) ⟶ Γ.G.left) (ρ : (Γ.btOrder ⊤) →+* B)
     (h : y ≫ j = Spec.map (CommRingCat.ofHom ρ)) : valAt y ⊤ le_top s = ρ f :=
-  GlobalTheory.T.bt_order_value_eval R T Γ j hj f s hs B y ρ h
+  _root_.GlobalTheory.CompanionTheory.Ar.BT.ValEmb.val_emb R T Γ j hj f s hs B y ρ h
 
 theorem dual_eq_smul {R L : Type} [CommRing R] [AddCommGroup L] [Module R L] [Module.Projective R L] (N : ℕ)
     (d : Module.Dual R L) (h : ∀ e, Ideal.Quotient.mk (Ideal.span {(N : R)}) (d e) = 0) :
@@ -439,12 +443,12 @@ end Core
 theorem omega_canon : ∀ (R : Type) [CommRing R] [IsDomain R] [IsIntegrallyClosed R] [IsNoetherianRing R] (T : Type) [CommGroup T] [Finite T] (Γ : QFGroup R T) (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj G] (x : Spec (CommRingCat.of R) ⟶ S) (N : ℕ) (i : Γ.G.left ⟶ G.left), Γ.IsTorsionAlong G x N i → Smooth G.hom → ∀ (L : Type) [AddCommGroup L] [Module R L] (M : LieModel G x L), ∃ θ : Module.Dual R L →ₗ[R] omega (Γ.btOrder ⊤), Function.Surjective θ ∧ (∀ w, θ w = 0 ↔ ∃ u, w = N • u) ∧ ∀ (f : augIdeal (Γ.btOrder ⊤)) (w : Module.Dual R L) (s : Γ(Γ.G.left, ⊤)), Γ.HasValues s (f.1.1 : T → R) → (θ w = (augIdeal (Γ.btOrder ⊤)).toCotangent f ↔ ∀ (e : L) (v : Spec (CommRingCat.of (DualNumber (R ⧸ Ideal.span {(N : R)}))) ⟶ Γ.G.left), v ≫ Γ.G.hom = Spec.map (CommRingCat.ofHom ((algebraMap (R ⧸ Ideal.span {(N : R)}) (DualNumber (R ⧸ Ideal.span {(N : R)}))).comp (Ideal.Quotient.mk _))) → v ≫ i = Spec.map (CommRingCat.ofHom (dualMap (Ideal.Quotient.mk (Ideal.span {(N : R)})))) ≫ (M.pt e).left → valAt v ⊤ le_top s = TrivSqZeroExt.inr (Ideal.Quotient.mk (Ideal.span {(N : R)}) (w e))) := by
   intro R _ _ _ _ T _ _ Γ S G _ _ x N i ht hsm L _ _ M
   haveI := hsm
-  obtain ⟨j, hj, -⟩ := GlobalTheory.T.existsUnique_btOrder_embedding R T Γ
-  obtain ⟨hop, -⟩ := GlobalTheory.T.btOrder_embedding_open_immersion R T Γ j hj
+  obtain ⟨j, hj, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.BT.exists_unique_emb_btOrder_top R T Γ
+  obtain ⟨hop, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.BT.isOpenImmersion_emb_and_translatesCover R T Γ j hj
   haveI := hop
-  obtain ⟨-, hproj, -⟩ := GlobalTheory.T.lie_model_finite_base_change S G R x L M
+  obtain ⟨-, hproj, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieProj.lie_finite_projective_baseChange S G R x L M
   haveI := hproj
-  obtain ⟨u, hu, hupin, huniv⟩ := GlobalTheory.T.dual_lattice_point_universal S G R x L M
+  obtain ⟨u, hu, hupin, huniv⟩ := _root_.GlobalTheory.CompanionTheory.Ar.BT.Tan.Univ.tangent_universal S G R x L M
   obtain ⟨θ, hsurj, hNθ, hlift⟩ := exists_theta Γ ht hj u hu huniv
   have hθN : ∀ w', θ (N • w') = 0 := fun w' => by
     have := LinearMap.congr_fun hNθ w'

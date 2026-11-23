@@ -2,11 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SecEqZeroOfLoc
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BigEtaleModuleSheafMonoEpiIffSectionsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafPropertiesStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
+public import Mathlib.Algebra.Homology.HomotopyCategory.KInjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafProperties
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleLocalPropertyCalculusRules
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FreeEtaleSheafSectionLocallyFiniteCombinationStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FreeHomSections
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KummerRelationBoundaryKernelGeneratorSumZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KummerRelationBoundaryKernelGeneratorSumZero
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistSectionsLocallyGeneratedStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -71,10 +73,10 @@ theorem exists_comp_eq_of_injective {R : Type} [CommRing R] {A B K : Shv R} [Inj
 theorem kernel_local (q : ℕ) [NeZero q] (V : Scheme.{0}) (c : (tripP q).obj (op V) →₀ ULift.{1} (ZMod q))
     (h : (c.sum fun x r => r • (freeGen (ZMod q) unitsP V (unitsP.mk (tripP.get x).tgt) -
       freeGen (ZMod q) unitsP V (unitsP.mk (tripP.get x).src))) = 0) :
-    (c.sum fun x r => r • resGen 1 (tripP.get x).root) = 0 := GlobalTheory.T.kummerRelation_boundary_kernel_generator_sum_zero q V c h
+    (c.sum fun x r => r • resGen 1 (tripP.get x).root) = 0 := _root_.GlobalTheory.EtC.KummerSplit.relation_kernel q V c h
 
 theorem exists_isKum (q : ℕ) [NeZero q] : ∃ t, IsKum q t := by
-  have hinj : Injective ((res (ZMod q) (tw q 1)).X 0) := (GlobalTheory.T.chosenInjectiveResolution_etaleSheaf_properties (ZMod q) (tw q 1)).2.1 0
+  have hinj : Injective ((res (ZMod q) (tw q 1)).X 0) := (_root_.GlobalTheory.EtC.ResBasic.res_basic (ZMod q) (tw q 1)).2.1 0
   have hu := free_hom_sections (ZMod q) unitsP ((free (ZMod q)).obj unitsP)
   obtain ⟨G, hG⟩ := (free_hom_sections (ZMod q) (tripP q) ((free (ZMod q)).obj unitsP)).1
     (fun U x => freeGen (ZMod q) unitsP U (unitsP.mk (tripP.get x).tgt) -

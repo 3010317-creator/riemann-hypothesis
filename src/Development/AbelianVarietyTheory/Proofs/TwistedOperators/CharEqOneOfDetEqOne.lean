@@ -2,10 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.IsHermHyperbolic
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.QuasiReflectionEqUnitaryTransvectionMul
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryCharacterKillsUnitaryTransvections
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryGeneratedByQuasiReflectionsAndWitt
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.TransvectionIdentitiesUnitary
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryTransvectionSubmonoidNormalDetOne
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryCharacterKillsUnitaryTransvectionsStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryGeneratedByQuasiReflectionsAndWittStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -99,11 +99,11 @@ theorem char_refl_eq (hG : IsHerm σ G)
   rcases h with h | h
   · obtain ⟨m, hm, e⟩ := quasiReflection_eq_tvGen_mul E n σ G hG h x y u hx hy hu
     rw [e, hX _ _ ((tvGen_normal E n σ G hG).2 m hm).1 (isU_refl hG hy hu),
-      GlobalTheory.T.unitaryCharacter_kills_unitaryTransvections E n σ G hG A X hX m hm, one_mul]
+      _root_.GlobalTheory.UTrans.TvKill.char_tvGen E n σ G hG A X hX m hm, one_mul]
   · obtain ⟨a, ha⟩ := h x y hx hy
     have h1 : hf σ G (a • x) (a • x) = hf σ G y y := by
       rw [Calc.hf_smul_left, Calc.hf_smul_right, ha]; ring
-    obtain ⟨γ, hγ, e⟩ := (GlobalTheory.T.unitary_generated_by_quasiReflections_and_witt E n σ G hG).2 y (a • x) hy h1
+    obtain ⟨γ, hγ, e⟩ := (_root_.GlobalTheory.UTrans.ReflChar0.gen_and_witt E n σ G hG).2 y (a • x) hy h1
     have ha0 : a ≠ 0 := by
       rintro rfl
       simp at ha
@@ -146,7 +146,7 @@ theorem GlobalTheory.UTrans.char_eq_one_of_det_eq_one : ∀ (E : Type) [Field E]
     have := hX 1 1 CharDet.isU_one CharDet.isU_one
     rw [mul_one] at this
     exact left_eq_mul.1 this
-  obtain ⟨l, hl, e⟩ := (GlobalTheory.T.unitary_generated_by_quasiReflections_and_witt E n σ G hG).1 γ hγ
+  obtain ⟨l, hl, e⟩ := (_root_.GlobalTheory.UTrans.ReflChar0.gen_and_witt E n σ G hG).1 γ hγ
   cases l with
   | nil => rw [e]; simpa using h1
   | cons p l =>

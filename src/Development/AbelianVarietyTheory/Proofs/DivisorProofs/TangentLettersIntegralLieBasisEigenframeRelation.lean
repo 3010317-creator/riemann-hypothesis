@@ -2,10 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.CMLattices.IntegralOf
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.LieBridgeE
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsLieBasisLocalModelStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsLieBasisLocalModel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFrameTangentVectorsOfIsGrpPullback
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GrpPullbackBasisLiftCompatible
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.IsLieBasisIffIsUnitDet
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
+public import Development.AbelianVarietyTheory.Definitions.Divisors.UnitaryWeightExponentVectorSignatureWeightMuZero
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameChangeCommBaseChange
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IntegralFramesDifferByUnit
 import Mathlib.Algebra.Order.Floor.Extended
@@ -45,13 +47,11 @@ import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.BcF
 import Development.AbelianVarietyTheory.Definitions.Divisors.CommGroupMulMulEqMulInvMulMulMul
 import Development.AbelianVarietyTheory.Definitions.Divisors.CuspIso
 import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsChartOfIsLocalRing
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsLocalRingTrivSqZeroExt
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsoOverOfIsOpenImmersion
 import Development.AbelianVarietyTheory.Definitions.Divisors.LinearIndependentBasisCoords
 import Development.AbelianVarietyTheory.Definitions.Divisors.MemSubPtsCutBaseChangeIff
 import Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings
-public import Development.AbelianVarietyTheory.Definitions.Divisors.UnitaryWeightExponentVectorSignatureWeightMuZero
 import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LieLetterIntegralInIntegralEigenbasis
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSingle
 
@@ -132,7 +132,7 @@ theorem tangent_letter_model_relation : ∀ (E : Type) [Field E] [NumberField E]
   letI := (iK.comp (algebraMap c.F z.K)).toAlgebra
   intro φ yT y' g a hφ hmap hchg hg hint
   obtain ⟨-, hlet, -, hx, -, hu⟩ := hz
-  obtain ⟨vV, hvV, hvw⟩ := GlobalTheory.T.exists_lieBasis_local_model E H Dw l Xo c z p T iK M hval A hA
+  obtain ⟨vV, hvV, hvw⟩ := _root_.GlobalTheory.LamT.exists_isLieBasis_locMod E H Dw l Xo c z p T iK M hval A hA
   choose wK hwK hwV using hvw
   have hxT : yT.x = spMap iK ≫ z.x := by rw [hmap.1, hφ, hx]
   have hK := LieComb.lieComb_algebra z.K z.Φ.T.t.G _ z.Φ.v z.Φ.basis.1

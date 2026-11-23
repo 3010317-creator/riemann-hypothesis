@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqZeroOfCobOneEqZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAdicCompleteOfFiniteProjectiveAlgebraStatement
+public import Mathlib.Algebra.Module.Projective
+public import Mathlib.RingTheory.AdicCompletion.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAdicCompleteOfFiniteProjectiveAlgebra
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PadicContinuousEvaluationExistsUniqueSubstNatura
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -84,7 +86,7 @@ theorem _root_.GlobalTheory.T.formalChart_natMultiple_eval_properties :
   have ev₂_inL (c : GlobalTheory.QLog.Chart G d) (n : ℕ) (f : MvPowerSeries (Fin d) O) :
       c.ev₂ n (inL f) = c.ev n f ⊗ₜ[O] 1 := by
     have : IsAdicComplete (Ideal.span {(p : G.A n ⊗[O] G.A n)}) (G.A n ⊗[O] G.A n) :=
-      GlobalTheory.T.isAdicComplete_of_finite_projective_algebra p O (G.A n ⊗[O] G.A n)
+      _root_.GlobalTheory.FinProjComplete.isAdicComplete_of_finite_projective p O (G.A n ⊗[O] G.A n)
     have hnil : ∀ i, ∃ N : ℕ, (p : G.A n ⊗[O] G.A n) ∣
         (Sum.elim (fun i => c.x n i ⊗ₜ[O] (1 : G.A n)) (fun i => (1 : G.A n) ⊗ₜ[O] c.x n i) i) ^ N := by
       rintro (i | i)
@@ -109,7 +111,7 @@ theorem _root_.GlobalTheory.T.formalChart_natMultiple_eval_properties :
   have ev₂_inR (c : GlobalTheory.QLog.Chart G d) (n : ℕ) (f : MvPowerSeries (Fin d) O) :
       c.ev₂ n (inR f) = 1 ⊗ₜ[O] c.ev n f := by
     have : IsAdicComplete (Ideal.span {(p : G.A n ⊗[O] G.A n)}) (G.A n ⊗[O] G.A n) :=
-      GlobalTheory.T.isAdicComplete_of_finite_projective_algebra p O (G.A n ⊗[O] G.A n)
+      _root_.GlobalTheory.FinProjComplete.isAdicComplete_of_finite_projective p O (G.A n ⊗[O] G.A n)
     have hnil : ∀ i, ∃ N : ℕ, (p : G.A n ⊗[O] G.A n) ∣
         (Sum.elim (fun i => c.x n i ⊗ₜ[O] (1 : G.A n)) (fun i => (1 : G.A n) ⊗ₜ[O] c.x n i) i) ^ N := by
       rintro (i | i)
@@ -133,7 +135,7 @@ theorem _root_.GlobalTheory.T.formalChart_natMultiple_eval_properties :
 
   have ev_nmul (c : GlobalTheory.QLog.Chart G d) (n k : ℕ) (i : Fin d) :
       c.ev n (nmul c.μ k i) = GlobalTheory.PDiv.mulBy O (G.A n) k (c.x n i) := by
-    have : IsAdicComplete (Ideal.span {(p : G.A n)}) (G.A n) := GlobalTheory.T.isAdicComplete_of_finite_projective_algebra p O (G.A n)
+    have : IsAdicComplete (Ideal.span {(p : G.A n)}) (G.A n) := _root_.GlobalTheory.FinProjComplete.isAdicComplete_of_finite_projective p O (G.A n)
     have H := ((GlobalTheory.CEval.continuous_eval p O (G.A n) (Fin d) _ (c.nil n)).2 (c.ev n) (c.isEval n)).1
     induction k generalizing i with
     | zero =>
@@ -171,7 +173,7 @@ theorem _root_.GlobalTheory.T.formalChart_natMultiple_eval_properties :
 
   have ev_subst_nmul (c : GlobalTheory.QLog.Chart G d) (n k : ℕ) (f : MvPowerSeries (Fin d) O) :
       c.ev n (subst (nmul c.μ k) f) = GlobalTheory.PDiv.mulBy O (G.A n) k (c.ev n f) := by
-    have : IsAdicComplete (Ideal.span {(p : G.A n)}) (G.A n) := GlobalTheory.T.isAdicComplete_of_finite_projective_algebra p O (G.A n)
+    have : IsAdicComplete (Ideal.span {(p : G.A n)}) (G.A n) := _root_.GlobalTheory.FinProjComplete.isAdicComplete_of_finite_projective p O (G.A n)
     have H := ((GlobalTheory.CEval.continuous_eval p O (G.A n) (Fin d) _ (c.nil n)).2 (c.ev n) (c.isEval n)).1
     let M : G.A n →ₐ[O] G.A n := (GlobalTheory.PDiv.mulBy O (G.A n) k : G.A n →ₐ[O] G.A n)
     have hE := isEval_algHom_comp (c.isEval n) M
@@ -183,7 +185,7 @@ theorem _root_.GlobalTheory.T.formalChart_natMultiple_eval_properties :
   have ev₂_pull2_nmul (c : GlobalTheory.QLog.Chart G d) (n k : ℕ) (s : MvPowerSeries (Fin d ⊕ Fin d) O) :
       c.ev₂ n (pull2 (nmul c.μ k) s) = pullbackTwo (GlobalTheory.PDiv.mulBy O (G.A n) k) (c.ev₂ n s) := by
     have : IsAdicComplete (Ideal.span {(p : G.A n ⊗[O] G.A n)}) (G.A n ⊗[O] G.A n) :=
-      GlobalTheory.T.isAdicComplete_of_finite_projective_algebra p O (G.A n ⊗[O] G.A n)
+      _root_.GlobalTheory.FinProjComplete.isAdicComplete_of_finite_projective p O (G.A n ⊗[O] G.A n)
     have hnil : ∀ i, ∃ N : ℕ, (p : G.A n ⊗[O] G.A n) ∣
         (Sum.elim (fun i => c.x n i ⊗ₜ[O] (1 : G.A n)) (fun i => (1 : G.A n) ⊗ₜ[O] c.x n i) i) ^ N := by
       rintro (i | i)

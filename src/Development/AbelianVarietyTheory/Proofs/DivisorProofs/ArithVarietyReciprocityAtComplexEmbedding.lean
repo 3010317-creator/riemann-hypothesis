@@ -2,10 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DensConst
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithReciprocityNoCommonDivisorProjectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionGenericFiberPullbackLocalIsoStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenericFiberArithmeticVarietyIntegralProjectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReciprocitySideEqGenericFibrePullbackStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithReciprocityNoCommonDivisorProjective
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ContinuousBcPt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionGenericFiberPullbackLocalIso
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenericFiberArithmeticVarietyIntegralProjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReciprocitySideEqGenericFibrePullback
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -43,7 +44,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ContinuousBcPt
 
 @[expose] public section
 
@@ -86,17 +86,17 @@ theorem side_symm : GlobalTheory.Published.Principalisation → ∀ (k : Type) [
   obtain ⟨G, j, q, hp⟩ : ∃ (G : Scheme.{0}) (j : G ⟶ X) (q : G ⟶ Sp K),
       IsPullback j q p (spMap (algebraMap k K)) := ⟨_, _, _, IsPullback.of_hasPullback _ _⟩
   obtain ⟨hGi, hGn, hproj, hdim, hgen, -, hstalk, hcoh, -⟩ :=
-    GlobalTheory.T.generic_fiber_arithmetic_variety_integral_projective k K X G p q j hp (e + 1) h
-  obtain ⟨s', hs', hsl, hsm, hslog⟩ := GlobalTheory.T.exists_section_generic_fiber_pullback_local_iso k K X G p q j hp τ hstalk M s hs hgen
-  obtain ⟨t', ht', htl, htm, htlog⟩ := GlobalTheory.T.exists_section_generic_fiber_pullback_local_iso k K X G p q j hp τ hstalk N t ht hgen
+    _root_.GlobalTheory.Mix.genericFibre_facts k K X G p q j hp (e + 1) h
+  obtain ⟨s', hs', hsl, hsm, hslog⟩ := _root_.GlobalTheory.Mix.exists_sec_bc k K X G p q j hp τ hstalk M s hs hgen
+  obtain ⟨t', ht', htl, htm, htlog⟩ := _root_.GlobalTheory.Mix.exists_sec_bc k K X G p q j hp τ hstalk N t ht hgen
   have hcod' : ∀ z : G, Order.coheight z = 1 → z ∈ nonzeroLocus s' ∨ z ∈ nonzeroLocus t' := by
     intro z hz
     rw [hsl, htl]
     exact hcod (j z) ((hcoh z).trans hz)
-  have hrec := GlobalTheory.T.arithReciprocity_noCommonDivisor_projective hP K G q τ e hproj hdim (fun i => (L i).bc hp.w τ) (M.bc hp.w τ)
+  have hrec := _root_.GlobalTheory.Mix.reciprocity_of_noCommonDivisor hP K G q τ e hproj hdim (fun i => (L i).bc hp.w τ) (M.bc hp.w τ)
     (N.bc hp.w τ) s' hs' t' ht' hcod'
-  have e1 := GlobalTheory.T.reciprocitySide_eq_genericFibre_pullback k K X G p q j hp τ e h _ _ hsm N L (M.logSec s) (N.logSec t)
-  have e2 := GlobalTheory.T.reciprocitySide_eq_genericFibre_pullback k K X G p q j hp τ e h _ _ htm M L (N.logSec t) (M.logSec s)
+  have e1 := _root_.GlobalTheory.Mix.side_bc_eq k K X G p q j hp τ e h _ _ hsm N L (M.logSec s) (N.logSec t)
+  have e2 := _root_.GlobalTheory.Mix.side_bc_eq k K X G p q j hp τ e h _ _ htm M L (N.logSec t) (M.logSec s)
   have hsf : (M.bc hp.w τ).logSec s' = fun y => M.logSec s (bcPt hp.w τ y) := funext hslog
   have htf : (N.bc hp.w τ).logSec t' = fun y => N.logSec t (bcPt hp.w τ y) := funext htlog
   rw [hsf, htf] at hrec

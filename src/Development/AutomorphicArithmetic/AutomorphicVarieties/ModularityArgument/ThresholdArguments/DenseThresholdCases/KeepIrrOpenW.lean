@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.LevelRelationTwoX
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.DeterminantRepresentations.IrrIffSpan
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.IrrIffSpan
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebraHeight.DGmap
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebraHeight.DOfRep
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebraHeight.DToDet
@@ -56,7 +57,7 @@ theorem irrOpenW_alt : _root_.UpperTheory.V.J.IrrOpenAlt := by
   have irr_iff_span {Γ : Type} [Group Γ] (r : Γ →* GL (Fin n) (Qbar l)) :
       IsIrr r ↔ Submodule.span (Qbar l) (Set.range (mat r)) = ⊤ := by
     have : Nonempty (Fin n) := ⟨⟨0, hn⟩⟩
-    rw [← UpperTheory.V.AlgebraTools.Det.irrIffSpan]
+    rw [← _root_.UpperTheory.Reformulated.B.Qe4.irrIffSpan]
     constructor
     · intro h N hN
       obtain ⟨-, -, hIrr⟩ := h

@@ -9,7 +9,7 @@ public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CpTransported
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CpTransportedTaylorSeriesMultiplicativeChart
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsMeasureOfBoundedMoments
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IteratedFDerivProdCoordAt
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.TwistedMeasureMomentsEqShiftedSeriesJetsStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.TwistedMeasureMomentsEqShiftedSeriesJets
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -139,9 +139,9 @@ theorem measure_of_products : ∀ (d q : ℕ) [Fact q.Prime] (ι : ℂ ≃+* ℂ
         (fwdDiff (1 : ℤ_[q]))^[r] f 0)
         (ω ^ e * ι (iteratedDeriv e (fun z => W1 d (y i) (U1 d (t j i) θ) z ^ a i) 0)) := by
     intro i e
-    obtain ⟨f, hf, -⟩ := GlobalTheory.T.twisted_measure_moments_eq_shifted_series_jets q 0 _ n e ⟨0, fun r => by simp⟩ (hroot i)
+    obtain ⟨f, hf, -⟩ := _root_.GlobalTheory.MomOne.TwistMom.twisted_moments q 0 _ n e ⟨0, fun r => by simp⟩ (hroot i)
     refine ⟨f, hf, fun j => ?_⟩
-    obtain ⟨f', hf', h⟩ := GlobalTheory.T.twisted_measure_moments_eq_shifted_series_jets q _ _ n e ⟨1, hS j i⟩ (hroot i)
+    obtain ⟨f', hf', h⟩ := _root_.GlobalTheory.MomOne.TwistMom.twisted_moments q _ _ n e ⟨1, hS j i⟩ (hroot i)
     obtain rfl : f' = f := by ext A; rw [hf, hf']
     have han := (hdiff j i).analyticAt 0
     rw [shiftS_pow (ShiftComp.norm_sub_one_lt_of_root (hroot i)) (hL.1 _ (ht j i)),

@@ -2,13 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.L2ExtensionLogCanonical
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EtaleEmpty
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalHolomorphicExtensionNearZerosStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmoothCutoffSlopeThreeQuartersStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtensionAcrossHypersurfaceValuesAtZerosStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalHolomorphicExtensionNearZeros
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmoothCutoffSlopeThreeQuarters
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtensionAcrossHypersurfaceValuesAtZeros
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralSublevelTailLeOfFiniteStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeasurableNsqExtendAndPsiStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeasureComplNonvanishingSetEqZeroOfDenseStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedEstimateEtalePartManifoldStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedEstimateEtalePartManifold
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeasurableNsqExtendAndPsi
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeasureComplNonvanishingSetEqZeroOfDense
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -135,8 +135,8 @@ theorem l2_extension_of_etale_coordinates : ∀ (n : ℕ) (Y : Type) [Topologica
     · simp [WeightedAtlas.nsq]
   · have hn0 : (0:ℝ) < n := by exact_mod_cast hn
     obtain ⟨Ω, h, m, ⟨hΩo, hhsec, hh0⟩, hm, hmΩ, hval, hshell, hfin⟩ :=
-      GlobalTheory.T.exists_local_holomorphic_extension_near_zeros n Y ι La A hn E L s hs hS hjac f δ hδ
-    obtain ⟨hNm, hψm⟩ := GlobalTheory.T.measurable_nsq_and_psi_of_isSecOn n Y ι La A (A.kap + E) Ω h hΩo hhsec hh0
+      _root_.GlobalTheory.OTY.exists_local_extension n Y ι La A hn E L s hs hS hjac f δ hδ
+    obtain ⟨hNm, hψm⟩ := _root_.GlobalTheory.OTY.measurable_nsq_extend_and_psi n Y ι La A (A.kap + E) Ω h hΩo hhsec hh0
     have hψm' := hψm L s hs
     have hN_nn : ∀ (la : La) (F : ι → Y → ℂ) y, 0 ≤ A.nsq la F y := fun la F y => by
       unfold WeightedAtlas.nsq; positivity
@@ -207,8 +207,8 @@ theorem l2_extension_of_etale_coordinates : ∀ (n : ℕ) (Y : Type) [Topologica
         unfold WeightedAtlas.nsq
         rw [hy' k]; simp
       rw [this]; exact hm
-    obtain ⟨θ, hθ⟩ := GlobalTheory.T.exists_smoothCutoff_slope_three_quarters T
-    obtain ⟨F, hFsec, hFbd⟩ := GlobalTheory.T.twistedEstimate_etalePart_manifold n Y ι La A E L s hs hsq δ hδ hlevi Λ τ z β
+    obtain ⟨θ, hθ⟩ := _root_.GlobalTheory.exists_isCut₂ T
+    obtain ⟨F, hFsec, hFbd⟩ := _root_.GlobalTheory.OTY.TwEst.twisted_estimate_nz n Y ι La A E L s hs hsq δ hδ hlevi Λ τ z β
       ⟨hτ, hpos, het, hfr, hdense, C, hC, hCb⟩ Ω h T θ ⟨hΩo, hhsec, hh0⟩ hT300 hθ hsubΩ hL2
     have hshellT := hshell T (by linarith)
     have hFbd' : (∫⁻ y in nz A τ, ENNReal.ofReal (A.nsq (A.kap + E)
@@ -220,10 +220,10 @@ theorem l2_extension_of_etale_coordinates : ∀ (n : ℕ) (Y : Type) [Topologica
         _ = ENNReal.ofReal (62 * K) := by
           rw [show (30 : ℝ≥0∞) = ENNReal.ofReal 30 by simp, ← ENNReal.ofReal_mul (by norm_num)]
           congr 1; rw [hK]; ring
-    obtain ⟨G, hGsec, hGF, hGP⟩ := GlobalTheory.T.extension_across_hypersurface_values_at_zeros n Y ι La A hn E L s hs hS hjac hsq δ hδ Λ τ hτ
+    obtain ⟨G, hGsec, hGF, hGP⟩ := _root_.GlobalTheory.OTY.extension_values_at_zeros n Y ι La A hn E L s hs hS hjac hsq δ hδ Λ τ hτ
       hdense Ω h T θ ⟨hΩo, hhsec, hh0⟩ hzΩ hθ hL2 F hFsec (lt_of_le_of_lt hFbd' ENNReal.ofReal_lt_top)
     refine ⟨G, hGsec, fun P hP => (hGP P hP).trans (hval P hP), ?_⟩
-    have hnull : A.mu (nz A τ)ᶜ = 0 := GlobalTheory.T.measure_compl_nonvanishingSet_eq_zero_of_dense n Y ι La A Λ τ hτ hdense
+    have hnull : A.mu (nz A τ)ᶜ = 0 := _root_.GlobalTheory.zeroSet_null_of_dense_nz n Y ι La A Λ τ hτ hdense
     have hnzm : MeasurableSet (nz A τ) := het.isOpen.measurableSet
     have hSm : MeasurableSet {y | δ * psi A L s y ≤ -T + 1} :=
       measurableSet_le (hψm'.const_mul δ) measurable_const

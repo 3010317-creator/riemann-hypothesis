@@ -3,9 +3,8 @@ module
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.SabPull
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.DenseInterior
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChartPullbackLineBundleTransitionEqAppLEStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCechKodairaSpencerClassAbelianTripleStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCechKodairaSpencerClassAbelianTriple
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsVectorFieldImageOpenImmersionStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAffineHomOfField
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LePreimageOfIsTranslate
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProperAmpleKTriv
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReductionEqBasePointStatement
@@ -13,6 +12,9 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiAbelianT
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentBasisMovesAlongSemiAbelianTripleMapStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentTranslateLiftsSemiAbelianTripleMapStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PullbackModelArcIntegral
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsLinearHomPull
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsInvDer
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAffineHomOfField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,9 +53,7 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.CubePullbacks.CubePull
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsLinearHomPull
 import Development.AbelianVarietyTheory.Definitions.Divisors.HasRigidChart
-public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsInvDer
 
 @[expose] public section
 
@@ -231,7 +231,7 @@ theorem exists_isKS_interior : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
     exact ConcreteCategory.bijective_of_isIso _
   obtain ⟨v', hv'φ, hv't, hv'b⟩ := GlobalTheory.T.tangentBasis_moves_along_semiAbelianTripleMap E H _ _ Y.t t' Y.j m _ _ ψ.hom (chart W) (chart W') hx n v hv hb
   obtain ⟨D', hD'⟩ := exists_derivation_transport (RingEquiv.ofBijective ψ.hom hbij) D
-  obtain ⟨Θ', hΘ'⟩ := GlobalTheory.T.exists_cech_kodairaSpencer_class_abelianTriple E H _ t' hP hA hK W' n v' hv't hv'b D'
+  obtain ⟨Θ', hΘ'⟩ := _root_.GlobalTheory.KSExists.exists_isKS E H _ t' hP hA hK W' n v' hv't hv'b D'
   exact isKS_transport E H _ _ Y.t t' Y.j m hcp (interior Y) W W' hW' hbij hW hWr n v v' hv hv't hv'φ D D'
     (fun r => hD' r) Θ' hΘ'
 

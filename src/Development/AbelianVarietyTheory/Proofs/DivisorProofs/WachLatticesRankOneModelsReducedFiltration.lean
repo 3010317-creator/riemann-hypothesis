@@ -5,9 +5,11 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RankOfMulEqO
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BhattScholzeCrystallineLattices
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMulVecEqPow
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSlotsGlobal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitRootCyclotomicExpExpansionsStatement
+public import Formalism.LocalRingCardinality.SpanPowerMembership.NDLocE
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitRootCyclotomicExpExpansions
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.CharAbove
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StableLatticeChainWithLinesMatrixForm
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWachModuleMapMatrixReductionComm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StableLatticeChainWithLinesMatrixFormStatement
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DvrComplete
 import Formalism.PieriBlockIdeals.PieriColumnMinors.HeckeLFunctionIdealEulerProduct
 import Mathlib.Algebra.Order.Floor.Extended
@@ -86,8 +88,8 @@ theorem GlobalTheory.WachPlace.wach_lattices : GlobalTheory.Published.BhattSchol
   obtain ⟨_, _, _⟩ := GlobalTheory.FinExtIntegers.dvr_complete LL
   haveI : CharP (ResidueField ↥(OL LL)) l := GlobalTheory.WachMap.charP_residueField_of_irreducible LL
   obtain ⟨x, dim, hx, hd0, hdR, hds⟩ :=
-    GlobalTheory.T.stable_lattice_chain_with_lines_matrix_form _ ↥(OL LL) n t R r ψ ϖ M rs hirr hM0 hMtop hmono hstab hlines
-  obtain ⟨u, c, ζ, jj, hu, hc, hζ, hζm, hjj⟩ := GlobalTheory.T.exists_unit_root_cyclotomicExpExpansions l LL hl hz
+    _root_.GlobalTheory.WachChain.chain_of_lattices _ ↥(OL LL) n t R r ψ ϖ M rs hirr hM0 hMtop hmono hstab hlines
+  obtain ⟨u, c, ζ, jj, hu, hc, hζ, hζm, hjj⟩ := _root_.GlobalTheory.WachExp.exists_locExp_expAt l LL hl hz
   obtain ⟨un, hun⟩ := (unConst l ↥(OL LL) hl (u : ℤ_[l]) c hu).1
   have hψ' : ∀ s, GlobalTheory.ExpFrame.CrysWith
       ((Matrix.GeneralLinearGroup.map (toOm LL)).comp (GlobalTheory.TripleGal.rk1 (ψ s)))

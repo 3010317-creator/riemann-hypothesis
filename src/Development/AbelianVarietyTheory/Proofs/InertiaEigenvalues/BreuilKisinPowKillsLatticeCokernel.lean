@@ -2,18 +2,27 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.RepresentationBounds
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DiagScaleApply
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EulerDerivationPreservesBreuilKisinSumSubmoduleStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPrimePowKillsFiniteLengthIntegralPowerSeriStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsotypicMonodromyPolynomialsRaiseDegreeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsotypicProjectorMemBreuilKisinLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsotypicProjectorMemIsotypicPartExplicitStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LagrangePrimePowMemIsotypicDegreePolySpanStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MaxFrobeniusOrbitLengthDiffBoundsZmodStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemPrimePowLatticeOfXPowSmulMemStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MonodromyReductionModuloHighDegreeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NumericalConditionsTheoremTLargePrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SumIsotypicProjectorsEqIdStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.VPowLatticeLeImageAddLPowOfFiniteCokernelStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EulerDerivationPreservesBreuilKisinSumSubmodule
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NormPowLeNormFactorial
+public import Mathlib.RingTheory.FiniteLength
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPrimePowKillsFiniteLengthIntegralPowerSeri
+public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.ImageStableDegreeBounds
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsotypicMonodromyPolynomialsRaiseDegree
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsotypicProjectorMemBreuilKisinLattice
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsotypicProjectorMemIsotypicPartExplicit
+public import Mathlib.NumberTheory.Padics.PadicIntegers
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LagrangePrimePowMemIsotypicDegreePolySpan
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.InstTameDescentExponentDataPadicThree
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MaxFrobeniusOrbitLengthDiffBoundsZmod
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.PowerSeriesVecReduceModUMulVec
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemPrimePowLatticeOfXPowSmulMem
+public import Mathlib.Algebra.Group.Nat.Defs
+public import Mathlib.Tactic.ToDual
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NumericalConditionsTheoremTLargePrime
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SumIsotypicProjectorsEqId
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExistsAlgebraMapEqRoot
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.VPowLatticeLeImageAddLPowOfFiniteCokernel
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MonodromyReductionModuloHighDegree
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -123,16 +132,16 @@ theorem isotypic_step : ∀ (O K : Type) [CommRing O] [NormedField K] [IsUltrame
   set A' := H + η + b with hA'
   have ha : 1 ≤ a := Nat.one_le_iff_ne_zero.2 (NeZero.ne a)
   have he : e + 1 = l ^ a := TameDescentExponentData.succ_eq (K := K)
-  have horb := GlobalTheory.T.maxFrobeniusOrbitLengthDiff_bounds_zmod l e a (Fact.out : l.Prime) ha he Sig N hB.frob_mem hB.zero_mem_Sig
+  have horb := _root_.GlobalTheory.BK.maxPeriod_bounds l e a (Fact.out : l.Prime) ha he Sig N hB.frob_mem hB.zero_mem_Sig
     hB.card_Sig hB.two_le
-  have hnum := GlobalTheory.T.numerical_conditions_theorem_T_large_prime l H N η (maxPeriod l Sig) hB.two_le hB.one_le hB.lt horb.2.1 hB.large
+  have hnum := _root_.GlobalTheory.numerical_bounds_of_forty_mul_lt l H N η (maxPeriod l Sig) hB.two_le hB.one_le hB.lt horb.2.1 hB.large
   have hA'l : 2 * A' + 2 < l := by
     have : A' = H + η + 2 * (N - 1) * maxPeriod l Sig + 1 := by
       simp only [hA', hb, hρ, GlobalTheory.IndefiniteRowSideFullHecke.RepresentationBounds.rho]; ring
     rw [this]; exact hnum.1
-  have hred := GlobalTheory.T.monodromy_reduction_modulo_high_degree O K l e a
-  have hdeg := GlobalTheory.T.isotypic_monodromy_polynomials_raise_degree O K l e a
-  obtain ⟨α, β, hαβ⟩ := GlobalTheory.T.lagrange_prime_pow_mem_isotypicDegreePoly_span l e a ha he Sig c A' N hB.card_Sig hA'l
+  have hred := _root_.GlobalTheory.NModHigh.reduction O K l e a
+  have hdeg := _root_.GlobalTheory.DegreeRaise.main O K l e a
+  obtain ⟨α, β, hαβ⟩ := _root_.GlobalTheory.lagrange_C_rho_eq_comb_degrees l e a ha he Sig c A' N hB.card_Sig hA'l
 
   have hlpow : ∀ (n : ℕ) (v : Vec K a κ), (l : K) ^ n • v = (l ^ n) • v := fun n v => by
     rw [← Nat.cast_pow, Nat.cast_smul_eq_nsmul K]
@@ -150,20 +159,20 @@ theorem isotypic_step : ∀ (O K : Type) [CommRing O] [NormedField K] [IsUltrame
     Submodule.mem_sup_left (Submodule.mem_sup_right ⟨z, hz, by simp [hlpow']⟩)
   have memT3 : ∀ h ∈ GlobalTheory.IndefiniteRowSideFullHecke.ImageStableDegreeBounds.MMHigh D₂.toPhiMod, h ∈ T := fun h hh =>
     Submodule.mem_sup_right hh
-  have hTc : ∀ w ∈ T, D₂.conn w ∈ T := GlobalTheory.T.eulerDerivation_preserves_breuilKisin_sum_submodule O K l e a ι κ η H D₁ D₂ F A' b hred
+  have hTc : ∀ w ∈ T, D₂.conn w ∈ T := _root_.GlobalTheory.CokerL.Tsub_conn O K l e a ι κ η H D₁ D₂ F A' b hred
 
-  have a3 := GlobalTheory.T.vPow_lattice_le_image_add_lPow_of_finite_cokernel O K l e a ι κ η H D₁ D₂ F hfl b (by omega) (by omega)
+  have a3 := _root_.GlobalTheory.LiftCoker.vPow_mem_imL_add_lPow O K l e a ι κ η H D₁ D₂ F hfl b (by omega) (by omega)
   obtain ⟨y₀, hy₀, z₀, hz₀, h3⟩ := a3 x hx
   have hyd : isoProj D₂.desc c (((X : K⟦X⟧) ^ e) ^ A' • x) =
       F.app (isoProj D₁.desc c y₀) + (l : K) ^ b • isoProj D₂.desc c z₀ := by
     rw [h3, map_add (f := _), map_smul, app_isoProj]
-  have hy_iso := GlobalTheory.T.isotypicProjector_mem_isotypicPart_explicit O K l e a κ D₂.toPhiMod D₂.desc c (((X : K⟦X⟧) ^ e) ^ A' • x)
+  have hy_iso := _root_.GlobalTheory.CokerL.isoProj_mem_isotypic' O K l e a κ D₂.toPhiMod D₂.desc c (((X : K⟦X⟧) ^ e) ^ A' • x)
   have hy_v : isoProj D₂.desc c (((X : K⟦X⟧) ^ e) ^ A' • x) ∈ GlobalTheory.IndefiniteRowSideFullHecke.ImageStableDegreeBounds.vL D₂.toPhiMod A' := by
     rw [isoProj_vpow]
-    exact ⟨_, GlobalTheory.T.isotypicProjector_mem_breuilKisinLattice O K l e a κ D₂.toPhiMod D₂.desc c x hx, rfl⟩
-  have hy₁L := GlobalTheory.T.isotypicProjector_mem_breuilKisinLattice O K l e a ι D₁.toPhiMod D₁.desc c y₀ hy₀
-  have hy₁iso := GlobalTheory.T.isotypicProjector_mem_isotypicPart_explicit O K l e a ι D₁.toPhiMod D₁.desc c y₀
-  have hz₁L := GlobalTheory.T.isotypicProjector_mem_breuilKisinLattice O K l e a κ D₂.toPhiMod D₂.desc c z₀ hz₀
+    exact ⟨_, _root_.GlobalTheory.CokerL.isoProj_mem_L O K l e a κ D₂.toPhiMod D₂.desc c x hx, rfl⟩
+  have hy₁L := _root_.GlobalTheory.CokerL.isoProj_mem_L O K l e a ι D₁.toPhiMod D₁.desc c y₀ hy₀
+  have hy₁iso := _root_.GlobalTheory.CokerL.isoProj_mem_isotypic' O K l e a ι D₁.toPhiMod D₁.desc c y₀
+  have hz₁L := _root_.GlobalTheory.CokerL.isoProj_mem_L O K l e a κ D₂.toPhiMod D₂.desc c z₀ hz₀
   set y := isoProj D₂.desc c (((X : K⟦X⟧) ^ e) ^ A' • x) with hy
 
   let φ : ℤ_[l] →+* K := (algebraMap ℚ_[l] K).comp PadicInt.Coe.ringHom
@@ -244,9 +253,9 @@ theorem kills_cokerL : ∀ (O K : Type) [CommRing O] [NormedField K] [IsUltramet
   set b := ρ + 1 with hb
   set A' := H + η + b with hA'
 
-  have horb := GlobalTheory.T.maxFrobeniusOrbitLengthDiff_bounds_zmod l e a (Fact.out : l.Prime) (Nat.one_le_iff_ne_zero.2 (NeZero.ne a))
+  have horb := _root_.GlobalTheory.BK.maxPeriod_bounds l e a (Fact.out : l.Prime) (Nat.one_le_iff_ne_zero.2 (NeZero.ne a))
     (TameDescentExponentData.succ_eq (K := K)) Sig N hB.frob_mem hB.zero_mem_Sig hB.card_Sig hB.two_le
-  have hnum := GlobalTheory.T.numerical_conditions_theorem_T_large_prime l H N η (maxPeriod l Sig) hB.two_le hB.one_le hB.lt horb.2.1 hB.large
+  have hnum := _root_.GlobalTheory.numerical_bounds_of_forty_mul_lt l H N η (maxPeriod l Sig) hB.two_le hB.one_le hB.lt horb.2.1 hB.large
   have hA'l : 2 * A' + 2 < l := by
     have : A' = H + η + 2 * (N - 1) * maxPeriod l Sig + 1 := by
       simp only [hA', hb, hρ, GlobalTheory.IndefiniteRowSideFullHecke.RepresentationBounds.rho]; ring
@@ -269,16 +278,16 @@ theorem kills_cokerL : ∀ (O K : Type) [CommRing O] [NormedField K] [IsUltramet
   have lmemL₁ : ∀ n : ℕ, ∀ v ∈ D₁.L, (l : K) ^ n • v ∈ D₁.L := fun n v hv => by
     rw [hlpow₁]; exact D₁.L.toAddSubmonoid.nsmul_mem hv _
   have appL : ∀ v ∈ D₁.L, F.app v ∈ D₂.L := fun v hv => F.app_mem_ext le_rfl hv
-  have hred := GlobalTheory.T.monodromy_reduction_modulo_high_degree O K l e a
+  have hred := _root_.GlobalTheory.NModHigh.reduction O K l e a
 
   have a3 : ∀ x ∈ D₂.L, ∃ y ∈ D₁.L, ∃ z ∈ D₂.L,
       ((X : K⟦X⟧) ^ e) ^ A' • x = F.app y + (l : K) ^ b • z :=
-    GlobalTheory.T.vPow_lattice_le_image_add_lPow_of_finite_cokernel O K l e a ι κ η H D₁ D₂ F hfl b (by omega) (by omega)
+    _root_.GlobalTheory.LiftCoker.vPow_mem_imL_add_lPow O K l e a ι κ η H D₁ D₂ F hfl b (by omega) (by omega)
 
   have stepP : ∀ x ∈ D₂.L, ∃ y ∈ D₁.L, ∃ z ∈ D₂.L, (l : K) ^ ρ • x = F.app y + (l : K) ^ b • z := by
     intro x hx
     have hT : (l : K) ^ ρ • (((X : K⟦X⟧) ^ e) ^ A' • x) ∈ GlobalTheory.CokerL.Tsub F A' b := by
-      rw [← GlobalTheory.T.sum_isotypicProjectors_eq_id O K l e a κ D₂.toPhiMod D₂.desc (((X : K⟦X⟧) ^ e) ^ A' • x),
+      rw [← _root_.GlobalTheory.CokerL.sum_isoProj O K l e a κ D₂.toPhiMod D₂.desc (((X : K⟦X⟧) ^ e) ^ A' • x),
         Finset.smul_sum]
       refine Submodule.sum_mem _ fun c _ => ?_
       exact GlobalTheory.CokerL.isotypic_step O K l e a ι κ η H D₁ D₂ F Sig U N hB h₁ h₂ hfl c x hx
@@ -311,7 +320,7 @@ theorem kills_cokerL : ∀ (O K : Type) [CommRing O] [NormedField K] [IsUltramet
       rw [smul_sub, smul_sub, smul_comm (((X : K⟦X⟧) ^ e) ^ A') ((l : K) ^ ρ), smul_smul, ← pow_add,
         Nat.add_sub_cancel' hle, ← hth, hlpow']
       abel
-    obtain ⟨z'', hz'', hw'⟩ := GlobalTheory.T.mem_prime_pow_lattice_of_X_pow_smul_mem O K l e a κ D₂.toPhiMod A' b _ z' hwL hz'L hw
+    obtain ⟨z'', hz'', hw'⟩ := _root_.GlobalTheory.CokerL.mem_lpow_L_of_vpow_smul O K l e a κ D₂.toPhiMod A' b _ z' hwL hz'L hw
     obtain ⟨y₂, hy₂, z₂, hz₂, h2⟩ := a3 _ (vmemL (l - 2 * A') _ hh₀)
     have e1 : ((X : K⟦X⟧) ^ e) ^ (l - A') • h₀ =
         ((X : K⟦X⟧) ^ e) ^ A' • ((X : K⟦X⟧) ^ e) ^ (l - 2 * A') • h₀ := by
@@ -324,7 +333,7 @@ theorem kills_cokerL : ∀ (O K : Type) [CommRing O] [NormedField K] [IsUltramet
     rw [key, hw', e1, h2, map_add (f := _), smul_add]
     abel
 
-  obtain ⟨m, hm⟩ := GlobalTheory.T.exists_prime_pow_kills_finiteLength_integralPowerSeries O K l F.coker hfl
+  obtain ⟨m, hm⟩ := _root_.GlobalTheory.PowKill.main O K l F.coker hfl
   have killM : GlobalTheory.IndefiniteRowSideFullHecke.RepresentationBounds.KillsCoker F.app (l ^ m) D₁.M D₂.M :=
     (GlobalTheory.IndefiniteRowSideFullHecke.RepresentationBounds.killsCoker_M_iff F.toHom (l ^ m)).2 fun q => by
       rw [← Nat.cast_smul_eq_nsmul (A O K), Nat.cast_pow]

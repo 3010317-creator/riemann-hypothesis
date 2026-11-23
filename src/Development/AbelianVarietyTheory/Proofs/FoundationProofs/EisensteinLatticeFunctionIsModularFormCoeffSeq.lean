@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.PetIPSmulRight
 public import Development.AbelianVarietyTheory.Definitions.Foundations.RepL
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RegularizedEisensteinLatticeSumDirectionIndepStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RegularizedEisensteinLatticeSumQExpansionStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RegularizedEisensteinLatticeSumSlTwoSmulStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RegularizedEisensteinLatticeSumDirectionIndep
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RegularizedEisensteinLatticeSumQExpansion
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RegularizedEisensteinLatticeSumSlTwoSmul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -174,7 +174,7 @@ theorem eis_latF_mf : ∀ (j L₁ L₂ : ℕ) (b χ₁ χ₂ : ℤ → ℂ) (φ 
     rw [show -(y : ZMod L₁) * ((-1 : ℤ) : ZMod L₁) = y by push_cast; ring] at h1
     rw [mul_neg_one] at h2
     rw [h1, h2, ← hpar]; ring
-  obtain ⟨c, hP, hq⟩ := GlobalTheory.T.regularizedEisensteinLatticeSum_qExpansion j L₁ b φ hj hL₁ ⟨Cb, hCb⟩ hhat hparity
+  obtain ⟨c, hP, hq⟩ := _root_.GlobalTheory.LatQ.lat_qexp j L₁ b φ hj hL₁ ⟨Cb, hCb⟩ hhat hparity
   refine ⟨c, ⟨hP, ?_⟩, hq⟩
   set K : ℂ := 2 * (-2 * π * Complex.I / L₁) ^ j / (j - 1).factorial with hKdef
   have hK : K ≠ 0 := by
@@ -221,9 +221,9 @@ theorem eis_latF_mf : ∀ (j L₁ L₂ : ℕ) (b χ₁ χ₂ : ℤ → ℂ) (φ 
   have hk1 : Kills L₁ ((L₁ : ℤ) * L₂ * k, γ 1 1) Φ := latF_kills L₁ L₂ hL₁ b φ hb hhat k (γ 1 1) hunit
   have hk0 : Kills L₁ (0, 1) Φ := by
     simpa using latF_kills L₁ L₂ hL₁ b φ hb hhat 0 1 (by simp)
-  rw [hq', hq', GlobalTheory.T.regularizedEisensteinLatticeSum_slTwo_smul j L₁ (0, 1) Φ (fun y => χd * Φ y) γ τ htr, hlin]
+  rw [hq', hq', _root_.GlobalTheory.EisM.lat_smul j L₁ (0, 1) Φ (fun y => χd * Φ y) γ τ htr, hlin]
   simp only [Prod.fst, Prod.snd]
-  rw [hw, GlobalTheory.T.regularizedEisensteinLatticeSum_direction_indep j L₁ _ (0, 1) Φ τ hj hL₁ hΦb hk1 hk0]
+  rw [hw, _root_.GlobalTheory.EisM.lat_indep j L₁ _ (0, 1) Φ τ hj hL₁ hΦb hk1 hk0]
   ring
 
 end GlobalTheory.EisForm

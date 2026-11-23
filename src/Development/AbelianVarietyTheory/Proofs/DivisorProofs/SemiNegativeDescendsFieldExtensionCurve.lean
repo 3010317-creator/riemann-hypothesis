@@ -2,7 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsIsoFromNormalization
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverCompOfIsClosedImmersion
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MonoPullbackMapOfFlatStatement
+public import Mathlib.AlgebraicGeometry.Modules.Sheaf
+public import Mathlib.AlgebraicGeometry.Morphisms.Flat
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MonoPullbackMapOfFlat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyHomologyEquiv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -83,7 +86,7 @@ theorem semiNeg_descends_baseChange : ∀ (k : Type) [Field k] (C : Scheme.{0}) 
     have hinst : (‹Algebra k Γ(C, ⊤)›) = algebraΓOfHom f :=
       Algebra.algebra_ext _ _ (algebraMap_eq_strHom k C)
     haveI : Flat (pullback.fst f t) := inferInstance
-    have hm := GlobalTheory.T.mono_pullback_map_of_flat' _ _ (pullback.fst f t) W F i
+    have hm := _root_.GlobalTheory.mono_pullback_map_of_flat _ _ (pullback.fst f t) W F i
     have h := hF _ r (hW.pullback _) _ hm
     rw [← interNum_congr_lbIso k' _ (isLB_vecOne (LB.isLB_pull hW.isLB_det _)) (isLB_vecOne (hW.pullback _).isLB_det)
       (fun j => by fin_cases j; exact hW.lbIso_det_pullback _)] at h

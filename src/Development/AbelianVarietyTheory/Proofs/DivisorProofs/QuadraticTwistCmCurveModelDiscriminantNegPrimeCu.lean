@@ -1,14 +1,19 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DatumOfIsIntegersLattice
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCubeValuationEqDiscriminantStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralJOfNonrealMultiplierStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModelAtShortOfSixUnitStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModelAtShortTwistFourMulAddOneStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdDerivWeierstrassPOverSquaresPowEightMulStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationNatCastEqOneOfCoprimeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationTwelfthPowerOfCubeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeierstrassModelUnitDiscriminantAwayFromPStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCubeValuationEqDiscriminant
+public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsVariableChangeEqLatticeCurve
+public import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.TranslateProduct
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralJOfNonrealMultiplier
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModelAtShortOfSixUnit
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModelAtShortTwistFourMulAddOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdDerivWeierstrassPOverSquaresPowEightMul
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.RingTheory.Valuation.ValuationSubring
+public import Mathlib.FieldTheory.IntermediateField.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationTwelfthPowerOfCube
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeierstrassModelUnitDiscriminantAwayFromP
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationNatCastEqOneOfCoprime
 import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsIntegralModelOfForms
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -90,14 +95,14 @@ theorem GlobalTheory.CMModel.twist_modelAt_all : ∀ (p : ℕ) (F : Intermediate
   have hpF : (p : ℂ) ∈ F := by simpa using F.algebraMap_mem (p : ℚ)
   have hp0 : (p : ℂ) ≠ 0 := Nat.cast_ne_zero.2 hp.ne_zero
   by_cases hv : V.valuation (p : ℂ) = 1
-  · have hgood : ModelAt V F ⟨0, 0, 0, -L.g₂ / 4, -L.g₃ / 4⟩ 1 := GlobalTheory.T.weierstrassModel_unit_discriminant_away_from_p p F L t hp h4 h3 hD hsq V hv
+  · have hgood : ModelAt V F ⟨0, 0, 0, -L.g₂ / 4, -L.g₃ / 4⟩ 1 := _root_.GlobalTheory.CMModel.modelAt_one_of_sqProd_mem p F L t hp h4 h3 hD hsq V hv
     split_ifs with h8
-    · have hk := GlobalTheory.T.modelAt_shortTwist_four_mul_add_one' V F (-L.g₂ / 4) (-L.g₃ / 4) 1 0 hg2 hg3 hgood
+    · have hk := _root_.GlobalTheory.CMModel.modelAt_shortTwist_four_mul_add_one V F (-L.g₂ / 4) (-L.g₃ / 4) 1 0 hg2 hg3 hgood
       have e : (4 * ((0 : ℤ) : ℂ) + 1) = 1 := by simp
       rw [e] at hk
       exact modelAt_of_val hk (by simp [hv])
     · obtain ⟨m, hm⟩ : ∃ m : ℕ, p + 1 = 4 * m := ⟨(p + 1) / 4, by omega⟩
-      have hk := GlobalTheory.T.modelAt_shortTwist_four_mul_add_one' V F (-L.g₂ / 4) (-L.g₃ / 4) 1 (-(m : ℤ)) hg2 hg3 hgood
+      have hk := _root_.GlobalTheory.CMModel.modelAt_shortTwist_four_mul_add_one V F (-L.g₂ / 4) (-L.g₃ / 4) 1 (-(m : ℤ)) hg2 hg3 hgood
       have hmC : (p : ℂ) + 1 = 4 * m := by exact_mod_cast hm
       have e : (4 * ((-(m : ℤ) : ℤ) : ℂ) + 1) = -(p : ℂ) := by push_cast; linear_combination hmC
       rw [e] at hk
@@ -107,20 +112,20 @@ theorem GlobalTheory.CMModel.twist_modelAt_all : ∀ (p : ℕ) (F : Intermediate
         have h2 : Nat.Coprime p 2 := (Nat.coprime_primes hp Nat.prime_two).2 (by omega)
         have h3' : Nat.Coprime p 3 := (Nat.coprime_primes hp Nat.prime_three).2 (by omega)
         simpa using Nat.Coprime.mul_right h2 h3'
-      rcases GlobalTheory.T.valuation_natCast_eq_one_or_of_coprime V p 6 hc with h | h
+      rcases _root_.GlobalTheory.CMModel.valuation_natCast_eq_one_of_coprime V p 6 hc with h | h
       · exact absurd h hv
       · exact_mod_cast h
-    obtain ⟨A, hAF, hA0, hA⟩ := GlobalTheory.T.exists_cube_valuation_eq_discriminant p F L t hp h4 h3 hD V
-    have hsq8 := GlobalTheory.T.prodDerivWeierstrassPOverSquares_pow_eight_mul p F L t hp h4 h3 hD
+    obtain ⟨A, hAF, hA0, hA⟩ := _root_.GlobalTheory.CMModel.exists_mem_valuation_cube_eq_Δ p F L t hp h4 h3 hD V
+    have hsq8 := _root_.GlobalTheory.CMModel.sqProd_pow_eight_mul p F L t hp h4 h3 hD
     have hΔF : (latticeCurve L).Δ ∈ F := by
       rw [latticeCurve_Δ]
       exact sub_mem (pow_mem hD.g₂_mem 3) (mul_mem h27 (pow_mem hD.g₃_mem 2))
-    obtain ⟨u, huF, hu0, hu⟩ := GlobalTheory.T.exists_valuation_pow_twelve_mul_eq p V F (latticeCurve L).Δ A (sqProd p L t) h4 hΔF hAF hsq
+    obtain ⟨u, huF, hu0, hu⟩ := _root_.GlobalTheory.valuation_twelfth_power_of_cube p V F (latticeCurve L).Δ A (sqProd p L t) h4 hΔF hAF hsq
       (latticeCurve_Δ_ne_zero L) hA0 hA hsq8
     have him : (sqrtNegNat p).im ≠ 0 := by
       simp [sqrtNegNat]
       exact hp.pos.ne'
-    have hj : (latticeCurve L).j ∈ V := mem_of_isIntegral V (GlobalTheory.T.isIntegral_j_of_nonreal_multiplier L (sqrtNegNat p) hD.mul him)
+    have hj : (latticeCurve L).j ∈ V := mem_of_isIntegral V (_root_.GlobalTheory.CMModel.LatticeJInt.main L (sqrtNegNat p) hD.mul him)
     have hjΔ := GlobalTheory.j_mul_Δ (latticeCurve L)
     have hDV : -(p : ℂ) ^ 3 ∈ V := neg_mem (pow_mem (natCast_mem V p) 3)
     have hvD : V.valuation (-(p : ℂ) ^ 3) = V.valuation (p : ℂ) ^ 3 := by simp
@@ -134,12 +139,12 @@ theorem GlobalTheory.CMModel.twist_modelAt_all : ∀ (p : ℕ) (F : Intermediate
     by_cases h8 : p % 8 = 3
     · have hd1 : d = 1 := by rw [hd, if_pos h8]
       rw [if_pos h8] at hu
-      refine GlobalTheory.T.modelAt_short_of_valuation_six_eq_one V F _ _ _ u _ hj hjt h6 huF hu0 hDV ?_
+      refine _root_.GlobalTheory.CMModel.modelAt_short_of_six_unit V F _ _ _ u _ hj hjt h6 huF hu0 hDV ?_
       rw [short_Δ, hvD, hd1, one_pow, one_mul]
       exact hu
     · have hdp : d = -(p : ℂ) := by rw [hd, if_neg h8]
       rw [if_neg h8] at hu
-      refine GlobalTheory.T.modelAt_short_of_valuation_six_eq_one V F _ _ _ (u * p) _ hj hjt h6 (mul_mem huF hpF) (mul_ne_zero hu0 hp0) hDV ?_
+      refine _root_.GlobalTheory.CMModel.modelAt_short_of_six_unit V F _ _ _ (u * p) _ hj hjt h6 (mul_mem huF hpF) (mul_ne_zero hu0 hp0) hDV ?_
       rw [short_Δ, hvD, hdp]
       change V.valuation (u * p) ^ 12 * V.valuation (p : ℂ) ^ 3 = V.valuation ((-(p : ℂ)) ^ 6 * (latticeCurve L).Δ)
       rw [map_mul, map_mul, map_pow, Valuation.map_neg, ← hu, mul_pow]

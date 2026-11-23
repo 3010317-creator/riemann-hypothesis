@@ -9,14 +9,17 @@ public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.EqZeroOfR
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsIsFactor
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsLatticeVectorRepAndShift
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsRingHomLift
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.GermsSpecStatement
+public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IsFShiftZeroIff
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.GermsSpec
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsHolToCompClm
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsHolToHalfPlaneMono
-import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.MemThetaShiftZero
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.NonemptyChainArcWitnessUniversalFamilyStatement
+public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IdealPart
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.NonemptyChainArcWitnessUniversalFamily
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.PointsFramesEq
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.SpecPtsIsFibAt
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.SpecPtsNonempty
+public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.ArcDictExpZeroSection
+import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.MemThetaShiftZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,8 +58,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc
-public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.ArcDictExpZeroSection
-public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IdealPart
 
 @[expose] public section
 
@@ -78,7 +79,7 @@ theorem main : ReciprocityTheory.ChartRestriction.G.Out.Laws → ReciprocityTheo
   haveI : Smooth Xo.s := SmoothOfRelativeDimension.smooth D.dim Xo.s
   haveI : IsLocallyNoetherian Xo.X := LocallyOfFiniteType.isLocallyNoetherian Xo.s
   obtain ⟨Λ⟩ := GlobalTheory.ArcModel.nonempty_gtAn L₁ L₂ hU E H D l c O β _ a
-  obtain ⟨C⟩ := GlobalTheory.T.nonempty_chain_arc_witness_universal_family L₁ L₂ E H D l Xo c O β Y bF a χ W Λ hχ hgen
+  obtain ⟨C⟩ := _root_.GlobalTheory.ArcPts.nonempty_chain L₁ L₂ E H D l Xo c O β Y bF a χ W Λ hχ hgen
   choose laA hA using fun v => (GlobalTheory.GtRep.exists_rep_and_shift L₁ L₂ E H D l c O β _ a Λ l.A l.A_pos).1 (a.etaA v)
   choose laM hM using fun v => (GlobalTheory.GtRep.exists_rep_and_shift L₁ L₂ E H D l c O β _ a Λ l.M (le_trans (by norm_num) l.three_le)).1 (a.eta v)
   obtain ⟨levA, levM⟩ := GlobalTheory.ArcPts.chain_levels L₁ L₂ E H D l Xo c O β Y bF a χ W Λ C laA laM hA hM
@@ -87,7 +88,7 @@ theorem main : ReciprocityTheory.ChartRestriction.G.Out.Laws → ReciprocityTheo
       spMap ((algebraMap ℂ ℂ⸨X⸩).comp (bF.comp (IntermediateField.inclusion c.le).toRingHom)) := by
     rw [Category.assoc, pullback.condition, ← Category.assoc, C.yF_over, ← spMap_comp]
   have hrat : C.Φ.Rational := GlobalTheory.ConstRational.rational L₁ L₂ E H D l Xo Λ.A _ _ C.Φ laA laM hfin hover levA levM
-  obtain ⟨Γ⟩ := GlobalTheory.T.exists_germs_localRing_convergent_divisible.1
+  obtain ⟨Γ⟩ := _root_.GlobalTheory.GermRing.germs_spec.1
   obtain ⟨Ψ⟩ := GlobalTheory.ArcPts.Special.specPts_nonempty L₁ L₂ E H D l _ _ Xo.X Xo.s Xo.univ Λ.A _ C.Φ Γ _ Xo.s _ hover hfin hrat
   obtain ⟨lin, cst, hfac, hEF⟩ := GlobalTheory.ArcPts.exists_isFactor _ Λ.A
   obtain ⟨T₁, hT₁, hol, hfib⟩ :=

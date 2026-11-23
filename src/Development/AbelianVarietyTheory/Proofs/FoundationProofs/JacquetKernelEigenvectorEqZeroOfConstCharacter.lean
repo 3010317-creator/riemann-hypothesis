@@ -2,8 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.OrderedConst
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsSubquotientDetRepParInd
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrincipalSeriesTypeConstantFamilyDetCharacterStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SphericalVectorNotInBorelJacquetKernelStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrincipalSeriesTypeConstantFamilyDetCharacter
+public import Development.AbelianVarietyTheory.Definitions.Foundations.MatrixMeasurableSpace
+public import Development.AbelianVarietyTheory.Definitions.Foundations.SmoothPartStable
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.LeviEmbMemNormalizerLower
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SphericalVectorNotInBorelJacquetKernel
+public import Mathlib.Topology.Algebra.Group.Matrix
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +49,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Mathlib.Topology.Algebra.Group.Matrix
 import Mathlib.Topology.Sheaves.Init
 
 @[expose] public section
@@ -56,7 +59,7 @@ namespace GlobalTheory.PsType
 
 theorem eq_zero_of_isEig_const : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (n : ℕ) (χ : kˣ →* ℂˣ) (V : Type) [AddCommGroup V] [Module ℂ V] (π : Representation ℂ (GL (Fin n) k) V), IsSmooth π → IsSmoothChar χ → ∀ v ∈ twKer π (unipB k (Fin n)) 1, IsEig π (grp fun _ => χ) (theta fun _ => χ) v → v = 0 := by
   intro k _ _ _ _ n χ V _ _ π hπ hχ v hv he
-  obtain ⟨h1, h2⟩ := GlobalTheory.T.principalSeriesType_constant_family_det_character k n χ
+  obtain ⟨h1, h2⟩ := _root_.GlobalTheory.PsType.const_family_main k n χ
   have hs : IsSmoothChar (detChar (Fin n) χ)⁻¹ := by
     have hc : Continuous (Matrix.GeneralLinearGroup.det : GL (Fin n) k → kˣ) :=
       Matrix.GeneralLinearGroup.continuous_det
@@ -75,7 +78,7 @@ theorem eq_zero_of_isEig_const : ∀ (k : Type) [Field k] [ValuativeRel k] [Topo
     have : twist π (detChar (Fin n) χ)⁻¹ (u : GL (Fin n) k) x = π (u : GL (Fin n) k) x := by
       simp [twist, detChar, hd]
     rw [this]
-  refine GlobalTheory.T.spherical_vector_not_in_borel_jacquet_kernel k n V (twist π (detChar (Fin n) χ)⁻¹) (isSmooth_twist hπ hs) v (hk ▸ hv) ?_
+  refine _root_.GlobalTheory.PsType.eq_zero_of_fixed_KO_twKer_unipB k n V (twist π (detChar (Fin n) χ)⁻¹) (isSmooth_twist hπ hs) v (hk ▸ hv) ?_
   intro g hg
   have h3 := he g (by rw [h1]; exact hg)
   rw [h2 g hg] at h3

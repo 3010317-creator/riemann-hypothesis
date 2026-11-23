@@ -6,7 +6,9 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueAct
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFiniteBaseChangeStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFiniteBaseChange
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.BundleObjects
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.InstFintypeSumElim
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,8 +50,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.FlagMinor
 import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.CompactGapsGE
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsLatFamilyCongr
-public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.BundleObjects
-public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.InstFintypeSumElim
 import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.Objects
 
 @[expose] public section
@@ -82,7 +82,7 @@ theorem lieModel_along_generic : ∀ (X : Scheme.{0}) (G : Over X) [GrpObj G] [I
     change (M₀.pt (f v)).left = _
     rw [hf]
     rfl
-  obtain ⟨h1, h2, h3⟩ := GlobalTheory.T.lie_model_finite_base_change X G R x L M
+  obtain ⟨h1, h2, h3⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieProj.lie_finite_projective_baseChange X G R x L M
   refine ⟨L, iL, mL, M, ρ, j, h1, h2, hρ, h3 Ω Li M₀ j hl, hl, fun a v => M₀.inj ?_⟩
   change M₀.pt (f (ρ a v)) = M₀.pt (ρ₀ a (f v))
   rw [h₀ a, hf, hf, hρ a, Category.assoc]

@@ -5,8 +5,10 @@ public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.TopAmpEx
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.DenseGenericOfFlat
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsCyclotomicBaseRingInvertingPrime
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSiegelFamilyLocalisedCyclotomicIntegersStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.NonemptySiegelFamilyOverArithmeticBaseStatement
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsSeparatedOfIsQProjOver
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSiegelFamilyLocalisedCyclotomicIntegers
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.ExistsArBaseAway
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.NonemptySiegelFamilyOverArithmeticBase
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -70,7 +72,7 @@ theorem isAlgebraic_of_injective {p M : ℕ} (hM : M ≠ 0) {o : Type} [CommRing
 
 theorem exists_siegelFamily_siegRep : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{0}) (P : Out.PolAV S) (M : LB P.A.left), M.IsLB → ∃ t : LB.Gen (Theta P.A M), t.IsGen) → ThetaUnifAV → ∀ h n : ℕ, 1 ≤ h → n.Prime → Odd n → ∃ j₀ : ℕ, ∀ j ≥ j₀, ∀ p : ℕ, p.Prime → p ≠ n → ∃ Ag : SiegelFamily h p ((n ^ j) ^ 2), SiegRep Ag := by
   intro L L2 hθ hU h n hh hn hodd
-  obtain ⟨j₀, hj₀⟩ := GlobalTheory.T.nonempty_siegelFamily_over_arithmetic_base L L2 hθ hU h n hh hn hodd
+  obtain ⟨j₀, hj₀⟩ := _root_.GlobalTheory.ZM.SiegelArithFamily.nonempty_sFam L L2 hθ hU h n hh hn hodd
   refine ⟨max j₀ 1, fun j hj p hp hnp => ?_⟩
   have hj1 : 1 ≤ j := le_trans (le_max_right _ _) hj
   obtain ⟨o, _, b, em, i, hem, hζ, hi, hconst⟩ :=
@@ -84,7 +86,7 @@ theorem exists_siegelFamily_siegRep : Out.Laws → Out.Laws2 → (∀ (S : Schem
     rw [← pow_mul]
     exact h3.trans (Nat.le_self_pow (by omega) n)
   have hinj : Function.Injective i := fun x y hxy => hem.2.2 (by rw [← hi, ← hi, hxy])
-  obtain ⟨Ag, hAg⟩ := GlobalTheory.T.exists_siegelFamily_localised_cyclotomic_integers L L2 h _ p o _ i (hodd.pow.pow) hk hp hinj hζ hconst
+  obtain ⟨Ag, hAg⟩ := _root_.GlobalTheory.SiegelFamilyBaseChange.exists_siegelFamily L L2 h _ p o _ i (hodd.pow.pow) hk hp hinj hζ hconst
     (isAlgebraic_of_injective (by omega) i hinj) F
   obtain ⟨F', -⟩ := F.exists_baseChange i hinj hζ
   obtain ⟨Ag', -, H⟩ := F'.exists_sRep_siegRep (by omega) Ag hAg

@@ -3,14 +3,22 @@ module
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.SquareIntegrableTempered.CentredSegments.IrreducibleUnif
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.SquareIntegrableTempered.TemperedProducts.CentredSegSqInt
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IrreducibleAdmissibleGL
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AdmissibleIrreducibleCentralScalarStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralCharacterEqOfScalarStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralCharacterTwistPowDegreeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContractingUnitAbsPowBoundsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetTwoFactorCentralCharacterMulStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RealPowPartialSegmentLtOneStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegmentJacquetTwoFactorSplitStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegmentRepCentralCharacterFormulaStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.SmoothPartStable
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Mathlib.RepresentationTheory.Irreducible
+public import Mathlib.Topology.Instances.Matrix
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AdmissibleIrreducibleCentralScalar
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.SquareIntegrableTempered.CasselmanNecTemp
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralCharacterEqOfScalar
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralCharacterTwistPowDegree
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsSubquotientDetRepParInd
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContractingUnitAbsPowBounds
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetTwoFactorCentralCharacterMul
+public import Mathlib.Basic.Real.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RealPowPartialSegmentLtOne
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.LSegJacquet
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegmentJacquetTwoFactorSplit
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegmentRepCentralCharacterFormula
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,15 +84,15 @@ theorem centredSegSqInt : ∀ (k : Type) [Field k] [ValuativeRel k] [Topological
   have hN : 1 ≤ y.1 := one_le_deg_of_isLSeg hL
   have hmax : Zls.MaxExpStrict y.rep := by
     intro x hd hpos hjm t ht c hc
-    obtain ⟨Γ, ⟨hlen, hfirst⟩, hΓ⟩ := GlobalTheory.T.segment_jacquet_two_factor_split k Δ y.1 _ y.rep hLJ hL x hd hpos hjm
-    obtain ⟨hα0, hα1, hnorm⟩ := GlobalTheory.T.contracting_unit_abs_pow_bounds k t ht
-    obtain ⟨c0, hc0⟩ := GlobalTheory.T.admissible_irreducible_central_scalar k Δ.first.fst _ Δ.first.rep Δ.first.snd.rep.smooth
+    obtain ⟨Γ, ⟨hlen, hfirst⟩, hΓ⟩ := _root_.GlobalTheory.CompanionTheory.SegJacquet.exists_isTopCut_two_of_jhMult_ne_zero k Δ y.1 _ y.rep hLJ hL x hd hpos hjm
+    obtain ⟨hα0, hα1, hnorm⟩ := _root_.GlobalTheory.CompanionTheory.TopNilp.nabs_absPow_of_tendsto_zero k t ht
+    obtain ⟨c0, hc0⟩ := _root_.GlobalTheory.CompanionTheory.SchurCentre.scalar_acts_by_scalar k Δ.first.fst _ Δ.first.rep Δ.first.snd.rep.smooth
       Δ.first.snd.rep.irr (hIA k _ _ _ Δ.first.snd.rep.smooth Δ.first.snd.rep.irr) t
-    obtain ⟨cy, hcy⟩ := GlobalTheory.T.admissible_irreducible_central_scalar k y.fst _ y.rep y.snd.rep.smooth y.snd.rep.irr
+    obtain ⟨cy, hcy⟩ := _root_.GlobalTheory.CompanionTheory.SchurCentre.scalar_acts_by_scalar k y.fst _ y.rep y.snd.rep.smooth y.snd.rep.irr
       (hIA k _ _ _ y.snd.rep.smooth y.snd.rep.irr) t
-    have hprod := GlobalTheory.T.jacquet_two_factor_central_character_mul k y.fst _ y.rep x hd hjm t cy (c 0) (c 1) hcy (hc 0) (hc 1)
+    have hprod := _root_.GlobalTheory.CompanionTheory.JacCentral.scalar_mul_eq k y.fst _ y.rep x hd hjm t cy (c 0) (c 1) hcy (hc 0) (hc 1)
     have hcy1 : ‖cy‖ = 1 := hU t cy hcy
-    have hy1 := hU t _ (GlobalTheory.T.segment_rep_central_character_formula k Δ y hL t c0 hc0)
+    have hy1 := hU t _ (_root_.GlobalTheory.CompanionTheory.SegScalar.scalarBy_of_isLSeg k Δ y hL t c0 hc0)
     rw [norm_mul, norm_pow, norm_pow, hnorm, ← pow_mul] at hy1
     have hr : 0 < ‖c0‖ := by
       rcases (norm_nonneg c0).lt_or_eq with h | h
@@ -100,8 +108,8 @@ theorem centredSegSqInt : ∀ (k : Type) [Field k] [ValuativeRel k] [Topological
     have hG0 : Zl.ScalarBy (Γ 0).first t
         (c0 * ↑((GlobalTheory.SmGL.absPow k ↑(Zc.below Γ 0)) t) ^ Δ.first.fst) := by
       rw [hfirst 0]
-      exact GlobalTheory.T.central_character_twist_pow_degree k Δ.first t c0 _ hc0
-    have he0 := GlobalTheory.T.central_character_eq_of_scalar k (x 0) t _ _ (hc 0) (GlobalTheory.T.segment_rep_central_character_formula k (Γ 0) (x 0) (hΓ 0) t _ hG0)
+      exact _root_.GlobalTheory.CompanionTheory.ScalarTwist.scalarBy_nu k Δ.first t c0 _ hc0
+    have he0 := _root_.GlobalTheory.CompanionTheory.ScalarUniq.scalarBy_unique k (x 0) t _ _ (hc 0) (_root_.GlobalTheory.CompanionTheory.SegScalar.scalarBy_of_isLSeg k (Γ 0) (x 0) (hΓ 0) t _ hG0)
     have hn0 : ‖c 0‖ = ‖c0‖ ^ (Γ 0).len * GlobalTheory.SplitWeil.nabs k t ^
         (Δ.first.fst * ((Γ 0).len * (Γ 1).len + (Γ 0).len * ((Γ 0).len - 1) / 2)) := by
       rw [he0, norm_mul, norm_pow, norm_mul, norm_pow, norm_pow, hnorm, hnorm, hb0]
@@ -113,7 +121,7 @@ theorem centredSegSqInt : ∀ (k : Type) [Field k] [ValuativeRel k] [Topological
       have hp : (∏ i ∈ Finset.univ.filter (fun i : Fin 2 => i ≤ 0), ‖c i‖) = ‖c 0‖ := by
         simp [Finset.prod_filter, Fin.prod_univ_two]
       rw [hp, hn0]
-      exact GlobalTheory.T.real_pow_partial_segment_lt_one _ _ _ _ _ hα0 hα1 hr Δ.d_pos (Γ 0).len_pos (Γ 1).len_pos hy1
+      exact _root_.GlobalTheory.CompanionTheory.Segment.top_piece_exponent_lt_one _ _ _ _ _ hα0 hα1 hr Δ.d_pos (Γ 0).len_pos (Γ 1).len_pos hy1
     · rw [Fin.prod_univ_two, ← norm_mul, hprod, hcy1]
   exact @hCas y.1 _ _ _ y.rep hN y.snd.rep.smooth y.snd.rep.irr (fun t c hc => hU t c hc) hmax
 

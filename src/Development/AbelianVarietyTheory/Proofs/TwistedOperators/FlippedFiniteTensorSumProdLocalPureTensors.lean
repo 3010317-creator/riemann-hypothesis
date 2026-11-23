@@ -2,15 +2,17 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsRealFam
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationLeOneOfMem
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSumPureTensorOfIsTensorDepthStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FlatTensorMovedTensorFinsetSumLinearStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.RankEqCardIffExistsFrameMatrixFirstColumnBlock
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSumPureTensorOfIsTensorDepth
+public import Development.AbelianVarietyTheory.Definitions.Divisors.FlatTensorVacuum
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FlatTensorMovedTensorFinsetSumLinear
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FlippedFiniteTensorLocalIdentityStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IdempotentSumOverFinitePlacesUnique
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LastRowColumnProductDataHaveVectorsStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LocalFlipStageIsTensorPlaceDepth
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealLineOfPeriodsOnLine
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnfoldedProductFunctionEqOfLocalIdentityStatement
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
 import Development.AutomorphicArithmetic.CyclotomicBounds.RamifiedDiscriminants.FunKit
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -88,7 +90,7 @@ theorem flipFin_productExpansion : Big fun {D} _ _ _ _ {T} _ _ _ _ _ _ ch => Con
     have hp := (flipStage_path_level t w.1 ch.S.B ch.W Φ).1
     change (locGrid ch.G t w.1).IsTensor _ _ (flipStage t w.1 ch.S.B ch.W Φ).path (Tflip ch.W ch.S.B t Φ w.1) at h1
     rw [hp] at h1
-    exact GlobalTheory.T.exists_sum_pureTensor_of_isTensor_depth _ _ (isUnif_unifAt w.1) _ _ _ h1
+    exact _root_.GlobalTheory.TensorExpansion.exists_sum_pureTensor _ _ (isUnif_unifAt w.1) _ _ _ h1
   choose n xw φw hnat hTeq using hexp
   have hv := fun a : (∀ w : locPl ch.G t, Fin (n w)) => hVec t e he (fun w => φw w (a w)) (fun w b hb => hnat w (a w) b hb)
   choose fd hfd using fun a j => (hv a).1 j
@@ -105,7 +107,7 @@ theorem flipFin_productExpansion : Big fun {D} _ _ _ _ {T} _ _ _ _ _ _ ch => Con
       have hT : Tflip ch.W ch.S.B t Φ w.1 = fun z => ∑ i ∈ Finset.univ, xw w i * (locGrid ch.G t w.1).lines₂ (GlobalTheory.SplitFlip.oppositePath D.R.m) (φw w i) z := funext (hTeq w)
       show flatTensor one_le_sLen (psiAt ch.W w.1) (unitVol w.1) (moved (locGrid ch.G t w.1) (keepAt ch.G w.1) ((repsAt ch.G t w.1).elt (β w)) (Tflip ch.W ch.S.B t Φ w.1)) _ _ = _
       rw [hT]
-      exact GlobalTheory.T.flatTensor_movedTensor_finset_sum_linear _ one_le_sLen _ _ (hψ t w.1 w.2) (unifAt w.1) (depthAt ch.G w.1) _ _ _ _ _ (fun i _ => (locGrid ch.G t w.1).isTensor_pureTensor _ _ _ _ (hnat w i)) _ _
+      exact _root_.GlobalTheory.FunObj.flatTensor_moved_sum _ one_le_sLen _ _ (hψ t w.1 w.2) (unifAt w.1) (depthAt ch.G w.1) _ _ _ _ _ (fun i _ => (locGrid ch.G t w.1).isTensor_pureTensor _ _ _ _ (hnat w i)) _ _
     simp only [key]
     rw [Finset.prod_univ_sum]
     refine Finset.sum_congr rfl fun a _ => ?_

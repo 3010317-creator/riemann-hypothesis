@@ -1,7 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.CosetTrace
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SeparatingFamilySumClosedUnderProdStatement
+public import Mathlib.Algebra.Field.Subfield.Defs
+public import Mathlib.Basic.NNReal.Defs
+public import Mathlib.RingTheory.Valuation.Basic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SeparatingFamilySumClosedUnderProd
+public import Mathlib.Algebra.Order.BigOperators.GroupWithZero.Finset
+public import Mathlib.Topology.Algebra.Monoid
+public import Mathlib.Topology.Order.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,9 +51,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.Algebra.Order.BigOperators.GroupWithZero.Finset
-public import Mathlib.Topology.Algebra.Monoid
-public import Mathlib.Topology.Order.Basic
 
 @[expose] public section
 
@@ -105,7 +108,7 @@ theorem almostSep_of_moves : ∀ (L : Type) [Field L] (v : Valuation L ℝ≥0) 
   let x : G ⧸ N → L := fun q => q.out • y q
   have hxF : ∀ q, x q ∈ Fix L N := fun q => smul_mem_fix N _ (hyF q)
   have hxv : ∀ q, v (x q) ≤ 1 := fun q => by simp only [x, hv]; exact hyv q
-  obtain ⟨n, a, b, hab, hsum⟩ := GlobalTheory.T.separating_family_sum_closed_under_prod L v G (Fix L N) (G ⧸ N) s x y
+  obtain ⟨n, a, b, hab, hsum⟩ := _root_.GlobalTheory.sepFamily_prod L v G (Fix L N) (G ⧸ N) s x y
     (fun j _ => ⟨hxF j, hyF j, hxv j, hyv j⟩)
   refine ⟨n, a, b, ∏ q ∈ s, (x q - y q), ?_, ?_⟩
   · refine

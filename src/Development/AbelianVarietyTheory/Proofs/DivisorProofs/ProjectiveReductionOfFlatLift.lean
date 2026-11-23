@@ -2,14 +2,27 @@ module
 
 public import Mathlib.NumberTheory.NumberField.Basic
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AnnihilatorLiftOfMulEqPStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGlobalUniformiserAbovePrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteOfSurjectiveTensorSemilinearStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FreeOfPrincipalMaximalIdealOfKerSmulLeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsReducedFieldTensorIntFiniteReducedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsReducedQuotTensorOfReducedModPStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KerSmulLeIdealSmulOfFreeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalizationMaximalIdealEqSpanNilpotentArtinianStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalizedModuleMemAnnSpanSmulTopStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGlobalUniformiserAbovePrime
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Mathlib.RingTheory.TensorProduct.Maps
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteOfSurjectiveTensorSemilinear
+public import Mathlib.Algebra.Algebra.Operations
+public import Mathlib.LinearAlgebra.FreeModule.Basic
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Defs
+public import Mathlib.RingTheory.Noetherian.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FreeOfPrincipalMaximalIdealOfKerSmulLe
+public import Mathlib.RingTheory.TensorProduct.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsReducedFieldTensorIntFiniteReduced
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsReducedQuotTensorOfReducedModP
+public import Mathlib.RingTheory.Ideal.Span
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KerSmulLeIdealSmulOfFree
+public import Mathlib.RingTheory.Artinian.Defs
+public import Mathlib.RingTheory.Localization.AtPrime.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalizationMaximalIdealEqSpanNilpotentArtinian
+public import Mathlib.Algebra.Module.LocalizedModule.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalizedModuleMemAnnSpanSmulTop
+public import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -23,7 +36,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -75,9 +87,9 @@ theorem projective_of_nilpotent_of_reduced_quotient (D : Type) [CommRing D] [IsA
   have hflat : Module.Flat D N := by
     apply Module.flat_of_localized_maximal
     intro P _
-    have hloc := GlobalTheory.T.localization_maximalIdeal_eq_span_nilpotent_artinian D x hx hr P
-    have hann := GlobalTheory.T.localizedModule_mem_annSpan_smul_of_mem D P.primeCompl x N h
-    haveI := GlobalTheory.T.free_of_principal_maximalIdeal_of_ker_smul_le' (Localization.AtPrime P) (algebraMap D _ x) hloc
+    have hloc := _root_.GlobalTheory.localization_maximalIdeal_eq_span_of_nilpotent D x hx hr P
+    have hann := _root_.GlobalTheory.localizedModule_mem_annSpan_smul_top D P.primeCompl x N h
+    haveI := _root_.GlobalTheory.free_of_principal_maximalIdeal_of_ker_smul_le (Localization.AtPrime P) (algebraMap D _ x) hloc
       (LocalizedModule P.primeCompl N) inferInstance hann
     exact Module.Flat.trans D (Localization.AtPrime P) _
   haveI : Module.FinitePresentation D N := Module.finitePresentation_of_finite D N
@@ -88,12 +100,12 @@ theorem projective_reduction_of_flat_lift : ∀ (p : ℕ) [Fact p.Prime] (F : Ty
   have hpk : (p : k) = 0 := by
     have : (p : Λ) ∈ RingHom.ker π := by rw [hker]; exact Ideal.subset_span rfl
     simpa using this
-  have hkerp := GlobalTheory.T.mem_span_smul_of_smul_eq_zero_of_free Λ (p : Λ) hann M hfree
+  have hkerp := _root_.GlobalTheory.ker_smul_le_ideal_smul_of_free Λ (p : Λ) hann M hfree
   have hkerf' : ∀ m, f m = 0 → m ∈ Ideal.span {(p : Λ)} • (⊤ : Submodule Λ M) := by
     intro m hm; rw [← hker]; exact hkerf m hm
-  obtain ⟨ϖ, z, hϖz, ⟨n0, hn0⟩, hred⟩ := GlobalTheory.T.exists_global_uniformizer_above_prime p F
+  obtain ⟨ϖ, z, hϖz, ⟨n0, hn0⟩, hred⟩ := _root_.GlobalTheory.exists_global_uniformiser_above_prime p F
   haveI : IsArtinianRing (k ⊗[ℤ] 𝓞 F) := IsArtinianRing.of_finite k (k ⊗[ℤ] 𝓞 F)
-  haveI : Module.Finite (k ⊗[ℤ] 𝓞 F) N := GlobalTheory.T.finite_of_surjective_semilinear_tensor Λ k π (𝓞 F) M hfin N f hf
+  haveI : Module.Finite (k ⊗[ℤ] 𝓞 F) N := _root_.GlobalTheory.finite_of_surjective_tensor_semilinear Λ k π (𝓞 F) M hfin N f hf
   have hnil : IsNilpotent ((1 : k) ⊗ₜ[ℤ] ϖ) := by
     refine ⟨n0, ?_⟩
     obtain ⟨y, hy⟩ := Ideal.mem_span_singleton'.mp hn0
@@ -106,7 +118,7 @@ theorem projective_reduction_of_flat_lift : ∀ (p : ℕ) [Fact p.Prime] (F : Ty
     haveI : Finite (𝓞 F ⧸ Ideal.span {(p : 𝓞 F)}) := Ideal.finiteQuotientOfFreeOfNeBot _ hne
     exact Finite.of_surjective _ (Ideal.Quotient.factor_surjective
       (Ideal.span_mono (by simp : ({(p : 𝓞 F)} : Set (𝓞 F)) ⊆ {(p : 𝓞 F), ϖ})))
-  have hredD := GlobalTheory.T.isReduced_quot_tensor_of_reduced_mod_p (𝓞 F) k p ϖ hpk (GlobalTheory.T.isReduced_field_tensor_int_finite_reduced _ k)
+  have hredD := _root_.GlobalTheory.reduced_quot_tensor_of_reduced_modp (𝓞 F) k p ϖ hpk (_root_.GlobalTheory.FinRedTensor.isReduced_field_tensor_finite _ k)
   have hannN := GlobalTheory.T.annihilator_lift_of_mul_eq_p_alt p (𝓞 F) Λ k π hpk hp2 M hkerp N f hf hkerf' ϖ z hϖz
   exact projective_of_nilpotent_of_reduced_quotient _ _ hnil hredD N hannN
 

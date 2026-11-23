@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsGaloisCover
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.EvalEqZeroOfMemVanIdeal
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.FiniteSetOfHilbertFunctionsFibresStatement
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.FiniteHomogeneousInf
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.FiniteSetOfHilbertFunctionsFibres
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -110,7 +111,7 @@ theorem exists_away_projective_vanIdeal : ∀ (R : Type) [CommRing R] [IsNoether
       obtain ⟨g, hg, h⟩ := h₃ e he
       exact ⟨g, hg, fun L _ y hy hφ => absurd (hφ ▸ h L y hy) hne⟩
   choose g hg h₅ using h₄
-  have hfin := GlobalTheory.T.finite_setOf_hilbertFunctions_fibres R σ (vanIdeal d p) hI
+  have hfin := _root_.GlobalTheory.finite_setOf_dimDeg_map R σ (vanIdeal d p) hI
   let f : R := f₁ * ∏ φ ∈ hfin.toFinset, g φ
   have h₆ : ∀ (L : Type) [Field L] (y : R →+* L), y f ≠ 0 → ∀ e ≥ d,
       (dimDeg (vanIdeal d fun h i => y (p h i)) e : ℚ) = Q.eval (e : ℚ) := by

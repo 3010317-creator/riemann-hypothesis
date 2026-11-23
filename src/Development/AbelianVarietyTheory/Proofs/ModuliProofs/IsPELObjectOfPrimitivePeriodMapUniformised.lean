@@ -5,13 +5,14 @@ public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.ExistsAr
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.MemNonzeroLocusIffPowFn
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsAbelianSchemeAndExtendOfGenericHoms
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CubeLineBundleAdjointIffHermFormAdjointStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.DeterminantConditionOfDiagonalCMActionStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CubeLineBundleAdjointIffHermFormAdjoint
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.DeterminantConditionOfDiagonalCMAction
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsGenMovePow
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsOActOfMapLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsOActOfMapLattice
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPrimitiveNormalisation
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsTateIsoOfPeriodMapGenusStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsUniqueIsMonHomOfLinearMapLatticeAnyDimStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsTateIsoOfPeriodMapGenus
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsUniqueIsMonHomOfLinearMapLatticeAnyDim
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -120,18 +121,18 @@ theorem pelClass_of_period : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{0}) (P
   have hkeep : ∀ c, ∀ z ∈ u.Λ, diagAct ty c z ∈ u.Λ := fun c z hz => by
     obtain ⟨x, rfl⟩ := (hΛ z).1 hz
     exact (hΛ _).2 ⟨c • x, (hQ c x).symm⟩
-  obtain ⟨act, hact⟩ := GlobalTheory.T.exists_oAct_of_endo_preserving_lattice h₁ h₂ h₃ h₄ (𝓞 E) t.pol u (diagAct ty) hkeep
+  obtain ⟨act, hact⟩ := _root_.GlobalTheory.exists_oAct_of_map_lattice h₁ h₂ h₃ h₄ (𝓞 E) t.pol u (diagAct ty) hkeep
   change OAct (𝓞 E) t.A at act
   have hj : ∀ j, act.act (a j) = t.act j := fun j => by
     obtain ⟨F, hFQ, hFe⟩ := hF j
     have e : F.restrictScalars ℝ = (diagAct ty (a j)).restrictScalars ℝ :=
       LinearMap.ext_on_range hpol.2.2.1 fun x => (hFQ x).trans (hQ _ x).symm
-    refine (GlobalTheory.T.existsUnique_isMonHom_of_linearMap_lattice_anyDim h₁ h₂ h₃ h₄ t.pol t.pol t.L t.L u u (diagAct ty (a j)) (hkeep _)).unique
+    refine (_root_.GlobalTheory.existsUnique_isMonHom_of_map_lattice h₁ h₂ h₃ h₄ t.pol t.pol t.L t.L u u (diagAct ty (a j)) (hkeep _)).unique
       ⟨act.hom _, hact _⟩ ⟨t.hom j, fun z => ?_⟩
     exact (congrArg u.ex (LinearMap.congr_fun e z).symm).trans (hFe z)
   have hadj : ∀ c, LBIso (cubeLB t.A ![fst t.A t.A ≫ act.act c, snd t.A t.A] t.L)
       (cubeLB t.A ![fst t.A t.A, snd t.A t.A ≫ act.act (H.bar c)] t.L) := fun c => by
-    refine (GlobalTheory.T.cubeLineBundle_adjoint_iff_hermForm_adjoint h₁ h₂ h₃ h₄ t.pol u Hm χ _ _ _ _ hAH (act.hom c) (act.hom (H.bar c)) (hact c)
+    refine (_root_.GlobalTheory.HermAdjoint.lbIso_cubeLB_iff_hermForm h₁ h₂ h₃ h₄ t.pol u Hm χ _ _ _ _ hAH (act.hom c) (act.hom (H.bar c)) (hact c)
       (hact (H.bar c))).2 (hermForm_adjoint_of_span Hm (diagAct ty c) (diagAct ty (H.bar c)) hpol.2.2.1 ?_)
     rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩
     have e := D'.adj c x y
@@ -155,8 +156,8 @@ theorem pelClass_of_period : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{0}) (P
     simp [h] at this
   refine ⟨?_, ?_⟩
   · rw [RingHom.comp_apply, hρ]
-    exact GlobalTheory.T.determinantCondition_of_diagonalCMAction h₁ h₂ h₃ h₄ E H D t.pol u Hm χ act ty hAH hty hact K σ
-  obtain ⟨I, hI⟩ := GlobalTheory.T.exists_tateIso_of_periodMap_genus_alt h₁ h₂ h₃ h₄ E H D D' f ν t.pol u Hm χ act Q hpq hgen hAH hpol.1 hΛ hpol.2.2.2.2.2
+    exact _root_.GlobalTheory.detCond_of_diagonal_action h₁ h₂ h₃ h₄ E H D t.pol u Hm χ act ty hAH hty hact K σ
+  obtain ⟨I, hI⟩ := _root_.GlobalTheory.exists_tateIso_of_periodMap_genus h₁ h₂ h₃ h₄ E H D D' f ν t.pol u Hm χ act Q hpq hgen hAH hpol.1 hΛ hpol.2.2.2.2.2
     (fun c n x => by
       rw [← hact, map_smul]
       exact congrArg (fun z => u.ex ((n : ℂ)⁻¹ • z)) (hQ c x).symm) K σ

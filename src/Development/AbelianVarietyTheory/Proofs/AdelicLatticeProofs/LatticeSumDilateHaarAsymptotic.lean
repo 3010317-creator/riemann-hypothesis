@@ -3,12 +3,12 @@ module
 public import Mathlib.Algebra.Module.ZLattice.Covolume
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.Calculus.ContDiff.Defs
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ZlatticeTsumDilateSubIntegralLeRapidStatement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ZlatticeTsumDilateSubIntegralLeRapid
+public import Mathlib.Analysis.InnerProductSpace.EuclideanDist
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-public import Mathlib.Analysis.InnerProductSpace.EuclideanDist
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
@@ -91,7 +91,7 @@ theorem lattice_sum_dilate_haar :
   let ν : Measure V := (volume : Measure (EuclideanSpace ℝ (Fin (Module.finrank ℝ V)))).map e
   have : ν.IsAddHaarMeasure := ContinuousLinearEquiv.isAddHaarMeasure_map e _
   have hmp : MeasurePreserving e volume ν := ⟨e.continuous.measurable, rfl⟩
-  obtain ⟨C, hC⟩ := GlobalTheory.T.zlattice_tsum_dilate_sub_integral_le_rapid _ (ZLattice.comap ℝ L e.toLinearMap) (f ∘ e)
+  obtain ⟨C, hC⟩ := _root_.GlobalTheory.latticeSum_dilate_sub_integral_le _ (ZLattice.comap ℝ L e.toLinearMap) (f ∘ e)
     (hf.comp e.contDiff) (hs.comp_homeomorph e.toHomeomorph) A
   refine ⟨C, fun x₀ t ht ht1 => ?_⟩
   have h := hC (e.symm x₀) t ht ht1

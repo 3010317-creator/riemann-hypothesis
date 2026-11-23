@@ -1,23 +1,33 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.HeightFunctions.GrowthConstantBoundGcR
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsShortThetaFamilyWithBlockPolynomialRulesStatement
+public import Development.AbelianVarietyTheory.Definitions.ThetaValues.IsBlockProd
+public import Development.AbelianVarietyTheory.Definitions.ThetaValues.GamAt
+public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniqOfChartIndep2
+public import Formalism.LocalToGlobal.ProjectiveLattices.RecPJThAllNeBot
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.SupBoundPageRows
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsShortThetaFamilyWithBlockPolynomialRules
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.GamAtOfLawsCore
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.LeExpOfLogLe
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.LogLeOfLePowMulPow
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.LogTwoMulCountLeMulSize
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.LowerBoundAtFramesFamilyWithScaledThetaRulesStatement
+public import Formalism.SharpRestriction.GenusPolyhedralBounds.RelativeIndexClassSets.AdmissibleModuleIffLatticeQuotients
+public import Formalism.LocalToGlobal.ProjectiveLattices.SupNDataOfNonneg
+public import Formalism.SharpRestriction.GenusPolyhedralBounds.RelativeIndexClassSets.CombBound4Of
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.LowerBoundAtFramesFamilyWithScaledThetaRules
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.PageRowsOfLe
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.PageTwoLeLAndSigns
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ScaledFamily
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ScaledThetaLatticeGeneratorsNoCommonZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ScaledThetaLatticeGeneratorsNoCommonZero
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.SizePageRowsOfSizePageAt
-import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.SupBoundsLeGeneratorConstantMulSize
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaLatticeWeightScalarNeZeroAndLogBounds
-import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaRunParametersAtTypePrimesProductStatement
-import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.WeightsBelow
-public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.HarmonicGermValueChartIndependentStatement
+public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.HarmonicGermValueChartIndependent
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ScaledThetaLatticeLeSupLatticeEveryWeightStatement
+public import Development.AbelianVarietyTheory.Definitions.ThetaValues.SWEqSOf
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.SupBoundsLeGeneratorConstantMulSize
+import Development.AbelianVarietyTheory.Definitions.TorusSections.IsTorusOf
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaRunParametersAtTypePrimesProduct
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.WeightsBelow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,8 +65,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.Definitions.ThetaValues.GamAt
-public import Development.AbelianVarietyTheory.Definitions.ThetaValues.SWEqSOf
 
 @[expose] public section
 
@@ -127,7 +135,7 @@ set_option maxHeartbeats 4000000 in
 set_option synthInstance.maxHeartbeats 400000 in
 theorem exists_genOK : ∀ (D : D7) (T : Top D) (h : LawsP T) (hinj : Function.Injective D.what₂.OtoLL) (EX : ErrX D) (p j : ℕ) (hj : InR D j) (large₂ : SizeData₂ D) (H : KHyp) (C2 A2 CT : ℝ) (ka wL wF : WeightFamilies.Wt D j) (Tn nP nW : ℕ) (h0 : ℝ), GlobalTheory.PtTie.Oriented T EX → PageOK large₂ (recPJ h j hj) H C2 A2 CT ka wL wF Tn nP nW h0 → ∃ G : GlobalFamilyData (recPJ h j hj) ka wL wF, GenOK h j hj large₂ G (scalOfP (recB h.toLawsCore) hinj EX p ka wL wF Tn) (cc D large₂ C2 A2 7 wL) := by
   intro D T h hinj EX p j hj large₂ H C2 A2 CT ka wL wF Tn nP nW h0 hOr hP
-  have hC := GlobalTheory.T.harmonic_germ_value_chart_independent
+  have hC := _root_.GlobalTheory.harmonicValue_chart_independent
   have hGam : GamAt T.toCore := GlobalTheory.RunIn.gamAt_of_lawsCore D T.toCore h.toLawsCore
   obtain ⟨hrows, -⟩ := GlobalTheory.pageRows_of_pageAt D _ _ j (recPJ h j hj) large₂ H C2 A2 7 CT ka wL wF Tn nP nW h0
     hP.hyp hP.page hP.ck
@@ -144,10 +152,10 @@ theorem exists_genOK : ∀ (D : D7) (T : Top D) (h : LawsP T) (hinj : Function.I
   obtain ⟨hC1, hA1, hCc, hAc, hCR, h12⟩ := hP.tie
   have htie : TieC (⟨0, 2, 0, 2, 0, 2, 0, 4, 7⟩ : KAdm) H 1 4 0 11 C2 A2 7 :=
     ⟨hC1, hA1, hCc, hAc, hCR, rfl, rfl, h12, le_rfl, le_rfl, le_rfl, le_rfl, le_rfl, le_rfl, le_rfl⟩
-  obtain ⟨-, -, -, hfrr⟩ := GlobalTheory.T.thetaRunParameters_at_typePrimes_product D _ _ j (recPJ h j hj) _ 1 4 0 11
+  obtain ⟨-, -, -, hfrr⟩ := _root_.GlobalTheory.RunParametersAtRecord.run_at_record D _ _ j (recPJ h j hj) _ 1 4 0 11
     (scalOfP (recB h.toLawsCore) hinj EX p ka wL wF Tn) large₂ H C2 A2 7 CT ka wL wF Tn nP nW h0 hP.hyp htie hP.page hsupp
   obtain ⟨N, w0, P₁, hharm, hblk, hcont, hspan, hNle, hsup⟩ :=
-    GlobalTheory.T.exists_short_thetaFamily_with_block_polynomial_rules hC D T h hGam large₂ j hj wL hrowsL hL hrn hlast hfrr
+    _root_.GlobalTheory.BlockTh.theta_family_block hC D T h hGam large₂ j hj wL hrowsL hL hrn hlast hfrr
   have hO : OPO large₂ (recB h.toLawsCore) := by
     obtain ⟨-, hSet, -⟩ := hP.hyp
     obtain ⟨-, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, -, hO, -⟩ := hSet
@@ -197,9 +205,9 @@ theorem exists_genOK : ∀ (D : D7) (T : Top D) (h : LawsP T) (hinj : Function.I
     unfold nbR
     push_cast at hl ⊢
     linarith [hO.1]
-  · exact GlobalTheory.T.scaledThetaLattice_generators_noCommonZero hC D T h EX j hj (scalOfP (recB h.toLawsCore) hinj EX p ka wL wF Tn) large₂ H C2 A2 7 CT ka wL wF
+  · exact _root_.GlobalTheory.RunIn.noCommonZero_of_tiedW hC D T h EX j hj (scalOfP (recB h.toLawsCore) hinj EX p ka wL wF Tn) large₂ H C2 A2 7 CT ka wL wF
       Tn nP nW h0 _ _ hP.hyp (by rw [hS]; exact hsOf.1) _ hT
-  · exact GlobalTheory.T.lower_bound_at_frames_family_with_scaled_thetaRules hC D T h EX j hj _ 1 4 0 11 (scalOfP (recB h.toLawsCore) hinj EX p ka wL wF Tn) large₂ H C2 A2 7 CT
+  · exact _root_.GlobalTheory.DegreeInterpolationBounds.i2iAt_record hC D T h EX j hj _ 1 4 0 11 (scalOfP (recB h.toLawsCore) hinj EX p ka wL wF Tn) large₂ H C2 A2 7 CT
       ka wL wF Tn nP nW h0 hP.hyp htie hP.page hsupp P₁ hharm hblk N' _
       (containsTh_of_eq_smul j P₁ _ _ _ (fun k q y => by
         simp only [scaledFamily]

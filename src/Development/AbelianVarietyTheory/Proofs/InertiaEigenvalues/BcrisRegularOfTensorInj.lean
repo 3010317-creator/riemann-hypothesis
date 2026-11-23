@@ -1,19 +1,22 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AcrisTorsionFreeComplete
-import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AinfFrobeniusUnitEigenvectorGaloisLineStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BcrisExistsTPowMulThetaNeZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BcrisRegularOfFullGaloisLineUnitsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsUnitCharacterOfGaloisStableLineCLTateStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsUnramifiedPeriodAinfUnitStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FixedOfInertiaFrobeniusStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TateCharacterFiniteOnInertiaOfEigenvectorStatement
+public import Formalism.LocalRingCardinality.AdicCompletionLocal.InstIsAdicCompleteOCSpanSingletonSetCast
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AinfFrobeniusUnitEigenvectorGaloisLine
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BcrisExistsTPowMulThetaNeZero
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BcrisRegularOfFullGaloisLineUnits
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsUnitCharacterOfGaloisStableLineCLTate
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsUnramifiedPeriodAinfUnit
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FixedOfInertiaFrobenius
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TateCharacterFiniteOnInertiaOfEigenvector
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AcrisGaloisActionFontaineTEqCyclotomic
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsCrisP
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GaloisInvariantsBcrisEqMaxUnramified
+import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BdRPlusIsDomainBdRIsField
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FontaineTIsUnitBcrisAndUniformizerBdRPlus
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GaloisInvariantsBcrisEqMaxUnramifiedStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalPeriodRingsDataUnramifiedLawsStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalPeriodRingsDataUnramifiedLaws
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PeriodRingsGaloisActionLawsFrobeniusComm
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ResEqIff
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaBdRPlusSurjectiveKerUnitsEquivariant
@@ -74,7 +77,7 @@ theorem exists_frob (C : Core l) :
   have := C.σ_root c m hm hlm (Subtype.ext hζ)
   rw [show ζ = (c : Om l) from rfl, hg, this]; rfl
 
-theorem qB_coe (z : ℤ_[l]) : C.qB (z : ℚ_[l]) = Per.zB l z := (GlobalTheory.T.localPeriodRingsData_unramified_laws l C).2.2.1 z
+theorem qB_coe (z : ℤ_[l]) : C.qB (z : ℚ_[l]) = Per.zB l z := (_root_.GlobalTheory.MemLoc.ULaws.u_laws l C).2.2.1 z
 
 theorem ι_aB (a : Per.Ainf l) :
     C.ι (Per.aB l a) = algebraMap (Per.BdRp l) (Per.BdR l) (aDp l a) := by
@@ -86,7 +89,7 @@ theorem theta_eig {b : Per.Bcris l} {y : Per.BdRp l}
     (hx : Per.σB g b = C.qB x * b) :
     Per.σC g (Per.θD l y) = algebraMap ℚ_[l] ℂ_[l] x * Per.θD l y := by
   have h1 := congrArg C.ι hx
-  rw [(GlobalTheory.T.localPeriodRingsData_unramified_laws l C).2.2.2.2.1, map_mul, h, (ActLaws.act_laws l).2.2.2.2.2.2.2.2.2.1,
+  rw [(_root_.GlobalTheory.MemLoc.ULaws.u_laws l C).2.2.2.2.1, map_mul, h, (ActLaws.act_laws l).2.2.2.2.2.2.2.2.2.1,
     show C.ι (C.qB x) = _ from C.ι_u _, ← map_mul] at h1
   have h2 := congrArg (Per.θD l) ((BdRField.bdR_isField l).2.1 h1)
   rw [(thetaD_props l).2.2.2.2, map_mul, C.o_sec.th] at h2
@@ -99,10 +102,10 @@ theorem σB_tB (g : GQ l) : Per.σB g C.tB = C.qB ((C.χ g : ℤ_[l]) : ℚ_[l])
 theorem isUnit_of_theta {b : Per.Bcris l} {y : Per.BdRp l}
     (h : C.ι b = algebraMap (Per.BdRp l) (Per.BdR l) y) (hy : Per.θD l y ≠ 0)
     (hb : ∀ g : GQ l, ∃ x : ℚ_[l], Per.σB g b = C.qB x * b) : IsUnit b := by
-  obtain ⟨η, hη⟩ := GlobalTheory.T.exists_unitCharacter_of_galoisStable_line_cLTate l _ hy fun g => (hb g).imp fun x hx => theta_eig C h hx
-  obtain ⟨N, hN, hI⟩ := GlobalTheory.T.tate_character_finite_on_inertia_of_eigenvector l η _ hy hη
+  obtain ⟨η, hη⟩ := _root_.GlobalTheory.Per.exists_unit_character_of_stable_line l _ hy fun g => (hb g).imp fun x hx => theta_eig C h hx
+  obtain ⟨N, hN, hI⟩ := _root_.GlobalTheory.TateEigen.finite_on_inertia l η _ hy hη
   obtain ⟨F, hF⟩ := exists_frob C
-  obtain ⟨w, hw, hwI, hwF, hwφ⟩ := GlobalTheory.T.exists_unramified_period_ainf_unit l F hF (η F ^ N)⁻¹
+  obtain ⟨w, hw, hwI, hwF, hwφ⟩ := _root_.GlobalTheory.MemLoc.exists_unramified_period l F hF (η F ^ N)⁻¹
   have h2 : C.ι (b ^ N * Per.aB l w) = algebraMap (Per.BdRp l) (Per.BdR l) (y ^ N * aDp l w) := by
     rw [map_mul, map_pow, h, ι_aB, map_mul, map_pow]
   have hθ : Per.θD l (y ^ N * aDp l w) ≠ 0 := by
@@ -115,7 +118,7 @@ theorem isUnit_of_theta {b : Per.Bcris l} {y : Per.BdRp l}
     rw [map_mul, map_mul, map_pow, map_pow, hη, ← (thetaD_props l).2.2.2.2,
       (ActLaws.act_laws l).2.2.2.2.2.2.2.2.2.2.1, mul_pow, ← map_pow, Units.val_pow_eq_pow_val,
       PadicInt.coe_pow]
-  have hfix := GlobalTheory.T.fixed_of_fixed_inertia_of_fixed_frobenius l F hF (Per.θD l (y ^ N * aDp l w))
+  have hfix := _root_.GlobalTheory.RegularDense.fixed_of_inertia_frobenius l F hF (Per.θD l (y ^ N * aDp l w))
     (fun g hg => by rw [hact, hI g hg, hwI g hg]; simp)
     (by
       rw [hact, hwF, map_mul, map_mul, ← C.o_sec.z, C.o_sec.th, map_mul, map_pow]
@@ -129,7 +132,7 @@ theorem isUnit_of_theta {b : Per.Bcris l} {y : Per.BdRp l}
   have hinv : ∀ g : GQ l, Per.σB g (b ^ N * Per.aB l w) = b ^ N * Per.aB l w := by
     intro g
     obtain ⟨x, hx⟩ := hb g
-    obtain ⟨z, hz⟩ := GlobalTheory.T.ainf_frobenius_unit_eigenvector_galois_line l w _ hw hwφ g
+    obtain ⟨z, hz⟩ := _root_.GlobalTheory.UnitLine.sigma_unit_eigen l w _ hw hwφ g
     have e : Per.σB g (b ^ N * Per.aB l w) = C.qB (x ^ N * z) * (b ^ N * Per.aB l w) := by
       rw [map_mul, map_pow, hx, hz, map_mul, map_pow, qB_coe]
       ring
@@ -138,7 +141,7 @@ theorem isUnit_of_theta {b : Per.Bcris l} {y : Per.BdRp l}
     have e3 : algebraMap ℚ_[l] ℂ_[l] (x ^ N * z) = 1 := mul_right_cancel₀ hθ (by rw [one_mul, ← e2])
     have e4 : x ^ N * (z : ℚ_[l]) = 1 := (algebraMap ℚ_[l] ℂ_[l]).injective (by rw [e3, map_one])
     rw [e, e4, map_one, one_mul]
-  obtain ⟨c, -, hc⟩ := GlobalTheory.T.galoisInvariants_Bcris_eq_maxUnramified l C ⟨⊥, inferInstance⟩ _ fun g _ => hinv g
+  obtain ⟨c, -, hc⟩ := _root_.GlobalTheory.MemLoc.InvCris.invariants_Bcris l C ⟨⊥, inferInstance⟩ _ fun g _ => hinv g
   have hc0 : c ≠ 0 := by
     rintro rfl
     rw [← hc, map_zero, map_zero] at h2
@@ -149,7 +152,7 @@ theorem isUnit_of_theta {b : Per.Bcris l} {y : Per.BdRp l}
 
 theorem isUnit_of_line (b : Per.Bcris l) (h0 : b ≠ 0)
     (hb : ∀ g : GQ l, ∃ x : ℚ_[l], Per.σB g b = C.qB x * b) : IsUnit b := by
-  obtain ⟨m, n, b', y, e, hy, hθ⟩ := GlobalTheory.T.bcris_exists_tPow_mul_theta_ne_zero l C b h0
+  obtain ⟨m, n, b', y, e, hy, hθ⟩ := _root_.GlobalTheory.MemLoc.RegDivide.exists_divide l C b h0
   have ht : IsUnit C.tB := (core_t_unit_fil l C).1
   have hu : IsUnit b' := isUnit_of_theta C hy hθ fun g => by
     obtain ⟨x, hx⟩ := hb g
@@ -173,7 +176,7 @@ end GlobalTheory.MemLoc.CrisRegular
 namespace GlobalTheory.MemLoc
 
 theorem core_regular (l : ℕ) [Fact l.Prime] (C : Core l) : C.Regular :=
-  GlobalTheory.T.bcris_regular_of_full_galois_line_units l C (CrisRegular.isUnit_of_line C)
+  _root_.GlobalTheory.MemLoc.regular_of_full l C (CrisRegular.isUnit_of_line C)
 
 theorem regular_of_tensorInj : ∀ (l : ℕ) [Fact l.Prime] (C : Core l), C.TensorInj → C.Regular :=
   fun l _ C _ => core_regular l C

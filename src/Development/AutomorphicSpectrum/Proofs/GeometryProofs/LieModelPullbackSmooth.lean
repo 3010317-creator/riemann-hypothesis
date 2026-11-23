@@ -3,7 +3,9 @@ module
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsVBOneOfChartGenerators
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeDominantCompat
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenMapStalkMap
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFreeOverLocalRingStatement
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFreeOverLocalRing
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelPullbackCorrespondence
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -86,7 +88,7 @@ theorem lat_eq_span (M : LieModel G ξ E) (p : Cpt ξ)
 theorem ext_basis {A : Type} [CommRing A] [IsLocalRing A] {g : A →+* Ω} {x : Spec (CommRingCat.of A) ⟶ X}
     (hs : Smooth G.hom) (hg : Function.Injective g) (hx : Spec.map (CommRingCat.ofHom g) ≫ x = ξ)
     (M : LieModel G ξ E) : ∃ n : ℕ, Nonempty (Module.Basis (Fin n) A (ExtE hx M)) :=
-  GlobalTheory.T.lie_model_free_over_local_ring X G hs A x (ExtE hx M) (extModel hg hx M)
+  _root_.GlobalTheory.CompanionTheory.Ar.LieFreeSmooth.lieModel_free_of_smooth X G hs A x (ExtE hx M) (extModel hg hx M)
 
 end Lat
 

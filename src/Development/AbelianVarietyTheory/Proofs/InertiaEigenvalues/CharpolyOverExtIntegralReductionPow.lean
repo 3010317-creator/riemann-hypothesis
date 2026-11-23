@@ -1,11 +1,19 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.OverExtAlgebraMap
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CharpolyMulLeftEqMapOfSpanningLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CharpolyNilpotentAddScalarStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsNilpotentResidueToMatrixMulLeftStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpanPowGeneratorEqTopOfCharpolySeparableStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedInvolutionExtMapsIntegersToIntegersStatement
+public import Mathlib.LinearAlgebra.Charpoly.Basic
+public import Mathlib.LinearAlgebra.FreeModule.PID
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CharpolyMulLeftEqMapOfSpanningLattice
+public import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CharpolyNilpotentAddScalar
+public import Mathlib.LinearAlgebra.Matrix.ToLin
+public import Mathlib.RingTheory.LocalRing.ResidueField.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsNilpotentResidueToMatrixMulLeft
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpanPowGeneratorEqTopOfCharpolySeparable
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedInvolutionExtMapsIntegersToIntegers
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -79,7 +87,7 @@ theorem charpoly_overExt_integral_reduction : ∀ (K K' : UQ) (d : ℕ) (φ : K.
     | zero => exact zero_mem _
     | add x z _ _ hx hz => exact add_mem hx hz
     | smul a x _ hx =>
-      obtain ⟨y', hy'⟩ := GlobalTheory.T.unramifiedInvolutionExt_maps_integers_to_integers K K' d φ hU a
+      obtain ⟨y', hy'⟩ := _root_.GlobalTheory.UnitLemma.Unr.map_int K K' d φ hU a
       have h : a • x = y' • x := by
         apply Subtype.ext
         rw [Algebra.smul_def, Algebra.smul_def, MulMemClass.coe_mul, MulMemClass.coe_mul]
@@ -89,7 +97,7 @@ theorem charpoly_overExt_integral_reduction : ∀ (K K' : UQ) (d : ℕ) (φ : K.
   have hspan : Submodule.span K'.E (Set.range ι) = ⊤ := by
     refine eq_top_iff.2 fun y hy0 => ?_
     clear hy0
-    have hy : y ∈ Submodule.span K.E (Set.range fun i : ℕ => B.g ^ i) := GlobalTheory.T.span_pow_generator_eq_top_of_charpoly_separable K B hsep ▸ Submodule.mem_top
+    have hy : y ∈ Submodule.span K.E (Set.range fun i : ℕ => B.g ^ i) := _root_.GlobalTheory.UnitLemma.Unr.span_pow_eq_top_of_separable K B hsep ▸ Submodule.mem_top
     induction hy using Submodule.span_induction with
     | mem x hx =>
       obtain ⟨i, rfl⟩ := hx
@@ -101,7 +109,7 @@ theorem charpoly_overExt_integral_reduction : ∀ (K K' : UQ) (d : ℕ) (φ : K.
         rw [Algebra.smul_def, Algebra.smul_def, ← hψ e]; rfl
       rw [h]; exact Submodule.smul_mem _ _ hx
   haveI : IsLocalRing S := hl
-  obtain ⟨n, b, hb⟩ := GlobalTheory.T.charpoly_mulLeft_eq_map_of_span_range_eq K'.O K'.E B.A S ι hinj hspan
+  obtain ⟨n, b, hb⟩ := _root_.GlobalTheory.charpoly_mulLeft_eq_map_of_spanning_lattice K'.O K'.E B.A S ι hinj hspan
   let x0 : S := ⟨B.g, Algebra.self_mem_adjoin_singleton K.O B.g⟩
   refine ⟨(LinearMap.toMatrix b b (LinearMap.mulLeft K'.O x0)).charpoly, (hb x0).symm, ?_⟩
   rw [Matrix.charpoly_natDegree_eq_dim, Fintype.card_fin, ← Matrix.charpoly_map]
@@ -117,6 +125,6 @@ theorem charpoly_overExt_integral_reduction : ∀ (K K' : UQ) (d : ℕ) (φ : K.
   have hsc : (Matrix.scalar (Fin n) s).map (IsLocalRing.residue K'.O) = Matrix.scalar (Fin n) (IsLocalRing.residue K'.O s) := by
     ext i j; simp [Matrix.scalar_apply, Matrix.diagonal_apply]; split_ifs <;> simp
   rw [hsc]
-  exact GlobalTheory.T.charpoly_nilpotent_add_scalar' _ n _ _ (GlobalTheory.T.isNilpotent_residue_toMatrix_mulLeft' K'.O S n b t htm)
+  exact _root_.GlobalTheory.charpoly_nilpotent_add_scalar _ n _ _ (_root_.GlobalTheory.isNilpotent_residue_toMatrix_mulLeft K'.O S n b t htm)
 
 end GlobalTheory.UnitLemma.Unr

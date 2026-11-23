@@ -6,10 +6,15 @@ public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ClassGroupAffineCurveDivisibleCharZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DivisorDescentModUnramifiedGaloisSubmoduleStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KummerExtensionPrimeNotMapComapLeSqStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ValuationEqOneOfPowEqSpanStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ClassGroupAffineCurveDivisibleCharZero
+public import Mathlib.FieldTheory.Galois.Basic
+public import Mathlib.RingTheory.ClassGroup.Basic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DivisorDescentModUnramifiedGaloisSubmodule
+public import Mathlib.FieldTheory.IntermediateField.Adjoin.Defs
+public import Mathlib.RingTheory.DedekindDomain.Basic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KummerExtensionPrimeNotMapComapLeSq
+public import Mathlib.RingTheory.Valuation.ValuationSubring
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ValuationEqOneOfPowEqSpan
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ZetaMemRange
 import Mathlib.Algebra.AffineMonoid.UniqueSums
 import Mathlib.Algebra.Order.Floor.Extended
@@ -74,10 +79,10 @@ theorem descent_abstract (A K E Ω : Type) [CommRing A] [IsDedekindDomain A] [Fi
       ∃ c : E, c ≠ 0 ∧ B.valuation (algebraMap E Ω (w / algebraMap K E f / c ^ N)) = 1 := by
   haveI : IsDedekindDomain (integralClosure A E) := integralClosure.isDedekindDomain A K E
   haveI : IsFractionRing (integralClosure A E) E := integralClosure.isFractionRing_of_finite_extension K E
-  obtain ⟨f, J, hf, hJ⟩ := GlobalTheory.T.divisor_descent_mod_unramified_galois_submodule A (integralClosure A E) K E N hN
-    (GlobalTheory.T.kummer_extension_prime_not_map_comap_le_sq A K E N hNu s hs hsu) hcl w hw hσ
+  obtain ⟨f, J, hf, hJ⟩ := _root_.GlobalTheory.DivisorDescent.descent_submodule A (integralClosure A E) K E N hN
+    (_root_.GlobalTheory.kummer_not_map_comap_le_sq A K E N hNu s hs hsu) hcl w hw hσ
   refine ⟨f, hf, fun B hB => ?_⟩
-  refine GlobalTheory.T.exists_valuation_div_pow_eq_one_of_pow_eq_span E Ω (integralClosure A E).toSubring B J N hN ?_ _ ?_ hJ
+  refine _root_.GlobalTheory.valuation_eq_one_of_pow_eq_span E Ω (integralClosure A E).toSubring B J N hN ?_ _ ?_ hJ
   · intro x
     show algebraMap E Ω (x : E) ∈ B
     obtain ⟨p, hp, hpx⟩ : IsIntegral A (x : E) := x.2
@@ -176,7 +181,7 @@ theorem divisor_descends : ∀ (k K Ω : Type) [Field k] [IsAlgClosed k] [CharZe
       · rw [Finset.mem_singleton.mp hx]
         exact ⟨⟨⟨b, hb⟩, ⟨b⁻¹, hb'⟩, Subtype.ext (mul_inv_cancel₀ hb0), Subtype.ext (inv_mul_cancel₀ hb0)⟩,
           Subtype.ext hβ⟩)
-    (GlobalTheory.T.classGroup_affineCurve_divisible_charZero k K N hN) ⟨θ ^ N, hw⟩ (fun h => pow_ne_zero N hθ (congrArg Subtype.val h))
+    (_root_.GlobalTheory.classGroup_ringOfIntegers_divisible k K N hN) ⟨θ ^ N, hw⟩ (fun h => pow_ne_zero N hθ (congrArg Subtype.val h))
     (by
       intro σ
       obtain ⟨u, hu, hu0, h⟩ := hs (σ.liftNormal Ω)

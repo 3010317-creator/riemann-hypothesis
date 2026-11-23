@@ -1,14 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.BsLApply
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContDiffAtFlagCellGradedLinePotentialStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DdcLeviFormEqZeroOfComplexLineInvariantStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DzWedgeDzbarSumPowCardEqFactorialDetProdStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GradedLinePotentialHessianDetOwnRowStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GradedSquaredLengthUpperUnitriangularGramEqOfAgrStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdFubiniStudyDensitiesEqFlagCellInvariantDensiStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopDegreeDensityBaseFormMulFibreVolumeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopDegreeDensityBlockTriangularDiagonalBlocksStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContDiffAtFlagCellGradedLinePotential
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExtFormAdjEqNegSecondForm
+public import ReciprocityTheory.L2DbarEstimates.IsLocalHomeomorph
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DdcLeviFormEqZeroOfComplexLineInvariant
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsTypeIsRealConst
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DzWedgeDzbarSumPowCardEqFactorialDetProd
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GradedLinePotentialHessianDetOwnRow
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GradedSquaredLengthUpperUnitriangularGramEqOfAgr
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdFubiniStudyDensitiesEqFlagCellInvariantDensi
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopDegreeDensityBaseFormMulFibreVolume
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopDegreeDensityBlockTriangularDiagonalBlocks
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -68,7 +71,7 @@ theorem dens_blocks (n d : ℕ) (J T : Type) [Fintype J] [Fintype T] (ε : Fin n
     dens (pull (bsL ε) α * ((∏ t, (∑ a, ∑ b, (kappa * K t a b) • sym (a, b)) ^ r t : Ev n) : Alt n)) =
       dens α * ∏ t, ((r t).factorial / (Real.pi : ℂ) ^ r t *
         (Matrix.of fun a b : {j // lev j = t} => K t (ε.symm (.inr a.1)) (ε.symm (.inr b.1))).det) := by
-  rw [GlobalTheory.T.topDegreeDensity_blockTriangular_diagonalBlocks n d J T ε lev ρ (fun t a b => kappa * K t a b) r hr
+  rw [_root_.GlobalTheory.FlagTri.dens_blockTri n d J T ε lev ρ (fun t a b => kappa * K t a b) r hr
     (fun t j h1 h2 b => by simp [(hK t j h1 h2 b).1, (hK t j h1 h2 b).2]) α]
   have hπ : (Real.pi : ℂ) ≠ 0 := by exact_mod_cast Real.pi_ne_zero
   have h1 (t : T) : (∑ a : {j // lev j = t}, ∑ b : {j // lev j = t},
@@ -76,7 +79,7 @@ theorem dens_blocks (n d : ℕ) (J T : Type) [Fintype J] [Fintype T] (ε : Fin n
       ((r t).factorial / (Real.pi : ℂ) ^ r t *
         (Matrix.of fun a b : {j // lev j = t} => K t (ε.symm (.inr a.1)) (ε.symm (.inr b.1))).det) •
         ∏ a : {j // lev j = t}, (Complex.I / 2) • sym (ε.symm (.inr a.1), ε.symm (.inr a.1)) := by
-    have h := GlobalTheory.T.dzWedgeDzbar_sum_pow_card_eq_factorial_det_prod n {j // lev j = t} (fun a => ε.symm (.inr a.1))
+    have h := _root_.GlobalTheory.FlagCell2.pow_card_sum_sym n {j // lev j = t} (fun a => ε.symm (.inr a.1))
       (fun a b hab => Subtype.ext (Sum.inr_injective (ε.symm.injective hab)))
       (kappa • Matrix.of fun a b : {j // lev j = t} => K t (ε.symm (.inr a.1)) (ε.symm (.inr b.1)))
     rw [Matrix.det_smul, ← hr t] at h
@@ -90,7 +93,7 @@ theorem dens_blocks (n d : ℕ) (J T : Type) [Fintype J] [Fintype T] (ε : Fin n
   simp only [h1]
   rw [Finset.prod_smul, Fintype.prod_fiberwise lev
     (fun j => (Complex.I / 2) • sym (ε.symm (.inr j), ε.symm (.inr j))), Subalgebra.coe_smul, mul_smul_comm, dens_smul,
-    GlobalTheory.T.topDegreeDensity_baseForm_mul_fibreVolume n d J ε α, mul_comm]
+    _root_.GlobalTheory.FlagCell2.BaseVol.dens_pull_mul_vol n d J ε α, mul_comm]
 
 theorem cellPot_add {ι : Type} {m : ι → ℕ} {n d : ℕ} (ε : Fin n ≃ Fin d ⊕ Cell m) (G : V d → Mat m ℂ) (x : Root m)
     (j : Cell m) (h1 : j.root ≠ x) (h2 : x.2.val ≤ j.root.2.val) (z : V n) (c : ℂ) :
@@ -103,7 +106,7 @@ theorem cellPot_add {ι : Type} {m : ι → ℕ} {n d : ℕ} (ε : Fin n ≃ Fin
   unfold cellPot
   rw [hb]
   congr 2
-  refine GlobalTheory.T.gradedSquaredLength_upperUnitriangular_gram_eq_of_agree _ _ _ _ _ fun s hs => hf _ ?_
+  refine _root_.GlobalTheory.FlagCell2.grD_upU_gram_eq _ _ _ _ _ fun s hs => hf _ ?_
   rintro rfl
   exact h1 (Sigma.ext rfl (heq_of_eq (le_antisymm hs h2)))
 
@@ -118,20 +121,20 @@ theorem dens_cellForm : ∀ (ι : Type) [Fintype ι] (m : ι → ℕ) (n d : ℕ
     simp [kappa, hπ]
   rw [cellForm, e, dens_blocks n d (Cell m) (Root m) ε Cell.root (fun x => x.2.val)
     (fun x p q => -leviForm (cellPot ε G x) w (coordVec p) (coordVec q)) (fun x => m x.1 - 1 - x.2)
-    (fun x => by convert (GlobalTheory.T.gradedLine_potential_hessian_det_own_row ι m n d ε G w x (hG _) (hC _)).1.symm) ?_]
+    (fun x => by convert (_root_.GlobalTheory.FlagCell2.row_levi_det ι m n d ε G w x (hG _) (hC _)).1.symm) ?_]
   · congr 1
     rw [fibDens, Fintype.prod_sigma, Complex.ofReal_prod]
     refine Finset.prod_congr rfl fun τ _ => ?_
-    rw [← GlobalTheory.T.prod_fubiniStudy_densities_eq_flagCell_invariant_density _ _ (hG τ), Complex.ofReal_prod]
+    rw [← _root_.GlobalTheory.FlagCellDens.main _ _ (hG τ), Complex.ofReal_prod]
     refine Finset.prod_congr rfl fun i _ => ?_
     rw [Complex.ofReal_mul]
     congr 1
     · push_cast
       rfl
-    · convert (GlobalTheory.T.gradedLine_potential_hessian_det_own_row ι m n d ε G w ⟨τ, i⟩ (hG _) (hC _)).2 <;> rfl
+    · convert (_root_.GlobalTheory.FlagCell2.row_levi_det ι m n d ε G w ⟨τ, i⟩ (hG _) (hC _)).2 <;> rfl
   · intro x j h1 h2 b
-    have h := GlobalTheory.T.ddcLeviForm_eq_zero_of_complexLine_invariant n (cellPot ε G x) w (coordVec (ε.symm (.inr j))) (coordVec b)
-      (GlobalTheory.T.contDiffAt_flagCellGradedLinePotential ι m n d ε G w x (hG _) (hC _)).1 (cellPot_add ε G x j h1 h2)
+    have h := _root_.GlobalTheory.ddc_eq_zero_of_invariant n (cellPot ε G x) w (coordVec (ε.symm (.inr j))) (coordVec b)
+      (_root_.GlobalTheory.CellPotSmooth.cellPot_contDiffAt ι m n d ε G w x (hG _) (hC _)).1 (cellPot_add ε G x j h1 h2)
     simp only [ddc, mul_eq_zero, hk, false_or] at h
     simp [h.1, h.2]
 

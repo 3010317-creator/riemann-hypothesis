@@ -2,9 +2,11 @@ module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.Birational
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.ArithIntersectionConstantMetricStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.ArithIntersectionMultilinearAllStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.IntersectionSystemDegreeStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.ArithIntersectionConstantMetric
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.ArithIntersectionMultilinearAll
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.IntersectionSystemDegree
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -121,7 +123,7 @@ theorem pts_eq_II (II : IntersectionSystem) (hII : IsFullIntersectionSystem II) 
     {e : ℕ} (L : Fin e → HermLine ι) (hP : IsArithVar P (e + 1)) (hL : ∀ j, IsSmoothHerm (L j)) :
     ptsIntegral P (fun k z => Real.log ((L k).h z)) (fun _ => 1) =
       II K ι P (e + 1) (Fin.snoc L (oneLine ι)) := by
-  have h := GlobalTheory.T.arith_intersection_constant_metric II hII.1 K ι P e L (-1) hP hL
+  have h := _root_.GlobalTheory.CompanionTheory.Ar.Top.intersection_snoc_constWeight II hII.1 K ι P e L (-1) hP hL
   have h' : II K ι P (e + 1) (Fin.snoc L (oneLine ι)) =
       - -1 * ptsIntegral P (fun j z => Real.log ((L j).h z)) (fun _ => 1) := h
   rw [h']
@@ -149,7 +151,7 @@ theorem pts_comb (II : IntersectionSystem) (hII : IsFullIntersectionSystem II) (
     · simp [hn'l, comb_lastExp]
     · simp [hn'c, comb_extExp]
   rw [pts_eq_II II hII P _ hP (fun k => smooth_comb hℓ _), hcomb,
-    GlobalTheory.T.arith_intersection_multilinear_all II hII K ι P (e + 1) (Option J) (extLine ℓ) n' hP hext]
+    _root_.GlobalTheory.CompanionTheory.Ar.Top.intersection_combLine_expansion II hII K ι P (e + 1) (Option J) (extLine ℓ) n' hP hext]
   symm
   let E : (Fin e → J) → (Fin (e + 1) → Option J) := fun w =>
     Fin.snoc (α := fun _ => Option J) (fun k => some (w k)) none
@@ -224,7 +226,7 @@ theorem pts_deg (II : IntersectionSystem) (hII : IsFullIntersectionSystem II) (P
     (hL' : ∀ j, IsSmoothHerm (L' j)) (ha : ∀ k, (L' k).a = (L k).a) :
     ptsIntegral P (fun k z => Real.log ((L' k).h z)) (fun _ => 1) =
       ptsIntegral P (fun k z => Real.log ((L k).h z)) (fun _ => 1) := by
-  have hD := GlobalTheory.T.intersection_system_degree II hII.1
+  have hD := _root_.GlobalTheory.CompanionTheory.Ar.Top.degreeStatement_of_intersectionSystem II hII.1
   have h1 : ptsIntegral P (fun k z => Real.log ((L k).h z)) (fun _ => 1) = _ :=
     hD K ι P e L 2 hP hL Nat.prime_two
   have h2 : ptsIntegral P (fun k z => Real.log ((L' k).h z)) (fun _ => 1) = _ :=

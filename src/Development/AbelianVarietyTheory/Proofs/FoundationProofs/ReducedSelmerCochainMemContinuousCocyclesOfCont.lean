@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ResPlaneSmulEqZero
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegralGaloisRepLocallyConstantModPrimePowStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.FinalTheorems
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegralGaloisRepLocallyConstantModPrimePow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -137,6 +138,6 @@ theorem _root_.GlobalTheory.Ord2.descS_resCoc_mem_z1_of_continuous : ∀ (l : �
     ∀ y : Fin 2 → Qbar l, VecE c y → (∀ s i, (l : Qbar l) * z s i - (mat W s *ᵥ y - y) i ∈ c.O) →
     descS S (resCoc c W z y) ∈ Z1 (resRep c W hO S hN) := by
   intro l _ Ω _ _ S A W c hO hN hW z hz y hy hzy
-  exact GlobalTheory.Ord2.ResidualCocycleReduction.reduced_selmer_cochain_mem_continuous_cocycles_S c W S A hO hN (GlobalTheory.T.integralGaloisRep_locallyConstant_modPrimePow l Ω c W hW hO) hz hy hzy
+  exact GlobalTheory.Ord2.ResidualCocycleReduction.reduced_selmer_cochain_mem_continuous_cocycles_S c W S A hO hN (_root_.GlobalTheory.Ord2.locConst_mod_pow l Ω c W hW hO) hz hy hzy
 
 end GlobalTheory.Ord2.ResidualCocycleReduction

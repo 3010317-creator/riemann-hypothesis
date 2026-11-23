@@ -3,9 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.LamIdealOfNotPrimePow
 public import Mathlib.Analysis.Analytic.Order
 public import Mathlib.NumberTheory.LSeries.Basic
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RayClassFamilyLogDerivReGtOneStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RayClassLFunctionFamilyContinuationGrowthStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RayClassLFunctionLogDerivLocalFormulaStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RayClassFamilyLogDerivReGtOne
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RayClassLFunctionFamilyContinuationGrowth
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RayClassLFunctionLogDerivLocalFormula
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -137,7 +137,7 @@ lemma sum_le_of_card_le_one {ι : Type*} {Z : Finset ι} (hZ : Z.card ≤ 1) {f 
 
 theorem logDeriv_sub_exceptional_le : ∀ c₀ : ℝ, 0 < c₀ → c₀ ≤ 1 / 20 → ∃ C : ℝ, 0 < C ∧ ∀ (𝓕 : LFam) (χ : AddChar 𝓕.G ℂ) (Z : Finset ℝ), 𝓕.ExcZ χ c₀ Z → ∀ s : ℂ, 1 - c₀ / 2 / 𝓕.ell s.im ≤ s.re → s.re ≤ 3 → (∀ β ∈ Z, s ≠ (β : ℂ)) → ‖deriv (𝓕.F χ) s / 𝓕.F χ s - ∑ β ∈ Z, 1 / (s - (β : ℂ))‖ ≤ C * 𝓕.ell s.im ^ 2 := by
   intro c₀ hc₀ hc₀'
-  obtain ⟨C₁, hC₁, hW⟩ := GlobalTheory.T.rayClassLFunction_logDeriv_local_formula
+  obtain ⟨C₁, hC₁, hW⟩ := _root_.GlobalTheory.HkLocal.logDeriv_local
   obtain ⟨K, hK, hKb⟩ := exists_bound_LSeries
   refine ⟨C₁ + 4 * C₁ / c₀ + 10 + K + 3, by positivity, ?_⟩
   intro 𝓕 χ Z hZ s hs1 hs3 hsZ
@@ -165,7 +165,7 @@ theorem logDeriv_sub_exceptional_le : ∀ c₀ : ℝ, 0 < c₀ → c₀ ≤ 1 / 
       nlinarith
     linarith
   by_cases hs74 : 7 / 4 ≤ s.re
-  · obtain ⟨-, -, -, hL⟩ := GlobalTheory.T.rayClassFamily_logDeriv_re_gt_one 𝓕 χ s (by linarith)
+  · obtain ⟨-, -, -, hL⟩ := _root_.GlobalTheory.Hk.LogDeriv.logDeriv_F 𝓕 χ s (by linarith)
     have hdl : deriv (𝓕.F χ) s / 𝓕.F χ s =
         (if χ = 1 then 1 / (s - 1) else 0) - LSeries (𝓕.lamChi χ) s := by
       rw [← hL]
@@ -267,7 +267,7 @@ theorem logDeriv_sub_exceptional_le : ∀ c₀ : ℝ, 0 < c₀ → c₀ ≤ 1 / 
       by_cases hβT : (β : ℂ) ∈ hfin.toFinset
       · have hhalf : 1 / 2 < (β : ℂ).re :=
           𝓕.half_lt_re_of_region (c := c₀) (by linarith) (s := (β : ℂ)) (by simpa using hβ.1)
-        have hAn : AnalyticAt ℂ (𝓕.F χ) (β : ℂ) := (GlobalTheory.T.rayClassLFunctionFamily_continuation_growth 𝓕 χ).1 _ hhalf
+        have hAn : AnalyticAt ℂ (𝓕.F χ) (β : ℂ) := (_root_.GlobalTheory.Hk.RayCont.continuation_growth 𝓕 χ).1 _ hhalf
         have hord : analyticOrderNatAt (𝓕.F χ) (β : ℂ) = 1 := order_eq_one hAn hβ.2.2.1 hβ.2.2.2
         have hk := key (hfin.toFinset.erase (β : ℂ)) (Finset.erase_subset _ _)
           fun w hw => notZ w (Finset.ne_of_mem_erase hw)

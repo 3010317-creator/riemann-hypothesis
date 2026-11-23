@@ -3,8 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.HasPartAnd
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.JetSplitAmb
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.LevelPrimeColumnValuationsAtBundlePoints
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ConcreteChainAgreesAtTupleOfNormalisedRowsStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TypePrimePeriodRowOfConstructedPointChainsStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ConcreteChainAgreesAtTupleOfNormalisedRows
+public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.ValidForConstructedPointClassesEventuallyWorking
+public import Formalism.LocalToGlobal.GroupLattices.AdmissibleAtGeneratorPlaces
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TypePrimePeriodRowOfConstructedPointChains
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +48,7 @@ namespace GlobalTheory.AtG
 
 theorem row_atG_pinned : GlobalTheory.AtG.JetSplitAmb → ∀ {Bd : BdT} (Q : V4.Slot) (Lk : LkT Bd), (∀ K X f T c, Q K X f T c → (positionOf (HasPartAnd fun _ _ _ _ w Z => ∀ a, GlobalTheory.AtG.RowPin w.I w.ok w.l Z a)) K X f T c) → AllBundlePointProperties.ArithmeticConditionAtBundlePoints Q Lk := by
   intro hJ Bd Q Lk hQ
-  exact GlobalTheory.T.typePrimePeriodRow_of_constructedPointChains hJ Q Lk
-    (RowE.of_all fun _ K β _ _ _ hq _ μ _ => GlobalTheory.T.concreteChainAgreesAtTuple_of_normalisedRows K β (hQ _ _ _ _ _ hq) μ)
+  exact _root_.GlobalTheory.AtG.row_atG_of_jetSplitAmb hJ Q Lk
+    (RowE.of_all fun _ K β _ _ _ hq _ μ _ => _root_.GlobalTheory.Svd.tiesAt_of_rowPin K β (hQ _ _ _ _ _ hq) μ)
 
 end GlobalTheory.AtG

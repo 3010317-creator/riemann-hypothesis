@@ -3,23 +3,25 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsHalfIdem
 public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.IsHermForm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsFinWeil
-import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.StarPurelyImaginaryEqNeg
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CmHostImaginaryGeneratorNeZero
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryMatrixEqProdQuasiReflections
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsHeisTrivial
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussSumNondegenerateFiniteHermitianModule
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalLatticeSelfDualFgFullIndexStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalSubstitutionThetaHeisenbergUnitaryStatement
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexMapNsmulComapEqAbsNormDet
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchurLemmaThetaFunctionsOrientedPairStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIsInfFamFamily
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryEqRealMulFiniteSplit
+import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.StarPurelyImaginaryEqNeg
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EventuallyFinEqOne
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsIntegralSplitIdempotentOverTwo
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FinTensMemLatO
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasDerivAtZeroAndIsTheta
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryMatrixEqProdQuasiReflections
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryQuasiReflectionLaws
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussSumNondegenerateFiniteHermitianModuleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalLatticeSelfDualFgFullIndexStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalSubstitutionThetaHeisenbergUnitaryStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexMapNsmulComapEqAbsNormDetStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexNeZeroOfFinite
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchurLemmaThetaFunctionsOrientedPairStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticFormUnitaryPairActionStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIsInfFamFamily
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryEqRealMulFiniteSplit
 import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -95,7 +97,7 @@ theorem gauss_isometry {R X M : Type} [CommRing R] [AddCommGroup X] [Module R X]
     simp only [β]
     rw [h.add_right, h.adj, h.adj, h.sg_sg]
   have hm : ∀ x, x ∈ A.comap (u - LinearMap.id) ↔ u x - x ∈ A := fun x => Iff.rfl
-  have key := GlobalTheory.T.gaussSum_nondegenerate_finite_hermitian_module σ w h.sg_sg h.w_add lam hlam β
+  have key := _root_.GlobalTheory.HermitianGauss.gauss_hermitian σ w h.sg_sg h.w_add lam hlam β
     (fun x y z => by
       rw [hβ', hβ', hβ', ← h.add_left, map_add (f := _)]
       congr 1
@@ -492,10 +494,10 @@ theorem finite_data (hψ : IsStdChar D ψ (-1)) (hS : IsSelfDualC S ΛS) (hT : I
     | zero => rw [map_zero, smul_zero]; exact zero_mem _
     | add x y _ _ hx hy => rw [map_add (f := _), smul_add]; exact add_mem hx hy
     | neg x _ hx => rw [map_neg, smul_neg]; exact neg_mem hx
-  have i1 := GlobalTheory.T.relIndex_map_nsmul_comap_eq_abs_norm_pow_mul_det _ _ A fg full (sandw b a - 1) N hN hd fun x hx => by
+  have i1 := _root_.GlobalTheory.relIndex_map_nsmul_comap_eq_abs_norm_det _ _ A fg full (sandw b a - 1) N hN hd fun x hx => by
     rw [LinearMap.sub_apply, smul_sub]
     exact sub_mem (hNA x hx) (nsmul_mem hx N)
-  have i2 := GlobalTheory.T.relIndex_map_nsmul_comap_eq_abs_norm_pow_mul_det _ _ A fg full (sandw b a) N hN hΔ hNA
+  have i2 := _root_.GlobalTheory.relIndex_map_nsmul_comap_eq_abs_norm_det _ _ A fg full (sandw b a) N hN hΔ hNA
   set B₁ := A.comap (sandw b a - 1).toAddMonoidHom with hB₁
   set B₂ := A.comap (sandw b a).toAddMonoidHom with hB₂
   set NA := A.map (N • AddMonoidHom.id _) with hNA'

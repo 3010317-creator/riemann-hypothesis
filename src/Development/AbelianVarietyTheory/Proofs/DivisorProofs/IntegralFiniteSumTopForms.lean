@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EndValuedForm11Coeffs
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasTopFormChartIntegralZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopFormIntegralAddStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasTopFormChartIntegralZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopFormIntegralAdd
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,12 +63,12 @@ private theorem isTopForm_hasInt_finset_sum {n : ℕ} {Y κ : Type} [Topological
   induction s using Finset.induction_on with
   | empty =>
     simp only [Finset.sum_empty]
-    exact ⟨⟨fun _ _ _ _ _ _ => by simp, fun _ => aemeasurable_const⟩, GlobalTheory.T.hasTopFormChartIntegral_zero e S⟩
+    exact ⟨⟨fun _ _ _ _ _ _ => by simp, fun _ => aemeasurable_const⟩, _root_.GlobalTheory.GoodTop.hasInt_zero e S⟩
   | insert a s ha ih =>
     simp only [Finset.sum_insert ha]
     obtain ⟨hF, hI⟩ := ih
     refine ⟨⟨fun i j y hy hi hj => ?_, fun i => ((hd a).meas i).add (hF.meas i)⟩,
-      GlobalTheory.T.topFormIntegral_add e he hc hS (hd a) hF (ht a) hI⟩
+      _root_.GlobalTheory.GoodTop.hasInt_add e he hc hS (hd a) hF (ht a) hI⟩
     rw [(hd a).trans i j y hy hi hj, hF.trans i j y hy hi hj]
     ring
 

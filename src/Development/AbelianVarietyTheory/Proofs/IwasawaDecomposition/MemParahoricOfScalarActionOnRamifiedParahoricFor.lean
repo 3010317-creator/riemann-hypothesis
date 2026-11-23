@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ReadsHecke
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SplitPlaceHeckeOperatorScalarOnSpherical
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitaryFiniteAdelesSplitPlaceDecompositionStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsReadsAtOfCover
+import Formalism.AlgebraicWeights.IsAlgWeight
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitaryFiniteAdelesSplitPlaceDecomposition
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +48,6 @@ import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RowsRe
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.StableIffCarrierEq
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.StrictHenselianAcyclic
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCharDescent
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsReadsAtOfCover
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FunKilled
 import Formalism.LocalToGlobal.IndefiniteReal.DoubleCosetOperators.GoodPartLeTypeSubspace
 import Formalism.LocalToGlobal.NormalizedHeckeFactors.TypesDefs
@@ -210,7 +211,7 @@ theorem mem_para_of_eig : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L]
   have hdP : (Pmat h.val i0 j0 t).det = a := by rw [det_P, hth]
   let Gg := Matrix.GeneralLinearGroup.mkOfDetNeZero (Gmat h.val i0 j0 t) (by rw [hdG]; exact ha0)
   have hGg : Gg.val = Gmat h.val i0 j0 t := rfl
-  obtain ⟨g, ⟨hgT, hgl⟩, -⟩ := (GlobalTheory.T.unitaryFiniteAdeles_splitPlace_decomposition L n s).2.2 Gg
+  obtain ⟨g, ⟨hgT, hgl⟩, -⟩ := (_root_.GlobalTheory.SplitAdelic.main L n s).2.2 Gg
   set p := κ⁻¹ * g * κ with hp
   have hpT : TrivOutside {s.v} p :=
     GlobalTheory.HeckeScalarSph.triv_mul (GlobalTheory.HeckeScalarSph.triv_mul (GlobalTheory.HeckeScalarSph.triv_inv hκT) hgT) hκT

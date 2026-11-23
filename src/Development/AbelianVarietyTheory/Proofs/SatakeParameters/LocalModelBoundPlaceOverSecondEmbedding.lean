@@ -4,12 +4,17 @@ public import Formalism.SharpRestriction.Divisibility.OrbitPlaces
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.IsPlaceCofactorValuationLowerBound
 public import Formalism.LocalToGlobal.GroupLattices.PendingLemmas.WittFractionToCpAlgebraMap
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CoeffApplyDPIvOfKvalGe
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CofactorLowerBoundOfPlaceBoundWittStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsLetterCoordinatesSeriesOnePlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FockRowsOfFillsStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CofactorLowerBoundOfPlaceBoundWitt
+public import Formalism.SharpRestriction.AdmissibleParameterJoins.GandSp
+public import Formalism.SharpRestriction.Divisibility.ProductZerothFirstParts
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsLetterCoordinatesSeriesOnePlace
+public import Formalism.LocalRingCardinality.DataExtra
+public import Formalism.SharpRestriction.GrowthBounds.FormalGroupSystem
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FockRowsOfFills
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.OrbitBoundOverSecondEmbeddingAnyBasePoint
+public import Formalism.SharpRestriction.GrowthBounds.IsResidueClassZero
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ServedPrimeProperties
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HasSubstCoordZA
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.OrbitBoundOverSecondEmbeddingAnyBasePointStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ServedPrimePropertiesStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,9 +71,9 @@ theorem kval_orbit (D : D7) (L : SizeData₂ D) (X : Inst D L) (K : Consts) (ce 
     product_zeroth_first_parts.KvalGe (D.R.N i) (D.R.N (i + 1)) p (fun s : ZMod (nP D p) => E.nu u i (OrbitPlaces.orbMap D p (true, t) s))
       (MvPowerSeries.map (Formalism.L2.G.Pend.k0ToC p) (inLetters (thOne B be U)))
       (FOrb D (i + 1) p (true, t) - OrbitPlaces.errF L K ce (i + 1) p (true, t)) := by
-  obtain ⟨bv, h1, h2, h3, h4, hb⟩ := GlobalTheory.T.exists_letterCoordinates_series_onePlace_alt p h.five (nP D p) h.even B be hbe
+  obtain ⟨bv, h1, h2, h3, h4, hb⟩ := _root_.GlobalTheory.OnePlace.exists_letterCoordinates_series_onePlace p h.five (nP D p) h.even B be hbe
   obtain ⟨U', hU', e⟩ := hb _ _ U hU
-  exact GlobalTheory.T.orbitBound_overSecondEmbedding_anyBasePoint D L X K ce E 11 1 hA hS hC p h h0 hne hX u i hi t 1 (-1) bv (by simp) (Or.inr rfl) h1 h2 h3 h4 _
+  exact _root_.GlobalTheory.TwU.orbitBound_overSecondEmbedding_anyBasePoint_alt D L X K ce E 11 1 hA hS hC p h h0 hne hX u i hi t 1 (-1) bv (by simp) (Or.inr rfl) h1 h2 h3 h4 _
     ⟨U', hU', e⟩
 
 theorem kval_general (D : D7) (L : SizeData₂ D) (X : Inst D L) (K : Consts) (ce : ErrC) (E : OrbitPlaces.Ent D)
@@ -102,7 +107,7 @@ theorem lowBound_of_series_bound_one_place {p : ℕ} [Fact p.Prime] (X : Sys p) 
 theorem lowAt_F : ∀ (D : D7) (u : D.what₂.Word) (w : D.what₂.places.Pl) (hg : GIdx D.host (D.mem u).A.T (D.what₂.places.resChar w)) (L : SizeData₂ D) (hT : GatTies D) (X : Inst D L) (Y : LatInst D) (K : Consts) (ce : ErrC) (E : OrbitPlaces.Ent D), LatTied hT X Y → FillsAll hT Y → OrbitPlaces.OrbitLetterBoundsAll 11 1 → OrbitPlaces.Shape D L X E → OrbitPlaces.CLarge 11 1 K ce → ((D.what₂.places.resChar w) : ℝ) ≤ L.sc.X'' D.R.n → ∀ (Lv : Levels (Y.Fl u w hg)) (Ch : Chain Lv) (std : _) (vp : _) (unif : _) (eO : _) (eO_spec : _) (dG : _) (dG_spec : _) (om : _) (Y5 : FormalGroupSystem.Pend (FormalGroupSystem.Sys.mk (D.gat u w hg) (Y.Fl u w hg) Lv Ch std vp unif eO eO_spec dG dG_spec om)), BeProp (D.what₂.places.resChar w) Y5.be → ∀ (v : Fin (D.gat u w hg).P.nV) (t : HH D), (D.gat u w hg).P.n' v = nP D (D.what₂.places.resChar w) → (∀ s : Fin ((D.gat u w hg).P.n' v), hT.gat_pos u w hg ⟨v, s⟩ = tauPl D (posPl D (D.what₂.places.resChar w) (true, t) s.val)) → ∀ i < D.R.m, Y5.LowAt i v (FOrb D (i + 1) (D.what₂.places.resChar w) (true, t) - OrbitPlaces.errF L K ce (i + 1) (D.what₂.places.resChar w) (true, t)) := by
   intro D u w hg L hT X Y K ce E hTied hFill hA hS hC hX Lv Ch std vp unif eO eO_spec dG dG_spec om Y5 hBe v t hn hpos i hi
   have h0 : IsResidueClassZero D (D.what₂.places.resChar w) := hg.2.2.1
-  have hne := (GlobalTheory.T.servedPrime_properties D _ hg.1 h0 hg.2.2.2.1).1
+  have hne := (_root_.GlobalTheory.TwU.Served.served_facts D _ hg.1 h0 hg.2.2.2.1).1
   have hstd := std v
   have hOK : OrbitPlaces.OrbOK D (D.what₂.places.resChar w) := ⟨hg.2.1, hn ▸ hstd.even, hn ▸ hstd.two_le⟩
   have hcc : MvPowerSeries.constantCoeff Y5.be = 0 := by
@@ -115,10 +120,10 @@ theorem lowAt_F : ∀ (D : D7) (u : D.what₂.Word) (w : D.what₂.places.Pl) (h
   have hN : ∀ j, NN (D.gat u w hg).P.m (Y.Fl u w hg).t j = D.R.N j := fun j => by
     simp only [NN, Ranks.N, ht]
     omega
-  refine GlobalTheory.T.lowAt_of_placeCofactorValuationLowerBound _ _ Y5 i v _ hcc ?_
+  refine _root_.GlobalTheory.TwU.LowGen.cofactor_lower_bound_of_place_bound_witt _ _ Y5 i v _ hcc ?_
   refine lowBound_of_series_bound_one_place (Sys.mk (D.gat u w hg) (Y.Fl u w hg) Lv Ch std vp unif eO eO_spec dG dG_spec om) Y5.be i v (fun s => E.nu u i (posPl D (D.what₂.places.resChar w) (true, t) s.val)) _ hcc ?_ ?_
   · intro s r
-    have h1 := GlobalTheory.T.formalGroup_nu_cast_eq_ite_lt_N D u w hg hT Y hFill ht v (toFin s) i hi r
+    have h1 := _root_.GlobalTheory.fock_rows_of_fills D u w hg hT Y hFill ht v (toFin s) i hi r
     have h2 := E.nu_row u i hi (posPl D (D.what₂.places.resChar w) (true, t) s.val) r
     have h3 := hpos (toFin s)
     rw [h3] at h1

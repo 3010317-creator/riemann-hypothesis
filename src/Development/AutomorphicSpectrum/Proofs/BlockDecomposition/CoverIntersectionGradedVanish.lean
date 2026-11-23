@@ -1,7 +1,7 @@
 module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.DifferentialFormsCech.GlobalDifferentialForms.FormCos
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoverIntersectionGradedIsoStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoverIntersectionGradedIso
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.GrCechFin
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -65,7 +65,7 @@ theorem van {K : Type} [Field K] [CharZero K] {X : Scheme.{0}} (q : X ⟶ Spec (
     (U : Cov q) (a n : ℕ) (i : Fin (n + 1) → U.ι) (r : ℕ) (hr : r ≠ a) :
     Subsingleton (HU (Fk q U a) (capT (Vk q U a) i) r) := by
   classical
-  obtain ⟨e⟩ := GlobalTheory.T.cover_intersection_graded_iso q U a n i r
+  obtain ⟨e⟩ := _root_.GlobalTheory.CompanionTheory.CapKC.cap_kc q U a n i r
   have hV : IsAffineOpen (capO U.U i) := by
     rw [capO_eq_iInf_image]
     exact U.inter _ ⟨i 0, Finset.mem_image_of_mem i (Finset.mem_univ 0)⟩

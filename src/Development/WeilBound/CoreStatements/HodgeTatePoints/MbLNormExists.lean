@@ -3,13 +3,18 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GlueApplyOfNotInFibre
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsGenOfIsVBOne
 public import Mathlib.AlgebraicGeometry.Morphisms.Finite
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DominatingModelChartCompatStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntegralClosureChartSpanStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntegralOverLocalizationScaledStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalSubringIntegralClosureMaxStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.MaximalIdealMembershipOfLocalStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrimeMemIffNotUnitLocalizationStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProjectiveModelNonemptyStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DominatingModelChartCompat
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntegralClosureChartSpan
+public import Mathlib.Algebra.Algebra.Subalgebra.Basic
+public import Mathlib.RingTheory.IntegralClosure.IsIntegral.Defs
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntegralOverLocalizationScaled
+public import Mathlib.RingTheory.IntegralClosure.Algebra.Basic
+public import Mathlib.RingTheory.LocalRing.LocalSubring
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalSubringIntegralClosureMax
+public import Mathlib.RingTheory.LocalRing.Defs
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.MaximalIdealMembershipOfLocal
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrimeMemIffNotUnitLocalization
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProjectiveModelNonempty
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.GenfibMap
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.MaBase
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.MbLCentre
@@ -87,7 +92,7 @@ theorem int_trans {o K : Type} [CommRing o] [Field K] [Algebra o K] (A B : Subal
 theorem mem_of_isIntegral_loc {o K : Type} [CommRing o] [Field K] [Algebra o K] (A : Subalgebra o K) (D : Subring K)
     (hA : ∀ a, IsIntegral A a → a ∈ A) (hAD : ∀ a ∈ A, a ∈ D)
     (hD : ∀ a ∈ D, ∃ u ∈ A, ∃ v ∈ A, v ≠ 0 ∧ v⁻¹ ∈ D ∧ a = u / v) (a : K) (ha : IsIntegral D a) : a ∈ D := by
-  obtain ⟨v, -, hv0, hvi, hi⟩ := GlobalTheory.T.integral_over_localization_scaled A D hAD hD a ha
+  obtain ⟨v, -, hv0, hvi, hi⟩ := _root_.GlobalTheory.CompanionTheory.Ggeo.ClearDenominators.exists_mul_isIntegral A D hAD hD a ha
   have e : a = (v * a) * v⁻¹ := by field_simp
   rw [e]
   exact mul_mem (hAD _ (hA _ hi)) hvi
@@ -101,7 +106,7 @@ theorem ideal_ext {o K : Type} [CommRing o] [Field K] [Algebra o K] (A : Subalge
   have key : ∀ Q₁ Q₂ : Ideal (integralClosure R K).toSubring,
       (∀ t : (integralClosure R K).toSubring, IsIntegral A (t : K) → t ∈ Q₁ → t ∈ Q₂) → Q₁ ≤ Q₂ := by
     intro Q₁ Q₂ h t ht
-    obtain ⟨v, hv, hv0, hvi, hi⟩ := GlobalTheory.T.integral_over_localization_scaled A R hAR hR t t.2
+    obtain ⟨v, hv, hv0, hvi, hi⟩ := _root_.GlobalTheory.CompanionTheory.Ggeo.ClearDenominators.exists_mul_isIntegral A R hAR hR t t.2
     have h1 := h (⟨v, hRT v (hAR v hv)⟩ * t) hi (Q₁.mul_mem_left _ ht)
     have h2 := Q₂.mul_mem_left ⟨v⁻¹, hRT _ hvi⟩ h1
     have e : (⟨v⁻¹, hRT _ hvi⟩ : (integralClosure R K).toSubring) * (⟨v, hRT v (hAR v hv)⟩ * t) = t := by
@@ -316,7 +321,7 @@ theorem normAt_of_charts (hD : Dominates M'.ξ M.ξ f (algebraMap Ω Ω'))
     have hRD : (regAt M.ξ p).map i₀ ≤ regAt M'.ξ p' := by
       rintro _ ⟨a, ha, rfl⟩
       exact hl.1 a ha
-    refine GlobalTheory.T.local_subring_integral_closure_max ((regAt M.ξ p).map i₀) (regAt M'.ξ p') (chRing o y (e c)).toSubring hRD ?_ ?_ ?_ ?_
+    refine _root_.GlobalTheory.CompanionTheory.Domination.eq_localisation_integralClosure ((regAt M.ξ p).map i₀) (regAt M'.ξ p') (chRing o y (e c)).toSubring hRD ?_ ?_ ?_ ?_
     · rintro _ ⟨a, ha, rfl⟩ h0 hinv
       have hu : unitAt M'.ξ p' (i₀ a) := ⟨h0, hl.1 a ha, hinv⟩
       exact ⟨a⁻¹, (hl.2 a ha hu).2.2, map_inv₀ _ _⟩
@@ -345,7 +350,7 @@ theorem normAt_of_charts (hD : Dominates M'.ξ M.ξ f (algebraMap Ω Ω'))
       have hub : i₀ u ∈ chRing o y (e c) := (hB c hc _).2
         (isIntegral_algebraMap (x := (⟨_, map_chRing x Ω' c u hu⟩ : A₀ c)))
       have h1 : ι ⟨i₀ u, hub⟩ ∈ P ↔ ¬ unitAt M'.ξ p' (i₀ u) := hmem ⟨i₀ u, hub⟩
-      have h2 := GlobalTheory.T.maximal_ideal_membership_of_local ((regAt M.ξ p).map i₀) P hPm (ι ⟨i₀ u, hub⟩) ⟨u, hr.1 u hu, rfl⟩
+      have h2 := _root_.GlobalTheory.CompanionTheory.IntegralClosureLocal.mem_maximal_iff_not_inv_mem ((regAt M.ξ p).map i₀) P hPm (ι ⟨i₀ u, hub⟩) ⟨u, hr.1 u hu, rfl⟩
       have h3 : unitAt M.ξ p u ↔ (i₀ u ≠ 0 ∧ (i₀ u)⁻¹ ∈ (regAt M.ξ p).map i₀) := by
         refine ⟨fun h => ⟨(map_ne_zero _).2 h.1, ⟨u⁻¹, h.2.2, map_inv₀ _ _⟩⟩, ?_⟩
         rintro ⟨h0, a, ha, e'⟩
@@ -367,7 +372,7 @@ theorem normAt_of_charts (hD : Dominates M'.ξ M.ξ f (algebraMap Ω Ω'))
     have hch'' := ((fibre_iff M Ω' M' f e hD hB1 hC c p hp p'').1 hf'').1
     have hr'' := PositivityTheory.HtPt.Ma.regat_loc o Ω' κ' y M' (e c) p'' hch''
     refine huniq p'' ⟨hch'', fun u => ?_⟩
-    have h := GlobalTheory.T.prime_mem_iff_not_unit_localization _ P inferInstance (ι u)
+    have h := _root_.GlobalTheory.CompanionTheory.LocalSubringUnits.mem_prime_iff_not_inv_mem _ P inferInstance (ι u)
     rw [← hD''] at h
     refine h.trans (not_congr ⟨fun h => ⟨h.1, hr''.1 _ u.2, h.2⟩, fun h => ⟨h.1, h.2.2⟩⟩)
 
@@ -378,7 +383,7 @@ theorem exists_normalisation : ∀ (o : Type) [CommRing o] [Algebra.EssFiniteTyp
   have hinj : ∀ c, x c ≠ 0 → algebraMap Ω Ω' (x c) ≠ 0 := fun c hc => by
     simpa using hc
   have hinj' : ∀ c, algebraMap Ω Ω' (x c) ≠ 0 → x c ≠ 0 := fun c hc h => hc (by simp [h])
-  obtain ⟨d, n, z, hz1, hz2⟩ := GlobalTheory.T.integral_closure_chart_span o Ω' κ (fun k => algebraMap Ω Ω' (x k))
+  obtain ⟨d, n, z, hz1, hz2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.IntClGens.exists_twisted_gens o Ω' κ (fun k => algebraMap Ω Ω' (x k))
     (fun c hc => PositivityTheory.HtPt.Mb.finite_ext M Ω' c (hinj' c hc))
   set x' : κ → Ω' := fun k => algebraMap Ω Ω' (x k) with hx'
   set y := joinCo (RingHom.id Ω') x' z with hy
@@ -388,7 +393,7 @@ theorem exists_normalisation : ∀ (o : Type) [CommRing o] [Algebra.EssFiniteTyp
     exact mul_ne_zero (hinj c hc) (pow_ne_zero _ (hinj c hc))
   have hJ := fun c (hc : x c ≠ 0) a (ha : IsIntegral (chRing o x' c) a) =>
     join_chart (o := o) x' d n z hz1 hz2 c (hinj c hc) a ha
-  obtain ⟨M'⟩ : Nonempty (PModel o y) := GlobalTheory.T.projective_model_nonempty o Ω' (κ × (κ ⊕ Fin n)) y
+  obtain ⟨M'⟩ : Nonempty (PModel o y) := _root_.GlobalTheory.CompanionTheory.Ar.nonempty_pModel_of_chart o Ω' (κ × (κ ⊕ Fin n)) y
     ⟨(c₀, Sum.inl c₀), hyne c₀ hc₀, fun a => by
       obtain ⟨b, v, hb, hv, hv0, rfl⟩ := PositivityTheory.HtPt.Mb.frac_ext M Ω' c₀ hc₀ a
       exact ⟨b, hJ c₀ hc₀ b hb, v, hJ c₀ hc₀ v (isIntegral_algebraMap (x := (⟨v, hv⟩ : chRing o x' c₀))), rfl⟩⟩
@@ -423,7 +428,7 @@ theorem exists_normalisation : ∀ (o : Type) [CommRing o] [Algebra.EssFiniteTyp
       refine int_trans (chRing o x' c) (chRing o y (c, Sum.inl c)) (fun b hb => (hB c hc b).2
         (isIntegral_algebraMap (x := (⟨b, hb⟩ : chRing o x' c)))) (fun b hb => (hB c hc b).1 hb) a ha
   refine ⟨_, inferInstance, y, M', f, hf, hN, ?_, fun p => ?_⟩
-  · refine GlobalTheory.T.dominating_model_chart_compat M Ω' M' f (fun c => (c, Sum.inl c)) hf hyne
+  · refine _root_.GlobalTheory.CompanionTheory.Ar.ChartFin.isFinite_of_charts M Ω' M' f (fun c => (c, Sum.inl c)) hf hyne
       (fun c hc p' => chart_over M Ω' M' f _ hf (fun c hc a ha => (hB c hc a).2 ha) hC c hc p') fun c hc => ?_
     refine ⟨(Set.finite_range fun k => z k / x' c ^ d).toFinset, fun a => ?_⟩
     rw [Set.Finite.coe_toFinset]

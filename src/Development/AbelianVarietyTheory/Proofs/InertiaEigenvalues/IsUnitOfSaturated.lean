@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsKernelVectorMemOEOfFrobeniusStableStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsKernelVectorMemOEOfFrobeniusStable
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -114,7 +114,7 @@ theorem isUnit_of_saturated : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : 
         ext i j
         exact constantCoeff_galW l (g : GQ l) (Y i j)
       rw [← this, ← Matrix.map_mul, hRY]
-    obtain ⟨vb, hv0, hvm, hYv⟩ := GlobalTheory.T.exists_kernel_vector_mem_OE_of_frobenius_stable l K bk d (Y.map c) (A.map c) hcA hAm hφ' hg' h0
+    obtain ⟨vb, hv0, hvm, hYv⟩ := _root_.GlobalTheory.BSP.exists_ker_vector_mem_OE l K bk d (Y.map c) (A.map c) hcA hAm hφ' hg' h0
     choose v hv hvc using fun i => Subring.mem_map.1 (hvm i)
     have hdiv : ∀ i, ((l : ℕ) : WCb l) ∣ Y.mulVec v i := by
       intro i

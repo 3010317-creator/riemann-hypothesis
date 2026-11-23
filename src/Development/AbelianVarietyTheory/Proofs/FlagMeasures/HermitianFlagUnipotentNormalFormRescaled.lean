@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ComplementReferenceCompactSubgroup
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EichlerIsometry
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemFlagUnipotentIffOrderedEichlerProductStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemFlagUnipotentIffOrderedEichlerProduct
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -111,7 +111,7 @@ theorem GlobalTheory.HL.nof_normal_form_rescaled : ∀ {F : Type} [Field F] [Val
     rw [← hX i, ← hX j, Eichler.hf_smul_l, Eichler.hf_smul_r, hgg]; simp
   · simp only [Frames.h]
     rw [hY' i, hY' j, Eichler.hf_smul_l, Eichler.hf_smul_r, hss]; simp
-  rw [GlobalTheory.T.mem_flagUnipotent_iff_orderedEichlerProduct L r k S g gs hsel n]
+  rw [_root_.GlobalTheory.FlagEich.main L r k S g gs hsel n]
   constructor
   · rintro ⟨u, s, e, he, hn⟩
     refine ⟨fun i => algebraMap F E ((a i)⁻¹ : Fˣ) • u i,

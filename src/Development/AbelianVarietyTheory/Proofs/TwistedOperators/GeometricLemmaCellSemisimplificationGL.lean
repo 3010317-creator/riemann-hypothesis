@@ -3,15 +3,17 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.ExistsCellOfIsSubquotient
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivOfRangeEq
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AdditiveFamilyFunctionDeterminedConstituentsStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsEquivPiExteriorTensorBlockLeviStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.JordanHolderMultNormalisedInductionExactStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormalisedInductionProductParabolicPiTensorStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PiExteriorTensorSmoothIrreducibleIsIrreducibleStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PiTensorDoublyIndexedSwapBlocksEquivStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PiTensorSmoothRepsExactEachFactorStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RelativeJacquetFunctorPiTensorEquivStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TensorProductDeterminesFactorClassesStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SmRep
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AdditiveFamilyFunctionDeterminedConstituents
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.NontrivialOfIrreducible
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsEquivPiExteriorTensorBlockLevi
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.JordanHolderMultNormalisedInductionExact
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormalisedInductionProductParabolicPiTensor
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PiExteriorTensorSmoothIrreducibleIsIrreducible
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PiTensorDoublyIndexedSwapBlocksEquiv
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PiTensorSmoothRepsExactEachFactor
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RelativeJacquetFunctorPiTensorEquiv
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TensorProductDeterminesFactorClasses
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -119,8 +121,8 @@ theorem GlobalTheory.SmGL.CellSemis.cellSemisimplification : GlobalTheory.Publis
       Function.Surjective p → (∀ u, p (ι u) = 0) → (∀ v, p v = 0 → ∃ u, ι u = v) →
       Φ τ (Function.update B i C) = Φ τ (Function.update B i C₁) + Φ τ (Function.update B i C₂) := by
     intro τ B i C C₁ C₂ ι p h1 h2 h3 h4
-    obtain ⟨ι', p', h1', h2', h3', h4'⟩ := GlobalTheory.T.piTensor_smooth_reps_exact_each_factor α (fun i => Levi k (c i)) B i C C₁ C₂ ι p h1 h2 h3 h4
-    exact GlobalTheory.T.jordanHolder_mult_normalised_induction_exact k β α m' (fun j i => c i j) g _ _ _ _ _ _ (compMap ι' _) (compMap p' _) h1' h2' h3' h4'
+    obtain ⟨ι', p', h1', h2', h3', h4'⟩ := _root_.GlobalTheory.SmGL.piTensor_exact_position α (fun i => Levi k (c i)) B i C C₁ C₂ ι p h1 h2 h3 h4
+    exact _root_.GlobalTheory.SmGL.IndExact.jhMult_relInd_exact k β α m' (fun j i => c i j) g _ _ _ _ _ _ (compMap ι' _) (compMap p' _) h1' h2' h3' h4'
       (isSmooth_comp (isSmooth_piTensor fun a => (Function.update B i C a).smooth) _ hswap) _ τ.ρ τ.irr
   let T' : Finset (∀ i, IrrCl (Levi k (c i))) :=
     Fintype.piFinset fun i => (finite_constituents (hA i)).toFinset
@@ -132,17 +134,17 @@ theorem GlobalTheory.SmGL.CellSemis.cellSemisimplification : GlobalTheory.Publis
     exact ⟨i, by simpa using hi⟩
   let P : ∀ i, (∀ j, IrrCl (GL (c i j) k)) → IrrRep (Levi k (c i)) := fun i s =>
     ⟨_, piTensor fun j => (s j).rep.ρ, isSmooth_piTensor fun j => (s j).rep.smooth,
-      GlobalTheory.T.piExteriorTensor_smoothIrreducible_isIrreducible hBZ k β (c i) fun j => (s j).rep⟩
+      _root_.GlobalTheory.ExtTensorIrr.piTensor_isIrreducible hBZ k β (c i) fun j => (s j).rep⟩
   let Θ : (∀ i j, IrrCl (GL (c i j) k)) → ∀ i, IrrCl (Levi k (c i)) := fun s i => (P i (s i)).cl
   have hΘi : Function.Injective Θ := by
     intro s s' h
     funext i j
-    have h2 := GlobalTheory.T.tensor_product_determines_factor_classes β (fun j => GL (c i j) k) (fun j => (s i j).rep) (fun j => (s' i j).rep)
+    have h2 := _root_.GlobalTheory.TensorFactorUnique.cl_eq_of_piTensor_equiv β (fun j => GL (c i j) k) (fun j => (s i j).rep) (fun j => (s' i j).rep)
       (IrrRep.cl_eq_iff.1 (congrFun h i)) j
     rwa [IrrCl.cl_rep, IrrCl.cl_rep] at h2
   have hΘs : Function.Surjective Θ := by
     intro t
-    choose s hs using fun i => GlobalTheory.T.exists_equiv_piExteriorTensor_blockLevi hBZ k β (c i) (t i).rep
+    choose s hs using fun i => _root_.GlobalTheory.LeviFactor.exists_equiv_piTensor_levi hBZ k β (c i) (t i).rep
     refine ⟨fun i j => (s i j).cl, funext fun i => ?_⟩
     rw [← (t i).cl_rep]
     exact IrrRep.cl_eq_iff.2 ⟨(GlobalTheory.LocGL.piTensorEquiv fun j => (s i j).nonempty_equiv_rep.some).trans
@@ -152,14 +154,14 @@ theorem GlobalTheory.SmGL.CellSemis.cellSemisimplification : GlobalTheory.Publis
     obtain ⟨i, hi⟩ := hT' _ hs
     exact ⟨i, (jhMult_congr_left (P i (s i)).nonempty_equiv_rep.some.symm _).trans hi⟩
   · have hLHS : jhMult τ.ρ (cellFunctor f g (piTensor ρ)) = Φ τ A :=
-      jhMult_congr_right _ (relIndEquiv g (GlobalTheory.LocGL.compEquiv (GlobalTheory.T.relative_jacquet_functor_piTensor_equiv k α β m c f X ρ).some (swapBlocks k c)))
-    rw [hLHS, GlobalTheory.T.additive_family_function_determined_constituents α (fun i => Levi k (c i)) (Φ τ) (hzero τ) (hexact τ) A hA T' hT',
+      jhMult_congr_right _ (relIndEquiv g (GlobalTheory.LocGL.compEquiv (_root_.GlobalTheory.RelJacTensor.relJac_piTensor_equiv k α β m c f X ρ).some (swapBlocks k c)))
+    rw [hLHS, _root_.GlobalTheory.SmGL.additive_family_expand α (fun i => Levi k (c i)) (Φ τ) (hzero τ) (hexact τ) A hA T' hT',
       ← Finset.sum_preimage Θ T' hΘi.injOn _ (fun t _ ht => absurd (hΘs t) ht)]
     refine Finset.sum_congr rfl fun s _ => ?_
     refine congrArg₂ (· * ·) (Finset.prod_congr rfl fun i _ =>
       jhMult_congr_left (P i (s i)).nonempty_equiv_rep.some _) (jhMult_congr_right _ ?_)
     exact (relIndEquiv g ((GlobalTheory.LocGL.compEquiv (GlobalTheory.LocGL.piTensorEquiv fun i =>
       (P i (s i)).nonempty_equiv_rep.some) (swapBlocks k c)).trans
-        (GlobalTheory.T.piTensor_doubly_indexed_swap_blocks_equiv k α β c (fun i j => (s i j).rep.V) (fun i j => (s i j).rep.ρ)).some)).trans
-      (GlobalTheory.T.normalised_induction_product_parabolic_piTensor k β α m' (fun j i => c i j) g (fun j => ⨂[ℂ] i, (s i j).rep.V)
+        (_root_.GlobalTheory.SmGL.piTensor_swapBlocks_equiv k α β c (fun i j => (s i j).rep.V) (fun i j => (s i j).rep.ρ)).some)).trans
+      (_root_.GlobalTheory.SmGL.IndTensor.relInd_piTensor k β α m' (fun j i => c i j) g (fun j => ⨂[ℂ] i, (s i j).rep.V)
         (fun j => piTensor fun i => (s i j).rep.ρ) (fun j => isSmooth_piTensor fun i => (s i j).rep.smooth)).some

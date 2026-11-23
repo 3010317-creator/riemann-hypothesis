@@ -1,11 +1,18 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ColFlags
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DominatesOfCoordsRegularStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsProperIntegralModelStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagFramesGenericModelRightStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrameMatrixChartRatiosStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FunctionFieldRatioGeneratorsStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EtaleLocalizationAtPrimeTensorOfLowHeight
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DominatesOfCoordsRegular
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+public import Mathlib.AlgebraicGeometry.Morphisms.Proper
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsProperIntegralModel
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordTieCompEquiv
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagFramesGenericModelRight
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrameMatrixChartRatios
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FunctionFieldRatioGenerators
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,12 +84,12 @@ theorem GlobalTheory.CompanionTheory.Ar.PB.FMX.exists_flagTotal : ∀ (E : Type)
   have hx : CoordTie ℤ 𝔐.ξ x := 𝔐.tie
   obtain ⟨c₀, hc₀⟩ := hx.cover ⟨genPt 𝔐.ξ, specializes_refl _⟩
   have hB' : ∀ s, ∃ B : Matrix (Fin (r s)) (Fin (n s)) Ω, B * Matrix.of (fun j l => φ s j (cF s l)) = 1 := hB
-  obtain ⟨J₁, hJ₁, hfrac⟩ := GlobalTheory.T.frame_matrix_chart_ratios Ω (EE 𝔐) (CMType H ⊕ CMType H) r n ((k : K₀) → J₀ k) x φ cF c₀ hc₀.1
-    (GlobalTheory.T.function_field_ratio_generators 𝔐.X Ω 𝔐.ξ _ x c₀ hx hc₀.1) hB'
+  obtain ⟨J₁, hJ₁, hfrac⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.CoordGen.flagCoord_generate Ω (EE 𝔐) (CMType H ⊕ CMType H) r n ((k : K₀) → J₀ k) x φ cF c₀ hc₀.1
+    (_root_.GlobalTheory.CompanionTheory.Ar.FlagBun.FracChart.exists_eq_div_adjoin 𝔐.X Ω 𝔐.ξ _ x c₀ hx hc₀.1) hB'
   have : Finite (FlagIx ((k : K₀) → J₀ k) n r) := by unfold FlagIx; infer_instance
   obtain ⟨X', ξ', s', hx', hirr', -, hprop, -⟩ :=
-    GlobalTheory.T.exists_proper_integral_model (GenField Ω r) ℤ (FlagIx ((k : K₀) → J₀ k) n r) (flagCoord _ x φ cF) J₁ hJ₁ hfrac
-  obtain ⟨f, hdom, hch⟩ := GlobalTheory.T.dominates_of_coords_regular 𝔐.X Ω 𝔐.ξ ℤ _ x X' (GenField Ω r) ξ' (algebraMap Ω (GenField Ω r)) hx hx'.gen
+    _root_.GlobalTheory.CompanionTheory.Ar.exists_cl_scheme (GenField Ω r) ℤ (FlagIx ((k : K₀) → J₀ k) n r) (flagCoord _ x φ cF) J₁ hJ₁ hfrac
+  obtain ⟨f, hdom, hch⟩ := _root_.GlobalTheory.CompanionTheory.Ar.CoordMap.exists_dominating_map 𝔐.X Ω 𝔐.ξ ℤ _ x X' (GenField Ω r) ξ' (algebraMap Ω (GenField Ω r)) hx hx'.gen
     hirr' (fun z p' => by simp [intCast_mem (regAt ξ' p') z]) (fun p' => by
       obtain ⟨⟨c1, J⟩, hne, hrat⟩ := hx'.cover p'
       have e1 : ∀ k, flagCoord _ x φ cF (k, J) = algebraMap Ω (GenField Ω r) (x k) *
@@ -91,7 +98,7 @@ theorem GlobalTheory.CompanionTheory.Ar.PB.FMX.exists_flagTotal : ∀ (E : Type)
       refine ⟨c1, left_ne_zero_of_mul hne, fun k => ?_⟩
       have := hrat (k, J)
       rwa [e1, e1, mul_div_mul_right _ _ (right_ne_zero_of_mul hne)] at this)
-  have hsm := GlobalTheory.T.flag_frames_generic_model_right 𝔐.X Ω 𝔐.ξ (EE 𝔐) _ x (CMType H ⊕ CMType H) r (VV 𝔐) (LL 𝔐) m n φ cF X' ξ' f hx 𝔐.all hL hφ hc
+  have hsm := _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.Sm.flag_smooth 𝔐.X Ω 𝔐.ξ (EE 𝔐) _ x (CMType H ⊕ CMType H) r (VV 𝔐) (LL 𝔐) m n φ cF X' ξ' f hx 𝔐.all hL hφ hc
     hx' hirr' hdom hch
   have hseg : seg (yv (p := D.p) (q := D.q) (aOf 𝔐 bW bO φ) x₀) =
       flagCoord ((k : K₀) → J₀ k) x φ cF ∘ segIxEquiv (Ψ := CMType H) (p := D.p) (q := D.q) (n := n) (J₀ := J₀) := by

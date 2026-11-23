@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.KunnethLefschetz.BasisOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupUnitAndPrimitiveRootClassesStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PullHlComp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupUnitAndPrimitiveRootClasses
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ProjTrans
 public import Development.EtaleCohomology.EtaleTrace.LPdCut
 public import Development.EtaleCohomology.EtaleTrace.LRingPf
@@ -87,7 +88,7 @@ theorem towerL_holds : TowerL := by
       rw [Polynomial.aeval_def, ← Polynomial.eval_map, Polynomial.map_cyclotomic]
       exact hz⟩
     let ζ : Prim (l ^ j) Γ(S k, ⊤) := z0.map (Scheme.ΓSpecIso (CommRingCat.of k)).inv.hom
-    obtain ⟨h1, h2⟩ := (GlobalTheory.T.tateTwistCup_unit_and_primitiveRoot_classes (l ^ j)).2 (S k) ζ i (-i)
+    obtain ⟨h1, h2⟩ := (_root_.GlobalTheory.EtC.CupGen.main (l ^ j)).2 (S k) ζ i (-i)
     refine ⟨⟨(rootClass i ζ, rootClass (-i) ζ), ?_⟩⟩
     change Ht.cast _ _ (cup (l ^ j) (rootClass i ζ) (rootClass (-i) ζ)) = _
     rw [h1, LRingPf.cast_cast]

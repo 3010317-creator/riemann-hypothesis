@@ -4,12 +4,18 @@ public import Development.WeilBound.CoreStatements.VolumeEquality.DegPushDefs
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BlockJoinInclusionsCompat
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsArithVarOfBlockAlgebraic
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.DegreeGenericOfDegree
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MongeAmpereIntegralCongrPotentialsStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsTwiceDifferentiableAt
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MongeAmpereIntegralCongrPotentials
 public import Development.WeilBound.CoreStatements.VolumeEquality.DegPushDim
 public import Development.WeilBound.CoreStatements.VolumeEquality.DegPushMap
 public import Development.WeilBound.CoreStatements.VolumeEquality.DegPushNumEq
 public import Development.WeilBound.CoreStatements.VolumeEquality.DegPushUnit
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PLiftBirationalNef
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.AnalyticSubsetChartLocal
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.ContDiffAtOfIsPotential
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.DegreeInt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterBridge
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRedF
 import GroundTheory.HeightsAndTheta.Heights.WeightedHomogeneous.PConeTrdeg
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -49,15 +55,10 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.AnalyticSubsetChartLocal
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.ContDiffAtOfIsPotential
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.DegreeInt
 import ReciprocityTheory.AnalyticForms.PotentialTheory.DegreeIntA
 import ReciprocityTheory.AnalyticForms.PotentialTheory.IntegrableOnTargetOfTsupport
 import ReciprocityTheory.AnalyticForms.PotentialTheory.Partition
 import ReciprocityTheory.AnalyticForms.PotentialTheory.PotentialContDiffAt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterBridge
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRedF
 import Development.WeilBound.CoreStatements.VolumeEquality.RootBranches
 
 @[expose] public section
@@ -237,7 +238,7 @@ theorem degNum_eq (hI : PB.Inputs) {d : ℕ} {σ : Type} {S : PB.AnSys d σ} {P 
           rw [Set.mem_preimage, chart.left_inv hj]
           exact P'.mem_U x⟩
       exact (contDiffAt_of_isPotential Re.R.A P' (hpb a) x j hx).of_le (by simp)
-    rw [(GlobalTheory.T.monge_ampere_integral_congr_potentials d Re.R.X Re.R.A Set.univ
+    rw [(_root_.GlobalTheory.CompanionTheory.Ar.PB.mInt_congr_samePot d Re.R.X Re.R.A Set.univ
       (fun j => potOf Re.R (Re.ref (w j))) (fun j => (S.th (w j)).pullback Re.π Re.holo.1)
       (fun _ => 1) (fun _ => 1) (fun j => by simp) (fun j => Re.ref_pot (w j))
       (fun j x _ => hC2 (w j) x) (fun _ _ => rfl)).1]

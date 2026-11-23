@@ -5,8 +5,8 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsFullL
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsGenOfIsVBOne
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PushInvertible
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ModuliFiniteSurjectiveOverGenericFamily
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FullLevelStructurePropertiesStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FullLevelStructurePullbackStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FullLevelStructureProperties
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FullLevelStructurePullback
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,10 +64,10 @@ theorem exists_full_level_over : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     rw [hf]
     have : spMap (RingHom.id Ω) = 𝟙 _ := by simp [spMap]
     rw [this, Category.id_comp]
-  obtain ⟨ev', hev', -⟩ := GlobalTheory.T.full_level_structure_pullback E H D Y.X X Y.t t f m Ω Ω (RingHom.id Ω) (spMap i ≫ y ≫ Y.j) ξ hid N z ev hlev
+  obtain ⟨ev', hev', -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.XR.isFullLevelAt_move E H D Y.X X Y.t t f m Ω Ω (RingHom.id Ω) (spMap i ≫ y ≫ Y.j) ξ hid N z ev hlev
   have hz : Units.map (RingHom.id Ω).toMonoidHom z = z := by ext; rfl
   rw [hz] at hev'
-  obtain ⟨hprim, -, -, -, -, hfull, -⟩ := GlobalTheory.T.full_level_structure_properties E H D X t Ω ξ N hN z ev' hev'
+  obtain ⟨hprim, -, -, -, -, hfull, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.XR.fullLevel_props E H D X t Ω ξ N hN z ev' hev'
   refine ⟨t, m, ev', hev', hfull, fun q => ?_⟩
   have hpow : (z : Ω) ^ N = 1 := by
     have := congrArg Units.val hprim.pow_eq_one

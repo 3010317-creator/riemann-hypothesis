@@ -2,10 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LevelMatchIff
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.FrLink
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDualVectorNormInvNotMemLocalStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.SelfDualAt
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDualVectorNormInvNotMemLocal
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MiddleLatticeSelfDualAnisotropicPairingStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrthogonalHyperbolicFrameAnisotropicMemSpanTransStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryDatumLevelPrimeSplitDegreeGramFactsStatement
+public import Formalism.LocalToGlobal.HermitianForms.TiedStep
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryDatumLevelPrimeSplitDegreeGramFacts
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -160,7 +162,7 @@ theorem mlat_mem_dualL {n : ℕ} (J : Matrix (Fin n) (Fin n) D.host.E) (L : Subm
 theorem mlat_inj (hW : WittX X u wt) : Function.Injective (Fintype.linearCombination D.host.E (qFr wt)) := by
   rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
   intro d hd
-  have hdet := (GlobalTheory.T.unitaryDatum_levelPrime_split_degree_gram_facts D u).2.2.2.2.2.2
+  have hdet := (_root_.GlobalTheory.St.G.record_facts D u).2.2.2.2.2.2
   refine Matrix.eq_zero_of_mulVec_eq_zero hdet ?_
   funext i
   have h := mlat_hT_lc hW (Pi.single i 1) d
@@ -384,9 +386,9 @@ theorem mlat_main (D : D7) (X : HidaSetting D) (u : D.what₂.Word) (wt : (VS D)
         refine ⟨c, hinjO ?_⟩
         rw [map_mul, hc, hB y hy, map_natCast, mul_comm]
     rw [AddSubgroup.relIndex, ← hker, AddSubgroup.index_ker, AddMonoidHom.range_eq_top.2 hsurj, AddSubgroup.card_top, mlat_card,
-      (GlobalTheory.T.unitaryDatum_levelPrime_split_degree_gram_facts D u).2.2.2.1]
+      (_root_.GlobalTheory.St.G.record_facts D u).2.2.2.1]
   refine ⟨⟨hLat, hint, hkill, hidx, fun v hv => ?_⟩, x₀, hx₀Lb, hx₀z, d, hdD, hd, fun y hy => ?_⟩
-  · exact GlobalTheory.T.hermitian_dual_vector_norm_inv_not_mem_local D.host.F D.host.E D.sp.cm (D.R.N 0) _ (Mq wt) hint d T (D.mem u).A.T_prime.pos hdD hnorm v hv
+  · exact _root_.GlobalTheory.St.G.dual_not_loc_of_norm_inv D.host.F D.host.E D.sp.cm (D.R.N 0) _ (Mq wt) hint d T (D.mem u).A.T_prime.pos hdD hnorm v hv
   · obtain ⟨⟨b, hb⟩, hyM⟩ := hC y hy
     refine ⟨b, ?_⟩
     have : ((b : 𝓞 D.host.E) : D.host.E) = algebraMap (𝓞 D.host.E) D.host.E b := rfl

@@ -2,15 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.MemPowSub
 public import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.CyclicKummerNormFixedHilbert90Statement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.CyclicKummerNormFixedHilbert90
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsIsKum
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsPlaceValuationAut
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HeightOneSpectrumPlacesOverFiniteSet
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HerbrandPrimeOrderStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.Hilbert90SUnitsKummerStatement
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.KummerGalois
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HerbrandPrimeOrder
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.Hilbert90SUnitsKummer
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.PowsSubgroupOfSelfSPow
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.PrimeMulCardPlacesLeCardOverKummerStatement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.PrimeMulCardPlacesLeCardOverKummer
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HeightOneSpectrumPlacesOverFiniteSet
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.KummerGalois
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -136,14 +136,14 @@ theorem first_inequality_sUnits_prime :
         p * (kNorm p (RingHom.id F) (δ : F)).relIndex (sUnits F S) ≤ p ^ tNon p F δ S := by
   intro p F _ _ _ ζ δ S hp hζ hS hδ hns
   obtain ⟨E, _, _, θ, σ, hq⟩ := exists_isKum p F ζ δ hp hζ hns
-  obtain ⟨hfd, hrk, hper, hfix, -, -, hnorm⟩ := GlobalTheory.T.cyclic_hilbert90_kummer_and_mem_kNorm_iff p F E ζ δ θ σ hq
+  obtain ⟨hfd, hrk, hper, hfix, -, -, hnorm⟩ := _root_.GlobalTheory.CNorm.kummer_basic p F E ζ δ θ σ hq
   obtain ⟨-, -, hgal, -⟩ := kummer_galois p F E ζ δ θ σ hq
   haveI : NumberField E := NumberField.of_module_finite F E
   haveI : IsTotallyComplex E := isTotallyComplex_of_algebra F E
   obtain ⟨SE, hSE⟩ := (places_over F E).1 S
   obtain ⟨hup, hσ⟩ := sUnits_over_and_aut F E S SE hSE
-  have h90 := GlobalTheory.T.hilbert90_sUnits_kummer' p F E ζ δ θ σ hq S SE hSE hS ((mem_sUnits F S δ).1 hδ)
-  have hcf := GlobalTheory.T.prime_mul_card_places_le_card_over_kummer p F E ζ δ θ σ hq S SE hSE
+  have h90 := _root_.GlobalTheory.CNorm.hilbert90_sUnits_kummer p F E ζ δ θ σ hq S SE hSE hS ((mem_sUnits F S δ).1 hδ)
+  have hcf := _root_.GlobalTheory.CNorm.prime_mul_card_le_card_over p F E ζ δ θ σ hq S SE hSE
   have hζE : IsPrimitiveRoot (algebraMap F E ζ) p := hζ.map_of_injective (algebraMap F E).injective
   obtain ⟨htF, hiF⟩ := pTor_pIdx_sUnits p F ζ S hp hζ
   obtain ⟨htE, hiE⟩ := pTor_pIdx_sUnits p E _ SE hp hζE
@@ -212,7 +212,7 @@ theorem first_inequality_sUnits_prime :
     obtain ⟨y, hy, h⟩ := h90 a a.2 h1
     refine ⟨⟨y, hy⟩, hext _ _ ?_⟩
     rw [h, dif_apply, Subgroup.coe_div, Units.val_div_eq_div_val, hτ]
-  obtain ⟨h0, -, -, -, key⟩ := GlobalTheory.T.herbrand_prime_order' p (sUnits E SE) τ hp
+  obtain ⟨h0, -, -, -, key⟩ := _root_.GlobalTheory.CNorm.herbrand_prime_order p (sUnits E SE) τ hp
     (fun a => hext _ _ (by rw [hτi, hper]))
     (by rw [pIdx_top_eq, hiE]; exact pow_ne_zero _ hp.ne_zero)
     (by rw [pTor_top_eq, htE]; exact hp.ne_zero)

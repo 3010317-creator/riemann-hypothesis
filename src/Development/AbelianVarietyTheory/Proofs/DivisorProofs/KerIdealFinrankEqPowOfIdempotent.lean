@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ToSpanSingletonConstGenInjective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankKernelIdealMulOfIdempotentsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankKernelIdealSuccLeMulLevelsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankKernelIdealMulOfIdempotents
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankKernelIdealSuccLeMulLevels
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -94,7 +94,7 @@ theorem kerIdeal_finrank_eq_pow_of_idempotent : ∀ (p : ℕ) [Fact p.Prime] (k 
   exact natSeq_pow_of_mul_eq (Fact.out : p.Prime)
     (fun n => Module.finrank k (G.A n ⧸ kerIdeal (u.app n)))
     (fun n => Module.finrank k (G.A n ⧸ kerIdeal (v.app n)))
-    (GlobalTheory.T.finrank_kernelIdeal_mul_of_idempotents p k G u v huv h1 h2)
-    (GlobalTheory.T.finrank_kernelIdeal_succ_le_mul_levels p k G u) (GlobalTheory.T.finrank_kernelIdeal_succ_le_mul_levels p k G v)
+    (_root_.GlobalTheory.PDivGroup.finrank_quot_kerIdeal_mul_of_idem p k G u v huv h1 h2)
+    (_root_.GlobalTheory.PDivGroup.finrank_quot_kerIdeal_succ_le p k G u) (_root_.GlobalTheory.PDivGroup.finrank_quot_kerIdeal_succ_le p k G v)
 
 end GlobalTheory

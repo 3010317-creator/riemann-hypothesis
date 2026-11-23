@@ -1,8 +1,10 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.LeftEquivariantFunctions.GLMatrixDerivatives.FrameDer
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LengthFunctionCompactStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PositiveConeStructureStatement
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.LeftEquivariantFunctions.GelfandFlags.IntSmooth
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LengthFunctionCompact
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.LeftEquivariantFunctions.SymZeroCommFrame
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PositiveConeStructure
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -164,12 +166,12 @@ theorem end1 : End1 := by
   have hcont : Continuous (fun x : G n => Fm (x : Mat n)) :=
     (trL_cont E.V).comp ((hk.comp_continuous hcontTw fun x => tw_mem (val_mem x) hdG).mul continuous_const)
   have hcs : HasCompactSupport (fun x : G n => Fm (x : Mat n)) := by
-    refine HasCompactSupport.intro (GlobalTheory.T.length_function_compact n R) fun x hx => ?_
+    refine HasCompactSupport.intro (_root_.GlobalTheory.CompanionTheory.LgBound.lgCpt n R) fun x hx => ?_
     simp only [Set.mem_ofPred_eq, not_le] at hx
     simp only [hFm, hR _ (val_mem x) hx, zero_mul, map_zero]
   refine ⟨hphi ▸ hcont.integrable_of_hasCompactSupport hcs, ?_⟩
   rw [hphi, hform Fm hFmcont hFmsupp hFmK, ← integral_const_mul]
-  refine setIntegral_congr_fun (GlobalTheory.T.positive_cone_structure n).1.measurableSet (fun v hv => ?_)
+  refine setIntegral_congr_fun (_root_.GlobalTheory.CompanionTheory.ConeHaar.coneSt n).1.measurableSet (fun v hv => ?_)
   rw [show Γ * S 1 * Kc σ c Fr k Γ T d.val (v, v) = Γ * S 1 * Kc σ c Fr k Γ T d.val (v, v) from rfl]
   have := hcone v hv
   simp only [trL_apply] at this

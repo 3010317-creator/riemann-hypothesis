@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LabelDatum
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ClassFunctionDegreeEqSumDerivativesStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GroupAlgebraTraceIdempotentAndIrreducibleDegreeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraRestrictionTwoBlockCuspidalEqZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WhittakerJacquetIdempotentsPropertiesPrimeFieldStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ClassFunctionDegreeEqSumDerivatives
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GroupAlgebraTraceIdempotentAndIrreducibleDegree
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraRestrictionTwoBlockCuspidalEqZero
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WhittakerJacquetIdempotentsPropertiesPrimeField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -88,14 +88,14 @@ theorem GlobalTheory.GLq.wh_cusp_pos : ∀ (g : ℕ) [Fact g.Prime] (ψ : AddCha
   intro g _ ψ hψ d χ hc
   have hc' := hc
   obtain ⟨hd, hirr, _⟩ := hc'
-  have hder := GlobalTheory.T.classFunction_degree_eq_sum_derivatives g ψ hψ d χ hd (GlobalTheory.GLq.Generic.isClass_of_isIrr hirr)
+  have hder := _root_.GlobalTheory.GLq.DegDer.one_eq_sum_der g ψ hψ d χ hd (GlobalTheory.GLq.Generic.isClass_of_isIrr hirr)
   rw [Finset.sum_eq_single 0] at hder
   rotate_left
   · intro m hm hm0
     have hmd : m < d := Finset.mem_range.mp hm
     have hz : res m (d - m) χ 1 = fun _ => 0 := by
       funext y
-      exact GlobalTheory.T.harishChandraRestrictionTwoBlock_cuspidal_eq_zero g d m χ hc (Nat.pos_of_ne_zero hm0) hmd 1 y
+      exact _root_.GlobalTheory.GLq.res_cusp_eq_zero g d m χ hc (Nat.pos_of_ne_zero hm0) hmd 1 y
     have : der ψ m χ 1 = 0 := by
       show wh ψ (res m (d - m) χ 1) = 0
       rw [hz]
@@ -111,8 +111,8 @@ theorem GlobalTheory.GLq.wh_cusp_pos : ∀ (g : ℕ) [Fact g.Prime] (ψ : AddCha
   rw [h0] at hder
   obtain ⟨V, _, hV⟩ := hirr
   have hchar : IsChar χ := ⟨V, hV⟩
-  obtain ⟨d', hd'pos, hd'⟩ := (GlobalTheory.T.groupAlgebraTrace_idempotent_and_irreducible_degree (Gn g d) (eU g d ψ) χ).2.1 ⟨V, ‹_›, hV⟩
-  obtain ⟨n, hn⟩ := (GlobalTheory.T.groupAlgebraTrace_idempotent_and_irreducible_degree (Gn g d) (eU g d ψ) χ).1 (GlobalTheory.T.whittakerJacquetIdempotents_properties_primeField g d 0 0 ψ).1 hchar
+  obtain ⟨d', hd'pos, hd'⟩ := (_root_.GlobalTheory.GLq.trIdem (Gn g d) (eU g d ψ) χ).2.1 ⟨V, ‹_›, hV⟩
+  obtain ⟨n, hn⟩ := (_root_.GlobalTheory.GLq.trIdem (Gn g d) (eU g d ψ) χ).1 (_root_.GlobalTheory.Adopt.whittakerJacquetIdempotents_properties_primeField g d 0 0 ψ).1 hchar
   have hwh : wh ψ χ = n := hn
   refine ⟨n, Nat.pos_of_ne_zero ?_, hwh⟩
   rintro rfl

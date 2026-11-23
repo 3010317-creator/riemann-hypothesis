@@ -2,10 +2,11 @@ module
 
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Mathlib.RingTheory.DedekindDomain.Basic
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DedekindFiniteTypeIdealCodimensionStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsNeZeroForallPointExtendSubalgebraStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.JetsMemSubalgebraOfFiniteTypeAlgebraStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemMaximalPowOfJetsVanishStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DedekindFiniteTypeIdealCodimension
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsNeZeroForallPointExtendSubalgebra
+public import Mathlib.RingTheory.FiniteType
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.JetsMemSubalgebraOfFiniteTypeAlgebra
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemMaximalPowOfJetsVanish
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -98,16 +99,16 @@ theorem specialise_generic_solution : ∀ (k A : Type) [Field k] [IsAlgClosed k]
   choose uξ huξ using hsepξ
   choose uD huDmem huD using hD
   obtain ⟨u0, hu0D, hu0⟩ := hDξ
-  choose TJ hTJ using fun i => GlobalTheory.T.jets_mem_subalgebra_of_finiteType_algebra k A R N (Δ i) (h01 i) (hleib i)
+  choose TJ hTJ using fun i => _root_.GlobalTheory.jets_mem_subalgebra_of_finiteType k A R N (Δ i) (h01 i) (hleib i)
   let T : Finset R := Finset.univ.biUnion TJ ∪ Finset.univ.image y ∪
     Finset.univ.image (fun p : I × I => Ring.inverse (Δ p.1 0 (us p) - Δ p.2 0 (us p))) ∪
     Finset.univ.image (fun i => Ring.inverse (Δ i 0 (uξ i) - ξ (uξ i))) ∪
     Finset.univ.image (fun i => Ring.inverse (Δ i 0 (uD i))) ∪
     {Ring.inverse (ξ u0), Ring.inverse (y j0)}
-  obtain ⟨a, S, hξS, ha0, hTS, hspec⟩ := GlobalTheory.T.exists_ne_zero_point_extends_to_subalgebra k A R ξ hinj T
+  obtain ⟨a, S, hξS, ha0, hTS, hspec⟩ := _root_.GlobalTheory.exists_ne_zero_forall_point_extend_subalgebra k A R ξ hinj T
   refine ⟨a, ha0, ?_⟩
   intro P hPmax haP
-  obtain ⟨-, φ, hφ⟩ := (GlobalTheory.T.dedekind_finiteType_ideal_codimension k A).2.1 P hPmax
+  obtain ⟨-, φ, hφ⟩ := (_root_.GlobalTheory.DedekindCodim.dedekind_finiteType_codim k A).2.1 P hPmax
   obtain ⟨ψ, hψ⟩ := hspec φ (fun h => haP ((hφ a).2 h))
   obtain ⟨L, hL⟩ := LinearMap.exists_extend (ψ.toLinearMap.comp
     (LinearEquiv.refl k (Subalgebra.toSubmodule S)).toLinearMap)
@@ -130,7 +131,7 @@ theorem specialise_generic_solution : ∀ (k A : Type) [Field k] [IsAlgClosed k]
   have hjet : ∀ i, ∃ Q : Ideal A, Q.IsMaximal ∧ (∀ u, u ∈ Q ↔ Δ' i 0 u = 0) ∧
       ∀ f : A, (∀ l < N, Δ' i l f = 0) → f ∈ Q ^ N := by
     intro i
-    apply GlobalTheory.T.mem_maximal_pow_of_jets_vanish k A N (Δ' i) hN
+    apply _root_.GlobalTheory.mem_pow_of_jets_vanish k A N (Δ' i) hN
     · rw [hΔ' i 0 hN0, h01 i, hone]
     · intro l hl u w
 

@@ -2,8 +2,8 @@ module
 
 public import Development.WeilBound.CoreStatements.FiniteTypeHarishChandra.SupportExistsAll
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralIdempotentAction
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SeparableIrreducibleStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SimpleIffIrreducibleStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SeparableIrreducible
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SimpleIffIrreducible
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,7 +58,7 @@ variable {Γ : Type} [Group Γ] [Fintype Γ]
 
 theorem nonempty_iso_iff_equiv (τ σ : FDRep ℂ Γ) :
     Nonempty (τ ≅ σ) ↔ Nonempty (Representation.Equiv τ.ρ σ.ρ) := by
-  rw [GlobalTheory.T.simple_iff_irreducible.2 Γ τ σ]
+  rw [_root_.GlobalTheory.CompanionTheory.TyFin.simpleIffIrr.2 Γ τ σ]
   constructor
   · rintro ⟨e, he⟩
     exact ⟨Representation.Equiv.mk e fun g => LinearMap.ext fun v => he g v⟩
@@ -67,7 +67,7 @@ theorem nonempty_iso_iff_equiv (τ σ : FDRep ℂ Γ) :
 
 theorem zIdem_act (τ σ : FDRep ℂ Γ) (hτ : Simple τ) (hσ : Simple σ) :
     Representation.asAlgebraHom σ.ρ (zIdem τ) = (open Classical in if Nonempty (τ ≅ σ) then 1 else 0) := by
-  have h := centralIdemAct Γ τ σ τ.ρ σ.ρ ((GlobalTheory.T.simple_iff_irreducible.1 Γ τ).1 hτ) ((GlobalTheory.T.simple_iff_irreducible.1 Γ σ).1 hσ)
+  have h := centralIdemAct Γ τ σ τ.ρ σ.ρ ((_root_.GlobalTheory.CompanionTheory.TyFin.simpleIffIrr.1 Γ τ).1 hτ) ((_root_.GlobalTheory.CompanionTheory.TyFin.simpleIffIrr.1 Γ σ).1 hσ)
   rw [zIdem_eq_centralIdem, h]
   by_cases hc : Nonempty (τ ≅ σ)
   · rw [if_pos hc, if_pos ((nonempty_iso_iff_equiv τ σ).1 hc)]
@@ -76,7 +76,7 @@ theorem zIdem_act (τ σ : FDRep ℂ Γ) (hτ : Simple τ) (hσ : Simple σ) :
 theorem eq_of_act (x y : MonoidAlgebra ℂ Γ)
     (h : ∀ τ : FDRep ℂ Γ, Simple τ → Representation.asAlgebraHom τ.ρ x = Representation.asAlgebraHom τ.ρ y) :
     x = y :=
-  sub_eq_zero.1 (GlobalTheory.T.separable_irreducible Γ _ fun τ hτ => by rw [map_sub, h τ hτ, sub_self])
+  sub_eq_zero.1 (_root_.GlobalTheory.CompanionTheory.FinRep.sepIrr Γ _ fun τ hτ => by rw [map_sub, h τ hτ, sub_self])
 
 theorem zIdemFacts : ReciprocityTheory.Ty.Fin.St.ZIdemFacts := by
   refine ⟨?_, ?_, ?_, ?_⟩

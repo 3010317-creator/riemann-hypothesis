@@ -3,23 +3,28 @@ module
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GeometricAbelianConnected
 public import Development.WeilBound.CoreStatements.PluriharmonicCharts.IsOpenHoloPreimage
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AlgebraicSquareBaseIntersection
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAdjacentSwapSquareSystemStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAnalyticProjectionBijectiveStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverArithmeticFifth
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverArithmeticFirstStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverArithmeticSecondStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsPeriodOn
+public import Mathlib.FieldTheory.RatFunc.AsPolynomial
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAdjacentSwapSquareSystem
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsMultiHomogIdealMap
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.LogPeriodStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LogResolutionMapLocallyAnalyticStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.SameOrbitRefl
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.SamePotBlock
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRes
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LogResolutionMapLocallyAnalytic
 public import Development.WeilBound.CoreStatements.PluriharmonicCharts.LognormOrbit
 public import Development.WeilBound.CoreStatements.PluriharmonicCharts.MapAevalInt
 public import Development.WeilBound.CoreStatements.PluriharmonicCharts.MapsToTwoFlagFramesOrthogonalOfIsometry
 public import Development.WeilBound.CoreStatements.PluriharmonicCharts.WCoZero
 public import Development.WeilBound.CoreStatements.PluriharmonicCharts.XCSwap
-import Development.WeilBound.CoreStatements.PluriharmonicCharts.XCWArith
 public import Development.WeilBound.CoreStatements.PluriharmonicCharts.XCWSec
+public import Development.WeilBound.CoreStatements.PluriharmonicCharts.LocalAnalyticSectionCoords
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAnalyticProjectionBijective
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverArithmeticFifth
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsImg
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverArithmeticFirst
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverArithmeticSecond
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.LogPeriodStatement
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.SameOrbitRefl
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.SamePotBlock
+import Development.WeilBound.CoreStatements.PluriharmonicCharts.XCWArith
 import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.AssemblyBase
 import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PAnResNullForm
 import GroundTheory.HeightsAndTheta.Heights.Intersections.ProjLineRankTwoPushforwardHypotheses
@@ -64,7 +69,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterBridgeB
-public import Development.WeilBound.CoreStatements.PluriharmonicCharts.LocalAnalyticSectionCoords
 
 @[expose] public section
 
@@ -92,11 +96,11 @@ theorem lift_inj (FA : FlagAn BM d) {x x' : FA.Re.R.X} (h : SameOrbit (FA.Re.R.l
 theorem varpi_eq (CR : CovReal FA Cv) (hy : IsArithVar (mCoordIdeal y) (d + 2))
     (hy' : IsArithVar (mCoordIdeal y') (d + 2)) {z : (Σ k, ι' k) → ℂ} (hz : z ∈ mcPts (mCoordIdeal y'))
     {x₀ : FA.Re.R.X} (hi : IsImg Cv z (FA.Re.R.lift x₀ x₀)) : CR.ϖ z = FA.Re.π x₀ := by
-  obtain ⟨x₁, hx₁⟩ := (GlobalTheory.T.flag_analytic_projection_bijective K ι Φ y Ψ N j M n d BM FA).2 (CR.ϖ z)
+  obtain ⟨x₁, hx₁⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.FC.re_pi_bijective K ι Φ y Ψ N j M n d BM FA).2 (CR.ϖ z)
   have h1 : IsImg Cv z (FA.Re.R.lift x₁ x₁) := fun z₁ o F' F hF' hF hg' hg h hfl =>
     CR.flags z₁ (mem_mcPts_of_sameOrbit hy'.2.1.2.1 o hz) F' F hF' hF hg' hg h hfl x₁
       (hx₁.trans (CR.ϖ_torus z z₁ hz o).symm)
-  rw [← hx₁, lift_inj FA (GlobalTheory.T.flag_cover_arithmetic_second K ι Φ y Ψ N j M K' ι' Φ' y' M' Cv d hy hy' z hz _ _ h1 hi)]
+  rw [← hx₁, lift_inj FA (_root_.GlobalTheory.CompanionTheory.Ar.PB.CovMap.isImg_unique K ι Φ y Ψ N j M K' ι' Φ' y' M' Cv d hy hy' z hz _ _ h1 hi)]
 
 theorem pot_pull (CR : CovReal FA Cv) (hy : IsArithVar (mCoordIdeal y) (d + 2))
     (hy' : IsArithVar (mCoordIdeal y') (d + 2)) {K₂ : Type} [Fintype K₂] {ι₂ : K₂ → Type} [∀ k, Fintype (ι₂ k)]
@@ -106,12 +110,12 @@ theorem pot_pull (CR : CovReal FA Cv) (hy : IsArithVar (mCoordIdeal y) (d + 2))
     LocRe R.A x fun u => Real.log ((CR.Re.ref p).h (R.lift x u ∘ v)) -
       (FA.S.th (some p)).φ (FA.Re.π (g₀ x)) (FA.Re.π (g₀ u)) := by
   have hg₀ : HoloMap R.A FA.Re.R.A g₀ := by
-    refine GlobalTheory.T.log_resolution_map_locally_analytic _ _ _ _ _ _ _ _ _ _ FA.Re.R R g₀ FA.J_top fun x => ?_
-    obtain ⟨V, f, hV, hzV, hf, hff⟩ := GlobalTheory.T.flag_cover_arithmetic_first K ι Φ y Ψ N j M K' ι' Φ' y' M' Cv d hy hy' _
+    refine _root_.GlobalTheory.CompanionTheory.Ar.PB.CovMap.holoMap_of_local_analytic _ _ _ _ _ _ _ _ _ _ FA.Re.R R g₀ FA.J_top fun x => ?_
+    obtain ⟨V, f, hV, hzV, hf, hff⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.CovMap.LocImg.local_img K ι Φ y Ψ N j M K' ι' Φ' y' M' Cv d hy hy' _
       (hP _ (R.mem x x (R.mem_U x)))
     refine ⟨(fun z => z ∘ v) ⁻¹' V, fun z => f (z ∘ v), hV.preimage (continuous_comp_idx v), hzV,
       fun z hz => (hf _ hz).comp (f := fun z => z ∘ v) (analytic_comp_idx v z), fun z' hz' x' hx' => ?_⟩
-    exact GlobalTheory.T.flag_cover_arithmetic_second K ι Φ y Ψ N j M K' ι' Φ' y' M' Cv d hy hy' _ (hP _ hz'.2) _ _ (hff _ ⟨hz'.1, hP _ hz'.2⟩).2
+    exact _root_.GlobalTheory.CompanionTheory.Ar.PB.CovMap.isImg_unique K ι Φ y Ψ N j M K' ι' Φ' y' M' Cv d hy hy' _ (hP _ hz'.2) _ _ (hff _ ⟨hz'.1, hP _ hz'.2⟩).2
       ((hi x').orbit (FibreCount.comp_orbit hv hx') (Cj.sameOrbit_refl _))
   have hW : IsOpen (R.U x ∩ g₀ ⁻¹' FA.Re.R.U (g₀ x)) := (R.isOpen_U x).inter ((FA.Re.R.isOpen_U _).preimage hg₀.1)
   have L1 := pot_loc CR hy hy' (A := R.A) hW ⟨R.mem_U x, FA.Re.R.mem_U _⟩ (Z := fun u => R.lift x u ∘ v)
@@ -146,7 +150,7 @@ theorem PositivityTheory.Xgp.t_c_sqsys : Inputs → ∀ (K : Type) [Fintype K] (
   have S : Sw M τ a b k₀ ca cb := ⟨hb, hab, hk, hca, hcb, PositivityTheory.Xgp.t_c_w_arith⟩
   have S' : Sw M' τ a b k₀' ca cb := ⟨hb, hab, hk', hca, hcb, PositivityTheory.Xgp.t_c_w_arith⟩
   obtain ⟨Q, RW, e, he, hde, hq0, hq1, -, hnorm⟩ :=
-    GlobalTheory.T.flag_adjacent_swap_square_system hI K ι Φ y Ψ N j M n d BM FA τ a b k₀ ca cb hb hab hk hca hcb hy
+    _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.ansq_exists hI K ι Φ y Ψ N j M n d BM FA τ a b k₀ ca cb hb hab hk hca hcb hy
   obtain ⟨g, h, dg, dh, hg, hh, hgn, hhn, hdeg, hq, hdiv⟩ :=
     PositivityTheory.Xgp.t_c_w_sec K' ι' Φ' y' Ψ N j M' d τ a b k₀' ca cb hb hab hk' hca hcb hy'
   have LC := PositivityTheory.Xgp.c_algsq.lc K' ι' Φ' y' Ψ N j M' d τ a b k₀' ca cb hb hab hk' hca hcb hy' g h dg dh hg hh hdeg hq
@@ -159,7 +163,7 @@ theorem PositivityTheory.Xgp.t_c_sqsys : Inputs → ∀ (K : Type) [Fintype K] (
     simpa only [combLine_a, hk', Option.some.injEq] using hdeg₁
   have hv₀ := Pts.isBlockMap_v₀ (ι := ι') k₀'
   have hv₁ := isBlockMap_v₁ (ι := ι') k₀'
-  have hsurj := (GlobalTheory.T.flag_analytic_projection_bijective K ι Φ y Ψ N j M n d BM FA).2
+  have hsurj := (_root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.FC.re_pi_bijective K ι Φ y Ψ N j M n d BM FA).2
   have o₀ : ∀ x x₀, FA.Re.π x₀ = Q.q 0 (e x) → SameOrbit (FA.Re.R.lift x₀ x₀) (fstPt k₀ (RW.lift x x)) := hq0
   have o₁ : ∀ x x₀, FA.Re.π x₀ = Q.q 1 (e x) → SameOrbit (FA.Re.R.lift x₀ x₀) (sndPt k₀ (RW.lift x x)) := by
     intro x x₀ hx

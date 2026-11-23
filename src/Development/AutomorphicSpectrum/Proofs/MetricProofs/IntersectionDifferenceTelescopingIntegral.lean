@@ -4,7 +4,12 @@ public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.MetricsP
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GenFibreExists
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AnalyticSystemRegularityProperties
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PtsIntegralLogNormRatEqBaseStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsTwiceDifferentiableAt
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.IsPotentialPullbackStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.RationalSections.IsRatSectionOn
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRes
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PtsIntegralLogNormRatEqBase
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.PLCurveA
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -47,7 +52,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import ReciprocityTheory.AnalyticForms.PotentialTheory.IntegrableOnTargetOfTsupport
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.PLCurveA
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterDerived
 import Std.Tactic.BVDecide.Normalize.Prop
 import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FrameDefinitions.PermFinTwoUniv
@@ -167,7 +171,7 @@ theorem position_integral (hE : ResExistsStatement) {P J : Ideal (MRing ι)} {D 
   have hlift : ∀ x ∉ (∅ : Set R.X), logNormRat (wtLine hab) 1 1 (R.lift x x) = v (π x) := by
     intro x _
     rw [logNormRat_wtLine, ratioWt_of_mem (R.mem x x (R.mem_U x)).1, hlog x]
-  have hb := GlobalTheory.T.intersection_number_pullback_degree_alt hE K ι P J D R X A π hπ dg br hP hdeg L Φ hL hΦ hS (wtLine hab) 1 1 v ∅
+  have hb := _root_.GlobalTheory.CompanionTheory.Ar.PB.ptsIntegral_logNormRat_eq_base hE K ι P J D R X A π hπ dg br hP hdeg L Φ hL hΦ hS (wtLine hab) 1 1 v ∅
     (wtLine_smooth hab h₁ h₂) hrat hnull hlift (mIntegrableCont A Φ hΦ v hv)
   rwa [logNormRat_wtLine] at hb
 

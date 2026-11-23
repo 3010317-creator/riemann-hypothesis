@@ -1,12 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.EllipticPartTestData
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EventuallyAlgebraMapMemIntegers
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EventuallyUnitaryTorusOrbitalClassTrivialLocalStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsTorusClassOfIrreducibleCharpolyUnitaryStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsHasCls
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EventuallyUnitaryTorusOrbitalClassTrivialLocal
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsTorusClassOfIrreducibleCharpolyUnitary
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HermitianIsometryBaseChange
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EventuallyAlgebraMapMemIntegers
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormClassesIffConjUnitaryTorusEllipticElements
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryTorusEquivCentralizerWithMeasureStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryTorusEquivCentralizerWithMeasure
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -146,7 +147,7 @@ theorem exists_equiv (hσ : IsCMExt F E σ) {r : ℕ} {P : PPol σ r} {J : Matri
       (φ' : (k ⊗[F] Fld P) ≃ₗ[k ⊗[F] E] (Fin r → k ⊗[F] E)) (h' : IsIsom P k J x'.1.1 φ'), gam h' = γ →
       ∀ μ f c, HasOrbInt μ (gam h') (centMeas h' dt) f c ↔ HasOrbInt μ γ (dt.map e) f c := by
   subst hγ
-  obtain ⟨e, he, hm⟩ := GlobalTheory.T.unitaryTorus_equiv_centralizer_with_measure F E σ hσ r r P J hJ k x φ h
+  obtain ⟨e, he, hm⟩ := _root_.GlobalTheory.TorCentTop.torEquiv_cent F E σ hσ r r P J hJ k x φ h
   refine ⟨e, he, fun dt x' φ' h' hγ μ f c => ?_⟩
   have h1 : torEmb h' = torEmb h := MonoidHom.ext fun t => by
     simpa using (GlobalTheory.TrEll.cls_conj_torus F E σ hσ r r P J hJ k x φ h x' φ' h').2.2.1 1 (by simpa using hγ) t
@@ -155,7 +156,7 @@ theorem exists_equiv (hσ : IsCMExt F E σ) {r : ℕ} {P : PPol σ r} {J : Matri
 
 theorem exists_isCentProd_torus : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (r : ℕ) (P : PPol σ r) (J : Matrix (Fin r) (Fin r) E), IsHermND σ J → ∀ (L : Submodule (𝓞 E) (Fin r → E)) [Submodule.IsFullLattice E L], ∀ γ : GRat σ J, γ.1.1.charpoly = P.1 → ∀ dta dtf dt, IsTorusMeas P dta dtf dt → ∃ ea ef e, IsCentProd L (ratEmb σ J γ) ea ef e ∧ (∃ 𝓣, IsFundamentalDomain ((ratPts σ J).subgroupOf (cent (ratEmb σ J γ))) 𝓣 e ∧ e 𝓣 = torVol P dt) ∧ (∀ (v : HeightOneSpectrum (𝓞 F)) (x : plusUnits P (Fv F v)) (φ : ((Fv F v) ⊗[F] Fld P) ≃ₗ[(Fv F v) ⊗[F] E] (Fin r → (Fv F v) ⊗[F] E)) (h : IsIsom P (Fv F v) J x.1.1 φ), gam h = proj σ J v (ratEmb σ J γ) → ∀ μ f c, HasOrbInt μ (gam h) (centMeas h (dtf v)) f c ↔ HasOrbInt μ (proj σ J v (ratEmb σ J γ)) (ef v) f c) ∧ ∀ (w : InfinitePlace F) (x : plusUnits P w.Completion) (φ : (w.Completion ⊗[F] Fld P) ≃ₗ[w.Completion ⊗[F] E] (Fin r → w.Completion ⊗[F] E)) (h : IsIsom P w.Completion J x.1.1 φ), gam h = projArch σ J w (ratEmb σ J γ) → ∀ μ f c, HasOrbInt μ (gam h) (centMeas h (dta w)) f c ↔ HasOrbInt μ (projArch σ J w (ratEmb σ J γ)) (ea w) f c := by
   intro F E _ _ _ _ _ σ hσ r P J hJ L _ γ hP dta dtf dt hdt
-  obtain ⟨P', hP', _, x₀, φ₀, h₀, -, hγ₀⟩ := (GlobalTheory.T.exists_torusClass_of_irreducible_charpoly_unitary F E σ hσ r J hJ).2 γ (hP ▸ P.2.2.1)
+  obtain ⟨P', hP', _, x₀, φ₀, h₀, -, hγ₀⟩ := (_root_.GlobalTheory.TrEll.RatEll.exists_cls_of_irreducible F E σ hσ r J hJ).2 γ (hP ▸ P.2.2.1)
   obtain rfl : P = P' := Subtype.ext (hP.symm.trans hP')
   obtain ⟨xA, φA, hA, -, hγA, htA⟩ := GlobalTheory.TrEll.BaseChg.exists_isom_baseChange F E σ hσ r r P J hJ F (AF F) (Algebra.ofId F (AF F)) x₀ φ₀ h₀
   rw [hγ₀, mapH_diagH] at hγA
@@ -184,7 +185,7 @@ theorem exists_isCentProd_torus : ∀ (F E : Type) [Field F] [NumberField F] [Fi
       exact (congrArg (projArch σ J w) (he t)).trans (hta w t).symm
     · rw [hef]
       exact (congrArg (proj σ J v) (he t)).trans (htf v t).symm
-    · filter_upwards [GlobalTheory.T.eventually_unitaryTorus_orbitalClass_trivial_local F E σ hσ r P J hJ L, eventually_proj_mem_stabLoc σ J L (ratEmb σ J γ)]
+    · filter_upwards [_root_.GlobalTheory.TrEll.eventually_unitLoc_orbCls F E σ hσ r P J hJ L, eventually_proj_mem_stabLoc σ J L (ratEmb σ J γ)]
         with v h1 h2 t
       rw [Subgroup.mem_subgroupOf, hef]
       exact h1.2.2.1 _ _ (hf v) (hγf v ▸ h2) t

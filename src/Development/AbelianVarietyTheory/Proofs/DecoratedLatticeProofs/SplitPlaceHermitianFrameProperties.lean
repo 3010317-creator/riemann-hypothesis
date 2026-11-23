@@ -1,11 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousSplitPlaceHermitianFrameGLEmbeddingStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.EqOfSplitPartAgreeSupportedAtSplitPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSelfDualLatticeWithPrescribedSplitComponenStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PlaceIdempotentActsOnSupportedAndOffStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualSplitComponentIsLatticeStabilizerEqStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousSplitPlaceHermitianFrameGLEmbedding
+public import Formalism.LocalToGlobal.BesselHermitianTheta.TiedWeil
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.EqOfSplitPartAgreeSupportedAtSplitPlace
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSelfDualLatticeWithPrescribedSplitComponen
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PlaceIdempotentActsOnSupportedAndOff
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualSplitComponentIsLatticeStabilizerEq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -127,7 +128,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 theorem mem_grpAt_iff (β : Frame p S n) (h : GA D S) : h ∈ grpAt S (· = p.v) ↔ ∃ g, h = β.gl g := by
   obtain ⟨ε, hε, hsum⟩ := p.above
-  have hL := (GlobalTheory.T.placeIdempotent_acts_on_supportedAndOff D p.v ε hε).1
+  have hL := (_root_.GlobalTheory.FinPl.placeIdem_acts D p.v ε hε).1
   unfold grpAt
   rw [mem_congGrp]
   constructor
@@ -151,7 +152,7 @@ theorem mem_grpAt_iff (β : Frame p S n) (h : GA D S) : h ∈ grpAt S (· = p.v)
       rw [← Matrix.mul_assoc β.b β.b', β.bb', Matrix.one_mul]
     let g : GL n k := ⟨β.b' * M * β.b, β.b' * M' * β.b, by rw [e2, hMM, Matrix.mul_one, β.b'b],
       by rw [e2, hM'M, Matrix.mul_one, β.b'b]⟩
-    refine ⟨g, GlobalTheory.T.eq_of_splitPart_agree_supportedAtSplitPlace D S p.e h (β.gl g) p.split hsupp (β.gl_supp g) ?_⟩
+    refine ⟨g, _root_.GlobalTheory.UnitSplit.eq_of_split_part D S p.e h (β.gl g) p.split hsupp (β.gl_supp g) ?_⟩
     intro i j
     rw [← p.sec_pr, ← p.sec_pr]
     congr 1
@@ -171,10 +172,10 @@ end
 
 theorem frame_facts : ∀ (D : D7) (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (p : SplitPt D k) (S : HSp D) (n : Type) [Fintype n] [DecidableEq n] (β : Frame p S n), (∀ h : GA D S, h ∈ grpAt S (· = p.v) ↔ ∃ g, h = β.gl g) ∧ Function.Injective β.gl ∧ Continuous β.gl ∧ (∀ L : Lat S, IsSelfDualC S L → ∃ Λ : Submodule 𝒪[k] (n → k), Λ.IsLattice k ∧ β.IsLat L Λ ∧ ∀ g, InK S L (· = p.v) (β.gl g) ↔ g • Λ = Λ) ∧ (∀ (L : Lat S) (Λ : Submodule 𝒪[k] (n → k)), IsSelfDualC S L → Λ.IsFullLattice k → ∃ M : Lat S, IsSelfDualC S M ∧ β.IsLat M Λ ∧ latV S M (· ≠ p.v) = latV S L (· ≠ p.v)) ∧ ∀ g, ∃ x : (AE D)ˣ, IsDetAt p.e S (β.gl g) x ∧ p.pr x = g.val.det := by
   intro D k _ _ _ _ p S n _ _ β
-  refine ⟨mem_grpAt_iff β, gl_inj β, GlobalTheory.T.continuous_splitPlaceHermitianFrame_GL_embedding D k p S n β, GlobalTheory.T.selfDual_splitComponent_isLattice_stabilizer_eq D k p S n β, ?_, det_at β⟩
+  refine ⟨mem_grpAt_iff β, gl_inj β, _root_.GlobalTheory.FrameCont.continuous_gl D k p S n β, _root_.GlobalTheory.FinPl.FrameLat.exists_lat D k p S n β, ?_, det_at β⟩
   intro L Λ hL hΛ
   first
-  | exact GlobalTheory.T.exists_selfDual_lattice_with_prescribed_splitComponent D k p S n β L Λ hL hΛ
-  | exact GlobalTheory.T.exists_selfDual_lattice_with_prescribed_splitComponent D k p S n β L Λ hL hΛ.toIsLattice
+  | exact _root_.GlobalTheory.FrameGlob.main D k p S n β L Λ hL hΛ
+  | exact _root_.GlobalTheory.FrameGlob.main D k p S n β L Λ hL hΛ.toIsLattice
 
 end GlobalTheory.FrameAt

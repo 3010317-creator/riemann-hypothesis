@@ -8,8 +8,9 @@ public import Mathlib.RingTheory.Coalgebra.GroupLike
 public import Mathlib.RingTheory.Valuation.Integers
 public import Mathlib.Topology.MetricSpace.Ultra.Basic
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DerivationDivisibleOfCocomm
+public import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.MemPrimitiveTensorsIffIsPrimitiveElem
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsIntegralOfDivisibleCharacters
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormSmulLeOneOfPrimitiveBoundedPowersStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormSmulLeOneOfPrimitiveBoundedPowers
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +51,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.MemPrimitiveTensorsIffIsPrimitiveElem
 
 @[expose] public section
 
@@ -214,7 +214,7 @@ theorem dvd_mul_of_norm (C : Type) [NontriviallyNormedField C] [IsUltrametricDis
         obtain ⟨u, h1, h2⟩ := exists_isGroupLikeElem χ
         rw [← h2]
         exact hu u h1
-  have key := GlobalTheory.T.norm_smul_le_one_of_primitive_bounded_powers C p hp _ _ supN supN (mulHom O C A)
+  have key := _root_.GlobalTheory.NearlyPrimitive.norm_smul_le_one C p hp _ _ supN supN (mulHom O C A)
     (inlHom O C A) (inrHom O C A) supN_smul supN_smul supN_nonneg
     supN_nonneg (supN_add_le hO') (supN_mul_le hO')
     (fun f => supN_le fun t => le_supN hO' f _)

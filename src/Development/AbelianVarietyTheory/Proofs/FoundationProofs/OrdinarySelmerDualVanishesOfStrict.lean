@@ -6,12 +6,12 @@ public import Development.AutomorphicArithmetic.AutomorphicVarieties.Commutative
 public import Mathlib.RingTheory.AdicCompletion.Noetherian
 public import Development.AbelianVarietyTheory.Definitions.Foundations.CohomologyInputsOfUnitary
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CupProductCoboundaryMod
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CupProductDualTwistIsTwoCocycleUnramifiedStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CupProductUnramifiedClassesVanishesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GaloisCocycleIntegralAfterScalingStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CupProductDualTwistIsTwoCocycleUnramified
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CupProductUnramifiedClassesVanishes
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GaloisCocycleIntegralAfterScaling
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GreenbergOrdinaryOfVanishingOnCycloKernel
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegralTwoCocycleReciprocityTrivialAtLastPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LocalDualityCharacterOrthogonalClassesStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegralTwoCocycleReciprocityTrivialAtLastPlace
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LocalDualityCharacterOrthogonalClasses
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicCharInertiaSurjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -212,11 +212,11 @@ theorem upgrade : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀ (l : ℕ) [F
   have hup' : ∀ s ∈ Dec (F := ℚ) A, mat (dual1 W) s 1 0 = 0 := fun s hs => by
     rw [galoisRepRankTwoTateDual_matrix_apply W hdet2, hup s hs, mul_zero]
 
-  obtain ⟨c1, j, hc1, hyint1, hyunr1, -, -⟩ := GlobalTheory.T.galois_cocycle_integral_after_scaling l Ω S W c y hc hWc hW.unr hy hyU A
+  obtain ⟨c1, j, hc1, hyint1, hyunr1, -, -⟩ := _root_.GlobalTheory.CocInt.integral_after_scaling l Ω S W c y hc hWc hW.unr hy hyU A
   have hWc1 : ∀ s i j, mat W s i j ∈ c1.O := fun s i j => hc1 (hWc s i j)
   have hW'c1 : ∀ s i j, mat (dual1 W) s i j ∈ c1.O := CupCob.dual_representation_integral c1 W hdet2 hWc1
   obtain ⟨c2, k, hc2, hzint2, hzunr2, -, hzgr2⟩ :=
-    GlobalTheory.T.galois_cocycle_integral_after_scaling l Ω S (dual1 W) c1 z hc' hW'c1 (galoisRepRankTwoTateDual_unramified_outside S W hdet2 hW.above hW.unr) hz hzU A
+    _root_.GlobalTheory.CocInt.integral_after_scaling l Ω S (dual1 W) c1 z hc' hW'c1 (galoisRepRankTwoTateDual_unramified_outside S W hdet2 hW.above hW.unr) hz hzU A
   obtain ⟨x, hxO, hx⟩ := hzgr2 hzGr
   have hWc2 : ∀ s i j, mat W s i j ∈ c2.O := fun s i j => hc2 (hWc1 s i j)
   have hW'c2 : ∀ s i j, mat (dual1 W) s i j ∈ c2.O := CupCob.dual_representation_integral c2 W hdet2 hWc2
@@ -267,18 +267,18 @@ theorem upgrade : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀ (l : ℕ) [F
   obtain ⟨p, hAp, hlp⟩ := hW.atL
   have hpS : p ∈ S := hW.above p hlp
   have hCobA : ∀ n, Cob2 c2 n (Dec (F := ℚ) A) (cup W y1 z1) := fun n => by
-    refine GlobalTheory.T.integralTwoCocycle_reciprocity_trivial_at_last_place hLit l Ω c2 n S (cup W y1 z1) p hW.l_odd hW.above
-      (GlobalTheory.T.cupProductDualTwist_isTwoCocycle_unramified l Ω c2 n S W y1 z1 hc hWc2 hdet2 hW.above hW.unr hy1Z hz1Z hy1int hz1int hy1U hz1U) hpS ?_ A hAp
+    refine _root_.GlobalTheory.Ord2.Rec.reciprocity hLit l Ω c2 n S (cup W y1 z1) p hW.l_odd hW.above
+      (_root_.GlobalTheory.Ord2.cupProductDualTwist_isTwoCocycle_unramified_alt l Ω c2 n S W y1 z1 hc hWc2 hdet2 hW.above hW.unr hy1Z hz1Z hy1int hz1int hy1U hz1U) hpS ?_ A hAp
     intro v _ hvp
     have hlv : ((l : ℕ) : 𝓞 ℚ) ∉ v.asIdeal := fun h => hvp (place_unique h hlp)
     obtain ⟨B, hB⟩ := exists_isPlaceOver Ω v
-    exact ⟨B, hB, GlobalTheory.T.cupProduct_unramifiedClasses_vanishes hLit l Ω c2 n W v B y1 z1 hc hWc2 hdet2 hB hlv
+    exact ⟨B, hB, _root_.GlobalTheory.Ord2.UnrCup.cup_unr_cob hLit l Ω c2 n W v B y1 z1 hc hWc2 hdet2 hB hlv
       (isIntegralCocycleOneModPow_of_integral_cocycle c2 n W _ hy1Z hy1int) (isIntegralCocycleOneModPow_of_integral_cocycle c2 n (dual1 W) _ hz1Z hz1int)
       (isIntegralCoboundaryOneModPow_of_integral_vector c2 n W _ (hy1unr v hlv B hB)) (isIntegralCoboundaryOneModPow_of_integral_vector c2 n (dual1 W) _ (hz1unr v hlv B hB))⟩
 
   have hm : Continuous fun s => mat W s := Units.continuous_val.comp hc
   have hm' : Continuous fun s => mat (dual1 W) s := Units.continuous_val.comp hc'
-  have hloc := GlobalTheory.T.local_duality_character_orthogonal_classes hLit l Ω c2 A (fun s => mat W s 1 1) (fun s => mat (dual1 W) s 0 0) (fun s => z1 s 0)
+  have hloc := _root_.GlobalTheory.Ord2.localDuality_char hLit l Ω c2 A (fun s => mat W s 1 1) (fun s => mat (dual1 W) s 0 0) (fun s => z1 s 0)
     (fun s => -y1 s 1) hW.atL (hm.matrix_elem 1 1).continuousOn (hm'.matrix_elem 0 0).continuousOn
     ((continuous_apply 0).comp hz1Z.1).continuousOn ((continuous_apply 1).comp hy1Z.1).neg.continuousOn
     (fun s hs => ⟨hWc2 s 1 1, hW'c2 s 0 0, hz1int s 0, neg_mem (hy1int s 1), by

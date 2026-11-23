@@ -3,9 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DivisorSupportCondition
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
 public import Mathlib.Algebra.Homology.HomotopyCategory.KInjective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafPropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafProperties
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HypercohomologyMappingConeSecondVariableExactStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MappingConeLocallyExactOfComponentSectionsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MappingConeLocallyExactOfComponentSections
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MappingConeResolutionLocalChaseOnSupportStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubsingletonHypercohomologyOfLocallyExactOnSuppoStatement
 public import Mathlib.Algebra.Homology.HomotopyCategory.Plus
@@ -57,10 +57,10 @@ namespace GlobalTheory.EtC.ConeLocalization
 
 theorem cone_kinj (R : Type) [CommRing R] {F G : Shv R} (φ : F ⟶ G) :
     (mappingCone (resMap R φ)).IsKInjective := by
-  haveI := (GlobalTheory.T.chosenInjectiveResolution_etaleSheaf_properties R F).2.1
-  haveI := (GlobalTheory.T.chosenInjectiveResolution_etaleSheaf_properties R G).2.1
-  haveI := (GlobalTheory.T.chosenInjectiveResolution_etaleSheaf_properties R F).2.2.1
-  haveI := (GlobalTheory.T.chosenInjectiveResolution_etaleSheaf_properties R G).2.2.1
+  haveI := (_root_.GlobalTheory.EtC.ResBasic.res_basic R F).2.1
+  haveI := (_root_.GlobalTheory.EtC.ResBasic.res_basic R G).2.1
+  haveI := (_root_.GlobalTheory.EtC.ResBasic.res_basic R F).2.2.1
+  haveI := (_root_.GlobalTheory.EtC.ResBasic.res_basic R G).2.2.1
   haveI : ∀ n, Injective ((mappingCone (resMap R φ)).X n) := fun n =>
     Injective.of_iso (HomologicalComplex.homotopyCofiber.XIsoBiprod (resMap R φ) n (n + 1) rfl).symm inferInstance
   haveI : (mappingCone (resMap R φ)).IsStrictlyGE (-1) := CochainComplex.isStrictlyGE_mappingCone _ 0 0 (-1)
@@ -73,7 +73,7 @@ theorem cone_loc (R : Type) [CommRing R] (E : Spc) {F G : Shv R} (φ : F ⟶ G)
       Loc U fun V g => ∃ a : Sec ((mappingCone (resMap R φ)).X (n - 1)) V,
         Sec.map ((mappingCone (resMap R φ)).d (n - 1) n) a = Sec.res g b := by
   intro U hU n b hb
-  exact GlobalTheory.T.mappingCone_locallyExact_of_component_sections R (resMap R φ) U n (GlobalTheory.T.mappingCone_resolution_localChase_on_support R E φ hφ U hU n) b hb
+  exact _root_.GlobalTheory.EtC.cone_sec_exact R (resMap R φ) U n (GlobalTheory.T.mappingCone_resolution_localChase_on_support R E φ hφ U hU n) b hb
 
 end GlobalTheory.EtC.ConeLocalization
 

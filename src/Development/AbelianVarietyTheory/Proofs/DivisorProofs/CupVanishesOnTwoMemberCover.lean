@@ -1,7 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DivisorSupportCondition
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafPropertiesStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
+public import Mathlib.Algebra.Homology.HomotopyCategory.KInjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafProperties
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CupProductEqZeroOfVanishingOnCoverStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -50,7 +52,7 @@ namespace GlobalTheory.EtC
 
 theorem a6supp : DivisorSupportCondition := by
   intro q _ U V E f g hc n m i j a b ha hb
-  exact GlobalTheory.T.cupProduct_eq_zero_of_vanishing_on_cover (ZMod q) (twPair q i j) ((GlobalTheory.T.chosenInjectiveResolution_etaleSheaf_properties (ZMod q) (tw q i)).2.1)
-    ((GlobalTheory.T.chosenInjectiveResolution_etaleSheaf_properties (ZMod q) (tw q j)).2.1) f g hc rfl a b ha hb
+  exact GlobalTheory.T.cupProduct_eq_zero_of_vanishing_on_cover (ZMod q) (twPair q i j) ((_root_.GlobalTheory.EtC.ResBasic.res_basic (ZMod q) (tw q i)).2.1)
+    ((_root_.GlobalTheory.EtC.ResBasic.res_basic (ZMod q) (tw q j)).2.1) f g hc rfl a b ha hb
 
 end GlobalTheory.EtC

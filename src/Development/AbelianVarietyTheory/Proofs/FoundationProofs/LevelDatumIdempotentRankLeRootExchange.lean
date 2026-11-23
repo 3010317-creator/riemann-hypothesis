@@ -1,10 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.StandardFiveNontrivial
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LevelDatumSubgroupCharacterPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RankLevelDatumIdempotentEqOfSameShapeStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RepresentationRootSubgroupExchangeStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SubgroupCharacterIdempotentPropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LevelDatumSubgroupCharacterProperties
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RankLevelDatumIdempotentEqOfSameShape
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.RepresentationTheory.Basic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RepresentationRootSubgroupExchange
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SubgroupCharacterIdempotentProperties
+public import Mathlib.Data.Matrix.PEquiv
+public import Mathlib.Basic.PEquiv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -15,7 +19,6 @@ import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-public import Mathlib.Data.Matrix.PEquiv
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
@@ -54,7 +57,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Mathlib.Basic.PEquiv
 
 @[expose] public section
 
@@ -186,7 +188,7 @@ theorem exchange (M : Type) [AddCommGroup M] [Module ℂ M] [FiniteDimensional �
     (hJ' : ∀ u, u ∈ J' ↔ IsUp g N u ∧ ∀ b : Fin N, L.s ≤ b → (b : ℕ) < L.s + L.k → u.val i b = 0)
     (n : ℕ) (v : Fin n → M) (hv : LinearIndependent ℂ v) (he : ∀ m, ∀ u ∈ J', ρ u (v m) = L.chi u • v m) :
     n ≤ rk ρ L.e := by
-  obtain ⟨m1, mm, c1, cm, -⟩ := GlobalTheory.T.levelDatum_submonoid_chi_mul_unipotent g N L
+  obtain ⟨m1, mm, c1, cm, -⟩ := _root_.GlobalTheory.BadShare.LevGroup.lev_group g N L
   let j : Fin N := ⟨L.s + L.k, L.hk⟩
   have hj : (j : ℕ) = L.s + L.k := rfl
   let W : Fin N → Prop := fun a => L.s ≤ a ∧ (a : ℕ) < L.s + L.k
@@ -270,7 +272,7 @@ theorem exchange (M : Type) [AddCommGroup M] [Module ℂ M] [FiniteDimensional �
         Matrix.one_apply_ne (by intro e; rw [← e] at hb; omega)]; simp
     · rw [chi_eq L hL _ _ hc i j hij (fun a b _ h => hD a b h), Matrix.vecMulVec_apply]
       simp
-  obtain ⟨w, hw, hw'⟩ := GlobalTheory.T.representation_root_subgroup_exchange (GG g N) M ρ (J ⊓ J') X Y L.chi
+  obtain ⟨w, hw, hw'⟩ := _root_.GlobalTheory.BadShare.root_exchange (GG g N) M ρ (J ⊓ J') X Y L.chi
     (by
       rintro x ⟨ξ, h, hx⟩ hB
       have : ξ = 0 := by
@@ -326,7 +328,7 @@ theorem exchange (M : Type) [AddCommGroup M] [Module ℂ M] [FiniteDimensional �
       exact mul_right_cancel₀ hn (by rw [e, one_mul]))
     n v hv
     (fun m => ⟨fun b hb => he m b hb.2, fun y hy => by rw [he m y (hYJ y hy).1, (hYJ y hy).2, one_smul]⟩)
-  refine (GlobalTheory.T.subgroupCharacterIdempotent_properties (GG g N) M ρ L.Mem L.chi m1 mm c1 cm).2.2.2 n w hw ?_
+  refine (_root_.GlobalTheory.BadShare.EpsProj.eps_spec (GG g N) M ρ L.Mem L.chi m1 mm c1 cm).2.2.2 n w hw ?_
   intro m u hu
   obtain ⟨x, hx, hb⟩ := hdec u hu
   have e : u = (u * x) * x⁻¹ := by group
@@ -341,8 +343,8 @@ theorem rk_le_step : ∀ (g : ℕ) [Fact g.Prime] (N : ℕ), ∀ (M : Type) [Add
   obtain ⟨σ, hσ⟩ := exists_cycle (N := N) L'.s L'.k L'.hk
   obtain ⟨Q, hQ⟩ := exists_perm (F := ZMod g) σ
   let K : Lev g N := ⟨true, L'.s, L'.k, L'.hk, L.ψ, L.hψ, fun a => L.co (σ a)⟩
-  rw [GlobalTheory.T.rank_levelDatum_idempotent_eq_of_same_shape g N M ρ L' K hL' rfl rfl]
-  obtain ⟨m1, mm, c1, cm, -⟩ := GlobalTheory.T.levelDatum_submonoid_chi_mul_unipotent g N K
+  rw [_root_.GlobalTheory.BadShare.CoDiag.rk_e_eq g N M ρ L' K hL' rfl rfl]
+  obtain ⟨m1, mm, c1, cm, -⟩ := _root_.GlobalTheory.BadShare.LevGroup.lev_group g N K
   have hE : ∀ a b, K.Edge a b ↔ L.Edge (σ a) (σ b) := by
     intro a b
     rw [edge_iff K rfl, edge_iff L hL, hσ, hσ, hk, hs]
@@ -406,7 +408,7 @@ theorem rk_le_step : ∀ (g : ℕ) [Fact g.Prime] (N : ℕ), ∀ (M : Type) [Add
         change (b : ℕ) = L'.s + L'.k at hb
         rw [Fin.lt_def, hσ, hσ]
         split_ifs <;> omega
-  have hr := (GlobalTheory.T.subgroupCharacterIdempotent_properties (GG g N) M ρ K.Mem K.chi m1 mm c1 cm).2.2.1
+  have hr := (_root_.GlobalTheory.BadShare.EpsProj.eps_spec (GG g N) M ρ K.Mem K.chi m1 mm c1 cm).2.2.1
   let bs := Module.finBasis ℂ (LinearMap.range (op ρ K.e))
   have hinj : LinearMap.ker (ρ Q⁻¹ ∘ₗ (LinearMap.range (op ρ K.e)).subtype) = ⊥ := by
     rw [LinearMap.ker_eq_bot]

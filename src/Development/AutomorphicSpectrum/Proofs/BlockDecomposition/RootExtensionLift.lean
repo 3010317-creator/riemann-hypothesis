@@ -2,8 +2,10 @@ module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.MapUSharp
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EtaleLiftingOfNilIdeal
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PeriodRingBaseChangeFromUniversalStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PeriodRingUniversalPropertyStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.MapAcrFromBase
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PeriodRingBaseChangeFromUniversal
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.AcrisKummerUnits.TwistAcrisZeroPreservesFiltration
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PeriodRingUniversalProperty
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -201,7 +203,7 @@ theorem toAcr_sub_mem {l : ℕ} [Fact l.Prime] (A : PAlg l) (n : ℕ) (w : Ainf 
   · have hl0 : ((l : ℕ) : A.A) = 0 := by
       rw [← map_natCast A.s l, CharP.cast_eq_zero, map_zero]
     haveI : CharP A.A l := (CharP.charP_iff_prime_eq_zero (Fact.out : l.Prime)).mpr hl0
-    obtain ⟨π, hπ, -, -, -⟩ := (GlobalTheory.T.period_ring_base_change_from_universal A n).1
+    obtain ⟨π, hπ, -, -, -⟩ := (_root_.GlobalTheory.CompanionTheory.AcrMod.acr_modp A n).1
     have hlP : ((l : ℕ) : A.Acr n) ∈ A.PFil n := by
       rw [← Ideal.Quotient.eq_zero_iff_mem, map_natCast, ← map_natCast π l, hl0, map_zero]
     obtain ⟨y, hy⟩ : ∃ y : WittVector l A.A, y = A.sW w - WittVector.teichmuller l (A.s (w.coeff 0)) :=
@@ -267,8 +269,8 @@ theorem tower_acr {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] {F : Fn O} {�
       ∀ j m, e (X.r j m) = 𝒯.A.toAcr n (WittVector.teichmuller l (𝒯.c j m : 𝒯.A.A)) := by
   intro hn0 ht
   have hl : l.Prime := Fact.out
-  obtain ⟨⟨πb, hπb, -, hπb0, -⟩, -, -, -, -, hPb, -⟩ := GlobalTheory.T.period_ring_base_change_from_universal (base l) n
-  obtain ⟨⟨πA, hπA, -, hπA0, -⟩, -, hJJ, -, -, -, -⟩ := GlobalTheory.T.period_ring_base_change_from_universal 𝒯.A n
+  obtain ⟨⟨πb, hπb, -, hπb0, -⟩, -, -, -, -, hPb, -⟩ := _root_.GlobalTheory.CompanionTheory.AcrMod.acr_modp (base l) n
+  obtain ⟨⟨πA, hπA, -, hπA0, -⟩, -, hJJ, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.AcrMod.acr_modp 𝒯.A n
   have hPP : 𝒯.A.PFil n = ((base l).PFil n).map (mapAcr 𝒯.A.fromBase n) := hJJ true
   let φ : 𝓛.D →+* 𝒯.A.Acr n := θ.φ
   have hφ : ∀ r, φ (𝓛.i r) = mapAcr 𝒯.A.fromBase n r := θ.comm
@@ -310,7 +312,7 @@ theorem tower_acr {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] {F : Fn O} {�
       exact this)
     (fun j => by rw [X.r_zero]; exact hg0 _ _ (𝓛.hT j).symm)
     (fun j m => by rw [← map_pow, X.r_succ])
-  obtain ⟨e', he'0, he'f⟩ := (GlobalTheory.T.period_ring_universal_property 𝒯.A n X.E h).1 f fun a => by
+  obtain ⟨e', he'0, he'f⟩ := (_root_.GlobalTheory.CompanionTheory.AcrUniv.maps_out 𝒯.A n X.E h).1 f fun a => by
     rw [← ho]; exact RingHom.congr_fun hfs a
   have he'm : ∀ x, e' (mapAcr 𝒯.A.fromBase n x) = h x := fun x => RingHom.congr_fun he'0 x
 
@@ -377,7 +379,7 @@ theorem tower_acr {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] {F : Fn O} {�
       rw [hπA, ← huPl _ _ ha]
       exact (huP _).symm
   have h1 : ∀ y, e (e' y) = y := fun y => by
-    have h4 := (GlobalTheory.T.period_ring_universal_property 𝒯.A n (𝒯.A.Acr n) (mapAcr 𝒯.A.fromBase n)).2 (e.comp e') (RingHom.id _)
+    have h4 := (_root_.GlobalTheory.CompanionTheory.AcrUniv.maps_out 𝒯.A n (𝒯.A.Acr n) (mapAcr 𝒯.A.fromBase n)).2 (e.comp e') (RingHom.id _)
       (RingHom.ext fun x => by rw [RingHom.comp_apply, RingHom.comp_apply, he'm, hh]) (RingHom.id_comp _)
       (fun a => by
         rw [← hPP]

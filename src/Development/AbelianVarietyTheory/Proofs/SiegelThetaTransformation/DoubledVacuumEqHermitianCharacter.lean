@@ -3,13 +3,15 @@ module
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HMatMulVecPerCrd
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DoubledLatticeSplit
 public import Mathlib.Data.Matrix.ColumnRowPartitioned
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DoubledHermitianTestFunctionSpecStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DoubledHermitianTestFunctionZeroAndNormStatement
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DoubledThetaTestFunctionSesquilinearHeisenbergStatement
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RationalSchwartzBruhatAlgebraIntegralLinearStatement
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DoubledHermitianTestFunctionSpec
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DoubledHermitianTestFunctionZeroAndNorm
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RelIndexDualSubmoduleInfOfSelfDual
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.TensorLatticeSelfDualSemicharacterIndex
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.TensorLatticeVacuaExistUnique
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DoubledThetaTestFunctionSesquilinearHeisenberg
+import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IMemSiegel
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RationalSchwartzBruhatAlgebraIntegralLinear
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -212,14 +214,14 @@ variable {K κ ι : Type} [Field K] [NumberField K] [Fintype κ] [Fintype ι]
   {φ φ' ψ ψ' : Matrix κ ι K → ℂ}
 
 theorem sb_mul_conj (h : IsSB φ) (h' : IsSB ψ) : IsSB fun x => φ x * conj (ψ x) := by
-  have hc : IsSB fun x => conj (ψ x) := (GlobalTheory.T.rationalSchwartzBruhat_algebra_integral_linear K κ ι ψ ψ h' h').2.2.2.1
-  exact (GlobalTheory.T.rationalSchwartzBruhat_algebra_integral_linear K κ ι φ _ h hc).2.2.1
+  have hc : IsSB fun x => conj (ψ x) := (_root_.GlobalTheory.SW.isSB_algebra_haar_linear K κ ι ψ ψ h' h').2.2.2.1
+  exact (_root_.GlobalTheory.SW.isSB_algebra_haar_linear K κ ι φ _ h hc).2.2.1
 
 theorem sb_add (h : IsSB φ) (h' : IsSB ψ) : IsSB (φ + ψ) := by
-  exact (GlobalTheory.T.rationalSchwartzBruhat_algebra_integral_linear K κ ι φ ψ h h').1
+  exact (_root_.GlobalTheory.SW.isSB_algebra_haar_linear K κ ι φ ψ h h').1
 
 theorem sb_smul (c : ℂ) (h : IsSB φ) : IsSB (c • φ) := by
-  exact (GlobalTheory.T.rationalSchwartzBruhat_algebra_integral_linear K κ ι φ φ h h).2.1 c
+  exact (_root_.GlobalTheory.SW.isSB_algebra_haar_linear K κ ι φ φ h h).2.1 c
 
 theorem ip_add_left (h : IsSB φ) (h' : IsSB φ') (k : IsSB ψ) :
     ip (φ + φ') ψ = ip φ ψ + ip φ' ψ := by
@@ -228,7 +230,7 @@ theorem ip_add_left (h : IsSB φ) (h' : IsSB φ') (k : IsSB ψ) :
     funext x; simp only [Pi.add_apply, add_mul]
   unfold GlobalTheory.SW.ip
   rw [e]
-  exact (GlobalTheory.T.rationalSchwartzBruhat_algebra_integral_linear K κ ι _ _ (sb_mul_conj h k) (sb_mul_conj h' k)).2.2.2.2.1
+  exact (_root_.GlobalTheory.SW.isSB_algebra_haar_linear K κ ι _ _ (sb_mul_conj h k) (sb_mul_conj h' k)).2.2.2.2.1
 
 theorem ip_add_right (h : IsSB φ) (k : IsSB ψ) (k' : IsSB ψ') :
     ip φ (ψ + ψ') = ip φ ψ + ip φ ψ' := by
@@ -237,7 +239,7 @@ theorem ip_add_right (h : IsSB φ) (k : IsSB ψ) (k' : IsSB ψ') :
     funext x; simp only [Pi.add_apply, map_add (f := _), mul_add]
   unfold GlobalTheory.SW.ip
   rw [e]
-  exact (GlobalTheory.T.rationalSchwartzBruhat_algebra_integral_linear K κ ι _ _ (sb_mul_conj h k) (sb_mul_conj h k')).2.2.2.2.1
+  exact (_root_.GlobalTheory.SW.isSB_algebra_haar_linear K κ ι _ _ (sb_mul_conj h k) (sb_mul_conj h k')).2.2.2.2.1
 
 theorem ip_smul (h : IsSB φ) (k : IsSB ψ) (a b : ℂ) :
     ip (a • φ) (b • ψ) = a * conj b * ip φ ψ := by
@@ -245,7 +247,7 @@ theorem ip_smul (h : IsSB φ) (k : IsSB ψ) (a b : ℂ) :
     funext x; simp only [Pi.smul_apply, smul_eq_mul, map_mul]; ring
   unfold GlobalTheory.SW.ip
   rw [e]
-  exact (GlobalTheory.T.rationalSchwartzBruhat_algebra_integral_linear K κ ι _ _ (sb_mul_conj h k) (sb_mul_conj h k)).2.2.2.2.2.1 _
+  exact (_root_.GlobalTheory.SW.isSB_algebra_haar_linear K κ ι _ _ (sb_mul_conj h k) (sb_mul_conj h k)).2.2.2.2.2.1 _
 
 private lemma finsum_ofReal {α : Type} (f : α → ℝ) :
     ∑ᶠ a, (f a : ℂ) = ((∑ᶠ a, f a : ℝ) : ℂ) := by
@@ -290,7 +292,7 @@ theorem ip_of_support (h : IsSB φ) (k : IsSB ψ) {A B : Set (Matrix κ ι K)} {
       exact finsum_congr fun q => by split_ifs <;> simp
   refine ⟨ρ, hρ, ?_⟩
   unfold GlobalTheory.SW.ip
-  rw [e, (GlobalTheory.T.rationalSchwartzBruhat_algebra_integral_linear K κ ι _ _ hind hind).2.2.2.2.2.1, hh]
+  rw [e, (_root_.GlobalTheory.SW.isSB_algebra_haar_linear K κ ι _ _ hind hind).2.2.2.2.2.1, hh]
 
 theorem unitv_smul {n g : ℕ} {v : TF n g} (h : IsSB v) (h1 : ip v v = 1) (c : ℂ) :
     unitv (c • v) = ((‖c‖ : ℂ)⁻¹ * c) • v := by
@@ -515,7 +517,7 @@ theorem ip_conj {K κ ι : Type} [Field K] [NumberField K] [Fintype κ] [Fintype
     funext x; simp only [map_mul, Complex.conj_conj]; ring
   unfold GlobalTheory.SW.ip
   rw [e]
-  exact (GlobalTheory.T.rationalSchwartzBruhat_algebra_integral_linear K κ ι _ _ (sb_mul_conj h k) (sb_mul_conj h k)).2.2.2.2.2.2.1
+  exact (_root_.GlobalTheory.SW.isSB_algebra_haar_linear K κ ι _ _ (sb_mul_conj h k) (sb_mul_conj h k)).2.2.2.2.2.2.1
 
 theorem ip_dbl (hs : IsSympl X bas) (hn : Even n) {b : ℂ}
     (hb : ∀ φ₁ φ₂ : TF n g, IsSB φ₁ → IsSB φ₂ →
@@ -523,16 +525,16 @@ theorem ip_dbl (hs : IsSympl X bas) (hn : Even n) {b : ℂ}
     {φ₁ φ₂ ψ₁ ψ₂ : TF n g} (h₁ : IsSB φ₁) (h₂ : IsSB φ₂) (k₁ : IsSB ψ₁) (k₂ : IsSB ψ₂) :
     ip (dbl X bas idx φ₁ φ₂) (dbl X bas idx ψ₁ ψ₂) = b * (ip φ₁ ψ₁ * ip ψ₂ φ₂) := by
   have sbD : ∀ x y : TF n g, IsSB x → IsSB y → IsSB (dbl X bas idx x y) :=
-    fun x y hx hy => (GlobalTheory.T.doubledHermitianTestFunction_spec E r X g bas idx n hs hn x y hx hy).1
+    fun x y hx hy => (_root_.GlobalTheory.SW.DblEx.dbl_spec E r X g bas idx n hs hn x y hx hy).1
   have addL : ∀ x x' y : TF n g, IsSB x → IsSB x' → IsSB y →
       dbl X bas idx (x + x') y = dbl X bas idx x y + dbl X bas idx x' y :=
-    fun x x' y hx hx' hy => ((GlobalTheory.T.doubledThetaTestFunction_sesquilinear_heisenberg E r X g bas idx n hs hn x y hx hy).1 x' hx').1
+    fun x x' y hx hx' hy => ((_root_.GlobalTheory.SW.DblLin.dbl_lin E r X g bas idx n hs hn x y hx hy).1 x' hx').1
   have addR : ∀ x y y' : TF n g, IsSB x → IsSB y → IsSB y' →
       dbl X bas idx x (y + y') = dbl X bas idx x y + dbl X bas idx x y' :=
-    fun x y y' hx hy hy' => ((GlobalTheory.T.doubledThetaTestFunction_sesquilinear_heisenberg E r X g bas idx n hs hn x y hx hy).1 y' hy').2
+    fun x y y' hx hy hy' => ((_root_.GlobalTheory.SW.DblLin.dbl_lin E r X g bas idx n hs hn x y hx hy).1 y' hy').2
   have smulD : ∀ (x y : TF n g) (a c : ℂ), IsSB x → IsSB y →
       dbl X bas idx (a • x) (c • y) = (a * conj c) • dbl X bas idx x y :=
-    fun x y a c hx hy => (GlobalTheory.T.doubledThetaTestFunction_sesquilinear_heisenberg E r X g bas idx n hs hn x y hx hy).2.1 a c
+    fun x y a c hx hy => (_root_.GlobalTheory.SW.DblLin.dbl_lin E r X g bas idx n hs hn x y hx hy).2.1 a c
   have smulL : ∀ (x y : TF n g) (a : ℂ), IsSB x → IsSB y →
       dbl X bas idx (a • x) y = a • dbl X bas idx x y := by
     intro x y a hx hy
@@ -605,11 +607,11 @@ theorem GlobalTheory.SW.dbl_vacuum : ∀ (E : Type) [Field E] [NumberField E] [I
   have hlift : ∀ d ∈ L₁ ⊔ L₂, ∃ y₁ ∈ L₁, ∃ y₂ ∈ L₂,
       Sum.elim y₁ y₂ ᵥ* dblT X = Sum.elim d (d ᵥ* β) :=
     fun d hd => (hβ d (d ᵥ* β)).2 ⟨hd, fun d' _ => ⟨0, by simp⟩⟩
-  obtain ⟨a, ha, b, hb, hab⟩ := GlobalTheory.T.doubledHermitianTestFunction_zero_and_norm E r X g bas idx n hs hn
+  obtain ⟨a, ha, b, hb, hab⟩ := _root_.GlobalTheory.SW.dbl_zero_and_norm E r X g bas idx n hs hn
   have VAC := GlobalTheory.SW.TensVac.vacua E r X g bas idx n hs hn w hw hw1
   have TL := GlobalTheory.SW.TensLat.tens_selfDual_semichar_index E r X g bas idx n hs hn w hw hw1
-  have WeylSymmetry := GlobalTheory.T.doubledHermitianTestFunction_spec E r X g bas idx n hs hn
-  have D9 := GlobalTheory.T.doubledThetaTestFunction_sesquilinear_heisenberg E r X g bas idx n hs hn
+  have WeylSymmetry := _root_.GlobalTheory.SW.DblEx.dbl_spec E r X g bas idx n hs hn
+  have D9 := _root_.GlobalTheory.SW.DblLin.dbl_lin E r X g bas idx n hs hn
   have hΛ₀ : stdL E n ∈ Vset E n M := GlobalTheory.SW.Base.stdL_mem_Vset n M
 
   have LAW : ∀ Λ ∈ Vset E n M, ∀ V₁ V₂ : TF n g, IsVac X bas w (tens Λ L₁) V₁ →

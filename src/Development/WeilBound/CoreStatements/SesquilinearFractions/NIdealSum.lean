@@ -2,7 +2,9 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.AdelicLattices.FactPrimes
 public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
-public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.LogIdealMulSpanMapStatement
+public import Development.AutomorphicSpectrum.Proofs.AdelicProofs.LogIdealMulSpanMap
+public import Mathlib.NumberTheory.NumberField.Norm
+public import Mathlib.RingTheory.ClassGroup.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,8 +51,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.NumberTheory.NumberField.Norm
-public import Mathlib.RingTheory.ClassGroup.Basic
 
 @[expose] public section
 
@@ -64,11 +64,11 @@ theorem logIdeal_pow (E : Type) [Field E] [NumberField E] (p : Nat.Primes) (j : 
   intro n
   induction n with
   | zero =>
-    have h1 := (GlobalTheory.T.log_ideal_mul_span_map E p j hj).2.1 1
+    have h1 := (_root_.GlobalTheory.CompanionTheory.Ar.Fl.logIdeal_mul_span_map E p j hj).2.1 1
     rw [Ideal.span_singleton_one, map_one, norm_one, Real.log_one] at h1
     simpa using h1
   | succ n ih =>
-    rw [pow_succ, (GlobalTheory.T.log_ideal_mul_span_map E p j hj).1 _ _ (pow_ne_zero _ hI) hI, ih]
+    rw [pow_succ, (_root_.GlobalTheory.CompanionTheory.Ar.Fl.logIdeal_mul_span_map E p j hj).1 _ _ (pow_ne_zero _ hI) hI, ih]
     push_cast
     ring
 
@@ -94,7 +94,7 @@ theorem sum_logIdeal_eq_log_absNorm : ∀ (E : Type) [Field E] [NumberField E] (
     intro j
     have hinj : Function.Injective (j.comp (algebraMap (𝓞 E) E)) :=
       j.injective.comp (FaithfulSMul.algebraMap_injective (𝓞 E) E)
-    rw [← logIdeal_pow E p _ hinj I hI h, ha, (GlobalTheory.T.log_ideal_mul_span_map E p _ hinj).2.1]
+    rw [← logIdeal_pow E p _ hinj I hI h, ha, (_root_.GlobalTheory.CompanionTheory.Ar.Fl.logIdeal_mul_span_map E p _ hinj).2.1]
     rfl
   have haE : (a : E) ≠ 0 := by
     intro h0

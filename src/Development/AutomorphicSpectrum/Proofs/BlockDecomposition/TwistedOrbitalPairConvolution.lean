@@ -2,9 +2,10 @@ module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ThetaNormCommutation.LocalComparisonSplitting.EulerFactorLevels.EulerFinOf
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PLocPrjGOfNotMem
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsCompactConjugacyTransversalStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsCompactConjugacyTransversal
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StabilizerIndexNeZero
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwistedOrbitalSwapConvolutionStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwistedOrbitalSwapConvolution
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -121,7 +122,7 @@ theorem splitConv_of_finite : ∀ (H : Type) [Group H] [TopologicalSpace H] [IsT
     rw [map_one]
   rw [he] at step₂
   rw [step₂]
-  exact GlobalTheory.T.twisted_orbital_swap_convolution H K K' (d * σ d') f₁ f₂ hKo hKc hK'o hK'K h₁ h₂ hG
-    (GlobalTheory.T.exists_compact_conjugacy_transversal H K (d * σ d') hKc hfin)
+  exact _root_.GlobalTheory.CompanionTheory.SplitSwap.main H K K' (d * σ d') f₁ f₂ hKo hKc hK'o hK'K h₁ h₂ hG
+    (_root_.GlobalTheory.CompanionTheory.OrbitalCount.exists_compact_reps_of_finite_doubleCosets H K (d * σ d') hKc hfin)
 
 end GlobalTheory.CompanionTheory.SplitConvF

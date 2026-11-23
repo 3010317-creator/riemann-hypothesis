@@ -3,18 +3,19 @@ module
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RestrictedTensorBasePointNormSq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralNormSqEqToL2
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsQuadOfPlane
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInverseChart
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FockVacuumAnnihilationEquationRealCoordinates
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealSymplecticFormAlternatingInvariantDefinite
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOscillatorActionOfGaussianPairings
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOscillatorActionUnitaryGroupHermitian
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralEqOfNorms
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsEuclideanCoordsHermitianCartanInvolutionStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergSmoothRapidSuperpositionTranslatesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousFourierGau
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsEuclideanCoordsHermitianCartanInvolution
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergSmoothRapidSuperpositionTranslates
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RestrictedTensorVacuumEqSmulBasePointStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.VacuumProjectorRangeAnnihilatedStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.VacuumProjectorRangeAnnihilated
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInverseChart
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealSymplecticFormAlternatingInvariantDefinite
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.InfAdeleTensorBijective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -107,12 +108,12 @@ theorem exists_superpos (om : W →L[ℝ] W →L[ℝ] ℝ) (hom : ∀ x, om x x 
   have key : ∀ u, proj h (ρ (E (-u)) x) = l (proj h (ρ (E (-u)) x)) • f₀ := by
     intro u
     have hs : Sm ρ (proj h (ρ (E (-u)) x)) :=
-      GlobalTheory.T.heisenberg_smooth_rapid_superposition_translates W V volume B om ρ hom hρ E gau continuous_gau Osc.integrable_pow_gau _ (sm_heis om hρ _ hx)
+      _root_.GlobalTheory.RealWeil.sm_superpos W V volume B om ρ hom hρ E gau continuous_gau Osc.integrable_pow_gau _ (sm_heis om hρ _ hx)
     obtain ⟨c, hc⟩ := hline ((proj h).comp (ρ (E (-u))))
       (fun C hC f => by
         rw [ContinuousLinearMap.comp_apply, ContinuousLinearMap.comp_apply, Osc.proj_comm h C hC, hC]) hs
       fun z => by
-        have := GlobalTheory.T.vacuumProjector_range_annihilated V B J _ hJ h (ρ (E (-u)) x) z
+        have := _root_.GlobalTheory.Mem.Lift.VacAnn.proj_annihilated V B J _ hJ h (ρ (E (-u)) x) z
         unfold dH at this
         rwa [UnitaryOsc.fderiv_comp_clm hs, UnitaryOsc.fderiv_comp_clm hs] at this
     rw [ContinuousLinearMap.comp_apply] at hc
@@ -284,7 +285,7 @@ theorem exists_coord (τ : D.what₂.Tau) {sS : Matrix (Fin S.rank) (Fin S.rank)
       (J : EuclideanSpace ℂ ((Fin T.rank × Fin S.rank) × Unit) ≃ₗᵢ[ℝ] EuclideanSpace ℂ ((Fin T.rank × Fin S.rank) × Unit)),
       (∀ x, J (J x) = -x) ∧ (∀ x y, (star (E y) ⬝ᵥ HM S T *ᵥ E x).im = omJ J x y) ∧ (∀ z, ∃ y, E z = atPl τ y) ∧
         ∀ y, ∃ z, E z = atPl τ y ∧ E (J z) = atPl τ (cplxO sS sT y) := by
-  obtain ⟨E, J, hJ, hEJ, hE⟩ := GlobalTheory.T.exists_euclideanCoords_hermitian_cartanInvolution ((Fin T.rank × Fin S.rank) × Unit)
+  obtain ⟨E, J, hJ, hEJ, hE⟩ := _root_.GlobalTheory.Twist.EuclidCoord.exists_coord ((Fin T.rank × Fin S.rank) × Unit)
     (blk (fun _ => ((2 * (tauE D τ D.host.xi0).im : ℝ) : ℂ) • gramAt D T τ) fun _ => (gramAt D S τ)⁻¹)
     (blk (fun _ => sT) fun _ => sS)
     (by
@@ -383,7 +384,7 @@ theorem isLocOp_integral (h : Chart θ σ) (hψ : IsStdChar D ψ (-1)) {μ : Mea
   · simp only [mul_left_comm _ a, integral_const_mul]
   · obtain ⟨F, rfl⟩ := lift f hf
     obtain ⟨U, hU, hl⟩ := hf.level
-    refine ⟨_, theta_of_sm h hψ _ (GlobalTheory.T.heisenberg_smooth_rapid_superposition_translates _ _ ν _ om _ hom hρ E c hc hci F (sm_of_theta h hψ F hf))
+    refine ⟨_, theta_of_sm h hψ _ (_root_.GlobalTheory.RealWeil.sm_superpos _ _ ν _ om _ hom hρ E c hc hci F (sm_of_theta h hψ F hf))
       ⟨U, hU, fun u hu h0 => (fix_iff hψ _ _).2 ?_⟩, hip F⟩
     refine ((rhoB hψ u).integral_comp_comm (hint F)).symm.trans
       (integral_congr_ae (Filter.Eventually.of_forall fun v => ?_))

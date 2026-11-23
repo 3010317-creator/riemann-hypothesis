@@ -2,9 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.InvVolConjLevelOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeasurableSetSetOfLe
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbsOriginBoxValueExponentLeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbsOriginBoxValueExponentLe
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTranslatesEqPrimFrameLat
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IndicatorMoveArgsOriginEqBoxIndicatorStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AuxiliaryVectorUniformizerExponent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IndicatorMoveArgsOriginEqBoxIndicator
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnfoldingCharacterPhaseOriginValuationLeBoxStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -76,7 +77,7 @@ theorem flatTensor_moved_box (G : Grid k) (hs : 1 ≤ G.s) (ψ : AddChar k Circl
       {z : G.Args | ∀ b ∈ oppositePath G.m, ∀ i j, (((ϖ ^ a)⁻¹ : kˣ) : k) * z b i j ∈ 𝒪[k]} 1)) 0 0 =
       (box G ϖ a a').indicator fun _ => P := by
     funext e
-    rw [flatIntegrand, moved_false, GlobalTheory.T.indicator_moveArgs_origin_eq_box_indicator G hs ϖ a a' g hg e]
+    rw [flatIntegrand, moved_false, _root_.GlobalTheory.OriginBox.indicator_moveArgs_origin G hs ϖ a a' g hg e]
     by_cases he : e ∈ box G ϖ a a'
     · have h1 := GlobalTheory.T.unfoldingCharacterPhase_origin_valuation_le_box G ϖ a a' e he
       rw [Set.indicator_of_mem he, Set.indicator_of_mem he, hψ _ (by rwa [Valuation.map_neg])]
@@ -208,7 +209,7 @@ theorem aaTerm_datum_origin : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Cons
   have key := flatTensor_moved_box_apow (bareGrid w) one_le_sLen (psiAt W w) (unitVol w) (isUnitVol_unitVol w) (unifAt w)
     _ _ hψ' _ (aaElt_elt_col w) (aaElt_elt_off w)
   refine ⟨expo (bareGrid w) (FractionalIdeal.count D.host.E w D.host.AA) (FractionalIdeal.count D.host.E w D.host.AAbar),
-    ?_, GlobalTheory.T.abs_originBoxValueExponent_le (bareGrid w) one_le_sLen _ _ (bigN D) (rank_le_bigN w)⟩
+    ?_, _root_.GlobalTheory.OriginBox.abs_expo_le (bareGrid w) one_le_sLen _ _ (bigN D) (rank_le_bigN w)⟩
   change flatTensor _ _ _ _ 0 0 = _
   rw [aaVac, genAt] at *
   rw [key, IsUnif.apow_eq (isUnif_unifAt w)]

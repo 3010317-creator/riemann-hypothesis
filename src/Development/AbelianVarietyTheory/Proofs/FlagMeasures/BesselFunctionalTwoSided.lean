@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupRepTwistedIsUnitaryRepStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupsClosedUnitaryWCompactStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnimodularBesselSubgroupsUWNStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupRepTwistedIsUnitaryRep
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupsClosedUnitaryWCompact
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnimodularBesselSubgroupsUWN
+public import Mathlib.MeasureTheory.Function.L2Space
 import Formalism.FormalDegreeBessel.FinalG
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -15,7 +16,6 @@ import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.MeasureTheory.Function.L2Space
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -322,13 +322,13 @@ theorem truncated_norm_sq : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H] [I
   obtain ⟨-, hσ, -, -, hμG, ⟨-, hSch⟩, -⟩ := hstd
   obtain ⟨hz, hT, hπ, hμ, -⟩ := hs
   obtain ⟨hz', hT', hπ', hμ', -⟩ := hs'
-  have hS := (GlobalTheory.T.bessel_subgroups_closed_unitaryW_compact k r z hz hT).2.2.2.1
-  have hS' := (GlobalTheory.T.bessel_subgroups_closed_unitaryW_compact k r z' hz' hT').2.2.2.1
-  have hG := (GlobalTheory.T.bessel_subgroups_closed_unitaryW_compact k r z hz hT).1
-  have hP := (GlobalTheory.T.besselSubgroupRepTwisted_isUnitaryRep k r z c π hz hT hπ).2.1
-  have hP' := (GlobalTheory.T.besselSubgroupRepTwisted_isUnitaryRep k r z' c' π' hz' hT' hπ').2.1
-  have hU := (GlobalTheory.T.unimodular_besselSubgroups_UW_N k r z hz hT μS).1 hμ
-  have hU' := (GlobalTheory.T.unimodular_besselSubgroups_UW_N k r z' hz' hT' μS').1 hμ'
+  have hS := (_root_.GlobalTheory.SgInf.closedSub_groups k r z hz hT).2.2.2.1
+  have hS' := (_root_.GlobalTheory.SgInf.closedSub_groups k r z' hz' hT').2.2.2.1
+  have hG := (_root_.GlobalTheory.SgInf.closedSub_groups k r z hz hT).1
+  have hP := (_root_.GlobalTheory.SgInf.PiUnitary.piS_unitary k r z c π hz hT hπ).2.1
+  have hP' := (_root_.GlobalTheory.SgInf.PiUnitary.piS_unitary k r z' c' π' hz' hT' hπ').2.1
+  have hU := (_root_.GlobalTheory.SgInf.unimodular_S_N_UW k r z hz hT μS).1 hμ
+  have hU' := (_root_.GlobalTheory.SgInf.unimodular_S_N_UW k r z' hz' hT' μS').1 hμ'
   have hσS := IsURepOn_mono hS.1 hσ
   have hσS' := IsURepOn_mono hS'.1 hσ
   haveI : IsFiniteMeasure (μS.restrict Om) := isFiniteMeasure_restrict.2 hfin.ne

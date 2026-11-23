@@ -2,8 +2,9 @@ module
 
 public import Mathlib.RingTheory.Etale.Basic
 public import Mathlib.RingTheory.Localization.AtPrime.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleAdjoinBaseChangeImageStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleLocalRingOfLocalizationStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleAdjoinBaseChangeImage
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleLocalRingOfLocalization
+public import Mathlib.RingTheory.Smooth.NoetherianDescent
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +47,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.RingTheory.Smooth.NoetherianDescent
 
 @[expose] public section
 
@@ -66,7 +66,7 @@ theorem localRing_of_etale_over_essEtale : ∀ (R S' E : Type) [CommRing R] [Com
   haveI : IsScalarTower R (Localization.AtPrime q) E := IsScalarTower.of_algebraMap_eq (fun r => by
     show algebraMap R E r = algebraMap S' E (ψ (algebraMap R _ r))
     rw [ψ.commutes, ← IsScalarTower.algebraMap_apply])
-  exact GlobalTheory.T.etale_local_ring_of_localization R A E q P
+  exact _root_.GlobalTheory.essEtale_atPrime_of_etale_over_atPrime R A E q P
 
 theorem span_one_tmul_eq_top (S B : Type) [CommRing S] [CommRing B] [Algebra S B] (A₀ B₀ : Type)
     [CommRing A₀] [CommRing B₀] [Algebra A₀ S] [Algebra A₀ B₀] (e : B ≃ₐ[S] S ⊗[A₀] B₀) :
@@ -124,7 +124,7 @@ theorem construct : ∀ (R S B : Type) [CommRing R] [CommRing S] [CommRing B] [A
       rw [Algebra.smul_def]
       exact mul_mem (Algebra.subset_adjoin (Or.inl ⟨s, hmono hjk hj, rfl⟩)) (hCmono hak ha)
   · intro j P hP
-    obtain ⟨_, _, _⟩ := GlobalTheory.T.etale_adjoin_baseChange_image' R S B A₀ B₀ e (Si j.1) (hi₀.trans (hmono j.2))
+    obtain ⟨_, _, _⟩ := _root_.GlobalTheory.etale_adjoin_baseChange_image R S B A₀ B₀ e (Si j.1) (hi₀.trans (hmono j.2))
     exact localRing_of_etale_over_essEtale R (Si j.1) (C j) (hloc j.1) P hP
 
 end GlobalTheory.EtaleOverDirectedUnion

@@ -1,9 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PairPtsEq
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LinearMapChainCompositeUpdateAddStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LinearMapChainCompositeUpdateSmulStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MultilinearSumEqOfProdFunEqStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.InvVolConjLevelOne
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LinearMapChainCompositeUpdateAdd
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LinearMapChainCompositeUpdateSmul
+public import Mathlib.Algebra.BigOperators.Finsupp.Basic
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.Multilinear.Basic
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MultilinearSumEqOfProdFunEq
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormalizedKernelOfVectorAddStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormalizedKernelOfVectorSmulStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -164,14 +168,14 @@ theorem colV_update_add (S : GridChoice W U) {t : T} (fs : Vecs G t) (x : ∀ j,
   have h : kkVec S (.top t j₀.1) (F + F') (x j₀.1) (x (j₀.1 + 1)) =
       kkVec S (.top t j₀.1) F (x j₀.1) (x (j₀.1 + 1)) + kkVec S (.top t j₀.1) F' (x j₀.1) (x (j₀.1 + 1)) :=
     GlobalTheory.T.normalizedKernelOfVector_add S (.top t j₀.1) hF hF' _ _
-  rw [colV, colV, colV, colK_update, colK_update, colK_update, h, GlobalTheory.T.linearMapChainComposite_update_add _ _ _ _ _ j₀.2, LinearMap.add_comp]
+  rw [colV, colV, colV, colK_update, colK_update, colK_update, h, _root_.GlobalTheory.chainTo_update_add _ _ _ _ _ j₀.2, LinearMap.add_comp]
 
 theorem colV_update_smul (S : GridChoice W U) {t : T} (fs : Vecs G t) (x : ∀ j, FinPt G (.top j)) (j₀ : Fin D.R.m) (c : ℂ)
     (F : WO (G.pS (arrP t (.inl j₀ : Arr D))) (G.pT (arrP t (.inl j₀ : Arr D))) → ℂ) :
     colV S (Function.update fs (.inl j₀) (c • F)) x = c • colV S (Function.update fs (.inl j₀) F) x := by
   have h : kkVec S (.top t j₀.1) (c • F) (x j₀.1) (x (j₀.1 + 1)) = c • kkVec S (.top t j₀.1) F (x j₀.1) (x (j₀.1 + 1)) :=
     GlobalTheory.T.normalizedKernelOfVector_smul S (.top t j₀.1) c F _ _
-  rw [colV, colV, colK_update, colK_update, h, GlobalTheory.T.linearMapChainComposite_update_smul _ _ _ _ _ j₀.2, LinearMap.smul_comp]
+  rw [colV, colV, colK_update, colK_update, h, _root_.GlobalTheory.ChainSmul.chainTo_update_smul _ _ _ _ _ j₀.2, LinearMap.smul_comp]
 
 theorem rowV_update_add (S : GridChoice W U) {t : T} (fs : Vecs G t) (y : ∀ i, FinPt G (.grid i D.R.m)) (i₀ : Fin D.R.m)
     {F F' : WO (G.pS (arrP t (.inr i₀ : Arr D))) (G.pT (arrP t (.inr i₀ : Arr D))) → ℂ}
@@ -181,14 +185,14 @@ theorem rowV_update_add (S : GridChoice W U) {t : T} (fs : Vecs G t) (y : ∀ i,
   have h : kkVec S (.chi i₀.1 D.R.m) (F + F') (y i₀.1) (y (i₀.1 + 1)) =
       kkVec S (.chi i₀.1 D.R.m) F (y i₀.1) (y (i₀.1 + 1)) + kkVec S (.chi i₀.1 D.R.m) F' (y i₀.1) (y (i₀.1 + 1)) :=
     GlobalTheory.T.normalizedKernelOfVector_add S (.chi i₀.1 D.R.m) hF hF' _ _
-  rw [rowV, rowV, rowV, rowK_update, rowK_update, rowK_update, h, GlobalTheory.T.linearMapChainComposite_update_add _ _ _ _ _ i₀.2, LinearMap.add_comp]
+  rw [rowV, rowV, rowV, rowK_update, rowK_update, rowK_update, h, _root_.GlobalTheory.chainTo_update_add _ _ _ _ _ i₀.2, LinearMap.add_comp]
 
 theorem rowV_update_smul (S : GridChoice W U) {t : T} (fs : Vecs G t) (y : ∀ i, FinPt G (.grid i D.R.m)) (i₀ : Fin D.R.m)
     (c : ℂ) (F : WO (G.pS (arrP t (.inr i₀ : Arr D))) (G.pT (arrP t (.inr i₀ : Arr D))) → ℂ) :
     rowV S (Function.update fs (.inr i₀) (c • F)) y = c • rowV S (Function.update fs (.inr i₀) F) y := by
   have h : kkVec S (.chi i₀.1 D.R.m) (c • F) (y i₀.1) (y (i₀.1 + 1)) = c • kkVec S (.chi i₀.1 D.R.m) F (y i₀.1) (y (i₀.1 + 1)) :=
     GlobalTheory.T.normalizedKernelOfVector_smul S (.chi i₀.1 D.R.m) c F _ _
-  rw [rowV, rowV, rowK_update, rowK_update, h, GlobalTheory.T.linearMapChainComposite_update_smul _ _ _ _ _ i₀.2, LinearMap.smul_comp]
+  rw [rowV, rowV, rowK_update, rowK_update, h, _root_.GlobalTheory.ChainSmul.chainTo_update_smul _ _ _ _ _ i₀.2, LinearMap.smul_comp]
 
 end GlobalTheory.TopZeroInv
 
@@ -261,7 +265,7 @@ theorem pairVec_sum_eq_of_prod_eq : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc 
     fun c h l => by simp only [f', dif_pos h]
   have eg : ∀ c ∈ a.support, ∀ l, ((g' c l : thetaSub W (arrP t l)) : WO (G.pS (arrP t l)) (G.pT (arrP t l)) → ℂ) = g c l :=
     fun c h l => by simp only [g', dif_pos h]
-  have key := GlobalTheory.T.multilinearMap_sum_eq_of_sum_prod_eval_eq (fun l : Arr D => thetaSub W (arrP t l)) (pairML S x y v w) a f' g' (fun z => by
+  have key := _root_.GlobalTheory.multilinear_sum_eq_of_prod_fun_eq (fun l : Arr D => thetaSub W (arrP t l)) (pairML S x y v w) a f' g' (fun z => by
     have := hprod z
     unfold Finsupp.sum at this ⊢
     refine (Finset.sum_congr rfl fun c h => ?_).trans (this.trans (Finset.sum_congr rfl fun c h => ?_))

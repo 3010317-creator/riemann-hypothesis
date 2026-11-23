@@ -3,7 +3,9 @@ module
 public import Mathlib.Basic.Complex.Basic
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Mathlib.RingTheory.PowerSeries.Basic
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsAlgebraicOfFiniteComplexAutomorphismOrbitStatement
+public import Mathlib.Algebra.Field.Subfield.Basic
+public import Mathlib.RingTheory.Algebraic.Defs
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsAlgebraicOfFiniteComplexAutomorphismOrbit
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -99,7 +101,7 @@ theorem coeff_mem_range_of_isRoot : ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] 
     rintro _ ⟨g, rfl⟩
     refine ⟨PowerSeries.map (g : ℂ →+* ℂ) b, hroot g, ?_⟩
     simp [PowerSeries.coeff_map]
-  obtain ⟨y, hy⟩ := mem_of_isAlgebraic_of_isAlgClosed E (GlobalTheory.T.isAlgebraic_of_finite_complex_automorphism_orbit E _ hfin)
+  obtain ⟨y, hy⟩ := mem_of_isAlgebraic_of_isAlgClosed E (_root_.GlobalTheory.FinOrbit.isAlgebraic_of_finite_orbit E _ hfin)
   exact ⟨y, hy⟩
 
 end GlobalTheory.PsRoot

@@ -4,7 +4,9 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.IsDCReps
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.NumberTheory.ModularForms.QExpansion
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeOperatorsOnHalfPlaneFunctionsAgreeExplicit
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeTOperatorExplicitModularFormStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.PetEqRelIndexMulPetProd
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeTOperatorExplicitModularForm
+public import Mathlib.NumberTheory.ModularForms.NormTrace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -23,7 +25,6 @@ import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
-public import Mathlib.NumberTheory.ModularForms.NormTrace
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.WittVector.IsPoly
@@ -427,7 +428,7 @@ theorem tq_sub_smul_cuspForm : ∀ (N l k : ℕ), 5 ≤ N → l.Prime → ¬ l �
   obtain ⟨f', hf'⟩ : ∃ f' : ModularForm (Lev N l) (k : ℤ), ⇑f' = TqF (k : ℤ) q σ ⇑f := by
     obtain ⟨-, -, hT, hD, -⟩ := GlobalTheory.SlashUpperTriangularMatrices.bridge
     rw [hT _ _ _ _ hq.pos]
-    exact GlobalTheory.T.heckeTOperatorExplicit_modularForm N l q k σ hN0 hq hqNl ((hD N l q σ).1 (by simpa using hdiam)) f
+    exact _root_.GlobalTheory.Hk.heckeT_modularForm N l q k σ hN0 hq hqNl ((hD N l q σ).1 (by simpa using hdiam)) f
   let G : ModularForm (Lev N l) (k : ℤ) := f' - ((1 : ℂ) + (q : ℂ) ^ (k - 1)) • f
   have hG : ⇑G = TqF (k : ℤ) q σ ⇑f - ((1 : ℂ) + (q : ℂ) ^ (k - 1)) • ⇑f := by
     simp [G, hf']

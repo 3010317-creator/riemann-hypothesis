@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsPlaceStabilizerPartialProductsFiniteSetStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.InLatticeStabilizerAtPlaceOfSupportedStabilizerStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LatticeVacuumIffPlacewiseStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TendstoUnitaryAdelicPointsAgreeOnGrowingFinsetStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsPlaceStabilizerPartialProductsFiniteSet
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.InLatticeStabilizerAtPlaceOfSupportedStabilizer
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LatticeVacuumIffPlacewise
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TendstoUnitaryAdelicPointsAgreeOnGrowingFinset
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmSplitHalves
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -55,7 +55,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem stab_fix_vac : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (χS χT : (AE D)ˣ →* Circle) (om : Om S T), IsWeilDatumO ψ S T χS χT om → ∀ (LS : Lat S) (LT : Lat T), IsSelfDualC S LS → IsSelfDualC T LT → ∀ (P : Pl D → Prop), (∀ v, P v → Tame D v ∧ GlobalTheory.IndefiniteRowSideFullHecke.UnramifiedCharacter.CharUnramAt D χS v ∧ GlobalTheory.IndefiniteRowSideFullHecke.UnramifiedCharacter.CharUnramAt D χT v) → ∀ f, Vac ψ S T LS LT P f → ∀ κ κ', InK S LS P κ → InK T LT P κ' → om (κ, κ') f = f := by
   intro D ψ S T χS χT om hW LS LT hS hT P hP f hf κ κ' hκ hκ'
-  have hloc := ((GlobalTheory.T.latticeVacuum_iff_placewise D ψ S T χS χT om hW LS LT hS hT P (fun v hv => (hP v hv).1) f).1.1 hf)
+  have hloc := ((_root_.GlobalTheory.VacLoc.vac_loc D ψ S T χS χT om hW LS LT hS hT P (fun v hv => (hP v hv).1) f).1.1 hf)
   have one_inK : ∀ (V : HSp D) (L : Lat V) (v : Pl D), InK V L (· = v) 1 := by
     intro V L v
     refine ⟨one_mem _, fun y _ => ?_⟩
@@ -63,7 +63,7 @@ theorem stab_fix_vac : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp 
     rw [h1, Matrix.one_mulVec]
   have single : ∀ v, P v → ∀ y y', InK S LS (· = v) y → InK T LT (· = v) y' → om (y, y') f = f :=
     fun v hv y y' hy hy' => GlobalTheory.VacStabFixed.vacFixedAt D v ψ S T χS χT om hW (hP v hv).2.1 (hP v hv).2.2 LS LT hS hT f
-      hloc.1 (hloc.2 v hv).2 y y' (GlobalTheory.T.inLatticeStabilizerAtPlace_of_supportedStabilizer D S LS v y hS hy) (GlobalTheory.T.inLatticeStabilizerAtPlace_of_supportedStabilizer D T LT v y' hT hy')
+      hloc.1 (hloc.2 v hv).2 y y' (_root_.GlobalTheory.KStabBridge.inStabAt_of_inK D S LS v y hS hy) (_root_.GlobalTheory.KStabBridge.inStabAt_of_inK D T LT v y' hT hy')
   have listS : ∀ l : List (GA D S), (∀ y ∈ l, ∃ v, P v ∧ InK S LS (· = v) y) → om (l.prod, 1) f = f := by
     intro l
     induction l with
@@ -84,10 +84,10 @@ theorem stab_fix_vac : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp 
       have e : (((1 : GA D S), y * l.prod) : GA D S × GA D T) = (1, y) * (1, l.prod) := by simp
       rw [List.prod_cons, e, map_mul, Module.End.mul_apply, ih (fun z hz => h z (List.mem_cons_of_mem _ hz)),
         single v hv 1 y (one_inK S LS v) hy]
-  choose lS hlS hiS hinS houtS using GlobalTheory.T.exists_placeStabilizer_partialProducts_finiteSet D S LS P κ hS hκ
-  choose lT hlT hiT hinT houtT using GlobalTheory.T.exists_placeStabilizer_partialProducts_finiteSet D T LT P κ' hT hκ'
-  have tS := GlobalTheory.T.tendsto_unitaryAdelicPoints_agree_on_growing_finset D S κ (fun Fs => (lS Fs).prod) hiS hinS houtS
-  have tT := GlobalTheory.T.tendsto_unitaryAdelicPoints_agree_on_growing_finset D T κ' (fun Fs => (lT Fs).prod) hiT hinT houtT
+  choose lS hlS hiS hinS houtS using _root_.GlobalTheory.PlaceProducts.finite_place_products D S LS P κ hS hκ
+  choose lT hlT hiT hinT houtT using _root_.GlobalTheory.PlaceProducts.finite_place_products D T LT P κ' hT hκ'
+  have tS := _root_.GlobalTheory.AdelicLimit.tendsto_of_agree D S κ (fun Fs => (lS Fs).prod) hiS hinS houtS
+  have tT := _root_.GlobalTheory.AdelicLimit.tendsto_of_agree D T κ' (fun Fs => (lT Fs).prod) hiT hinT houtT
   funext w
   have hc := ((hW.om_cont f hloc.1 w).tendsto (κ, κ')).comp (tS.prodMk_nhds tT)
   have heq : ∀ Fs, f w = ((fun p : GA D S × GA D T => om p f w) ∘ fun Fs => ((lS Fs).prod, (lT Fs).prod)) Fs := by

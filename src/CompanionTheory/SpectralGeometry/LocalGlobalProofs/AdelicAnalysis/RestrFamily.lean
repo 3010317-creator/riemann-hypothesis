@@ -1,7 +1,7 @@
 module
 
 public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.DisintegrationDensityExistsStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.DisintegrationDensityExists
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -152,7 +152,7 @@ theorem glue : ∀ (V X Y : Type) [TopologicalSpace V] [LocallyCompactSpace V] [
     have hcB : c ∈ B := hCB a ha hc
     have hI : IsOpen (C c ∩ C a) := (hCo c hcB).inter (hCo a ha)
     have r1 := restr_family hι hg hf hI Set.inter_subset_right (hF a ha)
-    have u := GlobalTheory.T.fibre_family_eq_on_open_subset V X Y μ ν f g ι hι hg hf (C c) (C c ∩ C a) (hCo c hcB) hI
+    have u := _root_.GlobalTheory.CompanionTheory.SW.FibreUniq.fibreFamily_eq V X Y μ ν f g ι hι hg hf (C c) (C c ∩ C a) (hCo c hcB) hI
       Set.inter_subset_left (F c) (restr (C c ∩ C a) (F a)) (hF c hcB) r1 c ⟨hbC c hcB, hc⟩
     have hm : c ∈ C c ∩ C a := ⟨hbC c hcB, hc⟩
     simp only [restr, if_pos hm] at u

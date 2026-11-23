@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRedDual
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneBaseChangeBasisStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.RedSurjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneBaseChangeBasis
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivGroupBaseChangeIsConnIsEtPerfect
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -94,8 +95,8 @@ theorem GlobalTheory.Dieu.EtFromConn.isTr_comp : ∀ (p : ℕ) [Fact p.Prime] (B
   haveI := B.free G.dual hD
   haveI := B.finite G.dual hD
   let b := Module.Free.chooseBasis (WittVector p k) (B.M G.dual hD)
-  obtain ⟨bu, hbu_eq⟩ := GlobalTheory.T.dieudonne_baseChange_basis p _ B k k'' G.dual hD hbu _ b
-  obtain ⟨bk, hbk_eq⟩ := GlobalTheory.T.dieudonne_baseChange_basis p _ B k k' G.dual hD hb _ b
+  obtain ⟨bu, hbu_eq⟩ := _root_.GlobalTheory.Dieu.Base.smap_toBase_basis p _ B k k'' G.dual hD hbu _ b
+  obtain ⟨bk, hbk_eq⟩ := _root_.GlobalTheory.Dieu.Base.smap_toBase_basis p _ B k k' G.dual hD hb _ b
   let lbu : Module.Dual (WittVector p k'') (B.M (G.dual.baseChange k'') hbu) :=
     bu.constr (WittVector p k'') fun i => WittVector.map (τ.comp σ) (l (b i))
   have hlbu : ∀ x, lbu (B.smap hbu hD (G.dual.toBase k'') x) = WittVector.map (τ.comp σ) (l x) := by
@@ -194,7 +195,7 @@ theorem GlobalTheory.Dieu.EtFromConn.isTr_comp : ∀ (p : ℕ) [Fact p.Prime] (B
     haveI := B.free G'.dual (dual_conn h')
     haveI := B.finite G'.dual (dual_conn h')
     let b' := Module.Free.chooseBasis (WittVector p k') (B.M G'.dual (dual_conn h'))
-    obtain ⟨b'', hb''⟩ := GlobalTheory.T.dieudonne_baseChange_basis p _ B k' k'' G'.dual (dual_conn h') hb' _ b'
+    obtain ⟨b'', hb''⟩ := _root_.GlobalTheory.Dieu.Base.smap_toBase_basis p _ B k' k'' G'.dual (dual_conn h') hb' _ b'
     have key := b''.ext (f₁ := lb') (f₂ := lbu.comp (B.map hbu hb' ψ)) fun i => by
       rw [hb'', hlb', hl', LinearMap.comp_apply]
       change _ = lbu (B.smap hbu hb' (SemiHom.ofHom ψ)

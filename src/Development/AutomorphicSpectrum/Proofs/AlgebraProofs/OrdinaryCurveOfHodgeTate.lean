@@ -5,7 +5,8 @@ public import Development.AutomorphicSpectrum.Statements.AlgebraStatements.Ordin
 public import Development.AutomorphicSpectrum.Statements.AlgebraStatements.PolarisedAFStatement
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.OrderPSquaredExtremalColengthStatement
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PolarisedAbelianVarietyPTorsionStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PolarisedAugmentationTheoremStatement
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PolarisedAugmentationTheorem
+public import Mathlib.RingTheory.AdicCompletion.RingHom
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -24,7 +25,6 @@ import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
-public import Mathlib.RingTheory.AdicCompletion.RingHom
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Echelon.Zsqrtd
@@ -202,7 +202,7 @@ theorem ordinaryCurve_of_hodgeTate : HodgeTateDatumStatement → OrdinaryCurveSt
   letI : Algebra ℤ_[p] R := f.toAlgebra
   obtain ⟨P, z, hg, hz, hk⟩ := GlobalTheory.T.polarised_abelian_variety_p_torsion p C v R hv hlt hc
   obtain ⟨⟨T⟩, cp, hs, H, pt, hpt, hH⟩ := hht p C v R hv hlt hc P
-  obtain ⟨pt', h1, h2⟩ := OrdCurve.reindex GlobalTheory.T.polarised_augmentation_theorem hlt hs T P.g hg H pt hpt (hH T) hz hk
+  obtain ⟨pt', h1, h2⟩ := OrdCurve.reindex _root_.GlobalTheory.CompanionTheory.Ar.GR.polarisedAF hlt hs T P.g hg H pt hpt (hH T) hz hk
   exact ⟨P.A, P.grp, P.L, P.isAb, P.isLB, P.ample, T, pt', h1, h2⟩
 
 end GlobalTheory.CompanionTheory.Ar.GR

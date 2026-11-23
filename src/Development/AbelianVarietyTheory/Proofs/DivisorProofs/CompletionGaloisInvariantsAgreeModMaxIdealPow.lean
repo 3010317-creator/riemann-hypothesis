@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.QuasiCompact
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdicCompletionEquivariantEquivOfLevelIsosStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdicCompletionMapInvariantsStatement
+public import Mathlib.RingTheory.AdicCompletion.Functoriality
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapSubApply
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdicCompletionRingInjectiveInvariantsOfModuleStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatTensorGaloisInjectiveInvariantsStatement
+public import Mathlib.RingTheory.AdicCompletion.Completeness
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -22,7 +24,6 @@ import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
-public import Mathlib.RingTheory.AdicCompletion.Completeness
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.Tactic.Echelon.Zsqrtd
 import Mathlib.Tactic.Inclusion.Extension.Core.Core
@@ -93,7 +94,7 @@ theorem completion_invariants_agree : ∀ (R : Type) [CommRing R] [IsDomain R] [
     intro x; constructor
     · rintro ⟨c, rfl⟩ σ; exact (gC σ).commutes c
     · intro hx; exact ⟨⟨x, (hC x).2 hx⟩, rfl⟩
-  have hmC := GlobalTheory.T.adicCompletion_map_injective_and_invariants C JC C C' (Algebra.linearMap C C') _ (fun σ => (gC σ).toLinearMap) Subtype.val_injective hfixC
+  have hmC := _root_.GlobalTheory.LinearMapDifferenceFormula.main C JC C C' (Algebra.linearMap C C') _ (fun σ => (gC σ).toLinearMap) Subtype.val_injective hfixC
   obtain ⟨injC, rangeC⟩ := GlobalTheory.T.adicCompletion_ring_injective_invariants_of_module C C' JC _ gC hmC.1 hmC.2
 
   obtain ⟨injOT, fixOT⟩ := GlobalTheory.T.flat_tensor_galois_injective_invariants R R' O hinj hgal
@@ -102,7 +103,7 @@ theorem completion_invariants_agree : ∀ (R : Type) [CommRing R] [IsDomain R] [
     intro t; constructor
     · rintro ⟨x, rfl⟩ σ; exact (galTensor O σ).commutes x
     · intro ht; obtain ⟨x, hx⟩ := fixOT t ht; exact ⟨x, hx⟩
-  have hmO := GlobalTheory.T.adicCompletion_map_injective_and_invariants O JO O T (Algebra.linearMap O T) _ (fun σ => (galTensor O σ).toLinearMap) injOT hfixO
+  have hmO := _root_.GlobalTheory.LinearMapDifferenceFormula.main O JO O T (Algebra.linearMap O T) _ (fun σ => (galTensor O σ).toLinearMap) injOT hfixO
   obtain ⟨injO, rangeO⟩ := GlobalTheory.T.adicCompletion_ring_injective_invariants_of_module O T JO _ (galTensor O) hmO.1 hmO.2
 
   have hIT : IT = (maximalIdeal R).map (algebraMap R T) := by

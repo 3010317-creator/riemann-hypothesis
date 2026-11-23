@@ -1,21 +1,25 @@
 module
 
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DerivativeOfProductInducedIso
 public import Development.WeilBound.RepresentationTheoryGL.GenericUnitaryGL.LeibnizOrders.LeibnizOrd
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParabolicProductTwoRepsEquivTwoBlockInduction
-import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LeviIntegralFacts
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoFunSmooth
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactInductionTwistedKernelStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GpProjContinuousStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GpProjLeviFormulaStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GpProjUnipotentStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GpProjUnipotentSurjectiveStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HGPClosedStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.SmoothPartStable
+public import Mathlib.Basic.Complex.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactInductionTwistedKernel
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.LeibnizDerivatives.EPGFalseEqLastIff
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GpProjContinuous
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.ColMatMulGlEmbMat
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GpProjLeviFormula
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GpProjUnipotent
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GpProjUnipotentSurjective
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HGPClosed
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InvariantPairingMirabolicVanishing
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsOpenFixedOfSubgroup
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MemHGPIffParabolicStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MemHGPIffParabolic
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothPsiMinus
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DerivativeOfProductInducedIso
+import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsOpenFixedOfSubgroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -234,7 +238,7 @@ theorem levi_mem_HGP (p : GL (Fin (m + j)) k) (hp : p ∈ parab k (eMJ m j)) : l
     ext a b
     change blockMat k (m + j) (glEmbMat k (m + j) (p : Matrix (Fin (m + j)) (Fin (m + j)) k)) a b = _
     simp [blockMat, glEmbMat]
-  apply (GlobalTheory.T.mem_mirabolicParabolic_iff_parabolic k m j _).2
+  apply (_root_.GlobalTheory.CompanionTheory.GPMem.mem_mirabolicParabolic_iff_mirabolicProj_mem_parabolic k m j _).2
   rwa [hproj]
 
 theorem hcomp (p : parab k (eMJ m j)) (w : Vt (j := j) ρ ⊗[ℂ] Zt τ m) :
@@ -246,7 +250,7 @@ theorem hcomp (p : parab k (eMJ m j)) (w : Vt (j := j) ρ ⊗[ℂ] Zt τ m) :
   | tmul a b =>
     set g₁ : GL (Fin m) k := leviProj k (eMJ m j) p false with hg₁
     set g₂ : GL (Fin j) k := leviProj k (eMJ m j) p true with hg₂
-    have hgp := GlobalTheory.T.gpProj_levi_formula k m j (p : GL (Fin (m + j)) k) p.2 (levi_mem_HGP _ p.2)
+    have hgp := _root_.GlobalTheory.CompanionTheory.LeibGP.gpProj_levi k m j (p : GL (Fin (m + j)) k) p.2 (levi_mem_HGP _ p.2)
     have h1 : sig ρ τ ⟨levi k (m + j) p, levi_mem_HGP _ p.2⟩ (a ⊗ₜ[ℂ] b) =
         (((dpow m (((j + 1 : ℕ) : ℝ) / 2) g₁ : ℂˣ) : ℂ) • ρ.ρ g₁ a : Vt (j := j) ρ) ⊗ₜ[ℂ]
           (((dpow j (-((m : ℕ) : ℝ) / 2) g₂ : ℂˣ) : ℂ) • τ.ρ (levi k j g₂) b : Zt τ m) := by
@@ -314,7 +318,7 @@ theorem tmul_mem_twKer (a : Vt (j := j) ρ) (t : Zt τ m) (ht : t ∈ twKer τ.�
   refine Submodule.span_induction (p := fun t _ => a ⊗ₜ[ℂ] (t : Zt τ m) ∈ twKer (sig ρ τ) ((MirUin k (m + j)).subgroupOf (MirabolicParabolic k m j)) 1)
     ?_ ?_ ?_ ?_ ht
   · rintro _ ⟨n, b, rfl⟩
-    obtain ⟨v, hv, hv2⟩ := GlobalTheory.T.gpProj_unipotent_surjective k m j (n : Mir k j) n.2
+    obtain ⟨v, hv, hv2⟩ := _root_.GlobalTheory.CompanionTheory.BZMir.exists_gpProj_unip k m j (n : Mir k j) n.2
     refine Submodule.subset_span ⟨⟨v, hv⟩, a ⊗ₜ[ℂ] b, ?_⟩
     have h1 := sig_tmul ρ τ v a b (by rw [hv2]) (by rw [hv2]; exact n.2)
     rw [hv2] at h1
@@ -352,7 +356,7 @@ theorem hck (w : Vt (j := j) ρ ⊗[ℂ] Zt τ m) :
       refine Submodule.span_le.2 ?_
       rintro _ ⟨u, w, rfl⟩
       have hu : ((u : MirabolicParabolic k m j) : Mir k (m + j)) ∈ MirUin k (m + j) := u.2
-      obtain ⟨h1, h2⟩ := GlobalTheory.T.gpProj_unipotent k m j u hu
+      obtain ⟨h1, h2⟩ := _root_.GlobalTheory.CompanionTheory.GpUnip.gpProj_unip k m j u hu
       have key : ∀ w, cc ρ τ (sig ρ τ (u : MirabolicParabolic k m j) w) = cc ρ τ w := by
         intro w
         induction w using TensorProduct.induction_on with
@@ -371,7 +375,7 @@ theorem isOpen_dpow_ker (n : ℕ) (s : ℝ) : IsOpen ((dpow (k := k) n s).ker : 
   (isSmoothChar_of_isUnram (isUnram_absPow k _)).detChar
 
 theorem isSmooth_sig (hρ : IsSmooth ρ.ρ) (hτ : IsSmooth τ.ρ) : IsSmooth (sig ρ τ) := by
-  refine isSmooth_comp (isSmooth_extTensor (isSmooth_twist hρ (isOpen_dpow_ker _ _)) ?_) _ (GlobalTheory.T.gpProj_continuous k m j)
+  refine isSmooth_comp (isSmooth_extTensor (isSmooth_twist hρ (isOpen_dpow_ker _ _)) ?_) _ (_root_.GlobalTheory.CompanionTheory.BZMir.continuous_gpProj k m j)
   exact isSmooth_twist hτ (IsSmoothChar.comp (χ := dpow (j + 1) (-((m : ℕ) : ℝ) / 2)) (isOpen_dpow_ker _ _) (Mir k j).subtype
     continuous_subtype_val)
 
@@ -412,7 +416,7 @@ theorem exE (hρ : IsSmooth ρ.ρ) (hτ : IsSmooth τ.ρ) :
         a.castSucc b.castSucc = (1 : Matrix (Fin (m + j)) (Fin (m + j)) k) a b
       simp [colMat, Matrix.one_apply, Fin.castSucc_ne_last]
   have hUH : MirUin k (m + j) ≤ MirabolicParabolic k m j := fun g hg => by
-    refine (GlobalTheory.T.mem_mirabolicParabolic_iff_parabolic k m j g).2 ?_
+    refine (_root_.GlobalTheory.CompanionTheory.GPMem.mem_mirabolicParabolic_iff_mirabolicProj_mem_parabolic k m j g).2 ?_
     rw [(hker g).2 hg]
     exact one_mem _
   have hN : (MirUin k (m + j)).Normal := by
@@ -440,13 +444,13 @@ theorem exE (hρ : IsSmooth ρ.ρ) (hτ : IsSmooth τ.ρ) :
       hblock.comp continuous_inv
     simpa only [map_inv] using hblock_inv
   exact GlobalTheory.CompanionTheory.CIndCoinv.coinv_equiv (MirabolicParabolic k m j) (MirUin k (m + j)) (parab k (eMJ m j)) (levi k (m + j))
-    (mirabolicProjection k (m + j)) (GlobalTheory.T.isClosed_mirabolicParabolic k m j) (GlobalTheory.CompanionTheory.BZMirOnto.exists_compactOpen k (m + j))
+    (mirabolicProjection k (m + j)) (_root_.GlobalTheory.CompanionTheory.MirGP.isClosed_HGP k m j) (GlobalTheory.CompanionTheory.BZMirOnto.exists_compactOpen k (m + j))
     (GlobalTheory.CompanionTheory.BZMirFun.continuous_levi k (m + j)) hproj_cont
-    hproj_levi hker hUH (fun g hg => (GlobalTheory.T.mem_mirabolicParabolic_iff_parabolic k m j g).1 hg)
+    hproj_levi hker hUH (fun g hg => (_root_.GlobalTheory.CompanionTheory.GPMem.mem_mirabolicParabolic_iff_mirabolicProj_mem_parabolic k m j g).1 hg)
     (fun p hp => levi_mem_HGP p hp) (GlobalTheory.SplitWeil.KO k (Fin (m + j))) GlobalTheory.SplitFlip.isCompact_KO hPK
     (dpow (m + j) (-1 / 2)) (isOpen_dpow_ker _ _) (sig ρ τ) (isSmooth_sig ρ τ hρ hτ) (sigP ρ τ)
     (cc ρ τ) (cMap_surjective _ _ (mkZ_surjective τ)) (hck ρ τ) (hcomp ρ τ)
-    (GlobalTheory.T.compact_induction_twisted_kernel _ _ hUH (GlobalTheory.CompanionTheory.BZMirOnto.exists_compactOpen k (m + j)) _ (isSmooth_sig ρ τ hρ hτ))
+    (_root_.GlobalTheory.CompanionTheory.PRep.CIndKer.mem_twKer_cInd _ _ hUH (GlobalTheory.CompanionTheory.BZMirOnto.exists_compactOpen k (m + j)) _ (isSmooth_sig ρ τ hρ hτ))
 
 set_option synthInstance.maxHeartbeats 100000 in
 theorem psiMinus_cInd_equiv_smInd (hρ : IsSmooth ρ.ρ) (hτ : IsSmooth τ.ρ) :

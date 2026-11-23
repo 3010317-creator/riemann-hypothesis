@@ -1,13 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.IsNormalSchemeSp
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsAddExtensionStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsInverseExtensionProperClosureStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FibreEqSpecialFibreOfReductionIndepStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FibreLawOfTestCartesianStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.NonemptyLawAbelianSchemeProperClosureStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SmoothOfRelativeDimensionGroupSchemeOfTestsStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TestCartOfSpecialFibreSurjectiveStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.Clauses
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsAddExtension
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsInverseExtensionProperClosure
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FibreEqSpecialFibreOfReductionIndep
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FibreLawOfTestCartesian
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.NonemptyLawAbelianSchemeProperClosure
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SmoothOfRelativeDimensionGroupSchemeOfTests
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TestCartOfSpecialFibreSurjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,10 +59,10 @@ namespace GlobalTheory.ZJ
 theorem Core.nonempty_law_of_hasTests_of_indep :
     ∀ C : Core, C.HasTests → C.Indep → Nonempty C.Law := by
   intro C hT hI
-  have hF : C.Fib := GlobalTheory.T.fibre_eq_specialFibre_of_reduction_indep C hI
-  have hS := GlobalTheory.T.smoothOfRelativeDimension_groupScheme_of_tests C hT hF
-  have hC : C.TestCart := GlobalTheory.T.testCart_of_specialFibre_surjective C hF hS
-  have hL : C.FibLaw := GlobalTheory.T.fibreLaw_of_testCartesian C hC
-  exact GlobalTheory.T.nonempty_law_abelianSchemeProperClosure C hS hC (GlobalTheory.T.exists_mul_of_isSquare_of_fibLaw C hT hS hC hL) (GlobalTheory.T.exists_inverse_extension_properClosure C hT hS hC hL)
+  have hF : C.Fib := _root_.GlobalTheory.ZJ.Core.fib_of_indep C hI
+  have hS := _root_.GlobalTheory.ZJ.Core.smoothOfRelativeDimension_of_hasTests C hT hF
+  have hC : C.TestCart := _root_.GlobalTheory.ZJ.Core.testCart_of_fib C hF hS
+  have hL : C.FibLaw := _root_.GlobalTheory.ZJ.Core.fibLaw_of_testCart C hC
+  exact _root_.GlobalTheory.ZJ.Core.nonempty_law C hS hC (_root_.GlobalTheory.ZJ.Core.exists_add_extension C hT hS hC hL) (_root_.GlobalTheory.exists_inv_extension C hT hS hC hL)
 
 end GlobalTheory.ZJ

@@ -3,11 +3,14 @@ module
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
 public import Formalism.LocalToGlobal.Divisibility.DefGroup
 public import Formalism.LocalToGlobal.HeckeThetaElements.IsHeckeElt
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsAdelicTraceCharacterSplitSectionNeOneStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsGLEmbeddingUnitaryAdelicSplitPlaceBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsPadicCoordinatesOfDegreeOneSplitPlaceStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsRingEquivPadicOfResidueCardUniformizerStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceCharacterConductorIntegersStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsAdelicTraceCharacterSplitSectionNeOne
+public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsGLEmbeddingUnitaryAdelicSplitPlaceBasis
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsPadicCoordinatesOfDegreeOneSplitPlace
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceCharacterConductorIntegers
+import Mathlib.NumberTheory.LocalField.Basic
+import Mathlib.NumberTheory.Padics.PadicNumbers
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsRingEquivPadicOfResidueCardUniformizer
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -73,8 +76,8 @@ theorem exists_splitPt_frame_char : ∀ (D : D7), (∀ (k : Type) [Field k] [Val
   refine ⟨?_, ?_⟩
   · intro k _ _ _ _ _ _ T hT hcard hirr w e hw he hN hsq
     haveI := Fact.mk hT
-    obtain ⟨φ, hφ, hφs, hφO⟩ := GlobalTheory.T.exists_ringEquiv_padic_of_residueCard_uniformizer k T hcard hirr
-    obtain ⟨v, pr, sec, hab, h1, h2, hpr, hsec, hint⟩ := GlobalTheory.T.exists_padicCoordinates_of_degreeOne_splitPlace D T w e hw he hN hsq
+    obtain ⟨φ, hφ, hφs, hφO⟩ := _root_.GlobalTheory.QpChar.exists_ringEquiv_padic k T hcard hirr
+    obtain ⟨v, pr, sec, hab, h1, h2, hpr, hsec, hint⟩ := _root_.GlobalTheory.FinPl.SplitQT.exists_coord_padic D T w e hw he hN hsq
     refine ⟨⟨v, e, he, hab, φ.toRingHom.comp pr, sec.comp φ.symm.toRingHom.toAddMonoidHom, ?_, ?_, ?_, ?_, ?_⟩, rfl⟩
     · intro a; simp [h1]
     · intro x; simp [h2]
@@ -87,12 +90,12 @@ theorem exists_splitPt_frame_char : ∀ (D : D7), (∀ (k : Type) [Field k] [Val
   · intro k _ _ _ _ p
     refine ⟨?_, ?_⟩
     · intro S n _ _ b b' h1 h2
-      obtain ⟨gl, hs, hm⟩ := GlobalTheory.T.exists_GL_embedding_unitaryAdelic_splitPlace_basis D k p S n b b' h1 h2
+      obtain ⟨gl, hs, hm⟩ := _root_.GlobalTheory.GlEmbed.exists_gl D k p S n b b' h1 h2
       exact ⟨⟨b, b', h1, h2, gl, hs, hm⟩, rfl⟩
     · intro ψ hψ
       obtain ⟨χ, hχ, hc⟩ := exists_char D k p ψ hψ
-      obtain ⟨a, ha⟩ := GlobalTheory.T.exists_adelicTraceCharacter_splitSection_ne_one D k p ψ hψ
-      refine ⟨χ, hχ, hc, ?_, fun hu => GlobalTheory.T.splitPlaceCharacter_conductor_integers D k p ψ χ hψ hχ hu⟩
+      obtain ⟨a, ha⟩ := _root_.GlobalTheory.FinPl.CharNontriv.exists_psiE_sec_ne_one D k p ψ hψ
+      refine ⟨χ, hχ, hc, ?_, fun hu => _root_.GlobalTheory.SplitCharCond.hasConductor_one D k p ψ χ hψ hχ hu⟩
       intro h1
       apply ha
       rw [← hχ a, h1]

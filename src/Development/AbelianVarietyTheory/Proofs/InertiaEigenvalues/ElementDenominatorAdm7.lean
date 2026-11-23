@@ -1,7 +1,8 @@
 module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.ElementDenominator
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.H1fGeneratedLatticeStatement
+public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.H1fGeneratedLattice
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,6 +50,6 @@ namespace GlobalTheory
 theorem elementDenominator_adm7 : ∀ D : D7, Formalism.MainNotions.ElementDenominator.adm7 D := by
   intro D l _ _ K LL _ T _
   haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
-  exact @GlobalTheory.T.h1f_generated_lattice l _ (D.loc l) (D.locA l) (D.locT l) K LL (Fintype.ofFinite _) T _
+  exact @_root_.GlobalTheory.H1fGeneration.h1fGen_tied l _ (D.loc l) (D.locA l) (D.locT l) K LL (Fintype.ofFinite _) T _
 
 end GlobalTheory

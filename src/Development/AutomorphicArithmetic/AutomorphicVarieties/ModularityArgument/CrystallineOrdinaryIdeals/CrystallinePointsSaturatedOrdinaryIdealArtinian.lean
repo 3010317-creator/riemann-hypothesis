@@ -2,10 +2,10 @@ module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.IsInertiaInfiniteCyclotomic
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.UnitaryThreeGroups.ConjStable
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.CrystallineOrdinaryIdeals.CrystallineDeformationPointsSaturatedOrdinaryIdeStatement
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.CrystallineOrdinaryIdeals.CrystallineDeformationPointsSaturatedOrdinaryIde
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.UnivEx
 import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.OrdinaryDeformation
 import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.PtCont
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.UnivEx
 import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.UnramifiedLiftDeformation
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -153,7 +153,7 @@ theorem reduce (hP : LocalPublishedTheorems)
     rfl
   have hD₀ : D.InDcr (π₀ : B₀ →+* E₀) (push f₀ U.r.hom) := ⟨hq.mult, hred, hq.cont, hq.cr⟩
   intro a ha
-  have h2 := GlobalTheory.T.crystallineDeformation_points_saturatedOrdinaryIdeal_fracO hP D U E₀ B₀ π₀ hπ₀ f₀ hD₀ ha
+  have h2 := _root_.GlobalTheory.CrFrac.main hP D U E₀ B₀ π₀ hπ₀ f₀ hD₀ ha
   rw [RingHom.mem_ker] at h2 ⊢
   exact congrArg Subtype.val h2
 

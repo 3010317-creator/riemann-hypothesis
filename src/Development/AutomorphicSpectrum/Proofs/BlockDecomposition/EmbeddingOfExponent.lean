@@ -3,13 +3,16 @@ module
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
 public import Development.WeilBound.RepresentationTheoryGL.TwistedFactors.LocalBaseChange.GenericPrincipalSeries.GenericPrincipalSeries
 public import Mathlib.LinearAlgebra.Eigenspace.Basic
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DeepLevelSubgroupsFiltrationStatement
+public import Development.WeilBound.RepresentationTheoryGL.TwistedFactors.LocalBaseChange.StrictDominanceCasselman.IsStrictlyDominant
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DeepLevelSubgroupsFiltration
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FrobeniusReciprocityNonzero
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GeneralizedEigenvectorExistsStatement
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.RepresentationTheory.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GeneralizedEigenvectorExists
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ImportsBisTer
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetCuspidalSupportOfFunctionalStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetModuleAdmissibleFixedStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetVectorFixedDeepLevelStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetCuspidalSupportOfFunctional
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetModuleAdmissibleFixed
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetVectorFixedDeepLevel
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeviEmbLeviProjMemKm
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SupportOfExponentOfCasselman
 import Mathlib.Algebra.Order.Floor.Extended
@@ -72,19 +75,19 @@ theorem embedding_of_exponent : ∀ (k : Type) [Field k] [ValuativeRel k] [Topol
     congr 1
     funext a
     exact GlobalTheory.CompanionTheory.PinLift.gl_one_comm _ _
-  obtain ⟨hanti, hpow⟩ := GlobalTheory.T.deep_level_subgroups_filtration (k := k) n hd1
+  obtain ⟨hanti, hpow⟩ := _root_.GlobalTheory.CompanionTheory.KmPow.KM_antitone_and_pow (k := k) n hd1
   have hsm : ∀ w : Jacquet π (unipRad k (stdBlocks (fun _ : Fin n => 1) hd1)), ∃ m,
       ∀ u ∈ PositivityTheory.Lbc.KM k n (Zls.Km k n (m + 1)) (fun _ : Fin n => 1) hd1,
         jac (stdBlocks (fun _ : Fin n => 1) hd1) π u w = w := by
     intro w
-    obtain ⟨m, hm, h⟩ := GlobalTheory.T.jacquet_vector_fixed_deep_level (k := k) n hd1 π hs w
+    obtain ⟨m, hm, h⟩ := _root_.GlobalTheory.CompanionTheory.JacSmooth.jac_fixed_of_smooth (k := k) n hd1 π hs w
     refine ⟨m - 1, ?_⟩
     rw [Nat.sub_add_cancel hm]
     exact h
   have hfd : ∀ m, FiniteDimensional ℂ ↥(⨅ u : PositivityTheory.Lbc.KM k n (Zls.Km k n (m + 1)) (fun _ : Fin n => 1) hd1,
       LinearMap.ker (jac (stdBlocks (fun _ : Fin n => 1) hd1) π (u : Levi k (fun _ : Fin n => Fin 1)) - 1)) := by
     intro m
-    haveI := GlobalTheory.T.jacquet_module_admissible_fixed (k := k) n hd1 π ha h0 h3 (m + 1) (by omega)
+    haveI := _root_.GlobalTheory.CompanionTheory.Jacquet.finiteDimensional_fixed_jac (k := k) n hd1 π ha h0 h3 (m + 1) (by omega)
     refine Submodule.finiteDimensional_of_le (S₂ := fixed (jac (stdBlocks (fun _ : Fin n => 1) hd1) π)
       (PositivityTheory.Lbc.KM k n (Zls.Km k n (m + 1)) (fun _ : Fin n => 1) hd1)) ?_
     intro w hw u
@@ -93,12 +96,12 @@ theorem embedding_of_exponent : ∀ (k : Type) [Field k] [ValuativeRel k] [Topol
     have h3' : jac (stdBlocks (fun _ : Fin n => 1) hd1) π (u : Levi k (fun _ : Fin n => Fin 1)) w = w := by
       simpa [sub_eq_zero] using h2
     simpa using h3'
-  obtain ⟨f, hf0, hf⟩ := GlobalTheory.T.generalized_eigenvector_exists (Levi k (fun _ : Fin n => Fin 1))
+  obtain ⟨f, hf0, hf⟩ := _root_.GlobalTheory.CompanionTheory.TorusQuot.exists_quotient_character (Levi k (fun _ : Fin n => Fin 1))
     (Jacquet π (unipRad k (stdBlocks (fun _ : Fin n => 1) hd1)))
     (jac (stdBlocks (fun _ : Fin n => 1) hd1) π) hcomm
     (fun m => PositivityTheory.Lbc.KM k n (Zls.Km k n (m + 1)) (fun _ : Fin n => 1) hd1) hanti hpow hsm hfd
     (GlobalTheory.CompanionTheory.PinLift.torusCharHom ξ) v hv0 hv
-  obtain ⟨g, w, hg⟩ := GlobalTheory.T.jacquet_cuspidal_support_of_functional n π ξ hξ hd f hf0 hf
+  obtain ⟨g, w, hg⟩ := _root_.GlobalTheory.CompanionTheory.CharTensor.chartotensor n π ξ hξ hd f hf0 hf
   obtain ⟨G, x, hx⟩ := GlobalTheory.CompanionTheory.FrobInv.exists_map_prodIrr (fun a => IrrGL.ofChar (ξ a) (hξ a)) hd π hs g ⟨w, hg⟩
   refine ⟨G, ?_⟩
   have hso : IsSimpleOrder (Subrepresentation π) := hirr

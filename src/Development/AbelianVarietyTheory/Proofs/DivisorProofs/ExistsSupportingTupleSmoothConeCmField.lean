@@ -1,9 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnimodMod
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAveragingProjectionBalancedFormsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCmIntegralAveragingTraceTensorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FunctionalPosOnSquaresEqSumOfSquaresStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.SumMulEqZeroOfSumToReal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAveragingProjectionBalancedForms
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCmIntegralAveragingTraceTensor
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FunctionalPosOnSquaresEqSumOfSquares
 import Mathlib.Algebra.AffineMonoid.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -57,8 +59,8 @@ theorem exists_supports_cm : ∀ (E : Type) [Field E] [NumberField E] [NumberFie
   haveI : Module.Flat ℤ X := Module.Flat.trans ℤ (𝓞 E) X
   haveI : Module.Free ℤ X := Module.free_of_finite_type_torsion_free'
   obtain ⟨N, ℓ, hN, h1, h2, h3⟩ := hγ.strict
-  obtain ⟨n, c, b, T, hc, hT, hbal, hsum0, hTpos⟩ := GlobalTheory.T.exists_cm_integral_averaging_traceTensor E H
-  obtain ⟨P, hPbal, hPc, hPsq⟩ := GlobalTheory.T.exists_averaging_projection_balancedForms (𝓞 E) H.bar X n c b T hc hT hbal hsum0 hTpos
+  obtain ⟨n, c, b, T, hc, hT, hbal, hsum0, hTpos⟩ := _root_.GlobalTheory.exists_cm_trace_tensor E H
+  obtain ⟨P, hPbal, hPc, hPsq⟩ := _root_.GlobalTheory.Poinc.exists_avg_proj_balForms (𝓞 E) H.bar X n c b T hc hT hbal hsum0 hTpos
   have hpos : ∀ l : X →ₗ[ℤ] ℤ, l ≠ 0 → 0 < (ℓ ∘ₗ P) (sqForm l) := by
     intro l hl
     obtain ⟨hne, hpsd⟩ := hPsq l hl
@@ -67,7 +69,7 @@ theorem exists_supports_cm : ∀ (E : Type) [Field E] [NumberField E] [NumberFie
     have h5 := h2 _ hb hpsd
     have h6 : (0 : ℝ) < ℓ (P (sqForm l)) := lt_of_lt_of_le (by positivity) h5
     exact_mod_cast h6
-  obtain ⟨D, m, a, hD, hspan, hsum⟩ := GlobalTheory.T.functional_pos_on_squares_eq_sum_of_squares X (ℓ ∘ₗ P) hpos
+  obtain ⟨D, m, a, hD, hspan, hsum⟩ := _root_.GlobalTheory.Poinc.SumSqFunctional.sumsq_functional X (ℓ ∘ₗ P) hpos
   have key : ∀ β ∈ balForms H.bar X, ∑ i, β (a i) (a i) = ((D * c : ℕ) : ℤ) * ℓ β := by
     intro β hβ
     rw [hsum β hβ.1, LinearMap.comp_apply, hPc β hβ, map_zsmul, smul_eq_mul]

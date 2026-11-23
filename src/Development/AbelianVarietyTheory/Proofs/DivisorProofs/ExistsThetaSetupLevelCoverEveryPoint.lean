@@ -1,14 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ThetaSetupStructureMapComp
-import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsPolAVHypSRetract
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsChartSiegelLevelCoverSharpTheta
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteChartMapToNormalFiniteModelStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteEtaleCoverChartAtFieldPointStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLevelCoverMatrices
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNormalModelNormalisationDedekindStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.ArithBase
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNormalModelNormalisationDedekind
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsThetaSystemRealisationRegularAtPrimeStatement
+import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLevelCoverMatrices
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SharpPolarizationPullbackStable
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SmoothProjectiveStalkFactorial
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsBigThetaSysWithAction
@@ -147,7 +148,7 @@ theorem exists_setup_cov : ∀ g : ℕ, 1 ≤ g → ∀ n : ℕ, 3 ≤ n → Odd
   have hp0 : (spMap R.val.toRingHom ≫ x ≫ q ≫ i) ≫ z = spMap ((algebraMap _ Ω).comp κ) := by
     simp only [Category.assoc, hiz]
     exact hbase
-  obtain ⟨M, π, hMn, hπ, hcomp⟩ := GlobalTheory.T.exists_normal_model_normalisation_dedekind (cycAway n) _ Ω κ ((IsFinite.SpecMap_iff _).1 hfin) Z z
+  obtain ⟨M, π, hMn, hπ, hcomp⟩ := _root_.GlobalTheory.Poinc.exists_ratModel_normalization (cycAway n) _ Ω κ ((IsFinite.SpecMap_iff _).1 hfin) Z z
     inferInstance inferInstance inferInstance _ hp0 hst
   obtain ⟨φM, hφπ, hφreg⟩ := modelAt _ Ω M Z π hMn hπ R hfrac hRic V f hV hf (by rw [hcomp, hfV])
   have ef : spMap S.R.val.toRingHom ≫ spMap (Subalgebra.inclusion hR).toRingHom = spMap R.val.toRingHom :=

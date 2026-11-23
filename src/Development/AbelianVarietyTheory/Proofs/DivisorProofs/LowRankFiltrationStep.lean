@@ -1,9 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubMemTwistSpan
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenRankGeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LowRankBoxFunctionStableStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatBoxDecompositionStatement
+public import Mathlib.LinearAlgebra.Matrix.Rank
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Mathlib.Topology.Instances.Matrix
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenRankGe
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LowRankBoxFunctionStable
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatBoxDecomposition
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,11 +67,11 @@ theorem mem_lowRank_succ_sup_twistSpan_of_mem_lowRank : ∀ (k : Type) [Field k]
     hcs.isCompact.of_isClosed_subset hSclosed (fun X hX => subset_tsupport Φ hX)
 
   let m₀ : Matrix A D k → ℕ := fun X =>
-    if h : X.rank = r then Classical.choose (GlobalTheory.T.low_rank_box_function_stable k A D ϖ hϖ ν β hν hνϖ r X h hr) else 0
+    if h : X.rank = r then Classical.choose (_root_.GlobalTheory.RankCoinv.exists_boxFn_mem_lowRank_sup_twistSpan k A D ϖ hϖ ν β hν hνϖ r X h hr) else 0
   have hm₀ : ∀ X : Matrix A D k, ∀ h : X.rank = r, ∀ m ≥ m₀ X, ∀ C ∈ box ϖ X (fun _ => m₀ X),
       boxFn ϖ C (fun _ => m) ∈ lowRank (r + 1) ⊔ twistSpan ν β := by
     intro X h
-    have := Classical.choose_spec (GlobalTheory.T.low_rank_box_function_stable k A D ϖ hϖ ν β hν hνϖ r X h hr)
+    have := Classical.choose_spec (_root_.GlobalTheory.RankCoinv.exists_boxFn_mem_lowRank_sup_twistSpan k A D ϖ hϖ ν β hν hνϖ r X h hr)
     simpa [m₀, h] using this
   let U : Matrix A D k → Set (Matrix A D k) := fun X =>
     if X.rank ≤ r then box ϖ X (fun _ => m₀ X) else {Y | r + 1 ≤ Y.rank}
@@ -79,9 +82,9 @@ theorem mem_lowRank_succ_sup_twistSpan_of_mem_lowRank : ∀ (k : Type) [Field k]
       refine (isClopen_box ϖ X _).isOpen.mem_nhds ?_
       intro i j; simp
     · simp only [U, h, if_false]
-      exact (GlobalTheory.T.isOpen_rank_ge k A D (r + 1)).mem_nhds (by simp only [Set.mem_setOf_eq]; omega)
+      exact (_root_.GlobalTheory.isOpen_setOf_le_rank_localField k A D (r + 1)).mem_nhds (by simp only [Set.mem_setOf_eq]; omega)
   obtain ⟨t, htS, hcover⟩ := hScpt.elim_nhds_subcover U hU
-  obtain ⟨m₁, hm₁⟩ := GlobalTheory.T.schwartz_bruhat_box_decomposition k A D ϖ hϖ Φ ⟨hlc, hcs⟩
+  obtain ⟨m₁, hm₁⟩ := _root_.GlobalTheory.RankCoinv.Decomp.exists_sum_boxFn k A D ϖ hϖ Φ ⟨hlc, hcs⟩
   obtain ⟨s, hdec, hconst⟩ := hm₁ (max m₁ (t.sup m₀)) (le_max_left _ _)
   set m := max m₁ (t.sup m₀) with hm
   rw [hdec]

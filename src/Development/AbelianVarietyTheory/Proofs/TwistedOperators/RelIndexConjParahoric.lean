@@ -2,10 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BorelParam
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ValuationDetOfMemKO
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BlockVolumeProdStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MatrixEntrywiseProductMeasureUniformizerPowerBoxStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RelIndexMulMatrixVolumeOpenSubgroupIntegralGLStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ValTwoBlockParahoricInfTorusConjBlockwiseStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.MatrixMeasurableSpace
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BlockVolumeProd
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MatrixEntrywiseProductMeasureUniformizerPowerBox
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RelIndexMulMatrixVolumeOpenSubgroupIntegralGL
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ValTwoBlockParahoricInfTorusConjBlockwise
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -109,9 +110,9 @@ theorem vol_conj_inf [MeasurableSpace k] [BorelSpace k] (ν : Measure k) [ν.IsA
         (volM ν D D (Units.val '' (((KO k D).map (MulAut.conj (torusElt k D ϖ e)).toMonoidHom ⊓ KO k D :
           Subgroup (GL D k)) : Set (GL D k)))).toReal := by
   have hq : (0 : ℝ) < resCard k := Nat.cast_pos.2 Nat.card_pos
-  have h1 := GlobalTheory.T.matrixEntrywiseProductMeasure_uniformizer_power_box k ν ϖ hϖ A D (fun _ j => max 0 (-e j))
-  have h2 := GlobalTheory.T.matrixEntrywiseProductMeasure_uniformizer_power_box k ν ϖ hϖ D A (fun i _ => 1 + max 0 (e i))
-  rw [GlobalTheory.T.val_twoBlockParahoric_inf_torusConj_blockwise k ϖ hϖ A D e, GlobalTheory.T.volM_blocks_eq_mul, h1, h2]
+  have h1 := _root_.GlobalTheory.BoxVolume.volM_box k ν ϖ hϖ A D (fun _ j => max 0 (-e j))
+  have h2 := _root_.GlobalTheory.BoxVolume.volM_box k ν ϖ hϖ D A (fun i _ => 1 + max 0 (e i))
+  rw [_root_.GlobalTheory.ParahoricConjBlocks.blockset k ϖ hϖ A D e, _root_.GlobalTheory.blockVolume_prod, h1, h2]
   simp only [ENNReal.toReal_mul, ENNReal.toReal_pow, ENNReal.toReal_ofReal (zpow_pos hq _).le]
   have hs : -((Fintype.card A : ℤ) * (Fintype.card D + sumAbs e)) =
       (-∑ _i : A, ∑ j : D, max 0 (-e j)) + (-∑ i : D, ∑ _j : A, (1 + max 0 (e i))) := by
@@ -136,9 +137,9 @@ theorem relIndex_conj_parahoric (k : Type) [Field k] [ValuativeRel k] [Topologic
   borelize k
   let ν : Measure k := Measure.addHaar
   have hq : (0 : ℝ) < resCard k := Nat.cast_pos.2 Nat.card_pos
-  obtain ⟨hp, hJ⟩ := GlobalTheory.T.relIndex_mul_matrixVolume_open_subgroup_integralGL k ν (A ⊕ D) _ (parahoric k A D) inf_le_right
+  obtain ⟨hp, hJ⟩ := _root_.GlobalTheory.IndexVolume.relIndex_mul_volM k ν (A ⊕ D) _ (parahoric k A D) inf_le_right
     (fun g hg => (mem_parahoric.1 hg).1) (isOpen_conj_inf _ (isOpen_parahoric A D) (mtor (A := A) ϖ e))
-  obtain ⟨-, hK⟩ := GlobalTheory.T.relIndex_mul_matrixVolume_open_subgroup_integralGL k ν D _ (KO k D) inf_le_right le_rfl
+  obtain ⟨-, hK⟩ := _root_.GlobalTheory.IndexVolume.relIndex_mul_volM k ν D _ (KO k D) inf_le_right le_rfl
     (isOpen_conj_inf _ (isOpen_KO D) (torusElt k D ϖ e))
   rw [Subgroup.inf_relIndex_right] at hJ hK
   have h0 := vol_conj_inf ν ϖ hϖ A D (fun _ => 0)

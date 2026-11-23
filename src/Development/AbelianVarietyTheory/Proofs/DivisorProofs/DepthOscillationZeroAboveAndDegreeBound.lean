@@ -2,8 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ESmall
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CmHostRootNegDiscriminantNeNegSelf
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FactorDepthBetweenZeroAndBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductDepthSumRoundingOscillationStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.FactorDepthInertBounds
+public import Development.AbelianVarietyTheory.Definitions.Divisors.EightDvdNCol
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FactorDepthBetweenZeroAndBound
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.BigBlockCharacters
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TypedPartSplitPrimes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductDepthSumRoundingOscillation
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.LamLetters
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -38,10 +43,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.BigBlockCharacters
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.FactorDepthInertBounds
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TypedPartSplitPrimes
-public import Development.AbelianVarietyTheory.Definitions.CMLattices.LamLetters
 
 @[expose] public section
 
@@ -122,13 +123,13 @@ theorem oscLe_zero_above_and_degree : ∀ (E : Type) [Field E] [NumberField E] [
   constructor
   · intro hMp la
     refine ⟨0, ?_⟩
-    have h := ((GlobalTheory.T.productDepth_sum_rounding_oscillation E H Dw l Xo c p la cx).1 (fun _ => 0) (fun _ => 0)
-      (fun f => (GlobalTheory.T.factorDepth_between_zero_and_bound E H Dw l Xo c p la f (cx f)).2 (lt_of_le_of_lt (hE.2.2.2 f) hMp))).1
+    have h := ((_root_.GlobalTheory.RefSum.nuBetween_sum_and_eLoc_le E H Dw l Xo c p la cx).1 (fun _ => 0) (fun _ => 0)
+      (fun f => (_root_.GlobalTheory.RefSum.facBetween_zero_boundAll E H Dw l Xo c p la f (cx f)).2 (lt_of_le_of_lt (hE.2.2.2 f) hMp))).1
     simpa using h
   · intro la
     refine ⟨0, ?_⟩
-    have h := ((GlobalTheory.T.productDepth_sum_rounding_oscillation E H Dw l Xo c p la cx).1 (fun _ => 0) (fun f => boundAll p (rk f) (cx f))
-      (fun f => (GlobalTheory.T.factorDepth_between_zero_and_bound E H Dw l Xo c p la f (cx f)).1)).1
+    have h := ((_root_.GlobalTheory.RefSum.nuBetween_sum_and_eLoc_le E H Dw l Xo c p la cx).1 (fun _ => 0) (fun f => boundAll p (rk f) (cx f))
+      (fun f => (_root_.GlobalTheory.RefSum.facBetween_zero_boundAll E H Dw l Xo c p la f (cx f)).1)).1
     have hsum : ∑ f, boundAll p (rk f) (cx f) ≤ (F * (Dw.p + Dw.q : ℕ) * Mb + Sm) / ((p : ℝ) - 1) := by
       unfold boundAll
       rw [← Finset.sum_div]

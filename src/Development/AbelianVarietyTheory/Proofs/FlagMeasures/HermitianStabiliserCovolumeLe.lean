@@ -2,13 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsFundOne
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CoordOfMemXa
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CovolumeReferenceLatticeStabiliserBoundsStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FundamentalSetMeasureCommensurableIndexRatioStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairCommonUnipotentStabiliserSummary
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CovolumeReferenceLatticeStabiliserBounds
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsHermND
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FundamentalSetMeasureCommensurableIndexRatio
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairInnerLatticesUnimodularPrimitive
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairNormalFormGeometrySummaryStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RelIndexNeZero
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StabilizerHaarUnimodularNormal
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairCommonUnipotentStabiliserSummary
+import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NormalFormDualOrthogonalLast
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairNormalFormGeometrySummary
 import Formalism.FormalDegreeBessel.FormalDegreeRatio.UnitaryWeylNormalHolds
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
@@ -65,7 +67,7 @@ theorem covol_of_act {G α : Type} [Group G] [MeasurableSpace α] (act : G → �
     (hΩ : MeasurableSet Ω) (hK : MeasurableSet K) (fA : ∀ x ∈ R, ∃! s, s ∈ A ∧ act s x ∈ Ω)
     (fB : ∀ x ∈ R, ∃! s, s ∈ B ∧ act s x ∈ K) : μ K = ENNReal.ofReal (GlobalTheory.HL.invVol A B) * μ Ω := by
   letI : MulAction G α := { smul := act, one_smul := h1, mul_smul := h2 }
-  exact GlobalTheory.T.fundamental_set_measure_commensurable_index_ratio G α μ R A B Ω K hm cA cB hR hinv hAB hBA hΩ hK fA fB
+  exact _root_.GlobalTheory.CovolIdx.measure_eq_invVol_mul G α μ R A B Ω K hm cA cB hR hinv hAB hBA hΩ hK fA fB
 
 theorem continuous_lmulM {k r : ℕ} (a : Mat k r) : Continuous (lmulM (k := k) (r := r) a) := by
   unfold lmulM
@@ -157,7 +159,7 @@ theorem cov_le : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCom
   have hRefFull : Submodule.IsFullLattice K (N.Ref (latL N.F N.F' Λ)) := by
     refine { toIsLattice := hRefLat, span_eq_top := ?_ }
     obtain ⟨-, -, hC, -, hWn, hUp, -, -, -, -, -, hPi⟩ :=
-      GlobalTheory.T.hermFramePairNormalForm_geometry_summary K V H hK r N
+      _root_.GlobalTheory.DegCnt.NF.geometry K V H hK r N
     have hP : N.Pi ≤ Submodule.span K (N.Ref (latL N.F N.F' Λ) : Set V) := by
       rw [hPi, ← GlobalTheory.DegCnt.InnerLat.span_hermFramePair_lattice_eq_sup N]
       exact Submodule.span_mono (show (N.P0 : Set V) ⊆ N.Ref (latL N.F N.F' Λ) from
@@ -175,7 +177,7 @@ theorem cov_le : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCom
     apply eq_top_iff.mpr
     rw [← hC.sup_eq_top]
     exact sup_le hW hP
-  obtain ⟨Ω, hΩ, -, hΩle⟩ := GlobalTheory.T.covolume_referenceLattice_stabiliser_bounds K V H hK r N k ι σ β Φ z z' g hP hd hF hN hv (latL N.F N.F' Λ) hLU hzL
+  obtain ⟨Ω, hΩ, -, hΩle⟩ := _root_.GlobalTheory.DegVol.RefCov.covol_ref K V H hK r N k ι σ β Φ z z' g hP hd hF hN hv (latL N.F N.F' Λ) hLU hzL
   have hnil := (GlobalTheory.UnipStab.common_unipotent_stabiliser K V H hK r N).2.2.2.2
   have hc1 := (GlobalTheory.DegCnt.Unimod.invVol_smul K V N.R (2 * r + 1) hnil _ _ hRefFull hΛ).1
   have hc2 := (GlobalTheory.DegCnt.Unimod.invVol_smul K V N.R (2 * r + 1) hnil _ _ hΛ hRefFull).1

@@ -2,11 +2,10 @@ module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.WsLink
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.AutomorphicPointGalois
-import Development.AbelianVarietyTheory.Definitions.Divisors.IsLocalRingTrivSqZeroExt
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.DeterminantRepresentations.IrrIffSpan
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.IrrIffSpan
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.RRFree
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.TNiceFour
-import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.LaArith
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.EigenbasisLifts.AeComm
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.EigenbasisLifts.AwAvg
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.EigenbasisLifts.BkAbEmb
@@ -26,6 +25,8 @@ public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimura
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.EigenbasisLifts.RelKill
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.ResidueFlagPoints.CycIne
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeakShimuraTheory.ResidueFlagPoints.ResLeCont
+import Development.AbelianVarietyTheory.Definitions.Divisors.IsLocalRingTrivSqZeroExt
+import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.LaArith
 import Formalism.LocalRingCardinality.SpanPowerMembership.NZLevD
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -219,7 +220,7 @@ theorem UpperTheory.V.Th.eigenbasis_rank_four :
   have hapt : _root_.UpperTheory.V.Th.AutomorphicPointGalois ι x ρ₀ := ⟨hcont, hx, ⟨_, arith hU.pr x m hm k hk hkk⟩, haut, by
     rintro _ ⟨g, hg, rfl⟩
     exact hv0 g hg, hfl⟩
-  have hirr₀ : U3.MatIrr ⊤ (W.mat ρ₀) := fun N hN => (AlgebraTools.Det.irrIffSpan (W.mat ρ₀)).2 hfull N fun g v hv => hN g trivial v hv
+  have hirr₀ : U3.MatIrr ⊤ (W.mat ρ₀) := fun N hN => (_root_.UpperTheory.Reformulated.B.Qe4.irrIffSpan (W.mat ρ₀)).2 hfull N fun g v hv => hN g trivial v hv
   have hnice := _root_.UpperTheory.V.Th.nice0four_alt ι x ρ₀ hapt hirr₀ (free hU.pr hn1 ι x _ m hρ haut hm hfl k hk hkk) hC hD4
   obtain ⟨X, hX⟩ := hAd l L Ω s V hV hζ c hc 4 (by omega) le_rfl r h0 B ι x ρ₀ hnice (par x m hm k hk hkk) _ R hP hR z hz hbk
   obtain ⟨Q, hQ⟩ := conjOf ρ₀ y ρ' X htan fun g => by rw [← hzy, hX, hR.ad]

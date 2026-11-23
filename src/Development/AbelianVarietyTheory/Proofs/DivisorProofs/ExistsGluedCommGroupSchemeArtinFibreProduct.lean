@@ -4,8 +4,10 @@ public import Mathlib.AlgebraicGeometry.Morphisms.Flat
 public import Mathlib.CategoryTheory.Monoidal.Cartesian.Grp
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsGrpObjOverOfPoints
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatOverArtinFibreProductIsPushoutStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OverTensorIsPullbackOfIsPullbackSquaresStatement
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatOverArtinFibreProductIsPushout
+public import Mathlib.AlgebraicGeometry.Pullbacks
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OverTensorIsPullbackOfIsPullbackSquares
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -233,7 +235,7 @@ namespace GlobalTheory.GlueGrpLaw
 
 theorem exists_glued_grp : ∀ (P R₁ R₂ R₀ : CommRingCat.{0}) (f₁ : P ⟶ R₁) (f₂ : P ⟶ R₂) (g₁ : R₁ ⟶ R₀) (g₂ : R₂ ⟶ R₀), IsPullback f₁ f₂ g₁ g₂ → IsLocalRing P → IsArtinianRing P → Function.Surjective g₁ → Function.Surjective g₂ → ∀ (A₁ : Over (Spec R₁)) [GrpObj A₁] (A₂ : Over (Spec R₂)) [GrpObj A₂] (A₀ : Over (Spec R₀)) [GrpObj A₀] (ψ₁ : A₀.left ⟶ A₁.left) (ψ₂ : A₀.left ⟶ A₂.left), IsCommMonObj A₁ → IsCommMonObj A₂ → IsGrpPullback A₀ A₁ (Spec.map g₁) ψ₁ → IsGrpPullback A₀ A₂ (Spec.map g₂) ψ₂ → ∀ (Y : Over (Spec P)) (j₁ : A₁.left ⟶ Y.left) (j₂ : A₂.left ⟶ Y.left), IsPullback j₁ A₁.hom Y.hom (Spec.map f₁) → IsPullback j₂ A₂.hom Y.hom (Spec.map f₂) → Flat Y.hom → IsPushout ψ₁ ψ₂ j₁ j₂ → ∃ _ : GrpObj Y, IsCommMonObj Y ∧ IsGrpPullback A₁ Y (Spec.map f₁) j₁ ∧ IsGrpPullback A₂ Y (Spec.map f₂) j₂ := by
   intro P R₁ R₂ R₀ f₁ f₂ g₁ g₂ hP hloc hart hg₁ hg₂ A₁ _ A₂ _ A₀ _ ψ₁ ψ₂ hc₁ hc₂ hψ₁ hψ₂ Y j₁ j₂ hj₁ hj₂ hfl hY
-  have pinch := GlobalTheory.T.flat_over_artinFibreProduct_isPushout P R₁ R₂ R₀ f₁ f₂ g₁ g₂ hP hloc hart hg₁ hg₂
+  have pinch := _root_.GlobalTheory.FlatPinch.main P R₁ R₂ R₀ f₁ f₂ g₁ g₂ hP hloc hart hg₁ hg₂
   have hw : Spec.map g₁ ≫ Spec.map f₁ = Spec.map g₂ ≫ Spec.map f₂ := by
     rw [← Spec.map_comp, ← Spec.map_comp, hP.w]
 
@@ -242,20 +244,20 @@ theorem exists_glued_grp : ∀ (P R₁ R₂ R₀ : CommRingCat.{0}) (f₁ : P �
       (Spec.map g₁) (Spec.map g₂) (by dsimp; infer_instance) (IsPullback.id_vert _) (IsPullback.id_vert _)
       (IsPullback.id_vert _) hw (by simp)
 
-  obtain ⟨k₁, hk₁f, hk₁s, hk₁⟩ := GlobalTheory.T.over_tensor_isPullback_of_isPullback_squares (Spec.map f₁) A₁ A₁ Y Y j₁ j₁ hj₁ hj₁
-  obtain ⟨k₂, hk₂f, hk₂s, hk₂⟩ := GlobalTheory.T.over_tensor_isPullback_of_isPullback_squares (Spec.map f₂) A₂ A₂ Y Y j₂ j₂ hj₂ hj₂
-  obtain ⟨i₁, hi₁f, hi₁s, hi₁⟩ := GlobalTheory.T.over_tensor_isPullback_of_isPullback_squares (Spec.map g₁) A₀ A₀ A₁ A₁ ψ₁ ψ₁ hψ₁.1 hψ₁.1
-  obtain ⟨i₂, hi₂f, hi₂s, hi₂⟩ := GlobalTheory.T.over_tensor_isPullback_of_isPullback_squares (Spec.map g₂) A₀ A₀ A₂ A₂ ψ₂ ψ₂ hψ₂.1 hψ₂.1
+  obtain ⟨k₁, hk₁f, hk₁s, hk₁⟩ := _root_.GlobalTheory.over_tensor_isPullback_of_isPullback (Spec.map f₁) A₁ A₁ Y Y j₁ j₁ hj₁ hj₁
+  obtain ⟨k₂, hk₂f, hk₂s, hk₂⟩ := _root_.GlobalTheory.over_tensor_isPullback_of_isPullback (Spec.map f₂) A₂ A₂ Y Y j₂ j₂ hj₂ hj₂
+  obtain ⟨i₁, hi₁f, hi₁s, hi₁⟩ := _root_.GlobalTheory.over_tensor_isPullback_of_isPullback (Spec.map g₁) A₀ A₀ A₁ A₁ ψ₁ ψ₁ hψ₁.1 hψ₁.1
+  obtain ⟨i₂, hi₂f, hi₂s, hi₂⟩ := _root_.GlobalTheory.over_tensor_isPullback_of_isPullback (Spec.map g₂) A₀ A₀ A₂ A₂ ψ₂ ψ₂ hψ₂.1 hψ₂.1
   have hfl2 : Flat (Y ⊗ Y).hom := by rw [Over.tensorObj_hom]; infer_instance
   have hik : i₁ ≫ k₁ = i₂ ≫ k₂ := left_ext
     (by rw [Category.assoc, Category.assoc, hk₁f, hk₂f, reassoc_of% hi₁f, reassoc_of% hi₂f, hY.w])
     (by rw [Category.assoc, Category.assoc, hk₁s, hk₂s, reassoc_of% hi₁s, reassoc_of% hi₂s, hY.w])
   have Q2 : IsPushout i₁ i₂ k₁ k₂ := pinch (Y ⊗ Y) (A₁ ⊗ A₁) (A₂ ⊗ A₂) (A₀ ⊗ A₀) k₁ k₂ i₁ i₂ hfl2 hk₁ hk₂ hi₁ hik hi₂.w
 
-  obtain ⟨l₁, hl₁f, hl₁s, hl₁⟩ := GlobalTheory.T.over_tensor_isPullback_of_isPullback_squares (Spec.map f₁) (A₁ ⊗ A₁) A₁ (Y ⊗ Y) Y k₁ j₁ hk₁ hj₁
-  obtain ⟨l₂, hl₂f, hl₂s, hl₂⟩ := GlobalTheory.T.over_tensor_isPullback_of_isPullback_squares (Spec.map f₂) (A₂ ⊗ A₂) A₂ (Y ⊗ Y) Y k₂ j₂ hk₂ hj₂
-  obtain ⟨h₁, hh₁f, hh₁s, hh₁⟩ := GlobalTheory.T.over_tensor_isPullback_of_isPullback_squares (Spec.map g₁) (A₀ ⊗ A₀) A₀ (A₁ ⊗ A₁) A₁ i₁ ψ₁ hi₁ hψ₁.1
-  obtain ⟨h₂, hh₂f, hh₂s, hh₂⟩ := GlobalTheory.T.over_tensor_isPullback_of_isPullback_squares (Spec.map g₂) (A₀ ⊗ A₀) A₀ (A₂ ⊗ A₂) A₂ i₂ ψ₂ hi₂ hψ₂.1
+  obtain ⟨l₁, hl₁f, hl₁s, hl₁⟩ := _root_.GlobalTheory.over_tensor_isPullback_of_isPullback (Spec.map f₁) (A₁ ⊗ A₁) A₁ (Y ⊗ Y) Y k₁ j₁ hk₁ hj₁
+  obtain ⟨l₂, hl₂f, hl₂s, hl₂⟩ := _root_.GlobalTheory.over_tensor_isPullback_of_isPullback (Spec.map f₂) (A₂ ⊗ A₂) A₂ (Y ⊗ Y) Y k₂ j₂ hk₂ hj₂
+  obtain ⟨h₁, hh₁f, hh₁s, hh₁⟩ := _root_.GlobalTheory.over_tensor_isPullback_of_isPullback (Spec.map g₁) (A₀ ⊗ A₀) A₀ (A₁ ⊗ A₁) A₁ i₁ ψ₁ hi₁ hψ₁.1
+  obtain ⟨h₂, hh₂f, hh₂s, hh₂⟩ := _root_.GlobalTheory.over_tensor_isPullback_of_isPullback (Spec.map g₂) (A₀ ⊗ A₀) A₀ (A₂ ⊗ A₂) A₂ i₂ ψ₂ hi₂ hψ₂.1
   have hfl3 : Flat ((Y ⊗ Y) ⊗ Y).hom := by rw [Over.tensorObj_hom]; infer_instance
   have hhl : h₁ ≫ l₁ = h₂ ≫ l₂ := left_ext
     (by rw [Category.assoc, Category.assoc, hl₁f, hl₂f, reassoc_of% hh₁f, reassoc_of% hh₂f, hik])

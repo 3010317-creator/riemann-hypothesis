@@ -3,7 +3,9 @@ module
 public import Development.AbelianVarietyTheory.BlockTheory.SiegelWeilLocal.OrthonormalPlaceBasis
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CountHypPAtAddQAt
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DifferentiableAtOrbit
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LowestKTypeInfinitesimalCharLargeGapStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LayerProd
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PosPartUnitaryMul
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LowestKTypeInfinitesimalCharLargeGap
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LowestKTypeMultiplicityOneCountingHypotheses
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SmoothOfMemLowKSub
 import Mathlib.Algebra.Order.Floor.Extended
@@ -62,7 +64,7 @@ theorem stepBoundAt_of_countHyp : ∀ (B : RowsAut) (Cg : ℝ) (n₀ : ℕ) (d :
   have hU : IsURepOn (UJset (B.I.ε v)) (B.σ v) := hds.2.2.1
   have h120v : 120 * (B.I.n : ℝ) * ((rkR (B.I.ε v) : ℕ) : ℝ) ^ ((3 : ℝ) / 2) ≤ h := by
     rw [hrk v]; exact h120
-  have heig := GlobalTheory.T.lowestKType_infinitesimalChar_large_gap B.I.n (B.I.ε v) (B.lam v) (B.H v) (B.σ v) hpar hds h (hgap v) h120v
+  have heig := _root_.GlobalTheory.DSId.LowCharGap.lowChar B.I.n (B.I.ε v) (B.lam v) (B.H v) (B.σ v) hpar hds h (hgap v) h120v
   exact ⟨hU, GlobalTheory.StepBoundOneRep.stepBound_of_eigen B.I.n (B.I.ε v) (B.H v) (B.σ v) (B.lam v) b hU
     (hK v) heig (hlam v)⟩
 

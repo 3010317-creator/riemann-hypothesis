@@ -3,9 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEqAddOfRedVEq
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.CmOrdIntId
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.ExistsIsPosDefOfBasis
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.ExistsSmoothPolyhedralFanRefinementStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.IntegerLatticeDominatesStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.VoronoiFanIsPolyhedralStatement
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.VoronoiMeans.VorFunEvalEqFineMean
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.ExistsSmoothPolyhedralFanRefinement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.IntegerLatticeDominates
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.VoronoiFanIsPolyhedral
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -40,7 +41,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import CompanionTheory.SpectralGeometry.CountingDefinitions.VoronoiMeans.VorFunEvalEqFineMean
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HomExtNormalSt
 
 @[expose] public section
@@ -63,14 +63,14 @@ theorem dominates_int_proj (Y : Type) [AddCommGroup Y] [m : Module ℤ Y] [Modul
     Dominates (id : ℤ → ℤ) Y := by
   obtain rfl : m = AddCommGroup.toIntModule Y := Subsingleton.elim _ _
   have : Module.Free ℤ Y := inferInstance
-  exact GlobalTheory.T.integer_lattice_dominates Y
+  exact _root_.GlobalTheory.CompanionTheory.Ar.Fan.dominates_int Y
 
 theorem exists_smooth_fan_int : ∀ g : ℕ, ∃ φ : InvFun ℤ, IsPolFan id g φ ∧ NoSelfInt id g φ := by
   intro g
   have hpoly : IsPolyFan (id : ℤ → ℤ) g (vorFun ℤ g) :=
-    GlobalTheory.T.voronoi_fan_is_polyhedral ℤ id g g (fun Y _ _ _ _ => hasRedCover_int_proj Y) (by simp)
+    _root_.GlobalTheory.CompanionTheory.Ar.Fan.vorFun_isPolyFan ℤ id g g (fun Y _ _ _ _ => hasRedCover_int_proj Y) (by simp)
   have htw : IsTwG (0 : ℤ) (vorFun ℤ g) := fun σ _ n B => baseFun_twist _ _ _ σ n B
-  obtain ⟨φ, h₁, h₂, -, -⟩ := GlobalTheory.T.exists_smooth_polyhedral_fan_refinement ℤ id 0 cmOrd_int_id g (vorFun ℤ g)
+  obtain ⟨φ, h₁, h₂, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fan.SmoothRefinement.exists_smooth_refinement ℤ id 0 cmOrd_int_id g (vorFun ℤ g)
     (fun Y _ _ _ _ => dominates_int_proj Y) hpoly htw
   exact ⟨φ, h₁, h₂⟩
 

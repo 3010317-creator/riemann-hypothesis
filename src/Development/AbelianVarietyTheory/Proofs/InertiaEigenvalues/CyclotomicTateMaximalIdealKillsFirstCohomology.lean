@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.HTBasis
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousOrbitPadicComplexStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicTowerTraceAlmostSurjectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousOrbitPadicComplex
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicTowerTraceAlmostSurjective
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ImportsRest
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -144,7 +144,7 @@ theorem step (act : GQ l →* (PadicComplex l ≃+* PadicComplex l)) (hact : IsA
     simpa [hc1] using hε
   rw [eventually_nhdsWithin_iff] at hev
   obtain ⟨L, S, hL, hst, hS, hS', hW⟩ := exists_field (Kinf K) _ hev
-  obtain ⟨b, hbL, hb1, hb⟩ := GlobalTheory.T.cyclotomicTower_trace_almost_surjective l K L S hL hst hS hS' a₀ ha₀ (by simpa using ha1)
+  obtain ⟨b, hbL, hb1, hb⟩ := _root_.GlobalTheory.Cyc.trace_almost_onto l K L S hL hst hS hS' a₀ ha₀ (by simpa using ha1)
   refine average act hact.2 (Hinf K) L.fixingSubgroup S hS hS' _ (b : PadicComplex l)
     (by simpa using hb1) (fun g hg => ?_) ?_ c hc t ε ht0 hε.le ht (fun g hg hg' => (hW g hg' hg).le)
   · rw [hact.1, (IntermediateField.mem_fixingSubgroup_iff _ _).1 hg b hbL]
@@ -170,7 +170,7 @@ theorem rank_one (act : GQ l →* (PadicComplex l ≃+* PadicComplex l)) (hact :
     rintro n y ⟨hy1, hy⟩
     obtain ⟨x, hx, hx'⟩ := step act hact K a ha ha1 (fun g => c g - a⁻¹ * (act g y - y))
       (hcont.sub (continuousOn_const.mul
-        ((GlobalTheory.T.continuous_orbit_padicComplex l act hact y).continuousOn.sub continuousOn_const)))
+        ((_root_.GlobalTheory.Cyc.IsActC.continuous_orbit l act hact y).continuousOn.sub continuousOn_const)))
       (fun g hg h hh => by
         simp only [hc g hg h hh, map_mul, map_sub, map_inv₀, hfix g hg, RingAut.mul_apply]
         ring)

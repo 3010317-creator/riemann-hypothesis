@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GFrames
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianStabiliserRationalUnitriangularPairsStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianStabiliserRationalUnitriangularPairs
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalExtend
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -311,7 +311,7 @@ theorem main : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
   have htup : (∀ i j, j < i → t i j = 0) ∧ ∀ i, t i i = 1 :=
     ⟨fun i j hij => by rw [ht i j (fun h => lt_asymm h.1 hij), if_neg (ne_of_gt hij)],
       fun i => by rw [ht i i (fun h => lt_irrefl _ h.1), if_pos rfl]⟩
-  obtain ⟨h, hh, hf1, -⟩ := (GlobalTheory.T.hermitianStabiliser_rational_unitriangular_pairs A r k G t s' htup hs'up).1 hs'
+  obtain ⟨h, hh, hf1, -⟩ := (_root_.GlobalTheory.HL.RatStab.stab_rat A r k G t s' htup hs'up).1 hs'
   exact ⟨h, hh, hf1⟩
 
 end GlobalTheory.HL.RatPat

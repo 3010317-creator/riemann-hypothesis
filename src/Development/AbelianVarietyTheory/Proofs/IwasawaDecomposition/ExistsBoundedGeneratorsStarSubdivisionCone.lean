@@ -6,7 +6,7 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EvalR
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFinRepsProjectiveFinrankLeNumberField
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IntBilinFormToRealMemBalancedPsdCone
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RealConeCoveredByStarAtPoint
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StarSubdivisionFunctionLinearOnCellsStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StarSubdivisionFunctionLinearOnCells
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StarSubdivisionSubordinateToFan
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -125,7 +125,7 @@ theorem of_cell (hw : IsCentreSet H.bar q ψ w) (X : Type) [AddCommGroup X] [Mod
       ψ.LinearOn u ∧ (starDepth H.bar ψ w).LinearOn u ∧ (∀ i, ψ.evalZ (u i) ≤ b) ∧
       (∀ i, (starDepth H.bar ψ w).evalZ (u i) ≤ 1) ∧ InRCone u β := by
   obtain ⟨hC1, hC2, hC3⟩ := hw X hX
-  obtain ⟨lin1, lin2⟩ := GlobalTheory.T.starSubdivision_function_linearOn_cells E H q ψ w 0 1 hw
+  obtain ⟨lin1, lin2⟩ := _root_.GlobalTheory.PolFan.starFun_linearOn E H q ψ w 0 1 hw
   by_cases hc : ∃ v ∈ balForms H.bar X, (∀ y, 0 ≤ v y y) ∧ w.evalZ v = 1 ∧ InRCone γ v
   · obtain ⟨v, hv, hvp, hvw, hvin⟩ := hc
     have hne : v ≠ 0 := by

@@ -1,8 +1,11 @@
 module
 
 public import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.DiscreteSeriesCharacters.CapelliDeterminantBlockProduct
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompactRaisingWordMemSpanHigherWordsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsWeightWordApplyWeightVectorStatement
+public import Formalism.RealPlaceAnalysis.StatementA
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompactRaisingWordMemSpanHigherWords
+public import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.LowKMultOneP
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsWeightWordApplyWeightVector
+public import Mathlib.Data.Set.Finite.List
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -14,7 +17,6 @@ import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
-public import Mathlib.Data.Set.Finite.List
 import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
@@ -43,7 +45,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.LowKMultOneP
 import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HolomorphicDiscreteSeries
 
 @[expose] public section
@@ -86,13 +87,13 @@ theorem main : ∀ (n : ℕ) (ε : Fin n → Bool) (V : Type) [NormedAddCommGrou
   refine ⟨l', hl'S.1, hl'S.2.1, ?_⟩
   set u := L.starProjection (word l') with hu
   have huL : u ∈ L := L.starProjection_apply_mem _
-  have hwt := GlobalTheory.T.isWeight_word_apply_weightVector n V E hG μ w hw.1 l'
+  have hwt := _root_.GlobalTheory.wordWeight n V E hG μ w hw.1 l'
   refine hΛ _ u huL hl'S.2.2 ⟨?_, ?_⟩
   · intro a
     rw [hu, ← proj_comm hU L hL a a rfl, hwt a, map_smul]
   · intro c d hcd hcd'
     rw [hu, ← proj_comm hU L hL c d hcd']
-    have hspan := GlobalTheory.T.compactRaising_word_mem_span_higherWords n ε V E hG w c d hcd hcd' (hw.2 c d hcd hcd') s t l' hl'S.2.1
+    have hspan := _root_.GlobalTheory.HolDS.compactRaise_word_higher n ε V E hG w c d hcd hcd' (hw.2 c d hcd hcd') s t l' hl'S.2.1
     have hle : Submodule.span ℂ {y : V | ∃ l'' : List (Fin n × Fin n), l''.length = l'.length ∧
         (∀ p ∈ l'', ε p.1 = s ∧ ε p.2 = t) ∧
         (l'.map fun p : Fin n × Fin n => ((p.2 : ℕ) : ℤ) - ((p.1 : ℕ) : ℤ)).sum <

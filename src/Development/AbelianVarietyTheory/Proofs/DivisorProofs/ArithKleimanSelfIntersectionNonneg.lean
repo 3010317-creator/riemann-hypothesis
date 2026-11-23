@@ -3,9 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SmallFam
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqOfIsometricTrivShift
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAmpleNefHermitianSmallSection
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeightGenericPointNonnegAmpleSemiPositiveStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLineBundleIsNefTensStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAmpleTensorOfNefFibresAmpleStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeightGenericPointNonnegAmpleSemiPositive
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLineBundleIsNefTens
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NefFibOfIsNef
+public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAmpleLBOfRelAmpleOfIsAffine
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAmpleTensorOfNefFibresAmple
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsNefPow
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TendstoSelfIntersectionPowTensorDivPow
 import Mathlib.Algebra.Order.Floor.Extended
@@ -63,10 +65,10 @@ theorem selfInter_nonneg : GlobalTheory.Published.ArCalc → AmpleHS → ∀ (k 
   obtain ⟨α, hα, hlim⟩ := GlobalTheory.SelfInterGrowth.main hC k X p D hX C A c hc
   refine ge_of_tendsto' hlim fun n => div_nonneg ?_ (by positivity)
   have hpow := GlobalTheory.NefPow.isNef_pow hC k X p D hX C n hnef
-  have htens := GlobalTheory.T.hermLineBundle_isNef_tens hC k X p D hX _ _ hpow hAn
-  have hamp := GlobalTheory.T.isAmple_tensor_of_nef_fibres_ample k X p D hX _ A hpow.vertical hA
+  have htens := _root_.GlobalTheory.NefTens.isNef_tens hC k X p D hX _ _ hpow hAn
+  have hamp := _root_.GlobalTheory.AmpleNefFibZ.isAmpleLB_tens_of_nefFib k X p D hX _ A hpow.vertical hA
   obtain ⟨h, hh, he⟩ := hα n
   rw [← he]
-  exact GlobalTheory.T.height_genericPoint_nonneg_ample_semiPositive hC hHS k X p D hX hD _ h hamp htens.semiPos hh (hlow _ h htens hh)
+  exact _root_.GlobalTheory.HSNef.height_generic_nonneg_of_ample hC hHS k X p D hX hD _ h hamp htens.semiPos hh (hlow _ h htens hh)
 
 end GlobalTheory.KleimanStep

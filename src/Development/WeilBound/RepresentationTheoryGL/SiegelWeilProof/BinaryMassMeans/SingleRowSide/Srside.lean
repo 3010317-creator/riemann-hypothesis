@@ -1,10 +1,11 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.BinaryMassMeans.MeanVal
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanBinaryGramDensityStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanBinaryGramIntegralStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalBinaryGramDensityStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalBinaryGramIntegralStatement
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanBinaryGramDensity
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanBinaryGramIntegral
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalBinaryGramDensity
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalBinaryGramIntegral
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,18 +66,18 @@ theorem srside : MeanVal → LocMass → RSide := by
   have hfin := Filter.eventually_cofinite.1 hC
   refine ⟨hfin.toFinset, fun S hS φ A hT => ?_⟩
   obtain ⟨hφc, hφs, hφ0, hφU, hAS, hAL⟩ := hT
-  obtain ⟨hGc, hGs, hGl, hGi⟩ := GlobalTheory.T.archimedean_binary_gram_density F E σ hCM J hJ d b li hli mi hmi φ hφc hφs hφ0 hφU
+  obtain ⟨hGc, hGs, hGl, hGi⟩ := _root_.GlobalTheory.CompanionTheory.SW.ArchFibre.fibre_integral_test F E σ hCM J hJ d b li hli mi hmi φ hφc hφs hφ0 hφU
   have hG0 : ∀ y : Ainf F, 0 ≤ ∫ X, φ X ∂(mi (hermScal (Ainf F) σ y)) := fun y => integral_nonneg fun X => hφ0 X
   have hP := fun v (hv : v ∉ S) => not_not.1 (fun h => hv (hS (hfin.mem_toFinset.2 h)))
   have key := hMV F hCM.1 θ hθ li lam hli hlam S (fun s => ∫ X, φ X ∂(mi (hermScal (Ainf F) σ s)))
     (fun v s => (m v (hermScal (Fv F v) σ s) (A v)).toReal) C hGc hGs hG0 (fun v y => ENNReal.toReal_nonneg)
     (fun v hv => by
       obtain ⟨h1, h2, h3⟩ := hAS v hv
-      obtain ⟨c1, c2, -⟩ := GlobalTheory.T.local_binary_gram_integral F E σ hCM J hJ d b v (lam v) (hlam v) (m v) (hm v) (A v) h1 h2 h3
+      obtain ⟨c1, c2, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.FibreCpt.fibre_masses F E σ hCM J hJ d b v (lam v) (hlam v) (m v) (hm v) (A v) h1 h2 h3
       exact ⟨c1, c2⟩)
     (fun v hv => by
       obtain ⟨p1, p2, p3⟩ := hP v hv
-      obtain ⟨l1, l2⟩ := GlobalTheory.T.local_binary_gram_density F E σ hCM J hJ d b v (lam v) (hlam v) (m v) (hm v)
+      obtain ⟨l1, l2⟩ := _root_.GlobalTheory.CompanionTheory.SW.StdLat.fibre_masses_standard_lattice F E σ hCM J hJ d b v (lam v) (hlam v) (m v) (hm v)
       simp only [hAL v hv]
       refine ⟨l1, fun s hs => ?_, p2, p3, l2⟩
       have hs0 : s ≠ 0 := fun h => hs (h ▸ (v.adicCompletionIntegers F).zero_mem)
@@ -91,7 +92,7 @@ theorem srside : MeanVal → LocMass → RSide := by
     congr 1
     refine Finset.prod_congr rfl fun v hv => ?_
     obtain ⟨h1, h2, h3⟩ := hAS v hv
-    exact (GlobalTheory.T.local_binary_gram_integral F E σ hCM J hJ d b v (lam v) (hlam v) (m v) (hm v) (A v) h1 h2 h3).2.2
+    exact (_root_.GlobalTheory.CompanionTheory.SW.FibreCpt.fibre_masses F E σ hCM J hJ d b v (lam v) (hlam v) (m v) (hm v) (A v) h1 h2 h3).2.2
   rw [hlim] at key
   have hsq : Tendsto (fun ε : ℝ => ε ^ 2) (𝓝[>] 0) (𝓝[>] 0) := by
     refine tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within _ ?_ ?_
@@ -103,7 +104,7 @@ theorem srside : MeanVal → LocMass → RSide := by
   simp only [Function.comp_apply]
   rw [← ENNReal.tsum_mul_left, ← ENNReal.tsum_mul_left]
   refine tsum_congr fun β => ?_
-  have h1 := GlobalTheory.T.archimedean_binary_gram_integral F E σ hCM J hJ d b li hli mi hmi θ hθ ε hε (algebraMap F (Ainf F) β.1) φ hφc
+  have h1 := _root_.GlobalTheory.CompanionTheory.BinaryDil.dilation_inf_binary F E σ hCM J hJ d b li hli mi hmi θ hθ ε hε (algebraMap F (Ainf F) β.1) φ hφc
   rw [← mul_assoc, h1, hGl, mul_assoc, ← ENNReal.ofReal_mul (hG0 _), map_pow]
 
 end PositivityTheory.Rg.Mass.LiteralAutomorphy

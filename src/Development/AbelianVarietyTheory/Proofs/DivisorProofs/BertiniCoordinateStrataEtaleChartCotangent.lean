@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitMkOfFormallyUnramified
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenericResidueLinearIndependence
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearIndependentCotangentOfIsTopFormFrameOfVaniStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothCoordinateStratumEtaleChartStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearIndependentCotangentOfIsTopFormFrameOfVani
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothCoordinateStratumEtaleChart
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -142,7 +142,7 @@ theorem key (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoetherian Y] (q : Y ⟶ S
   have hU : IsAffineOpen U := hfr.affine
   set I : Ideal Γ(Y, U) := Ideal.span (z '' (J : Set (Fin n))) with hIdef
   letI : Algebra ℂ (Γ(Y, U) ⧸ I) := ((Ideal.Quotient.mk I).comp (algX q U)).toAlgebra
-  haveI : Algebra.Smooth ℂ (Γ(Y, U) ⧸ I) := GlobalTheory.T.smooth_coordinateStratum_etaleChart Y q n U z hfr J
+  haveI : Algebra.Smooth ℂ (Γ(Y, U) ⧸ I) := _root_.GlobalTheory.PairStep.smooth_coordStratum Y q n U z hfr J
   obtain ⟨Q1, hQ1, hQ1u⟩ :=
     GlobalTheory.bertini_cotangent_independent ℂ (Γ(Y, U) ⧸ I) (fun i => Ideal.Quotient.mk I (f i)) 1
   have hinj : Function.Injective (Prod.snd : Fin 1 × ι → ι) :=
@@ -234,7 +234,7 @@ theorem bertini_strata_cotangent : ∀ (Y : Scheme.{0}) [IsIntegral Y] [IsLocall
   have huJ := Finset.prod_ne_zero_iff.1 hu J (Finset.mem_univ _)
   exact linearIndependent_option_cotangent
     (fun j : Option J => Y.presheaf.germ U y hy (j.elim (∑ i, algX q U (u i) * f i) fun j => z j)) h
-    (GlobalTheory.T.linearIndependent_cotangent_of_isTopFormFrame_of_vanishing Y q n U z hfr y hy J (fun j => h (some j)))
+    (_root_.GlobalTheory.CotIndep.linearIndependent_cotangent_of_isFrame Y q n U z hfr y hy J (fun j => h (some j)))
     (hQ J u huJ y hy hf (fun j => h (some j)) (h none))
 
 end GlobalTheory.StrataBertini

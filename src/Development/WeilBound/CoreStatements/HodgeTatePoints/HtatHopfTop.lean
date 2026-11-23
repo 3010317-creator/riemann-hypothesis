@@ -3,10 +3,14 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUnitFormLocalizationEtaleNbhd
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderEqOfLeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsFinOpenSubBaseChangeStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderEqOfLe
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsFinOpenSubBaseChange
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.HtatHopfReg
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.TwhopfFin
+public import Mathlib.RingTheory.Flat.Basic
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ExistsHenselianFlatOverPrime
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsBaseChangeGroup
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegularAtBaseChangeStatement
 import Development.WeilBound.CoreStatements.HodgeTatePoints.TwhopfSec
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -47,9 +51,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ExistsHenselianFlatOverPrimeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsBaseChangeGroupStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegularAtBaseChangeStatement
 
 @[expose] public section
 
@@ -58,7 +59,7 @@ open GlobalTheory.CompanionTheory.Ar.BT
 
 namespace PositivityTheory.HtPt.Htat.HopfOrderEqTop
 
-theorem btOrder_eq_top (hHenselian : type_of% @GlobalTheory.T.exists_henselian_flat_over_prime) (hBaseChange : type_of% @GlobalTheory.T.exists_base_change_group) (hRegular : type_of% @GlobalTheory.T.regular_at_base_change) (R : Type) [CommRing R] [IsDomain R] [IsIntegrallyClosed R] (T : Type) [CommGroup T]
+theorem btOrder_eq_top (hHenselian : type_of% @_root_.GlobalTheory.CompanionTheory.CommAlg.exists_flat_henselian_normal_over_prime) (hBaseChange : type_of% @_root_.GlobalTheory.CompanionTheory.Ar.BT.QFGroup.exists_isBaseChange_of_injective) (hRegular : type_of% @GlobalTheory.T.regular_at_base_change) (R : Type) [CommRing R] [IsDomain R] [IsIntegrallyClosed R] (T : Type) [CommGroup T]
     [Finite T] (Γ : QFGroup R T) (U : Γ.G.left.Opens) (hU : Γ.IsFinOpenSub U) :
     Γ.btOrder U = Γ.btOrder ⊤ := by
   ext f
@@ -83,18 +84,18 @@ theorem btOrder_eq_top (hHenselian : type_of% @GlobalTheory.T.exists_henselian_f
   haveI := Γ'.quasiCompact
   obtain ⟨U', hU'fin, hU'cl⟩ := PositivityTheory.HtPt.Twhopf.finite_part R' Γ'.G.left Γ'.G.hom
   have hU' := PositivityTheory.HtPt.Twhopf.finite_sub R' T Γ' U' hU'fin hU'cl
-  have hFU := GlobalTheory.T.isFinOpenSub_base_change R T Γ R' Γ' F hF U hU
+  have hFU := _root_.GlobalTheory.CompanionTheory.Ar.BT.isFinOpenSub_preimage_baseChange R T Γ R' Γ' F hF U hU
   have hle : F ⁻¹ᵁ U ≤ U' := PositivityTheory.HtPt.Twhopf.finite_le R' _ Γ'.G.hom _ _ hFU.finite hU'cl
   have h1 : (fun h => algebraMap R R' (f h)) ∈ Γ'.btSet (F ⁻¹ᵁ U) := by
     intro s x hx
     have := hRegular R T Γ R' Γ' F hF κ hκ _ x (hf s (F x) hx)
     simpa only [hκa] using this
-  rw [← PositivityTheory.HtPt.Twhopf.mem_order, ← GlobalTheory.T.btOrder_eq_of_le_of_isFinOpenSub R' T Γ' U' _ hU' hFU hle, PositivityTheory.HtPt.Twhopf.mem_order] at h1
+  rw [← PositivityTheory.HtPt.Twhopf.mem_order, ← _root_.GlobalTheory.CompanionTheory.Ar.BT.QFGroup.btOrder_eq_of_le R' T Γ' U' _ hU' hFU hle, PositivityTheory.HtPt.Twhopf.mem_order] at h1
   rw [← hg1]
   refine PositivityTheory.HtPt.Htat.bt_reg_descent R T Γ R' Γ' F hF hflat κ hκ _ g' ?_
   simpa only [hκa] using h1 t g' (hU'cl g' hg2)
 
 end PositivityTheory.HtPt.Htat.HopfOrderEqTop
 
-theorem PositivityTheory.HtPt.Htat.bt_sub_eq_top_of (hHenselian : type_of% @GlobalTheory.T.exists_henselian_flat_over_prime) (hBaseChange : type_of% @GlobalTheory.T.exists_base_change_group) (hRegular : type_of% @GlobalTheory.T.regular_at_base_change) : ∀ (R : Type) [CommRing R] [IsDomain R] [IsIntegrallyClosed R] (T : Type) [CommGroup T] [Finite T] (Γ : QFGroup R T) (U : Γ.G.left.Opens), Γ.IsFinOpenSub U → Γ.btOrder U = Γ.btOrder ⊤ :=
+theorem PositivityTheory.HtPt.Htat.bt_sub_eq_top_of (hHenselian : type_of% @_root_.GlobalTheory.CompanionTheory.CommAlg.exists_flat_henselian_normal_over_prime) (hBaseChange : type_of% @_root_.GlobalTheory.CompanionTheory.Ar.BT.QFGroup.exists_isBaseChange_of_injective) (hRegular : type_of% @GlobalTheory.T.regular_at_base_change) : ∀ (R : Type) [CommRing R] [IsDomain R] [IsIntegrallyClosed R] (T : Type) [CommGroup T] [Finite T] (Γ : QFGroup R T) (U : Γ.G.left.Opens), Γ.IsFinOpenSub U → Γ.btOrder U = Γ.btOrder ⊤ :=
   @PositivityTheory.HtPt.Htat.HopfOrderEqTop.btOrder_eq_top hHenselian hBaseChange hRegular

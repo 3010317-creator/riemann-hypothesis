@@ -1,7 +1,10 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.SeparatingAlgebras.StGlob
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsSupercuspidalTypeCharacterZmodPowStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsSubquotientDetRepParInd
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsIrreducibleIff
+public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Completion
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsSupercuspidalTypeCharacterZmodPow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,7 +51,7 @@ open MeasureTheory GroundTheory.Automorphic.Spherical UpperTheory.Gal.Gen
 theorem UpperTheory.Gal.Gen.tower_pf :
     UpperTheory.Gal.Gen.CongSub → UpperTheory.Gal.Gen.Tower := by
   intro hC E _ _ w a l hl hw ha N hN
-  obtain ⟨m, -, J', lam, hJo, hJc, hJN, hJtf, -, -⟩ := GlobalTheory.T.exists_supercuspidal_type_character_zmod_pow E w a l hl hw ha N hN 0
+  obtain ⟨m, -, J', lam, hJo, hJc, hJN, hJtf, -, -⟩ := _root_.GlobalTheory.CuspType.exists_type E w a l hl hw ha N hN 0
   obtain ⟨J, hT, hp⟩ := hC E w a l hl hw
   obtain ⟨s, hs⟩ := hT.small _ (hJo.mem_nhds J'.one_mem)
   refine ⟨fun n => J (s + n), ⟨fun n => hT.isOpen _, fun n => hT.compact _, ?_, ?_, ?_⟩, ?_, ?_, ?_⟩

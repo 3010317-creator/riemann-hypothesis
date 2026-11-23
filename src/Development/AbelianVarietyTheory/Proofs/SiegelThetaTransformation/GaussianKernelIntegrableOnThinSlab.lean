@@ -3,7 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
 public import Development.AbelianVarietyTheory.Definitions.ThetaValues.ExistsMemRowHighestTotalDegreeEqTwo
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExtendByZeroAntitoneOffBreak
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.IntegrableOnMinorFinStatement
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Mathlib.MeasureTheory.Integral.IntegrableOn
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.IntegrableOnMinorFin
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.KernInvariantSymmPos
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.MeasurePreservingMulLeft
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RealPlaceKernelHolomorphicWeightRowHighest
@@ -93,7 +96,7 @@ theorem integrableOn_place {r p q n : ℕ} (hr : p + q = r) (hp : p ≤ r) (hn :
         (A * Matrix.of x).map conj) a b -
         (Matrix.diagonal fun a : Fin r => ((sgn p (a : ℕ) : ℝ) : ℂ)) a b‖ < δ₀} volume := by
   subst hr
-  obtain ⟨δ₀, h0, h⟩ := GlobalTheory.T.integrableOn_inv_norm_det_pow_near_indefinite_gram p q n hn
+  obtain ⟨δ₀, h0, h⟩ := _root_.GlobalTheory.MinorInt.integrableOn_minor_fin p q n hn
   refine ⟨δ₀, h0, fun A hA => ?_⟩
   let e : Fin p ⊕ Fin q ≃ Fin (p + q) := finSumFinEquiv
   let L : (Fin (p + q) → Fin (p + q) → ℂ) ≃ₗ[ℂ] ((Fin p ⊕ Fin q) → (Fin p ⊕ Fin q) → ℂ) :=

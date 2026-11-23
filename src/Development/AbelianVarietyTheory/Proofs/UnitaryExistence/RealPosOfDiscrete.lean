@@ -3,8 +3,9 @@ module
 public import Formalism.LocalToGlobal.ProjectiveLattices.BetaAtSymm
 public import Mathlib.RingTheory.DiscreteValuationRing.Basic
 public import Mathlib.Topology.MetricSpace.Ultra.Basic
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.BetaAtAddLeftAndDiagEqTwoOrderStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.PsiCoordExistsUniqueUpToUnitLocalStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.BetaAtAddLeftAndDiagEqTwoOrder
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.PsiCoordExistsUniqueUpToUnitLocal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -160,8 +161,8 @@ theorem real_pos_of_discrete {X ι : Type} [AddCommGroup X] [Fintype ι] (b : Mo
 theorem betaAt_pos : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocalRing R] [CharZero R] [IsDiscreteValuationRing R] (Dg : DegData R (maximalIdeal R)) (C : Type) [NormedField C] [IsUltrametricDist C] (f : R →+* C) (p : ℕ), 1 < p → (∀ a ∈ maximalIdeal R, ‖f a‖ < 1) → (∀ a, ‖f a‖ ≤ 1) → (∀ χ r, PsiCoord Dg.toPre χ r → f r ≠ 0) → ∃ (ι : Type) (_ : Fintype ι) (b : Module.Basis ι ℤ Dg.toPre.X), ∀ x : ι → ℝ, x ≠ 0 → 0 < ∑ i, ∑ k, x i * x k * betaAt Dg.toPre f p (b i) (b k) := by
   intro R _ _ _ _ _ Dg C _ _ f p hp hm hle hne
   have hic : IsIntegrallyClosed R := inferInstance
-  obtain ⟨hadd, hsq⟩ := GlobalTheory.T.betaAt_add_left_and_diag_eq_two_order R Dg C f p hic hle hne
-  have hco := GlobalTheory.T.psiCoord_exists_unique_up_to_unit_local R Dg hic
+  obtain ⟨hadd, hsq⟩ := _root_.GlobalTheory.BetaAdd.main R Dg C f p hic hle hne
+  have hco := _root_.GlobalTheory.PsiCoordLocal.main R Dg hic
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible R
   have hp' : (1 : ℝ) < p := by exact_mod_cast hp
   have hunit : ∀ u : Rˣ, ‖f u‖ = 1 := by

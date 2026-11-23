@@ -2,12 +2,13 @@ module
 
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.CountData
 public import CompanionTheory.AutomorphicTheory.ThetaDilations.ProdRho
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ThetaFunctionAutomorphy
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ThetaFunctionModularity
+public import CompanionTheory.AutomorphicTheory.ThetaDilations.IsOpenCoset
 import CompanionTheory.AutomorphicTheory.ThetaDilations.SqPosOfNe
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ArchimedeanGaussianFourierStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ThetaFunctionAutomorphyStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ThetaFunctionModularityStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ThetaSeriesSummableStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.WeilRepresentationQuadraticDatumStatement
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ArchimedeanGaussianFourier
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ThetaSeriesSummable
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.WeilRepresentationQuadraticDatum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,7 +57,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import CompanionTheory.AutomorphicTheory.ThetaDilations.IsOpenCoset
 
 @[expose] public section
 
@@ -74,7 +74,7 @@ theorem int_fou {V : Type} [AddCommGroup V] [TopologicalSpace V] [MeasurableSpac
 
 theorem recip : ∀ (F : Type) [Field F] [NumberField F] [MeasurableSpace (A F)] [BorelSpace (A F)] (lf : Measure (A F)), lf.IsAddHaarMeasure → lf (Oh F) = 1 → ∀ ψ : AddChar (A F) ℂ, IsStdChar F ψ → ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (M : ℕ) (B : Matrix ι ι F) (ρ : InfinitePlace F → (F →+* ℝ)) (P : InfinitePlace F → Matrix ι ι ℝ), QSetup M B ρ P → ∀ φ : (ι → A F) → ℂ, SB φ → ∀ τ : InfinitePlace F → ℂ, (∀ w, 0 < (τ w).im) → ∀ b : F, b ≠ 0 → cG B ρ P τ * eiTerm ψ lf B ρ P (fou (chiB ψ (Bf B)) (muF B lf) φ) (fun w => -(τ w)⁻¹) b = eiTerm ψ lf B ρ P φ τ (-b⁻¹) := by
   intro F _ _ _ _ lf hlf h1 ψ hψ ι _ _ M B ρ P hQ φ hφ τ hτ b hb
-  have H := GlobalTheory.T.weil_representation_quadratic_datum F lf hlf h1 ψ hψ ι B hQ.2.2.1 hQ.2.2.2.1
+  have H := _root_.GlobalTheory.CompanionTheory.SW.Core.SelfDual.naQuad F lf hlf h1 ψ hψ ι B hQ.2.2.1 hQ.2.2.2.1
   have hD := H.2.2.2.2.2
   set m : ℝ := |((Algebra.norm ℚ (b⁻¹ : F) : ℚ) : ℝ)|⁻¹ ^ M with hm
   have hm0 : 0 < m := pow_pos (inv_pos.2 (abs_pos.2 (by exact_mod_cast Algebra.norm_ne_zero_iff.2 (inv_ne_zero hb)))) M
@@ -91,10 +91,10 @@ theorem recip : ∀ (F : Type) [Field F] [NumberField F] [MeasurableSpace (A F)]
     simp [opU, opD, uA, c]
     ring
   have hO : IsOrth B ρ 1 fun _ => 1 := ⟨by simp, fun _ => by simp⟩
-  have hU := fun φ τ => (GlobalTheory.T.theta_function_modularity F ψ hψ ι M B ρ P hQ _ _ hO φ τ)
-  have hW := GlobalTheory.T.theta_function_automorphy F lf hlf h1 ψ hψ ι M B ρ P hQ _ _ hO
-  have hG := GlobalTheory.T.archimedean_gaussian_fourier F ι M B ρ P hQ
-  obtain ⟨φ₀, hφ₀, hne⟩ := (GlobalTheory.T.theta_series_summable F ι M B ρ P hQ _ _ hO τ hτ).2
+  have hU := fun φ τ => (_root_.GlobalTheory.CompanionTheory.SW.ThetaUD.main F ψ hψ ι M B ρ P hQ _ _ hO φ τ)
+  have hW := _root_.GlobalTheory.CompanionTheory.SW.ThW.thetaInvariance F lf hlf h1 ψ hψ ι M B ρ P hQ _ _ hO
+  have hG := _root_.GlobalTheory.CompanionTheory.SW.GaussFou.gauss_fourier F ι M B ρ P hQ
+  obtain ⟨φ₀, hφ₀, hne⟩ := (_root_.GlobalTheory.CompanionTheory.SW.ThetaSum.theta_summable_and_ne_zero F ι M B ρ P hQ _ _ hO τ hτ).2
   have hρ : ∀ w, ((ρ w b : ℝ) : ℂ) ≠ 0 := fun w => by exact_mod_cast (map_ne_zero (ρ w)).2 hb
   have him : ∀ {σ : InfinitePlace F → ℂ}, (∀ w, 0 < (σ w).im) → ∀ w, 0 < (-(σ w)⁻¹).im := fun h w => by
     rw [Complex.neg_im, Complex.inv_im, neg_div, neg_neg]

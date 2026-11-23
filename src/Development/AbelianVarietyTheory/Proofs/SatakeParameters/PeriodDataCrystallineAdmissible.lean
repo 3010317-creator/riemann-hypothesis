@@ -2,10 +2,13 @@ module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.LocCoh
 public import Mathlib.RepresentationTheory.Invariants
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LengthIntegralCocyclesRationalCoboundariesLeStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LengthQuotientSmulLeFinrankOfEmbeddingStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LengthQuotientSmulSupLeIntermediateStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LengthQuotientSpanPowLeMulLengthStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LengthIntegralCocyclesRationalCoboundariesLe
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Mathlib.RingTheory.Length
+public import Mathlib.RingTheory.Localization.FractionRing
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LengthQuotientSmulLeFinrankOfEmbedding
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LengthQuotientSmulSupLeIntermediate
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LengthQuotientSpanPowLeMulLength
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,8 +68,8 @@ theorem length_H1fT_modPow_le : ∀ {G : Type} [Group G] [TopologicalSpace G] {Q
     intro c hc g
     exact (Submodule.mem_pi.mp hc.1.2) g (Set.mem_univ g)
   have hZf : ∀ c ∈ Z, c ∈ finiteCocycles PD ρ := fun c hc => hc.2
-  have h1 := GlobalTheory.T.length_quotient_smul_sup_le_intermediate O (G → V) Z (latticeCoboundaries L) B' a hBB
-  have h2 := GlobalTheory.T.length_integral_cocycles_rational_coboundaries_le L Z hZT
+  have h1 := _root_.GlobalTheory.length_quotient_smul_sup_le O (G → V) Z (latticeCoboundaries L) B' a hBB
+  have h2 := _root_.GlobalTheory.cocycle_bound_length_le L Z hZT
 
   let ψ0 : ↥Z →ₗ[O] ↥(finiteCocycles PD ρ) :=
     { toFun := fun c => ⟨c.1, hZf c.1 c.2⟩
@@ -84,8 +87,8 @@ theorem length_H1fT_modPow_le : ∀ {G : Type} [Group G] [TopologicalSpace G] {Q
   have hf : Function.Injective f := by
     rw [← LinearMap.ker_eq_bot]
     exact Submodule.ker_liftQ_eq_bot _ _ _ hker.le
-  have h3 := GlobalTheory.T.length_quotient_smul_le_finrank_of_embedding O LL (FiniteCohomology PD ρ) _ f hf a
-  have h4 := GlobalTheory.T.length_quotient_span_pow_le_mul_length O ((PD.p : ℕ) : O) n
+  have h3 := _root_.GlobalTheory.length_quotient_smul_range_le_finrank_mul O LL (FiniteCohomology PD ρ) _ f hf a
+  have h4 := _root_.GlobalTheory.main O ((PD.p : ℕ) : O) n
   have hl : lenOl PD (O := O) = Module.length O (O ⧸ Ideal.span {((PD.p : ℕ) : O)}) := rfl
   calc _ ≤ _ := h1
     _ ≤ (finrank LL (FiniteCohomology PD ρ) : ℕ∞) * Module.length O (O ⧸ Ideal.span {a}) +

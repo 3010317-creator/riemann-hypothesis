@@ -8,16 +8,19 @@ public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeSize
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudesRelevantCellMonomialRepStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselMapPairingBoundStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselPeriodPositivityStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BlockProjectionBesselStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DegreeNearParameterBoundStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUnitaryTorusScaleBesselCharacter
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagWedgeFixedAndLengthEqProdDistancesStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FormalDegreeProportional
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarLieIsHaarOnUnipotentRadicalStatement
+public import Development.AbelianVarietyTheory.Definitions.Jets.SideFam
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BlockProjectionBessel
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DegreeNearParameterBound
+public import Development.AbelianVarietyTheory.Definitions.Jets.SumIoPrAlt
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagWedgeFixedAndLengthEqProdDistances
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassBoundLowTypesAltBis
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MomentPieriNumericsOfSizeHypsStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PairingEqLeadingMinor
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TorusCommutesWithUnipotentStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.TensorDecompositionInjectiveParameters
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUnitaryTorusScaleBesselCharacter
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FormalDegreeProportional
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarLieIsHaarOnUnipotentRadicalStatement
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MomentPieriNumericsOfSizeHyps
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.AbsCoordLeOfLOneNormLe
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DiscreteSeriesUnitarySmoothBasic
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FamilySetupBesselGrowth
@@ -27,7 +30,6 @@ import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LenEqOfUnitriangular
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NumericalFamilyShapeGaps
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.PieriTensorDecomposition
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.QuotientMeasureAeMemAndMeasurableBesselModel
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.TensorDecompositionInjectiveParameters
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.TensorMomentEstimate
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.BesselNeZeroOfCyclicOrbit
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.ContinuousMulMt
@@ -317,10 +319,10 @@ theorem line_of_tens (hH : Hyps) (hKF : AmpKF) (hCC : CellConv) (D : D7) {τ w w
   have hc0 : ((2 * D.host.ka / ((D.host.g 0 : ℝ) * (D.host.g 1 : ℝ)) : ℝ) : ℂ) ≠ 0 := by
     rw [Complex.ofReal_ne_zero, mul_div_assoc]
     exact (mul_pos two_pos hka).ne'
-  have key := GlobalTheory.T.block_projection_bessel hH hKF hCC D.R.k D.R.rS _ _ (cmp l) (cmp l (Hpk D.R.k D.R.rS)) l
+  have key := _root_.GlobalTheory.CellPieri.amp_pieri hH hKF hCC D.R.k D.R.rS _ _ (cmp l) (cmp l (Hpk D.R.k D.R.rS)) l
     (toBessel D τ w w' θ W lam A₀ hW hA₀ hT hT') R RI io pr ep lam lamI h W.μG _ _ B B' BI BI' w0 wI κ₀ κ₁
     hDS hg hDI hok hgc hc0 ENNReal.ofReal_ne_top hW.2.2.2.2.2.2.1 (GlobalTheory.WedgeFRep.isFRep_cmp _ _ l) hTH
-    (GlobalTheory.T.flagWedge_fixed_and_length_eq_prod_distances _ _ l hl W.z hW.2.2.1).1 (GlobalTheory.T.flagWedge_fixed_and_length_eq_prod_distances _ _ l hl W.z' hW.2.2.2.1).1 e1 e2
+    (_root_.GlobalTheory.FlagPartialWedge.fixes_partial_wedge_and_length _ _ l hl W.z hW.2.2.1).1 (_root_.GlobalTheory.FlagPartialWedge.fixes_partial_wedge_and_length _ _ l hl W.z' hW.2.2.2.1).1 e1 e2
     (fun I => ⟨eI1 I, eI2 I⟩) n1 n2 hw0 hwI hκ g₀ μR ν₀ ν hcell
   rw [GlobalTheory.PrincipalMinorExterior.pairing_eq_leading_minor, hd _ (ne_zero_of_low hw0)] at key
   have hDm : DminN W.z W.z' g₀ l =
@@ -416,7 +418,7 @@ theorem side_kappa (hH : Hyps) (ht : t ∈ GG k r) {lam u u' b bv ga h F F' l₁
     obtain ⟨v, hv, hv0⟩ := hnz
     exact ⟨_, sig_sm hU (inv_mem ht) (hb.2.2.2.2.1 v (hb.2.2.2.2.2.2.1 v hv)), hv0⟩
   obtain ⟨⟨κ₁, hκ⟩, hdual⟩ := GlobalTheory.KappaDual.kappa_dual hH k r _ _ _ _ l _ _ io pr ep _ _ _ Wp z π u μW μN' μG _ _ (l₁ ν)
-    hR hRI (GlobalTheory.WedgeFRep.isFRep_cmp k r l) hT hS.2.2.1 (GlobalTheory.T.flagWedge_fixed_and_length_eq_prod_distances k r l hl z hS.2.2.1.1).1
+    hR hRI (GlobalTheory.WedgeFRep.isFRep_cmp k r l) hT hS.2.2.1 (_root_.GlobalTheory.FlagPartialWedge.fixes_partial_wedge_and_length k r l hl z hS.2.2.1.1).1
     (hS.2.2.2 ν hν0).1 hnz' I (m₁ _) (hS'.2.2.2 _ (firstNorm_add_subsetIndicator_le hνl I)).1
   have hnI : κ₁ ≠ 0 → NzOn (F' (ν + eZ I.1)) (m₁ (ν + eZ I.1)) := by
     intro h0
@@ -548,7 +550,7 @@ theorem scale_le {b v g Cg : ℝ} (hb : Real.exp 1 < b) (hv : 1 ≤ v) (hvb : 2 
 theorem minor_line : Hyps → AmpKF → CellConv → ∀ Cg cb Cu cT CT C0 C1 : ℝ, ∃ C : ℝ, ∀ Cn : ℝ, ∃ m₀ : ℝ, ∀ (D : D7) (large₂ : SizeData₂ D) (C' Cl : ℝ), 1000 ≤ Cl → Big D large₂ Cl m₀ → cdScaleTie D → HypZ D large₂ C' Cl Cg cb Cu cT CT C0 → ∀ τ w w', HypTT D w w' → ∀ θ, normWin D large₂ C1 θ → ∀ W, GoodW D τ w w' θ W → ∀ lam', l1dist lam' (lamD D τ) ≤ Cn * D.R.k * (D.R.m : ℝ) ^ 3 → ∀ A₀ : LocS W, GoodS D lam' A₀ → ∀ l : ℕ, l ≤ D.R.rS + 1 → ∃ s : ℝ, (s = 1 ∨ s = -1) ∧ ∀ AI : Finset (Fin (2 * D.R.rS + D.R.k + 1)) → LocS W, (∀ I, I.card = l → (∃ A : LocS W, GoodS D (lam' + s • epsI I) A) → GoodS D (lam' + s • epsI I) (AI I)) → ∃ a : Finset (Fin (2 * D.R.rS + D.R.k + 1)) → ℂ, (∀ I, I.card = l → (¬ ∃ A : LocS W, GoodS D (lam' + s • epsI I) A) → a I = 0) ∧ (∑ I ∈ univ.filter (fun I => I.card = l), ‖a I‖) ≤ large₂.sc.b ^ (C * (D.R.m : ℝ) ^ 2) ∧ ∀ μsec, IsSection D.R.k D.R.rS W.z W.z' μsec → ∀ γ p, RelPt D W.z W.z' γ p → ∀ θ', normWin D large₂ C1 θ' → ∀ νR, RMeas D W γ θ' νR → DminN W.z W.z' γ l • jhUnit D w w' A₀ μsec νR γ = ∑ I ∈ univ.filter (fun I => I.card = l), a I • jhUnit D w w' (AI I) μsec νR γ := by
   intro hH hKF hCC Cg cb Cu cT CT C0 C1
   refine ⟨2 * (2 * Cg + 2) + 2 * (|CT| + 20 * max 2 Cu) + 2 * max 2 Cu, fun Cn => ?_⟩
-  obtain ⟨m₁, hJ⟩ := GlobalTheory.T.exists_mmv_eq_const_div_deg_of_near_parameter hH hKF hCC Cg cb Cu cT CT C0 C1 (Cn + 1)
+  obtain ⟨m₁, hJ⟩ := _root_.GlobalTheory.Amp.OpenCellNorm.norm_eq_const_div_deg hH hKF hCC Cg cb Cu cT CT C0 C1 (Cn + 1)
   refine ⟨max m₁ (Cn + 1), fun D large₂ C' Cl hCl hBig hcd hZ τ w w' hTT θ hθw W hW lam' hlam A₀ hA₀ l hl =>
     ⟨1, Or.inl rfl, fun AI hAI => ?_⟩⟩
   classical
@@ -572,7 +574,7 @@ theorem minor_line : Hyps → AmpKF → CellConv → ∀ Cg cb Cu cT CT C0 C1 : 
   have hm2 : (D.R.m : ℝ) ^ 2 ≤ D.R.k * (D.R.m : ℝ) ^ 3 := by
     have : (D.R.m : ℝ) ^ 2 ≤ (D.R.m : ℝ) ^ 3 := pow_le_pow_right₀ (by linarith) (by norm_num)
     nlinarith [pow_nonneg (show (0 : ℝ) ≤ D.R.m by linarith) 3]
-  obtain ⟨hNum, hgc, heps⟩ := GlobalTheory.T.momentPieriNumerics_of_sizeHyps D large₂ C' Cl Cg cb Cu cT CT C0 hZ hCl τ w
+  obtain ⟨hNum, hgc, heps⟩ := _root_.GlobalTheory.SizeNum.num_of_size D large₂ C' Cl Cg cb Cu cT CT C0 hZ hCl τ w
     (fun n => if h : n - 1 < D.R.k then uS D w τ ⟨n - 1, h⟩ else 0) (fun i => by simp)
   obtain ⟨⟨hbv, hbv', hnb, -, hok⟩, hnum⟩ := GlobalTheory.NumFam.num_fam _ _ _ _ _ _ _ _ _ hNum
   obtain ⟨ν, rfl⟩ : ∃ ν : Fin (2 * D.R.rS + D.R.k + 1) → ℤ, lam' = fun a => lamD D τ a + (ν a : ℝ) := by

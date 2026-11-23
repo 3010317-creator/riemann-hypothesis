@@ -6,9 +6,10 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticInt
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRes
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsArithVarOfBlockAlgebraic
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MultihomogeneousLiftToJoinStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MultihomogeneousNonvanishingOnJoinStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SncModelEmbeddedLogResolutionStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsSncModel
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MultihomogeneousLiftToJoin
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MultihomogeneousNonvanishingOnJoin
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SncModelEmbeddedLogResolution
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PBirationalModelExists
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -137,7 +138,7 @@ theorem resExists_of_resK : ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKSt
     push Not at hcon
     exact hJP (Ideal.span_le.mpr fun f hf => hcon f (Ideal.subset_span hf) (hS f hf))
   obtain ⟨β', b', M, y', J₁, hβ', hβ'P, hzero, hy', hfield, hJ₁h, hJ₁, hsnc, hz, hG⟩ :=
-    GlobalTheory.T.multihomogeneous_lift_to_join hRes K ι Ω y e β b hP hβ hβP
+    _root_.GlobalTheory.CompanionTheory.Ar.Giv.exists_snc_model_iso hRes K ι Ω y e β b hP hβ hβP
   have hy : ∀ k, ∃ i, y ⟨k, i⟩ ≠ 0 := fun k => by
     obtain ⟨i, hi⟩ := hP.2.1.2.2 k
     exact ⟨i, coord_ne_zero y ⟨k, i⟩ hi⟩
@@ -153,7 +154,7 @@ theorem resExists_of_resK : ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKSt
     · rw [hcomp, hfield]
       intro t ht
       exact isAlgebraic_algebraMap (⟨t, ht⟩ : blockFnField y)
-  obtain ⟨R, hR⟩ := GlobalTheory.T.snc_model_embedded_log_resolution (K ⊕ Unit) (joinIdx ι fun _ : Unit => Fin M) Ω (joinVec y y') e J₁
+  obtain ⟨R, hR⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.SncRes.isEmbedded_of_isSncModel (K ⊕ Unit) (joinIdx ι fun _ : Unit => Fin M) Ω (joinVec y y') e J₁
     harith hJ₁h hJ₁ hsnc
   have hγ := homog_mul hβ hβ'
   have hγP : β * β' ∉ mCoordIdeal y := fun h => (hprime.mem_or_mem h).elim hβP hβ'P
@@ -166,7 +167,7 @@ theorem resExists_of_resK : ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKSt
     exact ⟨_, hγ⟩
   · rw [Ideal.span_singleton_le_iff_mem]
     exact hγP
-  · refine GlobalTheory.T.multihomogeneous_nonvanishing_on_join K ι Ω y e M y' J₁ R (β * β') (b + b') hR hy' hy hγ hγP ?_ ?_
+  · refine _root_.GlobalTheory.CompanionTheory.Ar.Giv.anLogRes_of_embedded_join K ι Ω y e M y' J₁ R (β * β') (b + b') hR hy' hy hγ hγP ?_ ?_
     · intro z hzm h0
       apply hz z hzm
       rw [evC_rename_inl] at h0 ⊢

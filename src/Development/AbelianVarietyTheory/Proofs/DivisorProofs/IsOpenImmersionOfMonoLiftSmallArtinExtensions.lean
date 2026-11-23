@@ -2,14 +2,17 @@ module
 
 public import Mathlib.AlgebraicGeometry.Noetherian
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsStalkRetractionOfSmallLiftingStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatOfLocalRetractionsModMaximalIdealPowStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ResidueFieldMapSurjectiveOfMonoStatement
+public import Mathlib.AlgebraicGeometry.ResidueField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsStalkRetractionOfSmallLifting
+public import Mathlib.RingTheory.RingHom.Flat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatOfLocalRetractionsModMaximalIdealPow
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ResidueFieldMapSurjectiveOfMono
+public import Mathlib.AlgebraicGeometry.Morphisms.FlatMono
+public import Mathlib.AlgebraicGeometry.Morphisms.Flat
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.NonemptyMumfordTorusQuotientTower
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
-public import Mathlib.AlgebraicGeometry.Morphisms.FlatMono
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
@@ -48,7 +51,6 @@ import Development.AbelianVarietyTheory.Definitions.Divisors.SameIdIff
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSingle
 import Development.AbelianVarietyTheory.PublishedTheorems.AbelianLaws.PrincipalPolarisationOneSection
 import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsAdditiveOfUniversal
-public import Mathlib.AlgebraicGeometry.Morphisms.Flat
 
 @[expose] public section
 
@@ -78,8 +80,8 @@ theorem isOpenImmersion_of_lift : ∀ {X Y : Scheme.{0}} (f : X ⟶ Y) [IsLocall
   haveI : IsLocallyNoetherian X := LocallyOfFiniteType.isLocallyNoetherian f
   have : Flat f := by
     refine (Flat.iff_flat_stalkMap f).2 fun x => ?_
-    have hres := GlobalTheory.T.residueFieldMap_surjective_of_mono' f x
-    refine GlobalTheory.T.flat_of_local_retractions_mod_maximalIdeal_pow (f.stalkMap x).hom (fun n => GlobalTheory.T.exists_stalk_retraction_of_small_lifting f hlift x hres n) ?_
+    have hres := _root_.GlobalTheory.residueFieldMap_surjective_of_mono f x
+    refine _root_.GlobalTheory.flat_of_retractions_mod_pow (f.stalkMap x).hom (fun n => _root_.GlobalTheory.SmallLift.exists_retraction f hlift x hres n) ?_
     intro n g₁ g₂ h₁ h₂ h
     have := stalk_hom_ext_of_mono f x
       (CommRingCat.of (X.presheaf.stalk x ⧸ maximalIdeal (X.presheaf.stalk x) ^ (n + 1)))

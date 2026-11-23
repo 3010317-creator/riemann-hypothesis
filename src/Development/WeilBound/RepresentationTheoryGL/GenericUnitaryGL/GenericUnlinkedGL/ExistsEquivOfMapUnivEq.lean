@@ -6,11 +6,12 @@ public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.SegmentCuspLines.ProdIrrFiniteLength
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.ZelevinskyCosocles.GKLocal
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NontrivialTwJacquetOfSurjective
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalSupportRealisedByProductStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalSwapProductGenericStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GelfandKazhdanLocalStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerRankExtensionBoundStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerRankProductLeOneStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalSupportRealisedByProduct
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalSwapProductGeneric
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GelfandKazhdanLocal
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerRankExtensionBound
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerRankProductLeOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,17 +77,17 @@ theorem genericUnique_of_perm {k : Type} [Field k] [ValuativeRel k] [Topological
   intro N s V W _ _ _ _ π σ hπ hσ gπ gσ
   obtain ⟨ψ, hψc, hψ1, gπψ⟩ := gπ
   have gσψ : IsGenericFor ψ σ := (isGeneric_iff_isGenericFor hψc hψ1 σ).1 gσ
-  obtain ⟨h, x, hd, hxs, hxc, hπx⟩ := GlobalTheory.T.cuspidal_support_realised_by_product k π s hπ
-  obtain ⟨h', y, hd', hys, hyc, hσy⟩ := GlobalTheory.T.cuspidal_support_realised_by_product k σ s hσ
+  obtain ⟨h, x, hd, hxs, hxc, hπx⟩ := _root_.GlobalTheory.CompanionTheory.GenSupp.hasSupport_std k π s hπ
+  obtain ⟨h', y, hd', hys, hyc, hσy⟩ := _root_.GlobalTheory.CompanionTheory.GenSupp.hasSupport_std k σ s hσ
   obtain ⟨e, he⟩ := exists_equiv_of_map_univ_eq x y (hxs.trans hys.symm)
   have hh : h = h' := by simpa using Fintype.card_congr e
   subst hh
   have hfun : (fun a => y (e a)) = x := funext he
   subst hfun
   have hσx : IsSubquotient σ (prodIrr (fun a => y (e a)) hd) :=
-    hP hA (GlobalTheory.T.gelfand_kazhdan_local hA) hH hW hC ψ hψc hψ1 y hyc hd' e hd σ hσ.isSmooth hσ.isIrreducible gσψ hσy
-  exact GlobalTheory.T.whittaker_rank_extension_bound k ψ hψc N (prodIrr (fun a => y (e a)) hd) π σ (isSmooth_prodIrr _ hd)
-    (GlobalTheory.T.whittaker_rank_product_le_one k hH hW ψ hψc hψ1 h N _ hd) hπ.isIrreducible hσ.isIrreducible hπx hσx gπψ gσψ
+    hP hA (_root_.GlobalTheory.CompanionTheory.GenGK.gkLocal_gen hA) hH hW hC ψ hψc hψ1 y hyc hd' e hd σ hσ.isSmooth hσ.isIrreducible gσψ hσy
+  exact _root_.GlobalTheory.CompanionTheory.GenUniq.nonempty_equiv_of_generic_subquotients k ψ hψc N (prodIrr (fun a => y (e a)) hd) π σ (isSmooth_prodIrr _ hd)
+    (_root_.GlobalTheory.CompanionTheory.RgGu.rank_twJacquet_prodIrr_le_one k hH hW ψ hψc hψ1 h N _ hd) hπ.isIrreducible hσ.isIrreducible hπx hσx gπψ gσψ
 
 theorem perm_abs {α : Type 1} {h : ℕ} (P : (Fin h → α) → Prop)
     (hP : ∀ (y : Fin h → α) (j : ℕ) (hj : j + 1 < h), P y → P fun a => y (Equiv.swap ⟨j, by omega⟩ ⟨j + 1, hj⟩ a))
@@ -111,7 +112,7 @@ theorem perm_of_swap : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpa
     rintro y j hj ⟨c, e, H⟩
     have e' : ∑ a, (y (Equiv.swap ⟨j, by omega⟩ ⟨j + 1, hj⟩ a)).1 = N :=
       (Equiv.sum_comp (Equiv.swap ⟨j, by omega⟩ ⟨j + 1, hj⟩) fun a => (y a).1).trans e
-    exact ⟨fun a => c _, e', @GlobalTheory.T.cuspidal_swap_product_generic k _ _ _ _ hA hG hH hW hC ψ hc h1 h N y c e j hj e' W _ _ σ hs hi hg H⟩
+    exact ⟨fun a => c _, e', @_root_.GlobalTheory.CompanionTheory.GenSwap.isSubquotient_prodIrr_swap k _ _ _ _ hA hG hH hW hC ψ hc h1 h N y c e j hj e' W _ _ σ hs hi hg H⟩
   obtain ⟨-, e, H⟩ := perm_abs P step x ⟨hx, hd, hσ⟩ τ
   exact H
 

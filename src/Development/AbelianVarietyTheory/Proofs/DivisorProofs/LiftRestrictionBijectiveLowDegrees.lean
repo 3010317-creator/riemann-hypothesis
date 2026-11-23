@@ -1,13 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DivPowerCompatTwoFormDerivativeCompOneForm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BijectiveRestrictionFourTermComplexOfExhaustionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystallineCohomologyComputedOnAffinePairsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystallineForgetFormsBijectiveSiteAndPairsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystallineFormsRestrictionAffineLiftBijectiveStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FilProperties
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PullbackBijectiveDegreesOneTwo
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BijectiveRestrictionFourTermComplexOfExhaustion
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystallineCohomologyComputedOnAffinePairs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystallineForgetFormsBijectiveSiteAndPairs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystallineFormsRestrictionAffineLiftBijective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.H1BijectiveOfExhaustingFiltrationStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomSpecPointsLevelsStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FilProperties
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomSpecPointsLevels
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothSectionsMonoReductionAffineInf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -88,7 +89,7 @@ theorem resMap_comp_bij12 {C C' : Type 1} {C'' : Type} [Category.{0} C] [Categor
 
 theorem Lift.resMap_toE_pullbackBijectiveDegreesOneTwo (D : Data) (Λ : Lift D) :
     (((KK D.κ D.t).res (pE D.κ D.t D.i)).resMap Λ.toE).PullbackBijectiveDegreesOneTwo := by
-  obtain ⟨N₀, hN₀⟩ := (GlobalTheory.T.hom_spec_points_levels D Λ).2.2.2
+  obtain ⟨N₀, hN₀⟩ := (_root_.GlobalTheory.PDForm.Lift.hom_spec D Λ).2.2.2
   have mono : ∀ m n T, m ≤ n → LevE D.κ D.t D.i m T → LevE D.κ D.t D.i n T := fun m n T hmn hT ↦
     le_bot_iff.1 (((fil_properties _ _ T.obj.T.δ).2.2.1 m n hmn).trans (le_of_eq hT))
   have exh : ∀ T, ∃ n, LevE D.κ D.t D.i n T := fun T ↦ (isDPNilpotent_iff_exists_isLevel T.obj.T.δ).1 T.obj.T.nil
@@ -97,13 +98,13 @@ theorem Lift.resMap_toE_pullbackBijectiveDegreesOneTwo (D : Data) (Λ : Lift D) 
         ((LevE D.κ D.t D.i N).lift Λ.toE h)).Bij := by
     intro N hN
     obtain ⟨n, rfl⟩ : ∃ n, N = n + 1 := ⟨N - 1, by omega⟩
-    exact ⟨fun U ↦ hN₀ _ (by omega) U, GlobalTheory.T.crystallineForms_restriction_affineLift_bijective D Λ n _⟩
-  exact ⟨GlobalTheory.T.h1_resMap_bijective_of_exhausting_properties _ _ _ _ Λ.toE (N₀ + 1) mono exh lev, GlobalTheory.T.bijective_restriction_fourTermComplex_of_exhaustion _ _ _ _ Λ.toE (N₀ + 1) mono exh lev⟩
+    exact ⟨fun U ↦ hN₀ _ (by omega) U, _root_.GlobalTheory.PDForm.levLift_resMap_bij D Λ n _⟩
+  exact ⟨GlobalTheory.T.h1_resMap_bijective_of_exhausting_properties _ _ _ _ Λ.toE (N₀ + 1) mono exh lev, _root_.GlobalTheory.CxTowerTwo.tower_two _ _ _ _ Λ.toE (N₀ + 1) mono exh lev⟩
 
 theorem Lift.resMap_lift_pullbackBijectiveDegreesOneTwo : ∀ (D : Data) (Λ : Lift D), ((KK D.κ D.t).resMap Λ.L).PullbackBijectiveDegreesOneTwo := by
   intro D Λ
-  have hp := GlobalTheory.T.fnMap_pullbackBijective12_kk_and_res D.R D.I D.κ _ D.t _ D.i
-  have hg := GlobalTheory.T.pullbackBijective12_resMap_of_affine_inter D.R D.I D.κ _ D.t _ D.i D.smooth_mono_inf.2.2
+  have hp := _root_.GlobalTheory.PDForm.crystalline_forget_forms_bijective_site_and_pairs D.R D.I D.κ _ D.t _ D.i
+  have hg := _root_.GlobalTheory.PDForm.crystallineCohomology_computed_on_affinePairs D.R D.I D.κ _ D.t _ D.i D.smooth_mono_inf.2.2
   exact resMap_comp_bij12 (KK D.κ D.t) (pE D.κ D.t D.i) Λ.toE
     (resMap_bij12_of_fnMap _ _ hp.1 hp.2 hg) (Lift.resMap_toE_pullbackBijectiveDegreesOneTwo D Λ)
 

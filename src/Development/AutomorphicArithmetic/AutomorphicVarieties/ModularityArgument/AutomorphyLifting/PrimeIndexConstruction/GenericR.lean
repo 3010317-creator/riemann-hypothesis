@@ -5,14 +5,14 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.Unipote
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.RealCusp
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ContinuousOfIsOpenStab
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFundamentalDomainMassOneCocompactLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsStandardAdelicAddCharStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFundamentalDomainMassOneCocompactLattice
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsStandardAdelicAddChar
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsGenericOfIsLocComp
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsMirabolicWhittakerStageOfIsCuspForm
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalUpperUnipotentAdelicUpperUnipotent
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.QuotientAverageMapLatticeEquivStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SetIntegralFundamentalDomainEqMassMulAverageStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WhittakerLawUpperTriangularUnipotentAdelicStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.QuotientAverageMapLatticeEquiv
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SetIntegralFundamentalDomainEqMassMulAverage
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WhittakerLawUpperTriangularUnipotentAdelic
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EquivOfISupRange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -83,7 +83,7 @@ theorem good_of_isCuspFormR (a : ℕ) (ψ : AddChar (Ad F) ℂ) (φ : TR.Sm F a)
       ⟨hper.1.comp (blkIxHomeo r).continuous, fun γ hγ x => by
         simp only [map_add (f := _)]
         exact hper.2 _ ((blkIxHomeo_mem r γ).2 hγ) _⟩
-    have key := GlobalTheory.T.quotientAverage_map_lattice_equiv _ _ (ratN F a r) (ratV F _) (isCoLat_ratV F (BlockIx a r))
+    have key := _root_.GlobalTheory.CuspGeneric.avg_equiv _ _ (ratN F a r) (ratV F _) (isCoLat_ratV F (BlockIx a r))
       (isCoLat_ratV F _) (blkIxHomeo r) (blkIxHomeo_mem r) _ hper
     rw [← key]
     have hfun : (fun x => φ.1 (blkU (blkIxHomeo r x) * g)) = fun x => φ.1 (unip x * g) :=
@@ -91,8 +91,8 @@ theorem good_of_isCuspFormR (a : ℕ) (ψ : AddChar (Ad F) ℂ) (φ : TR.Sm F a)
     rw [hfun] at hper2 ⊢
     letI : MeasurableSpace (BlockIx a r → Ad F) := borel _
     haveI : BorelSpace (BlockIx a r → Ad F) := ⟨rfl⟩
-    obtain ⟨μ, 𝓕, hμ, hF, h1⟩ := GlobalTheory.T.exists_fundamentalDomain_mass_one_cocompactLattice _ (ratN F a r) (isCoLat_ratV F (BlockIx a r))
-    obtain ⟨-, -, -, hint⟩ := GlobalTheory.T.setIntegral_fundamentalDomain_eq_mass_mul_average _ _ (isCoLat_ratV F (BlockIx a r)) μ 𝓕 hμ hF _ hper2
+    obtain ⟨μ, 𝓕, hμ, hF, h1⟩ := _root_.GlobalTheory.CuspGeneric.exists_fundamentalDomain_mass_one _ (ratN F a r) (isCoLat_ratV F (BlockIx a r))
+    obtain ⟨-, -, -, hint⟩ := _root_.GlobalTheory.CuspGeneric.setIntegral_eq_mass_mul_avg _ _ (isCoLat_ratV F (BlockIx a r)) μ 𝓕 hμ hF _ hper2
     have hc := h.2 r hr hra' μ 𝓕 hμ hF g
     rw [hint, h1] at hc
     simp only [ENNReal.toReal_one, Complex.ofReal_one, one_mul] at hc
@@ -139,7 +139,7 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 theorem isGeneric_of_isLocCompR (a : ℕ) (P : TR.CuspSub F a) (w : HeightOneSpectrum (𝓞 F))
     (σ : SmIrr (GL (Fin a) (w.adicCompletion F))) (hσ : P.IsLocComp w σ) : GlobalTheory.LocGL.IsGeneric σ.ρ := by
   obtain ⟨f, hf0, hf⟩ := hσ
-  obtain ⟨ψ, hψ⟩ := GlobalTheory.T.exists_standardAdelicAddChar F
+  obtain ⟨ψ, hψ⟩ := _root_.GlobalTheory.CuspGeneric.exists_stdPsi F
   have hg : ∀ v, Good ψ (a - 1) (f v).1.1 := fun v => good_of_isCuspFormR a ψ (f v).1 (P.cusp _ (f v).2)
   have h0 : a - 1 < a ∨ a - 1 = 0 := by omega
   obtain ⟨v₀, hv₀⟩ : ∃ v, f v ≠ 0 := by
@@ -171,7 +171,7 @@ theorem isGeneric_of_isLocCompR (a : ℕ) (P : TR.CuspSub F a) (w : HeightOneSpe
     obtain ⟨u1, u2⟩ := (GlobalTheory.SmGL.mem_unipB _).1 u.2
     obtain ⟨t1, t2, t3⟩ := locTri_adelicR a w u u1 u2
     have hlw := (whit_good hψ (a - 1) h0 (hg v)).1.law
-    have := GlobalTheory.T.whittakerLaw_upperTriangularUnipotent_adelic F a ψ _ (fun k hk => hlw k hk) _ t1 t2 h
+    have := _root_.GlobalTheory.CuspGeneric.tri_law F a ψ _ (fun k hk => hlw k hk) _ t1 t2 h
     rw [hl, hrt, hc, this, t3]
     rfl
   refine ⟨locPsi hψ w, ?_, fun h1 => ?_, ?_⟩

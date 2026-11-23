@@ -4,18 +4,22 @@ public import Development.AbelianVarietyTheory.Definitions.UpperBounds.FreeBallI
 public import Development.AbelianVarietyTheory.BlockTheory.PoincareCuspForms.SpanSubtraction
 public import Development.AbelianVarietyTheory.BlockTheory.PoincareCuspForms.TwoLevelLogarithm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBlockDetGe
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniformBoundLintegralFlagDomainBallCaseStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrbitSumExpPotentialUniformBoundStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.IsOrth
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniformBoundLintegralFlagDomainBallCase
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrbitSumExpPotentialUniformBound
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PoinConvBdd
 public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.ContinuousOnOfCharts
 public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.DivisionWithBasisOfDivision
-import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.ExistsMixedProj
-import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.ExistsPhlaBound
 public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.FirstMinimumInvariantContinuousPosOnFrames
 public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.KaFrameOfDelta
+public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.SumRangeBlocks
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.ArakelovInstances.PointwiseNormInvarianceHolds
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.CuspStatementPf
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.KronHolPsiStatementHolds
+import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.ExistsMixedProj
+import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.ExistsPhlaBound
 import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.MajLactRmul
 import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.OneLeMinorOfIsOrth
-public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.SumRangeBlocks
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,10 +62,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.ArakelovInstances.PointwiseNormInvarianceHolds
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.CuspStatementPf
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.FundSetPf
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.KronHolPsiStatementHolds
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.MeasInvStatementPf
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.OntoStatementPfE
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.SiegelSpaceAlgebraHolds
@@ -84,7 +85,7 @@ theorem sum_bound {r : ℕ} (X : Data E r) (x0 : Frame X.Ψ r) (h0 : IsOrth X x0
     ∃ C : ℝ≥0∞, C < ⊤ ∧ ∀ x, IsOrth X x →
       ∑' γ : X.Γ, ENNReal.ofReal (Real.exp (-(s * GlobalTheory.Up.rhX X x0 (lact γ.1 x)))) ≤ C := by
   have hr : (2 : ℝ) ≤ r := by exact_mod_cast (show 2 ≤ r by omega)
-  exact GlobalTheory.T.orbitSum_exp_potential_uniform_bound E r X x0 h0 hPD s (by linarith) (GlobalTheory.T.exists_uniform_bound_lintegral_flagDomain_ball_case E r X hp0 hp1 hq s hs)
+  exact _root_.GlobalTheory.OrbitSum.orbitSum_le E r X x0 h0 hPD s (by linarith) (_root_.GlobalTheory.IntBall.intBall E r X hp0 hp1 hq s hs)
 
 theorem kappa_exists {r : ℕ} (X : Data E r) (x0 : Frame X.Ψ r) (h0 : IsOrth X x0) (hPD : PropDisc X)
     (hp0 : 0 < X.p0) (hp1 : X.p0 < r) (hq : X.p0 * (r - X.p0) ≤ 3) {bb : ℝ}

@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Imports
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinCoproductUnitCocycleIdentitiesStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinEnvelopesAdicTopologicalBasisStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinCoproductUnitCocycleIdentities
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinEnvelopesAdicTopologicalBasis
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyBreuilKisinPrismCoproduct
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsOrientedPrismUniformizerFrameBreuilKisinHomStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyBreuilKisinPrismCoproductStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -113,12 +114,12 @@ theorem unit_cocycle : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (
       ∀ k₁ k₂ k₃ : Hom En.Q B, k₁.comp En.inr = k₂.comp En.inl → k₁.comp En.inl = k₃.comp En.inl →
         k₂.comp En.inr = k₃.comp En.inr → ε.map k₁.f * ε.map k₂.f = ε.map k₃.f := by
   intro l _ K bk d ρ τ s ht En ε hrel B
-  have cocB := GlobalTheory.T.breuilKisinCoproduct_unit_cocycle_identities l K bk d ρ τ s ht En ε hrel
+  have cocB := _root_.GlobalTheory.BSP.height_rel_unit_cocycle l K bk d ρ τ s ht En ε hrel
   haveI : IsAdicComplete bk.J bk.S := bk.complete
   refine ⟨unit_of_codiag En.inl En.inr En.univ ε
     (fun Δ h => (cocB bk.prism (Hom.id _) Unit (TopBasis.self bk.J)).1 Δ h), fun k₁ k₂ k₃ h12 h13 h23 => ?_⟩
-  exact (GlobalTheory.T.nonempty_breuilKisinPrismCoproduct l K bk En.Q _ _ (GlobalTheory.T.isOrientedPrismUniformizerFrame_breuilKisinHom l K bk En.Q En.inl)).elim fun En₂ =>
-    (GlobalTheory.T.breuilKisinEnvelopes_adicTopologicalBasis l K bk En En₂).2.elim fun ι htb => htb.elim fun tb =>
+  exact (_root_.GlobalTheory.BSP.nonempty_env l K bk En.Q _ _ (GlobalTheory.T.isOrientedPrismUniformizerFrame_breuilKisinHom l K bk En.Q En.inl)).elim fun En₂ =>
+    (_root_.GlobalTheory.BSP.envelopes_topBasis l K bk En En₂).2.elim fun ι htb => htb.elim fun tb =>
       cocycle_of_triple En.inl En.inr En.univ En₂.inl En₂.inr En₂.univ ε
         (fun k₂₃ k₁₃ a b c => (cocB En₂.Q (En₂.inl.comp En.inl) ι tb).2 En₂.inl k₂₃ k₁₃ a b c)
         k₁ k₂ k₃ h12 h13 h23

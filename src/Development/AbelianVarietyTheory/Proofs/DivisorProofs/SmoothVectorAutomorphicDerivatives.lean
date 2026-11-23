@@ -2,19 +2,29 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsSmoothVector
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BoundedAutomorphicHasRepresentative
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqSumIntegralCubeDerivativesStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqSumIntegralCubeDerivatives
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsArchimedeanLiftUnitaryGroupProduct
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsContinuousRepresentativeAverageStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEvaluationExtensionClosureRepresentativesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFixedAverageApproxOfSubgroupFixedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FundamentalDomainL2BoundStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeMulSetIntegralImage2OfForallLeStatement
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.MeasureTheory.Integral.IntegrableOn
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsContinuousRepresentativeAverage
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEvaluationExtensionClosureRepresentatives
+public import Mathlib.Analysis.InnerProductSpace.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFixedAverageApproxOfSubgroupFixed
+public import Mathlib.MeasureTheory.Group.FundamentalDomain
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FundamentalDomainL2Bound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeMulSetIntegralImage2OfForallLe
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalSobolevInequalityAdelicUnitary
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocallyIntegrableRep
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NcardRationalPointsTranslatedCompactLePowStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepresentativeParametricIntegralContinuousFamilyStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SetIntegralLeOfExpandingStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothAlongCurveProductsStableStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepresentativeParametricIntegralContinuousFamily
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothAlongCurveProductsStable
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocallyIntegrableRep
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SetIntegralLeOfExpanding
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SobolevIteratedOneParameterSubgroups
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdelicUnitaryTopology
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
@@ -98,7 +108,7 @@ theorem hasDerivAt_rep [μ.IsMulRightInvariant]
     · rfl
   have hw : Continuous fun t => ρ (c t) v' := (hρ v').comp hc
   have key : ∀ a b : ℝ, a ≤ b → ∀ y, φ (y * c b) - φ (y * c a) = ∫ t in a..b, φ' (y * c t) := fun a b hab => by
-    obtain ⟨p1, p2⟩ := GlobalTheory.T.representative_parametric_integral_continuous_family G μ K ι hloc hlin ℝ volume (Set.Icc a b) (fun t => ρ (c t) v')
+    obtain ⟨p1, p2⟩ := _root_.GlobalTheory.LocRep.rep_parametric_integral G μ K ι hloc hlin ℝ volume (Set.Icc a b) (fun t => ρ (c t) v')
       (fun t y => φ' (y * c t)) isCompact_Icc hw (hφ'.comp (continuous_snd.mul (hc.comp continuous_fst)))
       fun t => rep_tr htr hv' _
     rw [integral_Icc_eq_integral_Ioc, ← intervalIntegral.integral_of_le hab,
@@ -158,11 +168,11 @@ theorem exists_eval [μ.IsMulRightInvariant]
           rw [e1, e2]⟩ }
   have hA : ∀ v (φ : G → ℂ), Continuous φ → ι v =ᵐ[μ] φ → (Continuous fun x => ∫ t in Q, κ t * φ (x * Θ t)) ∧
       ι (A v) =ᵐ[μ] fun x => ∫ t in Q, κ t * φ (x * Θ t) := fun v φ hφ hv =>
-    GlobalTheory.T.representative_parametric_integral_continuous_family G μ K ι hloc hlin _ volume Q (fun t => κ t • ρ (Θ t) v) (fun t x => κ t * φ (x * Θ t)) hQ (hw v)
+    _root_.GlobalTheory.LocRep.rep_parametric_integral G μ K ι hloc hlin _ volume Q (fun t => κ t • ρ (Θ t) v) (fun t x => κ t * φ (x * Θ t)) hQ (hw v)
       ((hκ.comp continuous_fst).mul (hφ.comp (continuous_snd.mul (hΘ.comp continuous_fst)))) fun t => by
         filter_upwards [rep_smul hlin (κ t) (ρ (Θ t) v), rep_tr htr hv (Θ t)] with x e1 e2
         rw [e1, e2]
-  obtain ⟨Λ, hΛ⟩ := GlobalTheory.T.exists_evaluation_extension_closure_representatives G μ K ι hloc hlin A E (fun v ⟨_, φ, a2, a3⟩ => ⟨_, hA v φ a2 a3⟩) fun B hB => by
+  obtain ⟨Λ, hΛ⟩ := _root_.GlobalTheory.LocRep.exists_eval_closure G μ K ι hloc hlin A E (fun v ⟨_, φ, a2, a3⟩ => ⟨_, hA v φ a2 a3⟩) fun B hB => by
     obtain ⟨M, hM'⟩ := hloc (B * Ω) (hB.mul hΩ)
     obtain ⟨κ₀, hκ₀⟩ := hQ.exists_bound_of_continuousOn hκ.continuousOn
     refine ⟨max κ₀ 0 * (C * M), fun v ⟨a1, φ, a2, a3⟩ ψ hψ hv x hx => ?_⟩
@@ -194,8 +204,8 @@ theorem exists_eval [μ.IsMulRightInvariant]
           rw [integral_const_mul, mul_assoc, mul_assoc]
           exact mul_le_mul_of_nonneg_left (h1.trans (mul_le_mul_of_nonneg_left h2 hC)) (le_max_right _ _)
   refine ⟨Λ, fun v hv => hΛ v (Metric.mem_closure_iff.2 fun ε hε => ?_)⟩
-  obtain ⟨η, e1, e2, e3, e4⟩ := GlobalTheory.T.exists_fixed_average_approx_of_subgroup_fixed G μ K ρ hiso hρ H U hU hH v hv ε hε
-  exact ⟨_, ⟨e3, GlobalTheory.T.exists_continuous_representative_average G μ K ι hloc hlin ρ hiso hρ htr η v e1 e2⟩, by rwa [dist_eq_norm]⟩
+  obtain ⟨η, e1, e2, e3, e4⟩ := _root_.GlobalTheory.exists_average_fixed_approx_of_fixed G μ K ρ hiso hρ H U hU hH v hv ε hε
+  exact ⟨_, ⟨e3, _root_.GlobalTheory.LocRep.exists_continuous_rep_average G μ K ι hloc hlin ρ hiso hρ htr η v e1 e2⟩, by rwa [dist_eq_norm]⟩
 
 def Sm (ρ : G →* (K →L[ℂ] K)) {P : Type} (A : Set P) (e : P → ℝ → G) (v : K) : Prop :=
   ∀ (k : ℕ) (ps : Fin k → P), (∀ i, ps i ∈ A) →
@@ -229,13 +239,13 @@ theorem exists_smooth_rep [μ.IsMulRightInvariant]
       ∀ p ∈ A, Sm ρ A e (deriv (fun r : ℝ => ρ (e p r) v) 0) ∧
         (∀ k ∈ H, ρ k (deriv (fun r : ℝ => ρ (e p r) v) 0) = deriv (fun r : ℝ => ρ (e p r) v) 0) ∧
         ∀ x, HasDerivAt (fun t : ℝ => R v (x * e p t)) (R (deriv (fun r : ℝ => ρ (e p r) v) 0) x) 0 := by
-  obtain ⟨J, _, κ, l, hκ, hT⟩ := GlobalTheory.T.eq_sum_integral_cube_derivatives_alt G K ρ hiso hρ s hs N (fun i => e (qs i)) fun i => he _ (hq i)
+  obtain ⟨J, _, κ, l, hκ, hT⟩ := _root_.GlobalTheory.CubeTaylor.eq_sum_integral_cube_derivatives G K ρ hiso hρ s hs N (fun i => e (qs i)) fun i => he _ (hq i)
   choose Λ hΛ using fun j => exists_eval hloc hlin hiso hρ htr hU hH hΘ
     (isCompact_univ_pi fun _ => isCompact_Icc) hΩ hC hM (hκ j)
   let d : P → K → K := fun p w => deriv (fun r : ℝ => ρ (e p r) w) 0
   let S : Set K := {v | Sm ρ A e v ∧ ∀ k ∈ H, ρ k v = v}
   have hS : ∀ v ∈ S, ∀ p ∈ A, d p v ∈ S := fun v hv p hp => by
-    refine ⟨(GlobalTheory.T.smooth_along_curve_products_stable_alt G K ρ P A e v hv.1).1 p hp, fun k hk => ?_⟩
+    refine ⟨(_root_.GlobalTheory.smooth_along_curve_products_stable G K ρ P A e v hv.1).1 p hp, fun k hk => ?_⟩
     have h1 := hv.1.hasDerivAt hp
     have h2 := ((ρ k).restrictScalars ℝ).hasFDerivAt.comp_hasDerivAt 0 h1
     refine HasDerivAt.unique (f := fun r : ℝ => ρ (e p r) v) (x := 0) ?_ h1
@@ -262,7 +272,7 @@ theorem exists_smooth_rep [μ.IsMulRightInvariant]
     ⟨(hS v ⟨h1, h2⟩ p hp).1, (hS v ⟨h1, h2⟩ p hp).2, hasDerivAt_rep hloc hlin hρ htr (he p hp).1 (he p hp).2.1
       (he p hp).2.2 (h1.hasDerivAt hp) (hR v ⟨h1, h2⟩).1 (hR _ (hS v ⟨h1, h2⟩ p hp)).1 (hR v ⟨h1, h2⟩).2
       (hR _ (hS v ⟨h1, h2⟩ p hp)).2⟩⟩⟩
-  obtain ⟨-, s2, s3⟩ := GlobalTheory.T.smooth_along_curve_products_stable_alt G K ρ P A e v h1
+  obtain ⟨-, s2, s3⟩ := _root_.GlobalTheory.smooth_along_curve_products_stable G K ρ P A e v h1
   have e1 : ∀ t : Fin k → ℝ, R v (g * (List.ofFn fun i => e (ps i) (t i)).prod) =
       R (ρ (List.ofFn fun i => e (ps i) (t i)).prod v) g := fun t => by
     have hm : ρ (List.ofFn fun i => e (ps i) (t i)).prod v ∈ S := by
@@ -309,7 +319,7 @@ theorem exists_smooth_repr : ∀ (D : D7) (θ : InfFam D) (V : HSp D), IsInfFam 
   obtain ⟨B, hB, hBW, hBc⟩ := local_compact_nhds hW
   have hc := fun i => GlobalTheory.SobLoc.oneP_spec hθ V (hH (τs i)).2 (hX i)
   have hΘ := GlobalTheory.continuous_prod_ofFn_curves N (fun i => oneP θ V (τs i) (Xs i)) fun i => (hc i).1
-  obtain ⟨C₁, hC₁, h₁⟩ := GlobalTheory.T.le_mul_setIntegral_image2_of_forall_le_alt (GA D V) μ N _ (Metric.closedBall 0 S) B (K ^ N) hΘ
+  obtain ⟨C₁, hC₁, h₁⟩ := _root_.GlobalTheory.le_mul_setIntegral_image2_of_forall_le (GA D V) μ N _ (Metric.closedBall 0 S) B (K ^ N) hΘ
     (isCompact_closedBall _ _) hBc hB (pow_nonneg hK _)
   have hΩ : IsCompact (Set.image2 (fun (t : Fin N → ℝ) b => (List.ofFn fun i => oneP θ V (τs i) (Xs i) (t i)).prod * b)
       (Metric.closedBall 0 S) B) := by
@@ -322,7 +332,7 @@ theorem exists_smooth_repr : ∀ (D : D7) (θ : InfFam D) (V : HSp D), IsInfFam 
     (fun C hC => by
       obtain ⟨m, hm⟩ := GlobalTheory.T.ncard_rationalPoints_translatedCompact_le_pow D θ V hθ C hC
       obtain ⟨c, hc⟩ := hm 1
-      refine GlobalTheory.T.fundamental_domain_L2_bound (GA D V) μ (GQ V) 𝓕 hp.fd C hC (c * normInf θ V 1 ^ m) fun y => ?_
+      refine _root_.GlobalTheory.QuotLocInt.integrableOn_compact (GA D V) μ (GQ V) 𝓕 hp.fd C hC (c * normInf θ V 1 ^ m) fun y => ?_
       simpa using hc 1 (one_mem _) y)
     (fun a v w => hlin v w _ _ a (Filter.Eventually.of_forall fun _ => rfl) (Filter.Eventually.of_forall fun _ => rfl))
     hr.iso hr.cont hr.val hU
@@ -333,7 +343,7 @@ theorem exists_smooth_repr : ∀ (D : D7) (θ : InfFam D) (V : HSp D), IsInfFam 
     hX hs hΘ hΩ hC₁
     (fun f hf hf0 hfk => h₁ f _ hf hf0 fun x hx => by
       obtain ⟨φ, a, haU, ha, hφ, hφ'⟩ := h x (hBW hx)
-      refine GlobalTheory.T.setIntegral_le_pow_mul_setIntegral_of_expanding N _ _ K φ (fun t => f (List.ofFn fun i => oneP θ V (τs i) (Xs i) (t i)).prod)
+      refine _root_.GlobalTheory.setIntegral_le_of_expanding N _ _ K φ (fun t => f (List.ofFn fun i => oneP θ V (τs i) (Xs i) (t i)).prod)
         (fun t => f ((List.ofFn fun i => oneP θ V (τs i) (Xs i) (t i)).prod * x))
         (isCompact_univ_pi fun _ => isCompact_Icc) (isCompact_closedBall _ _) hK
         (hf.comp hΘ) (hf.comp (hΘ.mul continuous_const)) (fun g => hf0 _) (fun g => hf0 _)

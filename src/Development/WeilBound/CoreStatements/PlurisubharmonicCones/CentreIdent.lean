@@ -4,15 +4,17 @@ public import Development.AbelianVarietyTheory.Definitions.Uniformization.PointE
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUniqueLeftBasisCoordsAdicCompletion
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExponentialFamilyPeriods
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.VerticalDerivativeInCoordinates
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsDerivAt0OfIsPullback
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolUnifPeriodMatrixLeftStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolUnifPeriodMatrixMiddleStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolUnifPeriodMatrixRightStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsAbLift
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolUnifPeriodMatrixLeft
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolUnifPeriodMatrixMiddle
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolUnifPeriodMatrixRight
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsDerivAt0CompLinMap
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsDerivAt0ZeroOfFixed
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrincipalNearBoundary
 public import Development.WeilBound.CoreStatements.PlurisubharmonicCones.PhiTransport
 public import Development.WeilBound.CoreStatements.PlurisubharmonicCones.TorusExpEqOne
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PeriodLatticeSpans
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsDerivAt0OfIsPullback
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,7 +57,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PeriodLatticeSpans
 
 @[expose] public section
 
@@ -94,14 +95,14 @@ theorem centre_ident (e : FamExp t.G M B ψ) {b : Fin n → ℂ} (hb : b ∈ B) 
       IsGrpPullback A P.tB.G (𝟙 _) φ → u.IsAH Hm χ → IsAbLift e b P φ u ℓ →
       (∀ p, p ∈ I' ↔ p ∈ e.per b ∧ ℓ p = 0) ∧ ∀ p q, ℓ p ⬝ᵥ Hm *ᵥ star (ℓ q) = p ⬝ᵥ Hb *ᵥ star q := by
     intro A iA φ g' u Hm χ ℓ hφ hAH hℓ
-    obtain ⟨hin, honto⟩ := GlobalTheory.T.hol_unif_period_matrix_right E H R t g n M _ ψ e _ P A iA φ g' u Hm χ ℓ hb hφ hAH hP hℓ
+    obtain ⟨hin, honto⟩ := _root_.GlobalTheory.CompanionTheory.Ar.QuotLoc.periods_map_onto_lattice E H R t g n M _ ψ e _ P A iA φ g' u Hm χ ℓ hb hφ hAH hP hℓ
     obtain ⟨H', hH1, hH2, hH3⟩ := exists_pull_form ℓ Hm hAH.1
     have hE : ∀ y ∈ e.per b, ∀ y' ∈ e.per b, (y ⬝ᵥ Hb *ᵥ star y').im = (ℓ y ⬝ᵥ Hm *ᵥ star (ℓ y')).im := by
       intro y hy y' hy'
       obtain ⟨k, hk, hc⟩ := hW y hy y' hy'
       rw [hk]
       refine eq_of_forall_exp fun N hN => ?_
-      have := GlobalTheory.T.hol_unif_period_matrix_middle E H R t g n M _ ψ e _ P A iA φ g' u Hm χ ℓ hb hφ hAH hP hℓ N _ y y' hN hy hy'
+      have := _root_.GlobalTheory.CompanionTheory.Ar.QuotLoc.Pair.cubWeil_eq_exp_riemann E H R t g n M _ ψ e _ P A iA φ g' u Hm χ ℓ hb hφ hAH hP hℓ N _ y y' hN hy hy'
         (hc N (Units.mk0 _ (Complex.exp_ne_zero (-(2 * Real.pi * Complex.I) * (k : ℂ) / N))) hN rfl)
       rw [Units.val_mk0] at this
       have c : ((k : ℝ) : ℂ) = (k : ℂ) := by push_cast; rfl
@@ -163,14 +164,14 @@ theorem centre_ident (e : FamExp t.G M B ψ) {b : Fin n → ℂ} (hb : b ∈ B) 
     rw [GlobalTheory.VerticalDeriv.isDerivAt0_unique d2 d1, hΦ, hΦ, hact a x, Over.comp_left, Category.assoc, Category.assoc,
       P.m.act]
   · obtain ⟨-, -, -, A, iA, φ, g', u, Hm, χ, v', w', a', b', hφ, hAH, hv', hw', ha', hb', hc⟩ := hh x x'
-    obtain ⟨ℓ, hℓ⟩ := GlobalTheory.T.hol_unif_period_matrix_left E H R t g n M _ ψ e _ P A iA φ g' u Hm χ hb hφ hAH hP
+    obtain ⟨ℓ, hℓ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.QuotLoc.exists_isAbLift E H R t g n M _ ψ e _ P A iA φ g' u Hm χ hb hφ hAH hP
     have e1 : a' = ℓ (Φ x) := DiffL.isDiff_eq_lift E H R t g n M _ ψ e _ P A iA φ g' u Hm χ ℓ hb hφ hAH hP hℓ Mz hL _ _
       v' a' (hΦ x).symm hv' ha'
     have e2 : b' = ℓ (Φ x') := DiffL.isDiff_eq_lift E H R t g n M _ ψ e _ P A iA φ g' u Hm χ ℓ hb hφ hAH hP hℓ Mz hL _ _
       w' b' (hΦ x').symm hw' hb'
     rw [hc, e1, e2, ← (key A φ g' u Hm χ ℓ hφ hAH hℓ).2]
   · obtain ⟨-, -, -, A, iA, φ, g', u, Hm, χ, v', w', a', b', hφ, hAH, -⟩ := hh 0 0
-    obtain ⟨ℓ, hℓ⟩ := GlobalTheory.T.hol_unif_period_matrix_left E H R t g n M _ ψ e _ P A iA φ g' u Hm χ hb hφ hAH hP
+    obtain ⟨ℓ, hℓ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.QuotLoc.exists_isAbLift E H R t g n M _ ψ e _ P A iA φ g' u Hm χ hb hφ hAH hP
     obtain ⟨MT, hMT, hI⟩ := hI
     have k2 : ∀ x (δ : P.τ.X →+ ℤ), MV.pt x = MT.pt ((Int.castAddHom ℂ).comp δ) ≫ P.τ.i ↔
         Φ x = h fun a => (δ (β a) : ℂ) := fun x δ => by

@@ -1,10 +1,11 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AlternatingDifferenceTermWindow
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DltEqZero
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsIntegralSmallElementPowSmulStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsIntegralOrIsIntegralInvInFieldFactorStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowSmulMemAdjoinGenStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsIntegralSmallElementPowSmul
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsIntegralOrIsIntegralInvInFieldFactor
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowSmulMemAdjoinGen
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AlternatingDifferenceTermWindow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,14 +62,14 @@ namespace GlobalTheory.UnitLemma.Desc
 open GlobalTheory.UnitLemma Polynomial
 
 theorem exists_isIntegral_pow_smul : ∀ (K : UQ) (B : InvAlg K) (a : K.O), K.Small a → ∀ x : B.A,
-    ∃ k : ℕ, IsIntegral K.O ((al K a ^ k) • x) := GlobalTheory.T.exists_isIntegral_smallElement_pow_smul
+    ∃ k : ℕ, IsIntegral K.O ((al K a ^ k) • x) := _root_.GlobalTheory.UnitLemma.Desc.smul_pow_integral
 
 theorem isIntegral_or_of_fieldFactor : ∀ (K : UQ) (B : InvAlg K) (f y z : B.A), IsIdempotentElem f →
     (∀ w, f * w ≠ 0 → ∃ v, f * w * v = f) → f * y * z = f →
-    IsIntegral K.O (f * y) ∨ IsIntegral K.O (f * z) := GlobalTheory.T.isIntegral_or_isIntegral_inv_in_fieldFactor
+    IsIntegral K.O (f * y) ∨ IsIntegral K.O (f * z) := _root_.GlobalTheory.UnitLemma.Desc.isIntegral_or_isIntegral_of_fieldFactor
 
 theorem exists_pow_smul_mem_adjoin_g : ∀ (K : UQ) (B : InvAlg K) (a : K.O), B.P.Separable → K.Small a →
-    ∃ N : ℕ, ∀ r : B.A, IsIntegral K.O r → (al K a ^ N) • r ∈ Algebra.adjoin K.O {B.g} := GlobalTheory.T.exists_pow_smul_mem_adjoin_gen_of_separable
+    ∃ N : ℕ, ∀ r : B.A, IsIntegral K.O r → (al K a ^ N) • r ∈ Algebra.adjoin K.O {B.g} := _root_.GlobalTheory.UnitLemma.Desc.pow_smul_mem_adjoin_gen
 
 variable {K : UQ} (B : InvAlg K)
 

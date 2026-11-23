@@ -3,18 +3,18 @@ module
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowsMeanC
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AnisotropicOrthogonalIsometricDefiniteModelStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AnisotropicOrthogonalTotallyPositiveDefiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BaseLatticeConstructionHoldsStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BaseLatticeConstructionHolds
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardRowAutomorphismsEqLatticeStabilizerStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DefiniteQuotientLatticeEqImageAnisotropicPartStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsRowOfUnimodularLatticePrimitiveVectorStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GluedLatticesStableUnderVectorStabilizerStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsometryTransportsDiscriminantModuleStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsometryTransportsGenusOrbitSumStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrbSumFibreEquiv
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrbitLatticeUnimodularAndPrimitiveStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrbitWeightedStabilizerSumEqSumOrbitReps
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowsEqOfStabilizerConjugateLatticesStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryHostFieldArithmeticConditionsProofStatement
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrbSumFibreEquiv
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryHostFieldArithmeticConditionsProof
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,9 +77,9 @@ theorem rowsOrbC : GlobalTheory.TypeAsm.RowsOrbC := by
   have hlat := GlobalTheory.T.definiteQuotientLattice_eq_image_anisotropicPart D X u W e heX
   set M₀ := GlobalTheory.Mass.latIn (GlobalTheory.RowsOrb.Ub X u) (GlobalTheory.RowsOrb.Lmap X u Λ₀) with hM₀
   obtain ⟨hψ, hgen, horb⟩ := GlobalTheory.T.isometry_transports_genus_orbitSum D.host.E (GlobalTheory.RowsOrb.Ub X u) W (GlobalTheory.RowsOrb.hU X u) HW.B.flip e he φ hφ M₀
-  obtain ⟨hcm, -, -, -, hf, -, -, -, -, -, -, -, hTu⟩ := GlobalTheory.T.unitaryHostFieldArithmeticConditions D large₂ hS
+  obtain ⟨hcm, -, -, -, hf, -, -, -, -, -, -, -, hTu⟩ := _root_.GlobalTheory.TypeAsm.hostC D large₂ hS
   obtain ⟨hTp, hsp⟩ := hTu u
-  have hl0 := GlobalTheory.T.base_lattice_construction_holds D large₂ X Y u hS W HW hEmb Λ₀ hΛ₀
+  have hl0 := _root_.GlobalTheory.TypeAsm.lat0C D large₂ X Y u hS W HW hEmb Λ₀ hΛ₀
   rw [hlat Λ₀] at hl0
   obtain ⟨hM₀i, hM₀d⟩ := GlobalTheory.T.isometry_transports_discriminantModule D.host.E (GlobalTheory.RowsOrb.Ub X u) W (GlobalTheory.RowsOrb.hU X u) HW.B.flip e he M₀ _ hl0.1 hl0.2
   have hbs : (GlobalTheory.RowsOrb.hb X).IsSymm := ⟨fun a b => (VS D).herm.eq (a : (VS D).V) (b : (VS D).V)⟩

@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsTestRep
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelfDualIffLatticeVolumeAndPlancherelStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedQuadraticIntegralTraceFormPerfectStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedStandardAddCharConductorPropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelfDualIffLatticeVolumeAndPlancherel
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FourierMatch
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedQuadraticIntegralTraceFormPerfect
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedStandardAddCharConductorProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -82,7 +83,7 @@ theorem star_smul_F {r : ℕ} (a : F) (c : Fin r → E) : star (a • c) = a •
 
 theorem trace_star (z : E) : Algebra.trace F E (star z) = Algebra.trace F E z := by
   apply (algebraMap F E).injective
-  rw [(GlobalTheory.T.unramifiedQuadratic_integral_traceForm_perfect F E).1, (GlobalTheory.T.unramifiedQuadratic_integral_traceForm_perfect F E).1, star_star, add_comm]
+  rw [(_root_.GlobalTheory.NTr.traceForm_perfect F E).1, (_root_.GlobalTheory.NTr.traceForm_perfect F E).1, star_star, add_comm]
 
 def trForm (r : ℕ) : LinearMap.BilinForm F (Fin r → E) :=
   LinearMap.mk₂ F (fun c b => Algebra.trace F E (star c ⬝ᵥ b))
@@ -101,11 +102,11 @@ theorem trForm_isSymm (r : ℕ) : (trForm (F := F) (E := E) r).IsSymm := by
 theorem trForm_separatingLeft (r : ℕ) (c : Fin r → E) (hc : ∀ b, trForm (F := F) r c b = 0) : c = 0 := by
   classical
   funext i
-  obtain ⟨e, -, he⟩ := (GlobalTheory.T.unramifiedQuadratic_integral_traceForm_perfect F E).2.1
+  obtain ⟨e, -, he⟩ := (_root_.GlobalTheory.NTr.traceForm_perfect F E).2.1
   have h0 := hc (Pi.single i (c i * e))
   rw [trForm_apply, dotProduct_single, Pi.star_apply] at h0
   have h1 : algebraMap F E (Algebra.trace F E (star (c i) * (c i * e))) = star (c i) * c i * (e + star e) := by
-    rw [(GlobalTheory.T.unramifiedQuadratic_integral_traceForm_perfect F E).1]
+    rw [(_root_.GlobalTheory.NTr.traceForm_perfect F E).1]
     simp only [star_mul, star_star]
     ring
   rw [h0, map_zero, he, mul_one] at h1
@@ -137,7 +138,7 @@ theorem dual_intLat (r : ℕ) (ψ : AddChar F ℂ) (hψ : IsStdChar ψ) :
       ((intLat (F := F) (E := E) r : AddSubgroup (Fin r → E)) : Set (Fin r → E)) := by
   classical
   haveI : IsUltrametricDist E := Unram.ultraE F
-  have key := ((GlobalTheory.T.unramifiedStandardAddChar_conductor_properties F E).2 ψ hψ).2.2.2
+  have key := ((_root_.GlobalTheory.StdChar.psi_conductor F E).2 ψ hψ).2.2.2
   ext y
   constructor
   · intro hy i
@@ -183,7 +184,7 @@ theorem GlobalTheory.JR.selfDual_pi_trace : ∀ (F E : Type) [NontriviallyNormed
   have hcpt : IsCompact ((intLat (F := F) (E := E) r : AddSubgroup (Fin r → E)) : Set (Fin r → E)) := by
     rw [intLat_eq]
     exact isCompact_univ_pi (fun _ => isCompact_closedBall _ _)
-  have h := (GlobalTheory.T.selfDual_iff_lattice_volume_and_plancherel_alt F E ψ hψ (Fin r → E) (trForm r) (trForm_isSymm r) (trForm_nondegenerate r)
+  have h := (_root_.GlobalTheory.JR.selfDual_iff_lattice_volume_and_plancherel F E ψ hψ (Fin r → E) (trForm r) (trForm_isSymm r) (trForm_nondegenerate r)
     (Measure.pi fun _ => M.μE) inferInstance).1 (intLat r) hopen hcpt |>.1
   refine h.2 ?_
   rw [dual_intLat r ψ hψ, hvol, one_mul]

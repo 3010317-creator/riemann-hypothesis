@@ -3,10 +3,16 @@ module
 public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
 public import Mathlib.RingTheory.Polynomial.Cyclotomic.Basic
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.CountableIdealSummableAbsNormRpow
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DedekindZetaEulerProductMulSubOneEntireNeZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsContinuousNormCharLFunctionNeZeroOneStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPrimeNormCyclotomicCharNeOneStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SummableInvAbsNormPrimesOfNotPrimeNormStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Mathlib.Analysis.SpecialFunctions.Pow.Complex
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DedekindZetaEulerProductMulSubOneEntireNeZero
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsContinuousNormCharLFunctionNeZeroOne
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPrimeNormCyclotomicCharNeOne
+public import Mathlib.Topology.Algebra.InfiniteSum.Defs
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SummableInvAbsNormPrimesOfNotPrimeNorm
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InfinitelyManyPrimesInRayClass
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -79,15 +85,15 @@ theorem exists_prime_absNorm_eq_of_irreducible_cyclotomic : ∀ (K : Type) [Fiel
     rfl
   by_contra hcon
   push Not at hcon
-  obtain ⟨Z, hZ, hZ1, hZs⟩ := GlobalTheory.T.exists_entire_sub_one_mul_euler_exp_ne_zero_one K
+  obtain ⟨Z, hZ, hZ1, hZs⟩ := _root_.GlobalTheory.dedekindZeta_eulerProduct_mul_sub_one_entire_ne_zero K
   refine GlobalTheory.Mem.RayPrimes.not_summable_class (fun P : HeightOneSpectrum (𝓞 K) => Ideal.absNorm P.asIdeal)
     GlobalTheory.Mem.RayPrimes.two_le_absNorm cl
     (fun s hs => ((GlobalTheory.countable_ideal_and_summable_absNorm_rpow K).2 s hs).2) ?_ Z hZ.continuous hZ1 ?_ τ ?_
   · intro χ hχ
-    obtain ⟨P, u, hu, hχu⟩ := GlobalTheory.T.exists_prime_norm_cyclotomicChar_ne_one K m hm hirr χ hχ
+    obtain ⟨P, u, hu, hχu⟩ := _root_.GlobalTheory.NormChar.exists_prime_norm_char_ne_one K m hm hirr χ hχ
     have hP : ¬ m ∣ Ideal.absNorm P.asIdeal := by
       rw [← ZMod.natCast_eq_zero_iff, ← hu]; exact u.ne_zero
-    refine GlobalTheory.T.exists_continuous_normCharLFunction_ne_zero_one K m hm χ cl hcl ⟨P, hP, ?_⟩
+    refine _root_.GlobalTheory.NormCharL.exists_continuous_ne_zero_one K m hm χ cl hcl ⟨P, hP, ?_⟩
     rwa [show cl P = u from Units.ext ((hcl P hP).trans hu.symm)]
   · intro s hs
     simpa using hZs s (by simpa using hs)
@@ -95,7 +101,7 @@ theorem exists_prime_absNorm_eq_of_irreducible_cyclotomic : ∀ (K : Type) [Fiel
       hS.union ((Ring.HasFiniteQuotients.finite_absNorm_le (S := 𝓞 K) m).preimage
         (f := fun P : HeightOneSpectrum (𝓞 K) => P.asIdeal) (fun a _ b _ h => HeightOneSpectrum.ext h))
     refine summable_subset_union_finite (fun P : HeightOneSpectrum (𝓞 K) => ((Ideal.absNorm P.asIdeal : ℕ) : ℝ)⁻¹)
-      {P | ¬ (Ideal.absNorm P.asIdeal).Prime} _ {P | cl P = τ} hfin ?_ (GlobalTheory.T.summable_inv_absNorm_primes_of_not_prime_norm K)
+      {P | ¬ (Ideal.absNorm P.asIdeal).Prime} _ {P | cl P = τ} hfin ?_ (_root_.GlobalTheory.summable_inv_absNorm_of_not_prime K)
     intro P hP
     by_contra hn
     simp only [Set.mem_union, Set.mem_ofPred_eq, not_or, not_le, not_not] at hn hP

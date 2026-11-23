@@ -1,8 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCombAt
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapsPreserveSchwartzBruhatAndSurjectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLocalGroupElementsJacobiBesselStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ContrFactor
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapsPreserveSchwartzBruhatAndSurjective
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ExistsUnitarySupportedAtPlaceOfMulEqIdem
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLocalGroupElementsJacobiBessel
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -153,7 +155,7 @@ theorem exists_coreFrame {D : D7} {k : Type} [Field k] [ValuativeRel k] [Topolog
 
 theorem isLoc_one {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     (p : Place D k) {V : HSp D} {Y : Type} [Fintype Y] [DecidableEq Y] (Fr : Frame k V.rank Y) : p.IsLoc Fr 1 1 := by
-  obtain ⟨hloc, -, -⟩ := GlobalTheory.T.splitPlace_localGroupElements_jacobi_bessel D k p
+  obtain ⟨hloc, -, -⟩ := _root_.GlobalTheory.LocGrp.local_groups D k p
   obtain ⟨g₀, hg₀, hu⟩ := (hloc V Y Fr).1 1
   have h2 := (hloc V Y Fr).2.2 _ _ _ _ hg₀ hg₀
   rw [mul_one] at h2
@@ -165,7 +167,7 @@ theorem isLoc_one {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpa
 
 theorem gsupp1 : ∀ (D : D7), OmLoc D → FlatBF D → GlobalTheory.LocFlat.SymCollapse → GSupp1 D := by
   intro D hOm hFl hSym k _ _ _ _ p s κ S t _ _ ψ hψ j c H σ B J B' F s₁ hμ T₁ hT₁ Φ₁ hΦ₁ h hh hne
-  obtain ⟨hloc, hjac, -⟩ := GlobalTheory.T.splitPlace_localGroupElements_jacobi_bessel D k p
+  obtain ⟨hloc, hjac, -⟩ := _root_.GlobalTheory.LocGrp.local_groups D k p
   letI : MeasurableSpace k := borel k
   haveI : BorelSpace k := ⟨rfl⟩
   obtain ⟨ν, hν⟩ := exists_isUnitVol k
@@ -190,7 +192,7 @@ theorem gsupp1 : ∀ (D : D7), OmLoc D → FlatBF D → GlobalTheory.LocFlat.Sym
   obtain ⟨C, hC⟩ := exists_coreFrame p F
   obtain ⟨T₀, -, hT₀⟩ := hFl k p ν hν.1 ψ S.ψ hψ (σ + 1) B J s₁ F.s F.s_ne _ _ (c + 1 + 1) F.F₀ C F.G₀ F.F₁ F.G₁
     hC F.bes F.jac T₁ hT₁
-  have hSB := ((GlobalTheory.T.flatMaps_preserve_schwartzBruhat_and_surjective k S.ψ ν S.cond.continuous hν.1 _ _ (c + 1 + 1) (σ + 1 + 1) (by omega)).1
+  have hSB := ((_root_.GlobalTheory.LocFlat.flat_SB_onto k S.ψ ν S.cond.continuous hν.1 _ _ (c + 1 + 1) (σ + 1 + 1) (by omega)).1
     (by omega)).1 Φ'.1 Φ'.2
   have hflat := hT₀ Φ' ⟨_, hSB⟩ rfl
   rw [hom, hflat] at hne

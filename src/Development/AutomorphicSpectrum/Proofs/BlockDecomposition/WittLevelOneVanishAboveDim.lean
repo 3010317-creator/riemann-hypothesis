@@ -4,9 +4,10 @@ public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCoh
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.SEqOne
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ChartDividedPowersGradedConstant
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ChartIsGood
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoordinatesRestrictAffineOpenStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.CapOComp
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoordinatesRestrictAffineOpen
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FlatOfEtalePoly
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StableCoverCechVanishingStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StableCoverCechVanishing
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LocalisationLadders.VanishingOfLadder
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.PolynomialSiteTraces.PolyAll
 import Mathlib.Algebra.Order.Floor.Extended
@@ -110,10 +111,10 @@ theorem witt_level_one_filtration_vanish : ∀ {l : ℕ} [Fact l.Prime] {k : Typ
   have hn : IsNilpotent ((l : ℕ) : Wc.Wm l k 1) := by
     rw [nat_eq_zero]
     exact IsNilpotent.zero
-  refine (GlobalTheory.T.stable_cover_cech_vanishing.1 (sq (thFil (nlFun (Wc.pd l k 1) l X q ((Wc.res l k 1).comp ρ)) ((d : ℤ) + 1)) (IdF.bot _))
+  refine (_root_.GlobalTheory.CompanionTheory.GlobSt.glob_st.1 (sq (thFil (nlFun (Wc.pd l k 1) l X q ((Wc.res l k 1).comp ρ)) ((d : ℤ) + 1)) (IdF.bot _))
     (⊤ : ObjectProperty (Thick (nlFun (Wc.pd l k 1) l X q ((Wc.res l k 1).comp ρ)))) U.U 0).2.1 (fun S hS j => ?_) j
   obtain ⟨α, hα⟩ := id hS
-  obtain ⟨c', -⟩ := GlobalTheory.T.coordinates_restrict_affine_open (U.c α) (iInf₂_le α hα) (U.inter S hS)
+  obtain ⟨c', -⟩ := _root_.GlobalTheory.CompanionTheory.CoordRes.main (U.c α) (iInf₂_le α hα) (U.inter S hS)
   exact van_on (Wc.pd l k 1) (Im_one_eq_bot l k) l hp hn q _ c' d (hd α) j
 
 end GlobalTheory.CompanionTheory.WittLevel.Van

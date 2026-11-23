@@ -5,9 +5,14 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFor
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SobBdSeminorm
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EqZeroOfInnerSmooth
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsKFinDRep
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BilinearBoundOfDenseSecondSlotStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsMultilinearSlotwiseExtensionOfEquivariantStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemClosureOfForallDualVanishStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.LocallyConvex.WithSeminorms
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BilinearBoundOfDenseSecondSlot
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.BilinearMap
+public import Mathlib.LinearAlgebra.Multilinear.Basic
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsMultilinearSlotwiseExtensionOfEquivariant
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemClosureOfForallDualVanish
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemSmoothVectorsDiscreteSeriesModelIffStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SobolevContinuousModelRepOfSobolevBoundStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SobolevFormEqZeroOnSmoothOfKFiniteDiscreteSeriesStatement
@@ -96,7 +101,7 @@ theorem uniq (hHC : GlobalTheory.Published.HarishChandraModules) (M : DSModel V 
     (hp : WithSeminorms p) {L : M.H τ →ₗ[ℂ] E} (hL : L ∈ sobBd (M.ε τ) (M.σ τ) p)
     (h0 : ∀ a ∈ GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.kFin M τ, L a = 0) : ∀ w ∈ M.sm τ, L w = 0 := by
   intro w hw
-  have h := GlobalTheory.T.mem_closure_of_forall_clm_vanish hp ⊥ (L w) fun f _ => form_zero hHC M τ hp hL f (fun a ha => by rw [h0 a ha, map_zero]) w hw
+  have h := _root_.GlobalTheory.mem_closure_of_forall_dual_vanish hp ⊥ (L w) fun f _ => form_zero hHC M τ hp hL f (fun a ha => by rw [h0 a ha, map_zero]) w hw
   rw [Submodule.bot_coe, closure_singleton] at h
   exact h
 
@@ -251,7 +256,7 @@ theorem extend_positions : GlobalTheory.Published.HarishChandraModules → Globa
     let D₂ : Submodule ℂ (M.sm τ') := (GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.kFin M τ').comap (M.sm τ').subtype
     have hD : ∀ x, j₂ x ∈ closure (j₂ '' (D₂ : Set (M.sm τ'))) := by
       intro x
-      have h := GlobalTheory.T.mem_closure_of_forall_clm_vanish (hπ τ').withSeminorms (D₂.map j₂) (j₂ x) fun f hf =>
+      have h := _root_.GlobalTheory.mem_closure_of_forall_dual_vanish (hπ τ').withSeminorms (D₂.map j₂) (j₂ x) fun f hf =>
         form_zero hHC M τ' (hπ τ').withSeminorms hN₂C f (fun a ha => hf _ ⟨⟨a, hAB τ' ha⟩, ha, rfl⟩) x x.2
       rwa [Submodule.map_coe] at h
     let F' : M.sm τ →ₗ[ℂ] M.sm τ' →ₗ[ℂ] E := F.compl₁₂ (M.sm τ).subtype (M.sm τ').subtype
@@ -264,10 +269,10 @@ theorem extend_positions : GlobalTheory.Published.HarishChandraModules → Globa
       obtain ⟨q, hq, hb⟩ := bound_via hN₁iso (hF2 a ha) i
       exact ⟨q, hq, fun w => hb w ((hsm τ w).1 w.2)⟩
     intro i
-    obtain ⟨q, hq, hb'⟩ := GlobalTheory.T.exists_seminorm_bound_of_dense_second_slot hp j₁ j₂ hinj hcl D₂ hD F' h₂ h₁ ⟨b, hb⟩ i
+    obtain ⟨q, hq, hb'⟩ := _root_.GlobalTheory.bilinear_bound_of_dense_right hp j₁ j₂ hinj hcl D₂ hD F' h₂ h₁ ⟨b, hb⟩ i
     obtain ⟨Sl, C', hS, hb''⟩ := sobBd_seminorm hp hN₁C q hq
     exact ⟨Sl, C', hS, fun w hw => (hb' ⟨w, (hsm τ w).2 hw⟩).trans (hb'' w hw)⟩
-  obtain ⟨Tab, hT1, hT2⟩ := GlobalTheory.T.exists_multilinear_positionwise_extension_of_equivariant (H := fun τ => M.H τ) (fun τ => GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.kFin M τ)
+  obtain ⟨Tab, hT1, hT2⟩ := _root_.GlobalTheory.FactorwiseExtension.exists_multilinear_positionwise_extension (H := fun τ => M.H τ) (fun τ => GlobalTheory.IndefiniteRowSideFullHecke.KTypeExtension.kFin M τ)
     (fun τ => M.sm τ) hAB Rk Rg hRk hRg C hC hext huniq hpostC hcomm' hbs T₀' h0
   have hupd : ∀ (v : M.Vec) τ (w : M.sm τ),
       (fun τ' => ((Function.update v τ w τ' : M.sm τ') : M.H τ')) =

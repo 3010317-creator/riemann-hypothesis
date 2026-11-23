@@ -1,8 +1,9 @@
 module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.AcrisKummerUnits.Splits
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AbsolutelyClosedPolynomialSplitsStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AbsolutelyClosedPolynomialSplits
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StandardEtaleLocalSection
+public import Mathlib.RingTheory.Unramified.LocalStructure
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -23,7 +24,6 @@ import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.Order.CompletePartialOrder
 import Mathlib.RingTheory.Radical.NatInt
-public import Mathlib.RingTheory.Unramified.LocalStructure
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Echelon.Zsqrtd
 import Mathlib.Tactic.Inclusion.Extension.Core.Core
@@ -76,7 +76,7 @@ theorem exists_algHom_away_of_etale {S : Type} [CommRing S]
   have hsection : ∃ e : S, IsIdempotentElem e ∧ e ∉ q.comap (algebraMap S Bg) ∧
       Nonempty (Bg →ₐ[S] Localization.Away e) := by
     obtain ⟨P⟩ := Algebra.IsStandardEtale.nonempty_standardEtalePresentation (R := S) (S := Bg)
-    obtain ⟨s, hs⟩ := GlobalTheory.T.absolutely_closed_polynomial_splits hA P.f P.monic_f
+    obtain ⟨s, hs⟩ := _root_.GlobalTheory.CompanionTheory.MonicSplit.monic_splits hA P.f P.monic_f
 
     have hprod : (s.map fun b => P.x - algebraMap S Bg b).prod ∈ q := by
       have h0 : Polynomial.aeval P.x P.f = 0 := P.hasMap.1

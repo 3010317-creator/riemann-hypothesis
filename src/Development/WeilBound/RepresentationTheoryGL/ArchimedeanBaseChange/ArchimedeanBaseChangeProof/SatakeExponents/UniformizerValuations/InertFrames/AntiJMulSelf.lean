@@ -2,7 +2,8 @@ module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.FrameInert
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegralElementCharPolyNonsplit
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmFieldStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmField
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NormOneUnitHilbertNinety
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -124,7 +125,7 @@ namespace PositivityTheory.Rg.BcB.F.Inert
 
 theorem wittEx : WittEx := by
   intro E _ _ _ hU n w hw
-  obtain ⟨_, hinv, hval, hsplit, _⟩ := GlobalTheory.T.placeConjugation_properties_cmField E hU w
+  obtain ⟨_, hinv, hval, hsplit, _⟩ := _root_.GlobalTheory.ConjAtPlace.main E hU w
   obtain ⟨_, ⟨ϖ, q, hUI, _⟩, _, _⟩ := hsplit hw
   obtain ⟨_, _, _, _, ⟨x₀, hx₀, hδ⟩, _, _⟩ := hUI
   have hx0 : Valued.v x₀ ≤ 1 := (Valuation.mem_integer_iff _ _).1 hx₀

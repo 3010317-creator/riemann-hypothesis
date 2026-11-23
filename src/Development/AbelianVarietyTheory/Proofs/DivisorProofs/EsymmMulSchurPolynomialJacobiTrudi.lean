@@ -1,8 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAddHaarMeasureVolumeLie
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EsymmEqSumFilterPermStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchurMulDetEqDetStatement
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Mathlib.RingTheory.MvPolynomial.Symmetric.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EsymmEqSumFilterPerm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchurMulDetEqDet
 import Mathlib.Algebra.AffineMonoid.Basic
 import Mathlib.Algebra.AffineMonoid.UniqueSums
 import Mathlib.Algebra.Order.Floor.Extended
@@ -108,13 +110,13 @@ open MvPolynomial in
 theorem GlobalTheory.JSW.esymm_mul_schur : ∀ (n : ℕ) (l : Fin n → ℕ), Antitone l → ∀ j ≤ n, MvPolynomial.esymm (Fin n) ℤ j * GlobalTheory.JSW.schur n l = ∑ J ∈ (Finset.univ : Finset (Finset (Fin n))).filter (fun J => J.card = j ∧ Antitone (l + (fun i => if i ∈ J then 1 else 0))), GlobalTheory.JSW.schur n (l + (fun i => if i ∈ J then 1 else 0)) := by
   intro n l hl j _
   apply mul_right_cancel₀ (GlobalTheory.JSW.PieriDeterminant.vdm_ne n)
-  have h1 := GlobalTheory.T.esymm_mul_det_pow_eq_sum_det_shifted n (fun k => l k + n - 1 - k) j
+  have h1 := _root_.GlobalTheory.JSW.esymm_mul_alternant n (fun k => l k + n - 1 - k) j
   beta_reduce at h1
   calc MvPolynomial.esymm (Fin n) ℤ j * GlobalTheory.JSW.schur n l * _
       = ∑ J ∈ (Finset.univ : Finset (Finset (Fin n))).filter (fun J => J.card = j),
           Matrix.det (Matrix.of fun i k : Fin n => (MvPolynomial.X i : MvPolynomial (Fin n) ℤ) ^
             ((l k + n - 1 - (k : ℕ)) + if k ∈ J then 1 else 0)) := by
-        rw [mul_assoc, GlobalTheory.T.schur_mul_vandermonde_det_eq_det n l hl, h1]
+        rw [mul_assoc, _root_.GlobalTheory.JSW.schur_mul_det_eq_det n l hl, h1]
     _ = ∑ J ∈ ((Finset.univ : Finset (Finset (Fin n))).filter (fun J => J.card = j)).filter
           (fun J => Antitone (l + (fun i => if i ∈ J then 1 else 0))),
           Matrix.det (Matrix.of fun i k : Fin n => (MvPolynomial.X i : MvPolynomial (Fin n) ℤ) ^
@@ -127,7 +129,7 @@ theorem GlobalTheory.JSW.esymm_mul_schur : ∀ (n : ℕ) (l : Fin n → ℕ), An
           GlobalTheory.JSW.schur n (l + (fun i => if i ∈ J then 1 else 0)) *
             Matrix.det (Matrix.of fun i j : Fin n => (MvPolynomial.X i : MvPolynomial (Fin n) ℤ) ^ (n - 1 - (j : ℕ))) := by
         refine Finset.sum_congr rfl fun J hJ => ?_
-        rw [GlobalTheory.T.schur_mul_vandermonde_det_eq_det n _ (Finset.mem_filter.1 hJ).2]
+        rw [_root_.GlobalTheory.JSW.schur_mul_det_eq_det n _ (Finset.mem_filter.1 hJ).2]
         have e : ∀ k : Fin n, ((l + (fun i => if i ∈ J then 1 else 0) : Fin n → ℕ)) k + n - 1 - (k : ℕ) =
             (l k + n - 1 - (k : ℕ)) + if k ∈ J then 1 else 0 := by
           intro k; have := k.isLt; simp only [Pi.add_apply]; split_ifs <;> omega

@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FiniteSup
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.BarMatrix
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFockPolynomialIsoUnitaryPairStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsLocalFockIntertwinerRealPlaceOfCoverContra
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NoInvariantPairingSmallerFockSourceStatement
+public import Formalism.SharpRestriction.Divisibility.SchurIrreducible
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NoInvariantPairingSmallerFockSource
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -72,7 +73,7 @@ theorem pairing_eq_zero : ∀ (X : ProvA), Formalism.MainNotions.SchurIrreducibl
       map_add' := fun P Q => by ext v; simp
       map_smul' := fun c P => by ext v; simp }
   have hB' : ∀ P v, B' (κ P) v = b P (j v) := fun P v => by simp [B']
-  have h0 : B' = 0 := GlobalTheory.T.no_invariant_pairing_smaller_fock_source X h5 hAR t al be ga de hd hbig i hi hip hiq B' (fun Y hY P y => by
+  have h0 : B' = 0 := _root_.GlobalTheory.NoInvPairing.no_pairing_smaller_source X h5 hAR t al be ga de hd hbig i hi hip hiq B' (fun Y hY P y => by
     obtain ⟨P, rfl⟩ := κ.surjective P
     have hY' : toFrame M' τ (plainMat e' Y) ∈ lieAt W τ := h₂.lie ▸ ⟨Y, hY, rfl⟩
     have h4 : (plainMat e' Y).trace = Y.trace := trace_reindex' e' Y

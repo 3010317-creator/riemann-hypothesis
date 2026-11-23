@@ -3,8 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjMapApply
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjMapPartRightEquivariant
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeasurableThetaSumOfSchrodinger
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TamePartLeftStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TamePartRightStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TamePartLeft
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TamePartRight
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -118,7 +118,7 @@ theorem main : ∀ (F : Type) [Field F] [NumberField F] (κ κ' : Type) [Fintype
     letI mZ : MeasurableSpace (κ ⊕ κ' → AF F) := borel _
     haveI : BorelSpace (κ ⊕ κ' → AF F) := ⟨rfl⟩
     refine ⟨c, fun Φ hΦ => ?_⟩
-    have hP := IsTame.mapsTo (GlobalTheory.T.tame_part_left F κ κ κ' A hA) Φ hΦ
+    have hP := IsTame.mapsTo (_root_.GlobalTheory.DoublingEv.PartLTame.isTame_partL F κ κ κ' A hA) Φ hΦ
     refine lintegral_sq_split (Homeomorph.sumPiEquivProdPi κ κ' (fun _ => AF F)) (fun a b => rfl) μ μX
       (GlobalTheory.ThetaTransformMeas.continuous_of_mem_schA F hP) (GlobalTheory.ThetaTransformMeas.continuous_of_mem_schA F hΦ) c
       fun y => ?_
@@ -127,7 +127,7 @@ theorem main : ∀ (F : Type) [Field F] [NumberField F] (κ κ' : Type) [Fintype
     letI mZ : MeasurableSpace (κ' ⊕ κ → AF F) := borel _
     haveI : BorelSpace (κ' ⊕ κ → AF F) := ⟨rfl⟩
     refine ⟨c, fun Φ hΦ => ?_⟩
-    have hP := IsTame.mapsTo (GlobalTheory.T.tame_part_right F κ' κ κ A hA) Φ hΦ
+    have hP := IsTame.mapsTo (_root_.GlobalTheory.TamePartR.isTame_partR F κ' κ κ A hA) Φ hΦ
     refine lintegral_sq_split ((Homeomorph.sumPiEquivProdPi κ' κ (fun _ => AF F)).trans
         (Homeomorph.prodComm _ _)) (fun a b => rfl) μ μX
       (GlobalTheory.ThetaTransformMeas.continuous_of_mem_schA F hP) (GlobalTheory.ThetaTransformMeas.continuous_of_mem_schA F hΦ) c

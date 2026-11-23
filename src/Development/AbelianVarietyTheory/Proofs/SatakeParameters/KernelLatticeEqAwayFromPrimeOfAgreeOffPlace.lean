@@ -5,7 +5,7 @@ public import Formalism.LocalToGlobal.GroupLattices.TiedFamilies.TiePtOne
 public import Formalism.SharpRestriction.GrowthBounds.ChartedClasses.ToLEInvApply
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.LocSpBot
 public import Formalism.SharpRestriction.GlobalSchurBounds.GL3Theta
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AdelicLatticeSmulMemOfAgreeAwayFromPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AdelicLatticeSmulMemOfAgreeAwayFromPlace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -185,8 +185,8 @@ theorem smul_latK_of_smul_latAd : ∀ {R : Ranks} {F E : Type} [Field F] [Number
 
 theorem eqOff_latK_of_sameOff : letI := fun D : D7 => D.host.cmStar; ∀ (D : D7) (n p : ℕ) [Fact p.Prime] (G : GAtP p) (A : LocAt D.host.F D.host.E n G), LocInt A → SplAlg A → ∀ v (P : HeightOneSpectrum (𝓞 D.host.E)), PrimeOf p (G.P.W v) (A.iw v) P → ∀ (N : ℕ) (J : Matrix (Fin N) (Fin N) D.host.E) (a : 𝓞 D.host.E) (Lb : Submodule (𝓞 D.host.E) (Fin N → D.host.E)), Module.Finite (𝓞 D.host.E) Lb → Submodule.span D.host.E (Lb : Set (Fin N → D.host.E)) = ⊤ → ∀ x x' : GL (Fin N) (AfE D.host.F D.host.E), SameOff (A.pl v).1 x x' → GL3Theta.EqOff D P (latK D.sp J a x Lb) (latK D.sp J a x' Lb) := by
   intro D n p _ G A hInt hSpl v P hP N J a Lb hfin hspan x x' hoff
-  obtain ⟨m1, h1⟩ := GlobalTheory.T.adelicLattice_smul_mem_of_agree_away_from_place D.host.F D.host.E N Lb hfin hspan (A.pl v).1 x x' hoff
-  obtain ⟨m2, h2⟩ := GlobalTheory.T.adelicLattice_smul_mem_of_agree_away_from_place D.host.F D.host.E N Lb hfin hspan (A.pl v).1 x' x (sameOff_symm _ hoff)
+  obtain ⟨m1, h1⟩ := _root_.GlobalTheory.TwV.Xc.latAd_smul_mem_of_sameOff D.host.F D.host.E N Lb hfin hspan (A.pl v).1 x x' hoff
+  obtain ⟨m2, h2⟩ := _root_.GlobalTheory.TwV.Xc.latAd_smul_mem_of_sameOff D.host.F D.host.E N Lb hfin hspan (A.pl v).1 x' x (sameOff_symm _ hoff)
   refine ⟨max m1 m2, fun a' b hb ha => ?_⟩
   obtain ⟨c, hc, hcab⟩ := normConj_mem_pow D n p G A hInt hSpl v P hP (max m1 m2) a' b hb ha
   have hr : ((a' * b : 𝓞 D.host.E) : D.host.E) ∈ (algebraMap D.host.F D.host.E).range := ⟨_, hcab⟩

@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.Alternates
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AlternatingWordLargeSizeNumericalBoundsStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ComplexConjugationOrbitOneRealPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.EmbeddingSignAlternateOfSignNegStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TwistedDualOrbitPageWordThickIffThickEmbeddingStatement
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AlternatingWordLargeSizeNumericalBounds
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ComplexConjugationOrbitOneRealPlace
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.EmbeddingSignAlternateOfSignNeg
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TwistedDualOrbitPageWordThickIffThickEmbedding
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,16 +77,16 @@ theorem bHat_large_of_roomy {D : D7} (L : SizeData₂ D) (C : ℝ) (h : Roomy L 
 theorem conjWord_hypAT {D : D7} (L : SizeData₂ D) (C : ℝ) (j : Fin D.R.m) (ε : ℤˣ) (τ : D.R.GG) (l : ℕ)
     (hR : Roomy L C) (hl : 11 ≤ l) (hτ : Thick D.host τ) :
     (pageWord L j ε τ (D.R.cc)).HypAT l ∧ ∀ i, (pageWord L j ε τ (D.R.cc)).thick i := by
-  obtain ⟨hord, hplc⟩ := GlobalTheory.T.complexConjugation_orbit_one_realPlace τ
+  obtain ⟨hord, hplc⟩ := _root_.GlobalTheory.HTW.ConjWord.conj_word_one_place τ
   have hth : ∀ i, (pageWord L j ε τ (D.R.cc)).thick i := by
     intro i
-    rw [GlobalTheory.T.twistedDualOrbitPageWord_thick_iff_thickEmbedding L C j ε τ (D.R.cc) hR i]
+    rw [_root_.GlobalTheory.HTW.pageWord_thick_iff L C j ε τ (D.R.cc) hR i]
     unfold Thick at hτ ⊢
     rw [hplc i]
     exact hτ
   refine ⟨⟨?_, ?_, ?_⟩, hth⟩
   · rw [hord]; exact even_two
-  · exact (GlobalTheory.T.embeddingSign_alternate_of_sign_neg ε τ (D.R.cc) rfl).2
+  · exact (_root_.GlobalTheory.signs_alternate_inert ε τ (D.R.cc) rfl).2
   · intro M hM i
     obtain ⟨hB, hroom⟩ := bHat_large_of_roomy L C hR
     have hη : (0 : ℝ) ≤ etaHat L := Nat.cast_nonneg _
@@ -101,7 +102,7 @@ theorem conjWord_hypAT {D : D7} (L : SizeData₂ D) (C : ℝ) (j : Fin D.R.m) (�
     have hMk := key k
     rw [hk] at hMk
     have hi := key i
-    obtain ⟨h1, h2⟩ := GlobalTheory.T.alternatingWord_large_size_numerical_bounds l (bHat L) (etaHat L) (sHat L) (M : ℝ)
+    obtain ⟨h1, h2⟩ := _root_.GlobalTheory.alternatingWord_numerical_bounds l (bHat L) (etaHat L) (sHat L) (M : ℝ)
       ((pageWord L j ε τ (D.R.cc)).sz i : ℝ) hl hB hη hS hroom
       (abs_le.2 ⟨by linarith [hMk.1], by linarith [hMk.2]⟩)
       (abs_le.2 ⟨by linarith [hi.1], by linarith [hi.2]⟩)

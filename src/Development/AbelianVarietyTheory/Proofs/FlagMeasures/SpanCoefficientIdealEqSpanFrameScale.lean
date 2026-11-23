@@ -2,12 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LocClosed
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.Ia
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsFlagStepLocallyStandardDualCoeffOneStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagStepLocallyStandardDualCoeffIntegralStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.IsTermOver
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsFlagStepLocallyStandardDualCoeffOne
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagStepLocallyStandardDualCoeffIntegral
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalFlagScaledFrameEqBaseChangeFlagStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ScaledLocalDualCoeffEqGlobalCoeffStatement
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.LocFacts
-import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.LocLatSat
+import Formalism.PeriodIntegrals.LocLatSat
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LocalLatticeSaturation.LocLatSat
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -99,7 +101,7 @@ theorem span_coefIdeal_eq_span_frFac : ∀ (D : D7) (T : D.host.E) (G : LFlag (D
         rw [hFj]; exact Submodule.subset_span ⟨x, hxX, rfl⟩
       have hv2 : baseChange₂ D p x ∈ LocNG.img n ((A p).LamStd L) := by
         rw [← hΛ]; exact Submodule.subset_span ⟨x, hxΛ, rfl⟩
-      have hO := GlobalTheory.T.flagStep_locallyStandard_dualCoeff_integral (A p) n hn L a (baseChange₂ D p x) hv1 hv2
+      have hO := _root_.GlobalTheory.locCoef_integral (A p) n hn L a (baseChange₂ D p x) hv1 hv2
       rw [← GlobalTheory.T.scaled_local_dual_coeff_eq_global_coeff D T G Z A hA p a x (hXle hxX)]
       rw [SetLike.mem_coe, Submodule.mem_span_singleton]
       exact ⟨⟨_, hO⟩, by rw [Subring.smul_def, smul_eq_mul, mul_comm]⟩
@@ -116,7 +118,7 @@ theorem span_coefIdeal_eq_span_frFac : ∀ (D : D7) (T : D.host.E) (G : LFlag (D
       exact hmem
   ·
     rw [Submodule.span_le, Set.singleton_subset_iff]
-    obtain ⟨v, hvΛ, hvF, hv1⟩ := GlobalTheory.T.exists_flagStep_locallyStandard_dualCoeff_one (A p) n hn L a
+    obtain ⟨v, hvΛ, hvF, hv1⟩ := _root_.GlobalTheory.locStd_exists_flag_coef_one (A p) n hn L a
     rw [← hΛ] at hvΛ
     rw [hFj] at hvF
     set Xr : Submodule D.host.E (VS D).V := G.fl.Xa (a.val + 1) with hXr
@@ -129,7 +131,7 @@ theorem span_coefIdeal_eq_span_frFac : ∀ (D : D7) (T : D.host.E) (G : LFlag (D
             (Λ.map (Formalism.L2.SG.Pf.LocFacts.phi D) ⊓ W.restrictScalars (𝓞 D.host.E)) : Set (Vp D p)) =
           (PI.LocLatEq.latL (D.s.atP p) (Λ.map (Formalism.L2.SG.Pf.LocFacts.phi D)) : Set (Vp D p)) ∩
             Submodule.span (D.s.atP p).Ep (PI.LocLatEq.bc (D.s.atP p) '' (W : Set (Fin (nV D) → D.host.E))) :=
-        inf_eq_inter_span _ _ _ _ (D.s.atP p) _ _ _ hFG
+        _root_.PI.LocLatSat.UnitaryGroupMassFormula.locLatSat _ _ _ _ (D.s.atP p) _ _ _ hFG
       have himg : baseChange₂ D p '' (Xr : Set (VS D).V) =
           PI.LocLatEq.bc (D.s.atP p) '' (W : Set (Fin (nV D) → D.host.E)) := by
         rw [hW, Submodule.map_coe, Set.image_image]

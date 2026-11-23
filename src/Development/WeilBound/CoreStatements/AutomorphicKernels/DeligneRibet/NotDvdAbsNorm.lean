@@ -2,15 +2,18 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.SiegelKlingenDeligneRibet
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AbelContinuation
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AbsNormModEqOfRayRelPowModStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsLargePrimeInRayClassStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PrimeNotDividingCoprimeIdealNormStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RayClassParametrizationExistsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RayClassPartialZetaIntegralityStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RayRelAntitoneModulusAndPowModStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AbsNormModEqOfRayRelPowMod
+public import Formalism.SharpRestriction.GlobalSchurBounds.ShortIntervalPrimes
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsLargePrimeInRayClass
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PrimeNotDividingCoprimeIdealNorm
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RayClassParametrizationExists
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RayClassPartialZetaIntegrality
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RayRelAntitoneModulusAndPowMod
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ExistsAvoidOne
-import Development.AutomorphicSpectrum.Proofs.GlobalProofs.RayClassGroupFiniteRepresentativesStatement
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.DeligneRibet.WeightedSummability.WeightedSummable
+import Development.AutomorphicSpectrum.Proofs.GlobalProofs.RayClassGroupFiniteRepresentatives
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -71,28 +74,28 @@ theorem classValueZ : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F]
       (∀ s : ℂ, 1 < s.re → HasSum (fun I : {I : Ideal (𝓞 F) // CoprimeTo F 𝔣 I ∧ RayRel F 𝔣 I 𝔞} =>
         (classWeight (Ideal.absNorm 𝔠) 𝔠 I.1 : ℂ) * ((Ideal.absNorm I.1 : ℕ) : ℂ) ^ (-s)) (T s)) →
       ∀ k : ℕ, 1 ≤ k → ∃ q : ℚ, T (1 - (k : ℂ)) = (q : ℂ) ∧
-        ∀ l : ℕ, l.Prime → l ≠ Ideal.absNorm 𝔠 → ¬ l ∣ Ideal.absNorm 𝔟 → 0 ≤ padicValRat l q := GlobalTheory.T.ray_class_partial_zeta_integrality
+        ∀ l : ℕ, l.Prime → l ≠ Ideal.absNorm 𝔠 → ¬ l ∣ Ideal.absNorm 𝔟 → 0 ≤ padicValRat l q := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.Integrality.classTwist_value_int
 
 theorem classParamCop : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (𝔣 : Ideal (𝓞 F)), 𝔣 ≠ ⊥ →
     ∀ 𝔞 : Ideal (𝓞 F), CoprimeTo F 𝔣 𝔞 →
       ∃ (𝔟 : Ideal (𝓞 F)) (J : Type) (_ : Fintype J) (r' : J → ℕ) (y : J → 𝓞 F) (v' : ∀ j, Fin (r' j) → 𝓞 F),
-        ClassParam 𝔣 𝔞 𝔟 r' y v' ∧ 𝔟 ⊔ 𝔣 = ⊤ := GlobalTheory.T.ray_class_parametrization_exists
+        ClassParam 𝔣 𝔞 𝔟 r' y v' ∧ 𝔟 ⊔ 𝔣 = ⊤ := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.exists_classParam_sup_eq_top
 
 theorem not_dvd_absNorm {F : Type} [Field F] [NumberField F] {l : ℕ} (hl : l.Prime) {𝔟 : Ideal (𝓞 F)}
-    (h : 𝔟 ⊔ Ideal.span {(l : 𝓞 F)} = ⊤) : ¬ l ∣ Ideal.absNorm 𝔟 := GlobalTheory.T.prime_not_dividing_coprime_ideal_norm F l hl 𝔟 h
+    (h : 𝔟 ⊔ Ideal.span {(l : 𝓞 F)} = ⊤) : ¬ l ∣ Ideal.absNorm 𝔟 := _root_.GlobalTheory.CompanionTheory.DeligneRibet.absNorm_not_dvd_of_sup_span_eq_top F l hl 𝔟 h
 
 theorem deg1Ray : ∀ (F : Type) [Field F] [NumberField F] (𝔣 𝔞 : Ideal (𝓞 F)), 𝔣 ≠ ⊥ → CoprimeTo F 𝔣 𝔞 →
     ∀ (W : Finset (𝓞 F)) (B : ℕ), (∀ x ∈ W, x ≠ 0) →
       ∃ 𝔠 : Ideal (𝓞 F), 𝔠.IsPrime ∧ (Ideal.absNorm 𝔠).Prime ∧ B < Ideal.absNorm 𝔠 ∧ CoprimeTo F 𝔣 𝔠 ∧
-        RayRel F 𝔣 𝔠 𝔞 ∧ ∀ x ∈ W, x ∉ 𝔠 := GlobalTheory.T.exists_large_prime_in_ray_class
+        RayRel F 𝔣 𝔠 𝔞 ∧ ∀ x ∈ W, x ∉ 𝔠 := _root_.GlobalTheory.CompanionTheory.DegOneRay.exists_degOne_prime_in_rayClass
 
 theorem absNorm_modEq (F : Type) [Field F] [NumberField F] (l m : ℕ) {I J : Ideal (𝓞 F)}
-    (h : RayRel F (powMod F l m) I J) : Ideal.absNorm I ≡ Ideal.absNorm J [MOD l ^ m] := GlobalTheory.T.absNorm_modEq_pow_of_rayRel_powMod F l m I J h
+    (h : RayRel F (powMod F l m) I J) : Ideal.absNorm I ≡ Ideal.absNorm J [MOD l ^ m] := _root_.GlobalTheory.CompanionTheory.RayFacts.absNorm_modEq_of_rayRel_powMod F l m I J h
 
 theorem rayRel_mono {F : Type} [Field F] [NumberField F] {𝔣 𝔣' I J : Ideal (𝓞 F)} (h : 𝔣' ≤ 𝔣) (hr : RayRel F 𝔣' I J) :
-    RayRel F 𝔣 I J := (GlobalTheory.T.rayRel_antitone_modulus_and_powMod F).1 𝔣 𝔣' I J h hr
+    RayRel F 𝔣 I J := (_root_.GlobalTheory.CompanionTheory.RayFacts.rayRel_mono_powMod_anti F).1 𝔣 𝔣' I J h hr
 
-theorem powMod_le {F : Type} [Field F] [NumberField F] (l : ℕ) {n m : ℕ} (h : n ≤ m) : powMod F l m ≤ powMod F l n := (GlobalTheory.T.rayRel_antitone_modulus_and_powMod F).2 l n m h
+theorem powMod_le {F : Type} [Field F] [NumberField F] (l : ℕ) {n m : ℕ} (h : n ≤ m) : powMod F l m ≤ powMod F l n := (_root_.GlobalTheory.CompanionTheory.RayFacts.rayRel_mono_powMod_anti F).2 l n m h
 
 theorem smoothed : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F] (𝔣 : Ideal (𝓞 F)), 𝔣 ≠ ⊥ →
     ∀ (S : Finset (Ideal (𝓞 F))), (∀ a ∈ S, CoprimeTo F 𝔣 a) → (∀ a ∈ S, ∀ b ∈ S, RayRel F 𝔣 a b → a = b) →
@@ -177,7 +180,7 @@ theorem deligneRibet : GlobalTheory.Published.DeligneRibet := by
   intro F _ _ _ l _ n hn ε hε hint 𝔠 h𝔠 k hk r r' hr hr'
   have hl : l.Prime := Fact.out
   have h𝔣 : powMod F l n ≠ ⊥ := powMod_ne_bot hl.ne_zero n
-  obtain ⟨S, hS, hd, hc⟩ := GlobalTheory.T.ray_class_group_finite_representatives F (powMod F l n) h𝔣
+  obtain ⟨S, hS, hd, hc⟩ := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.finRay F (powMod F l n) h𝔣
   obtain ⟨Z, hZ⟩ := exists_classZeta F (powMod F l n) h𝔣 S hS hd hc
   choose z hz using fun c : S => (hZ c).2 k hk
   have hZ1 : ∀ c : S, IsRayZeta (powMod F l n) c.1 (Z c) := fun c => (hZ c).1

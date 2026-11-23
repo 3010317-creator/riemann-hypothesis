@@ -2,14 +2,15 @@ module
 
 public import Formalism.SharpRestriction.CuspSpanNormBounds.GlobAut
 public import Formalism.SharpRestriction.GlobalSchurBounds.StandardLattice
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsContinuousMulEquivCongruenceTopologyAdelicStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.CdScaleTieIff
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsContinuousMulEquivCongruenceTopologyAdelic
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GaussianRapidDecay
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CdScaleIsTrueScale
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CmDataIsCMExtAndGramIsHermND
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAdelicSplit
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsArchAdeleTensorEquivComplexCmType
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUniqueInfEmb
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryGroupRealPointsEquivPiIndefiniteUnitary
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUniqueInfEmb
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -134,7 +135,7 @@ theorem exists_adelic_equiv : ∀ I : AutInst, Formalism.MainNotions.GlobalTheor
   have hex := GlobalTheory.Mem.VolEmb.existsUnique_infEmb I.F I.E I.cm.sig hcm
   choose θ hθ hθu using fun v => hex (I.φ v)
   obtain ⟨er, her⟩ := exists_real_equiv I hcm θ hθ
-  obtain ⟨ef, hef, -⟩ := GlobalTheory.T.exists_continuousMulEquiv_congruenceTopology_adelicUnitary I
+  obtain ⟨ef, hef, -⟩ := _root_.GlobalTheory.CongTop.Swap.exists_continuousMulEquiv_adelic I
   obtain ⟨sp, hsp⟩ := GlobalTheory.Mem.VolSplit.exists_adelic_split I.F I.E I.cm.sig I.n I.J
   let g : HA (Ainf I.F) I.cm.sig I.J × HA (Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.Af I.F) I.cm.sig I.J ≃ₜ* I.GA :=
     { toFun := fun x => (er x.1, ef.symm x.2)

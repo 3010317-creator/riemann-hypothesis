@@ -4,12 +4,12 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BlockPart
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InnerProductFormula
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsMemProjEqOnFinset
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CmDataIsCMExtAndGramIsHermND
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CardBlockUpperTriangularSubgroupOfTopBlockStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CardBlockUpperTriangularSubgroupOfTopBlock
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LatticeLevelEqUnitaryInfFrameStabilizerStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelPlacesUnionTwistPlacesSplitDisjointStatement
-import Formalism.HermitianLattices.HermitianLatticesProofs.DualBasic
 public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.LiftsGen
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CmDataIsCMExtAndGramIsHermND
+import Formalism.HermitianLattices.HermitianLatticesProofs.DualBasic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -233,14 +233,14 @@ theorem relIndex_levV_latLev : ∀ {D : D7} {G : Type} [Group G] [Fintype G] {Pl
     by_cases h : PP.1 ∈ R.Pg
     · have e2 : Bl PP = parSub (r_le_V i) (Hl ⟨PP.1, h⟩) := hBp PP h
       simp only [g, dif_pos h]
-      rw [e2, GlobalTheory.T.card_blockUpperTriangularSubgroupOfTopBlock (kP PP.1) _ _ _ (r_le_V i) hn]
+      rw [e2, _root_.GlobalTheory.ParIndex.card_parSub (kP PP.1) _ _ _ (r_le_V i) hn]
       push_cast; ring
     · have e2 : Bl PP = parSub (r_le_V i) ⊤ := by
         rw [hBn PP h]
         ext x
         simp [mem_parSub]
       simp only [g, dif_neg h]
-      rw [e2, GlobalTheory.T.card_blockUpperTriangularSubgroupOfTopBlock (kP PP.1) _ _ _ (r_le_V i) hn, Subgroup.card_top]
+      rw [e2, _root_.GlobalTheory.ParIndex.card_parSub (kP PP.1) _ _ _ (r_le_V i) hn, Subgroup.card_top]
       push_cast; ring
   rw [hidx, Finset.prod_congr rfl (fun PP _ => hloc PP), Finset.prod_coe_sort Ts g, hTs, Finset.prod_union hdis]
   congr 1

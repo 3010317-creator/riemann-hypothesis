@@ -8,24 +8,25 @@ public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.IsI
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.IsRegularRingOfIsDiscreteValuationRing
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.AbelianVarietyTorsionCardEqPowProof
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsOActExtendDedekind
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsAbelianSchemeAndExtendOfGenericHoms
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSabExtension
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsDiscreteValuationRingStalkGeneric
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.EqOneOfTriv
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSectionsGenerateSquareBundle
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSchemeOfIsGrpPullback
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAffineOpenNonzeroLocusOfFibrewiseAmpleStatement
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ValuationRingHenselianAndSmoothPointsLift
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAffineOpenNonzeroLocusOfFibrewiseAmple
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsClosedSubschemeTranslationKernel
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsSecPullNeZero
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.FlatKernelPolarisationCosetsOverDVRStatement
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.InKIffTrivialTwist
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.IsAffineOfQuasiAffine
+public import Development.AbelianVarietyTheory.PublishedTheorems.SemiabelianTori.GeometricallyConnectedSplitTorusAff
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsAbelianSchemeAndExtendOfGenericHoms
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsDiscreteValuationRingStalkGeneric
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ValuationRingHenselianAndSmoothPointsLift
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.RelAmpleIffVeryAmpleBy
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SectionPull
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.VeryAmpleByPwOfAffineLoci
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLiftOfSchemeTheoreticallyDominant
-public import Development.AbelianVarietyTheory.PublishedTheorems.SemiabelianTori.GeometricallyConnectedSplitTorusAff
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -269,7 +270,7 @@ theorem relAmple_of_generic (hl : Out.Laws) (hA : IsAbelianScheme A) (c : Cubica
       (pushHom hB _ x) (by rw [← map_pow, hx, map_one]) (AmpleCrit.triv_translDiff_push hB hL x ht)
     have e' := e.trans (map_one (pushHom hB (Over.mk (𝟙 _)))).symm
     exact Over.OverMorphism.ext (hB.1.hom_ext (congrArg (fun q => q.left) e') (by rw [Over.w, Over.w]))
-  have aff := GlobalTheory.T.isAffineOpen_nonzeroLocus_of_fibrewise_ample V _ A.hom L.L d m u hd hA.proper hL hu (fun q hq => by
+  have aff := _root_.GlobalTheory.FibreAmple.isAffineOpen_nonzeroLocus_of_fibres V _ A.hom L.L d m u hd hA.proper hL hu (fun q hq => by
     by_cases h0 : q = ⊥
     · exact ⟨K, inferInstance, algebraMap V K,
         h0 ▸ (RingHom.injective_iff_ker_eq_bot _).1 (IsFractionRing.injective V K), ha₀⟩

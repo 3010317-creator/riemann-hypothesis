@@ -2,7 +2,7 @@ module
 
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Mathlib.RingTheory.DedekindDomain.Basic
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DedekindFiniteTypeIdealCodimensionStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DedekindFiniteTypeIdealCodimension
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,7 +57,7 @@ theorem degree_count_generates : ∀ (k A : Type) [Field k] [IsAlgClosed k] [Cha
  f₀ ≠ 0 → f ≠ 0 → Ideal.span {f₀} = P₀ * D * ∏ i, Q i ^ N → f ∈ D → f ∈ P → (∀ i, f ∈ Q' i ^ N) → Module.finrank k (A ⧸ Ideal.span {f}) ≤ Module.finrank k (A ⧸ Ideal.span {f₀}) →
  Ideal.span {f} = P * D * ∏ i, Q' i ^ N := by
   intro k A _ _ _ _ _ _ _ N I _ D P₀ P Q Q' f₀ f hP₀ hP hQ hQ' hinj hQ'P hDQ' hDP hf₀ hf hspan hfD hfP hfQ' hdeg
-  obtain ⟨_hfin, hmax, hmul, hle⟩ := GlobalTheory.T.dedekind_finiteType_ideal_codimension k A
+  obtain ⟨_hfin, hmax, hmul, hle⟩ := _root_.GlobalTheory.DedekindCodim.dedekind_finiteType_codim k A
   have hPne : P ≠ ⊥ := by
     intro h; apply hf; rw [h] at hfP; simpa using hfP
   have hmaxne : ∀ M : Ideal A, M.IsMaximal → M ≠ ⊥ := by

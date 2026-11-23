@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.FiniteDimensionalPolyV
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CompactUnitaryHaarSmallBallLowerBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExpNegMulSqrtDivPowLeStatement
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExpNegMulSqrtDivPowLe
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.HilbertSchmidtCompactUnitarySubOneEqTraceStatement
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.HilbertSchmidtCompactUnitarySubOneLeFourMulStatement
 import Formalism.RealPlaceAnalysis.RealPlaceTaylor.CompactHaarRightInvariantInst
@@ -101,7 +102,7 @@ theorem kernel_near_one : ∀ {n : ℕ} (ε : Fin n → Bool), ∃ C : ℝ, 0 �
   set A : ℝ := 4 * n + 4 with hA
   have hApos : 0 < A := by positivity
   obtain ⟨c, hc, D, hball⟩ := GlobalTheory.T.compactUnitaryHaar_smallBall_lower_bound ε
-  obtain ⟨C5, hC5⟩ := GlobalTheory.T.exists_exp_neg_mul_div_rpow_pow_le_mul_sqrt (1 / (2 * A)) D (by positivity)
+  obtain ⟨C5, hC5⟩ := _root_.GlobalTheory.exp_neg_mul_sqrt_div_pow_le (1 / (2 * A)) D (by positivity)
   have hC5pos : 0 ≤ C5 := by
     have := hC5 0
     simp at this

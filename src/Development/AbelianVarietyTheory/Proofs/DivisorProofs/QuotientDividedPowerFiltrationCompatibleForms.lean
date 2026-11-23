@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DivPowerCompatTwoFormDerivativeCompOneForm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContractionLieDerivativeDivPowerCompatFiltrationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeRhamAlgebraQuotientRingSurjectiveAndKernelStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DivPowerCompatRelFiltrationTwoSidedRelEqBotOfBasStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContractionLieDerivativeDivPowerCompatFiltration
+public import Development.AbelianVarietyTheory.Definitions.Divisors.OneFormMapEqKaehlerDifferentialMap
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeRhamAlgebraQuotientRingSurjectiveAndKernel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DivPowerCompatRelFiltrationTwoSidedRelEqBotOfBas
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,11 +54,11 @@ namespace GlobalTheory.PDForm
 
 theorem quot_fil_rel : ∀ (R B : Type) [CommRing R] [CommRing B] [Algebra R B] (J : Ideal B) (δ : DividedPowers J) (G : Type) [CommRing G] [Algebra R G] (J' : Ideal G) (δ' : DividedPowers J') (q : B →+* G) (h : SemiHom (RingHom.id R) q) (n : ℕ), IsDPMorphism δ δ' q → Function.Surjective q → J' = J.map q → (∀ b, q b = 0 ↔ b ∈ fil δ (n + 1)) → (∀ x, h.mDR x ∈ rel R δ' → x ∈ filDR R δ n) ∧ ∀ x ∈ filDR R δ (n + 1), h.mDR x ∈ rel R δ' := by
   intro R B _ _ _ J δ G _ _ J' δ' q h n hd hq hJ hk
-  obtain ⟨-, -, hsurj, hker⟩ := GlobalTheory.T.deRhamAlgebra_quotientRing_surjective_and_kernel R B G q h hq
-  obtain ⟨-, -, hmul, -, -, hanti, -⟩ := (GlobalTheory.T.divPowerCompatRel_filtration_twoSided_rel_eq_bot_of_base).1 R B J δ
+  obtain ⟨-, -, hsurj, hker⟩ := _root_.GlobalTheory.CechDR.semiHom_quotient_surjective_ker R B G q h hq
+  obtain ⟨-, -, hmul, -, -, hanti, -⟩ := (_root_.GlobalTheory.PDForm.rel_two_sided_and_bot).1 R B J δ
   have hv : ∀ m, ∀ a ∈ J, (0 : Derivation R B B) (δ.dpow (m + 1) a) = δ.dpow m a * (0 : Derivation R B B) a := by
     intro m a _; simp
-  have hd0 := ((GlobalTheory.T.contraction_lieDerivative_divPowerCompat_filtration_rules).2 R B J δ 0 hv n).2.1
+  have hd0 := ((_root_.GlobalTheory.PDForm.ctr_lie_rel_filDR).2 R B J δ 0 hv n).2.1
   refine ⟨fun x hx ↦ ?_, fun x hx ↦ ?_⟩
   ·
     have hle : rel R δ' ≤ (rel R δ).map h.mDR := by

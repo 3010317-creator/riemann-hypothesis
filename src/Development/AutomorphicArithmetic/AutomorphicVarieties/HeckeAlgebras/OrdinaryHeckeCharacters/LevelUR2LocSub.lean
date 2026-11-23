@@ -2,8 +2,13 @@ module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.HeckeCommRing
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.WeilGroupCharacters.ContinuousResP
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.HidaCompleteRings.ExtendPt
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.HidaCompleteRings.LocAbs
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ExtendPt
+public import Mathlib.Algebra.Algebra.Subalgebra.Lattice
+public import Mathlib.RingTheory.AdicCompletion.Basic
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Defs
+public import Mathlib.RingTheory.Noetherian.Defs
+public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.PrecompleteOfFinite
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.HidaCompleteRings.LocChar
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.UpOperatorEigenvalues.PtSmall
 import Mathlib.Algebra.Order.Floor.Extended
@@ -121,7 +126,7 @@ private theorem ls_core {A T K ι ι' : Type} [CommRing A] [IsLocalRing A] [IsNo
   classical
   haveI : Algebra.IsIntegral A T := Algebra.IsIntegral.of_finite A T
   haveI : IsNoetherian A T := isNoetherian_of_isNoetherianRing_of_finite A T
-  obtain ⟨e, he, hen, he1, -, -⟩ := AlgebraTools.AnnihilatorQuotientFinite.locAbs A T ι t a htop
+  obtain ⟨e, he, hen, he1, -, -⟩ := _root_.UpperTheory.Reformulated.B.Qe2.locAbs A T ι t a htop
   set T0 := Algebra.adjoin A (Set.range (fun i => t (j i))) with hT0
   have t0mem : ∀ i, t (j i) ∈ T0 := fun i => Algebra.subset_adjoin ⟨i, rfl⟩
   haveI : Module.Finite A T0 := Module.Finite.of_injective T0.val.toLinearMap Subtype.val_injective
@@ -132,7 +137,7 @@ private theorem ls_core {A T K ι ι' : Type} [CommRing A] [IsLocalRing A] [IsNo
   have htop0 : Algebra.adjoin A (Set.range (fun i => (⟨t (j i), t0mem i⟩ : T0))) = ⊤ := by
     rw [hset]
     exact Algebra.adjoin_adjoin_coe_preimage
-  obtain ⟨e0, he0, he0n, he01, -, -⟩ := AlgebraTools.AnnihilatorQuotientFinite.locAbs A T0 ι' (fun i => ⟨t (j i), t0mem i⟩)
+  obtain ⟨e0, he0, he0n, he01, -, -⟩ := _root_.UpperTheory.Reformulated.B.Qe2.locAbs A T0 ι' (fun i => ⟨t (j i), t0mem i⟩)
     (fun i => a (j i)) htop0
   have hmm : ((maximalIdeal A).map (algebraMap A T0)) ≤
       ((maximalIdeal A).map (algebraMap A T)).comap (T0.val : T0 →+* T) := by
@@ -193,7 +198,7 @@ private theorem ls_core {A T K ι ι' : Type} [CommRing A] [IsLocalRing A] [IsNo
       rcases htf b y hy with hb0 | hyz
       · rw [RingHom.mem_ker, hb0, map_zero]
       · exact absurd hyz hy0
-    obtain ⟨z, hQz, hzx⟩ := AlgebraTools.AnnihilatorQuotientFinite.extendPt ℤ A T K Q x.toIntAlgHom hQA
+    obtain ⟨z, hQz, hzx⟩ := _root_.UpperTheory.Reformulated.B.Qi4.extendPt ℤ A T K Q x.toIntAlgHom hQA
     let zr : T →+* K := z.toRingHom
     have hzx' : ∀ b, zr (algebraMap A T b) = x b := hzx
     have hbd : ∀ s, ‖zr s‖ ≤ 1 := ls_le zr (fun b => by rw [hzx']; exact hx1 b)

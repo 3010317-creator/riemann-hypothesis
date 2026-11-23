@@ -1,9 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.CommutativeAlgebra.InvariantSubspaceMobiusInverseRecEqOfFinrankLt
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.EndomorphismMassMulParabolicInductionTrivialStatement
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.EndomorphismMassOfCharpolyCardCyclicVectorsStatement
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.FinsumCardCyclicVectorsInvariantSubspacesStatement
+public import Mathlib.RingTheory.Coalgebra.IsFrobenius
+public import Mathlib.RingTheory.HopfAlgebra.Basic
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.EndomorphismMassMulParabolicInductionTrivial
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.EndomorphismMassOfCharpolyCardCyclicVectors
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.FinsumCardCyclicVectorsInvariantSubspaces
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -123,14 +127,14 @@ theorem mu_rec : ∀ (F : Type) [Field F] [Finite F] (P : F[X]), P.Monic →
     (Nat.card F : ℂ) ^ P.natDegree * mu P = conv (fun _ => 1) mu P ∧ mu (1 : F[X]) = 1 := by
   intro F _ _ P hP
   refine ⟨?_, mu_one F⟩
-  have key := GlobalTheory.T.endomorphismMass_mul_parabolic_induction_trivial F (Fin P.natDegree → F)
+  have key := _root_.GlobalTheory.CuspGL.MassMult.mass_mult F (Fin P.natDegree → F)
     (fun V _ _ _ g => (Nat.card {v : V // ∀ U : Submodule F V, (∀ x ∈ U, g x ∈ U) → v ∈ U → U = ⊤} : ℂ))
     (by
       intro V V' _ _ _ _ _ _ e g
       congr 1
       exact (Nat.card_congr (e.toEquiv.subtypeEquiv fun v => cyclic_conj e g v)).symm)
     P hP (by simp)
-  simp only [GlobalTheory.T.finsum_card_cyclic_vectors_invariant_subspaces] at key
+  simp only [_root_.GlobalTheory.CuspGL.finsum_card_cyclic_eq] at key
   rw [mass_const] at key
   have hr : conv (fun D : F[X] => mass (fun g : Module.End F (Fin D.natDegree → F) =>
       (Nat.card {v : Fin D.natDegree → F // ∀ U : Submodule F (Fin D.natDegree → F),
@@ -139,7 +143,7 @@ theorem mu_rec : ∀ (F : Type) [Field F] [Finite F] (P : F[X]), P.Monic →
     unfold conv
     refine finsum_mem_congr rfl fun x hx => ?_
     beta_reduce
-    rw [GlobalTheory.T.endomorphismMassOfCharpoly_card_cyclic_vectors F x.1 hx.1, div_self (glCard_ne_zero_of_finite F _)]
+    rw [_root_.GlobalTheory.CuspGL.mass_card_cyclic F x.1 hx.1, div_self (glCard_ne_zero_of_finite F _)]
   rw [← hr, ← key]
   unfold mu
   simp [mul_div_assoc]

@@ -2,21 +2,22 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnifAt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KappaConstantMulOfCoprimeEllipticPolynomialsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalTwistContinuousInvolutionIntegralPropertiesStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalTwistContinuousInvolutionIntegralProperties
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrbitalIntegralUnitIndicatorEventuallyOneClassStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmField
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedOrbitalIntegralTwistedConjInvariantStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedOrbitalIntegralTwistedConjInvariant
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLinks.AdelicClassCountProductStatement
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLinks.EllipticCharpolyLocalRealisationStatement
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLinks.EllipticCharpolySelfReciprocal
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLinks.FiniteEllipticCharpolysSupportStatement
-public import Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLinks.FiniteTwistedClassesCharpoly
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteTwistedClassesCharpoly
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLinks.IntegralConjugacyAlmostAllStatement
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLinks.KappaSignMultiplicative
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLinks.LocalPointsIntegralAlmostAllStatement
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLinks.MonicDivisorSignSumStatement
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLinks.UnitaryConjugacySignProductStatement
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.IsobaricBaseChange.IntegralCoefficientBaseChange.UnitaryBaseChangeCharacters.UnitaryBaseChangeLinks.UnitaryMassFormulaStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmField
 import Mathlib.Algebra.AffineMonoid.UniqueSums
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -98,7 +99,7 @@ theorem exists_ne_zero_of_twOrb [TopologicalSpace G] (K : Subgroup G) (δ : G) (
 theorem twOrb_conj [TopologicalSpace G] [IsTopologicalGroup G] {K K' : Subgroup G} (hK : IsCompact (K : Set G))
     (hK' : IsLevel (MonoidHom.id G) K K') {f : G → ℂ} (hf : IsHecke K' f) (δ g : G) :
     twOrb (MonoidHom.id G) K (g⁻¹ * δ * g) f = twOrb (MonoidHom.id G) K δ f := by
-  refine GlobalTheory.T.twistedOrbitalIntegral_twistedConj_invariant G (MonoidHom.id G) K δ g f fun x => ?_
+  refine _root_.GlobalTheory.TwOrbConj.twOrb_twConj G (MonoidHom.id G) K δ g f fun x => ?_
   haveI : CompactSpace K := isCompact_iff_compactSpace.1 hK
   have ho : IsOpen ((K'.subgroupOf K : Subgroup K) : Set K) := hK'.1.preimage continuous_subtype_val
   haveI := Subgroup.quotient_finite_of_isOpen _ ho
@@ -411,7 +412,7 @@ theorem fixedP (hU : Unr E) (hn : 1 ≤ n) {S : Set (Pl E)} (hS : IsSection S) {
       ∏ᶠ w ∈ S, kapOrb n w (atPl w p.1) (atPl w p.2) (f w) else 0 := by
   have hsep : ∀ w : Pl E, (atPl w P).Separable := atPl_separable hP
   haveI : ∀ w, Finite (LocCl n P w) := fun w =>
-    ((GlobalTheory.T.finite_twisted_classes_charpoly E hU n w (atPl w P) (hsep w)).2).to_subtype
+    ((_root_.GlobalTheory.BCT.ClsFin.classes_finite E hU n w (atPl w P) (hsep w)).2).to_subtype
   have hdivs := (GlobalTheory.T.monic_divisor_sign_sum E P hP.1 hP.2.2.1 (fun _ => 1) (fun _ _ _ _ _ _ => by simp) (fun _ _ _ => Or.inl rfl)).1
   have hP0 : P ≠ 0 := hP.1.ne_zero
   haveI : Finite (Fac P) := by
@@ -424,7 +425,7 @@ theorem fixedP (hU : Unr E) (hn : 1 ≤ n) {S : Set (Pl E)} (hS : IsSection S) {
       rw [h1] at e
       exact mul_left_cancel₀ (d'.2.1.ne_zero) e
     exact Subtype.ext (Prod.ext h1 h2)
-  have hKc : ∀ w, IsCompact (KL n w : Set (UL n w)) := fun w => (GlobalTheory.T.localTwist_continuous_involution_integral_properties E hU n w).2.2.2.2.2.2.2.1
+  have hKc : ∀ w, IsCompact (KL n w : Set (UL n w)) := fun w => (_root_.GlobalTheory.BCT.ThBasic.twist_basic E hU n w).2.2.2.2.2.2.2.1
   have hgood := ae_good hU hn hS hP hf.2
   have E1 := GlobalTheory.T.adelic_class_count_product (Pl E) S (LocCl n P) (Fac P) {c : TwCl (MonoidHom.id (UE E n)) // c.rep.1.val.charpoly = P}
     (locCl hU) (fun w c => twOrb (MonoidHom.id _) (KL n w) c.1.rep (f w))

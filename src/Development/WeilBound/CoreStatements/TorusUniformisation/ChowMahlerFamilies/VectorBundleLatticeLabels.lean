@@ -4,9 +4,17 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsG
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsLatFlagPair
 public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenLatticeDedekindTwist
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LabelEmbeddingInjectiveStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeEigenVectorBundleStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieOmegaLatticeVectorBundleStatement
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.InstFintypeSumElim
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LabelEmbeddingInjective
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EtaleLocalizationAtPrimeTensorOfLowHeight
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+import Mathlib.Order.CompletePartialOrder
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeEigenVectorBundle
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
+import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieOmegaLatticeVectorBundle
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NotInFibreOfIsUnit
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -48,7 +56,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.CompactGapsGE
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsLatFamilyCongr
-public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.InstFintypeSumElim
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericPointNormalCoords
 
 @[expose] public section
@@ -104,15 +111,15 @@ theorem PositivityTheory.Xgn.vector_bundle_lattice_labels : ∀ (E : Type) [Fiel
   have hvb : (𝔐.V t).IsVB (labelRk D t) (𝔐.Vgen t) := 𝔐.vb t
   refine ⟨?_, ?_⟩
   · have hsm : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
-    obtain ⟨hLat, -⟩ := GlobalTheory.T.lie_omega_lattice_vector_bundle 𝔐.X Ω 𝔐.ξ 𝔐.t.G 𝔐.Li 𝔐.M hgen hsm
-    obtain ⟨hinj, hcard⟩ := GlobalTheory.T.label_embedding_injective E H l c
+    obtain ⟨hLat, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieLat_isVB_of_smooth 𝔐.X Ω 𝔐.ξ 𝔐.t.G 𝔐.Li 𝔐.M hgen hsm
+    obtain ⟨hinj, hcard⟩ := _root_.GlobalTheory.CompanionTheory.Ar.labels_all_once E H l c
     have hσinj : Function.Injective 𝔐.emb := fun a b hab =>
       hinj (RingHom.ext fun x => 𝔐.cst.injective (RingHom.congr_fun hab x))
     letI : Fintype (CMType H ⊕ CMType H) := by
       haveI : Finite (CMType H ⊕ CMType H) := Nat.finite_of_card_ne_zero (by
         rw [hcard]; exact Module.finrank_pos.ne')
       exact Fintype.ofFinite _
-    have h := (GlobalTheory.T.lattice_eigen_vector_bundle 𝔐.X Ω 𝔐.ξ 𝔐.Li E 𝔐.ρ 𝔐.M.lat (overPrime 𝔐.ξ p) (Module.finrank Ω 𝔐.Li)
+    have h := (_root_.GlobalTheory.CompanionTheory.Ar.EigSplit.isVBOn_eigSp 𝔐.X Ω 𝔐.ξ 𝔐.Li E 𝔐.ρ 𝔐.M.lat (overPrime 𝔐.ξ p) (Module.finrank Ω 𝔐.Li)
       (CMType H ⊕ CMType H) 𝔐.emb hgen hσinj (by rw [← Nat.card_eq_fintype_card]; exact hcard)
       (HcVb.isVBOn_of_isVB hLat _)
       (fun q _ a e he => by

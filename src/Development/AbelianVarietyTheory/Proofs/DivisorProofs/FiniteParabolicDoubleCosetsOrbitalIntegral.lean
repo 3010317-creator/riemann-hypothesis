@@ -3,8 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ParP
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KrylovApply
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompactInvertibleKrylovMatricesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsUnitDetKrylovMatrixOfSeparableStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KrylovMatrixConjEqOfCharpolyEqStatement
+public import Mathlib.FieldTheory.Separable
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsUnitDetKrylovMatrixOfSeparable
+public import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KrylovMatrixConjEqOfCharpolyEq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedCentralizerBlockLeParabolic
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsOpenIsCompactUnitaryIntegralPoints
 import Mathlib.Algebra.Order.Floor.Extended
@@ -57,12 +59,12 @@ open GlobalTheory.LeviDesc.Krylov
 
 theorem exists_cyclic {F : Type} [Field F] {r : ℕ} (y : Matrix (Fin r) (Fin r) F) (hy : y.charpoly.Separable) :
     ∃ e : Fin r → F, IsUnit (krylov y e).det :=
-  GlobalTheory.T.exists_isUnit_det_krylovMatrix_of_separable y hy
+  _root_.GlobalTheory.LeviDesc.Krylov.exists_isUnit_det_krylov_of_separable y hy
 
 theorem krylov_conj_eq {F : Type} [Field F] {r : ℕ} (y y' : Matrix (Fin r) (Fin r) F) (e e' : Fin r → F)
     (hc : y.charpoly = y'.charpoly) (he : IsUnit (krylov y e).det) (he' : IsUnit (krylov y' e').det) :
     (krylov y e)⁻¹ * y * krylov y e = (krylov y' e')⁻¹ * y' * krylov y' e' :=
-  GlobalTheory.T.krylovMatrix_conj_eq_of_charpoly_eq y y' e e' hc he he'
+  _root_.GlobalTheory.LeviDesc.Krylov.krylov_conj_eq_of_charpoly_eq y y' e e' hc he he'
 
 theorem isClosed_charpoly_eq (E : Type) [Field E] [NumberField E] (w : Pl E) (r : ℕ)
     (χ : (w.adicCompletion E)[X]) : IsClosed {y : GLw r w | y.val.charpoly = χ} := by

@@ -1,9 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHolPeriods
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramRePosDefAdjointPeriodStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicFamilyConjConstantStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSemisimpleRingOfPosFormAdjointClosedStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramRePosDefAdjointPeriod
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Mathlib.RingTheory.SimpleModule.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicFamilyConjConstant
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.Matrix.Hermitian
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSemisimpleRingOfPosFormAdjointClosed
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -247,7 +253,7 @@ theorem retype : ∀ (O : Type) [Ring O] (bar : O → O) (g : ℕ) (ρ : O →+*
     · intro b hb
       rw [hF b hb]
       rfl
-  obtain ⟨Q, hQh, hQp, hQa⟩ := GlobalTheory.T.gram_re_posDef_adjoint_period O bar g ρ D (P b₀) _ e hper
+  obtain ⟨Q, hQh, hQp, hQa⟩ := _root_.GlobalTheory.PELU.gram_re_posdef_adj O bar g ρ D (P b₀) _ e hper
   have hcl : ∀ x ∈ S, ∃ y ∈ S, Q * y = xᴴ * Q := by
     intro x hx
     induction hx using Algebra.adjoin_induction with
@@ -268,8 +274,8 @@ theorem retype : ∀ (O : Type) [Ring O] (bar : O → O) (g : ℕ) (ρ : O →+*
       obtain ⟨v, hv, hv'⟩ := hy
       exact ⟨v * u, S.mul_mem hv hu, by
         rw [← Matrix.mul_assoc, hv', Matrix.mul_assoc, hu', Matrix.conjTranspose_mul, Matrix.mul_assoc]⟩
-  haveI : IsSemisimpleRing S := GlobalTheory.T.isSemisimpleRing_of_posDef_adjoint_closed _ Q S hQh hQp hcl
-  obtain ⟨B'', h, hB''o, hb₀'', hB''sub, hh1, hhd, hhu⟩ := GlobalTheory.T.holomorphic_family_conj_constant S g m B' b₀ F hB'o hb₀' hFd
+  haveI : IsSemisimpleRing S := _root_.GlobalTheory.isSemisimpleRing_of_posForm_adjoint_closed _ Q S hQh hQp hcl
+  obtain ⟨B'', h, hB''o, hb₀'', hB''sub, hh1, hhd, hhu⟩ := _root_.GlobalTheory.holFamily_conj_const S g m B' b₀ F hB'o hb₀' hFd
   refine ⟨B'', fun b => (h b)⁻¹, hB''o, hb₀'', hB''sub.trans Set.inter_subset_left, by simp [hh1], ?_, ?_⟩
   · exact dOn_inv h hhd (fun b hb => ((Matrix.isUnit_iff_isUnit_det _).1 (hhu b hb).1).ne_zero)
   · intro b hb

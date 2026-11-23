@@ -2,8 +2,11 @@ module
 
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMemRightTranslateMemIdentityComponentStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionComponentsPreimageOfIsPullbackStatement
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMemRightTranslateMemIdentityComponent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionComponentsPreimageOfIsPullback
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -86,7 +89,7 @@ theorem mem_unitComponent_mul_mem :
     Over.homMk (pullback.lift ω (𝟙 _) (by simp [p])) (pullback.lift_snd _ _ _)
   have hy'q : y'.left ≫ q = ω := pullback.lift_fst _ _ _
   have heq : (η[G']).left ≫ q = p ≫ (η[G]).left := overPullback_unit_comp_fst p G
-  have hZ := GlobalTheory.T.preimage_section_connectedComponentIn_of_isPullback G.left S G'.left (Spec (CommRingCat.of K)) G.hom G'.hom p q (η[G]).left (η[G']).left hsm
+  have hZ := _root_.GlobalTheory.sectionComponents_preimage_of_isPullback G.left S G'.left (Spec (CommRingCat.of K)) G.hom G'.hom p q (η[G]).left (η[G']).left hsm
     (IsPullback.of_hasPullback G.hom p) (Over.w η[G]) (Over.w η[G']) heq
   let pt : Spec (CommRingCat.of K) := IsLocalRing.closedPoint K
   have hy'Z : y'.left pt ∈ connectedComponent ((η[G']).left pt) := by
@@ -105,7 +108,7 @@ theorem mem_unitComponent_mul_mem :
       show G.hom (ω pt) = _
       rw [hω]
     rw [this]; exact hU
-  obtain ⟨z, hz1, hz2⟩ := GlobalTheory.T.exists_mem_rightTranslate_mem_identityComponent K G' hsm' (q ⁻¹ᵁ U) y' hU' hy'Z
+  obtain ⟨z, hz1, hz2⟩ := _root_.GlobalTheory.exists_mem_and_rightTranslate_mem_of_mem_identityComponent K G' hsm' (q ⁻¹ᵁ U) y' hU' hy'Z
   let L : G' ⟶ P.obj (G ⊗ G) := lift (𝟙 G') (toUnit G' ≫ y') ≫ Functor.LaxMonoidal.μ P G G
   have hmap : ∀ {A B : Over S} (f : A ⟶ B), (P.map f).left ≫ pullback.fst B.hom p = pullback.fst A.hom p ≫ f.left := by
     intro A B f; simp [P]

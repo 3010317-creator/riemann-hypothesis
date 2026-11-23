@@ -9,17 +9,20 @@ public import Development.AutomorphicSpectrum.Statements.AlgebraStatements.Hodge
 public import Development.AutomorphicSpectrum.Statements.AlgebraStatements.OrdinaryCurveStatement
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DifferentGeneratorDualIntegral
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PtAfTypeMain
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyModelHodgeRelayStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeTateFreeIntegralModelsStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyModelHodgeRelay
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.ValCastSub
 public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.ExistsCmTypeEmbedding
 public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.ExistsDualFamily
 public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.IsUnitOfVal
 public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.KernelMem
 public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.ReducesAtOfWithE
-import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.SequenceDifferentialsExist
 public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.TestOrderSections
 public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.Typed
+public import Development.WeilBound.CoreStatements.HodgeTatePoints.ExistsDualOf
+public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.IsIntegrallyClosedOfDenomBis
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IntegralClosureHeightEqOneOfLiesOver
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeTateFreeIntegralModels
+import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.SequenceDifferentialsExist
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,8 +62,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.CompactGapsGE
-public import Development.WeilBound.CoreStatements.HodgeTatePoints.ExistsDualOf
-public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.IsIntegrallyClosedOfDenomBis
 
 @[expose] public section
 
@@ -106,10 +107,10 @@ theorem PositivityTheory.Xgn.test_group_point_exists : GlobalTheory.CompanionThe
   haveI : NeZero (p ^ 𝔐.R p) := ⟨pow_ne_zero _ hpp.ne_zero⟩
   have hR4 := 𝔐.R_ge p hpS
   obtain ⟨h0, hNoe, hIC, hFr⟩ := Par.chart_facts E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hd p hpS A m hpm O c' hc'
-  obtain ⟨-, hN, -⟩ := GlobalTheory.T.hodge_tate_free_integral_models E H D l Xo c O₀ β Y S Ω K J y 𝔐 p hpS (Par.zp Ω p) (Par.mem_range_zp Ω p)
+  obtain ⟨-, hN, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HT.hcpt_generic_point E H D l Xo c O₀ β Y S Ω K J y 𝔐 p hpS (Par.zp Ω p) (Par.mem_range_zp Ω p)
   obtain ⟨AA, AW, hAA, hAW, hM, hret, -⟩ := PositivityTheory.Xgn.test_order_sections E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hd hpq p
     hpS hfree hp2 hdisc b hb φ hφ A m hpm O t₀ Sg e φ' F pq sc w σF hO hsec G c' hc' P i hseq hbase C RC hT χ hχ
-  obtain ⟨-, htight⟩ := GlobalTheory.T.arith_variety_model_hodge_relay hHD hOC E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hd hpq p
+  obtain ⟨-, htight⟩ := _root_.GlobalTheory.CompanionTheory.Relay.arith_variety_model_hodge_relay hHD hOC E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hd hpq p
     hpS hfree hp2 hdisc b hb φ hφ A m hpm O t₀ Sg e φ' F pq sc w σF hO hsec G c' hc' P i hseq hbase C RC hT χ hχ v hv hvp
   obtain ⟨g, io, ev, Hm, Eg, hio, hev, hcard, hEt, ⟨Ei, hEi, hiso⟩, hE, hH⟩ :=
     point_data hF E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hd hpq p hpS A m hpm O G c' hc' P C RC w hO.2.2.2.2.2.2.2 hT

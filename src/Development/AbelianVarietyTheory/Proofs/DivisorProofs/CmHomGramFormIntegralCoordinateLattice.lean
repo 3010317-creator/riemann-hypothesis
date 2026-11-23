@@ -3,10 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLinearHomProd
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.EigenvectorLieDegree
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGramMatricesCmUnitaryShimuraObject
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ScalarEqOfWeilPairingEqPrincipalCMTripleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilPairingCompatibleAddFirstSlotComplexStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilPairingCompatibleAddSecondSlotComplexStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilPairingCompatibleScalarSecondSlotConjStatement
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ScalarEqOfWeilPairingEqPrincipalCMTriple
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilPairingAddLeftComplex
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilPairingAddRightComplex
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilPairingSmulRightConj
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -88,7 +89,7 @@ theorem weilEq_prod_right {I₀ : Type} (f : A.t.G ⟶ B.t.G) (hf : GlobalTheory
   | singleton a => simpa using h a
   | cons a s has hs ih =>
     rw [Finset.prod_cons, Finset.sum_cons]
-    exact GlobalTheory.T.weilPairingCompatible_add_second_position_complex E H K σ₁ A B f (G a) _ hf.isMonHom (hG a).isMonHom
+    exact _root_.GlobalTheory.weilEq_mul_right_add E H K σ₁ A B f (G a) _ hf.isMonHom (hG a).isMonHom
       (isLinearHom_finprod s G hG).isMonHom _ _ (h a) ih
 
 theorem weilEq_prod_prod {I₀ J₀ : Type} (F : I₀ → (A.t.G ⟶ B.t.G)) (hF : ∀ i, GlobalTheory.Serre.IsLinearHom A.t.act B.t.act (F i))
@@ -101,7 +102,7 @@ theorem weilEq_prod_prod {I₀ J₀ : Type} (F : I₀ → (A.t.G ⟶ B.t.G)) (hF
   | singleton a => simpa using weilEq_prod_right (F a) (hF a) G hG (r a) (h a) hT
   | cons a s has hs ih =>
     rw [Finset.prod_cons, Finset.sum_cons]
-    exact GlobalTheory.T.weilPairingCompatible_add_first_position_complex E H K σ₁ A B (F a) _ _ (hF a).isMonHom (isLinearHom_finprod s F hF).isMonHom
+    exact _root_.GlobalTheory.CM.WeilAddLeft.weilEq_mul_left E H K σ₁ A B (F a) _ _ (hF a).isMonHom (isLinearHom_finprod s F hF).isMonHom
       (isLinearHom_finprod T G hG).isMonHom _ _ (weilEq_prod_right (F a) (hF a) G hG (r a) (h a) hT) ih
 
 theorem weilEq_pow_pow (f g : A.t.G ⟶ B.t.G) (hf : GlobalTheory.Serre.IsLinearHom A.t.act B.t.act f)
@@ -135,7 +136,7 @@ theorem weilEq_combo (X : CMObj H K ρ σ₁ p 0) (gP : Matrix (Fin p) (Fin p) (
     (GlobalTheory.Serre.IsLinearHom.act _ _).comp (X.lin (Sum.inl a))
   refine weilEq_prod_prod _ (hlin x) _ (hlin y) _ (fun a b => ?_) hne hne
   have h1 := weilEq_act_left (x a) (hG.1 a b)
-  exact GlobalTheory.T.weilPairingCompatible_scalar_second_position_conj E H K σ₁ (X.A true) X.B _ _ (hlin x a).isMonHom (X.lin (Sum.inl b)).isMonHom _ (y b) h1
+  exact _root_.GlobalTheory.CM.ActRight.weilEq_act_right E H K σ₁ (X.A true) X.B _ _ (hlin x a).isMonHom (X.lin (Sum.inl b)).isMonHom _ (y b) h1
 
 theorem integral_of_coords (X : CMObj H K ρ σ₁ p 0) (gP : Matrix (Fin p) (Fin p) (𝓞 E))
     (gQ : Matrix (Fin 0) (Fin 0) (𝓞 E)) (hG : GlobalTheory.FlatCM.IsGram X gP gQ) (barE : E →+* E)
@@ -155,7 +156,7 @@ theorem integral_of_coords (X : CMObj H K ρ σ₁ p 0) (gP : Matrix (Fin p) (Fi
       ((X.A true).t.act.act (∑ a, ∑ b, x a * gP a b * H.bar (y b))) (𝟙 _)
       (spMap (σ₁.comp (algebraMap (𝓞 K) K))) := fun k u v e hk hu hv =>
     (h1 k u v e hk hu hv).symm.trans (h2 k u v e hk hu hv)
-  have h4 := GlobalTheory.T.scalar_eq_of_weilPairing_eq_principalCMTriple E H K ρ σ₁ (X.A true) X.ρ_sq X.typeP _ _ h3
+  have h4 := _root_.GlobalTheory.TwistScalarUnique.eq_of_weilEq E H K ρ σ₁ (X.A true) X.ρ_sq X.typeP _ _ h3
   refine ⟨r, ?_⟩
   have h5 := congrArg (fun z : 𝓞 E => (z : E)) h4
 

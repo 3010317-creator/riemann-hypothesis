@@ -2,7 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.FiniteResidueFieldPadicInt
 public import Mathlib.Basic.Complex.Basic
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.QBinomialSumCardQuotientSubspacesStatement
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.QBinomialSumCardQuotientSubspaces
+public import Mathlib.Algebra.Module.Torsion.Basic
+public import Mathlib.RingTheory.LocalRing.ResidueField.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,8 +52,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.Algebra.Module.Torsion.Basic
-public import Mathlib.RingTheory.LocalRing.ResidueField.Basic
 
 @[expose] public section
 
@@ -169,7 +170,7 @@ theorem sum_alt_card_subElem_ge : ∀ (O K : Type) [CommRing O] [IsDomain O] [Is
     intro j
     rw [hset j, Set.ncard_image_of_injective _ hinj, ← Nat.card_coe_set_eq]
     rfl
-  have hI := GlobalTheory.T.qBinomial_sum_card_quotient_subspaces k V 1
+  have hI := _root_.GlobalTheory.qBinomial_subspaces k V 1
   rw [Finset.prod_eq_zero (Finset.mem_range.2 (by rw [hdV]; omega : 0 < Module.finrank k V)) (by simp)] at hI
   have hqk : (Nat.card k : ℂ) = (qRes O : ℂ) := rfl
   simp only [one_pow, mul_one, hqk, hdV] at hI

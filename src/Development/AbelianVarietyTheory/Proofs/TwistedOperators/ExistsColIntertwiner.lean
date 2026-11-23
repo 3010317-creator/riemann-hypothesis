@@ -6,19 +6,23 @@ public import Formalism.LocalToGlobal.IndefiniteReal.LinksLemmas
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.AdmissibleDiscreteSeriesOfHasParam
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HarishChandraModulesOn
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DefiniteLastStepRealIntertwiner
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TotalDegreeSubstFLe
+public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsHoweDualityIntertwinerUnitaryPairLocal
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GridRowRealParameterSuccAllPlusLowestWeightsStatement
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.PureTensorLIntertwine
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VacuumCharacterPositiveDefiniteSourceStatement
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntValuationEqOfMem
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AllPositiveModelFiniteDimensionalCompactTypeStatement
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContDiffSetIntegralNat
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEquivariantPiTensorPolynomialBilinearStatement
+import Mathlib.LinearAlgebra.PiTensorProduct.Basic
+import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEquivariantPiTensorPolynomialBilinear
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsRealIntertwinerOfCompactGroupIntertwiner
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockPolynomialVectorBasisChangeEqSubstitutionStatement
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockVectorsOfThetaDatumInjectiveStatement
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HasInfExpMulZero
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsHoweDualityIntertwinerUnitaryPairLocalStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GridRowRealParameterSuccAllPlusLowestWeightsStatement
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmPureTensorOOfFinite
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TendstoInfMulProd
 import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
@@ -234,10 +238,10 @@ theorem exists_col_intertwiner : ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype Γ
   have hl := fun τ =>
     haveI := (m τ).1
     haveI := (m' τ).1
-    GlobalTheory.T.exists_howeDuality_intertwiner_unitaryPair_local (G.nX j).V.rank (G.Xp j).V.rank (hn τ) (ν τ) (x₁ τ) (x₃ τ) _ _ ((G.Xp j).M.H τ) ((G.Xp j).M.σ τ) ((G.nX j).M.H τ) ((G.nX j).M.σ τ)
+    _root_.GlobalTheory.CompactHowe.exists_local_lift (G.nX j).V.rank (G.Xp j).V.rank (hn τ) (ν τ) (x₁ τ) (x₃ τ) _ _ ((G.Xp j).M.H τ) ((G.Xp j).M.σ τ) ((G.nX j).M.H τ) ((G.nX j).M.σ τ)
       (n1 τ) (n2 τ) (n3 τ) (n4 τ) (m τ).2.2.1 (m τ).2.2.2 (m' τ).2.2.1 (m' τ).2.2.2
   choose I I0 hI using hl
-  obtain ⟨J, J0, hJ⟩ := GlobalTheory.T.exists_equivariant_piTensor_polynomialBilinear D.what₂.Tau (G.nX j).V.rank (G.Xp j).V.rank (G.Xp j).M.H (G.nX j).M.H I I0
+  obtain ⟨J, J0, hJ⟩ := _root_.GlobalTheory.CompactHowe.PolyTensor.exists_tensor D.what₂.Tau (G.nX j).V.rank (G.Xp j).V.rank (G.Xp j).M.H (G.nX j).M.H I I0
   have key : ∀ (g : D.what₂.Tau → Matrix (Fin (G.Xp j).V.rank) (Fin (G.Xp j).V.rank) ℂ)
       (h : D.what₂.Tau → Matrix (Fin (G.nX j).V.rank) (Fin (G.nX j).V.rank) ℂ),
       (∀ τ, g τ ∈ Formalism.QuantumDeterminants.UH (gramAt D (G.Xp j).V τ)) → (∀ τ, h τ ∈ Formalism.QuantumDeterminants.UH (gramAt D (G.nX j).V τ)) → ∀ φ x,

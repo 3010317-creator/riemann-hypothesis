@@ -9,10 +9,16 @@ public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.CompSpli
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.CuspEqZeroOfGenericValues
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsRealisationPrimeDataCurveLiftingStatement
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.GenFrExAndGenFromTest
-public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.PageHypothesesAtCuspStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.CurveAsm
+public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.PageHypothesesAtCusp
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.AuxiliaryCuspFormConstantMonotone
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.HeightInequalitiesIndefiniteLiftIndexStatement
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.HeightInequalityDefiniteLiftIndexStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.SupNDataOfNonneg
+public import Formalism.LocalToGlobal.ProjectiveLattices.AxHLAM
+public import Formalism.LocalToGlobal.ProjectiveLattices.CurveOpen
+public import Formalism.LocalToGlobal.ProjectiveLattices.EtArch
+public import Formalism.LocalToGlobal.ProjectiveLattices.NumericalH1Condition
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.HeightInequalitiesIndefiniteLiftIndex
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.HeightInequalityDefiniteLiftIndex
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.IInfLeOfCombBound
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.LowerBoundConstAtLargeMultipleNumericalBounds
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.SubsingletonSectionsOfNoLeadingTerm
@@ -67,7 +73,7 @@ theorem exists_primeData_heights : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : �
   obtain ⟨hG, hT⟩ := GlobalTheory.Reg.genFrEx_and_genFromTest _ _ _ _ (T.Q.Xo j) T.Q.c
   haveI : Finite (Comp (T.Q.Xo j) T.Q.c) := CompFin.finite_comp _ _
   letI : Fintype (Comp (T.Q.Xo j) T.Q.c) := Fintype.ofFinite _
-  obtain ⟨g0, hcur⟩ := GlobalTheory.T.page_hypotheses_at_cusp D T h j hj large₂ H C2 A2 CT ka wL wF Tn nP nW h0 S nus hG hP hC G hGen hEta
+  obtain ⟨g0, hcur⟩ := _root_.GlobalTheory.RunJoin.curveHyp_of_run D T h j hj large₂ H C2 A2 CT ka wL wF Tn nP nW h0 S nus hG hP hC G hGen hEta
   have hinj := GlobalTheory.Reg.genValInj_record D T h j hj hG
   have hspl := GlobalTheory.Reg.compSplit_record D T h j hj hG
   have hbirA := fun ka wL wF G => (GlobalTheory.Reg.birSt_of_ratios_trdeg D T h j hj hG ka wL wF G).2
@@ -111,12 +117,12 @@ theorem exists_primeData_heights : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : �
   rcases lt_or_eq_of_le hj.2 with hjm | hjm
   · obtain ⟨hi, hec, -, hes, hea, hem⟩ := hEta hjm
     obtain ⟨w1, hw1, t1, ht1, hnz1, hs1⟩ := hI1 hjm
-    refine GlobalTheory.T.heightInequalities_indefinite_liftIndex D T h j hj hG ka wL wF _ S g0 hcur hinj hspl hbir y hw hc ht hjm hAlg h3 hn0 hBas large₂ _ _ _ _
+    refine _root_.GlobalTheory.HeightTop.heights_indefinite D T h j hj hG ka wL wF _ S g0 hcur hinj hspl hbir y hw hc ht hjm hAlg h3 hn0 hBas large₂ _ _ _ _
       (max 1 (PN D large₂)) (lamR large₂ CL wL) _ (p14R wL) (200000 * zBase large₂ ^ 2) (PO D large₂) CL 2 nus w2 t2 hW' hTh hth' hw2 ht2
       hnz2 hs2' hH1 (le_max_right _ _) (hLam _) hlc (by linarith) hDF hlN hO.1 hO2 (le_max_left _ _) (le_max_left _ _)
       (le_max_left _ _) (le_max_left _ _) hPet (le_max_left _ _) hP16 hprw hPO rfl (cc D large₂ C2 A2 7 wL) (thR wL) w1 t1
       (hn ▸ hw1) ht1 hnz1 (fun σ => (hs1 σ).trans (by gcongr)) hi hem hec.2 hes hc0 hcg (hA1 hjm) hlow hea
-  · refine GlobalTheory.T.heightInequality_definite_liftIndex D T h j hj hG ka wL wF _ S g0 hcur hinj hspl hbir y hw hc ht hjm hAlg h3 hn0 hBas large₂ _ _ _ _
+  · refine _root_.GlobalTheory.HeightDefinite.heights_definite D T h j hj hG ka wL wF _ S g0 hcur hinj hspl hbir y hw hc ht hjm hAlg h3 hn0 hBas large₂ _ _ _ _
       (max 1 (PN D large₂)) (lamR large₂ CL wL) _ (p14R wL) (200000 * zBase large₂ ^ 2) (PO D large₂) CL 2 nus w2 t2 hW' hTh hth' hw2 ht2
       hnz2 hs2' hH1 (le_max_right _ _) (hLam _) hlc (by linarith) hDF hlN hO.1 hO2 (le_max_left _ _) (le_max_left _ _)
       (le_max_left _ _) (le_max_left _ _) hPet (le_max_left _ _) hP16 hprw hPO rfl (hA2 hjm) ?_

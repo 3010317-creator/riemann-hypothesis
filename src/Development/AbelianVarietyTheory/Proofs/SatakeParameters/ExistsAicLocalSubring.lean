@@ -2,8 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DivisorSupportCondition
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsLocalSubringMonicRootsResidueStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsPolynomialSubringMaximalIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IntegralClosureMaximalResidueOfAlgClosedStatement
+public import Mathlib.RingTheory.Ideal.Maximal
+public import Mathlib.RingTheory.IntegralClosure.IsIntegral.Defs
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsPolynomialSubringMaximalIntegral
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IntegralClosureMaximalResidueOfAlgClosed
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsAlgClosedResidueFieldOfAic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -58,8 +61,8 @@ open CategoryTheory Limits AlgebraicGeometry GlobalTheory.EtC
 theorem exists_aic_local_subring (k K : Type) [Field k] [IsAlgClosed k] [Field K] [IsAlgClosed K] (φ : k →+* K) :
     ∃ T : Subring K, φ.range ≤ T ∧ (∃ _ : IsLocalRing T, AIC T ∧
       ∀ t : T, ∃ c : k, ∃ h : φ c ∈ T, t - ⟨φ c, h⟩ ∈ IsLocalRing.maximalIdeal T) ∧ IsFractionRing T K := by
-  obtain ⟨D, m₀, hD, hm₀, hres, hint⟩ := GlobalTheory.T.exists_polynomialSubring_maximal_integral k K φ
-  obtain ⟨R, 𝔪, hR, h𝔪, hres', hfr, hic⟩ := GlobalTheory.T.integralClosure_maximal_residue_of_algClosed k K φ D m₀ hD hm₀ hres hint
+  obtain ⟨D, m₀, hD, hm₀, hres, hint⟩ := _root_.GlobalTheory.exists_polySubring_maximal_integral k K φ
+  obtain ⟨R, 𝔪, hR, h𝔪, hres', hfr, hic⟩ := _root_.GlobalTheory.integralClosure_maximal_residue_algClosed k K φ D m₀ hD hm₀ hres hint
   exact GlobalTheory.T.exists_local_subring_monic_roots_residue k K φ R 𝔪 hR h𝔪 hres' hfr hic
 
 section Eqv

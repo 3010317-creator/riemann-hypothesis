@@ -3,12 +3,14 @@ module
 public import Development.AbelianVarietyTheory.Statements.CuspidalUnitaryTwists.ChapterMu
 public import Mathlib.GroupTheory.Nilpotent
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DirichletCharFiniteFourierTransformProperties
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EisensteinTameWeightSecondEqCharacterSumStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsModularFormCoeffSeqEisensteinProductParityStatement
+public import Mathlib.NumberTheory.DirichletCharacter.Orthogonality
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EisensteinTameWeightSecondEqCharacterSum
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsModularFormCoeffSeqEisensteinProductParity
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IterULevelValStable
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularFormCoeffSeqLinearStructure
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MuModelProductIsModularFormCoeffSeqLocallyAlgebrStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ZsNormCharLeOne
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularFormCoeffSeqLinearStructure
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MuModelProductIsModularFormCoeffSeqLocallyAlgebr
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -240,7 +242,7 @@ theorem measMu_of_eig : ∀ (l : ℕ) [Fact l.Prime] (ι : PadicAlgCl l ≃+* �
       rcases mul_eq_zero.1 h0 with h | h
       · exact absurd (sub_eq_zero.1 h) hνs
       · rw [hθ]; linear_combination h
-    have hMF := GlobalTheory.T.isModularFormCoeffSeq_eisensteinProduct_parity (2 * e + 1) N l m (θ⁻¹ * ν) θ ν f (by omega) hodd hN hp hm hlN rfl hν
+    have hMF := _root_.GlobalTheory.EisM.zm_fun_mf (2 * e + 1) N l m (θ⁻¹ * ν) θ ν f (by omega) hodd hN hp hm hlN rfl hν
       (fun x => by rw [hf, hθ])
     have hL := hlev _ _ m r hmr hMF
     have hne' : θ⁻¹ * ν ≠ χ := by
@@ -248,7 +250,7 @@ theorem measMu_of_eig : ∀ (l : ℕ) [Fact l.Prime] (ι : PadicAlgCl l ≃+* �
     simp only [val, hkill _ _ hne' hL, mul_zero]
   have htw : tw2 N s = fun B' => ∑ ν : DirichletCharacter ℂ N, ((N.totient : ℂ)⁻¹ * (1 - s * ν (-1))) * ch ν B' := by
     funext B'
-    rw [GlobalTheory.T.tw2_eq_inv_totient_mul_sum_characters N s hN B', Finset.mul_sum]
+    rw [_root_.GlobalTheory.EisM.eisensteinTameWeightSecond_eq_character_sum N s hN B', Finset.mul_sum]
     exact Finset.sum_congr rfl fun ν _ => by ring
   have hred : ∀ (m r : ℕ) (f : ZMod (l ^ m) → ℂ), 1 ≤ m → m ≤ r → (∀ y, f (-y) = s * f y) →
       val B c l α r (Zm (2 * e + 1) l (hat θ) (tw2 N s) (fun A d => f ((A : ZMod (l ^ m)) * (d : ZMod (l ^ m))⁻¹))) =
@@ -274,7 +276,7 @@ theorem measMu_of_eig : ∀ (l : ℕ) [Fact l.Prime] (ι : PadicAlgCl l ≃+* �
     have hf' := measMu_parity_succ hp m f f' hff' s hf
     have hMF : MF (2 * e + 1) (N * l ^ (m + 1)) (ch χ) (Zm (2 * e + 1) l (hat θ) (ch (θ * χ))
         (fun A d => f ((A : ZMod (l ^ m)) * (d : ZMod (l ^ m))⁻¹))) := by
-      have := GlobalTheory.T.isModularFormCoeffSeq_eisensteinProduct_parity (2 * e + 1) N l m (θ⁻¹ * (θ * χ)) θ (θ * χ) f (by omega) hodd hN hp hm hlN rfl
+      have := _root_.GlobalTheory.EisM.zm_fun_mf (2 * e + 1) N l m (θ⁻¹ * (θ * χ)) θ (θ * χ) f (by omega) hodd hN hp hm hlN rfl
         (by rw [hθχ, hθ]) (fun x => by rw [hf, hθ])
       rwa [hχeq] at this
     unfold mesMu
@@ -348,7 +350,7 @@ theorem measMu_of_eig : ∀ (l : ℕ) [Fact l.Prime] (ι : PadicAlgCl l ≃+* �
     have hpar2 : ψ' (-1) * (θ * χ) (-1) = (-1) ^ (e + 1) := by
       rw [hθχ, h3, hs]
       linear_combination (-(-1 : ℂ) ^ e) * hψsq
-    have hMF0 := GlobalTheory.T.muModelProduct_isModularFormCoeffSeq_locallyAlgebraic (2 * e + 1) e N l 1 (θ⁻¹ * (θ * χ)) (hat θ) θ (θ * χ) ψ' (by omega) hN hp le_rfl hlN
+    have hMF0 := _root_.GlobalTheory.zm_char_mf (2 * e + 1) e N l 1 (θ⁻¹ * (θ * χ)) (hat θ) θ (θ * χ) ψ' (by omega) hN hp le_rfl hlN
       (hat_char_props.1 N θ hN).1 (hat_char_props.1 N θ hN).2.1 rfl hpar1 hpar2
     rw [hχeq] at hMF0
     have hG : (fun x y : ℕ => ch ψ' x * ch ψ'⁻¹ y * ((y : ℂ) / x) ^ e) =

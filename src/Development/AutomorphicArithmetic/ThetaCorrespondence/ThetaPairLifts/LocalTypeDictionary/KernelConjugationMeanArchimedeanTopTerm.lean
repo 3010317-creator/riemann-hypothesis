@@ -2,10 +2,11 @@ module
 
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
 public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.DictAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EmbeddingsCurveFieldAboveFiniteNonemptyStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EmbLLMem
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EmbeddingsCurveFieldAboveFiniteNonempty
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsConstMeanLogAreaLogThetaNormLe
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InfiniteTopOfDictionaryDepth
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalEqualSignKernelsLargeConstantsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalEqualSignKernelsLargeConstants
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ConjTopAtOfRankLeOfWeightLe
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -39,7 +40,6 @@ import Mathlib.Tactic.NormNum.NatSqrt
 import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EmbLLMem
 
 @[expose] public section
 
@@ -53,7 +53,7 @@ theorem archimedean_top_term_kernel_conj_mean : _root_.GlobalTheory.FunPr.ThetaL
   intro hP hI hD hDp
   obtain ⟨C1, hC1, hmean⟩ := GlobalTheory.T.exists_const_mean_logArea_logThetaNorm_le
   obtain ⟨CF0, hCF⟩ := _root_.GlobalTheory.T.kernel_conjugation_average hP hI hD hDp C1 hC1
-  obtain ⟨CF0', hCF'⟩ := GlobalTheory.T.rationalEqualSignKernels_largeConstants
+  obtain ⟨CF0', hCF'⟩ := _root_.GlobalTheory.KerConjMean.ratTopAt_big
   refine ⟨max CF0 CF0', fun CF hCF0 => ?_⟩
   obtain ⟨C0, hC0⟩ := hCF CF (le_trans (le_max_left _ _) hCF0)
   obtain ⟨C0', hC0'⟩ := hCF' CF (le_trans (le_max_right _ _) hCF0)
@@ -76,7 +76,7 @@ theorem archimedean_top_term_kernel_conj_mean : _root_.GlobalTheory.FunPr.ThetaL
     obtain ⟨f, hf⟩ := hrat Φ β d hocc c j
     obtain ⟨u, rfl, hu⟩ := hv
     refine ⟨f u, (hf u).symm, ?_⟩
-    obtain ⟨hfin, hne⟩ := GlobalTheory.T.embeddingsCurveFieldAbove_finite_nonempty D (hI D) ch.S.Z.δ ch.S.Z.t0 ch.S.Z.crv ch.S.Z.pt0 p.embedding
+    obtain ⟨hfin, hne⟩ := _root_.GlobalTheory.KerConjMean.ext_finite_nonempty D (hI D) ch.S.Z.δ ch.S.Z.t0 ch.S.Z.crv ch.S.Z.pt0 p.embedding
     obtain ⟨⟨ρ₁, hρ₁, h₁⟩, ⟨ρ₂, hρ₂, h₂⟩⟩ := exists_avg _ hfin hne a0 nD Gd
       (hArea D ch.S.Z.δ ch.S.Z.t0) (hTh D ch.S.Z.δ ch.S.Z.t0)
     rcases le_or_gt 0 B with hB | hB

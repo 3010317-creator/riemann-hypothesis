@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TwistStep
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsNonzeroFrobVectorResidueZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsNonzeroFrobVectorResidueZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,6 +48,6 @@ open scoped Formalism.Per
 
 namespace GlobalTheory.PMon
 
-theorem exII_holds : ExII := GlobalTheory.T.exists_nonzero_frobVector_residue_zero
+theorem exII_holds : ExII := _root_.GlobalTheory.PMonII.exII
 
 end GlobalTheory.PMon

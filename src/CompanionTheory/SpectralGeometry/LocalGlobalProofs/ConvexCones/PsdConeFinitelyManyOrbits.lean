@@ -1,8 +1,8 @@
 module
 
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.VoronoiMeans.VorFunEvalEqFineMean
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.ContactSetSpannedOfCoverStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.MemConeOfModTwoLiftStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.ContactSetSpannedOfCover
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.MemConeOfModTwoLift
 import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.VorFunValueLe
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DicksonExistsFiniteSubfamilyBelow
 import Mathlib.Algebra.Order.Floor.Extended
@@ -87,8 +87,8 @@ theorem exists_vorFun_cells : ∀ (O : Type) [CommRing O] [IsDedekindDomain O] [
       IsCell bar (vorFun O g) γ ∧ (contact bar fun y => r (c y).1) ⊆ rcone γ := by
     intro j c
     have hcv := (vorFun_value_le O bar g X n r (fun y => (c y).1) hr (hred j c)).1
-    obtain ⟨s, γ, h1, h2, h3, h4⟩ := GlobalTheory.T.contact_set_spanned_of_cover O bar hcov X _ _ hcv
-    exact ⟨s, γ, GlobalTheory.T.isCell_vorFun_of_contact_subset_rcone O bar g X n r _ hr (hred j c) s γ h1 h2 h3 h4, h4⟩
+    obtain ⟨s, γ, h1, h2, h3, h4⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fan.isSpanned_contact O bar hcov X _ _ hcv
+    exact ⟨s, γ, _root_.GlobalTheory.CompanionTheory.Ar.Fan.isCell_vorFun_of_contact O bar g X n r _ hr (hred j c) s γ h1 h2 h3 h4, h4⟩
   choose s γ hγ hγc using cell
   refine ⟨⋃ j, ⋃ c, Set.range (γ j c), Set.finite_iUnion fun j => Set.finite_iUnion fun c => Set.finite_range _,
     fun B hB => ?_⟩

@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TopPlaceL
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.StdLvPr
 public import Formalism.LocalToGlobal.Divisibility.NumbersLemmas
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeightTieTrueCols
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ColumnNormParametersEqNatStepGapStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsClassFam
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ColumnNormParametersEqNatStepGap
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,7 +62,7 @@ theorem weightTie_of_stdKer : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.
   cases hPr
   cases hword
   cases hW
-  have hN := GlobalTheory.T.columnNormParameters_eq_natStepGap (I.rec7 l Z) L Del h0 hDel hEta
+  have hN := _root_.GlobalTheory.ColumnNormCompare.numRec_eq_ofRecord (I.rec7 l Z) L Del h0 hDel hEta
   refine ⟨plRec (I.rec7 l Z), fun u => ?_⟩
   have key := GlobalTheory.CoreHt.weightTie_trueCols I hOk l Z L ⟨Del, hDel⟩ u
   have gen : ∀ N : NumDatum, numDatumOfParameters (I.rec7 l Z) L = N → ∀ (W' : Wts B.fields (B.primes X).Word N.R), HEq B.wts W' →

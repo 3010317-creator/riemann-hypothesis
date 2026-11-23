@@ -2,8 +2,8 @@ module
 
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.FlatDegree
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.NineGeoU
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspHeightUpperStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspVolumeSumStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspHeightUpper
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspVolumeSum
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntersectionDegreeLowerStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -48,8 +48,8 @@ namespace GlobalTheory.CompanionTheory.Ar.Cusp.TopNine
 
 theorem nineGeoU_of_given (hG : Top.Given) (hW : Out.WeilSt) (hF : Fl.FlatDegree) :
     ∃ Ch Cu : ℝ, NineGeoU Ch Cu := by
-  obtain ⟨Ch, hCh⟩ := GlobalTheory.T.cusp_height_upper hG hF
-  obtain ⟨Cu, hCu⟩ := GlobalTheory.T.cusp_volume_sum hG
+  obtain ⟨Ch, hCh⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.TopHt.htU_of_given hG hF
+  obtain ⟨Cu, hCu⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.top_mean_cusp_weight hG
   refine ⟨Ch, Cu, ?_⟩
   intro E _ _ _ _ H D Xo l c Y II K _ J _ Ω _ _ W _ _ Dc Hd S₀ Or B₁ U M S' hII hAdm hU hT
   exact ⟨GlobalTheory.T.intersection_degree_lower hG hW E H D Xo l c Y II K J Ω W Dc Hd S₀ Or B₁ U M S' hII hAdm hT,

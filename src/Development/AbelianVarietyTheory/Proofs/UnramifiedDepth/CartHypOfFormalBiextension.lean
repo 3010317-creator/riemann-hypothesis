@@ -1,10 +1,11 @@
 module
 
 public import Formalism.LocalToGlobal.CharacterGerms.RowTieFB
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.CartHypOfIntegralGaugedFormalGroupLawStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.HasGaugeAdjointLieProjectorsPairDataStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.HasGaugeAdjointTeichmullerEndPairPlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IsIntegralGaugedFormalGroupLawPairDataStatement
+public import Development.AbelianVarietyTheory.Definitions.TeichmullerDepth.HasTeich
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.CartHypOfIntegralGaugedFormalGroupLaw
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.HasGaugeAdjointLieProjectorsPairData
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.HasGaugeAdjointTeichmullerEndPairPlaces
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IsIntegralGaugedFormalGroupLawPairData
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,7 +54,7 @@ namespace GlobalTheory
 
 theorem cartHyp_of_formalBiextension : CartFBSt := by
   intro C _ _ V O _ _ dd Y d _ I _ p
-  exact GlobalTheory.T.cartHyp_of_integralGaugedFormalGroupLaw C V d I (Fin dd) (Y.raw p) (GlobalTheory.T.isIntegralGaugedFormalGroupLaw_pairData C V O dd Y d I p)
-    (GlobalTheory.T.hasGaugeAdjointLieProjectors_pairData C V O dd Y d I p) (GlobalTheory.T.hasGaugeAdjointTeichmullerEnd_pair_places C V O dd Y d I p)
+  exact _root_.GlobalTheory.RowLaw.cartHyp_of_rlaw C V d I (Fin dd) (Y.raw p) (_root_.GlobalTheory.RowLawPair.rLaw_pairData C V O dd Y d I p)
+    (_root_.GlobalTheory.hasProj_pairData C V O dd Y d I p) (_root_.GlobalTheory.TeichPair.hasTeich C V O dd Y d I p)
 
 end GlobalTheory

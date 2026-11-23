@@ -1,15 +1,21 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.T2SpaceAdelicGeneralLinearGroupNumberField
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOfIsOpenStab
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactAdelicIntegralDenominatorStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactConjugateCentrePowerBoundedStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactConjugateRationalEntriesBoundedStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.DifferentiableAtChart
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactAdelicIntegralDenominator
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BaseChangeDefiniteUnitary
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactConjugateCentrePowerBounded
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactConjugateRationalEntriesBounded
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsOpenLevel
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteAdelicRestrictionMeasureStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteZSpanIntegralRepresentationStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FundamentalDomainIntegralCountBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IntegersBoundedArchimedeanCountStatement
+public import GroundTheory.AutomorphicForms.AutomorphicFormSpaces.Archimedean
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteAdelicRestrictionMeasure
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExpoConjOfIsCsd
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteZSpanIntegralRepresentation
+public import Mathlib.MeasureTheory.Group.FundamentalDomain
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FundamentalDomainIntegralCountBound
+public import Mathlib.NumberTheory.NumberField.InfinitePlace.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IntegersBoundedArchimedeanCount
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOfIsOpenStab
 import GroundTheory.AutomorphicForms.QuotientMeasure
 import GroundTheory.GlobalFields.Adele.Topology
 import Mathlib.Algebra.Order.Floor.Extended
@@ -68,8 +74,8 @@ theorem count_rational (E : Type) [Field E] [NumberField E] (Q : Set (Af E)) (hQ
     ∃ (C : ℝ) (N : ℕ), 0 ≤ C ∧ ∀ R : ℝ, 1 ≤ R →
       {x : E | algebraMap E (Af E) x ∈ Q ∧ ∀ w : InfinitePlace E, w x ≤ R}.Finite ∧
       ({x : E | algebraMap E (Af E) x ∈ Q ∧ ∀ w : InfinitePlace E, w x ≤ R}.ncard : ℝ) ≤ C * R ^ N := by
-  obtain ⟨D, hD, hden⟩ := GlobalTheory.T.compact_adelic_integral_denominator E Q hQ
-  obtain ⟨C, N, hC⟩ := GlobalTheory.T.integers_bounded_archimedean_count E
+  obtain ⟨D, hD, hden⟩ := _root_.GlobalTheory.CompanionTheory.AdeleDen.exists_common_denominator E Q hQ
+  obtain ⟨C, N, hC⟩ := _root_.GlobalTheory.CompanionTheory.IntCount.finite_and_ncard_le E
   have hD1 : (1 : ℝ) ≤ D := by exact_mod_cast Nat.one_le_iff_ne_zero.2 hD
   have hDE : (D : E) ≠ 0 := by exact_mod_cast hD
   refine ⟨|C| * (D : ℝ) ^ N, N, by positivity, fun R hR => ?_⟩
@@ -108,8 +114,8 @@ theorem count_lattice (E : Type) [Field E] [NumberField E] [_root_.NumberField.I
     rw [h2] at this
     rw [pow_zero, mul_one]
     exact_mod_cast this
-  obtain ⟨n₀, hn₀⟩ := GlobalTheory.T.compact_conjugate_centre_power_bounded E a ha Q hQ
-  obtain ⟨Qf, C₁, hQf, hC₁, hent⟩ := GlobalTheory.T.compact_conjugate_rational_entries_bounded E a g₀ Q hQ n₀
+  obtain ⟨n₀, hn₀⟩ := _root_.GlobalTheory.CompanionTheory.CuspGrowth.abs_le_of_conj_mem_compact E a ha Q hQ
+  obtain ⟨Qf, C₁, hQf, hC₁, hent⟩ := _root_.GlobalTheory.CompanionTheory.GrowthEntries.entries_bound E a g₀ Q hQ n₀
   obtain ⟨C₂, N₂, hC₂, hcount⟩ := count_rational E Qf hQf
   obtain ⟨c₃, hc₃⟩ : ∃ c₃ : ℝ, c₃ = C₂ * (C₁ + 1) ^ N₂ := ⟨_, rfl⟩
   have hc₃0 : 0 ≤ c₃ := by rw [hc₃]; positivity
@@ -215,8 +221,8 @@ theorem moderate_growth : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numbe
   obtain ⟨ν, hν⟩ : ∃ ν : Measure (AutomorphicForm.archGroup E a), ν = (μ.restrict (q ⁻¹' U)).map p := ⟨_, rfl⟩
   haveI : ν.IsHaarMeasure := by
     rw [hν, hpdef, hqdef]
-    exact GlobalTheory.T.finite_adelic_restriction_measure E a μ U hUc hU1
-  obtain ⟨κ, hκc, hκs, hκ⟩ := GlobalTheory.T.finite_z_span_integral_representation E a φ hK hZ ν
+    exact _root_.GlobalTheory.CompanionTheory.GrowthHaar.isHaarMeasure_map_restrict E a μ U hUc hU1
+  obtain ⟨κ, hκc, hκs, hκ⟩ := _root_.GlobalTheory.CompanionTheory.HCRep.GrowthKernel.exists_kernel_of_finite E a φ hK hZ ν
   obtain ⟨S, hS⟩ : ∃ S, S = tsupport κ := ⟨_, rfl⟩
   have hSc : IsCompact S := hS ▸ hκs
   have hSm : MeasurableSet S := hSc.isClosed.measurableSet
@@ -272,7 +278,7 @@ theorem moderate_growth : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numbe
     intro y
     obtain ⟨x, hx⟩ : ∃ x, x = g * infGL E a y := ⟨_, rfl⟩
     rw [← hx, hI]
-    refine GlobalTheory.T.fundamental_domain_integral_count_bound (latticeGL E a) μ _ hF _ (hMm x) _ hfm
+    refine _root_.GlobalTheory.CompanionTheory.Growth.lintegral_le_mul_of_encard_le (latticeGL E a) μ _ hF _ (hMm x) _ hfm
       (fun γ hγ z => congrArg (fun u : ℂ => ‖u‖ₑ ^ 2) (hli γ hγ z)) _ fun z => ?_
     obtain ⟨hfin, -⟩ := hC y
     rw [← hx] at hfin

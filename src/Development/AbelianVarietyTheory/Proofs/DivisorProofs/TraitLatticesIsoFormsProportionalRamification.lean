@@ -3,10 +3,14 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NotOrdGeOfNotMem
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGenericFibrePullbackSiegelTraitModelStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MumfordBundleTraitFibreEqUniversalStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUniformisationBaseChangeWithCoordinatesStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HomExtNormalSt
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUniformisationBaseChangeWithCoordinates
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PolarizationLineBundleUnifIso
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PrincipalPolarizationOfMumfordBundleSiegelFibreStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RigidifiedSymmetricLineBundleGroupPullbackStatement
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsSeparatedOfIsQProjOver
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PrincipalPolarizationOfMumfordBundleSiegelFibre
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.NonzeroLocus
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RigidifiedSymmetricLineBundleGroupPullback
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SiegelFamilyProperExtension
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnifPolarizationSquareIso
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.SemiAbelianHomExtendsUniquelyOverDvr
@@ -174,12 +178,12 @@ theorem pull (T : Trait F) {W : Type} [CommRing W] [IsDomain W] [IsLocalRing W] 
       exact gm_cocycle hL _ y (mem_pull.1 hy.1.1) (mem_pull.1 hy.1.2) (mem_pull.1 hy.2)
   have hΛ := lamPull T fK G'' β κ hκ hκβ α₂ hα₂
   have gB := (isGrpPullback_pullback G'' (jK W)).comp hβ
-  obtain ⟨hr, hs⟩ := GlobalTheory.T.rigidified_symmetric_lineBundle_groupPullback _ _ _ T.G _ _ gB T.U.LG T.U.symG T.U.symG_gen
+  obtain ⟨hr, hs⟩ := _root_.GlobalTheory.RigSymBaseChange.rigidified_and_sym_pull _ _ _ T.G _ _ gB T.U.LG T.U.symG T.U.symG_gen
   have hα := hκ.comp T.cart
-  obtain ⟨ha, hamp, hkt⟩ := GlobalTheory.T.principalPolarization_of_mumfordBundle_siegelFibre o ζ g n F _ (spMap fK ≫ T.y) _ (κ ≫ T.α) α₂ hα hα₂ _
+  obtain ⟨ha, hamp, hkt⟩ := _root_.GlobalTheory.SiegFibrePol.polAV_of_lam_univ o ζ g n F _ (spMap fK ≫ T.y) _ (κ ≫ T.α) α₂ hα hα₂ _
     (pull_isLB T.U.LG.isLB _) hr hs hΛ
   have hϖ : f T.ϖ ≠ 0 := fun h => T.irr.ne_zero (hf (h.trans (map_zero f).symm))
-  obtain ⟨D', A', U', ε, hL, hc⟩ := GlobalTheory.T.exists_uniformisation_baseChange_with_coordinates T.V W (isCN T) hW f hl T.G T.semi T.D T.A T.U
+  obtain ⟨D', A', U', ε, hL, hc⟩ := _root_.GlobalTheory.UnifCoordPull.exists_unif_psiCoord T.V W (isCN T) hW f hl T.G T.semi T.D T.A T.U
     {p | T.ϖ ∉ p.asIdeal} (PrimeSpectrum.isOpen_basicOpen (a := T.ϖ))
     (fun y => T.mono.psiUnitOn y fun p hp => by simpa using hp) (fun h => hϖ (RingHom.mem_ker.1 h)) G'' β hβ ha hr hs
     hamp hkt

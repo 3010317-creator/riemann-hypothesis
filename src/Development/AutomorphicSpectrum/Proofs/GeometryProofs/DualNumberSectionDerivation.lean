@@ -2,7 +2,9 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.MemEigSpOfMemHtDual
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DualMapSnd
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TangentSectionAdditiveStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TangentSectionAdditive
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -95,7 +97,7 @@ theorem exists_linear_snd : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] (C : Ty
   · intro l l'
     have e : (M.pt (l + l')).left = (M.pt l * M.pt l').left := by rw [M.add]
     have hvw : ⊤ ≤ (M.pt l * M.pt l').left ⁻¹ᵁ W := e ▸ h (l + l')
-    have key := GlobalTheory.T.tangent_section_additive S G C y (M.pt l) (M.pt l') (M.tan l) (M.tan l') W (h l) (h l') hvw h1 s
+    have key := _root_.GlobalTheory.CompanionTheory.Ar.SqAdd.tan_mul_add S G C y (M.pt l) (M.pt l') (M.tan l) (M.tan l') W (h l) (h l') hvw h1 s
     have key' := congrArg (fun t => (Scheme.ΓSpecIso (CommRingCat.of (DualNumber C))).hom.hom t) key
     simp only [map_add (f := _)] at key'
     have key'' : secVal (B := DualNumber C) (M.pt l * M.pt l').left W hvw s +

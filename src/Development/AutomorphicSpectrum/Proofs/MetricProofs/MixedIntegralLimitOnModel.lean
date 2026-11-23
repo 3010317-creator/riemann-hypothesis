@@ -2,9 +2,11 @@ module
 
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FrameDefinitions.Weights
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MixedIntegralModelFormulaStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MixedIntegralTendstoOffDivisorStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularChartDataPropertiesStatement
+public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.StatementsPtsBddConv
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MixedIntegralModelFormula
+public import GroundTheory.HeightsAndTheta.Heights.Regularisation.Statements
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MixedIntegralTendstoOffDivisor
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularChartDataProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,7 +79,7 @@ theorem tendsto_ptsIntegral_of_chart_conv : ∀ (K : Type) [Fintype K] (ι : K �
   intro K _ ι _ P n M R Θ Pp f fT G GT C L g hV hΘ hΘp hP hf hfT hconv hGT hGc hrel hg
   classical
   by_cases hQ : ∃ Q : (((k : K) → ι k) → ℂ) →ₗ[ℂ] (Fin (n + 1) → ℂ), IsGoodProj P Q
-  · have hYo := (GlobalTheory.T.regular_chart_data_properties n M.Xc M.atlas R).1
+  · have hYo := (_root_.GlobalTheory.CompanionTheory.Ar.Giv.regData_open_part n M.Xc M.atlas R).1
     have hmeas : ∀ᶠ t in 𝓝[>] (0 : ℝ), @Measurable M.Xc ℝ (borel M.Xc) _ (R.Yo.indicator (GT t)) ∧
         ∀ x ∈ R.Yo, |GT t x| ≤ C + C * Real.log (R.r x) := by
       filter_upwards [hGT] with t ht
@@ -85,11 +87,11 @@ theorem tendsto_ptsIntegral_of_chart_conv : ∀ (K : Type) [Fintype K] (ι : K �
       letI : MeasurableSpace M.Xc := borel M.Xc
       haveI : BorelSpace M.Xc := ⟨rfl⟩
       exact (continuous_of_atlasSmooth ht.1).measurable.indicator hYo.measurableSet
-    obtain ⟨-, hint, hlim⟩ := GlobalTheory.T.mixed_integral_tendsto_off_divisor n M.Xc M.atlas R Θ hΘ hΘp Pp f fT G GT C hP hf hfT hconv
+    obtain ⟨-, hint, hlim⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Giv.mixed_integral_tendsto_of_C2_off_divisor n M.Xc M.atlas R Θ hΘ hΘp Pp f fT G GT C hP hf hfT hconv
       hmeas hGc
     refine ⟨_, hlim.congr' ?_⟩
     filter_upwards [hint, hfT, hGT, hrel, hg] with t hit hft hgt hrt hgt'
-    have hpush := GlobalTheory.T.mixed_integral_model_formula K ι P n M hQ.choose Set.univ ∅ ∅ (fun _ => 1) (L t)
+    have hpush := _root_.GlobalTheory.CompanionTheory.Ar.Giv.push_chart_integrals K ι P n M hQ.choose Set.univ ∅ ∅ (fun _ => 1) (L t)
       (fun i => Pp i + LocPot.ofFun (fT i t)) (g t) (GT t) hV hQ.choose_spec isOpen_univ
       (fun j => by simp)
       (fun Ψ _ => by simp)

@@ -3,13 +3,19 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsThetaMeanSquareNorm
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TopLeOfClosedPoint
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.JacobsonClosedPointsToolsInt
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AlgebraicPointOverNumberFieldStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GroupSchemeIntegralNoetherianStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LineBundleSectionDivisibleStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrimeIdealExtensionLocalDomainStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionPointLineBundleUnitStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionPointValuationRingLiftStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionValueUniqueBaseChangeStatement
+public import Mathlib.NumberTheory.NumberField.Basic
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AlgebraicPointOverNumberField
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GroupSchemeIntegralNoetherian
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.CubicalStructures.CubeSymmetricSwapFirst
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LineBundleSectionDivisible
+public import Mathlib.RingTheory.DedekindDomain.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrimeIdealExtensionLocalDomain
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionPointLineBundleUnit
+public import Mathlib.RingTheory.Valuation.ValuationSubring
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionPointValuationRingLift
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionValueUniqueBaseChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -109,7 +115,7 @@ theorem point_bound (D : PPData H L) (n : ℕ) (s : Out.H0 D.t.PP.L n) (d : 𝓞
     have h1 : w ∈ D.t.G.left.basicOpen b ↔ (⟨m, hm.isPrime⟩ : PrimeSpectrum Γ(D.t.G.left, W)) ∈ hW.fromSpec ⁻¹ᵁ D.t.G.left.basicOpen b := Iff.rfl
     rw [h1, hW.fromSpec_preimage_basicOpen]
     rfl
-  obtain ⟨N, O, ρ, y, hN, hyN, hyw, hρ⟩ := GlobalTheory.T.torsion_point_valuation_ring_lift L D.t.G hS w hwc
+  obtain ⟨N, O, ρ, y, hN, hyN, hyw, hρ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Sl.Reg.exists_torsion_point_reducing_to L D.t.G hS w hwc
   let C := AlgebraicClosure L
   let yO : Sp O ⟶ D.t.G.left := y.left
   have hyO : yO ≫ D.t.G.hom = spMap ρ := Over.w y
@@ -119,7 +125,7 @@ theorem point_bound (D : PPData H L) (n : ℕ) (s : Out.H0 D.t.PP.L n) (d : 𝓞
     fun x hx => hWU (htop hx)
   haveI : Algebra.IsAlgebraic ℚ C := Algebra.IsAlgebraic.trans ℚ L C
   haveI : FaithfulSMul O C := (faithfulSMul_iff_algebraMap_injective O C).2 Subtype.val_injective
-  obtain ⟨K, _, _, e, x', hx⟩ := GlobalTheory.T.algebraic_point_over_number_field C D.t.G.left (D.t.G.hom ≫ spMap (algebraMap ℤ (𝓞 L)))
+  obtain ⟨K, _, _, e, x', hx⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Sl.Reg.Descend.exists_numberField_point C D.t.G.left (D.t.G.hom ≫ spMap (algebraMap ℤ (𝓞 L)))
     (spMap (algebraMap O C) ≫ yO)
   obtain ⟨c', hc⟩ := Spec.map_surjective (x' ≫ D.t.G.hom)
   let c : 𝓞 L →+* K := c'.hom
@@ -140,10 +146,10 @@ theorem point_bound (D : PPData H L) (n : ℕ) (s : Out.H0 D.t.PP.L n) (d : 𝓞
     have h1 : u ≫ yK ^ N = u ≫ 1 := by rw [MonObj.comp_pow, huy, hyCN, MonObj.comp_one]
     have h2 : spMap e ≫ (yK ^ N).left = spMap e ≫ (1 : Over.mk (spMap c) ⟶ D.t.G).left := congrArg (·.left) h1
     refine Over.OverMorphism.ext (ext_of_isDominant_of_isSeparated (X := Sp K) D.t.G.hom ((Over.w _).trans (Over.w _).symm) (spMap e) h2)
-  obtain ⟨⟨T, hT, -⟩, hmap⟩ := GlobalTheory.T.torsion_value_unique_base_change E H L D n s K (spMap c) yK N hN hyKN
+  obtain ⟨⟨T, hT, -⟩, hmap⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Sl.TorsExist.torsVal_existsUnique E H L D n s K (spMap c) yK N hN hyKN
   have hC := hmap C e yC T rfl hT
   have hI := Hy K c yK N T hT
-  obtain ⟨ε, hε⟩ := GlobalTheory.T.torsion_point_line_bundle_unit E H L D n s O C ρ y N hN hyN i hi _ hb yC hyC (e T) hC
+  obtain ⟨ε, hε⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Sl.Reg.torsVal_eq_unit_mul E H L D n s O C ρ y N hN hyN i hi _ hb yC hyC (e T) hC
   have hρi : Function.Injective ρ := fun a b hab => by
     have h1 := congrArg (Subtype.val) hab
     have h2 : algebraMap L C (a : L) = algebraMap L C (b : L) := by
@@ -205,7 +211,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Sl.Reg
 theorem section_dvd_of_torsVal : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (L : Type) [Field L] [NumberField L] (D : PPData H L) (n : ℕ) (s : Out.H0 D.t.PP.L n) (d : 𝓞 L), d ≠ 0 → (∀ (K : Type) [Field K] [NumberField K] (c : 𝓞 L →+* K) (y : Over.mk (spMap c) ⟶ D.t.G) (N : ℕ) (T : K), TorsVal D.t.PP s y N T → IsIntegral ℤ (T / c d ^ (N ^ 2))) → ∃ s' : Out.H0 D.t.PP.L n, ∀ j, s.f j = constFn D.t.G.hom _ d * s'.f j := by
   intro E _ _ _ H L _ _ D n s d hd Hy
   have hS := D.t.semi
-  obtain ⟨hInt, hring⟩ := GlobalTheory.T.group_scheme_integral_noetherian L D.t.G hS
+  obtain ⟨hInt, hring⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Sl.Reg.semiAb_props L D.t.G hS
   haveI := hInt
   have hδ : sc D.t.G.hom ⊤ d ≠ 0 := by
     intro h0
@@ -216,13 +222,13 @@ theorem section_dvd_of_torsVal : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     have := valR_sc e D.t.G.hom (RingHom.id _) he ⊤ (fun _ _ => trivial) d
     rw [h0, map_zero] at this
     exact hd this.symm
-  obtain ⟨s', hs'⟩ := GlobalTheory.T.line_bundle_section_divisible D.t.G.left (𝓞 L) D.t.G.hom _ s d hδ (by
+  obtain ⟨s', hs'⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Sl.Reg.Glue.sec_eq_smul_of_local D.t.G.left (𝓞 L) D.t.G.hom _ s d hδ (by
     intro j W hWU hW
     obtain ⟨i₀, rfl⟩ : ∃ i₀, j = fun _ => i₀ := ⟨j 0, funext fun k => congrArg j (Subsingleton.elim _ _)⟩
     by_cases hne : (W : Set D.t.G.left).Nonempty
     · obtain ⟨hNo, hft, hp⟩ := hring W hW
       haveI : Nonempty W := hne.to_subtype
-      exact GlobalTheory.T.prime_ideal_extension_local_domain (𝓞 L) Γ(D.t.G.left, W) (sc D.t.G.hom W) hft hp _ d hd fun m hm =>
+      exact _root_.GlobalTheory.CompanionTheory.Ggeo.RegularDvd.dvd_of_local (𝓞 L) Γ(D.t.G.left, W) (sc D.t.G.hom W) hft hp _ d hd fun m hm =>
         point_bound D n s d hd Hy i₀ W hW hWU m hm
     · have hW0 : W = ⊥ := by
         ext x

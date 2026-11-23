@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasLevelStd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemHilbertLatticeTwistIffLiftStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemHilbertLatticeTwistIffLift
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -83,20 +83,20 @@ theorem twist_twist : ∀ (F : Type) [Field F] [NumberField F] [IsTotallyReal F]
     Matrix.map_mul (f := Int.castRingHom F)
   have hT : twist N L (A.map (Int.cast : ℤ → ZMod N)) ≤ stdLat F := by
     intro v hv
-    obtain ⟨y, hy, w, hw, rfl⟩ := (GlobalTheory.T.mem_hilbertLatticeTwist_iff_lift F N L A v hL).1 hv
+    obtain ⟨y, hy, w, hw, rfl⟩ := (_root_.GlobalTheory.HilbFam.TwistMem.mem_twist_iff F N L A v hL).1 hv
     exact Submodule.add_mem _ (std_vecMul_int A (hL hy)) (std_natCast_smul N hw)
   rw [hm]
   ext v
-  rw [GlobalTheory.T.mem_hilbertLatticeTwist_iff_lift F N _ B v hT, GlobalTheory.T.mem_hilbertLatticeTwist_iff_lift F N L (A * B) v hL, hF]
+  rw [_root_.GlobalTheory.HilbFam.TwistMem.mem_twist_iff F N _ B v hT, _root_.GlobalTheory.HilbFam.TwistMem.mem_twist_iff F N L (A * B) v hL, hF]
   constructor
   · rintro ⟨u, hu, w, hw, rfl⟩
-    obtain ⟨y, hy, w', hw', rfl⟩ := (GlobalTheory.T.mem_hilbertLatticeTwist_iff_lift F N L A u hL).1 hu
+    obtain ⟨y, hy, w', hw', rfl⟩ := (_root_.GlobalTheory.HilbFam.TwistMem.mem_twist_iff F N L A u hL).1 hu
     refine ⟨y, hy, Matrix.vecMul w' (B.map (Int.cast : ℤ → F)) + w,
       Submodule.add_mem _ (std_vecMul_int B hw') hw, ?_⟩
     rw [Matrix.add_vecMul, Matrix.vecMul_vecMul, Matrix.smul_vecMul, smul_add, add_assoc]
   · rintro ⟨y, hy, w, hw, rfl⟩
     refine ⟨Matrix.vecMul y (A.map (Int.cast : ℤ → F)),
-      (GlobalTheory.T.mem_hilbertLatticeTwist_iff_lift F N L A _ hL).2 ⟨y, hy, 0, Submodule.zero_mem _, by simp⟩, w, hw, ?_⟩
+      (_root_.GlobalTheory.HilbFam.TwistMem.mem_twist_iff F N L A _ hL).2 ⟨y, hy, 0, Submodule.zero_mem _, by simp⟩, w, hw, ?_⟩
     rw [Matrix.vecMul_vecMul]
 
 end GlobalTheory.HilbFam.TwistMul

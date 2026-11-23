@@ -2,8 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ExistsIsGenOfUniqueFactorizationMonoid
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSingle
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOfFinOrderPicOfIsReducedFiniteIntStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyTensorLineBundleGlobalSectionsEquivStatement
+public import Mathlib.RingTheory.PicardGroup
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOfFinOrderPicOfIsReducedFiniteInt
+public import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.BijectiveSmulChartSec
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyTensorLineBundleGlobalSectionsEquiv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,7 +59,7 @@ namespace GlobalTheory.PowNowhereZero
 
 theorem tensSec (T : Scheme.{0}) [IsAffine T] (A B : LB T) (hA : A.IsLB) (hB : B.IsLB) :
     Nonempty (TensorProduct Γ(T, ⊤) (LB.Sec A) (LB.Sec B) ≃ₗ[Γ(T, ⊤)] LB.Sec (CechPic.tens A B)) :=
-  GlobalTheory.T.nonempty_tensor_lineBundle_globalSections_equiv T A B hA hB
+  _root_.GlobalTheory.SecTensor.tensorSecEquiv T A B hA hB
 
 variable {T : Scheme.{0}}
 
@@ -95,7 +97,7 @@ theorem main : ∀ (T : Scheme.{0}) [IsAffine T] [AlgebraicGeometry.IsReduced T]
     ∀ L : LB T, L.IsLB → ∃ (n : ℕ) (s : (lbPow L n).Sec), 1 ≤ n ∧ ReciprocityTheory.ChartRestriction.G.Out.nonzeroLocus s = ⊤ := by
   intro T _ _ hfin L hL
   have := LB.invertible_sec_top hL
-  obtain ⟨n, hn, hpow⟩ := (GlobalTheory.T.isOfFinOrder_pic_of_isReduced_finite_int Γ(T, ⊤) (CommRing.Pic.mk Γ(T, ⊤) (LB.Sec L))).exists_pow_eq_one
+  obtain ⟨n, hn, hpow⟩ := (_root_.GlobalTheory.PicReducedTors.pic_isOfFinOrder Γ(T, ⊤) (CommRing.Pic.mk Γ(T, ⊤) (LB.Sec L))).exists_pow_eq_one
   have hk := isLB_tp hL n
   have := LB.invertible_sec_top hk
   have h1 : CechPic.cls (tp L n) hk = 0 := by

@@ -1,13 +1,14 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.LeviMatchingWords.SplitPlaceGeneratorPowers
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConstantTermStarStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MatchLeviWordsOfStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MatchingIdentityOfStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MatchingUnitOfStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MultiplicityInertStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RegularPowerTorusStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SeparablePowerTorusStatement
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.LeviMatchingWords.MatchLM
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MatchingIdentityOf
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MultiplicityInert
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConstantTermStar
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MatchLeviWordsOf
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MatchingUnitOf
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RegularPowerTorus
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SeparablePowerTorus
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -47,13 +48,13 @@ import Mathlib.Tactic.NormNum.RealSqrt
 
 namespace PositivityTheory.Rg.BcB.F.MLM
 
-theorem matchLMIdOf : MatchLMIdOf := GlobalTheory.T.matching_identity_of
-theorem matchLMUnitOf : MatchLMUnitOf := GlobalTheory.T.matching_unit_of
+theorem matchLMIdOf : MatchLMIdOf := _root_.GlobalTheory.CompanionTheory.MatchId.matchLMIdOf
+theorem matchLMUnitOf : MatchLMUnitOf := _root_.GlobalTheory.CompanionTheory.MatchUnit.matchLMUnitOf
 
-theorem muInert : MuInert := GlobalTheory.T.multiplicity_inert
-theorem regPowT : RegPowT := GlobalTheory.T.regular_power_torus
-theorem sepPowT : SepPowT := GlobalTheory.T.separable_power_torus
-theorem ctStar : CtStar := GlobalTheory.T.constant_term_star
-theorem matchLMWordSOf : MatchLMWordSOf := GlobalTheory.T.match_levi_words_of
+theorem muInert : MuInert := _root_.GlobalTheory.CompanionTheory.MuInertPlace.muInert
+theorem regPowT : RegPowT := _root_.GlobalTheory.CompanionTheory.RegPow.regPowT
+theorem sepPowT : SepPowT := _root_.GlobalTheory.CompanionTheory.SepPow.sepPowT
+theorem ctStar : CtStar := _root_.GlobalTheory.CompanionTheory.CtAdj.ctStar
+theorem matchLMWordSOf : MatchLMWordSOf := _root_.GlobalTheory.CompanionTheory.LeviMatchingWords.matchLMWordSOf
 
 end PositivityTheory.Rg.BcB.F.MLM

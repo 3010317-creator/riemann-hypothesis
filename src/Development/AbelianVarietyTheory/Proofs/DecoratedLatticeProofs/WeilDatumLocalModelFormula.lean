@@ -2,14 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LawLoc
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ExistsUnitarySupportedAtPlaceOfMulEqIdem
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ConjSplitLocalModelBySupportedPairStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsScalarPreservesIntegralMatricesSubstStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSplitLocalSupportedScalarComponentStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LinearLawLocalModelInvStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LinearLawLocalModelMulClosedStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalSchrodingerModelUniqTransportExistsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitLocalComponentsOneMulInvStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilVacuumLocalModelIntegralMatrixPairStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ConjSplitLocalModelBySupportedPair
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsScalarPreservesIntegralMatricesSubst
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSplitLocalSupportedScalarComponent
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LinearLawLocalModelInv
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LinearLawLocalModelMulClosed
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalSchrodingerModelUniqTransportExists
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitLocalComponentsOneMulInv
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilVacuumLocalModelIntegralMatrixPair
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,12 +57,12 @@ namespace GlobalTheory.LocOm
 
 theorem omLoc : ∀ (D : D7), OmLoc D := by
   intro D k _ _ _ _ p ψ S T χS χT ω hW μS μT hμS hμT Y Y' _ _ _ _ FS FT Tm hTm g gk h hk hg hh Φ Φ' hΦ'
-  have U := (GlobalTheory.T.localSchrodingerModel_uniq_transport_exists D k p Y Y' S T FS FT ψ hW.std).1
+  have U := (_root_.GlobalTheory.LocModU.localModel_uniq_transport_exist D k p Y Y' S T FS FT ψ hW.std).1
   have enl : ∀ (g : GA D S) (gk : GL Y' k) (h : GA D T) (hk : GL Y k), p.IsLoc FS g gk → p.IsLoc FT h hk → Enl gk hk →
       LawLoc ω μS μT Tm g gk h hk := by
     intro g gk h hk hg hh he
-    obtain ⟨T₂, hT₂, hT₂e⟩ := GlobalTheory.T.conj_splitLocalModel_by_supported_pair D k p ψ S T χS χT ω hW μS μT Y Y' FS FT Tm hTm g gk h hk hg hh
-    obtain ⟨Φ₀, Φ₀', h0, h0', hv⟩ := GlobalTheory.T.weil_vacuum_local_model_integral_matrix_pair D k p ψ S T χS χT ω hW μS μT hμS hμT Y Y' FS FT Tm hTm g gk h hk hg hh he
+    obtain ⟨T₂, hT₂, hT₂e⟩ := _root_.GlobalTheory.LocTwist.conj_isModel D k p ψ S T χS χT ω hW μS μT Y Y' FS FT Tm hTm g gk h hk hg hh
+    obtain ⟨Φ₀, Φ₀', h0, h0', hv⟩ := _root_.GlobalTheory.LocOm.vacuum_move D k p ψ S T χS χT ω hW μS μT hμS hμT Y Y' FS FT Tm hTm g gk h hk hg hh he
     have inv1 : ∀ F, ω (g⁻¹, h⁻¹) (ω (g, h) F) = F := fun F => by
       rw [← Module.End.mul_apply, ← map_mul, Prod.mk_mul_mk, inv_mul_cancel, inv_mul_cancel, Prod.mk_one_one, map_one,
         Module.End.one_apply]
@@ -74,16 +74,16 @@ theorem omLoc : ∀ (D : D7), OmLoc D := by
     have := hT₂e Φ Φ' hΦ'
     rw [hT] at this
     rw [this, inv2]
-  obtain ⟨c, hc⟩ := GlobalTheory.T.exists_scalar_preservesIntegralMatricesSubst k Y Y' gk hk
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.LocOm.enl_scalar_denominator k Y Y' gk hk
   obtain ⟨zk, hzk⟩ : ∃ zk : GL Y k, (zk : Matrix Y Y k) = (c : k) • (1 : Matrix Y Y k) :=
     ⟨Units.map (Matrix.scalar Y : k →+* Matrix Y Y k).toMonoidHom c, by
       simp [Matrix.smul_one_eq_diagonal]⟩
-  obtain ⟨z, hz⟩ := GlobalTheory.T.exists_splitLocal_supported_scalar_component D k p T Y FT c zk hzk
-  have iS := GlobalTheory.T.splitLocalComponents_one_mul_inv D k p S Y' FS
-  have iT := GlobalTheory.T.splitLocalComponents_one_mul_inv D k p T Y FT
+  obtain ⟨z, hz⟩ := _root_.GlobalTheory.LocScalar.exists_isLoc_scalar D k p T Y FT c zk hzk
+  have iS := _root_.GlobalTheory.LocOm.isLoc_one_mul_inv D k p S Y' FS
+  have iT := _root_.GlobalTheory.LocOm.isLoc_one_mul_inv D k p T Y FT
   have l1 := enl g gk (h * z⁻¹) (hk * zk⁻¹) hg (iT.2.1 _ _ _ _ hh (iT.2.2 _ _ hz)) (hc zk hzk).1
   have l2 := enl 1 1 z⁻¹ zk⁻¹ iS.1 (iT.2.2 _ _ hz) (hc zk hzk).2
-  have l3 := GlobalTheory.T.linearLaw_localModel_mul_closed D k S T ω μS μT Y Y' Tm _ _ _ _ _ _ _ _ l1 (GlobalTheory.T.linearLaw_localModel_inv D k S T ω μS μT Y Y' Tm _ _ _ _ l2)
+  have l3 := _root_.GlobalTheory.LocOm.LawMul.lawLoc_mul D k S T ω μS μT Y Y' Tm _ _ _ _ _ _ _ _ l1 (_root_.GlobalTheory.LocOm.lawLoc_inv D k S T ω μS μT Y Y' Tm _ _ _ _ l2)
   simp only [inv_one, mul_one, inv_inv, inv_mul_cancel_right] at l3
   exact l3 Φ Φ' hΦ'
 

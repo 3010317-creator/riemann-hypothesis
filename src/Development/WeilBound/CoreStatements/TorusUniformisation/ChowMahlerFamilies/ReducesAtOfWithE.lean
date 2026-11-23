@@ -3,14 +3,17 @@ module
 public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.IsDerAt0
 public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.IsIntegrallyClosedOfDenomBis
 public import Development.AutomorphicSpectrum.PublishedTheorems.Algebra₂.FarguesHodgeTate
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeTateFreeIntegralModelsStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NatCastSmulMemHtLat
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PointHTOfFarguesHodgeTateStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionPointsDefinedGenericStatement
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.IsPolLatticePlane
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PointHTOfFarguesHodgeTate
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.HtatLat
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.HtatTest
-import Development.WeilBound.CoreStatements.HodgeTatePoints.TwhopfFin
 public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.ChartMatrices
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IntegralClosureHeightEqOneOfLiesOver
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeTateFreeIntegralModels
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NatCastSmulMemHtLat
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionPointsDefinedGeneric
+import Development.WeilBound.CoreStatements.HodgeTatePoints.TwhopfFin
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -139,7 +142,7 @@ theorem reducesAt_pack (hF : HT.FarguesHodgeTate) (E : Type) [Field E] [NumberFi
     ReducesAt P.Dh (algebraMap O (CR O y c') w) C O' := by
   obtain ⟨h0, hNoe, hIC, hFr⟩ :=
     chart_facts E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hd p hpS A m hpm O c' hc'
-  obtain ⟨-, hN, hprop, hTa, hrk, -, -⟩ := GlobalTheory.T.hodge_tate_free_integral_models E H D l Xo c O₀ β Y S Ω K J y 𝔐 p hpS
+  obtain ⟨-, hN, hprop, hTa, hrk, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HT.hcpt_generic_point E H D l Xo c O₀ β Y S Ω K J y 𝔐 p hpS
     (zp Ω p) (mem_range_zp Ω p)
   have hp := (Fact.out : p.Prime)
   have hn : p ^ 𝔐.R p ≠ 0 := pow_ne_zero _ hp.ne_zero
@@ -147,7 +150,7 @@ theorem reducesAt_pack (hF : HT.FarguesHodgeTate) (E : Type) [Field E] [NumberFi
   have hR : 1 ≤ 𝔐.R p := le_trans (by norm_num) (𝔐.R_ge p hpS)
   have hinj : Function.Injective (algebraMap (CR O y c') Ω) := IsFractionRing.injective _ _
   haveI : CharZero (CR O y c') := (algebraMap (CR O y c') Ω).charZero
-  obtain ⟨ev, ζ₀, hev⟩ := exists_isParam D 𝔐.t 𝔐.ξ GlobalTheory.T.torsion_points_defined_generic (p ^ 𝔐.R p) (Nat.pos_of_ne_zero hn) hpq hprop
+  obtain ⟨ev, ζ₀, hev⟩ := exists_isParam D 𝔐.t 𝔐.ξ _root_.GlobalTheory.CompanionTheory.Ar.HT.level_parametrisation (p ^ 𝔐.R p) (Nat.pos_of_ne_zero hn) hpq hprop
     (𝔐.tors p hpS) hTa
   obtain ⟨u, hu, huz⟩ := exists_coords D 𝔐.t 𝔐.ξ p (𝔐.R p) hR hev G.t₂.pt G.t₂.onto G.t₂.lin
   obtain ⟨π, e, hπ, he, hdec, hsurj, hker, halt, hadj, hes, hei⟩ :=
@@ -189,7 +192,7 @@ theorem reducesAt_pack (hF : HT.FarguesHodgeTate) (E : Type) [Field E] [NumberFi
     ext r
     exact (RingEquiv.symm_apply_eq κ).2 (hκ r).symm
   haveI := P.fin
-  refine reducesAt_of (GlobalTheory.T.pointHT_of_fargues_hodge_tate hF) E H D p (CR O y c') Ω (𝔐.R p) _ (withE P.Dh e halt hadj hes hei) u hu 𝔐.X 𝔐.t P.x (relabel P.Γ₂ b) P.i₂
+  refine reducesAt_of (_root_.GlobalTheory.CompanionTheory.Ar.HT.Fargues.pointHT hF) E H D p (CR O y c') Ω (𝔐.R p) _ (withE P.Dh e halt hadj hes hei) u hu 𝔐.X 𝔐.t P.x (relabel P.Γ₂ b) P.i₂
     ⟨P.tors₂.isOver, P.tors₂.mul, P.tors₂.inj, P.tors₂.kernel⟩ P.L P.M P.ρ P.act P.j P.j_bc π (P.ζ ^ a) (algebraMap O (CR O y c') w)
     ⟨P.isHT.1, P.isHT.2.1, fun z => ?_⟩ hπ he ?_ (isProper_of_iso _ 𝔐.ξ _ _ hq) (fun k _ _ f => ?_)
     (cp_descend hinj p (algebraMap O (CR O y c') w) hw) C O' v hv hvp hO hφ

@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.MeasurableCompInfGL
 public import Development.AbelianVarietyTheory.Definitions.Divisors.MirSet
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEqOnMirabolicOfSlicesFinitePlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiLocalKirillovArchimedeanKernelComplexPlacesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiLocalKirillovArchimedeanKernelComplexPlaces
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,7 +64,7 @@ theorem kirillov_semiLocal : ∀ (E : Type) [Field E] [NumberField E] [_root_.Nu
   have hq0 : (fun g => W₀ (g * (q⁻¹ * p₀))) q ≠ 0 := by
     simpa [← mul_assoc] using hne₀
   obtain ⟨X, _, ν, _, k, γ, hk, hK⟩ :=
-    GlobalTheory.T.semiLocal_kirillov_archimedean_kernel_complexPlaces E m S b _ q hb hC (hsm q) (h1 _ hW') (h4 _ hW' q).1 (h4 _ hW' q).2 hq1 hq0
+    _root_.GlobalTheory.JSW.KirArchTransfer.kirillov_arch E m S b _ q hb hC (hsm q) (h1 _ hW') (h4 _ hW' q).1 (h4 _ hW' q).2 hq1 hq0
   exact ⟨_, h3 _ hW' X ν k γ hk, hK⟩
 
 end GlobalTheory.JSW.MirSemi

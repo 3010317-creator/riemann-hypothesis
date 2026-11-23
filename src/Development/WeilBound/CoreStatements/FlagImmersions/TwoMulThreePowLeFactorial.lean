@@ -2,10 +2,11 @@ module
 
 public import GroundTheory.HeightsAndTheta.Heights.RemainderTerms.PrimeWeightEqZeroOfLt
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.HeckeSectionsIsotropicCommutatorPairingPower
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagDegreeWeightFormulaStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.LieTermFlagBoundStatement
-import GroundTheory.HeightsAndTheta.Heights.RemainderTerms.Elementary
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.CompactGapsGE
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagDegreeWeightFormula
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.LieTermFlagBound
 public import GroundTheory.HeightsAndTheta.Heights.RemainderTerms.PRestInnerTsumBound
+import GroundTheory.HeightsAndTheta.Heights.RemainderTerms.Elementary
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -156,7 +157,7 @@ theorem rest_sum_primes_bound (j : ℕ) (bad : Finset ℕ) (frob : ℕ → Ψ �
 theorem rest_sum_total_bound : ∀ (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ) (j : ℕ) (bad : Finset ℕ) (frob : ℕ → Ψ → ℕ → Ψ ⊕ Ψ) (u : Wt Ψ N) (g : ℝ) (B : ℕ) (Q : Ψ → ℕ → RP Ψ N), 1 ≤ j → j < N → WeightHyp j u g → bigB0 u g < B + 1 → IsDecomp (linRoot u ^ (dimFl Ψ N + 1)) Q → |∑ τ, ∑ k ∈ Finset.Icc 1 N, restSum j bad frob B τ k (Q τ k)| ≤ 2 * (((dimFl Ψ N : ℝ) + 1) * flagDeg u) * ((min j (N - j) : ℕ) * spread u) := by
   intro Ψ _ _ N j bad frob u g B Q hj hjN hW hB hQ
   have hg : 0 < g := hW.1
-  have hD : 0 < flagDeg u := (GlobalTheory.T.flag_degree_weight_formula Ψ N u).2.1 hW.2.1
+  have hD : 0 < flagDeg u := (_root_.GlobalTheory.CompanionTheory.Ar.Top.flagDeg_eq_weyl Ψ N u).2.1 hW.2.1
   have hN2 : (2 : ℝ) ≤ N := by exact_mod_cast (show 2 ≤ N by omega)
   have hH : 0 ≤ ‖u‖ / g := by positivity
   set E : ℝ := ((dimFl Ψ N : ℝ) + 1) * flagDeg u with hE
@@ -188,7 +189,7 @@ theorem rest_sum_total_bound : ∀ (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N 
       intro k hk
       split_ifs with h2
       · refine (rest_sum_primes_bound j bad frob B τ k (Q τ k) _ _ hb hB h2
-          (fun σ => GlobalTheory.T.lie_term_flag_bound Ψ N j u g Q hj hjN hW hQ τ σ k h2 (Finset.mem_Icc.mp hk).2)).trans ?_
+          (fun σ => _root_.GlobalTheory.CompanionTheory.Ar.Top.kappa_bound_of_decomp Ψ N j u g Q hj hjN hW hQ τ σ k h2 (Finset.mem_Icc.mp hk).2)).trans ?_
         have h3 : (2 * A / bigB0 u g) ^ (k - 1) ≤ (1 / 2 : ℝ) ^ (k - 1) :=
           pow_le_pow_left₀ (by positivity) hAb _
         calc E * (j' * (2 ^ (k - 1) / (k.factorial : ℝ)) * U * A ^ (k - 1)) * (5.56 / bigB0 u g ^ (k - 1))

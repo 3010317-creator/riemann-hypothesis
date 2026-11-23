@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SuppInd
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.RealLowestKTypeCoeffSquareIntegrable
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.HalfLinearCocycle
 public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.LocalIntegralGL
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LowerZeroUpperBlockIndicatorSqSumEqCardStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LowerZeroUpperBlockIndicatorSqSumEqCard
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormFiniteThetaDatumEqIndicatorProductStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormSqProductDatumThetaConjugateHalfStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TypePlacesDisjointTwistPlacesStatement
@@ -71,7 +71,7 @@ theorem levelVector_squareNorm_eq_prod_localVolumes_alt : GlobalTheory.Indefinit
   have hV : (Vc D i).rank = D.R.r + D.R.t := D.sp.V_rank _ (Nat.le_add_left _ _) i.2
   have hW : (Wc D i).rank = D.R.r := D.sp.W_rank _ (Nat.le_add_left _ _) i.2
   have hexp : (Vc D i).rank * (Wc D i).rank = D.R.r ^ 2 + D.R.r * D.R.t := by rw [hV, hW]; ring
-  simp_rw [fun PP => GlobalTheory.T.lowerZeroUpperBlockIndicator_sq_sum_eq_card (k := kP PP) D.R.r D.R.t hV hW (GlobalTheory.LevelVecNorm.locH R.Pg Hl PP), hexp]
+  simp_rw [fun PP => _root_.GlobalTheory.LevelVecNorm.suppInd_sq_sum_eq_card (k := kP PP) D.R.r D.R.t hV hW (GlobalTheory.LevelVecNorm.locH R.Pg Hl PP), hexp]
   rw [Finset.prod_union (GlobalTheory.T.disjoint_Pg_Q_of_core R F hcore t)]
   congr 1
   · rw [← Finset.prod_attach R.Pg]

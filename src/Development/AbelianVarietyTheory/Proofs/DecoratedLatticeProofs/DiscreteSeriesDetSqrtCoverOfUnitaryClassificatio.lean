@@ -2,10 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.DiscreteSeriesClassificationIff
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.AdmissibleDiscreteSeriesOfHasParam
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CoverDiscreteSeriesUnitarilyEquivOfSameParamStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsParamCoverDiscreteSeriesStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HarishChandraModulesIndefiniteUnitaryGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HasDiscreteSeriesKTypesOfHasParamCoverStatement
+public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.DiscreteSpectrumKFiniteDecomposition
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CoverDiscreteSeriesUnitarilyEquivOfSameParam
+public import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.IsotypicSignedParameters
+public import Formalism.LocalToGlobal.BesselHermitianTheta.DefsReal
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsParamCoverDiscreteSeries
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HarishChandraModulesOn
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HarishChandraModulesIndefiniteUnitaryGroup
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HasDiscreteSeriesKTypesOfHasParamCover
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ConsequencesOfDsClass
 import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsOfIsDSPar
 import Mathlib.Algebra.Order.Floor.Extended
@@ -61,16 +65,16 @@ theorem discreteSeriesCover_of_classification :
   have hC : GlobalTheory.Published.DiscreteSeriesCoverExists :=
     GlobalTheory.Published.CoverSeries.of_upq
       (GlobalTheory.Published.discreteSeriesUpqExists_iff_dsExists.2 hExists)
-      (fun p q h T U hU => ((GlobalTheory.T.harishChandraModules_indefiniteUnitaryGroup.1 p q h T).1 U hU).2.1)
+      (fun p q h T U hU => ((_root_.GlobalTheory.HcPort.print_harishChandraModules.1 p q h T).1 U hU).2.1)
   intro p q hn T
   choose D hD using fun lam : {lam : Ix p q → ℚ // IsParam lam} => hC p q T lam.1 lam.2
   refine ⟨D, ?_, ?_⟩
   · intro lam
-    exact GlobalTheory.T.hasDiscreteSeriesKTypes_of_hasParam_cover
+    exact _root_.GlobalTheory.CoverDS.hasTypes_of_hasParam_of_group
       hLowK hKTypes hInfChar p q hn T (D lam) lam.1 lam.2 (hD lam)
   · intro R
-    obtain ⟨lam, hl, hR⟩ := GlobalTheory.T.exists_param_coverDiscreteSeries hExhaust p q hn T R
-    exact ⟨⟨lam, hl⟩, GlobalTheory.T.coverDiscreteSeriesUnitarilyEquiv_of_sameParam
+    obtain ⟨lam, hl, hR⟩ := _root_.GlobalTheory.CoverExhaust.exists_param hExhaust p q hn T R
+    exact ⟨⟨lam, hl⟩, _root_.GlobalTheory.CoverDS.unitEquiv_of_dsUnique
       hUnique p q hn T R (D ⟨lam, hl⟩) lam hl hR (hD ⟨lam, hl⟩)⟩
 
 end GlobalTheory.CoverDS

@@ -1,9 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.OverExtAlgebraMap
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AddValNormUnramifiedInvolutionFieldExtEqMulStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DetTraceGramBlockMatrixStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBasisTraceInvolutionDetUnitUnramifiedStatement
+public import Mathlib.RingTheory.Norm.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AddValNormUnramifiedInvolutionFieldExtEqMul
+public import Mathlib.RingTheory.Trace.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DetTraceGramBlockMatrix
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBasisTraceInvolutionDetUnitUnramified
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsLocalRingOfIdem
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
@@ -77,7 +79,7 @@ theorem val_pow_of_ne {K : UQ} {a : K.E} (ha : a ≠ 0) (n : ℕ) : val K.O (a ^
 theorem eta_overExt : ∀ (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E), IsUnrExt K K' d φ → Odd d → ∀ (B : InvAlg K) (ψ : K'.E →+* B.A) (hψ : ∀ e, ψ (φ e) = algebraMap K.E B.A e) (hσ : ∀ e, B.σ (ψ e) = ψ (K'.c e)) (x : B.Aˣ), B.σ (x : B.A) = x → K'.eta ((overExt φ B ψ hψ hσ).gramDet (x : B.A)) = K.eta (B.gramDet (x : B.A)) := by
   intro K K' d φ hU hd B ψ hψ hσ x _
   have hd0 : 0 < d := hd.pos
-  obtain ⟨w, hw0, hwv⟩ := GlobalTheory.T.exists_basis_trace_involution_det_unit_unramified K K' d φ hU hd0
+  obtain ⟨w, hw0, hwv⟩ := _root_.GlobalTheory.UnitLemma.Unr.exists_basis_trace_conj_unit K K' d φ hU hd0
   letI : Algebra K.E K'.E := φ.toAlgebra
   haveI : Module.Finite K.E K'.E := Module.finite_of_finrank_pos (by rw [hU.2.2.2.2]; exact hd0)
   letI : Algebra K'.E B.A := ψ.toAlgebra
@@ -106,13 +108,13 @@ theorem eta_overExt : ∀ (K K' : UQ) (d : ℕ) (φ : K.E →+* K'.E), IsUnrExt 
         (w (e.symm i).1 * K'.c (w (e.symm j).1)) • ((x : B.A) * u (e.symm i).2 * B.σ (u (e.symm j).2)) := by
       rw [Algebra.smul_def, map_mul]; ring
     rw [this, LinearMap.map_smul, smul_eq_mul]; ring
-  rw [h2, Matrix.det_submatrix_equiv_self, GlobalTheory.T.det_trace_gram_block_eq_pow_mul_norm_det w H (fun l => K'.c (w l))]
+  rw [h2, Matrix.det_submatrix_equiv_self, _root_.GlobalTheory.det_traceGram_blockMatrix w H (fun l => K'.c (w l))]
   by_cases hH0 : H.det = 0
   · rw [hH0, Algebra.norm_zero, mul_zero]; simp [UQ.eta, val]
   have hN : Algebra.norm K.E H.det ≠ 0 := by
     rw [Ne, Algebra.norm_eq_zero_iff]; exact hH0
   unfold UQ.eta
-  rw [val_mul_of_ne (pow_ne_zero _ hw0) hN, val_pow_of_ne hw0, hwv, GlobalTheory.T.addVal_norm_unramifiedInvolutionFieldExt_eq_mul K K' d φ hU hd0, mul_zero, zero_add,
+  rw [val_mul_of_ne (pow_ne_zero _ hw0) hN, val_pow_of_ne hw0, hwv, _root_.GlobalTheory.UnitLemma.Unr.NormVal.normval K K' d φ hU hd0, mul_zero, zero_add,
     zpow_mul]
   rw [zpow_natCast, hd.neg_one_pow]
 

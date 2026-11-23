@@ -1,11 +1,12 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HodgeXD
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CosievePairingFamilyCompatStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CosievePairingFamilyCompat
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KuennethSwapStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PairingIsoOfComponentIsosStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PairingRestrictCompatStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RestrictSelfPullCEqStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PairingRestrictCompat
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.CapOComp
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RestrictSelfPullCEq
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PairingIsoOfComponentIsos
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -85,12 +86,12 @@ theorem glue_l : MVBij → CovDesc → ∀ {K : Type} [Field K] (E : XD K) (U₂
       (resU (E.F₃ c) k').pullC n ((prr U₁ U₁' r₁ ha).μ hn x y) = (prr U₂' U₂'' r₂ ha).μ hn x ((resU (E.F₁ a') k).pullC j y) := by
     intro U₁ U₂' U₁' U₂'' r₁ r₂ k k' a a' c ha i j n hn x y
     simp only [prr, swapPr, LinearMap.smul_apply, LinearMap.flip_apply, map_zsmul]
-    rw [GlobalTheory.T.pairing_restrict_compat E r₁.1 r₁.2 r₂.1 r₂.2 k (le_refl U₂) k' (show a' + a = c by omega) (show j + i = n by omega) y x,
-      GlobalTheory.T.restrict_self_pullC_eq (E.F₂ a) U₂ (le_refl U₂) i x]
-  have key := GlobalTheory.T.cosieve_pairing_family_compat hMV hCD E.F₁ E.F₃ (fun a => CH.cx (U₂.ι ⋙ E.F₂ a)) Rel prr hnat V W hV hW
+    rw [_root_.GlobalTheory.CompanionTheory.KunGlue.pr_res E r₁.1 r₁.2 r₂.1 r₂.2 k (le_refl U₂) k' (show a' + a = c by omega) (show j + i = n by omega) y x,
+      _root_.GlobalTheory.CompanionTheory.KunGlue.resU_self_pullC (E.F₂ a) U₂ (le_refl U₂) i x]
+  have key := _root_.GlobalTheory.CompanionTheory.KunGlue.glue_gen hMV hCD E.F₁ E.F₃ (fun a => CH.cx (U₂.ι ⋙ E.F₂ a)) Rel prr hnat V W hV hW
     (fun S => ⟨h₁ S, h₂ S⟩) (fun S hS => GlobalTheory.T.kuenneth_swap _ (hK S hS))
   have k2 := GlobalTheory.T.kuenneth_swap _ key
-  refine (GlobalTheory.T.pairing_iso_of_component_isos _ _ (fun a => Cx.Hom.id _) (fun a => Cx.Hom.id _) (fun a => Cx.Hom.id _)
+  refine (_root_.GlobalTheory.CompanionTheory.KunGlue.Transfer.kunE_iff _ _ (fun a => Cx.Hom.id _) (fun a => Cx.Hom.id _) (fun a => Cx.Hom.id _)
     (fun a n => mapH_id_bij _ n) (fun a n => mapH_id_bij _ n) (fun a n => mapH_id_bij _ n) ?_).1 k2
   intro a a' c ha i j n h x y
   exact swapPr_swapPr_apply (P := fun a => CH.cx ((capU V ∅).ι ⋙ E.F₁ a)) (Q := fun a => CH.cx (U₂.ι ⋙ E.F₂ a))

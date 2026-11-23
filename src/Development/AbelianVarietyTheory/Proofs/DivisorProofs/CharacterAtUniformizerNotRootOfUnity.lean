@@ -1,10 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeCharacterOfIdeleClassStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeValueNotFiniteOrderStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SplitPrimeDegreeOneStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnramifiedCharacterAtUniformizerStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeCharacterOfIdeleClass
+public import Development.AbelianVarietyTheory.Definitions.Foundations.EventuallyNormFinLeOne
+public import Formalism.LocalToGlobal.UnitaryNorms.IsUnitaryNormOf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeValueNotFiniteOrder
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SplitPrimeDegreeOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnramifiedCharacterAtUniformizer
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,12 +61,12 @@ theorem not_root_of_unity : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
   have hunr : UnrAt X.ν (splitPrime t) := by
     rw [Chars.ν, div_eq_mul_inv]
     exact (h.chars.unrα _ hW).mul (h.chars.unrβ _ hW).inv
-  rw [GlobalTheory.T.unramified_character_at_uniformizer F E X.ν v t hunr] at hpow
+  rw [_root_.GlobalTheory.ChrWUnif.chrW_unifAt F E X.ν v t hunr] at hpow
   have hHecke : IsHecke F E X.ν := by
     refine ⟨?_, fun x => ?_⟩
     · exact (h.chars.heckeα.1.div' h.chars.heckeβ.1 :)
     · rw [Chars.ν, MonoidHom.div_apply, h.chars.heckeα.2 x, h.chars.heckeβ.2 x, div_one]
-  obtain ⟨H, hloc, hinf⟩ := GlobalTheory.T.hecke_character_of_idele_class F E σ h.base.cm X.ν hHecke
+  obtain ⟨H, hloc, hinf⟩ := _root_.GlobalTheory.HeckeBridge.exists_hchar F E σ h.base.cm X.ν hHecke
   have hexp : HasExp B.emb X.ν (fun w => B.mα w - B.mβ w) := by
     intro z hz
     have h1 := h.chars.expα z hz
@@ -77,8 +79,8 @@ theorem not_root_of_unity : ∀ (F E : Type) [Field F] [NumberField F] [Field E]
       div_ne_zero hne (by exact_mod_cast (norm_ne_zero_iff.2 hne))
     rw [zpow_sub₀ hne']
   have hval : val X.ν (splitPrime t) = H.val (splitPrime t) := (hloc _ _).symm
-  obtain ⟨p, hp, hN, hsq⟩ := GlobalTheory.T.split_prime_degree_one F E (splitPrime t) (by rw [splitPrime_under]; exact hv.2)
-  refine GlobalTheory.T.hecke_value_not_finite_order F E σ h.base.cm h.base.galois B.emb H _ (hinf _ _ hexp) (fun w => ?_) p hp _ hN hsq ?_
+  obtain ⟨p, hp, hN, hsq⟩ := _root_.GlobalTheory.SplitFullyNorm.exists_prime_absNorm_eq_of_splitsFully F E (splitPrime t) (by rw [splitPrime_under]; exact hv.2)
+  refine _root_.GlobalTheory.CMSplitValue.not_isOfFinOrder_val F E σ h.base.cm h.base.galois B.emb H _ (hinf _ _ hexp) (fun w => ?_) p hp _ hN hsq ?_
   · have := h.geo.kappa w
     omega
   · rw [← hval]

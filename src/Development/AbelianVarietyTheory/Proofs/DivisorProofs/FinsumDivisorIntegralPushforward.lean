@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DensConst
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoheightEqOneIffClosureDimProjectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernIntegralPointClosurePullbackStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoheightEqOneIffClosureDimProjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernIntegralPointClosurePullback
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -107,12 +108,12 @@ theorem finsum_cycInt_push : ∀ (F : Type) [Field F] (X Y : Scheme.{0}) [IsInte
     exact QuasiCompact.compactSpace_of_compactSpace (i ≫ PSpace.str F m)
   haveI := hc hp
   haveI := hc hq
-  have key := fun (w : Y) (hw : Δ'.mult w ≠ 0) => GlobalTheory.T.mixedChernIntegral_pointClosure_pullback F X Y p q σ hp hq π hπ e L f hf w
-    ((GlobalTheory.T.coheight_eq_one_iff_closure_dim_projective F Y q e hq hY w).1 (CartierDiv.coheight_eq_one_of_mult_ne_zero (D := Δ') hw))
+  have key := fun (w : Y) (hw : Δ'.mult w ≠ 0) => _root_.GlobalTheory.CycPush.cycInt_pull F X Y p q σ hp hq π hπ e L f hf w
+    ((_root_.GlobalTheory.FieldDimCoheight.coheight_eq_one_iff F Y q e hq hY w).1 (CartierDiv.coheight_eq_one_of_mult_ne_zero (D := Δ') hw))
   exact finsum_weighted_regroup_along_fibres π Δ'.mult Δ.mult (fun w => π.residueDegree w) _ _ (fun z => Order.coheight z = 1)
     Δ'.finite_support_mult Δ.finite_support_mult
     (fun z hz => CartierDiv.coheight_eq_one_of_mult_ne_zero (D := Δ) hz) hΔ
-    (fun w hw h => (key w hw).1 ((GlobalTheory.T.coheight_eq_one_iff_closure_dim_projective F X p e hp hX _).1 h))
-    (fun w hw h => (key w hw).2 fun h' => h ((GlobalTheory.T.coheight_eq_one_iff_closure_dim_projective F X p e hp hX _).2 h'))
+    (fun w hw h => (key w hw).1 ((_root_.GlobalTheory.FieldDimCoheight.coheight_eq_one_iff F X p e hp hX _).1 h))
+    (fun w hw h => (key w hw).2 fun h' => h ((_root_.GlobalTheory.FieldDimCoheight.coheight_eq_one_iff F X p e hp hX _).2 h'))
 
 end GlobalTheory.Mix

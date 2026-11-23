@@ -4,7 +4,8 @@ public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.Bern
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsEquivProdIrrTw
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NontrivialTwJacquetOfSurjective
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CentralExponentBoundOver
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerHeredityStatement
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.LeibnizDerivatives.GenericProdIff
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerHeredity
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -83,7 +84,7 @@ theorem isGenericFor_factors {r m : ℕ} {V W : Type} [AddCommGroup V] [Module �
   obtain ⟨E⟩ := nonempty_prod₂_equiv_multiProd (Fin.sum_univ_two d) π
   have h' : IsGenericFor ψ (multiProd (stdBlocks d (Fin.sum_univ_two d)) π) :=
     IsGenericFor.of_equiv (π := prod₂ (π 0) (π 1)) h E
-  obtain ⟨L⟩ := GlobalTheory.T.whittaker_heredity k ψ hc h1 2 _ d (Fin.sum_univ_two d) (fun a => (P a).2.V) π hs
+  obtain ⟨L⟩ := _root_.GlobalTheory.CompanionTheory.Rodier.whitHeredity k ψ hc h1 2 _ d (Fin.sum_univ_two d) (fun a => (P a).2.V) π hs
   have hT : Nontrivial (⨂[ℂ] a, TwJacquet (π a) (unipB k (Fin (d a))) (whitChar ψ (d a))) := by
     have : Nontrivial (TwJacquet (multiProd (stdBlocks d (Fin.sum_univ_two d)) π) (unipB k (Fin (d 0 + d 1)))
       (whitChar ψ (d 0 + d 1))) := h'

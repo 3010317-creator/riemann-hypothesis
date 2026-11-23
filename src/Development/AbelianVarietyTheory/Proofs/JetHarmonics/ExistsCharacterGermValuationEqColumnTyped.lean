@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Jets.JetsOnCopiesCompatibleFrames
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors.StChartF
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CanonicalGaugeEigenvectorPairingIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CovariantDerivativeValueCharacterGermsStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.ChartChg
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CovariantDerivativeValueCharacterGerms
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SumSupportRename
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.EvSelfTwo
 import Mathlib.Algebra.Order.Floor.Extended
@@ -112,7 +113,7 @@ theorem exists_germ_valuation_eq : ∀ (C : Type) [Field C] [CharZero C] (v : Va
   have hh : MvPowerSeries.constantCoeff h = 0 := by
     have := congrArg MvPowerSeries.constantCoeff hg.ax0
     rwa [TB.WickVanishing.gt_const_ev_eq _ (TB.WickVanishing.pair_points_zero_constant TB.WickVanishing.gp_zero₂ (TB.WickVanishing.gp_pt 0)), map_zero] at this
-  obtain ⟨g, ρ, hρ, hsum⟩ := GlobalTheory.T.covariantDerivative_value_character_germs O d OE C B h hg hinj w0 N k n (ballIdeal hv _ hx0)
+  obtain ⟨g, ρ, hρ, hsum⟩ := _root_.GlobalTheory.nabVal_character_columns_of_canonGauge O d OE C B h hg hinj w0 N k n (ballIdeal hv _ hx0)
     (by show v (algebraMap O C (N : O)) < _; rwa [map_natCast]) (fun b => a (ty b)) (fun _ => 1)
     (fun b => by rw [ha1, mul_one]) (Σ τ : Ty, Fin (r τ)) u (fun b => {l | l.1 = ty b})
     (fun b l => σ l.1 (a (ty b)))

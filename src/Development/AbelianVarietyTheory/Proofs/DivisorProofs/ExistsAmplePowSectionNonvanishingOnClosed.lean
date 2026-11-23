@@ -1,10 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRatioOfWeight
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosedSubsetFiniteFibresIsAffineFiniteIntStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAmplePowerLiftOfNonvanishingOnClosedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNowhereZeroSectionLineBundlePowFiniteIntStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundlePowSectionsRationalFunctionsLociStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosedSubsetFiniteFibresIsAffineFiniteInt
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsClosedImmersionGenericPoint
+public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAmpleLBOfRelAmpleOfIsAffine
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAmplePowerLiftOfNonvanishingOnClosed
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNowhereZeroSectionLineBundlePowFiniteInt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundlePowSectionsRationalFunctionsLoci
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.GeometricallyReducedOfPerfectField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -55,13 +58,13 @@ namespace GlobalTheory.HSAmp
 theorem exists_pow_section_nonvanishing_on_closed : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (D : ℕ), IsArithVar p D → ∀ (P : Pair p), IsAmpleLB P.L.B → ∀ T : Set X, IsClosed T → (∀ ℓ : ℕ, (T ∩ fib X ℓ).Finite) → ∃ e : ℕ, 0 < e ∧ ∃ f ∈ P.H e 0, T ⊆ NV P e 0 f := by
   intro k _ X _ p D hX P hA T hT hfin
   let Z : Closeds X := ⟨T, hT⟩
-  obtain ⟨hAff, hFin⟩ := GlobalTheory.T.closedSubset_finiteFibres_isAffine_finite_int k X p D hX Z hfin
+  obtain ⟨hAff, hFin⟩ := _root_.GlobalTheory.HSAmp.closeds_finite_int k X p D hX Z hfin
   haveI := hAff
   haveI := ReducedSubgroup.isReduced_subscheme_vanishingIdeal Z
   let i := (Scheme.IdealSheafData.vanishingIdeal Z).subschemeι
-  obtain ⟨n, s, hn, hs⟩ := GlobalTheory.T.exists_nowhereZero_section_lineBundle_pow_finite_int _ hFin (P.L.B.pull i) (LB.isLB_pull hA.isLB i)
-  obtain ⟨N, u, hN, hu⟩ := GlobalTheory.T.exists_ample_power_lift_of_nonvanishing_on_closed k X p D hX P.L.B hA _ i n s hn hs
-  obtain ⟨f, hf, hfu⟩ := (GlobalTheory.T.lineBundlePow_sections_rationalFunctions_loci k X p P N).1 u
+  obtain ⟨n, s, hn, hs⟩ := _root_.GlobalTheory.PowNowhereZero.main _ hFin (P.L.B.pull i) (LB.isLB_pull hA.isLB i)
+  obtain ⟨N, u, hN, hu⟩ := _root_.GlobalTheory.LiftAmple.exists_sec_nonzero_on_closed k X p D hX P.L.B hA _ i n s hn hs
+  obtain ⟨f, hf, hfu⟩ := (_root_.GlobalTheory.HSAmp.pow_sec_dict k X p P N).1 u
   refine ⟨N, hN, f, hf, ?_⟩
   rw [hfu]
   intro x hx

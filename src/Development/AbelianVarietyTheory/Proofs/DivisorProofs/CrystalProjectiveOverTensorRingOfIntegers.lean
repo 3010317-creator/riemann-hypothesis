@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorModOfTmul
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeRhamHomologyClosedFibreSurjectiveKernelStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCrystalReductionSquareZeroArtinianStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FirstDeRhamHomologyProjectiveOverTensorIntegersStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProjectiveTensorOfFibreProjectiveStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CanonicalOfAbelianDeRham
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCrystalReductionSquareZeroArtinian
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsKSValueOneOfRetraction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FirstDeRhamHomologyProjectiveOverTensorIntegers
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProjectiveTensorOfFibreProjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -94,7 +96,7 @@ private theorem fibre_projective_tensorModOf
     letI := tensorModOf (act (dp0 k) (𝟙 _) a)
     Module.Projective (k ⊗[ℤ] 𝓞 F) (HdR B) := by
   change @Module.Projective _ _ _ _ (tensorModule (dp0 k) (𝟙 _) a)
-  exact GlobalTheory.T.firstDeRhamHomology_projective_over_tensor_integers F k B hB a
+  exact _root_.GlobalTheory.CrysProj.hdR_projective F k B hB a
 
 theorem crys_projective : ∀ (F : Type) [Field F] [NumberField F] (C C₀ : Type) [CommRing C] [IsLocalRing C] [IsArtinianRing C] [CommRing C₀] (π : C →+* C₀), Function.Surjective π → ∀ (hsq : RingHom.ker π ^ 2 = 0) (A₀ : Over (Sp C₀)) [GrpObj A₀] [IsCommMonObj A₀], IsAbelianScheme A₀ → ∀ (O : Type) [Ring O] [Algebra (𝓞 F) O] (a : GlobalTheory.UPel.HT.OActN O A₀), letI := GlobalTheory.HTSummand.tensorModOf ((GlobalTheory.HTSummand.crysAct (divided₂ hsq) (spMap π) a).comp (algebraMap (𝓞 F) O)); Module.Projective (C ⊗[ℤ] 𝓞 F) (Crys (divided₂ hsq) (spMap π) A₀) := by
   intro F _ _ C C₀ _ _ _ _ π hπ hsq A₀ _ _ hA O _ _ a
@@ -107,7 +109,7 @@ theorem crys_projective : ∀ (F : Type) [Field F] [NumberField F] (C C₀ : Typ
     rw [_root_.one_mul, hsq] at h2
     exact one_ne_zero ((Submodule.mem_bot C).1 h2)
   have : IsLocalRing C₀ := IsLocalRing.of_surjective' π hπ
-  obtain ⟨red, hfin, hproj, hsurj, hker, -, hequiv, -⟩ := GlobalTheory.T.exists_crystal_reduction_squareZero_artinian C C₀ π hπ hsq A₀ hA O a
+  obtain ⟨red, hfin, hproj, hsurj, hker, -, hequiv, -⟩ := _root_.GlobalTheory.CrysRed.exists_crysRed C C₀ π hπ hsq A₀ hA O a
   let a' : OAct (𝓞 F) A₀ :=
     { act := fun x ↦ a.act (algebraMap (𝓞 F) O x)
       hom := fun x ↦ a.hom _
@@ -129,7 +131,7 @@ theorem crys_projective : ∀ (F : Type) [Field F] [NumberField F] (C C₀ : Typ
     change algebraMap C₀ (IsLocalRing.ResidueField C₀) c = 0
     rw [IsLocalRing.ResidueField.algebraMap_eq]
     exact (IsLocalRing.residue_eq_zero_iff c).2 hc
-  refine GlobalTheory.T.projective_tensor_of_fibre_projective'
+  refine _root_.GlobalTheory.HTSummand.projective_tensor_of_fibre_projective
     C (IsLocalRing.ResidueField C₀) (𝓞 F) σ hσ H (HdR B)
     ρ ρB (f.comp red) hfin hproj (fsurj.comp hsurj) ?_ ?_
       (fibre_projective_tensorModOf F (IsLocalRing.ResidueField C₀) B hB aB)

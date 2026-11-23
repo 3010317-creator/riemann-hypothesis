@@ -2,7 +2,8 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsPowSubMemSpanOfIsUnitModOfIsAlgClosed
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.RationalSections.ThmISt
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntersectionFamilyFlatHermStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntersectionFamilyFlatHerm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -160,4 +161,4 @@ theorem GlobalTheory.CompanionTheory.Ar.Flat.sum_roots_eq : PtsIntegrableStateme
   open GlobalTheory.CompanionTheory.Ar.Flat.SumRoots in
   rw [← inter_tens hI hW hL N x hx, hloc, hI.2.1 W n L _ _ hW hL hA (smooth_ofWeight v hv hs),
     inter_ofWeight hI hW hL v hv hs,
-    GlobalTheory.T.intersection_family_flat_herm hP K ι Ω F y φ I W n L A S d hI hV hO hyW hW hL hA, sub_eq_add_neg]
+    _root_.GlobalTheory.CompanionTheory.Ar.Flat.FlatHerm.inter_eq hP K ι Ω F y φ I W n L A S d hI hV hO hyW hW hL hA, sub_eq_add_neg]

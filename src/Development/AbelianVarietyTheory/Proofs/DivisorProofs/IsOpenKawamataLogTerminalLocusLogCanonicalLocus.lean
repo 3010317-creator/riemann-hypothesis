@@ -2,8 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsLogCanonicalMultipleCanonical
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.ExistsLogResolutionStatement
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.LogResolutionMultiplierOpenStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsLogMult
+public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.ExistsLogResolution
+public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.LogResolutionMultiplierOpen
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -41,7 +42,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsLogMult
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsEtCoord
 
 @[expose] public section
@@ -62,10 +62,10 @@ theorem isOpen_kltLocus_lcLocus : GlobalTheory.Published.Principalisation → �
     have : x ∈ ((⊤ : Closeds X) : Set X) := trivial
     rw [← h] at this
     exact this
-  obtain ⟨Y, hY, s, hs, K, B, hres, -⟩ := GlobalTheory.T.exists_log_resolution hP k X p n hp hdim η m G hη.ne_zero ⊥ hZ
+  obtain ⟨Y, hY, s, hs, K, B, hres, -⟩ := _root_.GlobalTheory.LogResExist.exists_logRes hP k X p n hp hdim η m G hη.ne_zero ⊥ hZ
   haveI := hres.smooth
   haveI : Smooth (s ≫ p) := hres.smooth.smooth
   haveI : IsLocallyNoetherian Y := LocallyOfFiniteType.isLocallyNoetherian (s ≫ p)
-  exact GlobalTheory.T.log_resolution_multiplier_open k X p n hp hdim Δ η m G Y s K B hη hres
+  exact _root_.GlobalTheory.Discrepancy.isOpen_kltAt_and_lcAt_of_isLogRes k X p n hp hdim Δ η m G Y s K B hη hres
 
 end GlobalTheory.Discrepancy

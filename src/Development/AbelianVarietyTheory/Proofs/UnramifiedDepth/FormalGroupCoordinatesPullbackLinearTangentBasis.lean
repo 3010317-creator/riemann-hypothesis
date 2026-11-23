@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.TwoMulChainStartIndexAddOneOfOdd
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.CoeffSubstSumLPowPowMvPowerSeriesStatement
+public import Mathlib.RingTheory.MvPowerSeries.Substitution
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.CoeffSubstSumLPowPowMvPowerSeries
 import Formalism.LocalToGlobal.CharacterGerms.CartesianBoundOnCurves
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -85,7 +86,7 @@ theorem linPull_coords : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) (I J : Ty
         (MvPowerSeries.X j : MvPowerSeries ι C)) with hZ
     have hx : ∀ x, ∑ b', (Y b' - Zf b') * S.tan b' x = 0 := by
       intro x
-      have h := GlobalTheory.T.coeff_subst_sum_l_pow_pow_mvPowerSeries C I ι I V.l hl (fun c s => S.al c s x) t (MvPowerSeries.X x) f hf0 ht.1
+      have h := _root_.GlobalTheory.LogSubst.coeff_subst_sum_pow_pow C I ι I V.l hl (fun c s => S.al c s x) t (MvPowerSeries.X x) f hf0 ht.1
         (fun μ' => by rw [MvPowerSeries.coeff_X, ht.2 x μ']) μ
       rw [MvPowerSeries.subst_X hsub] at h
       have eL : MvPowerSeries.coeff μ (f x) = ∑ b', Zf b' * S.tan b' x := by
@@ -134,7 +135,7 @@ theorem linPull_coords : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) (I J : Ty
           omega
         subst hs0
         simp [show ∀ c, S.be c 0 κ = 0 from fun c => S.be_zero c κ]
-    rw [GlobalTheory.T.coeff_subst_sum_l_pow_pow_mvPowerSeries C I ι I V.l hl (fun c s => -S.be c s κ) t (S.ze t κ) f hf0 ht.1 hF μ]
+    rw [_root_.GlobalTheory.LogSubst.coeff_subst_sum_pow_pow C I ι I V.l hl (fun c s => -S.be c s κ) t (S.ze t κ) f hf0 ht.1 hF μ]
     simp only [neg_mul, Finset.sum_neg_distrib]
 
 end GlobalTheory.MainTerm

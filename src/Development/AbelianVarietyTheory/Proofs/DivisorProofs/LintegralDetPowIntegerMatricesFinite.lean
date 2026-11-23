@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IndicatorIntMMemSB
-import Development.AbelianVarietyTheory.Definitions.Foundations.SecondCountableAndT2LocalField
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralAbsPowIntegersFiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralAffineAbsPowBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralMatrixFirstRowColumnStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.MatrixMeasurableSpace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralAffineAbsPowBound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralMatrixFirstRowColumn
+import Development.AbelianVarietyTheory.Definitions.Foundations.SecondCountableAndT2LocalField
 import Formalism.DoubleCosetMeasures.StatementZ
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -136,7 +137,7 @@ theorem intdet : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] 
             · rw [Set.indicator_of_mem hx, Set.indicator_of_mem ((mem_intM_blk x u v M).2 ⟨hx, fun j => hu j trivial, fun i => hv i trivial, hM⟩), det_blk, mul_comm x]
             · rw [Set.indicator_of_notMem hx, Set.indicator_of_notMem (fun h => hx ((mem_intM_blk x u v M).1 h).1)]
           simp_rw [he]
-          refine (GlobalTheory.T.lintegral_affine_abs_pow_bound k μ s hs0 M.det _).trans (le_of_eq ?_)
+          refine (_root_.GlobalTheory.KSplit.lintegral_absPow_affine_le k μ s hs0 M.det _).trans (le_of_eq ?_)
           rw [mul_comm]
         · rw [show (fun x => (intM k (Fin (n + 1)) (Fin (n + 1))).indicator (fun Y => P Y.det)
               (Matrix.of (Fin.cons (Fin.cons x u : Fin (n + 1) → k) (fun i => (Fin.cons (v i) (M i) : Fin (n + 1) → k))))) = fun _ => 0 from ?_]
@@ -145,7 +146,7 @@ theorem intdet : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] 
           refine Set.indicator_of_notMem (fun hx => h ?_) _
           obtain ⟨_, hu, hv, hM⟩ := (mem_intM_blk x u v M).1 hx
           exact ⟨fun j _ => hu j, fun i _ => hv i, hM⟩
-      calc _ ≤ _ := GlobalTheory.T.lintegral_matrix_first_row_column k μ n _
+      calc _ ≤ _ := _root_.GlobalTheory.KSplit.CornerFubini.lintegral_volM_le_corner k μ n _
         _ ≤ ∫⁻ M, ∫⁻ v, ∫⁻ u, U.indicator (fun _ => U.indicator (fun _ => K * I M) v) u
               ∂(Measure.pi fun _ : Fin n => μ) ∂(Measure.pi fun _ : Fin n => μ) ∂(volM μ (Fin n) (Fin n)) :=
             lintegral_mono fun M => lintegral_mono fun v => lintegral_mono fun u => inner M v u

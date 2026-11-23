@@ -3,10 +3,11 @@ module
 public import Formalism.LocalToGlobal.KernelLattices.BaseEx
 public import Formalism.FrobeniusOrbits.FrobeniusOrbitsProofs.SplitK
 public import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
-import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.KerDetFin
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.KerDetOrd
+public import Formalism.PeriodIntegrals.KerIso
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.DeterminantKernelFiniteness.ExistsDenomBackward
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.DeterminantKernelOrder.ValNatCastEqOne
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.KerSplit
+import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -238,7 +239,7 @@ theorem splitKSplits : SplitKSplits D := splitKSplits_of (dMod8 D) (sqrtInK D)
 
 theorem yIndep (γ₀ : IsoK D) : YIndep γ₀ :=
   fun p 𝔭 γ γ' hp _ hm h1 h2 =>
-    ordRelativeDet_independence D.host.K D.host.E D.what₂.Tau {x | x ∈ D.host.AA0} p 𝔭 γ.g γ'.g γ₀.g hp hm h1 h2
+    _root_.PI.KerIso.DetOrdW.detOrdIndep D.host.K D.host.E D.what₂.Tau {x | x ∈ D.host.AA0} p 𝔭 γ.g γ'.g γ₀.g hp hm h1 h2
 
 theorem distinguished_ideal_ne_zero : D.host.AA0 ≠ 0 := by
   have hd : differentIdeal (𝓞 D.host.K) (𝓞 D.host.E) ≠ ⊥ := differentIdeal_ne_bot
@@ -250,7 +251,7 @@ theorem distinguished_ideal_ne_zero : D.host.AA0 ≠ 0 := by
   exact inv_ne_zero (FractionalIdeal.coeIdeal_ne_zero.mpr hb)
 
 theorem yFinite (γ₀ : IsoK D) (k : KapChoice γ₀) : k.YFinite :=
-  ordRelativeDet_finite D.host.K D.host.E D.what₂.Tau D.host.AA0 (distinguished_ideal_ne_zero D) (SplitK D) k.pp (fun p => (k.gaP p).g) γ₀.g
+  _root_.PI.KerDetFinW.detOrdFin D.host.K D.host.E D.what₂.Tau D.host.AA0 (distinguished_ideal_ne_zero D) (SplitK D) k.pp (fun p => (k.gaP p).g) γ₀.g
     k.pp_over k.gaP_at
 
 theorem Base.half_not_mem {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} (B : Base D cc δ) : B.ω₀ / 2 ∉ B.L.lattice := by

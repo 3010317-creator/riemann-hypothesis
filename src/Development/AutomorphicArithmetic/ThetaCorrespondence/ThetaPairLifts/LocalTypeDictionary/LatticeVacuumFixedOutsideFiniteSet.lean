@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMemKAt
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceBothStabilisersFixVacuumStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceStabilizerFixesVacuumLeftStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceBothStabilisersFixVacuum
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceStabilizerFixesVacuumLeft
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceSplitOrInert
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.SplitVprimeStabilizerFixesVacuum
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.VacuumFixedBySplitSphericalLeft
@@ -74,8 +74,8 @@ theorem lattice_vacuum_fixed_outside_finite_set : _root_.GlobalTheory.FunPr.Thet
   rcases GlobalTheory.KFinLoc.split_or_inert F E σ B hT.base v with hs | ⟨w, hw⟩
   · exact ⟨hS₁ v hv₁ hs, hS₂ v hv₂ hs⟩
   · refine ⟨fun k hk => ?_, fun k hk => ?_⟩
-    · exact GlobalTheory.T.inert_place_both_stabilisers_fix_vacuum F E σ B a a' G X om om' hT v w hw hvT k hk 1 (GlobalTheory.InertSph.one_mem_KAt σ G.W v)
-    · exact GlobalTheory.T.inertPlace_stabilizer_fixes_vacuum_left F E σ B a a' G X om om' hT v w hw hvT k hk
+    · exact _root_.GlobalTheory.InertSph.vac_fixed_pair F E σ B a a' G X om om' hT v w hw hvT k hk 1 (GlobalTheory.InertSph.one_mem_KAt σ G.W v)
+    · exact _root_.GlobalTheory.InertSphLeft.vac_fixed_left F E σ B a a' G X om om' hT v w hw hvT k hk
 end GlobalTheory.LatStabVac
 end
 

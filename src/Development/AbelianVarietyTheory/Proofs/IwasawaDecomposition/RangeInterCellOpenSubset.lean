@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsFrameCover
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFlagCellOfNonvanishingLeadingMinorsStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFlagCellOfNonvanishingLeadingMinors
+public import Formalism.SharpRestriction.Divisibility.AbelianOpenPart.IsOpenPart
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FlagCellPointEqOfTriangularFramesStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -107,7 +108,7 @@ theorem range_inter_cellOpen_subset : ∀ (O K : Type) [CommRing O] [Field K] (�
     unfold pt
     congr 1
     exact MvPolynomial.ringHom_ext (fun r => by simp) (fun i => by simp)
-  obtain ⟨x, d, hd, ht⟩ := GlobalTheory.T.exists_flagCell_of_nonvanishing_leading_minors T m k M _ _ _ w ((hc.inv b).map φ) hu (fun τ j hj => by
+  obtain ⟨x, d, hd, ht⟩ := _root_.GlobalTheory.FlagEmb.CellLU.exists_cell T m k M _ _ _ w ((hc.inv b).map φ) hu (fun τ j hj => by
     obtain ⟨hv, e⟩ := hp.plk b' w' (stdEn τ j hj)
     have := hne τ j hj _ _ _ (by rw [Category.assoc, e, spMap_pt])
     rw [map_plk] at this

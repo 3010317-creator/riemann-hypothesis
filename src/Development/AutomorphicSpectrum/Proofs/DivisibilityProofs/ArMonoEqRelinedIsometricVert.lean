@@ -3,7 +3,8 @@ module
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.ArMonoReline
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.LaurentCechNerveLevelSpecTensorPower
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.IsometricVerticalIntersectionEqStatement
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.LocalAtPlaces
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.IsometricVerticalIntersectionEq
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.MassFormulaConjugationAction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -87,7 +88,7 @@ theorem arList_swap_one {P : Ideal (MvPolynomial (Σ k, ι k) ℤ)}
       simp only [Fin.snoc_castSucc, Fin.snoc_last, List.ofFn_get, List.concat_eq_append]
       exact List.perm_middle.trans (List.perm_append_singleton _ _).symm
   rw [hsnoc A hA, hsnoc A' hA']
-  have h := GlobalTheory.T.isometric_vertical_intersection_eq K ι P _ hP I hI ∅ T hT A A' hA hA' hiso (pre ++ post).get hL
+  have h := _root_.GlobalTheory.CompanionTheory.Ar.Num.Link.change_line K ι P _ hP I hI ∅ T hT A A' hA hA' hiso (pre ++ post).get hL
   simpa [sub_eq_zero] using h
 
 theorem arList_swap_map {J : Type} {P : Ideal (MvPolynomial (Σ k, ι k) ℤ)}

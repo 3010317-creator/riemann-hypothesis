@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMemKAt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledVacuumStabilizerGaussDecompositionBigCell
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInversePreservingAdelicLatticeAtPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowIdempotentAdelicLatticeModPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTraceZeroAdeleUnitLatticeAtInertPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInversePreservingAdelicLatticeAtPlace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowIdempotentAdelicLatticeModPrime
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTraceZeroAdeleUnitLatticeAtInertPlace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -355,7 +355,7 @@ theorem exists_skew_cayley : ∀ (F E : Type) [Field F] [NumberField F] [Field E
   obtain ⟨h2v, h3, -⟩ := hT.base.inert v w hin
   have hp0 : 0 < Ideal.absNorm v.asIdeal := by omega
   have hpv : ((Ideal.absNorm v.asIdeal : ℕ) : 𝓞 F) ∈ v.asIdeal := Ideal.absNorm_mem _
-  obtain ⟨β, b, up, um, hβat, hβσ, hsc⟩ := GlobalTheory.T.exists_traceZero_adele_unit_lattice_at_inert_place F E σ B hT.base (a + a') G.W v w hin
+  obtain ⟨β, b, up, um, hβat, hβσ, hsc⟩ := _root_.GlobalTheory.InertSph.exists_traceZero_unit F E σ B hT.base (a + a') G.W v w hin
   have hKK : mat k * mat k⁻¹ = 1 := by
     show mat (k * k⁻¹) = 1
     rw [mul_inv_cancel]; rfl
@@ -368,7 +368,7 @@ theorem exists_skew_cayley : ∀ (F E : Type) [Field F] [NumberField F] [Field E
     intro z hz
     rw [Matrix.add_mulVec, Matrix.add_mulVec, Matrix.add_mulVec, Matrix.one_mulVec]
     exact add_mem (add_mem (add_mem (hKk z hz) (hKik z hz)) hz) hz
-  obtain ⟨N, hN0, hN⟩ := GlobalTheory.T.exists_pow_idempotent_adelicLattice_mod_prime F E (a + a') G.W hlat v _ hp0 hpv _ hfk
+  obtain ⟨N, hN0, hN⟩ := _root_.GlobalTheory.LatIdem.exists_pow_idem F E (a + a') G.W hlat v _ hp0 hpv _ hfk
   obtain ⟨N₀, rfl⟩ : ∃ N₀, N = N₀ + 1 := ⟨N - 1, by omega⟩
   have hh : ∀ z ∈ GlobalTheory.InertSph.latAt G.W v, (algebraMap (AF F) (AE F E) ⅟(2 : AF F)) • z ∈ GlobalTheory.InertSph.latAt G.W v :=
     fun z hz => by rw [algebraMap_smul]; exact GlobalTheory.DblVacGauss.invOf_two_smul_mem_latAt G.W v h2v hz
@@ -410,12 +410,12 @@ theorem exists_skew_cayley : ∀ (F E : Type) [Field F] [NumberField F] [Field E
     unfold SelfAdj at hsa
     rw [hYdef, Matrix.transpose_smul, Matrix.smul_mul, hsa, smul_map, hβσ, Matrix.mul_smul, ← AlgHom.mapMatrix_apply,
       neg_smul, add_neg_cancel]
-  · refine GlobalTheory.T.exists_inverse_preserving_adelicLatticeAtPlace F E (a + a') G.W hT.geo.hW.lat v _ hpv 1 isUnit_one _ ?_ (keepAdd keepOne hYk) s1
+  · refine _root_.GlobalTheory.InertSph.exists_inv_keeps_latAt F E (a + a') G.W hT.geo.hW.lat v _ hpv 1 isUnit_one _ ?_ (keepAdd keepOne hYk) s1
     rw [one_smul, add_sub_cancel_left]; exact hYat
-  · refine GlobalTheory.T.exists_inverse_preserving_adelicLatticeAtPlace F E (a + a') G.W hT.geo.hW.lat v _ hpv 1 isUnit_one _ ?_ (keepSub keepOne hYk) s2
+  · refine _root_.GlobalTheory.InertSph.exists_inv_keeps_latAt F E (a + a') G.W hT.geo.hW.lat v _ hpv 1 isUnit_one _ ?_ (keepSub keepOne hYk) s2
     intro u hu
     rw [one_smul, sub_sub_cancel_left, smul_neg, hYat u hu, neg_zero]
-  · refine GlobalTheory.T.exists_inverse_preserving_adelicLatticeAtPlace F E (a + a') G.W hT.geo.hW.lat v _ hpv 2 (isUnit_of_invertible _) _ ?_
+  · refine _root_.GlobalTheory.InertSph.exists_inv_keeps_latAt F E (a + a') G.W hT.geo.hW.lat v _ hpv 2 (isUnit_of_invertible _) _ ?_
       (keepAdd (keepAdd keepOne hYk) (keepMul hKk (keepSub keepOne hYk))) s3
     intro u hu
     have e : 1 + Y + mat k * (1 - Y) - (2 : AF F) • (1 : Matrix (Fin (a + a')) (Fin (a + a')) (AE F E)) =

@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.BigBlockCharacters
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NonemptyValExtOfOverLa
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChartCharacterIsLogarithmStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntProdRename
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChartCharacterIsLogarithm
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.FactorDepthInertBounds
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TypedPartSplitPrimes
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsFlagCharactersLeadingMinorsColength
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntProdRename
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,8 +46,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.FactorDepthInertBounds
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TypedPartSplitPrimes
 import Development.AbelianVarietyTheory.Definitions.Divisors.EightDvdNCol
 
 @[expose] public section
@@ -76,7 +76,7 @@ theorem hasChars_frame_of_hasAF : ∀ (E : Type) [Field E] [NumberField E] [IsCM
   let lf : Fin (rk f) → Fin (chD Ch.ch) → X.C := fun b j =>
     algebraMap X.O X.C (ReciprocityTheory.ChartRestriction.G.Pdiv.ChartF.dl (χ (Fin.castLE (rk_le f) b)) j)
   have hl : ∀ b, IsCharLog (fgl Ch X) (lf b) := fun b =>
-    GlobalTheory.T.chart_character_is_logarithm E H Dw l Xo c p T io y Ch X _ (hχ _)
+    _root_.GlobalTheory.CharLogOfChar.isCharLog_dl E H Dw l Xo c p T io y Ch X _ (hχ _)
   have hdet : pairDet lf (frame Ch X f) = algebraMap X.O X.C (Matrix.of fun a b : Fin (f.2.val + 1) =>
       ∑ j, X.ι (Ch.uvecT ⟨f.1, Fin.castLE f.2.isLt a⟩ j) *
         ReciprocityTheory.ChartRestriction.G.Pdiv.ChartF.dl (χ (Fin.castLE f.2.isLt b)) j).det := by

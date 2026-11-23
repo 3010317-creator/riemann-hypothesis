@@ -4,10 +4,11 @@ public import Development.WeilBound.CoreStatements.FlagImmersions.FibSandwich
 public import Development.WeilBound.CoreStatements.FlagImmersions.ExistsUnitMetric
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordOverIntOfFiniteOrder
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsFormNotInCoordIdeal
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsPlaceWeightConjInvariantStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.MemOfAevalEqZero
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsPowSubMemSpanOfIsUnitModOfIsAlgClosed
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsPlaceWeightConjInvariant
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PointOverNumberFieldValue
 public import Development.WeilBound.CoreStatements.VolumeEquality.ChartMeetsPoint
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.MemOfAevalEqZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -176,7 +177,7 @@ theorem smoothLine : SmoothLine := by
     by_cases h : w ∈ mcPts (mCoordIdeal y)
     · exact pres_on hT hD hg h
     · exact pres_off hvar.2.1.2.1 a c₀ hw h
-  obtain ⟨u, hu, huc⟩ := GlobalTheory.T.exists_place_weight_conj_invariant K J Ω F' y ψ (fun σ => Real.log (cinf σ)) hO
+  obtain ⟨u, hu, huc⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.exists_placeWeight K J Ω F' y ψ (fun σ => Real.log (cinf σ)) hO
   have huc' := huc fun σ => by simp only [hconj]
   refine ⟨hu.shift A₀, ?_, ?_, fun z => ?_, ?_, fun w hw => ?_⟩
   · show A₀.a + 0 = a

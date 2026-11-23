@@ -2,8 +2,8 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsTestZero
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.T2SpaceAdelicGeneralLinearGroupNumberField
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsNonnegTestFunctionNearOneStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TestFunctionContinuousCompactSupportStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsNonnegTestFunctionNearOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TestFunctionContinuousCompactSupport
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -88,9 +88,9 @@ theorem exists_isTest_Rop_injective : ∀ (E : Type) [Field E] [NumberField E] [
     have h2 := hΦ.continuousAt.preimage_mem_nhds h1
     change {y | dist (Φ y) 0 ≤ 1 / 2} ∈ 𝓝 (1 : GL (Fin a) (Cinf E)) at h2
     simpa only [dist_zero_right] using h2
-  obtain ⟨β₀, h0, hpos, htest, hconj, hsupp⟩ := GlobalTheory.T.exists_nonneg_test_function_near_one E a _ hN
+  obtain ⟨β₀, h0, hpos, htest, hconj, hsupp⟩ := _root_.GlobalTheory.CompanionTheory.SmoothRep.exists_bump_conjInv E a _ hN
   refine ⟨fun x => (β₀ x : ℂ), htest, hconj, fun v hv hRv => ?_⟩
-  obtain ⟨hc, hcs⟩ := GlobalTheory.T.test_function_continuous_compact_support E a U hU hUc _ htest
+  obtain ⟨hc, hcs⟩ := _root_.GlobalTheory.CompanionTheory.SmoothRep.continuous_hasCompactSupport_tst E a U hU hUc _ htest
   set f := tst U (fun x => (β₀ x : ℂ)) with hf
   set fr : GA E a → ℝ := fun g => (f g).re with hfr
   have hf_eq : ∀ g, f g = (fr g : ℂ) := by

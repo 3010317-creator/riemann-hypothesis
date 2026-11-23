@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrameCoord
 public import Development.AbelianVarietyTheory.Definitions.CMLattices.IntegralOf
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmPointIntegralFrameMemSpanEigenLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedEigenLatticeLeSpanIntegralFrameStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedEigenLatticeLeSpanIntegralFrame
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,4 +50,4 @@ theorem GlobalTheory.PtDeg.intFrame_span_eigLat : ∀ (E : Type) [Field E] [Numb
   intro E _ _ _ H Dw l Xo c K _ _ _ y B t₀ m1 m2 F ρ tt htt u hu 𝔓 T iK hiK ρV hρV
   intro yT hyT G t' n n' m1' m2' h1 h2 C a y' hC hL
   exact ⟨GlobalTheory.T.cm_point_integral_frame_mem_span_eigen_lattice E H Dw l Xo c K y B t₀ m1 m2 F ρ tt htt u hu 𝔓 T iK hiK ρV hρV yT hyT G t' n n' m1' m2' h1 h2 C a y' hC hL,
-    GlobalTheory.T.completed_eigenLattice_le_span_integral_frame E H Dw l Xo c K y B t₀ m1 m2 F ρ tt htt u hu 𝔓 T iK hiK ρV hρV yT hyT G t' n n' m1' m2' h1 h2 C a y' hC hL⟩
+    _root_.GlobalTheory.EigLatSpan.eigLat_le_span E H Dw l Xo c K y B t₀ m1 m2 F ρ tt htt u hu 𝔓 T iK hiK ρV hρV yT hyT G t' n n' m1' m2' h1 h2 C a y' hC hL⟩

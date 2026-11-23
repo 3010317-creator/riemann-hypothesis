@@ -4,7 +4,8 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.BlowupProjections.BlowupProjStatement
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FlagIndices
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.SmallGeneratedCountUpperOfUse
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.GrassmannHeightZ2OfInputsAndZ2Statement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.MetricsProjectionFormulaNef
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.GrassmannHeightZ2OfInputsAndZ2
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.HsLinksOfUse
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.InputsOfUse
 import Mathlib.Algebra.Order.Floor.Extended
@@ -56,7 +57,7 @@ theorem grassmannian_height_bound_of_systems :
       ReciprocityTheory.ChartRestriction.G.ArakelovGeometry.MoriwakiBigStatement → ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement →
         GroundTheory.Heights₂.Heights.LowerBoundFree.GrassmannianHeightZTwo.Statement := by
   intro hSys hU hBig hResK
-  exact GlobalTheory.T.grassmann_height_Z2_of_inputs_and_Z2 (inputs_of_use hSys hU hBig hResK) hSys
+  exact _root_.GlobalTheory.CompanionTheory.Ar.Giv.grassmann_height_Z2_of_push (inputs_of_use hSys hU hBig hResK) hSys
     (hsLinks_of_use hU hBig).2.2.1
 
 end GlobalTheory.CompanionTheory.Ar.Giv

@@ -1,13 +1,18 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DensConst
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHolomorphicSubAtlasSmoothClosedSubschemeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegrableLogNormSectionMixedChernFormsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAnalyticSNCOfAlgebraicSNCSectionStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernIntegralEqMongeAmpereIntegralCompactStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothSncComponentClosureCharZeroStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.AnalyticOnNhdFinChartIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHolomorphicSubAtlasSmoothClosedSubscheme
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegrableLogNormSectionMixedChernForms
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAnalyticSNCOfAlgebraicSNCSection
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothSncComponentClosureCharZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothWeightedLineBundleLogSectionNormProperties
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SncClosedEqIUnionClosureCodimOnePointsStatement
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import ReciprocityTheory.AnalyticForms.RegularLocalRings.FinalTheorems
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SncClosedEqIUnionClosureCodimOnePoints
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.PLLocalStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernIntegralEqMongeAmpereIntegralCompact
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,8 +51,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.AnalyticForms.PotentialTheory.IntegrableOnTargetOfTsupport
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.PLLocalStatement
-public import Development.AbelianVarietyTheory.Definitions.Divisors.AnalyticOnNhdFinChartIff
 
 @[expose] public section
 
@@ -89,10 +92,10 @@ theorem poincareLelong_snc : ∀ (F : Type) [Field F] (X : Scheme.{0}) [IsIntegr
   let R := AnRead.all p σ (e + 1)
   have hA := R.isAlgAtlas_finAtlas
   generalize R.finAtlas = A at hA
-  obtain ⟨r, z, hinj, hco, hT, hall, hl⟩ := GlobalTheory.T.snc_closed_eq_iUnion_closure_codim_one_points F X p (e + 1) hp hsm _ hsnc
-  have hS := GlobalTheory.T.isAnalyticSNC_of_algebraicSNC_section F X p σ (e + 1) hp hsm A hA M s hs r z hinj hco hT hl
-  choose B hB hBint using fun a => GlobalTheory.T.exists_holomorphic_subAtlas_smooth_closedSubscheme F X (clos (z a)) p _ σ hp (closι (z a)) rfl e A hA
-    (GlobalTheory.T.smooth_snc_component_closure_charZero F X p e hp hsm r z hl a)
+  obtain ⟨r, z, hinj, hco, hT, hall, hl⟩ := _root_.GlobalTheory.SncGenericPoints.exists_genericPoints F X p (e + 1) hp hsm _ hsnc
+  have hS := _root_.GlobalTheory.SecSnc.isSNC_locSec F X p σ (e + 1) hp hsm A hA M s hs r z hinj hco hT hl
+  choose B hB hBint using fun a => _root_.GlobalTheory.Mix.exists_subAtlas F X (clos (z a)) p _ σ hp (closι (z a)) rfl e A hA
+    (_root_.GlobalTheory.SncComp.smooth_component F X p e hp hsm r z hl a)
   have pot (N : MLine p σ) : IsPotential A N.φ.locPot :=
     ((Weight.isCInf_iff_isSmooth R).1 N.cInf).isPotential hA
   have hv (y) : CInfAt (fun y => u y / 2) y :=
@@ -106,15 +109,15 @@ theorem poincareLelong_snc : ∀ (F : Type) [Field F] (X : Scheme.{0}) [IsIntegr
     rw [Weight.logNormSec_locSec, MLine.logSec]; ring
   have e₂ : Mix.int (Fin.cons (MLine.ofFun u hu) L : Fin (e + 1) → MLine p σ) (M.logSec s) =
       mInt A (Fin.cons (LocPot.ofFun fun y => u y / 2) fun i => (L i).φ.locPot) (M.logSec s) := by
-    rw [(GlobalTheory.T.mixedChernIntegral_eq_mongeAmpereIntegral_compact F X p σ _ A hA _ _ (GlobalTheory.Mix.SecNorm.logSec_basic F X p σ M s).1).2
-      (GlobalTheory.T.integrable_logNormSection_mixedChernForms F X p σ _ hp hsm _ M s hs)]
+    rw [(_root_.GlobalTheory.Mix.int_eq_mInt F X p σ _ A hA _ _ (GlobalTheory.Mix.SecNorm.logSec_basic F X p σ M s).1).2
+      (_root_.GlobalTheory.MixLogSec.intg_logSec F X p σ _ hp hsm _ M s hs)]
     refine SameForm.mInt_eq (fun i => ?_) _
     refine Fin.cases ?_ (fun i => ?_) i
     · exact Weight.sameForm_ofFun A u
     · exact SameForm.refl _ _
   have e₃ : Mix.int (Fin.cons M L : Fin (e + 1) → MLine p σ) (fun y => u y / 2) =
       mInt A (Fin.cons M.φ.locPot fun i => (L i).φ.locPot) fun y => u y / 2 := by
-    have h := GlobalTheory.T.mixedChernIntegral_eq_mongeAmpereIntegral_compact F X p σ _ A hA (Fin.cons M L : Fin (e + 1) → MLine p σ) _ hvc.measurable
+    have h := _root_.GlobalTheory.Mix.int_eq_mInt F X p σ _ A hA (Fin.cons M L : Fin (e + 1) → MLine p σ) _ hvc.measurable
     rw [h.2 (h.1.2 (mIntegrableCont A _ (fun i => pot _) _ hvc))]
     congr 1
     exact funext fun i => Fin.cases rfl (fun _ => rfl) i

@@ -3,8 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SimpleOver
 public import Mathlib.LinearAlgebra.DFinsupp
 public import Mathlib.LinearAlgebra.Dimension.Basic
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OperatorStablePiTensorPureKernelSpanStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SimpleOverStableSubmoduleTensorPureKernelSpanStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OperatorStablePiTensorPureKernelSpan
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SimpleOverStableSubmoduleTensorPureKernelSpan
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -157,9 +157,9 @@ theorem simpleOver_sum {α β : Type} (hα : PP α) (hβ : PP β) [DecidableEq (
     (fun a => hr _) (fun a => hs _) (fun a => hso _)
   have hB := hβ (fun b => N (.inr b)) (fun b => Op (.inr b)) (fun b => K (.inr b))
     (fun b => hr _) (fun b => hs _) (fun b => hso _)
-  have hT := GlobalTheory.T.simpleOverStableSubmodule_tensorPureKernelSpan (piOps (fun a => Op (.inl a))) (piOps (fun b => Op (.inr b)))
+  have hT := _root_.GlobalTheory.TensHead.simpleOver_tensKer (piOps (fun a => Op (.inl a))) (piOps (fun b => Op (.inr b)))
     (piKer (fun a => K (.inl a))) (piKer (fun b => K (.inr b))) hrl
-    (GlobalTheory.T.operatorStable_piTensorPureKernelSpan _ _ (fun a => hs _)) (GlobalTheory.T.operatorStable_piTensorPureKernelSpan _ _ (fun b => hs _)) hA hB
+    (_root_.GlobalTheory.TensHead.stab_piOps_piKer _ _ (fun a => hs _)) (_root_.GlobalTheory.TensHead.stab_piOps_piKer _ _ (fun b => hs _)) hA hB
   let e := (PiTensorProduct.tmulEquivDep ℂ N).symm
   refine simpleOver_of_equiv e _ _ _ _ ?_ ?_ hT
   · apply le_antisymm

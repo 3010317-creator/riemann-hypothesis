@@ -2,15 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHermitianModelOfNormNeZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsModelOfUnitaryStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNormMulOfHermitianModelUnitaryConjStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceKappaOrbitalUnitEqSignedLatticeSumImpo
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHermitianModelOfNormNeZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsModelOfUnitary
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNormMulOfHermitianModelUnitaryConj
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianLatticeLocalUnitaryTwistStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianModelCharpolyEqAndUnitaryStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianModelsConjUnitaryOfNormClassStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianModelCharpolyEqAndUnitary
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianModelsConjUnitaryOfNormClass
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertOrbitalIntegralUnitEqLatticeCountStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LatticeCountAndGramDetSignNormClass
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsLocalRingOfIdem
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LatticeCountAndGramDetSignNormClassStatement
 import Formalism.LocalRingCardinality.SpanPowerMembership.LocAtA
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -152,7 +153,7 @@ theorem kapOrb_unit_eq_kapSum : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
     ext i j; simp [tr, g]
   have hmod : ∀ γ : UL n w, γ.1.val.charpoly = Q₁ * Q₂ →
       ∃ (x : B.Aˣ) (ψ : B.A ≃ₗ[K.E] (Fin n → K.E)), IsModel B (tr γ.1) x ψ :=
-    fun γ h => GlobalTheory.T.exists_isModel_of_unitary_charpoly_eq K B n (tr γ.1) (trU γ) hBu hBsep (by rw [trcp, h, hBP])
+    fun γ h => _root_.GlobalTheory.InertUnitOrb.exists_isModel_of_unitary K B n (tr γ.1) (trU γ) hBu hBsep (by rw [trcp, h, hBP])
   have clEq : Equivalence (fun x y : {x : B.Aˣ // B.σ (x : B.A) = x} =>
       ∃ u : B.Aˣ, (y.1 : B.A) = x.1 * (u * B.σ (u : B.A))) := by
     refine ⟨fun x => ⟨1, by simp⟩, ?_, ?_⟩
@@ -175,8 +176,8 @@ theorem kapOrb_unit_eq_kapSum : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   have Fv_resp : ∀ a b : {x : B.Aˣ // B.σ (x : B.A) = x},
       (∃ u : B.Aˣ, (b.1 : B.A) = a.1 * (u * B.σ (u : B.A))) → Fv a = Fv b := by
     rintro a b ⟨u, hu⟩
-    have e1 := (GlobalTheory.T.latticeCount_and_gramDetSign_norm_class K B (a.1 : B.A) u).1
-    have e2 := (GlobalTheory.T.latticeCount_and_gramDetSign_norm_class K B₁ (a.1 : B.A).1 (Units.map (MonoidHom.fst B₁.A B₂.A) u)).2
+    have e1 := (_root_.GlobalTheory.UnitLemma.NormClass.N_norm_class K B (a.1 : B.A) u).1
+    have e2 := (_root_.GlobalTheory.UnitLemma.NormClass.N_norm_class K B₁ (a.1 : B.A).1 (Units.map (MonoidHom.fst B₁.A B₂.A) u)).2
     simp only [Fv, hu]
     exact (congrArg₂ (· * ·) e2 e1).symm
   have Fv_out : ∀ a, Fv (Quot.out (Quot.mk _ a : B.Cl)) = Fv a := fun a =>
@@ -210,7 +211,7 @@ theorem kapOrb_unit_eq_kapSum : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
     have hΦ' : Φ c' = Quot.mk _ ⟨(hmod c'.rep hc').choose, hψ'.1⟩ := dif_pos hc'
     rw [hΦ, hΦ'] at h
     obtain ⟨v, hv⟩ := clEq.eqvGen_iff.1 (Quot.eqvGen_exact h)
-    obtain ⟨u, hu, hγu⟩ := GlobalTheory.T.hermitianModels_conj_unitary_of_norm_class K B n _ _ _ _ v ψ ψ' hψ hψ' hv
+    obtain ⟨u, hu, hγu⟩ := _root_.GlobalTheory.InertUnitOrb.conj_of_norm_class K B n _ _ _ _ v ψ ψ' hψ hψ' hv
     obtain ⟨g, rfl⟩ := pull u hu
     have hcomm : c.rep * g = g * c'.rep := by
       apply Subtype.ext
@@ -225,8 +226,8 @@ theorem kapOrb_unit_eq_kapSum : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
     set a := Quot.out k with ha
     have hk' : Fv a ≠ 0 := hk
     have hN : B.N (a.1 : B.A) ≠ 0 := (mul_ne_zero_iff.1 hk').2
-    obtain ⟨γm, ψ, hψ⟩ := GlobalTheory.T.exists_hermitianModel_of_norm_ne_zero K B n a.1 hdim a.2 hN
-    obtain ⟨hcpm, hunm⟩ := GlobalTheory.T.hermitianModel_charpoly_eq_and_unitary K B n γm a.1 ψ hψ
+    obtain ⟨γm, ψ, hψ⟩ := _root_.GlobalTheory.InertUnitOrb.ModelOfN.exists_model K B n a.1 hdim a.2 hN
+    obtain ⟨hcpm, hunm⟩ := _root_.GlobalTheory.ModelCharpoly.model_charpoly_unitary K B n γm a.1 ψ hψ
     obtain ⟨γ, hγ⟩ := pull γm (hunm hBu)
     have hcpγ : γ.1.val.charpoly = Q₁ * Q₂ := by
       apply Polynomial.map_injective e.symm.toRingHom e.symm.injective
@@ -249,7 +250,7 @@ theorem kapOrb_unit_eq_kapSum : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
     have hΦ : Φ c = Quot.mk _ ⟨(hmod c.rep hPc).choose, hψc.1⟩ := dif_pos hPc
     rw [hΦ]
     have hgu : γ * g⁻¹ = g⁻¹ * c.rep := by rw [hcr]; group
-    obtain ⟨v, hv⟩ := GlobalTheory.T.exists_norm_mul_of_hermitianModel_unitary_conj K B n γm (tr c.rep.1) (tr (g⁻¹).1) a.1 _ ψ ψc hψ hψc (trU g⁻¹)
+    obtain ⟨v, hv⟩ := _root_.GlobalTheory.InertUnitOrb.class_eq_of_conj K B n γm (tr c.rep.1) (tr (g⁻¹).1) a.1 _ ψ ψc hψ hψc (trU g⁻¹)
       (by rw [← hγ, ← trmul, ← trmul, ← Subgroup.coe_mul, ← Subgroup.coe_mul, hgu]) hBsep
     rw [← Quot.out_eq k]
     exact (Quot.sound ⟨v, hv⟩).symm

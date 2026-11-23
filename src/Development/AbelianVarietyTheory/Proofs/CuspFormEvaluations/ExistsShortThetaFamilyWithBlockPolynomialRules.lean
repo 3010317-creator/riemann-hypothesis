@@ -5,11 +5,16 @@ public import Development.AbelianVarietyTheory.Definitions.ThetaValues.GamAt
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniqOfChartIndep2
 public import Formalism.LocalToGlobal.ProjectiveLattices.RecPJThAllNeBot
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.SupBoundPageRows
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CardLatticeQuotientHalfLevelStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.ThShort
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FundamentalDomainPointBound
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CardLatticeQuotientHalfLevel
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsBlockProductMemIntegralHarmonicStatement
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsShortFiniteGeneratorsThetaLatticeStatement
-import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.LogSupNormThetaGeneratorLeStatement
-import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.SupBoundsLeGeneratorConstantMulSizeStatement
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsShortFiniteGeneratorsThetaLattice
+import Formalism.LocalToGlobal.ProjectiveLattices.HasDataCondition
+import Formalism.LocalToGlobal.ProjectiveLattices.XcLat
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.LogSupNormThetaGeneratorLe
+import Formalism.SharpRestriction.Divisibility.WeightAlgebra
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.SupBoundsLeGeneratorConstantMulSize
 import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaRuleExistsAndEval
 import Formalism.LocalToGlobal.LatticeGeometry.DegFlLApply
 import Formalism.SharpRestriction.GlobalSchurBounds.ThickPlacesCorollaryOfAnyTranslate
@@ -87,7 +92,7 @@ private theorem span_range_sum_elim_eq_thAll {D : D7} {Pr : ModuliIntegralCharts
 
 theorem theta_family_block : Formalism.MainNotions.ModuliIntegralCharts.H1.ChartIndepSt2 → ∀ (D : D7) (T : Top D) (h : LawsP T), GamAt T.toCore → ∀ (large₂ : SizeData₂ D) (j : ℕ) (hj : InR D j) (w : WeightFamilies.Wt D j), ReciprocityTheory.ChartRestriction.G.PullbackSections.SupBoundPageRows D large₂ w → 2 ≤ large₂.sc.L → D.R.r ≤ w.n → w.LastPos → D.R.f * D.R.r * (D.R.r + 1) ≤ 2 * w.n → ∃ (N : ℕ) (w0 : Fin N → (recB h.toLawsCore).Cusp j w) (P₁ : MvPolynomial (LtN (T.Q.Dw j) w.n) T.Q.c.F), P₁ ∈ harmA T.Q.c (wtA w) w.n ∧ IsBlockProd P₁ ∧ ContainsTh (T.Q.Xo j) T.Q.c (T.nab j) 1 P₁ (fun k => ((w0 k).1 : T.R j)) ∧ (fun (B : WeightFamilies.Prov D) (X : PJ D B T.G.P j) (w1 : Fin N → B.Cusp j w) => Submodule.span (𝓞 B.KO) (Set.range w1) = X.thAll w) (recB h.toLawsCore) (recPJ h j hj) w0 ∧ N ≤ 2 * ((D.host.g 0 * D.host.g 1) ^ (D.R.f * D.R.r * w.n) * (Module.finrank ℚ (recB h.toLawsCore).KO * (1 + WeightAlgebra.DF w) ^ (D.R.f * D.R.r * w.n))) ∧ ∀ k σ, Real.log ((recB h.toLawsCore).supN j w σ (w0 k)) ≤ 400 * Zb D large₂ * w.size + 3 * D.R.f * D.R.r * w.n * large₂.sc.L + 5 * Real.log (Module.finrank ℚ (recB h.toLawsCore).KO) + Real.log |((NumberField.discr (recB h.toLawsCore).KO : ℤ) : ℝ)| / Module.finrank ℚ (recB h.toLawsCore).KO + 2 := by
   intro hC D T h hG large₂ j hj w hP hL hr hlast hn
-  obtain ⟨N0, w0, hspan, hN0, hsup0⟩ := GlobalTheory.T.exists_short_finite_generators_thetaLattice hC D T h hG large₂ j hj w hP hL hr hlast
+  obtain ⟨N0, w0, hspan, hN0, hsup0⟩ := _root_.GlobalTheory.ThetaFamily.theta_family hC D T h hG large₂ j hj w hP hL hr hlast
   obtain ⟨-, ⟨hM, -⟩, -, hdat⟩ := h.toLawsCore.pins
   obtain ⟨hp, hq, -⟩ := hdat j hj
   have hpq : (T.Q.Dw j).p + (T.Q.Dw j).q = D.R.r := by
@@ -139,7 +144,7 @@ theorem theta_family_block : Formalism.MainNotions.ModuliIntegralCharts.H1.Chart
   let v : (Fin w.n → LevQ (T.Q.Dw j) T.Q.l) → (recB h.toLawsCore).Cusp j w := fun q =>
     (⟨f q, hfC q⟩ : cutR T.C j w)
   have hv1 : ∀ q, ((v q : cutR T.C j w) : T.R j) = f q := fun q => rfl
-  obtain ⟨hfin, hcard⟩ := GlobalTheory.T.card_lattice_quotient_half_level D.host.E T.Q.H (T.Q.Dw j) T.Q.l
+  obtain ⟨hfin, hcard⟩ := _root_.GlobalTheory.card_levQ D.host.E T.Q.H (T.Q.Dw j) T.Q.l
   let _ : Fintype (LevQ (T.Q.Dw j) T.Q.l) := Fintype.ofFinite _
   let e : Fin (N0 + Fintype.card (Fin w.n → LevQ (T.Q.Dw j) T.Q.l)) ≃ Fin N0 ⊕ (Fin w.n → LevQ (T.Q.Dw j) T.Q.l) :=
     finSumFinEquiv.symm.trans (Equiv.sumCongr (Equiv.refl _) (Fintype.equivFin _).symm)
@@ -205,7 +210,7 @@ theorem theta_family_block : Formalism.MainNotions.ModuliIntegralCharts.H1.Chart
         · have h1 : (1 : ℝ) ≤ (D.R.r : ℝ) ^ Formalism.L2.Pj.DF (T.Q.Dw j) (wtA w) := one_le_pow₀ (by exact_mod_cast h0)
           rw [max_eq_right h1, Real.log_pow]
           exact mul_le_mul_of_nonneg_left (Real.log_le_self (by positivity)) (by positivity)
-      have hNs := GlobalTheory.T.log_supNorm_thetaGenerator_le hC D T h hG large₂ j hj w hP hL hr hlp (fun b => levRep (q b)) P hPh (f q) (hf q) σ _ hℓ0 hℓexp
+      have hNs := _root_.GlobalTheory.RunIn.log_sup_theta_generator_le hC D T h hG large₂ j hj w hP hL hr hlp (fun b => levRep (q b)) P hPh (f q) (hf q) σ _ hℓ0 hℓexp
       have hL0 : (0 : ℝ) ≤ large₂.sc.L := by linarith
       have hr0 : (0 : ℝ) ≤ D.R.r := Nat.cast_nonneg _
       have t1 : 0 ≤ 3 * (D.R.f : ℝ) * D.R.r * w.n * large₂.sc.L := mul_nonneg (by positivity) hL0
@@ -231,7 +236,7 @@ theorem theta_family_block : Formalism.MainNotions.ModuliIntegralCharts.H1.Chart
         rw [hrc] at hℓle
         rw [hZ0]
         nlinarith
-      · have h9430 := (GlobalTheory.T.supBounds_le_generatorConstant_mul_size D (recB h.toLawsCore) large₂ j w 0 hL hwn).1
+      · have h9430 := (_root_.GlobalTheory.RunIn.sup_bounds_le_Gc D (recB h.toLawsCore) large₂ j w 0 hL hwn).1
         have hk1 : (Formalism.L2.Pj.DF (T.Q.Dw j) (wtA w) : ℝ) * D.R.r ≤ 140 * D.R.r * large₂.sc.L * Formalism.MainNotions.WeightAlgebra.absA w := by
           have : (Formalism.L2.Pj.DF (T.Q.Dw j) (wtA w) : ℝ) * D.R.r ≤ Formalism.MainNotions.WeightAlgebra.absA w * D.R.r :=
             mul_le_mul_of_nonneg_right hDF hr0

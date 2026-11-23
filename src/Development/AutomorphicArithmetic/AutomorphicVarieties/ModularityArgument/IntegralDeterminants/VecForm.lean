@@ -2,14 +2,17 @@ module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.IntegralDeterminants.PlaceConjAlt
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsIrreducibleSmallRepUnitary
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ArchimedeanUnitaryPointsEquivUnitaryGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CommuteUnitaryArchimedeanPointsDistinctPlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DefiniteUnitaryInfinitePointEqListProdPlacePartsStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BaseChangeDefiniteUnitary
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ArchimedeanUnitaryPointsEquivUnitaryGroup
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CommuteUnitaryArchimedeanPointsDistinctPlaces
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DefiniteUnitaryInfinitePointEqListProdPlaceParts
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsMultilinearMapOfIsotypicCommutingSubgroupsStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FinitePartAtOwnWeightNeBot
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ISupRangeWeightMapsEqTopDefiniteUnitaryStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ContinuousMapPFin
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DefiniteUnitaryIntegralBelowPlaceCompactOpen
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.GaloisLibrary.MemIsotypicOfInjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductOfLocalLevelsUnitaryIsOpenIsCompactIsLeve
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ISupRangeWeightMapsEqTopDefiniteUnitary
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,8 +52,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ContinuousMapPFin
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductOfLocalLevelsUnitaryIsOpenIsCompactIsLeve
 
 @[expose] public section
 
@@ -104,7 +105,7 @@ theorem UpperTheory.V.Z.Int.vecForm :
   let σ : ∀ v, Representation ℂ (embU n (φ v)) (nablaSq ℂ n (lam v)) := fun v =>
     (GlobalTheory.Branching.sqRep ℂ n (lam v)).comp ((cEmb (φ v)).comp (embU n (φ v)).subtype)
   have hirr : ∀ v, (σ v).IsIrreducible := fun v => by
-    obtain ⟨e, he⟩ := GlobalTheory.T.archimedeanUnitaryPoints_equiv_unitaryGroup E n (φ v)
+    obtain ⟨e, he⟩ := _root_.GlobalTheory.EmbUnitary.exists_equiv_unitaryGroup E n (φ v)
     obtain ⟨h1, h2⟩ := (GlobalTheory.CuspRep.isIrreducible_iff _).1
       (GlobalTheory.Branching.isIrreducible_smallRep_unitary n (lam v))
     refine (GlobalTheory.CuspRep.isIrreducible_iff _).2 ⟨h1, fun S hS => h2 S fun g u hu => ?_⟩
@@ -114,11 +115,11 @@ theorem UpperTheory.V.Z.Int.vecForm :
     change GlobalTheory.Branching.sqRep ℂ n (lam v) (GlobalTheory.Branching.unitaryIncl n (e x)) u ∈ S
     rwa [he]
   have hcomm : ∀ u v, u ≠ v → ∀ a b, Commute (s u a) (s v b) := fun u v huv a b =>
-    Subtype.ext (GlobalTheory.T.commute_unitaryArchimedeanPoints_distinct_places E n (φ u) (φ v) (by rwa [hφ, hφ]) _ a.2 _ b.2)
+    Subtype.ext (_root_.GlobalTheory.UnitaryBC.embU_commute E n (φ u) (φ v) (by rwa [hφ, hφ]) _ a.2 _ b.2)
   have hspan : ∀ v, (⨆ f : (σ v).IntertwiningMap (ρ.comp (s v)), LinearMap.range f.toLinearMap) = ⊤ :=
     fun v => span_sub (σ v) (ρ.comp (s v)) (π.rep.comp (embU n (φ v)).subtype) (hirr v)
       (Submodule.inclusion hNV) (Submodule.inclusion_injective hNV) (fun g y => Subtype.ext rfl)
-      (GlobalTheory.T.iSup_range_weightMaps_eq_top_definiteUnitary E n π (φ v) (lam v) (hW v))
+      (_root_.GlobalTheory.DefU.iSup_range_weight_eq_top E n π (φ v) (lam v) (hW v))
   haveI : Nontrivial N := ⟨⟨⟨φ₀, (hmemN _).2 ⟨hφ₀, hfix⟩⟩, 0, fun h => hne (congrArg Subtype.val h)⟩⟩
   obtain ⟨F, hF0, hF⟩ := GlobalTheory.T.exists_multilinearMap_of_isotypic_commuting_subgroups (InfinitePlace E) (infU E n) N (fun v => embU n (φ v))
     (fun v => nablaSq ℂ n (lam v)) ρ s σ inferInstance hirr hcomm hspan
@@ -134,7 +135,7 @@ theorem UpperTheory.V.Z.Int.vecForm :
   have hact : ∀ g ∈ infU E n, ∀ x : (∀ v, nablaSq ℂ n (lam v)),
       f (fun v => GlobalTheory.Branching.sqRep ℂ n (lam v) (cEmb (φ v) g) (x v)) = RU E n g (f x) := by
     intro g hg x
-    obtain ⟨y, hy, -, hprod⟩ := GlobalTheory.T.definiteUnitaryInfinitePoint_eq_list_prod_placeParts E n g hg
+    obtain ⟨y, hy, -, hprod⟩ := _root_.GlobalTheory.DefU.infU_eq_list_prod_embU E n g hg
     have hy' : ∀ v, y v ∈ embU n (φ v) := fun v => (hE v).symm ▸ hy v
     have hone : ∀ u v, u ≠ v → cEmb (φ v) (y u) = 1 := by
       intro u v huv

@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RowMap
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsTestRep
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedStandardAddCharConductorPropertiesStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FourierMatch
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedStandardAddCharConductorProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,7 +61,7 @@ theorem GlobalTheory.JR.WeilMix.negB_ptrB_wS_ptrB : ∀ (F E : Type) [Nontrivial
   haveI := M.haarF
   haveI : LocallyCompactSpace F := hU.lcF
   haveI : ProperSpace F := ProperSpace.of_locallyCompactSpace F
-  have hψc : Continuous (fun x => ψ x) := ((GlobalTheory.T.unramifiedStandardAddChar_conductor_properties F E).2 ψ hψ).1.continuous
+  have hψc : Continuous (fun x => ψ x) := ((_root_.GlobalTheory.StdChar.psi_conductor F E).2 ψ hψ).1.continuous
   funext Y
   obtain ⟨A, b, c, l⟩ := Y
   have hw : ((wS F : SpecialLinearGroup (Fin 2) F) : Matrix (Fin 2) (Fin 2) F) = !![0, 1; -1, 0] := rfl

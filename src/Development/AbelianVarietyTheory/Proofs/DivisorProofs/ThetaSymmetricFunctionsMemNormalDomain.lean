@@ -1,7 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SymTupOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DescendElementOfFieldEqualizerFaithfullyFlatStatement
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DescendElementOfFieldEqualizerFaithfullyFlat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaConstantListFieldExtensionEqUpToPermStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaConstantsFunctionsFiniteFlatCoverStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -92,7 +94,7 @@ theorem sym_ring : ∀ (S : Scheme.{0}) (G : Over S) [GrpObj G] [IsCommMonObj G]
     obtain ⟨σ, hσ⟩ := GlobalTheory.T.thetaConstantList_fieldExtension_eq_up_to_perm S G L ρ hL hρ g m R x θ hm hmu hP K K _ _ (RingHom.id K) (RingHom.id_comp _) N pt₁ _ pt₂ _ h₁ h₂
     rw [symTup_map', symTup_map', funext hσ]
     exact (symTup_perm' (fun b => i₁ (c b)) σ).symm ▸ rfl
-  choose e he using fun j => GlobalTheory.T.descend_element_of_field_equalizer_faithfully_flat R R₁ hfin hff (symTup c j) (hP' j)
+  choose e he using fun j => _root_.GlobalTheory.exists_eq_algebraMap_of_forall_ringHom_eq R R₁ hfin hff (symTup c j) (hP' j)
   refine ⟨e, fun K _ i pt c' hl j => ?_⟩
   obtain ⟨K', _, φ, i₁, hφ⟩ := exists_common_field R R₁ hff K i
   obtain ⟨pt₁, h₁⟩ := hc K' (φ.comp i) i₁ hφ

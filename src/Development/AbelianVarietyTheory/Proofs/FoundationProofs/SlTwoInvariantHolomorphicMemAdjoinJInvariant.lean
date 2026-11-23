@@ -8,11 +8,13 @@ public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Mathlib.RingTheory.SimpleRing.Principal
 public import Development.AbelianVarietyTheory.Definitions.Foundations.SiegelNeZeroIff
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ConstOfSlTwoIntInvariantBoundedUpperHalfPlaneStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExponentsIntegralOfTranslationInvariantStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HahnSeriesPowOfLeadingQInvStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularTowerFunctionSlTwoIntInvariantStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularTowerFunctionTendstoConstTermExponentialStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ConstOfSlTwoIntInvariantBoundedUpperHalfPlane
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExponentsIntegralOfTranslationInvariant
+public import Mathlib.Algebra.Order.Ring.Rat
+public import Mathlib.RingTheory.HahnSeries.Multiplication
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HahnSeriesPowOfLeadingQInv
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularTowerFunctionSlTwoIntInvariant
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularTowerFunctionTendstoConstTermExponential
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -73,20 +75,20 @@ theorem eq_const_of_nonneg [IsAlgClosure ℚ Ω] (X : Tower Ω ε) (h : X.K) (hi
   set a0 := (X.exp h).coeff 0 with ha0
   have hsupp : ∀ r : ℚ, (X.exp h).coeff r ≠ 0 → ∃ n : ℕ, r = n := by
     intro r hr
-    obtain ⟨m, rfl⟩ := GlobalTheory.T.exponents_integral_of_translation_invariant X h (hinv _) r hr
+    obtain ⟨m, rfl⟩ := _root_.GlobalTheory.KZ.Tower.exponent_integral_of_translation_invariant X h (hinv _) r hr
     have hm : 0 ≤ m := by
       by_contra hm
       exact hr (hneg _ (by exact_mod_cast (not_le.1 hm)))
     exact ⟨m.toNat, by rw [← Int.cast_natCast, Int.toNat_of_nonneg hm]⟩
-  obtain ⟨B, t, hB⟩ := GlobalTheory.T.modularTower_function_tendsto_constTerm_exponential X h φ hd.continuousOn ha hsupp
-  have hinvφ := GlobalTheory.T.modularTower_function_slTwoInt_invariant X h φ hd.continuousOn ha hinv
+  obtain ⟨B, t, hB⟩ := _root_.GlobalTheory.KZ.ExpBound.bound_at_infinity X h φ hd.continuousOn ha hsupp
+  have hinvφ := _root_.GlobalTheory.KZ.InvFun.fun_inv X h φ hd.continuousOn ha hinv
   have hexp1 : ∀ z : ℂ, t < z.im → Real.exp (-(2 * Real.pi * (z.im - t))) ≤ 1 := by
     intro z hz
     rw [Real.exp_le_one_iff]
     have : 0 < z.im - t := by linarith
     have := Real.pi_pos
     nlinarith
-  obtain ⟨c, hc⟩ := GlobalTheory.T.const_of_slTwoInt_invariant_bounded_upperHalfPlane φ hd hinvφ ⟨‖ε a0‖ + |B|, t, fun z hz hzt => by
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.KZ.LevelOne.const_of_invariant_bounded φ hd hinvφ ⟨‖ε a0‖ + |B|, t, fun z hz hzt => by
     have h1 := hB z hz hzt
     have h2 := hexp1 z hzt
     have h3 : B * Real.exp (-(2 * Real.pi * (z.im - t))) ≤ |B| := by
@@ -140,7 +142,7 @@ theorem mem_adjoin_j : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure
       obtain ⟨φ, hd, ha⟩ := hol
       obtain ⟨c, hcdef⟩ : ∃ c : Ω, c = (X.exp h).coeff (-((n + 1 : ℕ) : ℚ)) := ⟨_, rfl⟩
       obtain ⟨h', hh'⟩ : ∃ h' : X.K, h' = h - algebraMap Ω X.K c * X.jK ^ (n + 1) := ⟨_, rfl⟩
-      have hj := GlobalTheory.T.hahnSeries_pow_of_leading_qInv (X.exp X.jK) X.j_exp.1 X.j_exp.2.1 (n + 1)
+      have hj := _root_.GlobalTheory.hahn_pow_neg_one_lead (X.exp X.jK) X.j_exp.1 X.j_exp.2.1 (n + 1)
       have hinv' : ∀ γ : SL(2, ℤ), X.sl (ofSL γ) h' = h' := by
         intro γ
         rw [hh', map_sub, map_mul, map_pow, X.j_inv, hinv, AlgEquiv.commutes]
@@ -152,7 +154,7 @@ theorem mem_adjoin_j : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure
       have hneg' : ∀ r : ℚ, r < -(n : ℚ) → (X.exp h').coeff r = 0 := by
         intro r hr
         by_contra hrz
-        obtain ⟨m, rfl⟩ := GlobalTheory.T.exponents_integral_of_translation_invariant X h' (hinv' _) r hrz
+        obtain ⟨m, rfl⟩ := _root_.GlobalTheory.KZ.Tower.exponent_integral_of_translation_invariant X h' (hinv' _) r hrz
         apply hrz
         have hcoe : (X.exp h').coeff (m : ℚ) =
             (X.exp h).coeff m - c * ((X.exp X.jK) ^ (n + 1)).coeff m := by

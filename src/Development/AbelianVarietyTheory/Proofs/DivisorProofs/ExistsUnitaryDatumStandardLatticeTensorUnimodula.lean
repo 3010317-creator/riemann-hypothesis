@@ -3,10 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BasisApply
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
 public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.ToMatrixTrFormBaseChange
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepTraceEqMulTraceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryStandardLatticeAlternatingFormBijectiveStatement
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepTraceEqMulTrace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryStandardLatticeAlternatingFormBijective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryStandardLatticeFormComplexStructureBaseChStatement
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsEquivStdSymp
+public import Mathlib.RingTheory.Flat.TorsionFree
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +54,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsToricRankOne
-public import Mathlib.RingTheory.Flat.TorsionFree
 
 @[expose] public section
 
@@ -155,7 +156,7 @@ theorem form_smul_left (S : Matrix (Fin r) (Fin r) ℤ) (b : 𝓞 E → 𝓞 E) 
   rw [hL, hR, hb]
 
 theorem form_bijective (S : Matrix (Fin r) (Fin r) ℤ) (hS : IsUnit S.det) : Function.Bijective (form ρ g S) :=
-  GlobalTheory.T.unitaryStandardLatticeAlternatingForm_bijective ρ g S hS
+  _root_.GlobalTheory.UnitaryStd.form_bijective_of_unimodular ρ g S hS
 
 theorem form_cx_pos (S : Matrix (Fin r) (Fin r) ℤ) (hS : (S.map (Int.cast : ℤ → ℝ)).PosDef) (x : ℝ ⊗[ℤ] Lat ρ g)
     (hx : x ≠ 0) : 0 < (form ρ g S).baseChange ℝ ((cx ρ g).baseChange ℝ x) x :=
@@ -178,7 +179,7 @@ theorem trace_cx_act (a : 𝓞 E) : LinearMap.trace ℤ (Lat ρ g) (cx ρ g ∘�
 
 theorem trace_rep (s : ℕ) (hr : r = s * Module.finrank ℚ E) (a : 𝓞 E) :
     (ρ a).trace = s * Algebra.trace ℤ (𝓞 E) a :=
-  GlobalTheory.T.trace_ringHom_eq_mul_algebraTrace ρ s hr a
+  _root_.GlobalTheory.repTrace_eq_mul_trace ρ s hr a
 
 end Lemmas
 

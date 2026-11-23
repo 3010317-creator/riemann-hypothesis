@@ -2,7 +2,8 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IntegralClosureHeightEqOneOfLiesOver
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsExtendLin
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegAtIffChartLocalizationStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegAtIffChartLocalization
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -86,7 +87,7 @@ theorem isLocIn_regAt_chartRing : ∀ (E : Type) [Field E] [NumberField E] [IsCM
       exact add_mem hx hz
     · intro x z _ _ hx hz
       exact mul_mem hx hz
-  · obtain ⟨t, ht, hut, htb⟩ := (GlobalTheory.T.regAt_iff_chart_localization 𝔐.X Ω 𝔐.ξ ℤ _ (mseg y) 𝔐.tie s q hs b).1 hb
+  · obtain ⟨t, ht, hut, htb⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.regAt_iff_exists_chart_fraction 𝔐.X Ω 𝔐.ξ ℤ _ (mseg y) 𝔐.tie s q hs b).1 hb
     have hle : ∀ x ∈ Algebra.adjoin ℤ (Set.range fun j => mseg y j / mseg y s),
         x ∈ chartRing o (mseg y) s := by
       intro x hx

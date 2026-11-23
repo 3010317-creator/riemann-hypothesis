@@ -1,13 +1,18 @@
 module
 
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.LatticeRationalEmbedding
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocRatio
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GradedSandwichDegreeBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeRegularAtLocalPointStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeEvalAtLocalRingStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueSemilinearStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelIsBaseChangeStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GradedSandwichDegreeBound
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeRegularAtLocalPoint
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCocharLie
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.LatticeRationalEmbedding
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeEvalAtLocalRing
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueSemilinear
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelIsBaseChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,7 +59,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCocharLie
 
 @[expose] public section
 
@@ -218,7 +222,7 @@ theorem exists_phi : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp Ω ⟶
     obtain ⟨r', hr, -⟩ := (hw.2 k (c₀ k) (hunit k)).2 (c' k)
     exact reg_of_val hr hp
   obtain ⟨b, π, κ, hflag, -, hmb, hπ, hreg, hκ0, hκ, hκi, hcls⟩ :=
-    GlobalTheory.T.exists_graded_sandwich_coordinates X Ω ξ K J y G Li M V r b₀ m i a e₀ hb₀ hS hD ⟨centre zL, hp⟩ c₀ hIC
+    _root_.GlobalTheory.CompanionTheory.Ar.RootHt.cls_frame X Ω ξ K J y G Li M V r b₀ m i a e₀ hb₀ hS hD ⟨centre zL, hp⟩ c₀ hIC
   obtain ⟨hmi, hm0⟩ := inv_nat_reg (ξ := ξ) hp hm
   have hbl : ∀ l, b l ∈ M.lat ⟨centre zL, hp⟩ := fun l => by
     have h1 := (M.lat ⟨centre zL, hp⟩).smul_mem (⟨(m : Ω)⁻¹, hmi⟩ : regAt ξ ⟨centre zL, hp⟩) (hmb l)
@@ -233,14 +237,14 @@ theorem exists_phi : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp Ω ⟶
   letI : Module (𝓞 L) T := Module.compHom T (algebraMap (𝓞 L) L)
   haveI : IsScalarTower (𝓞 L) L T := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   subst hzL
-  obtain ⟨j₀, hj₀, -⟩ := GlobalTheory.T.lie_model_existsUnique_semilinear X G (𝓞 L) L (algebraMap (𝓞 L) L) z B.carrier T MB MT
+  obtain ⟨j₀, hj₀, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieBaseChange.existsUnique_semilinear_lifts X G (𝓞 L) L (algebraMap (𝓞 L) L) z B.carrier T MB MT
   let j : B.carrier →ₗ[𝓞 L] T :=
     { toFun := j₀, map_add' := j₀.map_add, map_smul' := fun c x => j₀.map_smulₛₗ c x }
   have hjj : ∀ x, ((MT.pt (j x)).left ≫ (𝟙 G.left) = ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (GlobalTheory.CompanionTheory.Ar.dualMap (algebraMap (𝓞 L) L)) ≫ (MB.pt x).left) := hj₀
-  have hbc : IsBaseChange L j := GlobalTheory.T.lie_model_isBaseChange X G (𝓞 L) L z B.carrier T MB MT j hjj
+  have hbc : IsBaseChange L j := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_isBaseChange X G (𝓞 L) L z B.carrier T MB MT j hjj
   obtain ⟨hinj, hclr⟩ := clear_int j hbc
-  obtain ⟨ev, hev, hevs, -⟩ := GlobalTheory.T.lie_lattice_eval_at_local_ring X G Ω ξ Li M L _ hp T MT hξ inferInstance
-  obtain ⟨g, hg⟩ := GlobalTheory.T.lattice_regular_at_local_point X G Ω ξ Li M L _ hp T MT (π i) hξ (hπr i)
+  obtain ⟨ev, hev, hevs, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieLat_val X G Ω ξ Li M L _ hp T MT hξ inferInstance
+  obtain ⟨g, hg⟩ := _root_.GlobalTheory.CompanionTheory.Ar.RootHt.exists_lieFunctional X G Ω ξ Li M L _ hp T MT (π i) hξ (hπr i)
   obtain ⟨uκ, huκ⟩ := val_exists hp hκ
   obtain ⟨uκi, huκi⟩ := val_exists hp hκi
   have huκ0 : uκ ≠ 0 := by

@@ -5,7 +5,7 @@ public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Development.AbelianVarietyTheory.Counterexamples.ModuliSurvey.HeckeKerZero
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.EtSetOfLists
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsClopenLocusTorsionSectionsHeckeKernelStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsClopenLocusTorsionSectionsHeckeKernel
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsNsmulOfDvd
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSabCancel
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ObjPull
@@ -139,7 +139,7 @@ theorem exists_set (hA : admitted l P p) {k : Type} [Field k] [IsAlgClosed k] {s
     rintro ⟨j, rfl⟩
     simp only [tu]
     exact (e.symm j).2
-  obtain ⟨V, -, hV⟩ := GlobalTheory.T.exists_clopen_locus_torsionSections_heckeKernel E H D l P p i n _ s o σ hA hσ
+  obtain ⟨V, -, hV⟩ := _root_.GlobalTheory.exists_clopen_heckeKer_iff E H D l P p i n _ s o σ hA hσ
   have h1 : Set.range (𝟙 (Sp k) :) ⊆ V := (hV k _).2 ⟨fun a b hab => e.symm.injective (Subtype.ext
     (Over.OverMorphism.ext (by simpa [σ] using hab))), C, hC, h⟩
   have h2 := fun (k' : Type) [Field k'] [IsAlgClosed k'] (x : Sp k' ⟶ Sp k) =>

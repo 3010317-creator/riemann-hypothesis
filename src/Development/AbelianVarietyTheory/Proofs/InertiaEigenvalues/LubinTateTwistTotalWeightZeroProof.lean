@@ -2,8 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TwistStep
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ScalGLCommute
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsLubinTateCharacterUnramifiedPeriodStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HasHodgeTateWeightFrameCharacterTwistStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdmSt
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsLubinTateCharacterUnramifiedPeriod
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HasHodgeTateWeightFrameCharacterTwist
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -162,10 +163,10 @@ theorem twistStep : TwistStep := by
     simp
   · have hN : 0 < Fintype.card n := Nat.pos_of_ne_zero hn
     have hs : 0 < r * Fintype.card n := Nat.mul_pos hρ.pos hN
-    obtain ⟨K', hK, x, χ, hle, hfr, hcont, hact, h1, h2, hj⟩ := GlobalTheory.T.exists_lubinTate_character_unramified_period l P AI T K (r * Fintype.card n) hs
+    obtain ⟨K', hK, x, χ, hle, hfr, hcont, hact, h1, h2, hj⟩ := _root_.GlobalTheory.LTChar.main l P AI T K (r * Fintype.card n) hs
     exact ⟨K', r * Fintype.card n, Twist.twist hK ρ χ (-∑ m, ∑ j, w m j), _,
       Twist.isRat_twist hK r _ hN ρ χ _ hρ hle hfr hcont,
-      GlobalTheory.T.hasHodgeTateWeightFrame_character_twist l P AI T n K K' hK r (Fintype.card n) hρ.pos ρ w χ x _ hρ hw hact h1 h2 hj,
+      _root_.GlobalTheory.PMon.Twist.framed_twist l P AI T n K K' hK r (Fintype.card n) hρ.pos ρ w χ x _ hρ hw hact h1 h2 hj,
       Twist.sum_weights r _ hρ.pos w rfl, Twist.potentiallySemistable_of_lubinTateTwist P hK ρ χ x _ hact⟩
 
 end GlobalTheory.PMon

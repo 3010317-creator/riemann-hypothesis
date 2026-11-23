@@ -1,8 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NotDominatesTopPlace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormallyEtaleBaseChangeEvalHomStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFractionRingTensorOfFractionFieldsStatement
+public import Mathlib.RingTheory.Etale.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormallyEtaleBaseChangeEvalHom
+public import Mathlib.RingTheory.Localization.FractionRing
+public import Mathlib.RingTheory.TensorProduct.Maps
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFractionRingTensorOfFractionFields
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -117,7 +120,7 @@ theorem exists_isEtTower_tensor : ∀ {K κ L : Type} [Field K] [Field κ] [Fiel
   haveI : IsScalarTower ℂ B κ := IsScalarTower.of_algebraMap_eq' rfl
   haveI : IsFractionRing R K := isFractionRing_subring R hR.frac
   haveI : IsFractionRing B κ := isFractionRing_subring B hB.frac
-  obtain ⟨hinj, hsurj⟩ := GlobalTheory.T.isFractionRing_tensor_of_fraction_fields (k := ℂ) (R := R) (B := B) (K := K) (κ := κ) (L := L)
+  obtain ⟨hinj, hsurj⟩ := _root_.GlobalTheory.tensor_fractionRing_of_tensor (k := ℂ) (R := R) (B := B) (K := K) (κ := κ) (L := L)
   set f := (algebraMap (K ⊗[ℂ] κ) L).comp (Algebra.TensorProduct.map
     (IsScalarTower.toAlgHom ℂ R K) (IsScalarTower.toAlgHom ℂ B κ)).toRingHom with hf
   letI iA : Algebra (R ⊗[ℂ] B) L := f.toAlgebra
@@ -203,7 +206,7 @@ theorem exists_isEtTower_tensor : ∀ {K κ L : Type} [Field K] [Field κ] [Fiel
     rw [e]
     have h1 : (algebraMap (R ⊗[ℂ] B) A).FormallyEtale :=
       RingHom.formallyEtale_algebraMap.2 (Algebra.FormallyEtale.of_isLocalization q.primeCompl)
-    exact (GlobalTheory.T.formallyEtale_baseChange_eval_hom τ he).comp h1
+    exact (_root_.GlobalTheory.formallyEtale_mvPolynomial_eval₂_tensor τ he).comp h1
   · show ((ψ (a (1 ⊗ₜ b)) : R) : K) = _
     rw [hψ, hφ, one_mul, (hev b z).1 hbz]
     rfl

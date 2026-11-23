@@ -4,7 +4,7 @@ public import Mathlib.Algebra.Field.Subfield.Defs
 public import Mathlib.Basic.NNReal.Defs
 public import Mathlib.Data.Nat.Prime.Defs
 public import Mathlib.RingTheory.Valuation.Basic
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ValuationAddPowSubLeStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ValuationAddPowSubLe
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -74,7 +74,7 @@ theorem exists_approxRoot_step : ∀ (L : Type) [Field L] (v : Valuation L ℝ�
   set u := α ^ p - y ^ p with hu
   have huF : u ∈ F := F.sub_mem hα (F.pow_mem hy p)
   have h1 : v (u - β ^ p) ≤ A := by
-    have := GlobalTheory.T.valuation_add_pow_sub_pow_sub_pow_le L v p hp y β
+    have := _root_.GlobalTheory.AlmostEt.valuation_add_pow_sub_le L v p hp y β
     have e : y + β = α := by rw [hβ]; ring
     rw [e] at this
     refine this.trans ?_
@@ -110,7 +110,7 @@ theorem exists_approxRoot_step : ∀ (L : Type) [Field L] (v : Valuation L ℝ�
     · rw [max_eq_right h]; exact hwM
     · rw [max_eq_left h]; exact le_max_right _ _
   have h3 : v ((w + γ) ^ p - w ^ p - γ ^ p) ≤ max A (v (p : L) * v β ^ p) := by
-    refine (GlobalTheory.T.valuation_add_pow_sub_pow_sub_pow_le L v p hp w γ).trans ?_
+    refine (_root_.GlobalTheory.AlmostEt.valuation_add_pow_sub_le L v p hp w γ).trans ?_
     have : v (p : L) * v γ * m ^ (p - 1) ≤ v (p : L) * m ^ p := by
       rw [mul_assoc, ← hpp, pow_succ, mul_comm (m ^ (p - 1)) m, hpp]
       gcongr

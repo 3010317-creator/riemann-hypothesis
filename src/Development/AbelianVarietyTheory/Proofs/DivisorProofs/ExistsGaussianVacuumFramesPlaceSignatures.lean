@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FramedDConst
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchimedeanTraceSymplecticOrthonormalFramesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchimedeanTraceSymplecticOrthonormalFrames
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFockVacuumGaussianFrames
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueArchimedeanMatrixAdeleExtensionOfComStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealScalarArchimedeanAdeleSmulMatrixRealPlaceStatement
+import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueArchimedeanMatrixAdeleExtensionOfCom
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealScalarArchimedeanAdeleSmulMatrixRealPlace
 import Mathlib.Algebra.Order.Archimedean.Real.Hom
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -129,7 +130,7 @@ theorem exists_vacuumD : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [N
       D u f₀ + (lineSign a b * Complex.I) • D u' f₀ = 0 := by
   intro F E _ _ _ _ _ σ α β κ _ _ _ _ _ P Q R S τ JA JB d a₀ b₀ A C D hCM hFr hD
   have hU := fun c : ∀ w : InfinitePlace F, Matrix (Ix (P w) (Q w)) (Ix (R w) (S w)) ℂ =>
-    GlobalTheory.T.existsUnique_archimedeanMatrix_adeleExtension_of_components σ τ hCM (fun w => A w * c w * (C w)ᵀ)
+    _root_.GlobalTheory.ArchMatCoords.existsUnique_at_map_piInf σ τ hCM (fun w => A w * c w * (C w)ᵀ)
   choose U hU hU' using hU
   have hadd : ∀ c c', U (c + c') = U c + U c' := fun c c' => by
     refine (hU' (c + c') _ ⟨fun u hu => ?_, fun w => ?_⟩).symm
@@ -138,7 +139,7 @@ theorem exists_vacuumD : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [N
   have hsmul : ∀ (r : ℝ) c, U (r • c) = realAd F r • U c := fun r c => by
     refine (hU' (r • c) _ ⟨fun u hu => ?_, fun w => ?_⟩).symm
     · rw [smul_comm, (hU c).1 u hu, smul_zero]
-    · rw [GlobalTheory.T.realScalarArchimedeanAdele_smul_matrix_realPlace σ τ hCM, (hU c).2, Pi.smul_apply, Matrix.mul_smul, Matrix.smul_mul]
+    · rw [_root_.GlobalTheory.RealScalar.realAd_smul_map σ τ hCM, (hU c).2, Pi.smul_apply, Matrix.mul_smul, Matrix.smul_mul]
       ext i j
       simp
   let p : (∀ w : InfinitePlace F, Matrix (Ix (P w) (Q w)) (Ix (R w) (S w)) ℂ) →ₗ[ℝ] (κ → mixedEmbedding.mixedSpace F) :=
@@ -163,7 +164,7 @@ theorem exists_vacuumD : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [N
         exact evI_realAd_mul r _ }
   have hω : ∀ c c', trPair F κ (p c) (q c') - trPair F κ (p c') (q c) =
       -2 * (∑ w, ∑ a, ∑ b, lineSign a b * c w a b * star (c' w a b)).im := fun c c' => by
-    rw [← GlobalTheory.T.archimedean_trace_symplectic_orthonormal_frames σ τ JA JB a₀ b₀ A C hCM hFr (U c) (U c') c c' (hU c).1 (hU c').1 (hU c).2 (hU c').2, d.form,
+    rw [← _root_.GlobalTheory.SympFramesD.symp_framesD σ τ JA JB a₀ b₀ A C hCM hFr (U c) (U c') c c' (hU c).1 (hU c').1 (hU c).2 (hU c').2, d.form,
       trPair_apply, trPair_apply, ← map_sub, ← evR_apply]
 
     simp only [dotProduct, map_sub, map_sum, map_mul]

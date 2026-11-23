@@ -7,12 +7,13 @@ public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsActionO
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsDescentOfInvGenOfInvariants
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLinearisation
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSecOnNonvanishingOfTameQuotient
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSemiAbelianTripleOfFiniteQuotientStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSemiAbelianTripleOfFiniteQuotient
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSmoothDescentOfTameQuotient
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSmulApplyEqOfEqOnInvariants
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.GeometricallyConnectedOfIsPullback
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.QuotientDescendGrpObj
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ResidueFieldMapFiniteSeparableOfTame
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSmulApplyEqOfEqOnInvariants
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -104,7 +105,7 @@ theorem exists_sab_descent_of_tame_quotient :
     convert htame k (y ≫ t.G.hom) using 2
     exact Nat.card_congr (Equiv.subtypeEquivRight fun g =>
       fixes_iff_fixes_image t.G.hom _ _ y (hw g) (hfib k _ g))) t.PP.isLB u hu₁ hu₂ hu₃
-  obtain ⟨t', ν, e, hν⟩ := T.exists_semiAbelianTriple_of_finiteQuotient E H Γ X X' ρ π t G' a' φ L' hQ hga hsemi' hgp ha hL' hiso
+  obtain ⟨t', ν, e, hν⟩ := _root_.GlobalTheory.QuotTriple.exists_sab_of_quotient E H Γ X X' ρ π t G' a' φ L' hQ hga hsemi' hgp ha hL' hiso
   have hinv' (g : Γ) : (τ g).asIso.hom ≫ ν.φ = ν.φ := by
     rw [← cancel_mono e.hom.left, Category.assoc, hν, hinv]
   refine ⟨t', ν, hinv', fun ⟨h₁, h₂, _⟩ hP => ⟨?_, ?_, ?_⟩⟩

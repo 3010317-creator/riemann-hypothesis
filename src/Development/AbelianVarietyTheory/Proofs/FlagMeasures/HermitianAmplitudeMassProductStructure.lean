@@ -2,19 +2,20 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GFrames
 public import Mathlib.Algebra.Module.Lattice.Full
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeMassEqOneOfSingleOrbitStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CommonStabilizerStabilizersCommensurableVolumeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CoordinateLatticeUniqueTermAlmostAllPlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GlobalHermitianFramesTermsOrbitsLocalStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetMassLeAndFiniteStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetTermBasicFacts
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFramesComplementUnitaryNormalisesStabilStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFramesStabilizerActsOnTermsStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ComplementReferenceCompactSubgroup
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeMassEqOneOfSingleOrbit
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CommonStabilizerStabilizersCommensurableVolume
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CoordinateLatticeUniqueTermAlmostAllPlaces
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GlobalHermitianFramesTermsOrbitsLocal
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetMassLeAndFinite
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFramesComplementUnitaryNormalisesStabil
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeMassEqFinprodLocalStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsIntegralOfQuad
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalAmplitudeSummandAtTermOrbitStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NumberFieldLatticeDeterminedByLocalLatticesStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalAmplitudeSummandAtTermOrbit
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SumProdOfLocalChoicesBijectionStatement
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetTermBasicFacts
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFramesStabilizerActsOnTerms
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsIntegralOfQuad
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NumberFieldLatticeDeterminedByLocalLattices
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -93,19 +94,19 @@ theorem orb_eq_iff {G α : Type*} [Group G] [MulAction G α] (H : Subgroup G) (a
 theorem std_one : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] [CharZero F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] (L : LocE F E), ∀ (r k : ℕ) (S : Frames L r k), ∀ (Λs : Submodule L.O S.V) (d₀ : S.Datum), IsLat L Λs → S.St ⊓ MulAction.stabilizer S.GLV Λs = S.K0 → S.IsTerm d₀ Λs → S.om d₀ Λs = 1 → (∀ Λ, S.IsTerm d₀ Λ → ∃ h ∈ S.St, Λ = h • Λs) → (∀ d Λ, S.IsTerm d Λ → ∃ h ∈ S.H0, d = h • d₀) → ∀ (d : S.Datum) (Λ Λ' : Submodule L.O S.V), S.IsTerm d Λ → S.IsTerm d Λ' → (∃ h ∈ S.St, Λ' = h • Λ) ∧ S.mu Λ = 1 ∧ S.om d Λ = 1 := by
   intro F _ _ _ _ _ E _ _ _ L r k S Λs d₀ hlat hK hterm hom hall hdat d Λ Λ' hΛ hΛ'
   obtain ⟨h, hh, rfl⟩ := hdat d Λ hΛ
-  have tr := GlobalTheory.T.hermitianFrames_complementUnitary_normalises_stabiliser L r k S h⁻¹ (S.H0.inv_mem hh)
-  have tr2 := GlobalTheory.T.hermitianFrames_complementUnitary_normalises_stabiliser L r k S h hh
+  have tr := _root_.GlobalTheory.HL.FixFrames.unitary_complement_acts L r k S h⁻¹ (S.H0.inv_mem hh)
+  have tr2 := _root_.GlobalTheory.HL.FixFrames.unitary_complement_acts L r k S h hh
   have key : ∀ Λ, S.IsTerm (h • d₀) Λ → ∃ s ∈ S.St, h⁻¹ • Λ = s • Λs ∧ S.mu Λ = 1 ∧ S.om (h • d₀) Λ = 1 := by
     intro Λ hΛ
     have e := tr.2 (h • d₀) Λ hΛ
     simp only [inv_smul_smul] at e
     obtain ⟨s, hs, hsΛ⟩ := hall _ e.1
     refine ⟨s, hs, hsΛ, ?_, ?_⟩
-    · rw [← e.2.2, hsΛ, ((GlobalTheory.T.commonStabilizer_stabilizers_commensurable_volume L r k S).1 Λs hlat).2.2 s hs]
+    · rw [← e.2.2, hsΛ, ((_root_.GlobalTheory.HL.volSt L r k S).1 Λs hlat).2.2 s hs]
       unfold Frames.mu
       rw [hK]
       simp [invVol, Subgroup.relIndex_self]
-    · rw [← e.2.1, hsΛ, (GlobalTheory.T.hermitianFrames_stabilizer_acts_on_terms L r k S d₀ Λs hterm s hs).2.1, hom]
+    · rw [← e.2.1, hsΛ, (_root_.GlobalTheory.FrameAct.stabiliser_acts_on_terms L r k S d₀ Λs hterm s hs).2.1, hom]
   obtain ⟨s, hs, e1, hmu, hom1⟩ := key Λ hΛ
   obtain ⟨s', hs', e2, -, -⟩ := key Λ' hΛ'
   refine ⟨⟨h * (s' * s⁻¹) * h⁻¹, tr2.1 _ (S.St.mul_mem hs' (S.St.inv_mem hs)), ?_⟩, hmu, hom1⟩
@@ -144,11 +145,11 @@ theorem isLattice_of_LRel {A : Places F E sig} {r k : ℕ} (G : GFrames A r k) {
 theorem term_of_LRel {A : Places F E sig} {r k : ℕ} (G : GFrames A r k) (hk : 4 * r + 7 ≤ k) {d : G.Dat}
     (hex : ∃ Λ₀, G.IsTerm d Λ₀) {Γ Γ' : G.Lt} (hΓ : G.IsTerm d Γ) (h : G.LRel Γ Γ') : G.IsTerm d Γ' := by
   have hl := isLattice_of_LRel G hΓ.1 h
-  have e := ((GlobalTheory.T.globalHermitianFrames_terms_orbits_local A r k G hk d hex).2.1 Γ Γ' hΓ hl).1 h
+  have e := ((_root_.GlobalTheory.HL.GlobalOrbits.global_terms_orbits A r k G hk d hex).2.1 Γ Γ' hΓ hl).1 h
   refine ⟨hl, fun p => ?_⟩
   obtain ⟨s, hs, hsp⟩ := e p
   rw [hsp]
-  exact (GlobalTheory.T.hermitianFrames_stabilizer_acts_on_terms (A.L p) r k (G.S p) (d p) _ (hΓ.2 p) s hs).1
+  exact (_root_.GlobalTheory.FrameAct.stabiliser_acts_on_terms (A.L p) r k (G.S p) (d p) _ (hΓ.2 p) s hs).1
 
 end GlobalTheory.HL.ProdStruct
 
@@ -198,9 +199,9 @@ theorem full_lattice_of_term {F E : Type} [Field F] [NumberField F] [Field E] [N
 theorem product_structure : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {sig : E →ₐ[F] E} (A : Places F E sig), ∀ (r k : ℕ) (G : GFrames A r k), 4 * r + 7 ≤ k → ∀ d : G.Dat, (∃ Λ₀, G.IsTerm d Λ₀) → ∀ P : ∀ p, Submodule (A.L p).O (G.S p).V → Prop, (∀ p, ∀ h ∈ (G.S p).St, ∀ Λ, (G.S p).IsTerm (d p) Λ → P p Λ → P p (h • Λ)) → {p | ∃ Λ, (G.S p).IsTerm (d p) Λ ∧ ¬ P p Λ}.Finite → G.amp d (fun Λ => ∀ p, P p (A.lat p Λ)) = ∏ᶠ p, (G.S p).amp (d p) (P p) ∧ G.mass d (fun Λ => ∀ p, P p (A.lat p Λ)) = ∏ᶠ p, (G.S p).mass (d p) (P p) ∧ {p | (G.S p).amp (d p) (P p) ≠ 1 ∨ (G.S p).mass (d p) (P p) ≠ 1}.Finite ∧ {o : Quot G.LRel | G.IsTerm d o.out}.Finite := by
   intro F E _ _ _ _ _ sig A r k G hk d hex P hPinv hPfin
   obtain ⟨Λ₀, hΛ₀⟩ := id hex
-  have orb := GlobalTheory.T.globalHermitianFrames_terms_orbits_local A r k G hk d hex
-  have hstd := GlobalTheory.T.coordinateLattice_unique_term_almost_all_places A r k G hk
-  have hrec := GlobalTheory.T.numberField_lattice_determined_by_local_lattices A _ Λ₀ (full_lattice_of_term G hΛ₀)
+  have orb := _root_.GlobalTheory.HL.GlobalOrbits.global_terms_orbits A r k G hk d hex
+  have hstd := _root_.GlobalTheory.HL.StdPlace.coordinate_lattice_standard A r k G hk
+  have hrec := _root_.GlobalTheory.HL.PlacesRec.lattice_local A _ Λ₀ (full_lattice_of_term G hΛ₀)
   have hfin := (hstd.union hrec.2.2).union hPfin
   set s := hfin.toFinset with hs_def
 
@@ -215,7 +216,7 @@ theorem product_structure : ∀ {F E : Type} [Field F] [NumberField F] [Field E]
     have t := std_one (A.L p) r k (G.S p) _ d₀ hlat hK ⟨(1, 1), hW⟩ hom hall hdat (d p) Λ Λ' hΛ hΛ'
     exact ⟨t.1, t.2.1, t.2.2, by by_contra hc; exact hs3 ⟨Λ, hΛ, hc⟩⟩
   have L1 : ∀ p, p ∉ s → (G.S p).amp (d p) (P p) = 1 ∧ (G.S p).mass (d p) (P p) = 1 := fun p hp =>
-    GlobalTheory.T.amplitude_mass_eq_one_of_single_orbit (A.L p) r k (G.S p) (d p) (P p) ⟨_, hΛ₀.2 p⟩
+    _root_.GlobalTheory.HL.Frames.amp_mass_eq_one_of_one_orbit (A.L p) r k (G.S p) (d p) (P p) ⟨_, hΛ₀.2 p⟩
       (fun Λ Λ' h1 h2 => (KF p hp Λ Λ' h1 h2).1)
       (fun Λ h1 => ⟨(KF p hp Λ Λ h1 h1).2.2.2, (KF p hp Λ Λ h1 h1).2.1, (KF p hp Λ Λ h1 h1).2.2.1⟩)
   have hmuG : ∀ Γ, G.IsTerm d Γ → G.mu Γ = ∏ p ∈ s, (G.S p).mu (A.lat p Γ) := by
@@ -237,11 +238,11 @@ theorem product_structure : ∀ {F E : Type} [Field F] [NumberField F] [Field E]
     intro p Λ h hh
     constructor
     · rintro ⟨h1, h2⟩
-      have e := GlobalTheory.T.hermitianFrames_stabilizer_acts_on_terms (A.L p) r k (G.S p) (d p) _ h1 h⁻¹ ((G.S p).St.inv_mem hh)
+      have e := _root_.GlobalTheory.FrameAct.stabiliser_acts_on_terms (A.L p) r k (G.S p) (d p) _ h1 h⁻¹ ((G.S p).St.inv_mem hh)
       rw [inv_smul_smul] at e
       exact ⟨e.1, by simpa using hPinv p h⁻¹ ((G.S p).St.inv_mem hh) _ h1 h2⟩
     · rintro ⟨h1, h2⟩
-      exact ⟨(GlobalTheory.T.hermitianFrames_stabilizer_acts_on_terms (A.L p) r k (G.S p) (d p) _ h1 h hh).1, hPinv p h hh Λ h1 h2⟩
+      exact ⟨(_root_.GlobalTheory.FrameAct.stabiliser_acts_on_terms (A.L p) r k (G.S p) (d p) _ h1 h hh).1, hPinv p h hh Λ h1 h2⟩
   let O := fun p => MulAction.orbitRel.Quotient (G.S p).St (Submodule (A.L p).O (G.S p).V)
   let Φ : Quot G.LRel → ∀ p, O p := fun c p => Quotient.mk'' (A.lat p c.out)
   let U : ∀ p, Set (O p) := fun p => {o | (G.S p).IsTerm (d p) o.out}
@@ -255,11 +256,11 @@ theorem product_structure : ∀ {F E : Type} [Field F] [NumberField F] [Field E]
         ((G.S p).mu (A.lat p Γ) : ℂ) * (G.S p).om (d p) (A.lat p Γ) else 0) ∧
       gM p (Quotient.mk'' (A.lat p Γ)) = (if P p (A.lat p Γ) then ENNReal.ofReal ((G.S p).mu (A.lat p Γ)) else 0) := by
     intro Γ hΓ p
-    have t := GlobalTheory.T.localAmplitude_summand_at_term_orbit (A.L p) r k (G.S p) (d p) (fun Λ => (G.S p).IsTerm (d p) Λ ∧ P p Λ) (hPinv' p)
-      (A.lat p Γ) (hΓ.2 p) ((GlobalTheory.T.numberField_lattice_determined_by_local_lattices A _ Γ (full_lattice_of_term G hΓ)).2.1 p) _ rfl
+    have t := _root_.GlobalTheory.HL.amp_summand_orbit (A.L p) r k (G.S p) (d p) (fun Λ => (G.S p).IsTerm (d p) Λ ∧ P p Λ) (hPinv' p)
+      (A.lat p Γ) (hΓ.2 p) ((_root_.GlobalTheory.HL.PlacesRec.lattice_local A _ Γ (full_lattice_of_term G hΓ)).2.1 p) _ rfl
     simp only [and_self_left, hΓ.2 p, true_and] at t
     exact ⟨t.1, t.2.2.1, t.2.2.2⟩
-  have hUfin : ∀ p ∈ s, (U p).Finite := fun p _ => (GlobalTheory.T.hermitianDoubleCoset_mass_le_and_finite (A.L p) r k (G.S p) (by omega) (d p)).2
+  have hUfin : ∀ p ∈ s, (U p).Finite := fun p _ => (_root_.GlobalTheory.HL.MassGlue.mass_le_and_finite (A.L p) r k (G.S p) (by omega) (d p)).2
   have hinj : ∀ c ∈ Tq, ∀ c' ∈ Tq, (∀ p ∈ s, Φ c p = Φ c' p) → c = c' := by
     intro c hc c' hc' he
     have hc1 : G.IsTerm d c.out := hc

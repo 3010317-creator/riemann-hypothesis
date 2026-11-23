@@ -2,7 +2,6 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsRealFam
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TiltSc
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicPointComponentsAtPlacesLatticesVacuaStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NormOneHomothetyCarriesSelfDualOfSplitComponentStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsCmSplitPointAtPlaceOverSplitStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FlatIntegrandFlippedTensorLocallyConstantCompact
@@ -11,6 +10,10 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GridBaseP
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualGridRowMovedLatticeLargeDepthStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LatticeOffS0LastLevelIffStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealLineOfPeriodsOnLine
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NormOneAtOne
+import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicPointComponentsAtPlacesLatticesVacua
+import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.MarkSpec
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -47,7 +50,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NormOneAtOne
 
 @[expose] public section
 
@@ -64,7 +66,7 @@ theorem moves_of_forall {D : D7} (S : HSp D) (g : GA D S) (L M : GlobalTheory.Fi
     GlobalTheory.FinPl.Moves S g L M (fun _ => True) := by
   intro y hy
   have hT := fun (N : GlobalTheory.FinPl.Lat S) (hN : Submodule.IsLattice D.host.E N) (z : Fin S.rank → AE D) =>
-    ((GlobalTheory.T.adelicPoint_components_atPlaces_lattices_vacua D (fun _ => True)).2 S).2.2.2 N z hN
+    ((_root_.GlobalTheory.FinPl.localComponents D (fun _ => True)).2 S).2.2.2 N z hN
   have hmy : ∀ i, (Formalism.L2.Theta.mt S g *ᵥ y) i ∈ idAt D (fun _ => True) := fun i => by
     simp only [Matrix.mulVec, dotProduct]
     exact Ideal.sum_mem _ fun j _ => Ideal.mul_mem_left _ _ (hy j)

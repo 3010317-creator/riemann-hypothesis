@@ -9,8 +9,11 @@ public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.Rel
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.EndoLbIsoSymmetryHypothesisExtendNormalModel
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsChartUnit
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.KTrivOfKTrivNonemptyOpenNormalCharZeroStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.KTrivOfKTrivNonemptyOpenNormalCharZero
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.LineBundleIsoExtendOfNormalBase
+public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAmpleLBOfRelAmpleOfIsAffine
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +53,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AmplePt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.CubePullbacks.CubePull
-public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAmpleLBOfRelAmpleOfIsAffine
 
 @[expose] public section
 
@@ -307,7 +309,7 @@ theorem relAmple_and_kTriv : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra 
   have hab : IsAbelianScheme ((Over.pullback W.ι).obj Q.G) :=
     ⟨inferInstance, MorphismProperty.of_isPullback (P := @Smooth) gp.1 ‹_›, hA.2 W hW,
       MorphismProperty.of_isPullback (P := @GeometricallyConnected) gp.1 ‹_›⟩
-  refine GlobalTheory.T.kTriv_of_kTriv_nonemptyOpen_normal_charZero laws W (isNormalScheme_opens hO.normal W) (fun n hn h => ?_) (W.ι ⁻¹ᵁ U₀) ?_ _
+  refine _root_.GlobalTheory.KTrivSpread.kTriv_of_open_normal laws W (isNormalScheme_opens hO.normal W) (fun n hn h => ?_) (W.ι ⁻¹ᵁ U₀) ?_ _
     ((cubeMapOf gp).rigLB Q.L hL' hr) c hab ha ?_
   · have e := congrArg ((M.res W hne).comp W.topIso.hom.hom) h
     rw [map_natCast, map_zero] at e

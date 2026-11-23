@@ -1,14 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermitianFormUnitaryOneOne
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicUnitaryHaarBiInvariantStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.GlobAut
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicUnitaryHaarBiInvariant
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExtAeEqContRep
+public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.ConvolutionSmoothL2
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegrablePh
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RealUnipotentRadicalEmbedsAdelicRadical
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ReproducingFormulaDiscreteSeriesTestGrowth
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LayerProd
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TruncatedLeastLatticeSizeBoundedBelowUnipotentRa
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.WeilIntegralVanishingOfFibreIntegrals
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FiniteAdelicUnitaryCongruenceTopology
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegrablePhStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RealUnipotentRadicalEmbedsAdelicRadicalStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ReproducingFormulaDiscreteSeriesTestGrowthStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TruncatedLeastLatticeSizeBoundedBelowUnipotentRaStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.WeilIntegralVanishingOfFibreIntegralsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -198,9 +201,9 @@ theorem cusp_of_fibre_vanish : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → �
   have hSF : SFinite (B.I.muA B.μf) := by
     unfold AutInst.muA
     infer_instance
-  have hLI : (B.I.muA B.μf).IsMulLeftInvariant := ⟨(GlobalTheory.T.adelicUnitaryHaar_bi_invariant B.I B.μf).1⟩
+  have hLI : (B.I.muA B.μf).IsMulLeftInvariant := ⟨(_root_.GlobalTheory.AdelicUnimod.adelic_unimodular B.I B.μf).1⟩
   have hOP : (B.I.muA B.μf).IsOpenPosMeasure :=
-    ⟨fun U hU hne => ((GlobalTheory.T.adelicUnitaryHaar_bi_invariant B.I B.μf).2.2.2.2 U hU hne).ne'⟩
+    ⟨fun U hU hne => ((_root_.GlobalTheory.AdelicUnimod.adelic_unimodular B.I B.μf).2.2.2.2 U hU hne).ne'⟩
   have hFC : IsFiniteMeasureOnCompacts (B.I.muA B.μf) := by
     unfold AutInst.muA
     infer_instance
@@ -210,8 +213,8 @@ theorem cusp_of_fibre_vanish : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → �
       ∀ ν : Measure B.I.GA, B.I.IsNQuotMeas W ν → ∀ x, ∫ m, f (m * x) ∂ν = 0 := by
     intro f hf W hW ν hν x
     have hn : 1 ≤ B.I.n := one_le_of_isIsot B.I W hW
-    obtain ⟨-, ⟨Φ, hΦ, hbd⟩, hrep⟩ := GlobalTheory.T.reproducing_formula_discreteSeries_test_growth B d h hd hn hloc hbig hfd T hT y f hf
-    obtain ⟨c, hc, hcle⟩ := GlobalTheory.T.truncatedLeastLatticeSize_bounded_below_unipotentRadical B.I W x hW
+    obtain ⟨-, ⟨Φ, hΦ, hbd⟩, hrep⟩ := _root_.GlobalTheory.Reproducing.reproducing_formula B d h hd hn hloc hbig hfd T hT y f hf
+    obtain ⟨c, hc, hcle⟩ := _root_.GlobalTheory.Dec.exists_pos_le_tau1_mul_of_mem_NA_of_isIsot B.I W x hW
     obtain ⟨hνfin, -, hνc, hνinv⟩ := hν
     have := hνfin
     obtain ⟨hfc, hfinv, -⟩ := hf
@@ -233,7 +236,7 @@ theorem cusp_of_fibre_vanish : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → �
     obtain ⟨hint, heq⟩ := constTerm_repro (B.I.muA B.μf) ν f (phe B d) hfc
       (continuous_phe B d hd).measurable x _ (hΦ.abs.const_mul _) hbound hrep
     obtain ⟨v⟩ : Nonempty (InfinitePlace B.I.F) := inferInstance
-    obtain ⟨Wv, hWv, hWvNA⟩ := GlobalTheory.T.realUnipotentRadical_embeds_adelicRadical B.I W v hW
+    obtain ⟨Wv, hWv, hWvNA⟩ := _root_.GlobalTheory.RadEmb.radical_embeds B.I W v hW
     obtain ⟨νv, hνv⟩ := GlobalTheory.Dec.exists_isHaarSub_NW (B.I.ε v) Wv
     have hincl : ∀ n : UJ (B.I.ε v), incl B.I v n = (Pi.mulSingle v n, 1) := fun n => rfl
     have hN0 : IsClosed ((GlobalTheory.Dec.nwSub (B.I.ε v) Wv : Subgroup (UJ (B.I.ε v))) : Set (UJ (B.I.ε v))) := by
@@ -266,7 +269,7 @@ theorem cusp_of_fibre_vanish : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → �
       have h4 := hfib v Wv hWv νv hνv x⁻¹ z
       simp only [hincl, mul_assoc] at h4 ⊢
       exact h4
-    have h0 := GlobalTheory.T.weil_integral_vanishing_of_fibre_integrals B.I.GA (B.I.muA B.μf) _ _ hcl hhaar _ _ hFm hφm hinvF hint hfibv
+    have h0 := _root_.GlobalTheory.Dec.weilVanish B.I.GA (B.I.muA B.μf) _ _ hcl hhaar _ _ hFm hφm hinvF hint hfibv
     rw [heq]
     exact h0
   refine ⟨part1, ?_⟩
@@ -276,7 +279,7 @@ theorem cusp_of_fibre_vanish : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → �
     intro v
     have h1 : (0:ℝ) ≤ (B.I.n : ℝ) ^ 2 * Real.sqrt (rkR (B.I.ε v)) := by positivity
     nlinarith [hbig v, h1]
-  obtain ⟨yv, Fc, -, hspan, hFc, -⟩ := GlobalTheory.T.kernelB' B d h hd hn hloc hbig32 hfd T hT
+  obtain ⟨yv, Fc, -, hspan, hFc, -⟩ := _root_.GlobalTheory.KernelExpansion.kernelB B d h hd hn hloc hbig32 hfd T hT
   have key : ∀ z ∈ Submodule.span ℂ (Set.range yv), ∃ g : B.I.GA → ℂ, IsContRep B z g := by
     intro z hz
     induction hz using Submodule.span_induction with

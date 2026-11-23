@@ -5,12 +5,13 @@ public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelObjectP
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ToRingActOpOfRingAct
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.SiegelToroidalIntegral
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjointActionsOrderFiniteUnramifiedSchemeStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLevelAbelianLocusToroidalChart
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSiegelFamilyCyclotomicAwayOddLevel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocallyNoetherianOfIsQProjOverNoeth
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelFamilyExistsUniqueClassifyScheme
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SRelOneOneIff
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLevelAbelianLocusToroidalChart
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NondegOfFieldExtension
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrincipalSiegelObjectOddLevelRigid
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SiegelFamilyExistsUniqueClassifySchemeStatement
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSchemeOfIsGrpPullback
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsQProjOverCompOfIsFiniteNoetherianBase
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsSquareUnique
@@ -51,7 +52,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AmplePt
 import Development.AbelianVarietyTheory.Definitions.Divisors.NotCompactOfMEqOne
-public import Development.AbelianVarietyTheory.Definitions.Divisors.SRelOneOneIff
 
 @[expose] public section
 
@@ -173,7 +173,7 @@ theorem exists_rep : ∀ (h' M : ℕ), 1 ≤ h' → 3 ≤ M → Odd M → ∀ (O
     (GlobalTheory.siegPre_pullback h' M (cycAway M) (zetaAway M) F.X R.H F.s (R.π ≫ F.s) R.π F.univ rfl).2 _ hzH F.princ,
     R.isAct, R.adj, hq, GlobalTheory.isLocallyNoetherian_of_isQProjOver_noeth (cycAway M) R.H _ hq, ?_⟩
   intro S t z act hz hact hadj
-  obtain ⟨f, ⟨hfs, ⟨φz, φ₂z, pbz, sqz, isoz, levz⟩⟩, hfu⟩ := GlobalTheory.T.siegelFamily_existsUnique_classify_scheme h' M hh hM hodd F S t z hz
+  obtain ⟨f, ⟨hfs, ⟨φz, φ₂z, pbz, sqz, isoz, levz⟩⟩, hfu⟩ := _root_.GlobalTheory.SiegFamAll.existsUnique_classify h' M hh hM hodd F S t z hz
   have hadj' : Adj z.A (F.univ.P.pull φ₂z) bar act := adj_of_lbIso z.isLB (pull_isLB F.univ.isLB _) isoz hadj
   obtain ⟨g, ⟨hgπ, ψ, hψ, hψφ, hψa⟩, hgu⟩ := R.rep S f z.A φz φ₂z act pbz sqz hact hadj'
   have sqψ := GlobalTheory.LamPull.exists_isSquare hψ.1.w

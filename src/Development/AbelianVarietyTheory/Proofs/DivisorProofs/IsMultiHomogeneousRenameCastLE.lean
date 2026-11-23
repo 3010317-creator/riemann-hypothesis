@@ -3,9 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PointHeight
 public import ReciprocityTheory.SemistableReduction.SJCoreA
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousFirstCoords
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BlockSphereProbZeroSetEqZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussianRadialLawProbabilityLogIntegrableMeanStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeasurePreservingPolarGaussianProbabilityComplexStatement
+public import ReciprocityTheory.SemistableReduction.SphereLogIntegrableStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BlockSphereProbZeroSetEqZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussianRadialLawProbabilityLogIntegrableMean
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeasurePreservingPolarGaussianProbabilityComplex
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,8 +67,8 @@ namespace GlobalTheory.SphereMeanDrop
 open MeasureTheory Set MvPolynomial ReciprocityTheory.MultiplicativeHeights
 
 theorem isProbabilityMeasure_gaussProb {n : ℕ} (hn : 0 < n) : IsProbabilityMeasure (gaussProb n) := by
-  have hp := GlobalTheory.T.measurePreserving_polar_gaussianProbabilityComplexSpace n hn
-  haveI := (GlobalTheory.T.gaussianRadialLawProbability_log_integrable_mean n hn).1
+  have hp := _root_.GlobalTheory.SphereMeanDrop.measurePreserving_polar_gaussProb n hn
+  haveI := (_root_.GlobalTheory.SphereMeanDrop.radProb_log_mean n hn).1
   haveI : IsProbabilityMeasure (sphereProb n) := isProbabilityMeasure_sphereProb hn
   rw [← hp.map_eq]
   infer_instance
@@ -146,7 +147,7 @@ theorem gauss_blockMean {B n : ℕ} (hn : 0 < n) (δ : ℕ) (g : MvPolynomial (F
         Real.log ‖eval (fun p => WithLp.ofLp (x p.1) p.2) g‖) (Measure.pi fun _ => gaussProb n) ∧
     ∫ x, Real.log ‖eval (fun p => WithLp.ofLp (x p.1) p.2) g‖ ∂(Measure.pi fun _ => gaussProb n) =
       blockSphereMean B n g + (B : ℝ) * δ * (radK (2 * n - 1) / radJ (2 * n - 1)) := by
-  obtain ⟨hρ, hlogi, hlog⟩ := GlobalTheory.T.gaussianRadialLawProbability_log_integrable_mean n hn
+  obtain ⟨hρ, hlogi, hlog⟩ := _root_.GlobalTheory.SphereMeanDrop.radProb_log_mean n hn
   haveI := hρ
   haveI : IsProbabilityMeasure (sphereProb n) := isProbabilityMeasure_sphereProb hn
   haveI : IsProbabilityMeasure (gaussProb n) := isProbabilityMeasure_gaussProb hn
@@ -161,7 +162,7 @@ theorem gauss_blockMean {B n : ℕ} (hn : 0 < n) (δ : ℕ) (g : MvPolynomial (F
       ((Measure.pi fun _ : Fin B => sphereProb n).prod (Measure.pi fun _ : Fin B => radProb n))
       (Measure.pi fun _ : Fin B => gaussProb n) := by
     have h1 := measurePreserving_pi (fun _ : Fin B => (sphereProb n).prod (radProb n))
-      (fun _ => gaussProb n) (fun _ => GlobalTheory.T.measurePreserving_polar_gaussianProbabilityComplexSpace n hn)
+      (fun _ => gaussProb n) (fun _ => _root_.GlobalTheory.SphereMeanDrop.measurePreserving_polar_gaussProb n hn)
     have h2 := MeasurePreserving.symm _ (measurePreserving_arrowProdEquivProdArrow (UnitSphereC n)
       (Ioi (0:ℝ)) (Fin B) (fun _ => sphereProb n) (fun _ => radProb n))
     exact h1.comp h2
@@ -187,7 +188,7 @@ theorem gauss_blockMean {B n : ℕ} (hn : 0 < n) (δ : ℕ) (g : MvPolynomial (F
       Real.log_prod (fun b _ => pow_ne_zero _ (hr b).ne')]
     simp only [Real.log_pow]
     ring
-  have hnull := GlobalTheory.T.blockSphereProb_zeroSet_eq_zero_of_ne_zero B n _ g hn hg hm
+  have hnull := _root_.GlobalTheory.SphereMeanNull.blockSphereProb_zeroSet_eq_zero B n _ g hn hg hm
   have hae : ∀ᵐ q ∂((Measure.pi fun _ : Fin B => sphereProb n).prod (Measure.pi fun _ : Fin B => radProb n)),
       Real.log ‖eval (fun p => WithLp.ofLp (((q.2 p.1 : ℝ)) • ((q.1 p.1 : EuclideanSpace ℂ (Fin n)))) p.2) g‖ =
         Real.log ‖eval (blockPoint q.1) g‖ + ∑ b, (δ : ℝ) * Real.log (q.2 b : ℝ) := by

@@ -3,11 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
 public import Development.AbelianVarietyTheory.Definitions.ThetaValues.ExistsMemRowHighestTotalDegreeEqTwo
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.FderivIntegralApplyOfHolomorphicOfDominated
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.GaussianKernelIntegrableOnThinSlabStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.GaussianKernelIntegrableOnThinSlab
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RealPlaceKernelHolomorphicWeightRowHighest
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.KernInvariantSymmPos
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LowestWeightFunctionMulEq
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.MeasurePreservingMulLeft
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RealPlaceKernelHolomorphicWeightRowHighestStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -323,9 +323,9 @@ theorem kern_reproducing : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   intro E _ _ _ r X g q0 hr idx n c c' m P hn hP hrn hP0
   have _ := isAddHaarMeasure_volume X
   obtain ⟨δ₀, hδ₀, h₀⟩ := thin_slab E r X
-  obtain ⟨δ₁, hδ₁, h₁⟩ := GlobalTheory.T.gaussianKernel_integrableOn_thin_slab E r X g q0 hr idx n c c' m P hn hP hrn
+  obtain ⟨δ₁, hδ₁, h₁⟩ := _root_.GlobalTheory.SW.kern_integrableOn_slab E r X g q0 hr idx n c c' m P hn hP hrn
   obtain ⟨hinv, hsym, hpos⟩ := kern_invariant_symm_pos E r X g q0 hr idx n c c' m P hn hP
-  have hhol := GlobalTheory.T.realPlaceKernel_holomorphic_weight_rowHighest E r X g q0 hr idx n c c' m P hn hP
+  have hhol := _root_.GlobalTheory.KernHol.kern_hol_weight E r X g q0 hr idx n c c' m P hn hP
   refine ⟨min δ₀ δ₁, lt_min hδ₀ hδ₁, fun δ hδ hle => ?_⟩
   obtain ⟨hS, hSU, hort, ⟨x₀, hx₀⟩, hu, ⟨C₀, hC₀⟩, hdec⟩ := h₀ δ hδ (hle.trans (min_le_left _ _))
   have hx₀' : x₀ ∈ X.dom := hSU (hort x₀ hx₀)

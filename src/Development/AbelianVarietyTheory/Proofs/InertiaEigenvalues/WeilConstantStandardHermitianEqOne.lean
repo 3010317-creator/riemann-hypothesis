@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsTestRep
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FourierIndicatorHermitianIntegralLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HermitianLatticeIsOpenIsCompactTestStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.KerLEqTraceDotProductOfIsIsomStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PsiKMulNLEqOneOnIntegralLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FourierIndicatorHermitianIntegralLattice
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HermitianLatticeIsOpenIsCompactTest
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.KerLEqTraceDotProductOfIsIsom
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PsiKMulNLEqOneOnIntegralLattice
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -86,9 +86,9 @@ end GlobalTheory.GammaOneProof
 open GlobalTheory.GammaOneProof in
 theorem GlobalTheory.JR.gammaOne_holds : GammaOne := by
   intro F E _ _ _ _ _ A ψ hψ x μ hsd ω γ W hW r j hj
-  obtain ⟨hΛo, hΛc, hT⟩ := GlobalTheory.T.hermitianLattice_isOpen_isCompact_test F E A r j
-  have hN := GlobalTheory.T.psiK_mul_NL_eq_one_on_integral_lattice F E A ψ hψ (x : A.K) r j hj
-  have hFour := GlobalTheory.T.fourier_indicator_hermitianIntegralLattice F E A ψ hψ r j (A.kerL ψ x) (GlobalTheory.T.kerL_eq_trace_dotProduct_of_isIsom F E A ψ (x : A.K) r j hj) hΛo hΛc μ hsd.1
+  obtain ⟨hΛo, hΛc, hT⟩ := _root_.GlobalTheory.JR.LatTop.lattice_isTest F E A r j
+  have hN := _root_.GlobalTheory.JR.NormInt.main F E A ψ hψ (x : A.K) r j hj
+  have hFour := _root_.GlobalTheory.JR.fourB_indicator_intLattice F E A ψ hψ r j (A.kerL ψ x) (_root_.GlobalTheory.JR.Et.kerL_eq_of_isIsom F E A ψ (x : A.K) r j hj) hΛo hΛc μ hsd.1
   set Λ : Set A.L := {y : A.L | ∀ i, ‖j y i‖ ≤ 1} with hΛ
   set φ0 : A.L → ℂ := Set.indicator Λ 1 with hφ0
   have h0 : (0 : A.L) ∈ Λ := by simp [hΛ]

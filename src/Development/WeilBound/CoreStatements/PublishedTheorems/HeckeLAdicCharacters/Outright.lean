@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.HeckeLAdicCharacterDeRham
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FrobPowRead
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LubinTatePeriodNotFilteredStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EvalMod
+public import GroundTheory.PAdicHodge.UnramifiedClosure
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LubinTatePeriodNotFiltered
 public import Development.WeilBound.CoreStatements.HeckeCharacterDeRham.DeRhamHeckeResults.LAdicHeckeDeRham.LAdicHeckeFields.FieldOfLeaves
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -46,6 +48,6 @@ import Mathlib.Topology.Sheaves.Init
 namespace HodgeLocalDeRhamField.HLdR
 
 theorem field_outright : GlobalTheory.Published.HeckeLAdicCharacterDeRham :=
-  PositivityTheory.SecR.Hladr2.field_of_leaves @GlobalTheory.CompanionTheory.LTPer.Tilt.tilt_period @GlobalTheory.T.lubin_tate_period_not_filtered
+  PositivityTheory.SecR.Hladr2.field_of_leaves @GlobalTheory.CompanionTheory.LTPer.Tilt.tilt_period @_root_.GlobalTheory.CompanionTheory.LTPer.exact_degrees_of_product
 
 end HodgeLocalDeRhamField.HLdR

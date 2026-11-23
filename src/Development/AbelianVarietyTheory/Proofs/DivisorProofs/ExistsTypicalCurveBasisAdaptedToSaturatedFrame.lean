@@ -2,8 +2,9 @@ module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.TypicalCurveStructureConstants
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatFrame
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RootExtractionLemmaSheafStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TypicalCurvesTangentAndBasesStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.RootStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RootExtractionLemmaSheaf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TypicalCurvesTangentAndBases
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -105,7 +106,7 @@ theorem exists_basis_adapted_frame : ∀ (C : Type) [Field C] [IsAlgClosed C] [C
       ∀ a : Fin i, j ≤ a.val → G.lc p (γ (r a)) 1 = 0 := by
   intro C _ _ _ v p hp hv d h hh ty G hmu τ j i hj u hu hut
   classical
-  obtain ⟨hPT2, -⟩ := GlobalTheory.T.typicalCurveEigenspace_and_basisExists
+  obtain ⟨hPT2, -⟩ := _root_.GlobalTheory.TypicalCurveBases.typical_curves_tangent_and_bases
   choose η hηc hηt hηtan using fun a : Fin i =>
     hPT2 C v p hp hv d h hh ty G hmu τ (u a) (hu.1 a) (hut a)
   have hspan : Module.finrank C (Submodule.span C (Set.range fun a =>
@@ -131,7 +132,7 @@ theorem exists_basis_adapted_frame : ∀ (C : Type) [Field C] [IsAlgClosed C] [C
       _ ≤ Fintype.card {e : Fin d // ty e = τ + 1} := finrank_range_le_card _
       _ = _ := Fintype.card_subtype _
       _ ≤ j := hj
-  obtain ⟨x, hxi, hxd, hxt, hxty, hxl⟩ := GlobalTheory.T.root_extraction_lemma_sheaf C v p hp hv d h i ty τ G η
+  obtain ⟨x, hxi, hxd, hxt, hxty, hxl⟩ := _root_.GlobalTheory.RootTrick.root_statement C v p hp hv d h i ty τ G η
     (fun a => hηc a) (fun a => hηt a) 1 j le_rfl (Fin d → C) LinearMap.id hspan
   set γ' : Fin i → Fin d → PowerSeries C :=
     fun w => G.sumF fun u => rescaleCurve (x w u) (η u) with hγ'

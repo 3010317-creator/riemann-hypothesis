@@ -5,7 +5,8 @@ public import Development.AbelianVarietyTheory.BlockTheory.SiegelWeilLocal.DeepK
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CanonicalLatticeFiltrationSizeProperties
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DeepRegionExponents
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsLimitOfChart
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeftQuotientCovolumeEqFundamentalDomainInterStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DefClassNum
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeftQuotientCovolumeEqFundamentalDomainInter
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasureLeCardMul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -90,7 +91,7 @@ theorem deep_mul_volume_le (hV : GlobalTheory.FlagMeas.AbsoluteVolume) (B : Rows
     exact mul_le_mul_of_nonneg_right h2 (by linarith)
   have hX2 : 2 ≤ bigX B b := by linarith
   have hvol := hV B.I p q hsig hq2 hn (bigX B b) hX2 (by linarith) (by nlinarith) c B.μf hc
-  obtain ⟨hcov, -⟩ := GlobalTheory.T.leftQuotientCovolume_eq_fundamentalDomain_inter B.I B.μf B.fund Set.univ B.fund_spec MeasurableSet.univ
+  obtain ⟨hcov, -⟩ := _root_.GlobalTheory.CovolRat.covol_eq_inter_fund B.I B.μf B.fund Set.univ B.fund_spec MeasurableSet.univ
     (fun _ _ _ _ => Set.mem_univ _)
   obtain ⟨hidx, hKg0, hKfin⟩ := GlobalTheory.CongIndex.measure_Kset_le B.I B.μf B.g hg
   have hKgfin : B.μf (B.I.Kg B.g) ≠ ⊤ :=

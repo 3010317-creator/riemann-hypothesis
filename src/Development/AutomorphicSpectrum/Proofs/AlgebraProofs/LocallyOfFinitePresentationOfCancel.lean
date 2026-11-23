@@ -4,7 +4,10 @@ public import Mathlib.AlgebraicGeometry.Morphisms.Finite
 public import Mathlib.AlgebraicGeometry.Morphisms.FinitePresentation
 public import Mathlib.AlgebraicGeometry.Morphisms.Flat
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FinitePresentationOfFaithfullyFlatStatement
+public import Mathlib.RingTheory.FinitePresentation
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FinitePresentationOfFaithfullyFlat
+public import Mathlib.RingTheory.Flat.EquationalCriterion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -47,7 +50,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Mathlib.RingTheory.Flat.EquationalCriterion
 
 @[expose] public section
 
@@ -79,7 +81,7 @@ lemma affine_case {X Y S : Scheme.{0}} [IsAffine X] [IsAffine Y] [IsAffine S] (q
   haveI : Module.FinitePresentation Γ(Y, ⊤) Γ(X, ⊤) :=
     Module.FinitePresentation.of_finite_of_finitePresentation _ _
   have hp : Module.Projective Γ(Y, ⊤) Γ(X, ⊤) := Module.Flat.projective_of_finitePresentation
-  exact GlobalTheory.T.finitePresentation_of_faithfully_flat _ _ _ inferInstance hp inferInstance h4
+  exact _root_.GlobalTheory.CompanionTheory.FinPresDescent.finitePresentation_of_finite_projective_faithfullyFlat _ _ _ inferInstance hp inferInstance h4
 
 theorem descends : ∀ {X Y S : Scheme.{0}} (q : X ⟶ Y) (f : Y ⟶ S), IsFinite q → Flat q →
     LocallyOfFinitePresentation q → Surjective q → LocallyOfFinitePresentation (q ≫ f) →

@@ -8,14 +8,15 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinset
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeUNuInvEqOneOfCong
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemBlockCongruenceLevelSubgroupIffStabilizerEntr
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemPrincipalCongruenceLevelSubgroupIffIntegralCo
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardThetaDatumEigenvectorBlockLevelStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardThetaDatumPresentationLevelNormStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CosetVecEq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardThetaDatumEigenvectorBlockLevel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardThetaDatumPresentationLevelNorm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumTransversalLeftTranslateInvariant
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitBlockCosetThetaVectorMemThetaFunctions
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilFixesCosetVectorCongruentOneModIdealStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ActAApply
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsWeilOfVacuum
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NormSqMulGaussianLatticeTranslateEqShifted
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitBlockCosetThetaVectorMemThetaFunctions
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilFixesCosetVectorCongruentOneModIdeal
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ActAApply
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -119,7 +120,7 @@ theorem exists_bottom_big : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts
     have := W.mul r c 1 1 _ hcv
     rw [mul_one] at this
     obtain ⟨hc1, hc2⟩ := (GlobalTheory.FunObj.StdDatum.mem_congLev_iff _ _ _ _).1 hc'
-    rw [this, GlobalTheory.T.weil_fixes_cosetVector_congruent_one_mod_ideal D δ t0 hc e0 vac W (condE G.pl) hm hcop hnu 0 (by omega) c hc1 hc2]
+    rw [this, _root_.GlobalTheory.FunObj.FixKey.om_cosetV_of_congOne D δ t0 hc e0 vac W (condE G.pl) hm hcop hnu 0 (by omega) c hc1 hc2]
   have hle : congLev D (condE G.pl) (botBig D i j + botSmall D i j) ≤
       blockLev D (condE G.pl) (botBig D i j + botSmall D i j) (botBig D i j) := by
     intro k hk
@@ -143,7 +144,7 @@ theorem exists_bottom_big : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts
     omega
   have hpres : Pres D ⊤ δ (levQ G.pl) e0 (stdSum W (condE G.pl) 0 R) := by
     rw [← GlobalTheory.FunObj.NormLevel.absNorm_condE]
-    exact GlobalTheory.T.standardTheta_datum_presentation_level_norm D δ t0 hc e0 vac had W _ hm hcop hb hnu R hR1 hR2 hfix
+    exact _root_.GlobalTheory.FunObj.StdDatum.pres_stdSum D δ t0 hc e0 vac had W _ hm hcop hb hnu R hR1 hR2 hfix
   have hidx_ne : (blockLev D (condE G.pl) (botBig D i j + botSmall D i j) (botBig D i j)).relIndex
       (intG D (botBig D i j + botSmall D i j)) ≠ 0 := fun h =>
     hj0 (Subgroup.relIndex_eq_zero_of_le_left hle h)
@@ -152,7 +153,7 @@ theorem exists_bottom_big : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts
     refine (Subgroup.relIndex_le_of_le_left hle hj0).trans (hj1.trans ?_)
     rw [GlobalTheory.FunObj.NormLevel.absNorm_condE]
     exact Nat.pow_le_pow_right hQ (by omega)
-  have heig := GlobalTheory.T.standardThetaDatum_eigenvector_blockLevel D δ t0 hc e0 vac had W _ hm hcop hnu R hR1 hR2 hfix
+  have heig := _root_.GlobalTheory.FunObj.StdDatum.CapelliMinorMembership.stdSum_eig D δ t0 hc e0 vac had W _ hm hcop hnu R hR1 hR2 hfix
   let P : Pair D ⊤ δ t0 (levQ G.pl) :=
     { crv := hc
       pt0 := ht

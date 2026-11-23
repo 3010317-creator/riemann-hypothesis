@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchActionReadingsCompatible
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchHeisenbergDerivativesExistStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFockMap
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchHeisenbergDerivativesExist
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ContDiffHeisenbergArchimedeanDiffOperatorFamilyStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergArchimedeanDiffOperatorHasDerivAtFamilStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergOrbitCoefficientSmoothStatement
@@ -81,7 +82,7 @@ theorem orbit_heis : ∀ {F E : Type} [Field F] [NumberField F] [Field E] [Numbe
   have hstab : ∀ v : Matrix (Fin a) (Fin (a + a')) (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)), At (evI F) v → ∀ g ∈ G.M.Pol B.ψ B.emb,
       ∃ g₁ ∈ G.M.Pol B.ψ B.emb, ∀ y, g₁ y = dOp (archCo G.M.co v).1 (archCo G.M.co v).2 g y := by
     intro v hv g hg
-    obtain ⟨D, hD⟩ := GlobalTheory.T.archHeisenbergDerivatives_exist F E σ (Fin a) (Fin (a + a')) (Fin a × Fin (a + a')) B.ψ (incM F G.V.J) (incM F G.W.J)
+    obtain ⟨D, hD⟩ := _root_.GlobalTheory.HeisDer.derEx F E σ (Fin a) (Fin (a + a')) (Fin a × Fin (a + a')) B.ψ (incM F G.V.J) (incM F G.W.J)
       G.M.co hψ
     have h0 : ∀ t, G.M.heisLine B.ψ v t 0 = 0 := fun t => by
       funext x

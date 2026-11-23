@@ -1,10 +1,6 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.TwistedConjugationNorms.OneCoset
-import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmFieldStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThLInvolutive
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsNormalisedThetaSub
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactElementEigenvaluesUnitsStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IwahoriAndMaximalCompactCriteriaStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RootsEqOfDistinctValuationsStatement
@@ -21,6 +17,12 @@ public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.TwistedConjugationNorms.HilbertNinetyNorms.TwistedOrbitalIntegralIndicatorInvIndex
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.TwistedConjugationNorms.HilbertNinetyNorms.UnitaryHeckeOrbitSingleCoset
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.TwistedConjugationNorms.KerConjDiagonalEqSpan
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.TwistedConjugationNorms.HilbertNinetyNorms.OrdLEqNegLog
+import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
+import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmField
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThLInvolutive
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsNormalisedThetaSub
 import GroundTheory.LocalFields.PadicLogSeries
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -63,7 +65,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.TwistedConjugationNorms.HilbertNinetyNorms.OrdLEqNegLog
 
 @[expose] public section
 
@@ -333,7 +334,7 @@ theorem nrm_d (hU : Unr E) (w : Pl E) (hw : ¬ IsSplitAt w) (ϖ : (w.adicComplet
     IsDiag (tdiag ϖ y * τ * thL a w (tdiag ϖ y * τ)) ∧
       ∀ i, (tdiag ϖ y * τ * thL a w (tdiag ϖ y * τ)).val i i ≠ 0 ∧
         ordL ((tdiag ϖ y * τ * thL a w (tdiag ϖ y * τ)).val i i) = nv y i := by
-  have hv : ∀ x, Valued.v (cj w x) = Valued.v x := (GlobalTheory.T.placeConjugation_properties_cmField E hU w).2.2.1
+  have hv : ∀ x, Valued.v (cj w x) = Valued.v x := (_root_.GlobalTheory.ConjAtPlace.main E hU w).2.2.1
   obtain ⟨hd, hde⟩ := d_diag w ϖ a y hτ
   obtain ⟨hθ, hθe⟩ := thL_diag w hw a hd
   obtain ⟨hN, hNe⟩ := diag_mul hd hθ

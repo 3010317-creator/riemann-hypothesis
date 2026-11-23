@@ -6,31 +6,38 @@ public import Development.AbelianVarietyTheory.Definitions.Uniformization.AllDV
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.GoodClass
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.MemNonzeroLocusIffPowFn
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.AbelianSchemeHomExtendsDedekindOfIsGrpPullbackAl
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsAbelianSchemeAndExtendOfGenericHoms
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.SmoothOfRelativeDimensionOfFibre
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsProjectiveModel
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SemiAbelianHomExtensionOfLawsStatement
-import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsSchemeTheoreticallyDominantSpecOfInjective
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaConstantsLocallyOnBase
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaLevelAbelianSchemePullback
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsIffOfThetaLevelPullback
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsRingBaseChange
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaConstantsUniqueUpToUnitStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaCosetNonvanishingOfHasThStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaConstantsUniqueUpToUnit
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaCosetNonvanishingOfHasTh
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelEndomorphismsSpreadOverBasicOpen
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelShapePrimitivityPullbackDescent
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.UniformizationLawsAndExpansionStatementsStatement
-import Development.AbelianVarietyTheory.Proofs.ThetaFamilyOrigin.IsThetaPtOverOfSubsingleton
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.TXFrame
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.PeriodicValuation
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.VRatioGtStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.UniformizationLawsAndExpansionStatements
 public import Development.AbelianVarietyTheory.Proofs.ThetaFamilyOrigin.IsVVGenOfIsThetaFamily
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AdicBaseEmbedsValuationAlgebraicClosure
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsDegDataIsPullDeg
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsIsoUniformisationsOfIsoDegenerationDataStatement
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsPrimGenerator
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsUniqueThetaConst
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.GtOntoDivisibleKernel
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SelfTorusExtensionCoordValuesEqOne
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SvalOfIsTwistPull
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ThetaConstantValuationsUnitsEveryCosetStatement
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.SpanEqTopOfFunctionals
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.WeilIsAlternatingSkewNatural
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsNsmulIffEq
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsAbelianSchemeAndExtendOfGenericHoms
+import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsSchemeTheoreticallyDominantSpecOfInjective
+import Development.AbelianVarietyTheory.Proofs.ThetaFamilyOrigin.IsThetaPtOverOfSubsingleton
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsDegDataIsPullDeg
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SvalOfIsTwistPull
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ValueAtOrigin
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -75,9 +82,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.ExistsRosatiGen
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.GenCalc
-public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.SpanEqTopOfFunctionals
-public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.WeilIsAlternatingSkewNatural
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsNsmulIffEq
 
 @[expose] public section
 
@@ -194,7 +198,7 @@ theorem subsingleton_characters (h₁ : Out.Laws) (h₂ : Out.Laws2) (hT : Globa
     (hn : 2 ≤ n) (ho : Odd n) (hj : 2 ≤ j) (hu : IsUnit ((n ^ j : ℕ) : W)) (v : Ix g ((n ^ j) ^ 2) → W)
     (hv : t.HasTh (𝟙 _) (fun a => algebraMap W (FractionRing W) (v a)))
     (hC : Coset n (n ^ j) v (IsLocalRing.maximalIdeal W)) : Subsingleton D.toPre.X := by
-  obtain ⟨hL, k₁, k₂, k₃, k₄⟩ := GlobalTheory.T.uniformization_laws_and_expansion_statements
+  obtain ⟨hL, k₁, k₂, k₃, k₄⟩ := _root_.GlobalTheory.lawsAndExpansions
   have hA : Out.AdmBase W (IsLocalRing.maximalIdeal W) := ⟨inferInstance, inferInstance, inferInstance, hc⟩
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible W
   choose Q hQ using DVR.QForm.exists_QVal hϖ D
@@ -237,7 +241,7 @@ theorem subsingleton_characters (h₁ : Out.Laws) (h₂ : Out.Laws2) (hT : Globa
     obtain ⟨y, hy⟩ : IsUnit (v a) := by_contra ha
     rw [← hy]; exact DVR.GC.v_alg_unit hν y
   obtain ⟨c₀, hc₀⟩ := hC 0
-  obtain ⟨u, hu'⟩ := GlobalTheory.T.thetaConstants_unique_up_to_unit h₁ h₂ o g _ J b _ s t F _ _ _ hc₂ hc₁
+  obtain ⟨u, hu'⟩ := _root_.GlobalTheory.hasTh_unique_unit h₁ h₂ o g _ J b _ s t F _ _ _ hc₂ hc₁
     (Ideal.eq_top_of_isUnit_mem _ (Ideal.subset_span ⟨_, rfl⟩)
       (((by_contra hc₀ : IsUnit _).map (algebraMap W (FractionRing W))).map (algebraMap (FractionRing W) F)))
   have tors : ∀ p, f p ^ ((n ^ (i + 1)) ^ 2) = 1 := fun p => ((f₁ p _).2 rfl w₀ hw.1).1
@@ -309,7 +313,7 @@ theorem exists_pol_model (h₁ : Out.Laws) (h₂ : Out.Laws2) (W : Type) [CommRi
     [Subsingleton D.toPre.X] :
     ∃ (P : Out.PolAV (Sp W)) (φ : A.A.left ⟶ P.A.left), IsGrpPullback A.A P.A (Out.jK W) φ ∧ LBIso A.L (P.L.pull φ) := by
   have hA : Out.AdmBase W (IsLocalRing.maximalIdeal W) := ⟨inferInstance, inferInstance, inferInstance, hc⟩
-  obtain ⟨O, hO, hψ⟩ := GlobalTheory.T.uniformization_laws_and_expansion_statements.1.2.2.2.2.psiOnExists W _ hA D
+  obtain ⟨O, hO, hψ⟩ := _root_.GlobalTheory.lawsAndExpansions.1.2.2.2.2.psiOnExists W _ hA D
   obtain ⟨D', hD, -, -⟩ := GlobalTheory.exists_degData_isPullDeg h₁.polBaseChange h₁.globalFns W W _ _ (RingHom.id W)
     (Ideal.map_id _).le D O hψ (by
       rw [show Out.specOf (RingHom.id W) = 𝟙 _ from Spec.map_id _]; exact hO)
@@ -409,10 +413,10 @@ theorem hasTh_of_generic (h₁ : Out.Laws) (h₂ : Out.Laws2) {o : Type} [CommRi
   have hv' := (GlobalTheory.hasTh_iff_of_tmap o g N J b _ s t' _ sK t _ K _ _ h).1 hv
   rw [Category.comp_id] at hK
   rw [Category.id_comp] at hv'
-  obtain ⟨c, hc⟩ := GlobalTheory.T.thetaCosetNonvanishing_of_hasTh h₁ h₂ o g N J b _ s t' n W _ _ _ hn hN hW
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.coset_of_hasTh h₁ h₂ o g N J b _ s t' n W _ _ _ hn hN hW
     (IsLocalRing.maximalIdeal.isMaximal W).isPrime 0
   obtain ⟨y, hy⟩ : IsUnit (σ.hom (v₀ (0 + (N / n) • c))) := by_contra hc
-  obtain ⟨u, hu'⟩ := GlobalTheory.T.thetaConstants_unique_up_to_unit h₁ h₂ o g N J b _ s t' K _ _ _ hK hv'
+  obtain ⟨u, hu'⟩ := _root_.GlobalTheory.hasTh_unique_unit h₁ h₂ o g N J b _ s t' K _ _ _ hK hv'
     (Ideal.eq_top_of_isUnit_mem _ (Ideal.subset_span ⟨_, rfl⟩) ((hy ▸ y.isUnit).map (algebraMap W K)))
   have key : ∀ a, v a = (v (0 + (N / n) • c) * ↑y⁻¹) * σ.hom (v₀ a) := fun a => IsFractionRing.injective W K (by
     rw [map_mul, map_mul, hu', hu', ← hy, mul_assoc (u : K), ← map_mul, y.mul_inv, map_one, _root_.mul_one])

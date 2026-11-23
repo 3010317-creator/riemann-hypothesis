@@ -8,11 +8,11 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalG
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTranslationInvariantFunctionalStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNegOneOfStandardTraceAdelicAddChar
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearWeilFunctionalLocalUniqueness
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalCharacterNormOneUnitStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalMomentMatrixTransform
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalCharacterNormOneUnitStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalNormUnramifiedFactorizationStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerPreservesSchwartzBruhat
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaActionExistsStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaActionExists
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -173,7 +173,7 @@ theorem scalar_left : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Fie
     have hu := congrArg Matrix.det (GlobalTheory.Div.CoordOpp.unit_map σ g t)
     rw [Matrix.det_mul, Matrix.det_mul, Matrix.det_transpose, ← hx1, mul_right_comm, mul_eq_right₀ hJ] at hu
     exact Units.inv_eq_of_mul_eq_one_right hu
-  obtain ⟨φ₁, ⟨hφ₁, hA⟩, -⟩ := (GlobalTheory.T.theta_action_exists hP F E σ B _ _ _ _ M _ _ om _ _ _ _ hT v).1 g hg 1 (fun u _ => by
+  obtain ⟨φ₁, ⟨hφ₁, hA⟩, -⟩ := (_root_.GlobalTheory.ThK.LocalOps.actsEx hP F E σ B _ _ _ _ M _ _ om _ _ _ _ hT v).1 g hg 1 (fun u _ => by
       rw [show mat (1 : UA σ W.J) = 1 from rfl, sub_self, smul_zero]) φ hφ
   have k1 := lin_zero_basis h M B.ψ hT.base.std _ _ om hT.weil t b c ι hι g hg _ hx2 φ φ₁ hφ hA
   rw [hκ g hg φ hφ φ₁ hφ₁ hA, chrW_comp_conj h hT.resW, map_inv, inv_inv] at k1

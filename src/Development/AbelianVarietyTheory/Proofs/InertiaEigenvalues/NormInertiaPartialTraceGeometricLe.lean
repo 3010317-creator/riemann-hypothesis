@@ -1,8 +1,8 @@
 module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormGeomSumGaloisLeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormInertiaPowPrimePowSubLeStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormGeomSumGaloisLe
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormInertiaPowPrimePowSubLe
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -147,11 +147,11 @@ theorem norm_sum_pow_le : ∀ (l : ℕ) [Fact l.Prime] (γ : GQ l), γ ∈ (Maxi
         _ = y := by rw [h1, pow_apply_of_fixed σ hσy]
     have hmove : ∀ z ∈ fixedAdd (H (n + 1)), ‖σ z - z‖ ≤ ρ * ‖z‖ := by
       intro z hz
-      have := GlobalTheory.T.norm_inertia_pow_prime_pow_sub_le l γ hγ (H (n + 1)) (hN _) (hI _) (k + (n + 1)) (n + 1) (hIle _)
+      have := _root_.GlobalTheory.InertiaMove.norm_pow_sub_le l γ hγ (H (n + 1)) (hN _) (hI _) (k + (n + 1)) (n + 1) (hIle _)
         (hpow _) n (by omega) z hz
       rwa [show k + (n + 1) - n = k + 1 by omega] at this
     have hyn : ‖y‖ ≤ ρ * ‖x‖ :=
-      (GlobalTheory.T.norm_sum_pow_apply_le_and_norm_pow_prime_sub_le l σ (fixedAdd (H (n + 1))) ρ hρ0 hρ1.le
+      (_root_.GlobalTheory.MemLoc.norm_geom_sum_galois_le l σ (fixedAdd (H (n + 1))) ρ hρ0 hρ1.le
         (fun z hz => apply_mem_fixedAdd (hN _) σ hz) hmove x hxS).1.trans
         (mul_le_mul_of_nonneg_right hmax (norm_nonneg _))
     have hsum : ∑ i ∈ Finset.range (l ^ (n + 1)), (γ ^ i) x

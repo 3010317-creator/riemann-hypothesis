@@ -2,11 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.OfDerivationFnOn
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsGrpObjOfStrictBirationalLawStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsStrictModelOfBirationalStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsWeakNeronModelBirationalGroupLawStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsWeakNeronModelStatement
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ModelMapGenericallyOpenImmersionCalculusStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsGrpObjOfStrictBirationalLaw
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsStrictModelOfBirational
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsWeakNeronModelBirationalGroupLaw
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsWeakNeronModel
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ModelMapGenericallyOpenImmersionCalculus
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,11 +59,11 @@ theorem exists_neutral_group_model : ∀ (R K : Type) [CommRing R] [IsDomain R] 
   have h1 := hS.1
   have h3 := hS.2.2.1
   have h4 := hS.2.2.2
-  obtain ⟨n, M, hI, hW⟩ := GlobalTheory.T.exists_weak_neron_model R K inferInstance A hA.smooth hA.proper hP
-  obtain ⟨N, hN, c, hc, hT⟩ := GlobalTheory.T.exists_weakNeronModel_birational_groupLaw R K hS A hA n M hI hW
-  obtain ⟨N', hN', hle⟩ := GlobalTheory.T.exists_strict_model_of_birational R K hS A hA N hN
-  obtain ⟨G, inst, hG, he, hs⟩ := GlobalTheory.T.exists_grpObj_of_strictBirationalLaw R K hS A hA N' hN'
-  obtain ⟨b1, b2, b3, -, -⟩ := GlobalTheory.T.modelMapGenericallyOpenImmersion_calculus R K hS
+  obtain ⟨n, M, hI, hW⟩ := _root_.GlobalTheory.SS.WeakNeronEx.exists_weakNeron R K inferInstance A hA.smooth hA.proper hP
+  obtain ⟨N, hN, c, hc, hT⟩ := _root_.GlobalTheory.SS.NeutralModel.exists_birLaw R K hS A hA n M hI hW
+  obtain ⟨N', hN', hle⟩ := _root_.GlobalTheory.SS.exists_strict_le R K hS A hA N hN
+  obtain ⟨G, inst, hG, he, hs⟩ := _root_.GlobalTheory.SS.exists_grpObj_of_strict R K hS A hA N' hN'
+  obtain ⟨b1, b2, b3, -, -⟩ := _root_.GlobalTheory.SS.GI.genIso_calculus R K hS
   refine ⟨G, inst, hG, he, c, hc, fun a => hs (a ^ c) ?_⟩
   have e1 : GenIso N' N (𝟙 A) := b1 A N' N hN'.1.1 hle
   have e2 : GenIso N N' (𝟙 A) := (b3 A A N' N (Iso.refl A)).1 e1

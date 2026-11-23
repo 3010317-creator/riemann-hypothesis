@@ -1,13 +1,13 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.CharacterTheory.InvertibleEndomorphismInnerProductPrimitiveMobiu
 public import Development.AbelianVarietyTheory.Definitions.CommutativeAlgebra.InvariantSubspaceMobiusInverseRecEqOfFinrankLt
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.CharpolyBlockAndInvariantUnderStabilizerNilradicStatement
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.CharpolyEqFinsumPsiStatement
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.FinsumMobiusInverseCharpolyInvariantLeStatement
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.FinsumMobiusInverseCharpolyTransversalSubspacesStatement
-import Development.AbelianVarietyTheory.Proofs.CharacterTheory.InvariantSubspaceMobiusInverseCharpolyLinearEquiStatement
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.SumPrimitiveEndClassFunctionRestrictMixedSubspacStatement
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.CharpolyBlockAndInvariantUnderStabilizerNilradic
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.CharpolyEqFinsumPsi
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.FinsumMobiusInverseCharpolyInvariantLe
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.FinsumMobiusInverseCharpolyTransversalSubspaces
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.SumPrimitiveEndClassFunctionRestrictMixedSubspac
+import Development.AbelianVarietyTheory.Proofs.CharacterTheory.InvertibleEndomorphismInnerProductPrimitiveMobiu
+import Development.AbelianVarietyTheory.Proofs.CharacterTheory.InvariantSubspaceMobiusInverseCharpolyLinearEqui
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -90,7 +90,7 @@ theorem res_top {F : Type} [Field F] (s : F[X] → ℂ) {V : Type} [AddCommGroup
   have htop : ∀ x ∈ (⊤ : Submodule F V), k x ∈ (⊤ : Submodule F V) := fun _ _ => Submodule.mem_top
   unfold res
   rw [dite_eq_left htop]
-  have hconj := GlobalTheory.T.invariantSubspaceMobiusInverseCharpoly_linearEquiv_conj F s (⊤ : Submodule F V) V Submodule.topEquiv (k.restrict htop)
+  have hconj := _root_.GlobalTheory.CuspGL.psi_conj F s (⊤ : Submodule F V) V Submodule.topEquiv (k.restrict htop)
   rw [← hconj]
   congr 1
 
@@ -121,7 +121,7 @@ theorem step {F : Type} [Field F] [Finite F] (s : F[X] → ℂ) (hs : IsAdditive
     · rfl
   have s_cp : ∀ k : Module.End F V, s (LinearMap.charpoly k) = ∑ W : Submodule F V, res s W k := by
     intro k
-    exact (GlobalTheory.T.apply_charpoly_eq_finsum_psi_invariant_submodules F V s k).trans
+    exact (_root_.GlobalTheory.CuspGL.charpoly_eq_finsum_psi F V s k).trans
       (finsum_sub (fun W : Submodule F V => ∀ x ∈ W, k x ∈ W) fun W => psi s W.1 (k.restrict W.2))
   have res_le : ∀ h ∈ nilRad A, ∀ W : Submodule F V, W ≤ A → res s W (g + h) = res s W g := by
     intro h hh W hWA
@@ -143,14 +143,14 @@ theorem step {F : Type} [Field F] [Finite F] (s : F[X] → ℂ) (hs : IsAdditive
     intro W hWT hWA hWle
     have key := (finsum_sub (fun h : Module.End F V => h ∈ nilRad A ∧ ∀ x ∈ W, (g + h) x ∈ W)
       fun h => psi s W ((g + h.1).restrict h.2.2)).symm.trans
-        (GlobalTheory.T.sum_primitiveEndClassFunction_restrict_mixed_subspace F V A W g hg hWA hWle (psi s W) (ih W hWT))
+        (_root_.GlobalTheory.CuspGL.sum_restrict_eq_zero_of_mixed F V A W g hg hWA hWle (psi s W) (ih W hWT))
     rw [← key, sum_H]
     refine Finset.sum_congr rfl fun h _ => ?_
     by_cases hh : h ∈ nilRad A <;> simp [hh, res]
   have sum_le : ∑ W : Submodule F V, (if W ≤ A then res s W g else 0) =
       s (LinearMap.charpoly (g.restrict hg)) := by
     have key := (finsum_sub (fun W : Submodule F V => W ≤ A ∧ ∀ x ∈ W, g x ∈ W)
-      fun W => psi s W.1 (g.restrict W.2.2)).symm.trans (GlobalTheory.T.finsum_mobiusInverseCharpoly_invariant_le F V s A g hg)
+      fun W => psi s W.1 (g.restrict W.2.2)).symm.trans (_root_.GlobalTheory.CuspGL.finsum_psi_le F V s A g hg)
     rw [← key]
     refine Finset.sum_congr rfl fun W _ => ?_
     by_cases hW : W ≤ A <;> by_cases hk : ∀ x ∈ W, g x ∈ W <;> simp [hW, hk, res]
@@ -160,7 +160,7 @@ theorem step {F : Type} [Field F] [Finite F] (s : F[X] → ℂ) (hs : IsAdditive
     have key := (finsum_sub
       (fun x : Module.End F V × Submodule F V =>
         x.1 ∈ nilRad A ∧ x.2 ⊓ A = ⊥ ∧ ∀ v ∈ x.2, (g + x.1) v ∈ x.2)
-      fun x => psi s x.1.2 ((g + x.1.1).restrict x.2.2.2)).symm.trans (GlobalTheory.T.finsum_mobiusInverseCharpoly_transversal_subspaces F V s A g hg)
+      fun x => psi s x.1.2 ((g + x.1.1).restrict x.2.2.2)).symm.trans (_root_.GlobalTheory.CuspGL.finsum_psi_transversal F V s A g hg)
     rw [← card_H, ← key, Fintype.sum_prod_type, Finset.sum_comm]
     refine Finset.sum_congr rfl fun W _ => ?_
     by_cases hW : W ⊓ A = ⊥
@@ -189,10 +189,10 @@ theorem step {F : Type} [Field F] [Finite F] (s : F[X] → ℂ) (hs : IsAdditive
       exact res_mixed W hWT hd hle
   have s_split : s (LinearMap.charpoly g) = s (LinearMap.charpoly (g.restrict hg)) +
       s (LinearMap.charpoly (A.mapQ A g (fun x hx => hg x hx))) := by
-    rw [(GlobalTheory.T.charpoly_block_and_invariant_under_stabilizerNilradical F V A g hg).1]
+    rw [(_root_.GlobalTheory.CuspGL.charpoly_block F V A g hg).1]
     exact hs _ _ (LinearMap.charpoly_monic _) (LinearMap.charpoly_monic _)
   have s_const : ∑ h ∈ H, s (LinearMap.charpoly (g + h)) = (H.card : ℂ) * s (LinearMap.charpoly g) := by
-    rw [Finset.sum_congr rfl fun h hh => by rw [(GlobalTheory.T.charpoly_block_and_invariant_under_stabilizerNilradical F V A g hg).2 h ((memH h).1 hh)],
+    rw [Finset.sum_congr rfl fun h hh => by rw [(_root_.GlobalTheory.CuspGL.charpoly_block F V A g hg).2 h ((memH h).1 hh)],
       Finset.sum_const, nsmul_eq_mul]
   have psi_expand : ∀ k : Module.End F V, psi s V k =
       s (LinearMap.charpoly k) - ∑ W ∈ Finset.univ.erase ⊤, res s W k := by

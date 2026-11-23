@@ -4,8 +4,12 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.PetIPSmul
 public import Development.AbelianVarietyTheory.Definitions.Foundations.RepL
 public import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 public import Mathlib.NumberTheory.LSeries.Basic
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasSumParsevalQExpansionHorizontalLineStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitStripIntegralEqIteratedStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasSumParsevalQExpansionHorizontalLine
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Complex.UpperHalfPlane.Measure
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitStripIntegralEqIterated
+public import Mathlib.NumberTheory.LSeries.MellinEqDirichlet
+public import Mathlib.Analysis.MellinTransform
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -19,7 +23,6 @@ import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
-public import Mathlib.NumberTheory.LSeries.MellinEqDirichlet
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Radical.NatInt
@@ -49,7 +52,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.Newform
-public import Mathlib.Analysis.MellinTransform
 
 @[expose] public section
 
@@ -76,7 +78,7 @@ theorem strip_eq_LSeries : ∀ (h b : ℕ → ℂ) (w : ℝ), 0 < w → PolyB h 
   have h4 : (0 : ℝ) < 4 * π := by positivity
   have ha0 : a 0 = 0 := by simp [ha, h0]
   have h1 : (∫ τ in strip, conj (qs h τ) * qs b τ * ((τ.im ^ (w + 1) : ℝ) : ℂ)) = mellin P (w : ℂ) := by
-    rw [GlobalTheory.T.unitStrip_integral_eq_iterated.2 _ hint]
+    rw [_root_.GlobalTheory.EisM.strip_iterated.2 _ hint]
     unfold mellin
     refine setIntegral_congr_fun measurableSet_Ioi (fun y hy => ?_)
     have hy : 0 < y := hy
@@ -105,7 +107,7 @@ theorem strip_eq_LSeries : ∀ (h b : ℕ → ℂ) (w : ℝ), 0 < w → PolyB h 
       · right; positivity)
     (by simpa using hw)
     (fun y hy => by
-      have := GlobalTheory.T.hasSum_parseval_qExpansion_horizontal_line h b y hh hb hy
+      have := _root_.GlobalTheory.EisM.parseval_line h b y hh hb hy
       refine this.congr_fun (fun n => ?_)
       simp only [ha]
       congr 2

@@ -2,8 +2,9 @@ module
 
 public import Formalism.LocalToGlobal.KernelLattices.TopPin
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.KernelDatumPeriodIdealFgAndSelfDual
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.KernelDatumPeriodLatticeIdealFgOfHeckeCharactersStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LastStepKernelDataIntegralAwayFromLevelsStatement
+public import Formalism.LocalToGlobal.KernelLattices.FirstKernelLawReading
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.KernelDatumPeriodLatticeIdealFgOfHeckeCharacters
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LastStepKernelDataIntegralAwayFromLevels
 import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.PeriodLatticeFinitelyGenerated
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -63,9 +64,9 @@ theorem kerEntTied_hyp : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (Gi :
   intro D L hT Gi Gl K Y cX ex t h1 h2 hQ hTop
   have h0 : t.Hyp0 := by
     first
-      | exact GlobalTheory.T.kernelDatum_periodLatticeIdeal_fg_of_heckeCharacters D L hT Gi Gl K Y cX ex t h1 h2 hQ
-      | exact GlobalTheory.T.kernelDatum_periodLatticeIdeal_fg_of_heckeCharacters D L hT Gi Gl K Y cX ex t h1 h2
+      | exact _root_.GlobalTheory.kernel_datum_of_hecke_character_values D L hT Gi Gl K Y cX ex t h1 h2 hQ
+      | exact _root_.GlobalTheory.kernel_datum_of_hecke_character_values D L hT Gi Gl K Y cX ex t h1 h2
   exact hypotheses_of_base_hypotheses D L hT Gi Gl K Y cX ex t h0
-    (hypFree_of_top_int D L hT Gi Gl K Y cX ex t hTop (GlobalTheory.T.lastStepKernelData_integral_awayFromLevels D L hT Gi Gl K Y cX ex t hTop))
+    (hypFree_of_top_int D L hT Gi Gl K Y cX ex t hTop (_root_.GlobalTheory.TopInt.topInt D L hT Gi Gl K Y cX ex t hTop))
 
 end GlobalTheory

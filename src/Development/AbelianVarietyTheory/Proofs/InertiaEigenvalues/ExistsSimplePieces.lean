@@ -2,10 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TwistedModelAdmissibleCocycles
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSeriesOfExact
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModelObjAndAbcStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModelPreimageOfInjectiveFinDimRepModelHomStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModelObjAndAbc
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModelPreimageOfInjectiveFinDimRepModelHom
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModelPushOfSurjective
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SenMultiplicityAdditiveExactSequenceStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SenMultiplicityAdditiveExactSequence
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -131,8 +131,8 @@ theorem ModTh.exists_simple_pieces : ∀ {k G : Type} [Field k] [Group G] {l n :
       unfold sen qmult gmult
       exact Module.finrank_zero_of_subsingleton
   · obtain ⟨A, C₀, f, p, ef, ep, hf, hp, H, hs, hlt⟩ := exists_simple_quotient B hB
-    obtain ⟨s, C, L, hL, hC, hss, hsen⟩ := ih A hlt _ (GlobalTheory.T.model_preimage_of_injective_finDimRepModelHom F M A B f N ef hf hN)
-    obtain ⟨hobj, hlat, -, hc⟩ := GlobalTheory.T.obj_and_abc_of_model F M B N hN
+    obtain ⟨s, C, L, hL, hC, hss, hsen⟩ := ih A hlt _ (_root_.GlobalTheory.Models.SubModel.model_pre F M A B f N ef hf hN)
+    obtain ⟨hobj, hlat, -, hc⟩ := _root_.GlobalTheory.Models.model_obj_and_abc F M B N hN
     let C' : Fin (s + 1) → Ob k G := Fin.cons C₀ C
     refine ⟨s + 1, C', Fin.cons (α := fun a => Lats k n (C' a).m) (F.push B C₀ p N) L, fun a => ?_, fun a => ?_,
       sameSS_piRep_succ C' A B f p ef ep hf hp H hss, fun i x => ?_⟩
@@ -142,7 +142,7 @@ theorem ModTh.exists_simple_pieces : ∀ {k G : Type} [Field k] [Group G] {l n :
     · refine Fin.cases ?_ (fun j => ?_) a
       · exact hs
       · exact hC j
-    · rw [Fin.sum_univ_succ, GlobalTheory.T.senMultiplicity_additive_exact_sequence F A B C₀ f p N hobj ef ep hf hp H i (hlat i) (hc i) x, hsen, add_comm]
+    · rw [Fin.sum_univ_succ, _root_.GlobalTheory.Models.sen_eq_sen_pre_add_sen_push F A B C₀ f p N hobj ef ep hf hp H i (hlat i) (hc i) x, hsen, add_comm]
       rfl
 
 end GlobalTheory.Models

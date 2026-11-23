@@ -3,8 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ExistsReduction
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicLatticeSelfDualHermitian
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicLatticeSpec
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsPrimeIdempotentIntegralAdelesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUnitaryStabilizerLiftOfSplitIdempotentStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsPrimeIdempotentIntegralAdeles
+public import Formalism.SatakeDualWeyl.Statement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUnitaryStabilizerLiftOfSplitIdempotent
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExtIdMulSupNatCastConj
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntAfApproxInterUnitConj
 import Mathlib.Algebra.Order.Floor.Extended
@@ -85,7 +86,7 @@ theorem exists_mem_Kset_actsAs_trivial_away : ∀ (I : AutInst) (N p : ℕ) (w :
   intro I N p w fr hN hp hw hw' M
   subst hN
   have : Fact p.Prime := ⟨hp⟩
-  obtain ⟨ε, hεε, h1ε, hεu, hεt, hεσ⟩ := GlobalTheory.T.exists_prime_idempotent_integralAdeles I w
+  obtain ⟨ε, hεε, h1ε, hεu, hεt, hεσ⟩ := _root_.GlobalTheory.RowLev.exists_prime_idempotent I w
   have hA := GlobalTheory.RowLev.intAf_approx_inter_unit_conj I 1 le_rfl
   have hL := GlobalTheory.AdelicLattice.adelicLattice_spec I 1 le_rfl
   have hX := GlobalTheory.RowLev.extId_mul_sup_natCast_conj I
@@ -95,7 +96,7 @@ theorem exists_mem_Kset_actsAs_trivial_away : ∀ (I : AutInst) (N p : ℕ) (w :
     have h0 : fr.r (1 - ε) = 0 := (hker _).2 h1ε
     rw [map_sub, map_one, sub_eq_zero] at h0
     exact h0.symm
-  obtain ⟨x, hxU, hxS, hact, htriv⟩ := GlobalTheory.T.exists_unitary_stabilizer_lift_of_split_idempotent (I.E ⊗[I.F] Af I.F) (Formalism.UG.sigR I.cm.sig (Af I.F))
+  obtain ⟨x, hxU, hxS, hact, htriv⟩ := _root_.GlobalTheory.SplitLift.exists_unitary_lift (I.E ⊗[I.F] Af I.F) (Formalism.UG.sigR I.cm.sig (Af I.F))
     (IntAf I.F I.E) I.n (I.J.map (Formalism.UG.inclE (F := I.F) (Af I.F))) I.Lf (ZMod p) fr.r fr.c ε
     (fun a => sigR_sigR_af I a) (fun a ha => hA.2.2.2 a ha) (isHerm_af I) (isUnit_det_af I)
     hL.2.2.2.1 hL.2.2.1 (fun y => GlobalTheory.AdelicLattice.adelicLattice_selfDual I y) hεε (hεσ hw') hrε

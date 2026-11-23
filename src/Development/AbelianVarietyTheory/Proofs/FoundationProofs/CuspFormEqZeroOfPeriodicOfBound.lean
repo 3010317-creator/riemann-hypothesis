@@ -4,10 +4,13 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.IsDCReps
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative.LeviCivita
 public import Mathlib.NumberTheory.ModularForms.QExpansion
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CoeffEqZeroOfExpDecayOfIntegralIdentityStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GreenFormulaPeriodicRectangleUpperHalfPlaneStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegralConjMulExpEqConjQExpansionCoeffStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.WirtingerEichlerStatement
+public import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CoeffEqZeroOfExpDecayOfIntegralIdentity
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GreenFormulaPeriodicRectangleUpperHalfPlane
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegralConjMulExpEqConjQExpansionCoeff
+public import Mathlib.Analysis.Complex.UpperHalfPlane.Manifold
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.WirtingerEichler
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -88,7 +91,7 @@ theorem periodic_of_dbar : ∀ (U : ℂ → ℂ) (h : ℍ → ℂ) (w : ℕ) (T 
 theorem fourier_sub_eq : ∀ (U : ℂ → ℂ) (h : ℍ → ℂ) (w : ℕ) (T : ℝ) (n : ℕ) (a b : ℝ), 0 < T → 0 < a → a ≤ b → (∀ s : ℂ, 0 < s.im → ∃ L : ℂ →L[ℝ] ℂ, HasFDerivAt U L s ∧ L Complex.I - Complex.I * L 1 = 2 * Complex.I * (s - (starRingEnd ℂ) s) ^ w * (starRingEnd ℂ) (h (ofComplex s))) → (∀ s : ℂ, 0 < s.im → U (s + T) = U s) → MDifferentiable 𝓘(ℂ) 𝓘(ℂ) h → Function.Periodic (h ∘ ofComplex) T → IsBoundedAtImInfty h → (∫ x in (0 : ℝ)..T, U ((x : ℂ) + (b : ℂ) * Complex.I) * Complex.exp (2 * Real.pi * Complex.I * n * ((x : ℂ) + (b : ℂ) * Complex.I) / T)) - (∫ x in (0 : ℝ)..T, U ((x : ℂ) + (a : ℂ) * Complex.I) * Complex.exp (2 * Real.pi * Complex.I * n * ((x : ℂ) + (a : ℂ) * Complex.I) / T)) = 2 * Complex.I * (2 * Complex.I) ^ w * T * (starRingEnd ℂ) ((qExpansion T h).coeff n) * ∫ y in a..b, (y : ℂ) ^ w * (Real.exp (-(4 * Real.pi * n / T) * y) : ℂ) := by
   intro U h w T n a b hT ha hab hd hp hh hper hbdd
   have hT' : (T : ℂ) ≠ 0 := by exact_mod_cast hT.ne'
-  refine (GlobalTheory.T.green_formula_periodic_rectangle_upperHalfPlane (fun z => U z * Complex.exp (2 * Real.pi * Complex.I * n * z / T))
+  refine (_root_.GlobalTheory.green_periodic_rectangle (fun z => U z * Complex.exp (2 * Real.pi * Complex.I * n * z / T))
     (fun s => Complex.exp (2 * Real.pi * Complex.I * n * s / T) *
       (2 * Complex.I * (s - (starRingEnd ℂ) s) ^ w * (starRingEnd ℂ) (h (ofComplex s))))
     T a b hT ha hab ?_ ?_ ?_).trans ?_
@@ -139,7 +142,7 @@ theorem fourier_sub_eq : ∀ (U : ℂ → ℂ) (h : ℍ → ℂ) (w : ℕ) (T : 
         funext x
         rw [mul_pow]
         ring
-      rw [hfun, intervalIntegral.integral_const_mul, GlobalTheory.T.integral_conj_mul_exp_eq_conj_qExpansion_coeff h T n y hT hy0 hh hper hbdd]
+      rw [hfun, intervalIntegral.integral_const_mul, _root_.GlobalTheory.HeckeFamilyMatrices.Qc.conj_integral h T n y hT hy0 hh hper hbdd]
       ring
     rw [intervalIntegral.integral_congr inner, intervalIntegral.integral_const_mul]
 
@@ -150,7 +153,7 @@ theorem cuspForm_eq_zero_of_periodic_of_bound : ∀ (Γ : Subgroup SL(2, ℤ)) (
   have hcoe : ∀ z : ℂ, 0 < z.im → ((ofComplex z : ℍ) : ℂ) = z := fun z hz => by
     rw [ofComplex_apply_of_im_pos hz]
   have hholo : MDifferentiable 𝓘(ℂ) 𝓘(ℂ) (⇑h) := ModularFormClass.holo h
-  have hd := GlobalTheory.T.hasFDerivAt_eichler_sub_conj_wirtinger (k - 2) ⇑f ⇑h p (ModularFormClass.holo f) hholo
+  have hd := _root_.GlobalTheory.EichlerDbar.wirtinger_eichler (k - 2) ⇑f ⇑h p (ModularFormClass.holo f) hholo
   have hUper : ∀ s : ℂ, 0 < s.im →
       (eichler (k - 2) ⇑f (ofComplex (s + ((h₀ : ℝ) : ℂ))) -
           (eichler (k - 2) ⇑h (ofComplex (s + ((h₀ : ℝ) : ℂ)))).map (starRingEnd ℂ) - p).eval
@@ -228,7 +231,7 @@ theorem cuspForm_eq_zero_of_periodic_of_bound : ∀ (Γ : Subgroup SL(2, ℤ)) (
         rw [sub_zero, abs_of_pos hT] at this
         calc _ ≤ _ := this
           _ = _ := by ring
-      have hc := GlobalTheory.T.coeff_eq_zero_of_exp_decay_of_integral_identity _ (2 * Complex.I * (2 * Complex.I) ^ (k - 2) * ((h₀ : ℝ) : ℂ))
+      have hc := _root_.GlobalTheory.ode_coeff_zero_of_decay_ends _ (2 * Complex.I * (2 * Complex.I) ^ (k - 2) * ((h₀ : ℝ) : ℂ))
         ((starRingEnd ℂ) ((qExpansion (h₀ : ℝ) ⇑h).coeff (n + 1)))
         (C * (h₀ : ℝ)) _ (4 * Real.pi * ((n + 1 : ℕ) : ℝ) / (h₀ : ℝ)) (k - 2) hw1 hα hβ hK hbound
         (fun a b ha hab => fourier_sub_eq _ ⇑h (k - 2) (h₀ : ℝ) (n + 1) a b hT ha hab hd hUper

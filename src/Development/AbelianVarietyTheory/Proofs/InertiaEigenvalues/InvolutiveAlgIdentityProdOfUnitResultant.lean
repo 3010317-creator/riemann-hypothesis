@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsLocalRingOfIdem
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteClassesOfSeparableCharPolyStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteClassesOfSeparableCharPoly
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GramDetEqNormMulGramDetOne
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LatticeCountAndGramDetSignNormClassStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LatticeCountProdOfIdempotentSeparableStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LatticeCountAndGramDetSignNormClass
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LatticeCountProdOfIdempotentSeparable
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitLemmaSelfAdjointLieOfCountLimitDescent
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -211,24 +212,24 @@ theorem isIso_swap4 (B₁ B₂ C₁ C₂ : InvAlg K) : IsIso (swap4 B₁ B₂ C�
 theorem kap_inv (B C : InvAlg K) (x : (B.prod C).A) (u : (B.prod C).Aˣ) :
     K.eta (B.gramDet (x * (u * (B.prod C).σ (u : (B.prod C).A))).1) *
       (B.prod C).N (x * (u * (B.prod C).σ (u : (B.prod C).A))) = K.eta (B.gramDet x.1) * (B.prod C).N x := by
-  rw [(GlobalTheory.T.latticeCount_and_gramDetSign_norm_class K (B.prod C) x u).1]
+  rw [(_root_.GlobalTheory.UnitLemma.NormClass.N_norm_class K (B.prod C) x u).1]
   congr 1
-  exact (GlobalTheory.T.latticeCount_and_gramDetSign_norm_class K B x.1 (MulEquiv.prodUnits (M := B.A) (N := C.A) u).1).2
+  exact (_root_.GlobalTheory.UnitLemma.NormClass.N_norm_class K B x.1 (MulEquiv.prodUnits (M := B.A) (N := C.A) u).1).2
 
 theorem stSum_prod (B C : InvAlg K) (hs : (B.P * C.P).Separable)
     (he : ((1, 0) : B.A × C.A) ∈ Algebra.adjoin K.O ({(B.g, C.g)} : Set (B.A × C.A))) :
     (B.prod C).stSum = B.stSum * C.stSum := by
-  haveI := GlobalTheory.T.finite_classes_of_separable_charPoly K B hs.of_mul_left
-  haveI := GlobalTheory.T.finite_classes_of_separable_charPoly K C hs.of_mul_right
-  exact finsum_prod B C (B.prod C).N B.N C.N (fun x u => (GlobalTheory.T.latticeCount_and_gramDetSign_norm_class K B x u).1)
-    (fun x u => (GlobalTheory.T.latticeCount_and_gramDetSign_norm_class K C x u).1) (GlobalTheory.T.latticeCount_prod_of_idempotent_separable K B C he hs)
+  haveI := _root_.GlobalTheory.UnitLemma.ClFin.finite_Cl_of_separable K B hs.of_mul_left
+  haveI := _root_.GlobalTheory.UnitLemma.ClFin.finite_Cl_of_separable K C hs.of_mul_right
+  exact finsum_prod B C (B.prod C).N B.N C.N (fun x u => (_root_.GlobalTheory.UnitLemma.NormClass.N_norm_class K B x u).1)
+    (fun x u => (_root_.GlobalTheory.UnitLemma.NormClass.N_norm_class K C x u).1) (_root_.GlobalTheory.UnitLemma.ProdCount.N_prod K B C he hs)
 
 theorem kapSum_prod (B₁ B₂ C₁ C₂ : InvAlg K) (hs : ((B₁.prod B₂).P * (C₁.prod C₂).P).Separable)
     (he : ((1, 0) : (B₁.prod B₂).A × (C₁.prod C₂).A) ∈ Algebra.adjoin K.O
       ({((B₁.prod B₂).g, (C₁.prod C₂).g)} : Set ((B₁.prod B₂).A × (C₁.prod C₂).A))) :
     InvAlg.kapSum (B₁.prod C₁) (B₂.prod C₂) = InvAlg.kapSum B₁ B₂ * InvAlg.kapSum C₁ C₂ := by
-  haveI := GlobalTheory.T.finite_classes_of_separable_charPoly K _ hs.of_mul_left
-  haveI := GlobalTheory.T.finite_classes_of_separable_charPoly K _ hs.of_mul_right
+  haveI := _root_.GlobalTheory.UnitLemma.ClFin.finite_Cl_of_separable K _ hs.of_mul_left
+  haveI := _root_.GlobalTheory.UnitLemma.ClFin.finite_Cl_of_separable K _ hs.of_mul_right
   unfold InvAlg.kapSum
   rw [(isIso_swap4 B₁ B₂ C₁ C₂).finsum_eq
     (fun x => K.eta ((B₁.prod C₁).gramDet x.1) * ((B₁.prod C₁).prod (B₂.prod C₂)).N x) (kap_inv _ _)]
@@ -239,7 +240,7 @@ theorem kapSum_prod (B₁ B₂ C₁ C₂ : InvAlg K) (hs : ((B₁.prod B₂).P *
     (fun x => K.eta (C₁.gramDet x.1) * (C₁.prod C₂).N x) (kap_inv _ _) (kap_inv _ _) ?_
   intro x y hx hy sx sy
   refine (congrArg (HMul.hMul _) (((isIso_swap4 B₁ B₂ C₁ C₂).N_eq _).trans
-    (GlobalTheory.T.latticeCount_prod_of_idempotent_separable K _ _ he hs x y hx hy sx sy))).trans ?_
+    (_root_.GlobalTheory.UnitLemma.ProdCount.N_prod K _ _ he hs x y hx hy sx sy))).trans ?_
   by_cases h1 : (B₁.prod B₂).N x = 0
   · simp [h1]
   by_cases h2 : (C₁.prod C₂).N y = 0

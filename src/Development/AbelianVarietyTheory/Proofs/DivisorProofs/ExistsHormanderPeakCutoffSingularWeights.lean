@@ -1,18 +1,24 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.PhlaBlockWtCpt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChartBallExtendByZeroInvariantStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChartBallWeightPotentialDensityBoundsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DbarDerivCutoffNormSqBoundAnnulusStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyNotMemChartBallSaturationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobeniusStrictLowerComparisonNearIdentityStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.IsOrth
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChartBallExtendByZeroInvariant
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.FundSetMeasStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChartBallWeightPotentialDensityBounds
+public import ReciprocityTheory.L2DbarEstimates.IsLocalHomeomorph
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DbarDerivCutoffNormSqBoundAnnulus
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyNotMemChartBallSaturation
+public import Mathlib.Analysis.Complex.Norm
+public import Mathlib.Data.Matrix.Mul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobeniusStrictLowerComparisonNearIdentity
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramChartSubFormEntryLe
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantExtensionMeasurableContDiffOnChartStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeviFormCutoffLogWeightLowerBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeviFormsTransportToOrthonormalChartOriginStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeviMarginOrthonormalChartOriginStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantExtensionMeasurableContDiffOnChart
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeviFormCutoffLogWeightLowerBound
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.BasePsiLeviLowerBound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeviFormsTransportToOrthonormalChartOrigin
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeviMarginOrthonormalChartOrigin
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UpperTriangularNearUnitDiagonalOfTwistedGramNear
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormFactorAndDensityNearOneInFlagChart
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UpperTriangularNearUnitDiagonalOfTwistedGramNearStatement
 import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.DifferentiableChart
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -112,9 +118,9 @@ theorem levi_ball (X : Data E r) {x : Frame X.Ψ r} (hx : IsOrth X x) (hr : 0 < 
     ∃ (x1 : Frame X.Ψ r) (ξ' : Fin (nd X) → ℂ), IsOrth X x1 ∧
       (∀ la : Wt X.Ψ r, leviM X (phla X la) x z ξ = leviM X (phla X la) x1 0 ξ') ∧
       ∑ j, ‖ξ j‖ ^ 2 ≤ 2 * ∑ j, ‖ξ' j‖ ^ 2 := by
-  have hzO : z ∈ OmF X x := (GlobalTheory.T.chartBall_weightPotential_density_bounds E r X 0 x z hx hz).1
+  have hzO : z ∈ OmF X x := (_root_.GlobalTheory.WeightSizes.chart_ball_sizes E r X 0 x z hx hz).1
   obtain ⟨x1, ho, b, hb, hxb⟩ := ortho_holds r X _ hzO
-  obtain ⟨ξ', h1, B, hB, hrel⟩ := GlobalTheory.T.leviForms_transport_to_orthonormal_chart_origin E r X x x1 b z ho hzO hb hxb ξ
+  obtain ⟨ξ', h1, B, hB, hrel⟩ := _root_.GlobalTheory.LeviWeightChart.levi_transport_origin E r X x x1 b z ho hzO hb hxb ξ
   refine ⟨x1, ξ', ho, h1, ?_⟩
   have hr1 : (1 : ℝ) ≤ r := by exact_mod_cast hr
   have hδ : (r : ℝ) * ‖z‖ ≤ 1 / 100 := by
@@ -128,12 +134,12 @@ theorem levi_ball (X : Data E r) {x : Frame X.Ψ r} (hx : IsOrth X x) (hr : 0 < 
     have := congrArg (gram τ.1 X.Gm) hm
     rw [FrameDegreeData.gram_mul, FrameDegreeData.gram_mul, hx τ, ho τ] at this
     exact this.symm
-  obtain ⟨hd, hoff⟩ := GlobalTheory.T.upperTriangular_near_unitDiagonal_of_twistedGram_near r (fun a => sgn X.p0 a) (mat b τ) ‖z‖
+  obtain ⟨hd, hoff⟩ := _root_.GlobalTheory.upperTriangular_near_diag_of_gram_near r (fun a => sgn X.p0 a) (mat b τ) ‖z‖
     (fun a => by unfold sgn; split_ifs <;> simp) (norm_nonneg _) hδ (hb τ).2 (fun a c => by
       have := GlobalTheory.GramChartNear.gw_sub_jd_le E r X z τ a c (by linarith)
       rw [← hG] at this
       exact this)
-  refine GlobalTheory.T.frobenius_strictLower_comparison_near_identity r ((mat x1 τ)⁻¹ * mat x τ) (mat (nmat X z) τ) (mat b τ) (mat B τ) _ _ ‖z‖
+  refine _root_.GlobalTheory.frobenius_lower_comparison r ((mat x1 τ)⁻¹ * mat x τ) (mat (nmat X z) τ) (mat b τ) (mat B τ) _ _ ‖z‖
     (norm_nonneg _) hδ (fun a c h => ?_) (fun a => ?_) (fun a c h => ?_) (hb τ).2 hd hoff (hB τ)
     (fun a c h => ?_) (fun a c h => ?_) ?_ ?_
   · simp [mat, nmat, not_lt.2 h.le, h.ne]
@@ -229,12 +235,12 @@ theorem levi_lower (X : Data E r) {x : Frame X.Ψ r} (hx : IsOrth X x) (hp0 : 0 
     ∀ z ∈ OmF X x, ∀ ξ : Fin (nd X) → ℂ, 0 ≤ smoothLevi X la bb x z ξ + leviM X ψ x z ξ := by
   have hr : 0 < r := hp0.trans hp1
   have hdom : ∀ z : V (nd X), ‖z‖ ≤ 1 / (100 * (r : ℝ) ^ 2) → z ∈ OmF X x := fun z hz =>
-    (GlobalTheory.T.chartBall_weightPotential_density_bounds E r X 0 x z hx hz).1
+    (_root_.GlobalTheory.WeightSizes.chart_ball_sizes E r X 0 x z hx hz).1
   have hball : ∀ z : V (nd X), ‖z‖ < 1 / (100 * (r : ℝ) ^ 2) → ∀ ξ : Fin (nd X) → ℂ,
       M * ∑ j, ‖ξ j‖ ^ 2 ≤ smoothLevi X la bb x z ξ + leviM X ψ x z ξ := by
     intro z hz ξ
     obtain ⟨x1, ξ', ho, e, hle⟩ := levi_ball X hx hr hz.le ξ
-    have hO := GlobalTheory.T.leviMargin_orthonormal_chart_origin E r X la x1 g bb hp0 hp1 ho hg hbb h1 h2 ξ'
+    have hO := _root_.GlobalTheory.LeviOriginMargin.levi_margin_origin E r X la x1 g bb hp0 hp1 ho hg hbb h1 h2 ξ'
     have hev : (fun w => ((ψ (cpt X x w) : ℝ) : ℂ)) =ᶠ[𝓝 z] fun w => ((η w : ℝ) : ℂ) := by
       filter_upwards [(isOpen_lt continuous_norm continuous_const).mem_nhds hz] with w hw
       have := ha 1 X.Γ.one_mem _ (ExtFPf.oneF_mem X) w (le_of_lt hw)
@@ -269,7 +275,7 @@ theorem levi_lower (X : Data E r) {x : Frame X.Ψ r} (hx : IsOrth X x) (hp0 : 0 
     rw [smoothLevi] at this ⊢
     rw [e1, e1, e1, e3, e4, leviM_phla_lact X hγ, leviM_phla_lact X hγ, leviM_phla_lact X hγ]
     exact le_trans (by positivity) this
-  · have hev := GlobalTheory.T.eventually_not_mem_chartBall_saturation E r X x ρ (fun w hw => hdom w (hw.trans hρ.le)) _ hz hc
+  · have hev := _root_.GlobalTheory.SaturationClosed.eventually_not_mem_saturation E r X x ρ (fun w hw => hdom w (hw.trans hρ.le)) _ hz hc
     have hev' : (fun w => ((ψ (cpt X x w) : ℝ) : ℂ)) =ᶠ[𝓝 z] fun _ => (((0 : ℝ) : ℝ) : ℂ) := by
       filter_upwards [(IW.cpt_diff X x).continuous.continuousAt.eventually hev] with w hw
       rw [hb _ hw]
@@ -280,8 +286,8 @@ theorem levi_lower (X : Data E r) {x : Frame X.Ψ r} (hx : IsOrth X x) (hp0 : 0 
       simp only [leviV, this]
       simp [wd]
     obtain ⟨x1, ho, b, hbB, hxb⟩ := ortho_holds r X _ hz
-    obtain ⟨ξ', e, -⟩ := GlobalTheory.T.leviForms_transport_to_orthonormal_chart_origin E r X x x1 b z ho hz hbB hxb ξ
-    have hO := GlobalTheory.T.leviMargin_orthonormal_chart_origin E r X la x1 g bb hp0 hp1 ho hg hbb h1 h2 ξ'
+    obtain ⟨ξ', e, -⟩ := _root_.GlobalTheory.LeviWeightChart.levi_transport_origin E r X x x1 b z ho hz hbB hxb ξ
+    have hO := _root_.GlobalTheory.LeviOriginMargin.levi_margin_origin E r X la x1 g bb hp0 hp1 ho hg hbb h1 h2 ξ'
     rw [smoothLevi, e, e, e, hψ, add_zero]
     exact le_trans (mul_nonneg (by linarith) (by positivity)) hO
 
@@ -338,7 +344,7 @@ theorem muF_ball_lt_top (X : Data E r) {x : Frame X.Ψ r} (hx : IsOrth X x) :
   rw [muF, withDensity_apply _ hB]
   refine lt_of_le_of_lt (setLIntegral_mono' (g := fun _ => ENNReal.ofReal (Real.exp ((X.Ψ.card : ℝ) * r))) hB
     fun z hz => ?_) ?_
-  · obtain ⟨-, -, -, h1, h2⟩ := GlobalTheory.T.chartBall_weightPotential_density_bounds E r X 0 x z hx (mem_ball_zero_iff.1 hz.1).le
+  · obtain ⟨-, -, -, h1, h2⟩ := _root_.GlobalTheory.WeightSizes.chart_ball_sizes E r X 0 x z hx (mem_ball_zero_iff.1 hz.1).le
     refine ENNReal.ofReal_le_ofReal ?_
     rw [← Real.exp_log h2]
     exact Real.exp_le_exp.2 (abs_le.1 h1).2
@@ -479,9 +485,9 @@ theorem peak_weight : ∃ C1 : ℝ, 0 ≤ C1 ∧ ∀ (E : Type) [Field E] [Numbe
     rw [hρ]
     exact one_div_lt_one_div_of_lt (by positivity) (by linarith [show (0 : ℝ) < (r : ℝ) ^ 2 by positivity])
   have hρ2 : 1 / ρ ^ 2 = 40000 * (r : ℝ) ^ 4 := by rw [hρ]; field_simp; norm_num
-  have hsz := fun (z : V (nd X)) (hz : ‖z‖ ≤ 1 / (100 * (r : ℝ) ^ 2)) => GlobalTheory.T.chartBall_weightPotential_density_bounds E r X la x z hx hz
+  have hsz := fun (z : V (nd X)) (hz : ‖z‖ ≤ 1 / (100 * (r : ℝ) ^ 2)) => _root_.GlobalTheory.WeightSizes.chart_ball_sizes E r X la x z hx hz
   have hdom : ∀ z : V (nd X), ‖z‖ ≤ 1 / (100 * (r : ℝ) ^ 2) → z ∈ OmF X x := fun z hz => (hsz z hz).1
-  choose ψ ha hb hl hrm using fun k : ℕ => GlobalTheory.T.chartBall_extend_by_zero_invariant E r X x _ hx hdom hinj (eta (nd X) χ ρ k)
+  choose ψ ha hb hl hrm using fun k : ℕ => _root_.GlobalTheory.chartBall_extend_by_zero E r X x _ hx hdom hinj (eta (nd X) χ ρ k)
   have hcpt : ∀ k (z : V (nd X)), ‖z‖ ≤ 1 / (100 * (r : ℝ) ^ 2) → ψ k (cpt X x z) = eta (nd X) χ ρ k z := by
     intro k z hz
     have := ha k 1 X.Γ.one_mem _ (ExtFPf.oneF_mem X) z hz
@@ -497,15 +503,15 @@ theorem peak_weight : ∃ C1 : ℝ, 0 ≤ C1 ∧ ∀ (E : Type) [Field E] [Numbe
     · exact hb k y hc
   have hηs : ∀ k, ContDiff ℝ ∞ (eta (nd X) χ ρ k) := fun k =>
     contDiff_const.mul (contDiff_eta hχ ρ (by positivity))
-  have hsm := fun k => GlobalTheory.T.invariantExtension_measurable_contDiffOn_chart E r X x ρ _ _ (ψ k) hx hρR hdom (hηs k) (ha k) (hb' k)
-    (GlobalTheory.T.eventually_not_mem_chartBall_saturation E r X x ρ fun w hw => hdom w (hw.trans hρR.le))
+  have hsm := fun k => _root_.GlobalTheory.PeakWeightSmooth.measurable_and_contDiffOn E r X x ρ _ _ (ψ k) hx hρR hdom (hηs k) (ha k) (hb' k)
+    (_root_.GlobalTheory.SaturationClosed.eventually_not_mem_saturation E r X x ρ fun w hw => hdom w (hw.trans hρR.le))
   have hlevi := fun k : ℕ => levi_lower X hx hp0 hp1 la (g := C1 * T) (bb := bb)
     (K := nd X * ((13 * A + 20) / ρ ^ 2)) (M := A ^ 2 / ρ ^ 2) (ρ := ρ) (by positivity) hbb0
     (by positivity) (by positivity)
     (margin_num hA hρ2 hD n1 n2 n4 n6 n7)
     hρR hg1 hg2 (η := eta (nd X) χ ρ k) (ψ := ψ k)
     (fun z ξ => by
-      have h := GlobalTheory.T.leviForm_cutoffLogWeight_lower_bound χ A hχ hχr hχ1 hχ0 hd1 hd2 (nd X) ρ (1 / ((k : ℝ) + 1)) hρ0 (by positivity)
+      have h := _root_.GlobalTheory.PeakWeightLevi.levi_cutLog_lower χ A hχ hχr hχ1 hχ0 hd1 hd2 (nd X) ρ (1 / ((k : ℝ) + 1)) hρ0 (by positivity)
         (delta_le k) z ξ
       have h2 : ContDiffAt ℝ 2 (fun w : V (nd X) => χ (‖w‖ ^ 2 / ρ ^ 2) *
           Real.log ((‖w‖ ^ 2 / ρ ^ 2 + 1 / ((k : ℝ) + 1)) / 2)) z :=
@@ -562,7 +568,7 @@ theorem peak_weight : ∃ C1 : ℝ, 0 ≤ C1 ∧ ∀ (E : Type) [Field E] [Numbe
   · refine measurable_const.indicator ?_
     exact (measurableSet_le measurable_const measurable_norm).inter
       (measurableSet_lt measurable_norm measurable_const)
-  · have h := GlobalTheory.T.dbarDeriv_cutoff_normSq_bound_annulus χ A hχ hχr hχ1 hχ0 hd1 (nd X) ρ hρ0 z ξ
+  · have h := _root_.GlobalTheory.wdb_cutoff_sq_le χ A hχ hχr hχ1 hχ0 hd1 (nd X) ρ hρ0 z ξ
     by_cases hz' : ρ / 2 ≤ ‖z‖ ∧ ‖z‖ < ρ
     · rw [if_pos hz'] at h
       rw [Set.indicator_of_mem (by exact hz'), one_mul, weight_levi X hx la bb (hsm k).2 hz]

@@ -2,12 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermitianFormUnitaryOneOne
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExtAeEqContRep
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FiniteAdelicUnitaryCongruenceTopology
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RealUnipotentRadicalEmbedsAdelicRadical
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ReproducingFormulaFixedVectorModerateGrowthStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ReproducingFormulaFixedVectorModerateGrowth
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowsAutIdemElementary
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TruncatedLeastLatticeSizeBoundedBelowUnipotentRa
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.WeilIntegralVanishingOfFibreIntegrals
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FiniteAdelicUnitaryCongruenceTopology
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -174,7 +174,7 @@ theorem cusp_of_fixed : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → ℝ) (h :
       ∀ x, ∫ m, f (m * x) ∂ν = 0 := by
     intro W hW ν hνW x
     have hn : 1 ≤ B.I.n := one_le_of_isIsot B.I W hW
-    obtain ⟨⟨Φ, hΦi, hΦb⟩, hrepf⟩ := GlobalTheory.T.reproducing_formula_fixedVector_moderateGrowth B d h hd hn hloc hbig T hT y f C hfix hrep hgr
+    obtain ⟨⟨Φ, hΦi, hΦb⟩, hrepf⟩ := _root_.GlobalTheory.ReproducingFixed.reproducing_fixed B d h hd hn hloc hbig T hT y f C hfix hrep hgr
     obtain ⟨hfin, -, hconc, hinvN⟩ := hνW
     haveI := hfin
     obtain ⟨c, hc0, hc⟩ := exists_pos_le_tau1_mul_of_mem_NA_of_isIsot B.I W x hW

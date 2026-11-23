@@ -4,10 +4,14 @@ public import Development.AbelianVarietyTheory.Definitions.Degenerations.OfDeriv
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsSplitTorusPointsMulEquiv
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsUnitEv
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.LocallyOfFinitePresentationDiagMap
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsFractionEvalSectionAffineNearPointStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsGenericFunctionFieldPointStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsWeightedRelationOfMinimalSupportStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SplitTorusWeightTestGenericPointRationalPointsStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsFractionEvalSectionAffineNearPoint
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsGenericFunctionFieldPoint
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Algebra.Ring.Hom.Defs
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsWeightedRelationOfMinimalSupport
+public import Mathlib.Tactic.ENatToNat
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SplitTorusWeightTestGenericPointRationalPoints
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GeometricallyIntegralIffGeometricallyConnectedOf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -150,7 +154,7 @@ theorem exists_rel {k : Type} [Field k] {G : Over (Sp k)} [GrpObj G] {X : Type} 
     have := h₁ (show IsLocalRing.closedPoint F ∈ (⊤ : (Sp F).Opens) from trivial)
     rw [← ha'] at this
     exact this
-  obtain ⟨α, β, hβ, hαβ⟩ := GlobalTheory.T.exists_fraction_evalSection_affine_near_point R (a.left ⁻¹ᵁ U) ((a.left.appLE U _ le_rfl).hom f) _ hx
+  obtain ⟨α, β, hβ, hαβ⟩ := _root_.GlobalTheory.SS.WtRat.exists_frac_ev R (a.left ⁻¹ᵁ U) ((a.left.appLE U _ le_rfl).hom f) _ hx
   have hsum (t) (w : R) (S : Finset X) (hS : w.coeff.support ⊆ S) : e t w = ∑ χ ∈ S, chr t χ * w.coeff χ := by
     show AddMonoidAlgebra.lift F F X (cH t) w = _
     rw [AddMonoidAlgebra.lift_apply, Finsupp.sum_of_support_subset _ hS _ (by simp)]
@@ -173,7 +177,7 @@ theorem exists_ratio_of_weight_sums : ∀ (k : Type) [Field k] [IsAlgClosed k] (
   intro k _ _ G _ hG X _ _ _ i hi U f hU
   obtain ⟨hc, hs, -, -, hgc⟩ := hG
   have : IsIntegral G.left := isIntegral_of_smooth_of_geometricallyConnected G.hom
-  obtain ⟨F, _, g₀, hg, hinj, hσ, hsec⟩ := GlobalTheory.T.exists_generic_functionField_point G.left
+  obtain ⟨F, _, g₀, hg, hinj, hσ, hsec⟩ := _root_.GlobalTheory.SS.WtRat.exists_generic_field_point G.left
   let s : Sp F ⟶ Sp k := g₀ ≫ G.hom
   let g : Over.mk s ⟶ G := Over.homMk g₀ rfl
   let pt (t : 𝟙_ (Over (Sp k)) ⟶ splitTorus (Sp k) X) : Over.mk s ⟶ splitTorus (Sp k) X := toUnit _ ≫ t
@@ -209,7 +213,7 @@ theorem exists_ratio_of_weight_sums : ∀ (k : Type) [Field k] [IsAlgClosed k] (
   have hone : ((pt 1 ≫ i) * g).left = g₀ := by
     rw [pt_one, MonObj.one_comp, _root_.one_mul]; rfl
   obtain ⟨S, p, q, hp, hrel⟩ := exists_rel i g U f (pt_one ▸ hgt 1 U hU)
-  obtain ⟨χ₀, p', q', hp', hφ, hw⟩ := GlobalTheory.T.exists_weighted_relation_of_minimal_support F _ X (fun t χ => chr (pt t) χ) σ
+  obtain ⟨χ₀, p', q', hp', hφ, hw⟩ := _root_.GlobalTheory.SS.exists_weighted_relation F _ X (fun t χ => chr (pt t) χ) σ
     (fun t => ev (R := F) ((pt t ≫ i) * g).left U (hgt t U hU) f) S p q
     (fun t t' χ => by rw [pt_mul, chr_mul]) (fun χ => by rw [pt_one, chr_one])
     (fun t t' χ => by rw [← chr_comp (σ t) (hσs t), hσpt])
@@ -224,7 +228,7 @@ theorem exists_ratio_of_weight_sums : ∀ (k : Type) [Field k] [IsAlgClosed k] (
     (fun o => o.elim (∑ χ ∈ S, p' χ) (Sum.elim (fun j => q' (ε j)) fun j => p' (ε j)))
   have hwt (v : Γ(G.left, U')) (χ : X) (r : F) (hv : ev g₀ U' (hg U' hU') v = r)
       (hr : ∀ t, σ t r * chr (pt t) χ₀ = chr (pt t) χ * r) : Wt i U' v (χ - χ₀) := by
-    refine GlobalTheory.T.splitTorusWeight_test_genericPoint_rationalPoints k G hs X i F s g hg U' v _ fun t h₁ h₂ => ?_
+    refine _root_.GlobalTheory.SS.WtRat.wt_of_genericPoint k G hs X i F s g hg U' v _ fun t h₁ h₂ => ?_
     have h3 : ev (R := F) ((pt t ≫ i) * g).left U' h₁ v = σ t r :=
       (ev_congr (hσ' t).symm U' h₁ (hσ' t ▸ h₁) v).trans
         ((ev_spMap (σ t) g₀ U' (hg U' hU') _ v).trans (congrArg (σ t) hv))

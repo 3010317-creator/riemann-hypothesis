@@ -2,13 +2,14 @@ module
 
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.IsDSOfIsDG
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.SumNonneg
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BesselGrowthStabilizerUnipotentStatement
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.GrowthUnitaryGroupRpowNegIntegrableStatement
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.ContinuousMulMt
+public import Formalism.HermitianCurvature.BesselNonvanishingReduction
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.GrowthUnitaryGroupRpowNegIntegrable
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.UhMeasurableSet
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PolynomialProperness.ZhatNormLinearBound
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.BesselDecayBounds.HaarCompactGrowth.GrowthSphericalBound
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ReproducingFormulaReduction
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.SigmaContOn
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.UhMeasurableSet
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PolynomialProperness.ZhatNormLinearBound
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.ContinuousMulMt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -162,6 +163,6 @@ theorem integrable_of_growth (hGG : GrowthG) (hGS : GrowthS) : HypsG → ∀ (k 
     _ ≤ _ := mul_le_mul_of_nonneg_left key (mul_nonneg hC0 hC0)
 
 theorem integrable_GS : HypsG → ∀ (k r : ℕ) (ε : Fin (2 * r + k + 1) → Bool) (mu : Fin (2 * r + k + 1) → ℝ) (h : ℝ) (R : Rep k r) (Wp : Type) [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [CompleteSpace Wp] [FiniteDimensional ℂ Wp] (z : Fin (2 * r + k + 1) → ℂ) (π : Mx k r → (Wp →L[ℂ] Wp)) (u : ℕ → ℝ) (μW μN μG νq : Measure (Formalism.QuantumDeterminants.Mt k r)), R.IsDG ε mu → Formalism.QuantumDeterminants.GapAtLeast ε mu h → GapOK k r h → SideG k r z π u μW μN μG νq → ∀ v ∈ R.TK, ∀ w ∈ R.sm, Integrable (fun y : Formalism.QuantumDeterminants.Mt k r × (Formalism.QuantumDeterminants.Mt k r × Formalism.QuantumDeterminants.Mt k r) => ⟪v, R.σ (Matrix.of y.1) w⟫_ℂ * star ⟪v, R.σ (Matrix.of y.2.1 * Matrix.of y.2.2 * Matrix.of y.1) w⟫_ℂ) (μG.prod (μW.prod μN)) :=
-  integrable_of_growth GlobalTheory.T.growth_unitaryGroup_rpow_neg_integrable GlobalTheory.T.besselGrowth_stabilizer_unipotent
+  integrable_of_growth _root_.GlobalTheory.gN_rpow_neg_integrable_haar _root_.Formalism.FourierDecayAlt.P.growth_spherical_bound
 
 end GlobalTheory.BesselFubini

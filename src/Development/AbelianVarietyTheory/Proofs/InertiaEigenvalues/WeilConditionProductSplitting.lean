@@ -3,13 +3,17 @@ module
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSplitting
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TensorRepApply
 public import Mathlib.Analysis.CStarAlgebra.Classes
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AbsKMulOfEtaleSplittingStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsTestRep
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AbsKMulOfEtaleSplitting
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FourBProdIterated
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsLocallyConstantTestRepresentationTensorProduct
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FourierMatch
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedValuationParitySignCharacterKernelNorm
+public import Mathlib.RingTheory.Norm.Basic
+public import Mathlib.RingTheory.Trace.Basic
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSmallDualLattices
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FourBProdIteratedStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsLocallyConstantTestRepresentationTensorProductStatement
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyMeasAndReps
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.QuadraticStarStructure
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedValuationParitySignCharacterKernelNormStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,8 +59,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.RingTheory.Norm.Basic
-public import Mathlib.RingTheory.Trace.Basic
 
 @[expose] public section
 
@@ -149,7 +151,7 @@ theorem etaK_split [Unram F E] (A A₁ A₂ : Et F E) (eK : A.K ≃ₐ[F] A₁.K
   have h₁ : Algebra.norm F (eK s).1 ≠ 0 := ((Prod.isUnit_iff.1 hu).1.map (Algebra.norm F)).ne_zero
   have h₂ : Algebra.norm F (eK s).2 ≠ 0 := ((Prod.isUnit_iff.1 hu).2.map (Algebra.norm F)).ne_zero
   simp only [Et.etaK]
-  rw [norm_split A A₁ A₂ eK, (GlobalTheory.T.unramifiedValuationParitySign_character_kernel_norms F E).1 _ _ h₁ h₂]
+  rw [norm_split A A₁ A₂ eK, (_root_.GlobalTheory.EtaChar.main F E).1 _ _ h₁ h₂]
 
 theorem smul_split (A A₁ A₂ : Et F E) (eK : A.K ≃ₐ[F] A₁.K × A₂.K) (eL : A.L ≃ₐ[F] A₁.L × A₂.L)
     (hS : IsSplitting A A₁ A₂ eK eL) (k : A.K) (y : A.L) :
@@ -170,7 +172,7 @@ theorem continuous_kerL [U : Unram F E] (A : Et F E) (ψ : AddChar F ℂ) (hψ :
 theorem tensor_isTestRep : ∀ {G H X Y : Type} [Group G] [Group H] [TopologicalSpace X] [TopologicalSpace Y]
     (W₁ : G → (X → ℂ) → X → ℂ) (W₂ : H → (Y → ℂ) → Y → ℂ), IsTestRep W₁ → IsTestRep W₂ →
     IsTestRep (tensorRep W₁ W₂) ∧ ∀ f : X × Y → ℂ, IsTest f →
-      (∀ u, IsTest (fun v => f (u, v))) ∧ ∀ h y, IsTest (fun u => W₂ h (fun v => f (u, v)) y) := GlobalTheory.T.isLocallyConstantTestRepresentation_tensorProduct
+      (∀ u, IsTest (fun v => f (u, v))) ∧ ∀ h y, IsTest (fun u => W₂ h (fun v => f (u, v)) y) := _root_.GlobalTheory.JR.WeilProd.isTestRep_tensorRep
 
 theorem fourB_split : ∀ {V V₁ V₂ : Type} [AddCommGroup V] [TopologicalSpace V] [IsTopologicalAddGroup V] [T2Space V]
     [LocallyCompactSpace V] [SecondCountableTopology V] [MeasurableSpace V] [BorelSpace V]
@@ -184,11 +186,11 @@ theorem fourB_split : ∀ {V V₁ V₂ : Type} [AddCommGroup V] [TopologicalSpac
     (∀ y' y, B y' y = B₁ (e y').1 (e y).1 * B₂ (e y').2 (e y).2) →
     ∀ (μ : Measure V) (μ₁ : Measure V₁) (μ₂ : Measure V₂), μ.IsAddHaarMeasure → μ₁.IsAddHaarMeasure →
     μ₂.IsAddHaarMeasure → ∃ c : ℂ, c ≠ 0 ∧ ∀ φ : V → ℂ, IsTest φ → ∀ y,
-      fourB μ B φ y = c * ∫ u, (∫ v, φ (e.symm (u, v)) * B₂ v (e y).2 ∂μ₂) * B₁ u (e y).1 ∂μ₁ := GlobalTheory.T.fourB_prod_iterated_alt
+      fourB μ B φ y = c * ∫ u, (∫ v, φ (e.symm (u, v)) * B₂ v (e y).2 ∂μ₂) * B₁ u (e y).1 ∂μ₁ := _root_.GlobalTheory.JR.fourB_prod_iterated
 
 theorem absK_split : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E]
     [StarRing E] [Unram F E] (A A₁ A₂ : Et F E) (eK : A.K ≃ₐ[F] A₁.K × A₂.K) (t : A.K),
-    A.absK t = A₁.absK (eK t).1 * A₂.absK (eK t).2 := GlobalTheory.T.absK_mul_of_etale_splitting
+    A.absK t = A₁.absK (eK t).1 * A₂.absK (eK t).2 := _root_.GlobalTheory.JR.EtProdAbs.absK_prod
 
 theorem map_nS {R S : Type} [CommRing R] [CommRing S] (f : R →+* S) (z : R) :
     SpecialLinearGroup.map f (nS z) = nS (f z) := by

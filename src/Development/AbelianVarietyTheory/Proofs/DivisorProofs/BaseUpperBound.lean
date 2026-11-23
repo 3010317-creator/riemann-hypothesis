@@ -4,29 +4,29 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NabBaseChang
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealizationEmbeddingCompatible
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TupleReadBaseTupleEqFamily
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CentralUniformiserActsByDilationTameKernelStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoefLatticeIndepCoefMapProofStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoefLatticeIndepCoefMapProof
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualWeylLatticeBaseChangeSpanProofStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatThetaQuotientAtPrincipalLevelProofStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatThetaQuotientAtPrincipalLevelProof
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FreeLowerBlockVectorMultipleKernelTranslate
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelCharacterFiniteOrderDefiniteFormsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelCharacterFiniteOrderDefiniteForms
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TameKernelVectorUnitMulDilatedFlatStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaPairCharactersAtLevel
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaPureTensorO
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTraceLevelCompatibleProofStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumUniqueOnThetaFunctions
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTraceLevelCompatibleProof
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsCentAtScalar
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsScaleOfChar
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSplitSupportedRepFiniteUnitaryClassStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodBaseDataWeightEqLiftCoeffModuleWeight
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodFormsSpannedByThetaSeriesOfClassSums
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemLatAtIffHat
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistingCharacterAdmissibleGaloisTwistGoodStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLowestKTypeFockMapThetaVectors
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ForcedContentEqScaleAtResidueChar
+public import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.KerDiag
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaPairCharactersAtLevel
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaPureTensorO
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumUniqueOnThetaFunctions
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsScaleOfChar
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodBaseDataWeightEqLiftCoeffModuleWeight
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeCharacterIdeleCharacterMatchUnique
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompAtMtOfMemGfC
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OmEqSumLattice
-public import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.KerDiag
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -127,7 +127,7 @@ theorem exists_om_eq (hC : GlobalTheory.Hk3.Core R F) (hG : QGuard R) (hV : VStd
     (hK : KerDat R i ξ χ ξR B.de.Q ω φ) (hχ : ChrEq B.de.chi ξ) (hQ : ∃ t, B.de.Q ⊆ R.Q t) {N : ℕ} (hN : N ≠ 0)
     (hNQ : ∀ PP ∈ B.de.Q, (N : 𝓞 D.host.E) ∈ PP.asIdeal) :
     ∃ (z : GA D (Vc D i)) (c : ℂ), IsCentAt i B.de.Q z ∧ UnitOff N c ∧ ω (z, 1) φ = c • (princ B).vecBase := by
-  obtain ⟨eg, eQ, fg, heg, heQ, hfg, hf⟩ := GlobalTheory.T.flatThetaQuotientAtPrincipalLevel_proof D G Pl0 T0 A Ks R F hC i ξ χ ξR ω φ B hB hBo hK hχ
+  obtain ⟨eg, eQ, fg, heg, heQ, hfg, hf⟩ := _root_.GlobalTheory.BaseCmp.flatTwoStep_holds D G Pl0 T0 A Ks R F hC i ξ χ ξR ω φ B hB hBo hK hχ
   obtain ⟨ϖ, hϖ0, hϖ⟩ := exists_uniformiser D.host.E B.de.Q
   have hϖE : (ϖ : D.host.E) ≠ 0 := by exact_mod_cast hϖ0
   obtain ⟨z, hz, hzm⟩ := GlobalTheory.CentScal.exists_isCentAt_scalar D i B.de.Q eQ heQ (ϖ : D.host.E) hϖE
@@ -184,7 +184,7 @@ theorem exists_trace_eq (hC : GlobalTheory.Hk3.Core R F) (hG : QGuard R) (hV : V
       GlobalTheory.OrientedHeis.om_fin_pureTensorO B.F.ψ _ _ _ _ ω hW B.F.θ hB.frame.vac.2.inf z hzf 1 (one_mem _) _ _ _ _ φ P hφ, hz,
       Formalism.IndefR.Eqv.KerDiag.pureTensorO_smul, map_smul]
     rfl
-  rw [e1, map_smul, GlobalTheory.T.thetaTraceLevelCompatible_proof D G Pl0 T0 A Ks R F hC i B hB hBo U ψ e he hU hψ ω hω]
+  rw [e1, map_smul, _root_.GlobalTheory.TraceLevelPf.traceLevel D G Pl0 T0 A Ks R F hC i B hB hBo U ψ e he hU hψ ω hω]
   congr 1
   funext g
   exact congrFun (GlobalTheory.WeilUniq.weilDatum_unique D _ hB.frame.vac.1 _ _ _ _ ω ω' hω hω' _ _
@@ -206,7 +206,7 @@ theorem mem_span_coefLat (hC : GlobalTheory.Hk3.Core R F) (hBo : BaseOf R i B)
     (O O' : Subring ℂ) (hO' : ∀ a : 𝓞 D.what₂.LL, D.what₂.embLL a ∈ O') {h : GA D (Vc D i)} {w : (R.cV i).W}
     (hw : InCoefLat R i h w) : c⁻¹ • Φ w ∈ Submodule.span O'
       (B.coefLat (Formalism.L2.Host.embLL0 D) (labLL0 D) O (finPt _ h) : Set (PolF D (Wc D i).rank (Vc D i).rank)) := by
-  obtain ⟨P, hP, rfl⟩ := GlobalTheory.T.coefLattice_indep_coefMap_proof D G Pl0 T0 A Ks R F hC i c0L hc0 h w hw
+  obtain ⟨P, hP, rfl⟩ := _root_.GlobalTheory.CoefIndepProof.coefIndep D G Pl0 T0 A Ks R F hC i c0L hc0 h w hw
   have hlat : B.latAt (finPt _ h) = Bridge.hLat (Vc D i) (fin (Vc D i) h) :=
     GlobalTheory.LatAtHLat.latAt_eq_hLat D _ _ B (hBo.ΛS ▸ GlobalTheory.AdTh.RecPair.coe_eq_of_frame (hC.lev.βV i)) _
   have hP' := GlobalTheory.T.dualWeylLattice_baseChange_span_proof D.host.E D.LL0 D.what₂.LL D.what₂.Tau _ (algebraMap D.LL0 D.what₂.LL) (labLL0 D) (lamV D i) _
@@ -242,7 +242,7 @@ theorem exists_move {h : GA D (Vc D j)} (hh : h ∈ GfC (Vc D j)) :
   obtain ⟨hg, ha, -⟩ := GlobalTheory.T.twistingCharacter_admissibleGaloisTwist_good D _ D.ntw ρ hρ i j b 0 ∅ 1 (twOK_one i 0)
   have hB := hρ.base i j b
   obtain ⟨γ, s, h', k, hs, hoff, hh', hsupp, e⟩ := GlobalTheory.T.exists_split_supported_rep_finite_unitary_class D ρ hρ i j b h hh
-  obtain ⟨n, hn, hk⟩ := GlobalTheory.T.levelCharacter_finiteOrder_definite_forms D _ _ (ρ.B i j b) _ k
+  obtain ⟨n, hn, hk⟩ := _root_.GlobalTheory.BaseCmp.levLamRoot D _ _ (ρ.B i j b) _ k
   refine ⟨s, h', (ρ.B i j b).act ((γ⁻¹ : GQ (Vc D j)) : GA D (Vc D j)), _, ⟨n, hn, by rw [inv_pow, hk, inv_one]⟩, fun P => ?_,
     fun P hP => ⟨hs, hoff, hh', hsupp, ?_⟩⟩
   · rw [← GlobalTheory.BaseClassSum.series_triv, GlobalTheory.BaseClassSum.series_move hB (D.sp.V_sig _) hg ha (hρ.weil i j b _ hg) hh hh' γ k e,

@@ -3,7 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IsThetaL2NormSquared
 public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsLineBasis
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.RiemannFormFramePeriodsEqMajorantStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.NormsFree
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.RiemannFormFramePeriodsEqMajorant
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FundamentalDomainExtension.UnipotentMoves.HermLinApply
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +48,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FundamentalDomainExtension.UnipotentMoves.HermLinApply
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.MajPos
 
 @[expose] public section
@@ -184,7 +185,7 @@ theorem key (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityT
   rw [hrange] at hspan
   refine ⟨hcard, b, hspan, ?_⟩
   obtain ⟨Hm, hR⟩ := (Uw.period k x).2.2.2.2
-  have hmaj := (GlobalTheory.T.riemann_form_frame_periods_eq_majorant E H Dw l Xo c σ r U Uw k x Hm hG hU hR).1
+  have hmaj := (_root_.GlobalTheory.RiemMaj.riemann_eq_majorant E H Dw l Xo c σ r U Uw k x Hm hG hU hR).1
   let p : Fin Uw.g → Fin Uw.g → ℂ := fun j => Uw.Pm k x (γ (Θ.bas (Pi.single (.inl j) 1)))
   let q : Fin Uw.g → Fin Uw.g → ℂ := fun j => Uw.Pm k x (γ (Θ.bas (Pi.single (.inr j) 1)))
   have hq : ∀ j, q j = ∑ i, Θ.τ w i j • p i := fun j => by

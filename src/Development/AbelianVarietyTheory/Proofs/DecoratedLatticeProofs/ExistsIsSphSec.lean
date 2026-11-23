@@ -2,8 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IntegrandSZero
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.GaussianBinomialClosedForm
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsDoublingChartInertPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IdeleCharacterFinitePlaceComponentEqOfInertStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsSplitOfIsInertAt
+public import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsAHEqOfMemRatPts
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsDoublingChartInertPlace
+public import Development.AbelianVarietyTheory.Definitions.Foundations.T2SpaceTensorProductFiniteExtension
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IdeleCharacterFinitePlaceComponentEqOfInert
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.OrdLEqNegLog
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RamificationIdxEqOneOfIsSquare
 import Mathlib.Algebra.Order.Floor.Extended
@@ -82,14 +85,14 @@ theorem exists_isSphSec {F E : Type} [Field F] [NumberField F] [Field E] [Number
     {c : w.adicCompletion E →+* w.adicCompletion E} {e : GLoc σ J v ≃* GU c n} (he : IsInertChart σ J L h c e) :
     ∃ Φ, GlobalTheory.IndefiniteRowSideFullHecke.SphericalSectionVariables.IsSphSec c (qV F v) n (locChar μ w) s Φ ∧
       ∀ y, φ (ioH _ σ hQ (y, 1)) = Φ (GlobalTheory.IndefiniteRowSideFullHecke.SphericalSectionVariables.io1 c n (e y)) := by
-  obtain ⟨f, hK, hio, hP, ha⟩ := GlobalTheory.T.exists_doubling_chart_inert_place F E σ hc n J hJ Q hQ L v w h hw c e he
+  obtain ⟨f, hK, hio, hP, ha⟩ := _root_.GlobalTheory.DblInert.exists_dblChart F E σ hc n J hJ Q hQ L v w h hw c e he
   refine ⟨fun g => φ (f.symm g), fun p k hk => ?_, fun y => ?_⟩
   · have hp : f.symm p ∈ siegelH (Fv F v) σ Q := (hP _).2 (by rw [f.apply_symm_apply]; exact p.2)
     have hk' : f.symm k ∈ KFin σ Q L v := (hK _).2 (by rwa [f.apply_symm_apply])
     have e1 := (mem_degPSH.1 h1).1 ⟨_, hp⟩ 1
     have e3 : GlobalTheory.IndefiniteRowSideFullHecke.SphericalSectionVariables.aD c n p = Units.map (GlobalTheory.LFun.toCompl h).toMonoidHom (aH _ σ Q ⟨_, hp⟩) :=
       (congrArg _ (Subtype.ext (f.apply_symm_apply _).symm)).trans (ha ⟨_, hp⟩ ((hP _).1 hp))
-    rw [mul_one, h3, mul_one, GlobalTheory.T.ideleCharacterFinitePlaceComponent_eq_of_inert F E μ v w h hw, npow_zpow hq _ _ (GlobalTheory.AbsInert.absEv_inert F E σ hc v w h hw _)] at e1
+    rw [mul_one, h3, mul_one, _root_.GlobalTheory.LFun.charAt_eq_locChar_of_isInertAt F E μ v w h hw, npow_zpow hq _ _ (GlobalTheory.AbsInert.absEv_inert F E σ hc v w h hw _)] at e1
     show φ (f.symm (p * k)) = _
     rw [map_mul, h2 _ hk', e3]
     exact e1

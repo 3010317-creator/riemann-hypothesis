@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.SameFns
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormalFormProductSpanLeftMulClosedStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormalFormProductSpanLeftMulClosed
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,7 +61,7 @@ theorem hats_prod_mem_nfSpan : ∀ (P : M.Par) (A : Type) [Ring A] [StarRing A] 
   | cons X H ih =>
     intro hH
     have h1 := ih (fun h hh => hH h (List.mem_cons_of_mem _ hh))
-    have h2 := (GlobalTheory.T.normalFormProductSpan_left_mul_closed P A d hd T).2 a ha 0 (a * H.length) H.length X
+    have h2 := (_root_.GlobalTheory.HatNF.SpanMul.span_mul P A d hd T).2 a ha 0 (a * H.length) H.length X
       (hH X List.mem_cons_self) _ h1
     rw [List.prod_cons, List.length_cons, Nat.mul_succ]
     exact h2

@@ -4,8 +4,11 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.OffR
 public import Formalism.LocalToGlobal.IndefiniteReal.DoubleCosetOperators.NHkRow
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.HeckeSplitOne
 public import Formalism.LocalToGlobal.IndefiniteReal.ConcretePkgSpec
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BaseChangePolynomialAnnihilatesDescentStatement
+public import Mathlib.Algebra.Polynomial.AlgebraMap
+public import Mathlib.LinearAlgebra.TensorProduct.Tower
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BaseChangePolynomialAnnihilatesDescent
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HeckeCommutationRealExpansionStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodProjectorBaseChangeForms
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,7 +47,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodProjectorBaseChangeForms
 
 @[expose] public section
 
@@ -129,7 +131,7 @@ theorem hkF_separable {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 I0 T : Type
     by_contra hgs
     exact hg (by simp only [hsupp g hgs, zero_mul, zero_smul])
 
-  have hdesc := GlobalTheory.T.baseChange_polynomial_annihilates_descent S.Ks ↥D.LL0 (KB S i b) (FmK S j) (G0g D.nd) rd (fun _ => rfl) T0 s ρ a q
+  have hdesc := _root_.GlobalTheory.baseChange_polynomial_kills_descent S.Ks ↥D.LL0 (KB S i b) (FmK S j) (G0g D.nd) rd (fun _ => rfl) T0 s ρ a q
     (fun z hz => hq z (hE' ▸ hz))
   set c := H.cHk i b k P with hc
   have hc0 : c ≠ 0 := by

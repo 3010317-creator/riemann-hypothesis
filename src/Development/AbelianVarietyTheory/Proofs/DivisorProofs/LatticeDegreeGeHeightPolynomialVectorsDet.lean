@@ -1,10 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HermSysHypOneLeLambdaZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffDetMemSpanDetIntegralPolynomialVectorsStatement
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffDetMemSpanDetIntegralPolynomialVectors
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfFrameNormEqZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteHeightSubMeanLeDegreeFullLatticeDetIdealStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HadamardIneqComplexCombinationsBasisStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.JoinCastSucc
+public import Development.AbelianVarietyTheory.Definitions.Divisors.LinearIndependentPullChart
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteHeightSubMeanLeDegreeFullLatticeDetIdeal
+public import Development.AbelianVarietyTheory.Definitions.Divisors.LinearIndependentBasisCoords
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HadamardIneqComplexCombinationsBasis
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinSubstLinSubst
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -118,7 +122,7 @@ theorem arch {F V : Type} [Field F] [AddCommGroup V] [Module F V] (nm : HermFam 
       rw [coe_eval₂Hom] at this
       rw [this]; rfl
     rw [hev] at hz ⊢
-    obtain ⟨hG, hH⟩ := GlobalTheory.T.hadamard_ineq_complex_combinations_basis F V nm d b σ (Matrix.of fun i k => eval₂ σ u (P i k))
+    obtain ⟨hG, hH⟩ := _root_.GlobalTheory.HSShort.hadamard_basis_comb F V nm d b σ (Matrix.of fun i k => eval₂ σ u (P i k))
     have hprod : ∏ k, cnrm nm σ (fun i => (Matrix.of fun i k => eval₂ σ u (P i k)) i k) b ≤ ∏ k, Bd k :=
       Finset.prod_le_prod₀ (fun k _ => Real.sqrt_nonneg _) (fun k _ => hbd k u hunit)
     have hpos : 0 < ‖(Matrix.of fun i k => eval₂ σ u (P i k)).det‖ := norm_pos_iff.2 hz
@@ -144,8 +148,8 @@ theorem GlobalTheory.HSShort.deg_ge_ht_det : ∀ (F V : Type) [Field F] [NumberF
   have hcg : ∀ m, AddMonoidAlgebra.coeff (linSubst w P.det) m ∈
       Submodule.span (𝓞 F) {y | ∃ v : Fin d → V, (∀ i, v i ∈ M) ∧ y = b.det v} := by
     rw [hdet]
-    exact GlobalTheory.T.coeff_det_mem_span_det_integral_polynomial_vectors F V M d b _ (P.map (linSubst w)) (fun k m => by simpa using hcoef k m)
-  have hfin := GlobalTheory.T.finiteHeight_sub_mean_le_degree_fullLattice_detIdeal F V nm M d b hM _ _ hg0 hcg
+    exact _root_.GlobalTheory.DetCoeff.coeff_det_mem_span_det F V M d b _ (P.map (linSubst w)) (fun k m => by simpa using hcoef k m)
+  have hfin := _root_.GlobalTheory.HSShort.DetIdeal.finPart_sub_mean_le_deg F V nm M d b hM _ _ hg0 hcg
   have harch : ∀ σ, blockSphereMean B N (linSubst (A σ) (map σ P.det)) ≤
       ∑ k, Real.log (Bd k) - Real.log (nm.gram σ b).det.re / 2 := fun σ =>
     GlobalTheory.HSShort.DetTop.arch nm b hL.pos σ (A σ) (hL.det σ) P a Bd hP hhom hBd (fun k u hu => hbd k σ u hu)

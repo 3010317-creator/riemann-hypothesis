@@ -3,10 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.RegularCharts.Reframe
 public import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt
 public import Formalism.LocalToGlobal.ProjectiveLattices.RulInst
-public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsSectionOfGenericValuesRegularOnChartsStatement
+public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsSectionOfGenericValuesRegularOnCharts
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.IsIntegrallyClosedQuotientOfMemMinimalPrimes
-public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.NaturalRuleValueBaseChangeOfIsReducedStatement
-public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.SectionEqZeroOfGenericFramedPointValuesStatement
+public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.NaturalRuleValueBaseChangeOfIsReduced
+public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.SectionEqZeroOfGenericFramedPointValues
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -135,7 +135,7 @@ theorem chart_mem (hL : EvLaws Xo c) {h : GenFrEx Xo c} (C : FChart h) {a : (E �
   set_option synthInstance.maxHeartbeats 200000 in
   have h1 := hL.wt a n f hf (Om C.Z) C.t (genFr h C.Z) C.yg (hL.test _ _) (hL.test _ _) C.bor
   set_option synthInstance.maxHeartbeats 200000 in
-  have h2 := GlobalTheory.T.naturalRule_value_baseChange_of_isReduced E H Dw l Xo c hL a n f hf C.R (Om C.Z) C.R.val C.y C.yg C.gen
+  have h2 := _root_.GlobalTheory.Reg.evR_baseChange_of_isReduced E H Dw l Xo c hL a n f hf C.R (Om C.Z) C.R.val C.y C.yg C.gen
   unfold evC
   rw [← h1, h2]
   exact (evR Xo c f C.y).2
@@ -167,7 +167,7 @@ open GlobalTheory.Reg.IntSec in
 theorem GlobalTheory.Reg.exists_sec_of_integral : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), EvLaws Xo c → ∀ h : GenFrEx Xo c, Atlas h → ∀ (a : (E →+* ℂ) × ℕ → ℕ) (n N : ℕ) (w : Fin N → Rul Xo c), (∀ i, w i ∈ sec Xo c a n) → ∀ (Z : Comp Xo c) (k m : ℕ) (cf : ℕ → MvPolynomial (Fin N) c.F) (b : Om Z), (∀ i < m, (cf i).IsHomogeneous ((m - i) * k)) → b ^ m + ∑ i ∈ Finset.range m, MvPolynomial.aeval (fun s => evC h Z (w s)) (cf i) * b ^ i = 0 → ∃ g ∈ sec Xo c (k • a) (k * n), evC h Z g = b ∧ (∀ Z', Z' ≠ Z → evC h Z' g = 0) ∧ g * g ^ m + ∑ i ∈ Finset.range m, (g * MvPolynomial.aeval w (cf i)) * g ^ i = 0 := by
   intro E _ _ _ H Dw l Xo c hL h hA a n N w hw Z k m cf b hcf hb
   classical
-  obtain ⟨g, hg, hgv⟩ := GlobalTheory.T.exists_section_of_generic_values_regular_on_charts E H Dw l Xo c hL h hA (k • a) (k * n)
+  obtain ⟨g, hg, hgv⟩ := _root_.GlobalTheory.Reg.SecGlue.exists_sec_of_regular E H Dw l Xo c hL h hA (k • a) (k * n)
     (Function.update (fun Z' => (0 : Om Z')) Z b) (by
       intro C
       by_cases hZ : C.Z = Z
@@ -192,7 +192,7 @@ theorem GlobalTheory.Reg.exists_sec_of_integral : ∀ (E : Type) [Field E] [Numb
   have hZ : evC h Z g = b := by rw [hgv, Function.update_self]
   have hZ' : ∀ Z', Z' ≠ Z → evC h Z' g = 0 := fun Z' hne => by rw [hgv, Function.update_of_ne hne]
   refine ⟨g, hg, hZ, hZ', ?_⟩
-  refine GlobalTheory.T.section_eq_zero_of_genericFramedPoint_values E H Dw l Xo c hL h hA ((k + m * k) • a) ((k + m * k) * n) _ ?_ ?_
+  refine _root_.GlobalTheory.Reg.sec_eq_zero_of_generic_values E H Dw l Xo c hL h hA ((k + m * k) • a) ((k + m * k) * n) _ ?_ ?_
   · refine Submodule.add_mem _ (IntSec.mul_mem hg (IntSec.pow_mem hg m)) (Submodule.sum_mem _ fun i hi => ?_)
     have hi' := Finset.mem_range.1 hi
     have e : k + m * k = k + (m - i) * k + i * k := by

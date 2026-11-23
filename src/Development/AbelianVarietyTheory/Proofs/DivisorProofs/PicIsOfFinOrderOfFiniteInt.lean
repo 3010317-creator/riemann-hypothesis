@@ -2,7 +2,8 @@ module
 
 public import Mathlib.NumberTheory.NumberField.Basic
 public import Mathlib.RingTheory.PicardGroup
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOfFinOrderOfIsOfFinOrderMapRingHomStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOfFinOrderOfIsOfFinOrderMapRingHom
+public import Mathlib.GroupTheory.FiniteAbelian.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -15,7 +16,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.GroupTheory.FiniteAbelian.Basic
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -172,7 +172,7 @@ theorem isOfFinOrder_of_numberField (K : Type) [Field K] [Algebra B K] [IsFracti
     · have := neg_mem (hNmem x)
       rwa [h, Int.cast_neg, Int.cast_natCast, neg_mul, neg_neg] at this
   haveI : Finite (CommRing.Pic (𝓞 K)) := Finite.of_equiv _ (ClassGroup.equivPic (𝓞 K)).toEquiv
-  exact GlobalTheory.T.isOfFinOrder_of_isOfFinOrder_pic_mapRingHom B (𝓞 K) φ N.natAbs hinj hn0 hcond M (isOfFinOrder_of_finite _)
+  exact _root_.GlobalTheory.isOfFinOrder_of_isOfFinOrder_mapRingHom B (𝓞 K) φ N.natAbs hinj hn0 hcond M (isOfFinOrder_of_finite _)
 
 theorem isOfFinOrder_of_charZero (M : CommRing.Pic B) : IsOfFinOrder M := by
   haveI : CharZero (FractionRing B) := IsFractionRing.charZero_of_isFractionRing B

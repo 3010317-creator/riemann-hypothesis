@@ -3,11 +3,15 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsSmoothModerateOfIsAutFunSm
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.WeilSiegelFormulaUnitary
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSiegelDomainReduction
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.CmTypeRestrictRealSubfieldInfinitePlaceBijective
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactAdelicDenominatorStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IntegerCoordinatesBoundStatement
+public import Mathlib.NumberTheory.NumberField.InfinitePlace.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IntegerCoordinatesBound
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InversePointTorusScalingStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LatticeSumDecayBoundStatement
+public import Mathlib.Topology.Algebra.InfiniteSum.Defs
+public import Mathlib.Topology.Order.Real
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LatticeSumDecayBound
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ModerateGrowthSchwartz
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.CmTypeRestrictRealSubfieldInfinitePlaceBijective
 import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -49,7 +53,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ModerateGrowthSchwartz
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.CovolOneIntegralAdd
 
 @[expose] public section
@@ -83,7 +86,7 @@ theorem lattice_sum {F E : Type} [Field F] [NumberField F] [Field E] [NumberFiel
       Set.range fun p : ι × Fin n => (1 : Af F) ⊗ₜ[F] R p.1 p.2) :=
     (isCompact_iUnion fun j => hL.image (hev j)).union (Set.finite_range _).isCompact
   obtain ⟨d, hd, hden⟩ := GlobalTheory.T.compact_adelic_denominator F E _ hC
-  obtain ⟨K₀, hK₀, hco⟩ := GlobalTheory.T.integer_coordinates_bound τ hτ
+  obtain ⟨K₀, hK₀, hco⟩ := _root_.GlobalTheory.CompanionTheory.NumberFieldCoord.abs_repr_le_of_forall_norm_embedding_le τ hτ
   have hint : ∀ ξ : Matrix (Fin n) (Fin 1) E, ξ.map (fun x => (1 : Af F) ⊗ₜ[F] x) ∈ L → ∀ i,
       ∃ y : 𝓞 E, ((d * d : ℕ) : E) * (R * ξ) i 0 = y := by
     intro ξ hξ i
@@ -158,7 +161,7 @@ theorem lattice_sum {F E : Type} [Field F] [NumberField F] [Field E] [NumberFiel
         exact hN
       exact h5.trans (Finset.prod_le_prod₀ (fun _ _ => by positivity) fun p _ => h1 p)
     · simp [h, Set.indicator_of_notMem hξ]
-  refine (GlobalTheory.T.lattice_sum_decay_bound m b hbp h hinj hh).trans (le_of_eq ?_)
+  refine (_root_.GlobalTheory.CompanionTheory.Count.tsum_le_prod_of_injOn m b hbp h hinj hh).trans (le_of_eq ?_)
   rw [← ENNReal.ofReal_prod_of_nonneg fun p _ => by have := hbp p; positivity]
   congr 1
   rw [Fintype.prod_prod_type]

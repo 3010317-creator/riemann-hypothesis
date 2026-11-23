@@ -2,15 +2,19 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IntegralAngMeas
 public import ReciprocityTheory.AnalyticForms.LeviForms.IsRegFamilyInhabitStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.DenseCoordinateTorusStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LeviFlatSeparatelyHarmonicStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LeviZeroInCompatibleChartStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PolydiscPoissonReproducesHarmonicStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PolydiscPoissonSmoothStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SectionBoundaryClosedAndCodenseStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SmoothInCompatibleChartStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SmoothOnOfChartCompositionStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.SncBoundaryCoordinateChartStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.DenseCoordinateTorus
+public import Mathlib.Analysis.InnerProductSpace.Harmonic.Basic
+public import ReciprocityTheory.AnalyticForms.MaIntEmpty
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LeviFlatSeparatelyHarmonic
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.IsPotentialOfFun
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LeviZeroInCompatibleChart
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PolydiscPoissonReproducesHarmonic
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PolydiscPoissonSmooth
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SectionBoundaryClosedAndCodense
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SmoothInCompatibleChart
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SmoothOnOfChartComposition
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.SncBoundaryCoordinateChart
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -102,7 +106,7 @@ theorem locExt_core {n : ℕ} (c : Fin n → ℂ) (r : ℝ) (hr : 0 < r) (Q : Se
   have hfsm : ∀ w ∈ punct (n := n) r, ContDiffAt ℝ ∞ f w :=
     fun w hw => ContDiffAt.comp w (hsm _ (hmem w hw)) (hτ w)
   have hharm : SepHarm r f := by
-    refine GlobalTheory.T.levi_flat_separately_harmonic n f (punct r) (locExt_isOpen_punct r)
+    refine _root_.GlobalTheory.CompanionTheory.Metric.harmonicAt_update_of_levi_eq_zero n f (punct r) (locExt_isOpen_punct r)
       (fun w hw => (hfsm w hw).contDiffWithinAt) ?_
     intro w hw v
     have hA : AnalyticAt ℂ (fun w : Fin n → ℂ => c + w) w := analyticAt_const.add analyticAt_id
@@ -112,7 +116,7 @@ theorem locExt_core {n : ℕ} (c : Fin n → ℂ) (r : ℝ) (hr : 0 < r) (Q : Se
       _ = 0 := by rw [this]; exact hlevi _ (hmem w hw) _
   have hfc : ContinuousOn f (punct r) :=
     fun w hw => (hfsm w hw).continuousAt.continuousWithinAt
-  have hpo := GlobalTheory.T.polydisc_poisson_reproduces_harmonic n f (r / 2) r B (half_pos hr) (half_lt_self hr) hfc hharm
+  have hpo := _root_.GlobalTheory.CompanionTheory.Ar.PB.Flat.polyPoisson_eq_self n f (r / 2) r B (half_pos hr) (half_lt_self hr) hfc hharm
     (fun w hw => hB _ (hmem w hw))
   have htor : ∀ θ : Fin n → ℝ, torusPt (r / 2) θ ∈ punct (n := n) r := by
     intro θ i
@@ -125,7 +129,7 @@ theorem locExt_core {n : ℕ} (c : Fin n → ℂ) (r : ℝ) (hr : 0 < r) (Q : Se
   have hcont : Continuous fun θ : Fin n → ℝ => f (torusPt (r / 2) θ) :=
     hfc.comp_continuous
       (continuous_pi fun i => (continuous_circleMap 0 _).comp (continuous_apply i)) htor
-  have hG := GlobalTheory.T.polydisc_poisson_smooth n (r / 2) f (half_pos hr) hcont
+  have hG := _root_.GlobalTheory.CompanionTheory.Ar.PB.Flat.Smooth.contDiffOn_polyPoisson n (r / 2) f (half_pos hr) hcont
   have hGc : ContDiffOn ℝ ∞ (fun z => polyPoisson (r / 2) f (z - c)) (Metric.ball c (r / 2)) := by
     refine ContDiffOn.comp (g := polyPoisson (r / 2) f) (f := fun z : Fin n → ℂ => z - c)
       (t := Metric.ball 0 (r / 2)) hG (contDiff_id.sub contDiff_const).contDiffOn ?_
@@ -133,7 +137,7 @@ theorem locExt_core {n : ℕ} (c : Fin n → ℂ) (r : ℝ) (hr : 0 < r) (Q : Se
     simpa [dist_eq_norm] using hz
   refine ⟨fun z => polyPoisson (r / 2) f (z - c), hGc, ?_⟩
   have hT : Dense {z : Fin n → ℂ | ∀ i, z i ≠ c i} := by
-    have h := (GlobalTheory.T.dense_coordinate_torus n).preimage (Homeomorph.subRight c).isOpenMap
+    have h := (_root_.GlobalTheory.CompanionTheory.Ar.PB.Flat.dense_forall_coord_ne_zero n).preimage (Homeomorph.subRight c).isOpenMap
     convert h using 1
     ext z
     simp [sub_ne_zero]
@@ -158,8 +162,8 @@ theorem locExt_core {n : ℕ} (c : Fin n → ℂ) (r : ℝ) (hr : 0 < r) (Q : Se
 
 theorem locExt : ∀ (e : ℕ) (X : Type) [TopologicalSpace X] (A : FinHolAtlas e X) (L : LocPot X) (s : X → X → ℂ) (nb : ℕ) (m : Fin nb → ℕ) (W : Fin nb → Set X), IsSection A L s → IsSNC A L s m W → ∀ (th : LocPot X) (u : X → ℝ) (M : ℝ), IsPotential A th → A.SmoothOn (bdry s)ᶜ u → IsPshOn A (bdry s)ᶜ (th + LocPot.ofFun u) → IsPshOn A (bdry s)ᶜ ((th + LocPot.ofFun u).rsmul (-1)) → (∀ y ∉ bdry s, |u y| ≤ M) → ∀ x, ∃ (N : Set X) (E : X → ℝ), IsOpen N ∧ x ∈ N ∧ A.SmoothOn N E ∧ ∀ y ∈ N, y ∉ bdry s → E y = u y := by
   intro e X _ A L s nb m W hs hsnc th u M hth hu hP hPn hM x
-  obtain ⟨ψ, hψ, hxψ, S, hbd⟩ := GlobalTheory.T.snc_boundary_coordinate_chart e X A L s nb m W hs hsnc x
-  obtain ⟨hcl, -⟩ := GlobalTheory.T.section_boundary_closed_and_codense e X A L s nb m W hs hsnc
+  obtain ⟨ψ, hψ, hxψ, S, hbd⟩ := _root_.GlobalTheory.CompanionTheory.Metric.bdry_snc_chart e X A L s nb m W hs hsnc x
+  obtain ⟨hcl, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Bdry.bdry_isClosed_dense_compl e X A L s nb m W hs hsnc
   let g₀ : X → ℝ := fun y => th.φ x y + u y
   let U' : Set X := th.U x ∩ (bdry s)ᶜ
   have hU' : IsOpen U' := (th.isOpen_U x).inter hcl.isOpen_compl
@@ -208,11 +212,11 @@ theorem locExt : ∀ (e : ℕ) (X : Type) [TopologicalSpace X] (A : FinHolAtlas 
     exact hz.2 i hi h0
   obtain ⟨C, hC⟩ := (isCompact_closedBall (ψ x) r).exists_bound_of_continuousOn
     (f := th.φ x ∘ ψ.symm) fun z hz =>
-      (GlobalTheory.T.smooth_in_compatible_chart e X A ψ (th.U x) (th.φ x) hψ (th.isOpen_U x) (hth.1 x) z (hball hz).1.1
+      (_root_.GlobalTheory.CompanionTheory.Metric.contDiffAt_comp_compatChart_symm e X A ψ (th.U x) (th.φ x) hψ (th.isOpen_U x) (hth.1 x) z (hball hz).1.1
         (hball hz).1.2).continuousAt.continuousWithinAt
   obtain ⟨G, hGs, hGe⟩ := locExt_core (ψ x) r hr Q hQ hcov (g₀ ∘ ψ.symm)
-    (fun z hz => GlobalTheory.T.smooth_in_compatible_chart e X A ψ U' g₀ hψ hU' hsm0 z (hoff z hz).1 (hoff z hz).2)
-    (fun z hz => GlobalTheory.T.levi_zero_in_compatible_chart e X A ψ U' g₀ hψ hU' hsm0 hlz z (hoff z hz).1 (hoff z hz).2)
+    (fun z hz => _root_.GlobalTheory.CompanionTheory.Metric.contDiffAt_comp_compatChart_symm e X A ψ U' g₀ hψ hU' hsm0 z (hoff z hz).1 (hoff z hz).2)
+    (fun z hz => _root_.GlobalTheory.CompanionTheory.LeviChart.levi_eq_zero_of_compatChart e X A ψ U' g₀ hψ hU' hsm0 hlz z (hoff z hz).1 (hoff z hz).2)
     (C + M) (fun z hz => by
       have h1 := hC z (Metric.ball_subset_closedBall hz.1)
       have h2 := hM _ (hoff z hz).2.2
@@ -227,7 +231,7 @@ theorem locExt : ∀ (e : ℕ) (X : Type) [TopologicalSpace X] (A : FinHolAtlas 
   refine ⟨ψ.source ∩ ψ ⁻¹' Metric.ball (ψ x) (r / 2), fun y => (G ∘ ψ) y - th.φ x y,
     ψ.isOpen_inter_preimage Metric.isOpen_ball, ⟨hxψ, Metric.mem_ball_self (half_pos hr)⟩, ?_, ?_⟩
   · intro j
-    have h1 := GlobalTheory.T.smoothOn_of_chart_composition e X A ψ (Metric.ball (ψ x) (r / 2)) G hψ Metric.isOpen_ball
+    have h1 := _root_.GlobalTheory.CompanionTheory.Metric.smoothOn_comp_compatChart' e X A ψ (Metric.ball (ψ x) (r / 2)) G hψ Metric.isOpen_ball
       (fun z hz => (hball (hhalf hz)).1.1) hGs
     exact (h1 j).sub ((hth.1 x j).mono fun y hy => ⟨hy.1, hNU hy.2⟩)
   · intro y hy hyb

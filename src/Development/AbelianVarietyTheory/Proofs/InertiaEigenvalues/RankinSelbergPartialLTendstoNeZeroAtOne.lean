@@ -1,17 +1,18 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsGoodEmptyIff
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DirichletSeriesExponentialSumConvergesStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DirichletSeriesExponentialSumConverges
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGoodRankinSelbergPlaceSetSupersetTotallyCoStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsOneLeNormPsumMultiset
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GenDirichletHasSumIteratedDeriv
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalRankinSelbergFactorConjTendstoOneNeZeroStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalRankinSelbergLogarithmFormulaStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormProdSatakeParametersUnitaryEqOneStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PartialRankinSelbergProductConjSwapRealStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PartialRankinSelbergProductConjSwapReal
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RankinSelbergGLnGLmPartialLEqDivEntireStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RankinSelbergSameDegreeMeromorphicContinuationStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SatakeParameterNormSqLtAbsNormUnitaryCuspStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RankinSelbergSameDegreeMeromorphicContinuation
+public import Development.AbelianVarietyTheory.Definitions.Divisors.UnrOutside
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SatakeParameterNormSqLtAbsNormUnitaryCusp
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalRankinSelbergLogarithmFormulaStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -126,7 +127,7 @@ theorem offDiag : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.I
       exact this.differentiableWithinAt
     · intro x hx
       have hp := (GlobalTheory.T.localRankinSelberg_logarithm_formula.2 E a b σ σ' hσ hσ' T hU hU' x hx).2
-      have e := GlobalTheory.T.partial_rankinSelberg_product_conj_swap_real E b a σ' σ hσ' hσ T hU' hU x hx
+      have e := _root_.GlobalTheory.RSConj.partial_conj E b a σ' σ hσ' hσ T hU' hU x hx
       have h2 : ∏' w : {w : HeightOneSpectrum (𝓞 E) // w ∉ T}, lfac σ' σ (x : ℂ) w.1 = F x / H x := (hFH x hx).tprod_eq
       have h3 : ∏' w : {w : HeightOneSpectrum (𝓞 E) // w ∉ T}, lfac σ σ' (x : ℂ) w.1 =
           starRingEnd ℂ (F (starRingEnd ℂ (x : ℂ)) / H (starRingEnd ℂ (x : ℂ))) := by
@@ -135,7 +136,7 @@ theorem offDiag : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.I
       rw [← h3]
       exact hp.multipliable.hasProd
   · have hne' : σ ≠ σ' := fun h => hne (by rw [h])
-    obtain ⟨F, hFa, hF1, hF⟩ := GlobalTheory.T.rankinSelberg_sameDegree_meromorphic_continuation E a σ σ' ha hσ hσ' T hgood hU hU'
+    obtain ⟨F, hFa, hF1, hF⟩ := _root_.GlobalTheory.RSNonvan.samedeg_continuation E a σ σ' ha hσ hσ' T hgood hU hU'
     refine ⟨dslope F 1, fun x hx => analyticAt_dslope' (hFa x hx), fun x hx => ?_⟩
     have hx1 : (x : ℂ) ≠ 1 := by exact_mod_cast hx.ne'
     have e : dslope F 1 (x : ℂ) = F x / ((x : ℂ) - 1) := by
@@ -164,8 +165,8 @@ theorem tendsto_partialL_ne_zero : ∀ (E : Type) [Field E] [NumberField E] [_ro
   have hU' : UnrOutside T' σ' := fun w hw => hT' w fun h => hw (hTT' h)
   obtain ⟨G, hGa, hG⟩ := offDiag E a b σ σ' ha hb hσ hσ' hne T' hgood hU hU'
   obtain ⟨G', hG'a, hG'⟩ := offDiag E b a σ' σ hb ha hσ' hσ (Ne.symm hne) T' hgood hU' hU
-  obtain ⟨D, hDa, -, hD⟩ := GlobalTheory.T.rankinSelberg_sameDegree_meromorphic_continuation E a σ σ ha hσ hσ T' hgood hU hU
-  obtain ⟨D', hD'a, -, hD'⟩ := GlobalTheory.T.rankinSelberg_sameDegree_meromorphic_continuation E b σ' σ' hb hσ' hσ' T' hgood hU' hU'
+  obtain ⟨D, hDa, -, hD⟩ := _root_.GlobalTheory.RSNonvan.samedeg_continuation E a σ σ ha hσ hσ T' hgood hU hU
+  obtain ⟨D', hD'a, -, hD'⟩ := _root_.GlobalTheory.RSNonvan.samedeg_continuation E b σ' σ' hb hσ' hσ' T' hgood hU' hU'
   have hGa1 : AnalyticAt ℂ G 1 := by simpa using hGa 1 one_pos
   have hG'a1 : AnalyticAt ℂ G' 1 := by simpa using hG'a 1 one_pos
   have hlim : Tendsto (fun x : ℝ => ∏' w : {w : HeightOneSpectrum (𝓞 E) // w ∉ T'}, lfac σ σ' (x : ℂ) w.1)
@@ -177,7 +178,7 @@ theorem tendsto_partialL_ne_zero : ∀ (E : Type) [Field E] [NumberField E] [_ro
       have hlimc : Tendsto (fun x : ℝ => G' x) (𝓝[>] 1) (𝓝 (starRingEnd ℂ (G 1))) := by
         refine ((Complex.continuous_conj.tendsto _).comp (tendsto_of_analyticAt hGa1)).congr'
           (eventually_nhdsWithin_of_forall fun x hx => ?_)
-        have e := GlobalTheory.T.partial_rankinSelberg_product_conj_swap_real E a b σ σ' hσ hσ' T' hU hU' x hx
+        have e := _root_.GlobalTheory.RSConj.partial_conj E a b σ σ' hσ hσ' T' hU hU' x hx
         simp only [Function.comp]
         rw [← (hG x hx).tprod_eq, ← (hG' x hx).tprod_eq, e]
       rw [tendsto_nhds_unique (tendsto_of_analyticAt hG'a1) hlimc, h0, map_zero]
@@ -187,7 +188,7 @@ theorem tendsto_partialL_ne_zero : ∀ (E : Type) [Field E] [NumberField E] [_ro
     have hP : ∀ x : ℝ, 1 < x → ∃ g : ℂ, HasSum (fun p : {w : HeightOneSpectrum (𝓞 E) // w ∉ T'} × ℕ =>
         ((dcoef σ σ' p.1.1 p.2 : ℝ) : ℂ) * Complex.exp (-((dexp p.1.1 p.2 : ℝ) : ℂ) * (x : ℂ))) g ∧ P x = Complex.exp g := by
       intro x hx
-      obtain ⟨g, hg, he⟩ := GlobalTheory.T.dirichlet_series_exponential_sum_converges E a b σ σ' hσ hσ' T' hU hU' x hx
+      obtain ⟨g, hg, he⟩ := _root_.GlobalTheory.RSNonvan.fourProd_eq_exp E a b σ σ' hσ hσ' T' hU hU' x hx
       refine ⟨g, hg, ?_⟩
       rw [← he, (hD x hx).tprod_eq, (hD' x hx).tprod_eq, (hG x hx).tprod_eq, (hG' x hx).tprod_eq]
       have hx1 : (x : ℂ) ≠ 1 := by exact_mod_cast hx.ne'
@@ -234,7 +235,7 @@ theorem tendsto_partialL_ne_zero : ∀ (E : Type) [Field E] [NumberField E] [_ro
     intro w hw
     have hw2 := (Finset.mem_sdiff.1 hw).2
     exact GlobalTheory.T.localRankinSelbergFactor_conj_tendsto_one_ne_zero (Ideal.absNorm w.asIdeal) (sat σ w) (sat σ' w) (NumberField.HeightOneSpectrum.one_lt_absNorm w)
-      (GlobalTheory.T.satakeParameter_normSq_lt_absNorm_unitaryCusp E a σ ha hσ T hT w hw2) (GlobalTheory.T.satakeParameter_normSq_lt_absNorm_unitaryCusp E b σ' hb hσ' T hT' w hw2)
+      (_root_.GlobalTheory.RSStrict.norm_sq_lt_absNorm E a σ ha hσ T hT w hw2) (_root_.GlobalTheory.RSStrict.norm_sq_lt_absNorm E b σ' hb hσ' T hT' w hw2)
   refine ⟨(∏ w ∈ T' \ T, lfac σ σ' 1 w) * G 1,
     mul_ne_zero (Finset.prod_ne_zero_iff.2 fun w hw => (hfac w hw).2) hG1, ?_⟩
   have hprodlim : Tendsto (fun x : ℝ => ∏ w ∈ T' \ T, lfac σ σ' (x : ℂ) w) (𝓝[>] 1)

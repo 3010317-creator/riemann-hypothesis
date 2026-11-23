@@ -5,9 +5,9 @@ public import Development.AbelianVarietyTheory.Definitions.Degenerations.Compani
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianSchemeProperClosureDataBasicProperties
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsClassicalPointLiftingResiduePoint
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsPairAvoidingSmallSets
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.NonemptyThetaExtensionTest
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.JacobsonClosedPointsToolsInt
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.KbIsAlgClosedAndConj
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.NonemptyThetaExtensionTestStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -116,7 +116,7 @@ theorem Core.Law.six_of_few : Semi.extend_existsSt.{0} → ∀ (C : Core) (L : C
   obtain ⟨hlift, hcl⟩ := GlobalTheory.exists_integral_point_lifting_residue_point C.Z C.π C.U C.ne p
   obtain ⟨y, hy, hyU⟩ := hlift (x ≫ C.GG.hom)
   obtain ⟨τ⟩ := hT p y hyU
-  obtain ⟨E⟩ := GlobalTheory.T.nonempty_thetaExtension_test hext C T p y τ fun p _ y τ => (L.test p y τ).1
+  obtain ⟨E⟩ := _root_.GlobalTheory.ZJ.Core.Theta.nonempty_ext hext C T p y τ fun p _ y τ => (L.test p y τ).1
   let s₀ : Sp (kb p) := IsLocalRing.closedPoint (kb p)
   have hs : ∀ s : Sp (kb p), s = s₀ := fun s => Subsingleton.elim (α := PrimeSpectrum (kb p)) _ _
   have hr : rPt p s₀ = cPt p := IsLocalRing.comap_closedPoint (IsLocalRing.residue (OO p))

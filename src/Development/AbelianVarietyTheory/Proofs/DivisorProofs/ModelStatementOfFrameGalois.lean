@@ -6,10 +6,11 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.SumExpSt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlgChainBStable
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnifDvd
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueDualWeylWeightProjector
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeStableOfHeckeFramePolynomialActionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeStableOfHeckeFramePolynomialAction
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.JKInvOfTriv
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeLinkOfSurvivingSimpleSubquotientStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimpleSubquotientDualWeylEmbedsHighestWeightStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.LiftFrameEmbeddingBase
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeLinkOfSurvivingSimpleSubquotient
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimpleSubquotientDualWeylEmbedsHighestWeight
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -42,7 +43,6 @@ import Mathlib.Tactic.NormNum.NatSqrt
 import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.LiftFrameEmbeddingBase
 
 @[expose] public section
 
@@ -108,9 +108,9 @@ theorem winputs_frame : ∀ (E Ω : Type) [Field E] [NumberField E] [IsCMField E
           ∀ τ, LatticeLink P (reFr W fr cjj) l τ (hw τ)) := by
     intro Gm _ _ _ _ hs hq
     obtain ⟨mT, _, hHG⟩ := GlobalTheory.ExpFrame.HeckeMod.hecke_module l ι P.Nr F W.lam jK hF hJ Gm
-    obtain ⟨mu, hmu, hemb⟩ := GlobalTheory.T.simpleSubquotient_dualWeyl_embeds_highestWeight F.O P.Nr ι W.lam ϖ hϖ hanti Gm hs hq
-    refine ⟨mT, fun τ => res P.Nr (mu τ), (GlobalTheory.T.heckeStable_of_heckeFrame_polynomial_action l ι P.Nr F W.lam jK Gm hH hHG).2, fun τ => ?_, fun hn =>
-      GlobalTheory.T.latticeLink_of_surviving_simple_subquotient E Ω hCheb l ι inc fr cjj P W hlink F hF Bk hG jK hJ ϖ hϖ hϖl hanti Gm hHG hs hq mu
+    obtain ⟨mu, hmu, hemb⟩ := _root_.GlobalTheory.HighWt.simpleSubquot_embeds F.O P.Nr ι W.lam ϖ hϖ hanti Gm hs hq
+    refine ⟨mT, fun τ => res P.Nr (mu τ), (_root_.GlobalTheory.ExpFrame.heckeStable_heckeNat_of_isHecke l ι P.Nr F W.lam jK Gm hH hHG).2, fun τ => ?_, fun hn =>
+      _root_.GlobalTheory.ExpFrame.LinkQ.latticeLink_of_surviving E Ω hCheb l ι inc fr cjj P W hlink F hF Bk hG jK hJ ϖ hϖ hϖl hanti Gm hHG hs hq mu
         (fun τ => ⟨(hmu τ).1, (hmu τ).2.1, (hmu τ).2.2.1⟩) hemb m θ0 h0e h0b h0o hn⟩
     obtain ⟨e', z, hp, hz⟩ := (hmu τ).2.2.2
     have hee : e τ (res P.Nr (mu τ)) = e' := Subtype.ext (hu0 τ _ _ hp).symm
@@ -118,7 +118,7 @@ theorem winputs_frame : ∀ (E Ω : Type) [Field E] [NumberField E] [IsCMField E
   haveI := hm.isPrime
   exact winputs_of_simple P (reFr W fr cjj) (F.setting W.lam jK m) l ϖ n₀ e hfin hlϖ
     ⟨GlobalTheory.ExpFrame.alg_chainB_stable F.O P.Nr ι W.lam, fun τ w => he0 τ w⟩
-    (GlobalTheory.T.heckeStable_of_heckeFrame_polynomial_action l ι P.Nr F W.lam jK (NablaT F.O P.Nr W.lam) hH hH).1
+    (_root_.GlobalTheory.ExpFrame.heckeStable_heckeNat_of_isHecke l ι P.Nr F W.lam jK (NablaT F.O P.Nr W.lam) hH hH).1
     (fun Gm i1 i2 i3 i4 => @hQ Gm i1 i2 i3 i4)
 
 

@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DifferentiableSqTh
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicComplexIntegralBoundedSeriesLawsStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PowerSeriesSupNormMulPadicComplexStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicComplexIntegralBoundedSeriesLaws
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PowerSeriesSupNormMulPadicComplex
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -71,10 +71,10 @@ theorem dvd_pow_prod_sub {R ι κ : Type*} [CommRing R] [Fintype ι] [Fintype κ
 
 noncomputable def bddSubring (p : ℕ) [Fact p.Prime] : Subring (PowerSeries ℂ_[p]) where
   carrier := {f | BddSer f}
-  mul_mem' ha hb := ((GlobalTheory.T.padicComplex_integral_bounded_series_laws p).2.1 _ _ ha hb).2.2
-  add_mem' ha hb := ((GlobalTheory.T.padicComplex_integral_bounded_series_laws p).2.1 _ _ ha hb).1
-  one_mem' := by simpa using ((GlobalTheory.T.padicComplex_integral_bounded_series_laws p).2.2.1 1).1
-  zero_mem' := by simpa using ((GlobalTheory.T.padicComplex_integral_bounded_series_laws p).2.2.1 0).1
+  mul_mem' ha hb := ((_root_.GlobalTheory.EvenTheta.SerRing.series_ring_laws p).2.1 _ _ ha hb).2.2
+  add_mem' ha hb := ((_root_.GlobalTheory.EvenTheta.SerRing.series_ring_laws p).2.1 _ _ ha hb).1
+  one_mem' := by simpa using ((_root_.GlobalTheory.EvenTheta.SerRing.series_ring_laws p).2.2.1 1).1
+  zero_mem' := by simpa using ((_root_.GlobalTheory.EvenTheta.SerRing.series_ring_laws p).2.2.1 0).1
   neg_mem' {x} hx := by
     obtain ⟨B, hB⟩ := hx
     exact ⟨B, fun n => by simpa using hB n⟩
@@ -85,8 +85,8 @@ theorem intSer_of_common_divisor (p : ℕ) [Fact p.Prime] (m n : ℕ) (e Ψ A B 
     (hΨA : Ψ * A = (∏ i, lineSer e (y i)) ^ 2) (hΨB : Ψ * B = ∏ j, lineSer e (y' j))
     (hy : ∀ i j, y i ≠ y' j) : IntSer Ψ := by
   have hl : ∀ x : ℂ_[p], lineSer e x ∈ bddSubring p := fun x =>
-    (bddSubring p).sub_mem he ((bddSubring p).mul_mem ((GlobalTheory.T.padicComplex_integral_bounded_series_laws p).2.2.1 x).1
-      ((bddSubring p).pow_mem (show BddSer _ from ⟨1, (GlobalTheory.T.padicComplex_integral_bounded_series_laws p).2.2.2.1⟩) 2))
+    (bddSubring p).sub_mem he ((bddSubring p).mul_mem ((_root_.GlobalTheory.EvenTheta.SerRing.series_ring_laws p).2.2.1 x).1
+      ((bddSubring p).pow_mem (show BddSer _ from ⟨1, (_root_.GlobalTheory.EvenTheta.SerRing.series_ring_laws p).2.2.2.1⟩) 2))
   obtain ⟨N, H, hH⟩ := dvd_pow_prod_sub (R := bddSubring p) ⟨Ψ, hΨ⟩
     (fun i => ⟨lineSer e (y i), hl _⟩) (fun j => ⟨lineSer e (y' j), hl _⟩)
     ⟨⟨A, hA⟩, Subtype.ext (by simpa using hΨA.symm)⟩
@@ -113,7 +113,7 @@ theorem intSer_of_common_divisor (p : ℕ) [Fact p.Prime] (m n : ℕ) (e Ψ A B 
     rw [this, PowerSeries.coeff_X_pow_mul']
     simp [h1]
   intro i
-  have := GlobalTheory.T.powerSeries_supNorm_mul_padicComplex p Ψ H ‖c‖ hΨ H.2 (fun k => by
+  have := _root_.GlobalTheory.EvenTheta.sup_norm_mul_padicComplex p Ψ H ‖c‖ hΨ H.2 (fun k => by
     rw [key, PowerSeries.coeff_monomial]
     split_ifs <;> simp) i (2 * n * m * N)
   rw [hHc] at this

@@ -1,20 +1,31 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.ExistsCellOfIsSubquotient
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BernsteinZelevinskyGeometricLemmaStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CellLeviTensorDecompositionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DoubleCosetBlockMatrixStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsPermBlockMatrixStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsStrictBlockOrderStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiltrationTransportEquivStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InductionReindexEquivStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsSmoothCompContinuousStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetModuleDeterminantTwistStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetModuleEquivStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetModuleLeviTransportStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeviBlockHomeomorphStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeviIntersectionConjugateStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PermutationBlockCountsStatement
+public import GroundTheory.AutomorphicForms.GeometricLemmaNormal
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BernsteinZelevinskyGeometricLemma
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CellLeviTensorDecomposition
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.LeviEmbMemNormalizerLower
+public import GroundTheory.AutomorphicForms.FiniteBruhat
+public import GroundTheory.AutomorphicForms.Iwasawa
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DoubleCosetBlockMatrix
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsPermBlockMatrix
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsStrictBlockOrder
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsUnitarisableOfCharIff
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiltrationTransportEquiv
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsSubquotientDetRepParInd
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InductionReindexEquiv
+public import GroundTheory.AutomorphicForms.GeometricLemmaJacquetCell
+public import Development.AbelianVarietyTheory.Definitions.Foundations.SmoothPartStable
+public import GroundTheory.AutomorphicForms.SmoothRep
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsSmoothCompContinuous
+public import GroundTheory.AutomorphicForms.InductionParabolic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetModuleDeterminantTwist
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetModuleEquiv
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetModuleLeviTransport
+public import GroundTheory.AutomorphicForms.InductionParabolicGroups
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeviBlockHomeomorph
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeviIntersectionConjugate
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PermutationBlockCounts
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -83,18 +94,18 @@ theorem jacquetOfInducedFiltration : ∀ (k : Type) [Field k] [ValuativeRel k] [
   let ι : n ≃ Fin N := Fintype.equivFin n
   let E := e.trans ι
   let E' := e'.trans ι
-  obtain ⟨βF, hβ⟩ := GlobalTheory.T.exists_strict_block_order m E
-  obtain ⟨γF, hγ⟩ := GlobalTheory.T.exists_strict_block_order m' E'
-  obtain ⟨φ, hφ, -, hφsc⟩ := GlobalTheory.T.levi_block_homeomorph k E βF hβ
-  obtain ⟨φ', hφ', -, -⟩ := GlobalTheory.T.levi_block_homeomorph k E' γF hγ
-  obtain ⟨K, w, hcov, hfilt⟩ := GlobalTheory.T.bernstein_zelevinsky_geometric_lemma k N βF γF
+  obtain ⟨βF, hβ⟩ := _root_.GlobalTheory.CompanionTheory.Twist.exists_nat_labelling_blk m E
+  obtain ⟨γF, hγ⟩ := _root_.GlobalTheory.CompanionTheory.Twist.exists_nat_labelling_blk m' E'
+  obtain ⟨φ, hφ, -, hφsc⟩ := _root_.GlobalTheory.CompanionTheory.LeviIso.leviEquiv k E βF hβ
+  obtain ⟨φ', hφ', -, -⟩ := _root_.GlobalTheory.CompanionTheory.LeviIso.leviEquiv k E' γF hγ
+  obtain ⟨K, w, hcov, hfilt⟩ := _root_.GlobalTheory.CompanionTheory.GeomLemmaUniform.geometricLemma_uniform k N βF γF
   let sz : Equiv.Perm (Fin N) → α → β → ℕ := fun v i j =>
     (Finset.univ.filter fun x : Fin N => blk E x = i ∧ blk E' (v.symm x) = j).card
-  let toSM : Fin K → SizeMatrix m m' := fun t => ⟨sz (w t), GlobalTheory.T.permutation_block_counts E E' (w t)⟩
+  let toSM : Fin K → SizeMatrix m m' := fun t => ⟨sz (w t), _root_.GlobalTheory.CompanionTheory.CellSizes.sizes_sum E E' (w t)⟩
   have hsz : ∀ v v' : Equiv.Perm (Fin N), permGL k v' ∈ doubleCoset (permGL k v)
       (blockUpper k N βF : Set (GL (Fin N) k)) (blockUpper k N γF) ↔ sz v = sz v' := by
     intro v v'
-    rw [GlobalTheory.T.double_coset_block_matrix k E βF hβ E' γF hγ v v']
+    rw [_root_.GlobalTheory.CompanionTheory.GeoCell.permGL_mem_doubleCoset_iff_card k E βF hβ E' γF hγ v v']
     exact ⟨fun h => funext fun i => funext fun j => h i j, fun h i j => congrFun (congrFun h i) j⟩
   have hself : ∀ v : Equiv.Perm (Fin N), permGL k v ∈ doubleCoset (permGL k v)
       (blockUpper k N βF : Set (GL (Fin N) k)) (blockUpper k N γF) := fun v =>
@@ -106,7 +117,7 @@ theorem jacquetOfInducedFiltration : ∀ (k : Type) [Field k] [ValuativeRel k] [
     exact (huniq t ((hsz _ _).2 h1)).trans (huniq t' (hself _)).symm
   have surj : Function.Surjective toSM := by
     intro B
-    obtain ⟨v, hv⟩ := GlobalTheory.T.exists_perm_block_matrix E E' B
+    obtain ⟨v, hv⟩ := _root_.GlobalTheory.CompanionTheory.SizeCells.exists_perm_cell_sizes E E' B
     obtain ⟨t, ht, -⟩ := hcov (permGL k v)
     refine ⟨t, Subtype.ext ?_⟩
     show sz (w t) = B.1
@@ -115,34 +126,34 @@ theorem jacquetOfInducedFiltration : ∀ (k : Type) [Field k] [ValuativeRel k] [
   refine ⟨K, Equiv.ofBijective toSM ⟨inj, surj⟩, ?_⟩
   intro W _ _ ρ hρ
   let σ := ρ.comp φ.symm.toMonoidHom
-  have hσ : GroundTheory.Automorphic.IsSmooth σ := GlobalTheory.T.isSmooth_comp_continuous φ.symm.toMonoidHom hφsc ρ hρ
+  have hσ : GroundTheory.Automorphic.IsSmooth σ := _root_.GlobalTheory.CompanionTheory.SmoothBridge.isSmooth_comp φ.symm.toMonoidHom hφsc ρ hρ
   have hF := hfilt W σ hσ
   obtain ⟨V, hF⟩ := hF
   obtain ⟨hV0, hF⟩ := hF
   obtain ⟨hVK, hF⟩ := hF
   obtain ⟨hVmono, hV, hΨ⟩ := hF
-  have e1' := GlobalTheory.T.induction_reindex_equiv k e e' ι ρ
+  have e1' := _root_.GlobalTheory.CompanionTheory.ParIndReindex.jac_parInd_reindex k e e' ι ρ
   obtain ⟨e1⟩ := e1'
-  have e2' := GlobalTheory.T.jac_equiv_jacquetRep_comp_levi_equiv k E' γF hγ φ' hφ' (V := IndSp E ρ) (parInd E ρ)
+  have e2' := _root_.GlobalTheory.CompanionTheory.JacBridge.jac_equiv_jacquetRep k E' γF hγ φ' hφ' (V := IndSp E ρ) (parInd E ρ)
   obtain ⟨e2⟩ := e2'
-  have e3' := GlobalTheory.T.parabolicInd_equiv_levi_transport k E βF hβ φ hφ ρ
+  have e3' := _root_.GlobalTheory.CompanionTheory.ParIndBridge.parInd_equiv_parabolicInd k E βF hβ φ hφ ρ
   obtain ⟨e3⟩ := e3'
-  have e4' := GlobalTheory.T.jacquet_module_equiv k N γF (V := IndSp E ρ) (parInd E ρ) _ e3
+  have e4' := _root_.GlobalTheory.CompanionTheory.JacquetEquiv.nonempty_jacquetRep_equiv k N γF (V := IndSp E ρ) (parInd E ρ) _ e3
   obtain ⟨e4⟩ := e4'
   have e12 := e1.trans e2
   have e45 := equivComp e4 φ'.toMonoidHom
   have e5 := e12.trans e45
-  have hT := GlobalTheory.T.filtration_transport_equiv φ'.toMonoidHom _ _ e5 K _
+  have hT := _root_.GlobalTheory.CompanionTheory.FiltTransfer.subQuot_of_filtration φ'.toMonoidHom _ _ e5 K _
     (fun j => indRep (cellLeviSub k βF γF (w j)) (normInducing σ γF (w j))) V hV0 hVK hVmono hV hΨ
   obtain ⟨S, hT⟩ := hT
   obtain ⟨hS1, hS2, hS3, hS4⟩ := hT
   refine ⟨S, hS1, hS2, hS3, fun t f g => ?_⟩
   have q1' := hS4 t
   obtain ⟨q1⟩ := q1'
-  have c' := GlobalTheory.T.levi_intersection_conjugate k E βF hβ φ hφ E' γF hγ φ' hφ' ρ (w t)
+  have c' := _root_.GlobalTheory.CompanionTheory.GeomCell.cell_iso k E βF hβ φ hφ E' γF hγ φ' hφ' ρ (w t)
   obtain ⟨f0, g0, c'⟩ := c'
   obtain ⟨q2⟩ := c'
-  have q3' := GlobalTheory.T.cell_levi_tensor_decomposition (fun i j => by rw [Fintype.card_fin, Fintype.card_fin]; rfl) f0 g0 f g ρ
+  have q3' := _root_.GlobalTheory.CompanionTheory.CellCongr.cellFunctor_congr (fun i j => by rw [Fintype.card_fin, Fintype.card_fin]; rfl) f0 g0 f g ρ
   obtain ⟨q3⟩ := q3'
   exact ⟨q1.trans (q2.trans q3)⟩
 

@@ -3,7 +3,7 @@ module
 public import Formalism.PeriodIntegrals.QuotInv
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UpqExpLocalChart
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UpperOff
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ClosedMatrixSubgroupTheoremStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ClosedMatrixSubgroupTheorem
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousMatExp
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsDensityOriginOfAlmostHomogeneous
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MatGroupHaarUniqueFiniteCompactOpenPos
@@ -306,7 +306,7 @@ theorem exists_hasDens : ∀ (m : ℕ) (S : Set (Matrix (Fin m) (Fin m) ℂ)) (�
     PI.IsMatGroup S → PI.IsHaarOnM S μ →
     ∃ c : ℝ, 0 < c ∧ HasDens S μ (ENNReal.ofReal c) ∧ ∀ c', HasDens S μ c' → c' = ENNReal.ofReal c := by
   intro m S μ hS hμ
-  obtain ⟨hlie, hsurj⟩ := GlobalTheory.T.closed_matrix_subgroup_theorem m S hS
+  obtain ⟨hlie, hsurj⟩ := _root_.GlobalTheory.ClosedMatGroup.closed_subgroup m S hS
   obtain ⟨-, hcpt, hop⟩ := GlobalTheory.MatHaar.haar_unique_locFinite_openPos m S μ hS hμ
   have hmem : ∀ X, expL S X ∈ S := fun X => by simpa [expL] using hlie X 1
   have hsurj' : ∀ ρ : ℝ, 0 < ρ → ∃ δ : ℝ, 0 < δ ∧ ∀ g ∈ S, (∀ i j, ‖(g - 1) i j‖ < δ) →

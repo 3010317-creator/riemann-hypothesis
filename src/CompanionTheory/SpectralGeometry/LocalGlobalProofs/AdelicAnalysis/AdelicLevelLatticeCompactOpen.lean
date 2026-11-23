@@ -1,7 +1,8 @@
 module
 
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.SumRhoEqTrace
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FiniteAdeleTopologyStatement
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.CountData
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FiniteAdeleTopology
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,7 +60,7 @@ theorem latN_coe_eq_pi (F : Type) [Field F] [NumberField F] (ι : Type) [Fintype
 
 theorem isCompact_mul_oh (F : Type) [Field F] [NumberField F] (N : ℕ) :
     IsCompact {x : A F | ∃ y ∈ Oh F, x = (N : A F) * y} := by
-  have hOh : IsCompact (Oh F) := (GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F).2.2.2.1
+  have hOh : IsCompact (Oh F) := (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.2.2.1
   have heq : {x : A F | ∃ y ∈ Oh F, x = (N : A F) * y} = (fun y => (N : A F) * y) '' Oh F := by
     ext x
     constructor
@@ -74,7 +75,7 @@ theorem main : ∀ (F : Type) [Field F] [NumberField F] (ι : Type) [Fintype ι]
     0 < N → IsCompact (latN F ι N : Set (ι → A F)) ∧ IsOpen (latN F ι N : Set (ι → A F)) ∧
       ∀ a : ι → F, SB (indC N a) := by
   intro F _ _ ι _ _ N hN
-  obtain ⟨-, -, hT2, -, -, -, -, -, -, hOpen⟩ := GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F
+  obtain ⟨-, -, hT2, -, -, -, -, -, -, hOpen⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
   have hC : IsCompact (latN F ι N : Set (ι → A F)) := by
     rw [latN_coe_eq_pi]
     exact isCompact_univ_pi fun _ => isCompact_mul_oh F N

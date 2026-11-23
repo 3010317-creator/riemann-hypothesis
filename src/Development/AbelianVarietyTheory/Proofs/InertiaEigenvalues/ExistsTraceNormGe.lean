@@ -3,10 +3,13 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Foundations.HTBasis
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsDiscreteValuationRingIntegralClosurePadicInt
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicCharacterPadicBasicProperties
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinrankCyclotomicExtAndCyclotomicCharSurjectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegersEqSumZetaPowStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinrankCyclotomicExtAndCyclotomicCharSurjective
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegersEqSumZetaPow
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsCycCycChar
 public import Formalism.LocalToGlobal.ProjectiveLattices.AvMono
+public import Mathlib.RingTheory.RootsOfUnity.Lemmas
+public import Mathlib.FieldTheory.Galois.Infinite
 import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -28,7 +31,6 @@ import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
-public import Mathlib.RingTheory.RootsOfUnity.Lemmas
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
 import Mathlib.Tactic.Echelon.Zsqrtd
@@ -55,7 +57,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.TypeStar
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.HeightTheory.FiniteAlgebraLocalCompletion
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Mathlib.FieldTheory.Galois.Infinite
 
 @[expose] public section
 
@@ -212,7 +213,7 @@ theorem norm_move_le (K : FinExt l) {τ : GQ l} (hτ : τ ∈ Gj K 1) (i : ℕ) 
     simp [this]
   | succ i hi ih =>
     intro ζ hζ z hz hn
-    obtain ⟨y, hy, rfl⟩ := (GlobalTheory.T.integers_eq_sum_zeta_pow_unique l K (i + 1) (by omega) ζ hζ).1 z hz hn
+    obtain ⟨y, hy, rfl⟩ := (_root_.GlobalTheory.Cyc.integers_eq_sum_zeta_pow l K (i + 1) (by omega) ζ hζ).1 z hz hn
     have hζ1 : ‖ζ‖ ≤ 1 := (norm_root (pow_ne_zero _ hl.ne_zero) hζ.pow_eq_one).le
     have hτ1 : ‖τ ζ‖ ≤ 1 := by rwa [norm_gal]
     have hζ' : IsPrimitiveRoot (ζ ^ l) (l ^ i) :=
@@ -247,7 +248,7 @@ theorem exists_gal_pow (K : FinExt l) (i m : ℕ) {ζ : Om l} (hζ : ζ ^ l ^ i 
       max_eq_left (hlt.trans hlt1.le)]
     rw [norm_one]
     exact (hlt.trans_lt hlt1).ne'
-  obtain ⟨g, hg, hgu⟩ := (GlobalTheory.T.finrank_cyclotomicExt_and_cyclotomicChar_surjective l K).2 χ hχ _ hu
+  obtain ⟨g, hg, hgu⟩ := (_root_.GlobalTheory.Cyc.finrank_Ks_and_chi_surjective l K).2 χ hχ _ hu
   refine ⟨g, (((cyc_basic l χ hχ).2.2 K g hg).1 1).2 ?_, ?_⟩
   · rw [hgu, Nat.cast_add, Nat.cast_one, add_sub_cancel_left]
     exact hlt

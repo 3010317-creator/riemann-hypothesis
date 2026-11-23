@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCoType
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CardFilterLowerHeckeRepsEqRelIndexPowStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BlockDetLowUEmb
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CardFilterLowerHeckeRepsEqRelIndexPow
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsFinsetRepsMaximalIdealMatrixModMulStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LowerUnipotentDiagDoubleCosetRepresentativesStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ParahoricBiTransformingLowerUnipotentDiagValueStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LowerUnipotentDiagDoubleCosetRepresentatives
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ParahoricBiTransformingLowerUnipotentDiagValue
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnramifiedHeightLatticeIndexIdentityStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -53,7 +54,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BlockDetLowUEmb
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasBoundedSumsOne
 
 @[expose] public section
@@ -165,7 +165,7 @@ theorem coeff_isEigen : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
     have hdec : ∀ g ∈ R, ∃ κ ∈ KO k D, ∃ κ' ∈ KO k D, g = κ * w * κ' :=
       fun g hg => ⟨_, hκc g hg, _, hκ'c g hg, hgκ g hg⟩
     choose! N hN using fun g hg => GlobalTheory.T.exists_finset_reps_maximalIdealMatrix_mod_mul k A D ϖ hϖ s g (hdec g hg)
-    obtain ⟨R', hrep, hsum⟩ := GlobalTheory.T.lowerUnipotent_diag_doubleCoset_representatives k A D ϖ hϖ s R hR κc κ'c
+    obtain ⟨R', hrep, hsum⟩ := _root_.GlobalTheory.LowerHecke.repsBuild k A D ϖ hϖ s R hR κc κ'c
       (fun g hg => ⟨hκc g hg, hκ'c g hg, hgκ g hg⟩) N hN
     have heig := hgen.2.2 s R' blockDet hrep
     set E := fun m : GL D k => emb₂ k (Equiv.refl (A ⊕ D)) (1, m) with hE
@@ -189,7 +189,7 @@ theorem coeff_isEigen : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
         rw [eq_mul_inv_iff_mul_eq]
         calc m * κc g * w * κ'c g = m * (κc g * w * κ'c g) := by group
           _ = m * g := by rw [← hgκ g hg]
-      have hcnt := (GlobalTheory.T.card_filter_lowerHecke_reps_eq_relIndex_pow k A D ϖ hϖ s m g (m * κc g * w) (hdec g hg) ⟨_, inv_mem (hκ'c g hg), hy⟩ (N g)
+      have hcnt := (_root_.GlobalTheory.LowerHeckeCount.card_filter_eq k A D ϖ hϖ s m g (m * κc g * w) (hdec g hg) ⟨_, inv_mem (hκ'c g hg), hy⟩ (N g)
         (hN g hg)).1
       have e1 : ∀ ν : Matrix D A k, E m * (lowU ν * E (κc g) * mtor ϖ (indic s)) = lowU (m.1 * ν) * E (m * κc g * w) := by
         intro ν
@@ -201,7 +201,7 @@ theorem coeff_isEigen : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
       simp only [hb, e1]
       have hs : ∀ (ν : Matrix D A k) (y : GL D k), φ (lowU ν * E y) = if ∃ ν₁ ν₂ : Matrix D A k, (∀ i a, valuation k (ν₁ i a) < 1) ∧
           (∀ i a, valuation k (ν₂ i a) < 1) ∧ ν = ν₁ + y.1 * ν₂ then φ (E y) else 0 :=
-        fun ν y => GlobalTheory.T.parahoricBiTransforming_lowerUnipotent_diag_value k A D ξ hξt hξu φ hbi ν y
+        fun ν y => _root_.GlobalTheory.LowerHeckeSupp.biType_lowU_emb k A D ξ hξt hξu φ hbi ν y
       simp only [hs, mul_ite, mul_zero]
       rw [Finset.sum_ite, Finset.sum_const_zero, add_zero, Finset.sum_const, nsmul_eq_mul, hcnt]
       rw [hy, hφR' _ (inv_mem (hκ'c g hg))]
@@ -221,7 +221,7 @@ theorem coeff_isEigen : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
         rw [eq_mul_inv_iff_mul_eq]
         calc m * κc g * w * κ'c g = m * (κc g * w * κ'c g) := by group
           _ = m * g := by rw [← hgκ g hg]
-      exact_mod_cast (GlobalTheory.T.card_filter_lowerHecke_reps_eq_relIndex_pow k A D ϖ hϖ s m g (m * κc g * w) (hdec g hg) ⟨_, inv_mem (hκ'c g hg), hy⟩ (N g) (hN g hg)).2
+      exact_mod_cast (_root_.GlobalTheory.LowerHeckeCount.card_filter_eq k A D ϖ hϖ s m g (m * κc g * w) (hdec g hg) ⟨_, inv_mem (hκ'c g hg), hy⟩ (N g) (hN g hg)).2
     have hdg : ∀ g ∈ R, (ξ (GeneralLinearGroup.det (m * g)) : ℂ) = ξ (GeneralLinearGroup.det m) *
         (ξ (GeneralLinearGroup.det (κc g)) * ((ξ ϖ : ℂ) ^ s.card * ξ (GeneralLinearGroup.det (κ'c g)))) := by
       intro g hg

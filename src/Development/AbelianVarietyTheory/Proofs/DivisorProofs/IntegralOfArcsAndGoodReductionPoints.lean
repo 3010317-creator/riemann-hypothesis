@@ -2,9 +2,17 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsChartOfIsLocalRing
 public import Mathlib.RingTheory.HahnSeries.PowerSeries
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowerSeriesOfNoPoleAwayUniformizerXStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsDiscreteValuationRingLocalizationPowerSeriesUnStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsArcDataOfBadReductionFiniteExtensionStatement
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.RingTheory.LaurentSeries
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowerSeriesOfNoPoleAwayUniformizerX
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PushInvertibleModelOfIso
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Mathlib.RingTheory.Localization.AtPrime.Basic
+public import Mathlib.RingTheory.PowerSeries.NoZeroDivisors
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsDiscreteValuationRingLocalizationPowerSeriesUn
+public import Formalism.LocalToGlobal.ProjectiveLattices.OneLtAbsNormReal
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsArcDataOfBadReductionFiniteExtension
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsComplexEmbeddingFractionFieldCdvr
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCdvrMkLeContinuum
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SpMapClosedPointOfSurjective
@@ -48,7 +56,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.FibreFramesOnModels
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PushInvertibleModelOfIso
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalisedModelUniformisationBaseChange
 
 @[expose] public section
@@ -75,7 +82,7 @@ theorem exists_denominator {A : Type} [CommRing A] [IsDomain A] [IsDiscreteValua
       ψ.comp (algebraMap (PowerSeries A) S) = (algebraMap R K).comp ρ → IsUnit (ρ PowerSeries.X) →
       ψ v ∈ (algebraMap R K).range) :
     ∃ s t : PowerSeries A, ¬ PowerSeries.C ϖ ∣ t ∧ v * algebraMap _ S t = algebraMap _ S s := by
-  obtain ⟨hp, hdvr⟩ := GlobalTheory.T.isDiscreteValuationRing_localization_powerSeries_uniformiser A ϖ hϖ
+  obtain ⟨hp, hdvr⟩ := _root_.GlobalTheory.PowerSeriesUniformiser.main A ϖ hϖ
   obtain ⟨R, _, _, _, _, _⟩ : ∃ (R : Type) (_ : CommRing R) (_ : IsDomain R) (_ : IsDiscreteValuationRing R)
       (_ : Algebra (PowerSeries A) R), IsLocalization.AtPrime R (Ideal.span {(PowerSeries.C ϖ : PowerSeries A)}) :=
     ⟨_, _, _, hdvr, _, inferInstance⟩
@@ -161,7 +168,7 @@ theorem integral_of_arcs_of_good : ∀ (E : Type) [Field E] [NumberField E] [IsC
       have := hy ⟨IsLocalRing.closedPoint T.V, rfl⟩
       change (spMap i ≫ z) (IsLocalRing.closedPoint T.V) ∈ _ at this
       erw [Scheme.Hom.comp_apply, e] at this; exact this)
-  obtain ⟨T', g, ϖ, a, hg, hgf, hϖ, hA⟩ := GlobalTheory.T.exists_arcData_of_badReduction_finiteExtension E H Dw l Xo c V Y h3 hS T io' b y' zT hbio hy' hzT' hzT hbad
+  obtain ⟨T', g, ϖ, a, hg, hgf, hϖ, hA⟩ := _root_.GlobalTheory.ArcOfPoint.exists_arcIn_of_bad_reduction E H Dw l Xo c V Y h3 hS T io' b y' zT hbio hy' hzT' hzT hbad
   have hcpl : IsAdicComplete (Ideal.span {ϖ}) T'.V := hϖ.maximalIdeal_eq ▸ T'.cpl
   obtain ⟨χ₀, hχ, hsp⟩ := h4 T'.V (g.comp b) ϖ a (Or.inr ⟨inferInstance, hϖ, hcpl⟩)
   obtain ⟨hover₀, hab₀, hopen, hW⟩ := (hχ χ₀).1 rfl
@@ -246,7 +253,7 @@ theorem integral_of_arcs_of_good : ∀ (E : Type) [Field E] [NumberField E] [IsC
     rintro _ ⟨x, rfl⟩
     exact (hab₀ (spMap ρ x)).2 fun hx => x.isPrime.ne_top (Ideal.eq_top_of_isUnit_mem _
       (show ρ PowerSeries.X ∈ x.asIdeal from hx) hρ))
-  obtain ⟨s, hs⟩ := GlobalTheory.T.exists_powerSeries_of_no_pole_away_uniformizer_X T'.V ϖ hϖ κ₀ hκ₀ S ιC hιC _ hres hden
+  obtain ⟨s, hs⟩ := _root_.GlobalTheory.PowerSeriesNoPole.exists_eq_algebraMap T'.V ϖ hϖ κ₀ hκ₀ S ιC hιC _ hres hden
 
   have hϖu : IsUnit ((algebraMap T'.V T'.Fr).comp evu (PowerSeries.C ϖ * PowerSeries.X)) := by
     rw [RingHom.comp_apply, map_mul evu, hevC, hevX]

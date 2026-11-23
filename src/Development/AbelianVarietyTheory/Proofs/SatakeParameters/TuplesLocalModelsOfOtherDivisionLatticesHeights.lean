@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.HasPartAnd
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LatticeChainComparisonIndepDivisionLatticesStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SiteAdmissibleIndepDivisionLatticesStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.IsPlaceCofactorValuationLowerBound
+public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.SetUnipotentTranslate
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SiteAdmissibleIndepDivisionLattices
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,6 +52,6 @@ theorem modelsAt_tr : ∀ (D : D7) (O : Obj D) (N : ∀ u, Submodule (𝓞 D.wha
   obtain ⟨h0, LC, hLC⟩ := H hT hk
   refine ⟨h0, LC, fun μ hμ u w hg hq => ?_⟩
   obtain ⟨c1, c2⟩ := hLC μ hμ u w hg hq
-  exact ⟨GlobalTheory.T.latticeChainComparison_indep_divisionLattices D N h _ _ u μ w hg _ _ _ c1, GlobalTheory.T.siteAdmissible_indep_divisionLattices D N h u w hg _ _ _ c2⟩
+  exact ⟨GlobalTheory.T.latticeChainComparison_indep_divisionLattices D N h _ _ u μ w hg _ _ _ c1, _root_.GlobalTheory.TwU.siteAdm_setDiv D N h u w hg _ _ _ c2⟩
 
 end GlobalTheory.Svd

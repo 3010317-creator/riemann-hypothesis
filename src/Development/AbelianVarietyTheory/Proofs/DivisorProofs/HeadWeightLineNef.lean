@@ -3,8 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExOfHeadWt
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.InterNumDetNonposSplitTorus
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothOfRelativeDimensionOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLieBundleFramesChartsChangeBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocallyFreeSubsheafDetIsoStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsChartOfIsLocalRing
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsIsoQuotToImOmegaLieOfSplit
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLieBundleFramesChartsChangeBasis
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ToBidualNaturalityDualSheafTranspose
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocallyFreeSubsheafDetIso
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIsoToBidualOfLocalFrames
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsLBOfChartPull
 import Mathlib.Algebra.Order.Floor.Extended
@@ -207,8 +210,8 @@ theorem val_dual_LL_stepEx {j : ℕ} (hj : j ≤ Dw.mult σ) (k k' : F.J) :
 theorem exists_step {j : ℕ} (hj : j ≤ Dw.mult σ) :
     ∃ (W : C.Modules) (ι : W ⟶ (Scheme.Modules.pullback (g ≫ π)).obj (Lie Y.t.G)), Mono ι ∧ IsVB W j ∧
       LBIso (chartwise (CechPic.dual (F.LL (NefStep.stepEx σ j))) g) (det W j) := by
-  obtain ⟨f, hf, hc⟩ := GlobalTheory.T.exists_lieBundle_frames_charts_change_basis E H Dw l Xo c O β Y
-  refine GlobalTheory.T.exists_locallyFree_subsheaf_det_iso C _ j _ (isLB_chartwise (isLB_dual (F.isLB_LL _)) g).1
+  obtain ⟨f, hf, hc⟩ := _root_.GlobalTheory.ChartLieFrame.exists_lieFrame E H Dw l Xo c O β Y
+  refine _root_.GlobalTheory.SubGlue.exists_sub_isVB_lbIso_det C _ j _ (isLB_chartwise (isLB_dual (F.isLB_LL _)) g).1
     (fun k i => vecSec F g σ f k (g ⁻¹ᵁ F.U k) le_rfl (Fin.castLE hj i))
     (fun k k' => ((F.B k k' σ).submatrix (Fin.castLE hj) (Fin.castLE hj)).map (g.app (F.U k ⊓ F.U k')).hom)
     (fun k V h => ?_) (fun k k' i => ?_) fun k k' => ?_

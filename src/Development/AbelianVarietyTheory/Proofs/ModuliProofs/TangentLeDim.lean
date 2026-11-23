@@ -1,20 +1,21 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.CmFieldHostElementAddConjEqOne
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsGaloisCover
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.ExistsArBaseAway
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.SabPull
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
-import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IsCoprimeTwoSubRtTwoAddRt
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.LineBundleSymmetryHypothesisBaseChange
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CardTypeLe
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsAdaptedLieBasis
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsKsMatrixStatement
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPushEquiv
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsLieBasis
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsKsMatrix
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaLevelAbelianSchemePullback
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelAbelianSchemeConstOverDualNumbers
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelPullbackIdCompCancel
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelShapePrimitivityPullbackDescent
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.CmFieldHostElementAddConjEqOne
+import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IsCoprimeTwoSubRtTwoAddRt
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPushEquiv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -163,7 +164,7 @@ theorem tangent_le_dim : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{0}) (P : O
     have := (hdet K p β hp).1 σ
     exact ⟨fun x => key _ (this.1 x), fun x => key _ (this.2 x)⟩
   obtain ⟨n, v, ty, hv, hty, hdiag⟩ := GlobalTheory.exists_adapted_lieBasis E H D K t₀.A A₀ (β ρ) t₀.ab.smooth det
-  obtain ⟨Θ, hsym, hcomm, hker⟩ := GlobalTheory.T.exists_ksMatrix_alt L1 L2 L3 K r t.pol t₀.pol φ₀ n v h₀ hL₀ hv
+  obtain ⟨Θ, hsym, hcomm, hker⟩ := _root_.GlobalTheory.KSField.exists_ksMatrix L1 L2 L3 K r t.pol t₀.pol φ₀ n v h₀ hL₀ hv
   have inj : Function.Injective Θ := by
     set_option backward.isDefEq.respectTransparency.instanceSearchTypes false in rw [injective_iff_map_eq_zero]
     intro lam h0

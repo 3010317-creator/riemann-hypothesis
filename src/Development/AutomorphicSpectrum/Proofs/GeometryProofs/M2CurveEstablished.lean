@@ -3,9 +3,12 @@ module
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.CurveSemiAbelianConjecture
 public import Mathlib.RingTheory.Coalgebra.IsFrobenius
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DegreeInvariantLinearEquiv
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.EigenFlagSlopeBoundStatement
-import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SubAndQuotientBundles
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.IsSplitGaussChars
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.GapCondExample
+public import Mathlib.RingTheory.HopfAlgebra.Basic
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.EigenFlagSlopeBound
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CurveLieEigenDegreeStatement
+import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SubAndQuotientBundles
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -101,7 +104,7 @@ theorem m2Curve_holds : CurveSemiAbelianConjecture := by
   letI := H.starRing
   obtain ⟨d, D, e, hlie, her⟩ := GlobalTheory.T.curve_lie_eigen_degree E H (fun _ => rfl) X0 t hpow K p C z Y hne hfib V M r hact
   let f : V →ₗ[K] (Fin d → K) := e
-  have key := GlobalTheory.T.eigen_flag_slope_bound K C p (𝓞 E) k (T ⊕ T) T χ d D Sum.inl Sum.inr j q w
+  have key := _root_.GlobalTheory.CompanionTheory.Ar.Crv.LmuDeg.lmuNum_nonneg_of_conjData K C p (𝓞 E) k (T ⊕ T) T χ d D Sum.inl Sum.inr j q w
     (fun τ i => (W τ i).map f) (fun τ i => (L τ i).map f) hp hsplit hk
     (by
       have : (Sum.elim Sum.inl Sum.inr : T ⊕ T → T ⊕ T) = id := by ext (x | x) <;> rfl

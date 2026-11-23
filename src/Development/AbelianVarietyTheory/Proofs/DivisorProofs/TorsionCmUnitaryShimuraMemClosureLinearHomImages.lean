@@ -3,10 +3,11 @@ module
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.EigenvectorLieDegree
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PointShiftSt
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
-import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsEqPowOfTorsionCompEqOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmTorsionMemClosureGenerators
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomKillsTorsionOfComplexPointsOneEmbeddingStatement
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomKillsTorsionOfComplexPointsOneEmbedding
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLinearHomProd
+import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsEqPowOfTorsionCompEqOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,7 +67,7 @@ theorem exists_linear_pow_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   have : Surjective (ReciprocityTheory.ChartRestriction.G.Out.mulA A.t.G m).left := hsu
   have hc : IsCommMonObj A.t.G := A.ab.comm
   have hcB : IsCommMonObj B.t.G := B.ab.comm
-  have hall := GlobalTheory.T.hom_kills_torsion_of_complexPoints_oneEmbedding E H K σ A B G hGm m hm hker
+  have hall := _root_.GlobalTheory.TorsionKill.kill_torsion E H K σ A B G hGm m hm hker
   obtain ⟨F, hF⟩ := GlobalTheory.DivisibleHom.exists_factor (A := A.t.G) m G hall
   have hFm : IsMonHom (ReciprocityTheory.ChartRestriction.G.Out.mulA A.t.G m ≫ F) := hF ▸ hGm
   have : IsMonHom F := GlobalTheory.DivisibleHom.isMonHom_of_factor m F

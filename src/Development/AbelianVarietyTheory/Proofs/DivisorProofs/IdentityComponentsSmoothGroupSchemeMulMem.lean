@@ -5,8 +5,9 @@ public import Mathlib.Combinatorics.Quiver.ReflQuiver
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MulMemIdentityComponentOfRationalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionComponentsPreimageOfIsPullbackStatement
+public import Mathlib.AlgebraicGeometry.Pullbacks
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MulMemIdentityComponentOfRational
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionComponentsPreimageOfIsPullback
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -72,7 +73,7 @@ theorem mul_mem_of_field {S : Scheme.{0}} (G : Over S) [GrpObj G] (hG : Smooth G
     have hc : pullback.fst (𝟙 S) p = pullback.snd (𝟙 S) p ≫ p := by
       simpa using pullback.condition (f := 𝟙 S) (g := p)
     simp [G', F, hc]
-  have key := GlobalTheory.T.preimage_section_connectedComponentIn_of_isPullback G.left S G'.left (Spec (CommRingCat.of k)) G.hom G'.hom p
+  have key := _root_.GlobalTheory.sectionComponents_preimage_of_isPullback G.left S G'.left (Spec (CommRingCat.of k)) G.hom G'.hom p
     (pullback.fst G.hom p) η[G].left η[G'].left hG (IsPullback.of_hasPullback G.hom p)
     (Over.w η[G]) (Over.w η[G']) hsec
   have huniv : ∀ t : (Spec (CommRingCat.of k) : Scheme), G'.hom ⁻¹' {t} = Set.univ :=
@@ -98,7 +99,7 @@ theorem mul_mem_of_field {S : Scheme.{0}} (G : Over S) [GrpObj G] (hG : Smooth G
     rfl
   have ha' := (hq _).1 (by rw [hpoint a _ (hgen a)]; exact ha)
   have hb' := (hq _).1 (by rw [hpoint b _ (hgen b)]; exact hb)
-  have hm := GlobalTheory.T.mul_mem_identityComponent_of_rational' k G' (u ≫ F.map a) (u ≫ F.map b) ha' hb'
+  have hm := _root_.GlobalTheory.mul_mem_identityComponent_of_rational k G' (u ≫ F.map a) (u ≫ F.map b) ha' hb'
   have e1 := hgen (a * b)
   rw [Functor.map_mul, MonObj.comp_mul] at e1
   rw [← hpoint (a * b) _ e1]

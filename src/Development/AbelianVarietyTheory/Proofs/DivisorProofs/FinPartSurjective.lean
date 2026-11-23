@@ -5,35 +5,39 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardLatt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsFinWeil
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsHalfIdem
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCongLevelIntG
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EventuallyFinEqOne
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeFinitelyGeneratedStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeMultipleMemOpenLevelStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitCharacter
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilRepresentationOfLatticeVacuaStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinitePartQuadraticPhaseEqCmThetaExpStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinitePartRationalTensorZeroAtPrimeIffPlaceIdemStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergFinitePointReadsClassicalTranslation
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergTranslateFixesThetaDeepLevel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPrimeIffNonSplitPlaceIdempotentStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvDifferentLatticeProductHermitianIsSelfDualStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvDifferentLatticeProductHermitianIsSelfDual
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsVacuumMovedThetaVacuum
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLatticeOIffScaleMulFinitePartMemIdealLatticeStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormPeriodSq
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexNeZeroOfFinite
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanHeisenbergTranslatesOfLatticeVacuaEqTopStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumSplitSupportedEqIntertwinerMulHalfDetChStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AdelicWeilVacuumFixedAndTranslatesSpanStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CompletedStandardAdelicLatticePropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsAdelicWeilRepresentationModelStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ActAApply
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsAdelicWeilRepresentationModel
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeisenbergRelativeIndexTranslateCompletedLattice
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaIntertwinerEqNormalisedAdelicSum
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualImageOrthonormalFrameLattice
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FrT
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EventuallyFinEqOne
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeFinitelyGeneratedStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeMultipleMemOpenLevelStatement
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsHeisTrivial
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilRepresentationOfLatticeVacua
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormPeriodSq
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexNeZeroOfFinite
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanHeisenbergTranslatesOfLatticeVacuaEqTop
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CompletedStandardAdelicLatticeProperties
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsGoodIndexNormalizationNegativeInert
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLatticeOfAdelicPoint
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeisenbergRelativeIndexTranslateCompletedLatticeStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutesStatement
+import Formalism.SharpRestriction.GlobalSchurBounds.StandardLatticesGL3
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutes
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SumOpTransversal
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaIntertwinerEqNormalisedAdelicSum
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SupportedSubgroupSplitCommutePrimeIdempotents
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualImageOrthonormalFrameLattice
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasWeil
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -72,7 +76,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FrT
 
 @[expose] public section
 
@@ -103,13 +106,13 @@ theorem exists_isLatRep_of {ΛS : Submodule (𝓞 D.host.E) (Fin S.rank → D.ho
   have H := isHeis_opF hψ.1 S T hw
   have hA := selfDual_latF (GlobalTheory.LatVac.latO_selfDual_approx_sign D ψ S T ΛS ΛT hψ hS hT).1
   obtain ⟨hlev, hmov⟩ := GlobalTheory.T.completedHomLattice_multiple_mem_open_level D S T ΛS ΛT hS hT (GlobalTheory.T.completedHomLattice_finitelyGenerated D S T ΛS ΛT hS hT)
-  have hspan := GlobalTheory.T.span_heisenberg_translates_of_lattice_vacua_eq_top H _ hA (smooth_theta hψ.1 hS hT hw hA hlev)
+  have hspan := _root_.GlobalTheory.FinWeil.span_translates_vacua H _ hA (smooth_theta hψ.1 hS hT hw hA hlev)
   have hidx : ∀ p, idx (latF S T ΛS ΛT) ((latF S T ΛS ΛT).map (rhoF S T p)) ≠ 0 := fun p => by
     obtain ⟨N, hN, h⟩ := hmov p.1 p.2
     refine idx_latF_ne_zero hS hT _ hN ?_
     rintro _ ⟨a, ha, rfl⟩
     exact h a ha
-  obtain ⟨Om, h1, h2⟩ := GlobalTheory.T.exists_weil_representation_of_lattice_vacua H lam hlam _ hA hspan (rhoF S T) gamF_rhoF hidx
+  obtain ⟨Om, h1, h2⟩ := _root_.GlobalTheory.FinWeil.exists_weil_rep_of_vacua H lam hlam _ hA hspan (rhoF S T) gamF_rhoF hidx
   exact ⟨Om, hw, hA, hspan, hidx, h1, fun p => (h2 p).1, fun p => (h2 p).2⟩
 
 theorem ext_finQ {a b : AE D} (h1 : infPart D a = infPart D b) (h2 : finQ D a = finQ D b) : a = b :=
@@ -227,7 +230,7 @@ theorem reads_opF (hset : Setup ψ θ S T cc δ r) {w w' : 𝓞 D.host.E} (hw : 
     (h : Reads ψ θ (S := S) (T := T) rfl rfl cc δ r F f) (x : XF S T) :
     Reads ψ θ (S := S) (T := T) rfl rfl cc δ r (WA (back S T r x) F) (opF hset.std.1 S T w x f) := by
   have hr : r ≠ 0 := IsScale.ne_zero hset.crv.1.1 hset.scale
-  obtain ⟨-, -, h3, -⟩ := GlobalTheory.T.completedStandardAdelicLattice_properties D (GlobalTheory.T.inducedType_thetaGenusOne_permutes D).1 cc δ hset.crv S.rank T.rank
+  obtain ⟨-, -, h3, -⟩ := _root_.GlobalTheory.CompletedLattice.completed_lattice D (_root_.GlobalTheory.InducedType.induced_type D).1 cc δ hset.crv S.rank T.rank
   obtain ⟨m, hm, hmx⟩ := exists_deep hset.std.1 hS hT hw hA x f
   obtain ⟨n, hn, hnx⟩ := hM.2.2.2.2 (back S T r x) F
   obtain ⟨z, a, ha, hz⟩ := h3 (back S T r x) (m * n) (Nat.mul_pos hm hn)
@@ -255,10 +258,10 @@ theorem reads_latRep (hset : Setup ψ θ S T cc δ r) {w : 𝓞 D.host.E}
     (h1' : Formalism.MainNotions.StandardLatticesGL3.Moves D (y : GL (Fin T.rank) (Formalism.MainNotions.StandardLatticesGL3.AE D)) L₁') :
     Reads ψ θ (S := S) (T := T) rfl rfl cc δ r (Formalism.MainNotions.TaylorLogMetric.Iop D (tor0 D cc δ) (Formalism.MainNotions.StandardLatticesGL3.La0 D (tor0 D cc δ) S.rank T.rank)
       (Formalism.MainNotions.TaylorLogMetric.La D (tor0 D cc δ) L₁ L₁') e0) (Om (g, h) f) := by
-  have hG := (GlobalTheory.T.inducedType_thetaGenusOne_permutes D).1
+  have hG := (_root_.GlobalTheory.InducedType.induced_type D).1
   have hr : r ≠ 0 := IsScale.ne_zero hset.crv.1.1 hset.scale
   have hmem := back_mem_iff (T := T) hset.gS hset.crv.1.1 hset.scale
-  obtain ⟨w', γ, WA, hM⟩ := GlobalTheory.T.exists_adelicWeilRepresentationModel D hG cc δ hset.crv S.rank T.rank
+  obtain ⟨w', γ, WA, hM⟩ := _root_.GlobalTheory.FinWeil.Model.exists_isModel D hG cc δ hset.crv S.rank T.rank
   obtain ⟨hTT, hfix, -⟩ := GlobalTheory.T.adelicWeil_vacuum_fixed_and_translates_span D hG cc δ hset.crv S.rank T.rank w' γ WA hM e0 he h0
   have hread := reads_opF hset hL.hw hph hS hT hL.sd hM ⟨e0, hTT⟩ f hf
   have hfixF : Fixes (opF hset.std.1 S T w) (latF S T (GlobalTheory.VacRead.lsB D cc r S.rank) (stdL D T.rank)) f := fun a ha => by
@@ -289,7 +292,7 @@ theorem reads_latRep (hset : Setup ψ θ S T cc δ r) {w : 𝓞 D.host.E}
       obtain ⟨l, rfl⟩ := back_surjective (S := S) (T := T) hr b
       simp only [← map_sub, hmem]
       exact hu l ((hmem' l).1 hb))
-  have hidx := GlobalTheory.T.heisenbergRelativeIndex_translate_completed_lattice D hG cc δ hset.crv S.rank T.rank x y
+  have hidx := _root_.GlobalTheory.FinWeil.idx_map_actA D hG cc δ hset.crv S.rank T.rank x y
   have hl := hsq _ hidx.1 fun q hq hi => hidx.2.1 q hq (sx q hq hi) (sy q hq hi)
   have hI := iop_eq_sumOp D hG cc δ hset.crv S.rank T.rank w' γ WA hM x y L₁ L₁' h1 h1' hSD ⟨e0, hTT⟩ hfix
   rw [show Formalism.MainNotions.TaylorLogMetric.Iop D (tor0 D cc δ) _ _ e0 = _ from hI, hL.vac _ f hfixF, normOp, s1, s2, i1, ← i2, hl,
@@ -430,7 +433,7 @@ theorem reads_om_split : ∀ {D : D7} (ψ : AddChar (AF D.host.F) ℂ) (θ : Inf
   obtain ⟨w, hw, hph⟩ := GlobalTheory.T.finitePartQuadraticPhase_eq_cmTheta_exp D
   obtain ⟨lam, hlam, hsq⟩ := exists_goodNorm D
   obtain ⟨ε, hε⟩ := GlobalTheory.RatAut.exists_isHalfIdem D
-  have dS := isSelfDualC_of_sd S hset.gS (GlobalTheory.T.invDifferentLatticeProductHermitian_isSelfDual D cc r S.rank hset.crv.1.1 hset.scale)
+  have dS := isSelfDualC_of_sd S hset.gS (_root_.GlobalTheory.VacRead.lsB_selfDual D cc r S.rank hset.crv.1.1 hset.scale)
   have dT := isSelfDualC_of_sd T hset.gT (GlobalTheory.MovedVacuum.sd_stdL D T.rank)
   obtain ⟨Om, hL⟩ := exists_isLatRep_of hset.std dS dT hlam hw
   obtain ⟨sg, u, x₀, hu, iu, zx, dx⟩ := exists_half_det hε S hset.gS hg sx

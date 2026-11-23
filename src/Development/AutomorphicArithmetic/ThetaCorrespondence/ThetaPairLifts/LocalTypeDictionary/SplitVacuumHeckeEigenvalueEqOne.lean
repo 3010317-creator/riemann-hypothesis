@@ -2,11 +2,14 @@ module
 
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMemKAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjMemAdelicSchwartzSpaceNumberFieldOfMemStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplementaryAdelicSchwartzTensorNeZeroStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjMemAdelicSchwartzSpaceNumberFieldOfMem
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplementaryAdelicSchwartzTensorNeZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDiagMemDoubledVacuumLatticeStabilizerStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDiagOneNegOneConjAntidiagonalStabilizerMemStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitPlaceDiagonalStabilizerGeneratedHermitianDoStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AntiCols
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDiagOneNegOneConjAntidiagonalStabilizerMem
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitPlaceDiagonalStabilizerGeneratedHermitianDo
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.VacuumSplitPlaceIndicatorSource
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.VDoubleEigenspaceSplitOfLine
 import Mathlib.Algebra.Order.Floor.Extended
@@ -43,7 +46,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AntiCols
 
 @[expose] public section
 
@@ -61,7 +63,7 @@ theorem split_vacuum_eigenvalue_eq_one : _root_.GlobalTheory.FunPr.ThetaLocalInp
   intro hP F E _ _ _ _ _ σ B a a' G X om om' hT v hsp₀ hv hψ htwo hstd k hk c hc
   obtain ⟨d', hd', -, dd, omd, hdc, hsp, hbox⟩ := hT.weil.2.1
   have hvac := hT.geo.hM.vac v
-  obtain ⟨r, hr, hr0⟩ := GlobalTheory.T.exists_complementaryAdelicSchwartz_tensor_ne_zero _ v (G.M.vac v) hvac.1 hvac.2.1
+  obtain ⟨r, hr, hr0⟩ := _root_.GlobalTheory.InertSph.exists_rest_tens_ne_zero _ v (G.M.vac v) hvac.1 hvac.2.1
   set V₀ := tens (evFin F v) (G.M.vac v) r with hV₀
   set S := boxFun V₀ (fun x => star (V₀ x)) with hS
   have hS0 : ∃ x, S x ≠ 0 := by
@@ -85,7 +87,7 @@ theorem split_vacuum_eigenvalue_eq_one : _root_.GlobalTheory.FunPr.ThetaLocalInp
     show omd p S = S
     rw [hμ, h1, one_smul]
   have hA : ∀ q ∈ GlobalTheory.DblVac.KD σ G.V v, q ∈ GlobalTheory.DblVac.PAnti σ G.V → q ∈ H := fun q hq hqa => by
-    obtain ⟨w₀, hw₀, hW⟩ := GlobalTheory.T.exists_diagOneNegOne_conj_antidiagonalStabilizer_mem σ G.V v
+    obtain ⟨w₀, hw₀, hW⟩ := _root_.GlobalTheory.DblVacFlip.flipPt_conj_anti_diag σ G.V v
     obtain ⟨h1, h2⟩ := hW q hq hqa
     have hq' : omd (w₀ * q * w₀⁻¹) S = S := hD _ h1 h2
     obtain ⟨μ, hμ⟩ := _root_.GlobalTheory.T.vDouble_eigenspace_split_of_line hP F E σ B a a' G X om om' hT v hsp₀ hv hψ htwo hstd d' hd' dd omd hdc hsp r hr w₀ hw₀
@@ -98,8 +100,8 @@ theorem split_vacuum_eigenvalue_eq_one : _root_.GlobalTheory.FunPr.ThetaLocalInp
       LinearMap.map_smul, hinv]
   obtain ⟨gd, hgd, hgdK⟩ := GlobalTheory.T.exists_diag_mem_doubledVacuumLatticeStabilizer σ G.V v k hk
   have hfix : omd gd S = S :=
-    GlobalTheory.T.split_place_diagonal_stabilizer_generated_hermitian_doubling σ B G.V _ _ hT.base hT.geo.hV v hsp₀ hψ htwo H hD hA gd hgdK
-  have hb := hbox k gd hgd V₀ hr.2 (fun x => star (V₀ x)) (GlobalTheory.T.conj_mem_adelicSchwartzSpaceNumberField_of_mem _ V₀ hr.2)
+    _root_.GlobalTheory.DblVac.gen_diag_anti_split_herm σ B G.V _ _ hT.base hT.geo.hV v hsp₀ hψ htwo H hD hA gd hgdK
+  have hb := hbox k gd hgd V₀ hr.2 (fun x => star (V₀ x)) (_root_.GlobalTheory.star_mem_schA_main _ V₀ hr.2)
   have hk1 : (om.comp (MonoidHom.inl _ _)) k V₀ = c • V₀ := by
     rw [MonoidHom.comp_apply, MonoidHom.inl_apply, hV₀, hc r hr]
     funext x

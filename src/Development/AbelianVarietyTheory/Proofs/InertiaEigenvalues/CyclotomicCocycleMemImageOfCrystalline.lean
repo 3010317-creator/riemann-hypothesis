@@ -1,10 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RestrictJumps
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsUniqueFits
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsWeakTopologyWachImageIsClosedStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NotFullBot
+public import Formalism.SharpRestriction.LevelLetterCocycles.DeltaInvariantLattices
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsWeakTopologyWachImageIsClosed
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.Xstab
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ZgFormula
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsUniqueFits
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -83,7 +85,7 @@ theorem zval : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonOf 
   have hcl : IsClosed (H : Set ↥(GK K)) :=
     (lam_exists D HW K s LL h).elim fun _ hx => hx.2.2.2.2
   have hcs : CompactSpace ↥H := isCompact_iff_compactSpace.1 hcl.isCompact
-  refine (GlobalTheory.T.exists_weakTopology_wachImage_isClosed D HW F l K s LL h T hT).elim fun τ hτ => ?_
+  refine (_root_.GlobalTheory.WeakClosedX.jD_XN_closed D HW F l K s LL h T hT).elim fun τ hτ => ?_
   let _ : TopologicalSpace M := τ
   have hT2 : T2Space M := hτ.1
   have hTG : IsTopologicalAddGroup M := hτ.2.1

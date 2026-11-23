@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GaugeUnfold
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsClosedEmbeddingOrthogonalUnitaryRealPlace
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GaugeMeasureQuotientUnitaryJVectorStabiliserStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GaugeMeasureQuotientUnitaryJVectorStabiliser
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GaussDensSphere
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RiemannianHaarGaugeExistsPosUnique
 import Formalism.RealPlaceAnalysis.FinalF
@@ -154,7 +154,7 @@ theorem volume_unitary : ∀ (N : ℕ) (c : ℝ), IsGauge (allPos N) c →
       hq hx hB
     have hV : ENNReal.ofReal c' * Formalism.REAL.muG (allPos n) Set.univ = ENNReal.ofReal (volU n) := by
       rw [← hv, ENNReal.ofReal_mul hc'pos.le, ENNReal.ofReal_toReal (muG_univ_lt_top n).ne]
-    have key := GlobalTheory.T.gauge_measure_quotient_unitaryJ_vector_stabiliser n _ _ true x₀ B j hq hx hB hj c c' hc hc'
+    have key := _root_.GlobalTheory.GaugeQuot.gauge_quotient n _ _ true x₀ B j hq hx hB hj c c' hc hc'
       (fun _ => ENNReal.ofReal (volU n)⁻¹) measurable_const (fun g => by
         rw [lintegral_const, mul_left_comm, hV, ← ENNReal.ofReal_mul (inv_pos.2 (volU_pos n)).le,
           inv_mul_cancel₀ (volU_pos n).ne', ENNReal.ofReal_one])

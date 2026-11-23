@@ -4,22 +4,29 @@ public import Development.AutomorphicSpectrum.Statements.GeometryStatements.Flat
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.JoinModelPointsProject
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LevelSectionsExactKernelLocusOpen
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.SplitComps
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CmTypeLatticeComparisonStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsPullWedge
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CmTypeLatticeComparison
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComponentGenericIsGenericPoint
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordOverIntOfFiniteOrder
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenLatticeVectorBundle
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsClopenIrreducibleCptStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsVerticalBoundStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsFlatAnIffIsConstMul
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsClopenIrreducibleCpt
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ArchBetween
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsVerticalBound
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExteriorCoeffBaseChangeCompat
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagCmTypeLatticeComparison
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericPointFactorsOpenStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeComponentMatchesModelComponentStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptFlagDegreeStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCptGen
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PushInvertible
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericPointFactorsOpen
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeComponentMatchesModelComponent
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.HodgeComponentFlagDegree
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsGenericFlag
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.WedgeLineLatticeVectorBundle
+public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PGenOnFibres
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrimeChartExistsUniquePoint
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegAtIffChartLocalization
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ValuationCoordsComplexPoint
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.WedgeLineLatticeVectorBundleStatement
-public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PGenOnFibres
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -229,8 +236,8 @@ theorem exists_cptOver [NumberField c.F] (Y : Model Xo c (algebraMap (𝓞 c.F) 
     {Ω₀ : Type} [Field Ω₀] (ξ₀ : Spec (CommRingCat.of Ω₀) ⟶ Y.X) (hg : IsCptGen ξ₀) :
     ∃ (U : Set (Xo.XF c)) (Z : CptOver Y U), genPt ξ₀ = genPt (Z.ξ₀ ≫ Y.j) := by
   have hgen := GlobalTheory.CompanionTheory.Ar.GenPtModel.genPt_mem_genericPoints E H D l Xo c Y Ω₀ ξ₀ hg
-  obtain ⟨y₀, hy₀⟩ := GlobalTheory.T.generic_point_factors_open E H D l Xo c Y Ω₀ ξ₀ hgen
-  obtain ⟨U, Z, hu, -, -⟩ := GlobalTheory.T.exists_clopen_irreducible_cpt E H D l Xo c _ _ Y (genPt y₀) hβ
+  obtain ⟨y₀, hy₀⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ChangeGeo.exists_factor_XF_of_genericPoint E H D l Xo c Y Ω₀ ξ₀ hgen
+  obtain ⟨U, Z, hu, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.exists_cptOver_mem_isClopen_isIrreducible E H D l Xo c _ _ Y (genPt y₀) hβ
   refine ⟨U, Z, ?_⟩
   have h₁ : genPt Z.ξ₀ ⤳ genPt y₀ := (Z.closure _).1 hu
   have h₂ : genPt (Z.ξ₀ ≫ Y.j) ⤳ genPt ξ₀ := by
@@ -266,13 +273,13 @@ theorem flat_unit_of_root_lines : Flat.FlatLineGenerator → ∀ (E : Type) [Fie
       rw [← e, div_mul_cancel₀ _ ((map_ne_zero_iff _ RingOfIntegers.coe_injective).2 (nonZeroDivisors.ne_zero hb))]⟩
   obtain ⟨U, Z, hgp⟩ := exists_cptOver Y hβ 𝔐.ξ₀ 𝔐.gen₀
   obtain ⟨φ, -, ⟨-, a, b, hgen, -⟩, -⟩ := hA0 E H D l Xo c _ _ Y U Z τ.1 hβ hpq τ.2 (isGeom_of_splitComps hs Z)
-  obtain ⟨i, j, hT⟩ := GlobalTheory.T.hodge_component_matches_model_component E H D l Xo c Y U Z S R.Ω R.K R.ι R.y 𝔐 hgp
+  obtain ⟨i, j, hT⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.CptIn.exists_isTie E H D l Xo c Y U Z S R.Ω R.K R.ι R.y 𝔐 hgp
   obtain ⟨a', b', d₁, d₂, h₁, h₂, ha0, hb0, ha', hb', ea, eb⟩ :=
     GlobalTheory.CompanionTheory.Ar.Flat.CptWedge.exists_pullWedge_flag E H D l Xo c Y U Z S R.Ω R.K R.ι R.y 𝔐 Fl τ i j a b hT hgen
-  have hdeg := GlobalTheory.T.hodge_cpt_flag_degree E H D l Xo c _ _ Y S R.Ω R.K R.ι R.y 𝔐 Fl R.xdeg e τ hroot
+  have hdeg := _root_.PositivityTheory.Xgn.hodge_component_flag_degree E H D l Xo c _ _ Y S R.Ω R.K R.ι R.y 𝔐 Fl R.xdeg e τ hroot
   have hfr : ∀ p ∈ genFibre ℤ 𝔐.ξ, IsCoeffAt (𝔐.V (.inl τ)) (𝔐.V (.inr τ)) D.p D.q a' b' p 1 := by
     intro p hp
-    obtain ⟨⟨x₀, hx₀, ex⟩, hs₁, hs₂⟩ := GlobalTheory.T.cm_type_lattice_comparison E H D l Xo c Y U Z S R.Ω R.K R.ι R.y 𝔐 τ i j hT p hp
+    obtain ⟨⟨x₀, hx₀, ex⟩, hs₁, hs₂⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.CptStalk.main E H D l Xo c Y U Z S R.Ω R.K R.ι R.y 𝔐 τ i j hT p hp
     obtain ⟨hv₁, hv₂, -, -⟩ := GlobalTheory.CompanionTheory.Ar.Flat.isVBOn_eig_genFib E H D l Xo c _ _ Y U Z τ.1 hβ τ.2
     obtain ⟨W₁, hW₁, u₁, -, hu₁⟩ := hv₁ x₀ hx₀
     obtain ⟨W₂, hW₂, u₂, -, hu₂⟩ := hv₂ x₀ hx₀
@@ -293,12 +300,12 @@ theorem flat_unit_of_root_lines : Flat.FlatLineGenerator → ∀ (E : Type) [Fie
   have hco : ∀ p ∈ genFibre ℤ 𝔐.ξ, IsCoeffAt (𝔐.V (.inl τ)) (𝔐.V (.inr τ)) (labelRk D (.inl τ)) (labelRk D (.inr τ))
       (exteriorPower.ιMulti R.Ω _ (Fl.b (.inl τ))) (exteriorPower.ιMulti R.Ω _ (Fl.b (.inr τ))) p (d₁ / d₂)⁻¹ :=
     fun p hp => isCoeffAt_of_smul h₁ h₂ ea eb (hfr p hp)
-  obtain ⟨-, hL2, -⟩ := GlobalTheory.T.wedge_line_lattice_vector_bundle 𝔐.X R.Ω 𝔐.ξ 𝔐.Li (𝔐.V (.inl τ)) (𝔐.V (.inr τ)) _ _ _ _ Set.univ
+  obtain ⟨-, hL2, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.lineLat_isVBOn_gen_frames 𝔐.X R.Ω 𝔐.ξ 𝔐.Li (𝔐.V (.inl τ)) (𝔐.V (.inr τ)) _ _ _ _ Set.univ
     (exteriorPower.ιMulti R.Ω _ (Fl.b (.inl τ))) (exteriorPower.ιMulti R.Ω _ (Fl.b (.inr τ))) hVA hVB haF hbF
     ⟨x₀, trivial, _, hco x₀ hx₀⟩
   have hd0 : d₁ / d₂ ≠ 0 := div_ne_zero h₁ h₂
   have hu := genUnit_of_gen 𝔐.tie hdeg fun p hp => (hL2 p trivial _).2 ⟨hd0, hco p hp⟩
-  obtain ⟨c', hc'⟩ := GlobalTheory.T.exists_vertical_bound R.K R.ι R.Ω R.y _ R.arith R.birational _ _ hu
+  obtain ⟨c', hc'⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Vert.exists_vertBound R.K R.ι R.Ω R.y _ R.arith R.birational _ _ hu
   have ha : (fun b => (((1 : ℕ) : ℤ)) * ∑ i, R.xdeg (τ, i) b) = ∑ i, R.xdeg (τ, i) := by
     funext b
     simp [Finset.sum_apply]

@@ -2,13 +2,15 @@ module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.PeakTraceBound
 public import Mathlib.LinearAlgebra.Eigenspace.Basic
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RegularizedExponentialSumStatement
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.FibreFactorHolds
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RegularizedExponentialSum
 public import Mathlib.Algebra.DirectSum.LinearMap
+public import Mathlib.Analysis.CStarAlgebra.GelfandDuality
+public import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Real
-public import Mathlib.Analysis.CStarAlgebra.GelfandDuality
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
@@ -18,7 +20,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -202,7 +203,7 @@ theorem trace_contra {V : Type} [AddCommGroup V] [Module ℂ V] [FiniteDimension
   have hrr' : r ≤ r' := by rw [hr']; linarith
   have hr'μ : r' < ‖μ‖ := by rw [hr']; linarith
   let ι := (hfin.toFinset : Set ℂ)
-  have key := GlobalTheory.T.regularized_exponential_sum ι (fun i => (Module.finrank ℂ (T.maxGenEigenspace i.1) : ℂ))
+  have key := _root_.GlobalTheory.CompanionTheory.ExpSums.expSum_holds ι (fun i => (Module.finrank ℂ (T.maxGenEigenspace i.1) : ℂ))
     (fun i => i.1) r' (max C 0 * (r' ^ j)⁻¹) N hr'0.le ?_ μ hr'μ
   ·
     have hmem : μ ∈ hfin.toFinset := by

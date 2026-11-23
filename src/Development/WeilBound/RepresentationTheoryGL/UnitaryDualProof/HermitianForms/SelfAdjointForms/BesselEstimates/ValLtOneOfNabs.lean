@@ -2,12 +2,14 @@ module
 
 public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.SelfAdjointForms.FixK
 public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.AvgData
+public import Mathlib.Analysis.Complex.Circle
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CharacterAnnihilatorIntegerLattice
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsScaledNontrivialCharacter
+public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.SelfAdjointForms.ColumnAlgebra.PiColElAdd
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsSubquotientDetRepParInd
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormalizedAbsCharacterization
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CharacterAnnihilatorIntegerLatticeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsScaledNontrivialCharacterStatement
-public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.SelfAdjointForms.ColumnAlgebra.PiColElAdd
 import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.TransversalSums.ContinuousBlkAtApply
 import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.TransversalSums.SumTranslateTransversal
 import Mathlib.Algebra.Order.Floor.Extended
@@ -125,7 +127,7 @@ def Mz (ψ : AddChar k Circle) (m : ℕ) (b : k) : AddSubgroup (Fin (m + 1) → 
 
 theorem isLat_Mz {ψ : AddChar k Circle} (hψ : Continuous ψ) (hψ1 : ψ ≠ 1) (m : ℕ) {b : k} (hb : b ≠ 0) :
     IsLat (Mz ψ m b) :=
-  GlobalTheory.T.character_annihilator_integer_lattice k ψ hψ hψ1 (m + 1) b hb
+  _root_.GlobalTheory.CompanionTheory.CharLattice.isCompact_isOpen_annihilator k ψ hψ hψ1 (m + 1) b hb
 
 theorem smul_mem_Mz {ψ : AddChar k Circle} {m : ℕ} {b c : k} (hc : c ∈ 𝒪[k]) {x : Fin (m + 1) → k}
     (hx : x ∈ Mz ψ m b) : c • x ∈ Mz ψ m b := by
@@ -140,7 +142,7 @@ theorem exists_sep {ψ : AddChar k Circle} (hψ : Continuous ψ) (hψ1 : ψ ≠ 
     by_contra hcon
     push Not at hcon
     exact hψ1 (DFunLike.ext _ _ (fun c => by rw [hcon c, AddChar.one_apply]))
-  obtain ⟨d, hd, -, hd2⟩ := GlobalTheory.T.exists_scaled_nontrivial_character k ψ hψ a c₀ ha hc₀
+  obtain ⟨d, hd, -, hd2⟩ := _root_.GlobalTheory.CompanionTheory.CharConductor.exists_conductor_step k ψ hψ a c₀ ha hc₀
   refine ⟨d, hd, fun c hc t ht => ?_⟩
   rw [dotProduct_single]
   have := hd2 (t (Fin.last m) * c) (mul_mem (ht _) hc)

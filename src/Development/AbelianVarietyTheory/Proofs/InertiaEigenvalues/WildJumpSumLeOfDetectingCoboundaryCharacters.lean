@@ -1,9 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NoTowerQ
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisGroupFixedFieldBaseChangeLocalFieldStatement
+public import GroundTheory.LocalFields.IntermediateField
+public import GroundTheory.LocalFields.Ramification
+public import Mathlib.FieldTheory.Galois.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisGroupFixedFieldBaseChangeLocalField
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RamificationJumpSumComapInjective
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WildJumpSumLeOfCoboundaryDetectsStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WildJumpSumLeOfCoboundaryDetects
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,7 +54,7 @@ namespace GlobalTheory.PMon.Ram
 
 theorem jumpSum_le_of_detects : ∀ (K L : Type) [Field K] [ValuativeRel K] [TopologicalSpace K] [IsNonarchimedeanLocalField K] [Field L] [ValuativeRel L] [TopologicalSpace L] [IsNonarchimedeanLocalField L] [Algebra K L] [ValuativeExtension K L] [FiniteDimensional K L] [IsGalois K L] (p E r : ℕ) (A B : Subgroup (L ≃ₐ[K] L)), p.Prime → 0 < E → OrdIs L p E → AxIn K L p → Detects p r A B → jumpSum (wild K L) A B ≤ 6 * E := by
   intro K L _ _ _ _ _ _ _ _ _ _ _ _ p E r A B hp hE hord hax hdet
-  obtain ⟨j, hinj, hrange, happ, hram⟩ := GlobalTheory.T.galoisGroup_fixedField_baseChange_localField K L A
+  obtain ⟨j, hinj, hrange, happ, hram⟩ := _root_.GlobalTheory.PMon.Ram.baseChange_fixedField K L A
 
   have haxF : AxIn (IntermediateField.fixedField A) L p := by
     intro J x hx
@@ -71,7 +74,7 @@ theorem jumpSum_le_of_detects : ∀ (K L : Type) [Field K] [ValuativeRel K] [Top
     refine ⟨z, hz, ?_⟩
     rw [← happ]
     exact hzx
-  have key := GlobalTheory.T.wild_jumpSum_le_of_coboundary_detects (IntermediateField.fixedField A) L p E r (B.comap j) hp hE hord haxF hdetF
+  have key := _root_.GlobalTheory.PMon.Ram.jumpSum_wild_top_le_of_detects (IntermediateField.fixedField A) L p E r (B.comap j) hp hE hord haxF hdetF
   have hwild : wild (IntermediateField.fixedField A) L = fun t => (wild K L t).comap j := by
     funext t
     exact hram _

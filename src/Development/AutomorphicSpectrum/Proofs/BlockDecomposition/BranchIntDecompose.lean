@@ -1,8 +1,10 @@
 module
 
 public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.StBranchIntDecompose
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BranchProperAtPointHoldsStatement
+public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.StBranchProperAtPoint
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BranchProperAtPointHolds
 public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PBranchIntDecompose
+public import GroundTheory.HeightsAndTheta.Heights.ElementarySymmetric.PBranchChartIntX
 import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PConeAvoidsExists
 import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PConeAvoidsFinite
 import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PConeAvoidsOpen
@@ -13,7 +15,6 @@ import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PHomogDimZeroPow
 import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PLeadIdealDim
 import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PLinearFormCut
 import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PUnitaryZariskiDense
-public import GroundTheory.HeightsAndTheta.Heights.ElementarySymmetric.PBranchChartIntX
 import GroundTheory.HeightsAndTheta.Heights.LocalFiniteness.ParametrisationSheetsConnectedHolds
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -61,7 +62,7 @@ set_option maxSynthPendingDepth 1
 namespace GlobalTheory.CompanionTheory.Ar
 
 theorem branchIntDecompose : GroundTheory.Heights₂.Heights.BranchIntDecompose.Statement :=
-  GroundTheory.Heights₂.Heights.BranchIntDecompose.proof GlobalTheory.T.branch_proper_at_point_holds
+  GroundTheory.Heights₂.Heights.BranchIntDecompose.proof _root_.GlobalTheory.CompanionTheory.Ar.Branch.branchProperAtPoint
     (GroundTheory.Heights₂.Heights.ComplexSets.GenericProjectionFinite.proof
       (GroundTheory.Heights₂.Heights.ComplexSets.FiniteProjectionsContainOpen.proof
         GroundTheory.Heights₂.Heights.ComplexSets.ConeAvoidsFinite.proof

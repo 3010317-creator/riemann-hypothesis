@@ -2,18 +2,26 @@ module
 
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.IwasawaUnitaryAdelic.IUAIwa
 public import Mathlib.LinearAlgebra.Matrix.IsDiag
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AntitoneDiagonalConjugateStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CartanDecompositionLieAlgebraStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CartanLocalToGlobalStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralizerRegularCommutesStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CommutingHermitianSimultaneousDiagStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsMaximalAbelianHermitianStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsRegularElementAbelianStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExpBlockTriangularStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LieAlgebraFunctionCalculusStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LieAlgebraOfExpLocalStatement
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.UnitaryGroup
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AntitoneDiagonalConjugate
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.LinearAlgebra.Matrix.Block
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CartanDecompositionLieAlgebra
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsAdmOnOfFiniteDimensional
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CartanLocalToGlobal
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralizerRegularCommutes
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CommutingHermitianSimultaneousDiag
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsMaximalAbelianHermitian
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsRegularElementAbelian
+public import Mathlib.Analysis.Normed.Algebra.Exponential
+public import Mathlib.Topology.Instances.Matrix
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExpBlockTriangular
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LieAlgebraFunctionCalculus
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LieAlgebraOfExpLocal
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalExpProductDecompositionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParabolicStabilizerBlockUnitStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParabolicStabilizerBlockUnit
 import Mathlib.Algebra.Order.Archimedean.Real.Hom
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -75,9 +83,9 @@ theorem frame {n : ℕ} (𝔤 : Submodule ℝ (Matrix (Fin n) (Fin n) ℂ)) :
       U * Matrix.diagonal (fun i => (h i : ℂ)) * Uᴴ ∈ 𝔤 ∧
       ∀ Y ∈ 𝔤, Yᴴ = Y → (U * Matrix.diagonal (fun i => (h i : ℂ)) * Uᴴ) * Y = Y * (U * Matrix.diagonal (fun i => (h i : ℂ)) * Uᴴ) →
         (Uᴴ * Y * U).IsDiag := by
-  obtain ⟨𝔞, hle, hH, hC, hM⟩ := GlobalTheory.T.exists_maximal_abelian_hermitian 𝔤
-  obtain ⟨U₀, hU₀, hD⟩ := GlobalTheory.T.commuting_hermitian_simultaneous_diag (𝔞 : Set (Matrix (Fin n) (Fin n) ℂ)) hH hC
-  obtain ⟨H, hHa, hreg⟩ := GlobalTheory.T.exists_regular_element_abelian 𝔞 U₀
+  obtain ⟨𝔞, hle, hH, hC, hM⟩ := _root_.GlobalTheory.CompanionTheory.HermitianCommuting.exists_maximal_commuting_hermitian_subspace 𝔤
+  obtain ⟨U₀, hU₀, hD⟩ := _root_.GlobalTheory.CompanionTheory.SimDiag.exists_unitary_isDiag (𝔞 : Set (Matrix (Fin n) (Fin n) ℂ)) hH hC
+  obtain ⟨H, hHa, hreg⟩ := _root_.GlobalTheory.CompanionTheory.IwaGen.exists_regular_point 𝔞 U₀
   have hU₀' : U₀ * U₀ᴴ = 1 := Matrix.mem_unitaryGroup_iff.1 hU₀
   have hU₀'' : U₀ᴴ * U₀ = 1 := Matrix.mem_unitaryGroup_iff'.1 hU₀
   let d : Fin n → ℝ := fun i => ((U₀ᴴ * H * U₀) i i).re
@@ -97,14 +105,14 @@ theorem frame {n : ℕ} (𝔤 : Submodule ℝ (Matrix (Fin n) (Fin n) ℂ)) :
     rw [hdd]
     calc U₀ * (U₀ᴴ * H * U₀) * U₀ᴴ = (U₀ * U₀ᴴ) * H * (U₀ * U₀ᴴ) := by simp only [Matrix.mul_assoc]
       _ = H := by rw [hU₀']; simp
-  obtain ⟨U, hU, h, hanti, heq, hdiag⟩ := GlobalTheory.T.antitone_diagonal_conjugate U₀ d hU₀
+  obtain ⟨U, hU, h, hanti, heq, hdiag⟩ := _root_.GlobalTheory.CompanionTheory.FrameSort.exists_antitone_reorder U₀ d hU₀
   refine ⟨U, hU, h, hanti, ?_, ?_⟩
   · rw [heq, hHd]; exact hle hHa
   · intro Y hY hYs hcomm
     rw [heq, hHd] at hcomm
     apply hdiag
     refine hD Y (hM Y hY hYs fun A hA => ?_)
-    exact GlobalTheory.T.centralizer_regular_commutes U₀ H A Y hU₀ (hD H hHa) (hD A hA) (fun i j hij => hreg i j hij A hA) hcomm
+    exact _root_.GlobalTheory.CompanionTheory.MatrixComm.commute_of_dominated_diag U₀ H A Y hU₀ (hD H hHa) (hD A hA) (fun i j hij => hreg i j hij A hA) hcomm
 
 theorem alg {n : ℕ} (𝔤 : Submodule ℝ (Matrix (Fin n) (Fin n) ℂ)) (hs : ∀ X ∈ 𝔤, Xᴴ ∈ 𝔤)
     (hb : ∀ X ∈ 𝔤, ∀ Y ∈ 𝔤, X * Y - Y * X ∈ 𝔤) :
@@ -143,7 +151,7 @@ theorem alg {n : ℕ} (𝔤 : Submodule ℝ (Matrix (Fin n) (Fin n) ℂ)) (hs : 
     have := hreg _ ((mem Y).1 hY) (by simp [Matrix.conjTranspose_mul, hYs, Matrix.mul_assoc]) (by rw [mulc, mulc, hc])
     rwa [cj'] at this
   refine ⟨U, hU, fun X hX => ?_⟩
-  obtain ⟨A, hA, B, hB, hAB, hAs, hBt⟩ := GlobalTheory.T.exists_skewHermitian_add_blockTriangular 𝔥 h hanti (GlobalTheory.T.lie_algebra_function_calculus 𝔥 h ((mem _).2 hd) hb') hs' hreg' _ (mem' X hX)
+  obtain ⟨A, hA, B, hB, hAB, hAs, hBt⟩ := _root_.GlobalTheory.CompanionTheory.IwasawaGen.skew_add_upper 𝔥 h hanti (_root_.GlobalTheory.CompanionTheory.AdProj.mem_of_entrywise 𝔥 h ((mem _).2 hd) hb') hs' hreg' _ (mem' X hX)
   refine ⟨U * A * Uᴴ, (mem _).1 hA, U * B * Uᴴ, (mem _).1 hB, ?_, ?_, ?_⟩
   · rw [← Matrix.add_mul, ← Matrix.mul_add, ← hAB, cj]
   · simp [Matrix.conjTranspose_mul, hAs, Matrix.mul_assoc]
@@ -151,8 +159,8 @@ theorem alg {n : ℕ} (𝔤 : Submodule ℝ (Matrix (Fin n) (Fin n) ℂ)) (hs : 
 
 theorem iwaOn_of_isLinRed : ∀ {n : ℕ} {G : Set (Matrix (Fin n) (Fin n) ℂ)}, GlobalTheory.LinRed.IsLinRed G → PositivityTheory.Tls2.Iua.IwaOn G := by
   intro n G hG
-  obtain ⟨𝔤, hiff, hV⟩ := GlobalTheory.T.lie_algebra_of_exp_local hG
-  obtain ⟨hs, hb⟩ := GlobalTheory.T.lie_algebra_star_closed_bracket hG 𝔤 hiff
+  obtain ⟨𝔤, hiff, hV⟩ := _root_.GlobalTheory.CompanionTheory.LinRedLie.exists_lieAlgebra hG
+  obtain ⟨hs, hb⟩ := _root_.GlobalTheory.CompanionTheory.LieStable.lieAlg_stable hG 𝔤 hiff
   obtain ⟨U, hU, hdec⟩ := alg 𝔤 hs hb
   have hexp : ∀ X ∈ 𝔤, NormedSpace.exp X ∈ G := fun X hX => by
     simpa using (hiff X).1 hX 1
@@ -185,10 +193,10 @@ theorem iwaOn_of_isLinRed : ∀ {n : ℕ} {G : Set (Matrix (Fin n) (Fin n) ℂ)}
     obtain ⟨A, hA, B, hB, hAB, hAs, hBt⟩ := hdec X hX
     rw [hAB]
     exact Submodule.add_mem_sup ⟨hA, hAs⟩ ⟨hB, hBt⟩)
-  obtain h := GlobalTheory.T.cartan_local_to_global hG U hU (by
+  obtain h := _root_.GlobalTheory.CompanionTheory.LinRedFactor.factor_of_local hG U hU (by
     filter_upwards [hloc] with g hg hgG
     obtain ⟨X, hX, Y, hY, rfl⟩ := hg hgG
-    exact ⟨_, ⟨hexp X hX.1, exp_mem_unitaryGroup X hX.2⟩, _, hexp Y hY.1, rfl, GlobalTheory.T.exp_block_triangular U Y hU hY.2⟩)
+    exact ⟨_, ⟨hexp X hX.1, exp_mem_unitaryGroup X hX.2⟩, _, hexp Y hY.1, rfl, _root_.GlobalTheory.CompanionTheory.Unitary.ExpUpper.blockTriangular_conj_exp U Y hU hY.2⟩)
   exact ⟨U, hU, h⟩
 
 end GlobalTheory.CompanionTheory.IwaGen

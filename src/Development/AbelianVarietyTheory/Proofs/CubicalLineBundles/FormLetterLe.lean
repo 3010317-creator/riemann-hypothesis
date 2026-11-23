@@ -3,11 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Definitions.CMLattices.LamLetters
 public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.GramStdBasisPosDefAndHq
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.HermitianLengthImageEigenBasisVectorLeStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.HermitianLengthImageEigenBasisVectorLe
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsFibreOfIffIsPolFibre
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LamEqOfWeilIsAllPoints
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LinearIndependentOfIsLieBasis
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.TopLieVectorNormSqEqGramDetStatement
+public import Formalism.LocalToGlobal.CMDeterminantIdeals.StatementB
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.TopLieVectorNormSqEqGramDet
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.VecLineNormSqEqForm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -74,7 +75,7 @@ theorem form_letter_le (hU : ThetaUnifAV) (hL : Out.Laws) {E : Type} [Field E] [
   obtain ⟨h, H⟩ := (GlobalTheory.CM.LieMetric.exists_unique_isHerm hU hL K A (GenFib.mk x.P φ hp x.v x.basis)).1
   have hg : IsMonHom (oa.act a) := oa.hom a
   obtain ⟨w, hw1, hw2⟩ := hT a i
-  have h1 := GlobalTheory.T.hermitianLength_image_eigenBasisVector_le hU hL K A B (GenFib.mk x.P φ hp x.v x.basis) F' h h' f (oa.act a) H H' hf hg
+  have h1 := _root_.GlobalTheory.LamF.LenOne.form_image_le hU hL K A B (GenFib.mk x.P φ hp x.v x.basis) F' h h' f (oa.act a) H H' hf hg
     (lamEq_of_weilIs_all_points hL K A B f (oa.act a) hf hg hW) i _ w U w' hw1 hw2 hw e s
   have h2 := GlobalTheory.CM.LieMetric.vecLine_norm_sq_eq_form hU hL K A x φ hp h H i ℓ hℓ s
   refine h1.trans ?_
@@ -91,7 +92,7 @@ theorem lamLen : ThetaUnifAV → Out.Laws → LamLenSt := by
     (GenFib.mk o.xB.P o.φB hp o.xB.v o.xB.basis)).1
   obtain ⟨g1, g2⟩ := gram_stdBasis_posDef_and_hq o.K₁ o.xB.P.g h σ
   refine ⟨_, g1, ?_, fun k => ?_⟩
-  · have := GlobalTheory.T.topLieVector_norm_sq_eq_gramDet hU hL o.K₁ o.B o.xB o.φB hp h Hh o.Tl o.LamL σ (harch σ)
+  · have := _root_.GlobalTheory.CM.TopLieVector.sq_eq_det_gram hU hL o.K₁ o.B o.xB o.φB hp h Hh o.Tl o.LamL σ (harch σ)
     exact ((congrArg Real.sqrt this).symm.trans (Real.sqrt_sq (hgood.2 σ).le)).symm
   · rw [g2]
     obtain ⟨w, hw1, hw2⟩ := hLg.2.2.1 k

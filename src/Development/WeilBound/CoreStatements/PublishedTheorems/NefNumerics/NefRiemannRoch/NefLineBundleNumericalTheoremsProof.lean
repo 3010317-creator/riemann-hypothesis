@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ExistsAlgClosedBaseChange
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NefNumericsOfRiemannRoch
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NefNumerics.NefRiemannRoch.NefProductNonnegStatement
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NefNumerics.NefRiemannRoch.NefRiemannRochStatement
+public import Development.WeilBound.CoreStatements.PublishedTheorems.NefNumerics.NefRiemannRoch.NefProductNonneg
+public import Development.WeilBound.CoreStatements.PublishedTheorems.NefNumerics.NefRiemannRoch.NefRiemannRoch
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,6 +49,6 @@ set_option autoImplicit false
 namespace GlobalTheory
 
 theorem nefNumerics_outright : GlobalTheory.Published.NefNumerics :=
-  GlobalTheory.Published.nefNumerics_of_product_of_riemannRoch GlobalTheory.T.nef_product_nonneg GlobalTheory.T.nef_riemann_roch
+  GlobalTheory.Published.nefNumerics_of_product_of_riemannRoch _root_.GlobalTheory.nefProductNonneg _root_.GlobalTheory.nefRiemannRoch
 
 end GlobalTheory

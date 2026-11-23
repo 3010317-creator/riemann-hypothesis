@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
 public import Mathlib.Algebra.Homology.HomotopyCategory.KInjective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafPropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafProperties
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyCoefficientLongExactSequenceStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HypercohomologyPullbackPushforwardFunctorialStatement
 import Mathlib.Algebra.Homology.DerivedCategory.KInjective
@@ -95,7 +95,7 @@ theorem sgl_cohomologyClass_subsingleton {R : Type} [CommRing R] (G I : Shv R) (
 
 theorem ext_injective_subsingleton {R : Type} [CommRing R] (G I : Shv R) [Injective I] (i : ℤ) (hi : i ≠ 0) :
     Subsingleton (CohomologyClass (sgl G) (res R I) i) := by
-  obtain ⟨hK, -, -, hq, -⟩ := GlobalTheory.T.chosenInjectiveResolution_etaleSheaf_properties R I
+  obtain ⟨hK, -, -, hq, -⟩ := _root_.GlobalTheory.EtC.ResBasic.res_basic R I
   haveI := hK
   haveI := hq
   haveI := sgl_isKInjective I

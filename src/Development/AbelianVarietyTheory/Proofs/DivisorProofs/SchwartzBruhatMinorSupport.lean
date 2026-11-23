@@ -1,9 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubMemNsp
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RankChartBoundedCoefficientsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RankChartShearInvarianceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RankChartStackDecompositionStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsBicharPairing
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ShearGLTransposeMul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RankChartBoundedCoefficients
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RankChartShearInvariance
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RankChartStackDecomposition
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +52,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsBicharPairing
 
 @[expose] public section
 
@@ -61,8 +63,8 @@ open GlobalTheory.SplitFlip GlobalTheory.LocMod.Inhab ValuativeRel
 theorem exists_mem_nsp_eq_of_rank_le : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (R T D : Type) [Fintype R] [DecidableEq R] [Fintype T] [DecidableEq T] [Fintype D] [DecidableEq D] [Nonempty T] (ν : kˣ →* ℂˣ) (ϖ : kˣ), GlobalTheory.SplitFlip.IsUnif ϖ → (∀ m : ℕ, 0 < m → ∀ r : ℝ, ((ν ϖ : ℂ)) ^ m ≠ (r : ℂ)) → ∀ (τ : R → D), ∀ f ∈ SB (Matrix (R ⊕ T) D k), (∀ Y : Matrix (R ⊕ T) D k, f Y ≠ 0 → (Y.submatrix Sum.inl τ).det ≠ 0) → ∃ Φ ∈ GlobalTheory.RankStrata.Nsp k (R ⊕ T) D ν, ∀ Y : Matrix (R ⊕ T) D k, Y.rank ≤ Fintype.card R → Φ Y = f Y := by
   intro k _ _ _ _ R T D _ _ _ _ _ _ _ ν ϖ hϖ hν τ f hf hsupp
   classical
-  obtain ⟨a, ha⟩ := GlobalTheory.T.rank_chart_bounded_coefficients k R T D τ f hf hsupp
-  obtain ⟨b, hb⟩ := GlobalTheory.T.rank_chart_shear_invariance k R T D f hf
+  obtain ⟨a, ha⟩ := _root_.GlobalTheory.RankChart.bounded_coeff_of_SB k R T D τ f hf hsupp
+  obtain ⟨b, hb⟩ := _root_.GlobalTheory.RankChart.sb_shear_invariant k R T D f hf
   have hv0 : 0 < valuation k (ϖ : k) := zero_lt_iff.2 (by simp)
   have hv1 : valuation k (ϖ : k) ≤ 1 := hϖ ▸ uniformizer_lt_one.le
   have hva : ∀ x : k, (valuation k (x : k) ≤ valuation k (((ϖ⁻¹ * a : kˣ)) : k) ↔
@@ -136,7 +138,7 @@ theorem exists_mem_nsp_eq_of_rank_le : ∀ (k : Type) [Field k] [ValuativeRel k]
     · rw [hzero Y hd, hzero _ (by rwa [submatrix_inl_eq, toRows₁_dil, ← submatrix_inl_eq]),
         Finset.sum_eq_zero fun q' _ => hzero _ (by rwa [submatrix_inl_eq, toRows₁_shear, ← submatrix_inl_eq])]
       ring
-    · obtain ⟨C, hC⟩ := GlobalTheory.T.rank_chart_stack_decomposition k R T D τ Y hY hd
+    · obtain ⟨C, hC⟩ := _root_.GlobalTheory.RankChart.exists_eq_stack k R T D τ Y hY hd
       rw [hC, dil_stack]
       simp only [shear_stack]
       rw [hA2, hA1 _ ((ϖ : k) • C), hdilmem]

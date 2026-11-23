@@ -2,8 +2,9 @@ module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.TwistedConjugationNorms.OneCoset
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MemCentIffTwConj
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmFieldStatement
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.TwistedConjugationNorms.HilbertNinetyNorms.DiagonalConjDistinctValuationsEq
+import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -162,7 +163,7 @@ theorem thL_eq' (w : Pl E) (hw : ¬ IsSplitAt w) (n : ℕ) : thL n w = thetaGL n
 
 theorem thL_thL (hU : Unr E) (w : Pl E) (hw : ¬ IsSplitAt w) (n : ℕ) (g : GLw n w) : thL n w (thL n w g) = g := by
   rw [thL_eq' w hw]
-  exact thetaGL_thetaGL' n (cj w) (GlobalTheory.T.placeConjugation_properties_cmField E hU w).2.1 g
+  exact thetaGL_thetaGL' n (cj w) (_root_.GlobalTheory.ConjAtPlace.main E hU w).2.1 g
 
 theorem logv_mul {L : Type} [Field L] [Valued L (WithZero (Multiplicative ℤ))] (a b : Lˣ) :
     WithZero.log (Valued.v ((a * b : Lˣ) : L)) = WithZero.log (Valued.v (a : L)) + WithZero.log (Valued.v (b : L)) := by
@@ -180,7 +181,7 @@ theorem logv_cj (hU : Unr E) (w : Pl E) (b : (w.adicCompletion E)ˣ) :
     WithZero.log (Valued.v ((Units.map (cj w).toMonoidHom b : (w.adicCompletion E)ˣ) : w.adicCompletion E)) =
       WithZero.log (Valued.v (b : w.adicCompletion E)) := by
   change WithZero.log (Valued.v (cj w (b : w.adicCompletion E))) = _
-  rw [(GlobalTheory.T.placeConjugation_properties_cmField E hU w).2.2.1]
+  rw [(_root_.GlobalTheory.ConjAtPlace.main E hU w).2.2.1]
 
 theorem thL_diagT (w : Pl E) (hw : ¬ IsSplitAt w) (n : ℕ) (t : Fin n → (w.adicCompletion E)ˣ) :
     thL n w (GlobalTheory.SmGL.diagT _ (Fin n) t) =

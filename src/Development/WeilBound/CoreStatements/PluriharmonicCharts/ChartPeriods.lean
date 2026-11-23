@@ -5,13 +5,16 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import Development.AbelianVarietyTheory.Counterexamples.ModuliSurvey.IsThetaFrameMulUnit
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FrameFreeFiniteOrderRuleConstPeriodSpace
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLinearEquivLift
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSabCancel
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsHolToFibPtAndCompFibre
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BoundaryChartHodgeMatrix
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsBdryChartOfHol
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsFamilyExponentialLocallyStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLinearLiftOfAdditiveFamily
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExponentialFamilyPeriods
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsFamilyExponentialLocally
 public import Development.WeilBound.CoreStatements.PluriharmonicCharts.IsOpenDet
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.AnChartX
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.HolPair
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSabCancel
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsHolToFibPtAndCompFibre
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLinearLiftOfAdditiveFamily
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,9 +55,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.BCRing
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.AnChartX
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.ExpRowsPf
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.HolPair
 import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
@@ -101,7 +102,7 @@ theorem chart_periods {Xo : Moduli D l} {σ : KA l →+* ℂ} {n : ℕ} (C : Bdr
           ∀ j, ty j (t : E) * W a u j = cc * W a u j := by
   classical
   have hpu : ∀ ρ : ℝ, punct n 0 ρ = Metric.ball 0 ρ := fun ρ => by ext z; simp [punct]
-  obtain ⟨ρ, hρ0, hρB, ⟨e⟩⟩ := GlobalTheory.T.exists_family_exponential_locally C.R C.t.G C.g n C.M (Metric.ball 0 1) C.ψ C.t.semi.smooth C.hol 0
+  obtain ⟨ρ, hρ0, hρB, ⟨e⟩⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.exists_famExp_near C.R C.t.G C.g n C.M (Metric.ball 0 1) C.ψ C.t.semi.smooth C.hol 0
     (Metric.mem_ball_self one_pos)
   have hy : IsHolTo (Metric.ball 0 ρ) fun u => C.pt u ≫ C.k :=
     GlobalTheory.LocLift.isHolTo_comp_hom (Marking.isHolTo_mono' (Marking.isHolTo_pt C)

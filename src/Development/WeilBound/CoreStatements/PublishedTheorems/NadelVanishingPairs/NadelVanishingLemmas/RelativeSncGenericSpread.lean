@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsEtCoord
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsRegularFnIffOfIsAffineOpen
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniversallyClosedOpenContainingFibreContainsNearStatement
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.SncChartBaseChange
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.SncChartDescendsStatement
+public import Mathlib.AlgebraicGeometry.Morphisms.UniversallyClosed
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniversallyClosedOpenContainingFibreContainsNear
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SncChartBaseChange
+public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.SncChartDescends
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,10 +60,10 @@ theorem GlobalTheory.LogPair.relSnc_spread : ∀ (R k : Type) [CommRing R] [Fiel
   have hW : π ⁻¹ᵁ W = ⊤ := by
     refine top_unique fun y _ => ?_
     obtain ⟨C', hC'⟩ := hrel.chart y
-    obtain ⟨C, hC⟩ := GlobalTheory.T.snc_chart_descends R k φ X X' f f' π d s L σ C' y hpb hC'
+    obtain ⟨C, hC⟩ := _root_.GlobalTheory.ChartDesc.chart_desc R k φ X X' f f' π d s L σ C' y hpb hC'
     show π y ∈ W
     exact (Opens.mem_iSup).2 ⟨C, hC⟩
-  obtain ⟨a, ha, h⟩ := GlobalTheory.T.universallyClosed_open_containing_fibre_contains_nearby R k φ X X' f f' π W hpb hW
+  obtain ⟨a, ha, h⟩ := _root_.GlobalTheory.tube_of_universallyClosed R k φ X X' f f' π W hpb hW
   refine ⟨a, ha, fun T _ χ hχ Z g ρ hρ => ?_⟩
   have hZ := h T χ hχ Z g ρ hρ
   refine ⟨fun i => LB.isLB_pull (hL i) ρ, fun z => ?_⟩
@@ -69,7 +71,7 @@ theorem GlobalTheory.LogPair.relSnc_spread : ∀ (R k : Type) [CommRing R] [Fiel
     have : z ∈ ρ ⁻¹ᵁ W := by rw [hZ]; trivial
     exact this
   obtain ⟨C, hC⟩ := (Opens.mem_iSup).1 hz
-  obtain ⟨C', hC'⟩ := GlobalTheory.T.snc_chart_base_change R T χ X Z f g ρ d s L σ C hρ
+  obtain ⟨C', hC'⟩ := _root_.GlobalTheory.LogPair.sncChart_baseChange R T χ X Z f g ρ d s L σ C hρ
   refine ⟨C', ?_⟩
   rw [hC']
   exact hC

@@ -2,11 +2,12 @@ module
 
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelesLocallyCompactSecondCountable
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicUnitaryGroupLocallyCompactStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicUnitaryGroupLocallyCompact
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CompactPartClosedOrbit
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.RationalGramAdelicCompactFiniteStatement
+public import Formalism.UnipotentAdelicQuotients.SWXSDefs
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.RationalGramAdelicCompactFinite
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.WittExtensionRationalToAdelic
 import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.WittExtensionRationalToAdelicStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -69,7 +70,7 @@ theorem compact_gram_fibre :
   haveI := hlc
   haveI := hsc
   haveI := ht2
-  obtain ⟨htg, hlcH, hscH, ht2H, -, hact⟩ := GlobalTheory.T.adelic_unitary_group_locally_compact F E σ hσ M J hJ (AF F)
+  obtain ⟨htg, hlcH, hscH, ht2H, -, hact⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopH.topH_props F E σ hσ M J hJ (AF F)
   haveI := htg
   haveI := hlcH
   haveI := hscH
@@ -78,7 +79,7 @@ theorem compact_gram_fibre :
   haveI := hlcK
   haveI := ht2K
   obtain ⟨hcont, h1, hmul, hinv⟩ := hact n
-  obtain ⟨-, hrat, -⟩ := GlobalTheory.T.rational_gram_adelic_compact_finite F E σ hσ M J hJ
+  obtain ⟨-, hrat, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.FinQ.gram_rational_finite F E σ hσ M J hJ
   have hZ : IsClosed {Y : Fin n → Fin M → AF F ⊗[F] E |
       gramR (AF F) σ J Y = (gramE σ J X).map (inclR (AF F))} :=
     isClosed_eq (hgram n M J) continuous_const
@@ -89,7 +90,7 @@ theorem compact_gram_fibre :
     intro Y
     constructor
     · intro hY
-      exact GlobalTheory.T.witt_extension_rational_to_adelic F E σ hσ M J hJ n X Y hX hY
+      exact _root_.GlobalTheory.CompanionTheory.SW.TransA.trans_adelic F E σ hσ M J hJ n X Y hX hY
     · rintro ⟨g, rfl⟩
       show gramR (AF F) σ J _ = _
       rw [hinv, hrat]

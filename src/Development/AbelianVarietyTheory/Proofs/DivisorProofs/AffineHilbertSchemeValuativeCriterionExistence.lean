@@ -2,9 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComapBcComp
 public import Mathlib.AlgebraicGeometry.ValuativeCriterion
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFlatIdealValuationRingPullbackStatement
+public import Mathlib.AlgebraicGeometry.AffineScheme
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Mathlib.RingTheory.RingHom.Flat
+public import Mathlib.RingTheory.Valuation.ValuationRing
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFlatIdealValuationRingPullback
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatSubschemeOfQuotientFlatAffineStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdealSheafDataComapIdealTopOfIsAffineStatement
+public import Mathlib.AlgebraicGeometry.IdealSheaf.Functorial
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdealSheafDataComapIdealTopOfIsAffine
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,12 +65,12 @@ theorem exists_flat_ideal_extension (V K : Type) [CommRing V] [IsDomain V] [Valu
     (p : X ⟶ Spec (CommRingCat.of V)) (p' : X' ⟶ Spec (CommRingCat.of K)) (b : X' ⟶ X)
     (h : IsPullback b p' p (Spec.map (CommRingCat.ofHom (algebraMap V K))))
     (I : X'.IdealSheafData) : ∃ J : X.IdealSheafData, Flat (J.subschemeι ≫ p) ∧ J.comap b = I := by
-  obtain ⟨J₀, hf, hJ⟩ := GlobalTheory.T.exists_flat_ideal_valuationRing_pullback V K X X' p p' b h (I.ideal ⟨⊤, isAffineOpen_top X'⟩)
+  obtain ⟨J₀, hf, hJ⟩ := _root_.GlobalTheory.FlatHilbAff.exists_flat_ideal V K X X' p p' b h (I.ideal ⟨⊤, isAffineOpen_top X'⟩)
   have e : (Scheme.IdealSheafData.ofIdealTop J₀).ideal ⟨⊤, isAffineOpen_top X⟩ = J₀ :=
     Scheme.IdealSheafData.equivOfIsAffine.apply_symm_apply J₀
   refine ⟨Scheme.IdealSheafData.ofIdealTop J₀, GlobalTheory.T.flat_subscheme_of_quotient_flat_affine V X p _ (by rw [e]; exact hf), ?_⟩
   apply Scheme.IdealSheafData.ext_of_isAffine
-  rw [GlobalTheory.T.idealSheafData_comap_ideal_top_of_isAffine, e, hJ]
+  rw [_root_.GlobalTheory.IdealSheafData.ideal_comap_top_of_isAffine, e, hJ]
 
 theorem finrank_const_of_isLocalRing (V : Type) [CommRing V] [IsLocalRing V] (Z : Scheme.{0})
     (f : Z ⟶ Spec (CommRingCat.of V)) (h1 : IsFinite f) (h2 : Flat f) (x y : Spec (CommRingCat.of V)) :

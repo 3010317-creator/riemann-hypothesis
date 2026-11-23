@@ -2,7 +2,8 @@ module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.WittExactSequences.IsCompl
 public import Mathlib.RingTheory.RingHom.Etale
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EtaleLiftingOfNilIdealStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.SubThickRees
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EtaleLiftingOfNilIdeal
 public import Mathlib.Algebra.Algebra.Epi
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -162,7 +163,7 @@ theorem pf_of_etale : ∀ (p : ℕ), p.Prime → ∀ {P E : Type} [CommRing P] [
     surjective_of_unramified p hp hEc φ hu hft (fun x => ⟨x, rfl⟩)
   let N : Ideal E := RingHom.ker φ
   have hN : ∀ x ∈ N, IsNilpotent x := fun x hx => ⟨p, hx⟩
-  have hL : EtLift N := GlobalTheory.T.etale_lifting_of_nil_ideal N hN
+  have hL : EtLift N := _root_.GlobalTheory.CompanionTheory.EtNil.etLift_of_nil N hN
   let eb : (E ⧸ N) ≃+* E := RingHom.quotientKerEquivOfSurjective hsurj
   have heb : ∀ x, eb (Ideal.Quotient.mk N x) = x ^ p := fun x => rfl
   let g : E →+* E ⧸ N := eb.symm.toRingHom

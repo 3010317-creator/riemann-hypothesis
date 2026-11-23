@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeightTensorDualRepDualHighestWeightAtEmbedding
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryRationalPointMatrixHomSurjectiveOnto
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ZariskiDenseRationalPointsDefiniteUnitaryCharZerStatement
+public import ReciprocityTheory.Automorphisms.Unitary
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ZariskiDenseRationalPointsDefiniteUnitaryCharZer
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -223,7 +224,7 @@ theorem hw_eigvec_transport : ∀ (L : Type) [Field L] [NumberField L] [IsCMFiel
   have hev : ∀ a a', MvPolynomial.eval (NX.evPtF (IsCMField.complexConj L : L →+* L) (emb τ₀) B) (P' a a') =
       ∑ i, ∑ j, Q a i * Q' j a' * T i j := by
     intro a a'
-    have h0 := GlobalTheory.T.zariskiDense_rationalPoints_definiteUnitary_charZero L n K _ (hrat a a') (fam (emb τ₀) B) (fam_conj _ B hne)
+    have h0 := _root_.GlobalTheory.UnitaryDense.unitary_points_dense L n K _ (hrat a a') (fam (emb τ₀) B) (fam_conj _ B hne)
     rw [fam_eval, map_sub, sub_eq_zero] at h0
 
     rw [h0, map_sum]

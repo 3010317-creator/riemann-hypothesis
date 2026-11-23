@@ -1,8 +1,9 @@
 module
 
 public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRegularNearOfRegularQuotientPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenOfStableUnderGeneralizationOfLocallyOpenStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRegularNearOfRegularQuotientPrime
+public import Mathlib.RingTheory.Spectrum.Prime.Topology
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenOfStableUnderGeneralizationOfLocallyOpen
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsRegularLocalRingOfFlatOfMapEqMaximalIdeal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -78,12 +79,12 @@ theorem isRegularLocalRing_atPrime_of_le {B : Type} [CommRing B] (p q : Ideal B)
 
 theorem isOpen_regularLocus_of_nagata : ∀ (B : Type) [CommRing B] [IsNoetherianRing B], (∀ (p : Ideal B) [p.IsPrime], ∃ g, g ∉ p ∧ ∀ (q : Ideal B) [q.IsPrime], p ≤ q → g ∉ q → IsRegularLocalRing (Localization.AtPrime q ⧸ p.map (algebraMap B (Localization.AtPrime q)))) → IsOpen {Q : PrimeSpectrum B | IsRegularLocalRing (Localization.AtPrime Q.asIdeal)} := by
   intro B _ _ hyp
-  apply GlobalTheory.T.isOpen_of_stableUnderGeneralization_of_locally_open B
+  apply _root_.GlobalTheory.isOpen_of_stableUnderGeneralization_of_locally_open_in_closure B
   · intro p q hpq hq
     exact isRegularLocalRing_atPrime_of_le p.asIdeal q.asIdeal hpq hq
   · intro p hp
     obtain ⟨g₁, hg₁p, hg₁⟩ := hyp p.asIdeal
-    obtain ⟨g₂, hg₂p, hg₂⟩ := GlobalTheory.T.exists_regular_near_of_regular_quotient_prime B p.asIdeal hp
+    obtain ⟨g₂, hg₂p, hg₂⟩ := _root_.GlobalTheory.RegularAscent.exists_regular_near_of_regular_quotient B p.asIdeal hp
     refine ⟨g₁ * g₂, fun h => (p.isPrime.mem_or_mem h).elim hg₁p hg₂p, ?_⟩
     intro q hpq hq
     have hq₁ : g₁ ∉ q.asIdeal := fun h => hq (q.asIdeal.mul_mem_right _ h)

@@ -1,8 +1,9 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.SlopeBoundSt
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeInnerProductMapIffStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeInnerProductOnSpanStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.HodgeIPIffHodgeFormConj
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeInnerProductMapIff
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeInnerProductOnSpan
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelComplexBaseChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -127,7 +128,7 @@ theorem hodge_along {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host
       ∀ x a, (Tn x).left ≫ m₀.φ ≫ m₁.φ = (Mp.pt a).left → D x = a := by
   subst hp
   have hall : ∀ a b : V, HodgeIP t₂.G t₂.PP.L ((z ≫ f₀) ≫ f₁) (Mp.pt a) (Mp.pt b) (core.inner a b) :=
-    GlobalTheory.T.hodge_inner_product_on_span E H X₁ X₂ t₁ t₂ f₁ m₁ (z ≫ f₀) V Mp core W h0 hs hW
+    _root_.GlobalTheory.CompanionTheory.Ar.HodgeExt.hodgeInnerProduct_of_span E H X₁ X₂ t₁ t₂ f₁ m₁ (z ≫ f₀) V Mp core W h0 hs hW
   have key : ∀ x, ∃ w₁ : epsAt (z ≫ f₀) ⟶ t₁.G, w₁.left = (Tn x).left ≫ m₀.φ ∧
       ∃ a : V, (Mp.pt a).left = w₁.left ≫ m₁.φ := by
     intro x
@@ -137,8 +138,8 @@ theorem hodge_along {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host
     exact ⟨w₁, hw₁, a, by rw [ha, hw₂]⟩
   choose w₁ hw₁ D hD using key
   refine ⟨D, fun x x' => ?_, fun x a h => ?_⟩
-  · rw [GlobalTheory.T.hodge_inner_product_map_iff E H X₁ t₁ X₀ t₀ f₀ m₀ z (Tn x) (Tn x') (w₁ x) (w₁ x') _ (hw₁ x) (hw₁ x'),
-      GlobalTheory.T.hodge_inner_product_map_iff E H X₂ t₂ X₁ t₁ f₁ m₁ (z ≫ f₀) (w₁ x) (w₁ x') (Mp.pt (D x)) (Mp.pt (D x')) _ (hD x) (hD x')]
+  · rw [_root_.GlobalTheory.CompanionTheory.Ar.hodgeInnerProduct_tripleMap_iff E H X₁ t₁ X₀ t₀ f₀ m₀ z (Tn x) (Tn x') (w₁ x) (w₁ x') _ (hw₁ x) (hw₁ x'),
+      _root_.GlobalTheory.CompanionTheory.Ar.hodgeInnerProduct_tripleMap_iff E H X₂ t₂ X₁ t₁ f₁ m₁ (z ≫ f₀) (w₁ x) (w₁ x') (Mp.pt (D x)) (Mp.pt (D x')) _ (hD x) (hD x')]
     exact hall _ _
   · apply Mp.inj
     apply Over.OverMorphism.ext

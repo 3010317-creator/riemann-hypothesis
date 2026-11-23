@@ -1,19 +1,20 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsAwayFlatProjRep
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsGaloisCover
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.IsProjByOfIsPullback
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsAwayProjectiveFormsThroughPoints
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsIsoOfProjectiveCoordinateRepresentation
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsProjCoordRepresentationHomogeneousIdealFlaStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSchemeMapOfProjectiveCoordinatesStatement
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.FiniteHomogeneousInf
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsProjCoordRepresentationHomogeneousIdealFla
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSchemeMapOfProjectiveCoordinates
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsIsoFibreOfPullback
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsProjProperRelAmpleOfProjectiveCoordinateRep
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ProjRepGraphSegreCoordinatesFibreStatement
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ProjectiveRepresentationPullbackCoordinates
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SectionCoordinateVectorExistsLocallyStatement
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SegreCoordinates
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ProjRepGraphSegreCoordinatesFibre
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SpMapCompRingHomComp
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsAwayFlatProjRep
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ProjectiveRepresentationPullbackCoordinates
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SectionCoordinateVectorExistsLocally
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SegreCoordinates
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -179,7 +180,7 @@ theorem fibre_graph (h₁ : ProjRep I₁ Z₁.hom M₁ th₁) (h₂ : ProjRep I�
       ((∀ F ∈ graphIdeal s M₁ th₁ a₁ M₂ th₂ a₂, MvPolynomial.eval₂ β v F = 0) ↔
         ∀ F ∈ J.map (MvPolynomial.map x'), MvPolynomial.eval₂ β v F = 0)) :
     ∃ e : W ⟶ Y, IsPullback e s sY (spMap x') ∧ e ≫ g ≫ p = a₁ ∧ e ≫ g ≫ q = a₂ := by
-  obtain ⟨N', ty', hW, hcW⟩ := GlobalTheory.T.projRep_graph_segre_coordinates_fibre R K σ₁ σ₂ x I₁ I₂ Z₁ Z₂ M₁ M₂ th₁ th₂ W s a₁ a₂ h₁ h₂ pb e₂
+  obtain ⟨N', ty', hW, hcW⟩ := _root_.GlobalTheory.ZM.GraphSegre.projRep_graph R K σ₁ σ₂ x I₁ I₂ Z₁ Z₂ M₁ M₂ th₁ th₂ W s a₁ a₂ h₁ h₂ pb e₂
   have hpb := IsPullback.of_hasPullback sY (spMap x')
   obtain ⟨t₁, hrep₁, hc₁⟩ := GlobalTheory.ZM.RepBC.projRep_baseChange S K _ x' J Y _ sY _ _ N ty hY hpb
   obtain ⟨e, he, -, hce⟩ := GlobalTheory.RepUniq.exists_iso_of_projRep K _ _ _ W _ s _ N' _ ty' t₁ hW hrep₁ hJ
@@ -190,7 +191,7 @@ theorem fibre_graph (h₁ : ProjRep I₁ Z₁.hom M₁ th₁) (h₂ : ProjRep I�
   have key : (e.hom ≫ pullback.fst sY (spMap x')) ≫ g = sq.lift a₁ a₂ (pb.w.trans e₂.symm) := by
     refine hom_ext_near _ _ fun w => ?_
     have hB := isLB_box a₁ a₂ h₁.1 h₂.1
-    obtain ⟨T₀, _, y₀, v₀, hy₀, ⟨z, hz⟩, hv₀⟩ := (GlobalTheory.T.sectionCoordinateVector_exists_locally W _ _
+    obtain ⟨T₀, _, y₀, v₀, hy₀, ⟨z, hz⟩, hv₀⟩ := (_root_.GlobalTheory.ZM.LocalCoord.secCoord_local W _ _
       (fun i : σ₁ × σ₂ => boxSec a₁ a₂ (th₁ i.1) (th₂ i.2)) hB).2.2 w
     obtain ⟨T, _, φ, hφ, ⟨z', hz'⟩, u, v, hu, hv, -⟩ := split_near a₁ a₂ th₁ th₂ h₁.1 h₂.1 y₀ v₀ hv₀ z
     refine ⟨_, spMap φ ≫ y₀, inferInstance, ⟨z', by rw [Scheme.Hom.comp_apply, hz', hz]⟩, ?_⟩
@@ -243,7 +244,7 @@ theorem exists_hom_near_of_graphs : ∀ (R σ₁ σ₂ Hh : Type) [CommRing R] [
   set a := algebraMap R S with ha
   set J := vanIdeal d (fun h (i : σ₁ × σ₂) => a (p₁ h i.1 * p₂ h i.2)) with hJ
   have hJh : ∀ F ∈ J, ∀ e, MvPolynomial.homogeneousComponent e F ∈ J := homogeneousComponent_mem_vanIdeal d _
-  obtain ⟨Y, sY, N, ty, -, hY, -, hflat⟩ := GlobalTheory.T.exists_projCoordRepresentation_homogeneousIdeal_flat S _ J d hJh
+  obtain ⟨Y, sY, N, ty, -, hY, -, hflat⟩ := _root_.GlobalTheory.ProjFlat.exists_projRep_flat S _ J d hJh
   replace hflat : Flat sY := hflat fun e he => by have := hproj e he; infer_instance
   have hprop : IsProper sY := (GlobalTheory.ZM.projRep_projective_ample S _ J (Over.mk sY) N ty hY).2.1
   have sq := IsPullback.of_hasPullback Z₁.hom Z₂.hom
@@ -277,7 +278,7 @@ theorem exists_hom_near_of_graphs : ∀ (R σ₁ σ₂ Hh : Type) [CommRing R] [
     have h1 : r * a f₁ ^ (n + 1) = 0 := by
       rw [pow_succ, ← _root_.mul_assoc, hr₀, ← map_mul, h0, map_zero]
     exact hr (((IsLocalization.Away.algebraMap_isUnit f₁).pow (n + 1)).mul_left_eq_zero.1 h1)
-  obtain ⟨g, hg, -, hc, -⟩ := GlobalTheory.T.exists_scheme_map_of_projective_coordinates R _ _ _ Y _ (sY ≫ spMap a) _ N _ ty hP hY.1 fun T _ β y v hy hv => by
+  obtain ⟨g, hg, -, hc, -⟩ := _root_.GlobalTheory.ZM.RepMap.exists_map_of_coord R _ _ _ Y _ (sY ≫ spMap a) _ N _ ty hP hY.1 fun T _ β y v hy hv => by
     obtain ⟨β', hβ'⟩ : ∃ β' : S →+* T, y ≫ sY = spMap β' := ⟨(Spec.preimage (y ≫ sY)).hom, (Spec.map_preimage _).symm⟩
     have hβ : β'.comp a = β := by
       rw [← Category.assoc, hβ', spc] at hy

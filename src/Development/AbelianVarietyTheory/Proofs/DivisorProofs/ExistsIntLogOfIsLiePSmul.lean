@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DvdOfForallInvariantDifferentialDvdStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFormalGroupLawLogWithLinearPartStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegralCoboundaryDivisibleOfQuasiLogDefecStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ToSpanSingletonConstGenInjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DvdOfForallInvariantDifferentialDvd
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFormalGroupLawLogWithLinearPart
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegralCoboundaryDivisibleOfQuasiLogDefec
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,11 +58,11 @@ theorem GlobalTheory.QLog.exists_int_log_of_isLie_p_smul : ∀ (p : ℕ) [Fact p
     have h1 := hl₁ w φ hφ
     rw [pow_one, LinearMap.smul_apply, smul_eq_mul] at h1
     exact (dvd_sub_right (dvd_mul_right _ _)).1 h1
-  obtain ⟨⟨z, hz⟩, -⟩ := GlobalTheory.T.dvd_of_forall_invariantDifferential_dvd p O G 1 (p : O) (c.ev 1 s₁) hdiv
-  obtain ⟨t, ht0, ht⟩ := GlobalTheory.T.exists_integral_coboundary_divisible_of_quasiLog_defect p O E hF G d c f s₁ z hf hs₁ hz
+  obtain ⟨⟨z, hz⟩, -⟩ := _root_.GlobalTheory.PDivGroup.dvd_of_forall_omega_dvd p O G 1 (p : O) (c.ev 1 s₁) hdiv
+  obtain ⟨t, ht0, ht⟩ := _root_.GlobalTheory.QLog.exists_int_cob_dvd_of_defect_ev p O E hF G d c f s₁ z hf hs₁ hz
   obtain ⟨hf0, hflin, -⟩ := hf
   choose b _ hb using hflin
-  obtain ⟨g, hg0, hglin, hgcob⟩ := GlobalTheory.T.exists_formalGroupLaw_log_with_linearPart p O E hF d c.μ c.isLaw (fun i => b i - lin t i)
+  obtain ⟨g, hg0, hglin, hgcob⟩ := _root_.GlobalTheory.QLog.exists_log_of_lin p O E hF d c.μ c.isLaw (fun i => b i - lin t i)
   have hμ : ∀ i, constantCoeff (up E c.μ i) = 0 := fun i => by
     rw [up, ← coeff_zero_eq_constantCoeff_apply, coeff_map, coeff_zero_eq_constantCoeff_apply,
       c.isLaw.const i, map_zero]

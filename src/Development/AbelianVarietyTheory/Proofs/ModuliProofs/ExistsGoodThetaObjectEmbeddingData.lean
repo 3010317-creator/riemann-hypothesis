@@ -3,12 +3,13 @@ module
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.DenseOfDenseP
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.EmbeddedAbelianVarietyCutOutByTorsionForms
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsEmbeddingSectionsOverFieldStatement
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.FiniteHomogeneousInf
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsEmbeddingSectionsOverField
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaCosetNonvanishingOfHasTh
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.TorsionSectionCoordsThetaTimesRoots
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SecCoordBcScaleUnique
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SpMapCompRingHomComp
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaCosetNonvanishingOfHasTh
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaSectionsVeryAmplePeriodicStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.TorsionSectionCoordsThetaTimesRoots
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -122,7 +123,7 @@ theorem exists_fibData : Out.Laws → Out.Laws2 → ∀ (g : ℕ) (J : Type) [Fi
   obtain ⟨hs, -, hth⟩ := hgood
   rw [GlobalTheory.ZM.spMap_comp_ringHom_comp] at hs
   subst hs
-  obtain ⟨σ, hemb, hproj⟩ := GlobalTheory.T.exists_embeddingSections_over_field l1 l2 o g (n ^ j) J b K _ t (n ^ 2) (fun a => x (v a)) hdvd2 htwo hth
+  obtain ⟨σ, hemb, hproj⟩ := _root_.GlobalTheory.ZM.EmbField.exists_emb_field l1 l2 o g (n ^ j) J b K _ t (n ^ 2) (fun a => x (v a)) hdvd2 htwo hth
   have hLB := (GlobalTheory.T.thetaSections_veryAmple_periodic l1 l2 o g (n ^ j) J b K (x.comp β) t (n ^ 2) σ hoddN hdvd htwo hemb).2.1
   have hspan : Ideal.span (Set.range fun a => x (v a)) = ⊤ :=
     span_theta l1 l2 t n (fun a => x (v a)) hn.two_le (dvd_pow_self n (by omega)) hth

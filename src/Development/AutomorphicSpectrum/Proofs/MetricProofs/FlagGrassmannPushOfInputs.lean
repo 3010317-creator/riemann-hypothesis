@@ -5,17 +5,18 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.StatementsFlagGrassPush
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsPermAppendSnoc
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.StatementsFlagGrassSteps
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagPointsIntegralProductFormulaStatement
-import GroundTheory.HeightsAndTheta.Heights.HeightKernels.Assembly
-import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PFlagArithVar
+public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FlagIndices.InstFintypeFlIdx
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagPointsIntegralProductFormula
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PFlagGrassPush
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PFlagImageGrass
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PFsInvPow
-import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PHFlProdLinear
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PVandCount
+public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.ChangeOfModel
+import GroundTheory.HeightsAndTheta.Heights.HeightKernels.Assembly
+import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PFlagArithVar
+import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PHFlProdLinear
 import GroundTheory.HeightsAndTheta.Heights.Intersections.PConsequences
 import GroundTheory.HeightsAndTheta.Heights.Intersections.PThmAExpand
-public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.ChangeOfModel
 import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.ExistsUnique
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -280,7 +281,7 @@ theorem flagGrassPush : GlobalTheory.CompanionTheory.Ar.PB.Inputs → Reciprocit
     (fun _ => linLine Ψ N (muForm Ψ N j)) (vandLine Ψ N j) hb hArFl' hArIm hJ
     (fun _ => isSmoothHerm_fsHerm _) (fun _ => isPullHerm_mu hj hjN) (fun _ => isSmoothHerm_fsHerm _)
   rw [hIm, pts_neg_eq (hII _ _) hArGr, ← linLine_jForms,
-    pts_linForms Ψ N II hII hN (fun w => GlobalTheory.T.flag_points_integral_product_formula hIn hSys Ψ N w hN) _ hcnt, prod_jForms] at hgeo
+    pts_linForms Ψ N II hII hN (fun w => _root_.GlobalTheory.CompanionTheory.Ar.Giv.borel_word hIn hSys Ψ N w hN) _ hcnt, prod_jForms] at hgeo
   have hJint : (Jint Ψ N j cf : ℝ) =
       (cf : ℝ) * ((flagInt Ψ N (muPoly Ψ N j ^ dimN Ψ N j * vandBlocks Ψ N j) : ℚ) : ℝ) := by
     unfold Jint fib

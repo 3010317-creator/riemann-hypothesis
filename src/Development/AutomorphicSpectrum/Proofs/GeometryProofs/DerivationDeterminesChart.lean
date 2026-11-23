@@ -4,7 +4,8 @@ public import Mathlib.Algebra.DualNumber
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.Calculus.FDeriv.Defs
 public import Mathlib.RingTheory.Smooth.StandardSmooth
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ImplicitFunctionHolomorphicStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ImplicitFunctionHolomorphic
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AnChart
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,7 +55,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AnChart
 import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExponentialFamilyPeriods
 import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeGram
 import Mathlib.CategoryTheory.Monoidal.Cartesian.Basic
@@ -405,7 +405,7 @@ theorem exists_sections : ∀ (R A : Type) [CommRing R] [CommRing A] [Algebra R 
   obtain ⟨L, hL⟩ : ∃ L : (I₀ → ℂ) ≃L[ℂ] (K₀ ⊕ Fin g → ℂ),
       (L : (I₀ → ℂ) →L[ℂ] (K₀ ⊕ Fin g → ℂ)) = F₀ :=
     ⟨(LinearEquiv.ofBijective F₀.toLinearMap bij).toContinuousLinearEquiv, by ext; rfl⟩
-  obtain ⟨ε', δ', X, ε'0, δ'0, hX₀, hXd, hX, hXinv⟩ := GlobalTheory.T.implicit_function_holomorphic n I₀ (K₀ ⊕ Fin g)
+  obtain ⟨ε', δ', X, ε'0, δ'0, hX₀, hXd, hX, hXinv⟩ := _root_.GlobalTheory.CompanionTheory.HoloChart.holomorphic_inverse_with_parameters n I₀ (K₀ ⊕ Fin g)
     (B ×ˢ Set.univ) Φ b₀ x₀ L (hB.prod isOpen_univ) ⟨hb₀, trivial⟩ hΦ (by
       rw [hL, hΦd]; exact hF₀)
   rw [Φ₀] at hX₀ hXd hX hXinv

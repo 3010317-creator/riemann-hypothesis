@@ -5,11 +5,11 @@ public import Formalism.FormalDegreeBessel.FormalDegreeRatio.GroupFactorizationH
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction
 public import Formalism.SharpRestriction.CuspSpanNormBounds.FractionFieldToGenericStalkAlgebraMapEq
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ExistsIsFolnerUWset
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselAmplitudeIndependentOfQuotientMeasureStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselRootMeasureIndependentOfChoicesStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselAmplitudeIndependentOfQuotientMeasure
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselRootMeasureIndependentOfChoices
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FramesCharactersAgreeCommonStabiliser
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HcTypeWIrreducibleAndSchurAverage
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RootMeasureTransportDoubleCosetStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RootMeasureTransportDoubleCoset
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BesselCharacterUnipotentRadicalProperties
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ParametersUPrimeForULower
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.UnipotentLevelZeroEqOne
@@ -278,9 +278,9 @@ theorem hsNormSq_amp_doubleCoset : ∀ (D : D7) τ w w' θ (W : LocW D.R.k D.R.r
   have hπ' := (GlobalTheory.Amp.Schur.type_irred hw' t2).2.1
   have hψ : ∀ n, ‖psiS D W.z n‖ = 1 := (GlobalTheory.BesselPsi.psi_character _ _ _ _ hz).1
   have hψ' : ∀ n, ‖psiS D W.z' n‖ = 1 := (GlobalTheory.BesselPsi.psi_character _ _ _ _ hz').1
-  have hH := (GlobalTheory.T.besselRootMeasure_independent_of_choices D W.z W.z' γ q q μ μ hz hz' hw hw' hγ hGf (ka_pos D) hμ hμ).2.2
-  have hmv := GlobalTheory.T.rootMeasure_transport_doubleCoset D W.z W.z' q γ a a' μ hz hz' hw hw' hγ ha ha' hμ
-  obtain ⟨-, e, hH'⟩ := GlobalTheory.T.besselRootMeasure_independent_of_choices D W.z W.z' _ q' q μ' _ hz hz' hw hw' hγ' hGf' (ka_pos D) hμ' hmv
+  have hH := (_root_.GlobalTheory.SnMass.RootUniq.rootMeas_unique D W.z W.z' γ q q μ μ hz hz' hw hw' hγ hGf (ka_pos D) hμ hμ).2.2
+  have hmv := _root_.GlobalTheory.Amp.RootMove.rootMeas_move D W.z W.z' q γ a a' μ hz hz' hw hw' hγ ha ha' hμ
+  obtain ⟨-, e, hH'⟩ := _root_.GlobalTheory.SnMass.RootUniq.rootMeas_unique D W.z W.z' _ q' q μ' _ hz hz' hw hw' hγ' hGf' (ka_pos D) hμ' hmv
   have hu := isUnit_det_of_mem_GG (s1' ha')
   have hq : IsQuotMeas W.μG μ' (ν.map (lmulM a')) := by
     rw [e]
@@ -290,7 +290,7 @@ theorem hsNormSq_amp_doubleCoset : ∀ (D : D7) τ w w' θ (W : LocW D.R.k D.R.r
     obtain ⟨n, hn, n', hn', g, e1, e2, -⟩ := hμ'
     rw [e1] at hγ' ⊢
     exact fun ρ hρ => psi_cell hz hz' _ hn hn' hγ' e2 hρ
-  have key := GlobalTheory.T.besselAmplitude_eq_smul_of_rescaled_stabilizerHaar _ _ W.Wp W.Wq W.z W.z' _ _ W.π W.π' A.Φ A.Φ' A.cN hz hz' hw hw' hπ hπ'
+  have key := _root_.GlobalTheory.SnMass.AmpUniq.amp_uniq _ _ W.Wp W.Wq W.z W.z' _ _ W.π W.π' A.Φ A.Φ' A.cN hz hz' hw hw' hπ hπ'
     (fun n _ => ⟨hψ n, hψ' n⟩) hΦ hΦ' cΦ cΦ' _ W.μG μ' _ ν' 1 hγ' hrel hG hH' one_pos hq hν'
   rw [Complex.ofReal_one, one_smul] at key
   obtain ⟨U, hU⟩ := exists_isometry hπ hψ hΦ ha

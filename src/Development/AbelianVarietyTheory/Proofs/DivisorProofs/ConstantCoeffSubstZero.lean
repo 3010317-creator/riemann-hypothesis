@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FormalCoboundarySmul
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralReducingToMvPowerSeriesSubstStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MvPowerSeriesReductionModPrimeRulesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowerSeriesEvalTwoGroupsRulesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubstSubSubstIntegralOfIntegralDifferentialStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralReducingToMvPowerSeriesSubst
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MvPowerSeriesReductionModPrimeRules
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowerSeriesEvalTwoGroupsRules
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubstSubSubstIntegralOfIntegralDifferential
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -79,7 +79,7 @@ theorem elim_const {R : Type} [CommRing R] {d : ℕ} {τ : Type} {u v : Fin d �
 theorem main : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Field k] [CharP k p] [PerfectRing k p] (d e : ℕ) (ν : Fin e → MvPowerSeries (Fin e ⊕ Fin e) k) (hν : IsLaw ν), ∀ f ∈ quasiLog p hν, subst (fun j => Katz.lift p (X j : MvPowerSeries (Fin e) k)) f = f ∧ (∀ (d' : ℕ) (φ : Fin d → MvPowerSeries (Fin d') k) (ψ : Fin e → MvPowerSeries (Fin d) k), (∀ j, constantCoeff (φ j) = 0) → (∀ j, constantCoeff (ψ j) = 0) → subst (fun l => Katz.lift p (subst φ (ψ l))) f - subst (fun j => Katz.lift p (φ j)) (subst (fun l => Katz.lift p (ψ l)) f) ∈ intBy p k (Fin d') 1) ∧ ∀ φ ψ : Fin e → MvPowerSeries (Fin d) k, (∀ j, constantCoeff (φ j) = 0) → (∀ j, constantCoeff (ψ j) = 0) → subst (fun l => Katz.lift p (op ν φ ψ l)) f - subst (fun l => Katz.lift p (φ l)) f - subst (fun l => Katz.lift p (ψ l)) f ∈ intBy p k (Fin d) 1 := by
   intro p _ k _ _ _ d e ν hν f hf
   have hf' : f ∈ quasiInt p k (Fin e) ∧ cob1 (fun i => lift p (ν i)) f ∈ intBy p k _ 1 := hf
-  have hred := fun (σ : Type) => GlobalTheory.T.mvPowerSeries_reduction_mod_prime_rules p k σ
+  have hred := fun (σ : Type) => _root_.GlobalTheory.Katz.red_rules p k σ
   refine ⟨?_, ?_, ?_⟩
   · have : (fun j => Katz.lift p (X j : MvPowerSeries (Fin e) k)) = X := funext fun j => lift_X p j
     rw [this, subst_self]; rfl
@@ -89,11 +89,11 @@ theorem main : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Field k] [CharP k p] [Pe
     rw [subst_comp_subst_apply (hasSubst_of_constantCoeff_zero hΨ)
       (hasSubst_of_constantCoeff_zero hΦ)]
     apply intBy_le_one p (p : WittVector p k)
-    refine GlobalTheory.T.subst_sub_subst_integral_of_integral_differential p k (Fin e) (Fin d') _ _ (fun l => subst φ (ψ l)) f
+    refine _root_.GlobalTheory.Katz.subst_sub_subst_mem_intBy p k (Fin e) (Fin d') _ _ (fun l => subst φ (ψ l)) f
       (fun l => constantCoeff_lift p (constantCoeff_subst_zero hφ (hψ l)))
       (fun l => constantCoeff_subst_zero hΦ (hΨ l))
       (fun l => (hred (Fin d')).2.2.1 _)
-      (fun l => (GlobalTheory.T.isIntegralReducingToMvPowerSeries_subst p k (Fin d) (Fin d') (fun j => lift p (φ j)) φ hΦ
+      (fun l => (_root_.GlobalTheory.Katz.red_subst p k (Fin d) (Fin d') (fun j => lift p (φ j)) φ hΦ
         (fun j => (hred (Fin d')).2.2.1 _)).1 _ _ ((hred (Fin d)).2.2.1 _)) hf'.1
   · intro φ ψ hφ hψ
     set Φ : Fin e → MvPowerSeries (Fin d) (Fr p k) := fun l => lift p (φ l) with hΦdef
@@ -101,10 +101,10 @@ theorem main : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Field k] [CharP k p] [Pe
     have hΦ : ∀ j, constantCoeff (Φ j) = 0 := fun j => constantCoeff_lift p (hφ j)
     have hΨ : ∀ j, constantCoeff (Ψ j) = 0 := fun j => constantCoeff_lift p (hψ j)
     have hL : ∀ i, constantCoeff (lift p (ν i)) = 0 := fun i => constantCoeff_lift p (hν.const i)
-    have hcalc := GlobalTheory.T.powerSeriesEvalTwoGroups_rules (Fr p k) e (Fin d) (Fin d) Φ Ψ hΦ hΨ
+    have hcalc := _root_.GlobalTheory.Katz.SubstCalc.powerSeriesEvalTwoGroups_rules_alt (Fr p k) e (Fin d) (Fin d) Φ Ψ hΦ hΨ
     have hredE : ∀ s, Red p (Sum.elim Φ Ψ s) (Sum.elim φ ψ s) := fun s => by
       cases s <;> exact (hred (Fin d)).2.2.1 _
-    have hsub := GlobalTheory.T.isIntegralReducingToMvPowerSeries_subst p k (Fin e ⊕ Fin e) (Fin d) (Sum.elim Φ Ψ) (Sum.elim φ ψ)
+    have hsub := _root_.GlobalTheory.Katz.red_subst p k (Fin e ⊕ Fin e) (Fin d) (Sum.elim Φ Ψ) (Sum.elim φ ψ)
       (elim_const hΦ hΨ) hredE
     have hcob : at2 (cob1 (fun i => lift p (ν i)) f) Φ Ψ =
         subst (op (fun i => lift p (ν i)) Φ Ψ) f - subst Φ f - subst Ψ f := by
@@ -117,7 +117,7 @@ theorem main : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Field k] [CharP k p] [Pe
     have h2 : subst (fun l => lift p (op ν φ ψ l)) f - subst (op (fun i => lift p (ν i)) Φ Ψ) f
         ∈ intBy p k (Fin d) 1 := by
       apply intBy_le_one p (p : WittVector p k)
-      refine GlobalTheory.T.subst_sub_subst_integral_of_integral_differential p k (Fin e) (Fin d) _ _ (op ν φ ψ) f
+      refine _root_.GlobalTheory.Katz.subst_sub_subst_mem_intBy p k (Fin e) (Fin d) _ _ (op ν φ ψ) f
         (fun l => constantCoeff_lift p (constantCoeff_subst_zero (elim_const hφ hψ) (hν.const l)))
         (fun l => constantCoeff_subst_zero (elim_const hΦ hΨ) (hL l))
         (fun l => (hred (Fin d)).2.2.1 _)

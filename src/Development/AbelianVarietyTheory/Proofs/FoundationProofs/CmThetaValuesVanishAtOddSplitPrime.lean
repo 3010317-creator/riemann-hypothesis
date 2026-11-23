@@ -2,7 +2,7 @@ module
 
 public import Formalism.SharpRestriction.GlobalSchurBounds.GL3Theta
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.CoeffSubstInvMemOfTwoLeOrder
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmThetaPointsIntegralNormConjugateLawsStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmThetaPointsIntegralNormConjugateLaws
 import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
 import Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.HostFacts
 import Mathlib.Algebra.Order.Floor.Extended
@@ -191,7 +191,7 @@ end Series
 
 theorem splitZero : ∀ D : D7, GL3Theta.splitZero D := by
   intro D p _ cc δ g hg h2 hs
-  obtain ⟨-, hN, hC⟩ := GlobalTheory.T.cmThetaPoints_integral_norm_conjugate_laws D
+  obtain ⟨-, hN, hC⟩ := _root_.GlobalTheory.CMEndo.endo_all D
   have hα := idem_mem D g.lam h2 hs
   have hok : g.Ok := hg.2.2.2.2
   have h1 := hC p cc δ g hg h2 _ hα

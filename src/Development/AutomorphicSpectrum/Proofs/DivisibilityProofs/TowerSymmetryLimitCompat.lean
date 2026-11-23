@@ -1,7 +1,9 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.Proportional
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.MonomialLinesPermutationStatement
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.Birational
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.MonomialLinesPermutation
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MultihomogeneousIdeals.IsFieldIntersection
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,7 +53,6 @@ import Development.AutomorphicSpectrum.Definitions.MetricPeriods.PairRelationOfS
 import ReciprocityTheory.AnalyticForms.LeviForms.IsRegFamilyInhabitStatement
 import ReciprocityTheory.AnalyticForms.PotentialTheory.IsPotentialOfFun
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MixedFieldContraction.GenericFibreKerTarget
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MultihomogeneousIdeals.IsFieldIntersection
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.RationalSections.IsRatSectionOn
 
 @[expose] public section
@@ -103,7 +104,7 @@ theorem arMono_word (M : RootModel Ψ N) (II : IntersectionSystem) (hII : IsInte
   have e : Finsupp.mapDomain some (∑ k, Finsupp.single (w k) 1) =
       ∑ k, Finsupp.single (some (w k)) (1 : ℕ) := by
     simp [Finsupp.mapDomain_finsetSum]
-  obtain ⟨hdeg, -, -, hv⟩ := GlobalTheory.T.monomial_lines_permutation II hII M.K M.ι M.P (dimFl Ψ N + 1) _ (M.line t) (fun k => some (w k))
+  obtain ⟨hdeg, -, -, hv⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Top.monoLines_monomial_word II hII M.K M.ι M.P (dimFl Ψ N + 1) _ (M.line t) (fun k => some (w k))
     M.arith (by rintro (_ | r); exacts [M.A_smooth, M.x_smooth t r])
   have hnone : (∑ k, Finsupp.single (some (w k)) (1 : ℕ) : Option (Ψ × Fin N) →₀ ℕ) none = 0 := by
     simp [Finsupp.finsetSum_apply]

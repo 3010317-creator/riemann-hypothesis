@@ -4,8 +4,9 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpanLSt
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.CentralIdemCoeff
 public import Formalism.SharpRestriction.LevelLetterCocycles.PairedCharacterCondition
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodORingOfIntegers
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PotentiallyCrystallineModuleEqCrystallineRestricStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SplitOfClosure
+import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PotentiallyCrystallineModuleEqCrystallineRestric
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -82,7 +83,7 @@ theorem sumG_crys (hr : GoodR D.nd i r) (hAdm : FontaineAtPlacesOverL (D := D)) 
   have hF' := hAdm (D.nd.l i) K' (D.nbr i w hw).LL
   have hcr : ∀ y : ↥Xs, IsCrys ((D.loc (D.nd.l i)).PD K')
       (matRep ((Br.loc D.nbr i w hw (rTwO D.nd i r y)).comp (Subgroup.inclusion (GK_le h)))) := fun y =>
-    (GlobalTheory.T.potentiallyCrystalline_module_eq_crystalline_restriction (D.nd.l i) (D.loc (D.nd.l i)) (D.nbr i w hw).Kw K' (D.nbr i w hw).LL h hN hF hS _
+    (_root_.GlobalTheory.PcRes.main (D.nd.l i) (D.loc (D.nd.l i)) (D.nbr i w hw).Kw K' (D.nbr i w hw).LL h hN hF hS _
       (matRep (Br.loc D.nbr i w hw (rTwO D.nd i r y)))).2.1 (hpot y)
   exact (cj_sum (Qp := ℚ_[D.nd.l i]) (O := ↥(OL (D.nbr i w hw).LL))
     (fun y : ↥Xs => (Br.loc D.nbr i w hw (rTwO D.nd i r y)).comp (Subgroup.inclusion (GK_le h))) hc' hF'

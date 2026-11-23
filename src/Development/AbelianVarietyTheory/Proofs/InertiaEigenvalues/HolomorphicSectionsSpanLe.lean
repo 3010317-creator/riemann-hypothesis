@@ -5,7 +5,9 @@ public import Formalism.LocalToGlobal.ProjectiveLattices.FamilyUniformisationBas
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicCuspSectionsLeSpanAlgebraicCuspForms
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RdIndepOfLawsM
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemCuspFormsAllEmbeddingsOfInclusionReading
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpanAutomorphismConjugatesOfNumberFieldIndependeStatement
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpanAutomorphismConjugatesOfNumberFieldIndepende
 import Formalism.LocalRingCardinality.HeightBoundGeFourthPowerRank
 import Formalism.LocalToGlobal.ProjectiveLattices.HostSize
 import Mathlib.Algebra.Order.Floor.Extended
@@ -170,7 +172,7 @@ theorem descent (hf : 1 < Module.finrank ℚ E / 2) {σ : c.F →+* ℂ} (U : Un
     simpa only [Finset.sum_apply, Pi.smul_apply] using this
   haveI := c.fin
   haveI : NumberField c.F := {}
-  have htop := GlobalTheory.T.span_automorphismConjugates_of_numberField_independent_eq_top c.F σ (Fin m) e he
+  have htop := _root_.GlobalTheory.ConjSpan.span_conj_eq_top c.F σ (Fin m) e he
   let L : (Fin m → ℂ) →ₗ[ℂ] FDSec U.X := Fintype.linearCombination ℂ fun i => rdU U (f i)
   have hle : (⊤ : Submodule ℂ (Fin m → ℂ)) ≤ (holSub0 U.X (laU U a n)).comap L := by
     rw [← htop, Submodule.span_le]

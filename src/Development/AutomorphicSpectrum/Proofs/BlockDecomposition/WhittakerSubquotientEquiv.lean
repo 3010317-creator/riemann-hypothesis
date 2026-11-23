@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhitImgMono
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerTwoBlockIntertwinersSpanStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhitKerLeComapMap
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerTwoBlockIntertwinersSpan
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -128,7 +129,7 @@ theorem main : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [I
       show Submodule.Quotient.mk (E.symm (E x)) = _
       rw [E.symm_apply_apply]; rfl⟩
   exact iSup_range_of_surjective ((coverMap ψ d J T T').comp (whitMap ψ d E.symm.toIntertwiningMap))
-    ((coverMap_surjective ψ d J T T').comp hE) (GlobalTheory.T.whittaker_two_block_intertwiners_span k ψ d X ρ)
+    ((coverMap_surjective ψ d J T T').comp hE) (_root_.GlobalTheory.CompanionTheory.BZNuPair.whit_iSup_range_eq_top k ψ d X ρ)
 
 end GlobalTheory.CompanionTheory.BZNuPair.WhitCover
 

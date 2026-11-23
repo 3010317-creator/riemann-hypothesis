@@ -5,10 +5,13 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatVecU
 public import Development.AbelianVarietyTheory.Definitions.Foundations.NormEulerPolySubOneLe
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SphericalHeckeValuesSameParameters
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasSatakeGLOfIsSatVecGL
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GradedSeriesContinuationDominatedStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GradedSeriesContinuationDominated
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasSumCardCosetsDiagonalDoubleCosetGLStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SatakeVectorHeckeEigenvalueStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnramifiedZetaSumGLCosets
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsSplitOfIsInertAt
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.FiniteCosetsInDoset
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -53,7 +56,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Mathlib.Topology.UniformSpace.Uniformizable
-public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsSplitOfIsInertAt
 
 @[expose] public section
 
@@ -197,7 +199,7 @@ theorem zeta_sum_GL_complex : GlobalTheory.Published.UnramifiedDoublingGL → �
           simp only [a, deg]; ring]
       exact h1,
     hs₂ X hX (lt_of_lt_of_le h (min_le_right _ _))⟩
-  obtain ⟨hA, hBs⟩ := GlobalTheory.T.hasSum_and_summable_on_ball_of_hasSum_on_interval deg hdeg a b Cℓ (min δ₁ δ₂) ρ₀ P P' (lt_min hδ₁ hδ₂) (fun d => Nat.cast_nonneg _)
+  obtain ⟨hA, hBs⟩ := _root_.GlobalTheory.gradedSeries_continuation_dominated deg hdeg a b Cℓ (min δ₁ δ₂) ρ₀ P P' (lt_min hδ₁ hδ₂) (fun d => Nat.cast_nonneg _)
     hab hP hP' hser X₀ hX₀ρ
   have hφv : ∀ a : GL (Fin r) (w.adicCompletion E) ⧸ KGL w (n := r),
       φ a.out = (z : ℂ) ^ (∑ i, (D a).1 i) * X₀ ^ deg (D a) := fun a => by

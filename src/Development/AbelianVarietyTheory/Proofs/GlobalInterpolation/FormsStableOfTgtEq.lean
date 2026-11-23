@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.FormsStable
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LevelChainTransitionIsExtKernelSumStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LevelPrimeIncidenceFiniteFibresStableStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MemFormsIffExistsEquivariantExtensionStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.UopIsExtStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LevelChainTransitionIsExtKernelSum
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LevelPrimeIncidenceFiniteFibresStable
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MemFormsIffExistsEquivariantExtension
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.UopIsExt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -84,7 +84,7 @@ theorem finsum_inc_eq (v : X.A.vT) (p : M.Pt) (F : M.Pt → M.Val) :
   rw [inc_eq_image, finsum_mem_image (M.update_pt_injective v p).injOn]
 
 theorem finite_inc_loc (v : X.A.vT) (p : M.Pt) : {q | (p.2 v).Inc q}.Finite := by
-  have h := ((GlobalTheory.T.levelPrime_incidence_finite_fibres_stable D u X i M v).1 p).1
+  have h := ((_root_.GlobalTheory.LvT.inc_finite_stable D u X i M v).1 p).1
   rw [inc_eq_image] at h
   exact Set.Finite.of_finite_image h (M.update_pt_injective v p).injOn
 
@@ -105,17 +105,17 @@ theorem formsStable_of_tgtEq : ∀ (D : D7) (u : D.what₂.Word) (X : Ch D u) (L
     (∀ i h, (Kt i h).TgtEq) → FormsStable X := by
   intro D u X Lv Kt hK
   refine ⟨fun i hi v φ hφ => ?_, fun i hi v v' φ hφ => ?_, fun i hi φ hφ => ?_⟩
-  · obtain ⟨Φ, hΦ⟩ := (GlobalTheory.T.mem_forms_iff_exists_equivariant_extension D u X i (Lv i hi) φ).1 hφ
-    exact (GlobalTheory.T.mem_forms_iff_exists_equivariant_extension D u X i (Lv i hi) _).2 ⟨_, GlobalTheory.T.isExt_Uop_finsum_inc_of_isExt D u X i (Lv i hi) v φ Φ hΦ⟩
-  · obtain ⟨Φ, hΦ⟩ := (GlobalTheory.T.mem_forms_iff_exists_equivariant_extension D u X i (Lv i hi) φ).1 hφ
-    have h1 := GlobalTheory.T.isExt_Uop_finsum_inc_of_isExt D u X i (Lv i hi) v _ _ (GlobalTheory.T.isExt_Uop_finsum_inc_of_isExt D u X i (Lv i hi) v' φ Φ hΦ)
-    have h2 := GlobalTheory.T.isExt_Uop_finsum_inc_of_isExt D u X i (Lv i hi) v' _ _ (GlobalTheory.T.isExt_Uop_finsum_inc_of_isExt D u X i (Lv i hi) v φ Φ hΦ)
+  · obtain ⟨Φ, hΦ⟩ := (_root_.GlobalTheory.LvT.PtModel.mem_Fi_iff_exists_isExt D u X i (Lv i hi) φ).1 hφ
+    exact (_root_.GlobalTheory.LvT.PtModel.mem_Fi_iff_exists_isExt D u X i (Lv i hi) _).2 ⟨_, _root_.GlobalTheory.LvT.uop_isExt D u X i (Lv i hi) v φ Φ hΦ⟩
+  · obtain ⟨Φ, hΦ⟩ := (_root_.GlobalTheory.LvT.PtModel.mem_Fi_iff_exists_isExt D u X i (Lv i hi) φ).1 hφ
+    have h1 := _root_.GlobalTheory.LvT.uop_isExt D u X i (Lv i hi) v _ _ (_root_.GlobalTheory.LvT.uop_isExt D u X i (Lv i hi) v' φ Φ hΦ)
+    have h2 := _root_.GlobalTheory.LvT.uop_isExt D u X i (Lv i hi) v' _ _ (_root_.GlobalTheory.LvT.uop_isExt D u X i (Lv i hi) v φ Φ hΦ)
     funext c
     rw [h1.1 c, h2.1 c]
     simp only []
     rw [(Lv i hi).finsum_inc_comm v v']
-  · obtain ⟨Φ, hΦ⟩ := (GlobalTheory.T.mem_forms_iff_exists_equivariant_extension D u X i (Lv i hi.le) φ).1 hφ
-    exact (GlobalTheory.T.mem_forms_iff_exists_equivariant_extension D u X (i + 1) (Lv (i + 1) hi) _).2
-      ⟨_, GlobalTheory.T.levelChainTransition_isExt_kernel_sum D u X i (Lv i hi.le) (Lv (i + 1) hi) (Kt i hi) φ Φ (hK i hi) hΦ⟩
+  · obtain ⟨Φ, hΦ⟩ := (_root_.GlobalTheory.LvT.PtModel.mem_Fi_iff_exists_isExt D u X i (Lv i hi.le) φ).1 hφ
+    exact (_root_.GlobalTheory.LvT.PtModel.mem_Fi_iff_exists_isExt D u X (i + 1) (Lv (i + 1) hi) _).2
+      ⟨_, _root_.GlobalTheory.LvT.isExt_KT D u X i (Lv i hi.le) (Lv (i + 1) hi) (Kt i hi) φ Φ (hK i hi) hΦ⟩
 
 end GlobalTheory.LvT

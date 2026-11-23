@@ -1,14 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.ThetaValues.Generic
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ArchimedeanFlatDecompositionIndexingStatement
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CuspFormVanishingAtPointsMulPowMemSpanStatement
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CuspFormVanishingLowCoeffMemLeadingAddDeepSpanStatement
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsAlgIndependentCoeffsFlatDatumStatement
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsBaseEmbeddingReadingFormsStatement
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FinrankLowerBoundCuspFormVanishingLowCoeffStatement
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.LeadingProductsIndependentModuloDeepProductsStatement
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.PointsInterpolationGenericSectionsStatement
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ArchimedeanFlatDecompositionIndexing
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CuspFormVanishingAtPointsMulPowMemSpan
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CuspFormVanishingLowCoeffMemLeadingAddDeepSpan
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsAlgIndependentCoeffsFlatDatum
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsBaseEmbeddingReadingForms
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FinrankLowerBoundCuspFormVanishingLowCoeff
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.LeadingProductsIndependentModuloDeepProducts
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.PointsInterpolationGenericSections
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,8 +52,8 @@ theorem GlobalTheory.Shares.exists_anFacts_record : ∀ (D : D7) (T : Top D) (h 
   intro D T h j hj n N ka wL wF w Tn CR c hka hA hOn hM hTie
   subst hka
   obtain ⟨A⟩ := hA
-  obtain ⟨R, e, hR⟩ := GlobalTheory.T.exists_base_embedding_reading_forms D T h j hj n
-  obtain ⟨t, ht, ⟨Fl⟩⟩ := GlobalTheory.T.exists_algIndependent_coeffs_flatDatum D T h j hj N wL wF w Tn _ A
+  obtain ⟨R, e, hR⟩ := _root_.GlobalTheory.Shares.exists_isRdgU D T h j hj n
+  obtain ⟨t, ht, ⟨Fl⟩⟩ := _root_.GlobalTheory.GenericFlat.exists_generic_flatAt D T h j hj N wL wF w Tn _ A
   classical
   let ι : Type := Σ k : (T.U j T.σ₀).Comp, Fin (Fl.Fl k).δ
   have : Fintype ι := inferInstance
@@ -62,13 +62,13 @@ theorem GlobalTheory.Shares.exists_anFacts_record : ∀ (D : D7) (T : Top D) (h 
     e.symm ⟨(en q).1, ⟨(Fl.Fl (en q).1).xs (en q).2, (Fl.Fl (en q).1).xs_mem _⟩⟩
   have hxs : ∀ q, e (xs q) = ⟨(en q).1, ⟨(Fl.Fl (en q).1).xs (en q).2, (Fl.Fl (en q).1).xs_mem _⟩⟩ :=
     fun q => e.apply_symm_apply _
-  have h1 := GlobalTheory.T.points_interpolation_genericSections D T h j hj n R e hR N wL wF w Tn _ A t Fl _ xs en hxs hOn
+  have h1 := _root_.GlobalTheory.Shares.points_and_interp D T h j hj n R e hR N wL wF w Tn _ A t Fl _ xs en hxs hOn
   refine ⟨R, t, _, xs, ?_, h1.1, h1.2,
-    GlobalTheory.T.cuspForm_vanishing_at_points_mul_pow_mem_span D T h j hj n R e hR N wL wF w Tn _ A t Fl _ xs en hxs hOn,
-    GlobalTheory.T.leadingProducts_independent_modulo_deepProducts D T h j hj n R e hR N wL wF w Tn _ A t Fl _ xs en hxs,
-    GlobalTheory.T.archimedean_flat_decomposition_indexing D T h j hj n R e hR N wL wF w Tn _ A t Fl _ xs en hxs,
-    GlobalTheory.T.finrank_lower_bound_cuspForm_vanishing_low_coeff D T h j hj n R e hR N wL wF w Tn _ A t Fl _ xs en hxs CR c rfl hM,
-    GlobalTheory.T.cuspForm_vanishing_low_coeff_mem_leading_add_deep_span D T h j hj n R e hR N wL wF w Tn _ A t Fl _ xs en hxs hOn CR c rfl ?_⟩
+    _root_.GlobalTheory.Shares.VanDiv.vanishing_division D T h j hj n R e hR N wL wF w Tn _ A t Fl _ xs en hxs hOn,
+    _root_.GlobalTheory.Shares.LeadDeep.main D T h j hj n R e hR N wL wF w Tn _ A t Fl _ xs en hxs,
+    _root_.GlobalTheory.UpperRecord.upper D T h j hj n R e hR N wL wF w Tn _ A t Fl _ xs en hxs,
+    _root_.GlobalTheory.LowerBound.lower_bound D T h j hj n R e hR N wL wF w Tn _ A t Fl _ xs en hxs CR c rfl hM,
+    _root_.GlobalTheory.Containment.main D T h j hj n R e hR N wL wF w Tn _ A t Fl _ xs en hxs hOn CR c rfl ?_⟩
   · intro Q hQ
     have hσ : R.σ = T.σ₀ := RingHom.ext hR.1
     rw [hσ]

@@ -7,9 +7,13 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AmpleDivIffI
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsPullbackGeneric
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniformisationFiniteExtSameMumfordBundle
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsDominantOfGen
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleSymmetricOfSymmetricGenericFibreStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RaynaudLineBundleRelAmpleOfGenericSemiAbelianStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymmetricLineBundlePullbackGrpPullbackStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ThickTransComp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleSymmetricOfSymmetricGenericFibre
+public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAmpleLBOfRelAmpleOfIsAffine
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RaynaudLineBundleRelAmpleOfGenericSemiAbelian
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymmetricLineBundlePullbackGrpPullback
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RegularLocalRingNormalDomain
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -45,7 +49,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAmpleLBOfRelAmpleOfIsAffine
 
 @[expose] public section
 
@@ -93,7 +96,7 @@ theorem ampleDiv_closure_on_chart : ∀ (R₀ : Type) [CommRing R₀] [IsDomain 
   have hlα : α = l ≫ φ := by
     have := hcomp _ (𝟙 _) l (by rw [Category.id_comp, hl])
     rwa [Category.id_comp] at this
-  have hs1 := GlobalTheory.T.symmetric_lineBundle_pullback_grpPullback _ _ A ((Over.pullback (jK R)).obj G) y α hα (toLB D) (isLB_toLB D) hsym
+  have hs1 := _root_.GlobalTheory.SymGrpPull.symm_pull _ _ A ((Over.pullback (jK R)).obj G) y α hα (toLB D) (isLB_toLB D) hsym
   rw [hlα] at hs1
   have hK₁ := LB.isLB_pull hL₁ (pullback.fst G.hom (jK R))
   have hK := LB.isLB_pull (isLB_toLB D) (l ≫ φ)
@@ -103,8 +106,8 @@ theorem ampleDiv_closure_on_chart : ∀ (R₀ : Type) [CommRing R₀] [IsDomain 
     LBIso.trans (LB.isLB_pull hK₁ _) (LB.isLB_pull hK _) hK₁ (GlobalTheory.Mum.UExt.lbIso_pull h4 _)
       (LBIso.trans (LB.isLB_pull hK _) hK hK₁ hs1 h4.symm)
   haveI : IsIntegrallyClosed R := (GlobalTheory.isDomain_and_isIntegrallyClosed_of_isRegularLocalRing R).2
-  have hs3 := GlobalTheory.T.lineBundle_symmetric_of_symmetric_generic_fibre R G hG (toLB D₁) hL₁ hs2
-  have h7 := GlobalTheory.T.raynaud_lineBundle_relAmple_of_generic_semiAbelian R hR G hG hGK (toLB D₁) hL₁ h6 hs3
+  have hs3 := _root_.GlobalTheory.SymGenericExt.symm_of_generic R G hG (toLB D₁) hL₁ hs2
+  have h7 := _root_.GlobalTheory.AmpleGenericSemiAb.isAmpleLB_of_generic R hR G hG hGK (toLB D₁) hL₁ h6 hs3
   haveI : QuasiCompact G.hom := hG.quasiCompact
   haveI : CompactSpace G.left := QuasiCompact.compactSpace_of_compactSpace G.hom
   exact (ampleDiv_iff_isAmpleLB G.left D₁).2 h7

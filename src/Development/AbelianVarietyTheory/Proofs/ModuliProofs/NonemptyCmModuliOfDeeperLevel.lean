@@ -2,9 +2,10 @@ module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PushInvertible
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LevelQuotientRepresentsReducedStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LevelQuotientUnramifiedDualNumberPointsStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.NonemptyLevelQuotStatement
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsGaloisCover
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LevelQuotientRepresentsReduced
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LevelQuotientUnramifiedDualNumberPoints
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.NonemptyLevelQuot
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -42,7 +43,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsGaloisCover
 
 @[expose] public section
 
@@ -54,8 +54,8 @@ namespace GlobalTheory.ZM
 
 theorem moduli_of_deeper_level : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{0}) (P : Out.PolAV S) (M : LB P.A.left), M.IsLB → ∃ t : LB.Gen (Theta P.A M), t.IsGen) → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l l₂ : Level H), 1 ≤ D.p + D.q → l.Dvd l₂ → Nonempty (Moduli D l₂) → Nonempty (Moduli D l) := by
   intro L L2 hT E _ _ _ H D l l₂ hD hl ⟨Xo₂⟩
-  obtain ⟨Q⟩ := GlobalTheory.T.nonempty_levelQuot_of_level_dvd L L2 hT E H D l l₂ Xo₂ hD hl
+  obtain ⟨Q⟩ := _root_.GlobalTheory.nonempty_levelQuot L L2 hT E H D l l₂ Xo₂ hD hl
   exact ⟨{ X := Q.X, s := Q.s, qproj := Q.qproj, smooth := Q.smooth, univ := Q.univ,
-           rep := GlobalTheory.T.levelQuotient_represents_reduced L L2 E H D l l₂ Xo₂ Q hD hl,
-           unram := GlobalTheory.T.levelQuotient_unramified_dualNumberPoints L L2 E H D l l₂ Xo₂ Q hD hl }⟩
+           rep := _root_.GlobalTheory.levelQuot_represents L L2 E H D l l₂ Xo₂ Q hD hl,
+           unram := _root_.GlobalTheory.levelQuot_unram L L2 E H D l l₂ Xo₂ Q hD hl }⟩
 end GlobalTheory.ZM

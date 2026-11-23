@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPullCubicalOfGenericOfExt
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsProperToroidalModelStructureMap
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBaseUnitRigidifiedGenericGeneratorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsConstMulEqGeneratorFactorialBaseStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGlobalGeneratorDivBaseUnitEqGenericStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ValCalc
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBaseUnitRigidifiedGenericGenerator
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsConstMulEqGeneratorFactorialBase
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.Biextensions.GenericFiberCubeInclusion
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGlobalGeneratorDivBaseUnitEqGeneric
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaDescendsFromGenericFibre
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsDiscreteValuationRingIntegralClosure
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsRegularLocalRingOfFlatOfMapEqMaximalIdeal
@@ -73,9 +75,9 @@ theorem extendGenAt_chartRing : ∀ (k : Type) [Field k] (m n : ℕ),
   have := hG.smooth
   have := hG.quasiCompact
   have := hG.geomConnected
-  obtain ⟨a, u, hu, hf⟩ := GlobalTheory.T.exists_const_mul_eq_generator_factorial_base _ _ G _ _ _ N.L r inferInstance inferInstance inferInstance
+  obtain ⟨a, u, hu, hf⟩ := _root_.GlobalTheory.GlobalVerticalUnit.exists_const_mul_eq_gen _ _ G _ _ _ N.L r inferInstance inferInstance inferInstance
     (IsPullback.of_hasPullback _ _) N.isLB hr
-  obtain ⟨b, hb⟩ := GlobalTheory.T.exists_baseUnit_rigidifiedGenericGenerator _ _ G (eSec G) (Over.w η[G]) eA heA N.L N.rig r N.isLB N.rigGen hc a u hu hf
-  exact GlobalTheory.T.exists_globalGenerator_div_baseUnit_eq_generic _ _ G _ _ _ pullback.condition N.L r a b hb u hu hf
+  obtain ⟨b, hb⟩ := _root_.GlobalTheory.rigUnit_exists _ _ G (eSec G) (Over.w η[G]) eA heA N.L N.rig r N.isLB N.rigGen hc a u hu hf
+  exact _root_.GlobalTheory.DivConst.exists_genPull_eq _ _ G _ _ _ pullback.condition N.L r a b hb u hu hf
 
 end GlobalTheory.ChartCubExt

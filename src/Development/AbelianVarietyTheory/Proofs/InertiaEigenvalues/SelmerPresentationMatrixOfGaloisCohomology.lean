@@ -5,14 +5,15 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomolog
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.ContinuousCycMod
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.GaloisSideTwistedSelmerAuxiliaryPrimes
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalConditionAboveLCoeffMapFunctorial
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalConditionAboveLSaturatedOfSelmerSetupStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalCountOfSetupStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NoGaloisInvariantsTorsionCoeffOfSelmerSetupStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.H1MapSubgroup
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalConditionAboveLSaturatedOfSelmerSetup
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalCountOfSetup
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NoGaloisInvariantsTorsionCoeffOfSelmerSetup
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RepOnEqOfEqOne
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelmerFunctorLeftExactTorsionCoefficientsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelmerObstructionLeResidualSelmerSimpleExtensionStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelmerTheoremOfLocalComponentsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TorsionLeftExactFunctorKernelSquareMatrixStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelmerFunctorLeftExactTorsionCoefficients
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelmerObstructionLeResidualSelmerSimpleExtension
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelmerTheoremOfLocalComponents
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TorsionLeftExactFunctorKernelSquareMatrix
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,14 +64,14 @@ theorem oneMatrix_of_galoisCohomology :
     ∀ (D : Formalism.BasicNotions.D7) (N : NData D.R D.host D.what₂) (X : NTw D.R D.host D.what₂ D.LL0 N)
       (bkP : BKPh X), ThmS bkP := by
   intro _ hPT hCD _ hLF hLT hLE hGF hGE _ hadm D N X bkP
-  refine GlobalTheory.T.selmer_theorem_of_local_components GlobalTheory.T.torsion_left_exact_functor_kernel_square_matrix D N X bkP ?_
+  refine _root_.GlobalTheory.SelAssemble.thmS_of_selmer_functor _root_.GlobalTheory.KRep.kernelRep D N X bkP ?_
   intro i s Λ _ _ _ κ Q hS
-  have hN := GlobalTheory.T.noGaloisInvariantsTorsionCoeff_of_selmerSetup D N X bkP i s Λ κ Q hS
-  have hU := GlobalTheory.T.localConditionAboveLSaturated_of_selmerSetup hLF hLT hLE hadm D N X bkP i s Λ κ Q hS
-  have hC := GlobalTheory.T.local_count_of_setup hLF hLT hLE hadm D N X bkP i s Λ κ Q hS
+  have hN := _root_.GlobalTheory.NoGlobalInv.noInv D N X bkP i s Λ κ Q hS
+  have hU := _root_.GlobalTheory.LocalSaturation.main hLF hLT hLE hadm D N X bkP i s Λ κ Q hS
+  have hC := _root_.GlobalTheory.LocalConditionCount.locCount hLF hLT hLE hadm D N X bkP i s Λ κ Q hS
   exact ⟨GlobalTheory.SelFun.selMaps D N X bkP i s Λ κ Q,
-    GlobalTheory.T.selmer_functor_left_exact_torsion_coefficients D N X bkP i s Λ κ Q hS hN hU,
+    _root_.GlobalTheory.SelLeftExact.selmer_left_exact D N X bkP i s Λ κ Q hS hN hU,
     GlobalTheory.SelFun.Colim.selColim D N X bkP i s Λ κ Q hS hN hU,
-    GlobalTheory.T.selmerObstruction_le_residualSelmer_simpleExtension hPT hCD hLF hLT hLE hGF hGE D N X bkP i s Λ κ Q hS hN hU hC⟩
+    _root_.GlobalTheory.SelObstruction.selObs hPT hCD hLF hLT hLE hGF hGE D N X bkP i s Λ κ Q hS hN hU hC⟩
 
 end GlobalTheory.SelFun

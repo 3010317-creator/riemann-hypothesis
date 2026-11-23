@@ -2,10 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CentreAtOfIsAt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLogEqnAddSmulIffOfOff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KawamataLogTerminalLogCanonicalGenerisationStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsLogCanonicalMultipleCanonical
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KawamataLogTerminalLogCanonicalGenerisation
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KltAtAddSmulOfLcAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KltAtLcAtOfLeCoeffStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopologicalKrullDimClosureLeOfSpecializes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KltAtLcAtOfLeCoeff
+public import Mathlib.AlgebraicGeometry.Scheme
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DimClosureLeOfSpecializes
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.NonzeroLocus
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -71,15 +74,15 @@ theorem logCanonicalCut_of_step : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocally
   have hx : KltAt p n (Δ + (1 - δ) • D) x :=
     kltAt_add_smul_of_lcAt X p n hp hn Δ D δ x hD hk hl hδ hδ1
   have hkw : KltAt p n (Δ + (1 - δ) • D) w :=
-    (GlobalTheory.T.kawamataLogTerminal_logCanonical_generisation X p n (Δ + (1 - δ) • D) x w hwx).1 hx
+    (_root_.GlobalTheory.Discrepancy.kltAt_lcAt_generisation X p n (Δ + (1 - δ) • D) x w hwx).1 hx
   by_cases hzw : z ⤳ w
   · by_cases hwz : w = z
     · subst hwz
       exact absurd ((off_add_smul X p n (Δ + (1 - δ) • D) B c w hoff).1.2 hkw) hw
-    · exact topologicalKrullDim_closure_le_of_specializes X z w j hzw hwz hdim
+    · exact _root_.GlobalTheory.ClosureDimensionSpecialization.dim_closure_le_of_specializes X z w j hzw hwz hdim
   · exfalso
     have h1 : KltAt p n (Δ + (1 - δ) • D + (1 : ℚ) • B) w := by
       rw [one_smul]; exact hsep w hzw (1 - δ) (by linarith) hkw
-    exact hw ((GlobalTheory.T.kltAt_and_lcAt_antitone_coeff X p n hp hn (Δ + (1 - δ) • D) B c 1 w hB hc).1 h1)
+    exact hw ((_root_.GlobalTheory.PairStep.kltAt_lcAt_of_le_coeff X p n hp hn (Δ + (1 - δ) • D) B c 1 w hB hc).1 h1)
 
 end GlobalTheory.PairStep

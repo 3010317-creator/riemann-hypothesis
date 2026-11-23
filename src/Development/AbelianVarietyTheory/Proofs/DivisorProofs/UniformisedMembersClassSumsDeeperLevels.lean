@@ -1,22 +1,27 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsActIffIsDiagEnd
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaConstantBoundedByShortestVector
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdicSumMaximalIdealUniqueNoetherianLocalStatement
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.TXFrame
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdicSumMaximalIdealUniqueNoetherianLocal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividingLabelAndShiftsPersistDeeperModelStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividingThetaConstantsGenerateIntegralTorsionLabStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCentredPureFiniteExtensionDeeperModelStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDeeperPointIntegralClosureGaloisStalkStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLatticeEquivTwoMembersSamePointStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMemberTermsIntegralUnitShiftStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsThetaSetupTowerBaseChangeMemberStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsThetaSetupTowerLargeRatioStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteGaloisFractionRingOfIsFractionRingStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsClassSumOfAdicSumUnitSmulTermsStatement
+public import Mathlib.FieldTheory.Galois.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteGaloisFractionRingOfIsFractionRing
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsChartMemberP
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsClassSumOfAdicSumUnitSmulTerms
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPrimitiveRootMap
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeAutomorphismCongrOneModDetEqOneStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnimodMod
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeAutomorphismCongrOneModDetEqOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmulEighthPowerDiag
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpMapStalkHomFromSpecStalk
+public import Development.AbelianVarietyTheory.Definitions.Divisors.LamRange
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaConstantBoundedByShortestVector
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividingThetaConstantsGenerateIntegralTorsionLabStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCentredPureFiniteExtensionDeeperModelStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMemberTermsIntegralUnitShiftStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsThetaSetupTowerBaseChangeMemberStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SurjectiveLabelHomLatticeModLevelThetaMember
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaSetupStalkNoetherianNormalFractionRing
 import Mathlib.Algebra.Order.Floor.Extended
@@ -56,7 +61,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.LamRange
 
 @[expose] public section
 
@@ -150,7 +154,7 @@ theorem classSums_deeper : ∀ g : ℕ, 1 ≤ g → ∀ n : ℕ, 3 ≤ n → Odd
   haveI := 𝔗.fd
   haveI := 𝔗.gal
   obtain ⟨algFL, tower, hfd, hgal, hfix⟩ :=
-    GlobalTheory.T.exists_finite_galois_fractionRing_fixing (X₁.M.Z.presheaf.stalk z₁) X₁.Ω₁ 𝔗.X₂.Ω₁ (fun _ => rfl)
+    _root_.GlobalTheory.finiteGalois_fractionRing_of_isFractionRing (X₁.M.Z.presheaf.stalk z₁) X₁.Ω₁ 𝔗.X₂.Ω₁ (fun _ => rfl)
   obtain ⟨z₂, j₂, hz₂, hj₂, hmax, hint, hσ₂, hinj⟩ := GlobalTheory.T.exists_deeperPoint_integralClosure_galois_stalk g n F W Z i X₁ act 𝔗 z₁
   have hdiv₂ : ∀ w, 𝔗.p w = z₁ → 𝔗.X₂.M.Div 𝔗.X₂.S.th (𝔗.lam x₀) w := fun w hw =>
     (GlobalTheory.T.dividing_label_and_shifts_persist_deeper_model g hg n hn hodd F Z z i hP hNZ hiz hD W hW hT X₁ z₁ act hact 𝔗 w hw x₀ hdiv (Φ.V y₀) (Φ.ev y₀)
@@ -242,7 +246,7 @@ theorem classSums_deeper : ∀ g : ℕ, 1 ≤ g → ∀ n : ℕ, 3 ≤ n → Odd
         (fun mu c => ev₂ y zt ^ eps (lab c) * io y (Φ.term y mu c)) (h𝔪₂T y (ev₂ y) (hExt y) zt hzt) c (aκ κ) _
         (hkk y _ κ (haκ κ)) h hh
       let e : (V' y)ˣ := hzu.unit ^ eps (lab c)
-      have hcs := GlobalTheory.T.isClassSum_of_adicSum_unit_smul_terms ℤ id g 8 W _ Φ y L₂ hL₂pos (fun v => kk y (κ v)) c (V' y) (io y) e (ev₂ y h)
+      have hcs := _root_.GlobalTheory.Poinc.isClassSum_of_sumI ℤ id g 8 W _ Φ y L₂ hL₂pos (fun v => kk y (κ v)) c (V' y) (io y) e (ev₂ y h)
         (by convert hs using 3; simp [e])
       have hj : j₂ ⟨Fv (aκ κ) c, hFB _ _⟩ = zt ^ ((M - 1) * eps (lab c)) * h := 𝔗.X₂.M.stalkHom_injective z₂ (by
         rw [hj₂, map_mul, map_pow, hzt, hh])
@@ -315,7 +319,7 @@ theorem classSums_deeper : ∀ g : ℕ, 1 ≤ g → ∀ n : ℕ, 3 ≤ n → Odd
       have h3 := ((hyy y₀).2.2.1 _ _ _ h1).1 h2 0
       simp only [Pi.smul_apply, map_nsmul] at h3
       exact congMod_of_nsmul hd (by rw [← 𝔗.lev]; exact h3)
-    have hdet : LinearMap.det (gk.toIntLinearEquiv : Φ.X y₀ →ₗ[ℤ] Φ.X y₀) = 1 := GlobalTheory.T.lattice_automorphism_congr_one_mod_det_eq_one (Φ.X y₀) gk _ hL₁ hcong
+    have hdet : LinearMap.det (gk.toIntLinearEquiv : Φ.X y₀ →ₗ[ℤ] Φ.X y₀) = 1 := _root_.GlobalTheory.Poinc.det_eq_one_of_congMod (Φ.X y₀) gk _ hL₁ hcong
     have hFσ : ∀ a c, σ' (Fv a c) = Fv (𝔗.gl σ' a) c := by
       obtain ⟨Vr, _, _, _, evr, Xr, _, mr, tr, δr, hevr, ⟨𝔪r⟩⟩ := GlobalTheory.Poinc.Sep.exists_uMem_injective g hg n hn hodd F Z z i
         hP hNZ hiz hD W hW hT X₁ z₁ act hact
@@ -348,7 +352,7 @@ theorem classSums_deeper : ∀ g : ℕ, 1 ≤ g → ∀ n : ℕ, 3 ≤ n → Odd
       have hu1 : (evr₂ (σ₂ zt)) ^ M = 1 := by rw [← map_pow, ← map_pow, hztM, map_one, map_one]
       have hu2 : (evr₂ zt) ^ M = 1 := by rw [← map_pow, hztM, map_one]
       simp only [key _ hu1, key _ hu2] at t1 t2
-      have heq := GlobalTheory.T.adicSum_maximalIdeal_unique_noetherian_local Vr' _ _ _ _ t1 t2
+      have heq := _root_.GlobalTheory.Poinc.sumI_maximalIdeal_unique Vr' _ _ _ _ t1 t2
       have heq' : σ₂ (zt ^ ((M - 1) * eps (lab c)) * h) = zt ^ ((M - 1) * eps (lab c)) * h' :=
         hinjr (by simpa only [map_mul, map_pow, smul_eq_mul] using heq)
       have := congrArg (𝔗.X₂.M.stalkHom z₂) heq'

@@ -1,11 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.CoeffRingsHaveRootsOfUnity
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AddValuationNonnegRingOfIntegersNumberFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CenterMonoidAlgebraLeSpanCentralIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CentralIntegralPreservesLocalisedLatticeImageStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ComparisonMapIntertwinesGroupAlgebraActionStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemHeckeEigOfImageMovedByCentreStatement
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.Valuation.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AddValuationNonnegRingOfIntegersNumberField
+public import Mathlib.Algebra.Algebra.Subalgebra.Basic
+public import Mathlib.Algebra.MonoidAlgebra.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CenterMonoidAlgebraLeSpanCentralIntegral
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CentralIntegralPreservesLocalisedLatticeImage
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ComparisonMapIntertwinesGroupAlgebraAction
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemHeckeEigOfImageMovedByCentre
 import Formalism.SharpRestriction.LevelLetterCocycles.EndomorphismIndexBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -325,12 +329,12 @@ theorem cenO_nonempty : ∀ D : D7, (∀ i, Nonempty (Sec D i)) → ZLStable D �
   have S : ∀ i, Sec D i := fun i => (hS i).some
   have hint : ∀ (i : D.nd.Loc) (a : 𝓞 D.what₂.LL), D.nd.embK i (a : D.what₂.LL) ∈
       (algebraMap (D.nd.O i) (FractionRing (D.nd.O i))).range := fun i a =>
-    (D.nd.embK_w i a).1 (GlobalTheory.T.addValuation_nonneg_ringOfIntegers_numberField D.what₂.LL (D.what₂.places.val (D.nd.w i)) a)
+    (D.nd.embK_w i a).1 (_root_.GlobalTheory.addValuation_nonneg_of_ringOfIntegers D.what₂.LL (D.what₂.places.val (D.nd.w i)) a)
   have hL : ∀ i, ∀ z ∈ CenR D i, ∀ m : D.nd.Mt i, ∃ m' : D.nd.Mt i, J (S i) m' = psi D i z (J (S i) m) :=
-    fun i => hL_of (S i) (GlobalTheory.T.centralIntegral_preserves_localisedLatticeImage D i (S i) (hint i) (GlobalTheory.T.comparisonMap_intertwines_groupAlgebra_action D i (S i) hTy) hInt)
-      (fun z hz => GlobalTheory.T.center_monoidAlgebra_le_span_centralIntegral (D.nd.O i) (G0g D.nd) z hz)
+    fun i => hL_of (S i) (_root_.GlobalTheory.PendOf.CenLat.cenInt_lat D i (S i) (hint i) (_root_.GlobalTheory.PendOf.CenKey.phi_onMt D i (S i) hTy) hInt)
+      (fun z hz => _root_.GlobalTheory.GroupAlg.center_mem_span_classSums (D.nd.O i) (G0g D.nd) z hz)
   exact ⟨{ zO := fun i => zA (S i) (hL i)
-           zO_comm := fun i z f => zA_comm (S i) (hL i) (GlobalTheory.T.mem_heckeEig_of_image_moved_by_centre D i (S i) hTy) z f
-           zO_act := fun i z x y h => zA_act (S i) (hL i) (GlobalTheory.T.comparisonMap_intertwines_groupAlgebra_action D i (S i) hTy) z x y h }⟩
+           zO_comm := fun i z f => zA_comm (S i) (hL i) (_root_.GlobalTheory.PendOf.CenEig.main D i (S i) hTy) z f
+           zO_act := fun i z x y h => zA_act (S i) (hL i) (_root_.GlobalTheory.PendOf.CenKey.phi_onMt D i (S i) hTy) z x y h }⟩
 
 end GlobalTheory.CenOAct

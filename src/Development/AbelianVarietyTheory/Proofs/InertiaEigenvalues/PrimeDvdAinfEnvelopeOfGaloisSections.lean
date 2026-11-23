@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AinfDivisibilityBreuilKisinFactsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AinfEnvelopeModPrimePropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinEnvelopePointFactorsThroughSectionStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AinfDivisibilityBreuilKisinFacts
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AinfEnvelopeModPrimeProperties
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinEnvelopePointFactorsThroughSection
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DvdAllPowOfFrobeniusEqKilledByPerfectPointsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -55,8 +55,8 @@ namespace GlobalTheory.BSP
 
 theorem l_dvd_of_galois_sections : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (En : Env bk (ainfObj K) (bk.ev bk.E) (bk.ev X)) (κ : Type) [Fintype κ] (x : κ → En.Q.A) (c : κ → κ → En.Q.A) (h : ℕ), (∀ j, En.inl.f (bk.ev bk.E) ^ h * x j = ∑ i, En.Q.D.φ (x i) * c i j) → (∀ (g : ↥(GK K)) (s : Hom En.Q (ainfObj K)), s.comp En.inl = Hom.id _ → s.comp En.inr = (ainfHom K g).comp bk.ι → ∀ j, ((l : ℕ) : (ainfObj K).A) ∣ s.f (x j)) → ∀ j, ((l : ℕ) : En.Q.A) ∣ x j := by
   intro l _ K bk En κ _ x c h hx hs
-  obtain ⟨-, -, -, -, -, -, hA7⟩ := GlobalTheory.T.ainf_divisibility_breuilKisin_facts l K bk
-  obtain ⟨-, hM2, hM3⟩ := GlobalTheory.T.ainf_envelope_mod_prime_properties l K bk En
+  obtain ⟨-, -, -, -, -, -, hA7⟩ := _root_.GlobalTheory.BSP.AinfDiv.main l K bk
+  obtain ⟨-, hM2, hM3⟩ := _root_.GlobalTheory.BSP.env_ainf_mod l K bk En
   let I : Ideal En.Q.A := Ideal.span {((l : ℕ) : En.Q.A)}
   let π : En.Q.A →+* En.Q.A ⧸ I := Ideal.Quotient.mk I
   have hπ : ∀ y, π y = 0 ↔ ((l : ℕ) : En.Q.A) ∣ y := fun y =>
@@ -92,7 +92,7 @@ theorem l_dvd_of_galois_sections : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (
       (f : En.Q.A ⧸ I →+* O), f (π (En.inl.f (bk.ev X))) ≠ 0 → ¬ IsUnit (f (π (En.inl.f (bk.ev X)))) →
       IsAdicComplete (Ideal.span {f (π (En.inl.f (bk.ev X)))}) O → ∀ j, f (π (x j)) = 0 := by
     intro O _ _ _ _ _ f hf0 hfu hfc j
-    obtain ⟨g, s, ψ, h1, h2, h3⟩ := GlobalTheory.T.breuilKisinEnvelope_point_factors_through_section l K bk En O (f.comp π) hf0 hfu hfc
+    obtain ⟨g, s, ψ, h1, h2, h3⟩ := _root_.GlobalTheory.BSP.envPoint_factors l K bk En O (f.comp π) hf0 hfu hfc
     obtain ⟨z, hz⟩ := hs g s h1 h2 j
     have e := h3 (x j)
     rw [RingHom.comp_apply] at e

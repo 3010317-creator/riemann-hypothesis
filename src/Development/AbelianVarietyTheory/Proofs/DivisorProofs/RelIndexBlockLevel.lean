@@ -2,10 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FinitePrimesUnder
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RowBlockIndicatorFromLtIff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardBlockParabolicSubgroupGLStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardGLRingOfIntegersQuotientProdFactorsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMaxLevelUnitaryCongrModIdealStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsReductionMaxLevelUnitaryModIdealStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardBlockParabolicSubgroupGL
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardGLRingOfIntegersQuotientProdFactors
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMaxLevelUnitaryCongrModIdeal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsReductionMaxLevelUnitaryModIdeal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -123,13 +125,13 @@ theorem relIndex_blockLevel {D : D7} {δ t0 : ℂ} {Q : ℕ} (P : Pair D ⊤ δ 
     (h𝔪 : 𝔪 ≠ ⊥) (hcop : 𝔪 ⊔ D.host.conj • 𝔪 = ⊤) (ha : a ≤ P.d) (hJ : IsBlockLevel P 𝔪 a) :
     ((P.J.relIndex (intG D P.d) : ℕ) : ℝ) = ∏ w ∈ (normalizedFactors 𝔪).toFinset,
       blockIdx (Ideal.absNorm w : ℝ) ((normalizedFactors 𝔪).count w) a (P.d - a) := by
-  obtain ⟨ρ, hρ⟩ := GlobalTheory.T.exists_reduction_maxLevel_unitary_mod_ideal D 𝔪 h𝔪 P.d
+  obtain ⟨ρ, hρ⟩ := _root_.GlobalTheory.LevelRed.exists_levelRed D 𝔪 h𝔪 P.d
   have hsurj : Function.Surjective ρ := by
     intro g'
     choose g hg using fun i j => Ideal.Quotient.mk_surjective (I := 𝔪) (((g' : GL (Fin P.d) (𝓞 D.host.E ⧸ 𝔪)) : Matrix (Fin P.d) (Fin P.d) (𝓞 D.host.E ⧸ 𝔪)) i j)
     have hgm : (Matrix.of g).map (Ideal.Quotient.mk 𝔪) = ((g' : GL (Fin P.d) (𝓞 D.host.E ⧸ 𝔪)) : Matrix (Fin P.d) (Fin P.d) (𝓞 D.host.E ⧸ 𝔪)) := by
       ext i j; simp [hg]
-    have h2 := GlobalTheory.T.exists_maxLevel_unitary_congr_mod_ideal D 𝔪 h𝔪 hcop P.d (Matrix.of g) (by rw [hgm]; exact Matrix.isUnits_det_units g')
+    have h2 := _root_.GlobalTheory.MaxLevelLift.exists_intG_cong D 𝔪 h𝔪 hcop P.d (Matrix.of g) (by rw [hgm]; exact Matrix.isUnits_det_units g')
     obtain ⟨k, hk, hk'⟩ := h2
     simp only [Matrix.of_apply] at hk'
     refine ⟨⟨k, hk⟩, ?_⟩
@@ -163,9 +165,9 @@ theorem relIndex_blockLevel {D : D7} {δ t0 : ℂ} {Q : ℕ} (P : Pair D ⊤ δ 
   have hI : ((blockPar (𝓞 D.host.E ⧸ 𝔪) a P.d).index : ℝ) =
       (Nat.card (GL (Fin P.d) (𝓞 D.host.E ⧸ 𝔪)) : ℝ) / (Nat.card (blockPar (𝓞 D.host.E ⧸ 𝔪) a P.d) : ℝ) := by
     rw [eq_div_iff hP0, mul_comm]; exact_mod_cast hcm
-  rw [hidx, hI, GlobalTheory.T.card_blockParabolicSubgroupGL _ a P.d ha, hR]
+  rw [hidx, hI, _root_.GlobalTheory.StdLoc.card_blockPar _ a P.d ha, hR]
   push_cast
-  rw [GlobalTheory.T.card_GL_ringOfIntegers_quotient_prod_factors _ 𝔪 h𝔪, GlobalTheory.T.card_GL_ringOfIntegers_quotient_prod_factors _ 𝔪 h𝔪, GlobalTheory.T.card_GL_ringOfIntegers_quotient_prod_factors _ 𝔪 h𝔪, absNorm_eq_prod h𝔪, ← Finset.prod_pow, ← Finset.prod_mul_distrib,
+  rw [_root_.GlobalTheory.CardGLQuot.card_GL_quot_prod _ 𝔪 h𝔪, _root_.GlobalTheory.CardGLQuot.card_GL_quot_prod _ 𝔪 h𝔪, _root_.GlobalTheory.CardGLQuot.card_GL_quot_prod _ 𝔪 h𝔪, absNorm_eq_prod h𝔪, ← Finset.prod_pow, ← Finset.prod_mul_distrib,
     ← Finset.prod_mul_distrib, ← Finset.prod_div_distrib]
   refine Finset.prod_congr rfl fun w hw => ?_
   have hq : (Ideal.absNorm w : ℝ) ≠ 0 := by

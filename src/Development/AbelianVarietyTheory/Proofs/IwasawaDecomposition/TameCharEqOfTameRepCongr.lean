@@ -1,10 +1,12 @@
 module
 
 public import Formalism.LocalToGlobal.NormalizedHeckeFactors.RingHomOfBaseOrderToFraction
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CharEqOfApplyRootEqStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RootEqOfClose
+public import ReciprocityTheory.GaloisValuations.Global
+public import Mathlib.Topology.Algebra.Nonarchimedean.AdicTopology
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CharEqOfApplyRootEq
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TameCharacterIndependentUniformizer
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TameRepConjugateInertia
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RootEqOfClose
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -88,7 +90,7 @@ theorem char_eq_of_tameRep_congr : ∀ {E Ω : Type} [Field E] [NumberField E] [
         + (algebraMap E Ω (u : E) - algebraMap E Ω (u' : E)) - (s' π / π - algebraMap E Ω (u' : E)) := by ring
     rw [e]
     exact Valuation.map_sub_lt _ (Valuation.map_add_lt _ hv hu) hv'
-  exact GlobalTheory.T.continuous_char_eq_of_inertia_condition A P hA hO χ hχ m hm hmP (hk A hA) ϖ hϖ hϖ2 π hπ s hs s' hs'
+  exact _root_.GlobalTheory.TameTau.char_eq_of_apply_root_eq A P hA hO χ hχ m hm hmP (hk A hA) ϖ hϖ hϖ2 π hπ s hs s' hs'
     ((div_left_inj' hπ0).1 heq)
 
 end GlobalTheory.TameTau

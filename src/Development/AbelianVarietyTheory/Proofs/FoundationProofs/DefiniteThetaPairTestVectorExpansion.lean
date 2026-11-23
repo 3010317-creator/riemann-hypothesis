@@ -1,13 +1,14 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OmEqPullOfVacuum
 public import Development.AbelianVarietyTheory.Definitions.Foundations.NormSumPairRankZeroOfCurveCoordNorm
 public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Levelaf
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLatticeOfAdelicPointStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaSpaceSelfDualPairAtMostLineStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLatticeOfAdelicPoint
+public import Formalism.SharpRestriction.GlobalSchurBounds.StandardLatticesGL3
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaSpaceSelfDualPairAtMostLine
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.VacuumUnderAdelicPairModulusOneStatement
-import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Adelstab
 public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.CsApprox
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OmEqPullOfVacuum
+import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Adelstab
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.CsSpan
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -448,17 +449,17 @@ theorem om_expand : ∀ (D : D7), Inp D → ∀ (cc : Ideal (𝓞 D.host.K)) (δ
   · exact ⟨0, 0, Fin.elim0, Fin.elim0, fun h => absurd h (by omega)⟩
   have hSD : ∀ (N : ℕ) (g : GA D N) L, Moves D (g : GL (Fin N) (AE D)) L → SD D L := by
     intro N g L hL
-    obtain ⟨Lt, h1, -⟩ := GlobalTheory.T.Lt_eq_iff_inv_mul_mem_intG_and_transport D N
+    obtain ⟨Lt, h1, -⟩ := _root_.GlobalTheory.NormSum.exists_lattice_of_adelic_point D N
     have : L = Lt g := by
       ext x; rw [hL x, (h1 g).1 x]
     rw [this]; exact (h1 g).2
   have hSD0 : ∀ N : ℕ, SD D (stdL D N) := by
     intro N
-    obtain ⟨Lt, h1, h2, -⟩ := GlobalTheory.T.Lt_eq_iff_inv_mul_mem_intG_and_transport D N
+    obtain ⟨Lt, h1, h2, -⟩ := _root_.GlobalTheory.NormSum.exists_lattice_of_adelic_point D N
     rw [← h2]; exact (h1 1).2
-  obtain ⟨-, hW, hint, -⟩ := GlobalTheory.T.theta_space_selfDual_pair_at_most_line D hI.g1 cc δ hC P.a P.d (La0 D (tor0 D cc δ) P.a P.d)
+  obtain ⟨-, hW, hint, -⟩ := _root_.GlobalTheory.ThetaLine.theta_line D hI.g1 cc δ hC P.a P.d (La0 D (tor0 D cc δ) P.a P.d)
     (Or.inr ⟨_, _, hSD0 _, hSD0 _, rfl⟩)
-  obtain ⟨-, -, -, -, -, -, hq⟩ := GlobalTheory.T.theta_space_selfDual_pair_at_most_line D hI.g1 cc δ hC P.a P.d (La D (tor0 D cc δ) L₁ L₁')
+  obtain ⟨-, -, -, -, -, -, hq⟩ := _root_.GlobalTheory.ThetaLine.theta_line D hI.g1 cc δ hC P.a P.d (La D (tor0 D cc δ) L₁ L₁')
     (Or.inr ⟨_, _, hSD _ g _ hL, hSD _ g' _ hL', rfl⟩)
   have he0 : P.e0 ∈ Th D (tor0 D cc δ) (stdL D P.a) (stdL D P.d) := P.vac.1
   have hfix : ∀ x ∈ La0 D (tor0 D cc δ) P.a P.d, Wd D (tor0 D cc δ) x P.e0 = P.e0 := by

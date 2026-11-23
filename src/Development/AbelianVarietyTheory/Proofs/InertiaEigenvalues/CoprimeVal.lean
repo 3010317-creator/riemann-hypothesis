@@ -3,7 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.OneAddXMulDerivativeBin
 public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAlgEquivXAddC
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCosetRepresentativesOfFiniteSubgroupPadicIStatement
+public import Mathlib.NumberTheory.Padics.RingHoms
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCosetRepresentativesOfFiniteSubgroupPadicI
+public import Mathlib.FieldTheory.KummerExtension
+public import Mathlib.RingTheory.RootsOfUnity.CyclotomicUnits
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -15,7 +18,6 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
-public import Mathlib.FieldTheory.KummerExtension
 import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.GroupTheory.Nilpotent
 import Mathlib.NumberTheory.Chebyshev
@@ -27,7 +29,6 @@ import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.PowerSeries.Inverse
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Mathlib.RingTheory.RootsOfUnity.CyclotomicUnits
 import Mathlib.RingTheory.SimpleRing.Principal
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Basify
@@ -244,7 +245,7 @@ theorem exists_roots : ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] [IsD
   intro l _ O _ _ _ _ _ _ Δ _ ξ hl2 hl ⟨ζ, hζ⟩ hξ hinv
   classical
   haveI := Fintype.ofFinite Δ
-  obtain ⟨e, a, hes, ha, hpow, hbij⟩ := GlobalTheory.T.exists_coset_reps_finite_subgroup_padicInt_units Δ hl2
+  obtain ⟨e, a, hes, ha, hpow, hbij⟩ := _root_.GlobalTheory.exists_coset_representatives_of_finite_subgroup_padicInt_units Δ hl2
   have hm : ζ - 1 ∈ maximalIdeal O := fun h => hl ((assoc_l ζ hζ).isUnit (h.pow _))
   have hz : ∀ b : ZMod l, ζ ^ b.val - 1 ∈ maximalIdeal O := fun b =>
     Ideal.mem_of_dvd _ (by simpa using sub_dvd_pow_sub_pow ζ 1 b.val) hm

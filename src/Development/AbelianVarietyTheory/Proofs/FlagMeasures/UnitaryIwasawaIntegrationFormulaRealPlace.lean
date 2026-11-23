@@ -1,8 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.SameKindIsometric
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IwasawaIntegrationFormulaConstantStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IwasawaIntegrationFormulaUpToConstantStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsGaugeAll
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IwasawaIntegrationFormulaConstant
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DefClassNum
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IwasawaIntegrationFormulaUpToConstant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,8 +50,8 @@ namespace GlobalTheory.FlagMeas
 
 theorem iwasawaFormula : IwasawaFormula := by
   intro n ε p q hp hq a j hj W hW c μN μM μK hc hN hM hK0 hK1 hKinv φ hφ
-  obtain ⟨κ, -, -, hκ⟩ := GlobalTheory.T.iwasawa_integration_formula_up_to_constant n ε p q hp hq a j hj W hW μN μM μK hN hM hK0 hK1 hKinv
-  have hconst := GlobalTheory.T.iwasawa_integration_formula_constant n ε p q hp hq a j hj W hW μN μM μK hN hM hK0 hK1 hKinv c κ hc hκ
+  obtain ⟨κ, -, -, hκ⟩ := _root_.GlobalTheory.IwasawaShape.iwasawa_shape n ε p q hp hq a j hj W hW μN μM μK hN hM hK0 hK1 hKinv
+  have hconst := _root_.GlobalTheory.IwConst.iwasawa_constant n ε p q hp hq a j hj W hW μN μM μK hN hM hK0 hK1 hKinv c κ hc hκ
   rw [hκ φ hφ, ← mul_assoc, hconst]
 
 end GlobalTheory.FlagMeas

@@ -4,15 +4,15 @@ public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.AtBas
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PlacesOf
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RowsConc
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFramesStabilizerActsOnTerms
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeDatumEquivariantFlagIsometriesStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormAdditiveCharacterTypePrimeEqOne
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeDatumEquivariantFlagIsometries
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalIsometryExtendsLocalIsometry
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalIsometryExtendsLocalIsometryStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SpanToZero
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermsOrbitsHeightsAmplitudesInCoordinatesStatement
-import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.LocalDiscriminantIsUnit
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermsOrbitsHeightsAmplitudesInCoordinates
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.TermDefPf
 public import Formalism.SharpRestriction.CuspSpanNormBounds.AutLzFiniteOfLoop
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormAdditiveCharacterTypePrimeEqOne
+import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.LocalDiscriminantIsUnit
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -284,7 +284,7 @@ variable {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E]
 variable {L : Formalism.MainNotions.S.Loc.LocE F E} {r k : ℕ} (S : Frames L r k)
 
 theorem datOf_St {s : S.GLV} (hs : s ∈ S.St) (Λ : Submodule L.O S.V) : S.datOf (s • Λ) = S.datOf Λ := by
-  have DO := GlobalTheory.T.hermitian_lattice_datum_equivariant_flag_isometries L r k S
+  have DO := _root_.GlobalTheory.HL.DatumOf.main L r k S
   have hs' := Subgroup.mem_inf.1 hs
   exact Prod.ext (DO.2.2.1 s hs'.1 Λ) (Prod.ext (DO.2.2.2.1 s hs'.2 Λ) (GlobalTheory.FrameAct.graph_smul S s hs Λ))
 
@@ -344,9 +344,9 @@ theorem local_orbit (hM : M.OK) (c : WCoord P S) {d d' : LocNG.Datum P} (hdd : L
     obtain ⟨y, rfl⟩ := c.e.surjective y
     show S.h (conjH c.e ψ0 (c.e x)) (conjH c.e ψ0 (c.e y)) = S.h (c.e x) (c.e y)
     rw [hφ, hφ, c.h_eq, c.h_eq, hu]
-  have DO := GlobalTheory.T.hermitian_lattice_datum_equivariant_flag_isometries M.L r k S
+  have DO := _root_.GlobalTheory.HL.DatumOf.main M.L r k S
   obtain ⟨s, hs, h, hh, hsh⟩ := DO.2.2.2.2 _ hiso hf1 hf2
-  have W := GlobalTheory.T.terms_orbits_heights_amplitudes_in_coordinates M hM H r k P S c
+  have W := _root_.GlobalTheory.HL.WCoordTerms.terms_orbits_heights_amps M hM H r k P S c
   obtain ⟨h1, hh1, hd⟩ := (W.2.1 d d').1 hdd
   have hterm := (W.1 d' t ht).1
   have hM' := DO.1 _ _ hterm

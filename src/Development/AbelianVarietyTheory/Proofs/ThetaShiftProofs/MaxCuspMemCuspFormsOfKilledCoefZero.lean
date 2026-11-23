@@ -2,8 +2,9 @@ module
 
 public import Formalism.LocalToGlobal.ProjectiveLattices.ArchimedeanQuadraticData.MaximalCuspKernels.MaxCuspsSt
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.CountableOfIsAddFundamentalDomain
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.CuspFlowEqTorusActionStatement
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HermitianMatrixRealizesCuspCoordsStatement
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.CuspFlowEqTorusAction
+public import Formalism.LocalToGlobal.ProjectiveLattices.IntegrableOnIntegrand
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HermitianMatrixRealizesCuspCoords
 import Formalism.LocalToGlobal.ProjectiveLattices.ArchimedeanQuadraticData.MaximalCuspKernels.MaxCuspsPfA
 import Formalism.LocalToGlobal.ProjectiveLattices.RdOrbIntOfLatZ
 import Mathlib.Algebra.Order.Floor.Extended
@@ -121,7 +122,7 @@ theorem maxCusps_mem_SSgt_of_coef_eq_zero : ∀ (E : Type) [Field E] [NumberFiel
   obtain ⟨cu, hspan⟩ := hcu ξ hξ
   obtain ⟨η, rfl⟩ := (Submodule.mem_span_range_iff_exists_fun E).1 hspan
   have hb : IsZBasis X cu (zBas X cu) := Classical.epsilon_spec (hbas cu)
-  obtain ⟨L, hflow, hph, hLint⟩ := GlobalTheory.T.cuspFlow_eq_torusAction E r ρ X cu hb η hξ.1
+  obtain ⟨L, hflow, hph, hLint⟩ := _root_.GlobalTheory.CuspFlow.flow_eq_zAct E r ρ X cu hb η hξ.1
   have hη : η ≠ 0 := by
     rintro rfl
     exact hξ.2.2 (by simp)
@@ -134,7 +135,7 @@ theorem maxCusps_mem_SSgt_of_coef_eq_zero : ∀ (E : Type) [Field E] [NumberFiel
       ?_ (maxCuspsA_periodic X cu hb la (hchi cu) P hsec x hx) (hLint la) ν hfreq fun m hm => ?_
     · exact hsec.1.continuousOn.comp_continuous (continuous_zAct X cu x)
         fun t => zAct_mem_dom X cu (zBas_skew X cu (hbas cu)) t x hx
-    · obtain ⟨χ, hχ, hχm⟩ := GlobalTheory.T.hermitian_matrix_realizes_cusp_coords E r ρ X cu hb m
+    · obtain ⟨χ, hχ, hχm⟩ := _root_.GlobalTheory.exists_isHermE_phZ_eq E r ρ X cu hb m
       have hνχ : ∀ τ : X.Ψ, (τ.1 (hq χ η)).re = ν τ := fun τ => by
         classical
         have h2 := hph χ hχ (Pi.single τ 1)

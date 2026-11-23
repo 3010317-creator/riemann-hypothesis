@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsClosedImmersionGenericPoint
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChernIntegrableOnDescendGenericallyFiniteStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChernIntegrableOnDescendGenericallyFinite
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousOnLogNorm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogNormRationalSectionArchIntegrableStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrincipalisationGenericSmoothCover
@@ -74,7 +74,7 @@ theorem archIntegrable : Published.Principalisation → ∀ (k : Type) [CommRing
       (fun y => logNorm (M.φ σ) r (PtsOver.map ρ rfl _ y))
       (ptsIn (ρ ≫ q) σ (ρ ⁻¹ᵁ (M.div hr).supp.compl)) := fun y hy =>
     GlobalTheory.ArchIntAlter.logNorm_pull M ρ hη hr hy
-  exact GlobalTheory.T.chernIntegrableOn_descend_genericallyFinite k Y q e hY Y' ρ hcov.1 hcov.2.1 hcov.2.2 N σ _ _
+  exact _root_.GlobalTheory.ChernDescend.chernIntegrableOn_descend k Y q e hY Y' ρ hcov.1 hcov.2.1 hcov.2.2 N σ _ _
     (GlobalTheory.ArchIntAlter.continuousOn_logNorm (M.φ σ) hr (M.cInf σ))
     ⟨(hup.1.mono_set hsub).congr_fun heq hm, (hup.2.mono_set hsub).congr_fun heq hm⟩
 

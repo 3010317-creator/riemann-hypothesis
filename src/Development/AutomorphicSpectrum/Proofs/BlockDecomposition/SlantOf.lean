@@ -2,8 +2,9 @@ module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.HodgeSurjectivity.FormUniq
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.HodgeSurjectivity.FirstChernCoboundary
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KuennethIsoProperSmoothStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KuennethProductProperSmoothStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HodgeXD
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KuennethIsoProperSmooth
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KuennethProductProperSmooth
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +50,7 @@ open CrystallineSemistableComparison CrystallineSemistableComparison.Onto
 namespace GlobalTheory.CompanionTheory.KunGlue
 
 theorem slantOf : CrystallineSemistableComparison.Onto.TopRes → CrystallineSemistableComparison.Onto.SlantOf :=
-  fun hT hS hM hC hZ hA hK => GlobalTheory.T.slant_of_hodge_kuenneth hT hS (fun K _ _ X X' P q q' _ _ _ _ p₁ p₂ hP h₁ h₂ =>
-    GlobalTheory.T.kuenneth_product_proper_smooth hS hM hC hZ hA hK K X X' P q q' p₁ p₂ hP h₁ h₂)
+  fun hT hS hM hC hZ hA hK => _root_.GlobalTheory.CompanionTheory.KunGlue.slant_of_kun hT hS (fun K _ _ X X' P q q' _ _ _ _ p₁ p₂ hP h₁ h₂ =>
+    _root_.GlobalTheory.CompanionTheory.KunGlue.kun_left hS hM hC hZ hA hK K X X' P q q' p₁ p₂ hP h₁ h₂)
 
 end GlobalTheory.CompanionTheory.KunGlue

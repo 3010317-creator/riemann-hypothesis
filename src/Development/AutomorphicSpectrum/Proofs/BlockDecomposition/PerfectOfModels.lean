@@ -2,8 +2,9 @@ module
 
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.CubeTheorem.LBSpreads
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PerfAllOfModels
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PerfectBaseChangeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PerfectOfGenericIsoStatement
+public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PerfectBaseChange
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PerfectOfGenericIso
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,6 +55,6 @@ namespace GlobalTheory.CompanionTheory.SpreadingModels
 theorem perfAll_of_hasModel
     (hModel : ∀ (R : Type) [CommRing R] (Y : Scheme.{0}) (f : Y ⟶ Spec (CommRingCat.of R)), Smooth f → IsProper f →
       ∀ M : LB Y, M.IsLB → HasModel f M) : PerfAll :=
-  perfAll_of_models GlobalTheory.T.perfect_base_change GlobalTheory.T.perfect_of_generic_iso hModel
+  perfAll_of_models _root_.GlobalTheory.CompanionTheory.PerfBase.perf_pull _root_.GlobalTheory.CompanionTheory.PerfIso.perf_of_iso hModel
 
 end GlobalTheory.CompanionTheory.SpreadingModels

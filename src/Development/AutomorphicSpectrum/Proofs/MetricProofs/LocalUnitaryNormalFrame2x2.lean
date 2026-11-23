@@ -5,8 +5,9 @@ public import Mathlib.Analysis.Calculus.ContDiff.Defs
 public import Mathlib.Analysis.InnerProductSpace.Basic
 public import Mathlib.LinearAlgebra.Matrix.PosDef
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ContDiffAtFrameEntry
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsHolomorphicNormalFrameStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.WeightedPolynomialHomogeneousCoeffBoundStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.InFlagDomainOne
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsHolomorphicNormalFrame
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.WeightedPolynomialHomogeneousCoeffBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -92,7 +93,7 @@ theorem GlobalTheory.CompanionTheory.Ar.PB.FibPt.exists_frame_normal_near :
       funext fun y' => hent y' p q
     rw [e]
     exact contDiffAt_const.mul (h1.add h2)
-  obtain ⟨g, hg, hu, h1, hd⟩ := GlobalTheory.T.exists_holomorphic_normal_frame d Gh y hpdy hherm hCh
+  obtain ⟨g, hg, hu, h1, hd⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.normal_holomorphic_frame d Gh y hpdy hherm hCh
   refine ⟨g, hg, hu, ?_, GlobalTheory.CompanionTheory.Ar.PB.FibPt.contDiffAt_frame_entry G g y hC hg, ?_, ?_⟩
   · have hc : ∀ p q, ContinuousAt (fun y' => g y' p q) y := fun p q => (hg p q).continuous.continuousAt
     have hdetc : ContinuousAt (fun y' => (g y').det) y := by
@@ -100,7 +101,7 @@ theorem GlobalTheory.CompanionTheory.Ar.PB.FibPt.exists_frame_normal_near :
       exact ((hc 0 0).mul (hc 1 1)).sub ((hc 0 1).mul (hc 1 0))
     have hne : ∀ᶠ y' in 𝓝 y, (g y').det ≠ 0 := hdetc.eventually_ne hu.ne_zero
     filter_upwards [hpd, hne] with y' ha hb
-    exact (GlobalTheory.T.log_sine_mobius_transform (G y') (g y') ha (isUnit_iff_ne_zero.mpr hb)).1
+    exact (_root_.GlobalTheory.CompanionTheory.Ar.PB.xiPot_logSin_change_of_frame (G y') (g y') ha (isUnit_iff_ne_zero.mpr hb)).1
   · rw [← hy]
     exact h1
   · intro p q

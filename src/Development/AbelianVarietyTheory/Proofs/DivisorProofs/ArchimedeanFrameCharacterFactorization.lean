@@ -2,10 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFockMap
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfCayleyTwoIZpowEqOneForallStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPolarDecompositionIndefiniteUnitaryStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IndefiniteUnitaryCharacterEqOneCayleyRotationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IndefiniteUnitaryCharacterMaximalCompactDetPowStatement
+public import Mathlib.Basic.Complex.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfCayleyTwoIZpowEqOneForall
+public import Formalism.LocalRingCardinality.DataTheta
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPolarDecompositionIndefiniteUnitary
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IndefiniteUnitaryCharacterEqOneCayleyRotation
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IndefiniteUnitaryCharacterMaximalCompactDetPow
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryLieElementsGenerateOneParamLines
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsGrpDataMapHaar
 import Mathlib.Algebra.Order.Floor.Extended
@@ -93,7 +95,7 @@ theorem charUpq : ∀ (R S : ℕ) (χ : Mat R S → ℂ),
     (∀ g : Mat R S, gᴴ * Jm R S * g = Jm R S → χ g ≠ 0) →
     ∃ n : ℤ, ∀ g : Mat R S, gᴴ * Jm R S * g = Jm R S → χ g = g.det ^ n := by
   intro R S χ hmul hc hne
-  obtain ⟨x, y, hxy⟩ := GlobalTheory.T.indefiniteUnitaryCharacter_maximalCompact_det_pow R S χ hmul hc hne
+  obtain ⟨x, y, hxy⟩ := _root_.GlobalTheory.KChar.kchar R S χ hmul hc hne
   have hJJ : Jm R S * Jm R S = 1 := jm_mul_self
   have h1 : χ 1 = 1 := by
     have e := hmul 1 1 (by simp) (by simp)
@@ -139,8 +141,8 @@ theorem charUpq : ∀ (R S : ℕ) (χ : Mat R S → ℂ),
     rcases Nat.eq_zero_or_pos S with hS | hS
     · subst hS; exact ⟨x, fun a d => by simp [Matrix.det_isEmpty]⟩
     have hxy' : x = y := by
-      have h0 := GlobalTheory.T.eq_zero_of_cayley_two_I_zpow_eq_one_forall (x - y) (fun t => by
-        have e := GlobalTheory.T.indefiniteUnitaryCharacter_eq_one_cayleyRotation R S χ hmul hc hne ⟨0, hR⟩ ⟨0, hS⟩ t
+      have h0 := _root_.GlobalTheory.zpow_cayley_two_eq_one_forall (x - y) (fun t => by
+        have e := _root_.GlobalTheory.UnitaryCharRot.char_eq_one_rot R S χ hmul hc hne ⟨0, hR⟩ ⟨0, hS⟩ t
         have hu1 := diag_unit (⟨0, hR⟩ : Fin R) ((1 + 2 * Complex.I * t) / (1 - 2 * Complex.I * t)) (by
           rw [star_zeta]; field_simp [ne_zero_add t, ne_zero_sub t])
         have hu2 := diag_unit (⟨0, hS⟩ : Fin S) ((1 - 2 * Complex.I * t) / (1 + 2 * Complex.I * t)) (by
@@ -159,7 +161,7 @@ theorem charUpq : ∀ (R S : ℕ) (χ : Mat R S → ℂ),
     subst hxy'
     exact ⟨x, fun a d => (mul_zpow _ _ _).symm⟩
   refine ⟨n, fun g hg => ?_⟩
-  obtain ⟨k, q, hk1, hk2, hq1, hq2, rfl⟩ := GlobalTheory.T.exists_polar_decomposition_indefiniteUnitary R S g hg
+  obtain ⟨k, q, hk1, hk2, hq1, hq2, rfl⟩ := _root_.GlobalTheory.UnitaryPolar.polar R S g hg
   have hq : χ q * χ q = 1 := by
     have hJq : (Jm R S * q)ᴴ * Jm R S * (Jm R S * q) = Jm R S := memm hJU hq1
     have hJqJ := memm hJq hJU

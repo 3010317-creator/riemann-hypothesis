@@ -4,9 +4,11 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.BadElt
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.AllRowsWt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BadEltIdemCentral
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffOneRealOfIdem
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankEigenInfKerLeOfSemidirectSplitStatement
+public import Formalism.LocalToGlobal.Divisibility.GoodPartHermitianSpec
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankEigenInfKerLeOfSemidirectSplit
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneSubGoodIdempotentEqBadTupleSumsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightUpperUnitriangularIdempotentIndepCharacterStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.ArithmeticCylinders
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightUpperUnitriangularIdempotentIndepCharacter
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,9 +66,9 @@ theorem bad_part_le_locShare : ∀ (D : D7) (Γ V : Type) [Group Γ] [Finite Γ]
     intro k
     unfold locShare
     refine Finset.sum_congr rfl fun t _ => Finset.prod_congr rfl fun v _ => ?_
-    exact GlobalTheory.T.weight_upperUnitriangularIdempotent_indep_character D k _ _ (hW.1 ⟨k, v⟩) (hψ₀ k) (t v)
+    exact _root_.GlobalTheory.BadCount.wtOf_eUk_indep D k _ _ (hW.1 ⟨k, v⟩) (hψ₀ k) (t v)
   refine ⟨S, hbad, ?_⟩
-  have key := GlobalTheory.T.finrank_eigen_inf_ker_le_of_semidirect_split (G0g D.nd) Γ V π ι hs ρ P lam lamb hlamb H n D.ntypes.e0
+  have key := _root_.GlobalTheory.BadCount.finrank_eig_inf_ker_le_of_isSplit (G0g D.nd) Γ V π ι hs ρ P lam lamb hlamb H n D.ntypes.e0
     (fun k => badElt D k (S k)) (fun k => locShare D (fun k _ => eUk D k (ψ₀ k)) k (S k)) c hemb hn
     (fun k => (GlobalTheory.BadCount.IdemCen.badElt_idem_central D k (S k)).1)
     (fun k a => (GlobalTheory.BadCount.IdemCen.badElt_idem_central D k (S k)).2 a)

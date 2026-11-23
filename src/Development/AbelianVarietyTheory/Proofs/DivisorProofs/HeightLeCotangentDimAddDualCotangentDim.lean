@@ -1,10 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ToSpanSingletonConstGenInjective
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AppOneEqZeroOfKernelIdealOfCompEqPrimeSmulStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankFrobeniusDualAddFinrankKerVerschiebungStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankFrobeniusKernelHopfLePowCotangentStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobeniusKernelIdealEqKernelRelativeFrobeniusStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AppOneEqZeroOfKernelIdealOfCompEqPrimeSmul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobTwistBaseChangeHomApp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankFrobeniusDualAddFinrankKerVerschiebung
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobKerIdealLeAugIdeal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankFrobeniusKernelHopfLePowCotangent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobeniusKernelIdealEqKernelRelativeFrobenius
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RigExtMapRelFrobCompRigOfOmega
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -67,18 +69,18 @@ theorem GlobalTheory.PDivGroup.height_le_finrank_cot_add_finrank_cot_dual (p : �
   have hord := finrank_eq_ker_mul_range K (G.dual.A 1) _ ((relFrob h G.dual).app 1)
   have hD : Module.finrank K (G.dual.A 1 ⧸ kerIdeal ((relFrob h G.dual).app 1)) ≤
       p ^ Module.finrank K (Cot K (G.dual.A 1)) := by
-    rw [← GlobalTheory.T.frobeniusKernelIdeal_eq_kernel_relativeFrobenius p K h G.dual 1]
-    exact GlobalTheory.T.finrank_frobenius_kernel_hopf_le_pow_cotangent p K (G.dual.A 1)
+    rw [← _root_.GlobalTheory.PDiv.frobKerIdeal_eq_kerIdeal_relFrob p K h G.dual 1]
+    exact _root_.GlobalTheory.PDiv.FrobKerOrder.finrank_le_pow_finrank_cot p K (G.dual.A 1)
   have hA : Module.finrank K (G.A 1 ⧸ kerIdeal ((relFrob h G).app 1)) ≤
       p ^ Module.finrank K (Cot K (G.A 1)) := by
-    rw [← GlobalTheory.T.frobeniusKernelIdeal_eq_kernel_relativeFrobenius p K h G 1]
-    exact GlobalTheory.T.finrank_frobenius_kernel_hopf_le_pow_cotangent p K (G.A 1)
+    rw [← _root_.GlobalTheory.PDiv.frobKerIdeal_eq_kerIdeal_relFrob p K h G 1]
+    exact _root_.GlobalTheory.PDiv.FrobKerOrder.finrank_le_pow_finrank_cot p K (G.A 1)
   have hker : (kerIdeal ((relFrob h G).app 1)).restrictScalars K ≤
       LinearMap.ker ((verschiebung h G).app 1 :
         G.A 1 →ₐ[K] (frobTwist h G).A 1).toLinearMap := fun a ha =>
-    GlobalTheory.T.app_one_eq_zero_of_kernel_ideal_of_comp_eq_prime_smul p K G (frobTwist h G) (relFrob h G) (verschiebung h G)
+    _root_.GlobalTheory.PDivGroup.app_one_eq_zero_of_mem_kerIdeal_of_comp_eq_prime_smul p K G (frobTwist h G) (relFrob h G) (verschiebung h G)
       (verschiebung_comp_relFrob h G) a ha
-  have hV := GlobalTheory.T.finrank_frobeniusDual_add_finrank_ker_verschiebung p K h G
+  have hV := _root_.GlobalTheory.PDivGroup.finrank_range_relFrob_dual_add_finrank_ker_verschiebung p K h G
   have hq := Submodule.finrank_quotient_add_finrank
     ((kerIdeal ((relFrob h G).app 1)).restrictScalars K)
   rw [(Submodule.Quotient.restrictScalarsEquiv K (kerIdeal ((relFrob h G).app 1))).finrank_eq] at hq

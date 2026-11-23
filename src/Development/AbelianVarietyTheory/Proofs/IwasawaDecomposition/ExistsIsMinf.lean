@@ -1,7 +1,8 @@
 module
 
 public import Formalism.LocalToGlobal.IndefiniteReal.SubgroupCharExtensionOneApply
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NonemptyCompactDualHaarStatement
+public import Formalism.LocalRingCardinality.DataCD
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NonemptyCompactDualHaar
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIsMinfOfDensity
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -46,6 +47,6 @@ open Formalism.BasicNotions Formalism.IndefR MeasureTheory
 namespace GlobalTheory.MinfMeasure
 
 theorem exists_isMinf : ∀ p q : ℕ, ∃ m : Measure (UpqT p q), Lev.IsMinf m :=
-  exists_isMinf_of_cd GlobalTheory.T.nonempty_compactDualHaar
+  exists_isMinf_of_cd _root_.GlobalTheory.CompactDualExists.nonempty_cdHaar
 
 end GlobalTheory.MinfMeasure

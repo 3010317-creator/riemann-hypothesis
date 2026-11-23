@@ -6,21 +6,23 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDesc
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ActOfGenerators
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsEquivStdSymp
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsIsPELOfTmap
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsIsPELTripleOfDenseFibresStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsIsPELTripleOfDenseFibres
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaLevelAbelianSchemePullback
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsUniqueMapToThetaFamilyOpenPartStatement
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsGaloisCover
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsUniqueMapToThetaFamilyOpenPart
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsWeilIsRoot
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsGoodThetaComplexClassUnitaryFullLevelStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsGoodThetaComplexClassUnitaryFullLevel
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsGrpPullbackOfIso
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsPrimitiveRootMapOfNatCastNeZero
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsQProjOverBaseChangeAndFiniteRestrict
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LeRingKrullDimThetaFamilyGenericFibreStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LeRingKrullDimThetaFamilyGenericFibre
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.MinimalAndDimLe
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.NonemptyThetaFamilyOverOpenClosureStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PelObjectFibreFromComplexCharZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.NonemptyThetaFamilyOverOpenClosure
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PelObjectFibreFromComplexCharZero
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SmoothOfRelativeDimensionOfDimOfDirectionsLe
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.TangentLeDimStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.TangentLeDim
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaClosureOpenFamilyQprojFlatReducedExtStatement
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.FiniteHomogeneousInf
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelPullbackIdCompCancel
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelShapePrimitivityPullbackDescent
 import Mathlib.Algebra.Order.Floor.Extended
@@ -66,8 +68,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc
-public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.FiniteHomogeneousInf
-public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsGaloisCover
 
 @[expose] public section
 
@@ -152,7 +152,7 @@ theorem moduli_of_family (hL : Out.Laws) (hL2 : Out.Laws2)
       obtain ⟨τ1, hτ1⟩ := exists_isPEL_of_tmap E H D g J a bas l.A o b ρ X _
         (sX ≫ spMap (algebraMap o (KA l))) _ tX t1 τX x hb ht1 hτX
       haveI : CharZero K' := charZero_of_hom (spMap β)
-      refine T.tangent_le_dim_alt hL hL2 hth E H D g J a w w' bas l.A o b ρ K' r (β.comp (algebraMap o (KA l))) t1 τ1
+      refine _root_.GlobalTheory.PelTangent.tangent_le_dim hL hL2 hth E H D g J a w w' bas l.A o b ρ K' r (β.comp (algebraMap o (KA l))) t1 τ1
         hw hw' hρsq hτ1 ?_
       intro lam t' h1 h2
       apply hdir lam
@@ -210,10 +210,10 @@ theorem GlobalTheory.ZM.exists_moduli_prime_power_level : Out.Laws → Out.Laws2
   intro hL hL2 hth hU E _ _ _ H D n hpq hn hodd
   obtain ⟨bas, hbas⟩ := ZM.exists_isSympBasis E H D
   obtain ⟨J, hJ, a, w, w', hw, hw', hgen⟩ := exists_generating_family (E := E) H.w0 (H.bar H.w0)
-  obtain ⟨Mat, κ, hGood⟩ := T.isGoodThetaComplexClass_unitaryFullLevel hL hL2 hth hU E H D _ J a w w' bas hpq hbas hw hw' hgen
+  obtain ⟨Mat, κ, hGood⟩ := _root_.GlobalTheory.PelGood.goodClass_pelClass hL hL2 hth hU E H D _ J a w w' bas hpq hbas hw hw' hgen
   obtain ⟨j₁, hj₁⟩ := hGood n hn hodd
-  obtain ⟨j₂, hj₂⟩ := T.nonempty_thetaFamily_over_open_closure hL hL2 _ J Mat κ n w w' hn hodd
-  obtain ⟨j₃, hj₃⟩ := T.existsUnique_map_to_thetaFamily_openPart hL hL2 _ J Mat κ n w w' hn hodd
+  obtain ⟨j₂, hj₂⟩ := _root_.GlobalTheory.ZM.OpenFamily.nonempty_wFam hL hL2 _ J Mat κ n w w' hn hodd
+  obtain ⟨j₃, hj₃⟩ := _root_.GlobalTheory.ZM.UnivProp.existsUnique_map_of_wFam hL hL2 _ J Mat κ n w w' hn hodd
   refine ⟨max (max j₁ j₂) (max j₃ 1), ?_⟩
   intro l hM hA
   have hj1 : j₁ ≤ max (max j₁ j₂) (max j₃ 1) := le_max_of_le_left (le_max_left _ _)
@@ -244,11 +244,11 @@ theorem GlobalTheory.ZM.exists_moduli_prime_power_level : Out.Laws → Out.Laws2
   haveI := hredU
   haveI := lft_of_qproj hqU'
   haveI : IsLocallyNoetherian F.U.toScheme := LocallyOfFiniteType.isLocallyNoetherian (F.U.ι ≫ F.Y.s)
-  obtain ⟨τU, hτU⟩ := T.exists_isPELTriple_of_dense_fibres hL hL2 hth E H D _ J a bas w w' hpq hbas hw hw' hgen _ o b em ρ F.U.toScheme
+  obtain ⟨τU, hτU⟩ := _root_.GlobalTheory.PELFamily.exists_isPEL_of_dense hL hL2 hth E H D _ J a bas w w' hpq hbas hw hw' hgen _ o b em ρ F.U.toScheme
     (F.U.ι ≫ F.Y.s) F.univ hemρ har.2.2 F.dense
   refine moduli_of_family hL hL2 hth D a w w' bas hbas hw hw' hgen _
     (dvd_pow (dvd_pow_self n (by omega)) two_ne_zero) b ρ hρ hζ (F.U.ι ≫ F.Y.s) F.univ τU hqU' hτU
-    (T.le_ringKrullDim_thetaFamily_genericFibre hL hL2 _ n (n ^ j) J Mat κ w w' o b em _ D.dim F hN3 hoddN har hGd) hinjU ?_
+    (_root_.GlobalTheory.ZM.GenericDim.le_ringKrullDim_genericFibre hL hL2 _ n (n ^ j) J Mat κ w w' o b em _ D.dim F hN3 hoddN har hGd) hinjU ?_
   intro S s' t τ hS hP hch
   refine hj₃ j hj3 o b em _ D.dim har hGd F S s' t hS ?_ ?_
   · refine Dense.mono ?_ dense_univ
@@ -256,11 +256,11 @@ theorem GlobalTheory.ZM.exists_moduli_prime_power_level : Out.Laws → Out.Laws2
     haveI := hch _ (S.fromSpecResidueField p)
     exact ⟨_, inferInstance, S.fromSpecResidueField p,
       ⟨IsLocalRing.closedPoint _, Scheme.fromSpecResidueField_apply p _⟩,
-      T.pelObject_fibre_from_complex_charZero hL hL2 E H D _ J a w w' bas hpq hbas hw hw' hgen (n ^ j) o b em ρ hemρ har S s' t τ hP _ _⟩
+      _root_.GlobalTheory.PELFrom.fromC_of_isPEL hL hL2 E H D _ J a w w' bas hpq hbas hw hw' hgen (n ^ j) o b em ρ hemρ har S s' t τ hP _ _⟩
   · intro K _ _ x t' hT
     haveI := hch K x
     obtain ⟨K₀, _, β, i, e, t₀, tx, tc, -, -, htx, htx0, htc0, hC⟩ :=
-      T.pelObject_fibre_from_complex_charZero hL hL2 E H D _ J a w w' bas hpq hbas hw hw' hgen (n ^ j) o b em ρ hemρ har S s' t τ hP K x
+      _root_.GlobalTheory.PELFrom.fromC_of_isPEL hL hL2 E H D _ J a w w' bas hpq hbas hw hw' hgen (n ^ j) o b em ρ hemρ har S s' t τ hP K x
     have s1 := (hGd.shape tc hC).1
     have s2 := ((shape_prim_pull_and_descend o _ _ J b Mat κ w w' _ _ _ _ _ t₀ tc htc0).2.2 K₀ rfl
       inferInstance inferInstance).1 s1

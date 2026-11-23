@@ -2,14 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjRelEquiv
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LinearDescent
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharpolyEqOfHermitianMultiplicationModelStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjUnitaryOfSameHermitianMultiplicationModelStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHermitianMultiplicationModelNonsplitStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryModelOfSelfDualLatticeCountNeZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianModelsConjUnitaryDifferByNormStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceKernelSignEqEtaGramDetStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdAdjoinRootAlgebrasGeneratedByPairStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedOrbitalIntegralCongruenceLevelEqCountStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CharpolyEqOfHermitianMultiplicationModel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjUnitaryOfSameHermitianMultiplicationModel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHermitianMultiplicationModelNonsplit
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryModelOfSelfDualLatticeCountNeZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianModelsConjUnitaryDifferByNorm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceKernelSignEqEtaGramDet
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdAdjoinRootAlgebrasGeneratedByPair
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedOrbitalIntegralCongruenceLevelEqCount
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -107,13 +107,13 @@ theorem kapOrb_eq_kapSum_of_fits {E : Type} [Field E] [NumberField E] [IsCMField
     · intro x; exact ⟨1, by simp⟩
     · rintro x y ⟨g, rfl⟩; exact ⟨g⁻¹, by simp [mul_assoc]⟩
     · rintro x y z ⟨g, rfl⟩ ⟨h, rfl⟩; exact ⟨g * h, by simp [mul_assoc]⟩
-  have hF := GlobalTheory.T.prod_adjoinRootAlgebras_generated_by_pair E w K e Q₁ Q₂ B₁ B₂ u₁ u₂ hsep hF₁ hF₂
+  have hF := _root_.GlobalTheory.KapLat.fits_prod E w K e Q₁ Q₂ B₁ B₂ u₁ u₂ hsep hF₁ hF₂
   unfold kapOrb clSum GlobalTheory.UnitLemma.InvAlg.kapSum
   rw [cast_finsum]
   set S' : Set (TwCl (MonoidHom.id (UL n w))) := {c | c.rep.1.val.charpoly = Q₁ * Q₂} with hS'
   have hex : ∀ c : TwCl (MonoidHom.id (UL n w)), c ∈ S' → ∃ x : (B₁.prod B₂).A, (B₁.prod B₂).σ x = x ∧ IsUnit x ∧
       IsModel w e (B₁.prod B₂) (u₁, u₂) x c.rep.1 := fun c hc =>
-    GlobalTheory.T.exists_hermitianMultiplicationModel_nonsplit E w hw K e hBr n (Q₁ * Q₂) (B₁.prod B₂) (u₁, u₂) hsep hF c.rep.1 c.rep.2 hc
+    _root_.GlobalTheory.KapLat.ExModel.exists_isModel E w hw K e hBr n (Q₁ * Q₂) (B₁.prod B₂) (u₁, u₂) hsep hF c.rep.1 c.rep.2 hc
   let Φ : TwCl (MonoidHom.id (UL n w)) → (B₁.prod B₂).Cl := fun c =>
     if h : ∃ x : (B₁.prod B₂).A, (B₁.prod B₂).σ x = x ∧ IsUnit x ∧ IsModel w e (B₁.prod B₂) (u₁, u₂) x c.rep.1 then
       Quot.mk _ ⟨h.choose_spec.2.1.unit, by simpa using h.choose_spec.1⟩ else Quot.mk _ ⟨1, by simp⟩
@@ -135,16 +135,16 @@ theorem kapOrb_eq_kapSum_of_fits {E : Type} [Field E] [NumberField E] [IsCMField
       (({γ : UL n w | γ.1 ∈ congSet w n k} : Set (UL n w)).indicator 1) = G (Φ c) := by
     intro c hc
     have hm := hrep c hc
-    have h7 := GlobalTheory.T.twisted_orbitalIntegral_congruence_level_eq_count E w hw K e hBr k t ht htk n (Q₁ * Q₂) (B₁.prod B₂) _ _ hsep hF hg.symm c.rep.1 c.rep.2 hm
+    have h7 := _root_.GlobalTheory.KapOrb.twOrb_congruence_eq_N E w hw K e hBr k t ht htk n (Q₁ * Q₂) (B₁.prod B₂) _ _ hsep hF hg.symm c.rep.1 c.rep.2 hm
     simp only [Subtype.coe_eta] at h7
-    rw [GlobalTheory.T.inertPlace_kernelSign_eq_eta_gramDet E w hw K e hBr n Q₁ Q₂ B₁ B₂ u₁ u₂ hsep hF₁ hF₂ _ _ hm, h7]
+    rw [_root_.GlobalTheory.KapLat.kapSign_eq_eta_gramDet E w hw K e hBr n Q₁ Q₂ B₁ B₂ u₁ u₂ hsep hF₁ hF₂ _ _ hm, h7]
     simp [G]
   have hinj : Set.InjOn Φ S' := by
     intro c₁ hc₁ c₂ hc₂ h12
     have m₁ := hrep c₁ hc₁
     have m₂ := hrep c₂ hc₂
     rw [h12] at m₁
-    obtain ⟨y, hy, hyc⟩ := GlobalTheory.T.conj_unitary_of_same_hermitianMultiplicationModel E w hw K e (B₁.prod B₂) _ _ n _ _ m₁ m₂
+    obtain ⟨y, hy, hyc⟩ := _root_.GlobalTheory.KapLat.models_conj E w hw K e (B₁.prod B₂) _ _ n _ _ m₁ m₂
     rw [← Quot.out_eq c₁, ← Quot.out_eq c₂]
     exact Quot.sound ⟨⟨y, hy⟩, Subtype.ext (by simpa [TwCl.rep] using hyc)⟩
   have hsupp : Function.support G ⊆ Φ '' S' := by
@@ -153,8 +153,8 @@ theorem kapOrb_eq_kapSum_of_fits {E : Type} [Field E] [NumberField E] [IsCMField
       intro h0; apply hκ; simp [G, h0]
     have hfix : (B₁.prod B₂).σ (GlobalTheory.UnitLemma.InvAlg.Cl.rep κ) = GlobalTheory.UnitLemma.InvAlg.Cl.rep κ := (Quot.out κ).2
     have hunit : IsUnit (GlobalTheory.UnitLemma.InvAlg.Cl.rep κ) := (Quot.out κ).1.isUnit
-    obtain ⟨γ, hγ, hmγ⟩ := GlobalTheory.T.exists_unitary_model_of_selfDualLatticeCount_ne_zero E w hw K e hBr n (Q₁ * Q₂) (B₁.prod B₂) _ _ hF hdeg hfix hunit hN
-    have hcp : γ.val.charpoly = Q₁ * Q₂ := GlobalTheory.T.charpoly_eq_of_hermitianMultiplicationModel E w K e n (Q₁ * Q₂) (B₁.prod B₂) _ _ γ hmon hF hmγ
+    obtain ⟨γ, hγ, hmγ⟩ := _root_.GlobalTheory.KapLat.exists_model_of_N_ne_zero E w hw K e hBr n (Q₁ * Q₂) (B₁.prod B₂) _ _ hF hdeg hfix hunit hN
+    have hcp : γ.val.charpoly = Q₁ * Q₂ := _root_.GlobalTheory.KapLat.charpoly_of_model E w K e n (Q₁ * Q₂) (B₁.prod B₂) _ _ γ hmon hF hmγ
     let c : TwCl (MonoidHom.id (UL n w)) := Quot.mk _ ⟨γ, hγ⟩
     obtain ⟨g, hg'⟩ := hconj.symm
       (hconj.eqvGen_iff.1 (Quot.eqvGen_exact (Quot.out_eq c)))
@@ -167,7 +167,7 @@ theorem kapOrb_eq_kapSum_of_fits {E : Type} [Field E] [NumberField E] [IsCMField
     refine ⟨c, hc, ?_⟩
     have m := hrep c hc
     rw [hcrep] at m
-    obtain ⟨v, hv⟩ := GlobalTheory.T.hermitianModels_conj_unitary_differ_by_norm E w hw K e n (Q₁ * Q₂) (B₁.prod B₂) _ _ _ hsep hF γ g.1 g.2 hmγ m
+    obtain ⟨v, hv⟩ := _root_.GlobalTheory.KapLat.model_conj_norm E w hw K e n (Q₁ * Q₂) (B₁.prod B₂) _ _ _ hsep hF γ g.1 g.2 hmγ m
     exact (Quot.out_eq (Φ c)).symm.trans ((Quot.sound (hcl.symm ⟨v, hv⟩)).trans (Quot.out_eq κ))
   calc _ = ∑ᶠ c, S'.indicator (fun c => G (Φ c)) c := finsum_congr fun c => by
           by_cases hc : c ∈ S'

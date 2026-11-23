@@ -4,9 +4,12 @@ public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LocCl
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FrameFixingIsometriesEmbedProdLocalUnitary
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeLocalGlobalPrinciple
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalOrthogonalProjCommComplementUnitary
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NumberFieldLatticeDeterminedByLocalLatticesStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TotallyPositiveOrthogonalOfTwoFlagExtendedSpacesStatement
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsNatMulIntegral
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PlacesOf
+import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GFrames
+import Mathlib.Algebra.Module.Lattice.Full
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NumberFieldLatticeDeterminedByLocalLattices
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,7 +47,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PlacesOf
 
 @[expose] public section
 
@@ -62,7 +64,7 @@ private theorem localLattice_fg_span (Z : LocDat D) (Λ : LV D) (h : Submodule.I
     change Submodule.span D.host.E ((GlobalTheory.Unfold.LatLoc.cE D).toLinearMap '' (Λ : Set (VS D).V)) = ⊤
     rw [Submodule.span_image, h.span_eq_top, Submodule.map_top, LinearMap.range_eq_top]
     exact (GlobalTheory.Unfold.LatLoc.cE D).surjective
-  have := (GlobalTheory.T.numberField_lattice_determined_by_local_lattices (GlobalTheory.HL.placesOf Z) (nV D) (GlobalTheory.Unfold.LatLoc.cL Λ) hc).2.1 p
+  have := (_root_.GlobalTheory.HL.PlacesRec.lattice_local (GlobalTheory.HL.placesOf Z) (nV D) (GlobalTheory.Unfold.LatLoc.cL Λ) hc).2.1 p
   rw [GlobalTheory.Unfold.LatLoc.localLattice_eq]
   exact this
 

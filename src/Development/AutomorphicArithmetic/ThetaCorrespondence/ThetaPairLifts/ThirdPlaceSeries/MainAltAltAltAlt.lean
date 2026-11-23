@@ -2,7 +2,9 @@ module
 
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.CuspidalGaloisUnramified
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.TypeConditions.AdmissibleResidualTameEigenvalues
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FirstCharacterTrivialWildInertiaTypePrimeStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.QuotientHomNonvanishingBound
+public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FirstCharacterTrivialWildInertiaTypePrime
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PointParOfTwist
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistInvOfCharLawsMultOne
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AdmissibleBranchingIffIsBranching
@@ -104,7 +106,7 @@ theorem main_alt_alt_alt : ∀ D : D7, SumRepresentations.tie0 D → _root_.Form
       rw [hm]; push_cast; ring
   have hP : GlobalTheory.TypeLeaf.PointPar D := GlobalTheory.TypeLeaf.pointPar_of_twist D hT hAut.1.1 hz
   intro i Sig hx hf hsq hc ρ hρ
-  exact _root_.GlobalTheory.TypeLeaf.tameSum_of_inputs_alt D hW (GlobalTheory.T.firstCharacter_trivial_wildInertia_typePrime D) hGal hF hP i Sig hx
+  exact _root_.GlobalTheory.TypeLeaf.tameSum_of_inputs_alt D hW (_root_.GlobalTheory.ChiTame.main D) hGal hF hP i Sig hx
     (_root_.UpperTheory.GalS.fullLabS_of_fullLabS_trivial ⟨hf, fun k v => hL.2 k v _ (hf k v) (hsq k v) (DiscreteGroups.sglob.DzType.big_of_le_nV D k (by
       obtain ⟨π, rfl⟩ := hc
       rw [GlobalTheory.InertialTypesCmp.lpDim_isoLoc]

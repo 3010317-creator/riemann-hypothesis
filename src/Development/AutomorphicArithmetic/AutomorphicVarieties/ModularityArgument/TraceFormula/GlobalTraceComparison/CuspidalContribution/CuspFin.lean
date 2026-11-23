@@ -4,8 +4,10 @@ public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityA
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.DiscreteSpectrumGLTwoOfCuspidalSpectrum
 public import Development.AutomorphicArithmetic.Foundations.Convolution.CentreSplitting.IsoEq
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspRapidDecaySiegelGL
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteDiscriminantIdentityStatement
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.AllLeaves
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteDiscriminantIdentity
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.ReproOf
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.CuspDiscreteDecompositionGL
 import Formalism.LocalToGlobal.IndefiniteReal.PHeisFCA
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -42,7 +44,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.CuspDiscreteDecompositionGL
 import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.TraceFormula.GlobalTraceComparison.BindPow
 
 @[expose] public section
@@ -110,4 +111,4 @@ private theorem cuspFin_of (hF : FinDisc) : CuspFin := by
 
 theorem UpperTheory.V.Z.Tf.GlobalTraceComparison.Cusp.cuspFin :
     CuspFin :=
-  cuspFin_of GlobalTheory.T.finite_discriminant_identity
+  cuspFin_of _root_.GlobalTheory.CompanionTheory.FinDiscP.main

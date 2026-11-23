@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IntegralLocallyConstCochainModPow
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FiniteGaloisApproximationStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NotCoboundaryConstantOne
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FiniteGaloisApproximation
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GeometricH1ZetaSubOneKills
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SmallTracesSubgroupGaloisTowerTopStatement
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SmallTracesSubgroupGaloisTowerTop
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -69,7 +70,7 @@ theorem _root_.GlobalTheory.T.geometric_h1_zeta_sub_one_kills : ∀ (p : ℕ) [F
         refine ⟨{a}, fun h => (hg h).elim, fun _ h hh agree => hga ?_⟩
         exact (agree a (Finset.mem_singleton_self a)).symm.trans (ha h hh)
     choose S hlocal hsep using localTests
-    obtain ⟨F, hF⟩ := GlobalTheory.T.finite_galois_approximation p Ω hΩ S
+    obtain ⟨F, hF⟩ := _root_.GlobalTheory.K5.gal_finite_subcover p Ω hΩ S
     refine ⟨F.biUnion S, fun g hg h hh agree => ?_⟩
     obtain ⟨g₀, hg₀F, hg₀⟩ := hF g
     have hg₀H : g₀ ∈ H := by
@@ -81,7 +82,7 @@ theorem _root_.GlobalTheory.T.geometric_h1_zeta_sub_one_kills : ∀ (p : ℕ) [F
     simpa [Cong] using Basic.cong_sub hh' hg'
   obtain ⟨S, hS⟩ := uniform
   obtain ⟨y, E, hy, hEH, hu, hsum⟩ :=
-    GlobalTheory.T.smallTraces_subgroup_galois_towerTop p Ω hp2 hΩ T H inf_le_right S j hj
+    _root_.GlobalTheory.K5.small_traces_subgroup p Ω hp2 hΩ T H inf_le_right S j hj
   let x : Ω := ∑ g ∈ E, g y * c g
   have hx : IsInt (p := p) x := by
     refine IsIntegral.sum _ fun g hg => ?_

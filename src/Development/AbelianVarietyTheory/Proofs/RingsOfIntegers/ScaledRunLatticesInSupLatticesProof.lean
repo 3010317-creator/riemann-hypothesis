@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Statements.ShortVectorBound.ScaledLatticesInSupLattices
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ScaledShortLatticeLeOfShortGeneratorBoundStatement
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ScaledShortLatticeLeOfShortGeneratorBound
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ScaledThetaLatticeLeSupLatticeEveryWeightStatement
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ShortGeneratorPlaceValuationBoundProofStatement
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.WeightNormalizerAndExponentsOfWeightSumStatement
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ShortGeneratorPlaceValuationBoundProof
+public import Formalism.SharpRestriction.Divisibility.AbelianOpenPart.OEOsInjective
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.WeightNormalizerAndExponentsOfWeightSum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -68,12 +69,12 @@ theorem integralityCondition_algebraicPoints (D : D7) (T : Top D) (h : LawsP T) 
           (k * Formalism.MainNotions.DIV.Cons.cHalf wL + Formalism.MainNotions.DIV.Cons.cHalf wF) : 𝓞 (recB h.toLawsCore).KO)) w ≤
         (recB h.toLawsCore).Mlat j w := by
     intro w k h1 h2
-    obtain ⟨e, a, b⟩ := GlobalTheory.T.nnW_eq_pow_mul_and_c2_cHalf_le_of_weight_sum D (recB h.toLawsCore) hinj EX j wL wF w k h1 h2
-    refine GlobalTheory.T.scaledShortLattice_le_of_shortGenerator_bound GlobalTheory.T.shortGeneratorPlaceValuationBound_proof D T h hs j hj hinj EX ho w _ _ _ a b ?_
+    obtain ⟨e, a, b⟩ := _root_.GlobalTheory.PlaceScalar.weight_normalizer_and_exponents_of_weight_sum D (recB h.toLawsCore) hinj EX j wL wF w k h1 h2
+    refine _root_.GlobalTheory.PlaceTop.thc_le_of_shortBound _root_.GlobalTheory.ShortBound.shortBound D T h hs j hj hinj EX ho w _ _ _ a b ?_
     rw [hp, e]
     exact congrArg (· * _) (mul_assoc _ _ _)
   refine ⟨GlobalTheory.T.scaledThetaLattice_le_supLattice_every_weight D T h j hj hinj EX ho wL, ?_, ?_, ?_⟩
-  · refine GlobalTheory.T.scaledShortLattice_le_of_shortGenerator_bound GlobalTheory.T.shortGeneratorPlaceValuationBound_proof D T h hs j hj hinj EX ho wF _ _ _ le_rfl le_rfl ?_
+  · refine _root_.GlobalTheory.PlaceTop.thc_le_of_shortBound _root_.GlobalTheory.ShortBound.shortBound D T h hs j hj hinj EX ho wF _ _ _ le_rfl le_rfl ?_
     rw [hp]
     rfl
   · exact key (wadd wF (wsmul (WeightFamilies.dimY D j) wL)) (WeightFamilies.dimY D j) (fun _ _ => rfl) (fun _ _ => rfl)

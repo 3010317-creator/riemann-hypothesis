@@ -6,13 +6,16 @@ public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmpPropsStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CuspExpansionCoeffConjOfQExpansionConjStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsComplexRingEquivExtendingSubfieldAutStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FractionFieldExtClosureInjectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GaloisExponentRootOfUnityExpTwoPiIStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LevelNFunctionGaloisConjQExpansionStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SlTwoDiagConjCongruenceIffDiagOneUnitMatrixEqStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmpProps
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CuspExpansionCoeffConjOfQExpansionConj
+public import Mathlib.Basic.Complex.Basic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsComplexRingEquivExtendingSubfieldAut
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FractionFieldExtClosureInjective
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ZetaActRefl
+public import Development.AbelianVarietyTheory.Definitions.Foundations.ExpUpper
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GaloisExponentRootOfUnityExpTwoPiI
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LevelNFunctionGaloisConjQExpansion
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SlTwoDiagConjCongruenceIffDiagOneUnitMatrixEq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,7 +54,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ZetaActRefl
 
 @[expose] public section
 
@@ -66,16 +68,16 @@ theorem gal_sl_io_of_cong :
     ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (T : Frac Ω ε) (a : GlobalTheory.FN.ring ε.range) (N w : ℕ), 0 < N → Lv ε.range N w a → ∀ (s : Ω ≃ₐ[ℚ] Ω) (d : ℤ), s (eOm ε (1 / N)) = eOm ε (1 / N) ^ d → ∀ γ γ' : SL(2, ℤ), Cong N d γ γ' → T.gal s (T.sl (ofSL γ) (T.io a)) = T.sl (ofSL γ') (T.gal s (T.io a)) := by
   intro Ω _ _ _ ε T a N w hN hLv s d hs γ γ' hC
   haveI : NeZero N := ⟨hN.ne'⟩
-  obtain ⟨g, hg⟩ := GlobalTheory.T.exists_complex_ringEquiv_extending_subfield_aut Ω ε s.toRingEquiv
+  obtain ⟨g, hg⟩ := _root_.GlobalTheory.FN.exists_ringEquiv_extend_of_embedding Ω ε s.toRingEquiv
   have hg' : ∀ x, g (ε x) = ε (s x) := hg
-  obtain ⟨u, hu, hZ⟩ := (GlobalTheory.T.galois_exponent_rootOfUnity_expTwoPiI Ω ε s N hN).2 d hs
+  obtain ⟨u, hu, hZ⟩ := (_root_.GlobalTheory.ZetaExp.main Ω ε s N hN).2 d hs
   have hE : ∀ x ∈ ε.range, g x ∈ ε.range := by
     rintro _ ⟨y, rfl⟩
     exact ⟨s y, (hg' y).symm⟩
-  obtain ⟨f', hf'L, hf'C⟩ := GlobalTheory.T.levelN_function_galois_conj_qExpansion g ε.range N u w (a : ℍ → ℂ) hE (hZ g hg') hLv
+  obtain ⟨f', hf'L, hf'C⟩ := _root_.GlobalTheory.FN.lv_galois_conj g ε.range N u w (a : ℍ → ℂ) hE (hZ g hg') hLv
   let a' : GlobalTheory.FN.ring ε.range := ⟨f', mem_ring_of_inR ⟨N, w, hN, hf'L⟩⟩
-  obtain ⟨hext, hcmp, hexpinj, -⟩ := GlobalTheory.T.fractionField_ext_closure_injective Ω ε T
-  obtain ⟨-, -, hSL, -⟩ := GlobalTheory.T.cmp_mul_ofSL_and_up_cmp_eq_up_mob
+  obtain ⟨hext, hcmp, hexpinj, -⟩ := _root_.GlobalTheory.FN.frac_ext_clo_inj Ω ε T
+  obtain ⟨-, -, hSL, -⟩ := _root_.GlobalTheory.FN.cmp_props
 
   have key : ∀ γ γ' : SL(2, ℤ), dg u * redGL N γ' = redGL N γ * dg u →
       T.gal s (T.sl (ofSL γ) (T.io a)) = T.sl (ofSL γ') (T.io a') := by
@@ -89,7 +91,7 @@ theorem gal_sl_io_of_cong :
     have hb1 : (b : ℍ → ℂ) = fun τ => (a : ℍ → ℂ) (γ • τ) := by rw [hb, hSL]
     have hb2 : (b' : ℍ → ℂ) = fun τ => f' (γ' • τ) := by rw [hb', hSL]
     refine Eq.symm ?_
-    refine GlobalTheory.T.cuspExpansion_coeff_conj_of_qExpansion_conj Ω ε s.toRingEquiv.toRingHom g N w b b' _ _ hg' hN ?_ ?_ (T.exp_io b) (T.exp_io b') r
+    refine _root_.GlobalTheory.FN.exp_conj Ω ε s.toRingEquiv.toRingHom g N w b b' _ _ hg' hN ?_ ?_ (T.exp_io b) (T.exp_io b') r
     · rw [hb1]; exact hLv.2 γ
     · rw [hb1, hb2]; exact hf'C γ γ' hM
   have h1 : T.gal s (T.io a) = T.io a' := by
@@ -102,6 +104,6 @@ theorem gal_sl_io_of_cong :
     rw [hcio, hc'io, e1, e2] at this
     exact this
   rw [h1]
-  exact key γ γ' ((GlobalTheory.T.slTwoDiagConjCongruence_iff_diagOneUnit_matrix_eq N d u hu γ γ').mp hC)
+  exact key γ γ' ((_root_.GlobalTheory.FNCong.cong_iff_dg N d u hu γ γ').mp hC)
 
 end GlobalTheory.FN

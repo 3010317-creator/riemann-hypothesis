@@ -2,7 +2,7 @@ module
 
 public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.StBranchNormalisation
 public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.StCurveBranchLength
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BranchNormalisationHoldsStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BranchNormalisationHolds
 public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PCurveBranchLength
 import GroundTheory.HeightsAndTheta.Heights.LocalFiniteness.BranchInverseOffHypersurfaceHolds
 import Mathlib.Algebra.Order.Floor.Extended
@@ -57,6 +57,6 @@ theorem curveBranchLength_of_branchNormalisation
   GroundTheory.Heights₂.Heights.CurveBranchLength.proof GroundTheory.Heights₂.Heights.AutoClose.CurveNormalisationLength hB
 
 theorem curveBranchLength : GroundTheory.Heights₂.Heights.CurveBranchLength.Statement :=
-  curveBranchLength_of_branchNormalisation GlobalTheory.T.branch_normalisation_holds
+  curveBranchLength_of_branchNormalisation _root_.GlobalTheory.CompanionTheory.BranchNorm.branchNormalisation
 
 end GlobalTheory.CompanionTheory.Heights.CurveBranch

@@ -4,18 +4,19 @@ public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UniqG
 public import Formalism.SharpRestriction.CuspSpanNormBounds.SBridge
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DegVand
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.BesselGapExistsFunctionalStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeEqKFiniteOrbitalIntegralGapStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeEqKFiniteOrbitalIntegralGap
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeEqSmulNormalisedAmplitudeLargeGapStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudePieriRelevantCellLargeGap
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CapParamOfIsHCTypeW
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CellConv
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DatumDegreeEqMulFormalDegreeGap
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUnitaryTorusScaleBesselCharacter
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalDataBothAmplitudeSidesStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableRootCoords
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MomentPieriNumericsOfSizeHypsStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.OnePlaceKF
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MomentPieriNumericsOfSizeHyps
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OpenCellAmplitudeNormEqConstDivDegreeLargeGap
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CapParamOfIsHCTypeW
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUnitaryTorusScaleBesselCharacter
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalizedBesselMapsAnyScalePieriConstants
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OpenCellAmplitudeNormEqConstDivDegreeLargeGapStatement
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UniformBesselConstant
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.HcParamSubIntegral
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NumericalFamilyShapeGaps
@@ -133,7 +134,7 @@ theorem exists_coef (hH : GlobalTheory.GapIn.Hyp) {Cg cb Cu cT CT C0 Cn : ℝ} (
     ⟨z1, t1 ▸ hT, ⟨_, c1⟩, GlobalTheory.ThA.capParam_of_isHCTypeW _ _ _ _ _ _ _ z1 (t1 ▸ hT) c1 (hsq _), w1, hNH, hG, q1⟩
   have s2 : SideG D.R.k D.R.rS W.z' W.π' (sq (uS D w' τ)) W.μW' W.μN W.μG W.νS' :=
     ⟨z2, t2 ▸ hT', ⟨_, c2⟩, GlobalTheory.ThA.capParam_of_isHCTypeW _ _ _ _ _ _ _ z2 (t2 ▸ hT') c2 (hsq _), w2, hNH, hG, q2⟩
-  obtain ⟨hNum, hcell, heps⟩ := GlobalTheory.T.momentPieriNumerics_of_sizeHyps D large₂ C' Cl Cg cb Cu cT CT C0 hZ hCl τ w _ (hsq _)
+  obtain ⟨hNum, hcell, heps⟩ := _root_.GlobalTheory.SizeNum.num_of_size D large₂ C' Cl Cg cb Cu cT CT C0 hZ hCl τ w _ (hsq _)
   obtain ⟨⟨-, -, -, -, hok⟩, hν⟩ := GlobalTheory.NumFam.num_fam _ _ _ _ _ _ _ _ _ hNum
   obtain ⟨ν, hlam, hn1, -⟩ := GlobalTheory.hcParam_sub_integral _ (lamD D τ) lam' hNum.2.1 hA.1
   have hq : n1 ν ≤ D.R.k * D.R.m ^ 5 := by
@@ -168,7 +169,7 @@ theorem exists_coef (hH : GlobalTheory.GapIn.Hyp) {Cg cb Cu cT CT C0 Cn : ℝ} (
   have i2 : ⟪l' v', l' v'⟫_ℂ ≠ 0 := inner_self_ne_zero.2 n2
   refine ⟨d2, coefF (toBessel D τ w w' θ W lam' A hW hA hT hT') v v' ((η / (d * (⟪l v, l v⟫_ℂ * ⟪l' v', l' v'⟫_ℂ))) • l v)
     (l' v'), GlobalTheory.AmpBessel.isKFinCoefH_coefF (toBessel D τ w w' θ W lam' A hW hA hT hT') k1 k2 _ _, fun γ μR νR ν hD h0 => ?_⟩
-  have key := (GlobalTheory.CellPieriG.amp_eq_orb hH (GlobalTheory.T.amplitude_eq_kFiniteOrbitalIntegral_gap hH) GlobalTheory.CellMaj.cellConv (toBessel D τ w w' θ W lam' A hW hA hT hT')
+  have key := (GlobalTheory.CellPieriG.amp_eq_orb hH (_root_.GlobalTheory.AmpOrbGap.ampKF hH) GlobalTheory.CellMaj.cellConv (toBessel D τ w w' θ W lam' A hW hA hT hT')
     ⟨A.H, A.σ⟩ lam' _ W.μG l l' w0 hDS hgap hok hcell hc ENNReal.ofReal_ne_top hG e1 e2 hw0 γ μR νR ν hD v v' k1 k2
     ((η / (d * (⟪l v, l v⟫_ℂ * ⟪l' v', l' v'⟫_ℂ))) • l v) (l' v')).2
   rw [hJ νR γ hD.1 h0]
@@ -183,7 +184,7 @@ open Formalism.BasicNotions Formalism.MainNotions GlobalTheory.Amp in
 theorem ampIsBessel : GlobalTheory.GapIn.Hyp → ∀ Cg cb Cu cT CT C0 C1 : ℝ, ∃ Ca : ℝ, 0 ≤ Ca ∧ ∀ Cn : ℝ, ∃ m₀ : ℝ, ∀ (D : D7) (large₂ : SizeData₂ D) (C' Cl : ℝ), 1000 ≤ Cl → D.host.rdE ≤ large₂.sc.b → m₀ ≤ D.R.m → cdScaleTie D → Bridge.AmpIsBessel D large₂ C' Cl Cg cb Cu cT CT C0 Cn C1 Ca := by
   intro hH Cg cb Cu cT CT C0 C1
   refine ⟨2 * |C1|, by positivity, fun Cn => ?_⟩
-  obtain ⟨m₁, hm₁⟩ := GlobalTheory.T.openCellAmplitudeNorm_eq_const_div_degree_largeGap hH (GlobalTheory.T.amplitude_eq_kFiniteOrbitalIntegral_gap hH) GlobalTheory.CellMaj.cellConv Cg cb Cu cT CT C0 C1 Cn
+  obtain ⟨m₁, hm₁⟩ := _root_.GlobalTheory.Amp.OpenCellNormGap.norm_eq_const_div_deg_gap hH (_root_.GlobalTheory.AmpOrbGap.ampKF hH) GlobalTheory.CellMaj.cellConv Cg cb Cu cT CT C0 C1 Cn
   refine ⟨max Cn m₁, fun D large₂ C' Cl hCl hb hm hcd hZ τ w w' hTT θ hθw W hW lam' hl A hA hT hT' => ?_⟩
   have hb0 : 0 < large₂.sc.b := Real.exp_pos _
   have hθ : 0 < θ := lt_of_lt_of_le (Real.rpow_pos_of_pos hb0 _) hθw.1

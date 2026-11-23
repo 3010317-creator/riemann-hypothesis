@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KummerTowerQqPowLevelEqQ
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DerivativeCyclotomicMul
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsIntPrimeDivRootOfUnitySubOnePowStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TowerLevelEmbeddingInjectiveRangeAdjoinRootsStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TowerLevelEmbeddingInjectiveRangeAdjoinRoots
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -79,7 +79,7 @@ theorem exists_levDer : ∀ (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Alg
   intro p _ Ω _ _ hC T m hm
   haveI : CharZero Ω := Basic.charZero_of_isClo hC
   obtain ⟨ι, hι⟩ := Basic.exists_isEmb T m
-  obtain ⟨hinj, hrange⟩ := GlobalTheory.T.towerLevelEmbedding_injective_range_adjoinRoots p Ω hC T m hm ι hι
+  obtain ⟨hinj, hrange⟩ := _root_.GlobalTheory.K5.LevEmb.emb_inj_range p Ω hC T m hm ι hι
   have hιA : ∀ z, ι z ∈ integralClosure (O0 p) Ω := fun z =>
     Lev_int T m _ (hrange ▸ AlgHom.mem_range_self ι z)
   let ιA : On p m →ₐ[O0 p] integralClosure (O0 p) Ω := ι.codRestrict _ hιA

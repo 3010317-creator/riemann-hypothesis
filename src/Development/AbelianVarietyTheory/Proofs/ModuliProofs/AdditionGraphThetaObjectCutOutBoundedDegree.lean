@@ -4,13 +4,13 @@ public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.FiniteHo
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.SectionsHaveFiniteDimension
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSingle
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.AbelianVarietyCutOutBoundedDegreeTorsionStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.AbelianVarietyCutOutBoundedDegreeTorsion
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.MemSubringOfLocalInverse
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SectionsDimAdditionGraphPrincipalPolarisation
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SectionsHaveFiniteDimensionInvarianceIsomorphism
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SqIsPowGrp
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaSectionsVeryAmplePeriodic
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.VampIsoOfSegreCoordinates
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SectionsHaveFiniteDimensionInvarianceIsomorphism
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SqIsPowGrp
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -165,7 +165,7 @@ theorem GlobalTheory.cutBy_graph_addition : Out.Laws → Out.Laws2 → ∀ (g : 
   intro hL hL2 g J _ Mat κ n hn hodd
   have hn1 := hn.one_lt
   haveI : NeZero ((n ^ 2) ^ 2) := ⟨by positivity⟩
-  obtain ⟨d, k₀, H⟩ := GlobalTheory.T.abelianVariety_cut_out_bounded_degree_torsion hL hL2 (2 * g) (2 * (n ^ 2) ^ 2)
+  obtain ⟨d, k₀, H⟩ := _root_.GlobalTheory.cutBy_idealOf_torsion hL hL2 (2 * g) (2 * (n ^ 2) ^ 2)
     ((Ix g ((n ^ 2) ^ 2) × Ix g ((n ^ 2) ^ 2)) × Ix g ((n ^ 2) ^ 2))
   refine ⟨max 2 k₀, fun j hj o _ b => ?_⟩
   haveI : NeZero ((n ^ j) ^ 2) := ⟨by positivity⟩

@@ -1,8 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.PairwiseDisjointCell
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasBoundedSumsOne
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HasSumHeckeSeriesSphericalIntegralInverse
 import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HasSumHeckeSeriesSphericalIntegralInverseStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -192,7 +194,7 @@ theorem hasSum_pair (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [
       have : (u * c.out * κ)⁻¹ * u = κ⁻¹ * c.out⁻¹ := by group
       rw [h, this, isInt_KO_mul_iff (inv_mem hκ)]
       rfl
-  have hN := (GlobalTheory.T.hasSum_hecke_series_spherical_integral_inverse k n (fun _ => 1) (fun _ => 1) (isBorelSph_one k) (fun _ => one_ne_zero) (X ^ 2)
+  have hN := (_root_.GlobalTheory.HeckeDual.hasSum_dual k n (fun _ => 1) (fun _ => 1) (isBorelSph_one k) (fun _ => one_ne_zero) (X ^ 2)
     fun i => by simpa only [inv_one, mul_one] using hX i).mul_left (X ^ (∑ i, |e i|).toNat)
   simp only [inv_one, mul_one] at hN
   rw [← E.hasSum_iff]

@@ -3,7 +3,8 @@ module
 public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.OpenCellDecomposition.OpenCellUnipotents.LevZZero
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OpenFns
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsEquivProdIrrTw
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwistedJacquetTensorProductEquivStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwistedJacquetTensorProductEquiv
+public import Mathlib.LinearAlgebra.PiTensorProduct.Basis
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -15,7 +16,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.LinearAlgebra.PiTensorProduct.Basis
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -137,7 +137,7 @@ theorem nontrivial_piTensor {ι : Type} [Fintype ι] {X : ι → Type} [∀ a, A
 theorem exists_not_mem_twKer (ψ : AddChar k Circle) (A : Representation ℂ (GL (Fin r) k) V)
     (x : Representation ℂ (GL (Fin m) k) W) (hA : IsGenericFor ψ A) (hx : IsGenericFor ψ x) :
     ∃ v, v ∉ twKer (piTensor (piPair A x)) (unipM k (dd r m)) (whitM (dd r m) ψ) := by
-  obtain ⟨e⟩ := GlobalTheory.T.twisted_jacquet_tensor_product_equiv (piPair A x) (fun a => unipB k (Fin (dd r m a))) (fun a => whitChar ψ (dd r m a))
+  obtain ⟨e⟩ := _root_.GlobalTheory.CompanionTheory.Rodier.PiCoinv.twJacquet_piTensor_equiv (piPair A x) (fun a => unipB k (Fin (dd r m a))) (fun a => whitChar ψ (dd r m a))
   have hf : ∀ a, Nontrivial (TwJacquet (piPair A x a) (unipB k (Fin (dd r m a))) (whitChar ψ (dd r m a))) := by
     intro a
     fin_cases a

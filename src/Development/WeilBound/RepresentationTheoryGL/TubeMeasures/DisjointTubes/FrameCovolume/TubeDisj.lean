@@ -3,9 +3,12 @@ module
 public import Development.WeilBound.RepresentationTheoryGL.TubeMeasures.DisjointTubes.TubeSt
 public import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithmeticGroupConjRationalPrincipalCongruence
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetEqOneUnitaryPrincipalCongruenceLevelThreeStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.Signature
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetEqOneUnitaryPrincipalCongruenceLevelThree
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EquivalenceGeneratedTorusRel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsInvertibleUnitaryAdelicMatrixOfRationalUnitaryStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsKMOne
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsInvertibleUnitaryAdelicMatrixOfRationalUnitary
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryExistsWithPrescribedParts
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -127,7 +130,7 @@ theorem tube_disj (D : D7) (V : HSp D) (θ : InfFam D) (A : Frames V) (rp : GA D
     have e : (g k)⁻¹ * δ⁻¹ * g k' = ((g k)⁻¹ * y) * ((g k')⁻¹ * (δ * y))⁻¹ := by group
     rw [e]; exact hmulKM _ _ hy.1 (hinvKM _ hgy.1)
   have hUA : IsUA (IsCMField.complexConj D.host.E) (-(V.gram)ᵀ) (ratM (maximalRealSubfield D.host.E) δ0.1) :=
-    GlobalTheory.T.isInvertibleUnitaryAdelicMatrix_of_rational_unitary D.host.E V.rank _ δ0.1 (Matrix.isUnits_det_units δ0).ne_zero hherm
+    _root_.GlobalTheory.RatUnit.isUA_ratM D.host.E V.rank _ δ0.1 (Matrix.isUnits_det_units δ0).ne_zero hherm
   have hratM : ratM (maximalRealSubfield D.host.E) δ0.1 = δ0.1.map (inclR (Af D.host.F)) := rfl
   have hkk : k = k' := hdist k k' ⟨δ0.1, hUA, (finHom V ((g k)⁻¹ * δ⁻¹ * g k')).1, hκ', by
     rw [hratM, ← hfin, ← Units.val_mul, ← Units.val_mul, ← map_mul, ← map_mul]
@@ -184,7 +187,7 @@ theorem tube_disj (D : D7) (V : HSp D) (θ : InfFam D) (A : Frames V) (rp : GA D
       exact (X k).Λ.add_mem hx (nsmul_mem hy M)
   have hΓ : δ0 ∈ (X k).Γ := (hXΓ k δ0).2 ⟨⟨by rw [hXG k]; exact hherm, hstab⟩, hcong⟩
   have hd1 : (δ0 : Matrix (Fin V.rank) (Fin V.rank) D.host.E).det = 1 :=
-    GlobalTheory.T.det_eq_one_unitary_principal_congruence_level_three D.host.E V.rank M (X k) hM (hXΓ k) δ0 hΓ
+    _root_.GlobalTheory.UnitaryCongruenceDet.det_eq_one D.host.E V.rank M (X k) hM (hXΓ k) δ0 hΓ
 
   have hmemSU : embGL Ψ V.rank δ0 ∈ realSU Ψ Gm := embGL_mem_realSU Ψ Gm δ0 hd1 (by rw [hGm]; exact hherm)
   have hin : (⟨embGL Ψ V.rank δ0, hmemSU⟩ : realSU Ψ Gm) ∈ inReal Ψ Gm (X k).Γ :=

@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UMLeviMulUMLevi
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParabolicUnipotentLeviDecompStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsUMOfMem
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParabolicUnipotentLeviDecomp
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -75,7 +76,7 @@ theorem fibV_one_bump : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSp
   · rw [Set.indicator_of_notMem (show v ∉ (GlobalTheory.CompanionTheory.BZPsiPG.FibOnto.latt t c : Set (Fin t → k)) from hv)]
     apply h2
     rintro ⟨h, β, hβ, e⟩
-    obtain ⟨x, q, hq⟩ := GlobalTheory.T.parabolic_unipotent_levi_decomp k i t h
+    obtain ⟨x, q, hq⟩ := _root_.GlobalTheory.CompanionTheory.BZPsiPG.HpgMem.main k i t h
     obtain ⟨y, hy, b', hb', rfl⟩ := hβ
     rw [hq, uM_levi_mul_uM_levi] at e
     obtain ⟨e1, e2⟩ := uM_levi_inj _ (show uM k (i + t) (midV k i t v) * levi k (i + t) 1 = _ from e)

@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.AdmissibleDiscreteSeriesOfHasParam
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.NotTrivialAndTwist
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.KStableSubmoduleEqTopOfHighestWeightLeStatement
+public import Formalism.LocalRingCardinality.DataTheta
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.KStableSubmoduleEqTopOfHighestWeightLe
+public import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.IsotypicSignedParameters
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -42,7 +44,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.IsotypicSignedParameters
 
 @[expose] public section
 
@@ -139,7 +140,7 @@ theorem hasTypes_of_twist (p q : ℕ) (T : GrpData p q) (R : DSRep T) (lam : Ix 
   refine ⟨by rwa [Cover.blattner_add, ← hwSub_twAct], fun v => ?_, hcone⟩
   set c : ℂ := ((∑ a, (lam a + 1 / 2) : ℚ) : ℂ) with hc
   have htop : LinearMap.ker (R.HK.act 1 - c • LinearMap.id) = ⊤ := by
-    refine GlobalTheory.T.kStable_submodule_eq_top_of_highestWeight_le p q R.HK _ (fun X _ w hw => ?_) fun μ w hw => ?_
+    refine _root_.GlobalTheory.HwSpan.eq_top_of_hwSub_le p q R.HK _ (fun X _ w hw => ?_) fun μ w hw => ?_
     · have e := congrArg (fun f : Module.End ℂ R.HK.V => f w) (R.HK.lie X 1)
       simp only [Matrix.mul_one, Matrix.one_mul, sub_self, map_zero, LinearMap.zero_apply, LinearMap.sub_apply,
         Module.End.mul_apply] at e

@@ -7,11 +7,13 @@ public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AemeasurableCx
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ConePtsSubsetMcPtsOfMinimal
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.DomCellLogNormMeasurableInvariant
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsCxVarOfMemMinimalPrimesCxIdeal
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LintegralFibreLogNormFiniteStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.SetFibreFiniteOfGoodProj
+public import Development.AutomorphicSpectrum.PublishedTheorems.Metrics₂.SheetDensityEqSetSheetDensity
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LintegralFibreLogNormFinite
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PChartDimLt
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PChartRatioImageNull
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PComponentsMeetNull
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.SetFibreFiniteOfGoodProj
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -185,7 +187,7 @@ theorem integrable_absFibreSum_of_isCxVar {K : Type} [Fintype K] {ι : K → Typ
     exact Finset.sum_congr rfl fun w _ => abs_setSheetDensity_eq hS Ψ (pot L) A s y w
   refine ⟨?_, (hasFiniteIntegral_iff_ofReal (Eventually.of_forall fun y =>
     finsum_nonneg fun w => finsum_nonneg fun _ => abs_nonneg _)).2
-    (GlobalTheory.T.lintegral_fibre_logNorm_finite K ι Q e Ψ L A s a hQ hΨ hL hA hAa hs hsQ)⟩
+    (_root_.GlobalTheory.CompanionTheory.Ar.Pub.CxChart.logNorm_mass_lt_top K ι Q e Ψ L A s a hQ hΨ hL hA hAa hs hsQ)⟩
   rw [heq]
   exact (h1.add h2).aestronglyMeasurable
 

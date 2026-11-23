@@ -4,7 +4,7 @@ public import Formalism.SharpRestriction.LevelLetterCocycles.IdempotentChoiceDep
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.GlobalCore
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CMemCoeffSub
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CutValueMemHeckeValueIdealOffSupport
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeterminantLemmaDiscreteValuationRingQuotientLenStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeterminantLemmaDiscreteValuationRingQuotientLen
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LengthHeckeQuotientLeCocycleSpanDeterminant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -133,7 +133,7 @@ theorem main : ∀ (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (GE D.nd →* GL (F
     intro c a
     rw [← hfχ, ← Algebra.algebraMap_eq_smul_one]
     rfl
-  have key := GlobalTheory.T.determinantLemma_discreteValuationRing_quotientLength_bound (D.nd.O i) A (Option (Fin D.R.t)) d ψ (by
+  have key := _root_.GlobalTheory.DetGen.length_quot_le_sum_length (D.nd.O i) A (Option (Fin D.R.t)) d ψ (by
     rintro (_ | c) B
     · obtain ⟨a, ha, rfl⟩ := hsurj B
       exact ⟨⟨a, ha⟩, hfρ _⟩

@@ -1,11 +1,14 @@
 module
 
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.WeilSiegelTheta.BigCellDefs
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdelicCharacterOrthogonalIsRational
+public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IntegrableOnOfPeriodic
+public import Formalism.LocalToGlobal.IndefiniteReal.DatumLemmas
+public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.CharLem
 import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.StarPurelyImaginaryEqNeg
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsTopologicalRingAE
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdelicCharacterOrthogonalIsRationalStatement
 import Formalism.LocalToGlobal.BesselHermitianTheta.LemmasWeil
-public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IntegrableOnOfPeriodic
 import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -46,8 +49,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import Formalism.LocalToGlobal.IndefiniteReal.DatumLemmas
-public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.CharLem
 
 @[expose] public section
 
@@ -175,7 +176,7 @@ theorem ann_E {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsCharAF D.host.F ψ) (z :
     (h : ∀ e : D.host.E, ψ (Algebra.trace (AF D.host.F) (AE D) (incA D e * z)) = 1) :
     ∃ w : D.host.E, z = incA D w :=
   ann_gen (F := D.host.F) (E := D.host.E) (A := AF D.host.F) (fun x => ψ x = 1)
-    (fun x hx => GlobalTheory.T.adelic_character_orthogonal_is_rational D.host.F D.sp.cm.totReal ψ hψ x hx) z h
+    (fun x hx => _root_.GlobalTheory.CompanionTheory.Hypotheses₂.OneV.Ann.annihilator_eq D.host.F D.sp.cm.totReal ψ hψ x hx) z h
 
 def chi (ψ : AddChar (AF D.host.F) ℂ) (m : Mx D r r) (b : hermA D r) : ℂ :=
   ψ (halfTr (Matrix.trace (HMul.hMul m b.1 : Mx D r r)))

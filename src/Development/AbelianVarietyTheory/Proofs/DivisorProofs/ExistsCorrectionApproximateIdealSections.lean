@@ -1,13 +1,20 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExistsIvDOfDefinite
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChevalleyExistsLeSupMaximalIdealPowOfAntitoneStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GermMemIdealSheafStalkOfClosedFibreUnivClosedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemSpanSupPowOfForallCompleteDvrLocalTestStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsNoetherianRingAdicCompletionOfNoetherian
+public import Mathlib.RingTheory.AdicCompletion.LocalRing
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChevalleyExistsLeSupMaximalIdealPowOfAntitone
+public import ReciprocityTheory.AnalyticForms.RegularLocalRings.FinalTheorems
+public import Mathlib.AlgebraicGeometry.Morphisms.UniversallyClosed
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GermMemIdealSheafStalkOfClosedFibreUnivClosed
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Mathlib.RingTheory.EssentialFiniteness
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemSpanSupPowOfForallCompleteDvrLocalTest
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemIdealOfFlatStalkPullback
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PolarizationTransferWithFunction
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StalkGenerizationGermCompat
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsNoetherianRingAdicCompletionOfNoetherian
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StalkIdComapOfAffine
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -100,7 +107,7 @@ theorem mem_map_of_approx {Z S : Scheme.{0}} (π : S ⟶ Z) [IsProper π] (I : S
   refine GlobalTheory.FlatPush.mem_idlAlong_map_of_flat π I ξ ?_ F ?_
   · rw [Scheme.stalkClosedPointTo, CommRingCat.hom_comp]
     exact RingHom.Flat.comp (Flat.stalkMap ξ _) (RingHom.Flat.of_bijective (ConcreteCategory.bijective_of_isIso _))
-  refine GlobalTheory.T.germ_mem_idealSheaf_stalk_of_closedFibre_univClosed _ R (Limits.pullback.fst ξ π) _ _ fun v hv => ?_
+  refine _root_.GlobalTheory.SpreadIdeal.mem_stalkId_of_closedFibre _ R (Limits.pullback.fst ξ π) _ _ fun v hv => ?_
   haveI : IsLocallyNoetherian (Limits.pullback ξ π) := LocallyOfFiniteType.isLocallyNoetherian (Limits.pullback.fst ξ π)
   set p := Limits.pullback.fst ξ π with hp
   set q := Limits.pullback.snd ξ π with hq
@@ -195,7 +202,7 @@ theorem exists_correction : ∀ (Z S : Scheme.{0}) [IsIntegral Z] [IsIntegral S]
       zero_mem' := fun V _ _ _ _ hV ξ ev h1 h2 h3 => by rw [map_zero]; exact zero_mem _
       smul_mem' := fun c a ha V _ _ _ _ hV ξ ev h1 h2 h3 => by
         rw [smul_eq_mul, map_mul]; exact Ideal.mul_mem_left _ _ (ha V hV ξ ev h1 h2 h3) }
-  refine GlobalTheory.T.chevalley_exists_le_sup_maximalIdeal_pow_of_antitone (Z.presheaf.stalk z) K (FinalTheorems.stalkId (E.idealSheaf.map π) z) ?_ ?_ ?_ k
+  refine _root_.GlobalTheory.Chevalley.exists_le_sup_maximalIdeal_pow_of_antitone (Z.presheaf.stalk z) K (FinalTheorems.stalkId (E.idealSheaf.map π) z) ?_ ?_ ?_ k
   · intro m n hmn f hf V _ _ _ _ hV ξ ev h1 h2 h3
     exact (show _ ≤ (_ : Ideal V) from sup_le_sup_left (Ideal.pow_le_pow_right hmn) _) (hf V hV ξ ev h1 h2 h3)
   · intro e f hf V _ _ _ _ hV ξ ev h1 h2 h3
@@ -212,7 +219,7 @@ theorem exists_correction : ∀ (Z S : Scheme.{0}) [IsIntegral Z] [IsIntegral S]
   haveI := (hS x).2
   have hI := E.stalkId_idealSheaf i x hi
   rw [hI]
-  refine GlobalTheory.T.mem_span_sup_pow_of_forall_complete_dvr_local_test (S.presheaf.stalk x) _ (fun n => ψ (a n))
+  refine _root_.GlobalTheory.Poinc.mem_span_sup_pow_of_forall_complete_dvr (S.presheaf.stalk x) _ (fun n => ψ (a n))
     (nonZeroDivisors.ne_zero (GlobalTheory.Cartier.isRegularFn_iff_germ.1 (E.regular i) x hi)) ?_ ?_
   · intro m n hmn
     rw [← map_sub]

@@ -4,7 +4,8 @@ public import Mathlib.Algebra.AffineMonoid.Basic
 public import Mathlib.NumberTheory.NumberField.Basic
 public import Mathlib.RingTheory.DedekindDomain.Different
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ImportsTer
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.PrimePowerNotDvdDifferentStatement
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.PrimePowerNotDvdDifferent
+public import Mathlib.RingTheory.UniqueFactorizationDomain.Multiplicative
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -47,7 +48,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.RingTheory.UniqueFactorizationDomain.Multiplicative
 
 @[expose] public section
 
@@ -77,7 +77,7 @@ theorem prime_pow_dvd_span_of_dvd_differentIdeal (E : Type) [Field E] [NumberFie
     exact pow_ne_zero _ hp0 this
   obtain ⟨J, hJ, hnd⟩ :=
     (FiniteMultiplicity.of_not_isUnit hPp.not_unit hS0).exists_eq_pow_mul_and_not_dvd
-  have hnot := GlobalTheory.T.prime_power_not_dvd_different E P J p _ hp hpP hnd hJ
+  have hnot := _root_.GlobalTheory.CompanionTheory.Glob.not_pow_dvd_different E P J p _ hp hpP hnd hJ
   have hlt : i < multiplicity P (Ideal.span {((p : 𝓞 E)) ^ (Module.finrank ℚ E)}) := by
     by_contra hle
     exact hnot ((pow_dvd_pow P (not_lt.1 hle)).trans hi)

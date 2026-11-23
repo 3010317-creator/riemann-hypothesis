@@ -3,10 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsLv
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LocallyCompactSpaceAxis
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsSquareIntegrableIffMemL2
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicFixatorEqUnipotentRadicalMulCommonFixator
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteCovolumeCommonAdelicFixatorOfColumns
+public import Development.AbelianVarietyTheory.Definitions.Divisors.LocallyCompactUnipFlag
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsotropicFrameDecompositionSubgroupProperties
 import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsUniqueIsProdMeasureFinAway
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicFixatorEqUnipotentRadicalMulCommonFixatorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteCovolumeCommonAdelicFixatorOfColumnsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsotropicFrameDecompositionSubgroupPropertiesStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,7 +67,7 @@ theorem semiLat_fixG : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     ext x
     simp only [Subgroup.mem_subgroupOf, Subgroup.mem_inf]
     exact ⟨fun e => e.1, fun e => ⟨e, h x.2⟩⟩
-  obtain ⟨hC, -, cM, cN, hN, hP, hd, hn, -⟩ := GlobalTheory.T.isotropicFrameDecomposition_subgroup_properties F E σ n J j m C D Z J₀ H
+  obtain ⟨hC, -, cM, cN, hN, hP, hd, hn, -⟩ := _root_.GlobalTheory.SphEis.frame_facts F E σ n J j m C D Z J₀ H
   haveI := locallyCompact_unipRad H.cm H.herm hC
   obtain ⟨ν, DN, hν, hDN, h1⟩ := exists_mass_one (cocompact_unipRad H.cm H.herm hC)
   haveI : LocallyCompactSpace (fixG σ J C ⊓ fixG σ J D : Subgroup (GAd σ J)) := cM.locallyCompactSpace
@@ -83,9 +84,9 @@ theorem semiLat_fixG : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
       domN := by rw [key hN]; exact hDN
       domM := by rw [key inf_le_left]; exact hDM
       finN := by rw [h1]; exact ENNReal.one_ne_top
-      finM := GlobalTheory.T.finiteCovolume_common_adelicFixatorOfColumns F E σ n J j m C D Z J₀ H _ _ inferInstance hDM }⟩
+      finM := _root_.GlobalTheory.SphEis.finCovol_fixG F E σ n J j m C D Z J₀ H _ _ inferInstance hDM }⟩
   rintro γ ⟨hγ, hf⟩
-  obtain ⟨u, hu, x, hx, e, hr⟩ := GlobalTheory.T.adelicFixator_eq_unipotentRadical_mul_commonFixator F E σ n J j m C D Z J₀ H γ hf
+  obtain ⟨u, hu, x, hx, e, hr⟩ := _root_.GlobalTheory.SphEis.fixG_eq_unipRad_mul F E σ n J j m C D Z J₀ H γ hf
   refine ⟨u, hu, x, hx, ⟨?_, hN hu⟩, ⟨hr hγ, hx.1⟩, e⟩
   have : u = γ * x⁻¹ := by rw [e, mul_inv_cancel_right]
   rw [this]

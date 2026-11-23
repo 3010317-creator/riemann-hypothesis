@@ -3,17 +3,22 @@ module
 public import Development.WeilBound.ThetaLifts.LatticeBasics.HypothesesE
 public import Development.WeilBound.ThetaLifts.LatticeBasics.UnfoldC
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EmbBar
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanMinorHeightBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DenominatorBoundByHeightStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FinitePlaceMinorHeightBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IntegersBoundedEmbeddingsCountStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeftInvertibleExistsNonzeroMinorStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalNormFinitePlaceBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalNormInfinitePlaceBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PluckerMinorsDetermineColumnSpaceStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.QuadraticIntegralCoefficientsBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StandardCompactEntriesIntegralStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SummableHeightPowOfPolynomialCountStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanMinorHeightBound
+public import Development.AbelianVarietyTheory.Definitions.Foundations.T2SpaceTensorProductFiniteExtension
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DenominatorBoundByHeight
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FinitePlaceMinorHeightBound
+public import Mathlib.Analysis.Complex.Norm
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IntegersBoundedEmbeddingsCount
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeftInvertibleExistsNonzeroMinor
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalNormFinitePlaceBound
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalNormInfinitePlaceBound
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PluckerMinorsDetermineColumnSpace
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.QuadraticIntegralCoefficientsBound
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StandardCompactEntriesIntegral
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SummableHeightPowOfPolynomialCount
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -130,10 +135,10 @@ theorem absE_mul_vecHt_le (hcm : IsCMExt F E σ) (e : ∀ w : InfinitePlace F, E
   rw [GlobalTheory.Doubling.absE_apply, vecHt, mul_mul_mul_comm, ← Finset.prod_mul_distrib, ← finprod_mul_distrib hs2 hs]
   refine mul_le_mul' (Finset.prod_le_prod' fun w _ => ?_) (finprod_le_finprod' (hs2.union hs |>.subset (Function.mulSupport_mul _ _))
     (hB.subset (Function.mulSupport_pow _ _)) fun v => ?_)
-  · refine GlobalTheory.T.local_norm_infinite_place_bound F E σ hcm J w (e w) u _ (fun f => compInf F E w (z f)) (Bi w) (fun f => ?_) (fun f => hi w f)
+  · refine _root_.GlobalTheory.CompanionTheory.GodementH.absEw_mul_locInf_le F E σ hcm J w (e w) u _ (fun f => compInf F E w (z f)) (Bi w) (fun f => ?_) (fun f => hi w f)
     rw [hz, map_mul]
     congr 1
-  · refine GlobalTheory.T.local_norm_finite_place_bound F E σ hcm J v u _ (fun f => compFin F E v (z f)) (Bf v) (fun f => ?_) (fun f => hf v f)
+  · refine _root_.GlobalTheory.CompanionTheory.GodementH.absEv_mul_locFin_le F E σ hcm J v u _ (fun f => compFin F E v (z f)) (Bf v) (fun f => ?_) (fun f => hf v f)
     rw [hz, map_mul, compFin_inclR]
     rfl
 
@@ -166,7 +171,7 @@ theorem isIntegral_of_quad {z b c : E} (hb : IsIntegral ℤ b) (hc : IsIntegral 
 
 theorem denom_one (hcm : IsCMExt F E σ) {u : J → E} {f₀ : J} (hu : u f₀ = 1) (f : J) :
     ∃ m : ℕ, 0 < m ∧ (m : ℝ≥0) ≤ (∏ᶠ v, locFin σ v u) ^ 2 ∧ IsIntegral ℤ ((m : E) * u f) := by
-  obtain ⟨y₁, y₂, hq, hy⟩ := GlobalTheory.T.quadratic_integral_coefficients_bound F E σ hcm (u f)
+  obtain ⟨y₁, y₂, hq, hy⟩ := _root_.GlobalTheory.CompanionTheory.GodementH.trace_norm_local_sizes F E σ hcm (u f)
   have hloc : ∀ (v : Pl (F := F)), max 1 ‖algebraMap F (Fv F v) y₁‖₊ ≤ locFin σ v u ∧ max 1 ‖algebraMap F (Fv F v) y₂‖₊ ≤ locFin σ v u := by
     intro v
     obtain ⟨h1, h2⟩ := hy v (embBar F E v)
@@ -189,8 +194,8 @@ theorem denom_one (hcm : IsCMExt F E σ) {u : J → E} {f₀ : J} (hu : u f₀ =
       refine hs.subset fun v hv hv' => hv ?_
       exact le_antisymm ((hy v).trans (le_of_eq hv')) (le_max_left _ _)
     exact finprod_le_finprod' hsub hs hy
-  obtain ⟨m₁, p₁, l₁, i₁⟩ := GlobalTheory.T.denominator_bound_by_height F y₁
-  obtain ⟨m₂, p₂, l₂, i₂⟩ := GlobalTheory.T.denominator_bound_by_height F y₂
+  obtain ⟨m₁, p₁, l₁, i₁⟩ := _root_.GlobalTheory.CompanionTheory.GodementH.Den.denominator_le F y₁
+  obtain ⟨m₂, p₂, l₂, i₂⟩ := _root_.GlobalTheory.CompanionTheory.GodementH.Den.denominator_le F y₂
   refine ⟨m₁ * m₂, Nat.mul_pos p₁ p₂, ?_, ?_⟩
   · rw [sq]; push_cast
     exact mul_le_mul' (l₁.trans (hsup _ fun v => (hloc v).1)) (l₂.trans (hsup _ fun v => (hloc v).2))
@@ -226,7 +231,7 @@ theorem count (hcm : IsCMExt F E σ) (J : Type) [Fintype J] : ∃ (C : ℝ) (c :
     {u : J → E | (∃ f₀, u f₀ = 1) ∧ (vecHt σ u : ℝ) ≤ T}.Finite ∧
     (Set.ncard {u : J → E | (∃ f₀, u f₀ = 1) ∧ (vecHt σ u : ℝ) ≤ T} : ℝ) ≤ C * T ^ c := by
   classical
-  obtain ⟨C₀, hC₀, hlat⟩ := GlobalTheory.T.integers_bounded_embeddings_count E
+  obtain ⟨C₀, hC₀, hlat⟩ := _root_.GlobalTheory.CompanionTheory.IntegerCount.card_bounded_conjugates_le E
   set Jc := Fintype.card J with hJc
   set d := Module.finrank ℚ E with hd
   refine ⟨C₀ ^ Jc, 2 * Jc + (2 * Jc + 1) * d * Jc, pow_pos hC₀ _, fun T hT => ?_⟩
@@ -417,8 +422,8 @@ theorem key_bound (hcm : IsCMExt F E σ) {B : Base F E} {b : GL (Ix n) E} {K : S
     (fun w => (n.factorial : ℝ≥0) * htInf F w (Formalism.UG.bc (compInf F E w) X) ^ n)
     (fun v => htFin F v (Formalism.UG.bc (compFin F E v) X) ^ n)
     ((finite_mulSupport_htFin F X).subset (Function.mulSupport_pow _ _))
-    (fun w f => GlobalTheory.T.archimedean_minor_height_bound F E n (Ix n) w (B.emb w) X κ (((hK k⁻¹).1 (inv_mem hk)).1 w) f Sum.inl)
-    (fun v f => GlobalTheory.T.finite_place_minor_height_bound F E n (Ix n) v X κ (fun i j => GlobalTheory.T.standard_compact_entries_integral F E σ n Y B b K hK _ (inv_mem hk) v i j) f Sum.inl)
+    (fun w f => _root_.GlobalTheory.CompanionTheory.GodementH.MinInf.minor_le_htInf F E n (Ix n) w (B.emb w) X κ (((hK k⁻¹).1 (inv_mem hk)).1 w) f Sum.inl)
+    (fun v f => _root_.GlobalTheory.CompanionTheory.GodementH.absFin_minor_mul_le F E n (Ix n) v X κ (fun i j => _root_.GlobalTheory.CompanionTheory.GodementH.StdInt.absFin_inFrame_le_one F E σ n Y B b K hK _ (inv_mem hk) v i j) f Sum.inl)
   rw [hδ] at hmain
   have hprod : (∏ w, ((n.factorial : ℝ≥0) * htInf F w (Formalism.UG.bc (compInf F E w) X) ^ n) ^ 2) *
       ∏ᶠ v, (htFin F v (Formalism.UG.bc (compFin F E v) X) ^ n) ^ 2 =
@@ -483,7 +488,7 @@ theorem godement_sum : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     obtain ⟨P, hP⟩ := hP
     have hg1 : ((g q).1 : Matrix (Ix n) (Ix n) E) * ((g q)⁻¹).1 = 1 := by rw [← Units.val_mul, mul_inv_cancel, Units.val_one]
     have hb1 : (b.1 : Matrix (Ix n) (Ix n) E) * (b⁻¹).1 = 1 := by rw [← Units.val_mul, mul_inv_cancel, Units.val_one]
-    refine GlobalTheory.T.left_invertible_exists_nonzero_minor E (Ix n) n (pl b (g q)) ((P * ((g q).1 : Matrix (Ix n) (Ix n) E)) * (b.1 : Matrix (Ix n) (Ix n) E)) ?_
+    refine _root_.GlobalTheory.CompanionTheory.GodementH.exists_mnr_ne_zero_of_left_inverse E (Ix n) n (pl b (g q)) ((P * ((g q).1 : Matrix (Ix n) (Ix n) E)) * (b.1 : Matrix (Ix n) (Ix n) E)) ?_
     calc (P * ((g q).1 : Matrix (Ix n) (Ix n) E)) * (b.1 : Matrix (Ix n) (Ix n) E) * pl b (g q)
         = P * ((g q).1 : Matrix (Ix n) (Ix n) E) * ((b.1 : Matrix (Ix n) (Ix n) E) * (b⁻¹).1) * ((g q)⁻¹).1 *
           (diagCols (Fin n) : Matrix (Ix n) (Fin n) E) := by simp only [pl, Matrix.mul_assoc]
@@ -496,7 +501,7 @@ theorem godement_sum : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
   have hu1 : ∀ q, u q (f₀ q) = 1 := fun q => div_self (hf₀ q)
   have hinj : Function.Injective u := by
     intro q q' e
-    obtain ⟨c, hc⟩ := GlobalTheory.T.plucker_minors_determine_column_space E (Ix n) n _ _ _ _ (hf₀ q) (hf₀ q') (fun f => congrFun e f)
+    obtain ⟨c, hc⟩ := _root_.GlobalTheory.CompanionTheory.GodementH.Cramer.main E (Ix n) n _ _ _ _ (hf₀ q) (hf₀ q') (fun f => congrFun e f)
     have hp := isPar_of_pl (hg q) (hg q') hc
     have : (Quotient.mk _ (Quotient.out q') : Cos σ Y) = Quotient.mk _ (Quotient.out q) :=
       cos_eq.2 (Subgroup.subset_closure ⟨_, hp⟩)
@@ -519,7 +524,7 @@ theorem godement_sum : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
     rw [ha.val p t hp k hk]; exact NNReal.coe_nonneg _
   refine ⟨c, fun s' hs' => ?_⟩
   have hs0 : 0 < s' := lt_of_le_of_lt (Nat.cast_nonneg c) hs'
-  have hsum : Summable fun q => h q ^ (-s') := GlobalTheory.T.summable_height_pow_of_polynomial_count _ h h1 C₁ c hcnt s' hs'
+  have hsum : Summable fun q => h q ^ (-s') := _root_.GlobalTheory.CompanionTheory.GodementH.summable_rpow_neg_of_polynomial_count _ h h1 C₁ c hcnt s' hs'
   have hterm : ∀ (x : G2 σ Y) (q : Cos σ Y), a ((Quotient.out q).1 * x) ^ s' ≤
       ((C : ℝ) * (ht2 x : ℝ) ^ (2 * n)) ^ s' * h q ^ (-s') := by
     intro x q

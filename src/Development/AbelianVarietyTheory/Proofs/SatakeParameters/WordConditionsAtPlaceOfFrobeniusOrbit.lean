@@ -3,13 +3,14 @@ module
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NotDvdCondN
 public import Formalism.SharpRestriction.LevelLetterCocycles.LocalSituation
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.EmbeddingMapsIntoGoodExtension
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LatticeInSumTwistedDualsFitsWordStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LatticeTwistedDualFitsWordFewSmallJumpsStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalFieldDegreeEqRamificationMulInertiaStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LatticeInSumTwistedDualsFitsWord
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LatticeTwistedDualFitsWordFewSmallJumps
+public import Formalism.SharpRestriction.LevelLetterCocycles.QuotientHomNonvanishingBound
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalFieldDegreeEqRamificationMulInertia
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PlaceCompletionLeMaxUnramifiedAway2qdStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplitsOfConjugatesMem
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TwistedDualSizeWordParametersNumbersStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.WachFunctorLettersInverseFrobeniusOrbitStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TwistedDualSizeWordParams
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.WachFunctorLettersInverseFrobeniusOrbit
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,17 +59,17 @@ theorem wordBase_of_jumpIn : ∀ {D : D7} (L : SizeData₂ D) (C₀ : ℝ) (HW :
   have hU : (D.nbr i w hw).Kw.1 ≤ MaximalUnramifiedExtension (D.nd.l i) :=
     GlobalTheory.T.placeCompletion_le_maxUnramified_away_2qd D.nbr i w hw h2 hq hd
   have hF : Formalism.MainNotions.LocalSituation.fontCore ((D.loc (D.nd.l i)).PD (D.nbr i w hw).Kw) := hA _ _
-  obtain ⟨g, hg, hread⟩ := GlobalTheory.T.wachFunctor_letters_inverseFrobenius_orbit D (D.loc (D.nd.l i)) (D.nbr i w hw).Kw C.LL
+  obtain ⟨g, hg, hread⟩ := _root_.GlobalTheory.HTW.Rec.reads_orbit_invFrob D (D.loc (D.nd.l i)) (D.nbr i w hw).Kw C.LL
     ((HW (D.nd.l i)).W (D.nbr i w hw).Kw 1 C.LL hG) (Br.cEw D.nbr i w hw) κ h2 hq hd
     (D.nbr i w hw).j_dense hU
-  refine ⟨g, hg, GlobalTheory.T.localFieldDegree_eq_ramification_mul_inertia D.nbr i w hw, ?_, GlobalTheory.T.wordNum_recWord L C₀ (liftIdx D i) ε g _ hR hg⟩
+  refine ⟨g, hg, _root_.GlobalTheory.bridge_degW D.nbr i w hw, ?_, _root_.GlobalTheory.HTW.Rec.recWord_wordNum L C₀ (liftIdx D i) ε g _ hR hg⟩
   exact
     { unram := hU
       split := fun ft => GlobalTheory.splits_of_conjugates_mem _ _ _
         (GlobalTheory.good_conjugates_mem _ _ _ 1 hG) ft
-      t1 := GlobalTheory.T.lattice_in_sum_twisted_duals_fits_word L C₀ (liftIdx D i) ε (D.loc (D.nd.l i)) (D.nbr i w hw).Kw C.LL
+      t1 := _root_.GlobalTheory.HTW.Rec.fits_of_isSubOfSums L C₀ (liftIdx D i) ε (D.loc (D.nd.l i)) (D.nbr i w hw).Kw C.LL
         ((HW (D.nd.l i)).W (D.nbr i w hw).Kw 1 C.LL hG) (Br.cEw D.nbr i w hw) κ _ _ g hR hF hI hread
-      t2 := GlobalTheory.T.lattice_twisted_dual_fits_word_few_small_jumps L C₀ (liftIdx D i) ε (D.loc (D.nd.l i)) (D.nbr i w hw).Kw C.LL
+      t2 := _root_.GlobalTheory.HTW.Rec.fits_lowCount_of_matRep L C₀ (liftIdx D i) ε (D.loc (D.nd.l i)) (D.nbr i w hw).Kw C.LL
         ((HW (D.nd.l i)).W (D.nbr i w hw).Kw 1 C.LL hG) (Br.cEw D.nbr i w hw) κ _ _ g hR hF hU hI hread }
 
 end GlobalTheory.HTW.Rec

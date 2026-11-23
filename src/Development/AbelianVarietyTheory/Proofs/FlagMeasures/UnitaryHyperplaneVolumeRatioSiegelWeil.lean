@@ -3,7 +3,8 @@ module
 public import Formalism.UnipotentAdelicQuotients.SiegelWeilUnitaryConvergent
 public import Formalism.SharpRestriction.GlobalSchurBounds.MassRatioUnfoldedOfTheoremTwo
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OneVectorCcOfSiegelWeil
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SiegelOneVectorMeasurableOfCompactSupportStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.SiegelMeanCc
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SiegelOneVectorMeasurableOfCompactSupport
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.VolumeRatio
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -49,6 +50,6 @@ theorem volumeRatio :
     HeckeCharacterZeroLocus.SiegelWeilU.SiegelWeilUnitaryConvergent → ∀ D : Formalism.BasicNotions.D7, Formalism.MainNotions.RT.MassRatioUnderVolume D :=
   fun hP =>
     GlobalTheory.VolRatioFromSecondClause.volumeRatio
-      (GlobalTheory.T.siegel_one_vector_measurable_of_compactSupport (GlobalTheory.GaussMean.oneVectorCc_of_siegelWeil hP))
+      (_root_.GlobalTheory.OneVecMeas.sw1b2_of_cc (GlobalTheory.GaussMean.oneVectorCc_of_siegelWeil hP))
 
 end GlobalTheory.VolRatioFromSiegelWeil

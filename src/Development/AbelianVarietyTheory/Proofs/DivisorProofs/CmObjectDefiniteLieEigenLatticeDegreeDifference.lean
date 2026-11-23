@@ -3,20 +3,22 @@ module
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.EigenvectorLieDegree
 public import Development.AbelianVarietyTheory.Definitions.CMLattices.ExistsIsThetaDegOfIsLocalModel
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PointShiftSt
-import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IsCoprimeTwoSubRtTwoAddRt
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
-import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsWithoutCohomology
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueDifferentialMonHomLieBasis
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.InjectiveOfSumEq
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.NonemptyPolAVGenericFibreWithLieBasis
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbsNormMapRingOfIntegersHom
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmDefiniteLieIndexIdealEqNormIdeal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmDifferentFromIdeal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeImagesEigenLinesCmUnitaryShimuraObject
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGramMatricesCmUnitaryShimuraObject
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeDegreeEqSublatticeDegreeAddLogIndex
+import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IsCoprimeTwoSubRtTwoAddRt
+import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsWithoutCohomology
 import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LieAlgebraEigenDecompositionCMSignature
 import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LieLatticeFgAndSpanEqTopRingOfIntegers
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.NonemptyPolAVGenericFibreWithLieBasis
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbsNormMapRingOfIntegersHomStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmDefiniteLieIndexIdealEqNormIdealStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmDifferentFromIdeal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeImagesEigenLinesCmUnitaryShimuraObjectStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGramMatricesCmUnitaryShimuraObjectStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeDegreeEqSublatticeDegreeAddLogIndexStatement
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsCmEllipticCurveWithPeriod
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SemiAbelianHomExtensionDvr
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ThetaUniformisationComplexAbelianVariety
@@ -92,10 +94,10 @@ theorem cmDiff_definite : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   have hM : ∀ j : Fin p ⊕ Fin 0, ∃ M, (FA j.isLeft).IsDiffOf F (X.φ j) M := fun j =>
     (DiffCoord.existsUnique_isDiffOf K _ (FA j.isLeft) _ F (X.φ j) (X.lin j).1).1.exists
   choose M hM using hM
-  obtain ⟨gP, gQ, hg⟩ := GlobalTheory.T.exists_gramMatrices_cmUnitaryShimuraObject E H K ρ σ₁ p 0 X
+  obtain ⟨gP, gQ, hg⟩ := _root_.GlobalTheory.FlatCM.GramExists.exists_isGram E H K ρ σ₁ p 0 X
   have hD : IsDiffs (FA true) (FA false) F (fun a => M (.inl a)) (fun a => M (.inr a)) :=
     ⟨fun a => hM (.inl a), fun a => hM (.inr a)⟩
-  obtain ⟨𝔫, h𝔫₀, hid₀⟩ := GlobalTheory.T.cmDefinite_lieIndex_ideal_eq_norm_ideal E H hH K ρ σ₁ p X gP gQ hg
+  obtain ⟨𝔫, h𝔫₀, hid₀⟩ := _root_.GlobalTheory.FlatCM.IdealZero.idealSt_zero E H hH K ρ σ₁ p X gP gQ hg
   have hQd : gQ.det = 1 := Matrix.det_fin_zero
   have h𝔫 : 𝔫 * 𝔫.map (H.bar : 𝓞 E →+* 𝓞 E) = Ideal.span {gP.det * gQ.det} := by
     rw [hQd, mul_one]; exact h𝔫₀
@@ -105,7 +107,7 @@ theorem cmDiff_definite : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     rw [hQd, map_one, Ideal.span_singleton_one, Ideal.mul_top, idxZero, Ideal.mul_top]
     exact hid₀ (FA true) F (fun a => M (.inl a)) hD.1 τ hτ
   obtain ⟨hP0, hQ0, hdP, hdQ⟩ :=
-    GlobalTheory.T.degree_images_eigenLines_cmUnitaryShimuraObject GlobalTheory.cmCurve_closed GlobalTheory.thetaUnifAV_all GlobalTheory.abelianSchemeLaws_all.1
+    _root_.GlobalTheory.FlatCM.ImageDeg.deg_images GlobalTheory.cmCurve_closed GlobalTheory.thetaUnifAV_all GlobalTheory.abelianSchemeLaws_all.1
       GlobalTheory.homExtension_semiAbelian_dvr_unconditional E H K ρ σ₁ p 0 X χ hχ gP gQ hg (FA true) (FA false) F _ _ hD h hF τ hτ
   obtain ⟨hle, hrk1, -, hind, -⟩ :=
     GlobalTheory.CM.Indep.letters_independent GlobalTheory.thetaUnifAV_all GlobalTheory.abelianSchemeLaws_all.1 E H K ρ σ₁ p 0 X FA F M hM
@@ -152,10 +154,10 @@ theorem cmDiff_definite : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
       (iSupIndep.comp hind (f := fun a : Fin 0 => ((Sum.inr a : Fin p ⊕ Fin 0), τb))
       fun a b e => by simpa using e)).trans ?_
     simp
-  obtain ⟨hneP, hdegP⟩ := GlobalTheory.T.lattice_degree_eq_sublattice_degree_add_log_index K _ h p _ _ hsubP (hfg τ) hrkP hrsP
-  obtain ⟨hneQ, hdegQ⟩ := GlobalTheory.T.lattice_degree_eq_sublattice_degree_add_log_index K _ h 0 _ _ hsubQ (hfg τb) hrkQ hrsQ
+  obtain ⟨hneP, hdegP⟩ := _root_.GlobalTheory.LatIndexDeg.deg_eq_deg_add_log_absNorm_idx K _ h p _ _ hsubP (hfg τ) hrkP hrsP
+  obtain ⟨hneQ, hdegQ⟩ := _root_.GlobalTheory.LatIndexDeg.deg_eq_deg_add_log_absNorm_idx K _ h 0 _ _ hsubQ (hfg τb) hrkQ hrsQ
   rw [hdegP, hdegQ, hdP, hdQ]
-  have hdvd := (GlobalTheory.T.absNorm_map_ringOfIntegers_hom' E K τ ⊥).1
+  have hdvd := (_root_.GlobalTheory.absNorm_map_ringOfIntegers_hom E K τ ⊥).1
   have hfE : 0 < Module.finrank ℚ E := Module.finrank_pos
   have hfK : 0 < Module.finrank ℚ K := Module.finrank_pos
   set n := Module.finrank ℚ K / Module.finrank ℚ E with hn
@@ -164,7 +166,7 @@ theorem cmDiff_definite : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     field_simp
   have hn0 : 0 < n := Nat.div_pos (Nat.le_of_dvd hfK hdvd) hfE
   have hbar : Ideal.absNorm (𝔫.map (H.bar : 𝓞 E →+* 𝓞 E)) = Ideal.absNorm 𝔫 := by
-    rw [(GlobalTheory.T.absNorm_map_ringOfIntegers_hom' E E _ 𝔫).2, Nat.div_self hfE, pow_one]
+    rw [(_root_.GlobalTheory.absNorm_map_ringOfIntegers_hom E E _ 𝔫).2, Nat.div_self hfE, pow_one]
   have hnorm : ∀ x : 𝓞 E, (Ideal.absNorm (Ideal.span {x}) : ℝ) = |((Algebra.norm ℚ (x : E) : ℚ) : ℝ)| := fun x => by
     rw [Ideal.absNorm_span_singleton, ← Algebra.coe_norm_int, Nat.cast_natAbs]
     push_cast
@@ -173,7 +175,7 @@ theorem cmDiff_definite : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     rw [Ideal.map_span, Set.image_singleton]
   rw [hspan] at hid'
   have e1 := congrArg Ideal.absNorm hid'
-  rw [map_mul, map_mul, (GlobalTheory.T.absNorm_map_ringOfIntegers_hom' E K τ _).2, (GlobalTheory.T.absNorm_map_ringOfIntegers_hom' E K τ _).2] at e1
+  rw [map_mul, map_mul, (_root_.GlobalTheory.absNorm_map_ringOfIntegers_hom E K τ _).2, (_root_.GlobalTheory.absNorm_map_ringOfIntegers_hom E K τ _).2] at e1
   have e2 := congrArg Ideal.absNorm h𝔫
   rw [map_mul, hbar, ← Ideal.span_singleton_mul_span_singleton, map_mul] at e2
   have hA : (Ideal.absNorm (idx K p (F.eigLat X.B.t.act τ) (subP (FA true) F (fun a => M (.inl a)) τ)) : ℝ) ≠ 0 := by

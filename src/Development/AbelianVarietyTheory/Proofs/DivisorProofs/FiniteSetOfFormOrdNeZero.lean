@@ -1,11 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsLogCanonicalMultipleCanonical
-import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.RingKrullDimQuotientEqOfMemMinimalPrimes
-import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopologicalKrullDimEqOfIsIsoRestrict
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsNeZeroIsStandardSmoothOfRelativeDimension
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.FiniteCodimOnePointsClosed
+public import Mathlib.AlgebraicGeometry.Noetherian
+public import Mathlib.AlgebraicGeometry.Properties
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteCodimOnePointsClosed
+import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.RingKrullDimQuotientEqOfMemMinimalPrimes
+import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -113,7 +115,7 @@ theorem finite_setOf_formOrd_ne_zero : ∀ (k : Type) [Field k] [CharZero k] (X 
   have hB : B ≠ ⊤ := fun h => by
     have hm : genericPoint X ∈ (B : Set X) := by rw [h]; trivial
     exact hm ⟨hU, hW⟩
-  refine (GlobalTheory.T.finite_codim_one_points_closed X B hB).subset ?_
+  refine (_root_.GlobalTheory.Cartier.finite_coheight_one_of_ne_top X B hB).subset ?_
   rintro z ⟨E, hE, hne⟩
   refine ⟨hE.coheight_eq_one, fun hz => hne ?_⟩
   obtain ⟨hzU, hzW⟩ := hz

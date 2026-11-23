@@ -1,15 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToQMemMaximalIdealIff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFreeGeneratorTopFormsTensorLocalizationOrdStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsUnitMulZpowUniformiserTmulStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTrBasisInImageOfFractionFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GraphIdealLocalizationMaximalIdealEqSpanStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GraphJetsMemPowSupUniformiserStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocalRingOfVarietyPointLocalizationPlaceTensorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceGraphIdealTensorNeTopStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RingKrullDimLocalizationGraphIdealMinimalPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumTmulNotMemPrimeOfGraphImageNeZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFreeGeneratorTopFormsTensorLocalizationOrd
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsUnitMulZpowUniformiserTmul
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsLocModelIsPrimeOf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTrBasisInImageOfFractionField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GraphIdealLocalizationMaximalIdealEqSpan
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GraphJetsMemPowSupUniformiser
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocalRingOfVarietyPointLocalizationPlaceTensor
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceGraphIdealTensorNeTop
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RingKrullDimLocalizationGraphIdealMinimalPrime
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumTmulNotMemPrimeOfGraphImageNeZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -82,14 +83,14 @@ theorem GlobalTheory.GraphLocal.exists_locModel_graph : ∀ {K κ κ' L : Type} 
   intro K κ κ' L _ _ _ _ _ _ _ _ _ _ _ n k k' x τ' R π ρ hx hτ hO' hz hcompat hC hfrac E hER hcentre
   have hinj : Function.Injective (algebraMap (K ⊗[ℂ] κ') L) := IsFractionRing.injective _ _
   obtain ⟨t, ht⟩ := IsDiscreteValuationRing.exists_irreducible E.ring
-  obtain ⟨zR, hzR⟩ := GlobalTheory.T.exists_trBasis_in_image_of_fractionField k R π hfrac hz
-  obtain ⟨𝔭, h𝔭⟩ := Ideal.nonempty_minimalPrimes (GlobalTheory.T.placeGraphIdealTensor_ne_top (κ' := κ') R π ρ E hcompat hC hfrac hER hcentre)
+  obtain ⟨zR, hzR⟩ := _root_.GlobalTheory.GraphLocal.exists_trBasis_lift k R π hfrac hz
+  obtain ⟨𝔭, h𝔭⟩ := Ideal.nonempty_minimalPrimes (_root_.GlobalTheory.GraphLocal.graphIdeal_ne_top (κ' := κ') R π ρ E hcompat hC hfrac hER hcentre)
   haveI : 𝔭.IsPrime := h𝔭.1.1
   have hle : graphIdeal E R π ρ ≤ 𝔭 := h𝔭.1.2
-  have hQ : IsLocModel (algebraMap ℂ L) (locAt (L := L) 𝔭) := GlobalTheory.T.isLocalRingOfVarietyPoint_localization_placeTensor E 𝔭 hO'
+  have hQ : IsLocModel (algebraMap ℂ L) (locAt (L := L) 𝔭) := _root_.GlobalTheory.GraphLocal.isLocModel_locAt E 𝔭 hO'
   letI := hQ.isLocalRing
-  have hmax := GlobalTheory.T.graphIdeal_localization_maximalIdeal_eq_span (L := L) k R π ρ E hER t zR 𝔭 hO' hcompat hC hfrac hcentre ht hzR h𝔭
-  have hdim := GlobalTheory.T.ringKrullDim_localization_graphIdeal_minimalPrime (L := L) k R π ρ E 𝔭 hO' hcompat hC hfrac hER hcentre hz h𝔭
+  have hmax := _root_.GlobalTheory.GraphLocal.MaxGen.maximalIdeal_locAt_eq_span (L := L) k R π ρ E hER t zR 𝔭 hO' hcompat hC hfrac hcentre ht hzR h𝔭
+  have hdim := _root_.GlobalTheory.GraphLocal.dim_locAt_graph (L := L) k R π ρ E 𝔭 hO' hcompat hC hfrac hER hcentre hz h𝔭
   have hz0 : ((toQ (L := L) 𝔭 (gens E R π ρ hER t zR 0) : locAt (L := L) 𝔭) : L) =
       algebraMap (K ⊗[ℂ] κ') L ((t : K) ⊗ₜ 1) := by
     simp [gens]
@@ -98,7 +99,7 @@ theorem GlobalTheory.GraphLocal.exists_locModel_graph : ∀ {K κ κ' L : Type} 
     exact (toQ (L := L) 𝔭 ⟨e ⊗ₜ 1, tmul_mem (A := placeAlg E) he 1⟩).2
   · intro g hg
     rw [hz0]
-    exact GlobalTheory.T.exists_isUnit_mul_zpow_uniformiser_tmul E 𝔭 t hinj ht g hg
+    exact _root_.GlobalTheory.GraphLocal.exists_isUnit_mul_zpow_tmul E 𝔭 t hinj ht g hg
   · intro b hb
     refine ⟨toQ 𝔭 ⟨1 ⊗ₜ b, tmul_mem (one_mem (placeAlg E)) b⟩, isUnit_toQ 𝔭 hinj ?_, rfl⟩
     intro h
@@ -110,14 +111,14 @@ theorem GlobalTheory.GraphLocal.exists_locModel_graph : ∀ {K κ κ' L : Type} 
   · intro l a b hs
     have hw : ∑ i, (a i : K) ⊗ₜ[ℂ] b i ∈ tens (κ' := κ') (placeAlg E) :=
       Subalgebra.sum_mem _ fun i _ => tmul_mem (hER _ (a i).2) (b i)
-    refine ⟨toQ 𝔭 ⟨_, hw⟩, isUnit_toQ 𝔭 hinj (GlobalTheory.T.sum_tmul_notMem_prime_of_graph_image_ne_zero R π ρ E 𝔭 hle hER l a b ⟨_, hw⟩ rfl hs), ?_⟩
+    refine ⟨toQ 𝔭 ⟨_, hw⟩, isUnit_toQ 𝔭 hinj (_root_.GlobalTheory.GraphLocal.sum_notMem_of_ne_zero R π ρ E 𝔭 hle hER l a b ⟨_, hw⟩ rfl hs), ?_⟩
 
     simp [map_sum]
   · intro M l a b hJ
     have hw : ∑ i, (a i : K) ⊗ₜ[ℂ] b i ∈ tens (κ' := κ') (placeAlg E) :=
       Subalgebra.sum_mem _ fun i _ => tmul_mem (hER _ (a i).2) (b i)
     refine ⟨toQ 𝔭 ⟨_, hw⟩, by simp [map_sum], ?_⟩
-    have h1 := GlobalTheory.T.graphJets_mem_pow_sup_uniformiser R π ρ E 𝔭 t hle ht hcompat hC hfrac hER hcentre M l a b ⟨_, hw⟩ rfl hJ
+    have h1 := _root_.GlobalTheory.GraphLocal.jets_mem_pow_sup R π ρ E 𝔭 t hle ht hcompat hC hfrac hER hcentre M l a b ⟨_, hw⟩ rfl hJ
     have h2 := Ideal.mem_map_of_mem (toQ (L := L) 𝔭) h1
     rw [Ideal.map_sup, Ideal.map_pow, Ideal.map_span, Set.image_singleton] at h2
     have h3 : Ideal.map (toQ (L := L) 𝔭) 𝔭 ^ M ⊔ Ideal.span {toQ (L := L) 𝔭 ⟨(t : K) ⊗ₜ 1, tmul_mem t.2 1⟩} ≤
@@ -125,7 +126,7 @@ theorem GlobalTheory.GraphLocal.exists_locModel_graph : ∀ {K κ κ' L : Type} 
           Ideal.span {toQ (L := L) 𝔭 (gens E R π ρ hER t zR 0)} :=
       sup_le_sup (Ideal.pow_right_mono (map_le_maximalIdeal 𝔭 hinj) M) le_rfl
     exact h3 h2
-  · obtain ⟨y, q, hy, hq, e⟩ := GlobalTheory.T.exists_freeGenerator_topForms_tensorLocalization_order n k' x τ' E 𝔭 t hQ.const_mem hx hτ hO' ht
+  · obtain ⟨y, q, hy, hq, e⟩ := _root_.GlobalTheory.GraphLocal.exists_isFreeGen_locAt_formOrd n k' x τ' E 𝔭 t hQ.const_mem hx hτ hO' ht
     refine ⟨y, q, hy, hq, ?_⟩
     rw [hz0]
     exact e

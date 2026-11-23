@@ -4,15 +4,17 @@ public import Development.AbelianVarietyTheory.Definitions.Jets.PowerSeriesHasSu
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
 public import Mathlib.Topology.MetricSpace.Ultra.Basic
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsFormalGroupHeightOneTorsionTowerStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsIntegralPolynomialTorsionCharacterLevelStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsLimitPowerSeriesAgreeOnAnnulusPointsStatement
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FormalGroupNatMulSeriesEvalOpenDiscPropertiesStatement
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FormalGroupTorsionTowerExactOrderStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IntegralMvPowerSeriesTwoEqZeroOfVanishOnSquaresStatement
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MvPowerSeriesEvalTsumOpenPolydiscPropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsFormalGroupHeightOneTorsionTower
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsIntegralPolynomialTorsionCharacterLevel
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsLimitPowerSeriesAgreeOnAnnulusPoints
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IntegralMvPowerSeriesTwoEqZeroOfVanishOnSquares
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormFormalGroupHeightOneTorsionTower
+public import Mathlib.RingTheory.RootsOfUnity.Lemmas
+public import Mathlib.RingTheory.RootsOfUnity.EnoughRootsOfUnity
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FormalGroupNatMulSeriesEvalOpenDiscProperties
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FormalGroupTorsionTowerExactOrder
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MvPowerSeriesEvalTsumOpenPolydiscProperties
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MvPowerSeriesIntegralBoundedClosure
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormFormalGroupHeightOneTorsionTowerStatement
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.PowerSeriesEvalTsumUnitDiscPropertiesStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -34,7 +36,6 @@ import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RootsOfUnity.AlgebraicallyClosed
-public import Mathlib.RingTheory.RootsOfUnity.Lemmas
 import Mathlib.RingTheory.SimpleRing.Principal
 import Mathlib.Tactic.Echelon.Zsqrtd
 import Mathlib.Tactic.Inclusion.Extension.Core.Core
@@ -59,7 +60,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Connected.Separation
 import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.RingTheory.RootsOfUnity.EnoughRootsOfUnity
 
 @[expose] public section
 
@@ -125,12 +125,12 @@ theorem exists_iso_multiplicative (K : Type) [NormedField K] [IsUltrametricDist 
         f.subst (MvPowerSeries.X 0 : MvPowerSeries (Fin 2) K) *
           f.subst (MvPowerSeries.X 1 : MvPowerSeries (Fin 2) K) := by
   classical
-  obtain ⟨t, ht1, ht0, htne, htp⟩ := GlobalTheory.T.exists_formalGroup_heightOne_torsion_tower K p F hF h1 h2
+  obtain ⟨t, ht1, ht0, htne, htp⟩ := _root_.GlobalTheory.ConvSer.exists_torsion_tower K p F hF h1 h2
   obtain ⟨ζ, hζ0, hζ1, hζp, hζn⟩ := exists_root_tower K p
-  obtain ⟨-, hpt⟩ := GlobalTheory.T.formalGroupNatMulSeries_eval_openDisc_properties K F hF
-  obtain ⟨ho1, -, ho3⟩ := GlobalTheory.T.formalGroup_torsionTower_exact_order K p F hF t ht1 ht0 htne htp
-  obtain ⟨hn1, hn2, hn3, hn4⟩ := GlobalTheory.T.norm_formalGroup_heightOne_torsion_tower K p F hF h1 h2 t ht1 ht0 htne htp
-  choose g hgI hgv using fun n => GlobalTheory.T.exists_integral_polynomial_torsion_character_level K p F hF t ht1 ht0 htne htp n (ζ n) (hζn n)
+  obtain ⟨-, hpt⟩ := _root_.GlobalTheory.ConvSer.nMul_point K F hF
+  obtain ⟨ho1, -, ho3⟩ := _root_.GlobalTheory.ConvSer.tower_exact_order K p F hF t ht1 ht0 htne htp
+  obtain ⟨hn1, hn2, hn3, hn4⟩ := _root_.GlobalTheory.ConvSer.TowerNorm.tower_norm K p F hF h1 h2 t ht1 ht0 htne htp
+  choose g hgI hgv using fun n => _root_.GlobalTheory.ConvSer.exists_intg_polynomial_level K p F hF t ht1 ht0 htne htp n (ζ n) (hζn n)
   obtain ⟨bI, -, bP, bC, bX, -, -, bS, -, bf⟩ := GlobalTheory.BddAlg.bdd_alg K (Fin 2)
   obtain ⟨bI1, -, bP1, bC1, -⟩ := GlobalTheory.BddAlg.bdd_alg K Unit
   set P : ℕ → ℕ → K := fun n j => ev1 (nMul F j) (t n) with hP
@@ -173,7 +173,7 @@ theorem exists_iso_multiplicative (K : Type) [NormedField K] [IsUltrametricDist 
     intro n m j k h
     rw [((GlobalTheory.T.powerSeriesEvalTsum_unitDisc_properties_alt K _ (hPlt n j)).2.2.2.2.1 (g m)).2, ← h]
     exact hgv m k
-  obtain ⟨φ, hφI, hφc, hφv⟩ := GlobalTheory.T.exists_limit_powerSeries_agree_on_annulus_points K G ‖t 1‖ hr0 (ht1 1).le hmono hGr hlim
+  obtain ⟨φ, hφI, hφc, hφv⟩ := _root_.GlobalTheory.ConvSer.exists_limit_of_agree_on_points K G ‖t 1‖ hr0 (ht1 1).le hmono hGr hlim
     (fun n => (g n : PowerSeries K))
     (fun n => (bf _).1.2 fun k => by rw [Polynomial.coeff_coe]; exact hgI n k)
     (by
@@ -250,11 +250,11 @@ theorem exists_iso_multiplicative (K : Type) [NormedField K] [IsUltrametricDist 
     have iR := (bI _ _ i01 i01').1
     have bd : ∀ S : MvPowerSeries (Fin 2) K, Intg S → Bdd S := fun S h => (bP S 0).2.2 h
     rw [← sub_eq_zero]
-    refine GlobalTheory.T.integralMvPowerSeries_two_eq_zero_of_vanish_on_squares K G ‖t 1‖ hr0 (ht1 1).le hmono hGr hlim _ (bI _ _ iF iR).2.1 ?_
+    refine _root_.GlobalTheory.ConvSer.eq_zero_of_ev_vanish K G ‖t 1‖ hr0 (ht1 1).le hmono hGr hlim _ (bI _ _ iF iR).2.1 ?_
     intro n x hx y hy
     obtain ⟨i, -, rfl⟩ := (hmem n x).1 hx
     obtain ⟨j, -, rfl⟩ := (hmem n y).1 hy
-    obtain ⟨-, eA, -, eX, -, -, -, eS⟩ := GlobalTheory.T.mvPowerSeriesEvalTsum_openPolydisc_properties K (Fin 2) ![P n i, P n j]
+    obtain ⟨-, eA, -, eX, -, -, -, eS⟩ := _root_.GlobalTheory.ConvSer.ev_algebra K (Fin 2) ![P n i, P n j]
       (Fin.forall_fin_two.2 ⟨hPlt n i, hPlt n j⟩)
     have hs : ev F.toPowerSeries ![P n i, P n j] = P n (i + j) := (hpt _ (ht1 n)).2.2.2.1 i j
     rw [(eA _ _ (bd _ iF) (bd _ iR)).2.1, (eA _ _ (bd _ i01) (bd _ i01')).1,

@@ -2,11 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TwistedModelAdmissibleCocycles
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSeriesOfExact
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSimplePiecesStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModelObjAndAbcStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModelPreimageOfInjectiveFinDimRepModelHomStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSimplePieces
+public import Mathlib.RepresentationTheory.Irreducible
+public import Mathlib.RingTheory.SimpleModule.Rank
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModelObjAndAbc
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModelPreimageOfInjectiveFinDimRepModelHom
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModelPushOfSurjective
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SenMultiplicityAdditiveExactSequenceStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SenMultiplicityAdditiveExactSequence
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -23,11 +25,9 @@ import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
-public import Mathlib.RepresentationTheory.Irreducible
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.HopfAlgebra.Basic
 import Mathlib.RingTheory.Radical.NatInt
-public import Mathlib.RingTheory.SimpleModule.Rank
 import Mathlib.Tactic.Echelon.Zsqrtd
 import Mathlib.Tactic.Inclusion.Extension.Core.Core
 import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
@@ -117,14 +117,14 @@ theorem GlobalTheory.Models.ModTh.exists_jordanHolder_through_line : ∀ {k G : 
   intro k G _ _ l n _ _ _ R F r Dt M B A₁ χ j p N hN hj hji hp hps
   obtain ⟨K, f, hf, hfi, hfe⟩ := exists_ker A₁ (chr χ) p hp
   obtain ⟨Q, q, hq, hqs, hqe⟩ := exists_coker A₁ B j hj
-  have hA := GlobalTheory.T.model_preimage_of_injective_finDimRepModelHom F M A₁ B j N hj hji hN
-  have hK := GlobalTheory.T.model_preimage_of_injective_finDimRepModelHom F M K A₁ f _ hf hfi hA
+  have hA := _root_.GlobalTheory.Models.SubModel.model_pre F M A₁ B j N hj hji hN
+  have hK := _root_.GlobalTheory.Models.SubModel.model_pre F M K A₁ f _ hf hfi hA
   have hL := GlobalTheory.Models.ModTh.model_push_of_surjective F M A₁ (chr χ) p _ hp hps hA
   have hQ := GlobalTheory.Models.ModTh.model_push_of_surjective F M B Q q _ hq hqs hN
-  obtain ⟨s, C, L, c1, c2, c3, c4⟩ := GlobalTheory.T.exists_simple_pieces_sen_sum F M K _ hK
-  obtain ⟨t, C', L', d1, d2, d3, d4⟩ := GlobalTheory.T.exists_simple_pieces_sen_sum F M Q _ hQ
-  obtain ⟨oB, lB, -, cB⟩ := GlobalTheory.T.obj_and_abc_of_model F M B N hN
-  obtain ⟨oA, lA, -, cA⟩ := GlobalTheory.T.obj_and_abc_of_model F M A₁ _ hA
+  obtain ⟨s, C, L, c1, c2, c3, c4⟩ := _root_.GlobalTheory.Models.ModTh.exists_simple_pieces F M K _ hK
+  obtain ⟨t, C', L', d1, d2, d3, d4⟩ := _root_.GlobalTheory.Models.ModTh.exists_simple_pieces F M Q _ hQ
+  obtain ⟨oB, lB, -, cB⟩ := _root_.GlobalTheory.Models.model_obj_and_abc F M B N hN
+  obtain ⟨oA, lA, -, cA⟩ := _root_.GlobalTheory.Models.model_obj_and_abc F M A₁ _ hA
   let S : (Fin s ⊕ Unit) ⊕ Fin t → Σ A : Ob k G, Lats k n A.m :=
     Sum.elim (Sum.elim (fun a => ⟨C a, L a⟩) fun _ => ⟨chr χ, F.push A₁ (chr χ) p (F.pre A₁ B j N)⟩)
       fun a => ⟨C' a, L' a⟩
@@ -144,8 +144,8 @@ theorem GlobalTheory.Models.ModTh.exists_jordanHolder_through_line : ∀ {k G : 
       (((SameSS.of_exact hf hp hfi hps hfe (hfl _)).trans (c3.prod (SameSS.refl _ (hfl _)))).prod d3)
   · rw [Equiv.sum_comp e (fun a => sen ((F.D (S a).1).γ i) ((S a).2 i) x), Fintype.sum_sum_type,
       Fintype.sum_sum_type, Fintype.sum_unique (ι := Unit),
-      GlobalTheory.T.senMultiplicity_additive_exact_sequence F A₁ B Q j q N oB hj hq hji hqs hqe i (lB i) (cB i) x,
-      GlobalTheory.T.senMultiplicity_additive_exact_sequence F K A₁ (chr χ) f p _ oA hf hp hfi hps hfe i (lA i) (cA i) x, c4, d4]
+      _root_.GlobalTheory.Models.sen_eq_sen_pre_add_sen_push F A₁ B Q j q N oB hj hq hji hqs hqe i (lB i) (cB i) x,
+      _root_.GlobalTheory.Models.sen_eq_sen_pre_add_sen_push F K A₁ (chr χ) f p _ oA hf hp hfi hps hfe i (lA i) (cA i) x, c4, d4]
     rfl
   · show S (e (e.symm _)) = _
     rw [Equiv.apply_symm_apply]

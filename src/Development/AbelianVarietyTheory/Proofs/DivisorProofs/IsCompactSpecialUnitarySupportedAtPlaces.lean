@@ -1,11 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.NotIsCompactUnivFv
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousPlaceExtensionByZeroTensorOfPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdempotentAdeleOfPlacesMulEqSumComponentsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsClosedSpecialUnitarySupportedAtPlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCompactSpecialUnitarySupportedAtPlacesTer
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryEquationBaseChangeAlgHomStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousSingleV
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousPlaceExtensionByZeroTensorOfPlace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdempotentAdeleOfPlacesMulEqSumComponents
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsClosedSpecialUnitarySupportedAtPlaces
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCompactSpecialUnitarySupportedAtPlacesBis
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryEquationBaseChangeAlgHom
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -91,8 +93,8 @@ theorem isCompact_SUSupp_of_bounded : ∀ (F E : Type) [Field F] [NumberField F]
     ∑ v ∈ S₂, GlobalTheory.CompanionTheory.SaGen.iB (GlobalTheory.CompanionTheory.SaGen.placeMapFin v) '' C₂ v
   have hX : IsCompact X :=
     ((((Set.toFinite _).isCompact).image (continuous_id.mul continuous_const)).add
-      (hsum _ _ fun w _ => (hC₁ w).image (GlobalTheory.T.continuous_placeExtensionByZero_tensor_of_place _))).add (hsum _ _ fun v _ => (hC₂ v).image (GlobalTheory.T.continuous_placeExtensionByZero_tensor_of_place _))
-  refine GlobalTheory.T.isCompact_specialUnitarySupportedAtPlaces σ J ε X hX (GlobalTheory.T.isClosed_specialUnitarySupportedAtPlaces σ J ε) fun g hg i j => ?_
+      (hsum _ _ fun w _ => (hC₁ w).image (_root_.GlobalTheory.CompanionTheory.SaGen.ExtZero.continuous_iB_place _))).add (hsum _ _ fun v _ => (hC₂ v).image (_root_.GlobalTheory.CompanionTheory.SaGen.ExtZero.continuous_iB_place _))
+  refine _root_.GlobalTheory.SUSuppCompact.isCompact_SUSupp σ J ε X hX (_root_.GlobalTheory.SUSuppClosed.isClosed_SUSupp σ J ε) fun g hg i j => ?_
   have hu : Formalism.UG.cT (sigR (AF F) σ) ((HA.mat (AF F) σ J g).1 : Matrix (Fin M) (Fin M) (AF F ⊗[F] E)) *
       JR (AF F) J * ((HA.mat (AF F) σ J g).1 : Matrix (Fin M) (Fin M) (AF F ⊗[F] E)) = JR (AF F) J := by
     let g' : HR (AF F) σ J := g
@@ -103,15 +105,15 @@ theorem isCompact_SUSupp_of_bounded : ∀ (F E : Type) [Field F] [NumberField F]
     have := hg.2 i j
     simpa only [Matrix.sub_apply] using this
   have hdec : a = δ * (1 - e) + e * a := by linear_combination (-1 : AF F ⊗[F] E) * hfix
-  rw [hdec, GlobalTheory.T.idempotentAdeleOfPlaces_mul_eq_sum_components S₁ S₂ ε hε a, ← add_assoc]
+  rw [hdec, _root_.GlobalTheory.PlaceIdemSum.idem_mul_eq_sum S₁ S₂ ε hε a, ← add_assoc]
   refine Set.add_mem_add (Set.add_mem_add ⟨δ, ?_, rfl⟩ (Set.finsetSum_mem_finsetSum _ _ _ fun w hw => ⟨_, ?_, rfl⟩))
     (Set.finsetSum_mem_finsetSum _ _ _ fun v hv => ⟨_, ?_, rfl⟩)
   · rw [hδ, Matrix.one_apply]
     split_ifs
     · exact Or.inr rfl
     · exact Or.inl rfl
-  · exact hC₁' w hw _ (GlobalTheory.T.unitaryEquation_baseChange_algHom σ J _ _ hu) i j
-  · exact hC₂' v hv _ (GlobalTheory.T.unitaryEquation_baseChange_algHom σ J _ _ hu) i j
+  · exact hC₁' w hw _ (_root_.GlobalTheory.unitaryEq_baseChange σ J _ _ hu) i j
+  · exact hC₂' v hv _ (_root_.GlobalTheory.unitaryEq_baseChange σ J _ _ hu) i j
 
 end GlobalTheory.SUSuppCompact
 

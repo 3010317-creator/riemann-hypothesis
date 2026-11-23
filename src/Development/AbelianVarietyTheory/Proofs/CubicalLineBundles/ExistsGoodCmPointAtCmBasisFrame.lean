@@ -4,8 +4,10 @@ public import Development.AbelianVarietyTheory.Definitions.CMLattices.IntegralOf
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.NonvanishingNearMaximum
 public import Formalism.LocalToGlobal.ProjectiveLattices.PetersonNormSubspace
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CmExistsHolds
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsCmPointLatticeDataOfAdaptedBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsGoodCmPointOfIntegralCmObjectStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.NonemptyUnitAt
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.ExistsIsThetaDegOfIsLocalModel
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsCmPointLatticeDataOfAdaptedBasis
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsGoodCmPointOfIntegralCmObject
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.SabMapCancelAndCompOver
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.UniversalTripleFibreKeyDataNonemptyField
 import Mathlib.Algebra.Order.Floor.Extended
@@ -55,7 +57,7 @@ namespace GlobalTheory.LamT
 theorem exists_good_cmPt_at_frame : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) [StarRing (𝓞 E)], (∀ a : 𝓞 E, star a = H.bar a) → ∀ (r : ℕ) (U : Unf Xo c c.F.val.toRingHom r), IsUnf U → 0 < r → ∀ (k : U.Comp) (x₀ : (U.X k).dom) (Xx : FD.DataX E r) (hX : Xx.toData = U.X k) (𝔄 : FractionalIdeal (nonZeroDivisors (𝓞 E)) E), 𝔄 ≠ 0 → Xx.Λ = Submodule.span (𝓞 E) {v | ∃ a ∈ 𝔄, ∃ u ∈ Xx.L', v = a • u} → ∀ (La : ℝ) (lam : Fin r → Fin r → E), FD.LamBasis Xx La (hX ▸ x₀.1) lam → ∃ (z : CMPt Xo c) (σ₁ : z.K →ₐ[c.F] CAt c.F.val.toRingHom), z.Good (Module.finrank ℚ E / 2) La ∧ spMap σ₁.toRingHom ≫ z.y.x = (U.un k x₀).x := by
   intro E _ _ _ H Dw l Xo c _ hstar r U hU hr k x₀ Xx hX 𝔄 h𝔄 hΛ La lam hlam
   obtain ⟨W⟩ := PullbackSections.nonempty_unfAt hU k x₀
-  obtain ⟨Z, hZ⟩ := GlobalTheory.T.exists_cmPoint_lattice_data_of_adapted_basis E H Dw l Xo c r U hU hr k x₀ W Xx hX 𝔄 h𝔄 hΛ La lam hlam
+  obtain ⟨Z, hZ⟩ := _root_.GlobalTheory.LamT.CMBasis.exists_cmLat_unfAt E H Dw l Xo c r U hU hr k x₀ W Xx hX 𝔄 h𝔄 hΛ La lam hlam
   have hfd : FiniteDimensional ℚ c.F := inferInstance
   obtain ⟨K₁, nf, hk, ρ, X, y, t₀, m, m', -, -, -, -, -, hle, hρ, hhh, hy, hpt, -⟩ :=
     GlobalTheory.CM.cmExists_holds E H Dw l Xo W.g _ W.F (W.ik k) W.Pm W.per Z c.F hfd
@@ -69,7 +71,7 @@ theorem exists_good_cmPt_at_frame : ∀ (E : Type) [Field E] [NumberField E] [Is
     exact ⟨mm⟩
   let σ₁ : K₁ →ₐ[c.F] CAt c.F.val.toRingHom :=
     { (algebraMap K₁ ℂ : K₁ →+* ℂ) with commutes' := fun _ => rfl }
-  obtain ⟨z, σ', hz, he⟩ := GlobalTheory.T.exists_good_cm_point_of_integral_cm_object E H Dw l Xo c hstar K₁ ρ (algebraMap K₁ ℂ) X La y Φ mB
+  obtain ⟨z, σ', hz, he⟩ := _root_.GlobalTheory.LamT.exists_cmPt_good_of_cmObj E H Dw l Xo c hstar K₁ ρ (algebraMap K₁ ℂ) X La y Φ mB
     (fun τ => by
       show τ (H.rt : E) = H.rt0 ↔ _
       rw [← hρ, Subtype.ext_iff]

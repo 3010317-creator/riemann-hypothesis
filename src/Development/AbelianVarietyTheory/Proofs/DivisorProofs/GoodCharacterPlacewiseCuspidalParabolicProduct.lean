@@ -3,10 +3,11 @@ module
 public import Formalism.LocalToGlobal.IndefiniteReal.LinksChar
 public import Formalism.LocalToGlobal.NormalizedHeckeFactors.CoeffZeroNeOfMonicIrr
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.CuspidalProductMultiplicity
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IrreducibleCharacterGoodIdempotentCuspidalProducStatement
+public import Formalism.SharpRestriction.Divisibility.LiftErrorLocal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IrreducibleCharacterGoodIdempotentCuspidalProduc
+public import Formalism.LocalToGlobal.Columns.GoodXgFin
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCuspProdCharTransport
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumCoeffChiIdemMul
-public import Formalism.LocalToGlobal.Columns.GoodXgFin
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.IrreducibleCharacterSeries.CharacterEqOfRepIso
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.IrreducibleCharacterSeries.ConjugateCharacterFormula
 import Mathlib.Algebra.Order.Floor.Extended
@@ -120,7 +121,7 @@ theorem isProdCuspChar_good : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0
     symm
     refine Fintype.sum_equiv eR.toEquiv _ _ fun g => ?_
     simp [h1]
-  obtain ⟨θ, hθ, hχθ⟩ := GlobalTheory.T.irreducible_character_good_idempotent_cuspidal_product' D hE _ hirr he0
+  obtain ⟨θ, hθ, hχθ⟩ := _root_.GlobalTheory.GoodFactor.irreducible_character_good_idempotent_cuspidal_product D hE _ hirr he0
   have key : ∀ PP : R.Pg, ∃ θ' : GL (Fin D.R.r) (kP PP.1) → ℂ,
       @GlobalTheory.IndefiniteRowSideFullHecke.CuspidalProductMultiplicity.IsCuspProdChar (kP PP.1) (Ideal.Quotient.field PP.1.asIdeal) D.R.r θ' ∧
         ∀ g, θ' (R.eG g PP) = θ (plg.symm PP) (eR g (plg.symm PP)) := by

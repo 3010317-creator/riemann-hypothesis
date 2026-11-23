@@ -2,12 +2,18 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsInvDer
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeStructureSheafCohomologyNoetherianStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechOneCochainToPosetCochainCoboundaryExistsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechOneCochainToPosetCochainMemCocyclesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechToPosetPosetToCechSubCoboundaryStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCechOneCocyclePosetOneCochainToCechCochainStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PosetOneCochainToCechCochainCoboundaryStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PosetToCechCechToPosetCocycleEqStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictCapFBijective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechOneCochainToPosetCochainCoboundaryExists
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechOneCochainToPosetCochainMemCocycles
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechToPosetPosetToCechSubCoboundary
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCechOneCocyclePosetOneCochainToCechCochain
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PosetOneCochainToCechCochainCoboundary
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PosetToCechCechToPosetCocycleEq
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsLinearHomPull
+public import Development.AbelianVarietyTheory.Definitions.Divisors.CommAlgFunctorCoboundaryZeroMemCocyclesOne
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ComparisonMemCechHodgeFiltration
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.DenseInterior
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.LieBridgeA
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LeISupInfPreimage
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -48,15 +54,10 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsLinearHomPull
-public import Development.AbelianVarietyTheory.Definitions.Divisors.CommAlgFunctorCoboundaryZeroMemCocyclesOne
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ComparisonMemCechHodgeFiltration
 import Development.AbelianVarietyTheory.Definitions.Divisors.HasDefect
 import Development.AbelianVarietyTheory.Definitions.Divisors.HasRigidChart
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsProperToroidalModelStructureMap
-public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.DenseInterior
 import Formalism.LocalToGlobal.ProjectiveLattices.ErealAddIInf
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.LieBridgeA
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.LieBridgeB
 
 @[expose] public section
@@ -99,21 +100,21 @@ theorem cech_free : ∀ (A : Type) [CommRing A] [IsLocalRing A] [IsNoetherianRin
   let bP := bH.map e
   choose f hf using fun a => CatCoh.H1.mk_surjective F (bP a)
   let b : Fin g → C1 U := fun a => GlobalTheory.CechCmp.toCech B.hom U hU hinf (f a).1
-  have hb : ∀ a, IsCoc U (b a) := fun a => GlobalTheory.T.isCechOneCocycle_posetOneCochainToCechCochain I B.left A B.hom U hU hinf _ (f a).2
+  have hb : ∀ a, IsCoc U (b a) := fun a => _root_.GlobalTheory.CechCmp.isCoc_toCech I B.left A B.hom U hU hinf _ (f a).2
   have hbP : ∀ a, CatCoh.H1.mk F ⟨GlobalTheory.CechCmp.toPos B.hom U hU hinf (b a),
-      GlobalTheory.T.toPos_mem_Z1_of_isCoc I B.left A B.hom U hU hinf _ (hb a)⟩ = bP a := by
+      _root_.GlobalTheory.CechCmp.cechOneCochainToPosetCochain_mem_cocycles I B.left A B.hom U hU hinf _ (hb a)⟩ = bP a := by
     intro a
     rw [← hf a, CatCoh.H1.mk_eq_mk]
-    exact GlobalTheory.T.exists_d0_eq_toPos_toCech_sub_of_mem_Z1 I B.left A B.hom U hU hinf _ (f a).2
+    exact _root_.GlobalTheory.CechCmp.cechToPoset_posetToCech_sub_coboundary I B.left A B.hom U hU hinf _ (f a).2
   have hbb : ∀ a, GlobalTheory.CechCmp.toCech B.hom U hU hinf (GlobalTheory.CechCmp.toPos B.hom U hU hinf (b a)) = b a :=
-    fun a => GlobalTheory.T.posetToCech_cechToPoset_cocycle_eq I B.left A B.hom U hU hinf _ (hb a)
+    fun a => _root_.GlobalTheory.CechCmp.toCech_toPos I B.left A B.hom U hU hinf _ (hb a)
 
   have hlc : ∀ (cc : Fin g → A) (hm : GlobalTheory.CechCmp.toPos B.hom U hU hinf
       (fun i j => ∑ a, constFn B.hom (U i ⊓ U j) (cc a) * b a i j) ∈ CatCoh.Z1 F),
       CatCoh.H1.mk F ⟨_, hm⟩ = ∑ a, cc a • bP a := by
     intro cc hm
     have : (⟨_, hm⟩ : CatCoh.Z1 F) = ∑ a, cc a • ⟨GlobalTheory.CechCmp.toPos B.hom U hU hinf (b a),
-        GlobalTheory.T.toPos_mem_Z1_of_isCoc I B.left A B.hom U hU hinf _ (hb a)⟩ := by
+        _root_.GlobalTheory.CechCmp.cechOneCochainToPosetCochain_mem_cocycles I B.left A B.hom U hU hinf _ (hb a)⟩ := by
       apply Subtype.ext
       rw [Submodule.coe_sum]
       simp only [Submodule.coe_smul]
@@ -125,9 +126,9 @@ theorem cech_free : ∀ (A : Type) [CommRing A] [IsLocalRing A] [IsNoetherianRin
       (fun i j => ∑ a, constFn B.hom (U i ⊓ U j) (cc a) * b a i j) ∈ CatCoh.Z1 F := by
     intro cc
     rw [GlobalTheory.CechCmp.toPos_lc]
-    exact Submodule.sum_mem _ fun a _ => Submodule.smul_mem _ _ (GlobalTheory.T.toPos_mem_Z1_of_isCoc I B.left A B.hom U hU hinf _ (hb a))
+    exact Submodule.sum_mem _ fun a _ => Submodule.smul_mem _ _ (_root_.GlobalTheory.CechCmp.cechOneCochainToPosetCochain_mem_cocycles I B.left A B.hom U hU hinf _ (hb a))
   refine ⟨b, hb, fun c hc => ?_⟩
-  have hcm := GlobalTheory.T.toPos_mem_Z1_of_isCoc I B.left A B.hom U hU hinf c hc
+  have hcm := _root_.GlobalTheory.CechCmp.cechOneCochainToPosetCochain_mem_cocycles I B.left A B.hom U hU hinf c hc
   let x := CatCoh.H1.mk F ⟨_, hcm⟩
   have hex : IsCob U (fun i j => c i j - ∑ a, constFn B.hom (U i ⊓ U j) (bP.repr x a) * b a i j) := by
     let l : C1 U := fun i j => ∑ a, constFn B.hom (U i ⊓ U j) (bP.repr x a) * b a i j
@@ -139,11 +140,11 @@ theorem cech_free : ∀ (A : Type) [CommRing A] [IsLocalRing A] [IsNoetherianRin
       exact (bP.sum_repr x).symm
     obtain ⟨g0, hg0⟩ := CatCoh.H1.mk_eq_mk.1 h0
     have key : (fun i j => c i j - l i j) = GlobalTheory.CechCmp.toCech B.hom U hU hinf (CatCoh.d0 F g0) := by
-      rw [hg0, GlobalTheory.CechCmp.toCech_sub, GlobalTheory.T.posetToCech_cechToPoset_cocycle_eq I B.left A B.hom U hU hinf c hc, hl]
+      rw [hg0, GlobalTheory.CechCmp.toCech_sub, _root_.GlobalTheory.CechCmp.toCech_toPos I B.left A B.hom U hU hinf c hc, hl]
       rfl
     show IsCob U (fun i j => c i j - l i j)
     rw [key]
-    exact GlobalTheory.T.isCob_toCech_d0 I B.left A B.hom U hU hinf g0
+    exact _root_.GlobalTheory.CechCmp.posetOneCochainToCechCochain_coboundary I B.left A B.hom U hU hinf g0
   refine ⟨bP.repr x, hex, fun cc hcc => ?_⟩
   have hcs : ∀ (O : B.left.Opens) (y z : A), constFn B.hom O (y - z) = constFn B.hom O y - constFn B.hom O z :=
     fun O y z => by simp only [constFn, map_sub]
@@ -156,7 +157,7 @@ theorem cech_free : ∀ (A : Type) [CommRing A] [IsLocalRing A] [IsNoetherianRin
     have e₂ := h₂ i j
     simp only [δ, hcs, sub_mul, Finset.sum_sub_distrib, GlobalTheory.KS.rsT_sub] at e₁ e₂ ⊢
     linear_combination e₁ - e₂
-  obtain ⟨g1, hg1⟩ := GlobalTheory.T.exists_d0_eq_toPos_of_isCob I B.left A B.hom U hU hinf _ hcob
+  obtain ⟨g1, hg1⟩ := _root_.GlobalTheory.CechCmp.cechOneCochainToPosetCochain_coboundary_exists I B.left A B.hom U hU hinf _ hcob
   have hz : ∑ a, δ a • bP a = 0 := by
     rw [← hlc δ (hmem δ)]
     exact CatCoh.H1.mk_eq_zero.2 ⟨g1, hg1⟩

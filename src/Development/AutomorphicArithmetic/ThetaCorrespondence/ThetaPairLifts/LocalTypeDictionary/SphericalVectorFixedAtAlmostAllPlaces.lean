@@ -2,7 +2,7 @@ module
 
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMemKAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceLatticeStabiliserFixesVacuumStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceLatticeStabiliserFixesVacuum
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PsiUnramifiedAwayDifferent
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnramifiedPlacesInvariant
 import Mathlib.Algebra.Order.Floor.Extended
@@ -69,7 +69,7 @@ theorem vacuum_fixed_at_cofinitely_many_places : _root_.GlobalTheory.FunPr.Theta
   obtain ⟨h2, h3⟩ := two_three_of_six v h6
   by_cases hin : ∃ w, Formalism.UG.IsInertAt F E v w
   · obtain ⟨w, hw⟩ := hin
-    exact GlobalTheory.T.inert_place_lattice_stabiliser_fixes_vacuum F E σ B a a' G X om om' hT v w hw hvT k hk
+    exact _root_.GlobalTheory.InertSph.vac_fixed F E σ B a a' G X om om' hT v w hw hvT k hk
   · push_neg at hin
     exact vac_fixed_split F E σ B a a' G X om om' hT v hin hvT hψ h2 h3 k hk
 end GlobalTheory.LocVacFix

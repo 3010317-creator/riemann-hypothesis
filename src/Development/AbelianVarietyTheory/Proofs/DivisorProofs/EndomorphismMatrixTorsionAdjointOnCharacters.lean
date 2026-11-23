@@ -3,11 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnimodMod
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SharpOverIff
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TorMatch
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqAdjointApplyOfWeightedQuadraticSumPolarStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqAdjointApplyOfWeightedQuadraticSumPolar
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLiftValuationSubring
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsGrpPullbackGenMap
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LabelCongruenceEndoAllAlgClosedFieldsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormTauLineBundleCoordinateEqExpStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsToricRankOne
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AssociatedPsiCoordinatesOfTauUnits
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -43,7 +44,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsToricRankOne
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTorPartTorusExtension
 
 @[expose] public section
@@ -119,6 +119,6 @@ theorem main : ∀ (o Ω : Type) [CommRing o] [Field Ω] [Algebra o Ω] (S : The
         qW W β (j χ) : ℤ) : ℝ) = sc * ((qW W β (y + j (m χ)) - qW W β y - qW W β (j (m χ)) : ℤ) : ℝ) := by
       push_cast; linarith
     exact_mod_cast mul_left_cancel₀ hsc.ne' h'
-  exact GlobalTheory.T.eq_adjoint_apply_of_weightedQuadraticSum_polar W hW X₀ β hβs hβp E E' hEE (j χ) (j (m χ)) hpolW
+  exact _root_.GlobalTheory.Poinc.eq_adjoint_apply_of_qW_polar W hW X₀ β hβs hβp E E' hEE (j χ) (j (m χ)) hpolW
 
 end GlobalTheory.Poinc.FibMatrix

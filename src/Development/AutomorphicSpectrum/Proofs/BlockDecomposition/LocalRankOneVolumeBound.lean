@@ -2,14 +2,15 @@ module
 
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.GlobalUnitScalingHaarProductFormula
-import Development.AbelianVarietyTheory.Definitions.Divisors.LineOppositeParabolicUnitaryLeviSectionEq
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TraceGramUnitScalingStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitScalingRankOneVolumeStatement
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerOrbitVolume.DetAdmA
+public import Formalism.UnipotentAdelicQuotients.SWXSDefs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TraceGramUnitScaling
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitScalingRankOneVolume
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerOrbitVolume.SdUniq
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.TensTop
+import Development.AbelianVarietyTheory.Definitions.Divisors.LineOppositeParabolicUnitaryLeviSectionEq
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerOrbitVolume.DetAdmA
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerOrbitVolume.TensTop
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerOrbitVolume.TopoAF
-public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.TensTop
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,7 +78,7 @@ theorem push_dil : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
   set D : (Fin 1 → Fin M → Fv F v ⊗[F] E) → (Fin 1 → Fin M → Fv F v ⊗[F] E) := fun X p k => (u : Fv F v ⊗[F] E) * X p k with hD
   set n : Fv F v := Algebra.norm (Fv F v) (u : Fv F v ⊗[F] E) with hn
   have hn0 : n ≠ 0 := (u.isUnit.map (Algebra.norm (Fv F v))).ne_zero
-  have hdil : ∀ X, Q (D X) = n * Q X := fun X => GlobalTheory.T.trace_gram_unit_scaling F E σ hσ M J hJ v u X
+  have hdil : ∀ X, Q (D X) = n * Q X := fun X => _root_.GlobalTheory.CompanionTheory.AvgFree.Dilate.half_trace_dilate F E σ hσ M J hJ v u X
   set S' : Set (Fv F v) := (fun t => n * t) ⁻¹' S with hS'def
   have hmul : Measurable (fun t : Fv F v => n * t) := (continuous_const_mul n).measurable
   have hS' : MeasurableSet S' := hmul hS
@@ -108,7 +109,7 @@ theorem push_dil : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
     rw [Measure.map_apply hmul hS] at h2
     rw [hS'def, h2, ENNReal.smul_def, smul_eq_mul]
     simp [ENNReal.coe_inv (nnnorm_ne_zero_iff.2 hn0)]
-  rw [hset, GlobalTheory.T.unit_scaling_rank_one_volume F E σ hσ M d b v lam hlam u _ (hP.inter (hQm hS'))]
+  rw [hset, _root_.GlobalTheory.CompanionTheory.SW.coordW_image_unit_mul F E σ hσ M d b v lam hlam u _ (hP.inter (hQm hS'))]
   set a : ℝ≥0∞ := (‖n‖₊ : ℝ≥0∞) with ha
   have ha0 : a ≠ 0 := by simpa [ha] using hn0
   have hat : a ≠ ⊤ := ENNReal.coe_ne_top

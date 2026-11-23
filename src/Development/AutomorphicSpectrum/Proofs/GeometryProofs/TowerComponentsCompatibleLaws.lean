@@ -4,16 +4,21 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CInfGoo
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.TriangularInvOfDiagNe
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFramedPointBaseChangeAlgebraMap
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AlgIndepOfSameAdjoinStatement
+public import Mathlib.FieldTheory.IntermediateField.Adjoin.Defs
+public import Mathlib.RingTheory.AlgebraicIndependent.Defs
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AlgIndepOfSameAdjoin
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FramePointBorelSectionScalingStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericFlagTriangularChangeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericLuDecompositionUniqueStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsGenericFlag
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericFlagTriangularChange
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericLuDecompositionUnique
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompComparisonMiddle
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsCombBaseChangeStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelPullbackEquivalence
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LuFactorsGenerateSameFieldStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LuFactorsGenerateSameField
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginComponentGenericPointStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginGenericFrameStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.FrMapComp
 import Formalism.LocalToGlobal.ProjectiveLattices.GenFrPf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -53,7 +58,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.FrMapComp
 import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.DefiniteFormStabilizerFiniteAwayFromP
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.ArakelovInstances.IsStrictDom
@@ -253,18 +257,18 @@ theorem lin_core {Ω₀ Ω Li₀ Li : Type} [Field Ω₀] [Field Ω] [Algebra Ω
       (fun q : {lk : Fin (r s) × Fin (r s) // lk.2 < lk.1} => u s q.1.1 q.1.2) := fun s =>
     hind.comp (fun q => (⟨s, q⟩ : Σ s, {lk : Fin (r s) × Fin (r s) // lk.2 < lk.1}))
       (fun a b h => by simpa using h)
-  have hLU := fun s => GlobalTheory.T.exists_lu_decomposition_mul_generic_unipotent Ω₀ Ω (r s) ((P s)ᵀ) (u s) (hAdet s) (hu1 s) (hu0 s) (hinds s)
+  have hLU := fun s => _root_.GlobalTheory.CompanionTheory.GenericLU.generic_lu Ω₀ Ω (r s) ((P s)ᵀ) (u s) (hAdet s) (hu1 s) (hu0 s) (hinds s)
   choose v w hvw hv1 hv0 hw0 hw using hLU
-  have hfld := fun s => GlobalTheory.T.lu_factors_generate_same_field Ω₀ Ω (r s) ((P s)ᵀ) (u s) (v s) (w s) (hAdet s) (hu1 s) (hu0 s) (hv1 s) (hv0 s)
+  have hfld := fun s => _root_.GlobalTheory.CompanionTheory.LuFields.adjoin_entries_eq Ω₀ Ω (r s) ((P s)ᵀ) (u s) (v s) (w s) (hAdet s) (hu1 s) (hu0 s) (hv1 s) (hv0 s)
     (hw0 s) (hw s) (hvw s)
   have hall : IntermediateField.adjoin Ω₀ (Set.range fun q : Σ s, Fin (r s) × Fin (r s) => u q.1 q.2.1 q.2.2) =
       IntermediateField.adjoin Ω₀ (Set.range fun q : Σ s, Fin (r s) × Fin (r s) => v q.1 q.2.1 q.2.2) :=
     le_antisymm (adjoin_all_le u v hfld) (adjoin_all_le v u fun s => (hfld s).symm)
   have hindv : AlgebraicIndependent Ω₀ (fun q : Σ s, {lk : Fin (r s) × Fin (r s) // lk.2 < lk.1} =>
       v q.1 q.2.1.1 q.2.1.2) := by
-    refine GlobalTheory.T.alg_indep_of_same_adjoin Ω₀ Ω _ _ _ hind ?_
+    refine _root_.GlobalTheory.CompanionTheory.FieldGen.algebraicIndependent_of_adjoin_eq Ω₀ Ω _ _ _ hind ?_
     rw [← adjoin_all_eq_strict u hu1 hu0, ← adjoin_all_eq_strict v hv1 hv0, hall]
-  have hTm := fun s => GlobalTheory.T.generic_flag_triangular_change Ω Li (r s) (fun k => j (ec s k)) (b s)
+  have hTm := fun s => _root_.GlobalTheory.CompanionTheory.Ar.FlagChange.adapted_triangular Ω Li (r s) (fun k => j (ec s k)) (b s)
     (fun k => ∑ l, u s l k • j (cc s l)) (v s) (w s) (hf s) (hb s) (hv1 s) (hv0 s) (hw0 s) (hw s) (fun k => by
       rw [← hvw s]
       simp only [Matrix.mul_apply, Matrix.map_apply, Matrix.transpose_apply, Finset.sum_smul, smul_smul]

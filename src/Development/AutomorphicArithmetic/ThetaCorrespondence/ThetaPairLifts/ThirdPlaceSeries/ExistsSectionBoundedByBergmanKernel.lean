@@ -7,13 +7,16 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.SemiposAtOfP
 public import Development.AbelianVarietyTheory.Definitions.Foundations.NonnegOfMemCStarSet
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexUniformizationLawsOfGoodDeepCover
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCarryingSectionOrders
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNonzeroSectionWeightBound
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormSqThetaConstantSpanningClassesLeExpStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsNumberFieldPoint
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.TorusAt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormSqThetaConstantSpanningClassesLeExp
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.BergmanKernelThickPartEstimate
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.BergmanKernelThinPartEstimate
-import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.HostN
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RunParamsStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HtValOnSubset
+public import Development.AbelianVarietyTheory.Definitions.Divisors.QuoIff
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNonzeroSectionWeightBound
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsNumberFieldPoint
+import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.HostN
 import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.WtNZ
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -47,8 +50,6 @@ import Mathlib.Tactic.NormNum.NatSqrt
 import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.HtValOnSubset
-public import Development.AbelianVarietyTheory.Definitions.Divisors.QuoIff
 
 @[expose] public section
 
@@ -87,7 +88,7 @@ theorem theta_function_le_bergman_kernel_alt : _root_.GlobalTheory.CovTop.Publis
   have hb : 1 ≤ (Fm.L x ι).sc.b := Real.one_le_exp (Real.rpow_nonneg (by linarith [(Fm.L x ι).sc.one_lt_alt]) _)
   obtain ⟨r1, r2⟩ := a4 1 le_rfl (by push_cast; exact one_le_pow₀ hb)
   refine ⟨_ + B, add_nonneg a2 b1, by rw [mul_add, add_mul]; exact add_le_add a3 b2, fun Z xs f hs hf σ hσ y hy => ?_⟩
-  have d := GlobalTheory.T.normSq_thetaConstant_spanning_classes_le_exp _ _ _ _ _ _ σ _ (Y.U σ) (xiR (Fm.D x ι)) hσ (hY.1.unf σ hσ) 5 (by decide) (by norm_num) xs f hs hf
+  have d := _root_.GlobalTheory.ThetaConst.normSq_thetaConst_le_exp _ _ _ _ _ _ σ _ (Y.U σ) (xiR (Fm.D x ι)) hσ (hY.1.unf σ hσ) 5 (by decide) (by norm_num) xs f hs hf
     _ _ _ _ r1 (Or.inr a1) ⟨y.1, y.2.1⟩ y.2.2
   have e2 := h₂ i hi Y hY u1 hu Z σ hσ y hy
   have e3 := b3 Z σ hσ y hy

@@ -3,10 +3,14 @@ module
 public import GroundTheory.HeightsAndTheta.Heights.Antisymmetric.Statements
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.CompactGapsGE
 public import Mathlib.CategoryTheory.Category.Basic
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagDegreeWeightFormulaStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagShiftTotalLinRootPowerStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.PolarizationPolynomialCoeffBoundStatement
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagDegreeWeightFormula
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagShiftTotalLinRootPower
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Data.Nat.Choose.Multinomial
+public import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.PolarizationPolynomialCoeffBound
 public import Development.WeilBound.CoreStatements.FlagImmersions.DegLApply
+public import Mathlib.Algebra.MvPolynomial.Funext
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +54,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Mathlib.Algebra.MvPolynomial.Funext
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.IsSemipositiveOn
 
 @[expose] public section
@@ -126,7 +129,7 @@ theorem flagDeg_eq_delta (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N : ℕ) :
       Finset.prod_pos fun k hk => inv_pos.2 (sub_pos.2 ?_))
     exact_mod_cast (Finset.mem_Ioi.1 hk)
   · intro x
-    rw [(GlobalTheory.T.flag_degree_weight_formula Ψ N _).1, mul_assoc]
+    rw [(_root_.GlobalTheory.CompanionTheory.Ar.Top.flagDeg_eq_weyl Ψ N _).1, mul_assoc]
     congr 1
     unfold GroundTheory.Heights₂.Heights.antisymDelta
     rw [map_prod, ← Finset.prod_mul_distrib]
@@ -150,13 +153,13 @@ theorem cor_b_poly_functional : ∀ (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ] (N
     intro F
     simp only [Φ, LinearMap.add_apply, LinearMap.smul_apply, LinearMap.sum_apply, Lin.shL_apply,
       Lin.totL_apply, smul_eq_mul]
-  obtain ⟨P', -, hP', -, hle⟩ := GlobalTheory.T.polarization_polynomial_coeff_bound (Ψ × Fin N) (dimFl Ψ N + 1) Φ
+  obtain ⟨P', -, hP', -, hle⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Top.polarisation_functional (Ψ × Fin N) (dimFl Ψ N + 1) Φ
   have heq : P' = Pl - GroundTheory.Heights₂.Heights.antisymDelta Ψ N * l := by
     refine MvPolynomial.funext fun x => ?_
     have e1 : (-∑ y, C (x y) * X y : RP Ψ N) = linRoot (fun τ i => x (τ, i) : Wt Ψ N) := rfl
     have e2 := hP (fun τ i => x (τ, i))
     rw [hP', e1, hΦ, map_sub, map_mul, hab, ← e2]
-    simp only [(GlobalTheory.T.flag_shift_total_lin_root_power Ψ N j _ _).1, (GlobalTheory.T.flag_shift_total_lin_root_power Ψ N j _ _).2, hc]
+    simp only [(_root_.GlobalTheory.CompanionTheory.Ar.Top.Sh_Tot_linRoot_pow Ψ N j _ _).1, (_root_.GlobalTheory.CompanionTheory.Ar.Top.Sh_Tot_linRoot_pow Ψ N j _ _).2, hc]
     rw [sub_eq_add_neg (eval x Pl)]
     congr 1
     rw [← Finset.sum_add_distrib, ← Finset.sum_add_distrib, Finset.mul_sum, Finset.mul_sum,

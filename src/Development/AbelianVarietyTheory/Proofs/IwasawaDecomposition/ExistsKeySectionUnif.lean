@@ -4,16 +4,22 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.KchMu
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.NormConst
 public import Development.AbelianVarietyTheory.Definitions.KeyFormula.KeyRootOfKeyFormula
 public import Development.AbelianVarietyTheory.Definitions.RegularCharts.Reframe
-import Development.AbelianVarietyTheory.Proofs.GenericRegularity.EvaluationLawsGenericFramesAtlasHold
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.SectionEqZeroOfGenericFramedPointValues
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.RingTheory.TensorProduct.Basic
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsBaseFieldMultipleOfNthRootComplexification
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsProbabilityMeasureMuPart
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIntegerExponentSectionOfChartRegular
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Mathlib.RingTheory.Smooth.Basic
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsPowEqUnitOfContinuousComplexRoot
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUniversalTripleFibreAtFramedPoint
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaKeyRuleTriangularFrameChangeFourthPower
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaKeyRuleValueAtThetaPoint
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UniversalTripleFibresBaseChangeKeyData
+import Development.AbelianVarietyTheory.Proofs.GenericRegularity.EvaluationLawsGenericFramesAtlasHold
 import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsDomainAndIsIntegrallyClosedAtPrimeOfSmoothOfCo
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsBaseFieldMultipleOfNthRootComplexificationStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIntegerExponentSectionOfChartRegularStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsPowEqUnitOfContinuousComplexRootStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUniversalTripleFibreAtFramedPointStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaKeyRuleTriangularFrameChangeFourthPowerStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaKeyRuleValueAtThetaPointStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UniversalTripleFibresBaseChangeKeyDataStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,14 +83,14 @@ theorem exists_eq_smul_pow {K : Type} [Field K] [Algebra K ℂ] {A : Type} [Comm
     Units.map ((Algebra.TensorProduct.includeRight : A →ₐ[K] ℂ ⊗[K] A) : A →* _) u
   have hu' : (u' : ℂ ⊗[K] A) = C ⊗ₜ[K] (u : A) := by
     simp [u', Algebra.TensorProduct.algebraMap_apply]
-  obtain ⟨w, hw⟩ := GlobalTheory.T.exists_pow_eq_unit_of_continuous_complex_root (ℂ ⊗[K] A) n u' (fun χ => ρ (res χ)) hn
+  obtain ⟨w, hw⟩ := _root_.GlobalTheory.ContRoot.exists_pow_eq_of_continuous_root (ℂ ⊗[K] A) n u' (fun χ => ρ (res χ)) hn
     (fun m V s hV hs => hρ m V (fun p => res (s p)) hV fun a => hs _) (fun χ => by
       rw [hu, hu']
       have : C ⊗ₜ[K] (u : A) = C • ((1 : ℂ) ⊗ₜ[K] (u : A)) := by
         rw [TensorProduct.smul_tmul', smul_eq_mul, mul_one]
       rw [this, map_smul, smul_eq_mul]
       rfl)
-  exact GlobalTheory.T.exists_base_field_multiple_of_nth_root_complexification K A n w C u hn hC u.ne_zero (hw.trans hu')
+  exact _root_.GlobalTheory.KeyFourth.exists_eq_smul_pow_of_pow_eq_tmul K A n w C u hn hC u.ne_zero (hw.trans hu')
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E} {Dw : Datum H}
   {l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level H} {Xo : Moduli Dw l} {c : Coeff l}
@@ -93,8 +99,8 @@ theorem keySec_of_generic (h : GenFrEx Xo c) (b : ∀ Z : Comp Xo c, Om Z) (hb0 
     (hb : ∀ C : FChart h, ((kch C.t : (Om C.Z)ˣ) : Om C.Z) * b C.Z ∈ C.R ∧
       (((kch C.t : (Om C.Z)ˣ) : Om C.Z) * b C.Z)⁻¹ ∈ C.R) : Nonempty (KeySec Xo c) := by
   obtain ⟨hL, -, -, hA⟩ := evLaws_genFr_atlas E H Dw l Xo c
-  obtain ⟨f, hf, hfb⟩ := GlobalTheory.T.exists_integer_exponent_section_of_chart_regular E H Dw l Xo c h (keyEx Dw) b fun C => (hb C).1
-  obtain ⟨f', hf', hfb'⟩ := GlobalTheory.T.exists_integer_exponent_section_of_chart_regular E H Dw l Xo c h (-keyEx Dw) (fun Z => (b Z)⁻¹) fun C => by
+  obtain ⟨f, hf, hfb⟩ := _root_.GlobalTheory.SecGlueInt.exists_secZ_of_regular E H Dw l Xo c h (keyEx Dw) b fun C => (hb C).1
+  obtain ⟨f', hf', hfb'⟩ := _root_.GlobalTheory.SecGlueInt.exists_secZ_of_regular E H Dw l Xo c h (-keyEx Dw) (fun Z => (b Z)⁻¹) fun C => by
     have := (hb C).2
     rw [mul_inv, ← Units.val_inv_eq_inv_val] at this
     simpa only [kch, Pi.neg_apply, zpow_neg, Finset.prod_inv_distrib] using this
@@ -126,18 +132,18 @@ theorem exists_chart_units {κ : GlobalTheory.KeyCl.Rule} (h₁ : GlobalTheory.K
         ((u : C.R) : Om C.Z) = ((kch C.t ^ 4 * v C.Z : (Om C.Z)ˣ) : Om C.Z) := by
   have hc : ∀ Z : Comp Xo c, CharZero (Om Z) := fun Z =>
     charZero_of_injective_algebraMap (algebraMap c.F (Om Z)).injective
-  choose Ψ hΨ using fun Z : Comp Xo c => GlobalTheory.T.exists_universalTripleFibre_at_framedPoint E H Dw l Xo c g e (Om Z) (genFr h Z) hpq
+  choose Ψ hΨ using fun Z : Comp Xo c => _root_.GlobalTheory.KeyFourth.exists_tied E H Dw l Xo c g e (Om Z) (genFr h Z) hpq
   refine ⟨fun Z => κ (Om Z) (Ψ Z).key, fun C => ?_⟩
   haveI := C.sm
   haveI : IsIntegrallyClosed C.R := isIntegrallyClosed_of_smooth c.F C.R
   haveI : IsNoetherianRing C.R := Algebra.FiniteType.isNoetherianRing c.F C.R
   haveI : CharZero C.R := charZero_of_injective_algebraMap (algebraMap c.F C.R).injective
-  obtain ⟨Φ, hΦ⟩ := GlobalTheory.T.exists_universalTripleFibre_at_framedPoint E H Dw l Xo c g e C.R C.y hpq
-  obtain ⟨Φ', hΦ'⟩ := GlobalTheory.T.exists_universalTripleFibre_at_framedPoint E H Dw l Xo c g e (Om C.Z) C.yg hpq
+  obtain ⟨Φ, hΦ⟩ := _root_.GlobalTheory.KeyFourth.exists_tied E H Dw l Xo c g e C.R C.y hpq
+  obtain ⟨Φ', hΦ'⟩ := _root_.GlobalTheory.KeyFourth.exists_tied E H Dw l Xo c g e (Om C.Z) C.yg hpq
   obtain ⟨u, hu⟩ := h₃ C.R Φ.key
   refine ⟨Φ, u, hΦ, hu, ?_⟩
-  rw [← GlobalTheory.T.theta_key_rule_triangular_frame_change_fourth_power κ h₁ h₂ E H Dw l Xo c g e (Om C.Z) C.t _ _ (Ψ C.Z) Φ' C.bor (hΨ _) hΦ']
-  exact (hu (Om C.Z) _ _ (GlobalTheory.T.universal_triple_fibres_base_change_key_data E H Dw l Xo c g e _ _ C.R.val C.y C.yg Φ Φ' C.gen hΦ hΦ')).symm
+  rw [← _root_.GlobalTheory.KeyFourth.rule_frBor κ h₁ h₂ E H Dw l Xo c g e (Om C.Z) C.t _ _ (Ψ C.Z) Φ' C.bor (hΨ _) hΦ']
+  exact (hu (Om C.Z) _ _ (_root_.GlobalTheory.KeyFourth.tied_keyPB E H Dw l Xo c g e _ _ C.R.val C.y C.yg Φ Φ' C.gen hΦ hΦ')).symm
 
 theorem rule_eq_of_rootVal {κ : GlobalTheory.KeyCl.Rule} (h₁ : GlobalTheory.KeyCl.Homog (fun _ => 1) κ) (h₂ : GlobalTheory.KeyCl.Funct κ)
     (h₃ : GlobalTheory.KeyCl.ThetaOne κ) {σ : c.F →+* ℂ} {g : ℕ} {e : Fin g ≃ Σ τ : E →+* ℂ, Fin (Dw.mult τ)}
@@ -151,9 +157,9 @@ theorem rule_eq_of_rootVal {κ : GlobalTheory.KeyCl.Rule} (h₁ : GlobalTheory.K
   obtain ⟨k, x, t, ht, rfl⟩ : ∃ (k : Fin F.n) (x : (M.X k).dom) (t : Ix Dw → (CAt σ)ˣ), FrBor t (un k x) y ∧
     v = Formalism.L2.PjFree.toC ((kch t : (CAt σ)ˣ) : CAt σ) := hv
   obtain ⟨Ψ, hΨ⟩ : ∃ Ψ : FibKey Xo ℂ (un k x).x, Tied (S := ℂ) e (un k x).s (un k x).u Ψ :=
-    @GlobalTheory.T.exists_universalTripleFibre_at_framedPoint E _ _ _ H Dw l Xo c g e ℂ _ _ σ.toAlgebra (un k x) hpq
+    @_root_.GlobalTheory.KeyFourth.exists_tied E _ _ _ H Dw l Xo c g e ℂ _ _ σ.toAlgebra (un k x) hpq
   have e₁ : κ ℂ Φ.key = kch (S := ℂ) t ^ 4 * κ ℂ Ψ.key :=
-    @GlobalTheory.T.theta_key_rule_triangular_frame_change_fourth_power κ h₁ h₂ E _ _ _ H Dw l Xo c g e ℂ _ _ σ.toAlgebra t (un k x) y Ψ Φ ht hΨ hΦ
+    @_root_.GlobalTheory.KeyFourth.rule_frBor κ h₁ h₂ E _ _ _ H Dw l Xo c g e ℂ _ _ σ.toAlgebra t (un k x) y Ψ Φ ht hΨ hΦ
   obtain ⟨a, ha, hy⟩ := hun k x
   have hb : (T k).co.symm x.1 ∈ (T k).co ⁻¹' (M.X k).dom := by
     show (T k).co ((T k).co.symm x.1) ∈ (M.X k).dom
@@ -161,7 +167,7 @@ theorem rule_eq_of_rootVal {κ : GlobalTheory.KeyCl.Rule} (h₁ : GlobalTheory.K
   have d1 := ((T k).norm _ hb).1.ne_zero
   rw [hNk] at ha
   have a0 : a ≠ 0 := fun h0 => mul_ne_zero hN d1 (by rw [← ha, h0]; simp)
-  have e₂ := GlobalTheory.T.theta_key_rule_value_at_theta_point κ h₁ h₃ E H Dw l Xo c σ g e F r M k (T k) _ hb a (un k x) Ψ a0 hy hΨ
+  have e₂ := _root_.GlobalTheory.KeyFourth.value_at_thetaPt κ h₁ h₃ E H Dw l Xo c σ g e F r M k (T k) _ hb a (un k x) Ψ a0 hy hΨ
   have e₃ : N ^ 4 * (κ ℂ Ψ.key : ℂ) = ((2 * Real.pi * Complex.I) ^ g) ^ 4 := by
     refine mul_right_cancel₀ (pow_ne_zero 4 d1) ?_
     rw [show a ^ 8 = (a ^ 2) ^ 4 by ring, ha] at e₂

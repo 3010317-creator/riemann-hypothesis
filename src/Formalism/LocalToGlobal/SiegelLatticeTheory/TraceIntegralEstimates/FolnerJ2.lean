@@ -5,7 +5,8 @@ public import Formalism.LocalToGlobal.SiegelLatticeTheory.TraceIntegralEstimates
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.BesselLevi
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.TraceIntegralEstimates.FolnerG2
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.TraceIntegralEstimates.IsFolnerOfEquiv
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.BesselLevi
+public import Formalism.PeriodIntegrals.BesselLevi
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BesselLeviAction.MulVecBvecApply
 import Formalism.RealPlaceAnalysis.RealPlaceTaylor.KoszulLowersPower
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -118,7 +119,7 @@ theorem inS_psiF_iff {T : ℝ} {z : Fin (2 * r + k + 1) → ℂ} (hF : IsFrameJ 
   rw [← key]
   constructor
   · intro hs
-    exact HNset_of_inS (fun k r T hT s hs h1 h2 => bessel_levi_formula k r T hT s hs h1 h2) hF hT hz hs
+    exact HNset_of_inS (fun k r T hT s hs h1 h2 => _root_.PI.UnitaryGroupMassFormula.BesselLevi.main k r T hT s hs h1 h2) hF hT hz hs
   · intro hs
     exact inS_of_HNset hF hz (inWb_zB T) ⟨_, rfl⟩ hs
 

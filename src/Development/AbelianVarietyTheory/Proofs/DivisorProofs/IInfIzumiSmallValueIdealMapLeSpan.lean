@@ -4,11 +4,14 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLeSpan
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.ArithBase
 public import Mathlib.RingTheory.AdicCompletion.LocalRing
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSpecializesIsLocalization
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDominatingLocalDomainEqMulMaximalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNonzeroClassicalPointOfLocalHomAvoidingStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRingHomPadicAlgClNeZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModelLocalRingEssFiniteTypeIntStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModelLocalRingResidueFieldFiniteOfClosedPointStatement
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDominatingLocalDomainEqMulMaximal
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.InducedModelMorphismCompStructureMap
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNonzeroClassicalPointOfLocalHomAvoiding
+public import Mathlib.NumberTheory.Padics.Complex
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRingHomPadicAlgClNeZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModelLocalRingEssFiniteTypeInt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModelLocalRingResidueFieldFiniteOfClosedPoint
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CompletionIsDomainAndIsIntegrallyClosed
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsNoetherianRingAdicCompletionOfNoetherian
 import Mathlib.Algebra.Order.Floor.Extended
@@ -176,8 +179,8 @@ theorem iInf_map_smallIdeal_le_span : ∀ (o Ω : Type) [CommRing o] [Field Ω] 
   haveI : CharZero (M.O x) := ⟨fun a b h => by
     have := congrArg Subtype.val h
     simpa using this⟩
-  haveI : Algebra.EssFiniteType ℤ (M.O x) := GlobalTheory.T.modelLocalRing_essFiniteType_int o Ω M x
-  haveI : Finite (ResidueField (M.O x)) := GlobalTheory.T.modelLocalRing_residueField_finite_of_closedPoint o Ω M x hx
+  haveI : Algebra.EssFiniteType ℤ (M.O x) := _root_.GlobalTheory.Izumi.essFiniteType_int_O o Ω M x
+  haveI : Finite (ResidueField (M.O x)) := _root_.GlobalTheory.ResFin.finite_residueField_O o Ω M x hx
   set A := M.O x with hA
   set R := AdicCompletion (maximalIdeal A) A with hR
   set φ := algebraMap A R with hφ
@@ -186,8 +189,8 @@ theorem iInf_map_smallIdeal_le_span : ∀ (o Ω : Type) [CommRing o] [Field Ω] 
   have hinj : Function.Injective φ := algebraMap_completion_injective A
   intro G hG
   by_contra hGf
-  obtain ⟨s, hs0, hs⟩ := GlobalTheory.T.exists_nonzero_classicalPoint_of_localHom_avoiding o Ω M U hU x
-  obtain ⟨B, _, _, _, _, ι, hιinj, hιloc, hιres, u, hu, hfu⟩ := GlobalTheory.T.exists_dominating_local_domain_eq_mul_maximal R (φ ⟨f, hf⟩) G hGf
+  obtain ⟨s, hs0, hs⟩ := _root_.GlobalTheory.Izumi.exists_ne_zero_forall_exists_cen o Ω M U hU x
+  obtain ⟨B, _, _, _, _, ι, hιinj, hιloc, hιres, u, hu, hfu⟩ := _root_.GlobalTheory.Izumi.exists_dominating_eq_mul_of_not_mem_span R (φ ⟨f, hf⟩) G hGf
   have hG0 : G ≠ 0 := by
     rintro rfl
     exact hGf (Submodule.zero_mem _)
@@ -226,7 +229,7 @@ theorem iInf_map_smallIdeal_le_span : ∀ (o Ω : Type) [CommRing o] [Field Ω] 
     rw [Ne, ← map_zero ι]
     intro h
     exact mul_ne_zero hG0 ((map_ne_zero_iff φ hinj).2 hs0) (hιinj h)
-  obtain ⟨p, hp, χ, hχ1, hχm, hχh⟩ := GlobalTheory.T.exists_ringHom_padicAlgCl_ne_zero' B inferInstance (ι (G * φ s)) hh
+  obtain ⟨p, hp, χ, hχ1, hχm, hχh⟩ := _root_.GlobalTheory.CurvePoint.exists_ringHom_padicAlgCl_ne_zero B inferInstance (ι (G * φ s)) hh
   set ψ : R →+* PadicAlgCl p := χ.comp ι with hψ
   have hψ1 : ∀ g, ‖ψ g‖ ≤ 1 := fun g => hχ1 _
   have hψG : ψ G ≠ 0 := by

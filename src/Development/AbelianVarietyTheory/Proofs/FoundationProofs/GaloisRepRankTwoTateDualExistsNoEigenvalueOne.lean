@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Foundations.FinalTheorems
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
 public import Mathlib.RingTheory.AdicCompletion.Noetherian
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCommutatorDetNonzeroStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsComm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +49,7 @@ namespace GlobalTheory.Ord2
 
 theorem galoisRepRankTwoTateDual_exists_no_eigenvalue_one_alt : ∀ (l : ℕ) [Fact l.Prime] (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (e : ℕ) (S : Finset Pl) (A : ValuationSubring Ω) (W : R2 Ω l), Nf e S A W → ∃ g, (mat (dual1 W) g - 1).det ≠ 0 := by
   intro l _ Ω _ _ _ e S A W h
-  obtain ⟨φ, hφ, hd⟩ := GlobalTheory.T.exists_commutator_det_nonzero l Ω e S A W h
+  obtain ⟨φ, hφ, hd⟩ := _root_.GlobalTheory.CommutingExistence.main l Ω e S A W h
   have hφ' : φ ∈ H0g W := (Subgroup.commutator_le.2 (fun a ha b hb => by
     rw [commutatorElement_def]
     exact mul_mem (mul_mem (mul_mem ha hb) (inv_mem ha)) (inv_mem hb))) hφ

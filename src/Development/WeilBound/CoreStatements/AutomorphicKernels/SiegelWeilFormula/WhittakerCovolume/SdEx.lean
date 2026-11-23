@@ -1,7 +1,8 @@
 module
 
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.WhittakerCovolume.RelAlg
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsSelfdualMeasureHermitianAdelesStatement
+public import Formalism.UnipotentAdelicQuotients.SWXSDefs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsSelfdualMeasureHermitianAdeles
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsSelfdualMeasureHermitianTuplesStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -45,6 +46,6 @@ namespace PositivityTheory.SiegelWeilFormula.KWhit
 
 theorem sdEx : SdEx := by
   intro F E _ _ _ _ _ σ hcm M J hJ ψ hψ n
-  exact ⟨GlobalTheory.T.exists_selfdual_measure_hermitian_tuples F E σ hcm M J hJ ψ hψ n, GlobalTheory.T.exists_selfdual_measure_hermitian_adeles F E σ hcm ψ hψ n⟩
+  exact ⟨GlobalTheory.T.exists_selfdual_measure_hermitian_tuples F E σ hcm M J hJ ψ hψ n, _root_.GlobalTheory.CompanionTheory.SW.HermCoord.exists_sdHerm F E σ hcm ψ hψ n⟩
 
 end PositivityTheory.SiegelWeilFormula.KWhit

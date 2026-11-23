@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HypothesesAbsDet
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.HoweDualityGL
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.OmQuotientTransposeInverseStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.OmQuotientTrivialRankZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.OmQuotientTwistDetStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.IsParahoricVec
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.OmQuotientTransposeInverse
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsSubquotientDetRepParInd
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.OmQuotientTrivialRankZero
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.OmQuotientTwistDet
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +52,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Algebra.Group.Units
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsSubquotientDetRepParInd
 
 @[expose] public section
 
@@ -168,8 +169,8 @@ theorem uniq_left (hM : GlobalTheory.Published.MinguezThetaGL) (r n : ℕ) {V V'
     (hσ' : IsSmooth σ') (hσ'i : σ'.IsIrreducible) (hτ : IsSmooth τ) (hτi : τ.IsIrreducible)
     (h1 : OmQuot 1 σ τ) (h2 : OmQuot 1 σ' τ) : Nonempty (σ.Equiv σ') := by
   by_cases h0 : r = 0 ∨ n = 0
-  · obtain ⟨⟨a⟩, -⟩ := GlobalTheory.T.om_quotient_trivial_rank_zero k r n V W σ τ h0 hσi hτi h1
-    obtain ⟨⟨b⟩, -⟩ := GlobalTheory.T.om_quotient_trivial_rank_zero k r n V' W σ' τ h0 hσ'i hτi h2
+  · obtain ⟨⟨a⟩, -⟩ := _root_.GlobalTheory.HoweZero.main k r n V W σ τ h0 hσi hτi h1
+    obtain ⟨⟨b⟩, -⟩ := _root_.GlobalTheory.HoweZero.main k r n V' W σ' τ h0 hσ'i hτi h2
     exact ⟨a.trans b.symm⟩
   · push_neg at h0
     obtain ⟨F, hF0, hF⟩ := h1
@@ -212,10 +213,10 @@ theorem main : GlobalTheory.Published.MinguezThetaGL → GlobalTheory.Published.
   have hn : IsSmoothChar (detChar (Fin n) μ) := hμ.detChar
   refine ⟨?_, ?_⟩
   · intro V W W' _ _ _ _ _ _ σ τ τ' hσ hσi hτ hτi hτ' hτ'i h1 h2
-    have h1' := (GlobalTheory.T.om_quotient_twist_det k r n μ V W σ τ).1 h1
-    have h2' := (GlobalTheory.T.om_quotient_twist_det k r n μ V W' σ τ').1 h2
-    have t1 := GlobalTheory.T.om_quotient_transpose_inverse k r n V W _ _ (invT r) (invT n) (fun _ => rfl) (fun _ => rfl) h1'
-    have t2 := GlobalTheory.T.om_quotient_transpose_inverse k r n V W' _ _ (invT r) (invT n) (fun _ => rfl) (fun _ => rfl) h2'
+    have h1' := (_root_.GlobalTheory.OmTwist.main k r n μ V W σ τ).1 h1
+    have h2' := (_root_.GlobalTheory.OmTwist.main k r n μ V W' σ τ').1 h2
+    have t1 := _root_.GlobalTheory.omQuot_transpose k r n V W _ _ (invT r) (invT n) (fun _ => rfl) (fun _ => rfl) h1'
+    have t2 := _root_.GlobalTheory.omQuot_transpose k r n V W' _ _ (invT r) (invT n) (fun _ => rfl) (fun _ => rfl) h2'
     have hs : ∀ m : ℕ, Function.Surjective (invT (k := k) m) := fun m g => ⟨invT m g, invT_invT m g⟩
     obtain ⟨e⟩ := uniq_left hM n r _ _ _
       (isSmooth_comp (isSmooth_twist hτ hn) _ (continuous_invT n)) (irr_comp _ (hs n) (irr_twist hτi _))
@@ -225,8 +226,8 @@ theorem main : GlobalTheory.Published.MinguezThetaGL → GlobalTheory.Published.
     obtain ⟨e'⟩ := equiv_of_comp (invT n) (invT_invT n) e
     exact equiv_of_twist _ e'
   · intro V V' W _ _ _ _ _ _ σ σ' τ hσ hσi hσ' hσ'i hτ hτi h1 h2
-    have h1' := (GlobalTheory.T.om_quotient_twist_det k r n μ V W σ τ).1 h1
-    have h2' := (GlobalTheory.T.om_quotient_twist_det k r n μ V' W σ' τ).1 h2
+    have h1' := (_root_.GlobalTheory.OmTwist.main k r n μ V W σ τ).1 h1
+    have h2' := (_root_.GlobalTheory.OmTwist.main k r n μ V' W σ' τ).1 h2
     obtain ⟨e⟩ := uniq_left hM r n _ _ _
       (isSmooth_twist hσ hr) (irr_twist hσi _) (isSmooth_twist hσ' hr) (irr_twist hσ'i _)
       (isSmooth_twist hτ hn) (irr_twist hτi _) h1' h2'

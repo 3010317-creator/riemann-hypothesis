@@ -2,15 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PerRowC
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsInvLower
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryHostFieldArithmeticConditionsProofStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowsMeanC
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryHostFieldArithmeticConditionsProof
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.KppOffCOfSteps
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.RelevantSetZeroGNotIdentity
 public import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.CellBru
-import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.CellFin
-import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.CellGeo
 public import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.CellInv
 public import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.CellMono
 public import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.CellPt
+import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.CellFin
+import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.CellGeo
 import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.SplittingAdmissibleOfTermData
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -201,4 +202,4 @@ theorem nfExC (hHost : HostC) : NFExC := by
 
 end GlobalTheory.TypeAsm.NFEx
 
-theorem GlobalTheory.TypeAsm.nfExC_holds : GlobalTheory.TypeAsm.NFExC := GlobalTheory.TypeAsm.NFEx.nfExC GlobalTheory.T.unitaryHostFieldArithmeticConditions
+theorem GlobalTheory.TypeAsm.nfExC_holds : GlobalTheory.TypeAsm.NFExC := GlobalTheory.TypeAsm.NFEx.nfExC _root_.GlobalTheory.TypeAsm.hostC

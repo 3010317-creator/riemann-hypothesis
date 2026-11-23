@@ -3,16 +3,17 @@ module
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPotential
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.OneSubPhiOntoOfFilZero
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BhattScholzeCrystallineLattices
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinBcrisComparisonFrobeniusNaturalityStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinLatticeStableAndHodgeTateJumpsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinTensorAinfGaloisStableKummerFixedStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGaloisDescentDatumAndStableStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisFixesCrystallineImageDescentDatumStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegralConnectionTaylorFormulaTameBreuilKisinStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.KummerTowerGaloisPreservesBreuilKisinModuleStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinBcrisComparisonFrobeniusNaturality
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinLatticeStableAndHodgeTateJumps
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinTensorAinfGaloisStableKummerFixed
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGaloisDescentDatumAndStable
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisFixesCrystallineImageDescentDatum
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegralConnectionTaylorFormulaTameBreuilKisin
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.KummerTowerGaloisPreservesBreuilKisinModule
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemLOfEPowSmulMem
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyCrysBKFunctorOLOfBhattScholze
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TameInertiaCharactersSubsetTameTypeStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AcrisTorsionFreeComplete
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TameInertiaCharactersSubsetTameType
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,17 +64,17 @@ theorem exists_pack_isOfType : GlobalTheory.Published.BhattScholzeCrystallineLat
   let I : Ident (thetaW a LL) ϖ B.P T := Ident.ofRes B.I
   have hBK : IsBK (T := resF T (ϖ.field a)) (I.res (inclG (ϖ.field a)) (continuous_subtype_val.subtype_mk _)) :=
     B.isBK
-  obtain ⟨C, hC, hTay⟩ := GlobalTheory.T.integralConnection_taylorFormula_tameBreuilKisin hBS l a e ϖ LL hl (Fin B.n) B.P T I hBK
-  obtain ⟨⟨jB, hcmp⟩, -⟩ := GlobalTheory.T.breuilKisin_bcris_comparison_frobenius_naturality l a e ↥(OL LL) ↥LL.1 (thetaW a LL) ϖ (Fin B.n) B.P T I
-  have hhor := GlobalTheory.T.galois_fixes_crystalline_image_descentDatum l a e ϖ LL hl (Fin B.n) B.P T I jB hcmp C hC hTay
-  obtain ⟨hst, hinf⟩ := GlobalTheory.T.breuilKisin_tensorAinf_galoisStable_kummerFixed l a e ϖ LL (Fin B.n) B.P T I hBK
-  have hK7 := GlobalTheory.T.kummerTowerGalois_preserves_breuilKisinModule hBS l a e ϖ LL (Fin B.n) B.P T I hBK
-  obtain ⟨⟨Δ, hΔ⟩, hLA⟩ := GlobalTheory.T.exists_galoisDescentDatum_and_stable l a e ϖ LL (Fin B.n) B.P T I hinf hK7
-  obtain ⟨hEN, hjU⟩ := GlobalTheory.T.breuilKisin_lattice_stable_and_hodgeTate_jumps hF l a e ϖ LL hl (Fin B.n) B.P T I jB Pl AI hstd hcmp hhor
+  obtain ⟨C, hC, hTay⟩ := _root_.GlobalTheory.IntConnTaylor.main hBS l a e ϖ LL hl (Fin B.n) B.P T I hBK
+  obtain ⟨⟨jB, hcmp⟩, -⟩ := _root_.GlobalTheory.CrisComparison.main l a e ↥(OL LL) ↥LL.1 (thetaW a LL) ϖ (Fin B.n) B.P T I
+  have hhor := _root_.GlobalTheory.HorizXi.galois_fixes_xi l a e ϖ LL hl (Fin B.n) B.P T I jB hcmp C hC hTay
+  obtain ⟨hst, hinf⟩ := _root_.GlobalTheory.BKGal.StableFix.main l a e ϖ LL (Fin B.n) B.P T I hBK
+  have hK7 := _root_.GlobalTheory.GKinfStable.main hBS l a e ϖ LL (Fin B.n) B.P T I hBK
+  obtain ⟨⟨Δ, hΔ⟩, hLA⟩ := _root_.GlobalTheory.BKGal.GalDescent.exists_galDesc_and_stable l a e ϖ LL (Fin B.n) B.P T I hinf hK7
+  obtain ⟨hEN, hjU⟩ := _root_.GlobalTheory.NgalFil.ENStable_and_jumps hF l a e ϖ LL hl (Fin B.n) B.P T I jB Pl AI hstd hcmp hhor
   have hj : B.P.jumps ⊆ (U : Set ℤ) := hjU _ hT.jumps
   have hIcc : B.P.jumps ⊆ Set.Icc (-(η : ℤ)) H := fun i hi => hU i (hj hi)
   obtain ⟨hlow, hup⟩ := (GlobalTheory.BK.PhiMod.jumps_subset_Icc_iff _ _ l e a (Fin B.n) B.P η H).1 hIcc
-  have hch := GlobalTheory.T.tameInertiaCharacters_subset_tameType l a e ϖ LL hl (Fin B.n) B.P T I jB Δ Pl AI hstd hcmp hhor hΔ Sig hT.type
+  have hch := _root_.GlobalTheory.CharsDesc.chars_subset_sig l a e ϖ LL hl (Fin B.n) B.P T I jB Δ Pl AI hstd hcmp hhor hΔ Sig hT.type
   let D : BKDat ↥(OL LL) ↥LL.1 l e a (Fin B.n) η H :=
     { toPhiMod := B.P
       desc := Δ

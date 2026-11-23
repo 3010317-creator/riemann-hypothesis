@@ -1,12 +1,11 @@
 module
 
-import Formalism.LocalRingCardinality.IntCastDvdOfDvdIntegers
 public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.OverPlaceIntegralForm
 public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.SplittingProjection
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AdelicLatticeCompletionLocalGlobalStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AdelicLatticeCompletionLocalGlobal
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.DualOfDualFrames
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsAddEquivField
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsLatticeVectorApproxAllFinitePlacesStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsLatticeVectorApproxAllFinitePlaces
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsSecondFunctional
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsSplittingOfCharacter
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ImportsExtra
@@ -14,6 +13,7 @@ public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MemDua
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MemRangeBcOfTransposeMulEqOne
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MulVecMemIff
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.OverLatticeIffSelfDualOverBase
+import Formalism.LocalRingCardinality.IntCastDvdOfDvdIntegers
 import Mathlib.Algebra.AffineMonoid.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -131,7 +131,7 @@ theorem approx_one {Λ Λ' : Submodule (𝓞 E) (Fin k → E)} (hfin : Module.Fi
     (y : Fin k → E ⊗[F] v.adicCompletion F) (hy : y ∈ locLat v Λ') :
     ∃ x ∈ Λ', y - loc v x ∈ locLat v Λ ∧ ∀ w : HeightOneSpectrum (𝓞 F), w ≠ v → loc w x ∈ locLat w Λ := by
   classical
-  obtain ⟨x, hx, H⟩ := GlobalTheory.T.exists_lattice_vector_approx_all_finitePlaces F E k Λ' hfin T hT
+  obtain ⟨x, hx, H⟩ := _root_.GlobalTheory.OverCompare.exists_lattice_approx_all F E k Λ' hfin T hT
     (Pi.single (M := fun w : HeightOneSpectrum (𝓞 F) => Fin k → E ⊗[F] w.adicCompletion F) v y) (fun w => by
       by_cases hw : w = v
       · subst hw; rw [Pi.single_eq_same]; exact hy
@@ -171,7 +171,7 @@ theorem mem_of_count {Λ Λ' : Submodule (𝓞 E) (Fin k → E)} (hfin : Module.
   have hΨ : Function.Surjective Ψ := by
     intro t
     choose y hy using fun p : {v : HeightOneSpectrum (𝓞 F) // (T : 𝓞 F) ∈ v.asIdeal} => hsur p.1 p.2 (t p)
-    obtain ⟨x, hx, H⟩ := GlobalTheory.T.exists_lattice_vector_approx_all_finitePlaces F E k Λ' hfin T hT
+    obtain ⟨x, hx, H⟩ := _root_.GlobalTheory.OverCompare.exists_lattice_approx_all F E k Λ' hfin T hT
       (fun v => if hv : (T : 𝓞 F) ∈ v.asIdeal then (y ⟨v, hv⟩).1 else 0) (fun v => by
         by_cases hv : (T : 𝓞 F) ∈ v.asIdeal
         · rw [dite_eq_left hv]; exact (y ⟨v, hv⟩).2
@@ -649,7 +649,7 @@ theorem exists_overLattice (L : ColLevel R F E sp gp C A clsLat)
     top_le_iff.1 (L.Lb_span ▸ Submodule.span_mono hLN)
   have hoff : ∀ v : HeightOneSpectrum (𝓞 F), (A.T : 𝓞 F) ∉ v.asIdeal → locLat v N = locLat v L.Lb :=
     fun v hv => le_antisymm ((locLat_mono v hNL).trans (locLat_dual_le L v hv)) (locLat_mono v hLN)
-  obtain ⟨hAd, -, hint⟩ := GlobalTheory.T.adelicLatticeCompletion_local_global F E R.k N hfin
+  obtain ⟨hAd, -, hint⟩ := _root_.GlobalTheory.LatLocGlob.latS_local_global F E R.k N hfin
   have hloc : ∀ (v : HeightOneSpectrum (𝓞 F)) (h : (A.T : 𝓞 F) ∈ v.asIdeal), LocalAtT L N v h (s v h) := by
     intro v hv
     obtain ⟨ε, hε⟩ := hε v hv

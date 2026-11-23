@@ -1,7 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Statements.CuspidalUnitaryTwists.ExistsSmallSpherical
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NormMeanInfPosLogLeDefiniteThetaPairStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NormSumPairRankZeroOfCurveCoordNorm
+public import Formalism.PairingDivisors.StatementH
+public import Mathlib.Analysis.SpecialFunctions.Log.PosLog
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NormMeanInfPosLogLeDefiniteThetaPair
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -47,7 +50,7 @@ open scoped BigOperators
 namespace GlobalTheory.ArchFree.st
 
 theorem archSt : ArchSt := by
-  obtain ⟨C, hC, h⟩ := GlobalTheory.T.norm_meanInf_posLog_le_definiteThetaPair
+  obtain ⟨C, hC, h⟩ := _root_.GlobalTheory.ArchFree.norm.norm_meanInf_posLog_le
   refine ⟨C, hC, ?_⟩
   intro D cc δ t0 Q hc ht hQ K _ _ _ σ ι N B L P P' zA zA' hN hB h1 hL hd hs hn i
   exact ⟨h D cc δ t0 Q hc ht hQ K σ N B L (P i) (zA i) hN hB h1 hL hd (hs i).1 (hn i).1,

@@ -3,12 +3,18 @@ module
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.FiniteHomogeneousInf
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.ExistsArBaseAway
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.DescendToThetaConstantFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsEmbeddingOfHomogeneousKerEqStatement
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.GoodClass
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.DescendToThetaConstantField
+public import Mathlib.Algebra.Field.Subfield.Basic
+public import Mathlib.Algebra.MvPolynomial.Eval
+public import Mathlib.Algebra.Polynomial.Basic
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.RingTheory.Ideal.Maps
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsEmbeddingOfHomogeneousKerEq
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsObjectAtMinimalPrime
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.KerConeMemMinimalPrimes
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ResidueGeneric
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaPointsVanishingIdealRadicalHomogeneousStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaPointsVanishingIdealRadicalHomogeneous
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -93,7 +99,7 @@ theorem countable_of_finiteType (o : Type) [CommRing o] (h : Algebra.FiniteType 
 
 theorem exists_generic_object : Out.Laws → Out.Laws2 → ∀ (g : ℕ) (J : Type) [Finite J] (Mat : J → Matrix (Fin (2 * g)) (Fin (2 * g)) ℤ) (κ n : ℕ) (w w' : J), n.Prime → Odd n → ∃ j₀ : ℕ, ∀ j ≥ j₀, ∀ (o : Type) [CommRing o] (b : TBase o ((n ^ j) ^ 2)) (em : o →+* ℂ) (C : TObj g ((n ^ j) ^ 2) J b (spMap em) → Prop) (d : ℕ), ArBase em → GoodClass em C Mat κ w w' d → ∀ (Y : MMPre n (n ^ j) (thIdeal em C)) (R : Type) [CommRing R] (β : o →+* R) (x : Sp R ⟶ Y.MM) (v : Ix g ((n ^ j) ^ 2) → R), IsOpenImmersion x → x ≫ Y.s = spMap β → SecCoord Y.de Y.th x v → ∀ q ∈ minimalPrimes R, ∃ (K : Type) (_ : Field K) (y : R →+* K) (e : K →+* ℂ) (t : TObj g ((n ^ j) ^ 2) J b (spMap y ≫ spMap β)) (tc : TObj g ((n ^ j) ^ 2) J b (spMap em)), RingHom.ker y = q ∧ e.comp (y.comp β) = em ∧ C tc ∧ TMap tc t (spMap e) ∧ t.Shape Mat κ ∧ t.Prim w w' ∧ t.HasTh (𝟙 _) (fun a => y (v a)) := by
   intro L1 L2 g J _ Mat κ n w w' hn hodd
-  obtain ⟨j₀, hj₀⟩ := GlobalTheory.T.descend_to_thetaConstant_field L1 L2 g J Mat κ n w w' hn hodd
+  obtain ⟨j₀, hj₀⟩ := _root_.GlobalTheory.ZM.descend_to_theta_field L1 L2 g J Mat κ n w w' hn hodd
   refine ⟨max j₀ 1, fun j hj o _ b em C d har hC Y R _ β x v hx hxs hv q hq => ?_⟩
   have hj0 : j ≥ j₀ := le_trans (le_max_left _ _) hj
   have hj1 : 1 ≤ j := le_trans (le_max_right _ _) hj
@@ -122,12 +128,12 @@ theorem exists_generic_object : Out.Laws → Out.Laws2 → ∀ (g : ℕ) (J : Ty
   have hva : y (v a₀) ≠ 0 := fun h => hc₀ ((hy0 _).1 h)
   obtain ⟨hcl, hmin⟩ := GlobalTheory.CoordChart.residue_generic o g n (n ^ j) (thIdeal em C) Y R β x v K y a₀ (by omega) hx hxs hv hfrac hva
   have hmin' := hmin (by rw [hker]; exact hq)
-  obtain ⟨-, hhom, -⟩ := GlobalTheory.T.thetaPointsVanishingIdeal_radical_homogeneous o g (n ^ j) J b em C har.2.2
+  obtain ⟨-, hhom, -⟩ := _root_.GlobalTheory.ZM.ThIdeal.thIdeal_radical_homogeneous_torsionFree o g (n ^ j) J b em C har.2.2
   have hu : (fun a => y (v a) / y (v a₀)) a₀ = 1 := div_self hva
   have hP := GlobalTheory.ker_cone_mem_minimalPrimes o _ K (thIdeal em C) (y.comp β) (fun a => y (v a) / y (v a₀)) a₀ hhom hu hmin'
   obtain ⟨tc, wv, htc, hth, hkw⟩ := GlobalTheory.ZM.exists_object_at_minimalPrime o g (n ^ j) J b em C Mat κ w w' d L1 L2 hN3 hNodd
     (countable_of_finiteType o har.2.1) hC _ hP
-  obtain ⟨e, c, hc, he, hec⟩ := GlobalTheory.T.exists_complex_embedding_scaling_of_ker_eval_eq o K _ (y.comp β) em (fun a => y (v a) / y (v a₀)) wv a₀
+  obtain ⟨e, c, hc, he, hec⟩ := _root_.GlobalTheory.exists_embedding_of_homogeneous_ker_eq o K _ (y.comp β) em (fun a => y (v a) / y (v a₀)) wv a₀
     (div_ne_zero hva hva) (by simpa only [div_self hva, div_one] using hcl) hkw.symm
   have heva : e (y (v a₀)) ≠ 0 := (map_ne_zero e).2 hva
   have hth' : tc.HasTh (𝟙 _) (fun a => e (y (v a))) := by

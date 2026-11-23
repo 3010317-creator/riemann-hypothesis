@@ -4,8 +4,10 @@ public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.RowsPtA
 public import Formalism.SharpRestriction.CuspSpanNormBounds.BranchingAndRankConstants
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AbsAllAtRecordGap
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AmpleThetaWideRangeLargeConstantsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AmplitudeBoundsAtParametersOfAdmittedBoundsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsThresholdCriticalLevelLowerBoundStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.AbsPointwiseMonoConstant
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AmplitudeBoundsAtParamsOfAdmittedBounds
+public import Formalism.SharpRestriction.CuspSpanNormBounds.CongruenceAtSplitFrobeniusHolds
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsThresholdCriticalLevelLowerBound
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PtDlAtRecord
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RealPlaceAmplitudeNormLeConstDivFormalDegreeStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RowColumnShapeOfWindowDataWidthGeOneStatement
@@ -95,9 +97,9 @@ theorem ampOn_singleton : ∀ c : ℝ, AmpOn {c} := by
   obtain ⟨CDl, hDl⟩ := GlobalTheory.CoreDlGap.ptDl_at_record Cg cb Cu cT CT c
   obtain ⟨Ca, hCa, hAbs⟩ := GlobalTheory.AbsRecGap.abs_all_at_record_gap Cg cb Cu cT CT c
   obtain ⟨CS, tS, hS⟩ := GlobalTheory.Amp.schur_at_record_gap Cg cb Cu cT CT c
-  obtain ⟨tL, hL⟩ := GlobalTheory.T.exists_threshold_criticalLevel_lower_bound cb Cu hcb
+  obtain ⟨tL, hL⟩ := _root_.GlobalTheory.CritLevelSize.tcritLow_sizes cb Cu hcb
   obtain ⟨tV, hV⟩ := GlobalTheory.T.normalizedFormalDegree_eq_vandermonde_of_sizes
-  obtain ⟨C, C2, Ch, hC, hCh, H⟩ := GlobalTheory.T.ampAt_of_admitted_bounds Cg CPT CDl 1 Ca CS zero_le_one hCa
+  obtain ⟨C, C2, Ch, hC, hCh, H⟩ := _root_.GlobalTheory.ampAt_record_of_inputs Cg CPT CDl 1 Ca CS zero_le_one hCa
   refine ⟨C, C2, Ch, hC, hCh, fun Cpr δ hδ => ?_⟩
   obtain ⟨t0, H0⟩ := H Cpr δ hδ
   obtain ⟨t1, h1⟩ := hPT (max Cpr 0)

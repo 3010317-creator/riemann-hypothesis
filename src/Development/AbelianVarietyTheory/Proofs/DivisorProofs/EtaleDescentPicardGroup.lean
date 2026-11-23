@@ -6,7 +6,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PicFaithfull
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BijectiveMultiplicativeGroupSectionsUnitsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEtaleFaithfullyFlatPicMapAlgebraEqOneStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEtaleFaithfullyFlatRefiningEtaleSurjectionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PositiveDegreeClassesDieOnEtaleCoverStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PositiveDegreeClassesDieOnEtaleCover
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -260,7 +260,7 @@ theorem rep_add {x y : H ℤ (sp A) Gm 1} {c d : CommRing.Pic A} (hx : Rep x c) 
   · rw [cd_mul hw hv, f1, f2]
 
 theorem rep_exists (x : H ℤ (sp A) Gm 1) : ∃ c, Rep x c := by
-  obtain ⟨Y, f, hf, hs, hx⟩ := GlobalTheory.T.positiveDegreeClasses_die_on_etaleCover ℤ (Spec (CommRingCat.of A)) Gm 1 one_pos x
+  obtain ⟨Y, f, hf, hs, hx⟩ := _root_.GlobalTheory.EtC.classes_die_on_etale_cover ℤ (Spec (CommRingCat.of A)) Gm 1 one_pos x
   obtain ⟨B, g, h, hg, hh⟩ := GlobalTheory.T.exists_etaleFaithfullyFlat_refining_etale_surjection (CommRingCat.of A) Y f hf hs
   letI : Algebra A B := g.hom.toAlgebra
   haveI : Algebra.Etale A B := hg.1

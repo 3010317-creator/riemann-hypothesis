@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqSmulOfCommuteHeisenbergLinearModelSchwartzBruhStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqSmulOfCommuteHeisenbergLinearModelSchwartzBruh
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -124,7 +124,7 @@ theorem GlobalTheory.schur_heisenberg_linearModel_fintype : ∀ {k : Type} [Fiel
     funext Y
     simp [ι₂', hlin x hx y hy c]
   have hadd : ∀ Y C, e (Y + C) = e Y + e C := fun Y C => map_add e Y C
-  obtain ⟨c, hc⟩ := GlobalTheory.T.eq_smul_of_commute_heisenberg_linearModel_schwartzBruhat V ψ0 hψc hψ1 ι₁' ι₂' hbij' hlin'
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.LinSchur.eq_smul_of_commute V ψ0 hψc hψ1 ι₁' ι₂' hbij' hlin'
     (fun C => Tr (e C)) (fun l => Mu (l ∘ₗ e.symm.toLinearMap))
     (fun C x hx => by
       obtain ⟨h1, h2, h3⟩ := hTr (e C) x hx

@@ -2,15 +2,21 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsAdditiveOfUniversal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianDualCrystalOfDualAbelianScheme
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeFirstDeRhamStructureStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeHomLiftingNilpotentDividedPowersStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeFirstDeRhamStructure
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianLifting
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeHomLiftingNilpotentDividedPowers
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeUnobstructedSquareZeroAffineStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualAbelianSchemeExistsBidualityStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdditiveLiftIff
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GrothendieckDeformationOfLifting
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GroupObjectLiftDividedPowers
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.JetRingMorphismUniqueness
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MaximalIsotropicLiftModIdealStatement
+public import Mathlib.Algebra.Algebra.Operations
+public import Mathlib.Algebra.Module.Projective
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MaximalIsotropicLiftModIdeal
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsKSValueOneOfRetraction
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualAbelianSchemeExistsBidualityStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdditiveLiftIff
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SmoothOfRelativeDimensionOfCharZero
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ConnectedSpaceSpecOfIsLocalRing
 import Mathlib.Algebra.Order.Floor.Extended
@@ -54,7 +60,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
 import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsToricRankOne
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsKSValueOneOfRetraction
 
 @[expose] public section
 
@@ -143,7 +148,7 @@ theorem lagr_univ {R : Type} [CommRing R] [IsLocalRing R] (I : Ideal R) {D : Typ
   let ψ : (Fin (Module.finrank R D) → R) →ₗ[R] (Fin (Module.finrank R D) → R) →ₗ[R] R :=
     φ.compl₁₂ ε.symm.toLinearMap ε.symm.toLinearMap
   have hψ : ∀ x y, ψ x y = φ (ε.symm x) (ε.symm y) := fun _ _ ↦ rfl
-  obtain ⟨E, N', hEN, hE, hEF⟩ := GlobalTheory.T.maximal_isotropic_lift_mod_ideal R I _ ψ hI h2 (fun x y ↦ by simp only [hψ]; exact anti _ _)
+  obtain ⟨E, N', hEN, hE, hEF⟩ := _root_.GlobalTheory.isotropic_summand_lift R I _ ψ hI h2 (fun x y ↦ by simp only [hψ]; exact anti _ _)
     (fun l ↦ by
       obtain ⟨z, hz⟩ := perf (l ∘ₗ ε.toLinearMap)
       refine ⟨ε z, fun x ↦ ?_⟩
@@ -175,10 +180,10 @@ theorem exists_lift_lam : ∀ (R R₀ : Type) [CommRing R] [IsLocalRing R] [IsNo
   let κ := divided₂ hI0
   have hκ : IsNilDP κ := isDPNilpotent_squareZero hI0
   have ADD : GlobalTheory.Published.DualAbelianScheme := GlobalTheory.T.dualAbelianScheme_exists_biduality
-  have ADR : GlobalTheory.Published.AbelianDeRham := GlobalTheory.T.abelianScheme_firstDeRham_structure
+  have ADR : GlobalTheory.Published.AbelianDeRham := _root_.GlobalTheory.abelianDeRham
   have ADC : GlobalTheory.Published.AbelianDualCrystal := GlobalTheory.abelianDualCrystal_of_dualAbelianScheme ADD
   have GD : GlobalTheory.Published.GrothendieckDeformation :=
-    GlobalTheory.Published.grothendieckDeformation_of_lifting ADR GlobalTheory.T.print_abelianLifting
+    GlobalTheory.Published.grothendieckDeformation_of_lifting ADR _root_.GlobalTheory.abelianScheme_hom_lifting_nilpotent_dividedPowers
   haveI := P₀.isAb.comm
   obtain ⟨A', _, i', h', hA'⟩ := GlobalTheory.T.abelianScheme_unobstructed_squareZero_affine R (RingHom.ker π) hI0 R₀ π hπ rfl P₀.A P₀.isAb
   obtain ⟨g, hg⟩ := GlobalTheory.AbelianDim.exists_relDim R A' hA'

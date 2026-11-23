@@ -3,8 +3,8 @@ module
 public import Mathlib.LinearAlgebra.Matrix.Rank
 public import Mathlib.NumberTheory.LocalField.Basic
 public import Mathlib.Topology.Instances.Matrix
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixRankNormalForm
 import Development.AbelianVarietyTheory.Definitions.Divisors.LineOppositeParabolicUnitaryLeviSectionEq
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixRankNormalFormStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,7 +61,7 @@ theorem GlobalTheory.isOpen_setOf_le_rank_localField : ∀ (k : Type) [Field k] 
   intro k _ _ _ _ A D _ _ _ _ s
   rw [isOpen_iff_mem_nhds]
   intro X hX
-  obtain ⟨H, Q, hHQ⟩ := GlobalTheory.T.matrix_rank_normal_form k A D X
+  obtain ⟨H, Q, hHQ⟩ := _root_.GlobalTheory.rank_frame_exists k A D X
   have hc : Continuous fun Y : Matrix A D k => (H * Y * Q).det :=
     ((continuous_const.matrix_mul continuous_id).matrix_mul continuous_const).matrix_det
   have hopen : IsOpen {Y : Matrix A D k | (H * Y * Q).det ≠ 0} :=

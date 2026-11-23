@@ -3,7 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ZetaAwayPowSelf
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.RangeOfIsPullback
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelObjectPullbackExistsAndPrincipal
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.WeilIsIffOfIsGrpPullbackComm
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ConstGen
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.WeilIsGrpPullbackOfCommute
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -71,7 +73,7 @@ theorem isSympLev_of_sympCond_pull : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) 
   · rw [← hker a, ← key', map_eq_one_iff _ σ.injective]
   · obtain ⟨a, ha⟩ := honto (σ g) (by rw [← map_pow, hg, map_one])
     exact ⟨a, σ.injective (by rw [key', ha])⟩
-  · exact (GlobalTheory.weilIs_iff_of_isGrpPullback_comm _ _ o.A o'.A T.hom m.φ _ _ (pull_isLB o.isLB _)
+  · exact (_root_.GlobalTheory.weilIs_grpPullback_of_comm _ _ o.A o'.A T.hom m.φ _ _ (pull_isLB o.isLB _)
       (pull_isLB o'.isLB _) m.cart dg (Over.mk x) M _ _ _ _ _ (eσ _) (eσ _)).2 (by rw [key', key']; exact hw a c)
 
 end GlobalTheory.HTSympCover

@@ -2,8 +2,9 @@ module
 
 public import Mathlib.AlgebraicGeometry.Morphisms.ClosedImmersion
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowKillsOnCompactOfLocalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowMulAppEqZeroNearOfRepresentedStatement
+public import Mathlib.AlgebraicGeometry.Scheme
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowKillsOnCompactOfLocal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowMulAppEqZeroNearOfRepresented
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -98,9 +99,9 @@ theorem killIdeal_map_basicOpen {S : Scheme.{0}} (Φ : ∀ (T : Scheme.{0}), (T 
     have hc : algebraMap Γ(S, W) Γ(S, S.basicOpen f) c ∈ killIdeal Φ (S.basicOpen f) := by
       rw [← IsLocalization.mk'_spec Γ(S, S.basicOpen f) c m]
       exact Ideal.mul_mem_right _ _ ha
-    obtain ⟨n, hn⟩ := GlobalTheory.T.exists_pow_kills_on_compact_of_local S Φ (W : S.Opens) W.2.isCompact f c (fun y hy => by
+    obtain ⟨n, hn⟩ := _root_.GlobalTheory.pow_kills_on_compact_of_local S Φ (W : S.Opens) W.2.isCompact f c (fun y hy => by
       obtain ⟨U, Z, i, hyU, hi, hrep⟩ := hcov y
-      exact GlobalTheory.T.exists_pow_mul_app_eq_zero_near_of_represented' S Φ hstab U Z i hi hrep (W : S.Opens) f c
+      exact _root_.GlobalTheory.exists_pow_mul_app_eq_zero_near_of_represented S Φ hstab U Z i hi hrep (W : S.Opens) f c
         (fun T t ht => (mem_killIdeal Φ).1 hc T t ht) y hyU hy)
     change IsLocalization.mk' _ c _ ∈ Ideal.map (algebraMap Γ(S, W) Γ(S, S.basicOpen f)) _
     rw [IsLocalization.mk'_mem_map_algebraMap_iff]

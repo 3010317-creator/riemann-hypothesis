@@ -1,29 +1,40 @@
 module
 
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.BoundAtTwoThreeFamilyFon
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleParametersFamilyConstStatement
+public import Development.AutomorphicArithmetic.ResidueCharacters.TwistedPlaces
+public import Formalism.SharpRestriction.ParConsts
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleParametersFamilyConst
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FontaineBoundsCrystallineDeRhamAll
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FontainePropertiesAllPlacesAlt
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodPointMultiplicityLeRankProofStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.BoundAtTwoThreeFamily
+public import Formalism.SharpRestriction.LevelLetterCocycles.SumRepresentations
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodPointMultiplicityLeRankProof
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ImportsTerMore
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalBoundTableFromDataBandConditionStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.EmbeddingTypeJumps
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalBoundTableFromDataBandCondition
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalBoundTableFromDataRowBRowEntries
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalBoundTableRowsCDAdmissibleStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalBoundZeroAtLargePrimesOfCongruenceBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ParametersConditionsMonotoneInConstantStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ParametersExcludedPrimesFewAndSmallAlongFamilyStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalBoundTableRowsCDAdmissible
+public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.BaseSizes
+public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.JumpDictionary
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsRhoPtOfSplitting
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalBoundZeroAtLargePrimesOfCongruenceBound
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SizeConditionsMonotoneInConstant
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExcludedPrimesFewAndSmallAlongFamily
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PolyValLeSumMulPow
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpecialPrimesSmallAlongFamilyStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TheoremECorollaryAClosingAllDataStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpecialPrimesSmallAlongFamily
+public import Formalism.SharpRestriction.LevelLetterCocycles.WachCoordinates
+public import Formalism.GaloisCohomology.LocalTateDualityK
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.RationalDualityOfAllCoefficients
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TheoremECorollaryAClosingAllData
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwoEALe
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.AdmissibleParameterEventuallyStatement
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.EtaLocLeRhsStatement
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ExistsSetupLargeStatement
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.FamJointBCDClosed
-import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.HoldsAll
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.NStarS
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.PolynomialBoundSetup
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RowsADInSettingStatement
+import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.HoldsAll
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -70,9 +81,9 @@ namespace GlobalTheory.NLinkClose
 theorem main_alt_alt : Hypotheses₂ → ∀ {eps : ℝ} (Fm : FamP eps), ∀ (C : ℝ) (CT : ℕ), 0 ≤ C → TwGood Fm → _root_.GlobalTheory.NLink.FactsFAlt Fm C CT →
     _root_.GlobalTheory.NLink.BoundAtTwoThreeFamilyFonAlt Fm → ConclF Fm := by
   intro hP eps Fm C CT hC0 hTw hF h23
-  obtain ⟨C₀, h03⟩ := GlobalTheory.T.theoremE_corollaryA_closing_all_data hP.bk hP.tate hP.euler
+  obtain ⟨C₀, h03⟩ := _root_.GlobalTheory.ThmECorA.closing hP.bk hP.tate hP.euler
   obtain ⟨constantFirstHub, Q, h67⟩ := _root_.GlobalTheory.T.embedding_jumps_aux2_of_setup
-  obtain ⟨C1, xpar, hC1, hpar⟩ := GlobalTheory.T.admissible_parameters_family_const Fm
+  obtain ⟨C1, xpar, hC1, hpar⟩ := _root_.GlobalTheory.NLink.admissible_parameters_design_family Fm
   obtain ⟨Ca, xa, ha⟩ := h23
   obtain ⟨Cb, xb, hb'⟩ := _root_.UpperTheory.N.starSF_of_prints hP Fm
   set ComplexParameterFamilyContinuity : ℝ := max 0 (max Ca Cb) with hC23def
@@ -95,8 +106,8 @@ theorem main_alt_alt : Hypotheses₂ → ∀ {eps : ℝ} (Fm : FamP eps), ∀ (C
     simp only [KillingConditions.RowK.Le, KillingConditions.RowK.K₁, KillingConditions.RowK.K₂, KillingConditions.RowK.K₃, rowC]
     refine ⟨hC₂1, ?_, ?_, ?_, hCs1, hA, ?_, ?_, ?_, ?_, ?_⟩ <;> linarith
   obtain ⟨xset, hset⟩ := _root_.GlobalTheory.T.exists_hubData_admJ_setup hP Fm C C₂ CT hTw hF
-  obtain ⟨xexc, hexc⟩ := GlobalTheory.T.excludedPrimes_few_and_small_along_family Fm
-  obtain ⟨xsm, hsm⟩ := GlobalTheory.T.specialPrimes_small_along_family Fm Cs hCs1
+  obtain ⟨xexc, hexc⟩ := _root_.GlobalTheory.NLink.excOK_family Fm
+  obtain ⟨xsm, hsm⟩ := _root_.GlobalTheory.SpecialSmall.special_primes_small Fm Cs hCs1
   obtain ⟨xE, hE⟩ := _root_.GlobalTheory.T.eventually_congBound_of_facts hP Fm
   obtain ⟨xbcd, hbcd⟩ := _root_.GlobalTheory.HTW.RecS.fam_jointBCD_closed_alt hP.font GlobalTheory.Per.FontaineAll.fontaine_bounds
     GlobalTheory.FontaineAdm.fontaineProperties_all_places _root_.GlobalTheory.JumpStatement.holds_all_alt Fm (rowC C₂)
@@ -112,14 +123,14 @@ theorem main_alt_alt : Hypotheses₂ → ∀ {eps : ℝ} (Fm : FamP eps), ∀ (C
   have hmid := _root_.GlobalTheory.T.star_ad_and_bb_le_of_joint_cond hP (Fm.D x i) (Fm.L x i) (Fm.params x hx i) (Fm.ex x hx i).nch HW F Cm X C₂ hS hC₂1
     ((h03 (Fm.D x i) HW F Cm).2 C₂ hC₂0) hBCD
   have hparC1 := hpar x h6 hx i
-  have hmult := GlobalTheory.T.goodPointMultiplicityLeRank_proof (Fm.D x i) (Fm.L x i) hFa.Conclusion1.2.2 hFa.Conclusion2.2.2 hFa.toCore.isot hFa.c2
+  have hmult := _root_.GlobalTheory.NLink.multLe_of_rank (Fm.D x i) (Fm.L x i) hFa.Conclusion1.2.2 hFa.Conclusion2.2.2 hFa.toCore.isot hFa.c2
   have hSizeG : SizeG (Fm.L x i) := (Fm.sizes x hx i).2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
   have hCTb : (CT : ℝ) ≤ (Fm.L x i).sc.b := le_trans hCT hb
   have htyp := _root_.GlobalTheory.T.star_bound_of_paired_character_condition hP (Fm.D x i) (Fm.L x i) (Fm.params x hx i) (Fm.ex x hx i).nch HW F Cm X C₂ hS C C1 CT
     hC0 hC1 hCTb hEx.2 hmult hparC1 hSizeG
-  have hmono := GlobalTheory.T.sizeConditions_mono (Fm.D x i) (Fm.L x i) (Fm.params x hx i) X
+  have hmono := _root_.GlobalTheory.NLinkMono.main (Fm.D x i) (Fm.L x i) (Fm.params x hx i) X
   have hCong := hE x h4 hx i hFa
-  have hlarge := GlobalTheory.T.localBoundZeroAtLargePrimes_of_congruenceBound (Fm.D x i) (Fm.L x i) X.r X.ρ X.exc hCong hFa.toCore.weight hS.canon.fam hS.kill hSha
+  have hlarge := _root_.GlobalTheory.NLink.RowE.main (Fm.D x i) (Fm.L x i) X.r X.ρ X.exc hCong hFa.toCore.weight hS.canon.fam hS.kill hSha
     hSm.1 (by rw [hXexc]; exact hexcEq)
   have hxa : xa ≤ x := le_trans (le_trans (le_max_left _ _) (le_max_right _ _)) h7
   have hxb : xb ≤ x := le_trans (le_trans (le_max_right _ _) (le_max_right _ _)) h7
@@ -142,9 +153,9 @@ theorem main_alt_alt : Hypotheses₂ → ∀ {eps : ℝ} (Fm : FamP eps), ∀ (C
       kill := hS.kill
       num := ⟨GlobalTheory.NLink.RowA.main _ _ (Fm.params x hx i) HW X _ Cs hS.canon.data hRle,
         GlobalTheory.NLink.localBoundTableFromData_rowB_rowEntries _ _ (Fm.params x hx i) HW X _ Cs hS.canon.data hRle,
-        (GlobalTheory.T.mediumInert_smallInert_lengthBound_tabX _ _ (Fm.params x hx i) HW X _ Cs hS.canon.data hRle).1,
-        (GlobalTheory.T.mediumInert_smallInert_lengthBound_tabX _ _ (Fm.params x hx i) HW X _ Cs hS.canon.data hRle).2,
-        GlobalTheory.T.localBoundTableFromData_bandCondition _ _ (Fm.params x hx i) HW X _ Cs hS.canon.data hRle hS.par67⟩
+        (_root_.GlobalTheory.NLink.localBoundTable_rowsCD_admissible _ _ (Fm.params x hx i) HW X _ Cs hS.canon.data hRle).1,
+        (_root_.GlobalTheory.NLink.localBoundTable_rowsCD_admissible _ _ (Fm.params x hx i) HW X _ Cs hS.canon.data hRle).2,
+        _root_.GlobalTheory.NBand.bandPlaceWeightApproximation_tabX _ _ (Fm.params x hx i) HW X _ Cs hS.canon.data hRle hS.par67⟩
       mid := hmid.1
       bb := ((hmono 7200 Cs (by linarith) hCs0).2.2.1) hmid.2
       large := hlarge

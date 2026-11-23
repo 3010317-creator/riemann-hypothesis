@@ -1,22 +1,24 @@
 module
 
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.SiegelDensities.Pieces
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CharacterSideEquidistributionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CountingFormulaOfComponentsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EquidistributionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistenceTestFunctionsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HassePrincipleHermitianStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianExistencePrincipleStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LFunctionSideEquidistributionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LengthFormulaOfTotalMassOneStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalDensityFormulaStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalDensityOfMassOneStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalDensityRatioFormulaStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ScalarFibrationFormulaStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SiegelWeilRankOneBaseCaseStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SimilitudeOfScalarFormulaStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TateIntegralFormulaStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ThetaIdentityOfLocalDensitiesStatement
+public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.BaseOneSide.PsiSide
+public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.BinaryMassMeans.MeanVal
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CharacterSideEquidistribution
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CountingFormulaOfComponents
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.Equidistribution
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistenceTestFunctions
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HassePrincipleHermitian
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianExistencePrinciple
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LFunctionSideEquidistribution
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LengthFormulaOfTotalMassOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalDensityFormula
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalDensityOfMassOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalDensityRatioFormula
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ScalarFibrationFormula
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SiegelWeilRankOneBaseCase
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SimilitudeOfScalarFormula
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TateIntegralFormula
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ThetaIdentityOfLocalDensities
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.MassOneBase.MassOne
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.SiegelDensities.PlugInf
 import Mathlib.Algebra.Order.Floor.Extended
@@ -60,9 +62,9 @@ import Mathlib.Topology.Sheaves.Init
 namespace PositivityTheory.Rg.Base1
 
 theorem baseOne_of (hM : PositivityTheory.SiegelWeilFormula.Densx.MassOne) : PositivityTheory.SiegelWeilFormula.Densx.BaseOne :=
-  GlobalTheory.T.siegel_weil_rank_one_base_case (GlobalTheory.T.length_formula_of_total_mass_one hM) (GlobalTheory.T.similitude_of_scalar_formula GlobalTheory.T.scalar_fibration_formula) GlobalTheory.T.hasse_principle_hermitian
-    (GlobalTheory.T.counting_formula_of_components GlobalTheory.T.tate_integral_formula (GlobalTheory.T.character_side_equidistribution GlobalTheory.T.equidistribution) GlobalTheory.T.local_density_ratio_formula GlobalTheory.T.hermitian_existence_principle GlobalTheory.T.existence_test_functions GlobalTheory.T.local_density_formula
-      (GlobalTheory.T.l_function_side_equidistribution GlobalTheory.T.equidistribution) (GlobalTheory.T.theta_identity_of_local_densities GlobalTheory.T.scalar_fibration_formula (GlobalTheory.T.local_density_of_mass_one GlobalTheory.T.scalar_fibration_formula hM)))
+  _root_.GlobalTheory.CompanionTheory.Base1.baseOne_of_parts (_root_.GlobalTheory.CompanionTheory.Mass.Rank.mass_formula_of_total_mass_one hM) (_root_.GlobalTheory.CompanionTheory.SW.BaseSimil.simil _root_.GlobalTheory.CompanionTheory.RgBase.ScalFib.scal) _root_.GlobalTheory.CompanionTheory.SW.BaseHasse.hasse
+    (_root_.GlobalTheory.CompanionTheory.RgBaseCnt.cnt_of _root_.GlobalTheory.CompanionTheory.TateRes.tate (_root_.GlobalTheory.CompanionTheory.BasePsi.psiSide_of_equi _root_.GlobalTheory.CompanionTheory.Equi.equi) _root_.GlobalTheory.CompanionTheory.RatioBase.ratio _root_.GlobalTheory.CompanionTheory.RgBase.hEx _root_.GlobalTheory.CompanionTheory.SW.BaseTest.testEx _root_.GlobalTheory.CompanionTheory.SW.RankOne.dens
+      (_root_.GlobalTheory.CompanionTheory.SW.RankOneSiegelWeil.lside _root_.GlobalTheory.CompanionTheory.Equi.equi) (_root_.GlobalTheory.CompanionTheory.RgBase.Theta.thetaId _root_.GlobalTheory.CompanionTheory.RgBase.ScalFib.scal (_root_.GlobalTheory.CompanionTheory.RankOneLoc.locR _root_.GlobalTheory.CompanionTheory.RgBase.ScalFib.scal hM)))
 
 theorem baseOne : PositivityTheory.SiegelWeilFormula.Densx.BaseOne := baseOne_of PositivityTheory.SiegelWeilFormula.BaseOne.massOne
 

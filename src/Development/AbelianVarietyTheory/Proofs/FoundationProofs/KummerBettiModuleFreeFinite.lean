@@ -5,12 +5,13 @@ public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
 public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.BettiKummerRelationPadicAddStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HsCodiscreteNeBot
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.BettiKummerRelationPadicAdd
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.BettiKummerRelationPadicSmulStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EqZeroOfBettiKummerRelationPadicZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsBettiCocycleKummerRelationStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GammaOneGammaZeroHomogeneousCocyclesFiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KummerCompletionNoPrimeTorsionStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EqZeroOfBettiKummerRelationPadicZero
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsBettiCocycleKummerRelation
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GammaOneGammaZeroHomogeneousCocyclesFinite
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KummerCompletionNoPrimeTorsion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,13 +64,13 @@ namespace GlobalTheory.KZ
 
 theorem B_free_finite : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε), Function.Injective ε → (∃ φ : ℂ → ℂ, DifferentiableOn ℂ φ Hs ∧ X.an X.jK = (φ : Mero)) → ∀ (N l w : ℕ) [Fact l.Prime], l ≠ 2 → 5 ≤ N → Nat.Coprime N l → Odd w → Module.Free ℤ_[l] (X.B N l w) ∧ Module.Finite ℤ_[l] (X.B N l w) := by
   intro Ω _ _ _ ε X hε hj N l w _ hl2 hN hcop hw
-  have L1 : ∀ x : X.Khat l, (l : ℤ_[l]) • x = 0 → x = 0 := fun x hx => GlobalTheory.T.kummerCompletion_no_prime_torsion X l x hx
-  have Ladd : ∀ b b' c c', BtZ X N l b c → BtZ X N l b' c' → BtZ X N l (b + b') (c + c') := fun b b' c c' h h' => GlobalTheory.T.bettiKummerRelationPadic_add X N l b b' c c' h h'
+  have L1 : ∀ x : X.Khat l, (l : ℤ_[l]) • x = 0 → x = 0 := fun x hx => _root_.GlobalTheory.KZ.BettiB.khat_no_l_torsion X l x hx
+  have Ladd : ∀ b b' c c', BtZ X N l b c → BtZ X N l b' c' → BtZ X N l (b + b') (c + c') := fun b b' c c' h h' => _root_.GlobalTheory.KZ.BettiB.Add.btZ_add X N l b b' c c' h h'
   have Lsmul : ∀ (r : ℤ_[l]) b c, BtZ X N l b c → BtZ X N l (r • b) (r • c) := fun r b c h => GlobalTheory.T.bettiKummerRelationPadic_smul X N l r b c h
   have Lzero : BtZ X N l 0 0 := btZ_zero X N l
-  have L3 : ∀ b, BtZ X N l b 0 → b = 0 := fun b h => GlobalTheory.T.eq_zero_of_bettiKummerRelationPadic_zero ε X hε hj N l (by omega) b h
-  have L4 : Module.Finite ℤ_[l] (Z1 N l w) := GlobalTheory.T.gammaOneGammaZeroHomogeneousCocycles_finite N l w (by omega)
-  have L5 : ∀ b ∈ X.BSet N l w, ∃ c ∈ Z1 N l w, BtZ X N l b c := GlobalTheory.T.exists_betti_cocycle_kummer_relation ε X hε hj N l w hl2 hN hcop hw
+  have L3 : ∀ b, BtZ X N l b 0 → b = 0 := fun b h => _root_.GlobalTheory.KZ.BettiB.eq_zero_of_btZ_zero ε X hε hj N l (by omega) b h
+  have L4 : Module.Finite ℤ_[l] (Z1 N l w) := _root_.GlobalTheory.KZ.BettiB.module_finite_z1_padicInt N l w (by omega)
+  have L5 : ∀ b ∈ X.BSet N l w, ∃ c ∈ Z1 N l w, BtZ X N l b c := _root_.GlobalTheory.KZ.BettiEx.exists_betti_cocycle ε X hε hj N l w hl2 hN hcop hw
 
   let S : Submodule ℤ_[l] (X.Fn l × Z1 N l w) :=
     { carrier := {p | BtZ X N l p.1 (p.2 : Gam N l → MvPolynomial (Fin 2) ℤ_[l])}

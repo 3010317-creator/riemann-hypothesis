@@ -1,13 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrPreservesHomology
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AcyclicResolutionComputesEtaleCohomologyStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafPropertiesStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AcyclicResolutionComputesEtaleCohomology
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsImageCocycleSemilinearSheafComplexMapStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtendChainMapAlongQuasiIsoKInjectiveStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HypercohomologyPullbackPushforwardFunctorialStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictScalarsInjectiveSheafAcyclicStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.GalMapMul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictScalarsInjectiveSheafAcyclic
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SheafComplexSemilinearMapCompBijectiveStatement
+import Mathlib.Algebra.Homology.HomotopyCategory.KInjective
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafProperties
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HypercohomologyPullbackPushforwardFunctorialStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,7 +65,7 @@ theorem rAug_comp_toZ_eq_zero_of_kill (S : Type) [CommRing S] (F : Shv S) (R : T
   apply HomologicalComplex.from_single_hom_ext
   apply Sheaf.hom_ext
   ext U b
-  obtain ⟨-, -, -, -, h5, -⟩ := GlobalTheory.T.chosenInjectiveResolution_etaleSheaf_properties S F
+  obtain ⟨-, -, -, -, h5, -⟩ := _root_.GlobalTheory.EtC.ResBasic.res_basic S F
   let e := HomologicalComplex.singleObjXSelf (ComplexShape.up ℤ) 0 ((restr (Int.castRingHom S)).obj F)
   let a : Sec ((restr (Int.castRingHom S)).obj F) U.unop := Sec.map e.hom b
   have hb : b = Sec.map (sglι ((restr (Int.castRingHom S)).obj F)) a := by
@@ -89,10 +92,10 @@ theorem cpush_toZ_eq_zero_of_kill (S : Type) [CommRing S] (F : Shv S) (R : Type)
     (hδ : ∀ (U : Scheme.{0}) (a : Sec F U), δ.app U 0 (Sec.map (resι S F) a) = 0) (E : Spc) (n : ℤ)
     (y : CohomologyClass ((chains ℤ).obj E) ((rcx (Int.castRingHom S)).obj (res S F)) n) :
     cpush ((chains ℤ).obj E) δ.toZ n y = 0 := by
-  obtain ⟨-, -, -, hqF, -⟩ := GlobalTheory.T.chosenInjectiveResolution_etaleSheaf_properties S F
-  obtain ⟨-, hinjG, hgeG, hqG, -⟩ := GlobalTheory.T.chosenInjectiveResolution_etaleSheaf_properties R G
+  obtain ⟨-, -, -, hqF, -⟩ := _root_.GlobalTheory.EtC.ResBasic.res_basic S F
+  obtain ⟨-, hinjG, hgeG, hqG, -⟩ := _root_.GlobalTheory.EtC.ResBasic.res_basic R G
   let G' := (restr (Int.castRingHom R)).obj G
-  obtain ⟨hKI', -, hGE', -⟩ := GlobalTheory.T.chosenInjectiveResolution_etaleSheaf_properties ℤ G'
+  obtain ⟨hKI', -, hGE', -⟩ := _root_.GlobalTheory.EtC.ResBasic.res_basic ℤ G'
   haveI := hqF; haveI := hqG; haveI := hgeG; haveI := hKI'; haveI := hGE'
   haveI : QuasiIso (rAug (Int.castRingHom S) (resAug F)) := rAug_quasiIso _ _
   haveI : QuasiIso (rAug (Int.castRingHom R) (resAug G)) := rAug_quasiIso _ _
@@ -100,8 +103,8 @@ theorem cpush_toZ_eq_zero_of_kill (S : Type) [CommRing S] (F : Shv S) (R : Type)
     (rAug (Int.castRingHom R) (resAug G))).1 (resAug G')
   have hacyc : ∀ (t : ℤ) (P : PSh) (m : ℤ), 0 < m →
       Subsingleton (H ℤ (disc.obj P) (((rcx (Int.castRingHom R)).obj (res R G)).X t) m) :=
-    fun t P m hm => GlobalTheory.T.restrictScalars_injective_sheaf_acyclic ℤ R (Int.castRingHom R) ((res R G).X t) P m hm
-  have hbij := GlobalTheory.T.acyclic_resolution_computes_etale_cohomology ℤ G' ((rcx (Int.castRingHom R)).obj (res R G)) (rAug (Int.castRingHom R) (resAug G)) v hv
+    fun t P m hm => _root_.GlobalTheory.EtC.restr_injective_acyclic ℤ R (Int.castRingHom R) ((res R G).X t) P m hm
+  have hbij := _root_.GlobalTheory.EtC.acycRes_computes ℤ G' ((rcx (Int.castRingHom R)).obj (res R G)) (rAug (Int.castRingHom R) (resAug G)) v hv
     hacyc E n
   have hzero := rAug_comp_toZ_eq_zero_of_kill S F R G δ hδ
   obtain ⟨hom⟩ := (GlobalTheory.T.extend_chainMap_along_quasiIso_kInjective ℤ ((restr (Int.castRingHom S)).obj F) ((rcx (Int.castRingHom S)).obj (res S F)) (res ℤ G')

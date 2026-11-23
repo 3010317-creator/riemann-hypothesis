@@ -2,12 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WHyp
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSelfDualMeasuresAndAbsKScale
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HyperbolicPartialFourierTwiceEqReflectionStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IdempotentCoordinatesStructureStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsLocallyConstantCompactSupportIdempotentCoordinStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsLocallyConstantEtaleTraceAddCharHermitianKerneStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HyperbolicPartialFourierTwiceEqReflection
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IdempotentCoordinatesStructure
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsLocallyConstantCompactSupportIdempotentCoordin
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsTestRep
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsLocallyConstantEtaleTraceAddCharHermitianKerne
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PartialFourierPsiKPreservesTestFunctions
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FourierEtaleKEqIntegralPartialFourier
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyMeasAndReps
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PartialFourierPsiKPreservesTestFunctionsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +54,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FourierEtaleKEqIntegralPartialFourier
 
 @[expose] public section
 
@@ -92,9 +93,9 @@ theorem measure_eq_coords : ∀ (F E : Type) [NontriviallyNormedField F] [Nontri
   haveI := GlobalTheory.FourKFub.secondCountableK A
   obtain ⟨_, _, _, _, hS⟩ := EtMeas.top_facts F A.L
   obtain ⟨_, _, _, _, -⟩ := EtMeas.top_facts F A.K
-  obtain ⟨h1, h2, -, hker, -⟩ := GlobalTheory.T.idempotentCoordinates_structure F E A e he hse
-  obtain ⟨htc, htc'⟩ := GlobalTheory.T.isLocallyConstantCompactSupport_idempotentCoordinates_iff F E A e h1 h2
-  have hlc := (GlobalTheory.T.isLocallyConstant_etaleTraceAddChar_hermitianKernel F E A ψ hψ).2 (x : A.K)
+  obtain ⟨h1, h2, -, hker, -⟩ := _root_.GlobalTheory.JR.Hyp.coord_structure F E A e he hse
+  obtain ⟨htc, htc'⟩ := _root_.GlobalTheory.JR.Hyp.isTest_coord F E A e h1 h2
+  have hlc := (_root_.GlobalTheory.JR.Hyp.isLocallyConstant_psiK_kerL F E A ψ hψ).2 (x : A.K)
   haveI : ν.IsAddHaarMeasure := hν.1
   let C := ccEquiv A e h1 h2
   have hC : (C : A.K × A.K → A.L) = cc A e := rfl
@@ -108,13 +109,13 @@ theorem measure_eq_coords : ∀ (F E : Type) [NontriviallyNormedField F] [Nontri
   have hsw : ∀ Φ : A.K × A.K → ℂ, IsTest Φ → IsTest (fun q : A.K × A.K => Φ (q.2, q.1)) := fun Φ hΦ =>
     ⟨hΦ.1.comp_continuous continuous_swap, hΦ.2.comp_homeomorph (Homeomorph.prodComm A.K A.K)⟩
   have hpt : ∀ Φ : A.K × A.K → ℂ, IsTest Φ → IsTest (pt A ν ψ x Φ) := fun Φ hΦ =>
-    GlobalTheory.T.partialFourier_psiK_preserves_testFunctions F E A ψ hψ x ν hν.1 Φ hΦ
+    _root_.GlobalTheory.JR.Hyp.pt_isTest F E A ψ hψ x ν hν.1 Φ hΦ
   have hT : ∀ Φ : A.K × A.K → ℂ, IsTest Φ → IsTest (tt A ν ψ x Φ) := fun Φ hΦ =>
     hpt _ (hsw _ (hpt Φ hΦ))
   have hTT : ∀ Φ : A.K × A.K → ℂ, IsTest Φ → tt A ν ψ x (tt A ν ψ x Φ) = fun p => Φ (-p.1, -p.2) := by
     intro Φ hΦ
-    have i1 := GlobalTheory.T.hyperbolicPartialFourier_twice_eq_reflection F E A ψ x ν hν _ (hsw _ (hpt Φ hΦ))
-    have i2 := GlobalTheory.T.hyperbolicPartialFourier_twice_eq_reflection F E A ψ x ν hν Φ hΦ
+    have i1 := _root_.GlobalTheory.JR.Hyp.pt_pt_eq_reflect F E A ψ x ν hν _ (hsw _ (hpt Φ hΦ))
+    have i2 := _root_.GlobalTheory.JR.Hyp.pt_pt_eq_reflect F E A ψ x ν hν Φ hΦ
     funext p
     show pt A ν ψ x (fun q => pt A ν ψ x (pt A ν ψ x (fun q' => pt A ν ψ x Φ (q'.2, q'.1))) (q.2, q.1)) p = _
     rw [i1]

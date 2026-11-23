@@ -3,10 +3,17 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsFlatAnIffIsConstMul
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HermitianPeriodLinearAlgebra
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsDerivAt0CompLinMap
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PeriodEigenFrameStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniformisedEigenFrameOneStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeGram
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PeriodEigenFrame
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsConstMul
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniformisedEigenFrameOne
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.PeriodHermitianTypeCompatibility
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.RiemannFormPeriodDeterminantBoundStatement
+import Mathlib.Analysis.Complex.Order
+import Mathlib.Data.Matrix.ColumnRowPartitioned
+import Mathlib.LinearAlgebra.Matrix.PosDef
+import Mathlib.LinearAlgebra.Matrix.Rank
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.RiemannFormPeriodDeterminantBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -105,7 +112,7 @@ theorem norm_core {p q g : ℕ} (V : Fin p → Fin g → ℂ) (W : Fin q → Fin
     have := congrFun (congrFun hrel (e m)) (e n)
     simpa [Matrix.mul_apply] using this
   have hdet : (S.submatrix e e).det ≠ 0 := by rwa [Matrix.det_submatrix_equiv_self]
-  obtain ⟨t₁, -, -, t₄⟩ := GlobalTheory.T.riemann_form_period_determinant p q (A.submatrix id e) (B.submatrix id e)
+  obtain ⟨t₁, -, -, t₄⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.fcNorm p q (A.submatrix id e) (B.submatrix id e)
     (S.submatrix e e) H₁ H₂ pd₁ pd₂ hdet hrel'
   have hFS : Fm * S = B := by
     ext j n
@@ -202,7 +209,7 @@ theorem hodgeNorm_flat : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     positivity
   intro ρ Φ hΦ P y v w Γ Δ hP hy hfr hΓ hΔ
   obtain ⟨⟨V₀, W₀, Fm, B, d⟩, ⟨k1, k2, k3, k4, -, ⟨C, k6⟩, k7⟩, -⟩ :=
-    GlobalTheory.T.uniformised_eigen_frame_one E H D l Xo c τ τ' σ g ty FU hty hrt hτ i e P y v w he hP hy hfr
+    _root_.GlobalTheory.CompanionTheory.Ar.Flat.anSolve E H D l Xo c τ τ' σ g ty FU hty hrt hτ i e P y v w he hP hy hfr
   simp only at k1 k2 k3 k4 k6 k7
   have hflat : Φ y v w * (Matrix.fromRows C Fm).det = ρ :=
     hΦ P y v w V₀ W₀ C Fm B hP hy hfr k1 k2 k6 k3 k4
@@ -217,8 +224,8 @@ theorem hodgeNorm_flat : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     show σ (tauIn c (ComplexEmbedding.conjugate τ) a) = _
     rw [h1, hτ, H.bar_eq, IsCMField.complexEmbedding_complexConj]
     rfl
-  obtain ⟨V, hVd, hVl, hVs⟩ := GlobalTheory.T.period_eigen_frame E H D l Xo _ g ty FU i P (under y) (σ.comp (tauIn c τ)) τ' D.p v hP hy hτ hv
-  obtain ⟨W, hWd, hWl, -⟩ := GlobalTheory.T.period_eigen_frame E H D l Xo _ g ty FU i P (under y) _ (ComplexEmbedding.conjugate τ') D.q w hP hy hc hw
+  obtain ⟨V, hVd, hVl, hVs⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.exists_directions_of_isEigFrame E H D l Xo _ g ty FU i P (under y) (σ.comp (tauIn c τ)) τ' D.p v hP hy hτ hv
+  obtain ⟨W, hWd, hWl, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.exists_directions_of_isEigFrame E H D l Xo _ g ty FU i P (under y) _ (ComplexEmbedding.conjugate τ') D.q w hP hy hc hw
   have eV : V₀ = V := funext fun a => (hVd a _).1 (k1 a)
   have eW : W₀ = W := funext fun a => (hWd a _).1 (k2 a)
   subst eV eW

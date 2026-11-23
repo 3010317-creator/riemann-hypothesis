@@ -2,8 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.PoincareCuspForms.TwoLevelLogarithm
 public import Development.AbelianVarietyTheory.Definitions.ThetaValues.Generic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeadingMonomialProductsLinearIndependentStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LoweredWeightInterpolationAtPointsStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.BasePsiLeviLowerBound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeadingMonomialProductsLinearIndependent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LoweredWeightInterpolationAtPoints
+public import ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.IndCount
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.JetsPf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -38,8 +41,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.IndCount
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.JetsPf
 import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsArchOne
 
 @[expose] public section
@@ -49,7 +50,7 @@ open NumberField Module ReciprocityTheory.ChartRestriction.G.FD ReciprocityTheor
 theorem GlobalTheory.ShareOn.lowerRank_oneComponent : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (X : DataX E r) (Xa : ArchInM X.toData) (Fl : FlatM X.toData Xa), GlobalTheory.Shares.Margins X.toData Xa → 0 < X.p0 → X.p0 < r → GapsGe X.p0 Xa.L 1 → PairGe Xa.L (1.9 * Xa.T) → GapsGe X.p0 (Xa.Fp - kLog X.Ψ r - (nd X.toData + 2) • Xa.L) 0 → PairGe (Xa.Fp - kLog X.Ψ r - (nd X.toData + 2) • Xa.L) 1 → ∀ s : ℕ, Even s → s ≤ Xa.T → ∀ u : Frame X.Ψ r → ℂ, u ∈ X.SS (deMul X.Ψ r X.p0 s) → (∃ x ∈ X.dom, u x ≠ 0) → ∃ g : Fin (Fl.δ * (Xa.T + nd X.toData).choose (nd X.toData)) → Frame X.Ψ r → ℂ, (∀ q, g q ∈ X.SS (Xa.Fp + Xa.T • Xa.L - deMul X.Ψ r X.p0 s)) ∧ ∀ a : _ → ℂ, (∀ x ∈ X.dom, ∑ q, a q * g q x = 0) → a = 0 := by
   intro E _ _ _ r X Xa Fl hM hp0 hp0r hg1 hp1 hg2 hp2 s hs hsT u hu hune
   classical
-  have hF := GlobalTheory.T.loweredWeight_interpolation_at_points E r X Xa Fl hM hp0 hp0r hg1 hp1 hg2 hp2 s hs hsT u hu hune
+  have hF := _root_.GlobalTheory.LowerInterp.lowered_interp E r X Xa Fl hM hp0 hp0r hg1 hp1 hg2 hp2 s hs hsT u hu hune
   choose F hFd hFval hFss using hF
   set M := ReciprocityTheory.ChartRestriction.G.AR.multiLt (nd X.toData) (Xa.T + 1) with hM'
   have hMcard : M.card = (Xa.T + nd X.toData).choose (nd X.toData) := by
@@ -90,7 +91,7 @@ theorem GlobalTheory.ShareOn.lowerRank_oneComponent : ∀ (E : Type) [Field E] [
       rw [← ha x hx]
       refine Finset.sum_congr rfl fun q _ => ?_
       rw [hc q]
-    have h7 := GlobalTheory.T.leadingMonomialProducts_linearIndependent E r X.toData Xa Fl F hFd hFval Xa.T cc hlead
+    have h7 := _root_.GlobalTheory.JetIndepAtPts.leadM_coeff_zero E r X.toData Xa Fl F hFd hFval Xa.T cc hlead
     funext q
     rw [← hc q]
     exact h7 _ (Finset.mem_product.mp (e q).2).2 _

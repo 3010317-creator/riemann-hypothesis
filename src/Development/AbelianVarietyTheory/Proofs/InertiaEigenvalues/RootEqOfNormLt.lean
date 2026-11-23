@@ -1,15 +1,15 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicIntegersEqWittZetaSubOne
 public import Formalism.LocalRingCardinality.AdicCompletionLocal.InstIsAdicCompleteOCSpanSingletonSetCast
 public import Development.AbelianVarietyTheory.Definitions.Foundations.HTBasis
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsAlgClosedTiltFieldAndValuationRing
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormEqZpowOfMemMaxUnramifiedSubfield
 public import Development.AbelianVarietyTheory.CrystallinePeriods.RingBasics
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousOrbitPadicComplex
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicTateMaximalIdealKillsFirstCohomologyStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicTowerFixedIffMemCompletedIntegersStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicTateMaximalIdealKillsFirstCohomology
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicTowerFixedIffMemCompletedIntegers
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqOfPowEqOneOfNormSubLtOne
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicIntegersEqWittZetaSubOne
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinrankCyclotomicExtAndCyclotomicCharSurjective
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormPrimitiveRootPrimePowSubOnePadicComplex
 import Mathlib.Algebra.Order.Floor.Extended
@@ -282,12 +282,12 @@ theorem exists_near_Ohat (act : GQ l →* (PadicComplex l ≃+* PadicComplex l))
       funext k
       simp only [Pi.add_apply, map_mul, RingAut.mul_apply, map_div₀, map_sub, map_natCast]
       ring
-  obtain ⟨b, hb, hb'⟩ := GlobalTheory.T.cyclotomic_tate_maximalIdeal_kills_first_cohomology l act hact K 1 a ha ha1 _ hcoc
+  obtain ⟨b, hb, hb'⟩ := _root_.GlobalTheory.Cyc.AveragingRankOne.cyclotomic_maximalIdeal_smul_cocycle_isCoboundary l act hact K 1 a ha ha1 _ hcoc
   have hn : ‖(l : PadicComplex l) / a * b 0‖ ≤ ‖(l : PadicComplex l)‖ / ‖a‖ := by
     rw [norm_mul, norm_div]
     exact mul_le_of_le_one_right (by positivity) (hb 0)
   refine ⟨y - l / a * b 0, ?_, by simpa using hn⟩
-  rw [← GlobalTheory.T.cyclotomicTower_fixed_iff_mem_completedIntegers l act hact K]
+  rw [← _root_.GlobalTheory.CycInvariants.fixed_iff_mem_Ohat l act hact K]
   · intro h hh
     have := congrFun (hb' h hh) 0
     simp only [Pi.smul_apply, smul_eq_mul, Pi.sub_apply] at this

@@ -6,7 +6,10 @@ public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAmpleL
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ValCalc
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DvdOfForallHeightOneExistsDvdMul
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyExistsAmplePowSectionsCuttingOutClosed
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMulEqMulSqOfFaithfullyFlatHeightOneStatement
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Mathlib.RingTheory.Ideal.Height
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMulEqMulSqOfFaithfullyFlatHeightOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOpenUnitMulSq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitOfAssociated
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GeometricallyIntegralOpen
@@ -18,10 +21,10 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiabelianG
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubsingletonOfNotNonempty
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaSectionSquareUnitsLocal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoSmulPolarisationClassGenericDiagonalDoublingStatement
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SecLinOfSecScal
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GeometricallyIntegralIffGeometricallyConnectedOf
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PowFlatLocallyQuasiFinite
 import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExpansionOfIntegralSectionIsIntegral
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SecLinOfSecScal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -135,7 +138,7 @@ theorem exists_open_unit_mul_sq (R : Type) [CommRing R] [IsDomain R] [IsLocalRin
           (Ideal.height_strict_mono_of_isPrime hlt).trans_le h1.le
         rw [ENat.lt_one_iff_eq_zero, Ideal.height_eq_zero_iff_eq_bot] at h1'
         exact hq ((Ideal.map_eq_bot_iff_of_injective hinj).1 h1')
-      refine GlobalTheory.T.exists_mul_eq_mul_sq_of_faithfullyFlat_height_one _ _ _ hne₀ hsq p hp h1 ?_
+      refine _root_.GlobalTheory.Mum.exists_mul_eq_mul_sq_of_faithfullyFlat_of_map_isPrime _ _ _ hne₀ hsq p hp h1 ?_
       have := hpr' _ hqp
       rwa [← Ideal.map_map, heq] at this
   obtain ⟨u₀, a, hua⟩ := isUnit_mul_sq_of_faithfullyFlat _ (G.left.presheaf.stalk x') _ hne₀ hsq Hp

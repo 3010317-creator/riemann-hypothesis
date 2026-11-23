@@ -2,9 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRapidInf
 public import Development.AbelianVarietyTheory.Definitions.Divisors.MirSet
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOnDoubleCosetOfEqOnArchimedeanSliceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCutOperatorsMirabolicFinitePlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDisjointUnipotentCellsCoverCompactMiraboliStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfMemCell
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOnDoubleCosetOfEqOnArchimedeanSlice
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCutOperatorsMirabolicFinitePlaces
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDisjointUnipotentCellsCoverCompactMiraboli
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,8 +60,8 @@ theorem GlobalTheory.JSW.MirPatch.exists_eq_on_mirS_of_slices : ∀ (E : Type) [
   choose Wq hWq hWqb using hsel
   choose Uq hUqo hUq using fun q => hWU _ (hWq q)
   obtain ⟨K, R, j, hKo, hKc, hR, hcov, huniq⟩ :=
-    GlobalTheory.T.exists_disjoint_unipotentCells_cover_compact_mirabolic E m S C hC (fun q => Ub ⊓ Uq q) (fun q => hUbo.inter (hUqo q))
-  choose n hh c hhS hcutEq using GlobalTheory.T.exists_cutOperators_mirabolic_finitePlaces E m S K hKo hKc
+    _root_.GlobalTheory.JSW.MirPatch.Cover.exists_cover E m S C hC (fun q => Ub ⊓ Uq q) (fun q => hUbo.inter (hUqo q))
+  choose n hh c hhS hcutEq using _root_.GlobalTheory.JSW.MirPatch.cut_operators E m S K hKo hKc
   refine ⟨∑ x ∈ R, ∑ i, c x i • (fun g => Wq (j x) (g * hh x i)), ?_, ?_⟩
   · exact 𝒲.sum_mem fun x _ => 𝒲.sum_mem fun i _ => 𝒲.smul_mem _ (hWt _ (hWq _) _ (hhS x i))
   · intro p hp
@@ -75,7 +76,7 @@ theorem GlobalTheory.JSW.MirPatch.exists_eq_on_mirS_of_slices : ∀ (E : Type) [
       by_cases hpx : p ∈ GlobalTheory.JSW.MirPatch.cell K x
       · rw [Set.indicator_of_mem hpx, Set.indicator_of_mem hpx]
         obtain ⟨hj1, hj2, -, hj4⟩ := hR x hx
-        exact GlobalTheory.T.eq_on_doubleCoset_of_eq_on_archimedeanSlice E m S b (Wq (j x)) (Ub ⊓ Uq (j x)) (j x) hj1 hj2 hb (hWe _ (hWq _))
+        exact _root_.GlobalTheory.JSW.MirPatch.eq_on_cell_of_eq_on_slice E m S b (Wq (j x)) (Ub ⊓ Uq (j x)) (j x) hj1 hj2 hb (hWe _ (hWq _))
           (fun u hu g => hUb u hu.1 g) (fun u hu g => hUq _ u hu.2 g) (hWqb _ ⟨hj1, hj2⟩) p hp (hj4 hpx)
       · rw [Set.indicator_of_notMem hpx, Set.indicator_of_notMem hpx]
     rw [e1, Finset.sum_congr rfl e2]

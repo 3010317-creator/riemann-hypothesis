@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsVolData
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarLieNilpotentCoordinates
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarLieNilpotentCoordinatesStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NCoords
+public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
+public import ReciprocityTheory.GeometryOfNumbers.LatticeCovolumes.CountStA
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarLieNilpotentEqLebesgue
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -42,7 +44,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.GeometryOfNumbers.LatticeCovolumes.CountStA
 
 @[expose] public section
 
@@ -112,7 +113,7 @@ theorem mem_iff (ι : Type) (k r : ℕ) (DU : UTr r → Set (ι → ℂ)) (DH : 
 
 theorem measure_blocks : ∀ (ι : Type) [Fintype ι] (k r : ℕ) (DU : UTr r → Set (ι → ℂ)) (DH : Fin r → Set (ι → Fin (k + 1) → ℂ)) (DC : UTr r → Set (ι → ℂ)) (DG : Fin r → Set (ι → ℝ)), (∀ p, MeasurableSet (DU p)) → (∀ a, MeasurableSet (DH a)) → (∀ p, MeasurableSet (DC p)) → (∀ a, MeasurableSet (DG a)) → MeasurableSet {x : ι → Mt k r | (∀ w, Matrix.of (x w) ∈ Nset k r) ∧ ∀ β : Bk r, (fun w => cM k r β (x w)) ∈ blkSet ι k r DU DH DC DG β} ∧ (Measure.pi fun _ : ι => haarLie (Nset k r) 1) {x : ι → Mt k r | (∀ w, Matrix.of (x w) ∈ Nset k r) ∧ ∀ β : Bk r, (fun w => cM k r β (x w)) ∈ blkSet ι k r DU DH DC DG β} = (2 : ℝ≥0∞) ^ (Fintype.card ι * (r * (r - 1) + r * (k + 1))) * ((∏ p, volume (DU p)) * (∏ a, volume (DH a)) * (∏ p, volume (DC p)) * ∏ a, volume (DG a)) := by
   intro ι _ k r DU DH DC DG hU hH hC hG
-  obtain ⟨⟨hσ, -, hnull, -⟩, -, -, hmap⟩ := GlobalTheory.T.haar_lie_nilpotent_coordinates k r
+  obtain ⟨⟨hσ, -, hnull, -⟩, -, -, hmap⟩ := _root_.GlobalTheory.SnMass.NEntry.haarLie_entries k r
   set μ := haarLie (Nset k r) 1 with hμ
   set e := r * (r - 1) + r * (k + 1) with he
   set F : (ι → Mt k r) → (ι → Yf k r) := fun x w => nCoords k r (x w) with hFdef

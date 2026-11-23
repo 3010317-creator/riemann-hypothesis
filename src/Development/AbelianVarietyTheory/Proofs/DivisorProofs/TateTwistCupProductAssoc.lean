@@ -4,12 +4,13 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.PullHlComp
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CupProductAssocOfPairingAssocStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CupProductNaturalInSheafComplexPairingStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsTensorEtaleSheafComplexPairingStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSheafComplexPairingTensorAssocDescStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSheafComplexPairingTensorAssocDesc
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HypercohomologyPullbackPushforwardFunctorial
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTateTwistResolutionTensorFlatStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTensorUniversalPropertyStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTateTwistResolutionTensorFlat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistResolutionMapExistsUniqueHomotopyStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistResolutionPairingSpecAndCupUniqueStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistResolutionPairingSpecAndCupUnique
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTensorUniversalPropertyStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +51,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
 
 @[expose] public section
 
@@ -84,10 +84,10 @@ theorem main : ∀ (q : ℕ) [NeZero q] (E : Spc) {n m k i j l : ℤ} (a : Ht q 
   set P := twPair q (i + j) l with hPdef
   set μ' := twPair q j l with hμ'def
   set Q' := trPair hk (twPair q i (j + l)) with hQ'def
-  have hμ : IsTwPair μ := (GlobalTheory.T.tateTwistResolutionPairing_spec_and_cup_unique q i j).1
-  have hP : IsTwPair P := (GlobalTheory.T.tateTwistResolutionPairing_spec_and_cup_unique q (i + j) l).1
-  have hμ' : IsTwPair μ' := (GlobalTheory.T.tateTwistResolutionPairing_spec_and_cup_unique q j l).1
-  have hQ' : IsTwPair Q' := trPair_isTwPair hk _ (GlobalTheory.T.tateTwistResolutionPairing_spec_and_cup_unique q i (j + l)).1
+  have hμ : IsTwPair μ := (_root_.GlobalTheory.EtC.TwPairUniq.main q i j).1
+  have hP : IsTwPair P := (_root_.GlobalTheory.EtC.TwPairUniq.main q (i + j) l).1
+  have hμ' : IsTwPair μ' := (_root_.GlobalTheory.EtC.TwPairUniq.main q j l).1
+  have hQ' : IsTwPair Q' := trPair_isTwPair hk _ (_root_.GlobalTheory.EtC.TwPairUniq.main q i (j + l)).1
   have hfun := GlobalTheory.EtC.ZcFun.main (ZMod q)
   have cpush_id : ∀ (K I : Cx (ZMod q)) (n : ℤ) x, cpush K (𝟙 I) n x = x := fun K I n x => ((hfun.1 K I n x).2)
 
@@ -97,8 +97,8 @@ theorem main : ∀ (q : ℕ) [NeZero q] (E : Spc) {n m k i j l : ℤ} (a : Ht q 
   obtain ⟨-, -, hext⟩ := GlobalTheory.T.tateTwistResolution_map_exists_unique_homotopy q (i + j + l)
   obtain ⟨T, τ, hτ⟩ := GlobalTheory.T.exists_isTensor_etaleSheafComplexPairing (ZMod q) (res _ (tw q i)) (res _ (tw q j))
   obtain ⟨T3, τ', hτ'⟩ := GlobalTheory.T.exists_isTensor_etaleSheafComplexPairing (ZMod q) T (res _ (tw q l))
-  have hT := GlobalTheory.T.isTateTwistResolution_tensor_flat q i j (i + j) rfl _ _ hIi hIj hFj τ hτ
-  have hT3 := GlobalTheory.T.isTateTwistResolution_tensor_flat q (i + j) l (i + j + l) rfl _ _ hT hIl hFl τ' hτ'
+  have hT := _root_.GlobalTheory.EtC.isTwRes_tensor q i j (i + j) rfl _ _ hIi hIj hFj τ hτ
+  have hT3 := _root_.GlobalTheory.EtC.isTwRes_tensor q (i + j) l (i + j + l) rfl _ _ hT hIl hFl τ' hτ'
 
   obtain ⟨u, hu, -⟩ := (GlobalTheory.T.isTensor_universal_property (ZMod q) τ hτ).1 μ (𝟙 _) (𝟙 _)
   obtain ⟨u₁, hu₁, -⟩ := (GlobalTheory.T.isTensor_universal_property (ZMod q) τ' hτ').1 P u (𝟙 _)
@@ -107,7 +107,7 @@ theorem main : ∀ (q : ℕ) [NeZero q] (E : Spc) {n m k i j l : ℤ} (a : Ht q 
   have L2 : P.cup E rfl (cpush _ u (n + m) (τ.cup E rfl a b)) c = cpush _ u₁ (n + m + k) (τ'.cup E rfl (τ.cup E rfl a b) c) := by
     rw [GlobalTheory.T.cupProduct_natural_in_sheafComplexPairing (ZMod q) τ' P u (𝟙 _) u₁ hu₁ E rfl _ c, cpush_id]
 
-  obtain ⟨ν, hν⟩ := GlobalTheory.T.exists_sheafComplexPairing_tensor_assoc_desc (ZMod q) τ τ' hτ hτ' μ' Q'
+  obtain ⟨ν, hν⟩ := _root_.GlobalTheory.EtC.tensor_assoc_desc (ZMod q) τ τ' hτ hτ' μ' Q'
   obtain ⟨u₂, hu₂, -⟩ := (GlobalTheory.T.isTensor_universal_property (ZMod q) τ' hτ').1 ν (𝟙 _) (𝟙 _)
   have R1 : ν.cup E rfl (τ.cup E rfl a b) c = Q'.cup E hd a (μ'.cup E rfl b c) :=
     GlobalTheory.T.cupProduct_assoc_of_pairing_assoc (ZMod q) τ ν μ' Q' hν E rfl rfl rfl hd a b c

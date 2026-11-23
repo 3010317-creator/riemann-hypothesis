@@ -2,12 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.CoP
 public import Formalism.SharpRestriction.GlobalSchurBounds.ProductFirstZerothParts
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsHermitianFormDescentCoefficientFieldStatement
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.InvTrKEmbGLApply
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.PredMemGamRanks
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsHermitianFormDescentCoefficientField
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LocalBasisRepLatticeIntegralCoordsSpecStatement
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MemClosureIff
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MemLocWDelAtrIffStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MemLocWHlatIffStatement
+public import Formalism.LocalToGlobal.Columns.TiedValLatG
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MemLocWDelAtrIff
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MemLocWHlatIff
+import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.InvTrKEmbGLApply
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -114,16 +116,16 @@ theorem GlobalTheory.PerQ.Co.PtInt.exists_mem_SP_of_coP_mem : ∀ {B : Base} {X 
     · have hinv : rhoVr B.fields.emb (I.perIn u a).sgT (GlobalTheory.PerQ.Co.bP I u a w c)⁻¹
           (rhoVr B.fields.emb (I.perIn u a).sgT (GlobalTheory.PerQ.Co.bP I u a w c) ⟨G, hGV⟩) = ⟨G, hGV⟩ := by
         rw [← Module.End.mul_apply, ← map_mul, inv_mul_cancel, map_one, Module.End.one_apply]
-      rw [GlobalTheory.T.mem_locW_delAtr_iff' B.fields.emb B.embLL B.places (I.rec7 l Z).plEq (I.rec7 l Z).val_eq (I.perIn u a).sgT
+      rw [_root_.GlobalTheory.WeylLocOnePlace.mem_locW_delAtr_iff B.fields.emb B.embLL B.places (I.rec7 l Z).plEq (I.rec7 l Z).val_eq (I.perIn u a).sgT
         (I.perIn u a).sg (GlobalTheory.PerQ.Co.PtInt.natW_sgT I u a) _ (hOk.lsh_full_lat c.1 _) w _ hspec.1, hinv]
       have h := hco c
       rw [hGe] at h
       exact h
   choose v hv1 hv2 using key
-  obtain ⟨y, hy1, hy2⟩ := GlobalTheory.T.exists_hermitianForm_descent_coefficientField B.fields.emb B.embLL (I.perIn u a).S' (I.perIn u a).sgT (l.fmL u a).famP z hz' v hv1
+  obtain ⟨y, hy1, hy2⟩ := _root_.GlobalTheory.Glob.FormDescent.desc B.fields.emb B.embLL (I.perIn u a).S' (I.perIn u a).sgT (l.fmL u a).famP z hz' v hv1
   refine ⟨y, ?_, hy2⟩
   show y ∈ locW B.places w ((I.perIn u a).S'.hlat B.fields.emb (I.perIn u a).sgT (l.fmL u a).famP).L
-  rw [GlobalTheory.T.mem_locW_hlat_iff' B.fields.emb B.places (I.rec7 l Z).plEq (I.rec7 l Z).val_eq (I.perIn u a).S' (I.perIn u a).sgT
+  rw [_root_.GlobalTheory.Mem.Col2.mem_locW_hlat_iff B.fields.emb B.places (I.rec7 l Z).plEq (I.rec7 l Z).val_eq (I.perIn u a).S' (I.perIn u a).sgT
     (l.fmL u a).famP hOk w y]
   intro c
   rw [hy1 c]

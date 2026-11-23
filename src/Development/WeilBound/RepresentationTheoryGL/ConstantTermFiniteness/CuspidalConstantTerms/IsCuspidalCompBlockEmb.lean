@@ -3,16 +3,16 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsBlockEmb
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExpoConjOfIsCsd
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsConstAlongSingleton
-import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BlockEmbeddingRationalGLMemRationalPointsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BlockEmbeddingUnipotentMemFlagUnipotentRadicalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CocompactStandardParabolicUnipotentRadicalWittFrStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CocompactStandardParabolicUnipotentRadicalWittFr
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConstantTermAlongSubset
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousUnitaryGLBlockEmbeddingPolynomialEntriStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBlockProjectionFlagUnipotentRadicalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalUnipotentRadicalEqLeviMulUnipotentStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardParabolicUnipotentMonoStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalUnipotentRadicalEqLeviMulUnipotent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardParabolicUnipotentMono
 public import Development.WeilBound.RepresentationTheoryGL.ConstantTermFiniteness.CuspidalConstantTerms.IntegralSectionEqConstTermOn
+import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -97,11 +97,11 @@ theorem isCuspidal_comp_blockEmb : ∀ (F E : Type) [Field F] [NumberField F] [F
   have hSS : S ⊂ insert k S := Finset.ssubset_insert hkS
   set U := GlobalTheory.StdPar.unip σ J X (insert k S) with hU
   set U₀ := GlobalTheory.StdPar.unip σ J X S with hU₀
-  have hle : U₀ ≤ U := GlobalTheory.T.standardParabolicUnipotent_mono F E σ hσ n J hJ r X Y hW _ S (Finset.subset_insert _ _)
+  have hle : U₀ ≤ U := _root_.GlobalTheory.StdPar.unip_mono_of_subset F E σ hσ n J hJ r X Y hW _ S (Finset.subset_insert _ _)
   haveI : LocallyCompactSpace U₀ := (GlobalTheory.StdPar.isClosed_unip S hσ hJ hW).isClosedEmbedding_subtypeVal.locallyCompactSpace
   haveI : LocallyCompactSpace U := (GlobalTheory.StdPar.isClosed_unip _ hσ hJ hW).isClosedEmbedding_subtypeVal.locallyCompactSpace
-  have cS := GlobalTheory.T.cocompact_standardParabolicUnipotentRadical_wittFrame F E σ hσ n J hJ r X Y hW S
-  have cS' := GlobalTheory.T.cocompact_standardParabolicUnipotentRadical_wittFrame F E σ hσ n J hJ r X Y hW (insert k S)
+  have cS := _root_.GlobalTheory.CuspCocpt.cocompact_unip F E σ hσ n J hJ r X Y hW S
+  have cS' := _root_.GlobalTheory.CuspCocpt.cocompact_unip F E σ hσ n J hJ r X Y hW (insert k S)
   have esub : ∀ {N : Subgroup (GAd σ J)}, N ≤ U → (ratPts σ J ⊓ U).subgroupOf N = (ratPts σ J).subgroupOf N := by
     intro N hN
     ext x
@@ -113,7 +113,7 @@ theorem isCuspidal_comp_blockEmb : ∀ (F E : Type) [Field F] [NumberField F] [F
     rw [esub hN]
     exact hc
   have hfΓ : LeftInv (ratPts σ J ⊓ U) ψ := fun γ hγ g => by
-    obtain ⟨m, hm, hmL, ν, hν, e⟩ := GlobalTheory.T.rational_unipotentRadical_eq_levi_mul_unipotent F E σ hσ n J hJ r X Y hW S (insert k S) (Finset.subset_insert _ _) γ hγ.1 hγ.2
+    obtain ⟨m, hm, hmL, ν, hν, e⟩ := _root_.GlobalTheory.RatLevi.rat_unip_eq_levi_mul_unip F E σ hσ n J hJ r X Y hW S (insert k S) (Finset.subset_insert _ _) γ hγ.1 hγ.2
     rw [e, mul_assoc, hψ.1.leftM m hm hmL, hψ.1.leftN ν hν]
   have hnorm : ∀ p ∈ U, ∀ u ∈ U₀, p * u * p⁻¹ ∈ U₀ := by
     intro p hp u hu

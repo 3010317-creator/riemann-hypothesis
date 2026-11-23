@@ -5,8 +5,8 @@ public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeil
 public import GroundTheory.AutomorphicForms.GL2.GJMatrixCoord
 public import GroundTheory.HeightsAndTheta.Theta.AdelicFourier
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNegOneOfStandardTraceAdelicAddChar
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianCovolumeFormulaStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TupleSpaceCovolumeFormulaStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianCovolumeFormula
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TupleSpaceCovolumeFormula
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.RationalHermitianMeasures.ColEApply
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.RationalHermitianMeasures.HOfMain
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.WhittakerCovolume.CovolUnique
@@ -113,7 +113,7 @@ theorem measDict_of (hH : MeasP.HermCovol) (hT : MeasP.TupCovol) : MeasDict := b
     haveI := hνH; haveI := hH'
     exact ⟨hemb, hemb.measurable, @MeasG.covol_unique _ _ _ _ _ _ _ _ d.ratM _ _ _ hνH hH' _ _ hG hfd hG1 h1⟩
 
-theorem measDict : MeasDict := measDict_of GlobalTheory.T.hermitian_covolume_formula GlobalTheory.T.tuple_space_covolume_formula
+theorem measDict : MeasDict := measDict_of _root_.GlobalTheory.CompanionTheory.SW.HermCov.hermCovol _root_.GlobalTheory.CompanionTheory.SiegelND.TupCovolume.tupCovol
 
 end PositivityTheory.SiegelWeilFormula.KWhit
 

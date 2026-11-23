@@ -2,12 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.DenseInterior
 public import Mathlib.Tactic.ENatToNat
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianCechH1TrivialBundleRankBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechCocycleCoboundaryOfCoveringSubfamilyStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechFirstCohomologyDimensionBoundCocyclesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosedFibreIsAbelianSchemeRelDimOfFrameStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FibrePullbackAffineFunctionEqQuotientConstStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAffineOpenPreimageQuotientFibreStatement
+public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.IsScalarTowerOfAlgebraMapEq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianCechH1TrivialBundleRankBound
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechCocycleCoboundaryOfCoveringSubfamily
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechFirstCohomologyDimensionBoundCocycles
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosedFibreIsAbelianSchemeRelDimOfFrame
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FibrePullbackAffineFunctionEqQuotientConst
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAffineOpenPreimageQuotientFibre
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,11 +80,11 @@ theorem fieldDep : ∀ (K : Type) [Field K] (A : Over (Sp K)) [GrpObj A] (g : �
     obtain ⟨i, hi, hx⟩ := Set.mem_iUnion₂.1 (ht (Set.mem_univ x))
     rw [TopologicalSpace.Opens.mem_iSup]
     exact ⟨t.equivFin ⟨i, hi⟩, by simpa [σ] using hx⟩
-  obtain ⟨hfin, hrk⟩ := GlobalTheory.T.abelian_cech_h1_trivial_bundle_rank_bound K A g hA hsm (Fin t.card) (fun k => W (σ k)) (fun k => hW _) hσ
-  obtain ⟨c, hc, h', hh'⟩ := GlobalTheory.T.cech_first_cohomology_dimension_bound_cocycles K A.left A.hom g (Fin t.card) (fun k => W (σ k)) hfin hrk
+  obtain ⟨hfin, hrk⟩ := _root_.GlobalTheory.AbCoh.FDimField.cechLB_triv_finite_finrank_one_le K A g hA hsm (Fin t.card) (fun k => W (σ k)) (fun k => hW _) hσ
+  obtain ⟨c, hc, h', hh'⟩ := _root_.GlobalTheory.OrdCechDep.exists_comb_coboundary K A.left A.hom g (Fin t.card) (fun k => W (σ k)) hfin hrk
     (fun b k k' => e b (σ k) (σ k')) (fun b k k' k'' => he b _ _ _)
   refine ⟨c, hc, ?_⟩
-  exact GlobalTheory.T.cechCocycle_coboundary_of_coveringSubfamily A.left J W (Fin t.card) σ hσ
+  exact _root_.GlobalTheory.CechCobGlue.cocycle_coboundary_of_subcover A.left J W (Fin t.card) σ hσ
     (fun i i' => ∑ b, (A.hom.appLE ⊤ (W i ⊓ W i') le_top).hom
       ((Scheme.ΓSpecIso (CommRingCat.of K)).inv.hom (c b)) * e b i i') (by
       intro i i' i''
@@ -95,7 +97,7 @@ theorem fieldDep : ∀ (K : Type) [Field K] (A : Over (Sp K)) [GrpObj A] (g : �
 theorem fibre_dim : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (X : Scheme.{0}) (t : SAB H X), IsProper t.G.hom → Out.RelAmple t.G t.PP.L → ∀ (U : X.affineOpens) (n : ℕ) (v : Fin n → (Sp (DualNumber Γ(X, U.1)) ⟶ t.G.left)), (∀ a, IsTanAtG t (chart U) (v a)) → (∀ w, IsTanAtG t (chart U) w → ∃! cf : Fin n → Γ(X, U.1), IsCombAtG t (chart U) v cf w) → ∀ (J : Type) (W : J → t.G.left.Opens), (∀ i, IsAffineOpen (W i)) → ⨆ i, W i = t.G.hom ⁻¹ᵁ U.1 → ∀ (hWU : ∀ i, W i ≤ t.G.hom ⁻¹ᵁ U.1) (m : Ideal Γ(X, U.1)), m.IsMaximal → ∀ (A : Over (Sp (Γ(X, U.1) ⧸ m))) [GrpObj A] (ι : A.left ⟶ t.G.left), IsGrpPullback A t.G (spMap (Ideal.Quotient.mk m) ≫ chart U) ι → ∀ (e : Fin (n + 1) → ∀ i i' : J, Γ(A.left, ι ⁻¹ᵁ W i ⊓ ι ⁻¹ᵁ W i')), (∀ b, (∀ i i' i'', resG A.left (inf_le_left : ι ⁻¹ᵁ W i ⊓ ι ⁻¹ᵁ W i' ⊓ ι ⁻¹ᵁ W i'' ≤ ι ⁻¹ᵁ W i ⊓ ι ⁻¹ᵁ W i') (e b i i') + resG A.left (le_inf (inf_le_left.trans inf_le_right) inf_le_right : ι ⁻¹ᵁ W i ⊓ ι ⁻¹ᵁ W i' ⊓ ι ⁻¹ᵁ W i'' ≤ ι ⁻¹ᵁ W i' ⊓ ι ⁻¹ᵁ W i'') (e b i' i'') = resG A.left (le_inf (inf_le_left.trans inf_le_left) inf_le_right : ι ⁻¹ᵁ W i ⊓ ι ⁻¹ᵁ W i' ⊓ ι ⁻¹ᵁ W i'' ≤ ι ⁻¹ᵁ W i ⊓ ι ⁻¹ᵁ W i'') (e b i i''))) → ∃ r : Fin (n + 1) → Γ(X, U.1), (∃ b, r b ∉ m) ∧ ∃ h' : ∀ i, Γ(A.left, ι ⁻¹ᵁ W i), ∀ i i', ∑ b, (ι.appLE (W i ⊓ W i') (ι ⁻¹ᵁ W i ⊓ ι ⁻¹ᵁ W i') (fun _ hx => hx)).hom ((t.G.hom.appLE U.1 (W i ⊓ W i') (inf_le_left.trans (hWU i))).hom (r b)) * e b i i' = resG A.left inf_le_left (h' i) - resG A.left inf_le_right (h' i') := by
   intro E _ _ _ H X t hprop hamp U n v hv huniq J W hWa hcov hWU m hm A _ ι hpb e he
   letI : Field (Γ(X, U.1) ⧸ m) := Ideal.Quotient.field m
-  obtain ⟨hA, hsm⟩ := GlobalTheory.T.closedFibre_isAbelianScheme_relDim_of_frame E H X t hprop U n v hv huniq m hm A ι hpb
+  obtain ⟨hA, hsm⟩ := _root_.GlobalTheory.FibreAbDim.isAbelianScheme_and_relDim E H X t hprop U n v hv huniq m hm A ι hpb
   have hsq := hpb.1
   have hw : ι ≫ t.G.hom = A.hom ≫ spMap (Ideal.Quotient.mk m) ≫ chart U := hsq.w
   have htop : ⨆ i, ι ⁻¹ᵁ W i = ⊤ := by
@@ -109,7 +111,7 @@ theorem fibre_dim : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
     rw [TopologicalSpace.Opens.mem_iSup] at hx' ⊢
     exact hx'
   have haff : ∀ i, IsAffineOpen (ι ⁻¹ᵁ W i) := fun i =>
-    GlobalTheory.T.isAffineOpen_preimage_quotientFibre X t.G.left t.G.hom U m A.left A.hom ι hsq (W i) (hWa i) (hWU i)
+    _root_.GlobalTheory.AffinePreimageFibre.isAffineOpen_preimage_fibre X t.G.left t.G.hom U m A.left A.hom ι hsq (W i) (hWa i) (hWU i)
   obtain ⟨c, hc, h, hh⟩ := fieldDep (Γ(X, U.1) ⧸ m) A n hA hsm J (fun i => ι ⁻¹ᵁ W i) haff htop e he
   choose r hr using fun b => Ideal.Quotient.mk_surjective (c b)
   refine ⟨r, ?_, h, fun i i' => ?_⟩
@@ -119,7 +121,7 @@ theorem fibre_dim : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
     exact Ideal.Quotient.eq_zero_iff_mem.2 hmem
   · rw [← hh i i']
     refine Finset.sum_congr rfl fun b _ => ?_
-    rw [GlobalTheory.T.fibre_pullback_affineFunction_eq_quotientConst X t.G.left t.G.hom U m A.left A.hom ι hw (W i ⊓ W i') (inf_le_left.trans (hWU i))
+    rw [_root_.GlobalTheory.fibre_restrict_scalar_compat X t.G.left t.G.hom U m A.left A.hom ι hw (W i ⊓ W i') (inf_le_left.trans (hWU i))
       (ι ⁻¹ᵁ W i ⊓ ι ⁻¹ᵁ W i') (fun _ hx => hx), hr b]
 
 end GlobalTheory.FibreH1

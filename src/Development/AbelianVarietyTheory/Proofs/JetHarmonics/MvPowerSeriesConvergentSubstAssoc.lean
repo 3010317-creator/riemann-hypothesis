@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Jets.PowerSeriesHasSumAt
 public import Mathlib.Topology.MetricSpace.Ultra.Basic
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MvPowerSeriesConvergentSubstHasSumAndBounds
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MvPowerSeriesConvergentSubstIsRingHomOnBoundedStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MvPowerSeriesConvergentSubstIsRingHomOnBounded
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MvPowerSeriesIntegralBoundedClosure
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -95,7 +95,7 @@ theorem small_csub_of_small (K : Type) [NormedField K] [IsUltrametricDist K] [Co
   have hbu : Bdd u := (hP _ 0).2.2 hu.1
   have h2 : Small (csub t (u - MvPowerSeries.C c)) :=
     (GlobalTheory.ConvSer.csub_hasSum_and_bounds K σ τ t _ ht hb1).2.2.2 h1 (by simp [hc])
-  obtain ⟨hR, hRC, -⟩ := GlobalTheory.T.mvPowerSeriesConvergentSubst_isRingHom_on_bounded K σ τ t ht
+  obtain ⟨hR, hRC, -⟩ := _root_.GlobalTheory.ConvSer.csub_ring_map K σ τ t ht
   have h3 : csub t u = csub t (u - MvPowerSeries.C c) + MvPowerSeries.C c := by
     rw [(hR _ _ hbu (hC c).1).2.1, hRC]; ring
   refine ⟨(GlobalTheory.ConvSer.csub_hasSum_and_bounds K σ τ t _ ht hbu).2.2.1 hu.1, ?_⟩
@@ -111,7 +111,7 @@ theorem csub_assoc : ∀ (K : Type) [NormedField K] [IsUltrametricDist K] [Compl
   have hst : ∀ j, Small (csub t (s j)) := fun j => small_csub_of_small K σ τ t ht _ (hs j)
   refine ⟨hst, ?_⟩
   obtain ⟨hI, hB, hP, hC, -, hF, -⟩ := GlobalTheory.BddAlg.bdd_alg K σ
-  obtain ⟨-, -, -, hRP, hRF, -⟩ := GlobalTheory.T.mvPowerSeriesConvergentSubst_isRingHom_on_bounded K σ τ t ht
+  obtain ⟨-, -, -, hRP, hRF, -⟩ := _root_.GlobalTheory.ConvSer.csub_ring_map K σ τ t ht
   have hint : ∀ ν : ρ →₀ ℕ, Intg (∏ j, s j ^ ν j) := fun ν =>
     ((hF ρ Finset.univ _).1 fun j _ => (hP _ _).1 (hs j).1).1
   have hbd : ∀ ν : ρ →₀ ℕ, Bdd (∏ j, s j ^ ν j) := fun ν => (hP _ 0).2.2 (hint ν)

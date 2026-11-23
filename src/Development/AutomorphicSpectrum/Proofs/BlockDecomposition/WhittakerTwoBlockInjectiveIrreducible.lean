@@ -2,7 +2,8 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhitKerLeComapMap
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsEquivPiExteriorTensorBlockLevi
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerSubquotientEquivStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhitImgMono
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerSubquotientEquiv
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.BernsteinZelevinskyFiniteness
 import GroundTheory.LocalFields.PadicLogSeries
 import Mathlib.Algebra.Order.Floor.Extended
@@ -43,7 +44,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhitImgMono
 
 @[expose] public section
 
@@ -115,7 +115,7 @@ theorem exists_irr_sub : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalS
     ⟨_, subQuot T T', IsSubquotient.isSmooth ⟨T, ⟨Submodule.mkQ _, fun _ => rfl⟩, Submodule.mkQ_surjective _⟩ hs, isIrreducible_subQuot hcov⟩
   obtain ⟨s, ⟨Φ⟩⟩ := GlobalTheory.LeviFactor.exists_equiv_piTensor_levi GlobalTheory.CompanionTheory.Published.bernsteinZelevinskyFiniteness
     k (Fin 2) (fun a => Fin (d a)) τ
-  have hspan := GlobalTheory.T.whittaker_subquotient_equiv k ψ d X J T T' (fun a => (s a).V) (fun a => (s a).ρ) hT'.le Φ
+  have hspan := _root_.GlobalTheory.CompanionTheory.BZNuPair.WhitCover.main k ψ d X J T T' (fun a => (s a).V) (fun a => (s a).ρ) hT'.le Φ
   have hQ : Nontrivial ((whitImg ψ d J T).toSubmodule ⧸
       (whitImg ψ d J T').toSubmodule.comap (whitImg ψ d J T).toSubmodule.subtype) := by
     refine Submodule.Quotient.nontrivial_iff.2 fun h => hT ?_

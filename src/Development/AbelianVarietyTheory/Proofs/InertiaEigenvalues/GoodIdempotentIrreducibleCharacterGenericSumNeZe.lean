@@ -6,7 +6,9 @@ public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.CuspidalP
 public import Formalism.SharpRestriction.Divisibility.LiftErrorLocal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenericMultOneDimOf
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IrreducibleCharacterGoodIdempotentCuspidalProduc
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WhittakerSpaceDimParabolicInductionCuspidalEqOneStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.GenericMultiplicityOne
+import Development.AbelianVarietyTheory.Definitions.Divisors.SplitDoublingNBlock
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WhittakerSpaceDimParabolicInductionCuspidalEqOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -42,7 +44,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.GenericMultiplicityOne
 
 @[expose] public section
 
@@ -80,7 +81,7 @@ theorem local_sum_ne_zero {p : ℕ} [hp : Fact p.Prime] {r : ℕ} [Fintype (unip
   haveI : NeZero p := ⟨hp.out.ne_zero⟩
   haveI := GlobalTheory.IndefiniteRowSideFullHecke.GenericMultiplicityOne.finite_parInd (F := ZMod p) b σ
   have h1 := GlobalTheory.GenericProduct.sum_unip_eq (addOf θ') (parInd b σ)
-  rw [GlobalTheory.T.whittakerSpaceDim_parabolicInduction_cuspidal_eq_one (ZMod p) (addOf θ') (addOf_ne_one θ' h') r _ b σ hσ, Nat.cast_one, mul_one] at h1
+  rw [_root_.GlobalTheory.FinGL.whDim_parInd_eq_one (ZMod p) (addOf θ') (addOf_ne_one θ' h') r _ b σ hσ, Nat.cast_one, mul_one] at h1
   have e : ∀ h : unip (ZMod p) r, θ h *
       (((θ' (Multiplicative.ofAdd (Formalism.L2.NX.supSum r ((h : GL (Fin r) (ZMod p)) : Matrix (Fin r) (Fin r) (ZMod p)))))⁻¹ : ℂˣ) : ℂ) =
       LinearMap.trace ℂ _ (parInd b σ h) * (((addCharHom (addOf θ') (supHom (ZMod p) r) h)⁻¹ : ℂˣ) : ℂ) := by

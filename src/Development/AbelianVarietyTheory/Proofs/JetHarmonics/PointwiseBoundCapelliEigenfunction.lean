@@ -4,9 +4,10 @@ public import Development.AbelianVarietyTheory.Definitions.Jets.SupWOfSup
 public import Development.AbelianVarietyTheory.PublishedTheorems.BesselIntegrals.BesselXiIntegrable
 public import Formalism.HermitianCurvature.HerGenC
 public import Formalism.HermitianCurvature.StatementTBB
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CapelliEigenfunctionPointwiseBoundOfDifferentTypStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CapelliEigenfunctionPointwiseBoundOfEqualTypesStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.TopDensityCutoffDominatedOfHCXiStatement
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutLimENF
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CapelliEigenfunctionPointwiseBoundOfDifferentTyp
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CapelliEigenfunctionPointwiseBoundOfEqualTypes
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.TopDensityCutoffDominatedOfHCXi
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,9 +65,9 @@ theorem pointwise_bound_mono {P : M.Par} {Wp Wq : Type} [NormedAddCommGroup Wp] 
 
 theorem pointwise_bound_eigenfunction : GlobalTheory.HCXi.BesselXiIntegrable → P5.ThmPActualCpt → ∀ C C₃ C₀ : ℝ, 0 ≤ C → 0 ≤ C₃ → 0 ≤ C₀ → ∃ C₄ Cc : ℝ, ∀ (P : M.Par) (Wp Wq : Type) [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq] (p : KB.Pl P Wp Wq) (f : B.Mat P.k P.r → (Wq →L[ℂ] Wp)) (b c A₀ : ℝ) (n₀ p₀ : ℕ) (lam lam' : Fin (2 * P.r + P.k + 1) → ℝ), StdNum C b c P lam → Cases P n₀ → 3 * (P.r + 1) ≤ 2 * p₀ → (p₀ : ℝ) ≤ C₀ * ((P.r : ℝ) + 1) ^ 2 → EigDec f A₀ lam' → Cc * ((P.r : ℝ) + 1) ^ 4 * (((3 * (P.r + 1) : ℕ) : ℝ) * (2 * (P.r : ℝ) + P.k + 1) ^ 2 + (2 * (P.r : ℝ) + P.k + 1) ^ 3) ≤ A₀ - (((2 * P.r + 2) * p₀ + n₀ * (P.r + 1) : ℕ) : ℝ) → (∀ s, |lam' s - lam s| + (((2 * P.r + 2) * p₀ + n₀ * (P.r + 1) : ℕ) : ℝ) ≤ c - 1) → TBB.RegularityBoundBigCell p f b C₃ (2 * p₀ + n₀) → TBB.ThmBpAt p f b C₄ n₀ p₀ := by
   intro hX hP C C₃ C₀ hC hC₃ hC₀
-  have hN := GlobalTheory.T.topDensity_cutoff_dominated_of_HC_xi hX
-  obtain ⟨D₁, E₁, h₁⟩ := GlobalTheory.T.capelliEigenfunction_pointwiseBound_of_differentTypes hX hP hN C C₃ C₀ hC hC₃ hC₀
-  obtain ⟨D₂, E₂, h₂⟩ := GlobalTheory.T.capelliEigenfunction_pointwiseBound_of_equalTypes hX hP hN C C₃ C₀ hC hC₃ hC₀
+  have hN := _root_.GlobalTheory.HatNF.topDensity_cut_dominated_all hX
+  obtain ⟨D₁, E₁, h₁⟩ := _root_.GlobalTheory.capelliEigenfunction_pointwiseBound_of_differentTypes.thmBp_eigen_different_types hX hP hN C C₃ C₀ hC hC₃ hC₀
+  obtain ⟨D₂, E₂, h₂⟩ := _root_.GlobalTheory.capelliEigenfunction_pointwiseBound_of_equalTypes.thmBp_eig_eq hX hP hN C C₃ C₀ hC hC₃ hC₀
   refine ⟨max D₁ D₂, max E₁ E₂, ?_⟩
   intro P Wp Wq _ _ _ _ _ _ p f b c A₀ n₀ p₀ lam lam' hS hc h3 hp hE hA hl hR
   have key : ∀ E : ℝ, E ≤ max E₁ E₂ → E * ((P.r : ℝ) + 1) ^ 4 * (((3 * (P.r + 1) : ℕ) : ℝ) * (2 * (P.r : ℝ) + P.k + 1) ^ 2 + (2 * (P.r : ℝ) + P.k + 1) ^ 3) ≤ A₀ - (((2 * P.r + 2) * p₀ + n₀ * (P.r + 1) : ℕ) : ℝ) := by

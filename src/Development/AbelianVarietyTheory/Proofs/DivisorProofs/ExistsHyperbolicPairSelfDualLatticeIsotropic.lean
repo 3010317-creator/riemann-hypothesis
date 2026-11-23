@@ -1,11 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsotropicDualPartnerSelfDualHermitianLattiStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsScaleFractionalIdealIntegralAvoidMaximalsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionHermitianLinearFormFgModuleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualHermitianLatticeExistsNonzeroPairingStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SplitEmbeddingIntegralAndMaximalIdealStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsotropicDualPartnerSelfDualHermitianLatti
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsScaleFractionalIdealIntegralAvoidMaximals
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionHermitianLinearFormFgModule
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualHermitianLatticeExistsNonzeroPairing
+public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Completion
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SplitEmbeddingIntegralAndMaximalIdeal
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIntegerAddConjEqOneOfFormallyUnramified
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -91,7 +93,7 @@ theorem exists_pair : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
   have hfu : Algebra.FormallyUnramified (𝓞 F) (𝓞 E) := by haveI := hB.unram; infer_instance
   obtain ⟨θ, hθ⟩ := GlobalTheory.exists_integer_add_conj_eq_one_of_formallyUnramified F E σ hB.cm hfu
   have hfg : Y.L.FG := hY.lat.fg
-  obtain ⟨z0, hz0L, hz0⟩ := GlobalTheory.T.selfDual_hermitianLattice_exists_nonzero_pairing F E σ hσ n Y.J Y.L hfg hY.herm hY.dual x hx0
+  obtain ⟨z0, hz0L, hz0⟩ := _root_.GlobalTheory.selfDual_pair_nondeg F E σ hσ n Y.J Y.L hfg hY.herm hY.dual x hx0
   let f : (Fin n → E) →ₗ[𝓞 E] E :=
     { toFun := fun z => form σ Y.J z x
       map_add' := fun a b => by simp [form, add_dotProduct]
@@ -106,16 +108,16 @@ theorem exists_pair : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
     have : f z0 ∈ I₀ := Submodule.mem_map_of_mem hz0L
     rw [h, Submodule.mem_bot] at this
     exact hz0 this
-  have hT4 := fun (v : B.P) (b : Bool) => GlobalTheory.T.splitEmbedding_integral_and_maximalIdeal F E v.1 (if b then (B.τ v).comp σ else B.τ v)
+  have hT4 := fun (v : B.P) (b : Bool) => _root_.GlobalTheory.adicEmbedding_integral_place F E v.1 (if b then (B.τ v).comp σ else B.τ v)
   choose hle Q hQmax hQ using hT4
-  obtain ⟨s, hs0, hsI, hsQ⟩ := GlobalTheory.T.exists_scale_fractionalIdeal_integral_avoid_maximals E I₀ hI₀fg hI₀ne (B.P × Bool) (fun p => Q p.1 p.2) (fun p => hQmax _ _)
+  obtain ⟨s, hs0, hsI, hsQ⟩ := _root_.GlobalTheory.exists_scale_integral_not_le_maximal E I₀ hI₀fg hI₀ne (B.P × Bool) (fun p => Q p.1 p.2) (fun p => hQmax _ _)
   set x' : Fin n → E := σ s • x with hx'def
   have hfx' : ∀ z, form σ Y.J z x' = s * form σ Y.J z x := fun z => by
     rw [hx'def, form_smul_right, hσ]
   have hx'x' : form σ Y.J x' x' = 0 := by
     rw [hfx', hx'def, form_smul_left, hxx, mul_zero, mul_zero]
-  obtain ⟨y₀, hy₀1, hy₀L⟩ := GlobalTheory.T.exists_section_hermitianLinearForm_fg_module F E σ n Y.J Y.L hfg x' ⟨z0, hz0L, by rw [hfx']; exact mul_ne_zero hs0 hz0⟩
-  obtain ⟨y, hyy, hx'y, hL⟩ := GlobalTheory.T.exists_isotropic_dual_partner_selfDual_hermitianLattice F E σ hσ n Y.J Y.L hY.herm hY.dual θ hθ x' y₀ hx'x' hy₀1 hy₀L
+  obtain ⟨y₀, hy₀1, hy₀L⟩ := _root_.GlobalTheory.FormSection.exists_section F E σ n Y.J Y.L hfg x' ⟨z0, hz0L, by rw [hfx']; exact mul_ne_zero hs0 hz0⟩
+  obtain ⟨y, hyy, hx'y, hL⟩ := _root_.GlobalTheory.TraceCorrection.exists_pair F E σ hσ n Y.J Y.L hY.herm hY.dual θ hθ x' y₀ hx'x' hy₀1 hy₀L
   have hint : ∀ z ∈ Y.L, IsIntegral ℤ (form σ Y.J z x') := fun z hz => by
     rw [hfx']; exact hsI _ (Submodule.mem_map_of_mem hz)
   have hx'L : x' ∈ Y.L := (hY.dual x').2 fun w hw => by

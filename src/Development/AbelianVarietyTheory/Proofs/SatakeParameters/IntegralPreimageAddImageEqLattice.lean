@@ -1,7 +1,8 @@
 module
 
 public import Formalism.SatakeDualWeyl.StatementF
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsSquareMatrixSpanColumnsIntegralStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsSquareMatrixSpanColumnsIntegral
+public import Mathlib.Data.Matrix.ColumnRowPartitioned
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -12,7 +13,6 @@ import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-public import Mathlib.Data.Matrix.ColumnRowPartitioned
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
@@ -74,7 +74,7 @@ theorem latA_sum {n m : ℕ} (c : Matrix (Fin n) (Fin n) L) (hc : c.det ≠ 0) (
         v = c *ᵥ u + y *ᵥ w) ↔
       ∃ t : Fin n → L, (∀ i, t i ∈ Formalism.UG.intL L) ∧ v = (a : Matrix (Fin n) (Fin n) L) *ᵥ t := by
   classical
-  obtain ⟨b, hb⟩ := GlobalTheory.T.exists_square_matrix_span_columns_integral L n (Fin n ⊕ Fin m) (Matrix.fromCols c y)
+  obtain ⟨b, hb⟩ := _root_.GlobalTheory.Hk3.HoweG.exists_square_span_cols L n (Fin n ⊕ Fin m) (Matrix.fromCols c y)
   have key : ∀ v : Fin n → L,
       (∃ u : Fin n → L, ∃ w : Fin m → L, (∀ i, u i ∈ Formalism.UG.intL L) ∧ (∀ i, w i ∈ Formalism.UG.intL L) ∧
         v = c *ᵥ u + y *ᵥ w) ↔

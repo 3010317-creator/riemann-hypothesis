@@ -1,8 +1,9 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.StrictDominance.JointGeneralisedEigenvectors.IsJointGenEig
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CasselmanFirstPropertyStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeckeCharacterExistsUniqueStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CasselmanFirstProperty
+public import Development.WeilBound.RepresentationTheoryGL.TwistedFactors.LocalBaseChange.TwistedIndependenceLemma.TwistedIndependence
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeckeCharacterExistsUnique
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -67,8 +68,8 @@ theorem heckeOp_commute : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopol
     ∀ t t' : D.T, D.IsDom t → D.IsDom t' → ∀ U U' : Module.End ℂ (fixed π D.J),
     PositivityTheory.Lbc.IsHeckeOpG π D.J (t : G) U → PositivityTheory.Lbc.IsHeckeOpG π D.J (t' : G) U' → U * U' = U' * U := by
   intro G _ _ _ D hcomm V _ _ π hπ t t' ht ht' U U' hU hU'
-  have h1 := GlobalTheory.T.casselman_first_property G D V π hπ t t' ht ht' U U' hU hU'
-  have h2 := GlobalTheory.T.casselman_first_property G D V π hπ t' t ht' ht U' U hU' hU
+  have h1 := _root_.GlobalTheory.CompanionTheory.Casselman.hecke_dominant_mul_abstract G D V π hπ t t' ht ht' U U' hU hU'
+  have h2 := _root_.GlobalTheory.CompanionTheory.Casselman.hecke_dominant_mul_abstract G D V π hπ t' t ht' ht U' U hU' hU
   have hc : (t' : G)⁻¹ * (t : G)⁻¹ * (t' : G) * (t : G) ∈ D.J := by
     have := hcomm (t' : G)⁻¹ (D.T.inv_mem t'.2) (t : G)⁻¹ (D.T.inv_mem t.2)
     simpa using this
@@ -77,6 +78,6 @@ theorem heckeOp_commute : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopol
     have e : (t' : G) * (t : G) * ((t' : G)⁻¹ * (t : G)⁻¹ * (t' : G) * (t : G))⁻¹ = (t : G) * t' := by
       group
     rwa [e] at this
-  exact (GlobalTheory.T.hecke_character_exists_unique G D.J D.isOpen_J D.isCompact_J V π hπ ((t : G) * t')).unique h1 h3
+  exact (_root_.GlobalTheory.CompanionTheory.HeckeFixed.heckeExistsUnique G D.J D.isOpen_J D.isCompact_J V π hπ ((t : G) * t')).unique h1 h3
 
 end GlobalTheory.CompanionTheory.CassHecke

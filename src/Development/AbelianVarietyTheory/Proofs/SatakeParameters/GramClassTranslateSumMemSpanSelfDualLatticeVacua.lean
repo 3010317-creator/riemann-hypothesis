@@ -3,9 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SelfDualOne
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemIntMat
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsGramClassRepsSelfDualLatticeGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SelfDualLatticeOfIntegralGramMatrixStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.VacuumTranslateSumSelfDualLatticeFixedStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsGramClassRepsSelfDualLatticeGroup
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SelfDualLatticeOfIntegralGramMatrix
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.VacuumTranslateSumSelfDualLatticeFixed
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -114,9 +114,9 @@ theorem gramClass_sum_mem_span_selfDual_vac : ∀ (L : Type) [Field L] [CharZero
   classical
   have hP' := hP
   obtain ⟨hU, hodd, hSint, hTint, hS, hT, hδ, hpsi_int, hpsi_ne, -, hρ, -, -, -⟩ := hP'
-  obtain ⟨a, ha1, ha2, ha3, ha4⟩ := GlobalTheory.T.selfDual_lattice_of_integral_gramMatrix L ϖ σ q n n' JS JT hU hodd hSint hTint hS hT x hx
+  obtain ⟨a, ha1, ha2, ha3, ha4⟩ := _root_.GlobalTheory.Hk3.HoweG.selfDual_lattice_of_gram_int L ϖ σ q n n' JS JT hU hodd hSint hTint hS hT x hx
   obtain ⟨Y, hxY, hYA, hYd, B, _, _, b0, l, hb0, hl, hcov, hmul, hsep⟩ :=
-    GlobalTheory.T.exists_gramClass_reps_selfDualLattice_group L ϖ σ q δ n n' JS JT ψ hU hodd hSint hTint hS hT hδ hpsi_int hpsi_ne x hx a ⟨ha1, ha2, ha3, ha4⟩
+    _root_.GlobalTheory.Hk3.GramSep.gram_class_family L ϖ σ q δ n n' JS JT ψ hU hodd hSint hTint hS hT hδ hpsi_int hpsi_ne x hx a ⟨ha1, ha2, ha3, ha4⟩
   have hψinv : ∀ a, ψ a * ψ (-a) = 1 := fun a => by
     rw [← AddChar.map_add_eq_mul, add_neg_cancel, AddChar.map_zero_eq_one]
   have hshift : ∀ y u, u ∈ HoweDuality.intMat L n' n →
@@ -156,7 +156,7 @@ theorem gramClass_sum_mem_span_selfDual_vac : ∀ (L : Type) [Field L] [CharZero
       exact Finset.sum_congr rfl (fun y hy => (hshift y (l b y) (hl b y hy).1).symm)
     rw [hsum]
     refine Submodule.subset_span ⟨b0 b, hb0 b, ?_⟩
-    refine GlobalTheory.T.vacuumTranslateSum_selfDualLattice_fixed L ϖ σ q δ n n' JS JT ψ M ρ ω hP s hvac (b0 b) (hb0 b) _ ?_ ?_ ?_
+    refine _root_.GlobalTheory.Hk3.HoweG.vacuum_sum_selfDual_fixed L ϖ σ q δ n n' JS JT ψ M ρ ω hP s hvac (b0 b) (hb0 b) _ ?_ ?_ ?_
     · intro z hz
       obtain ⟨y, hy, rfl⟩ := Finset.mem_image.mp hz
       exact (hl b y hy).2

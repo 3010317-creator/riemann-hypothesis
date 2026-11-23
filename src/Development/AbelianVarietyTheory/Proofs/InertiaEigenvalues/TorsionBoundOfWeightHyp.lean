@@ -3,12 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExpStar
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousOrbitOfEventually
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoordEquivariant
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsContinuousGaloisLatticeMatrixIntegral
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinrankCyclotomicExtAndCyclotomicCharSurjective
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IndexSmulCocycleEqCoboundary
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TensorQuotientTorsionFreeComplete
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TorsionExponentDevissageCommRing
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.XiQuotientInvariantsLiftRationallyStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.XiQuotientInvariantsLiftRationally
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsContinuousGaloisLatticeMatrixIntegral
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinrankCyclotomicExtAndCyclotomicCharSurjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -366,7 +366,7 @@ theorem torsion_bound_at_level : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf 
   have hC := fun i : ℤ => GlobalTheory.Cyc.GradedTorsion.torsion_killed D HW F h7 l K s LL h T M0 h0 i hle' hW
   have hcont := fun a b : ℤ => GlobalTheory.AinfCont.continuous_orbit_tensor_Qab D HW F l K s LL h T a b _ hle'
   have hinv := fun (a e b : ℤ) (hae : a ≤ e) (heb : e ≤ b) =>
-    GlobalTheory.T.xiQuotient_invariants_lift_rationally D HW F h5 h7 l K s LL h T a e b _ hle' hsm hae heb hW.1
+    _root_.GlobalTheory.InvariantLift.invariants_lift D HW F h5 h7 l K s LL h T a e b _ hle' hsm hae heb hW.1
   exact @tors_combine l _ _ (D.locA l) K _ _ h.1 hsm (GK K) hle hle' _ _ (zlMod LL T) hfree hfin
     (actTZ LL T) _ hcont hinv hC a b hab _ hc
 

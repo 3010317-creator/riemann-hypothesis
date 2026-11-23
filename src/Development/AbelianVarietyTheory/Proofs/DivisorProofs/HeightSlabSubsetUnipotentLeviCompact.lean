@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ScalesBy
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeviDecompositionWittFrameStabilizer
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCompactLevelHeightScalesIsotropicFrame
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeviDecompositionWittFrameStabilizerStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -68,7 +68,7 @@ theorem slab_subset : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numb
     have hone : absE F E (Matrix.GeneralLinearGroup.det (l * l')) = 1 := by
       apply NNReal.coe_injective
       rw [map_mul, map_mul, NNReal.coe_mul, hal', Real.exp_neg, ht, Real.exp_log hpos, mul_inv_cancel₀ hpos.ne', NNReal.coe_one]
-    obtain ⟨u, hu, m, -, e, -, -, hm⟩ := GlobalTheory.T.leviDecomposition_wittFrameStabilizer F E σ n J r X Y D.cm D.herm D.witt _ _ hs
+    obtain ⟨u, hu, m, -, e, -, -, hm⟩ := _root_.GlobalTheory.LeviDecompositionFrame.levi_dec_frame F E σ n J r X Y D.cm D.herm D.witt _ _ hs
     have h0 : b 0 = 1 := by
       have := hb.add 0 0
       rw [add_zero] at this

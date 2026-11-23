@@ -3,20 +3,21 @@ module
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SameOrbitRefl
 public import Development.WeilBound.CoreStatements.CentralCharts.ExistsPermFirst
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FlagIndices.InstFintypeFlIdx
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AdaptedAtlasSncSectionStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AdaptedAtlasSmoothPotentialLocalStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ConjugationAntiholomorphicChartsStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ConjugationInvariantSingularPotentialStatement
+public import ReciprocityTheory.AnalyticForms.LeviForms.IsRegFamilyInhabitStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AdaptedAtlasSncSection
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AdaptedAtlasSmoothPotentialLocal
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ConjugationAntiholomorphicCharts
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ConjugationInvariantSingularPotential
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagModelAnalyticDataExists
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.FubiniStudyMetricSmooth
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LiftSystemComplexConjugationStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LiftSystemRealStructureStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.LogResolutionFubiniStudyPositive
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.SingularPotentialLogGrowthPshStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.SingularWeightMonotoneRegularization
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LiftSystemRealStructure
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SmoothContinuous
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.SmoothFunctionAsDegreeZeroMetric
 public import Development.WeilBound.CoreStatements.CentralCharts.SmoothOnOfTame
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.FubiniStudyMetricSmooth
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.LogResolutionFubiniStudyPositive
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.SingularPotentialLogGrowthPsh
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.SingularWeightMonotoneRegularization
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.SmoothFunctionAsDegreeZeroMetric
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -120,7 +121,7 @@ theorem exists_member (hR : RegGlobalStatement) (R : AnLogRes P ⊤ n) (L : LocP
   have hth := hA _ hfd
   have hsys := isLiftSys R
   obtain ⟨c, hspec, hcont, hinv⟩ := GlobalTheory.T.lift_system_complex_conjugation hsys
-  have hanal := GlobalTheory.T.conjugation_antiholomorphic_charts hsys c hspec hcont
+  have hanal := _root_.GlobalTheory.CompanionTheory.Ar.PB.Cj.conj_analytic hsys c hspec hcont
   have hsm := smoothOn_of_tame hT
   obtain ⟨C₁, hC₁⟩ := size_of_tame hn hT
   have hpsh : IsPshOn R.A (bdry s)ᶜ (potOf R (fsHerm J d) + LocPot.ofFun u) := by
@@ -132,7 +133,7 @@ theorem exists_member (hR : RegGlobalStatement) (R : AnLogRes P ⊤ n) (L : LocP
       linarith
     · obtain ⟨ψ, h1, h2, h3, h4, -⟩ := hP z hz
       exact ⟨ψ, h1, h2, h3, h4⟩
-  obtain ⟨C₅, hsw⟩ := GlobalTheory.T.singular_potential_log_growth_psh n R.X R.A L s nb m W hL hs snc hn _ u C₁ hth hsm hpsh hC₁
+  obtain ⟨C₅, hsw⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.isSingWeight_of_logGrowth n R.X R.A L s nb m W hL hs snc hn _ u C₁ hth hsm hpsh hC₁
   have hlines : ∀ (phT : ℝ → R.X → ℝ) (t₀ : ℝ), (∀ t, 0 < t → t ≤ t₀ → R.A.Smooth (phT t)) →
       (∀ t x, phT t (c x) = phT t x) → ∃ line : ℝ → HermLine J,
       (∀ t, (line t).a = d ∧ IsSmoothHerm (line t) ∧ IsConjInvariantH (line t)) ∧
@@ -169,8 +170,8 @@ theorem exists_member (hR : RegGlobalStatement) (R : AnLogRes P ⊤ n) (L : LocP
         rw [heq _ hy', heq _ hy, huc _ _ (hspec y)])
     obtain ⟨line, l1, l2⟩ := hlines (fun _ => u') (Real.exp (-Real.exp 1)) (fun _ _ _ => hu') fun _ => hcp
     exact ⟨u', fun _ => u', line, C₀, C₀, _, s1, r1, c1, heq, l1, l2, fun _ _ => ⟨p2, p1⟩⟩
-  · obtain ⟨B, hB⟩ := GlobalTheory.T.adapted_atlas_snc_section R.A L s m W hL hs snc hn
-    obtain ⟨C₆, hg⟩ := GlobalTheory.T.adapted_atlas_smooth_potential_local n R.X R.A B L s nb m W hL hs snc hn hB u hsm fun x => by
+  · obtain ⟨B, hB⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Adapt.exists_adaptedAtlas R.A L s m W hL hs snc hn
+    obtain ⟨C₆, hg⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.gradBound_of_local_bounds n R.X R.A B L s nb m W hL hs snc hn hB u hsm fun x => by
       obtain ⟨ψ, a, M, h, ht⟩ := hT x
       obtain ⟨V', c, h1, h2, h3, h4⟩ := local_of_tame hn h ht
       exact ⟨ψ, V', c, h.1, h1, h2, h3, fun x' a b => (h4 x' a b).2⟩
@@ -178,10 +179,10 @@ theorem exists_member (hR : RegGlobalStatement) (R : AnLogRes P ⊤ n) (L : LocP
       hL hs snc hn (hA _ hfs) hΘ
     have hsw' := m₁ _ _ _ _ (le_max_left C₅ C₆) hsw
     obtain ⟨C, t₀, phT, r, c2⟩ := hR R.A B _ L s m W (hA _ hfs) hΘ hL hs snc hn hB _ u _ hsw' (hg _ (le_max_right _ _))
-    have hthc := GlobalTheory.T.lift_system_real_structure hsys c hspec hcont hanal (fsHerm J d) (Cj.fs_conj d) (potOf R (fsHerm J d)) fun x =>
+    have hthc := _root_.GlobalTheory.CompanionTheory.Ar.PB.Cj.pot_conj_pluriharmonic hsys c hspec hcont hanal (fsHerm J d) (Cj.fs_conj d) (potOf R (fsHerm J d)) fun x =>
       ⟨Set.univ, isOpen_univ, trivial, fun _ => 0, fun _ => analyticOnNhd_const,
         fun z _ => (sub_self _).trans Complex.zero_re.symm⟩
-    obtain ⟨C', t', r', c'⟩ := GlobalTheory.T.conjugation_invariant_singular_potential n R.X R.A _ L s nb m W hL hs snc hn (hA _ hfs) hΘ c hcont hinv hanal
+    obtain ⟨C', t', r', c'⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.an_conj_symmetrise n R.X R.A _ L s nb m W hL hs snc hn (hA _ hfs) hΘ c hcont hinv hanal
       (fun y => (hcb _ _ (hspec y)).1) (fun y => (hcb _ _ (hspec y)).2) _ u phT C t₀ hth hthc
       (fun y _ => huc _ _ (hspec y)) r c2
     obtain ⟨line, l1, l2⟩ := hlines (fun t y => (phT t y + phT t (c y)) / 2) t' (fun t h0 h1 => (r'.2.2 t h0 h1).1)

@@ -5,7 +5,8 @@ public import Formalism.SharpRestriction.CuspSpanNormBounds.PExtra
 public import Formalism.SharpRestriction.CuspSpanNormBounds.BranchingAndRankConstants
 public import Development.AbelianVarietyTheory.Statements.DiscreteSeriesShifts.ThmBpDS
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.AmpKF0IffGapIn
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeadingMinorLineUnitAmplitudesLargeGapsStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DegVand
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeadingMinorLineUnitAmplitudesLargeGaps
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SizesLargeOfPowerBounds
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CompactCellConvergence.CellConvergence
 import Mathlib.Algebra.Order.Floor.Extended
@@ -43,7 +44,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DegVand
 
 @[expose] public section
 
@@ -55,7 +55,7 @@ theorem ptDl_along_family_gap : Formalism.HermitianLatticesTheory.SiegelMassRati
   intro _ hH _ Cg cb Cu cT CT C0 C1
   have hA : GlobalTheory.GapIn.AmpKF0 := GlobalTheory.NoPr.Model.ampKF0_iff_gapIn.mp GlobalTheory.NoPr.Model.ampKF0_holds
   have hCC : GlobalTheory.CellAmp.CellConv := Formalism.MainNotions.S.Pv.AmpDDPf.cell_convergence
-  obtain ⟨C, hC⟩ := GlobalTheory.T.leadingMinor_line_unitAmplitudes_largeGaps hH hA hCC Cg cb Cu cT CT C0 C1
+  obtain ⟨C, hC⟩ := _root_.GlobalTheory.CellMinorLineGap.minor_line hH hA hCC Cg cb Cu cT CT C0 C1
   refine ⟨C, 1000, fun eps Fm _ hCl _ Cn => ?_⟩
   obtain ⟨m₀, hm⟩ := hC Cn
   obtain ⟨x0, hx0⟩ := GlobalTheory.family_sizes_eventually_large eps Fm (max m₀ 1)

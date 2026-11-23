@@ -4,19 +4,22 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PositionPot
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FrameDefinitions.CpRegPhRegOfNonneg
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.RationalSections.ThmISt
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsContinuousMetricRatioStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsPositivePotentialDominatingStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IntersectionNumberMetricChangeStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.LocalHolomorphicSectionOfPotentialStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MixedIntegralTendstoOffDivisorStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularChartDataPropertiesStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularizedHodgeHeightLimitStatement
+public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FrameDefinitions.Weights
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsContinuousMetricRatio
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsPositivePotentialDominating
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IntersectionNumberMetricChange
+public import GroundTheory.HeightsAndTheta.Heights.Regularisation.Statements
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MixedIntegralTendstoOffDivisor
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularizedHodgeHeightLimit
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularizedHodgeMetricSmoothStatement
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularizedWeightPshAndBoundsStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularizedWeightTendstoC2Statement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularizedWeightTendstoUniformlyStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SmoothOnAtlasContinuousStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.VerticalHodgeMetricLogFormulaStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularizedWeightTendstoC2
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularizedWeightTendstoUniformly
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.IsPotentialOfFun
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SmoothOnAtlasContinuous
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.VerticalHodgeMetricLogFormula
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.LocalHolomorphicSectionOfPotential
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularChartDataProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -102,14 +105,14 @@ theorem tendsto_arLimFun (hLoc : ReciprocityTheory.ChartRestriction.G.AI.I2.Metr
     (S : LogLogRegularisationSetting M D.Xo (muLine Hd)) (hS : S.IsTied) (B : ℕ) (hII : IsFullIntersectionSystem II)
     (Nb : HermLine J) (hNb : IsSmoothHerm Nb) (hNa : Nb.a = muTwDeg Hd B) :
     Tendsto (arLimFun Hd S B) (𝓝[>] 0) (𝓝 (limTop Hd B Nb)) := by
-  obtain ⟨Pn, hPn, hPnS⟩ := GlobalTheory.T.local_holomorphic_section_of_potential K J (mCoordIdeal D.y) D.n M Nb hNb
-  obtain ⟨Θ, hΘ, hΘp, hΘN⟩ := GlobalTheory.T.exists_positive_potential_dominating K J II Ψ Ω W D M Pn hPn
+  obtain ⟨Pn, hPn, hPnS⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Giv.exists_potential_of_smoothHerm K J (mCoordIdeal D.y) D.n M Nb hNb
+  obtain ⟨Θ, hΘ, hΘp, hΘN⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.exists_posPot_dominating K J II Ψ Ω W D M Pn hPn
   obtain ⟨-, ⟨C₁, hC₁⟩, hpsh⟩ := GlobalTheory.T.regularized_weight_psh_and_bounds K J (mCoordIdeal D.y) D.n M D.Xo (muLine Hd) S Θ hS hΘ hΘp
-  obtain ⟨κ, hκc, hκ⟩ := GlobalTheory.T.exists_continuous_metric_ratio K J II Ψ Ω W D Hd M S B Nb hNb hNa
+  obtain ⟨κ, hκc, hκ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.Descent.logDiff_descends K J II Ψ Ω W D Hd M S B Nb hNb hNa
   obtain ⟨Bκ, hBκ⟩ : ∃ b : ℝ, ∀ x, |κ x| ≤ b := by
     obtain ⟨b, hb⟩ := (isCompact_univ.image hκc).isBounded.exists_norm_le
     exact ⟨b, fun x => hb _ ⟨x, Set.mem_univ _, rfl⟩⟩
-  obtain ⟨hYo, hYnull, -, -⟩ := GlobalTheory.T.regular_chart_data_properties D.n M.Xc M.atlas S.R
+  obtain ⟨hYo, hYnull, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Giv.regData_open_part D.n M.Xc M.atlas S.R
   have hph := S.R.ph_smooth
 
   set Cc : ℝ := |C₁| + |S.R.Clog| + |Bκ| + 1 with hCc
@@ -136,7 +139,7 @@ theorem tendsto_arLimFun (hLoc : ReciprocityTheory.ChartRestriction.G.AI.I2.Metr
       Tendsto (fun t => mInt M.atlas (positionPot S.R.th Pn (S.regWeight t) i) (GT t)) (𝓝[>] 0)
         (𝓝 (mInt M.atlas (positionPot S.R.th Pn S.R.ph i) G)) := by
     intro i
-    refine GlobalTheory.T.mixed_integral_tendsto_off_divisor D.n M.Xc M.atlas S.R Θ hΘ hΘp
+    refine _root_.GlobalTheory.CompanionTheory.Ar.Giv.mixed_integral_tendsto_of_C2_off_divisor D.n M.Xc M.atlas S.R Θ hΘ hΘp
       (fun j : Fin D.n => if (j : ℕ) < i then S.R.th else Pn)
       (fun j : Fin D.n => if (j : ℕ) < i then S.R.ph else fun _ => 0)
       (fun (j : Fin D.n) t => if (j : ℕ) < i then S.regWeight t else fun _ => 0) G GT Cc
@@ -175,14 +178,14 @@ theorem tendsto_arLimFun (hLoc : ReciprocityTheory.ChartRestriction.G.AI.I2.Metr
     · intro j k K' hK' hK'c
       by_cases h : (j : ℕ) < i
       · simp only [h, if_true]
-        exact GlobalTheory.T.regularized_weight_tendsto_C2 K J (mCoordIdeal D.y) D.n M D.Xo (muLine Hd) S hS k K' hK' hK'c
+        exact _root_.GlobalTheory.CompanionTheory.Ar.Giv.regWeight_tendsto_C2_of_tied K J (mCoordIdeal D.y) D.n M D.Xo (muLine Hd) S hS k K' hK' hK'c
       · simp only [h, if_false]
         exact ⟨tuo_const _ _ _, tuo_const _ _ _, tuo_const _ _ _⟩
     · filter_upwards [hbd] with t ht
       refine ⟨?_, fun x hx => ?_⟩
       · letI : MeasurableSpace M.Xc := borel M.Xc
         haveI : BorelSpace M.Xc := ⟨rfl⟩
-        have hc : Continuous (GT t) := hκc.sub (GlobalTheory.T.smooth_on_atlas_continuous D.n M.Xc M.atlas _ ht.1)
+        have hc : Continuous (GT t) := hκc.sub (_root_.GlobalTheory.CompanionTheory.Ar.AtlasSmooth.continuous_of_atlas_smooth D.n M.Xc M.atlas _ ht.1)
         exact hc.measurable.indicator hYo.measurableSet
       · obtain ⟨h2, -⟩ := ht.2 x hx
         have hL := hlogr x hx
@@ -195,7 +198,7 @@ theorem tendsto_arLimFun (hLoc : ReciprocityTheory.ChartRestriction.G.AI.I2.Metr
         have h7 : |GT t x| ≤ |κ x| + |S.regWeight t x| := abs_sub _ _
         linarith
     · intro K' hK' hK'c
-      have hu := GlobalTheory.T.regularized_weight_tendsto_uniformly K J (mCoordIdeal D.y) D.n M D.Xo (muLine Hd) S hS K' hK' hK'c
+      have hu := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.tendstoUniformlyOn_regWeight_of_isTied K J (mCoordIdeal D.y) D.n M D.Xo (muLine Hd) S hS K' hK' hK'c
       have hu2 : TendstoUniformlyOn GT (fun x => κ x - S.R.ph x) (𝓝[>] 0) K' := by
         rw [Metric.tendstoUniformlyOn_iff] at hu ⊢
         intro ε hε
@@ -208,7 +211,7 @@ theorem tendsto_arLimFun (hLoc : ReciprocityTheory.ChartRestriction.G.AI.I2.Metr
   have hmeasT : ∀ t, M.atlas.Smooth (S.regWeight t) → ∀ j, AEStronglyMeasurable (GT t ∘ (M.atlas.chart j).symm)
       (volume.restrict (M.atlas.chart j).target) := by
     intro t ht j
-    have hc : Continuous (GT t) := hκc.sub (GlobalTheory.T.smooth_on_atlas_continuous D.n M.Xc M.atlas _ ht)
+    have hc : Continuous (GT t) := hκc.sub (_root_.GlobalTheory.CompanionTheory.Ar.AtlasSmooth.continuous_of_atlas_smooth D.n M.Xc M.atlas _ ht)
     exact (hc.comp_continuousOn (M.atlas.chart j).continuousOn_symm).aestronglyMeasurable
       (M.atlas.chart j).open_target.measurableSet
   have hmeasG : ∀ j, AEStronglyMeasurable (G ∘ (M.atlas.chart j).symm)
@@ -236,14 +239,14 @@ theorem tendsto_arLimFun (hLoc : ReciprocityTheory.ChartRestriction.G.AI.I2.Metr
       (fun z => Real.log (Nb.h z) - Real.log ((muVert Hd B).h z)) =
       mInt M.atlas (positionPot S.R.th Pn S.R.ph i) G := by
     intro i
-    refine GlobalTheory.T.regularized_hodge_height_limit K J II Ψ Ω W D Hd M S B Nb (muVert Hd B) Pn i S.R.ph G _ hPn hPnS hph ?_ ?_ hmeasG (hconv i).1
+    refine _root_.GlobalTheory.CompanionTheory.Ar.Cusp.ptsIntegral_word_eq_mInt K J II Ψ Ω W D Hd M S B Nb (muVert Hd B) Pn i S.R.ph G _ hPn hPnS hph ?_ ?_ hmeasG (hconv i).1
     · intro z hz hY
       have h1 := S.ph_eq z ⟨mem_Xo_of_proj_mem S hz hY, hz⟩ hY
-      rw [GlobalTheory.T.vertical_hodge_metric_log_formula K J II Ψ Ω W D Hd B z hz, h1]
+      rw [_root_.GlobalTheory.CompanionTheory.Ar.Cusp.log_muVert_h_of_mem K J II Ψ Ω W D Hd B z hz, h1]
       ring
     · intro z hz hY
       have h1 := S.ph_eq z ⟨mem_Xo_of_proj_mem S hz hY, hz⟩ hY
-      have h2 := GlobalTheory.T.vertical_hodge_metric_log_formula K J II Ψ Ω W D Hd B z hz
+      have h2 := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.log_muVert_h_of_mem K J II Ψ Ω W D Hd B z hz
       have h3 := hκ z hz
       simp only [hG, Set.indicator_of_mem hY]
       rw [h1, h2, h3]
@@ -256,12 +259,12 @@ theorem tendsto_arLimFun (hLoc : ReciprocityTheory.ChartRestriction.G.AI.I2.Metr
       (Filter.eventually_all_finset _).2 fun i _ => (hconv i).2.1
     filter_upwards [GlobalTheory.T.regularized_hodge_metric_smooth K J II Ψ Ω W D Hd M S B hS, hbd, hint] with t hsp hb hi
     obtain ⟨hsm, hdeg, hlog⟩ := hsp
-    have hT := GlobalTheory.T.intersection_number_metric_change hLoc K J II (mCoordIdeal D.y) D.n Nb (muReg Hd S B t) hII D.arith hNb hsm
+    have hT := _root_.GlobalTheory.CompanionTheory.Ar.Tele.telescope hLoc K J II (mCoordIdeal D.y) D.n Nb (muReg Hd S B t) hII D.arith hNb hsm
       (hdeg.trans hNa.symm)
     rw [arLimFun, hT]
     congr 1
     refine Finset.sum_congr rfl fun i hi' => ?_
-    refine (GlobalTheory.T.regularized_hodge_height_limit K J II Ψ Ω W D Hd M S B Nb (muReg Hd S B t) Pn i (S.regWeight t) (GT t) _ hPn hPnS
+    refine (_root_.GlobalTheory.CompanionTheory.Ar.Cusp.ptsIntegral_word_eq_mInt K J II Ψ Ω W D Hd M S B Nb (muReg Hd S B t) Pn i (S.regWeight t) (GT t) _ hPn hPnS
       (fun j => (hb.1 j).mono fun y hy => ⟨hy.1, Set.mem_univ _⟩) ?_ ?_ (hmeasT t hb.1) (hi i hi')).symm
     · intro z hz _
       exact hlog z hz

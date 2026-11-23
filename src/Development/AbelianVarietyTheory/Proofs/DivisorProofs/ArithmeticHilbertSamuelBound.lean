@@ -2,11 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HermSysHypOneLeLambdaZero
 public import Development.AbelianVarietyTheory.Definitions.Divisors.WellChosen
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BertiniNumberFieldOfHilbertSamuelQuotedStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BertiniNumberFieldOfHilbertSamuel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRightInvOfSpan
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExplicitArithmeticHilbertSamuelBoundStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExplicitArithmeticHilbertSamuelBound
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormHeightEqHt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SlopeLowerBoundTopLatticeOffHypersurfaceStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SlopeLowerBoundTopLatticeOffHypersurface
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,6 +58,6 @@ open GlobalTheory.HSShort GlobalTheory.HSChoice MvPolynomial
 namespace GlobalTheory.HSShort
 
 theorem geoBound_of_quoted' : Quoted → GeoBound := fun hQ =>
-  GlobalTheory.T.explicit_arithmetic_hilbertSamuel_bound hQ (GlobalTheory.T.bertiniNumberField_of_hilbertSamuel₂ hQ) (GlobalTheory.HeightTieProof.heightTie GlobalTheory.HSShort.htMul) GlobalTheory.T.slopeLowerBound_topLattice_offHypersurface
+  _root_.GlobalTheory.HSShortTop.geoBound_of_abstract hQ (_root_.GlobalTheory.HSShort.bertiniNumberField_of_hilbertSamuel hQ) (GlobalTheory.HeightTieProof.heightTie GlobalTheory.HSShort.htMul) _root_.GlobalTheory.HSShort.SlopeTop.slopeBound
 
 end GlobalTheory.HSShort

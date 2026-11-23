@@ -1,11 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsSpanFormsNeBot
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AutomorphicFormGLUniformModerateGrowthStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspFormGLIteratedDecayModerateGrowthStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeightMulLeOfIsCompactStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeightPositiveDiagonalLeSumAddInvStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RapidDecaySmallestRatioAbsorbsHeightAndCharacterStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AutomorphicFormGLUniformModerateGrowth
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspFormGLIteratedDecayModerateGrowth
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExpoConjOfIsCsd
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeightPositiveDiagonalLeSumAddInv
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RapidDecaySmallestRatioAbsorbsHeightAndCharacter
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeightMulLeOfIsCompact
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,9 +55,9 @@ namespace GlobalTheory
 
 theorem cuspForm_rapidDecay_siegel : GlobalTheory.Published.AutomorphicFormsFiniteGL → ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) (ψ : Sm E a), IsCuspForm ψ → ∀ (Ω : Set (GL (Fin a) (Cinf E))), IsCompact Ω → ∀ t : ℝ, 0 < t → ∀ lam : Fin a → ℝ, ∃ C : ℝ, 0 ≤ C ∧ ∀ (r : Fin a → ℝ) (d : GL (Fin a) (Cinf E)), (∀ i, 0 < r i) → (∀ i j : Fin a, (j : ℕ) = i + 1 → t * r j ≤ r i) → d.val = Matrix.diagonal (fun i => fun _ => (r i : ℂ)) → ∏ i, r i = 1 → ∀ c ∈ Ω, ‖ψ.1 (infGL E a (d * c))‖ ≤ C * ∏ i, r i ^ lam i := by
   intro hP E _ _ _ a ψ hψ Ω hΩ t ht lam
-  obtain ⟨N, hN⟩ := GlobalTheory.T.automorphicForm_GL_uniform_moderate_growth hP E a ψ hψ.1
-  obtain ⟨m, C1, hC1, hreal⟩ := GlobalTheory.T.rapidDecay_smallestRatio_absorbs_height_and_character a t ht lam N
-  obtain ⟨B, hB1, hB⟩ := GlobalTheory.T.exists_height_mul_le_of_isCompact E a Ω hΩ
+  obtain ⟨N, hN⟩ := _root_.GlobalTheory.AutGrowth.uniform_growth_of_autForm hP E a ψ hψ.1
+  obtain ⟨m, C1, hC1, hreal⟩ := _root_.GlobalTheory.rapidDecay_real a t ht lam N
+  obtain ⟨B, hB1, hB⟩ := _root_.GlobalTheory.AutGrowth.height_mul_le_of_isCompact E a Ω hΩ
   obtain ⟨C0, hC0⟩ := hN []
   simp only [List.map_nil, List.prod_nil, Module.End.one_apply] at hC0
   have hC0' : ∀ y, ‖ψ.1 (infGL E a y)‖ ≤ max C0 0 * height y ^ N := fun y =>
@@ -67,7 +69,7 @@ theorem cuspForm_rapidDecay_siegel : GlobalTheory.Published.AutomorphicFormsFini
       ∀ c ∈ Ω, ‖ψ.1 (infGL E a (d * c))‖ ≤ C * (r j / r i) ^ m * height d ^ N) := by
     intro i j
     by_cases hij : (j : ℕ) = i + 1
-    · obtain ⟨C, hC, h⟩ := GlobalTheory.T.cuspForm_GL_iterated_decay_moderateGrowth hP E a N t ht i j hij m ψ hψ hN Ω hΩ
+    · obtain ⟨C, hC, h⟩ := _root_.GlobalTheory.CuspRapid.iterated_decay hP E a N t ht i j hij m ψ hψ hN Ω hΩ
       exact ⟨C, hC, fun _ => h⟩
     · exact ⟨0, le_rfl, fun h => absurd h hij⟩
   choose Cf hCf0 hCf using hex
@@ -77,7 +79,7 @@ theorem cuspForm_rapidDecay_siegel : GlobalTheory.Published.AutomorphicFormsFini
     mul_nonneg (add_nonneg hK0 hS0) hC1, ?_⟩
   intro r d hr hrt hd hprod c hc
   have hhd : height d ^ N ≤ (1 + ∑ i, r i + ∑ i, (r i)⁻¹) ^ N :=
-    pow_le_pow_left₀ (by linarith [one_le_height d]) (GlobalTheory.T.height_positiveDiagonal_le_sum_add_inv E a r d hr hd) N
+    pow_le_pow_left₀ (by linarith [one_le_height d]) (_root_.GlobalTheory.height_diagonal_le_sum E a r d hr hd) N
   have hP0 : 0 ≤ ∏ i, r i ^ lam i := Finset.prod_nonneg fun i _ => Real.rpow_nonneg (hr i).le _
   have hsplit : (max C0 0 * B ^ N + ∑ p : Fin a × Fin a, Cf p.1 p.2) * C1 * ∏ i, r i ^ lam i
       = max C0 0 * B ^ N * (C1 * ∏ i, r i ^ lam i)

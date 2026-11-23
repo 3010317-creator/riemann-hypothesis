@@ -1,8 +1,8 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GaussTubeOfTubeGood
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TubeTransformHorizontalInvarianceStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TubeTransformVerticalInvarianceStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TubeTransformHorizontalInvariance
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TubeTransformVerticalInvariance
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,17 +60,17 @@ theorem phi_eq_of_convex : ∀ (X : Type) [NormedAddCommGroup X] [NormedSpace �
       GlobalTheory.CompanionTheory.TubeFourier.phi G (a, c) t = GlobalTheory.CompanionTheory.TubeFourier.phi G (b, c) t := by
     intro a b c h
     rcases le_total a b with hab | hba
-    · exact GlobalTheory.T.tube_transform_horizontal_invariance X Ω G hG a b c hab
+    · exact _root_.GlobalTheory.CompanionTheory.TubeFourier.phi_shift_fst X Ω G hG a b c hab
         (fun s hs => h s (Set.Icc_subset_uIcc hs)) t
-    · exact (GlobalTheory.T.tube_transform_horizontal_invariance X Ω G hG b a c hba
+    · exact (_root_.GlobalTheory.CompanionTheory.TubeFourier.phi_shift_fst X Ω G hG b a c hba
         (fun s hs => h s (Set.Icc_subset_uIcc' hs)) t).symm
   have hver : ∀ a b c : ℝ, (∀ s ∈ Set.uIcc a b, (c, s) ∈ Ω) →
       GlobalTheory.CompanionTheory.TubeFourier.phi G (c, a) t = GlobalTheory.CompanionTheory.TubeFourier.phi G (c, b) t := by
     intro a b c h
     rcases le_total a b with hab | hba
-    · exact GlobalTheory.T.tube_transform_vertical_invariance X Ω G hG a b c hab
+    · exact _root_.GlobalTheory.CompanionTheory.TubeFourier.phi_shift_snd X Ω G hG a b c hab
         (fun s hs => h s (Set.Icc_subset_uIcc hs)) t
-    · exact (GlobalTheory.T.tube_transform_vertical_invariance X Ω G hG b a c hba
+    · exact (_root_.GlobalTheory.CompanionTheory.TubeFourier.phi_shift_snd X Ω G hG b a c hba
         (fun s hs => h s (Set.Icc_subset_uIcc' hs)) t).symm
   have hf : IsLocallyConstant (fun p : Ω => GlobalTheory.CompanionTheory.TubeFourier.phi G (p : ℝ × ℝ) t) := by
     rw [IsLocallyConstant.iff_eventually_eq]

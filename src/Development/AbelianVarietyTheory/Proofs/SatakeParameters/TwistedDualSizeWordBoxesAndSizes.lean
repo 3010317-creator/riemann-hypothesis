@@ -1,11 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NotDvdCondN
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MaxSizeAtNonThickPlaceLeParametersWindowEndsStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MaxSizeAtNonThickPlaceLeWindowEnds
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RoundedSizeBoundWindow
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TwistedDualOrbitPageWordNonThickSizeBoundsStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TwistedDualPageWordMiAddHiLeTwoHeightStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TwistedDualSizeWordLetterEqPageWordStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.Alternates
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TwistedDualOrbitPageWordNonThickSizeBounds
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TwistedDualPageWordMiAddHiLeTwoHeight
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TwistedDualSizeWordLetterEqPageWord
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,13 +60,13 @@ theorem recWord_wordBox : ∀ {D : D7} (L : SizeData₂ D) (C : ℝ) (j : Fin D.
   have hb := GlobalTheory.HTW.bHat_window L C hR
   refine ⟨?_, ?_, hb.1, hb.2⟩
   · intro a
-    obtain ⟨-, hM, hh, -⟩ := GlobalTheory.T.twistedDualSizeWord_letter_eq_pageWord L C j ε (g 0) ψ hR a
+    obtain ⟨-, hM, hh, -⟩ := _root_.GlobalTheory.HTW.Rec.recWord_letter_eq_pageWord L C j ε (g 0) ψ hR a
     rw [hM, hh]
-    exact GlobalTheory.T.twistedDualPageWord_Mi_add_hi_le_two_height L C j ε (g 0) ψ hR a
+    exact _root_.GlobalTheory.HTW.pageWord_Mi_add_hi_le L C j ε (g 0) ψ hR a
   · intro a hnt
-    obtain ⟨hsz, -, -, hth⟩ := GlobalTheory.T.twistedDualSizeWord_letter_eq_pageWord L C j ε (g 0) ψ hR a
-    obtain ⟨s, hs1, hs2, -, hs3⟩ := GlobalTheory.T.twistedDualOrbitPageWord_nonThick_size_bounds L C j ε (g 0) ψ hR a (fun h => hnt (hth.2 h))
-    refine ⟨s, hs1, le_trans hs2 (GlobalTheory.T.maxSizeAtNonThickPlace_le_windowEnds L).1, ?_⟩
+    obtain ⟨hsz, -, -, hth⟩ := _root_.GlobalTheory.HTW.Rec.recWord_letter_eq_pageWord L C j ε (g 0) ψ hR a
+    obtain ⟨s, hs1, hs2, -, hs3⟩ := _root_.GlobalTheory.HTW.pageWord_not_thick_size L C j ε (g 0) ψ hR a (fun h => hnt (hth.2 h))
+    refine ⟨s, hs1, le_trans hs2 (_root_.GlobalTheory.HTW.Rec.wMax_le_wB L).1, ?_⟩
     have hc : (((recWord L j ε (letter (g 0) ψ)).sz a : ℕ) : ℝ) = (((pageWord L j ε (g 0) ψ).sz a : ℤ) : ℝ) := by
       rw [← hsz]; push_cast; rfl
     rw [hc]; exact hs3

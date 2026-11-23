@@ -2,9 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAmbOfIsArithVar
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithVarietyReciprocityAtComplexEmbeddingStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedArchLogNormIntegralEqSumEmbeddingsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictedArchIntegralEqSumClosureIntegralsStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DensConst
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithVarietyReciprocityAtComplexEmbedding
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedArchLogNormIntegralEqSumEmbeddings
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictedArchIntegralEqSumClosureIntegrals
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -43,7 +44,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.DensConst
 
 @[expose] public section
 
@@ -77,7 +77,7 @@ theorem archRecip_of_principalisation (hP : GlobalTheory.Published.Principalisat
     · have hz := CartierDiv.coheight_eq_one_of_mult_ne_zero h0
       have hza : z ∉ nonzeroLocus a := fun h =>
         (notMem_supp_divOfSec.2 h) (CartierDiv.mem_supp_of_mult_ne_zero h0)
-      rw [GlobalTheory.T.restrictedArchIntegral_eq_sum_closureIntegrals hP k Y q e hq L B b z hz ((hab z hz).resolve_left hza), finsum_eq_sum_of_fintype,
+      rw [_root_.GlobalTheory.MixHt.resArch_eq_finsum_cycInt hP k Y q e hq L B b z hz ((hab z hz).resolve_left hza), finsum_eq_sum_of_fintype,
         Finset.mul_sum]
   have fin (D : CartierDiv Y) (g : Y → ℝ) : (Function.support fun z => (D.mult z : ℝ) * g z).Finite :=
     D.finite_support_mult.subset fun z hz => by
@@ -90,13 +90,13 @@ theorem archRecip_of_principalisation (hP : GlobalTheory.Published.Principalisat
           ∑ᶠ z, ((divOfSec A.isLB a ha).mult z : ℝ) * resArch L B b z =
         ∑ σ : k →+* ℂ, side (MLine.ofHerm B σ) (fun i => MLine.ofHerm (L i) σ) ((MLine.ofHerm A σ).logSec a)
           ((MLine.ofHerm B σ).logSec b) (divOfSec (MLine.ofHerm A σ).φ.isLB a ha) := by
-    rw [GlobalTheory.T.mixedArchLogNormIntegral_eq_sum_embeddings hP k Y q (e + 1) hq, finsum_eq_sum_of_fintype, finsum_congr (key A B a b ha hab),
+    rw [_root_.GlobalTheory.MixPolar.mixArch_eq_sum hP k Y q (e + 1) hq, finsum_eq_sum_of_fintype, finsum_congr (key A B a b ha hab),
       finsum_sum_comm _ _ (fun σ _ => fin _ _), ← Finset.sum_add_distrib]
     refine Finset.sum_congr rfl fun σ _ => ?_
     rw [side, ← hcons]
     rfl
   rw [hside M N s t hs hcov, hside N M t s ht fun z hz => (hcov z hz).symm]
-  exact Finset.sum_congr rfl fun σ _ => GlobalTheory.T.arith_variety_reciprocity_at_complex_embedding hP k Y q e hq σ (fun i => MLine.ofHerm (L i) σ)
+  exact Finset.sum_congr rfl fun σ _ => _root_.GlobalTheory.MixRec.side_symm hP k Y q e hq σ (fun i => MLine.ofHerm (L i) σ)
     (MLine.ofHerm M σ) (MLine.ofHerm N σ) s hs t ht hcov
 
 end GlobalTheory.MixHt

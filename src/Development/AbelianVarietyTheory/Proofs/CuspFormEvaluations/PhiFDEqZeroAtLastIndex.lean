@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.TorusSections.IsTorus
 public import Formalism.LocalToGlobal.ProjectiveLattices.HasDataCondition
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.TorusAt
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsTorusWithSignUniformisationFrameStatement
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FirstMinimumSqGeAndPhiEqZeroDefiniteStatement
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FirstMinimumSqGeAndPhiEqZeroDefinite
 import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -86,7 +86,7 @@ theorem phiFD_eq_zero_at_last_index : ∀ (D : D7) (T : Top D) (_h : LawsP T) (j
     have h2m := D.R.two_le_m
     show 0 < D.R.k + D.R.m - 1
     omega
-  refine (GlobalTheory.T.la1sq_ge_two_f_div_rd_of_p0_eq_zero D.host.E D.R.r ((T.U j σ).X k) hr0 hp0 hint x hx).2 q R0
+  refine (_root_.GlobalTheory.DefiniteMin.firstMinimumSq_ge_and_phi_eq_zero_definite D.host.E D.R.r ((T.U j σ).X k) hr0 hp0 hint x hx).2 q R0
     ?_ ?_ ?_
   · have h16 := P.hrd
     linarith

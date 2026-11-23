@@ -2,8 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.OmegaFactorization
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TraceDualDifferent
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEquivFourierClassesPosConeSummandStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEquivLatticeClassesFibreSummandStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RepNeZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEquivFourierClassesPosConeSummand
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEquivLatticeClassesFibreSummand
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeSumEqConeSum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -80,8 +81,8 @@ theorem nonconst_terms : ∀ (F : Type) [Field F] [NumberField F] [NumberField.I
     HasSum (fun c : {c : Quotient (GlobalTheory.IndefiniteRowSideFullHecke.OmegaFactorization.latRel 𝔞 𝔟) // c.out.1.2 ≠ 0} => GlobalTheory.IndefiniteRowSideFullHecke.OmegaFactorization.eisClass 𝔞 𝔟 k 0 z c)
       ((GlobalTheory.IndefiniteRowSideFullHecke.OmegaFactorization.omegaFactor 𝔞 : ℂ) ^ k / (GlobalTheory.IndefiniteRowSideFullHecke.OmegaFactorization.cK F k : ℂ) * ∑' c, GlobalTheory.IndefiniteRowSideFullHecke.OmegaFactorization.qClass 𝔞 𝔟 k z c) := by
   intro F _ _ _ hL 𝔞 𝔟 k hk2 hke hsum z hz
-  obtain ⟨e1, he1⟩ := GlobalTheory.T.exists_equiv_latticeClasses_fibre_summand F 𝔞 𝔟
-  obtain ⟨e2, he2⟩ := GlobalTheory.T.exists_equiv_fourierClasses_posCone_summand F 𝔞 𝔟
+  obtain ⟨e1, he1⟩ := _root_.GlobalTheory.LatFibre.exists_equiv F 𝔞 𝔟
+  obtain ⟨e2, he2⟩ := _root_.GlobalTheory.Div.QFibre.qFibres F 𝔞 𝔟
   set C : ℂ := (omegaFactor 𝔞 : ℂ) ^ k / (cK F k : ℂ) with hC
   set y : Emb F → ℂ := fun τ => Complex.I * ((z τ).im : ℂ) with hy_def
   have hdF : 0 < dF F := abs_pos.2 (by exact_mod_cast discr_ne_zero F)

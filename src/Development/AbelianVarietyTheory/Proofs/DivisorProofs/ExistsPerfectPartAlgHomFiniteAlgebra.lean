@@ -1,7 +1,9 @@
 module
 
 public import Mathlib.FieldTheory.Perfect
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowCharEqOfIsReducedFiniteStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowCharEqOfIsReducedFinite
+public import Mathlib.RingTheory.Noetherian.Nilpotent
+public import Mathlib.RingTheory.Ideal.Quotient.Nilpotent
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -22,7 +24,6 @@ import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.HopfAlgebra.Basic
-public import Mathlib.RingTheory.Noetherian.Nilpotent
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.Tactic.Echelon.Zsqrtd
 import Mathlib.Tactic.Inclusion.Extension.Core.Core
@@ -48,7 +49,6 @@ import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Divisors.KerIdealCompOfSurjective
 import Development.AbelianVarietyTheory.Definitions.Divisors.ToSpanSingletonConstGenInjective
 import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.IsCounitDerivationCounitComp
-public import Mathlib.RingTheory.Ideal.Quotient.Nilpotent
 
 @[expose] public section
 
@@ -85,7 +85,7 @@ theorem exists_perfectPart_algHom : ∀ (p : ℕ) [Fact p.Prime] (k : Type) [Fie
     | succ m ih =>
       intro a
       obtain ⟨b, hb⟩ := ih a
-      obtain ⟨c, hc⟩ := GlobalTheory.T.exists_pow_char_eq_of_isReduced_finite' p k (A ⧸ N) b
+      obtain ⟨c, hc⟩ := _root_.GlobalTheory.exists_pow_char_eq_of_isReduced_finite p k (A ⧸ N) b
       exact ⟨c, by rw [hb, hc, ← pow_mul, ← pow_succ']⟩
   have hlift : ∀ a : A, ∃ b : A, a - b ^ q ∈ N := by
     intro a

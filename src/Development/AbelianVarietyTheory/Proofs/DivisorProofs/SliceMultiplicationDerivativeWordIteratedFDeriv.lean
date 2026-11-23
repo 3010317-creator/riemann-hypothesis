@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdeleJoinZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchroedingerDerivativeSliceDirectionalAddPhaseStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchroedingerDerivativeSliceDirectionalAddPhase
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -73,7 +73,7 @@ theorem slice_word_fderivs (F : Type) [Field F] [NumberField F] [Invertible (2 :
     refine ⟨?_, ?_⟩
     · funext x
       simp only [List.map_cons, List.foldr_cons]
-      rw [word_cons, GlobalTheory.T.schroedingerDerivative_slice_directional_add_phase F κ ψ ℓ hψ _ y hd (v, 0) x, h1]
+      rw [word_cons, _root_.GlobalTheory.WeilL2Words.dS_adeleJoin_eq F κ ψ ℓ hψ _ y hd (v, 0) x, h1]
       simp
     · simp only [List.foldr_cons]
       exact (h2.fderiv_right (by simp)).clm_apply contDiff_const
@@ -121,7 +121,7 @@ theorem slice_word_mul_fderivs : ∀ (F : Type) [Field F] [NumberField F] [Inver
       rw [e1]; exact e2.differentiable (by simp)
     refine ⟨?_, (hc.pow (i + 1)).mul h2⟩
     funext x
-    rw [List.replicate_succ, List.cons_append, word_cons, GlobalTheory.T.schroedingerDerivative_slice_directional_add_phase F κ ψ ℓ hψ _ y hd (0, u) x]
+    rw [List.replicate_succ, List.cons_append, word_cons, _root_.GlobalTheory.WeilL2Words.dS_adeleJoin_eq F κ ψ ℓ hψ _ y hd (0, u) x]
     have e1x := congrFun e1 x
     simp only [ContinuousLinearMap.map_zero, zero_add, e1x]
     ring

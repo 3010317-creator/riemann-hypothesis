@@ -2,13 +2,20 @@ module
 
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.AbelianDeRham.AbelianHodgeDeRham.H1DimGeAbelianDim
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CocycleUnitsTrivializeModuloIdealStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DependencyStatementStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FirstCohomologyRankBoundAtClosedPointStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MinimalGeneratorsBaseChangeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MinimalGeneratorsLocalIdealStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TrivialPullbackGivesUnitCocycleStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitCocycleLiftMinimalGeneratorsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitCocycleLiftModuloMaximalStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TrMulTrInv
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DependencyStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FirstCohomologyRankBoundAtClosedPoint
+public import Mathlib.RingTheory.RingHom.Flat
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MinimalGeneratorsBaseChange
+public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
+public import Mathlib.Algebra.Algebra.Operations
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Defs
+public import Mathlib.RingTheory.Noetherian.Defs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MinimalGeneratorsLocalIdeal
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TrivialPullbackGivesUnitCocycle
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitCocycleLiftMinimalGenerators
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitCocycleLiftModuloMaximal
+public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsGenOfSmallExtension
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +57,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.TangentLinearity.ConstPullback
-public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsGenOfSmallExtension
 import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.HodgeWedgeFields.H1CommutesBaseChange
 
 @[expose] public section
@@ -67,13 +73,13 @@ namespace GlobalTheory.CompanionTheory.FewEq
 
 theorem fewEq : FewEqSt := by
   have gen := GlobalTheory.T.cocycle_units_trivialize_modulo_ideal
-  have data := GlobalTheory.T.trivial_pullback_gives_unit_cocycle
-  have mingens := GlobalTheory.T.minimal_generators_local_ideal
-  have flat := GlobalTheory.T.minimal_generators_base_change
-  have dep := GlobalTheory.T.dependency_statement
-  have fibre := GlobalTheory.T.first_cohomology_rank_bound_at_closed_point
-  have cocycle := GlobalTheory.T.unit_cocycle_lift_modulo_maximal
-  have finish := GlobalTheory.T.unit_cocycle_lift_minimal_generators
+  have data := _root_.GlobalTheory.CompanionTheory.FewEq.exists_local_of_triv
+  have mingens := _root_.GlobalTheory.CompanionTheory.FewEq.exists_minimal_generators
+  have flat := _root_.GlobalTheory.CompanionTheory.FewEq.minimal_generators_flat_independent
+  have dep := _root_.GlobalTheory.CompanionTheory.FewEq.depSt
+  have fibre := _root_.GlobalTheory.CompanionTheory.FewEq.FibreRed.dep_fibre
+  have cocycle := _root_.GlobalTheory.CompanionTheory.FewEq.Cochain.exists_cochain
+  have finish := _root_.GlobalTheory.CompanionTheory.FewEq.exists_correction
   intro R _ _ _ X s n hsm hpr hF M hM I hI hJ
   have hIm : I ≤ IsLocalRing.maximalIdeal R := IsLocalRing.le_maximalIdeal hI
   obtain ⟨r, t, ht, hmin⟩ := mingens R I

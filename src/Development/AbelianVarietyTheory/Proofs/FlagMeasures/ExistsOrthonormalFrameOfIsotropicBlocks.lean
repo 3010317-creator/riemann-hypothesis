@@ -1,7 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SigmaFiniteOfRealSmul
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsHermitianSqrtInSignedUnitaryGroupStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.GlobAut
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsHermitianSqrtInSignedUnitaryGroup
+public import Mathlib.Data.Matrix.ColumnRowPartitioned
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -11,7 +13,6 @@ import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
-public import Mathlib.Data.Matrix.ColumnRowPartitioned
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.NumberTheory.Chebyshev
@@ -191,7 +192,7 @@ theorem exists_isFrame : ∀ (n n₀ a : ℕ) (j : Fin a → ℕ) (ε : Fin n �
     have := congrArg Matrix.det hHJH
     rw [Matrix.det_mul, Matrix.det_mul, hH, zero_mul, zero_mul] at this
     exact hdetJ₀ this.symm
-  obtain ⟨s, hsh, hss⟩ := GlobalTheory.T.exists_hermitian_sqrt_in_signedUnitaryGroup n₀ ε₀ D hdet (by rw [hD]; exact hHJH)
+  obtain ⟨s, hsh, hss⟩ := _root_.GlobalTheory.LeviIso.exists_hermitian_sqrt_mem_UJ n₀ ε₀ D hdet (by rw [hD]; exact hHJH)
   rw [hD] at hss
   obtain ⟨S, hS⟩ : ∃ S, S = uMat s := ⟨_, rfl⟩
   obtain ⟨S', hS'⟩ : ∃ S' : Matrix (Fin n₀) (Fin n₀) ℂ,

@@ -1,11 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsLogCanonicalMultipleCanonical
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitMkOfFormallyUnramified
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BertiniCoordinateStrataEtaleChartCotangent
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsLogMult
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscrepancyEqFormOrderSubWeightedCoordOrders
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscrepancyLtAdaptedCoordsIndependentFunction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SncChartSingleEquation
 import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BertiniCoordinateStrataEtaleChartCotangentStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscrepancyEqFormOrderSubWeightedCoordOrdersStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscrepancyLtAdaptedCoordsIndependentFunctionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SncChartSingleEquationStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,7 +46,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Definitions.Divisors.CentreAtOfIsAt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsLogMult
 
 @[expose] public section
 
@@ -85,8 +86,8 @@ theorem exists_poly_neg_one_lt_discrep_member : ∀ (Y : Scheme.{0}) [IsIntegral
       (GlobalTheory.Cartier.CartierDiv.principal t + A).IsEqn y f → ∀ E : DivOver q, E.Through y →
       -1 < discrep E η m g - c' * E.ord f) fun y₀ => ?_).imp
     fun Q ⟨hQ, hQc⟩ => ⟨hQ, fun c hc t ht y => hQc c hc y t ht⟩
-  obtain ⟨W, hW, z, w, u, e, f, hfr, he, hf, hch⟩ := GlobalTheory.T.exists_affine_snc_chart_cartier_single_equation Y q n B hB A ι s hs y₀
-  obtain ⟨Q, hQ, hQc⟩ := GlobalTheory.T.bertini_coordinateStrata_etaleChart_cotangent Y q n W z hfr ι f
+  obtain ⟨W, hW, z, w, u, e, f, hfr, he, hf, hch⟩ := _root_.GlobalTheory.PairStep.exists_sncChart_isEqn_affine Y q n B hB A ι s hs y₀
+  obtain ⟨Q, hQ, hQc⟩ := _root_.GlobalTheory.StrataBertini.bertini_strata_cotangent Y q n W z hfr ι f
   refine ⟨W, W.isOpen, hW, Q, hQ, fun c hc y hy t ht hgen η K Θ m c' g f' hη hK hm hΘ hc' hmult
     hg hf' E hE => ?_⟩
   obtain ⟨J, hJ, hJz⟩ := hch y hy
@@ -102,8 +103,8 @@ theorem exists_poly_neg_one_lt_discrep_member : ∀ (Y : Scheme.{0}) [IsIntegral
     refine ⟨i, (unitAt_fnOf_iff hy (gen_mem hy) (f i)).1 ?_⟩
     rw [hf i]
     exact (he y hy).generatesAt_iff.1 hi
-  rw [GlobalTheory.T.discrepancy_eq_formOrder_sub_weighted_coordOrders Y q n B y W hy z J w u hJ η K Θ m g hη hK hm hΘ hg E hE]
-  exact GlobalTheory.T.discrepancy_lt_adaptedCoords_independent_function Y q n B y W hy z J w u hJ hJz _ (fun h => hQc c hc y hy hbas J h) (t * e) f'
+  rw [_root_.GlobalTheory.Discrepancy.IsSncChart.discrep_eq_formOrd_sub_sum Y q n B y W hy z J w u hJ η K Θ m g hη hK hm hΘ hg E hE]
+  exact _root_.GlobalTheory.Discrepancy.IsSncChart.neg_one_lt_formOrd_sub_sum_sub_ord_of_indep Y q n B y W hy z J w u hJ hJz _ (fun h => hQc c hc y hy hbas J h) (t * e) f'
     (fun j => (Θ.mult (w j) : ℚ) / m) c' hFv.symm hunit (fun j hj => by
       have := hmult (w j) (hJ.spec j hj)
       have hm' : (0 : ℚ) < m := by exact_mod_cast hm

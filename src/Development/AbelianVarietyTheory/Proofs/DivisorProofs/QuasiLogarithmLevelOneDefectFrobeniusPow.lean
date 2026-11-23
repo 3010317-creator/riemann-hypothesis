@@ -3,12 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.EpsilonPairingZeta
 public import Mathlib.RingTheory.MvPowerSeries.Expand
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedInOfQuasiLogarithmStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedInOfQuasiLogarithm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NmulSucc
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OmegaBaseChangeFiniteProjectiveReflexive
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivGroupFormalChartEvNatMultipleEqConvPowerStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PadicContinuousEvaluationExistsUniqueSubstNatura
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubstSubIn
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PadicContinuousEvaluationExistsUniqueSubstNatura
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -255,7 +255,7 @@ theorem defect_frob_pow : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsA
       (Ideal.pow_mem_of_mem _ (Ideal.mem_span_singleton_self _) _ (by have := hpp.one_lt; omega)), ?_⟩
     rw [mul_pow, e']; ring
   have hD : DIn (⊤ : Ideal F.B) (map F.s f) := by
-    have h := GlobalTheory.T.divided_in_of_quasi_logarithm p F.B O F.Q F.θ F.frame d μ' hμ ⊤ f hf
+    have h := _root_.GlobalTheory.QLogDiff.dIn_of_QL p F.B O F.Q F.θ F.frame d μ' hμ ⊤ f hf
     intro α i
     obtain ⟨r, _, e'⟩ := h α i
     exact ⟨F.σ r, trivial, by rw [coeff_map, ← map_natCast F.s, ← map_mul, e', F.s_alg]⟩

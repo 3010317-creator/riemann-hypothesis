@@ -1,9 +1,9 @@
 module
 
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.GaussianContinuousRapidDecay
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.CountData
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FiniteAdeleTopologyStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FiniteAdeleTopology
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.GaussianSumOfCounting
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.GaussianContinuousRapidDecay
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -140,14 +140,14 @@ theorem phi_bound {φ : (ι → A F) → ℂ} (hφ : SB φ) :
   obtain ⟨C, hC⟩ := hcs.exists_bound_of_continuous hlc.continuous
   have hK : IsCompact (⋃ i, (fun y : ι → A F => y i) '' tsupport φ) :=
     isCompact_iUnion fun i => hcs.isCompact.image (continuous_apply i)
-  obtain ⟨N, hN, hb⟩ := (GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F).2.2.2.2.2.2.2.2.1 _ hK
+  obtain ⟨N, hN, hb⟩ := (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.2.2.2.2.2.2.2.1 _ hK
   refine ⟨max C 0, le_max_right _ _, N, hN, fun y => (hC y).trans (le_max_left _ _), fun y hy i => ?_⟩
   exact hb _ (Set.mem_iUnion.mpr ⟨i, y, subset_tsupport _ hy, rfl⟩)
 
 theorem measurable_fin {Ω : Type} [MeasurableSpace Ω] [MeasurableSpace (A F)] [BorelSpace (A F)]
     {gf : Ω → Matrix ι ι (A F)} (h : ∀ i j, Measurable fun ω => gf ω i j) (x : ι → F) :
     Measurable fun ω => gf ω *ᵥ fun j => algebraMap F (A F) (x j) := by
-  haveI : SecondCountableTopology (A F) := (GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F).2.1
+  haveI : SecondCountableTopology (A F) := (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.1
   refine measurable_pi_iff.mpr fun i => ?_
   simp only [Matrix.mulVec, dotProduct]
   exact Finset.measurable_sum _ fun j _ => (h i j).mul_const _
@@ -171,7 +171,7 @@ theorem measurable_term {Ω : Type} [MeasurableSpace Ω] [MeasurableSpace (A F)]
     (hf : ∀ i j, Measurable fun ω => gf ω i j) (hi : ∀ w i j, Measurable fun ω => gi ω w i j)
     {φ : (ι → A F) → ℂ} (hφ : SB φ) (τ : InfinitePlace F → ℂ) (x : ι → F) :
     Measurable fun ω => thTerm B ρ P (gf ω) (gi ω) φ τ x := by
-  haveI : SecondCountableTopology (A F) := (GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F).2.1
+  haveI : SecondCountableTopology (A F) := (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.1
   unfold thTerm
   exact (hφ.1.continuous.measurable.comp (measurable_fin hf x)).mul
     ((continuous_gauss B ρ P τ).measurable.comp (measurable_inf hi ρ x))
@@ -223,9 +223,9 @@ theorem theta_integral_bound : ∀ (F : Type) [Field F] [NumberField F], ∀ [Me
   intro F _ _ _ _ ι _ _ M B ρ P hQ Ω _ Pr gf gi hCD φ hφ κ t hκ ht
   obtain ⟨htr, -, -, -, -, hP, -⟩ := hQ
   obtain ⟨-, hgi, hgf, -, hcnt⟩ := hCD
-  haveI : SecondCountableTopology (A F) := (GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F).2.1
+  haveI : SecondCountableTopology (A F) := (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.1
   haveI : Countable F := countable_field
-  have hOh : MeasurableSet (Oh F) := (GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F).2.2.2.2.1.measurableSet
+  have hOh : MeasurableSet (Oh F) := (_root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F).2.2.2.2.1.measurableSet
   obtain ⟨C₀, hC₀, N, hN, hb, hs⟩ := phi_bound hφ
   obtain ⟨c, hc, hlow⟩ := posDef_lower_family P hP
   obtain ⟨Cc, hCc⟩ := hcnt N hN

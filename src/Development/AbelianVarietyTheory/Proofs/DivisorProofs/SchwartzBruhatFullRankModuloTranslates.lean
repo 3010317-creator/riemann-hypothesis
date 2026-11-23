@@ -1,10 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubMemNsp
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNonzeroMinorOfRankStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatMinorSupportStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatPartitionOfUnityStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatReindexRowsStatement
+public import Mathlib.LinearAlgebra.Matrix.Rank
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNonzeroMinorOfRank
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatMinorSupport
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatPartitionOfUnity
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatReindexRows
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -86,12 +88,12 @@ theorem exists_fullRank_sub_mem_span : ∀ (k : Type) [Field k] [ValuativeRel k]
       have := Fintype.card_congr e'
       simp at this
       omega
-    have hT := GlobalTheory.T.schwartzBruhat_reindex_rows k (Fin ρ ⊕ ↥(Set.range S)ᶜ) (Fin n) (Fin d) ν e'
-    obtain ⟨Φ', hΦ', hΦ'f⟩ := GlobalTheory.T.schwartzBruhat_minor_support k (Fin ρ) (↥(Set.range S)ᶜ) (Fin d) ν ϖ hϖ hν τ
+    have hT := _root_.GlobalTheory.RankStrata.rowRenum_SB_Nsp k (Fin ρ ⊕ ↥(Set.range S)ᶜ) (Fin n) (Fin d) ν e'
+    obtain ⟨Φ', hΦ', hΦ'f⟩ := _root_.GlobalTheory.RankChart.exists_mem_nsp_eq_of_rank_le k (Fin ρ) (↥(Set.range S)ᶜ) (Fin d) ν ϖ hϖ hν τ
       (fun Z => f (Z.submatrix e'.symm id)) (hT.1 f hf) (fun Z hZ => by
         have := hS _ hZ
         rwa [Matrix.submatrix_submatrix, show (e'.symm ∘ S) = Sum.inl from funext he'] at this)
-    have hT2 := GlobalTheory.T.schwartzBruhat_reindex_rows k (Fin n) (Fin ρ ⊕ ↥(Set.range S)ᶜ) (Fin d) ν e'.symm
+    have hT2 := _root_.GlobalTheory.RankStrata.rowRenum_SB_Nsp k (Fin n) (Fin ρ ⊕ ↥(Set.range S)ᶜ) (Fin d) ν e'.symm
     refine ⟨_, hT2.2 Φ' hΦ', fun Y hY => ?_⟩
     simp only [Equiv.symm_symm]
     rw [hΦ'f _ (by rw [show (id : Fin d → Fin d) = ⇑(Equiv.refl (Fin d)) from rfl, Matrix.rank_submatrix]; simpa using hY)]
@@ -104,14 +106,14 @@ theorem exists_fullRank_sub_mem_span : ∀ (k : Type) [Field k] [ValuativeRel k]
       letI := IsTopologicalAddGroup.rightUniformSpace k
       haveI := isUniformAddGroup_of_addCommGroup (G := k)
       infer_instance
-    have hsp := GlobalTheory.T.schwartzBruhat_partition_of_unity k (Fin n) (Fin d) ((Fin ρ → Fin n) × (Fin ρ → Fin d))
+    have hsp := _root_.GlobalTheory.CoverSB.mem_span_of_cover k (Fin n) (Fin d) ((Fin ρ → Fin n) × (Fin ρ → Fin d))
       (fun i => {Y : Matrix (Fin n) (Fin d) k | (Y.submatrix i.1 i.2).det ≠ 0})
       (fun i => isOpen_ne_fun ((continuous_id.matrix_submatrix i.1 i.2).matrix_det) continuous_const) g hg
       (fun Y hY => by
         have : ρ ≤ Y.rank := by
           by_contra h
           exact hY (hg0 Y (by omega))
-        obtain ⟨S, τ, h⟩ := GlobalTheory.T.exists_nonzero_minor_of_rank k _ _ ρ Y this
+        obtain ⟨S, τ, h⟩ := _root_.GlobalTheory.exists_submatrix_det_ne_zero_of_le_rank k _ _ ρ Y this
         exact ⟨(S, τ), h⟩)
     refine Submodule.span_induction
       (p := fun g _ => ∃ Φ ∈ Nsp k (Fin n) (Fin d) ν, ∀ Y : Matrix (Fin n) (Fin d) k, Y.rank ≤ ρ → Φ Y = g Y)

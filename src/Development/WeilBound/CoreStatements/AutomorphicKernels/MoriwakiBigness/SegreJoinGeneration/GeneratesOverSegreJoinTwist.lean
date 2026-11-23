@@ -3,21 +3,23 @@ module
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsAmpleOfGenTwist
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.StatementsPerturb
 public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.SegreJoin
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.KleimanGenericPointSectionInputStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.KleimanInputNefAmpleSectionCountStatement
-import Development.WeilBound.CoreStatements.HodgeTatePoints.A12
-import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PVocabMultiHomog
-import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PVocabMultiHomogIdeal
+public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.GenericPointSectionHypotheses
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.KleimanGenericPointSectionInput
+public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.IsFieldSubalgebraSelf
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.KleimanInputNefAmpleSectionCount
 public import GroundTheory.HeightsAndTheta.Heights.ElementarySymmetric.PGeneratedCechTieX
-import GroundTheory.HeightsAndTheta.Heights.FieldsOfNumbers.PCutRegular
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.AssemblyBase
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PAmpleOfGenTwist
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PGenKoszulStep
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PGenTwistVanish
-import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PKleimanNefF
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PKleimanScheme
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PKoszulCechComplex
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PKoszulCechExact
+import Development.WeilBound.CoreStatements.HodgeTatePoints.A12
+import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PVocabMultiHomog
+import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PVocabMultiHomogIdeal
+import GroundTheory.HeightsAndTheta.Heights.FieldsOfNumbers.PCutRegular
+import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PKleimanNefF
 import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.BlockVecSegreJoin
 import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.ExistsNeZeroOfWeight
 import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.IsMultiProjPrimeSegreLift
@@ -79,7 +81,7 @@ open GroundTheory.Heights₂.Heights
 open GroundTheory.Heights₂.Heights.IndefiniteRowSideFullHecke.Kleiman2 (IsNef IsGenerated KAt baseDeg)
 open GroundTheory.Heights₂.Heights.Kleiman.SectionsOverLocalization (segreJoin)
 
-theorem kAt_all (d : ℕ) : KAt d := (GlobalTheory.T.kleiman_input_nef_ample_section_count GlobalTheory.T.kleiman_genericPointSectionInput).2.1 d
+theorem kAt_all (d : ℕ) : KAt d := (_root_.GlobalTheory.CompanionTheory.Relay.kleiman_input_nef_ample_section_count _root_.GlobalTheory.CompanionTheory.Relay.kleiman_genericPointSectionInput).2.1 d
 
 theorem genTwistVanish : HilbertSamuel.GenTwistVanish.Statement :=
   HilbertSamuel.GenTwistVanish.proof PositivityTheory.HtPt.Ktw.a11 HilbertSamuel.QuotPartGraded.full

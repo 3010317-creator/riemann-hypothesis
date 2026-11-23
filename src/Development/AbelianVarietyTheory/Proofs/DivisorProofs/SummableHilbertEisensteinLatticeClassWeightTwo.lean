@@ -2,9 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.OmegaFactorization
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlgebraNormRatGaussianExtensionOfPairStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteGaussianExtensionUnitsQuotUnitsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertEisensteinLatticeSummandWeightTwoBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SummableGaussianExtensionNormRpowStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IrreducibleXSqAddOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteGaussianExtensionUnitsQuotUnits
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertEisensteinLatticeSummandWeightTwoBound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SummableGaussianExtensionNormRpow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,8 +56,8 @@ theorem GlobalTheory.HeckeTwo.summable_eisClass_two : ∀ (F : Type) [Field F] [
     (𝔞 𝔟 : GlobalTheory.IndefiniteRowSideFullHecke.OmegaFactorization.Frac F) (σ : ℂ), 0 < σ.re → ∀ z ∈ GlobalTheory.IndefiniteRowSideFullHecke.OmegaFactorization.upperHalf F,
     Summable (GlobalTheory.IndefiniteRowSideFullHecke.OmegaFactorization.eisClass 𝔞 𝔟 2 σ z) := by
   intro F _ _ _ 𝔞 𝔟 σ hσ z hz
-  obtain ⟨C, hC⟩ := GlobalTheory.T.hilbertEisensteinLatticeSummand_weightTwo_bound F σ hσ z hz
-  have hS := (GlobalTheory.T.summable_gaussianExtension_norm_rpow F 𝔞 𝔟 (1 + σ.re) (by linarith) (GlobalTheory.T.finite_gaussianExtension_units_quot_units F)).mul_left C
+  obtain ⟨C, hC⟩ := _root_.GlobalTheory.Proof.hilbertEisensteinLatticeSummand_weightTwo_bound.bound F σ hσ z hz
+  have hS := (_root_.GlobalTheory.GaussSum.summable_gauss_norm F 𝔞 𝔟 (1 + σ.re) (by linarith) (_root_.GlobalTheory.GaussExt.finite_units_quot_units F)).mul_left C
   refine Summable.of_norm_bounded hS fun c => ?_
   have hp : c.out.1 ≠ 0 := c.out.2.2.2
   have e : |((Algebra.norm ℚ (GlobalTheory.GaussExt.gEmb F c.out.1) : ℚ) : ℝ)| =

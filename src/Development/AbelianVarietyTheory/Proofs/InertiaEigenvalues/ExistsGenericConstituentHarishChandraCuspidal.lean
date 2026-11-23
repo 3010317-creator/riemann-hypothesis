@@ -2,11 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LabelDatum
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BernsteinZelevinskyDerivativeHarishChandraProduct
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WhittakerDimensionPosOfCuspidalCharacter
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CentralIdempotentOfIrrCharacterOrthogonalCentral
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CharacterDecompositionAndClassFunctionExpansion
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraProductListIsCharacterAndPermInvari
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WhittakerDimensionHarishChandraInductionMul
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WhittakerDimensionPosOfCuspidalCharacterStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -145,7 +145,7 @@ theorem exists_generic_constituent : ∀ (g : ℕ) [Fact g.Prime] (ψ : AddChar 
     rw [wh_hcL_prod ψ hψ L hL]
     refine List.prod_ne_zero fun h0 => ?_
     obtain ⟨p, hp, h1⟩ := List.mem_map.1 h0
-    obtain ⟨m, hm, hm'⟩ := GlobalTheory.T.whittakerDimension_pos_of_cuspidal_character g ψ hψ p.1 p.2 (hL p hp)
+    obtain ⟨m, hm, hm'⟩ := _root_.GlobalTheory.GLq.wh_cusp_pos g ψ hψ p.1 p.2 (hL p hp)
     rw [hm'] at h1
     have : m = 0 := by exact_mod_cast h1
     omega

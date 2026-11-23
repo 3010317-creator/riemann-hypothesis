@@ -3,13 +3,17 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrameCoord
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HtValOnSubset
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsLocalRingTrivSqZeroExt
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsCompleteDVRCompletionIntegralIffStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetValuationsSumZeroSameLocalLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRamificationCompleteDVRValuationEqMulStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatLineWeightCharacterTriangularFrameChangeStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.OneLtAbsNormReal
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsCompleteDVRCompletionIntegralIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetValuationsSumZeroSameLocalLattice
+public import Formalism.LocalRingCardinality.DataArith
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRamificationCompleteDVRValuationEqMul
+public import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsFlatSecRankZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatLineWeightCharacterTriangularFrameChange
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HostIntegerCharacterCompConjEqConjEmbedding
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralFrameSpanCompletedEigenLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TriangularFrameChangeBasechangeIntegralAtCompletStatement
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.IntegralOf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralFrameSpanCompletedEigenLattice
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TriangularFrameChangeBasechangeIntegralAtComplet
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsAlgebraicOfNormConst
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LowerTriIsUnitDet
 import Mathlib.Algebra.Order.Floor.Extended
@@ -64,12 +68,12 @@ theorem rho_eq_vAdd_at_prime : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
       rw [h, pow_zero, map_zero, map_zero] at h0
       exact absurd h0 zero_ne_one
     · exact h
-  obtain ⟨T, iK, hFin, hT⟩ := GlobalTheory.T.exists_completeDVR_completion_integral_iff K 𝔓
-  obtain ⟨e, he, hv⟩ := GlobalTheory.T.exists_ramification_completeDVR_valuation_eq_mul K 𝔓 T iK hT
+  obtain ⟨T, iK, hFin, hT⟩ := _root_.GlobalTheory.exists_cdvr_completion_integral_iff K 𝔓
+  obtain ⟨e, he, hv⟩ := _root_.GlobalTheory.CdvrPlaceVal.vV_eq_mul_vAdd K 𝔓 T iK hT
   letI := (iK.comp (algebraMap c.F K)).toAlgebra
   let φ : K →ₐ[c.F] T.Fr := { iK with commutes' := fun _ => rfl }
   obtain ⟨yT, hyT⟩ := GlobalTheory.FlagTan.exists_frMap φ y
-  have htri := GlobalTheory.T.triangular_frameChange_basechange_integral_at_completion E H Dw l Xo c K y B t₀ m1 m2 𝔓 T iK hT yT hyT
+  have htri := _root_.GlobalTheory.PtDegInt.intPt E H Dw l Xo c K y B t₀ m1 m2 𝔓 T iK hT yT hyT
   rcases htri with ⟨ρV, hρV, G, t', n, n', m1', m2', h1, h2, C, td, y', hlow, hdiag, hchg, hlie, hint⟩
   have hbor : FrBor td yT y' :=
     ((GlobalTheory.Frames.frBor_calculus E H Dw l Xo c T.Fr yT y' y').1 td).2 ⟨C, hlow, hdiag, hchg⟩
@@ -96,14 +100,14 @@ theorem rho_eq_vAdd_at_prime : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   have hval := hρ (π 𝔓) _ hmem
   have hev1 := GlobalTheory.FlagTan.evR_frBor s.sig_mem hbor
   have hev2 : evR Xo c s.sig yT = φ (evR Xo c s.sig y) := GlobalTheory.FlagTan.evR_frMap s.sig_mem.1 hyT
-  have hS4 := GlobalTheory.T.flatLineWeight_character_triangular_frameChange E H Dw τ T.Fr td
+  have hS4 := _root_.GlobalTheory.FlatChar.flatWt_char E H Dw τ T.Fr td
   have hct := GlobalTheory.ConjHostChar.conj_char E H Dw l Xo c τ K t ht
-  obtain ⟨hA1, hA2⟩ := GlobalTheory.T.integralFrame_span_completed_eigenLattice E H Dw l Xo c K y B t₀ m1 m2 F τ.1 t ht u hu 𝔓 T iK hT ρV hρV yT hyT G t' n n'
+  obtain ⟨hA1, hA2⟩ := _root_.GlobalTheory.PtDeg.intFrame_span_eigLat E H Dw l Xo c K y B t₀ m1 m2 F τ.1 t ht u hu 𝔓 T iK hT ρV hρV yT hyT G t' n n'
     m1' m2' h1 h2 C (td none) y' hchg hlie
-  obtain ⟨hB1, hB2⟩ := GlobalTheory.T.integralFrame_span_completed_eigenLattice E H Dw l Xo c K y B t₀ m1 m2 F (conjEmb τ.1) (t.comp (H.bar : 𝓞 E →+* 𝓞 E)) hct u' hu'
+  obtain ⟨hB1, hB2⟩ := _root_.GlobalTheory.PtDeg.intFrame_span_eigLat E H Dw l Xo c K y B t₀ m1 m2 F (conjEmb τ.1) (t.comp (H.bar : 𝓞 E →+* 𝓞 E)) hct u' hu'
     𝔓 T iK hT ρV hρV yT hyT G t' n n' m1' m2' h1 h2 C (td none) y' hchg hlie
-  obtain ⟨-, hCdet, hvC⟩ := GlobalTheory.T.det_valuations_sum_zero_same_local_lattice K 𝔓 T iK hT F.P₀.g _ _ b hb M u hM (C τ.1) hA1 hA2
-  obtain ⟨-, -, hvC'⟩ := GlobalTheory.T.det_valuations_sum_zero_same_local_lattice K 𝔓 T iK hT F.P₀.g _ _ b' hb' M' u' hM' (C (conjEmb τ.1)) hB1 hB2
+  obtain ⟨-, hCdet, hvC⟩ := _root_.GlobalTheory.TwoBasesDet.det_vV_add_eq_zero K 𝔓 T iK hT F.P₀.g _ _ b hb M u hM (C τ.1) hA1 hA2
+  obtain ⟨-, -, hvC'⟩ := _root_.GlobalTheory.TwoBasesDet.det_vV_add_eq_zero K 𝔓 T iK hT F.P₀.g _ _ b' hb' M' u' hM' (C (conjEmb τ.1)) hB1 hB2
   have hdet : ∀ σ, (C σ).det = ∏ i, (td (some ⟨σ, i⟩) : T.Fr) := fun σ => by
     rw [Matrix.det_of_lowerTriangular (C σ) (fun i j hij => hlow σ i j hij)]
     exact Finset.prod_congr rfl fun i _ => hdiag σ i

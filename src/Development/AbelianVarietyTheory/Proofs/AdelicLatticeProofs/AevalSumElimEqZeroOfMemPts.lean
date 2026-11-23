@@ -3,7 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.AdelicPair
 public import Mathlib.RingTheory.TensorProduct.Maps
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EqZeroOfContractions
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RatComponentMemRatPolysVanishingOnMatrixSetStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RatComponentMemRatPolysVanishingOnMatrixSet
+public import Mathlib.LinearAlgebra.Dual.Lemmas
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -47,7 +49,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.LinearAlgebra.Dual.Lemmas
 
 @[expose] public section
 
@@ -92,7 +93,7 @@ theorem aeval_sum_elim_eq_zero_of_tensor {ι : Type} [Fintype ι] [DecidableEq �
           (((Algebra.ofId ℂ (MvPolynomial (ι × ι) ℂ)).restrictScalars ℚ).comp eg)
           (MvPolynomial.mapAlgHom (Algebra.ofId ℚ ℂ))
       have h2 : TensorProduct.lid ℚ _ (LinearMap.rTensor _ (l ∘ₗ eg.toLinearMap) t) ∈ vanI Γ := by
-        refine GlobalTheory.T.rat_component_mem_ratPolysVanishingOnMatrixSet ι Γ hΓ (φ t) ?_ l _ ?_
+        refine _root_.GlobalTheory.ClassFin.component_mem_vanI ι Γ hΓ (φ t) ?_ l _ ?_
         · intro h hh
           rw [← ht g hg h hh]
           clear ht

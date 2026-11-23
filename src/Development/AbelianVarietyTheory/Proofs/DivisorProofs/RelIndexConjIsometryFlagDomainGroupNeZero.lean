@@ -1,8 +1,9 @@
 module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.Signature
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteRelIndexStabilizerCommensurableLattiStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPosNatSmulMemOfFgAndSpanningLatticeStatement
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteRelIndexStabilizerCommensurableLatti
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DenExists
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -140,8 +141,8 @@ theorem relIndex_map_conj_ne_zero : ∀ {E : Type} [Field E] [NumberField E] [Is
   set Λ' := X₂.Λ.map (moveLin δ) with hΛ'
   have hfg : Λ'.FG := X₂.Λ_fg.map _
   have hsp := span_map_moveLin δ X₂.Λ X₂.Λ_span
-  obtain ⟨n₁, hn₁, h₁⟩ := GlobalTheory.T.exists_pos_nat_smul_mem_of_fg_and_spanning_lattice X.Λ Λ' hfg X.Λ_span
-  obtain ⟨n₂, hn₂, h₂⟩ := GlobalTheory.T.exists_pos_nat_smul_mem_of_fg_and_spanning_lattice Λ' X.Λ X.Λ_fg hsp
+  obtain ⟨n₁, hn₁, h₁⟩ := _root_.GlobalTheory.DenominatorExistence.main X.Λ Λ' hfg X.Λ_span
+  obtain ⟨n₂, hn₂, h₂⟩ := _root_.GlobalTheory.DenominatorExistence.main Λ' X.Λ X.Λ_fg hsp
   have hnat : ∀ (L : Submodule (𝓞 E) (Fin r → E)) (k : ℕ) (v : Fin r → E), v ∈ L →
       (k : E) • v ∈ L := by
     intro L k v hv
@@ -155,7 +156,7 @@ theorem relIndex_map_conj_ne_zero : ∀ {E : Type} [Field E] [NumberField E] [Is
     intro v hv
     have := hnat _ n₁ _ (h₂ v hv)
     rwa [smul_smul, ← Nat.cast_mul] at this
-  obtain ⟨K, hK, hKΛ⟩ := GlobalTheory.T.exists_finite_relIndex_stabilizer_commensurable_lattice X.Λ Λ' (n₁ * n₂) (Nat.mul_pos hn₁ hn₂) X.Λ_fg hA hB X.Γ
+  obtain ⟨K, hK, hKΛ⟩ := _root_.GlobalTheory.LatticeCongr.exists_relIndex_ne_zero_stab X.Λ Λ' (n₁ * n₂) (Nat.mul_pos hn₁ hn₂) X.Λ_fg hA hB X.Γ
     (fun γ hγ => (X.Γ_stab γ hγ).2)
   obtain ⟨S, hS⟩ := X₂.Γ_index
   have hAH : (X₂.Γ.map (MulAut.conj δ).toMonoidHom).relIndex (X.Γ ⊓ K) ≠ 0 :=

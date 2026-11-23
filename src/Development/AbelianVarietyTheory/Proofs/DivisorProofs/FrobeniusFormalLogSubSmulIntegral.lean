@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.FormalExpMulFormalExpNeg
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalLogCoeffMemOfSubOneMemDp
+public import Mathlib.Data.Nat.Prime.Defs
+public import Mathlib.RingTheory.MvPowerSeries.Substitution
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobeniusSubstMapCongrPowModP
 import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.NatCastMulCoeffOfPderivEq
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalLogCoeffMemOfSubOneMemDpStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobeniusSubstMapCongrPowModPStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,7 +80,7 @@ theorem in_frob_formalLog_sub_smul : ∀ (p : ℕ) [Fact p.Prime] (B O Q : Type)
     have := congrArg constantCoeff hgk
     rwa [map_mul, hgp1, one_mul, map_one] at this
 
-  have hc := fun α => GlobalTheory.T.frobenius_subst_map_congr_pow_mod_p p B σB hσ d g α
+  have hc := fun α => _root_.GlobalTheory.FrobCong.frobenius_congr p B σB hσ d g α
   choose r hr using hc
   set R : MvPowerSeries (Fin d) B := fun α => r α with hR
   have hvR : v - g ^ p = C (p : B) * R := by
@@ -101,7 +103,7 @@ theorem in_frob_formalLog_sub_smul : ∀ (p : ℕ) [Fact p.Prime] (B O Q : Type)
       Ideal.mul_mem_right _ _ (Ideal.pow_mem_of_mem _ (Ideal.mem_span_singleton_self _) _
         (by omega)), ?_⟩
     rw [mul_pow, ← mul_assoc, ← pow_succ', Nat.sub_add_cancel (by omega : 1 ≤ p), mul_comm]
-  have hlog := GlobalTheory.T.formalLog_coeff_mem_of_sub_one_mem_dp p B O Q θ hF _ hJ (Fin d) h hh1 hhJ
+  have hlog := _root_.GlobalTheory.DPLog.formalLog_in_of_sub_one_mem p B O Q θ hF _ hJ (Fin d) h hh1 hhJ
 
   set ι := algebraMap B Q with hι
   have hG1 : constantCoeff (map ι g) = 1 := by simp [hg]

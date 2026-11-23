@@ -3,12 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ComplementReferenceCompactSubgroup
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardSubmoduleAndHomLe
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsBasisFgMaximalOrderSpanningFree
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsGluingHomomorphismDefectGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FrameLatticeGramDetAndMinorsOrbitInvariantStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsGluingHomomorphismDefectGroup
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FrameLatticeGramDetAndMinorsOrbitInvariant
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetFrameClassProperties
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermExponentsNonnegAndDefectGroupBound
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetTermBasicFacts
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsPrincipalIdealRingOfHenselian
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermExponentsNonnegAndDefectGroupBoundStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -96,7 +96,7 @@ theorem sat_gens (d : S.Datum) (Λ : Submodule L.O S.V) (hΛ : S.IsTerm d Λ) :
   have hfg : (S.sat Λ).FG := by
     haveI : IsNoetherian L.O Λ := isNoetherian_of_fg_of_noetherian Λ hSD.1.1
     exact (isNoetherian_submodule.1 this) _ inf_le_left
-  have hsp := (GlobalTheory.T.frameLattice_gramDet_and_minors_orbit_invariant L r k S _ hW.2.2.1 _ hW.2.2.2.1).2.2
+  have hsp := (_root_.GlobalTheory.FrameGram.main L r k S _ hW.2.2.1 _ hW.2.2.2.1).2.2
   set y := Sum.elim (S.fr d Λ) (S.fr' d Λ) with hy
   have hr : Set.range (y ∘ finSumFinEquiv.symm) = Set.range y :=
     finSumFinEquiv.symm.surjective.range_comp y
@@ -124,7 +124,7 @@ theorem sat_gens (d : S.Datum) (Λ : Submodule L.O S.V) (hΛ : S.IsTerm d Λ) :
 theorem tauRel_sum (d : S.Datum) (Λ : Submodule L.O S.V) (hΛ : S.IsTerm d Λ) {ι : Type}
     (s : Finset ι) (c : ι → L.O) (w y : ι → S.V) (h : ∀ i, S.TauRel d Λ (w i) (y i)) :
     S.TauRel d Λ (∑ i ∈ s, c i • w i) (∑ i ∈ s, c i • y i) := by
-  obtain ⟨-, -, h3, h4, -⟩ := GlobalTheory.T.exists_gluing_homomorphism_defect_group L r k S d Λ hΛ
+  obtain ⟨-, -, h3, h4, -⟩ := _root_.GlobalTheory.HL.Gluing.main L r k S d Λ hΛ
   induction s using Finset.induction_on with
   | empty => simpa using ((h4 0 (Submodule.zero_mem _)).1 (Submodule.zero_mem _)).2
   | insert a s ha ih =>
@@ -136,8 +136,8 @@ theorem encard_kernels_le : ∀ {F : Type} [Field F] [ValuativeRel F] [Topologic
   rcases Set.eq_empty_or_nonempty
     {Λ | S.IsTerm d Λ ∧ S.Fr d Λ = C ∧ S.sat Λ = Mh ∧ S.cardI d Λ = j} with h0 | ⟨Λ₀, h₀, hC₀, hM₀, -⟩
   · rw [h0]; simp
-  obtain ⟨-, -, -, -, -, b, -, hb⟩ := GlobalTheory.T.exists_gluing_homomorphism_defect_group L r k S d Λ₀ h₀
-  obtain ⟨-, -, -, -, -, ⟨i₀, hi₀, hbe⟩, -⟩ := GlobalTheory.T.term_exponents_nonneg_and_defect_group_bound L r k S d Λ₀ h₀
+  obtain ⟨-, -, -, -, -, b, -, hb⟩ := _root_.GlobalTheory.HL.Gluing.main L r k S d Λ₀ h₀
+  obtain ⟨-, -, -, -, -, ⟨i₀, hi₀, hbe⟩, -⟩ := _root_.GlobalTheory.HL.Defect.exponents_and_defect L r k S d Λ₀ h₀
   have hq : 2 ≤ S.q := (GlobalTheory.UnramOrder.order_facts L S.ϖ S.ϖ_irr).2.2.2.2.2.2.1
   let M₀ : Submodule L.O Mh := (S.M d Λ₀).comap Mh.subtype
   have hcard : Nat.card (Mh ⧸ M₀) = S.q ^ i₀ := by
@@ -163,7 +163,7 @@ theorem encard_kernels_le : ∀ {F : Type} [Field F] [ValuativeRel F] [Topologic
     ((fun Λ : Submodule L.O S.V => Λ ⊓ S.W0.restrictScalars L.O) ''
       {Λ | S.IsTerm d Λ ∧ S.Fr d Λ = C ∧ S.sat Λ = Mh ∧ S.cardI d Λ = j}) (by
     rintro _ ⟨Λ, ⟨hΛ, hC, hM, hj⟩, rfl⟩
-    obtain ⟨t1, t2, -, t4, t5, -⟩ := GlobalTheory.T.exists_gluing_homomorphism_defect_group L r k S d Λ hΛ
+    obtain ⟨t1, t2, -, t4, t5, -⟩ := _root_.GlobalTheory.HL.Gluing.main L r k S d Λ hΛ
     rw [hM] at t1 t5
     have hMM : S.M d Λ = S.M d Λ₀ := by
       have hmem : (S.fr d Λ, S.fr' d Λ) ∈ S.frameCls (S.fr d Λ₀) (S.fr' d Λ₀) := by

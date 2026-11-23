@@ -5,11 +5,14 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.SabComp
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsTripleOfAbelianModelDedekind
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.GroupSchemeMorphismDescends
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.GrpObjOfDenseOpen
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDescOfFlatOfSchemeTheoreticallyDominantBasStatement
+public import Mathlib.AlgebraicGeometry.Morphisms.SchemeTheoreticallyDominant
+public import Mathlib.AlgebraicGeometry.Morphisms.Separated
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDescOfFlatOfSchemeTheoreticallyDominantBas
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatSurjectiveSpMapOfDvrStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpecFractionFieldIsPullbackOfUnramifiedStatement
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLiftOfSchemeTheoreticallyDominant
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.GrpObjOfDenseOpen
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -153,7 +156,7 @@ theorem hasGoodReduction_of_model : ∀ (R K W K' : Type) [CommRing R] [IsDomain
   have hc : (eI.hom.left ≫ pullback.fst A.hom (spMap (algebraMap K K'))) ≫ a = pullback.fst G.hom (spMap (algebraMap W K')) ≫ g := by
     rw [Category.assoc]; exact hcomp
 
-  obtain ⟨hm, hm1, hm2, hm3⟩ := GlobalTheory.T.exists_desc_of_flat_of_schemeTheoreticallyDominant_base (spMap (algebraMap R W)) (spMap (algebraMap R K)) (spMap (algebraMap K K')) (spMap (algebraMap W K')) hsq X.hom (X ⊗ X).hom (G ⊗ G).hom (sq2 hg.w)
+  obtain ⟨hm, hm1, hm2, hm3⟩ := _root_.GlobalTheory.exists_desc_of_flat_of_schemeTheoreticallyDominant (spMap (algebraMap R W)) (spMap (algebraMap R K)) (spMap (algebraMap K K')) (spMap (algebraMap W K')) hsq X.hom (X ⊗ X).hom (G ⊗ G).hom (sq2 hg.w)
     (isPullback_squareMapOfCompatibleMorphism hg.w hg) (A ⊗ A).hom (sq2 ha.w) (isPullback_squareMapOfCompatibleMorphism ha.w ha)
     ((Over.pullback (spMap (algebraMap W K'))).obj G ⊗ (Over.pullback (spMap (algebraMap W K'))).obj G).hom (sq2 hρ.1.w) (sq2 hψ.1.w)
     (isPullback_squareMapOfCompatibleMorphism hρ.1.w hρ.1) (isPullback_squareMapOfCompatibleMorphism hψ.1.w hψ.1)
@@ -162,12 +165,12 @@ theorem hasGoodReduction_of_model : ∀ (R K W K' : Type) [CommRing R] [IsDomain
       rw [← Category.assoc, mul_sq hρ _ (grpSchemeSquareProductMap_comp_fst _) (grpSchemeSquareProductMap_comp_snd _), Category.assoc, ← hc, ← Category.assoc,
         ← mul_sq hψ _ (grpSchemeSquareProductMap_comp_fst _) (grpSchemeSquareProductMap_comp_snd _), Category.assoc])
 
-  obtain ⟨hi, hi1, hi2, hi3⟩ := GlobalTheory.T.exists_desc_of_flat_of_schemeTheoreticallyDominant_base (spMap (algebraMap R W)) (spMap (algebraMap R K)) (spMap (algebraMap K K')) (spMap (algebraMap W K')) hsq X.hom X.hom G.hom g hg A.hom a ha
+  obtain ⟨hi, hi1, hi2, hi3⟩ := _root_.GlobalTheory.exists_desc_of_flat_of_schemeTheoreticallyDominant (spMap (algebraMap R W)) (spMap (algebraMap R K)) (spMap (algebraMap K K')) (spMap (algebraMap W K')) hsq X.hom X.hom G.hom g hg A.hom a ha
     ((Over.pullback (spMap (algebraMap W K'))).obj G).hom (pullback.fst G.hom (spMap (algebraMap W K'))) (eI.hom.left ≫ pullback.fst A.hom (spMap (algebraMap K K'))) hρ.1 hψ.1 hc
     (ι[G].left ≫ g) (ι[A].left ≫ a) (by rw [Category.assoc, hg.w, ← Category.assoc, Over.w]) (by
       rw [← Category.assoc, inv_sq hρ, Category.assoc, ← hc, ← Category.assoc, ← inv_sq hψ, Category.assoc])
 
-  obtain ⟨hu, hu1, hu2, hu3⟩ := GlobalTheory.T.exists_desc_of_flat_of_schemeTheoreticallyDominant_base (spMap (algebraMap R W)) (spMap (algebraMap R K)) (spMap (algebraMap K K')) (spMap (algebraMap W K')) hsq X.hom (𝟙 (Sp R)) (𝟙 (Sp W)) (spMap (algebraMap R W))
+  obtain ⟨hu, hu1, hu2, hu3⟩ := _root_.GlobalTheory.exists_desc_of_flat_of_schemeTheoreticallyDominant (spMap (algebraMap R W)) (spMap (algebraMap R K)) (spMap (algebraMap K K')) (spMap (algebraMap W K')) hsq X.hom (𝟙 (Sp R)) (𝟙 (Sp W)) (spMap (algebraMap R W))
     (IsPullback.of_vert_isIso ⟨by simp⟩) (𝟙 (Sp K)) (spMap (algebraMap R K)) (IsPullback.of_vert_isIso ⟨by simp⟩)
     (𝟙 (Sp K')) (spMap (algebraMap W K')) (spMap (algebraMap K K')) (IsPullback.of_vert_isIso ⟨by simp⟩) (IsPullback.of_vert_isIso ⟨by simp⟩) hsq.w.symm
     (η[G].left ≫ g) (η[A].left ≫ a) (by rw [Category.assoc, hg.w, ← Category.assoc, Over.w]; rfl) (by

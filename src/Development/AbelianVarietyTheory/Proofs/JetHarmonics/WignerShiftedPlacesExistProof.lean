@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Statements.DiscreteSeriesShifts.ShiftExists
 public import Development.AbelianVarietyTheory.Statements.DiscreteSeriesShifts.AmapsShExists
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsShiftedTypesLowerBound
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.WignerMapsThreePlacesExistsStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.WignerMapsThreePlacesExists
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.WithRightAction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -167,6 +167,6 @@ theorem shiftExists_of (hA : GlobalTheory.WigSh.AmapsShExists) : GlobalTheory.Wi
   exact ⟨Wqp, i1, i2, i3, Wqm, j1, j2, j3, pp, pm, Ap, Am, ApPt, AmPt, a1, b1, a2, a3, a4, b2, b3, b4, a8, b8,
     c1, c2, c3, c4⟩
 
-theorem shiftExists : GlobalTheory.WigSh.ShiftExists := shiftExists_of GlobalTheory.T.wignerMapsThreePlaces_exists
+theorem shiftExists : GlobalTheory.WigSh.ShiftExists := shiftExists_of _root_.GlobalTheory.WigSh.amapsShExists
 
 end GlobalTheory.wignerShiftedPlacesExist_proof

@@ -2,18 +2,21 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExpStar
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyThetaOnBdRPlusPeriodData
-import Development.AbelianVarietyTheory.CrystallinePeriods.RingBasics
-import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousOrbitPadicComplex
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicCharacterPadicBasicProperties
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicTwistCocycleCoboundary
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicTwistCocycleCoboundaryStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.HTBasis
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamFilQuotientXiPowerAinf
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.H1BallCocycleLogCyclotomicStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.LocalSituation
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.H1BallCocycleLogCyclotomic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TateInvariantsCyclotomicTwist
+public import ReciprocityTheory.DualLattices.AinfFacts
+import Development.AbelianVarietyTheory.CrystallinePeriods.RingBasics
+import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormPrimitiveRootPrimePowSubOnePadicComplex
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormUnitPowSubOne
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TateInvariantsCyclotomicTwistStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaBdRPlusSurjectiveKerUnitsEquivariantStatement
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsCrisP
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaBdRPlusSurjectiveKerUnitsEquivariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,7 +56,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Algebra.Nonarchimedean.Completion
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.DualLattices.AinfFacts
 
 @[expose] public section
 
@@ -70,14 +72,14 @@ theorem norm_le_of_twist {act : GQ l →* (PadicComplex l ≃+* PadicComplex l)}
     (ha : IsActC act) (hχ : IsCyc χ) (K : FinExt l) {s : ℕ} (hs : Lev l s) {j : ℤ} (hj : j ≠ 0)
     (β : PadicComplex l) (h : ∀ σ ∈ Gj K s, ‖chiC χ j σ * act σ β - β‖ ≤ 1) :
     ‖(l : PadicComplex l) ^ (1 + s + padicValInt l j) * β‖ ≤ 1 := by
-  obtain ⟨γ, hγ, e⟩ := GlobalTheory.T.cyclotomic_twist_cocycle_coboundary l act χ ha hχ K s hs j hj
+  obtain ⟨γ, hγ, e⟩ := _root_.GlobalTheory.Cyc.TwistKill.pow_kills_cyclotomic_H1 l act χ ha hχ K s hs j hj
     (fun σ => chiC χ j σ * act σ β - β)
     ⟨(((continuous_chiC hχ j).mul (GlobalTheory.Cyc.IsActC.continuous_orbit l act ha β)).sub
       continuous_const).continuousOn, h, fun g _ g' _ => by
         have h2 : act g (chiC χ j g') = chiC χ j g' := act_algebraMap ha g _
         simp only [chiC_mul, map_mul, map_sub, h2, RingAut.mul_apply]
         ring⟩
-  have h0 := (GlobalTheory.T.tate_invariants_cyclotomic_twist l act χ ha hχ K s hs j
+  have h0 := (_root_.GlobalTheory.CyclotomicTowerSubgroupInclusions.invariants_twist l act χ ha hχ K s hs j
     ((l : PadicComplex l) ^ (1 + s + padicValInt l j) * β - γ) (fun g hg => by
       have := e g hg
       simp only [map_sub, map_mul, map_pow, map_natCast] at this ⊢
@@ -92,7 +94,7 @@ theorem norm_le_of_log {act : GQ l →* (PadicComplex l ≃+* PadicComplex l)} {
       (α : PadicComplex l) + (act σ β - β)‖ ≤ 1) :
     ‖α‖ ≤ (l : ℝ) ^ (1 + s) := by
   obtain ⟨hn, hc, -⟩ := GlobalTheory.Cyc.cyc_basic l χ hχ
-  obtain ⟨H1, H2⟩ := GlobalTheory.T.cocycle_eq_log_cyclotomic_smul_add_coboundary l act χ ha hχ K s hs
+  obtain ⟨H1, H2⟩ := _root_.GlobalTheory.Cyc.LogClass.image_H1_logChi l act χ ha hχ K s hs
   obtain ⟨_, ⟨α', hα', rfl⟩, hn', b, e⟩ := H1 (fun σ =>
     algebraMap ℚ_[l] (PadicComplex l) (logZl l (χ σ : ℚ_[l])) * (α : PadicComplex l) + (act σ β - β))
     ⟨(((continuous_algMap.comp ((GlobalTheory.PadicLogUnits.logZl_hom l).2.1.comp_continuous hc hn)).mul
@@ -203,7 +205,7 @@ theorem theta_onto (T : LocTied l P AI) (y : PadicComplex l) (hy : ‖y‖ ≤ 1
     ⟨y, (GlobalTheory.RingBasics.mem_OC _).2 hy⟩
   refine ⟨a, ?_⟩
   change GlobalTheory.ThetaTie.th T _ = _
-  rw [GlobalTheory.ThetaTie.th_eq T (GlobalTheory.ThetaTie.eD_ιA T a).symm, (GlobalTheory.T.thetaBdRPlus_surjective_ker_units_equivariant l).2.2.2.1]
+  rw [GlobalTheory.ThetaTie.th_eq T (GlobalTheory.ThetaTie.eD_ιA T a).symm, (_root_.GlobalTheory.MemLoc.thetaD_props l).2.2.2.1]
   exact congrArg Subtype.val ha
 
 theorem graded (T : LocTied l P AI) (J : ThetaL P AI) (i : ℕ) {u : P.R.BdR}

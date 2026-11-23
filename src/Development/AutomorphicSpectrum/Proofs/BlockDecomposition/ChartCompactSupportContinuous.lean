@@ -2,7 +2,8 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FreeCell
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRingStatement
+public import Formalism.UnipotentAdelicQuotients.SWXSDefs
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.UnitsOpenEmbeddingLocalTensor
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -256,7 +257,7 @@ theorem test_chart : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
   haveI := hLC
   haveI := hSC
   haveI := hT2
-  obtain ⟨i1, -, -, i4, hsig, -⟩ := GlobalTheory.T.tensor_locally_compact_ring F E σ hCM R
+  obtain ⟨i1, -, -, i4, hsig, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R
   haveI := i1
   haveI := i4
   have hinv := GlobalTheory.CompanionTheory.SW.KUnits.continuousOn_ringInverse hKu

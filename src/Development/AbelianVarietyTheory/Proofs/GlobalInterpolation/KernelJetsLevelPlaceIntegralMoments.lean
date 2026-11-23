@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.JetSu
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.EqAndAlg
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.JetMomentsOfUnitPeriod
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LatticeFactsAll
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.UnitPeriodTranslatesMomentsFiniteStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TranslateMomentsAll
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.UnitPeriodTranslatesMomentsFinite
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +51,7 @@ namespace GlobalTheory.MomTop
 
 theorem jetMoments : GlobalTheory.IndefiniteRowSideFullHecke.JetSumTable.JetMoments :=
   GlobalTheory.MomT.jetMoments_of_unitPeriod
-    (GlobalTheory.T.unitPeriodTranslates_moments_finite GlobalTheory.MomEq.eq_and_alg.1 GlobalTheory.MomEq.eq_and_alg.2)
+    (_root_.GlobalTheory.MomFin.moments_fin GlobalTheory.MomEq.eq_and_alg.1 GlobalTheory.MomEq.eq_and_alg.2)
     GlobalTheory.MomEq.eq_and_alg.1 GlobalTheory.MomLat.latticeFactsAll
 
 end GlobalTheory.MomTop

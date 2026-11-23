@@ -4,9 +4,9 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.IsDCReps
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.Complex.UpperHalfPlane.Manifold
 public import Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative.LeviCivita
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EichlerIntegralFromISlashChangeOfVariablesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EichlerIntegralFromITailExponentialDecayStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PolyDegreeSlashActionRightActionPropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EichlerIntegralFromISlashChangeOfVariables
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EichlerIntegralFromITailExponentialDecay
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PolyDegreeSlashActionRightActionProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -88,12 +88,12 @@ theorem bound_rate {F : ℍ → ℂ} {C c c' : ℝ} (hc : c' ≤ c)
 
 theorem polySlash_eichler_limit : ∀ (k : ℕ) (f h : ℍ → ℂ) (p : ℂ[X]) (σ : SL(2, ℤ)) (Cf cf Ch ch : ℝ), 2 ≤ k → 0 < cf → 0 < ch → MDifferentiable 𝓘(ℂ) 𝓘(ℂ) f → MDifferentiable 𝓘(ℂ) 𝓘(ℂ) h → MDifferentiable 𝓘(ℂ) 𝓘(ℂ) (f ∣[(k : ℤ)] σ) → MDifferentiable 𝓘(ℂ) 𝓘(ℂ) (h ∣[(k : ℤ)] σ) → (∀ τ : ℍ, 1 ≤ τ.im → ‖(f ∣[(k : ℤ)] σ) τ‖ ≤ Cf * Real.exp (-cf * τ.im)) → (∀ τ : ℍ, 1 ≤ τ.im → ‖(h ∣[(k : ℤ)] σ) τ‖ ≤ Ch * Real.exp (-ch * τ.im)) → p ∈ degreeLT ℂ (k - 1) → ∃ (Q : ℂ[X]) (C' c : ℝ), Q ∈ degreeLT ℂ (k - 2 + 1) ∧ 0 < c ∧ ∀ τ : ℍ, 1 ≤ τ.im → ∀ j ≤ k - 2, ‖(slP (k - 2) (mat σ) (eichler (k - 2) f (σ • τ) - (eichler (k - 2) h (σ • τ)).map (starRingEnd ℂ) - p) - Q).coeff j‖ ≤ C' * Real.exp (-c * τ.im) * (1 + ‖(τ : ℂ)‖) ^ (k - 2) := by
   intro k f h p σ Cf cf Ch ch hk hcf hch hf hh hfs hhs bf bh _hp
-  obtain ⟨C1, hC1⟩ := GlobalTheory.T.eichlerIntegralFromI_slash_change_of_variables k hk f hf σ
-  obtain ⟨C2, hC2⟩ := GlobalTheory.T.eichlerIntegralFromI_slash_change_of_variables k hk h hh σ
+  obtain ⟨C1, hC1⟩ := _root_.GlobalTheory.EichlerChange.polySlash_eichler_smul k hk f hf σ
+  obtain ⟨C2, hC2⟩ := _root_.GlobalTheory.EichlerChange.polySlash_eichler_smul k hk h hh σ
   have hc : 0 < min cf ch := lt_min hcf hch
-  obtain ⟨Lf, Kf, hLf⟩ := GlobalTheory.T.eichlerIntegralFromI_tail_exponential_decay (k - 2) (f ∣[(k : ℤ)] σ) (max Cf 0) (min cf ch) hfs hc
+  obtain ⟨Lf, Kf, hLf⟩ := _root_.GlobalTheory.HeckeFamilyMatrices.eichler_tail (k - 2) (f ∣[(k : ℤ)] σ) (max Cf 0) (min cf ch) hfs hc
     (bound_rate (min_le_left _ _) bf)
-  obtain ⟨Lh, Kh, hLh⟩ := GlobalTheory.T.eichlerIntegralFromI_tail_exponential_decay (k - 2) (h ∣[(k : ℤ)] σ) (max Ch 0) (min cf ch) hhs hc
+  obtain ⟨Lh, Kh, hLh⟩ := _root_.GlobalTheory.HeckeFamilyMatrices.eichler_tail (k - 2) (h ∣[(k : ℤ)] σ) (max Ch 0) (min cf ch) hhs hc
     (bound_rate (min_le_right _ _) bh)
   set R : ℂ[X] := Lf + C1 - (Lh + C2).map (starRingEnd ℂ) - slP (k - 2) (mat σ) p with hR
   refine ⟨∑ j ∈ Finset.range (k - 2 + 1), C (R.coeff j) * X ^ j, Kf + Kh, min cf ch,
@@ -102,7 +102,7 @@ theorem polySlash_eichler_limit : ∀ (k : ℕ) (f h : ℍ → ℂ) (p : ℂ[X])
   have key : slP (k - 2) (mat σ) (eichler (k - 2) f (σ • τ) - (eichler (k - 2) h (σ • τ)).map (starRingEnd ℂ) - p)
       = eichler (k - 2) (f ∣[(k : ℤ)] σ) τ + C1
         - (eichler (k - 2) (h ∣[(k : ℤ)] σ) τ + C2).map (starRingEnd ℂ) - slP (k - 2) (mat σ) p := by
-    rw [map_sub, map_sub, hC1, ← (GlobalTheory.T.polyDegreeSlashAction_right_action_properties (k - 2) (mat σ) 1 _ (eichler_mem _ _ _)).2.2.2, hC2]
+    rw [map_sub, map_sub, hC1, ← (_root_.GlobalTheory.HeckeFamilyMatrices.SlPAct.polySlash_act (k - 2) (mat σ) 1 _ (eichler_mem _ _ _)).2.2.2, hC2]
   have e1 := hLf τ hτ j hj
   have e2 := hLh τ hτ j hj
   rw [coeff_sub] at e1 e2

@@ -3,12 +3,15 @@ module
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.UnitaryConjugation
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BlkGLMem
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ArchimedeanPreimageRealPlaceLineStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsArchimedeanPairNegativeSymplecticPairingStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsArchimedeanPairNegativeSymplecticPairing
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsHeisenbergDerivativeArchimedeanDirectionStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergDerivativeZeroOrEmptyEqZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergLineDerivativeEqDirectionalAddPhaseStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergDerivativeZeroOrEmptyEqZero
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergLineDerivativeEqDirectionalAddPhase
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealPlaceLinesRelatedAndVanishOffPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchwartzEqZeroOfWrongSignGaussianRelationStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchwartzEqZeroOfWrongSignGaussianRelation
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,13 +80,13 @@ theorem actsD_zero_of_neg {F E : Type} [Field F] [NumberField F] [Field E] [Numb
     (w : InfinitePlace F) (hw : ε' w = -1) (v : Matrix (Fin n) (Fin d) (AE F E)) (h : SInf F (Fin n × Fin d))
     (hD : ActsD (evI F) (M.heisLine B.ψ v) g h) : h = 0 := by
   by_cases hκ : n = 0 ∨ d = 0
-  · refine GlobalTheory.T.heisenbergDerivative_zero_or_empty_eq_zero M B.ψ g h v hD (Or.inr ?_)
+  · refine _root_.GlobalTheory.HeisDerivZero.actsD_eq_zero M B.ψ g h v hD (Or.inr ?_)
     rcases hκ with hκ | hκ
     · subst hκ; exact ⟨fun p => p.1.elim0⟩
     · subst hκ; exact ⟨fun p => p.2.elim0⟩
   push_neg at hκ
   obtain ⟨u, u', hu, hu', hrel, hneg⟩ :=
-    GlobalTheory.T.exists_archimedean_pair_negative_symplectic_pairing B X W r s r' s' hB hX hW (Nat.pos_of_ne_zero hκ.1) (Nat.pos_of_ne_zero hκ.2) ε' w hw
+    _root_.GlobalTheory.WrongSignPair.exists_neg_pair B X W r s r' s' hB hX hW (Nat.pos_of_ne_zero hκ.1) (Nat.pos_of_ne_zero hκ.2) ε' w hw
   obtain ⟨f, hf⟩ := GlobalTheory.T.exists_heisenberg_derivative_archimedean_direction M B.ψ hB.std g u hu
   obtain ⟨f', hf'⟩ := GlobalTheory.T.exists_heisenberg_derivative_archimedean_direction M B.ψ hB.std g u' hu'
   have hff := hε' u u' hu hu' hrel f f' hf hf'
@@ -97,9 +100,9 @@ theorem actsD_zero_of_neg {F E : Type} [Field F] [NumberField F] [Field E] [Numb
   set b₁ : Fin n × Fin d → mixedEmbedding.mixedSpace F := fun i => evI F ((M.co.e u).2 i)
   set b₂ : Fin n × Fin d → mixedEmbedding.mixedSpace F := fun i => evI F ((M.co.e u').2 i)
   have hg0 : g = 0 := by
-    refine GlobalTheory.T.schwartz_eq_zero_of_wrong_sign_gaussian_relation g a₁ a₂ (ell b₁) (ell b₂) (fun y => ?_) ?_
-    · have e1 := GlobalTheory.T.heisenbergLineDerivative_eq_directional_add_phase M B.ψ hB.std g f u hu hf y
-      have e2 := GlobalTheory.T.heisenbergLineDerivative_eq_directional_add_phase M B.ψ hB.std g f' u' hu' hf' y
+    refine _root_.GlobalTheory.WrongSignGauss.vanish g a₁ a₂ (ell b₁) (ell b₂) (fun y => ?_) ?_
+    · have e1 := _root_.GlobalTheory.HeisDerivFormula.heisLine_deriv_eq M B.ψ hB.std g f u hu hf y
+      have e2 := _root_.GlobalTheory.HeisDerivFormula.heisLine_deriv_eq M B.ψ hB.std g f' u' hu' hf' y
       have e3 : f' y = Complex.I * f y := by rw [hff]; rfl
       rw [e1, e2] at e3
       exact e3
@@ -119,7 +122,7 @@ theorem actsD_zero_of_neg {F E : Type} [Field F] [NumberField F] [Field E] [Numb
       have c2 : (ell b₁) a₂ = Algebra.trace ℝ (mixedEmbedding.mixedSpace F) (a₂ ⬝ᵥ b₁) := rfl
       rw [c1, c2]
       exact hneg
-  exact GlobalTheory.T.heisenbergDerivative_zero_or_empty_eq_zero M B.ψ g h v hD (Or.inl hg0)
+  exact _root_.GlobalTheory.HeisDerivZero.actsD_eq_zero M B.ψ g h v hD (Or.inl hg0)
 
 end GlobalTheory.GaussCancel
 

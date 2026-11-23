@@ -1,11 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.MemRingOfInR
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCuspExpansionDiscriminantIntegerLeadingOneStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FnHahnSeriesOfHasQStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HahnSeriesSubringCoeffMulInvMemStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsCuspExpansionAtInfinityPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.QExpansionCoeffsMemFinitelyGeneratedStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCuspExpansionDiscriminantIntegerLeadingOne
+public import Mathlib.Algebra.Order.Ring.Rat
+public import Mathlib.RingTheory.HahnSeries.Summable
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HahnSeriesSubringCoeffMulInvMem
+public import Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative.LeviCivita
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsCuspExpansionAtInfinityProperties
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.QExpansionCoeffsMemFinitelyGenerated
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FnHahnSeriesOfHasQ
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,11 +67,11 @@ theorem coeff_fg : ∀ (Ω : Type) [Field Ω] (ε : Ω →+* ℂ) (f : ℍ → �
   have hb'' : HasQ N (fun τ => DD τ ^ w * f τ) (fun n => ε (a n)) := by
     have : (fun n => ε (a n)) = b := funext ha
     rw [this]; exact hb'
-  obtain ⟨S, hS⟩ := GlobalTheory.T.qExpansion_coeffs_mem_finitelyGenerated Ω ε N w f a hN hLv hb''
-  obtain ⟨H, hH, hHa, hH0⟩ := GlobalTheory.T.exists_hahnSeries_isExp_of_hasQ Ω ε N (fun τ => DD τ ^ w * f τ) a hN hb''
-  obtain ⟨hD, hDe, hD0, hDl, hDz⟩ := GlobalTheory.T.exists_cuspExpansion_discriminant_integer_leading_one Ω ε
-  obtain ⟨hops, huniq, hC, -, -⟩ := GlobalTheory.T.isCuspExpansionAtInfinity_properties Ω ε
-  obtain ⟨hmul, hinv⟩ := GlobalTheory.T.hahnSeries_subring_coeff_mul_inv_mem Ω (Subring.closure (S : Set Ω))
+  obtain ⟨S, hS⟩ := _root_.GlobalTheory.FN.qcoeff_finitelyGenerated Ω ε N w f a hN hLv hb''
+  obtain ⟨H, hH, hHa, hH0⟩ := _root_.GlobalTheory.fn_hahnSeries_of_hasQ Ω ε N (fun τ => DD τ ^ w * f τ) a hN hb''
+  obtain ⟨hD, hDe, hD0, hDl, hDz⟩ := _root_.GlobalTheory.FNExpD.expD Ω ε
+  obtain ⟨hops, huniq, hC, -, -⟩ := _root_.GlobalTheory.FNExp.exp_props Ω ε
+  obtain ⟨hmul, hinv⟩ := _root_.GlobalTheory.HahnSub.coeff_mul_inv_mem Ω (Subring.closure (S : Set Ω))
   set A := Subring.closure (S : Set Ω)
 
   have hpow : ∀ k : ℕ, IsExp ε (fun τ => DD τ ^ k) (hD ^ k) := by

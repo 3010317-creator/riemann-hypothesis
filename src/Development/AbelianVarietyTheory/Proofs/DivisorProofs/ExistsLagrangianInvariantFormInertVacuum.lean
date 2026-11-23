@@ -7,10 +7,12 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqAdeleSuppo
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplementaryAdelicSchwartzRestFunctionStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLagrangianInertPlace
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianTensorSkewHermitianLatticeOpenCompact
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceTensorLatticeSelfDualSupportedAtStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LagrangianInvariantLinearFormLocalExistenceStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceTensorLatticeSelfDualSupportedAt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousAtPlace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LagrangianInvariantLinearFormLocalExistence
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualLocalImageLatticeSupportedAtPlace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticFormEqZeroOfLagrangianAtPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticFormEqZeroOfLagrangianAtPlace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -143,7 +145,7 @@ theorem exists_lagr_inv_vac : ∀ (F E : Type) [Field F] [NumberField F] [Field 
       x ∈ v.adicCompletionIntegers F := fun x hx => (hgood.2.2 x).1 hx
   have hiso : ∀ x ∈ Λ, ∀ x' ∈ Λ, x.1 ⬝ᵥ x'.2 - x'.1 ⬝ᵥ x.2 = 0 := by
     rintro _ ⟨u, hu, rfl⟩ _ ⟨u', hu', rfl⟩
-    have h0 := GlobalTheory.T.symplecticForm_eq_zero_of_lagrangianAtPlace σ G.V'.J G.W v C hLag (-1) u u' hu hu'
+    have h0 := _root_.GlobalTheory.InertVacIso.symp_eq_zero_of_lagAt σ G.V'.J G.W v C hLag (-1) u u' hu hu'
     change symp (cA σ) (-1) (incM F G.V'.J) (incM F G.W.J) u u' = 0 at h0
     rw [co.form] at h0
     have h1 := congrArg (evFin F v) h0
@@ -151,7 +153,7 @@ theorem exists_lagr_inv_vac : ∀ (F E : Type) [Field F] [NumberField F] [Field 
     simpa [GlobalTheory.LatVac.locCo, dotProduct, map_sum, map_mul, map_sub] using h1
   have hOC := GlobalTheory.LatOpenCpt.main σ B G.V' G.W _ _ _ _ hT.geo.hV' hT.geo.hW G.M' hT.geo.hM'.rat v
   have hdual := GlobalTheory.LatVac.DualLoc.map_selfDual v co B.ψ (latAtV G.V' G.W v) hatL
-    (GlobalTheory.T.inertPlace_tensorLattice_selfDual_supportedAt F E σ B a a' G X om om' hT v w hin)
+    (_root_.GlobalTheory.InertDual.latAtV_selfDual F E σ B a a' G X om om' hT v w hin)
   have heig0 : ∀ g ∈ latAtV G.V' G.W v, schr (GlobalTheory.LatVac.psiAt B.ψ v) (GlobalTheory.LatVac.locCo co v g) (G.M'.vac v) =
       B.ψ (⅟(2 : AF F) * symp (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) (inclR (F := F) (AF F) (θ : E)) ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) G.V'.J) ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) G.W.J) g g) • G.M'.vac v :=
     fun g hg => acts_unique v _ _ _ _ hsb (GlobalTheory.VacBridge.rho_acts_locCo co B.ψ v g (hatL g hg) _) (hvac g hg)
@@ -162,8 +164,8 @@ theorem exists_lagr_inv_vac : ∀ (F E : Type) [Field F] [NumberField F] [Field 
     rintro γ ⟨⟨g, hg, rfl⟩, ⟨u, hu, hgu⟩⟩
     have e : g = u := eq_of_locCo co v g u (hatL g hg) hu.1 hgu.symm
     subst e
-    rw [heig0 g hg, GlobalTheory.T.symplecticForm_eq_zero_of_lagrangianAtPlace σ G.V'.J G.W v C hLag _ g g hu hu, mul_zero, AddChar.map_zero_eq_one, one_smul]
-  obtain ⟨l, hl, hl0⟩ := GlobalTheory.T.lagrangian_invariant_linearForm_local_uniqueness v (GlobalTheory.LatVac.psiAt B.ψ v) (Fin a' × Fin (a + a')) Λ Γ (G.M'.vac v) hψc hψ hiso
+    rw [heig0 g hg, _root_.GlobalTheory.InertVacIso.symp_eq_zero_of_lagAt σ G.V'.J G.W v C hLag _ g g hu hu, mul_zero, AddChar.map_zero_eq_one, one_smul]
+  obtain ⟨l, hl, hl0⟩ := _root_.GlobalTheory.LagLocForm.lagr_local_form v (GlobalTheory.LatVac.psiAt B.ψ v) (Fin a' × Fin (a + a')) Λ Γ (G.M'.vac v) hψc hψ hiso
     hOC.1 hOC.2 hdual hsb hne heig hfix
   refine ⟨C, l, hLag, ?_, hl0⟩
   intro u hu φ hφ φ₁ _ hA

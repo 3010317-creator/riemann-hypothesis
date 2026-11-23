@@ -2,9 +2,11 @@ module
 
 public import Formalism.LocalToGlobal.CharacterGerms.NondegenerateCharts
 public import Formalism.LocalToGlobal.CharacterGerms.RowTieSelf
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NonDegenerateFormalBiextensionSquareStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RawChartTangentMaximalIdealOfNonDegenerateStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.HasGaugeAdjointLieProjectorsSelfConjugatePlaceStatement
+public import Development.AbelianVarietyTheory.Definitions.Jets.IsSelfOf
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NonDegenerateFormalBiextensionSquare
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RawChartTangentMaximalIdealOfNonDegenerate
+public import Development.AbelianVarietyTheory.Definitions.TeichmullerDepth.HasTeich
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.HasGaugeAdjointLieProjectorsSelfConjugatePlace
 import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IsIntegralGaugedFormalGroupLawSelfConjugateSquar
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -53,7 +55,7 @@ namespace GlobalTheory.RowAtSelf
 
 theorem rowCondition_two_selfConjugate_of_nonDegenerate : ∀ (C : Type) [Field C] [CharZero C] (V : VF C) (O : Type) [CommRing O] [StarRing O] (dd : ℕ) (Y : FBChart C V O dd) (d : ℕ) [NeZero d] (I0 : Type) [Fintype I0] (p : SelfData Y d I0), NDG Y → ∀ Hc : ∀ g, (Y.rawSelf p).CartHyp V g, RawChart.RankMaximalCondition Hc :=
   fun C _ _ V O _ _ dd Y d _ I0 _ p h Hc =>
-    GlobalTheory.T.rawChart_tangent_maximalIdeal_of_nonDegenerate C V d _ _ (Y.rawSelf p) (GlobalTheory.RowLawSquare.rlaw_rawSelf C V O dd Y d I0 p)
-      (GlobalTheory.T.hasGaugeAdjointLieProjectors_selfConjugatePlace C V O dd Y d I0 p) (GlobalTheory.T.nonDegenerate_formalBiextension_square C V O dd Y d I0 p h) Hc
+    _root_.GlobalTheory.RowAt.GoodInj.tangent_mm_of_nonDeg C V d _ _ (Y.rawSelf p) (GlobalTheory.RowLawSquare.rlaw_rawSelf C V O dd Y d I0 p)
+      (_root_.GlobalTheory.ProjSelf.hasProj_self C V O dd Y d I0 p) (_root_.GlobalTheory.NonDegSquare.nonDeg_rawSelf C V O dd Y d I0 p h) Hc
 
 end GlobalTheory.RowAtSelf

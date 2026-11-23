@@ -5,7 +5,7 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PerVa
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAffineStableLieEigenspaceFrame
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsContinuousOnFrameDirectionsInverse
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLocalEquationComplexPoints
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FrameCoordinatesEqRationalMatrixValuesChartStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FrameCoordinatesEqRationalMatrixValuesChart
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLinearEquivLift
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsHolomorphicLieFrame
 import Mathlib.Algebra.Order.Floor.Extended
@@ -169,7 +169,7 @@ theorem GlobalTheory.LieBase.exists_chart_dirs : ∀ (E : Type) [Field E] [Numbe
   have hyV : cxOf e σ hj y ∈ ptsIn (genStr T.Z) σ V.1 := by
     obtain ⟨h1, hy, -⟩ := hab 0 h0B
     rwa [h1, hsy] at hy
-  obtain ⟨M, hM⟩ := GlobalTheory.T.frame_coordinates_eq_rational_matrix_values_chart E H Dw l Xo c O β T.Z σ F e X j f₀ Eb A₀ hj hoi hT V φ Φ hφ A
+  obtain ⟨M, hM⟩ := _root_.GlobalTheory.LieBase.coords_eq_ratVal_of_chart E H Dw l Xo c O β T.Z σ F e X j f₀ Eb A₀ hj hoi hT V φ Φ hφ A
   have hMy := hM y hA hyV
   choose Ws hWs s hs using fun τ p q => (hMy.1 τ p q).exists_fnOf
   obtain ⟨G, hG, hGA⟩ := exists_open_mem X Eb hA

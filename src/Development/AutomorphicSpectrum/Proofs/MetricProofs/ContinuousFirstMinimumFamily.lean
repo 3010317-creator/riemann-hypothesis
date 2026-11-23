@@ -1,8 +1,8 @@
 module
 
-import Development.WeilBound.CoreStatements.PlurisubharmonicCones.EmbEquivSymmApply
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsEigFrames
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RiemannLatticeEigenProjectionStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RiemannLatticeEigenProjection
+import Development.WeilBound.CoreStatements.PlurisubharmonicCones.EmbEquivSymmApply
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic

@@ -6,15 +6,19 @@ public import Development.AutomorphicSpectrum.Statements.GeometryStatements.CmpS
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUniqueLeftBasisCoordsAdicCompletion
 public import Development.AutomorphicSpectrum.Statements.MetricStatements.AgreementIffGuarded
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GenFibreExists
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.GoodTowerRealAgreementStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RealTowerProportionalStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.TestPolynomialShiftTotalStatement
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.GoodTowerRealAgreement
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.RefLinked
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RealTowerProportional
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.HeckeSectionsIsotropicCommutatorPairingPower
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.TestPolynomialShiftTotal
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspIntersectionHeight
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodOriginIntersectionRelayStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PtsIntegralFibreAppendEqMulImageStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodOriginIntersectionRelay
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PtsIntegralFibreAppendEqMulImage
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.StokesLimitIffPosOfResK
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HeightComparisonBetweenModelsStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MeasureLimitStatementHoldsStatement
+public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.StatementsMuMeasureLimit
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MeasureLimitStatementHolds
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.ProjectionFormulaOfArithSystem
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularizedHodgeMetricSmooth
 import Mathlib.Algebra.Order.Floor.Extended
@@ -72,17 +76,17 @@ theorem testPoly_eq_slX : PB.AgreementPos → PB.Proportional → Cmp.CmpSt → 
   intro hAg hPr hCmp hGiv hPts E _ _ _ _ H D Xo l c Y _ T o II hGl hEx hII hp hq B B₁ a K _ J _ Ω _ _ W _ _ Dc O Lt _ _ _ X Or hB hBB hqp hbg hsm hGood hgen hS
   have hIn : PB.Inputs := hGiv.2.2.2.2.2.2.2.2.2.1
   haveI : Nonempty (CMType H) := GlobalTheory.CompanionTheory.Ar.Cusp.PtHt.cm_nonempty H
-  have hUnif := GlobalTheory.T.good_tower_real_agreement hGiv E H D Xo l c Y T o II hGl hEx hII hp hq
+  have hUnif := _root_.GlobalTheory.CompanionTheory.Relay.good_tower_real_agreement hGiv E H D Xo l c Y T o II hGl hEx hII hp hq
   have hProp : T.Proportional :=
-    GlobalTheory.T.real_tower_proportional hPr hIn II hII (CMType H) (D.p + D.q) T (Top.realOf o.toTowerOrigin) hUnif
+    _root_.GlobalTheory.CompanionTheory.Ar.Top.rootTower_proportional_of_unif hPr hIn II hII (CMType H) (D.p + D.q) T (Top.realOf o.toTowerOrigin) hUnif
   have hJpos : 0 < Top.testDeg (CMType H) (D.p + D.q) T.j :=
-    (GlobalTheory.T.test_polynomial_shift_total (CMType H) (D.p + D.q) T.j T.j_pos T.j_lt).2.1
+    (_root_.GlobalTheory.CompanionTheory.Ar.Top.testPoly_facts (CMType H) (D.p + D.q) T.j T.j_pos T.j_lt).2.1
   have hLim : ArLimExists X.H X.S B :=
     (GlobalTheory.T.height_comparison_between_models hGiv hPts K J II (CMType H) Ω W Dc X.H X.M X.M X.S X.S B hII X.S_tied X.S_tied).1
-  have hMass := (GlobalTheory.T.measure_limit_statement_holds II (CMType H) K J Ω W Dc O Lt X B hII.1 hLim).2
+  have hMass := (_root_.GlobalTheory.CompanionTheory.Ar.Giv.muMeasureLimit II (CMType H) K J Ω W Dc O Lt X B hII.1 hLim).2
   have hSm := GlobalTheory.CompanionTheory.Ar.Cusp.muReg_smooth_log K J II (CMType H) Ω W Dc X.H X.M X.S B X.S_tied
   obtain ⟨K₃, _, ι₃, _, κ, v, P₃, e, r, cf, Mt, Nt, δ, hb, hY, himg, hδ, hdeg, hNs, hpull, hT, hGeo⟩ :=
-    GlobalTheory.T.good_origin_intersection_relay hAg hPr hCmp hGiv hPts E H D Xo l c Y T o II hGl hEx hII hp hq B B₁ a K J Ω W Dc O Lt X Or hB hBB hqp hbg hsm hGood hgen hS
+    _root_.GlobalTheory.CompanionTheory.Relay.good_origin_intersection_relay hAg hPr hCmp hGiv hPts E H D Xo l c Y T o II hGl hEx hII hp hq B B₁ a K J Ω W Dc O Lt X Or hB hBB hqp hbg hsm hGood hgen hS
   have hXar : IsArithVar (imageZ v P₃) (Dc.n + 1) := by rw [himg]; exact Dc.arith
   obtain ⟨G⟩ := GlobalTheory.CompanionTheory.Ar.PB.Known.genFibreExists K J K₃ ι₃ κ v P₃ _ hb hY
   obtain ⟨Jf, hJf, -⟩ := (GlobalTheory.CompanionTheory.Ar.PB.Known.fieldNumbers G.Φ (FibreBlock κ) (fibreIdx ι₃ κ)).1
@@ -106,7 +110,7 @@ theorem testPoly_eq_slX : PB.AgreementPos → PB.Proportional → Cmp.CmpSt → 
     filter_upwards [hSm, hpull, hGeo] with t ht hp' hg
     rw [← hg, hfib, Finset.sum_mul]
     refine Finset.sum_congr rfl fun m _ => ?_
-    have h := GlobalTheory.T.ptsIntegral_fibre_append_eq_mul_image II hII K J K₃ ι₃ κ v P₃ Dc.n e G Jf (fun _ => muReg X.H X.S B t) (fun _ => Mt t) (Nt 1 m)
+    have h := _root_.GlobalTheory.CompanionTheory.Relay.ptsIntegral_fibre_append_eq_mul_image II hII K J K₃ ι₃ κ v P₃ Dc.n e G Jf (fun _ => muReg X.H X.S B t) (fun _ => Mt t) (Nt 1 m)
       hb hY hXar hJf (fun _ => ht.1) (fun _ => hp') (hNs 1 m)
     rw [h, himg]
     simp only [geomDeg, hfibN]

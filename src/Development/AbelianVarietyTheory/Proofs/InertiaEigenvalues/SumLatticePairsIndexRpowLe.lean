@@ -6,7 +6,7 @@ public import Mathlib.RingTheory.DiscreteValuationRing.Basic
 public import Mathlib.RingTheory.LocalRing.ResidueField.Defs
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.LengthCommensurableSpanSpanOfDetNeZero
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsLengthEqAndCardEqPowOfIsFiniteLength
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SumSublatticeIndexRpowLeSolomonStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SumSublatticeIndexRpowLeSolomon
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -398,7 +398,7 @@ theorem sum_over_fiber_le (σ : ℝ) (hσ : (r : ℝ) - 1 < σ) (B : Matrix (Fin
         rw [index_range_transpose _ (hA₂ g hg)]
     _ = ∑ N ∈ S.image f, ((N.toAddSubgroup.index : ℕ) : ℝ) ^ (-σ) :=
         (Finset.sum_image (f := fun N : Submodule O (Fin r → O) => ((N.toAddSubgroup.index : ℕ) : ℝ) ^ (-σ)) hf).symm
-    _ ≤ _ := GlobalTheory.T.sum_sublattice_index_rpow_le_solomon O r σ hσ _ (by
+    _ ≤ _ := _root_.GlobalTheory.SubZeta.sum_index_rpow_le O r σ hσ _ (by
         intro N hN
         obtain ⟨g, hg, rfl⟩ := Finset.mem_image.1 hN
         exact index_range_ne_zero _ (by rw [Matrix.det_transpose]; exact hA₂ g hg))
@@ -415,7 +415,7 @@ theorem sum_index_pairs_le : ∀ (O K : Type) [CommRing O] [IsDomain O] [IsDiscr
   generalize hZ : (∏ i ∈ Finset.range r,
     (1 - (Nat.card (IsLocalRing.ResidueField O) : ℝ) ^ ((i : ℝ) - σ))⁻¹) = Z
   have hZ0 : 0 ≤ Z := by
-    have := GlobalTheory.T.sum_sublattice_index_rpow_le_solomon O r σ hσ ∅ (by simp)
+    have := _root_.GlobalTheory.SubZeta.sum_index_rpow_le O r σ hσ ∅ (by simp)
     simpa [hZ] using this
   let Mg : GL (Fin r) K → Submodule O (Fin r → O) :=
     fun g => (lat O K (g : Matrix (Fin r) (Fin r) K)).comap (incl O K r)
@@ -480,7 +480,7 @@ theorem sum_index_pairs_le : ∀ (O K : Type) [CommRing O] [IsDomain O] [IsDiscr
     _ ≤ Z * Z := by
         refine mul_le_mul_of_nonneg_right ?_ hZ0
         rw [← hZ]
-        refine GlobalTheory.T.sum_sublattice_index_rpow_le_solomon O r σ hσ _ ?_
+        refine _root_.GlobalTheory.SubZeta.sum_index_rpow_le O r σ hσ _ ?_
         intro M hM
         obtain ⟨g, hg, rfl⟩ := Finset.mem_image.1 hM
         exact (Finset.mem_filter.1 hg).2

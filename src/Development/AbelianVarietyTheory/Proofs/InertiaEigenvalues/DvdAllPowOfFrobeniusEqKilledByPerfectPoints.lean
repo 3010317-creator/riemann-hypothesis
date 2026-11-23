@@ -4,7 +4,7 @@ public import Mathlib.FieldTheory.Perfect
 public import Mathlib.RingTheory.AdicCompletion.Basic
 public import Mathlib.RingTheory.Valuation.ValuationRing
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusPowEquationDvdAllPowStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowDvdOfVanishingAtPerfectValuationPointsStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowDvdOfVanishingAtPerfectValuationPoints
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -102,7 +102,7 @@ theorem key : ∀ (l : ℕ) [Fact l.Prime] (R : Type) [CommRing R] (u : R), ((l 
     intro j O _ _ _ _ _ f h1 h2 h3
     exact hpts O (f.comp φ) h1 h2 h3 j
   have hb : ∀ j (M : ℕ), ∃ c : ℕ, ∀ n : ℕ, φ u ^ (M * n) ∣ φ u ^ c * φ (D j) ^ n := fun j M =>
-    GlobalTheory.T.pow_dvd_of_vanishing_at_perfect_valuation_points l R' (φ u) (φ (D j)) hl' hu' hunit (hpts' j) M
+    _root_.GlobalTheory.s_points_kpt l R' (φ u) (φ (D j)) hl' hu' hunit (hpts' j) M
   obtain ⟨y, hy⟩ := GlobalTheory.T.frobeniusPowEquation_dvd_all_pow l R' (φ u) hl' hu' κ (fun i => φ (D i)) (fun i j => φ (c i j)) h heq' hb m j
   obtain ⟨⟨a, s⟩, rfl⟩ := IsLocalization.mk'_surjective S y
   have h2 : φ (D j * s) = φ (u ^ m * a) := by

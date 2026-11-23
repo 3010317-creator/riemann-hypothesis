@@ -9,18 +9,21 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemDivsOfMem
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AbsNormEqOfSplit
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.CharacterValueAtT
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.DeltaNeZero
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HeckeCharProductFormulaNormOneStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.JetCCompSubstStatement
+public import Formalism.LocalToGlobal.Columns.DecoFin
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.HeckeCharProductFormulaNormOne
+public import Formalism.LocalToGlobal.KernelLattices.ThDistC
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.JetCCompSubst
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.JetOpIdentityOfEntire
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LocalCharEqHeckeCharLocalComponentOfValuesStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.NormalisedFamilyLatticeHypAndSmoothStatement
+public import Formalism.LocalToGlobal.Columns.FiniteSumNonzeroLargeDepth
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LocalCharEqHeckeCharLocalComponentOfValues
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.NormalisedFamilyLatticeHypAndSmooth
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.NotDvdDifferent
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.OrdDetConjFinite
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TameCharacterValuesEqHeckeCharLocalValuesStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.TameCharacterValuesEqHeckeCharLocalValues
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DetIdLatGmap
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FinAfMemIntUIff
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GmapToAddSubgroup
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SmulLatMatOf
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FinAfMemIntUIff
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsOfStarEq
 import Formalism.LocalToGlobal.Columns.BaseLemmas
 import Formalism.LocalToGlobal.Divisibility.DivisibilityProofs.TuplesP
@@ -282,7 +285,7 @@ theorem jetMap_pull (A : Amb X) (n : X.Tau → ℕ) (f : Sp X.E a ≃ₗ[X.E] Sp
       A.σ₀ (∏ τ, X.emb τ ((LinearEquiv.det f : X.Eˣ) : X.E) ^ n τ) •
         Formalism.GradedWeylDivisibility.blockAct ℂ (fun τ => (matAt f'.symm τ).map A.σ₀)
           (jetMap (jetC A.cD G) n (map A.σ₀ (Formalism.GradedWeylDivisibility.blockAct X.K (matAt f) Q))) := by
-  have ch := GlobalTheory.T.jetC_constr_aeval_monomial X.Tau a b A.cD G (fun τ => (matAt f τ).map A.σ₀) (fun τ => (matAt f'.symm τ).map A.σ₀) hG
+  have ch := _root_.GlobalTheory.Glob.JetChainLin.jetC_comp_subst X.Tau a b A.cD G (fun τ => (matAt f τ).map A.σ₀) (fun τ => (matAt f'.symm τ).map A.σ₀) hG
   have e0 : (fun z => G (A.pullV a b f f' z)) = fun z : VCx X.Tau a b => G fun τ i j => ∑ k : Fin b, ∑ l : Fin a,
       (matAt f'.symm τ).map A.σ₀ i k * z τ k l * (matAt f τ).map A.σ₀ l j := by
     funext z
@@ -388,7 +391,7 @@ theorem muAtT_eq (hX : X.Ok) (hPr : Pr.Ok) (hsel : IsSel X sel) (u : Pr.Word) (h
     σ₀ (muAtT Ch sel mu cst j.1 P (a : X.E)) = ((((m0 j * ξ).locK P.1 a)⁻¹ : ℂˣ) : ℂ) := by
   classical
   have bad := GlobalTheory.ThetaMove.BadPrimes.bad_primes X Pr sel S mu u hX hPr hsel hT hg P.1 (Finset.mem_union_right _ P.2)
-  have tw := (GlobalTheory.T.tame_character_values_eq_heckeChar_local_values X.F X.E X.K σ₀ _ ξ hξ (xi_tame hξ) P.1).2 bad.2.2.1
+  have tw := (_root_.GlobalTheory.TwistVal.main X.F X.E X.K σ₀ _ ξ hξ (xi_tame hξ) P.1).2 bad.2.2.1
   have lk : ∀ y, ((((m0 j * ξ)⁻¹).locK P.1 y : ℂˣ) : ℂ) =
       (((m0 j).locK P.1 y : ℂˣ) : ℂ)⁻¹ * ((ξ.locK P.1 y : ℂˣ) : ℂ)⁻¹ := fun y => by
     rw [← mul_inv, ← Units.val_mul, ← Units.val_inv_eq_inv_val]
@@ -397,7 +400,7 @@ theorem muAtT_eq (hX : X.Ok) (hPr : Pr.Ok) (hsel : IsSel X sel) (u : Pr.Word) (h
       (c : 𝓞 X.E ⧸ P.1.asIdeal) = Ideal.Quotient.mk P.1.asIdeal y → P.1.valuation X.E (x : X.E) = 1 := fun x y c h1 h2 => by
     rw [h1]
     exact GlobalTheory.NormOneUnit.val_eq_one fun hm => c.ne_zero (h2.trans (Ideal.Quotient.eq_zero_iff_mem.2 hm))
-  refine GlobalTheory.T.localChar_eq_heckeChar_localComponent_of_values X.E X.K σ₀ P.1 (m0 j * ξ)⁻¹ _ _ bad.2.2.1 (fun q hq => ?_) (fun x y c h1 h2 => ?_) a
+  refine _root_.GlobalTheory.LocCharComp.locChar_eq_locK X.E X.K σ₀ P.1 (m0 j * ξ)⁻¹ _ _ bad.2.2.1 (fun q hq => ?_) (fun x y c h1 h2 => ?_) a
   · rw [lk]
     by_cases hP : P.1 ∈ Pr.vGs
     · rw [if_pos hP, hc j.1 j.2 P hP q hq, Units.val_inv_eq_inv_val, map_inv₀, tw q hq]
@@ -488,7 +491,7 @@ theorem muProdLaw (hD : X.AbelianUnramifiedExtensionConditions) (hPr : Pr.Ok) (h
   have vx : ∀ P : HeightOneSpectrum (𝓞 X.E), P.under (𝓞 X.F) ∉ V → P.valuation X.E (x : X.E) = 1 := fun P hP =>
     by_contra fun hn => hP (Finset.mem_image_of_mem _ (Finset.mem_union_right _ (hfin.mem_toFinset.2 hn)))
   have ξtriv := GlobalTheory.Mem.ReadTwist.trivOn hξ mu.2.1.1.2
-  have key := GlobalTheory.T.heckeChar_productFormula_normOne X.F X.E (m0 j * ξ) rep V x z hX.star_F hX.rankE hs hD.unram
+  have key := _root_.GlobalTheory.NormOneProd.inf_mul_prod X.F X.E (m0 j * ξ) rep V x z hX.star_F hX.rankE hs hD.unram
     ⟨fun v k => by rw [HChar.resFin_mul, hμ.triv.1, ξtriv.1, one_mul], fun v k => by
       rw [HChar.resInf_mul, hμ.triv.2, ξtriv.2, one_mul]⟩
     (fun P y h1 h2 => by
@@ -557,7 +560,7 @@ theorem muProdLaw (hD : X.AbelianUnramifiedExtensionConditions) (hPr : Pr.Ok) (h
       simp only [rep, dif_neg h, if_neg h]
       rw [mul_one, locK_eq_zpow (unr _ h'), Units.val_zpow_eq_zpow_val, map_zpow₀, mUof, dif_pos j.2, Units.val_mul, map_mul,
         Units.val_inv_eq_inv_val, Units.val_inv_eq_inv_val, map_inv₀, map_inv₀, ht.muVal j _ o.1,
-        (GlobalTheory.T.tame_character_values_eq_heckeChar_local_values X.F X.E X.K σ₀ _ ξ hξ (xi_tame hξ) _).1 o.2, HChar.val_mul, Units.val_inv_eq_inv_val,
+        (_root_.GlobalTheory.TwistVal.main X.F X.E X.K σ₀ _ ξ hξ (xi_tame hξ) _).1 o.2, HChar.val_mul, Units.val_inv_eq_inv_val,
         Units.val_zpow_eq_zpow_val, Units.val_mul, ← mul_inv, inv_zpow]
   rw [muInvDet, muInvDet, off, Finset.prod_congr rfl fun P _ => at1 P, Finset.prod_mul_distrib, ← fin]
   ring
@@ -597,7 +600,7 @@ theorem ratStep : ∀ (Z : Dat) (H : D7) (s : Seam H Z.X) (cc : Ideal (𝓞 H.ho
   have hPr := h.ok.primes
   have ea := even_rank Z.R i
   have eb := even_rank Z.R (i + 1)
-  obtain ⟨hL, hsm⟩ := GlobalTheory.T.normalisedFamily_latticeHyp_and_smooth H Z.X s cc δ B χ cD _ _ hX hs hcc hδ hv ea eb
+  obtain ⟨hL, hsm⟩ := _root_.GlobalTheory.ThetaMove.LatticeFacts.laHyp_and_eSmooth H Z.X s cc δ B χ cD _ _ hX hs hcc hδ hv ea eb
   have bad := GlobalTheory.ThetaMove.BadPrimes.bad_primes Z.X Z.Pr sel S mu u hX hPr h.isSel h.T_mem h.g_mem
   have hL' : (ambOf s B χ cD).LaHyp (Z.R.N i) (Z.R.N (i + 1)) (Sall sel mu u) :=
     ⟨hL.1, hL.2.1, fun P hP => (bad P hP).1, fun P hP =>

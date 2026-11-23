@@ -8,14 +8,19 @@ public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
 public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.HopfAlgebra.Basic
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIsDiamondMatrixGamma1Gamma0OfCoprimeStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalAlgClosureRatPrimitiveRootEqPowStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalBActCommGamma0CapGamma0LevelShimuraReciprocitStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalBActDiagNatOneCommStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalBMemKummerInvariantSetStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GaloisActionUpperTriangularHeckeReindexOnBStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.Letter
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIsDiamondMatrixGamma1Gamma0OfCoprime
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalAlgClosureRatPrimitiveRootEqPow
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalBActCommGamma0CapGamma0LevelShimuraReciprocit
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalBActDiagNatOneComm
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalBMemKummerInvariantSet
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GaloisActionUpperTriangularHeckeReindexOnB
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SumActUpperTriangularHeckeReindexCoprimeUnit
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SlMulToRingEquiv
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SumActUpperTriangularHeckeReindexCoprimeUnitStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -89,23 +94,23 @@ theorem B_inv_tr {Ω : Type} [Field Ω] [Algebra ℚ Ω] {ε : Ω →+* ℂ} (X 
 
 theorem op_galB_comm : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure ℚ Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε), Function.Injective ε → (∃ φ : ℂ → ℂ, DifferentiableOn ℂ φ Hs ∧ X.an X.jK = (φ : Mero)) → ∀ (N l w : ℕ) [Fact l.Prime], l ≠ 2 → 5 ≤ N → Nat.Coprime N l → Odd w → ∀ T : Letter, admitted N l T → ∀ (s : Ω ≃ₐ[ℚ] Ω), ∀ b ∈ X.B N l w, X.op N l T (X.galB l s b) = X.galB l s (X.op N l T b) := by
   intro Ω _ _ _ ε X hε hj N l w _ hl hN hNl hw T hT s b hb
-  have hgb : X.galB l s b ∈ X.B N l w := GlobalTheory.T.galB_mem_kummer_invariant_set ε X hε hj N l w hl hN hNl hw s b hb
+  have hgb : X.galB l s b ∈ X.B N l w := _root_.GlobalTheory.KZ.StabGal.galB_mem_B ε X hε hj N l w hl hN hNl hw s b hb
   have hinv := B_inv_tr X N l w _ hgb
 
   have hup : ∀ q : ℕ, 0 < q →
       (∑ j ∈ Finset.range q, X.act l !![1, (j : ℤ); 0, (q : ℤ)]) (X.galB l s b) =
         X.galB l s ((∑ j ∈ Finset.range q, X.act l !![1, (j : ℤ); 0, (q : ℤ)]) b) := by
     intro q hq
-    obtain ⟨e, he, hζ⟩ := GlobalTheory.T.galAlgClosureRat_primitiveRoot_eq_pow s q hq
+    obtain ⟨e, he, hζ⟩ := _root_.GlobalTheory.algEquiv_primitiveRoot_pow s q hq
 
     rw [LinearMap.sum_apply, LinearMap.sum_apply, map_sum]
-    rw [← GlobalTheory.T.sum_act_upperTriangular_hecke_reindex_coprime_unit X l _ hinv q e hq he]
+    rw [← _root_.GlobalTheory.KZ.Tower.sum_act_upper_mul_unit X l _ hinv q e hq he]
     refine Finset.sum_congr rfl fun j _ => ?_
-    exact (GlobalTheory.T.galoisAction_upperTriangular_hecke_reindex_on_B ε X hε hj N l w hl hN hNl hw s q e hq hζ (j : ℤ) b hb).symm
+    exact (_root_.GlobalTheory.KZ.GalUpper.galB_act_upper ε X hε hj N l w hl hN hNl hw s q e hq hζ (j : ℤ) b hb).symm
 
   have hdiam : ∀ d : ℕ, Nat.Coprime d N → sgD N l d ∈ CongruenceSubgroup.Gamma0 N ⊓ CongruenceSubgroup.Gamma0 l := by
     intro d hd
-    have hex := GlobalTheory.T.exists_isDiamondMatrixGamma1Gamma0_of_coprime N l d (by omega) hNl hd
+    have hex := _root_.GlobalTheory.diam_exists N l d (by omega) hNl hd
     exact (Classical.epsilon_spec hex).1
   cases T with
   | T q =>
@@ -121,13 +126,13 @@ theorem op_galB_comm : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosure
     have hdet2 : 0 < (!![(q : ℤ), 0; 0, 1] : Matrix (Fin 2) (Fin 2) ℤ).det := by
       simp [Matrix.det_fin_two_of]; exact_mod_cast hq
     rw [← Tower.act_act Ω ε X l _ _ hdet1 hdet2, ← Tower.act_act Ω ε X l _ _ hdet1 hdet2,
-      GlobalTheory.T.galB_act_diagNatOne_comm ε X hε l q hq s,
-      GlobalTheory.T.galB_act_comm_gamma0CapGamma0Level_shimuraReciprocity ε X hε hj N l w hl hN hNl hw (sgD N l q) (hdiam q hqN) s b hb]
+      _root_.GlobalTheory.KZ.Tower.galB_act_diag ε X hε l q hq s,
+      _root_.GlobalTheory.KZ.GammaZeroComm.galB_act_comm ε X hε hj N l w hl hN hNl hw (sgD N l q) (hdiam q hqN) s b hb]
   | U =>
     simp only [Tower.op, Tower.heckeU]
     exact hup l (Fact.out : l.Prime).pos
   | D d =>
     simp only [Tower.op, Tower.diam]
-    exact (GlobalTheory.T.galB_act_comm_gamma0CapGamma0Level_shimuraReciprocity ε X hε hj N l w hl hN hNl hw (sgD N l d) (hdiam d hT) s b hb).symm
+    exact (_root_.GlobalTheory.KZ.GammaZeroComm.galB_act_comm ε X hε hj N l w hl hN hNl hw (sgD N l d) (hdiam d hT) s b hb).symm
 
 end GlobalTheory.KZ.HeckeGal

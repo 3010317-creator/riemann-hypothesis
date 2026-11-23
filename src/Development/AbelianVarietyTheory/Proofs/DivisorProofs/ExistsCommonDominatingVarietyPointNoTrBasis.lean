@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NotDominatesTopPlace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalModelAtComplexPointStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsResidueToComplexOfRationalResidueStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalModelAtComplexPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsResidueToComplexOfRationalResidue
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsDomainTensorComplex
+public import Mathlib.FieldTheory.FinTrdeg
 import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -16,7 +17,6 @@ import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
-public import Mathlib.FieldTheory.FinTrdeg
 import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
@@ -69,7 +69,7 @@ theorem exists_residue {K : Type} [Field K] [Algebra ℂ K] (R : Subring K)
     letI : Algebra ℂ R := ((algebraMap ℂ K).codRestrict R h.const_mem).toAlgebra
     ∃ ε : R →ₐ[ℂ] ℂ, ∀ r : R, ε r = 0 ↔ NonUnit R (r : K) := by
   letI : Algebra ℂ R := ((algebraMap ℂ K).codRestrict R h.const_mem).toAlgebra
-  obtain ⟨ε, h1, h2⟩ := GlobalTheory.T.exists_residue_to_complex_of_rationalResidue R h h'
+  obtain ⟨ε, h1, h2⟩ := _root_.GlobalTheory.FieldPair.exists_residue_complex R h h'
   exact ⟨⟨ε, h1⟩, h2⟩
 
 theorem pair_step : ∀ {K L : Type} [Field K] [Field L] [Algebra ℂ K] [Algebra ℂ L] (R : Subring K) (S : Subring L),
@@ -111,7 +111,7 @@ theorem pair_step : ∀ {K L : Type} [Field K] [Field L] [Algebra ℂ K] [Algebr
     Algebra.EssFiniteType.of_surjective (Algebra.TensorProduct.comm ℂ S R).toAlgHom
       (Algebra.TensorProduct.comm ℂ S R).surjective
   let ε : R ⊗[ℂ] S →ₐ[ℂ] ℂ := Algebra.TensorProduct.lift εR εS fun _ _ => Commute.all _ _
-  obtain ⟨T, hT, hT', hTa⟩ := GlobalTheory.T.exists_localModel_at_complexPoint (R ⊗[ℂ] S) ε
+  obtain ⟨T, hT, hT', hTa⟩ := _root_.GlobalTheory.FieldPair.exists_locModel_at_point (R ⊗[ℂ] S) ε
   let M := FractionRing (R ⊗[ℂ] S)
   let j : R ⊗[ℂ] S →ₐ[ℂ] M := IsScalarTower.toAlgHom ℂ _ M
   have hj : Function.Injective j := IsFractionRing.injective (R ⊗[ℂ] S) M

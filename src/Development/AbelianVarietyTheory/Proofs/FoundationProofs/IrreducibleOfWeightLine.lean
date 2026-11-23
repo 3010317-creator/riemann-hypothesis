@@ -1,7 +1,7 @@
 module
 
 public import Formalism.LocalRingCardinality.DataTheta
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemISupInfWeightSubmoduleOfDiagonalStableStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemISupInfWeightSubmoduleOfDiagonalStable
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SameBlockOfPosC
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -66,7 +66,7 @@ theorem irreducible_of_weight_line : ∀ (p q : ℕ) (M : GKMod p q) (H : Type) 
   left
   have horth : ∀ x ∈ N, inner ℂ (E x) (E v) = 0 := by
     intro x hx
-    have hx' := GlobalTheory.T.mem_iSup_inf_weightSubmodule_of_diagonal_stable p q M.V M.act N (fun a => hN a a (hS.refl a)) x hx (M.wts x)
+    have hx' := _root_.GlobalTheory.WeightDecomp.mem_iSup_inf_wtSub p q M.V M.act N (fun a => hN a a (hS.refl a)) x hx (M.wts x)
     clear hx
     induction hx' using Submodule.iSup_induction' with
     | mem ν y hy =>

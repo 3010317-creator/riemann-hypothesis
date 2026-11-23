@@ -3,10 +3,13 @@ module
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.DualIsConjByOne
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsSpanFormsNeBot
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsNormalisedThetaSub
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CuspRepDualIsoOfCommonRepresentedFunctionalStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIdempotentFiniteRankAdjointCuspidalStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FunctionalFixedByIdempotentRepresentedStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsConjSelfDualOfInvTransposeIsoCmConjStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExpoConjOfIsCsd
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CuspRepDualIsoOfCommonRepresentedFunctional
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIdempotentFiniteRankAdjointCuspidal
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FunctionalFixedByIdempotentRepresented
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsConjSelfDualOfInvTransposeIsoCmConj
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -75,7 +78,7 @@ theorem isCsd_of_paired : GlobalTheory.Published.AutomorphicFormsFiniteGL → �
   intro hP L _ _ _ a π h1 h2
   obtain ⟨B₁, l1, r1, f1, c1, x1⟩ := h1
   obtain ⟨B₂, l2, r2, f2, c2, x2⟩ := h2
-  obtain ⟨P, hP0, hPP, hfin, hadj⟩ := GlobalTheory.T.exists_idempotent_finiteRank_adjoint_cuspidal hP L a π
+  obtain ⟨P, hP0, hPP, hfin, hadj⟩ := _root_.GlobalTheory.IdemAdj.exists_idem_adj hP L a π
   obtain ⟨P₁, e1⟩ := hadj invTOp (Or.inl rfl) B₁ l1 r1 f1 c1 x1
   obtain ⟨P₂, e2⟩ := hadj conjOp (Or.inr rfl) B₂ l2 r2 f2 c2 x2
   obtain ⟨v, hv⟩ : ∃ v, P v ≠ 0 := by
@@ -87,17 +90,17 @@ theorem isCsd_of_paired : GlobalTheory.Published.AutomorphicFormsFiniteGL → �
     push_neg at h
     exact hv ((Module.forall_dual_apply_eq_zero_iff ℂ (P v)).1 h)
   have hf : (g ∘ₗ P) ∘ₗ P = g ∘ₗ P := by rw [LinearMap.comp_assoc, hPP]
-  obtain ⟨ψ₁, hψ₁⟩ := GlobalTheory.T.exists_representing_of_comp_idempotent_of_nondegenerate B₁ l1 r1 P P₁ hPP hfin e1 (g ∘ₗ P) hf
-  obtain ⟨ψ₂, hψ₂⟩ := GlobalTheory.T.exists_representing_of_comp_idempotent_of_nondegenerate B₂ l2 r2 P P₂ hPP hfin e2 (g ∘ₗ P) hf
+  obtain ⟨ψ₁, hψ₁⟩ := _root_.GlobalTheory.functional_fixed_by_idempotent_represented B₁ l1 r1 P P₁ hPP hfin e1 (g ∘ₗ P) hf
+  obtain ⟨ψ₂, hψ₂⟩ := _root_.GlobalTheory.functional_fixed_by_idempotent_represented B₂ l2 r2 P P₂ hPP hfin e2 (g ∘ₗ P) hf
   have hne : ψ₁ ≠ 0 := by
     rintro rfl
     apply hg
     have := hψ₁ v
     simp only [map_zero, LinearMap.comp_apply] at this
     exact this.symm
-  obtain ⟨S, hS⟩ := GlobalTheory.T.cuspRep_dual_iso_of_common_represented_functional L a π invTOp conjOp invTOp_involutive conjOp_involutive B₁ B₂ l1 r1 f1 c1 x1
+  obtain ⟨S, hS⟩ := _root_.GlobalTheory.ContraPair.iso_of_common_functional L a π invTOp conjOp invTOp_involutive conjOp_involutive B₁ B₂ l1 r1 f1 c1 x1
     l2 r2 f2 c2 x2 ψ₁ ψ₂ hne (fun φ => (hψ₁ φ).trans (hψ₂ φ).symm)
-  exact GlobalTheory.T.isConjSelfDual_of_invTranspose_iso_cmConj L a π S hS
+  exact _root_.GlobalTheory.CsdFromConj.isCsd_of_invT_conj L a π S hS
 
 end GlobalTheory.CsdBack
 

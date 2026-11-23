@@ -2,7 +2,8 @@ module
 
 public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.StParamChartInt
 public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.StSliceBranchInt
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BranchProperAtPointHoldsStatement
+public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.StBranchProperAtPoint
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BranchProperAtPointHolds
 public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PChartIntCountAdd
 public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PParamChartInt
 public import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PParamCritNull
@@ -62,6 +63,6 @@ theorem paramChartInt : GroundTheory.Heights₂.Heights.ParamChartInt.Statement 
     GroundTheory.Heights₂.Heights.ParamDensIntegrable.proof
 
 theorem sliceBranchInt : GroundTheory.Heights₂.Heights.SliceBranchInt.Statement :=
-  GroundTheory.Heights₂.Heights.SliceBranchInt.proof GlobalTheory.T.branch_proper_at_point_holds paramChartInt
+  GroundTheory.Heights₂.Heights.SliceBranchInt.proof _root_.GlobalTheory.CompanionTheory.Ar.Branch.branchProperAtPoint paramChartInt
 
 end GlobalTheory.CompanionTheory.Ar.SliceBranch

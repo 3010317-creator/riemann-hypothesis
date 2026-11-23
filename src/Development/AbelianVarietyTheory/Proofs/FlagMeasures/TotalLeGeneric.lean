@@ -2,15 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ComplementReferenceCompactSubgroup
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CommonStabilizerStabilizersCommensurableVolume
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDataMassEqSumFrameClassesStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetTermBasicFacts
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFrameClassTermsLeOverlatticeMassesStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsPrincipalIdealRingOfHenselian
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDataMassEqSumFrameClasses
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFrameClassTermsLeOverlatticeMasses
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LatticeCountBoundFrames
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RmulMul
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SelfDualHermitianLatticeMassOfTraceStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SelfDualHermitianLatticeMassOfTrace
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SumClsLeEncard
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermExponentsNonnegAndDefectGroupBound
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetTermBasicFacts
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsPrincipalIdealRingOfHenselian
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -144,10 +144,10 @@ theorem GlobalTheory.HL.GenMass.total_le_generic : ∀ {F : Type} [Field F] [Val
   intro F _ _ _ _ _ E _ _ _ L r k S hk d₁ Λ₁ hT g hg
   obtain ⟨hSD, -, hMs, -, -, -, hI, -⟩ := GlobalTheory.HL.TermBasic.term_basic L r k S d₁ Λ₁ hT
   obtain ⟨ha, hD, -, -, hH, -⟩ := GlobalTheory.HL.Defect.exponents_and_defect L r k S d₁ Λ₁ hT
-  obtain ⟨κ, hκ, hU⟩ := GlobalTheory.T.selfDualHermitianLattice_mass_of_trace L r k S (by omega) ⟨Λ₁, hSD⟩
+  obtain ⟨κ, hκ, hU⟩ := _root_.GlobalTheory.HL.FrameMass.mass_trace L r k S (by omega) ⟨Λ₁, hSD⟩
   have hv := vth_nonneg S
   have hp : (S.fr d₁ Λ₁, S.fr' d₁ Λ₁) ∈ S.Fr d₁ Λ₁ := pair_mem_cls S _ _
-  have hsw := GlobalTheory.T.hermitianDataMass_eq_sum_frameClasses L r k S (fun _ _ => True) (fun _ _ _ _ _ _ => trivial)
+  have hsw := _root_.GlobalTheory.HL.sumData_mass_eq_sumCls L r k S (fun _ _ => True) (fun _ _ _ _ _ _ => trivial)
   have hnn : S.nn = S.sumCls fun C => S.sumData fun d => S.nT d C fun _ => True := hsw.1
   have hM := hU _ hI.1 _ hp (S.M d₁ Λ₁) le_rfl (fun x hx => (hMs hx).2)
     (fun x hx y hy => (hSD.2 y).2 (hMs hy).1 x (hMs hx).1)
@@ -155,7 +155,7 @@ theorem GlobalTheory.HL.GenMass.total_le_generic : ∀ {F : Type} [Field F] [Val
       S.massSig (S.M d₁ Λ₁) ≤ ENNReal.ofReal (2 * κ) := by
     simpa [Frames.M] using hM
   have hg' : g = ENNReal.ofReal (S.wC (S.Fr d₁ Λ₁)) * S.massSig (S.M d₁ Λ₁) := by
-    rw [hg, (GlobalTheory.T.hermitianFrameClass_terms_le_overlattice_masses L r k S _ hI.1 _ hp).2]
+    rw [hg, (_root_.GlobalTheory.HL.ClassMass.class_mass L r k S _ hI.1 _ hp).2]
     rfl
   have hw := ENNReal.one_le_ofReal.2 ((GlobalTheory.HL.volSt L r k S).2 _ hI.1).2.2.1
   have hlow : ENNReal.ofReal (κ / 2) ≤ g := by
@@ -170,7 +170,7 @@ theorem GlobalTheory.HL.GenMass.total_le_generic : ∀ {F : Type} [Field F] [Val
       obtain ⟨p, hpC⟩ : ∃ p, p ∈ C := by
         obtain ⟨n, -, n', -, rfl⟩ := hC
         exact ⟨_, pair_mem_cls S _ _⟩
-      refine ((GlobalTheory.T.hermitianFrameClass_terms_le_overlattice_masses L r k S C hC p hpC).1 fun _ => True).trans ?_
+      refine ((_root_.GlobalTheory.HL.ClassMass.class_mass L r k S C hC p hpC).1 fun _ => True).trans ?_
       refine (ENNReal.tsum_le_tsum (g := fun _ => ENNReal.ofReal (2 * κ)) fun Mh => ?_).trans ?_
       · refine (hU C hC p hpC Mh.1 Mh.2.1 Mh.2.2.1 Mh.2.2.2.1).2.trans (ENNReal.ofReal_le_ofReal ?_)
         refine mul_le_of_le_one_right (by positivity) ?_

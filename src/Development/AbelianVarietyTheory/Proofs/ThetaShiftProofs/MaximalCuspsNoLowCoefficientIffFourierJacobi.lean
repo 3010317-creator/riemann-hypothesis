@@ -1,7 +1,8 @@
 module
 
 public import Formalism.LocalToGlobal.ProjectiveLattices.TieUpA
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.MemFormsLowCoeffsVanishIffFourierJacobiStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.XcLat
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.MemFormsLowCoeffsVanishIffFourierJacobi
 public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.PoincarePointwiseStatement
 import Formalism.LocalToGlobal.ProjectiveLattices.RosatiLatticeNorms.LinkFD
 import Mathlib.Algebra.Order.Floor.Extended
@@ -62,7 +63,7 @@ theorem mem_MggK_of_rho_eq_zero {D : D7} (X : WeightFamilies.Prov D) (CR Tt cc :
 theorem tieMaxCusp : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ), InR D j → ∀ (ka : WeightFamilies.Wt D j) (CR Tt cc : ℝ), TieMaxCuspSt h j CR Tt cc ka := by
   intro D T h j hj ka CR Tt cc F
   rcases lt_or_eq_of_le hj.2 with hlt | hjm
-  · exact (GlobalTheory.T.mem_forms_low_coeffs_vanish_iff_fourierJacobi D T.toCore h.toLawsCore j ka CR Tt cc hj hlt F).2
+  · exact (_root_.GlobalTheory.LowCoeff.mem_iff_low_coeff_vanish D T.toCore h.toLawsCore j ka CR Tt cc hj hlt F).2
   · have h0 : WeightFamilies.rho D j = 0 := by
       show D.R.m - j = 0
       omega

@@ -3,12 +3,13 @@ module
 public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.BaseOneSide.PsiSide
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanBinaryGramDensity
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ScalHHermScal
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GramFibreMeasureLocal
 import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CoordinateHaarMeasure
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CoordinateHaarMeasureStatement
+import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
 import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HermitianMatricesLocallyCompactBorel
 import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.RankOneFiberMeasureBlockExtension
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRingStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GramFibreMeasureLocal
+import Formalism.UnipotentAdelicQuotients.SWXSDefs
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -154,14 +155,14 @@ theorem modulus_eq (hσ : IsCMExt F E σ) (b : Module.Basis (Fin 2) F E) (lam : 
     (hn : (u : R) ⊗ₜ[F] (1 : E) = sigR R σ x * x) {ρ a : ℝ≥0}
     (hρ : lam.map (fun y => (u : R) * y) = ρ • lam)
     (ha : (coordK R b lam).map (fun y => (x : R ⊗[F] E) * y) = a • coordK R b lam) : a = ρ := by
-  obtain ⟨iTR, iLC, iSC, iT2, hsc, -, hrep, -, -, -⟩ := GlobalTheory.T.tensor_locally_compact_ring F E σ hσ R
+  obtain ⟨iTR, iLC, iSC, iT2, hsc, -, hrep, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ R
   haveI := iTR
   haveI := iLC
   haveI := iSC
   haveI := iT2
   haveI : BorelSpace (R ⊗[F] E) := ⟨rfl⟩
   obtain ⟨hinv, -⟩ := HaarCoord.conj_facts hσ
-  obtain ⟨hK, -, -⟩ := GlobalTheory.T.coordinate_haar_measure F E σ hσ R 2 b lam inferInstance
+  obtain ⟨hK, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hσ R 2 b lam inferInstance
   haveI := hK
   let S : (R ⊗[F] E) ≃ₜ+ (R ⊗[F] E) :=
     { toFun := sigR R σ
@@ -207,7 +208,7 @@ theorem herm_modulus (hσ : IsCMExt F E σ) (lam : Measure R) [lam.IsAddHaarMeas
     (ν : Measure (HermR R σ 1)) [ν.IsAddHaarMeasure] (l : R) {ρ : ℝ≥0}
     (hρ : lam.map (fun y => l * y) = ρ • lam) :
     ν.map (GlobalTheory.CompanionTheory.SW.MassSimil.scalH R σ l) = ρ • ν := by
-  obtain ⟨iTR, iLC, iSC, iT2, -, htr, -, -, -, -⟩ := GlobalTheory.T.tensor_locally_compact_ring F E σ hσ R
+  obtain ⟨iTR, iLC, iSC, iT2, -, htr, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ R
   haveI := iTR
   obtain ⟨jLC, jSC, jT2, jB, -⟩ := GlobalTheory.CompanionTheory.SW.HermTop.herm_top F E σ hσ R 1
   haveI := jLC
@@ -248,7 +249,7 @@ theorem scal : PositivityTheory.Rg.Base1.Scal := by
   haveI := i2
   haveI := i3
   haveI := i4
-  obtain ⟨iTR, iLC, iSC, iT2, -, -, -, iB, -, -⟩ := GlobalTheory.T.tensor_locally_compact_ring F E σ hσ R
+  obtain ⟨iTR, iLC, iSC, iT2, -, -, -, iB, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ R
   haveI := iTR
   haveI := iLC
   haveI := iSC
@@ -268,7 +269,7 @@ theorem scal : PositivityTheory.Rg.Base1.Scal := by
   obtain ⟨u, rfl⟩ := hnu
   let lam : Measure R := Measure.addHaar
   let b : Module.Basis (Fin 2) F E := Module.finBasisOfFinrankEq F E hσ.2.2.1
-  obtain ⟨hK, -, -⟩ := GlobalTheory.T.coordinate_haar_measure F E σ hσ R 2 b lam inferInstance
+  obtain ⟨hK, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hσ R 2 b lam inferInstance
   haveI := hK
   obtain ⟨ρ, hρ⟩ : ∃ ρ : ℝ≥0, lam.map (fun y => (u : R) * y) = ρ • lam := by
     haveI : (lam.map (lmul u)).IsAddHaarMeasure := ContinuousAddEquiv.isAddHaarMeasure_map lam (lmul u)

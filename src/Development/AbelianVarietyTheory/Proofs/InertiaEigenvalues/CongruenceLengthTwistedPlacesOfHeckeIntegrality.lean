@@ -4,8 +4,9 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsWi
 public import Formalism.LocalRingCardinality.DataTies
 public import Formalism.LocalToGlobal.Divisibility.RowSideTie
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaJEqZeroOfUntwisted
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodPartProjectorSpectralAtEveryLocalisationStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HeckeStableLocalLatticeOfRationalIntegralityStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.RowsExhaust
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodPartProjectorSpectralAtEveryLocalisation
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HeckeStableLocalLatticeOfRationalIntegrality
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RangeAdjointLeOfComp
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -42,7 +43,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.RowsExhaust
 
 @[expose] public section
 
@@ -56,7 +56,7 @@ theorem etaJ_join_closed : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T 
   intro D G _ _ Pl0 T m A P ψ Zs tup eMt s hOk hm S0 M Tn hTup hTw hMt hStd Q hQ hLatInt hHT hHR hAV hCS jW hmR hθ
     hEig hIsot h42 hZ hGood
   have hLat : ∀ j w, 1 ≤ j → j ≤ D.R.m → D.what₂.muAt w ≠ D.what₂.mu0 → LatStable Tn.B j w :=
-    fun j w h1 h2 hne => GlobalTheory.T.heckeStableLocalLattice_of_rationalIntegrality D M Tn Q hQ hLatInt j w h1 h2 hne
+    fun j w h1 h2 hne => _root_.GlobalTheory.LatTied.latStable_tied D M Tn Q hQ hLatInt j w h1 h2 hne
   have hTC : ∀ i : D.nd.Loc, ThetaCut D (D.nd.mu i) (D.nd.j i) := by
     intro i
     have hne := D.nd.w_tw i
@@ -72,7 +72,7 @@ theorem etaJ_join_closed : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T 
     exact GlobalTheory.EtaJoin.thetaCut_of_tie D G Pl0 T m A P ψ Zs tup eMt s hOk S0 jW i' _
       (hMt i' _ hy).1 (hθ i' _ hy)
   have hSpec : ∀ i, SpecPr D i :=
-    GlobalTheory.T.good_part_projector_spectral_at_every_localisation D M hHT hHR hAV Tn hStd hCS hTC hEig hIsot h42 hZ hGood
+    _root_.GlobalTheory.EtaJoin.SpecAll.specPr_all D M hHT hHR hAV Tn hStd hCS hTC hEig hIsot h42 hZ hGood
   exact GlobalTheory.etaJ_join D G Pl0 T m A P ψ Zs tup eMt s hOk hm S0 M Tn hTup hTw hMt hStd hLat hSpec
 
 end GlobalTheory

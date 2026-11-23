@@ -7,11 +7,12 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGrpPul
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenericFibreIsGrpPullbackOfUniversalTripleStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptySemiAbelianCompletionChartOfOpenPartStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelAmpleRigidifiedBundlePullbackUniversalTripleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiAbelianDescentFromCompleteRegularChartsStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsDiscreteValuationRingIntegralClosure
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SubsetSpanBy
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiAbelianDescentFromCompleteRegularCharts
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ChartRingFormallyUnramified
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RegularLocalRingNormalDomain
 public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.MvPowerSeriesSubstConstTermsLocalAlgHomSpec
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsDiscreteValuationRingIntegralClosure
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RegularLocalRingNormalDomain
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +50,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbProj
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc
-public import Development.AbelianVarietyTheory.Definitions.Divisors.SubsetSpanBy
 
 @[expose] public section
 
@@ -108,7 +108,7 @@ theorem exists_semiAbelian_of_charts : ∀ {E : Type} [Field E] [NumberField E] 
     · obtain ⟨k, _, m, e, C, ξ, a, htaut, hy, hcl, het, -⟩ := hpre x hx
       obtain ⟨Ch, -⟩ := bdChart x k m e C ξ hy hcl het
       exact ⟨Ch⟩
-  obtain ⟨G, _, e, hG, hpb, hmap⟩ := GlobalTheory.T.semiAbelian_descent_from_complete_regular_charts (Xo.XF c) S hNorm j hdom tF.G hAab tF.PP.L hLB hAmp hch
+  obtain ⟨G, _, e, hG, hpb, hmap⟩ := _root_.GlobalTheory.Desc.descent_semiAbelian (Xo.XF c) S hNorm j hdom tF.G hAab tF.PP.L hLB hAmp hch
   haveI : IsCommMonObj G := hG.comm
   refine ⟨G, inferInstance, hG.comm, e, hG, hpb, ?_, ?_⟩
   · ext x

@@ -2,15 +2,17 @@ module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.MapUSharp
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoordMem
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EpsilonCyclotomicElementPropertiesStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.WittExactSequences.ObFacts
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EpsilonCyclotomicElementProperties
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsLiftToThickening
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExtendedDividedPowers
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NatCastIsUnit
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PeriodRingBaseChangeFromUniversalStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RootExtensionLiftStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.MapAcrFromBase
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PeriodRingBaseChangeFromUniversal
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RootExtensionLift
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SubMemSpanOfEtale
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SubSubSmulEqZeroOfSmulEqZero
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UZeroApplySelf
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExtendedDividedPowers
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -256,7 +258,7 @@ theorem tw_facts (ε : Eps l) (k : Bool) (n : ℕ) (hn : IsNilpotent (l : (base 
     (m c : ℕ) (hc : ¬ l ^ m ∣ c) :
     ∃ w ξ : (base l).Acr n, (base l).cris n ε.μ = ((base l).cris n (ε.qk m ^ c) - 1) * w * ξ ∧ IsNilpotent ξ ∧
       ∀ r, Ideal.span {ξ} * fil (DD k (base l) n) (ρ r) ≤ fil (DD k (base l) n) (ρ (r + 1)) := by
-  obtain ⟨-, hq, hξ, hμ, -⟩ := GlobalTheory.T.epsilon_cyclotomic_element_properties ε
+  obtain ⟨-, hq, hξ, hμ, -⟩ := _root_.GlobalTheory.CompanionTheory.EpsFacts.eps_facts ε
   have hl : (l : ℕ) ≠ 0 := (Fact.out : l.Prime).ne_zero
   have hI : ∀ x ∈ JJ k (base l) n, IsNilpotent x := fun x hx =>
     GlobalTheory.CompanionTheory.ThickHom.isNilpotent_of_mem (DD k (base l) n) hl hn hx
@@ -289,8 +291,8 @@ theorem main : ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] {F : Fn O} {
   intro l _ O _ F κ d s 𝒯 k n 𝓛 δ hδ hp hn ε ρ hρ γ γ' θ hn0 h1 h2 h3
   classical
   obtain ⟨X⟩ := GlobalTheory.CompanionTheory.RootAdjoin.nonempty_rootExt l Fact.out 𝓛.D 𝓛.t
-  obtain ⟨e₀, hbij, hal, hr⟩ := GlobalTheory.T.root_extension_lift 𝒯 k n 𝓛 δ hδ hp hn X (θ.app (SingleObj.star _)) hn0 h1
-  obtain ⟨-, -, -, -, hfil, -, -⟩ := GlobalTheory.T.period_ring_base_change_from_universal 𝒯.A n
+  obtain ⟨e₀, hbij, hal, hr⟩ := _root_.GlobalTheory.CompanionTheory.TowerAcr.tower_acr 𝒯 k n 𝓛 δ hδ hp hn X (θ.app (SingleObj.star _)) hn0 h1
+  obtain ⟨-, -, -, -, hfil, -, -⟩ := _root_.GlobalTheory.CompanionTheory.AcrMod.acr_modp 𝒯.A n
   choose mm cc hb hnd using X.mono
   let χ : Gam d → X.ι → Acris l := fun g a =>
     if h : a = X.a₀ then 1 else ∏ j, ε.qk (mm a h) ^ (Multiplicative.toAdd g j * cc a h j)

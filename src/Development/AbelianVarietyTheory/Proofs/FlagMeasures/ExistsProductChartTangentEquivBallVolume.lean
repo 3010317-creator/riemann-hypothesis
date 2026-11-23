@@ -3,7 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BlkExt
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HasDensityAtIdentityLieAlgebraOfOmegaDensity
 public import Mathlib.Topology.Separation.CompletelyRegular
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemLieEUnitaryGroupIffOfInvolutiveStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemLieEUnitaryGroupIffOfInvolutive
+public import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
 import Mathlib.Algebra.Order.Archimedean.Real.Hom
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -18,7 +20,6 @@ import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -76,7 +77,7 @@ theorem norm_sq_unrealify {m : ℕ} (x : EuclideanSpace ℝ (Fin m × Fin m × B
 
 theorem skew_top {k : ℕ} (X : lieE (UH (1 : Matrix (Fin k) (Fin k) ℂ))) (i j : Fin k) :
     conj (unrealify (X : EuclideanSpace ℝ _) j i) + unrealify (X : EuclideanSpace ℝ _) i j = 0 := by
-  have h := (GlobalTheory.T.mem_lieE_unitaryGroup_iff_of_involutive k 1 (X : EuclideanSpace ℝ _) (by simp)).1 X.2
+  have h := (_root_.GlobalTheory.TubeLie.mem_lieE_UH_of_sq k 1 (X : EuclideanSpace ℝ _) (by simp)).1 X.2
   have h' := congrFun (congrFun h i) j
   simpa [Matrix.conjTranspose_apply, Complex.star_def] using h'
 
@@ -94,7 +95,7 @@ private theorem Hd_mul_self_eq_one {k : ℕ} {η : ℝ} (hη : η = 1 ∨ η = -
 
 theorem tang_mem {k : ℕ} {η : ℝ} (hη : η = 1 ∨ η = -1) (v : Par k) :
     realify (k + 1) (tang η v) ∈ lieE (UH (Hd k η)) := by
-  rw [GlobalTheory.T.mem_lieE_unitaryGroup_iff_of_involutive _ _ _ (Hd_mul_self_eq_one hη), GlobalTheory.OmegaFrobenius.unrealify_realify]
+  rw [_root_.GlobalTheory.TubeLie.mem_lieE_UH_of_sq _ _ _ (Hd_mul_self_eq_one hη), GlobalTheory.OmegaFrobenius.unrealify_realify]
   have hs := skew_top v.1
   ext i j
   rw [lie_entry, Matrix.zero_apply]
@@ -156,7 +157,7 @@ theorem norm_sq_tangL {k : ℕ} {η : ℝ} (hη : η = 1 ∨ η = -1) (v : Par k
 theorem tangL_surjective {k : ℕ} {η : ℝ} (hη : η = 1 ∨ η = -1) : Function.Surjective (tangL (k := k) hη) := by
   intro y
   set M := unrealify (y : EuclideanSpace ℝ (Fin (k + 1) × Fin (k + 1) × Bool)) with hMdef
-  have hM := (GlobalTheory.T.mem_lieE_unitaryGroup_iff_of_involutive _ _ _ (Hd_mul_self_eq_one hη)).1 y.2
+  have hM := (_root_.GlobalTheory.TubeLie.mem_lieE_UH_of_sq _ _ _ (Hd_mul_self_eq_one hη)).1 y.2
   have e : ∀ i j, (starRingEnd ℂ) (M j i) * (if j = Fin.last k then (η : ℂ) else 1) +
       (if i = Fin.last k then (η : ℂ) else 1) * M i j = 0 := by
     intro i j
@@ -164,7 +165,7 @@ theorem tangL_surjective {k : ℕ} {η : ℝ} (hη : η = 1 ∨ η = -1) : Funct
     rwa [lie_entry, Matrix.zero_apply] at h
   let A : Matrix (Fin k) (Fin k) ℂ := fun i j => M i.castSucc j.castSucc
   have hA : GlobalTheory.OmegaFrobenius.realify k A ∈ lieE (UH (1 : Matrix (Fin k) (Fin k) ℂ)) := by
-    rw [GlobalTheory.T.mem_lieE_unitaryGroup_iff_of_involutive _ _ _ (by simp), GlobalTheory.OmegaFrobenius.unrealify_realify]
+    rw [_root_.GlobalTheory.TubeLie.mem_lieE_UH_of_sq _ _ _ (by simp), GlobalTheory.OmegaFrobenius.unrealify_realify]
     ext i j
     have h := e i.castSucc j.castSucc
     simp [Fin.castSucc_ne_last] at h

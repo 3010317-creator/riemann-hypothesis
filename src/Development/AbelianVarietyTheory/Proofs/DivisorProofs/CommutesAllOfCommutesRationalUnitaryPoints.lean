@@ -1,8 +1,9 @@
 module
 
 public import Formalism.LocalToGlobal.IndefiniteReal.BridgeTie
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CayleyTransformSkewMemUnitaryGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MvPolynomialEqZeroOfVanishSkewHermitianStatement
+public import Formalism.SatakeDualWeyl.Statement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CayleyTransformSkewMemUnitaryGroup
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MvPolynomialEqZeroOfVanishSkewHermitian
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CmTypeRestrictRealSubfieldInfinitePlaceBijective
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MvPolynomialClearDenominatorsEval
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RelIndexLevelSelfDualStabilizerEqProdLocal
@@ -206,7 +207,7 @@ theorem ratDense (D : D7) (V : Formalism.BasicNotions.TH.HSp D)
     simp only [pt, Matrix.inv_def, Matrix.mul_smul, Matrix.smul_apply, Ring.inverse_eq_inv', smul_eq_mul]
     rw [div_eq_inv_mul]
   have hQ' : G * ∏ σ, (1 - Vv σ).det = 0 := by
-    refine GlobalTheory.T.mvPolynomial_eq_zero_of_vanish_skewHermitian D.host.F D.host.E D.sp.cm.sig (fun x => star_star x) (sig_ne_id D) D.sp.cm.deg2
+    refine _root_.GlobalTheory.SkewDense.eq_zero_of_vanish_skew D.host.F D.host.E D.sp.cm.sig (fun x => star_star x) (sig_ne_id D) D.sp.cm.deg2
       (Formalism.BasicNotions.TH.tauE D) ?_ V.rank V.gram (GlobalTheory.ParIndex.gram_herm D V) (GlobalTheory.ParIndex.gram_det_ne D V) _ ?_
     · intro τ τ' h
       exact (GlobalTheory.CMTypePlaces.places_bijective D).1 (by simp only at h ⊢; rw [h])
@@ -228,9 +229,9 @@ theorem ratDense (D : D7) (V : Formalism.BasicNotions.TH.HSp D)
           γ ∈ Formalism.UG.UJ (D.sp.cm.sig : D.host.E →+* D.host.E) V.gram ∧
             (γ : Matrix (Fin V.rank) (Fin V.rank) D.host.E) = (1 + S) * (1 - S)⁻¹ := by
         first
-          | exact GlobalTheory.T.cayleyTransform_skew_mem_unitaryGroup (D.sp.cm.sig : D.host.E →+* D.host.E) V.gram S hS h0
-          | exact GlobalTheory.T.cayleyTransform_skew_mem_unitaryGroup (D.sp.cm.sig : D.host.E →+* D.host.E) V.gram S hS hJ h0
-          | exact GlobalTheory.T.cayleyTransform_skew_mem_unitaryGroup (D.sp.cm.sig : D.host.E →+* D.host.E) V.gram S hJ hS h0
+          | exact _root_.GlobalTheory.CayleyUnitary.cayley_mem_UJ (D.sp.cm.sig : D.host.E →+* D.host.E) V.gram S hS h0
+          | exact _root_.GlobalTheory.CayleyUnitary.cayley_mem_UJ (D.sp.cm.sig : D.host.E →+* D.host.E) V.gram S hS hJ h0
+          | exact _root_.GlobalTheory.CayleyUnitary.cayley_mem_UJ (D.sp.cm.sig : D.host.E →+* D.host.E) V.gram S hJ hS h0
       have hne : ∀ τ, (1 - y τ).det ≠ 0 := fun τ => by
         rw [hdS]; exact (map_ne_zero _).2 h0
       have hDy : ∀ p, MvPolynomial.eval (pt y) (Dd p) ≠ 0 := fun p => by

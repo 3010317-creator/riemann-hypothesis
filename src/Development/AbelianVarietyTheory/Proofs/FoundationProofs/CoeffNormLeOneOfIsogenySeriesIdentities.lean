@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DifferentiableSqTh
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegralSeriesOfCommonDivisorLineProductsStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicComplexIntegralBoundedSeriesLawsStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegralSeriesOfCommonDivisorLineProducts
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PowerSeriesCoeffNormLeOneFunctionalEquationPadicStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PowerSeriesSupNormMulPadicComplexStatement
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicComplexIntegralBoundedSeriesLaws
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PowerSeriesSupNormMulPadicComplex
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -102,13 +102,13 @@ theorem intSer_one : IntSer (1 : PowerSeries ℂ_[p]) := by
 
 theorem bdd_prod {ι : Type*} (s : Finset ι) (g : ι → PowerSeries ℂ_[p]) (hg : ∀ i, BddSer (g i)) :
     BddSer (∏ i ∈ s, g i) :=
-  Finset.prod_induction g BddSer (fun a b ha hb => ((GlobalTheory.T.padicComplex_integral_bounded_series_laws p).2.1 a b ha hb).2.2)
+  Finset.prod_induction g BddSer (fun a b ha hb => ((_root_.GlobalTheory.EvenTheta.SerRing.series_ring_laws p).2.1 a b ha hb).2.2)
     (IntSer.bdd intSer_one) (fun i _ => hg i)
 
 theorem int_pow {g : PowerSeries ℂ_[p]} (hg : IntSer g) (k : ℕ) : IntSer (g ^ k) := by
   induction k with
   | zero => simpa using intSer_one
-  | succ k ih => rw [pow_succ]; exact ((GlobalTheory.T.padicComplex_integral_bounded_series_laws p).1 _ _ ih hg).2.2
+  | succ k ih => rw [pow_succ]; exact ((_root_.GlobalTheory.EvenTheta.SerRing.series_ring_laws p).1 _ _ ih hg).2.2
 
 theorem subst_lineSer_sub {e h : PowerSeries ℂ_[p]} (h0 : PowerSeries.constantCoeff h = 0)
     (x₀ x₁ : ℂ_[p]) :
@@ -134,8 +134,8 @@ theorem bdd_of_mul_sq {Ψ h : PowerSeries ℂ_[p]} {c : ℂ_[p]} (hc : c ≠ 0) 
     simpa using h1
   have hne : PowerSeries.constantCoeff h' ≠ 0 := by
     intro h; rw [h] at hc0; simp at hc0
-  have hinv := (GlobalTheory.T.padicComplex_integral_bounded_series_laws p).2.2.2.2.1 h' hi hc0
-  have hb2 := ((GlobalTheory.T.padicComplex_integral_bounded_series_laws p).2.1 _ _ hb (((GlobalTheory.T.padicComplex_integral_bounded_series_laws p).2.1 _ _ ((GlobalTheory.T.padicComplex_integral_bounded_series_laws p).2.2.1 c⁻¹).1
+  have hinv := (_root_.GlobalTheory.EvenTheta.SerRing.series_ring_laws p).2.2.2.2.1 h' hi hc0
+  have hb2 := ((_root_.GlobalTheory.EvenTheta.SerRing.series_ring_laws p).2.1 _ _ hb (((_root_.GlobalTheory.EvenTheta.SerRing.series_ring_laws p).2.1 _ _ ((_root_.GlobalTheory.EvenTheta.SerRing.series_ring_laws p).2.2.1 c⁻¹).1
     (IntSer.bdd (int_pow hinv 2))).2.2)).2.2
   have hm := PowerSeries.mul_inv_cancel h' hne
   have hcc : (PowerSeries.C c : PowerSeries ℂ_[p]) * PowerSeries.C c⁻¹ = 1 := by
@@ -155,7 +155,7 @@ open Isog
 
 theorem intSer_of_isogeny_identities : ∀ (p : ℕ) [Fact p.Prime] (k : ℕ) (e h S f : PowerSeries ℂ_[p]) (x₀ x₁ : ℂ_[p]) (y : Fin k → ℂ_[p]) (y' : Fin (2 * k) → ℂ_[p]), IntSer e → PowerSeries.constantCoeff e = 1 → IntSer h → PowerSeries.constantCoeff h = 0 → ‖PowerSeries.coeff 1 h‖ = 1 → ‖((2 * k : ℕ) : ℂ_[p])‖ < 1 → PowerSeries.constantCoeff S = 1 → PowerSeries.constantCoeff f = 1 → f ^ 2 = S * lineSer e x₀ → (PowerSeries.subst h f : PowerSeries ℂ_[p]) = S ^ k * ∏ i, lineSer e (y i) → (PowerSeries.subst h (S * lineSer e x₁) : PowerSeries ℂ_[p]) = S ^ (2 * k) * ∏ j, lineSer e (y' j) → (∀ i j, y i ≠ y' j) → (∃ j, y' j = x₀) → (∃ j, y' j = x₁) → x₀ ≠ x₁ → IntSer f ∧ ‖x₀‖ ≤ 1 := by
   intro p _ k e h S f x₀ x₁ y y' he he0 hh h0 h1 hk hS0 hf0 hf2 hf hS hy ⟨j₀, hj₀⟩ ⟨j₁, hj₁⟩ hx
-  obtain ⟨rI, rB, rC, -, -, rS, rM⟩ := GlobalTheory.T.padicComplex_integral_bounded_series_laws p
+  obtain ⟨rI, rB, rC, -, -, rS, rM⟩ := _root_.GlobalTheory.EvenTheta.SerRing.series_ring_laws p
   have hs : PowerSeries.HasSubst h := PowerSeries.HasSubst.of_constantCoeff_zero' h0
   have hG : ∀ x, BddSer (lineSer e x) := fun x => ⟨_, norm_coeff_lineSer_le he x⟩
   have hG0 : ∀ x, PowerSeries.constantCoeff (lineSer e x) = 1 := fun x => by
@@ -199,7 +199,7 @@ theorem intSer_of_isogeny_identities : ∀ (p : ℕ) [Fact p.Prime] (k : ℕ) (e
     rw [← eAB, mul_sub, eA, eB, sq]
     exact (rB _ _ (rB _ _ hPb hPb).2.2 hP'b).2.1
   have hΨi : IntSer Ψ :=
-    GlobalTheory.T.integral_series_of_common_divisor_line_products p k (2 * k) e Ψ A B y y' (IntSer.bdd he) hΨb ⟨_, hGs x₀⟩ ⟨_, hGs x₁⟩ hΨ0 eA eB hy
+    _root_.GlobalTheory.EvenTheta.intSer_of_common_divisor p k (2 * k) e Ψ A B y y' (IntSer.bdd he) hΨb ⟨_, hGs x₀⟩ ⟨_, hGs x₁⟩ hΨ0 eA eB hy
   have hP'm : ∀ n, ‖PowerSeries.coeff n P'‖ ≤ max 1 ‖x₁‖ := fun n => by
     have := rM Ψ B _ _ hΨi (hGs x₁) n
     rwa [eB, one_mul] at this
@@ -214,13 +214,13 @@ theorem intSer_of_isogeny_identities : ∀ (p : ℕ) [Fact p.Prime] (k : ℕ) (e
       ← Finset.mul_prod_erase (Finset.univ.erase j₁) _ (a := j₀) (by simp [hj]), hj₀, hj₁]
   have hGR : IntSer (lineSer e x₀ * R) := fun n => by
     obtain ⟨i, hi⟩ := exists_norm_coeff_lineSer he he0 x₁
-    have h3 := GlobalTheory.T.powerSeries_supNorm_mul_padicComplex p _ _ _ (hG x₁) (rB _ _ (hG x₀) hRb).2.2 (eP' ▸ hP'm) i n
+    have h3 := _root_.GlobalTheory.EvenTheta.sup_norm_mul_padicComplex p _ _ _ (hG x₁) (rB _ _ (hG x₀) hRb).2.2 (eP' ▸ hP'm) i n
     have hpos : (0 : ℝ) < max 1 ‖x₁‖ := lt_max_of_lt_left one_pos
     have h4 := mul_le_mul_of_nonneg_right hi
       (norm_nonneg (PowerSeries.coeff n (lineSer e x₀ * R)))
     exact le_of_mul_le_mul_left (by rw [mul_one]; exact h4.trans h3) hpos
   have hGi : IntSer (lineSer e x₀) := fun n => by
-    have h3 := GlobalTheory.T.powerSeries_supNorm_mul_padicComplex p _ _ _ (hG x₀) hRb hGR n 0
+    have h3 := _root_.GlobalTheory.EvenTheta.sup_norm_mul_padicComplex p _ _ _ (hG x₀) hRb hGR n 0
     rwa [PowerSeries.coeff_zero_eq_constantCoeff_apply, hR0, norm_one, mul_one] at h3
   have hx0 : ‖x₀‖ ≤ 1 := by
     obtain ⟨i, hi⟩ := exists_norm_coeff_lineSer he he0 x₀
@@ -229,7 +229,7 @@ theorem intSer_of_isogeny_identities : ∀ (p : ℕ) [Fact p.Prime] (k : ℕ) (e
     have hAi : IntSer A := rS _ h _ hGi hh h0
     have h2 : IntSer (P * P) := by
       rw [← sq, ← eA]; exact (rI _ _ hΨi hAi).2.2
-    have h3 := GlobalTheory.T.powerSeries_supNorm_mul_padicComplex p _ _ _ hPb hPb h2 n 0
+    have h3 := _root_.GlobalTheory.EvenTheta.sup_norm_mul_padicComplex p _ _ _ hPb hPb h2 n 0
     rwa [PowerSeries.coeff_zero_eq_constantCoeff_apply, hP0, norm_one, mul_one] at h3
   refine ⟨GlobalTheory.T.powerSeriesCoeffNormLeOne_functional_equation_padic p f h (lineSer e x₀ ^ k) P (2 * k) hf0 hh h0 h1 hk (int_pow hGi k)
     (by simp [hG0]) hPi hP0 ?_, hx0⟩

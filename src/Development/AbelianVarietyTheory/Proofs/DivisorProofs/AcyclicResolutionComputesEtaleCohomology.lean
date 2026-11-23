@@ -2,12 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChainsBasicStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleSheafComplexMappingConeAcyclicOfQuasiIsoStatement
+public import Mathlib.Algebra.Homology.HomotopyCategory.KInjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafProperties
+public import Development.AbelianVarietyTheory.Definitions.Divisors.GalMapMul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleSheafComplexMappingConeAcyclicOfQuasiIso
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNaturalHomotopyEquivChainsConstantPresheafStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HypercohomologyMappingConeSecondVariableExactStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HypercohomologyPullbackPushforwardFunctorialStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HypercohomologyTrivialOfTermsDegreeZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HypercohomologyTrivialOfTermsDegreeZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MappingConeTermsSheafExtSubsingletonStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SheafCohomologyClassSubsingletonOfAcyclicBoundedStatement
 import Mathlib.Algebra.Homology.HomotopyCategory.Plus
@@ -97,18 +99,18 @@ end GlobalTheory.EtC.AcycRes
 open GlobalTheory.EtC.AcycRes in
 theorem GlobalTheory.EtC.acycRes_computes : ∀ (R : Type) [CommRing R] (F : Shv R) (C : Cx R) [C.IsStrictlyGE 0] (ε : sgl F ⟶ C) [QuasiIso ε] (u : C ⟶ res R F), ε ≫ u = resAug F → (∀ (t : ℤ) (P : PSh) (n : ℤ), 0 < n → Subsingleton (H R (disc.obj P) (C.X t) n)) → ∀ (E : Spc) (n : ℤ), Function.Bijective (cpush ((chains R).obj E) u n) := by
   intro R _ F C _ ε _ u hu hC E n
-  obtain ⟨-, hinj, hge, hqa, -⟩ := GlobalTheory.T.chosenInjectiveResolution_etaleSheaf_properties R F
+  obtain ⟨-, hinj, hge, hqa, -⟩ := _root_.GlobalTheory.EtC.ResBasic.res_basic R F
   have : QuasiIso (ε ≫ u) := by rw [hu]; exact hqa
   have : QuasiIso u := quasiIso_of_comp_left ε u
   have : ((chains R).obj E).IsStrictlyLE 0 := (GlobalTheory.T.chains_map_and_d_eq_sum_neg_one_pow_smul_delta R).1 E
   have : (mappingCone u).IsStrictlyGE (-1) := isStrictlyGE_mappingCone u 0 0 (-1)
   apply coneBij
   intro m
-  apply GlobalTheory.T.hypercohomology_trivial_of_terms_degreeZero R _ _ _ m
+  apply _root_.GlobalTheory.nullHtpy_stair R _ _ _ m
   intro p k hp
   obtain ⟨q, rfl⟩ : ∃ q : ℕ, p = -(q : ℤ) := ⟨(-p).toNat, by omega⟩
   apply subOfIso (chainsXIso R E q)
-  apply GlobalTheory.T.sheafCohomologyClass_subsingleton_of_acyclic_boundedBelow R _ _ (-1) (GlobalTheory.T.etaleSheafComplex_mappingCone_acyclic_of_quasiIso R u)
+  apply GlobalTheory.T.sheafCohomologyClass_subsingleton_of_acyclic_boundedBelow R _ _ (-1) (_root_.GlobalTheory.EtC.mappingCone_acyclic R u)
   intro t i hi
   apply GlobalTheory.T.mappingCone_terms_sheafExt_subsingleton R _ u hinj _ t i hi
   intro t' i' hi'

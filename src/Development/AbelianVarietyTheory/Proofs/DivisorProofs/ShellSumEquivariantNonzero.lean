@@ -2,11 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IndicatorIntMMemSB
 public import Formalism.DoubleCosetMeasures.StatementZ
-import Development.AbelianVarietyTheory.Definitions.Foundations.SecondCountableAndT2LocalField
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CartanAntitone
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ZetaIntegralEquivariantNonzeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ZetaIntegralShellsVanishBeyondPeriodRamifiedStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ZetaIntegralEquivariantNonzero
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.ScaledIntegerPeriodic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ZetaIntegralShellsVanishBeyondPeriodRamified
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegrableZetaIntegrand
+import Development.AbelianVarietyTheory.Definitions.Foundations.SecondCountableAndT2LocalField
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsMulLeftInvariantVolGL
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LinearChangeOfVariablesLocalFieldMatrix
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Cartan
@@ -149,13 +150,13 @@ variable {ϖ : kˣ} {ν : kˣ →* ℂˣ} {e : ℕ}
 theorem finite_shells (hϖ : IsUnif ϖ) (hram : ¬ IsUnram ν) (hcond : CondLE ϖ e ν) {a : ℕ}
     {φ : Matrix (Fin a) (Fin a) k → ℂ} (hφ : φ ∈ SB (Matrix (Fin a) (Fin a) k)) :
     {m : {m : Fin a → ℤ // Antitone m} | ∃ z : ℂ, shell (haarVol (KO k (Fin a))) ϖ ν z φ m.1 ≠ 0}.Finite :=
-  (GlobalTheory.T.zetaIntegralShells_vanish_beyondPeriod_ramified k ϖ hϖ ν e hram hcond a (haarVol (KO k (Fin a))) φ hφ).2.2.2
+  (_root_.GlobalTheory.ShellVan.shell_lemma k ϖ hϖ ν e hram hcond a (haarVol (KO k (Fin a))) φ hφ).2.2.2
 
 theorem integrableOn_shell (hϖ : IsUnif ϖ) (hram : ¬ IsUnram ν) (hcond : CondLE ϖ e ν) {a : ℕ}
     {φ : Matrix (Fin a) (Fin a) k → ℂ} (hφ : φ ∈ SB (Matrix (Fin a) (Fin a) k)) (m : Fin a → ℤ) (w : ℂ) :
     IntegrableOn (fun g : GL (Fin a) k => φ g.val * (ν (gdet g) : ℂ) * apow (gdet g) w) (shellSet ϖ m)
       (haarVol (KO k (Fin a))) :=
-  (GlobalTheory.T.zetaIntegralShells_vanish_beyondPeriod_ramified k ϖ hϖ ν e hram hcond a (haarVol (KO k (Fin a))) φ hφ).1 m w
+  (_root_.GlobalTheory.ShellVan.shell_lemma k ϖ hϖ ν e hram hcond a (haarVol (KO k (Fin a))) φ hφ).1 m w
 
 theorem support_finite (hϖ : IsUnif ϖ) (hram : ¬ IsUnram ν) (hcond : CondLE ϖ e ν) {a : ℕ}
     {φ : Matrix (Fin a) (Fin a) k → ℂ} (hφ : φ ∈ SB (Matrix (Fin a) (Fin a) k)) (w : ℂ) :
@@ -258,7 +259,7 @@ theorem shellSum_eqv (hϖ : IsUnif ϖ) (hν : IsSmU ν) (hram : ¬ IsUnram ν) (
       have hB3 : (a : ℝ) - 1 < w.re := lt_of_le_of_lt (le_max_right _ _) hw
       rw [← integral_eq_shellSum hϖ hram hcond hφ (h₁ w hB1),
         ← integral_eq_shellSum hϖ hram hcond hφ' (h₂ w hB2)]
-      exact (GlobalTheory.T.zeta_integral_equivariant_nonzero k a ν w hν hB3).1.2.2 g₁ g₂ φ hφ)
+      exact (_root_.GlobalTheory.GJForm.isEqv_integral_and_ne_zero k a ν w hν hB3).1.2.2 g₁ g₂ φ hφ)
   exact hE (Set.mem_univ z)
 
 theorem exists_ne_zero (hϖ : IsUnif ϖ) (hcond : CondLE ϖ e ν) {a : ℕ} (z : ℂ) :

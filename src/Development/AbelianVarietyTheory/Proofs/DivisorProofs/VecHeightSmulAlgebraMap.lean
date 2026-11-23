@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHeightIffOfDegreeEq
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalizedPointHeightLatticeAlgebraMapStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalizedPointHeightLatticeSmulStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PointHeight
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalizedPointHeightLatticeAlgebraMap
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalizedPointHeightLatticeSmul
 import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -81,9 +82,9 @@ theorem vecHeight_smul_algebraMap (F K : Type) [Field F] [NumberField F] [Field 
     funext fun j => Subtype.ext rfl
   have hz' : z' ≠ 0 := fun h => smul_ne_zero hc' hyL (by
     rw [← he, h]; exact funext fun j => map_zero _)
-  have h1 := GlobalTheory.T.normalizedPointHeightLattice_algebraMap F (coordField F z) N n w A hw hA L z' hz'
-  have h2 := GlobalTheory.T.normalizedPointHeightLattice_smul F L N n w A hw hA _ c' hyL hc'
-  have h3 := GlobalTheory.T.normalizedPointHeightLattice_algebraMap F K N n w A hw hA L y hy
+  have h1 := _root_.GlobalTheory.Adelic.HeightExt.pointHeight_algebraMap F (coordField F z) N n w A hw hA L z' hz'
+  have h2 := _root_.GlobalTheory.Adelic.HeightScaling.pointHeight_smul F L N n w A hw hA _ c' hyL hc'
+  have h3 := _root_.GlobalTheory.Adelic.HeightExt.pointHeight_algebraMap F K N n w A hw hA L y hy
   rw [he, h2, h3] at h1
   exact h1.symm
 

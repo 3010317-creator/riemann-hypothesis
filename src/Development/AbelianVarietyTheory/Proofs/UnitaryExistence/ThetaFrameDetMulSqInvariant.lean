@@ -11,7 +11,7 @@ public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.Different
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsEqNsmulOfDvdPairing
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsSecGeneratorFibre
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RatioSqEqDetJAut
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.UniformizationPeriodLatticeChangeStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.UniformizationPeriodLatticeChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -74,7 +74,7 @@ theorem thetaFrame_det_mul_sq_invariant : (∀ (Y : Type) [AddCommGroup Y] [Modu
     exact ⟨hu, hsy, hpos⟩
   obtain ⟨hu, hτ⟩ := riem b hb
   obtain ⟨hu', hτ'⟩ := riem b' hb'
-  obtain ⟨hu₀, hpt, hex⟩ := GlobalTheory.T.uniformization_period_lattice_change hMink E H D l Xo σ g ty U i (P b) (P b') gam h₀ (hP b hb)
+  obtain ⟨hu₀, hpt, hex⟩ := _root_.GlobalTheory.FamRigid.ex_eq_of_level_group hMink E H D l Xo σ g ty U i (P b) (P b') gam h₀ (hP b hb)
     (hP b' hb') hiso hhalf hA hPP
   have hθ : ∀ b ∈ B, (fun z => thetaChar (τ b) c₁ c₂ (h b *ᵥ z)) ≠ 0 := fun b hb hz => by
     obtain ⟨hu, hτ⟩ := riem b hb

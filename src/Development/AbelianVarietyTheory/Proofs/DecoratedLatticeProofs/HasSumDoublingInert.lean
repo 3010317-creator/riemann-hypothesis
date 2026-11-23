@@ -1,12 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.GaussianBinomialClosedForm
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.InvariantSphericalCoefficientEqZeroOrZonalStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.InvariantSphericalCoefficientEqZeroOrZonal
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsSplitOfIsInertAt
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsOpenIsCompactUnitaryIntegralPoints
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasSumUnramifiedZetaSumUnitaryInert
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegralRightInvariantEqSumOpenSubgroupCosetsStatement
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SphericalDoublingSectionGraphDiagonalEqStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SummableNormCosetOutStatement
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.MeasureTheory.Function.L1Space.Integrable
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SummableNormCosetOut
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,7 +47,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsSplitOfIsInertAt
 
 @[expose] public section
 
@@ -67,7 +69,7 @@ theorem hasSum_doubling_inert : GlobalTheory.IndefiniteRowSideFullHecke.Spherica
     rw [mul_assoc (a * t) b k, GlobalTheory.T.sphericalDoublingSection_graph_diagonal_eq L ϖ σ q n hU χ hχ s Φ hΦ d t ht a ha _ (mul_mem hb hk),
       GlobalTheory.T.sphericalDoublingSection_graph_diagonal_eq L ϖ σ q n hU χ hχ s Φ hΦ d t ht a ha b hb]
   refine ⟨hright, ?_⟩
-  obtain ⟨h0, h1⟩ := GlobalTheory.T.invariant_sphericalCoefficient_eq_zero_or_zonal L ϖ σ q n hU V ρ x α hx ℓ hℓ
+  obtain ⟨h0, h1⟩ := _root_.GlobalTheory.ZonalCoeff.coeff_zero_or_zonal L ϖ σ q n hU V ρ x α hx ℓ hℓ
   by_cases hx0 : ℓ x = 0
   · simp only [h0 hx0, hx0, mul_zero]
     exact hasSum_zero
@@ -83,7 +85,7 @@ theorem hasSum_doubling_inert : GlobalTheory.IndefiniteRowSideFullHecke.Spherica
       have h2 := hw.1 1 ⟨k, hk⟩ g
       simp only [OneMemClass.coe_one, one_mul] at h2
       rw [hright g k hk, h2]
-    have hs := (GlobalTheory.T.summable_norm_coset_out' _ μ (KU σ n) hKo hμK _ hF hint).of_norm
+    have hs := (_root_.GlobalTheory.summable_norm_coset_out _ μ (KU σ n) hKo hμK _ hF hint).of_norm
     have hci := (GlobalTheory.T.integral_right_invariant_eq_sum_open_subgroup_cosets _ μ (KU σ n) hKo hμK
       (fun g => Φ (GlobalTheory.IndefiniteRowSideFullHecke.SphericalSectionVariables.io1 σ n g) * (ℓ (ρ g x) / ℓ x)) _ hF hs.hasSum).2
     have hS := hs.hasSum

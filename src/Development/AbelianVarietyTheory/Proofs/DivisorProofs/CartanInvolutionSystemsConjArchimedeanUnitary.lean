@@ -3,9 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CartanInvolutionConjOfPosDef
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBasisAdaptedToCartanInvolution
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSupportedAtInfinityAdeleWithComplexComponeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealPlaceComponentAdeleConjugationEqComplexConjStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SupportedAtInfinityAdeleEqZeroOfComplexComponentStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSupportedAtInfinityAdeleWithComplexCompone
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealPlaceComponentAdeleConjugationEqComplexConj
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SupportedAtInfinityAdeleEqZeroOfComplexComponent
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -181,7 +182,7 @@ theorem conj_cartan_arch : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     rw [← cm.2.2.2 (B.emb w).1, hX.herm]
   have hU := fun w => exists_conj_cartan_matrix n _ (X.θ w) (Y.θ w) (hM w) (hX.cartan w) (hY.cartan w)
   choose u v huv hun hint using hU
-  choose lift hlat hlev using GlobalTheory.T.exists_supportedAtInfinity_adele_with_complexComponents F E σ cm B.emb
+  choose lift hlat hlev using _root_.GlobalTheory.RealLift.exists_atInf_piInf_eq F E σ cm B.emb
   let π := Ideal.Quotient.mk (archIdeal F E)
   let Dm : Matrix (Fin n) (Fin n) (AE F E) := Matrix.of fun i j => lift fun w => (u w - 1) i j
   let Dv : Matrix (Fin n) (Fin n) (AE F E) := Matrix.of fun i j => lift fun w => (v w - 1) i j
@@ -197,7 +198,7 @@ theorem conj_cartan_arch : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
     ext i j; exact hlev _ w
   have zero : ∀ Z : Matrix (Fin n) (Fin n) (AE F E), π.mapMatrix Z = 0 → (∀ w, (piInf (B.emb w)).mapMatrix Z = 0) → Z = 0 := by
     intro Z h1 h2; ext i j
-    exact GlobalTheory.T.supportedAtInfinity_adele_eq_zero_of_complexComponents F E σ cm B.emb _ (Ideal.Quotient.eq_zero_iff_mem.1 (congrFun (congrFun h1 i) j))
+    exact _root_.GlobalTheory.AdeleInfInj.eq_zero_of_piInf_eq_zero F E σ cm B.emb _ (Ideal.Quotient.eq_zero_iff_mem.1 (congrFun (congrFun h1 i) j))
       (fun w => congrFun (congrFun (h2 w) i) j)
   have hGH : (1 + Dm) * (1 + Dv) = 1 := by
     refine sub_eq_zero.1 (zero _ ?_ fun w => ?_)
@@ -207,7 +208,7 @@ theorem conj_cartan_arch : ∀ (F E : Type) [Field F] [NumberField F] [Field E] 
   have hcw : ∀ w, (piInf (B.emb w)).mapMatrix ((cA σ).toRingHom.mapMatrix Dm) = (u w).map star - 1 := fun w => by
     ext i j
     simp only [RingHom.mapMatrix_apply, Matrix.map_apply]
-    rw [show (cA σ).toRingHom (Dm i j) = cA σ (Dm i j) from rfl, GlobalTheory.T.realPlaceComponent_adeleConjugation_eq_complexConj F E σ cm w (B.emb w)]
+    rw [show (cA σ).toRingHom (Dm i j) = cA σ (Dm i j) from rfl, _root_.GlobalTheory.RealPlaceConj.piInf_cA_eq_star F E σ cm w (B.emb w)]
     simp only [Dm, Matrix.of_apply]
     rw [hlev]
     simp only [Matrix.sub_apply, Matrix.one_apply, Matrix.map_apply, star_sub]

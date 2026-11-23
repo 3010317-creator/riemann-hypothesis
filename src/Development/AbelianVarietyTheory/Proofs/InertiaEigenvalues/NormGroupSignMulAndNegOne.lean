@@ -2,8 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsStableGauss
 public import Mathlib.NumberTheory.LocalField.Basic
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NegOneMemNormOfValuationEqStatement
+public import Mathlib.RingTheory.Norm.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NegOneMemNormOfValuationEq
 public import GroundTheory.AutomorphicForms.HermitianClassification
+public import Mathlib.LinearAlgebra.Charpoly.BaseChange
 import GroundTheory.AutomorphicForms.HermitianOrthogonal
 import GroundTheory.LocalFields.FiniteExtension
 import Mathlib.Algebra.Order.Floor.Extended
@@ -19,7 +21,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.LinearAlgebra.Charpoly.BaseChange
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -140,7 +141,7 @@ theorem norms_of_isField {F E : Type} [NontriviallyNormedField F] [NontriviallyN
     haveI : ValuativeExtension F E := ⟨by
       intro a b
       rw [hEv, hFv, norm_algebraMap', norm_algebraMap']⟩
-    obtain ⟨z, hz⟩ := GlobalTheory.T.exists_norm_eq_neg_one_of_unramified_values F E (fun y => by
+    obtain ⟨z, hz⟩ := _root_.GlobalTheory.neg_one_mem_norm_of_valuation_eq F E (fun y => by
       obtain ⟨x, hx⟩ := hU.unram y
       exact ⟨x, by rw [hEv, norm_algebraMap', hx], by rw [hEv, norm_algebraMap', hx]⟩)
     refine ⟨algebraMap E A.L z, ?_⟩

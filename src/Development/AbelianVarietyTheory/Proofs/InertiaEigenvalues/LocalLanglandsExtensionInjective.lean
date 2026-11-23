@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.LanglandsMultisegments
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.LocalLanglandsGL
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivProdIrrZero
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyEquivProdChosenIrrGLPairDegreeZeroStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyEquivProdChosenIrrGLPairDegreeZero
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Mono0OfLpDimEqOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -80,7 +81,7 @@ theorem eq_of_isL (hM : LanglandsMultisegments) [CharZero k] (𝔪 : Multiset (S
   obtain rfl : nx = ny := hdeg
   have hd : ∑ a, (![(⟨nx, cx⟩ : IrrGL (k := k)), t] a).1 = nx := by simp [Fin.sum_univ_two, ht0]
   have hs := (hM k).2 𝔪 0 ![⟨nx, cx⟩, t] ⟨nx, cy⟩ hd hx ht (by rwa [add_zero])
-  obtain ⟨φ⟩ := GlobalTheory.T.nonempty_equiv_prodChosenIrrGL_pair_degreeZero k (⟨nx, cx⟩ : IrrGL (k := k)) t ht0 hd
+  obtain ⟨φ⟩ := _root_.GlobalTheory.LocGL.nonempty_equiv_prodIrr_pair_zero k (⟨nx, cx⟩ : IrrGL (k := k)) t ht0 hd
   have hs2 : IsSubquotient (IrrGL.rep (⟨nx, cy⟩ : IrrGL (k := k))) (IrrGL.rep (⟨nx, cx⟩ : IrrGL (k := k))) :=
     hs.trans (.of_injective φ.symm.toIntertwiningMap φ.symm.toLinearEquiv.injective)
   obtain ⟨ψ⟩ := hs2.nonempty_equiv cy.rep.irr cx.rep.irr

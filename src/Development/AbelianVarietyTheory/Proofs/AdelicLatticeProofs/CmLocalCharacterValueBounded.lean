@@ -1,9 +1,10 @@
 module
 
 public import Formalism.UnipotentAdelicQuotients.ThmBInHecke
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.CmExtensionAdelesStandardModelDictionaryStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsPrimeIdempotentCMFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.PrimeIdempotentEqIndicatorPrimeStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.CmExtensionAdelesStandardModelDictionary
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsPrimeIdempotentCMField
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.PrimeIdempotentEqIndicatorPrime
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,9 +78,9 @@ theorem intValuation_of_mem_notMem_sq {R : Type*} [CommRing R] [IsDedekindDomain
 
 theorem unifIdele_exists_chiAt : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (χ : (AE F E)ˣ →* Circle) (P : HeightOneSpectrum (𝓞 E)), (∃ x, IsUnifIdele σ P x) ∧ (IsUnramAt σ χ P → ∀ x, IsUnifIdele σ P x → chiAt σ χ P = (χ x : ℂ)) ∧ ‖chiAt σ χ P‖ ≤ 1 := by
   intro F E _ _ _ _ _ σ hσ χ P
-  obtain ⟨Φ, h1, h2, h3, -, -⟩ := GlobalTheory.T.cmExtension_adeles_standardModel_dictionary F E σ hσ
-  have hu := GlobalTheory.T.primeIdempotent_eq_indicator_prime F E σ Φ h1 h2 h3 P
-  obtain ⟨e, f, hef⟩ := GlobalTheory.T.exists_primeIdempotent_CMField F E σ hσ P
+  obtain ⟨Φ, h1, h2, h3, -, -⟩ := _root_.GlobalTheory.cmAdele_dictionary F E σ hσ
+  have hu := _root_.GlobalTheory.isPrimeIdem_eq_indicator F E σ Φ h1 h2 h3 P
+  obtain ⟨e, f, hef⟩ := _root_.GlobalTheory.PrimeIdemExists.exists_isPrimeIdem F E σ hσ P
   obtain ⟨ea, eb, ec⟩ := hu e f hef
   have huniq : ∀ e' f', IsPrimeIdem σ P e' f' → e' = e := by
     intro e' f' h'

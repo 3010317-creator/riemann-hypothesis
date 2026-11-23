@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.OneFormMapEqKaehlerDifferentialMap
 public import Mathlib.RingTheory.Smooth.Basic
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdempotentLiftFormallySmoothSquareZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothRangeOfIdempotentAlgHomStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothRangeOfIdempotentAlgHom
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -71,7 +71,7 @@ theorem retractLift : ∀ (R R₀ : Type) [CommRing R] [CommRing R₀] (I : Idea
       exact Ideal.mem_map_of_mem _ hy
     exact hle hx
   refine ⟨e.range, inferInstance, inferInstance,
-    ((r : B₀' →+* B₀).comp p').comp (e.range.val : e.range →+* B'), ?_, ?_, ?_, GlobalTheory.T.smooth_range_of_idempotent_algHom R B' e he⟩
+    ((r : B₀' →+* B₀).comp p').comp (e.range.val : e.range →+* B'), ?_, ?_, ?_, _root_.GlobalTheory.smooth_range_of_idempotent R B' e he⟩
   · intro c b
     show r (p' ((c • b : e.range) : B')) = π c • r (p' (b : B'))
     rw [Subalgebra.coe_smul, hs' c (b : B'), map_smul]

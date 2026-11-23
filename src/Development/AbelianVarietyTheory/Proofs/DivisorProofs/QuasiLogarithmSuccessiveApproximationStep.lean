@@ -1,15 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FormalCoboundarySmul
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdditiveFormalGroupCoboundaryHomogeneousStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoboundaryEqAdditiveLeadingTermsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoboundaryOneTeichmullerLiftIsCocycleModPStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreePartIntegralDifferentialOfCoboundaryStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupLawCoboundaryTwoCoboundaryOneStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdditiveFormalGroupCoboundaryHomogeneous
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoboundaryEqAdditiveLeadingTerms
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoboundaryOneTeichmullerLiftIsCocycleModP
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreePartIntegralDifferentialOfCoboundary
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LazardAdditiveLawWittVectorFractionFieldModP
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupLawCoboundaryTwoCoboundaryOne
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupLawLinearCoeffAdditiveStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LazardAdditiveLawWittVectorFractionFieldModPStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MvPowerSeriesReductionModPrimeRulesStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReductionCommutesFormalGroupLawCoboundariesStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MvPowerSeriesReductionModPrimeRules
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReductionCommutesFormalGroupLawCoboundaries
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -130,14 +130,14 @@ theorem GlobalTheory.Katz.quasiLog_approx_step : ∀ (p : ℕ) [Fact p.Prime] (k
   intro p _ k _ _ _ d μ hμ c hc N f hN hf hlow
   have hL0 : ∀ i, constantCoeff ((fun i => Katz.lift p (μ i)) i) = 0 :=
     fun i => constantCoeff_lift p (hμ.const i)
-  have CC := GlobalTheory.T.formalGroupLawCoboundaryTwo_coboundaryOne (Fr p k) d (fun i => Katz.lift p (μ i)) hL0 0
-  have Q := GlobalTheory.T.coboundaryOne_teichmullerLift_isCocycle_mod_p p k d μ hμ f hf
-  have RD := GlobalTheory.T.mvPowerSeries_reduction_mod_prime_rules p k (Fin d ⊕ Fin d)
-  have RD3 := GlobalTheory.T.mvPowerSeries_reduction_mod_prime_rules p k (Fin d ⊕ (Fin d ⊕ Fin d))
-  have RC := GlobalTheory.T.reduction_commutes_formalGroupLawCoboundaries p k d μ hμ.const
+  have CC := _root_.GlobalTheory.Katz.formalGroupLawCoboundaryTwo_coboundaryOne_alt (Fr p k) d (fun i => Katz.lift p (μ i)) hL0 0
+  have Q := _root_.GlobalTheory.Katz.cob2_cob1_lift_mem_intBy_and_swap_sub_mem p k d μ hμ f hf
+  have RD := _root_.GlobalTheory.Katz.red_rules p k (Fin d ⊕ Fin d)
+  have RD3 := _root_.GlobalTheory.Katz.red_rules p k (Fin d ⊕ (Fin d ⊕ Fin d))
+  have RC := _root_.GlobalTheory.Katz.red_coboundaries p k d μ hμ.const
   have LIN := GlobalTheory.T.formal_group_law_linear_coeff_additive p k d μ hμ
-  have LEAD := GlobalTheory.T.coboundary_eq_additive_leading_terms (Fr p k) d (fun i => Katz.lift p (μ i)) N (fun i α hα => (LIN i α hα).2)
-  have HOM := GlobalTheory.T.additive_formal_group_coboundary_homogeneous (Fr p k) d N
+  have LEAD := _root_.GlobalTheory.CobLead.cob_eq_additive_lead (Fr p k) d (fun i => Katz.lift p (μ i)) N (fun i α hα => (LIN i α hα).2)
+  have HOM := _root_.GlobalTheory.homog_cob_addLaw (Fr p k) d N
   obtain ⟨g, hg⟩ : ∃ g, g = cob1 (fun i => Katz.lift p (μ i)) f - Katz.lift p c := ⟨_, rfl⟩
   rw [← hg] at hlow
 
@@ -203,7 +203,7 @@ theorem GlobalTheory.Katz.quasiLog_approx_step : ∀ (p : ℕ) [Fact p.Prime] (k
       rw [map_sub, HOM.2.2.1] at hw
       exact ⟨w, hw⟩
     · rw [if_neg hγ, if_neg hγ]; exact ⟨0, by simp⟩
-  obtain ⟨h, hhom, hint⟩ := GlobalTheory.T.lazard_additive_law_wittVectorFractionField_mod_p p k d N e hN ehom hcob2e hswape
+  obtain ⟨h, hhom, hint⟩ := _root_.GlobalTheory.Katz.lazard_mod_p_frac p k d N e hN ehom hcob2e hswape
   have hord : ∀ α : Fin d →₀ ℕ, α.degree < N → coeff α h = 0 := fun α hα => hhom α (by omega)
   have hsub : cob1 (fun i => Katz.lift p (μ i)) (f - h) =
       cob1 (fun i => Katz.lift p (μ i)) f - cob1 (fun i => Katz.lift p (μ i)) h := by
@@ -226,7 +226,7 @@ theorem GlobalTheory.Katz.quasiLog_approx_step : ∀ (p : ℕ) [Fact p.Prime] (k
   have hnegq : -h ∈ quasiInt p k (Fin d) := by
     intro α i
     by_cases hα : α.degree = N
-    · refine GlobalTheory.T.degree_part_integralDifferential_of_coboundary p k d μ hμ N f (-h) hN hf
+    · refine _root_.GlobalTheory.Katz.WDer.main p k d μ hμ N f (-h) hN hf
         (fun β hβ => by rw [map_neg, hord β hβ, neg_zero]) (fun γ hγ => ?_) α i hα
       obtain ⟨w, hw⟩ := K γ (by omega)
       refine ⟨p * w + WittVector.teichmuller p (coeff γ c), ?_⟩

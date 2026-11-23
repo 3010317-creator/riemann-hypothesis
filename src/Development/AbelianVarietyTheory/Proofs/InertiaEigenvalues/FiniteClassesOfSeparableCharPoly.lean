@@ -1,9 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteSqEqOneOfFiniteAlgebraStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteUnitsModSquaresOfUnramifiedQuadraticStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitsModSqFiniteOfFieldsStatement
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteSqEqOneOfFiniteAlgebra
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteUnitsModSquaresOfUnramifiedQuadratic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitsModSqFiniteOfFields
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -187,8 +189,8 @@ theorem toCl_surjective : Function.Surjective (toCl B) := by
   | mk x => exact ⟨QuotientGroup.mk ⟨x.1, x.2⟩, rfl⟩
 
 theorem finite_Cl (K : UQ) (B : InvAlg K) : Finite B.Cl := by
-  have hsq := GlobalTheory.T.finite_units_mod_sq_of_finite_for_fields K.E (GlobalTheory.T.finite_units_mod_squares_of_unramifiedQuadratic K) B.A
-  have hmu := GlobalTheory.T.finite_setOf_sq_eq_one_of_finite_charZero K.E B.A
+  have hsq := _root_.GlobalTheory.units_modSq_finite_of_fields K.E (_root_.GlobalTheory.UnitLemma.UQ.finite_units_mod_sq K) B.A
+  have hmu := _root_.GlobalTheory.finite_sq_eq_one_of_finite_algebra K.E B.A
   haveI := finite_quot B hsq hmu
   exact Finite.of_surjective _ (toCl_surjective B)
 

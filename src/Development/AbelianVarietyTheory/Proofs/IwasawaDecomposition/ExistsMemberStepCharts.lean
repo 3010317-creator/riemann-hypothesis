@@ -3,17 +3,20 @@ module
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SetStab
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LatAtLattice
 public import Formalism.LocalToGlobal.Columns.RecLevelLocT
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BaseFieldsDefiniteLaws
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ColumnPointEqOfDecoAndCosetReductionStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CouplingCosetInFramesEqIffReductionEqStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DecoratedLatticeDiagonalBasePointMulStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.XiAtPenultimateEqXiCpl1
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ColumnPointEqOfDecoAndCosetReduction
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CouplingCosetInFramesEqIffReductionEq
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ReferenceCharactersFactorTame
+public import Formalism.LocalToGlobal.Columns.Adelic
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DecoratedLatticeDiagonalBasePointMul
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAdelicPointDecoratedLatticeAllTwistsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCouplingCosetWithGivenReductionStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCouplingCosetWithGivenReduction
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnitaryDiagonalBasePointLevelPrimeStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoordsStatement
 public import Formalism.LocalToGlobal.Columns.RecLevelAsm
 public import Formalism.LocalToGlobal.Columns.RecLevelLocP
 public import Formalism.LocalToGlobal.Columns.RecLevelStep
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BaseFieldsDefiniteLaws
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -430,7 +433,7 @@ theorem hqG (hPr : (B.primes X).Ok) : ∀ w ∈ (B.primes X).vGs, ((Formalism.L2
   fun _ hw => GlobalTheory.TopStep.qOf_notMem_sq (GlobalTheory.Mem.FieldsLaws.fields_ok B) hPr hw
 
 theorem cos_iff (hPr : (B.primes X).Ok) {u : B.Word} {i : ℕ} (q q' : PtAt B.R I.sel (I.tup I.mu0) (I.cst I.mu0) u i) :
-    cosetIn q = cosetIn q' ↔ bar q = bar q' := GlobalTheory.T.couplingCosetInFrames_eq_iff_reduction_eq I.twistPrimes_reference_tuple_eq_empty (hqG hPr) q q'
+    cosetIn q = cosetIn q' ↔ bar q = bar q' := _root_.GlobalTheory.Mem.Col2.MemChart.cosetIn_eq_iff_bar_eq I.twistPrimes_reference_tuple_eq_empty (hqG hPr) q q'
 
 theorem cos_of_ne {u : B.Word} {i : ℕ} (h : i + 1 ≠ B.R.m) (q q' : PtAt B.R I.sel (I.tup I.mu0) (I.cst I.mu0) u i) :
     cosetIn q = cosetIn q' := by
@@ -481,7 +484,7 @@ theorem dia_of_pt (hPr : (B.primes X).Ok) (u : B.Word) {n : ℕ} [NeZero n] {Q :
     {p : DecoF B.fields.E n ((B.primes X).vT u) (B.primes X).vGs Q} (h : PtOf (g * kStd X u n) p) :
     g ∈ UAd B.sp.cm n ∧ (decoOf ((B.primes X).vT u) (B.primes X).vGs g).dia (diaT (Pr := B.primes X) u) = p.deco := by
   obtain ⟨k1, k2, k3⟩ := kStd_spec hPr u n
-  refine GlobalTheory.T.decoratedLattice_diagonalBasePoint_mul _ _ B.sp.cm n _ _ Q g _ p _ h k1 (fun w hw => k2 _ fun hT => ?_) fun P r j hr => ?_
+  refine _root_.GlobalTheory.Mem.Col2.DiaPt.decoOf_dia_eq _ _ B.sp.cm n _ _ Q g _ p _ h k1 (fun w hw => k2 _ fun hT => ?_) fun P r j hr => ?_
   · exact rls_T_notUnder hPr u _ hT ⟨w, hw, rfl⟩
   · have hu : IsUnit (Ideal.Quotient.mk P.1.asIdeal (B.fields.conjO ((B.primes X).piT u))) := by
       have h0 : Ideal.Quotient.mk P.1.asIdeal (B.fields.conjO ((B.primes X).piT u)) ≠ 0 := fun h0 =>
@@ -511,8 +514,8 @@ theorem chart_of (hI : I.Ok) (hP : TC.Pins B X) (l : I.Laws) (Z : TC.Later B (I.
   have hX := GlobalTheory.Mem.FieldsLaws.fields_ok B
   obtain ⟨hg, -, hl⟩ := (GlobalTheory.T.trueColumn_spaces_standard_in_frameCoords I hI hP l Z).2.2.2 i hi
   have hf : B.fields.f = B.R.f := (hPr.vT_card u).symm.trans (l.lev u I.mu0).card_ST
-  have hinj := GlobalTheory.T.columnPoint_eq_of_deco_and_cosetReduction (R := B.R) (cst := I.cst I.mu0) (u := u) (j := i) I.twistPrimes_reference_tuple_eq_empty (hqG hPr)
-  have hsur := GlobalTheory.T.exists_couplingCoset_with_given_reduction (R := B.R) (cst := I.cst I.mu0) (u := u) (j := i) I.twistPrimes_reference_tuple_eq_empty (hqG hPr)
+  have hinj := _root_.GlobalTheory.Mem.Col2.MemChart.eq_of_deco_bar (R := B.R) (cst := I.cst I.mu0) (u := u) (j := i) I.twistPrimes_reference_tuple_eq_empty (hqG hPr)
+  have hsur := _root_.GlobalTheory.Mem.Col2.MemChart.CosetLift.exists_ptAt_bar_eq (R := B.R) (cst := I.cst I.mu0) (u := u) (j := i) I.twistPrimes_reference_tuple_eq_empty (hqG hPr)
   obtain ⟨lev, Y, SI, h1, h2, h3, h4, h5⟩ := chart_exists (F := B.host.F) (E := B.host.E) B.sp.cm (B.R.N i)
     (chH (X := B.fields) (lvG I i c₀.1) (bar (rpI I u i c₀))) (f := B.R.f)
     (basePi_of_ok hX hPr u) (hPr.piT_norm u) (rls_vT_iff hX hPr u)

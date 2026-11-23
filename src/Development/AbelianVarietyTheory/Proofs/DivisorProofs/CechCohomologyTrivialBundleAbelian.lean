@@ -7,7 +7,9 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAmpleK
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFreeComplexMumfordBundleOriginStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteSubgroupSchemeIdealGeneratedByDimElementsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankHomologyOneTwoDualResolutionStatement
-public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExactDualMapOfExactFibresOfIsRegularLocalRingStatement
+public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ExistsFiniteProjectiveComplexQuasiIso
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExactDualMapOfExactFibresOfIsRegularLocalRing
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.StalkOfSmoothLocalStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -111,7 +113,7 @@ theorem cechLB_triv_finrank_one_two : ∀ (K : Type) [Field K] [IsAlgClosed K] (
   have hdim' : ringKrullDim (A.left.presheaf.stalk ((η[A]).left.base p)) = g := by
     rw [← ringKrullDim_eq_of_ringEquiv e]
     exact hdim
-  have hex := GlobalTheory.T.exact_dualMap_of_exactAt_extendScalars_fibres _ g hdim' C hfree hbdd hfib
+  have hex := _root_.GlobalTheory.exact_dualMap_of_exact_fibres_of_isRegularLocalRing _ g hdim' C hfree hbdd hfib
   obtain ⟨h1, h2⟩ := GlobalTheory.T.finrank_homology_one_two_dualResolution _ g hdim' f hJt hart C hfree hex hcok K φ hφ
   haveI := hA.proper
   refine ⟨fun i => ?_, ?_, ?_⟩

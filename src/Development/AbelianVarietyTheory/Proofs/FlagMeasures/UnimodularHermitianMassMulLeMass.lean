@@ -1,7 +1,7 @@
 module
 
 public import Formalism.HermitianLattices.StatementMass
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LValEtaBoundsStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LValEtaBounds
 public import Formalism.HermitianLattices.HermitianLatticesProofs.MassTelescope
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -177,7 +177,7 @@ theorem mass_mul_mass_le : Formalism.HermitianLatticesTheory.SiegelMassRatio →
   have hstd : ∀ n, Formalism.HermitianLatticesTheory.mass (Formalism.HermitianLatticesTheory.massTelescope_form K n)
       (Formalism.HermitianLatticesTheory.massTelescope_lat K n) = ms n := fun n =>
     hms n _ _ _ (Formalism.HermitianLatticesTheory.massTelescope_symm K n) (Formalism.HermitianLatticesTheory.massTelescope_ortho K n)
-  have hL := GlobalTheory.T.lValEta_mem_Icc_two_pow_fDeg K hCM
+  have hL := _root_.GlobalTheory.EtaValueBound.lValEta_bounds K hCM
   set v := Formalism.HermitianLatticesTheory.vInv K with hvdef
   set f := Formalism.HermitianLatticesTheory.fDeg K with hfdef
   have hX : (1 : ℝ) ≤ (2 * v) ^ f := one_le_pow₀ (by linarith)

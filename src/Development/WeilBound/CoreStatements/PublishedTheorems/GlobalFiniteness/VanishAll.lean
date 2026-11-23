@@ -5,7 +5,8 @@ public import GroundTheory.GlobalFields.IdeleClassGroup.IdeleClassMapIdeleClassM
 public import GroundTheory.ProfiniteCohomology.CohomologicalDimension.PrimaryComponentCohomologyEqBotOfScdpLt
 public import GroundTheory.ProfiniteCohomology.RestrictedRamification.MaxUnramifiedOutside
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.CohomologicalDimensionTopologicalIso
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ConstantTermFrameKTypeCoefficientsStatement
+public import Mathlib.Topology.Algebra.ContinuousMonoidHom
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ConstantTermFrameKTypeCoefficients
 public import Development.WeilBound.CoreStatements.PublishedTheorems.GlobalFiniteness.Transport
 public import GroundTheory.ProfiniteCohomology.RestrictedRamification.Dimension
 import Mathlib.Algebra.Order.Floor.Extended
@@ -83,7 +84,7 @@ theorem cdp_gal_le_two_gen (F Ω : Type) [Field F] [NumberField F] [Field Ω] [A
     (hS : ContainsAbove S l) (hK : l ≠ 2 ∨ IsTotallyComplex F) :
     cdp l (galUnramifiedOutside F Ω (S : Set (HeightOneSpectrum (𝓞 F)))) ≤ 2 := by
   obtain ⟨K, S', hS', ⟨ψ⟩, ⟨e⟩⟩ := exists_gs_transport_field F Ω l S hS
-  rw [GlobalTheory.T.cohomological_dimension_topological_iso _ _ l e]
+  rw [_root_.GlobalTheory.CompanionTheory.GSCd.cdp_eq_of_continuousMulEquiv _ _ l e]
   refine cdp_galUnramifiedOutside_le_two K (S' : Set (HeightOneSpectrum (𝓞 K.1))) Fact.out
     (fun v hv => hS' v hv) (hK.imp id fun h => by
       let _ : IsTotallyComplex F := h

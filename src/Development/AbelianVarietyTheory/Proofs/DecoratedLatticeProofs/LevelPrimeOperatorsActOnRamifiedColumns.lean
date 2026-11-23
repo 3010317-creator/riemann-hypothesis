@@ -4,8 +4,8 @@ public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.TwTrans
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RamifiedOperatorBijectiveFiniteTranslationCombin
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RamifiedOperatorsBijectiveAtPlaces
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPointsLieOverDistinctPlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistRamifiedIffScalarFormsRamifiedStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistTranslationsActAtLevelPrimeProofStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistRamifiedIffScalarFormsRamified
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistTranslationsActAtLevelPrimeProof
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -123,22 +123,22 @@ theorem twS : TwS' := by
         J.foldr (fun i f => sOp (β j i) (Q j i) q (resChar (χ i) (hχ i) q) (η i) f) (A.rd θ j hj b φ y) := by
     intro j hj φ hφ η
     obtain ⟨c, hc, hfold⟩ := comb_foldr (β j) (Q j) q χ hχ η J
-    have hram := GlobalTheory.T.twistRamified_iff_scalarFormsRamified I hOk hPins l Z u a Ch A hA θ hθ k ι p β Q L hStd j hj φ hφ.1
+    have hram := _root_.GlobalTheory.AdForm.ram_iff_scalar_ram I hOk hPins l Z u a Ch A hA θ hθ k ι p β Q L hStd j hj φ hφ.1
     have hR : ∀ b y, IsContAut _ (trc c (A.rd θ j hj b φ y)) ∧
         ∀ i, GlobalTheory.FinPl.RamAt (β j i) (Q j i) (trc c (A.rd θ j hj b φ y)) := by
       intro b y
       rw [← hfold]
       exact foldr_keeps hinj (β j) (Q j) q χ hχ η J ⟨hram.1 b y, fun i => hram.2.1 hφ b y i⟩
-    obtain ⟨φ', hφ'F, hφ'⟩ := GlobalTheory.T.twistTranslationsActAtLevelPrime_proof I hOk hPins l Z u a Ch A hA θ hθ k ι p β Q L hStd j hj c hc φ hφ.1
+    obtain ⟨φ', hφ'F, hφ'⟩ := _root_.GlobalTheory.AdForm.TransAct.twTransAct I hOk hPins l Z u a Ch A hA θ hθ k ι p β Q L hStd j hj c hc φ hφ.1
       (fun b y i g hg => ramAt_fixed ((hR b y).2 i) hg)
     refine ⟨φ', ?_, fun b y => (hφ' b y).trans (hfold _).symm⟩
-    have hram' := GlobalTheory.T.twistRamified_iff_scalarFormsRamified I hOk hPins l Z u a Ch A hA θ hθ k ι p β Q L hStd j hj φ' hφ'F
+    have hram' := _root_.GlobalTheory.AdForm.ram_iff_scalar_ram I hOk hPins l Z u a Ch A hA θ hθ k ι p β Q L hStd j hj φ' hφ'F
     exact hram'.2.2 fun b y i => by rw [hφ' b y]; exact (hR b y).2 i
   classical
   refine ⟨fun j η φ => if h : j ≤ B.R.m ∧ RamT (I := I) (l := l) (u := u) (a := a) j φ then
     (key j h.1 φ h.2 η).choose else φ, ?_⟩
   intro j hj φ hφ
-  have hram := GlobalTheory.T.twistRamified_iff_scalarFormsRamified I hOk hPins l Z u a Ch A hA θ hθ k ι p β Q L hStd j hj φ hφ.1
+  have hram := _root_.GlobalTheory.AdForm.ram_iff_scalar_ram I hOk hPins l Z u a Ch A hA θ hθ k ι p β Q L hStd j hj φ hφ.1
   refine ⟨fun b y => ⟨hram.1 b y, fun i => hram.2.1 hφ b y i⟩, fun η => ?_⟩
   have h : j ≤ B.R.m ∧ RamT (I := I) (l := l) (u := u) (a := a) j φ := ⟨hj, hφ⟩
   simp only [dif_pos h]

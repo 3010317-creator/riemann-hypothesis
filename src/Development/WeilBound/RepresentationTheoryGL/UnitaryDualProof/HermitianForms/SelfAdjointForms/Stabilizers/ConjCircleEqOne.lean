@@ -1,9 +1,14 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.SelfAdjointForms.Stabilizers.AnnAnti
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CardCosetRepsEqRelIndexStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsCharacterSeparatingLatticeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsCosetRepsOpenInCompactStatement
+public import Mathlib.GroupTheory.Index
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CardCosetRepsEqRelIndex
+public import Mathlib.Analysis.Complex.Circle
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsCharacterSeparatingLattice
+public import Mathlib.Algebra.Group.Subgroup.Defs
+public import Mathlib.Topology.Algebra.Group.Defs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsCosetRepsOpenInCompact
 import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.SelfAdjointForms.MirabolicVectors.ContinuousMulVec
 import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.TransversalSums.ContinuousBlkAtApply
 import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.TransversalSums.SumTranslateTransversal
@@ -103,7 +108,7 @@ theorem sum_char {ψ : AddChar k Circle} (hψ : Continuous ψ) (hψ1 : ψ ≠ 1)
   split_ifs with huA
   · rw [Finset.sum_congr rfl fun η hη => conj_circle_eq_one (hR.1 η hη u huA), Finset.sum_const, nsmul_eq_mul,
       mul_one]
-  · obtain ⟨η₀, hη₀A, hη₀u⟩ := GlobalTheory.T.exists_character_separating_lattice k ψ hψ hψ1 (m + 1) A hA.1 hA.2 u huA
+  · obtain ⟨η₀, hη₀A, hη₀u⟩ := _root_.GlobalTheory.CompanionTheory.CharacterBiduality.exists_annihilator_ne k ψ hψ hψ1 (m + 1) A hA.1 hA.2 u huA
     set F : (Fin (m + 1) → k) → ℂ := fun η => starRingEnd ℂ ((ψ (η ⬝ᵥ u) : Circle) : ℂ) with hFdef
     have hF : ∀ a, ∀ d ∈ ann ψ A', F (a + d) = F a := by
       intro a d hd
@@ -135,7 +140,7 @@ theorem avg_decomp_pf (hψ : Continuous ψ) (hψ1 : ψ ≠ 1) (hπ : IsSmooth π
     (R.card : ℂ) • avg ψ h π ξ A v = (T.card : ℂ) • ∑ η ∈ R, avg ψ h π (ξ + η) A' v := by
   classical
   obtain ⟨⟨H, S⟩, hHA, hHo, hHv, hHξ, hS1, hS2⟩ := avgData_exists ψ h π hψ hπ ξ A hA v
-  obtain ⟨U, hU1, hU2⟩ := GlobalTheory.T.exists_coset_reps_open_in_compact (Fin (m + 1) → k) A' H hA'.1 hHo (hHA.trans hAA)
+  obtain ⟨U, hU1, hU2⟩ := _root_.GlobalTheory.CompanionTheory.Topology.exists_finset_transversal_of_isCompact_of_isOpen (Fin (m + 1) → k) A' H hA'.1 hHo (hHA.trans hAA)
   set f : (Fin (m + 1) → k) → V := fun t => (starRingEnd ℂ ((ψ (ξ ⬝ᵥ t) : Circle) : ℂ)) • π (colEl k m N h t) v
     with hfdef
 
@@ -170,9 +175,9 @@ theorem avg_decomp_pf (hψ : Continuous ψ) (hψ1 : ψ ≠ 1) (hπ : IsSmooth π
       Module.End.mul_apply, hHv d hd]
   have hind : ∑ u ∈ U.filter (· ∈ A), f u = ∑ t ∈ S, f t :=
     sum_tr_indep A H _ S (isTr_filter A A' H hHA U ⟨hU1, hU2⟩ hAA) ⟨hS1, hS2⟩ f hper
-  have cU : U.card = H.relIndex A' := GlobalTheory.T.card_coset_reps_eq_relIndex _ A' H U (hHA.trans hAA) hU1 hU2
-  have cS : S.card = H.relIndex A := GlobalTheory.T.card_coset_reps_eq_relIndex _ A H S hHA hS1 hS2
-  have cT : T.card = A.relIndex A' := GlobalTheory.T.card_coset_reps_eq_relIndex _ A' A T hAA hT.1 hT.2
+  have cU : U.card = H.relIndex A' := _root_.GlobalTheory.CompanionTheory.Transversal.card_eq_relIndex _ A' H U (hHA.trans hAA) hU1 hU2
+  have cS : S.card = H.relIndex A := _root_.GlobalTheory.CompanionTheory.Transversal.card_eq_relIndex _ A H S hHA hS1 hS2
+  have cT : T.card = A.relIndex A' := _root_.GlobalTheory.CompanionTheory.Transversal.card_eq_relIndex _ A' A T hAA hT.1 hT.2
   have cmul : U.card = S.card * T.card := by
     rw [cU, cS, cT, AddSubgroup.relIndex_mul_relIndex H A A' hHA hAA]
   have hS0 : (S.card : ℂ) ≠ 0 := by

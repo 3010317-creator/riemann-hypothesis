@@ -9,23 +9,25 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CXiValIff
 public import Formalism.LocalToGlobal.IndefiniteReal.FWTie
 public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ConjugateSectionValuesSemilinearStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.ThClassPins
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ConjugateSectionValuesSemilinear
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCoversOfHalves
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsRingEquivOfIsTranscendenceBasis
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoverCharacterTrivialOnLevelDeterminantsStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeightZeroSectionValueOnMarkedPeriodSpaceStatement
+public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.PermutesRefl
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AutConjTranslatesDetCharacterMarkings
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsPermPeriodSpacesComplexAut
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.NonemptyFrPtComplex
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.SecEqZeroOfComplex
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CmModuliConsequenceOfAbelianSchemeLaws
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AutConjTranslatesDetCharacterMarkingsStatement
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsAlgebraMapOfSigRFixed
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFiniteAdelicElementMarkingComponent
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFramedPointBaseChangeAlgebraMap
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLatticeEmbeddingLiftDatumHermitianSpace
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsMemberDictionaryContextGoodEmbedding
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsPermPeriodSpacesComplexAutStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.NonemptyFrPtComplex
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RelabelEmbeddingsGoodBijectiveConjCompat
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.SecEqZeroOfComplex
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -125,12 +127,12 @@ theorem galRul_eq_cmul_complex (V : HSp D) (r : ℕ) (σ : c.F →+* ℂ) (C : C
   have hg : σ (IntermediateField.inclusion c.le (baseKA l).ρ) = H.rt0 := hC.good
   have hrt : τ H.rt0 = H.rt0 := by
     conv_lhs => rw [← hg, hτ, hta.base, hg]
-  obtain ⟨π, hπ⟩ := GlobalTheory.T.exists_perm_periodSpaces_complexAut D.host.E H Dw l Xo _ _ _ C.F hC.pos hC.good
+  obtain ⟨π, hπ⟩ := _root_.GlobalTheory.ConjPermutes.exists_perm D.host.E H Dw l Xo _ _ _ C.F hC.pos hC.good
     ((GlobalTheory.Relab.relab_good D.host.E H l c σ hC.good).2.2.2 Dw C.g C.e) hC.lA τ hrt
-  obtain ⟨κ, ⟨u, hu⟩, hκ⟩ := GlobalTheory.T.autConj_translates_detCharacter_markings D H Dw l Xo c σ V r C hC hsig τ hrt hcur π hπ xi hx1 hx2
+  obtain ⟨κ, ⟨u, hu⟩, hκ⟩ := _root_.GlobalTheory.DetTranslate.conj_translates_det D H Dw l Xo c σ V r C hC hsig τ hrt hcur π hπ xi hx1 hx2
   have hcu := hconj u
   rw [← hu] at hcu
-  have hgal : galRul hta f ∈ sec Xo c 0 0 := ((GlobalTheory.T.conjugateSection_values_semilinear D.host.E H Dw l Xo c ta hta).1 0 0 f hf).1
+  have hgal : galRul hta f ∈ sec Xo c 0 0 := ((_root_.GlobalTheory.GalTw.galRul_sec_val_semilinear D.host.E H Dw l Xo c ta hta).1 0 0 f hf).1
   have hne : ((xi' (Matrix.GeneralLinearGroup.det (finHom V u)) : ℂˣ) : ℂ) ≠ 0 := Units.ne_zero _
   have hpt : ∀ y : FrPt Xo c (CAt σ), toC (evR Xo c (galRul hta f) y) =
       (τ a₀ / a₀' * ((xi' (Matrix.GeneralLinearGroup.det (finHom V u)) : ℂˣ) : ℂ)⁻¹) * toC (evR Xo c f' y) ∧

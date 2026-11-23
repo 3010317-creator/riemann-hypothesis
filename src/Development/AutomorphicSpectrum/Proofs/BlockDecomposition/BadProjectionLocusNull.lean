@@ -2,15 +2,19 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RatiosEqOfSameOrbit
 public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PPtsSheetOnlyNull
-import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.DifferentiableOnOfTendstoLocallyUniformlyOn
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegrableOnSourceIffOfDensity
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ComplexPointLiftsToMulticoneStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DehomogenizedEvalEqRatioStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsPullHermPullLine
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ComplexPointLiftsToMulticone
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsSmoothHermCombLine
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DehomogenizedEvalEqRatio
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsUnderOfSameOrbitStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MixedCyclePointDictionaryStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PointsEqIffSameTorusOrbitStatement
-import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PSheetOnlyNull
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MixedCyclePointDictionary
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRes
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PointsEqIffSameTorusOrbit
 public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.PCriticalFibreInfinite
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterBridgeB
+import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.DifferentiableOnOfTendstoLocallyUniformlyOn
+import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PSheetOnlyNull
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,7 +55,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.AnalyticForms.AnalyticCharts.NullZero
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterBridgeB
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterFib
 import Std.Tactic.BVDecide.Normalize.Prop
 
@@ -163,7 +166,7 @@ theorem ev_coord (p : ∀ k, Bk n k) {y : GlobalTheory.CxPts (i ≫ mpStr ℤ m 
   classical
   have hw : PtsOver.map i rfl _ y ∈ ptsIn (mpStr ℤ m n) σ₀ (mchart p) :=
     CxPts.mem_ptsIn.2 (CxPts.mem_ptsIn.1 hy)
-  rw [CxPts.ev_app i rfl, GlobalTheory.T.dehomogenized_eval_eq_ratio m n p _ _ (isMultiHomog_coord q) _ z hz hw]
+  rw [CxPts.ev_app i rfl, _root_.GlobalTheory.CompanionTheory.MixZ.ev_dehomog_of_isUnder m n p _ _ (isMultiHomog_coord q) _ z hz hw]
   simp [Pi.single_apply, Finset.prod_ite_eq']
 
 variable [IsIntegral X] [IsClosedImmersion i]
@@ -173,7 +176,7 @@ theorem exists_lift (hPh : ReciprocityTheory.ChartRestriction.G.Geo.IsMultiHomog
     ∃ (O : Set (Fin D → ℂ)) (γ : (Fin D → ℂ) → (Σ k, Bk n k) → ℂ), IsOpen O ∧
       (y ∈ c.e.source → c.finChart y ∈ O) ∧ O ⊆ c.finChart.target ∧ DifferentiableOn ℂ γ O ∧
       ∀ v ∈ O, Over i (c.finChart.symm v) (γ v) ∧ γ v ∈ mcPts (ptIdeal (i (genericPoint X))) := by
-  obtain ⟨z, hzP, hz⟩ := GlobalTheory.T.complex_point_lifts_to_multicone m n X i y
+  obtain ⟨z, hzP, hz⟩ := _root_.GlobalTheory.CompanionTheory.MPDict.exists_mem_mcPts_isUnder m n X i y
   choose p hp using hzP.1
   have hyW : y ∈ ptsIn (i ≫ mpStr ℤ m n) σ₀ (i ⁻¹ᵁ mchart p) :=
     CxPts.mem_ptsIn.2 (Set.mem_iInter.2 fun k => CxPts.mem_ptsIn.1 ((hz k (p k)).1.2 (hp k)))
@@ -187,7 +190,7 @@ theorem exists_lift (hPh : ReciprocityTheory.ChartRestriction.G.Geo.IsMultiHomog
   · refine differentiableOn_pi.2 fun q => ?_
     exact ((c.analyticOnNhd_finChart_iff (isOpen_ptsIn W) _).2 (c.holo W _)).differentiableOn
   · rintro v ⟨-, hvW⟩
-    obtain ⟨z', hz'P, hz'⟩ := GlobalTheory.T.complex_point_lifts_to_multicone m n X i (c.finChart.symm v)
+    obtain ⟨z', hz'P, hz'⟩ := _root_.GlobalTheory.CompanionTheory.MPDict.exists_mem_mcPts_isUnder m n X i (c.finChart.symm v)
     have hne : ∀ k, z' ⟨k, p k⟩ ≠ 0 := fun k => (hz' k (p k)).1.1 (by
       refine CxPts.mem_ptsIn.2 ?_
       exact Set.mem_iInter.1 (CxPts.mem_ptsIn.1 hvW) k)
@@ -213,14 +216,14 @@ theorem volume_chart_crit : ∀ (m : ℕ) (n : Fin (m + 1) → ℕ) (X : Scheme.
         volume (c.e.target ∩ c.e.symm ⁻¹' {y | (∃ z, GlobalTheory.CompanionTheory.MixZ.ArchEq.Over i y z ∧ Ψ (segre z) 0 = 0) ∨
           ¬ GlobalTheory.CompanionTheory.MixZ.ArchEq.IsRegAt i Ψ c y}) = 0 := by
   intro m n X _ i _ D hX Ψ hΨ c
-  obtain ⟨-, hp₃, hp₄, -⟩ := GlobalTheory.T.mixed_cycle_point_dictionary m n X i (D + 1) hX.dim_eq
+  obtain ⟨-, hp₃, hp₄, -⟩ := _root_.GlobalTheory.CompanionTheory.MixZ.ptDict m n X i (D + 1) hX.dim_eq
   have hP := hp₄ (hp₃.2 hX.charZero)
   have hPh := hP.2.1.2.1
   have hCF := CriticalFibreInfinite.proof
   have horb : ∀ (O : Set (Fin D → ℂ)) (γ : (Fin D → ℂ) → (Σ k, Bk n k) → ℂ), O ⊆ c.finChart.target →
       (∀ v ∈ O, Over i (c.finChart.symm v) (γ v)) → ∀ v ∈ O, ∀ v' ∈ O, SameOrbit (γ v) (γ v') → v = v' := by
     intro O γ hO hγ v hv v' hv' h
-    have e := (GlobalTheory.T.points_eq_iff_same_torus_orbit m n X i _ _ _ _ (hγ v hv) (hγ v' hv')).2 h
+    have e := (_root_.GlobalTheory.CompanionTheory.MixZ.Orbit.eq_iff_sameOrbit m n X i _ _ _ _ (hγ v hv) (hγ v' hv')).2 h
     calc v = c.finChart (c.finChart.symm v) := (c.finChart.right_inv (hO hv)).symm
       _ = c.finChart (c.finChart.symm v') := congrArg _ e
       _ = v' := c.finChart.right_inv (hO hv')
@@ -248,7 +251,7 @@ theorem volume_chart_crit : ∀ (m : ℕ) (n : Fin (m + 1) → ℕ) (X : Scheme.
         (fun a ha b hb => horb O γ hOT (fun u hu => (hγ u hu).1) a (hball ha) b (hball hb))
         (Metric.mem_ball_self hr)
     · rintro w ⟨⟨-, z', hz', h0'⟩, hw⟩
-      obtain ⟨a, ha, e⟩ := (GlobalTheory.T.points_eq_iff_same_torus_orbit m n X i _ _ _ _ hz' (hγ w (hball hw)).1).1 rfl
+      obtain ⟨a, ha, e⟩ := (_root_.GlobalTheory.CompanionTheory.MixZ.Orbit.eq_iff_sameOrbit m n X i _ _ _ _ hz' (hγ w (hball hw)).1).1 rfl
       rw [segre_orbit e, map_smul, Pi.smul_apply, smul_eq_mul] at h0'
       exact (mul_eq_zero.1 h0').resolve_left (Finset.prod_ne_zero_iff.2 fun k _ => ha k)
   have hS2 : volume {v | v ∈ c.finChart.target ∧ (∀ z, Over i (c.finChart.symm v) z → Ψ (segre z) 0 ≠ 0) ∧
@@ -282,7 +285,7 @@ theorem volume_chart_crit : ∀ (m : ℕ) (n : Fin (m + 1) → ℕ) (X : Scheme.
       have hev : projCoord i Ψ ∘ c.finChart.symm =ᶠ[𝓝 w]
           fun w => PtsSheetOnlyNull.ratio (Ψ (segre (γ w))) := by
         filter_upwards [hO'o.mem_nhds (hball hw)] with u hu
-        have hso := (GlobalTheory.T.points_eq_iff_same_torus_orbit m n X i _ _ _ _ (over_liftOf (hγ u hu.1).1) (hγ u hu.1).1).1 rfl
+        have hso := (_root_.GlobalTheory.CompanionTheory.MixZ.Orbit.eq_iff_sameOrbit m n X i _ _ _ _ (over_liftOf (hγ u hu.1).1) (hγ u hu.1).1).1 rfl
         exact ratios_eq_of_sameOrbit Ψ hso hu.2
       unfold IsRegAt at hnr
       rw [not_not, c.finChart.right_inv hwT, hev.fderiv_eq] at hnr

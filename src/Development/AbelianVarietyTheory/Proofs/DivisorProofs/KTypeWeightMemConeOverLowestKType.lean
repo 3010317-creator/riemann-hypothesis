@@ -2,11 +2,14 @@ module
 
 public import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.LowKMultOneP
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HolomorphicDiscreteSeries
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InnerWordNeZeroReversedWordNeZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KFiniteSpanRaisingOperatorWordsLowestKTypeStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KTypeLeKFiniteVectorsFiniteDimensionalStatement
+public import Formalism.RealPlaceAnalysis.StatementA
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InnerWordNeZeroReversedWordNeZero
+public import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.DiscreteSeriesCharacters.CapelliDeterminantBlockProduct
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KFiniteSpanRaisingOperatorWordsLowestKType
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumMapRootEqSumCount
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WordReachingIrreducibleKModuleReachesHighestWeigStatement
+import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KTypeLeKFiniteVectorsFiniteDimensional
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WordReachingIrreducibleKModuleReachesHighestWeig
 import Formalism.RealPlaceAnalysis.StatementKT
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -78,13 +81,13 @@ theorem GlobalTheory.kType_weight_in_cone_over_lowK : ∀ (n : ℕ) (ε : Fin n 
           rw [map_smul, inner_smul_right, ha l hl, mul_zero] }
     have hT : ∀ T ∈ {S : Submodule ℂ H | IsKTypeOf ε σ (lowK ε lam) S}, T ≤ Q.map D.subtype := by
       intro T hT y hy
-      have hTD := (GlobalTheory.T.kType_le_kFiniteVectors_finiteDimensional n ε H σ D E hcomp hU hI hK _ T hT).1
+      have hTD := (_root_.GlobalTheory.kTypeInKFinite n ε H σ D E hcomp hU hI hK _ T hT).1
       refine ⟨⟨y, hTD hy⟩, ?_, rfl⟩
       intro l hl
       by_contra h
       exact hne ⟨T, hT, ⟨y, hTD hy⟩, hy, l, hl, h⟩
     have hlow : lowKSub ε lam σ ≤ Q.map D.subtype := sSup_le hT
-    have hspan := GlobalTheory.T.kFinite_span_raisingOperator_words_lowestKType n ε H σ D E lam hP hC hDS hK
+    have hspan := _root_.GlobalTheory.kfin_span_raising_words_lowK n ε H σ D E lam hP hC hDS hK
     have hle : Submodule.span ℂ {y : D | ∃ l : List (Fin n × Fin n), (∀ p ∈ l, ε p.1 = true ∧ ε p.2 = false) ∧
         ∃ x ∈ (lowKSub ε lam σ).comap D.subtype, y = (l.map fun p : Fin n × Fin n => E p.1 p.2).prod x} ≤
         (ℂ ∙ w)ᗮ := by
@@ -100,8 +103,8 @@ theorem GlobalTheory.kType_weight_in_cone_over_lowK : ∀ (n : ℕ) (ε : Fin n 
     rw [Submodule.mem_orthogonal_singleton_iff_inner_right, inner_self_eq_zero] at hw
     exact hw0 hw
   obtain ⟨T, hT, x, hx, l, hl, hne⟩ := key
-  have hadj := GlobalTheory.T.inner_word_ne_zero_reversedWord_ne_zero n ε D E hK.unit l w x hne
-  obtain ⟨-, hfd, hstab, hhw⟩ := GlobalTheory.T.kType_le_kFiniteVectors_finiteDimensional n ε H σ D E hcomp hU hI hK _ T hT
+  have hadj := _root_.GlobalTheory.SignInnerAdjoint.main n ε D E hK.unit l w x hne
+  obtain ⟨-, hfd, hstab, hhw⟩ := _root_.GlobalTheory.kTypeInKFinite n ε H σ D E hcomp hU hI hK _ T hT
   have hl' : ∀ p ∈ l.reverse.map Prod.swap, ε p.1 = false ∧ ε p.2 = true := by
     intro p hp
     rw [List.mem_map] at hp
@@ -109,6 +112,6 @@ theorem GlobalTheory.kType_weight_in_cone_over_lowK : ∀ (n : ℕ) (ε : Fin n 
     rw [List.mem_reverse] at hq
     exact ⟨(hl q hq).2, (hl q hq).1⟩
   have hKU : KUnit ε E := fun a b hab y z => Formalism.REAL.isUnitary_kUnit ε E hK.unit a b hab y z
-  obtain ⟨l', -, hl'ty, hsum⟩ := GlobalTheory.T.word_reaching_irreducible_k_module_reaches_highest_weight n ε D E hK.gl hKU (T.comap D.subtype) hfd hstab (lowK ε lam) hhw
+  obtain ⟨l', -, hl'ty, hsum⟩ := _root_.GlobalTheory.HdStep.main n ε D E hK.gl hKU (T.comap D.subtype) hfd hstab (lowK ε lam) hhw
     μ w hwH false true _ hl' x hx hadj
   exact GlobalTheory.root_word_count_letters n ε μ (lowK ε lam) l' hl'ty hsum

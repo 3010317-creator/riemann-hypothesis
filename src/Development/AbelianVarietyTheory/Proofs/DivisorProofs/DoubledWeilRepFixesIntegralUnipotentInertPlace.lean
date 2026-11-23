@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FromBlocksMem
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledWeilInertPlaceVacuumEigenfunctionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledWeilRepFixesVacuumTensorSiegelParabolicInStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralUnipotentRadicalConjToSquareInertPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledWeilInertPlaceVacuumEigenfunction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledWeilRepFixesVacuumTensorSiegelParabolicIn
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralUnipotentRadicalConjToSquareInertPlace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,10 +63,10 @@ theorem nab_fix : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFi
   intro F E _ _ _ _ _ σ B a a' G X om om' hTr v w hin hT dd omd hdc hws R hR0 hRv n hn
   change GlobalTheory.InertDbl.UD σ G.W →* _ at omd
   set Φ := GlobalTheory.InertDbl.dblFun (tens (evFin F v) (G.M'.vac v) R) with hΦdef
-  obtain ⟨c, hc⟩ := GlobalTheory.T.doubledWeil_inert_place_vacuum_eigenfunction F E σ B a a' G X om om' hTr v w hin hT dd omd hdc hws R hR0 hRv n hn.1
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.DblVacLine.dblFun_eigen F E σ B a a' G X om om' hTr v w hin hT dd omd hdc hws R hR0 hRv n hn.1
   change omd n Φ = c • Φ at hc
-  obtain ⟨s, hs, hsn⟩ := GlobalTheory.T.integralUnipotentRadical_conj_to_square_inertPlace F E σ B hTr.base (a + a') G.W v w hin n hn
-  have hs1 : omd s Φ = Φ := GlobalTheory.T.doubledWeilRep_fixes_vacuum_tensor_siegelParabolic_inert F E σ B a a' G X om om' hTr v w hin hT dd omd hdc hws R hR0 hRv s hs
+  obtain ⟨s, hs, hsn⟩ := _root_.GlobalTheory.InertConjSq.conj_sq F E σ B hTr.base (a + a') G.W v w hin n hn
+  have hs1 : omd s Φ = Φ := _root_.GlobalTheory.InertDblPar.parD_fix F E σ B a a' G X om om' hTr v w hin hT dd omd hdc hws R hR0 hRv s hs
   have hs2 : omd s⁻¹ Φ = Φ := by
     conv_lhs => rw [← hs1]
     change (omd _ * omd _) Φ = Φ

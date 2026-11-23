@@ -1,8 +1,9 @@
 module
 
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.StageData
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.BlockOneScalarPreservesNondegenerateStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.GramBlockOneFirstVectorFormulaStatement
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.BlockOneScalarPreservesNondegenerate
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.GramBlockOneFirstVectorFormula
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorInvolutionAlgebraProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -118,10 +119,10 @@ theorem coords : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFie
   obtain ⟨-, -, -, hinv, -, hfix, -⟩ := GlobalTheory.CompanionTheory.SW.KAlg.algebra_tensor_invol F E σ D.hCM R
   have hfr : Module.finrank F E = 2 := D.hCM.2.2.1
   have ht : t ≠ 0 := D.ht
-  have hJ' := GlobalTheory.T.block_one_scalar_preserves_nondegenerate F E σ M J D.hJ t ht
+  have hJ' := _root_.GlobalTheory.CompanionTheory.SW.PiLocalization₂.isHermND_blockOne_algebraMap F E σ M J D.hJ t ht
   refine ⟨?_, ?_⟩
   · intro x hx c X S hS
-    obtain ⟨h00, h0j, hij⟩ := GlobalTheory.T.gram_block_one_first_vector_formula F E σ M J t n R ((a x : Rˣ) : R) c X
+    obtain ⟨h00, h0j, hij⟩ := _root_.GlobalTheory.CompanionTheory.SW.PiLocalization₂.gramR_vec F E σ M J t n R ((a x : Rˣ) : R) c X
     rw [← hS] at h00 h0j hij
     have hx0 : (S : Matrix (Fin (n + 1)) (Fin (n + 1)) (R ⊗[F] E)) 0 0 = x ⊗ₜ[F] (1 : E) := by
       rw [h00, ← D.hsq x hx]
@@ -136,7 +137,7 @@ theorem coords : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberFie
     simp only [schurM]
     rw [hc, hij i j, add_sub_cancel_left]
   · intro S X hB hX
-    obtain ⟨h00, h0j, hij⟩ := GlobalTheory.T.gram_block_one_first_vector_formula F E σ M J t n R
+    obtain ⟨h00, h0j, hij⟩ := _root_.GlobalTheory.CompanionTheory.SW.PiLocalization₂.gramR_vec F E σ M J t n R
       ((a (s0 R (S : Matrix (Fin (n + 1)) (Fin (n + 1)) (R ⊗[F] E))) : Rˣ) : R)
       (cvec R t a (S : Matrix (Fin (n + 1)) (Fin (n + 1)) (R ⊗[F] E))) X
     have hH := gram_symm R σ hinv hJ'.1 (vec

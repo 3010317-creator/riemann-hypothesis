@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsNormalFormStabilizerMeasure
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StabilizerDilationWeightsDualIsotropicVector
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StabilizerHaarUnimodularNormalStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StabilizerMeasureNormalisationSymm
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StabilizerHaarUnimodularNormal
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MatGroupHaarUniqueFiniteCompactOpenPos
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -73,7 +73,7 @@ theorem normalFormStabilizerMeasure_eq_any_normalForm : ∀ (k r j : ℕ) (hj : 
   have h2 := normalFormStabilizerMeasure_scalar_le hj z z' _ t.toReal 1 μR hNt hR
   rw [ENNReal.ofReal_one, ENNReal.ofReal_toReal htop.ne] at h1 h2
   have ht1 : t = 1 := le_antisymm h2 h1
-  obtain ⟨hH, -⟩ := GlobalTheory.T.stabilizer_haar_unimodular_normal k r j hj z z' g₀ β c hz hz' hT hg₀
+  obtain ⟨hH, -⟩ := _root_.GlobalTheory.Amp.StabHaar.lebesgue_haar_unimodular_stabilizer k r j hj z z' g₀ β c hz hz' hT hg₀
   obtain ⟨hσ, -⟩ := hH
   exact ⟨by rw [ht, ht1, one_smul], hσ⟩
 

@@ -3,13 +3,15 @@ module
 public import Development.AbelianVarietyTheory.BlockTheory.PoincareCuspForms.TwoLevelLogarithm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLatPIffMulVec
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsIsometryOfSabMap
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLevelChangeTransportersAllComponentsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdentityTransportsComponentToItselfStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLevelComponentTransportCompStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTransportIdentityOfMemComponentGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelActionMulAndFaithfulFiniteGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelComponentTransportReadsCuspFormsConstMulStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniqueUpToTargetGroupStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTransp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLevelChangeTransportersAllComponents
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdentityTransportsComponentToItself
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLevelComponentTransportComp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTransportIdentityOfMemComponentGroup
+public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.SingleIndexPlacesAreTwisted
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelActionMulAndFaithfulFiniteGroup
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelComponentTransportReadsCuspFormsConstMul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniqueUpToTargetGroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -80,13 +82,13 @@ theorem exists_transport : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi
             Submodule.Quotient.mk (p := p.T.Q.l.Mb • (⊤ : Submodule (𝓞 D.host.E) (Lf k))) ⟨_, hw⟩ =
               φ k ((r.lev i g ^ n) ((φ k).symm (Submodule.Quotient.mk w))) := by
   intro D L hT Gi Gl Kc Y cX ex Csz p hp r h hr i v
-  obtain ⟨ψ, hex⟩ := GlobalTheory.T.exists_levelChange_transporters_all_components p hp r h hr i v
-  have uniq := GlobalTheory.T.unique_up_to_target_group p hp r h hr i v ψ
-  have one := GlobalTheory.T.identity_transports_component_to_itself p hp r h hr i v ψ
-  have comp := GlobalTheory.T.isLevelComponentTransport_comp p hp r h hr i v ψ
-  have gam := GlobalTheory.T.isTransport_identity_of_mem_componentGroup p hp r h hr i v ψ
-  obtain ⟨lmul, linj⟩ := GlobalTheory.T.levelAction_mul_and_faithful_finiteGroup p hp r h hr i
-  have c8 := GlobalTheory.T.levelComponentTransport_reads_cuspForms_const_mul p hp r h hr i v ψ
+  obtain ⟨ψ, hex⟩ := _root_.GlobalTheory.ShareOn.exists_transp_all p hp r h hr i v
+  have uniq := _root_.GlobalTheory.ShareOn.IsTransp.uniq p hp r h hr i v ψ
+  have one := _root_.GlobalTheory.ShareOn.isTransp_one p hp r h hr i v ψ
+  have comp := _root_.GlobalTheory.ShareOn.isTransp_comp p hp r h hr i v ψ
+  have gam := _root_.GlobalTheory.ShareOn.isTransp_one_of_mem_Γ p hp r h hr i v ψ
+  obtain ⟨lmul, linj⟩ := _root_.GlobalTheory.LevelFaithful.lev_mul_and_faithful p hp r h hr i
+  have c8 := _root_.GlobalTheory.ShareOn.transp_reads_const_mul p hp r h hr i v ψ
   choose act tr htr using fun (g : p.P.Gp) k => hex (r.lev i g⁻¹) k
   have lev1 : r.lev i 1 = 1 := by
     have e := lmul 1 1

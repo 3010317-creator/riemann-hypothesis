@@ -1,8 +1,10 @@
 module
 
 public import Formalism.SharpRestriction.GlobalSchurBounds.GlobalRankLatticeProofs.UnitTraceSumBounds.SigmaStarUniq
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.DiscrNe
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SigmaStarEx
+public import Formalism.PeriodIntegrals.DiscrNe
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.NonzeroDiscriminants.DiscMain
+public import Formalism.PeriodIntegrals.SigmaStarEx
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ThetaSeriesExistence.SigmaStarEx
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,8 +46,8 @@ import Mathlib.Topology.Sheaves.Init
 
 namespace Formalism.MainNotions.Ext
 
-theorem discrNe_holds : DiscrNe := discrNe'
+theorem discrNe_holds : DiscrNe := _root_.DiscrNeWork.discrNe_all
 
-theorem sigmaStarEx_holds : SigmaStarEx := sigma_star_exists
+theorem sigmaStarEx_holds : SigmaStarEx := _root_.PI.SSE.sigmaStarEx
 
 end Formalism.MainNotions.Ext

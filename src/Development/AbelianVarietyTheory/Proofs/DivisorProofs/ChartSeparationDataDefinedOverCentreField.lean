@@ -5,7 +5,9 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.OrdGeOfForal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EighthPowerThetaCoefficientEqConstMulMonomialStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCommonModule
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFourierTermSystemRegularTraitsGivenChartStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPosMulExtendIntLinearFormStatement
+public import Mathlib.LinearAlgebra.FreeModule.Basic
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPosMulExtendIntLinearForm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsStalkElementsApproxLeadingTermQuotientsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsMonomialTauFirstCoordsOfUnitLastCoordsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PoincareApproxValuesAtPointOfElementsStatement
@@ -84,7 +86,7 @@ theorem isUnit_natCast_of_cyc (n : ℕ) (hn : n ≠ 0) (V : Type) [CommRing V] (
 
 theorem exists_ext_functional (F : Type) [AddCommGroup F] [Module.Free ℤ F] [Module.Finite ℤ F] (P : Submodule ℤ F)
     (f : P →ₗ[ℤ] ℤ) : ∃ c : ℤ, 0 < c ∧ ∃ lam : F →ₗ[ℤ] ℤ, ∀ x : P, lam x = c * f x :=
-  GlobalTheory.T.exists_pos_mul_extend_int_linearForm' F P f
+  _root_.GlobalTheory.exists_pos_mul_extend_int_linearForm F P f
 
 theorem isCone_inst {φ : InvFun ℤ} {X : Type} [AddCommGroup X] (i1 i2 : Module ℤ X) [f1 : @Module.Finite ℤ X _ _ i1]
     [f2 : @Module.Finite ℤ X _ _ i2] {m : ℕ} (gm' : Fin m → @LinearMap.BilinForm ℤ _ X _ (AddCommGroup.toIntModule X))

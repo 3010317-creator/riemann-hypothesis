@@ -5,12 +5,15 @@ public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RowsC
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.SzHypFD
 public import Formalism.SharpRestriction.CuspSpanNormBounds.AdmissibleBoundsFromSource
 public import Formalism.SharpRestriction.CuspSpanNormBounds.LocalBesselAndTopKernel
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DataConditionsOfGlobalAndRealRowsStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GlobalRankNumberBoundsRankClausesFirstHalfStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HypothesesOfGlobalRowsAndNodesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LevelPrimesSizeBoundsColumnDimensionStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.StandingHypothesesHoldFamily
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DataConditionsOfGlobalAndRealRows
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.SecondLabelsNonempty
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GlobalRankNumberBoundsRankClausesFirstHalf
+public import Formalism.SharpRestriction.CuspSpanNormBounds.StandingNumericalData
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HypothesesOfGlobalRowsAndNodes
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LevelPrimesSizeBoundsColumnDimension
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TwoLeRootDiscriminantAndSplitArithmeticCondition
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PgFrameAtRecord
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TwoLeRootDiscriminantAndSplitArithmeticConditionStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,16 +60,16 @@ namespace GlobalTheory.Diag.PG
 theorem lemmaPG_record : Formalism.HermitianLatticesTheory.SiegelMassRatio → Formalism.L2.SG.Pf.SzHypFD.DsigHC → ∀ eps CD : ℝ, 0 < eps → eps < 1 / 52 → 3 ≤ CD → ∀ C' Cl Cg C : ℝ, 40 ≤ Cl → Cl ≤ CD → ∃ x0 : ℝ, ∀ x, x0 ≤ x → ∀ (D : D7) (large₂ : SizeData₂ D), large₂.sc.L = x ^ eps → 8 * large₂.CGam ≤ C' → Ties D → LocalBesselAndTopKernel.FamilyMidVolume D → Glob0 D x eps CD Cg → Nodes D x eps → DuWin D 3 → AdmissibleBoundsFromSource.hyp D large₂ 3 C' Cl Cg (1 / 4) 3 (1 / 2) (4 * Cg + 13) ∧ Formalism.L2.SG.RowsConc.TFrameAt D ∧ C * large₂.sc.L ≤ (D.R.m : ℝ) - 1 ∧ C ≤ (D.R.k : ℝ) := by
   intro hSM hDs eps CD heps0 heps1 hCD C' Cl Cg C hCl40 hClCD
   have hCl0 : (0 : ℝ) < Cl := by linarith
-  obtain ⟨x1, hx1⟩ := GlobalTheory.T.dataConditions_of_global_and_real_rows eps CD heps0 heps1 hCD
-  obtain ⟨x2, hx2⟩ := GlobalTheory.T.hypotheses_of_global_rows_and_nodes eps CD heps0 heps1 hCD C' Cl Cg hCl0 hClCD
-  obtain ⟨x3, hx3⟩ := GlobalTheory.T.eventually_rankNums_imp_parameter_lower_bounds eps CD heps0 heps1 hCD (max C (3 * Real.exp 8))
+  obtain ⟨x1, hx1⟩ := _root_.GlobalTheory.Diag.PG.data_of_rows eps CD heps0 heps1 hCD
+  obtain ⟨x2, hx2⟩ := _root_.GlobalTheory.Diag.PG.standingHypotheses_of_glob0_nodes_Tr_bounds eps CD heps0 heps1 hCD C' Cl Cg hCl0 hClCD
+  obtain ⟨x3, hx3⟩ := _root_.GlobalTheory.Diag.PG.rankNums_first_half eps CD heps0 heps1 hCD (max C (3 * Real.exp 8))
   refine ⟨max x1 (max x2 x3), ?_⟩
   intro x hx D large₂ hL hC' hTies hAdm hG hN hW
   have hx1' : x1 ≤ x := le_trans (le_max_left _ _) hx
   have hx2' : x2 ≤ x := le_trans (le_trans (le_max_left _ _) (le_max_right _ _)) hx
   have hx3' : x3 ≤ x := le_trans (le_trans (le_max_right _ _) (le_max_right _ _)) hx
 
-  obtain ⟨-, hAr⟩ := GlobalTheory.T.two_le_rootDiscriminant_and_split_arithmetic_conditions D
+  obtain ⟨-, hAr⟩ := _root_.GlobalTheory.two_le_rdE_and_arithmeticConditionsS0 D
   have hData : StandingNumericalData D 3 := hx1 x hx1' D Cg 3 hG hN hAr hW
 
   obtain ⟨-, -, -, -, -, hm1, hk, hxe⟩ := hx3 x hx3' _ _ _ _ _ hG.nums
@@ -112,7 +115,7 @@ theorem lemmaPG_record : Formalism.HermitianLatticesTheory.SiegelMassRatio → F
     (⟨hHyp0, hData, by norm_num⟩ : StandingHypotheses D large₂ C' Cl Cg (1 / 4) 3 0 CT0 ∧ StandingNumericalData D 3 ∧ (1 : ℝ) ≤ 3)
 
   have hFr := (GlobalTheory.pgFrame_at_record hSM hDs D large₂ C' Cl Cg (1 / 4) 3 0 CT0 3 hTies hCnt hCl40 h3m h3k hAdm).1
-  have hwin := GlobalTheory.T.levelPrimes_size_bounds_columnDimension hSM hDs D large₂ C' Cl Cg (1 / 4) 3 0 CT0 3 hTies hCnt hCl40 h3m h3k hAdm
+  have hwin := _root_.GlobalTheory.levelPrime_size hSM hDs D large₂ C' Cl Cg (1 / 4) 3 0 CT0 3 hTies hCnt hCl40 h3m h3k hAdm
 
   have hHyp : StandingHypotheses D large₂ C' Cl Cg (1 / 4) 3 (1 / 2) (4 * Cg + 13) :=
     hx2 x hx2' D large₂ (1 / 2) (4 * Cg + 13) hL hC' hG hN hwin

@@ -1,7 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ParBoundW
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SurjectiveOfAdjointSeparatesLabelledPartsStatement
+public import Mathlib.Algebra.Module.LinearMap.Star
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SurjectiveOfAdjointSeparatesLabelledParts
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaChainHeckeParamAddSmulOfAgreeOffSetStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaLiftChainHeckeParameterInjectivePlacewiseStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -62,7 +65,7 @@ theorem ontoAll_of_chainUp : ∀ D : D7, FinDim D → MetEx D → EigSpan D → 
   have hRe : Equivalence R :=
     ⟨fun _ _ _ => rfl, fun h w hw => (h w hw).symm, fun h h' w hw => (h w hw).trans (h' w hw)⟩
   have hlin₀ := GlobalTheory.T.thetaChainHeckeParam_add_smul_of_agree_off_set D c s₀
-  refine GlobalTheory.T.surjective_of_adjoint_separates_labelled_parts (s₀.CC c) (s.CC c) (GlobalTheory.LFun.Fam D.host.E) (GlobalTheory.LFun.Fam D.host.E) ip₀ ip Θ
+  refine _root_.GlobalTheory.ChainOnto.surjective_of_adjoint_separates (s₀.CC c) (s.CC c) (GlobalTheory.LFun.Fam D.host.E) (GlobalTheory.LFun.Fam D.host.E) ip₀ ip Θ
     (fun u B => IsPar u B) (fun x B => IsPar x B) R R (fun B => chainPar c B k)
     hm₀.herm hm₀.pos hm.pos hRe (hEig c hc 0 (Nat.zero_le _) s₀ hs₀) hlin₀.1 hlin₀.2 ?_ ?_ ?_
   · intro B B' h w hw

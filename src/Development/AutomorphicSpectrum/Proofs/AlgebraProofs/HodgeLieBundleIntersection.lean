@@ -1,10 +1,12 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.TrivFlagMod
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ChartBundleExtensionIntersectionStatement
-import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DvrBundleStatementAStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DvrBundleStatementDStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericLinearEquivStatement
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ChartBundleExtensionIntersection
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.SameGenericSymm
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DvrBundleStatementD
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.InstFintypeSumElim
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericLinearEquiv
+import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DvrBundleStatementA
 import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsBundles
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -87,11 +89,11 @@ theorem main : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing
   have sWLie : SameGeneric O x W Lie := fun s hs => ⟨(sLieW s hs).2, (sLieW s hs).1⟩
   have sLaLa : SameGeneric O x La La := fun s hs =>
     ⟨fun v hv => ⟨1, one_ne_zero, by simpa using hv⟩, fun v hv => ⟨1, one_ne_zero, by simpa using hv⟩⟩
-  have h1 := GlobalTheory.T.chart_bundle_extension_intersection O Ω K ι x d r n s VL VH VO La W H T om omHT hm sLaW hHT hom hex k hk1 hk2
+  have h1 := _root_.GlobalTheory.CompanionTheory.Ar.Num.QuotAdd.main O Ω K ι x d r n s VL VH VO La W H T om omHT hm sLaW hHT hom hex k hk1 hk2
     q L Q hQ
-  have h2 := (GlobalTheory.T.dvr_bundle_statement_a O Ω K ι x d r VL La W Lie hm sLaW sWLie k hk1 hk2 q L Q hQ).1
-  have h3 := (GlobalTheory.T.dvr_bundle_statement_a O Ω K ι x d r VL Lie W Lie hm sLieW sWLie k hk1 hk2 q L Q hQ).2
-  have h4 := (GlobalTheory.T.dvr_bundle_statement_d O Ω K ι x d r VL La Lie w hw hm hsc k hk1 hk2 q L Q hQ).1
+  have h2 := (_root_.GlobalTheory.CompanionTheory.Ar.Num.Cocycle.main O Ω K ι x d r VL La W Lie hm sLaW sWLie k hk1 hk2 q L Q hQ).1
+  have h3 := (_root_.GlobalTheory.CompanionTheory.Ar.Num.Cocycle.main O Ω K ι x d r VL Lie W Lie hm sLieW sWLie k hk1 hk2 q L Q hQ).2
+  have h4 := (_root_.GlobalTheory.CompanionTheory.Ar.Num.Constants.main O Ω K ι x d r VL La Lie w hw hm hsc k hk1 hk2 q L Q hQ).1
   have hcarry : ∀ s, mseg x s ≠ 0 → ∀ v,
       ((LinearEquiv.smulOfNeZero Ω VL _ hw') v ∈ Lie.lat s ↔ v ∈ La.lat s) ∧
         ((LinearEquiv.smulOfNeZero Ω VL _ hw') v ∈ Lie.lat s ↔ v ∈ La.lat s) := by
@@ -106,7 +108,7 @@ theorem main : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing
   have hQ' : Q.IsHomogeneous (d - (k - 1)) := by
     have : d - (k - 1) = d + 1 - k := by omega
     rwa [this]
-  have h5 := (GlobalTheory.T.same_generic_linear_equiv O Ω K ι x d hm r VL VL (LinearEquiv.smulOfNeZero Ω VL _ hw') La La Lie Lie
+  have h5 := (_root_.GlobalTheory.CompanionTheory.Ar.Num.CkTransport.main O Ω K ι x d hm r VL VL (LinearEquiv.smulOfNeZero Ω VL _ hw') La La Lie Lie
     sLaLa hcarry).2 (k - 1) (psum (Fin r) ℤ (k - 1)) (psum_isSymmetric _ _ _)
     (isHomogeneous_psum r (k - 1)) (by omega) q L Q hQ' w hw
   rw [h5]

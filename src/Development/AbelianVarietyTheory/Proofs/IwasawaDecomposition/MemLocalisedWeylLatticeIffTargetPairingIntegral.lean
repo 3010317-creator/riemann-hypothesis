@@ -6,7 +6,8 @@ public import Formalism.LocalToGlobal.KernelLattices.ColumnData.KerEntHyp
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DominantWeightPolynomialFunctionalMinorsStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemLocalizedWeylLatticeIffDetTwistedEvalStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SectionPolynomialEqOfFunctionEqCoefficientStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeylLatticeDualityPadicMinorsStatement
+public import Formalism.UnipotentAdelicQuotients.WeylLatDual
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MainProof
 public import Formalism.LocalToGlobal.Divisibility.NumbersLemmas
 import Formalism.LocalToGlobal.KernelLattices.ColumnData.DiagramFitsSourceRank
 import Mathlib.Algebra.Order.Floor.Extended
@@ -58,7 +59,7 @@ theorem mem_locW_iff_prTC_le_one : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X
   have hfits := nuFits_tgt (I.rec7 l Z) u i hi
   have hF := canT_of Pl Bs (GlobalTheory.T.toy_entPl_canOnto _ Pl) u μ w i hi c' (secC O u μ (i + 1) v')
   have hspec := canInv_spec (I.rec7 l Z) w _ (nuD (I.rec7 l Z) u i) _ hF
-  have hS := GlobalTheory.T.weyl_lattice_duality_padic_minors ((I.rec7 l Z).what₂.places.resChar w) _ (I.rec7 l Z).what₂.Tau (tauPl (I.rec7 l Z))
+  have hS := _root_.GlobalTheory.WeylLatDualProof.mainProof ((I.rec7 l Z).what₂.places.resChar w) _ (I.rec7 l Z).what₂.Tau (tauPl (I.rec7 l Z))
     (Formalism.L2.DIV.tauPl_bijective _) _ (nuD (I.rec7 l Z) u i) _ hfits.1 hfits.2
     (canInv (I.rec7 l Z) w _ (nuD (I.rec7 l Z) u i) (tgtFun Pl Bs u μ w i c' (secC O u μ (i + 1) v')))
   have hpol := GlobalTheory.T.sectionPolynomial_eq_of_function_eq_coefficient I hOk hPins l Z Y.Qp O hStd u μ i hi z v' hev

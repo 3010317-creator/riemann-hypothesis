@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLatPIffMulVec
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrincipalCongruenceBackTriangularFrameStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.UnFree
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrincipalCongruenceBackTriangularFrame
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.NumericalConsequencesOfPins
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CoreArithmeticGroupContainsPrincipalCongruence
 import Mathlib.Algebra.Order.Floor.Extended
@@ -94,7 +95,7 @@ theorem sub_mem_half_smul_latP : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies 
   have hU := (Formalism.L2.PjFree.isUnf_ofPj _).2 (hL.unf _ hj _ hσ)
   obtain ⟨th, hrk, hth, hD⟩ := hL.dictU _ hj _ hσ
   obtain ⟨⟨x0, hx0, -⟩, -⟩ := hD.2.2
-  obtain ⟨η, hηU, hηc, b, hb, hx⟩ := GlobalTheory.T.exists_principal_congruence_back_triangular_frame _ _ _ _ _ _ _ _ _ hσ hU hA (hnum _ hj).2.1 k γ hγ (x0 k) (hx0 k).1
+  obtain ⟨η, hηU, hηc, b, hb, hx⟩ := _root_.GlobalTheory.CongrOrbit.exists_congr_back _ _ _ _ _ _ _ _ _ hσ hU hA (hnum _ hj).2.1 k γ hγ (x0 k) (hx0 k).1
   have hηΓ : η ∈ ((uAt r v i).X k).Γ :=
     GlobalTheory.PrincCore.hasPrinc_core D _ hL _ hj _ hσ k η hηU hηc
   have hmem : (η * γ)⁻¹ ∈ ((uAt r v i).X k).Γ := inv_mem (mul_mem hηΓ hγ)

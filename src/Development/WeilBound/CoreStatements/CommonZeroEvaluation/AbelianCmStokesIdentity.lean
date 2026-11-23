@@ -10,16 +10,13 @@ public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.StatementsMuM
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.StatementsStokesLimitTVb
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.StatementsTopNMixed
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.DegreeGenericOfDegree
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LeviChartRegularityStatementHoldsStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LocalOrbitChartStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MeasureLimitStatementHoldsStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ModelPointsIntegrableStatementHoldsStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.StokesLimitStatementHoldsStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TopMixedLimitOfResolutionStatement
-import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PCriticalFlatNotInjective
-import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PHolomorphicKernelFibre
-import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PInjectiveHolomorphicInverse
-import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PInjectiveHolomorphicJacobianNeZero
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LeviChartRegularityStatementHolds
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LocalOrbitChart
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MeasureLimitStatementHolds
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ModelPointsIntegrableStatementHolds
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.StokesLimitStatementHolds
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.BlowupProjections.BlowupProjStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TopMixedLimitOfResolution
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PGenDegGeomDeg
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.PIsomInvariance
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PAPrimeChartLevi
@@ -27,21 +24,13 @@ public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PAPrimeChartL
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PAPrimeChartMargin
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PBdPtsNull
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PBoundaryNull
-import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PBoundaryPtsNull
-import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PChartVelLift
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PDivisorPreimageNull
-import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PHermExtend
-import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PHoloInjDerivInj
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PModelLogIntegrable
-import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PMuRegSmooth
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PNbarChartSemipos
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PNbarSemipos
-import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PNbarSmooth
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.POmNPoly
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.POmNVbInt
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PParamImageNull
-import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PProjHoloLocal
-import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PProjSmoothAlong
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PPtsBddConv
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PPtsMonoSemipos
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PRegAboveWeight
@@ -53,15 +42,27 @@ public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PStokesLimitT
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PStokesStep
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PStokesTelescope
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PTopNMixedExpand
-import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PTopNPoly
-import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PTpCuspIntegrable
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PTpIntegrandLimit
-import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PVertFactorPos
-import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PVertFactorSmooth
 public import GroundTheory.HeightsAndTheta.Heights.Intersections.PConsequences
 public import GroundTheory.HeightsAndTheta.Heights.Intersections.PPtsAbsIntegrable
 public import GroundTheory.HeightsAndTheta.Heights.Intersections.PPtsAbsMeasurable
 public import GroundTheory.HeightsAndTheta.Heights.SemipositiveHeights.PtsIntegrable
+import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PCriticalFlatNotInjective
+import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PHolomorphicKernelFibre
+import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PInjectiveHolomorphicInverse
+import GroundTheory.HeightsAndTheta.Heights.ComplexAnalyticSets.PInjectiveHolomorphicJacobianNeZero
+import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PBoundaryPtsNull
+import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PChartVelLift
+import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PHermExtend
+import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PHoloInjDerivInj
+import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PMuRegSmooth
+import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PNbarSmooth
+import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PProjHoloLocal
+import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PProjSmoothAlong
+import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PTopNPoly
+import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PTpCuspIntegrable
+import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PVertFactorPos
+import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PVertFactorSmooth
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -150,7 +151,7 @@ theorem stokes_of_statements (hOrb : LocalOrbitChart.Statement)
   exact StokesLimitPos.proof hG hTel hNs hTp hT hEps II (CMType H) K J Ω W Dc O Lt X B a hFull.1 hPos hB hAr hyp
 
 theorem stokes_of_model : PB.Inputs → Prov.An → ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement → Flat.GagaSections → GlobalTheory.Published.SemiAbelianHomExtension → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] [IsAbelianGalois ℚ E] (H : Host E) (D : Datum H) (Xo : ∀ l : Tor.Level H, Moduli D l) (l : Tor.Level H) (c : Coeff l) (Y : Model (Xo l) c (algebraMap (𝓞 c.F) c.F)) (II : IntersectionSystem) (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (Ω : Type) [Field Ω] [Algebra ℚ Ω] (W : CMType H → Type) [∀ τ, AddCommGroup (W τ)] [∀ τ, Module Ω (W τ)] (Dc : ComponentData II (CMType H) K J Ω W) (Hd : HodgeData Dc) (S₀ : Finset ℕ) (Or : CptOrigin Y S₀ Dc Hd) (B₁ : ℕ) (U : ((Σ k, J k) → ℂ) → ℝ), IsFullIntersectionSystem II → admitted Xo l c Y Or B₁ → Or.𝔐.IsCuspWeight Or.sm U → ∀ [DecidableEq (CMType H)] (O Lt : Type) [CommRing O] [AddCommGroup Lt] [Module O Lt] (X : ComponentSetting Dc O Lt), X.H = Hd → (∀ z ∈ Dc.Xo, X.Cd.cuspWeight z = U z) → CuspBundlePos X → ∀ B : ℕ, 4 * Dc.f + 2 ≤ B → ArLimExists X.H X.S B → Top.StokesAt X B :=
-  stokes_of_statements GlobalTheory.T.local_orbit_chart_statement_holds GlobalTheory.T.levi_chart_regularity_statement_holds (margin_of_orbit GlobalTheory.T.local_orbit_chart_statement_holds) GlobalTheory.T.model_points_integrable_statement_holds GlobalTheory.T.top_mixed_limit_of_resolution GlobalTheory.T.stokes_limit_statement_holds GlobalTheory.T.measure_limit_statement_holds
+  stokes_of_statements _root_.GlobalTheory.CompanionTheory.Ar.Giv.localOrbitChart _root_.GlobalTheory.CompanionTheory.Ar.Giv.nbarLeviChartReg (margin_of_orbit _root_.GlobalTheory.CompanionTheory.Ar.Giv.localOrbitChart) _root_.GlobalTheory.CompanionTheory.Ar.Giv.modelPtsIntegrable _root_.GlobalTheory.CompanionTheory.Ar.Giv.mixed_limit _root_.GlobalTheory.CompanionTheory.Ar.Giv.VbLimit.stokesLimitTVb _root_.GlobalTheory.CompanionTheory.Ar.Giv.muMeasureLimit
 
 end ModelDimension.OrbitMargin
 

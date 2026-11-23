@@ -2,7 +2,7 @@ module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsTorsionFieldExtStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsTorsionFieldExt
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsUnitOfPowEqOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -121,8 +121,8 @@ theorem cmTorsionIsometry_transport_geometricPoint (hL : Out.Laws) {E : Type} [F
     have h : ∀ y, r y = (Over.homMk (spMap l) rfl : Over.mk (spMap l ≫ x) ⟶ Over.mk x) ≫ y :=
       fun y => Over.OverMorphism.ext (hr y)
     exact ⟨fun c y => by rw [h, h, Category.assoc], fun s => by rw [h, ← Category.assoc, comp_toUnit]⟩
-  obtain ⟨r, hr, rinj, ronto, rw'⟩ := GlobalTheory.T.exists_torsion_injective_weil_compatible hL S P F Ω i x
-  obtain ⟨q, hq, qinj, qonto, qw⟩ := GlobalTheory.T.exists_torsion_injective_weil_compatible hL S P F k j x
+  obtain ⟨r, hr, rinj, ronto, rw'⟩ := _root_.GlobalTheory.exists_torsion_fieldExt hL S P F Ω i x
+  obtain ⟨q, hq, qinj, qonto, qw⟩ := _root_.GlobalTheory.exists_torsion_fieldExt hL S P F k j x
   obtain ⟨I₀, h₀⟩ := TateIsoFieldExt.down D i r (act := fun c y => y ≫ act c)
     (e := OnTors fun n y y' c => Out.WeilIs P.A P.L n y y' (unitOn c)) rinj (onto_tors r rinj ronto)
     (key Ω i r hr).1 (fun c => by haveI := hm c; exact MonObj.one_comp (act c))

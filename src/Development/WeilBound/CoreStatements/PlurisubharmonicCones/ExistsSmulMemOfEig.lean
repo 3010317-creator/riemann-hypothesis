@@ -2,7 +2,9 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsAdapted
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AbelianPartHeightLinear
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.NormalizedDegreeOrthogonalSumStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsOrthFull
+public import Mathlib.Order.CompletePartialOrder
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.NormalizedDegreeOrthogonalSum
 public import GroundTheory.HeightsAndTheta.Heights.CountingLowerBound.PInteriorDichotomy
 public import GroundTheory.HeightsAndTheta.Heights.HeightsOfSets.DegreeTopEqArithDegree
 import Mathlib.Algebra.Order.Floor.Extended
@@ -243,7 +245,7 @@ theorem eig_facts (hcard : 2 * Fintype.card Ψ = Module.finrank ℚ E)
       (CanonicalFiltration.rank_saturation A.Bq _).le) (mono (h1 s))
   refine ⟨h5, fun s => div_le_div_of_nonneg_right
     (CanonicalFiltration.degree_le_of_le_of_rank_eq A.Bq (h1 s) (h5 s).symm) (Nat.cast_nonneg _), ?_⟩
-  have hI := GlobalTheory.T.normalized_degree_orthogonal_sum L A.Bq (Ψ ⊕ Ψ) (fun s => eigSp ρM (intLift (A.σ s))) fun s s' h =>
+  have hI := _root_.GlobalTheory.CompanionTheory.Ar.OrthSum.normDegree_rank_iSup L A.Bq (Ψ ⊕ Ψ) (fun s => eigSp ρM (intLift (A.σ s))) fun s s' h =>
     orthAt_saturation A.Bq (F := A.img s) (F' := A.img s') (by
       rw [A.img_eq, A.img_eq]
       exact A.orth s s' h) (h2 s) (h2 s')

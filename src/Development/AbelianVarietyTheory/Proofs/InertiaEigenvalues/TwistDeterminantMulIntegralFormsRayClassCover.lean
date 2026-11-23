@@ -3,9 +3,13 @@ module
 public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.TwistSeries
 public import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.ExistsXiOKEvenRamified
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsOpenCongruenceIdelesAndRealFiniteParts
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.WeberValuesMemOfContainsRayFieldStatement
+public import Development.AbelianVarietyTheory.Definitions.HeightFunctions.XiValIffXiAt
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.RayFieldTheta
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.WeberValuesMemOfContainsRayField
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HeckeCharacterTwistProps
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LevelCoverFormsMulComponentFunction
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IMemSiegel
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CompletedLatticeEqAdelicCompletionAndGramStatement
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsAlgebraMapOfSigRFixed
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUnitaryOfTraceEq
@@ -47,9 +51,7 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Definitions.Divisors.PerCEmb
 import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.DatEqZero
-public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IMemSiegel
 import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsStabForm
-public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
 import Development.AbelianVarietyTheory.Definitions.ThetaValues.PolyDerivSmulLetter
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsInertTop
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ValRingLocRing
@@ -85,7 +87,7 @@ theorem mul_twist_mem_intForms : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, 
     have hb : D.host.sqrtMinusD ^ 2 = -(D.host.d : D.host.E) := D.host.sqrtMinusD_sq
     simpa using hb
   obtain ⟨φK, hφK⟩ := hRay
-  have hW := (GlobalTheory.T.weberValues_mem_of_containsRayField D.host.E T.Q.H D.host.K C.d.c₂.F φK C.d.c₂.F.val.toRingHom (Formalism.L2.Pj.LPb.finrank_K D) hsq
+  have hW := (_root_.GlobalTheory.FieldSize.WeberTransport.weberIn_of_containsRayField D.host.E T.Q.H D.host.K C.d.c₂.F φK C.d.c₂.F.val.toRingHom (Formalism.L2.Pj.LPb.finrank_K D) hsq
     C.d.l₂.M hM3 hφK).1
   have hWc : GlobalTheory.FinalJoin.WeberIn T.Q.H C.d.c₂.F C.d.l₂.M := fun P hP' => by
     have hsub : ∀ z ∈ C.d.c₂.F.val.toRingHom.toRatAlgHom.fieldRange, z ∈ C.d.c₂.F := fun z hz' => by

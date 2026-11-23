@@ -6,21 +6,29 @@ public import Development.AbelianVarietyTheory.Definitions.RegularCharts.BaseNor
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.LawsFieldsSeparately
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ContinuousRmulPair
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsUnitGramFrameBorelChange
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.AbsGeneratorRatioEqOneOfUnitFrameMoveStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ActLevFullLevelGroupFramedPointsStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsEqConstMulOfForallExistsNormEqStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsIsometryTriangularPeriodsOfFramePointMoveStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsRationalIsometryOfTraceIsometryStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FramesDifferByIsometryAndTriangularOfPeriodsStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MemCuspFormsOfMultipleRationalIsometryMoveStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NotAntiIsometryOfTriangularRelatedPeriodsStatement
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsFormExtendToAllLattices
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.IsStabiliserInvariantPullBoundedSection
+public import Formalism.LocalToGlobal.ProjectiveLattices.IsLevMove
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.AbsGeneratorRatioEqOneOfUnitFrameMove
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsStabForm
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ActLevFullLevelGroupFramedPoints
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsEqConstMulOfForallExistsNormEq
+public import Formalism.LocalToGlobal.ProjectiveLattices.UnFree
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsIsometryTriangularPeriodsOfFramePointMove
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.Signature
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsRationalIsometryOfTraceIsometry
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FramesDifferByIsometryAndTriangularOfPeriods
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MemCuspFormsOfMultipleRationalIsometryMove
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NotAntiIsometryOfTriangularRelatedPeriods
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FiniteDimensionalOfLeHolSub
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedModuliAlgebraicLawsChartWeightIntegrality
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RelabelEmbeddingsGoodBijectiveConjCompat
 public import Formalism.LocalToGlobal.ProjectiveLattices.FreeBridge
 public import Formalism.LocalToGlobal.ProjectiveLattices.SpMapAlgHomId
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.OntoStatementPfE
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsFormExtendToAllLattices
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.IsStabiliserInvariantPullBoundedSection
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RelabelEmbeddingsGoodBijectiveConjCompat
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,7 +64,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.OntoStatementPfE
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.PairUnfoldPfA
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FourierCoefficientDomain
 
@@ -83,9 +90,9 @@ theorem exists_match (hσ : Formalism.L2.PjFree.GoodEmb c σ) (hU : Formalism.L2
     (hx : IsUnitFr (U.X k) x.1) (hx' : IsUnitFr (U.X k') x'.1) :
     ∃ (a : GL (Fin r) E) (h : IsMatch (U.X k) (U.X k') a), ∃ b ∈ Bor (U.X k').Ψ r,
       x'.1 = rmul (lact a (castFr h.psi x.1)) b ∧ (∀ τ i, ‖b τ i i‖ = 1) ∧ ∀ j, cabs (t j : CAt σ) = 1 := by
-  obtain ⟨gam, A, htr, hA0, hA, hAt⟩ := GlobalTheory.T.exists_isometry_triangular_periods_of_framePointMove E H Dw l Xo c σ r U hσ hU ρ ν k k' x x' y' t hm hb
-  have hgen := GlobalTheory.T.abs_generatorRatio_eq_one_of_unitFrame_move E H Dw l Xo c σ r U hσ hU ρ ν k k' x x' y' t hm hb hx hx'
-  obtain ⟨a, ε, hε, hξ, hav, hlat, hiso⟩ := GlobalTheory.T.exists_rational_isometry_of_trace_isometry E r (U.X k) (U.X k') (hxi k k') gam htr
+  obtain ⟨gam, A, htr, hA0, hA, hAt⟩ := _root_.GlobalTheory.LevelCusp.exists_isometry_tri_of_frMove E H Dw l Xo c σ r U hσ hU ρ ν k k' x x' y' t hm hb
+  have hgen := _root_.GlobalTheory.LevelCusp.cabs_gen_eq_one_of_move E H Dw l Xo c σ r U hσ hU ρ ν k k' x x' y' t hm hb hx hx'
+  obtain ⟨a, ε, hε, hξ, hav, hlat, hiso⟩ := _root_.GlobalTheory.TraceIsometry.exists_gl_of_trace_isometry E r (U.X k) (U.X k') (hxi k k') gam htr
   obtain ⟨hbij, hrt, -, -⟩ := GlobalTheory.Relab.relab_good E H l c σ hσ
   obtain ⟨hrr, hty, -⟩ := hU
   have hΨ : (U.X k).Ψ = (U.X k').Ψ := Finset.ext fun τ => ((hty k).2 τ).trans ((hty k').2 τ).symm
@@ -108,7 +115,7 @@ theorem exists_match (hσ : Formalism.L2.PjFree.GoodEmb c σ) (hU : Formalism.L2
   rcases hε with rfl | rfl
   · have h : IsMatch (U.X k) (U.X k') a :=
       ⟨hΨ, hp, by rw [hξ, one_mul], fun u v => by rw [hiso, one_mul], hlat⟩
-    obtain ⟨b, hb, hxb, hu⟩ := GlobalTheory.T.frames_differ_by_isometry_and_triangular_of_periods E r _ _ a h (fun τ => Dw.mult (e.symm τ)) m1 m2 x.1 x.2 x'.1 x'.2
+    obtain ⟨b, hb, hxb, hu⟩ := _root_.GlobalTheory.PeriodBorel.borel_of_periods E r _ _ a h (fun τ => Dw.mult (e.symm τ)) m1 m2 x.1 x.2 x'.1 x'.2
       (fun τ => A (e.symm τ)) (fun τ => hA0 _) hrel
     obtain ⟨h1, h2⟩ := hu hx hx'
     refine ⟨a, h, b, hb, hxb, h1, fun j => ?_⟩
@@ -117,7 +124,7 @@ theorem exists_match (hσ : Formalism.L2.PjFree.GoodEmb c σ) (hU : Formalism.L2
     · have := h2 (e τ) i (by rw [e.symm_apply_apply]; exact i.2)
       rw [e.symm_apply_apply, hAt] at this
       exact this
-  · exact (GlobalTheory.T.not_antiIsometry_of_triangular_related_periods E r _ _ hΨ hp hr a hiso (fun τ => Dw.mult (e.symm τ)) m1 m2 x.1 x.2 x'.1 x'.2
+  · exact (_root_.GlobalTheory.AntiIsom.not_antiIsometry E r _ _ hΨ hp hr a hiso (fun τ => Dw.mult (e.symm τ)) m1 m2 x.1 x.2 x'.1 x'.2
       (fun τ => A (e.symm τ)) (fun τ => hA0 _) hrel).elim
 
 theorem laU_match {k k' : U.Comp} {a : GL (Fin r) E} (h : IsMatch (U.X k) (U.X k') a)
@@ -135,7 +142,7 @@ theorem rdU_mem_SS (hσ : Formalism.L2.PjFree.GoodEmb c σ) (hU : Formalism.L2.P
     Formalism.L2.PjFree.rdU U g k ∈ (U.X k).SS (Formalism.L2.PjFree.laU U w n k) := by
   have hsec := hU.2.2.2.2.1 w n hD g hg k
   obtain ⟨hun1, hun2⟩ := GlobalTheory.FrameNorm.exists_unitFr_frBor E H Dw l Xo c σ r U hσ hU
-  obtain ⟨⟨k', a, h⟩, c₀, hc⟩ := GlobalTheory.T.exists_eq_const_mul_of_forall_exists_norm_eq' (Frame (U.X k).Ψ r)
+  obtain ⟨⟨k', a, h⟩, c₀, hc⟩ := _root_.GlobalTheory.exists_eq_const_mul_of_forall_exists_norm_eq (Frame (U.X k).Ψ r)
     (Σ k' : U.Comp, {a : GL (Fin r) E // IsMatch (U.X k) (U.X k') a}) (U.X k).dom (FourierCoefficientDomain.isOpen_dom _)
     (GlobalTheory.frames_isConnected E r (U.X k)).isPreconnected (GlobalTheory.frames_isConnected E r (U.X k)).nonempty
     (Formalism.L2.PjFree.rdU U g k) (fun i x => Formalism.L2.PjFree.rdU U f i.1 (lact i.2.1 (castFr i.2.2.psi x))) hsec.1
@@ -169,7 +176,7 @@ theorem rdU_mem_SS (hσ : Formalism.L2.PjFree.GoodEmb c σ) (hU : Formalism.L2.P
         hQ.2.1 _ (h.mem_dom hx) _ (GlobalTheory.Dict.Pull.cast_bor h.psi hb₀),
         GlobalTheory.Dict.Pull.cast_bchar h.psi (laU_match h w n), norm_mul, norm_mul] at v5
       exact mul_left_cancel₀ (norm_ne_zero_iff.2 (AR.Up.OntoE.bchar_ne _ _ hb₀)) v5)
-  exact GlobalTheory.T.mem_cuspForms_of_multiple_rational_isometry_move E r _ _ a h _ _ (laU_match h w n) _ _ c₀ hsec (hfc k') hc
+  exact _root_.GlobalTheory.LevelCusp.mem_SS_of_isMatch E r _ _ a h _ _ (laU_match h w n) _ _ c₀ hsec (hfc k') hc
 
 end Free
 
@@ -187,7 +194,7 @@ theorem GlobalTheory.LevelCusp.actLev_mem_cuspA : ∀ (D : D7) (T : Top D) (h : 
     rw [(hp.2.2.2 j hj).1, (hp.2.2.2 j hj).2.1]
     have := hj.1; have := hj.2; have := D.R.m_add_three_le_k
     simp only [Ranks.sigW]; omega
-  have hL := GlobalTheory.T.actLev_full_level_group_framedPoints D T.Q j hpq hp.2.1.2
+  have hL := _root_.GlobalTheory.FullLevelAction.actLev_levFull D T.Q j hpq hp.2.1.2
   obtain ⟨hs, hc⟩ := (mem_cusp _ _ _ _ _ _).1 hf
   have hg : actLev (Xo := T.Q.Xo j) T.Q.c (levFull (T.Q.Dw j) T.Q.l) γ f ∈ sec (T.Q.Xo j) T.Q.c (wtA w) w.n :=
     actL_mem _ _ _ _ hL.total hL.nat hL.bor _ γ hs

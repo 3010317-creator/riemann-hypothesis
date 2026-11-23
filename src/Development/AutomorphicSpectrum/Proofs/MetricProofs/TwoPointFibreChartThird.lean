@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsFibreChartIff
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BaseChartFlagAnalyticMapStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsPeriodOn
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BaseChartFlagAnalyticMap
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MinorIJEqSubmatrix
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SmoothMinorOfSmoothMatrix
 import Mathlib.Algebra.Order.Floor.Extended
@@ -79,7 +80,7 @@ theorem contDiffOn_gram_plane : ∀ (K : Type) [Fintype K] (ι : K → Type) [�
   intro K _ ι _ Φ _ y Ψ _ _ N j M n d BM FA τ a b ca cb _ _ _ _ X q Un Gn ΦYn ΦWn l H bp hUn hF r s
   obtain ⟨hH, hbp, hch, hO, hGn, -, -⟩ := hF
   have hGs : ∀ r s, ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun w => BM.G l τ (bp w) r s) Un :=
-    GlobalTheory.T.base_chart_flag_analytic_map K ι Φ y Ψ N j M n d BM l τ Un bp hUn hbp hch (fun w hw => (hO w hw).1)
+    _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.Fib.contDiffOn_gram_comp_basePoint K ι Φ y Ψ N j M n d BM l τ Un bp hUn hbp hch (fun w hw => (hO w hw).1)
   have hMs : ∀ r s, ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞)
       (fun w => ((H τ w)ᴴ * BM.G l τ (bp w) * H τ w) r s) Un :=
     GramPlane.contDiffOn_conj_mul_mul hUn (H τ) (fun w => BM.G l τ (bp w)) (hH τ) hGs

@@ -4,12 +4,15 @@ public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsUnitOf
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Mathlib.RingTheory.RingHom.Smooth
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AlgebraicIndependentOfAdjoinStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsPermNormalizedMinorsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalizationClosureEqualStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalizationClosureSmoothStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LuDecompositionOfMinorsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NormalizedMinorExtendsStatement
+public import Mathlib.FieldTheory.IntermediateField.Adjoin.Defs
+public import Mathlib.RingTheory.AlgebraicIndependent.Defs
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AlgebraicIndependentOfAdjoin
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsPermNormalizedMinors
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProdUpdateDiv
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalizationClosureEqual
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalizationClosureSmooth
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LuDecompositionOfMinors
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NormalizedMinorExtends
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,7 +68,7 @@ theorem exists_cell {F : Type} [Field F] (O : Subring F) [IsLocalRing O] {n r : 
     (hN : ∀ a b, N a b ∈ O) (hNA : N * A = 1) (Y : Matrix (Fin r) (Fin r) F)
     (hs : ∀ i : Fin r, ∃ J, NormAt O (A * Y) ((i : ℕ) + 1) i.2 J) :
     ∃ w : Equiv.Perm (Fin r), ∀ (k : ℕ) (hk : k ≤ r), NormAt O Y k hk (w ∘ Fin.castLE hk) := by
-  refine GlobalTheory.T.exists_perm_normalized_minors O Y (fun k hk I' I => GlobalTheory.T.normalized_minor_extends O Y k hk I' I) fun k hk => ?_
+  refine _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.Sm.Cell.exists_perm_normAt O Y (fun k hk I' I => _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.Sm.Cell.normAt_exchange O Y k hk I' I) fun k hk => ?_
   cases k with
   | zero => exact ⟨Fin.elim0, normAt_zero O Y _⟩
   | succ k =>
@@ -99,7 +102,7 @@ theorem big_cell_smooth : ∀ (Ω : Type) [Field Ω] (S : Type) [Fintype S] (r n
       rw [← hB]
       exact ⟨hJ0 ⟨s, i'⟩, hJr ⟨s, i'⟩⟩
   choose w hw using hw
-  have hlu := fun s => GlobalTheory.T.lu_decomposition_of_minors ((Y s).submatrix (w s) id) fun k hk => (hw s k hk).1
+  have hlu := fun s => _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.Sm.Cell.exists_lu_of_leading_minors ((Y s).submatrix (w s) id) fun k hk => (hw s k hk).1
   choose C V hC hV0 hV1 hCV using hlu
 
   let v : GenIx r → GenField Ω r := fun q => V q.1 q.2.1.1 q.2.1.2
@@ -186,7 +189,7 @@ theorem big_cell_smooth : ∀ (Ω : Type) [Field Ω] (S : Type) [Fintype S] (r n
       exact mul_mem (Subring.subset_closure (Or.inl (hyA ⟨s, k⟩ _))) (Subring.subset_closure (Or.inr ⟨_, rfl⟩))
 
   have hv : AlgebraicIndependent Ω v := by
-    refine GlobalTheory.T.algebraic_independent_of_adjoin _ v (genU_indep Ω r) fun q => ?_
+    refine _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.Sm.Cell.algebraicIndependent_of_mem_adjoin_range _ v (genU_indep Ω r) fun q => ?_
     rw [← genU_gen]
     have hmem : ∀ s l k, V s l k ∈ IntermediateField.adjoin Ω (Set.range v) := fun s l k => by
       rcases lt_trichotomy l k with h | h | h
@@ -200,7 +203,7 @@ theorem big_cell_smooth : ∀ (Ω : Type) [Field Ω] (S : Type) [Fintype S] (r n
     · rw [← hCV q.1]
       congr 1
 
-  have hL := GlobalTheory.T.localization_closure_equal A B tq htq0 htqA htqB hAB hBA
+  have hL := _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.Sm.Cell.locSub_eq_of_inverse_family A B tq htq0 htqA htqB hAB hBA
   have htA : (∏ q, tq q) ∈ A := A.prod_mem fun q _ => htqA q
   have hinv : (∏ q, tq q)⁻¹ = ∏ q, (tq q)⁻¹ := (Finset.prod_inv_distrib _).symm
   refine ⟨∏ q, tq q, htA, Finset.prod_ne_zero_iff.2 fun q _ => htq0 q, hAO htA, ?_, ?_⟩
@@ -211,7 +214,7 @@ theorem big_cell_smooth : ∀ (Ω : Type) [Field Ω] (S : Type) [Fintype S] (r n
   have gen : ∀ (L : Subring (GenField Ω r)), L = locSub B (∏ q, tq q)⁻¹ → ∀ h : ∀ a ∈ R, i a ∈ L,
       ((i.comp R.subtype).codRestrict L (fun a => h a a.2)).Smooth := by
     rintro _ rfl h
-    refine GlobalTheory.T.localization_closure_smooth R v hv _ ?_ (inv_ne_zero (Finset.prod_ne_zero_iff.2 fun q _ => htq0 q)) h
+    refine _root_.GlobalTheory.CompanionTheory.Ar.FlagBun.Sm.Cell.smooth_locSub_closure R v hv _ ?_ (inv_ne_zero (Finset.prod_ne_zero_iff.2 fun q _ => htq0 q)) h
     rw [hinv]
     exact B.prod_mem fun q _ => htqB q
   exact gen _ hL hR

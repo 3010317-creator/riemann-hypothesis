@@ -4,12 +4,15 @@ public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LastRowM
 public import Development.WeilBound.CoreStatements.PublishedTheorems.JacquetShalikaRigidity.ColumnConjugationMeasure
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAdelicGLHomeomorphInfiniteFinite
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AdelicVectorIntegralProductStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AnnihilatorAdelicLatticeCompactStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanCharacterRealPairingStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BoxFourierIntegralBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteAdelicLatticeOpenCompactStatement
+public import Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.WhittakerVanishingImpliesZero
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AnnihilatorAdelicLatticeCompact
+public import Development.WeilBound.CoreStatements.PublishedTheorems.SmoothVectorEstimates.MirabolicColumnBlock
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanCharacterRealPairing
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BoxFourierIntegralBound
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteAdelicLatticeOpenCompact
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InfiniteVectorMeasureIsAddHaarStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothCutoffTranslateContDiffStatement
+public import Mathlib.Analysis.Calculus.BumpFunction.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,7 +54,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Mathlib.Analysis.Calculus.BumpFunction.Basic
 
 @[expose] public section
 
@@ -243,7 +245,7 @@ theorem inf_ft (h4 : S4) (h8 : S8) {ψ : AddChar (Ad E) ℂ} (hψ : StdPsi ψ) {
     ∃ C : ℝ, ∀ (z : Fin k → Cinf E) (g : GA E k),
       ‖∫ x, (b x : ℂ) * φ (g * (infGL E k (rowGL x))⁻¹) * ψ (sInf E (∑ i, x i * z i)) ∂nuInf E k‖ ≤
         C * ((1 + ‖z‖) ^ M)⁻¹ := by
-  obtain ⟨β, hβ, hψβ⟩ := GlobalTheory.T.archimedean_character_real_pairing (E := E) (k := k) h8 hψ
+  obtain ⟨β, hβ, hψβ⟩ := _root_.GlobalTheory.CompanionTheory.JSPair.exists_pairing (E := E) (k := k) h8 hψ
   haveI := GlobalTheory.T.infinite_vector_measure_isAddHaar E k
   set F : (Fin k → Cinf E) → XB E k := fun x => (b x : ℂ) • Rt E k (infGL E k (rowGL x))⁻¹ φ with hF
   have hFs : ContDiff ℝ ∞ F := GlobalTheory.T.smooth_cutoff_translate_contDiff hφ hb hu
@@ -401,7 +403,7 @@ theorem cut_of (h0 : PositivityTheory.jumpWindows.G0) (h4 : S4) (h8 : S8) (hk : 
       IsUnit (lastEnt t) ∧ repW k w (rowGL t) φ = φ)
     (hsm : ∀ y, etaOf b (latS S B : Set (Af E)) y ≠ 0 → sOf S y ∈ C₀) :
     Cut ψ S U φ (etaOf b (latS S B : Set (Af E))) (sOf S) := by
-  obtain ⟨hLo, hLc⟩ := GlobalTheory.T.finite_adelic_lattice_open_compact S B hBo hBI
+  obtain ⟨hLo, hLc⟩ := _root_.GlobalTheory.CompanionTheory.CutOff.latS_isOpen_isCompact S B hBo hBI
   have hLcl : IsClosed (latS S B : Set (Af E)) := AddSubgroup.isClosed_of_isOpen _ hLo
   have hf : Continuous fun y : Fin k → Ad E => fun i => pFin E (y i) :=
     continuous_pi fun i => (GlobalTheory.CuspRep.GASplit.continuous_pFin E).comp (continuous_apply i)
@@ -504,7 +506,7 @@ theorem cut_of (h0 : PositivityTheory.jumpWindows.G0) (h4 : S4) (h8 : S8) (hk : 
       · by_cases e : v = w
         · subst e; rw [pLoc_sLoc_self]; exact h2 hv
         · rw [pLoc_sLoc_ne e]; exact zero_mem _
-    obtain ⟨C₁, hC₁, hann⟩ := GlobalTheory.T.annihilator_adelic_lattice_compact hψ S hS (latS S B : Set (Af E))
+    obtain ⟨C₁, hC₁, hann⟩ := _root_.GlobalTheory.CompanionTheory.AnnLattice.exists_isCompact_annihilator hψ S hS (latS S B : Set (Af E))
       (fun w hw t ht => hsl w t (fun _ => ht) (fun h => absurd h hw))
       (fun w hw => ⟨_, (hBo w hw).mem_nhds (zero_mem (B w)), fun t ht =>
         hsl w t (fun h => absurd hw h) (fun _ => ht)⟩)
@@ -546,7 +548,7 @@ theorem cut_of (h0 : PositivityTheory.jumpWindows.G0) (h4 : S4) (h8 : S8) (hk : 
       linear_combination (ψ (sInf E (∑ i, pInf E (y i) * zi i)) * ψ (sFin E (∑ i, pFin E (y i) * zf i))) * hφ'
     rw [key, norm_mul]
     have hA : ‖∫ x, A x ∂nuInf E k‖ ≤ C * ((1 + ‖zi‖) ^ M)⁻¹ := hCb zi g
-    obtain ⟨hB1, hB2⟩ := GlobalTheory.T.box_fourier_integral_bound (k := k) hψ.norm hψ.cont (latS S B) hLc hLo (eRow (Af E) k) zf
+    obtain ⟨hB1, hB2⟩ := _root_.GlobalTheory.CompanionTheory.CutOff.FinFT.box_fourier_main (k := k) hψ.norm hψ.cont (latS S B) hLc hLo (eRow (Af E) k) zf
     by_cases hz : zf ∈ Set.pi Set.univ fun _ : Fin k => C₁
     · rw [Set.indicator_of_mem hz]
       calc ‖∫ x, A x ∂nuInf E k‖ * ‖∫ f, Bf f ∂nuFin E k‖

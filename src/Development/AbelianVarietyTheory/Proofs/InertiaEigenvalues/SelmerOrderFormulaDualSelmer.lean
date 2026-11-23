@@ -3,13 +3,13 @@ module
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.VecPairApply
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.PoitouTateNineTermTransgressionZeroApply
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousAlgebraMapPadicInt
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GreenbergWilesPairStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GreenbergWilesPair
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalConditionAboveLSaturatedOfSelmerSetup
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalConditionOrderAboveLFiniteModulesStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalConditionOrderAboveLFiniteModules
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalCountOfSetup
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalDualityPerfectPairFiniteModulesStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalDualityPerfectPairFiniteModules
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NoGaloisInvariantsTorsionCoeffOfSelmerSetup
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PairingEquivariantStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PairingEquivariant
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelmerObstructionLeResidualSelmerSimpleExtension
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -121,7 +121,7 @@ theorem order_formula (hPT : PoitouTateTotallyComplex) (hLF : LocalFiniteness) (
   have hsub : ∀ {M : Type} [AddCommGroup M] [Module Λ M] [TopologicalSpace M] [DiscreteTopology M]
       (π : Representation Λ (G F Ω) M), ContAction π → ∀ U : Subgroup (G F Ω), ContAction (π.comp U.subtype) :=
     fun π h U => h.comp ((continuous_subtype_val.comp continuous_fst).prodMk continuous_snd)
-  have hloc := fun v => GlobalTheory.T.localDuality_perfect_pair_finite_modules hLF hLD hLE F Ω l n (A.1 v) v (A.2 v) Λ W W'
+  have hloc := fun v => _root_.GlobalTheory.LocalPair.local_pair hLF hLD hLE F Ω l n (A.1 v) v (A.2 v) Λ W W'
     (ρ.comp (Dec (F := F) (A.1 v)).subtype) (ρ'.comp (Dec (F := F) (A.1 v)).subtype) P hn (hsub ρ hc _) (hsub ρ' hc' _)
     hl hr (fun g x y => hP g.1 x y)
   have hS : ∀ v, v ∈ hfin.toFinset ∪ (hT.toFinset ∪ Q) ↔ v ∈ placesOver F l ∨ v ∈ T ∨ v ∈ Q := by simp
@@ -130,7 +130,7 @@ theorem order_formula (hPT : PoitouTateTotallyComplex) (hLF : LocalFiniteness) (
   have hnl : ∀ v, v ∈ T ∨ v ∈ Q → v ∉ placesOver F l := fun v h => h.elim (hTl v) (hQl v)
   have b1 : ∀ v ∈ placesOver F l, bkCond ρ A l (T ∪ ↑Q) L v = L v := fun v hv => if_pos hv
   have b2 : ∀ v, v ∈ T ∨ v ∈ Q → bkCond ρ A l (T ∪ ↑Q) L v = ⊤ := fun v hv => (if_neg (hnl v hv)).trans (if_pos hv)
-  obtain ⟨fC, e⟩ := GlobalTheory.T.greenbergWiles_pair_alt hPT hLF hGF hGE F Ω l n Λ W W' ρ ρ' P hn hc hc' hl hr hP
+  obtain ⟨fC, e⟩ := _root_.GlobalTheory.PairFormula.greenbergWiles_pair hPT hLF hGF hGE F Ω l n Λ W W' ρ ρ' P hn hc hc' hl hr hP
     (hfin.toFinset ∪ (hT.toFinset ∪ Q)) A (fun v hv => (hS v).2 (.inl hv))
     (fun v hv => hur v ((hS' v).1 hv).1 ((hS' v).1 hv).2.1 ((hS' v).1 hv).2.2) (bkCond ρ A l (T ∪ ↑Q) L)
     (fun v hv => (if_neg ((hS' v).1 hv).1).trans (if_neg (not_or.2 ((hS' v).1 hv).2))) C (fun y => by
@@ -205,8 +205,8 @@ theorem orderFormula : PoitouTateTotallyComplex → LocalFiniteness → LocalTat
       unfold Ranks.f Ranks.n
       ring
     omega
-  obtain ⟨hc, hc', hP, hU⟩ := GlobalTheory.T.pairing_equivariant_alt D N X bkP i s A κ Q ρ hS hK hD Y Y' β hβ.1
-  have hcount := GlobalTheory.T.localConditionOrder_aboveL_finiteModules D N X bkP i s A κ Q hS hK
+  obtain ⟨hc, hc', hP, hU⟩ := _root_.GlobalTheory.NewPrime.PairEquiv.pairing_equivariant D N X bkP i s A κ Q ρ hS hK hD Y Y' β hβ.1
+  have hcount := _root_.GlobalTheory.LocCountFinite.locCountFin D N X bkP i s A κ Q hS hK
     (GlobalTheory.LocalSaturation.main hLF hLD hLE h4 D N X bkP i s A κ Q hS)
     (GlobalTheory.LocalConditionCount.locCount hLF hLD hLE h4 D N X bkP i s A κ Q hS) Y
   have hko : IsOpen ((κ⁻¹).ker : Set (GE N)) := by

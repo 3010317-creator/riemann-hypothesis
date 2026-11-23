@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LocallyCompactSpaceAxis
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralConjEqOfSemidirectLatticeDatumStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnimodularAndLintegralUnfoldOfLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralConjEqOfSemidirectLatticeDatum
+public import Mathlib.MeasureTheory.Group.FundamentalDomain
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnimodularAndLintegralUnfoldOfLattice
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -83,9 +84,9 @@ theorem lintegral_two_step_unfolding : ∀ (G : Type) [Group G] [TopologicalSpac
   haveI : LocallyCompactSpace M := S.closedM.isClosedEmbedding_subtypeVal.locallyCompactSpace
   haveI := S.haarN
   haveI := S.haarM
-  have hN := (GlobalTheory.T.unimodular_and_lintegral_unfold_of_lattice N ν (Λ.subgroupOf N) DN S.haarN S.domN S.finN).2
-  have hM := (GlobalTheory.T.unimodular_and_lintegral_unfold_of_lattice M π (Λ.subgroupOf M) DM S.haarM S.domM S.finM).2
-  have hC := GlobalTheory.T.lintegral_conj_eq_of_semidirectLatticeDatum G N M Λ ν π DN DM S
+  have hN := (_root_.GlobalTheory.ResLine.RightUnfold.unimodular_and_unfold N ν (Λ.subgroupOf N) DN S.haarN S.domN S.finN).2
+  have hM := (_root_.GlobalTheory.ResLine.RightUnfold.unimodular_and_unfold M π (Λ.subgroupOf M) DM S.haarM S.domM S.finM).2
+  have hC := _root_.GlobalTheory.ResLine.lintegral_conj_eq_of_semiLat G N M Λ ν π DN DM S
   have A : ∀ x : G, ∫⁻ m : M, ∫⁻ u : N, φ (u * m * x) ∂ν ∂π =
       ∫⁻ b in DM, ∫⁻ c in DN, ∑' l : Λ, φ ((b : G)⁻¹ * (c : G)⁻¹ * (l * x)) ∂ν ∂π := by
     intro x

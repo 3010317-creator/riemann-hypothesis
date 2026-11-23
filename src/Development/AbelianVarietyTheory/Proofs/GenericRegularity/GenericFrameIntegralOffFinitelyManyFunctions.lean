@@ -9,16 +9,16 @@ public import Mathlib.Tactic.ENatToNat
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsChartFiniteType
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsFrPtTie
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsIntegralPivotDecomposition
-public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsModelChartGenericPointComponentStatement
-public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.FramedPointIntegralIntegralCellAnyModelStatement
-import Development.AbelianVarietyTheory.Proofs.GenericRegularity.IsCombAtIffCoordinateCombination
-import Development.AbelianVarietyTheory.Proofs.GenericRegularity.IsEigenvectorIffLieBasisCoordinates
-import Development.AbelianVarietyTheory.Proofs.GenericRegularity.LieBasisCoordinatesBijectiveTangent
+public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsModelChartGenericPointComponent
+public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.FramedPointIntegralIntegralCellAnyModel
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.NonemptyLift
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.TieBaseChange
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameChangeCommBaseChange
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameChangeExistsUniqueOfSamePoint
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IntegralFrameChangeIntegralInvertibleMatrix
+import Development.AbelianVarietyTheory.Proofs.GenericRegularity.IsCombAtIffCoordinateCombination
+import Development.AbelianVarietyTheory.Proofs.GenericRegularity.IsEigenvectorIffLieBasisCoordinates
+import Development.AbelianVarietyTheory.Proofs.GenericRegularity.LieBasisCoordinatesBijectiveTangent
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -305,7 +305,7 @@ theorem exists_finset_of_lift (hT : Out.SecTwistSt) (hbc : FrBC Xo c) {Y : Model
   obtain ⟨z₀, hz₀⟩ := hbc R T.Fr ψ y₀
   have ht₀ := GlobalTheory.Reg.MChart.tie_baseChange E H Dw l Xo c _ _ Y M R T.Fr f ψ u y₀ z₀ ht hz₀
   rw [← hf₀, ← eu] at ht₀
-  have hi₀ : Integral T io z₀ := GlobalTheory.T.framedPoint_integral_integralCell_anyModel hT E H Dw l Xo c _ _ Y M T io f₀ ix (fun τ => Matrix.of (u₀ τ))
+  have hi₀ : Integral T io z₀ := _root_.GlobalTheory.Reg.tie_integral_of_any_model hT E H Dw l Xo c _ _ Y M T io f₀ ix (fun τ => Matrix.of (u₀ τ))
     (fun τ => ⟨fun i j hij => hinj ((hu₀ τ _ _).trans (by rw [(hcell τ).1 i j hij, map_zero, map_zero])),
       fun i => hinj ((hu₀ τ _ _).trans (by rw [(hcell τ).2 i, map_one, map_one]))⟩) z₀ ht₀
   have hc := (GlobalTheory.Frames.ChgBC.frChg_baseChange E H Dw l Xo c R T.Fr ψ y₀ y z₀ z k a hchg hz₀).1 hz
@@ -320,7 +320,7 @@ theorem exists_finset_of_lift (hT : Out.SecTwistSt) (hbc : FrBC Xo c) {Y : Model
 
 theorem genFr_integral : ReciprocityTheory.ChartRestriction.G.Out.SecTwistSt → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), FrBC Xo c → ∀ (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (h : GenFrEx Xo c) (Z : Comp Xo c), ∃ S : Finset (Om Z), (∀ s ∈ S, s ≠ 0) ∧ ∀ (T : CDVR) (io : c.F →+* T.Fr), letI := io.toAlgebra; ∀ ψ : Om Z →ₐ[c.F] T.Fr, (∀ s ∈ S, vV T.V (ψ s) = 0) → ∀ z : FrPt Xo c T.Fr, FrMap ψ (genFr h Z) z → Integral T io z := by
   intro hT E _ _ _ H Dw l Xo c hbc Y h Z
-  obtain ⟨M, hM⟩ := GlobalTheory.T.exists_modelChart_genericPoint_component hT E H Dw l Xo c Y Z
+  obtain ⟨M, hM⟩ := _root_.GlobalTheory.GenericChart.exists_chart_genPt hT E H Dw l Xo c Y Z
   let xF : Sp (Om Z) ⟶ Xo.XF c := spMap (algebraMap (kap Z) (Om Z)) ≫ genSp Z
   have hpt : ∀ p, genSp Z p = genPt Z := fun p => Scheme.fromSpecResidueField_apply _ p
   obtain ⟨f, hf, -⟩ := GlobalTheory.ModelPoints.existsUnique_chartHom M.hU (Om Z) (xF ≫ Y.j) (by

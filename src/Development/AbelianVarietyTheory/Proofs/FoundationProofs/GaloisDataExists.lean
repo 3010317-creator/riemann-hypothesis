@@ -1,7 +1,7 @@
 module
 
 public import Formalism.SharpRestriction.GlobalSchurBounds.StandardLatticesGL3
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalStarComplexMultiplicationPointsStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalStarComplexMultiplicationPoints
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LaMemSum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -106,6 +106,6 @@ theorem galEx_of_galStar (D : D7) (hS : galStar D) : galEx D := by
     congr 1
     push_cast; ring
 
-theorem galEx_all : ∀ D : D7, galEx D := fun D => galEx_of_galStar D (GlobalTheory.T.galStar_complexMultiplication_points D)
+theorem galEx_all : ∀ D : D7, galEx D := fun D => galEx_of_galStar D (_root_.GlobalTheory.ConjPoint.galStar_holds D)
 
 end GlobalTheory.GalExist

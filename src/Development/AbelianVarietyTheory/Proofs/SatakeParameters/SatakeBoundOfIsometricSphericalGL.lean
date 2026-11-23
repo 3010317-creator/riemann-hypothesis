@@ -4,8 +4,8 @@ public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.Finite
 public import Mathlib.Analysis.SpecialFunctions.Pow.Real
 public import Mathlib.RepresentationTheory.Basic
 public import Mathlib.RingTheory.MvPolynomial.Symmetric.Defs
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GeneralLinearTransitiveOnLatticesOverDVRStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SatakeParametersBoundedLatticeEigenfunctionStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GeneralLinearTransitiveOnLatticesOverDVR
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SatakeParametersBoundedLatticeEigenfunction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,7 +59,7 @@ theorem satake_bound_of_isometric_spherical : ∀ (O K : Type) [CommRing O] [IsD
     rw [map_mul]; rfl
   have hone : ∀ x : V, ρ 1 x = x := fun x => by
     rw [map_one]; rfl
-  choose γ hγ using (GlobalTheory.T.generalLinear_transitive_on_lattices_over_DVR O K r).1
+  choose γ hγ using (_root_.GlobalTheory.LatHecke.gl_transitive_lattices O K r).1
   have hγ' : ∀ L : Lat O K r, γ L • std O K r = L := fun L => Subtype.ext (hγ L)
   let φ : Lat O K r → V := fun L => ρ (γ L) v
 
@@ -80,7 +80,7 @@ theorem satake_bound_of_isometric_spherical : ∀ (O K : Type) [CommRing O] [IsD
   have hstd : φ (std O K r) = v := by
     have := hφ 1
     rwa [one_smul, hone] at this
-  refine GlobalTheory.T.satakeParameters_bounded_lattice_eigenfunction O K r V φ α ‖v‖ hcard ?_ ?_ ?_
+  refine _root_.GlobalTheory.SatakeBound.main O K r V φ α ‖v‖ hcard ?_ ?_ ?_
   · intro h
     exact hv (by rw [← hstd, h]; rfl)
   · intro L

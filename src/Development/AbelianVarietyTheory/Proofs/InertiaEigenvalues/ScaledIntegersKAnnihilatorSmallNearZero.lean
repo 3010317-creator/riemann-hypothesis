@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsTestRep
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleHermitianPairStructureFactsStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleHermitianPairStructureFacts
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSmallDualLattices
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -53,7 +53,7 @@ theorem GlobalTheory.JR.annihilator_small : ∀ (F E : Type) [NontriviallyNormed
   haveI : IsUltrametricDist F := hU.ultraF
   haveI : LocallyCompactSpace F := hU.lcF
   haveI : ContinuousSMul F A.K := IsModuleTopology.toContinuousSMul F A.K
-  have hfacts := GlobalTheory.T.etaleHermitianPair_structure_facts F E A
+  have hfacts := _root_.GlobalTheory.JR.EtFacts.main F E A
   have hnd : (Algebra.traceForm F A.K).Nondegenerate := hfacts.2.2.1
   have hOKopen : IsOpen A.OK := hfacts.2.2.2.2.2.2.2.2.2.1
   obtain ⟨R, hR⟩ := hfacts.2.2.2.2.2.2.2.2.2.2.2

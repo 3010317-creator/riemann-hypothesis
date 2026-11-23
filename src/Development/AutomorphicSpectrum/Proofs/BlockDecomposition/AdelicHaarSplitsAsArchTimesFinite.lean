@@ -2,9 +2,10 @@ module
 
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
 public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRingStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdeleHaarProductDecompositionStatement
+public import Formalism.UnipotentAdelicQuotients.SWXSDefs
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdeleHaarProductDecomposition
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.IntegralSelfDualEqAdelicFourier
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ModerateGrowthSchwartz
 import Formalism.LocalRingCardinality.DataHost
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicLocalCompactness.AdeleLC
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.TensTop
@@ -48,7 +49,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ModerateGrowthSchwartz
 import Development.AbelianVarietyTheory.Definitions.Foundations.AestronglyMeasurableQuotMeasureIffLift
 import Development.AbelianVarietyTheory.Definitions.Foundations.EventuallyEqOfIsPreconnected
 import Development.AbelianVarietyTheory.Definitions.Foundations.IsIwasawaOfIsCompact
@@ -154,9 +154,9 @@ theorem map_tuple : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
   have h2 := hCM.2.2.1
   haveI : FiniteDimensional F E := Module.finite_of_finrank_pos (by omega)
   let b := Module.finBasis F E
-  obtain ⟨tA, -, sA, -, -, -, -, hBA, -, -⟩ := GlobalTheory.T.tensor_locally_compact_ring F E σ hCM (AF F)
-  obtain ⟨tI, -, sI, -, -, -, -, hBI, -, -⟩ := GlobalTheory.T.tensor_locally_compact_ring F E σ hCM (Ainf F)
-  obtain ⟨tF, -, sF, -, -, -, -, hBF, -, -⟩ := GlobalTheory.T.tensor_locally_compact_ring F E σ hCM (Af F)
+  obtain ⟨tA, -, sA, -, -, -, -, hBA, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (AF F)
+  obtain ⟨tI, -, sI, -, -, -, -, hBI, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Ainf F)
+  obtain ⟨tF, -, sF, -, -, -, -, hBF, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Af F)
   haveI := hBA n M
   haveI := hBI n M
   haveI := hBF n M
@@ -176,7 +176,7 @@ theorem map_tuple : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
   haveI : m₂.IsAddHaarMeasure := by dsimp only [m₂]; infer_instance
   haveI : SFinite m₁ := by dsimp only [m₁]; infer_instance
   haveI : SFinite m₂ := by dsimp only [m₂]; infer_instance
-  obtain ⟨c, -, hcT, hc⟩ := GlobalTheory.T.adele_haar_product_decomposition F ι (dx.map e) m₁ m₂ hm inferInstance inferInstance
+  obtain ⟨c, -, hcT, hc⟩ := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.OneV.ProdM.map_split_eq_smul_prod F ι (dx.map e) m₁ m₂ hm inferInstance inferInstance
   let S := splitHomeo F ι
   let H : (Fin n → Fin M → AF F ⊗[F] E) ≃ₜ
       (Fin n → Fin M → Ainf F ⊗[F] E) × (Fin n → Fin M → Af F ⊗[F] E) :=

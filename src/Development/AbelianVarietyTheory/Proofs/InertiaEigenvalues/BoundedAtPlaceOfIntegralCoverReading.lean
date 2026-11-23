@@ -6,11 +6,11 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IntF
 public import Development.AbelianVarietyTheory.Definitions.ThetaValues.IoOverLeftUnique
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntValuationPrimeBack
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BddAllOfThetaSumOnCover
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoverSectionsLinearIndependentAdelicReadingsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPullbackSectionToLevelCoverStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoverSectionsLinearIndependentAdelicReadings
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPullbackSectionToLevelCover
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegralValuesAlgebraicPointsIffValueNonnegStatement
 import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.EvROfFrMapFromTest
 import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ExistsFiniteExtensionIntegralFramedPointLiftCove
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegralValuesAlgebraicPointsIffValueNonnegStatement
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedModuliAlgebraicLawsChartWeightIntegrality
 import Mathlib.Algebra.Order.Floor.Extended
@@ -82,7 +82,7 @@ theorem bddAll_of_mem_intForms : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, 
   intro D T hL j hj σ hσ C hU a n hdom hPin la la' hval m x f hf hmem
   obtain ⟨g₂, ⟨hcs, hint⟩, hrd⟩ := hmem
   have hex : ∀ b, ∃ f₂ ∈ sec C.d.Xo₂ C.d.c₂ a n, C.IsPull (f b) f₂ := fun b =>
-    GlobalTheory.T.exists_pullback_section_to_levelCover D T hL j hj σ hσ C hU.1 a n (f b) (hf b)
+    _root_.GlobalTheory.CovPull.exists_pull D T hL j hj σ hσ C hU.1 a n (f b) (hf b)
   choose f₂ hf₂ using hex
   have hpin : ∀ b, C.rd a (f₂ b) = T.phiJ j σ a (f b) := fun b => hPin.2 (f b) (hf b) (f₂ b) (hf₂ b).1 (hf₂ b).2
   have hG : g₂ = ∑ b, C.d.eF (x b) • f₂ b := by
@@ -92,7 +92,7 @@ theorem bddAll_of_mem_intForms : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, 
       sub_mem hcs.1 (sum_mem fun b _ => Submodule.smul_mem _ _ (hf₂ b).1)
     have hli : LinearIndependent C.d.c₂.F ![g₂ - ∑ b, C.d.eF (x b) • f₂ b] :=
       linearIndependent_unique_iff.2 h0
-    have hli2 := GlobalTheory.T.coverSections_linearIndependent_adelicReadings D T hL j hj σ hσ C hU hPin.1 a n hdom 1 ![g₂ - ∑ b, C.d.eF (x b) • f₂ b]
+    have hli2 := _root_.GlobalTheory.CoverIndep.cover_rd_linearIndependent D T hL j hj σ hσ C hU hPin.1 a n hdom 1 ![g₂ - ∑ b, C.d.eF (x b) • f₂ b]
       (fun i => by fin_cases i; exact hsec) hli
     have hz : C.rd a (g₂ - ∑ b, C.d.eF (x b) • f₂ b) = 0 := by
       rw [rd_sub, rd_sum, hrd]

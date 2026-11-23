@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DefCl
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BaseChangeDefiniteUnitary
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.T2SpaceAdelicGeneralLinearGroupNumberField
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CovolumeUnitDetNormSlabLatticeAutLtTopStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HaarInfiniteGLLtTopOfInfiniteGLHaarMeasureLtTopStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.DifferentiableAtChart
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HaarInfiniteGLLtTopOfInfiniteGLHaarMeasureLtTop
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -112,7 +113,7 @@ theorem GlobalTheory.GLInfReduction.exists_cover_of_finite_measure (E : Type) [F
     infer_instance)
   simp only [GlobalTheory.FlagMeas.covol, iInf_lt_iff] at hslab
   obtain ⟨D, hDm, hcov, hDlt⟩ := hslab
-  have hD' := GlobalTheory.T.haar_infiniteGL_lt_top_of_infiniteGLHaarMeasure_lt_top E a ν D hDm hDlt
+  have hD' := _root_.GlobalTheory.haarGL_finite_pullback E a ν D hDm hDlt
   set S : Set (GL (Fin a) (Cinf E)) := {y | entries (y : Matrix (Fin a) (Fin a) (Cinf E)) ∈ D} with hS
   have hS' : ν S < ⊤ := hD'
 

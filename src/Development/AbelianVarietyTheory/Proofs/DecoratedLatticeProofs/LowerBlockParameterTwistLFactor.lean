@@ -3,7 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsLevMeas
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ParBoundW
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeckeCharQuotientUnramifiedAtTwistPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SegmentsBoundsAndDoublingLFactorStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NormEulerPolySubOneLe
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.PairwiseDisjointCell
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SegmentsBoundsAndDoublingLFactor
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitProjectionUnderEqResidueCardEqAbsNorm
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaLiftChainHeckeParameterTwistNextTargetChar
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnramifiedHeckeCharAtUniformizerIdeleEqValueStatement
@@ -152,7 +154,7 @@ theorem GlobalTheory.ChainTw.qPar_twist_lFactor : ∀ (D : D7) (c : Com D) (w : 
   have hα' : Finset.univ.val.map α = ∑ i ∈ Finset.Icc 1 k,
       GlobalTheory.LFun.seg PP (GlobalTheory.LFun.val (F := D.host.F) (c.μ i * (c.μ (k + 1))⁻¹) PP) D.R.t := by
     rw [hα]; exact Finset.sum_congr rfl fun i hi => by rw [hz i hi]
-  obtain ⟨hb, hL⟩ := GlobalTheory.T.segments_bounds_and_doubling_lFactor PP k D.R.t (k * D.R.t)
+  obtain ⟨hb, hL⟩ := _root_.GlobalTheory.LFun.seg_bounds_and_doubling_lFactor PP k D.R.t (k * D.R.t)
     (fun i => GlobalTheory.LFun.val (F := D.host.F) (c.μ i * (c.μ (k + 1))⁻¹) PP) (fun i => GlobalTheory.LFun.norm_val _ _) α hα'
   refine ⟨hb, ?_⟩
   rw [hL, invNormFactor_eq, blockL, zinv]

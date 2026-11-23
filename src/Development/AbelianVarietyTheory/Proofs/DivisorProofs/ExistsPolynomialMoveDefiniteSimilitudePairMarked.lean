@@ -6,14 +6,16 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmFieldConjE
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagonalSignOfPositiveEigenvectorOnePositiveStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdelicUnitCarryingFormToNormMultipleStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDiagonalCongrOfSimilitudeDistinctEigenvaluStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTotallyRealEvenNegPlacesLocalNormStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianCongrOfPositiveIndexEqStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsCyclotomicExtensionQI
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTotallyRealEvenNegPlacesLocalNorm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianCongrOfPositiveIndexEq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianTripleTrivialOverRealsOfGramCongruentStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MarkedSimilitudePairMinpolyRootsNormSqEqStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixDiagonalizableOfCharpolyEqProdDistinct
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MoveMarkOfIrreducible
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NegDefOfHermitianMatrixPositiveIndexEqZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimilitudePairGramInvCongruentStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsRootSelectionUnitaryRankOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimilitudePairGramInvCongruent
 import GroundTheory.Brauer.TensorSimple
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -116,7 +118,7 @@ theorem congr_of_diag {n : ℕ} (A h : Matrix (Fin n) (Fin n) ℂ) (hA : A.IsHer
     congr 1; funext i; simp
   have hDd : (Matrix.diagonal (fun i => (r i : ℂ))).det ≠ 0 := by
     rw [Matrix.det_diagonal]; exact Finset.prod_ne_zero_iff.2 fun i _ => by exact_mod_cast hr i
-  obtain ⟨W, hW⟩ := GlobalTheory.T.hermitian_congr_of_positiveIndex_eq A _ hA hD hdet hDd
+  obtain ⟨W, hW⟩ := _root_.GlobalTheory.HermCongruence.congr_of_sigPosH_eq A _ hA hD hdet hDd
     (by rw [(GlobalTheory.LKTrip.sigPosH_sigNegH_diagonal n r hD).1, hc])
   refine ⟨W * Z⁻¹, ?_⟩
   have e1 : ((Z⁻¹ : GL (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ)ᴴ * (Z : Matrix (Fin n) (Fin n) ℂ)ᴴ = 1 := by
@@ -568,7 +570,7 @@ theorem real_back (ha : G.a = 1) (P : Pair G) (pb : PowerBasis G.F M) (hpol : P.
       rw [hZ]; congr 2; exact funext fun i => hb _
     rw [map_mul, ← Matrix.mul_assoc (G.gram w)]
     exact diag_mul (G.gram w * G.psi w ((P.β⁻¹ : G.Cˣ) : G.C)) (G.psi w (j b)) Z d (fun i => (e i b).re) hD hB
-  obtain ⟨W, hW⟩ := GlobalTheory.T.similitudePair_gram_inv_congruent p G P w
+  obtain ⟨W, hW⟩ := _root_.GlobalTheory.LKMid.Pair.gram_psi_inv_congr p G P w
   by_cases hw : w = v
   · subst hw
     refine ⟨fun _ => pos_of_diag _ Z _ hD' (fun i => ?_) x hx, fun h => absurd hv h⟩
@@ -689,7 +691,7 @@ theorem core (ha : G.a = 1) (hn : Odd G.n) (pb : PowerBasis G.F M) (hdeg : (minp
     obtain ⟨k, hk⟩ := hn
     rw [hk, Nat.add_sub_cancel]
     exact ⟨k, by ring⟩
-  obtain ⟨a, ha0, hσa, hneg, hpos, u, hu⟩ := GlobalTheory.T.exists_totallyReal_even_neg_places_local_norm M σ hσ1 hφ (sset v.embedding ε) hS hcard p
+  obtain ⟨a, ha0, hσa, hneg, hpos, u, hu⟩ := _root_.GlobalTheory.NormSign.exists_neg_even_norm_away M σ hσ1 hφ (sset v.embedding ε) hS hcard p
   obtain ⟨A, hA⟩ := pb.exists_eq_aeval' a
   have hreal : ∀ φ : M →+* ℂ, φ a = ((φ a).re : ℂ) := fun φ => by
     have := hφ φ a

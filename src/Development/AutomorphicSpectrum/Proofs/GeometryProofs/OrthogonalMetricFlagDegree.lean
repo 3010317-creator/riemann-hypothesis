@@ -3,13 +3,17 @@ module
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsSubFibreSubFib
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsOrthFull
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsFlagBasisAtStalkStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModelBaseChangeStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsFlagBasisAtStalk
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModelBaseChange
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsUnitNatCastStalk
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFrameSpansGenericStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelProjectiveGenericFibreStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.OrthogonalMetricHermitianBundleStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFrameSpansGeneric
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelProjectiveGenericFibre
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.OrthogonalMetricHermitianBundle
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -84,11 +88,11 @@ theorem rank_fib : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : H
   haveI hsm : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
   have hs : genPt 𝔐.ξ ⤳ centre (spMap (algebraMap (𝓞 L) L) ≫ z) := 𝔐.all _
   have hu := fun n hn => isUnit_natCast_stalk 𝔐.X L (spMap (algebraMap (𝓞 L) L) ≫ z) n hn
-  obtain ⟨b, hb1, hb2, hb3, hb4, hb5, hb6⟩ := GlobalTheory.T.exists_flag_basis_at_stalk E H D l Xo c Y S Ω K J y 𝔐 Fl ⟨_, hs⟩ hu
-  obtain ⟨T, _, _, _, _, TL, j, hj, hbc⟩ := GlobalTheory.T.exists_lie_model_base_change 𝔐.X 𝔐.t.G (𝓞 L) L z B.carrier MB
-  obtain ⟨w, hw1, hw2, hw3, hw4⟩ := GlobalTheory.T.lie_model_frame_spans_generic 𝔐.X 𝔐.t.G Ω 𝔐.ξ 𝔐.Li 𝔐.M L _ T TL hs
+  obtain ⟨b, hb1, hb2, hb3, hb4, hb5, hb6⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FlagFrames.exists_frames E H D l Xo c Y S Ω K J y 𝔐 Fl ⟨_, hs⟩ hu
+  obtain ⟨T, _, _, _, _, TL, j, hj, hbc⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FlagFib.lieModel_liftBaseChange 𝔐.X 𝔐.t.G (𝓞 L) L z B.carrier MB
+  obtain ⟨w, hw1, hw2, hw3, hw4⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FlagFib.lieModel_valFrame 𝔐.X 𝔐.t.G Ω 𝔐.ξ 𝔐.Li 𝔐.M L _ T TL hs
     (Σ s, Fin (labelRk D s)) _ hgen hb3 hb4 hb5
-  have hbr := fun U => GlobalTheory.T.lie_model_projective_generic_fibre 𝔐.X 𝔐.t.G Ω 𝔐.ξ 𝔐.Li 𝔐.M L z B.carrier MB T TL j U hgen hj hbc
+  have hbr := fun U => _root_.GlobalTheory.CompanionTheory.Ar.FlagFib.Bridge.finrank_subFib 𝔐.X 𝔐.t.G Ω 𝔐.ξ 𝔐.Li 𝔐.M L z B.carrier MB T TL j U hgen hj hbc
   refine ⟨?_, ?_, ?_⟩
   · rw [(hbr ⊥).1]
     have e1 := finrank_span_eq_card hw2
@@ -135,7 +139,7 @@ theorem rank_fib : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : H
 theorem flag_fibre : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) [Fintype (CMType H)] (Fl : 𝔐.Flag) (h : LieMetric 𝔐.M y), h.Orth 𝔐.t.act → ∀ (L : Type) [Field L] [NumberField L] (z : Sp (𝓞 L) ⟶ 𝔐.X) (B : GroundTheory.Heights₂.Heights.HermitianBundle.{0} L) (MB : LieModel 𝔐.t.G z B.carrier), IsFibre (fun z v w c => c = h.ip z v w) z B MB → ∃ (A : FlagPair B (CMType H) D.p D.q), A.IsOrthFull ∧ (∀ τ i, IsSubFibre 𝔐.M (flagStep Ω (Fl.b (.inl τ)) i.val) z MB ((A.W τ).F i)) ∧ ∀ τ i, IsSubFibre 𝔐.M (flagStep Ω (Fl.b (.inr τ)) i.val) z MB ((A.S τ).F i) := by
   intro E _ _ _ H D l Xo c Y S Ω _ K _ J _ y 𝔐 _ Fl h hO L _ _ z B MB hF
   obtain ⟨h1, h2, h3⟩ := rank_fib E H D l Xo c Y S Ω K J y 𝔐 Fl L z B MB
-  have ho := GlobalTheory.T.orthogonal_metric_hermitian_bundle E H D l Xo c Y S Ω K J y 𝔐 h hO L z B MB hF
+  have ho := _root_.GlobalTheory.CompanionTheory.Ar.FlagFib.FibOrth.orthAt_subFib E H D l Xo c Y S Ω K J y 𝔐 h hO L z B MB hF
   have hex : ∀ s, ∃ A : SatFlag B (labelRk D s), ∀ i, A.F i = subFib 𝔐.M (flagStep Ω (Fl.b s) i.val) z MB := by
     intro s
     exact exists_satFlag 𝔐.M z B MB (Fl.b s) (h2 s)

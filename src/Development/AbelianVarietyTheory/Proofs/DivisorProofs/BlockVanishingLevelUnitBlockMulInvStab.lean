@@ -3,9 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjSmulNeBot
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BlockUpperOfMulEqOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CongLevRelIndexLe
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdempotentLimitPowersIntegralAdelesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegralUnitaryGlueIdempotentStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOrthogonalIdempotentDivisibleCongruentStatement
+public import Formalism.SharpRestriction.GlobalSchurBounds.StandardLatticesGL3
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdempotentLimitPowersIntegralAdeles
+public import Development.AbelianVarietyTheory.Definitions.Divisors.FinitePrimesUnder
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegralUnitaryGlueIdempotent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOrthogonalIdempotentDivisibleCongruent
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryCongruentOneDetSubOneMemIdealMulConj
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHalfIdem
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RationalPointsIntegralPointsMembership
@@ -163,7 +165,7 @@ theorem blockJ_unitBlock : ∀ (D : D7) (𝔪 : Ideal (𝓞 D.host.E)), 𝔪 ≠
     refine neg_mem (sum_mem fun m _ => GlobalTheory.CongIdx.mul_mem_hatId (hJiO _ _) (hA _ _ ?_ ?_))
     · simp
     · simp
-  obtain ⟨k, hk, hkc⟩ := exists_k GlobalTheory.T.exists_integralUnitary_glue_idempotent (GlobalTheory.T.exists_orthogonalIdempotent_divisible_congruent GlobalTheory.T.exists_idempotent_limit_powers_integralAdeles) D 𝔪 hm hcop a Dt Dp (fun _ _ => hJO _ _) (fun _ _ => hJiO _ _) hc
+  obtain ⟨k, hk, hkc⟩ := exists_k _root_.GlobalTheory.GlueUnitary.glue_unitary (_root_.GlobalTheory.BotPairSmall.IdemChoice.exists_idem_of_limit _root_.GlobalTheory.AlgIntIdem.idem) D 𝔪 hm hcop a Dt Dp (fun _ _ => hJO _ _) (fun _ _ => hJiO _ _) hc
   refine ⟨k, hk, fun i l => ?_⟩
   set K := (((k⁻¹ : GA D a) : GL (Fin a) (AE D)) : Matrix (Fin a) (Fin a) (AE D)) with hK
   have h1 : (J * (unitBlock D o a (o + a)).map (inc D)) i l = J i (Fin.natAdd o l) := by

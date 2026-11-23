@@ -5,8 +5,9 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EcoefQN
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AssociatedPowOfUnits
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AwayOfInjective
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BcrisPeriodMatrixOverAcris
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BdRFiltrationKerThetaGeneratorFactsStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalPeriodRingsDataUnramifiedLaws
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsCrisP
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BdRFiltrationKerThetaGeneratorFacts
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PeriodRingsGaloisActionLawsFrobeniusComm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -131,7 +132,7 @@ theorem periods_over_Acris_sst : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk
   intro l _ K bk P AI T C _hFits d ρ U U' hUU' c₁ F hφ k k₀ Mn c hn hgal
   have hA := (GlobalTheory.MemLoc.AwayT.away_and_inj l C).1
   obtain ⟨_, _, -, -, -, hFilt, -⟩ := GlobalTheory.MemLoc.BdRDVR.core_dvr l C
-  obtain ⟨-, hmul, -, hiff, -, -, hinj⟩ := GlobalTheory.T.bdR_filtration_ker_theta_generator_facts l C (xi C.ε) C.ker_theta.symm
+  obtain ⟨-, hmul, -, hiff, -, -, hinj⟩ := _root_.GlobalTheory.MemLoc.seed_fil l C (xi C.ε) C.ker_theta.symm
   have AL := GlobalTheory.MemLoc.ActLaws.act_laws l
   obtain ⟨N₁, h₁⟩ := exists_lift C hA U
   obtain ⟨N₂, h₂⟩ := exists_lift C hA U'

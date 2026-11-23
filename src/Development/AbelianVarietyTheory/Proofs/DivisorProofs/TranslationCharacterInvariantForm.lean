@@ -2,10 +2,12 @@ module
 
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzFamilyPhaseBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzFourierRepresentationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzInnerProductContinuousStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzIntegralSuperpositionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzFamilyPhaseBound
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzFourierRepresentation
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzInnerProductContinuous
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzIntegralSuperposition
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -69,11 +71,11 @@ theorem multiplier_symm : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ
   intro V _ _ _ μ hμ T hT m f f' g g' hf' hg'
   letI : MeasurableSpace V := borel V
   haveI : BorelSpace V := ⟨rfl⟩
-  obtain ⟨d, A, h, hm⟩ := GlobalTheory.T.schwartz_fourier_representation V m
-  obtain ⟨Φf, hΦf, cΦf, bΦf⟩ := GlobalTheory.T.schwartz_family_phase_bound V _ A f
-  obtain ⟨Φg, hΦg, cΦg, bΦg⟩ := GlobalTheory.T.schwartz_family_phase_bound V _ (-A) g
-  obtain ⟨Λ1, hΛ1⟩ := GlobalTheory.T.schwartz_inner_product_continuous V μ hμ (T g)
-  obtain ⟨Λ2, hΛ2⟩ := GlobalTheory.T.schwartz_inner_product_continuous V μ hμ (T f)
+  obtain ⟨d, A, h, hm⟩ := _root_.GlobalTheory.schwartz_eq_fourier_synthesis V m
+  obtain ⟨Φf, hΦf, cΦf, bΦf⟩ := _root_.GlobalTheory.CharFamily.charMul_family V _ A f
+  obtain ⟨Φg, hΦg, cΦg, bΦg⟩ := _root_.GlobalTheory.CharFamily.charMul_family V _ (-A) g
+  obtain ⟨Λ1, hΛ1⟩ := _root_.GlobalTheory.schwartz_pairing_conj_clm V μ hμ (T g)
+  obtain ⟨Λ2, hΛ2⟩ := _root_.GlobalTheory.schwartz_pairing_conj_clm V μ hμ (T f)
   have hint : ∀ (Φ : EuclideanSpace ℝ (Fin d) → SchwartzMap V ℂ), Continuous Φ →
       (∀ k n : ℕ, ∃ C : ℝ, ∀ ξ, SchwartzMap.seminorm ℂ k n (Φ ξ) ≤ C * (1 + ‖ξ‖ ^ n)) →
       ∀ (c : EuclideanSpace ℝ (Fin d) → ℂ), (∀ ξ, ‖c ξ‖ = ‖h ξ‖) →
@@ -101,7 +103,7 @@ theorem multiplier_symm : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ
     simp [ContinuousLinearMap.neg_apply]
   have lhs : ∫ x, T f' x * starRingEnd ℂ (T g x) ∂μ = ∫ ξ, h ξ * ∫ x, T f x * starRingEnd ℂ (T (Φg ξ) x) ∂μ := by
     rw [← hΛ1]
-    have := GlobalTheory.T.schwartz_integral_superposition V (EuclideanSpace ℝ (Fin d)) volume Φf cΦf h h.continuous.aestronglyMeasurable
+    have := _root_.GlobalTheory.schwartz_clm_integral_comm V (EuclideanSpace ℝ (Fin d)) volume Φf cΦf h h.continuous.aestronglyMeasurable
       (hint Φf cΦf bΦf h (fun _ => rfl)) f' (fun x => by
         rw [hf', hm, ← integral_mul_const]
         congr 1; funext ξ; rw [hΦf]; ring) (Λ1.comp T)
@@ -110,7 +112,7 @@ theorem multiplier_symm : ∀ (V : Type) [NormedAddCommGroup V] [NormedSpace ℝ
   have rhs : ∫ x, T f x * starRingEnd ℂ (T g' x) ∂μ = ∫ ξ, h ξ * ∫ x, T f x * starRingEnd ℂ (T (Φg ξ) x) ∂μ := by
     have e1 : ∫ x, T f x * starRingEnd ℂ (T g' x) ∂μ = starRingEnd ℂ (Λ2 (T g')) := by
       rw [hΛ2, ← integral_conj]; congr 1; funext x; simp [mul_comm]
-    have := GlobalTheory.T.schwartz_integral_superposition V (EuclideanSpace ℝ (Fin d)) volume Φg cΦg (fun ξ => starRingEnd ℂ (h ξ))
+    have := _root_.GlobalTheory.schwartz_clm_integral_comm V (EuclideanSpace ℝ (Fin d)) volume Φg cΦg (fun ξ => starRingEnd ℂ (h ξ))
       (Complex.continuous_conj.comp h.continuous).aestronglyMeasurable
       (hint Φg cΦg bΦg _ (fun _ => Complex.norm_conj _)) g' (fun x => by
         rw [hg', hm, ← integral_conj, ← integral_mul_const]

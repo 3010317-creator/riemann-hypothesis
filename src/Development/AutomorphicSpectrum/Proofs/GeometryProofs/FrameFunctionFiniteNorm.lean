@@ -4,11 +4,14 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.HasBare
 public import Development.AutomorphicSpectrum.PublishedTheorems.Geometry₂.GagaSections
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.BlowupProjections.BlowupProjStatement
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsFlatAnIffIsConstMul
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteConstantAllHoldsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlatZeroFromResolutionAndGagaStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrameFunctionTwoModelsRelayStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodReductionDvrModelExistsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IrreducibleComponentClopenStatement
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.FinConstFor
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteConstantAllHolds
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.FlatLineGenerator
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlatZeroFromResolutionAndGaga
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrameFunctionTwoModelsRelay
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodReductionDvrModelExists
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IrreducibleComponentClopen
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,13 +57,13 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.S
 
 theorem finGood : Geo.ResK.ResKStatement → GagaSections → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (U : Set (Xo.XF c)) (Z : CptOver Y U) (τ : E →+* ℂ) (φ : FrameFn Xo c) (p : Nat.Primes) (κ : c.F →+* ℂ_[p]), FracBase β → 1 ≤ D.p + D.q → τ (H.rt : E) = H.rt0 → U ∈ irreducibleComponents (Xo.XF c) → Z.IsGeom → FlatOnModel Z τ φ → l.GoodAt p → ∃ t : ℝ, HasFinNorm U τ φ p κ t := by
   intro hRes hGaga E _ _ _ H D l Xo c O _ β Y U Z τ φ p κ hβ hpq hrt hU hZ hφ hgood
-  obtain ⟨O', _, _, _, β', Y', hβ', hκ, hsplit, hN3⟩ := GlobalTheory.T.good_reduction_dvr_model_exists E H D l Xo c p κ hpq hgood
-  obtain ⟨-, hne, hgeom⟩ := GlobalTheory.T.irreducible_component_clopen E H D l Xo c U hU
+  obtain ⟨O', _, _, _, β', Y', hβ', hκ, hsplit, hN3⟩ := _root_.GlobalTheory.CompanionTheory.Relay.good_reduction_dvr_model_exists E H D l Xo c p κ hpq hgood
+  obtain ⟨-, hne, hgeom⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Br.cptOver_any E H D l Xo c U hU
   obtain ⟨Z'⟩ := hne O' β' Y' hβ'
   have hZ' : Z'.IsGeom := hgeom O β Y O' β' Y' Z Z' hβ hβ' hZ
-  obtain ⟨φ', hline', hflat', -⟩ := GlobalTheory.T.flat_zero_from_resolution_and_gaga hRes hGaga E H D l Xo c O' β' Y' U Z' τ hβ' hpq hrt hZ'
-  obtain ⟨t', ht'⟩ := GlobalTheory.T.finite_constant_all_holds E H D l Xo c O' β' Y' U Z' τ p κ φ' hrt hβ'.1 hκ hsplit hN3 hZ' hflat' hline'
-  obtain ⟨x, hx0, hx⟩ := GlobalTheory.T.frame_function_two_models_relay hRes hGaga E H D l Xo c O β Y O' β' Y' U Z Z' τ φ φ' hβ hβ' hpq hrt hZ hZ' hφ hflat'
+  obtain ⟨φ', hline', hflat', -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.A0.flat_zero_of_resolution_gaga hRes hGaga E H D l Xo c O' β' Y' U Z' τ hβ' hpq hrt hZ'
+  obtain ⟨t', ht'⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.FinAll.finConstAll E H D l Xo c O' β' Y' U Z' τ p κ φ' hrt hβ'.1 hκ hsplit hN3 hZ' hflat' hline'
+  obtain ⟨x, hx0, hx⟩ := _root_.GlobalTheory.CompanionTheory.Relay.frame_function_two_models_relay hRes hGaga E H D l Xo c O β Y O' β' Y' U Z Z' τ φ φ' hβ hβ' hpq hrt hZ hZ' hφ hflat'
   refine ⟨t' - Real.log ‖κ x‖, ?_⟩
   unfold GlobalTheory.CompanionTheory.Ar.Fl.HasFinNorm
   intro V K _ _ _ _ _ _ j β₁ y v w T tK m m' hj hjβ hfr hv hw

@@ -3,8 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.CommutativeAlgebra.AbByPOfComm
 public import Mathlib.Basic.Complex.Basic
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.ExistsMonomialBasisAbelianByPrimePowerStatement
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.TraceLiftMonomialMatrixEqSumEigenvaluesStatement
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.ExistsMonomialBasisAbelianByPrimePower
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.TraceLiftMonomialMatrixEqSumEigenvalues
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -82,7 +83,7 @@ theorem isChar_brauerLift : ∀ (k : Type) [Field k] [IsAlgClosed k] (θ : k →
     ((Matrix.toLinAlgEquiv' : Matrix (Fin n) (Fin n) k ≃ₐ[k] _).toMonoidHom.comp
       (Units.coeHom _)).comp ρ
   have hR : ∀ g, R g = Matrix.toLin' (ρ g : Matrix (Fin n) (Fin n) k) := fun g => rfl
-  obtain ⟨m, b, hb⟩ := GlobalTheory.T.exists_monomial_basis_abelianByPrimePower k G (Fin n → k) R hG hc
+  obtain ⟨m, b, hb⟩ := _root_.GlobalTheory.CuspGL.exists_monomial_basis_of_abByP k G (Fin n → k) R hG hc
   choose s c hsc using hb
   have hc0 : ∀ g i, c g i ≠ 0 := by
     intro g i h0
@@ -123,7 +124,7 @@ theorem isChar_brauerLift : ∀ (k : Type) [Field k] [IsAlgClosed k] (θ : k →
       ^ Nat.card G = 1 := by
     rw [hM, LinearMap.toMatrix_pow, ← map_pow, pow_card_eq_one', map_one, LinearMap.toMatrix_one]
   have h2 : L g ^ Nat.card G = 1 := by rw [← map_pow, pow_card_eq_one', map_one]
-  have h3 := GlobalTheory.T.trace_lift_monomialMatrix_eq_sum_eigenvalues k θ hθ m (Nat.card G) (σ g) (c g) (hc0 g) hc h1 h2
+  have h3 := _root_.GlobalTheory.MonoTrace.trace_lift_monomial k θ hθ m (Nat.card G) (σ g) (c g) (hc0 g) hc h1 h2
   rw [hM, LinearMap.charpoly_toMatrix, hR, Matrix.charpoly_toLin'] at h3
   show _ = LinearMap.trace ℂ _ (Matrix.toLin' (L g))
   rw [Matrix.trace_toLin'_eq]

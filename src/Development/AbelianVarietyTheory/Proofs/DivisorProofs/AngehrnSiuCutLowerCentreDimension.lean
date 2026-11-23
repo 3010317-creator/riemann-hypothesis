@@ -3,14 +3,14 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CentreAtOfIsAt
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AmpleAddNefIsAmple
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDivisorNonKltPointsNumericallyMultipleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRationalLogCanonicalThresholdAtPointStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntersectionNumberCurveOfClassEqSmulAdd
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDivisorNonKltPointsNumericallyMultiple
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRationalLogCanonicalThresholdAtPoint
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KltAtAddSmulOfLcAt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MultNsmulOfQadd
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonKltLocusDimLtAfterPerturbation
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowMulIntersectionLeOfNefClassOnClosed
 public import Development.WeilBound.CoreStatements.PublishedTheorems.NefNumerics.NefRiemannRoch.NefLineBundleNumericalTheoremsProof
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntersectionNumberCurveOfClassEqSmulAdd
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowMulIntersectionLeOfNefClassOnClosed
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -200,7 +200,7 @@ theorem logCanonicalCut_lowers_centre_dimension : GlobalTheory.Published.Princip
       _ ≤ _ := mul_le_mul_of_nonneg_left hmixQ (by positivity)
 
   have hDq : IsQCart (qWeil D₀ m') := ⟨m', D₀, hm', hD₀, rfl⟩
-  obtain ⟨B, δ₀, hδ₀, -, hBnum, hOff, hnk, hsep⟩ := GlobalTheory.T.exists_divisor_nonKlt_points_numerically_multiple hPr X p n hp hn Δ m G A'
+  obtain ⟨B, δ₀, hδ₀, -, hBnum, hOff, hnk, hsep⟩ := _root_.GlobalTheory.AmpleStep.exists_divisor hPr X p n hp hn Δ m G A'
     (qWeil D₀ m') {x} z e h hΔ hklt hm hG hA'amp hDq
     (fun y hy => by rw [Finset.mem_singleton] at hy; subst hy; exact ⟨hx, hzx⟩) he hdim hcen hh hcard
 
@@ -226,7 +226,7 @@ theorem logCanonicalCut_lowers_centre_dimension : GlobalTheory.Published.Princip
       (1 - δ) 0 (by linarith) le_rfl
     exact ⟨M₁, F₁, hM₁, hF₁, by rw [← heq, zero_smul, add_zero]⟩
   have hBq : IsQCart B := hBnum.isQCart
-  obtain ⟨c, hc0, hc1, hlcc, hnkc⟩ := GlobalTheory.T.exists_rational_logCanonicalThreshold_at_point hPr X p n hp hn Δ m G ((1 - δ) • qWeil D₀ m') B x
+  obtain ⟨c, hc0, hc1, hlcc, hnkc⟩ := _root_.GlobalTheory.PairStep.exists_threshold_lcAt_not_kltAt hPr X p n hp hn Δ m G ((1 - δ) • qWeil D₀ m') B x
     hm hG hsDq hBq hk1 hnk1
   have hcut := logCanonicalCut_of_step X p n hp hn Δ (qWeil D₀ m') B δ c x z (e - 1) hxk hDq hBq hlc hδ0 hδ1
     hc1 hOff hsep (by rw [Nat.sub_add_cancel he]; exact hdim) hlcc hnkc

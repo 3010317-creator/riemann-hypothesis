@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Definitions.Jets.ExistsSecTieFOfT
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors.StChartF
 public import Formalism.LocalToGlobal.ProjectiveLattices.Adm3OfExtension
 public import Formalism.SharpRestriction.GenusPolyhedralBounds.RelativeIndexClassSets.WeightedPrimeSumBound
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ThetaLatticeDepthLeUnscaledAddBoundaryStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.RecPJThAllNeBot
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ThetaLatticeDepthLeUnscaledAddBoundary
 public import Formalism.SharpRestriction.GenusPolyhedralBounds.RelativeIndexClassSets.LocalFormOfWeakForm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -86,6 +87,6 @@ theorem combBound_alg : (∀ (p : ℕ) [Fact p.Prime], Pdiv.ChartF.HTFSt p) → 
   intro hH D T h j hj hinj EX w c hO hR ka wF S G hS hEt
   refine combBound_of_depth_le G c hR.2.2.2.1 (fun la y => ?_) hEt
   rw [hS]
-  exact GlobalTheory.T.thetaLattice_depth_le_unscaled_add_boundary hH D T h j hj hinj EX w c hO hR la y
+  exact _root_.GlobalTheory.RecDepth.depth_le hH D T h j hj hinj EX w c hO hR la y
 
 end GlobalTheory.PtTie

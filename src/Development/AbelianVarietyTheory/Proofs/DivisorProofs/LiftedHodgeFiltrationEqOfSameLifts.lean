@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsKSValueOneOfRetraction
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeFirstDeRhamStructureStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeFirstDeRhamStructure
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GroupLiftTangentCompatibility
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ConnectedSpaceSpecOfIsLocalRing
 import Mathlib.Algebra.Order.Floor.Extended
@@ -64,7 +65,7 @@ theorem liftFil_le (k : Type) [Field k] (A₀ : Over (Sp k)) [GrpObj A₀] (A₁
     (hA₁ : IsAbelianScheme A₁) (g : HdR A₀ → HdR A₀)
     (H₁ : ∀ x ∈ Fil A₀, IsFilLift h₁ x (g x)) (H₂ : ∀ x ∈ Fil A₀, IsFilLift h₂ x (g x)) :
     liftFil (epsDP k) h₁ ≤ liftFil (epsDP k) h₂ := by
-  have P : AbelianDeRham := GlobalTheory.T.abelianScheme_firstDeRham_structure
+  have P : AbelianDeRham := _root_.GlobalTheory.abelianDeRham
   obtain ⟨g₁, hg₁⟩ := GlobalTheory.AbelianDim.exists_relDim (DualNumber k) A₁ hA₁
   have hA₀ : IsAbelianScheme A₀ := by
     have := hA₁.comm

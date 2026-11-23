@@ -3,17 +3,24 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsChartPtChartPt
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsKSValueOneOfRetraction
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.DenseInterior
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeformationChartPointReductionEqSpecialFibreStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualMapCompDualMap
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLinearCombinationTangentVectorsAffineOpenStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeformationChartPointReductionEqSpecialFibre
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.HasArcDataIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLinearCombinationTangentVectorsAffineOpen
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsAlgHomOfComp
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRingHomAddEpsMul
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FirstOrderDeformationPointsDifferEpsAllOpensStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAffineHomOfField
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAffineOpenInfOfSeparatedOverAffineOpenStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsDeformationChartPointSpecMapStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FirstOrderDeformationPointsDifferEpsAllOpens
+public import Mathlib.AlgebraicGeometry.Morphisms.Separated
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAffineOpenInfOfSeparatedOverAffineOpen
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.DiscreteValuationRings.FlatBCSec
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsDeformationChartPointSpecMap
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTangentOfFibrePullbackTangentAtChartStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTranslateOfTangentVectorFibreToGroupSchemeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogDerivativeTransitionUnitsIsoLineBundlesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTransl
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTranslateOfTangentVectorFibreToGroupScheme
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogDerivativeTransitionUnitsIsoLineBundles
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualMapCompDualMap
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAffineHomOfField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,7 +85,7 @@ theorem chartPt_sub : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H 
   have := t.semi.separated
   have hut : ∀ a, IsTangent (u a) := GlobalTheory.T.isTangent_of_fibre_pullback_tangent_at_chart t U v hv x0 hU A m u hm hu
   let Ω : t.G.left.affineOpens :=
-    ⟨Ω₁.1 ⊓ Ω₂.1, GlobalTheory.T.isAffineOpen_inf_of_separated_over_affineOpen t.G.hom U Ω₁ Ω₂ (hΩ₁.trans (hW₀ _)) (hΩ₂.trans (hW₀ _))⟩
+    ⟨Ω₁.1 ⊓ Ω₂.1, _root_.GlobalTheory.SepAffInf.isAffineOpen_inf_of_le_preimage t.G.hom U Ω₁ Ω₂ (hΩ₁.trans (hW₀ _)) (hΩ₂.trans (hW₀ _))⟩
   have e₁ : Ω.1 ≤ Ω₁.1 := inf_le_left
   have e₂ : Ω.1 ≤ Ω₂.1 := inf_le_right
   have hxΩ : ⊤ ≤ x ⁻¹ᵁ (m ⁻¹ᵁ Ω.1) := fun p hp => ⟨(hxW hp).1.1, (hxW hp).2.1⟩
@@ -94,7 +101,7 @@ theorem chartPt_sub : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H 
   have hwx := fun a => (hw a).red (hut a)
   have := isAffineHom_of_field x0
   have : IsAffineHom m := MorphismProperty.of_isPullback (P := @IsAffineHom) hm.1.flip inferInstance
-  obtain ⟨S, hS, hSx, hSv⟩ := GlobalTheory.T.exists_linearCombination_tangentVectors_affineOpen A.hom ⟨m ⁻¹ᵁ Ω.1, Ω.2.preimage m⟩ (baseMap K B) x hx hxΩ w
+  obtain ⟨S, hS, hSx, hSv⟩ := _root_.GlobalTheory.CechKS.LinTan.exists_linComb A.hom ⟨m ⁻¹ᵁ Ω.1, Ω.2.preimage m⟩ (baseMap K B) x hx hxΩ w
     (fun a => (hw a).w) hwx (fun a => ∑ b, baseMap K B ((Matrix.of fun a b => ev x0 U.1 hU (Θ a b)) a b) *
       ((valR (w b) _ (M.g p₁ p₂).val).snd * valR x _ (M.g p₁ p₂)⁻¹.val))
   have hx₁ : ⊤ ≤ x ⁻¹ᵁ (M.U p₁ ⊓ (t.PP.L.pull m).U (fun _ => j i₁)) :=
@@ -108,17 +115,17 @@ theorem chartPt_sub : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {H 
     intro b
     unfold dlogAt
     rw [hwt]
-    exact GlobalTheory.T.logDerivative_transitionUnits_isoLineBundles m t.PP.L M wg hwg (j i₁) (j i₂) p₁ p₂ x (w b) (hwx b) hx₁ hx₂
+    exact _root_.GlobalTheory.CechKS.dlog_transition_iso m t.PP.L M wg hwg (j i₁) (j i₂) p₁ p₂ x (w b) (hwx b) hx₁ hx₂
   have hxm : ⊤ ≤ (x ≫ m) ⁻¹ᵁ Ω.1 := hxΩ
   have hbase : (x ≫ m) ≫ t.G.hom = spMap ((baseMap K B).comp (ev x0 U.1 hU)) ≫ LogKS.chart U := by
     rw [Category.assoc, hm.1.w, ← Category.assoc, hx, GlobalTheory.Cris.spMap_comp (ev x0 U.1 hU), Category.assoc]
     exact congrArg _ (GlobalTheory.FlagMod.spMap_ev x0 U.2 hU).symm
-  rw [GlobalTheory.T.firstOrderDeformation_points_differ_eps_allOpens hi.1.w hm'.1 him U hU' Ω ((e₁.trans hΩ₁).trans (hW₀ _)) x hxΩ S hS hSx l₁' l₂' k₁.1 k₂.1 k₁.2.1 k₂.2.1
+  rw [_root_.GlobalTheory.CechKS.valR_sub_eq_eps_mul_of_affine hi.1.w hm'.1 him U hU' Ω ((e₁.trans hΩ₁).trans (hW₀ _)) x hxΩ S hS hSx l₁' l₂' k₁.1 k₂.1 k₁.2.1 k₂.2.1
     (fun f => ⟨_, k₂.2.2 f⟩) ?_ O hxO f, hSv _ hxO]
   · simp only [Finset.sum_mul]
   · intro f
     have hd := hdiff i₁ i₂ Ω.1 (le_inf (e₁.trans hΩ₁) (e₂.trans hΩ₂)) f B _ (x ≫ m) (fun a => w a ≫ m) hbase hxm
-      (fun a => GlobalTheory.T.isTranslateOfTangentVector_fibre_to_groupScheme t x0 A m hm _ (v a) (u a) (hu a) _ x hx (w a) (hw a))
+      (fun a => _root_.GlobalTheory.CechKS.IsTransl.isTranslate_comp t x0 A m hm _ (v a) (u a) (hu a) _ x hx (w a) (hw a))
     rw [valR_eq_ev _ _ hxm, map_sub, ← valR_eq_ev, ← valR_eq_ev] at hd
     rw [k₁.2.2, k₂.2.2, valR_comp_app S, hSv _ hxΩ]
     unfold chartVal
@@ -169,7 +176,7 @@ theorem isCechKS_of_isKS : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   · intro k B _ _ x hx hxW
     have hxΩ : ⊤ ≤ x ⁻¹ᵁ (ι ⁻¹ᵁ k.2.1.1.1) := fun p hp => (hxW hp).1
     have hP := hex k B x hx hxΩ
-    refine ⟨hP.1, GlobalTheory.T.deformationChartPoint_reduction_eq_specialFibre hi hι'.1 hιι' hx hxΩ hP, fun B' _ _ ρ => ?_⟩
+    refine ⟨hP.1, _root_.GlobalTheory.CechKS.chartPt_red hi hι'.1 hιι' hx hxΩ hP, fun B' _ _ ρ => ?_⟩
     have hx' : (spMap (ρ : B →+* B') ≫ x) ≫ A.hom = spMap (baseMap K B') := by
       rw [Category.assoc, hx]
       show Spec.map _ ≫ Spec.map _ = Spec.map _
@@ -178,7 +185,7 @@ theorem isCechKS_of_isKS : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
       fun p _ => hxΩ (Set.mem_univ ((spMap (ρ : B →+* B')).base p))
     have hxWo : ⊤ ≤ x ⁻¹ᵁ (M.U k.2.2 ⊓ (t.PP.L.pull ι).U (fun _ => j k.1)) :=
       fun p hp => ⟨(hxW hp).2, Set.mem_iInter.2 fun _ => hWj k.1 (k.2.1.2 (hxW hp).1)⟩
-    exact (GlobalTheory.T.isDeformationChartPoint_spec_map hx hxΩ hxWo (GlobalTheory.T.isTangent_of_fibre_pullback_tangent_at_chart t U v hv x0 hU A ι u hι hu) hP B' ρ).unique hι'.1 (hex k B' _ hx' hxΩ')
+    exact (_root_.GlobalTheory.CechKS.isChartPt_spMap hx hxΩ hxWo (GlobalTheory.T.isTangent_of_fibre_pullback_tangent_at_chart t U v hv x0 hU A ι u hι hu) hP B' ρ).unique hι'.1 (hex k B' _ hx' hxΩ')
   · intro k k' B _ _ x O f w hx hxW hxO hw
     have h₁ : ⊤ ≤ x ⁻¹ᵁ (ι ⁻¹ᵁ k.2.1.1.1) := fun p hp => (hxW hp).1.1
     have h₂ : ⊤ ≤ x ⁻¹ᵁ (ι ⁻¹ᵁ k'.2.1.1.1) := fun p hp => (hxW hp).2.1

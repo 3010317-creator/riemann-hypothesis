@@ -1,8 +1,10 @@
 module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.ModerateCoefficientPositivity
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DefiniteFrameLeadingMinorsSignStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrameSectionSliceEqPolyDivDetPowStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.Signature
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DefiniteFrameLeadingMinorsSign
+public import Mathlib.RingTheory.MvPolynomial.Homogeneous
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrameSectionSliceEqPolyDivDetPow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -171,7 +173,7 @@ theorem finiteDimensional_cusp_definite : ∀ (E : Type) [Field E] [NumberField 
     intro x
     constructor
     · intro hx τ; exact (hx τ).1
-    · intro hx τ; exact ⟨hx τ, GlobalTheory.T.re_dmin_sign_pos_of_definite E r X hp x τ (hx τ)⟩
+    · intro hx τ; exact ⟨hx τ, _root_.GlobalTheory.FlagDomain.definite_frame_leading_minors_sign E r X hp x τ (hx τ)⟩
   set N : ℕ := ∑ τ, ∑ i, (la τ i).natAbs with hN
   have hNle : ∀ τ i, 0 ≤ la τ i + N := by
     intro τ i
@@ -195,7 +197,7 @@ theorem finiteDimensional_cusp_definite : ∀ (E : Type) [Field E] [NumberField 
     simp only [Set.mem_pi, Set.mem_univ, true_implies, Set.mem_setOf_eq]
     exact hdom x
   · intro g hg x hx τ
-    obtain ⟨F, hF, hFy⟩ := GlobalTheory.T.frameSection_slice_eq_poly_div_det_pow E r X hdom la N hNle g hg.1.1 x hx τ
+    obtain ⟨F, hF, hFy⟩ := _root_.GlobalTheory.section_slice_eq_poly_div_det_pow E r X hdom la N hNle g hg.1.1 x hx τ
     refine ⟨ev F, ⟨F, ?_, rfl⟩, fun t ht => hFy t ht⟩
     rw [SetLike.mem_coe, MvPolynomial.mem_restrictTotalDegree]
     exact hF.totalDegree_le

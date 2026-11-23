@@ -2,12 +2,15 @@ module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.BocksteinBaseChange.IsUnitWitt
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.SEqOne
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FilteredModuleFiniteOfGradedStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteLengthWittCohomologyStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.DpZeroRight
+public import Mathlib.RingTheory.Noetherian.Defs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FilteredModuleFiniteOfGraded
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.BocksteinBaseChange.ResCoeff
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteLengthWittCohomology
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SquarePullBijectiveOfAcyclicStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TruncatedWittIsNoetherianStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WittLevelOneGradedFiniteStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WittLevelOneVanishAboveDimStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TruncatedWittIsNoetherian
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WittLevelOneGradedFinite
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WittLevelOneVanishAboveDim
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.ChartGrConst
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.IsProperOfProj
 import Mathlib.Algebra.Order.Floor.Extended
@@ -65,7 +68,7 @@ private lemma isHecke_div_and_resEtaPow_div {b : Base} {L : b.Fun} (Q : ObjectPr
     (hN : IsNoetherianRing b.R)
     (hgr : ∀ r j : ℕ, Module.Finite b.R (CH.H (sq (sFil Q ↑r) (sFil Q (↑r + 1))) j)) (j : ℕ) :
     Module.Finite b.R (HO Q j) := by
-  have hfin := GlobalTheory.T.filtered_module_finite_of_graded (sFil Q) (fun r r' h T => (isFil Q).anti h T) (d + 1) (fun r _ j' => hgr r j') j
+  have hfin := _root_.GlobalTheory.CompanionTheory.LenDev.finite_H_sq (sFil Q) (fun r r' h T => (isFil Q).anti h T) (d + 1) (fun r _ j' => hgr r j') j
   rw [Nat.cast_add, Nat.cast_one] at hfin
   have ha : ∀ T, (sFil Q 0).S T = ⊤ := fun T => (isFil Q).top 0 le_rfl T
   have hb := GlobalTheory.T.square_pull_bijective_of_acyclic (sFil Q 0) (sFil Q (↑d + 1)) ha ?hv j
@@ -77,8 +80,8 @@ theorem wittCohomology_finite_length {l : ℕ} [Fact l.Prime] {k : Type} [Field 
     {X : Scheme.{0}} (q : X ⟶ Spec (CommRingCat.of O)) [IsProper q] [Smooth q] (ρ : O →+* k) (j : ℕ) :
     IsFiniteLength (WittVector l k) (CH.H (Wc.OM l (B.schFn q) ρ 1) j) := by
   obtain ⟨U⟩ := (CrystallineSemistableComparison.Pb.cov_ex q).1 inferInstance
-  refine GlobalTheory.T.finite_length_witt_cohomology q ρ j ?_
-  have hvan := GlobalTheory.T.witt_level_one_vanish_above_dim q ρ U (Finset.univ.sup U.d) (fun α => Finset.le_sup (Finset.mem_univ α))
+  refine _root_.GlobalTheory.CompanionTheory.LevelOne.finiteLength_level_one q ρ j ?_
+  have hvan := _root_.GlobalTheory.CompanionTheory.WittLevel.Van.witt_level_one_filtration_vanish q ρ U (Finset.univ.sup U.d) (fun α => Finset.le_sup (Finset.mem_univ α))
   have hfin := isHecke_div_and_resEtaPow_div _ _ hvan ?hN ?hgr j
   · refine Module.Finite.of_surjective (hM := hfin)
       (LinearEquiv.ofBijective ((incl ?hle).o.pull j) ?hb).symm.toLinearMap (LinearEquiv.surjective _)
@@ -88,8 +91,8 @@ theorem wittCohomology_finite_length {l : ℕ} [Fact l.Prime] {k : Type} [Field 
       · exact Or.inr ⟨(Fact.out : l.Prime).ne_zero, Or.inl rfl⟩
       · intro W hW
         rw [Set.mem_singleton_iff.mp hW, sSup_range, U.cover]
-  · exact GlobalTheory.T.truncated_witt_isNoetherian
-  · exact GlobalTheory.T.witt_level_one_graded_finite q ρ U
+  · exact _root_.GlobalTheory.CompanionTheory.WittLevel.isNoetherianRing_Wm_one
+  · exact _root_.GlobalTheory.CompanionTheory.FibGr.level_one_gr_finite q ρ U
 
 theorem smooth_model_finite_length_link {l : ℕ} [Fact l.Prime] {K : IntermediateField ℚ_[l] (PadicAlgCl l)} (r : Res l K) (M : Model l K)
     (hM : M.Sm) (j : ℕ) : IsFiniteLength (WittVector l r.k) ((Wc.HS l (B.schFn M.p) r.ρ j).M 1) := by

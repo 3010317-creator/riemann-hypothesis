@@ -5,14 +5,20 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDesc
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.FlatLineGenerator
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.CardComapMulFinsumEqFinsumFibres
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsSncModel
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EffectiveScaledWeightOfRetractionStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsEffectiveWeightSectionStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsHolomorphicSectionOfAnalytic
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsReferenceGeometrySameGenericStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EmbedsGeneric
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ArchBetween
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.SplitComps
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EffectiveScaledWeightOfRetraction
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsEffectiveWeightSection
+public import Development.WeilBound.CoreStatements.CentralCharts.ReferenceGeometryHolomorphicInverse
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.BlowupProjections.BlowupProjStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsReferenceGeometrySameGeneric
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericPointsFiniteNonemptyStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsCptGenResidueFieldGenericStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCptGen
+public import Mathlib.AlgebraicGeometry.ResidueField
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsCptGenResidueFieldGeneric
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginCoordsOverFieldStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginGoodPrimesFiniteStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginGoodPrimesFinite
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,7 +59,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EmbedsGeneric
 
 @[expose] public section
 
@@ -83,17 +88,17 @@ theorem comp_data (hG : Top.Given) (hA0 : Flat.FlatLineGenerator) (hA1 : Flat.Fl
           (fderiv ℂ (fun z i => lam ((Sys.A.chart j).symm z) i / lam ((Sys.A.chart j).symm z) p)
             (Sys.A.chart j x)).ker = ⊥) := by
   have hdom : ∀ x, IsDomain (Y.X.presheaf.stalk x) := fun x => (Y.normal x).1
-  have hcg := GlobalTheory.T.isCptGen_residue_field_generic Y.X hdom x hx
-  obtain ⟨G, hG0⟩ := GlobalTheory.T.exists_reference_geometry_same_generic hG.2.2.2.2.1 E H D l (Xo l) c Y _ (Y.X.fromSpecResidueField x) hcg
-  obtain ⟨A, hinv⟩ := GlobalTheory.T.exists_holomorphic_section_of_analytic hG hA0 hA1 E H D Xo l c Y hgl hsp hp hq G
+  have hcg := _root_.GlobalTheory.CompanionTheory.Ar.isCptGen_of_maximal Y.X hdom x hx
+  obtain ⟨G, hG0⟩ := _root_.GlobalTheory.CompanionTheory.Ar.exists_refGeo hG.2.2.2.2.1 E H D l (Xo l) c Y _ (Y.X.fromSpecResidueField x) hcg
+  obtain ⟨A, hinv⟩ := _root_.AnalyticReference.reference_geometry_holomorphic_inverse hG hA0 hA1 E H D Xo l c Y hgl hsp hp hq G
   let ν : RootIx D → ℤ := fun r => -((r.2 : ℕ) : ℤ)
   have hν : ∀ τ (i k : Fin (D.p + D.q)), i < k → ν (τ, k) < ν (τ, i) := by
     intro τ i k hik
     simp only [ν, neg_lt_neg_iff]
     exact_mod_cast hik
-  obtain ⟨k, q', s, hk, hq', hs, heff⟩ := GlobalTheory.T.exists_effective_weight_section hG E H D Xo l c Y hgl hp hq G ⟨A⟩ ν hν
+  obtain ⟨k, q', s, hk, hq', hs, heff⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ExRefEff.exists_eff hG E H D Xo l c Y hgl hp hq G ⟨A⟩ ν hν
   obtain ⟨Fx, R, o, hgen, hkA, hq'', hn, hdeg, hJ, hamp, hemb, hbij, hlam⟩ :=
-    GlobalTheory.T.effective_scaled_weight_of_retraction E H D l (Xo l) c Y G A ν k q' s hinv hsp hk hq' hs heff
+    _root_.GlobalTheory.CompanionTheory.Ar.RefRoot.refRoot E H D l (Xo l) c Y G A ν k q' s hinv hsp hk hq' hs heff
   refine ⟨A.Sys, Fx, R, o, ?_, ?_, hdeg, hJ, hamp, hemb, hbij, A.flat, hlam⟩
   · rw [hgen, hG0]
     exact Scheme.fromSpecResidueField_apply x _
@@ -112,7 +117,7 @@ theorem level_data (hG : Top.Given) (hW : Out.WeilSt)
     ∃ (RM : Top.RootModel (CMType H) (D.p + D.q)) (o' : RootOrigin Y S RM Fx), o'.𝔐.OmVB ∧
       (∀ p ∈ S, o'.𝔐.R p = 4) ∧ o'.Re.J = ⊤ ∧ ∃ _ : Algebra ℚ RM.Ω, SmoothGenericFibreM RM.y := by
   obtain ⟨Ω, _, _, K, _, J, _, y, bk, bx, i, 𝔐, h, Fl, xdeg, e, hbk, hy, hd, hf, hcst, hfl, hfin, hlines,
-    hom, hsm, hR⟩ := GlobalTheory.T.root_origin_good_primes_finite hG hW E H D l Xo c Y Sys Fx R o S hS hdisc hdeg
+    hom, hsm, hR⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ChangeGeo.exists_cover hG hW E H D l Xo c Y Sys Fx R o S hS hdisc hdeg
   obtain ⟨RM, o', h1, h2, h3, h4⟩ := GlobalTheory.T.root_origin_coords_over_field hG E H D l Xo c Y Sys Fx R o S Ω K J y bk bx i 𝔐 h Fl
     xdeg e hdeg hemb hbij hbk hy hd hf hcst hfl hfin hlines hom hsm
   refine ⟨RM, o', h1, fun p hp => ?_, h3, h4⟩

@@ -2,9 +2,9 @@ module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LevelChainValuations.LatDefs
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.SEqOne
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LatticeFiltrationComapSpanPowStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LatticeFiltrationLTorsionFreeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MemLatticeSubIffSumStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LatticeFiltrationComapSpanPow
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LatticeFiltrationLTorsionFree
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MemLatticeSubIffSum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -115,7 +115,7 @@ theorem T_mem_span {r : ℕ} {b : B} (hb : b ∈ T f ξ l M r) : b ∈ Ideal.spa
   | neg x _ hx => exact neg_mem hx
 
 theorem mem_T_zero {b : B} (hb : b ∈ Lat.sub f ξ l M) : b ∈ T f ξ l M 0 := by
-  obtain ⟨n, c, rfl⟩ := (GlobalTheory.T.mem_lattice_sub_iff_sum f ξ l M b).1 hb
+  obtain ⟨n, c, rfl⟩ := (_root_.GlobalTheory.CompanionTheory.LatSpan.mem_sub_iff f ξ l M b).1 hb
   exact sum_mem fun i _ => AddSubgroup.subset_closure ⟨c i, i, Nat.zero_le _, rfl⟩
 
 theorem xi_mul_mem (hl : l ≠ 0) (r : ℕ) (e : W) :
@@ -166,7 +166,7 @@ theorem tf_pow {m : ℕ} (h : Lat.Hyp f ξ l m) (hc : Lat.DPClosed (Lat.ι f ξ 
   | zero => simpa using H
   | succ n ih =>
     rw [pow_succ', mul_assoc] at H
-    exact ih (GlobalTheory.T.lattice_filtration_l_torsion_free f ξ l M m h hc r _ H)
+    exact ih (_root_.GlobalTheory.CompanionTheory.Lat.quot_pdP_no_torsion f ξ l M m h hc r _ H)
 
 theorem lat_ι_mem_T_zero (x : Lat.A f ξ l M) : Lat.ι f ξ l M x ∈ T f ξ l M 0 :=
   mem_T_zero f ξ l M (Subtype.prop x)
@@ -177,7 +177,7 @@ theorem closed_succ {m : ℕ} (h : Lat.Hyp f ξ l m) (hc : Lat.DPClosed (Lat.ι 
     (x : Lat.A f ξ l M)
     (hx : ∀ n : ℕ, x ∈ Ideal.span {(l : Lat.A f ξ l M) ^ n} ⊔ pdP (Lat.γ f ξ l M hc) (r + 1)) :
     x ∈ pdP (Lat.γ f ξ l M hc) (r + 1) := by
-  have E := GlobalTheory.T.lattice_filtration_comap_span_pow f ξ l M m h hc
+  have E := _root_.GlobalTheory.CompanionTheory.LatPdpEq.dividedPowerFiltration_eq f ξ l M m h hc
   have hle : pdP (Lat.γ f ξ l M hc) (r + 1) ≤ pdP (Lat.γ f ξ l M hc) r := by
     rw [E, E]
     exact Ideal.comap_mono (Ideal.span_singleton_le_span_singleton.2 (pow_dvd_pow _ (Nat.le_succ r)))
@@ -228,7 +228,7 @@ theorem closed : ∀ {W B : Type} [CommRing W] [CommRing B] [Algebra ℚ B] (f :
   induction r with
   | zero =>
     intro x _
-    rw [GlobalTheory.T.lattice_filtration_comap_span_pow f ξ l M m h hc 0]
+    rw [_root_.GlobalTheory.CompanionTheory.LatPdpEq.dividedPowerFiltration_eq f ξ l M m h hc 0]
     simp
   | succ r ih => exact closed_succ h hc r ih
 

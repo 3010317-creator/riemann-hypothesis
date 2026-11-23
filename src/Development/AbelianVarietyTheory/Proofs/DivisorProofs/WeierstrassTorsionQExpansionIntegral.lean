@@ -2,10 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ZetaActRefl
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TorsTransport
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlgebraicValuationAtLeastBasicPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasQExpansionNormalizedDerivWeierstrassPTorsionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralWeierstrassTorsionQCoefficientsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeierstrassDivisionValueQExpansionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlgebraicValuationAtLeastBasicProperties
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasQExpansionNormalizedDerivWeierstrassPTorsion
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralWeierstrassTorsionQCoefficients
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeierstrassDivisionValueQExpansion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,12 +57,12 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (lam : algebraicClosure ℚ ℂ →+
   intro l hl lam N _ M x hM hx hx0
   have hpos : 0 < M := Nat.pos_of_ne_zero fun h => hM (h ▸ dvd_zero l)
   have hpow : ∀ e : ℕ, ¬ l ∣ M ^ e := fun e h => hM (hl.out.dvd_of_dvd_pow h)
-  have hsz := (GlobalTheory.T.algebraicValuationAtLeast_basic_properties l lam).1
-  refine ⟨⟨cB N x, GlobalTheory.T.weierstrass_division_value_q_expansion N x hx0, fun k => hsz (M ^ 2) _ (hpow 2) ?_⟩,
-    ⟨cD N x, GlobalTheory.T.hasQExpansion_normalizedDerivWeierstrassPTorsion N x, fun k => hsz (M ^ 3) _ (hpow 3) ?_⟩⟩
+  have hsz := (_root_.GlobalTheory.SzRules.main l lam).1
+  refine ⟨⟨cB N x, _root_.GlobalTheory.WpFam.ExpansionB.main N x hx0, fun k => hsz (M ^ 2) _ (hpow 2) ?_⟩,
+    ⟨cD N x, _root_.GlobalTheory.WpFam.DerivExpansion.main N x, fun k => hsz (M ^ 3) _ (hpow 3) ?_⟩⟩
   · rw [Nat.cast_pow]
-    exact (GlobalTheory.T.isIntegral_weierstrassTorsion_qCoefficients N M x k hpos hx).1
+    exact (_root_.GlobalTheory.WpFam.isIntegral_coefficients N M x k hpos hx).1
   · rw [Nat.cast_pow]
-    exact (GlobalTheory.T.isIntegral_weierstrassTorsion_qCoefficients N M x k hpos hx).2.1
+    exact (_root_.GlobalTheory.WpFam.isIntegral_coefficients N M x k hpos hx).2.1
 
 end GlobalTheory.WpFam.ExpansionIntegral

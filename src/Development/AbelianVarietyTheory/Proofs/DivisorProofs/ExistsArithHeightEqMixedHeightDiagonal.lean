@@ -3,10 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAmbOfIsArithVar
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchIntegrableOfProjArithAmbientStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChernPartSingleton
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoheightOneIffPointClosureDimProjArithStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasPointClosureDimBasicProjArithAmbientStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedArchIntegralAdditiveAndDiagonalStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoheightOneIffPointClosureDimProjArith
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedArchIntegralAdditiveAndDiagonal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedHeightPowEqDegreeLogCardFiniteFieldStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasPointClosureDimBasicProjArithAmbient
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NontrivialIsomClassInt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -91,7 +91,7 @@ theorem mix_pow {m : ℕ} {T : ∀ d : ℕ, (Fin d → HermLB p) → X → ℝ} 
 theorem exists_isArithHeight : ArchInteg → ∀ (k : Type) [CommRing k] (X : Scheme.{0}) (p : X ⟶ Sp k) (D : ℕ), IsArithVar p D → ∀ T, IsMix p (D + 1) T → ∀ N : HermLB p, ∃ h : X → ℝ, N.IsArithHeight h ∧ ∀ (x : X) (d : ℕ), HasDim x d → h x = T d (fun _ => N) x := by
   intro HI k _ X p D hX T hT N
   have hA : IsAmb p := isAmb_of_isArithVar hX
-  obtain ⟨-, -, -, -, himm, hgen⟩ := GlobalTheory.T.hasPointClosureDim_basic_projArithAmbient k X p hA
+  obtain ⟨-, -, -, -, himm, hgen⟩ := _root_.GlobalTheory.MixHt.hasDim_basic k X p hA
   let h : X → ℝ := fun x =>
     T ((topologicalKrullDim (closure ({x} : Set X))).unbotD 0).toNat (fun _ => N) x
   have hh (x : X) (d : ℕ) (hd : HasDim x d) : h x = T d (fun _ => N) x := by
@@ -122,13 +122,13 @@ theorem exists_isArithHeight : ArchInteg → ∀ (k : Type) [CommRing k] (X : Sc
       congr 1
       funext a
       exact Fin.cases rfl (fun j => j.elim0) a
-    rw [hh _ 1 (hgi Z i 1 hd1), key, recVal, (GlobalTheory.T.mixedArchIntegral_additive_and_diagonal HI k Z (i ≫ p) hAZ (N.restr i) r hr).2 0 hd1 (N.restr i),
+    rw [hh _ 1 (hgi Z i 1 hd1), key, recVal, (_root_.GlobalTheory.MixAdd.mixArch_add_diag HI k Z (i ≫ p) hAZ (N.restr i) r hr).2 0 hd1 (N.restr i),
       GlobalTheory.ArchDimZero.main k Z (i ≫ p) hZ _ _ r hr, HermLB.curveDeg]
     refine congrArg (· - _) (finsum_congr fun z => ?_)
     by_cases hz : ((N.restr i).div hr).mult z = 0
     · simp [hz]
     have hz1 := CartierDiv.coheight_eq_one_of_mult_ne_zero hz
-    have hz0 : HasDim (i z) 0 := (himm Z i z 0).2 (((GlobalTheory.T.coheight_one_iff_pointClosure_dim_projArith k Z (i ≫ p) hAZ 0 hd1).1 z).1 hz1)
+    have hz0 : HasDim (i z) 0 := (himm Z i z 0).2 (((_root_.GlobalTheory.MixHt.dimOne k Z (i ≫ p) hAZ 0 hd1).1 z).1 hz1)
     rw [hT.zero _ _ hz0, card_residueField_eq i z]
   · have hAZ : IsAmb (i ≫ p) := hA.sub i
     refine ⟨GlobalTheory.T.archIntegrable_of_projArithAmbient HI k Z (i ≫ p) hAZ e hd _ _ r hr, ?_⟩
@@ -142,12 +142,12 @@ theorem exists_isArithHeight : ArchInteg → ∀ (k : Type) [CommRing k] (X : Sc
     have e1 : (Fin.cons N (fun _ : Fin e => N) : Fin (e + 1) → HermLB p) = fun _ => N :=
       funext fun a => Fin.cases rfl (fun _ => rfl) a
     rw [e1] at key
-    rw [hh _ (e + 1) hx, key, recVal, (GlobalTheory.T.mixedArchIntegral_additive_and_diagonal HI k Z (i ≫ p) hAZ ((N.restr i).pow m) r hr).2 e hd (N.restr i)]
+    rw [hh _ (e + 1) hx, key, recVal, (_root_.GlobalTheory.MixAdd.mixArch_add_diag HI k Z (i ≫ p) hAZ ((N.restr i).pow m) r hr).2 e hd (N.restr i)]
     refine congrArg (· - _) (finsum_congr fun z => ?_)
     by_cases hz : (((N.restr i).pow m).div hr).mult z = 0
     · simp [hz]
     have hz1 := CartierDiv.coheight_eq_one_of_mult_ne_zero hz
-    have hze : HasDim (i z) e := (himm Z i z e).2 (((GlobalTheory.T.coheight_one_iff_pointClosure_dim_projArith k Z (i ≫ p) hAZ e hd).1 z).1 hz1)
+    have hze : HasDim (i z) e := (himm Z i z e).2 (((_root_.GlobalTheory.MixHt.dimOne k Z (i ≫ p) hAZ e hd).1 z).1 hz1)
     rw [hh _ e hze]
 
 end GlobalTheory.MixHtDiag

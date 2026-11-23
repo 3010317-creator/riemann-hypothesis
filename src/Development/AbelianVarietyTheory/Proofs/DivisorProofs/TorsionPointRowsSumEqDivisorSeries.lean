@@ -1,9 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ZetaActRefl
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasSumLambertDoubleSeriesDivisorsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionPointRowSumEqQExpansionSeriesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TsumResidueClassSplitBySignStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasSumLambertDoubleSeriesDivisors
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionPointRowSumEqQExpansionSeries
+public import Mathlib.Data.ZMod.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TsumResidueClassSplitBySign
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -90,7 +92,7 @@ theorem main : ∀ (N : ℕ) [NeZero N] (e : ℕ) (τ : ℍ) (x : Fin 2 → ZMod
     field_simp
     ring
   rw [hfR] at hS
-  have hsplit := GlobalTheory.T.tsum_residueClass_split_by_sign N (x 0) R hS.summable
+  have hsplit := _root_.GlobalTheory.WpFam.tsum_residue_class_split N (x 0) R hS.summable
   let c₁ : ℕ → ℕ → ℂ := fun d m => if ((d : ℕ) : ZMod N) = x 0 then ch N ((m : ZMod N) * x 1) else 0
   let c₂ : ℕ → ℕ → ℂ := fun d m => if ((d : ℕ) : ZMod N) = -x 0 then ch N (-((m : ZMod N) * x 1)) else 0
   have hq1 : ‖q‖ < 1 := norm_q_lt N τ
@@ -106,8 +108,8 @@ theorem main : ∀ (N : ℕ) [NeZero N] (e : ℕ) (τ : ℍ) (x : Fin 2 → ZMod
     split_ifs
     · rw [norm_ch]
     · simp
-  have h₁ := GlobalTheory.T.hasSum_lambert_double_series_divisors e q c₁ hq1 hc₁
-  have h₂ := GlobalTheory.T.hasSum_lambert_double_series_divisors e q c₂ hq1 hc₂
+  have h₁ := _root_.GlobalTheory.WpFam.hasSum_lambert e q c₁ hq1 hc₁
+  have h₂ := _root_.GlobalTheory.WpFam.hasSum_lambert e q c₂ hq1 hc₂
   set T₁ := ∑' d : ℕ+, ∑' m : ℕ+, ((m : ℕ) : ℂ) ^ e * c₁ d m * q ^ ((d : ℕ) * (m : ℕ))
   set T₂ := ∑' d : ℕ+, ∑' m : ℕ+, ((m : ℕ) : ℂ) ^ e * c₂ d m * q ^ ((d : ℕ) * (m : ℕ))
   refine ⟨T₁ + (-1) ^ (e + 1) * T₂, ?_, ?_⟩
@@ -125,7 +127,7 @@ theorem main : ∀ (N : ℕ) [NeZero N] (e : ℕ) (τ : ℍ) (x : Fin 2 → ZMod
       intro d
       simp only [c₁]
       split_ifs with hd
-      · have := (GlobalTheory.T.torsionPoint_rowSum_eq_qExpansion_series N e τ (x 1) d he).1
+      · have := (_root_.GlobalTheory.WpFam.torsion_row_series N e τ (x 1) d he).1
         simp only [hR]
         push_cast
         rw [this]
@@ -135,7 +137,7 @@ theorem main : ∀ (N : ℕ) [NeZero N] (e : ℕ) (τ : ℍ) (x : Fin 2 → ZMod
       intro d
       simp only [c₂]
       split_ifs with hd
-      · have := (GlobalTheory.T.torsionPoint_rowSum_eq_qExpansion_series N e τ (x 1) d he).2
+      · have := (_root_.GlobalTheory.WpFam.torsion_row_series N e τ (x 1) d he).2
         simp only [hR]
         push_cast
         rw [this]

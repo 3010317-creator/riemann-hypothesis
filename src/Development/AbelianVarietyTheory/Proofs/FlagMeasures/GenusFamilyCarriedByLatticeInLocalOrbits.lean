@@ -4,8 +4,12 @@ public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LocCl
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeLocalGlobalPrinciple
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeLocalGlobalPrincipleStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalTermLatticeOverInnerDatumFgSpanStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NumberFieldLatticeDeterminedByLocalLatticesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryComplementMovesLocalTermsWithDataStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.IsTermOver
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryComplementMovesLocalTermsWithData
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PlacesOf
+import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GFrames
+import Mathlib.Algebra.Module.Lattice.Full
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NumberFieldLatticeDeterminedByLocalLattices
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -41,7 +45,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PlacesOf
 
 @[expose] public section
 
@@ -74,7 +77,7 @@ theorem localLattice_fg_and_span_eq_top (Z : LocDat D) (Λ : LV D) (h : Submodul
     change Submodule.span D.host.E (((LatLoc.cE D).toLinearMap) '' (Λ : Set (VS D).V)) = ⊤
     rw [Submodule.span_image, h.span_eq_top, Submodule.map_top, LinearMap.range_eq_top]
     exact (LatLoc.cE D).surjective
-  have := (GlobalTheory.T.numberField_lattice_determined_by_local_lattices (GlobalTheory.HL.placesOf Z) (nV D) (LatLoc.cL Λ) hmap).2.1 p
+  have := (_root_.GlobalTheory.HL.PlacesRec.lattice_local (GlobalTheory.HL.placesOf Z) (nV D) (LatLoc.cL Λ) hmap).2.1 p
   rw [LatLoc.localLattice_eq]
   exact this
 
@@ -108,7 +111,7 @@ theorem glue_local_orbits : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' 
     · exact ⟨1, one_mem _, fun _ => rfl, τ, hp ▸ hτ1, by rw [img_one, hτ2]⟩
     · obtain ⟨g, hg, hm⟩ := hrel p
       exact ⟨g, hg, fun h => absurd h hp, _,
-        (GlobalTheory.T.unitaryComplement_moves_local_terms_with_data (Z.M p) (Z.agree p).1 (locH Z p) D.R.rS D.R.k (FP p) (finrank_loc p) (hR p) g hg
+        (_root_.GlobalTheory.HL.LocalMove.main (Z.M p) (Z.agree p).1 (locH Z p) D.R.rS D.R.k (FP p) (finrank_loc p) (hR p) g hg
           (y p) (y' p) τ hτ1 hm).1, by rw [← hτ2]⟩
   choose h hU h1 τ hτ1 hτ2 using key
   obtain ⟨M, hM⟩ := Ideal.exists_maximal (𝓞 D.host.F)

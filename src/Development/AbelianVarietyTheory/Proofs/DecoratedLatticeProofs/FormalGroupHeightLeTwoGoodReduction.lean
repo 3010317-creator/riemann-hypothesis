@@ -2,15 +2,20 @@ module
 
 public import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.EndoZInstance
 public import Formalism.LocalToGlobal.TorsionIntegrality.WeierstrassTwoTorsion.StatementK
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MultiplicationSeriesUnitCoeffNormLeStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.EndOmega
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MultiplicationSeriesUnitCoeffNormLe
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NormWeierstrassPSubEqOneOfGood
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeierstrassPIntegralOfMulIntegralGoodReductionStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeierstrassPOddMulSubTwoTorsionProductStatement
+public import Mathlib.Analysis.Normed.Field.Instances
+public import Mathlib.Analysis.SpecialFunctions.Elliptic.Weierstrass
+public import Mathlib.NumberTheory.Padics.Complex
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeierstrassPIntegralOfMulIntegralGoodReduction
+public import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.TranslateProduct
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeierstrassPOddMulSubTwoTorsionProduct
 public import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.AnalyticIdentityTheorems.Taylor
-import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.MulStableIntegral
 public import Formalism.LocalToGlobal.TorsionIntegrality.SecondCoefficientNorms.BinomialSeriesCoefficients.CurveIntegerMultiplicationSeries
-import Formalism.LocalToGlobal.TorsionIntegrality.SecondCoefficientNorms.BinomialSeriesCoefficients.USideB
 public import Formalism.LocalToGlobal.TorsionIntegrality.TorsionTranslationPowers.AnalyticTransOfAdd
+import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.MulStableIntegral
+import Formalism.LocalToGlobal.TorsionIntegrality.SecondCoefficientNorms.BinomialSeriesCoefficients.USideB
 import Formalism.LocalToGlobal.TorsionIntegrality.TorsionTranslationPowers.NonsingularJetNorms.AnaSys
 import Formalism.LocalToGlobal.TorsionIntegrality.WeierstrassTwoTorsion.CubeThreeR
 import Formalism.LocalToGlobal.TorsionIntegrality.WeierstrassTwoTorsion.FglInvariant
@@ -289,7 +294,7 @@ theorem height_le_two (L : PeriodPair) (l : ℕ) [Fact l.Prime] (hl : 5 ≤ l) (
     intro s P hs h2s hP
     have hm := odd_mul_sub_mem L hodd h2s hP
     have hn : (l : ℂ) * (s + P) ∉ L.lattice := fun h => hs (by simpa using sub_mem h hm)
-    refine ⟨fun h => hn (nat_mul_mem L l h), GlobalTheory.T.weierstrassP_integral_of_mul_integral_good_reduction L l hl ι h2 h3 hΔ _ l hn ?_⟩
+    refine ⟨fun h => hn (nat_mul_mem L l h), _root_.GlobalTheory.Honda.integral_of_mul_integral L l hl ι h2 h3 hΔ _ l hn ?_⟩
     rw [wp_congr L hm, ← Formalism.L2.Th1.E.AnaSys.px_ptOf l L ι s hs]
     exact (Formalism.L2.Th1.E.ptOfInt l L ι hInt s 2 two_pos (fun h => by have := Nat.le_of_dvd two_pos h; omega)
       (by simpa using h2s) hs).1
@@ -324,7 +329,7 @@ theorem height_le_two (L : PeriodPair) (l : ℕ) [Fact l.Prime] (hl : 5 ≤ l) (
     rw [Complex.normSq_natCast, ← sq] at this
     exact_mod_cast this
   have h0S : (0 : ℂ) ∉ S := fun h => (hS.1 0 h).2 (zero_mem _)
-  have hprod := GlobalTheory.T.weierstrassP_odd_mul_sub_twoTorsion_product L l S t hodd hS ht0 ht2
+  have hprod := _root_.GlobalTheory.OddHalfProduct.wp_odd_mul_sub_half_prod L l S t hodd hS ht0 ht2
   have hins : ∀ P ∈ insert (0 : ℂ) S, (l : ℂ) * P ∈ L.lattice := by
     intro P hP
     rcases Finset.mem_insert.1 hP with rfl | hP
@@ -338,7 +343,7 @@ theorem height_le_two (L : PeriodPair) (l : ℕ) [Fact l.Prime] (hl : 5 ≤ l) (
     rwa [hb2, zero_div] at this
   have hu := series_u (logPair W) hX _ _ S _ _ hzser
   rw [← hcard]
-  refine GlobalTheory.T.multiplication_series_unit_coeff_norm_le ℂ_[l] (Formalism.L2.Th1.A.xS W) _ (ι (L.weierstrassP t)) (ι (L.weierstrassP t')) S.card
+  refine _root_.GlobalTheory.Honda.htform_unit_coeff_le ℂ_[l] (Formalism.L2.Th1.A.xS W) _ (ι (L.weierstrassP t)) (ι (L.weierstrassP t')) S.card
     (Polynomial.C ((l : ℂ_[l]) ^ 2) * ∏ P ∈ S, (Polynomial.X - Polynomial.C (ι (L.weierstrassP P))))
     (Polynomial.C 1 * ∏ P ∈ insert 0 S, (Polynomial.X - Polynomial.C (ι (L.weierstrassP (t + P)))))
     hx (Formalism.L2.Th1.A.wSerFactor ℂ_[l] W).2.2.2.1 ?_ (cc_mulBy (logPair W) _) ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_

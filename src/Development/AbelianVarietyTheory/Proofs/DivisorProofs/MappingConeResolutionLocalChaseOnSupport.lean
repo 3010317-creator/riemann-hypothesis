@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafPropertiesStatement
+public import Mathlib.Algebra.Homology.HomotopyCategory.KInjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafProperties
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafSectionsExactStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleLocalPropertyCalculusRulesStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -99,8 +100,8 @@ theorem mappingCone_resolution_localChase_of_succ (E : Spc) {F G : Shv R} (φ : 
       Sec.map ((res R F).d n k) a₁ = -Sec.res g b₁ ∧
       Sec.map ((resMap R φ).f n) a₁ + Sec.map ((res R G).d m n) a₂ = Sec.res g b₂ := by
   obtain ⟨Lall, Lmono, -, -, Ltrans, -, -⟩ := GlobalTheory.T.etaleLocal_property_calculus_rules
-  have hι := ((GlobalTheory.T.chosenInjectiveResolution_etaleSheaf_properties R F).2.2.2.2.2.2.2 G φ).2
-  have hd := (GlobalTheory.T.chosenInjectiveResolution_etaleSheaf_properties R F).2.2.2.2.2.2.1
+  have hι := ((_root_.GlobalTheory.EtC.ResBasic.res_basic R F).2.2.2.2.2.2.2 G φ).2
+  have hd := (_root_.GlobalTheory.EtC.ResBasic.res_basic R F).2.2.2.2.2.2.1
   rcases lt_or_ge n 0 with hn | hn
   · have hb₂ : b₂ = 0 := ((GlobalTheory.T.chosenInjectiveResolutionEtaleSheaf_sections_exactness R G U).2.2.2 n hn).elim _ _
     have hb₁ : b₁ = 0 := by

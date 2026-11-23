@@ -2,10 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowForm
 public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussianConvolutionSeriesCoefficientDescFactoriaStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussianIteratedFDerivWeightedExpBoundedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormGaussianConvolutionSeriesCoefficientLeIntegrStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormIteratedFDerivMultilinearDiagonalLeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussianConvolutionSeriesCoefficientDescFactoria
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.ContDiff.FTaylorSeries
+public import Mathlib.Analysis.Complex.Exponential
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussianIteratedFDerivWeightedExpBounded
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormGaussianConvolutionSeriesCoefficientLeIntegr
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormIteratedFDerivMultilinearDiagonalLe
+public import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -13,7 +18,6 @@ import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Calculus.ContDiff.Bounds
 import Mathlib.Analysis.Calculus.ContDiff.CPolynomial
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-public import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
@@ -76,7 +80,7 @@ theorem summable_seminorm_term : ∀ (E : Type) [NormedAddCommGroup E] [InnerPro
     have e2 : δ * (6 * c) ≤ b := by rwa [le_div_iff₀ (by positivity)] at hδ2
     rw [e1, hθ]; nlinarith
 
-  choose K hK using fun m => GlobalTheory.T.gaussian_iteratedFDeriv_weighted_exp_bounded E c α hc hα1 k m
+  choose K hK using fun m => _root_.GlobalTheory.GaussDerivBound.weighted_bound E c α hc hα1 k m
   set M : ℕ → ℝ := fun i => ∫ a, (2 * c * ‖a‖) ^ i * ‖h a‖ with hM
   have hM0 : ∀ i, 0 ≤ M i := fun i => integral_nonneg fun a => by positivity
   set B : ℝ := θ ^ n * ∑ i ∈ Finset.range (n + 1), (n.choose i : ℝ) * M (n - i) * K i with hB
@@ -104,7 +108,7 @@ theorem summable_seminorm_term : ∀ (E : Type) [NormedAddCommGroup E] [InnerPro
     rw [hfun]
     have hfn : ‖f‖ ≤ s * ∫ a, ‖GlobalTheory.ConvSeries.wt b c (⇑h) a‖ * ‖a‖ ^ j := by
       rw [hf, norm_smul, Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg hs0]
-      exact mul_le_mul_of_nonneg_left (GlobalTheory.T.norm_gaussianConvolutionSeriesCoefficient_le_integral E b c hb.le hc.le h j) hs0
+      exact mul_le_mul_of_nonneg_left (_root_.GlobalTheory.ConvSeries.norm_coef_le_integral E b c hb.le hc.le h j) hs0
     have hterm : ∀ i ∈ Finset.range (n + 1),
         ‖y‖ ^ k * ((n.choose i : ℝ) * ‖iteratedFDeriv ℝ i (fun y : E => Complex.exp (-((c * ‖y‖ ^ 2 : ℝ) : ℂ))) y‖ *
           ‖iteratedFDeriv ℝ (n - i) (fun y : E => f (fun _ => y)) y‖) ≤
@@ -112,8 +116,8 @@ theorem summable_seminorm_term : ∀ (E : Type) [NormedAddCommGroup E] [InnerPro
       intro i hi
       have hi' : i ≤ n := Nat.lt_succ_iff.1 (Finset.mem_range.1 hi)
       set m := n - i
-      have h1 := GlobalTheory.T.norm_iteratedFDeriv_multilinear_diagonal_le E j f m y
-      have h3 := GlobalTheory.T.gaussianConvolutionSeriesCoefficient_descFactorial_estimate E b c θ α hc hθ1 hα0 hθα h j m y
+      have h1 := _root_.GlobalTheory.norm_iteratedFDeriv_diag_multilinear_le E j f m y
+      have h3 := _root_.GlobalTheory.TermEst.main E b c θ α hc hθ1 hα0 hθα h j m y
       have hPm : ‖iteratedFDeriv ℝ m (fun y : E => f (fun _ => y)) y‖ ≤
           θ⁻¹ ^ (j - m) * Real.exp (c * α * ‖y‖ ^ 2) * M m := by
         refine h1.trans (le_trans ?_ h3)

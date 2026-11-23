@@ -1,12 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ActAtApply
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlActionQuadraticRelationModuloPiTensorAtFactorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HoweFiniteLengthUniqueMaximalOfCyclicStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsGoodGlRepPiTensorActionAtFactorAndCommuteStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemPiTensorSpanAllFactorsOfJointKernelStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PiTensorSpanAllFactorsSupFiniteSingletonStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TprodCyclicModuloSpanSomeFactorStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlActionQuadraticRelationModuloPiTensorAtFactor
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HoweFiniteLengthUniqueMaximalOfCyclic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsGoodGlRepPiTensorActionAtFactorAndCommute
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemPiTensorSpanAllFactorsOfJointKernel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PiTensorSpanAllFactorsSupFiniteSingleton
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TprodCyclicModuloSpanSomeFactor
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -98,7 +98,7 @@ theorem iInf_hwSub_le {R S : T → ℕ} (a : ∀ w, Mat (R w) (S w) →ₗ[ℂ] 
     (⨅ w, hwSub (actAt w (a w)) (μ w)) ≤ tensAll (fun w => hwSub (a w) (μ w)) := by
   intro y hy
   rw [Submodule.mem_iInf] at hy
-  refine GlobalTheory.T.mem_piTensorSpanAllFactors_of_jointKernel T V
+  refine _root_.GlobalTheory.HoweR.mem_tensAll_of_killed T V
     (fun w => {l | (∃ c, l = a w (Eab c c) - ((μ w c : ℚ) : ℂ) • 1) ∨ ∃ c d, posC c d ∧ l = a w (Eab c d)})
     (fun w => hwSub (a w) (μ w)) ?_ y ?_
   · intro w x hx
@@ -128,18 +128,18 @@ theorem howeAlg_tensAny : ∀ (T : Type) [Fintype T] [DecidableEq T] (V : T → 
     [∀ w, Module ℂ (V w)], ∀ (R S : T → ℕ) (a : ∀ w, Mat (R w) (S w) →ₗ[ℂ] Module.End ℂ (V w))
     (C : ∀ w, Submodule ℂ (V w)), (∀ w, Pack (a w) (C w)) → HoweAlg (fun w => actAt w (a w)) (tensAny C) := by
   intro T _ _ V _ _ R S a C hP
-  have hG := GlobalTheory.T.isGoodGlRep_piTensorActionAtFactor_and_commute T V R S a (fun w => (hP w).1)
+  have hG := _root_.GlobalTheory.HoweR.actAt_good_comm T V R S a (fun w => (hP w).1)
   choose α β α' β' hQ using fun w => (hP w).2.2.1
   choose μ v hv hgen hmul using fun w => (hP w).2.2.2.2
-  refine GlobalTheory.T.howeAlg_of_cyclic_highest_weight T R S (⨂[ℂ] i, V i) (fun w => actAt w (a w)) hG.1 hG.2 (tensAny C) α β α' β'
-    (fun w => GlobalTheory.T.glActionQuadraticRelationModulo_piTensorAtFactor T V C w (R w) (S w) (a w) _ _ _ _ (hQ w)) ?_ ?_
+  refine _root_.GlobalTheory.HoweR.howe_finiteLength_uniqueMaximal_of_cyclic T R S (⨂[ℂ] i, V i) (fun w => actAt w (a w)) hG.1 hG.2 (tensAny C) α β α' β'
+    (fun w => _root_.GlobalTheory.HoweR.quadMod_actAt T V C w (R w) (S w) (a w) _ _ _ _ (hQ w)) ?_ ?_
   · intro B
     choose U hUfd hU using fun w => (hP w).2.2.2.1 B
-    refine ⟨tensAll U, (GlobalTheory.T.piTensorSpanAllFactors_sup_finite_singleton T V U C).2.1 hUfd, fun ν hν => ?_⟩
+    refine ⟨tensAll U, (_root_.GlobalTheory.HoweR.TensSup.main T V U C).2.1 hUfd, fun ν hν => ?_⟩
     exact (iInf_hwSub_le a ν).trans
-      ((tensAll_mono (fun w => hU w (ν w) (fun c => hν w c))).trans (GlobalTheory.T.piTensorSpanAllFactors_sup_finite_singleton T V U C).1)
+      ((tensAll_mono (fun w => hU w (ν w) (fun c => hν w c))).trans (_root_.GlobalTheory.HoweR.TensSup.main T V U C).1)
   · refine ⟨μ, PiTensorProduct.tprod ℂ v, fun w => ?_,
-      fun N hN hC hvN => GlobalTheory.T.tprod_cyclic_modulo_spanSomeFactor T V R S a C v hgen N hN hC hvN, ?_⟩
+      fun N hN hC hvN => _root_.GlobalTheory.HoweR.tprod_cyclic_top T V R S a C v hgen N hN hC hvN, ?_⟩
     · have h := hv w
       simp only [hwSub, wtSub, Submodule.mem_inf, Submodule.mem_iInf, LinearMap.mem_ker] at h ⊢
       refine ⟨fun c => ?_, fun c d hcd => ?_⟩
@@ -148,8 +148,8 @@ theorem howeAlg_tensAny : ∀ (T : Type) [Fintype T] [DecidableEq T] (V : T → 
       · rw [actAt_apply]
         exact atPl_tprod_eq_zero w _ v (h.2 c d hcd)
     · refine (iInf_hwSub_le a μ).trans ((tensAll_mono (fun w => hmul w)).trans ?_)
-      refine (GlobalTheory.T.piTensorSpanAllFactors_sup_finite_singleton T V (fun w => Submodule.span ℂ {v w}) C).1.trans ?_
-      exact sup_le_sup_right ((GlobalTheory.T.piTensorSpanAllFactors_sup_finite_singleton T V (fun w => Submodule.span ℂ {v w}) C).2.2 v) _
+      refine (_root_.GlobalTheory.HoweR.TensSup.main T V (fun w => Submodule.span ℂ {v w}) C).1.trans ?_
+      exact sup_le_sup_right ((_root_.GlobalTheory.HoweR.TensSup.main T V (fun w => Submodule.span ℂ {v w}) C).2.2 v) _
 
 end GlobalTheory.HoweR
 

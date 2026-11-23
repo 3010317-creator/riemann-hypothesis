@@ -5,22 +5,31 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdelicU
 public import GroundTheory.AutomorphicForms.ReductionMeasure
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspFormRapidKernelSmoothSpanSmoothCuspidalBound
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspFormSmoothSpanNormLeShortRationalVector
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspidalBlockAverageLastColumnEqZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnipotentBlockColumnIndex
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExpoConjOfIsCsd
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspidalBlockAverageLastColumnEqZero
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsEquivariantProj
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsMulSupSFinGL
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegrableOnAbsDetRpowLeOneFundamentalDomainStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsFundamentalDomainIUnion
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.T2SpaceAdelicGeneralLinearGroupNumberField
+public import GroundTheory.GlobalFields.IdeleGroups.IdeleNorms
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegrableOnAbsDetRpowLeOneFundamentalDomain
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsMirabolicWhittakerStageTopOfVanishingBlockAver
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsOpenAdelicUnipotentTimesIntegralOutsideSet
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsStandardAdelicAddCharGlobalAdelicCharStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IteratedColumnTransformEqGlobalWhittakerStatement
+public import GroundTheory.GlobalFields.TateThesis.AdelicChar
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsStandardAdelicAddCharGlobalAdelicChar
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRapidInf
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IteratedColumnTransformEqGlobalWhittaker
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LieModelFiniteBaseChange
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LintegralRankinSelbergThetaEqWhittakerUnfolding
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LintegralThetaSeriesUnfoldMirabolicStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsEqColGenMulBlkU
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LintegralUnipotentCellPosLtTopContinuous
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowerMapFlatSemiabelian
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SuperDiagBlockGL
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnfoldMirabolicStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DifferentiableIntegralMulCpow
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsFundamentalDomainIUnion
+import Formalism.DoubleCosetMeasures.Statement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LintegralThetaSeriesUnfoldMirabolic
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnfoldMirabolic
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIsFundamentalDomain
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -61,8 +70,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Definitions.Divisors.UnrOutside
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DifferentiableIntegralMulCpow
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsEqColGenMulBlkU
 
 @[expose] public section
 
@@ -371,7 +378,7 @@ theorem lintegral_whit_sq_eq : ∀ (E : Type) [Field E] [NumberField E] [_root_.
       continuous_const.matrix_vecMul Units.continuous_val
     exact ((hB.cont.enorm.measurable.pow_const 2).mul (hG.comp hv).enorm.measurable).mul
       (ENNReal.measurable_ofReal.comp hmd)
-  have e1 := GlobalTheory.T.lintegral_theta_series_unfold_mirabolic E (m + 1) (Nat.succ_pos m) μ 𝓕 𝓕P h𝓕 h𝓕P
+  have e1 := _root_.GlobalTheory.ThetaUnfold.lintegral_theta_unfold E (m + 1) (Nat.succ_pos m) μ 𝓕 𝓕P h𝓕 h𝓕P
     (fun g y => ‖F g‖ₑ ^ 2 * ‖G y‖ₑ * ENNReal.ofReal (GlobalTheory.RSnm.detAbs g ^ x))
     hmeas (fun γ g y => by simp only [hB.left, hdet])
   simp_rw [← ENNReal.tsum_mul_left, ← ENNReal.tsum_mul_right]
@@ -391,9 +398,9 @@ theorem lintegral_whit_sq_eq : ∀ (E : Type) [Field E] [NumberField E] [_root_.
     simp only [hw, GlobalTheory.RSnm.detAbs]
     rw [row_mul (blkU_row hℓ y), map_mul, det_blkU, one_mul]
   have hgood : Good ψC (m + 1 - 1) F := GlobalTheory.CuspGeneric.good_top E m ψC F hB.cont hB.left
-    fun r hr hra g => GlobalTheory.T.cuspidal_blockAverage_lastColumn_eq_zero E (m + 1) F hB.cont hB.left hB.cusp r hr hra g
-  have e2 := (GlobalTheory.T.unfold_mirabolic_alt E (m + 1) μ ψC (GlobalTheory.T.isStandardAdelicAddChar_global_adelicChar E) 𝓕P 𝓕₀ h𝓕P h𝓕₀' w hwm hwl hwu).1 F hgood
-  rw [GlobalTheory.T.iteratedColumnTransform_eq_globalWhittaker E (m + 1) F (Nat.succ_pos m) hB.cont hB.left] at e2
+    fun r hr hra g => _root_.GlobalTheory.CuspGeneric.avg_blk_last_eq_zero E (m + 1) F hB.cont hB.left hB.cusp r hr hra g
+  have e2 := (_root_.GlobalTheory.MirTower.unfold_mirabolic E (m + 1) μ ψC (_root_.GlobalTheory.StdCharStd.stdPsi_adelicChar E) 𝓕P 𝓕₀ h𝓕P h𝓕₀' w hwm hwl hwu).1 F hgood
+  rw [_root_.GlobalTheory.CuspGeneric.WhitEq.whit_eq_whittaker E (m + 1) F (Nat.succ_pos m) hB.cont hB.left] at e2
   simp_rw [mul_assoc]
   exact e2.symm
 
@@ -435,7 +442,7 @@ theorem lintegral_whit_sq_ne_top {E : Type} [Field E] [NumberField E] [_root_.Nu
     obtain ⟨C, hC⟩ := GlobalTheory.ThetaSqLow.exists_bound hπ hφ hG
     have hi : IntegrableOn (fun g : GA E (m + 1) => GlobalTheory.RSnm.detAbs g ^ (x - 1))
         (𝓕 ∩ {g | GlobalTheory.RSnm.detAbs g ≤ 1}) μ :=
-      GlobalTheory.T.integrableOn_absDet_rpow_le_one_fundamentalDomain
+      _root_.GlobalTheory.RSThetaLow.integrableOn_absDet_rpow_low
         E (m + 1) m.succ_pos μ 𝓕 h1 (x - 1) (by linarith)
     refine ne_top_of_le_ne_top (hi.const_mul C).lintegral_lt_top.ne (lintegral_mono fun g => ?_)
     have hδ := GlobalTheory.RSnm.detAbs_pos g

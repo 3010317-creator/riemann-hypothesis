@@ -3,12 +3,13 @@ module
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurePreservingReindex
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EqZeroOfInnerSmooth
 public import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.WordDerivatives
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicUnitaryHaarBiInvariantStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.DerivativeAlongLieAlgebraPreservesSmoothSpaceStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RightRegularRepUnitaryStronglyContinuous
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DerivedActionSmoothVectorRealLinear
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EquivariantMapCarriesGelfandInvariantToFunction
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GelfandInvariantActionSmoothVectorsScalar
+import Formalism.SharpRestriction.CuspSpanNormBounds.GlobAut
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicUnitaryHaarBiInvariant
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LieWordCommutesOneParameterDerivativeStatement
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SobolevContinuousFormSumLieWordInnerStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -240,7 +241,7 @@ theorem isContRep_of_ae (B : RowsAut) {y : B.I.L2 B.μf B.fund} {f : B.I.GA → 
 
 theorem eq_of_ae (B : RowsAut) {f f' : B.I.GA → ℂ} (hc : Continuous f) (hc' : Continuous f')
     (h : f =ᵐ[B.I.muA B.μf] f') : f = f' := by
-  obtain ⟨-, -, -, -, hop⟩ := GlobalTheory.T.adelicUnitaryHaar_bi_invariant B.I B.μf
+  obtain ⟨-, -, -, -, hop⟩ := _root_.GlobalTheory.AdelicUnimod.adelic_unimodular B.I B.μf
   have : (B.I.muA B.μf).IsOpenPosMeasure := ⟨fun U hU hne => (hop U hU hne).ne'⟩
   exact (Continuous.ae_eq_iff_eq (B.I.muA B.μf) hc hc').1 h
 

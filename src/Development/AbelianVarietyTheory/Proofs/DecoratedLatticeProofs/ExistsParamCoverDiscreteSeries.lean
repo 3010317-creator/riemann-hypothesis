@@ -2,8 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.DiscreteSpectrumKFiniteDecomposition
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.RhoCompactTwiceEqOfSignBlockOrdered
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.BlockOrderedSquareIntegrableStatement
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.DiscreteSeriesCoverIrreducibleUnitaryStatement
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsBlockOrd
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.BlockOrderedSquareIntegrable
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.DiscreteSeriesCoverIrreducibleUnitary
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -81,9 +82,9 @@ theorem exists_param_of_trivial (hE : GlobalTheory.Dec.DSExhaust) {T : GrpData p
   have hB0 := blockOrd_std p q
   have hIrr : GlobalTheory.Dec.IsSqIntIrr (fun i : Fin (p + q) => (finSumFinEquiv.symm i).isLeft) σ :=
     ⟨R.U.cs, R.nontriv,
-      (GlobalTheory.T.discreteSeries_cover_irreducibleUnitary p q (p + q) _ _ T R σ hB0 hF).1,
-      (GlobalTheory.T.discreteSeries_cover_irreducibleUnitary p q (p + q) _ _ T R σ hB0 hF).2,
-      GlobalTheory.T.block_ordered_square_integrable p q (p + q) _ _ T R σ hB0 hF⟩
+      (_root_.GlobalTheory.RealPar.CoverURep.urep_irred p q (p + q) _ _ T R σ hB0 hF).1,
+      (_root_.GlobalTheory.RealPar.CoverURep.urep_irred p q (p + q) _ _ T R σ hB0 hF).2,
+      _root_.GlobalTheory.RealPar.SqInt.isSqIntOn_of_factors p q (p + q) _ _ T R σ hB0 hF⟩
   obtain ⟨s, mu, hc, hs, hDS⟩ := hE (p + q) _ R.U.H σ hIrr
   let P : SignedPar (p + q) := ⟨mu, (fun i : Fin (p + q) => (finSumFinEquiv.symm i).isLeft) ∘ s, hc⟩
   have hB : BlockOrd ((finSumFinEquiv : Ix p q ≃ Fin (p + q)).trans s.symm) P.sgn := blockOrd_perm hB0 s hs

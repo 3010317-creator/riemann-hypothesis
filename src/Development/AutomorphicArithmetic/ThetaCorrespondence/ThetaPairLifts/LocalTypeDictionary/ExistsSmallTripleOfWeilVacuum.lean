@@ -2,12 +2,15 @@ module
 
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.UnitCharTriangle
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsNormaliseMeanSquareOfCocompactStatement
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MapFinNeg
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.CocompactTensor
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsThetaFunctionStandardPairSecondStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FirstStandardPairMemberHasThetaFunctionStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RatInOfDefinite
+import Mathlib.Analysis.CStarAlgebra.Classes
+import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.MeasureTheory.Group.FundamentalDomain
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsNormaliseMeanSquareOfCocompact
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MapFinNeg
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.CocompactTensor
 import Formalism.SharpRestriction.CuspSpanNormBounds.BesselShellMomentBounds
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -92,7 +95,7 @@ private theorem exists_vacuum_vector (ψ : AddChar (AF D.host.F) ℂ) (θ : InfF
   have : BorelSpace (WO S T) := ⟨rfl⟩
   have h1 := (hf 1).1
   simp only [one_mul] at h1
-  obtain ⟨⟨μ, 𝓕, hμ⟩, c, hc⟩ := GlobalTheory.T.exists_normalise_meanSquare_of_cocompact' (WO S T) (ratL T S) K hK hcov f h1.cont f0 (by
+  obtain ⟨⟨μ, 𝓕, hμ⟩, c, hc⟩ := _root_.GlobalTheory.exists_normalise_meanSquare_of_cocompact (WO S T) (ratL T S) K hK hcov f h1.cont f0 (by
     rintro _ ⟨g, rfl⟩ w
     have e := h1.quasi g w
     have e' := congrArg norm e

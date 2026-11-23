@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsFlatLift
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobeniusDerivationFactorsThroughKaehlerStatement
+public import Mathlib.RingTheory.Kaehler.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobeniusDerivationFactorsThroughKaehler
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -102,7 +103,7 @@ theorem exists_isH_of_isFrob : ∀ {K Kt : Type} [CommRing K] [CommRing Kt] (p :
     intro z
     show g _ = g _
     exact hwd _ _ (Function.surjInv_eq hL.surj _)
-  obtain ⟨f, hfs, hfD⟩ := GlobalTheory.T.frobeniusDerivation_factors_through_kaehler (M := K) p φ (by
+  obtain ⟨f, hfs, hfD⟩ := _root_.GlobalTheory.DI.frobDeriv_factors_kaehler (M := K) p φ (by
     intro a b
     obtain ⟨z, rfl⟩ := hL.surj a
     obtain ⟨z', rfl⟩ := hL.surj b

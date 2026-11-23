@@ -1,11 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.IsHermForm
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.AdelicUnitaryScalingUnitStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.CayleyTransformUnitarySkewInvolutiveStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInverseOneAddPreservingAdelicCompletionStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsRationalMatrixApproxAdeleLinearMapStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IdempotentAdelesAndSmallAdelicMatricesStatement
+public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.Hat1
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.AdelicUnitaryScalingUnit
+public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.CayleyTransformUnitarySkewInvolutive
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInverseOneAddPreservingAdelicCompletion
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsRationalMatrixApproxAdeleLinearMap
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IdempotentAdelesAndSmallAdelicMatrices
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -171,8 +173,8 @@ theorem core {K R : Type} [Field K] [CommRing R] (ι : K →+* R) (c : K →+* K
   have h2' : IsUnit (2 : R) := by
     have := h2.isUnit.map ι
     rwa [map_ofNat] at this
-  obtain ⟨cR1, cR2, -, -⟩ := GlobalTheory.T.cayleyTransform_unitary_skew_involutive R σ n (G.map ι) hσ hG' hdet' h2'
-  obtain ⟨-, -, cK3, cK4⟩ := GlobalTheory.T.cayleyTransform_unitary_skew_involutive K c n G hc hG hdu h2.isUnit
+  obtain ⟨cR1, cR2, -, -⟩ := _root_.GlobalTheory.CayleyInv.cayley_transform R σ n (G.map ι) hσ hG' hdet' h2'
+  obtain ⟨-, -, cK3, cK4⟩ := _root_.GlobalTheory.CayleyInv.cayley_transform K c n G hc hG hdu h2.isUnit
   have hl : ι lam * σ (ι lam) = 1 := by rw [hσι, ← map_mul, hlam, map_one]
   set k : Matrix (Fin n) (Fin n) R := ι lam • (e • h + (1 - e) • (1 : Matrix (Fin n) (Fin n) R)) with hk
   have hku : kᵀ * G.map ι * k.map σ = G.map ι := preserves_form_smul_idempotent_glue σ _ h e _ he hσe hl hh
@@ -301,7 +303,7 @@ theorem weak_approximation : ∀ (F E : Type) [Field F] [NumberField F] [Field E
   intro F E _ _ _ _ _ c n G hG hr L hfg hsp g N D hg hN hD
   classical
   obtain ⟨hcc, hc1, hGc, hdet⟩ := hG
-  obtain ⟨i1, i2, -, i4, i5⟩ := GlobalTheory.T.idempotent_adeles_and_small_adelic_matrices F E n L hfg hsp
+  obtain ⟨i1, i2, -, i4, i5⟩ := _root_.GlobalTheory.UnRep.idempotent_adeles_small_matrices F E n L hfg hsp
   have hfin : {v : HeightOneSpectrum (𝓞 F) | (N : 𝓞 F) ∈ v.asIdeal}.Finite := by
     have hne : Ideal.span {(N : 𝓞 F)} ≠ 0 := by
       rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
@@ -365,7 +367,7 @@ theorem weak_approximation : ∀ (F E : Type) [Field F] [NumberField F] [Field E
     have := (Nat.cast_ne_zero.2 hd.ne' : (d : E) ≠ 0).isUnit.map ι
     rwa [map_natCast] at this
   have hgu : g.1ᵀ * G.map ι * g.1.map σ = G.map ι := (preserves_iff σ (G.map ι) g.1).1 hg
-  obtain ⟨lam, hlam, hu⟩ := GlobalTheory.T.adelic_unitary_scaling_unit F E c hr hcc hc1 n (g⁻¹).1 e hee hsupp
+  obtain ⟨lam, hlam, hu⟩ := _root_.GlobalTheory.UnRep.exists_norm_one_isUnit_det F E c hr hcc hc1 n (g⁻¹).1 e hee hsupp
   rw [hsub] at hu
   obtain ⟨γ, hγ, hcong⟩ := core ι c' σ (fun x => hσt 1 x) hcc hσσ G
     (by ext a b; exact hGc b a) hdet two_ne_zero (stab (hat F (L : Set (Fin n → E))))
@@ -375,10 +377,10 @@ theorem weak_approximation : ∀ (F E : Type) [Field F] [NumberField F] [Field E
     (e ⊗ₜ[F] (1 : E)) (by rw [Algebra.TensorProduct.tmul_mul_tmul, hee, mul_one]) (hσ1 e) hz
     (fun X hX z hz => by rw [Matrix.smul_mulVec]; exact i5 e heI _ (hX z hz))
     N hN (fun X hX => by
-      obtain ⟨W, hW, hW'⟩ := GlobalTheory.T.exists_inverse_one_add_preserving_adelicCompletion F E n L hfg hsp N e heI he0' X hX
+      obtain ⟨W, hW, hW'⟩ := _root_.GlobalTheory.UnRep.exists_inverse_one_add_preserving_hat F E n L hfg hsp N e heI he0' X hX
       exact ⟨W, hW', hW⟩)
     (fun M D' hD' => by
-      obtain ⟨M₀, H⟩ := GlobalTheory.T.exists_rational_matrix_approx_adele_linear_map F E n L hfg hsp (skewPart σ (G.map ι))
+      obtain ⟨M₀, H⟩ := _root_.GlobalTheory.UnRep.exists_rational_approx_after_adele_linear F E n L hfg hsp (skewPart σ (G.map ι))
         (fun a M => skewPart_smul σ _ _ (hσ1 a) M) M D' hD'
       obtain ⟨X, hX, hX'⟩ := exists_stab _ _ D' (hunit D' hD') H
       rw [map_sub] at hX'

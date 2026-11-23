@@ -6,22 +6,23 @@ public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.FamilySetupBesselGrowthStatement
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.FamilySetupCayleyBoundStatement
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.FamilySetupCayleyRecursionStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FamiliesHaveLargeGapOfNumericalHypothesesStatement
+public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.IsDSOfIsDG
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FamiliesHaveLargeGapOfNumericalHypotheses
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralLeOfHighest
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassBoundLowTypesSum
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CayleyExistsAndAny
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DiscreteSeriesUnitarySmoothBasic
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DominantRootSums
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DstInvContinuousOn
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FrechetContinuousContinuousOnOrbitHasDerivAt
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.KStableFiniteDimSmoothCompactRootStable
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LenEqOfUnitriangular
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevZeroOfKHighest
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NumericalFamilyProductBoundConstantLe
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NumericalFamilyShapeGaps
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.QuotientMeasureAeMemAndMeasurableBesselModel
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SmoothVectorsDiscreteSeriesGlModule
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.TorusWeightEigenAndRootShift
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CayleyExistsAndAny
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DstInvContinuousOn
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LenEqOfUnitriangular
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NumericalFamilyShapeGaps
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.ContinuousMulMt
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.ReproducingFormulaReduction
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.UhMeasurableSet
@@ -131,7 +132,7 @@ theorem oneLength_moment_lowestType_largeGap (hH : GlobalTheory.GapIn.Hyp) (k r 
   have hHG : HypsG := hH.1
   have hK : PI.KFinSmooth := hHG.1.2.2.1
   have hSG : SetupG lam u b bv ga h q0 z π μW μN μG νq R l dg :=
-    (GlobalTheory.T.families_have_largeGap_of_numericalHypotheses.2 k r Wp lam u b bv ga h q0 z π μW μN μG νq R l dg).1 hS
+    (_root_.GlobalTheory.GapSetup.families_gap.2 k r Wp lam u b bv ga h q0 z π μW μN μG νq R l dg).1 hS
   have hNum := hS.1
   have hFam := hS.2.1
   have hSide := hS.2.2.1

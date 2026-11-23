@@ -1,7 +1,7 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.SheetUnsheet
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ArchIntegrableIffOverIntegersStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ArchIntegrableIffOverIntegers
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +52,7 @@ namespace GlobalTheory.CompanionTheory.Ar.BaseZ
 
 theorem archInt_toZ : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (t : X ⟶ Sp ℤ) (D : ℕ), IsArithVar p D → ∀ (N M : HermLB p) (hN : ∀ τ, (wZ N t τ).IsCInf) (hM : ∀ τ, (wZ M t τ).IsCInf) (e : ℕ) (r : M.B.ι → X.functionFieldˣ) (hr : IsRatSec M.B r), ((toZ N t hN).ArchIntegrable (toZ M t hM) e hr ↔ N.ArchIntegrable M e hr) ∧ (N.ArchIntegrable M e hr → (toZ N t hN).archInt (toZ M t hM) e hr = N.archInt M e hr) := by
   intro k _ X _ p t D hX N M hN hM e r hr
-  have W := fun τ : ℤ →+* ℂ => GlobalTheory.T.archIntegrable_iff_over_integers k X p t τ D hX N M (wZ N t τ) (wZ M t τ)
+  have W := fun τ : ℤ →+* ℂ => _root_.GlobalTheory.CompanionTheory.Ar.BaseZ.archInt_over_int k X p t τ D hX N M (wZ N t τ) (wZ M t τ)
     (wOver_wZ N t τ) (wOver_wZ M t τ) (hN τ) e r hr
   let τ₀ : ℤ →+* ℂ := Int.castRingHom ℂ
   have hu : ∀ τ : ℤ →+* ℂ, τ = τ₀ := fun τ => Subsingleton.elim _ _

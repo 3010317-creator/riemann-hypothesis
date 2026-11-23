@@ -3,13 +3,16 @@ module
 public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IsThetaL2NormSquared
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.KeyAtIffExistsKeyAtVia
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.AppellHumbertUnifTangentWeilPairing
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueLinearLiftOfHolomorphicAbelianVariet
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.UnifMetricScalar
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.HasSumPolyDerivMulProdAddMatrix
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsLieBasis
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsRescaleUniformisationRigidification
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsChartOfIsLocalRing
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PushInvertible
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GenericFibreGroupFactorsUniversalCartesian
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.KeySectionEqConstMulThetaFunctionFibre
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueLinearLiftOfHolomorphicAbelianVariet
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsValLineLogNormAtIffEmbedding
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsRescaleUniformisationRigidificationStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GenericFibreGroupFactorsUniversalCartesianStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.KeySectionEqConstMulThetaFunctionFibreStatement
 import Development.AbelianVarietyTheory.Proofs.ToricGeometry.TopLePreimageOfValAtNeZero
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ThetaUniformisationComplexAbelianVariety
 import Mathlib.Algebra.Order.Floor.Extended
@@ -87,7 +90,7 @@ theorem exists_unif_of_arc : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   have hPer := Ha.period w hw
   obtain ⟨fr, hf₁, hf₂, hf₃, -, s, hs⟩ := Θ.frame w hw
   obtain ⟨-, wx, -, hgp, hwx, -, -, -⟩ := hx
-  obtain ⟨φ', hφ₁, hφ₂, hgp', hiso⟩ := GlobalTheory.T.genericFibre_group_factors_universal_cartesian E H Dw l Xo c _ _ Y yF x φ hgp ⟨wx, hwx⟩
+  obtain ⟨φ', hφ₁, hφ₂, hgp', hiso⟩ := _root_.GlobalTheory.GenericFibrePoint.fibre_map_univ E H Dw l Xo c _ _ Y yF x φ hgp ⟨wx, hwx⟩
   rw [hy₁] at hgp'
   have hL := Xo.univ.t.PP.isLB
   have hM' := LB.isLB_pull hL (φ' ≫ Y.m0.toSABMap.φ)
@@ -100,14 +103,14 @@ theorem exists_unif_of_arc : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   obtain hθ : ∃ z, thetaChar (Θ.τ w) Θ.c₁ Θ.c₂ (Θ.h.mulVec z) ≠ 0 :=
     exists_thetaChar_mulVec_ne _ _ _ _ (Θ.pos w hw).1 (Θ.pos w hw).2 Θ.half₁ Θ.half₂ hh
 
-  obtain ⟨c₁, hc₁⟩ := GlobalTheory.T.keySection_eq_const_mul_thetaFunction_fibre x _ Xo.univ.t.G Xo.univ.t.PP.L (Fu.u Ha.i (Ha.Pw w)) (φ' ≫ Y.m0.toSABMap.φ) g u₂ wI
+  obtain ⟨c₁, hc₁⟩ := _root_.GlobalTheory.FibreKeyTheta.th_isFn_const_mul x _ Xo.univ.t.G Xo.univ.t.PP.L (Fu.u Ha.i (Ha.Pw w)) (φ' ≫ Y.m0.toSABMap.φ) g u₂ wI
     (fun z => thetaChar (Θ.τ w) Θ.c₁ Θ.c₂ (Θ.h.mulVec z)) fr s hL hgp'.1 hwI hθ
     (fun j z hj => hf₂ j z (by rwa [hex₁] at hj))
     (fun k j z hkj => by
       obtain ⟨hk, hj⟩ := (top_le_preimage_inf _ _ _).1 hkj
       exact carry_fr u₁ hM' x.P.isLB hwI k j z hk hj)
     (fun j z p hp₁ hp₂ hj => hs j z p (hp₁.trans (hex₁ z)) hp₂ (by rwa [hex₁] at hj))
-  obtain ⟨u₃, lam, hlam, hex, hΛ, hR, hfr⟩ := GlobalTheory.T.exists_rescale_uniformisation_rigidification x.P.A x.P.L g u₂ x.rig x.P.isLB x.rig_gen
+  obtain ⟨u₃, lam, hlam, hex, hΛ, hR, hfr⟩ := _root_.GlobalTheory.RigRescale.exists_rescale_rig x.P.A x.P.L g u₂ x.rig x.P.isLB x.rig_gen
   have hFn : u₃.IsFn x.th fun z => c₁ / lam * thetaChar (Θ.τ w) Θ.c₁ Θ.c₂ (Θ.h.mulVec z) := by
     intro i z hi
     rw [hex] at hi ⊢

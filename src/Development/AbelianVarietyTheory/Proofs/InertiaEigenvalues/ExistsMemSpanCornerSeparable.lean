@@ -1,8 +1,9 @@
 module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.QuotientHomNonvanishingBound
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCornerSeparableCharpolyOfIsInternalStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpanRepresentationDensityOfIsInternalConstituentStatement
+public import Mathlib.FieldTheory.Separable
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCornerSeparableCharpolyOfIsInternal
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SpanRepresentationDensityOfIsInternalConstituent
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -74,9 +75,9 @@ theorem exists_mem_span_corner_separable {K Γ : Type} [Field K] [Infinite K] [G
       rw [show (c • x).mulVec v = c • x.mulVec v by
         ext i; simp [Matrix.mulVec, dotProduct, Finset.mul_sum, mul_assoc]]
       exact (Vs j).smul_mem c (hx v hv)
-  obtain ⟨m, hm, hsep⟩ := GlobalTheory.T.exists_corner_separable_charpoly_of_isInternal ι Vs a b hint hba (fun j => hstab j _ hab)
+  obtain ⟨m, hm, hsep⟩ := _root_.GlobalTheory.SpanRing.exists_corner_separable_charpoly ι Vs a b hint hba (fun j => hstab j _ hab)
   refine ⟨m, ?_, hsep⟩
-  have hlin := GlobalTheory.T.span_representation_density_of_isInternal_constituents (matRep σ) ι Vs hs hint hspan hdist (Matrix.toLin' m)
+  have hlin := _root_.GlobalTheory.BlockDensity.density (matRep σ) ι Vs hs hint hspan hdist (Matrix.toLin' m)
     (fun j v hv => by simpa [Matrix.toLin'_apply] using hm j v hv)
   have hfun : (⇑(matRep σ)) = ⇑(Matrix.toLin' : Matrix (Fin n) (Fin n) K ≃ₗ[K] _) ∘ ⇑σ := rfl
   rw [hfun, Set.range_comp] at hlin

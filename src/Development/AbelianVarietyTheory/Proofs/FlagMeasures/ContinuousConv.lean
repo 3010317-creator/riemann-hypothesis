@@ -1,11 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermitianFormUnitaryOneOne
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicUnitaryHaarBiInvariantStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FiniteAdelicUnitaryCongruenceTopology
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.InvariantExtensionIntegrableOnCompactStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.GlobAut
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicUnitaryHaarBiInvariant
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.InvariantExtensionIntegrableOnCompact
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RightConvolutionOperatorAeEqIntegralAdelic
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RightRegularRepUnitaryStronglyContinuousStatement
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FiniteAdelicUnitaryCongruenceTopology
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RightRegularRepUnitaryStronglyContinuous
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -87,13 +88,13 @@ theorem conv_isContRep : ∀ (B : RowsAut) (ψ : B.I.GA → ℂ) (F : B.I.L2 B.�
   have iK : IsFiniteMeasureOnCompacts (B.I.muA B.μf) := by
     unfold AutInst.muA
     infer_instance
-  obtain ⟨hl, -, -, -, -⟩ := GlobalTheory.T.adelicUnitaryHaar_bi_invariant B.I B.μf
+  obtain ⟨hl, -, -, -, -⟩ := _root_.GlobalTheory.AdelicUnimod.adelic_unimodular B.I B.μf
   have iL : (B.I.muA B.μf).IsMulLeftInvariant := ⟨hl⟩
-  obtain ⟨-, -, hiso, hcontR, hext⟩ := GlobalTheory.T.rightRegularRep_unitary_stronglyContinuous B
+  obtain ⟨-, -, hiso, hcontR, hext⟩ := _root_.GlobalTheory.RightRegFund.rightReg_unitary_continuous B
   obtain ⟨hEinv, hEm⟩ := hext F
   unfold IsContRep
   refine ⟨?_, ?_, ?_⟩
-  · exact continuous_conv _ ψ _ hψ hc hEm fun C hC => ((GlobalTheory.T.invariantExtension_integrableOn_compact B C hC).choose_spec F).1
+  · exact continuous_conv _ ψ _ hψ hc hEm fun C hC => ((_root_.GlobalTheory.LocalL2Isometry.ext_integrableOn B C hC).choose_spec F).1
   · intro γ hγ x
     calc ∫ z, ψ ((γ * x)⁻¹ * z) * B.I.ext F z ∂B.I.muA B.μf
         = ∫ w, ψ ((γ * x)⁻¹ * (γ * w)) * B.I.ext F (γ * w) ∂B.I.muA B.μf :=

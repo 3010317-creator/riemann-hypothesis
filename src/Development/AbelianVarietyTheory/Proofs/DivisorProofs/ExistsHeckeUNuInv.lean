@@ -1,13 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FinitePrimesUnder
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BottomRanksSumLeTwoExponentAddCentreStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNatHeckeCharacterTrivialCongruentUnitsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeCharacterTrivialSubfieldKillsIdeleNormsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeCharacterUnramifiedInertKillsUnitsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BottomRanksSumLeTwoExponentAddCentre
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsRationalUnitaryDeterminantMapRationalUnitaryTo
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNatHeckeCharacterTrivialCongruentUnits
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsOfBalanced
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeCharacterTrivialSubfieldKillsIdeleNorms
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeCharacterUnramifiedInertKillsUnits
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OfHCharN
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareNuInvHasInfinityTypeCmTypeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareNuInvUnramifiedOverInertPrimeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareNuInvHasInfinityTypeCmType
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareNuInvUnramifiedOverInertPrime
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeCharacterIdeleCharacterMatchUnique
 import Formalism.LocalToGlobal.UnitaryNorms.CharUniq
 import Mathlib.Algebra.Order.Floor.Extended
@@ -84,13 +86,13 @@ theorem exists_heckeU_nu_inv : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Con
     rw [hw]; push_cast; ring
   have hc : ∃ m : ℕ, 0 < m ∧ ∀ u, IntU D u → (∃ s ∈ OhE D, (u : AE D) - 1 = (m : AE D) * s) →
       (nuH G μ₀ i j)⁻¹.1 (finIdl D u) = 1 := by
-    obtain ⟨M, hM, h⟩ := GlobalTheory.T.exists_nat_heckeCharacter_trivial_congruent_units D.host.E (nuH G μ₀ i j)⁻¹
+    obtain ⟨M, hM, h⟩ := _root_.GlobalTheory.Mem.HeckeLevel.exists_level_nat D.host.E (nuH G μ₀ i j)⁻¹
     refine ⟨M, hM, fun u hu ⟨s, hs, e⟩ => h _ (GlobalTheory.Mem.Col2.SplitChar.finIdl_unit hu)
       (fun w => by rw [GlobalTheory.Mem.Col2.SplitChar.finIdl_fst]; rfl) fun P => ?_⟩
     rw [GlobalTheory.Mem.Col2.SplitChar.vl_sub_one, e, map_mul, GlobalTheory.Mem.Col2.SplitChar.vl_nat,
       HeightOneSpectrum.valuedAdicCompletion_eq_valuation']
     exact mul_le_of_le_one_right' (GlobalTheory.Mem.Col2.SplitChar.vl_le hs P)
-  exact ⟨GlobalTheory.SplitCharGen.ofHChar _ (nuH G μ₀ i j)⁻¹ _ hu (GlobalTheory.T.squareNu_inv_hasInfinityType_cmType hL G i j) hp hc
-    (GlobalTheory.T.heckeCharacter_trivial_subfield_kills_idele_norms D _ htriv (GlobalTheory.T.exists_nat_heckeCharacter_trivial_congruent_units D.host.E _)) (GlobalTheory.T.heckeCharacter_unramified_inert_kills_units D _ fun P hP => GlobalTheory.T.squareNu_inv_unramified_over_inert_prime hL G i j P hP), fun x => rfl, fun τ => GlobalTheory.T.bottomRanks_sum_le_two_exponent_add_centre D sc.cGap i j τ⟩
+  exact ⟨GlobalTheory.SplitCharGen.ofHChar _ (nuH G μ₀ i j)⁻¹ _ hu (_root_.GlobalTheory.FunObj.SqNum.nuH_inv_hasInf hL G i j) hp hc
+    (_root_.GlobalTheory.NuCharNorm.chi_norm_one D _ htriv (_root_.GlobalTheory.Mem.HeckeLevel.exists_level_nat D.host.E _)) (_root_.GlobalTheory.UnrKill.unr_kill D _ fun P hP => _root_.GlobalTheory.FunObj.SqNum.nuH_inv_unrAt_of_inertQ hL G i j P hP), fun x => rfl, fun τ => _root_.GlobalTheory.ChiGrid.botBig_add_botSmall_le_two_e_add_two_cen D sc.cGap i j τ⟩
 
 end GlobalTheory.BottomNu

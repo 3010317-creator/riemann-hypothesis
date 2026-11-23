@@ -2,8 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.MemRingOfInR
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FnHasSumReindexNat
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HahnSeriesCommonDenominatorEqMonomialMulPowerSerStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasSumPowerSeriesInvOfConvergentStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HahnSeriesCommonDenominatorEqMonomialMulPowerSer
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.RingTheory.MvPowerSeries.Inverse
+public import Mathlib.RingTheory.PowerSeries.Basic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasSumPowerSeriesInvOfConvergent
+public import Mathlib.NumberTheory.ModularForms.EisensteinSeries.Basic
+public import ReciprocityTheory.ReductiveGroups.UnramifiedIntegrals.ModDefs
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -100,7 +105,7 @@ namespace GlobalTheory
 theorem fn_hasSum_ne_zero : ∀ (Ω : Type) [Field Ω] (ε : Ω →+* ℂ) (C : ℝ) (φ : ℂ → ℂ) (h : HahnSeries ℚ Ω),
     Den h → h ≠ 0 → HS ε C φ h → ∃ C' : ℝ, ∀ z : ℂ, C' < z.im → φ z ≠ 0 := by
   intro Ω _ ε C φ h hD h0 hS
-  obtain ⟨N, n₀, a, hN, ha0, ha, hz⟩ := GlobalTheory.T.hahnSeries_commonDenominator_eq_monomial_mul_powerSeries Ω h hD h0
+  obtain ⟨N, n₀, a, hN, ha0, ha, hz⟩ := _root_.GlobalTheory.fnShape Ω h hD h0
   have hNr : (0 : ℝ) < N := by exact_mod_cast hN
   have hpi : 0 < Real.pi := Real.pi_pos
   set b : ℕ → ℂ := fun k => ε (a k) with hb
@@ -125,7 +130,7 @@ theorem fn_hasSum_ne_zero : ∀ (Ω : Type) [Field Ω] (ε : Ω →+* ℂ) (C : 
       have := key z hzC
       rw [hzx] at this
       exact this.summable
-  obtain ⟨ρ', hρ'0, hρ'⟩ := GlobalTheory.T.hasSum_powerSeries_inv_of_convergent b ρ hρ0 hb0 hsum
+  obtain ⟨ρ', hρ'0, hρ'⟩ := _root_.GlobalTheory.PowerSeriesInv.hasSum_inv b ρ hρ0 hb0 hsum
   refine ⟨max C (-(N * Real.log ρ') / (2 * Real.pi)), fun z hzi => ?_⟩
   have hzC : C < z.im := lt_of_le_of_lt (le_max_left _ _) hzi
   have hz2 : -(N * Real.log ρ') / (2 * Real.pi) < z.im := lt_of_le_of_lt (le_max_right _ _) hzi

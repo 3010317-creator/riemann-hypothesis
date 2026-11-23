@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.InvariantRadonFibre
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsUniqueHaarOfInvariantRadonOnCosetsStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsUniqueHaarOfInvariantRadonOnCosets
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -104,7 +104,7 @@ theorem normaliseSubgroupClause : NormaliseSubgroupClause := by
     have h3 : (c : ℝ≥0∞) = 1 := (ENNReal.mul_left_inj hK0 hKt).mp h2
     have h4 : c = 1 := by exact_mod_cast h3
     rw [h4, one_smul]
-  obtain ⟨dg₀, ⟨_, h₀⟩, -⟩ := GlobalTheory.T.existsUnique_haar_of_invariantRadonOnCosets G H hH (Measure.haar : Measure H) μ hμ
+  obtain ⟨dg₀, ⟨_, h₀⟩, -⟩ := _root_.GlobalTheory.QuotientHaar.existsUnique_haar_of_invariantRadon G H hH (Measure.haar : Measure H) μ hμ
   have hc : dg = Measure.haarScalarFactor dg dg₀ • dg₀ :=
     Measure.isMulLeftInvariant_eq_smul dg dg₀
   have hpos : Measure.haarScalarFactor dg dg₀ ≠ 0 :=

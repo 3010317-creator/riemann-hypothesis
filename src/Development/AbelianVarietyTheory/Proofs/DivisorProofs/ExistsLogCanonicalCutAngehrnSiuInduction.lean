@@ -2,11 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CentreAtOfIsAt
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AngehrnSiuCutLowerCentreDimensionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAmpleEffectiveKltInductionStartStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLogCanonicalMultipleOfGloballyKltStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNonKltCentreOfNotKltAfterAddingStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AngehrnSiuCutLowerCentreDimension
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsLogCanonicalMultipleCanonical
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAmpleEffectiveKltInductionStart
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNonKltCentreOfNotKltAfterAdding
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NotKltAtOfIsNkltCentre
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLogCanonicalMultipleOfGloballyKlt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -74,7 +75,7 @@ theorem exists_lcCut_induction : GlobalTheory.Published.Principalisation → ∀
   intro hPr X _ _ _ p n hP hn hn1
   letI := algebraΓOfHom p
   intro Δ r N₀ x c hΔ hklt hr hN₀ hnef hbig hx hc hZ
-  obtain ⟨m, G, hm, hG⟩ := GlobalTheory.T.exists_logCanonicalMultiple_of_globally_klt X p n hP hn Δ hΔ hklt
+  obtain ⟨m, G, hm, hG⟩ := _root_.GlobalTheory.Discrepancy.exists_isLogCanonicalMultiple_of_kltAt X p n hP hn Δ hΔ hklt
   have hcpos : ∀ e, 1 ≤ e → e ≤ n → 0 < c e := fun e h1 h2 => hc e (Finset.mem_Icc.2 ⟨h1, h2⟩)
   have hgen : closure ({genericPoint X} : Set X) = Set.univ := (genericPoint_spec X).def
   have hdimX : topologicalKrullDim (closure ({genericPoint X} : Set X)) = n := by
@@ -94,7 +95,7 @@ theorem exists_lcCut_induction : GlobalTheory.Published.Principalisation → ∀
   obtain ⟨β, hβ0, hβ⟩ := exists_rat_btwn (sub_pos.2 hlt)
   have hβ0' : (0 : ℚ) < β := by exact_mod_cast hβ0
   obtain ⟨A, F, a, hA, ha, hF, lam₀, μ₀, m₀, D₀, hm₀, hD₀, hμ₀, hlam₀, hnum₀, hklt₀⟩ :=
-    GlobalTheory.T.exists_ample_effective_klt_inductionStart hPr X p n hP hn Δ r N₀ hN₀ β hΔ hklt hr hnef hbig hβ0'
+    _root_.GlobalTheory.PairStep.exists_ample_eff_kltAt_start hPr X p n hP hn Δ r N₀ hN₀ β hΔ hklt hr hnef hbig hβ0'
   refine ⟨A, hA, ?_⟩
   have key : ∀ a : WithBot ℕ∞, ∀ j : ℕ, (j : WithBot ℕ∞) < a → a ≤ ((j + 1 : ℕ) : WithBot ℕ∞) →
       a = ((j + 1 : ℕ) : WithBot ℕ∞) := by
@@ -124,7 +125,7 @@ theorem exists_lcCut_induction : GlobalTheory.Published.Principalisation → ∀
         LcCut p n (Δ + qWeil D₀ m') x j'
   have first : S (n - 1) := by
     obtain ⟨lam₁, μ₁, m₁, D₁, hm₁, hD₁, hμ₁, hlam₁, hnum₁, hcut₁⟩ :=
-      GlobalTheory.T.angehrnSiu_cut_lower_centre_dimension hPr X p n hP hn Δ m G r N₀ hN₀ A F a x (genericPoint X) n c' lam₀ μ₀ m₀ D₀ hΔ hklt hm hG hr
+      _root_.GlobalTheory.PairStep.logCanonicalCut_lowers_centre_dimension hPr X p n hP hn Δ m G r N₀ hN₀ A F a x (genericPoint X) n c' lam₀ μ₀ m₀ D₀ hΔ hklt hm hG hr
         hnef hA ha hF hx (genericPoint_specializes x) hn1 hdimX (Or.inl rfl) hc'0 hc'v hm₀ hD₀ hμ₀
         hnum₀ (hklt₀ x).lcAt
     refine ⟨n - 1, lam₁, μ₁, m₁, D₁, le_rfl, hm₁, hD₁, hμ₁, ?_, hnum₁, hcut₁⟩
@@ -147,7 +148,7 @@ theorem exists_lcCut_induction : GlobalTheory.Published.Principalisation → ∀
     push_neg at hall
     obtain ⟨z, hzx, hzk, hzd⟩ := hall
     have hq : IsQCart (qWeil D₁ m') := ⟨m', D₁, hm', hD₁, rfl⟩
-    obtain ⟨w, hwz, hw⟩ := GlobalTheory.T.exists_nonKltCentre_of_not_klt_after_adding X p n hP hn Δ (qWeil D₁ m') z hq (hklt z) hzk
+    obtain ⟨w, hwz, hw⟩ := _root_.GlobalTheory.PairStep.Centre.exists_isNkltCentre X p n hP hn Δ (qWeil D₁ m') z hq (hklt z) hzk
     have hwx : w ⤳ x := hwz.trans hzx
     have hwk : ¬ KltAt p n (Δ + qWeil D₁ m') w :=
       GlobalTheory.PairStep.not_kltAt_of_isNkltCentre X p n hP hn _ w w hw specializes_rfl
@@ -159,7 +160,7 @@ theorem exists_lcCut_induction : GlobalTheory.Published.Principalisation → ∀
     have hZw := hZ (Closeds.closure ({w} : Set X)) (j + 1) isIrreducible_singleton.closure
       (by simpa using specializes_iff_mem_closure.1 hwx) (by omega) hwd
     obtain ⟨lam', μ', m'', D₂, hm'', hD₂, hμ', hlam', hnum', hcut'⟩ :=
-      GlobalTheory.T.angehrnSiu_cut_lower_centre_dimension hPr X p n hP hn Δ m G r N₀ hN₀ A F a x w (j + 1) (c (j + 1)) lam μ m' D₁ hΔ hklt hm hG hr
+      _root_.GlobalTheory.PairStep.logCanonicalCut_lowers_centre_dimension hPr X p n hP hn Δ m G r N₀ hN₀ A F a x w (j + 1) (c (j + 1)) lam μ m' D₁ hΔ hklt hm hG hr
         hnef hA ha hF hx hwx (by omega) hwd (Or.inr hw) hcj hZw hm' hD₁ hμ hnum hlc
     refine ⟨j, lam', μ', m'', D₂, le_rfl, hm'', hD₂, hμ', ?_, hnum', by simpa using hcut'⟩
     rw [hsj]

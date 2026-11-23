@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.SumIoPr
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.IsDSOfIsDG
-public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.BesselCayleySideBoundStatement
+public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.BesselCayleySideBound
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.CayleyEndomorphismsModularStatement
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.FamilySetupBesselGrowthStatement
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.QuotientMeasureAeMemAndMeasurableBesselModelStatement
@@ -130,7 +130,7 @@ theorem ratio_moment : HypsG → ∀ (k r : ℕ) (Wp : Type) [NormedAddCommGroup
     (fun i v hi hv => ?_) (fun v => hmass v v.2) q j hjq w hw
   · filter_upwards [hae] with x hx v
     have h1 := mul_le_mul_of_nonneg_left
-      (Gp91.GlobalTheory.T.bessel_cayley_side_bound hK k r _ _ (R ν) Wp z π u μW μN μG νq (l ν) Q (E ν) hDG hG hBe.1 hQ
+      (_root_.Gp91.GlobalTheory.MomentPointwise.pointwise hK k r _ _ (R ν) Wp z π u μW μN μG νq (l ν) Q (E ν) hDG hG hBe.1 hQ
         (hE ν hν).1 _ hx a v) hdg.le
     simp only [Finset.mul_sum] at h1
     linarith

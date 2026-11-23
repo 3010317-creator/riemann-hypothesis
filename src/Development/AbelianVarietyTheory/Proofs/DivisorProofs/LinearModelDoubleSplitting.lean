@@ -6,10 +6,12 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SpanSchwartzBruhatProductEqTop
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicHeisenbergActsByLocalSchrodinger
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledWeilInertPlaceVacuumEigenfunction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerPreservesSchwartzBruhat
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TotallyDisconnectedProductLocallyCompact
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ProdFnMemSB
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfComponentTensorAdelicFunctionEq
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNegOneOfStandardTraceAdelicAddChar
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerPreservesSchwartzBruhat
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TotallyDisconnectedProductLocallyCompactStatement
 import GroundTheory.GlobalFields.LocalAtPlace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -47,7 +49,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.MetricSpace.Ultra.TotallySeparated
 import Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ProdFnMemSB
 
 @[expose] public section
 
@@ -152,7 +153,7 @@ theorem dblLin : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Field F]
     inferInstanceAs (LocallyCompactSpace (Fin n → Fin d → Fv F v))
   haveI : TotallyDisconnectedSpace (Matrix (Fin n) (Fin d) (Fv F v)) :=
     inferInstanceAs (TotallyDisconnectedSpace (Fin n → Fin d → Fv F v))
-  obtain ⟨ιd, hbij, hprod⟩ := GlobalTheory.T.totally_disconnected_product_locally_compact (Homeomorph.sumArrowHomeomorphProdArrow (X := Fv F v)
+  obtain ⟨ιd, hbij, hprod⟩ := _root_.GlobalTheory.SBProdExt.exists_linear_bijOn_prod (Homeomorph.sumArrowHomeomorphProdArrow (X := Fv F v)
     (ι := Fin n × Fin d) (ι' := Fin n × Fin d)) (colsHomeo (Fin n) (Fin d) (Fin d) (Fv F v)) ι (conjLin ι) hι.bij
     (conjLin_bijOn ι hι.bij)
   have hbox : ∀ φ₁ ∈ SB (Fin n × Fin d → Fv F v), ∀ φ₂ ∈ SB (Fin n × Fin d → Fv F v),

@@ -3,12 +3,14 @@ module
 public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.FinLocalCutAt
 public import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArcFramedPointIntegralOpenDiscStatement
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArcFramedPointUniqueAndBaseChangeStatement
+public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IsFramedPointChangedByLetters
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArcFramedPointIntegralOpenDisc
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArcFramedPointUniqueAndBaseChange
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsFactorOfMemRange
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.FrameChangeComposeInvertBaseChangeTriangular
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.FramedPointEvalNaturalWeightScaling
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IntegralOfFrChg
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArcLetterRingOverDVRPolynomialDenominators
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +54,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArcLetterRingOverDVRPolynomialDenominators
 
 @[expose] public section
 
@@ -214,12 +215,12 @@ theorem recordAt_of_isArcFr : Out.Laws → Out.Laws2 → ∀ (E : Type) [Field E
   obtain ⟨z₁, hz₁⟩ := hev.bc _ _ φ Dv.yR
   have hA : IsArcFr W e th ((algebraMap T'.V T'.Fr).comp e₀) z₀ := by
     rw [← he₁]
-    have key := (GlobalTheory.T.arcFramedPoint_unique_and_baseChange hL hL2 E H Dw l Xo c O β Y Dv.Tv.V b aw χ W e th hth _ _ y₀ hy).2
+    have key := (_root_.GlobalTheory.ArcQ.isArcFr_unique_baseChange hL hL2 E H Dw l Xo c O β Y Dv.Tv.V b aw χ W e th hth _ _ y₀ hy).2
     first
       | exact key hmono _ φ z₀ hz₀
       | exact key _ φ z₀ hz₀
   have hI₀ : Integral T' io' z₀ := by
-    have key := GlobalTheory.T.arc_framedPoint_integral_open_disc hL hL2 E H Dw l Xo c O β Y Dv.Tv.V b aw χ W ρ e th hB hth hP
+    have key := _root_.GlobalTheory.ArcQ.integral_of_isArcFr hL hL2 E H Dw l Xo c O β Y Dv.Tv.V b aw χ W ρ e th hB hth hP
     have h1 : Function.Injective (e₀.comp (PowerSeries.C (R := Dv.Tv.V))) := by
       rw [he₀]; exact Function.Injective.of_comp (f := algebraMap T'.V T'.Fr) hinj
     have h2 : ∀ τ x, io' (embK c τ x) = algebraMap T'.V T'.Fr (e₀ (PowerSeries.C (R := Dv.Tv.V) (ρ τ x))) :=

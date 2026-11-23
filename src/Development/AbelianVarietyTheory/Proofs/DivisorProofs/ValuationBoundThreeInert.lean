@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TorsTransport
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlgebraicValuationAtLeastBasicPropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlgebraicValuationAtLeastBasicProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,7 +60,7 @@ namespace GlobalTheory.ArithThreeInert
 
 theorem main : ∀ [Fact (Nat.Prime 3)] (lam : algebraicClosure ℚ ℂ →+* ℂ_[3]) (d : ℕ) (w σ p : ℂ), d % 3 = 1 → w ^ 2 = -(d : ℂ) → Sz 3 lam 0 (((1 + w) ^ 2 - (1 + (d : ℂ))) * σ - ((1 + w) ^ 2 - 1) * p) → Sz 3 lam 0 (((1 - w) ^ 2 - (1 + (d : ℂ))) * σ - ((1 - w) ^ 2 - 1) * p) → Sz 3 lam 0 σ := by
   intro _ lam d w σ p hd hw h1 h2
-  obtain ⟨hint, hadd, hmul, -, hneg, -, -⟩ := GlobalTheory.T.algebraicValuationAtLeast_basic_properties 3 lam
+  obtain ⟨hint, hadd, hmul, -, hneg, -, -⟩ := _root_.GlobalTheory.SzRules.main 3 lam
   have hsub : ∀ x y : ℂ, Sz 3 lam 0 x → Sz 3 lam 0 y → Sz 3 lam 0 (x - y) := by
     intro x y hx hy
     rw [sub_eq_add_neg]; exact hadd 0 x (-y) hx (hneg 0 y hy)

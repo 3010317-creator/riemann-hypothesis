@@ -1,12 +1,13 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.TwistedConjugationNorms.OneCoset
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmFieldStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IwahoriAndMaximalCompactCriteriaStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryIwahoriFactsStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryIwahoriOrbitalSupportStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WeightExponentStrictlyAntitoneStatement
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.TwistedConjugationNorms.HilbertNinetyNorms.Hilbert90NormOneUnitsOfUnrOfNotSplit
+import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -102,7 +103,7 @@ def cjU (w : Pl E) : (w.adicCompletion E)ˣ →* (w.adicCompletion E)ˣ := Units
   rfl
 
 theorem ordL_cj (hU : Unr E) (w : Pl E) (x : w.adicCompletion E) : ordL (cj w x) = ordL x := by
-  rw [ordL_eq_neg_log', ordL_eq_neg_log', (GlobalTheory.T.placeConjugation_properties_cmField E hU w).2.2.1 x]
+  rw [ordL_eq_neg_log', ordL_eq_neg_log', (_root_.GlobalTheory.ConjAtPlace.main E hU w).2.2.1 x]
 
 theorem thL_diagT (w : Pl E) (hw : ¬ IsSplitAt w) (a : ℕ) (d : Fin a → (w.adicCompletion E)ˣ) :
     thL a w (GlobalTheory.SmGL.diagT (w.adicCompletion E) (Fin a) d) =
@@ -202,7 +203,7 @@ theorem ex_tw (hU : Unr E) (w : Pl E) (hw : ¬ IsSplitAt w) (ϖ : (w.adicComplet
   set P : Fin a → (w.adicCompletion E)ˣ := fun i => ϖ ^ y i with hPdef
   have hcϖ : cjU w ϖ = ϖ := Units.ext hϖ.2
   have hcP : ∀ i, cjU w (P i) = P i := fun i => by simp only [hPdef, map_zpow, hcϖ]
-  have hcc : ∀ x, cj w (cj w x) = x := (GlobalTheory.T.placeConjugation_properties_cmField E hU w).2.1
+  have hcc : ∀ x, cj w (cj w x) = x := (_root_.GlobalTheory.ConjAtPlace.main E hU w).2.1
   have hUr : ∀ i, U i.rev = (cjU w (U i))⁻¹ := fun i => Units.ext (by simp [hUdef, hrev])
   have hoP : ∀ i, ordL (P i : w.adicCompletion E) = y i := fun i => by
     rw [hPdef, ordL_zpow_units, hϖ.1, mul_one]

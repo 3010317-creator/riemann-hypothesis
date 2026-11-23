@@ -4,9 +4,11 @@ public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSin
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.CoeNonzeroLocusCanonicalEqComplRange
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAmpleLBOfRelAmpleOfIsAffine
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsClosedImmersionBlowupGeneratingSectionsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLineBundleSectionsGenerateIdealSheafStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PullbackO1IsoBlowupTwistDualStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Proportional
+public import ReciprocityTheory.AnalyticForms.RegularLocalRings.FinalTheorems
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsClosedImmersionBlowupGeneratingSections
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLineBundleSectionsGenerateIdealSheaf
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PullbackO1IsoBlowupTwistDual
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.EventuallySectionAndRelAmplePowDiv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -68,10 +70,10 @@ theorem ample_twist_of_blowup : ∀ (R : Type) [CommRing R] [IsDomain R] [IsNoet
     FinalTheorems.Blowup b J → IsFinite ν → EX.idealSheaf = J.comap (ν ≫ b) → ∀ L : LB X, IsAmpleLB L → ∃ T₀ : ℕ, ∀ T, T₀ ≤ T →
       IsAmpleLB (CechPic.tens (lbPow (L.pull (ν ≫ b)) T) (CechPic.dual EX.lb)) := by
   intro R _ _ _ X X' N s J b ν EX hs hb hν hEX L hL
-  obtain ⟨L₀, m, σ, hL₀, hσ⟩ := GlobalTheory.T.exists_lineBundle_sections_generate_idealSheaf R X s J hs
-  obtain ⟨c, hc, hprop, hci⟩ := GlobalTheory.T.exists_closedImmersion_blowup_generatingSections R X X' s J b L₀ m σ hs hb hσ
+  obtain ⟨L₀, m, σ, hL₀, hσ⟩ := _root_.GlobalTheory.ProjBlowup.exists_generates_isLB R X s J hs
+  obtain ⟨c, hc, hprop, hci⟩ := _root_.GlobalTheory.ProjBlowup.exists_closedImmersion_of_generates R X X' s J b L₀ m σ hs hb hσ
   have hψ : Proportional σ (ν ≫ b) (ν ≫ c) := hprop.comp ν
-  have hiso := GlobalTheory.T.pullback_O1_iso_blowup_twist_dual R X N J L₀ m σ (ν ≫ b) (ν ≫ c) EX hL₀ hσ hψ hEX
+  have hiso := _root_.GlobalTheory.ProjBlowup.lbIso_pull_O1_of_proportional R X N J L₀ m σ (ν ≫ b) (ν ≫ c) EX hL₀ hσ hψ hEX
   have : IsProper s := by
     obtain ⟨n, i, hi, rfl⟩ := hs
     have := isProper_str R n

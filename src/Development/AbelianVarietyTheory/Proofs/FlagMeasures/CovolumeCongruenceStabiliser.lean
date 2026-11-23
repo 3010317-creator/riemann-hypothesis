@@ -2,12 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.OfRoots
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsCoveringSetExpLieLatticeRootGroup
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsCoveringSetExpLieLatticeRootGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExponentialUnipotentStabilizerStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExponentialUnipotentStabilizer
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramUnipotentLieLatticeDomainVolumeBound
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramUnipotentLieLatticeDomainVolumeBoundStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramUnipotentStabilizerBruhatCellConjRoot
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramUnipotentStabilizerBruhatCellConjRootStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GramUnipotentStabilizerBruhatCellConjRoot
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -346,7 +343,7 @@ theorem discrete_lattice {K : Type} [Field K] [NumberField K] {ι : Type} [Finty
 theorem covolume_congruence_stabiliser : ∀ (K : Type) [Field K] [NumberField K] [StarRing K] (ι : Type) [Fintype ι] (τ : ι → (K →+* ℂ)) (N : ℕ) (L U : Matrix (Fin N) (Fin N) K) (p : Point K N) (I : Ideal (𝓞 K)) (B : ℝ) (Bv : ι → ℝ), (∀ v a, τ v (star a) = starRingEnd ℂ (τ v a)) → (∀ w : InfinitePlace K, ∃! v, InfinitePlace.mk (τ v) = w) → finrank ℚ K = 2 * Fintype.card ι → IsLoUni L → IsUpUni U → EntIn ⊤ (L * ptMat p * U) → I ≠ ⊥ → 1 ≤ B → (∀ (t : ℕ) (A A' : Fin t → Fin N) (v : ι), ‖τ v (((L * ptMat p * U).submatrix A A').det)‖ ≤ Bv v) → ∏ v, max 1 (Bv v) ≤ B → ∃ Ω : Set (ι → roots (ptMat p) → ℂ), MeasurableSet Ω ∧ MeasureTheory.volume Ω ≤ ENNReal.ofReal ((|(discr K : ℝ)| ^ (1 / 2 : ℝ) * (4 * (N : ℝ) ^ 2) ^ (Fintype.card ι) * B ^ 4 * (Ideal.absNorm I : ℝ) * (N.factorial : ℝ) ^ (2 * Fintype.card ι)) ^ (N ^ 2)) ∧ ∀ c : ι → roots (ptMat p) → ℂ, ∃ a ∈ stabU (L * ptMat p * U), EntIn I (a - 1) ∧ (fun v (q : roots (ptMat p)) => ((U * a * U⁻¹).map (τ v) * ofRoots (roots (ptMat p)) (c v) : Matrix (Fin N) (Fin N) ℂ) q.1.1 q.1.2) ∈ Ω := by
   classical
   intro K _ _ _ ι _ τ N L U p I B Bv hstar hτ hrk hL hU hZ hI hB hBv hprod
-  obtain ⟨hstab, hlie, hstabp, hliep⟩ := GlobalTheory.T.gramUnipotentStabilizer_bruhatCell_conj_root K N L U p hL hU
+  obtain ⟨hstab, hlie, hstabp, hliep⟩ := _root_.GlobalTheory.LoopV.Cell.stab_cell K N L U p hL hU
   have hUdet : IsUnit U.det := by rw [det_upUni hU]; exact isUnit_one
   have hZdet : (L * ptMat p * U).det ≠ 0 := by
     rw [Matrix.det_mul, Matrix.det_mul, det_loUni hL, det_upUni hU, one_mul, mul_one]
@@ -359,7 +356,7 @@ theorem covolume_congruence_stabiliser : ∀ (K : Type) [Field K] [NumberField K
       (U * x * U⁻¹) i j = 0 := fun x hx => (hliep _).1 ((hlie x).1 hx)
   have hτ' : ∀ w : InfinitePlace K, ∃ v, InfinitePlace.mk (τ v) = w := fun w => (hτ w).exists
   obtain ⟨Λ₀, hΛ₀⟩ := exists_lattice τ (L * ptMat p * U) U (roots (ptMat p)) ⊤
-  obtain ⟨Ω₀, hΩ₀m, hΩ₀, hΩ₀v⟩ := GlobalTheory.T.gramUnipotentLieLattice_domain_volume_bound K ι τ N L U p B Bv hstar hτ hrk hL hU hZ hB hBv
+  obtain ⟨Ω₀, hΩ₀m, hΩ₀, hΩ₀v⟩ := _root_.GlobalTheory.LieCovol.lie_lattice_domain K ι τ N L U p B Bv hstar hτ hrk hL hU hZ hB hBv
     hprod Λ₀ hΛ₀
   obtain ⟨Λ', hΛ'⟩ := exists_lattice τ (L * ptMat p * U) U (roots (ptMat p))
     (Ideal.span {(N.factorial : 𝓞 K)} * I)
@@ -425,7 +422,7 @@ theorem covolume_congruence_stabiliser : ∀ (K : Type) [Field K] [NumberField K
     intro c _ x hx hxc v
     rw [ofRoots_sub_one (τ v) _ hRlt (U * x * U⁻¹) (hsupp x hx) (c v) (hxc v), expT_map,
       expT_conj U x hUdet]
-  have hgrp := (GlobalTheory.T.exponential_unipotent_stabilizer K N (L * ptMat p * U) I hZdet)
+  have hgrp := (_root_.GlobalTheory.LoopV.ExpGroup.exp_group K N (L * ptMat p * U) I hZdet)
   have htrans : ∀ a b c : Fin N, (a, b) ∈ roots (ptMat p) → (b, c) ∈ roots (ptMat p) →
       (a, c) ∈ roots (ptMat p) := fun a b c hab hbc =>
     roots_trans _ (GlobalTheory.LoopV.Cell.ptMat_det p).ne_zero hliep a b c hab hbc
@@ -444,7 +441,7 @@ theorem covolume_congruence_stabiliser : ∀ (K : Type) [Field K] [NumberField K
     congr 1
     simp only [Matrix.mul_assoc, Matrix.nonsing_inv_mul_cancel_left _ _ hUdet]
     rw [← Matrix.mul_assoc (expT X₁), hWe]
-  obtain ⟨Ω, hΩm, hΩv, hΩcov⟩ := GlobalTheory.T.exists_covering_set_exp_lie_lattice_rootGroup ι N (roots (ptMat p)) Λ' Ω' hRlt htrans hΩ'm hΩ'
+  obtain ⟨Ω, hΩm, hΩv, hΩcov⟩ := _root_.GlobalTheory.LoopV.Cover.cover ι N (roots (ptMat p)) Λ' Ω' hRlt htrans hΩ'm hΩ'
     hfin hd' hclos
   refine ⟨Ω, hΩm, ?_, fun c => ?_⟩
   · rw [hΩv]

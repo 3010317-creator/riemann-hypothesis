@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Jets.SumIoPrAlt
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DerivedActionExpandMatrixUnitsStatement
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DiscreteSeriesUnitarySmoothBasicStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsLieUnitaryElementSimpleRootStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsLieUnitaryElementSimpleRoot
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FrechetContinuousContinuousOnOrbitHasDerivAtStatement
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SmoothMapsClosureStatement
 import Formalism.FlagUnipotentLattices.MinkowskiFactorialBounds.BlockMinorAbsoluteOfExplicit
@@ -101,7 +101,7 @@ theorem pointwise : PI.KFinSmooth → ∀ (k r : ℕ) (ε : Fin (2 * r + k + 1) 
   have hπ1 : π 1 = 1 := (Formalism.FourierDecayAlt.P.MatrixMultiplicationContinuity.piW_facts hT hπ).1
   obtain ⟨hmul, -, -, hsm, -⟩ := GlobalTheory.T.discreteSeries_unitary_smooth_basic hK k r ε mu R hR
   obtain ⟨hact, -, -, hcomp⟩ := GlobalTheory.T.smooth_maps_closure hK k r ε mu mu mu R R R hR hR hR
-  obtain ⟨X, hX, hXn, hXt⟩ := GlobalTheory.T.exists_lie_unitary_element_simple_root k r z hz hT g hg a
+  obtain ⟨X, hX, hXn, hXt⟩ := _root_.GlobalTheory.UnipotentElement.exists_element k r z hz hT g hg a
   obtain ⟨-, -, hexp⟩ := GlobalTheory.T.derivedAction_expand_matrixUnits hK k r ε mu R hR Q E hQ.1.1 hE
   obtain ⟨ladd, lsmul, leq, lcont⟩ := hl
   have hla : 0 ≤ lenA k r z g a.castSucc := Metric.infDist_nonneg

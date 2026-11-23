@@ -2,28 +2,32 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitaryOnTheta
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ActOMemFinSub
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EventuallyFinEqOne
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasDerivAtZeroAndIsTheta
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsSelfDualCLatFrame
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.NotMemSpanOfCommute
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.OmVacuumEqSplitFacSmulSum
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SmulMemLatO
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeFinitelyGeneratedStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHomLatticeMultipleMemOpenLevelStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EventuallyUnitaryPairKeepsCompletedLatticeStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHeisenbergInvariantMeanSquareFormStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitPlacesSelectingAdelicIdempotentStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryGroupCharacterOfHeckeCharStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilRepresentationOfLatticeVacuaStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsHeisTrivial
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilRepresentationOfLatticeVacua
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPrimeNotDvdRelIndexSplitPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntertwinerFixesOfLocalVacuumStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantFormNormalizedHeisenbergIntertwinerEqStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantFormNormalizedHeisenbergIntertwinerStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntertwinerFixesOfLocalVacuum
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantFormNormalizedHeisenbergIntertwinerEq
+public import Mathlib.Algebra.Algebra.Basic
+public import Mathlib.Algebra.Module.LinearMap.Star
+public import Mathlib.Analysis.Complex.Norm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantFormNormalizedHeisenbergIntertwiner
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexNeZeroOfFinite
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanHeisenbergTranslatesOfLatticeVacuaEqTopStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanHeisenbergTranslatesOfLatticeVacuaEqTop
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticFormUnitaryPairActionStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsGoodIndexNormalizationNegativeInert
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.EventuallyFinEqOne
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasDerivAtZeroAndIsTheta
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SmulMemLatO
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -108,13 +112,13 @@ theorem exists_isLatRep (hψ : IsStdChar D ψ (-1)) (hS : IsSelfDualC S ΛS) (hT
   have H := isHeis_opF hψ.1 S T hw
   have hA := selfDual_latF (GlobalTheory.LatVac.latO_selfDual_approx_sign D ψ S T ΛS ΛT hψ hS hT).1
   obtain ⟨hlev, hmov⟩ := GlobalTheory.T.completedHomLattice_multiple_mem_open_level D S T ΛS ΛT hS hT (GlobalTheory.T.completedHomLattice_finitelyGenerated D S T ΛS ΛT hS hT)
-  have hspan := GlobalTheory.T.span_heisenberg_translates_of_lattice_vacua_eq_top H _ hA (smooth_theta hψ.1 hS hT hw hA hlev)
+  have hspan := _root_.GlobalTheory.FinWeil.span_translates_vacua H _ hA (smooth_theta hψ.1 hS hT hw hA hlev)
   have hidx : ∀ p, idx (latF S T ΛS ΛT) ((latF S T ΛS ΛT).map (rhoF S T p)) ≠ 0 := fun p => by
     obtain ⟨N, hN, h⟩ := hmov p.1 p.2
     refine idx_latF_ne_zero hS hT _ hN ?_
     rintro _ ⟨a, ha, rfl⟩
     exact h a ha
-  obtain ⟨Om, h1, h2⟩ := GlobalTheory.T.exists_weil_representation_of_lattice_vacua H lam hlam _ hA hspan (rhoF S T) gamF_rhoF hidx
+  obtain ⟨Om, h1, h2⟩ := _root_.GlobalTheory.FinWeil.exists_weil_rep_of_vacua H lam hlam _ hA hspan (rhoF S T) gamF_rhoF hidx
   exact ⟨w, Om, hw, hA, hspan, hidx, h1, fun p => (h2 p).1, fun p => (h2 p).2⟩
 
 namespace IsLatRep
@@ -195,7 +199,7 @@ theorem unit (hlam : GoodNorm (sgO D) lam) (μ : Measure (WO S T)) (𝓕 : Set (
     (h𝓕 : IsAddFundamentalDomain (ratL T S) 𝓕 μ) (p : GA D S × GA D T) (f : thetaSub ψ S T) :
     ∫⁻ u in 𝓕, ‖(Om p f : WO S T → ℂ) u‖ₑ ^ 2 ∂μ = ∫⁻ u in 𝓕, ‖(f : WO S T → ℂ) u‖ₑ ^ 2 ∂μ := by
   obtain ⟨B, hB, hB'⟩ := GlobalTheory.T.exists_heisenbergInvariant_meanSquare_form D ψ S T hψ (thetaSub ψ S T) (fun _ hf => hf) μ 𝓕 hμ h𝓕
-  rw [hB', hB', GlobalTheory.T.invariantForm_normalizedHeisenbergIntertwiner (isHeis_opF hψ S T h.hw) (fun x y => hψ.2.1 _) lam hlam _ h.sd h.span (rhoF S T p)
+  rw [hB', hB', _root_.GlobalTheory.FinWeil.invForm_intertwiner (isHeis_opF hψ S T h.hw) (fun x y => hψ.2.1 _) lam hlam _ h.sd h.span (rhoF S T p)
     (gamF_rhoF p) (h.sd' p) (h.fin p) (Om p) (h.op p) (h.vac p) B]
   intro x u v
   have h1 : ∀ u : thetaSub ψ S T, opF hψ S T w x u =
@@ -215,7 +219,7 @@ theorem split
   have hm : ∀ (a b : AE D) (x : XF S T), mulF S T a (mulF S T b x) = (a * b) • x := fun a b x => smul_smul a b x
   have hc : ∀ (a : AE D) (x : XF S T), rhoF S T (g, k) (mulF S T a x) = mulF S T a (rhoF S T (g, k) x) :=
     fun a x => XF.ext (actO_smul _ _ _ _)
-  obtain ⟨n, hn, hℓ⟩ := GlobalTheory.T.invariantForm_normalizedHeisenbergIntertwiner_eq (isHeis_opF hψ S T h.hw) lam _ h.sd h.span (rhoF S T (g, k)) (gamF_rhoF _)
+  obtain ⟨n, hn, hℓ⟩ := _root_.GlobalTheory.FinWeil.invariantForm_normOp_eq (isHeis_opF hψ S T h.hw) lam _ h.sd h.span (rhoF S T (g, k)) (gamF_rhoF _)
     (h.sd' _) (h.fin _) (Om (g, k)) (h.op _) (h.vac _) (mulF S T e) (mulF S T (cA D e))
     (fun x => by rw [hm, he.1, mulF_apply]) (fun x => by rw [hm, he'.1, mulF_apply])
     (fun x => by rw [hm, he.2.1, zero_smul]) (fun x => by rw [hm, mul_comm, he.2.1, zero_smul])
@@ -257,7 +261,7 @@ theorem inert {v : HeightOneSpectrum (𝓞 D.host.F)} {η : AF D.host.F} (hv : N
   have hP : ∀ a ∈ latF S T ΛS ΛT, mulF S T (algebraMap (AF D.host.F) (AE D) η) a ∈ latF S T ΛS ΛT :=
     fun a ha => GlobalTheory.LatticeStable.smul_mem_latO D S T _ _ _ _ (finPart_placeIdem hv.1) _ ha
   obtain ⟨b, hb, hb'⟩ := exists_half_of_nonSplit hv
-  refine GlobalTheory.T.intertwiner_fixes_of_local_vacuum' (isHeis_opF hψ S T h.hw) _ h.sd h.span (rhoF S T (g, k)) (Om (g, k)) (h.op _)
+  refine _root_.GlobalTheory.FinWeil.intertwiner_fixes_of_local_vacuum (isHeis_opF hψ S T h.hw) _ h.sd h.span (rhoF S T (g, k)) (Om (g, k)) (h.op _)
     (h.fix_vac fun a ha => ?_) (mulF S T (algebraMap (AF D.host.F) (AE D) η))
     (fun x y => by rw [gamF, gamF, coe_mulF, coe_mulF, symplO_smul, cA_algebraMap]) hP (fun x => XF.ext ?_) f
     fun a ha => Subtype.ext ?_

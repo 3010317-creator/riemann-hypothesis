@@ -1,7 +1,10 @@
 module
 
 public import Development.WeilBound.CoreStatements.PublishedTheorems.PoitouTateDuality.PtfsDefs
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteDualInjectiveEquivStatement
+public import Mathlib.Algebra.Algebra.Basic
+public import Mathlib.LinearAlgebra.Dual.Defs
+public import Mathlib.SetTheory.Cardinal.Finite
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteDualInjectiveEquiv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,7 +60,7 @@ theorem shaHalf_of_perfectPair {n : ℕ} [NeZero n] {X Y : Type} [AddCommGroup X
     Finite Y ∧ Finite X ∧ Nonempty (X ≃ₗ[ZMod n] Module.Dual (ZMod n) Y) ∧
       Nat.card Y = Nat.card X := by
   obtain ⟨hX, hY, P, hP, hP'⟩ := h
-  have key := GlobalTheory.T.finite_dual_injective_equiv n Y X ⟨P, hP.1⟩ ⟨P.flip, hP'.1⟩
+  have key := _root_.GlobalTheory.CompanionTheory.ZModDual.equiv_dual_of_injective_pair n Y X ⟨P, hP.1⟩ ⟨P.flip, hP'.1⟩
   exact ⟨hY, hX, key.1, key.2⟩
 
 section Published

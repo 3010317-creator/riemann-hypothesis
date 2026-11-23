@@ -2,11 +2,17 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsSubquotientDetRepParInd
 public import Mathlib.Topology.Algebra.Group.Units
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BlockUnipotentMapContinuousMulDetOneCompactSuppoStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CentralTranslateDetOneCompact
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspidalUnipotentVanishing
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralUnipotentRadicalCoefficientCoinvariantEqStatement
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Mathlib.Topology.Instances.Matrix
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BlockUnipotentMapContinuousMulDetOneCompactSuppo
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VerticalPairPowerSumVanish
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FundamentalIdealFrobeniusPowers
+public import Development.AbelianVarietyTheory.Definitions.Foundations.SmoothPartStable
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralUnipotentRadicalCoefficientCoinvariantEq
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSupercuspidalOfIsCuspidal
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ValuationDetOfMemKO
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CentralExponentBoundOver
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -49,7 +55,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ValuationDetOfMemKO
 
 @[expose] public section
 
@@ -107,7 +112,7 @@ theorem isCuspFn_cutCoef : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologica
     have := hbi 1 K0.one_mem (g⁻¹ * y) hy g
     rwa [one_mul, mul_inv_cancel_left] at this
   obtain ⟨C, hC, hCs⟩ := (GlobalTheory.CuspCoef.isSupercuspidal_of_isCuspidal k N V π hπ).2 v l hl
-  obtain ⟨D, hD, hDs⟩ := GlobalTheory.T.central_translate_det_one_compact k N C hC
+  obtain ⟨D, hD, hDs⟩ := _root_.GlobalTheory.CentreCpt.exists_compact_center_mul k N C hC
   have hcs : HasCompactSupport f := by
     refine HasCompactSupport.intro hD fun g hg => ?_
     rw [hf]
@@ -118,10 +123,10 @@ theorem isCuspFn_cutCoef : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologica
     · rfl
   refine ⟨hlc, hcs, K0, GlobalTheory.CentralExponent.isOpen_cong γ hγ, GlobalTheory.CentralExponent.isCompact_cong γ hγ, hbi, ?_⟩
   intro a b e ha hb μ hμ u hu g h
-  obtain ⟨huc, hum, hud, hup⟩ := GlobalTheory.T.blockUnipotentMap_continuous_mul_det_one_compactSupport k N a b e u hu
+  obtain ⟨huc, hum, hud, hup⟩ := _root_.GlobalTheory.blockUnipotent_props k N a b e u hu
   by_cases hg : ValuativeRel.valuation k (g : Matrix (Fin N) (Fin N) k).det = 1
-  · refine GlobalTheory.T.integral_unipotentRadical_coefficient_coinvariant_eq_zero k N V π hsm a b μ hμ u huc hum (l ∘ₗ π (g * h⁻¹)) (π h v)
-      (GlobalTheory.T.cuspidal_unipotent_vanishing k N V π hπ a b e ha hb u hu _) _ (hup f hcs g h) fun X => ?_
+  · refine _root_.GlobalTheory.UnipCoefInt.integral_coef_eq_zero k N V π hsm a b μ hμ u huc hum (l ∘ₗ π (g * h⁻¹)) (π h v)
+      (_root_.GlobalTheory.SmGL.CuspSpan.mem_span_unip k N V π hπ a b e ha hb u hu _) _ (hup f hcs g h) fun X => ?_
     have hd : ValuativeRel.valuation k ((g * (h⁻¹ * u X * h) : GL (Fin N) k) : Matrix (Fin N) (Fin N) k).det = 1 := by
       simp only [Units.val_mul, Matrix.det_mul, hud X, map_mul, hg, one_mul, mul_one]
       rw [← map_mul, ← Matrix.det_mul, ← Units.val_mul, inv_mul_cancel, Units.val_one, Matrix.det_one, map_one]

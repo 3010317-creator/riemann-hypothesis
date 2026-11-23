@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLagrAt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplementaryAdelicSchwartzRestFunctionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergInvariantFormCompLocalWeilOperatorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergInvariantFormVanishesLagrangianTestStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceTransformingCharacterEqOneStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergInvariantFormCompLocalWeilOperator
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergInvariantFormVanishesLagrangianTest
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceTransformingCharacterEqOne
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationLocalityUnitaryGroupVStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -96,7 +96,7 @@ theorem inv_of_heisInv : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     obtain ⟨S₀, hS₀⟩ := GlobalTheory.T.weilRepresentationLocality_unitaryGroupV' B G X om om' hT v g hg
     have e : S₀ f = Sop g f := funext fun t => (huniq _ f _ hf (hS₀ f hf).2 t).trans (hSop g f t).symm
     rw [← e]; exact hS₀ f hf
-  obtain ⟨φ₀, hφ₀, hline⟩ := GlobalTheory.T.heisenberg_invariant_form_vanishes_lagrangian_test F E σ a' (a + a') G.V' G.W G.M' B.ψ v (hT.base.inert v w hin).2.2 m C hC
+  obtain ⟨φ₀, hφ₀, hline⟩ := _root_.GlobalTheory.InertLagUniq.exists_test F E σ a' (a + a') G.V' G.W G.M' B.ψ v (hT.base.inert v w hin).2.2 m C hC
   by_cases hz : ∀ f ∈ SB (Fin a' × Fin (a + a') → Fv F v), l f = 0
   · rw [hz φ₁ hφ₁, hz φ hφ]
   push_neg at hz
@@ -107,7 +107,7 @@ theorem inv_of_heisInv : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
       ∀ f₁ ∈ SB (Fin a' × Fin (a + a') → Fv F v), Acts (evFin F v) (om' (g, 1)) f f₁ → l f₁ = c g * l f := by
     intro g hg f hf f₁ hf₁ hA
     have hf₁eq : f₁ = Sop g f := funext fun t => (huniq _ f f₁ hf hA t).trans (hSop g f t).symm
-    have hE := GlobalTheory.T.heisenbergInvariantForm_comp_localWeilOperator F E σ B a a' G X om om' hT v m C l hl g hg (Sop g) (hS g hg)
+    have hE := _root_.GlobalTheory.InertVacEquiv.heisInv_comp F E σ B a a' G X om om' hT v m C l hl g hg (Sop g) (hS g hg)
     have hl' : GlobalTheory.InertVacLag.HeisInv G.M' B.ψ v C (l ∘ₗ Sop g - c g • l) := by
       intro u hu f hf f₁ hf₁ hA'
       simp only [LinearMap.sub_apply, LinearMap.smul_apply, smul_eq_mul]
@@ -120,7 +120,7 @@ theorem inv_of_heisInv : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
     simp only [LinearMap.sub_apply, LinearMap.smul_apply, smul_eq_mul, LinearMap.comp_apply] at h1
     rw [hf₁eq]
     linear_combination h1
-  have hc := GlobalTheory.T.inert_place_transforming_character_eq_one F E σ B a a' G X om om' hT v w hin hv m C hC l hl hz c hlaw g hg
+  have hc := _root_.GlobalTheory.InertLagChar.char_eq_one F E σ B a a' G X om om' hT v w hin hv m C hC l hl hz c hlaw g hg
   rw [hlaw g hg φ hφ φ₁ hφ₁ hA, hc, one_mul]
 
 end GlobalTheory.InertVacLag

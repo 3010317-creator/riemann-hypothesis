@@ -1,7 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasDefect
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDerivationExtendingCotangentFormStatement
+public import Mathlib.RingTheory.Derivation.Basic
+public import Mathlib.RingTheory.Ideal.Cotangent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDerivationExtendingCotangentForm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StalkDerivationMemSpanInvariantSemiAbelianStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GeometricallyIntegralIffGeometricallyConnectedOf
 import Mathlib.Algebra.Order.Floor.Extended
@@ -304,6 +306,6 @@ theorem eq_zero_of_invDer_vanish : ∀ (R : Type) [CommRing R] [IsDomain R] [IsN
   haveI : ReciprocityTheory.ChartRestriction.G.Semi.IsSemiAbelian G := hSA
   haveI : Smooth G.hom := hSA.smooth
   haveI : IsLocallyNoetherian G.left := LocallyOfFiniteType.isLocallyNoetherian G.hom
-  exact euler_of_span _ n D (span_of_parts GlobalTheory.T.stalkDerivation_mem_span_invariant_semiAbelian GlobalTheory.T.exists_derivation_extending_cotangent_form R G hSA n v dd hinv p hp D hD)
+  exact euler_of_span _ n D (span_of_parts GlobalTheory.T.stalkDerivation_mem_span_invariant_semiAbelian _root_.GlobalTheory.ConormalDer.exists_derivation_extending R G hSA n v dd hinv p hp D hD)
 
 end GlobalTheory.InvJet

@@ -2,12 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousAtPlace
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGivenStageEqOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousCharacterCocycleTrivialNearZeroStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Topology.Algebra.Nonarchimedean.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousCharacterCocycleTrivialNearZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSchwartzBruhatSchroedingerFixedLocalFieldStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSubgroupSymplecticAnnihilatorLocalFieldStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocallyConstantHeisenbergLatticeVacuumFunction
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSplittingSplitOm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchroedingerMemSchwartzBruhatFinitePlaceStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.UnitaryConjugation
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocallyConstantHeisenbergLatticeVacuumFunction
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -49,7 +52,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.MetricSpace.Ultra.Pi
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.UnitaryConjugation
 
 @[expose] public section
 
@@ -210,7 +212,7 @@ theorem exists_schr_eigen : ∀ {F : Type} [Field F] [NumberField F] (v : Global
     have h1 := hNN (Set.mk_mem_prod hx hy)
     rw [Set.mem_preimage] at h1
     exact hU₀ _ h1
-  obtain ⟨U, hU, hUχ⟩ := GlobalTheory.T.continuous_character_cocycle_trivial_near_zero lamH hlamc ε hεN hε0 χ hχc (fun a h => hker a h) (fun a b => hco a b)
+  obtain ⟨U, hU, hUχ⟩ := _root_.GlobalTheory.CocycleChar.cocycle_char_trivial_near_zero lamH hlamc ε hεN hε0 χ hχc (fun a h => hker a h) (fun a b => hco a b)
   obtain ⟨φ₁, hφ₁SB, hφ₁0, U', hU', hU'φ⟩ := GlobalTheory.T.exists_schwartzBruhat_schroedingerFixed_localField v ψ hψc (κ := κ)
   obtain ⟨Y, hYsep, N', hN', hN'Y⟩ := GlobalTheory.T.exists_subgroup_symplecticAnnihilator_localField v ψ hψc hψ1 (U ∩ U') (Filter.inter_mem hU hU')
 

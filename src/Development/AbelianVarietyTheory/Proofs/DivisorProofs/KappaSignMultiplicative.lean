@@ -1,11 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramDetChangeOfBasesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramDetNeZeroOfKerOrthStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KerAevalOrthogonalRangeUnitarySelfReciprocalStatement
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramDetChangeOfBases
+public import Mathlib.LinearAlgebra.Matrix.ToLin
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GramDetNeZeroOfKerOrth
+public import Mathlib.Algebra.Polynomial.AlgebraMap
+public import Mathlib.Algebra.Polynomial.Reverse
+public import Mathlib.Data.Matrix.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KerAevalOrthogonalRangeUnitarySelfReciprocal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmField
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryConjMapsKerAevalBasisAndGramStatement
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjAlgApply
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -100,12 +106,12 @@ theorem gram_change (σ : K →+* K) {n : ℕ} (W : Submodule K (Fin n → K)) {
     (hsu' : Submodule.span K (Set.range u') = W) :
     ∃ d : K, d ≠ 0 ∧ (Matrix.of fun i j => ∑ k, σ (u' i k) * u' j k).det =
       σ d * d * (Matrix.of fun i j => ∑ k, σ (u i k) * u j k).det :=
-  GlobalTheory.T.gram_det_change_of_basis' σ W u u' hu hsu hu' hsu'
+  _root_.GlobalTheory.gram_det_change_of_bases σ W u u' hu hsu hu' hsu'
 
 theorem csr_orth (σ : K →+* K) {n : ℕ} (γ : Matrix (Fin n) (Fin n) K) (hγ : (γ.map σ)ᵀ * γ = 1) (Q : K[X])
     (hQ : C (σ (Q.coeff 0)) * Q = (Q.map σ).reverse) (x z : Fin n → K) (hx : aeval γ Q *ᵥ x = 0) :
     ∑ k, σ ((aeval γ Q *ᵥ z) k) * x k = 0 :=
-  GlobalTheory.T.ker_aeval_orthogonal_range_unitary_selfReciprocal σ γ hγ Q hQ x z hx
+  _root_.GlobalTheory.csr_ker_orth_range σ γ hγ Q hQ x z hx
 
 theorem gram_ne_zero (σ : K →+* K) {n : ℕ} (A : Matrix (Fin n) (Fin n) K) {ι : Type} [Fintype ι] [DecidableEq ι]
     (u : ι → Fin n → K) (hu : LinearIndependent K u)
@@ -113,7 +119,7 @@ theorem gram_ne_zero (σ : K →+* K) {n : ℕ} (A : Matrix (Fin n) (Fin n) K) {
     (horth : ∀ x z, A *ᵥ x = 0 → ∑ k, σ ((A *ᵥ z) k) * x k = 0)
     (hdec : ∀ v, ∃ z y, A *ᵥ y = 0 ∧ v = A *ᵥ z + y) :
     (Matrix.of fun i j => ∑ k, σ (u i k) * u j k).det ≠ 0 :=
-  GlobalTheory.T.gram_det_ne_zero_of_ker_orth' σ A u hu hsu horth hdec
+  _root_.GlobalTheory.gram_det_ne_zero_of_ker_orth σ A u hu hsu horth hdec
 
 theorem conj_ker (σ : K →+* K) {n : ℕ} (γ g : GL (Fin n) K) (hg : ((g : Matrix (Fin n) (Fin n) K).map σ)ᵀ * g = 1)
     (Q : K[X]) {ι : Type} (u : ι → Fin n → K) (hu : LinearIndependent K u)
@@ -123,7 +129,7 @@ theorem conj_ker (σ : K →+* K) {n : ℕ} (γ g : GL (Fin n) K) (hg : ((g : Ma
         LinearMap.ker (Matrix.toLin' (aeval (γ : Matrix (Fin n) (Fin n) K) Q)) ∧
       (Matrix.of fun i j => ∑ k, σ (((g : Matrix (Fin n) (Fin n) K) *ᵥ u i) k) * ((g : Matrix (Fin n) (Fin n) K) *ᵥ u j) k) =
         Matrix.of fun i j => ∑ k, σ (u i k) * u j k :=
-  GlobalTheory.T.unitary_conj_maps_ker_aeval_basis_and_gram σ γ g hg Q u hu hsu
+  _root_.GlobalTheory.ConjugateAlgebraLemmas.main σ γ g hg Q u hu hsu
 
 end GlobalTheory.KapSignMul
 

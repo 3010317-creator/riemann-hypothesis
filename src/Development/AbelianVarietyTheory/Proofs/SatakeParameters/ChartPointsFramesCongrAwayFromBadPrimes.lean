@@ -1,12 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.UnderTie
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AdelicMatrixCongruentOneAtPrimeInvOfPosDepthStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AdelicMatrixCongruentOneAtPrimeMulOfBothStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ExistsMidLevIff
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AdelicMatrixCongruentOneAtPrimeInvOfPosDepth
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AdelicMatrixCongruentOneAtPrimeMulOfBoth
+public import Formalism.LocalToGlobal.Columns.RecLevel
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IntAtAdeleMulOfPlaceComponentEqZero
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RationalMatrixEntriesCongruentOneOfAdelicCongrue
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ResidueCardColumnFieldPrimeToHostPrimeEq
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DatumPeriodicMulLatticeFinal
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IntAtAdeleMulOfPlaceComponentEqZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RationalMatrixEntriesCongruentOneOfAdelicCongrueStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ResidueCardColumnFieldPrimeToHostPrimeEqStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,7 +63,7 @@ theorem congAt_of_prV_eq (v : HeightOneSpectrum (𝓞 F)) (Q : HeightOneSpectrum
     (h : Formalism.UG.bc (Formalism.UG.prV (E := E) v) y₁ = Formalism.UG.bc (Formalism.UG.prV (E := E) v) y) :
     GlobalTheory.TwU.CongAt Q n (y⁻¹ * y₁) := by
   intro a b
-  apply GlobalTheory.T.intAtAdele_mul_of_placeComponent_eq_zero F E v Q hv
+  apply _root_.GlobalTheory.VanishAtOver.intAtA_mul_of_prV_eq_zero F E v Q hv
   have h1 : Formalism.UG.bc (Formalism.UG.prV (E := E) v) (y⁻¹ * y₁) = 1 := by
     rw [map_mul, h, map_inv, inv_mul_cancel]
   have h2 := congrArg (fun g : GL (Fin N) (TensorProduct F E (v.adicCompletion F)) => (g : Matrix (Fin N) (Fin N) (TensorProduct F E (v.adicCompletion F))) a b) h1
@@ -78,7 +80,7 @@ theorem congAt_ratA_of_near (v : HeightOneSpectrum (𝓞 F)) (Q : HeightOneSpect
   have e : GlobalTheory.TwU.ratA F (g⁻¹ * g₁) = (y⁻¹ * GlobalTheory.TwU.ratA F g)⁻¹ * ((y⁻¹ * y₁) * (y₁⁻¹ * GlobalTheory.TwU.ratA F g₁)) := by
     rw [map_mul, map_inv]; group
   rw [e]
-  exact GlobalTheory.T.adelicMatrixCongruentOneAtPrime_mul_of_both F E Q n N _ _ (GlobalTheory.T.adelicMatrixCongruentOneAtPrime_inv_of_pos_depth F E Q n N _ hn hg) (GlobalTheory.T.adelicMatrixCongruentOneAtPrime_mul_of_both F E Q n N _ _ (congAt_of_prV_eq v Q hv n y y₁ h) hg₁)
+  exact _root_.GlobalTheory.CongProd.congAt_mul_prod F E Q n N _ _ (_root_.GlobalTheory.TwU.congAt_inv_pos_depth F E Q n N _ hn hg) (_root_.GlobalTheory.CongProd.congAt_mul_prod F E Q n N _ _ (congAt_of_prV_eq v Q hv n y y₁ h) hg₁)
 
 end GlobalTheory.AwayFr
 
@@ -151,9 +153,9 @@ theorem frames_away : UnderTie (fun {D L hT Gi Gl Kc Y cX ex t u μ St} A dtU a 
   have c1 := congAt_ratA_of_near _ _ hv _ hD _ _ _ _ (monoidHom_mul_mul_congr_middle _ _ _ _ _ hxv) (hp.frame P) (hp₁.frame P)
   have c2 := congAt_ratA_of_near _ _ hv _ hD _ _ _ _ (monoidHom_mul_mul_congr_middle _ _ _ _ _ hxv.symm) (hp₁.frame P) (hp.frame P)
   rw [← map_inv, ← map_mul] at c1 c2
-  have i1 := GlobalTheory.T.rationalMatrix_entries_congruent_one_of_adelic_congruent _ _ _ _ _ _ c1
-  have i2 := GlobalTheory.T.rationalMatrix_entries_congruent_one_of_adelic_congruent _ _ _ _ _ _ c2
-  rw [GlobalTheory.T.residueCard_columnFieldPrimeToHostPrime_eq] at i1 i2
+  have i1 := _root_.GlobalTheory.TwU.ratA_congAt_entry _ _ _ _ _ _ c1
+  have i2 := _root_.GlobalTheory.TwU.ratA_congAt_entry _ _ _ _ _ _ c2
+  rw [_root_.GlobalTheory.qOf_seamP] at i1 i2
   have entry : ∀ (g : Sp t.X.E (D.R.N j) ≃ₗ[t.X.E] Sp t.X.E (D.R.N j)) (l s : Fin (D.R.N j)),
       ((seamGL t.seam g : GL (Fin (D.R.N j)) D.host.E) : Matrix (Fin (D.R.N j)) (Fin (D.R.N j)) D.host.E) l s =
         t.seam.iE (g (Pi.single s 1) l) := by

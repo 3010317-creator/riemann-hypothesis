@@ -3,14 +3,14 @@ module
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MarkValEqZeroOrOne
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.VoronoiMeans.VorFunEvalEqFineMean
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsBaryStageStart
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.PsdBalancedFormMemCellConeStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.PsdBalancedFormVanishesLowRankStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.PsdBalancedFormMemCellCone
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.PsdBalancedFormVanishesLowRank
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BilinFormExistsPrimitiveOfNeZero
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CarrierDimLeOfAddCellGenerators
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteBilinFormAbsLe
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InRealConeSummandsOfEvalZAdditiveCell
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InvFunEvalZAddOfLinearOnRealCone
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemClosureSumIndecomposableFaceOfAdditiveStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemClosureSumIndecomposableFaceOfAdditive
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PolFanExistsMarkedFormInCell
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -71,11 +71,11 @@ theorem inFace_iff (hb : CMOrd O bar) (hψ : IsPolyFan bar q ψ) (hl : IsCarrier
   have b2 := cone_nonneg hτ.nonneg hβ
   constructor
   · rintro ⟨h1, h2, -, h4, h5⟩
-    exact GlobalTheory.T.psd_balanced_form_mem_cell_cone O bar hb q ψ lab hψ hl X hX hD m τ hτ β b1 b2 hβ x h1 h2 h4 h5
+    exact _root_.GlobalTheory.CompanionTheory.Ar.Fan.RationalConeOfSum.inRCone_of_add O bar hb q ψ lab hψ hl X hX hD m τ hτ β b1 b2 hβ x h1 h2 h4 h5
   · intro hx
     have hs := cone_add hβ hx
     refine ⟨cone_bal hτ.mem hx, cone_nonneg hτ.nonneg hx, fun y hy => cone_vanish hx fun j =>
-      GlobalTheory.T.psd_balanced_form_vanishes_low_rank O bar hb q ψ lab hψ hl X hX hD m τ hτ β b1 b2 hβ hr j y hy,
+      _root_.GlobalTheory.CompanionTheory.Ar.Fan.VanishingInRationalCone.vanish_of_inRCone_of_genRank_le O bar hb q ψ lab hψ hl X hX hD m τ hτ β b1 b2 hβ hr j y hy,
       evalZ_add_of_linearOn_inRCone _ ψ X m τ hτ.linear _ _ hβ hx, le_antisymm ((lab_le hl hX hτ hs).trans hr) ?_⟩
     obtain ⟨c, hc, e⟩ := hx
     refine carrierDim_le_of_add_cell _ bar q ψ lab hl X hX m τ hτ β b1 b2 _ (cone_bal hτ.mem hs)
@@ -105,7 +105,7 @@ theorem exists_isMarked_inRCone : ∀ (O : Type) [CommRing O] [IsDedekindDomain 
   have hβ0 : β ≠ 0 := by
     rintro rfl
     have h0 : ∀ j, τ j = 0 := fun j => eq_zero_of_diag (hτ.mem j).1 fun y =>
-      GlobalTheory.T.psd_balanced_form_vanishes_low_rank O bar hbar q ψ lab hψ hl X hX hD n τ hτ 0 hb hp hβ hr.le j y rfl
+      _root_.GlobalTheory.CompanionTheory.Ar.Fan.VanishingInRationalCone.vanish_of_inRCone_of_genRank_le O bar hbar q ψ lab hψ hl X hX hD n τ hτ 0 hb hp hβ hr.le j y rfl
     have h1 : Submodule.span ℤ (Set.range τ) = ⊥ := Submodule.span_eq_bot.2 (by rintro _ ⟨j, rfl⟩; exact h0 j)
     have h2 : genRank τ = 0 := by rw [genRank, h1, finrank_bot]
     rw [h2, hlab] at hr
@@ -117,7 +117,7 @@ theorem exists_isMarked_inRCone : ∀ (O : Type) [CommRing O] [IsDedekindDomain 
     fun x => by simp only [hSdef, Set.Finite.mem_toFinset, Set.mem_setOf_eq]
   have hSτ : ∀ x ∈ S, InRCone τ x := fun x hx => ((hS x).1 hx).1
   have hcl : β ∈ AddSubmonoid.closure {y | IsIndec bar ψ lab β y} :=
-    GlobalTheory.T.mem_closure_sum_indecomposable_face_of_additive _ bar ψ lab X β
+    _root_.GlobalTheory.PolFan.Mark.mem_closure_isIndec _ bar ψ lab X β
       (fun x y hx hy => ⟨(hF _).2 (cone_add ((hF _).1 hx) ((hF _).1 hy)),
         evalZ_add_of_linearOn_inRCone _ ψ X n τ hτ.linear _ _ ((hF _).1 hx) ((hF _).1 hy)⟩)
       (fun x hx => hfan.integral x hx.1 hx.2.1) (fun x hx h0 => hfan.pos x hx.1 hx.2.1 h0) β ((hF _).2 hβ)
@@ -159,6 +159,6 @@ theorem exists_isMarked_inRCone : ∀ (O : Type) [CommRing O] [IsDedekindDomain 
     fun x => (hS x).trans (isIndec_iff hbar hψ hl hX hD hτ hτ0 (hr.le.trans hge) x).symm, g, hg, hgβ⟩, ?_⟩
   refine (cone_smul_iff hg).1 (hgβ ▸ cone_sum fun x hx => ?_)
   obtain ⟨h1, h2, -, h4, h5⟩ := (hF x).2 (hSτ x hx)
-  exact GlobalTheory.T.psd_balanced_form_mem_cell_cone O bar hbar q ψ lab hψ hl X hX hD m v hv β hb hp hvβ x h1 h2 h4 h5
+  exact _root_.GlobalTheory.CompanionTheory.Ar.Fan.RationalConeOfSum.inRCone_of_add O bar hbar q ψ lab hψ hl X hX hD m v hv β hb hp hvβ x h1 h2 h4 h5
 
 end GlobalTheory.CompanionTheory.Ar.Fan.MarkedRayInCone

@@ -17,7 +17,9 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.EqPlaceId
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PlacedBesselPairLattice
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualSplitComponentIsLatticeStabilizerEq
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSelfDualLatticeWithPrescribedSplitComponen
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsFiniteAdeleProjectionIntegralReductionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagonalBlockDetBlockTriangular
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsFiniteAdeleProjectionIntegralReduction
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LatticeCompletionAtPlacesMemCompletedHermitianLaStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemLatticeCompletionAtPlacesOfFinPartMemHatLattiStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IdemAtUniqueOrth
@@ -92,7 +94,7 @@ theorem int_moved (q : SplitPt D k) {PP : Formalism.L2.DIV.Pl D.host.E} (hq : Fo
     (β : GL (Fin V.rank) (Lev.EAf D)) (hβ : Formalism.L2.DIV.IsFrame β Λ) (t : GA D V) (G : GlobalTheory.LocMod.Frame k V.rank Y)
     (σ : Fin V.rank ≃ Y) (hM : MovedTo (ofSplit q) V t β (G.β.submatrix id σ)) (y : Y → k) :
     (fun i => q.sec (((mt V t⁻¹).map q.pr *ᵥ (G.β *ᵥ y)) i)) ∈ latV V Λ (· = q.v) ↔ ∀ i, y i ∈ 𝒪[k] := by
-  obtain ⟨π, h1, -, h2, -⟩ := GlobalTheory.T.exists_finiteAdele_projection_integral_reduction D k q PP hq
+  obtain ⟨π, h1, -, h2, -⟩ := _root_.GlobalTheory.FinPl.SplitPt.exists_lift_isRed D k q PP hq
   have hl : ∀ y : Fin V.rank → k, (fun i => q.sec (y i)) ∈ latV V Λ (· = q.v) ↔
       ∀ i, (((Matrix.GeneralLinearGroup.map π β)⁻¹).val *ᵥ y) i ∈ 𝒪[k] := fun y => by
     have h3 : (fun i => q.sec (y i)) ∈ latV V Λ (· = q.v) ↔
@@ -278,7 +280,7 @@ theorem line_bes (q : SplitPt D k) {PP : Formalism.L2.DIV.Pl D.host.E} (hq : For
 
 theorem val_nat (q : SplitPt D k) {PP : Formalism.L2.DIV.Pl D.host.E} (hq : Formalism.L2.NTheta.IsIdemAt q.e PP) (T : ℕ)
     (hT : (T : 𝓞 D.host.E) ∉ PP.asIdeal) : valuation k (T : k) = 1 := by
-  obtain ⟨π, -, h, -⟩ := GlobalTheory.T.exists_finiteAdele_projection_integral_reduction D k q PP hq
+  obtain ⟨π, -, h, -⟩ := _root_.GlobalTheory.FinPl.SplitPt.exists_lift_isRed D k q PP hq
   have h1 := h.int T
   have h2 := h.ker T
   rw [map_natCast] at h1

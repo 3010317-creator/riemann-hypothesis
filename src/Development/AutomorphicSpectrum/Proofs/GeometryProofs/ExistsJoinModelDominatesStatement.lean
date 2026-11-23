@@ -1,6 +1,12 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GlueApplyOfNotInFibre
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsUniqueDominatingMap
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.JoinCoordsCentreChart
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProjectiveModelNonempty
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegAtChartLocalization
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCptGen
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegAtLocalOrderFraction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -39,11 +45,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsUniqueDominatingMapStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.JoinCoordsCentreChartStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProjectiveModelNonemptyStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegAtChartLocalizationStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegAtLocalOrderFractionStatement
 import Development.WeilBound.CoreStatements.HodgeTatePoints.MbLJoinExists
 
 @[expose] public section

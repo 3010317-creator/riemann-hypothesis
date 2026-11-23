@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DiagHermitianTrivialOfSumFourSquares
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDefinitePairClassesFixedMinpolyDegreeOneStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteMinpolyDefinitePairsTermNeZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteMinpolyDefinitePairsTermNeZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,7 +54,7 @@ theorem finite_classes_irr_term_ne_zero : ∀ (p : ℕ) [Fact p.Prime] (G : HTGr
       (∀ k ∈ K', ∀ k' ∈ K', ∀ g, f' (k * g * k') = f' g) →
       {q : GlobalTheory.LKDef.DCls G | Irreducible (Quot.out q).pol ∧ (Quot.out q).term L.K.toSubgroup f 1 K' f' ≠ 0}.Finite := by
   intro p _ G ha L f hf hfb K' f' hf' hfb'
-  refine ((GlobalTheory.T.finite_minpoly_definitePairs_term_ne_zero p G ha L f hf hfb K' f' hf' hfb').biUnion
+  refine ((_root_.GlobalTheory.LKDef.FinPol.finite_pol_term_ne_zero p G ha L f hf hfb K' f' hf' hfb').biUnion
     (fun P0 _ => GlobalTheory.T.finite_definitePair_classes_fixed_minpoly_degree_one p G ha L f hf hfb K' f' hf' hfb' P0)).subset ?_
   intro q hq
   exact Set.mem_biUnion (x := (Quot.out q).pol) ⟨Quot.out q, rfl, hq.1, hq.2⟩ ⟨rfl, hq.1, hq.2⟩

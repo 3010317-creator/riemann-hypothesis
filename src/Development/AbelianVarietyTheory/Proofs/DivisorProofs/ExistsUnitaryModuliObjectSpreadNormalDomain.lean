@@ -9,7 +9,9 @@ import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPushEquiv
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PushEquivSymmLeft
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.TateIsometryOfFiniteLevelIsometries
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.TorsionIsometryPrimitiveRootBijectiveModN
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.WeilIsIffOfIsGrpPullbackComm
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ConstGen
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.WeilIsGrpPullbackOfCommute
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHold
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -160,7 +162,7 @@ theorem geom_push (o : Obj D l b s) {X : Scheme.{0}} {t : SAB H X} {f : S ⟶ X}
     apply Over.OverMorphism.ext
     show (z.left ≫ _) ≫ _ = (z.left ≫ _) ≫ _
     rw [Category.assoc, ← m.act, Category.assoc]
-  · exact (weilIs_iff_of_isGrpPullback_comm _ _ t.G o.t.G f m.cm.F t.PP.L o.t.PP.L t.PP.isLB o.t.PP.isLB m.cart hL
+  · exact (_root_.GlobalTheory.weilIs_grpPullback_of_comm _ _ t.G o.t.G f m.cm.F t.PP.L o.t.PP.L t.PP.isLB o.t.PP.isLB m.cart hL
       (Over.mk x) n _ _ z z' _ (ObjPull.pushEquiv_symm_left m.cart (Over.mk x) z).symm
       (ObjPull.pushEquiv_symm_left m.cart (Over.mk x) z').symm).1 hz
   · exact (push _ _ (hσA a)).trans (congrArg _ (hA a))

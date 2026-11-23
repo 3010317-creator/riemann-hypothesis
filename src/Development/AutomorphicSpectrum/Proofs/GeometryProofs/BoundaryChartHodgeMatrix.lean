@@ -4,18 +4,22 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.BdryCha
 public import Development.AbelianVarietyTheory.Definitions.Uniformization.PointEqOfSubsingleton
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsTorusAndQuotientHom
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FrameFreeFiniteOrderRuleConstPeriodSpace
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsHolToFibPtAndCompFibre
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BoundaryChartHolomorphicStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BoundaryChartHolomorphic
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLinearLiftOfAdditiveFamily
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExpHomBijectiveOfLocalInjStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExpHomBijectiveOfLocalInj
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FamilyExpDerivativeLieStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FamilyUniformisationLocalPeriodStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GroupPointsEquivCommonCoverStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeGramPullbackIffStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FamilyUniformisationLocalPeriod
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GroupPointsEquivCommonCover
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeGram
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeGramPullbackIff
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsDerivAt0CompLinMap
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PeriodLatticeRankTwoGStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PuncturedPolydiscOpenConnectedStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TangentVectorLiftsOpenImmersionStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PeriodLatticeRankTwoG
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PuncturedPolydiscOpenConnected
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TangentVectorLiftsOpenImmersion
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.LevClauses
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsHolToFibPtAndCompFibre
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,7 +63,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.LevClauses
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.ExpRowsPf
 import Std.Tactic.BVDecide.Normalize.Prop
 
@@ -73,13 +76,13 @@ namespace GlobalTheory.CompanionTheory.Ar.Flat.Marking
 
 theorem punct_top (n a : ℕ) (ρ : ℝ) (hρ : 0 < ρ) :
     IsOpen (punct n a ρ) ∧ IsPreconnected (punct n a ρ) ∧ (punct n a ρ).Nonempty :=
-  GlobalTheory.T.punctured_polydisc_open_connected n a ρ hρ
+  _root_.GlobalTheory.CompanionTheory.Ar.Flat.PunctShape.punct_open_connected_nonempty n a ρ hρ
 
 theorem bijective_of_exp {M : Type} [Group M] {g g' : ℕ} (ex : (Fin g' → ℂ) → M) (r : (Fin g → ℂ) → M)
     (h : (Fin g → ℂ) →ₗ[ℂ] (Fin g' → ℂ)) (hex : ∀ z w, ex (z + w) = ex z * ex w) (hc : ∀ x, ex (h x) = r x)
     (ho : Function.Surjective r) (hr : ∃ δ : ℝ, 0 < δ ∧ ∀ x, ‖x‖ < δ → r x = 1 → x = 0)
     (he : ∃ δ : ℝ, 0 < δ ∧ ∀ y, ‖y‖ < δ → ex y = 1 → y = 0) : Function.Bijective h :=
-  GlobalTheory.T.exp_hom_bijective_of_local_inj M g g' ex r h hex hc ho hr he
+  _root_.GlobalTheory.CompanionTheory.Ar.LbMarking.linearLift_bijective_of_discrete_kernels M g g' ex r h hex hc ho hr he
 
 theorem herm_transport {g g' : ℕ} (Hm : Matrix (Fin g) (Fin g) ℂ) (h : (Fin g → ℂ) ≃ₗ[ℂ] (Fin g' → ℂ))
     (hH : Hm.IsHermitian) : ∃ Hf : Matrix (Fin g') (Fin g') ℂ, Hf.IsHermitian ∧
@@ -95,7 +98,7 @@ theorem herm_transport {g g' : ℕ} (Hm : Matrix (Fin g) (Fin g) ℂ) (h : (Fin 
 theorem deriv_of_open {A T : Scheme.{0}} (φ : A ⟶ T) [IsOpenImmersion φ] {g : ℕ} (W : (Fin g → ℂ) → (Sp ℂ ⟶ A))
     (y : Fin g → ℂ) (v : Sp (DualNumber ℂ) ⟶ T) (hv : IsDerivAt0 (fun x => W x ≫ φ) y v) :
     ∃ v' : Sp (DualNumber ℂ) ⟶ A, v' ≫ φ = v ∧ IsDerivAt0 W y v' :=
-  GlobalTheory.T.tangent_vector_lifts_open_immersion A T φ g W y v hv
+  _root_.GlobalTheory.CompanionTheory.Ggeo.DOpen.isDerivAt0_lift_of_isOpenImmersion A T φ g W y v hv
 
 theorem isDerivAt0_frame {R : Type} [CommRing R] {G : Over (Sp R)} [GrpObj G] [IsCommMonObj G] {g n : ℕ}
     {M : LieModel G (𝟙 (Sp R)) (Fin g → R)} {B : Set (Fin n → ℂ)} {ψ : (Fin n → ℂ) → (R →+* ℂ)}
@@ -107,7 +110,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {D : Da
 
 theorem finrank_of_isPeriod (D : Datum H) {g : ℕ} {ty : Fin g → (E →+* ℂ)} {P : D.La →+ (Fin g → ℂ)}
     (hP : IsPeriod D ty P) : Module.finrank ℤ D.La = 2 * g :=
-  GlobalTheory.T.period_lattice_rank_two_g E H D g ty P hP
+  _root_.GlobalTheory.CompanionTheory.Ar.Flat.PeriodRank.finrank_la_eq_two_mul E H D g ty P hP
 
 theorem isolated_of_isPeriod (D : Datum H) {g : ℕ} {ty : Fin g → (E →+* ℂ)} {P : D.La →+ (Fin g → ℂ)}
     (hP : IsPeriod D ty P) : ∃ δ : ℝ, 0 < δ ∧ ∀ x : Fin g → ℂ, ‖x‖ < δ → x ∈ P.range → x = 0 := by
@@ -125,14 +128,14 @@ theorem isolated_of_isPeriod (D : Datum H) {g : ℕ} {ty : Fin g → (E →+* �
 
 theorem isHolTo_pt {Xo : Moduli D l} {σ : KA l →+* ℂ} {n a : ℕ} (C : BdryChart Xo σ n a) :
     IsHolTo (punct n a 1) C.pt :=
-  GlobalTheory.T.boundary_chart_holomorphic E H D l Xo σ n a C
+  _root_.GlobalTheory.CompanionTheory.Ar.Flat.isHolTo_pt E H D l Xo σ n a C
 
 theorem exists_index {Xo : Moduli D l} {σ : KA l →+* ℂ} {g : ℕ} {ty : Fin g → (E →+* ℂ)}
     (FU : FamilyUnif Xo σ ty) {m : ℕ} {B : Set (Fin m → ℂ)} {y : (Fin m → ℂ) → (Sp ℂ ⟶ Xo.X)} (hB : IsOpen B)
     (hc : IsPreconnected B) (hne : B.Nonempty) (hs : ∀ b ∈ B, y b ≫ Xo.s = spMap σ) (hy : IsHolTo B y) :
     ∃ i : Fin FU.n, ∀ b₀ ∈ B, ∃ (B' : Set (Fin m → ℂ)) (P : (Fin m → ℂ) → ((FU.Di i).La →+ (Fin g → ℂ))),
       IsOpen B' ∧ b₀ ∈ B' ∧ B' ⊆ B ∧ IsHolPeriods (FU.Di i) ty B' P ∧ ∀ b ∈ B', FU.u i (P b) = y b :=
-  GlobalTheory.T.family_uniformisation_local_period E H D l Xo σ g ty FU m B y hB hc hne hs hy
+  _root_.GlobalTheory.CompanionTheory.Ar.Flat.exists_index_of_isPreconnected E H D l Xo σ g ty FU m B y hB hc hne hs hy
 
 theorem exists_fibre_equiv {S₁ S₂ V : Scheme.{0}} {t₁ : SAB H S₁} {t₂ : SAB H S₂} {tV : SAB H V}
     {f₁ : V ⟶ S₁} {f₂ : V ⟶ S₂} (m₁ : SABMap tV t₁ f₁) (m₂ : SABMap tV t₂ f₂) (x : Sp ℂ ⟶ V)
@@ -141,7 +144,7 @@ theorem exists_fibre_equiv {S₁ S₂ V : Scheme.{0}} {t₁ : SAB H S₁} {t₂ 
       (∀ q, ∃ w : Sp ℂ ⟶ tV.G.left, w ≫ tV.G.hom = x ∧ w ≫ m₂.φ = q.left ∧ w ≫ m₁.φ = (Φ q).left) ∧
       ∀ (N : ℕ) (q q' : Over.mk y₂ ⟶ t₂.G) (ζ : (Γ(Sp ℂ, ⊤))ˣ),
         GlobalTheory.UU.CubWeil t₁.cub N (Φ q) (Φ q') ζ → GlobalTheory.UU.CubWeil t₂.cub N q q' ζ :=
-  GlobalTheory.T.group_points_equiv_common_cover E H S₁ S₂ V t₁ t₂ tV f₁ f₂ m₁ m₂ x y₁ y₂ h₁ h₂
+  _root_.GlobalTheory.CompanionTheory.Ar.MarkFibre.exists_fibre_equiv E H S₁ S₂ V t₁ t₂ tV f₁ f₂ m₁ m₂ x y₁ y₂ h₁ h₂
 
 theorem isRiemannMatrix_unique {Xo : Moduli D l} {σ : KA l →+* ℂ} {n a : ℕ} (C : BdryChart Xo σ n a) (z : Fin n → ℂ)
     {A B : Matrix (Fin C.g) (Fin C.g) ℂ} (hA : C.IsRiem z A) (hB : C.IsRiem z B) : A = B := by
@@ -307,9 +310,9 @@ theorem isRiem_of_period {Xo : Moduli D l} {σ : KA l →+* ℂ} {n a : ℕ} (C 
   let vU : Fin m → (epsAt (FU.u i P₀) ⟶ Xo.univ.t.G) := fun c => Over.homMk (v' c ≫ C.m₂.φ) (by
     show (v' c ≫ C.m₂.φ) ≫ Xo.univ.t.G.hom = spMap (algebraMap ℂ (DualNumber ℂ)) ≫ FU.u i P₀
     rw [Category.assoc, C.m₂.cart.1.w, ← Category.assoc, hover c, hu, Category.assoc])
-  have e1 := GlobalTheory.T.hodge_gram_pullback_iff E H _ _ C.t C.tV C.j C.m₁ (C.pt z) (spMap (C.ψ z)) m vV v Γ (C.pt_eq z hz1).1.symm
+  have e1 := _root_.GlobalTheory.CompanionTheory.Ar.Flat.hodgeGram_iff_of_sabMap E H _ _ C.t C.tV C.j C.m₁ (C.pt z) (spMap (C.ψ z)) m vV v Γ (C.pt_eq z hz1).1.symm
     (fun c => hv1 c)
-  have e2 := GlobalTheory.T.hodge_gram_pullback_iff E H _ _ Xo.univ.t C.tV C.k C.m₂ (C.pt z) (FU.u i P₀) m vV vU Γ hu (fun c => rfl)
+  have e2 := _root_.GlobalTheory.CompanionTheory.Ar.Flat.hodgeGram_iff_of_sabMap E H _ _ Xo.univ.t C.tV C.k C.m₂ (C.pt z) (FU.u i P₀) m vV vU Γ hu (fun c => rfl)
   have e3 := hodgeGram_iff_period E H D l Xo σ g ty FU i P₀ Hm₀ hper hH₀ him (FU.u i P₀) rfl m vU x Γ (fun c => by
     have := ReciprocityTheory.ChartRestriction.G.PullbackSections.ExpRows.isDerivAt0_comp_hom (hv2 c) C.m₂.φ
     have h2 : (fun x => Wz x ≫ C.m₂.φ) = fun x => (FU.ex i P₀ x).left := funext fun x => (hW x).1

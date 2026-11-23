@@ -4,10 +4,13 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.CongModRefl
 public import Development.AbelianVarietyTheory.Definitions.Divisors.UnifOfSpaceEq
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsStabForm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPosNatSmulMemOfSpanningNumberFieldLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelCoverComplexModelsComponentsIsometriesDegreStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelCoverPullbackReadingEqUnitConstPowMul
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeanZeroCompSmulPeriodicFundamentalDomainStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelCoverComplexModelsComponentsIsometriesDegre
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.MeasureTheory.Group.FundamentalDomain
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeanZeroCompSmulPeriodicFundamentalDomain
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MemCuspFormsOfMultipleRationalIsometryMove
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelCoverPullbackReadingEqUnitConstPowMul
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.IsStabiliserInvariantPullBoundedSection
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -88,7 +91,7 @@ theorem integral_zero_of_scaled {α : Type} {Ψ Ψ' : Finset α} (h : Ψ = Ψ') 
     have := hL p hp s
     rw [hg', hg', add_comm] at this
     exact mul_left_cancel₀ hc0 this
-  have := GlobalTheory.T.mean_zero_comp_smul_periodic_fundamentalDomain Ψ L' D' g' q hq hD' hp' hf' hc hb (fun p hp s => by rw [add_comm]; exact hL' p hp s) h0
+  have := _root_.GlobalTheory.mean_zero_comp_smul_of_periodic Ψ L' D' g' q hq hD' hp' hf' hc hb (fun p hp s => by rw [add_comm]; exact hL' p hp s) h0
     L D hD hf hK
   simp only [hg']
   rw [integral_const_mul, this, mul_zero]
@@ -294,7 +297,7 @@ theorem cusp_iff_pull : ∀ (D : D7) (j : ℕ) (H : ReciprocityTheory.ChartRestr
     subst hσe
     have hσ : GoodEmb c (σ₂.comp (d.eF : c.F →+* d.c₂.F)) := good_eF d σ₂ hσ₂
     obtain ⟨π, δ, N, hN, hcomp, hsum, t, ht, hrd⟩ :=
-      GlobalTheory.T.levelCover_complexModels_components_isometries_degree D j H Dw l Xo c U dict d U₂ dict₂ hL hL₂ hlev σ₂ hσ₂
+      _root_.GlobalTheory.LevModel.levCover_model D j H Dw l Xo c U dict d U₂ dict₂ hL hL₂ hlev σ₂ hσ₂
     refine ⟨π, fun k => ?_, fun k₂ => ?_⟩
     · by_contra hne
       push_neg at hne

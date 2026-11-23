@@ -4,23 +4,30 @@ public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralNormSqEqToL2
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsQuadOfPlane
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.LowVanishFockOfLowVanish
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInverseChart
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FockVacuumAnnihilationEquationRealCoordinates
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOscillatorActionOfGaussianPairings
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOscillatorActionUnitaryGroupHermitian
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralEqOfNorms
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.CocompactTensor
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EqZeroOfPderivStable
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FderivCompress
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeisenbergSmoothVectorDerivativeCalculus
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PtYAndItYOfPair
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EqZeroAtOneOfIteratedDerivsVanishOfGrowthStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsEuclideanCoordsHermitianCartanInvolutionStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EqZeroAtOneOfIteratedDerivsVanishOfGrowth
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousFourierGau
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsEuclideanCoordsHermitianCartanInvolution
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockCreationPreservesFockVectorsTwoFramesStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormCreationAnnihilationWordLeNumberOperatorPowStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PowSubCreationVacuumFockBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.VacuumProjectorRangeAnnihilatedStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeylNumberOperatorCommutationStatement
+public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormCreationAnnihilationWordLeNumberOperatorPow
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PowSubCreationVacuumFockBound
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.VacuumProjectorRangeAnnihilated
+public import Mathlib.Analysis.InnerProductSpace.PiL2
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeylNumberOperatorCommutation
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInverseChart
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.CocompactTensor
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -128,7 +135,7 @@ theorem relations {κ : Type} [Fintype κ] (e : OrthonormalBasis κ ℝ V) (N : 
       (∀ z, N * cE J hS hD z = cE J hS hD z * (N + ((8 * π : ℝ) : ℂ) • 1)) ∧
       (∀ z, N * aE J hS hD z = aE J hS hD z * (N - ((8 * π : ℝ) : ℂ) • 1)) ∧
       ∀ z, dE hS hD z ∈ Submodule.span ℂ (Set.range (fun j => aE J hS hD (e j)) ∪ Set.range fun j => cE J hS hD (e j)) := by
-  refine GlobalTheory.T.weyl_number_operator_commutation_alt V _ κ J e (dE hS hD) (aE J hS hD) (cE J hS hD) N hJ
+  refine _root_.GlobalTheory.weyl_number_operator_commutation V _ κ J e (dE hS hD) (aE J hS hD) (cE J hS hD) N hJ
     (fun u v => LinearMap.ext fun f => Subtype.ext (dH_add_left ρ u v f.1))
     (fun r v => LinearMap.ext fun f => Subtype.ext ((dH_smul_left ρ r v f.1).trans (Complex.coe_smul r _).symm))
     (fun u v => LinearMap.ext fun f => Subtype.ext ?_) (fun _ => rfl) (fun _ => rfl) hN
@@ -157,7 +164,7 @@ theorem inner_translate (K : Submodule ℂ S) (hK : ∀ z, ∀ x ∈ K, cE J hS 
     inner ℂ y (Φ (ρ w v)) = 0 := by
   have e : (1 / 2 : ℂ) • cE J hS hD w - (1 / 2 : ℂ) • aE J hS hD w = dE hS hD w := by
     unfold cE aE; module
-  obtain ⟨h1, h2⟩ := GlobalTheory.T.pow_sub_creation_vacuum_fock_bound S H ((Φ : B →ₗ[ℂ] H) ∘ₗ S.subtype) ((1 / 2 : ℂ) • aE J hS hD w)
+  obtain ⟨h1, h2⟩ := _root_.GlobalTheory.pow_vacuum_fock_bound S H ((Φ : B →ₗ[ℂ] H) ∘ₗ S.subtype) ((1 / 2 : ℂ) • aE J hS hD w)
     ((1 / 2 : ℂ) • cE J hS hD w) (π * ‖w‖ ^ 2) v (by positivity)
     (fun x x' => by
       have := adjoint h hΦ hS hD w x x'
@@ -174,7 +181,7 @@ theorem inner_translate (K : Submodule ℂ S) (hK : ∀ z, ∀ x ∈ K, cE J hS 
     (by rw [LinearMap.smul_apply, ha, smul_zero])
   rw [e] at h1 h2
   have h3 := h1 K hv fun x hx => K.smul_mem _ (hK w x hx)
-  have := GlobalTheory.T.eq_zero_at_one_of_iteratedDerivs_vanish_of_growth (fun k t => inner ℂ y (Φ (ρ (t • w) ((dE hS hD w ^ k) v)))) (2 * (π * ‖w‖ ^ 2))
+  have := _root_.GlobalTheory.vanish_at_one_of_derivs_vanish_of_growth (fun k t => inner ℂ y (Φ (ρ (t • w) ((dE hS hD w ^ k) v)))) (2 * (π * ‖w‖ ^ 2))
     (‖y‖ ^ 2 * ‖Φ v‖ ^ 2) (fun k t => ?_) (fun k => ?_) fun k t => ?_
   · simpa using this
   · have := (((innerSL ℂ y).comp Φ).restrictScalars ℝ).hasFDerivAt.comp_hasDerivAt t
@@ -205,7 +212,7 @@ theorem dense_zero (hρ : ∀ w, ∀ f ∈ S, ρ w f ∈ S) (hP : ∀ f ∈ S, p
     refine e.symm.trans (integral_eq_zero_of_ae (Filter.Eventually.of_forall fun w => ?_))
     let v : S := ⟨proj h (ρ (-w) f), hP _ (hρ _ _ f.2)⟩
     have ha : ∀ z, aE J hS hD z v = 0 := fun z =>
-      (aE_eq_zero hS hD z v).2 (GlobalTheory.T.vacuumProjector_range_annihilated V B J ρ hJ h _ z)
+      (aE_eq_zero hS hD z v).2 (_root_.GlobalTheory.Mem.Lift.VacAnn.proj_annihilated V B J ρ hJ h _ z)
     exact inner_translate hJ h hΦ hS hD K hK (hK0 v ha) ha
       (fun x hx => (Submodule.mem_orthogonal' _ _).1 hy _ ⟨x, hx, rfl⟩) w
   obtain ⟨_, ⟨g, hg, rfl⟩, hd⟩ := Metric.mem_closure_iff.1 hf δ hδ
@@ -263,7 +270,7 @@ theorem exists_number {ι : Type} [Fintype ι] (u : ι → V) (d : ℕ) : ∃ M 
     rw [hM, add_mul, r2, mul_add _ (N + _), smul_mul_assoc, mul_smul_comm, one_mul, mul_one]
   have m3 : ∀ z, M * aE J hS hD z = aE J hS hD z * (M - ((8 * π : ℝ) : ℂ) • 1) := fun z => by
     rw [hM, add_mul, r3, add_sub_cancel_right, mul_sub, smul_mul_assoc, mul_smul_comm, one_mul, mul_one, sub_add_cancel]
-  have hb := GlobalTheory.T.norm_creationAnnihilation_word_le_numberOperator_pow S H _ ((Φ : B →ₗ[ℂ] H) ∘ₗ S.subtype) (fun j => aE J hS hD (e j)) (fun j => cE J hS hD (e j)) M
+  have hb := _root_.GlobalTheory.norm_word_le_number_pow S H _ ((Φ : B →ₗ[ℂ] H) ∘ₗ S.subtype) (fun j => aE J hS hD (e j)) (fun j => cE J hS hD (e j)) M
     (8 * π) (4 * π) (by linarith [Real.pi_gt_three]) (by linarith [Real.pi_pos]) (fun j => adjoint h hΦ hS hD _)
     (fun j => by rw [r1, e.orthonormal.1 j, one_pow, mul_one]) (by rw [hM, hN]) (fun j => m3 _) fun j => m2 _
   have hw : ∀ (l : List ι) (x : S), ((l.map fun i => dE hS hD (u i)).prod x : B) =
@@ -358,7 +365,7 @@ theorem dense_coord {κ : Type} [Fintype κ] [DecidableEq κ] {Q s : Matrix κ �
     (hF : ∀ z, ∀ f ∈ S, f ∈ F → dH ρ z f - I • dH ρ (I • s *ᵥ z) f ∈ F) {ι : Type} [Fintype ι] (u : ι → κ → ℂ) (d : ℕ)
     {f : B} (hf : f ∈ S) {δ : ℝ≥0∞} (hδ : 0 < δ) :
     ∃ g ∈ F, g ∈ S ∧ wordSum (fun i => dH ρ (u i)) (fun x => ‖Φ x‖ₑ) d (f - g) < δ := by
-  obtain ⟨E, J, hJ, hE, hom⟩ := GlobalTheory.T.exists_euclideanCoords_hermitian_cartanInvolution κ Q s hQ hs hp
+  obtain ⟨E, J, hJ, hE, hom⟩ := _root_.GlobalTheory.Twist.EuclidCoord.exists_coord κ Q s hQ hs hp
   have hρ : IsHeis (omJ J) fun v => ρ (E v) :=
     UnitaryOsc.isHeis_comp h (E : EuclideanSpace ℂ κ →L[ℝ] (κ → ℂ)) fun x y => hom x y
   exact dense_transport hJ E (J' := fun z => I • s *ᵥ z) hE hρ hΦ T hT F hS hF0 hF u d hf hδ

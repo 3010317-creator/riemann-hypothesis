@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnifAt
 public import Development.WeilBound.RepresentationTheoryGL.TwistedFactors.LocalBaseChange.ElementaryCosets.CosetMap
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalConjugationInvolutiveValuationPreservingStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsNormalisedThetaSub
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DiagonalTorusCommutativeStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DiagonalTorusCommutative
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IwahoriAndMaximalCompactCriteriaStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -198,7 +198,7 @@ theorem thL_mem_Nlo (w : Pl E) (hw : ¬ IsSplitAt w) (n : ℕ) {g : GLw n w}
 
 theorem thL_mem_Tor (w : Pl E) (hw : ¬ IsSplitAt w) (n : ℕ) {g : GLw n w}
     (hg : g ∈ PositivityTheory.Lbc.Tor (w.adicCompletion E) n) : thL n w g ∈ PositivityTheory.Lbc.Tor (w.adicCompletion E) n := by
-  have hT := fun x : GLw n w => (GlobalTheory.T.diagonal_torus_commutative (k := w.adicCompletion E) n).2 x
+  have hT := fun x : GLw n w => (_root_.GlobalTheory.CompanionTheory.LbElem.TorComm.tor_comm_and_mem_iff (k := w.adicCompletion E) n).2 x
   have h0 := (hT g⁻¹).1 (inv_mem hg)
   refine (hT _).2 fun i j hij => ?_
   show (thL n w g).val i j = 0

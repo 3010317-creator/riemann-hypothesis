@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ChernWeilNumbers
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChernWeilNumbersOfDegreeEqChernIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeEqIntegralTopChernFormComplexStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ChernDegreeComplex
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChernWeilNumbersOfDegreeEqChernIntegral
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeEqIntegralTopChernFormComplex
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,6 +46,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 namespace GlobalTheory.ChernDegree
 
 theorem chernWeilNumbers_holds : GlobalTheory.Published.ChernWeilNumbers :=
-  GlobalTheory.T.chernWeilNumbers_of_degree_eq_chernIntegral GlobalTheory.T.degree_eq_integral_topChernForm_complex
+  _root_.GlobalTheory.ChernCalc.chernWeilNumbers_of_chernDegreeComplex _root_.GlobalTheory.ChernDegree.chernDegreeComplex
 
 end GlobalTheory.ChernDegree

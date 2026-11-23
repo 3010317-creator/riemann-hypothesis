@@ -6,13 +6,20 @@ public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmpPropsStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHahnSeriesScaleTwistRingHomStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExpTwoPiIRatInFieldRootsOfUnityPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FractionFieldExtClosureInjectiveStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GlTwoPosRatMobiusUpperHalfPlanePropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsCuspExpansionAtInfinityCompRatAffineStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsCuspExpansionAtInfinityPropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmpProps
+public import Mathlib.Algebra.Order.Ring.Rat
+public import Mathlib.RingTheory.HahnSeries.Multiplication
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHahnSeriesScaleTwistRingHom
+public import Development.AbelianVarietyTheory.Definitions.Foundations.ExpUpper
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExpTwoPiIRatInFieldRootsOfUnityProperties
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FractionFieldExtClosureInjective
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsCuspExpansionAtInfinityCompRatAffine
+public import Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative.LeviCivita
+public import Mathlib.RingTheory.HahnSeries.Summable
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsCuspExpansionAtInfinityProperties
+import Mathlib.Analysis.Complex.UpperHalfPlane.MoebiusAction
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GlTwoPosRatMobiusUpperHalfPlaneProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,22 +73,22 @@ theorem exp_sl_coeff_upper (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure
     (T : Frac Ω ε) (g : GQ) (hg : ent g 1 0 = 0) (f : T.K) (r : ℚ) :
     (T.exp (T.sl g f)).coeff (r * ent g 0 0 / ent g 1 1) =
       eOm ε (r * ent g 0 1 / ent g 1 1) * (T.exp f).coeff r := by
-  obtain ⟨hl, hmob⟩ := (GlobalTheory.T.glTwoPosRatMobius_upperHalfPlane_properties).2.2.2.2.2 g hg
-  obtain ⟨_, hε, h0, hadd, _, _⟩ := GlobalTheory.T.expTwoPiIRatInField_roots_of_unity_properties Ω ε
-  obtain ⟨Φ, hΦ⟩ := GlobalTheory.T.exists_hahnSeries_scale_twist_ringHom Ω Ω (RingHom.id Ω) (ent g 0 0 / ent g 1 1)
+  obtain ⟨hl, hmob⟩ := (_root_.GlobalTheory.FN.mob_props).2.2.2.2.2 g hg
+  obtain ⟨_, hε, h0, hadd, _, _⟩ := _root_.GlobalTheory.FNRoots.main Ω ε
+  obtain ⟨Φ, hΦ⟩ := _root_.GlobalTheory.FNTwist.exists_scale_twist_ringHom Ω Ω (RingHom.id Ω) (ent g 0 0 / ent g 1 1)
     (fun r => eOm ε (r * (ent g 0 1 / ent g 1 1))) hl (by simpa using h0)
     (fun r r' => by simp only [add_mul, hadd])
   have key : (T.exp.toRingHom.comp (T.sl g).toRingEquiv.toRingHom) = Φ.comp T.exp.toRingHom := by
-    apply (GlobalTheory.T.fractionField_ext_closure_injective Ω ε T).1
+    apply (_root_.GlobalTheory.FN.frac_ext_clo_inj Ω ε T).1
     intro a
-    obtain ⟨a', ha', hsl⟩ := (GlobalTheory.T.fractionField_ext_closure_injective Ω ε T).2.1 g a
+    obtain ⟨a', ha', hsl⟩ := (_root_.GlobalTheory.FN.frac_ext_clo_inj Ω ε T).2.1 g a
     have hE : IsExp ε a' (Φ (T.exp (T.io a))) := by
-      refine GlobalTheory.T.isCuspExpansionAtInfinity_comp_rat_affine Ω ε a a' (ent g 0 0 / ent g 1 1) (ent g 0 1 / ent g 1 1) _ _ hl
+      refine _root_.GlobalTheory.FN.isExp_comp_affine Ω ε a a' (ent g 0 0 / ent g 1 1) (ent g 0 1 / ent g 1 1) _ _ hl
         (fun z hz => ?_) (fun s => ?_) (T.exp_io a)
-      · rw [ha', (GlobalTheory.T.cmp_mul_ofSL_and_up_cmp_eq_up_mob).2.2.2 g a z hz, hmob z]
+      · rw [ha', (_root_.GlobalTheory.FN.cmp_props).2.2.2 g a z hz, hmob z]
       · rw [hΦ, map_mul, hε]
         rfl
-    have hu := (GlobalTheory.T.isCuspExpansionAtInfinity_properties Ω ε).2.1 _ _ _ (T.exp_io a') hE
+    have hu := (_root_.GlobalTheory.FNExp.exp_props Ω ε).2.1 _ _ _ (T.exp_io a') hE
     show T.exp (T.sl g (T.io a)) = Φ (T.exp (T.io a))
     rw [hsl, hu]
   have hc := congrArg (fun h : HahnSeries ℚ Ω => h.coeff (r * (ent g 0 0 / ent g 1 1)))

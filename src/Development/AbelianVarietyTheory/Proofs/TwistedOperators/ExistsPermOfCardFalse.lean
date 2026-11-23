@@ -5,9 +5,9 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.BasePlaceNot
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.NodeYPredEqChainVertexAtRowZeroLast
 public import Development.AbelianVarietyTheory.Definitions.Foundations.UnitarySixTwoHarishChandraParameter
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsFrameOfHasSignature
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CardWeightSetGridEqGridRowSpaceRankStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GridParamRegularCardMinusCountStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GridParameterRegularCardEqRankFormulaStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CardWeightSetGridEqGridRowSpaceRank
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GridParamRegularCardMinusCount
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GridParameterRegularCardEqRankFormula
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.SignatureConjugationInvariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -194,20 +194,20 @@ namespace GlobalTheory.GridJoin
 theorem parV_counts (D : D7) (hH : HostHyp D) (τ : D.what₂.Tau) {i j : ℕ} (h1 : 1 ≤ i) (h2 : i ≤ D.R.m) (h3 : j ≤ D.R.m) :
     SignedHC.IsRegular (GlobalTheory.Grid.parV D i j τ) ∧ (GlobalTheory.Grid.parV D i j τ).card = GlobalTheory.Grid.rkV D i j ∧
       SignedHC.nMinus (GlobalTheory.Grid.parV D i j τ) = (D.R.m - j) / 2 := by
-  obtain ⟨hr, hc⟩ := GlobalTheory.T.gridParameter_regular_card_eq_rankFormula D hH τ i j h1 h2 h3
+  obtain ⟨hr, hc⟩ := _root_.GlobalTheory.GridParDCount.parD_regular_card D hH τ i j h1 h2 h3
   obtain ⟨a, b, c⟩ := dualPar_shift_counts (if Odd (i + j) then -(1 / 2) else 0) hr
   exact ⟨a, b.trans hc, c.trans (GlobalTheory.SignedHC.Model.nMinus_parD _ i j)⟩
 
 theorem parP_counts (D : D7) (hH : HostHyp D) (τ : D.what₂.Tau) {i : ℕ} (h : i ≤ D.R.m) :
     SignedHC.IsRegular (GlobalTheory.Grid.parP D i τ) ∧ (GlobalTheory.Grid.parP D i τ).card = GlobalTheory.Grid.rkP D i ∧
       SignedHC.nMinus (GlobalTheory.Grid.parP D i τ) = (D.R.m - i + 1) / 2 :=
-  GlobalTheory.T.gridParam_regular_card_minusCount D hH τ i h
+  _root_.GlobalTheory.Grid.parPi_counts D hH τ i h
 
 theorem parXp_counts (D : D7) (hH : HostHyp D) (τ : D.what₂.Tau) {j : ℕ} (h1 : 1 ≤ j) (h2 : j ≤ D.R.m) :
     SignedHC.IsRegular (GlobalTheory.Grid.parXp D j τ) ∧ (GlobalTheory.Grid.parXp D j τ).card = GlobalTheory.Grid.rkX D j ∧
       SignedHC.nMinus (GlobalTheory.Grid.parXp D j τ) = 0 := by
   obtain ⟨a, b, c⟩ := plus_counts ((GlobalTheory.Grid.grid D τ).weightX j)
-  exact ⟨a, b.trans (GlobalTheory.T.card_weightSet_grid_eq_gridRowSpaceRank D hH τ j h1 h2), c⟩
+  exact ⟨a, b.trans (_root_.GlobalTheory.Grid.card_weightX_grid D hH τ j h1 h2), c⟩
 
 theorem exists_weil_ordered : ∀ {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] {Pl0 T : Type} {A : FamIn D.what₂.LL Γ Pl0 T D.R.m}
     {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] {R : RealDat D A Ks} {sc : GlobalTheory.ChiGrid.Consts},

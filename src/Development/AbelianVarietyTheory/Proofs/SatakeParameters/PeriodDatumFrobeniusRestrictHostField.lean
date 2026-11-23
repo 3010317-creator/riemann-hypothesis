@@ -1,9 +1,12 @@
 module
 
 public import Formalism.LocalRingCardinality.DataDIV
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsPlaceOverPrimeOfPadicAlgClEmbeddingStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FrobGIsArithFrobAndSignStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HostFieldPadicEmbeddingMemMaxUnramifiedStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataN
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsPlaceOverPrimeOfPadicAlgClEmbedding
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FrobGIsArithFrobAndSign
+public import Formalism.LocalRingCardinality.DataHost
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HostFieldPadicEmbeddingMemMaxUnramified
 import Formalism.SharpRestriction.RamificationFrobenius.TotientGaloisClasses.HostFacts
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -96,13 +99,13 @@ theorem GlobalTheory.FrobPeriod.periodFrob_restrict : ∀ (D : D7) {l : ℕ} [Fa
   haveI : IsGalois ℚ D.host.E := D.host.hostE_isGalois
   let c' : D.host.E →+* PadicAlgCl l := K.1.val.toRingHom.comp c
   have hK : ∀ z, c' z ∈ K0 K := fun z =>
-    IntermediateField.mem_inf.2 ⟨(c z).2, GlobalTheory.T.hostField_padicEmbedding_mem_maxUnramified D.host l h2 hq hd c' z⟩
+    IntermediateField.mem_inf.2 ⟨(c z).2, _root_.GlobalTheory.HostKur.host_image_mem_Kur D.host l h2 hq hd c' z⟩
   let c0 : D.host.E →+* ↥(K0 K) := c'.codRestrict (K0 K) hK
   have hc0 : ∀ z, ((c0 z : ↥(K0 K)) : PadicAlgCl l) = c' z := fun z => rfl
   have hyx : y = c0 x := Subtype.ext (congrArg (fun t : ↥K.1 => (t : PadicAlgCl l)) hy)
   let σ0 := (P.PD K).σ
   obtain ⟨g, hg⟩ := exists_comp_of_normal c0 ((σ0 : ↥(K0 K) →+* ↥(K0 K)).comp c0)
-  obtain ⟨v, hvl, hv⟩ := GlobalTheory.T.exists_place_over_prime_of_padicAlgCl_embedding l D.host.E c'
+  obtain ⟨v, hvl, hv⟩ := _root_.GlobalTheory.LocPlace.exists_place_of_emb l D.host.E c'
   haveI := liesOver_of_mem l v hvl
   have hgl : ∀ z : 𝓞 D.host.E, g • z - z ^ l ∈ v.asIdeal := fun z => by
     refine (hv _).2 ?_
@@ -114,7 +117,7 @@ theorem GlobalTheory.FrobPeriod.periodFrob_restrict : ∀ (D : D7) {l : ℕ} [Fa
     exact h
   set F := D.host.sigmaOf (DV.frobG D l) with hFdef
   have hF : ∀ z : 𝓞 D.host.E, F • z - z ^ l ∈ v.asIdeal := fun z => by
-    have h := (GlobalTheory.T.frobG_isArithFrobAt_and_sign_eq_jacobiSym D l h2 hq hd).1 v.asIdeal z
+    have h := (_root_.GlobalTheory.FrobSign.frobG_isArithFrob_and_sign D l h2 hq hd).1 v.asIdeal z
     rw [card_quot_under l v.asIdeal] at h
     exact h
   have hin := (D.host.der.frob l hlN v.asIdeal).2.2.2

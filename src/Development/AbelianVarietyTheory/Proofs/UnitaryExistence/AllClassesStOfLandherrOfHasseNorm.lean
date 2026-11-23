@@ -5,7 +5,9 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.Landherr₂.Lan
 public import Development.AbelianVarietyTheory.PublishedTheorems.Landherr₂.ExistsNormTensor
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsCongrIffTraceFormsIsometricCm
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsHeckeQuotientPrincipalTripleStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsHeckeQuotientPrincipalTriple
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AllClassesOccur
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -49,7 +51,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 
 theorem GlobalTheory.allClassesSt_of_landherr_of_hasseNorm :
     GlobalTheory.Published.LandherrSt → GlobalTheory.Published.HasseNormSt → GlobalTheory.AllClassesSt :=
-  fun hL hN => GlobalTheory.all_classes_occur hL hN GlobalTheory.abelianSchemeLaws_all.1 (GlobalTheory.T.exists_heckeQuotient_principal_triple GlobalTheory.abelianSchemeLaws_all.1)
+  fun hL hN => GlobalTheory.all_classes_occur hL hN GlobalTheory.abelianSchemeLaws_all.1 (_root_.GlobalTheory.exists_heckeQuotient_triple_of_laws GlobalTheory.abelianSchemeLaws_all.1)
 
 theorem GlobalTheory.allClassesSt_of_hasseNorm : GlobalTheory.Published.HasseNormSt → GlobalTheory.AllClassesSt :=
   fun hN => GlobalTheory.allClassesSt_of_landherr_of_hasseNorm

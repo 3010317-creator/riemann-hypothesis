@@ -8,24 +8,27 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.RealisedChai
 public import Development.AbelianVarietyTheory.Definitions.HeightFunctions.NormComparisonConstants
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ClsAt
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.HeckeTransferRankOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteGroupLevelStructureActionFixedRuns
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LeafDataOfOnTieOfIntegral
 import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.AdmissibleColumnsLeAndHarmonicMapCover
 import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CoverMulShortThetaSeriesIndepOfFramedLift
 import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsQuotEquiv
 import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShortThetaValueUnderLevelMoveStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteGroupLevelStructureActionFixedRuns
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMapAllComparison
 import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ChartIndependenceUnconditional
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsDetOfMemSt
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LeafDataOfOnTieOfIntegral
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MulVecMemOfFrame
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ActLevFullLevelGroupFramedPointsStatement
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsCompletedIsometryInducingHalfLevelAutomorpStatement
+import Development.AbelianVarietyTheory.Definitions.Jets.EmbShortThLeThetaPlain
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ActLevFullLevelGroupFramedPoints
+import Formalism.LocalToGlobal.ProjectiveLattices.LiftLaSpec
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.HeckeKer
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsCompletedIsometryInducingHalfLevelAutomorp
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsConjLevelMapByLevelMovesStatement
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsLevelChangeActionOnCuspForms
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevelActionShortThetaSeriesRootOfUnityMul
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevelCoverDatumSimilitudeAdjointTransportStatement
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LiesOverFramedOfSquareLevelMovesStatement
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ModuliSchemeLevelMapsHeckePointsStatement
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ModuliSchemeLevelMapsHeckePoints
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUniqueFramedPointMoveUniversalTriple
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrMoveTransfer
@@ -95,13 +98,13 @@ theorem exists_const_int {D : D7} (T : Full D) (hT : LawsFull T) {j : ℕ} (hj :
   have hL := GlobalTheory.firstFiveLaws.1
   have hpq := rank_eq hT.p.pins hj
   have hA : T.Q.l.A = 1 := hT.p.pins.2.1.2
-  have hAct := GlobalTheory.T.actLev_full_level_group_framedPoints D T.Q j hpq hA
+  have hAct := _root_.GlobalTheory.FullLevelAction.actLev_levFull D T.Q j hpq hA
   have hLev := hT.sh.dLev j hj w.n
   have hA₂ := hT.lvA j hj w.n
   obtain ⟨inst, hnab⟩ := hT.sh.dNab j hj w.n
   obtain ⟨ph, ψ, x₀, -, hpin, htie⟩ := hT.sh.dPhi j hj w.n hw
   have hTot := hT.sh.shTot j hj (wtA w) w.n (dom_wtA w)
-  obtain ⟨g, hν, hγ, hg⟩ := GlobalTheory.T.exists_completed_isometry_inducing_half_level_automorphism _ _ (T.Q.Dw j) T.Q.l γ
+  obtain ⟨g, hν, hγ, hg⟩ := _root_.GlobalTheory.LevelIsometry.exists_isometry_inducing _ _ (T.Q.Dw j) T.Q.l γ
   obtain ⟨ρ₂, hρ₂⟩ := GlobalTheory.LevelActionLaws.exists_levAut hpq (T.dδ j w.n).Xo₂ g (by rw [hν, sub_self]; exact dvd_zero _)
   obtain ⟨u, hu, hcd⟩ := GlobalTheory.ShortMove.exists_root T hT hj hxi hw g hν ρ₂ hρ₂
   refine ⟨u, hu, fun Λ N P x0 x0' f f' hG hx hf hf' => ?_⟩
@@ -147,7 +150,7 @@ theorem exists_const_int {D : D7} (T : Full D) (hT : LawsFull T) {j : ℕ} (hj :
   obtain ⟨v, hv, hfv⟩ := hR k hk y' z₂ hz₂
   obtain ⟨v', hv', -⟩ := (hTot Λ N x0 P hU hb hb₂ hO hX hP).1 k y₂'
   have e₁ := GlobalTheory.ShortLiftInvariance.cover_product_indep_of_lift hL hC _ _ _ _ _ _ _ d
-    (GlobalTheory.T.moduliScheme_levelMaps_heckePoints'.2 _ _ _ hpq).1 hLev (hA₂.trans hA.symm) hnab ⟨ph, ψ, x₀, hpin, htie⟩ Λ N hU hb₂ hO _ _ hP₂ x0 _
+    (_root_.GlobalTheory.moduliScheme_levelMaps_heckePoints.2 _ _ _ hpq).1 hLev (hA₂.trans hA.symm) hnab ⟨ph, ψ, x₀, hpin, htie⟩ Λ N hU hb₂ hO _ _ hP₂ x0 _
     r' m' hE' k hk y' z₂ y₂' hz₂ ho' v v' hv hv'
   have e₂ := GlobalTheory.T.shortThetaValue_under_levelMove hL hC _ _ _ _ d.Xo₂ d.c₂ d.nab₂ hnab k ρ₂.hom ν₂ _ _ y₂ y₂' hmv₂ hfr₂ σq hσ
     _ _ _ hP₂ (d.w x0) Λ _ N v' hv'

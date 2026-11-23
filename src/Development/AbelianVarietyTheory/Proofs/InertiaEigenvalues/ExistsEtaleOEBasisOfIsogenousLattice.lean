@@ -2,8 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TrivIsCr
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIntegralWittLatticeBasis
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegralElementsUnitFactorizationStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsUnitOfSaturated
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegralElementsUnitFactorization
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -107,7 +108,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (τ : Ain
     (∀ g, f * ρ'' g = ρ g * f) → ∃ T'' P : Matrix (Fin d) (Fin d) (WCb l), IsUnit T'' ∧ (∀ i j, P i j ∈ bk.OE) ∧
       zW f * T'' = F.T * P := by
   intro l _ K bk τ _ N d ρ ρ'' F f hf hρ'' hfρ
-  obtain ⟨hsat1, -, hinvS, -, -, hgalOE, hfrobOE⟩ := GlobalTheory.T.integral_elements_unit_factorization l K bk
+  obtain ⟨hsat1, -, hinvS, -, -, hgalOE, hfrobOE⟩ := _root_.GlobalTheory.OEDvr.main l K bk
   have hl0 : (l : WCb l) ≠ 0 := (WittVector.irreducible l).ne_zero
   have hzW : ∀ M : Matrix (Fin d) (Fin d) ℤ_[l], zW M = (algebraMap ℤ_[l] (WCb l)).mapMatrix M := fun _ => rfl
   have hzWmul : ∀ M M' : Matrix (Fin d) (Fin d) ℤ_[l], zW (M * M') = zW M * zW M' := fun M M' => by

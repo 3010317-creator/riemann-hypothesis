@@ -5,12 +5,15 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Exi
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FiniteAdeleIdempotentOfFMulSelf
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralDefiniteQuotientEqClassSum
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ScalarFormsOnChartsOfTrueColumnTuple
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BaseFieldsDefiniteLaws
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CouplingCosetFramesInvariantRationalUnitaryStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LatAtLattice
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CouplingCosetFramesInvariantRationalUnitary
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteOrbitsOfFiniteFibres
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPointOfRationalUnitaryAdelicMulStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevOkTwists
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ReferenceCharactersFactorTame
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPointOfRationalUnitaryAdelicMul
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoordsStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ChartNonempty
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BaseFieldsDefiniteLaws
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevOkTwists
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryEqRealMulFiniteSplit
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -49,7 +52,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ChartNonempty
 import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsGlOfEquiv
 
@@ -124,11 +126,11 @@ theorem exists_level {B : Base} {X : PreX B.toPre} (I : TC B X) (l : I.Laws) (u 
   have hpt : TC.PtOf (y' * (y'⁻¹ * (ratAd B.host.F γ⁻¹ * w)) * k (chOf ((I.stp u a i).cl b d)))
       ((I.stp u a i).act b (1, κ) ((I.stp u a i).rep ((I.stp u a i).cl b d))).1.1 := by
     rw [hk, mul_inv_cancel_left, mul_assoc]
-    exact GlobalTheory.T.isPointOf_rational_unitary_adelic_mul _ _ _ _ _ _ _ γ⁻¹ _ _ hw
+    exact _root_.GlobalTheory.Mem.Col2.RatMove.isPtOf_ratAd _ _ _ _ _ _ _ γ⁻¹ _ _ hw
   have hx := (hlev _ _ hpt).2 ⟨(1, κ), map_one (Formalism.L2.Col.ufGL _ _), rfl, by
     refine Eq.trans ?_ hco
     refine (congrArg (fun q : (I.stp u a i).D b => cosetIn q) hk).trans ?_
-    exact GlobalTheory.T.couplingCoset_frames_invariant_rational_unitary _ _ _ _ _ _ _ _ _ (GlobalTheory.Mem.FieldsLaws.fields_ok B) l.pr _ _ γ⁻¹ rfl rfl⟩
+    exact _root_.GlobalTheory.Mem.Col2.cosetIn_smul_unitary _ _ _ _ _ _ _ _ _ (GlobalTheory.Mem.FieldsLaws.fields_ok B) l.pr _ _ γ⁻¹ rfl rfl⟩
   refine ⟨⟨_, hx⟩, ?_, hchr ⟨_, hx⟩ (1, κ) (map_one (Formalism.L2.Col.ufGL _ _)) hpt⟩
   show w = ratAd B.host.F γ * y' * (y'⁻¹ * (ratAd B.host.F γ⁻¹ * w))
   rw [mul_assoc, mul_inv_cancel_left, ← mul_assoc]

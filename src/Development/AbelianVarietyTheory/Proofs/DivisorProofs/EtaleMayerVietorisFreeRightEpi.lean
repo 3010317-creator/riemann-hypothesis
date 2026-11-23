@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleLocallyIffAffineEtalePointCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleSheafSectionsExtAndGlueStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleSheafSectionsExtAndGlue
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FreeHomSectionsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -130,7 +130,7 @@ theorem epi_of_loc (R : Type) [CommRing R] {P Q E : PSh} (f : P ⟶ E) (g : Q �
   obtain ⟨-, -, -, hmapQ⟩ := GlobalTheory.T.free_sections_ext_res_map R Q F
   apply hext
   intro T x
-  apply (GlobalTheory.T.etaleSheafSections_ext_and_glue R F T).1
+  apply (_root_.GlobalTheory.EtC.sec_ext_glue R F T).1
   obtain ⟨S, hS, hP⟩ := h T x
   refine ⟨S, hS, fun V k hk => ?_⟩
   rcases hP V k hk with ⟨y, hy⟩ | ⟨y, hy⟩

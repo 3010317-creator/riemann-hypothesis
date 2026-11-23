@@ -6,8 +6,10 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LevelSe
 public import Mathlib.AlgebraicGeometry.Morphisms.Proper
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AdaptedSpan
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeLatticeGenericAgree
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsConnectedZeroSetOfIsProperStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LineDegreeSpecialFibreStatement
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsConnectedZeroSetOfIsProper
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GenericCentreSpecializes
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LineDegreeSpecialFibre
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.StalkClosedPointToGermTop
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -70,7 +72,7 @@ theorem order_on_component : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : S
     · rw [h0, map_zero, inv_zero]
       exact zero_mem _
     · exact (hx o h0).2.2
-  refine GlobalTheory.T.line_degree_special_fibre X Ω ξ O s ϖ hϖ hinj hs hg hn (GlobalTheory.T.isConnected_zeroSet_uniformizer X Ω ξ O s ϖ hϖ hinj hs hg hc) _ _
+  refine _root_.GlobalTheory.CompanionTheory.Ar.Flat.propZ_numerical X Ω ξ O s ϖ hϖ hinj hs hg hn (_root_.GlobalTheory.CompanionTheory.Ar.Flat.isConnected_zeroSet_of_isProper X Ω ξ O s ϖ hϖ hinj hs hg hc) _ _
     (𝓗.det_isVB σ hσr hu husp) (hdz u hu husp) fun x hx => ?_
   obtain ⟨ha, hb, hco⟩ := hgen
   have hα : α ≠ 0 := left_ne_zero_of_smul ha

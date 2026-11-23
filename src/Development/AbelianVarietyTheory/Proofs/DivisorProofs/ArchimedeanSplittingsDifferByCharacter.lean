@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchroedingerSchurCommutingOperatorScalarStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchroedingerSchurCommutingOperatorScalar
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationUnitaryStandardCharacter
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -83,7 +83,7 @@ theorem splittings_differ_by_character :
     swap
     · exact ⟨1, fun h => absurd h hg⟩
     have hgi := at_inv hg
-    obtain ⟨z, hz⟩ := GlobalTheory.T.adelicSchroedinger_schur_commuting_operator_scalar F κ ψ hψ (om g * ω₀ g⁻¹)
+    obtain ⟨z, hz⟩ := _root_.GlobalTheory.HoweD.AdelicSchur.schur F κ ψ hψ (om g * ω₀ g⁻¹)
       (fun φ hφ => hom.pres g _ ((hω _ hgi).1 φ hφ))
       (fun w φ hφ => by
         have e1 : schr ψ w φ = d.rho ψ (d.e.symm w) φ := by simp [Darboux.rho]

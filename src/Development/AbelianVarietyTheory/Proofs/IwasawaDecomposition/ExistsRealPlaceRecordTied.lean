@@ -2,7 +2,8 @@ module
 
 public import Formalism.LocalToGlobal.BesselHermitianTheta.MinfDensity
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsGrpDataMapHaar
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NonemptyFockModelUnitaryDualPairStatement
+public import Formalism.LocalRingCardinality.DataTheta
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NonemptyFockModelUnitaryDualPair
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealPlaceStdParamIsParam
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -65,7 +66,7 @@ theorem exists_realPlace_record_tied :
     · obtain ⟨R, -⟩ := H p q (grp p q) _ (realPlaceStdParam_isParam p q)
       exact ⟨R, fun h' => absurd h' h⟩
   choose ds hds using key
-  exact ⟨⟨grp, fun p q r s => Classical.choice (GlobalTheory.T.nonempty_fockModel_unitary_dual_pair p q r s _ _ _), ds⟩,
+  exact ⟨⟨grp, fun p q r s => Classical.choice (_root_.GlobalTheory.nonempty_fockData_pair p q r s _ _ _), ds⟩,
     ⟨hgrp, fun p q lam h => by first | exact hds p q lam h | exact fun _ => hds p q lam h⟩⟩
 
 end GlobalTheory

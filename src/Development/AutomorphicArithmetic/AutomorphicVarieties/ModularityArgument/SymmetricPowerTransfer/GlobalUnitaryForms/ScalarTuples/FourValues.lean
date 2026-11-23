@@ -2,7 +2,8 @@ module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.SymmetricPowerTransfer.GlobalUnitaryForms.HodgeTateFromSandwich
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsCongrIffTraceFormsIsometricCm
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasseNormTheoremQuadraticExtensionStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.Landherr₂.ExistsNormTensor
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasseNormTheoremQuadraticExtension
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,7 +65,7 @@ private theorem four_values (F : Type) [Field F] [NumberField F] [IsTotallyReal 
   have hx0 : x ≠ 0 := fun h => by simpa [h] using hx σ
   have hΔ0 : Δ ≠ 0 := fun h => by simpa [h] using hΔ σ
   refine ⟨hx0, ?_⟩
-  obtain ⟨y, hy0, hy⟩ := GlobalTheory.LocalQuad.isotropic_of_indefinite GlobalTheory.T.hasse_norm_theorem_quadratic_extension F (ι := Fin 5) ![1, -Δ, 1, -Δ, -x]
+  obtain ⟨y, hy0, hy⟩ := GlobalTheory.LocalQuad.isotropic_of_indefinite _root_.GlobalTheory.QNorm.hasseNormSt F (ι := Fin 5) ![1, -Δ, 1, -Δ, -x]
     (by simp) (fun i => by fin_cases i <;> simp [hx0, hΔ0])
     (fun s => ⟨4, 0, by simpa using hx s, by simp⟩)
   simp [Fin.sum_univ_succ] at hy

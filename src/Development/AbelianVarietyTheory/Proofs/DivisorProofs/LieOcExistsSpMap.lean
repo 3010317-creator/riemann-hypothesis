@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieRankAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorLieConditionOfBasicOpenCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsClosedOfLocalIdealPointPropertyStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorLieConditionOfBasicOpenCover
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsClosedOfLocalIdealPointProperty
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KottwitzLieConditionLocallyCutOutByIdealStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -101,7 +102,7 @@ theorem lieHer_closed (b : Base D R) (s : S ⟶ Sp R) (A : Over S) [GrpObj A] [I
     have key : ∀ r : R', (Localization.awayMap g r).comp (algebraMap R' (Localization.Away r)) =
         (algebraMap R'' (Localization.Away (g r))).comp g := fun r => IsLocalization.map_comp _
     refine ⟨?_, ?_⟩
-    · refine GlobalTheory.T.harrisTaylor_lie_condition_of_basicOpen_cover p D R b S A act R'' (g.comp β) (spMap g ≫ x) (t.image g) ?_ ?_
+    · refine _root_.GlobalTheory.UPel.HT.LieLoc.lieAt_of_cover p D R b S A act R'' (g.comp β) (spMap g ≫ x) (t.image g) ?_ ?_
       · rw [Finset.coe_image, ← Ideal.map_span, ht, Ideal.map_top]
       · intro r'' hr''
         obtain ⟨r, hr, rfl⟩ := Finset.mem_image.1 hr''
@@ -131,7 +132,7 @@ theorem lieHer_closed (b : Base D R) (s : S ⟶ Sp R) (A : Over S) [GrpObj A] [I
         rw [RingHom.id_comp, ← RingHom.comp_assoc, hlift, RingHom.comp_assoc]
       rw [e1, e2] at h
       exact h
-  obtain ⟨Z, i, hi, hZ⟩ := GlobalTheory.T.isClosed_of_local_ideal_point_property S P her loc (fun z => by
+  obtain ⟨Z, i, hi, hZ⟩ := _root_.GlobalTheory.PtClosed.closed_of_points S P her loc (fun z => by
     obtain ⟨U, hU, hz, K, hK⟩ := GlobalTheory.T.kottwitzLieCondition_locally_cut_out_by_ideal p D R b S s A hA act z
     refine ⟨U, hU, hz, K, fun R' _ f => ?_⟩
     obtain ⟨β, hβ⟩ := lieOc_exists_spMap (spMap f ≫ hU.fromSpec ≫ s)

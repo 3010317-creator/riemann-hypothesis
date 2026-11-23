@@ -1,8 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.BaseIdealIdeal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseIdealSheafOfIdealComapSpecMapSupportStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompatibleReductionSystemMapImmersionStatement
+public import Mathlib.AlgebraicGeometry.IdealSheaf.Functorial
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseIdealSheafOfIdealComapSpecMapSupport
+public import Mathlib.AlgebraicGeometry.Morphisms.Immersion
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompatibleReductionSystemMapImmersion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,7 +59,7 @@ theorem alg_of_isClosedImmersion : ∀ (R : Type) [CommRing R] (I : Ideal R) (W 
     (f : W ⟶ Spec (CommRingCat.of R)) (i : W' ⟶ W), IsSeparated f → IsClosedImmersion i → Alg f I →
     Alg (i ≫ f) I := by
   intro R _ I W W' f i hf hi hA t ht hp
-  obtain ⟨hs, hsp, hc⟩ := GlobalTheory.T.compatibleReductionSystem_map_immersion R I W W' f i hf inferInstance t ht hp
+  obtain ⟨hs, hsp, hc⟩ := _root_.GlobalTheory.FormalAlg.mapSystem R I W W' f i hf inferInstance t ht hp
   obtain ⟨T, hT, hred⟩ := hA _ hs hsp
   refine ⟨T.comap i, ?_, fun e => ?_⟩
   · have h1 : (T.comap i).subschemeι ≫ i ≫ f =
@@ -65,7 +67,7 @@ theorem alg_of_isClosedImmersion : ∀ (R : Type) [CommRing R] (I : Ideal R) (W 
       rw [← T.comapIso_hom_fst_assoc i, pullback.condition_assoc]
     rw [h1]
     infer_instance
-  · rw [← (GlobalTheory.T.baseIdealSheafOfIdeal_comap_specMap_support).1 R W W' f i, ← Scheme.IdealSheafData.comap_sup, hred e]
+  · rw [← (_root_.GlobalTheory.FormalAlg.baseIdeal_calculus).1 R W W' f i, ← Scheme.IdealSheafData.comap_sup, hred e]
     exact hc e
 
 end GlobalTheory.FormalAlg

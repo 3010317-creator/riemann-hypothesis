@@ -2,7 +2,8 @@ module
 
 public import Formalism.SharpRestriction.GlobalSchurBounds.GlobalRankLatticeProofs.UnitTraceSumBounds.PhNormOfUnits
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.PhNormLimit
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.PhNormUnits
+public import Formalism.PeriodIntegrals.PhNormUnits
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PowerSeriesNormUnits.NormUnitsOfCalculation
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +47,7 @@ namespace Formalism.MainNotions.Ext.CutA
 
 theorem phNormOfUnits_holds : PhNormOfUnits := by
   intro p _ g S hok
-  exact phase_norm_units p g.l g.ex g.ph S hok.2.2.1 hok.2.2.2
+  exact _root_.PI.PhNormUnits.UnitaryGroupMassFormula.norm_units_of_calculation p g.l g.ex g.ph S hok.2.2.1 hok.2.2.2
 
 theorem phNormClosed_holds : PhNormClosed := by
   intro p _ g S hok

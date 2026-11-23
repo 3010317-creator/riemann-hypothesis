@@ -3,10 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Jets.IsSelfOf
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IsIntegralGaugedFormalGroupLawSelfConjugateSquar
 public import Formalism.LocalToGlobal.CharacterGerms.RowTieAxes
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RawChartTangentMaximalIdealOfNonDegenerateStatement
-import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.AddCurveStableOfIntegralGaugedFormalGroupLaw
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.HasGaugeAdjointLieProjectorsPairDataStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RawChartTangentMaximalIdealOfNonDegenerate
+public import Development.AbelianVarietyTheory.Definitions.TeichmullerDepth.HasTeich
+public import Formalism.LocalToGlobal.CharacterGerms.RowTieFB
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.HasGaugeAdjointLieProjectorsPairData
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IsIntegralGaugedFormalGroupLawPairData
+import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.AddCurveStableOfIntegralGaugedFormalGroupLaw
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -164,7 +166,7 @@ open ReciprocityTheory.ChartRestriction.G ReciprocityTheory.ChartRestriction.G.G
 theorem nonDegenerate_and_rowConditionTwo_pairsOfPlaces : (∀ (C : Type) [Field C] [CharZero C] (V : VF C) (O : Type) [CommRing O] [StarRing O] (dd : ℕ) (Y : FBChart C V O dd) (d : ℕ) [NeZero d] (I : Fin 2 → Type) [∀ g, Fintype (I g)] (p : PairData Y d I), NDG Y → NonDeg (Y.raw p) V) ∧ RankMaximalOfNondegenerate :=
   ⟨fun _ _ _ _ _ _ _ _ Y _ _ _ _ p h => nonDeg_raw Y p h,
     fun C _ _ V O _ _ dd Y d _ I _ p h _ Hc =>
-      GlobalTheory.T.rawChart_tangent_maximalIdeal_of_nonDegenerate C V d I (Fin dd) (Y.raw p) (GlobalTheory.RowLawPair.rLaw_pairData C V O dd Y d I p) (GlobalTheory.T.hasGaugeAdjointLieProjectors_pairData C V O dd Y d I p)
+      _root_.GlobalTheory.RowAt.GoodInj.tangent_mm_of_nonDeg C V d I (Fin dd) (Y.raw p) (GlobalTheory.RowLawPair.rLaw_pairData C V O dd Y d I p) (_root_.GlobalTheory.hasProj_pairData C V O dd Y d I p)
         (nonDeg_raw Y p h) Hc⟩
 
 end GlobalTheory.NonDegPair

@@ -8,9 +8,14 @@ public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.MetricC
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.MetricDataUnique
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.UnifMetricScalar
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualWeylTensorEvaluationTranslateKronecker
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MulNormDualWeylTensorEvaluationLeFibreNormStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAdelicOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MulNormDualWeylTensorEvaluationLeFibreNorm
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.PointwiseNormSectionEqFlagDomainNorm
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.RecordAtOfIsArcFr
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.OrthogonalFrameDomain
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.OrthonormalFlagTranslateHolds
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.FrMapComp
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.PlaceBoundSplitOfIntegral
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFramedPointBaseChangeAlgebraMap
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUniqueFrameChangeByMatrices
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameChangeByMatricesReflAndComp
@@ -56,12 +61,8 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.OrthogonalFrameDomain
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.OrthonormalFlagTranslateHolds
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.ProdCastLESucc
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.FrMapComp
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.SupAtUnit
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.PlaceBoundSplitOfIntegral
 import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
@@ -204,7 +205,7 @@ theorem cabs_le_matNorm {Z : Comp Xo c} (P : PtData Z) {a : (E →+* ℂ) × ℕ
   have hs : cabs (s : CAt σ) = (Real.sqrt (P.N σ))⁻¹ := by
     rw [← Real.sqrt_inv, ← eq_inv_of_mul_eq_one_left hN.symm]
     exact (Real.sqrt_sq (norm_nonneg (show ℂ from (s : CAt σ)))).symm
-  have hb := GlobalTheory.T.mul_norm_dualWeylTensorEvaluation_le_fibreNorm _ _ (part Dw a) (fun τ i j hij => hd.1 τ hij) (fun I => σ (x I)) (P.X σ)
+  have hb := _root_.GlobalTheory.TSup.mul_norm_tval_le_fibNorm _ _ (part Dw a) (fun τ i j hij => hd.1 τ hij) (fun I => σ (x I)) (P.X σ)
     (fun τ => ⟨W τ, Matrix.mem_unitaryGroup_iff'.2 (hW2 τ)⟩) ((Real.sqrt (P.N σ))⁻¹ ^ n) (by positivity)
   refine le_trans (le_of_eq ?_) hb
   have e : (fun τ => P.X σ τ * W τ) =

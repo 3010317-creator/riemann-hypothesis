@@ -2,9 +2,9 @@ module
 
 public import Formalism.SatakeDualWeyl.StatementF
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitaryDoubleCosetOfGLintDoubleCoset
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.UniformizerPowerTorusMemNormalUnitarySubgroup
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertPlaceHeckeDoubleCosetsInverseRepsLabel
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InvMemDoubleCosetAndComm
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.UniformizerPowerTorusMemNormalUnitarySubgroupStatement
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnitaryMemIntegralUnitaryDoubleCosetOfGLnDoubleC
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.FIwasawa
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.FIwasawaB
@@ -158,7 +158,7 @@ theorem diag_mem : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicative 
     rw [hvrev, WithZero.log_inv]
   obtain ⟨s, hs, hs'⟩ := Formalism.UG.P.fSatake_diag_exists (σ := σ) (fun i => ϖ ^ c i) (fun i => by
     rw [map_zpow₀, hσϖ, hc, ← zpow_add₀ h0, add_neg_cancel, zpow_zero])
-  have hsN : s ∈ N := GlobalTheory.T.uniformizerPowerTorus_mem_normal_unitarySubgroup L ϖ σ q n hU N hN hK hu c hc s hs
+  have hsN : s ∈ N := _root_.GlobalTheory.torus_mem_normal L ϖ σ q n hU N hN hK hu c hc s hs
   have hvpow : ∀ i, Valued.v (ϖ ^ c i) = Valued.v (T i i) := by
     intro i
     rw [map_zpow₀, hϖ', ← WithZero.exp_zsmul, ← WithZero.exp_log (hv0 i)]

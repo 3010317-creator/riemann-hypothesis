@@ -2,7 +2,9 @@ module
 
 public import Mathlib.NumberTheory.NumberField.Basic
 public import Mathlib.RingTheory.Unramified.Locus
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPrimeSpanOfSqEqNegPrimeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPrimeSpanOfSqEqNegPrime
+public import Mathlib.NumberTheory.RamificationInertia.Unramified
+public import Mathlib.NumberTheory.RamificationInertia.Ramification
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -20,7 +22,6 @@ import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
-public import Mathlib.NumberTheory.RamificationInertia.Unramified
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.WittVector.IsPoly
@@ -49,7 +50,6 @@ import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.PublishedTheorems.PublishedFoundations.ComplexMultiplicationJPremises
 import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.SemiChar
 import Mathlib.AlgebraicGeometry.EllipticCurve.Weierstrass
-public import Mathlib.NumberTheory.RamificationInertia.Ramification
 
 @[expose] public section
 
@@ -92,7 +92,7 @@ theorem natPrime_not_mem_cube_of_isUnramifiedAt :
     rw [h0] at hy
     have : ((p : 𝓞 K)) = 0 := by simpa using hy.symm
     exact hp.ne_zero (by exact_mod_cast this)
-  have hprime : (Ideal.span {y}).IsPrime := GlobalTheory.T.isPrime_span_of_sq_eq_neg_prime_quadratic p K y hp hK hy
+  have hprime : (Ideal.span {y}).IsPrime := _root_.GlobalTheory.CMModel.isPrime_span_of_sq_eq_neg_prime p K y hp hK hy
   set Y : 𝓞 H := algebraMap (𝓞 K) (𝓞 H) y with hYdef
   have hpY : (p : 𝓞 H) = -(Y ^ 2) := by
     rw [hYdef, ← map_pow, hy, map_neg, map_natCast, neg_neg]

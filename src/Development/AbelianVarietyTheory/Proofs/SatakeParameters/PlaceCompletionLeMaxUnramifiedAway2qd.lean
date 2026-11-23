@@ -1,8 +1,12 @@
 module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.QuotientHomNonvanishingBound
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HostFieldPadicEmbeddingMemMaxUnramifiedStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PadicAlgClFiniteDenseEqAdjoinStatement
+public import Formalism.LocalRingCardinality.DataHost
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HostFieldPadicEmbeddingMemMaxUnramified
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.NumberTheory.Padics.Complex
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PadicAlgClFiniteDenseEqAdjoin
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,10 +57,10 @@ theorem bridge_field_le_unramified : ∀ {R : Ranks} {H : Host R} {what₂ : Row
     (hw : w ∈ placesOver H.E (N.l i)),
     N.l i ∉ H.small → N.l i ≠ H.q → N.l i ≠ H.d → (nbr i w hw).Kw.1 ≤ Loc.MaximalUnramifiedExtension (N.l i) := by
   intro R H what₂ N nbr i w hw h2 hq hd
-  have hK := GlobalTheory.T.padicAlgCl_finite_dense_eq_adjoin' (N.l i) H.E ((nbr i w hw).j.comp (algebraMap H.E N.Om)) (nbr i w hw).Kw.1
+  have hK := _root_.GlobalTheory.padicAlgCl_finite_dense_eq_adjoin (N.l i) H.E ((nbr i w hw).j.comp (algebraMap H.E N.Om)) (nbr i w hw).Kw.1
     (nbr i w hw).j_E (nbr i w hw).Kw.2 (nbr i w hw).j_dense
   rw [hK, IntermediateField.adjoin_le_iff]
   rintro _ ⟨x, rfl⟩
-  exact GlobalTheory.T.hostField_padicEmbedding_mem_maxUnramified H (N.l i) h2 hq hd _ x
+  exact _root_.GlobalTheory.HostKur.host_image_mem_Kur H (N.l i) h2 hq hd _ x
 
 end GlobalTheory

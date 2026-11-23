@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.FinModel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorRelDimAndDiagonalIsLineBundleStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.Uniformised
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorRelDimAndDiagonalIsLineBundle
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PowerOfAbelianSchemeProjective
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.IteratedFiberPowerZeroIsIsoAndSuccIsPullback
 import Mathlib.Algebra.Order.Floor.Extended
@@ -39,7 +40,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.Uniformised
 
 @[expose] public section
 
@@ -67,7 +67,7 @@ theorem UpperTheory.power_projector_exists :
   intro q _ D R _ _ b N _ _ X s o k
   letI := o.grp
   haveI := o.comm
-  have hT := GlobalTheory.T.harrisTaylor_relDim_and_diagonal_isLineBundle q D R b N X s o
+  have hT := _root_.GlobalTheory.HTDim.relDim_and_isLB q D R b N X s o
   refine ⟨fun hs => GlobalTheory.KS.isProjOver_pow R X s hs o.A o.ab _ hT.2 o.ample k, ?_⟩
   intro d hd
   haveI := relDim_pow o.A D.g hT.1 k

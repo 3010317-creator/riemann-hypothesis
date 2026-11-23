@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DatumOfIsIntegersLattice
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentSlopeMemStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentSlopeMem
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsIntegralModelOfForms
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -74,7 +74,7 @@ theorem intV_average (V : ValuationSubring ℂ) (a₄ a₆ r s t : ℂ) (u : ℂ
   have hr := avg_mem_of_card_unit V _ hc hX
   have ht := avg_mem_of_card_unit V _ hc hY
   have hs := avg_mem_of_card_unit V _ hc fun i =>
-    GlobalTheory.T.tangent_slope_mem_of_intV V a₄ a₆ r s t (X i) (Y i) u h (hX i) (hY i) (h2 i)
+    _root_.GlobalTheory.CMModel.tangentSlope_mem V a₄ a₆ r s t (X i) (Y i) u h (hX i) (hY i) (h2 i)
   simp only [← Finset.sum_div, Finset.sum_sub_distrib, ← Finset.mul_sum, Finset.sum_const,
     Finset.card_univ, nsmul_eq_mul] at hr hs ht
   set A := ∑ i, X i

@@ -4,10 +4,13 @@ public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.Fir
 public import Mathlib.RingTheory.DiscreteValuationRing.Basic
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ForallGeometricallyIntegralOfSmoothOfGeometrical
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGlobalUnitRatioGenericLineBundleIsosStatement
+public import Mathlib.Tactic.ENatToNat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGlobalUnitRatioGenericLineBundleIsos
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlobalFunctionsConstantAfterBaseChangeOfAbelianS
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LineBundleIsoOfGenericIsoNormalLocalBase
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaPointShapePrimitivityNearGeneric
+public import Development.AbelianVarietyTheory.Definitions.Divisors.CommAlgFunctorCoboundaryZeroMemCocyclesOne
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ComparisonMemCechHodgeFiltration
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,8 +51,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.BCTools
-public import Development.AbelianVarietyTheory.Definitions.Divisors.CommAlgFunctorCoboundaryZeroMemCocyclesOne
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ComparisonMemCechHodgeFiltration
 import Development.AbelianVarietyTheory.Definitions.Divisors.MapSmulOfIsHausdorff
 import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.TateUnramifiedOfTorsionUnramified
 import Development.AbelianVarietyTheory.PublishedTheorems.Landherr₂.DimEqZero
@@ -119,7 +120,7 @@ theorem exists_iso_const_of_generic : ∀ (W K' : Type) [CommRing W] [IsDomain W
   have hP' := pull_isLB hP (pullback.fst G.hom (spMap (algebraMap W K')))
   have hM' := pull_isLB hM (pullback.fst G.hom (spMap (algebraMap W K')))
   obtain ⟨v, hv⟩ := lbIso_of_generic W K' G hG P M hP hM (LBIso.trans hP' hN hM' ⟨w₁, hw₁⟩ (LBIso.symm ⟨w, hw⟩))
-  obtain ⟨u, hu⟩ := GlobalTheory.T.exists_global_unit_ratio_generic_lineBundle_isos _ _ _ P M N hP hM hN w w₁ v hw hw₁ hv
+  obtain ⟨u, hu⟩ := _root_.GlobalTheory.GenIsoRatio.ratio _ _ _ P M N hP hM hN w w₁ v hw hw₁ hv
   obtain ⟨c, hc⟩ := globalFn_eq_cst W K' G hG u.val
   refine ⟨v, c, hv, fun n i m hle => ?_⟩
   rw [hu n i m hle, hc, GlobalTheory.AbLaw.rs_cst]

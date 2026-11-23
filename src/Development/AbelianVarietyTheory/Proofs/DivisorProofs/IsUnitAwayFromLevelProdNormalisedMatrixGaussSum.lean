@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ConjTupRefl
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ComplexMatrixGaussSumNormIntegralGaloisStatement
+public import Mathlib.NumberTheory.LegendreSymbol.AddCharacter
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ComplexMatrixGaussSumNormIntegralGalois
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -131,7 +132,7 @@ theorem unitOff_prod_gaussSum : ∀ (D : D7) [∀ PP : Pl D.host.E, Fintype (kP 
     have := Ideal.Quotient.eq_zero_iff_mem.mpr (hN PP hPP)
     simpa using this
   obtain ⟨m, hm⟩ := card_dvd_pow (kP PP) h0
-  obtain ⟨h1, h2, h3, -⟩ := GlobalTheory.T.galois_matrix_gaussSum_eq_char_pow_mul (kP PP) (ψP PP) (ξ PP) r (hψ PP hPP) (hξ PP hPP) _ rfl
+  obtain ⟨h1, h2, h3, -⟩ := _root_.GlobalTheory.complexMatrixGaussSum_norm_integral_galois (kP PP) (ψP PP) (ξ PP) r (hψ PP hPP) (hξ PP hPP) _ rfl
   rw [Nat.card_eq_fintype_card]
   exact unitOff_normalised Fintype.card_ne_zero hm hrn h1 h2 h3
 

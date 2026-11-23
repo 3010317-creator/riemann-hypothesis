@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DescCocycle
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTensorSquareEquivFibreSquareSectionsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitBasicOpenOfCoboundaryIdentityStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteFaithfullyFlatAlgebraOverAffineOpenStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Hilbert90LocalOfCocycleTensorStatement
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Hilbert90LocalOfCocycleTensor
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitCocycleDescendsOnTripleOverlapsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -88,7 +89,7 @@ theorem coboundary_locally_of_cocycle : ∀ {X Y : Scheme.{0}} (f : X ⟶ Y) [Is
   obtain ⟨e, he⟩ := GlobalTheory.T.exists_tensorSquare_equiv_fibreSquare_sections f V₀ hV₀ h
   have hcoc := GlobalTheory.T.unit_cocycle_descends_on_triple_overlaps f V V₀ hV₀ h hle c hc e he
   let c₀ : (Γ(X, f ⁻¹ᵁ V₀) ⊗[Γ(Y, V₀)] Γ(X, f ⁻¹ᵁ V₀))ˣ := Units.map e.symm.toMonoidHom (res hle c)
-  obtain ⟨r, hr, m, s, n, hm, hs⟩ := GlobalTheory.T.hilbert90_of_cocycle_faithfullyFlat_tensor _ _ c₀ hcoc
+  obtain ⟨r, hr, m, s, n, hm, hs⟩ := _root_.GlobalTheory.FlatDescent.hilbert90_local_of_cocycle _ _ c₀ hcoc
     (Ideal.comap (Y.presheaf.germ V₀ y hyV₀).hom (IsLocalRing.maximalIdeal _)) inferInstance
   have hm' : ((pullback.fst f f).app (f ⁻¹ᵁ V₀)).hom m * (res hle c).val =
       ((pullback.snd f f).appLE (f ⁻¹ᵁ V₀) _ h).hom m := by

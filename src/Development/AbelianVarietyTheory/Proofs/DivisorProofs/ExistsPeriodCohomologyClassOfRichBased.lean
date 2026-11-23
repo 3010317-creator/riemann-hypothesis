@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EllFamNontrivial
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegZeroCocycleExistsCoboundaryOfRichBasedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantCochainOneConstOnDegreeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ParameterFunctionEqZeroOfComposableStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InvariantCochainOneConstOnDegree
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ParameterFunctionEqZeroOfComposable
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -68,7 +68,7 @@ theorem exists_perCl {I : Type} [Fintype I] {g : ℕ} {Λ : Type} [AddCommGroup 
       f'.1 T T'' (φ ≫ ψ) = ψ.φ (f'.1 T T' φ) + f'.1 T' T'' ψ := fun φ ψ ↦ f'.2 φ ψ
   have hp : ∀ l : Λ, ∃ p : Hol F.V, ∀ (T T' : K.Obj) (φ : T ⟶ T'), φ.deg = l →
       f'.1 T T' φ = algebraMap (Hol F.V) T'.C p :=
-    fun l ↦ GlobalTheory.T.invariant_cochainOne_const_on_degree K hR f'.1 l
+    fun l ↦ _root_.GlobalTheory.AnPer.Charts.invCochain_const K hR f'.1 l
       (fun T T' T'' φ ψ _ hψ ↦ by rw [hc, h0 _ _ ψ hψ, add_zero])
       (fun T T' T'' φ ψ hφ _ ↦ by rw [hc, h0 _ _ φ hφ, map_zero, zero_add])
   choose p hp using hp
@@ -77,7 +77,7 @@ theorem exists_perCl {I : Type} [Fintype I] {g : ℕ} {Λ : Type} [AddCommGroup 
   have hadd : ∀ l m, p (l + m) = p l + p m := by
     intro l m
     rw [← sub_eq_zero]
-    refine GlobalTheory.T.parameter_function_eq_zero_of_composable K hR l m _ fun k k' k'' hl hm ↦ ?_
+    refine _root_.GlobalTheory.AnPer.Charts.eq_zero_of_cst_composable K hR l m _ fun k k' k'' hl hm ↦ ?_
     let φ : K.triv k ⟶ K.triv k' := ptHom (K.triv k') hl
     let ψ : K.triv k' ⟶ K.triv k'' := ptHom (K.triv k'') hm
     have e := hc φ ψ

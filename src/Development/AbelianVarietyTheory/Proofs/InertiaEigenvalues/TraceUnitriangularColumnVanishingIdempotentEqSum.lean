@@ -6,8 +6,9 @@ public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GgOneAndIsCla
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsMirabolicConjInvariantTwistedTailMeanFun
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsUnitOfIsUniUp
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MirabolicClassFunBlockDiagonalEqSumDerivatives
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GelfandGraevCharacterGLnNormAndReciprocityStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GelfandGraevCharacterGLnNormAndReciprocity
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraInductionRestrictionIsClassFunction
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsMirClass
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WhittakerDimensionHarishChandraInductionMul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -47,7 +48,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsMirClass
 
 @[expose] public section
 
@@ -129,6 +129,6 @@ theorem tr_eJ'_eq_sum_wh_der : ∀ (g : ℕ) [Fact g.Prime] (ψ : AddChar (ZMod 
   congr 1
   refine Finset.sum_congr rfl fun i hi => ?_
   have hi' := Finset.mem_range.mp hi
-  rw [key i (by omega), (GlobalTheory.T.gelfandGraevCharacterGLn_norm_and_reciprocity g ψ hψ (k - i) (by omega)).1]
+  rw [key i (by omega), (_root_.GlobalTheory.GLq.GGNorm.gg_norm g ψ hψ (k - i) (by omega)).1]
 
 end GlobalTheory.GLq.ExactMult

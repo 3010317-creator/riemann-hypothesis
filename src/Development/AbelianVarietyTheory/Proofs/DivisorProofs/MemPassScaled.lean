@@ -3,11 +3,15 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasLevelStd
 public import Development.AbelianVarietyTheory.Definitions.Divisors.MemPass
 public import Development.AbelianVarietyTheory.Definitions.Divisors.JetAnalytic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlgebraicValuationBoundOfMulSqIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmLatticeExistsMultipleIntegralPrimeToLStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoprimeMulPrimePowMemConductorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralDiscMulCoordsOfCmFieldIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NatMulIntegralMemCmLatticePrimeToStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.TorsTransport
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlgebraicValuationBoundOfMulSqIntegral
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.OmegaFactorization
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmLatticeExistsMultipleIntegralPrimeToL
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.VpBounds
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoprimeMulPrimePowMemConductor
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.DefiningCoordinates
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralDiscMulCoordsOfCmFieldIntegral
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NatMulIntegralMemCmLatticePrimeTo
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -87,12 +91,12 @@ theorem passl : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (l : ℕ)
   intro E _ _ _ l _ lam 𝔣 Q y θ D M₀ hf hQ hy hD hθ hθD hM₀
   have hl : l.Prime := Fact.out
   set c := condQ 𝔣 Q with hc
-  obtain ⟨M, hMl, hMint⟩ := GlobalTheory.T.cmLattice_exists_multiple_integral_prime_to_l E l c y hl hy
-  obtain ⟨M₁, hM₁l, hM₁c⟩ := GlobalTheory.T.exists_coprime_mul_prime_pow_mem_conductor E l 𝔣 Q hl hf hQ
+  obtain ⟨M, hMl, hMint⟩ := _root_.GlobalTheory.HilbFam.LatticeUp.exists_mul_integral E l c y hl hy
+  obtain ⟨M₁, hM₁l, hM₁c⟩ := _root_.GlobalTheory.HilbFam.CondNumber.exists_mem_condQ E l 𝔣 Q hl hf hQ
   have hM₁0 : M₁ ≠ 0 := by rintro rfl; exact hM₁l (dvd_zero l)
   have hM0 : M ≠ 0 := by rintro rfl; exact hMl (dvd_zero l)
   have hR : 0 < M₁ * l ^ a0 𝔣 l := Nat.pos_of_ne_zero (mul_ne_zero hM₁0 (pow_ne_zero _ hl.ne_zero))
-  obtain ⟨M₂, hM₂l, hM₂⟩ := GlobalTheory.T.nat_mul_integral_mem_cmLattice_prime_to E l c y (M₁ * l ^ a0 𝔣 l) hl hy hR hM₁c
+  obtain ⟨M₂, hM₂l, hM₂⟩ := _root_.GlobalTheory.HilbFam.LatDen.nat_mul_integral_mem_lattice E l c y (M₁ * l ^ a0 𝔣 l) hl hy hR hM₁c
   obtain ⟨D', hD'⟩ := (fun {p n : ℕ} => _root_.Dvd.intro_left _ (_root_.Nat.divMaxPow_mul_pow_padicValNat p n)) (p := l) (n := D)
   have hD'l : ¬ l ∣ D' := by
     rintro ⟨e, he⟩
@@ -113,7 +117,7 @@ theorem passl : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (l : ℕ)
       have h' : (M : E) * y' = (D : E)⁻¹ * (((x 0 : FR E) : E) * θ + ((x 1 : FR E) : E)) := by
         rw [← hxy]; field_simp
       rw [h']; ring
-    have h := GlobalTheory.T.isIntegral_disc_mul_coords_of_cmField_integral E θ D (fun j => (D : FR E)⁻¹ * x j) hD hθ hθD (by rw [hpt]; exact hMint y' hy') j
+    have h := _root_.GlobalTheory.HilbFam.isIntegral_coord_of_isIntegral E θ D (fun j => (D : FR E)⁻¹ * x j) hD hθ hθD (by rw [hpt]; exact hMint y' hy') j
     refine ⟨h.1, ?_⟩
     have h2 := h.2
     simp only [mul_inv_cancel_left₀ hDF] at h2
@@ -150,12 +154,12 @@ theorem passl : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (l : ℕ)
     have h2 : IsIntegral ℤ ((D : ℂ) * (f ((D : FR E)⁻¹ * w j)) ^ 2) := by
       have := h1.map f
       simpa [map_mul, map_pow, map_natCast] using this
-    have h3 := (GlobalTheory.T.algebraicValuation_bound_of_mul_sq_integral l lam D 0 (f ((D : FR E)⁻¹ * w j)) hD h2).1
+    have h3 := (_root_.GlobalTheory.SizeSqIntegral.main l lam D 0 (f ((D : FR E)⁻¹ * w j)) hD h2).1
     have h4 : (D : ℂ) * f ((D : FR E)⁻¹ * w j) = ((i (w j) : ℝ) : ℂ) := by
       rw [← map_natCast f D, ← map_mul, mul_inv_cancel_left₀ hDF]
       rfl
     rwa [h4] at h3
-  · have h := (GlobalTheory.T.algebraicValuation_bound_of_mul_sq_integral l lam D (M₀ * M * D' * M₂ * M₁ * l ^ a0 𝔣 l) 0 hD (by simpa using (isIntegral_zero : IsIntegral ℤ (0 : ℂ)))).2
+  · have h := (_root_.GlobalTheory.SizeSqIntegral.main l lam D (M₀ * M * D' * M₂ * M₁ * l ^ a0 𝔣 l) 0 hD (by simpa using (isIntegral_zero : IsIntegral ℤ (0 : ℂ)))).2
     rwa [show M₀ * M * D' * M₂ * M₁ * l ^ (padicValNat l D + a0 𝔣 l) =
       M₀ * M * D' * M₂ * M₁ * l ^ a0 𝔣 l * l ^ padicValNat l D by ring]
 

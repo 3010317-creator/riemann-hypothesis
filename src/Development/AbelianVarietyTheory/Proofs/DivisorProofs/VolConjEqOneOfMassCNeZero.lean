@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PointSide
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MassMulVolumeCommensurableStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedCentralizerMassMapConjStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MassMulVolumeCommensurable
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedCentralizerMassMapConj
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,8 +59,8 @@ theorem vol_conj_eq_one_of_massC_ne_zero {G : Type} [Group G] (Γ' T C : Subgrou
     have hcT := hC hc
     simp only [MulEquiv.coe_toMonoidHom, MulAut.conj_apply]
     exact T.mul_mem (T.mul_mem ht hcT) (T.inv_mem ht)
-  have hchange := GlobalTheory.T.mass_mul_volume_commensurable Γ' T C (C.map (MulAut.conj t).toMonoidHom) hC hC' h1 h2 hf hf'
-  rw [GlobalTheory.T.twistedCentralizerMass_map_conj Γ' T C t ht hC] at hchange
+  have hchange := _root_.GlobalTheory.LKCount.MassChange.massC_mul_vol Γ' T C (C.map (MulAut.conj t).toMonoidHom) hC hC' h1 h2 hf hf'
+  rw [_root_.GlobalTheory.LKCount.massC_map_conj Γ' T C t ht hC] at hchange
   have := mul_left_cancel₀ hm (hchange.trans (mul_one _).symm)
   exact this
 

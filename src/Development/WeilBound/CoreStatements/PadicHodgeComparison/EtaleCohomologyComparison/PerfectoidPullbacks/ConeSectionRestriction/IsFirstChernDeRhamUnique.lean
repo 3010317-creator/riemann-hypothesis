@@ -2,8 +2,8 @@ module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.ConeSectionRestriction.IsTautologicalLineAt
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.InclStd
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsTwistingLineDataProjectiveStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwistingSheafBaseChangeStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsTwistingLineDataProjective
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwistingSheafBaseChange
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.ConeSectionRestriction.PowTop
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.ConeSectionRestriction.RestrictionBijectiveAboveDimension
 import Mathlib.Algebra.Order.Floor.Extended
@@ -58,7 +58,7 @@ namespace CrystallineSemistableComparison.Pb
 open ReciprocityTheory.ChartRestriction.G.Geo.Tor
 
 theorem isO1At_exists {R : Type} [CommRing R] {X : Scheme.{0}} (N : ℕ) (i : X ⟶ PSpace R N) :
-    ∃ D : E.LineData X, IsTautologicalLineAt D N i := GlobalTheory.T.exists_twisting_line_data_projective N i
+    ∃ D : E.LineData X, IsTautologicalLineAt D N i := _root_.GlobalTheory.CompanionTheory.ConeTwistingSheafMap.main N i
 
 theorem isO1_exists {R : Type} [CommRing R] {X : Scheme.{0}} (p : X ⟶ Sp R) (hp : IsProjOver p) :
     ∃ D : E.LineData X, IsTautologicalLine p D := by
@@ -68,7 +68,7 @@ theorem isO1_exists {R : Type} [CommRing R] {X : Scheme.{0}} (p : X ⟶ Sp R) (h
 
 theorem isTwistingSheaf_pullback {R R' : Type} [CommRing R] [CommRing R'] (φ : R →+* R') {X : Scheme.{0}} (p : X ⟶ Sp R)
     (D : E.LineData X) (hD : IsTautologicalLine p D) :
-    IsTautologicalLine (pullback.snd p (spMap φ)) (D.pb (pullback.fst p (spMap φ))) := GlobalTheory.T.twisting_sheaf_base_change φ p D hD
+    IsTautologicalLine (pullback.snd p (spMap φ)) (D.pb (pullback.fst p (spMap φ))) := _root_.GlobalTheory.CompanionTheory.ConeTwistingSheaf.isTwistingSheaf_pullback φ p D hD
 
 theorem isFirstChernDeRham_exists {K : Type} [Field K] [CharZero K] {X : Scheme.{0}} (q : X ⟶ Spec (CommRingCat.of K))
     (d : ℕ) [SmoothOfRelativeDimension d q] (D : E.LineData X) (hD : IsTautologicalLine q D) :

@@ -5,13 +5,15 @@ public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries
 public import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsAuxiliaryPlaceNotMemFinset
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.LinearIndependentE
 public import Mathlib.LinearAlgebra.Matrix.Rank
-import Development.AbelianVarietyTheory.Definitions.Divisors.LineOppositeParabolicUnitaryLeviSectionEq
-import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
-import Development.AbelianVarietyTheory.Definitions.Foundations.T2SpaceAdeleRing
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.FiniteDimensionalMram
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsMulCommutativeCentRealUJ
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TypeFunctionConstantTermVanishSplitPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeightedOrbitalIntegralGLZeroOfRadicalIntegralsStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.ContinuousOfMemCcSmooth
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeightedOrbitalIntegralGLZeroOfRadicalIntegrals
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.EllipticPartTestData
+import Development.AbelianVarietyTheory.Definitions.Divisors.LineOppositeParabolicUnitaryLeviSectionEq
+import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
+import Development.AbelianVarietyTheory.Definitions.Foundations.T2SpaceAdeleRing
 import Formalism.DoubleCosetMeasures.Statement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -57,7 +59,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.EllipticPartTestData
 import Development.AbelianVarietyTheory.Definitions.Divisors.HasTypeVec
 import Development.AbelianVarietyTheory.Definitions.Foundations.InnerEqZeroOfNotUEquiv
 
@@ -305,7 +306,7 @@ theorem weighted_orbital_vanish : GlobalTheory.IndefiniteRowSideFullHecke.Standa
     exact (hcond _).1 h1
   haveI : ((μf v).map e).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map (μf v) e
   haveI : (dt.map (subEquiv e hcent)).IsHaarMeasure := ContinuousMulEquiv.isHaarMeasure_map dt (subEquiv e hcent)
-  have key := GlobalTheory.T.weightedOrbitalIntegral_GL_zero_of_radical_integrals (Fv D.host.F v.1) V.rank ((μf v).map e) _ N hεε' hN_iff (fun x => ff v (e.symm x)) hfc hfcs
+  have key := _root_.GlobalTheory.RadicalOrb.hasQuotInt_zero (Fv D.host.F v.1) V.rank ((μf v).map e) _ N hεε' hN_iff (fun x => ff v (e.symm x)) hfc hfcs
     hvan (e (proj D.sp.cm.sig V.gram v (rat V γ))) hreg hcε (fun x => b (e.symm x)) hb'c hb'L hb'N (dt.map (subEquiv e hcent))
   have hcomm : ∀ t t' : cent (proj D.sp.cm.sig V.gram v (rat V γ)), (t : GLoc D.sp.cm.sig V.gram v) * t' = t' * t := by
     intro t t'

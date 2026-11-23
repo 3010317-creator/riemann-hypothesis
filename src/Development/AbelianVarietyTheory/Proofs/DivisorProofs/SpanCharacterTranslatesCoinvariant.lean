@@ -3,10 +3,13 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FullRankSB
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.BernsteinUnitaryProductIrreducible
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FibreMemInducedSpaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FibreZeroMemCoinvariantsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InducedScalarIrreducibleStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FibreZeroMemCoinvariants
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InducedScalarIrreducible
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegrableFullRankFibreStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenStabilizerSchwartzBruhatStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Definitions.Divisors.RankEqCardIffExistsFrameMatrixFirstColumnBlock
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsUnitarisableOfCharIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenStabilizerSchwartzBruhat
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -189,6 +192,6 @@ theorem coinv_or_fullRank_le : GlobalTheory.Published.BernsteinUnitaryProductIrr
           Ψ ∈ Submodule.span ℂ {z | ∃ (g : GL (Fin a) k) (Ψ : Matrix (Fin a) (Fin d) k → ℂ),
             Ψ ∈ GlobalTheory.WeilM.SB (Matrix (Fin a) (Fin d) k) ∧ z = GlobalTheory.SplitFlip.omA ν β g 1 Ψ - Ψ}) ∨
       (∀ Ψ ∈ GlobalTheory.WeilM.SB (Matrix (Fin a) (Fin d) k), (∀ Y : Matrix (Fin a) (Fin d) k, Y.rank ≠ a → Ψ Y = 0) → Ψ ∈ N) :=
-  of_parts GlobalTheory.T.induced_scalar_irreducible GlobalTheory.T.fibre_mem_induced_space GlobalTheory.T.isOpen_stabilizer_schwartzBruhat GlobalTheory.T.integrable_full_rank_fibre GlobalTheory.T.fibre_zero_mem_coinvariants
+  of_parts _root_.GlobalTheory.RankFibre.indScal_irreducible GlobalTheory.T.fibre_mem_induced_space _root_.GlobalTheory.OmAStab.isOpen_omA_stab GlobalTheory.T.integrable_full_rank_fibre _root_.GlobalTheory.RankFibreKer.fibre_ker
 
 end GlobalTheory.RankFibre

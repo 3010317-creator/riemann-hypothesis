@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormSubLtOneOfFix
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBasisOfSubmodule
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsInvariantMatrixLiftOfAdicCompleteStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsWittVectorTraceOneFiniteLevelStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.Hilbert90MatrixCoboundaryCharPFiniteLevelStatement
+public import Mathlib.Data.Matrix.Mul
+public import Mathlib.RingTheory.AdicCompletion.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsInvariantMatrixLiftOfAdicComplete
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsWittVectorTraceOneFiniteLevel
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.Hilbert90MatrixCoboundaryCharPFiniteLevel
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsCrysOfSplitStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PeriodDataComparisonStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -142,7 +144,7 @@ theorem exists_witt_matrix
     have := congrArg c (map_zlW p (frobenius R p) z)
     exact this
   obtain ⟨m, hm, h1⟩ := exists_fixer_dvd ρ hopen M hM hJ 1
-  obtain ⟨W₁, hW₁, hW₁m, hW₁g⟩ := GlobalTheory.T.exists_unit_matrix_coboundary_of_fixed_frobenius_pow p G R ρ m hm (hfin m hm) r
+  obtain ⟨W₁, hW₁, hW₁m, hW₁g⟩ := _root_.GlobalTheory.UnramifiedHilbertNinety.exists_matrix_coboundary p G R ρ m hm (hfin m hm) r
     ((c.comp (zlW p R)).mapMatrix.toMonoidHom.comp M)
     (fun g h i j => by
       change ρ g (c (zlW p R (M h i j))) = c (zlW p R (M h i j))
@@ -158,13 +160,13 @@ theorem exists_witt_matrix
       change (c.comp (zlW p R)) ((M g - 1) i j) = 0
       rw [hz, map_mul, pow_one, map_natCast, CharP.cast_eq_zero, zero_mul])
   have hct : ∀ y : R, c (WittVector.teichmuller p y) = y := fun y => rfl
-  obtain ⟨W, hW, hWg⟩ := GlobalTheory.T.exists_invariant_matrix_lift_of_adic_complete G (WittVector p R) p WittVector.isAdicCompleteIdealSpanP
+  obtain ⟨W, hW, hWg⟩ := _root_.GlobalTheory.InvariantLift.exists_invariant_lift G (WittVector p R) p WittVector.isAdicCompleteIdealSpanP
     (fun g => WittVector.map (ρ g).toRingHom) (wittMap_mul ρ) (fun g => map_natCast _ _) r
     ((zlW p R).mapMatrix.toMonoidHom.comp M) (fun g h i j => map_zlW p _ _)
     {N | ∃ m, 0 < m ∧ N = fixer ρ p m}
     (by
       rintro _ ⟨m, hm, rfl⟩
-      exact ⟨normal_fixer ρ p m, hfin m hm, GlobalTheory.T.exists_wittVector_trace_one_finiteLevel p G R ρ m hm (hfin m hm)⟩)
+      exact ⟨normal_fixer ρ p m, hfin m hm, _root_.GlobalTheory.UnramifiedCrys.exists_witt_trace_one p G R ρ m hm (hfin m hm)⟩)
     (by
       rintro _ ⟨a, ha, rfl⟩ k
       obtain ⟨b, hb, h⟩ := exists_fixer_dvd ρ hopen M hM hJ k

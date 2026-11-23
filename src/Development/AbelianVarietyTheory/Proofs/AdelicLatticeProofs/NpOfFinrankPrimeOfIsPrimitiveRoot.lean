@@ -3,10 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.MemPowSub
 public import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsAdmissiblePlacesContainingPrimeSupersetMon
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsSupersetMemSUnits
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.KummerGalois
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemUnitsLocalKummerNormsOfBaseChangeNormStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SUnitMemKummerNormsOfLocalNormsStatement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemUnitsLocalKummerNormsOfBaseChangeNorm
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SUnitMemKummerNormsOfLocalNorms
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsSupersetMemSUnits
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -95,8 +95,8 @@ theorem np_of_finrank_prime_of_isPrimitiveRoot : ∀ (p : ℕ) (F E : Type) [Fie
   have hfin : Units.mk0 x hx ∈ finNorm p F δ S := by
     simp only [finNorm, Subgroup.mem_iInf]
     intro v _
-    exact GlobalTheory.T.mem_unitsLocalKummerNorms_of_baseChange_norm p F E (v.adicCompletion F) ζ δ θ σ hk (Units.mk0 x hx) (hloc.1 v)
-  have hx' := GlobalTheory.T.sUnit_mem_kummerNorms_of_local_norms p F ζ (Units.mk0 δ hδ0) S hp hζ hadm (hS₁ S hS _ (by simp))
+    exact _root_.GlobalTheory.CNorm.mem_kNorm_of_tNorm p F E (v.adicCompletion F) ζ δ θ σ hk (Units.mk0 x hx) (hloc.1 v)
+  have hx' := _root_.GlobalTheory.CNorm.sUnit_mem_kNorm_of_mem_finNorm p F ζ (Units.mk0 δ hδ0) S hp hζ hadm (hS₁ S hS _ (by simp))
     hk.nonpow (Units.mk0 x hx) (hS₁ S hS _ (by simp)) hfin
   obtain ⟨y, hy⟩ := (mem_kNorm p (RingHom.id F) δ _).1 hx'
   obtain ⟨-, -, -, -, -, ⟨e⟩, -⟩ := kummer_galois p F E ζ δ θ σ hk

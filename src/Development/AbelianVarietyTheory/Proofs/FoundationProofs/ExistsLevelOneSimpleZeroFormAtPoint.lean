@@ -3,9 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FiniteIndexOfGammaLe
 public import Mathlib.NumberTheory.ModularForms.EisensteinSeries.Basic
 public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EisensteinWronskianNeZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EllipticPointsStabilizerStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.JInvariantEqualSl2OrbitStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EisensteinWronskianNeZero
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EllipticPointsStabilizer
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.JInvariantEqualSl2Orbit
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -104,13 +105,13 @@ theorem exists_local_data : ∀ τ₀ : ℍ, ∃ (n : ℕ) (a b : ℤ) (E : ℍ 
   intro τ₀
   have hD := cube_sub_sq_ne_zero τ₀
   by_cases h6 : E₆ τ₀ = 0
-  · obtain ⟨u, hu, hp⟩ := (GlobalTheory.T.elliptic_points_stabilizer τ₀).1 h6
+  · obtain ⟨u, hu, hp⟩ := (_root_.GlobalTheory.EllipticZero.elliptic_of_zero τ₀).1 h6
     have h4 : E₄ τ₀ ≠ 0 := fun h => hD (by simp [h, h6])
     refine ⟨4, 0, 6, E₆, u, hu, by norm_num, hp, by norm_num, by decide, isMF_E₆, fun τ hτ => ⟨?_, ?_⟩,
       ⟨1, one_ne_zero, tendsto_E₆⟩, ?_⟩
     · intro h
-      exact GlobalTheory.T.eisenstein_wronskian_ne_zero τ (by simp [h, hτ])
-    · exact GlobalTheory.T.j_invariant_equal_sl2_orbit τ τ₀ (by simp [h6, hτ])
+      exact _root_.GlobalTheory.EisWronskian.wronskian_E₄_E₆_ne_zero τ (by simp [h, hτ])
+    · exact _root_.GlobalTheory.JOrbit.exists_smul_of_E₄_E₆ τ τ₀ (by simp [h6, hτ])
     · rintro d hd ⟨m, rfl⟩
       obtain ⟨m, rfl⟩ := Int.eq_ofNat_of_zero_le (show 0 ≤ m by push_cast at hd; omega)
       refine ⟨(E₄ : ℍ → ℂ) ^ m, ?_, by simpa using fun h => absurd h h4⟩
@@ -118,12 +119,12 @@ theorem exists_local_data : ∀ τ₀ : ℍ, ∃ (n : ℕ) (a b : ℤ) (E : ℍ 
       convert this using 1
       push_cast; ring
   by_cases h4 : E₄ τ₀ = 0
-  · obtain ⟨u, hu, hp⟩ := (GlobalTheory.T.elliptic_points_stabilizer τ₀).2 h4
+  · obtain ⟨u, hu, hp⟩ := (_root_.GlobalTheory.EllipticZero.elliptic_of_zero τ₀).2 h4
     refine ⟨6, 0, 4, E₄, u, hu, by norm_num, hp, by norm_num, by decide, isMF_E₄, fun τ hτ => ⟨?_, ?_⟩,
       ⟨1, one_ne_zero, tendsto_E₄⟩, ?_⟩
     · intro h
-      exact GlobalTheory.T.eisenstein_wronskian_ne_zero τ (by simp [h, hτ])
-    · exact GlobalTheory.T.j_invariant_equal_sl2_orbit τ τ₀ (by simp [h4, hτ])
+      exact _root_.GlobalTheory.EisWronskian.wronskian_E₄_E₆_ne_zero τ (by simp [h, hτ])
+    · exact _root_.GlobalTheory.JOrbit.exists_smul_of_E₄_E₆ τ τ₀ (by simp [h4, hτ])
     · rintro d hd ⟨m, rfl⟩
       obtain ⟨m, rfl⟩ := Int.eq_ofNat_of_zero_le (show 0 ≤ m by push_cast at hd; omega)
       refine ⟨(E₆ : ℍ → ℂ) ^ m, ?_, by simpa using fun h => absurd h h6⟩
@@ -139,7 +140,7 @@ theorem exists_local_data : ∀ τ₀ : ℍ, ∃ (n : ℕ) (a b : ℤ) (E : ℍ 
     exact IsPrimitiveRoot.neg_one 0 (by norm_num)
   · exact ((isMF_E₄.pow 3).smul _).sub ((isMF_E₆.pow 2).smul _)
   · have hz : E₆ τ₀ ^ 2 * E₄ τ ^ 3 - E₄ τ₀ ^ 3 * E₆ τ ^ 2 = 0 := by simpa using hτ
-    refine ⟨?_, GlobalTheory.T.j_invariant_equal_sl2_orbit τ τ₀ (by linear_combination hz)⟩
+    refine ⟨?_, _root_.GlobalTheory.JOrbit.exists_smul_of_E₄_E₆ τ τ₀ (by linear_combination hz)⟩
     have hDτ := cube_sub_sq_ne_zero τ
     have k4 : E₄ τ ≠ 0 := by
       intro h
@@ -147,7 +148,7 @@ theorem exists_local_data : ∀ τ₀ : ℍ, ∃ (n : ℕ) (a b : ℤ) (E : ℍ 
       exact hDτ (by simp [h, this])
     rw [deriv_comb]
     intro h
-    have hW := GlobalTheory.T.eisenstein_wronskian_ne_zero τ
+    have hW := _root_.GlobalTheory.EisWronskian.wronskian_E₄_E₆_ne_zero τ
     apply mul_ne_zero (mul_ne_zero (pow_ne_zero 2 h6) (pow_ne_zero 3 k4)) hW
     linear_combination (2 * E₄ τ * deriv (⇑E₆ ∘ ofComplex) τ) * hz - (E₄ τ * E₆ τ) * h
   · have := ((tendsto_E₄.pow 3).const_mul (E₆ τ₀ ^ 2)).sub ((tendsto_E₆.pow 2).const_mul (E₄ τ₀ ^ 3))

@@ -3,13 +3,16 @@ module
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrimeIsMaximalOfIsFractionRing
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsFFCurve
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LocalComponentsSurjective
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LengthFormulaSumValuationsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsMultihomogPrimeOfPlaceStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GeometricNumberZeroFinrankStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalRingEssFiniteTypeStatement
+public import GroundTheory.FunctionField.PlaceDefs
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LengthFormulaSumValuations
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsMultihomogPrimeOfPlace
+public import GroundTheory.HeightsAndTheta.Heights.Intersections.LocRing
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GeometricNumberZeroFinrank
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalRingEssFiniteType
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.MultihomogPrimeMemDivisorSupportStatement
-import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PCoordConeArithVar
 public import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.AssemblyBase
+import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PCoordConeArithVar
 import GroundTheory.HeightsAndTheta.Heights.Intersections.OneNotMemOfIsPrime
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -82,7 +85,7 @@ theorem exists_centre (w : (Σ k, J k) → K) (hbir : Birational w) (hw : ∀ k,
     simp only [h, map_zero] at h1
     exact ((Valuation.ne_zero_iff _).2 h0) (le_zero_iff.1 h1)
   choose c' hc1 hc2 using hch
-  obtain ⟨W, hWp, hWh, hVW, hcW, hD, hiff⟩ := GlobalTheory.T.exists_multihomog_prime_of_place B J p K w v c' hc1 hc2
+  obtain ⟨W, hWp, hWh, hVW, hcW, hD, hiff⟩ := _root_.GlobalTheory.CompanionTheory.Ar.GeoDeg.Centre.exists_centre B J p K w v c' hc1 hc2
   have hx : (X ⟨k, c⟩ : MRing J) ∈ W := by
     rw [hiff (Pi.single k 1) _ (GroundTheory.Heights₂.Heights.Inter.regularityLocalFlat_holds.homog_X k c)]
     have hs : (Finset.univ.sup fun i => v.valuation (w ⟨k, i⟩)) = v.valuation (w ⟨k, c' k⟩) :=
@@ -119,7 +122,7 @@ theorem local_term (w : (Σ k, J k) → K) (hbir : Birational w) (k : B) (c : J 
       DFunLike.congr_fun (Subsingleton.elim (algebraMap (ZMod p) K)
         ((algebraMap (locRing (mCoordIdeal w) W) K).comp (algebraMap (ZMod p) (locRing (mCoordIdeal w) W)))) x
   haveI hE : Algebra.EssFiniteType (ZMod p) (locRing (mCoordIdeal w) W) :=
-    GlobalTheory.T.local_ring_ess_finite_type B J p K w W c' hV hWp hVW hc'
+    _root_.GlobalTheory.CompanionTheory.Ar.GeoDeg.essFiniteType_locRing B J p K w W c' hV hWp hVW hc'
   haveI hN : IsNoetherianRing (locRing (mCoordIdeal w) W) := Algebra.EssFiniteType.isNoetherianRing (ZMod p) _
   have hs : IsMultiHomog (X ⟨k, c⟩ : MRing J) (Pi.single k 1) := homog_X k c
   have ht : IsMultiHomog (X ⟨k, c' k⟩ : MRing J) (Pi.single k 1) := homog_X k (c' k)
@@ -148,14 +151,14 @@ theorem local_term (w : (Σ k, J k) → K) (hbir : Birational w) (k : B) (c : J 
       obtain ⟨g, hg⟩ := hF.mul_inv_cancel hf0
       exact IsUnit.of_mul_eq_one _ hg
     exact ((isUnit_iff hVW f hs ht (hc' k) hy).1 hu) hxW
-  have key := GlobalTheory.T.length_formula_sum_valuations (ZMod p) K (locRing (mCoordIdeal w) W) hnf f hf0
+  have key := _root_.GlobalTheory.CompanionTheory.Relay.length_formula_sum_valuations (ZMod p) K (locRing (mCoordIdeal w) W) hnf f hf0
   have hset : {v : Place (ZMod p) K | (∀ a : locRing (mCoordIdeal w) W, v.valuation (algebraMap _ K a) ≤ 1) ∧
       ∀ a ∈ maximalIdeal (locRing (mCoordIdeal w) W), v.valuation (algebraMap _ K a) < 1} =
       {v : Place (ZMod p) K | Dom v w W} := by
     ext v
     exact hρ.dom_iff hV hWp hVW v
   rw [hset] at key
-  rw [hlen, locIdeal_eq_span hym, GlobalTheory.T.geometric_number_zero_finrank B J p K w hbir k c hc W hWd b]
+  rw [hlen, locIdeal_eq_span hym, _root_.GlobalTheory.CompanionTheory.Ar.GeoDeg.ResDeg.geoNum_zero_eq_finrank B J p K w hbir k c hc W hWd b]
   have : (algebraMap (locRing (mCoordIdeal w) W) K f) = w ⟨k, c⟩ / w ⟨k, c' k⟩ := hf2
   rw [this] at key
   rw [← key]

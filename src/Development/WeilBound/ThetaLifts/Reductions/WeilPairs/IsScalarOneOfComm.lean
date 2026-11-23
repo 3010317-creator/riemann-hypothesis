@@ -3,14 +3,17 @@ module
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.AutDef
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.EtaDef
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.GoodLat
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRealChartAdeleTensorAdmissibleCMBaseStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergCMRealLineAddNoPhase
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianFormRealCoordinateMatrixHermitianDetNeZStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealCoordinateActionUnitaryPreservesHermitianForStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardTraceAddCharIsStandardCharOfAdmissibleCMStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTopologicalRingAE
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRealChartAdeleTensorAdmissibleCMBase
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianFormRealCoordinateMatrixHermitianDetNeZ
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealCoordinateActionUnitaryPreservesHermitianFor
+public import Formalism.LocalToGlobal.IndefiniteReal.DatumF
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardTraceAddCharIsStandardCharOfAdmissibleCM
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaDistributionInvariantRationalTarget
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaFunctionHeisenbergInvariantStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryAdelicPointEqRealMulFiniteBothOrdersStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaFunctionHeisenbergInvariant
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InfPartFPlaceIdem
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryAdelicPointEqRealMulFiniteBothOrders
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.AutEta
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.AutGen
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.AutLat
@@ -18,6 +21,8 @@ public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.AutProd
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.AutReal
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.AutSubst
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.AutTrace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDetSmulSubOne
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergCMRealLineAddNoPhase
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,7 +63,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDetSmulSubOne
 
 @[expose] public section
 
@@ -106,8 +110,8 @@ def IsScalarF (p : GAF σ JS × GAF σ JT) (c : ℂ) : Prop :=
 
 theorem exists_partsF (p : GAF σ JS × GAF σ JT) : ∃ a k : GAF σ JS × GAF σ JT, a.1 ∈ GinfCF σ JS ∧ a.2 ∈ GinfCF σ JT ∧
     k.1 ∈ GfCF σ JS ∧ k.2 ∈ GfCF σ JT ∧ p = a * k ∧ p = k * a := by
-  obtain ⟨a, ha, k, hk, e1, e1'⟩ := GlobalTheory.T.unitaryAdelicPoint_eq_real_mul_finite_both_orders F E σ nS JS p.1
-  obtain ⟨b, hb, l, hl, e2, e2'⟩ := GlobalTheory.T.unitaryAdelicPoint_eq_real_mul_finite_both_orders F E σ nT JT p.2
+  obtain ⟨a, ha, k, hk, e1, e1'⟩ := _root_.GlobalTheory.WeilPartsF.exists_real_finite_mul F E σ nS JS p.1
+  obtain ⟨b, hb, l, hl, e2, e2'⟩ := _root_.GlobalTheory.WeilPartsF.exists_real_finite_mul F E σ nT JT p.2
   exact ⟨(a, b), (k, l), ha, hb, hk, hl, Prod.ext e1 e2, Prod.ext e1' e2'⟩
 
 theorem exists_isScalarF (C : Ctx σ B JS JT ξ₀ θ ι) {χS χT : (AEF F E)ˣ →* Circle}
@@ -120,7 +124,7 @@ theorem exists_isScalarF (C : Ctx σ B JS JT ξ₀ θ ι) {χS χT : (AEF F E)ˣ
     rw [e1, map_mul, Module.End.mul_apply, hi.triv k.1 k1 k.2 k2 f h]
   have hof : ∀ f, IsThetaFunOF σ JS JT ξ₀ B.ψ f → of p f = of k f := fun f h => by
     rw [e2, map_mul, Module.End.mul_apply, hf.triv a.1 a1 a.2 a2 f h]
-  have hth := GlobalTheory.T.theta_function_heisenberg_invariant F E σ B C.good nS nT JS JT ξ₀
+  have hth := _root_.GlobalTheory.HeisThetaF.isThetaFunOF_heisOF F E σ B C.good nS nT JS JT ξ₀
   obtain ⟨c, hc, h⟩ := schur_norm C (of p * oi p * substF σ JS JT p⁻¹)
     (fun f h => hf.pres _ _ (hi.pres _ _ (R f h).1))
     (fun u f h => by
@@ -213,8 +217,8 @@ theorem real_data (C : Ctx σ B JS JT ξ₀ θ ι) (hs : CartF σ JS JT ξ₀ B 
       (∫ v, gaussV (HMF JS JT ξ₀ (tauB B)) s (mMF σ JS JT θ (g⁻¹, h⁻¹)) v) * ∏ v, tauB B v (b ⊗ₖ aᵀ - 1).det =
         r * (-s).det * ((∏ v, tauB B v (b ⊗ₖ aᵀ).det) * GlobalTheory.RealWeil.dP s (mMF σ JS JT θ (g, h))) := by
   obtain ⟨q1, q2⟩ := det_mMF C ha hb
-  have hH := GlobalTheory.T.hermitianFormRealCoordinateMatrix_hermitian_det_ne_zero F E σ B C.good nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ
-  have hU := GlobalTheory.T.realCoordinateAction_unitary_preserves_hermitianForm F E σ B C.good nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ θ C.inf ι C.chart (g⁻¹, h⁻¹)
+  have hH := _root_.GlobalTheory.RealWeilF.HMF_herm_det F E σ B C.good nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ
+  have hU := _root_.GlobalTheory.RealWeilF.mMF_unitary F E σ B C.good nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ θ C.inf ι C.chart (g⁻¹, h⁻¹)
   have c1 : s * mMF σ JS JT θ (g⁻¹, h⁻¹) = mMF σ JS JT θ (g⁻¹, h⁻¹) * s := by
     have := comm_inv (mMF σ JS JT θ) hcm
     rwa [Prod.inv_mk] at this
@@ -358,8 +362,8 @@ theorem datumEta : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
       ∀ η : (AF F ⊗[F] E)ˣ →* Circle, IsHeckeCharF η → ResEtaF η 1 → HasExp B.emb η (fun _ => 1) → UnramInert σ η →
         ∃ ω, IsWeilDatumOF σ JS JT (fun w : InfinitePlace F => (B.emb w).1) ξ₀ B.ψ (η ^ nS) (η ^ nT) ω := by
   intro F E _ _ _ _ _ σ B hB nS nT JS JT hS hT ξ₀ h0 hξ Λ hG hR hc w lam Om hO η h1 h2 h3 h4
-  obtain ⟨θ, hθ⟩ := (GlobalTheory.T.standardTraceAddChar_isStandardChar_of_admissibleCMBase F E σ B hB).2.1
-  obtain ⟨ι, hι⟩ := GlobalTheory.T.exists_realChart_adeleTensor_admissibleCMBase F E σ B hB θ hθ
+  obtain ⟨θ, hθ⟩ := (_root_.GlobalTheory.StdCharWeilDatum.isStdCharF_of_isGood F E σ B hB).2.1
+  obtain ⟨ι, hι⟩ := _root_.GlobalTheory.RealWeilF.CMChart.exists_chartF F E σ B hB θ hθ
   have C : Ctx σ B JS JT ξ₀ θ ι := ⟨hB, hS, hT, h0, hξ, hθ, hι⟩
   obtain ⟨ε, hε, hprod⟩ := eta_prod hB h1 h2 h3 h4 hO.good hO.sqrt
   obtain ⟨of, hf, hof⟩ := exists_fin C hO h1 h2 hε

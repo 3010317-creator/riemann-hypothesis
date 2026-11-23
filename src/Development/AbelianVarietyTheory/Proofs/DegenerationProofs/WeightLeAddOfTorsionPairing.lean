@@ -4,8 +4,12 @@ public import Mathlib.Analysis.Complex.Norm
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Mathlib.NumberTheory.Padics.RingHoms
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsBasisAdaptedLatticeSubspace
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FinrankLeOfWeightsUnipotentSymplecticStatement
+public import Mathlib.LinearAlgebra.BilinearForm.Properties
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FinrankLeOfWeightsUnipotentSymplectic
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsNilpotentSubOneOfConjPow
+public import Mathlib.LinearAlgebra.BilinearForm.TensorProduct
+public import Mathlib.LinearAlgebra.FreeModule.PID
+public import Mathlib.RingTheory.RootsOfUnity.EnoughRootsOfUnity
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -20,7 +24,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.LinearAlgebra.BilinearForm.TensorProduct
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -58,8 +61,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Mathlib.LinearAlgebra.FreeModule.PID
-public import Mathlib.RingTheory.RootsOfUnity.EnoughRootsOfUnity
 import Mathlib.Topology.Sheaves.Presheaf
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.CubicalStructures.CubeSymmetricSwapFirst
@@ -227,7 +228,7 @@ theorem finrank_le_ker_add (l : ℕ) [Fact l.Prime] {T : Type} [AddCommGroup T]
     induction j with
     | zero => intro t; rfl
     | succ j ih => intro t; rw [Function.iterate_succ_apply, Function.iterate_succ_apply, h, ih]
-  have main := GlobalTheory.T.finrank_le_of_weights_unipotent_symplectic ℚ_[l] V B' ⟨hleft, fun y hy => hleft y fun x => by
+  have main := _root_.GlobalTheory.SS.LinCore.finrank_le_of_weights ℚ_[l] V B' ⟨hleft, fun y hy => hleft y fun x => by
       rw [hsk' x y, hy x, neg_zero]⟩ hsk' S' Φ' q hq ?_ ?_ ?_ ?_
     (W.localized' ℚ_[l] (ℤ_[l])⁰ ι) P hP ?_ ?_
   · have h1 : finrank ℚ_[l] V = finrank ℤ_[l] T := Module.finrank_baseChange

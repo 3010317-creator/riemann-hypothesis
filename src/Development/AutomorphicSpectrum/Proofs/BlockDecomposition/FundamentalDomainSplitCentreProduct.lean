@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.T2SpaceAdelicGeneralLinearGroupNumberField
 public import GroundTheory.AutomorphicForms.Reduction
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AdelicGLNormOneSplitStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BaseChangeDefiniteUnitary
+public import GroundTheory.AutomorphicForms.ReductionMahler
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AdelicGLNormOneSplit
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -74,7 +76,7 @@ theorem splitCentre_mul_mul_swap (s t : ℝ) (d x : GA E a) :
 
 theorem exists_lattice_smul_mem_splitFd (ha : 0 < a) (g : GA E a) :
     ∃ l : latticeGL E a, l • g ∈ splitFd E a := by
-  obtain ⟨e, he⟩ := GlobalTheory.T.adelic_GL_norm_one_split E a ha
+  obtain ⟨e, he⟩ := _root_.GlobalTheory.CompanionTheory.SplitHomeo.exists_homeomorph E a ha
   obtain ⟨⟨x, t⟩, rfl⟩ := e.surjective g
   rw [he]
   obtain ⟨δ, hδ, -⟩ := RightCosetSpace.existsUnique_smul_mem_fundamentalDomain (rationalGLOne (K := E) (n := a)) x
@@ -94,7 +96,7 @@ theorem exists_lattice_smul_mem_splitFd (ha : 0 < a) (g : GA E a) :
 
 theorem eq_one_of_mul_mem_splitFd (ha : 0 < a) {l g : GA E a} (hl : l ∈ latticeGL E a) (hg : g ∈ splitFd E a)
     (h : l * g ∈ splitFd E a) : l = 1 := by
-  obtain ⟨e, he⟩ := GlobalTheory.T.adelic_GL_norm_one_split E a ha
+  obtain ⟨e, he⟩ := _root_.GlobalTheory.CompanionTheory.SplitHomeo.exists_homeomorph E a ha
   obtain ⟨γ, m, rfl⟩ := mem_latticeGL_iff.1 hl
   obtain ⟨⟨x, s⟩, ⟨hx, hs⟩, rfl⟩ := hg
   obtain ⟨⟨y, u⟩, ⟨hy, hu⟩, hyu⟩ := h
@@ -121,7 +123,7 @@ theorem eq_one_of_mul_mem_splitFd (ha : 0 < a) {l g : GA E a} (hl : l ∈ lattic
   rw [h8, zpow_zero, mul_one]
 
 theorem measurableSet_splitFd (ha : 0 < a) : MeasurableSet (splitFd E a) := by
-  obtain ⟨e, he⟩ := GlobalTheory.T.adelic_GL_norm_one_split E a ha
+  obtain ⟨e, he⟩ := _root_.GlobalTheory.CompanionTheory.SplitHomeo.exists_homeomorph E a ha
   have h : (fun p : normOneGL (K := E) (n := a) × ℝ => splitCentre E a p.2 * (p.1 : GA E a)) = e :=
     funext fun p => (he p.1 p.2).symm
   rw [splitFd, h]

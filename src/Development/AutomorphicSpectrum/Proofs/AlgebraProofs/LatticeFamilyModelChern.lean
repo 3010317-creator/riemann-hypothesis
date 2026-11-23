@@ -1,10 +1,15 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.IsLatticeFamily
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ChartRingsNoetherianFractionStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LatticeFamilyInjectiveModelFactsStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LatticeGoodBaseChangeStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LineLatticeFamilyModelStatement
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.InstFintypeSumElim
+public import Development.WeilBound.CoreStatements.HodgeTatePoints.HcptgenRing
+public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.XChartNoethFrac
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LatticeFamilyInjectiveModelFacts
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.LieLatticeData
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LatticeGoodBaseChange
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.FlagMinor
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.TrivFlagMod
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LineLatticeFamilyModel
 import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LocallyFreeFiniteProjectiveBaseChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -118,9 +123,9 @@ theorem main : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing
     · simp [(hχ τ).1]
     · simp [(hχ τ).2]
   have hbc := fun c (hc : mseg x c ≠ 0) =>
-    GlobalTheory.T.lattice_good_base_change (D c) (chartRing O (mseg x) c) p _ _ (hchar _) (hD.base c hc) (hG c hc)
-  have hfam := (GlobalTheory.T.lattice_family_injective_model_facts O Ω K ι x hinj p hp w χ φ D hD).2
-  obtain ⟨K', i1, i2, ι', i3, z, hz, hl⟩ := GlobalTheory.T.line_lattice_family_model O Ω K ι x d hx hfn (Sg × Fin n)
+    _root_.GlobalTheory.CompanionTheory.Ar.Num.LatticeGoodBaseChange.main (D c) (chartRing O (mseg x) c) p _ _ (hchar _) (hD.base c hc) (hG c hc)
+  have hfam := (_root_.GlobalTheory.CompanionTheory.Ar.Num.FamConstr.main O Ω K ι x hinj p hp w χ φ D hD).2
+  obtain ⟨K', i1, i2, ι', i3, z, hz, hl⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FlattenLines.main O Ω K ι x d hx hfn (Sg × Fin n)
     (fun j c => (D c).xId (fun a => algebraMap O Ω (χ j.1 a)) j.2) fun j =>
       ⟨((hfam j.1).2.1 j.2).1, fun c hc =>
         ⟨ne_bot (((hbc c hc).1 j.1).2.2.2 j.2),
@@ -128,7 +133,7 @@ theorem main : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing
   refine ⟨K', i1, i2, ι', i3, z, hz, fun τ i => ?_⟩
   obtain ⟨a, ha⟩ := hl (τ, i)
   refine ⟨1, a, one_ne_zero, fun c hc v => ?_⟩
-  obtain ⟨hc', hle⟩ := ((GlobalTheory.T.chart_rings_noetherian_fraction O Ω K ι x).2.2 K' ι' z).2 c hc
+  obtain ⟨hc', hle⟩ := ((_root_.PositivityTheory.Xgn.t_chart_noeth_frac O Ω K ι x).2.2 K' ι' z).2 c hc
   have h := (((hbc _ hc').2 Ω (chartRing O (mseg (joinCoord x z)) c) fun a ha => hle ha).2 τ).2.2 i
   rw [← ha c hc v]
   simp only [Algebra.algebraMap_self, RingHom.id_apply, Set.image_id'] at h

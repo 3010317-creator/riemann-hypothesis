@@ -4,11 +4,11 @@ public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermL
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsIntegralIff
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NcardImageOfLe
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AlgMem
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CongruentOneMatricesTransitiveNearHermitianStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIsometryNearIdentityCloseTuplesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIsometryTupleMatrixRightMulNearIdentityStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CongruentOneMatricesTransitiveNearHermitian
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIsometryNearIdentityCloseTuples
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIsometryTupleMatrixRightMulNearIdentity
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MatrixCongruentOneModUniformizerPowGroupAndOrbit
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsPrincipalIdealRingOfHenselian
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MatrixCongruentOneModUniformizerPowGroupAndOrbitStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -236,13 +236,13 @@ theorem exists_close (L : LocE F E) {ϖ : 𝒪[F]} (hϖ : Irreducible ϖ) {n : �
       ∃ g ∈ isomG L Hm, CongId L ϖ Λ N g ∧ ∃ A ∈ congK L ϖ m i,
         y + algebraMap F E ((ϖ : F) ^ M) • u = rmul (fun a => g (y a)) A := by
   have hpe := isUnit_pow (E := E) hϖ e
-  obtain ⟨N', hN'⟩ := GlobalTheory.T.exists_isometry_near_identity_close_tuples L ϖ hϖ Hm hH Λ hΛ m
+  obtain ⟨N', hN'⟩ := _root_.GlobalTheory.HL.CloseTuples.exists_isometry_close L ϖ hϖ Hm hH Λ hΛ m
     ((algebraMap F E ((ϖ : F) ^ e) * algebraMap F E ((ϖ : F) ^ e)) • Γ)
     (by rw [Matrix.det_smul]; exact ((hpe.mul hpe).pow _).mul hΓ) N
   have hi' : 1 ≤ N' + i := by omega
-  obtain ⟨j, hj⟩ := GlobalTheory.T.congruentOneMatrices_transitive_near_hermitian L ϖ hϖ m Γ hh hΓ (N' + i) hi'
-  obtain ⟨h1, hK', -⟩ := GlobalTheory.T.matrixCongruentOneModUniformizerPow_group_and_orbits L ϖ hϖ m (N' + i) hi'
-  obtain ⟨h2, hK, -⟩ := GlobalTheory.T.matrixCongruentOneModUniformizerPow_group_and_orbits L ϖ hϖ m i hi
+  obtain ⟨j, hj⟩ := _root_.GlobalTheory.CongTrans.congK_transitive L ϖ hϖ m Γ hh hΓ (N' + i) hi'
+  obtain ⟨h1, hK', -⟩ := _root_.GlobalTheory.CongGrp.congK_group L ϖ hϖ m (N' + i) hi'
+  obtain ⟨h2, hK, -⟩ := _root_.GlobalTheory.CongGrp.congK_group L ϖ hϖ m i hi
   refine ⟨N' + (j + e), fun y u hy hG hu => ?_⟩
   have hint : ∀ v ∈ Λ, ∀ w ∈ Λ, hf L Hm v w ∈ L.O := fun v hv w hw => (hΛ.2 w).2 hw v hv
   let D : Matrix (Fin m) (Fin m) E := Matrix.of fun a b =>
@@ -294,7 +294,7 @@ theorem exists_close (L : LocE F E) {ϖ : 𝒪[F]} (hϖ : Irreducible ϖ) {n : �
 
 theorem main : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] [CharZero F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] (L : LocE F E), ∀ (ϖ : 𝒪[F]), Irreducible ϖ → ∀ {n : ℕ} (Hm : Matrix (Fin n) (Fin n) E), IsHermND L Hm → ∀ Λs, IsSD L Hm Λs → ∀ Λ, IsSD L Hm Λ → ∀ (m : ℕ) (Γ : Matrix (Fin m) (Fin m) E), IsUnit Γ.det → ∀ N e : ℕ, ∃ i0 : ℕ, 1 ≤ i0 ∧ ∀ i ≥ i0, ∀ K : Subgroup ((Fin n → E) ≃ₗ[E] (Fin n → E)), K ≤ isomG L Hm ⊓ stabL L Λ → (∀ g ∈ isomG L Hm, CongId L ϖ Λ N g → g ∈ K) → ∀ x : Fin m → Fin n → E, (∀ a, algebraMap F E ((ϖ : F) ^ e) • x a ∈ Λ) → gramT L Hm x = Γ → IsCO (tupLat L Λs m) (thick L ϖ (torb K x) i) ∧ (∀ y ∈ torb K x, ∀ A ∈ congK L ϖ m i, cT L A * Γ * A = Γ → rmul y A ∈ torb K x) := by
   intro F _ _ _ _ _ E _ _ _ L ϖ hϖ n Hm hH Λs hΛs Λ hΛ m Γ hΓ N e
-  obtain ⟨i1, hi1⟩ := GlobalTheory.T.exists_isometry_tupleMatrixRightMul_near_identity L ϖ hϖ Hm hH Λ hΛ m Γ hΓ N e
+  obtain ⟨i1, hi1⟩ := _root_.GlobalTheory.HL.RStab.exists_isometry_rmul L ϖ hϖ Hm hH Λ hΛ m Γ hΓ N e
   refine ⟨i1 + 1, by omega, fun i hi K hK hKN x hx hG => ?_⟩
   have horb : ∀ y ∈ torb K x, (∀ a, algebraMap F E ((ϖ : F) ^ e) • y a ∈ Λ) ∧ gramT L Hm y = Γ ∧
       ∀ g ∈ K, (fun a => g (y a)) ∈ torb K x := by
@@ -317,7 +317,7 @@ theorem main : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [I
     ext a b
     exact (GlobalTheory.HL.Model.hf_symm L hH.1 _ _).symm
   obtain ⟨M, hM⟩ := exists_close L hϖ hH hΛ hh hΓ N e i (by omega)
-  obtain ⟨-, hC, -⟩ := GlobalTheory.T.matrixCongruentOneModUniformizerPow_group_and_orbits L ϖ hϖ m i (by omega)
+  obtain ⟨-, hC, -⟩ := _root_.GlobalTheory.CongGrp.congK_group L ϖ hϖ m i (by omega)
   let B : AddSubgroup (Fin m → Fin n → E) :=
     (tupLat L Λ m).map (DistribSMul.toAddMonoidHom _ (algebraMap F E ((ϖ : F) ^ M)))
   have hB : ∀ w : Fin m → Fin n → E, (∀ a, w a ∈ Λ) → algebraMap F E ((ϖ : F) ^ M) • w ∈ B :=

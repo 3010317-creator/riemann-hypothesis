@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
 public import Formalism.HermitianLattices.StatementMass
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EncardShortVectorsLeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsShortVectorIntegralHermitianLatticeRankOneStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EncardShortVectorsLe
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsShortVectorIntegralHermitianLatticeRankOne
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ImportsRest
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -126,7 +126,7 @@ theorem main : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCommG
     have hsub : primSp h L 1 n ⊆ (fun x : V => Submodule.span K {x}) ''
         {x : V | x ∈ L ∧ ∀ τ : K →+* ℂ, (τ (h x x)).re ≤ B} := by
       rintro U ⟨hU, hd⟩
-      obtain ⟨x, hx, hx0, hxB⟩ := GlobalTheory.T.exists_short_vector_integralHermitianLattice_rank_one K U (hRes h U) hK ⟨fun x y => hs.eq x y⟩
+      obtain ⟨x, hx, hx0, hxB⟩ := _root_.GlobalTheory.Mass.ShortVector.main K U (hRes h U) hK ⟨fun x y => hs.eq x y⟩
         (fun τ x hx => hp τ x (by simpa using hx)) hU (latIn U L)
         ⟨latIn_isFullLattice L hL.1 U, fun x hx y hy => hL.2 x hx y hy⟩
       rw [hd] at hxB
@@ -134,7 +134,7 @@ theorem main : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCommG
       refine Submodule.eq_of_le_of_finrank_eq ((Submodule.span_singleton_le_iff_mem _ _).2 x.2) ?_
       rw [hU, finrank_span_singleton (by simpa using hx0)]
     have h1 := (Set.encard_le_encard hsub).trans (Set.encard_image_le _ _)
-    refine le_trans (by exact_mod_cast h1) ((GlobalTheory.T.encard_shortVectors_le' K V h hK hs hp L hL B hB0).trans ?_)
+    refine le_trans (by exact_mod_cast h1) ((_root_.GlobalTheory.Mass.encard_shortVectors_le K V h hK hs hp L hL B hB0).trans ?_)
     exact ENNReal.ofReal_le_ofReal (real_bound _ hrd n _ _ hn Fintype.card_pos)
   · rw [Set.encard_le_one_iff]
     rintro U W ⟨hU, -⟩ ⟨hW, -⟩

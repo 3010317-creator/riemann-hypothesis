@@ -4,9 +4,10 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomolog
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BhattScholzeIntegral
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.RationalDualityOfAllCoefficients
 public import Formalism.SharpRestriction.LevelLetterCocycles.ElementDenominator
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BhattScholzeCoefficientsOfPadicIntLatticesStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LiftingStepTheoremTOfBhattScholzeFontaineStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalLiftingAdmittedHypothesesAllStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BhattScholzeCrystallineLattices
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BhattScholzeCoefficientsOfPadicIntLattices
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LiftingStepTheoremTOfBhattScholzeFontaine
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalLiftingAdmittedHypothesesAll
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,4 +55,4 @@ theorem GlobalTheory.InertiaEigenvalues.theoremT_all_records :
     ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW) (Cm : CmpOf D.loc D.locA HW F),
     ∀ C : ℕ, 40 ≤ C → ElementDenominator.Conclusion2 D C := by
   intro hBS hFon hBK hTD hEC D HW F Cm C hC
-  exact GlobalTheory.T.liftingStep_theoremT_of_bhattScholze_fontaine (GlobalTheory.T.bhattScholze_coefficients_of_padicInt_lattices hBS) hFon C hC D HW F (GlobalTheory.T.localLifting_admittedHypotheses_all hBK hTD hEC D HW F Cm)
+  exact _root_.GlobalTheory.TheoremTClosing.main (_root_.GlobalTheory.bhattScholze_coeff hBS) hFon C hC D HW F (_root_.GlobalTheory.AdmAllRecords.localLifting_admittedHypotheses_all_alt hBK hTD hEC D HW F Cm)

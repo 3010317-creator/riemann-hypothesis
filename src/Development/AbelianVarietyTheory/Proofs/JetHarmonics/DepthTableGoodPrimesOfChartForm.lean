@@ -3,8 +3,9 @@ module
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors.StChartF
 public import Development.AbelianVarietyTheory.Definitions.Jets.CmQuadraticFormEqAlternatingForm
 public import Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.DepthCond
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.AllGoodPrimeDepthDataExistProofStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DepthLeafGoodPrimesOfPointDataStatement
+public import Development.AbelianVarietyTheory.Definitions.Jets.DepthNumbersThresholdEq
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.AllGoodPrimeDepthDataExistProof
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DepthLeafGoodPrimesOfPointData
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,10 +51,10 @@ theorem leafDepthGood_of_chartForm : (∀ (p : ℕ) [Fact p.Prime], ReciprocityT
   RunTie T EX Tp hK O ι → C0 ≤ oc.C → LeafPage O → LeafSizes O → 10 ≤ Pm.CnW → 3 ≤ L.sc.x ^ (L.sc.ez / 5) → 3 ≤ L.sc.x → (D.R.k : ℝ) * L.sc.b' ≤ L.sc.b →
   DepthCond.ContentEqualsDatumContent Nm (numOf D L) ι → LeafDepthGood Nm O := by
   intro hUp
-  obtain ⟨C0, h⟩ := GlobalTheory.T.depthLeaf_goodPrimes_of_point_data
+  obtain ⟨C0, h⟩ := _root_.GlobalTheory.GoodDepth.leafGood_run
   refine ⟨C0, ?_⟩
   intro D L Pm Tp hK T hT EX _ K _ _ _ _ _ _ Bs Df S P _ _ oc O ι Nm hR
   exact h D L Pm Tp hK T hT EX K Bs Df S P oc O ι Nm hR
-    (fun j => GlobalTheory.T.allGoodPrimeDepthDataExist_proof hUp _ _ _ _ (T.Q.Xo (ι j)) T.Q.c)
+    (fun j => _root_.GlobalTheory.goodPrime_packages hUp _ _ _ _ (T.Q.Xo (ι j)) T.Q.c)
 
 end GlobalTheory

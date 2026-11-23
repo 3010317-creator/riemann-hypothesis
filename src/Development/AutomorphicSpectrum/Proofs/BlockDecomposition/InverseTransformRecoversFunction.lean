@@ -1,8 +1,8 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GaussTubeOfTubeGood
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExponentialFourierIntegralBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FourierInversionProdStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExponentialFourierIntegralBound
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FourierInversionProd
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -103,12 +103,12 @@ theorem inv_phi_eq : ∀ (X : Type) [NormedAddCommGroup X] [NormedSpace ℂ X] [
   have hl : ((pt x 0).1.re, (pt x 0).2.re) = x := by simp [pt]
   have hint2 : Integrable (fun t : ℝ × ℝ =>
       ∫ y : ℝ × ℝ, Complex.exp (-(Complex.I * ((rdot y t : ℝ) : ℂ))) • G (pt x y)) := by
-    have h0 := (GlobalTheory.T.exponential_fourier_integral_bound X (phi G x) (pt x 0) ε M' hε hphic (by rw [hl]; exact hM')).1
+    have h0 := (_root_.GlobalTheory.CompanionTheory.TubeFourier.integrable_and_norm_integral_le X (phi G x) (pt x 0) ε M' hε hphic (by rw [hl]; exact hM')).1
     refine h0.congr (Eventually.of_forall fun t => ?_)
     show Complex.exp (dot (pt x 0) t) • phi G x t =
       ∫ y : ℝ × ℝ, Complex.exp (-(Complex.I * ((rdot y t : ℝ) : ℂ))) • G (pt x y)
     rw [hdx, hat_eq_smul]
-  have key := GlobalTheory.T.fourier_inversion_real_plane X (fun y => G (pt x y)) hc hint hint2 y
+  have key := _root_.GlobalTheory.CompanionTheory.TubeFourier.fourier_inversion_prod X (fun y => G (pt x y)) hc hint hint2 y
   rw [key]
   unfold inv
   congr 1

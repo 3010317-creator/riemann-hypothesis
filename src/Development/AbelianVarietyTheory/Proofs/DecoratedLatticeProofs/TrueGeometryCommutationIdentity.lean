@@ -2,8 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.XiEqXiOffMul
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemCosetInOfRes
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.EntryAgree
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.CosInj
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistPrimeRationalCosetSameOrbitIffLevel
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FrsFBaseEqSelf
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistPrimeRationalCosetSameOrbitIffLevelStatement
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsMemberStepCharts
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -190,7 +192,7 @@ theorem orb_iff (hI : I.Ok)
   have hs : G.s + 1 + 1 = B.R.m := G.hs
   have hL := hI.idx_ok a
   rw [show B.R.m - 2 = G.s by omega] at hL
-  have h := GlobalTheory.T.twistPrime_rational_coset_sameOrbit_iff_level B.fields (B.primes X) B.R I.Ch I.sel I.S (I.tup a) (I.cst a) B.embLL P G.k _ G.s _ tw (I.idx a) I.glob hL
+  have h := _root_.GlobalTheory.TwBridge.LevOrb.sameOrb_iff_level B.fields (B.primes X) B.R I.Ch I.sel I.S (I.tup a) (I.cst a) B.embLL P G.k _ G.s _ tw (I.idx a) I.glob hL
     (b.get (by omega)) hQ e he z z'
   have e1 : levQ I a (G.s + 1) b = (I.idx a).levQ (G.s + 1) (b.get (by omega)) := by
     unfold levQ levQAt

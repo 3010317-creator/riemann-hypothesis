@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermitianFormUnitaryOneOne
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CompletedTensorDiscreteSeriesIrreducibleFormalDeStatement
+public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.ConvolutionSmoothL2
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CompletedTensorDiscreteSeriesIrreducibleFormalDe
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RightRegularRepUnitaryStronglyContinuous
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SelfAdjointEqAlgebraMapOfCommuteIrreducible
 import Mathlib.Algebra.Order.Floor.Extended
@@ -160,7 +161,7 @@ end Abstract
 theorem exists_orthonormal_frame : ∀ (B : RowsAut) (d : InfinitePlace B.I.F → ℝ), IsDSData B d → FiniteDimensional ℂ (B.I.eHom B.σs B.μf B.fund B.R B.Re) → B.I.eHom B.σs B.μf B.fund B.R B.Re ≤ B.I.HomS B.σs B.μf B.fund B.R → ∃ T : Fin B.D → (B.Hs →L[ℂ] B.I.L2 B.μf B.fund), (∀ i, T i ∈ B.I.eHom B.σs B.μf B.fund B.R B.Re) ∧ (∀ i u, ‖T i u‖ = ‖u‖) ∧ (∀ i j, i ≠ j → ∀ u u', ⟪T i u, T j u'⟫_ℂ = 0) ∧ Submodule.span ℂ (Set.range T) = B.I.eHom B.σs B.μf B.fund B.R B.Re := by
   intro B d hd hfin hle
   haveI := hfin
-  obtain ⟨hU, hI, -, hw, -⟩ := GlobalTheory.T.completedTensorDiscreteSeries_irreducible_formalDegree B d hd
+  obtain ⟨hU, hI, -, hw, -⟩ := _root_.GlobalTheory.Dec.tensorRep B d hd
   obtain ⟨h1, hmul, hnorm, -⟩ := hU
   let σ : B.I.Ginf →* (B.Hs →L[ℂ] B.Hs) :=
     { toFun := B.σs, map_one' := h1, map_mul' := fun a b => hmul a b }

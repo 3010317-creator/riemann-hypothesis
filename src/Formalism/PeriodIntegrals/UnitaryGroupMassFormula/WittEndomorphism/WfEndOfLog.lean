@@ -3,7 +3,8 @@ module
 public import Formalism.PeriodIntegrals.InvSerSub
 public import Formalism.PeriodIntegrals.W2pair
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.WfRing
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.WfSubst
+public import Formalism.PeriodIntegrals.WfSubst
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.WittSubstitution.CoeffMapMem
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.WittEndomorphism.FlogConstantCoeff
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -48,6 +49,6 @@ import Mathlib.Topology.Sheaves.Init
 
 namespace PI.WfEndProof
 
-theorem wfEnd_of_log (hL : WfLog) : WfEnd := wfEnd_of witt_ring_structure witt_substitution hL
+theorem wfEnd_of_log (hL : WfLog) : WfEnd := wfEnd_of witt_ring_structure _root_.PI.WfSubstProof.wfSubst hL
 
 end PI.WfEndProof

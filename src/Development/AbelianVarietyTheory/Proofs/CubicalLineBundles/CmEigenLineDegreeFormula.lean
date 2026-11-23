@@ -2,17 +2,19 @@ module
 
 public import Development.AbelianVarietyTheory.Statements.PrincipalLattices.ConclusionsAtIdentity
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CmCurveBaseChangeComp
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.DegreeLieLatticesCmTripleBaseChangeStatement
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.DegreeLieLatticesCmTripleBaseChange
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.EllPullExistsOAct
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsCmEllipticCurveIntegersWithPeriodStatement
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.ExistsIsThetaDegOfIsLocalModel
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsCmEllipticCurveIntegersWithPeriod
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsPullback
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsTensorDecompositionPureTypeCmTripleStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsTensorDecompositionPureTypeCmTriple
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueExtendRingOfIntegersHom
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.HasPeriodOfEllMap
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.NonemptyPolAVGenericFibreWithLieBasis
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.TwoMulDegreeEigenLatticeTensorRankOne
 import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.HasTypeBaseChange
 import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LinearIndependentOfIsLieBasis
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.NonemptyPolAVGenericFibreWithLieBasis
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.TwoMulDegreeEigenLatticeTensorRankOneStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -88,7 +90,7 @@ theorem degSt : CMCurve → ThetaUnifAV → Out.Laws → HomExtDvr → DegSt := 
   have hρc : σ (ρ : K) ^ 2 = -(H.d : ℂ) := by
     have e := congrArg (fun a : 𝓞 K => σ (a : K)) hρ
     simpa using e
-  obtain ⟨M, _, ω, C, x, hωρ, hprin, hper, hx⟩ := GlobalTheory.T.exists_cmEllipticCurve_integers_with_period hC hU hL hX E H χ hχ (σ (ρ : K)) hρc
+  obtain ⟨M, _, ω, C, x, hωρ, hprin, hper, hx⟩ := _root_.GlobalTheory.CM.EllExists.exists_ell hC hU hL hX E H χ hχ (σ (ρ : K)) hρc
   obtain ⟨k, _, j, i, hj, hi⟩ := exists_compositum K σ M
 
   obtain ⟨C', φC, hCC'⟩ := exists_ellMap hB E H (𝓞 M) ω C (𝓞 k) (RingOfIntegers.mapRingHom i)
@@ -118,7 +120,7 @@ theorem degSt : CMCurve → ThetaUnifAV → Out.Laws → HomExtDvr → DegSt := 
     rw [e2]
     exact hωρ.symm
   obtain ⟨k₁, _, hk, ω₁, C₁, φ₁, T₁, m₁, D, ε, hD, hE1, hpq, hKF, hpos, hten⟩ :=
-    GlobalTheory.T.exists_tensor_decomposition_pure_type_cm_triple hU hL hX E H k (RingOfIntegers.mapRingHom i ω) C' T' 1 hprin' (by rw [← hρω]; exact htype')
+    _root_.GlobalTheory.CM.Recog.exists_isTen_of_hasType hU hL hX E H k (RingOfIntegers.mapRingHom i ω) C' T' 1 hprin' (by rw [← hρω]; exact htype')
   have hper₁ : C₁.HasPeriod x :=
     hasPeriod_of_ellMap hB E H k k₁ (IntermediateField.inclusion hk).toRingHom _ ω₁ C' C₁ φ₁ x hE1 hper'
   have hsp₁ : Splits E k₁ :=
@@ -129,8 +131,8 @@ theorem degSt : CMCurve → ThetaUnifAV → Out.Laws → HomExtDvr → DegSt := 
   obtain ⟨⟨h', hh'⟩, -⟩ := LieMetric.exists_unique_isHerm hU hL k T'.pol F'
   obtain ⟨⟨h₁, hh₁⟩, -⟩ := LieMetric.exists_unique_isHerm hU hL k₁ T₁.pol F₁
 
-  have d1 := (GlobalTheory.T.degree_lieLattices_cmTriple_baseChange hU hL E H K k j T T' mT F F' h h' hh hh').2 τ
-  have d2 := (GlobalTheory.T.degree_lieLattices_cmTriple_baseChange hU hL E H k k₁ (IntermediateField.inclusion hk).toRingHom T' T₁ m₁ F' F₁ h' h₁
+  have d1 := (_root_.GlobalTheory.CM.LieBaseChange.deg_lieLat_eigLat_baseChange hU hL E H K k j T T' mT F F' h h' hh hh').2 τ
+  have d2 := (_root_.GlobalTheory.CM.LieBaseChange.deg_lieLat_eigLat_baseChange hU hL E H k k₁ (IntermediateField.inclusion hk).toRingHom T' T₁ m₁ F' F₁ h' h₁
     hh' hh₁).2 ((RingOfIntegers.mapRingHom j).comp τ)
 
   have h2 : 2 * τ H.w0 = 1 + ρ := by
@@ -149,7 +151,7 @@ theorem degSt : CMCurve → ThetaUnifAV → Out.Laws → HomExtDvr → DegSt := 
     simp only [RingHom.comp_apply]
     rw [h4]
     exact hE1.1
-  have key := GlobalTheory.T.two_mul_degree_eigenLattice_tensor_rankOne hU hL E H k₁ ω₁ C₁ D ε hD T₁ x hsp₁ hpq hKF hpos hten hper₁ F₁ h₁ hh₁ _ hw
+  have key := _root_.GlobalTheory.CM.TensorDeg.two_mul_deg_eigLat hU hL E H k₁ ω₁ C₁ D ε hD T₁ x hsp₁ hpq hKF hpos hten hper₁ F₁ h₁ hh₁ _ hw
 
   have hd : (0 : ℝ) < H.d := by exact_mod_cast Nat.pos_of_ne_zero (NeZero.ne _)
   have hrd : 0 < NumberField.rootDiscr E := by

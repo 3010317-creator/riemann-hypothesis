@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.MatrixMeasurableSpace
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsCutoffOfAddCharTranslationInvariantFunctioStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralLastFactorSliceMemSchwartzBruhatStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchwartzBruhatFunctionalZeroOfFibreIntegralZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FourierTransformInversionLocalFieldPi
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsCutoffOfAddCharTranslationInvariantFunctio
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralLastFactorSliceMemSchwartzBruhat
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchwartzBruhatFunctionalZeroOfFibreIntegralZero
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSchwartzBruhatConvolutionLocalFieldPower
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -81,7 +82,7 @@ theorem kernel : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] 
     refine ⟨s, fun t ht y => ?_⟩
     have := hs ht y
     simpa [sub_eq_add_neg] using this
-  obtain ⟨Φ', hΦ', hl⟩ := GlobalTheory.T.exists_cutoff_of_addChar_translation_invariant_functional k ψ hψc hψ1 I₀ I₁ I₂ M l h1 D s
+  obtain ⟨Φ', hΦ', hl⟩ := _root_.GlobalTheory.CharCutoff.exists_cutoff_of_char_invariant k ψ hψc hψ1 I₀ I₁ I₂ M l h1 D s
   have hz : ∀ x₀ x₁, ∫ a, Φ'.1 (x₀, x₁, a) ∂(Measure.pi fun _ => ν) = 0 := by
     intro x₀ x₁
     simp_rw [hΦ']
@@ -92,7 +93,7 @@ theorem kernel : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] 
       exact hD x₀
     · simp [Set.indicator_of_notMem hx]
   rw [hl]
-  exact GlobalTheory.T.schwartzBruhat_functional_zero_of_fibre_integral_zero k ν hν I₀ I₁ I₂ M l h2 Φ' hz
+  exact _root_.GlobalTheory.SplitWeil.FourierPi.map_eq_zero_of_translation_invariant_of_fibre_integral_eq_zero k ν hν I₀ I₁ I₂ M l h2 Φ' hz
 
 theorem coinvariants : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] [MeasurableSpace k] [BorelSpace k] (ψ : AddChar k Circle) (ν : Measure k), Continuous ψ → ψ ≠ 1 → ν.IsAddHaarMeasure → ∀ (I₀ I₁ I₂ : Type) [Fintype I₀] [Fintype I₁] [Fintype I₂] (M : Type) [AddCommGroup M] [Module ℂ M] (l : SB ((I₀ → k) × (I₁ → k) × (I₂ → k)) →ₗ[ℂ] M), (∀ (b : I₁ → k) (Φ Φ' : SB ((I₀ → k) × (I₁ → k) × (I₂ → k))), (∀ x, Φ'.1 x = (ψ (b ⬝ᵥ x.2.1) : ℂ) * Φ.1 x) → l Φ' = l Φ) → (∀ (a : I₂ → k) (Φ Φ' : SB ((I₀ → k) × (I₁ → k) × (I₂ → k))), (∀ x, Φ'.1 x = Φ.1 (x + (0, 0, a))) → l Φ' = l Φ) → ∃! l₀ : SB (I₀ → k) →ₗ[ℂ] M, ∀ Φ : SB ((I₀ → k) × (I₁ → k) × (I₂ → k)), ∃ Ψ : SB (I₀ → k), (∀ x, Ψ.1 x = ∫ a, Φ.1 (x, 0, a) ∂(Measure.pi fun _ => ν)) ∧ l Φ = l₀ Ψ := by
   intro k _ _ _ _ _ _ ψ ν hψc hψ1 hν I₀ I₁ I₂ _ _ _ M _ _ l h1 h2
@@ -144,8 +145,8 @@ theorem coinvariants : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpa
     simp only [Set.indicator_of_mem h0, one_mul]
     rw [integral_const_mul, integral_indicator_const _ (isOpen_box _).measurableSet]
     rw [← hvol, Complex.real_smul, mul_inv_cancel₀ (by exact_mod_cast hvol0), mul_one]
-  refine ⟨l ∘ₗ σ, fun Φ => ⟨⟨_, GlobalTheory.T.integral_last_factor_slice_mem_schwartzBruhat k ν I₀ I₁ I₂ Φ⟩, fun x => rfl, ?_⟩, ?_⟩
-  · set Ψ : SB (I₀ → k) := ⟨_, GlobalTheory.T.integral_last_factor_slice_mem_schwartzBruhat k ν I₀ I₁ I₂ Φ⟩
+  refine ⟨l ∘ₗ σ, fun Φ => ⟨⟨_, _root_.GlobalTheory.SliceIntegral.integral_slice_mem_SB k ν I₀ I₁ I₂ Φ⟩, fun x => rfl, ?_⟩, ?_⟩
+  · set Ψ : SB (I₀ → k) := ⟨_, _root_.GlobalTheory.SliceIntegral.integral_slice_mem_SB k ν I₀ I₁ I₂ Φ⟩
     have hk := kernel k ψ ν hψc hψ1 hν I₀ I₁ I₂ M l h1 h2 (Φ - σ Ψ) (fun x₀ => by
       simp only [Submodule.coe_sub, Pi.sub_apply]
       rw [integral_sub (hInt Φ x₀) (hInt (σ Ψ) x₀), hσi]

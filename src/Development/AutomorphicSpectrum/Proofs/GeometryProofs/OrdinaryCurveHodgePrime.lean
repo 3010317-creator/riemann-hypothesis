@@ -8,18 +8,21 @@ public import Development.AutomorphicSpectrum.PublishedTheorems.Algebra₂.Zarhi
 public import Development.AutomorphicSpectrum.Statements.AlgebraStatements.HodgeTateDatumStatement
 public import Development.AutomorphicSpectrum.Statements.AlgebraStatements.OrdinaryCurveStatement
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.AbelianFactorTightFieldActionStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HodgeKernelImageLatticeStatement
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.LieLatticeData
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HodgeKernelImageLattice
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HopfOrderLatticeBase
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LatticeBaseChangeLargerRingHoldsStatement
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LatticeBaseChangeLargerRingHolds
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.MemFirstLatticeIff
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.QuotientZarhinHodgeTateSubquotientStatement
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ValMulLeOfCyclicKer
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyModelHodgeRelayStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyModelPrimeTotalStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyPrimeGlobalRelayStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyPrimeHodgeEstimateStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyPrimeHodgeTotalStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ChartDThSqIdealMemAndSmulMemAndEigMemSqIdealStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FromNAdd
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyModelHodgeRelay
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyModelPrimeTotal
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.StepOrderRes
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyPrimeGlobalRelay
+public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.TestLiftExists
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyPrimeHodgeTotal
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ChartDThSqIdealMemAndSmulMemAndEigMemSqIdeal
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.OrdinaryCurveModelRelayStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -62,7 +65,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.StepOrderRes
 import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.CompactGapsGE
 
 @[expose] public section
@@ -141,15 +143,15 @@ theorem testFacts (hF : GlobalTheory.CompanionTheory.Ar.HT.FarguesHodgeTate) (hQ
       · simp only [ha, if_false]; exact one_mem _
   have hBase' : ((chartD e b pq sc w P i).bc RC).Base RC p (algebraMap O C w) := by
     rw [hw]
-    exact (GlobalTheory.T.lattice_base_change_larger_ring_holds (chartD e b pq sc w P i) (CR O y c') p (algebraMap O Ω w) _ hcd hBase C RC hRC).2
+    exact (_root_.GlobalTheory.CompanionTheory.Ar.Num.lattice_base_change_larger_ring (chartD e b pq sc w P i) (CR O y c') p (algebraMap O Ω w) _ hcd hBase C RC hRC).2
   have hw0 : algebraMap O C w ≠ 0 := by
     intro h0
     have e1 := congrArg (algebraMap O C) hup
     rw [map_pow, h0, zero_pow (by omega), map_mul, map_natCast] at e1
     exact mul_ne_zero (hu.map (algebraMap O C)).ne_zero hpC e1.symm
-  obtain ⟨AA, AW, hAA, hAW, hM, hstab, hFS⟩ := GlobalTheory.T.arith_variety_prime_global_relay E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hAr hpq p hpS hfree hp2 hdisc b hb φ hφ A m hpm O t₀ Sg e φ' F pq sc w σ hOrb hSec G c' hc' P i hseq hBase C RC hT χ hχ
-  obtain ⟨hAb, hTi⟩ := GlobalTheory.T.arith_variety_model_hodge_relay hH hOC E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hAr hpq p hpS hfree hp2 hdisc b hb φ hφ A m hpm O t₀ Sg e φ' F pq sc w σ hOrb hSec G c' hc' P i hseq hBase C RC hT χ hχ v hv hvp
-  obtain ⟨σ', ee, hfund, hχσ, hσφ⟩ := GlobalTheory.T.arith_variety_prime_hodge_total E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hAr hpq p hpS hfree hp2 hdisc b hb φ hφ A m hpm O t₀ Sg e φ' F pq sc w σ hOrb hSec G c' hc' P i hseq hBase C RC hT χ hχ
+  obtain ⟨AA, AW, hAA, hAW, hM, hstab, hFS⟩ := _root_.GlobalTheory.CompanionTheory.Relay.arith_variety_prime_global_relay E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hAr hpq p hpS hfree hp2 hdisc b hb φ hφ A m hpm O t₀ Sg e φ' F pq sc w σ hOrb hSec G c' hc' P i hseq hBase C RC hT χ hχ
+  obtain ⟨hAb, hTi⟩ := _root_.GlobalTheory.CompanionTheory.Relay.arith_variety_model_hodge_relay hH hOC E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hAr hpq p hpS hfree hp2 hdisc b hb φ hφ A m hpm O t₀ Sg e φ' F pq sc w σ hOrb hSec G c' hc' P i hseq hBase C RC hT χ hχ v hv hvp
+  obtain ⟨σ', ee, hfund, hχσ, hσφ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.TestPt.lifts_eq_frobenius_powers E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hAr hpq p hpS hfree hp2 hdisc b hb φ hφ A m hpm O t₀ Sg e φ' F pq sc w σ hOrb hSec G c' hc' P i hseq hBase C RC hT χ hχ
   have hptors : ∀ x : TestPt.NAdd E (D.p + D.q) p, p • x = 0 := by
     intro x
     ext k
@@ -168,19 +170,19 @@ theorem testFacts (hF : GlobalTheory.CompanionTheory.Ar.HT.FarguesHodgeTate) (hQ
     rw [hAW]
     rw [hAA] at h1
     exact h1
-  have hTh := GlobalTheory.T.chartD_th_sqIdeal_mem_and_smul_mem_and_eig_mem_sqIdeal E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hAr hpq p hpS hfree hp2 hdisc b hb φ hφ A m hpm O t₀ Sg e φ' F pq sc w σ hOrb hSec G c' hc' P i hseq hBase C RC hT χ hχ σ' ee hχσ
+  have hTh := _root_.GlobalTheory.CompanionTheory.Relay.chartD_th_sqIdeal_mem_and_smul_mem_and_eig_mem_sqIdeal E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hAr hpq p hpS hfree hp2 hdisc b hb φ hφ A m hpm O t₀ Sg e φ' F pq sc w σ hOrb hSec G c' hc' P i hseq hBase C RC hT χ hχ σ' ee hχσ
   have hTh' : ∀ τ, (∀ g ∈ ReciprocityTheory.PGsh.Up.sqIdeal (ReciprocityTheory.PGsh.L2.augIdeal AW.carrier), (g, 0) ∈ ((chartD e b pq sc w P i).bc RC).Th τ) ∧ (∀ (a : F) g m, (g, m) ∈ ((chartD e b pq sc w P i).bc RC).Th τ → ((fun x => g (a • x)), (fun (τ : Sg) (a : F) => χ τ a) τ a • m) ∈ ((chartD e b pq sc w P i).bc RC).Th τ) ∧ ∀ g ∈ GlobalTheory.CompanionTheory.Ar.GR.eig AW.carrier (σ' ^ p ^ ee τ), (g, 0) ∈ ((chartD e b pq sc w P i).bc RC).Th τ → g ∈ ReciprocityTheory.PGsh.Up.sqIdeal (ReciprocityTheory.PGsh.L2.augIdeal AW.carrier) := by
     rw [hAW]
     exact hTh
-  have hleaf := GlobalTheory.T.arith_variety_model_prime_total hZ hH E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hAr hpq p hpS hfree hp2 hdisc b hb φ hφ A m hpm O t₀ Sg e φ' F pq sc w σ hOrb hSec G c' hc' P i hseq hBase C RC hT χ hχ v hv hvp hAb
+  have hleaf := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.TestPt.w_mul_forms_le_af hZ hH E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hAr hpq p hpS hfree hp2 hdisc b hb φ hφ A m hpm O t₀ Sg e φ' F pq sc w σ hOrb hSec G c' hc' P i hseq hBase C RC hT χ hχ v hv hvp hAb
   have haf : ∀ τ, ((chartD e b pq sc w P i).bc RC).af RC p (fun a => χ τ a) ≤ stdLat RC _ := fun τ =>
     af_le_stdLat RC h01 _ p hBase'.M_le _ (map_zero (χ τ)) (map_one (χ τ))
   have hseq' : ∀ τ, ((chartD e b pq sc w P i).bc RC).imH RC p τ (fun a => χ τ a) = ((chartD e b pq sc w P i).bc RC).om τ ∧
       ((chartD e b pq sc w P i).bc RC).kerH RC p τ (fun a => χ τ a) = divLat (algebraMap O C w) (((chartD e b pq sc w P i).bc RC).lie τ) := by
     intro τ
-    obtain ⟨hbb, h1, h2, h3, h4, h5, h6, h7⟩ := GlobalTheory.T.arith_variety_prime_hodge_estimate E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hAr hpq p hpS hfree hp2 hdisc b hb φ hφ A m hpm O t₀ Sg e φ' F pq sc w σ hOrb hSec G c' hc' P i hseq hBase C RC hT χ hχ τ
+    obtain ⟨hbb, h1, h2, h3, h4, h5, h6, h7⟩ := _root_.PositivityTheory.Xgn.test_lift_exists E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hAr hpq p hpS hfree hp2 hdisc b hb φ hφ A m hpm O t₀ Sg e φ' F pq sc w σ hOrb hSec G c' hc' P i hseq hBase C RC hT χ hχ τ
     obtain ⟨g1, g2⟩ := GlobalTheory.T.ordinary_curve_model_relay hF hQ hZ hH hOC E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hAr hpq p hpS hfree hp2 hdisc b hb φ hφ A m hpm O t₀ Sg e φ' F pq sc w σ hOrb hSec G c' hc' P i hseq hBase C RC hT χ hχ v hv hvp τ hbb h1 h2 h4 h7
-    exact GlobalTheory.T.hodge_kernel_image_lattice RC p ((chartD e b pq sc w P i).bc RC) (algebraMap O C w) (fun (τ : Sg) (a : F) => χ τ a) τ hw0 (hleaf τ) (haf τ)
+    exact _root_.GlobalTheory.CompanionTheory.Ar.PtSeq.pt_seq_lin RC p ((chartD e b pq sc w P i).bc RC) (algebraMap O C w) (fun (τ : Sg) (a : F) => χ τ a) τ hw0 (hleaf τ) (haf τ)
       _ hbb h1 h2 h3 h4 g1 g2 h5 h6
   exact ⟨hleaf, fun τ => (hseq' τ).1, fun τ => (hseq' τ).2,
     GlobalTheory.CompanionTheory.Ar.Num.PtDx.main RC v hv p hvp ((chartD e b pq sc w P i).bc RC) (algebraMap O C w) (fun (τ : Sg) (a : F) => χ τ a) φ' hBase' AW hM hFS σ' hfund hFlag ee hχσ hσφ hTh',

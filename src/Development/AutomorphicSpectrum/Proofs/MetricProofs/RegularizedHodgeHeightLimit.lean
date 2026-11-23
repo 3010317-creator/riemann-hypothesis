@@ -1,9 +1,13 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PositionPot
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MixedIntegralModelFormulaStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularChartDataPropertiesStatement
+public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.StatementsPtsBddConv
+public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FrameDefinitions.Weights
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MixedIntegralModelFormula
+public import GroundTheory.HeightsAndTheta.Heights.Regularisation.Statements
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularChartDataProperties
 public import GroundTheory.HeightsAndTheta.Heights.ElementarySymmetric.PNbarLeviChartReg
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterGood
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +53,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterGood
 import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AutomorphicSpectrum.Definitions.MetricPeriods.ExistsIntSmulIsAdicIntegralInTensorBasis
 import Mathlib.CategoryTheory.Monoidal.Cartesian.Basic
@@ -178,7 +181,7 @@ end Vertical
 
 theorem ptsIntegral_word_eq_mInt : ∀ (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (II : IntersectionSystem) (Ψ : Type) [Fintype Ψ] (Ω : Type) [Field Ω] [Algebra ℚ Ω] (W : Ψ → Type) [∀ τ, AddCommGroup (W τ)] [∀ τ, Module Ω (W τ)] (D : ComponentData II Ψ K J Ω W) (Hd : HodgeData D) (M : XModel D) (S : LogLogRegularisationSetting M D.Xo (muLine Hd)) (B : ℕ) (Nb Bm : HermLine J) (Pn : ReciprocityTheory.AnForm.M.LocPot M.Xc) (i : ℕ) (f G₀ : M.Xc → ℝ) (g : ((Σ k, J k) → ℂ) → ℝ), ReciprocityTheory.AnForm.M.IsPotential M.atlas Pn → (∀ x, ∀ y₀ ∈ (Pn).U x ∩ Set.univ, ∃ U : Set M.Xc, IsOpen U ∧ y₀ ∈ U ∧ U ⊆ (Pn).U x ∩ Set.univ ∧ ∃ s : M.Xc → (Σ k, J k) → ℂ, (∀ y' ∈ U, s y' ∈ mcPts (mCoordIdeal D.y) ∧ M.proj (s y') = y') ∧ (∀ p, M.atlas.HoloOn U fun y' => s y' p) ∧ ∃ G : M.Xc → ℂ, M.atlas.HoloOn U G ∧ ∀ y' ∈ U, (Pn).φ x y' - (fun z => Real.log (Nb.h z)) (s y') = (G y').re) → M.atlas.SmoothOn S.R.Yo f → (∀ z ∈ mcPts (mCoordIdeal D.y), M.proj z ∈ S.R.Yo → Real.log (Bm.h z) = Real.log (S.ref.h z) + f (M.proj z) + ∑ p ∈ D.SB B, Real.log (D.vertFactor p z)) → (∀ z ∈ mcPts (mCoordIdeal D.y), M.proj z ∈ S.R.Yo → g z = G₀ (M.proj z)) → (∀ j, MeasureTheory.AEStronglyMeasurable (G₀ ∘ (M.atlas.chart j).symm) (MeasureTheory.volume.restrict (M.atlas.chart j).target)) → ReciprocityTheory.AnForm.M.MIntegrable M.atlas (positionPot S.R.th Pn f i) G₀ → ptsIntegral (mCoordIdeal D.y) (pot fun j : Fin D.n => if (j : ℕ) < i then Bm else Nb) g = ReciprocityTheory.AnForm.M.mInt M.atlas (positionPot S.R.th Pn f i) G₀ := by
   intro K _ J _ II Ψ _ Ω _ _ W _ _ D Hd M S B Nb Bm Pn i f G₀ g hPot hPn hf hBm hg hG₀ hInt
-  obtain ⟨hYo, hnull, -, -⟩ := GlobalTheory.T.regular_chart_data_properties D.n M.Xc M.atlas S.R
+  obtain ⟨hYo, hnull, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Giv.regData_open_part D.n M.Xc M.atlas S.R
   have hex : ∃ Q : (((k : K) → J k) → ℂ) →ₗ[ℂ] (Fin (D.n + 1) → ℂ), IsGoodProj (mCoordIdeal D.y) Q :=
     goodProjExists K J _ D.n D.arith
   have hnull' : ∀ j, volume ((M.atlas.chart j).target ∩ (M.atlas.chart j).symm ⁻¹' (S.R.Yoᶜ ∪ ∅)) = 0 := by
@@ -240,7 +243,7 @@ theorem ptsIntegral_word_eq_mInt : ∀ (K : Type) [Fintype K] (J : K → Type) [
       exact ⟨U ∩ S.R.Yo, hUo.inter hYo, ⟨hyU', hyY⟩, fun y hy => ⟨hUs hy.1, hy.2⟩, s,
         fun y hy => hs y hy.1, fun p => holoOn_mono _ (hh p) Set.inter_subset_left, G,
         holoOn_mono _ hG Set.inter_subset_left, fun y hy => hre y hy.1⟩
-  have hmain := GlobalTheory.T.mixed_integral_model_formula K J (mCoordIdeal D.y) D.n M hex.choose S.R.Yo ∅ ∅ (fun _ => 1)
+  have hmain := _root_.GlobalTheory.CompanionTheory.Ar.Giv.push_chart_integrals K J (mCoordIdeal D.y) D.n M hex.choose S.R.Yo ∅ ∅ (fun _ => 1)
     (fun j : Fin D.n => if (j : ℕ) < i then Bm else Nb) (positionPot S.R.th Pn f i) g G₀ D.arith hex.choose_spec
     hYo hnull' hN hsm hloc (fun z hz _ hY _ => hg z hz hY) hG₀
   have h := (hmain.2.2 hInt).2

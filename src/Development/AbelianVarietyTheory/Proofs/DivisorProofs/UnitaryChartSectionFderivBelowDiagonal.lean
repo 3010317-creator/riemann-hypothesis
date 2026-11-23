@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemDomOfOrth
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContDiffOnGramSchmidtUpperTriangularFactorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryChartSectionFrameEntriesHasStrictFDerivAtStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContDiffOnGramSchmidtUpperTriangularFactor
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryChartSectionFrameEntriesHasStrictFDerivAt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,7 +65,7 @@ theorem gsB_differentiableAt (X : Data E r) {x : Frame X.Ψ r} (hx : IsOrth X x)
   obtain ⟨R, hR, hball⟩ := exists_ball X hx
   have hs : {w | cpt X x w ∈ X.dom} ∈ nhds (0 : V (nd X)) :=
     Filter.mem_of_superset (Metric.ball_mem_nhds 0 hR) (fun w hw => hball w hw)
-  exact ((GlobalTheory.T.contDiffOn_gramSchmidtUpperTriangularFactor X hx τ a b).contDiffAt hs).differentiableAt (by simp)
+  exact ((_root_.GlobalTheory.SUChartSection.GSSmooth.gsB_contDiffOn X hx τ a b).contDiffAt hs).differentiableAt (by simp)
 
 theorem nmat_differentiableAt (X : Data E r) (τ : X.Ψ) (a b : Fin r) :
     DifferentiableAt ℝ (fun w : V (nd X) => nmat X w τ a b) 0 :=
@@ -82,7 +82,7 @@ theorem gsB_zero_apply (X : Data E r) (τ : X.Ψ) (a b : Fin r) :
 
 theorem dY_lower (X : Data E r) {x : Frame X.Ψ r} (hx : IsOrth X x) (z : V (nd X)) (τ : X.Ψ)
     (a b : Fin r) (hba : b < a) : dY X z τ a b = nmat X z τ a b := by
-  have hS := (GlobalTheory.T.unitaryChartSectionFrameEntries_hasStrictFDerivAt X hx).hasFDerivAt
+  have hS := (_root_.GlobalTheory.SUChartSection.yF_hasStrictFDerivAt X hx).hasFDerivAt
   have h1 := hasFDerivAt_pi'.1 hS τ
   have h2 := hasFDerivAt_pi'.1 h1 a
   have h3 := hasFDerivAt_pi'.1 h2 b

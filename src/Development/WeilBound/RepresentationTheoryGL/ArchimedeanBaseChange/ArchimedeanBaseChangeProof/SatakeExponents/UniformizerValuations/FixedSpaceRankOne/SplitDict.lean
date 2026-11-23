@@ -1,7 +1,7 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.SetupEig
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SplitDictionaryHoldsStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SplitDictionaryHolds
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -43,6 +43,6 @@ namespace PositivityTheory.Rg.BcB.F.Eig.CSD
 
 open PositivityTheory.Rg.BcB.F.Eig
 
-theorem splitDict : SplitDict := GlobalTheory.T.split_dictionary_holds
+theorem splitDict : SplitDict := _root_.GlobalTheory.CompanionTheory.SplitPlace.splitDict
 
 end PositivityTheory.Rg.BcB.F.Eig.CSD

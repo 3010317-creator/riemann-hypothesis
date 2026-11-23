@@ -2,7 +2,8 @@ module
 
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.ModelDer
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.ContinuousTorepK
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.PolyCoef
+public import Formalism.PeriodIntegrals.WeylForU
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.CompactGroupIntegrability.IsPositiveDefiniteMatrixCoefficientOfMemAlgA
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -167,7 +168,7 @@ theorem fh_coef (τ : KG (fun _ : Fin k => true) →* unitary (V →L[ℂ] V)) (
     ∃ L : Matrix (Fin k) (Fin k) ℂ →ₗ[ℂ] ℂ, ∀ X, inK (fun _ : Fin k => true) X →
       inner ℂ w (derOp (fun _ : Fin k => true) τ X v) = L X := by
   classical
-  obtain ⟨m, P, hP⟩ := polynomial_coefficients k V (fhSig τ) ⊤ (fhSig_isURepOn τ hτ) inferInstance
+  obtain ⟨m, P, hP⟩ := _root_.PI.UnitaryGroupMassFormula.PolyCoef.polyCoef k V (fhSig τ) ⊤ (fhSig_isURepOn τ hτ) inferInstance
     (fun _ _ _ _ => Submodule.mem_top) v Submodule.mem_top w
   have hdet1 : DifferentiableAt ℂ (fun A : Matrix (Fin k) (Fin k) ℂ => A.det) 1 := by
     have h : (fun A : Matrix (Fin k) (Fin k) ℂ => A.det) = fun A =>

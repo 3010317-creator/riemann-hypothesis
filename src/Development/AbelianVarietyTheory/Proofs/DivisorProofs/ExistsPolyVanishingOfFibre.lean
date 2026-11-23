@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtChart
 public import Mathlib.RingTheory.Spectrum.Prime.Topology
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleChartLocalizationFiniteTypeFormallyUnramifiStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNeZeroAlgebraMapEqMulOfFormallyUnramifiedAStatement
+public import Mathlib.RingTheory.Unramified.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNeZeroAlgebraMapEqMulOfFormallyUnramifiedA
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -90,7 +91,7 @@ theorem exists_poly_vanishing_of_fibre : ∀ (R : Type) [CommRing R] (A : Type) 
     intro h0
     rw [map_eq_zero_iff _ (IsLocalization.injective (Localization.Away u) hle), Ideal.Quotient.eq_zero_iff_mem] at h0
     exact hf (mem_nilradical.1 h0)
-  obtain ⟨Q, hQ, d, hd⟩ := GlobalTheory.T.exists_ne_zero_algebraMap_eq_mul_of_formallyUnramified' (MvPolynomial (Fin g) Ω) (Localization.Away u) _ hf'
+  obtain ⟨Q, hQ, d, hd⟩ := _root_.GlobalTheory.exists_ne_zero_algebraMap_eq_mul_of_formallyUnramified (MvPolynomial (Fin g) Ω) (Localization.Away u) _ hf'
   refine ⟨Q, hQ, fun a ha hfa => ?_⟩
   let φ : TensorProduct R Ω A ⧸ N →+* Ω := Ideal.Quotient.lift N (GlobalTheory.DenseSec.pt a).toRingHom (fun x hx => kill a x hx)
   have hφu : IsUnit (φ u) := by

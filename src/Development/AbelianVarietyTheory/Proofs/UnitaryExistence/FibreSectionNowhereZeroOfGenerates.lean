@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.UnivFrame
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFibreSectionPowMulBaseChangeAwayStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLocalGeneratorStableBaseChangeStatement
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ScaledBaseChangeFibreSectionCalculusStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFibreSectionPowMulBaseChangeAway
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLocalGeneratorStableBaseChange
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ScaledBaseChangeFibreSectionCalculus
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ScaledBaseChangeFibreSectionNonvanishingIff
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -53,12 +53,12 @@ namespace GlobalTheory.Frames
 
 theorem secNZ_of_secGen : Out.SecBaseChangeSt → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (S : Type) [CommRing S] (x : Sp S ⟶ Xo.X) (s : LB.Sec (PPx x)), SecGen x s → SecNZ x s := by
   intro hbc E _ _ _ H Dw l Xo S _ x s hs p
-  obtain ⟨g, hg, θ, hθ⟩ := GlobalTheory.T.exists_local_generator_stable_baseChange hbc E H Dw l Xo S x p
+  obtain ⟨g, hg, θ, hθ⟩ := _root_.GlobalTheory.Frames.exists_local_generator hbc E H Dw l Xo S x p
   have hid : ∀ (R : Type) [CommRing R] (z : Sp R ⟶ Xo.X), z = spMap (RingHom.id R) ≫ z := by
     intro R _ z
     have : spMap (RingHom.id R) = 𝟙 (Sp R) := Spec.map_id _
     rw [this, Category.id_comp]
-  obtain ⟨-, hc2, -, hc4⟩ := GlobalTheory.T.scaledBaseChange_fibreSection_calculus E H Dw l Xo (Localization.Away g) (Localization.Away g)
+  obtain ⟨-, hc2, -, hc4⟩ := _root_.GlobalTheory.Frames.SecCalc.sec_calc E H Dw l Xo (Localization.Away g) (Localization.Away g)
     (Localization.Away g) (RingHom.id _) (RingHom.id _) (spMap (algebraMap S (Localization.Away g)) ≫ x)
     _ _ (hid _ _) (hid _ _)
   have hθθ : SecBC (RingHom.id (Localization.Away g)) 1 _ _ θ θ :=
@@ -71,7 +71,7 @@ theorem secNZ_of_secGen : Out.SecBaseChangeSt → ∀ (E : Type) [Field E] [Numb
       rw [h]; exact hg
     exact this
   obtain ⟨q, i, hq, hqi⟩ := hnz p'
-  obtain ⟨N, s₀, s₁, h01, h1⟩ := GlobalTheory.T.exists_fibreSection_pow_mul_baseChange_away E H Dw l Xo S x g θ
+  obtain ⟨N, s₀, s₁, h01, h1⟩ := _root_.GlobalTheory.Frames.SecLoc.exists_secBC_pow_mul E H Dw l Xo S x g θ
   have hu : IsUnit (scal (spMap (algebraMap S (Localization.Away g)) ≫ x)
       ((algebraMap S (Localization.Away g)) g ^ N) i) := by
     obtain ⟨v, hv⟩ := ((IsLocalization.Away.algebraMap_isUnit (S := Localization.Away g) g).pow N).exists_right_inv

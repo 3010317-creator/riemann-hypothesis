@@ -3,10 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ExistsUnitarySupportedAtPlaceOfMulEqIdem
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PlacesToAdeles
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.SingleMemIdAt
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselCharacterLocalElementEqSimpleEntrySumStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemFlagUnipotentRadicalOfBesselNormalFrameLocalStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLocalGroupElementsJacobiBesselStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselCharacterLocalElementEqSimpleEntrySum
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemFlagUnipotentRadicalOfBesselNormalFrameLocal
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLocalGroupElementsJacobiBessel
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilCharacterSplitPlaceExistsContinuousNontrivia
+public import Development.AbelianVarietyTheory.Definitions.Foundations.EqPlaceIdemOfIsPrimeIdem
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +46,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.Definitions.Foundations.EqPlaceIdemOfIsPrimeIdem
 
 @[expose] public section
 
@@ -83,8 +83,8 @@ theorem unip_law : ∀ (D : D7), GlobalTheory.FinPl.FlatLaws D → OmLoc D → �
   intro D hFL hOm k _ _ _ _ _ _ p ψ ψk hχ σ J B st s hs n n' _ _ _ _ c G₀ FW FA F₀ FV hJ hC hB Tm hTm u hu Φ Φ' hΦ
   obtain ⟨v, ε, hv, hε⟩ := p.split.2.2
   have hF := (hFL ψ (· = v)).2 σ J B st
-  obtain ⟨g, hg, -⟩ := ((GlobalTheory.T.splitPlace_localGroupElements_jacobi_bessel D k p).1 B.V (n ⊕ Fin c) FV).1 (embA n u)
-  have hgN : g ∈ flagN B.d := GlobalTheory.T.mem_flagUnipotentRadical_of_besselNormalFrameLocal D k p σ B (s * p.xi) n c FA FV hB g (embA n u) hu hg
+  obtain ⟨g, hg, -⟩ := ((_root_.GlobalTheory.LocGrp.local_groups D k p).1 B.V (n ⊕ Fin c) FV).1 (embA n u)
+  have hgN : g ∈ flagN B.d := _root_.GlobalTheory.LocFlag.mem_flagN D k p σ B (s * p.xi) n c FA FV hB g (embA n u) hu hg
   have hgP : g ∈ GlobalTheory.FinPl.grpAt B.V (· = v) := by
     have hS := hg.1
     obtain rfl := GlobalTheory.AdelicU.Supp.isPlaceIdem_iff.1 hv
@@ -117,7 +117,7 @@ theorem unip_law : ∀ (D : D7), GlobalTheory.FinPl.FlatLaws D → OmLoc D → �
     1 1 g (embA n u) h1 hg Φ Φ' hΦ''
   have heq := hF.equiv (Tm Φ) (hTm.theta Φ) g hgN hgP 1 (one_mem _)
   rw [map_one, mul_one, Prod.mk_one_one, map_one, Prod.mk_one_one, map_one] at heq
-  rw [← hω, heq, GlobalTheory.T.besselCharacter_localElement_eq_simpleEntrySum D k p ψ ψk hχ σ B (s * p.xi) n c FA FV hB g (embA n u) hu hg]
+  rw [← hω, heq, _root_.GlobalTheory.LocBesChar.psiBes_isLoc D k p ψ ψk hχ σ B (s * p.xi) n c FA FV hB g (embA n u) hu hg]
   simp only [Module.End.one_apply]
   congr 1
   rw [AddChar.map_neg_eq_inv, Circle.coe_inv_eq_conj]

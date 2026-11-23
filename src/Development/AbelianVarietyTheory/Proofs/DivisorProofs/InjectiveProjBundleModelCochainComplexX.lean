@@ -2,10 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CotDComp
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSheafProjBundleCochainPresheafEtaleStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsZeroChains
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SxProdIsoHomSnd
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProjBundleCochainPresheafIsSheafStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NaturalSectionsLinearExtension
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SxProdIsoHomSnd
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsZeroChains
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -233,7 +233,7 @@ theorem injective_cotSheaf (q N : ℕ) (I : Cx R) (hI : ∀ m, Injective (I.X m)
 theorem Jcx_X_injective : ∀ (R : Type) [CommRing R] (q N : ℕ) (I : Cx R), (∀ n, CategoryTheory.Injective (I.X n)) →
     ∀ n, CategoryTheory.Injective ((Jcx R q N I).X n) := by
   intro R _ q N I hI n
-  have hS := GlobalTheory.T.isSheaf_projBundleCochainPresheaf_etale R q N I n
+  have hS := _root_.GlobalTheory.T.projBundleCochainPresheaf_isSheaf R q N I n
   exact Injective.of_iso (sheafificationIso (⟨cotPre R q N I n, hS⟩ : Shv R)) (injective_cotSheaf q N I hI n hS)
 
 end GlobalTheory.EtC

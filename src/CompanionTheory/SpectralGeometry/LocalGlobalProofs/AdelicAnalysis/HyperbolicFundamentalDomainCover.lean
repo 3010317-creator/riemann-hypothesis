@@ -7,11 +7,13 @@ public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ArithmeticUnitaryGroupDiscrete
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FundamentalDomainOfSubgroupFromCosetReps
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HyperbolicAndBlockOneNondegenerate
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HyperbolicParabolicSiegelSetBoundStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HyperbolicUnitaryStabilizerCocompactStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InvariantMeasureCompactCoverBound
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HyperbolicParabolicSiegelSetBound
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HyperbolicUnitaryStabilizerCocompact
+public import Mathlib.MeasureTheory.Group.FundamentalDomain
+public import CompanionTheory.AutomorphicTheory.ThetaDilations.Nuabs
+public import Formalism.UnipotentAdelicQuotients.SWXSDefs
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.UnitaryTransitiveOnIsotropicVectors
 import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.UnitaryTransitiveOnIsotropicVectorsStatement
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OneVectorCcOfSiegelWeil
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -78,9 +80,9 @@ theorem integral_isotropic_lines_le_flow_sum : ∀ (F E : Type) [Field F] [Numbe
   have : μ.IsHaarMeasure := hμ
   have hinj : Function.Injective (inclR (F := F) (E := E) (AF F)) :=
     Algebra.TensorProduct.includeRight_injective (AdeleRing.algebraMap_injective _ _)
-  obtain ⟨P, ν, S, ω, Kc, hP, _, hν, hνU, hω, hKc, hSm, hSν, hSP, hScov⟩ := GlobalTheory.T.hyperbolic_parabolic_siegel_set_bound F E σ hcm M J hJ hfin τ hτ
-  obtain ⟨C, hC, hiwa⟩ := GlobalTheory.T.hyperbolic_unitary_stabilizer_cocompact F E σ hcm M J hJ
-  obtain ⟨C', K, hC', hK, hcover⟩ := GlobalTheory.CompanionTheory.Adelic.integral_fundamentalDomain_le_siegel _ μ P ν hν hνU C hC
+  obtain ⟨P, ν, S, ω, Kc, hP, _, hν, hνU, hω, hKc, hSm, hSν, hSP, hScov⟩ := _root_.GlobalTheory.CompanionTheory.SW.FNu.exists_nu_siegel F E σ hcm M J hJ hfin τ hτ
+  obtain ⟨C, hC, hiwa⟩ := _root_.GlobalTheory.CompanionTheory.SW.Iwa.iwasawa F E σ hcm M J hJ
+  obtain ⟨C', K, hC', hK, hcover⟩ := _root_.CompanionTheory.PlacePermOperatorBicommutantSpan.cover _ μ P ν hν hνU C hC
   set e₀ : Fin 1 → Fin (M + 2) → AF F ⊗[F] E := eOne _ (M + 1) with he₀
   set e₁ : Fin 1 → Fin (M + 2) → AF F ⊗[F] E := fun _ => Fin.cons 0 (Fin.cons 1 fun _ => 0) with he₁
   have aC : ∀ X, Continuous fun h : HA (AF F) σ (hypJ J) => actW (AF F) σ _ h⁻¹ X := fun X =>
@@ -127,7 +129,7 @@ theorem integral_isotropic_lines_le_flow_sum : ∀ (F E : Type) [Field F] [Numbe
     rw [Finset.mul_sum]
     exact Finset.sum_congr rfl fun j _ => by ring
   · have hw : ∀ X : L, ∃ γ ∈ Γ, actW (AF F) σ _ γ⁻¹ e₀ = ratTup (AF F) X.1 := fun X => by
-      obtain ⟨g, hg, e⟩ := GlobalTheory.T.unitary_transitive_on_isotropic_vectors F E σ hcm _ _ hH (eOne E (M + 1) 0) (X.1 0)
+      obtain ⟨g, hg, e⟩ := _root_.GlobalTheory.CompanionTheory.SW.WittIso.transitive_isotropic F E σ hcm _ _ hH (eOne E (M + 1) 0) (X.1 0)
         (fun h => one_ne_zero (congrFun h 0)) (fun h => (hL X.2).1 (funext fun a => by rw [Subsingleton.elim a 0]; exact h))
         (by simp [hE, hform, eOne, hypJ, Fin.sum_univ_succ]) (congrFun (congrFun (hL X.2).2 0) 0)
       have hm : bc (inclR (AF F)) g ∈ HR (AF F) σ (hypJ J) := by

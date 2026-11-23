@@ -6,12 +6,17 @@ public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.For
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.QuotientIsAbelianSchemeOfQuotientScheme
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.IsGloballyGeneratedIffGeneratingSections
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FormallyUnramifiedOfCompOfEtaleOfSurjective
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FiniteFlatSubgroupSchemeStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LocallyOfFinitePresentationOfCancelStatement
+public import Mathlib.AlgebraicGeometry.Morphisms.Finite
+public import Mathlib.AlgebraicGeometry.Morphisms.FinitePresentation
+public import Mathlib.AlgebraicGeometry.Morphisms.Flat
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LocallyOfFinitePresentationOfCancel
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.NormLineBundleDescentStatement
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.NormMapRestrictionCompatibleStatement
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SeparatedOfFiniteSurjectiveQuotientStatement
+public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAmpleLBOfRelAmpleOfIsAffine
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FormallyUnramifiedOfCompOfEtaleOfSurjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +57,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAmpleLBOfRelAmpleOfIsAffine
 
 @[expose] public section
 
@@ -145,7 +149,7 @@ theorem quotientByFiniteFlat_of_freeQuotient (hF : GlobalTheory.CompanionTheory.
     have := UniversallyClosed.of_comp_surjective q.left Y.hom
     have := GlobalTheory.AbelianQuotient.geometricallyReduced_of_comp q.left Y.hom
     have : LocallyOfFinitePresentation Y.hom :=
-      GlobalTheory.T.locallyOfFinitePresentation_of_cancel q.left Y.hom hq1 hq2 hq3 hq4 (by rw [hw]; infer_instance)
+      _root_.GlobalTheory.CompanionTheory.LfpDescent.descends q.left Y.hom hq1 hq2 hq3 hq4 (by rw [hw]; infer_instance)
     exact ⟨hcomm, GlobalTheory.AbelianQuotient.smooth_of_grpObj_of_flat Y, ⟨⟩,
       GlobalTheory.AbelianQuotient.geometricallyConnected_of_comp q.left Y.hom⟩
   have := hab.proper

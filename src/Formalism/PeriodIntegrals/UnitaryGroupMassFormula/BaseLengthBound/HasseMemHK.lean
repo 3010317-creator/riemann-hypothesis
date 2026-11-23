@@ -1,7 +1,8 @@
 module
 
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BaseLengthBound.TaylorSpanGeneratorsAlt
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.HassePresH
+public import Formalism.PeriodIntegrals.HassePresH
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.HasseDerivativeFiltration.HasseMemHfr
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BaseLengthBound.FkFilt
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BaseLengthBound.LenPiU
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BaseLengthBound.TaylorSpanGenerators
@@ -86,7 +87,7 @@ def toWKo (a : ℕ) : ↥(HK X la G.w wF) →ₗ[Op X la G.N] WK X la G.w wF a w
 
 theorem hasse_mem_HK (β : Idx D j G.N →₀ ℕ) (x : ↥(HK X la G.w wF)) :
     hasse X la G.w β (x : Lw X la G.w) ∈ HK X la G.w wF :=
-  (mem_HK X la G.w).2 (hasse_presentation X la G.w wF β _ ((mem_HK X la G.w).1 x.2))
+  (mem_HK X la G.w).2 (_root_.PI.UnitaryGroupMassFormula.HassePresH.main X la G.w wF β _ ((mem_HK X la G.w).1 x.2))
 
 def dH (β : Idx D j G.N →₀ ℕ) : ↥(HK X la G.w wF) →+ SectionSheafQuotient X la G.w wF where
   toFun x := toA0K X la G.w wF ⟨hasse X la G.w β (x : Lw X la G.w), hasse_mem_HK G la β x⟩

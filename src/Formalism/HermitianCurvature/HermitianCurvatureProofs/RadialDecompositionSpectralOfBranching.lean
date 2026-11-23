@@ -2,10 +2,10 @@ module
 
 public import Formalism.HermitianCurvature.StatementQ
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CapelliTwoByTwo
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.LemmaDDeterminantIdentity
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.QRadialDecompositionOfPieces
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.QuadraticFormTwoTwo.RadialDecompositionOfParts
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.RightTypeAction
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.QnTPres
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.LemmaDDeterminantIdentity
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +52,7 @@ namespace Formalism.FourierDecayAlt.P
 open Formalism.FourierDecayAlt Formalism.FourierDecayAlt.Q
 
 theorem radialDecompositionSpectral_of_branching : Branching → RadialDecompositionSpectral := fun hB =>
-  q_radial_decomposition_of_pieces second_contraction_adapted contractions_covariant capelli_two_by_two
+  _root_.Formalism.FourierDecayAlt.Q.LieAlgebraWeightVectors.radial_decomposition_of_parts' second_contraction_adapted contractions_covariant capelli_two_by_two
     right_type_action hB qnTPres
 
 end Formalism.FourierDecayAlt.P

@@ -3,9 +3,11 @@ module
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.StableEig
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.UnivFrame
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.EigenBasisIffTangentBasis
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsTangentModuleUniversalGroupStatement
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrameChangeCommBaseChange
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsTangentVectorBasisAtPointBaseChange
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.UniformBaseChange.PullGt
+import Formalism.LocalToGlobal.ProjectiveLattices.IsCombAt
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsTangentModuleUniversalGroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -47,7 +49,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ChartPullbacks.UniformBaseChange.PullGt
 import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsLineGenOn
 
@@ -252,7 +253,7 @@ theorem comb_total_iff {B : Type} [CommRing B] (xB : Sp B ⟶ Xo.X)
     Formalism.L2.Pj.IsCombAt xB (fun j => uu (e j).1 (e j).2) (fun j => a (e j).1 (e j).2) w ↔
       Formalism.L2.Pj.IsCombAt xB (uu σ) (a σ) w := by
   classical
-  obtain ⟨N, _, _, v, ρ, hinj, htan, hcomb, -, -⟩ := GlobalTheory.T.exists_tangent_module_universal_group E H D l Xo B xB
+  obtain ⟨N, _, _, v, ρ, hinj, htan, hcomb, -, -⟩ := _root_.GlobalTheory.TanMod.exists_tangent_module E H D l Xo B xB
   choose b hb using fun τ i => (htan (uu τ i)).1 (hu τ i)
   obtain rfl : uu = fun τ i => v (b τ i) := by funext τ i; exact (hb τ i).symm
   have key : ∑ j, a (e j).1 (e j).2 • b (e j).1 (e j).2 = ∑ i, a σ i • b σ i := by
@@ -268,7 +269,7 @@ theorem isTanAt_of_comb {B : Type} [CommRing B] {xB : Sp B ⟶ Xo.X} {m : ℕ}
     {u : Fin m → (Sp (DualNumber B) ⟶ Xo.univ.t.G.left)} (hu : ∀ i, Formalism.L2.Pj.IsTanAt xB (u i))
     {a : Fin m → B} {w : Sp (DualNumber B) ⟶ Xo.univ.t.G.left} (h : Formalism.L2.Pj.IsCombAt xB u a w) :
     Formalism.L2.Pj.IsTanAt xB w := by
-  obtain ⟨N, _, _, v, ρ, hinj, htan, hcomb, -, -⟩ := GlobalTheory.T.exists_tangent_module_universal_group E H D l Xo B xB
+  obtain ⟨N, _, _, v, ρ, hinj, htan, hcomb, -, -⟩ := _root_.GlobalTheory.TanMod.exists_tangent_module E H D l Xo B xB
   choose b hb using fun i => (htan (u i)).1 (hu i)
   obtain rfl : u = fun i => v (b i) := by funext i; exact (hb i).symm
   rw [(hcomb _ b _ _).1 h]

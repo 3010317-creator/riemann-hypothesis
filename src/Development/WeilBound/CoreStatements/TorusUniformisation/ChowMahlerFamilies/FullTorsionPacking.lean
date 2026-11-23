@@ -1,7 +1,9 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsLatFamilyCongr
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionEmbeddingGeometricPointsStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUnitFormLocalizationEtaleNbhd
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionEmbeddingGeometricPoints
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -112,7 +114,7 @@ theorem PositivityTheory.Xgn.full_torsion_packing : ∀ (X : Scheme.{0}) (G : Ov
   have hτN : ∀ t, τ t ^ N = 1 := fun t => by
     change preHom G u (pt t) ^ N = 1
     rw [← map_pow, (honto _).2 ⟨t, rfl⟩, map_one]
-  obtain ⟨Γ, i, hΓ, hi⟩ := GlobalTheory.T.torsion_embedding_geometric_points R T X G hG x N hN τ hτinj hτN (by
+  obtain ⟨Γ, i, hΓ, hi⟩ := _root_.GlobalTheory.CompanionTheory.Ar.BT.Tors.exists_qfGroup_torsion R T X G hG x N hN τ hτinj hτN (by
     intro Ω' _ _ a g hg
     have hw : spMap (a.comp e') ≫ ξ = Spec.map (CommRingCat.ofHom a) ≫ (genPt R).hom ≫ x := by
       have h0 : spMap (a.comp e') ≫ ξ = spMap a ≫ spMap e' ≫ ξ := by

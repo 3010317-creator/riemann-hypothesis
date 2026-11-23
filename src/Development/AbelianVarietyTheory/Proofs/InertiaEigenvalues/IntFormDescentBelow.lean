@@ -2,17 +2,22 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IntFormsSubset
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.BddGoodOfBddAll
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspidalSectionBoundedNonzeroMultipleStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBasisBoundedModuleValuationRingPiStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HolomorphicSectionsSpanRestrictionStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.BddGood
+public import Formalism.LocalToGlobal.ProjectiveLattices.MulCMemSec
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspidalSectionBoundedNonzeroMultiple
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Valuation
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBasisBoundedModuleValuationRingPi
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HolomorphicSectionsSpanRestriction
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemCuspFormsAllEmbeddingsOfInclusionReadingStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NatCastPowMulValuationLeOneOfNotPowSuccDvdDifferStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RelativeDifferentOrderBoundedAbsoluteRamificatioStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SupSetFinitelyGenerated
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TraceCombinationCoverFormIntegralOverPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ValuationMulLeOneOfTraceApproxIdempotentIntegralStatement
+public import Mathlib.RingTheory.DedekindDomain.Different
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NatCastPowMulValuationLeOneOfNotPowSuccDvdDiffer
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RelativeDifferentOrderBoundedAbsoluteRamificatio
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TraceCombinationCoverFormIntegralOverPrime
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ValuationMulLeOneOfTraceApproxIdempotentIntegral
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegralValuesAlgebraicPointsIffValueNonneg
 public import Formalism.LocalToGlobal.ProjectiveLattices.ModelAt
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SupSetFinitelyGenerated
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +55,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.SpanSteps
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.BddGood
 import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.CompIntField
 
 @[expose] public section
@@ -92,7 +96,7 @@ theorem exists_local_basis {F : Type} [Field F] [NumberField F] (p : HeightOneSp
     (fun ki : Fin M × Fin (Module.finrank F C) => B.equivFun ⟨g ki.1, hg ki.1⟩ ki.2)
   have hvle : ∀ s : 𝓞 F, p.valuation F (algebraMap (𝓞 F) F s) ≤ 1 := fun s => by
     rw [HeightOneSpectrum.valuation_of_algebraMap]; exact p.intValuation_le_one s
-  obtain ⟨m, b, hbM, hbsp, hbli⟩ := GlobalTheory.T.exists_basis_bounded_module_valuationRing_pi p _ S (by show Int (e 0); rw [map_zero]; exact h0)
+  obtain ⟨m, b, hbM, hbsp, hbli⟩ := _root_.GlobalTheory.locBasis_of_bounded p _ S (by show Int (e 0); rw [map_zero]; exact h0)
     (fun x hx y hy => by show Int (e (x + y)); rw [map_add (f := _)]; exact hadd _ _ hx hy)
     (fun a ha x hx => by show Int (e (a • x)); rw [map_smul]; exact hsmul _ _ ha hx)
     (fun i => by show Int (e _); rw [hsingle]; exact hκ i)
@@ -149,7 +153,7 @@ theorem intForm_descent_below (l e : ℕ) (hl : l.Prime) : ∃ c₀ : ℕ, ∀ (
       ∀ φ ∈ C.intForms (wtA w) w.n {la}, (∀ k ∈ T.Kf j T.σ₀, ∀ h, φ (h * k) = φ h) →
         ∃ (m : ℕ) (x : Fin m → C.d.c₂.F) (ψ : Fin m → (GA D (T.V j T.σ₀) → ℂ)), (∀ i, la.valuation C.d.c₂.F (x i) ≤ 1) ∧
           (∀ i, ψ i ∈ baseInt T j T.σ₀ (wtA w) w.n {p}) ∧ ((l : ℂ) ^ c₀) • φ = ∑ i, C.σ₂ (x i) • ψ i := by
-  obtain ⟨c, hc⟩ := GlobalTheory.T.relative_different_order_bounded_absolute_ramification l e hl
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.TowerDifferent.relDifferent_order_bounded l e hl
   refine ⟨c, ?_⟩
   intro D T hL j hj w hlast hD hspan hK C hU hP la p hp0 hl1 hl2 φ hφ hφK
   letI : Algebra T.Q.c.F C.d.c₂.F := C.inc.toAlgebra
@@ -181,13 +185,13 @@ theorem intForm_descent_below (l e : ℕ) (hl : l.Prime) : ∃ c₀ : ℕ, ∀ (
         simp only [vLa]; omega
       exact (GlobalTheory.GoodPtsModel.smul_mem_supSet (W := ⊤) hv ⟨trivial, hf⟩).2)
     (fun f hf => by
-      obtain ⟨κ, h1, h2⟩ := GlobalTheory.T.cuspidal_section_bounded_nonzero_multiple _ _ _ _ (T.Q.Xo j) T.Q.c _ (T.U j) (hL.unf _ hj) p l hl hlp hgood (wtA w) w.n f hD hf
+      obtain ⟨κ, h1, h2⟩ := _root_.GlobalTheory.CuspBound.exists_bddAll_cusp _ _ _ _ (T.Q.Xo j) T.Q.c _ (T.U j) (hL.unf _ hj) p l hl hlp hgood (wtA w) w.n f hD hf
       exact ⟨κ, h1, (GlobalTheory.GoodPtsModel.bddAll_iff_smul _ _).1 h2⟩)
     g (fun i => (hg i).1) (fun f hf hb => hgen f ⟨hf, hb⟩)
   have hβs : ∀ k, β k ∈ sec (T.Q.Xo j) T.Q.c (wtA w) w.n ∧
       rdU (T.U j T.σ₀) (β k) ∈ holSub0 (T.U j T.σ₀).X (laU (T.U j T.σ₀) (wtA w) w.n) := fun k =>
     ⟨cusp_le_sec _ _ _ _ _ (hβ k).1, ReciprocityTheory.ChartRestriction.G.PullbackSections.rdC_mem_holSub0 T.good_σ₀ (wtA w) w.n ⟨β k, (hβ k).1⟩⟩
-  obtain ⟨m', x, ψ, hψ, hφe⟩ := GlobalTheory.T.holomorphic_sections_span_restriction D T hL j hj T.σ₀ hσ C hU _ _ hD hP hspan hK φ
+  obtain ⟨m', x, ψ, hψ, hφe⟩ := _root_.GlobalTheory.CoverFormDesc.cover_form_desc D T hL j hj T.σ₀ hσ C hU _ _ hD hP hspan hK φ
     (C.intForms_subset _ _ _ hφ) hφK
   have hcc' : ∀ i, ∃ cc : Fin m → T.Q.c.F, ψ i = ∑ k, T.σ₀ (cc k) • T.phiJ j T.σ₀ (wtA w) (β k) := fun i => by
     obtain ⟨f, hf, hfe⟩ := hψ i
@@ -206,15 +210,15 @@ theorem intForm_descent_below (l e : ℕ) (hl : l.Prime) : ∃ c₀ : ℕ, ∀ (
       simp only [y, hcc, Finset.smul_sum, smul_smul, map_sum, Finset.sum_smul, map_mul, hσ₂]
     exact Finset.sum_comm
   have hφ' : (∑ k, C.σ₂ (y k) • T.phiJ j T.σ₀ (wtA w) (β k)) ∈ C.intForms (wtA w) w.n {la} := hsum ▸ hφ
-  obtain ⟨N, hN⟩ := GlobalTheory.T.traceCombination_coverForm_integral_over_prime D T hL j hj T.σ₀ hσ _ _ hD hspan hK C hU hP la p hp m β hβs
+  obtain ⟨N, hN⟩ := _root_.GlobalTheory.TraceIdem.trace_comb_integral D T hL j hj T.σ₀ hσ _ _ hD hspan hK C hU hP la p hp m β hβs
     (fun k => (hval _).1 (hβ k).2) y hφ'
   have hdiff : ∀ k, ∀ d ∈ differentIdeal (𝓞 T.Q.c.F) (𝓞 C.d.c₂.F),
       la.valuation C.d.c₂.F (y k * (d : C.d.c₂.F)) ≤ 1 := fun k =>
-    GlobalTheory.T.valuation_mul_le_one_of_trace_approxIdempotent_integral T.Q.c.F C.d.c₂.F la p hp (y k)
+    _root_.GlobalTheory.InvDiffLocal.valuation_mul_different_le_one T.Q.c.F C.d.c₂.F la p hp (y k)
       ⟨N, fun b hb => hprim (fun k => Algebra.trace T.Q.c.F C.d.c₂.F ((b : C.d.c₂.F) * y k)) ((hval _).2 (hN b hb)) k⟩
   have hcd := hc T.Q.c.F C.d.c₂.F p la hp hl1 hl2
   refine ⟨m, fun k => (l : C.d.c₂.F) ^ c * y k, fun k => T.phiJ j T.σ₀ (wtA w) (β k), ?_, ?_, ?_⟩
-  · exact fun k => GlobalTheory.T.valuation_prime_pow_mul_le_one_of_not_dvd_different l c T.Q.c.F C.d.c₂.F la hl1 hcd (y k) (hdiff k)
+  · exact fun k => _root_.GlobalTheory.natCast_pow_mul_valuation_le_one_of_not_pow_succ_dvd_differentIdeal l c T.Q.c.F C.d.c₂.F la hl1 hcd (y k) (hdiff k)
   · refine fun k => ⟨β k, ⟨(hβs k).1, (hβs k).2, fun q hq => ?_⟩, rfl⟩
     rw [Set.mem_singleton_iff.1 hq]
     exact (hval _).1 (hβ k).2

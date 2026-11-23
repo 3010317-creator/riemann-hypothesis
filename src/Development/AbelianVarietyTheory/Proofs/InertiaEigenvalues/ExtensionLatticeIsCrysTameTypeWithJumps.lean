@@ -4,9 +4,10 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPo
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.OneSubPhiOntoOfFilZero
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteClassesSubsetAdmissibleOfGoodO
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPotentialPhiSub
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineExtensionOfJumpsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineOfExtensionLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TameTypeOfExtensionLatticeStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AcrisTorsionFreeComplete
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineExtensionOfJumps
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineOfExtensionLattice
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TameTypeOfExtensionLattice
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -94,10 +95,10 @@ theorem extLat_isGood : GlobalTheory.Published.FontaineBcris → ∀ (l : ℕ) [
   refine ⟨isGood_mono ϖ Pl _ (UnitModel.isGood_of_trivial ϖ Pl _ fun _ _ => rfl) hS hU, fun T hT c hc => ?_⟩
   let z : ↥(latticeCocycles T.L) := ⟨c, hc.1⟩
   have hz : (z : Gl l → T.V) ∈ finiteCocycles (Pl.PD (Formalism.MainNotions.ElementDenominator.qlExt l)) T.ρ := hc.2
-  have hcr := GlobalTheory.T.crystalline_of_extension_lattice ϖ Pl T hT.crys z hz
+  have hcr := _root_.GlobalTheory.ExtLatCrys.isCrys_resF_extLat ϖ Pl T hT.crys z hz
   refine ⟨ext T z, incl T z, proj T z, ((0 : T.V), (1 : ↥LL.1)), ⟨LinearMap.inl_injective,
     fun y => ⟨(0, y), rfl⟩, fun y hy => ?_, fun x => ?_, fun y hy => ?_⟩, ⟨zero_mem _, 1, (algebraMap (OL LL) LL.1).map_one⟩, rfl,
-    fun h => ?_, ⟨hcr, GlobalTheory.T.tame_type_of_extension_lattice ϖ Pl T Sig hS hT.type z hz, GlobalTheory.T.crystalline_extension_of_jumps ϖ Pl AI hstd T U hU hT.crys hT.jumps z hcr⟩⟩
+    fun h => ?_, ⟨hcr, _root_.GlobalTheory.TameExt.tameType_extLat ϖ Pl T Sig hS hT.type z hz, _root_.GlobalTheory.ExtJumps.jumps_extLat ϖ Pl AI hstd T U hU hT.crys hT.jumps z hcr⟩⟩
   · obtain ⟨o, rfl⟩ := hy
     exact ⟨(0, Algebra.linearMap _ _ o), ⟨zero_mem _, o, rfl⟩, rfl⟩
   · change x.2 = 0 ↔ ∃ y, ((y, 0) : T.V × ↥LL.1) = x

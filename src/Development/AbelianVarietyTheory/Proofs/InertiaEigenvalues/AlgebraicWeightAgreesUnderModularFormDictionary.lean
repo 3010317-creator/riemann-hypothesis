@@ -3,13 +3,13 @@ module
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsDictionaryCmFieldAutomorphic
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAdelicExtensionOfAlgebraicWeightDefiniteUn
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPolyRep
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DefiniteUnitaryAutFormEqZeroOfFinitePoints
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DualWeylModuleIntertwinesGLOfUnitaryGroupStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsHighestWeightVectorDualWeylModuleUpperStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ArchimedeanUnitaryPointsEquivUnitaryGroup
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPolynomialRepGLComplexAlgebraicWeightEvalPointStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPolynomialRepGLComplexAlgebraicWeightEvalPoint
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryGroupFiniteDimensionalRepContainsHighestW
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeightEqOfFinitePartNeBot
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DefiniteUnitaryAutFormEqZeroOfFinitePoints
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -215,7 +215,7 @@ theorem weight_agree : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n
   obtain ⟨R, hfin, hrat, hcont⟩ := GlobalTheory.WeightRealExt.exists_extension L n π.toAlgWt
   obtain ⟨_, ι, _, _, b, P, hP⟩ := a.alg
   obtain ⟨e, he⟩ := GlobalTheory.EmbUnitary.exists_equiv_unitaryGroup L n τ
-  have hΦ := GlobalTheory.T.isPolynomialRepGLComplex_algebraicWeight_evalPoint L n a ι b P hP τ
+  have hΦ := _root_.GlobalTheory.AlgWtHW.isPolyRep_evPt L n a ι b P hP τ
   set Φ : GL (Fin n) ℂ → Matrix ι ι ℂ := fun A => GlobalTheory.AlgWtHW.evM P (NG.evPt τ A) with hΦd
   have hΦx : ∀ x : embU n τ, Φ (cEmb τ (x : UA L n)) = GlobalTheory.WeightRealExt.polyMat P (x : UA L n) := fun x =>
     (polyMat_embU P τ x).symm

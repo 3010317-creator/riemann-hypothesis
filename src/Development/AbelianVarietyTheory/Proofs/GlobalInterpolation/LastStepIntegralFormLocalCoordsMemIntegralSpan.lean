@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.CoP
 public import Formalism.SharpRestriction.GlobalSchurBounds.ProductFirstZerothParts
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.InvTrKEmbGLApply
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.LocalBasisRepLatticeIntegralCoordsSpecStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MemLocWDelAtrIffStatement
+public import Formalism.LocalToGlobal.Columns.TiedValLatG
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MemLocWDelAtrIff
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SpanMapNabKDelK
 import Formalism.LocalToGlobal.Columns.PolyFnLemmas
 import Mathlib.Algebra.Order.Floor.Extended
@@ -105,7 +106,7 @@ theorem latCo_one {B : Base} {X : PreX B.toPre} (I : TC B X) (hI : I.Ok) (l : I.
     simp only [DomWeight.natW, DomWeight.detShift, dif_pos hN, GlobalTheory.Mem.Col2.shW]
     congr 1
     ring
-  exact (GlobalTheory.T.mem_locW_delAtr_iff' B.fields.emb B.embLL B.places (I.rec7 l Z).plEq (I.rec7 l Z).val_eq
+  exact (_root_.GlobalTheory.WeylLocOnePlace.mem_locW_delAtr_iff B.fields.emb B.embLL B.places (I.rec7 l Z).plEq (I.rec7 l Z).val_eq
     (GlobalTheory.Mem.Col2.lamT (B.hcW u) B.R.m) (((I.rec7 l Z).fm u).lam (I.rec7 l Z).R.m) hnat _ hM w _ hB v').1 (Submodule.subset_span hmem)
 
 theorem latCo_gen {B : Base} {X : PreX B.toPre} (I : TC B X) (hI : I.Ok) (l : I.Laws) (Z : TC.Later B (I.cols l)) (u : B.Word)

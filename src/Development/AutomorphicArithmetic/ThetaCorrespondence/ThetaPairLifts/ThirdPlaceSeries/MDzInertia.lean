@@ -3,12 +3,22 @@ module
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SglobDzMatchCut
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SglobDzBigDef
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DepthZeroInertiaOfLanglands
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIntegerApproxUnitAdicCompletionStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsRegularCharacterLabelRootProductStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsResidueFieldEmbeddingPlaceOverStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExtensionUnramifiedAtOnePlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.KummerCharacterFactorsAbsoluteGaloisAbelianizatiStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalArtinInertiaIsUnitAtStatement
+public import Formalism.LocalToGlobal.UnitaryNorms.IsUnitaryNormOf
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIntegerApproxUnitAdicCompletion
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrincipalCongruenceFixedVectorsLeSmoothVectors
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.GreenRegularCharacters
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsRegularCharacterLabelRootProduct
+public import Formalism.ConjugateSelfDual.Statement
+public import Formalism.LocalToGlobal.NormalizedHeckeFactors.TypesDefs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsResidueFieldEmbeddingPlaceOver
+public import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
+public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Completion
+public import ReciprocityTheory.GaloisValuations.Global
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExtensionUnramifiedAtOnePlace
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.KummerCharacterFactorsAbsoluteGaloisAbelianization
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HasExponentZeroIff
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalArtinInertiaIsUnitAt
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIneOfUnit
 public import Development.AutomorphicArithmetic.Foundations.UnitarySphericalFixing.SatakeParameters.GoodLem
 import Formalism.LocalToGlobal.Columns.StdLatUnimodular
@@ -72,7 +82,7 @@ theorem depthZeroInertiaBig_of_narrowBig_m_alt : _root_.DiscreteGroups.sglob.DzT
   intro HT HG HL
   intro E Ω _ _ _ _ _ _ g _ A w h rc hrc i hi κ L t ht hTC n hbig σ _ τ P hP hinf
   have hn : 0 < n := hP.2.1.1
-  obtain ⟨E', _, _, _, _, _, _, _, w', h', hg0, hg1, hN, ⟨ζ, hζ⟩, hfix⟩ := GlobalTheory.T.exists_unramified_totallyComplex_ext_with_unity_roots E Ω g A w h i hi n hn
+  obtain ⟨E', _, _, _, _, _, _, _, w', h', hg0, hg1, hN, ⟨ζ, hζ⟩, hfix⟩ := _root_.GlobalTheory.UnrCycExt.exists_unramified_ext E Ω g A w h i hi n hn
   let t' : Ω ≃ₐ[E'] Ω := { t with commutes' := fun e => hfix t ht e }
   have htt : ∀ z, t' z = t z := fun _ => rfl
   have hdec : t' • A = A := by
@@ -88,8 +98,8 @@ theorem depthZeroInertiaBig_of_narrowBig_m_alt : _root_.DiscreteGroups.sglob.DzT
     exact _root_.UpperTheory.One.M.New.artin HL h'
   obtain ⟨art, hart⟩ := HG E' Ω
   set u := a' (ineIncl h' ⟨t', ht'⟩) with hu_def
-  have hu : IsUnitAt w' u := GlobalTheory.T.localArtin_inertia_isUnitAt h' a' ha' ⟨t', ht'⟩
-  obtain ⟨x, hx⟩ := GlobalTheory.T.exists_integer_approx_unit_adicCompletion w' u hu
+  have hu : IsUnitAt w' u := _root_.GlobalTheory.ArtinInertia.isUnitAt_artin_ine h' a' ha' ⟨t', ht'⟩
+  obtain ⟨x, hx⟩ := _root_.GlobalTheory.unit_completion_approx_integer w' u hu
   haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
   have hg2 : 2 ≤ g := (Fact.out : g.Prime).two_le
   have hq : 0 < g ^ n - 1 := by
@@ -103,7 +113,7 @@ theorem depthZeroInertiaBig_of_narrowBig_m_alt : _root_.DiscreteGroups.sglob.DzT
   have hab : toAb E' Ω σ' = toAb E' Ω t' := by
     rw [hσ'ab]; exact ha'.glob art hart _
   have hgE : ((g : ℕ) : E') ≠ 0 := Nat.cast_ne_zero.mpr (Fact.out : g.Prime).ne_zero
-  have hkum := GlobalTheory.T.kummerCharacter_factors_absoluteGaloisAbelianization E' Ω (g ^ n - 1) hq ζ hζ ((g : ℕ) : E') hgE y (by rw [hy, map_natCast]) σ' t' hab
+  have hkum := _root_.GlobalTheory.KummerAb.kummer_char_eq_of_toAb_eq E' Ω (g ^ n - 1) hq ζ hζ ((g : ℕ) : E') hgE y (by rw [hy, map_natCast]) σ' t' hab
   have hgΩ : ((g : ℕ) : Ω) ≠ 0 := by
     rw [← map_natCast (algebraMap E' Ω)]; exact (_root_.map_ne_zero _).mpr hgE
   have h1 := hTC n hn y hy
@@ -118,10 +128,10 @@ theorem depthZeroInertiaBig_of_narrowBig_m_alt : _root_.DiscreteGroups.sglob.DzT
     rw [← map_natCast (Ideal.Quotient.mk w'.asIdeal), Ideal.Quotient.eq_zero_iff_mem]; exact hg0
   haveI : CharP (𝓞 E' ⧸ w'.asIdeal) g := (CharP.charP_iff_prime_eq_zero (Fact.out : g.Prime)).mpr hgK
   letI : Algebra (ZMod g) (𝓞 E' ⧸ w'.asIdeal) := ZMod.algebra _ g
-  obtain ⟨ι, hι⟩ := GlobalTheory.T.exists_residueField_embedding_place_over E' Ω g A w' h' κ
+  obtain ⟨ι, hι⟩ := _root_.GlobalTheory.residue_ringOfIntegers_to_place E' Ω g A w' h' κ
   have hcard : Nat.card (𝓞 E' ⧸ w'.asIdeal) = g ^ n := hN
   haveI : Finite (𝓞 E' ⧸ w'.asIdeal) := Nat.finite_of_card_ne_zero (by rw [hcard]; positivity)
-  obtain ⟨θ, hreg, ⟨x0, hx0, hθ⟩, hprod⟩ := GlobalTheory.T.exists_regularCharacter_labelRoot_product g L n hn P hP.1 _ hcard ι
+  obtain ⟨θ, hreg, ⟨x0, hx0, hθ⟩, hprod⟩ := _root_.GlobalTheory.RegLabelChar.exists_regularChar g L n hn P hP.1 _ hcard ι
   have hιz : ι (Ideal.Quotient.mk _ x) = L.gen n := by rw [hι]; exact h2
   have hgen0 : L.gen n ≠ 0 := by
     intro e

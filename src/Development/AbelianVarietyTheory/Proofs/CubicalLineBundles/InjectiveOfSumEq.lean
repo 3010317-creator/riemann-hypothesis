@@ -1,9 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Statements.PrincipalLattices.ConclusionsAtIdentity
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ISupRangeDifferentialEqTopOfJointlyOntoStatement
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.ExistsIsThetaDegOfIsLocalModel
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ISupRangeDifferentialEqTopOfJointlyOnto
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IntegralTangentVectorCoordinates
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LieAlgebraEigenDecompositionCMSignatureStatement
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LieAlgebraEigenDecompositionCMSignature
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -134,21 +136,21 @@ theorem letters_independent : ThetaUnifAV → Out.Laws → IndSt := by
       ⨆ τ : 𝓞 E →+* 𝓞 K, Submodule.span K ((FA b).eigLat (X.A b).t.act τ : Set (Fin (FA b).P₀.g → K)) = ⊤ ∧
       (FA b).P₀.g = Module.finrank ℚ E / 2 := by
     rintro (_ | _)
-    · obtain ⟨a, b, c, d, -⟩ := GlobalTheory.T.lieAlgebra_eigenDecomposition_CM_signature E H K ρ (X.A false) (FA false) 0 1 X.split X.typeM X.ρ_sq
+    · obtain ⟨a, b, c, d, -⟩ := _root_.GlobalTheory.CM.EigDec.eigen_decomposition E H K ρ (X.A false) (FA false) 0 1 X.split X.typeM X.ρ_sq
       refine ⟨fun τ => ?_, b, c, by rw [(FA false).fib.1]; simpa using d⟩
       rw [a]
       by_cases h : τ H.rt = ρ
       · rw [if_pos h, if_neg (by simpa [hsq] using h)]
       · rw [if_neg h, if_pos (by simpa [hsq] using h)]
-    · obtain ⟨a, b, c, d, -⟩ := GlobalTheory.T.lieAlgebra_eigenDecomposition_CM_signature E H K ρ (X.A true) (FA true) 1 0 X.split X.typeP X.ρ_sq
+    · obtain ⟨a, b, c, d, -⟩ := _root_.GlobalTheory.CM.EigDec.eigen_decomposition E H K ρ (X.A true) (FA true) 1 0 X.split X.typeP X.ρ_sq
       refine ⟨fun τ => ?_, b, c, by rw [(FA true).fib.1]; simpa using d⟩
       rw [a]
       simp
   have hB : FB.P₀.g = Module.finrank ℚ E / 2 * (p + q) := by
     rw [FB.fib.1]
-    exact (GlobalTheory.T.lieAlgebra_eigenDecomposition_CM_signature E H K ρ X.B FB p q X.split X.typeB X.ρ_sq).2.2.2.1
+    exact (_root_.GlobalTheory.CM.EigDec.eigen_decomposition E H K ρ X.B FB p q X.split X.typeB X.ρ_sq).2.2.2.1
   have hsur : ⨆ j, LinearMap.range (M j) = ⊤ :=
-    GlobalTheory.T.iSup_range_differential_eq_top_of_jointly_onto hU hL K X.B.pol FB σ₁ (Fin p ⊕ Fin q) (fun j => (X.A j.isLeft).pol) (fun j => FA j.isLeft) X.φ M
+    _root_.GlobalTheory.DiffSpan.iSup_range_diff_eq_top hU hL K X.B.pol FB σ₁ (Fin p ⊕ Fin q) (fun j => (X.A j.isLeft).pol) (fun j => FA j.isLeft) X.φ M
       inferInstance (fun j => (X.lin j).1) hM fun y => by
         obtain ⟨x, hx⟩ := X.onto y
         exact ⟨p + q, finSumFinEquiv.symm, fun m => x _, hx⟩

@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.EqOfLieBasisComplex
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LieLatticeFgAndSpanEqTopRingOfIntegersStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LieLatticeFgAndSpanEqTopRingOfIntegers
 import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.IsLieBasisIffIsUnitDet
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -88,7 +88,7 @@ theorem existsUnique_isDiffOf : ∀ (K : Type) [Field K] [NumberField K] (P : Ou
     obtain rfl : w = w' := Over.OverMorphism.ext (F'.fib.2.1.1.hom_ext (hw.trans hw'.symm) ((Over.w _).trans (Over.w _).symm))
     exact (F'.basis.2 w ((LieComb.lieComb_algebra K _ _ F'.v F'.basis.1).2.1 c w hc)).unique hc hc'
   have huniq : ∀ N, F.IsDiffOf F' f N → N = M := fun N hN => by
-    refine LinearMap.ext_on (GlobalTheory.T.lieLattice_fg_and_span_eq_top_ringOfIntegers K P F).2 fun c hc => ?_
+    refine LinearMap.ext_on (_root_.GlobalTheory.CM.LieLattice.lieLat_fg_and_span_eq_top K P F).2 fun c hc => ?_
     refine Submodule.span_induction (p := fun c _ => N c = M c) ?_ ?_ ?_ ?_ hc
     · rintro c ⟨u, hu⟩
       exact hcoord _ _ _ (hN u c hu) (hd u c hu)

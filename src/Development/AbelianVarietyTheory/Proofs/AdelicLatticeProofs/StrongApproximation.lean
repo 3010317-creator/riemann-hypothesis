@@ -3,11 +3,14 @@ module
 public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.IsHermHyperbolic
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.Hat1
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsAnisotropicOrthogonalBasisHermitian
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.TransvectionIdentitiesUnitaryStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryEqQuasiReflectionMulTransvectionsStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryGroupWeakApproximationAtPrimesStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryTransvectionSubmonoidAdjustIntegralAwayStatement
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryTransvectionSubmonoidNormalDetOneStatement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.TransvectionIdentitiesUnitary
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryEqQuasiReflectionMulTransvections
+public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.IsHermForm
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryGroupWeakApproximationAtPrimes
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryTransvectionSubmonoidAdjustIntegralAway
+import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryTransvectionSubmonoidNormalDetOne
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicCompletionRationalPointsAndApproximation
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLatticeRationalVectorsInAdelicTranslate
 import Mathlib.Algebra.Order.Floor.Extended
@@ -59,7 +62,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.IsHermForm
 
 @[expose] public section
 
@@ -307,7 +309,7 @@ theorem strong_approximation : ∀ (F E : Type) [Field F] [NumberField F] [Field
   have hb : 0 < M * dg := Nat.mul_pos hM hdg
   have hD₁ : 0 < M * dP := Nat.mul_pos hM hdP
   have hD : 0 < M * dP * d := Nat.mul_pos hD₁ hd
-  obtain ⟨γ₀, hγ₀, t, ht, hcong⟩ := GlobalTheory.T.unitaryGroup_weak_approximation_at_primes F E c n G hG' hrk L hL hsp g (M * dg) (M * dP * d)
+  obtain ⟨γ₀, hγ₀, t, ht, hcong⟩ := _root_.GlobalTheory.UnRep.WeakApprox.weak_approximation F E c n G hG' hrk L hL hsp g (M * dg) (M * dP * d)
     hg hb hD
   have hU : IsU (c : E →+* E) G γ₀.1 := hγ₀
   set γ : Matrix (Fin n) (Fin n) E := γ₀.1 with hγ
@@ -336,10 +338,10 @@ theorem strong_approximation : ∀ (F E : Type) [Field F] [NumberField F] [Field
   have hs₂ : ((M * dP : ℕ) : RA F E) * emb F (c s₀) = (t : RA F E) ^ n * emb F (c u - 1) := by
     have := congrArg (fun a => emb F (c a)) hs₀
     simpa only [map_mul, map_natCast, map_pow, map_sub, map_one] using this
-  obtain ⟨hnorm, hnormal⟩ := GlobalTheory.T.unitaryTransvectionSubmonoid_normal_det_one E n (c : E →+* E) G hG
+  obtain ⟨hnorm, hnormal⟩ := _root_.GlobalTheory.UTrans.tvGen_normal E n (c : E →+* E) G hG
   have hu1 : u * c u = 1 := (hnorm γ hU).1
-  obtain ⟨m, hm, hme⟩ := (GlobalTheory.T.unitary_eq_quasiReflection_mul_transvections F E c n G hG hiso γ hU).1 x hx
-  have hmul := (GlobalTheory.T.transvection_identities_unitary E n (c : E →+* E) G hG.invol hG.herm).2.2.1 x
+  obtain ⟨m, hm, hme⟩ := (_root_.GlobalTheory.UTrans.isU_eq_tv_mul_tvGen F E c n G hG hiso γ hU).1 x hx
+  have hmul := (_root_.GlobalTheory.UTrans.Calc.calculus E n (c : E →+* E) G hG.invol hG.herm).2.2.1 x
   have hm' : m = tv (c : E →+* E) G x ((c u - 1) / h) * γ := by
     have h0 : (c u - 1) / h + (u - 1) / h + (c u - 1) / h * ((u - 1) / h) * h = 0 := by
       field_simp
@@ -361,7 +363,7 @@ theorem strong_approximation : ∀ (F E : Type) [Field F] [NumberField F] [Field
     rw [hBe, smul_smul, ← Nat.cast_mul, mul_assoc]
   obtain ⟨C, hC, hCe⟩ := mul_cong (mul_mem hcs hdP') (natCast_smul_mem _ hB) hc1 hc2
   rw [← Matrix.mul_assoc, ← map_mul, ← hm'] at hCe
-  obtain ⟨m', hm'T, k, e, hk, hadj⟩ := GlobalTheory.T.unitaryTransvectionSubmonoid_adjust_integral_away F E c n G hrk hG L hL hsp m hm (M * dg) hb 1
+  obtain ⟨m', hm'T, k, e, hk, hadj⟩ := _root_.GlobalTheory.UTrans.tvGen_adjust F E c n G hrk hG L hL hsp m hm (M * dg) hb 1
   have hbE : ((M * dg : ℕ) : E) ≠ 0 := by exact_mod_cast hb.ne'
   have hW : (emb F).mapMatrix (((k : E) / ((M * dg : ℕ) : E)) • (m' - m)) ∈ stab H := by
     refine emb_mem_stab F fun v hv => ?_

@@ -1,11 +1,13 @@
 module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.ElementDenominator
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ASGlue
+public import Formalism.PeriodIntegrals.ArtSch
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ValuationGluing.ValbLeOfCoeffEqZero
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ASRoot
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ASSmall
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ASWitt
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.TiltDivisibility
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SmallArtinSchreier.ExistsAsOfValLtOne
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.WittCoefficients.CoeffEqOfSubMem
+public import GroundTheory.PAdicHodge.PerfectoidField
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusSubOneSurjectiveWittTilt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -42,9 +44,8 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Formalism.PeriodIntegrals.ArtSch
 
 @[expose] public section
 
 theorem _root_.GlobalTheory.T.frobenius_sub_one_surjective_witt_tilt : Formalism.MainNotions.ElementDenominator.ArtinSchreierWittOnto := fun l _ x =>
-  PI.ArtSch.main_of witt_lift (tiltSurjectiveOfParts rootModP_holds tilt_divisibility smallSurjective) l x
+  PI.ArtSch.main_of _root_.PI.ArtSch.WittLiftWork.wittLift (_root_.PI.ArtSch.Glue.tiltGlue rootModP_holds _root_.GlobalTheory.ArtinSchreierTilt.tiltDiv _root_.PI.UnitaryGroupMassFormula.ASSmall.tiltSmall) l x

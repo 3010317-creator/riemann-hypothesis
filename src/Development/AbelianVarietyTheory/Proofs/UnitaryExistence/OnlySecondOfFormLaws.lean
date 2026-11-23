@@ -4,8 +4,10 @@ public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.Continuou
 public import Formalism.LocalToGlobal.ProjectiveLattices.CuspidalL2Subspace
 public import Formalism.LocalToGlobal.ProjectiveLattices.VolProofs
 public import Development.AbelianVarietyTheory.Counterexamples.LevelGroupExamples.RightInvariantOfCovolume
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.InvariantProbabilityLatticeQuotientUniqueStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroupStatement
+public import Mathlib.MeasureTheory.Group.FundamentalDomain
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.InvariantProbabilityLatticeQuotientUnique
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup
 public import Formalism.LocalToGlobal.GlobalTheory.GL5.FamilyMassVolumeIdentityOfClassDecomp
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -66,7 +68,7 @@ def DatumSign {H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host D.host.E} (
 theorem invProb_iff (V : HSp D) (hP : VolPairEx V) (hV : FinVol V) (ν : Measure (AutQ V)) :
     IsProbabilityMeasure ν ∧ RightInv V ν ↔ ν = muQ1 V := by
   have hp := volPair_isVolPair V hP
-  obtain ⟨i1, i2, i3⟩ := GlobalTheory.T.lcsc_adelic_unitary_group _ _ D.sp.cm.sig _ V.gram
+  obtain ⟨i1, i2, i3⟩ := _root_.GlobalTheory.AdelicUnitaryTop.lcsc_adelicUnitary _ _ D.sp.cm.sig _ V.gram
   have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.topGroupHA D.sp.cm.sig V.gram
   have := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.borelHA D.sp.cm.sig V.gram
   have : Countable (GQ V) := Formalism.L2.GlobalTheoryTheory.GenusMassVolumes.Unfold.countableGamma D.sp.cm.sig V.gram
@@ -78,7 +80,7 @@ theorem invProb_iff (V : HSp D) (hP : VolPairEx V) (hV : FinVol V) (ν : Measure
   constructor
   · rintro ⟨h1, h2⟩
     rw [hq]
-    exact GlobalTheory.T.invariant_probability_lattice_quotient_unique _ (GQ V) _ _ hp.2 hV'.2 ν h2
+    exact _root_.GlobalTheory.LatticeQuotUniq.invariant_prob_eq _ (GQ V) _ _ hp.2 hV'.2 ν h2
   · rintro rfl
     refine ⟨inferInstance, fun h ρ hρ s hs => ?_⟩
     have hm := autMk_measurable V

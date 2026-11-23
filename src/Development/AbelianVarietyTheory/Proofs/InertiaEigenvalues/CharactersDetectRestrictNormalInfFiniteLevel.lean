@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NoTowerQ
 public import Mathlib.NumberTheory.Padics.ValuativeRel
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalFieldIntegerIffAlgebraicClosureNormStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalFieldIntegerIffAlgebraicClosureNorm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -98,7 +100,7 @@ theorem detects_restrictNormal_inf : ∀ (l : ℕ) [Fact l.Prime] (L : Type) [Fi
     conv_lhs => rw [← hσ]
     exact AlgEquiv.restrictNormal_commutes (lift s) L x'
   refine ⟨(s x' - x' - (a i (lift s) : L)) / (l : L) ^ r, ?_, ?_⟩
-  · refine ((GlobalTheory.T.localFieldInteger_iff_algebraicClosureNorm l L _).1).mpr ?_
+  · refine ((_root_.GlobalTheory.PMon.Ram.mem_integer_iff_norm_le_and_valuation_lt_one_iff_norm_lt l L _).1).mpr ?_
     rw [map_div₀, map_sub, map_sub, map_intCast, map_pow, map_natCast, key, hx', norm_div, norm_pow, hnorm_l]
     rw [div_le_one (by positivity)]
     exact hN i _ hσN

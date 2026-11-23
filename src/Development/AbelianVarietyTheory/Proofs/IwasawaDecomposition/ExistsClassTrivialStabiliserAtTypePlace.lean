@@ -4,8 +4,9 @@ public import Formalism.LocalToGlobal.GaloisLevelStructure.DefsLevel
 public import Formalism.SharpRestriction.CuspSpanNormBounds.BesselShellMomentBounds
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteRationalConjMemBoundedCompact
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SplitPlaceHeckeOperatorScalarOnSpherical
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitaryFiniteAdelesSplitPlaceDecompositionStatement
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.GSplit
+import Formalism.AlgebraicWeights.IsAlgWeight
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitaryFiniteAdelesSplitPlaceDecomposition
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -176,7 +177,7 @@ theorem exists_class (m r : ℕ) (hr : 2 ≤ r) (s : SplitPlace L) {p : ℕ} (hp
     (h : (p : 𝓞 L) ∈ s.ideal) (h2 : (p : 𝓞 L) ∉ s.ideal ^ 2) :
     ∃ g : GAf L (m + 2), ∀ γ ∈ GQ L (m + 2), g⁻¹ * γ * g ∈ Umax L (m + 2) → NG.UniRT s r (s.loc _ (g⁻¹ * γ * g)) → γ = 1 := by
   classical
-  obtain ⟨-, -, hlift⟩ := GlobalTheory.T.unitaryFiniteAdeles_splitPlace_decomposition L (m + 2) s
+  obtain ⟨-, -, hlift⟩ := _root_.GlobalTheory.SplitAdelic.main L (m + 2) s
   let A₀ : GL (Fin (m + 2)) ℤ := Matrix.nonsingInvUnit (frameM m) (by rw [det_frameM]; exact isUnit_one)
   let A : GL (Fin (m + 2)) (s.v.adicCompletion (maximalRealSubfield L)) := Matrix.GeneralLinearGroup.map (Int.castRingHom (s.v.adicCompletion (maximalRealSubfield L))) A₀
   have hA : ∀ i j, A.1 i j = ((frameM m i j : ℤ) : s.v.adicCompletion (maximalRealSubfield L)) := fun i j => rfl

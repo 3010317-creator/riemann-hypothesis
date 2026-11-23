@@ -4,19 +4,22 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.ThetaSeri
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.AdmissibleColumnsLeAndHarmonicMapCover
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CoverMulShortThetaSeriesIndepOfFramedLift
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.EqOfForallAlgClosed
-import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsQuotEquiv
-import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShortThetaValueUnderLevelMoveStatement
 public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ChartIndependenceUnconditional
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ActLevFullLevelGroupFramedPointsStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsCompletedIsometryInducingHalfLevelAutomorpStatement
+public import Development.AbelianVarietyTheory.Definitions.Jets.EmbShortThLeThetaPlain
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ActLevFullLevelGroupFramedPoints
+public import Formalism.LocalToGlobal.ProjectiveLattices.LiftLaSpec
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.HeckeKer
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsCompletedIsometryInducingHalfLevelAutomorp
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsConjLevelMapByLevelMovesStatement
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevelActionShortThetaSeriesRootOfUnityMul
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.DetCharacterReductionInvariant
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsQuotEquiv
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShortThetaValueUnderLevelMoveStatement
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevelCoverDatumSimilitudeAdjointTransport
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LevelCoverDatumSimilitudeAdjointTransportStatement
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.LiesOverFramedOfSquareLevelMovesStatement
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ModuliSchemeLevelMapsHeckePointsStatement
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ModuliSchemeLevelMapsHeckePoints
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.DetCharacterReductionInvariant
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUniqueFramedPointMoveUniversalTriple
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FrMoveTransfer
 import Formalism.LocalToGlobal.ProjectiveLattices.SpMapAlgHomId
@@ -84,7 +87,7 @@ theorem natCast_mem_half (l : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Level
 theorem exists_rightMul (γ : LaMod Dw l ≃ₗ[𝓞 E] LaMod Dw l) {n : ℕ} {rk : Bool} {x : Fin n → Dw.La}
     (hx : AdmX (l := l) rk x) : ∃ x' : Fin n → Dw.La, IsRightMul γ x x' ∧ AdmX (l := l) rk x' := by
   have hM₁ : 0 < l.M := by have := l.three_le; omega
-  obtain ⟨g, -, hγ, -⟩ := GlobalTheory.T.exists_completed_isometry_inducing_half_level_automorphism _ _ Dw l γ
+  obtain ⟨g, -, hγ, -⟩ := _root_.GlobalTheory.LevelIsometry.exists_isometry_inducing _ _ Dw l γ
   obtain ⟨g', hg'⟩ := g.inv l.M hM₁
   obtain ⟨fa, hfa⟩ := exists_adjoint Dw (g.f l.M)
   obtain ⟨ga, hga⟩ := exists_adjoint Dw g'
@@ -244,13 +247,13 @@ theorem exists_const (T : Full D) (hT : LawsFull T) (hj : InR D j) (hxi : TwistT
   have hL := GlobalTheory.firstFiveLaws.1
   have hpq := rank_eq hT.p.pins hj
   have hA : T.Q.l.A = 1 := hT.p.pins.2.1.2
-  have hAct := GlobalTheory.T.actLev_full_level_group_framedPoints D T.Q j hpq hA
+  have hAct := _root_.GlobalTheory.FullLevelAction.actLev_levFull D T.Q j hpq hA
   have hLev := hT.sh.dLev j hj w.n
   have hA₂ := hT.lvA j hj w.n
   obtain ⟨inst, hnab⟩ := hT.sh.dNab j hj w.n
   obtain ⟨ph, ψ, x₀, -, hpin, htie⟩ := hT.sh.dPhi j hj w.n hw
   have hTot := hT.sh.shTot j hj (wtA w) w.n (dom_wtA w)
-  obtain ⟨g, hν, hγ, hg⟩ := GlobalTheory.T.exists_completed_isometry_inducing_half_level_automorphism _ _ (T.Q.Dw j) T.Q.l γ
+  obtain ⟨g, hν, hγ, hg⟩ := _root_.GlobalTheory.LevelIsometry.exists_isometry_inducing _ _ (T.Q.Dw j) T.Q.l γ
   obtain ⟨ρ₂, hρ₂⟩ := GlobalTheory.LevelActionLaws.exists_levAut hpq (T.dδ j w.n).Xo₂ g (by rw [hν, sub_self]; exact dvd_zero _)
   obtain ⟨u, hu, hcd⟩ := exists_root T hT hj hxi hw g hν ρ₂ hρ₂
   refine ⟨u, hu, fun Λ N P x0 x0' f f' hG hx hf hf' => ?_⟩
@@ -296,7 +299,7 @@ theorem exists_const (T : Full D) (hT : LawsFull T) (hj : InR D j) (hxi : TwistT
   obtain ⟨v, hv, hfv⟩ := hR k hk y' z₂ hz₂
   obtain ⟨v', hv', -⟩ := (hTot Λ N x0 P hU hb hb₂ hO hX hP).1 k y₂'
   have e₁ := GlobalTheory.ShortLiftInvariance.cover_product_indep_of_lift hL hC _ _ _ _ _ _ _ d
-    (GlobalTheory.T.moduliScheme_levelMaps_heckePoints'.2 _ _ _ hpq).1 hLev (hA₂.trans hA.symm) hnab ⟨ph, ψ, x₀, hpin, htie⟩ Λ N hU hb₂ hO _ _ hP₂ x0 _
+    (_root_.GlobalTheory.moduliScheme_levelMaps_heckePoints.2 _ _ _ hpq).1 hLev (hA₂.trans hA.symm) hnab ⟨ph, ψ, x₀, hpin, htie⟩ Λ N hU hb₂ hO _ _ hP₂ x0 _
     r' m' hE' k hk y' z₂ y₂' hz₂ ho' v v' hv hv'
   have e₂ := GlobalTheory.T.shortThetaValue_under_levelMove hL hC _ _ _ _ d.Xo₂ d.c₂ d.nab₂ hnab k ρ₂.hom ν₂ _ _ y₂ y₂' hmv₂ hfr₂ σq hσ
     _ _ _ hP₂ (d.w x0) Λ _ N v' hv'
@@ -328,7 +331,7 @@ theorem mv_series (T : Full D) (hT : LawsFull T) (hj : InR D j) (hxi : TwistTriv
   rw [hu γ _ _ _ _ _ _ _ hG hx hf hf']
   by_cases h0 : f' = 0
   · rw [h0, smul_zero]
-  have hAct := GlobalTheory.T.actLev_full_level_group_framedPoints D T.Q j (rank_eq hT.p.pins hj) hT.p.pins.2.1.2
+  have hAct := _root_.GlobalTheory.FullLevelAction.actLev_levFull D T.Q j (rank_eq hT.p.pins hj) hT.p.pins.2.1.2
   have hmul : ∀ a b, u (a * b) = u a * u b := fun a b => by
     obtain ⟨x₁, r₁, a₁⟩ := exists_rightMul a hf'.1
     obtain ⟨x₂, r₂, a₂⟩ := exists_rightMul b a₁

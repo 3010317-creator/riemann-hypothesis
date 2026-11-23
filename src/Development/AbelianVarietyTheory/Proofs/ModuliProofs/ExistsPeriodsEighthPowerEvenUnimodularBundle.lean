@@ -4,9 +4,10 @@ public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.ExistsAr
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.BijectiveTensorOmegaStd
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CubeLineBundleAdjointIffHermFormAdjointStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CubeLineBundleAdjointIffHermFormAdjoint
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.E8SharpClassPrimitiveIsoClosed
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.EighthPowerIntegerMatrixPrimitiveAdjointStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.Clauses
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.EighthPowerIntegerMatrixPrimitiveAdjoint
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsEquivPiRangeOfMatrixUnits
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLatticeUniformisationOfPrimTheta
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLinearLiftOfIsMonHomPolAV
@@ -291,10 +292,10 @@ theorem GlobalTheory.exists_periods_of_sharpClass : Out.Laws → Out.Laws2 → (
   have hadj : ∀ m m', m.transpose * (W + W.transpose) = (W + W.transpose) * m' →
       ∀ x y, EF0 (r m x) y = EF0 x (r m' y) := by
     intro m m' hmm' x y
-    have h1 := (GlobalTheory.T.eighthPower_integerMatrix_primitive_adjoint hth W ℂ o (spMap em) h k _ c t.pol pr hpr huniv hLB m (α m) (hα' m)).2 m' (α m')
+    have h1 := (_root_.GlobalTheory.PowerAdjoint.matrix_primitive_adjoint hth W ℂ o (spMap em) h k _ c t.pol pr hpr huniv hLB m (α m) (hα' m)).2 m' (α m')
       (hα' m') hmm'
     have h2 : hermForm Hm0 (F m (Q0 x)) (Q0 y) = hermForm Hm0 (Q0 x) (F m' (Q0 y)) :=
-      (GlobalTheory.T.cubeLineBundle_adjoint_iff_hermForm_adjoint hL hL2 hth hU t.pol u Hm0 χ (α m) (α m') (F m) (F m') hAH (hαm m) (hαm m') (hF m) (hF m')).1
+      (_root_.GlobalTheory.HermAdjoint.lbIso_cubeLB_iff_hermForm hL hL2 hth hU t.pol u Hm0 χ (α m) (α m') (F m) (F m') hAH (hαm m) (hαm m') (hF m) (hF m')).1
         h1 (Q0 x) (Q0 y)
     rw [hr, hr] at h2
     have h3 := congrArg Complex.im h2

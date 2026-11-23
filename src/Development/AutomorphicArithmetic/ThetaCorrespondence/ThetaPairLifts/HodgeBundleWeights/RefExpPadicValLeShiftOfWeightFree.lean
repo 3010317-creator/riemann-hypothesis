@@ -4,8 +4,11 @@ public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLif
 public import Development.AbelianVarietyTheory.Definitions.Divisors.MulSmulIdemMem
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings
 public import Development.AbelianVarietyTheory.Definitions.Foundations.NonnegOfMemCStarSet
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexUniformizationLawsOfGoodDeepCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasUnramifiedIntegralFramedPointsOfGoodPlacesStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HtValOnSubset
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexUniformizationLawsOfGoodDeepCover
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.FormalAlgebraisation
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CanonicalOfAbelianDeRham
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasUnramifiedIntegralFramedPointsOfGoodPlaces
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReferenceExponentPrimeBound
 import Formalism.SharpRestriction.GlobalSchurBounds.ThickPlacesCorollaryOfAnyTranslate
 import Mathlib.Algebra.Order.Floor.Extended
@@ -41,7 +44,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Definitions.Divisors.EightDvdNCol
-public import Development.AbelianVarietyTheory.Definitions.Divisors.HtValOnSubset
 import Development.AbelianVarietyTheory.Definitions.Divisors.TupleReadBaseTupleEqFamily
 
 @[expose] public section
@@ -53,7 +55,7 @@ namespace GlobalTheory.RefSum.WFree
 theorem refExp_padicVal_le_shift_of_weightFree : _root_.GlobalTheory.CovTop.PublishedHodgeBundleTheorems → ∀ (D : D7) (T : CoreJ D) (j : ℕ) (Y : Deep T.toCore j) (e : ℕ) (o : ℝ), LawsJ T → InR D j → Y.Good e o → 1 ≤ (T.Q.Dw j).p → 1 ≤ (T.Q.Dw j).q → FlatExists Y.U (xiR D) → ∀ (u : GlobalTheory.AllWt.Weight (T.Q.Dw j)) (w₀ : Psi T.Q.H → ℤ) (m : ℕ) (cst : ℝ) (q : ℕ), q.Prime → refExp_vp Y.U cst (wtOf (T.Q.Dw j) u 0) q ≤ refExp_vp Y.U cst (wtOf (T.Q.Dw j) (u + parWt (T.Q.Dw j) w₀) m) q + (((if q ∈ badPrimes T.Q.H Y.d.l₂ then (m * (D.R.f * D.R.r) * (different_vp D.host.E q : ℝ) + 1) else 0 : ℝ)) : EReal) := by
   intro hP D T j Y e o hT hj hY _ _ hF u w₀ m cst q hq
   haveI : IsGalois ℚ D.host.E := D.host.hostE_isGalois
-  have hL := GlobalTheory.T.complexUniformizationLaws_of_goodDeepCover D T j Y e o hT hj hY
+  have hL := _root_.GlobalTheory.LawsDeep.laws_deep D T j Y e o hT hj hY
   have hp := hT.pins
   have hr : (T.Q.Dw j).p + (T.Q.Dw j).q = D.R.r := by
     rw [(hp.2.2.2 j hj).1, (hp.2.2.2 j hj).2.1]
@@ -61,7 +63,7 @@ theorem refExp_padicVal_le_shift_of_weightFree : _root_.GlobalTheory.CovTop.Publ
     simp only [Ranks.sigW, Ranks.r]; omega
   have h2 := two_mul_sum_mult (T.Q.Dw j)
   rw [StandardLattice.finrank_host D, hr, mul_assoc] at h2
-  exact refExp_vp_le_of_laws hL (GlobalTheory.T.hasUnramifiedIntegralFramedPoints_of_goodPlaces hP.q18 hP.q1 hP.p5 _ _ _ _ _ _ hL.pos) hF u w₀ m cst hq
+  exact refExp_vp_le_of_laws hL (_root_.GlobalTheory.UnramPoint.unramPts hP.q18 hP.q1 hP.p5 _ _ _ _ _ _ hL.pos) hF u w₀ m cst hq
     (by exact_mod_cast Nat.eq_of_mul_eq_mul_left two_pos h2)
 end GlobalTheory.RefSum.WFree
 end

@@ -1,9 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsBaseFrame
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivationExtendLocalizationAtPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DvdDerivationOfMemSpanProdParamsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogarithmicDerivationLocalizationAtPrimeSpanOfRiStatement
+public import Mathlib.RingTheory.Derivation.Basic
+public import Mathlib.RingTheory.Localization.AtPrime.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivationExtendLocalizationAtPrime
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsAlgHomOfComp
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
+public import ReciprocityTheory.AnalyticForms.RegularLocalRings.FinalTheorems
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DvdDerivationOfMemSpanProdParams
+public import Mathlib.RingTheory.FiniteType
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogarithmicDerivationLocalizationAtPrimeSpanOfRi
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -119,10 +125,10 @@ theorem logDet_local_eq_unit_mul_prod :
     rw [Derivation.leibniz, smul_eq_mul, smul_eq_mul]
     exact Ideal.add_mem _ (Ideal.mul_mem_left _ _ (hEg i))
       (Ideal.mul_mem_right _ _ (Ideal.mem_span_singleton_self g))
-  choose N hN using fun i => GlobalTheory.T.logarithmicDerivation_localizationAtPrime_span_of_ring F A R P I n b hspan (E i) (hE i)
+  choose N hN using fun i => _root_.GlobalTheory.logDerivation_atPrime_span F A R P I n b hspan (E i) (hE i)
 
   choose D' hD' using fun k =>
-    GlobalTheory.T.exists_derivation_extend_localization_atPrime ℤ A R P ((Algebra.linearMap A R).compDer (b k))
+    _root_.GlobalTheory.derivation_extend_localization_atPrime ℤ A R P ((Algebra.linearMap A R).compDer (b k))
   have hD'a : ∀ k a, D' k (φ a) = φ (b k a) := fun k a => hD' k a
   have hD'I : ∀ k, ∀ f ∈ I.map φ, D' k f ∈ I.map φ := by
     intro k f hf
@@ -142,7 +148,7 @@ theorem logDet_local_eq_unit_mul_prod :
     · obtain ⟨j, hj, rfl⟩ := Finset.mem_map.mp hl
       have hgk : D' k g ∈ Ideal.span {g} := by
         rw [← hIg]; exact hD'I k g (by rw [hIg]; exact Ideal.mem_span_singleton_self g)
-      have := GlobalTheory.T.dvd_derivation_of_mem_span_prod_params' R m r hrsp J (D' k) hgk j hj
+      have := _root_.GlobalTheory.dvd_derivation_of_mem_span_prod_params R m r hrsp J (D' k) hgk j hj
       obtain ⟨c, hc⟩ := this
       refine ⟨c, ?_⟩
       have hmv : hm (e j) = r j := if_pos hl

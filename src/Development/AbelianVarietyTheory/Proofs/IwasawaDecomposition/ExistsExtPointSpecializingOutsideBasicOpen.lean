@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RingKrullDimIntegers
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsExtPlaceOfNeZeroMaximalStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsExtPlaceOfNeZeroMaximal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -107,7 +107,7 @@ theorem main : ∀ (F : Type) [Field F] [NumberField F] (Y : Var F) (N : TrueGeo
     rw [hU.fromSpec_primeIdealOf] at this
     exact hzg this
   obtain ⟨𝔪, h𝔪, hle'⟩ := Ideal.exists_le_maximal _ (hU.primeIdealOf ⟨z, hzU⟩).isPrime.ne_top
-  obtain ⟨v, e, φ, h₁, h₂, h₃⟩ := GlobalTheory.T.exists_ext_place_of_ne_zero_maximal F Γ(N.X, U) 𝔪 h𝔪 g' hg0
+  obtain ⟨v, e, φ, h₁, h₂, h₃⟩ := _root_.GlobalTheory.TrueGeo.HorizRing.main F Γ(N.X, U) 𝔪 h𝔪 g' hg0
   let yt : Sp e.O ⟶ N.X := Spec.map (CommRingCat.ofHom φ) ≫ hU.fromSpec
   have hw : (spMap e.O.subtype ≫ yt) ≫ N.p =
       spMap (algebraMap F (AlgebraicClosure F)) ≫ spMap (algebraMap (𝓞 F) F) := by

@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSubquotientOfEquiv
 public import Mathlib.Order.Sigma
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ParabolicModulusSqrtCharRefinedBlocksInStagesStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ParabolicModulusSqrtCharRefinedBlocksInStages
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FinSigmaFinEquivSymmStrictMonoToLex
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -286,7 +286,7 @@ theorem jac_refinePlace_equiv : ∀ (k : Type) [Field k] [ValuativeRel k] [Topol
   refine Submodule.linearMap_qext _ (LinearMap.ext fun v => ?_)
   simp only [LinearMap.comp_apply, Submodule.mkQ_apply, LinearEquiv.coe_coe, MonoidHom.coe_comp,
     Function.comp_apply]
-  rw [jac_mk, map_smul, hφ, hφ, relJacD_mk, jac_mk, leviEmb_refine_flatHom, GlobalTheory.T.parabolicModulusSqrtChar_refinedBlocks_in_stages k s d t d' e' g, Submodule.Quotient.mk_smul, smul_smul, mul_inv,
+  rw [jac_mk, map_smul, hφ, hφ, relJacD_mk, jac_mk, leviEmb_refine_flatHom, _root_.GlobalTheory.JacStages.deltaHalf_flatHom k s d t d' e' g, Submodule.Quotient.mk_smul, smul_smul, mul_inv,
     Units.val_mul, mul_comm]
 
 end GlobalTheory.JacStagesProof

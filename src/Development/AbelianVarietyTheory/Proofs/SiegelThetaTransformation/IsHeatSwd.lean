@@ -2,9 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsHeatZero
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.EisensteinSeriesOfSchwartzIsHolomorphic
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.EisensteinSeriesOfSchwartzIsHolomorphicStatement
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.FiniteClsAndStab
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.IsHeatThHStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.IsHeatThH
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -103,8 +102,8 @@ theorem GlobalTheory.SW.isHeat_swd : ∀ (E : Type) [Field E] [NumberField E] [I
   haveI := (finite_cls_and_stab E n M hφ.pos.1).1
   haveI := Fintype.ofFinite (Cls E n M)
   have h := isHeat_sum Ψ (ι := Cls E n M) fun c => isHeat_const_mul Ψ
-    (isHeat_sub Ψ (GlobalTheory.T.isHeat_thH_of_isSB E Ψ hΨ n N _ (isSB_member hφ (Quot.out c).2))
-      (GlobalTheory.T.eisenstein_series_of_schwartz_is_holomorphic E Ψ hΨ n N hn hN _ (isSB_member hφ (Quot.out c).2))) (wt M (Quot.out c).1 : ℂ)
+    (isHeat_sub Ψ (_root_.GlobalTheory.SW.isHeat_thH E Ψ hΨ n N _ (isSB_member hφ (Quot.out c).2))
+      (_root_.GlobalTheory.SW.isHeat_eis E Ψ hΨ n N hn hN _ (isSB_member hφ (Quot.out c).2))) (wt M (Quot.out c).1 : ℂ)
   convert h using 3 with Z z
   funext z'
   exact finsum_eq_sum_of_fintype _

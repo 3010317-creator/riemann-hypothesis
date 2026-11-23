@@ -1,11 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NotDominatesTopPlace
-import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ExistsBasisKaehlerOfAlgebraicIndependent
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DvrPlaceTopFormOrdersApi
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormallyEtalePolynomialPlaceToPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFreeGenWedgeFormOfFormallyEtaleMvPolynomialStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KaehlerWedgeFormMapEqSmulOfBasisStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsAlgHomOfIsBaseChange
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFreeGenWedgeFormOfFormallyEtaleMvPolynomial
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KaehlerWedgeFormMapEqSmulOfBasis
+import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ExistsBasisKaehlerOfAlgebraicIndependent
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SpanFinrankMaximalIdealLeNcardOfLeSupSq
 import Mathlib.Algebra.GroupWithZero.Submonoid.CancelMulZero
 import Mathlib.Algebra.Order.Floor.Extended
@@ -121,7 +122,7 @@ theorem formOrd_append_of_ord_eq : ∀ {K L : Type} [Field K] [Field L] (cK : �
   obtain rfl : n = m + 1 := by exact_mod_cast h2
   have hω0 : IsFreeGen P0.ring (dForm P0.const z) := isFreeGen_dForm z b hb
   have hF : IsFreeGen P.ring (dForm P.const (Fin.append τ' (fun i => ρ (z i)))) :=
-    GlobalTheory.T.isFreeGen_wedgeForm_of_formallyEtale_mvPolynomial P0.const P.const ρ hc z b hb τ' hFE
+    _root_.GlobalTheory.TopFrameEt.isFreeGen_dForm_of_formallyEtale_mvPolynomial P0.const P.const ρ hc z b hb τ' hFE
   haveI : Algebra.FormallyEtale P0.ring K := .of_isLocalization (nonZeroDivisors P0.ring)
   let bK : Module.Basis (Fin (m + 1)) K (Omega cK) :=
     (KaehlerDifferential.isBaseChange_of_formallyEtale ℂ P0.ring K).basis b
@@ -146,7 +147,7 @@ theorem formOrd_append_of_ord_eq : ∀ {K L : Type} [Field K] [Field L] (cK : �
     exact one_ne_zero (hxK.1 (a₁ := 1) (a₂ := 0) (by simp [← hf]))
   have hK : P0.formOrd (dForm cK (fun i => (x i : K))) = P0.ord f := by
     rw [← hf]; exact P0.formOrd_smul_toRat hω0 hf0
-  have key := GlobalTheory.T.kaehlerWedgeForm_map_eq_smul_of_basis cK cL j (RingHom.ext fun a => by
+  have key := _root_.GlobalTheory.TopFormAppend.dForm_append_eq_smul cK cL j (RingHom.ext fun a => by
       change j (cK a) = cL a
       have := hj ⟨cK a, hE.base.const_mem a⟩
       rw [hE.const a] at this

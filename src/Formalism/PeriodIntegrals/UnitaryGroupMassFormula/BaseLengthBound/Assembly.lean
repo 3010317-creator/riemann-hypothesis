@@ -1,7 +1,8 @@
 module
 
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BaseLengthBound.TaylorSpanGeneratorsAlt
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.FiltLenF
+public import Formalism.PeriodIntegrals.FiltLenF
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FiltrationLength.FiltLenFMain
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SumAntidiagonalTuple
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BaseLengthBound.Column
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BaseLengthBound.EqZeroOfOrdTop
@@ -9,10 +10,10 @@ public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BaseLengthBound.
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BaseLengthBound.HasseMemHK
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BaseLengthBound.HasseOpSmul
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BaseLengthBound.HasseSmul
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BaseLengthBound.HasseVan
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BaseLengthBound.LenBaseOf
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BaseLengthBound.TaylorRep
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BaseLengthBound.UInjOfColumn
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BaseLengthBound.HasseVan
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,7 +60,7 @@ namespace PoleLengthBounds
 
 theorem filtLenGr_holds : FiltLenGr := by
   intro R W _ _ _ F a hF h0 ha V _ _ φ hker M N P Q hNM hP hQ
-  refine filtration_length_bound R W F a hF h0 ha V φ hker M N P Q hNM
+  refine _root_.PI.FiltrationLength.filtLenF_main R W F a hF h0 ha V φ hker M N P Q hNM
     (fun k hk => Submodule.map_le_iff_le_comap.2 fun x hx => hP k hk x hx) (fun k hk v hv => ?_)
   obtain ⟨x, hx, rfl⟩ := hQ k hk v hv
   exact Submodule.mem_map_of_mem hx

@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsSpanFormsNeBot
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AutomorphicFormEqOwnRealLieSmoothingStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothingGrowthExponentStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WordEqSmoothingOfReproducedStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfMemWeakIn
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AutomorphicFormEqOwnRealLieSmoothing
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothingGrowthExponent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WordEqSmoothingOfReproduced
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,8 +58,8 @@ theorem GlobalTheory.AutGrowth.uniform_growth_of_autForm : GlobalTheory.Publishe
   let ν : Measure (Lie E a) := Measure.addHaar
   obtain ⟨C, N, hC⟩ := hφ.growth 1
   simp only [one_mul] at hC
-  obtain ⟨α, hα, hconv⟩ := GlobalTheory.T.automorphicForm_eq_own_realLieSmoothing hP E a ν φ hφ
+  obtain ⟨α, hα, hconv⟩ := _root_.GlobalTheory.AutGrowth.SelfSmoothing.exists_smoothing_eq_self hP E a ν φ hφ
   refine ⟨N, fun l => ?_⟩
-  obtain ⟨β, hβ, hw⟩ := GlobalTheory.T.exists_test_word_eq_smoothing E a ν α hα φ hconv l
-  obtain ⟨C', hC'⟩ := GlobalTheory.T.exists_smoothing_norm_le_height_pow E a ν β hβ φ.1 C N hC
+  obtain ⟨β, hβ, hw⟩ := _root_.GlobalTheory.AutGrowth.word_eq_smoothing_of_reproduced E a ν α hα φ hconv l
+  obtain ⟨C', hC'⟩ := _root_.GlobalTheory.AutGrowth.smoothing_growth_exponent E a ν β hβ φ.1 C N hC
   exact ⟨C', fun y => by rw [hw]; exact hC' y⟩

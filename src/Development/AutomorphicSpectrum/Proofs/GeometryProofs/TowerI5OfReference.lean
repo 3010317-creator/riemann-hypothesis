@@ -1,11 +1,12 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ArchBetween
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DominantWeightGapShiftStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HeightOfZeroDimVarietyStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.JoinModelPointsProjectStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LineHeightInvariantScalingStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootHeightDifferenceBoundStatement
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.CompactGapsGE
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DominantWeightGapShift
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HeightOfZeroDimVariety
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.JoinModelPointsProject
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LineHeightInvariantScaling
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootHeightDifferenceBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -160,7 +161,7 @@ theorem transfer [DecidableEq Ψ] (M R : RootModel Ψ N) (i : R.Ω →+* M.Ω) (
   classical
   have hw' : (fun p => algebraMap L (AlgebraicClosure L) (w p)) ∈ ptsOver (AlgebraicClosure L) M.P :=
     ptsOver_map (algebraMap L (AlgebraicClosure L)) hw
-  obtain ⟨-, -, hpts, hlift⟩ := GlobalTheory.T.join_model_points_project Ψ N M R i
+  obtain ⟨-, -, hpts, hlift⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Ht.JoinFacts.main Ψ N M R i
   obtain ⟨z, hz, hzw⟩ := hlift (AlgebraicClosure L) _ hw'
   let F := IntermediateField.adjoin L (Set.range z)
   haveI : FiniteDimensional L F :=
@@ -170,12 +171,12 @@ theorem transfer [DecidableEq Ψ] (M R : RootModel Ψ N) (i : R.Ω →+* M.Ω) (
   have hz' : z' ∈ ptsOver F (mCoordIdeal (joinOf M R i)) :=
     ptsOver_of_map (algebraMap F (AlgebraicClosure L)) hz
   refine ⟨F, inferInstance, inferInstance, fun p => z' (GlobalTheory.CompanionTheory.Ar.Cmp.joinInr M.ι R.ι p), (hpts F z' hz').2, ?_⟩
-  have key := GlobalTheory.T.root_height_difference_bound Ψ N M R i u c t s lo hi lam hC hA F z' hz'
+  have key := _root_.GlobalTheory.CompanionTheory.Ar.Ht.CloseHt.close_ht Ψ N M R i u c t s lo hi lam hC hA F z' hz'
   have heq : rootHt M t lam s F (fun p => z' (GlobalTheory.CompanionTheory.Ar.Cmp.joinInl M.ι R.ι p)) = rootHt M t lam s L w := by
     unfold rootHt
     refine Finset.sum_congr rfl fun j _ => ?_
     congr 1
-    rw [← GlobalTheory.T.line_height_invariant_scaling M.K M.ι (M.line t j) L F (algebraMap L F) w (fun _ => 1) hw.1 (fun _ => one_ne_zero)]
+    rw [← _root_.GlobalTheory.CompanionTheory.Ar.Ht.lineHt_map_scale M.K M.ι (M.line t j) L F (algebraMap L F) w (fun _ => 1) hw.1 (fun _ => one_ne_zero)]
     congr 1
     funext p
     rw [one_mul]
@@ -196,7 +197,7 @@ theorem point_bound [DecidableEq Ψ] {II : IntersectionSystem} (hII : IsIntersec
     ∃ x, -C₁ ≤ x ∧ s * x - (C₁ + |C| * (G + 2) + 1) * Real.log (2 + (C₁ + |C| * (G + 2) + 1) + x) -
       (C₁ + |C| * (G + 2) + 1) * l - (C₁ + |C| * (G + 2) + 1) * b - (C₁ + |C| * (G + 2) + 1) ≤
         M.ht II t mu s W := by
-  obtain ⟨L, _, _, w, hWw, hwW, hII'⟩ := GlobalTheory.T.height_of_zero_dim_variety M.K M.ι II hII W hW.1
+  obtain ⟨L, _, _, w, hWw, hwW, hII'⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Ht.height_eq_intersection_number M.K M.ι II hII W hW.1
   have hwP : w ∈ ptsOver L M.P := ptsOver_mono hW.2 hwW
   have hht : M.ht II t mu s W = rootHt M t mu s L w := by
     unfold RootModel.ht rootHt
@@ -223,7 +224,7 @@ theorem i5_of_hasRef_of_refLower : ∀ (Ψ : Type) [Fintype Ψ] [DecidableEq Ψ]
     exact Finset.single_le_sum (f := Cf) (fun c _ => by linarith [hCf1 c]) (Finset.mem_univ c)
   have hC₁1 : 1 ≤ C₁ := le_trans (hCf1 (Classical.arbitrary T.Comp)) (hCfle _)
   intro c₀ hc₀
-  obtain ⟨θ₁, hθ₁, -, hθ⟩ := GlobalTheory.T.dominant_weight_gap_shift Ψ N T.j T.nu c₀ T.j_pos T.j_lt hc₀
+  obtain ⟨θ₁, hθ₁, -, hθ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.WtShift.sub_small_dominant Ψ N T.j T.nu c₀ T.j_pos T.j_lt hc₀
   obtain ⟨G, hGdef⟩ : ∃ G : ℝ, G = (Fintype.card Ψ * N : ℝ) * 2 := ⟨_, rfl⟩
   have hG0 : 0 ≤ G := by rw [hGdef]; positivity
   obtain ⟨D, hDdef⟩ : ∃ D : ℝ, D = C₁ + |C| * (G + 2) + 1 := ⟨_, rfl⟩

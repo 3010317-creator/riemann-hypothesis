@@ -7,13 +7,15 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomolog
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamPotentiallySemistable
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HeckeLAdicCharacterAboveOfPublished
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalArtinExistsHolds
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GlobalArtinReciprocityHolds
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WdParameterMonodromyZeroIffPotentiallyCrystallin
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsSteinberg
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.MetAndHolds
-import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.ConclusionFinite
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.AlgebraicCharacters.AlgebraicCharacterWD
-public import Development.AutomorphicArithmetic.ThetaCorrespondence.GaloisRepresentations.HeckeDeRham
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.HeckeLAdicCharacterDeRham
+public import Development.WeilBound.CoreStatements.PublishedTheorems.HeckeLAdicCharacters.Outright
+import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
+import CompanionTheory.AutomorphicTheory.PlaceSeparation.IsOpenQuotientMapArt0
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WdParameterMonodromyZeroIffPotentiallyCrystallin
+import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.ConclusionFinite
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,10 +66,10 @@ namespace UpperTheory.Gal.Int.Inp
 theorem pst : GlobalTheory.Published.DeRhamPotSemistable := GlobalTheory.deRham_potentiallySemistable
 
 theorem alg : GlobalTheory.Published.AlgebraicCharacterWD :=
-  UpperTheory.Lit.CharWD.algebraicCharacterWD GlobalTheory.globalArtinReciprocity_holds UpperTheory.Lit.heckeLAdicCharacterDeRham pst
+  UpperTheory.Lit.CharWD.algebraicCharacterWD _root_.CompanionTheory.FamInh.globalArtin _root_.HodgeLocalDeRhamField.HLdR.field_outright pst
 
 theorem crys : GlobalTheory.Published.HeckeLAdicCharacterCrystalline := by
-  have hD := UpperTheory.Lit.heckeLAdicCharacterDeRham
+  have hD := _root_.HodgeLocalDeRhamField.HLdR.field_outright
   have hB := pst
   have hW := alg
   intro E Ω _ _ _ _ _ l _ P AI hT ι art ha χ n μ h1 h2 h3 w A h O _ _ _ Bw hj hu
@@ -91,6 +93,6 @@ theorem crys : GlobalTheory.Published.HeckeLAdicCharacterCrystalline := by
   exact (GlobalTheory.Published.CharCrysModel.isUnram_iff χ w).2 hu
 
 theorem hk : GlobalTheory.Published.HeckeLAdicCharacterAbove :=
-  GlobalTheory.HeckeAboveBridge.heckeLAdicCharacterAbove_of_potSemistable UpperTheory.Lit.heckeLAdicCharacterDeRham crys pst
+  GlobalTheory.HeckeAboveBridge.heckeLAdicCharacterAbove_of_potSemistable _root_.HodgeLocalDeRhamField.HLdR.field_outright crys pst
 
 end UpperTheory.Gal.Int.Inp

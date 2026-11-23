@@ -1,9 +1,10 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormPowSubPowLe
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.EndOmega
 public import Formalism.ThetaLogCoordinates.UniformThetaSubstitution.IsLawOfLog
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsUnramifiedNearIntegralComplexPadicStatement
+public import Formalism.LocalToGlobal.TorsionIntegrality.CMGoodModels.Statement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsUnramifiedNearIntegralComplexPadic
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormPowSubPowLe
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -156,7 +157,7 @@ theorem GlobalTheory.Honda.kur_resAlg_unr : ∀ (l : ℕ) [Fact l.Prime], 2 < l 
     exact_mod_cast hdeg.ne'
   obtain ⟨z, hz⟩ := IsAlgClosed.exists_root g hdg
   have hz1 : ‖z‖ ≤ 1 := norm_root_le_one g hgm hgc hz
-  obtain ⟨y, hyK, hy1, hzy⟩ := GlobalTheory.T.exists_unramified_near_integral_complexPadic l z hz1
+  obtain ⟨y, hyK, hy1, hzy⟩ := _root_.GlobalTheory.ResidueUnr.exists_near_kur l z hz1
   refine ⟨⟨y, hyK⟩, hy1, ?_⟩
   have hev : ((f.eval ⟨y, hyK⟩ : MaximalUnramifiedExtension l) : ℂ_[l]) = g.eval y := by
     rw [hg, Polynomial.eval_map]

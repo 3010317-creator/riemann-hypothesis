@@ -3,7 +3,7 @@ module
 public import Mathlib.LinearAlgebra.Determinant
 public import Mathlib.LinearAlgebra.Matrix.PosDef
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.MinkowskiDetBoundGramOfDetNeZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PosSemidefRealDetLeProdDiagStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PosSemidefRealDetLeProdDiag
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -156,7 +156,7 @@ theorem det_sq_mul_pow_le_prod :
     have : e.equivFun.symm z = e.equivFun.symm 0 := by
       rw [map_zero, Module.Basis.equivFun_symm_apply]; exact h0
     exact e.equivFun.symm.injective this
-  have hhad := GlobalTheory.T.posSemidef_det_le_prod_diag' r _ hMp
+  have hhad := _root_.GlobalTheory.posSemidef_real_det_le_prod_diag r _ hMp
   have hdetM : (Mz.map (Int.cast : ℤ → ℝ)).det =
       ((A.det : ℤ) : ℝ) ^ 2 * (Gz.map (Int.cast : ℤ → ℝ)).det := by
     have h1 : ∀ N : Matrix (Fin r) (Fin r) ℤ, (N.map (Int.cast : ℤ → ℝ)).det = ((N.det : ℤ) : ℝ) :=

@@ -2,18 +2,22 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsEigFrames
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PlurisubharmonicLocal
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.EigenComponentPolynomialInActionStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsExtendLinearIndependentOfSpanStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.GramDetPosIffLinearIndependentStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HolomorphicFamilySmoothEntriesStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HolomorphicLocalQuotientMapStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HolomorphicSpanCoefficientsStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsotropicEigencomponentConjugateFormStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsotropicQuotientStructureStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsotropicSublatticeCovolumePositiveStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.QuotientFamilyEigenFrameStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.RiemannLatticeEigenProjectionStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.EigenComponentPolynomialInAction
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.LinearIndependent.Defs
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsExtendLinearIndependentOfSpan
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.GramDetPosIffLinearIndependent
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HolomorphicFamilySmoothEntries
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HolomorphicLocalQuotientMap
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HolomorphicSpanCoefficients
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsotropicEigencomponentConjugateForm
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsotropicQuotientStructure
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsotropicSublatticeCovolumePositive
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.QuotientFamilyEigenFrame
 public import GroundTheory.HeightsAndTheta.Heights.StabilizerCovolume.PhiISemipositive
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.RiemannLatticeEigenProjection
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -104,7 +108,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {g : ℕ} {Λ : Type
 
 theorem hol_eig {U : Set (Fin n → ℂ)} {R : (Fin n → ℂ) → RiemLat E g Λ} (hP : ∀ x, DifferentiableOn ℂ (fun t => (R t).P x) U)
     (s : 𝓞 E →+* ℂ) (x : Λ) : DifferentiableOn ℂ (fun t => eigComp (R t).B s ((R t).P x)) U := by
-  obtain ⟨N, a, c, h⟩ := GlobalTheory.T.eigen_component_polynomial_in_action E s
+  obtain ⟨N, a, c, h⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.EigFormula.eigComp_eq_sum E s
   have e : (fun t => eigComp (R t).B s ((R t).P x)) = fun t => ∑ i, c i • (R t).P (a i • x) := by
     funext t
     rw [h g Λ (R t)]
@@ -134,11 +138,11 @@ theorem perEmb {U W : Set (Fin n → ℂ)} {R : (Fin n → ℂ) → RiemLat E g 
   set w : Fin r → (Fin n → ℂ) → Fin g → ℂ := fun a t => eigComp (R t).B s ((R t).P (v a)) with hw
   have hwh : ∀ a, DifferentiableOn ℂ (w a) U := fun a => hol_eig hHol.2 s (v a)
   have hwl : ∀ t ∈ U, LinearIndependent ℂ fun a => w a t := fun t ht =>
-    (GlobalTheory.T.isotropic_eigencomponent_conjugate_form E g Λ Unit (R t) I (hiso t ht) s).2 r v hvI hvli
+    (_root_.GlobalTheory.CompanionTheory.Relay.isotropic_eigencomponent_conjugate_form E g Λ Unit (R t) I (hiso t ht) s).2 r v hvI hvli
   have hwe : ∀ t, ∀ a, w a t ∈ eigSp (R t).B s := fun t a =>
-    ((GlobalTheory.T.riemann_lattice_eigen_projection E g Λ Unit (R t)).2.2.1 s).1 _
+    ((_root_.GlobalTheory.CompanionTheory.Relay.riemann_lattice_eigen_projection E g Λ Unit (R t)).2.2.1 s).1 _
   have ht₀U := hWU ht₀
-  obtain ⟨k, J, rfl, hli⟩ := GlobalTheory.T.exists_extend_linearIndependent_of_span g m r (fun a => w a t₀) (fun i => b i t₀) (hwl _ ht₀U) (hbl _ ht₀U)
+  obtain ⟨k, J, rfl, hli⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Exchange.exists_completion_by_members g m r (fun a => w a t₀) (fun i => b i t₀) (hwl _ ht₀U) (hbl _ ht₀U)
     (fun a => by rw [hbs _ ht₀U]; exact hwe _ a)
   set c : Fin (r + k) → (Fin n → ℂ) → Fin g → ℂ := fun i t => Fin.append (fun a => w a t) (fun j => b (J j) t) i with hc
   have hch : ∀ i, DifferentiableOn ℂ (c i) W := by
@@ -151,28 +155,28 @@ theorem perEmb {U W : Set (Fin n → ℂ)} {R : (Fin n → ℂ) → RiemLat E g 
     refine Fin.addCases (fun a => ?_) (fun j => ?_) i
     · simp only [hc, Fin.append_left]; rw [hbs t (hWU ht)]; exact hwe t a
     · simp only [hc, Fin.append_right]; exact Submodule.subset_span ⟨_, rfl⟩
-  obtain ⟨V, hVo, ht₀V, hVW, G, hG, hGl⟩ := GlobalTheory.T.holomorphic_span_coefficients E g Λ n (r + k) W R b c t₀ hW ht₀
+  obtain ⟨V, hVo, ht₀V, hVW, G, hG, hGl⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.FrameChange.log_gram_frame_change E g Λ n (r + k) W R b c t₀ hW ht₀
     (fun i => (hb i).mono hWU) hch (fun t ht => hbl t (hWU ht)) hcs hli
   have hSc : ∀ t ∈ V, ((R t).gram fun i => c i t).det =
       ((R t).gram fun a => w a t).det * ((R' t).gram fun j => q t (b (J j) t)).det := by
     intro t ht
     have htW := hVW ht
-    exact GlobalTheory.T.quotient_family_eigen_frame E g g' Λ Λ' (R t) (R' t) (q t) I s r k v (fun j => b (J j) t) (hiso t (hWU htW)) hv
+    exact _root_.GlobalTheory.CompanionTheory.Ar.Cusp.SchurGram.gram_append_eq E g g' Λ Λ' (R t) (R' t) (q t) I s r k v (fun j => b (J j) t) (hiso t (hWU htW)) hv
       (hker t htW) (hcomp t htW) (fun j => by rw [← hbs t (hWU htW)]; exact Submodule.subset_span ⟨_, rfl⟩)
   have hcpos : ∀ t ∈ V, 0 < ((R t).gram fun i => c i t).det.re ∧ ((R t).gram fun i => c i t).det.im = 0 :=
-    fun t ht => (GlobalTheory.T.gram_det_pos_iff_linearIndependent E g Λ (R t) _ _).1 (hGl t ht).1
+    fun t ht => (_root_.GlobalTheory.CompanionTheory.Ar.Cusp.GramPos.gram_det_pos_iff E g Λ (R t) _ _).1 (hGl t ht).1
   have hwpos : ∀ t ∈ V, 0 < ((R t).gram fun a => w a t).det.re ∧ ((R t).gram fun a => w a t).det.im = 0 :=
-    fun t ht => (GlobalTheory.T.gram_det_pos_iff_linearIndependent E g Λ (R t) _ _).1 (hwl t (hWU (hVW ht)))
+    fun t ht => (_root_.GlobalTheory.CompanionTheory.Ar.Cusp.GramPos.gram_det_pos_iff E g Λ (R t) _ _).1 (hwl t (hWU (hVW ht)))
   have hul : ∀ t ∈ V, LinearIndependent ℂ fun j => q t (b (J j) t) := by
     intro t ht
-    refine (GlobalTheory.T.gram_det_pos_iff_linearIndependent E g' Λ' (R' t) _ _).2 fun h0 => ?_
+    refine (_root_.GlobalTheory.CompanionTheory.Ar.Cusp.GramPos.gram_det_pos_iff E g' Λ' (R' t) _ _).2 fun h0 => ?_
     have := hSc t ht
     rw [h0, mul_zero] at this
     have h1 := (hcpos t ht).1
     rw [this] at h1
     simp at h1
   have hup : IsPsh V (fun t => Real.log ((R' t).gram fun j => q t (b (J j) t)).det.re) :=
-    (GlobalTheory.T.holomorphic_family_smooth_entries E g' Λ' Unit n V R' hVo (isHolFam_mono hR' hVW)).2.2 k (fun j t => q t (b (J j) t))
+    (_root_.GlobalTheory.CompanionTheory.Relay.holomorphic_family_smooth_entries E g' Λ' Unit n V R' hVo (isHolFam_mono hR' hVW)).2.2 k (fun j t => q t (b (J j) t))
       (fun j => hol_apply (fun x => (hq x).mono hVW) (((hb _).mono hWU).mono hVW)) hul
   have hneg : DifferentiableOn ℂ (fun t => - G t) V := hG.neg
   have hfin := GroundTheory.Heights₂.Heights.NineStatements.isPsh_add_re_add_const hVo hup hneg 0
@@ -200,9 +204,9 @@ theorem localQuot {U : Set (Fin n → ℂ)} {R : (Fin n → ℂ) → RiemLat E g
       IsHolFam W R' ∧ (∀ x, DifferentiableOn ℂ (fun t => q t x) W) ∧
       (∀ t ∈ W, LinearMap.ker (q t) = Submodule.span ℂ ((R t).P '' I)) ∧
       ∀ t ∈ W, ∀ y z, (∀ u ∈ I, (R t).ip ((R t).P u) y = 0) → (R' t).ip (q t y) (q t z) = (R t).ip y z := by
-  obtain ⟨g', k, Λ', i1, i2, e, form', π, hk, hπ, hall⟩ := GlobalTheory.T.isotropic_quotient_structure E g Λ (R t₀) I hsat hiso
+  obtain ⟨g', k, Λ', i1, i2, e, form', π, hk, hπ, hall⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.Univ.QuotLat.exists_univ_quot E g Λ (R t₀) I hsat hiso
   have hform : ∀ t ∈ U, (R t).form = (R t₀).form := fun t ht => hHol.1 t ht t₀ ht₀
-  obtain ⟨W, hWo, ht₀W, hWU, q, hq, hqs⟩ := GlobalTheory.T.holomorphic_local_quotient_map g' k g n U (fun i t => (R t).P (e i)) t₀ hU ht₀ hk
+  obtain ⟨W, hWo, ht₀W, hWU, q, hq, hqs⟩ := _root_.GlobalTheory.CompanionTheory.Metric.QuotHol.exists_holomorphic_quotient g' k g n U (fun i t => (R t).P (e i)) t₀ hU ht₀ hk
     (fun i => hHol.2 (e i)) (hall (R t₀) rfl).1
   have hker : ∀ t ∈ W, LinearMap.ker (q t) = Submodule.span ℂ ((R t).P '' I) := fun t ht => by
     rw [(hqs t ht).2, (hall (R t) (hform t (hWU ht))).2.1]
@@ -241,17 +245,17 @@ theorem phi_isPsh_continuous : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   rcases U.eq_empty_or_nonempty with rfl | ⟨t₁, ht₁⟩
   · refine ⟨GlobalTheory.CompanionTheory.AnForm.PshLocal.isPsh_of_locally n _ _ isOpen_empty (fun z hz => absurd hz (Set.notMem_empty z)),
       continuousOn_empty _⟩
-  obtain ⟨⟨r, v, hv⟩, -⟩ := GlobalTheory.T.isotropic_sublattice_covolume_positive E g Λ Ψ (R t₁) σ I hCM (hcusp t₁ ht₁).2 (hcusp t₁ ht₁).1
+  obtain ⟨⟨r, v, hv⟩, -⟩ := _root_.GlobalTheory.CompanionTheory.Relay.isotropic_sublattice_covolume_positive E g Λ Ψ (R t₁) σ I hCM (hcusp t₁ ht₁).2 (hcusp t₁ ht₁).1
   have hnz : ∀ t ∈ U, (R t).nz σ I = (R t).nzOf σ I v ∧ 0 < (R t).nz σ I := fun t ht => by
-    have := ((GlobalTheory.T.isotropic_sublattice_covolume_positive E g Λ Ψ (R t) σ I hCM (hcusp t ht).2 (hcusp t ht).1).2 r v hv)
+    have := ((_root_.GlobalTheory.CompanionTheory.Relay.isotropic_sublattice_covolume_positive E g Λ Ψ (R t) σ I hCM (hcusp t ht).2 (hcusp t ht).1).2 r v hv)
     exact ⟨this.1, this.2.1⟩
   set w : Ψ → Fin r → (Fin n → ℂ) → Fin g → ℂ := fun τ a t => eigComp (R t).B (σ τ) ((R t).P (v a)) with hw
   set idx : ℝ := ((Submodule.span (𝓞 E) (Set.range v)).toAddSubgroup.relIndex I.toAddSubgroup : ℝ) with hidx
   have hidx0 : idx ≠ 0 := by
     rw [hidx]; exact_mod_cast hv.2.2.2
   have hwpos : ∀ t ∈ U, ∀ τ, 0 < ((R t).gram fun a => w τ a t).det.re := fun t ht τ =>
-    ((GlobalTheory.T.gram_det_pos_iff_linearIndependent E g Λ (R t) _ _).1
-      ((GlobalTheory.T.isotropic_eigencomponent_conjugate_form E g Λ Unit (R t) I (hcusp t ht).2 (σ τ)).2 r v hv.2.1 hv.2.2.1)).1
+    ((_root_.GlobalTheory.CompanionTheory.Ar.Cusp.GramPos.gram_det_pos_iff E g Λ (R t) _ _).1
+      ((_root_.GlobalTheory.CompanionTheory.Relay.isotropic_eigencomponent_conjugate_form E g Λ Unit (R t) I (hcusp t ht).2 (σ τ)).2 r v hv.2.1 hv.2.2.1)).1
   have hlog : ∀ t ∈ U, (R t).logDet (fun τ i => b τ i t) - Real.log ((R t).nz σ I) =
       (∑ τ, (Real.log ((R t).gram fun i => b τ i t).det.re - Real.log ((R t).gram fun a => w τ a t).det.re)) +
         Real.log idx := by
@@ -280,7 +284,7 @@ theorem phi_isPsh_continuous : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
     exact GroundTheory.Heights₂.Heights.NineStatements.isPsh_congr' (fun t ht => (hlog t (hWU ht.1)).symm) hs
   · have hHm : ∀ i j, ContinuousOn (fun t => (R t).Hm i j) U := by
       intro i j
-      obtain ⟨h1, h2⟩ := (GlobalTheory.T.holomorphic_family_smooth_entries E g Λ Ψ n U R hU hHol).1 i j
+      obtain ⟨h1, h2⟩ := (_root_.GlobalTheory.CompanionTheory.Relay.holomorphic_family_smooth_entries E g Λ Ψ n U R hU hHol).1 i j
       have e : (fun t => (R t).Hm i j) = fun t => (((R t).Hm i j).re : ℂ) + (((R t).Hm i j).im : ℂ) * Complex.I := by
         funext t; exact (Complex.re_add_im _).symm
       rw [e]

@@ -4,10 +4,14 @@ public import Mathlib
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.BlowupProjections.BlowupProjStatement
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FirstCohomology.DimSplitPf
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoordinatesExtendingRegularParameters
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.KaehlerBasisSpreadsToNeighbourhoodStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.SmoothLocalRingFreeDifferentialsStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.RegularSequenceGermsRegularLocalStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.KaehlerBasisOnLocalizationAwayStatement
+public import Mathlib.RingTheory.Kaehler.Basic
+public import Mathlib.RingTheory.Localization.AtPrime.Basic
+public import Mathlib.RingTheory.Localization.Away.Basic
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.KaehlerBasisSpreadsToNeighbourhood
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.SmoothLocalRingFreeDifferentials
+public import ReciprocityTheory.AnalyticForms.RegularLocalRings.FinalTheorems
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.RegularSequenceGermsRegularLocal
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.KaehlerBasisOnLocalizationAway
 
 @[expose] public section
 
@@ -49,7 +53,7 @@ theorem basis_spread (K A : Type) [Field K] [CommRing A] [Algebra K A] [Algebra.
     ∃ s ∉ P, ∀ (B : Type) [CommRing B] [Algebra A B] [Algebra K B] [IsScalarTower K A B]
       [IsLocalization.Away s B],
       LinearIndependent B (fun i => KaehlerDifferential.D K B (algebraMap A B (x i))) ∧
-        Submodule.span B (Set.range fun i => KaehlerDifferential.D K B (algebraMap A B (x i))) = ⊤ := GlobalTheory.T.kaehler_basis_spreads_to_neighbourhood K A P x hx
+        Submodule.span B (Set.range fun i => KaehlerDifferential.D K B (algebraMap A B (x i))) = ⊤ := _root_.GlobalTheory.CompanionTheory.KaehlerSpread.spread K A P x hx
 
 theorem omega_free (K : Type) [Field K] (D : ℕ) (Y : Scheme.{0}) (g : Y ⟶ Sp K)
     (hD : SmoothOfRelativeDimension D g) (U : Y.affineOpens) (P : Ideal Γ(Y, U.1)) [P.IsPrime] :
@@ -57,7 +61,7 @@ theorem omega_free (K : Type) [Field K] (D : ℕ) (Y : Scheme.{0}) (g : Y ⟶ Sp
     Algebra.FinitePresentation K Γ(Y, U.1) ∧
       Module.Free (Localization.AtPrime P) Ω[Localization.AtPrime P⁄K] ∧
       Module.Finite (Localization.AtPrime P) Ω[Localization.AtPrime P⁄K] ∧
-      Module.finrank (Localization.AtPrime P) Ω[Localization.AtPrime P⁄K] = D := GlobalTheory.T.smooth_local_ring_free_differentials K D Y g hD U P
+      Module.finrank (Localization.AtPrime P) Ω[Localization.AtPrime P⁄K] = D := _root_.GlobalTheory.CompanionTheory.ResKCoords.finitePresentation_and_kaehler_atPrime K D Y g hD U P
 
 theorem stalk_transfer (Y : Scheme.{0}) (U : Y.affineOpens) (y : Y) (hy : y ∈ U.1)
     (hreg : IsRegularLocalRing (Y.presheaf.stalk y)) (m : ℕ) (f : Fin m → Γ(Y, U.1))
@@ -65,7 +69,7 @@ theorem stalk_transfer (Y : Scheme.{0}) (U : Y.affineOpens) (y : Y) (hy : y ∈ 
     IsRegularLocalRing (Localization.AtPrime (U.2.primeIdealOf ⟨y, hy⟩).asIdeal) ∧
       FinalTheorems.Rsp (Localization.AtPrime (U.2.primeIdealOf ⟨y, hy⟩).asIdeal) m
         (fun i => algebraMap Γ(Y, U.1) _ (f i)) ∧
-      ∀ s : Γ(Y, U.1), y ∈ Y.basicOpen s ↔ s ∉ (U.2.primeIdealOf ⟨y, hy⟩).asIdeal := GlobalTheory.T.regular_sequence_germs_regular_local Y U y hy hreg m f hf
+      ∀ s : Γ(Y, U.1), y ∈ Y.basicOpen s ↔ s ∉ (U.2.primeIdealOf ⟨y, hy⟩).asIdeal := _root_.GlobalTheory.CompanionTheory.ResKCoords.stalk_to_localization Y U y hy hreg m f hf
 
 theorem isCoords_basicOpen (K : Type) [Field K] (Y : Scheme.{0}) (g : Y ⟶ Sp K) (U : Y.affineOpens)
     (s : Γ(Y, U.1)) {n : ℕ} (x : Fin n → Γ(Y, U.1))
@@ -74,7 +78,7 @@ theorem isCoords_basicOpen (K : Type) [Field K] (Y : Scheme.{0}) (g : Y ⟶ Sp K
         [IsLocalization.Away s B],
         LinearIndependent B (fun i => KaehlerDifferential.D K B (algebraMap Γ(Y, U.1) B (x i))) ∧
           Submodule.span B (Set.range fun i => KaehlerDifferential.D K B (algebraMap Γ(Y, U.1) B (x i))) = ⊤) :
-    IsCoords g (Y.basicOpen s) (fun i => Y.presheaf.map (homOfLE (Y.basicOpen_le s)).op (x i)) := GlobalTheory.T.kaehler_basis_on_localization_away K Y g U s x h
+    IsCoords g (Y.basicOpen s) (fun i => Y.presheaf.map (homOfLE (Y.basicOpen_le s)).op (x i)) := _root_.GlobalTheory.CompanionTheory.Glob.ResKCoords.isCoords_basicOpen_of_away K Y g U s x h
 
 theorem coords_at_point (K : Type) [Field K] [CharZero K] (D : ℕ) (Y : Scheme.{0}) (g : Y ⟶ Sp K)
     (hD : SmoothOfRelativeDimension D g) (U : Y.affineOpens) (y : Y) (hy : y ∈ U.1)

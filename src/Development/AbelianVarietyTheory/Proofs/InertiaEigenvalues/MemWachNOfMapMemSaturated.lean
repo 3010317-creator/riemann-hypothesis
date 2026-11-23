@@ -3,11 +3,15 @@ module
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NotFullBot
 public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqTopOfSpanImage
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FlatOverProductPowerSeriesRingStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsBaseChangeComapOfExactFlatStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachKernelIntersectionFreeOfBaseChangeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachKernelMemFrobeniusSpanAfterQPowStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachModuleUniquenessCharacterisationStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+public import Mathlib.RingTheory.Flat.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FlatOverProductPowerSeriesRing
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsBaseChangeComapOfExactFlat
+public import Formalism.SharpRestriction.LevelLetterCocycles.DeltaInvariantLattices
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachKernelIntersectionFreeOfBaseChange
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachKernelMemFrobeniusSpanAfterQPow
+public import Formalism.SharpRestriction.LevelLetterCocycles.GammaSemisimpleLocalOfConsequences
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachModuleUniquenessCharacterisation
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -68,7 +72,7 @@ theorem mem_N_of_map_mem : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc)
       exact GlobalTheory.EtaleExact.isUnit_or_dvd_pow (D.loc l) LL
     · rw [(D.loc l).PD_p K]
       exact GlobalTheory.EtaleExact.sep_RW LL
-  have key := GlobalTheory.T.wachModule_uniqueness_characterisation D HW F l K s LL h T₀ h0
+  have key := _root_.GlobalTheory.NL.FrobeniusMatrixUniqueness.main D HW F l K s LL h T₀ h0
   obtain ⟨hinj, hexact, hsurj⟩ : Function.Injective (W.map ι) ∧ Function.Exact (W.map ι) (W.map π) ∧
       Function.Surjective (W.map π) := hex
   haveI := GlobalTheory.EtaleExact.finite_OL LL
@@ -76,9 +80,9 @@ theorem mem_N_of_map_mem : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc)
   haveI := ((D.loc l).PD K).finK₀
   haveI : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨Module.finrank_pos.ne'⟩
   haveI : Module.Flat (AA K LL) W.EE :=
-    GlobalTheory.T.flat_over_product_power_series_ring _ _ W.EE ((D.loc l).PD K).p W.EE_π W.EE_complete W.EE_dense W.EE_sat
+    _root_.GlobalTheory.FlatLocCompl.flat_letA _ _ W.EE ((D.loc l).PD K).p W.EE_π W.EE_complete W.EE_dense W.EE_sat
   have hbc : IsBaseChange W.EE ((W.N T₁).comap ((W.map ι).restrictScalars (AA K LL))).subtype :=
-    GlobalTheory.T.isBaseChange_comap_of_exact_flat (AA K LL) W.EE _ _ _ (W.map ι) (W.map π) (W.N T₁) (W.N T₂) hinj hexact hsurj
+    _root_.GlobalTheory.isBaseChange_comap_of_exact (AA K LL) W.EE _ _ _ (W.map ι) (W.map π) (W.N T₁) (W.N T₂) hinj hexact hsurj
       (W.N_base T₁ h1) (W.N_base T₂ h2) (fun y hy => W.map_N π h1 h2 y hy)
   have hcomp : ∀ z, W.map π (W.map ι z) = 0 := fun z => (hexact _).2 ⟨z, rfl⟩
   have hA : ∀ (a : AA K LL) (z : W.DD T₀), W.map ι (a • z) = a • W.map ι z := fun a z =>
@@ -116,8 +120,8 @@ theorem mem_N_of_map_mem : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc)
     show W.map ι (W.Q ^ k • W.φD T₀ y) ∈ W.N T₁
     rw [hA, W.map_φ]
     exact hk
-  have hfree := GlobalTheory.T.wachKernel_intersection_free_of_baseChange D HW F l K s LL h T₀ T₁ T₂ ι π h0 h1 h2 hses hbc
-  have hspan := GlobalTheory.T.wachKernel_mem_frobeniusSpan_after_Q_pow D HW F l K s LL h T₀ T₁ T₂ ι π h0 h1 h2 hses
+  have hfree := _root_.GlobalTheory.WachKernel.kernel_freeA D HW F l K s LL h T₀ T₁ T₂ ι π h0 h1 h2 hses hbc
+  have hspan := _root_.GlobalTheory.NL.PhiSpanKer.main D HW F l K s LL h T₀ T₁ T₂ ι π h0 h1 h2 hses
   have heq := key _ hfree hbc hγ hγπ hφ hspan
   rw [← heq]
   exact hx

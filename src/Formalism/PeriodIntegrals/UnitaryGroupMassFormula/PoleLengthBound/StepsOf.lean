@@ -2,17 +2,18 @@ module
 
 public import Formalism.PeriodIntegrals.LengthPoleInLift
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PoleLengthBound.PiBallFromAlt
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.FiltLenF
+public import Formalism.PeriodIntegrals.FiltLenF
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FiltrationLength.FiltLenFMain
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SumAntidiagonalTuple
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PoleLengthBound.AALeAAp
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PoleLengthBound.Assemble
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PoleLengthBound.Closed
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PoleLengthBound.FiltOk
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PoleLengthBound.LiftMul
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PoleLengthBound.PiBallFrom
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PoleLengthBound.PiLenHolds
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PoleLengthBound.RestrictedDerivativeLinear
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PoleLengthBound.Taylor
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PoleLengthBound.FiltOk
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PoleLengthBound.RestrictedDerivativeLinear
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PoleLengthBound.Vanish
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -66,6 +67,6 @@ theorem steps_of (hBQ : BallQuot) : Steps := by
       (column_derivative G la) (restricted_derivative_linear G la) (liftMul_of Q T hOk.2.1 h3),
     ball_product_length piLen_holds hBQ G la Q S CRm T e c hOk⟩
 
-theorem pole_length_bound_of_balls (hBQ : BallQuot) : PI.LengthPoleInLift := target filtration_length_bound sum_antidiagonalTuple (steps_of hBQ)
+theorem pole_length_bound_of_balls (hBQ : BallQuot) : PI.LengthPoleInLift := target _root_.PI.FiltrationLength.filtLenF_main sum_antidiagonalTuple (steps_of hBQ)
 
 end PI.PoleLengthCount

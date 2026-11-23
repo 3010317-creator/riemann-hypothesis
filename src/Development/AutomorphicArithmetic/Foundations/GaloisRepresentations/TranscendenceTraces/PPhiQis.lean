@@ -1,7 +1,9 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.TranscendenceTraces.PhiExact
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafPropertiesStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
+public import Mathlib.Algebra.Homology.HomotopyCategory.KInjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafProperties
 public import Mathlib.Algebra.Homology.ShortComplex.ExactFunctor
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -57,7 +59,7 @@ private theorem single_key {R : Type} [CommRing R] (Φ : Shv R ⥤ Shv R) [Φ.Ad
 theorem UpperTheory.Gal.TranscendenceTraces.phiQis_of :
     PhiQis := by
   intro R _ Φ _ hΦ F
-  obtain ⟨-, -, -, hq, hι, -, -, -⟩ := GlobalTheory.T.chosenInjectiveResolution_etaleSheaf_properties R F
+  obtain ⟨-, -, -, hq, hι, -, -, -⟩ := _root_.GlobalTheory.EtC.ResBasic.res_basic R F
   haveI : Φ.PreservesHomology := (Φ.exact_tfae.out 2 3).1 hΦ
   let e := (HomologicalComplex.singleMapHomologicalComplex Φ (ComplexShape.up ℤ) 0).app F
   let φ : (HomologicalComplex.single (Shv R) (ComplexShape.up ℤ) 0 ⋙

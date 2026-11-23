@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.DecayZero
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AdelicPeriodicContinuousEqZeroOfFourierCoeffStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.IntegralAdelicVectorsCharacterOrthogonalityStatement
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RationalVectorsAdelesFundamentalDomainMassOneStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AdelicPeriodicContinuousEqZeroOfFourierCoeff
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.IntegralAdelicVectorsCharacterOrthogonality
+import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RationalVectorsAdelesFundamentalDomainMassOne
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.T2SpaceNumberFieldInfiniteAdeles
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -95,7 +95,7 @@ theorem fourier_series : ∀ (F : Type) [Field F] [NumberField F] (N : ℕ) (ψ 
   classical
   have hC' := hC
   obtain ⟨_, ⟨hψc, hψn, hψF, -⟩, -, hcov, -⟩ := hC'
-  obtain ⟨-, -, -, ⟨K, hK, hKc⟩, -⟩ := GlobalTheory.T.rationalVectors_adeles_fundamentalDomain_mass_one F N ν hcov
+  obtain ⟨-, -, -, ⟨K, hK, hKc⟩, -⟩ := _root_.GlobalTheory.SWQ.rat_lattice_fundamentalDomain F N ν hcov
   haveI : Countable (Fin N → F) := countable_fn F N
   haveI : IsFiniteMeasure ((muV N ν).restrict D) := isFiniteMeasure_restrict.mpr (by rw [hD1]; simp)
   have hmass : ((muV N ν).restrict D) Set.univ = 1 := by rw [Measure.restrict_apply_univ, hD1]
@@ -148,7 +148,7 @@ theorem fourier_series : ∀ (F : Type) [Field F] [NumberField F] (N : ℕ) (ψ 
       · subst h
         simp only [sub_self, bd_zero, AddChar.map_zero_eq_one]
         simp [integral_const, measureReal_def, hmass]
-      · rw [GlobalTheory.T.integral_adelicVectors_character_orthogonality F N ψ lam ν a hC D hD hD1 (ξ' - ξ) (sub_ne_zero.mpr h), mul_zero]
+      · rw [_root_.GlobalTheory.SWQ.charOrth F N ψ lam ν a hC D hD hD1 (ξ' - ξ) (sub_ne_zero.mpr h), mul_zero]
     simp_rw [hval]
     simp
   have hQcoef : ∀ ξ : Fin N → F, ∫ u in D, Q u * ψ (-(Bd (AF F) a u (rat ξ))) ∂(muV N ν) = 0 := by
@@ -163,7 +163,7 @@ theorem fourier_series : ∀ (F : Type) [Field F] [NumberField F] (N : ℕ) (ψ 
       hint _ (hS.mul (hψc.comp (continuous_bd a ξ).neg)) _ (fun u => by simpa [norm_mul, hψn] using hSb u)
     simp only [hQdef, sub_mul]
     rw [integral_sub h1 h2, hc, hcoefS, sub_self]
-  have hQ0 := GlobalTheory.T.adelicPeriodic_continuous_eq_zero_of_fourier_coeff F N ψ lam ν a hC D hD hD1 Q hQc hQper hQcoef
+  have hQ0 := _root_.GlobalTheory.SWQ.periodic_eq_zero_of_coeff F N ψ lam ν a hC D hD hD1 Q hQc hQper hQcoef
   intro u
   have := congrFun hQ0 u
   simp only [hQdef, Pi.zero_apply, sub_eq_zero] at this

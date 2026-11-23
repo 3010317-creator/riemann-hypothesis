@@ -2,7 +2,7 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsLatIntVec
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermOf
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DeltaEqLatticeIndexStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DeltaEqLatticeIndex
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -240,8 +240,8 @@ theorem map_lastInc_lastFib {m : ℕ} (C : Matrix (Fin (m + 1)) (Fin (m + 1)) E)
 theorem delta_blk (F E : Type) [Field F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E)
     (m : ℕ) (c : Matrix (Fin m) (Fin m) E) (u : Fin m → E) (d : E) :
     delta (blk σ c u d) = delta c * Ideal.absNorm (tor c u) * idx E (lastFib (blk σ c u d)) := by
-  have hC := (GlobalTheory.T.delta_eq_lattice_index E (m + 1) (blk σ c u d)).2
-  have hc := (GlobalTheory.T.delta_eq_lattice_index E m c).2
+  have hC := (_root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.DeltaIndex.delta_index E (m + 1) (blk σ c u d)).2
+  have hc := (_root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.DeltaIndex.delta_index E m c).2
   have hsplit := relIndex_split (proj E m).toAddMonoidHom (intVec E (m + 1)).toAddSubgroup
     (lam (blk σ c u d)).toAddSubgroup (intVec_le_lam (blk σ c u d))
   have hA : (intVec E (m + 1)).toAddSubgroup.map (proj E m).toAddMonoidHom

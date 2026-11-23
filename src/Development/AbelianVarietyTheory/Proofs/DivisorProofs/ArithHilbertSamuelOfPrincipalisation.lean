@@ -2,10 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.SmallSecTensTriv
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AmpleArithHilbertSamuelOfPrincipalisationStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArCalcOfPrincipalisation
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithHilbertSamuelNefOfAmpleStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SmallFam
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AmpleArithHilbertSamuelOfPrincipalisation
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqOfIsometricTrivShift
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithHilbertSamuelNefOfAmple
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiPullOfPrincipalisation
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArCalcOfPrincipalisation
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +52,7 @@ namespace GlobalTheory
 
 theorem arithHilbertSamuel_of_principalisation :
     GlobalTheory.Published.Principalisation → GlobalTheory.Published.ArithHilbertSamuel :=
-  fun h => GlobalTheory.T.arithHilbertSamuel_nef_of_ample (GlobalTheory.MixHt.arCalc_of_principalisation h) (GlobalTheory.T.ampleArithHilbertSamuel_of_principalisation h)
+  fun h => _root_.GlobalTheory.HSNef.arithHilbertSamuel_of_ampleHS (GlobalTheory.MixHt.arCalc_of_principalisation h) (_root_.GlobalTheory.HSNef.ampleHS_of_principalisation h)
     (GlobalTheory.SemiPullAll.semiPull_of_principalisation h)
 
 end GlobalTheory

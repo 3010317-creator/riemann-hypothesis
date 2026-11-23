@@ -1,10 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.I0M
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsFlagUnipotentFiniteAdelesIffFrameUnipotentRadiStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsFlagUnipotentMatrixIffJointlyBijectivePairStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsFlagUnipotentMatrixPiIffForallEvalStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsFlagUnipotentRealPlaceIffFrameUnipotentRadicalStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BesselCharacterGenericCharacterLaws
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.HidaSetting
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsFlagUnipotentFiniteAdelesIffFrameUnipotentRadi
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsFlagUnipotentMatrixIffJointlyBijectivePair
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsFlagUnipotentMatrixPiIffForallEval
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsFlagUnipotentRealPlaceIffFrameUnipotentRadical
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LinearIndependentScaledBasisColumnsMatrixTranspoStatement
 import Formalism.LocalToGlobal.SiegelLatticeTheory.FundamentalEquivalence.FundamentalContinuity.AdelicIsomorphismStatement
 import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.InHHAlg
@@ -61,13 +63,13 @@ theorem unip_joint {A R₁ R₂ : Type} [CommRing A] [CommRing R₁] [CommRing R
     (hinj : ∀ y, f y = 0 → g y = 0 → y = 0) (hsurj : ∀ a b, ∃ y, f y = a ∧ g y = b) {n ρ : ℕ}
     (E : Matrix (Fin n) (Fin ρ) A) (K : Matrix (Fin ρ) (Fin n) A) (M : Matrix (Fin n) (Fin n) A) :
     Unip E K M ↔ Unip (E.map f) (K.map f) (M.map f) ∧ Unip (E.map g) (K.map g) (M.map g) :=
-  GlobalTheory.T.isFlagUnipotentMatrix_iff_jointlyBijective_pair f g hinj hsurj E K M
+  _root_.GlobalTheory.BesselChar.JointSplit.unip_iff_of_joint f g hinj hsurj E K M
 
 theorem unip_pi {ι S : Type} [Fintype ι] [DecidableEq ι] [CommRing S] {n ρ : ℕ} (E : Matrix (Fin n) (Fin ρ) (ι → S))
     (K : Matrix (Fin ρ) (Fin n) (ι → S)) (M : Matrix (Fin n) (Fin n) (ι → S)) :
     Unip E K M ↔ ∀ i, Unip (E.map (Pi.evalRingHom (fun _ => S) i)) (K.map (Pi.evalRingHom (fun _ => S) i))
       (M.map (Pi.evalRingHom (fun _ => S) i)) :=
-  GlobalTheory.T.isFlagUnipotentMatrix_pi_iff_forall_eval E K M
+  _root_.GlobalTheory.BesselChar.unip_pi_iff E K M
 
 theorem unip_real (I : Formalism.MainNotions.S.AutInst) (v : InfinitePlace I.F) {ρ : ℕ} (x : Fin ρ → Fin I.n → I.E) (c : Fin ρ → I.E)
     (z : Fin I.n → I.E) (hc : ∀ a, c a ≠ 0) (hz : ∀ a, Formalism.UG.hform (starRingEnd I.E) I.J (x a) z = 0)
@@ -75,7 +77,7 @@ theorem unip_real (I : Formalism.MainNotions.S.AutInst) (v : InfinitePlace I.F) 
     Unip ((Matrix.of fun k a => c a * x a k).map (I.φ v))
       ((Formalism.UG.cT (starRingEnd I.E) (Matrix.of fun k a => c a * x a k) * I.J).map (I.φ v)) N ↔
     InN (I.ε v) (fun a => rv I v (x a)) (rv I v z) ((I.P v)⁻¹ * N * I.P v) :=
-  GlobalTheory.T.isFlagUnipotent_realPlace_iff_frame_unipotentRadical I v x c z hc hz N
+  _root_.GlobalTheory.RealUnipFrame.unip_iff_inN I v x c z hc hz N
 
 theorem unip_fin (I : Formalism.MainNotions.S.AutInst) {ρ : ℕ} (x : Fin ρ → Fin I.n → I.E) (c : Fin ρ → I.E)
     (z : Fin I.n → I.E) (hc : ∀ a, c a ≠ 0) (hz : ∀ a, Formalism.UG.hform (starRingEnd I.E) I.J (x a) z = 0)
@@ -87,7 +89,7 @@ theorem unip_fin (I : Formalism.MainNotions.S.AutInst) {ρ : ℕ} (x : Fin ρ �
     (N - 1) *ᵥ incl I z ∈ Submodule.span (I.E ⊗[I.F] Formalism.MainNotions.S.Af I.F) (Set.range fun b => incl I (x b)) ∧
     ∀ y : VA I, (∀ a, hA I (incl I (x a)) y = 0) →
       (N - 1) *ᵥ y ∈ Submodule.span (I.E ⊗[I.F] Formalism.MainNotions.S.Af I.F) (Set.range fun b => incl I (x b))) :=
-  GlobalTheory.T.isFlagUnipotent_finiteAdeles_iff_frame_unipotentRadical I x c z hc hz N
+  _root_.GlobalTheory.UnipFin.unip_flag_iff_Nfin I x c z hc hz N
 
 theorem eM_linIndep (X : HidaSetting D) (h : X.B.I = Formalism.L2.SG.InstExistsPf.instOf D) (t lam : D.host.E) (ht : t ≠ 0)
     (hl : lam ≠ 0) : LinearIndependent D.host.E (GlobalTheory.Core.SBesEx.eM X h t lam).transpose :=

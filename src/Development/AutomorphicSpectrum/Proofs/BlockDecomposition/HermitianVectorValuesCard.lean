@@ -1,9 +1,9 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ResAlgSplitTwo
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianSpaceAnisotropicUnitStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NormFibreCardNonzeroStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NormFibreCardZeroStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermitianSpaceAnisotropicUnit
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NormFibreCardNonzero
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.NormFibreCardZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -129,7 +129,7 @@ theorem count : ∀ (E : Type) [CommRing E] (τ : E →+* E) (q : ℕ) (ε : ℤ
     have hfinE : Finite E := Nat.finite_of_card_ne_zero (by
       rw [hR.card]; exact pow_ne_zero _ (by omega))
     have hnt : Nontrivial V := Finite.one_lt_card_iff_nontrivial.1 (by omega)
-    obtain ⟨w, hw⟩ := GlobalTheory.T.hermitian_space_anisotropic_unit E τ q ε hR V B hnt
+    obtain ⟨w, hw⟩ := _root_.GlobalTheory.CompanionTheory.UnrDens.exists_unit_norm E τ q ε hR V B hnt
     have hP : Nat.card (B.perp w) = q ^ (2 * m) := by
       have h1 : Nat.card E * Nat.card (B.perp w) = Nat.card V := by
         rw [← Nat.card_prod]; exact Nat.card_congr (B.perpEquiv hw)
@@ -183,7 +183,7 @@ theorem count : ∀ (E : Type) [CommRing E] (τ : E →+* E) (q : ℕ) (ε : ℤ
     refine ⟨?_, ?_⟩
     · intro c hcf hc0
       have hn : (Nat.card {a : E // a * τ a = c * di} : ℝ) = (q : ℝ) - ε := by
-        have := GlobalTheory.T.norm_fibre_card_nonzero E τ q ε hR (c * di)
+        have := _root_.GlobalTheory.CompanionTheory.UnrDens.NormUnit.card_fibre E τ q ε hR (c * di)
           (by rw [map_mul, hcf, hdifix])
           (by
             intro h0
@@ -195,7 +195,7 @@ theorem count : ∀ (E : Type) [CommRing E] (τ : E →+* E) (q : ℕ) (ε : ℤ
       rw [key c hcf, hn, hpw, pow_succ ((ε : ℝ) / q) m]
       exact arith_unit _ _ _ _ hq0
     · have hn : (Nat.card {a : E // a * τ a = (0 : E) * di} : ℝ) = (q : ℝ) * (1 + ε) - ε := by
-        have := GlobalTheory.T.norm_fibre_card_zero E τ q ε hR
+        have := _root_.GlobalTheory.CompanionTheory.UnrDens.NormZero.card_norm_zero E τ q ε hR
         rw [zero_mul]
         exact_mod_cast this
       rw [key 0 (map_zero τ), hn, hpw, pow_succ ((ε : ℝ) / q) m]

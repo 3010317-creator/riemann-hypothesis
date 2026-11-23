@@ -1,11 +1,12 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.LangPolynomials.FixedIntegersIsUnitOfNotMemPrimeSpan
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EvNormOpEqNrmStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NormOpFrobStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.CyclotomicDvdExpandOfCoprime
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EvNormOpEqNrm
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NormOpFrob
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OneAddXPowSubOneMem
-import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsAdicCompleteComapConstantCoeff
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.PowSubOneMem
+import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsAdicCompleteComapConstantCoeff
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -228,7 +229,7 @@ private theorem all_levels (R : Type) [CommRing R] (p : ℕ) [hp : Fact p.Prime]
     simpa using Ideal.mem_jacobson_bot.1 (IsAdicComplete.le_jacobson_bot J hx) 1
   have hNJ : ∀ x, x - 1 ∈ J → colNm R p x - 1 ∈ J := by
     intro x hx
-    obtain ⟨r, hr⟩ := GlobalTheory.T.normOp_eq_smap_add_mul R p σ hF x
+    obtain ⟨r, hr⟩ := _root_.GlobalTheory.Col.normOp_frob R p σ hF x
     have h1 : smap σ (x - 1) ∈ J := by
       rw [hJ, Ideal.mem_comap, Ideal.mem_span_singleton'] at hx ⊢
       obtain ⟨d, hd⟩ := hx
@@ -287,10 +288,10 @@ private theorem all_levels (R : Type) [CommRing R] (p : ℕ) [hp : Fact p.Prime]
     (fun r n => (Ideal.span {(p : lev R p r) ^ n}).comap (ev R p r)) hNJ
     (fun r hr x y h => by
       rw [← Ideal.Quotient.eq] at h ⊢
-      rw [colNm_apply, colNm_apply, GlobalTheory.T.ev_normOp_eq_nrm_ev_succ R p r hr hR, GlobalTheory.T.ev_normOp_eq_nrm_ev_succ R p r hr hR, h])
+      rw [colNm_apply, colNm_apply, _root_.GlobalTheory.Col.ev_normOp_eq_nrm R p r hr hR, _root_.GlobalTheory.Col.ev_normOp_eq_nrm R p r hr hR, h])
     (fun r hr n x y h => by
       rw [Ideal.mem_comap, map_sub] at h ⊢
-      rw [colNm_apply, colNm_apply, GlobalTheory.T.ev_normOp_eq_nrm_ev_succ R p r hr hR, GlobalTheory.T.ev_normOp_eq_nrm_ev_succ R p r hr hR]
+      rw [colNm_apply, colNm_apply, _root_.GlobalTheory.Col.ev_normOp_eq_nrm R p r hr hR, _root_.GlobalTheory.Col.ev_normOp_eq_nrm R p r hr hR]
       exact nrm_congr p r n hr _ _ h)
     (fun r n x hx => by
       rw [Ideal.mem_comap, Ideal.Quotient.eq_zero_iff_mem.2 hx]; exact zero_mem _)
@@ -308,7 +309,7 @@ private theorem all_levels (R : Type) [CommRing R] (p : ℕ) [hp : Fact p.Prime]
   have hU : ∀ r, IsUnit (ev R p r (G r * W r ^ p ^ (r - c))) := fun r =>
     ((hun _ (ha r)).mul ((hun _ (hW1 r)).pow _)).map _
   obtain ⟨f, hf⟩ := GlobalTheory.Col.exists_coleman_series R p σ hF (fun m => (hU (m + 1)).unit) (fun m => by
-    rw [IsUnit.unit_spec, IsUnit.unit_spec, ← GlobalTheory.T.ev_normOp_eq_nrm_ev_succ R p (m + 1) _ hR, Ideal.Quotient.eq]
+    rw [IsUnit.unit_spec, IsUnit.unit_spec, ← _root_.GlobalTheory.Col.ev_normOp_eq_nrm R p (m + 1) _ hR, Ideal.Quotient.eq]
     exact hW2 (m + 1) (by omega))
   refine ⟨f, f.isUnit, fun m hm => ?_⟩
   obtain ⟨m, rfl⟩ : ∃ k, m = k + 1 := ⟨m - 1, by omega⟩
@@ -331,7 +332,7 @@ theorem UpperTheory.Kd.C7.pExact :
       · obtain ⟨w, hwu, hw⟩ := hg m hm h
         refine ⟨w, hwu, ?_⟩
         rw [show m₀ - (m + 1) = 0 by omega, show m₀ - m = 0 by omega, max_eq_left h, max_eq_left (by omega : m₀ ≤ m + 1),
-          Function.iterate_zero_apply, Function.iterate_zero_apply, GlobalTheory.T.ev_normOp_eq_nrm_ev_succ R p m hm hF.complete, hw]
+          Function.iterate_zero_apply, Function.iterate_zero_apply, _root_.GlobalTheory.Col.ev_normOp_eq_nrm R p m hm hF.complete, hw]
       · refine ⟨1, isUnit_one, ?_⟩
         rw [one_pow, mul_one, show m₀ - m = (m₀ - (m + 1)) + 1 by omega, Function.iterate_succ_apply',
           max_eq_right h.le, max_eq_right (by omega : m + 1 ≤ m₀), colNm_apply])

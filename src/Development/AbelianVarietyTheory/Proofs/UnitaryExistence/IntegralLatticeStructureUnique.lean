@@ -2,8 +2,12 @@ module
 
 public import Formalism.LocalToGlobal.ProjectiveLattices.FrameProofs
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IntegralFramesDifferByUnitStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.SemiAbelianDvrExtensionsIsoCompatibleStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ValVEqOneIntegralGeneratorsStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PushInvertible
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.SemiAbelianDvrExtensionsIsoCompatible
+public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.UnivFrame
+public import Formalism.LocalToGlobal.ProjectiveLattices.VAtVNeBot
+public import Mathlib.Tactic.ENatToNat
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ValVEqOneIntegralGenerators
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,7 +59,7 @@ theorem exists_sabMap_of_eq {E : Type} [Field E] [NumberField E] [IsCMField E] {
     (n₁ : SABMap t₂ Xo.univ.t x') (n₂ : SABMap t₂ G₂ (spMap (algebraMap T.V T.Fr))) :
     ∃ (k : SABMap t t₂ (𝟙 _)) (n : SABMap G G₂ (𝟙 _)), k.φ ≫ n₁.φ = m₁.φ ∧ m₂.φ ≫ n.φ = k.φ ≫ n₂.φ := by
   subst hx
-  exact GlobalTheory.T.semiAbelian_dvr_extensions_iso_compatible E H Dw l Xo T.V T.Fr x' G G₂ t t₂ m₁ m₂ n₁ n₂
+  exact _root_.GlobalTheory.sab_extensions_iso E H Dw l Xo T.V T.Fr x' G G₂ t t₂ m₁ m₂ n₁ n₂
 
 theorem intLatU_holds : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H)
     (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), IntLatU Xo c := by
@@ -67,7 +71,7 @@ theorem intLatU_holds : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   obtain ⟨k, n, hk, hn⟩ := exists_sabMap_of_eq T hx G G₂ t t₂ m₁ m₂ n₁ n₂
   refine ⟨GlobalTheory.T.integral_frames_differ_by_unit' E H Dw l Xo c T io y.1 y'.1 G G₂ t t₂ m₁ m₂ n₁ n₂ k n hx hk hn ub ub₂ hub hub₂, ?_⟩
   intro a pm h1 h2 h3
-  refine GlobalTheory.T.valV_eq_one_integral_generators E H Dw l Xo c T io y.1 y'.1 G G₂ t t₂ m₁ m₂ n₁ n₂ k n hx hk hn θ θ₂ hθ hθ₂ a
+  refine _root_.GlobalTheory.IntegralGenerator.valV_eq_one E H Dw l Xo c T io y.1 y'.1 G G₂ t t₂ m₁ m₂ n₁ n₂ k n hx hk hn θ θ₂ hθ hθ₂ a
     ⟨pm, h1, ?_, h3⟩
   have hid : spMap (RingHom.id T.Fr) = 𝟙 (Sp T.Fr) := Spec.map_id _
   rw [h2, hid]

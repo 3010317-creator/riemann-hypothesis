@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.MemPowSub
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasseNormPrincipleOfCyclicTowerStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.NpOfFinrankTwoStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.NpOfOddPrimeDegreeStatement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasseNormPrincipleOfCyclicTower
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.NpOfFinrankTwo
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.NpOfOddPrimeDegree
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,8 +65,8 @@ theorem np_of_finrank_prime (p : ℕ) (F E : Type) [Field F] [NumberField F] [Fi
     [NumberField E] [Algebra F E] [IsGalois F E] (hp : p.Prime) (h : Module.finrank F E = p) :
     NP F E := by
   by_cases h2 : p = 2
-  · exact GlobalTheory.T.np_of_finrank_two' F E (h2 ▸ h)
-  · exact GlobalTheory.T.np_of_odd_prime_degree' p F E hp h2 h
+  · exact _root_.GlobalTheory.CNorm.np_of_finrank_two F E (h2 ▸ h)
+  · exact _root_.GlobalTheory.CNorm.np_of_odd_prime_degree p F E hp h2 h
 
 theorem hasseNormPrinciple_cyclic_of_finrank (n : ℕ) : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E]
     [Algebra F E], Module.finrank F E = n → IsGalois F E → IsCyclic (E ≃ₐ[F] E) → NP F E := by
@@ -107,7 +107,7 @@ theorem hasseNormPrinciple_cyclic_of_finrank (n : ℕ) : ∀ (F E : Type) [Field
   have hlt : Module.finrank F M < n := by
     rw [← hmul, hME]
     exact lt_mul_of_one_lt_right hpos hp.one_lt
-  exact GlobalTheory.T.hasseNormPrinciple_of_cyclic_tower F M E hC (np_of_finrank_prime p M E hp hME) (ih _ hlt F M rfl hFM hCM)
+  exact _root_.GlobalTheory.CNorm.np_of_cyclic_tower F M E hC (np_of_finrank_prime p M E hp hME) (ih _ hlt F M rfl hFM hCM)
 
 theorem np_cyclic : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E]
     [Algebra F E], IsGalois F E → IsCyclic (E ≃ₐ[F] E) → NP F E :=

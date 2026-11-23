@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Lifts
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsTwIffCanonEq
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.StdLvPr
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ColNorm
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BaseFieldsDefiniteLawsStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.BaseDataEmbeddingConj
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BaseFieldsDefiniteLaws
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ChartReadsAtClassGLStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CongruentAutomorphismsLiftStepGroupElementsStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CouplingCosetInFramesPreimageUnderLiftStatement
@@ -19,7 +20,6 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Finit
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.KernelChoicesStandardTrueColumnsStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.KernelEntriesCompatibleTrueColumns
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LastStepCharacterInverseTypeAtLiftsStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevOkTwists
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelPrimeFunctionalsEqMovedLevelFunctionalsStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalConstantWeilCharacterValuesIsIntegralStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalGroupElementEqLevelComponentBadPrimeStatement
@@ -29,6 +29,7 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Ratio
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RepresentativeLatticeEqCompanionOfAdelicRepStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StepGroupCharacterInverseTypeAtLiftsStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StepNearLiftsComponentMemLocalChartGroupStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevOkTwists
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoords
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -205,7 +206,7 @@ theorem adTie_true : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → TC
             ib := fun i hi β => Idx.get (sc i hi.le β).1 hi
             fb := fb
             y0 := y0 }, ?_, ?_⟩
-  · refine ⟨(GlobalTheory.T.base_fields_definite_laws B).1, hOk.sel_ok, ⟨hOk.g_mem, hOk.T_mem u⟩, hch, hOk.ch_tied.mu0, GlobalTheory.T.localConstantWeilCharacter_values_isIntegral I hOk hTw a, fun _ => rfl, fun _ => Iff.rfl,
+  · refine ⟨(_root_.GlobalTheory.Mem.FieldsLaws.fields_satisfy_definite_laws B).1, hOk.sel_ok, ⟨hOk.g_mem, hOk.T_mem u⟩, hch, hOk.ch_tied.mu0, GlobalTheory.T.localConstantWeilCharacter_values_isIntegral I hOk hTw a, fun _ => rfl, fun _ => Iff.rfl,
       ⟨fun y => ?_, fun k z hz => ?_⟩, fun x y hxy => ?_, fun ι hι j b x hb hx => ?_, fun h => ?_,
       fun μ _ _ => ⟨tildeQ B.host I.SQ (I.xi μ), fun x => ?_, fun u => ?_⟩, fun i hi => ?_, fun i hi y τ => ?_⟩
     · obtain ⟨a, rfl⟩ := QuotientGroup.mk_surjective (show DtQ B.host I.SQ from y)

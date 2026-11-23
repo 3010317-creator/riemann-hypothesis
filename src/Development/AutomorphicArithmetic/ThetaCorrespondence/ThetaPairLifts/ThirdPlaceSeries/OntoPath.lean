@@ -4,7 +4,8 @@ public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLif
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TraceLatticeLeThetaLatticeAtPlace
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsRec
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GoodLiftOntoOfBase
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OnClausesWithErrorOfSplitPartStatement
+public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.SingleIndexPlacesAreTwisted
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OnClausesWithErrorOfSplitPart
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OnOfOnWithCanonical
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubOrthProjPerpMem
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedPlacesBoundChainTwoRunChainStatement
@@ -111,7 +112,7 @@ theorem onto_path_alt : _root_.GlobalTheory.BigOn.TwoRunsStatement → _root_.Gl
     ((R2 p).num (F2 p) c.CE CH) c.CE hOk hC.grp.levels hC.grp.chiW hC.models hC.tup.mu_conj hC.thP.thG hU hBL hrat hRR
     pLev pY gSup gSpan gLem gIdx gData kRank hI hT2 tTw sSh bBad dG dR d2 dL pPage pSizes pX pBad (eExp c.CE CH) le_rfl
     (pTie c.CE CH)
-  obtain ⟨hon, hD⟩ := GlobalTheory.T.onClauses_with_error_of_splitPart _ _ _ _ _ _ _ _ _ _ p c.CE CH err herr
+  obtain ⟨hon, hD⟩ := _root_.GlobalTheory.BigOn.onWith_of_split _ _ _ _ _ _ _ _ _ _ p c.CE CH err herr
   have hDpos : 0 < (p.S false).D := by rw [hD]; exact hRR.1
   have hJ : ∀ w ∈ (p.S false).Tw, ∀ j, 0 ≤ p.Z.J0 ((p.S false).μ w) w j := (eExp C CH).1
   exact on_of_onWith_canonical _ _ _ (p.S false) p.Z c.CE C CH CH err hDpos pE1u

@@ -4,12 +4,15 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.Int
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CuspIso
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.Hypotheses2
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ExistsAlgClosedBaseChange
-import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommonRestrIsoTens
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagSpaceComponentSmoothProjectiveConnectedStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.BarCompSubsetClosure
+public import Formalism.LocalToGlobal.ProjectiveLattices.CompHt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagSpaceComponentSmoothProjectiveConnected
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.IsNefHodgeBundleHeadWeight
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.IsNefHodgeBundleTailWeight
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.IsNefHodgeBundleUnitWeight
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqLastAddGaps
+import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,7 +47,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqLastAddGaps
 
 @[expose] public section
 
@@ -64,7 +66,7 @@ theorem weight_line_bundle_isNef : _root_.GlobalTheory.CovTop.Hypotheses'' → G
   intro hPr hNN hSA E _ _ _ H Dw l Xo c TF Z hF la hla
   letI := algebraΓOfHom (str₀ TF.X Z)
   classical
-  obtain ⟨-, hproj, -⟩ := GlobalTheory.T.flagSpace_component_smooth_projective_connected E H Dw l Xo c TF Z hF
+  obtain ⟨-, hproj, -⟩ := _root_.GlobalTheory.VarFlag.isVariety₀_flag E H Dw l Xo c TF Z hF
   obtain ⟨A, hA⟩ := exists_isAmpleLB_of_isProjOver hproj
   let C := common₀ TF.X Z
   let φ := AddMonoidHom.mk' (fun a => cls (L₀ TF.X Z a) (C.isLB a)) (cls_common_add C)

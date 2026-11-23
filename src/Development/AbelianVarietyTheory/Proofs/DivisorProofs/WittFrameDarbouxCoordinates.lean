@@ -4,11 +4,12 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EvIInfScaleMul
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsSmoothModerateOfIsAutFunSm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRationalDarbouxHermitianTensorAdeles
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuadraticExtensionSymplecticCoordinatesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticFormBaseChangeMatrixStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticPairingBlockReductionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorusElementActsOnFrameColumnsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WittFrameExtendsToBlockBasisStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuadraticExtensionSymplecticCoordinates
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticFormBaseChangeMatrix
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SymplecticPairingBlockReduction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorusElementActsOnFrameColumns
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WittFrameExtendsToBlockBasis
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -170,10 +171,10 @@ theorem adapted_torus : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     exact mul_eq_zero_of_right _ this.symm
   have h2 : Module.finrank F E = 2 := hB.cm.2.2.1
   haveI : FiniteDimensional F E := Module.finite_of_finrank_eq_succ h2
-  obtain ⟨n₀, Z₀, Q, hn, hQP, hPQ, hG, hJ₀, hJ₀h, hZx, hZy⟩ := GlobalTheory.T.witt_frame_extends_to_block_basis F E σ hB.cm n X.J hP.herm.herm hX' r₀ Xf Yf hWF
+  obtain ⟨n₀, Z₀, Q, hn, hQP, hPQ, hG, hJ₀, hJ₀h, hZx, hZy⟩ := _root_.GlobalTheory.SiegelSet.PerpBasis.exists_perp_basis F E σ hB.cm n X.J hP.herm.herm hX' r₀ Xf Yf hWF
   set P := Matrix.fromCols Z₀ (Matrix.fromCols Xf Yf) with hPdef
   obtain ⟨co₀, hco₀⟩ := GlobalTheory.RatDarboux.exists_darboux (AF F) h2 σ hσ hJ₀h hP.skew.skew hJ₀ hW'
-  obtain ⟨p, q, hpq, hpq', hpr, hqr⟩ := GlobalTheory.T.quadratic_extension_symplectic_coordinates σ d W.J hσ h2 hP.skew.skew hW'
+  obtain ⟨p, q, hpq, hpq', hpr, hqr⟩ := _root_.GlobalTheory.PairCoords.exists_pair_coords σ d W.J hσ h2 hP.skew.skew hW'
   have hinc : ∀ {a b c : Type} [Fintype b] (U : Matrix a b E) (V : Matrix b c E),
       incM F (U * V) = incM F U * incM F V := fun U V => Matrix.map_mul
   have h1 : incM F P * incM F Q = 1 := by
@@ -214,7 +215,7 @@ theorem adapted_torus : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
         q ((incM F Q * w₁) (Sum.inr (Sum.inr i))) ⬝ᵥ p ((incM F Q * w₂) (Sum.inr (Sum.inl i))) -
           q ((incM F Q * w₂) (Sum.inr (Sum.inr i))) ⬝ᵥ p ((incM F Q * w₁) (Sum.inr (Sum.inl i))) := fun i => by
       rw [neg_one_mul, neg_one_mul, map_neg, ← hpq', ← hpq]; ring
-    rw [e1, GlobalTheory.T.symplectic_form_base_change_matrix, hGinc, GlobalTheory.T.symplectic_pairing_block_reduction, hform₀, he, he, hdot, hdot, blockCo_apply, blockCo_apply]
+    rw [e1, _root_.GlobalTheory.symp_mul_left, hGinc, _root_.GlobalTheory.WeilM.symp_fromBlocks_hyperbolic, hform₀, he, he, hdot, hdot, blockCo_apply, blockCo_apply]
     simp only [key, sumElim_dotProduct_sumElim, top]
     simp only [dotProduct, Fintype.sum_prod_type, Finset.sum_sub_distrib]
     ring
@@ -241,7 +242,7 @@ theorem adapted_torus : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
     have hm : mat a' = ((HA.mat (AF F) σ ((1 : E) • X.J.map σ) a : GL (Fin n) (AE F E)) :
         Matrix (Fin n) (Fin n) (AE F E)) := by
       rw [show mat a' = ((a' : GL (Fin n) (AE F E)) : Matrix (Fin n) (Fin n) (AE F E)) from rfl, ha']
-    obtain ⟨hx, hy, h0⟩ := GlobalTheory.T.torus_element_acts_on_frame_columns F E σ hB.cm n ((1 : E) • X.J.map σ) r₀ Xf Yf t ht a hT
+    obtain ⟨hx, hy, h0⟩ := _root_.GlobalTheory.TorusMat.isTorusElt_mat F E σ hB.cm n ((1 : E) • X.J.map σ) r₀ Xf Yf t ht a hT
     generalize ((HA.mat (AF F) σ ((1 : E) • X.J.map σ) a : GL (Fin n) (AE F E)) : Matrix (Fin n) (Fin n) (AE F E)) = m
       at hx hy h0 hm
     have hc : ∀ C : Matrix (Fin n) (Fin r₀) E, Formalism.UG.cT (σ : E →+* E) C * ((1 : E) • X.J.map σ) * Z₀ = 0 → ∀ c,

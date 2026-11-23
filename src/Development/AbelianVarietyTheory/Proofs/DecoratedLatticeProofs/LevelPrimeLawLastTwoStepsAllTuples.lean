@@ -3,18 +3,19 @@ module
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.SmallPair
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.VacOfShape
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.IndicatorFunctionIdentity
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BiVacuumOperatorZeroOrLeftInvertibleStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BiVacuumOperatorZeroOrLeftInvertible
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BilinearVacuumCentralCharacter
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DataAsCombinationsAtSplitPlacesProofStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapPreservesVacuumProofStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DataAsCombinationsAtSplitPlacesProof
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapPreservesVacuumProof
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastKernelDatumInLastLineFrameAtLevelPrime
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastSeeSawCombinationsOperatorDatumStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastSeeSawDatumAtSplitPlacesProofStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastSeeSawDoubleLiftAdditiveStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RamifiedOperatorsBijectiveAtPlacesStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchwartzBruhatTensorIndicatorCharacterFacts
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastSeeSawCombinationsOperatorDatum
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastSeeSawDatumAtSplitPlacesProof
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastSeeSawDoubleLiftAdditive
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ValueDoubleExact
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RamifiedOperatorsBijectiveAtPlaces
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeesawLastStageCharsUnramifiedAtLevelPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SmallPairPairingAllGluedPlacesProofStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SmallPairPairingAllGluedPlacesProof
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SchwartzBruhatTensorIndicatorCharacterFacts
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.T2SpaceMatrixOfIsNonarchimedeanLocalField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -86,7 +87,7 @@ theorem main : ∀ (D : D7) (c : Comm D) (v : VCom c) (k : Type) [Field k] [Valu
     exact ⟨⟨M, hM.isPrime, (Ideal.bot_lt_of_maximal M (NumberField.RingOfIntegers.not_isField D.host.F)).ne'⟩⟩
   have hM : IsSelfDualC _ (o.M j 0 h) := ((hS.good (Classical.arbitrary _)).bf j 0 h).sdV₀
   obtain ⟨lam, hlam, hlamv⟩ := hS.pre.lam j h
-  obtain ⟨ε', hε'⟩ := GlobalTheory.T.lastSeeSawDatumAtSplitPlaces_proof D k ι o.p o.I (· ∈ v.tP) hPl o.q c.ψ hstd o.χ o.hχ (fun i => (hS.pre.char i).1)
+  obtain ⟨ε', hε'⟩ := _root_.GlobalTheory.LastTAllPf.main D k ι o.p o.I (· ∈ v.tP) hPl o.q c.ψ hstd o.χ o.hχ (fun i => (hS.pre.char i).1)
     (Fin (c.X (j + 1)).rank) (Fin (c.X j).rank) (Fin c.T.rank) (c.bes j 0 h).V₀ (c.X j) (c.bes j 0 h).L (c.X (j + 1))
     (c.X (j + 1 + 1)) c.T c.Lz (c.bes j 0 h).o (c.oT (j + 1 + 1) h) (c.bes j 0 h).ζ o.ζ₀ (c.bes j 0 h).line hS.pre.line
     (v.τ j h) lam hlam (fun i => (hlamv i).1) (hS.pre.tau j h)
@@ -94,8 +95,8 @@ theorem main : ∀ (D : D7) (c : Comm D) (v : VCom c) (k : Type) [Field k] [Valu
   haveI : ∀ i, (Λ i).IsFullLattice k := hΛ
   let ε : ι → 𝓀[k]ˣ := fun i => (ε' i)⁻¹ * u i
   let Q : ι → Pair k (Fin (c.X (j + 1)).rank) := fun i => ε i • o.Q (j + 1) i
-  obtain ⟨r, e, hr, hSm⟩ := GlobalTheory.T.smallPairPairingAllGluedPlaces_proof D k ι o.p o.I (· ∈ v.tP) hPl (Fin (c.X (j + 1)).rank) (Fin (c.X j).rank) o.q o.χ o.hχ
-  have hAC := GlobalTheory.T.dataAsCombinationsAtSplitPlaces_proof D
+  obtain ⟨r, e, hr, hSm⟩ := _root_.GlobalTheory.FinPl.SmallAllPf.main D k ι o.p o.I (· ∈ v.tP) hPl (Fin (c.X (j + 1)).rank) (Fin (c.X j).rank) o.q o.χ o.hχ
+  have hAC := _root_.GlobalTheory.FinPl.allComb D
   let Ψ' : ι → Matrix (Fin (c.X (j + 1)).rank) (Fin (c.X j).rank ⊕ Fin 1) k → ℂ := fun i =>
     tensCol (phiOne (o.Q j i) (o.Q (j + 1) i)) (charInd (resChar (o.χ i) (o.hχ i) o.q) (Q i))
   have hAC1 := hAC k ι o.p o.I (· ∈ v.tP) hPl (Fin (c.X (j + 1)).rank) (Fin (c.X j).rank ⊕ Fin 1) c.ψ hstd
@@ -114,15 +115,15 @@ theorem main : ∀ (D : D7) (c : Comm D) (v : VCom c) (k : Type) [Field k] [Valu
     (fun i => phiOne (o.Q j i) (o.Q (j + 1) i)) (c.x j).L (c.x (j + 1)).L v.NT (c.x (j + 1 + 1)).L (o.M j 0 h)
     hx0 hx1 hv.sdT hx2 hM (fun i => ⟨hS.pre.latT (j + 1) (by omega) i, hγ i⟩) (v.dT j) (v.dT (j + 1))
     ⟨(hv.atT j).1, hS.rep j (by omega)⟩ hrep'
-  have hLO := GlobalTheory.T.lastSeeSaw_combinations_operatorDatum D c.ψ (c.bes j 0 h).V₀ (c.X j) (c.bes j 0 h).L (c.X (j + 1)) (c.X (j + 1 + 1)) c.T c.Lz
+  have hLO := _root_.GlobalTheory.LastOpPf.lastOp D c.ψ (c.bes j 0 h).V₀ (c.X j) (c.bes j 0 h).L (c.X (j + 1)) (c.X (j + 1 + 1)) c.T c.Lz
     (c.bes j 0 h).o (c.oT (j + 1 + 1) h) (v.τ j h) (c.bes j 0 h).line.1 hS.pre.line.1 (hS.pre.tau j h)
   obtain ⟨op0, hop0, hop0e⟩ := (hLO (· ∈ v.tP)).1 e0 he0.1
-  obtain ⟨op, hop, hope⟩ := ((GlobalTheory.T.biVacuumOperator_zero_or_left_invertible D) k ι o.p o.I _ hPl c.ψ hstd _ _ _ op0 hop0).2 e₁ e₂ he₁ he₂
+  obtain ⟨op, hop, hope⟩ := ((_root_.GlobalTheory.FinPl.biInv_main D) k ι o.p o.I _ hPl c.ψ hstd _ _ _ op0 hop0).2 e₁ e₂ he₁ he₂
   refine ⟨ε, op, r, e, hr, hop, ?_⟩
   intro t ht hW hU hK Ψ₁ Ψ₂ hΨ₁ hΨ₂
   obtain ⟨χA, χz, χS', χT, omz, omT', omz'', hχV, hwA, hwz, hwX, hwT, hwTi, hwz''⟩ := hW.last j h
   have hunrT := GlobalTheory.T.seesawLastStage_chars_unramified_at_levelPrime D c v k ι o hS j h t hU hK χz χS' χT hwX hwTi
-  have hFV := GlobalTheory.T.flatMapPreservesVacuum_proof D c.ψ (· ∈ v.tP)
+  have hFV := _root_.GlobalTheory.FinPl.FlatVacuum.flatVac D c.ψ (· ∈ v.tP)
   have hΞ : Vac c.ψ (c.bes j 0 h).V₀ (c.X (j + 1)) (o.M j 0 h) (c.x (j + 1)).L (· ∈ v.tP) (flatBF (t.sBF j 0 h) Ψ₁) :=
     hFV.1 0 (c.B j 0 h) (c.J j 0 h) (t.sBF j 0 h) (v.N j) (o.M j 0 h) (v.N (j + 1)) (c.x (j + 1)).L
       (fun x _ => (hS.good x).bf j 0 h) Ψ₁ hΨ₁
@@ -146,12 +147,12 @@ theorem main : ∀ (D : D7) (c : Comm D) (v : VCom c) (k : Type) [Field k] [Valu
     (o.β (j + 1)) o.γ (c.x (j + 1)).L v.NT hx1 hv.sdT (fun _ _ => 0)
   have hw₁ : IsWeilDatumO c.ψ _ _ (χA * χz) (t.sBF j 0 h).χW (t.sBF j 0 h).om₀ := by
     rw [← hχV]; exact (t.sBF j 0 h).weil₀
-  have hSS := GlobalTheory.T.lastSeeSaw_doubleLift_additive D c.ψ (c.bes j 0 h).V₀ (c.X j) (c.bes j 0 h).L (c.X (j + 1)) (c.X (j + 1 + 1)) c.T c.Lz
+  have hSS := _root_.GlobalTheory.SeeSmallPf.seeSmall D c.ψ (c.bes j 0 h).V₀ (c.X j) (c.bes j 0 h).L (c.X (j + 1)) (c.X (j + 1 + 1)) c.T c.Lz
     (c.bes j 0 h).o (c.oT (j + 1 + 1) h) (v.τ j h) (c.bes j 0 h).line.1 hS.pre.line.1 (hS.pre.tau j h)
     (hc.x j (by omega)).cpt (hc.x (j + 1) (by omega)).cpt hc.cpt χA χz (t.sBF j 0 h).χW χS' χT (t.sBF j 0 h).om₀
     (t.kom j) omz (t.kom (j + 1)) omT' omz'' hw₁ hwA hwz hwX hwT hwz'' (c.x j).vol (c.x (j + 1)).vol c.volT N
   have hRam : PairDat.Ram (⟨o.β j, o.β₀ j 0 h, o.Q j⟩ : PairDat o.p (c.X j) (c.bes j 0 h).V₀ (Fin (c.X j).rank)) φ := hφ
-  have hRam' := (GlobalTheory.T.epsilonFourierProduct_bijective_gluedPlaces D k ι o.p o.q o.χ o.hχ ε (Fin (c.X j).rank) (c.X j) (c.bes j 0 h).V₀
+  have hRam' := (_root_.GlobalTheory.FinPl.allBijective_all D k ι o.p o.q o.χ o.hχ ε (Fin (c.X j).rank) (c.X j) (c.bes j 0 h).V₀
     ⟨o.β j, o.β₀ j 0 h, o.Q j⟩ hS.pre.inj o.I).1.mapsTo hRam
   have L1 := hSS (fun i => comb c.ψ _ _ (a i) Ξ) (fun i => comb c.ψ _ _ (b i) Φ₂)
     (fun i => ⟨((hAC1.2.2 (a i) (hab i).1 Ξ hΞ).1).1, ((hAC2.2.2 (b i) (hab i).2 Φ₂ hΦ).1).1⟩) φ f hφ.1 hf

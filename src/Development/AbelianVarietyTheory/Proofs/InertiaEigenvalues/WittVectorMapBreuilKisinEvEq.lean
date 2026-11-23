@@ -1,7 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WittVectorTeichmullerIsAdicCompleteOfPerfectStatement
+public import Mathlib.RingTheory.AdicCompletion.Basic
+public import Mathlib.RingTheory.WittVector.Teichmuller
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WittVectorTeichmullerIsAdicCompleteOfPerfect
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,7 +66,7 @@ theorem wmap_ev_eq : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (O 
     rwa [bk.ev_X, WittVector.teichmuller_coeff_zero] at this
   have hX : ((WittVector.map ψ).comp bk.ev) X = WittVector.teichmuller l (ψ bk.flat) := by
     rw [RingHom.comp_apply, bk.ev_X, WittVector.map_teichmuller]
-  have hcomp := (GlobalTheory.T.wittVector_teichmuller_isAdicComplete_of_perfect l O (ψ bk.flat) h0 hc).1
+  have hcomp := (_root_.GlobalTheory.WittTeichComplete.main l O (ψ bk.flat) h0 hc).1
   refine RingHom.congr_fun (ringHom_ext_of_sep ((WittVector.map ψ).comp bk.ev) ((WittVector.map ψ').comp bk.ev)
     (fun w => ?_) ?_ fun x hx => ?_) s
   · simp only [RingHom.comp_apply, bk.ev_C]

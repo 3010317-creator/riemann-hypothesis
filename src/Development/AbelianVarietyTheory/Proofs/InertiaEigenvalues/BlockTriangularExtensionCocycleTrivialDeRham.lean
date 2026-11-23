@@ -2,8 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.KroneckerTransposeMulVec
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdmSt
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamPeriodRingFieldTPowFiltrationUnitsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InvariantRightInverseOfRightInverseStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamPeriodRingFieldTPowFiltrationUnits
+public import Mathlib.Algebra.Field.IsField
+public import Mathlib.Data.Matrix.Mul
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsInvariantRightInverseField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -116,7 +118,7 @@ theorem GlobalTheory.PMon.extCoc_dies_in_BdR : ∀ (l : ℕ) [Fact l.Prime] (P :
   have hY : κ * Y = 1 := by
     simp only [Y]
     rw [hκdef, Matrix.mul_assoc, ← Matrix.mul_assoc Qb, hQb, Matrix.one_mul, hSR]
-  obtain ⟨Λ, hκΛ, hΛ⟩ := GlobalTheory.T.exists_invariant_right_inverse P.R.BdR (GlobalTheory.T.deRhamPeriodRing_field_tPow_filtration_units l P AI T).1 (↥(GK K)) σ (a ⊕ b) b κ Y hY hκ
+  obtain ⟨Λ, hκΛ, hΛ⟩ := _root_.GlobalTheory.InvariantRightInverse.exists_invariant_rightInverse P.R.BdR (_root_.GlobalTheory.PMon.bdR_tied l P AI T).1 (↥(GK K)) σ (a ⊕ b) b κ Y hY hκ
   have hQbR : Qb = (R : Matrix b b P.R.BdR) * κ := by
     rw [hκdef, ← Matrix.mul_assoc, hRS, Matrix.one_mul]
   have hgQb : ∀ g, Qb.map (σ g) = (R : Matrix b b P.R.BdR).map (σ g) * κ := fun g => by

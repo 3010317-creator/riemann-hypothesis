@@ -3,10 +3,13 @@ module
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IntegralClosureHeightEqOneOfLiesOver
 public import GroundTheory.HeightsAndTheta.Heights.IntegralModels.Statements
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DualMapCompStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootModelFlagCompareStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginCompareThirdStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootTowerUniformHeightBoundStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ArchBetween
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.TowerOrigin
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DualMapComp
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootModelFlagCompare
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginCompareThird
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootTowerUniformHeightBound
 public import GroundTheory.HeightsAndTheta.Heights.IntegralModels.Assembly
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -178,7 +181,7 @@ theorem exists_comparison (o₀ : RootOrigin Y S₀ R Fx) (h₀ : o₀.Fl.deg = 
 theorem genUnit_some (o : RootOrigin Y S M Fx) (o₀ : RootOrigin Y S₀ R Fx) (i : R.Ω →+* M.Ω)
     (hi : i.comp o₀.g = o.g) (r : RootIx D) :
     Ht.GenUnit (Ht.joinOf M R i) (Ht.joinDeg M R (some r)) (i (o₀.e r) / o.e r) := by
-  refine GlobalTheory.T.root_model_flag_compare E H D l Xo c Y S S₀ M R o.𝔐 o₀.𝔐 o.Fl o₀.Fl i o.e o₀.e ?_ ?_ o.lines o₀.lines r
+  refine _root_.GlobalTheory.CompanionTheory.Ar.Ht.CloseGen.genUnit_join E H D l Xo c Y S S₀ M R o.𝔐 o₀.𝔐 o.Fl o₀.Fl i o.e o₀.e ?_ ?_ o.lines o₀.lines r
   · rw [o.g_over, o₀.g_over, ← hi, spMap_comp, Category.assoc]
   · intro s k
     rw [o.g_flag, o₀.g_flag, ← hi, dualMap_comp, spMap_comp, Category.assoc]
@@ -215,9 +218,9 @@ theorem sum_bound {T : Top.RootTower (CMType H) (D.p + D.q)} [DecidableEq (CMTyp
 
 theorem has_ref : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) [DecidableEq (CMType H)] (T : Top.RootTower (CMType H) (D.p + D.q)) (g : Top.GoodOrigin Y T), (∀ B a, ∀ p ∈ g.S B, ∃ κ, HT.IsCp p κ ∧ HT.Sandwich (g.Or B a).𝔐 p κ) → Ht.HasRef T g.R := by
   intro E _ _ _ H D l Xo c Y _ T g hS
-  have hC₀ := fun a => GlobalTheory.T.exists_uniform_height_constant_alt E H D l Xo c Y (g.Sys a) (g.Fx a) (g.R a) (g.refOr a)
+  have hC₀ := fun a => _root_.GlobalTheory.CompanionTheory.Ar.OrVert.or_vert E H D l Xo c Y (g.Sys a) (g.Fx a) (g.R a) (g.refOr a)
   choose C₀ hC₀ using hC₀
-  obtain ⟨C₂, s₀, hs₀, hA⟩ := GlobalTheory.T.root_tower_uniform_height_bound E H D l Xo c Y T g
+  obtain ⟨C₂, s₀, hs₀, hA⟩ := _root_.GlobalTheory.CompanionTheory.Ar.OrArch.arch_between E H D l Xo c Y T g
   obtain ⟨C₃, hC₃⟩ := sum_bound g.toTowerOrigin
   have hl2 : 0 < Real.log 2 := Real.log_pos (by norm_num)
   set C₁ : ℝ := ∑ a, |C₀ a| with hC₁
@@ -242,7 +245,7 @@ theorem has_ref : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Ho
   refine ⟨i, fun j => j.elim 1 fun r => i ((g.refOr a).e r) / (g.Or B a).e r, ?_, ?_⟩
   · refine ⟨by rw [(g.Or B a).kA_eq, (g.refOr a).kA_eq], ?_, ?_⟩
     · rintro (_ | r)
-      · exact (GlobalTheory.T.root_origin_compare_third E H D l Xo c Y (g.S B) ∅ (T.M B a) (g.R a) (g.Sys a) (g.Fx a) (g.Or B a)
+      · exact (_root_.GlobalTheory.CompanionTheory.Ar.Ht.ALine.main E H D l Xo c Y (g.S B) ∅ (T.M B a) (g.R a) (g.Sys a) (g.Fx a) (g.Or B a)
           (g.refOr a) i hi).1
       · exact genUnit_some (g.Or B a) (g.refOr a) i hi r
     · rintro (_ | r)

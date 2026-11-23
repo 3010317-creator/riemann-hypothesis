@@ -1,8 +1,8 @@
 module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.CapOComp
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CechCohomologyFullSubcategoryIsoStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SerreClassOfCechSpectralSequenceStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CechCohomologyFullSubcategoryIso
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SerreClassOfCechSpectralSequence
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,12 +61,12 @@ theorem serre_union : ∀ {R : Type} [CommRing R] {C : Type 1} [Category.{0} C] 
     (∀ p q, p + q = n → 𝒮.P ((cechH F W q).cx.H p)) → 𝒮.P (HU F (fun T => ∃ α, W α T) n) := by
   intro R _ C _ F ι W hW 𝒮 n h
   have hle : ∀ α, W α ≤ (fun T => ∃ β, W β T : ObjectProperty C) := fun α T hT => ⟨α, hT⟩
-  refine GlobalTheory.T.serre_class_of_cech_spectral_sequence ((ObjectProperty.ι (fun T => ∃ β, W β T : ObjectProperty C)) ⋙ F)
+  refine _root_.GlobalTheory.CompanionTheory.CechSerre.serre_cech ((ObjectProperty.ι (fun T => ∃ β, W β T : ObjectProperty C)) ⋙ F)
     (fun α T => W α T.obj) (fun α => by
       intro T T' f hT
       exact hW α f.hom hT T'.property) (fun T => T.property) 𝒮 n ?_
   intro p q hpq
-  obtain ⟨e⟩ := GlobalTheory.T.cech_cohomology_full_subcategory_iso F (fun T => ∃ β, W β T : ObjectProperty C) W hle q p
+  obtain ⟨e⟩ := _root_.GlobalTheory.CompanionTheory.CechFull.cechH_fullSubcategory_H F (fun T => ∃ β, W β T : ObjectProperty C) W hle q p
   exact serre_of_equiv 𝒮 e.symm (h p q hpq)
 
 end GlobalTheory.CompanionTheory.CosieveRel

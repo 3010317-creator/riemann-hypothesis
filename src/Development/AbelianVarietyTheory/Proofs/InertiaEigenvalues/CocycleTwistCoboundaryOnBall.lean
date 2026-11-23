@@ -1,12 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.HTBasis
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CocycleVanishingOnFixingSubgroupDeterminedByGeneStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CocycleVanishingOnFixingSubgroupDeterminedByGene
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicTateMaximalIdealKillsFirstCohomology
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicTowerFixedIffMemCompletedIntegers
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TorsionCoinvariantsTwistedCyclotomicGenerator
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousOrbitPadicComplex
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicCharacterPadicBasicProperties
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicTateMaximalIdealKillsFirstCohomologyStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicTowerFixedIffMemCompletedIntegersStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TorsionCoinvariantsTwistedCyclotomicGeneratorStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -303,7 +303,7 @@ theorem torsion_killed : ∀ (l : ℕ) [Fact l.Prime] (act : GQ l →* (PadicCom
   have hlC : (l : PadicComplex l) ∈ inC (Kinf K) :=
     ⟨algebraMap ℚ_[l] (Om l) (l : ℚ_[l]), IntermediateField.algebraMap_mem _ _,
       (algebraMap_eq (l := l) (l : ℚ_[l])).symm.trans (map_natCast _ l)⟩
-  obtain ⟨x1, hx1, hx1e⟩ := GlobalTheory.T.cyclotomic_tate_maximalIdeal_kills_first_cohomology l act ha K r (l : PadicComplex l) hlC norm_l_lt c hHc
+  obtain ⟨x1, hx1, hx1e⟩ := _root_.GlobalTheory.Cyc.AveragingRankOne.cyclotomic_maximalIdeal_smul_cocycle_isCoboundary l act ha K r (l : PadicComplex l) hlC norm_l_lt c hHc
 
   obtain ⟨c1, hc1def⟩ : ∃ c1 : GQ l → Fin r → PadicComplex l,
       c1 = fun σ => (l : PadicComplex l) ^ 1 • c σ - (twAct act χ i U σ x1 - x1) := ⟨_, rfl⟩
@@ -319,7 +319,7 @@ theorem torsion_killed : ∀ (l : ℕ) [Fact l.Prime] (act : GQ l →* (PadicCom
 
   have hw : ∀ a, c1 g a ∈ Ohat K := by
     intro a
-    refine (GlobalTheory.T.cyclotomicTower_fixed_iff_mem_completedIntegers l act ha K (c1 g a) (hc1.2.1 g hgG a)).1 ?_
+    refine (_root_.GlobalTheory.CycInvariants.fixed_iff_mem_Ohat l act ha K (c1 g a) (hc1.2.1 g hgG a)).1 ?_
     intro h hh
     have hh' : g⁻¹ * h * g ∈ Hinf K := conj_hinf hχ K m hgG hh
     have e1 : c1 (g * (g⁻¹ * h * g)) = c1 g := by
@@ -344,7 +344,7 @@ theorem torsion_killed : ∀ (l : ℕ) [Fact l.Prime] (act : GQ l →* (PadicCom
     abel
   have hx2O : ∀ a, x2 a ∈ Ohat K := by
     intro a
-    refine (GlobalTheory.T.cyclotomicTower_fixed_iff_mem_completedIntegers l act ha K (x2 a) (hx2b a)).1 ?_
+    refine (_root_.GlobalTheory.CycInvariants.fixed_iff_mem_Ohat l act ha K (x2 a) (hx2b a)).1 ?_
     intro h hh
     have e := hcob1 h (hHG h hh)
     rw [hc1H h hh, smul_zero, tw_hinf hχ hU hh] at e
@@ -352,7 +352,7 @@ theorem torsion_killed : ∀ (l : ℕ) [Fact l.Prime] (act : GQ l →* (PadicCom
     simp only [Pi.zero_apply, Pi.sub_apply] at e'
     exact sub_eq_zero.1 e'.symm
 
-  obtain ⟨y, hyO, hye⟩ := GlobalTheory.T.torsion_coinvariants_twistedCyclotomicGenerator l act χ ha hχ K m r hm U g hU J hJ i (c1 g) x2 k hw hx2O
+  obtain ⟨y, hyO, hye⟩ := _root_.GlobalTheory.CycCoinv.torsion_coinvariants l act χ ha hχ K m r hm U g hU J hJ i (c1 g) x2 k hw hx2O
     (hcob1 g hgG).symm
   rw [← hN] at hye
   have hyb : y ∈ ball l r := fun a => ohat_norm K (hyO a)
@@ -360,7 +360,7 @@ theorem torsion_killed : ∀ (l : ℕ) [Fact l.Prime] (act : GQ l →* (PadicCom
     intro h hh
     rw [tw_hinf hχ hU hh]
     funext a
-    exact (GlobalTheory.T.cyclotomicTower_fixed_iff_mem_completedIntegers l act ha K (y a) (hyb a)).2 (hyO a) h hh
+    exact (_root_.GlobalTheory.CycInvariants.fixed_iff_mem_Ohat l act ha K (y a) (hyb a)).2 (hyO a) h hh
 
   obtain ⟨d, hddef⟩ : ∃ d : GQ l → Fin r → PadicComplex l,
       d = fun σ => (l : PadicComplex l) ^ N • c1 σ - (twAct act χ i U σ y - y) := ⟨_, rfl⟩
@@ -374,7 +374,7 @@ theorem torsion_killed : ∀ (l : ℕ) [Fact l.Prime] (act : GQ l →* (PadicCom
   have hdg : d g = 0 := by
     simp only [hddef]
     rw [hye, sub_self]
-  have hd0 := (GlobalTheory.T.cocycle_vanishing_on_fixingSubgroup_determined_by_generator l act χ ha hχ K m r hm U g hU i).1 d hdU hdH hdg
+  have hd0 := (_root_.GlobalTheory.Cyc.Procyclic.procyclic l act χ ha hχ K m r hm U g hU i).1 d hdU hdH hdg
 
   refine ⟨y + (l : PadicComplex l) ^ N • x1, ball_add hyb (ball_pow N hx1), ?_⟩
   intro σ hσ

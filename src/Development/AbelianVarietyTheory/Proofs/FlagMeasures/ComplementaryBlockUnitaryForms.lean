@@ -1,20 +1,21 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SigmaFiniteOfRealSmul
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ColumnBlocksSpanFlagOfBlockTriangularStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ColumnBlocksSpanFlagOfBlockTriangular
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsAlgebraIsotropicFlagSelfAdjointLevi
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsConjGaugeInvariant
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsMeasurableUnitaryLeviBlockMapStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsOrthonormalFrameOfIsotropicBlocksStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsMeasurableUnitaryLeviBlockMap
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsOrthonormalFrameOfIsotropicBlocks
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsOrthonormalTriangular
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagStabilizerMulInvLeviComponentMemUnipotentStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GaugeMeasureMatrixAlgebraSubgroupLocalAsymptoticStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagStabilizerMulInvLeviComponentMemUnipotent
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DefClassNum
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GaugeMeasureMatrixAlgebraSubgroupLocalAsymptotic
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarComplexGLMatricesConjAndSingularNull
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsRadialMapUnitaryLeviBlockProductStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeviChartMapHaarCarriedInvariantStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsRadialMapUnitaryLeviBlockProduct
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeviChartMapHaarCarriedInvariant
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocSizeBlocks
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemIsotropicFlagSelfAdjointLeviIffBlock
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurePreservingWithDensity
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemIsotropicFlagSelfAdjointLeviIffBlockStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -130,7 +131,7 @@ theorem uMat_injective {n : ℕ} {ε : Fin n → Bool} {g h : Formalism.REAL.UJ 
 theorem exists_leviChart : ∀ (n n₀ a : ℕ) (j : Fin a → ℕ) (ε : Fin n → Bool) (ε₀ : Fin n₀ → Bool) (W : Fin (a + 1) → Submodule ℂ (Fin n → ℂ)) (A : ∀ i, Matrix (Fin n) (Fin (j i)) ℂ) (C : ∀ i, Matrix (Fin (j i)) (Fin n) ℂ) (A₀ : Matrix (Fin n) (Fin n₀) ℂ) (τ τ₀ : ℂ →+* ℂ), (τ = RingHom.id ℂ ∨ τ = starRingEnd ℂ) → (τ₀ = RingHom.id ℂ ∨ τ₀ = starRingEnd ℂ) → n = n₀ + 2 * ∑ i, j i → (∀ i, C i * A i = 1) → (∀ i k, i ≠ k → C i * A k = 0) → (∀ i k, (A i)ᴴ * Formalism.REAL.Jm ε * A k = 0) → (∀ i, (A i)ᴴ * Formalism.REAL.Jm ε * A₀ = 0) → A₀ᴴ * Formalism.REAL.Jm ε * A₀ = Formalism.REAL.Jm ε₀ → SpansFlag A W → IsIsoFlag ε j W → ∃ θ, IsLeviChart ε ε₀ W A A₀ τ τ₀ θ := by
   intro n n₀ a j ε ε₀ W A C A₀ τ τ₀ hτ hτ₀ hn hC1 hC0 hAA hA0 h00 hsp hiso
   obtain ⟨B, p, q, hB1, hB0, htri, hAB, hBA, hpq⟩ := BlockGS.block_gramSchmidt n a j A C hC1 hC0
-  have hspB : SpansFlag B W := GlobalTheory.T.columnBlocksSpanFlag_of_block_triangular n a j A B p q W htri hAB hBA hsp
+  have hspB : SpansFlag B W := _root_.GlobalTheory.LeviIso.spansFlag_of_triangular n a j A B p q W htri hAB hBA hsp
   have hBJA : ∀ (m : ℕ) (X : Matrix (Fin n) (Fin m) ℂ), (∀ i, (A i)ᴴ * Formalism.REAL.Jm ε * X = 0) →
       ∀ i, (B i)ᴴ * Formalism.REAL.Jm ε * X = 0 := by
     intro m X hX i
@@ -143,8 +144,8 @@ theorem exists_leviChart : ∀ (n n₀ a : ℕ) (j : Fin a → ℕ) (ε : Fin n 
     rw [hBA k, Matrix.mul_sum]
     refine Finset.sum_eq_zero fun m _ => ?_
     rw [← Matrix.mul_assoc, hAA, Matrix.zero_mul]
-  obtain ⟨B₀, s, d, hF, hA₀⟩ := GlobalTheory.T.exists_orthonormalFrame_of_isotropicBlocks n n₀ a j ε ε₀ B A₀ hn hB1 hB0 hBJB (hBJA _ _ hA0) h00
-  obtain ⟨θ₀, hθm, hθ⟩ := GlobalTheory.T.exists_measurable_unitaryLeviBlockMap n n₀ a j ε ε₀ B B₀ hF
+  obtain ⟨B₀, s, d, hF, hA₀⟩ := _root_.GlobalTheory.FrameCompletion.exists_isFrame n n₀ a j ε ε₀ B A₀ hn hB1 hB0 hBJB (hBJA _ _ hA0) h00
+  obtain ⟨θ₀, hθm, hθ⟩ := _root_.GlobalTheory.LeviIso.exists_measurable_levMap n n₀ a j ε ε₀ B B₀ hF
   obtain ⟨C₀, hC₀, hC₀m⟩ := exists_conj_gauge_invariant n₀ ε₀ τ₀ hτ₀
   have hp : ∀ i, (p i i).det ≠ 0 := fun i => (Matrix.isUnit_det_of_right_inverse (hpq i)).ne_zero
   let R : (∀ i, Fin (j i) → Fin (j i) → ℂ) × Formalism.REAL.UJ ε₀ → (∀ i, Fin (j i) → Fin (j i) → ℂ) × Formalism.REAL.UJ ε₀ :=
@@ -160,7 +161,7 @@ theorem exists_leviChart : ∀ (n n₀ a : ℕ) (j : Fin a → ℕ) (ε : Fin n 
     fun z hz => hθ (R z) fun i => det_twist_ne (hp i) (hz i)
   refine ⟨θ₀ ∘ R, hθm.comp hRm, fun m => ?_, fun z z' hz hz' => ⟨?_, fun e => ?_⟩,
     fun z hz => ⟨fun i => ?_, fun g hg hg0 => ?_⟩, fun μ c hμ hc => ?_⟩
-  · rw [GlobalTheory.T.mem_isotropicFlagSelfAdjointLevi_iff_block n n₀ a j ε ε₀ B B₀ hF W hspB m]
+  · rw [_root_.GlobalTheory.LeviIso.Range.mem_flagM_iff n n₀ a j ε ε₀ B B₀ hF W hspB m]
     constructor
     · rintro ⟨x, g, hx, hm⟩
       choose y hy using fun i => twist_surj hτ (hp i) (x i)
@@ -197,7 +198,7 @@ theorem exists_leviChart : ∀ (n n₀ a : ℕ) (j : Fin a → ℕ) (ε : Fin n 
   · rw [Function.comp_apply, Size.locSize_blocks n a j B W hB1 hB0 hspB _
       (fun i => Matrix.of (twist (p i i) τ (z.1 i))) (fun i => det_twist_ne (hp i) (hz i))
       (fun i => by rw [hθR z hz, hF.lev_mul_B]) i, det_twist (hp i), norm_tau hτ]
-  · refine GlobalTheory.T.flagStabilizer_mul_inv_leviComponent_mem_unipotent n n₀ a j ε ε₀ B B₀ hF W A A₀ p d s (C₀ z.2) (fun i => (Matrix.of (z.1 i)).map τ) g _
+  · refine _root_.GlobalTheory.LeviUnip.mul_inv_mem_flagN n n₀ a j ε ε₀ B B₀ hF W A A₀ p d s (C₀ z.2) (fun i => (Matrix.of (z.1 i)).map τ) g _
       hsp hspB (fun k i h => (htri k i h).1) hp hAB hA₀ (fun i => ?_) hg (by rw [hC₀]; exact hg0) (hθR z hz)
     rw [det_map_tau]
     exact (map_ne_zero τ).2 (hz i)
@@ -209,14 +210,14 @@ theorem exists_leviChart : ∀ (n n₀ a : ℕ) (j : Fin a → ℕ) (ε : Fin n 
       refine MeasurePreserving.prod ?_ ⟨hcont.measurable, hC₀m s c hc⟩
       exact measurePreserving_pi _ _ fun i => (measurePreserving_twist hτ (hp i)).smul_measure _
     rw [← Measure.map_map hθm hRm, hR.map_eq]
-    obtain ⟨g1, g2⟩ := GlobalTheory.T.levi_chart_map_haar_carried_invariant n n₀ a j ε ε₀ B B₀ hF W hspB θ₀ hθm hθ c
-    have g3 := GlobalTheory.T.isRadial_map_unitaryLeviBlockProduct n n₀ a j ε ε₀ B B₀ hF θ₀ hθm hθ c hc
+    obtain ⟨g1, g2⟩ := _root_.GlobalTheory.LeviIso.map_chart_carried_and_invariant n n₀ a j ε ε₀ B B₀ hF W hspB θ₀ hθm hθ c
+    have g3 := _root_.GlobalTheory.LeviIso.MapRadial.isRadial_map_lev n n₀ a j ε ε₀ B B₀ hF θ₀ hθm hθ c hc
     have hν : IsGaugeSub (flagM ε W) (n₀ ^ 2 + 2 * ∑ i, j i ^ 2) _ := ⟨g1, g2, g3⟩
     have hd : n - 2 * ∑ i, j i = n₀ := by omega
     have halg := GlobalTheory.LeviAlgebra.exists_levi_algebra n ε a j W hiso
     rw [hd] at halg
     obtain ⟨𝒜, E, a1, a2, a3, a4⟩ := halg
     rw [a4] at hμ hν
-    exact (GlobalTheory.T.gaugeMeasure_matrixAlgebraSubgroup_local_asymptotics n ε 𝒜 _ E a1 a2 a3 _ hν).2.2.1 μ hμ
+    exact (_root_.GlobalTheory.GaugeSubLoc.gauge_local_asymptotics n ε 𝒜 _ E a1 a2 a3 _ hν).2.2.1 μ hμ
 
 end GlobalTheory.LeviIso.Chart

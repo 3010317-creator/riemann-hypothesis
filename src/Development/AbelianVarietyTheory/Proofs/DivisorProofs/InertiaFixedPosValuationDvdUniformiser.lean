@@ -1,9 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaloisTransitiveOnValuationRings
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardInertiaEqRamificationIdxOfPerfectResidueStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationLeExpNegCardInertiaOfInertiaFixedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationUniformizerIntegralClosureEqExpNegRamifStatement
+public import Mathlib.RingTheory.RamificationInertia.Ramification
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardInertiaEqRamificationIdxOfPerfectResidue
+public import Mathlib.FieldTheory.Galois.Basic
+public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Valuation
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationLeExpNegCardInertiaOfInertiaFixed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationUniformizerIntegralClosureEqExpNegRamif
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -162,8 +165,8 @@ theorem valuation_le_of_fixed (R K L : Type) [CommRing R] [IsDomain R] [IsDiscre
     (P : HeightOneSpectrum (integralClosure R L)) (π : R) (hπ : Irreducible π) (y : L)
     (hy : ∀ σ ∈ P.asIdeal.inertia (L ≃ₐ[K] L), σ y = y) (hlt : P.valuation L y < 1) :
     P.valuation L y ≤ P.valuation L (algebraMap K L (algebraMap R K π)) := by
-  rw [GlobalTheory.T.valuation_uniformizer_integralClosure_eq_exp_neg_ramificationIdx R K L P π hπ, ← GlobalTheory.T.card_inertia_eq_ramificationIdx_of_perfect_residue R K L P]
-  exact GlobalTheory.T.valuation_le_exp_neg_card_inertia_of_inertia_fixed R K L P y hy hlt
+  rw [_root_.GlobalTheory.valuation_uniformizer_integralClosure R K L P π hπ, ← _root_.GlobalTheory.InertiaDVR.card_inertia_eq_ramificationIdx R K L P]
+  exact _root_.GlobalTheory.InertiaFixedVal.valuation_le_exp_neg_card_inertia R K L P y hy hlt
 
 theorem div_uniformiser_mem : ∀ (R K L : Type) [CommRing R] [IsDomain R] [IsDiscreteValuationRing R]
     [PerfectField (ResidueField R)] [Field K] [Algebra R K] [IsFractionRing R K] [Field L] [Algebra K L]

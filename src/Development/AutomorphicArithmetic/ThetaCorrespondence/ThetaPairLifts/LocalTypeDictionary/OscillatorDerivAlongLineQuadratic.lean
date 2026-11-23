@@ -1,13 +1,16 @@
 module
 
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ArchimedeanLineIntertwinesRealSchrodingerStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ArchimedeanOneParameterFamilyContinuousStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsAdmissibleFiniteFactorArchimedeanSchwartzStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsHeisenbergLineDerivativeFormulaStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealMetaplecticFamilyDerivativeQuadraticStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilRepresentationIntegralActionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPairingStdP
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ArchimedeanLineIntertwinesRealSchrodinger
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ArchimedeanOneParameterFamilyContinuous
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsHeisenbergLineDerivativeFormula
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.RealMetaplecticRepresentation
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealMetaplecticFamilyDerivativeQuadratic
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilRepresentationIntegralAction
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ArchimedeanThetaFamilyExistsSmooth
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsAdmissibleFiniteFactorArchimedeanSchwartz
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +48,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPairingStdP
 
 @[expose] public section
 
@@ -66,12 +68,12 @@ theorem oscillator_deriv_along_line_quadratic : _root_.GlobalTheory.FunPr.ThetaL
   classical
   intro hP F E _ _ _ _ _ σ n d X W M ψ χX χW om hCM hψ hW γ hγ
   obtain ⟨T, hT, hadd, h0⟩ := _root_.GlobalTheory.T.archimedean_theta_family_exists_smooth hP M ψ χX χW om hCM hψ hW γ hγ
-  obtain ⟨A, hAc, hA⟩ := GlobalTheory.T.archimedeanLine_intertwines_realSchrodinger M ψ χX χW om hψ hW γ hγ T hT
+  obtain ⟨A, hAc, hA⟩ := _root_.GlobalTheory.ArchFam.schr_equiv M ψ χX χW om hψ hW γ hγ T hT
   haveI : BorelSpace (Fin n × Fin d → mixedEmbedding.mixedSpace F) := Pi.borelSpace
   let μ : Measure (Fin n × Fin d → mixedEmbedding.mixedSpace F) := Measure.addHaar
   have hiso : ∀ t f, ∫ x, ‖T t f x‖ ^ 2 ∂μ = ∫ x, ‖f x‖ ^ 2 ∂μ := fun t f =>
-    GlobalTheory.T.weil_representation_integral_action M ψ χX χW om hW μ inferInstance (γ (Multiplicative.ofAdd t)) f (T t f) (hT t f)
-  obtain ⟨hc1, hc2⟩ := GlobalTheory.T.archimedeanOneParameterFamily_continuous M ψ χX χW om hW γ hγ T hT
+    _root_.GlobalTheory.ArchIsom.acts_norm_sq_eq M ψ χX χW om hW μ inferInstance (γ (Multiplicative.ofAdd t)) f (T t f) (hT t f)
+  obtain ⟨hc1, hc2⟩ := _root_.GlobalTheory.ArchFamilyCont.continuous_family M ψ χX χW om hW γ hγ T hT
   have trace_real {ι : Type} [Fintype ι] (f : ι → ℝ) :
       Algebra.trace ℝ (ι → ℝ) f = ∑ i, f i := by
     rw [Algebra.trace_eq_matrix_trace (Pi.basisFun ℝ ι)]
@@ -116,12 +118,12 @@ theorem oscillator_deriv_along_line_quadratic : _root_.GlobalTheory.FunPr.ThetaL
         have h := hy (Pi.single i b)
         simpa [trP, Pi.single_apply, ite_mul, Finset.sum_ite_eq', mul_comm] using h
     }
-  obtain ⟨m, a, b, c, c₀, hR⟩ := GlobalTheory.T.realMetaplectic_family_derivative_quadratic hP.realMetaplecticRepresentation
+  obtain ⟨m, a, b, c, c₀, hR⟩ := _root_.GlobalTheory.QuadFam.deriv_quad hP.realMetaplecticRepresentation
     (Fin n × Fin d → mixedEmbedding.mixedSpace F) μ inferInstance _
     hpair A T hAc hadd h0 hA hiso hc1 (hc2 μ inferInstance)
-  choose u hu hDu using fun i => GlobalTheory.T.exists_heisenbergLine_derivative_formula M ψ hψ (a i)
-  choose v hv hDv using fun i => GlobalTheory.T.exists_heisenbergLine_derivative_formula M ψ hψ (b i)
-  obtain ⟨r₀, hr₀, hinj⟩ := GlobalTheory.T.exists_admissible_finiteFactor_archimedeanSchwartz (F := F) (Fin n × Fin d)
+  choose u hu hDu using fun i => _root_.GlobalTheory.HeisDerivArch.exists_heisLine_actsD_eq M ψ hψ (a i)
+  choose v hv hDv using fun i => _root_.GlobalTheory.HeisDerivArch.exists_heisLine_actsD_eq M ψ hψ (b i)
+  obtain ⟨r₀, hr₀, hinj⟩ := _root_.GlobalTheory.ArchUniq.exists_admissible_finite_factor (F := F) (Fin n × Fin d)
   refine ⟨m, u, v, c, c₀, fun i => ⟨hu i, hv i⟩, ?_⟩
   intro f g₁ g₂ h1 h2 F₁ hF y
   have eF : ∀ t, F₁ t = T t f := fun t => hinj _ _ ((hF t r₀ (hr₀ f)).symm.trans (hT t f r₀ (hr₀ f)))

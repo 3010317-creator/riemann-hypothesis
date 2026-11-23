@@ -7,12 +7,13 @@ public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DecoratedPointClassesBijectiveDoubleCosetsStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsK1PointCongruentStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsStepLevelSmallerAtFinitePlacesStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPointOfRationalUnitaryAdelicMul
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemFramedLevelIffTwoAdelicPointsStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PlaceProjectionZeroIntegralIffComponentsAboveStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ReferenceCharactersFactorTame
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PlaceProjectionZeroIntegralIffComponentsAbove
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PointLatticeIffBaseLatticeDecorated
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.QbKLeLocLev
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StabIffMemConj
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPointOfRationalUnitaryAdelicMul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -75,7 +76,7 @@ theorem localComponent_congr {v : HeightOneSpectrum (𝓞 F)} {P : HeightOneSpec
     congrArg (fun g : GL (Fin n) (E ⊗[F] v.adicCompletion F) => (g : Matrix (Fin n) (Fin n) (E ⊗[F] v.adicCompletion F)) i j) h
   have h1 : prV (E := E) v ((x : Matrix (Fin n) (Fin n) (AfE F E)) i j - (x' : Matrix (Fin n) (Fin n) (AfE F E)) i j) = 0 := by
     rw [map_sub, h0, sub_self]
-  have h2 := (GlobalTheory.T.placeProjection_zero_integral_iff_components_above F E v _).1.1 h1 P hP
+  have h2 := (_root_.GlobalTheory.Mem.Col2.AdComp.prV_zero_int_iff F E v _).1.1 h1 P hP
   rw [map_sub, sub_eq_zero] at h2
   exact h2
 

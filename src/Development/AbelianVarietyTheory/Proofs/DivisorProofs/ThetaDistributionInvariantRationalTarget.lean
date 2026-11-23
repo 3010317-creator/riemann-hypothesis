@@ -2,14 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteDetSmulSubOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSplitCharacter
-import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.StarPurelyImaginaryEqNeg
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FinTensMemLatO
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MapFinNeg
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaTildeHeckeCharSplitMulSignOfNormFormulaStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCartanInvolutionCommQuasiReflectionStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LocalNewformFunction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCartanInvolutionCommQuasiReflection
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteWeilRepEqLatticeIntertwinerMulCharacterStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralGaussianRealIsometryNoFixedStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalIsometryVacuumScalarGaussSumIntegralStatement
+import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.StarPurelyImaginaryEqNeg
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FinTensMemLatO
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsGoodIndexNormalizationNegativeInert
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsThetaFunNeZero
@@ -334,7 +335,7 @@ theorem exists_cartan_refl (V : HSp D) (x : Fin V.rank → D.host.E) (c : D.host
       s * (1 + c • Matrix.vecMulVec x (star x ᵥ* V.gram)).map (tauE D τ) =
         (1 + c • Matrix.vecMulVec x (star x ᵥ* V.gram)).map (tauE D τ) * s := by
   have e0 : star (tauE D τ ∘ x) = tauE D τ ∘ star x := funext fun i => (tauE_star τ (x i)).symm
-  obtain ⟨s, h1, h2⟩ := GlobalTheory.T.exists_cartanInvolution_comm_quasiReflection _ (gramAt D V τ) (GlobalTheory.SmoothForms.RealPts.gramAt_herm V τ)
+  obtain ⟨s, h1, h2⟩ := _root_.GlobalTheory.CartanRefl.exists_cartan_comm_quasiReflection _ (gramAt D V τ) (GlobalTheory.SmoothForms.RealPts.gramAt_herm V τ)
     (GlobalTheory.SmoothForms.RealPts.gramAt_unit V τ).ne_zero (tauE D τ ∘ x) (by
       have : star (tauE D τ ∘ x) ⬝ᵥ gramAt D V τ *ᵥ (tauE D τ ∘ x) = tauE D τ (star x ⬝ᵥ V.gram *ᵥ x) := by
         rw [e0, RingHom.map_dotProduct]

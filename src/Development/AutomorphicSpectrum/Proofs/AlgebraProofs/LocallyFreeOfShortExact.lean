@@ -2,8 +2,11 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.FlagMinor
 public import Mathlib.RingTheory.IsTensorProduct
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LocallyFreeFiniteProjectiveBaseChangeStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LocallyFreeOfFiniteProjectiveStatement
+public import Mathlib.Algebra.Module.Projective
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LocallyFreeFiniteProjectiveBaseChange
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LocallyFreeOfFiniteProjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -116,8 +119,8 @@ theorem main : ∀ {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (R : Sub
     { L with smul_mem' := fun a e he => hL.1 a a.2 e he }
   let M₁ : Submodule R E₁ := M.comap (i.restrictScalars R)
   let M₂ : Submodule R E₂ := M.map (q.restrictScalars R)
-  obtain ⟨hfin, hproj, hrk, hbc⟩ := GlobalTheory.T.locally_free_finite_projective_base_change R (r₁ + r₂) M hL
-  obtain ⟨hfin₂, hproj₂, hrk₂, hbc₂⟩ := GlobalTheory.T.locally_free_finite_projective_base_change R r₂ M₂ hL₂
+  obtain ⟨hfin, hproj, hrk, hbc⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.LocFreeProj.main R (r₁ + r₂) M hL
+  obtain ⟨hfin₂, hproj₂, hrk₂, hbc₂⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.LocFreeProj.main R r₂ M₂ hL₂
   have hqi : ∀ x, q (i x) = 0 := fun x => by
     rw [← LinearMap.mem_ker, ← hex]; exact LinearMap.mem_range_self i x
   let j : M₁ →ₗ[R] M := (i.restrictScalars R).restrict (fun x hx => hx)
@@ -167,6 +170,6 @@ theorem main : ∀ {o Ω : Type} [CommRing o] [Field Ω] [Algebra o Ω] (R : Sub
     rw [LinearMap.range_eq_top.2 hq, finrank_top, ← hex, LinearMap.finrank_range_of_inj hi,
       hrk, hrk₂] at h1
     omega
-  exact GlobalTheory.T.locally_free_of_finite_projective R r₁ M₁ hfin₁ hproj₁ hrk₁ hbc₁
+  exact _root_.GlobalTheory.CompanionTheory.Ar.Num.LocFreeProj.locFree_of_projective R r₁ M₁ hfin₁ hproj₁ hrk₁ hbc₁
 
 end GlobalTheory.CompanionTheory.Ar.Num.LocFreeKernel

@@ -3,8 +3,12 @@ module
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.AgreementPos
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.RefLinked
 public import Development.AutomorphicSpectrum.Statements.MetricStatements.AgreementIffGuarded
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.PolarizationPolynomialCoeffBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RealTowerArithAgreementStatement
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Data.Nat.Choose.Multinomial
+public import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.PolarizationPolynomialCoeffBound
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RealTowerArithAgreement
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.KillNoneFormPoly
 import Mathlib.Algebra.MvPolynomial.Funext
 import Mathlib.Algebra.Order.Floor.Extended
@@ -92,7 +96,7 @@ theorem abs_le_coeff (d : ℕ) (Φ : RPA Ψ N →ₗ[ℝ] ℝ) (n k : ℕ) (hn :
     (h : ∀ (lam : Wt Ψ N) (s : ℝ), (n : ℝ) * Φ (linA lam s ^ d) = eval (PB.gapS (fun x => lam x.1 x.2) (s / k)) Q)
     (m : Option (Ψ × Fin N) →₀ ℕ) (hm : m.degree = d) :
     |Φ (monomial m 1)| ≤ |(PB.toWtS Q).coeff m| := by
-  obtain ⟨Pl, -, hev, -, hle⟩ := GlobalTheory.T.polarization_polynomial_coeff_bound (Option (Ψ × Fin N)) d Φ
+  obtain ⟨Pl, -, hev, -, hle⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Top.polarisation_functional (Option (Ψ × Fin N)) d Φ
   have hkR : (1 : ℝ) ≤ k := by exact_mod_cast hk
   have hnR : (1 : ℝ) ≤ n := by exact_mod_cast hn
   set u : ℝ := -(k : ℝ)⁻¹ with hu
@@ -148,7 +152,7 @@ theorem tower_I1_of_reference_linked : PB.Coefficients → PB.AgreementPos → P
   by_cases hm : m.degree = dimFl Ψ N + 1
   · obtain ⟨C₃, s₀, -, hag⟩ := hAg hI _ _ (R.Sys c) 0 (hpos c)
     have htend := (hag II hII _ _ _ (R.tie B c).Re).1
-    have hnum := GlobalTheory.T.real_tower_arith_agreement hI II hII Ψ N (T.M B c) (R.Sys c) (R.n c) (R.tie B c)
+    have hnum := _root_.GlobalTheory.CompanionTheory.Ar.Top.RootNum.arith_degrees hI II hII Ψ N (T.M B c) (R.Sys c) (R.n c) (R.tie B c)
     have hle := abs_le_coeff (dimFl Ψ N + 1) ((T.M B c).PP II) (R.n c) (T.M B c).kA (hnum 0 0).1
       (T.M B c).kA_pos ((R.tie B c).Re.PB II) (fun lam s => ((hnum lam s).2.2 htend (hpos c)).2) m hm
     obtain ⟨K, iK, ι, iι, P, Re, Re', Sf, α, H, h1, h2, h3, h4, h5, h6, h7, h8, h9⟩ := hlink B hB c

@@ -1,7 +1,7 @@
 module
 
 public import Formalism.SharpRestriction.CuspSpanNormBounds.IsTermOver
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnipotentRadicalIsotropicFlagMovesStepIntoPrevStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnipotentRadicalIsotropicFlagMovesStepIntoPrev
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -85,7 +85,7 @@ theorem GlobalTheory.locCoef_integral : ∀ {F : Type} [Field F] [ValuativeRel F
   unfold Formalism.MainNotions.S.LocNG.img at hvimg
   obtain ⟨w, hw, hwv⟩ := Submodule.mem_map.mp hvimg
   have hwv' : n w = v := hwv
-  have hu := (GlobalTheory.T.unipotentRadical_isotropicFlag_moves_step_into_prev Fr n hn (a.val + 1) (Nat.succ_le_of_lt a.isLt) v hv).2
+  have hu := (_root_.GlobalTheory.unipRadical_moves_step_into_prev Fr n hn (a.val + 1) (Nat.succ_le_of_lt a.isLt) v hv).2
   simp only [Nat.add_sub_cancel] at hu
   have hsymm : n.symm v = w := by rw [← hwv']; exact n.symm_apply_apply w
   rw [hsymm] at hu

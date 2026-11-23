@@ -1,12 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InfOfNodupAlg
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AlgWeightContragredientExistsUniqueStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AlgWeightHighestWeightExistsUniqueAntitoneStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AutomorphicRepCmQuotientModelStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCoordinateModelOfAlgWeightStatement
+public import Formalism.LocalToGlobal.GaloisLevelStructure.DefsAut
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AlgWeightContragredientExistsUnique
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AlgWeightHighestWeightExistsUniqueAntitone
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AutomorphicRepCmQuotientModel
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCoordinateModelOfAlgWeight
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SatakeParametersInertPlaceIndependentOfModelStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitPlaceLocalComponentExistsUniqueClassStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RingSpecNormalisedCharacterEq
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitPlaceLocalComponentExistsUniqueClass
 public import Formalism.LocalToGlobal.GaloisLevelStructure.Checks
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -61,7 +63,7 @@ theorem autIso_trans {π π' π'' : NG.AutRep L n} (h : π.Iso π') (h' : π'.Is
 theorem clsA_eq_iff (π π' : NG.AutRep L n) : clsA π = clsA π' ↔ π.Iso π' := by
   constructor
   · intro h
-    obtain ⟨m, hm⟩ := GlobalTheory.T.automorphic_rep_cm_quotient_model L n π'
+    obtain ⟨m, hm⟩ := _root_.GlobalTheory.AutModel.exists_autRepM L n π'
     have h2 : m ∈ (clsA π).1 := by rw [h]; exact hm
     exact autIso_trans h2 (autIso_symm hm)
   · intro h
@@ -72,7 +74,7 @@ theorem clsA_eq_iff (π π' : NG.AutRep L n) : clsA π = clsA π' ↔ π.Iso π'
 theorem clsW_eq_iff (a b : NG.AlgWt L n) : clsW a = clsW b ↔ a.Iso b := by
   constructor
   · intro h
-    obtain ⟨m, hm⟩ := GlobalTheory.T.exists_coordinate_model_of_algWeight L n b
+    obtain ⟨m, hm⟩ := _root_.GlobalTheory.AutQuot.Model.exists_model L n b
     have h2 : m ∈ (clsW a).1 := by rw [h]; exact hm
     exact h2.trans hm.symm
   · intro h
@@ -107,14 +109,14 @@ section
 attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField
 
 theorem locAt_of_split (π : NG.AutRep L n) (s : SplitPlace L) : ∃ x, LocAt π s.w x := by
-  obtain ⟨σ, hσ, -⟩ := GlobalTheory.T.splitPlaceLocalComponent_exists_unique_class L n π s
+  obtain ⟨σ, hσ, -⟩ := _root_.GlobalTheory.LocCompSplit.main L n π s
   exact ⟨_, s, σ, rfl, hσ, HEq.rfl⟩
 
 theorem locAt_unique {π π' : NG.AutRep L n} (hi : π.Iso π') {w : HeightOneSpectrum (𝓞 L)} {x x'}
     (hx : LocAt π w x) (hx' : LocAt π' w x') : x = x' := by
   obtain ⟨s, σ, hs, hσ, e⟩ := hx
   obtain ⟨s', σ', hs', hσ', e'⟩ := hx'
-  obtain ⟨σ₀, -, hu⟩ := GlobalTheory.T.splitPlaceLocalComponent_exists_unique_class L n π s
+  obtain ⟨σ₀, -, hu⟩ := _root_.GlobalTheory.LocCompSplit.main L n π s
   have h1 := hu π s rfl σ ((NG.AutRep.iso_equivalence (L := L) (n := n)).refl π) hσ
   have h2 := hu π' s' (hs'.trans hs.symm) σ' hi hσ'
   have key : ∀ (u u' : HeightOneSpectrum (𝓞 L)) (_ : u = u') (a : GlobalTheory.SmGL.IrrCl (GL (Fin n) (u.adicCompletion L)))
@@ -160,12 +162,12 @@ theorem f_sat (π : NG.AutRep D.host.E D.R.nV) (v : HeightOneSpectrum (𝓞 (max
 theorem f_wt (π : NG.AutRep D.host.E D.R.nV) (a : NG.AlgWt D.host.E D.R.nV) (hd : π.toAlgWt.IsDual a) :
     wtOf D (clsA π).rep = clsW a := by
   have hπ : (clsA π).rep.toAlgWt.Iso π.toAlgWt := (rep_iso π).1
-  obtain ⟨b, hb, hbu, hba⟩ := GlobalTheory.T.algWeight_contragredient_exists_unique _ _ π.toAlgWt
+  obtain ⟨b, hb, hbu, hba⟩ := _root_.GlobalTheory.algWt_contragredient _ _ π.toAlgWt
   have hrb : (clsA π).rep.toAlgWt.IsDual b := (hba _ hπ.symm).1
   have hex : ∃ b, (clsA π).rep.toAlgWt.IsDual b := ⟨b, hrb⟩
   unfold wtOf
   rw [dite_eq_left hex]
-  obtain ⟨b', -, hbu', -⟩ := GlobalTheory.T.algWeight_contragredient_exists_unique _ _ (clsA π).rep.toAlgWt
+  obtain ⟨b', -, hbu', -⟩ := _root_.GlobalTheory.algWt_contragredient _ _ (clsA π).rep.toAlgWt
   have h1 : b'.Iso hex.choose := (hbu' _).1 hex.choose_spec
   have h2 : b'.Iso b := (hbu' _).1 hrb
   have h3 : b.Iso a := (hbu a).1 hd
@@ -174,9 +176,9 @@ theorem f_wt (π : NG.AutRep D.host.E D.R.nV) (a : NG.AlgWt D.host.E D.R.nV) (hd
 theorem f_infW (a : NG.AlgWt D.host.E D.R.nV) (τ : D.host.E →+* ℂ) (lam : Fin D.R.nV → ℤ) (hl : a.HWAt τ lam) :
     NG.infOf (hwOf (clsW a).rep τ) = NG.infOf lam := by
   have hi : a.Iso (clsW a).rep := (repW_iso a).symm
-  obtain ⟨b0, hb0, hb0', hhw⟩ := GlobalTheory.T.algWeight_contragredient_exists_unique _ _ a
+  obtain ⟨b0, hb0, hb0', hhw⟩ := _root_.GlobalTheory.algWt_contragredient _ _ a
   have hr : (clsW a).rep.HWAt τ lam := ((hhw _ hi).2 τ lam hl)
-  obtain ⟨huniq, hanti⟩ := GlobalTheory.T.algWeight_highestWeight_exists_unique_antitone _ _ (clsW a).rep τ
+  obtain ⟨huniq, hanti⟩ := _root_.GlobalTheory.AlgWtHW.hw_exists_unique_antitone _ _ (clsW a).rep τ
   have hex : ∃ lam, (clsW a).rep.HWAt τ lam ∧ Antitone lam := ⟨lam, hr, hanti lam hr⟩
   unfold hwOf
   rw [dite_eq_left hex, huniq.unique hex.choose_spec.1 hr]

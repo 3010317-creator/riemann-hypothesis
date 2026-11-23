@@ -6,10 +6,10 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Hei
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LastSeeSawCombinationsOperatorDatum
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemIdAtOfSupp
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemSupportedSubgroupOfSuppAtSplitPlaceMemStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PlaceIdempotentActsOnSupportedAndOff
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PlaceIdempotentActsOnSupportedAndOffStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawTwistPlaceLastTwoStepsStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaKernelExistsForContinuous
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PlaceIdempotentActsOnSupportedAndOff
+import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -91,10 +91,10 @@ theorem half_one_sub_of_ne : ∀ (D : D7) (k k' : Type) [Field k] [ValuativeRel 
   intro D k k' _ _ _ _ _ _ _ _ q q' hne m n u hu i j
   obtain ⟨ε, hε, hs⟩ := q.above
   obtain ⟨ε', hε', hs'⟩ := q'.above
-  have h1 : u i j ∈ GlobalTheory.FinPl.idAt D (· = q'.v) := ((GlobalTheory.T.placeIdempotent_acts_on_supportedAndOff D q'.v ε' hε').1 _).2 (hs' ▸ hu i j)
+  have h1 : u i j ∈ GlobalTheory.FinPl.idAt D (· = q'.v) := ((_root_.GlobalTheory.FinPl.placeIdem_acts D q'.v ε' hε').1 _).2 (hs' ▸ hu i j)
   have h2 : u i j ∈ GlobalTheory.FinPl.idAt D (· ≠ q.v) :=
     PinEx.idAt_mono (fun x (hx : x = q'.v) => hx ▸ fun e => hne e.symm) h1
-  have h3 := (GlobalTheory.T.placeIdempotent_acts_on_supportedAndOff D q.v ε hε).2 _ h2
+  have h3 := (_root_.GlobalTheory.FinPl.placeIdem_acts D q.v ε hε).2 _ h2
   rw [sub_mul, one_mul, hs, h3, sub_zero]
 
 theorem comb_single_zero : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (S T : HSp D) (f : WO S T → ℂ), comb ψ S T (Finsupp.single 0 1) f = f := by

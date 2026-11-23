@@ -1,8 +1,10 @@
 module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.KleimanNefness.KleimanSt
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.KleimanGenericPointSectionInputStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.KleimanInputNefAmpleSectionCountStatement
+public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.GenericPointSectionHypotheses
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.KleimanGenericPointSectionInput
+public import GroundTheory.HeightsAndTheta.Heights.KleimanAmpleness.IsFieldSubalgebraSelf
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.KleimanInputNefAmpleSectionCount
 public import GroundTheory.HeightsAndTheta.Heights.SemipositiveHeights.KleimanNef
 import GroundTheory.HeightsAndTheta.Heights.SemipositiveHeights.KleimanNefF
 import Mathlib.Algebra.Order.Floor.Extended
@@ -52,7 +54,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Giv
 
 theorem kleimanNef_field_and_fibre : KleimanNefIntersectionNonneg ∧ KleimanNefFStatement := by
   have hF : KleimanNefFStatement :=
-    GroundTheory.Heights₂.Heights.ForSecondHalf.KleimanNefF.kleimanNef_field_of_alt (GlobalTheory.T.kleiman_input_nef_ample_section_count GlobalTheory.T.kleiman_genericPointSectionInput).1
+    GroundTheory.Heights₂.Heights.ForSecondHalf.KleimanNefF.kleimanNef_field_of_alt (_root_.GlobalTheory.CompanionTheory.Relay.kleiman_input_nef_ample_section_count _root_.GlobalTheory.CompanionTheory.Relay.kleiman_genericPointSectionInput).1
   exact ⟨GroundTheory.Heights₂.Heights.ForSecondHalf.KleimanNef.proof hF, hF⟩
 
 end GlobalTheory.CompanionTheory.Ar.Giv

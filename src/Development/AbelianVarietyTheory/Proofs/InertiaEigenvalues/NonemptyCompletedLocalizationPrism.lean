@@ -1,14 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.DeltaStructureOfWittLengthTwoSection
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdicCompletionRegularAndTorsionBoundedStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsDeltaRingStructureAdicCompletionStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsDeltaRingStructureLocalizationStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsAdicCompletionMapOfFgStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsRingHomExtendIsAdicCompletionMapStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsDeltaRingHomOfDenseDeltaCommuteLocusStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrismLocalizationSpanNonZeroDivisorBoundedTorsioStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RingHomEqOfIsAdicCompletionMapStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdicCompletionRegularAndTorsionBounded
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsDeltaRingStructureAdicCompletion
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsDeltaRingStructureLocalization
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsAdicCompletionMapOfFg
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsRingHomExtendIsAdicCompletionMap
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsDeltaRingHomOfDenseDeltaCommuteLocus
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrismLocalizationSpanNonZeroDivisorBoundedTorsio
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.RingHomEqOfIsAdicCompletionMap
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -136,17 +136,17 @@ theorem GenAway₂ : ∀ (l : ℕ) [Fact l.Prime] (R : Type) [CommRing R] (B : O
   intro l _ R _ B f d hg
   set M := Submonoid.closure (Set.range fun m : ℕ => B.D.φ^[m] f) with hM
   have hfM : f ∈ M := Submonoid.subset_closure ⟨0, rfl⟩
-  obtain ⟨DL, hDL⟩ := GlobalTheory.T.exists_deltaRingStructure_localization l B.A B.D M (locAway_φ_mem B.D f)
-  obtain ⟨hIL, hdnz, N, hN⟩ := GlobalTheory.T.prismLocalization_span_nonZeroDivisor_bounded_torsion l R B f d hg M hfM
+  obtain ⟨DL, hDL⟩ := _root_.GlobalTheory.BSP.delta_localization l B.A B.D M (locAway_φ_mem B.D f)
+  obtain ⟨hIL, hdnz, N, hN⟩ := _root_.GlobalTheory.BSP.locAway_span_nzd_bdd l R B f d hg M hfM
   set J : Ideal (Localization M) := Ideal.span {(l : Localization M)} ⊔
     Ideal.span {algebraMap B.A (Localization M) d} with hJdef
   have hJ : (JJ B).map (algebraMap B.A (Localization M)) = J := by
     rw [JJ, Ideal.map_sup, hIL, Ideal.map_span, Set.image_singleton, map_natCast]
   have hJfg : J.FG := Submodule.FG.sup (Submodule.fg_span_singleton _) (Submodule.fg_span_singleton _)
-  obtain ⟨Q, _, i, hi⟩ := GlobalTheory.T.exists_isAdicCompletionMap_of_fg _ J hJfg
+  obtain ⟨Q, _, i, hi⟩ := _root_.GlobalTheory.BSP.isCompl_exists _ J hJfg
   have hlJ : (l : Localization M) ∈ J := Ideal.mem_sup_left (Ideal.mem_span_singleton_self _)
-  obtain ⟨DQ, hDQ⟩ := GlobalTheory.T.exists_deltaRingStructure_adicCompletion l _ Q i J hi hlJ DL
-  obtain ⟨hqnz, hqN⟩ := GlobalTheory.T.adic_completion_regular_and_torsion_bounded l _ Q i (algebraMap B.A (Localization M) d) N hdnz hN hi
+  obtain ⟨DQ, hDQ⟩ := _root_.GlobalTheory.BSP.exists_delta_completion l _ Q i J hi hlJ DL
+  obtain ⟨hqnz, hqN⟩ := _root_.GlobalTheory.BSP.ComplLD.regular_and_torsion_bounded l _ Q i (algebraMap B.A (Localization M) d) N hdnz hN hi
   set g : B.A →+* Q := i.comp (algebraMap B.A (Localization M)) with hgdef
   have hgδ : ∀ x, g (B.D.δ x) = DQ.δ (g x) := fun x => by
     simp only [hgdef, RingHom.comp_apply]; rw [hDL x, hDQ]
@@ -210,10 +210,10 @@ theorem GenAway₂ : ∀ (l : ℕ) [Fact l.Prime] (R : Type) [CommRing R] (B : O
       exact sup_le_sup_left (Ideal.span_le.2 (Set.singleton_subset_iff.2 (gC.f_I d hg.1))) _
     haveI := C.complete
     have hhaus : IsHausdorff (JJ C) C.A := inferInstance
-    obtain ⟨h, hh⟩ := GlobalTheory.T.exists_ringHom_extend_isAdicCompletionMap _ Q C.A i J (JJ C) hi C.complete lift hJle
+    obtain ⟨h, hh⟩ := _root_.GlobalTheory.BSP.exists_ringHom_comp_of_isCompl _ Q C.A i J (JJ C) hi C.complete lift hJle
     have hhi : ∀ y, h (i y) = lift y := fun y => RingHom.congr_fun hh y
     have hδh : IsδMap DQ C.D h := by
-      refine GlobalTheory.T.isDeltaRingHom_of_dense_deltaCommuteLocus l Q C.A DQ C.D (J.map i) (JJ C) h ?_ ?_ hhaus ?_
+      refine _root_.GlobalTheory.isδMap_of_dense_δLocus l Q C.A DQ C.D (J.map i) (JJ C) h ?_ ?_ hhaus ?_
       · rw [← map_natCast i]; exact Ideal.mem_map_of_mem i hlJ
       · rw [Ideal.map_map, hh]; exact hJle
       · intro x n
@@ -238,7 +238,7 @@ theorem GenAway₂ : ∀ (l : ℕ) [Fact l.Prime] (R : Type) [CommRing R] (B : O
     refine ⟨H, Hom.ext' hgC, fun y hy => Hom.ext' ?_⟩
     have hy' : y.f.comp g = gC.f := congrArg Hom.f hy
     have hyi : y.f.comp i = h.comp i := IsLocalization.ringHom_ext M (hy'.trans hgC.symm)
-    exact GlobalTheory.T.ringHom_eq_of_isAdicCompletionMap _ Q C.A i J (JJ C) hi hhaus y.f h (by rw [hyi, hh]; exact hJle) hyi
+    exact _root_.GlobalTheory.BSP.ringHom_eq_of_isCompl _ Q C.A i J (JJ C) hi hhaus y.f h (by rw [hyi, hh]; exact hJle) hyi
   · intro x n
     obtain ⟨y, hy⟩ := hi.surj x n
     obtain ⟨⟨b0, s⟩, hbs⟩ := IsLocalization.mk'_surjective M y

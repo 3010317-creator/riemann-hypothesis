@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.AxesVanishingStructureSheafDegOne
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommaDescentInjectiveStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommaDescentRestrictionEquivStatement
+import Development.AbelianVarietyTheory.Definitions.Divisors.CommAlgFunctorCoboundaryZeroMemCocyclesOne
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CommaDescentRestrictionEquiv
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompatFamilyExtend
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlueCommaOfBasis
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasLocOAff
@@ -10,7 +11,8 @@ import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneCocycleCoboundar
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.Pull1RestrictSurjectiveOfComma
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictPull1InjectiveOfSepGlue
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SepOfFactoringCover
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoCocycleCoboundaryOfBasisFunctorStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VanishingH1InvertingMorphisms
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoCocycleCoboundaryOfBasisFunctor
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -120,10 +122,10 @@ theorem cohO_basis_bijective : ∀ (R : Type) [CommRing R] (X : Scheme.{0}) (s :
   have hs := _root_.GlobalTheory.sep_of_factoring_cover (OAff s) hG.functor.op H hcov
   have hg := _root_.GlobalTheory.CatCoh.Desc.glue_comma_of_basis (OAff s) hG.functor.op H hcov hdir
   have hv := _root_.GlobalTheory.CatCoh.Desc.Basis.oneCocycle_vanishing_comma_of_basis (OAff s) hG.functor.op H hcov hdir
-  have hv2 := GlobalTheory.T.twoCocycle_coboundary_of_basisFunctor (OAff s) hG.functor.op H hcov hdir
+  have hv2 := _root_.GlobalTheory.CatCoh.Desc.VandermondeTwoBasis.twoCocycle_coboundary_of_basisFunctor_alt (OAff s) hG.functor.op H hcov hdir
   refine ⟨⟨_root_.GlobalTheory.CatCoh.CoefMap.restrict_pull1_injective_of_sep_glue _ _ hs hg,
       _root_.GlobalTheory.CatCoh.pull1_restrict_surjective_of_comma _ _ hs hg hv⟩,
-    ⟨GlobalTheory.T.comma_descent_injective _ _ hs hg hv, GlobalTheory.T.comma_descent_restriction_equiv _ _ hs hg hv hv2⟩, ?_⟩
+    ⟨GlobalTheory.T.comma_descent_injective _ _ hs hg hv, _root_.GlobalTheory.CatCoh.Desc.pull2_surjective_of_comma _ _ hs hg hv hv2⟩, ?_⟩
   intro h0 g hg0
   have hcomp : ∀ ⦃t t' : Pᵒᵖ⦄ (a : t ⟶ t'), g t' = mp (OAff s) (hG.functor.op.map a) (g t) := by
     intro t t' a

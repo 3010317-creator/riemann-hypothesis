@@ -1,9 +1,12 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsSmoothHermTrivLine
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ConjugationInvariantHermitianMetricStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SmoothFunctionAsDegreeZeroMetricStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ConjugationInvariantHermitianMetric
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRes
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SmoothFunctionAsDegreeZeroMetric
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PFsInvPow
+public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FlagIndices.InstFintypeFlIdx
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +48,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FlagIndices.InstFintypeFlIdx
 import GroundTheory.HeightsAndTheta.Heights.Intersections.IsSmoothHermFubiniStudyO1
 
 @[expose] public section
@@ -200,7 +202,7 @@ theorem exists_flat_line : ∀ (K : Type) [Fintype K] (J : K → Type) [∀ k, F
   obtain ⟨H, hHdef⟩ : ∃ H, H = GroundTheory.Heights₂.Heights.LowerBoundFree.fsHerm J a := ⟨_, rfl⟩
   have hHa : H.a = a := by rw [hHdef]; rfl
   rw [← hHdef] at hHs
-  obtain ⟨B, hBa, hBs, hB⟩ := GlobalTheory.T.smooth_function_as_degree_zero_metric K J P D R _ (smooth_ratio R hsm hloc H hHa hHs)
+  obtain ⟨B, hBa, hBs, hB⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.exists_hermLine_log_eq_of_smooth K J P D R _ (smooth_ratio R hsm hloc H hHa hHs)
   have hT₀s : IsSmoothHerm (H.tensor B) := ContDiffOn.mul hHs hBs
   have hT₀a : (H.tensor B).a = a := by
     show H.a + B.a = a
@@ -226,7 +228,7 @@ theorem exists_flat_line : ∀ (K : Type) [Fintype K] (J : K → Type) [∀ k, F
     have h1 := hpt x
     rw [e, (H.tensor B).smul c z hc, hT₀a, hsm z hz c hc] at h1
     exact mul_left_cancel₀ hne h1
-  obtain ⟨T, hTa, hTs, hTc, hT⟩ := GlobalTheory.T.conjugation_invariant_hermitian_metric K J (H.tensor B) hT₀s
+  obtain ⟨T, hTa, hTs, hTc, hT⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.exists_conjInvariant_line_averaged K J (H.tensor B) hT₀s
   have hTφ : ∀ z ∈ mcPts P, T.h z = φ z := by
     intro z hz
     have hc := conj_mem_mcPts hz

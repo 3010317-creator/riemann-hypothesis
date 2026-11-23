@@ -3,12 +3,12 @@ module
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.InnerProductSpace.Basic
 public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousOnCoordsOfLinearIndependentStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolyGrowthSpreadOfIntegralMonodromyStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousOnCoordsOfLinearIndependent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolyGrowthSpreadOfIntegralMonodromy
+public import Mathlib.Analysis.Complex.Convex
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
-public import Mathlib.Analysis.Complex.Convex
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
@@ -68,7 +68,7 @@ theorem int_coord_const (g m : ℕ) (U : Set ℂ) (hU : IsPreconnected U) (μ ν
   have key : ∀ j, ∀ s ∈ U, n s j = n s₀ j := by
     intro j
     have hcont : ContinuousOn (fun s i => ((n s j i : ℤ) : ℝ)) U := by
-      refine GlobalTheory.T.continuousOn_coords_of_linearIndependent' g m U μ (fun s => ν s j) (fun s i => (n s j i : ℝ)) hμ ?_ hli ?_
+      refine _root_.GlobalTheory.continuousOn_coords_of_linearIndependent g m U μ (fun s => ν s j) (fun s i => (n s j i : ℝ)) hμ ?_ hli ?_
       · exact (continuous_apply j).comp_continuousOn hν
       · intro s hs
         rw [hnE s hs j]
@@ -98,6 +98,6 @@ theorem strip_growth : ∀ (g m : ℕ) (lam : ℂ → Fin m → Fin g → ℂ) (
     (fun s hs => hli s hs) (fun s hs j => (hspan s hs _).1 ⟨Pi.single j 1, hsingle _ j⟩)
   obtain ⟨Q, hQ⟩ := int_coord_const g m _ hU (fun s => lam (s + 2 * Real.pi * Complex.I)) lam hshift hcont
     hli' (fun s hs j => (hspan s hs _).2 ⟨Pi.single j 1, hsingle _ j⟩)
-  exact GlobalTheory.T.polyGrowth_strip_of_integral_monodromy g m lam C k P Q (fun s hs j => hP s hs j) (fun s hs j => hQ s hs j) hB
+  exact _root_.GlobalTheory.polyGrowth_spread_of_integral_monodromy g m lam C k P Q (fun s hs j => hP s hs j) (fun s hs j => hQ s hs j) hB
 
 end GlobalTheory.StripGrowth

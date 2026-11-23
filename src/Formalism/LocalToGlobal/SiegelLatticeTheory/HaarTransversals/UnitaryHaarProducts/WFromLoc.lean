@@ -4,7 +4,8 @@ public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.Unita
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.TensInt
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.QuotRaw
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.WFLUnit
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.BesselLevi
+public import Formalism.PeriodIntegrals.BesselLevi
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BesselLeviAction.MulVecBvecApply
 import Formalism.SharpRestriction.CuspSpanNormBounds.NonemptyParameterModels.NumericSettingWithGapSatisfiable
 import Formalism.SharpRestriction.CuspSpanNormBounds.UnimodularSchurMeasures.RightRegularIsometricMultiplicative
 import Mathlib.Algebra.Order.Floor.Extended
@@ -201,7 +202,7 @@ theorem wblk_core (hQK : QuotProdK) (hHN : LocHNProps) (hNU : NUnimodLoc) (hTens
     have hsv : ∀ v, ∃ h ∈ UWset D.R.k D.R.rS (zBv D.R.k D.R.rS (TV u)), ∃ m ∈ Nset D.R.k D.R.rS,
         Qi (ε v) (eV v) (fV v) (Pi.wfr u v) (z0v (TV u) (zV u v)) * uMat (s v) *
           Qm (eV v) (fV v) (Pi.wfr u v) (z0v (TV u) (zV u v)) = h * m :=
-      fun v => HNset_of_inS (fun k r T hT s hs h1 h2 => bessel_levi_formula k r T hT s hs h1 h2) (hFr u v) (hT u)
+      fun v => HNset_of_inS (fun k r T hT s hs h1 h2 => _root_.PI.UnitaryGroupMassFormula.BesselLevi.main k r T hT s hs h1 h2) (hFr u v) (hT u)
         (Qm_zB (hT u) _) (hs v)
     choose hB hhB mB hmB hsm using hsv
     let gH : ∀ v, Formalism.REAL.UJ (ε v) := fun v => toUJ _ (conjQ_UJ (hFr u v) (hhB v).1)

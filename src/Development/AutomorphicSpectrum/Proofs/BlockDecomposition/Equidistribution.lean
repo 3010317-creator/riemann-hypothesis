@@ -2,11 +2,12 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CosetOff
 public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.BinaryMassMeans.MeanVal
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CosetCongruenceRefinementStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CosetEmptyPlacesLatticeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CosetUnitIdealIntegralStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LatticeCosetScaledRiemannSumStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocallyConstantBoxApproximationStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CosetCongruenceRefinement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CosetEmptyPlacesLattice
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CosetUnitIdealIntegral
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LatticeCosetScaledRiemannSum
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocallyConstantBoxApproximation
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -119,8 +120,8 @@ def Claim (θ : ℝ →+* Ainf F) (li : Measure (Ainf F)) (lam : ∀ v : HeightO
 theorem claim_empty (hF : IsTotallyReal F) (θ : ℝ →+* Ainf F) (hθ : Continuous θ) (li : Measure (Ainf F)) (hli : IsStdInf li)
     (lam : ∀ v : HeightOneSpectrum (𝓞 F), Measure (Fv F v)) (ι : Type) [Fintype ι] : Claim θ li lam ι ∅ := by
   intro I hI _ x0 φ ψ hφ hc _
-  rw [GlobalTheory.T.coset_empty_places_lattice]
-  have := GlobalTheory.T.lattice_coset_scaled_riemann_sum F hF θ hθ li hli ι I hI x0 φ hφ hc
+  rw [_root_.GlobalTheory.CompanionTheory.Equi.cosetOff_empty_eq_latCoset]
+  have := _root_.GlobalTheory.CompanionTheory.Equi.lat_sum F hF θ hθ li hli ι I hI x0 φ hφ hc
   simpa [term] using this
 
 theorem mul_pow_prime {S : Finset (HeightOneSpectrum (𝓞 F))} {v : HeightOneSpectrum (𝓞 F)} (hv : v ∉ S) {I : Ideal (𝓞 F)}
@@ -215,10 +216,10 @@ theorem claim_insert {θ : ℝ →+* Ainf F} {li : Measure (Ainf F)} {lam : ∀ 
   have hφca : HasCompactSupport fun y => |φ y| := hφc.comp_left (g := fun t : ℝ => |t|) abs_zero
   have hψa : ∀ w ∈ S, Continuous (fun y => |ψ w y|) ∧ HasCompactSupport (fun y => |ψ w y|) := fun w hw =>
     ⟨(hψS w hw).1.abs, (hψS w hw).2.comp_left (g := fun t : ℝ => |t|) abs_zero⟩
-  obtain ⟨B, hB0, hB⟩ := GlobalTheory.T.locally_constant_box_approximation F v (lam v) (hlam v) ι (ψ v) hψc hψs
+  obtain ⟨B, hB0, hB⟩ := _root_.GlobalTheory.CompanionTheory.Equi.LocApprox.loc_approx F v (lam v) (hlam v) ι (ψ v) hψc hψs
   have hcell : ∀ (k : ℕ) (c : ι → Fv F v), ∃ x1 : ι → F, ∀ x : ι → F,
       (x ∈ cosetOff (insert v S) I x0 ∧ ∀ i, algebraMap F (Fv F v) (x i) - c i ∈ ballV v k) ↔
-        x ∈ cosetOff S (I * v.asIdeal ^ k) x1 := fun k c => GlobalTheory.T.coset_congruence_refinement F ι S v hv I hI hcopv k x0 c
+        x ∈ cosetOff S (I * v.asIdeal ^ k) x1 := fun k c => _root_.GlobalTheory.CompanionTheory.Equi.CosetStep.coset_step F ι S v hv I hI hcopv k x0 c
   choose x1 hx1 using hcell
   have hJ := fun k => mul_pow_prime hv hI hcopS k
   have hP := fun (k : ℕ) (c : ι → Fv F v) => hS _ (hJ k).1 (hJ k).2 (x1 k c) φ ψ hφ hφc hψS
@@ -297,7 +298,7 @@ theorem equi : PositivityTheory.Rg.Mass.Equi := by
     | empty => exact claim_empty hF θ hθ li hli lam ι
     | insert v S hv ih => exact claim_insert hlam hv (ih fun w hw => hψ w (Finset.mem_insert_of_mem hw))
   have h := (hc ⊤ top_ne_bot (fun w _ h => w.isPrime.ne_top (top_le_iff.1 h)) 0 φ ψ hφ hφc hψ).2
-  rw [GlobalTheory.T.coset_unit_ideal_integral] at h
+  rw [_root_.GlobalTheory.CompanionTheory.Equi.CosetTop.cosetOff_top] at h
   simp only [term, Ideal.absNorm_top, Nat.cast_one, one_pow, inv_one, one_mul] at h
   exact h
 

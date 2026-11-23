@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Statements.HeckeThetaIntegrals.FormulaAt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DefiniteKernelNodeRankLeTotalRank
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogBranchingConstantSqLeStatement
+public import Formalism.SharpRestriction.Divisibility.PrimeDegreeVariant
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogBranchingConstantSqLe
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopNodeFormWeightAbsLeLinearStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -138,7 +139,7 @@ theorem GlobalTheory.InfSize.main : ∃ CF0 : ℝ, ∀ CF : ℝ, CF0 ≤ CF → 
   have hτ : ∀ τ, Real.log (Formalism.MainNotions.PrimeDegreeVariant.brBd ch.G.sp.topDec.rank (wt ch.G (.top D.R.m) τ)
       (listedWt ch.G (.grid D.R.m D.R.m) τ) ^ 2) ≤ 5 * c * c2 * (bigN D : ℝ) * large₂.sc.b * Real.log large₂.sc.b := by
     intro τ
-    refine (GlobalTheory.T.log_branching_constant_sq_le _ _ _ B hB1 hNB (hwB τ)).trans ?_
+    refine (_root_.GlobalTheory.BranchBound.log_brBd_sq_le _ _ _ B hB1 hNB (hwB τ)).trans ?_
     have hl6 : 0 ≤ Real.log (6 * B) := Real.log_nonneg (by linarith)
     calc 5 * ((ch.G.V (.top D.R.m)).rank : ℝ) * B * Real.log (6 * B) ≤ 5 * (bigN D : ℝ) * B * Real.log (6 * B) := by
           gcongr

@@ -4,8 +4,9 @@ public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAmpleL
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ThickTransComp
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAmpleSymmetricLineBundleSemiAbelianStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteNormalCoverSymmBundlePowerDecompositStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAmpleSymmetricLineBundleSemiAbelian
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SubsetSpanBy
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteNormalCoverSymmBundlePowerDecomposit
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAmpleLBOfLbPowLbIsoLinComb
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAmpleLBOfPull
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RegularLocalRingNormalDomain
@@ -67,7 +68,7 @@ theorem isAmpleLB_of_generic_of_symm (R : Type) [CommRing R] [IsRegularLocalRing
     (hA : IsAbelianScheme ((Over.pullback (jK R)).obj G)) (L : LB G.left) (hL : L.IsLB)
     (hLK : RelAmple ((Over.pullback (jK R)).obj G) (L.pull (pullback.fst G.hom (jK R))))
     (hs : LBIso (L.pull (GrpObj.inv : G ⟶ G).left) L) : IsAmpleLB L := by
-  obtain ⟨M, hMa, hMs⟩ := GlobalTheory.T.exists_ample_symmetric_lineBundle_semiAbelian R G hG hA
+  obtain ⟨M, hMa, hMs⟩ := _root_.GlobalTheory.SymAmple.exists_ample_symmetric R G hG hA
   have hMK : RelAmple ((Over.pullback (jK R)).obj G) (M.pull (pullback.fst G.hom (jK R))) := by
     have : IsProper ((Over.pullback (jK R)).obj G).hom := hA.proper
     have h1 : IsAffineHom (jK R) := by unfold jK; infer_instance
@@ -76,7 +77,7 @@ theorem isAmpleLB_of_generic_of_symm (R : Type) [CommRing R] [IsRegularLocalRing
     exact (relAmple_iff_isAmpleLB_of_isAffine ((Over.pullback (jK R)).obj G) (LB.isLB_linComb hMa.isLB _ _)).2
       (hMa.pull_of_isAffineHom _)
   obtain ⟨R', _, _, _, _, _, ρ, G', _, π, hinj, hfin, hpb, N, a₀, r, a, β, hN, ha₀, -, hiso⟩ :=
-    GlobalTheory.T.exists_finiteNormalCover_symmBundle_power_decomposition R hc G hG hA L M hL hMa.isLB hLK hMK hs hMs
+    _root_.GlobalTheory.CoverDec.exists_cover_sqDec R hc G hG hA L M hL hMa.isLB hLK hMK hs hMs
   have : IsFinite π := by
     have : IsFinite (spMap ρ) := by
       unfold spMap

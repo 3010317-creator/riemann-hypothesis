@@ -2,10 +2,14 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WtRInjective
 public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DerivativeUnitaryActionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsHighestWeightHermitianDerivationStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HighestWeightTensorDecompositionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IntertwinerEqZeroOfVanishOnHighestStatement
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.RealDescent.RealLeviDescent.IsCoreMod
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DerivativeUnitaryAction
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsCliff
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsHighestWeightHermitianDerivation
+public import Formalism.RealPlaceAnalysis.StatementA
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HighestWeightTensorDecomposition
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IntertwinerEqZeroOfVanishOnHighest
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,7 +82,7 @@ theorem exists_map_out (H L : Type) [NormedAddCommGroup H] [InnerProductSpace �
       simp only [f, LinearMap.smulRight_apply]
       exact Submodule.smul_mem _ _ (Submodule.smul_mem _ _ hdm)
     exact this
-  obtain ⟨T, hT, hi⟩ := GlobalTheory.T.highest_weight_tensor_decomposition L H K G μ hK hG hKs hGs (Submodule.span ℂ {v}) hsp f hf
+  obtain ⟨T, hT, hi⟩ := _root_.GlobalTheory.CompanionTheory.RealCount.ExtHw.kmap_extend L H K G μ hK hG hKs hGs (Submodule.span ℂ {v}) hsp f hf
   refine ⟨T, ?_, hi⟩
   have hvv : ⟪v, v⟫_ℂ ≠ 0 := inner_self_ne_zero.2 hv0
   have := hT ⟨v, Submodule.mem_span_singleton_self v⟩
@@ -103,7 +107,7 @@ theorem exists_map_in (H L : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ
       simp only [LinearMap.smulRight_apply]
       exact Submodule.smul_mem _ _ hvm
     exact this
-  obtain ⟨P, hP, hi⟩ := GlobalTheory.T.highest_weight_tensor_decomposition H L G K μ hG hK hGs hKs D hD (φ.smulRight v) hf
+  obtain ⟨P, hP, hi⟩ := _root_.GlobalTheory.CompanionTheory.RealCount.ExtHw.kmap_extend H L G K μ hG hK hGs hKs D hD (φ.smulRight v) hf
   exact ⟨P, fun d => by rw [hP d, LinearMap.smulRight_apply], hi⟩
 
 theorem eq_smul_id_of_apply (L : Type) [NormedAddCommGroup L] [InnerProductSpace ℂ L] [FiniteDimensional ℂ L]
@@ -112,7 +116,7 @@ theorem eq_smul_id_of_apply (L : Type) [NormedAddCommGroup L] [InnerProductSpace
     (huniq : ∀ w : L, (∀ a b, a < b → K a b w = 0) → ∃ c : ℂ, w = c • v)
     (R : L →ₗ[ℂ] L) (hR : ∀ a b w, R (K a b w) = K a b (R w)) (r : ℂ) (hr : R v = r • v) :
     R = r • LinearMap.id := by
-  have h0 := GlobalTheory.T.intertwiner_eq_zero_of_vanish_on_highest L L K K hK hKs (R - r • LinearMap.id)
+  have h0 := _root_.GlobalTheory.CompanionTheory.RealCountG.intertwiner_eq_zero_of_highest L L K K hK hKs (R - r • LinearMap.id)
     (fun a b w => by simp [hR, map_smul]) (fun μ w hw => by
       obtain ⟨c, rfl⟩ := huniq w (fun a b hab => hw.2 a b hab rfl)
       simp [hr, smul_comm c r])
@@ -161,7 +165,7 @@ theorem exists_isotypic_projection {n : ℕ} (H : Type) [NormedAddCommGroup H] [
         ∀ (k : Matrix.unitaryGroup (Fin n) ℂ) (z : Fin n → ℂ), k.1 = diagonal z → Function.Injective z →
           LinearMap.trace ℂ H ((ρ k : H →ₗ[ℂ] H) ∘ₗ S ∘ₗ p) = trOn (hwOf G (wtR ν)) S * weylChar ν z := by
   intro hG hGs hder hν
-  obtain ⟨L, _, _, _, σ, K, v, hK, hKs, hσ, hv0, hv, huniq, htr⟩ := GlobalTheory.T.exists_highest_weight_hermitian_derivation ν hν
+  obtain ⟨L, _, _, _, σ, K, v, hK, hKs, hσ, hv0, hv, huniq, htr⟩ := _root_.GlobalTheory.CompanionTheory.RmModel.rmModel ν hν
   have hD : ∀ x ∈ hwOf G (wtR ν), Formalism.REAL.KHighest (fun _ => true) G (wtR ν) x := fun x hx => hx
   let b := Module.finBasis ℂ (hwOf G (wtR ν))
   have ex1 : ∀ j, ∃ T : L →ₗ[ℂ] H, T v = (b j : H) ∧ ∀ a c w, T (K a c w) = G a c (T w) := fun j =>
@@ -172,7 +176,7 @@ theorem exists_isotypic_projection {n : ℕ} (H : Type) [NormedAddCommGroup H] [
     exists_map_in H L G K (wtR ν) hG hK hGs hKs v hv _ hD (b.coord j)
   choose P hPd hPi using ex2
   have hPk : ∀ j k w, P j (ρ k w) = σ k (P j w) := fun j =>
-    GlobalTheory.T.derivative_unitary_action H L ρ G hder σ K hσ hKs (P j) (hPi j)
+    _root_.GlobalTheory.CompanionTheory.RealCount.IntegrateK.intertwines_unitary H L ρ G hder σ K hσ hKs (P j) (hPi j)
   have hp : ∀ w, (∑ j, T j ∘ₗ P j) w = ∑ j, T j (P j w) := fun w => by
     simp [LinearMap.sum_apply]
   refine ⟨∑ j, T j ∘ₗ P j, ?_, ?_, ?_, ?_⟩

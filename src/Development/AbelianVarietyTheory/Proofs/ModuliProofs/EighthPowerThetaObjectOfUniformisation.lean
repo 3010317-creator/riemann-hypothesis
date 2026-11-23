@@ -3,11 +3,13 @@ module
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.ExistsArBaseAway
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.AppellHumbertUniformisationRiemannFormStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSiegPreOfPolAVStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.AppellHumbertUniformisationRiemannForm
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.Clauses
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSiegPreOfPolAV
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HomExtOfLin
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ImInvIsHermitian
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LbIsoLinCombLamOfAppellHumbertStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LbIsoLinCombLamOfAppellHumbert
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PrincipalTorusAlgebraic
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.OLinearMatrixOfUnifPow
 import Mathlib.Algebra.Order.Floor.Extended
@@ -134,8 +136,8 @@ theorem sharpClass_of_unif : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{0}) (P
   change ∀ i z, u₀.ex (R i z) = u.ex z ≫ pr i at hpru
   have hk : (k : ℂ) ≠ 0 := by simpa using (b.unit.map em).ne_zero
   have hk0 : 0 < k := Nat.pos_of_ne_zero fun e => hk (by simp [e])
-  obtain ⟨Ef, hEf, -, -, -, -, -, -, hWeil⟩ := GlobalTheory.T.appellHumbert_uniformisation_riemannForm laws laws2 hc hT P₀ u₀ _ χ₀ hAH₀
-  obtain ⟨c, φ, hφ, hcP, ⟨wP, hwP⟩, hlev⟩ := GlobalTheory.T.exists_siegPre_iso_of_polAV laws hc o ℂ em P₀.g k b.ζ (Units.map (em : o →* ℂ) b.ζ) P₀
+  obtain ⟨Ef, hEf, -, -, -, -, -, -, hWeil⟩ := _root_.GlobalTheory.AnyAppellHumbert.isAH_properties laws laws2 hc hT P₀ u₀ _ χ₀ hAH₀
+  obtain ⟨c, φ, hφ, hcP, ⟨wP, hwP⟩, hlev⟩ := _root_.GlobalTheory.exists_siegPre_of_polAV laws hc o ℂ em P₀.g k b.ζ (Units.map (em : o →* ℂ) b.ζ) P₀
     (fun x => u₀.ex ((k : ℂ)⁻¹ • per τ (m x))) rfl hk rfl
     (IsPrimitiveRoot.coe_units_iff.1 (b.prim ℂ em))
     (fun x y => by rw [map_add (f := _), map_add (f := _), smul_add, u₀.ex_add])
@@ -159,7 +161,7 @@ theorem sharpClass_of_unif : Out.Laws → Out.Laws2 → (∀ (S : Scheme.{0}) (P
     obtain ⟨x, hx⟩ := (hΛ l).1 l.2
     rw [hχ x l hx.symm, hEF, form_act, hw, ← exp_pi_I_int, ← hx]
     simp [hRQ, im_hermForm_per hs hp]
-  have hL := GlobalTheory.T.lbIso_linComb_lam_of_appellHumbert_alt laws laws2 hc hT W t.pol u Hm χ' P₀ u₀ _ χ₀ pr R hAH hAH₀ hpru hform hchi
+  have hL := _root_.GlobalTheory.lbIso_linComb_lam_of_appellHumbert laws laws2 hc hT W t.pol u Hm χ' P₀ u₀ _ χ₀ pr R hAH hAH₀ hpru hform hchi
   letI := P₀.isAb.comm
   haveI := hpr
   refine ⟨c, hcP, fun i => pr i ≫ φ.inv, fun i => inferInstanceAs (IsMonHom (pr i ≫ φ.inv)), fun T y => ?_, ?_, fun j i => ?_, fun i v => ?_⟩

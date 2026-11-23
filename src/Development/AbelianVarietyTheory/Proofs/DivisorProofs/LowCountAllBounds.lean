@@ -1,8 +1,14 @@
 module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.FactorialWeightedSumBound
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AddValuationNatCastEqPadicValNatStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DigitsSumLeLogbStatement
+public import Mathlib.Basic.Real.Basic
+public import Mathlib.Data.Nat.PadicValNat
+public import Mathlib.Data.Nat.Prime.Defs
+public import Mathlib.RingTheory.Valuation.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AddValuationNatCastEqPadicValNat
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import Mathlib.Data.Nat.Digits.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DigitsSumLeLogb
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.LegendreBoundsFactorialMultiIndexCapelli
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -207,7 +213,7 @@ theorem low_count_second_bound : FactorialMultiindexBound := by
     rw [Finset.sum_congr rfl (fun e _ => this e), ← Finset.sum_mul, count_lt i cr hcr]
     ring
   · have hN : (∏ x, (α x).factorial : ℕ) ≠ 0 := Finset.prod_ne_zero_iff.2 fun x _ => Nat.factorial_ne_zero _
-    rw [GlobalTheory.T.addValuation_natCast_eq_padicValNat' C v p hp hv _ hN]
+    rw [_root_.GlobalTheory.addValuation_natCast_eq_padicValNat C v p hp hv _ hN]
     rw [WithTop.coe_le_coe]
     rw [GlobalTheory.LegendreBounds.padicValNat_prod_factorial p hp]
     have hle : ∀ x : Fin i × Fin i, α x ≤ ex := by
@@ -218,7 +224,7 @@ theorem low_count_second_bound : FactorialMultiindexBound := by
         ≤ (padicValNat p (α x).factorial : ℝ) := by
       intro x
       rw [GlobalTheory.LegendreBounds.legendre_real p hp]
-      have hd := GlobalTheory.T.digits_sum_le_mul_logb p (α x) hp
+      have hd := _root_.GlobalTheory.digits_sum_le_logb p (α x) hp
       have hlog : Real.logb p ((α x : ℝ) + 1) ≤ Real.logb p ((ex : ℝ) + 1) :=
         Real.logb_le_logb_of_le hp1 (by positivity) (by have := hle x; push_cast; exact_mod_cast (by omega : α x + 1 ≤ ex + 1))
       have h0 : (0 : ℝ) < (p : ℝ) - 1 := by linarith

@@ -1,13 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPotential
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisLpowDvdBoundTeichmullerMonoidStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExistsSumMonomialAdd
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisLpowDvdBoundTeichmullerMonoid
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EventuallySubMemPow
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCoordAcrisBcrisStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPowSmulMemGaloisStableLatticeQlStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSmulEqAcrisLatticeImageStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCoordAcrisBcris
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPowSmulMemGaloisStableLatticeQl
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSmulEqAcrisLatticeImage
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisLatticeSubMemPowSmulEventuallyStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemPowSmulLatticeOfCoordDvdStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemPowSmulLatticeOfCoordDvd
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistedActionAcrisTensorSubEventuallyLpowStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FrobeniusPeriodRingInjective
 import Mathlib.Algebra.Order.Floor.Extended
@@ -94,8 +96,8 @@ theorem main_gen {O K : Type} [CommRing O] [Algebra ℤ_[l] O] [Module.Free ℤ_
       ∃ y ∈ T.L.T, (x : T.V) = ((l : O) ^ k) • y)
     (b : TW (OB l O) T) (c : G → T.V) (hc : IsCobOf s T b c) (m : ℕ) :
     ∀ᶠ g in nhds (1 : G), ∃ x ∈ T.L.T, c g = ((l : O) ^ m) • x := by
-  obtain ⟨s0, hs0, β, hβ⟩ := GlobalTheory.T.exists_smul_eq_acrisLattice_image T b
-  obtain ⟨C, hC⟩ := GlobalTheory.T.acris_lpow_dvd_bound_teichmullerMonoid l (s0 * s0) (by rw [map_mul]; exact mul_ne_zero hs0 hs0)
+  obtain ⟨s0, hs0, β, hβ⟩ := _root_.GlobalTheory.DenomCris.exists_smul_eq_TWincl T b
+  obtain ⟨C, hC⟩ := _root_.GlobalTheory.AcrisMonBound.main l (s0 * s0) (by rw [map_mul]; exact mul_ne_zero hs0 hs0)
   set a : Per.Acris l := ainfToAcris l s0 with ha
   set m' := m + C + 1 with hm'
   have h2 : ∀ᶠ g in nhds (1 : G), (l : Per.Acris l) ^ m' ∣ galC (s g) a - a := by
@@ -125,7 +127,7 @@ theorem main_gen {O K : Type} [CommRing O] [Algebra ℤ_[l] O] [Module.Free ℤ_
   have hfin : ∀ φ : ↥T.L.T →+ ℤ_[l], (∀ (z : ℤ_[l]) (t : ↥T.L.T), φ (algebraMap ℤ_[l] O z • t) = z * φ t) → ∃ X : Per.Acris l, a * a * algebraMap ℤ_[l] (Per.Acris l) (φ x') =
       (l : Per.Acris l) ^ (n + m') * X - (l : Per.Acris l) ^ m' * (a * w * algebraMap ℤ_[l] (Per.Acris l) (φ x')) := by
     intro φ hφ
-    obtain ⟨ΦA, ΦB, hA, hB, h1, hN, hI⟩ := GlobalTheory.T.exists_coord_acris_bcris_alt T φ hφ
+    obtain ⟨ΦA, ΦB, hA, hB, h1, hN, hI⟩ := _root_.GlobalTheory.exists_coord_acris_bcris T φ hφ
     have hσσ : σ * gσ = (1 : O) ⊗ₜ[ℤ_[l]] (acrisToBcris l a * acrisToBcris l ga) := by
       rw [hσ, hgσ, hσA, hgσA]
       simp only [toOB, Algebra.TensorProduct.map_tmul, AlgHom.id_apply, Algebra.TensorProduct.tmul_mul_tmul, mul_one]
@@ -179,7 +181,7 @@ theorem cont_at_one : ∀ (l : ℕ) [Fact l.Prime], l ≠ 2 → ∀ (LL : FinExt
     rw [← map_natCast (algebraMap ℚ_[l] ↥LL.1)]
     exact (map_ne_zero _).2 (Nat.cast_ne_zero.2 (Fact.out : l.Prime).ne_zero)
   refine (main_gen (sQ l) continuous_subtype_val T hK (GlobalTheory.T.twistedAction_acrisTensor_sub_eventually_lpow (sQ l) continuous_subtype_val T ?hT) ?hD
-    (GlobalTheory.T.mem_pow_smul_lattice_of_coord_dvd T) b c hc m).mono ?fin
+    (_root_.GlobalTheory.InertiaEigenvalues.mem_pow_smul_of_coord_dvd T) b c hc m).mono ?fin
   case fin =>
     rintro g ⟨x, hx, e⟩
     exact ⟨x, hx, e.trans (natCast_pow_smul T m x)⟩
@@ -189,7 +191,7 @@ theorem cont_at_one : ∀ (l : ℕ) [Fact l.Prime], l ≠ 2 → ∀ (LL : FinExt
     exact ⟨t', ht', e.trans (natCast_pow_smul T k t').symm⟩
   case hD =>
     intro v
-    obtain ⟨n, x, hx, e⟩ := GlobalTheory.T.exists_pow_smul_mem_galoisStableLattice_Ql l LL T v
+    obtain ⟨n, x, hx, e⟩ := _root_.GlobalTheory.TContMul.main l LL T v
     exact ⟨n, x, hx, e.trans (natCast_pow_smul T n v).symm⟩
 
 end GlobalTheory.CocycleCont

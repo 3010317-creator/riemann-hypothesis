@@ -3,12 +3,13 @@ module
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.T2SpaceNumberFieldInfiniteAdeles
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.CountableIdealSummableAbsNormRpow
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.IsSelfDualLatticeIff
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EventuallyLocalDensityStandardLatticeBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFibreFamilyHermitianLengthInfiniteAdelesStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIsRestrictedProductTupleMeasureStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EventuallyLocalDensityStandardLatticeBound
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFibreFamilyHermitianLengthInfiniteAdeles
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIsRestrictedProductTupleMeasure
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RestrictedProductMeasureBasicProperties
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FibreFamilyHermitianQuadraticFormAtUnitProps
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsNiceLocalFieldProductRingInfiniteAdelesComplet
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RestrictedProductMeasureBasicPropertiesStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -81,7 +82,7 @@ theorem existsUnique_isStdX : ∀ (F E : Type) [Field F] [NumberField F] [Field 
   have bV := fun v m => GlobalTheory.GaugeEx.FibBasic.fibAt_basic F E σ (Fv F v) (nV v) M J (tupMeas (s.lamV v) 1 M) (s.nuV v) _ m
     (s.haar_nuV v) (uV v)
   obtain ⟨mi, hmi⟩ : ∃ mi, FibAt (Ainf F) σ J (tupMeas s.lamI 1 M) s.nuI (algebraMap F _ β) mi := by
-    obtain ⟨fib, hfib⟩ := GlobalTheory.T.exists_fibreFamily_hermitianLength_infiniteAdeles F E σ hσ M J (tupMeas s.lamI 1 M) s.nuI hM1 hJ
+    obtain ⟨fib, hfib⟩ := _root_.GlobalTheory.GaugeEx.FibExist.exists_fibreFamily_ainf F E σ hσ M J (tupMeas s.lamI 1 M) s.nuI hM1 hJ
       (isAddHaarMeasure_tupMeas_of_lc _ s.haar_lamI 1 M) s.haar_nuI
     exact ⟨_, fib, by rw [setOf_isUnit_ainf]; exact hfib, rfl⟩
   have hex : ∀ v, ∃ m, FibAt (Fv F v) σ J (tupMeas (s.lamV v) 1 M) (s.nuV v) (algebraMap F _ β) m := by
@@ -97,7 +98,7 @@ theorem existsUnique_isStdX : ∀ (F E : Type) [Field F] [NumberField F] [Field 
     refine ⟨(bI mi hmi).2.1, fun v => (bV v _ (hmv v)).2.1, ?_⟩
     have hs := ((GlobalTheory.countable_ideal_and_summable_absNorm_rpow F).2 2 (by norm_num)).2
     refine Summable.of_norm_bounded_eventually hs ?_
-    filter_upwards [GlobalTheory.T.eventually_localDensity_standardLattice_bound F E σ hσ d b s M J β hM1 hJ hβ] with v hv
+    filter_upwards [_root_.GlobalTheory.GaugeDensity.local_density_bound F E σ hσ d b s M J β hM1 hJ hβ] with v hv
     have h := hv _ (hmv v)
     have hq : (1 : ℝ) ≤ (Ideal.absNorm v.asIdeal : ℝ) := by
       have : Ideal.absNorm v.asIdeal ≠ 0 := by
@@ -115,11 +116,11 @@ theorem existsUnique_isStdX : ∀ (F E : Type) [Field F] [NumberField F] [Field 
     rw [Real.norm_of_nonneg ha, Real.rpow_neg hq0.le, Real.rpow_two, ← one_div,
       le_div_iff₀ (by positivity)]
     exact h2
-  obtain ⟨ν, hν⟩ := GlobalTheory.T.exists_isRestrictedProductTupleMeasure F E d b 1 M mi mv hconv
+  obtain ⟨ν, hν⟩ := _root_.GlobalTheory.GaugeEx.exists_isProd F E d b 1 M mi mv hconv
   refine ⟨ν, ⟨mi, mv, hmi, hmv, hν⟩, ?_⟩
   rintro ν' ⟨mi', mv', hmi', hmv', hν'⟩
   obtain rfl : mi' = mi := (bI mi hmi).2.2 _ hmi'
   obtain rfl : mv' = mv := funext fun v => (bV v _ (hmv v)).2.2 _ (hmv' v)
-  exact (GlobalTheory.T.restrictedProductMeasure_basic_properties F E d b 1 M ν _ _ hν).2.2.1 _ hν'
+  exact (_root_.GlobalTheory.GaugeEx.isProd_basic F E d b 1 M ν _ _ hν).2.2.1 _ hν'
 
 end GlobalTheory.GaugeEx

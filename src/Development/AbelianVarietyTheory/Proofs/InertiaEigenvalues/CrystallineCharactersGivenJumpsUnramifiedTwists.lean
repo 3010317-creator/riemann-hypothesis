@@ -1,11 +1,12 @@
 module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.TableLineDegreeTwo
-import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineTwistCrystallineCharacterJumpsShift
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCrystallineCharJumpOneStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsCrysInvAndHodgeTateJumpsNegStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedCharIsCrystallineHodgeTateZeroStatement
+public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCrystallineCharJumpOne
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsCrysInvAndHodgeTateJumpsNeg
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedCharIsCrystallineHodgeTateZero
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -86,7 +87,7 @@ theorem hasJumps_one (hT : LocTied l P AI) : HasJumps P K LL 1 0 := by
   have hc : Continuous (fun g => ((Formalism.MainNotions.tableLineDegreeTwo.charL (LL := ↥LL.1) (1 : ↥(GK K) →* (↥(OL LL))ˣ) g : (↥LL.1)ˣ) : ↥LL.1)) := by
     simp only [charL_val, MonoidHom.one_apply, Units.val_one, map_one]
     exact continuous_const
-  obtain ⟨h1, h2⟩ := GlobalTheory.T.unramifiedChar_isCrystalline_hodgeTate_zero l P AI hT K LL (Formalism.MainNotions.tableLineDegreeTwo.charL (LL := ↥LL.1) 1) hc
+  obtain ⟨h1, h2⟩ := _root_.GlobalTheory.UnramifiedChar.isCrys_and_multV_eq l P AI hT K LL (Formalism.MainNotions.tableLineDegreeTwo.charL (LL := ↥LL.1) 1) hc
     (fun g _ => by ext; simp [charL_val])
   exact ⟨hc, h1, fun τ b => by rw [h2]; rfl⟩
 
@@ -122,7 +123,7 @@ theorem hasJumps_inv (hT : LocTied l P AI) {χ : ↥(GK K) →* (↥(OL LL))ˣ}
   have he : Formalism.MainNotions.tableLineDegreeTwo.charL (LL := ↥LL.1) χ⁻¹ = (Formalism.MainNotions.tableLineDegreeTwo.charL (LL := ↥LL.1) χ)⁻¹ := by
     refine MonoidHom.ext fun x => ?_
     simp only [Formalism.MainNotions.tableLineDegreeTwo.charL, MonoidHom.comp_apply, MonoidHom.inv_apply, map_inv]
-  obtain ⟨h1, h2⟩ := GlobalTheory.T.isCrys_inv_and_hodgeTate_jumps_neg l P AI hT K LL (Formalism.MainNotions.tableLineDegreeTwo.charL (LL := ↥LL.1) χ) f hχ.2.1 hχ.2.2
+  obtain ⟨h1, h2⟩ := _root_.GlobalTheory.Adopt.isCrys_inv_and_hodgeTate_jumps_neg l P AI hT K LL (Formalism.MainNotions.tableLineDegreeTwo.charL (LL := ↥LL.1) χ) f hχ.2.1 hχ.2.2
   refine ⟨?_, he ▸ h1, fun τ b => by rw [he, h2]; rfl⟩
   have : (fun x => ((Formalism.MainNotions.tableLineDegreeTwo.charL (LL := ↥LL.1) χ⁻¹ x : (↥LL.1)ˣ) : ↥LL.1)) =
       (fun x => ((Formalism.MainNotions.tableLineDegreeTwo.charL (LL := ↥LL.1) χ x : (↥LL.1)ˣ) : ↥LL.1)) ∘ (fun x => x⁻¹) := by
@@ -175,7 +176,7 @@ theorem GlobalTheory.CrysCharJumps.adm20_of_fonOf :
   intro D HW F l _ K LL hA
   refine ⟨fun a => ?_, ?_⟩
   · classical
-    choose ψ hψ using fun τ₀ => GlobalTheory.T.exists_crystalline_char_jump_one_alt l (D.loc l) (D.locA l) (D.locT l) K LL hA τ₀
+    choose ψ hψ using fun τ₀ => _root_.GlobalTheory.LTChar.exists_crystalline_char_jump_one l (D.loc l) (D.locA l) (D.locT l) K LL hA τ₀
     haveI : FiniteDimensional ℚ_[l] ↥K.1 := K.2
     haveI : Fintype (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) := Fintype.ofFinite _
     let c : (↥K.1 →ₐ[ℚ_[l]] ↥LL.1) → ℤ := fun τ =>
@@ -193,7 +194,7 @@ theorem GlobalTheory.CrysCharJumps.adm20_of_fonOf :
       exact h1.symm.trans hi
     simp [hc]
   · intro V _ _ _ _ _ _ _ ρ ρ' μ hρc hρ hμc hμI hρ'
-    obtain ⟨hμcr, hμm⟩ := GlobalTheory.T.unramifiedChar_isCrystalline_hodgeTate_zero l (D.loc l) (D.locA l) (D.locT l) K LL μ hμc hμI
+    obtain ⟨hμcr, hμm⟩ := _root_.GlobalTheory.UnramifiedChar.isCrys_and_multV_eq l (D.loc l) (D.locA l) (D.locT l) K LL μ hμc hμI
     have htw : IsTwistRep μ ρ ρ' := ⟨LinearEquiv.refl _ _, fun g x => by simp [hρ' g]⟩
     obtain ⟨h1, h2⟩ := GlobalTheory.TwistRepCrys.isCrys_and_multV_twist l (D.loc l) (D.locA l) (D.locT l) K LL
       V ρ V ρ' μ htw hμcr hρ

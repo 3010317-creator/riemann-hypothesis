@@ -6,10 +6,12 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PullL
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SysExOfPol
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EvalPullSemilinearOfIsTwInv
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCellQuotientByRadicalOfMemCone
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIntBilinFormDescendAlongSurjectiveStatement
+public import Mathlib.LinearAlgebra.BilinearMap
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIntBilinFormDescendAlongSurjective
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPrimitiveBalancedFormPrimitiveAmongIntForms
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RingOfIntegersAutCommHostConjugation
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NonnegSumSmulIntBilinFormToRealMemPsdCone
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RingOfIntegersAutCommHostConjugationStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -124,7 +126,7 @@ theorem exists_desc_rays_pullAdd : ∀ (E : Type) [Field E] [NumberField E] [IsC
     · obtain ⟨y₀, hy₀⟩ := hq (f y)
       obtain ⟨z₀, hz₀⟩ := hq (f z)
       simp only [pullAdd_apply, hsm, ← hy₀, ← hz₀, ← Submodule.Quotient.mk_smul, hU i hi]
-      rw [(hm i).2, GlobalTheory.T.ringOfIntegers_aut_comm_hostConjugation E H τ a]
+      rw [(hm i).2, _root_.GlobalTheory.ringOfIntegers_equiv_bar_comm E H τ a]
     · obtain ⟨y₀, hy₀⟩ := hq (f y)
       simp only [pullAdd_apply, ← hy₀, hU i hi]
       exact hpos i y₀
@@ -137,7 +139,7 @@ theorem exists_desc_rays_pullAdd : ∀ (E : Type) [Field E] [NumberField E] [IsC
         · have hk0' : (k : ℤ) ≠ 0 := by exact_mod_cast hk0.ne'
           have hval : ∀ x y, (k : ℤ) * β' x y = u i (f x) (f y) := fun x y => by
             rw [← pullAdd_apply, ← hk]; simp
-          obtain ⟨ζ, hζ⟩ := GlobalTheory.T.exists_intBilinForm_descend_along_surjective f hf β'
+          obtain ⟨ζ, hζ⟩ := _root_.GlobalTheory.exists_bilinForm_descend_of_surjective f hf β'
             (fun x hx y => by
               have := hval x y
               rw [hx, map_zero, LinearMap.zero_apply] at this

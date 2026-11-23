@@ -3,12 +3,18 @@ module
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUniqueLeftBasisCoordsAdicCompletion
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianPartLatticeEigenCompat
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsSandwichOfHodgeTateFreeStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IntegralClosureHeightEqOneOfLiesOver
+public import Development.AutomorphicSpectrum.PublishedTheorems.Algebra₂.FarguesHodgeTate
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsSandwichOfHodgeTateFree
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeDominantCompat
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelPullbackCorrespondence
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TangentVectorExtendsDvrStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Mathlib.RingTheory.DedekindDomain.Basic
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TangentVectorExtendsDvr
 public import Development.WeilBound.CoreStatements.PlurisubharmonicCones.AevalCyclotomic
 public import Development.WeilBound.CoreStatements.PlurisubharmonicCones.InFibreLoc
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelPullbackCorrespondence
 import Development.WeilBound.CoreStatements.PlurisubharmonicCones.NormBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -89,7 +95,7 @@ theorem abelian_part_integral_point_bis : Top.Given → ∀ (E : Type) [Field E]
     · exact ⟨0, 0, fun h => absurd h hpS⟩
     have hp := 𝔐.S_prime p hpS
     haveI : Fact p.Prime := ⟨hp⟩
-    obtain ⟨κ, hκ, hS⟩ := GlobalTheory.T.exists_sandwich_of_hodge_tate_free hG.2.2.2.2.2.2.1 E H D l Xo c _ _ Y S Ω K J y 𝔐 p hpS hpq (hfree p hpS)
+    obtain ⟨κ, hκ, hS⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HT.ModelSandwich.sandwich_of_htFree hG.2.2.2.2.2.2.1 E H D l Xo c _ _ Y S Ω K J y 𝔐 p hpS hpq (hfree p hpS)
     have hne : Ideal.span {(p : 𝓞 L)} ≠ ⊤ := fun h => by
       have h1 := congrArg Ideal.absNorm h
       rw [Ideal.absNorm_span_natCast, Ideal.absNorm_top, RingOfIntegers.rank] at h1
@@ -137,7 +143,7 @@ theorem abelian_part_integral_point_bis : Top.Given → ∀ (E : Type) [Field E]
     have key : ∀ d ∈ differentIdeal ℤ (𝓞 E), (∏ p ∈ S, k p) • σ₀ s d • x ∈ A.eig s := fun d hd => by
       refine ⟨(hΛ _).2 ?_, ?_⟩
       · let MB := LiePull.extModel (g := algebraMap (𝓞 L) L) (x := z) (FaithfulSMul.algebraMap_injective _ _) rfl ML
-        obtain ⟨e, he⟩ := GlobalTheory.T.tangent_vector_extends_dvr (𝓞 L) L 𝔐.X z 𝔐.t.G _ MB (ML.pt ((∏ p ∈ S, k p) • σ₀ s d • x)) (ML.tan _)
+        obtain ⟨e, he⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_lifts_of_local (𝓞 L) L 𝔐.X z 𝔐.t.G _ MB (ML.pt ((∏ p ∈ S, k p) • σ₀ s d • x)) (ML.tan _)
           fun Q hQ cc hc => ((hloc Q cc hc).2 x (hx' ⟨Q, hQ.isPrime⟩) d hd).2
         exact ⟨MB.pt e, MB.tan e, (hML _).trans ((Category.comp_id _).symm.trans he)⟩
       · obtain ⟨cc, hc⟩ := hcc ⊥

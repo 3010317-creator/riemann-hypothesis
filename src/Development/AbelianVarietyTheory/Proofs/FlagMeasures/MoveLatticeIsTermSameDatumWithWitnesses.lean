@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ComplementReferenceCompactSubgroup
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EichlerMapMemUnipotentCharacterStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EichlerMapMemUnipotentCharacter
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIsometryOfSameTrace
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetFramesDatumMovePropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetFramesDatumMoveProperties
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetTermBasicFacts
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -226,11 +226,11 @@ theorem f'_li : LinearIndependent E fun j : Fin r => S.f' j.castSucc := by
 
 theorem main : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] [CharZero F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] (L : LocE F E), ∀ (r k : ℕ) (S : Frames L r k), ∀ (j : Fin r) (β βJ : ℕ) (d : S.Datum) (Λ : Submodule L.O S.V), S.IsTerm d Λ → S.InFF β (j + 1) βJ d Λ → ∀ x x' u s, S.IsMove (j + 1) d Λ x x' u s → ∃ n₀ ∈ S.N, ∃ n₀' ∈ S.N', ∃ n'' ∈ S.N', (∀ v, n₀ v = eich L S.Hm x u s v) ∧ (∀ v, n₀⁻¹ v = eich L S.Hm x (-u) (L.cj s) v) ∧ (∀ v, n₀' v = eich L S.Hm x' u s v) ∧ (∀ v ∈ perp L S.Hm S.X', n'' v = v) ∧ ((n₀⁻¹ • Λ : Submodule L.O S.V) : Set S.V) = S.moved Λ x u s ∧ S.IsTermW d (n₀⁻¹ • Λ) (n₀⁻¹ * (S.wit d Λ).1) (n'' * n₀' * (S.wit d Λ).2) := by
   intro F _ _ _ _ _ E _ _ _ L r k S j β βJ d Λ hT hF x x' u s hM
-  obtain ⟨hs1, hs2, -, -, hc, hxx, -, hux, hux', -, hx'X⟩ := GlobalTheory.T.hermitianDoubleCosetFrames_datum_move_properties L r k S j β βJ d Λ hT hF x x' u s hM
+  obtain ⟨hs1, hs2, -, -, hc, hxx, -, hux, hux', -, hx'X⟩ := _root_.GlobalTheory.HL.MoveFacts.move_facts L r k S j β βJ d Λ hT hF x x' u s hM
   obtain ⟨hx, hx', hb, -, hu, hup, -, hss⟩ := hM
-  obtain ⟨n₀, hn₀, e₀, ei₀, -, -⟩ := GlobalTheory.T.eichler_map_mem_unipotent_character L r k S S.f S.es (Or.inl ⟨rfl, rfl⟩) j x u s hx
+  obtain ⟨n₀, hn₀, e₀, ei₀, -, -⟩ := _root_.GlobalTheory.HL.EichlerUnip.eichler_mem_unip L r k S S.f S.es (Or.inl ⟨rfl, rfl⟩) j x u s hx
     (fun y hy => hup y (Submodule.mem_sup_left hy)) hss
-  obtain ⟨n₀', hn₀', e₀', ei₀', -, -⟩ := GlobalTheory.T.eichler_map_mem_unipotent_character L r k S S.f' S.es' (Or.inr ⟨rfl, rfl⟩) j x' u s hx'
+  obtain ⟨n₀', hn₀', e₀', ei₀', -, -⟩ := _root_.GlobalTheory.HL.EichlerUnip.eichler_mem_unip L r k S S.f' S.es' (Or.inr ⟨rfl, rfl⟩) j x' u s hx'
     (fun y hy => hup y (Submodule.mem_sup_right hy)) hss
   obtain ⟨hSD, hW, -, -, hfr', -⟩ := GlobalTheory.HL.TermBasic.term_basic L r k S d Λ hT
   obtain ⟨hI, hI', hn, hn', hL, hL', had, hgr⟩ := hW

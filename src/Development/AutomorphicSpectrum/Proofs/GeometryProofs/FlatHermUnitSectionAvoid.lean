@@ -1,10 +1,10 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsPowSubMemSpanOfIsUnitModOfIsAlgClosed
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointExistsUniqueEmbeddingStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointsDenseNonvanishingStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsPlaceWeightConjInvariantStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.UnitSectionAvoidPrimeStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointExistsUniqueEmbedding
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointsDenseNonvanishing
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsPlaceWeightConjInvariant
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.UnitSectionAvoidPrime
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -69,9 +69,9 @@ theorem PtOver.eventually_ptOver {K : Type} [Fintype K] {ι : K → Type} [∀ k
     have h0 : ((e a : ℕ) : ℝ) = ((e b : ℕ) : ℝ) := hab
     have : ((e a : ℕ)) = (e b : ℕ) := by exact_mod_cast h0
     exact e.injective (Fin.ext this)
-  obtain ⟨u, hu, -⟩ := GlobalTheory.T.exists_place_weight_conj_invariant K ι Ω F y φ t hO
+  obtain ⟨u, hu, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.exists_placeWeight K ι Ω F y φ t hO
   filter_upwards [hu.near σ z hz] with w hw hwP
-  obtain ⟨τ, hτ, -⟩ := GlobalTheory.T.complex_point_existsUnique_embedding K ι Ω F y φ hO w hwP
+  obtain ⟨τ, hτ, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.existsUnique_ptOver K ι Ω F y φ hO w hwP
   have h1 : u w = t τ := (hu.near τ w hτ).self_of_nhds
   have h2 : τ = σ := ht (h1.symm.trans hw)
   exact h2 ▸ hτ
@@ -79,10 +79,10 @@ theorem PtOver.eventually_ptOver {K : Type} [Fintype K] {ι : K → Type} [∀ k
 theorem FlatHerm.exists_rep : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (ι k)] (Ω : Type) [Field Ω] (F : Type) [Field F] [NumberField F] (y : (Σ k, ι k) → Ω) (φ : F →+* Ω) (A : HermLine ι) (S : FlatHerm y φ A) (d : ℕ) (W : Ideal (MRing ι)), OverInt y φ → IsArithVar (mCoordIdeal y) d → IsSmoothHerm A → IsMultiProjPrime W → mCoordIdeal y ≤ W → ∃ (f' g' : MRing ι) (df' dg' : K → ℕ), IsMultiHomog f' df' ∧ IsMultiHomog g' dg' ∧ (∀ k, (df' k : ℤ) - dg' k = S.M * A.a k) ∧ f' ∉ W ∧ g' ∉ W ∧ f' * S.g - g' * S.f ∈ mCoordIdeal y ∧ IsUnitSec (mCoordIdeal y) f' g' ∧ ∀ σ z, PtOver y φ σ z → ‖evC z f'‖ = (S.κ σ * A.h z) ^ S.M * ‖evC z g'‖ := by
   intro K _ ι _ Ω _ F _ _ y φ A S d W hO hV hA hW hPW
   obtain ⟨f', g', df', dg', hf', hg', hdeg, hfW, hgW, hrel, hunit⟩ :=
-    GlobalTheory.T.unit_section_avoid_prime K ι (mCoordIdeal y) W S.f S.g S.df S.dg hV.2.1 hW hPW S.hf S.hg S.g_ne S.unit
+    _root_.GlobalTheory.CompanionTheory.Ar.Flat.exists_rep_avoiding K ι (mCoordIdeal y) W S.f S.g S.df S.dg hV.2.1 hW hPW S.hf S.hg S.g_ne S.unit
   refine ⟨f', g', df', dg', hf', hg', fun k => (hdeg k).trans (S.deg k), hfW, hgW, hrel, hunit, ?_⟩
   intro σ z hz
-  have hcl := GlobalTheory.T.complex_points_dense_nonvanishing K ι (mCoordIdeal y) d S.g hV S.g_ne hz.1
+  have hcl := _root_.GlobalTheory.CompanionTheory.Ar.Flat.nonvanishing_dense K ι (mCoordIdeal y) d S.g hV S.g_ne hz.1
   have hfreq := mem_closure_iff_frequently.mp hcl
   have hnear := PtOver.eventually_ptOver hO hz
   have hcontA : ContinuousAt A.h z :=

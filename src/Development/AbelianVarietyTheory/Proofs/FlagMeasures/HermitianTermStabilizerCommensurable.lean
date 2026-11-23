@@ -1,13 +1,16 @@
 module
 
 public import Formalism.SharpRestriction.CuspSpanNormBounds.IsTermOver
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FramePairCoordinatesTransportUnitaryMassStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetTermBasicFactsStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFramePairCoordinatesTransportInnerDataStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFramesComplementUnitaryActsOnTermsStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GgNone
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FramePairCoordinatesTransportUnitaryMass
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ComplementReferenceCompactSubgroup
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetTermBasicFacts
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFramePairCoordinatesTransportInnerData
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianFramesComplementUnitaryActsOnTerms
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NotField
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StabilizerCommensurableInvVolumeSmulComplementStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermsCorrespondStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StabilizerCommensurableInvVolumeSmulComplement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermsCorrespond
+public import Mathlib.GroupTheory.Commensurable
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -21,7 +24,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.GroupTheory.Commensurable
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -49,8 +51,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ComplementReferenceCompactSubgroup
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GgNone
 import Formalism.SharpRestriction.CuspSpanNormBounds.Point
 
 @[expose] public section
@@ -65,9 +65,9 @@ theorem stab_commensurable : ∀ {F : Type} [Field F] [ValuativeRel F] [Topologi
   haveI := hM.loc
   haveI := hM.char0
   obtain ⟨S, ⟨c⟩⟩ := GlobalTheory.HL.CoordExist.exists_coord M hM H r k P hk hrel
-  obtain ⟨hUW, -, -, -, hAut, -⟩ := GlobalTheory.T.framePairCoordinates_transport_unitary_mass M hM H r k P S c
-  obtain ⟨-, -, -, hStab, -⟩ := GlobalTheory.T.hermitianFramePairCoordinates_transport_innerData M hM H r k P S c
-  obtain ⟨hTC, -, -⟩ := GlobalTheory.T.isTerm_and_om_eq_of_coord_isTermOver M hM H r k P S c
+  obtain ⟨hUW, -, -, -, hAut, -⟩ := _root_.GlobalTheory.HL.CoordMass.transport M hM H r k P S c
+  obtain ⟨-, -, -, hStab, -⟩ := _root_.GlobalTheory.HL.CoordDatum.transport M hM H r k P S c
+  obtain ⟨hTC, -, -⟩ := _root_.GlobalTheory.HL.CoordTermWt.terms_correspond M hM H r k P S c
   have key : ∀ (d : LocNG.Datum P) (τ : Term V M r), LocNG.IsTermOver P d τ →
       S.IsTerm (c.dat d) (c.lat τ.abelian₂) := fun d τ h => (hTC d τ h).1
   have eA : ∀ Λ, P.UW0 ⊓ LocNG.Aut Λ =
@@ -91,15 +91,15 @@ theorem stab_commensurable : ∀ {F : Type} [Field F] [ValuativeRel F] [Topologi
     intro d τ h x hx
     obtain ⟨hx0, hxs⟩ := Subgroup.mem_inf.mp hx
     have ht := key d τ h
-    have h1 := (GlobalTheory.T.hermitianFrames_complementUnitary_acts_on_terms M.L r k S _ _ ht x hx0).1
+    have h1 := (_root_.GlobalTheory.HL.ComplAct.main M.L r k S _ _ ht x hx0).1
     rw [MulAction.mem_stabilizer_iff.mp hxs] at h1
-    have h2 := (GlobalTheory.T.hermitian_double_coset_term_basic_facts M.L r k S _ _ ht).2.2.2.2.2.2.2 _ h1
+    have h2 := (_root_.GlobalTheory.HL.TermBasic.term_basic M.L r k S _ _ ht).2.2.2.2.2.2.2 _ h1
     exact Subgroup.mem_inf.mpr ⟨hx0, MulAction.mem_stabilizer_iff.mpr h2⟩
-  have volH := GlobalTheory.T.stabilizer_commensurable_invVolume_smul_complement M.L r k S
+  have volH := _root_.GlobalTheory.HL.Frames.stab_commensurable_invVol_smul M.L r k S
   have cLam : ∀ (d : LocNG.Datum P) (τ : Term V M r), LocNG.IsTermOver P d τ →
       S.complementReferenceCompactSubgroup.Commensurable (S.H0 ⊓ MulAction.stabilizer S.GLV (c.lat τ.abelian₂)) := by
     intro d τ h
-    have := volH.1 _ (GlobalTheory.T.hermitian_double_coset_term_basic_facts M.L r k S _ _ (key d τ h)).1.1
+    have := volH.1 _ (_root_.GlobalTheory.HL.TermBasic.term_basic M.L r k S _ _ (key d τ h)).1.1
     exact ⟨⟨this.1⟩, ⟨this.2.1⟩⟩
   have cDat : ∀ (d : LocNG.Datum P) (τ : Term V M r), LocNG.IsTermOver P d τ →
       S.complementReferenceCompactSubgroup.Commensurable (S.H0 ⊓ MulAction.stabilizer S.GLV (c.dat d)) := by

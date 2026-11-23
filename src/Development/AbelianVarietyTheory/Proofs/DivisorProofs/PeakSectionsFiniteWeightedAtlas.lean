@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EtaleEmpty
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPeakSectionSmallDbarEnergyStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinSumSmoothSectionDbarEnergyLeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPeakSectionSmallDbarEnergy
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinSumSmoothSectionDbarEnergyLe
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PosLowerBoundOnFinset
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PshNormalFrameQuadraticComparisonStatement
+public import ReciprocityTheory.L2DbarEstimates.IsLocalHomeomorph
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PshNormalFrameQuadraticComparison
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,7 +77,7 @@ theorem peak_sections_finite : ∀ (n : ℕ) (Y : Type) [TopologicalSpace Y] [T2
         A.ph H (A.pick P) ((A.chart (A.pick P)).symm v) - 2 * (q v).re ≤
           C * ‖v - A.chart (A.pick P) P‖ ^ 2 := by
     intro P
-    refine GlobalTheory.T.psh_normal_frame_quadratic_comparison n _ (fun v => A.ph H (A.pick P) ((A.chart (A.pick P)).symm v)) _
+    refine _root_.GlobalTheory.psh_normal_frame n _ (fun v => A.ph H (A.pick P) ((A.chart (A.pick P)).symm v)) _
       ((A.chart (A.pick P)).isOpen_inter_preimage_symm (hU P).2) ?_
       ((A.smooth_ph H (A.pick P)).mono Set.inter_subset_left) ?_
     · refine ⟨(A.chart (A.pick P)).map_source (A.mem_pick P), ?_⟩
@@ -100,13 +101,13 @@ theorem peak_sections_finite : ∀ (n : ℕ) (Y : Type) [TopologicalSpace Y] [T2
     exact mul_le_mul_of_nonneg_right
       (Finset.single_le_sum (f := Cc) (fun Q _ => (hC Q).le) hP) (by positivity)
   · intro G p hp
-    have h9 := fun P : Y => GlobalTheory.T.exists_peak_section_small_dbar_energy n Y ι La A C H G (A.pick P) (A.chart (A.pick P) P)
+    have h9 := fun P : Y => _root_.GlobalTheory.OTY.peak_section n Y ι La A C H G (A.pick P) (A.chart (A.pick P) P)
       (ρ P) (c P) (q P) (p P) (hρ P) (hc P) ((hsub P).trans Set.inter_subset_left) (hq P) (hp P)
       (fun v hv => (hb P v hv).1)
     choose K hK F hF using h9
     have hKs : 0 ≤ ∑ P ∈ T, K P := Finset.sum_nonneg fun P _ => hK P
     refine ⟨(T.card : ℝ) * ∑ P ∈ T, K P, by positivity, fun k => ?_⟩
-    obtain ⟨hs, hn⟩ := GlobalTheory.T.finSum_smoothSection_dbarEnergy_le n Y ι La A C (G + k • H) T (fun P => F P k)
+    obtain ⟨hs, hn⟩ := _root_.GlobalTheory.OTY.isSSec_finset_sum_and_n1_le_card_mul_sum n Y ι La A C (G + k • H) T (fun P => F P k)
       (fun P _ => (hF P k).1)
     refine ⟨_, hs, fun P hP v hv => ?_, hn.trans ?_⟩
     · have hv' : v ∈ ball (A.chart (A.pick P) P) (ρ P / 2) := ball_subset_ball (hr0le P hP) hv

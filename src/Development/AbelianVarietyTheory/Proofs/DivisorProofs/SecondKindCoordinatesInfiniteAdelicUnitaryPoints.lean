@@ -1,7 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsSmoothModerateOfIsAutFunSm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoordsSecondKindFormPreservingGroupStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Normed.Algebra.Exponential
+public import Mathlib.Topology.Instances.Matrix
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoordsSecondKindFormPreservingGroup
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsSigmaList
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -130,7 +133,7 @@ theorem GlobalTheory.infPts_secondKind_chart : ∀ (F E : Type) [Field F] [Numbe
     intro w
     obtain ⟨τ⟩ : Nonempty (EmbOver E w) := inferInstance
     let A : Matrix (Fin n) (Fin n) ℂ := J.map τ.1
-    obtain ⟨d, Z, s₀, hZ, hs, hev⟩ := GlobalTheory.T.coordsSecondKind_formPreservingGroup n A
+    obtain ⟨d, Z, s₀, hZ, hs, hev⟩ := _root_.GlobalTheory.ClosedMatGroup.coords_second_kind_unitary n A
     have hd : IsUnit A.det := by
       rw [show A = J.map τ.1 from rfl, ← RingHom.mapMatrix_apply, ← RingHom.map_det]
       exact (IsUnit.mk0 _ hJ.2).map _

@@ -2,7 +2,10 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsSncModel
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.TowerOrigin
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptMultihomogFormStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ConjugateHermitianLineIsometries
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptMultihomogForm
 public import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.NonvanishingDense
 public import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.OAlgoverAlg
 import Mathlib.Algebra.Order.Floor.Extended
@@ -95,7 +98,7 @@ theorem o_algover : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
     simp only [Pi.smul_apply, smul_eq_mul] at this
     rw [e, this, Pi.smul_apply, smul_eq_mul]
     field_simp
-  obtain ⟨b, d, hbd, hb, hint⟩ := GlobalTheory.T.hodge_cpt_multihomog_form E H D l Xo c O β Y S RM.Ω RM.K RM.ι RM.y Or.𝔐 x hx hβ
+  obtain ⟨b, d, hbd, hb, hint⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.HInterior.exists_form_interior E H D l Xo c O β Y S RM.Ω RM.K RM.ι RM.y Or.𝔐 x hx hβ
   letI := Or.g.toAlgebra
   have : FiniteDimensional Fx.Ωf RM.Ω := Module.finite_of_finrank_pos (by
     rw [Or.g_deg, ← Or.Re_deg]; exact Or.Re.deg_pos)

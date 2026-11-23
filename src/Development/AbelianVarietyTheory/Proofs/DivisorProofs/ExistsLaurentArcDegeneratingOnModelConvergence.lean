@@ -4,31 +4,37 @@ public import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.OrbitThickSt
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
 public import Development.AbelianVarietyTheory.Counterexamples.ModuliSurvey.MemOfPowEqInt
-import Development.AbelianVarietyTheory.Definitions.Divisors.IsLocalRingTrivSqZeroExt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EvRFrMapOfIsReduced
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ArcFramedPointExtendsToModelBoundaryStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BoundaryExtensionIndependentOfModelStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ConstantVectorsLieBasisOfComplexArcStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ArcFramedPointExtendsToModelBoundary
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BoundaryExtensionIndependentOfModel
+public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IsThetaL2NormSquared
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ConstantVectorsLieBasisOfComplexArc
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemCuspOfVanishOn
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsIsArcFr
+public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.ModelsAt
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
+public import Development.AbelianVarietyTheory.Definitions.Divisors.UnitaryWeightExponentVectorSignatureWeightMuZero
+import Development.AbelianVarietyTheory.Definitions.Divisors.IsLocalRingTrivSqZeroExt
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArcDatumSectionValueCoeffEqFourierJacobi
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArcModelWitnessExtension
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArithmeticCMKnownTheoremsProof
-import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ChartCoordinatesHasSumStatement
+import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IsFramedPointChangedByLetters
+import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ChartCoordinatesHasSum
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.EqZeroOfForallExistsLsumETwoPi
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.EqZeroOfMulEventually
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsCmArcDataAtSplitIsotropicPoint
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsIsArcFr
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsNeZeroIff
-import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.FrameChangeComposeInvertBaseChangeTriangularStatement
+import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.UnivFrame
+import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.FrameChangeComposeInvertBaseChangeTriangular
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.FrameChangeExistsUniqueInvertible
-import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.FrameChangeExistsUniqueInvertibleStatement
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.FrameMatrixHasSumStatement
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HasSumSectionValueArcFramedPoint
-import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HasSumThetaGeneratorChartRatioStatement
+import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HasSumThetaGeneratorChartRatio
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.LaurentCoeffSectionValueArcEqFourierJacobi
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.NonemptyUnifWitnessDataOfIsUnf
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.TorusExtExponentialDerivativeBijectiveTangent
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsOpenChartFramedPointTestRingStatement
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsOpenChartFramedPointTestRing
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.RelabelEmbeddingsGoodBijectiveConjCompat
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -66,14 +72,11 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.RigidSys
-public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.ModelsAt
 import Development.AbelianVarietyTheory.Definitions.Divisors.CommGroupMulMulEqMulInvMulMulMul
 import Development.AbelianVarietyTheory.Definitions.Divisors.CuspIso
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsoOverOfIsOpenImmersion
 import Development.AbelianVarietyTheory.Definitions.Divisors.LinearIndependentBasisCoords
 import Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings
-public import Development.AbelianVarietyTheory.Definitions.Divisors.UnitaryWeightExponentVectorSignatureWeightMuZero
 
 @[expose] public section
 
@@ -136,17 +139,17 @@ theorem hasSum_evR_arc_natural : Out.Laws → Out.Laws2 → ∀ (E : Type) [Fiel
     simp only [spMap, ← Spec.map_comp, ← CommRingCat.ofHom_comp]
     congr 2
     exact RingHom.ext fun x => (hK (β x)).symm
-  obtain ⟨p, j, y₀, hch, hmem⟩ := GlobalTheory.T.exists_openChart_framedPoint_testRing hL1.secBaseChange E H Dw l Xo c (pt (IsLocalRing.closedPoint ℂ⸨X⸩))
+  obtain ⟨p, j, y₀, hch, hmem⟩ := _root_.GlobalTheory.Frames.exists_openChart_testRing hL1.secBaseChange E H Dw l Xo c (pt (IsLocalRing.closedPoint ℂ⸨X⸩))
   haveI := hch.1
   obtain ⟨φ, hφ⟩ := GlobalTheory.ArcQ.exists_algHom_of_mem_range j hch.2.2 pt hpt3 hmem
   obtain ⟨y₁, hy₁⟩ := hL.bc _ _ φ y₀
   obtain ⟨G, s, hGs⟩ := (frChg_exists_unique_units E H Dw l Xo c _ (fun _ => 1) 1 y₁).2.2.2 y
     (by rw [hy₁.1, ← hch.2.1, ← Category.assoc, hφ, hpt2])
-  obtain ⟨T₁, h₁⟩ := GlobalTheory.T.holArc_chart_coordinates_hasSum E H Dw l Xo c σ O β Y a χ W g ty Fu Ha p j φ hK hχ hβ hch.1 hch.2.2
+  obtain ⟨T₁, h₁⟩ := _root_.GlobalTheory.ArcPoint.chart_coordinates_hasSum E H Dw l Xo c σ O β Y a χ W g ty Fu Ha p j φ hK hχ hβ hch.1 hch.2.2
     (by rw [← Category.assoc, hφ, hpt1])
   obtain ⟨T₂, h₂⟩ := GlobalTheory.T.frame_matrix_hasSum_alt hL1 hL2 E H Dw l Xo c σ O β Y a χ W g ty Fu Ha y e th z p j y₀ φ y₁ G s
     hK hχ hβ hy hz hch hy₁ hGs
-  obtain ⟨T₃, h₃⟩ := GlobalTheory.T.hasSum_thetaGenerator_chart_ratio hL1 hL2 E H Dw l Xo c σ O β Y a χ W g ty Fu Ha y e th Θ p j y₀ φ y₁ G s
+  obtain ⟨T₃, h₃⟩ := _root_.GlobalTheory.ArcQ.hasSum_generator_ratio hL1 hL2 E H Dw l Xo c σ O β Y a χ W g ty Fu Ha y e th Θ p j y₀ φ y₁ G s
     hK hχ hβ hP hth hy hch hy₁ hGs
   have key : ∀ w : ℂ, max T₁ (max T₂ T₃) < w.im → ∀ yw, AnFr Ha Θ z w yw →
       ∃ (ψ : p.R →ₐ[c.F] CAt σ) (yw₁ : FrPt Xo c (CAt σ))
@@ -200,10 +203,10 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : ReciprocityTheo
 theorem evR_frChg_one_secZ {S : Type} [CommRing S] [Algebra c.F S] [IsLocalRing S] {ex : Ix Dw → ℤ}
     (hex : ex none = 0) {F : Rul Xo c} (hF : F ∈ GlobalTheory.AllWt.secZ Xo c ex) {s : S} {y y' : FrPt Xo c S}
     (h : FrChg (fun _ => 1) s y y') : evR Xo c F y' = evR Xo c F y := by
-  obtain ⟨u, rfl⟩ := ((GlobalTheory.T.frameChange_exists_unique_invertible E H Dw l Xo c S _ s y).2.2.1 y' h).2
+  obtain ⟨u, rfl⟩ := ((_root_.GlobalTheory.ArcQ.frChg_exists_unique_units E H Dw l Xo c S _ s y).2.2.1 y' h).2
   let t : Ix Dw → Sˣ := fun i => i.elim u fun _ => 1
   have hb : FrBor t y y' :=
-    ((GlobalTheory.T.frameChange_compose_invert_baseChange_triangular E H Dw l Xo c S).2.2.2 t y y').2
+    ((_root_.GlobalTheory.Frames.frChg_calculus E H Dw l Xo c S).2.2.2 t y y').2
       ⟨fun _ => 1, fun τ i => by simp [t], fun τ i j hij => Matrix.one_apply_ne hij.ne, h⟩
   rw [GlobalTheory.FlagTan.evR_frBor hF hb]
   simp [t, Fintype.prod_option, hex]
@@ -238,7 +241,7 @@ theorem exists_arc_secZ' [Algebra c.F ℂ⸨X⸩]
   obtain ⟨T, s, d, z, hd, hz, hflow⟩ := htie _ _ Y χ W Ha
   obtain ⟨-, v₂, -, -⟩ := GlobalTheory.ExpTan.anVec_bijective h1.globalFns E H Dw l Xo c _ _ _ Y _ _ W _ _ Uw.F Ha
   choose e he using fun τ i => (v₂ (z τ i)).exists
-  have hB := GlobalTheory.T.constant_vectors_lieBasis_of_complex_arc E H Dw l Xo c σ r U Uw _ _ Y _ χ W Ha e z hσ hz he
+  have hB := _root_.GlobalTheory.CuspFromBasis.main E H Dw l Xo c σ r U Uw _ _ Y _ χ W Ha e z hσ hz he
   obtain ⟨-, -, th, hth⟩ := GlobalTheory.ThetaOverField.nonzero_generates h1 h2 ℂ (aC.restrict (c.V Wp).subtype).D₀
     DVR.SecOps.secZero
   obtain ⟨Θ⟩ := GlobalTheory.ArcTheta.nonempty_thetaDat h1 h2 E H Dw l Xo c σ _ _ Y _ χ W _ _ Uw.F Ha hty th hth
@@ -264,14 +267,14 @@ theorem exists_arc_secZ' [Algebra c.F ℂ⸨X⸩]
         GlobalTheory.ArcId.sp_comp]
       rfl)
     (fun τ t => halg _)
-  have hbd := GlobalTheory.T.arc_framed_point_extends_to_model_boundary E H Dw l Xo c σ _ _ Y _ χ W e th y halg hover hmono hB hy (fun h =>
+  have hbd := _root_.GlobalTheory.CuspFrom.arc_bdExt E H Dw l Xo c σ _ _ Y _ χ W e th y halg hover hmono hB hy (fun h =>
     (hab _).1 h (by
       change _ ∈ IsLocalRing.maximalIdeal _
       rw [PowerSeries.maximalIdeal_eq_span_X]
       exact Ideal.mem_span_singleton_self _))
   obtain ⟨T', hT'⟩ := GlobalTheory.ArcQZ.hasSum_evR_arc_natural h1 h2 E H Dw l Xo c σ _ _ Y _ χ W _ _ Uw.F Ha y e th Θ z hev halg hover
     hmono hpush hth hy he
-  refine ⟨y, max T (max T' Ha.T), s, d, GlobalTheory.T.boundaryExtension_independent_of_model E H Dw l Xo c _ _ Z _ _ Y _ _ _ y
+  refine ⟨y, max T (max T' Ha.T), s, d, _root_.GlobalTheory.CuspFrom.bdExt_of_bdExt E H Dw l Xo c _ _ Z _ _ Y _ _ _ y
     (RingHom.ext fun t => (halg t).symm) hbd, hd, fun w hw => ?_⟩
   simp only [max_lt_iff] at hw
   obtain ⟨hxw, hlie⟩ := hflow w hw.1

@@ -2,10 +2,13 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsLatIntVec
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermOf
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DeltaEqLatticeIndexStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LamIsLatticeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TorsionNormZetaBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TsumCompBoundedFibresLeStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DeltaEqLatticeIndex
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LamIsLattice
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TorsionNormZetaBound
+public import Mathlib.SetTheory.Cardinal.Finite
+public import Mathlib.Topology.Algebra.InfiniteSum.Defs
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TsumCompBoundedFibresLe
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,7 +64,7 @@ theorem fibre_bound (c : Matrix (Fin m) (Fin m) E) (b : (Fin m → E) ⧸ lam c)
         (Submodule.Quotient.mk (Quotient.out U) : (Fin m → E) ⧸ lam c) = b} ∧
       Nat.card {U : (Fin m → E) ⧸ intVec E m //
         (Submodule.Quotient.mk (Quotient.out U) : (Fin m → E) ⧸ lam c) = b} ≤ delta c := by
-  obtain ⟨hne, hidx⟩ := GlobalTheory.T.delta_eq_lattice_index E m c
+  obtain ⟨hne, hidx⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.DeltaIndex.delta_index E m c
   set H := (intVec E m).toAddSubgroup with hH
   set Kg := (lam c).toAddSubgroup with hK
   have hidx' : delta c = (H.addSubgroupOf Kg).index := hidx
@@ -106,11 +109,11 @@ theorem fibre_bound (c : Matrix (Fin m) (Fin m) E) (b : (Fin m → E) ⧸ lam c)
 
 theorem sum_tor : ∀ (E : Type) [Field E] [NumberField E] (m : ℕ) (c : Matrix (Fin m) (Fin m) E) (r : ℝ), 1 < r → Summable (fun U : (Fin m → E) ⧸ intVec E m => (Ideal.absNorm (tor c (Quotient.out U)) : ℝ) ^ (-((m : ℝ) + r))) ∧ ∑' U : (Fin m → E) ⧸ intVec E m, (Ideal.absNorm (tor c (Quotient.out U)) : ℝ) ^ (-((m : ℝ) + r)) ≤ delta c * zetaR E r := by
   intro E _ _ m c r hr
-  obtain ⟨hs, hle⟩ := GlobalTheory.T.torsion_norm_zeta_bound E m (lam c) (GlobalTheory.T.lam_is_lattice E m c) r hr
+  obtain ⟨hs, hle⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.sum_torsion E m (lam c) (_root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.HS.isLat_lam_of_matrix E m c) r hr
   have hg : ∀ x : (Fin m → E) ⧸ lam c,
       0 ≤ (Ideal.absNorm (Ideal.torsionOf (𝓞 E) ((Fin m → E) ⧸ lam c) x) : ℝ) ^
         (-((m : ℝ) + r)) := fun x => Real.rpow_nonneg (Nat.cast_nonneg _) _
-  obtain ⟨h1, h2⟩ := GlobalTheory.T.tsum_comp_bounded_fibres_le ((Fin m → E) ⧸ intVec E m) ((Fin m → E) ⧸ lam c)
+  obtain ⟨h1, h2⟩ := _root_.GlobalTheory.CompanionTheory.SiegelND.Integ.Hua.SumFibre.summable_comp_of_bounded_fibres ((Fin m → E) ⧸ intVec E m) ((Fin m → E) ⧸ lam c)
     (fun U => Submodule.Quotient.mk (Quotient.out U)) (delta c) (fibre_bound c)
     (fun x => (Ideal.absNorm (Ideal.torsionOf (𝓞 E) ((Fin m → E) ⧸ lam c) x) : ℝ) ^
       (-((m : ℝ) + r))) hg hs

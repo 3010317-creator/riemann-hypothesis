@@ -1,15 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntZEqFourier
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasDerivAtHeckeTermDecayIntegrandStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegrableHeckeTermDecayIntegrandStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormHeckeTermDecayFourierIntegralLeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasDerivAtHeckeTermDecayIntegrand
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegrableHeckeTermDecayIntegrand
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormHeckeTermDecayFourierIntegralLe
+public import Mathlib.Analysis.Fourier.FourierTransformDeriv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-public import Mathlib.Analysis.Fourier.FourierTransformDeriv
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
@@ -65,14 +65,14 @@ theorem intZ_ibp (σ : ℂ) (hσ : σ ∈ halfPlane) (ν : ℝ) (a : ℤ) (b m :
     2 * (Real.pi : ℂ) * I * ν * intZ σ ν a b m y =
       -(a : ℂ) * intZ σ ν (a + 1) b m y
         + 2 * (-σ - (b : ℂ)) * (intZ σ ν (a - 1) (b + 1) m y - I * intZ σ ν a (b + 1) (m + 1) y) := by
-  have i0 := GlobalTheory.T.integrable_heckeTermDecayIntegrand σ hσ a b m hab y hy
-  have i1 := GlobalTheory.T.integrable_heckeTermDecayIntegrand σ hσ (a + 1) b m (by omega) y hy
-  have i2 := GlobalTheory.T.integrable_heckeTermDecayIntegrand σ hσ (a - 1) (b + 1) m (by push_cast; omega) y hy
-  have i3 := GlobalTheory.T.integrable_heckeTermDecayIntegrand σ hσ a (b + 1) (m + 1) (by push_cast; omega) y hy
+  have i0 := _root_.GlobalTheory.HeckeTwo.TermDecay.integrable_qZ σ hσ a b m hab y hy
+  have i1 := _root_.GlobalTheory.HeckeTwo.TermDecay.integrable_qZ σ hσ (a + 1) b m (by omega) y hy
+  have i2 := _root_.GlobalTheory.HeckeTwo.TermDecay.integrable_qZ σ hσ (a - 1) (b + 1) m (by push_cast; omega) y hy
+  have i3 := _root_.GlobalTheory.HeckeTwo.TermDecay.integrable_qZ σ hσ a (b + 1) (m + 1) (by push_cast; omega) y hy
   have hd : deriv (qZ σ a b m y) = fun t => -(a : ℂ) * qZ σ (a + 1) b m y t
       + 2 * (-σ - (b : ℂ)) * (qZ σ (a - 1) (b + 1) m y t - I * qZ σ a (b + 1) (m + 1) y t) := by
-    funext t; exact (GlobalTheory.T.hasDerivAt_heckeTermDecayIntegrand σ a b m y hy t).deriv
-  have hdiff : Differentiable ℝ (qZ σ a b m y) := fun t => (GlobalTheory.T.hasDerivAt_heckeTermDecayIntegrand σ a b m y hy t).differentiableAt
+    funext t; exact (_root_.GlobalTheory.HeckeTwo.TermDecay.hasDerivAt_qZ σ a b m y hy t).deriv
+  have hdiff : Differentiable ℝ (qZ σ a b m y) := fun t => (_root_.GlobalTheory.HeckeTwo.TermDecay.hasDerivAt_qZ σ a b m y hy t).differentiableAt
   have hi : MeasureTheory.Integrable (deriv (qZ σ a b m y)) := by
     rw [hd]; exact (i1.const_mul _).add ((i2.sub (i3.const_mul _)).const_mul _)
   have key := congrFun (Real.fourier_deriv i0 hdiff hi) ν
@@ -139,11 +139,11 @@ theorem intZ_decay (K : Set ℂ) (hK : IsCompact K) (hKH : K ⊆ halfPlane) (N :
   induction N with
   | zero =>
     intro a b m hab
-    obtain ⟨C, hC⟩ := GlobalTheory.T.norm_heckeTermDecayFourierIntegral_le K hK hKH a b m hab
+    obtain ⟨C, hC⟩ := _root_.GlobalTheory.HeckeTwo.TermDecay.norm_intZ_le K hK hKH a b m hab
     exact ⟨C, fun σ hσ ν y _ hy => by simpa using hC σ hσ ν y hy⟩
   | succ N ih =>
     intro a b m hab
-    obtain ⟨C0, hC0⟩ := GlobalTheory.T.norm_heckeTermDecayFourierIntegral_le K hK hKH a b m hab
+    obtain ⟨C0, hC0⟩ := _root_.GlobalTheory.HeckeTwo.TermDecay.norm_intZ_le K hK hKH a b m hab
     obtain ⟨C1, hC1⟩ := ih (a + 1) b m (by omega)
     obtain ⟨C2, hC2⟩ := ih (a - 1) (b + 1) m (by push_cast; omega)
     obtain ⟨C3, hC3⟩ := ih a (b + 1) (m + 1) (by push_cast; omega)

@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GenScal
 public import Development.AbelianVarietyTheory.Definitions.Divisors.UnifOfSpaceEq
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrincipalLevelComponentsDoubleCosetsCongruenceStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrincipalLevelComponentsDoubleCosetsCongruence
+public import Mathlib.NumberTheory.NumberField.House
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -17,7 +18,6 @@ import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
-public import Mathlib.NumberTheory.NumberField.House
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.Etale.Weakly
@@ -199,7 +199,7 @@ theorem isIntegral_eig {D : D7} {j : ℕ} {H : ReciprocityTheory.ChartRestrictio
     {τ : D.host.E →+* ℂ} (hτ : τ ∈ ((U σ).X k).Ψ) (lam : ℂ) (w : Fin D.R.r → ℂ) (hw : w ≠ 0)
     (he : w ᵥ* (γ : Matrix (Fin D.R.r) (Fin D.R.r) D.host.E).map τ = lam • w) :
     IsIntegral ℤ ((lam - 1) / l.M) := by
-  obtain ⟨G, Λ, g, Λk, u, -, hk, -⟩ := GlobalTheory.T.principalLevel_components_doubleCosets_congruence D j H Dw l Xo c U dict hL σ hσ
+  obtain ⟨G, Λ, g, Λk, u, -, hk, -⟩ := _root_.GlobalTheory.LevGeo.Reps.components_double_cosets D j H Dw l Xo c U dict hL σ hσ
   obtain ⟨hG, -, -, hfg, hsp, hu, hΓ, -⟩ := hk k
   obtain ⟨γ', ⟨-, hc⟩, hint⟩ := hΓ γ hγ
   have hdet := det_ne_zero_of_gram τ G (hG ▸ ((U σ).X k).Gm_det) _ (hu τ hτ)

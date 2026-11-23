@@ -7,7 +7,10 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsUni
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsOpenCongruenceEmbeddingStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LatticeSumLongVectorsDecayWeightLeStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LongElementEmbeddingNormStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnfoldTsumAlongSubgroupStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.MeasureTheory.Group.FundamentalDomain
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnfoldTsumAlongSubgroup
 import Formalism.LocalToGlobal.GlobalTheory.GL5.FamilyMassVolumeIdentityOfClassDecomp
 import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemElt
 import Mathlib.Algebra.Order.Floor.Extended
@@ -236,7 +239,7 @@ theorem identity_dominates : ∀ (D : D7) (θ : InfFam D), IsInfFam θ → ∀ (
         ∑' q, ENNReal.ofReal (β q) := ENNReal.tsum_le_tsum hLle
     have h2 : (∑' q, ENNReal.ofReal (β q)) = ENNReal.ofReal (∑' q, β q) := (ENNReal.ofReal_tsum_of_nonneg hβ0 hβs).symm
     exact ne_top_of_le_ne_top ENNReal.ofReal_ne_top (h1.trans h2.le)
-  have hU := GlobalTheory.T.integrableOn_and_hasSum_tsum_subgroup (GA D V) (GA D Y) v.μ ι hιi (GQ V) v.𝓕 hfund f φ hfm hφ.2.measurable hinv hfin
+  have hU := _root_.GlobalTheory.unfold_tsum_along_subgroup (GA D V) (GA D Y) v.μ ι hιi (GQ V) v.𝓕 hfund f φ hfm hφ.2.measurable hinv hfin
   have htarget : (∫ h in v.𝓕, poin θ M K (p.v θ) (stabilizerEmbedding d x⁻¹) (p.v θ) (stabilizerEmbedding d h) * φ h ∂v.μ) =
       ∫ h in v.𝓕, (∑' γ : GQ V, f (γ * ι h)) * φ h ∂v.μ := by
     congr 1; funext h; simp only [poin, hf, hι, mul_assoc]

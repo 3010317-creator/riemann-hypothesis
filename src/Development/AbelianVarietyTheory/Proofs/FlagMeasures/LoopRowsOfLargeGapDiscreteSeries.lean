@@ -8,20 +8,23 @@ public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CoefWeightedL
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CovolumeUnipotentIntegralNormalisedHaar
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermRepUnram
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalBesselJFactorAllWordsOfGapStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LoopRowBoundsAlongFamilyLargeGapsStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RMeasExAll
+public import Formalism.SharpRestriction.CuspSpanNormBounds.PExtra
+public import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.RowsCnt
+public import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.RowsNDF
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LoopRowBoundsAlongFamilyLargeGaps
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StabiliserCovolumeRelevantTermLeHeightPowStatement
-import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.SiegelMassRatioOfLI
-import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.Choice
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.ChoiceFinal
-import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.FinXClosed
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.GapClosed
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.IsLowUnitHBaseVector
-import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.LocFactorAll
-import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.LoopBPin
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.LoopBTheta
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.LoopRowSB
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.BetaLUniq
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RMeasExAll
+import Formalism.GL3MeanSquares.GenusMeanAsymptotics.UnimodularClassRepresentatives.SiegelMassRatioOfLI
+import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.Choice
+import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.FinXClosed
+import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.LocFactorAll
+import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.LoopBPin
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -174,7 +177,7 @@ theorem loop_rows_closed_gap : GlobalTheory.GapIn.Hyp → Formalism.L2.SG.LocWSO
   have hRM : RMeasExAll := GlobalTheory.RMeasAll.rMeasEx_all
   have hJF : JFactNAll := GlobalTheory.T.localBesselJFactor_all_words_of_gap
   have hCF : Formalism.L2.SG.Pf.LoopBCovN.CovNFormula := GlobalTheory.CovNFormulaPf.main
-  choose C₀F thrF hR using GlobalTheory.T.loopRowBounds_along_family_largeGaps Formalism.HermitianLattices.Ext.L3.siegelMassRatio hH hBp
+  choose C₀F thrF hR using _root_.GlobalTheory.LoopRowBoundsGap.rows_along_family Formalism.HermitianLattices.Ext.L3.siegelMassRatio hH hBp
   choose cVF hcV using GlobalTheory.T.stabiliserCovolume_relevantTerm_le_heightPow
   have hForm : Closed 𝒞 fun Fm _ => OwnEv Fm fun C' Cl x i =>
       Cnt.Hyp0 (Fm.D x i) (Fm.L x i) C' Cl (Fm.CYL + 1) (1 / 4) 3 (1 / 2) Fm.CTu 3 →

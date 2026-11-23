@@ -2,16 +2,21 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CoreR
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.GaussQ
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ArchimedeanCoordinateMeasureTransportStatement
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
+public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ArchimedeanCoordinateMeasureTransport
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ArchimedeanLocalDensityFormula
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CoordinateHaarMeasureStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CoordinateHomeomorphRankOneTuplesStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ExistsTraceFormGramMatrixInBasisStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CoordinateHaarMeasure
+public import Formalism.UnipotentAdelicQuotients.SWXSDefs
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ExistsTraceFormGramMatrixInBasis
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.CountData
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.QuadraticLevelSetDensity
+public import Mathlib.LinearAlgebra.Matrix.PosDef
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.SymmetricInvertibleExistsPosdefCongruence
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CoordinateHomeomorphRankOneTuples
 import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HermitianRankOneHomeomorphBase
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteAdelesLocalRingTotallyRealStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.QuadraticLevelSetDensityStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.SymmetricInvertibleExistsPosdefCongruenceStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRingStatement
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteAdelesLocalRingTotallyReal
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,7 +63,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HypOneZeroZero
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TrMMemFramesEIff
 
@@ -145,7 +149,7 @@ theorem exists_haar_map (hF : IsTotallyReal F) (e : Ainf F ≃+* (InfinitePlace 
     (he : IsHomeomorph e) {κ : ℝ} (hκ : 0 < κ) :
     ∃ lam : Measure (Ainf F), lam.IsAddHaarMeasure ∧
       lam.map e = ENNReal.ofReal κ • (volume : Measure (InfinitePlace F → ℝ)) := by
-  obtain ⟨i1, i2, i3, i4, -⟩ := GlobalTheory.T.infinite_adeles_local_ring_totally_real F hF
+  obtain ⟨i1, i2, i3, i4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hF
   haveI := i1
   haveI := i2
   haveI := i3
@@ -175,14 +179,14 @@ end SlopeTestRemainingChoices
 
 theorem smallDensity_transport : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → 3 ≤ M → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (ρ : InfinitePlace F → (F →+* ℝ)) (e : Ainf F ≃+* (InfinitePlace F → ℝ)), (∀ w x, ((ρ w x : ℝ) : ℂ) = w.embedding x) → IsHomeomorph e → (∀ x w, e (algebraMap F (Ainf F) x) w = ρ w x) → (∀ y w, |e y w| = ‖y w‖) → (∀ (A Pm : InfinitePlace F → Matrix (Fin M × Fin d) (Fin M × Fin d) ℝ) (Di : (InfinitePlace F → ℝ) → ℝ), Continuous Di → (∀ U : Set (InfinitePlace F → ℝ), MeasurableSet U → ∫⁻ x in qR0 A ⁻¹' U, ENNReal.ofReal (gaussR Pm x) = ∫⁻ y in U, ENNReal.ofReal (Di y)) → ∀ f : (InfinitePlace F → Fin M × Fin d → ℝ) → ℝ, Measurable f → (∀ x, 0 ≤ f x) → (∀ N : ℕ, ∃ C' : ℝ, ∀ x, f x * (1 + ∑ w, ‖x w‖) ^ N ≤ C') → ∀ ε : ℝ, 0 < ε → ∃ δ R : ℝ, 0 < δ ∧ 0 < R ∧ ∀ U : Set (InfinitePlace F → ℝ), MeasurableSet U → ∫⁻ x in qR0 A ⁻¹' U ∩ (coreR δ R)ᶜ, ENNReal.ofReal (f x) ≤ ENNReal.ofReal ε * volume U) → ∀ (μ : Measure (Fin 1 → Fin M → Ainf F ⊗[F] E)) (ν : Measure (HermR (Ainf F) σ 1)), μ.IsAddHaarMeasure → ν.IsAddHaarMeasure → ∀ φ : (Fin 1 → Fin M → Ainf F ⊗[F] E) → ℝ, Continuous φ → (∀ X, 0 ≤ φ X) → RapidDecay b (fun X => (φ X : ℂ)) → ∀ ε : ℝ, 0 < ε → ∃ δ R : ℝ, 0 < δ ∧ 0 < R ∧ IsCompact {X : Fin 1 → Fin M → Ainf F ⊗[F] E | (fun w => xw e b X w) ∈ coreR δ R} ∧ ∀ A : Set (HermR (Ainf F) σ 1), MeasurableSet A → ∫⁻ X in gramR (Ainf F) σ J ⁻¹' (Subtype.val '' A) ∩ {X | (fun w => xw e b X w) ∈ coreR δ R}ᶜ, ENNReal.ofReal (φ X) ∂μ ≤ ENNReal.ofReal ε * ν A := by
   intro F E _ _ _ _ _ σ hcm M J hJ hM d b ρ e hρ he heρ hen hreal μ ν hμ hν φ hφc hφ0 hφR ε hε
-  obtain ⟨i1, i2, i3, i4, -⟩ := GlobalTheory.T.infinite_adeles_local_ring_totally_real F hcm.1
+  obtain ⟨i1, i2, i3, i4, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hcm.1
   haveI := i1
   haveI := i2
   haveI := i3
   haveI := i4
   haveI : BorelSpace (Ainf F) := ⟨rfl⟩
   haveI : BorelSpace (HermR (Ainf F) σ 1) := ⟨rfl⟩
-  obtain ⟨t1, t2, t3, t4, -, -, -, t8, t9, -⟩ := GlobalTheory.T.tensor_locally_compact_ring F E σ hcm (Ainf F)
+  obtain ⟨t1, t2, t3, t4, -, -, -, t8, t9, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hcm (Ainf F)
   haveI := t1
   haveI := t2
   haveI := t3
@@ -201,11 +205,11 @@ theorem smallDensity_transport : ∀ (F E : Type) [Field F] [NumberField F] [Fie
     rw [hcm.2.2.1] at h1
     simpa using h1.symm
   have hs : ∀ x, σ (σ x) = x := HermOne.sig_sig hcm
-  obtain ⟨B, hBs, hBd, -, hBR⟩ := GlobalTheory.T.exists_trace_form_gram_matrix_in_basis F E σ hcm M J hJ d b
+  obtain ⟨B, hBs, hBd, -, hBR⟩ := _root_.GlobalTheory.CompanionTheory.SW.TraceCoord.exists_trace_coord F E σ hcm M J hJ d b
   have hP : ∀ w, ∃ P : Matrix (Fin M × Fin d) (Fin M × Fin d) ℝ,
       P.PosDef ∧ P * (B.map (ρ w))⁻¹ * P = B.map (ρ w) := by
     intro w
-    refine GlobalTheory.T.symmetric_invertible_exists_posdef_congruence _ _ ?_ ?_
+    refine _root_.GlobalTheory.CompanionTheory.SW.exists_posDef_majorant_of_isSymm _ _ ?_ ?_
     · exact hBs.map _
     · have h := RingHom.map_det (ρ w) B
       rw [RingHom.mapMatrix_apply] at h
@@ -213,7 +217,7 @@ theorem smallDensity_transport : ∀ (F E : Type) [Field F] [NumberField F] [Fie
       exact (map_ne_zero _).2 hBd
   choose Pm hPd hPm using hP
   have hcard : Fintype.card (Fin M × Fin d) = 2 * M := by simp [hd, mul_comm]
-  obtain ⟨Di, hDc, -, hDd, -⟩ := GlobalTheory.T.quadratic_level_set_density F (Fin M × Fin d) M B ρ Pm
+  obtain ⟨Di, hDc, -, hDd, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.Dens.density_of_q F (Fin M × Fin d) M B ρ Pm
     ⟨hcm.1, hcard, hBs, hBd, hρ, hPd, hPm⟩ hM
 
   set κ : ℝ := (Real.sqrt |(discr F : ℝ)|)⁻¹ with hκdef
@@ -221,7 +225,7 @@ theorem smallDensity_transport : ∀ (F E : Type) [Field F] [NumberField F] [Fie
     exact_mod_cast NumberField.discr_ne_zero F)))
   obtain ⟨lam, hlam, hmap⟩ := exists_haar_map (F := F) hcm.1 e he hκ
   haveI : SigmaFinite lam := inferInstance
-  obtain ⟨-, hK2, hK3⟩ := GlobalTheory.T.coordinate_haar_measure F E σ hcm (Ainf F) d b lam hlam
+  obtain ⟨-, hK2, hK3⟩ := _root_.GlobalTheory.CompanionTheory.SW.coord_measures_haar F E σ hcm (Ainf F) d b lam hlam
   haveI := hK2 1 M
   haveI := hK3 1
   obtain ⟨c₁, hc₁⟩ : ∃ c : ℝ≥0, μ = (c : ℝ≥0∞) • coordW (Ainf F) b lam 1 M :=
@@ -242,7 +246,7 @@ theorem smallDensity_transport : ∀ (F E : Type) [Field F] [NumberField F] [Fie
     have h1 : (τ : HermR (Ainf F) σ 1 → _) = e ∘ tt := rfl
     rw [h1, ← Measure.map_map (f := tt) (g := e) eH.measurable tt.measurable,
       HermOne.map_coordHerm (Ainf F) hcm b lam, hmap]
-  have hcoord := GlobalTheory.T.coordinate_homeomorph_rank_one_tuples F E σ hcm (Ainf F) d b lam hlam M
+  have hcoord := _root_.GlobalTheory.CompanionTheory.SW.BB.coordMap_one F E σ hcm (Ainf F) d b lam hlam M
   let Φh : (Fin 1 → Fin M → Ainf F ⊗[F] E) ≃ₜ (InfinitePlace F → Fin M × Fin d → ℝ) :=
     (hcoord.1.homeomorph _).trans (swapHomeo eH)
   let Φ : (Fin 1 → Fin M → Ainf F ⊗[F] E) → (InfinitePlace F → Fin M × Fin d → ℝ) :=
@@ -252,7 +256,7 @@ theorem smallDensity_transport : ∀ (F E : Type) [Field F] [NumberField F] [Fie
     (swapHomeo (ι := Fin M × Fin d) eH).continuous.measurable.comp hcoord.2.1.measurable
   have hpushL : (coordW (Ainf F) b lam 1 M).map Φ =
       ENNReal.ofReal (κ ^ (M * d)) • (volume : Measure (InfinitePlace F → Fin M × Fin d → ℝ)) :=
-    GlobalTheory.T.archimedean_coordinate_measure_transport F E σ hcm M d b e he lam hlam hmap
+    _root_.GlobalTheory.CompanionTheory.SW.BB.infPush F E σ hcm M d b e he lam hlam hmap
   let A₀ : InfinitePlace F → Matrix (Fin M × Fin d) (Fin M × Fin d) ℝ := fun w => B.map (ρ w)
   have hQc : Continuous (qR0 A₀) := by
     refine continuous_pi fun w => continuous_const.mul ?_

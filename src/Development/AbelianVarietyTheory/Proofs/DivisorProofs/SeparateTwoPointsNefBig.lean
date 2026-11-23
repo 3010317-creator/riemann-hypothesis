@@ -3,12 +3,14 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ExistsAlgClosedBaseChange
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsLogCanonicalMultipleCanonical
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAmpleAddEffectiveOfNefBigStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPosKltAddSmulEffectiveDivisorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionSeparatingTwoPointsAmpleStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsEqnIffGeneratesAtInv
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAmpleAddEffectiveOfNefBig
+public import Development.AbelianVarietyTheory.Definitions.Divisors.CentreAtOfIsAt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPosKltAddSmulEffectiveDivisor
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionSeparatingTwoPointsAmple
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsEffQDivAddOfIsQCart
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLogCanonicalMultipleAddQWeil
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KltAtLcAtOfLeCoeffStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KltAtLcAtOfLeCoeff
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowMulIntersectionLeOfNefClassOnClosed
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TensOfIsNef
 import Mathlib.Algebra.Order.Floor.Extended
@@ -105,8 +107,8 @@ theorem separate_nef_big : GlobalTheory.Published.Principalisation → GlobalThe
     hcurve hx₁ hx₂ hne hh hz hsum hρ
   letI := algebraΓOfHom p
   obtain ⟨a, A, hA, E₀, ha, hAmp, hE₀, hcls⟩ :=
-    GlobalTheory.T.exists_ample_add_effective_of_nef_big hNef X p hp N hNn.isLB hNn hNb
-  obtain ⟨c, hc, hkltc⟩ := GlobalTheory.T.exists_pos_klt_add_smul_effective_divisor hPr X p n hp hdim Δ m G (qWeil E₀ 1) hm hG hklt
+    _root_.GlobalTheory.exists_ample_add_eff_of_isNef_isBig hNef X p hp N hNn.isLB hNn hNb
+  obtain ⟨c, hc, hkltc⟩ := _root_.GlobalTheory.PairStep.exists_pos_kltAt_add_smul hPr X p n hp hdim Δ m G (qWeil E₀ 1) hm hG hklt
     ⟨1, E₀, one_pos, hE₀, rfl⟩
   have hS0 : 0 ≤ ∑ e ∈ Finset.Icc 1 n, h e := Finset.sum_nonneg fun e _ => (hh e).le
   obtain ⟨q, m', hm', hq, haq, hmc, hbud⟩ := exists_budget ρ _ c a hρ hsum hS0 hc
@@ -120,14 +122,14 @@ theorem separate_nef_big : GlobalTheory.Published.Principalisation → GlobalThe
   have hqa' : (((q - a : ℕ) : ℚ)) = q - a := by rw [Nat.cast_sub haq.le]
   have hB : qWeil E₀ m' = (1 / (m' : ℚ)) • qWeil E₀ 1 := by
     funext z; simp [qWeil]; ring
-  refine GlobalTheory.T.exists_section_separating_two_points_ample hPr hNad hNef X p n hp hdim M (Δ + qWeil E₀ m') (m * m') (m' • G + m • E₀)
+  refine _root_.GlobalTheory.PairStep.exists_sec_separating_two_points_of_ample hPr hNad hNef X p n hp hdim M (Δ + qWeil E₀ m') (m * m') (m' • G + m • E₀)
     (tens A (lbPow N (q - a))) (1 / (m' : ℚ)) (fun e => h e / ((q : ℚ) - a)) x₁ x₂ hM
     (isEffQDiv_add_of_isQCart X p hp Δ _ hΔ ⟨m', E₀, hm', hE₀, rfl⟩) ?_ (Nat.mul_pos hm hm')
     (isLogCanonicalMultiple_add_qWeil X p n Δ m m' G E₀ hm hm' hG) hN'amp ?_ hx₁ hx₂ hne
     (fun e => div_pos (hh e) hqa) ?_ ?_
   · intro y
     rw [hB]
-    exact (GlobalTheory.T.kltAt_and_lcAt_antitone_coeff X p n hp hdim Δ (qWeil E₀ 1) (1 / (m' : ℚ)) c y
+    exact (_root_.GlobalTheory.PairStep.kltAt_lcAt_of_le_coeff X p n hp hdim Δ (qWeil E₀ 1) (1 / (m' : ℚ)) c y
       ⟨1, E₀, one_pos, hE₀, rfl⟩ hmc).1 (hkltc y)
   · intro C hC
     have h1 := hcurve C hC

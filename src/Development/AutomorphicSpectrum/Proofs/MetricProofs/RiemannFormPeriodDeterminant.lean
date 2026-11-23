@@ -4,10 +4,12 @@ public import Mathlib.Analysis.Analytic.Basic
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.Calculus.FDeriv.Defs
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.DifferentiableOnOfTendstoLocallyUniformlyOn
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AnalyticDoublingMapLocalInverseStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AnalyticGroupLawBoundedCommutatorStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.DoublingLimitLocalLogarithmStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LocalLogarithmHomomorphismStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AnalyticDoublingMapLocalInverse
+public import Mathlib.Analysis.Complex.Basic
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AnalyticGroupLawBoundedCommutator
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IterDifferentiableOn
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.DoublingLimitLocalLogarithm
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LocalLogarithmHomomorphism
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -88,7 +90,7 @@ theorem exists_local_log_of_commutative_law : ∀ (n g : ℕ) (b₀ : Fin n → 
     rw [← ball_prod_same]
     exact ⟨ball_subset_ball (min_le_right _ _) hb, ball_subset_ball (min_le_right _ _) hs⟩
   have hGbound : ∀ b ∈ ball b₀ R, ∀ s ∈ ball (0 : Fin g → ℂ) R, ∀ t ∈ ball (0 : Fin g → ℂ) R, ‖μ (b, s, t) - s - t‖ ≤ ‖s‖ * ‖t‖ / R ^ 2 := by
-    refine GlobalTheory.T.analytic_group_law_bounded_commutator b₀ G R hR ?_ ?_ ?_
+    refine _root_.GlobalTheory.CompanionTheory.Metric.norm_le_of_vanishing_on_axes b₀ G R hR ?_ ?_ ?_
     · rintro ⟨b, s, t⟩ ⟨hb, hs, ht⟩
       exact (hRG b hb s hs t ht).2.differentiableAt.differentiableWithinAt
     · rintro ⟨b, s, t⟩ ⟨hb, hs, ht⟩
@@ -133,7 +135,7 @@ theorem exists_local_log_of_commutative_law : ∀ (n g : ℕ) (b₀ : Fin n → 
     calc ‖μ (b, s, s) - s - s‖ ≤ C * ‖s‖ * ‖s‖ := h1
       _ ≤ c * ‖s‖ := by gcongr
       _ ≤ c * ‖((b, s) : (Fin n → ℂ) × (Fin g → ℂ)) - (b₀, 0)‖ := by gcongr
-  obtain ⟨h, hhan, hh0, H1, H2⟩ := GlobalTheory.T.analytic_doubling_map_local_inverse b₀ d hdan hd0 hdderiv
+  obtain ⟨h, hhan, hh0, H1, H2⟩ := _root_.GlobalTheory.CompanionTheory.Metric.FamilyInverse.exists_analytic_family_inverse b₀ d hdan hd0 hdderiv
   have hmed := LocalLog.medial_eventually b₀ μ hμ.continuousAt hμ0 hcomm hassoc
   have hhc : ContinuousAt h (b₀, 0) := hhan.continuousAt
   have t0 : Tendsto (fun p : (Fin n → ℂ) × (Fin g → ℂ) × (Fin g → ℂ) => p.1) (𝓝 (b₀, 0, 0)) (𝓝 b₀) :=
@@ -213,7 +215,7 @@ theorem exists_local_log_of_commutative_law : ∀ (n g : ℕ) (b₀ : Fin n → 
     have h1 := hcontr b hb s hs
     have h2 : ‖h (b, s)‖ ≤ ‖s‖ := by linarith [norm_nonneg s]
     gcongr
-  obtain ⟨L, hLu, hLb⟩ := GlobalTheory.T.doubling_limit_local_logarithm b₀ h ρ C hρ hCpos.le hcontr hquad
+  obtain ⟨L, hLu, hLb⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.LocalLog.koenigs_limit b₀ h ρ C hρ hCpos.le hcontr hquad
   have hdiffh : DifferentiableOn ℂ h (ball b₀ ρ ×ˢ ball (0 : Fin g → ℂ) ρ) := by
     rintro ⟨b, s⟩ ⟨hb, hs⟩
     exact (hq b hb s hs).2.1.differentiableAt.differentiableWithinAt
@@ -248,7 +250,7 @@ theorem exists_local_log_of_commutative_law : ∀ (n g : ℕ) (b₀ : Fin n → 
       _ ≤ c * ‖s‖ := by gcongr
   · have hpt : ∀ b ∈ ball b₀ ρ, ∀ s ∈ ball (0 : Fin g → ℂ) ρ, Tendsto (fun k : ℕ => (2 : ℂ) ^ k • GlobalTheory.CompanionTheory.Ar.Flat.LocalLog.iter h k (b, s)) atTop (𝓝 (L (b, s))) :=
       fun b hb s hs => hLu.tendsto_at ⟨hb, hs⟩
-    have hadd := GlobalTheory.T.local_logarithm_homomorphism b₀ h μ L ρ C hρ hCpos.le hcontr hboundρ hhomρ hpt
+    have hadd := _root_.GlobalTheory.CompanionTheory.Ar.Flat.LocalLog.koenigs_limit_additive_for_law b₀ h μ L ρ C hρ hCpos.le hcontr hboundρ hhomρ hpt
     have hμs : ∀ᶠ p in 𝓝 ((b₀, 0, 0) : (Fin n → ℂ) × (Fin g → ℂ) × (Fin g → ℂ)), μ p ∈ ball (0 : Fin g → ℂ) ρ := by
       filter_upwards [hμ.continuousAt (ball_mem_nhds (μ (b₀, 0, 0)) hρ)] with p hp
       simpa [hμ0] using hp

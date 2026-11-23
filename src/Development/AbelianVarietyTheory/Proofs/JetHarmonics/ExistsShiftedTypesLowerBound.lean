@@ -4,12 +4,14 @@ public import Development.AbelianVarietyTheory.Definitions.Jets.WigMap
 public import Mathlib.Analysis.InnerProductSpace.Adjoint
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ChainLowerBound
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsIntCoordsOfRegularParam
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsWignerContractionChainLoweringStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsWignerContractionChainRaisingStatement
+public import Development.AbelianVarietyTheory.Definitions.Jets.Imports
+public import Formalism.HermitianCurvature.FrameExists2
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsWignerContractionChainLowering
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsWignerContractionChainRaising
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FrameExistsAndVectorEqSmulTranslate
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.HypAndAdj
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormAdjointApplyOfNormPreserving
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormSqAdjointAddGeOfJointEigenspaces
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.HypAndAdj
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.IrreducibleCapelliModules
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -81,13 +83,13 @@ theorem exists_shifted_types_lower_bound : ∀ (V : Type) [NormedAddCommGroup V]
     have h2 := abs_le.mp (hb (((Fin.last n : Fin (n + 1)) : ℕ) + 1) (by simp))
     linarith [h1.2, h2.1]
   obtain ⟨Vp, iP1, iP2, iP3, πp, Ap, hπp, hAp, hwp⟩ :=
-    GlobalTheory.T.exists_wignerContraction_chain_raising V n r z π u β L B i.succ n₀ hz hT hπ hL hu hB (by
+    _root_.GlobalTheory.WigSh.chain_raise V n r z π u β L B i.succ n₀ hz hT hπ hL hu hB (by
       intro j hj
       have hj' : j ≤ i.castSucc := Fin.le_castSucc_iff.mpr hj
       have := hL.antitone hj'
       omega)
   obtain ⟨Vm, familyMassRatio, familyMassSecondLine, iM3, πm, Am, hπm, hAm, hwm⟩ :=
-    GlobalTheory.T.exists_wignerContraction_chain_lowering V n r z π u β L B i.castSucc n₀ hz hT hπ hL hu hB (by
+    _root_.GlobalTheory.WigSh.exists_wigMap_chain_lowering V n r z π u β L B i.castSucc n₀ hz hT hπ hL hu hB (by
       intro j hj
       have hj' : i.succ ≤ j := Fin.castSucc_lt_iff_succ_le.mp hj
       have := hL.antitone hj'

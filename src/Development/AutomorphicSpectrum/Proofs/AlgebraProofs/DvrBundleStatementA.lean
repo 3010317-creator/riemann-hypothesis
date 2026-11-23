@@ -2,11 +2,15 @@ module
 
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.SameGenericSymm
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.BundleObjects
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ChartBundleBaseExtensionUniqueStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PairCocycleStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericBundleChainStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericFlagComparisonStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericFlagDifferenceStatement
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.TrivFlagMod
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ChartBundleBaseExtensionUnique
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsBundles
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PairCocycle
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.InstFintypeSumElim
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericBundleChain
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericFlagComparison
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MixedFieldContraction.GenericFibreKerTarget
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericFlagDifference
 import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.ClassListMapDomainPerm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -102,7 +106,7 @@ theorem main : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   have h13 : SameGeneric O x E E'' := sameGeneric_comp h1 h2
   obtain ⟨K', _, _, ι', _, z, EB, w, b, hMB, hbir, hEB⟩ :=
-    GlobalTheory.T.same_generic_bundle_chain O Ω K ι x d hM N 2 V ![E, E', E''] (by
+    _root_.GlobalTheory.CompanionTheory.Ar.CommonFlag.main O Ω K ι x d hM N 2 V ![E, E', E''] (by
       intro j
       fin_cases j
       · exact sameGeneric_self E
@@ -120,11 +124,11 @@ theorem main : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing
   have pair : ∀ i j, SameGeneric O (joinCoord x z) (EB i) (EB j) →
       SameGenericFibre ϖ (EB i) (EB j) ∧ ∃ f g : Fin N → MRing (Sum.elim ι ι') O,
         IsFlagPair ϖ (joinCoord x z) (EB i) (EB j) w w (b i) (b j) f g := fun i j hs =>
-    GlobalTheory.T.same_generic_flag_comparison O Ω (K ⊕ K') (Sum.elim ι ι') (joinCoord x z) ϖ hϖ d hM' N V (EB i) (EB j) hs
+    _root_.GlobalTheory.CompanionTheory.Ar.FlagPairOfFrames.main O Ω (K ⊕ K') (Sum.elim ι ι') (joinCoord x z) ϖ hϖ d hM' N V (EB i) (EB j) hs
       w w (b i) (b j) (fr i) (fr j) tri
-  have s01 := (GlobalTheory.T.chart_bundle_base_extension_unique O Ω K ι x N V E E' K' ι' z (EB 0) (EB 1) p0 p1).2.1 h1
-  have s12 := (GlobalTheory.T.chart_bundle_base_extension_unique O Ω K ι x N V E' E'' K' ι' z (EB 1) (EB 2) p1 p2).2.1 h2
-  have s02 := (GlobalTheory.T.chart_bundle_base_extension_unique O Ω K ι x N V E E'' K' ι' z (EB 0) (EB 2) p0 p2).2.1 h13
+  have s01 := (_root_.GlobalTheory.CompanionTheory.Ar.Num.PullPreserve.pull_preserve O Ω K ι x N V E E' K' ι' z (EB 0) (EB 1) p0 p1).2.1 h1
+  have s12 := (_root_.GlobalTheory.CompanionTheory.Ar.Num.PullPreserve.pull_preserve O Ω K ι x N V E' E'' K' ι' z (EB 1) (EB 2) p1 p2).2.1 h2
+  have s02 := (_root_.GlobalTheory.CompanionTheory.Ar.Num.PullPreserve.pull_preserve O Ω K ι x N V E E'' K' ι' z (EB 0) (EB 2) p0 p2).2.1 h13
   obtain ⟨g01, f01, d01, c01⟩ := pair 0 1 s01
   obtain ⟨g12, f12, d12, c12⟩ := pair 1 2 s12
   obtain ⟨-, f02, d02, c02⟩ := pair 0 2 s02
@@ -136,10 +140,10 @@ theorem main : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuationRing
         pairNum (pointIdeal O (joinCoord x z)) (b i) (b j) f g (psumExpansion N k)
           (classList (fun j => pullDeg (K' := K') (L j)) μ) := by
     intro A B i j f g hs pi pj hf
-    exact (GlobalTheory.T.same_generic_flag_difference O Ω K ι x ϖ hϖ d hM N V A B hs K' ι' z hMB hbir (EB i) (EB j) pi pj
+    exact (_root_.GlobalTheory.CompanionTheory.Ar.Num.ck_rootNum_eq_pairNum_on_flagPair O Ω K ι x ϖ hϖ d hM N V A B hs K' ι' z hMB hbir (EB i) (EB j) pi pj
       w w (b i) (b j) f g hf).1 k hk1 hk2 q L Q hQ
   have coc := fun μ (hμ : μ ∈ Q.support) =>
-    GlobalTheory.T.pair_cocycle O ϖ hϖ Ω (K ⊕ K') (Sum.elim ι ι') (joinCoord x z) d hM' N V (EB 0) (EB 1) (EB 2)
+    _root_.GlobalTheory.CompanionTheory.CommAlg.PairCocycleClosed.pairCocycle O ϖ hϖ Ω (K ⊕ K') (Sum.elim ι ι') (joinCoord x z) d hM' N V (EB 0) (EB 1) (EB 2)
       g01 g12 w w w (b 0) (b 1) (b 2) f01 d01 f12 d12 f02 d02 c01 c12 c02 k (psumExpansion N k)
       (psumExpansion N k) (psumExpansion N k) (isPairExpansion_psum N k) (isPairExpansion_psum N k)
       (isPairExpansion_psum N k) (classList (fun j => pullDeg (K' := K') (L j)) μ)

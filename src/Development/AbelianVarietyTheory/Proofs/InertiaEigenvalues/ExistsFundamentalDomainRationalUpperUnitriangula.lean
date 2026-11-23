@@ -2,9 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdelicUnitriangularMulMemUnipotentTimesIntegral
 public import GroundTheory.GlobalFields.Adele.Discrete
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsUniqueRatUnitriangularMulEntriesMemFundameStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsCompactAdelicUnitriangularEntriesMemCompactStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsUniqueRatUnitriangularMulEntriesMemFundame
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsCompactAdelicUnitriangularEntriesMemCompact
 public import GroundTheory.GlobalFields.TateThesis.AdeleMeasure
+public import GroundTheory.GlobalFields.Adele.Compact
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -47,7 +48,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsOpenKerFinIdele
-public import GroundTheory.GlobalFields.Adele.Compact
 
 @[expose] public section
 
@@ -85,7 +85,7 @@ theorem exists_fundamentalDomain_NE (E : Type) [Field E] [NumberField E] (n : �
       refine (Continuous.measurable ?_) (GroundTheory.Global.measurableSet_fundamentalSet E)
       exact (Units.continuous_val.comp continuous_subtype_val).matrix_elem i j
     · intro x
-      obtain ⟨γ, ⟨hγ, hγD⟩, huniq⟩ := GlobalTheory.T.existsUnique_ratUnitriangular_mul_entries_mem_fundamentalSet E n (x : GA E n) x.2
+      obtain ⟨γ, ⟨hγ, hγD⟩, huniq⟩ := _root_.GlobalTheory.CellDec.existsUnique_ratUnip_mul_mem_fundamentalSet E n (x : GA E n) x.2
       refine ⟨⟨⟨ratGL E n γ, ratGL_mem_NA hγ⟩, Subgroup.mem_subgroupOf.2 (Subgroup.mem_map.2 ⟨γ, hγ, rfl⟩)⟩,
         fun i j hij => hγD i j hij, ?_⟩
       intro g hg
@@ -125,7 +125,7 @@ theorem exists_fundamentalDomain_NE (E : Type) [Field E] [NumberField E] (n : �
     rw [Subtype.isCompact_iff, Set.image_preimage_eq_inter_range, Subtype.range_coe_subtype]
     change IsCompact (K ∩ (NA E n : Set (GA E n)))
     rw [Set.inter_eq_left.2 (fun g (hg : g ∈ K) => hg.1)]
-    exact GlobalTheory.T.isCompact_adelicUnitriangular_entries_mem_compact E n C hC
+    exact _root_.GlobalTheory.CellDec.isCompact_unip_entries_mem E n C hC
   refine (measure_mono fun u hu => ?_).trans_lt hK.measure_lt_top
   refine ⟨u.2, fun i j hij => ?_⟩
   have h := hu i j hij

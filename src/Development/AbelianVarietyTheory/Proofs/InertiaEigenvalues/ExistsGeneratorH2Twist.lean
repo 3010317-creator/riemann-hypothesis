@@ -5,13 +5,15 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FactorM
 public import Formalism.GaloisCohomology.LocalTateDualityK
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicCoboundaryOfDivisible
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousTwoCocycleMultipleOfFundamental
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CycEqImageStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteCocyclesQuotientPowSmulModuleStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FundamentalTwoCocycleMultipleNotCoboundaryStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsAdicCompleteOfPadicCoeffStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PadicIntRingHomContinuousOfPadicCoeffStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwoCocycleFundamentalMultipleModPowStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwoCocycleMemCoboundariesOfModUniformizerPowStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CycEqImage
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteCocyclesQuotientPowSmulModule
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.H2EquivOfTorsionCharacter
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FundamentalTwoCocycleMultipleNotCoboundary
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsAdicCompleteOfPadicCoeff
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PadicIntRingHomContinuousOfPadicCoeff
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwoCocycleFundamentalMultipleModPow
+public import Mathlib.Topology.Algebra.Ring.Ideal
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwoCocycleMemCoboundariesOfModUniformizerPow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +52,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.H2EquivOfTorsionCharacter
 
 @[expose] public section
 
@@ -89,7 +90,7 @@ theorem exists_free_H2_twist : ∀ {p : ℕ} [Fact p.Prime] {K : IntermediateFie
   haveI := hO.t2
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
   obtain ⟨hopen, hbasis⟩ := powSub_open_basis hO hϖ
-  haveI := GlobalTheory.T.isAdicComplete_of_padicCoeff' hO
+  haveI := _root_.GlobalTheory.isAdicComplete_of_padicCoeff hO
   have hd : ∀ n : ℕ, ringChar (O ⧸ IsLocalRing.maximalIdeal O ^ n) ∣ p ^ n := fun n => by
     apply ringChar.dvd
     rw [← map_natCast (Ideal.Quotient.mk (IsLocalRing.maximalIdeal O ^ n)),
@@ -101,7 +102,7 @@ theorem exists_free_H2_twist : ∀ {p : ℕ} [Fact p.Prime] {K : IntermediateFie
       rw [← PadicInt.zmod_cast_comp_toZModPow m n hle, ← RingHom.comp_assoc, ← RingHom.comp_assoc]
       congr 1
       exact RingHom.ext_zmod _ _)
-  have hφ : Continuous φ := GlobalTheory.T.padicInt_ringHom_continuous_of_padicCoeff' hO φ
+  have hφ : Continuous φ := _root_.GlobalTheory.padicInt_ringHom_continuous_of_padicCoeff hO φ
   let χZ : Formalism.GaloisCohomology.GK p K →* ℤ_[p]ˣ := (cyclotomicCharacter (PadicAlgCl p) p).comp
     (MulSemiringAction.toRingAut (Formalism.GaloisCohomology.GK p K) (PadicAlgCl p))
   have hχc : Continuous fun g => (χZ g : ℤ_[p]) :=
@@ -119,7 +120,7 @@ theorem exists_free_H2_twist : ∀ {p : ℕ} [Fact p.Prime] {K : IntermediateFie
   let χ : G →* ℤ_[p]ˣ := χZ.comp e.toMonoidHom
   let cG : G × G → ℤ_[p] := fun q => c (e q.1, e q.2)
   have hcG : ∀ r, GlobalTheory.TateTop.Gen χ r cG := fun r => (hc r).transport e he he'
-  have hεφ : ∀ g, ((ε g : Oˣ) : O) = φ (χ g : ℤ_[p]) := fun g => GlobalTheory.T.eq_cyclotomicCharacter_of_isCyc hO φ i hε g
+  have hεφ : ∀ g, ((ε g : Oˣ) : O) = φ (χ g : ℤ_[p]) := fun g => _root_.GlobalTheory.CycImage.cyc_eq_image hO φ i hε g
   have hχGc : Continuous fun g => (χ g : ℤ_[p]) := hχc.comp he
   have hεc : Continuous fun g => ((ε g : Oˣ) : O) := by
     simp_rw [hεφ]
@@ -128,7 +129,7 @@ theorem exists_free_H2_twist : ∀ {p : ℕ} [Fact p.Prime] {K : IntermediateFie
     show Continuous fun q : G × O => twist ε O q.1 q.2
     simp only [twist_apply, smul_eq_mul]
     exact (hεc.comp continuous_fst).mul continuous_snd
-  have hfin := fun n => GlobalTheory.T.finite_cocycles_quotient_pow_smul_of_isOpen hT hK hO.p_mem i (twist ε O) hcont ϖ hϖ hopen n
+  have hfin := fun n => _root_.GlobalTheory.LocDualInt.finite_cocycles_quotient_pow_smul_module hT hK hO.p_mem i (twist ε O) hcont ϖ hϖ hopen n
   have hG := fun r => GlobalTheory.GenSpan.gen_zmod (hcG r)
   have hcc : Continuous cG :=
     GlobalTheory.PadicH2Separated.continuous_of_reductions cG fun s => (hG (s + 1)).1.1.continuous
@@ -149,19 +150,19 @@ theorem exists_free_H2_twist : ∀ {p : ℕ} [Fact p.Prime] {K : IntermediateFie
       exact sub_eq_zero.2 hab
     rw [← Submodule.Quotient.mk_smul, Submodule.Quotient.mk_eq_zero] at h0
     obtain ⟨f, hf, hfd⟩ := (separated_dvr_second_cohomology_mem _ _).1 h0
-    refine sub_eq_zero.1 (GlobalTheory.T.fundamentalTwoCocycle_multiple_not_coboundary χ cG hcG φ ε hεφ ϖ hϖ hO.p_mem hopen (a - b) f hf
+    refine sub_eq_zero.1 (_root_.GlobalTheory.TateNat.free_inj χ cG hcG φ ε hεφ ϖ hϖ hO.p_mem hopen (a - b) f hf
       fun g h => ?_)
     have e1 := congrFun hfd (g, h)
     rw [e1]
     rfl
   · induction y using Submodule.Quotient.induction_on with
     | H w =>
-      obtain ⟨a, ha⟩ := GlobalTheory.T.twoCocycle_fundamental_multiple_mod_pow χ cG hcG φ ε hεφ ϖ hϖ hO.p_mem hopen w.1 w.2
+      obtain ⟨a, ha⟩ := _root_.GlobalTheory.UnifSpan.span_mod_pow χ cG hcG φ ε hεφ ϖ hϖ hO.p_mem hopen w.1 w.2
       refine ⟨a, ?_⟩
       show a • Z = Submodule.Quotient.mk w
       rw [← Submodule.Quotient.mk_smul, eq_comm, Submodule.Quotient.eq]
       show (w.1 - a • z0) ∈ B2 (twist ε O)
-      refine GlobalTheory.T.twoCocycle_mem_coboundaries_of_mod_uniformizer_pow ε ϖ hopen hbasis hfin _
+      refine _root_.GlobalTheory.PadicH2SeparatedDVR.separated_dvr_second_cohomology_mem ε ϖ hopen hbasis hfin _
         (sub_mem w.2 (Submodule.smul_mem _ a hz0)) fun n => ?_
       obtain ⟨b, hb, hbd⟩ := ha n
       exact ⟨b, hb, fun g h => by rw [hbd]; rfl⟩

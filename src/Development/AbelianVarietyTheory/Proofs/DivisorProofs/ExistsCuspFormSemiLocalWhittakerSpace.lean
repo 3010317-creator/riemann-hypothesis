@@ -2,10 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KerInfMemLocSpan
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NAInterSupSSubset
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchimedeanKernelSpanCuspFormRightInvariantOpenStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchimedeanKernelSpanCuspFormRightInvariantOpen
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConstantTermAutomorphicFormIntegral
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspFormModerateGrowthCompactStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlobalWhittakerCoefficientLinearArchimedeanKerneStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspFormModerateGrowthCompact
+public import Development.AbelianVarietyTheory.Definitions.Divisors.MeasurableCompInfGL
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlobalWhittakerCoefficientLinearArchimedeanKerne
 import GroundTheory.AutomorphicForms.ReductionMeasure
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -139,13 +140,13 @@ end GlobalTheory.JSW.MirSemi
 open GlobalTheory.JSW.MirSemi in
 theorem GlobalTheory.JSW.MirSemi.whitSpace_exists : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (m : ℕ) (S : Finset (HeightOneSpectrum (𝓞 E))) (π : CuspSub E (m + 1)) (φ : Sm E (m + 1)), φ ∈ π.V → ∃ 𝒲 : Submodule ℂ (GA E (m + 1) → ℂ), GlobalTheory.JSW.whit φ.1 ∈ 𝒲 ∧ (∀ W ∈ 𝒲, ∀ u ∈ GlobalTheory.JSW.NA (E := E) (a := (m + 1)), ∀ g, W (u * g) = GlobalTheory.JSW.psiN u * W g) ∧ (∀ W ∈ 𝒲, ∀ h ∈ GlobalTheory.JSW.supS (E := E) (a := (m + 1)) S, (fun g => W (g * h)) ∈ 𝒲) ∧ (∀ W ∈ 𝒲, ∀ (X : Type) [MeasurableSpace X] (ν : Measure X) [SFinite ν] (k : X → ℂ) (γ : X → GL (Fin (m + 1)) (Cinf E)), GlobalTheory.JSW.IsRapidInf ν k γ → GlobalTheory.JSW.kerInf ν k γ W ∈ 𝒲) ∧ (∀ W ∈ 𝒲, ∀ g, Continuous (fun y : GL (Fin (m + 1)) (Cinf E) => W (g * infGL E (m + 1) y)) ∧ ∃ (C : ℝ) (N : ℕ), ∀ y, ‖W (g * infGL E (m + 1) y)‖ ≤ C * height y ^ N) ∧ (∀ W ∈ 𝒲, ∃ U : Subgroup (GL (Fin (m + 1)) (Af E)), IsOpen (U : Set (GL (Fin (m + 1)) (Af E))) ∧ ∀ u ∈ U, ∀ g, W (g * finGL E (m + 1) u) = W g) ∧ ∀ W ∈ 𝒲, ∃ F ∈ GlobalTheory.JSW.MirSemi.locSpan S φ.1, ∀ g, GlobalTheory.JSW.whit F g = W g := by
   intro E _ _ _ m S π φ hφ
-  have hreg := GlobalTheory.T.cusp_form_moderate_growth_compact E (m + 1) S π φ hφ
+  have hreg := _root_.GlobalTheory.JSW.MirSemi.locSpan_continuous_moderate E (m + 1) S π φ hφ
   let 𝒲 : Submodule ℂ (GA E (m + 1) → ℂ) :=
     { carrier := {W | ∃ F ∈ locSpan S φ.1, GlobalTheory.JSW.whit F = W}
       add_mem' := by
         rintro _ _ ⟨F, hF, rfl⟩ ⟨G, hG, rfl⟩
         refine ⟨F + G, add_mem hF hG, funext fun g => ?_⟩
-        have h := ((GlobalTheory.T.globalWhittakerCoefficient_linear_archimedeanKernel E (m + 1) F G (hreg F hF).1 (hreg G hG).1 (hreg F hF).2 (hreg G hG).2).1 1 g)
+        have h := ((_root_.GlobalTheory.JSW.WhitAlg.whit_linear_kerInf E (m + 1) F G (hreg F hF).1 (hreg G hG).1 (hreg F hF).2 (hreg G hG).2).1 1 g)
         simp only [one_mul] at h
         exact h
       zero_mem' := ⟨0, zero_mem _, funext fun g => by
@@ -161,12 +162,12 @@ theorem GlobalTheory.JSW.MirSemi.whitSpace_exists : ∀ (E : Type) [Field E] [Nu
     exact ⟨_, rt_mem_locSpan hF hh, funext fun g => (whit_mul_right_fun F g h).symm⟩
   · rintro _ ⟨F, hF, rfl⟩ X _ ν _ k γ hk
     refine ⟨GlobalTheory.JSW.kerInf ν k γ F, kerInf_mem_locSpan hF ν hk, funext fun g => ?_⟩
-    rw [(GlobalTheory.T.globalWhittakerCoefficient_linear_archimedeanKernel E (m + 1) F F (hreg F hF).1 (hreg F hF).1 (hreg F hF).2 (hreg F hF).2).2 X ν k γ hk g]
+    rw [(_root_.GlobalTheory.JSW.WhitAlg.whit_linear_kerInf E (m + 1) F F (hreg F hF).1 (hreg F hF).1 (hreg F hF).2 (hreg F hF).2).2 X ν k γ hk g]
     rfl
   · rintro _ ⟨F, hF, rfl⟩ g
     exact whit_infGL_growth (hreg F hF).1 (hreg F hF).2 g
   · rintro _ ⟨F, hF, rfl⟩
-    obtain ⟨U, hU, hinv⟩ := GlobalTheory.T.archimedeanKernelSpan_cuspForm_right_invariant_open E (m + 1) S π φ hφ F hF
+    obtain ⟨U, hU, hinv⟩ := _root_.GlobalTheory.JSW.MirSemi.locSpan_openInv E (m + 1) S π φ hφ F hF
     refine ⟨U, hU, fun u hu g => ?_⟩
     rw [whit_mul_right_fun]
     congr 1

@@ -2,8 +2,9 @@ module
 
 public import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.EigenspaceCyclicDensity.LowKMultOneP
 public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompactHighestWeightUniqueOfIrreducibleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KStabIffIsKStableOnFiniteVectorsStatement
+public import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.DiscreteSeriesCharacters.CapelliDeterminantBlockProduct
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompactHighestWeightUniqueOfIrreducible
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KStabIffIsKStableOnFiniteVectors
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,12 +64,12 @@ theorem GlobalTheory.kTypeInKFinite : ∀ (n : ℕ) (ε : Fin n → Bool) (H : T
   haveI hFD : FiniteDimensional ℂ (S.comap D.subtype) :=
     LinearEquiv.finiteDimensional (Submodule.comapSubtypeEquivOfLe hSD).symm
   have hStab : KStab ε E (S.comap D.subtype) := by
-    rw [GlobalTheory.T.kStab_iff_isKStableOn_finite_vectors n ε H σ D E hH hU hI hK _ hFD, hmap]; exact hS.2.1
+    rw [_root_.GlobalTheory.KFinStab.kStab_iff_kStableOn n ε H σ D E hH hU hI hK _ hFD, hmap]; exact hS.2.1
   have hinj := Submodule.map_injective_of_injective (f := D.subtype) Subtype.val_injective
   have hirr : ∀ L' ≤ S.comap D.subtype, KStab ε E L' → L' = ⊥ ∨ L' = S.comap D.subtype := by
     intro L' hL' hst
     haveI : FiniteDimensional ℂ L' := Submodule.finiteDimensional_of_le hL'
-    have hK' := (GlobalTheory.T.kStab_iff_isKStableOn_finite_vectors n ε H σ D E hH hU hI hK L' inferInstance).1 hst
+    have hK' := (_root_.GlobalTheory.KFinStab.kStab_iff_kStableOn n ε H σ D E hH hU hI hK L' inferInstance).1 hst
     have hle : L'.map D.subtype ≤ S := hmap ▸ Submodule.map_mono hL'
     rcases hS.2.2.1 _ hle hK' with h | h
     · left; apply hinj; rw [h, Submodule.map_bot]
@@ -77,4 +78,4 @@ theorem GlobalTheory.kTypeInKFinite : ∀ (n : ℕ) (ε : Fin n → Bool) (H : T
   have hKR : KRel ε E := fun a b c d _ _ => hK.gl a b c d
   have hKU : KUnit ε E := fun a b h x y => by rw [hK.unit a b x y]; simp [Formalism.REAL.sgn, h]
   refine ⟨hSD, hFD, hStab, ?_⟩
-  exact GlobalTheory.T.compactHighestWeight_unique_of_irreducible n ε D E hKR hKU _ hFD hStab hirr μ v hvS hv0 hvh
+  exact _root_.GlobalTheory.HDUniq.khighest_weight_unique n ε D E hKR hKU _ hFD hStab hirr μ v hvS hv0 hvh

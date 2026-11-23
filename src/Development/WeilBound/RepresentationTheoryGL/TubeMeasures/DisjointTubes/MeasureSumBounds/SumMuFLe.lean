@@ -6,16 +6,21 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.HolomorphicS
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchimedeanMatrixUnitaryGroupPreservesGramStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithmeticGroupConjRationalPrincipalCongruenceStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComponentRepresentativesInjectiveDoubleCosetStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CovolumeEqOfRealUnitaryConjStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CovolumeRealSpecialUnitaryEqFlagDomainMassStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetEqOneUnitaryPrincipalCongruenceLevelThreeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFlagDomainDataPrincipalCongruenceLevelStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.FundSetMeasStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CovolumeEqOfRealUnitaryConj
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EmbGLMemRealSU
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FundamentalDomainPointBound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CovolumeRealSpecialUnitaryEqFlagDomainMass
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.Signature
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetEqOneUnitaryPrincipalCongruenceLevelThree
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFlagDomainDataPrincipalCongruenceLevel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianMassUpperBound
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrincipalCongruenceConjMemArithmeticGroupStatement
 public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.FinMuAllData
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CompletedLatticeEqAdelicCompletionAndGram
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLatticeRationalVectorsInAdelicTranslateStatement
+public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.Hat1
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLatticeRationalVectorsInAdelicTranslate
 public import Formalism.LocalToGlobal.LatticeGeometry.DegFlLApply
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CompletedLatticeEqAdelicCompletionAndGram
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -84,16 +89,16 @@ theorem sum_muF_le (hT : TubeSt) (D : D7) (V : HSp D) (r : ℕ) (hr : V.rank = r
     have := (hm k).1
     simpa [Matrix.reindex_apply] using this
   have hL := GlobalTheory.Member.latHat_eq_hat_and_gram D V
-  choose Λk hΛk using fun k => GlobalTheory.T.exists_lattice_rationalVectorsInAdelicTranslate D.host.F D.host.E V.rank (GlobalTheory.Member.latC V) (finHom V (gA k))
+  choose Λk hΛk using fun k => _root_.GlobalTheory.AdLat.exists_lattice_latOf D.host.F D.host.E V.rank (GlobalTheory.Member.latC V) (finHom V (gA k))
     hL.2.2.1 hL.2.2.2.1
-  have hX' := fun k => GlobalTheory.T.exists_flagDomainData_principalCongruenceLevel D.host.E V.rank M (X k) (Λk k) hM (hΛk k).2.1 (hΛk k).2.2.1
+  have hX' := fun k => _root_.GlobalTheory.PrincData.exists_princ_data D.host.E V.rank M (X k) (Λk k) hM (hΛk k).2.1 (hΛk k).2.2.1
   choose X' hX'Gm hX'Ψ hX'p0 hX'Λ hX'Γ using hX'
   have hfm : ∀ k, ∃ y, IsOrth (X' k) y ∧ ∃ FF', IsFundSet (X' k) y FF' ∧ muF (X' k) y FF' < ⊤ :=
     fun k => GlobalTheory.finMu_all_data D.host.E V.rank (X' k)
   choose y hy FF' hFF' _ using hfm
   have hμ : ∀ k, muF (X k) (x0 k) (FF k) = muF (X' k) (y k) (FF' k) := by
     intro k
-    refine GlobalTheory.T.covolume_eq_of_realUnitary_conj D.host.E V.rank (X k) (X' k) (hX'Ψ k)
+    refine _root_.GlobalTheory.CovolConj.muF_eq_of_conj D.host.E V.rank (X k) (X' k) (hX'Ψ k)
       (fun τ => if h : τ ∈ (X k).Ψ then archM V (th k ⟨τ, h⟩) (gA k) else 1) (x0 k) (y k) (FF k) (FF' k)
       (hX'Gm k) (hX'p0 k) ?_ ?_ ?_ (hF k).1 (hy k) (hF k).2 (hFF' k)
     · intro τ hτ
@@ -120,8 +125,8 @@ theorem sum_muF_le (hT : TubeSt) (D : D7) (V : HSp D) (r : ℕ) (hr : V.rank = r
     intro k γ
     rw [hX'Γ k γ, hX'Gm k, hX'Λ k]
   have hdet : ∀ k, ∀ γ ∈ (X' k).Γ, (γ : Matrix (Fin V.rank) (Fin V.rank) D.host.E).det = 1 := fun k =>
-    GlobalTheory.T.det_eq_one_unitary_principal_congruence_level_three D.host.E V.rank M (X' k) hM (hΓ' k)
-  have hCc := fun k => GlobalTheory.T.covolume_realSpecialUnitary_eq_flagDomain_mass D.host.E V.rank (X' k) (y k) (FF' k) (by omega) (hdet k) (hy k) (hFF' k)
+    _root_.GlobalTheory.UnitaryCongruenceDet.det_eq_one D.host.E V.rank M (X' k) hM (hΓ' k)
+  have hCc := fun k => _root_.GlobalTheory.SUCovol.covolume_realSU D.host.E V.rank (X' k) (y k) (FF' k) (by omega) (hdet k) (hy k) (hFF' k)
   have hTube := hT D V P Q hs hsig h2 M hM Comp X' gA y hdist (fun k => ⟨(hX'Gm k).trans (hG k),
     fun τ => by rw [hX'Ψ k]; exact hΨ k τ, by rw [hX'Λ k]; exact (hΛk k).1, hΓ' k, hy k⟩)
   have hC1 : (1 : ℝ) ≤ ((2 : ℝ) ^ (V.rank * (V.rank - 1) / 2) * (2 * Real.pi) ^ (V.rank - 1) *

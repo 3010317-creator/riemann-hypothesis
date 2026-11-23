@@ -2,13 +2,17 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFockMap
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DblCol
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledHermitianSpaceFrameOfFrameStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledSpaceFrameColBlocksEqStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockHeisenbergOperatorOfCoordsRealISmulSignConjOStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledHermitianSpaceFrameOfFrame
+public import Mathlib.Data.Matrix.ColumnRowPartitioned
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledSpaceFrameColBlocksEq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockHeisenbergOperatorOfCoordsRealISmulSignConjO
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasArchDerivativeOnPureTensorUniqueAdelicOperato
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergDerivativeOnSchwartzTensorConjStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergDerivativeOnSchwartzTensorConj
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductFunctionOnSumCoordsMemAdelicSchwartzSpace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TprodConstantPolynomialsNeZeroStatement
+public import Formalism.LocalRingCardinality.DataTheta
+public import Mathlib.RingTheory.PiTensorProduct
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TprodConstantPolynomialsNeZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,11 +70,11 @@ theorem dbl_cols {α β : Type} [Fintype β] {P Q R S : ℕ} (A : Matrix α (Ix 
     (A * c * (dblM C)ᵀ).toCols₂ = A * c.submatrix id eR * Cᵀ ∧
     (Jm P Q * c * Jm (R + S) (S + R)).submatrix id eL = Jm P Q * c.submatrix id eL * Jm R S ∧
     (Jm P Q * c * Jm (R + S) (S + R)).submatrix id eR = -(Jm P Q * c.submatrix id eR * Jm R S) :=
-  GlobalTheory.T.doubledSpaceFrame_colBlocks_eq α β P Q R S A C c
+  _root_.GlobalTheory.RealLift.Dbl.dblM_colBlocks α β P Q R S A C c
 
 theorem heisOp_rot_one {P Q R S : ℕ} (c : Matrix (Ix P Q) (Ix R S) ℂ) (t : ℝ) :
     heisOp (((t : ℂ) * Complex.I) • (Jm P Q * c * Jm R S)) 1 = ((t : ℂ) * Complex.I) • heisOp c 1 :=
-  GlobalTheory.T.fockHeisenbergOperatorOfCoords_real_I_smul_signConj_one P Q R S c t
+  _root_.GlobalTheory.HeisRot.heisOp_rot_one P Q R S c t
 
 theorem box_deriv {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ] (a₁ b₁ a₂ b₂ : κ → AF F)
     (f g₁ g₂ : SInf F κ) (f₀ h : SInf F (κ ⊕ κ))
@@ -82,7 +86,7 @@ theorem box_deriv {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ] 
       (Algebra.trace ℝ (mixedEmbedding.mixedSpace F) (∑ i, x i * evI F (Sum.elim b₁ (-b₂) i)) : ℝ) * f₀ x)
     (hf₀ : ∀ x, f₀ x = f (x ∘ Sum.inl) * star (f (x ∘ Sum.inr))) (x : κ ⊕ κ → mixedEmbedding.mixedSpace F) :
     h x = g₁ (x ∘ Sum.inl) * star (f (x ∘ Sum.inr)) + f (x ∘ Sum.inl) * star (g₂ (x ∘ Sum.inr)) :=
-  GlobalTheory.T.heisenberg_derivative_on_schwartz_tensor_conj F κ a₁ b₁ a₂ b₂ f g₁ g₂ f₀ h hg₁ hg₂ hh hf₀ x
+  _root_.GlobalTheory.heisenbergDeriv_tensor_conj F κ a₁ b₁ a₂ b₂ f g₁ g₂ f₀ h hg₁ hg₂ hh hf₀ x
 
 def conjS {V : Type} [NormedAddCommGroup V] [NormedSpace ℝ V] (f : SchwartzMap V ℂ) : SchwartzMap V ℂ where
   toFun x := starRingEnd ℂ (f x)
@@ -135,7 +139,7 @@ theorem vac_box : DerEx → VacLine → ∀ (F E : Type) [Field F] [NumberField 
   set f₁ := Φ (PiTensorProduct.tprod ℂ fun _ => 1) with hf₁
   obtain ⟨f₀, hf₀⟩ := GlobalTheory.SchwartzBox.exists_schwartz_box f₁ (conjS f₁)
   have hf₀' : ∀ x, f₀ x = f₁ (x ∘ Sum.inl) * star (f₁ (x ∘ Sum.inr)) := fun x => hf₀ x
-  have hFrd := GlobalTheory.T.doubled_hermitian_space_frame_of_frame F E α β P Q R S τ JA JB a b A C hFr
+  have hFrd := _root_.GlobalTheory.RealLift.Dbl.framed_dbl F E α β P Q R S τ JA JB a b A C hFr
   have hder : ∀ u₁ : Matrix α β (_root_.GlobalTheory.IndefiniteRowSideFullHecke.WeilTensorModels.AE (F := F) (E := E)), At (evI F) u₁ → ∀ c₁ : InfinitePlace F → Matrix (Ix P Q) (Ix R S) ℂ,
       (∀ w, u₁.map (piInf (τ w)) = A w * c₁ w * (C w)ᵀ) →
       D u₁ f₁ = Φ (sumPl (fun w => heisOp (c₁ w)) (PiTensorProduct.tprod ℂ fun _ => 1)) := fun u₁ hu₁ c₁ hc₁ =>
@@ -187,7 +191,7 @@ theorem vac_box : DerEx → VacLine → ∀ (F E : Type) [Field F] [NumberField 
     ring
   obtain ⟨z', hz'⟩ := hV F E σ α (β ⊕ β) (κ ⊕ κ) P Q (R + S) (S + R) ψ τ JA (dbl JB) dd a b A
     (fun w => dblM (C w)) Φd hCM hψ hFrd hΦd f₀ 1 key
-  have hne1 : f₁ ≠ 0 := fun h0 => GlobalTheory.T.tprod_constant_polynomials_ne_zero F P Q R S (hΦ.1 (h0.trans (map_zero Φ).symm))
+  have hne1 : f₁ ≠ 0 := fun h0 => _root_.GlobalTheory.tprod_one_pol_ne_zero F P Q R S (hΦ.1 (h0.trans (map_zero Φ).symm))
   obtain ⟨y, hy⟩ : ∃ y, f₁ y ≠ 0 := by
     by_contra h
     push_neg at h

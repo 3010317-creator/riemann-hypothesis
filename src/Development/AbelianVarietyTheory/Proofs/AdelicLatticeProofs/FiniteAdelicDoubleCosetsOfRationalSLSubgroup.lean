@@ -1,12 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.AdelicPair
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ClassFinitenessCompletelyReducibleStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsRatIdempotentBlockDiagPartKillsSpanStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FinrankSpanBlockDiagPartImageLtStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasFiniteAdelicDoubleCosetsOfBlockDiagPartImageStatement
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsAutStableSLMatrixGroupImageBlockDiagPartStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RatZariskiClosureOfAutStableSLGroupStatement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ClassFinitenessCompletelyReducible
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsRatIdempotentBlockDiagPartKillsSpan
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FinrankSpanBlockDiagPartImageLt
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasFiniteAdelicDoubleCosetsOfBlockDiagPartImage
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RatZariskiClosureOfAutStableSLGroup
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsAutStableSLMatrixGroupImageBlockDiagPart
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -75,15 +75,15 @@ theorem cf_of_isQGroup : ∀ (ι : Type) [Fintype ι] [DecidableEq ι] (Γ : Set
   | _ n ih =>
     intro Γ hn R _ _ R₀ hQ hA
     by_cases hS : SS Γ
-    · exact GlobalTheory.T.classFiniteness_completelyReducible ι Γ R R₀ hQ hS hA
-    · obtain ⟨e, he, hup, a, ha, ha0, hblk⟩ := GlobalTheory.T.exists_rat_idempotent_blockDiagPart_kills_span ι Γ hQ.toIsPre hS
+    · exact _root_.GlobalTheory.ClassFin.cf_of_ss ι Γ R R₀ hQ hS hA
+    · obtain ⟨e, he, hup, a, ha, ha0, hblk⟩ := _root_.GlobalTheory.ClassFin.exists_rat_idempotent_blk_eq_zero ι Γ hQ.toIsPre hS
 
-      have hPre : IsPre (blk e '' Γ) := GlobalTheory.T.isAutStableSLMatrixGroup_image_blockDiagPart ι Γ e hQ.toIsPre he hup
-      obtain ⟨hQ', hvan, hspan⟩ := GlobalTheory.T.ratZariskiClosure_of_autStable_SL_group ι (blk e '' Γ) hPre
-      have hlt := GlobalTheory.T.finrank_span_blockDiagPart_image_lt ι Γ e a ha ha0 hblk
+      have hPre : IsPre (blk e '' Γ) := _root_.GlobalTheory.ClassFin.isPre_blk_image ι Γ e hQ.toIsPre he hup
+      obtain ⟨hQ', hvan, hspan⟩ := _root_.GlobalTheory.ClassFin.RatClosure.ratClosure ι (blk e '' Γ) hPre
+      have hlt := _root_.GlobalTheory.ClassFin.finrank_span_blk_image_lt ι Γ e a ha ha0 hblk
       have hcl : CF (pts (blk e '' Γ) ℂ) R R₀ :=
         ih _ (by rw [← hn, hspan]; exact hlt) _ rfl R R₀ hQ' hA
       have hblkCF : CF (blk e '' Γ) R R₀ := (cf_congr_of_vanI_eq hvan R R₀).mp hcl
-      exact GlobalTheory.T.hasFiniteAdelicDoubleCosets_of_blockDiagPart_image ι Γ e R R₀ hQ he hup hA hblkCF
+      exact _root_.GlobalTheory.ClassFin.cf_of_cf_blk_image ι Γ e R R₀ hQ he hup hA hblkCF
 
 end GlobalTheory.ClassFin

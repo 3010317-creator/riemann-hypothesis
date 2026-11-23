@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsBaryStageStart
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RealConeCoveredByStarAtPointStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsStrictIff
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RealConeCoveredByStarAtPoint
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -106,7 +107,7 @@ theorem isStarOf_finite_cover : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
       rw [evalZ_zero_form] at hv
       exact zero_ne_one hv
     obtain ⟨m', s, h, hcut, hpos, t, ht, hBt⟩ :=
-      GlobalTheory.T.realCone_covered_by_star_at_point X m γ v (pullR e.toLinearMap B) (fun i y z => (hγ.mem i).1 y z) hγ.nonneg hv0 hi ⟨c, hc, hBc⟩
+      _root_.GlobalTheory.StarCover.star_cover X m γ v (pullR e.toLinearMap B) (fun i y z => (hγ.mem i).1 y z) hγ.nonneg hv0 hi ⟨c, hc, hBc⟩
     refine ⟨e, m' + 1, Fin.cons v fun j => γ (s j), t,
       hst.2.1 X hX m γ hγ v hb hp hv hi m' s h hcut hpos, fun i => ?_, ht, hBt⟩
     refine Fin.cases ?_ (fun j => ?_) i

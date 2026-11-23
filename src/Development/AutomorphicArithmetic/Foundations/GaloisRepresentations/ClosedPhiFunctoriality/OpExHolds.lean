@@ -2,10 +2,12 @@ module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ClosedPhiFunctoriality.IntBasisAlt
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ClosedPhiFunctoriality.IsOp2One
-import Development.AbelianVarietyTheory.CrystallinePeriods.RingBasics
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisTorsionFreeCompleteFrobeniusPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinPreframeBoundedPolesStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisTorsionFreeCompleteFrobeniusProperties
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TrivIsCr
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinPreframeBoundedPoles
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsInvariantUnitMatrixBcrisFrame
+import Development.AbelianVarietyTheory.CrystallinePeriods.RingBasics
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PeriodRingsGaloisActionLawsFrobeniusComm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -51,7 +53,7 @@ open UpperTheory.Gal.ClosedPhiFromClosedTrace
 private theorem phi_zC (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (n : ℕ) (z : ℤ_[l]) :
     (phiA l ^ n) (zC l z) = zC l z := by
   have h1 : phiA l (zC l z) = zC l z := by
-    have h := (GlobalTheory.T.acris_torsionFree_complete_frobenius_properties l K bk).2.2.2.1 (Per.zA l z)
+    have h := (_root_.GlobalTheory.AcrisFrobE.main l K bk).2.2.2.1 (Per.zA l z)
     have h2 : WittVector.frobenius (Per.zA l z) = Per.zA l z := by
       rw [← GlobalTheory.RingBasics.φA_apply]; exact (ActLaws.act_laws l).2.2.2.2.2.2.2.2.1 z
     rw [h2] at h
@@ -99,7 +101,7 @@ private theorem one (hInvQ : InvQ) (hInvU : InvU) (hOp : OpOne2) (l : ℕ) [Fact
       IsOp2 ρ n₁ n₂ (iB l ((phiA l ^ n₂) (fI l τ) ^ (3 * N) * (l : Per.Acris l) ^ (4 * k) * (phiA l ^ n₁) (fI l τ) ^ N))
         (((phiA l ^ n₂) (fI l τ ^ (2 * N) * (l : Per.Acris l) ^ (2 * k)) •
           ((Y.map (fI l) * Q).map ⇑(phiA l ^ n₁) * (Q' * Y'.map (fI l)).map ⇑(phiA l ^ n₂))).map (iB l)) := by
-  obtain ⟨Y, Y', hY, hYY⟩ := GlobalTheory.T.breuilKisinPreframe_bounded_poles l K bk τ hτ N d _ G.toPre
+  obtain ⟨Y, Y', hY, hYY⟩ := _root_.GlobalTheory.BKLim.pre_bounded_poles l K bk τ hτ N d _ G.toPre
   obtain ⟨Q, Q', hQ⟩ := hk d G.A G.A' G.A_mul
   have hinv := hInvQ l K bk τ hτ N k d ρ G hG Q Q' hQ
   have hyy : Y.map (fI l) * Y'.map (fI l) = fI l τ ^ (2 * N) • (1 : Matrix (Fin d) (Fin d) (Per.Acris l)) := by

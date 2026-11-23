@@ -4,15 +4,18 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitaryOnT
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsIdemOfAlgebraMap
 public import Formalism.SatakeDualWeyl.StatementG
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsIntegralSplitIdempotentOverTwo
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsUniqueIdeleOfLinearEquivQuotientLocal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryGroupCharacterEqOneOfTrivialIntegralStatement
+public import Formalism.SatakeDualWeyl.StatementF
+public import Mathlib.Analysis.Complex.Circle
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryGroupCharacterEqOneOfTrivialIntegral
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnramifiedConjugatePlaceUniformiser
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsSplitAt
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.MemHermitianStandardLatticeIffPairingIntegral
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AdelicUnitarySupportedAtFinitePlaceEqLocalUnitarStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsRingEquivTensorInertAdicCompletionStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AdelicUnitarySupportedAtFinitePlaceEqLocalUnitar
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FiniteResidueFieldAdicCompletionIntegers
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsRingEquivTensorInertAdicCompletion
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertPlaceHeckeDoubleCosetsInverseRepsLabel
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.StabilisesCompletedLatticeIffLocalMatrixIntegralStatement
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsUniqueIdeleOfLinearEquivQuotientLocal
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.StabilisesCompletedLatticeIffLocalMatrixIntegral
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -75,9 +78,9 @@ theorem core (hc : CMData (maximalRealSubfield E) E) (V : HSpace E)
     (hg : Supp hc V e g) : ν g = 1 := by
   have hur := unramified hc
   obtain ⟨σ, π, hσE, hσ⟩ := GlobalTheory.FixedPrime.exists_isUnramInv v P hin
-  obtain ⟨ψ, hψE, hψσ, hψO⟩ := GlobalTheory.T.exists_ringEquiv_tensor_inert_adicCompletion E v P hin σ hσE hσ.2.1
+  obtain ⟨ψ, hψE, hψσ, hψO⟩ := _root_.GlobalTheory.InertCompletion.exists_ringEquiv_completion E v P hin σ hσE hσ.2.1
   obtain ⟨h, hfr, hon⟩ := exists_orthonormal hc V v
-  obtain ⟨s1, s2, s3⟩ := GlobalTheory.T.adelicUnitary_supportedAtFinitePlace_eq_localUnitary _ E hc V v e he
+  obtain ⟨s1, s2, s3⟩ := _root_.GlobalTheory.SuppLocal.supp_local _ E hc V v e he
   let ψ' : LocAlg v →+* P.adicCompletion E := ψ
   let φ : HA (AF (maximalRealSubfield E)) hc.sig V.gram →* GL (Fin V.rank) (P.adicCompletion E) :=
     (bc ψ').comp ((MulAut.conj h⁻¹).toMonoidHom.comp (locMat hc V v))
@@ -123,13 +126,13 @@ theorem core (hc : CMData (maximalRealSubfield E) E) (V : HSpace E)
       ← map_ofNat (algebraMap (𝓞 E) E) 2, HeightOneSpectrum.valuation_of_algebraMap]
     exact (HeightOneSpectrum.intValuation_eq_one_iff).2 h2
   have : CharZero (P.adicCompletion E) := algebraRat.charZero _
-  have key := GlobalTheory.T.unitaryGroup_character_eq_one_of_trivial_integral (P.adicCompletion E) π σ _ V.rank 1 hσ hv2 (one_mem _)
+  have key := _root_.GlobalTheory.UnitaryCharacter.char_eq_one (P.adicCompletion E) π σ _ V.rank 1 hσ hv2 (one_mem _)
     (fun i j => by
       simp only [Units.val_one, Matrix.one_apply, eq_comm (a := j)]
       split_ifs
       · exact map_one σ
       · exact map_zero σ) μ
-    (fun k hk => hν _ (hl1 k) ((GlobalTheory.T.stabilises_completedLattice_iff_localMatrix_integral _ E hc V v h hfr _ ((s1 _).1 (hl1 k)).2).2
+    (fun k hk => hν _ (hl1 k) ((_root_.GlobalTheory.PlaceComp.StabLoc.stab_iff _ E hc V v h hfr _ ((s1 _).1 (hl1 k)).2).2
       ((bc_mem_range_iff ψ' hO _).2 (by rw [← hφ, hl2]; exact hk)))) ⟨φ g, hmem g⟩
   rw [hinj g hg _ (hl1 ⟨φ g, hmem g⟩) (hl2 ⟨φ g, hmem g⟩).symm]
   exact key

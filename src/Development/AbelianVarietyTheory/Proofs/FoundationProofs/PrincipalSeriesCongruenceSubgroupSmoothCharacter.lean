@@ -2,12 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.OrderedConst
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsUnitarisableOfCharIff
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsTrivialOnUnitsModConductorUnitCharacterValuePrStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrincipalSeriesCongruenceSubgroupInvMemStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrincipalSeriesCongruenceSubgroupIsOpenIsCompactStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrincipalSeriesCongruenceSubgroupMulClosedStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrincipalSeriesTypeCharacterEqOneNearOneStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrincipalSeriesTypeCharacterMulStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsTrivialOnUnitsModConductorUnitCharacterValuePr
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrincipalSeriesCongruenceSubgroupInvMem
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrincipalSeriesCongruenceSubgroupIsOpenIsCompact
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrincipalSeriesCongruenceSubgroupMulClosed
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrincipalSeriesTypeCharacterEqOneNearOne
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrincipalSeriesTypeCharacterMul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,16 +57,16 @@ namespace GlobalTheory.PsType
 theorem grp_theta_datum : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (n : ℕ)
     (ψ : Fin n → kˣ →* ℂˣ), (∀ i, IsSmoothChar (ψ i)) → Ordered ψ → Datum (grp ψ) (theta ψ) ∧ IsOpen (grp ψ) := by
   intro k _ _ _ _ n ψ hs ho
-  have hoc := GlobalTheory.T.principalSeriesCongruenceSubgroup_isOpen_isCompact k n ψ hs
-  have hnear := GlobalTheory.T.principalSeriesTypeCharacter_eq_one_near_one k n ψ hs
+  have hoc := _root_.GlobalTheory.PsType.grp_isOpen_isCompact k n ψ hs
+  have hnear := _root_.GlobalTheory.PsType.theta_one_and_near k n ψ hs
   have hone : (1 : GL (Fin n) k) ∈ grp ψ := by
     refine ⟨(KO k (Fin n)).one_mem, fun i j hij => ?_⟩
     have h0 : (1 : GL (Fin n) k).val i j = 0 := by
       simp [Matrix.one_apply_ne (ne_of_lt hij)]
     rw [h0]
-    exact (GlobalTheory.T.isTrivialOnUnitsModConductor_unitCharacterValue_props k).2.2.1 _
-  refine ⟨⟨hone, GlobalTheory.T.principalSeriesCongruenceSubgroup_mul_closed k n ψ ho, GlobalTheory.T.principalSeriesCongruenceSubgroup_inv_mem k n ψ ho, hoc.2, hnear.1,
-    GlobalTheory.T.principalSeriesTypeCharacter_mul k n ψ ho, ?_⟩, hoc.1⟩
+    exact (_root_.GlobalTheory.PsType.triv_ev_props k).2.2.1 _
+  refine ⟨⟨hone, _root_.GlobalTheory.PsType.grp_mul_closed k n ψ ho, _root_.GlobalTheory.PsType.grp_inv_mem k n ψ ho, hoc.2, hnear.1,
+    _root_.GlobalTheory.PsType.theta_mul k n ψ ho, ?_⟩, hoc.1⟩
   obtain ⟨U, hU, hUt⟩ := hnear.2
   exact ⟨U, hU, fun g hg _ => hUt g hg⟩
 

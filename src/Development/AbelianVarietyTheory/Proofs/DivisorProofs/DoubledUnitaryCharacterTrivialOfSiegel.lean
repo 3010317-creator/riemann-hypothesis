@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BigCellFactorisationDoubledUnitaryGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DenseInvertibleAntidiagonalCornerDoubledUnitaryStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BigCellFactorisationDoubledUnitaryGroup
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DenseInvertibleAntidiagonalCornerDoubledUnitary
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -91,12 +92,12 @@ theorem eq_one_of_siegel : (∀ (F E : Type) [Field F] [NumberField F] [Field E]
       IsUnit (Matrix.fromCols (1 : Matrix (Fin n) (Fin n) (AE F E)) (-1 : Matrix (Fin n) (Fin n) (AE F E)) * ((h * p).1.1 : Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) (AE F E)) * Matrix.fromRows (1 : Matrix (Fin n) (Fin n) (AE F E)) (-1 : Matrix (Fin n) (Fin n) (AE F E))).det) →
       c h = 1 := by
     rintro h ⟨p, t, hp, hu⟩
-    obtain ⟨p', q, t', s, hp', hq', e⟩ := GlobalTheory.T.bigCell_factorisation_doubledUnitaryGroup (AF F) (AE F E) (cA σ) (Fin n) (incM F J) (h * p) hu
+    obtain ⟨p', q, t', s, hp', hq', e⟩ := _root_.GlobalTheory.BigCell.bigCell_factor (AF F) (AE F E) (cA σ) (Fin n) (incM F J) (h * p) hu
     have h1 : c (h * p) = 1 := by rw [e, map_mul, hP p' t' hp', hq q s hq', one_mul]
     rwa [map_mul, hP p t hp, mul_one] at h1
   have hcl : IsClosed {g : UG (cA σ) (dbl (incM F J)) | c g = 1} := isClosed_eq hc continuous_const
   refine MonoidHom.ext fun g => ?_
-  exact hcl.closure_subset_iff.2 (fun h hh => hΩ h hh) (GlobalTheory.T.dense_invertible_antidiagonal_corner_doubledUnitary F E σ hCM n J ε hJ hdet g)
+  exact hcl.closure_subset_iff.2 (fun h hh => hΩ h hh) (_root_.GlobalTheory.SiegelDense.dense F E σ hCM n J ε hJ hdet g)
 
 end GlobalTheory.SiegelChar
 

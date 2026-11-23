@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt
 public import Formalism.LocalToGlobal.ProjectiveLattices.RegPFree
-public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.NaturalRuleValueBaseChangeOfIsReducedStatement
+public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.NaturalRuleValueBaseChangeOfIsReduced
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,7 +60,7 @@ theorem span_evR_eq_top_of_noCommonZero : ∀ (E : Type) [Field E] [NumberField 
   obtain ⟨z, hz⟩ := hL.bc S T φ y
   obtain ⟨i, hi⟩ := hnz T z
   apply hi
-  rw [GlobalTheory.T.naturalRule_value_baseChange_of_isReduced E H Dw l Xo c hL a n (ws i) (hws i) S T φ y z hz]
+  rw [_root_.GlobalTheory.Reg.evR_baseChange_of_isReduced E H Dw l Xo c hL a n (ws i) (hws i) S T φ y z hz]
   have hm : evR Xo c (ws i) y ∈ M := hle (Ideal.subset_span ⟨i, rfl⟩)
   have h0 : Ideal.Quotient.mkₐ c.F M (evR Xo c (ws i) y) = 0 := Ideal.Quotient.eq_zero_iff_mem.2 hm
   show (IsScalarTower.toAlgHom c.F (S ⧸ M) T) (Ideal.Quotient.mkₐ c.F M (evR Xo c (ws i) y)) = 0

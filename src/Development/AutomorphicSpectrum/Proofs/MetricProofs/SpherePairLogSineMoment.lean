@@ -4,9 +4,11 @@ public import GroundTheory.HeightsAndTheta.Heights.Intersections.StatementsFibre
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.EvalW
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.InFlagDomainOne
 public import GroundTheory.HeightsAndTheta.Heights.ElementarySymmetric.StWWFibrePoly
-import Aesop.Main
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SphereMeasureStereographicIntegralStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.KappaSt
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SphereMeasureStereographicIntegral
 public import GroundTheory.HeightsAndTheta.Heights.ElementarySymmetric.PDiagFibreMoment
+import Aesop.Main
 import GroundTheory.HeightsAndTheta.Heights.Intersections.PFibreLocal
 import Mathlib.Algebra.Order.Archimedean.Real.Hom
 import Mathlib.Algebra.Order.Floor.Extended
@@ -98,7 +100,7 @@ theorem measurable_nS : Measurable nS := by
 theorem stereo_hyp (f : (Fin 3 → ℝ) → ℝ) (hf : Measurable f) :
     (Integrable (fun a : ℂ => f (nS a) * dens a) ↔ Integrable (fun m : S2 => f (crd m)) sphereMeasure) ∧
       ∫ a : ℂ, f (nS a) * dens a = ∫ m : S2, f (crd m) ∂sphereMeasure :=
-  (GlobalTheory.T.sphere_measure_stereographic_integral).1 f hf
+  (_root_.GlobalTheory.CompanionTheory.Relay.sphere_measure_stereographic_integral).1 f hf
 
 theorem map_stereo : stereoMeasure.map nS = sphereMeasure.map crd := by
   have := FibreLocal.isProbabilityMeasure_sphere
@@ -273,7 +275,7 @@ theorem integral_eq_moment : ∀ (ℓ : MvPolynomial (Fin 3) ℝ →ₗ[ℝ] ℝ
   simp only [ker_crd] at h
   rw [← h, ← integral_const_mul]
   refine integral_congr_ae (Eventually.of_forall fun p => ?_)
-  have hk : logSin 1 p.1 p.2 = ker (nS p.1, nS p.2) := (GlobalTheory.T.sphere_measure_stereographic_integral).2 p.1 p.2
+  have hk : logSin 1 p.1 p.2 = ker (nS p.1, nS p.2) := (_root_.GlobalTheory.CompanionTheory.Relay.sphere_measure_stereographic_integral).2 p.1 p.2
   have hw : ∀ a, wS a = Real.pi * dens a := fun a => by
     have := Real.pi_ne_zero
     simp only [wS, dens]

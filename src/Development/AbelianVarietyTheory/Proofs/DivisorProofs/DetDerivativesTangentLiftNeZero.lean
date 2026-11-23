@@ -1,10 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NonemptyCuspFrame
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivativeAlongKodairaSpencerDeformationLiftStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetDerivativesDivJacobianIndependentStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDualNumberDeformationLiftModificationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTangentVectorsFunctionsInvertibleDerivsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivativeAlongKodairaSpencerDeformationLift
+public import Development.AbelianVarietyTheory.Definitions.Divisors.BarCompSubsetClosure
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetDerivativesDivJacobianIndependent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDualNumberDeformationLiftModification
+public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.TangentBijectionOfValues
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTangentVectorsFunctionsInvertibleDerivs
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrimeSpectrumDualNumberEq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -59,7 +62,7 @@ theorem _root_.GlobalTheory.CompHS.det_tanLift_ne_zero : ∀ {E : Type} [Field E
     (g : Fin (dimFlag Dw) → Γ(M.X, O)) (hzO : ⊤ ≤ z ⁻¹ᵁ O) (hzv : ∀ b, ⊤ ≤ zv b ⁻¹ᵁ O)
     (hJ : evalPt z O hzO (M.K.jacobian i hO g) ≠ 0), (Matrix.of fun a b => (evalPt (zv (tanOrd Dw b)) O (hzv _) (g a)).snd).det ≠ 0 := by
   intro E _ _ _ H Dw l Xo c Y X Z M hKS K _ _ z ho Q hz v hv zv hl i O hO g hzO hzv hJ
-  obtain ⟨O₁, hzO₁, x, w, hw, hdx⟩ := GlobalTheory.T.exists_tangentVectors_functions_invertible_derivs M.str (dimFlag Dw) z
+  obtain ⟨O₁, hzO₁, x, w, hw, hdx⟩ := _root_.GlobalTheory.TanVec.exists_tangent_matrix M.str (dimFlag Dw) z
   have hzi : ⊤ ≤ z ⁻¹ᵁ M.K.bundle.U i := fun s hs => hO (hzO hs)
   have hzO' : ⊤ ≤ z ⁻¹ᵁ (O₁ ⊓ M.K.bundle.U i) := fun s hs => ⟨hzO₁ hs, hzi hs⟩
   let x' : Fin (dimFlag Dw) → Γ(M.X, O₁ ⊓ M.K.bundle.U i) := fun a => resG M.X inf_le_left (x a)
@@ -71,7 +74,7 @@ theorem _root_.GlobalTheory.CompHS.det_tanLift_ne_zero : ∀ {E : Type} [Field E
     ext a b
     simp only [Matrix.of_apply, x']
     rw [evalPt_res (w b) inf_le_left (hwO₁ b) (hwO' b)]
-  have hjc := GlobalTheory.T.det_derivatives_div_jacobian_independent M z i w hw O (O₁ ⊓ M.K.bundle.U i) hO inf_le_right g x' hzO hzO' hwO hwO'
+  have hjc := _root_.GlobalTheory.TanJac.det_mul_jacobian_comm M z i w hw O (O₁ ⊓ M.K.bundle.U i) hO inf_le_right g x' hzO hzO' hwO hwO'
   rw [e1] at hjc
   have hdg : (Matrix.of fun a b => (evalPt (w b) O (hwO b) (g a)).snd).det ≠ 0 := by
     intro h0
@@ -81,9 +84,9 @@ theorem _root_.GlobalTheory.CompHS.det_tanLift_ne_zero : ∀ {E : Type} [Field E
   have hspan : ∀ c0 : Fin (dimFlag Dw), ∃ C : TIx Dw (psiSet H) → K, ∀ a,
       (evalPt (w c0) O (hwO c0) (g a)).snd = ∑ t, C t * (evalPt (zv t) O (hzv t) (g a)).snd := by
     intro c0
-    obtain ⟨wf, hdef, hlw⟩ := GlobalTheory.T.exists_dualNumber_deformation_lift_modification M z ho hz (w c0) (hw c0)
+    obtain ⟨wf, hdef, hlw⟩ := _root_.GlobalTheory.CompHS.exists_isDef_lift_dualNumber M z ho hz (w c0) (hw c0)
     obtain ⟨Mx, hMx, -⟩ := hQ.existsUnique hdef.isTanX
-    obtain ⟨C, hC⟩ := GlobalTheory.T.derivative_along_kodairaSpencer_deformation_lift M z ho hQ hz hv hl hdef hMx hlw
+    obtain ⟨C, hC⟩ := _root_.GlobalTheory.CompHS.der_fun_hor M z ho hQ hz hv hl hdef hMx hlw
     refine ⟨Sum.elim Mx C, fun a => ?_⟩
     rw [hC O (g a) (hwO c0) hzv, Fintype.sum_sum_type]
     rfl

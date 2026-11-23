@@ -1,7 +1,7 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.LeftEquivariantFunctions.GLMatrixDerivatives.FrameDer
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeightBoundFactsStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeightBoundFacts
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.LeftEquivariantFunctions.GLMatrixDerivatives.GelfandReading
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.LeftEquivariantFunctions.GLMatrixDerivatives.KchainTop
 import Mathlib.Algebra.Order.Floor.Extended
@@ -45,6 +45,6 @@ import Mathlib.Topology.Sheaves.Init
 
 namespace PositivityTheory.RgBcC.LfSt
 
-theorem kChain_holds : KChain := Kchain.kChain GlobalTheory.T.height_bound_facts (GelfandReading.frameDer_of GlobalTheory.T.height_bound_facts)
+theorem kChain_holds : KChain := Kchain.kChain _root_.GlobalTheory.CompanionTheory.HbBasis.hbFacts (GelfandReading.frameDer_of _root_.GlobalTheory.CompanionTheory.HbBasis.hbFacts)
 
 end PositivityTheory.RgBcC.LfSt

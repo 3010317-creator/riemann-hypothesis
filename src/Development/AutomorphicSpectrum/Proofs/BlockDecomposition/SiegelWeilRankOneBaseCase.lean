@@ -2,8 +2,9 @@ module
 
 public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.BaseOneSide.PsiSide
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.SiegelDensities.Pieces
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.EulerProductMeasureZeroStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HermitianOneByOneIsScalarStatement
+import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.EulerProductMeasureZero
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HermitianOneByOneIsScalar
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -123,7 +124,7 @@ theorem exists_half_lamLim : ∃ c : ℝ≥0, ∀ Λ : ℂ, IsLamLim F E Λ → 
 
 theorem baseOne_of_parts : Prop1 → Simil → Hasse → Cnt → PositivityTheory.SiegelWeilFormula.Densx.BaseOne := by
   intro hP hS hH hC F E _ _ _ _ _ σ hcm J hJ T hT hd d b li lam hli hlam μ 𝓕 hμ h𝓕 mi m hmi hm
-  obtain ⟨β, rfl, hβ, he⟩ := GlobalTheory.T.hermitian_one_by_one_is_scalar F E σ hcm T hT
+  obtain ⟨β, rfl, hβ, he⟩ := _root_.GlobalTheory.CompanionTheory.SW.hermOne_eq_scal F E σ hcm T hT
   have hβ0 : β ≠ 0 := hβ hd
   simp only [he]
   have hsph : {X : Fin 1 → Fin 1 → E | gramE σ J X = fun _ _ => algebraMap F E β} = sph σ J β := rfl
@@ -133,8 +134,8 @@ theorem baseOne_of_parts : Prop1 → Simil → Hasse → Cnt → PositivityTheor
       ∃ v, (cfac E v • m v (hermScal (Fv F v) σ (algebraMap F _ β))) = 0
   · obtain ⟨c', hc'⟩ := exists_half_lamLim F E
     refine ⟨c', ?_, hc'⟩
-    rw [(GlobalTheory.T.euler_product_measure_zero F E σ hcm d b 1 1 _ c _ _).2.1 hc h0]
-    exact (GlobalTheory.T.euler_product_measure_zero F E σ hcm d b 1 1 0 c' _ _).2.2 hc.1 hc.2.1 h0
+    rw [(_root_.GlobalTheory.CompanionTheory.SW.EulerZero.euler_zero F E σ hcm d b 1 1 _ c _ _).2.1 hc h0]
+    exact (_root_.GlobalTheory.CompanionTheory.SW.EulerZero.euler_zero F E σ hcm d b 1 1 0 c' _ _).2.2 hc.1 hc.2.1 h0
   push Not at h0
   have hmne : ∀ v, m v (hermScal (Fv F v) σ (algebraMap F _ β)) ≠ 0 := fun v hz =>
     h0.2 v (by rw [hz, smul_zero])
@@ -156,7 +157,7 @@ theorem baseOne_of_parts : Prop1 → Simil → Hasse → Cnt → PositivityTheor
         simp [thetaMeas]
       unfold EP
       rw [ht]
-      exact (GlobalTheory.T.euler_product_measure_zero F E σ hcm d b 1 1 0 c _ _).2.2 hc'.1 hc'.2.1 hz
+      exact (_root_.GlobalTheory.CompanionTheory.SW.EulerZero.euler_zero F E σ hcm d b 1 1 0 c _ _).2.2 hc'.1 hc'.2.1 hz
   exact ⟨c, hc, hC F E σ J d b li lam μ 𝓕 mi m hcm hJ hli hlam hμ h𝓕 hmi hm c hall⟩
 
 end GlobalTheory.CompanionTheory.Base1

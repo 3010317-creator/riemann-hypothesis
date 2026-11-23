@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.FormalExpMulFormalExpNeg
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueHasPAdicPowerSeriesValueOfDiffCoeffsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PAdicEvaluationSubstCompatibleThickeningStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PadicContinuousEvaluationExistsUniqueSubstNaturaStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueHasPAdicPowerSeriesValueOfDiffCoeffs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PAdicEvaluationSubstCompatibleThickening
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PadicContinuousEvaluationExistsUniqueSubstNatura
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,10 +77,10 @@ theorem hasVal_log_of_hasVal_formalLog : ∀ (p : ℕ) [Fact p.Prime] (B O Q : T
   have hu : ∀ j : Unit, constantCoeff ((fun _ : Unit => g - 1) j) = 0 := fun _ => by simp [hg]
   have hEu : E (g - 1) = E g - 1 := by rw [map_sub, map_one]
   have hnil : ∃ N : ℕ, (p : B) ∣ (E g - 1) ^ N :=
-    hEu ▸ ((GlobalTheory.T.padicContinuousEvaluation_existsUnique_subst_natural p B B σ z hz).2 E hE).2.1 (g - 1) (hu ())
+    hEu ▸ ((_root_.GlobalTheory.CEval.continuous_eval p B B σ z hz).2 E hE).2.1 (g - 1) (hu ())
   have hD := dIn_top_powerSeriesLog B Q
-  obtain ⟨q', hq', -⟩ := GlobalTheory.T.existsUnique_hasPAdicPowerSeriesValue_of_diffCoeffs p B O Q θ hF Unit (fun _ => E g - 1) (fun _ => hnil) _ hD
-  have h4 := GlobalTheory.T.pAdicEvaluation_subst_compatible_thickening p B O Q θ hF σ z hz E hE Unit (fun _ => g - 1) _ q' hu hD
+  obtain ⟨q', hq', -⟩ := _root_.GlobalTheory.QLog.existsUnique_hasVal_of_dIn p B O Q θ hF Unit (fun _ => E g - 1) (fun _ => hnil) _ hD
+  have h4 := _root_.GlobalTheory.QLog.hasVal_subst p B O Q θ hF σ z hz E hE Unit (fun _ => g - 1) _ q' hu hD
     (by simpa only [hEu] using hq')
   have h5 : subst (up Q (fun _ : Unit => g - 1)) (PowerSeries.log Q : MvPowerSeries Unit Q)
       = formalLog (map (algebraMap B Q) g) := by

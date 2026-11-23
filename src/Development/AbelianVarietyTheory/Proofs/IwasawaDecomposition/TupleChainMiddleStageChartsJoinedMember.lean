@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LatAtLattice
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFiniteOrderChartsMiddleStepsStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsMemberChartMatchingAwayFromTwistStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StepLevelLocalGroupEqOfAgreeOffPlacesStatement
+public import Formalism.LocalToGlobal.HermitianForms.IsLocBasis
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StepLevelLocalGroupEqOfAgreeOffPlaces
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,7 +63,7 @@ theorem charts_tuple : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok → 
     haveI := finite_chart I l u a i
     refine ⟨Chart I u a i, inferInstance, chartOf I u a i, K, g, ⟨k, hK⟩, fun β => ⟨?_, hfin β, ?_⟩⟩
     · intro v hv
-      refine GlobalTheory.T.stepLevel_localGroup_eq_of_agree_off_places (K β).lev (K0 (g β)).lev (Q : Set _) (fun x hx => ⟨fun hxK => ?_, fun hx0 => ?_⟩) v hv
+      refine _root_.GlobalTheory.stepLevel_uloc_eq_of_agree (K β).lev (K0 (g β)).lev (Q : Set _) (fun x hx => ⟨fun hxK => ?_, fun hx0 => ?_⟩) v hv
       · exact ((hCK β).1 ⟨x, hxK⟩ hx).1
       · exact (hCK β).2 ⟨x, hx0⟩ hx
     · intro κ κ' he hq

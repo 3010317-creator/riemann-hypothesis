@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LocallyCompactSpaceAxis
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeightFunctionScalingParabolicStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeviNormalizesUnipotentRadicalBisStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeightFunctionScalingParabolic
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsConstAlongSingleton
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeviNormalizesUnipotentRadicalBis
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -70,8 +71,8 @@ theorem reps_perm : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
   intro F E _ _ _ _ _ σ n J r X Y L a h D T hT
   have h3 : ∀ γ ∈ (ratPts σ J ⊓ lineGrp σ J (col X)), ∀ g, h (γ * g) = h g := by
     rintro γ ⟨hγ, l, hl⟩ g
-    rw [(GlobalTheory.T.height_function_scaling_parabolic F E σ n J r X Y L a h D).2 γ l hl g,
-      (GlobalTheory.T.levi_normalizes_unipotent_radical_bis F E σ n J r X Y D.cm D.herm D.witt).2.2.2.2.2 γ hγ l hl]
+    rw [(_root_.GlobalTheory.ResLine.iwasawaHeight_isHt F E σ n J r X Y L a h D).2 γ l hl g,
+      (_root_.GlobalTheory.ResLine.LeviFacts.levi_facts F E σ n J r X Y D.cm D.herm D.witt).2.2.2.2.2 γ hγ l hl]
     simp
   have h4 : ∀ γ : ratPts σ J, ∃! t, t ∈ T ∧ ((γ * t⁻¹ : ratPts σ J) : GAd σ J) ∈ (ratPts σ J ⊓ lineGrp σ J (col X)) := by
     intro γ

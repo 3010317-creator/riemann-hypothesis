@@ -6,9 +6,9 @@ public import Development.AbelianVarietyTheory.Proofs.HeightProofs.UnitaryAdelic
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HeckeCharInfinityEqCoeffMulHalfNormPow
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsCommonDenominatorSelfDualLevelStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFinitePartDenominatorLeHeightPowStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsModGrowthExpLeNormInfPow
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SumProductWeightsLeOfSeparatedGeometricMeanStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SumProductWeightsLeOfSeparatedGeometricMean
 public import Formalism.LocalToGlobal.Columns.TiedTilA
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsModGrowthExpLeNormInfPow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -212,7 +212,7 @@ theorem sum_sep_le (ι : Type) [Fintype ι] [Nonempty ι] (n : ℕ) : ∃ C : �
     ∀ S : Finset (ι → Matrix (Fin n) (Fin n) ℂ),
       (∀ s ∈ S, ∀ s' ∈ S, s ≠ s' → la ^ Fintype.card ι ≤ ∏ v, hsn (s v - s' v)) →
       ∑ s ∈ S, ∏ v, ((1 + hsn (s v)) ^ (2 * n ^ 2 + 1))⁻¹ ≤ C * la⁻¹ ^ (2 * n ^ 2 * Fintype.card ι) :=
-  GlobalTheory.T.sum_productWeights_le_of_separated_geometricMean ι n
+  _root_.GlobalTheory.SepSum.sum_weights_le_of_separated ι n
 
 variable {D : D7}
 

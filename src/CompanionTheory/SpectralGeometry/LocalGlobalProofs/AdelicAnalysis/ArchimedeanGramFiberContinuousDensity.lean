@@ -4,14 +4,15 @@ public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerPr
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ContinuousDensitiesEqOfIntegralsOnCompacts
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.DisintegrationDensityUnique
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ExistsSizeMulLe
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.GramFiberMeasuresIntegralFormulaStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.GramFiberMeasuresIntegralFormula
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HermitianLocalContinuousCongruenceSection
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteAdelesLocalRingTotallyReal
+public import Formalism.UnipotentAdelicQuotients.SWXSDefs
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.SizeFunctionRapidDecayIntegrable
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.UnitsOpenEmbeddingLocalTensor
 import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.GramRightActionIdentities
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HermitianLocalContinuousCongruenceSectionStatement
 import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HermitianMatricesLocallyCompactBorel
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteAdelesLocalRingTotallyRealStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.SizeFunctionRapidDecayIntegrableStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRingStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.UnitsOpenEmbeddingLocalTensorStatement
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -195,10 +196,10 @@ theorem ofReal_inv_pow_le {a b c : ℝ} (ha : 0 < a) (hb : 0 < b) (hc : 0 ≤ c)
 
 theorem fibre_rapid_eq_density : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (M : ℕ) (J : Matrix (Fin M) (Fin M) E), IsHermND σ J → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (μ : Measure (Fin 1 → Fin M → Ainf F ⊗[F] E)) (ν : Measure (HermR (Ainf F) σ 1)) m, μ.IsAddHaarMeasure → ν.IsAddHaarMeasure → IsGramFib (Ainf F) σ J 1 μ ν m → ∀ φ : (Fin 1 → Fin M → Ainf F ⊗[F] E) → ℝ, Continuous φ → (∀ X, 0 ≤ φ X) → RapidDecay b (fun X => (φ X : ℂ)) → ∀ D : HermR (Ainf F) σ 1 → ℝ, Continuous D → (∀ U : Set (HermR (Ainf F) σ 1), MeasurableSet U → ∫⁻ X in gramR (Ainf F) σ J ⁻¹' (Subtype.val '' U), ENNReal.ofReal (φ X) ∂μ = ∫⁻ S in U, ENNReal.ofReal (D S) ∂ν) → ∀ S : HermR (Ainf F) σ 1, IsUnit (S : Matrix (Fin 1) (Fin 1) (Ainf F ⊗[F] E)).det → ∫⁻ X, ENNReal.ofReal (φ X) ∂(m S) = ENNReal.ofReal (D S) := by
   intro F E _ _ _ _ _ σ hσ M J hJ d b μ ν m hμ hν hfib φ hφc hφ0 hφr D hDc hD S hS
-  have hLoc : IsLocR (Ainf F) := GlobalTheory.T.infinite_adeles_local_ring_totally_real F hσ.1
+  have hLoc : IsLocR (Ainf F) := _root_.GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hσ.1
   obtain ⟨hTR, hLC, hSC, hT2, -, -, -, -⟩ := id hLoc
   haveI : BorelSpace (Ainf F) := ⟨rfl⟩
-  obtain ⟨hKr, hKl, hKs, hK2, -, -, -, hVb, -, -⟩ := GlobalTheory.T.tensor_locally_compact_ring F E σ hσ (Ainf F)
+  obtain ⟨hKr, hKl, hKs, hK2, -, -, -, hVb, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Ainf F)
   haveI := hKr
   haveI := hKl
   haveI := hKs
@@ -210,7 +211,7 @@ theorem fibre_rapid_eq_density : ∀ (F E : Type) [Field F] [NumberField F] [Fie
   haveI := hX2
   haveI := hXb
   obtain ⟨g, hgc, hgf⟩ := hlift M J hJ
-  have hKU := GlobalTheory.T.units_open_embedding_local_tensor F E σ hσ (Ainf F) hLoc
+  have hKU := _root_.GlobalTheory.CompanionTheory.SW.KUnits.units_val_isOpenEmbedding F E σ hσ (Ainf F) hLoc
 
   set B : Set (HermR (Ainf F) σ 1) :=
     {S | IsUnit (S : Matrix (Fin 1) (Fin 1) (Ainf F ⊗[F] E)).det} with hBdef
@@ -230,11 +231,11 @@ theorem fibre_rapid_eq_density : ∀ (F E : Type) [Field F] [NumberField F] [Fie
       simp [hBdef, hgf]
     rw [e]
     exact hfib
-  obtain ⟨B₁, s, hB₁, hSB₁, hsc, hs1, hsS⟩ := GlobalTheory.T.hermitian_local_continuous_congruence_section F E σ hσ (Ainf F) hLoc 1 S hS
-  obtain ⟨κ, hκc, hκ0, -, hκ⟩ := GlobalTheory.T.gram_fiber_measures_gl_equivariant F E σ hσ M J hJ (Ainf F) hLoc 1 μ ν m hμ hν hfib
-  obtain ⟨-, hsz0, N, hN⟩ := GlobalTheory.T.size_function_rapid_decay_integrable F E σ hσ d b 1 M μ hμ
+  obtain ⟨B₁, s, hB₁, hSB₁, hsc, hs1, hsS⟩ := _root_.GlobalTheory.CompanionTheory.SW.exists_local_section F E σ hσ (Ainf F) hLoc 1 S hS
+  obtain ⟨κ, hκc, hκ0, -, hκ⟩ := _root_.GlobalTheory.CompanionTheory.SW.ScaleCont.fibre_scale_continuous F E σ hσ M J hJ (Ainf F) hLoc 1 μ ν m hμ hν hfib
+  obtain ⟨-, hsz0, N, hN⟩ := _root_.GlobalTheory.CompanionTheory.SW.SizeInt.size_neg_pow_integrable F E σ hσ d b 1 M μ hμ
   have hszc : Continuous (sizeTup b : (Fin 1 → Fin M → Ainf F ⊗[F] E) → ℝ) :=
-    (GlobalTheory.T.size_function_rapid_decay_integrable F E σ hσ d b 1 M μ hμ).1
+    (_root_.GlobalTheory.CompanionTheory.SW.SizeInt.size_neg_pow_integrable F E σ hσ d b 1 M μ hμ).1
   obtain ⟨hg1, hg2, hg3, -, -⟩ := GlobalTheory.CompanionTheory.SW.GramAlg.gram_algebra F E σ hσ M J hJ (Ainf F) 1
   set w : (Fin 1 → Fin M → Ainf F ⊗[F] E) → ℝ≥0∞ :=
     fun X => ENNReal.ofReal (((1 + sizeTup b X) ^ N)⁻¹) with hw

@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IndEtOfForallFinset
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafBasicPropertiStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.GalMapMul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafBasicProperti
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExactAtOfProd
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HCXBijectiveStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WExactPreadditiveYonedaOfInjective
@@ -59,6 +60,6 @@ theorem wExact_term_HC (R : Type) [CommRing R] (F : Shv R) (T : Type 1) [Categor
       preadditiveYoneda.obj ((res R F).X (n - k)))
     (term (Φ ⋙ HC R F) n) (fun k => Functor.whiskerLeft Φ (π k)) (fun V => hπ (Φ.obj V))
     (fun k => wExact_preadditiveYoneda_of_injective R T (Φ ⋙ ((evaluation _ PSh).obj (op (SimplexCategory.mk k))).op)
-      U X a ((res R F).X (n - k)) ((GlobalTheory.T.chosenInjectiveResolutionEtaleSheaf_basic_properties R F).1 (n - k)) (h (op (SimplexCategory.mk k))))
+      U X a ((res R F).X (n - k)) ((_root_.GlobalTheory.EtC.res_basic R F).1 (n - k)) (h (op (SimplexCategory.mk k))))
 
 end GlobalTheory.EtC

@@ -3,7 +3,11 @@ module
 public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
 public import Mathlib.Data.Fintype.Perm
 public import Mathlib.Data.Fintype.Powerset
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FactorialLeTwoMulCardPermWithFixedPointStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FactorialLeTwoMulCardPermWithFixedPoint
+public import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
+public import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
+public import Mathlib.Algebra.BigOperators.Ring.Finset
+public import Mathlib.Algebra.Order.BigOperators.Group.Finset
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,10 +53,6 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AbelianVarietyTheory.Definitions.Foundations.SamePartIffOfNeZero
-public import Mathlib.Algebra.BigOperators.Group.Finset.Piecewise
-public import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
-public import Mathlib.Algebra.BigOperators.Ring.Finset
-public import Mathlib.Algebra.Order.BigOperators.Group.Finset
 
 @[expose] public section
 
@@ -98,8 +98,8 @@ theorem card_fix_ge {N : ℕ} (A : Finset (Fin N)) (h0 : 0 < A.card) (hN : A.car
         (∃ i ∈ A, σ i = i) ∧ ∃ j ∉ A, σ j = j).card := by
   have c1 : Fintype.card {x // x ∈ A} = A.card := by simp
   have c2 : Fintype.card {x // x ∉ A} = N - A.card := by simp [Fintype.card_subtype_compl]
-  have h1 := GlobalTheory.T.factorial_le_two_mul_card_perm_with_fixedPoint {x // x ∈ A} (Fintype.card_pos_iff.1 (by omega))
-  have h2 := GlobalTheory.T.factorial_le_two_mul_card_perm_with_fixedPoint {x // x ∉ A} (Fintype.card_pos_iff.1 (by omega))
+  have h1 := _root_.GlobalTheory.BadShare.factorial_le_two_mul_card_perm_fixed {x // x ∈ A} (Fintype.card_pos_iff.1 (by omega))
+  have h2 := _root_.GlobalTheory.BadShare.factorial_le_two_mul_card_perm_fixed {x // x ∉ A} (Fintype.card_pos_iff.1 (by omega))
   rw [c1] at h1
   rw [c2] at h2
   refine (Nat.mul_le_mul h1 h2).trans ?_

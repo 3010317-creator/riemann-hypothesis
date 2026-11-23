@@ -1,14 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EndValuedForm11Coeffs
-import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.DifferentiableOnOfTendstoLocallyUniformlyOn
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChangeOfFrameHolomorphicInvertibleHolomorphicChaStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContDiffAtHolomorphicComplexChartOfSmoothAtStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DifferentiableOnHolomorphicChartTransEtaleChartStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransgressionTopCoeffCompHolomorphicJacobianSqStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransgressionTopCoeffComplexGermCongrStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransgressionTopCoeffHolomorphicFrameChangeStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.InterPolyProdSum
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChangeOfFrameHolomorphicInvertibleHolomorphicCha
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContDiffAtHolomorphicComplexChartOfSmoothAt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DifferentiableOnHolomorphicChartTransEtaleChart
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransgressionTopCoeffCompHolomorphicJacobianSq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransgressionTopCoeffComplexGermCongr
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransgressionTopCoeffHolomorphicFrameChange
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ChernDensityFrameIndepChartJacobianFactor
+import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.DifferentiableOnOfTendstoLocallyUniformlyOn
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHolomorphicInvertibleFrameCoordinates
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -65,7 +66,7 @@ theorem corrTop_holoChart_trans : ∀ {F : Type} [Field F] {σ : F →+* ℂ} {X
   have hm := mem_over e hey hcy
   have e₂ : φ (e y) = c.e y := congrArg c.e (e.left_inv hey)
   have hφa : AnalyticAt ℂ φ (e y) :=
-    GlobalTheory.SCV.analyticAt_of_differentiableOn (GlobalTheory.T.differentiableOn_holomorphicChart_trans_etaleChart he c) (ho.mem_nhds hm)
+    GlobalTheory.SCV.analyticAt_of_differentiableOn (_root_.GlobalTheory.GoodTop.holoChart_trans_algChart he c) (ho.mem_nhds hm)
 
   set ρc : V X.dim → ℝ := fun v => ρ (c.e.symm v)
   set G₀ : Mat (fun _ : Unit => m) X.Fn → V X.dim → Matrix (Fin m) (Fin m) ℂ := fun B v => H₀ B (c.e.symm v) ()
@@ -75,7 +76,7 @@ theorem corrTop_holoChart_trans : ∀ {F : Type} [Field F] {σ : F →+* ℂ} {X
 
   have step1 : corrC (fun v => ρ (e.symm v)) (fun v => H₀ A (e.symm v) ()) (fun v => H A (e.symm v) ()) (e y) =
       corrC (fun v => ρc (φ v)) (fun v => G₀ A (φ v)) (fun v => G₁ A (φ v)) (e y) := by
-    apply GlobalTheory.T.transgressionTopCoeffComplex_germ_congr
+    apply _root_.GlobalTheory.GoodTop.corrC_germ_congr
     · filter_upwards [ho.mem_nhds hm] with w hw
       simp only [ρc, hback w hw]
     · filter_upwards [ho.mem_nhds hm] with w hw
@@ -83,27 +84,27 @@ theorem corrTop_holoChart_trans : ∀ {F : Type} [Field F] {σ : F →+* ℂ} {X
     · filter_upwards [ho.mem_nhds hm] with w hw
       simp only [G₁, hback w hw]
 
-  have hρc : ContDiffAt ℝ ∞ ρc (c.e y) := GlobalTheory.T.contDiffAt_holomorphicComplexChart_of_smoothAt c.holo hcy (hρ y)
+  have hρc : ContDiffAt ℝ ∞ ρc (c.e y) := _root_.GlobalTheory.GoodTop.contDiffAt_holoChart c.holo hcy (hρ y)
   have hG₀ := hM₀.mContDiffAt_chart hy₀ c hcy hA ()
   have hG₀u := hM₀.isUnit_det_chart hy₀ c hcy hA ()
   have hG₁ := hM.mContDiffAt_chart hy c hcy hA ()
   have hG₁u := hM.isUnit_det_chart hy c hcy hA ()
   have step2 : corrC (fun v => ρc (φ v)) (fun v => G₀ A (φ v)) (fun v => G₁ A (φ v)) (e y) =
       ((‖(fderiv ℂ φ (e y)).det‖ ^ 2 : ℝ) : ℂ) * corrC ρc (G₀ A) (G₁ A) (φ (e y)) := by
-    apply GlobalTheory.T.transgressionTopCoeff_comp_holomorphic_jacobian_sq (hφa.contDiffAt)
+    apply _root_.GlobalTheory.GoodTop.corrC_comp_holo (hφa.contDiffAt)
     · rw [e₂]; exact hρc.differentiableAt (by simp)
     · rw [e₂]; exact hG₀
     · rw [e₂]; exact hG₀u
     · rw [e₂]; exact hG₁
     · rw [e₂]; exact hG₁u
 
-  obtain ⟨hQ, hQu, hQh⟩ := GlobalTheory.T.changeOfFrame_holomorphic_invertible_holomorphicChart E (e := c.e) c.holo hcy hA hA'
+  obtain ⟨hQ, hQu, hQh⟩ := _root_.GlobalTheory.GoodTop.changeFrame_holoChart E (e := c.e) c.holo hcy hA hA'
   have step3 : corrC ρc (G₀ A) (G₁ A) (c.e y) = corrC ρc (G₀ A') (G₁ A') (c.e y) := by
-    rw [← GlobalTheory.T.transgressionTopCoeff_holomorphic_frame_change ρc hG₀ hG₀u hG₁ hG₁u hQ hQu hQh]
+    rw [← _root_.GlobalTheory.GoodTop.corrC_changeFrame ρc hG₀ hG₀u hG₁ hG₁u hQ hQu hQh]
     have hO : ∀ᶠ z in 𝓝 y, z ∈ ptsIn X.str σ O := (isOpen_ptsIn O).mem_nhds hy
     have hev := (c.e.tendsto_symm hcy).eventually
       (hO.and ((GlobalTheory.FrameLift.eventually_mem hA).and (GlobalTheory.FrameLift.eventually_mem hA')))
-    apply GlobalTheory.T.transgressionTopCoeffComplex_germ_congr
+    apply _root_.GlobalTheory.GoodTop.corrC_germ_congr
     · exact Filter.EventuallyEq.rfl
     · filter_upwards [hev] with w hw
       simp only [G₀, Matrix.transpose_transpose]

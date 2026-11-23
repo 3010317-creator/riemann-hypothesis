@@ -4,8 +4,8 @@ public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.Compl
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermLat
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EncardUniCosetsLe
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetFrameClassProperties
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeadingMinorsProdDenominatorUnitriangularFactors
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsPrincipalIdealRingOfHenselian
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeadingMinorsProdDenominatorUnitriangularFactorsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -238,7 +238,7 @@ theorem main : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [I
       Δ ∈ L.O ∧ IsUnit Δ ∧ vE L S.ϖ (Δ * L.cj Δ) = S.vD ∧
         ∀ i j, L.cj Δ * u i j ∈ L.O ∧ Δ * u' i j ∈ L.O := by
     intro u u' hu hu' hb hint
-    refine GlobalTheory.T.leadingMinors_prod_denominator_unitriangular_factors L r k S u u' hu hu' hb (fun a b => ?_) Δ hΔ
+    refine _root_.GlobalTheory.OrbitDenom.main L r k S u u' hu hu' hb (fun a b => ?_) Δ hΔ
     rw [pairing]
     exact hint.2 _ (GlobalTheory.HL.FrameClass.frame_classes L r k S _ _).1 a b
   obtain ⟨hΔO, hΔu, hΔv⟩ : Δ ∈ L.O ∧ IsUnit Δ ∧ vE L S.ϖ (Δ * L.cj Δ) = S.vD := by

@@ -2,11 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPotential
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SmulMemFilTOfZero
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisToBcrisMemFiltrationOfLadicApproxStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPowMulDescPochhammerEulerEqEisensteinPowStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisToBcrisMemFiltrationOfLadicApprox
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExistsSumMonomialAdd
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPowMulDescPochhammerEulerEqEisensteinPow
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsInjectiveBcrisToBdR
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JMemFilPOfApprox
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BdRFiltrationLaws
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsInjectiveBcrisToBdR
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaBdRPlusSurjectiveKerUnitsEquivariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -147,14 +148,14 @@ theorem gal_iSl_sub_mem (ϖ : PiSys l e) (C : GlobalTheory.MemLoc.Core l) (m : �
   rw [hk']
   have hdesc : ∀ i, 1 ≤ i → ∃ h' ∈ A O K, (l : K⟦X⟧) ^ k * descN K i p₀ = E K l e ^ (m + 1 - i) * h' := by
     intro i hi
-    obtain ⟨h', hh', he⟩ := GlobalTheory.T.exists_pow_mul_descPochhammerEuler_eq_eisenstein_pow l e O K (p : K⟦X⟧) h k m hh hk i hi
+    obtain ⟨h', hh', he⟩ := _root_.GlobalTheory.BKReal.exists_l_pow_mul_descN_eq_E_pow_mul l e O K (p : K⟦X⟧) h k m hh hk i hi
     refine ⟨(l : K⟦X⟧) ^ s * h', mul_mem (pow_mem (natCast_mem _ l) s) hh', ?_⟩
     have h4 : descN K i p₀ = (l : K⟦X⟧) ^ s * descN K i p := by
       have h3 : (l : K⟦X⟧) ^ s = PowerSeries.C ((l : K) ^ s) := by simp
       rw [hp₀def, h3, ← smul_eq_C_mul, map_smul, smul_eq_C_mul]
     rw [h4, mul_left_comm, he]
     ring
-  refine GlobalTheory.T.acrisToBcris_mem_filtration_of_ladic_approx l O C m _ fun r => ?_
+  refine _root_.GlobalTheory.BKGal.TaylorFil.toOB_mem_filO_of_approx l O C m _ fun r => ?_
   obtain ⟨M₀, hM⟩ := ϖ.taylor_S a O K g q r
   obtain ⟨w, hw⟩ := hM (max M₀ 1) (le_max_left _ _)
   have hM1 : 0 < max M₀ 1 := lt_of_lt_of_le one_pos (le_max_right _ _)

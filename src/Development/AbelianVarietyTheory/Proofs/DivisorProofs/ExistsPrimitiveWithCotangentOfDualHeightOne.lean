@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqZ
 public import Mathlib.LinearAlgebra.FreeModule.PID
 public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CartierDualHeightOneAdjoinPrimitiveEqTopStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CartierDualHeightOneAdjoinPrimitiveEqTop
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,7 +56,7 @@ theorem exists_primitive_dUnit_eq : ∀ (p : ℕ) [Fact p.Prime] (K H : Type) [F
     (∀ φ ∈ augIdeal K (CartierDual K H), φ ^ p = 0) →
     ∀ w : Cot K H, ∃ b : H, cobOne K H b = 0 ∧ dUnit (R := K) b = w := by
   intro p _ K H _ _ _ _ _ _ hnil w
-  have hgen := GlobalTheory.T.cartierDual_height_one_adjoin_primitive_eq_top p K (CartierDual K H) hnil
+  have hgen := _root_.GlobalTheory.HeightOneDual.adjoin_primitive_eq_top p K (CartierDual K H) hnil
   set e := CartierDual.bidual K H
   have hH : Algebra.adjoin K {b : H | cobOne K H b = 0} = ⊤ := by
     let f : CartierDual K (CartierDual K H) →ₐ[K] H :=

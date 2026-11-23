@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsDualDualRep
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsPlaceOverMoveValCc
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAlternatingFormLeftCorankLeOneStatement
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAlternatingFormLeftCorankLeOne
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SemilinearCoefficientMapCocycles
 public import Development.AutomorphicArithmetic.CyclotomicBounds.CyclotomicOrders.ExistsCycZPowNeOne
 import Mathlib.Algebra.Order.Floor.Extended
@@ -333,7 +335,7 @@ theorem abs_two (hcc : ∀ g, cj (cj g) = g) (A : (Fin r → K) ≃ₗ[K] (Fin r
   let S₂ : Submodule K (H1 ρ) := S'.map C.toLinearMap
   let T : Submodule K (H1 ρ) := S ⊔ S₂
   refine ⟨Module.finrank K T * Module.finrank K T, fun L ho hn hc hL hL' hsp => ?_⟩
-  obtain ⟨ω, hω0, hω⟩ := GlobalTheory.T.exists_alternating_form_left_corank_le_one K T (S.comap T.subtype) (S₂.comap T.subtype) (by
+  obtain ⟨ω, hω0, hω⟩ := _root_.GlobalTheory.AltCorank.exists_alt_corank_le_one K T (S.comap T.subtype) (S₂.comap T.subtype) (by
     rw [(Submodule.comapSubtypeEquivOfLe (le_sup_left : S ≤ T)).finrank_eq,
       (Submodule.comapSubtypeEquivOfLe (le_sup_right : S₂ ≤ T)).finrank_eq, hd]
     exact (LinearEquiv.finrank_map_eq C S').symm)

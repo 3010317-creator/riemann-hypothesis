@@ -3,8 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.RedSurjective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CobOneEqZeroOfConnecting
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsThetaDieudonneModFrobeniusDifferentials
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankRigidExtensionsEqHeightAndDimAddDualStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LengthGeFinrankOfSemilinearSurjectiveStatement
+public import Mathlib.RingTheory.Length
+public import Mathlib.RingTheory.WittVector.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LengthGeFinrankOfSemilinearSurjective
+import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqZeroOfCobOneEqZero
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankRigidExtensionsEqHeightAndDimAddDual
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,7 +63,7 @@ theorem colength_range_map_ge (p : ℕ) [Fact p.Prime] (T : GlobalTheory.Dieu.Th
       (Module.finrank k (G.dual.Lie ⧸ LinearMap.range (lieMap H.dual G.dual (dualHom G H q))) : ℕ∞) ≤
         Module.length (WittVector p k) (T.M G ⧸ LinearMap.range (T.map q)) := by
   have hp : (p : k) = 0 := CharP.cast_eq_zero k p
-  haveI : Module.Finite k G.RigExt := (GlobalTheory.T.finrank_rigidExtensions_eq_height_and_dim_add_dual p k hp G).2.1
+  haveI : Module.Finite k G.RigExt := (_root_.GlobalTheory.PDivGroup.finrank_rigExt_omega p k hp G).2.1
   obtain ⟨θ, hθ⟩ := GlobalTheory.Dieu.theta_exists p T k
   have hred : ∀ m : T.M H, T.red G (T.map q m) = rigExtMap q (T.red H m) := fun m => by
     show T.base.red G trivial (T.base.smap trivial trivial (SemiHom.ofHom q) m) = _
@@ -70,7 +73,7 @@ theorem colength_range_map_ge (p : ℕ) [Fact p.Prime] (T : GlobalTheory.Dieu.Th
       Module.Finite.of_injective G.rigOfOmega (G.rigOfOmega_injective_of_eq_zero hp)
     obtain ⟨-, hsurj, -, hsemi, hnat⟩ := hθ G
     let Q := LinearMap.range (omegaMap G H q)
-    refine (GlobalTheory.T.length_ge_finrank_of_semilinear_surjective p k (T.M G) (G.omega ⧸ Q) (WittVector.frobeniusEquiv p k)
+    refine (_root_.GlobalTheory.Dieu.length_ge_finrank_of_semilinear_surj p k (T.M G) (G.omega ⧸ Q) (WittVector.frobeniusEquiv p k)
       (Q.mkQ.toAddMonoidHom.comp (θ G)) (Q.mkQ_surjective.comp hsurj) (fun a n => ?_)
       (LinearMap.range (T.map q))).1 ?_
     · show Q.mkQ (θ G (WittVector.frobenius a • n)) = WittVector.constantCoeff a • Q.mkQ (θ G n)
@@ -81,7 +84,7 @@ theorem colength_range_map_ge (p : ℕ) [Fact p.Prime] (T : GlobalTheory.Dieu.Th
       exact ⟨_, rfl⟩
   · haveI : Module.Finite k G.dual.Lie := Module.Finite.of_surjective (G.rigToLie hp) (G.rigToLie_surjective hp)
     let Q := LinearMap.range (lieMap H.dual G.dual (dualHom G H q))
-    refine (GlobalTheory.T.length_ge_finrank_of_semilinear_surjective p k (T.M G) (G.dual.Lie ⧸ Q) (RingEquiv.refl _)
+    refine (_root_.GlobalTheory.Dieu.length_ge_finrank_of_semilinear_surj p k (T.M G) (G.dual.Lie ⧸ Q) (RingEquiv.refl _)
       ((Q.mkQ ∘ₗ G.rigToLie hp).toAddMonoidHom.comp (T.red G).toAddMonoidHom)
       ((Q.mkQ_surjective.comp (G.rigToLie_surjective hp)).comp (T.base.red_surjective G trivial))
       (fun a n => ?_) (LinearMap.range (T.map q))).1 ?_

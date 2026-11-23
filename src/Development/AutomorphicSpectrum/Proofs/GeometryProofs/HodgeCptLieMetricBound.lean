@@ -6,19 +6,28 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.BlowupProjections.BlowupProjStatement
 public import Development.AbelianVarietyTheory.PublishedTheorems.SemiabelianTori.GeometricallyConnectedSplitTorusAff
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianPartBaseChangeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianPartLieSignatureStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianPartMapsCompatibleRightStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsAbelianPartExtensionStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsCocharacterLieModelStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsPrincipalBaseChangeIffStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieMetricHeightBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelRankEqGenericStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieSignatureNumberFieldStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrincipalHermitianFibreStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SemiAbelianPullbackTorusExtensionStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SemiabelianLieMetricHeightStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HermitianBundleQuotientDegreeBoundStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianPartBaseChange
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianPartLieSignature
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsOrthFull
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianPartMapsCompatibleRight
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsAbelianPartExtension
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCocharLie
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsCocharacterLieModel
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsPrincipalBaseChangeIff
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieMetricHeightBound
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCptGen
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Mathlib.NumberTheory.NumberField.Basic
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelRankEqGeneric
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieSignatureNumberField
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PrincipalHermitianFibre
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SemiAbelianPullbackTorusExtension
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SemiabelianLieMetricHeight
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HermitianBundleQuotientDegreeBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,7 +68,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.SabComp
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsOrthFull
 
 @[expose] public section
 
@@ -92,21 +100,21 @@ theorem exists_compare {S S₁ : Scheme.{0}} {f : S₁ ⟶ S} {A A' : Over S₁}
 
 theorem slope_unif : N1ab → PartI → Geo.ResK.ResKStatement → GlobalTheory.Published.SemiAbelianHomExtension → SlopeBoundSt → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (Y : Model Xo c (algebraMap (𝓞 c.F) c.F)) (S : Finset ℕ) (Ω : Type) [Field Ω] (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (y : (Σ k, J k) → Ω) (𝔐 : HodgeCpt Y S y) (h : LieMetric 𝔐.M y), 1 ≤ D.p + D.q → ∃ C : ℝ, 0 ≤ C ∧ ∀ (L₀ : Type) [Field L₀] [NumberField L₀] (z₀ : Sp (𝓞 L₀) ⟶ 𝔐.X), ∃ (L : Type) (_ : Field L) (_ : NumberField L) (e : L₀ →+* L), ∀ (B : GroundTheory.Heights₂.Heights.HermitianBundle.{0} L) (MB : LieModel 𝔐.t.G (spMap (RingOfIntegers.mapRingHom e) ≫ z₀) B.carrier), IsFibre (fun z v w c => c = h.ip z v w) _ B MB → B.slopeMax ≤ ((C * Real.log (2 + C + max (-B.normDegree ⊤) 0) + C : ℝ) : EReal) := by
   intro hN hP hR hH hS E _ _ _ H D l Xo c Y S Ω _ K _ J _ y 𝔐 h hpq
-  obtain ⟨K₀, hK₀, hQ⟩ := GlobalTheory.T.lie_metric_height_bound hR E H D l Xo c Y S Ω K J y 𝔐 h hpq
+  obtain ⟨K₀, hK₀, hQ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.QuotUnif.main hR E H D l Xo c Y S Ω K J y 𝔐 h hpq
   haveI : CharZero Ω := charZero_of_injective_ringHom 𝔐.cst.injective
-  obtain ⟨C₁, hC₁, hT⟩ := GlobalTheory.T.semiabelian_lie_metric_height hH 𝔐.X Ω K J y 𝔐.ξ inferInstance 𝔐.all 𝔐.tie 𝔐.t.G 𝔐.t.semi 𝔐.Li 𝔐.M h
+  obtain ⟨C₁, hC₁, hT⟩ := _root_.GlobalTheory.CompanionTheory.Ar.TorusUnif.torus_unif hH 𝔐.X Ω K J y 𝔐.ξ inferInstance 𝔐.all 𝔐.tie 𝔐.t.G 𝔐.t.semi 𝔐.Li 𝔐.M h
   obtain ⟨C₀, hC₀, hSl⟩ := hS
   obtain ⟨Cc, hCc1, hCcK, hCc₁, hCc₀⟩ : ∃ Cc : ℝ, 1 ≤ Cc ∧ K₀ ≤ Cc ∧ C₁ ≤ Cc ∧ C₀ ≤ Cc :=
     ⟨max (max K₀ C₁) (max C₀ 1), by simp, by simp, by simp, by simp⟩
-  obtain ⟨C', hC', hPB⟩ := GlobalTheory.T.hermitian_bundle_quotient_degree_bound (Module.finrank Ω 𝔐.Li) Cc hCc1
+  obtain ⟨C', hC', hPB⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PtBoundary.slopeMax_le_log (Module.finrank Ω 𝔐.Li) Cc hCc1
   refine ⟨C', hC', fun L₀ _ _ z₀ => ?_⟩
-  obtain ⟨L₁, _, _, e₁, ⟨P₁⟩⟩ := GlobalTheory.T.exists_abelian_part_extension E H 𝔐.X 𝔐.t L₀ (spMap (algebraMap (𝓞 L₀) L₀) ≫ z₀)
+  obtain ⟨L₁, _, _, e₁, ⟨P₁⟩⟩ := _root_.GlobalTheory.CompanionTheory.Ar.abPart_exists E H 𝔐.X 𝔐.t L₀ (spMap (algebraMap (𝓞 L₀) L₀) ≫ z₀)
   obtain ⟨σ₁⟩ : Nonempty (L₁ →+* ℂ) := inferInstance
-  obtain ⟨P₁c, _, mBc, _, _⟩ := GlobalTheory.T.abelian_part_base_change E H 𝔐.X 𝔐.t L₁ ℂ _ P₁ σ₁
-  have hpr : IsPrincipal P₁.tB := (GlobalTheory.T.isPrincipal_base_change_iff E H L₁ ℂ σ₁ P₁.tB P₁c.tB mBc).1 (hQ _ P₁c).1
-  obtain ⟨L, _, _, e₂, t', tK, ⟨m'⟩, ⟨mP⟩⟩ := GlobalTheory.T.lie_signature_number_field hN hP E H L₁ P₁.tB hpr
-    (GlobalTheory.T.abelian_part_lie_signature E H D l Xo c Y S Ω K J y 𝔐 L₁ _ P₁)
-  have hprK : IsPrincipal tK := (GlobalTheory.T.isPrincipal_base_change_iff E H L₁ L e₂ P₁.tB tK mP).2 hpr
+  obtain ⟨P₁c, _, mBc, _, _⟩ := _root_.GlobalTheory.CompanionTheory.Ar.AbPartFieldChange.exists_baseChange E H 𝔐.X 𝔐.t L₁ ℂ _ P₁ σ₁
+  have hpr : IsPrincipal P₁.tB := (_root_.GlobalTheory.CompanionTheory.Ar.isPrincipal_iff_of_sabMap_field E H L₁ ℂ σ₁ P₁.tB P₁c.tB mBc).1 (hQ _ P₁c).1
+  obtain ⟨L, _, _, e₂, t', tK, ⟨m'⟩, ⟨mP⟩⟩ := _root_.GlobalTheory.CompanionTheory.Ar.SabModel.exists_sab_model hN hP E H L₁ P₁.tB hpr
+    (_root_.GlobalTheory.CompanionTheory.Ar.AbPartConst.lieMult_constant_along_cmType E H D l Xo c Y S Ω K J y 𝔐 L₁ _ P₁)
+  have hprK : IsPrincipal tK := (_root_.GlobalTheory.CompanionTheory.Ar.isPrincipal_iff_of_sabMap_field E H L₁ L e₂ P₁.tB tK mP).2 hpr
   refine ⟨L, inferInstance, inferInstance, e₂.comp e₁, fun B MB hB => ?_⟩
   have hz : spMap (algebraMap (𝓞 L) L) ≫ (spMap (RingOfIntegers.mapRingHom (e₂.comp e₁)) ≫ z₀) =
       spMap e₂ ≫ (spMap e₁ ≫ spMap (algebraMap (𝓞 L₀) L₀) ≫ z₀) := by
@@ -116,9 +124,9 @@ theorem slope_unif : N1ab → PartI → Geo.ResK.ResKStatement → GlobalTheory.
       congr 2
     rw [← Category.assoc, e]
     simp only [Category.assoc]
-  obtain ⟨B', MB', hB'⟩ := GlobalTheory.T.principal_hermitian_fibre E H L t' tK m' hprK
+  obtain ⟨B', MB', hB'⟩ := _root_.GlobalTheory.CompanionTheory.Ar.HodgeFibre.exists_hermitianBundle E H L t' tK m' hprK
   have hslope := hSl E H L t' tK m' hprK B' MB' hB'
-  obtain ⟨P₂, mK2, mB2, c1, c2⟩ := GlobalTheory.T.abelian_part_base_change E H 𝔐.X 𝔐.t L₁ L _ P₁ e₂
+  obtain ⟨P₂, mK2, mB2, c1, c2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.AbPartFieldChange.exists_baseChange E H 𝔐.X 𝔐.t L₁ L _ P₁ e₂
   obtain ⟨w, hw, hw', hwp⟩ := exists_compare mB2.cart mP.cart
   letI := P₂.τ.addCommGroup
   letI := P₂.τ.grpB
@@ -126,17 +134,17 @@ theorem slope_unif : N1ab → PartI → Geo.ResK.ResKStatement → GlobalTheory.
   have hφ' : IsGrpPullback P₂.τ.B t'.G (spMap (algebraMap (𝓞 L) L)) (P₂.e.hom.left ≫ w ≫ m'.φ) := by
     have := (isGrpPullback_iso P₂.e).comp (hwp.comp m'.cart)
     simpa using this
-  obtain ⟨MT, hMT⟩ := GlobalTheory.T.exists_cocharacter_lie_model (Sp L) P₂.τ.X L (𝟙 _)
+  obtain ⟨MT, hMT⟩ := _root_.GlobalTheory.CompanionTheory.Ar.TorusLie.exists_lieModel_splitTorus (Sp L) P₂.τ.X L (𝟙 _)
   have hcart : IsGrpPullback P₂.tK.G 𝔐.t.G (spMap (algebraMap (𝓞 L) L) ≫ (spMap (RingOfIntegers.mapRingHom (e₂.comp e₁)) ≫ z₀)) P₂.m.φ := by
     rw [hz]; exact P₂.m.cart
   obtain ⟨r, bs, hbs⟩ := hT L _ P₂.tK.G P₂.m.φ P₂.τ hcart
-  obtain ⟨ε, f, hε, hf, hli, hker, hsur⟩ := GlobalTheory.T.semi_abelian_pullback_torus_extension 𝔐.X 𝔐.t.G 𝔐.t.semi L _ P₂.tK.G P₂.m.φ P₂.τ t'.G _ t'.semi hcart hφ'
+  obtain ⟨ε, f, hε, hf, hli, hker, hsur⟩ := _root_.GlobalTheory.CompanionTheory.Ar.TopPt.main 𝔐.X 𝔐.t.G 𝔐.t.semi L _ P₂.tK.G P₂.m.φ P₂.τ t'.G _ t'.semi hcart hφ'
     MT hMT B.carrier B'.carrier MB MB' r bs
   have hbd := hbs MT hMT B MB hB ε hε
-  have hnb := GlobalTheory.T.abelian_part_maps_compatible_right E H 𝔐.X 𝔐.t L₁ L e₂ _ _ hz P₁ P₂ mK2 mB2 c1 c2 t' tK m' mP w hw hw' Ω 𝔐.ξ 𝔐.Li 𝔐.M K J y h K₀
+  have hnb := _root_.GlobalTheory.CompanionTheory.Ar.SlopeNorm.sqAt_le E H 𝔐.X 𝔐.t L₁ L e₂ _ _ hz P₁ P₂ mK2 mB2 c1 c2 t' tK m' mP w hw hw' Ω 𝔐.ξ 𝔐.Li 𝔐.M K J y h K₀
     (fun zc P v v₀ c => (hQ zc P).2 v v₀ c) B B' MB MB' hB hB' f hf
   haveI : Smooth 𝔐.t.G.hom := 𝔐.t.semi.smooth
-  have hrk := GlobalTheory.T.lie_model_rank_eq_generic 𝔐.X Ω 𝔐.ξ 𝔐.all 𝔐.t.G 𝔐.Li 𝔐.M L _ B.carrier MB
+  have hrk := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_finrank_eq 𝔐.X Ω 𝔐.ξ 𝔐.all 𝔐.t.G 𝔐.Li 𝔐.M L _ B.carrier MB
   have hC₁0 : (0 : ℝ) < C₁ := by linarith
   have hCc0 : (0 : ℝ) < Cc := by linarith
   refine hPB L B B' r ε f hrk hli hker hsur ?_ ?_ ?_

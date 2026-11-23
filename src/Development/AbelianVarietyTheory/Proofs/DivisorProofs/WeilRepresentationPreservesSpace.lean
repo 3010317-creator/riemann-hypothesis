@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearBarLocalThetaFactorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalUnitaryActionSchwartzInfStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTrivialAtPlaceProductStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryAdelicPlaceDecompositionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearBarLocalThetaFactor
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalUnitaryActionSchwartzInf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaTrivialAtPlaceProduct
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryAdelicPlaceDecomposition
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,20 +55,20 @@ theorem so_stable : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Field
   | smul c x _ hx => rw [map_smul]; exact Submodule.smul_mem _ c hx
   | mem x hx =>
     obtain ⟨f, φ, hSB, hcof, hloc, rfl⟩ := hx
-    obtain ⟨g₁, g₂, hg, hg₁, hg₂⟩ := GlobalTheory.T.unitary_adelic_place_decomposition F E σ a' G.V'.J B.v₁ γ.1
-    obtain ⟨h₁, h₂, hh, hh₁, hh₂⟩ := GlobalTheory.T.unitary_adelic_place_decomposition F E σ (a + a') G.W.J B.v₁ γ.2
+    obtain ⟨g₁, g₂, hg, hg₁, hg₂⟩ := _root_.GlobalTheory.UnitaryPlaceSplit.exists_split_at F E σ a' G.V'.J B.v₁ γ.1
+    obtain ⟨h₁, h₂, hh, hh₁, hh₂⟩ := _root_.GlobalTheory.UnitaryPlaceSplit.exists_split_at F E σ (a + a') G.W.J B.v₁ γ.2
     have hγ : γ = (g₁, h₁) * (g₂, h₂) := Prod.ext hg hh
     obtain ⟨f₂, φ₂, hSB₂, hcof₂, hv₂, he₂⟩ :=
-      GlobalTheory.T.theta_trivial_at_place_product hP F E σ B a a' G X om om' hT B.v₁ g₂ h₂ hg₂ hh₂ f φ hSB hcof
+      _root_.GlobalTheory.PureAway.pure_away hP F E σ B a a' G X om om' hT B.v₁ g₂ h₂ hg₂ hh₂ f φ hSB hcof
     obtain ⟨φ', hSB', hne', hacts, he'⟩ :=
-      GlobalTheory.T.local_unitary_action_schwartz_inf hP F E σ B a a' G X om om' hT B.v₁ g₁ hg₁ h₁ hh₁ f₂ φ₂ hSB₂ hcof₂
+      _root_.GlobalTheory.PureStabOne.pure_stab_one hP F E σ B a a' G X om om' hT B.v₁ g₁ hg₁ h₁ hh₁ f₂ φ₂ hSB₂ hcof₂
     rw [hγ, map_mul, mul_apply_eq_comp, he₂, he']
     refine Submodule.subset_span ⟨f₂, φ', hSB', ?_, ?_, rfl⟩
     · filter_upwards [hcof₂, (Set.finite_singleton B.v₁).compl_mem_cofinite] with w hw hw'
       rw [hne' w hw', hw]
     · obtain ⟨hφSB, ι, hι, hsupp⟩ := hloc
       refine ⟨hSB' _, ι, hι, fun Y hY => ?_⟩
-      obtain ⟨c, P, Q, hPQ⟩ := GlobalTheory.T.linear_bar_local_theta_factor hP F E σ B a a' G X om om' hT B.v₁ B.τ₁ ι hι g₁ hg₁ h₁ hh₁
+      obtain ⟨c, P, Q, hPQ⟩ := _root_.GlobalTheory.OppLinOp.local_op_eq_smul hP F E σ B a a' G X om om' hT B.v₁ B.τ₁ ι hι g₁ hg₁ h₁ hh₁
         (φ₂ B.v₁) (hSB₂ _) (φ' B.v₁) (hSB' _) hacts
       rw [hPQ, hv₂, hsupp, mul_zero]
       rwa [Matrix.rank_mul_eq_left_of_isUnit_det, Matrix.rank_mul_eq_right_of_isUnit_det]

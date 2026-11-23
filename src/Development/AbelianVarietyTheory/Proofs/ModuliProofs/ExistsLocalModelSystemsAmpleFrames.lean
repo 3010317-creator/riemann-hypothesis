@@ -6,12 +6,15 @@ public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.ArcF
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.HomExtSt
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CoefficientFieldIntegersDedekindFractionField
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsGlobalModelOfLocalModelsStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLocalModelSystemAmpleFramesFullLevelStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GtBaseChangeSt
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.AuxiliaryInertOddPrime
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsGlobalModelOfLocalModels
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLocalModelSystemAmpleFramesFullLevel
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LevelStructureConditionsAndSplitFibresStatement
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LocalModelSystemTransitionSiegelClausesStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.AdmissiblePadicIntMaximalIdeal
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.RaisedModelFiniteCoverAmpleFrames
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PrimeToPartLevelExistsUniqueMono
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.RaisedModelFiniteCoverAmpleFramesStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,16 +69,16 @@ theorem exists_localSystems_ample :
   obtain ⟨-, hN⟩ := hN1
   have hlev : ToroidalLevelCompatibility (H := H) (D := D) := (hN E H D hpq).1
 
-  obtain ⟨S, hS⟩ := GlobalTheory.T.exists_localModelSystem_ampleFrames_fullLevel hext hL hL2 hL3 htop E H D Xo hpq hlev
+  obtain ⟨S, hS⟩ := _root_.GlobalTheory.SystemAmple.exists_system_ampFrames hext hL hL2 hL3 htop E H D Xo hpq hlev
   refine ⟨S.Y, fun p W hp hW => ⟨GlobalTheory.T.localModelSystem_transition_siegel_clauses hext hL hL2 hL3 E H D Xo hpq hlev S p W hp hW, fun i => ?_⟩,
-    GlobalTheory.T.exists_global_model_of_local_models hext hL hL2 hL3 E H D Xo hpq hlev S⟩
+    _root_.GlobalTheory.GlobalModel.exists_global_model hext hL hL2 hL3 E H D Xo hpq hlev S⟩
   refine ⟨(GlobalTheory.T.localModel_oneModel_and_splitFibres hext hL hL2 hL3 E H D Xo hpq hlev S p W hp hW i).2, ?_⟩
 
   obtain ⟨l₀, h₀, hr⟩ := S.raises p W hp hW i
   obtain ⟨k, hk⟩ := hS (S.ch p)
   have hc := (GlobalTheory.CoeffRings.coeff_isDedFrac E H i.l i.c).2.2.2 p W hp hW
   have hcop : (S.n (S.ch p)).Coprime p := (Nat.coprime_primes (S.aux _).1 hp).2 (S.ch_ne p)
-  exact GlobalTheory.T.raised_model_finite_cover_ample_frames hL hL2 hL3 E H D Xo (S.n (S.ch p)) (S.n (S.ch p) ^ S.J (S.ch p)) k (S.T (S.ch p)) hlev
+  exact _root_.GlobalTheory.RaisedAmple.amp_of_raises hL hL2 hL3 E H D Xo (S.n (S.ch p)) (S.n (S.ch p) ^ S.J (S.ch p)) k (S.T (S.ch p)) hlev
     l₀ i.l (S.B (S.ch p) l₀ h₀.1) i.c _ (i.c.V W).subtype (S.Y p W hp hW i) (S.aux _).1 (S.aux _).2.1
     ⟨_, rfl⟩ (hc.2.1 _ hcop) ((GlobalTheory.Models.primeToPart_spec E H p hp).2.1 i.l l₀ h₀).1 hc.1 hr hk
 

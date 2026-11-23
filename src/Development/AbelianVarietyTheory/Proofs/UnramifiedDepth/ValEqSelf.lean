@@ -2,23 +2,33 @@ module
 
 public import Formalism.LocalToGlobal.CharacterGerms.RowTieSelf
 public import Development.AbelianVarietyTheory.Definitions.TeichmullerDepth.HasTeich
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.AdmissibleRowsValueEqRowGaugeStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ConstantCoeffDerivationPolynomialEqJetAt0Statement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.DiagonalSplitStatement
+public import Formalism.LocalToGlobal.CharacterGerms.RowTie
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.AdmissibleRowsValueEqRowGauge
+public import Formalism.IncomingBounds.StatementThmP
+public import Formalism.LocalToGlobal.ProjectiveLattices.PlaceBelow
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ConstantCoeffDerivationPolynomialEqJetAt0
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IntSOfMulEqOne
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.DiagonalSplit
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsAdjointIntegralEndOfLadicLimit
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsEndomorphismPairW0Statement
-import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsIntegralEndOfLadicActionLimitStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsIntegralSeriesFrameEqProdRowsStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsLadicSeparatingSequenceEmbeddingsStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.GaugeBiadditiveSymmAdjointIntegralEndStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.HasGaugeAdjointLieProjectorsSelfConjugatePlaceStatement
-import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.HasGaugeAdjointTeichmullerEndSelfConjugatePlace
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IntegralGermEqGaugedFormalGroupLawExpIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.InvariantDerivationsConstantInLogCoordinatesStatement
-import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IsIntegralGaugedFormalGroupLawSelfConjugateSquarStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.JetAt0ProdSubstDisjointVariablesStatement
-import Formalism.LocalToGlobal.CharacterGerms.ConstMemTypeSetOfNonneg
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsEndomorphismPairW0
+public import Formalism.LocalToGlobal.CharacterGerms.RowTieFB
+public import Formalism.LocalToGlobal.CharacterGerms.RowTieVal
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsIntegralSeriesFrameEqProdRows
+public import Formalism.LocalToGlobal.CharacterGerms.Interface
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsLadicSeparatingSequenceEmbeddings
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.GaugeBiadditiveSymmAdjointIntegralEnd
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.HasGaugeAdjointLieProjectorsSelfConjugatePlace
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IntegralGermEqGaugedFormalGroupLawExpIntegral
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.InvariantDerivationsConstantInLogCoordinates
+public import Mathlib.RingTheory.MvPowerSeries.Substitution
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.JetAt0ProdSubstDisjointVariables
 public import Formalism.LocalToGlobal.CharacterGerms.RowTieAdm
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.LiftXEqRename
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.SCMain
+import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsIntegralEndOfLadicActionLimit
+import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.HasGaugeAdjointTeichmullerEndSelfConjugatePlace
+import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IsIntegralGaugedFormalGroupLawSelfConjugateSquar
+import Formalism.LocalToGlobal.CharacterGerms.ConstMemTypeSetOfNonneg
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,8 +71,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.LiftXEqRename
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.TaylorDiscriminants.WickVanishing.SCMain
 import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
@@ -79,11 +87,11 @@ theorem exists_sep (p : ∀ o, SelfData Y d (I0 o)) (hs : SelfSep Y p) (o : Orb)
     ∃ E E' : Matrix (Fin 2 × Fin dd) (Fin 2 × Fin dd) C, IsEnd (Y.rawSelf (p o)) V E E' ∧
       (∀ g c, E.mulVec ((Y.rawSelf (p o)).u g c) = (Y.rawSelf (p o)).u g c) ∧
       ∀ o', o' ≠ o → ∀ g c, E.mulVec ((Y.rawSelf (p o')).u g c) = 0 ∧ E'.mulVec ((Y.rawSelf (p o')).u g c) = 0 := by
-  obtain ⟨s, hs1, hs2, hs3⟩ := GlobalTheory.T.exists_ladic_separating_sequence_embeddings C V O d (p o).em (p o).em_int (p o).em_frob (p o).em_unr
+  obtain ⟨s, hs1, hs2, hs3⟩ := _root_.GlobalTheory.SeparatingSeq.main C V O d (p o).em (p o).em_int (p o).em_frob (p o).em_unr
   let X : RawChart C d (fun _ => I0 o) (Fin dd) :=
     { lg := fun i => un1 (Y.lg i), ex := fun i => un1 (Y.ex i), h := Y.h, k := 0, u := fun _ => (p o).e,
       ty := fun _ => (p o).ty0, n := 0, j := 0, j' := 0, big := fun _ _ => True }
-  obtain ⟨M, M', h1, -, h3, h4⟩ := GlobalTheory.T.exists_integralEnd_of_ladic_action_limit C V O dd Y d _ X rfl rfl rfl s hs1
+  obtain ⟨M, M', h1, -, h3, h4⟩ := _root_.GlobalTheory.ActionLimit.exists_isEnd_of_limit_raw C V O dd Y d _ X rfl rfl rfl s hs1
   have hlg : ∀ i, MvPowerSeries.constantCoeff (X.lg i) = 0 := by
     intro i
     show MvPowerSeries.constantCoeff (un1 (Y.lg i)) = 0
@@ -146,11 +154,11 @@ theorem exists_plane [Fintype Orb] (p : ∀ o, SelfData Y d (I0 o)) (hs : SelfSe
         (MvPowerSeries.X (⟨o, w⟩ : WVO fun o (_ : Fin 2) => I0 o) : MvPowerSeries (WVO fun o (_ : Fin 2) => I0 o) C))
         (gr o * mvExp (Y.rawSelf (p o)).hRow) := by
   classical
-  have hL := GlobalTheory.T.isIntegralGaugedFormalGroupLaw_selfConjugateSquare C V O dd Y d _ (p o₀)
-  obtain ⟨W, W', hW, hWW, hWv, hWh⟩ := GlobalTheory.T.exists_endomorphism_pair_w0 C V O dd Y d _ (p o₀)
-  choose P hP01 hP10 hPid hPk hPr using fun o => GlobalTheory.T.hasGaugeAdjointLieProjectors_selfConjugatePlace C V O dd Y d _ (p o)
+  have hL := _root_.GlobalTheory.RowLawSquare.rlaw_rawSelf C V O dd Y d _ (p o₀)
+  obtain ⟨W, W', hW, hWW, hWv, hWh⟩ := _root_.GlobalTheory.ActionEndSelf.exists_endomorphism_w0 C V O dd Y d _ (p o₀)
+  choose P hP01 hP10 hPid hPk hPr using fun o => _root_.GlobalTheory.ProjSelf.hasProj_self C V O dd Y d _ (p o)
   choose E E' hE hEid hEk using exists_sep Y p hs
-  obtain ⟨-, -, cmul, czero, -, -, cadj⟩ := GlobalTheory.T.gauge_biadditive_symm_adjoint_integralEnd C V d _ _ (Y.rawSelf (p o₀)) hL
+  obtain ⟨-, -, cmul, czero, -, -, cadj⟩ := _root_.GlobalTheory.RowVal.EndCalc.end_calc C V d _ _ (Y.rawSelf (p o₀)) hL
   have hPg : ∀ o g, IsEnd (Y.rawSelf (p o₀)) V (P o g) (P o (1 - g)) := by
     intro o g
     fin_cases g
@@ -169,7 +177,7 @@ theorem exists_plane [Fintype Orb] (p : ∀ o, SelfData Y d (I0 o)) (hs : SelfSe
     simp only [linAct, FBChart.rawSelf, Pi.smul_apply, smul_eq_mul] at h1 ⊢
     rw [mul_left_comm, ← h1, Finset.mul_sum]
     exact Finset.sum_congr rfl fun _ _ => by ring
-  have hcore := GlobalTheory.T.sum_hEnd_sub_hEnd_mem_logInt C V d _ _ (Y.rawSelf (p o₀)) hL Orb (fun o g => P o g * E o) W W' hπ hW hWW (by
+  have hcore := _root_.GlobalTheory.RowVal.MapSumDiagonal.diagonal_split C V d _ _ (Y.rawSelf (p o₀)) hL Orb (fun o g => P o g * E o) W W' hπ hW hWW (by
     intro o g o' g' hne
     have hWπ := cmul _ _ hW.1 (hπ o' g')
     by_cases ho : o' = o
@@ -193,7 +201,7 @@ theorem exists_plane [Fintype Orb] (p : ∀ o, SelfData Y d (I0 o)) (hs : SelfSe
       · intro c
         rw [← Matrix.mulVec_mulVec, hWu, Matrix.mulVec_smul, (hEk o o' ho g' c).2, smul_zero])
   rw [hWh]
-  refine GlobalTheory.T.exists_integralSeries_frame_eq_prod_rows C V d Orb _ _ (fun o => Y.rawSelf (p o)) d _ (Y.rawSelf (p o₀)) hL (fun _ => ⟨rfl, rfl, rfl⟩)
+  refine _root_.GlobalTheory.RowVal.exists_intS_frame_eq_prod C V d Orb _ _ (fun o => Y.rawSelf (p o)) d _ (Y.rawSelf (p o₀)) hL (fun _ => ⟨rfl, rfl, rfl⟩)
     (fun o g => P o g * E o) W hπ ?_ ?_ hcore gr hg
   · intro o g c
     rw [← Matrix.mulVec_mulVec, hEid, hPid]
@@ -360,9 +368,9 @@ theorem valEqSelf : ∀ (C : Type) [Field C] [CharZero C] (V : VF C) (O : Type) 
   have hE0 : ∀ s : Fin n × Fin dd, MvPowerSeries.constantCoeff
       (MvPowerSeries.subst (fun j : Fin dd => linCol pl u (s.1, j)) (un1 (Y.ex s.2))) = 0 := fun s =>
     constantCoeff_subst_zero (fun j => cc_linCol pl u _) (by rw [constantCoeff_uncurry, Y.ex_const])
-  have hjet := GlobalTheory.T.constantCoeff_derivationPolynomial_eq_jetAt0 C dd n (Y.B.FK C) _ (Ls.cp n) (Ls.uv n) _ _ hE0 co P (by
+  have hjet := _root_.GlobalTheory.DerivJet.constantCoeff_DpolyN_eq_jetAt0 C dd n (Y.B.FK C) _ (Ls.cp n) (Ls.uv n) _ _ hE0 co P (by
     intro ℓ hℓ
-    refine GlobalTheory.T.invariantDerivations_constant_in_logCoordinates C V O dd Y n _ (linCol pl u) (cc_linCol pl u) _ _ _ ?_
+    refine _root_.GlobalTheory.InvDerivLog.subst_ex_DofN C V O dd Y n _ (linCol pl u) (cc_linCol pl u) _ _ _ ?_
     intro b j
     obtain ⟨ρ, col, hpl, h0, h1⟩ := hco ℓ hℓ
     have h2 : ∀ x, MvPowerSeries.pderiv (R := C) x (linCol pl u (b, j)) =
@@ -407,7 +415,7 @@ theorem valEqSelf : ∀ (C : Type) [Field C] [CharZero C] (V : VF C) (O : Type) 
     rw [Subsingleton.elim q.1 0]
     exact MvPowerSeries.constantCoeff_X _
   have hg' : ∀ o ρ, gr o ρ ∈ ExpInt (Y.rawSelf (p o)) V := fun o ρ => by
-    rw [← GlobalTheory.T.integralGerm_eq_gaugedFormalGroupLaw_expIntegral C V d _ _ _ (GlobalTheory.T.isIntegralGaugedFormalGroupLaw_selfConjugateSquare C V O dd Y d _ (p o)) (H o).cartH (S o) (t o) (ht o)]
+    rw [← _root_.GlobalTheory.RowLaw.intGerm_eq_expInt C V d _ _ _ (_root_.GlobalTheory.RowLawSquare.rlaw_rawSelf C V O dd Y d _ (p o)) (H o).cartH (S o) (t o) (ht o)]
     exact hg o ρ
   choose F hF hFe using fun ρ => exists_plane Y p hs o₀ (fun o => gr o ρ) fun o => hg' o ρ
   refine ⟨∏ ρ, MvPowerSeries.subst
@@ -415,8 +423,8 @@ theorem valEqSelf : ∀ (C : Type) [Field C] [CharZero C] (V : VF C) (O : Type) 
     intS_prod _ fun ρ => intS_subst (fun _ => MvPowerSeries.constantCoeff_X _) (fun _ => intS_X _) (hF ρ), ?_⟩
   unfold FBChart.nab nabValN
   rw [hjet, ← hQ, glue pl u Y.ex Y.ex_const _ hl0]
-  simp only [hu, hFe, GlobalTheory.T.admissibleRows_value_eq_rowGauge C V d _ _ _ (H _) N _ _ (hk _)]
-  rw [← GlobalTheory.T.jetAt0_prod_subst_disjoint_variables C Orb (fun o => Fin N × WV fun _ => I0 o) (Fin N × WVO fun o (_ : Fin 2) => I0 o)
+  simp only [hu, hFe, _root_.GlobalTheory.RowVal.valOf_eq_hRow C V d _ _ _ (H _) N _ _ (hk _)]
+  rw [← _root_.GlobalTheory.JetProdSubst.jetAt0_prod_subst C Orb (fun o => Fin N × WV fun _ => I0 o) (Fin N × WVO fun o (_ : Fin 2) => I0 o)
     (fun o x => (x.1, ⟨o, x.2⟩)) (by
       rintro ⟨o, ρ, w⟩ ⟨o', ρ', w'⟩ h
       simp only [Prod.mk.injEq] at h

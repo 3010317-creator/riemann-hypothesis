@@ -1,15 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.CmLatticeCommutatorPairingPowEqOneOfGoodLift
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmEvenThetaSeriesChartCoeffIntegralStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmEvenThetaSeriesChartCoeffIntegral
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CpTransportedTaylorSeriesTranslateNormLe
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ScaledThetaTranslationQuotientElliptic
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CpBinomialPowerSubOneSeriesIntegralityCompositio
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CpSeriesCoeffBoundedTaylorEllipticOfPolesStatement
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CpSeriesCoeffBoundedTaylorEllipticOfPoles
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CpSeriesCoeffNormBoundedRingLaws
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CpTransportedTaylorSeriesInChartRingHomLaws
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CpTransportedTaylorSeriesMultiplicativeChart
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CpTransportedTaylorSeriesTranslateNormLeStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ScaledThetaTranslationQuotientElliptic
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SmallTorsionKilledByPrimePowersStatement
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SmallTorsionKilledByPrimePowers
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -145,7 +145,7 @@ theorem bd_translate : ∀ (d q : ℕ) [Fact q.Prime] (M : Mdl q) (ω : ℂ_[q])
     by_contra hne
     have : AnalyticAt ℂ ψ p := hψan p (hNp _ (by rwa [mul_add, hst']))
     exact absurd this.meromorphicOrderAt_nonneg (not_le.mpr hp)
-  have hψb := GlobalTheory.T.cpSeriesCoeffBounded_taylor_elliptic_of_poles q M _ ψ hch hψe hψ0 hψp
+  have hψb := _root_.GlobalTheory.MomOne.EllBdd.bdd_hat_of_ell q M _ ψ hch hψe hψ0 hψp
   have hback : (fun z => ψ (z + -t')) = φm := by
     funext z; simp [hψ]
   have hℓ : constantCoeff (C ω * logS : ℂ_[q]⟦X⟧) = 0 := hch.2.1
@@ -155,7 +155,7 @@ theorem bd_translate : ∀ (d q : ℕ) [Fact q.Prime] (M : Mdl q) (ω : ℂ_[q])
   have hb1 : ∀ B, Bd B (hat M.ι (C ω * logS) ψ) → Bd B (hat M.ι (C ω * logS) φm) := by
     intro B hB
     by_cases hsm : M.Small (-t')
-    · have hin : InOK d (-t') := (GlobalTheory.T.smallTorsion_killed_by_prime_powers d q M ω hd h16 hsp hOK hch).2.2.1 (-t')
+    · have hin : InOK d (-t') := (_root_.GlobalTheory.MomOne.smallTors d q M ω hd h16 hsp hOK hch).2.2.1 (-t')
         ⟨s * s, Nat.mul_pos hs hs, Nat.Coprime.mul_left hsq hsq, by
           have : ((s * s : ℕ) : ℂ) * (-t') = -((s : ℂ) * t) := by
             rw [← hst']; push_cast; ring
@@ -163,7 +163,7 @@ theorem bd_translate : ∀ (d q : ℕ) [Fact q.Prime] (M : Mdl q) (ω : ℂ_[q])
       have hl : t' ∈ M.L.lattice := (hOK t').2 (by simpa using inOK_neg hin)
       have : ψ = φm := funext fun z => hNe.2 t' hl z
       rwa [← this]
-    · have := GlobalTheory.T.cpTransportedTaylorSeries_translate_norm_le q M _ ψ (-t') B hch hψe hψ0 hψt hψp hsm (by rwa [hback]) hB
+    · have := _root_.GlobalTheory.MomOne.TransNorm.translate_norm_le q M _ ψ (-t') B hch hψe hψ0 hψt hψp hsm (by rwa [hback]) hB
       rwa [hback] at this
 
   have hmp : φm = fun z => φp ((-1 : ℂ) * z) := by
@@ -204,7 +204,7 @@ theorem bd_translate : ∀ (d q : ℕ) [Fact q.Prime] (M : Mdl q) (ω : ℂ_[q])
     have e' : φp = fun z => f ((s : ℂ) * z) := rfl
     rw [e', e] at hP1
     exact (hmul.2.2.2.1 (s : ℤ_[q]) _ 1 (PadicInt.norm_natCast_eq_one_iff.2 hsq.symm)).1 hP1
-  have hθ1 := GlobalTheory.T.cm_even_theta_series_chart_coeff_integral d q M ω θ hd h16 hsp hOK hch hth
+  have hθ1 := _root_.GlobalTheory.MomOne.theta_series_integral d q M ω θ hd h16 hsp hOK hch hth
   have hfin : hat M.ι (C ω * logS) (U1 d t θ) = hat M.ι (C ω * logS) f * hat M.ι (C ω * logS) θ := by
     rw [← (hat1.1 f θ hfa hθa).2.1]
     apply (hat1.1 _ _ hUa (hfa.mul hθa)).2.2.1

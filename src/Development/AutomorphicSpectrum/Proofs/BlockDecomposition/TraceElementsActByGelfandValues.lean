@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PosPartUnitaryMul
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TraceElementCapelliRecursionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TraceElementGelfandPolynomialFormulaStatement
+public import Formalism.RealPlaceAnalysis.StatementE
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TraceElementCapelliRecursion
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TraceElementGelfandPolynomialFormula
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -71,7 +72,7 @@ theorem etr_eq_gelfVal_of_capelli :
   intro k
   induction k using Nat.strong_induction_on with
   | _ N ih =>
-    rw [GlobalTheory.T.trace_element_capelli_recursion V m E hE _ v hP N (fun k => GlobalTheory.Dec.gelfVal χ k) (fun k hk => ih k hk)]
-    rw [GlobalTheory.T.trace_element_gelfand_polynomial_formula m χ N]
+    rw [_root_.GlobalTheory.CompanionTheory.CapelliEigen.etr_apply_of_eigen V m E hE _ v hP N (fun k => GlobalTheory.Dec.gelfVal χ k) (fun k hk => ih k hk)]
+    rw [_root_.GlobalTheory.CompanionTheory.GelfRec.gelfVal_newton m χ N]
 
 end GlobalTheory.CompanionTheory.CapelliGelfand

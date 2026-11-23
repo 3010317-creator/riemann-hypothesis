@@ -3,9 +3,15 @@ module
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSmoothOfDefectZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDerivationExtendingKernelFormOfLiftingStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InjectiveCotangentComplexBaseChangeOfFormsExtendStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LiftRingHomAffineOpenOfArtinianSchemeLiftStatement
+public import Mathlib.RingTheory.Artinian.Defs
+public import Mathlib.RingTheory.Derivation.Basic
+public import Mathlib.RingTheory.Ideal.Maps
+public import Mathlib.RingTheory.LocalRing.Defs
+public import Mathlib.RingTheory.Noetherian.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDerivationExtendingKernelFormOfLifting
+public import Mathlib.RingTheory.Extension.Cotangent.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InjectiveCotangentComplexBaseChangeOfFormsExtend
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LiftRingHomAffineOpenOfArtinianSchemeLift
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,7 +72,7 @@ theorem smooth_of_lift (A R : Type) [CommRing A] [IsNoetherianRing A] [CommRing 
   have hmax : ∀ (m : Ideal R) [m.IsMaximal], Algebra.IsSmoothAt A m := by
     intro m _
     letI : Field (R ⧸ m) := Ideal.Quotient.field m
-    have key := GlobalTheory.T.injective_cotangentComplexBaseChange_of_forms_extend' A (MvPolynomial (Fin n) A) R (R ⧸ m) fun ℓ => GlobalTheory.T.exists_derivation_extending_kernel_form_of_lifting A (MvPolynomial (Fin n) A) R (R ⧸ m) hs Ideal.Quotient.mk_surjective H ℓ
+    have key := _root_.GlobalTheory.injective_cotangentComplexBaseChange_of_forms_extend A (MvPolynomial (Fin n) A) R (R ⧸ m) fun ℓ => _root_.GlobalTheory.LiftDeriv.exists_derivation_extending A (MvPolynomial (Fin n) A) R (R ⧸ m) hs Ideal.Quotient.mk_surjective H ℓ
     exact (GlobalTheory.SS.DefectZero.isSmoothAt_iff_injective A (MvPolynomial (Fin n) A) R (R ⧸ m) hs m
       (Ideal.mk_ker).symm).mpr key
   have hU : Algebra.smoothLocus A R = Set.univ := by
@@ -81,6 +87,6 @@ theorem smooth_of_artinian_lift : ∀ (B : Type) [CommRing B] [IsNoetherianRing 
   constructor
   intro U hU V hV e
   haveI : IsNoetherianRing Γ(Sp B, U) := IsLocallyNoetherian.component_noetherian ⟨U, hU⟩
-  exact smooth_of_lift _ _ _ (HasRingHomProperty.appLE @LocallyOfFiniteType s hs ⟨U, hU⟩ ⟨V, hV⟩ e) (GlobalTheory.T.lift_ringHom_affine_open_of_artinian_scheme_lift B X s H U hU V hV e)
+  exact smooth_of_lift _ _ _ (HasRingHomProperty.appLE @LocallyOfFiniteType s hs ⟨U, hU⟩ ⟨V, hV⟩ e) (_root_.GlobalTheory.lift_ringHom_of_scheme_lift B X s H U hU V hV e)
 
 end GlobalTheory.SmoothCrit

@@ -4,14 +4,20 @@ public import Development.AbelianVarietyTheory.Statements.DiscreteSeriesShifts.T
 public import Development.AbelianVarietyTheory.PublishedTheorems.BesselIntegrals.BesselXiIntegrable
 public import Formalism.HermitianCurvature.HerGenC
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CapelliParamMemIntAddHalf
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DiscreteSeriesCoefficientExpansionBoundBallStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DiscreteSeriesKFiniteCoeffCapelliEigenDecayStatement
+public import Development.AbelianVarietyTheory.Definitions.Jets.SideFam
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutBP
+public import Formalism.PeriodIntegrals.CapelliEig
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DiscreteSeriesCoefficientExpansionBoundBall
+public import Development.AbelianVarietyTheory.Definitions.Jets.SupWOfSup
+public import Development.AbelianVarietyTheory.Definitions.Jets.SumIoPrAlt
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DiscreteSeriesKFiniteCoeffCapelliEigenDecay
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.HcParamSubIntegral
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.InterlaceHalf
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MarginArithClosing
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NumOfStdHyp
+public import Formalism.HermitianCurvature.StatementTBB
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.PointwiseBoundCapelliEigenfunction
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NumericalFamilyShapeGaps
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.PointwiseBoundCapelliEigenfunctionStatement
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.RegularityAtPlaceOfSubadditive
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -49,7 +55,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.Jets.SideFam
 
 @[expose] public section
 
@@ -68,7 +73,7 @@ theorem thmBpAt_mono {P : M.Par} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerPr
 theorem pointwise_bound_discreteSeries : GlobalTheory.HCXi.BesselXiIntegrable → P5.ThmPActualCpt → ThmBpDS := by
   intro hXi hP Ch C₀ hC₀
   have hC : 0 ≤ 2 * |Ch| := by positivity
-  obtain ⟨C₄, Cc, heig⟩ := GlobalTheory.T.pointwiseBound_capelli_eigenfunction hXi hP (2 * |Ch|) (2 * |Ch| / 2 + 6) C₀ hC (by positivity) hC₀
+  obtain ⟨C₄, Cc, heig⟩ := _root_.GlobalTheory.BpEigen.pointwise_bound_eigenfunction hXi hP (2 * |Ch|) (2 * |Ch| / 2 + 6) C₀ hC (by positivity) hC₀
   obtain ⟨G₁, hnum⟩ := GlobalTheory.BpStdNum.num_of_stdHyp (C₀ + 10) (by positivity)
   obtain ⟨G₂, hgrid⟩ := GlobalTheory.StdGrid.std_grid
   obtain ⟨G₃, -, hmar⟩ := GlobalTheory.margin_arith_closing Cc C₀ hC₀
@@ -106,8 +111,8 @@ theorem pointwise_bound_discreteSeries : GlobalTheory.HCXi.BesselXiIntegrable �
   have hb : 1 ≤ b := by linarith
   have hgap := (hfam ν₀ (by omega)).2.2.1
   rw [← hν] at hgap
-  have hE := GlobalTheory.T.discreteSeries_KFinite_coeff_capelli_eigen_decay P.k P.r _ lam' (h / 2) R Wp Wq f hDS hgap hgok hf
-  have hexp := GlobalTheory.T.discreteSeries_coefficient_expansion_bound_ball' (2 * |Ch|) hC P Wp Wq p lam b bv ga h _ (2 * p₀ + n₀) ν₀ R f
+  have hE := _root_.GlobalTheory.CoefRegG.eigDec_of_isKFinCoefT P.k P.r _ lam' (h / 2) R Wp Wq f hDS hgap hgok hf
+  have hexp := _root_.GlobalTheory.discreteSeries_coefficient_expansion_bound_ball (2 * |Ch|) hC P Wp Wq p lam b bv ga h _ (2 * p₀ + n₀) ν₀ R f
     hN hN' hTb hTb' le_rfl (hν ▸ hDS) hf
   have hreg := Formalism.FourierDecayAlt.P.regularity_at_place p f b _ _ (by linarith) hexp
   refine thmBpAt_mono hb (le_max_left _ _) ?_

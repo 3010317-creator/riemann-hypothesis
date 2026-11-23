@@ -5,26 +5,35 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.Exi
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.SiegelKlingenDeligneRibet
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.PartialZetaFunctionalEquation
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasLevelStd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmLatticeDerivClassInvarianceOfHeckeStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.DefiningCoordinates
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.OmegaFactorization
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmLatticeDerivClassInvarianceOfHecke
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoordInEqOfJet
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinWeierstrassTorsionConjTransportStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ZetaActRefl
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsTrSelf
+public import ReciprocityTheory.ReductiveGroups.UnramifiedIntegrals.ModDefs
+public import Development.AbelianVarietyTheory.Definitions.Divisors.TorsTransport
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinWeierstrassTorsionConjTransport
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEquivCmTypeRealEmbeddings
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrimitiveRat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitZetaAct
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FractionalIdealNormEqFiniteIdeleModule
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaloisConjQExpansionFamilyDiagOneUnitStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeWeightTwoContinuationOfFunctionalEquationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertEisensteinExpansionOfLipschitzHeckeZetaStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertEisensteinValueDerivativesViaJetsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertFamilyWeierstrassTwistStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertLatticeTwistHasLevel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LipschitzFormulaTotallyRealPoissonStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaloisConjQExpansionFamilyDiagOneUnit
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeWeightTwoContinuationOfFunctionalEquation
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TraceDualDifferent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertEisensteinExpansionOfLipschitzHeckeZeta
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertEisensteinValueDerivativesViaJets
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertFamilyWeierstrassTwist
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LipschitzFormulaTotallyRealPoisson
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemMulMatSmulOneIff
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemOneIffIsIntegral
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PartialZetaDenominatorsCMFieldOfSiegelKlingenDelStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransportModularFamilyGL2ZModWeierstrassStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.ZetaValueIdeals
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PartialZetaDenominatorsCMFieldOfSiegelKlingenDel
+public import Mathlib.NumberTheory.ModularForms.EisensteinSeries.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TransportModularFamilyGL2ZModWeierstrass
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistLattice
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeierstrassEisensteinNonholomorphicIdentityStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeierstrassEisensteinNonholomorphicIdentity
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertLatticeTwistHasLevel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,7 +73,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ZetaActRefl
 
 @[expose] public section
 
@@ -221,7 +229,7 @@ theorem value_eq (hE : EisExp) (E : Type) [Field E] [NumberField E] [IsCMField E
   obtain ⟨⟨g, hg⟩, hD⟩ := hD
   obtain ⟨u, hu⟩ := GlobalTheory.LatConjOne.exists_list_count κ
   have e1 := ((hD g hg).2 κ u (fun i => by convert hu i)).1 S hS
-  have e2 := GlobalTheory.T.hilbertEisenstein_value_derivatives_via_jets hE E I φ e θ τ Λ L n s N g κ u Ch hf hs hN hL he hθ hn hmem hg hu
+  have e2 := _root_.GlobalTheory.HilbFam.eValue_derivs hE E I φ e θ τ Λ L n s N g κ u Ch hf hs hN hL he hθ hn hmem hg hu
   have hpi : (Real.pi : ℂ) ≠ 0 := by exact_mod_cast Real.pi_ne_zero
   have him : ((τ.im : ℝ) : ℂ) ≠ 0 := by exact_mod_cast τ.im_pos.ne'
   have hn0 : (n : ℂ) ^ (2 * s * Module.finrank ℚ (FR E)) ≠ 0 := pow_ne_zero _ (by exact_mod_cast hn.ne')
@@ -247,10 +255,10 @@ theorem value_eq (hE : EisExp) (E : Type) [Field E] [NumberField E] [IsCMField E
 theorem latConj : GlobalTheory.Published.SiegelKlingenDeligneRibet → GlobalTheory.Published.PartialZetaFunctionalEquation → GlobalTheory.Published.HilbertClassFieldJ →
     GlobalTheory.Published.EllipticMainTheoremCM → GlobalTheory.LatVal.LatConj := by
   intro hSK hPZ _ _
-  have hW2 := GlobalTheory.T.heckeWeightTwoContinuation_of_functionalEquation hPZ
-  have hS := GlobalTheory.T.cmLattice_derivClassInvariance_of_hecke hW2
-  have hZ := GlobalTheory.T.partialZetaDenominatorsCMField_of_siegelKlingenDeligneRibet hSK
-  have hE := GlobalTheory.T.hilbertEisensteinExpansion_of_lipschitz_hecke_zeta GlobalTheory.T.lipschitz_formula_totally_real_poisson hW2 hPZ
+  have hW2 := _root_.GlobalTheory.HeckeTwo.heckeWeightTwo_of_fe hPZ
+  have hS := _root_.GlobalTheory.DerivAtOrigin.statement hW2
+  have hZ := _root_.GlobalTheory.ZetaDenom.zetaDenominators hSK
+  have hE := _root_.GlobalTheory.HilbertEis.eisExp _root_.GlobalTheory.LipschitzTR.lipschitz hW2 hPZ
   intro K _ _ d δ ι hK2 hd hδ g t Λ₀ Λ₁ Ω₀ Ω₁ _ hTT E _ _ _ _ I _ φ s 𝔣 Q hD κ κ' hκ y S S' hSS hSS'
   obtain ⟨hU, hφ, hφK, hs, hb, hQ⟩ := hD
   have hf : 2 ≤ Module.finrank ℚ (FR E) := GlobalTheory.LatConjOne.two_le_finrank_of_unramFin E hU
@@ -318,7 +326,7 @@ theorem latConj : GlobalTheory.Published.SiegelKlingenDeligneRibet → GlobalThe
   obtain ⟨n, N, L₀, hn, hN, h2N, hLev, hmem⟩ := GlobalTheory.RoadE.exists_level E (algebraMap K E θ₀) (condQ 𝔣 Q) y 2 hc hθF two_pos
   haveI : NeZero N := ⟨hN.ne'⟩
   haveI : Fact (1 < N) := ⟨Nat.le_of_dvd hN h2N⟩
-  obtain ⟨hω₀, hω₁, h4, h6, hG, hA⟩ := GlobalTheory.T.eisenstein_weierstrass_torsion_conj_transport K d δ ι g t Λ₀ Λ₁ Ω₀ Ω₁ hd hδ hTT 1 c₁ τ₀ τ₁ hT₀ hT₁ _ _ rfl rfl
+  obtain ⟨hω₀, hω₁, h4, h6, hG, hA⟩ := _root_.GlobalTheory.WpFam.Transp.main K d δ ι g t Λ₀ Λ₁ Ω₀ Ω₁ hd hδ hTT 1 c₁ τ₀ τ₁ hT₀ hT₁ _ _ rfl rfl
   obtain ⟨A, hAt, hAw⟩ := hA N
   have hmem₁ := GlobalTheory.RoadE.ConjLat.twist_lattice K ι E (condQ 𝔣 Q) y t 𝔞 θ₀ (c₁ * θ₁) c₁ Λ₀ Λ₁ c₁ τ₀ τ₁ N A n L₀ hK2 hc hL0 hT₀ hθ₀ hinv hL1 hT₁
     (by simp [hθ₁]) (by simp) (by simpa using hAt) hn hLev hmem
@@ -376,13 +384,13 @@ theorem latConj : GlobalTheory.Published.SiegelKlingenDeligneRibet → GlobalThe
     (((Real.pi / τ₁.im : ℝ) : ℂ) / (2 * Real.pi * Complex.I) ^ 2 - wB N (vmul v A) τ₁) _ _
     (fun μ => hfun (2 * s) L₀ μ (wB N v) τ₀)
     (fun μ => hfun (2 * s) (HilbFam.twist N L₀ (A : Matrix (Fin 2) (Fin 2) (ZMod N))) μ (wB N (vmul v A)) τ₁)
-    (by rw [GlobalTheory.T.weierstrass_eisenstein_nonholomorphic_identity, GlobalTheory.T.weierstrass_eisenstein_nonholomorphic_identity, neg_div, neg_div, add_div, add_div, map_neg, map_add (f := _), hG, (hAw v).1])
+    (by rw [_root_.GlobalTheory.wB_nonhol_correction, _root_.GlobalTheory.wB_nonhol_correction, neg_div, neg_div, add_div, add_div, map_neg, map_add (f := _), hG, (hAw v).1])
     (fun μ => by
-      have h := GlobalTheory.T.transport_modularFamily_GL2ZMod_weierstrass g N N (wt (2 * s) μ) a A _
+      have h := _root_.GlobalTheory.WpFamGL.transport_GL g N N (wt (2 * s) μ) a A _
         (fun β => hfun (2 * s) (HilbFam.twist N L₀ ((β : GL (Fin 2) (ZMod N)) : Matrix (Fin 2) (Fin 2) (ZMod N)))
           (fun j => μ (σ.symm j)) (wB N (vmul v β))) τ₀ τ₁ _ _ hN dvd_rfl haz
-        (GlobalTheory.T.hilbert_family_weierstrass_twist hE (FR E) hf s N L₀ hs hLev v μ)
-        (fun β => GlobalTheory.T.galois_conj_qExpansion_family_diag_one_unit hE (FR E) hf s N L₀ hs hLev z hz g a μ _ v haz (fun i j hij => by
+        (_root_.GlobalTheory.HilbFam.isFam_hfun_GL hE (FR E) hf s N L₀ hs hLev v μ)
+        (fun β => _root_.GlobalTheory.HilbFam.GalFamily.qConj_family hE (FR E) hf s N L₀ hs hLev z hz g a μ _ v haz (fun i j hij => by
           have : j = σ i := by
             ext x
             have := (hij x).symm.trans (hσ i x)

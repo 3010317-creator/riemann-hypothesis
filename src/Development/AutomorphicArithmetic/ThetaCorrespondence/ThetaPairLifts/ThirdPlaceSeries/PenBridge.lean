@@ -5,9 +5,12 @@ public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLif
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.FamilyConstants
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsSelfDualStabilizerWithPrescribedSplitPlaceStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemIntegralGLSplitPlaceOfCarriesLatticeCompletioStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RelIndexPreimagePiEqProdStatement
+public import Mathlib.GroupTheory.Index
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RelIndexPreimagePiEqProd
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LevelsStatement
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.PlacesInjectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousLocHom
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.StepBeforeLastEqSSucc
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,8 +48,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Definitions.LatticeFrames.MiStarOfMid
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousLocHom
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.StepBeforeLastEqSSucc
 
 @[expose] public section
 
@@ -81,7 +82,7 @@ theorem pen_bridge_alt : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} {I :
     exact (KO _ _).mul_mem ((KO _ _).mul_mem ((KO _ _).inv_mem (hcKO i)) hx') (hcKO i)
   have hsd : IsSelfDualC ((I.rec7 l Z).sp.X j) (a.g.x j).L := (ha.x j (by have h2 : (I.rec7 l Z).R.m = B.R.m := rfl; omega)).sd
   have hinj : Function.Injective fun i => (J.G i).q.v := _root_.GlobalTheory.T.injective_q_v_of_reads W hW u a ha hTr t J hR
-  have hidx := GlobalTheory.T.relIndex_eq_prod_relIndex_of_surjective_pi (_root_.GlobalTheory.PenBridge.reductionHomAtLastLevel J j hj) U0 (J.A.U j (J.ι j α)) (fun i => KO (J.G i).k _)
+  have hidx := _root_.GlobalTheory.relIndex_preimage_pi_eq_prod (_root_.GlobalTheory.PenBridge.reductionHomAtLastLevel J j hj) U0 (J.A.U j (J.ι j α)) (fun i => KO (J.G i).k _)
     (fun i => ((GlobalTheory.PenVol.cosStab (((J.G i).T (J.E i).δ (J.E i).tame (J.E i).η).lev ((J.G i).s + 1) 0 rfl).J (GlobalTheory.StepData.box _ ((J.G i).ϖ ^ (J.E i).M)) ((J.E i).cos (cast (congrArg (J.E i).Ch (show j = (J.G i).s + 1 by have h1 : (J.G i).s + 1 + 1 = B.R.m := (J.G i).hs; have h2 : (I.rec7 l Z).R.m = B.R.m := rfl; omega)) (α i))))).comap (MulAut.conj (c i)).toMonoidHom) hJK ?img ?onto ?mem
   · rw [hidx]
     refine Finset.prod_congr rfl fun i _ => ?_

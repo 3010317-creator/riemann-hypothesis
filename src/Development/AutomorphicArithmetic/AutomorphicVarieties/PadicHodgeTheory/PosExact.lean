@@ -4,20 +4,22 @@ public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeT
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BlochKatoRightExact
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineAndJumps
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineCoboundaryLiftStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamSubrepQuotientAndStrictness
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBlochKatoCocycleOfCrysDeRhamPairStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsSumOfIsCrys
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FontaineBoundsCrystallineDeRhamConcreteRings
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TensorFundamentalExactSequenceCrystallineStatement
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.CharFil
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.Z1fMap
+public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ImportsMoreExtra
+public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.PhiMul
+import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
+import Formalism.SharpRestriction.LevelLetterCocycles.LocCoh
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineCoboundaryLift
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamSubrepQuotientAndStrictness
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBlochKatoCocycleOfCrysDeRhamPair
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TensorFundamentalExactSequenceCrystalline
 import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.IsCrField
 import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.IsCrIff
 import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.IsCrysOfInertia
 import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.OpenField
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.Z1fMap
-public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ImportsMoreExtra
-public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.PhiMul
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -353,7 +355,7 @@ theorem noFix_char_field (K : FinExt l) (κ : ↥(GK K) →* Eˣ) (hκ : Continu
     intro y hy hφ
     have h1 := hfil (iota_mem K _ ((mem_Dcris _ _ y).2 fun g => by rw [← actC_eq]; exact hy g))
     rw [phC_eq K] at hφ
-    obtain ⟨v, rfl⟩ := (GlobalTheory.T.tensor_fundamental_exact_sequence_crystalline l _ _ T K E E).2 y hφ
+    obtain ⟨v, rfl⟩ := (_root_.GlobalTheory.FundSeq.tensor_fundamental_sequence l _ _ T K E E).2 y hφ
       (GlobalTheory.DRFil.FilV_antitone ((PP l).PD K) (show (0 : ℤ) ≤ 1 by omega) h1)
     by_contra hne
     have hv : v ≠ 0 := by rintro rfl; exact hne (zero_tmul _ _)
@@ -608,15 +610,15 @@ theorem core_surj (hc : ∀ x, Continuous fun g => ρ g x) (hc' : ∀ x, Continu
   letI : Module ℤ_[l] V' := Module.compHom V' (algebraMap ℤ_[l] ℚ_[l])
   haveI : IsScalarTower ℤ_[l] ℚ_[l] V' := IsScalarTower.of_algebraMap_smul fun _ _ => rfl
   obtain ⟨hdr', hl2⟩ := lift_dR T K ℚ_[l] ρ ρ' f hf hs hdr
-  obtain ⟨-, d₂', hd2, hfil⟩ := GlobalTheory.T.crystalline_coboundary_lift l _ _ T K ℚ_[l] ℤ_[l] GlobalTheory.Published.BlochKato.goodO_padicInt
+  obtain ⟨-, d₂', hd2, hfil⟩ := _root_.GlobalTheory.CobCrisLift.coboundary_lift l _ _ T K ℚ_[l] ℤ_[l] GlobalTheory.Published.BlochKato.goodO_padicInt
     { V := V', ρ := ρ', cont := hc' } hdr' c' x' hx'
   obtain ⟨d₂, hd₂, e₂⟩ := hl2 _ hd2
-  obtain ⟨x, y, c, hy, hx1, hx2, hc, hcx⟩ := GlobalTheory.T.exists_blochKato_cocycle_of_crys_deRham_pair l _ _ T K ℚ_[l] ℤ_[l]
+  obtain ⟨x, y, c, hy, hx1, hx2, hc, hcx⟩ := _root_.GlobalTheory.FundDel.connecting_cocycle l _ _ T K ℚ_[l] ℤ_[l]
     GlobalTheory.Published.BlochKato.goodO_padicInt { V := V, ρ := ρ, cont := hc } 0 (zero_mem _) d₂ hd₂
   dsimp only at *
   refine ⟨c, hc, ?_⟩
   rw [← hx2, map_sub, map_ιV] at e₂
-  obtain ⟨v, hv⟩ := (GlobalTheory.T.tensor_fundamental_exact_sequence_crystalline l _ _ T K ℚ_[l] V').2
+  obtain ⟨v, hv⟩ := (_root_.GlobalTheory.FundSeq.tensor_fundamental_sequence l _ _ T K ℚ_[l] V').2
     (AlgebraTensorModule.map f (LinearMap.id : Bcr l →ₗ[ℚ_[l]] Bcr l) x - x')
     (by rw [map_sub, hφ, ← map_φVB, ← sub_eq_zero.1 hx1])
     (by

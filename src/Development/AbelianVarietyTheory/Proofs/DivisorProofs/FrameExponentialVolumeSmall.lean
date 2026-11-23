@@ -2,10 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SemiposAtOfPositive
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.IsOrth
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeepCongruenceElementSeparatesChartBallThickFramStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModelWeightGapL1CardBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualAndPrincipalCongruenceOrbitsOfGoodLevelStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitriangularChartMemDomainSmallBallStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSelfDualTr
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeepCongruenceElementSeparatesChartBallThickFram
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModelWeightGapL1CardBound
+public import Formalism.LocalToGlobal.ProjectiveLattices.PetersonNormSubspace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualAndPrincipalCongruenceOrbitsOfGoodLevel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitriangularChartMemDomainSmallBall
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.ArakelovInstances.FirstMinimumInvariantContinuousPos
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -40,7 +43,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.ArakelovInstances.FirstMinimumInvariantContinuousPos
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.ExtFStatementPfA
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.FundSetPf
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.KaUnfoldPfB
@@ -59,7 +61,7 @@ open ReciprocityTheory.ChartRestriction.G.AR.Up ReciprocityTheory.ChartRestricti
 
 theorem cpt_mem_dom_small : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (X : Data E r)
     (x : Frame X.Ψ r) (z : ReciprocityTheory.L2DbarEstimates.V (nd X)), IsOrth X x → ‖z‖ ≤ 1 / (100 * (r : ℝ) ^ 2) →
-    cpt X x z ∈ X.dom := GlobalTheory.T.unitriangularChart_mem_domain_small_ball
+    cpt X x z ∈ X.dom := _root_.GlobalTheory.ChartDomain.cpt_mem_dom_of_norm_le
 
 theorem ball_injects : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E)
     (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (σ : c.F →+* ℂ) (r : ℕ) (U : Unf Xo c σ r),
@@ -70,7 +72,7 @@ theorem ball_injects : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
       ‖z'‖ ≤ 1 / (100 * (r : ℝ) ^ 2) → ∀ b ∈ Bor (U.X k).Ψ r,
       lact γ (cpt (U.X k) x z) = rmul (cpt (U.X k) x z') b → γ = 1 := by
   intro E _ _ _ H Dw l Xo c σ r U hσ hU hl hp hq k x hx hM γ hγ z z' hz hz' b hb he
-  obtain ⟨hsd, horb⟩ := GlobalTheory.T.selfDual_and_principalCongruence_orbits_of_goodLevel E H Dw l Xo c σ r U hσ hU hl hp hq k
+  obtain ⟨hsd, horb⟩ := _root_.GlobalTheory.EqCovol.selfDual_and_congr_of_isUnf E H Dw l Xo c σ r U hσ hU hl hp hq k
   have hwd : cpt (U.X k) x z ∈ (U.X k).dom := cpt_mem_dom_small E r (U.X k) x z hx hz
   obtain ⟨γ', hγ'U, hγ'c, b', hb', he'⟩ := horb γ hγ _ hwd
   have h1 : lact γ' (cpt (U.X k) x z) =
@@ -78,7 +80,7 @@ theorem ball_injects : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     have e1 := congrArg (fun w => rmul w (ExtFPf.invF (U.X k) b')) (he'.symm.trans he)
     simp only [ExtFPf.rmul_assoc, ExtFPf.rmul_invF _ hb', ExtFPf.rmul_oneF] at e1
     exact e1
-  have hγ'1 : γ' = 1 := GlobalTheory.T.deep_congruence_element_separates_chart_ball_thick_frame E r (U.X k) l.M' x hsd hx hM γ' hγ'U hγ'c z z' hz hz' _
+  have hγ'1 : γ' = 1 := _root_.GlobalTheory.ThickSep.deep_cong_chart_sep E r (U.X k) l.M' x hsd hx hM γ' hγ'U hγ'c z z' hz hz' _
     (ExtFPf.mul_mem _ hb (ExtFPf.invF_mem _ hb')) h1
   subst hγ'1
   rw [FundSetPf.lact_one] at he'
@@ -93,7 +95,7 @@ theorem modelWt_shape : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     (∀ τ (a b : Fin r), (a : ℕ) = 0 → (b : ℕ) = r - 1 →
       g ≤ (modelWt U (wtOf Dw u1 0) k τ b : ℝ) - modelWt U (wtOf Dw u1 0) k τ a) ∧
     (∑ τ, ∑ a, |(modelWt U (wtOf Dw u1 0) k τ a : ℝ)|) = l1 u1 ∧
-    (U.X k).Ψ.card = Nat.card (Psi H) := GlobalTheory.T.model_weight_gap_l1_card_bound
+    (U.X k).Ψ.card = Nat.card (Psi H) := _root_.GlobalTheory.ModelWtGap.model_weight_gap_l1_card
 
 theorem orth_transfer : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (X : Data E r)
     (la : Wt X.Ψ r) (y : Frame X.Ψ r), y ∈ X.dom → ∃ x, IsOrth X x ∧ X.firstMinimumSq x = X.firstMinimumSq y ∧

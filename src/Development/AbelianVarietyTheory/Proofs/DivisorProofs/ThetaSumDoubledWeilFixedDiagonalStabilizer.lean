@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicModuleNormRationalUnitEqOneStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasSumDiagonalIntegralRationalHeisenbergStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicModuleNormRationalUnitEqOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDiagonalLagrangianInvariantForm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasSumDiagonalIntegralRationalHeisenberg
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationPreservesSchwartz
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -45,7 +46,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDiagonalLagrangianInvariantForm
 
 @[expose] public section
 
@@ -228,7 +228,7 @@ theorem GlobalTheory.ThetaSiegelRat.thetaSum_omd_of_fix_diag : ∀ (F E : Type) 
       Units.ext (by rw [hdett]; rfl)
     rw [e]
     exact hχ.2 _
-  have hmod := GlobalTheory.T.adelicModule_norm_rationalUnit_eq_one F E (Matrix.GeneralLinearGroup.det t) _ hdett
+  have hmod := _root_.GlobalTheory.NormModule.modu_norm_rat F E (Matrix.GeneralLinearGroup.det t) _ hdett
 
   have hdiag : ∀ (y : Matrix (Fin a) (Fin b) (AE F E)), ∀ φ' ∈ schA F (κ ⊕ κ),
       GlobalTheory.DiagForm.lDiag F κ (dd.rho ψ (Matrix.fromCols y y) φ') = GlobalTheory.DiagForm.lDiag F κ φ' := by
@@ -308,7 +308,7 @@ theorem GlobalTheory.ThetaSiegelRat.thetaSum_omd_of_fix_diag : ∀ (F E : Type) 
             (dd.rho ψ (Matrix.fromCols (incM F (x * (P - R)ᵀ)) (0 : Matrix (Fin a) (Fin b) (AE F E))) (omd p φ)) :=
           hdiag _ _ (GlobalTheory.HeisSchA.schr_mem_schA ψ hψ _ _ (hS.pres p φ hφ))
 
-  obtain ⟨c, hc0, hc⟩ := GlobalTheory.T.hasSum_diagonalIntegral_rationalHeisenberg F ψ hψ κ
+  obtain ⟨c, hc0, hc⟩ := _root_.GlobalTheory.ThetaRatSum.hasSum_lDiag_schr_rat F ψ hψ κ
   have h1 := hc φ hφ
   have h3 := (e.hasSum_iff).mpr (hc (omd p φ) (hS.pres p φ hφ))
   have h4 : HasSum (fun uv : (κ → F) × (κ → F) => GlobalTheory.DiagForm.lDiag F κ (schr ψ

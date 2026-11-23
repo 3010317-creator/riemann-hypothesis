@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsWeakOfDatum
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdelicZakThetaExistsUniqueStatement
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AnnihilationCreationPeriodCoordinatesStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsThetaEqOfTranslationInvariantMultipleStatement
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.Fischer
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsThetaEqOfTranslationInvariantMultiple
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.GaussRMulFactor
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RealPeriodMapHomeomorphRiemannFormDensity
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RealPointsClassicalModelRealVectorSpaceStatement
@@ -162,7 +163,7 @@ theorem GlobalTheory.Ker.exists_test_of_fock : ∀ (D : D7) (S T : HSp D) (C : C
     exact Finset.sum_congr rfl fun σ _ => hone ζ σ _
   obtain ⟨-, hext, hth⟩ := GlobalTheory.T.thetaFunction_space_heisenberg_laws D S T C
   obtain ⟨-, -, -, hfin, -, N, hN, hlev⟩ := hth f hf
-  obtain ⟨φ, hφ, hθ⟩ := GlobalTheory.T.exists_theta_eq_of_translation_invariant_multiple D.host.E T.rank C.X C.g C.q0 C.hr C.bas C.idx S.rank C.sympl C.even _ hx N hN
+  obtain ⟨φ, hφ, hθ⟩ := _root_.GlobalTheory.Ker.Onto.exists_thA_eq D.host.E T.rank C.X C.g C.q0 C.hr C.bas C.idx S.rank C.sympl C.even _ hx N hN
     Φ hC (by
       intro y hy v
       have h1 := hfin (-(N • y)) (R v) (hR v).1

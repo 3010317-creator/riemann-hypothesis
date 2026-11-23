@@ -3,7 +3,9 @@ module
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.HeckeGaloisCriteria.ExtraTr
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.BoundAtTwoThreeFamily
 public import Formalism.SharpRestriction.GlobalTheoremInputs
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleParametersFamilyConstStatement
+public import Development.AutomorphicArithmetic.ResidueCharacters.TwistedPlaces
+public import Formalism.SharpRestriction.ParConsts
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleParametersFamilyConst
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.HeckeGaloisCriteria.EvPowLeExp
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.HeckeGaloisCriteria.IsHeckeGaloisIff
 import Mathlib.Algebra.Order.Floor.Extended
@@ -78,7 +80,7 @@ theorem linkN_of_gd (Fm : FamP eps) (c : ∀ x (i : Fm.Ix x), CutD (Fm.D x i))
     (hc : ∀ x, Fm.x1 < x → ∀ i, (c x i).Good ∧ GlobalTheory.NLink.MultLe (Fm.L x i) ∧ TwistedPlaces.adm3 (Fm.L x i))
     (h : LinkN (gd Fm c)) : LinkN Fm := by
   obtain ⟨C, x0, h⟩ := h
-  obtain ⟨C1, x1, hC1, hpar⟩ := GlobalTheory.T.admissible_parameters_family_const Fm
+  obtain ⟨C1, x1, hC1, hpar⟩ := _root_.GlobalTheory.NLink.admissible_parameters_design_family Fm
   obtain ⟨i0⟩ := Fm.Ix_zero
   have he : 0 < eps := Fm.L_eps 0 i0 ▸ (Fm.L 0 i0).sc.eps_pos
   obtain ⟨x2, hev⟩ := ev_pow_le_exp C1 eps he

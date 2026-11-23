@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.OfDerivationFnOn
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.HomBaseChangeBijectiveOfLeNilradical
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsLiftOneParameterQuotientTorusStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSmoothTorusQuotientOfGoodOpenCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SplitTorusImageFactorQuotientGoodOpenStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsLiftOneParameterQuotientTorus
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSmoothTorusQuotientOfGoodOpenCover
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SplitTorusImageFactorQuotientGoodOpen
 import Mathlib.Algebra.AffineMonoid.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -108,23 +108,23 @@ theorem exists_quot_no_cocharacter : ∀ (k : Type) [Field k] [IsAlgClosed k] (G
     (i : splitTorus (Sp k) X ⟶ G), IsMonHom i ∧ (∀ x : G.left, ∃ V, x ∈ V ∧ GoodOpen i V) ∧ Module.finrank ℤ X = n
   have hb : ∀ n, P n → n ≤ g := by
     rintro _ ⟨X, _, _, _, i, hi, hV, rfl⟩
-    obtain ⟨B, _, q, -, hd⟩ := GlobalTheory.T.exists_smooth_torus_quotient_of_goodOpen_cover k G hG X i hi hV
+    obtain ⟨B, _, q, -, hd⟩ := _root_.GlobalTheory.TorusQuotientGlue.main k G hG X i hi hV
     obtain ⟨a, -, ha⟩ := hd g hg
     omega
   obtain ⟨n₀, h₀⟩ : ∃ n, P n := by
-    obtain ⟨X', _, _, _, i', ρ, h1, -, -, -, hV⟩ := GlobalTheory.T.splitTorus_image_factor_quotient_goodOpen k G hG PUnit 1
+    obtain ⟨X', _, _, _, i', ρ, h1, -, -, -, hV⟩ := _root_.GlobalTheory.TorusImage.exists_factor_goodOpen k G hG PUnit 1
       (inferInstanceAs (IsMonHom (toUnit _ ≫ η[G])))
     exact ⟨_, X', _, ‹_›, ‹_›, i', h1, hV, rfl⟩
   obtain ⟨X, _, _, _, i, hi, hV, hn⟩ : P (Nat.findGreatest P g) := Nat.findGreatest_spec (hb _ h₀) h₀
-  obtain ⟨B, _, q, hq, -⟩ := GlobalTheory.T.exists_smooth_torus_quotient_of_goodOpen_cover k G hG X i hi hV
+  obtain ⟨B, _, q, hq, -⟩ := _root_.GlobalTheory.TorusQuotientGlue.main k G hG X i hi hV
   refine ⟨X, _, inferInstance, inferInstance, B, _, i, q, hq, fun f hf => ?_⟩
-  obtain ⟨j, hj, rfl⟩ := GlobalTheory.T.exists_lift_oneParameter_quotient_torus k G hG X B i q hq f hf
+  obtain ⟨j, hj, rfl⟩ := _root_.GlobalTheory.SS.exists_lift_oneParameter k G hG X B i q hq f hf
   obtain ⟨-, hqm, -, -, -, hpb, -⟩ := hq
   have : Mono (η[B]) := ⟨fun a b _ => toUnit_unique a b⟩
   have : Mono i := hpb.mono_fst_of_mono
   let φ : splitTorus (Sp k) (X × ULift.{0} ℤ) ⟶ G :=
     (torusMap _ (AddMonoidHom.inl X (ULift.{0} ℤ)) ≫ i) * (torusMap _ (AddMonoidHom.inr X (ULift.{0} ℤ)) ≫ j)
-  obtain ⟨X', _, _, _, i', ρ, h1, h2, -, h3, hV'⟩ := GlobalTheory.T.splitTorus_image_factor_quotient_goodOpen k G hG (X × ULift.{0} ℤ) φ
+  obtain ⟨X', _, _, _, i', ρ, h1, h2, -, h3, hV'⟩ := _root_.GlobalTheory.TorusImage.exists_factor_goodOpen k G hG (X × ULift.{0} ℤ) φ
     (by simp only [φ]; rw [Hom.mul_def]; infer_instance)
   have hr : Module.finrank ℤ X' ≤ Module.finrank ℤ X := by
     have hP : P (Module.finrank ℤ X') := ⟨X', _, ‹_›, ‹_›, i', h1, hV', rfl⟩

@@ -1,15 +1,19 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdIPowLe
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFiniteProductOrientedBoundedPrismsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsPrismLocalizationAwayOfGeneratedStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InvertibleIdealPrincipalOnZariskiCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsPrismCoverBreuilKisinCoproductInlStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsPrismCoverOfStableMaximalMapNeTopStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsStablePrismHomCompStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsStablePrismHomOfFiniteProductComponentsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsStablePrismHomOfLocalizationAwayStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyBreuilKisinPrismCoproductStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.InvertibleSpanSingleton
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFiniteProductOrientedBoundedPrisms
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.DeltaStructureOfWittLengthTwoSection
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIsPrismLocalizationAwayOfGenerated
+public import Mathlib.RingTheory.PicardGroup
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InvertibleIdealPrincipalOnZariskiCover
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsPrismCoverBreuilKisinCoproductInl
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsPrismCoverOfStableMaximalMapNeTop
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsStablePrismHomComp
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsStablePrismHomOfFiniteProductComponents
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsStablePrismHomOfLocalizationAway
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyBreuilKisinPrismCoproduct
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +53,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.DeltaStructureOfWittLengthTwoSection
 
 @[expose] public section
 
@@ -106,26 +109,26 @@ theorem map_ne_top_of_comp {l : ℕ} {R : Type} [CommRing R] {B Q C : Obj l R} (
 theorem exists_cover_receiving_bk : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (B : Obj l ↥(OL K)),
     ∃ (C : Obj l ↥(OL K)) (h : Hom B C), Nonempty (Hom bk.prism C) ∧ Cover h := by
   intro l _ K bk B
-  obtain ⟨n, s, t, hspan, hst⟩ := GlobalTheory.T.invertible_ideal_principal_on_zariski_cover B.A B.I B.inv
+  obtain ⟨n, s, t, hspan, hst⟩ := _root_.GlobalTheory.BSP.invertible_ideal_principal_on_cover B.A B.I B.inv
   have hga : ∀ i, GenAway B (s i) (t i) := fun i => ⟨(hst i).1, fun x hx => by
     obtain ⟨c, hc⟩ := (hst i).2 x hx
     exact ⟨1, by rw [pow_one, hc]; exact Ideal.mul_mem_left _ _ (Ideal.mem_span_singleton_self _)⟩⟩
-  choose L h hL hLI using fun i => GlobalTheory.T.exists_isPrismLocalizationAway_of_generated l (↥(OL K)) B (s i) (t i) (hga i)
+  choose L h hL hLI using fun i => _root_.GlobalTheory.BSP.exists_isLoc l (↥(OL K)) B (s i) (t i) (hga i)
   have hfr : ∀ i, ∃ p, IsFrame bk (L i) ((h i).f (t i)) p := fun i => by
     obtain ⟨p, hp⟩ := Ideal.Quotient.mk_surjective ((L i).str (bk.str.symm (Ideal.Quotient.mk _ X)))
     exact ⟨p, hLI i, hp⟩
   choose p hp using hfr
-  have En : ∀ i, Env bk (L i) ((h i).f (t i)) (p i) := fun i => (GlobalTheory.T.nonempty_breuilKisinPrismCoproduct l K bk (L i) _ _ (hp i)).some
-  obtain ⟨Q, π, hbij, -, huniv⟩ := GlobalTheory.T.exists_finite_product_oriented_boundedPrisms l (↥(OL K)) n (fun i => (En i).Q) fun i => ⟨_, (En i).I_eq⟩
+  have En : ∀ i, Env bk (L i) ((h i).f (t i)) (p i) := fun i => (_root_.GlobalTheory.BSP.nonempty_env l K bk (L i) _ _ (hp i)).some
+  obtain ⟨Q, π, hbij, -, huniv⟩ := _root_.GlobalTheory.Prism.finite_product_oriented l (↥(OL K)) n (fun i => (En i).Q) fun i => ⟨_, (En i).I_eq⟩
   obtain ⟨c, hc⟩ := huniv B fun i => (En i).inl.comp (h i)
   obtain ⟨g, -⟩ := huniv bk.prism fun i => (En i).inr
   refine ⟨Q, c, ⟨g⟩, ?_⟩
-  have hcov : ∀ i, Cover (En i).inl := fun i => GlobalTheory.T.isPrismCover_breuilKisinCoproduct_inl l K bk (L i) _ _ (hp i) (En i)
+  have hcov : ∀ i, Cover (En i).inl := fun i => _root_.GlobalTheory.BSP.env_inl_cover l K bk (L i) _ _ (hp i) (En i)
   have hstab : ∀ i, Stable ((π i).comp c) := fun i => by
     rw [hc i]
-    exact GlobalTheory.T.isStablePrismHom_comp l _ B (L i) (En i).Q (h i) (En i).inl
-      (GlobalTheory.T.isStablePrismHom_of_localizationAway l _ B (L i) (s i) (h i) ⟨t i, (hga i).1, (hga i).2⟩ (hL i)) (hcov i).stable
-  refine GlobalTheory.T.isPrismCover_of_stable_maximal_map_ne_top l _ B Q c (GlobalTheory.T.isStablePrismHom_of_finite_product_components l _ n _ (fun i => ⟨_, (En i).I_eq⟩) Q π hbij B c hstab) ?_
+    exact _root_.GlobalTheory.BSP.stable_comp l _ B (L i) (En i).Q (h i) (En i).inl
+      (_root_.GlobalTheory.BSP.stable_of_isLoc l _ B (L i) (s i) (h i) ⟨t i, (hga i).1, (hga i).2⟩ (hL i)) (hcov i).stable
+  refine _root_.GlobalTheory.BSP.cover_of_stable_of_map_ne_top l _ B Q c (_root_.GlobalTheory.ProdStable.prodStable l _ n _ (fun i => ⟨_, (En i).I_eq⟩) Q π hbij B c hstab) ?_
   intro 𝔪 hm
   obtain ⟨i, hi⟩ : ∃ i, s i ∉ 𝔪 := by
     by_contra hall

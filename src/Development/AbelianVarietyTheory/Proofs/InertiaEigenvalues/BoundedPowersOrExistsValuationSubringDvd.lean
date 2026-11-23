@@ -2,7 +2,7 @@ module
 
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Mathlib.RingTheory.Valuation.ValuationSubring
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsValuationSubringAlgClosedNotIsUnitStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsValuationSubringAlgClosedNotIsUnit
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -133,7 +133,7 @@ theorem bounded_powers_or_exists_valuationSubring_dvd :
     refine pow_dvd_pow_mul_pow_of_homogeneous_relation (u ^ M) x q.coeff _ N hc ?_ j
     simpa only [mul_assoc] using hN'
   · right
-    obtain ⟨L, _, _, V, f, hf1, hf2⟩ := GlobalTheory.T.exists_valuationSubring_algClosed_not_isUnit S _ hS
+    obtain ⟨L, _, _, V, f, hf1, hf2⟩ := _root_.GlobalTheory.exists_valuationSubring_not_isUnit_and_nonZeroDivisors_ne_zero S _ hS
     refine ⟨L, inferInstance, inferInstance, V, f.comp (algebraMap R S), ?_, hf1, ?_⟩
     · refine hf2 _ (mem_nonZeroDivisors_iff_right.2 fun s hs => ?_)
       have h1 : (s : T) * algebraMap R T u = 0 := congrArg Subtype.val hs

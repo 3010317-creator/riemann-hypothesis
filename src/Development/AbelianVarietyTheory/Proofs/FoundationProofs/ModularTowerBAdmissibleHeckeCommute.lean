@@ -1,10 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeLetterPreservesBasisSet
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DiamondMatrixMulCommModGamma1CapGamma0Statement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeStableCongruenceConjDiamondMatrixStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HermiteRightFactorOfPrimeDvdDetStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.Sl2CoprimeFactorizationUniqueStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.Letter
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DiamondMatrixMulCommModGamma1CapGamma0
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeStableCongruenceConjDiamondMatrix
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HermiteRightFactorOfPrimeDvdDet
+public import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.Sl2CoprimeFactorizationUnique
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,20 +69,20 @@ local notation "M₂" => Matrix (Fin 2) (Fin 2) ℤ
 theorem herm (p : ℕ) (hp : p.Prime) (m : M₂) (h : (p : ℤ) ∣ m.det) :
     (∃ y : M₂, m = y * !![(p : ℤ), 0; 0, 1]) ∨
       ∃ k : ℕ, k < p ∧ ∃ y : M₂, m = y * !![1, (k : ℤ); 0, (p : ℤ)] :=
-  GlobalTheory.T.hermite_right_factor_of_prime_dvd_det p hp m h
+  _root_.GlobalTheory.hermite_right_factor_prime_det p hp m h
 
 theorem bezout (a c : ℤ) (hac : IsCoprime a c) (hc : c ≠ 0) (y y' β β' : M₂)
     (hy : y.det = a) (hy' : y'.det = a) (hβ : β.det = c) (hβ' : β'.det = c) (h : y * β = y' * β') :
     ∃ g : SL(2, ℤ), (g : M₂) * β = β' :=
-  GlobalTheory.T.exists_sl2_mul_eq_of_coprime_det_factorization a c hac hc y y' β β' hy hy' hβ hβ' h
+  _root_.GlobalTheory.sl2_right_factor_of_coprime_factorizations a c hac hc y y' β β' hy hy' hβ hβ' h
 
 theorem PP_conj (N l d : ℕ) (σ : SL(2, ℤ)) (r : M₂) (hσ : IsDiam N l d σ) (hr : PP N l r) :
     PP N l ((σ : M₂) * r * ((σ⁻¹ : SL(2, ℤ)) : M₂)) :=
-  GlobalTheory.T.heckeStableCongruence_conj_diamondMatrix N l d σ r hσ hr
+  _root_.GlobalTheory.KZ.StabHecke.congruenceCondition_conj_diamond N l d σ r hσ hr
 
 theorem diam_comm (N l d d' : ℕ) (σ σ' : SL(2, ℤ)) (hσ : IsDiam N l d σ) (hσ' : IsDiam N l d' σ') :
     ∃ g : SL(2, ℤ), g ∈ Gam N l ∧ σ' * σ = g * (σ * σ') :=
-  GlobalTheory.T.diamondMatrix_mul_comm_mod_gamma1CapGamma0 N l d d' σ σ' hσ hσ'
+  _root_.GlobalTheory.KZ.isDiam_mul_comm_mod_Gam N l d d' σ σ' hσ hσ'
 
 theorem PP_cancel {N l : ℕ} {y β : M₂} (h : PP N l (y * β)) (hβ : PP N l β) : PP N l y := by
   obtain ⟨a1, a2, a3, a4⟩ := h

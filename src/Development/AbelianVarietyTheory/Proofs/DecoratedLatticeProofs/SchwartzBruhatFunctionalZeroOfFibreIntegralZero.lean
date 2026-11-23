@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.MatrixMeasurableSpace
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsFinsetIntegralScaledBoxPiCosetRepsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsIntegralScaledBoxPiSupersetOfIsCompactStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralBoxInvariantEqMeasureRealMulSumRepsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SumIntegralScaledBoxPiCosetRepsShiftInvariantStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FourierTransformInversionLocalFieldPi
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsFinsetIntegralScaledBoxPiCosetReps
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsIntegralScaledBoxPiSupersetOfIsCompact
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralBoxInvariantEqMeasureRealMulSumReps
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SumIntegralScaledBoxPiCosetRepsShiftInvariant
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSchwartzBruhatConvolutionLocalFieldPower
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -80,8 +81,8 @@ theorem map_eq_zero_of_translation_invariant_of_fibre_integral_eq_zero : ∀ (k 
   obtain ⟨r, hr⟩ := exists_box_subset hU
   have hK : IsCompact ((fun x : (I₀ → k) × (I₁ → k) × (I₂ → k) => x.2.2) '' tsupport Φ.1) :=
     Φ.2.2.isCompact.image (by fun_prop)
-  obtain ⟨R, hrR, hKR⟩ := GlobalTheory.T.exists_integralScaledBoxPi_superset_of_isCompact k I₂ _ hK r
-  obtain ⟨S, hSR, hS⟩ := GlobalTheory.T.exists_finset_integralScaledBoxPi_coset_reps k I₂ r R hrR
+  obtain ⟨R, hrR, hKR⟩ := _root_.GlobalTheory.exists_box_superset_of_isCompact k I₂ _ hK r
+  obtain ⟨S, hSR, hS⟩ := _root_.GlobalTheory.BoxReps.exists_finset_box_reps k I₂ r R hrR
   have h0R : (0 : I₂ → k) ∈ box I₂ R := fun i _ => by simp [cball]
   have h0r : (0 : I₂ → k) ∈ box I₂ r := fun i _ => by simp [cball]
   have hSne : S.Nonempty := by
@@ -112,8 +113,8 @@ theorem map_eq_zero_of_translation_invariant_of_fibre_integral_eq_zero : ∀ (k 
       simp [T]
     rw [hval]
     by_cases ha : a ∈ box I₂ R
-    · rw [GlobalTheory.T.sum_integralScaledBoxPi_coset_reps_shift_invariant k I₂ r R S hSR hS (fun y => Φ.1 (x₀, x₁, y)) hF1 a ha]
-      have h := GlobalTheory.T.integral_box_invariant_eq_measureReal_mul_sum_reps k ν hν I₂ r R S hSR hS (fun y => Φ.1 (x₀, x₁, y)) hF1 hF2
+    · rw [_root_.GlobalTheory.CosetSumShift.sum_shift k I₂ r R S hSR hS (fun y => Φ.1 (x₀, x₁, y)) hF1 a ha]
+      have h := _root_.GlobalTheory.SplitWeil.FourierPi.integral_eq_measureReal_box_mul_sum k ν hν I₂ r R S hSR hS (fun y => Φ.1 (x₀, x₁, y)) hF1 hF2
       rw [hΦ x₀ x₁] at h
       have h' := (mul_eq_zero.mp h.symm).resolve_left (by exact_mod_cast hvol)
       simpa using h'

@@ -1,11 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsLogMult
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.ExistsRoundedDownDivisorStatement
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.MultiplierIdealEffectiveBoundaryStatement
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.MultiplierIdealIndependentStatement
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.MultiplierVanishingNefTwistAmpleStatement
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.PushforwardIdealRegularity
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsClosedImmersionGenericPoint
+public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.ExistsRoundedDownDivisor
+public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.MultiplierIdealEffectiveBoundary
+public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.MultiplierIdealIndependent
+public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.MultiplierVanishingNefTwistAmple
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsEqnIffGeneratesAtInv
+public import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.HdimEqZeroOfSubsingleton
+public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.IsGloballyGeneratedIffGeneratingSections
+public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsValuationSubringDominatingSubring
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PushforwardIdealRegularity
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,11 +62,11 @@ theorem nadel_of_logRes : ∀ (k : Type) [Field k] [CharZero k] (X : Scheme.{0})
   intro k _ _ X _ _ _ p n hp hdim Δ η m G Y _ _ s _ K B hΔ hLM hR N M T hN hMlb r hT hr hcls hMnef
     a Fd A hA hFd J hJ i hi
   haveI := hR.smooth
-  obtain ⟨F, hF, -⟩ := GlobalTheory.T.exists_rounded_down_divisor k Y (s ≫ p) n hR.proj (pullCart s G - m • K) m
-  have hJ' := (GlobalTheory.T.multiplier_ideal_independent k X p n hp η m G Y s K B F hLM.ne_zero hLM.pos hR hF J).1 hJ
-  obtain ⟨e⟩ := GlobalTheory.T.pushforward_ideal_regularity X Y s hR.bir (-F) J hJ'
-    (GlobalTheory.T.multiplier_ideal_effective_boundary k X p n hp hdim Δ η m G Y s K B F hΔ hLM hR hF)
-  have hv := (GlobalTheory.T.multiplier_vanishing_nef_twist_ample k X p n hp η m G Y s K B F hLM.ne_zero hLM.pos hR hF N M T hN hMlb r hT hr
+  obtain ⟨F, hF, -⟩ := _root_.GlobalTheory.exists_cartierDiv_mult_ediv k Y (s ≫ p) n hR.proj (pullCart s G - m • K) m
+  have hJ' := (_root_.GlobalTheory.Discrepancy.isMultIdeal_iff_regularAt k X p n hp η m G Y s K B F hLM.ne_zero hLM.pos hR hF J).1 hJ
+  obtain ⟨e⟩ := _root_.GlobalTheory.pushforward_twist_iso_idealModule X Y s hR.bir (-F) J hJ'
+    (_root_.GlobalTheory.Discrepancy.regAt_of_regularAt_neg_roundDown k X p n hp hdim Δ η m G Y s K B F hΔ hLM hR hF)
+  have hv := (_root_.GlobalTheory.vanishing_logRes_pushforward_and_local k X p n hp η m G Y s K B F hLM.ne_zero hLM.pos hR hF N M T hN hMlb r hT hr
     hcls hMnef a Fd A hA hFd).1 i hi
   exact @Equiv.subsingleton _ _ (cohOn.mapIso ℤ ⊤ i ((twistFunctor N).mapIso e)).symm.toEquiv hv
 

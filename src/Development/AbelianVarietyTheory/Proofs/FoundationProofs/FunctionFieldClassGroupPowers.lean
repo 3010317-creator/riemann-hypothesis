@@ -2,10 +2,12 @@ module
 
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Mathlib.RingTheory.ClassGroup.Basic
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DegreeCountMaximalIdealGeneratesProductStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsFormalDeformationPowerSeriesSolutionStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLinearSystemMaximalDegreeFactorizationStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SpecialiseGenericSolutionAlmostAllPointsStatement
+public import Mathlib.RingTheory.DedekindDomain.Basic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DegreeCountMaximalIdealGeneratesProduct
+public import Mathlib.RingTheory.PowerSeries.Basic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsFormalDeformationPowerSeriesSolution
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLinearSystemMaximalDegreeFactorization
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SpecialiseGenericSolutionAlmostAllPoints
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -91,13 +93,13 @@ theorem exists_class_group_mk0_eq_mul_pow :
   intro k A _ _ _ _ _ _ _ _ _ _ N hN P₀ hP₀ h₀
   haveI : Algebra.FiniteType k A :=
     Algebra.FiniteType.trans (S := k[X]) inferInstance inferInstance
-  obtain ⟨r, V, D, Q, f₀, hset, hdeg⟩ := GlobalTheory.T.exists_linear_system_maximalDegree_factorization k A N P₀ (by omega) hP₀
-  have hform := GlobalTheory.T.exists_formal_deformation_powerSeries_solution k A N (Fin r) V D P₀ Q f₀ hN hP₀ hset
-  obtain ⟨a, ha, hall⟩ := GlobalTheory.T.specialise_generic_solution_almost_all_points k A (PowerSeries k) N (Fin r) V D hN hform
+  obtain ⟨r, V, D, Q, f₀, hset, hdeg⟩ := _root_.GlobalTheory.linear_system_setup k A N P₀ (by omega) hP₀
+  have hform := _root_.GlobalTheory.FormalDeform.formal_deformation k A N (Fin r) V D P₀ Q f₀ hN hP₀ hset
+  obtain ⟨a, ha, hall⟩ := _root_.GlobalTheory.specialise_generic_solution k A (PowerSeries k) N (Fin r) V D hN hform
   obtain ⟨-, hVD, hQ, -, -, -, -, -, hf₀, hspan₀, -⟩ := hset
   refine ⟨a, ha, fun P hP haP h => ?_⟩
   obtain ⟨Q', f, hQ', hinj, hne, hDQ', hDP, hfV, hf, hfP, hfQ'⟩ := hall P hP haP
-  have hspan := GlobalTheory.T.degree_count_maximalIdeal_generates_product k A N (Fin r) D P₀ P Q Q' f₀ f hP₀ hP hQ hQ' hinj hne hDQ' hDP
+  have hspan := _root_.GlobalTheory.degree_count_generates k A N (Fin r) D P₀ P Q Q' f₀ f hP₀ hP hQ hQ' hinj hne hDQ' hDP
     hf₀ hf hspan₀ (hVD f hfV) hfP hfQ' (hdeg f hfV hf)
   have hP₀ne : P₀ ≠ ⊥ := nonZeroDivisors.ne_zero h₀
   have hD : D ∈ nonZeroDivisors (Ideal A) := by

@@ -3,11 +3,13 @@ module
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsFundSet
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BallAutomorphismInverseExists
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ContinuousCuspNormFamilyStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ContinuousFirstMinimumFamilyStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ContinuousHermitianMatrixFamilyStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CuspWeightInvariantUnderIsometryStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FirstMinimumAndCuspWeightBoundsStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsometryPreservesHermitianAndActionStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsEigFrames
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ContinuousFirstMinimumFamily
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ContinuousHermitianMatrixFamily
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.CuspWeightInvariantUnderIsometry
+public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FirstMinimumAndCuspWeightBounds
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsometryPreservesHermitianAndAction
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MeasurableCuspWeightFamilyStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -64,13 +66,13 @@ theorem first_minimum_cusp_weight_regular : ∀ (E : Type) [Field E] [NumberFiel
   let R : U → RiemLat E g Λ := fun t => F.R t.1
   have hP : ∀ v, Continuous fun x : U => (R x).P v := fun v =>
     continuousOn_iff_continuous_restrict.1 (F.hol.2 v).continuousOn
-  have hH : Continuous fun x : U => (R x).Hm := GlobalTheory.T.continuous_hermitian_matrix_family E g Λ U R F.form (fun x => F.form_eq _) hP
-  have hlam : Continuous fun x : U => (R x).lam1 := GlobalTheory.T.continuous_first_minimum_family E g Λ U R hP hH
+  have hH : Continuous fun x : U => (R x).Hm := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.HmCont.continuous_Hm E g Λ U R F.form (fun x => F.form_eq _) hP
+  have hlam : Continuous fun x : U => (R x).lam1 := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.continuous_first_minimum E g Λ U R hP hH
   have hnz : ∀ I, Continuous fun x : U => (R x).nz F.σ I := fun I => GlobalTheory.T.continuous_cusp_norm_family E g Λ Ψ U R F.σ I hP hH
   have hbdd : ∀ x : U, BddAbove {y | ∃ I, (R x).IsCusp I ∧ y = -Real.log ((R x).nz F.σ I)} := by
     intro x
     have hr : (R x).HasRank F.σ j' := fun τ => (F.sig x.1 x.2 τ).1
-    obtain ⟨-, -, h3, -, -⟩ := GlobalTheory.T.first_minimum_and_cusp_weight_bounds E g Λ Ψ (R x) F.σ j' F.cm hr hj
+    obtain ⟨-, -, h3, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.cuspW_le E g Λ Ψ (R x) F.σ j' F.cm hr hj
     refine ⟨(R x).cuspW F.σ, ?_⟩
     rintro y ⟨I, hI, rfl⟩
     exact (h3 I hI).1
@@ -88,7 +90,7 @@ theorem first_minimum_cusp_weight_regular : ∀ (E : Type) [Field E] [NumberFiel
     have hf : ∀ x y, (F.R t').form (γ x) (γ y) = (F.R t).form x y := fun x y => by
       rw [F.form_eq, F.form_eq]
       exact hγ x y
-    obtain ⟨h1, h2⟩ := GlobalTheory.T.isometry_preserves_hermitian_and_action E g Λ (F.R t) (F.R t') γ φ hf hφ
+    obtain ⟨h1, h2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.PeriodIso.isometry_and_commutes E g Λ (F.R t) (F.R t') γ φ hf hφ
     have himg : φ '' Set.range (F.R t).P = Set.range (F.R t').P := by
       ext z
       constructor
@@ -97,7 +99,7 @@ theorem first_minimum_cusp_weight_regular : ∀ (E : Type) [Field E] [NumberFiel
       · rintro ⟨y, rfl⟩
         refine ⟨_, ⟨γ.symm y, rfl⟩, ?_⟩
         rw [← hφ, γ.apply_symm_apply]
-    obtain ⟨a, b, -⟩ := GlobalTheory.T.cusp_weight_invariant_under_isometry E g Λ Ψ (F.R t) F.σ g Λ (F.R t') φ F.cm himg h1 h2
+    obtain ⟨a, b, -⟩ := _root_.GlobalTheory.CompanionTheory.Relay.cusp_weight_invariant_under_isometry E g Λ Ψ (F.R t) F.σ g Λ (F.R t') φ F.cm himg h1 h2
     exact ⟨b.symm, a.symm⟩
 
 end GlobalTheory.CompanionTheory.Ar.Cusp.FamilyMeas

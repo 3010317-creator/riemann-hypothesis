@@ -1,11 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FormalCoboundarySmul
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdditiveFormalGroupCoboundaryHomogeneousStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupLawCoboundaryTwoCoboundaryOneStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomogeneousCocycleAdditiveLawReductionCoboundaryStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MvPowerSeriesReductionModPrimeRulesStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReductionCommutesFormalGroupLawCoboundariesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdditiveFormalGroupCoboundaryHomogeneous
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupLawCoboundaryTwoCoboundaryOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomogeneousCocycleAdditiveLawReductionCoboundary
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MvPowerSeriesReductionModPrimeRules
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReductionCommutesFormalGroupLawCoboundaries
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -140,14 +140,14 @@ theorem step (d N : ℕ) (hN : 2 ≤ N) (m : ℕ) : ∀ e : MvPowerSeries (Fin d
     ∃ h : MvPowerSeries (Fin d) (Fr p k), (∀ α : Fin d →₀ ℕ, α.degree ≠ N → coeff α h = 0) ∧
       e - cob1 (addLaw (Fr p k) d) h ∈ intBy p k _ (p : WittVector p k) := by
   have hconst : ∀ i, constantCoeff (addLaw (Fr p k) d i) = 0 := fun i => by simp [addLaw]
-  have hA := GlobalTheory.T.formalGroupLawCoboundaryTwo_coboundaryOne (Fr p k) d (addLaw (Fr p k) d) hconst 0
+  have hA := _root_.GlobalTheory.Katz.formalGroupLawCoboundaryTwo_coboundaryOne_alt (Fr p k) d (addLaw (Fr p k) d) hconst 0
   have hlaw : IsLaw (addLaw (Fr p k) d) := hA.2.2.2.2.1
   have hcob0 : cob1 (addLaw (Fr p k) d) 0 = 0 := by
     have := formalCoboundary_smul hconst 0 0
     rwa [zero_smul, zero_smul] at this
-  have hR := GlobalTheory.T.mvPowerSeries_reduction_mod_prime_rules p k (Fin d ⊕ Fin d)
-  have hR3 := GlobalTheory.T.mvPowerSeries_reduction_mod_prime_rules p k (Fin d ⊕ (Fin d ⊕ Fin d))
-  have hRC := GlobalTheory.T.reduction_commutes_formalGroupLawCoboundaries p k d (addLaw k d) (fun i => by simp [addLaw])
+  have hR := _root_.GlobalTheory.Katz.red_rules p k (Fin d ⊕ Fin d)
+  have hR3 := _root_.GlobalTheory.Katz.red_rules p k (Fin d ⊕ (Fin d ⊕ Fin d))
+  have hRC := _root_.GlobalTheory.Katz.red_coboundaries p k d (addLaw k d) (fun i => by simp [addLaw])
   rw [lift_addLaw] at hRC
   induction m with
   | zero =>
@@ -182,7 +182,7 @@ theorem step (d N : ℕ) (hN : 2 ≤ N) (m : ℕ) : ∀ e : MvPowerSeries (Fin d
       rw [coeff_wsmul, he γ hγ, mul_zero] at hw1
       have hw0 : w = 0 := IsFractionRing.injective (WittVector p k) (Fr p k) (by rw [← hw1, map_zero])
       rw [← hw2, hw0, map_zero]
-    obtain ⟨h', hh', hred⟩ := GlobalTheory.T.homogeneous_cocycle_additiveLaw_reduction_coboundary p k d N c hN ⟨hc2, hcs⟩ hch
+    obtain ⟨h', hh', hred⟩ := _root_.GlobalTheory.LazardHomog.homogCoc_red_cob p k d N c hN ⟨hc2, hcs⟩ hch
     have hdiff : ((p : WittVector p k) ^ m) • e - cob1 (addLaw (Fr p k) d) h' ∈
         intBy p k _ (p : WittVector p k) := by
       have := (hR.2.2.2.1 _ _ _ _ hc hred).2
@@ -196,12 +196,12 @@ theorem step (d N : ℕ) (hN : 2 ≤ N) (m : ℕ) : ∀ e : MvPowerSeries (Fin d
         coeff α ((algebraMap (WittVector p k) (Fr p k) ((p : WittVector p k) ^ m))⁻¹ • h') = 0 := by
       intro α hα
       rw [coeff_smul, hh' α hα, mul_zero]
-    have hcoc := (GlobalTheory.T.formalGroupLawCoboundaryTwo_coboundaryOne (Fr p k) d (addLaw (Fr p k) d) hconst
+    have hcoc := (_root_.GlobalTheory.Katz.formalGroupLawCoboundaryTwo_coboundaryOne_alt (Fr p k) d (addLaw (Fr p k) d) hconst
       ((algebraMap (WittVector p k) (Fr p k) ((p : WittVector p k) ^ m))⁻¹ • h')).2.2.2.2.2 hlaw
     obtain ⟨h2, hh2, hfin⟩ := ih (e - cob1 (addLaw (Fr p k) d)
         ((algebraMap (WittVector p k) (Fr p k) ((p : WittVector p k) ^ m))⁻¹ • h'))
       (fun γ hγ => by
-        rw [map_sub, he γ hγ, (GlobalTheory.T.additive_formal_group_coboundary_homogeneous (Fr p k) d N).1 _ hh1 γ hγ, sub_zero])
+        rw [map_sub, he γ hγ, (_root_.GlobalTheory.homog_cob_addLaw (Fr p k) d N).1 _ hh1 γ hγ, sub_zero])
       (by rw [((hA.2.2.1) e _).2.1, hcoc.1, sub_zero]; exact hcb)
       (by
         rw [((hA.2.2.1) e _).2.2, hcoc.2]

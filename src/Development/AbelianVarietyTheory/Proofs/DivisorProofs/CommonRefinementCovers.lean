@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemConeOfMem
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoverDominatingPairStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoverLiftThroughNormalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalFiniteDominantRefinementStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoverDominatingPair
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoverLiftThroughNormal
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAlgAtlasAtlasOf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalFiniteDominantRefinement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,9 +67,9 @@ namespace GlobalTheory.CoverCommon
 
 theorem exists_cover_dominating_two : ∀ (F : Type) [Field F] [NumberField F] (Y : Var F) (V₁ V₂ : Cover Y), ∃ (V : Cover Y) (π₁ : V.X ⟶ V₁.X) (π₂ : V.X ⟶ V₂.X), π₁ ≫ V₁.p = V.p ∧ π₂ ≫ V₂.p = V.p ∧ Lies V V₁ π₁ ∧ Lies V V₂ π₂ := by
   intro F _ _ Y V₁ V₂
-  obtain ⟨G, _, _, g, k, _, _, hk⟩ := GlobalTheory.T.normal_finite_dominant_refinement F Y V₁ V₂
-  obtain ⟨W, a, k', ha, hW, hk'⟩ := GlobalTheory.T.cover_lift_through_normal F Y V₁ V₂ G g k hk
-  obtain ⟨W', b, c, hb, hc, hW', hV⟩ := GlobalTheory.T.cover_dominating_pair F Y W V₂ k' hk'
+  obtain ⟨G, _, _, g, k, _, _, hk⟩ := _root_.GlobalTheory.Mean4O.CommonGen.exists_common F Y V₁ V₂
+  obtain ⟨W, a, k', ha, hW, hk'⟩ := _root_.GlobalTheory.Mean4O.NormCoverFin.exists_cover F Y V₁ V₂ G g k hk
+  obtain ⟨W', b, c, hb, hc, hW', hV⟩ := _root_.GlobalTheory.Mean4O.CoverDom.exists_cover_dominating_cover F Y W V₂ k' hk'
   obtain ⟨e, he₁, he₂⟩ := hW
   obtain ⟨e', he₁', he₂'⟩ := hW'
   refine ⟨W', b ≫ a, c, by rw [Category.assoc, ha, hb], hc, ⟨e' ≫ e, ?_, ?_⟩, hV⟩

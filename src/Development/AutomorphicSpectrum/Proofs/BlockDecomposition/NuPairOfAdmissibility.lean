@@ -6,22 +6,25 @@ public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhitKerL
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.ColMatMulGlEmbMat
 public import GroundTheory.LocalFields.PadicLogSeries
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NontrivialTwJacquetOfSurjective
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousInvAddChar
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.UnipotentDerivatives.DerUnipLeUnipB
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DerivativeJacquetTwistedQuotient
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualClassTwistNeg
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsSmoothIterPhi
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityOfEquiv
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetThetaReverseBlocks
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.LSegJacquet
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PairingTwistedDeterminantSubquotient
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerKernelPullbackJacquet
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerTwoBlockInjectiveIrreducible
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerTwoBlockSubquotientTensor
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SmoothContragredientIrreducibleAndReflexive
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnitarisableOfSquareIntegrable
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.JhMultSubAddQuot
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousInvAddChar
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DerivativeJacquetTwistedQuotientStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualClassTwistNeg
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GelfandKazhdanContragredient
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsSmoothIterPhi
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityOfEquiv
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetThetaReverseBlocksStatement
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalLanglandsOfIrreducibleAdmissible
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PairingTwistedDeterminantSubquotientStatement
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TransposeInverseInvolutionApply
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerKernelPullbackJacquetStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerTwoBlockInjectiveIrreducibleStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerTwoBlockSubquotientTensorStatement
 import Development.AutomorphicSpectrum.Proofs.GlobalProofs.BernsteinZelevinskyFiniteness
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -63,7 +66,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
 import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.SegmentCuspLines.ProdIrrFiniteLength
 import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.ZelevinskyCosocles.LUnlinkedComm
 
@@ -119,8 +121,8 @@ theorem deriv_equiv (ψ : AddChar k Circle) (n j : ℕ) {V : Type} [AddCommGroup
     (π : Representation ℂ (GL (Fin (n + j + 1)) k) V) (hd : ∑ a, (![n, j + 1] a) = n + j + 1) :
     Nonempty ((GlobalTheory.BZMir.deriv k ψ j π).Equiv
       (twist (whit2 ψ ![n, j + 1] (jac (stdBlocks ![n, j + 1] hd) π)) (detChar (Fin n) (absPow k (((j : ℂ) + 1) / 2))))) := by
-  obtain ⟨q, hqs, hqk, hqg⟩ := GlobalTheory.T.derivative_jacquet_twisted_quotient k ψ n j V π hd
-  have hcm := GlobalTheory.T.whittaker_kernel_pullback_jacquet k ψ n j V π hd
+  obtain ⟨q, hqs, hqk, hqg⟩ := _root_.GlobalTheory.CompanionTheory.DerivQuot.exists_deriv_quot k ψ n j V π hd
+  have hcm := _root_.GlobalTheory.CompanionTheory.BZNuPair.DerComap.whitKer_jac_comap_eq_twKer_derUnip k ψ n j V π hd
   refine equiv_of_ker _ _ _ q ((whitKer ψ ![n, j + 1] (jac (stdBlocks ![n, j + 1] hd) π)).mkQ ∘ₗ
       (twKer π (unipRad k (stdBlocks ![n, j + 1] hd)) 1).mkQ) hqs
     ((Submodule.mkQ_surjective _).comp (Submodule.mkQ_surjective _)) ?_
@@ -169,7 +171,7 @@ theorem jm_contra_gen (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) {h N
     rwa [GlobalTheory.CompanionTheory.JacquetCongr.jm_congr_of_equiv u hd _ _ ⟨E1⟩]
   have h2 := jhMult_ne_zero_iff.1 h1
   have hd' : ∑ a, (u (Fin.rev a)).1 = N := sum_dualRev hA u hd
-  obtain ⟨E2⟩ := GlobalTheory.T.jacquet_theta_reverse_blocks k h N (fun a => (u a).1) hd hd' V π
+  obtain ⟨E2⟩ := _root_.GlobalTheory.CompanionTheory.JacTheta.nonempty_jac_comp_thetaW k h N (fun a => (u a).1) hd hd' V π
   have h3 := h2.trans (IsSubquotient.of_injective E2.toIntertwiningMap E2.injective)
   have T1 := piTensorRevEquiv (fun a => (u a).rep)
   have T2 := compEquiv (piTensorEquiv fun a => blockEquiv hA hGK u a) (revPi fun a => GL (Fin (u a).1) k)
@@ -237,7 +239,7 @@ theorem deriv_irr_sub (ψ : AddChar k Circle) (hc : Continuous ψ) (n j : ℕ) {
       (hasFiniteLength_of_isIrreducible hi)
   have hnt' : Nontrivial (_ ⧸ whitKer ψ ![n, j + 1] (jac (stdBlocks ![n, j + 1] hd) π)) :=
     E.toLinearEquiv.symm.toEquiv.nontrivial
-  obtain ⟨S, f, hf⟩ := GlobalTheory.T.whittaker_two_block_injective_irreducible k ψ hc ![n, j + 1] _ _ hJs hJf hnt'
+  obtain ⟨S, f, hf⟩ := _root_.GlobalTheory.CompanionTheory.BZNuPair.WhitSub.exists_irr_sub k ψ hc ![n, j + 1] _ _ hJs hJf hnt'
   let χ := detChar (Fin n) (absPow k (((j : ℂ) + 1) / 2))
   have hχ : IsSmoothChar χ := (isSmoothChar_absPow _).detChar
   refine ⟨irrTwist S χ hχ, E.symm.toIntertwiningMap.comp (twistMap f χ), ?_⟩
@@ -263,7 +265,7 @@ theorem deriv_jm (ψ : AddChar k Circle) (hc : Continuous ψ) (n j : ℕ) {V : T
   have h1 : IsSubquotient S.ρ (twist (whit2 ψ ![n, j + 1] (jac (stdBlocks ![n, j + 1] hd) π)) χ) :=
     hS.trans (IsSubquotient.of_injective E.toIntertwiningMap E.injective)
   have h2 := isSubquotient_untwist h1 hmul
-  obtain ⟨s, hsub, ⟨e0⟩⟩ := GlobalTheory.T.whittaker_two_block_subquotient_tensor k ψ hc ![n, j + 1] _ _ hJs hJf (irrTwist S χ' hχ') h2
+  obtain ⟨s, hsub, ⟨e0⟩⟩ := _root_.GlobalTheory.CompanionTheory.BZNuPair.exists_constituent_of_whit2 k ψ hc ![n, j + 1] _ _ hJs hJf (irrTwist S χ' hχ') h2
   let x : Fin 2 → IrrGL (k := k) := fun a => IrrGL.of (N := ![n, j + 1] a) (s a).ρ (s a).smooth (s a).irr
   have hx0 : x 0 = (IrrGL.of S.ρ S.smooth S.irr).nu (-(((j : ℂ) + 1) / 2)) := by
     rw [IrrGL.nu, IrrGL.tw_of]
@@ -318,7 +320,7 @@ theorem nuPair : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] 
   obtain ⟨w₀, hw₀⟩ := exists_ne (0 : S.V)
   have hw1 : f w₀ ≠ 0 := fun h => hw₀ (hf (by rw [h, map_zero]))
   obtain ⟨w', hw'⟩ := hn' (f w₀) hw1
-  obtain ⟨Q, hQ, hQcl⟩ := GlobalTheory.T.pairing_twisted_determinant_subquotient k (n + 1) j _ S (GlobalTheory.BZMir.deriv k ψ⁻¹ j (contra ω))
+  obtain ⟨Q, hQ, hQcl⟩ := _root_.GlobalTheory.CompanionTheory.DualQuot.exists_subquotient_dual_nu k (n + 1) j _ S (GlobalTheory.BZMir.deriv k ψ⁻¹ j (contra ω))
     (GlobalTheory.CompanionTheory.BZCuspPair.isSmooth_deriv ψ⁻¹ j (isSmooth_contra _)) (B'.comp f.toLinearMap)
     (fun g w v => by
       have := hB' g (f w) v

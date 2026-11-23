@@ -1,7 +1,8 @@
 module
 
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.ExSubAlt
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PairNumberPullbackStatement
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsBundles
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.PairNumberPullback
 public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.XSJoinright
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -47,6 +48,6 @@ import Mathlib.Topology.Sheaves.Init
 namespace GlobalTheory.CompanionTheory.Ar.Num.FlagModelJoinRight
 
 theorem main : GroundTheory.Heights₂.Heights.NumbersDVR.FlagModelJoinRightAlt.Statement :=
-  PositivityTheory.Xgn.A_s_joinright.of_pullback GlobalTheory.T.pair_number_pullback
+  PositivityTheory.Xgn.A_s_joinright.of_pullback _root_.GlobalTheory.CompanionTheory.Ar.Num.PairNumberPullback.main
 
 end GlobalTheory.CompanionTheory.Ar.Num.FlagModelJoinRight

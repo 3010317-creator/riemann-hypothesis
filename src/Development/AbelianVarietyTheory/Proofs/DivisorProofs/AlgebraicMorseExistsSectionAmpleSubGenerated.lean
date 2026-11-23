@@ -1,11 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LineBundleGlobalSectionsDimCongrPicardClass
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AsymptoticRiemannRochAmpleCoherent
+public import Mathlib.Algebra.Group.Int.Defs
+public import Mathlib.Algebra.Order.Group.Unbundled.Abs
+public import Mathlib.Data.Nat.Factorial.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MorseInequalityArith
+public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.EventuallyExistsFiniteSubsetNonzeroLocus
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SheafCohomologyDimTwistCutInequalities
 import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.EventuallySubsingletonCohTwistZOfIsProjOver
 import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.IsFiniteLengthOfIsArtinianRingAnnihilator
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AsymptoticRiemannRochAmpleCoherentStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MorseInequalityArithStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SheafCohomologyDimTwistCutInequalitiesStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -71,10 +75,10 @@ theorem exists_sec_of_ample_sub_generated :
   obtain ⟨t, ht⟩ := IsGenerated.exists_mono_cutHom k G hB
   have hGd : suppDim G ≤ (d : ℕ) := suppDim_cut_le _ hB.isLB s hsd
   have hcut := interNum_cons_eq_interNum_cut hB.isLB s (P := fun _ : Fin d => L) (fun _ => hL.isLB) hfin
-  obtain ⟨C, m₀, hC⟩ := GlobalTheory.T.asymptotic_riemannRoch_ample_coherent k X hp (d + 1) (GlobalTheory.structureModule X) hsd L hL
-  obtain ⟨C', m₁, hC'⟩ := GlobalTheory.T.asymptotic_riemannRoch_ample_coherent k X hp d G hGd L hL
+  obtain ⟨C, m₀, hC⟩ := _root_.GlobalTheory.abs_factorial_mul_hdim_zero_twist_sub_le_of_isAmpleLB k X hp (d + 1) (GlobalTheory.structureModule X) hsd L hL
+  obtain ⟨C', m₁, hC'⟩ := _root_.GlobalTheory.abs_factorial_mul_hdim_zero_twist_sub_le_of_isAmpleLB k X hp d G hGd L hL
   rw [hcut] at hlt
-  obtain ⟨m, hm1, hm⟩ := GlobalTheory.T.exists_mul_lt_of_asymptotic_bounds d (topSelfIntersection k L (d + 1)) (interNum k G (fun _ : Fin d => L))
+  obtain ⟨m, hm1, hm⟩ := _root_.GlobalTheory.morse_inequality_arith d (topSelfIntersection k L (d + 1)) (interNum k G (fun _ : Fin d => L))
     (fun m => hdim k (twist (GlobalTheory.structureModule X) (lbPow L m)) 0)
     (fun m => hdim k (twist G (lbPow L m)) 0) C C' m₀ m₁ hC hC' hlt
   have hcl : cls (lbPow L m) (isLB_lbPow hL.isLB m) =
@@ -94,7 +98,7 @@ theorem exists_sec_of_ample_sub_generated :
       intro M' hM' h
       have h1 := cls_tens hM' hB.isLB (isLB_tens hM' hB.isLB)
       have h2 := ih _ (isLB_tens hM' hB.isLB) (by rw [h1, h, succ_nsmul']; abel)
-      exact ((GlobalTheory.T.sheafCohomologyDim_twist_cut_inequalities k X hp G B _ M' hB.isLB _ hM' t ht h1).2.2).trans h2
+      exact ((_root_.GlobalTheory.hdim_twist_cut_inequalities k X hp G B _ M' hB.isLB _ hM' t ht h1).2.2).trans h2
   have hch : ∀ (j : ℕ) (M' : LB X) (hM' : M'.IsLB),
       cls (lbPow L m) (isLB_lbPow hL.isLB m) = cls M' hM' + j • cls B hB.isLB →
       hdim k (twist (GlobalTheory.structureModule X) (lbPow L m)) 0 ≤
@@ -113,7 +117,7 @@ theorem exists_sec_of_ample_sub_generated :
       have h0 : cls (lbPow L m) (isLB_lbPow hL.isLB m) = cls (tens M' B) (isLB_tens hM' hB.isLB) + j • cls B hB.isLB := by
         rw [h1, h, succ_nsmul']; abel
       have h2 := ih _ (isLB_tens hM' hB.isLB) h0
-      have h3 := (GlobalTheory.T.sheafCohomologyDim_twist_cut_inequalities k X hp (GlobalTheory.structureModule X) B _ M' hB.isLB _ hM' s hs h1).1 0
+      have h3 := (_root_.GlobalTheory.hdim_twist_cut_inequalities k X hp (GlobalTheory.structureModule X) B _ M' hB.isLB _ hM' s hs h1).1 0
       change hdim k (twist (GlobalTheory.structureModule X) (tens M' B)) 0 ≤
         hdim k (twist (GlobalTheory.structureModule X) M') 0 + hdim k (twist G (tens M' B)) 0 at h3
       have h4 := hmono j _ (isLB_tens hM' hB.isLB) h0

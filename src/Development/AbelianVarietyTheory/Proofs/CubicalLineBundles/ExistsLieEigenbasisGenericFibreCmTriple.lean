@@ -3,11 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Definitions.CMLattices.LamLetters
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
 public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsLieRepresentationEigenLatticesStatement
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueDifferentialMonHomLieBasisStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsLieRepresentationEigenLattices
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueDifferentialMonHomLieBasis
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueExtendRingOfIntegersHom
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsFibreOfIffIsPolFibre
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LieAlgebraEigenDecompositionCMSignatureStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LieAlgebraEigenDecompositionCMSignature
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.NonemptyPolAVGenericFibreWithLieBasis
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsIsLocalModelOfIntegral
 import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.IsLieBasisIffIsUnitDet
@@ -75,12 +75,12 @@ theorem exists_eigenbasis_fibre : Out.SecTwistSt → Out.Laws → ∀ (E : Type)
     omega
   obtain ⟨F₀⟩ := GlobalTheory.CM.GenFib.nonempty_of_baseChange hL.polBaseChange K T.pol
   have hg : T.g = Module.finrank ℚ E / 2 := by
-    simpa using (GlobalTheory.T.lieAlgebra_eigenDecomposition_CM_signature E H K ρ T F₀ 1 0 hsp hty hρ).2.2.2.1
+    simpa using (_root_.GlobalTheory.CM.EigDec.eigen_decomposition E H K ρ T F₀ 1 0 hsp hty hρ).2.2.2.1
   obtain ⟨y, ψ, w, hyg, hψ, hw⟩ := GlobalTheory.KeyPow.exists_keyIn_pullback hT (algebraMap (𝓞 K) K) T.pol (hpos.trans_eq hg.symm)
   have hfib : IsFibreOf T.pol y (spMap (algebraMap (𝓞 K) K)) ψ := ⟨hψ, w, (isGen_iff _).2 hw⟩
   let F : GenFib T.pol := ⟨y.P, ψ, (isFibreOf_iff_isPolFibre _ _ _ _ _ _).1 hfib, y.v, y.basis⟩
-  obtain ⟨hrk, hind, -, -, hcard, -⟩ := GlobalTheory.T.lieAlgebra_eigenDecomposition_CM_signature E H K ρ T F 1 0 hsp hty hρ
-  obtain ⟨r, hr, hr'⟩ := GlobalTheory.T.exists_lieRepresentation_eigenLattices K T.pol F (𝓞 E) T.t.act
+  obtain ⟨hrk, hind, -, -, hcard, -⟩ := _root_.GlobalTheory.CM.EigDec.eigen_decomposition E H K ρ T F 1 0 hsp hty hρ
+  obtain ⟨r, hr, hr'⟩ := _root_.GlobalTheory.CM.GenFib.exists_lieRep_eigLat K T.pol F (𝓞 E) T.t.act
   let res : S → (𝓞 E →+* 𝓞 K) := fun t => RingOfIntegers.mapRingHom (lab t)
   have hres : ∀ t (a : 𝓞 E), ((res t a : 𝓞 K) : K) = lab t (a : E) := fun t a => rfl
   have hinj : Function.Injective res := fun s t h => Subtype.ext (hlab.1
@@ -111,7 +111,7 @@ theorem exists_eigenbasis_fibre : Out.SecTwistSt → Out.Laws → ∀ (E : Type)
   choose v' hv' _ using fun i => hex (M i)
   have hv'b : IsLieBasis v' := (hbas M v' y.basis hv').2 hM
   refine ⟨⟨y.P, y.g_pos, y.rig, y.rig_gen, y.th, y.th_ne, v', hv'b⟩, ψ, e, hfib, hyg', fun a i => ?_⟩
-  obtain ⟨-, f₀, -, hf₀, hd⟩ := GlobalTheory.T.existsUnique_differential_monHom_lieBasis K T.pol F T.pol F (T.t.act.act a) (T.t.act.hom a)
+  obtain ⟨-, f₀, -, hf₀, hd⟩ := _root_.GlobalTheory.CM.DiffCoord.existsUnique_isDiffOf K T.pol F T.pol F (T.t.act.act a) (T.t.act.hom a)
   have h1 : IsLieComb (r a (M i)) y.v (v' i ≫ f₀) := hd _ (hr a) _ _ (hv' i)
   obtain ⟨w', hw', -⟩ := (LieComb.lieComb_algebra K y.P.A _ v' hv'b.1).1 (Pi.single i (lab (e i) (a : E)))
   have h2 := hcomp _ M v' _ w' hv' hw'

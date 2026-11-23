@@ -4,8 +4,10 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.ESmall
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.FactorDepthInertBounds
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TypedPartSplitPrimes
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CmHostRootNegDiscriminantNeNegSelf
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FactorDepthBetweenZeroAndBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FactorDepthUpperBoundOddUnramifiedPrimeStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.EightDvdNCol
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FactorDepthBetweenZeroAndBound
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.BigBlockCharacters
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FactorDepthUpperBoundOddUnramifiedPrime
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -38,7 +40,6 @@ import Mathlib.Tactic.NormNum.NatSqrt
 import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.BigBlockCharacters
 
 @[expose] public section
 
@@ -118,7 +119,7 @@ theorem oscLe_split : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     rw [Finset.sum_ite, e1, e2, ← add_div]
     exact div_le_div_of_nonneg_right (by linarith) hp1.le
   refine ⟨0, fun T io e ho y => ?_⟩
-  have hall := fun f => (GlobalTheory.T.factorDepth_between_zero_and_bound E H Dw l Xo c p la f (cx f)).1 T io e ho y
+  have hall := fun f => (_root_.GlobalTheory.RefSum.facBetween_zero_boundAll E H Dw l Xo c p la f (cx f)).1 T io e ho y
   constructor
   · rw [Nat.cast_zero, EReal.coe_zero]
     exact Finset.sum_nonneg fun f _ => (hall f).1
@@ -129,7 +130,7 @@ theorem oscLe_split : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
     refine Finset.sum_le_sum fun f _ => ?_
     by_cases hf : IsBig k f
     · simp only [B, if_pos hf]
-      exact (GlobalTheory.T.factorDepth_upperBound_oddUnramifiedPrime E H Dw l Xo c p T io y (not_isUnit_of_overLa la ho) ha h2 hd f (cx f) hf.1).1 hs
+      exact (_root_.GlobalTheory.FacUpOdd.nuFac_le_odd_unram E H Dw l Xo c p T io y (not_isUnit_of_overLa la ho) ha h2 hd f (cx f) hf.1).1 hs
     · simp only [B, if_neg hf]
       exact (hall f).2 ha
 

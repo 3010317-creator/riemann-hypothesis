@@ -3,12 +3,15 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfMemCell
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemSupportComp
 public import Development.AbelianVarietyTheory.Definitions.Divisors.MirSet
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompositeCutOperatorsProductLocalCellsMirabolicStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWhittakerCutInductionStepOfOpenSubgroupStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinitePlaceStandardCharLocallyConstantNontrivialStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRapidInf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompositeCutOperatorsProductLocalCellsMirabolic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWhittakerCutInductionStepOfOpenSubgroup
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.DifferentiableAtChart
+public import GroundTheory.GlobalFields.TateThesis.AdelicChar
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinitePlaceStandardCharLocallyConstantNontrivial
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MirabolicCellFiniteUnionLocalDoubleCosetsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MirabolicCutoffsOfRestrictionCutoffsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WhittakerIndicatorCutMulOpenSubgroupStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MirabolicCutoffsOfRestrictionCutoffs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WhittakerIndicatorCutMulOpenSubgroup
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -76,8 +79,8 @@ theorem cuts_mir {F : Type} [NormedField F] [ProperSpace F] [IsUltrametricDist F
     · rw [if_pos h, one_mul, Set.indicator_of_mem h]
     · rw [if_neg h, zero_mul, Set.indicator_of_notMem h]
   | succ m ih =>
-    refine GlobalTheory.T.mirabolic_cutoffs_of_restriction_cutoffs ψ hψ hψ1 m (GlobalTheory.T.exists_whittakerCut_inductionStep_of_open_subgroup ψ hψ hψ1 m (fun V hVc hVo z' => ?_)) U hUc hUo z
-    refine GlobalTheory.T.whittakerIndicatorCut_mul_open_subgroup ψ V hVo _ _ (fun x hx u hu => ?_) (ih V hVc hVo z')
+    refine _root_.GlobalTheory.JSW.Cut.cuts_mir_of_res ψ hψ hψ1 m (_root_.GlobalTheory.JSW.Cut.exists_cut_cor_of_sub ψ hψ hψ1 m (fun V hVc hVo z' => ?_)) U hUc hUo z
+    refine _root_.GlobalTheory.JSW.Cut.cuts_mul_open_subgroup ψ V hVo _ _ (fun x hx u hu => ?_) (ih V hVc hVo z')
     obtain ⟨n, hn, k, hk, rfl⟩ := hx
     exact ⟨n, hn, k * u, V.mul_mem hk hu, by rw [mul_assoc]⟩
 
@@ -89,7 +92,7 @@ theorem GlobalTheory.JSW.MirPatch.cut_operators : ∀ (E : Type) [Field E] [Numb
   intro E _ _ _ m S K hKo hKc q
   classical
   obtain ⟨U, N, z, hU, hdisj, hchar⟩ := GlobalTheory.T.mirabolic_cell_finite_union_local_double_cosets E m S K hKo hKc q
-  choose ψ hψv hψl hψ1 using GlobalTheory.T.finitePlace_standardChar_locallyConstant_nontrivial E
+  choose ψ hψv hψl hψ1 using _root_.GlobalTheory.JSW.psiLoc_addChar_locallyConstant_ne_one E
   have hcut : ∀ i : Fin N, ∃ T : GA E (m + 1) →₀ ℂ, (∀ h ∈ T.support, h ∈ GlobalTheory.JSW.supS (E := E) (a := (m + 1)) S ∧
       GeneralLinearGroup.map (pInf E) h = 1) ∧ ∀ W : GA E (m + 1) → ℂ,
       (∀ u ∈ GlobalTheory.JSW.NA (E := E) (a := (m + 1)), ∀ g, W (u * g) = GlobalTheory.JSW.psiN u * W g) →
@@ -97,7 +100,7 @@ theorem GlobalTheory.JSW.MirPatch.cut_operators : ∀ (E : Type) [Field E] [Numb
       act T W p = {x : GA E (m + 1) | ∀ w ∈ S, GeneralLinearGroup.map ((pLoc E w).comp (pFin E)) x ∈
         GlobalTheory.JSW.Cut.cell (z i w) (U w : Set (GL (Fin (m + 1)) (w.adicCompletion E)))}.indicator W p := by
     intro i
-    refine GlobalTheory.T.composite_cut_operators_product_local_cells_mirabolic E m S ψ hψv K U (z i) (fun w hw => (hU w hw).2.2) fun w hw => ?_
+    refine _root_.GlobalTheory.JSW.CutProd.cut_prod_mirS E m S ψ hψv K U (z i) (fun w hw => (hU w hw).2.2) fun w hw => ?_
     haveI := GlobalTheory.AdelicUnitaryTop.properSpace_adicCompletion E w
     haveI : IsUltrametricDist (w.adicCompletion E) :=
       inferInstanceAs (@IsUltrametricDist (w.adicCompletion E)

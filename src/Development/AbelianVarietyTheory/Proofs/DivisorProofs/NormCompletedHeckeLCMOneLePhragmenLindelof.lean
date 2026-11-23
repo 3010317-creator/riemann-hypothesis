@@ -3,11 +3,12 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.HeckeFunctionalEquationAbs
 public import Mathlib.NumberTheory.LSeries.RiemannZeta
 public import Mathlib.NumberTheory.NumberField.CMField
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPrimitiveHeckeLFunctionInvOfTrivialOnMaxRealStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormHeckeLFunctionLeZetaThreeHalvesPowStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.EntireEqOfHalfPlane
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPrimitiveHeckeLFunctionInvOfTrivialOnMaxReal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormHeckeLFunctionLeZetaThreeHalvesPow
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareBottomHalfRankDiffLeHalfRank
-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsCMTypeEmbedding
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ExplicitFormula.LGrowthGamma
+import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsCMTypeEmbedding
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -158,7 +159,7 @@ theorem norm_heckeL_one_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   obtain ⟨Λc, hΛc, hbc⟩ := hB E I φ hφ χ n hu hinf' hn
   obtain ⟨Λc', hΛc', -⟩ := hB E I φ hφ χ⁻¹ (fun i => -n i) hu' hinv hn'
   obtain ⟨ε, hε, hfe⟩ := hFE E I φ hφ χ n a Λc Λc' hu hinf' hn ha hΛc hΛc'
-  have hL' : IsHeckeL χ⁻¹ Λ := GlobalTheory.T.isPrimitiveHeckeLFunction_inv_of_trivialOnMaxReal E χ Λ htr hL
+  have hL' : IsHeckeL χ⁻¹ Λ := _root_.GlobalTheory.CMVal.isHeckeL_inv_of_trivOnF E χ Λ htr hL
   have harch : archFactor (fun i => -n i) = archFactor n := by
     funext s; unfold archFactor; simp only [abs_neg]
   have hApos : 0 < A := by
@@ -176,14 +177,14 @@ theorem norm_heckeL_one_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     rw [hs] at h1
     have h1' : ‖archFactor n s‖ ≤ F := by
       rw [hF_def]; convert h1 using 3; push_cast; ring
-    exact mul_le_mul h1' (GlobalTheory.T.norm_heckeLFunction_le_zeta_three_halves_pow E χ Λ s hu hL hs.ge) (norm_nonneg _) hF0
+    exact mul_le_mul h1' (_root_.GlobalTheory.HeckeLBound.norm_heckeL_le E χ Λ s hu hL hs.ge) (norm_nonneg _) hF0
   have hline' : ∀ s : ℂ, s.re = 3 / 2 → ‖Λc' s‖ ≤ F * Z := fun s hs => by
     rw [hΛc'.eq_mul hL' (by rw [hs]; norm_num), norm_mul, harch]
     have h1 := norm_archFactor_le n (s := s) (by rw [hs]; norm_num)
     rw [hs] at h1
     have h1' : ‖archFactor n s‖ ≤ F := by
       rw [hF_def]; convert h1 using 3; push_cast; ring
-    exact mul_le_mul h1' (GlobalTheory.T.norm_heckeLFunction_le_zeta_three_halves_pow E χ⁻¹ Λ s hu' hL' hs.ge) (norm_nonneg _) hF0
+    exact mul_le_mul h1' (_root_.GlobalTheory.HeckeLBound.norm_heckeL_le E χ⁻¹ Λ s hu' hL' hs.ge) (norm_nonneg _) hF0
 
   have hleft : ∀ s : ℂ, s.re = -1 / 2 → ‖Λc s‖ ≤ A * F * Z := fun s hs => by
     rw [hfe s, norm_mul, norm_mul, hε, one_mul, Complex.norm_natCast_cpow_of_pos hApos]

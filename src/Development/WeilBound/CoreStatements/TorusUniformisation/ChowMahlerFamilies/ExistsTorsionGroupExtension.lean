@@ -2,7 +2,10 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUnitFormLocalizationEtaleNbhd
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.MemEigSpOfMemHtDual
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionEmbeddingGeometricPointsStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionEmbeddingGeometricPoints
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.BundleObjects
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.InstFintypeSumElim
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,8 +49,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.FlagMinor
 import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.CompactGapsGE
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsLatFamilyCongr
-public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.BundleObjects
-public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.InstFintypeSumElim
 import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.Objects
 
 @[expose] public section
@@ -107,7 +108,7 @@ theorem PositivityTheory.Xgn.exists_torsion_group_extension : ∀ (R' : Type) [C
     Over.homMk (Spec.map (CommRingCat.ofHom b)) hu
   let τ : T →* (Over.mk ((BT.genPt R').hom ≫ x') ⟶ G) := (pre u G).comp pt
   have hτ : ∀ t, (τ t).left = Spec.map (CommRingCat.ofHom b) ≫ (pt t).left := fun t => rfl
-  obtain ⟨Γ, i, h1, h2⟩ := GlobalTheory.T.torsion_embedding_geometric_points R' T X G hG x' N hN τ
+  obtain ⟨Γ, i, h1, h2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.BT.Tors.exists_qfGroup_torsion R' T X G hG x' N hN τ
     ((pre_inj u (epi_spec b) G).comp hinj)
     (fun t => by
       change pre u G (pt t) ^ N = 1

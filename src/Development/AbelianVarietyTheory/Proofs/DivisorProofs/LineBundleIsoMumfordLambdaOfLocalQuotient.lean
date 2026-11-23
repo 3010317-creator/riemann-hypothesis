@@ -8,12 +8,17 @@ public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.IsA
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.TrivBasicOpenOfTrivFibre
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSiegelObjectOfDescendedData
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SiegelStructurePullback
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HasModelOfSpreadingStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsProperSpreadsOutStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LbSpreadsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PerfectOfModelsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SchemeModelsSpreadStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothSpreadsOutStatement
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.CubeTheorem.LBSpreads
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HasModelOfSpreading
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.CubeTheorem.SchemeModels
+public import Mathlib.AlgebraicGeometry.Morphisms.Proper
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsProperSpreadsOut
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LbSpreads
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PerfectOfModels
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SchemeModelsSpread
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothSpreadsOut
+public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +57,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GrpPullbackId
 
 @[expose] public section
@@ -114,7 +118,7 @@ theorem lbIso_lam_of_quotient : ∀ (R R₀ : Type) [CommRing R] [IsLocalRing R]
   have ht₀ : GlobalTheory.AbLaw.Triv ((LB.div (abelian₂ B L) P).pull (pullback.fst (G2 B₀).hom (spMap (residue R₀)) ≫ i₂)) :=
     triv_of _ (by rw [pull_comp, pull_comp, hsq₀])
   have hPf : GlobalTheory.SpreadingModels.PerfAll :=
-    GlobalTheory.T.perfect_of_models (GlobalTheory.T.has_model_of_spreading GlobalTheory.T.scheme_models_spread GlobalTheory.T.smooth_spreads_out GlobalTheory.T.isProper_spreads_out GlobalTheory.T.line_bundle_spreads_out')
+    _root_.GlobalTheory.CompanionTheory.SpreadingModels.perfAll_of_hasModel (_root_.GlobalTheory.CompanionTheory.CubeModels.hasModel_of_spreads _root_.GlobalTheory.CompanionTheory.NoethApprox.schemeModels _root_.GlobalTheory.CompanionTheory.SmoothSpread.smooth_spreads _root_.GlobalTheory.CompanionTheory.SpreadingModels.properSpreads _root_.GlobalTheory.CompanionTheory.LBLimit.lbSpreads)
   haveI := hA.smooth
   haveI := hA.proper
   have sm : Smooth (B ⊗ B).hom := by

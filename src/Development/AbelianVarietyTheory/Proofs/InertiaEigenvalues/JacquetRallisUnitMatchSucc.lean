@@ -1,14 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsTestRep
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsWeilRepSL2GlBorderedBlockStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsWeilRepSL2HermitianBlockStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetRallisMatchOfDenseSeparableStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetRallisMatchingAddStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetRallisUnitMatchStepOfOneLeNormStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PartialFourierPreservesTestFixesUnitStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.Sl2GeneratedWeylUnipotentStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedStandardAddCharConductorPropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsWeilRepSL2GlBorderedBlock
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsWeilRepSL2HermitianBlock
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FourierMatch
+public import Mathlib.FieldTheory.Separable
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetRallisMatchOfDenseSeparable
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetRallisMatchingAdd
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetRallisUnitMatchStepOfOneLeNorm
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PartialFourierPreservesTestFixesUnit
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.Sl2GeneratedWeylUnipotent
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedStandardAddCharConductorProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -155,7 +157,7 @@ theorem nS_inv (t : F) : (nS t)⁻¹ = nS (-t) := by
 variable (E) in
 theorem submonoid_eq_top [Unram F E] (S : Submonoid (SpecialLinearGroup (Fin 2) F)) (hw : wS F ∈ S)
     (hn : ∀ t : F, (∀ y : F, ‖y‖ < 1 → ‖t * y‖ ≤ 1) → nS t ∈ S) (x : SpecialLinearGroup (Fin 2) F) : x ∈ S := by
-  have hgen := GlobalTheory.T.closure_weyl_and_integral_unipotents_eq_univ F E
+  have hgen := _root_.GlobalTheory.JR.sl2_closure_weyl_unipotent_eq_top F E
   have hx : x ∈ Subgroup.closure ({wS F} ∪ {g | ∃ t : F, (∀ y : F, ‖y‖ < 1 → ‖t * y‖ ≤ 1) ∧ g = nS t}) := by
     rw [hgen]; trivial
   rw [← Subgroup.mem_toSubmonoid, Subgroup.closure_toSubmonoid] at hx
@@ -176,10 +178,10 @@ namespace GlobalTheory.JR.UnitStep
 
 theorem unitMatch_succ : WeilEt → GammaOne → ∀ r : ℕ, FourierMatch (r + 1) → UnitMatch r → UnitMatch (r + 1) := by
   intro hWe hGo r hF hU F E _ _ _ _ _ M
-  obtain ⟨ψ, hψ⟩ := (GlobalTheory.T.unramifiedStandardAddChar_conductor_properties F E).1
-  obtain ⟨W1, hW1r, hW1⟩ := GlobalTheory.T.exists_weilRepSL2_glBorderedBlock F E (r + 1) M ψ hψ
-  obtain ⟨W2, hW2r, hW2⟩ := GlobalTheory.T.exists_weilRepSL2_hermitianBlock hWe hGo F E (r + 1) M ψ hψ
-  obtain ⟨hTG, hTU, htG, htU, hfG, hfU⟩ := GlobalTheory.T.partialFourier_preserves_test_fixes_unit F E (r + 1) M ψ hψ
+  obtain ⟨ψ, hψ⟩ := (_root_.GlobalTheory.StdChar.psi_conductor F E).1
+  obtain ⟨W1, hW1r, hW1⟩ := _root_.GlobalTheory.JR.weil_repG F E (r + 1) M ψ hψ
+  obtain ⟨W2, hW2r, hW2⟩ := _root_.GlobalTheory.weilSL2_hermitian hWe hGo F E (r + 1) M ψ hψ
+  obtain ⟨hTG, hTU, htG, htU, hfG, hfU⟩ := _root_.GlobalTheory.fourier_test_unit F E (r + 1) M ψ hψ
 
   have hN1 : ∀ f, IsTest f → ∀ t : F, W1 (nS t) f = fun Y => (fun z => ψ (t * z)) (mom Y 0) * f Y :=
     fun f hf t => funext fun Y => (hW1 f hf).1 t Y
@@ -221,7 +223,7 @@ theorem unitMatch_succ : WeilEt → GammaOne → ∀ r : ℕ, FourierMatch (r + 
         have d1 : IsTest (W1 h u' - u') := isTest_sub (hW1r.1 h u' htG) htG
         have d2 : IsTest (W2 h u - u) := isTest_sub (hW2r.1 h u htU) htU
         rw [e1, e2]
-        exact GlobalTheory.T.jacquetRallis_matching_add F E (r + 1) M _ _ _ _ (hW1r.1 g _ d1) (isTest_sub (hW1r.1 g u' htG) htG)
+        exact _root_.GlobalTheory.JR.match_add F E (r + 1) M _ _ _ _ (hW1r.1 g _ d1) (isTest_sub (hW1r.1 g u' htG) htG)
           (hW2r.1 g _ d2) (isTest_sub (hW2r.1 g u htU) htU) (hS g _ _ d1 d2 hh) hg }
   have hD1 : ∀ t : F, W1 (nS t) u' - u' = fun Y => (fun z => ψ (t * z) - 1) (mom Y 0) * u' Y := by
     intro t; rw [hN1 u' htG t]; funext Y; simp only [Pi.sub_apply]; ring
@@ -236,12 +238,12 @@ theorem unitMatch_succ : WeilEt → GammaOne → ∀ r : ℕ, FourierMatch (r + 
       rw [hD1 t, hD2 t]
       intro a ha
       by_cases h1 : 1 ≤ ‖mom (sec a) 0‖
-      · exact matchAt_mul M (fun z => ψ (t * z) - 1) (GlobalTheory.T.jacquetRallisUnitMatch_step_of_one_le_norm r hU F E M a ha h1)
+      · exact matchAt_mul M (fun z => ψ (t * z) - 1) (_root_.GlobalTheory.JR.Step.unitMatchAt_of_one_le_norm r hU F E M a ha h1)
       · refine matchAt_mul_zero M (fun z => ψ (t * z) - 1) u' u ?_
         have : ‖t * mom (sec a) 0‖ ≤ 1 := ht _ (lt_of_not_ge h1)
         simp [hψ.1 _ this])
 
-  refine (GlobalTheory.T.jacquetRallis_match_of_dense_separable F E (r + 1) M u' u htG htU).2 (Nat.succ_pos r) ?_
+  refine (_root_.GlobalTheory.JR.DenseMatch.match_of_dense F E (r + 1) M u' u htG htU).2 (Nat.succ_pos r) ?_
   intro a ha ha0
   obtain ⟨x, hx, -⟩ := hψ.2
   have hm := hS' (nS (x / mom (sec a) 0))

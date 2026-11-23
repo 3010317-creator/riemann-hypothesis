@@ -4,9 +4,10 @@ public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsF
 public import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
 public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
 public import Mathlib.RingTheory.Valuation.ValuationSubring
+public import Mathlib.Analysis.SpecialFunctions.Elliptic.Weierstrass
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.WeierstrassPComplexMultiplicationCongruenceModPr
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.WeierstrassPTorsionIntegralAndDistinctMod
 import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LatticeDeterminedByInvariants
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.WeierstrassPComplexMultiplicationCongruenceModPrStatement
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.WeierstrassPTorsionIntegralAndDistinctModStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -215,7 +216,7 @@ theorem weber_congruences : ∀ (K : IntermediateField ℚ ℂ) [NumberField K] 
     convert this using 1
     linear_combination (-1 / 27 : ℂ) * hΔ'
   have hD : (L'.g₂ ^ 3 - 27 * L'.g₃ ^ 2)⁻¹ ∈ W := by rw [hΔ', inv_one]; exact one_mem W
-  obtain ⟨a, ha, -, -, a2, a3, a4⟩ := GlobalTheory.T.weierstrassP_complexMultiplication_congruence_mod_prime L' W ((π : K) : ℂ) p i2 i3 hg hh hD hp hpW hπ
+  obtain ⟨a, ha, -, -, a2, a3, a4⟩ := _root_.GlobalTheory.EisensteinCongruence.weierstrassP_mul_congr_pow L' W ((π : K) : ℂ) p i2 i3 hg hh hD hp hpW hπ
     (fun l hl ↦ by
       obtain ⟨z, rfl⟩ : ∃ z, l = c * z := ⟨c⁻¹ * l, by field_simp⟩
       rw [mul_left_comm]
@@ -225,7 +226,7 @@ theorem weber_congruences : ∀ (K : IntermediateField ℚ ℂ) [NumberField K] 
   rw [eJ]
   refine ⟨hJ, c1, fun m hm hpm ↦ ?_⟩
   have im := inv_natCast_mem W hp hpW hpm
-  obtain ⟨t1, t2⟩ := GlobalTheory.T.weierstrassP_torsion_integral_and_distinct_mod L' W m i2 i3 hg hh hD hm im
+  obtain ⟨t1, t2⟩ := _root_.GlobalTheory.TorsionIntegral.torsion_integral_distinct L' W m i2 i3 hg hh hD hm im
   have s1 : ∀ t, (m : ℂ) * t ∈ L.lattice → (m : ℂ) * (c * t) ∈ L'.lattice := fun t ht ↦ by
     rw [mul_left_comm]; exact (H _).mpr ht
   refine ⟨fun t ht ht' ↦ ?_, fun n1 n2 t t' ht ht0 ht' ht0' h ↦ ?_⟩

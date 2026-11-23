@@ -3,10 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
 public import Development.AbelianVarietyTheory.Definitions.Divisors.P22
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GrothendieckDeformation
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsModuliPointTrivSqZeroExtTangentBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KodairaSpencerMatrixExistsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KodairaSpencerZeroTangentTrivialStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentFlagHodgeIndexVanishingStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsLocalRingTrivSqZeroExt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsModuliPointTrivSqZeroExtTangentBasis
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KodairaSpencerMatrixExists
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KodairaSpencerZeroTangentTrivial
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TangentFlagHodgeIndexVanishing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -88,10 +89,10 @@ theorem ksUniv : GlobalTheory.CovTop.Hypotheses₂ → GlobalTheory.Published.Gr
   intro hP hG E _ _ _ H Dw l Xo c K _ _ y hpq
   classical
   obtain ⟨X₀, h1, h2, hinj⟩ :=
-    GlobalTheory.T.exists_moduliPoint_trivSqZeroExt_tangentBasis E H Dw l Xo c K y (HIx Dw (psiSet H)) (card_HIx (isHalf_psiSet H))
+    _root_.GlobalTheory.TanBasis.exists_point_tanBasis E H Dw l Xo c K y (HIx Dw (psiSet H)) (card_HIx (isHalf_psiSet H))
   choose N hN using fun k : HIx Dw (psiSet H) =>
-    GlobalTheory.T.kodaira_spencer_matrix_exists hP E H Dw l Xo c K y _ hpq (isTanX_dir h1 h2 (Pi.single k 1))
-  have hL := GlobalTheory.T.tangent_flag_hodge_index_vanishing hP E H Dw l Xo c K y _ X₀ hpq h1 h2 N hN
+    _root_.GlobalTheory.KSExist.ksExist hP E H Dw l Xo c K y _ hpq (isTanX_dir h1 h2 (Pi.single k 1))
+  have hL := _root_.GlobalTheory.FlagTan.isKS_dir_sum hP E H Dw l Xo c K y _ X₀ hpq h1 h2 N hN
   let L : (HIx Dw (psiSet H) → K) →ₗ[K] (HIx Dw (psiSet H) → K) := Fintype.linearCombination K N
   have hLa : ∀ M, L M = ∑ k, M k • N k := fun M => Fintype.linearCombination_apply _ _ _
   have h0 : spMap (dir c (0 : HIx Dw (psiSet H) → K)).toRingHom ≫ X₀ =
@@ -100,7 +101,7 @@ theorem ksUniv : GlobalTheory.CovTop.Hypotheses₂ → GlobalTheory.Published.Gr
     congr 2
     ext z <;> simp [TrivSqZeroExt.algebraMap_eq_inl]
   have Linj : Function.Injective L := (injective_iff_map_eq_zero L).2 fun M hM =>
-    hinj ((GlobalTheory.T.kodaira_spencer_zero_tangent_trivial hP hG E H Dw l Xo c K y _ hpq (isTanX_dir h1 h2 M)
+    hinj ((_root_.GlobalTheory.FlagTan.eq_const_of_isKS_zero hP hG E H Dw l Xo c K y _ hpq (isTanX_dir h1 h2 M)
       (by rw [← hM, hLa]; exact hL M)).trans h0.symm)
   let e := LinearEquiv.ofInjectiveEndo L Linj
   let P := LinearMap.toMatrix' (e.symm : (HIx Dw (psiSet H) → K) →ₗ[K] (HIx Dw (psiSet H) → K))

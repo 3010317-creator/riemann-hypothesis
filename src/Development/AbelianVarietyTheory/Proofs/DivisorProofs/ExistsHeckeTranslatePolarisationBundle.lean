@@ -2,12 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompEqOneOfTransl
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsGaloisCover
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DescendedBirigidifiedBundleSymmetricStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DescendedBundleKernelKilledByIntegerPrimeToPStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DescendedBirigidifiedBundleSymmetric
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DescendedBundleKernelKilledByIntegerPrimeToP
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBirigidifiedBundleOfDescentStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDescentBundlePowerHeckeQuotientStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelAmpleDiagonalDescendedBundleGaloisCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RosatiInvolutionOfGaloisIsogenyDescentStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelAmpleDiagonalDescendedBundleGaloisCover
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RosatiInvolutionOfGaloisIsogenyDescent
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -68,9 +68,9 @@ theorem exists_pol_translate : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UP
   have hmp : (k ^ 2 / c).Coprime p :=
     Nat.Coprime.coprime_dvd_left (Nat.div_dvd_of_dvd hck) (hk.pow_left 2)
   exact ⟨P', hP', r1, r2,
-    GlobalTheory.T.descended_birigidified_bundle_symmetric p D R b (N * k) S s o A' ψ _ hA' hψ hG _ P' hP' w r1 r2,
-    GlobalTheory.T.relAmple_diagonal_descended_bundle_galois_cover p D R b (N * k) S s o A' ψ _ hA' hψ hG _ hm1 P' hP' w,
-    GlobalTheory.T.descendedBundle_kernel_killed_by_integer_prime_to_p p D R b (N * k) S s o A' ψ _ hA' hψ hG _ hmp P' hP' w,
-    GlobalTheory.T.rosati_involution_of_galois_isogeny_descent p D R b (N * k) S s o A' act' ψ _ hA' hψ hG hact _ P' hP' w r1 r2, w⟩
+    _root_.GlobalTheory.HeckeSym.descended_symm p D R b (N * k) S s o A' ψ _ hA' hψ hG _ P' hP' w r1 r2,
+    _root_.GlobalTheory.HeckeAmple.relAmple_diag_of_galois p D R b (N * k) S s o A' ψ _ hA' hψ hG _ hm1 P' hP' w,
+    _root_.GlobalTheory.UPel.HT.Hecke.kernel_descent p D R b (N * k) S s o A' ψ _ hA' hψ hG _ hmp P' hP' w,
+    _root_.GlobalTheory.UPel.HT.Hecke.rosati_of_descent p D R b (N * k) S s o A' act' ψ _ hA' hψ hG hact _ P' hP' w r1 r2, w⟩
 
 end GlobalTheory.UPel.HT.Hecke

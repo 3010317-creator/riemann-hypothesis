@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.WeilThetaConvergence
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsSmoothModerateOfIsAutFunSm
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LintegralSiegelConeInvModulusLtTopWeilStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LintegralSiegelConeInvModulusLtTopWeil
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConeIntegralZeroVarsLtTop
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SchwartzBoundFiniteInfiniteStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SiegelSetCompactReductionStatement
@@ -81,7 +81,7 @@ theorem weilThetaConvergence_of_siegelSet (hRT : GlobalTheory.Published.SiegelSe
       exact GlobalTheory.CompanionTheory.SiegelCone.cone_integral_zero_vars_lt_top D.host.F V.rank (2 * n) c
     · have hw := GlobalTheory.T.witt_frame_rank_le_witt_index D V Xf Yf hW
       have h2 : n + Formalism.MainNotions.SchurIrreducible.wittIdx V < V.rank := hV.resolve_left (by omega)
-      exact GlobalTheory.T.lintegral_siegelCone_inv_modulus_lt_top_weil D.host.F V.rank r (2 * n) hc (by omega)
+      exact _root_.GlobalTheory.SiegelSet.lintegral_cone_modulus_lt_top D.host.F V.rank r (2 * n) hc (by omega)
   calc absThetaInt V ν Φ.1 ≤ ∫⁻ g in S, absTheta V Φ.1 g ∂ν :=
         GlobalTheory.T.theta_integral_le_fundamental_set D V ν hν Φ.1 hcontΦ S hSm hScov
     _ ≤ C₁ * ∫⁻ t in GlobalTheory.SiegelSet.cone r c,

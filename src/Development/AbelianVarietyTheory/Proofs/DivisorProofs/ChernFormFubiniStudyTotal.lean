@@ -1,12 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsClosedImmersionGenericPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChernPartComplementDenseOpenNullField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsProjSpaceStandardChartFubiniStudy
+public import ReciprocityTheory.L2DbarEstimates.IsLocalHomeomorph
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FubiniStudyHessianDeterminantRealPart
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Mathlib.Topology.Separation.CompletelyRegular
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralFubiniStudyDensityEqOne
 import Development.AbelianVarietyTheory.Definitions.Divisors.LineBundleGlobalSectionsDimCongrPicardClass
 import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.LocusEqTopOfDualPow
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChernPartComplementDenseOpenNullFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsProjSpaceStandardChartFubiniStudyStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FubiniStudyHessianDeterminantRealPartStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralFubiniStudyDensityEqOneStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -67,24 +70,24 @@ theorem chern_mass_hermitian_O_one_projective : ∀ N : ℕ, ((ProjSpace.hermiti
   have hSP : ((ProjSpace.hermitianTwistingSheaf ℂ N).φ (RingHom.id ℂ)).SemiPosReg N :=
     (HermLB.semiPos_fs _ _ _ _ _ _ : (ProjSpace.hermitianTwistingSheaf ℂ N).SemiPos N) _
   refine ⟨?_, by rw [Weight.chernPart_neg_eq_zero hC hSP]; rfl⟩
-  obtain ⟨c, i, hsrc, htgt, hsub, hφv⟩ := GlobalTheory.T.exists_projSpace_standardChart_fubiniStudy N
+  obtain ⟨c, i, hsrc, htgt, hsub, hφv⟩ := _root_.GlobalTheory.StdProjChart.exists_stdChart N
   have hmem : c.e.symm 0 ∈ c.e.source := c.e.map_target (htgt ▸ mem_univ _)
   have hgen : genericPoint (PSpace ℂ N) ∈ ProjSpace.chart ℂ N 0 := by
     have h0 : c.e.symm 0 ∈ ptsIn (PSpace.str ℂ N) (RingHom.id ℂ) (ProjSpace.chart ℂ N 0) := hsrc ▸ hmem
     exact ((genericPoint_spec (PSpace ℂ N)).mem_open_set_iff (ProjSpace.chart ℂ N 0).isOpen).2
       ⟨_, by simp, mem_ptsIn.1 h0⟩
-  have hnull := GlobalTheory.T.chernPart_complement_dense_open_null_field ℂ (PSpace ℂ N) (PSpace.str ℂ N) (RingHom.id ℂ) N hproj _ hgen _
+  have hnull := _root_.GlobalTheory.ChernNullField.chernPart_compl_null ℂ (PSpace ℂ N) (PSpace.str ℂ N) (RingHom.id ℂ) N hproj _ hgen _
     ((ProjSpace.hermitianTwistingSheaf ℂ N).φ (RingHom.id ℂ)) 1
   rw [← hsrc] at hnull
   have hmeas : MeasurableSet c.e.source := c.e.open_source.measurableSet
   rw [← union_compl_self c.e.source, measure_union disjoint_compl_right hmeas.compl, hnull, add_zero,
     Weight.chernPart_apply hC 1 c hmeas subset_rfl, c.e.image_source_eq_target, htgt,
     Measure.restrict_univ]
-  refine Eq.trans (lintegral_congr fun v => ?_) (GlobalTheory.T.lintegral_fubiniStudy_density_eq_one' N)
+  refine Eq.trans (lintegral_congr fun v => ?_) (_root_.GlobalTheory.lintegral_fubiniStudy_density_eq_one N)
   have hv : c.e.symm v ∈ c.e.source := c.e.map_target (htgt ▸ mem_univ _)
   rw [AlgChart.chernDens_eq c hC hv (hsub hv), AlgChart.hess, c.e.right_inv (htgt ▸ mem_univ _)]
   have hf : (fun w => ((((ProjSpace.hermitianTwistingSheaf ℂ N).φ (RingHom.id ℂ)).φ i (c.e.symm w) : ℝ) : ℂ)) =
       fun w => ((Real.log (1 + ‖w‖ ^ 2) : ℝ) : ℂ) := funext fun w => by rw [hφv w]
-  rw [hf, GlobalTheory.T.det_complexHessian_fubiniStudy_potential N v]
+  rw [hf, _root_.GlobalTheory.FSDet.det_fubiniStudy_hess N v]
   simp
 end GlobalTheory.FSMass

@@ -1,13 +1,18 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.HolomorphicDiscreteSeries.WeightOccurrence.OccSome
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CommutantAnnihilatingVectorZeroStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CommutatorCoerciveOnAnnihilatorStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsUnitaryInterlacingRealizationStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HilbertSchmidtNormSubmultiplicativeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InterlacingSignatureParityStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PartialFractionCoefficientSignsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TraceDiagonalBlockConjugateFormulaStatement
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CommutantAnnihilatingVectorZero
+public import Formalism.RealPlaceAnalysis.Complexify
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CommutatorCoerciveOnAnnihilator
+public import Development.WeilBound.RepresentationTheoryGL.HolomorphicDiscreteSeries.EmbeddedFrames.PfD
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsUnitaryInterlacingRealization
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HilbertSchmidtNormSubmultiplicative
+public import Development.WeilBound.CoreStatements.BranchingTraces.HeBranching
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InterlacingSignatureParity
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PartialFractionCoefficientSigns
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TraceDiagonalBlockConjugateFormula
 public import Development.WeilBound.CoreStatements.BranchingTraces.ContinuousEmb
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -84,8 +89,8 @@ theorem emb_mulVec_alt (a : Matrix (Fin n) (Fin n) ℂ) :
 
 theorem frame : PositivityTheory.RgHe.Frame := by
   intro n ε d ε' d' e hF hinj hW
-  obtain ⟨hs1, hs2⟩ := GlobalTheory.T.interlacing_signature_parity n ε d ε' d' e hF hinj hW
-  obtain ⟨ps1, ps2⟩ := GlobalTheory.T.partial_fraction_coefficient_signs d d' hinj
+  obtain ⟨hs1, hs2⟩ := _root_.GlobalTheory.CompanionTheory.RgHeFrame.SignWord.heSign n ε d ε' d' e hF hinj hW
+  obtain ⟨ps1, ps2⟩ := _root_.GlobalTheory.CompanionTheory.RgHeSign.pfSign d d' hinj
   have hD : ∀ i, 0 < (if ε i then (1 : ℝ) else -1) * pfD d d' i := fun i => by
     have h := ps1 i
     by_cases hi : ε i = true
@@ -107,7 +112,7 @@ theorem frame : PositivityTheory.RgHe.Frame := by
         exact hj ((hs2 j).2 h')
       rw [he.neg_one_pow, one_mul] at h
       linarith
-  obtain ⟨g, X, hgU, hXg, hblk, hβ⟩ := GlobalTheory.T.exists_unitary_interlacing_realization n ε d ε' d' e hF.1 hF.2 hinj hD hR
+  obtain ⟨g, X, hgU, hXg, hblk, hβ⟩ := _root_.GlobalTheory.CompanionTheory.RgHeFrame.build n ε d ε' d' e hF.1 hF.2 hinj hD hR
   set J := Jm ε with hJ
   have hJJ : J * J = 1 := Jm_mul_self ε
   have h2 : (J * gᴴ * J) * g = 1 := by
@@ -122,7 +127,7 @@ theorem frame : PositivityTheory.RgHe.Frame := by
     rw [hinv]; rfl
   refine ⟨gu, fun Y => ?_, ?_⟩
   · rw [hgu, hgu']
-    exact GlobalTheory.T.trace_diagonal_block_conjugate_formula n e d d' g X hdet hXg hblk Y
+    exact _root_.GlobalTheory.CompanionTheory.RgHeFrame.trace_diagonal_block_conjugate n e d d' g X hdet hXg hblk Y
   · set D : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ := diagonal fun i => ((d i : ℝ) : ℂ) with hDd
     have hX : X = g * D * g⁻¹ := by
       rw [hXg.symm, Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hdet, Matrix.mul_one]
@@ -132,8 +137,8 @@ theorem frame : PositivityTheory.RgHe.Frame := by
     have hcyc : ∀ A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ, A * X = X * A → A *ᵥ v = 0 → A = 0 := by
       intro A hA hAv
       rw [hX] at hA
-      exact GlobalTheory.T.commutant_annihilating_vector_zero g _ v hdet hdi (fun i => by rw [hinv]; exact hβ i) A hA hAv
-    obtain ⟨c, hc, hAc⟩ := GlobalTheory.T.commutator_coercive_on_annihilator X v hcyc
+      exact _root_.GlobalTheory.CompanionTheory.RgHeFrame.commutant_cyclic_eq_zero g _ v hdet hdi (fun i => by rw [hinv]; exact hβ i) A hA hAv
+    obtain ⟨c, hc, hAc⟩ := _root_.GlobalTheory.CompanionTheory.RgHeFrame.hs_le_commutator X v hcyc
     refine ⟨c * hs g * hs g⁻¹ + 1, by have := hs_nonneg' g; have := hs_nonneg' g⁻¹; positivity, fun h => ?_⟩
     set B := emb e (um h) with hB
     set B' := emb e (um h⁻¹) with hB'
@@ -161,8 +166,8 @@ theorem frame : PositivityTheory.RgHe.Frame := by
     have i1 := hAc (B - 1) hAv
     rw [key] at i1
     have i2 : hs (B * (g * δ * g⁻¹)) ≤ hs B * (hs g * hs δ * hs g⁻¹) := by
-      refine (GlobalTheory.T.hilbert_schmidt_norm_submultiplicative _ _).trans (mul_le_mul_of_nonneg_left ?_ (hs_nonneg' _))
-      refine (GlobalTheory.T.hilbert_schmidt_norm_submultiplicative _ _).trans (mul_le_mul_of_nonneg_right (GlobalTheory.T.hilbert_schmidt_norm_submultiplicative _ _) (hs_nonneg' _))
+      refine (_root_.GlobalTheory.CompanionTheory.RgHe.hs_mul_le_mul _ _).trans (mul_le_mul_of_nonneg_left ?_ (hs_nonneg' _))
+      refine (_root_.GlobalTheory.CompanionTheory.RgHe.hs_mul_le_mul _ _).trans (mul_le_mul_of_nonneg_right (_root_.GlobalTheory.CompanionTheory.RgHe.hs_mul_le_mul _ _) (hs_nonneg' _))
     have i3 : hs (um h - 1) = hs (B - 1) := (hs_emb_sub (e := e) (um h)).symm
     rw [i3]
     have := hs_nonneg' B; have := hs_nonneg' δ; have := hs_nonneg' g; have := hs_nonneg' g⁻¹

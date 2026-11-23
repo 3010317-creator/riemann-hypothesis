@@ -4,13 +4,13 @@ public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.AtBas
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LocClosed
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.OverOfIsTermOver
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UnitriangularLatticeStabiliserSubFrameAutomorphi
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsDatumOfTwoCongruentFramesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsTermLocalTermMoveOfIsometryStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsDatumOfTwoCongruentFrames
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsTermLocalTermMoveOfIsometry
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalDataGlobalTermIndependentOfRepresentativeStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalAutomorphismLocalExtensionMovesLatticesStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermAtBasePointOfFrames
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermAtBasePointOfFramesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermDatumOrbitUniqueStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermDatumOrbitUnique
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnsignedLocalTermRowLatticeIsTerm
 import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.LocalDiscriminantIsUnit
 import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.SatGram
@@ -107,7 +107,7 @@ theorem isTerm_move {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] {
     [TopologicalSpace E] [MeasurableSpace E] {M : Formalism.MainNotions.S.Loc.Model F E} {V : Type} [AddCommGroup V] [Module E V]
     (H : Formalism.MainNotions.S.Loc.HermSp M V) {r : ℕ} (g : V ≃ₗ[E] V) (t : Formalism.MainNotions.S.Loc.Term V M r)
     (hg : Formalism.MainNotions.S.LocNG.IsUnitary H g) (ht : H.IsTerm t) : H.IsTerm (GlobalTheory.LocOver.move g t) :=
-  GlobalTheory.T.isTerm_localTermMove_of_isometry H g t hg ht
+  _root_.GlobalTheory.LocOver.isTerm_move_of_unitary H g t hg ht
 
 theorem tri_adapt_loc (Z : LocDat D) (p : PlF D) (g : GV D) {T : D.host.E} (F₁ F₂ : LFlag (D.sp.Y 0) D.R.rS T)
     (g' : Vp D p ≃ₗ[(D.s.atP p).Ep] Vp D p) (hg : Adapt g F₁ F₂) (he : Ext p g g') :
@@ -177,7 +177,7 @@ theorem local_data_of_term : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u'
   have hex : ∀ p, ∃ d, LocNG.IsTermOver (FP p) d
       (GlobalTheory.LocOver.move (gp p) (GlobalTheory.LocOver.locU Z p t.lam (lf D (X.Fu u)) t.frame (Tu D u) (Tu D u'))) := by
     intro p
-    refine GlobalTheory.T.exists_datum_of_two_congruent_frames (Z.M p) (Z.agree p).1 (locH Z p) D.R.rS (FP p) _
+    refine _root_.GlobalTheory.LocOver.TermOver.exists_datum (Z.M p) (Z.agree p).1 (locH Z p) D.R.rS (FP p) _
       (isTerm_move (locH Z p) (gp p) _ (hu p) (hτ p).1) (hB p).2.2.1.symm (hB p).2.2.2.symm ?_ ?_
     · rw [(hB p).1]
       exact tri_adapt_loc Z p g _ _ (gp p) hgF (hgp p)
@@ -197,7 +197,7 @@ theorem local_data_of_term : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u'
     refine (GlobalTheory.LocOver.Check.over_move_iff (FP p) d _ (gp p) (hu p)).symm.trans ?_
     constructor
     · intro h
-      exact GlobalTheory.T.term_datum_orbit_unique (Z.M p) (Z.agree p).1 (locH Z p) D.R.rS D.R.k (FP p) (finrank_Vp_eq p) (hRel p) d (y p) _ h
+      exact _root_.GlobalTheory.LocOver.orbit_over_unique (Z.M p) (Z.agree p).1 (locH Z p) D.R.rS D.R.k (FP p) (finrank_Vp_eq p) (hRel p) d (y p) _ h
         (GlobalTheory.LocOver.Check.over_of_isTermOver _ _ _ (hy p))
     · intro h
       refine ⟨1, fun _ _ => rfl, y p, h, ?_⟩

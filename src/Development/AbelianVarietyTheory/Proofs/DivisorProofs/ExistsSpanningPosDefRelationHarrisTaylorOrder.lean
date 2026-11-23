@@ -2,10 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjugateGramSymm
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NotCompactOfMEqOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorOrderFaithfulLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorOrderFaithfulLattice
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralCasimirElementCentralStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralCasimirElementMulPosStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceCompPosOfAdjoint
+public import Mathlib.LinearAlgebra.Basis.MulOpposite
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -20,7 +21,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.LinearAlgebra.Basis.MulOpposite
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -312,7 +312,7 @@ theorem exists_W_datum (D : Datum p) : ∃ (r : ℕ) (x : Module.Basis (Fin r) �
         have hz : ∀ y : D.La, (D.star x).unop • y = 0 := fun y => hinj _ (by
           have := LinearMap.congr_fun h0 ((1 : ℝ) ⊗ₜ y)
           rwa [hA, LinearMap.zero_apply] at this)
-        have h1 := GlobalTheory.T.harrisTaylor_order_faithful_lattice p D _ hz
+        have h1 := _root_.GlobalTheory.HTFaith.faithful p D _ hz
         rw [← D.star_star x, h1]
         simp
       have htr := trace_comp_pos_of_adjoint (D.EF.baseChange ℝ ∘ₗ J)

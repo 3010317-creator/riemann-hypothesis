@@ -6,12 +6,13 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamC
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExpansionsLowAndPullback
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExpansionsLowAndPullbackRecord
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NBasisLoc
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedSubfieldLeCyclotomicExt
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachExpansionBasisDivisibilityStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachExpansionsSpanFullLatticeStatement
+public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachExpansionBasisDivisibility
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeEqFiltrationSumAtLevel
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLevelExpansionAtRootOfUnity
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachWeierstrassTestAndDensity
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedSubfieldLeCyclotomicExt
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachExpansionsSpanFullLattice
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLevelExpansionAtRootOfUnity
 import Mathlib.Algebra.Lie.OfAssociative
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -202,9 +203,9 @@ theorem lattice_at_level : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc)
         exact hf_same.symm ▸ ⟨hd.1, hdF⟩
       · have hzero := (congrArg (fun z => embed z) (hf_ne hr)).trans embed.map_zero
         exact ⟨(hf_ne hr).symm ▸ zero_mem _, hzero.symm ▸ zero_mem _⟩
-    have hfull := GlobalTheory.T.wach_expansions_span_full_lattice D HW F Cm l K s LL h T hT i ζ hprim
+    have hfull := _root_.GlobalTheory.NL.FullLevel.full_lat D HW F Cm l K s LL h T hT i ζ hprim
     refine (@GlobalTheory.NL.N_basis D HW F l _ K s LL h T hT).elim fun nb => ?_
-    have hli := GlobalTheory.T.wachExpansion_basis_divisibility D HW F Cm l K s LL h T hT i ζ ⟨s, hprim⟩ hfull
+    have hli := _root_.GlobalTheory.NL.LevInj.expansion_basis D HW F Cm l K s LL h T hT i ζ ⟨s, hprim⟩ hfull
     have hdense := (GlobalTheory.NL.WDiv.weierstrass_dense D HW l K s LL h).2.2.1 i ζ ⟨s, hprim⟩
     have : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
     have : IsFractionRing ↥(OL LL) ↥LL.1 :=

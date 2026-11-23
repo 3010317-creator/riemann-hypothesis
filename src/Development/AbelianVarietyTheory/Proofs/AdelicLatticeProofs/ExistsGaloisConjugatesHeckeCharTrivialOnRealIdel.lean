@@ -3,9 +3,11 @@ module
 public import Formalism.LocalToGlobal.ProjectiveLattices.FamilyUniformisationBasePointOrthogonalBis
 public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ContinuousCharacterFiniteOrderIntegralUnitsStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsContinuousCircleCharExtensionStatement
+public import Mathlib.Analysis.Complex.Circle
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsContinuousCircleCharExtension
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsOpenCongruenceIdelesAndRealFinitePartsStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryCharPiComplexUnitsEqProdZpowStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryCharPiComplexUnitsEqProdZpow
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CmTypeRestrictRealSubfieldInfinitePlaceBijective
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsIsArchimedeanAdeleChartOfRealChart
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsRealChartInfiniteAdelesCmType
@@ -181,7 +183,7 @@ theorem exists_type (D : D7) (θ : D.what₂.Tau → (Ainf D.host.F ⊗[D.host.F
     rw [TensorProduct.sub_tmul, RingHom.map_sub, ← mul_one (1 : D.host.E), ← Algebra.TensorProduct.tmul_mul_tmul,
       RingHom.map_mul, rr z hz, rr z⁻¹ hz', mul_one, ← Algebra.TensorProduct.one_def, RingHom.map_one]
     simp
-  obtain ⟨k, hk⟩ := GlobalTheory.T.exists_zpow_prod_div_conj_of_continuous_trivial_on_real D.what₂.Tau (χ.comp T.toHomUnits) (hc.comp Tc) fun z hz => by
+  obtain ⟨k, hk⟩ := _root_.GlobalTheory.unitaryChar_pi_complexUnits_eq_prod_zpow D.what₂.Tau (χ.comp T.toHomUnits) (hc.comp Tc) fun z hz => by
     let a : (AF D.host.F)ˣ := Units.mkOfMulEqOne (pairA D.host.F (ρ (fun i => (z i : ℂ).re)) 1)
       (pairA D.host.F (ρ (fun i => (z⁻¹ i : ℂ).re)) 1) (Prod.ext (rm z hz) (mul_one (1 : Af D.host.F)))
     have : T.toHomUnits z = idF D a := Units.ext (ext _ _ ((tf z).trans rfl) fun τ => (ti z τ).trans (rr z hz τ).symm)
@@ -245,7 +247,7 @@ theorem exists_conjugates : ∀ (D : D7) (Q : Par D) (χ₀ : (AE D)ˣ →* Circ
     have Ac : Continuous A := by
       rw [show (A : _ → _) = _ from funext hA]
       exact continuous_finsetProd _ fun τ _ => (continuous_angle D (θc _)).zpow _
-    obtain ⟨χ, χc, χ1, χ2⟩ := GlobalTheory.T.exists_continuous_circle_char_extension' (AE D)ˣ (intIdeles D)
+    obtain ⟨χ, χc, χ1, χ2⟩ := _root_.GlobalTheory.exists_continuous_circle_char_extension (AE D)ˣ (intIdeles D)
       ((Units.map (incA D).toMonoidHom).range ⊔ (idF D).range) (A.comp (intIdeles D).subtype * ψ) Hopen
       ((Ac.comp continuous_subtype_val).mul ψc) (by
         intro x hx

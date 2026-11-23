@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SimpleOver
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LeKerOfLocalFiniteLengthToSimpleStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LeKerOfLocalFiniteLengthToSimple
+public import Mathlib.LinearAlgebra.Quotient.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -41,7 +42,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.LinearAlgebra.Quotient.Basic
 
 @[expose] public section
 
@@ -82,7 +82,7 @@ theorem tens_maxStab_contains_left_ker : ∀ {M₀ V : Type} [AddCommGroup M₀]
     simp only [bAct, dif_pos (hsh h hh), Submodule.mapQ_apply, Submodule.mkQ_apply]
   let φ : M₀ →ₗ[ℂ] (M₀ ⊗[ℂ] V) ⧸ N' := N'.mkQ ∘ₗ (TensorProduct.mk ℂ M₀ V).flip y
   have hφ : ∀ x, φ x = N'.mkQ (x ⊗ₜ[ℂ] y) := fun x => rfl
-  have key := GlobalTheory.T.le_ker_of_local_finite_length_to_simple Op₀ Rel₀ K₀ φ act (bAct '' B) hlen hmax hK hKs
+  have key := _root_.GlobalTheory.TensHead.le_ker_of_simple_commuting Op₀ Rel₀ K₀ φ act (bAct '' B) hlen hmax hK hKs
     (by
       intro z hz
       rw [LinearMap.mem_ker, hφ, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero]

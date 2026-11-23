@@ -3,9 +3,11 @@ module
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.HeckeGaloisCriteria.FactsOfPre
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.GaloisPreconditions
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.NormChoiceFacts
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CentralElementsFromIdempotentCoeffsStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TraceMemAdjoin
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ResidualRankPartExistsOfJointConditionStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.StepJumpDirect
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CentralElementsFromIdempotentCoeffs
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.HeckeCharEqOfLAdicRealisation
+public import Formalism.SharpRestriction.LevelLetterCocycles.JointConditionsZpowers.ResidualIrreducibleOfTheorem
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ResidualRankPartExistsOfJointCondition
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.HeckeGaloisCriteria.CompatibilityTiesEigenRestriction
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.HeckeGaloisCriteria.Tie0CutOfTie0
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.AdmissibleJOfRestricted
@@ -14,6 +16,7 @@ public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLif
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ExistsGood
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.PrvG6OfAdmStatement
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.SParts
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TraceMemAdjoin
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -47,7 +50,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.HeckeCharEqOfLAdicRealisation
 
 @[expose] public section
 
@@ -83,7 +85,7 @@ theorem pre_cut_alt {c : CutD D} (hc : c.Good) {x : NChoice D} (h : _root_.Upper
     good := h.good }
 theorem facts_of_galois_preconditions_of_cutRec (hCh : GlobalTheory.TwSys.Cheb) (lf : LocalFiniteness) (ltd : LocalTateDuality) (lec : LocalEulerChar)
     {x : NChoice D} (h : _root_.UpperTheory.GalC.GaloisPreconditions D x) (hC : CutRec D) : _root_.GlobalTheory.NFacts.NormChoiceFacts D x :=
-  have ex : GlobalTheory.StringRepresentationDecomposition.RbEx D := GlobalTheory.T.residualRankPartExists_of_jointCondition D h.what₂.c.rho
+  have ex : GlobalTheory.StringRepresentationDecomposition.RbEx D := _root_.GlobalTheory.StringRepresentationDecomposition.rbEx_of_jointCond_rho D h.what₂.c.rho
   have h0 : SumRepresentations.tie0 D := h.adm.1.1.1
   have h1 : SumRepresentations.adm1 D := h.adm.1.1.2.2.1
   have g2 := _root_.UpperTheory.GalS.de_rham_points_weight_jumps_alt D h0 h1 h.what₂.a.a2 h.what₂.a.a5 hC
@@ -97,7 +99,7 @@ theorem facts_of_galois_preconditions_of_cutRec (hCh : GlobalTheory.TwSys.Cheb) 
 theorem exists_good_cut_facts_tie4 (hCh : GlobalTheory.TwSys.Cheb) (lf : LocalFiniteness) (ltd : LocalTateDuality) (lec : LocalEulerChar)
     {x : NChoice D} (h : _root_.UpperTheory.GalC.GaloisPreconditions D x) (hT : Tie4 D) :
     ∃ c : CutD D, c.Good ∧ _root_.GlobalTheory.NFacts.NormChoiceFacts (cut D c) (nchCut c x) ∧ Tie4 (cut D c) := by
-  obtain ⟨c, hc⟩ := _root_.UpperTheory.GalC.exists_good_alt (GlobalTheory.T.central_elements_from_idempotent_coeffs GlobalTheory.CentralIdem.centralIdemCoeff) h hT
+  obtain ⟨c, hc⟩ := _root_.UpperTheory.GalC.exists_good_alt (_root_.GlobalTheory.Pass.CentralStep.main GlobalTheory.CentralIdem.centralIdemCoeff) h hT
   exact ⟨c, hc, _root_.UpperTheory.GalC.facts_of_galois_preconditions_of_cutRec hCh lf ltd lec (_root_.UpperTheory.GalC.pre_cut_alt hc h) (cutRec_cut hc), compatibilityTies_eigenRestriction c hT⟩
 end UpperTheory.GalC
 end

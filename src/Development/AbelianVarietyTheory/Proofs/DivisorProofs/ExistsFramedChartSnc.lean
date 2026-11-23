@@ -4,26 +4,25 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsLat
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PerValNeZero
 public import Development.AbelianVarietyTheory.Counterexamples.LevelGroupExamples.RelabBijective
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CubicalWeilPairingTorsionConstHolomorphicFamilyStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsConstantPeriodMarkingUniversalCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsContinuousOnFrameDirectionsInverseStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsConstantPeriodMarkingUniversalCover
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsContinuousOnFrameDirectionsInverse
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsExponentialChartAtPoint
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFramedChartExponentialToroidalModel
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHolomorphicLatticeBasisPunctPolydiscCoverPStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLocallyHolomorphicPeriodsFamilyStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsPeriodsInFrameOffBoundaryStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsSncCoordinatesComplexPointSmoothVarietyStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLocallyHolomorphicPeriodsFamily
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsToricTorsionCubicalWeilOneComplexPointStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExponentialKernelLatticeRiemannFormOffBoundaryStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExponentialKernelsIsHolomorphicLatticeFamilyStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FlatSectionIsFlat
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HorizontalCoordinateLatticeIsometryDetOne
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HorizontalCoordinateLatticeIsometryDetOneStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HorizontalCoordinatePolynomialBoundStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HorizontalCoordinatePolynomialBound
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HorizontalFunctionMatrixRelation
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PeriodLinearAlgebraHodgeSequenceExactStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PeriodsChangeOfEigenFrameStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PeriodLinearAlgebraHodgeSequenceExact
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PeriodsChangeOfEigenFrame
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TorsionCountThroughExponentialLatticeKernelStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TwoMarkingsDifferByLevelIsometryStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsPeriodsInFrameOffBoundary
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsSncCoordinatesComplexPointSmoothVarietyStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExponentialKernelsIsHolomorphicLatticeFamilyStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TwoMarkingsDifferByLevelIsometry
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsDifferentiableOnTransfer
 import Mathlib.Algebra.AffineMonoid.Basic
 import Mathlib.Algebra.Order.Floor.Extended
@@ -264,8 +263,8 @@ theorem exists_isLogChart_snc : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
 theorem logGrowth_snc : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Z : Model Xo c β) (hsm : SmoothOfRelativeDimension Dw.dim (genStr Z)) (hsnc : ReciprocityTheory.AnForm.R.FinalTheorems.Snc (genBdIdeal Z)) (σ : c.F →+* ℂ) (g : ℕ) (e : Fin g ≃ Letter Dw) (Fu : Fam Xo c σ e) (τ : E →+* ℂ) (x : ∀ i, Idx Dw τ → (Fu.Di i).La) (hm : Fin Fu.n → Matrix (Idx Dw τ) (Idx Dw τ) E) (h : CxFr Z σ → ℂ), Formalism.L2.PjFree.GoodEmb c σ → 1 ≤ Dw.p + Dw.q → (∀ i, IsPerBasis (Fu.Di i) (x i) (hm i)) → (∀ a i Q, Per Fu a i Q → h a = perVal c σ τ (x i) (hm i) Q) → LogGrowth h := by
   intro E _ _ _ H Dw l Xo c O _ β Z hsm hsnc σ g e Fu τ x hm h hσ hpq hx hh x₀
   obtain ⟨n, g', r, k, ch, ex, lam, ρ, hx₀, hx₀', hch⟩ := exists_isLogChart_snc E H Dw l Xo c O β Z hsm hsnc σ hσ hpq x₀
-  obtain ⟨i, T₀, hmark⟩ := GlobalTheory.T.exists_constant_periodMarking_universalCover E H Dw l Xo c O β Z σ g e Fu n g' r k ch ex lam ρ hch
-  obtain ⟨C₂, k₂, hbnd⟩ := GlobalTheory.T.horizontalCoordinate_polynomial_bound E H Dw l c σ (Fu.Di i) τ (x i) (hm i) g' r T₀ ρ (hx i)
+  obtain ⟨i, T₀, hmark⟩ := _root_.GlobalTheory.ShFam.Hor.Mark.exists_marking_const E H Dw l Xo c O β Z σ g e Fu n g' r k ch ex lam ρ hch
+  obtain ⟨C₂, k₂, hbnd⟩ := _root_.GlobalTheory.ShFam.Hor.PolyBd.perVal_bound E H Dw l c σ (Fu.Di i) τ (x i) (hm i) g' r T₀ ρ (hx i)
   obtain ⟨hexp, hinner, -, hlam, C₁, k₁, hgrow⟩ := hch
   refine ⟨ch.source ∩ ch ⁻¹' Metric.ball 0 (1 / 2),
     fun y => ∏ j ∈ Finset.univ.filter (fun j : Fin n => (j : ℕ) < k), ch y j,
@@ -277,7 +276,7 @@ theorem logGrowth_snc : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     simp
   intro V _ _ _ B a hB ha haN b₀ hb₀
   obtain ⟨W, Wi, hW, hWi, hdir⟩ :=
-    GlobalTheory.T.exists_continuousOn_frameDirections_inverse E H Dw l Xo c O β Z σ n g' ch ex hexp V B a hB ha fun b hb => (haN b hb).1
+    _root_.GlobalTheory.ShFam.Hor.ExpDirs.exists_dirs_continuousOn E H Dw l Xo c O β Z σ n g' ch ex hexp V B a hB ha fun b hb => (haN b hb).1
   have hBn : B ∈ 𝓝 b₀ := hB.mem_nhds hb₀
   obtain ⟨M, hM, hWM⟩ := eventually_entries_le (hW.continuousAt hBn)
   obtain ⟨M', hM', hWM'⟩ := eventually_entries_le (hWi.continuousAt hBn)
@@ -288,8 +287,8 @@ theorem logGrowth_snc : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   obtain ⟨s, hs, hse, hsi, hsn⟩ := exists_log_lift k (ch (a b).1) hz ((hinner _ hs1).1 hin)
   obtain ⟨hd, hw1, hw2⟩ := hdir b hb
   obtain ⟨Q, gm, hQ, hgm, hv⟩ := hmark s hs (a b) (W b) (by rw [hse, ch.left_inv hs1]) hd
-  have hgood := GlobalTheory.T.periodLinearAlgebra_hodgeSequence_exact E H Dw l Xo c O β Z σ g e Fu τ (a b) i Q (x i) (hm i) hQ (hx i)
-  obtain ⟨hgood', hnorm, -⟩ := GlobalTheory.T.horizontalCoordinate_lattice_isometry_det_one E H Dw l c σ (Fu.Di i) τ (x i) (hm i) Q gm (hx i) hgood hgm
+  have hgood := _root_.GlobalTheory.ShFam.Hor.goodPer_of_per E H Dw l Xo c O β Z σ g e Fu τ (a b) i Q (x i) (hm i) hQ (hx i)
+  obtain ⟨hgood', hnorm, -⟩ := _root_.GlobalTheory.ShFam.HorIso.perVal_isom E H Dw l c σ (Fu.Di i) τ (x i) (hm i) Q gm (hx i) hgood hgm
   set L := 1 + |Real.log ‖∏ j ∈ Finset.univ.filter (fun j : Fin n => (j : ℕ) < k), ch (a b).1 j‖| with hL
   have hL1 : 1 ≤ L := le_add_of_nonneg_right (abs_nonneg _)
   have hP : 1 ≤ (5 * L) ^ k₁ := one_le_pow₀ (by linarith)
@@ -322,9 +321,9 @@ theorem horOf_eq_perVal {Z : Model Xo c β} (hx : ∀ i, IsPerBasis (Fu.Di i) (x
   have hs := hex.choose_spec
   generalize hex.choose = w at hs
   obtain ⟨j, Q'⟩ := w
-  obtain rfl : j = i := (GlobalTheory.T.two_markings_differ_by_level_isometry E H Dw l Xo c O β Z σ g e Fu a).1 _ _ _ _ hs h
-  obtain ⟨gm, h1, h2, h3⟩ := (GlobalTheory.T.two_markings_differ_by_level_isometry E H Dw l Xo c O β Z σ g e Fu a).2 _ _ _ h hs
-  have := perVal_isLev (hx j) (GlobalTheory.T.periodLinearAlgebra_hodgeSequence_exact E H Dw l Xo c O β Z σ g e Fu τ a j Q' _ _ hs (hx j)) h1 h2
+  obtain rfl : j = i := (_root_.GlobalTheory.ShFam.Hor.TwoMarkings.per_unique E H Dw l Xo c O β Z σ g e Fu a).1 _ _ _ _ hs h
+  obtain ⟨gm, h1, h2, h3⟩ := (_root_.GlobalTheory.ShFam.Hor.TwoMarkings.per_unique E H Dw l Xo c O β Z σ g e Fu a).2 _ _ _ h hs
+  have := perVal_isLev (hx j) (_root_.GlobalTheory.ShFam.Hor.goodPer_of_per E H Dw l Xo c O β Z σ g e Fu τ a j Q' _ _ hs (hx j)) h1 h2
   rw [← this]
   congr 1
   exact AddMonoidHom.ext h3
@@ -333,14 +332,14 @@ theorem horFn_horOf_snc {Z : Model Xo c β} (hsm : SmoothOfRelativeDimension Dw.
     (hsnc : ReciprocityTheory.AnForm.R.FinalTheorems.Snc (genBdIdeal Z)) (hσ : Formalism.L2.PjFree.GoodEmb c σ) (hr : 1 ≤ Dw.p + Dw.q)
     (hx : ∀ i, IsPerBasis (Fu.Di i) (x i) (hm i)) :
     HorFn (Z := Z) τ (horOf Fu τ x hm) := by
-  have good := fun a i Q h => GlobalTheory.T.periodLinearAlgebra_hodgeSequence_exact E H Dw l Xo c O β Z σ g e Fu τ a i Q _ _ h (hx i)
+  have good := fun a i Q h => _root_.GlobalTheory.ShFam.Hor.goodPer_of_per E H Dw l Xo c O β Z σ g e Fu τ a i Q _ _ h (hx i)
   refine ⟨fun a ha => ?_, fun a a' M N ha hM hN => ?_, fun V _ _ _ B a hB hf hi b₀ hb => ?_,
     logGrowth_snc E H Dw l Xo c O β Z hsm hsnc σ g e Fu τ x hm _ hσ hr hx (horOf_eq_perVal hx)⟩
-  · obtain ⟨i, Q, h⟩ := GlobalTheory.T.exists_periods_in_frame_off_boundary E H Dw l Xo c O β Z σ g e Fu a ha
+  · obtain ⟨i, Q, h⟩ := _root_.GlobalTheory.ShFam.Hor.exists_per E H Dw l Xo c O β Z σ g e Fu a ha
     rw [horOf_eq_perVal hx a i Q h]
     exact (good a i Q h).perVal_ne_zero
-  · obtain ⟨i, Q, h⟩ := GlobalTheory.T.exists_periods_in_frame_off_boundary E H Dw l Xo c O β Z σ g e Fu a ha
-    obtain ⟨Q', h', hc⟩ := GlobalTheory.T.periods_change_of_eigenFrame E H Dw l Xo c O β Z σ g e Fu a a' i Q h hM.1
+  · obtain ⟨i, Q, h⟩ := _root_.GlobalTheory.ShFam.Hor.exists_per E H Dw l Xo c O β Z σ g e Fu a ha
+    obtain ⟨Q', h', hc⟩ := _root_.GlobalTheory.ShFam.Hor.per_chg E H Dw l Xo c O β Z σ g e Fu a a' i Q h hM.1
     have key : ∀ ρ M, Chg a a' ρ M → perMat (x i) Q ρ = Mᵀ * perMat (x i) Q' ρ := fun ρ M hM => by
       ext j k
       simp only [perMat, Matrix.of_apply, Matrix.mul_apply, Matrix.transpose_apply, hc ρ M hM, mul_comm]
@@ -350,7 +349,7 @@ theorem horFn_horOf_snc {Z : Model Xo c β} (hsm : SmoothOfRelativeDimension Dw.
     obtain ⟨-, h0, -, S', hS'⟩ := good a' i Q' h'
     rw [horOf_eq_perVal hx a i Q h, horOf_eq_perVal hx a' i Q' h', perVal, perVal, k2, key _ _ hM]
     exact GlobalTheory.ShFam.Hor.horVal_change N M h0 hS' (k2 ▸ hR) (key _ _ hM ▸ hS)
-  · obtain ⟨B', i, Q, hB', hb', -, hP, hd⟩ := GlobalTheory.T.exists_locally_holomorphic_periods_family E H Dw l Xo c O β Z σ g e Fu V B a hB hf hi b₀ hb
+  · obtain ⟨B', i, Q, hB', hb', -, hP, hd⟩ := _root_.GlobalTheory.ShFam.HorLift.exists_hol_per E H Dw l Xo c O β Z σ g e Fu V B a hB hf hi b₀ hb
     have hn := hB'.mem_nhds hb'
     have hd' : ∀ v z, DifferentiableAt ℂ (fun b => Q b v z) b₀ := fun v z => (hd v z).differentiableAt hn
     obtain ⟨R, hR⟩ := (good _ i _ (hP b₀ hb')).2.2.1

@@ -2,10 +2,13 @@ module
 
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.CharacterChoiceData
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SphericalHeckeScalarOnTypeSpacesAllPlaces
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SplitPlaceHeckeOperatorScalarOnSphericalStatement
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteCosetsHeckeSetAtSplitPlaceOutsideLevelStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalPointThetaExhaustion
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PointLocalEigenGaloisPolynomialSplitStatement
+public import Formalism.LocalToGlobal.NormalizedHeckeFactors.HeckeStdTwOfStd
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.HeckeSplitOne
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PointLocalEigenGaloisPolynomialSplit
+import Formalism.LocalToGlobal.GaloisLevelStructure.DefsAut
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SplitPlaceHeckeOperatorScalarOnSpherical
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteCosetsHeckeSetAtSplitPlaceOutsideLevel
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplitExEveryDatum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -67,7 +70,7 @@ theorem eig_at_alt {hL : _root_.UpperTheory.Zero.LLC.RecTExists} {D : D7} (P : _
   have hex : ∀ k, ∃ c : ℂ, ∀ f ∈ P.H.av.S i Q,
       (∀ κ ∈ Umax D.host.E D.R.nV, TrivOutside {s.v} κ → NG.rt D.host.E D.R.nV κ f = f) →
       NG.tN (Umax D.host.E D.R.nV) s ϖ k f = c • f := fun k =>
-    GlobalTheory.T.splitPlace_heckeOperator_scalar_on_spherical D.host.E D.R.nV (P.M.loc i).wt (P.H.av.S i Q) (P.H.av.irr i Q) s ϖ k hu
+    _root_.GlobalTheory.HeckeScalarSph.tN_scalar D.host.E D.R.nV (P.M.loc i).wt (P.H.av.S i Q) (P.H.av.irr i Q) s ϖ k hu
   choose c hc using hex
   have hfT : ∀ y, (P.M.loc i).real y ∈ NG.TypeSp (P.M.loc i).wt.ρ (P.M.loc i).J (P.M.loc i).χ := by
     intro y
@@ -94,7 +97,7 @@ theorem eig_at_alt {hL : _root_.UpperTheory.Zero.LLC.RecTExists} {D : D7} (P : _
       (Umax D.host.E D.R.nV) (fun κ _ => Iff.rfl) g hg hg0 hgfix c (fun k _ _ => hc k g hg hgfix)
     rw [hpol, D.nbc.embAV_loc, P.H.emb]
   · intro k _ _ y hy
-    have hfinU := GlobalTheory.T.finite_cosets_heckeSet_at_splitPlace_outside_level D.host.E D.R.nV (Umax D.host.E D.R.nV) 1 ∅
+    have hfinU := _root_.GlobalTheory.TSetFin.finite_image_tSet D.host.E D.R.nV (Umax D.host.E D.R.nV) 1 ∅
       (fun κ _ => ⟨Iff.rfl, fun _ => rfl⟩) s ϖ k (by simp) hu
     have e1 : NG.tN (P.M.loc i).J s ϖ k ((P.M.loc i).real y) =
         NG.tN (Umax D.host.E D.R.nV) s ϖ k ((P.M.loc i).real y) := by
@@ -106,7 +109,7 @@ theorem eig_at_alt {hL : _root_.UpperTheory.Zero.LLC.RecTExists} {D : D7} (P : _
 theorem main_alt_alt : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7) (P : _root_.GlobalTheory.NPin.CharacterChoiceData hL D), ∀ i,
     GlobalTheory.ThetaExh.PtLocal D.nd D.naut i := by
   intro hL D P i
-  refine GlobalTheory.T.pointLocalEigen_galoisPolynomial_split D P.M P.H.hecke P.H.rational P.H.av P.H.cover i ?_
+  refine _root_.GlobalTheory.PtLocalEig.main D P.M P.H.hecke P.H.rational P.H.av P.H.cover i ?_
   intro Q w hw
   obtain ⟨s0, ϖ0, hc0, hu0⟩ := GlobalTheory.SplitConjPlace.splitEx_all D w hw.1
   obtain ⟨c0, hp0, -⟩ := _root_.GlobalTheory.PtLocalPin.eig_at_alt P i Q w hw s0 ϖ0 hc0 hu0

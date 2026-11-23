@@ -4,16 +4,17 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRecTLocRec
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ConjSplit
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InfOfNodupAlg
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.NormalIntegrality
-import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AutRepIsotypicSplitPlaceLocalComponentStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEquivOfMapEq
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteHeckeDoubleCosetCosetsAtSplitPlaceStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SphericalVectorFixedLocal
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitPlaceFixedVectorSumSphericalImagesStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitPlaceHeckeOperatorEigenvalueConjSphericalStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitPlaceLocalComponentExistsUniqueClassStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RingSpecNormalisedCharacterEq
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitPlaceLocalComponentExistsUniqueClass
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.EventuallyUnr
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ExistsHasSatakeOfUnr
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEquivOfMapEq
 import Formalism.LocalToGlobal.GaloisLevelStructure.Checks
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -118,7 +119,7 @@ theorem locPol_eq_alt : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D
   intro hL D π s w ϖ hcw hu J hJ f hf hf0 hfix c hc x hx
   have hw := conjSplit_w D s w hcw
   subst hw
-  obtain ⟨σc, hσc, huniq⟩ := GlobalTheory.T.splitPlaceLocalComponent_exists_unique_class D.host.E D.R.nV π (conjSplit s)
+  obtain ⟨σc, hσc, huniq⟩ := _root_.GlobalTheory.LocCompSplit.main D.host.E D.R.nV π (conjSplit s)
   obtain ⟨s', σ', h', hσ', hxe⟩ := hx
   have hh := huniq π s' h' σ' ((NG.AutRep.iso_equivalence (L := D.host.E) (n := D.R.nV)).refl π) hσ'
   have hxc : x = GlobalTheory.LocLanglands.cls σc := eq_of_heq (hxe.symm.trans (cls_heq h' σ' σc hh))

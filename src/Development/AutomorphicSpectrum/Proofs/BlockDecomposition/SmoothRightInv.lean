@@ -1,21 +1,28 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UMLeviMulUMLevi
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsUMOfMem
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousLeviUnipotentProj
+public import Development.AbelianVarietyTheory.Definitions.Foundations.SmoothPartStable
+public import Mathlib.Basic.Complex.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsInducedSectionSupportedOpen
+public import Development.AbelianVarietyTheory.Definitions.Foundations.MatrixMeasurableSpace
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsNormalOpenSubgroupCompact
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FibreFunctionLocallyConstantCompact
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FibreIntegralIntertwinesUnipotent
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FibreIntegralSupportSubgroup
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FibreIntegralVanishingOpenSubgroup
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FibreIntegralVanishingSubgroup
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FibreSubgroupOpenCompact
+public import Mathlib.Topology.Algebra.Group.Defs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteImageCompactRightInvariant
+public import Mathlib.GroupTheory.Index
+public import Mathlib.RepresentationTheory.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InducedGeneratedByKFinite
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IwasawaDecompParabolicMaximalCompact
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothTensorFixedParabolicNearOne
 import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousLeviUnipotentProjStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsInducedSectionSupportedOpenStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsNormalOpenSubgroupCompactStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FibreFunctionLocallyConstantCompactStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FibreIntegralIntertwinesUnipotentStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FibreIntegralSupportSubgroupStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FibreIntegralVanishingOpenSubgroupStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FibreIntegralVanishingSubgroupStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FibreSubgroupOpenCompactStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteImageCompactRightInvariantStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InducedGeneratedByKFiniteStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IwasawaDecompParabolicMaximalCompactStatement
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothIntegralLinear
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothTensorFixedParabolicNearOneStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,7 +83,7 @@ theorem fibInt_translate : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologica
 
 theorem fibInt_linear : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (i t : ℕ) {V W : Type} [AddCommGroup V] [Module ℂ V] [AddCommGroup W] [Module ℂ W] (τ : Representation ℂ (Mir k i) V) (σ : Representation ℂ (GL (Fin t) k) W), IsSmooth τ → IsSmooth σ → ∀ [MeasurableSpace (Fin t → k)] [BorelSpace (Fin t → k)] (μ : MeasureTheory.Measure (Fin t → k)) [μ.IsAddHaarMeasure] (g : GL (Fin (i + t)) k), (∀ f₁ f₂ : cIndSpace (HPG k i t) (hRep τ σ), fibInt μ (f₁ + f₂) g = fibInt μ f₁ g + fibInt μ f₂ g) ∧ ∀ (a : ℂ) (f : cIndSpace (HPG k i t) (hRep τ σ)), fibInt μ (a • f) g = a • fibInt μ f g := by
   intro k _ _ _ _ i t V W _ _ _ _ τ σ hτ hσ _ _ μ _ g
-  have hr := fun f => GlobalTheory.T.fibre_function_locally_constant_compact k i t τ σ hτ hσ f g
+  have hr := fun f => _root_.GlobalTheory.CompanionTheory.BZPsiPG.FibCompact.fibV_main k i t τ σ hτ hσ f g
   have hp := SmIntEl.smInt_properties (W := V ⊗[ℂ] W) (W' := V ⊗[ℂ] W) μ
   refine ⟨fun f₁ f₂ => ?_, fun a f => ?_⟩
   · have h : smInt μ (fibV (f₁ + f₂) g) = smInt μ (fibV f₁ g) + smInt μ (fibV f₂ g) :=
@@ -101,7 +108,7 @@ variable {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchim
 
 theorem exists_latt_nhds {n : ℕ} {U : Set (Mir k n)} (hU : U ∈ 𝓝 (1 : Mir k n)) :
     ∃ c : kˣ, ∃ A ∈ 𝓝 (1 : GL (Fin n) k), ∀ y ∈ latt n c, ∀ b ∈ A, uM k n y * levi k n b ∈ U := by
-  have hc := GlobalTheory.T.continuous_levi_unipotent_proj k n
+  have hc := _root_.GlobalTheory.CompanionTheory.BZPsiPG.continuous_levi_uM_mirProj k n
   have hcont : Continuous fun p : (Fin n → k) × GL (Fin n) k => uM k n p.1 * levi k n p.2 :=
     (hc.2.1.comp continuous_fst).mul (hc.1.comp continuous_snd)
   have h00 : uM k n 0 * levi k n 1 = 1 := by rw [uM_zero, map_one, one_mul]
@@ -117,7 +124,7 @@ theorem exists_level {n : ℕ} {Z : Type} (Zs : Set Z) (hZ : Zs.Finite) (U : Z �
       (∀ κ ∈ KO k (Fin n), ∀ b ∈ K₁, κ * b * κ⁻¹ ∈ K₁) ∧ ∀ z ∈ Zs, ∀ p ∈ Bgrp n c K₁ hK, p ∈ U z := by
   have hI : (⋂ z ∈ Zs, U z) ∈ 𝓝 (1 : Mir k n) := (Filter.biInter_mem hZ).2 fun z _ => hU z
   obtain ⟨c, A, hA, hcA⟩ := exists_latt_nhds hI
-  obtain ⟨K₁, hK, hopen, hsub, hidx, hnorm⟩ := GlobalTheory.T.exists_normal_open_subgroup_compact k n _ (Filter.inter_mem hA hA')
+  obtain ⟨K₁, hK, hopen, hsub, hidx, hnorm⟩ := _root_.GlobalTheory.CompanionTheory.OpenCore.exists_open_normal_subgroup_KO k n _ (Filter.inter_mem hA hA')
   refine ⟨c, K₁, hK, hopen, fun x hx => (hsub hx).2, hidx, hnorm, ?_⟩
   rintro z hz _ ⟨y, hy, b, hb, rfl⟩
   exact Set.mem_iInter₂.1 (hcA y hy b (hsub hb).1) z hz
@@ -147,19 +154,19 @@ theorem exists_bump_fib (τ : Representation ℂ (Mir k i) V) (σ : Representati
       (∀ (q : Qp k i t), ∀ b' ∈ K₁, fibInt μ b ((q : GL (Fin (i + t)) k) * b') =
         (((μ (latt t c : Set (Fin t → k))).toReal : ℝ) : ℂ) • qRep τ σ q (clT τ W z)) ∧
       ∀ g : GL (Fin (i + t)) k, (¬ ∃ q : Qp k i t, ∃ b' ∈ K₁, g = (q : GL (Fin (i + t)) k) * b') → fibInt μ b g = 0 := by
-  have hBo := GlobalTheory.T.fibre_subgroup_open_compact k (i + t) c K₁ hK hopen
-  obtain ⟨b, hb1, hb2⟩ := GlobalTheory.T.exists_induced_section_supported_open (HPG k i t) (hRep τ σ) (Bgrp (i + t) c K₁ hK) hBo.1 hBo.2 z hz
+  have hBo := _root_.GlobalTheory.CompanionTheory.BZPsiPG.FibOnto.isOpen_isCompact_Bgrp k (i + t) c K₁ hK hopen
+  obtain ⟨b, hb1, hb2⟩ := _root_.GlobalTheory.CompanionTheory.HBBump.exists_bump (HPG k i t) (hRep τ σ) (Bgrp (i + t) c K₁ hK) hBo.1 hBo.2 z hz
   have hone : fibInt μ b 1 = (((μ (latt t c : Set (Fin t → k))).toReal : ℝ) : ℂ) • clT τ W z := by
-    have h1 := GlobalTheory.T.fibre_integral_vanishing_subgroup k i t τ σ c K₁ hK z b hb1 hb2
+    have h1 := _root_.GlobalTheory.CompanionTheory.BZPsiPG.FibOnto.fibV_one_bump k i t τ σ c K₁ hK z b hb1 hb2
     have h2 := (SmIntEl.smInt_properties (W := V ⊗[ℂ] W) (W' := V ⊗[ℂ] W) μ).2.2.2 _ z (isCompact_latt t c)
       (isOpen_latt t c) (isClosed_latt t c)
     exact (congrArg (fun φ => clT τ W (smInt μ φ)) h1).trans ((congrArg (clT τ W) h2).trans (map_smul _ _ _))
-  refine ⟨b, fun q b' hb' => ?_, GlobalTheory.T.fibre_integral_support_subgroup k i t τ σ μ c K₁ hK b hb2⟩
+  refine ⟨b, fun q b' hb' => ?_, _root_.GlobalTheory.CompanionTheory.BZPsiPG.FibOffQ.main k i t τ σ μ c K₁ hK b hb2⟩
   have e1 : fibInt μ b b' = fibInt μ b 1 := by
-    have h := GlobalTheory.T.fibre_integral_vanishing_open_subgroup k i t τ σ c K₁ hK z b hb1 hb2 b' hb' 1
+    have h := _root_.GlobalTheory.CompanionTheory.BZPsiPG.FibInvK.fibV_mul_right_eq k i t τ σ c K₁ hK z b hb1 hb2 b' hb' 1
     have h' : fibV b b' = fibV b 1 := (congrArg (fibV b) (one_mul b').symm).trans h
     exact congrArg (fun φ => clT τ W (smInt μ φ)) h'
-  exact (GlobalTheory.T.fibre_integral_intertwines_unipotent k i t τ σ hτ hσ μ b q b').trans
+  exact (_root_.GlobalTheory.CompanionTheory.BZPsiPG.FibQ.main k i t τ σ hτ hσ μ b q b').trans
     ((congrArg (qRep τ σ q) (e1.trans hone)).trans (map_smul _ _ _))
 
 end
@@ -210,22 +217,22 @@ theorem mem_range_fibLin (τ : Representation ℂ (Mir k i) V) (σ : Representat
     (hinv : {s : GL (Fin (i + t)) k | ∀ x, Gf (x * s) = Gf x} ∈ 𝓝 (1 : GL (Fin (i + t)) k)) :
     Gf ∈ LinearMap.range (fibLin τ σ hτ hσ μ) := by
   have hfin : (Gf '' (KO k (Fin (i + t)) : Set (GL (Fin (i + t)) k))).Finite :=
-    GlobalTheory.T.finite_image_compact_right_invariant _ GlobalTheory.SplitFlip.isCompact_KO Gf hinv
+    _root_.GlobalTheory.CompanionTheory.TopGroup.finite_image_of_right_invariant_near_one _ GlobalTheory.SplitFlip.isCompact_KO Gf hinv
   obtain ⟨pre, hpre⟩ : ∃ pre : Jacquet τ (MirUin k i) ⊗[ℂ] W → V ⊗[ℂ] W, ∀ a, clT τ W (pre a) = a :=
     ⟨Function.surjInv (clT_surjective τ W), Function.surjInv_eq _⟩
-  choose Ust hUst hUfix using GlobalTheory.T.smooth_tensor_fixed_parabolic_near_one k i t τ σ hτ hσ
+  choose Ust hUst hUfix using _root_.GlobalTheory.CompanionTheory.BZPsiPG.Stab.hRep_fix k i t τ σ hτ hσ
   obtain ⟨c, K₁, hK, hopen, hsub, hidx, hnorm, hlev⟩ := exists_level _ (hfin.image pre) Ust hUst hinv
   have hfix : ∀ κ ∈ KO k (Fin (i + t)), ∀ h : HPG k i t,
       (h : Mir k (i + t)) ∈ Bgrp (i + t) c K₁ hK → hRep τ σ h (pre (Gf κ)) = pre (Gf κ) :=
     fun κ hκ h hh => hUfix _ h (hlev _ ⟨_, ⟨κ, hκ, rfl⟩, rfl⟩ _ hh)
-  refine GlobalTheory.T.induced_generated_by_K_finite (Qp k i t) (KO k (Fin (i + t))) K₁ (qRep τ σ) (LinearMap.range (fibLin τ σ hτ hσ μ)) Gf hK hidx hnorm
+  refine _root_.GlobalTheory.CompanionTheory.CosetSum.mem_of_translated_bumps (Qp k i t) (KO k (Fin (i + t))) K₁ (qRep τ σ) (LinearMap.range (fibLin τ σ hτ hσ μ)) Gf hK hidx hnorm
     (fun g => ?_) ?_ ?_ hlaw (fun g b hb => hsub hb g) ?_
-  · obtain ⟨q, κ, hκ, e⟩ := GlobalTheory.T.iwasawa_decomp_parabolic_maximal_compact k i t g
+  · obtain ⟨q, κ, hκ, e⟩ := _root_.GlobalTheory.CompanionTheory.BZPsiPG.exists_Qp_mul_KO k i t g
     exact ⟨q, κ, hκ, e⟩
   · rintro _ ⟨f, rfl⟩ x
     exact ⟨prodPG τ σ (levi k (i + t) x) f, funext fun g => fibInt_translate k i t τ σ μ f x g⟩
   · rintro _ ⟨f, rfl⟩ q g
-    exact GlobalTheory.T.fibre_integral_intertwines_unipotent k i t τ σ hτ hσ μ f q g
+    exact _root_.GlobalTheory.CompanionTheory.BZPsiPG.FibQ.main k i t τ σ hτ hσ μ f q g
   · intro κ hκ
     exact exists_fib_mem τ σ hτ hσ μ c K₁ hK hopen (pre (Gf κ)) (Gf κ) (hpre _) (hfix κ hκ)
 

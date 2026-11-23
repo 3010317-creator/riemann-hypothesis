@@ -1,8 +1,9 @@
 module
 
 public import Mathlib.RingTheory.WittVector.Frobenius
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsWittVectorGhostEqFrobeniusIterateStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GhostComponentInjectiveOfNoTorsionStatement
+public import Mathlib.RingTheory.WittVector.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsWittVectorGhostEqFrobeniusIterate
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GhostComponentInjectiveOfNoTorsion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,8 +55,8 @@ theorem exists_frobenius_compatible_lift : ∀ (l : ℕ) [Fact l.Prime] (A : Typ
     ∀ (O : Type) [CommRing O] [CharP O l] (f : A →+* O), ∃ F : A →+* WittVector l O,
       (∀ a, (F a).coeff 0 = f a) ∧ ∀ a, F (φ a) = WittVector.frobenius (F a) := by
   intro l _ A _ φ hφ htor O _ _ f
-  have hex := GlobalTheory.T.exists_wittVector_ghost_eq_frobenius_iterate l A φ hφ
-  have inj := GlobalTheory.T.wittVector_eq_of_ghostComponent_eq_of_no_torsion l A htor
+  have hex := _root_.GlobalTheory.DworkGhost.exists_witt_ghost_iterate l A φ hφ
+  have inj := _root_.GlobalTheory.WittVector.ghostComponent_injective_of_noTorsion l A htor
   let s : A → WittVector l A := fun a => Classical.choose (hex a)
   have hs : ∀ a n, WittVector.ghostComponent n (s a) = φ^[n] a := fun a => Classical.choose_spec (hex a)
   have hit : ∀ (n : ℕ) (a : A), φ^[n] a = (φ ^ n) a := fun n a => by rw [RingHom.coe_pow]

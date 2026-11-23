@@ -1,12 +1,14 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MatrixCongruentOneModUniformizerPowGroupAndOrbit
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermLat
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardPrimitiveTuplesHermitianGramModUniformizerStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CommensurableCosetUnionContentIndependentNonnegStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsPrincipalIdealRingOfHenselian
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsHermND
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardPrimitiveTuplesHermitianGramModUniformizer
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CommensurableCosetUnionContentIndependentNonneg
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrthonormalBasisAndOneOrbit
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RelIndexTupleLatticeHermitianLatticeUniformizerStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RelIndexTupleLatticeHermitianLatticeUniformizer
+public import Mathlib.Data.Set.Card.Arithmetic
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MatrixCongruentOneModUniformizerPowGroupAndOrbit
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsPrincipalIdealRingOfHenselian
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -20,7 +22,6 @@ import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
-public import Mathlib.Data.Set.Card.Arithmetic
 import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
@@ -429,7 +430,7 @@ theorem cont_primitive_tuples : ∀ {F : Type} [Field F] [ValuativeRel F] [Topol
   obtain ⟨-, h2, -, -, h5, h6, h7, -⟩ := GlobalTheory.UnramOrder.order_facts L ϖ hϖ
   have hcj : ∀ x ∈ L.O, L.cj x ∈ L.O := fun x hx => (h2 x hx).1
   obtain ⟨j, hj, hjA⟩ := exists_level L ϖ hϖ A hA.1
-  obtain ⟨hT, hH⟩ := GlobalTheory.T.relIndex_tupleLattice_hermitianLattice_uniformizer L ϖ hϖ Hm hHm Λ hΛ m j
+  obtain ⟨hT, hH⟩ := _root_.GlobalTheory.HL.LatCard.relIndex_tupLat_hermLat L ϖ hϖ Hm hHm Λ hΛ m j
   obtain ⟨b, hb, hbΛ⟩ := (GlobalTheory.HL.SelfDual.orthonormal_basis_and_one_orbit L Hm hHm).1 Λ hΛ
   have hu := one_add_unit L ϖ hϖ hj
   have hq : resQ ϖ ≠ 0 := by omega
@@ -438,7 +439,7 @@ theorem cont_primitive_tuples : ∀ {F : Type} [Field F] [ValuativeRel F] [Topol
     (IsUnit.mk0 _ (pow_ne_zero _ (fun h => hϖ.ne_zero (Subtype.ext h)))).map _
   have hc : L.cj (algebraMap F E ((ϖ : F) ^ j)) = algebraMap F E ((ϖ : F) ^ j) := L.cj.commutes _
   obtain ⟨R, hR, hR'⟩ := exists_residues L hp (by rw [h6]; exact pow_ne_zero _ hq)
-  have hD := fun G hG hG' => GlobalTheory.T.card_primitive_tuples_hermitian_gram_mod_uniformizer L ϖ hϖ n m j hmn hj G hG hG' R hR hR' _ rfl
+  have hD := fun G hG hG' => _root_.GlobalTheory.GramCount.primitive_gram_count L ϖ hϖ n m j hmn hj G hG hG' R hR hR' _ rfl
   generalize algebraMap F E ((ϖ : F) ^ j) = p at *
   have hHle : (hermLat L m).map (DistribSMul.toAddMonoidHom _ p) ≤ hermLat L m := by
     intro X hX
@@ -453,7 +454,7 @@ theorem cont_primitive_tuples : ∀ {F : Type} [Field F] [ValuativeRel F] [Topol
   have hH0 : ((hermLat L m).map (DistribSMul.toAddMonoidHom _ p)).relIndex (hermLat L m) ≠ 0 := by
     rw [hH]; exact pow_ne_zero _ hq
   have hGH : GoodSub (hermLat L m) ((hermLat L m).map (DistribSMul.toAddMonoidHom _ p)) B := by
-    refine (GlobalTheory.T.commensurableCosetUnionContent_independent_nonneg _ B).2.1 A _ hA hjA ?_
+    refine (_root_.GlobalTheory.HL.cont_independent_pos _ B).2.1 A _ hA hjA ?_
     exact AddSubgroup.relIndex_ne_zero_trans hH0 hA.2.1
   have hg : ∀ z z', IsPrimT L Hm Λ z → IsPrimT L Hm Λ z' →
       z - z' ∈ (tupLat L Λ m).map (DistribSMul.toAddMonoidHom _ p) →
@@ -480,7 +481,7 @@ theorem cont_primitive_tuples : ∀ {F : Type} [Field F] [ValuativeRel F] [Topol
     refine ⟨prim_add L hΛ hcj hp hu hz hw, ?_⟩
     simpa using hGH.2.2.1 _ hzB _ (gram_add L hHm.1 hΛ hp hp' hc hz.1 hw)
   refine ⟨⟨_, hGT⟩, ?_⟩
-  rw [(GlobalTheory.T.commensurableCosetUnionContent_independent_nonneg _ _).1 _ hGT, (GlobalTheory.T.commensurableCosetUnionContent_independent_nonneg _ _).1 _ hGH, relVol, relVol, hT, hH,
+  rw [(_root_.GlobalTheory.HL.cont_independent_pos _ _).1 _ hGT, (_root_.GlobalTheory.HL.cont_independent_pos _ _).1 _ hGH, relVol, relVol, hT, hH,
     AddSubgroup.relIndex_eq_one.2 hTle, AddSubgroup.relIndex_eq_one.2 hHle]
   have he : 2 * n * m * j = j * (2 * n * m - m ^ 2) + m ^ 2 * j := by
     have : m ^ 2 ≤ 2 * n * m := by nlinarith

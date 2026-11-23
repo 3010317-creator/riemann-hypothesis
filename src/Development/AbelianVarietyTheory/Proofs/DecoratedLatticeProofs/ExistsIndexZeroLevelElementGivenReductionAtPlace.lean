@@ -3,17 +3,20 @@ module
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PlacedBy
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselFrameEmbeddingLocalElementEqEmbeddedMatrixStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ConjPlEqCP
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsNEmbXInvMulMemKOneStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LevelZeroUniformizerFrameUnipotentAndEmbedGLStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.OnesRepresent
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsNEmbXInvMulMemKOne
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UpZeroMemLev
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LevelZeroUniformizerFrameUnipotentAndEmbedGL
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemFlagUnipotentRadicalOfBesselNormalFrameLocal
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.OnePlace
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PinnedLocalGroupsHaveLevel
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ReducesToResidueOfLocalLevelElementMovedBackStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ReductionEqOneOfSupportedAtOrthogonalSplitPlaceStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLocalGroupElementsJacobiBessel
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymmetricLevelChainPatternIterated
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumPowersUnramifiedEtaTilde
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramAtOfUnramOutside
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemLatOIffExistsActO
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLocalGroupElementsJacobiBessel
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlaces
 import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemSum
 import Mathlib.Algebra.Order.Floor.Extended
@@ -58,7 +61,6 @@ import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.LatticeFrames.MiStarOfMid
 import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PairForm
 import Development.AbelianVarietyTheory.Definitions.LatticeFrames.UnitRatio
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.MemLatOIffExistsActO
 
 @[expose] public section
 
@@ -236,8 +238,8 @@ theorem GlobalTheory.LevZeroPlace.one_place : ∀ {D : D7} {c : Comm D} {v : VCo
     fun g hg hl PP' hPP' hne => GlobalTheory.T.reduction_eq_one_of_supportedAt_orthogonal_splitPlace D (G ⟨PP', hPP'⟩).k (G ⟨PP', hPP'⟩).q PP' (hB.loc ⟨PP', hPP'⟩).idem (G PP).q.e
       (horth PP ⟨PP', hPP'⟩ fun h => hne (congrArg Subtype.val h).symm) _ _ _
       (GlobalTheory.PlaceMatch.suppAt_conj' hg _) (hst _ hl)
-  obtain ⟨n, γ, hnN, hnJ, hγJ, hc⟩ := GlobalTheory.T.exists_N_embX_inv_mul_mem_KOne' (G PP).k (G PP).s D.R.k (G PP).S x.1 x.2
-  obtain ⟨hup1, hup2⟩ := GlobalTheory.T.levelZeroUniformizerFrame_unipotent_and_embedGL (G PP).k (G PP).s D.R.k (G PP).S (Fin D.R.t)
+  obtain ⟨n, γ, hnN, hnJ, hγJ, hc⟩ := _root_.GlobalTheory.SymChain.SymData.exists_N_embX_inv_mul_mem_KOne (G PP).k (G PP).s D.R.k (G PP).S x.1 x.2
+  obtain ⟨hup1, hup2⟩ := _root_.GlobalTheory.LevZeroUp.upZero_N_embX (G PP).k (G PP).s D.R.k (G PP).S (Fin D.R.t)
   obtain ⟨hupN, -⟩ := hup1 ⟨n, hnJ⟩ hnN
   rw [hρ] at hupN
   obtain ⟨ν, hν⟩ := GlobalTheory.LocMod.Witness.exists_isLoc (GlobalTheory.LocMod.ofSplit (G PP).q)

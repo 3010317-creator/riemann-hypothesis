@@ -7,9 +7,10 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Leadi
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LintegralFlagDensityFibreBoundedDomain
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LintegralPiFibreMeasurePreserving
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MeasurePreservingCurry
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MeasurePreservingFlagFibreChartCoordinates
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MeasurePreservingGlueLowerUnitriangularBlocksStatement
 public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.ExistsMixedProj
+public import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MeasurePreservingFlagFibreChartCoordinates
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MeasurePreservingGlueLowerUnitriangularBlocks
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -23,7 +24,6 @@ import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -223,7 +223,7 @@ theorem lintegral_x0F_le (X : Data E r) {j : ℕ} (hj : j ≤ r) (hp : X.p0 = r 
       rw [densF_eq X κ, ENNReal.ofReal_prod_of_nonneg fun _ _ => dens_nonneg _ _]
     rw [e1]
     exact Finset.measurable_prod _ fun t _ => hDm.comp ((measurable_pi_apply t).comp hco.measurable)
-  have key := GlobalTheory.ProdFibre.lintegral_pi_fibre X.Ψ _ _ _ (glue e) (base e) D φ (GlobalTheory.T.measurePreserving_glueLowerUnitriangularBlocks _ _ _ _ (isBlockOrderedSumEquiv_trueIndex hj))
+  have key := GlobalTheory.ProdFibre.lintegral_pi_fibre X.Ψ _ _ _ (glue e) (base e) D φ (_root_.GlobalTheory.FlagFibre.measurePreserving_glue _ _ _ _ (isBlockOrderedSumEquiv_trueIndex hj))
     (measurable_base _) (base_glue (isBlockOrderedSumEquiv_trueIndex hj)) hDm hφm
   set K := ENNReal.ofReal (1 / (flagConst j * flagConst (r - j)))
   have hcube : MeasurableSet (cube j (r - j)) :=

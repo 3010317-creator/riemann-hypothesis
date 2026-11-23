@@ -3,21 +3,26 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.HeckeLAdicCharacterDeRham
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HasPeriods
 public import Development.WeilBound.CoreStatements.CrystallinePeriodRings.LocTied6
-public import Development.AutomorphicArithmetic.ThetaCorrespondence.LocalComparison.LocTied6
-public import Development.AutomorphicArithmetic.ThetaCorrespondence.LocalComparison.LocTiedOf6
+public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
+public import Development.AutomorphicArithmetic.ThetaCorrespondence.CrystallineComparison.LocalComparisonFromAlternative
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DeRhamRankLubinTateLineStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsLubinTateCharacterUnitaryStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsOpenUnitSubgroupKerStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GaloisCharacterArtinCompatStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GaloisOpenSubgroupLocalUnitsStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsLubinTateCharacterUnitary
+public import Formalism.LocalToGlobal.UnitaryNorms.IsUnitaryNormOf
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsOpenUnitSubgroupKer
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GaloisCharacterArtinCompat
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GaloisOpenSubgroupLocalUnits
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ImportsTer
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalCharacterFiniteExtensionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalCharacterInducedTiedSixStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalCharacterInducedTiedStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalGaloisEmbeddingExtensionStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UniqueEmbeddingExtension
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UniqueEmbeddingExtensionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnramifiedCharactersDeRhamJumpZeroStatement
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.DeRhamJacobian.IsdRJ
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.CharAbove
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalCharacterFiniteExtension
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.FiniteDimensionalLetter
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalCharacterInducedTiedSix
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalCharacterInducedTied
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.FiniteDimensionalWdSpace
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalGaloisEmbeddingExtension
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UniqueEmbeddingExtension
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnramifiedCharactersDeRhamJumpZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -95,8 +100,8 @@ theorem lubinTate_at_embedding (HP : LTPeriods) : ∀ {E Ω : Type} [Field E] [N
       ∀ (x : (w.adicCompletion E)ˣ) (σ : ↥(Dec (F := E) A)), IsUnitAt w x → (σ : G E Ω) ∈ Ine (F := E) A →
         art (localIdele E w x) = toAb E Ω σ → ((lam σ : ↥LL'.1) : Qbar l) = j.1 x := by
   intro E Ω _ _ _ _ _ l _ P AI hT w A hA O _ _ _ Bw hI art hart LL' hLL j
-  obtain ⟨χ, hχ, hc, hn⟩ := GlobalTheory.T.exists_lubin_tate_character_unitary Bw.Kw
-  obtain ⟨φ, τ, hφc, hφ, hτ, hu⟩ := GlobalTheory.T.local_galois_embedding_extension w A hA O Bw hI LL' hLL j
+  obtain ⟨χ, hχ, hc, hn⟩ := _root_.GlobalTheory.CompanionTheory.LTHodge.exists_lubinTateChar Bw.Kw
+  obtain ⟨φ, τ, hφc, hφ, hτ, hu⟩ := _root_.GlobalTheory.CompanionTheory.EmbBridge.embeddings_of_continuous w A hA O Bw hI LL' hLL j
   have hper := HP P AI hT Bw.Kw χ hχ hc
   have hsplit : ∀ (μ : ↥Bw.Kw.1 →ₐ[ℚ_[l]] Om l) (x : ↥Bw.Kw.1), μ x ∈ LL'.1 :=
     fun μ x => hLL (Bw.LL_split μ x)
@@ -162,7 +167,7 @@ variable {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E Ω] [IsAl
 include hT hA hI hLL
 
 theorem isdRJ_one_hlc : IsdRJ Bw P LL' 1 0 := by
-  refine GlobalTheory.T.local_character_induced_agree P AI (UpperTheory.Lit.Cmp.locTied_of6 l P AI hT) w A hA O Bw hI LL' hLL 1 ?_ ?_ ⊤ ?_ ?_
+  refine _root_.GlobalTheory.CompanionTheory.PotUnr.isdRJ_zero_of_trivial_on_open_inertia P AI (_root_.Formalism.BasicNotions.CmpTie.local_comparison_from_alternative l P AI hT) w A hA O Bw hI LL' hLL 1 ?_ ?_ ⊤ ?_ ?_
   · simp only [MonoidHom.one_apply, Units.val_one]
     exact continuous_const
   · intro g
@@ -178,11 +183,11 @@ theorem isdRJ_zpow_hlc {ψ : ↥(Dec (F := E) A) →* (↥LL'.1)ˣ} {J : (↥Bw.
   · simpa using isdRJ_one_hlc P AI hT hA Bw hI LL' hLL
   · intro i ih
     rw [zpow_add_one, add_smul, one_smul]
-    exact GlobalTheory.T.local_character_induced_tied P AI (UpperTheory.Lit.Cmp.locTied_of6 l P AI hT) w A hA O Bw hI LL' hLL _ _ _ _ ih h
+    exact _root_.GlobalTheory.CompanionTheory.HLCMul.isdRJ_mul P AI (_root_.Formalism.BasicNotions.CmpTie.local_comparison_from_alternative l P AI hT) w A hA O Bw hI LL' hLL _ _ _ _ ih h
   · intro i ih
     rw [zpow_sub_one, sub_smul, one_smul, sub_eq_add_neg]
-    exact GlobalTheory.T.local_character_induced_tied P AI (UpperTheory.Lit.Cmp.locTied_of6 l P AI hT) w A hA O Bw hI LL' hLL _ _ _ _ ih
-      (GlobalTheory.T.local_character_induced_tied_six P AI hT w A hA O Bw hI LL' hLL _ _ h)
+    exact _root_.GlobalTheory.CompanionTheory.HLCMul.isdRJ_mul P AI (_root_.Formalism.BasicNotions.CmpTie.local_comparison_from_alternative l P AI hT) w A hA O Bw hI LL' hLL _ _ _ _ ih
+      (_root_.GlobalTheory.CompanionTheory.DeRhamChar.isdRJ_inv P AI hT w A hA O Bw hI LL' hLL _ _ h)
 
 theorem isdRJ_prod_hlc {ι' : Type} (s : Finset ι') (ψ : ι' → (↥(Dec (F := E) A) →* (↥LL'.1)ˣ))
     (J : ι' → (↥Bw.Kw.1 →ₐ[ℚ_[l]] ↥LL'.1) → ℤ) (h : ∀ i ∈ s, IsdRJ Bw P LL' (ψ i) (J i)) :
@@ -191,7 +196,7 @@ theorem isdRJ_prod_hlc {ι' : Type} (s : Finset ι') (ψ : ι' → (↥(Dec (F :
   | empty => simpa using isdRJ_one_hlc P AI hT hA Bw hI LL' hLL
   | insert a s ha ih =>
     rw [Finset.prod_insert ha, Finset.sum_insert ha]
-    exact GlobalTheory.T.local_character_induced_tied P AI (UpperTheory.Lit.Cmp.locTied_of6 l P AI hT) w A hA O Bw hI LL' hLL _ _ _ _ (h a (Finset.mem_insert_self a s))
+    exact _root_.GlobalTheory.CompanionTheory.HLCMul.isdRJ_mul P AI (_root_.Formalism.BasicNotions.CmpTie.local_comparison_from_alternative l P AI hT) w A hA O Bw hI LL' hLL _ _ _ _ (h a (Finset.mem_insert_self a s))
       (ih fun i hi => h i (Finset.mem_insert_of_mem hi))
 
 end Jumps
@@ -204,8 +209,8 @@ open PositivityTheory.HodgeLocalCharacter.HLC
 
 theorem field_of_ltPeriods (HP : LTPeriods) : GlobalTheory.Published.HeckeLAdicCharacterDeRham := by
   intro E Ω _ _ _ _ _ l _ P AI hT ι art hart χ n μ hχ hμ hL w A hA O _ _ _ Bw hI
-  have hT6 := UpperTheory.Lit.Cmp.locTied6 l P AI hT
-  obtain ⟨LL', ψ, hLL, hmod, hψμ, hψc, hψn⟩ := GlobalTheory.T.local_character_finite_extension μ hμ w A hA O Bw
+  have hT6 := _root_.Formalism.BasicNotions.CmpTie.locTied6_F l P AI hT
+  obtain ⟨LL', ψ, hLL, hmod, hψμ, hψc, hψn⟩ := _root_.GlobalTheory.CompanionTheory.HeckeChar.exists_unit_model μ hμ w A hA O Bw
   have : Finite {j : w.adicCompletion E →+* Qbar l // Continuous j} := finite_contEmb w
   have : Fintype {j : w.adicCompletion E →+* Qbar l // Continuous j} := Fintype.ofFinite _
   choose lam hlc hln hlJ hlx using
@@ -240,13 +245,13 @@ theorem field_of_ltPeriods (HP : LTPeriods) : GlobalTheory.Published.HeckeLAdicC
     intro g
     rw [hφv, norm_mul, norm_inv, hψn, hΛv, norm_prod]
     simp [norm_zpow, hln]
-  obtain ⟨U, hUo, hUu, hUχ⟩ := GlobalTheory.T.exists_open_subgroup_heckeChar_eq_one χ w
-  obtain ⟨V, hVo, hV⟩ := GlobalTheory.T.galois_open_subgroup_local_units (l := l) art hart w A hA U hUo hUu
+  obtain ⟨U, hUo, hUu, hUχ⟩ := _root_.GlobalTheory.CompanionTheory.HeckeSmooth.exists_open_unit_subgroup_ker χ w
+  obtain ⟨V, hVo, hV⟩ := _root_.GlobalTheory.CompanionTheory.InertOpen.exists_openSubgroup_ine_art_units (l := l) art hart w A hA U hUo hUu
   have hφ0 : IsdRJ Bw P LL' φ 0 := by
-    refine GlobalTheory.T.local_character_induced_agree P AI hT w A hA O Bw hI LL' hLL φ hφc hφn V hVo ?_
+    refine _root_.GlobalTheory.CompanionTheory.PotUnr.isdRJ_zero_of_trivial_on_open_inertia P AI hT w A hA O Bw hI LL' hLL φ hφc hφn V hVo ?_
     intro σ hσV hσI
     obtain ⟨x, hxU, hx⟩ := hV σ hσV hσI
-    have h1 := GlobalTheory.T.galois_character_artin_compat ι art χ n μ hL w x σ hx
+    have h1 := _root_.GlobalTheory.CompanionTheory.HeckeLocal.isLAdicOf_localIdele ι art χ n μ hL w x σ hx
     rw [hUχ x hxU, Units.val_one, map_one, one_mul] at h1
     have h2 : ∀ j, ((lam j σ : ↥LL'.1) : Qbar l) = j.1 x := fun j => hlx j x σ (hUu x hxU) hσI hx
     have hψΛ : ((ψ σ : ↥LL'.1) : Qbar l) = ((Λ σ : ↥LL'.1) : Qbar l) := by
@@ -258,7 +263,7 @@ theorem field_of_ltPeriods (HP : LTPeriods) : GlobalTheory.Published.HeckeLAdicC
     show ψ σ * Λ⁻¹ σ = 1
     rw [MonoidHom.inv_apply, hψΛ', mul_inv_cancel]
   have hψJ : IsdRJ Bw P LL' ψ (0 + ∑ j, nj j • Jj j) := by
-    have := GlobalTheory.T.local_character_induced_tied P AI hT w A hA O Bw hI LL' hLL φ Λ _ _ hφ0 hΛ
+    have := _root_.GlobalTheory.CompanionTheory.HLCMul.isdRJ_mul P AI hT w A hA O Bw hI LL' hLL φ Λ _ _ hφ0 hΛ
     simpa [φ] using this
   refine ⟨⟨LL', _, hmod, hψJ.1⟩, ?_⟩
   intro τ LL'' τ'' hτ
@@ -267,7 +272,7 @@ theorem field_of_ltPeriods (HP : LTPeriods) : GlobalTheory.Published.HeckeLAdicC
   have hτ' : IsInduced Bw τ τ' := fun x => hτ x
   refine ⟨LL', _, hmod, hψJ.1, τ', hτ', fun a => ?_⟩
   rw [hψJ.2 τ' a]
-  obtain ⟨j0, hj0, huniq⟩ := GlobalTheory.T.unique_embedding_extension (l := l) w A hA O Bw hI LL' τ'
+  obtain ⟨j0, hj0, huniq⟩ := _root_.GlobalTheory.CompanionTheory.EmbUniq.existsUnique_continuous_induced (l := l) w A hA O Bw hI LL' τ'
   have hj0E : j0.1.comp (algebraMap E (w.adicCompletion E)) = τ :=
     RingHom.ext fun x => (hj0 x).trans (hτ' x).symm
   have hsum : (0 + ∑ j, nj j • Jj j) τ' = -n (ι.toRingHom.comp τ) := by

@@ -1,10 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.NormSmall
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbsNormMinpolyCoeffZeroPowNumberFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeanInfLogNormEmbeddingEqLogNormDivStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeanValuationNormOverDegreeSmulEqAddValuationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationMinpolyCoeffZeroGeOfPowMulIntegralStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.FinitePrimesUnder
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbsNormMinpolyCoeffZeroPowNumberField
+public import Formalism.PairingDivisors.StatementH
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeanInfLogNormEmbeddingEqLogNormDiv
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeanValuationNormOverDegreeSmulEqAddValuation
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValuationMinpolyCoeffZeroGeOfPowMulIntegral
 public import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.EllipticOnePole
 import Formalism.PairingDivisors.PairingDivisorProofs.Height
 import Mathlib.Algebra.Order.Floor.Extended
@@ -97,7 +99,7 @@ theorem height_meanVal [StarRing K] [_root_.NumberField.IsTotallyComplex K] (σ 
     · obtain ⟨l, hl, hlw⟩ := exists_prime_mem w
       have hlS : l ∈ S := by
         rw [hSdef, Set.Finite.mem_toFinset]; exact ⟨hl, w, h, hlw⟩
-      have key := GlobalTheory.T.valuation_minpoly_coeff_zero_ge_of_pow_mul_integral K σ β p l (12 * n l) hp hl (hlow l hl) w hlw
+      have key := _root_.GlobalTheory.FunObj.SqNum.LowVal.vw_coeff_zero_ge K σ β p l (12 * n l) hp hl (hlow l hl) w hlw
       have h1 : N0 l * (vw w (l : K) : ℝ) ≤ Formalism.PairingDivisionLocalBalance.wt S N0 w :=
         Finset.single_le_sum (f := fun l => N0 l * (vw w (l : K) : ℝ))
           (fun l' _ => mul_nonneg (Nat.cast_nonneg _) (by exact_mod_cast Formalism.PairingDivisionLocalBalance.vw_natCast_nonneg w l')) hlS
@@ -111,11 +113,11 @@ theorem height_meanVal [StarRing K] [_root_.NumberField.IsTotallyComplex K] (σ 
       12 * Formalism.PairingDivisionLocalBalance.meanInf K (fun v => Real.log ‖v.embedding a‖) := by
     simp only [pow_zero, inv_one, mul_one, map_pow, norm_pow, Real.log_pow, Formalism.PairingDivisionLocalBalance.meanInf]
     rw [← Finset.mul_sum]; push_cast; ring
-  rw [hm, GlobalTheory.T.meanInf_log_norm_embedding_eq_log_norm_div K a ha0] at HC
+  rw [hm, _root_.GlobalTheory.meanInf_log_norm_embedding K a ha0] at HC
 
   set e := (minpoly ℚ β).natDegree with he
   have he0 : 0 < e := minpoly.natDegree_pos halg.isIntegral
-  have hnorm := GlobalTheory.T.abs_norm_minpoly_coeff_zero_pow_numberField K σ β p hp halg
+  have hnorm := _root_.GlobalTheory.NormTower.abs_norm_coeff_zero_pow K σ β p hp halg
   have hK : (0 : ℝ) < Module.finrank ℚ K := by exact_mod_cast Module.finrank_pos
   have hlogN : (e : ℝ) * Real.log |((Algebra.norm ℚ a : ℚ) : ℝ)| =
       ((d * Module.finrank ℚ K : ℕ) : ℝ) * Real.log |(((minpoly ℚ β).coeff 0 : ℚ) : ℝ)| := by
@@ -271,7 +273,7 @@ theorem thbSt_of_inputs : GlobalTheory.IndefiniteRowSideFullHecke.ClassZetaValua
     unfold GlobalTheory.CMVal.beta; rw [map_pow]; ring
   have hqc' := hqc
   rw [e12] at hqc'
-  have hmv := GlobalTheory.T.meanValuationNormOverDegree_smul_eq_add_valuation D.what₂.LL D.what₂.embLL _ (zd c ^ 12) p qc hp hqc' (beta_ne x hx0) (pow_ne_zero _ hz0)
+  have hmv := _root_.GlobalTheory.FunObj.SqNum.meanVal_vw_smul D.what₂.LL D.what₂.embLL _ (zd c ^ 12) p qc hp hqc' (beta_ne x hx0) (pow_ne_zero _ hz0)
   obtain ⟨finc, sumc⟩ := fam_bd (some c) _ qc hxc' hqc
   refine ⟨hz0, GlobalTheory.HeightMeanValueBounds.htLe_of_real g _ _ (zd c) _ hg (fun w => ?_) fin0 finc sum0 sumc⟩
   rw [hmv w, Formalism.PairingDivisionLocalBalance.vw_pow w _ hz0]

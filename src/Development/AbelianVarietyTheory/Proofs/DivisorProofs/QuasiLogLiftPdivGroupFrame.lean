@@ -3,8 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.EpsilonPairingZeta
 public import Mathlib.RingTheory.MvPowerSeries.Expand
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedInOfQuasiLogarithmStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubstSubInStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedInOfQuasiLogarithm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubstSubIn
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -213,11 +213,11 @@ theorem ql_frob : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed
       (Ideal.pow_mem_of_mem _ (Ideal.mem_span_singleton_self _) _ (by have := hpp.one_lt; omega)), ?_⟩
     rw [mul_pow, e]; ring
   have hD : DIn (⊤ : Ideal F.B) (map F.s f) := by
-    have h := GlobalTheory.T.divided_in_of_quasi_logarithm p F.B O F.Q F.θ F.frame d μ' hμ ⊤ f hf
+    have h := _root_.GlobalTheory.QLogDiff.dIn_of_QL p F.B O F.Q F.θ F.frame d μ' hμ ⊤ f hf
     intro α i
     obtain ⟨b, _, e⟩ := h α i
     exact ⟨F.σ b, trivial, by rw [coeff_map, ← map_natCast F.s, ← map_mul, e, F.s_alg]⟩
-  have hK := GlobalTheory.T.subst_sub_subst_mem_mul_of_coeff_sub_mem p F.B O F.Q F.θ F.frame _ hJ (Fin d) (Fin d ⊕ Fin d) ⊤ (map F.s f)
+  have hK := _root_.GlobalTheory.KatzCongr.subst_sub_in p F.B O F.Q F.θ F.frame _ hJ (Fin d) (Fin d ⊕ Fin d) ⊤ (map F.s f)
     (fun i => μ' i ^ p) (fun i => expand p hp (map F.σ (μ' i))) hD
     (fun i => by rw [map_pow, hμ.const i, zero_pow hp])
     (fun i => by rw [constantCoeff_expand, constantCoeff_map, hμ.const i, map_zero])

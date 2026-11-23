@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.ExistsAwayFracOfMemHomLoc
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.FiniteCechHomologyOfFiniteCubeHomology
-public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.FiniteHomologyCubeComplexGradedModuleStatement
+public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.FiniteHomologyCubeComplexGradedModule
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.FinitePieceOfPolyGradedSMul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -60,6 +60,6 @@ theorem finite_grCech_homology : ∀ (ι : Type) [LinearOrder ι] [Fintype ι] (
   have h₁ : Module.Finite R ((grCube ι ℳ n).obj ∅) :=
     Module.Finite.equiv (homLocEmptyEquiv ι ℳ n)
   exact finite_cechHomology_of_finite_cubeHomology ι R (grCube ι ℳ n) h₁
-    (GlobalTheory.T.finite_homology_cubeComplex_gradedModule ι R M ℳ hM n) p
+    (_root_.GlobalTheory.finite_cubeComplex_grCube_homology ι R M ℳ hM n) p
 
 end GlobalTheory

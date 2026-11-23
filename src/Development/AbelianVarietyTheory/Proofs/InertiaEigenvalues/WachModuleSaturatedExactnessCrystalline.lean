@@ -1,13 +1,16 @@
 module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.DeltaInvariantLattices
-import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DvrComplete
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqTopOfSpanImage
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FontaineAndDecompletion
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemWachNOfMapMemSaturatedStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NotFullBot
+public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemWachNOfMapMemSaturated
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SaturatedAndIsogenyInvariant
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachNCokernelKilledByPowerStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachNCokernelKilledByPower
+public import Mathlib.RingTheory.OrderOfVanishing.Basic
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -24,7 +27,6 @@ import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.KrullDimension.PID
-public import Mathlib.RingTheory.OrderOfVanishing.Basic
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.ENatToNat
@@ -163,8 +165,8 @@ theorem exactness_of_N : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (
       Function.Exact (((HW l).W K s LL h).map ι) (((HW l).W K s LL h).map π) ∧
       Function.Surjective (((HW l).W K s LL h).map π) := GlobalTheory.EtaleExact.DD_exact D HW F (GlobalTheory.Decompl.fontaine_and_decompletion D HW F) l K s LL h
     T₀ T₁ T₂ ι π hses
-  have h4 := GlobalTheory.T.mem_wachN_of_map_mem_saturated D HW F l K s LL h T₀ T₁ T₂ ι π c0 c1 c2 hses
-  obtain ⟨c, hc⟩ := GlobalTheory.T.wachN_cokernel_killed_by_power D HW F Cm l K s LL h T₀ T₁ T₂ ι π c0 c1 c2 hses
+  have h4 := _root_.GlobalTheory.NL.KerSat.mem_N_of_map_mem D HW F l K s LL h T₀ T₁ T₂ ι π c0 c1 c2 hses
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.NL.CokerFin.coker_killed D HW F Cm l K s LL h T₀ T₁ T₂ ι π c0 c1 c2 hses
   have hp : ((D.loc l).PD K).p = l := (D.loc l).PD_p K
   refine ⟨fun x _ hx => ?_, fun y hy hy0 => ?_, fun z hz => ?_, h4, ?_⟩
   · exact hex.1 (hx.trans (map_zero _).symm)

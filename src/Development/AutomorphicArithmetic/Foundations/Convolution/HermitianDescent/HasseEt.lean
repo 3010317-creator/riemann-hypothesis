@@ -2,10 +2,12 @@ module
 
 public import Development.AutomorphicArithmetic.Foundations.Convolution.HermitianDescent.NormAlmostAll
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsIsRealEmbeddingEqHom
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsRingHomAdicCompletionUnder
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasseNormPrincipleOfIsCyclicStatement
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsNormFromBaseChangeBaseChangeProperties
+public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.MemPowSub
 public import Development.AutomorphicArithmetic.Splittings.ExistsCyclicGaloisTensorAlgEquivPi
+public import Mathlib.RingTheory.TensorProduct.Pi
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsRingHomAdicCompletionUnder
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasseNormPrincipleOfIsCyclic
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.IsNormFromBaseChangeBaseChangeProperties
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -29,7 +31,6 @@ import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.HopfAlgebra.Basic
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Mathlib.RingTheory.TensorProduct.Pi
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Basify
 import Mathlib.Tactic.Echelon.Zsqrtd
@@ -54,7 +55,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.MemPowSub
 
 @[expose] public section
 
@@ -130,7 +130,7 @@ private theorem field_case (F E K A : Type) [Field F] [NumberField F] [Field E] 
   haveI : FiniteDimensional F E := Module.Finite.of_restrictScalars_finite ℚ F E
   obtain ⟨L, _, _, _, _, I, _, _, _, hC, ⟨e⟩⟩ := UpperTheory.exists_cyclic_galois_tensor_algEquiv_pi F E K
   haveI : NumberField L := NumberField.of_module_finite K L
-  refine norm_up F E K L I e _ (GlobalTheory.T.hasseNormPrinciple_of_isCyclic K L inferInstance hC (π x) hx ⟨fun w => ?_, fun a => ?_⟩)
+  refine norm_up F E K L I e _ (_root_.GlobalTheory.CNorm.np_cyclic K L inferInstance hC (π x) hx ⟨fun w => ?_, fun a => ?_⟩)
   · obtain ⟨φ, hφ⟩ := GlobalTheory.QNorm.exists_ringHom_adicCompletion_under F K w
     exact local_step F E K L I A _ _ e π φ hφ x (hf _)
   · letI := a

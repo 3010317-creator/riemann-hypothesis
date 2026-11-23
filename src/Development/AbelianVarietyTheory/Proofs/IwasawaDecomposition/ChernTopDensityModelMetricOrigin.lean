@@ -3,9 +3,11 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.InterPolyProdSum
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.FirstIndexEqOfUnfolded
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MeasurePreservingCompEquiv
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CurvatureFormMatrixBoundedDomainModelMetricAtZerStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TopDegreeFormCoeffBlockSymbolDetPowCayleyStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TopDegreeFormCoeffProdBlockSymbolDetPowStatement
+public import Formalism.DegreeFormula.Statement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BlockSymApply
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CurvatureFormMatrixBoundedDomainModelMetricAtZer
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TopDegreeFormCoeffBlockSymbolDetPowCayley
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TopDegreeFormCoeffProdBlockSymbolDetPow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -41,7 +43,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BlockSymApply
 
 @[expose] public section
 
@@ -64,7 +65,7 @@ theorem chernTop_model_origin : ∀ (ι : Type) [Fintype ι] (p q n : ℕ) (h : 
   have hc : ∀ τ : ι, chernPoly (fun u => Matrix.transpose (hP (unflat (GlobalTheory.UnifDens.flatL h u) τ))⁻¹) 0 p =
       C ((-1 : ℂ) ^ p) * (blockSym h τ).det := by
     intro τ
-    rw [chernPoly, GlobalTheory.T.curvatureFormMatrix_boundedDomainModelMetric_at_zero ι p q n h τ, neg_neg, coeff_charpolyRev_card, map_pow, map_neg, map_one]
+    rw [chernPoly, _root_.GlobalTheory.DomainDens.curvPoly_model_zero ι p q n h τ, neg_neg, coeff_charpolyRev_card, map_pow, map_neg, map_one]
   have hs : (algebraMap ℝ ℂ ((-1 : ℝ) ^ p)) * (-1 : ℂ) ^ p = 1 := by
     rw [map_pow, map_neg, map_one, ← pow_add, ← two_mul, pow_mul, neg_one_sq, one_pow]
   have ha : aeval (fun x : ι × ℕ => chernPoly (fun u => Matrix.transpose (hP (unflat (GlobalTheory.UnifDens.flatL h u) x.1))⁻¹) 0 x.2)
@@ -79,7 +80,7 @@ theorem chernTop_model_origin : ∀ (ι : Type) [Fintype ι] (p q n : ℕ) (h : 
   have e : (∏ i ∈ Finset.range p, (((q + i).factorial : ℂ) / i.factorial)) =
       ((∏ i ∈ Finset.range p, (((q + i).factorial : ℝ) / i.factorial) : ℝ) : ℂ) := by push_cast; rfl
   simp only [chernTop]
-  rw [ha, GlobalTheory.T.topDegreeFormCoeff_prod_blockSymbol_det_pow ι p q n h h1, GlobalTheory.T.topDegreeFormCoeff_blockSymbolDet_pow_cayley p q h1, e, ← Complex.ofReal_pow, Complex.ofReal_re, GlobalTheory.TrueCx.grassConst,
+  rw [ha, _root_.GlobalTheory.DomainDens.topCoeff_prod_blockSym_det_pow ι p q n h h1, _root_.GlobalTheory.topCoeff_blockSym_det_pow p q h1, e, ← Complex.ofReal_pow, Complex.ofReal_re, GlobalTheory.TrueCx.grassConst,
     div_pow, hn, pow_mul', div_eq_inv_mul]
 
 end GlobalTheory.DomainDens

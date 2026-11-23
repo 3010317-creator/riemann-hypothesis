@@ -3,8 +3,9 @@ module
 public import Development.AutomorphicArithmetic.LocalEmbeddings.ArchSz
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AlgebraicHeckeCharValuesInNumberField
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitaryHeckeCharacterValues
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HeckeCharLocPowEqOneOnLocalUnitsStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeCharacterUnramifiedAeAndExistsLevelStatement
+public import Formalism.LocalToGlobal.UnitaryNorms.IsUnitaryNormOf
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HeckeCharLocPowEqOneOnLocalUnits
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeCharacterUnramifiedAeAndExistsLevel
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalIdeleSndSelf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -89,7 +90,7 @@ private theorem exists_global {L : Type} [Field L] [NumberField L] (χ : HChar L
     have hwv := v.isPrime.le_of_pow_le hle
     exact (HeightOneSpectrum.ext (w.isMaximal.eq_of_le v.isPrime.ne_top hwv)).symm
   set k := GlobalTheory.Mem.ValAlg.uOf a ha0 with hk
-  set S := (GlobalTheory.T.heckeCharacter_unramified_ae_and_exists_level L χ).1.toFinset ∪ {w} with hS
+  set S := (_root_.GlobalTheory.Mem.UnrAe.unr_ae_and_level L χ).1.toFinset ∪ {w} with hS
   have hwS : w ∈ S := by simp [hS]
   choose Nf hNf hNa using fun v => GlobalTheory.Mem.ValAlg.locK_pow χ v
   refine ⟨k, ∏ v ∈ S.erase w, Nf v, Finset.prod_pos (fun v _ => hNf v), ?_, ?_⟩
@@ -146,7 +147,7 @@ private theorem exists_pow_inf {L : Type} [Field L] [NumberField L] (χ : HChar 
       map_zpow₀, hp, hq, ← WithZero.exp_zsmul, ← WithZero.exp_zsmul, ← WithZero.exp_add,
       WithZero.exp_eq_one, smul_eq_mul, smul_eq_mul]
     ring
-  obtain ⟨m, hm, hmx⟩ := GlobalTheory.T.heckeChar_loc_pow_eq_one_on_localUnits L χ w _ hunit
+  obtain ⟨m, hm, hmx⟩ := _root_.GlobalTheory.LocUnitPow.loc_pow_eq_one L χ w _ hunit
   have hinf : (χ.locK w k) ^ N = (χ.inf k ^ N)⁻¹ := by
     rw [mul_pow] at hkN
     exact eq_inv_of_mul_eq_one_right hkN

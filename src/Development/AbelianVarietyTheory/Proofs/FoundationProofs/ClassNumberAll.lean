@@ -2,8 +2,10 @@ module
 
 public import Formalism.SharpRestriction.GlobalSchurBounds.StandardLattice
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MassSelfDualLatticeFirstSpaceEq
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SelfDualLatticeOverColumnBaseLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.StabiliserSelfDualLatticeLevelIndexFormulaStatement
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.SplittingProjection
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.SelfDualLatticeOverColumnBaseLattice
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.SelfDualLatticeIndex
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.StabiliserSelfDualLatticeLevelIndexFormula
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -47,6 +49,6 @@ namespace GlobalTheory.ColClassNumber
 open Formalism.BasicNotions Formalism.MainNotions.StandardLattice
 
 theorem classNumber_all (D : D7) (Lv : LevelData D) : ClassNumberFormula₂ D Lv :=
-  classNumber_of_index GlobalTheory.T.selfDualLattice_over_columnBaseLattice GlobalTheory.T.stabiliser_self_dual_lattice_level_index_formula D Lv
+  classNumber_of_index _root_.GlobalTheory.OverObj.selfDualOverBase _root_.GlobalTheory.LevelIndex.selfDualLatticeIndex_stabiliserLevelIndexFormula D Lv
 
 end GlobalTheory.ColClassNumber

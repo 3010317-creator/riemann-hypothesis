@@ -4,9 +4,11 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Triv
 public import Formalism.SharpRestriction.LevelLetterCocycles.LocCoh
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AcrisTorsionFreeComplete
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamFilteredComparisonCoordinatesStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamFiltrationBoundsInvariantCoordinatesStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFiltrationAdaptedBasisOfSubspaceStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsInvariantBasisOfIsDeRhamLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamFiltrationBoundsInvariantCoordinates
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFiltrationAdaptedBasisOfSubspace
+public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsInvariantBasisOfIsDeRhamLattice
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HodgeStructureOfAdaptedInvariantFamilyStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -89,7 +91,7 @@ theorem exists_hodge : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (P : LocPrime
           funext i; simp only [Pi.smul_apply, Algebra.smul_def, hKact]
         rw [this, Matrix.mulVec_smul, hu g] }
   have hmemIv : ∀ c, c ∈ Iv ↔ ∀ g : ↥(GK K), M g *ᵥ (fun i => P.actQdR (g : GQ l) (c i)) = c := fun c => Iff.rfl
-  obtain ⟨x, hxli, hxinv, hxspan⟩ := GlobalTheory.T.exists_invariant_basis_of_isDeRham_lattice l P AI T K d ρ hDR
+  obtain ⟨x, hxli, hxinv, hxspan⟩ := _root_.GlobalTheory.DRMat.invariant_basis_of_isDR l P AI T K d ρ hDR
   set D : Submodule ↥K.1 (Fin d → P.R.BdR) := Submodule.span ↥K.1 (Set.range x) with hD
   have hDIv : D ≤ Iv := Submodule.span_le.2 (by rintro _ ⟨j, rfl⟩; exact (hmemIv _).2 (hxinv j))
   have hIvD : ∀ c, c ∈ Iv → c ∈ D := fun c hc => hxspan c hc
@@ -111,7 +113,7 @@ theorem exists_hodge : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (P : LocPrime
   have hsep : ∀ v ∈ D, (∀ a, v ∈ F a) → v = 0 := fun v _ hv =>
     funext fun i => (P.PD K).Fil_sep (v i) fun a => (hmemF a v).1 (hv a) i
   set_option synthInstance.maxHeartbeats 200000 in
-  obtain ⟨b0, h0, hbF0, hbrep0⟩ := GlobalTheory.T.exists_filtration_adapted_basis_of_subspace D F hF hex hsep
+  obtain ⟨b0, h0, hbF0, hbrep0⟩ := _root_.GlobalTheory.AdaptedBasis.exists_adapted_basis D F hF hex hsep
   set e := finCongr hfr
   set b := b0.reindex e with hb
   set h : Fin d → ℤ := fun j => h0 (e.symm j) with hh
@@ -154,7 +156,7 @@ theorem exists_hodge : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (P : LocPrime
   refine ⟨H, fun N ⟨h1, h2⟩ i => ?_⟩
   rw [hH i]
   have hne : (b i : Fin d → P.R.BdR) ≠ 0 := fun h0' => b.ne_zero i (Subtype.ext h0')
-  obtain ⟨hlo, hhi⟩ := GlobalTheory.T.deRham_filtration_bounds_invariant_coordinates l P K d ρ N h1 h2 _ (hbinv i) hne
+  obtain ⟨hlo, hhi⟩ := _root_.GlobalTheory.DRMat.invariant_coord_bounds l P K d ρ N h1 h2 _ (hbinv i) hne
   rw [abs_le]
   constructor
   · by_contra hlt

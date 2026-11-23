@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GaussPowFourHom
 public import Formalism.SharpRestriction.GlobalSchurBounds.StandardLatticesGL3
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaSpaceSelfDualPairAtMostLineStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaTranslationIntertwinerUnitaryStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutes
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaSpaceSelfDualPairAtMostLine
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaTranslationIntertwinerUnitary
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -161,7 +161,7 @@ theorem triple_constant : ∀ D : D7, GaussSumTripleConstant D := by
       intro X Y; funext z; simp [Iop, U]
     rw [e, e, e]; funext z; simp
   set T := tor0 D cc δ with hT
-  have line := fun X (k : KLat D T X) => GlobalTheory.T.theta_space_selfDual_pair_at_most_line D (GlobalTheory.T.inducedType_thetaGenusOne_permutes D).1 cc δ hc N N' X k
+  have line := fun X (k : KLat D T X) => _root_.GlobalTheory.ThetaLine.theta_line D (_root_.GlobalTheory.InducedType.induced_type D).1 cc δ hc N N' X k
   have eqI : ∀ X Y : AddSubgroup (VC D N N'), KLat D T Y → ∀ G, Iop D T X Y G = itw (wLin D T) X Y G :=
     fun X Y k G => iop_eq_itw D T X Y (line Y k).2.1 G
   have fix : ∀ X : AddSubgroup (VC D N N'), KLat D T X → ∀ G ∈ ThSp D T X, ∀ x ∈ X, wLin D T x G = G := by
@@ -173,7 +173,7 @@ theorem triple_constant : ∀ D : D7, GaussSumTripleConstant D := by
   have uni : ∀ X Y : AddSubgroup (VC D N N'), KLat D T X → KLat D T Y → ∀ G ∈ ThSp D T X,
       itw (wLin D T) X Y G ∈ ThSp D T Y ∧ itw (wLin D T) Y X (itw (wLin D T) X Y G) = G := by
     intro X Y kX kY G hG
-    have := GlobalTheory.T.intertwinerUnitary_all D cc δ hc N N' X Y kX kY G hG
+    have := _root_.GlobalTheory.theta_translation_intertwiner_unitary D cc δ hc N N' X Y kX kY G hG
     rw [← eqI X Y kY, ← eqI Y X kX]
     exact ⟨this.2.1, this.2.2.2⟩
   have nz : ∀ X Y : AddSubgroup (VC D N N'), KLat D T X → KLat D T Y → ∀ G ∈ ThSp D T X, G ≠ 0 →

@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.CommutativeAlgebra.AbByPOfComm
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.IsCharacterOverSubfieldOfRepresentationStatement
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.LinearMapShortExactCommuteStatement
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.IsCharacterOverSubfieldOfRepresentation
+public import Mathlib.LinearAlgebra.Trace
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.LinearMapShortExactCommute
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,10 +57,10 @@ theorem exists_isChar_eq_add_of_injective : ∀ (K L : Type) [Field K] [Field L]
     rintro g _ ⟨w, rfl⟩
     exact ⟨σ g w, (LinearMap.congr_fun (hcomm g) w).symm⟩
   refine ⟨fun g => algebraMap K L ((ρ.quotient _ hle).character g),
-    (GlobalTheory.T.isCharacterOverSubfield_of_representation K L G _ (ρ.quotient _ hle)).1, fun g => ?_⟩
+    (_root_.GlobalTheory.BI.isChar_and_isIrrChar_of_rep K L G _ (ρ.quotient _ hle)).1, fun g => ?_⟩
   rw [← map_add (f := _)]
   congr 1
-  refine GlobalTheory.T.linear_map_short_exact_commute K W V _ f.toLinearMap (LinearMap.range f.toLinearMap).mkQ (σ g) (ρ g)
+  refine _root_.GlobalTheory.trace_eq_add_of_shortExact K W V _ f.toLinearMap (LinearMap.range f.toLinearMap).mkQ (σ g) (ρ g)
     (ρ.quotient _ hle g) hf (Submodule.mkQ_surjective _) (Submodule.ker_mkQ _).symm (hcomm g) ?_
   ext v
   rfl

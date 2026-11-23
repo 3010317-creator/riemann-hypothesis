@@ -3,7 +3,7 @@ module
 public import Formalism.SharpRestriction.LevelLetterCocycles.ProdOneSubPrimitiveRoots
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsAdicCompleteOfPowLe
 public import Formalism.SharpRestriction.LevelLetterCocycles.ElementDenominator
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemUnramifiedFieldOfMemMaxUnramifiedSupRootStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemUnramifiedFieldOfMemMaxUnramifiedSupRoot
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -176,7 +176,7 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (�
   intro l _ a e _ _ ϖ _ g hg
   obtain ⟨h, hh, hgh⟩ := exists_fix_Kur (ϖ.fieldInf a) g fun x hx hK => by
     obtain ⟨n, hn⟩ := mem_level ϖ hx
-    exact fix_Kunr g hg x (GlobalTheory.T.mem_unramifiedField_of_mem_maxUnramified_sup_root l a e ϖ n x hK hn)
+    exact fix_Kunr g hg x (_root_.GlobalTheory.KunrDisj.mem_Kunr_of_mem_Kur_of_mem_sup l a e ϖ n x hK hn)
   obtain ⟨k', hk', hkeq⟩ := mem_IK_of_fix (g * h) hgh
   exact ⟨k', hk', h, hh, hkeq⟩
 

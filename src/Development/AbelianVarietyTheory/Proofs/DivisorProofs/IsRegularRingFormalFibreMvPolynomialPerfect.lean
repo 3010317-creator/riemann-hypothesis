@@ -3,8 +3,11 @@ module
 public import Mathlib.FieldTheory.Perfect
 public import Mathlib.RingTheory.AdicCompletion.Algebra
 public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDerivationExtendAdicCompletionLocalizationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RegularFibreOfLiftedPartialDerivationsStatement
+public import Mathlib.RingTheory.Derivation.Basic
+public import Mathlib.RingTheory.Localization.AtPrime.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDerivationExtendAdicCompletionLocalization
+public import Mathlib.Algebra.MvPolynomial.PDeriv
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RegularFibreOfLiftedPartialDerivations
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsRegularLocalRingOfFlatOfMapEqMaximalIdeal
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsRegularLocalRingAdicCompletion
 import Mathlib.Algebra.Order.Floor.Extended
@@ -81,14 +84,14 @@ theorem isRegularRing_adicCompletion_tensor_of_mvPolynomial :
     exact ha
   have hD : ∀ s : Fin n, ∃ D : Derivation ℤ B B, ∀ x,
       D (algebraMap S₀ B x) = algebraMap S₀ B (MvPolynomial.pderiv s x) := fun s =>
-    GlobalTheory.T.exists_derivation_extend_adicCompletion_localization S₀ P ((MvPolynomial.pderiv s).restrictScalars ℤ)
+    _root_.GlobalTheory.derivation_extend_completion_localization_atPrime S₀ P ((MvPolynomial.pderiv s).restrictScalars ℤ)
   have hD' : ∀ s : Fin n, ∃ D : @Derivation ℤ B B _ _ _ (Ring.toIntAlgebra B) _ _, ∀ x,
       D (algebraMap S₀ B x) = algebraMap S₀ B (MvPolynomial.pderiv s x) := by
     intro s
     obtain ⟨D, hD⟩ := hD s
     exact ⟨@Derivation.mk ℤ B B _ _ _ (Ring.toIntAlgebra B) _ _ D.toLinearMap
       D.map_one_eq_zero' D.leibniz', hD⟩
-  have h := GlobalTheory.T.regular_fibre_of_lifted_partialDerivations Λ (Fin n) B K hC hD'
+  have h := _root_.GlobalTheory.regularFibre_of_liftedPartialDerivations Λ (Fin n) B K hC hD'
   let e : B ⊗[R] K ≃ₐ[R] B ⊗[S₀] K := IsLocalization.algebraTensorEquiv P.primeCompl R B K
   exact IsRegularRing.of_ringEquiv e.symm.toRingEquiv
 

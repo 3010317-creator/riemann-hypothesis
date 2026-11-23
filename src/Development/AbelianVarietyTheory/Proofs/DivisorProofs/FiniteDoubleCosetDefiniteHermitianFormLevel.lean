@@ -5,7 +5,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormGroupToP
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TC
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ClassNumberFiniteHolds
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BorelFiniteClassNumberCentraliserTorusStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryCentralizerOfCommutePadicPointsSpliStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryCentralizerOfCommutePadicPointsSpli
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieMultLabelRank
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolynomialZeroLocusCoordinatesStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorusExtensionModuleStructure
@@ -158,7 +158,7 @@ theorem cover_KHT (P : CCF) (G : HTGroup p) (L : G.Level) (B : GlobalTheory.LKDe
 
   have hz₁ := inT_psiAway_inv_of_commute p G B.β x t hx 1 g.1 (by simp)
   simp only [OneMemClass.coe_one, Prod.fst_one, Units.val_one] at hz₁
-  obtain ⟨z₂, hz₂, hψ₂⟩ := GlobalTheory.T.exists_unitaryCentralizer_of_commute_padicPoints_split p G B.β B.sym 1 g.2 (by simp)
+  obtain ⟨z₂, hz₂, hψ₂⟩ := _root_.GlobalTheory.TorCls.centraliser_at_p p G B.β B.sym 1 g.2 (by simp)
   simp only [OneMemClass.coe_one, Prod.fst_one, Units.val_one] at hz₂
   set z₁ := psiAway G x⁻¹ (g.1 : (AfP p ⊗[ℚ] G.C)ˣ × (AfP p)ˣ) with hz₁def
   obtain ⟨γ, hγ, -, s, hs, u, hu, hz⟩ := hS (z₁, z₂) (TC_of_inT G _ _ _ hz₁) (TC_of_inT G _ _ _ hz₂)

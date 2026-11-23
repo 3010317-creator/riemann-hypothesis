@@ -3,10 +3,11 @@ module
 public import Mathlib.Algebra.Algebra.Basic
 public import Mathlib.LinearAlgebra.BilinearMap
 public import Mathlib.SetTheory.Cardinal.Finite
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AnnihilatorIntersectionCardStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AnnihilatorIntersectionCard
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CardComapEqCardKerMulCardRangeInf
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CardEqCardKerMulCardRange
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DoubleAnnihilatorEqSelfStatement
+public import Mathlib.Data.ZMod.Defs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DoubleAnnihilatorEqSelf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,9 +61,9 @@ theorem card_comap_mul_card_ker_mul_card_eq :
     (⨅ x ∈ L, LinearMap.ker (B.flip x))
   have e3 := card_eq_card_ker_mul_card_range (ZMod n) H P loc
   have hflip : B.flip.flip = B := LinearMap.flip_flip B
-  have hdd := GlobalTheory.T.double_annihilator_eq_self n P' P B.flip hB' (by rw [hflip]; exact hB) (LinearMap.range loc')
+  have hdd := _root_.GlobalTheory.CompanionTheory.FiniteDuality.double_annihilator n P' P B.flip hB' (by rw [hflip]; exact hB) (LinearMap.range loc')
   rw [hflip, ← hR] at hdd
-  have e4 := GlobalTheory.T.annihilator_intersection_card n P P' B hB hB' (LinearMap.range loc) L
+  have e4 := _root_.GlobalTheory.CompanionTheory.PairCount.card_annihilator_inf n P P' B hB hB' (LinearMap.range loc) L
   rw [hdd] at e4
   rw [e1, e2, e3]
   have key : Nat.card ↥(LinearMap.ker loc) * Nat.card ↥(LinearMap.ker loc') *

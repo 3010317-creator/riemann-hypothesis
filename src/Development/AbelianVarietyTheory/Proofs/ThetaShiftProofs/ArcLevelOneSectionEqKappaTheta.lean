@@ -2,11 +2,11 @@ module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
 public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IdealPart
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArcSectionValueAtSpecialisedPointsThetaStatement
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArcSectionValueAtSpecialisedPointsTheta
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.CharEqOfThetaCharEqMul
-import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.MemThetaShiftZero
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.TwoRigidifiedThetaFramesOnFibreStatement
 public import Development.AbelianVarietyTheory.Statements.ThetaLevelCharacters.MemThetaLevelCharDimZero
+import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.MemThetaShiftZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -143,7 +143,7 @@ theorem arc_theta : Out.Laws → Out.Laws2 → ∀ (E : Type) [Field E] [NumberF
       (by simp) (Q := fun z => Q (K.h.symm z)) (hQ.comp K.h.symm.differentiable) (by simp [hQ0]) fun z => ?_
     rw [hoff w, ContinuousLinearEquiv.apply_symm_apply]
     ring
-  · obtain ⟨T', hT'⟩ := GlobalTheory.T.arcSection_value_at_specialised_points_theta hL hL2 E H D l Xo c O β Y bF a χ W Λ C Γ Ψ th σ fam θ w₂ w₁ w₀ U s r hfin hth hθ
+  · obtain ⟨T', hT'⟩ := _root_.GlobalTheory.ArcSectionValue.section_value hL hL2 E H D l Xo c O β Y bF a χ W Λ C Γ Ψ th σ fam θ w₂ w₁ w₀ U s r hfin hth hθ
       hθ0 hfn r₂ r₁ r₀ hU hpull
     refine ⟨max T T', fun w hw => ?_⟩
     have hw1 : T < w.im := (le_max_left _ _).trans_lt hw

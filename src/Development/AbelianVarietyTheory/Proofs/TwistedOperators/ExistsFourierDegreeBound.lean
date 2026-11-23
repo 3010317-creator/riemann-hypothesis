@@ -1,12 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegralEqZeroOfScalar
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TotalDegreeSubstFLe
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.RingTheory.Algebraic.Defs
+public import Mathlib.Topology.Instances.Matrix
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CoeffMatrixFamilyBilateralSubstitutionMonomialCo
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MapDomainFstEqOfCoeffMatrixFamilyBilateralSubsti
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MatrixFamilyBilateralSubstitutionCompEqMul
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MatrixFamilyBilateralSubstitutionScalarMonomial
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CompactCommutingCartanInvolutionMovedStandard
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralNormSqEqToL2
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CoeffMatrixFamilyBilateralSubstitutionMonomialCoStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MapDomainFstEqOfCoeffMatrixFamilyBilateralSubstiStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MatrixFamilyBilateralSubstitutionCompEqMulStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MatrixFamilyBilateralSubstitutionScalarMonomialStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -81,10 +85,10 @@ theorem substMat_mul (θ : InfFam D) (V : HSp D) (m : ℕ) (d : D.what₂.Tau �
         (fun τ => compAt θ τ (Formalism.L2.Theta.mt V g₁))
         (GlobalTheory.CompactHowe.substF (fun _ : D.what₂.Tau => (1 : Matrix (Fin m) (Fin m) ℂ))
           (fun τ => compAt θ τ (Formalism.L2.Theta.mt V g₂)) (monomial k.1 1)) := by
-    rw [GlobalTheory.T.matrixFamilyBilateralSubstitution_comp_eq_mul, ← e, ← e1]
+    rw [_root_.GlobalTheory.CompactHowe.substF_mul, ← e, ← e1]
   rw [e2]
   conv_lhs => rw [eq_sum_mon (d := d) (GlobalTheory.CompactHowe.substF _ _ (monomial k.1 1))
-    (fun k'' h => (GlobalTheory.T.mapDomain_fst_eq_of_coeff_matrixFamilyBilateralSubstitution_ne_zero _ _ _ _ h).trans k.2)]
+    (fun k'' h => (_root_.GlobalTheory.CompactHowe.mapDomain_fst_eq_of_coeff_substF_ne_zero _ _ _ _ h).trans k.2)]
 
   rw [map_sum, coeff_sum]
   refine Finset.sum_congr rfl fun k'' _ => ?_
@@ -93,7 +97,7 @@ theorem substMat_mul (θ : InfFam D) (V : HSp D) (m : ℕ) (d : D.what₂.Tau �
 theorem substMat_cont {θ : InfFam D} (hθ : IsInfFam θ) (V : HSp D) (m : ℕ) (d : D.what₂.Tau →₀ ℕ)
     (k' k : Mon D m V.rank d) :
     Continuous (fun g : GinfC V => substMat θ V m d g.1 k' k) := by
-  have hc := (GlobalTheory.T.coeff_matrixFamilyBilateralSubstitution_monomial_continuous_algebraic (ι := D.what₂.Tau) (N := m) (n := V.rank) k.1 k'.1).1
+  have hc := (_root_.GlobalTheory.SubstCoeff.coeff_substF_monomial_continuous_algebraic (ι := D.what₂.Tau) (N := m) (n := V.rank) k.1 k'.1).1
   have hm : Continuous fun g : GinfC V => (fun τ : D.what₂.Tau => compAt θ τ (Formalism.L2.Theta.mt V g.1)) :=
     continuous_pi fun τ =>
       (GlobalTheory.RealWeil.continuous_compAt hθ τ _ _).comp ((GlobalTheory.RealWeil.continuous_mt V).1.comp continuous_subtype_val)
@@ -105,7 +109,7 @@ theorem substMat_cont {θ : InfFam D} (hθ : IsInfFam θ) (V : HSp D) (m : ℕ) 
 theorem substMat_alg (θ : InfFam D) (V : HSp D) (m : ℕ) (d : D.what₂.Tau →₀ ℕ)
     (k' k : Mon D m V.rank d) (g : GA D V) (hg : ∀ τ a b, IsAlgebraic ℚ (compAt θ τ (Formalism.L2.Theta.mt V g) a b)) :
     IsAlgebraic ℚ (substMat θ V m d g k' k) := by
-  have ha := (GlobalTheory.T.coeff_matrixFamilyBilateralSubstitution_monomial_continuous_algebraic (ι := D.what₂.Tau) (N := m) (n := V.rank) k.1 k'.1).2
+  have ha := (_root_.GlobalTheory.SubstCoeff.coeff_substF_monomial_continuous_algebraic (ι := D.what₂.Tau) (N := m) (n := V.rank) k.1 k'.1).2
     (fun _ => (1 : Matrix (Fin m) (Fin m) ℂ)) (fun τ => compAt θ τ (Formalism.L2.Theta.mt V g)) (one_alg m) hg
   exact ha
 
@@ -121,7 +125,7 @@ theorem substMat_central (θ : InfFam D) (V : HSp D) (m : ℕ) (d : D.what₂.Ta
     · subst hρ; rw [if_pos rfl, h1]
     · rw [if_neg hρ, h2 ρ hρ]
   ext k' k
-  simp only [substMat, e, GlobalTheory.T.matrixFamilyBilateralSubstitution_scalar_monomial, MvPolynomial.coeff_smul, coeff_monomial, Matrix.smul_apply, Matrix.one_apply,
+  simp only [substMat, e, _root_.GlobalTheory.CompactHowe.substF_scalar_monomial, MvPolynomial.coeff_smul, coeff_monomial, Matrix.smul_apply, Matrix.one_apply,
     smul_eq_mul]
   rw [show Finsupp.mapDomain Prod.fst k.1 = d from k.2]
   by_cases h : k' = k

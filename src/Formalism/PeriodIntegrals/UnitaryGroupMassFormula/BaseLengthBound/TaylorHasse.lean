@@ -2,8 +2,9 @@ module
 
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BaseLengthBound.YmDerivSt
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.HasseJidPow
-import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.HassePresH
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PoleLengthBound.YmDeriv
+import Formalism.PeriodIntegrals.HassePresH
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.HasseDerivativeFiltration.HasseMemHfr
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -121,7 +122,7 @@ theorem ym_mem (γ : Fin (WeightFamilies.dimY D j) → ℕ) :
 
 theorem hasse_mem_HK (u : WeightFamilies.Wt D j) (β : Idx D j G.N →₀ ℕ) {z : Lw X la G.w} (hz : z ∈ HK X la G.w u) :
     hs G la β z ∈ HK X la G.w u :=
-  (mem_HK X la G.w).2 (hasse_presentation X la G.w u β z ((mem_HK X la G.w).1 hz))
+  (mem_HK X la G.w).2 (_root_.PI.UnitaryGroupMassFormula.HassePresH.main X la G.w u β z ((mem_HK X la G.w).1 hz))
 
 theorem bcol_size {N : ℕ} (jj : Fin N) (α : Fin (WeightFamilies.dimY D j) → ℕ) :
     ((bcol (D := D) (j := j) jj α).sum fun _ n => n) = ∑ i, α i := by

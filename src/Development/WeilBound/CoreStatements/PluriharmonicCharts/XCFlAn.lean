@@ -2,13 +2,14 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PartialFlagBlocks
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.EvalNeZeroOfNotMem
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagGapPullbackThirdStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HasStepCharts
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagGapPullbackThird
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagModelAnalyticDataExists
+public import Development.WeilBound.CoreStatements.PluriharmonicCharts.MinorIJOneSelf
+public import Development.WeilBound.CoreStatements.PluriharmonicCharts.NotMemTop
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.LogResolutionFubiniStudyPositive
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.SingularWeightMonotoneRegularization
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.SncAdaptedAtlasProjection
-public import Development.WeilBound.CoreStatements.PluriharmonicCharts.MinorIJOneSelf
-public import Development.WeilBound.CoreStatements.PluriharmonicCharts.NotMemTop
 import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PHFlProdLinear
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -116,7 +117,7 @@ theorem step_member [Fintype Ψ] [DecidableEq Ψ]
     · rw [stepGap, hh, sub_self]; rfl
     · rfl
   have hps := PositivityTheory.Xgp.plurisubharmonic_charts.isPshOn_stepPot K ι Φ y Ψ N j M n BM p K ι id id e R pr hp
-    (GlobalTheory.T.flag_gap_pullback_third K ι Φ y Ψ N j M n BM p K ι id id e R pr hyp)
+    (_root_.GlobalTheory.CompanionTheory.Ar.PB.StepW.ChartEx.hasStepCharts K ι Φ y Ψ N j M n BM p K ι id id e R pr hyp)
   rw [h0] at hps
   have hps' : IsPsh R.A (potOf R (fsHerm ι (M.dy p)) + LocPot.ofFun (0 : R.X → ℝ)) := isPsh_of_univ hU hps
   have hsm0 : R.A.Smooth (0 : R.X → ℝ) := fun jj => by

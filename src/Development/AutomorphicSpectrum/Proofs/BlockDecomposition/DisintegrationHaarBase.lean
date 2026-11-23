@@ -1,7 +1,9 @@
 module
 
 public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ContinuousDensitiesEqOfIntegralsOnCompactsStatement
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
+public import Mathlib.MeasureTheory.Measure.OpenPos
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ContinuousDensitiesEqOfIntegralsOnCompacts
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.DisintegrationDensityContinuous
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.DisintegrationDensityExists
 import Mathlib.Algebra.Order.Floor.Extended
@@ -123,7 +125,7 @@ theorem lintegral_shift {V X Y : Type} [TopologicalSpace V] [T2Space V] [Measura
   have hD' := continuous_lintegral hF hφs hcs (hss.trans hWU) (fun v => h0 _)
   have hDs : Continuous fun b => ∫⁻ v, ENNReal.ofReal (φ v) ∂(fib (b + s)) :=
     hD.comp (continuous_add_const s)
-  refine GlobalTheory.T.continuous_densities_eq_of_integrals_on_compacts X ν Set.univ isOpen_univ _ _ hD'.continuousOn hDs.continuousOn
+  refine _root_.GlobalTheory.CompanionTheory.SW.eq_of_setLIntegral_compact_eq X ν Set.univ isOpen_univ _ _ hD'.continuousOn hDs.continuousOn
     (fun S hS _ => ?_) c (Set.mem_univ c)
   have hSm := hS.measurableSet
   have hS'm : MeasurableSet ((fun x : X => x - s) ⁻¹' S) :=

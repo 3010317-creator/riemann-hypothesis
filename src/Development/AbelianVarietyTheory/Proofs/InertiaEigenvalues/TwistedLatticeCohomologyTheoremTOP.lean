@@ -6,22 +6,29 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.Admissi
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleOfSurjective
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleStd
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmissibleUntwistedCharUnramifiedOfResidueRealis
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardH1LocalEulerFormulaStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineSumsTwistsCharactersExpectedJumps
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExactLocalConditionsTopCoreStatement
+public import Formalism.GaloisCohomology.LocalTateDualityK
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+public import ReciprocityTheory.BasicDefinitions.AdRep
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardH1LocalEulerFormula
+public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.AdmissibleCharUnramified
+public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.AdmissibleCharacterHyp
+public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.InvariantsVanishing
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExactLocalConditionsTopCore
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIndependentAdmissibleCocyclesResidue
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsModThOfPres
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPowSmulEqZero
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPresTensor
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPullBasis
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteClassesSubsetAdmissibleOfGoodO
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteQuotientPow
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FinsumCountNeg
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.StmtOfReal
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.StrictnessOfTied
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ToAmbCoefH1EqCoefAmbToAmb
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.VanishOfLattice
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeUsedPropertiesOfAdmittedStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Saturated
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeUsedPropertiesOfAdmitted
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineSumsTwistsCharactersExpectedJumps
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteClassesSubsetAdmissibleOfGoodO
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteQuotientPow
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteResidueField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -79,7 +86,7 @@ theorem freeH_of_vanish_euler : Formalism.GaloisCohomology.LocalEulerCharK →
     (GlobalTheory.LocalIntegers.isOpen_integers l S.LL)
     (fun U hU => GlobalTheory.FreeCoh.pow_mul_mem_nhds S.LL S.Γ.lam hs.2.2.2.2.2 U hU)
     ht.2.2.1.1 (GlobalTheory.AdmClasses.not_isUnit_integers l S.LL) hV.1 hV.2 ht.1 hs.2.2.1
-    (fun M _ _ _ π hlm hlc h0 h2 => GlobalTheory.T.card_H1_local_euler_formula heul l S.K S.O M π hlm hlc h0 h2)
+    (fun M _ _ _ π hlm hlc h0 h2 => _root_.GlobalTheory.EulerFree.card_H1_eq_pow heul l S.K S.O M π hlm hlc h0 h2)
 
 theorem stmtAt_of_real (hdual : Formalism.GaloisCohomology.LocalTateDualityK) (heul : Formalism.GaloisCohomology.LocalEulerCharK)
     {l : ℕ} [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (htied : Nonempty (LocTied l P AI))
@@ -113,9 +120,9 @@ theorem twistedLatticeCohomology_theoremTOP : ∀ (D : D7) (HW : HWOf D.loc) (F 
   have hreal : ∀ S : TopSit (D.loc l), S.Real := fun S =>
     GlobalTheory.BasePairs.real_of_presented (D.locA l) (HW l) (F l) S
       (GlobalTheory.RedFun.realD (D.locA l) (HW l) (F l) S)
-      (GlobalTheory.T.wachLattice_usedProperties_of_admitted D HW F Cm hA l S.K S.LL S.hyp.1.2.1)
+      (_root_.GlobalTheory.WachQN.qN_of_admitted D HW F Cm hA l S.K S.LL S.hyp.1.2.1)
       (GlobalTheory.TopSteps.CrysRules.crysCalc (D.locA l) htied S)
-  exact GlobalTheory.T.exactLocalConditions_topCore (D.loc l) (D.locA l) htied (HW l)
+  exact _root_.GlobalTheory.TopDict.topCore_of_typings (D.loc l) (D.locA l) htied (HW l)
     (stmtAt_of_real h18.1 h18.2 (D.loc l) (D.locA l) htied hreal (fun K' LL' hc => h19 l K' LL' hc))
     (GlobalTheory.TopSteps.CharVanish.stmt_of_real (D.loc l) (D.locA l) htied hreal)
     (GlobalTheory.TopSteps.admissibleUntwistedCharUnramified_of_residueRealisation (D.loc l) (D.locA l) htied hreal)

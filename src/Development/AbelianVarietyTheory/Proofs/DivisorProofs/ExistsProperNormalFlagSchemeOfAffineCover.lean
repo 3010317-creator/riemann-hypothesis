@@ -1,11 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsFrameCover
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CompactNormalNoetherianOfFlagCellCover
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsPluckerFlagEmbeddingOfProjectiveBase
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FlagCellsGlueLocallyClosedPluckerProduct
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PreimageIUnionOpensEqRangeFlagCells
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsFlagModelField
 import Development.AbelianVarietyTheory.Definitions.Divisors.SecondCountableTopologyOfIsProjOver
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CompactNormalNoetherianOfFlagCellCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsPluckerFlagEmbeddingOfProjectiveBaseStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FlagCellsGlueLocallyClosedPluckerProductStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PreimageIUnionOpensEqRangeFlagCellsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +47,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbProj
 import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsChartOfIsLocalRing
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsFlagModelField
 import Development.AbelianVarietyTheory.Definitions.RegularCharts.Reframe
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagCellFrameChangeTriangular
 
@@ -61,12 +61,12 @@ namespace GlobalTheory.FlagMod.FieldFlag
 
 theorem exists_properFlag : ∀ (K : Type) [Field K] (X : Scheme.{0}) (s : X ⟶ Sp K) (T : Type) [Finite T] (m : T → ℕ) (M : ℕ) (B : Type) [Finite B] (V : B → X.affineOpens) (α : ∀ b, K →+* Γ(X, (V b).1)) (c D : ∀ b, Let m → Fin (M + 1) → Γ(X, (V b).1)), IsProjOver s → ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme X → IsCover (RingHom.id K) s V α c D → (∀ x : X, ∃ b, x ∈ (V b).1) → ∃ (Z : Scheme.{0}) (π : Z ⟶ X) (g : ∀ en : En m, Z ⟶ PSpace K (plN M en.1)) (κ : ∀ b, Pm m → (Sp (CR m (V b)) ⟶ Z)), IsProper π ∧ ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsNormalScheme Z ∧ HasPlk (RingHom.id K) V α c π g κ ∧ (∀ b w, IsOpenImmersion (κ b w)) ∧ (∀ z : Z, ∃ b w, z ∈ Set.range (κ b w)) ∧ ∀ (W : Scheme.{0}) (a a' : W ⟶ Z), a ≫ π = a' ≫ π → (∀ en, a ≫ g en = a' ≫ g en) → a = a' := by
   intro K _ X s T _ m M B _ V α c D hP hN hC hV
-  obtain ⟨P, p0, p, h, hPlk⟩ := GlobalTheory.T.exists_pluckerFlagEmbedding_of_projective_base K K (RingHom.id K) X s T m M B V α c D hP hC
-  obtain ⟨F, f, i, hf, hi, hif, hcov⟩ := GlobalTheory.T.flagCells_glue_locallyClosed_pluckerProduct K K (RingHom.id K) X s T m M B V α c D P p0 p h hP hN hC hPlk
+  obtain ⟨P, p0, p, h, hPlk⟩ := _root_.GlobalTheory.FlagEmb.exists_isPlk K K (RingHom.id K) X s T m M B V α c D hP hC
+  obtain ⟨F, f, i, hf, hi, hif, hcov⟩ := _root_.GlobalTheory.FlagEmb.cells_glue K K (RingHom.id K) X s T m M B V α c D P p0 p h hP hN hC hPlk
   have hXn : IsLocallyNoetherian X := by
     obtain ⟨N, ι, _, rfl⟩ := hP
     exact LocallyOfFiniteType.isLocallyNoetherian (ι ≫ PSpace.str K N)
-  obtain ⟨hFc, hFn, hFnoe⟩ := GlobalTheory.T.compact_normal_noetherian_of_flagCell_cover X T m B V F i hN hi hcov
+  obtain ⟨hFc, hFn, hFnoe⟩ := _root_.GlobalTheory.FlagEmb.compact_normal_noetherian_of_cells X T m B V F i hN hi hcov
   have hPp : IsProper (p0 ≫ s) := by
     obtain ⟨N, ι, hι, e⟩ := hPlk.proj
     have := isProper_str K N
@@ -82,7 +82,7 @@ theorem exists_properFlag : ∀ (K : Type) [Field K] (X : Scheme.{0}) (s : X ⟶
   have : IsNoetherian F := {}
   have hqc : QuasiCompact f := inferInstance
   have hsep : IsSeparated (f.imageι ≫ p0) := inferInstance
-  have hpre := GlobalTheory.T.preimage_iUnion_opens_eq_range_flagCells K K (RingHom.id K) X s T m M B V α c D P p0 p h hC hPlk F f.image f i f.toImage f.imageι
+  have hpre := _root_.GlobalTheory.FlagEmb.preimage_iUnion_eq_range_cells K K (RingHom.id K) X s T m M B V α c D P p0 p h hC hPlk F f.image f i f.toImage f.imageι
     hf hi hif hcov inferInstance f.toImage_imageι f.toImage.denseRange hFnoe hsep
   have huniv : (⋃ b, ((V b).1 : Set X)) = Set.univ := by
     refine Set.eq_univ_of_forall fun x => ?_

@@ -1,13 +1,17 @@
 module
 
 public import Formalism.LocalToGlobal.KernelLattices.LateralTheory
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ComplexPadicNormKappaSplitPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ConjugateEmbeddingsInduceDifferentPrimesSplitStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.QuadraticAtMostTwoPrimesOverStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RelativeDeterminantIsometryNormOneStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ValuationOfGeneratorOfPowStatement
-import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.BaseEx
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ComplexPadicNormKappaSplitPrime
+public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ConjugateEmbeddingsInduceDifferentPrimesSplit
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.QuadraticAtMostTwoPrimesOver
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.RelativeDeterminantIsometryNormOne
+public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Valuation
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ValuationOfGeneratorOfPow
 public import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.IsAdmissibleFlagPairOfUnitriangularLeftAutomorph
+import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.BaseEx
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -190,14 +194,14 @@ theorem norm_kappa_sq_mul_det : ∀ (D : D7) (γ₀ γ : IsoK D) (k : KapChoice 
     ((D.host.conj : D.host.E →+* D.host.E).comp (algebraMap D.host.K D.host.E)))
   have ejK : ∀ z : D.host.K, jK z = ι (D.host.φ₀ (z : D.host.E)) := fun z => rfl
   have ejK' : ∀ z : D.host.K, jK' z = ι (D.host.φ₀ (D.host.conj (z : D.host.E))) := fun z => rfl
-  have hU := GlobalTheory.T.relativeDeterminant_isometry_norm_one D γ₀ γ
+  have hU := _root_.GlobalTheory.detRel_mul_conj_eq_one D γ₀ γ
   set x : D.host.K := γ.detRel γ₀ with hxdef
   set h : ℕ := classNumber D.host.K with hh
   have hy : ordK (k.pp q) x = k.yP q :=
     yIndep D γ₀ q (k.pp q) γ (k.gaP q) hqp hs (k.pp_over q hqp hs) hat (k.gaP_at q hqp hs)
   have hπv : (k.pp q).valuation D.host.K ((k.pi q : 𝓞 D.host.K) : D.host.K) = WithZero.exp (-(h : ℤ)) :=
-    GlobalTheory.T.valuation_eq_exp_neg_of_pow_eq_span_singleton D.host.K (k.pp q) h (k.pi q) (k.pi_gen q hqp hs)
-  have hkap := GlobalTheory.T.complexPadic_norm_kappa_splitPrime D γ₀ k q hs ι
+    _root_.GlobalTheory.valuation_of_generator_of_pow D.host.K (k.pp q) h (k.pi q) (k.pi_gen q hqp hs)
+  have hkap := _root_.GlobalTheory.KapSplitNorm.norm_kappa_split D γ₀ k q hs ι
   have hrt := k.rt_pow q hqp hs
   have hrt0 := k.rt_ne_zero q hqp hs
   set y : ℤ := k.yP q with hydef
@@ -213,7 +217,7 @@ theorem norm_kappa_sq_mul_det : ∀ (D : D7) (γ₀ γ : IsoK D) (k : KapChoice 
   obtain ⟨w', hqw', hw'⟩ := exists_place jK'
   have hne : w ≠ w' := by
     intro heq
-    obtain ⟨y0, h1, h2⟩ := GlobalTheory.T.conjugate_embeddings_induce_different_primes_split D q hq2 hj ι
+    obtain ⟨y0, h1, h2⟩ := _root_.GlobalTheory.ConjPlace.conj_place_ne D q hq2 hj ι
     have a1 : y0 ∈ w.asIdeal := (hw y0).2 (by rw [ejK]; exact h1)
     rw [heq, hw', ejK'] at a1
     exact absurd a1 (not_lt.2 h2)
@@ -232,7 +236,7 @@ theorem norm_kappa_sq_mul_det : ∀ (D : D7) (γ₀ γ : IsoK D) (k : KapChoice 
     intro j v hv hv𝔭
     exact le_antisymm (norm_le_one_of_int j π) (not_lt.1 fun hlt => hnot v hv𝔭 ((hv π).2 hlt))
   have key : ‖jK x‖ ^ h = (‖jK (π : D.host.K)‖ / ‖jK' (π : D.host.K)‖) ^ y := by
-    rcases GlobalTheory.T.quadratic_field_at_most_two_primes_over_prime D.host.K (kQuad D) q hqp 𝔭 w w' hq𝔭 hqw hqw' with e | e | e
+    rcases _root_.GlobalTheory.quadratic_at_most_two_primes_over D.host.K (kQuad D) q hqp 𝔭 w w' hq𝔭 hqw hqw' with e | e | e
     · have h1 := norm_pow_eq jK w hw h π (by rw [← e]; exact hπv) x hx0
       have h2 : -WithZero.log (w.valuation D.host.K x) = y := by rw [← e]; exact hy
       rw [h2] at h1

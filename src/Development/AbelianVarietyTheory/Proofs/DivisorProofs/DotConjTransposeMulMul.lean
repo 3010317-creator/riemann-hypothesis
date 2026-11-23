@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsRootSelectionUnitaryRankOne
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianFormNegOnOrthogonalOfPositiveIndexOneStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsCyclotomicExtensionQI
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianFormNegOnOrthogonalOfPositiveIndexOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MarkNormSqEqSimilitudeFactorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimilitudePairGramInvCongruentStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimilitudePairGramInvCongruent
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimilitudePairHermitianFormInvertibleSimilitudeStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -85,7 +86,7 @@ theorem mark_unique : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pair G) 
       rw [← mul_assoc] at e; exact mul_right_cancel₀ hne0 e
     exact hne (mul_left_cancel₀ hμ0 (hμ.trans h1))
 
-  obtain ⟨Z, hZ⟩ := GlobalTheory.T.similitudePair_gram_inv_congruent p G P v
+  obtain ⟨Z, hZ⟩ := _root_.GlobalTheory.LKMid.Pair.gram_psi_inv_congr p G P v
   rw [hZ, dot_conjTranspose_mul_mul] at horth hxp hxp'
   have hx'0 : x' ≠ 0 := by
     rintro rfl; simp at hxp'
@@ -94,7 +95,7 @@ theorem mark_unique : ∀ (p : ℕ) [Fact p.Prime] (G : HTGroup p) (P : Pair G) 
     apply hx'0
     have := congrArg (fun w => ((Z⁻¹ : GL (Fin G.n) ℂ) : Matrix (Fin G.n) (Fin G.n) ℂ) *ᵥ w) h0
     simpa [Matrix.mulVec_mulVec] using this
-  have hneg := GlobalTheory.T.hermitianForm_neg_on_orthogonal_of_positiveIndex_one (G.gram v) (G.gram_herm v) (G.gram_det v) hv _ _ hxp horth hY
+  have hneg := _root_.GlobalTheory.re_form_neg_of_orth_of_sigPosH_eq_one (G.gram v) (G.gram_herm v) (G.gram_det v) hv _ _ hxp horth hY
   exact absurd hxp' (not_lt.mpr hneg.le)
 
 end GlobalTheory.LKMid.Pair

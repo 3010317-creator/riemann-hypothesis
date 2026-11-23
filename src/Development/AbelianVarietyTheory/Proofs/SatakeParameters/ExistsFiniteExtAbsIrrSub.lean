@@ -1,10 +1,11 @@
 module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.DataN
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.EndSpannedByRepMatricesOfScalarExtensionStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.EndSpannedOfIsIrrSubOfIsAlgClosedStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsInternalStableDecompositionDescendsToSubfiStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IrreducibleSubrepIsoSummandOfIsInternalStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MapMulVecMemOfMemSpan
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.EndSpannedByRepMatricesOfScalarExtension
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.EndSpannedOfIsIrrSubOfIsAlgClosed
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsInternalStableDecompositionDescendsToSubfi
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IrreducibleSubrepIsoSummandOfIsInternal
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SemisimpleMatrixRepIsInternalIrreducible
 import Formalism.PadicSubsetSums.StableGradedCounts.ZBrauerNesbittAlg
 import Mathlib.Algebra.Order.Floor.Extended
@@ -92,12 +93,12 @@ theorem exists_finite_ext_absIrrSub : ∀ {K Γ ι : Type} [Field K] [Group Γ] 
     · show f ∘ c ∈ Vs j m
       rw [hfc]; exact (b j m k).2
     · exact hfc
-  obtain ⟨Us, hUi, hUs⟩ := GlobalTheory.T.exists_internal_stable_decomposition_descends_to_subfield f τ (Vs j) (hint j) (fun m => hcomp ▸ (hirr j m).2.1) hsp
+  obtain ⟨Us, hUi, hUs⟩ := _root_.GlobalTheory.SplitField.descend_decomp f τ (Vs j) (hint j) (fun m => hcomp ▸ (hirr j m).2.1) hsp
   have hES : ∀ m, EndSpanned τ (Us m) := by
     intro m
-    apply GlobalTheory.T.endSpannedByRepMatrices_of_scalarExtension f τ (Us m)
+    apply _root_.GlobalTheory.SplitField.endSpanned_of_endSpanned_map f τ (Us m)
     rw [(hUs m).2, hcomp]
-    exact GlobalTheory.T.endSpanned_of_isIrrSub_of_isAlgClosed' _ _ (hirr j m)
+    exact _root_.GlobalTheory.SplitField.endSpanned_of_isIrrSub_of_isAlgClosed _ _ (hirr j m)
   have hne : ∀ m, Us m ≠ ⊥ := by
     intro m h
     apply (hirr j m).1
@@ -105,6 +106,6 @@ theorem exists_finite_ext_absIrrSub : ∀ {K Γ ι : Type} [Field K] [Group Γ] 
     simp
   have hUirr : ∀ m, IsIrrSub τ (Us m) := fun m => isIrrSub_of_endSpanned τ (Us m) (hne m) (hUs m).1 (hES m)
   intro W hW
-  obtain ⟨m, hm⟩ := GlobalTheory.T.irreducible_subrep_iso_summand_of_isInternal τ Us hUi hUirr W hW
+  obtain ⟨m, hm⟩ := _root_.GlobalTheory.SplitField.isoSub_summand_of_isInternal τ Us hUi hUirr W hW
   exact absIrrSub_of_endSpanned τ W hW.1 hW.2.1 (endSpanned_of_isoSub τ W (Us m) hW.2.1 hm (hES m))
 end GlobalTheory.SplitField

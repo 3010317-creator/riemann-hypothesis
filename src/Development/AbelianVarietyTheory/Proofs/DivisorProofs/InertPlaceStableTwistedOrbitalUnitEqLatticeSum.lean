@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBasePointTwistedHermUnimodularEqSelfDualStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSelfReciprocalInvAlgWithPolyStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBasePointTwistedHermUnimodularEqSelfDual
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSelfReciprocalInvAlgWithPoly
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedConjugacyClassesEquivUnitsModNormsNonspliStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedOrbitalIntegralUnitGLEqHermitianLatticeCoStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -89,13 +89,13 @@ theorem twisted_unit_eq_stSum : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
       exact RingHom.congr_fun hcomm (Q.coeff 0)
     rw [Polynomial.map_mul, Polynomial.map_C, h0] at h1
     rw [h1, hrev, Polynomial.map_map, hcomm, ← Polynomial.map_map]
-  obtain ⟨B, hg, hP⟩ := GlobalTheory.T.exists_selfReciprocalInvAlg_with_poly K (Q.map e.symm.toRingHom) (hm.map _) hPr
+  obtain ⟨B, hg, hP⟩ := _root_.GlobalTheory.UnitLemma.exists_invAlg_root K (Q.map e.symm.toRingHom) (hm.map _) hPr
   have hsep : B.P.Separable := by
     rw [hP]
     exact hs.map
   refine ⟨B, hg, hP, ?_⟩
   have hε : (-1 : B.A) ^ (a - 1) = 1 ∨ (-1 : B.A) ^ (a - 1) = -1 := neg_one_pow_eq_or B.A (a - 1)
-  obtain ⟨β₀, hβ₀, hX⟩ := GlobalTheory.T.exists_basePoint_twistedHerm_unimodular_eq_selfDual K B hg hsep _ hε
+  obtain ⟨β₀, hβ₀, hX⟩ := _root_.GlobalTheory.UnitLemma.TwistUnitAny.twisted_unit_eq_unit_any K B hg hsep _ hε
   obtain ⟨F, hF⟩ := GlobalTheory.T.twistedConjugacyClasses_equiv_unitsModNorms_nonsplit E hU w hw K e hc hr a Q hm hd hs B hg hP β₀ hβ₀
   have hterm : ∀ k : B.Cl, twOrb (thL a w) (GlobalTheory.LFun.KGL w (n := a)) (F k).1.rep
       ((GlobalTheory.LFun.KGL w (n := a) : Set (GLw a w)).indicator 1) = ((B.N k.rep : ℚ) : ℂ) := by

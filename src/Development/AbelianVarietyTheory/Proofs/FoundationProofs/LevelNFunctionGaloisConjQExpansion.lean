@@ -3,9 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ZetaActRefl
 public import Development.AbelianVarietyTheory.Definitions.Foundations.MemRingOfInR
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasQExpansionOfLevelCoeffAndFunctionUnique
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DiagOneUnitConjLiftsSl2IntReductionModStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularDiscriminantPowMulSlashTwelveMulStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ShimuraReciprocityConjugateFormLevelStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DiagOneUnitConjLiftsSl2IntReductionMod
+public import ReciprocityTheory.ReductiveGroups.UnramifiedIntegrals.ModDefs
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularDiscriminantPowMulSlashTwelveMul
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ShimuraReciprocityConjugateFormLevel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,7 +65,7 @@ theorem lv_galois_conj : ∀ (g : ℂ ≃+* ℂ) (E : Subring ℂ) (N : ℕ) [Ne
   set F : ℍ → ℂ := fun τ => DD τ ^ w * f τ with hFdef
   have hsl : ∀ (h : ℍ → ℂ) (γ : SL(2, ℤ)),
       ((fun τ => DD τ ^ w * h τ) ∣[((12 * w : ℕ) : ℤ)] γ) = fun τ => DD τ ^ w * h (γ • τ) :=
-    fun h γ => GlobalTheory.T.modularDiscriminant_pow_mul_slash_twelve_mul w h γ
+    fun h γ => _root_.GlobalTheory.disc_pow_mul_slash w h γ
   have hev : Even (12 * w) := ⟨6 * w, by ring⟩
   have hinv : ∀ γ ∈ CongruenceSubgroup.Gamma N, F ∣[((12 * w : ℕ) : ℤ)] γ = F := by
     intro γ hγ
@@ -75,7 +76,7 @@ theorem lv_galois_conj : ∀ (g : ℂ ≃+* ℂ) (E : Subring ℂ) (N : ℕ) [Ne
     intro γ
     obtain ⟨a, ha, -⟩ := hf.2 γ
     exact ⟨a, by rw [hFdef, hsl]; exact ha⟩
-  obtain ⟨F', hF'inv, hF'c⟩ := GlobalTheory.T.shimuraReciprocity_conjugate_form_level g N d (12 * w) F hZ hev hinv hq
+  obtain ⟨F', hF'inv, hF'c⟩ := _root_.GlobalTheory.FNConj.main g N d (12 * w) F hZ hev hinv hq
   refine ⟨fun τ => F' τ / DD τ ^ w, ?_, ?_⟩
   · have hF'eq : (fun τ => DD τ ^ w * (F' τ / DD τ ^ w)) = F' := by
       funext τ
@@ -93,7 +94,7 @@ theorem lv_galois_conj : ∀ (g : ℂ ≃+* ℂ) (E : Subring ℂ) (N : ℕ) [Ne
       have h2 := congrFun hF'eq τ
       have hne := pow_ne_zero w (ReciprocityTheory.ChartRestriction.L1.DD_ne_zero τ)
       exact mul_left_cancel₀ hne (h1.trans h2.symm)
-    · obtain ⟨γ, hγ⟩ := (GlobalTheory.T.diagOneUnit_conj_lifts_sl2IntReductionMod N d).2 γ'
+    · obtain ⟨γ, hγ⟩ := (_root_.GlobalTheory.FN.dg_conj_lift N d).2 γ'
       obtain ⟨a, ha, ha'⟩ := hF'c γ γ' hγ
       obtain ⟨b, hb, hbE⟩ := hf.2 γ
       have hb' : HasQ N (F ∣[((12 * w : ℕ) : ℤ)] γ) b := by rw [hFdef, hsl]; exact hb

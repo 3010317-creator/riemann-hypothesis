@@ -2,8 +2,10 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermInf
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermOf
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FiniteAdeleTopologyStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRingStatement
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.CountData
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FiniteAdeleTopology
+public import Formalism.UnipotentAdelicQuotients.SWXSDefs
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DeltaConjInvariantStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DeltaPosIndexStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DisjointTranslatesVolumeBoundStatement
@@ -19,6 +21,7 @@ public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.Rational
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RationalTupleInLatticeLevelStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TraceDualDenominatorBoundedStatement
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.SchwartzBruhatEqSumPure
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ModerateGrowthSchwartz
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.TensTop
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -61,7 +64,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ModerateGrowthSchwartz
 import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.WeilSiegelTheta.BigCellDefs
 
 @[expose] public section
@@ -88,11 +90,11 @@ theorem finite_bound : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
         C * (delta (t • c).1 : ℝ) ^ (-((M : ℝ) / 2)) := by
   intro F E _ _ _ _ _ σ hCM M J hJ n ψ hψ μ hμ Q hQ
   classical
-  obtain ⟨hA1, hA2, hA3, -⟩ := GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F
+  obtain ⟨hA1, hA2, hA3, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
   haveI : LocallyCompactSpace (Af F) := hA1
   haveI : SecondCountableTopology (Af F) := hA2
   haveI : T2Space (Af F) := hA3
-  obtain ⟨hT1, hT2, hT3, hT4, -, -, -, hT8, -⟩ := GlobalTheory.T.tensor_locally_compact_ring F E σ hCM (Af F)
+  obtain ⟨hT1, hT2, hT3, hT4, -, -, -, hT8, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Af F)
   haveI : IsTopologicalRing (Af F ⊗[F] E) := hT1
   haveI : SecondCountableTopology (Af F ⊗[F] E) := hT3
   haveI : T2Space (Af F ⊗[F] E) := hT4

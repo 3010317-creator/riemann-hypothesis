@@ -2,13 +2,17 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsFlatAnIffIsConstMul
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieMultIffExistsFrame
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ConstantsAtFieldPointStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenLatticeVectorBundleStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenProjectorFieldEmbeddingStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ConstantsAtFieldPoint
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenLatticeVectorBundle
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenProjectorFieldEmbedding
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsUnitWedge
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelActionSpecializeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LineGeneratorGeometricStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniversalLieModelPullbackStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelActionSpecialize
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LineGeneratorGeometric
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniversalLieModelPullback
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -105,10 +109,10 @@ theorem exists_value_frame (Y : Model Xo c β) (U : Set (Xo.XF c)) (Z : CptOver 
       IsEigFrame Xo.univ.t.act (under y) (βF.comp (tauIn c τ)) v₀ ∧
       (∀ i, ∃ v', Z.M.ValAt (y ≫ Y.j) (b i) v' ∧ SameVec Y y (v₀ i) v') ∧
       (∀ i, IsComb (A i) v₀ (v i)) ∧ IsUnit A.det := by
-  obtain ⟨W, _, _, Mu, Mz, ρ, hu, hz, hS⟩ := GlobalTheory.T.universal_lie_model_pullback E H D l Xo c O β Y F y
-  obtain ⟨m, e, cf, h1, h2⟩ := GlobalTheory.T.eigen_projector_field_embedding E c.F (tauIn c τ)
-  obtain ⟨u, hval, hspan⟩ := GlobalTheory.T.lie_model_action_specialize Y.X Y.t.G Z.Ω (Z.ξ₀ ≫ Y.j) Z.V Z.M F (y ≫ Y.j) h W Mz (𝓞 E) Y.t.act Z.ρ ρ c.F Z.inc βF
-    (tauIn c τ) m e cf n b Z.gen Y.t.semi.smooth Z.act hz (GlobalTheory.T.constants_at_field_point E H D l Xo c O β Y U Z F βF y hβ hy h) h1
+  obtain ⟨W, _, _, Mu, Mz, ρ, hu, hz, hS⟩ := _root_.GlobalTheory.CompanionTheory.Ar.LieTransport.main E H D l Xo c O β Y F y
+  obtain ⟨m, e, cf, h1, h2⟩ := _root_.GlobalTheory.CompanionTheory.TraceProj.exists_eigen_projector E c.F (tauIn c τ)
+  obtain ⟨u, hval, hspan⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ValueSpan.value_span Y.X Y.t.G Z.Ω (Z.ξ₀ ≫ Y.j) Z.V Z.M F (y ≫ Y.j) h W Mz (𝓞 E) Y.t.act Z.ρ ρ c.F Z.inc βF
+    (tauIn c τ) m e cf n b Z.gen Y.t.semi.smooth Z.act hz (_root_.GlobalTheory.CompanionTheory.Ar.Flat.ConstVal.valAt_inc E H D l Xo c O β Y U Z F βF y hβ hy h) h1
     (h2 Z.Ω Z.V Z.inc Z.ρ) hb
   choose t ht using fun i => Mu.onto _ (hv.1 i).1
   have hvt : v = fun i => Mu.pt (t i) := funext fun i => (ht i).symm
@@ -159,13 +163,13 @@ theorem exists_const_of_flatOnModel : ∀ (E : Type) [Field E] [NumberField E] [
   intro E _ _ _ H D l Xo c O _ β Y U Z τ φ φ' hβ hτ hg hl hfl hl' hfl'
   obtain ⟨-, a, b, hgen, hrep⟩ := hfl
   obtain ⟨-, a', b', hgen', hrep'⟩ := hfl'
-  obtain ⟨x, s, t, hx, ht, hst, ha', hb'⟩ := GlobalTheory.T.line_generator_geometric E H D l Xo c O β Y U Z τ a a' b b' hβ hg hgen hgen'
+  obtain ⟨x, s, t, hx, ht, hst, ha', hb'⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.ConstRatio.const_ratio E H D l Xo c O β Y U Z τ a a' b b' hβ hg hgen hgen'
   refine ⟨x, hx, fun F _ βF y v w hf => ?_⟩
   obtain ⟨hy, hU, hv, hw⟩ := id hf
   have hpt : y (IsLocalRing.closedPoint F) ∈ U := hU ⟨_, rfl⟩
   have hsp : genPt (Z.ξ₀ ≫ Y.j) ⤳ centre (y ≫ Y.j) := ((Z.closure _).1 hpt).map Y.j.continuous
   have hmem : (⟨centre (y ≫ Y.j), hsp⟩ : Cpt (Z.ξ₀ ≫ Y.j)) ∈ Z.genFib := ⟨Y.jQ (y (IsLocalRing.closedPoint F)), rfl⟩
-  obtain ⟨h1, h2, -, -⟩ := GlobalTheory.T.eigen_lattice_vector_bundle E H D l Xo c O β Y U Z τ hβ hτ
+  obtain ⟨h1, h2, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.isVBOn_eig_genFib E H D l Xo c O β Y U Z τ hβ hτ
   obtain ⟨U₁, hU₁, b₁, -, hb₁⟩ := h1 _ hmem
   obtain ⟨U₂, hU₂, b₂, -, hb₂⟩ := h2 _ hmem
   have f₁ := hb₁ _ hmem hU₁
@@ -183,7 +187,7 @@ theorem exists_const_of_flatOnModel : ∀ (E : Type) [Field E] [NumberField E] [
   have r1 := hrep F βF y v₀ w₀ b₁ b₂ ga gb hf₀ hga hgb hval₁ hval₂
   have r2 := hrep' F βF y v₀ w₀ b₁ b₂ (s * ga) (t * gb) hf₀ (by rw [ha', hga, smul_smul])
     (by rw [hb', hgb, smul_smul]) hval₁ hval₂
-  have r3 := valAt_mul (GlobalTheory.T.constants_at_field_point E H D l Xo c O β Y U Z F βF y hβ.2.2 hy hsp x) r1
+  have r3 := valAt_mul (_root_.GlobalTheory.CompanionTheory.Ar.Flat.ConstVal.valAt_inc E H D l Xo c O β Y U Z F βF y hβ.2.2 hy hsp x) r1
   have e : s * ga / (t * gb) = Z.inc x * (ga / gb) := by
     rw [hst]; field_simp
   rw [e] at r2

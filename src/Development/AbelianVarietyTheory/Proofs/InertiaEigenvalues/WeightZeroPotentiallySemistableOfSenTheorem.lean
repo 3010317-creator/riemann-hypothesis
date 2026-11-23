@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TwistStep
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsThetaDeRhamFilZeroSurjectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteInertiaImpliesPotSemistableProofStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SenAdmissibleRepresentationFiniteInertiaStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeilRestrictionUnramifiedFrobeniusConjugatesStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdmSt
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsThetaDeRhamFilZeroSurjective
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteInertiaImpliesPotSemistableProof
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SenAdmissibleRepresentationFiniteInertia
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WeilRestrictionUnramifiedFrobeniusConjugates
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,8 +64,8 @@ theorem fr_zero_apply (l : ℕ) [Fact l.Prime] (c : ↥(MaximalUnramifiedExtensi
 theorem senStep : SenStep := by
   intro l _ P AI T n _ _ K r ρ hρ hF
   classical
-  obtain ⟨ρ₀, p, hc₀, hp, hρ₀⟩ := GlobalTheory.T.weilRestriction_unramified_frobeniusConjugates l n K r ρ hρ
-  obtain ⟨S, θ, hS, -, -, hθΩ, hθg⟩ := GlobalTheory.T.exists_theta_deRhamFilZero_surjective l P AI T
+  obtain ⟨ρ₀, p, hc₀, hp, hρ₀⟩ := _root_.GlobalTheory.PMon.weilRes l n K r ρ hρ
+  obtain ⟨S, θ, hS, -, -, hθΩ, hθg⟩ := _root_.GlobalTheory.PMon.exists_theta_deRhamFilZero_surjective_alt l P AI T
   choose U hU hUg using hF
   have hΩ : ∀ y : Om l, algebraMap (Om l) P.R.BdR y ∈ S := fun y => (hθΩ y).1
   have hkd : ∀ c : ↥(MaximalUnramifiedExtension l), kd P c ∈ S := fun c => hΩ _
@@ -186,7 +187,7 @@ theorem senStep : SenStep := by
       simp only [Θ, RingHom.mapMatrix_apply, Matrix.map_apply]
       exact ((hθg (g : GQ l) (XS i j)).2).symm
     rw [h1, h2, ← map_mul, hES g]
-  have hfin₀ := GlobalTheory.T.sen_admissible_representation_finite_inertia l (n × Fin r) K ρ₀ hc₀ Mu hSen
+  have hfin₀ := _root_.GlobalTheory.PMon.senFinite l (n × Fin r) K ρ₀ hc₀ Mu hSen
 
   have hr : 0 < r := hρ.pos
   let z : Fin r := ⟨0, hr⟩
@@ -208,6 +209,6 @@ theorem senStep : SenStep := by
       rw [this]
       exact hfin₀.image F
     exact Set.Finite.of_finite_image h1 (fun a _ b _ h => Units.ext h)
-  exact GlobalTheory.T.finiteInertiaImpliesPotSemistable_proof l P AI T n K r ρ hρ hfin
+  exact _root_.GlobalTheory.PMon.unrStep_holds l P AI T n K r ρ hρ hfin
 
 end GlobalTheory.PMon

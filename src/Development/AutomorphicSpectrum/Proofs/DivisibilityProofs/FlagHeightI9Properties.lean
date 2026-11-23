@@ -2,9 +2,13 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.HasBaseDegreeSetting
 public import Development.AutomorphicSpectrum.Statements.MetricStatements.AgreementIffGuarded
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagHeightPolynomialEvalStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagHeightPowerSumOneZeroStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagVarietyBoundaryDimensionDropStatement
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagHeightPolynomialEval
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagHeightPowerSumOneZero
+public import GroundTheory.HeightsAndTheta.Heights.Antisymmetric.Statements
+public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FlagIndices.InstFintypeFlIdx
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MixedFieldContraction.GenericFibreKerTarget
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagVarietyBoundaryDimensionDrop
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,10 +69,10 @@ theorem flag_height_I9 : PB.FlagHeight → PB.Inputs → ∀ II : IntersectionSy
   intro hFH hIn II hII Ψ _ _ N _ hN
   have hA : IsArithVar (GroundTheory.Heights₂.Heights.LowerBoundFree.PFl Ψ N) (dimFl Ψ N + 1) := by
     rw [flag_dim_eq_antisymmetric_degree]
-    exact (GlobalTheory.T.flag_variety_boundary_dimension_drop Ψ N hN).1
+    exact (_root_.GlobalTheory.CompanionTheory.Ar.PB.flag_isArithVar_and_image Ψ N hN).1
   have hev : ∀ lam : Wt Ψ N, hhFl Ψ N II (linRoot lam ^ (dimFl Ψ N + 1)) =
       eval (fun x => lam x.1 x.2) (PB.hFlPoly Ψ N II) := fun lam =>
-    GlobalTheory.T.flag_height_polynomial_eval II hII Ψ N lam hN hA
+    _root_.GlobalTheory.CompanionTheory.Ar.Top.hhFl_linRoot_pow II hII Ψ N lam hN hA
   obtain ⟨-, hgap, hdom⟩ := hFH hIn II hII Ψ N hN
   refine ⟨?_, ?_, ?_⟩
   · rintro lam - ⟨τ, a, b, hab, heq⟩
@@ -84,6 +88,6 @@ theorem flag_height_I9 : PB.FlagHeight → PB.Inputs → ∀ II : IntersectionSy
     rw [flag_gap_eq_sub lam τ a hp, sub_nonneg]
     exact hlam τ a ⟨(a : ℕ) + 1, hp⟩ (Fin.le_def.2 (Nat.le_succ _))
   · intro τ Q hQ
-    exact GlobalTheory.T.flag_height_power_sum_one_zero II hII Ψ N τ Q hN hA hQ
+    exact _root_.GlobalTheory.CompanionTheory.Ar.Top.hhFl_pk_one_mul II hII Ψ N τ Q hN hA hQ
 
 end GlobalTheory.CompanionTheory.Ar.Top

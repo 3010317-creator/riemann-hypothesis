@@ -2,8 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsLocModelIsPrimeOf
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EssFiniteTypeOfLocalizationFiniteTypeComplex
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDvrLocalizationOfMinimalPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNormalFiniteTypeSubringLeValuationSubringAStatement
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+public import Mathlib.RingTheory.Valuation.ValuationSubring
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ImportsMoreTail
+public import Mathlib.Basic.Complex.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNormalFiniteTypeSubringLeValuationSubringA
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -190,7 +194,7 @@ theorem exists_place_dominating : ∀ {κ : Type} [Field κ] [Algebra ℂ κ] (O
     field_simp at hfz
     linear_combination hfz
   have hcV : ∀ z : ℂ, algebraMap ℂ κ z ∈ V := fun z => hOV' _ (hO.const_mem z)
-  obtain ⟨R, hcR, hft, hTR, hRV, hRn, hRi, hRf⟩ := GlobalTheory.T.exists_normal_finiteType_subring_le_valuationSubring' V T hcV hTV hfracT
+  obtain ⟨R, hcR, hft, hTR, hRV, hRn, hRi, hRf⟩ := _root_.GlobalTheory.exists_normal_finiteType_subring_le_valuationSubring V T hcV hTV hfracT
   haveI := hRn
   haveI := hRi
   haveI := hRf
@@ -213,7 +217,7 @@ theorem exists_place_dominating : ∀ {κ : Type} [Field κ] [Algebra ℂ κ] (O
   have ha'P : a' ∈ P := hVnu a (hY ▸ Submodule.subset_span haY) _
   obtain ⟨Q, hQp, haQ, hQP, hQ0, hmin⟩ := exists_minimal_prime_le P a' ha'0 ha'P
   haveI := hQp
-  obtain ⟨W, hWd, hRW, hinvW, hninvW, hWfrac⟩ := GlobalTheory.T.exists_dvr_localization_of_minimal_prime' R Q hQ0 hmin
+  obtain ⟨W, hWd, hRW, hinvW, hninvW, hWfrac⟩ := _root_.GlobalTheory.AuxiliaryLemmaSecond.main R Q hQ0 hmin
 
   have hcW : ∀ z : ℂ, algebraMap ℂ κ z ∈ W := fun z => hRW ⟨_, hcR z⟩
   have hWft : ((algebraMap ℂ κ).codRestrict W hcW).EssFiniteType :=

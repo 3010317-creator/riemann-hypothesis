@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.FormsPin
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.KernelEntriesHypOfHeckeCharacterConditionsStatement
+public import Formalism.LocalToGlobal.KernelLattices.TopPin
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.KernelEntriesHypOfHeckeCharacterConditions
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -89,7 +90,7 @@ theorem colSide_hyp : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (Gi : G.
   intro D L hT Gi Gl K Y cX ex t hC hTop
   obtain ⟨eta, hTied⟩ := hC.chars
   rw [t.glob_σ] at hTied
-  refine GlobalTheory.T.kernelEntries_hyp_of_heckeCharacterConditions D L hT Gi Gl K Y cX ex t (fun j => ⟨_, hTied.mu0 j⟩) (fun j v hv => hTied.muVal j v hv) ?_ hTop
+  refine _root_.GlobalTheory.kerEntTied_hyp D L hT Gi Gl K Y cX ex t (fun j => ⟨_, hTied.mu0 j⟩) (fun j v hv => hTied.muVal j v hv) ?_ hTop
   intro μ k
   exact GlobalTheory.KerJ.ColSideHyp.g_not_mem_Qp t hC μ k
 

@@ -2,7 +2,8 @@ module
 
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CutLimENF
 public import Development.AbelianVarietyTheory.PublishedTheorems.BesselIntegrals.BesselXiIntegrable
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BasicOperatorsPolynomialLiftNoInversePowerStatement
+public import Development.AbelianVarietyTheory.Definitions.Jets.BasicLiftAll
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.BasicOperatorsPolynomialLiftNoInversePower
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.TopDensityDominated
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -44,7 +45,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.Jets.BasicLiftAll
 
 @[expose] public section
 
@@ -55,7 +55,7 @@ namespace GlobalTheory.HatNF
 theorem topDensity_cut_dominated_all :
     GlobalTheory.HCXi.BesselXiIntegrable → Formalism.FourierDecayAlt.P.CutBP.NFTopDomAll := by
   intro hΞ Cb
-  obtain ⟨Cc, H⟩ := GlobalTheory.HatNF.top_density_dominated hΞ (fun _ => 0) GlobalTheory.T.basicOperators_polynomialLift_no_inversePower Cb
+  obtain ⟨Cc, H⟩ := GlobalTheory.HatNF.top_density_dominated hΞ (fun _ => 0) _root_.GlobalTheory.HatNF.basicLiftAll_zero Cb
   refine ⟨Cc, ?_⟩
   intro Wp Wq _ _ _ _ _ _ P p f A₀ p₀ χ Y N hH w hw hN
   obtain ⟨a1, a2, a3, a4, a5, a6⟩ := hH

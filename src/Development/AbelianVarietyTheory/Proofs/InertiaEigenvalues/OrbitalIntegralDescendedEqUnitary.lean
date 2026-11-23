@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MulMatMemUnitaryGroup
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyMeasAndReps
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitaryGroupPositiveCharacterTrivialAndUnimodulaStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FourierMatch
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitaryGroupPositiveCharacterTrivialAndUnimodula
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -123,7 +124,7 @@ theorem orbL_descFn : ∀ (F E : Type) [NontriviallyNormedField F] [Nontrivially
     (isClosed_unitary (R := A.L)).isClosedEmbedding_subtypeVal.isEmbedding.secondCountableTopology
   haveI : SigmaFinite ν := inferInstance
   haveI : SigmaFinite M.μU := inferInstance
-  haveI : M.μU.IsMulRightInvariant := (GlobalTheory.T.unitaryGroup_positiveCharacter_trivial_and_unimodular F E r).2 M
+  haveI : M.μU.IsMulRightInvariant := (_root_.GlobalTheory.JR.UnitChar.posChar_trivial_and_unimodular F E r).2 M
   have huc : Continuous (A.uHom hx) := continuous_induced_rng.2 ((continuous_mulMat A j).comp continuous_subtype_val)
   have hinvc : Continuous fun g : unitaryGroup (Fin r) E => g⁻¹ := continuous_inv
 

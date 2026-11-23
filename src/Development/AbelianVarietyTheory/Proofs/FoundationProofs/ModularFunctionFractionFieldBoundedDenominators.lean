@@ -6,10 +6,14 @@ public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AlgebraicSubringClosureCommonDenominatorStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CuspExpansionCoeffMemFinitelyGeneratedSubringStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HahnSeriesSubringCoeffMulInvMemStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemModularFunctionRingOverIffHasSomeLevelOverStatement
+public import Mathlib.RingTheory.Algebraic.Defs
+public import Mathlib.RingTheory.IntegralClosure.IsIntegral.Defs
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AlgebraicSubringClosureCommonDenominator
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CuspExpansionCoeffMemFinitelyGeneratedSubring
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemModularFunctionRingOverIffHasSomeLevelOver
+import Mathlib.Algebra.Order.Ring.Rat
+import Mathlib.RingTheory.HahnSeries.Summable
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HahnSeriesSubringCoeffMulInvMem
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,8 +67,8 @@ theorem frac_bdd_den : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure
   obtain ⟨a, b, hb, hab⟩ := T.io_surj f
   have hexpS : ∀ c : ring ε.range, ∃ S : Finset Ω, ∀ r, (T.exp (T.io c)).coeff r ∈ Subring.closure (S : Set Ω) := by
     intro c
-    have hc : InR ε.range (c : ℍ → ℂ) := ((GlobalTheory.T.mem_modularFunctionRingOver_iff_hasSomeLevelOver ε.range).1 c).1 c.2
-    exact GlobalTheory.T.cuspExpansion_coeff_mem_finitelyGenerated_subring Ω ε c _ hc (T.exp_io c)
+    have hc : InR ε.range (c : ℍ → ℂ) := ((_root_.GlobalTheory.FN.mem_ring_iff_inR ε.range).1 c).1 c.2
+    exact _root_.GlobalTheory.FN.coeff_fg Ω ε c _ hc (T.exp_io c)
   obtain ⟨Sa, hSa⟩ := hexpS a
   obtain ⟨Sb, hSb⟩ := hexpS b
   have hiob : T.io b ≠ 0 := by
@@ -87,14 +91,14 @@ theorem frac_bdd_den : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgClosure
   have hA_b : ∀ r, (T.exp (T.io b)).coeff r ∈ A := fun r =>
     Subring.closure_mono (by intro x hx; simp [S, hx]) (hSb r)
   have hA_l : (T.exp (T.io b)).leadingCoeff⁻¹ ∈ A := Subring.subset_closure (by simp [S])
-  have hP := GlobalTheory.T.hahnSeries_subring_coeff_mul_inv_mem Ω A
+  have hP := _root_.GlobalTheory.HahnSub.coeff_mul_inv_mem Ω A
   have hA_inv := hP.2 _ hA_b hA_l
   have hA_f : ∀ r, (T.exp f).coeff r ∈ A := by
     intro r
     rw [hf]
     exact hP.1 _ _ hA_a hA_inv r
   haveI : Algebra.IsAlgebraic ℚ Ω := IsAlgClosure.isAlgebraic
-  obtain ⟨D, hD, hDk⟩ := GlobalTheory.T.algebraic_subring_closure_common_denominator Ω S
+  obtain ⟨D, hD, hDk⟩ := _root_.GlobalTheory.finite_subring_common_denominator Ω S
   exact ⟨D, hD, fun r => hDk _ (hA_f r)⟩
 
 end GlobalTheory.FN

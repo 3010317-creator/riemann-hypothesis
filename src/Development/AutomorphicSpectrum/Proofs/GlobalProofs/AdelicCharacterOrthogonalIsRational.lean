@@ -3,11 +3,13 @@ module
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.CountData
 public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelesSelfDual
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FiniteAdeleTopologyStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteAdeleHaarMapEqScaledVolumeStatement
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
+public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteAdeleHaarMapEqScaledVolume
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.SchurFunctionSmoothRightInvariant
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.StandardAdelicCharacterStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdelicCharacterArchimedeanFormStatement
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AdelicCharacterArchimedeanForm
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FiniteAdeleTopology
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.StandardAdelicCharacter
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -73,7 +75,7 @@ variable {F : Type} [Field F] [NumberField F]
 
 theorem fin_eq_zero (ψf : AddChar (A F) ℂ) (hψ : GlobalTheory.CompanionTheory.SW.Core.IsStdChar F ψf) {y : A F}
     (hy : ∀ t : F, ψf (algebraMap F (A F) t * y) = 1) : y = 0 := by
-  obtain ⟨hlc, hsc, ht2, hOc, hOo, hden, hint, hnb, hcp, -⟩ := GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F
+  obtain ⟨hlc, hsc, ht2, hOc, hOo, hden, hint, hnb, hcp, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
   have hall : ∀ z : A F, ψf (z * y) = 1 := by
     intro z
     have hcl : IsClosed {z : A F | ψf (z * y) = 1} :=
@@ -216,7 +218,7 @@ theorem core (hF : IsTotallyReal F) (ρ : InfinitePlace F → (F →+* ℝ))
     (hstd : GlobalTheory.CompanionTheory.SW.Core.IsStdChar F ψf) (X : InfinitePlace F → ℝ) (y : A F)
     (H : ∀ t : F, eR (∑ w, ρ w t * X w) * ψf (algebraMap F (A F) t * y) = 1) :
     ∃ c : F, (∀ w, X w = ρ w c) ∧ y = algebraMap F (A F) c := by
-  obtain ⟨-, -, -, -, hOo, hden, hint, -⟩ := GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F
+  obtain ⟨-, -, -, -, hOo, hden, hint, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
   have hopen : IsOpen {z : A F | y - z ∈ Oh F} := hOo.preimage (continuous_const.sub continuous_id)
   obtain ⟨c1, hc1⟩ := hden.exists_mem_open hopen ⟨y, by
     show y - y ∈ Oh F
@@ -227,7 +229,7 @@ theorem core (hF : IsTotallyReal F) (ρ : InfinitePlace F → (F →+* ℝ))
   have hXint : ∀ r : 𝓞 F, ∃ n : ℤ, ∑ w, ρ w (r : F) * (X w - ρ w c1) = n := by
     intro r
     have h1 := H1 r
-    rw [((GlobalTheory.T.standard_adelic_character F).2 ψf hstd).2.1 _ (oh_mul ((hint _).2 ⟨r, rfl⟩) hc1'), mul_one] at h1
+    rw [((_root_.GlobalTheory.CompanionTheory.SW.Core.StdChar.main F).2 ψf hstd).2.1 _ (oh_mul ((hint _).2 ⟨r, rfl⟩) hc1'), mul_one] at h1
     exact eR_int h1
   obtain ⟨c2, hc2⟩ := real_eq_of_int hF ρ hρ _ hXint
   have H2 := sub_field hF ρ hρ ψf hstd H1 c2
@@ -247,8 +249,8 @@ end Core
 
 theorem annihilator_eq : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal F → ∀ ψ : AddChar (AF F) ℂ, IsCharAF F ψ → ∀ x : AF F, (∀ t : F, ψ (algebraMap F (AF F) t * x) = 1) → ∃ c : F, x = algebraMap F (AF F) c := by
   intro F _ _ hF ψ hψ x hx
-  obtain ⟨ρ, e, hρ, he, heρ, -, -⟩ := GlobalTheory.T.infinite_adele_haar_map_eq_scaled_volume F hF
-  obtain ⟨a, ha, hinf, ψf, hstd, hfin⟩ := GlobalTheory.T.adelic_character_archimedean_form F hF ρ e hρ he heρ ψ hψ
+  obtain ⟨ρ, e, hρ, he, heρ, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.real_iso F hF
+  obtain ⟨a, ha, hinf, ψf, hstd, hfin⟩ := _root_.GlobalTheory.CompanionTheory.Glob.CharAF.exists_char_data F hF ρ e hρ he heρ ψ hψ
   have hsplit : ∀ (u : Ainf F) (v : Af F),
       ψ (u, v) = eR (∑ w, ρ w a * e u w) * ψf (algebraMap F (Af F) a * v) := by
     intro u v

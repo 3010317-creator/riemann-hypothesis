@@ -3,7 +3,9 @@ module
 public import Formalism.SharpRestriction.LevelLetterCocycles.JointConditionsZpowers.CommutingEndomorphismCondition
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.HeckeOpen
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalParameterLawsOfWeilDeligneIdentification
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalizationEqOfHeckeAgreementTwistLawsStatement
+public import Formalism.LocalToGlobal.GaloisLevelStructure.TiedHecke
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.RankOneUnitary
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalizationEqOfHeckeAgreementTwistLaws
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,7 +79,7 @@ theorem built_laws_alt : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : 
 theorem main_alt_alt : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7) (M : Formalism.L2.MtFam D), _root_.GlobalTheory.HeightCounting.NormChoiceConstructed hL D →
     Formalism.L2.HeckeTied D M → KillingConditions.LocalisationUniqueness D := fun hL D M b hT =>
   have h := _root_.GlobalTheory.LocCoincide.built_laws_alt hL D b
-  GlobalTheory.T.localization_eq_of_heckeAgreement_twistLaws D M hT h.1 h.2.1 h.2.2
+  _root_.GlobalTheory.LocSepTie.main D M hT h.1 h.2.1 h.2.2
 end GlobalTheory.LocCoincide
 end
 end

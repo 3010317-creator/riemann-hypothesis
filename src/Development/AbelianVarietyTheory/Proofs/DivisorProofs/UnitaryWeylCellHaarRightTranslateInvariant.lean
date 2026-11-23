@@ -1,8 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConvUAbsU
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HaarMeasureUniqueSigmaCompactNormalisedCompactOpStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryWeylCellShellIsOpenCompactSubgroupStatement
+public import Mathlib.MeasureTheory.Group.Measure
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HaarMeasureUniqueSigmaCompactNormalisedCompactOp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemShellUIffDepth
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryWeylCellShellIsOpenCompactSubgroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +47,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Algebra.Group.Units
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemShellUIffDepth
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasBoundedSumsOne
 
 @[expose] public section
@@ -65,7 +66,7 @@ theorem cellU_haar_rightInv : ∀ (L : Type) [Field L] [Valued L (WithZero (Mult
       (∀ F : GU σ n → ENNReal,
         ∫⁻ u : cellU y, F ((u * p : cellU y) : GU σ n) ∂μ = ∫⁻ u : cellU y, F (u : GU σ n) ∂μ) := by
   intro L _ _ _ ϖ σ q hU n k hk hn y hy hw _ _ μ _ _ p
-  have hS := GlobalTheory.T.unitaryWeylCellShell_isOpenCompactSubgroup L ϖ σ q hU n k hk hn y hy hw
+  have hS := _root_.GlobalTheory.WeylCell.WeylUnipotentShell.shellU_open_compact_subgroup L ϖ σ q hU n k hk hn y hy hw
   haveI : LocallyCompactSpace (cellU y) :=
     (hS.1 0).2.1.locallyCompactSpace_of_mem_nhds_of_group ((hS.1 0).1.mem_nhds (hS.1 0).2.2.1)
   let e : cellU y ≃ᵐ cellU y := (Homeomorph.mulRight p).toMeasurableEquiv
@@ -96,7 +97,7 @@ theorem cellU_haar_rightInv : ∀ (L : Type) [Field L] [Valued L (WithZero (Mult
       simpa using hmul _ _ h (hinv p hp)
     · intro h; exact hmul _ _ h hp
   have hνμ : ν = μ := by
-    have := GlobalTheory.T.haarMeasure_unique_sigmaCompact_normalised_compactOpen (cellU y) μ ν (fun i : ℕ => shellU k y (i : ℤ))
+    have := _root_.GlobalTheory.haar_unique_of_sigmaCompact_normalised (cellU y) μ ν (fun i : ℕ => shellU k y (i : ℤ))
       (fun i => ⟨(hS.1 i).2.1, (hS.1 i).1.measurableSet⟩)
       (Set.eq_univ_of_forall fun u => Set.mem_iUnion.2 ⟨_, mem_shellU_depth k y u⟩)
       _ 1 ho hc ⟨1, h1⟩ hνS

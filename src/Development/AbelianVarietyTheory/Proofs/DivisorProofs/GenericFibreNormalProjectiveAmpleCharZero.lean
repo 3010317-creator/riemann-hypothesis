@@ -3,10 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAmpleLBOfRelAmpleOfIsAffine
 public import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.IsOpenOfMemIrreducibleComponentsOfFinite
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverCompOfIsClosedImmersion
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmoothSubalgebraContainingFinsetCharZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsDomainAndIsIntegrallyClosedAtPrimeTensorFieldAStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsNormalSchemePullbackSpMapOfAlgebraStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalizationIsDomainIsIntegrallyClosedOfFinsetSuStatement
+public import Mathlib.RingTheory.Smooth.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmoothSubalgebraContainingFinsetCharZero
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsDomainAndIsIntegrallyClosedAtPrimeTensorFieldA
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsNormalSchemePullbackSpMapOfAlgebra
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalizationIsDomainIsIntegrallyClosedOfFinsetSu
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalOfGenericFibrePullback
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -93,6 +95,6 @@ theorem genFibre_of_fieldChange (hd2 : ∀ (F K : Type) [Field F] [CharZero F] [
   exact (IsNormalScheme.iff_of_iso (e ≪≫ pullback.congrHom rfl hc)).mp h1
 
 theorem genericFibre_normal_projective_ample : ∀ (o K : Type) [CommRing o] [IsDomain o] [Field K] [CharZero K] (b : o →+* K), Function.Injective b → ∀ (Z : Scheme.{0}) (z : Z ⟶ Sp o) (L : LB Z), IsProjOver z → GlobalTheory.IsNormalScheme Z → L.IsLB → IsAmpleLB L → IsProjOver (pullback.snd z (spMap b)) ∧ GlobalTheory.IsNormalScheme (pullback z (spMap b)) ∧ (L.pull (pullback.fst z (spMap b))).IsLB ∧ IsAmpleLB (L.pull (pullback.fst z (spMap b))) :=
-  genFibre_of_fieldChange (GlobalTheory.T.isNormalScheme_pullback_spMap_of_isNormalScheme (GlobalTheory.T.isDomain_and_isIntegrallyClosed_atPrime_tensor_field_alt GlobalTheory.T.exists_smooth_subalgebra_containing_finset_charZero GlobalTheory.T.isDomain_isIntegrallyClosed_atPrime_of_finset_subrings))
+  genFibre_of_fieldChange (_root_.GlobalTheory.isNormalScheme_pullback_spMap_of_algebra (_root_.GlobalTheory.isDomain_and_isIntegrallyClosed_atPrime_tensor_field _root_.GlobalTheory.exists_smooth_subalgebra_of_finset _root_.GlobalTheory.localization_isDomain_isIntegrallyClosed_of_finset_subring))
 
 end GlobalTheory.GenFibNormal

@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NotDvdCondN
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TwistedDualPageWordInertPrimeDichotomyStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TwistedDualSizeWordLetterEqPageWordStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.Alternates
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TwistedDualPageWordInertPrimeDichotomy
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TwistedDualSizeWordLetterEqPageWord
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -74,8 +75,8 @@ theorem recWord_dichotomy : ∀ {D : D7} (L : SizeData₂ D) (C : ℝ) (j : Fin 
   obtain ⟨rfl, hg⟩ := hO
   obtain ⟨τ, rfl⟩ : ∃ τ, g = letter τ ψ := ⟨g 0, funext hg⟩
   clear hg
-  have hT := GlobalTheory.T.twistedDualSizeWord_letter_eq_pageWord L C j ε τ ψ hR
-  obtain ⟨hBox, hcase⟩ := GlobalTheory.T.twistedDualPageWord_inert_prime_dichotomy L C j ε τ ψ l hR hl hψ
+  have hT := _root_.GlobalTheory.HTW.Rec.recWord_letter_eq_pageWord L C j ε τ ψ hR
+  obtain ⟨hBox, hcase⟩ := _root_.GlobalTheory.HTW.pageWord_inert_dichotomy L C j ε τ ψ l hR hl hψ
   have hsz : ∀ a, (((recWord L j ε (letter τ ψ)).sz a : ℕ) : ℤ) = (pageWord L j ε τ ψ).sz a :=
     fun a => (hT a).1
   have hη : ∀ a, etaHat L < (recWord L j ε (letter τ ψ)).sz a := fun a => by

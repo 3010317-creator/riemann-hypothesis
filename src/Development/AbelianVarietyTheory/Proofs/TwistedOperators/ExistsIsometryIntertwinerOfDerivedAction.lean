@@ -1,8 +1,10 @@
 module
 
 public import Formalism.LocalRingCardinality.DataTheta
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoverUpqClosureExpTopAndCartanStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EqZeroOfFactorialBoundStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoverUpqClosureExpTopAndCartan
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EqZeroOfFactorialBound
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SameBlockOfPosC
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -67,7 +69,7 @@ private theorem J_pi_expt_iota_eq {p q : ℕ} {T : GrpData p q} (D : DSRep T) (�
   let g : ℕ → ℝ → πU.H := fun k s =>
     πU.π (T.expt (s • Y)) (E ((A ^ k) y)) - J (D.U.π (T.expt (s • Y)) (D.ι ((A ^ k) y)))
   have key : ∀ k s, g k s = 0 := by
-    refine GlobalTheory.T.eq_zero_of_factorial_bound_of_vanish_at_zero πU.H g (2 * C) ρ (by linarith) hρ ?_ ?_ ?_
+    refine _root_.GlobalTheory.FactorialJet.eq_zero_of_factorial_bound πU.H g (2 * C) ρ (by linarith) hρ ?_ ?_ ?_
     · intro k s
       have h1 := hasDerivAt_orbit πU hY (hder Y hY ((A ^ k) y)) s
       have h2 := hasDerivAt_orbit D.U hY (D.11 Y hY ((A ^ k) y)) s
@@ -148,7 +150,7 @@ theorem exists_isometry_intertwiner_of_derived :
     rintro _ ⟨Y, hY, rfl⟩
     exact hexp Y hY
   have hall : ∀ a : T.G, a ∈ S := fun a =>
-    hle ((GlobalTheory.T.coverUpq_closure_exp_top_and_cartan p q hpq T).1 ▸ Subgroup.mem_top a)
+    hle ((_root_.GlobalTheory.CoverExp.closure_expt_eq_top_and_cartan p q hpq T).1 ▸ Subgroup.mem_top a)
   refine ⟨{ toLinearMap := J.toLinearMap, norm_map' := hJn }, hJ, ?_⟩
   intro a x
   exact hall a x

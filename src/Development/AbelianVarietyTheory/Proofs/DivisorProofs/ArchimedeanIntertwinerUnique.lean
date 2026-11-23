@@ -4,8 +4,10 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeri
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPairingStdP
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MulRealAdEqZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzHadamardLemma
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TranslationCharacterInvariantFormStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TranslationInvariantFormConstL2Statement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TranslationCharacterInvariantForm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TranslationInvariantFormConstL2
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SchwartzEqZeroOfWrongSignGaussianRelation
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -160,7 +162,7 @@ theorem const_of_intertwines : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F : Typ
   haveI : BorelSpace (κ → mixedEmbedding.mixedSpace F) := ⟨rfl⟩
   set μ₀ : Measure (κ → mixedEmbedding.mixedSpace F) := Measure.addHaar with hμ₀
   have hμ₀H : μ₀.IsAddHaarMeasure := by rw [hμ₀]; infer_instance
-  obtain ⟨c, hc⟩ := GlobalTheory.T.translation_invariant_form_const_l2 _ μ₀ hμ₀H T (htr μ₀ hμ₀H) (GlobalTheory.T.translation_character_invariant_form _ μ₀ hμ₀H T (hmod μ₀ hμ₀H))
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.TransConstForm.eq_const_mul_l2_of_translation_invariant _ μ₀ hμ₀H T (htr μ₀ hμ₀H) (_root_.GlobalTheory.CharMult.multiplier_symm _ μ₀ hμ₀H T (hmod μ₀ hμ₀H))
   obtain ⟨Φ, hΦ⟩ := GlobalTheory.ArchUniqStd.exists_one (V := κ → mixedEmbedding.mixedSpace F)
   have hself : ∀ h : SInf F κ, ∫ x, h x * starRingEnd ℂ (h x) ∂μ₀ = ((∫ x, ‖h x‖ ^ 2 ∂μ₀ : ℝ) : ℂ) :=
     fun h => GlobalTheory.WrongSignGauss.ip_self μ₀ h

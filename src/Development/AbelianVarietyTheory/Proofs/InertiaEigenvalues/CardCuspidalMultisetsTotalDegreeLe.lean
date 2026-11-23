@@ -3,11 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LabelDatum
 public import Mathlib.Analysis.SpecialFunctions.Complex.CircleAddChar
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CharacterPairingHarishChandraCuspidalMackey
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGenericConstituentHarishChandraCuspidalStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGenericConstituentHarishChandraCuspidal
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraSeriesLabelExistsUniqueGLn
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NcardGenericIrreducibleCharactersGLnLe
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteIrrCharactersAndFinsumCentralIdempotentsEq
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraProductListIsCharacterAndPermInvari
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraSeriesLabelExistsUniqueGLn
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NcardGenericIrreducibleCharactersGLnLeStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -79,7 +79,7 @@ theorem card_le : ∀ (g : ℕ) [Fact g.Prime] (n : ℕ), 0 < n → ∀ S : Fins
     (GlobalTheory.gl_list_product_perm_char g M.toList M.toList n (hdeg M hM).symm
       (fun p hp => Label.isChar_of_isIrr (hcusp M hM p hp).2.1)).1
   have key : ∀ M ∈ S, ∃ ρ : Gn g n → ℂ, IsIrr ρ ∧ wh ψ ρ ≠ 0 ∧ ip ρ (hcL M.toList n) ≠ 0 :=
-    fun M hM => GlobalTheory.T.exists_generic_constituent_harishChandra_cuspidal g ψ hψ M.toList n (hdeg M hM) (hcusp M hM)
+    fun M hM => _root_.GlobalTheory.GLq.GenericConstituent.exists_generic_constituent g ψ hψ M.toList n (hdeg M hM) (hcusp M hM)
   choose! f hf using key
   have hfin : {ρ : Gn g n → ℂ | IsIrr ρ ∧ wh ψ ρ ≠ 0}.Finite :=
     (GlobalTheory.GLq.irr_finite_and_finsum_zOf_eq_one (Gn g n)).1.subset fun ρ h => h.1
@@ -98,6 +98,6 @@ theorem card_le : ∀ (g : ℕ) [Fact g.Prime] (n : ℕ), 0 < n → ∀ S : Fins
   calc S.card = (S : Set (Multiset (Pc g))).ncard := (Set.ncard_coe_finset S).symm
     _ ≤ {ρ : Gn g n → ℂ | IsIrr ρ ∧ wh ψ ρ ≠ 0}.ncard :=
         Set.ncard_le_ncard_of_injOn f (fun M hM => ⟨(hf M hM).1, (hf M hM).2.1⟩) hinj hfin
-    _ ≤ g ^ n - g ^ (n - 1) := GlobalTheory.T.ncard_generic_irreducible_characters_GLn_le g ψ hψ n hn
+    _ ≤ g ^ n - g ^ (n - 1) := _root_.GlobalTheory.GLq.card_generic_irr_le g ψ hψ n hn
 
 end GlobalTheory.GLq.CuspMultisetCount

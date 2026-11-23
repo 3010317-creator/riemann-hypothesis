@@ -2,7 +2,8 @@ module
 
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.BconeDefs
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrPreservesHomology
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictScalarsInjectiveSheafAcyclicStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.GalMapMul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictScalarsInjectiveSheafAcyclic
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.AcyMiddleOfShortExact
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.SubsingletonHypercohomologyFreeOfSubsingletonCoh
 import Mathlib.Algebra.Order.Floor.Extended
@@ -54,6 +55,6 @@ theorem UpperTheory.acy_mappingCone_semiMap_of_injective :
   intro R _ L B hL hB ρ Q s
   have key : ∀ (I : Shv R), Injective I → Acy Q ((restr (Int.castRingHom R)).obj I) := by
     intro I hI P _ n hn
-    exact UpperTheory.subsingleton_hypercohomology_free_of_subsingleton_cohomology _ P n (GlobalTheory.T.restrictScalars_injective_sheaf_acyclic ℤ R _ I P n hn)
+    exact UpperTheory.subsingleton_hypercohomology_free_of_subsingleton_cohomology _ P n (_root_.GlobalTheory.EtC.restr_injective_acyclic ℤ R _ I P n hn)
   exact UpperTheory.acy_middle_of_shortExact Q _ (mappingCone.triangleRotateShortComplexSplitting ρ.toZ s).shortExact
     (key _ (hB s)) (key _ (hL (s + 1)))

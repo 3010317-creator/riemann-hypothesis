@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.ZetaActRefl
 public import ReciprocityTheory.ReductiveGroups.UnramifiedIntegrals.ModDefs
 public import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.SemiChar
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AreaTauPair
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomogeneityOfIsTauOfStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HasQIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomogeneityOfIsTauOf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -67,7 +68,7 @@ theorem two_pi_I_ne_zero : (2 * (Real.pi : ℂ) * Complex.I) ≠ 0 := by
 
 theorem main : ∀ (Λ : PeriodPair) (c Ω : ℂ) (τ : ℍ), IsTauOf Λ c τ → (G2s τ / (2 * (Real.pi : ℂ) * Complex.I) ^ 2 / (Ω * c / (2 * Real.pi * Complex.I)) ^ 2 = s2 Λ / Ω ^ 2) ∧ ∀ (N : ℕ) (x : Fin 2 → ZMod N), wp N x τ / (Ω * c / (2 * Real.pi * Complex.I)) ^ 2 = Λ.weierstrassP (c * tors N τ x) / Ω ^ 2 ∧ wpd N x τ / (Ω * c / (2 * Real.pi * Complex.I)) ^ 3 = Λ.derivWeierstrassP (c * tors N τ x) / Ω ^ 3 := by
   intro Λ c Ω τ h
-  obtain ⟨_, hP, hD, hs, _⟩ := GlobalTheory.T.weierstrassP_homogeneity_of_isTauOf Λ c τ h
+  obtain ⟨_, hP, hD, hs, _⟩ := _root_.GlobalTheory.WpFam.homogeneity_of_isTauOf Λ c τ h
   have hG := (GlobalTheory.WpFam.LatConst.main τ).1
   have hk := two_pi_I_ne_zero
   refine ⟨?_, fun N x => ⟨?_, ?_⟩⟩

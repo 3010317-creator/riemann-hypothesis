@@ -1,16 +1,20 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.SiegelMeanCc
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ContDensityOnEqFibreIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ContinuousHasCompactSupportInfFinProductTestFuncStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsFibreMeasuresLocalHermitianFormStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralHermitianOrbitSumFixedLengthLtTopStatement
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ContDensityOnEqFibreIntegral
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ContinuousHasCompactSupportInfFinProductTestFunc
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsFibreMeasuresLocalHermitianForm
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralHermitianOrbitSumFixedLengthLtTop
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeanLEqOfRealMeanCReStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasureEqOfLintegralSmoothEqStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MultipliableOfRealReOfComplexStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PureFiniteAdelicTestFunctionContinuousCompactStatement
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasureEqOfLintegralSmoothEq
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MultipliableOfRealReOfComplex
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PureFiniteAdelicTestFunctionContinuousCompact
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFibreFamilyHermitianLengthInfiniteAdeles
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFibreFamilyHermitianLengthInfiniteAdelesStatement
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MeasurableEmbeddingAdelicTupleLocalComponents
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.DensInfTR
 import Mathlib.Algebra.Order.Floor.Extended
@@ -80,9 +84,9 @@ theorem sw1b2_of_cc : GlobalTheory.GaussMean.OneVectorCc → ∀ (F E : Type) [F
   have hCc := fun (Φ' : (Fin 1 → Fin M → AF F ⊗[F] E) → ℂ) (Φi' : (Fin 1 → Fin M → Ainf F ⊗[F] E) → ℂ) h1 h2 h3 h5 =>
     ((((hOV'.2 hM β hβ d b Φ' Φi' Φf Φv h1 h2 h3 hpure h5).2 ψ hψ).2 μ hμ).2 𝓕 h𝓕).2.2.2.2 μi νi μv νv hμi hνi hμv hνv
   refine ⟨?_, ?_, ?_⟩
-  · exact GlobalTheory.T.exists_fibreFamily_hermitianLength_infiniteAdeles F E σ hCM M J μi νi (by omega) hJ hμi.1 hνi.1
-  · exact ⟨fun v => Classical.choose (GlobalTheory.T.exists_fibreMeasures_localHermitianForm F E σ hCM M J hJ (by omega) v (μv v) (νv v) (hμv v).1 (hνv v).1),
-      fun v => Classical.choose_spec (GlobalTheory.T.exists_fibreMeasures_localHermitianForm F E σ hCM M J hJ (by omega) v (μv v) (νv v) (hμv v).1 (hνv v).1)⟩
+  · exact _root_.GlobalTheory.GaugeEx.FibExist.exists_fibreFamily_ainf F E σ hCM M J μi νi (by omega) hJ hμi.1 hνi.1
+  · exact ⟨fun v => Classical.choose (_root_.GlobalTheory.HermFibreLocal.exists_isFibreFamily F E σ hCM M J hJ (by omega) v (μv v) (νv v) (hμv v).1 (hνv v).1),
+      fun v => Classical.choose_spec (_root_.GlobalTheory.HermFibreLocal.exists_isFibreFamily F E σ hCM M J hJ (by omega) v (μv v) (νv v) (hμv v).1 (hνv v).1)⟩
   intro fi fv hfi hfv
 
   have : IsTotallyReal F := hCM.1
@@ -120,7 +124,7 @@ theorem sw1b2_of_cc : GlobalTheory.GaussMean.OneVectorCc → ∀ (F E : Type) [F
     have h' : IsContDensityOn (μv v) (fun X => qR (Fv F v) σ J (X 0)) id (νv v) {c | c ≠ 0}
         (fun X => (((Φv v X).re : ℝ) : ℂ)) (Fl v) := by
       rw [← hΦvR v]; exact hFl v
-    exact GlobalTheory.T.contDensity_eq_fibre_integral _ _ (μv v) _ (νv v) _ (fv v) (fun X => (Φv v X).re) (Fl v)
+    exact _root_.GlobalTheory.FibreDensity.contDensityOn_eq_fibre_integral _ _ (μv v) _ (νv v) _ (fv v) (fun X => (Φv v X).re) (Fl v)
       (FibExist.continuous_qR (Fv F v) σ J) isOpen_ne (hfv v)
       (Complex.continuous_re.comp (hpure.1 v).1.continuous) ((hpure.1 v).2.comp_left Complex.zero_re)
       (fun X => (hreal v X).1) h' _ (hβv v)
@@ -137,7 +141,7 @@ theorem sw1b2_of_cc : GlobalTheory.GaussMean.OneVectorCc → ∀ (F E : Type) [F
     have e : (fun v => ∫⁻ X, ENNReal.ofReal (Φv v X).re ∂(fv v (algebraMap F (Fv F v) β))) =
         fun v => ENNReal.ofReal (Fl v (algebraMap F (Fv F v) β)).re := funext fun v => (hdensV Fl hFl v).2
     rw [e]
-    exact GlobalTheory.T.multipliable_ofReal_re_of_nonneg_real _ _ hm fun v => by
+    exact _root_.GlobalTheory.multipliable_ofReal_re_of_complex' _ _ hm fun v => by
       rw [(hdensV Fl hFl v).1]
       exact ⟨by simp, by simpa using integral_nonneg fun X => (hreal v X).1⟩
   refine ⟨(hFlR Fl0 hFl0 hmul0).1, ?_⟩
@@ -167,7 +171,7 @@ theorem sw1b2_of_cc : GlobalTheory.GaussMean.OneVectorCc → ∀ (F E : Type) [F
       (GlobalTheory.GaugeGlue.continuous_map b (sndA F) GlobalTheory.GaugeGlue.continuous_sndA).comp
         ((continuous_apply i).comp (continuous_apply a))
   have hpI : Continuous (projInf (F := F) (E := E) (M := M) (n := 1)) := GlobalTheory.GaugeGlue.continuous_projInf b
-  have hΦfc := GlobalTheory.T.pureFiniteAdelicTestFunction_continuous_compact F E d M 1 b Φf Φv hpure
+  have hΦfc := _root_.GlobalTheory.isPureFin_continuous_hasCompactSupport F E d M 1 b Φf Φv hpure
   let T : Set (Fin 1 → Fin M → E) := {x | hE σ J (x 0) (x 0) = algebraMap F E β}
   have hS : {x : Fin 1 → Fin M → E | x 0 ≠ 0 ∧ hE σ J (x 0) (x 0) = algebraMap F E β} = T := by
     ext x
@@ -226,11 +230,11 @@ theorem sw1b2_of_cc : GlobalTheory.GaussMean.OneVectorCc → ∀ (F E : Type) [F
     let Φ' : (Fin 1 → Fin M → AF F ⊗[F] E) → ℂ := fun X => Φi' (projInf X) * Φf (projFin X)
     have hΦi'c : Continuous Φi' := Complex.continuous_ofReal.comp (hφc.comp eV.continuous)
     have hΦi'cs : HasCompactSupport Φi' := (hφcs.comp_homeomorph eV).comp_left Complex.ofReal_zero
-    have hΦ'c := GlobalTheory.T.continuous_hasCompactSupport_infFin_product_testFunction F E M 1 Φ' Φi' Φf hΦi'c hΦi'cs hΦfc.1 hΦfc.2 (fun X => rfl)
+    have hΦ'c := _root_.GlobalTheory.prod_continuous_hasCompactSupport F E M 1 Φ' Φi' Φf hΦi'c hΦi'cs hΦfc.1 hΦfc.2 (fun X => rfl)
     obtain ⟨Fi', Fl', hdi, hdv, hmul', hmean'⟩ := hCc Φ' Φi' hΦi'c hΦi'cs (hsmooth φ hφ) (fun X => rfl)
     rw [hBi] at hdi
     have := hνi.1
-    have hFi := GlobalTheory.T.contDensity_eq_fibre_integral _ _ μi _ νi _ fi (fun X => φ (eV X)) Fi' (FibExist.continuous_qR (Ainf F) σ J)
+    have hFi := _root_.GlobalTheory.FibreDensity.contDensityOn_eq_fibre_integral _ _ μi _ νi _ fi (fun X => φ (eV X)) Fi' (FibExist.continuous_qR (Ainf F) σ J)
       hBio hfi (hφc.comp eV.continuous) (hφcs.comp_homeomorph eV) (fun X => hφ0 _) hdi βi hβiB
     have hP := hFlR Fl' hdv hmul'
     let f : T → HA (AF F) σ J → ℝ := fun x h => φ (a x h) * (Φf (projFin (act x h))).re
@@ -242,7 +246,7 @@ theorem sw1b2_of_cc : GlobalTheory.GaussMean.OneVectorCc → ∀ (F E : Type) [F
         ((φ (eV (projInf (act x h))) * (Φf (projFin (act x h))).re : ℝ) : ℂ)
       conv_lhs => rw [(hΦfR (projFin (act x h))).1]
       push_cast; ring
-    have hint := GlobalTheory.T.lintegral_hermitian_orbit_sum_fixed_length_lt_top F E σ hCM M J hJ β hβ Φ' hΦ'c.1 hΦ'c.2 μ 𝓕 hμ h𝓕
+    have hint := _root_.GlobalTheory.OrbitSumInt.lintegral_orbitSum_lt_top F E σ hCM M J hJ β hβ Φ' hΦ'c.1 hΦ'c.2 μ 𝓕 hμ h𝓕
     have hint' : ∫⁻ h in 𝓕, ∑' x : T, ‖((f x h : ℝ) : ℂ)‖ₑ ∂μ < ⊤ := by
       refine lt_of_eq_of_lt ?_ hint
       refine lintegral_congr fun h => tsum_congr fun x => ?_
@@ -263,7 +267,7 @@ theorem sw1b2_of_cc : GlobalTheory.GaussMean.OneVectorCc → ∀ (F E : Type) [F
     simp only [Complex.re_ofReal_mul, Complex.ofReal_re]
     rw [ENNReal.ofReal_mul hr, mul_comm]
   have := hfoc
-  have hm : m₁ = m₂ := GlobalTheory.T.measure_eq_of_lintegral_smooth_eq' N m₁ m₂ htest
+  have hm : m₁ = m₂ := _root_.GlobalTheory.measure_eq_of_lintegral_smooth_eq N m₁ m₂ htest
   rw [hS]
   calc meanL μ 𝓕 (fun h => ∑' x : T, Φ (h⁻¹ • ratTup (F := F) (AF F) (x : Fin 1 → Fin M → E)))
       = ∫⁻ y, Φi (eV.symm y) ∂m₁ := by

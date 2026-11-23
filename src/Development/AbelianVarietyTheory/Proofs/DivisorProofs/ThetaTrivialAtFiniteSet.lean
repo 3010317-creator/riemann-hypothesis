@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalUnitaryActionSchwartzInfStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalUnitaryActionSchwartzInf
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryAdelicPlaceDecomposition
 import Formalism.LocalRingCardinality.SpanPowerMembership.LocAtA
 import Mathlib.Algebra.Order.Floor.Extended
@@ -119,7 +119,7 @@ theorem pure_stab_fin : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [F
       filter_upwards [hcof, S.eventually_cofinite_notMem] with x hx hxS
       rw [hφ₂S x hxS, hx]
     obtain ⟨φ', hφ', hφ'w, -, hφ'e⟩ :=
-      GlobalTheory.T.local_unitary_action_schwartz_inf hP F E σ B a a' G X om om' hT w g₁ hg₁ h₁ hh₁ f φ₂ hφ₂ hcof₂
+      _root_.GlobalTheory.PureStabOne.pure_stab_one hP F E σ B a a' G X om om' hT w g₁ hg₁ h₁ hh₁ f φ₂ hφ₂ hcof₂
     refine ⟨φ', hφ', fun x hx => ?_, ?_⟩
     · rw [Finset.mem_insert, not_or] at hx
       rw [hφ'w x hx.1, hφ₂S x hx.2]

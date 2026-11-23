@@ -3,31 +3,31 @@ module
 public import Development.AbelianVarietyTheory.Definitions.HeightFunctions.GrowthConstantBoundGcR
 public import Development.AbelianVarietyTheory.Definitions.ThetaValues.Generic
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ArchimedeanFlatDecompositionIndexing
-import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ComponentModelWeightDimensionDictionary
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CuspFormVanishingAtPointsMulPowMemSpan
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CuspFormVanishingLowCoeffMemLeadingAddDeepSpan
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsAlgIndependentCoeffsFlatDatum
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsBaseEmbeddingReadingForms
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsValueBasisInSpanningForms
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FinrankLowerBoundCuspFormVanishingLowCoeff
-import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.GenericSectionsPolynomialDictionary
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.InBasisIffPointValuesLinearIndependentSpan
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.InContainMROfAnFacts
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.LeadingProductsIndependentModuloDeepProducts
-import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.MemSpanCuspReadingsIffComponents
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.NonemptyHeightOneSpectrumRingOfIntegers
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.PointsInterpolationGenericSections
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShareRdOfInBasis
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ShareRhoROfAnFacts
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ReadingsCuspAndIndependent
-public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.CuspReadingsSpanModelFormsShiftedWeightsStatement
+public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.CuspReadingsSpanModelFormsShiftedWeights
+public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.ThetaArchimedeanDataDefiniteModelsNonempty
+public import Formalism.LocalToGlobal.ProjectiveLattices.OneCusp
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ComponentModelWeightDimensionDictionary
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.GenericSectionsPolynomialDictionary
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.MemSpanCuspReadingsIffComponents
 import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.ExistsIndepForms
 import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.ExistsLtMulOfLt
 import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.FirstMinimumInvariantContinuousPosOnFrames
 import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.NmatZeroMemBor
-public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.ThetaArchimedeanDataDefiniteModelsNonemptyStatement
 import Formalism.LocalRingCardinality.HeightBoundGeFourthPowerRank
-public import Formalism.LocalToGlobal.ProjectiveLattices.OneCusp
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -307,8 +307,8 @@ end Abstract
 
 theorem sharesDef : GlobalTheory.RunJoin.SharesDefSt := by
   intro D T h EX p hj large₂ H C2 A2 CT ka wL wF Tn nP nW h0 S nus hPar hPg hC hL G₀ hNZ Sh hSh
-  obtain ⟨A⟩ := GlobalTheory.T.thetaArchimedeanData_definiteModels_nonempty D T h EX p hj large₂ H C2 A2 CT ka wL wF Tn nP nW h0 S nus hPar hPg hC G₀.N G₀.w hNZ
-  obtain ⟨hOn, hM⟩ := GlobalTheory.T.cuspReadings_span_model_forms_shifted_weights D T h _ hj large₂ H C2 A2 CT ka wL wF Tn nP nW h0 EX p hPar hPg
+  obtain ⟨A⟩ := _root_.GlobalTheory.ArchDefinite.archAt_nonempty_of_definite D T h EX p hj large₂ H C2 A2 CT ka wL wF Tn nP nW h0 S nus hPar hPg hC G₀.N G₀.w hNZ
+  obtain ⟨hOn, hM⟩ := _root_.GlobalTheory.RunJoin.onto_of_page D T h _ hj large₂ H C2 A2 CT ka wL wF Tn nP nW h0 EX p hPar hPg
   obtain ⟨hka, hT⟩ := weight_and_degree hPg.hyp
   have hp : ∀ k : (T.U D.R.m T.σ₀).Comp, ((T.U D.R.m T.σ₀).X k).p0 = 0 := fun k => by
     have h0 : WeightFamilies.rho D D.R.m = 0 := by

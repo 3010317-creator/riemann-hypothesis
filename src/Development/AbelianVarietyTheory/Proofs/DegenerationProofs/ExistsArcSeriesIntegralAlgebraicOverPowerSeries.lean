@@ -12,15 +12,22 @@ public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsA
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsArcLiftExtensionLargerClosedFieldStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsFiniteDimensionalFieldDegenerationValuesStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsSums
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsValuationSubringIntegralClosureCompleteDVRStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsValuedFieldValuationCentreLePowStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.AdmissiblePadicIntMaximalIdeal
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsValuationSubringIntegralClosureCompleteDVR
+public import Mathlib.Analysis.Normed.Field.Basic
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.RingTheory.Valuation.ValuationSubring
+public import Mathlib.Topology.MetricSpace.Ultra.Basic
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsValuedFieldValuationCentreLePow
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FamiliesValuesCorrespondStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IntegralGaugeValuesAreValuationUnitsStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.LabelledTorsionValuesAdditiveKernelSurjectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionClassesDescendFiniteAlgebraStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.NotAllMatchRankZero
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionClassesDescendFiniteAlgebra
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionPairingValuesOfFamiliesValuesStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusTorsionPointsCorrespondValuesStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TwistTxCosetNormGeStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.CharZeroOfIsPrimitiveRoot
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TwistTxCosetNormGe
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -151,7 +158,7 @@ theorem exists_series : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory
   have wp := GlobalTheory.T.torsionPairing_values_of_familiesValues gt (GlobalTheory.T.families_values_correspond hL hL2)
   obtain ⟨_, _⟩ := base_local hB
   let F := AlgebraicClosure (FractionRing O')
-  obtain ⟨S₀, hS₀⟩ := GlobalTheory.T.exists_valuationSubring_integral_closure_completeDVR O' ϖ hB F
+  obtain ⟨S₀, hS₀⟩ := _root_.GlobalTheory.LN.exists_valuationSubring_isIntegral O' ϖ hB F
   have hin : ∀ r : O', algebraMap (FractionRing O') F (algebraMap O' _ r) ∈ S₀ := fun r =>
     (hS₀ _).2 (by rw [← IsScalarTower.algebraMap_apply]; exact isIntegral_algebraMap)
   obtain ⟨A₀, hA₀⟩ := GlobalTheory.T.exists_arcIsometry_torsion_integralGauge hL gt E H D l Xo c W₀ Y O' b ϖ a hB F S₀ hin
@@ -181,7 +188,7 @@ theorem exists_series : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory
       | some i => A₀.q (m ^ 2) (t i)
     obtain ⟨K₁, A₁, f1, f2, f3, f4, f5, f6, f7⟩ :=
       GlobalTheory.T.exists_finiteDimensional_field_degenerationValues O' a.D₀ F A₀.N A₀.ν (Set.range fun i => (p i).1.2.b) (Set.finite_range _)
-    obtain ⟨O₁, _, N₀, I, hI, hp⟩ := GlobalTheory.T.torsionClasses_descend_finite_algebra O' F S₀ hS₀ A₀.N K₁ A₁ f1 f3 f4 f5 f6 f7 iθ iσ ith (iψ a.gen) (Option Ix) k p
+    obtain ⟨O₁, _, N₀, I, hI, hp⟩ := _root_.GlobalTheory.Ex.TorsDesc.descend O' F S₀ hS₀ A₀.N K₁ A₁ f1 f3 f4 f5 f6 f7 iθ iσ ith (iψ a.gen) (Option Ix) k p
       (fun i => by cases i; exacts [hj, hm2]) fun i => f2 _ ⟨i, rfl⟩
     have : FaithfulSMul O' F := (faithfulSMul_iff_algebraMap_injective _ _).2 (by
       rw [IsScalarTower.algebraMap_eq O' (FractionRing O') F]
@@ -232,7 +239,7 @@ theorem exists_series : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory
         (∃ x, 1 ≤ ‖gam (v (n ^ j) 1 0 x)‖) ∧ ∀ x, ∃ h, u ^ (A₀.be.be (A₀.q ((n ^ j) ^ 2) x).1.1.toAdd
           (A₀.q ((n ^ j) ^ 2) x).1.1.toAdd).toNat ≤ ‖gam (v (n ^ j) 1 0 (x + n ^ (j - 1) • h))‖ := by
       intro e
-      obtain ⟨C, _, _, _, _, gam, g1, g2, g3⟩ := GlobalTheory.T.exists_valuedField_valuationCentre_le_pow (PowerSeries O') K PowerSeries.X
+      obtain ⟨C, _, _, _, _, gam, g1, g2, g3⟩ := _root_.GlobalTheory.exists_valuedField_centre_le_pow (PowerSeries O') K PowerSeries.X
         (fun h => not_isUnit_zero (by simpa using h.map PowerSeries.constantCoeff : IsUnit (0 : O')))
         PowerSeries.X_ne_zero _ hfin S hS e
       letI : Algebra (FractionRing O') C := (gam.comp (algebraMap _ K)).toAlgebra
@@ -256,7 +263,7 @@ theorem exists_series : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory
       obtain ⟨qf, hq1, hq2⟩ := (GlobalTheory.T.arcTorsionValues_norms_integral_positive E H D l Xo c W₀ Y O' b ϖ a hB C hce A' hN).2.2 (r' 1) hu1
       choose p hp' using fun x => (existsUnique_twRel A'.be (r' 1) _ hpow (A'.q _ x)).exists
       obtain ⟨t1, t2, t3⟩ := GlobalTheory.T.labelledTorsionValues_additive_kernel_surjective gt E H D O' C A'.arc _ (pow_pos hm.pos 2)
-      obtain ⟨c1, c2⟩ := GlobalTheory.T.twist_tx_coset_norm_ge_alt C A'.N _ A'.be (r' 1) _ qf n _ j hp ho hn hj hu1 hpow hq1 hq2
+      obtain ⟨c1, c2⟩ := _root_.GlobalTheory.twist_tx_coset_norm_ge C A'.N _ A'.be (r' 1) _ qf n _ j hp ho hn hj hu1 hpow hq1 hq2
         (GlobalTheory.T.abelianPartValues_torsion_pairing_separation_integral hL hL2 (GlobalTheory.T.abelianPartValues_of_expansionLaws hL) O' a.D₀ a.even a.bimult C hce A'.N A'.ν hN n hp ho hn)
         D.La (A'.q _) (eq_zero_of_nsmul D hp.ne_zero) t1 t2 t3 p hp'
       have hv := (hsum C gam g1 g2 A'.N I _ A'.be hI hβ (r' 1) (r' ((n ^ j) ^ 2)) (r' 1) hu'

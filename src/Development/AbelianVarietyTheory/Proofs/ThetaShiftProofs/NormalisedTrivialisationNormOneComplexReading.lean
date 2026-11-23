@@ -3,8 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.ModelsAt
 public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.NonemptyOfFrameValues
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsRingHomLift
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HolomorphicArcAgreesAnalyticDictionaryStatement
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsTauCanonicalTrivialisationIffNormalisedArcStatement
+public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.NonemptyGtAnOfToric
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.HolomorphicArcAgreesAnalyticDictionary
+public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.PrimAn
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsTauCanonicalTrivialisationIffNormalisedArc
+public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.ExistsChartComplexPoint
 import Mathlib.Algebra.Order.Archimedean.Real.Hom
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -43,8 +46,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.ExistsChartComplexPoint
-public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.NonemptyGtAnOfToric
 
 @[expose] public section
 
@@ -163,8 +164,8 @@ theorem normOne_of_tauCan : Known → ∀ (E : Type) [Field E] [NumberField E] [
   obtain ⟨Λ'⟩ := GlobalTheory.ArcModel.nonempty_gtAn K.laws K.laws2 K.theta E H Dw l c O β _ a
   obtain ⟨Λ''⟩ := GlobalTheory.ArcDictModel.nonempty_of_frameValues Λ'
   let Λ := Λ''.toGtAn₀
-  obtain ⟨gam, h, -, hy, hP, hE⟩ := GlobalTheory.T.holomorphicArc_agrees_analyticDictionary K E H Dw l Xo c σ O β Y a χ W g ty Fu Ha Λ
-  have hN := ((GlobalTheory.T.isTauCanonicalTrivialisation_iff_normalised_arc E H Dw l c O β _ a Λ n).1 htau).2
+  obtain ⟨gam, h, -, hy, hP, hE⟩ := _root_.GlobalTheory.ArcCompare.holArc_agrees K E H Dw l Xo c σ O β Y a χ W g ty Fu Ha Λ
+  have hN := ((_root_.GlobalTheory.KappaAn.tauCan_iff_normAn E H Dw l c O β _ a Λ n).1 htau).2
   have hNv : h (Ha.N v) = Λ.A.N (gam v) := by
     have h0 := hP 0 v
     have h1 := hP 1 v

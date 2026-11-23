@@ -2,8 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitMkOfFormallyUnramified
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ChainRuleAndJacobianCriterion
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleMvPolynomialEval2HomRestrictSmallerAffinesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsKaehlerBasisDifferentialsOfTopFormFrameStatement
+public import Mathlib.RingTheory.RingHom.Etale
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleMvPolynomialEval2HomRestrictSmallerAffines
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsAlgHomOfComp
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsKaehlerBasisDifferentialsOfTopFormFrame
 public import Mathlib.Algebra.Category.ModuleCat.Free
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -43,8 +47,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Definitions.Divisors.CommGroupMulMulEqMulInvMulMulMul
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsAlgHomOfComp
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsUniqueIsTanFrameOfIsEmpty
 import Development.AbelianVarietyTheory.Definitions.Divisors.IsoOverOfIsOpenImmersion
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsBaseFrame
 
@@ -98,8 +100,8 @@ theorem isFrame_etale : ∀ (k : Type) [Field k] (X Y : Scheme.{0}) (p : X ⟶ S
   intro k _ X Y p q p' hp m D _ ι o U U' hU' hU W W' hW' hW hW'a hWU hW'U' N hN x hx
   subst hp
   have hU'a : IsAffineOpen U' := hx.affine
-  have hC := GlobalTheory.T.etale_mvPolynomial_eval2Hom_restrict_smaller_affines X Y q ι U U' hU' hU hU'a W W' hW' hW hW'a hWU hW'U' N hN
-  obtain ⟨bR, hbR⟩ := GlobalTheory.T.exists_kaehlerBasis_differentials_of_topFormFrame k X p m ‹_› U' _ hx
+  have hC := _root_.GlobalTheory.EtaleRestrict.etale_eval₂_res X Y q ι U U' hU' hU hU'a W W' hW' hW hW'a hWU hW'U' N hN
+  obtain ⟨bR, hbR⟩ := _root_.GlobalTheory.TopForm.FrameBasis.exists_basis_of_isFrame k X p m ‹_› U' _ hx
   haveI : Finite ι := Finite.of_injective (fun a ↦ o.symm (Sum.inr a))
     (fun a b h ↦ Sum.inr_injective (o.symm.injective h))
   letI : Algebra k Γ(X, U') := (algX p U').toAlgebra

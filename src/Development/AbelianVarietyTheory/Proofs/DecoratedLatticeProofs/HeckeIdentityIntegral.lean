@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsCoType
 public import Formalism.LocalToGlobal.Columns.HeckeSp
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CardSubspacesContainingRangeQVandermondeStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CardSubspacesContainingRangeQVandermonde
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SumIntegralIndicatorCosetsKernelSubspacesStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SumIntegralIndicatorCosetsSubspacesContainingStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -70,7 +70,7 @@ theorem GlobalTheory.ParHecke.heckeIdentity_integral : ∀ (k : Type) [Field k] 
       obtain ⟨hc, hr⟩ := hRn n hn'
       rw [(GlobalTheory.T.sum_integralIndicator_cosets_kernel_subspaces k D D' ϖ hϖ (sn n) (Rn n) hr y).2 y₀ hy₀, hc]
     rw [Finset.sum_congr rfl (fun n hn => by rw [hR n hn])]
-    have hC := GlobalTheory.T.card_subspaces_containing_range_qVandermonde 𝓀[k] (D → 𝓀[k]) (D' → 𝓀[k]) (y₀.map (IsLocalRing.residue 𝒪[k])).mulVecLin t s.card
+    have hC := _root_.GlobalTheory.RangeKerCount.card_above_range_eq_sum 𝓀[k] (D → 𝓀[k]) (D' → 𝓀[k]) (y₀.map (IsLocalRing.residue 𝒪[k])).mulVecLin t s.card
       (by simp only [Module.finrank_fintype_fun_eq_card]; exact ht)
       (by simp only [Module.finrank_fintype_fun_eq_card]; exact Finset.card_le_univ s)
     simp only [Module.finrank_fintype_fun_eq_card] at hC

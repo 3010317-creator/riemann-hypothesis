@@ -2,10 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEqAddOfRedVEq
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsStrictIff
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BalancedPsdRationalRadicalConeSubsetIntConeStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DicksonExistsFiniteSubfamilyBelowStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NonnegSumSmulIntBilinFormToRealMemPsdConeStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StrictlyConcavePolFanConeRealFormsStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.SumMulEqZeroOfSumToReal
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BalancedPsdRationalRadicalConeSubsetIntCone
+public import Mathlib.Data.Finset.Defs
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DicksonExistsFiniteSubfamilyBelow
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NonnegSumSmulIntBilinFormToRealMemPsdCone
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StrictlyConcavePolFanConeRealForms
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -134,10 +136,10 @@ theorem exists_contact_baseFun_lamW : ∀ (E : Type) [Field E] [NumberField E] [
   intro E _ _ _ H D φs 𝓜 X _ _ _ _ N m n u w r a hD hφ hN hu hS hr ha
   classical
   choose F hF using fun (M : ℕ) (y : Fin n → ZMod (M + 1)) =>
-    GlobalTheory.T.dickson_exists_finite_subfamily_below m (fun a' : {a' : Fin n → ℤ // redV M a' = y} => fun j => (u j (r a'.1) (r a'.1)).toNat)
+    _root_.GlobalTheory.dickson_finite_below_every m (fun a' : {a' : Fin n → ℤ // redV M a' = y} => fun j => (u j (r a'.1) (r a'.1)).toNat)
   let vec : ∀ M : ℕ, (Fin n → ZMod (M + 1)) → (Fin n → ℤ) → Fin m → ℤ :=
     fun M y a' i => u i (r (a M y)) (r (a M y)) - u i (r a') (r a')
-  have hI := GlobalTheory.T.strictlyConcave_polFan_cone_real_forms X φs N m u w hφ hu hS
+  have hI := _root_.GlobalTheory.PolCell.strictWith_real X φs N m u w hφ hu hS
   have hsum : ∀ (t : Fin m → ℝ) (x z : X), (∑ i, t i • toReal (u i)) x z = ∑ i, t i * (u i x z : ℝ) := by
     intro t x z
     simp [LinearMap.sum_apply]
@@ -170,13 +172,13 @@ theorem exists_contact_baseFun_lamW : ∀ (E : Type) [Field E] [NumberField E] [
       Set.finite_iUnion fun y => (Finset.finite_toSet _).image _
   · intro β hβ hβ0
     have hB : toReal β ∈ psdCone (bar := H.bar) (X := X) := by
-      have := GlobalTheory.T.nonneg_sum_smul_intBilinFormToReal_mem_psdCone (𝓞 E) H.bar X 1 ![β] ![1] (fun i => by fin_cases i; simpa using hβ)
+      have := _root_.GlobalTheory.PolFan.ConeSub.sum_smul_toReal_mem_psdCone (𝓞 E) H.bar X 1 ![β] ![1] (fun i => by fin_cases i; simpa using hβ)
         (fun i y => by fin_cases i; simpa using hβ0 y) (fun i => by fin_cases i; simp)
       simpa using this
     rw [← evalR_toReal]
-    exact hle_gen _ (GlobalTheory.T.balancedPsdRationalRadicalCone_subset_intCone (𝓞 E) H.bar X hB)
+    exact hle_gen _ (_root_.GlobalTheory.PolFan.psdCone_subset_psdCone_int (𝓞 E) H.bar X hB)
   · intro B hB heq
-    have hB' := GlobalTheory.T.balancedPsdRationalRadicalCone_subset_intCone (𝓞 E) H.bar X hB
+    have hB' := _root_.GlobalTheory.PolFan.psdCone_subset_psdCone_int (𝓞 E) H.bar X hB
     rw [kDen_mul_evalR_baseFun D φs N n 𝓜 hr, evalW_lamW] at heq
     have heq' := mul_left_cancel₀ hD'.ne' heq
     have h1 := (hI.2 B hB').1

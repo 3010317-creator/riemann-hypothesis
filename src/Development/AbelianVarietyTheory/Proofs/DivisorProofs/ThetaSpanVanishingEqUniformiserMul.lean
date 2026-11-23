@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SubsetSpanBy
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseChangeSendsClosedFibreGenericPointDvrStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RegularAtPointFunctionFieldMapOfGenericPointCompStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ResidueFieldLinearIndependentClosedFibreGenericPStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiAbelianDvrClosedFibreStalkUniformiserStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseChangeSendsClosedFibreGenericPointDvr
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RegularAtPointFunctionFieldMapOfGenericPointComp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ResidueFieldLinearIndependentClosedFibreGenericP
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiAbelianDvrClosedFibreStalkUniformiser
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -114,13 +114,13 @@ theorem modPi : ∀ (T D : Type) [CommRing T] [IsDomain T] [IsDiscreteValuationR
   set c := cst H'.hom with hc
   have hreg : ∀ u, GlobalTheory.Cartier.RegAt y u → GlobalTheory.Cartier.RegAt y' (θ u) := by
     intro u hu
-    have hpt := GlobalTheory.T.baseChange_sends_closedFibre_genericPoint_dvr T D a ha hm H H' π θ hH hpb ⟨_, hff.choose_spec⟩ y y' hy hy' hdy hdy'
-    exact GlobalTheory.T.regularAtPoint_functionField_map_of_genericPoint_comp H.left H'.left π θ ⟨_, hff.choose_spec⟩ y' u (hpt ▸ hu)
+    have hpt := _root_.GlobalTheory.Desc.GaussBC.apply_eq_of_closedFibre_dim_one T D a ha hm H H' π θ hH hpb ⟨_, hff.choose_spec⟩ y y' hy hy' hdy hdy'
+    exact _root_.GlobalTheory.Desc.RegPull.regAt_map H.left H'.left π θ ⟨_, hff.choose_spec⟩ y' u (hpt ▸ hu)
   have hcreg : ∀ d, GlobalTheory.Cartier.RegAt y' (c d) := fun d => (cst_reg_zero D H'.left H'.hom y' hy' d).1
   have hc0reg : ∀ t, GlobalTheory.Cartier.RegAt y (cst H.hom t) := fun t => (cst_reg_zero T H.left H.hom y hy t).1
   have hϖz : GlobalTheory.Cartier.ZeroAt y (cst H.hom ϖ) :=
     (cst_reg_zero T H.left H.hom y hy ϖ).2 (by rw [hmT]; exact Ideal.subset_span rfl)
-  obtain ⟨hϖ0, hfac⟩ := GlobalTheory.T.semiAbelian_dvr_closedFibre_stalk_uniformiser T H hH y hy hdy ϖ hmT
+  obtain ⟨hϖ0, hfac⟩ := _root_.GlobalTheory.Desc.GenFibre.unif T H hH y hy hdy ϖ hmT
 
   have hdiv : ∀ x, GlobalTheory.Cartier.ZeroAt y x → ∃ w, GlobalTheory.Cartier.RegAt y w ∧ x = cst H.hom ϖ * w := by
     intro x hx
@@ -137,7 +137,7 @@ theorem modPi : ∀ (T D : Type) [CommRing T] [IsDomain T] [IsDiscreteValuationR
         rw [mul_comm _ (cst H.hom ϖ ^ (-k).toNat), ← _root_.mul_assoc, ← zpow_natCast, hk',
           ← zpow_add₀ hϖ0, neg_add_cancel, zpow_zero, _root_.one_mul]
       exact (zeroAt_iff.1 (e ▸ hx.mul (regAt_npow (hc0reg ϖ) _))).2 hw
-  have hgeo := GlobalTheory.T.residueField_linearIndependent_closedFibre_genericPoints T D a ha hm H H' π θ hH hpb hff y y' hy hy' hdy hdy'
+  have hgeo := _root_.GlobalTheory.Desc.ResInj.residue_linearIndependent T D a ha hm H H' π θ hH hpb hff y y' hy hy' hdy hdy'
   set S := spanBy c (θ '' regSet y) with hS
 
   have hyes : ∀ (n : ℕ) (d : Fin n → D) (u : Fin n → H.left.functionField), (∀ i, GlobalTheory.Cartier.RegAt y (u i)) →

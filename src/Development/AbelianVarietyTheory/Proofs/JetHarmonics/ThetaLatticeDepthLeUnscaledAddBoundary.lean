@@ -3,8 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Jets.ExistsSecTieFOfTies
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors.StChartF
 public import Formalism.LocalToGlobal.ProjectiveLattices.RecPJThAllNeBot
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ThetaLatticeDepthLeAtPlacesOverLevelStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ThetaLatticeDepthLeAtPlacesPrimeToLevelStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ThetaLatticeDepthLeAtPlacesOverLevel
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ThetaLatticeDepthLeAtPlacesPrimeToLevel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +52,7 @@ theorem depth_le : (∀ (p : ℕ) [Fact p.Prime], Pdiv.ChartF.HTFSt p) → ∀ (
   intro hHT D T h j hj hinj EX w c hO hR la y
   by_cases hla : ∃ i : Fin 2, ((D.host.g i : ℕ) : 𝓞 T.Q.c.F) ∈ la.asIdeal
   · obtain ⟨i, hi⟩ := hla
-    exact GlobalTheory.T.thetaLatticeDepth_le_at_places_over_level hHT D T h j hj hinj EX w c hO hR la i hi y
-  · exact GlobalTheory.T.thetaLatticeDepth_le_at_places_prime_to_level D T h j hj hinj EX w c hO hR la (fun i hi => hla ⟨i, hi⟩) y
+    exact _root_.GlobalTheory.DepthOverLevel.depth_le_over_level hHT D T h j hj hinj EX w c hO hR la i hi y
+  · exact _root_.GlobalTheory.DepthPrimeToLevel.depth_le D T h j hj hinj EX w c hO hR la (fun i hi => hla ⟨i, hi⟩) y
 
 end GlobalTheory.RecDepth

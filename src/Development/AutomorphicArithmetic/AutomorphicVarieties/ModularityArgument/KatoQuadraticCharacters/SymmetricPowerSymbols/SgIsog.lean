@@ -2,7 +2,13 @@ module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.KatoQuadraticCharacters.SymmetricPowerSymbols.SymExOf
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CthFacMultipliable
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SiegelUnitInTowerAnEqSiegelUnitOnComplexStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.SgC
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SiegelUnitInTowerAnEqSiegelUnitOnComplex
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SmoothedThetaQProductDistributionRelation
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -184,8 +190,8 @@ private theorem prod_siegel {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgClosur
     field_simp
     ring
   apply X.an.injective
-  rw [map_prod, Finset.prod_congr rfl (fun j hj => GlobalTheory.T.siegelUnitInTower_an_eq_siegelUnitOnComplex Ω ε X c _ (hAj j hj)),
-    X.an_sl (dg k) _ (sgC c x) (GlobalTheory.T.siegelUnitInTower_an_eq_siegelUnitOnComplex Ω ε X c x hA)]
+  rw [map_prod, Finset.prod_congr rfl (fun j hj => _root_.GlobalTheory.KZ.SiegelMem.an_siegel_eq Ω ε X c _ (hAj j hj)),
+    X.an_sl (dg k) _ (sgC c x) (_root_.GlobalTheory.KZ.SiegelMem.an_siegel_eq Ω ε X c x hA)]
   have hprod : ∏ j ∈ Finset.range k, (↑(sgC c ![x 0, (x 1 + j) / k]) : Mero) =
       ↑(∏ j ∈ Finset.range k, sgC c ![x 0, (x 1 + j) / k]) :=
     (map_prod (Filter.Germ.coeRingHom _) _ _).symm

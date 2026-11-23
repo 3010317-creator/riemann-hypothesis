@@ -12,12 +12,13 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LastS
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LastStepTwistLevelContainsPrincipalCongruenceStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelCharacterAtQFiniteOrderAndTrivialStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LevelFrameCharacterMulMovedPointStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemFramedLevelIffTwoAdelicPointsStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PlaceProjectionZeroIntegralIffComponentsAboveStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PointOverXHasAdelicPointBlockExtendMulStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnMemberLevelReadAtBasePointStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoords
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TwistPrimesAwayLevelAndTypePrimesStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemFramedLevelIffTwoAdelicPointsStatement
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ReferenceCharactersFactorTame
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PlaceProjectionZeroIntegralIffComponentsAbove
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TrueColumnSpacesStandardInFrameCoords
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,7 +77,7 @@ theorem localComponent_congr (P : HeightOneSpectrum (𝓞 E)) {v : HeightOneSpec
     have := congrArg (fun g : GL (Fin n) _ => g.1 i j) h
     rw [map_sub, sub_eq_zero]
     exact this
-  have h2 := ((GlobalTheory.T.placeProjection_zero_integral_iff_components_above F E v _).1.1 h1) P hv
+  have h2 := ((_root_.GlobalTheory.Mem.Col2.AdComp.prV_zero_int_iff F E v _).1.1 h1) P hv
   rw [map_sub, sub_eq_zero] at h2
   exact h2
 
@@ -85,7 +86,7 @@ theorem bc_prV_eq_one {v : HeightOneSpectrum (𝓞 F)} {x : GL (Fin n) (AfE F E)
     bc (prV (E := E) v) x = 1 := by
   refine Units.ext (Matrix.ext fun i j => ?_)
   have h1 : prV (E := E) v (x.1 i j - (1 : Matrix (Fin n) (Fin n) (AfE F E)) i j) = 0 := by
-    refine (GlobalTheory.T.placeProjection_zero_integral_iff_components_above F E v _).1.2 fun w hw => ?_
+    refine (_root_.GlobalTheory.Mem.Col2.AdComp.prV_zero_int_iff F E v _).1.2 fun w hw => ?_
     rw [map_sub, h w hw, Matrix.one_apply]
     split_ifs <;> simp only [map_one, map_zero, sub_self]
   rw [map_sub, sub_eq_zero] at h1

@@ -4,17 +4,20 @@ public import Formalism.LocalToGlobal.IndefiniteReal.ScalarOnPartsFull
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsIdemOfAlgebraMap
 public import Formalism.SatakeDualWeyl.StatementE
 public import Formalism.SatakeDualWeyl.StatementG
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsUniqueIdeleOfLinearEquivQuotientLocal
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AdelicUnitarySupportedAtFinitePlaceEqLocalUnitarStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsComplexConjIsometryInertCompletionStatement
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsDvrFrobeniusLift
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsRingEquivTensorInertAdicCompletionStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsInertAtOfUniqueUnramifiedPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalMatrixDoubleCosetOfElementaryDivisorsStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemIntegralFiniteAdelesTensorIffLocalOrdersStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.StabilisesCompletedLatticeIffLocalMatrixIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnitaryMemIntegralUnitaryDoubleCosetOfGLnDoubleCStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AdelicUnitarySupportedAtFinitePlaceEqLocalUnitar
+public import Mathlib.RingTheory.Unramified.Basic
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.Signature
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsComplexConjIsometryInertCompletion
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.FiniteResidueFieldAdicCompletionIntegers
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsRingEquivTensorInertAdicCompletion
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsInertAtOfUniqueUnramifiedPrime
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalMatrixDoubleCosetOfElementaryDivisors
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemIntegralFiniteAdelesTensorIffLocalOrders
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.StabilisesCompletedLatticeIffLocalMatrixIntegral
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnitaryMemIntegralUnitaryDoubleCosetOfGLnDoubleC
 public import Formalism.LocalToGlobal.GlobalTheory.GL5.FamilyMassVolumeIdentityOfClassDecomp
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsUniqueIdeleOfLinearEquivQuotientLocal
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsDvrFrobeniusLift
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Cartan
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.FiniteCosetsInDoset
 import Formalism.SatakeDualWeyl.KpqSubgroupCompact
@@ -256,8 +259,8 @@ theorem inert_of_idem {v : HeightOneSpectrum (𝓞 (maximalRealSubfield E))} {P 
     (hu : ∃ x : 𝓞 (maximalRealSubfield E), ∃ y : 𝓞 E,
       (y : E) = algebraMap (maximalRealSubfield E) E (x : maximalRealSubfield E) ∧ y ∈ P.asIdeal ∧ y ∉ P.asIdeal ^ 2) :
     IsInertAt (maximalRealSubfield E) E v P := by
-  refine GlobalTheory.T.isInertAt_of_unique_unramified_prime E v P (fun x hx => (hP x hx).trans (not_congr ?_)) hu
-  rw [GlobalTheory.T.mem_integralFiniteAdelesTensor_iff_localOrders, ← locEmb_mem_locOrder_iff, ← mem_ordAt_iff]
+  refine _root_.GlobalTheory.SelfDualGenus.isInertAt_of_unique_unramified E v P (fun x hx => (hP x hx).trans (not_congr ?_)) hu
+  rw [_root_.GlobalTheory.PlaceComp.IntLocal.mem_intA_iff, ← locEmb_mem_locOrder_iff, ← mem_ordAt_iff]
   constructor
   · intro h
     have := h v
@@ -290,10 +293,10 @@ theorem core (hc : CMData (maximalRealSubfield E) E) (V : HSpace E)
       ∃ a b, (IsFin hc V a ∧ Stab hc V a) ∧ Supp hc V e a ∧ (IsFin hc V b ∧ Stab hc V b) ∧ Supp hc V e b ∧
         g' = a * g * b := by
   have hur := unramified hc
-  obtain ⟨σ, π, hσE, hσσ, hσv, hσx, hσπ, hπ⟩ := GlobalTheory.T.exists_complexConj_isometry_inert_completion E v P hin
-  obtain ⟨ψ, hψE, hψσ, hψO⟩ := GlobalTheory.T.exists_ringEquiv_tensor_inert_adicCompletion E v P hin σ hσE hσv
+  obtain ⟨σ, π, hσE, hσσ, hσv, hσx, hσπ, hπ⟩ := _root_.GlobalTheory.InertConj.exists_conj_completion E v P hin
+  obtain ⟨ψ, hψE, hψσ, hψO⟩ := _root_.GlobalTheory.InertCompletion.exists_ringEquiv_completion E v P hin σ hσE hσv
   obtain ⟨h, hfr, hon⟩ := exists_orthonormal hc V v
-  obtain ⟨s1, s2, s3⟩ := GlobalTheory.T.adelicUnitary_supportedAtFinitePlace_eq_localUnitary _ E hc V v e he
+  obtain ⟨s1, s2, s3⟩ := _root_.GlobalTheory.SuppLocal.supp_local _ E hc V v e he
   let S : Subgroup (HA (AF (maximalRealSubfield E)) hc.sig V.gram) :=
     MonoidHom.ker (G := HA (AF (maximalRealSubfield E)) hc.sig V.gram)
       ((bc (infP (maximalRealSubfield E) E)).comp (HR (AF (maximalRealSubfield E)) hc.sig V.gram).subtype) ⊓
@@ -332,14 +335,14 @@ theorem core (hc : CMData (maximalRealSubfield E) E) (V : HSpace E)
     group
   have hlev : ∀ k ∈ S, (IsFin hc V k ∧ Stab hc V k) ↔ φ k ∈ GLint (Fin V.rank) (Ov E P) := fun k hk => by
     have h1 := (s1 k).1 ((hS k).2 hk)
-    rw [and_iff_right h1.1, GlobalTheory.T.stabilises_completedLattice_iff_localMatrix_integral _ E hc V v h hfr k h1.2]
+    rw [and_iff_right h1.1, _root_.GlobalTheory.PlaceComp.StabLoc.stab_iff _ E hc V v h hfr k h1.2]
     exact bc_mem_range_iff ψ' hO _
   have hdiv : ∀ (ϖ : 𝓞 E) (d : Fin V.rank → ℤ) k, ϖ ∉ P.asIdeal ^ 2 → DivG hc V e (ϖ : E) d k →
       ∃ k₁ ∈ GLint (Fin V.rank) (Ov E P), ∃ k₂ ∈ GLint (Fin V.rank) (Ov E P),
         (φ k).1 = k₁.1 * Matrix.diagonal (fun i => algebraMap E (P.adicCompletion E) ϖ ^ d i) * k₂.1 := by
     intro ϖ d k h2 hd
     have h0 : (ϖ : E) ≠ 0 := fun h0 => h2 (by rw [RingOfIntegers.coe_eq_zero_iff.1 h0]; exact zero_mem _)
-    obtain ⟨k₁, hk₁, k₂, hk₂, ek⟩ := GlobalTheory.T.localMatrix_doubleCoset_of_elementaryDivisors _ E hc V v e h ϖ d k he hfr h0 hd
+    obtain ⟨k₁, hk₁, k₂, hk₂, ek⟩ := _root_.GlobalTheory.PlaceDiv.double_coset_of_divG _ E hc V v e h ϖ d k he hfr h0 hd
     refine ⟨bc ψ' k₁, (bc_mem_range_iff ψ' hO _).1 hk₁, bc ψ' k₂, (bc_mem_range_iff ψ' hO _).1 hk₂, ?_⟩
     show (h⁻¹ * locMat hc V v k * h).1.map ψ' = k₁.1.map ψ' * _ * k₂.1.map ψ'
     rw [ek, Matrix.map_mul, Matrix.map_mul, Matrix.diagonal_map (map_zero ψ')]
@@ -355,13 +358,13 @@ theorem core (hc : CMData (maximalRealSubfield E) E) (V : HSpace E)
   refine ⟨fun k hk => hk.1, ?_, exists_reps hlev (Final.GLintComm E P V.rank) hgS, ?_⟩
   · obtain ⟨a, ha, b, hb, e⟩ := inv_mem_GL_dc hσv hσπ hπ (hmem g)
     exact lift_dc hinj hsurj hlev hgS (inv_mem hgS)
-      (GlobalTheory.T.unitary_mem_integralUnitary_doubleCoset_of_GLn_doubleCoset E P σ _ hσσ hσv hσx _ (hmem g) _ (hmem g⁻¹) a ha b hb (by rw [map_inv, e]))
+      (_root_.GlobalTheory.UnitaryDoubleCoset.doubleCoset_unitary_of_GL E P σ _ hσσ hσv hσx _ (hmem g) _ (hmem g⁻¹) a ha b hb (by rw [map_inv, e]))
   · intro ϖ ϖ' d g' h1 h2 h1' h2' hg' hd hd'
     have hv := hval ϖ h1 h2
     obtain ⟨a, ha, b, hb, e⟩ := same_dc (fun h0 => by rw [h0, map_zero] at hv; exact WithZero.exp_ne_zero hv.symm)
       ((hval ϖ' h1' h2').trans hv.symm) d (hdiv ϖ d g h2 hd) (hdiv ϖ' d g' h2' hd')
     exact lift_dc hinj hsurj hlev hgS hg'
-      (GlobalTheory.T.unitary_mem_integralUnitary_doubleCoset_of_GLn_doubleCoset E P σ _ hσσ hσv hσx _ (hmem g) _ (hmem g') a ha b hb e)
+      (_root_.GlobalTheory.UnitaryDoubleCoset.doubleCoset_unitary_of_GL E P σ _ hσσ hσv hσx _ (hmem g) _ (hmem g') a ha b hb e)
 
 end CM
 

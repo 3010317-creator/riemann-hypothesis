@@ -4,7 +4,8 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.HermSysHypOn
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffLeOfBounded
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfFrameNormEqZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinSubstLinSubst
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogEvalSubLeBlockSphereMeanMultidegreeStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PointHeight
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogEvalSubLeBlockSphereMeanMultidegree
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -128,7 +129,7 @@ theorem norm_eval_le {B N : ℕ} {a : Fin B → ℕ} {A : Matrix (Fin N) (Fin N)
   by_cases hz : eval p h = 0
   · rw [hz, norm_zero, mul_zero]
     exact mul_nonneg (Real.exp_pos _).le (pow_nonneg hR _)
-  · have harch := GlobalTheory.T.log_eval_sub_le_blockSphereMean_multidegree B N a A h hA hh p hp hz
+  · have harch := _root_.GlobalTheory.LelongBlocksMulti.log_eval_sub_le_blockSphereMean B N a A h hA hh p hp hz
     have hle : ‖eval p h‖ ≤ Real.exp (blockSphereMean B N (linSubst A h) +
         (∑ i, (a i : ℝ)) * (harmonic (N - 1) : ℝ) / 2) := by
       rw [← Real.exp_log (norm_pos_iff.2 hz)]

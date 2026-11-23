@@ -5,11 +5,12 @@ public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSin
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsKerIffMinors
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.EventuallySectionAndRelAmplePowDivStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsHomogeneousVolumeVeryAmpleProductsStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PolarizedAbelianAmpleExistsPositiveVolumeStatement
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SectionsGrowthBasicPropertiesAbelianVarietyStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.EventuallySectionAndRelAmplePowDiv
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsHomogeneousVolumeVeryAmpleProducts
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PolarizedAbelianAmpleExistsPositiveVolume
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ExistsFinAffineCover
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SectionsGrowthBasicPropertiesAbelianVariety
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -355,14 +356,14 @@ theorem exists_vol_linComb_poly : Out.Laws → Out.Laws2 → ∀ (K : Type) [Fie
   intro h₁ h₂ K _ _ P I _ φ
   have := P.isAb.proper
   have h := LB.isLB_linComb P.isLB φ
-  have vb := fun x => GlobalTheory.T.sectionsGrowth_basic_properties_abelianVariety K P (LB.LinComb P.L φ x) P.g (h x)
+  have vb := fun x => _root_.GlobalTheory.VolBasic.vol_basic K P (LB.LinComb P.L φ x) P.g (h x)
   refine exists_poly (V := fun x δ => Vol P.A.hom (LB.LinComb P.L φ x) P.g δ)
     (Am := fun x => Out.RelAmple P.A (LB.LinComb P.L φ x))
     (VA := fun x => ∃ (m : ℕ) (th : Fin (m + 1) → (LB.LinComb P.L φ x).Sec), VAmp P.A.hom _ th)
     (Eff := fun x => Nontrivial (LB.LinComb P.L φ x).Sec)
     (fun x y hx => ?_) (fun x hx => ?_) (fun x => (vb x).2.1) (fun x x' δ δ' he => ?_) (fun x δ a ha hδ => ?_)
-    (fun x hx => (GlobalTheory.T.polarizedAbelian_ample_exists_positive_volume h₁ h₂ K P _ (h x) hx).imp fun _ h => h.2) (fun κ _ w hw => ?_)
-  · filter_upwards [GlobalTheory.T.eventually_section_and_relAmple_pow_div K P _ _ (h x) (h y) hx] with t ht
+    (fun x hx => (_root_.GlobalTheory.VolEx.exists_vol h₁ h₂ K P _ (h x) hx).imp fun _ h => h.2) (fun κ _ w hw => ?_)
+  · filter_upwards [_root_.GlobalTheory.AmpleDominates.eventually_sec_and_relAmple K P _ _ (h x) (h y) hx] with t ht
     have hl : (LB.div (lbPow (LB.LinComb P.L φ x) t) (LB.LinComb P.L φ y)).IsLB :=
       LB.isLB_div (LB.isLB_linComb (h x) _ _) (h y)
     have iso := lbIso_div_pow P.isLB φ x y t
@@ -375,10 +376,10 @@ theorem exists_vol_linComb_poly : Out.Laws → Out.Laws2 → ∀ (K : Type) [Fie
   · obtain ⟨s, hs⟩ := (TrivLocus.nontrivial_sec_iff _).1 (PrimVan.nontrivial_sec_of_lbIso (h _)
       (LB.isLB_div (h x') (h x)) (lbIso_div P.isLB φ x' x).symm he)
     exact ((vb x).2.2.2.2.2 _ s (h x') hs).2 δ δ'
-  · exact (GlobalTheory.T.sectionsGrowth_basic_properties_abelianVariety K P _ P.g (LB.isLB_linComb (h x) _ _)).2.2.1 _ _ (h _) (lbIso_pow P.isLB φ x a)
+  · exact (_root_.GlobalTheory.VolBasic.vol_basic K P _ P.g (LB.isLB_linComb (h x) _ _)).2.2.1 _ _ (h _) (lbIso_pow P.isLB φ x a)
       ((vb x).2.2.2.1 a δ ha hδ)
   · let e := (Fintype.equivFin (Option κ)).symm
-    obtain ⟨Φ, hΦ, hV⟩ := GlobalTheory.T.exists_homogeneous_volume_veryAmple_products h₁ h₂ K P I φ _ (fun k => w (e k)) Fintype.card_pos fun k => hw (e k)
+    obtain ⟨Φ, hΦ, hV⟩ := _root_.GlobalTheory.VolPoly.exists_homogeneous_vol h₁ h₂ K P I φ _ (fun k => w (e k)) Fintype.card_pos fun k => hw (e k)
     refine ⟨MvPolynomial.rename e Φ, hΦ.rename_isHomogeneous, fun n hn => ?_⟩
     have := hV (fun k => n (e k)) fun k => hn (e k)
     have e₁ : ∑ k, (n k : ℤ) • w k = fun i => ∑ k, (n (e k) : ℤ) * w (e k) i := by

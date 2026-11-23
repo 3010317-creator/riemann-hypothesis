@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsTestRep
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleHermitianPairStructureFactsStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleHermitianPairStructureFacts
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,7 +61,7 @@ theorem dual_cinvOK_small : ∀ (F E : Type) [NontriviallyNormedField F] [Nontri
   intro F E _ _ _ _ _ A ψ hψ V hV
   classical
   haveI : ContinuousSMul F A.K := IsModuleTopology.toContinuousSMul F A.K
-  obtain ⟨-, -, hnd, -, -, -, -, -, -, hOpen, -, R, hR⟩ := GlobalTheory.T.etaleHermitianPair_structure_facts F E A
+  obtain ⟨-, -, hnd, -, -, -, -, -, -, hOpen, -, R, hR⟩ := _root_.GlobalTheory.JR.EtFacts.main F E A
   have h0 : (0 : A.K) ∈ A.OK := by rw [← hR]; exact R.zero_mem
   let b := Module.finBasis F A.K
   let d := (Algebra.traceForm F A.K).dualBasis hnd b

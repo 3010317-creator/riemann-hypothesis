@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ContinuousGaussSp
 public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralHermitianNormFibreDilationStatement
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.IsFibreFamilyEqAtContinuityPoint
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.PerpendicularEmbedding
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralHermitianNormFibreDilation
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MeasurePreservingGlue
+public import Mathlib.MeasureTheory.Integral.Pi
+import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.IsFibreFamilyEqAtContinuityPoint
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -19,7 +21,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.MeasureTheory.Integral.Pi
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -218,12 +219,12 @@ theorem gauss_fibre : ∀ (P Q : ℕ) (fib : ℝ → Measure (Sp P Q)) (β d : �
     ((continuousAt_id.pow _).div continuousAt_id one_ne_zero) (by simp)
     (fun a b hab h0 => shell h a b hab h0) (fun t ht => ?_) (fun t ht ht1 => ?_)
   · have ht0 : 0 < t := one_pos.trans_le ht
-    rw [GlobalTheory.T.lintegral_hermitianNormFibre_dilation P Q fib β t h hβ ht0 _ hg]
+    rw [_root_.GlobalTheory.FibreScaling.lintegral_fibre_scale P Q fib β t h hβ ht0 _ hg]
     gcongr with y
     rw [gaussSp_smul, Real.sq_sqrt ht0.le, gaussSp]
     have : 0 ≤ ∑ i, ‖y i‖ ^ 2 := by positivity
     exact Real.exp_le_exp.2 (by nlinarith)
-  · rw [GlobalTheory.T.lintegral_hermitianNormFibre_dilation P Q fib β t h hβ ht _ hg]
+  · rw [_root_.GlobalTheory.FibreScaling.lintegral_fibre_scale P Q fib β t h hβ ht _ hg]
     gcongr with y
     rw [gaussSp_smul, Real.sq_sqrt ht.le, gaussSp]
     have : 0 ≤ ∑ i, ‖y i‖ ^ 2 := by positivity

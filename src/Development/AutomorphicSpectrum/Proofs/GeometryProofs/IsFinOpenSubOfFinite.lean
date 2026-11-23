@@ -1,7 +1,9 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUnitFormLocalizationEtaleNbhd
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteOpenLeClosedFibreStatement
+public import Mathlib.AlgebraicGeometry.Morphisms.Finite
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteOpenLeClosedFibre
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,7 +60,7 @@ theorem mem_of_finite_of_closedFibre {R : Type} [CommRing R] [IsLocalRing R]
   haveI := hY
   haveI : IsIso (⊤ : Y.left.Opens).ι := by rw [← Scheme.topIso_hom]; infer_instance
   have hfin : IsFinite ((⊤ : Y.left.Opens).ι ≫ Y.hom) := inferInstance
-  have hle := GlobalTheory.T.finite_open_le_closed_fibre R Y.left Y.hom ⊤ (h.left ⁻¹ᵁ W) hfin (fun x hx => by
+  have hle := _root_.GlobalTheory.CompanionTheory.Ar.BT.isFinite_open_le_of_closedFibre_le R Y.left Y.hom ⊤ (h.left ⁻¹ᵁ W) hfin (fun x hx => by
     apply hW
     have hw : h.left ≫ X.hom = Y.hom := Over.w h
     have hc := Scheme.Hom.comp_apply h.left X.hom x

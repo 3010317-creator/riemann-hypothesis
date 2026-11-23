@@ -1,12 +1,14 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.JacobianTraceQuotients.TraceQuot
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsTorusEigenformOfCompactTorusEigenvectorStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsSubquotientDetRepParInd
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsTorusEigenformOfCompactTorusEigenvector
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TameParahoricRepSplitsAsProduct
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.JacobianTraceQuotients.QuotEmb
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.JacobianTraceQuotients.SubQuot
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.LocalDoubleCosets.OfSupportHolds
-import Development.AutomorphicSpectrum.Proofs.GlobalProofs.BernsteinZelevinskyFinitenessStatement
+import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
+import Development.AutomorphicSpectrum.Proofs.GlobalProofs.BernsteinZelevinskyFiniteness
 import GroundTheory.AutomorphicForms.TensorProductTheorem.Irreducible
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -81,10 +83,10 @@ theorem UpperTheory.Gal.Join.expSub :
     rw [← map_prod, Finset.univ_prod_mulSingle]
   have hωs : ∀ i, IsSmoothChar (ω i) := fun i => hμ.comp _ (continuous_mulSingle_units i)
   have hlen : HasFiniteLength (jacB π) := by
-    have hj := (GlobalTheory.T.bernstein_zelevinsky_finiteness k).2.1 (Fin n) (Fin n) (fun _ => Unit) (points (Fin n)) V π hsm
+    have hj := (_root_.GlobalTheory.CompanionTheory.Published.bernsteinZelevinskyFiniteness k).2.1 (Fin n) (Fin n) (fun _ => Unit) (points (Fin n)) V π hsm
       (hasFiniteLength_of_isIrreducible hirr)
     exact (hasFiniteLength_comp_iff _ _ (leviTorus k (Fin n)).surjective).mpr hj
-  obtain ⟨ψ, l, hl0, hl, hψω⟩ := GlobalTheory.T.exists_torusEigenform_of_compactTorus_eigenvector k n _ (jacB π) y ω hJs hlen hωs hy0
+  obtain ⟨ψ, l, hl0, hl, hψω⟩ := _root_.GlobalTheory.TorusEigenform.main k n _ (jacB π) y ω hJs hlen hωs hy0
     (fun t _ => by rw [hy t, hωμ])
   have hψs : ∀ i, IsSmoothChar (ψ i) := fun i =>
     GlobalTheory.TameIwahori.isSmoothChar_of_eq_on_units (hωs i) (hψω i)

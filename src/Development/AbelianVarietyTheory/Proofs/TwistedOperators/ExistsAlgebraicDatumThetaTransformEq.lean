@@ -4,9 +4,10 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaEqB
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilDatumTransportAdelicSchwartzThetaTrans
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNegOneOfStandardTraceAdelicAddChar
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsRationalDarbouxOrientedPairTransportStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockPolynomialTmulSchwartzBruhatMemAlgebraicDataStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockPolynomialTmulSchwartzBruhatMemAlgebraicData
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FockVacuumEquationsTransferSchroedingerDatumStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemGaussianVacuaSpanOfVacuumEquationsStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsGaussEqZero
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemGaussianVacuaSpanOfVacuumEquations
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,10 +78,10 @@ theorem vacDatum_exists : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ) (θ : In
   obtain ⟨Φ, hΦ, hΦf⟩ := (hon f).1 hf.1
   have hD : IsDatum M ψ cS Φ f := (hiff Φ f).2 ⟨hΦ, hΦf⟩
   have hG := GlobalTheory.T.fockVacuumEquations_transfer_schroedingerDatum D ψ θ hθ ε S X A B e Bs hBs hψ Vs Ws r s r' s' hJ hJW hV hW hcart M hM cS hcS f Φ hf hD
-  have hsp := GlobalTheory.T.mem_gaussianVacuaSpan_of_vacuumEquations M Bs.ψ Bs.emb hBs.std Φ hΦ hG
+  have hsp := _root_.GlobalTheory.VacFactor.mem_span_of_isGaussEq M Bs.ψ Bs.emb hBs.std Φ hΦ hG
   refine ⟨Φ, Submodule.span_le.2 ?_ hsp, hD⟩
   rintro _ ⟨g, h, hg, hh, rfl⟩
-  exact GlobalTheory.T.fockPolynomial_tmul_schwartzBruhat_mem_algebraicData M Bs.ψ Bs.emb hM g hg h hh
+  exact _root_.GlobalTheory.SquareAgree.pureA_mem_algD M Bs.ψ Bs.emb hM g hg h hh
 
 end GlobalTheory.VacDatum
 

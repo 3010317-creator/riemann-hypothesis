@@ -2,13 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ToAStRep
 public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FontaineFormalismOfRegular
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsCombinationNormNeZeroOfLinearIndependentAlStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsFieldCombinationNormNeZeroStatement
+public import Mathlib.RingTheory.Norm.Defs
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsCombinationNormNeZeroOfLinearIndependentAl
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsFieldCombinationNormNeZero
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FinrankDpstUnramifiedLeDimRepresentation
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.KummerNotFrac
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NormTensorProductMapLeftStatement
+public import Mathlib.RingTheory.TensorProduct.Maps
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NormTensorProductMapLeft
+public import Mathlib.LinearAlgebra.Charpoly.BaseChange
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -21,7 +24,6 @@ import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.LinearAlgebra.Charpoly.BaseChange
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -196,7 +198,7 @@ theorem GlobalTheory.Pst.UnitLetter.exists_unit_Dpst : ∀ {l : ℕ} [Fact l.Pri
     rw [Finset.coe_univ] at this
     exact linearIndepOn_univ_iff.mp this
   have hfin : finrank (Bst P) (Bst P ⊗[ℚ_[l]] ↥L.1) = d := Module.finrank_baseChange
-  obtain ⟨a, ha⟩ := GlobalTheory.T.exists_field_coeff_norm_sum_smul_ne_zero (k := ↥(MaximalUnramifiedExtension l)) w (GlobalTheory.T.exists_norm_sum_smul_ne_zero_of_linearIndependent hfin w hB)
+  obtain ⟨a, ha⟩ := _root_.GlobalTheory.exists_field_combination_norm_ne_zero (k := ↥(MaximalUnramifiedExtension l)) w (_root_.GlobalTheory.exists_combination_norm_ne_zero_of_linearIndependent hfin w hB)
   let ys := ∑ i, mulV P ↥L.1 (Fin 1 → ↥L.1) (a i) (y i)
   have hys : ys ∈ Dpst P ρm := Submodule.sum_mem _ fun i _ => mulV_mem_Dpst P ρm (a i) (y i) (hyD i)
   have hysA : toA P L ys = ∑ i, algebraMap ↥(MaximalUnramifiedExtension l) (Bst P) (a i) • w i := by
@@ -215,7 +217,7 @@ theorem GlobalTheory.Pst.UnitLetter.exists_unit_Dpst : ∀ {l : ℕ} [Fact l.Pri
     have hfix := hK₂ g0 (GK_le (K' := supExt K K₂) le_sup_right g.2)
     have h1 : Algebra.norm (Bst P) (toA P L (stRep P ρm g0 ys)) = Algebra.norm (Bst P) (toA P L ys) := by
       rw [hfix]
-    rw [toA_stRep ρm χ hm, map_mul, GlobalTheory.T.norm_tensorProduct_map_id_right, norm_one_tmul] at h1
+    rw [toA_stRep ρm χ hm, map_mul, _root_.GlobalTheory.norm_tensorProduct_map_left, norm_one_tmul] at h1
     have hν : Algebra.norm ℚ_[l] (χ g0) ≠ 0 := Algebra.norm_ne_zero_iff.mpr (hχ g0)
     refine ⟨(Algebra.norm ℚ_[l] (χ g0))⁻¹, ?_⟩
     change actSt P ((g0 : ↥(GK K)) : GQ l) _ = _

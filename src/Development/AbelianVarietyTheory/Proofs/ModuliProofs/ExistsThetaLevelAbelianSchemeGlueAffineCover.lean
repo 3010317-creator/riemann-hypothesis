@@ -5,10 +5,10 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDesc
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.PolBaseChangeOfRelAmpleLocal
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.SurjectiveAppOfIsAbelianScheme
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsGenOfInvariant
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaLevelAbelianSchemeGlueOpenCoverStatement
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaLevelAbelianSchemePullback
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaLevelAbelianSchemeGlueOpenCover
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SurjectiveAppTopPullbackSndOfApp
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelIsoUniqueOfDenseCommonFibresStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelIsoUniqueOfDenseCommonFibres
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaLevelAbelianSchemePullback
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -222,7 +222,7 @@ theorem unique_affine {R : Type} [CommRing R] [_root_.IsReduced R] {r : Sp R ⟶
   obtain ⟨ψ, e, w⟩ : ∃ ψ : u.A.left ⟶ u.A.left, ψ ≫ φ = φ' ∧ ψ ≫ u.A.hom = u.A.hom :=
     ⟨a.1.lift φ' u.A.hom a'.1.w, a.1.lift_fst _ _ _, a.1.lift_snd _ _ _⟩
   subst e
-  have H := (GlobalTheory.T.thetaLevel_iso_unique_of_dense_common_fibres h₁ h₂ o g N' J b m R β u u hm hd hN (fun p => subset_closure (by
+  have H := (_root_.GlobalTheory.TUniq.iso_unique_of_dense h₁ h₂ o g N' J b m R β u u hm hd hN (fun p => subset_closure (by
     obtain ⟨v, hv⟩ := GlobalTheory.tObj_pull o g _ J b _ _ _ _ ((Sp R).fromSpecResidueField p) u rfl
     exact ⟨(Sp R).residueField p, inferInstance, (Sp R).fromSpecResidueField p, v,
       ((Sp R).range_fromSpecResidueField p).ge rfl, hv, hv⟩))).2 (𝟙 _) ψ (IsMap.id u).1
@@ -308,7 +308,7 @@ theorem exists_glue : Out.Laws → Out.Laws2 → ∀ (o : Type) [CommRing o] (g 
   have e₂ : ∀ i, (e i).inv ≫ x i = (U i).ι := fun i => (x i).isoOpensRange_inv_comp
   choose t' ht' using fun i => GlobalTheory.tObj_pull o g _ J b _ _ _ ((U i).ι ≫ s) (e i).inv (t i)
     (by rw [← Category.assoc, e₂])
-  obtain ⟨t₀, ht₀⟩ := GlobalTheory.T.exists_thetaLevelAbelianScheme_glue_openCover o g _ J b S s I U t'
+  obtain ⟨t₀, ht₀⟩ := _root_.GlobalTheory.exists_tobj_of_cover o g _ J b S s I U t'
     (top_le_iff.1 fun p _ => TopologicalSpace.Opens.mem_iSup.2 (hc p))
     (fun i j => by
       obtain ⟨u, hu⟩ := GlobalTheory.tObj_pull o g _ J b _ _ _ ((U i ⊓ U j).ι ≫ s) (S.homOfLE inf_le_left) (t' i)

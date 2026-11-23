@@ -6,13 +6,13 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmFiniteA
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsHalfIdem
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLatticeOfAdelicPoint
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InducedTypeThetaGenusOnePermutes
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RationalPointsIntegralPointsMembership
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaLatticeAgreeOfTrivialAtPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaSpaceSelfDualPairAtMostLineStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaTranslationIntertwinerUnitaryStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaLatticeAgreeOfTrivialAtPrime
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaSpaceSelfDualPairAtMostLine
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaTranslationIntertwinerUnitary
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitaryHeckeCharacterValues
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.WeilOperatorConjHeisenbergMovedLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.WeilRepresentationVacuumSignInertPlacesStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.WeilOperatorConjHeisenbergMovedLattice
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.WeilRepresentationVacuumSignInertPlaces
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RationalPointsIntegralPointsMembership
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -444,9 +444,9 @@ theorem lattice_facts (hc : Crv D cc δ) {e0 : VC D N N' → ℂ}
   have k0 : KLat D (tor0 D cc δ) (La0 D (tor0 D cc δ) N N') :=
     Or.inr ⟨_, _, sd_of_moves (moves_one D N), sd_of_moves (moves_one D N'), rfl⟩
   have k1 : KLat D (tor0 D cc δ) (La D (tor0 D cc δ) L L') := Or.inr ⟨_, _, sd_of_moves hL, sd_of_moves hL', rfl⟩
-  obtain ⟨-, hTh, -, hII⟩ := GlobalTheory.T.intertwinerUnitary_all D cc δ hc N N' _ _ k0 k1 e0 he
-  have w0 := (GlobalTheory.T.theta_space_selfDual_pair_at_most_line D hg1 cc δ hc N N' _ k0).2.1
-  have w1 := (GlobalTheory.T.theta_space_selfDual_pair_at_most_line D hg1 cc δ hc N N' _ k1).2.1
+  obtain ⟨-, hTh, -, hII⟩ := _root_.GlobalTheory.theta_translation_intertwiner_unitary D cc δ hc N N' _ _ k0 k1 e0 he
+  have w0 := (_root_.GlobalTheory.ThetaLine.theta_line D hg1 cc δ hc N N' _ k0).2.1
+  have w1 := (_root_.GlobalTheory.ThetaLine.theta_line D hg1 cc δ hc N N' _ k1).2.1
   have hne : Iop D (tor0 D cc δ) (La0 D (tor0 D cc δ) N N') (La D (tor0 D cc δ) L L') e0 ≠ 0 := by
     intro h; rw [h, Iop_zero] at hII; exact h0 hII.symm
   have hfix : ∀ x ∈ La D (tor0 D cc δ) L L', Wl (tor0 D cc δ) x
@@ -492,14 +492,14 @@ theorem scalar_mul (hc : Crv D cc δ) {e0 : VC D N N' → ℂ}
         Nr q (La0 D (tor0 D cc δ) N N') (La D (tor0 D cc δ) Li Li')) := by
     intro q hq
     by_cases hin : InertQ D q
-    · have u := GlobalTheory.T.thetaLattice_agree_of_trivialAt_prime D hg1 cc δ hc.1.1 N N' q 1 gs 1 gs' _ Ls _ Ls' (hs q hq hin) (hs' q hq hin)
+    · have u := _root_.GlobalTheory.NormSum.La_agree_of_trivAt D hg1 cc δ hc.1.1 N N' q 1 gs 1 gs' _ Ls _ Ls' (hs q hq hin) (hs' q hq hin)
         (moves_one D N) (moves_one D N') (by rwa [one_mul]) (by rwa [one_mul])
-      have v := GlobalTheory.T.thetaLattice_agree_of_trivialAt_prime D hg1 cc δ hc.1.1 N N' q gi gs gi' gs' Li L Li' L' (hs q hq hin) (hs' q hq hin)
+      have v := _root_.GlobalTheory.NormSum.La_agree_of_trivAt D hg1 cc δ hc.1.1 N N' q gi gs gi' gs' Li L Li' L' (hs q hq hin) (hs' q hq hin)
         hLi hLi' (by rwa [h2]) (by rwa [h2'])
       exact Or.inl ⟨u.2, u.1, v.2, v.1⟩
-    · have u := GlobalTheory.T.thetaLattice_agree_of_trivialAt_prime D hg1 cc δ hc.1.1 N N' q 1 gi 1 gi' _ Li _ Li' (hi q hq hin) (hi' q hq hin)
+    · have u := _root_.GlobalTheory.NormSum.La_agree_of_trivAt D hg1 cc δ hc.1.1 N N' q 1 gi 1 gi' _ Li _ Li' (hi q hq hin) (hi' q hq hin)
         (moves_one D N) (moves_one D N') (by rwa [one_mul]) (by rwa [one_mul])
-      have v := GlobalTheory.T.thetaLattice_agree_of_trivialAt_prime D hg1 cc δ hc.1.1 N N' q gs gi gs' gi' Ls L Ls' L' (hi q hq hin) (hi' q hq hin)
+      have v := _root_.GlobalTheory.NormSum.La_agree_of_trivAt D hg1 cc δ hc.1.1 N N' q gs gi gs' gi' Ls L Ls' L' (hi q hq hin) (hi' q hq hin)
         hLs hLs' (by rwa [h1]) (by rwa [h1'])
       exact Or.inr ⟨v.1, v.2, u.2, u.1⟩
   have hidx := index_mul hloc
@@ -510,7 +510,7 @@ theorem scalar_mul (hc : Crv D cc δ) {e0 : VC D N N' → ℂ}
     have hm := AddSubgroup.nsmul_relIndex_mem (La D (tor0 D cc δ) Li Li') hy
     rw [← Wl_apply, ← Wl_apply, ← Module.End.mul_apply, ← i3 _ hm _ (hxi j), add_comm, i3 _ (hxi j) _ hm,
       Module.End.mul_apply, a6 _ (AddSubgroup.nsmul_mem _ hy _)]
-  have hmove := fun j => GlobalTheory.T.weilOperator_conj_heisenberg_moved_lattice D hg1 cc δ hc.1.1 N N' e0 W gs gi gs' gi' Li L Li' L' hLi hLi'
+  have hmove := fun j => _root_.GlobalTheory.WeilEquiv.om_wd_moved D hg1 cc δ hc.1.1 N N' e0 W gs gi gs' gi' Li L Li' L' hLi hLi'
     (by rwa [h1]) (by rwa [h1']) (xi j) (hxi j) e0 heT
   choose y hy hyW using hmove
   have hrep : ∀ j, ∃ u ∈ La D (tor0 D cc δ) L L', Wl (tor0 D cc δ) (xs j) e0 = Wl (tor0 D cc δ) u e0 := by
@@ -572,7 +572,7 @@ theorem scalar_formula (hc : Crv D cc δ) (hev : Even (N * N')) {e0 : VC D N N' 
   exact ⟨_, scalar_mul hc he W (cutG_mul e h1 h2 g).1 (cutG_mul e h1 h2 g).2 (cutG_mul e h1 h2 g').1
     (cutG_mul e h1 h2 g').2 (hs g) (hs g') (hi g) (hi g') hL hL' hLs hLs' hLi hLi' hO
     (W.split _ _ x x' Ls Ls' (hs g) (hs g') (fun q hq h => ⟨hx q hq h, hx' q hq h⟩) hd hd' hLs hLs')
-    (GlobalTheory.T.weilRepresentation_vacuum_sign_inert_places D cc δ hc N N' hev e0 he W _ _ Li Li' (hi g) (hi g') hLi hLi')⟩
+    (_root_.GlobalTheory.InertSign.vacuum_inert D cc δ hc N N' hev e0 he W _ _ Li Li' (hi g) (hi g') hLi hLi')⟩
 
 theorem exists_trivial_inert {e : AE D} (h1 : e * e = e) (h2 : sgA D e = e)
     (h3 : ∀ q : ℕ, q.Prime → (InertQ D q → ZeroAt D q e) ∧ (¬ InertQ D q → ZeroAt D q (1 - e)))

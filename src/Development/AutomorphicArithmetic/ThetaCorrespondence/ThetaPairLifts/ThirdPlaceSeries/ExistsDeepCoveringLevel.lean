@@ -3,8 +3,11 @@ module
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.HodgeBundleWeights.ToKnownTheoremsOf
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LiftLambdaBound
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeepExistenceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGoodCoverOverSizedFieldStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings
+public import Development.AbelianVarietyTheory.PublishedTheorems.PublishedFoundations.NonemptyAlgHomOfIsRayOfDvd
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGoodCoverOverSizedField
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.HostN
+public import Development.AbelianVarietyTheory.Definitions.Divisors.QuoIff
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -37,7 +40,6 @@ import Mathlib.Tactic.NormNum.NatSqrt
 import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.QuoIff
 
 @[expose] public section
 
@@ -55,7 +57,7 @@ theorem exists_deep_covering_level_alt (hP : _root_.GlobalTheory.CovTop.Publishe
   obtain ⟨C, hC, x0, h⟩ := h
   refine ⟨C, hC, x0, fun x hx hle ι p hp i hi => ?_⟩
   have hN := h x hx hle ι p hp i
-  obtain ⟨Y, hY⟩ := GlobalTheory.T.exists_good_cover_over_sized_field hP.p8 (Fm.D x ι) p.T.toCore p.fw.laws.pins ((i : ℕ) + 1) ⟨by omega, i.isLt⟩ hN.split
+  obtain ⟨Y, hY⟩ := _root_.GlobalTheory.CovTop.SizedCover.exists_good_sized hP.p8 (Fm.D x ι) p.T.toCore p.fw.laws.pins ((i : ℕ) + 1) ⟨by omega, i.isLt⟩ hN.split
     hN.cop (expL (Fm.L x ι).sc.L)
   refine ⟨Y, (goodCov_iff p i Y).2 (hY.mono (size_le hN ?_))⟩
   exact RecTied.core_size_le p hp.2 (by linarith [hN.big.2.1])

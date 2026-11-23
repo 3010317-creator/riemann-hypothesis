@@ -2,8 +2,13 @@ module
 
 public import ReciprocityTheory.GaloisValuations.Global
 public import Mathlib.NumberTheory.Cyclotomic.Basic
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicPrimePowAutomorphismInertialAtPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteGaloisInertiaLiftsAbsoluteInertiaRatStatement
+public import Mathlib.Algebra.CharP.IntermediateField
+public import Mathlib.FieldTheory.IntermediateField.Adjoin.Defs
+public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
+public import Mathlib.RingTheory.Valuation.ValuationSubring
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicPrimePowAutomorphismInertialAtPrime
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteGaloisInertiaLiftsAbsoluteInertiaRat
+public import Mathlib.NumberTheory.Cyclotomic.Gal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -19,7 +24,6 @@ import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.FieldTheory.Galois.Profinite
 import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.NumberTheory.Chebyshev
-public import Mathlib.NumberTheory.Cyclotomic.Gal
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
@@ -95,8 +99,8 @@ theorem exists_mem_Ine_toZModPow (Ω : Type) [Field Ω] [Algebra ℚ Ω] [IsAlgC
   have hu : (u : ZMod (l ^ k)) = PadicInt.toZModPow k (v : ℤ_[l]) := rfl
   obtain ⟨τ, z, hz, hτz⟩ := exists_aut_pow (K := ℚ) (L := IntermediateField.adjoin ℚ {ζ})
     (cyclotomic.irreducible_rat (Nat.pos_of_neZero (l ^ k))) (ZMod.val_coe_unit_coprime u)
-  obtain ⟨hτ₁, hτ₂⟩ := GlobalTheory.T.cyclotomicPrimePow_automorphism_inertial_at_prime Ω l k A hA ζ hζ τ
-  obtain ⟨σ, hσ, hστ⟩ := GlobalTheory.T.finiteGaloisInertia_lifts_absoluteInertia_rat Ω l A hA (IntermediateField.adjoin ℚ {ζ}) τ hτ₁ hτ₂
+  obtain ⟨hτ₁, hτ₂⟩ := _root_.GlobalTheory.CycInertial.main Ω l k A hA ζ hζ τ
+  obtain ⟨σ, hσ, hστ⟩ := _root_.GlobalTheory.InertiaLift.main Ω l A hA (IntermediateField.adjoin ℚ {ζ}) τ hτ₁ hτ₂
   refine ⟨σ, hσ, ?_⟩
   have hzΩ : IsPrimitiveRoot (z : Ω) (l ^ k) := IsPrimitiveRoot.coe_submonoidClass_iff.mpr hz
 

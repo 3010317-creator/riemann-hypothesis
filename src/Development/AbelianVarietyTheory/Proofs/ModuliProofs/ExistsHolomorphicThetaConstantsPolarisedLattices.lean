@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.GoodClas
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaHolomorphic
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThEqClassicalThetaFunctionValuesStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThEqClassicalThetaFunctionValues
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.UnimodularSymplecticCoordinatesAndLatticeRank
 public import Development.AbelianVarietyTheory.Proofs.ToricGeometry.NegOneZpowFormApplySemicharacter
 import Mathlib.Algebra.Order.Floor.Extended
@@ -88,7 +88,7 @@ theorem exists_holomorphic_thetaConstants_of_family : Out.Laws → Out.Laws2 →
     refine ⟨hdiff, fun l z => ?_⟩
     obtain ⟨y, hy⟩ := (hΛ l).1 l.2
     rw [pow_one, hχ y l hy.symm, ← hy, hfe]
-  have key := T.hasTh_eq_classicalThetaFunction_values hL hL2 hU o g N' J b em t u (Hm bb) χ' (θ bb) lam' hN hAH hth hne
+  have key := _root_.GlobalTheory.ThetaClassical.hasTh_classical hL hL2 hU o g N' J b em t u (Hm bb) χ' (θ bb) lam' hN hAH hth hne
     (fun i => by rw [hpt i, Nat.cast_pow])
   have hx : ∀ a : Ix g (N' ^ 2),
       ∑ i, ((a i).val : ℂ) • (lam' i : Fin g → ℂ) = Q bb (x a) := fun a => by

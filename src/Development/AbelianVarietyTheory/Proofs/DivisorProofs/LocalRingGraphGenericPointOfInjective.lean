@@ -1,12 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsLocModelIsPrimeOf
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardTranscendenceBasisOverConstEqOfAlgEquivStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EssFiniteTypeOfLocalRingOfVarietyPointStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAlgEquivFractionFieldOfLocalRingOfVarietyPStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GraphLocalRingRegularParamsAndDimStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocalRingOfVarietyPointTensorGraphLocalizationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopFormsGraphLocalRingFreelyGeneratedStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CardTranscendenceBasisOverConstEqOfAlgEquiv
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EssFiniteTypeOfLocalRingOfVarietyPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAlgEquivFractionFieldOfLocalRingOfVarietyP
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocalization
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GraphLocalRingRegularParamsAndDim
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocalRingOfVarietyPointTensorGraphLocalization
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TopFormsGraphLocalRingFreelyGenerated
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -80,15 +81,15 @@ theorem localRing_graph_of_injective : ∀ {K κ κ' L : Type} [Field K] [Field 
       dForm (algebraMap ℂ L) (Fin.append (fun i => algebraMap (K ⊗[ℂ] κ') L (1 ⊗ₜ τ' i))
         (fun i => algebraMap (K ⊗[ℂ] κ') L (x i ⊗ₜ 1))) = (q : L) • dForm (algebraMap ℂ L) (fun i => (y i : L)) := by
   intro K κ κ' L _ _ _ _ _ _ _ _ _ _ _ n k k' x τ' R π ρ hx hτ' hz hπc hπf hπi hRf hR hκ' hk
-  obtain ⟨e, he⟩ := GlobalTheory.T.exists_algEquiv_fractionField_of_localRingOfVarietyPoint R π hR hπc hπf hπi
+  obtain ⟨e, he⟩ := _root_.GlobalTheory.locModel_fracField_algEquiv R π hR hπc hπf hπi
   obtain ⟨z, hz⟩ := hz
-  obtain rfl : n = k := GlobalTheory.T.card_transcendenceBasisOverConst_eq_of_algEquiv e n k x z hx hz
-  have hK : Algebra.EssFiniteType ℂ K := GlobalTheory.T.essFiniteType_of_localRingOfVarietyPoint R hR
+  obtain rfl : n = k := _root_.GlobalTheory.trBasis_card_eq_of_algEquiv e n k x z hx hz
+  have hK : Algebra.EssFiniteType ℂ K := _root_.GlobalTheory.essFiniteType_of_isLocModel R hR
   obtain ⟨O', hO'⟩ := hκ'
-  have hκ'f : Algebra.EssFiniteType ℂ κ' := GlobalTheory.T.essFiniteType_of_localRingOfVarietyPoint O' hO'
+  have hκ'f : Algebra.EssFiniteType ℂ κ' := _root_.GlobalTheory.essFiniteType_of_isLocModel O' hO'
   set σ : K →ₐ[ℂ] κ' := ρ.comp e.toAlgHom with hσ
-  have hQ : IsLocModel (algebraMap ℂ L) (loc L σ) := GlobalTheory.T.isLocalRingOfVarietyPoint_tensorGraphLocalization σ hK hκ'f
-  obtain ⟨hm, hdim⟩ := GlobalTheory.T.graphLocalRing_regular_params_and_dim (L := L) σ n x hK hκ'f hx
+  have hQ : IsLocModel (algebraMap ℂ L) (loc L σ) := _root_.GlobalTheory.DiagLoc.isLocModel_loc σ hK hκ'f
+  obtain ⟨hm, hdim⟩ := _root_.GlobalTheory.DiagLoc.maximalIdeal_eq_span_and_ringKrullDim (L := L) σ n x hK hκ'f hx
   have hsum : ∀ (l : ℕ) (a : Fin l → R) (b : Fin l → κ'),
       algebraMap (K ⊗[ℂ] κ') L (∑ i, (a i : K) ⊗ₜ[ℂ] b i) =
         ∑ i, algebraMap (K ⊗[ℂ] κ') L ((a i : K) ⊗ₜ b i) := fun l a b => map_sum _ _ _
@@ -152,7 +153,7 @@ theorem localRing_graph_of_injective : ∀ {K κ κ' L : Type} [Field K] [Field 
     have := Ideal.mem_map_of_mem (toLoc L σ) hmem
     rw [Ideal.map_pow, map_ker] at this
     exact this
-  · refine ⟨_, 1, GlobalTheory.T.topForms_graphLocalRing_freelyGenerated σ n k' x τ' hQ.const_mem hK hκ'f hx hτ', isUnit_one, ?_⟩
+  · refine ⟨_, 1, _root_.GlobalTheory.DiagLoc.isFreeGen_dForm_graph σ n k' x τ' hQ.const_mem hK hκ'f hx hτ', isUnit_one, ?_⟩
     rw [Submonoid.coe_one, one_smul]
     congr 1
     funext i

@@ -2,7 +2,10 @@ module
 
 public import Mathlib.RingTheory.DiscreteValuationRing.Basic
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProperGroupSchemePointsValuationRingMulEquivStatement
+public import Mathlib.AlgebraicGeometry.Morphisms.Proper
+public import Mathlib.RingTheory.Valuation.ValuationRing
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProperGroupSchemePointsValuationRingMulEquiv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -96,7 +99,7 @@ namespace GlobalTheory.LevExt
 
 theorem sections_generic_mulEquiv : ∀ (W L : Type) [CommRing W] [IsDomain W] [IsDiscreteValuationRing W] [Field L] [Algebra W L] [IsFractionRing W L] (G : Over (Sp W)) [GrpObj G] (A : Over (Sp L)) [GrpObj A] (φ : A.left ⟶ G.left), IsProper G.hom → IsGrpPullback A G (spMap (algebraMap W L)) φ → ∃ e : (𝟙_ (Over (Sp L)) ⟶ A) ≃* (𝟙_ (Over (Sp W)) ⟶ G), ∀ y, y.left ≫ φ = spMap (algebraMap W L) ≫ (e y).left := by
   intro W L _ _ _ _ _ _ G _ A _ φ hP hφ
-  obtain ⟨e1, he1⟩ := GlobalTheory.T.proper_group_scheme_points_valuationRing_mulEquiv W L (Sp W) G hP (𝟙 (Sp W))
+  obtain ⟨e1, he1⟩ := _root_.GlobalTheory.ValPts.points_generic_mulEquiv W L (Sp W) G hP (𝟙 (Sp W))
   let i : Over.mk (spMap (algebraMap W L) ≫ 𝟙 (Sp W)) ≅ Over.mk ((𝟙_ (Over (Sp L))).hom ≫ spMap (algebraMap W L)) :=
     Over.isoMk (Iso.refl _) (by simp)
   let e : (𝟙_ (Over (Sp L)) ⟶ A) ≃* (𝟙_ (Over (Sp W)) ⟶ G) :=

@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.FrameTopAlt
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualImageAdelicPointWittCoreStatement
+import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualImageAdelicPointWittCore
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrame
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -51,6 +52,6 @@ theorem movedLat : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {Gi : Forma
   intro D L hT Gi Gl Kc Yd cX ex W _ j hj g
   obtain ⟨c, hc⟩ := W.Q.charW.base.lev.βY j hj
   have hsd : IsSelfDualC (Yc D j) ((pk W).ΛY j) := GlobalTheory.SDFrameLattice.isSelfDualC_of_isSDFrame D _ _ _ _ ⟨c, hc⟩
-  exact (GlobalTheory.T.selfDual_image_adelicPoint_wittCore D (Yc D j) _ hsd).1 g
+  exact (_root_.GlobalTheory.FinPl.GlobImage.glob D (Yc D j) _ hsd).1 g
 
 end GlobalTheory.MovedLat

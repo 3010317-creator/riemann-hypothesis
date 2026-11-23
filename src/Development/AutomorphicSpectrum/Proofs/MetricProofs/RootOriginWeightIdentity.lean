@@ -1,9 +1,11 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.TowerOrigin
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.IntegralSectionLatticeMultipleStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.IntegralSectionLatticeMultiple
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsUniqueLatOfChartBundle
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginCoordField
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsVBOneOfChartGenerators
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,7 +50,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Development.AutomorphicSpectrum.Definitions.MetricPeriods.HasMultiplier
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsVBOneOfChartGenerators
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.SumFundCoMulSumIic
 
 @[expose] public section
@@ -220,7 +221,7 @@ theorem section_on_model : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
     rw [hfeq]
     exact isIntegral_algebraMap (x := (⟨_, hB⟩ : Algebra.adjoin ℚ
       (Set.range fun p : Σ k, RM.ι k => RM.y p / RM.y ⟨p.1, c' p.1⟩)))
-  obtain ⟨N₀, hN, hmem⟩ := GlobalTheory.T.integral_section_lattice_multiple RM.K RM.ι RM.Ω RM.y 0 (combLine (RM.line 1) n₀).a _ key
+  obtain ⟨N₀, hN, hmem⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Small.exists_nat_mul_mem_chartLatNm_of_isIntegral_rat RM.K RM.ι RM.Ω RM.y 0 (combLine (RM.line 1) n₀).a _ key
   refine ⟨n₀, N₀, ?_, hN, ?_, ?_⟩
   · intro j
     cases j with

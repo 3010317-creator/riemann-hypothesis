@@ -2,8 +2,9 @@ module
 
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FrameDefinitions.Weights
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRes
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsAnalyticLogResolutionStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MultiprojectivePointsNonemptyStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsAnalyticLogResolution
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MultiprojectivePointsNonempty
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -216,5 +217,5 @@ theorem LevelTowerAlt.nonempty_component_model : ∀ (K : Type) [Fintype K] (J :
     refine ⟨i, fun h0 => hi ?_⟩
     rw [mCoordIdeal, RingHom.mem_ker, mConeMap]
     simp [h0]
-  obtain ⟨R⟩ := GlobalTheory.T.exists_analytic_log_resolution K J Ω D.y D.n D.arith D.smoothGeneric
-  exact LevelTowerAlt.cxModel_of_res R (GlobalTheory.T.multiprojective_points_nonempty K J Ω D.y hy)
+  obtain ⟨R⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.nonempty_anLogRes_of_smoothGenericFibre K J Ω D.y D.n D.arith D.smoothGeneric
+  exact LevelTowerAlt.cxModel_of_res R (_root_.GlobalTheory.CompanionTheory.Ar.PB.CovGraph.mcPts_mCoordIdeal_nonempty K J Ω D.y hy)

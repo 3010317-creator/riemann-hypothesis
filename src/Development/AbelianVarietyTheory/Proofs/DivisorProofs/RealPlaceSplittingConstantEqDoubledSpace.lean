@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFockMap
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DblCol
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousDblIncl
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCentralCircleOneParameterUnitaryRealPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCentralCircleOneParameterUnitaryRealPlace
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockAct2DiagonalOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TprodConstantPolynomialsNeZero
 import Mathlib.Algebra.Order.Floor.Extended
@@ -69,6 +69,6 @@ theorem constant_eq_dbl :
       Φd (PiTensorProduct.tprod ℂ fun _ => 1) x = z * Φ (PiTensorProduct.tprod ℂ fun _ => 1) (x ∘ Sum.inl) *
         star (Φ (PiTensorProduct.tprod ℂ fun _ => 1) (x ∘ Sum.inr))) →
     0 < R + S → ∀ w, c w = cd w :=
-  compare_of GlobalTheory.T.exists_central_circle_oneParameter_unitary_realPlace GlobalTheory.VacuumWeight.fockAct2_diagonal_one GlobalTheory.tprod_one_pol_ne_zero
+  compare_of _root_.GlobalTheory.CentralLine.exists_central_line GlobalTheory.VacuumWeight.fockAct2_diagonal_one GlobalTheory.tprod_one_pol_ne_zero
 
 end GlobalTheory.RealLift.Compare

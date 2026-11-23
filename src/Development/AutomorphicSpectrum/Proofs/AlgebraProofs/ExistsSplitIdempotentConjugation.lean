@@ -3,9 +3,13 @@ module
 public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.StepOrderRes
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ImportsExtraFurther
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.GaussSumValuationTeichmullerStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.TeichmullerCharacterOrderGeneratesStatement
+public import Mathlib.Basic.NNReal.Defs
+public import Mathlib.NumberTheory.MulChar.Basic
+public import Mathlib.RingTheory.Valuation.Integers
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.GaussSumValuationTeichmuller
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.TeichmullerCharacterOrderGenerates
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.RiRank
+public import ReciprocityTheory.DualLattices.ImportsAlt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,7 +57,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.DualLattices.ImportsAlt
 
 @[expose] public section
 
@@ -245,7 +248,7 @@ theorem rank_one_sum : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgC
   · intro cN cD hN hD
     rw [hcol cN cD hN hD, hcard, Nat.cast_pow, map_pow, ← pow_mul]
   · intro τ hτ c cD hc hcD
-    have hord := (GlobalTheory.T.teichmuller_character_order_generates p C v R hv hvp F f hcard τ hτ).1
+    have hord := (_root_.GlobalTheory.CompanionTheory.Ar.GR.FundGen.main p C v R hv hvp F f hcard τ hτ).1
     by_cases h2 : Fintype.card F = 2
     · have hpf : p ^ f = 2 := hcard.symm.trans h2
       obtain ⟨rfl, rfl⟩ := (Nat.Prime.pow_eq_iff Nat.prime_two).1 hpf
@@ -344,6 +347,6 @@ theorem rank_one_sum : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgC
         have : 1 ≤ p ^ f := Nat.one_le_pow _ _ (Fact.out : p.Prime).pos
         omega
       rw [hdual τ hne c cD hc hcD]
-      exact GlobalTheory.T.gauss_sum_valuation_teichmuller p C v R hv hvp F f hcard h2 τ hτ ψ hψ
+      exact _root_.GlobalTheory.CompanionTheory.Ar.GR.gauss_value p C v R hv hvp F f hcard h2 τ hτ ψ hψ
 
 end GlobalTheory.CompanionTheory.Ar.GR

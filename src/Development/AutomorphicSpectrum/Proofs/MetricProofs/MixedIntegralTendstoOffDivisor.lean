@@ -1,12 +1,14 @@
 module
 
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.UniformEnergyBoundOfSection
 public import GroundTheory.HeightsAndTheta.Heights.AnalyticLimit.Objects
 public import GroundTheory.HeightsAndTheta.Heights.Regularisation.Statements
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LocalDensityInclusionExclusionStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MixedEnergyUniformBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MixedIntegralRegularizedConvergenceStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularChartDataPropertiesStatement
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.IsPotentialOfFun
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LocalDensityInclusionExclusion
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MixedEnergyUniformBound
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MixedIntegralRegularizedConvergence
+public import ReciprocityTheory.AnalyticForms.LeviForms.TailBoundA
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.UniformEnergyBoundOfSection
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularChartDataProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +54,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.AnalyticForms.LeviForms.TailBoundA
 import ReciprocityTheory.AnalyticForms.PotentialTheory.ContDiffAtOfIsPotential
 import ReciprocityTheory.AnalyticForms.PotentialTheory.HessCEqZeroOfEventuallyEqZero
 import ReciprocityTheory.AnalyticForms.PotentialTheory.LocDens
@@ -105,7 +106,7 @@ theorem position_tail (e : ℕ) (X : Type) [TopologicalSpace X] [CompactSpace X]
     split_ifs
     · exact hP i
     · exact isPotential_ofFun A _ hz
-  obtain ⟨CE, hCE⟩ := GlobalTheory.T.mixed_energy_uniform_bound e X A R Θ hΘ hΘp
+  obtain ⟨CE, hCE⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Giv.tailLogProducts e X A R Θ hΘ hΘp
     (fun i => (if i ∈ T then P i else LocPot.ofFun 0) + Θ) |C| hth
   refine ⟨CE, fun u hu hpsh hb => ?_⟩
   have h1 : ∀ i, IsPsh A ((if i ∈ T then P i else LocPot.ofFun 0) +
@@ -172,7 +173,7 @@ theorem expand_on {e : ℕ} {X : Type} [TopologicalSpace X] (A : FinHolAtlas e X
         (if i ∈ T then P i else LocPot.ofFun 0) + LocPot.ofFun (if i ∈ T then f i else 0) + Θ) j y) := by
     refine (ae_restrict_iff' hKm).2 ?_
     filter_upwards [hae0] with y hy hyK
-    rw [GlobalTheory.T.local_density_inclusion_exclusion A Yo P f Θ hYo hP hΘ hf j y ⟨hKt hyK, hy (hKt hyK)⟩, Finset.mul_sum]
+    rw [_root_.GlobalTheory.CompanionTheory.Ar.Giv.locDens_expand_ofFun A Yo P f Θ hYo hP hΘ hf j y ⟨hKt hyK, hy (hKt hyK)⟩, Finset.mul_sum]
     refine Finset.sum_congr rfl fun T _ => ?_
     ring
   have hint := fun T (_ : T ∈ (Finset.univ : Finset (Finset (Fin e)))) => (hI T).const_mul ((-1 : ℝ) ^ (e - T.card))
@@ -190,7 +191,7 @@ theorem mIntegrable_of_logBound {e : ℕ} {X : Type} [TopologicalSpace X] [Compa
   intro j K hK hKc
   letI : MeasurableSpace X := borel X
   haveI : BorelSpace X := ⟨rfl⟩
-  obtain ⟨-, hnull, -, -⟩ := GlobalTheory.T.regular_chart_data_properties e X A R
+  obtain ⟨-, hnull, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Giv.regData_open_part e X A R
   have hKm := hKc.measurableSet
   have hD : IntegrableOn (locDens A Φ j) K := ((locDensCont A Φ hΦ j).mono hK).integrableOn_compact hKc
   have hTl := (hT (Real.exp 1) le_rfl).1 j K hK hKc
@@ -249,7 +250,7 @@ namespace GlobalTheory.CompanionTheory.Ar.Giv
 open GlobalTheory.CompanionTheory.Ar.Giv.Conv GroundTheory.Heights₂.Heights.AnalyticLimit in
 theorem mixed_integral_tendsto_of_C2_off_divisor : ∀ (e : ℕ) (X : Type) [TopologicalSpace X] [CompactSpace X] [T2Space X] (A : FinHolAtlas e X) (R : GroundTheory.Heights₂.Heights.Regular.RegChartData A) (Θ : LocPot X), IsPotential A Θ → IsPosPot A Θ → ∀ (P : Fin e → LocPot X) (f : Fin e → X → ℝ) (fT : Fin e → ℝ → X → ℝ) (G : X → ℝ) (GT : ℝ → X → ℝ) (C : ℝ), (∀ i, IsPotential A (P i)) → (∀ i, A.SmoothOn R.Yo (f i)) → (∀ᶠ t in 𝓝[>] (0 : ℝ), ∀ i, A.Smooth (fT i t) ∧ IsPsh A (P i + LocPot.ofFun (fT i t) + Θ) ∧ ∀ x ∈ R.Yo, |fT i t x| ≤ C + C * Real.log (R.r x) ∧ fT i t x ≤ C) → (∀ i, ∀ j, ∀ K' ⊆ (A.chart j).target ∩ (A.chart j).symm ⁻¹' R.Yo, IsCompact K' → TendstoUniformlyOn (fun t => fT i t ∘ (A.chart j).symm) (f i ∘ (A.chart j).symm) (𝓝[>] 0) K' ∧ TendstoUniformlyOn (fun t => fderiv ℝ (fT i t ∘ (A.chart j).symm)) (fderiv ℝ (f i ∘ (A.chart j).symm)) (𝓝[>] 0) K' ∧ TendstoUniformlyOn (fun t => fderiv ℝ (fderiv ℝ (fT i t ∘ (A.chart j).symm))) (fderiv ℝ (fderiv ℝ (f i ∘ (A.chart j).symm))) (𝓝[>] 0) K') → (∀ᶠ t in 𝓝[>] (0 : ℝ), @Measurable X ℝ (borel X) _ (R.Yo.indicator (GT t)) ∧ ∀ x ∈ R.Yo, |GT t x| ≤ C + C * Real.log (R.r x)) → (∀ K' ⊆ R.Yo, IsCompact K' → TendstoUniformlyOn GT G (𝓝[>] 0) K') → MIntegrable A (fun i => P i + LocPot.ofFun (f i)) G ∧ (∀ᶠ t in 𝓝[>] (0 : ℝ), MIntegrable A (fun i => P i + LocPot.ofFun (fT i t)) (GT t)) ∧ Tendsto (fun t => mInt A (fun i => P i + LocPot.ofFun (fT i t)) (GT t)) (𝓝[>] 0) (𝓝 (mInt A (fun i => P i + LocPot.ofFun (f i)) G)) := by
   intro e X _ _ _ A R Θ hΘ hΘp P f fT G GT C hP hf hfT hC hGT hGc
-  obtain ⟨hYo, hnull, -, -⟩ := GlobalTheory.T.regular_chart_data_properties e X A R
+  obtain ⟨hYo, hnull, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Giv.regData_open_part e X A R
   have hz : A.Smooth (0 : X → ℝ) := fun j => contDiffOn_const
   choose CE hCE using fun T => position_tail e X A R Θ hΘ hΘp P C hP T
   have hth : ∀ (T : Finset (Fin e)) i, IsPotential A (if i ∈ T then P i else LocPot.ofFun 0) := by
@@ -289,7 +290,7 @@ theorem mixed_integral_tendsto_of_C2_off_divisor : ∀ (e : ℕ) (X : Type) [Top
     · simp only [hi, if_false]
       exact Metric.tendstoUniformlyOn_iff.2 fun ε hε =>
         Eventually.of_forall fun t y _ => by simpa using hε
-  have term := fun T : Finset (Fin e) => GlobalTheory.T.mixed_integral_regularized_convergence e X A R Θ
+  have term := fun T : Finset (Fin e) => _root_.GlobalTheory.CompanionTheory.Ar.Giv.conv_chart_integral e X A R Θ
     (fun i => if i ∈ T then P i else LocPot.ofFun 0) (fun i => if i ∈ T then f i else 0)
     (fun i t => if i ∈ T then fT i t else 0) G GT C (CE T) hΘ (hth T) (hph T)
     (hev.mono fun t h => h T) (hC2 T) hGT hGc

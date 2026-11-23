@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.InvariantRadonFibre
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsMulRightInvariantHaarAdelicUnitaryGroupHermiti
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.WeilCriterionInvariantMeasureHomogeneousSpaceStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.WeilCriterionInvariantMeasureHomogeneousSpace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,7 +51,7 @@ theorem compactClause : CompactClause := by
   have : CompactSpace H := isCompact_iff_compactSpace.mp hH
   have : SecondCountableTopology H := TopologicalSpace.Subtype.secondCountableTopology (H : Set G)
   borelize G
-  refine GlobalTheory.T.weil_criterion_invariant_measure_homogeneous_space G H hH.isClosed fun h => ?_
+  refine _root_.GlobalTheory.WeilCriterion.modulusClause G H hH.isClosed fun h => ?_
   rw [GlobalTheory.AdelicPointsUnimod.modular_of_mem_compact H hH h.2,
     GlobalTheory.AdelicPointsUnimod.modular_of_mem_compact (⊤ : Subgroup H) (by simpa using isCompact_univ)
       (Subgroup.mem_top h)]

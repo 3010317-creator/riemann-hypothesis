@@ -2,10 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.Uniformised
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplexUniformisationHarrisTaylorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHarrisTaylorModuliObjectPullbackStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NotCompactOfMEqOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHarrisTaylorModuliObjectPullback
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHarrisTaylorObjectOfPeriodStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorObjectPullbackCompDiagonalBundleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorRelDimAndDiagonalIsLineBundleStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorObjectPullbackCompDiagonalBundle
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorRelDimAndDiagonalIsLineBundle
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyModuliMapOfMarkedPeriodIsometryStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformisationAtCorrespondOfCartesianStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -67,14 +68,14 @@ theorem Model.fineAt_univ : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type
         (∀ e, UnifAt (M.univ.fam h hL) σ ρ N D' t Q y e → ∃ e', UnifAt (o.fam h' hL') σ ρ N D' t Q (𝟙 _) e') := by
     intro o y m hy h' hL' D' t Q
     have key := GlobalTheory.T.uniformisationAt_correspond_of_cartesian D.O D.inv D.g ρ R R σ σ D.La (M.univ.fam h hL) (o.fam h' hL') N y m.φ m.cart m.act
-      ((GlobalTheory.T.harrisTaylorObjectPullback_comp_diagonalBundle p D R b N M.X (Sp ℂ) (Sp ℂ) M.s (spMap σ) (spMap σ) M.univ o o y (𝟙 _)).2 m) m.eta D' t Q (𝟙 _)
+      ((_root_.GlobalTheory.UPel.HT.objMap_comp_diag_lbIso p D R b N M.X (Sp ℂ) (Sp ℂ) M.s (spMap σ) (spMap σ) M.univ o o y (𝟙 _)).2 m) m.eta D' t Q (𝟙 _)
       (Category.id_comp _) (by erw [Category.id_comp]; exact hy)
     erw [Category.id_comp] at key
     exact ⟨fun e' he' => (key.1 e' he').imp fun e he => he.1, fun e he => (key.2 e he).imp fun e' he' => he'.1⟩
   refine ⟨?_, ?_, ?_⟩
   · intro y hy
-    obtain ⟨o, ⟨m⟩⟩ := GlobalTheory.T.exists_harrisTaylorModuliObject_pullback p D R b N M.X (Sp ℂ) M.s (spMap σ) y hy M.univ
-    obtain ⟨h', hL'⟩ := GlobalTheory.T.harrisTaylor_relDim_and_diagonal_isLineBundle p D R b N (Sp ℂ) (spMap σ) o
+    obtain ⟨o, ⟨m⟩⟩ := _root_.GlobalTheory.HTPullEvery.exists_objMap p D R b N M.X (Sp ℂ) M.s (spMap σ) y hy M.univ
+    obtain ⟨h', hL'⟩ := _root_.GlobalTheory.HTDim.relDim_and_isLB p D R b N (Sp ℂ) (spMap σ) o
     obtain ⟨D', t, Q, e, hC, hU⟩ := GlobalTheory.T.exists_complexUniformisation_harrisTaylor p D R b N σ ρ o h' hL' hN hNp hty
     obtain ⟨e2, he2⟩ := (tr o y m hy h' hL' D' t Q).1 e hU
     exact ⟨D', t, Q, e2, hC, he2⟩
@@ -86,14 +87,14 @@ theorem Model.fineAt_univ : ∀ (p : ℕ) [Fact p.Prime] (D : Datum p) (R : Type
   · intro D' D'' t t' Q Q' y y' e e' hU hU' w u hw hQ
     have hy : y ≫ M.s = spMap σ := hU.1
     have hy' : y' ≫ M.s = spMap σ := hU'.1
-    obtain ⟨o1, ⟨m1⟩⟩ := GlobalTheory.T.exists_harrisTaylorModuliObject_pullback p D R b N M.X (Sp ℂ) M.s (spMap σ) y hy M.univ
-    obtain ⟨o2, ⟨m2⟩⟩ := GlobalTheory.T.exists_harrisTaylorModuliObject_pullback p D R b N M.X (Sp ℂ) M.s (spMap σ) y' hy' M.univ
-    obtain ⟨h1, hL1⟩ := GlobalTheory.T.harrisTaylor_relDim_and_diagonal_isLineBundle p D R b N (Sp ℂ) (spMap σ) o1
-    obtain ⟨h2, hL2⟩ := GlobalTheory.T.harrisTaylor_relDim_and_diagonal_isLineBundle p D R b N (Sp ℂ) (spMap σ) o2
+    obtain ⟨o1, ⟨m1⟩⟩ := _root_.GlobalTheory.HTPullEvery.exists_objMap p D R b N M.X (Sp ℂ) M.s (spMap σ) y hy M.univ
+    obtain ⟨o2, ⟨m2⟩⟩ := _root_.GlobalTheory.HTPullEvery.exists_objMap p D R b N M.X (Sp ℂ) M.s (spMap σ) y' hy' M.univ
+    obtain ⟨h1, hL1⟩ := _root_.GlobalTheory.HTDim.relDim_and_isLB p D R b N (Sp ℂ) (spMap σ) o1
+    obtain ⟨h2, hL2⟩ := _root_.GlobalTheory.HTDim.relDim_and_isLB p D R b N (Sp ℂ) (spMap σ) o2
     obtain ⟨e1, he1⟩ := (tr o1 y m1 hy h1 hL1 D' t Q).2 e hU
     obtain ⟨e2, he2⟩ := (tr o2 y' m2 hy' h2 hL2 D'' t' Q').2 e' hU'
     obtain ⟨m12⟩ := GlobalTheory.T.nonempty_moduliMap_of_marked_period_isometry p D R b N σ ρ o1 o2 h1 hL1 h2 hL2 D' D'' t t' Q Q' e1 e2 w u hN he1 he2 hw hQ
-    have hc := (GlobalTheory.T.harrisTaylorObjectPullback_comp_diagonalBundle p D R b N M.X (Sp ℂ) (Sp ℂ) M.s (spMap σ) (spMap σ) M.univ o2 o1 y' (𝟙 _)).1
+    have hc := (_root_.GlobalTheory.UPel.HT.objMap_comp_diag_lbIso p D R b N M.X (Sp ℂ) (Sp ℂ) M.s (spMap σ) (spMap σ) M.univ o2 o1 y' (𝟙 _)).1
       ⟨m12⟩ ⟨m2⟩
     obtain ⟨f, -, huniq⟩ := M.rep (Sp ℂ) (spMap σ) o1
     have e1' := huniq y ⟨hy, ⟨m1⟩⟩

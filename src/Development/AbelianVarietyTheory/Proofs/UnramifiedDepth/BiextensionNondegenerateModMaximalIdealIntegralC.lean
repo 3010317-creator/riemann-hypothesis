@@ -6,14 +6,17 @@ public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsUniqueF
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IntegralChartFormalBiext
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.StarRingExtOfStar
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.UniversalStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CubWeilPerfectOfGenericStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.FiniteFlatSurjectiveMulByNAbelianSchemeStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors.AlWellDefSt
+public import Development.AbelianVarietyTheory.Definitions.Uniformization.PointEqOfSubsingleton
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CubWeilPerfectOfGeneric
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.FiniteFlatSurjectiveMulByNAbelianScheme
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.RatioTranslate
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.UniformisationTriplesCompleteDVRTorsion
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.AbelianPartProjectionRespectsOrthogonalityStatement
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.AlphaPHomomorphismCubicalWeilTrivialRationalTorsStatement
-import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.AlphaPMultiplicativeCharacterEqOneStatement
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.CubicalWeilTrivialOfLocalArtinianPointsStatement
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.DegenerateDirectionOfNotNondegenerateStatement
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.EqOneOfTangentVectorEqOneStatement
@@ -28,6 +31,7 @@ public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.FrameParti
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IntegralFramedPointModelPolarisedGenericFibreStatement
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.NotNondegenerateOfDegenerateSeriesDirectionStatement
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.UniversalChartPointsOverFieldPointStatement
+import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.AlphaPMultiplicativeCharacterEqOneStatement
 import Mathlib.Algebra.AffineMonoid.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -178,8 +182,8 @@ theorem perf_of_polAV {O : Type} [CommRing O] [IsDomain O] [IsLocalRing O] [Char
     exact (algebraMap (FractionRing O) K).injective.comp (IsFractionRing.injective O _)
   have : CharZero K := charZero_of_injective_algebraMap hi
   have hnK : (n : K) ≠ 0 := Nat.cast_ne_zero.2 (by omega)
-  obtain ⟨f₁, f₂, f₃⟩ := GlobalTheory.T.finite_flat_surjective_mul_by_n_abelianScheme hl O P.A P.isAb P.L P.isLB P.ample n hn
-  refine ⟨f₁, GlobalTheory.T.eq_one_of_cubWeil_trivial_of_generic O K hi P.A P.g P.smoothDim L c n hn f₁ f₂
+  obtain ⟨f₁, f₂, f₃⟩ := _root_.GlobalTheory.MulAmple.finite_flat_surjective_pow hl O P.A P.isAb P.L P.isLB P.ample n hn
+  refine ⟨f₁, _root_.GlobalTheory.cubWeil_perfect_of_generic O K hi P.A P.g P.smoothDim L c n hn f₁ f₂
     ((hl.mulN _ P n hn).2.2.2.2 K _ hnK) fun y hy hp => ?_⟩
   have ht := CubNondeg.main hl _ P.A P.isAb L c K _ n hnK f₁ f₂ f₃ y hy hp
   rw [hL] at ht

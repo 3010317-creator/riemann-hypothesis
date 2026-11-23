@@ -12,10 +12,10 @@ public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.HopfAlgebra.Basic
 public import Mathlib.RingTheory.SimpleRing.Principal
 public import Development.AbelianVarietyTheory.Definitions.Foundations.SiegelNeZeroIff
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ConstOfSlTwoIntInvariantBoundedUpperHalfPlaneStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ConstOfSlTwoIntInvariantBoundedUpperHalfPlane
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FiniteDimensionalLev
+public import Mathlib.Analysis.Complex.Liouville
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularTowerFunctionSlTwoIntInvariant
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularTowerFunctionSlTwoIntInvariantStatement
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularTowerFunctionTendstoConstTermExponential
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UpperHalfPlaneCodiscreteGermIdentityAndUnits
 import Mathlib.Algebra.Order.Floor.Extended
@@ -66,7 +66,6 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
 import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.NormProducts.InvMod
-public import Mathlib.Analysis.Complex.Liouville
 
 @[expose] public section
 
@@ -176,7 +175,7 @@ private theorem onto (φ : ℂ → ℂ) (hd : DifferentiableOn ℂ φ Hs)
   by_contra hc
   push Not at hc
   have hne : ∀ τ ∈ Hs, φ τ - a ≠ 0 := fun τ hτ => sub_ne_zero.2 (hc τ hτ)
-  obtain ⟨c, hcc⟩ := GlobalTheory.T.const_of_slTwoInt_invariant_bounded_upperHalfPlane (fun w => (φ w - a)⁻¹) ((hd.sub_const a).inv hne)
+  obtain ⟨c, hcc⟩ := _root_.GlobalTheory.KZ.LevelOne.const_of_invariant_bounded (fun w => (φ w - a)⁻¹) ((hd.sub_const a).inv hne)
     (fun γ z hz => by simp only [hinv γ z hz]) ⟨1, max t (‖a‖ + 1), fun z hz hzt => by
       rw [max_lt_iff] at hzt
       have h1 := h z hzt.1
@@ -262,7 +261,7 @@ theorem UpperTheory.Kd.K4.jan :
       ∀ τ ∈ Hs, analyticOrderAt (fun s => φ s - φ τ) τ ≤ E := by
   intro Ω _ _ _ ε X
   obtain ⟨φ, hφ, hd⟩ := X.j_hol
-  have hinv := GlobalTheory.T.modularTower_function_slTwoInt_invariant X X.jK φ hd.continuousOn hφ X.j_inv
+  have hinv := _root_.GlobalTheory.KZ.InvFun.fun_inv X X.jK φ hd.continuousOn hφ X.j_inv
   obtain ⟨t, ht, h⟩ := near_one X φ hφ hd.continuousOn
   have hne := deriv_ne φ hd t ht h
   have han := hd.analyticOnNhd SiegelModel.isOpen_Hs

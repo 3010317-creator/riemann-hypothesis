@@ -4,11 +4,11 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormMulTrans
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ToRingActOpOfRingAct
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwoLeFinrankLa
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsAdditiveOfUniversal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualAbelianSchemeExistsBiduality
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsEqPowOfTorsionCompEqOne
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.FlatAndSurjectiveOfIsFiniteAbelianEnd
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ForallGeometricallyIntegralOfSmoothOfGeometrical
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.MulAFiniteFlatSurjectiveEtale
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualAbelianSchemeExistsBiduality
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdditiveLiftIff
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsDualOfIsPerfectOfAdditive
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsDualOfIso
@@ -16,7 +16,8 @@ import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFiniteAndFlatTors
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsMonHomOfClassifying
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LiftLeftFst
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NearIsIsoOfIsProperOfFinitePresentation
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TheoremOfCubeAbelianSchemeOverArbitraryBase
+import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CubeTheorem
+import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.CubeTheorem.CubeTheoremHolds
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSchemeOfIsGrpPullback
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ConnectedSpaceSpecOfIsLocalRing
 import Mathlib.Algebra.Order.Floor.Extended
@@ -79,7 +80,7 @@ theorem evc_symm (o : SiegPre h M ζ s) {Y : Over S} (a b : Y ⟶ o.A) :
   simp only [evc, c]
 
 theorem additive (o : SiegPre h M ζ s) : IsAdditive o.P ∧ IsAdditive (swap o.P) :=
-  additive_of_cube GlobalTheory.CubeTop.cubeTheorem o.ab o.ab o.isLB o.rig₁ o.rig₂
+  additive_of_cube _root_.GlobalTheory.SpreadingModels.cubeTheorem_holds o.ab o.ab o.isLB o.rig₁ o.rig₂
 
 theorem evc_mul_left (o : SiegPre h M ζ s) {Y : Over S} (a a' b : Y ⟶ o.A) :
     evc o.isLB (a * a') b = evc o.isLB a b + evc o.isLB a' b :=

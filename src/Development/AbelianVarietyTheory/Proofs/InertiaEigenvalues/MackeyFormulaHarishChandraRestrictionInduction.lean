@@ -6,7 +6,8 @@ public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardDoubleCos
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsShuffle
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MackeyCellTermOfBlockSizes
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.Reciprocity
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraInductionRestrictionIsClassFunctionStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LabelDatum
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HarishChandraInductionRestrictionIsClassFunction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -215,8 +216,8 @@ theorem mackey_formula : ∀ (g : ℕ) [Fact g.Prime] (a b c d n : ℕ), n = a +
           res i (a - i) (fun x => res (c - i) (b - (c - i)) (Φ x) y₃ y₄) y₁ y₂) d h₂) c h₁ := by
   intro g _ a b c d n hn1 hn2 Φ hΦ1 hΦ2 h₁ h₂
   obtain ⟨-, -, R3⟩ := Recip.reciprocity g
-  have hcl : IsClass (hcT a b Φ n) := (GlobalTheory.T.harishChandra_induction_restriction_isClassFunction g a b n hn1).1 Φ
-  have hres := (GlobalTheory.T.harishChandra_induction_restriction_isClassFunction g c d n hn2).2 _ hcl
+  have hcl : IsClass (hcT a b Φ n) := (_root_.GlobalTheory.GLq.HcClass.hc_class g a b n hn1).1 Φ
+  have hres := (_root_.GlobalTheory.GLq.HcClass.hc_class g c d n hn2).2 _ hcl
   suffices H : (fun (h₁ : Gn g c) (h₂ : Gn g d) => res c d (hcT a b Φ n) h₁ h₂) =
       (fun (h₁ : Gn g c) (h₂ : Gn g d) => ∑ i ∈ (Finset.range (a + 1)).filter (fun i => i ≤ c ∧ c - i ≤ b),
         hcT i (c - i) (fun y₁ y₃ => hcT (a - i) (b - (c - i)) (fun y₂ y₄ =>
@@ -226,12 +227,12 @@ theorem mackey_formula : ∀ (g : ℕ) [Fact g.Prime] (a b c d n : ℕ), n = a +
   · intro y x z
     refine Finset.sum_congr rfl fun i hi => ?_
     simp only [Finset.mem_filter, Finset.mem_range] at hi
-    exact (GlobalTheory.T.harishChandra_induction_restriction_isClassFunction g i (c - i) c (by omega)).1 _ x z
+    exact (_root_.GlobalTheory.GLq.HcClass.hc_class g i (c - i) c (by omega)).1 _ x z
   · intro x y z
     refine Finset.sum_congr rfl fun i hi => ?_
     simp only [Finset.mem_filter, Finset.mem_range] at hi
     have hd' : ∀ Ψ, hcT (a - i) (b - (c - i)) Ψ d (z * y * z⁻¹) = hcT (a - i) (b - (c - i)) Ψ d y :=
-      fun Ψ => (GlobalTheory.T.harishChandra_induction_restriction_isClassFunction g (a - i) (b - (c - i)) d (by omega)).1 Ψ y z
+      fun Ψ => (_root_.GlobalTheory.GLq.HcClass.hc_class g (a - i) (b - (c - i)) d (by omega)).1 Ψ y z
     simp only [hd']
   · intro Λ hΛ1 hΛ2
     rw [left_side a b c d n hn1 hn2 Φ hΦ1 hΦ2 Λ hΛ1 hΛ2, mean_sum]

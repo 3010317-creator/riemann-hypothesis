@@ -4,10 +4,13 @@ public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.FactorDep
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TypedPartSplitPrimes
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EightDvdNCol
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContentLeDetDepthAdd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedPowerContentDetPowDependsOnPIKStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupDeterminantPowDepthBoundsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupRootsOfUnityTypedLieRanksStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatFrame
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedPowerContentDetPowDependsOnPIK
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.BigBlockCharacters
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupDeterminantPowDepthBounds
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupRootsOfUnityTypedLieRanks
 public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ExistsIntegralChartIntegralFramedPoint
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.CmHostUnitAddConjEqOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -40,8 +43,6 @@ import Mathlib.Tactic.NormNum.NatSqrt
 import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.CmHostUnitAddConjEqOne
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.BigBlockCharacters
 
 @[expose] public section
 
@@ -55,8 +56,8 @@ namespace GlobalTheory.RefSum
 theorem facBetween_inert : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), ∀ (p : ℕ) [Fact p.Prime] (la : PointsOfFlagModel.abelian₂ p c), ¬ (p : ℤ) ∣ discr E → InertInK H p → ∀ (f : Lt1 Dw) (k : ℕ), InPsi H f.1 → ∃ A B : ℝ, FacBetween Xo la f k A B ∧ B - A ≤ boundInert p Dw.q (rk f) k := by
   intro E _ _ _ H Dw l Xo c p _ la hdisc hinert f k hpsi
   letI := H.starRing
-  obtain ⟨κ, hκ⟩ := GlobalTheory.T.dividedPowerContent_detPow_depends_on_p_i_k p Fact.out (rk f) k
-  have hFGT := GlobalTheory.T.formalGroup_rootsOfUnity_typed_lieRanks E H Dw l Xo c (fun _ => rfl) p hdisc
+  obtain ⟨κ, hκ⟩ := _root_.GlobalTheory.detPow_content_const p Fact.out (rk f) k
+  have hFGT := _root_.GlobalTheory.PrimePart.formalGroupTypes E H Dw l Xo c (fun _ => rfl) p hdisc
   have hch : ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io), Nonempty (IntegralChartA3 Xo c T io y) :=
     fun T io y => by
       obtain ⟨C, -⟩ := (@GlobalTheory.IntChartExists.intChart_exists E _ _ _ H Dw l Xo c H.starRing).2.2 (fun _ => rfl) T io y
@@ -82,7 +83,7 @@ theorem facBetween_inert : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
     exact EReal.sub_le_of_le_add hd2
   · obtain ⟨Ch⟩ := hch T io y
     obtain ⟨X⟩ := nonempty_valExt_of_overLa la ho
-    have h1 := GlobalTheory.T.formalGroupDeterminantPowDepth_bounds X.C (vX_vp X) p Fact.out (vX_vp_p X) (rk f) _ k (fgl Ch X) (frame Ch X f)
+    have h1 := _root_.GlobalTheory.FGDepth.detDepth_bounds X.C (vX_vp X) p Fact.out (vX_vp_p X) (rk f) _ k (fgl Ch X) (frame Ch X f)
       (isSatFrame_frame Ch X f)
     refine (nuFac_le Ch X f k).trans ?_
     rw [← hκ X.C (vX_vp X) (vX_vp_p X)]

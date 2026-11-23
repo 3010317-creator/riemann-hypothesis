@@ -1,10 +1,20 @@
 module
 
 public import Mathlib.RingTheory.RingHom.Smooth
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AdjoinInverseIsLocalizationAwayStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.KaehlerBasisTowerStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.KaehlerFinrankFractionFieldStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalizationKaehlerPrimeIdealStatement
+public import Mathlib.Algebra.Algebra.Rat
+public import Mathlib.Algebra.Algebra.Subalgebra.Lattice
+public import Mathlib.RingTheory.Localization.Away.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AdjoinInverseIsLocalizationAway
+public import Mathlib.RingTheory.Smooth.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.KaehlerBasisTower
+public import Mathlib.RingTheory.Kaehler.Basic
+public import Mathlib.RingTheory.Localization.FractionRing
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.KaehlerFinrankFractionField
+public import Mathlib.Algebra.MvPolynomial.Rename
+public import Mathlib.RingTheory.Ideal.Maps
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalizationKaehlerPrimeIdeal
+public import Mathlib.RingTheory.Smooth.StandardSmoothOfFree
+public import Mathlib.RingTheory.Smooth.StandardSmooth
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -26,7 +36,6 @@ import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.Order.CompletePartialOrder
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.SimpleRing.Principal
-public import Mathlib.RingTheory.Smooth.StandardSmoothOfFree
 import Mathlib.Tactic.Echelon.Zsqrtd
 import Mathlib.Tactic.Inclusion.Extension.Core.Core
 import Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit
@@ -48,7 +57,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.RingTheory.Smooth.StandardSmooth
 
 @[expose] public section
 
@@ -101,9 +109,9 @@ theorem exists_away_basis (S T K L : Type) [CommRing S] [CommRing T] [Field K] [
   haveI : IsDomain T := (IsFractionRing.injective T L).isDomain (algebraMap T L)
   haveI : IsFractionRing T' L :=
     IsFractionRing.isFractionRing_of_isDomain_of_isLocalization (Submonoid.powers g) T' L
-  have hm : Module.finrank L (KaehlerDifferential K L) = m := GlobalTheory.T.kaehler_finrank_fraction_field S T' K L m w hli' hsp'
+  have hm : Module.finrank L (KaehlerDifferential K L) = m := _root_.GlobalTheory.CompanionTheory.Ggeo.finrank_kaehler_fractionRing_eq_of_basis S T' K L m w hli' hsp'
   obtain rfl : r = m := hr.symm.trans hm
-  obtain ⟨h1, h2⟩ := GlobalTheory.T.kaehler_basis_tower_alt ℚ S T' e r z w hli hsp hli' hsp'
+  obtain ⟨h1, h2⟩ := _root_.GlobalTheory.CompanionTheory.KaehlerTower.kaehler_basis_tower ℚ S T' e r z w hli hsp hli' hsp'
   exact ⟨_, fun i => by rw [Fin.append_left]; rfl, h1, h2⟩
 
 theorem local_step : ∀ (Ω₀ Ω : Type) [Field Ω₀] [Field Ω] [CharZero Ω₀] [CharZero Ω] [Algebra Ω₀ Ω] (σ σ' : Type) [Finite σ']
@@ -140,7 +148,7 @@ theorem local_step : ∀ (Ω₀ Ω : Type) [Field Ω₀] [Field Ω] [CharZero Ω
   letI : Algebra (Algebra.adjoin ℚ (Set.range r₁)) T := (Subalgebra.inclusion hle₁).toRingHom.toAlgebra
   have hne₁ : h₁ ≠ 0 := fun h0 => hh₁P (h0 ▸ P.zero_mem)
   haveI : IsLocalization.Away h₁ T :=
-    GlobalTheory.T.adjoin_inverse_is_localization_away Ω _ T (Set.range r₁) rfl h₁ hne₁ (by rw [hT, hh₁]) hle₁
+    _root_.GlobalTheory.CompanionTheory.Ggeo.adjoin_inv_isLocalization_away Ω _ T (Set.range r₁) rfl h₁ hne₁ (by rw [hT, hh₁]) hle₁
   have hdisj : Disjoint ((Submonoid.powers h₁ : Submonoid (Algebra.adjoin ℚ (Set.range r₁))) :
       Set (Algebra.adjoin ℚ (Set.range r₁))) (↑P : Set (Algebra.adjoin ℚ (Set.range r₁))) := by
     rwa [Ideal.disjoint_powers_iff_notMem_of_isPrime]
@@ -198,7 +206,7 @@ theorem local_step : ∀ (Ω₀ Ω : Type) [Field Ω₀] [Field Ω] [CharZero Ω
       rw [SetLike.mem_coe, this]
       exact S'.mul_mem htS' (S'.pow_mem (hle' h₁.2) _)
   letI : Algebra T S' := (Subalgebra.inclusion hTS').toRingHom.toAlgebra
-  haveI : IsLocalization.Away g S' := GlobalTheory.T.adjoin_inverse_is_localization_away Ω T S' (T : Set Ω) (Algebra.adjoin_eq T).symm g hg0 hEq hTS'
+  haveI : IsLocalization.Away g S' := _root_.GlobalTheory.CompanionTheory.Ggeo.adjoin_inv_isLocalization_away Ω T S' (T : Set Ω) (Algebra.adjoin_eq T).symm g hg0 hEq hTS'
   haveI : IsScalarTower T S' Ω := .of_algebraMap_eq fun _ => rfl
   obtain ⟨hsm', z', hz', hli', hsp'⟩ := Hg S'
   refine ⟨hsm', z', n, by omega, hli', hsp', ?_⟩
@@ -207,7 +215,7 @@ theorem local_step : ∀ (Ω₀ Ω : Type) [Field Ω₀] [Field Ω] [CharZero Ω
   have hθ : ∀ s, ((θ s : S') : Ω) = algebraMap Ω₀ Ω s := fun s => hψ s
   have hr₀S : ∀ p, r₀ p ∈ S := fun p => by
     rw [hS]; exact Algebra.subset_adjoin (Set.mem_insert_of_mem _ ⟨p, rfl⟩)
-  rw [GlobalTheory.T.localization_kaehler_prime_ideal Ω₀ Ω σ σ' r₀ r₁ v hv bd S S' θ hθ hr₀S hr₁S' q, hq (q.comap θ) (hq'.comap θ)]
+  rw [_root_.GlobalTheory.CompanionTheory.Ar.BoundaryPull.vanishing_rename_iff Ω₀ Ω σ σ' r₀ r₁ v hv bd S S' θ hθ hr₀S hr₁S' q, hq (q.comap θ) (hq'.comap θ)]
   constructor
   · rintro ⟨i, hi, hmem⟩
     refine ⟨Fin.castAdd r i, by simpa using hi, ?_⟩

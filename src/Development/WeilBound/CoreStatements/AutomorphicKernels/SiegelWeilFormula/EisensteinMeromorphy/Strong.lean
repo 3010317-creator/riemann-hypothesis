@@ -1,7 +1,8 @@
 module
 
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.AuxiliaryPrimeFunction
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EisensteinHeckeFunctionalStatement
+public import Development.WeilBound.ThetaLifts.LatticeBasics.HypothesesE
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EisensteinHeckeFunctional
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.EisensteinMeromorphy.DiffContOfReg
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.EisensteinMeromorphy.HgtMulRight
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.EisensteinMeromorphy.MeromorphicOnOfWeak
@@ -99,7 +100,7 @@ theorem eisStrong_of : EisBL → EisStrong := by
     intro s hs
     obtain ⟨k, H, hreg, he⟩ := hp s
     exact hreg.remove h1 he ((isOpen_lt continuous_const Complex.continuous_re).mem_nhds hs) hdiff
-  have hinv := GlobalTheory.T.eisenstein_hecke_functional F E σ d.B d.n d.Y r' s' d.ok.good d.ok.hn hY d.b d.K d.a d.ok.frame
+  have hinv := _root_.GlobalTheory.CompanionTheory.EisRat.eis_left_rat F E σ d.B d.n d.Y r' s' d.ok.good d.ok.hn hY d.b d.K d.a d.ok.frame
     d.ok.stdK d.ok.hgt d.χ s₁ f hf d.ok.hecke t Ê hsum
   obtain ⟨t', hmaj⟩ := majorant d ⟨r', s', hY⟩ hf
   intro s₀

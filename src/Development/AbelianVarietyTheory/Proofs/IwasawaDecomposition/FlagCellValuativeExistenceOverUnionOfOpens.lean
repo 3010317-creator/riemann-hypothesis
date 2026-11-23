@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsFrameCover
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CauchyBinetPluckerAndCellCoordinatesStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIntegralFlagCellOfValuedFieldStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CauchyBinetPluckerAndCellCoordinates
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIntegralFlagCellOfValuedField
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FlagCellPointEqOfTriangularFramesStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -80,8 +80,8 @@ theorem exists_of_closedPoint {A : Type} [CommRing A] [IsLocalRing A] {X : Schem
 theorem indep_cellVec {T : Type} {m : T → ℕ} {k : Type} [Field k] {M : ℕ} (D c : Let m → Fin (M + 1) → k) (w : Pm m)
     (x : CellVar m → k) (h : LeftInv D c) (τ : T) :
     LinearIndependent k fun j : Fin (m τ) => cellVec c w x ⟨τ, j⟩ := by
-  have h1 := (GlobalTheory.T.cauchyBinet_plucker_and_cellCoordinates.2 T m k M D c w x h).1 _ _ (down_std τ (m τ) le_rfl)
-  rw [GlobalTheory.T.cauchyBinet_plucker_and_cellCoordinates.1] at h1
+  have h1 := (_root_.GlobalTheory.FlagEmb.CauchyBinet.main.2 T m k M D c w x h).1 _ _ (down_std τ (m τ) le_rfl)
+  rw [_root_.GlobalTheory.FlagEmb.CauchyBinet.main.1] at h1
   have h2 := Matrix.linearIndependent_rows_of_det_ne_zero (h1.trans_ne one_ne_zero)
   let L : (Fin (M + 1) → k) →ₗ[k] (Fin (m τ) → k) :=
     Matrix.toLin' (Matrix.of fun l' r => D ((wLet w ∘ std τ (m τ) le_rfl) l') r)
@@ -110,7 +110,7 @@ theorem exists_integral_cell : ∀ (O K : Type) [CommRing O] [Field K] (β : O �
   have ha' : spMap ((algebraMap A k).comp φ) ≫ (V b).2.fromSpec =
       spMap (ψ'.comp (MvPolynomial.C : Γ(X, (V b').1) →+* CR m (V b'))) ≫ (V b').2.fromSpec := by
     rw [← sp_cbase, ha, ← Category.assoc, sp_comp]
-  obtain ⟨w, y, d, hy, hd, ht⟩ := GlobalTheory.T.exists_integral_flagCell_of_valuedField T m k (ValuationRing.valuation A k).valuationSubring M _ _
+  obtain ⟨w, y, d, hy, hd, ht⟩ := _root_.GlobalTheory.FlagEmb.exists_integral_cell T m k (ValuationRing.valuation A k).valuationSubring M _ _
     (inBlock_cellVec (hC.compat k b b' _ _ ha') w' (ψ' ∘ MvPolynomial.X))
     (indep_cellVec _ _ w' _ ((hC.inv b').map _))
   have hy' : ∀ v, ∃ t : A, algebraMap A k t = y v := fun v => (ValuationRing.mem_integer_iff A k (y v)).1 (hy v)

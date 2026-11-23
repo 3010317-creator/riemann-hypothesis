@@ -1,8 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.SplitRep
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AbsIrrSubOfIsIrrSubMapStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MatrixSystemNonzeroSolutionDescendsStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataN
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AbsIrrSubOfIsIrrSubMap
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Data.Matrix.Mul
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MatrixSystemNonzeroSolutionDescends
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SemisimpleMatrixRepIsInternalIrreducible
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -154,7 +157,7 @@ theorem splitRep_of_models : ∀ {k Γ L : Type} [Field k] [Group Γ] [Field L] 
     ext x; simp
   have hint : ∀ g, ((ρ g : Matrix (Fin a) (Fin a) k)).map f * C = C * ((σ g : Matrix (Fin b) (Fin b) k)).map f :=
     fun g => hCint g
-  obtain ⟨X, hX0, hXint, hQX⟩ := GlobalTheory.T.exists_ne_zero_intertwiner_of_map f (fun g => (ρ g : Matrix (Fin a) (Fin a) k))
+  obtain ⟨X, hX0, hXint, hQX⟩ := _root_.GlobalTheory.matrix_system_nonzero_solution_descends f (fun g => (ρ g : Matrix (Fin a) (Fin a) k))
     (fun g => (σ g : Matrix (Fin b) (Fin b) k)) Q C hC0 hint hQC
 
   have hXW : LinearMap.range X.mulVecLin ≤ W := by
@@ -174,6 +177,6 @@ theorem splitRep_of_models : ∀ {k Γ L : Type} [Field k] [Group Γ] [Field L] 
   have hVeq : V = ext f W :=
     Submodule.eq_of_le_of_finrank_le hVle ((finrank_ext_le f W).trans (hWb.trans hVb.ge))
   have hV' : IsIrrSub (mapRep f ρ) (ext f W) := hVeq ▸ hV
-  exact GlobalTheory.T.absIrrSub_of_isIrrSub_span_map f ρ W hWi hV'
+  exact _root_.GlobalTheory.AbsIrrOfAlgClosed.absIrrSub_of_isIrrSub_map f ρ W hWi hV'
 
 end GlobalTheory.SplitCrit

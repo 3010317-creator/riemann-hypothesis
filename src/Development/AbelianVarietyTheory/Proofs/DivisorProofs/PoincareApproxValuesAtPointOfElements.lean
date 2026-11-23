@@ -1,9 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsChartMember
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDominantTuplePrescribedMemberLinearFormStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.OrdGeOfForall
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDominantTuplePrescribedMemberLinearForm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemOfForallMemSupPow
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightedLatticeQuadraticSumGeDiagonalStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnimodMod
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightedLatticeQuadraticSumGeDiagonal
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -157,7 +159,7 @@ theorem GlobalTheory.Poinc.Sep.values_of_elements : ∀ (O : Type) [CommRing O] 
     rw [hδ i] at hi
     simp only [LinearMap.smul_apply, smul_eq_mul] at hi
     exact pos_of_mul_pos_right hi (by positivity)
-  obtain ⟨cW, hcW0, hcW⟩ := GlobalTheory.T.weightedLatticeQuadraticSum_ge_diagonal (s + 1) W hW
+  obtain ⟨cW, hcW0, hcW⟩ := _root_.GlobalTheory.Poinc.QWDom.qW_ge (s + 1) W hW
   have hq : ∀ k mv, 0 ≤ qW W (Φ.δ y k) mv := fun k mv => by
     have h1 := hcW (Φ.X y) (Φ.δ y k) (Φ.bal y k).1 (Φ.nonneg y k) mv
     have h2 : (0 : ℝ) ≤ ((∑ u, Φ.δ y k (mv u) (mv u) : ℤ) : ℝ) := by
@@ -194,7 +196,7 @@ theorem GlobalTheory.Poinc.Sep.values_of_elements : ∀ (O : Type) [CommRing O] 
               RingHom.ker ev) := by
     intro lam hlam mv
     obtain ⟨D, D', l, a, i₀, hD, hD', hmv, hdom, hlin⟩ :=
-      GlobalTheory.T.exists_dominant_tuple_prescribed_member_linearForm O bar φ (d₀ * d) (Φ.X y) hφX (Φ.m y) m₁ ga a₁ hcone hne hpos hs₁ s W hW N₁ hN₁ lam hlam mv
+      _root_.GlobalTheory.Poinc.DomTuple.exists_dominant O bar φ (d₀ * d) (Φ.X y) hφX (Φ.m y) m₁ ga a₁ hcone hne hpos hs₁ s W hW N₁ hN₁ lam hlam mv
     refine ⟨D, D', l, a, i₀, hD, hD', hmv, hlin, fun c => ?_⟩
     set T := (w : Φ.V y) ^ (D * d₀) * ∏ k, Φ.t y k ^ (M * D' * (lam (ga k)).toNat) with hT
     have hmono : Φ.monoT y a = T * g₀ ^ (D * d₀) := by

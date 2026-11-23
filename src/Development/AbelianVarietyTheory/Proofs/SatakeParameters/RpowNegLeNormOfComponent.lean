@@ -5,7 +5,10 @@ public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.Finite
 public import Development.AbelianVarietyTheory.BlockTheory.ThetaLiftGeometry.SmallRowEigenvalues
 public import Formalism.SatakeDualWeyl.StatementE
 public import Mathlib.NumberTheory.NumberField.Completion.FinitePlace
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SatakeBoundOfIsometricSphericalGLStatement
+public import Mathlib.Analysis.SpecialFunctions.Pow.Real
+public import Mathlib.RepresentationTheory.Basic
+public import Mathlib.RingTheory.MvPolynomial.Symmetric.Defs
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SatakeBoundOfIsometricSphericalGL
 public import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Tjcosets
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -73,7 +76,7 @@ variable {O K}
 theorem IsUnitarySatake.norm_le {r : ℕ} {β : Multiset ℂ} (h : IsUnitarySatake O K r β) :
     ∀ b ∈ β, ‖b‖ ≤ (qRes O : ℝ) ^ (((r : ℝ) - 1) / 2) := by
   obtain ⟨hc, V, _, _, ρ, v, hρ, hv, hfix, hT⟩ := h
-  exact GlobalTheory.T.satake_bound_of_isometric_sphericalGL O K r V ρ v β hc hρ hv hfix hT
+  exact _root_.GlobalTheory.LatHecke.satake_bound_of_isometric_spherical O K r V ρ v β hc hρ hv hfix hT
 
 end Local
 

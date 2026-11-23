@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IntFormsSubset
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoverPullbackMemBoundedCuspidalHolomorphicStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPullbackSectionToLevelCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegralPullbackUniformisedLevelCoverPlacesStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoverPullbackMemBoundedCuspidalHolomorphic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPullbackSectionToLevelCover
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegralPullbackUniformisedLevelCoverPlaces
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,13 +53,13 @@ theorem baseForms_sub_cover : ∀ (D : D7) (T : CoreJ D), LawsJ T → ∀ j, For
   constructor
   · intro x hx
     obtain ⟨f, ⟨hf, hh⟩, rfl⟩ := hx
-    obtain ⟨f₂, hf₂, hpull⟩ := GlobalTheory.T.exists_pullback_section_to_levelCover D T hL j hj σ hσ C hU.1 a n f hf
-    exact ⟨f₂, ⟨hf₂, GlobalTheory.T.coverPullback_mem_boundedCuspidalHolomorphic D T hL j hj σ hσ C hU a n hD f hf hh f₂ hf₂ hpull⟩, hP.2 f hf f₂ hf₂ hpull⟩
+    obtain ⟨f₂, hf₂, hpull⟩ := _root_.GlobalTheory.CovPull.exists_pull D T hL j hj σ hσ C hU.1 a n f hf
+    exact ⟨f₂, ⟨hf₂, _root_.GlobalTheory.CoverHol.cover_pull_holSub0 D T hL j hj σ hσ C hU a n hD f hf hh f₂ hf₂ hpull⟩, hP.2 f hf f₂ hf₂ hpull⟩
   · intro S S₂ hS
     intro x hx
     obtain ⟨f, ⟨hf, hh, hi⟩, rfl⟩ := hx
-    obtain ⟨f₂, hf₂, hpull⟩ := GlobalTheory.T.exists_pullback_section_to_levelCover D T hL j hj σ hσ C hU.1 a n f hf
-    exact ⟨f₂, ⟨⟨hf₂, GlobalTheory.T.coverPullback_mem_boundedCuspidalHolomorphic D T hL j hj σ hσ C hU a n hD f hf hh f₂ hf₂ hpull⟩,
-      GlobalTheory.T.integral_pullback_uniformisedLevelCover_places D T hL j hj σ hσ C hU a n hD S S₂ hS f hf hi f₂ hf₂ hpull⟩, hP.2 f hf f₂ hf₂ hpull⟩
+    obtain ⟨f₂, hf₂, hpull⟩ := _root_.GlobalTheory.CovPull.exists_pull D T hL j hj σ hσ C hU.1 a n f hf
+    exact ⟨f₂, ⟨⟨hf₂, _root_.GlobalTheory.CoverHol.cover_pull_holSub0 D T hL j hj σ hσ C hU a n hD f hf hh f₂ hf₂ hpull⟩,
+      _root_.GlobalTheory.CoverUpInt.pull_integral D T hL j hj σ hσ C hU a n hD S S₂ hS f hf hi f₂ hf₂ hpull⟩, hP.2 f hf f₂ hf₂ hpull⟩
 
 end GlobalTheory.CoverUp

@@ -3,21 +3,28 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CentreAtOfIsAt
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsLocModelIsPrimeOf
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AngehrnSiuNotKltAtSeveralPointsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscrepancySubQCartierCoeffNonposStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DvrPlaceTopFormOrdersApi
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NotDominatesTopPlace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AngehrnSiuNotKltAtSeveralPoints
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiscrepancySubQCartierCoeffNonpos
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalEquationEffectiveQCartierDivisor
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLtBinomialBoundOfMulPowLtStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsResidueMapClosurePointStatement
+public import Mathlib.Data.Nat.Choose.Basic
+public import Mathlib.Data.Rat.Init
+public import Mathlib.Tactic.ToAdditive
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLtBinomialBoundOfMulPowLt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsResidueMapClosurePoint
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionsRestrictBasis
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTrBasisMemOfIsLocalRingOfVarietyPointStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.H0LowerBoundIntersectionNumberClosureStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegrallyClosedPointLocalRingNormalSchemeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTrBasisMemOfIsLocalRingOfVarietyPoint
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsEqnIffGeneratesAtInv
+public import Development.AbelianVarietyTheory.Definitions.Divisors.LineBundleGlobalSectionsDimCongrPicardClass
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.H0LowerBoundIntersectionNumberClosure
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegrallyClosedPointLocalRingNormalScheme
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsLogCanonicalMultipleCanonical
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLogCanonicalEquationChangeFormPerturbedDivisor
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalResidueFieldClosedPointProjectiveComplex
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DvrPlaceTopFormOrdersApi
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocModelLocRingAndExistsTrBasis
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLogCanonicalEquationChangeFormPerturbedDivisorStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLogCanonicalLocalEquationAddSmulDivisor
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsProjOverLocallyOfFiniteType
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RationalResidueFieldClosedPointProjectiveComplexStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -130,7 +137,7 @@ theorem not_kltAt_of_local : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoeth
   haveI := GlobalTheory.isProjOver_locallyOfFiniteType ℂ X p hp
   have hLM : IsLocModel (Cartier.constFn p) (locRing x) := isLocModel_locRing x
   obtain ⟨-, hx0⟩ := isLocModel_locRing_and_exists_trBasis X p n x hn
-  obtain ⟨xi, hxi⟩ := GlobalTheory.T.exists_trBasis_mem_of_isLocalRingOfVarietyPoint (Cartier.constFn p) (locRing x) n hLM hx0
+  obtain ⟨xi, hxi⟩ := _root_.GlobalTheory.FieldPair.exists_trBasis_mem_of_isLocModel (Cartier.constFn p) (locRing x) n hLM hx0
   have hfree := isFreeGen_dForm_of_trBasis (Cartier.constFn p) hxi
   have hω0 : dForm (Cartier.constFn p) (fun j => (xi j : X.functionField)) ≠ 0 := fun h0 =>
     one_ne_zero (hfree.1 (a₁ := 1) (a₂ := 0) (by simp [h0]))
@@ -140,7 +147,7 @@ theorem not_kltAt_of_local : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoeth
   obtain ⟨F0, hF0⟩ := hfree.2 η
   replace hF0 : F0 • dForm (Cartier.constFn p) (fun j => (xi j : X.functionField)) = η := hF0
   have hF0ne : F0 ≠ 0 := fun h0 => hη (by rw [← hF0, h0, zero_smul])
-  obtain ⟨m₂, g₂, hm₂, hLE₂, hdisc₂⟩ := GlobalTheory.T.isLogCanonicalEquation_changeForm_perturbed_divisor X p n hn Δ D η
+  obtain ⟨m₂, g₂, hm₂, hLE₂, hdisc₂⟩ := _root_.GlobalTheory.PairStep.isLogEqn_changeForm_add X p n hn Δ D η
     (dForm (Cartier.constFn p) (fun j => (xi j : X.functionField))) x m mD l gG fD g aX
     (Units.mk0 F0 hF0ne) A δ (h / l) hω0 hF0.symm hm hmD hLE hDx hA
   have hKlt := (kltAt_iff_klt (p := p) hn hω0 hm₂ hLE₂).1 hK
@@ -229,7 +236,7 @@ theorem not_kltAt_of_local : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoeth
       (Finsupp.mapDomain (fun g : locRing x => (g : X.functionField)) φ) := by
     refine ⟨hω0, hψ0, fun E hE => ?_⟩
     obtain ⟨E', rfl⟩ := (placeEquiv p).surjective E
-    have h1 := GlobalTheory.T.discrepancy_sub_qCartier_coeff_nonpos X p n Δ D η x m mD gG fD δ hΔ hD hδ1 hm hmD hLE hDx E' hE
+    have h1 := _root_.GlobalTheory.PairStep.discrep_sub_le_zero_of_isQCart X p n Δ D η x m mD gG fD δ hΔ hD hδ1 hm hmD hLE hDx E' hE
     rw [hdψ]
     exact h1
   refine H xi φ ⟨u * (aX : X.functionField) ^ l, hux⟩ ⟨(g : X.functionField) * (aX : X.functionField) ^ l, hgx⟩
@@ -293,8 +300,8 @@ theorem exists_global_step : GlobalTheory.Published.Principalisation → ∀ (X 
   intro hPr X _ _ _ p n hp hn Δ m G A D P z k h hΔ _ hm hG hA hD hP hk hZ hcase hh hnum l₀
   haveI := GlobalTheory.isProjOver_locallyOfFiniteType ℂ X p hp
 
-  obtain ⟨q, hq, hnumq⟩ := GlobalTheory.T.exists_lt_binomial_bound_of_mul_pow_lt P.card k h _ hk hh hnum
-  obtain ⟨l₁, hl₁⟩ := GlobalTheory.T.h0_lower_bound_of_isAmple_cartierDiv X p hp A z k q hA hZ hq
+  obtain ⟨q, hq, hnumq⟩ := _root_.GlobalTheory.elementary_binom_bound P.card k h _ hk hh hnum
+  obtain ⟨l₁, hl₁⟩ := _root_.GlobalTheory.ClosureRR.h0_ge_of_lt_interNumRed X p hp A z k q hA hZ hq
   obtain ⟨l₂, hl₂⟩ := exists_sections_restrict_basis X p hp A z hA
   obtain ⟨l, M, hl0, hM, hkl, hhl, hcl⟩ := hnumq (max l₀ (max l₁ l₂))
   obtain ⟨r, f, hfs, hr, hgen⟩ := hl₂ l ((le_max_right _ _).trans ((le_max_right _ _).trans hl0))
@@ -303,7 +310,7 @@ theorem exists_global_step : GlobalTheory.Published.Principalisation → ∀ (X 
     have : ((P.card * (M + k - 1).choose k : ℕ) : ℚ) < r := by rw [hr]; exact lt_of_lt_of_le hcl hq1
     exact_mod_cast this
 
-  obtain ⟨κ, _, _, π₀, -, hπ, hconst, hκ, hloc⟩ := GlobalTheory.T.exists_residueMap_closure_point X p hp z k hZ
+  obtain ⟨κ, _, _, π₀, -, hπ, hconst, hκ, hloc⟩ := _root_.GlobalTheory.ResMap.residueMap X p hp z k hZ
   letI : Algebra ℂ X.functionField := (Cartier.constFn p).toAlgebra
   choose aX haX using fun x : X => A.exists_isEqn x
   obtain ⟨aZ, haZ⟩ := A.exists_isEqn z
@@ -338,9 +345,9 @@ theorem exists_global_step : GlobalTheory.Published.Principalisation → ∀ (X 
     have : (aZ : X.functionField) ^ l ≠ 0 := pow_ne_zero _ aZ.ne_zero
     field_simp
 
-  obtain ⟨av, hav, hfam⟩ := GlobalTheory.T.angehrnSiu_not_klt_at_several_points hPr n k P.card r M (fun i => locRing (e i : X)) π w lam wb
+  obtain ⟨av, hav, hfam⟩ := _root_.GlobalTheory.LocalHeart.not_klt_at_points hPr n k P.card r M (fun i => locRing (e i : X)) π w lam wb
     (isLocModel_locRing_and_exists_trBasis X p n z hn).2 hκ hk
-    (fun i => ⟨isLocModel_locRing _, GlobalTheory.T.isIntegrallyClosed_pointLocalRing_normalScheme X _, GlobalTheory.T.rationalResidueField_closedPoint_projectiveComplex X p hp _ (hP _ (e i).2).1⟩)
+    (fun i => ⟨isLocModel_locRing _, _root_.GlobalTheory.FieldPair.isIntegrallyClosed_locRing X _, _root_.GlobalTheory.FieldPair.ratRes_locRing_of_isClosed_of_isProjOver X p hp _ (hP _ (e i).2).1⟩)
     (fun i a h => hconst a (hxz i h)) (fun i f => (hloc _ (hxz i)).2.1 f)
     (fun i => ⟨(hloc _ (hxz i)).1, (hloc _ (hxz i)).2.2 (hP _ (e i).2).1⟩) hlamw hcr hM
 

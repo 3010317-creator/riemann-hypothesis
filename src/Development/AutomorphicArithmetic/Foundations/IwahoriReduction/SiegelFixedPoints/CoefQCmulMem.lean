@@ -4,12 +4,19 @@ public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.Sie
 public import Development.AbelianVarietyTheory.Definitions.Foundations.ApplyEqOfMemAdjoin
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
 public import Mathlib.RingTheory.AdicCompletion.Noetherian
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsLogDerivQExpansionModPrimePowRescaleStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SiegelUnitEdgeClassKummerDlogCongruenceStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SmoothedEisensteinFxCoefficientSeqOneMemSubringStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.EeProd
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsLogDerivQExpansionModPrimePowRescale
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsTopWTopWOfExists
+public import Development.AbelianVarietyTheory.Definitions.Foundations.Integral
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SiegelUnitEdgeClassKummerDlogCongruence
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.EisensteinModularTowers.NormalModularTowerTopAlgebraModel
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.SiegelFixedPoints.ConstInt
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.SiegelFixedPoints.DvdOfModEq
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SmoothedEisensteinFxCoefficientSeqOneMemSubring
 import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.SiegelFixedPoints.IsAdmissibleSmoothingFactorAddIntVector
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -176,7 +183,7 @@ private theorem smF_mem [IsAlgClosed Ω] [CharZero Ω] (A : ValuationSubring Ω)
   have hz : ∀ e : ℤ, eOm ε (1 / (M : ℚ)) ^ e ∈ A := fun e => by
     refine root_mem A hM.ne' ?_
     rw [← zpow_natCast, ← zpow_mul, mul_comm, zpow_mul, zpow_natCast, hζ.pow_eq_one, one_zpow]
-  exact GlobalTheory.T.smoothedEisensteinFxCoefficientSeq_one_mem_subring Ω A.toSubring c M _ a b hM hc h (hz b) (hz (-b)) k
+  exact _root_.GlobalTheory.KummerEisensteinGalois.smF_one_mem_subring Ω A.toSubring c M _ a b hM hc h (hz b) (hz (-b)) k
 
 private theorem not_dvd_of {l M : ℕ} {a : ℤ} (h : l ∣ M) (ha : ¬ (l : ℤ) ∣ a) : ¬ (M : ℤ) ∣ a :=
   fun h1 => ha ((Int.natCast_dvd_natCast.2 h).trans h1)
@@ -204,7 +211,7 @@ theorem UpperTheory.Kd.L.one :
   intro l _
   by_cases h2 : l = 2
   · exact ⟨0, fun ε X N _ c d gm hP => absurd h2 hP.odd⟩
-  obtain ⟨cc, hcc⟩ := GlobalTheory.T.siegelUnit_edgeClass_kummer_dlog_congruence l h2
+  obtain ⟨cc, hcc⟩ := _root_.GlobalTheory.pair_edge_dlog l h2
   refine ⟨cc, ?_⟩
   intro Ω _ _ _ _ ε X N _ c d gm hP A hA x m n hm hn g hg hg0 hg1
   haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
@@ -285,7 +292,7 @@ theorem UpperTheory.Kd.L.one :
   intro s hs hSt t ht φ hφ r
   have hsi : s⁻¹ ∈ fixMu Ω (topMu l n m N) := inv_mem hs
   obtain ⟨φ', hφ'⟩ := rescale_series φ hD0
-  have hdl := (GlobalTheory.T.isLogDerivQExpansionModPrimePow_rescale ε X hj l A hA n (N * N) _ _ φ φ' hNN hφ').1 hφ
+  have hdl := (_root_.GlobalTheory.Glue.isDl_rescale ε X hj l A hA n (N * N) _ _ φ φ' hNN hφ').1 hφ
   have hq : (((topMu l n m N : ℕ) : ℚ)) / ((N * N : ℕ) : ℚ) = (l : ℚ) ^ (m + n) := by
     have : ((N * N : ℕ) : ℚ) ≠ 0 := hD0.ne'
     rw [topMu, Nat.cast_mul, mul_div_assoc, div_self this, mul_one, Nat.cast_pow]

@@ -2,13 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.PoincareCuspForms.SmallUnipotentElements
 public import Development.AbelianVarietyTheory.BlockTheory.PoincareCuspForms.TwoLevelLogarithm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDetPowerSectionNeZeroDefiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTotallySplitPrimeUpperLevelUnipotentStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUpperLevelSubgroupComponentStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FreeBallNoContractionUnitaryUpperLevelStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrbitInterpolationDetWeightFreeBallIndefiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UpperLevelIsUnitaryStabiliserBothLatticesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UpperLevelTrivialDefiniteNoContractionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDetPowerSectionNeZeroDefinite
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTotallySplitPrimeUpperLevelUnipotent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUpperLevelSubgroupComponent
+public import Development.AbelianVarietyTheory.Definitions.UpperBounds.FreeBallIffOfDimXEqZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FreeBallNoContractionUnitaryUpperLevel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrbitInterpolationDetWeightFreeBallIndefinite
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UpperLevelIsUnitaryStabiliserBothLattices
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UpperLevelTrivialDefiniteNoContraction
 import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.MajLactRmul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -88,16 +89,16 @@ theorem comp_interp {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ}
     (x : Frame X.Ψ r) (hx : x ∈ X.dom) (hNC : GlobalTheory.IndefiniteRowSideFullHecke.SmallUnipotentElements.NoContraction X x) :
     ∃ P ∈ X.SS (deMul X.Ψ r X.p0 s), P x ≠ 0 ∧ ∀ γ ∈ G, γ ∉ X.Γ → P (lact γ x) = 0 := by
   by_cases hdef : X.p0 = 0 ∨ X.p0 = r
-  · have h1 := GlobalTheory.T.upperLevel_trivial_definite_noContraction E r X G g hg hgr hL' hU hdef x hx hNC
-    obtain ⟨P, hP, hP0⟩ := GlobalTheory.T.exists_detPowerSection_ne_zero_definite E r X.toData (fun γ hγ => h1 γ (hΓG hγ)) hdef s x hx
+  · have h1 := _root_.GlobalTheory.DefiniteLevel.eq_one_of_definite E r X G g hg hgr hL' hU hdef x hx hNC
+    obtain ⟨P, hP, hP0⟩ := _root_.GlobalTheory.DefConst.exists_ne_zero E r X.toData (fun γ hγ => h1 γ (hΓG hγ)) hdef s x hx
     refine ⟨P, hP, hP0, fun γ hγ hγ' => absurd ?_ hγ'⟩
     rw [h1 γ hγ]
     exact X.Γ.one_mem
   · push_neg at hdef
     have hp0 : 0 < X.p0 := Nat.pos_of_ne_zero hdef.1
     have hp1 : X.p0 < r := lt_of_le_of_ne X.p0_le hdef.2
-    obtain ⟨x0, h0, ⟨b, hb, rfl⟩, hFB⟩ := GlobalTheory.T.freeBall_noContraction_unitaryUpperLevel E r X G g hg hgr hΓG hL' hΛ hU x hx hNC
-    obtain ⟨P, hP, hP0, hPγ⟩ := GlobalTheory.T.orbitInterpolation_detWeight_freeBall_indefinite E r X.toData hχ G x0 h0 hFB hp0 hp1 s hs hsb
+    obtain ⟨x0, h0, ⟨b, hb, rfl⟩, hFB⟩ := _root_.GlobalTheory.FreeBallAt.freeBall_at E r X G g hg hgr hΓG hL' hΛ hU x hx hNC
+    obtain ⟨P, hP, hP0, hPγ⟩ := _root_.GlobalTheory.OrbitInterpWeight.orbit_interp_deMul E r X.toData hχ G x0 h0 hFB hp0 hp1 s hs hsb
     have hx0 : x0 ∈ X.dom := IW.orth_mem_dom X.toData x0 h0
     refine ⟨P, hP, ?_, fun γ hγ hγ' => ?_⟩
     · rw [hP.1.1.2.1 x0 hx0 b hb]
@@ -125,8 +126,8 @@ theorem castWt_deMul {E : Type} [Field E] {r : ℕ} {Ψ Ψ' : Finset (E →+* �
 theorem exists_form_one_lift : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (U C : Type) [Group U] [Finite U] [Finite C] [MulAction U C] (M : TwoLevels E r U C), LevelHyp M → ∀ s : ℕ, Even s → 2 * r + 50 * r ^ 2 * M.dimX + 1 ≤ s → ∀ (c : C) (x : Frame M.Ψ r), GlobalTheory.IndefiniteRowSideFullHecke.SmallUnipotentElements.NoContraction (M.comp c) (castFrame (M.comp_Ψ c).symm x) → x ∈ M.dom → ∃ u ∈ M.SS (deMul M.Ψ r M.p0 s), u c x ≠ 0 ∧ (∀ h : U, h ≠ 1 → M.pull h u c x = 0) ∧ ∀ c', (∀ h : U, h • c ≠ c') → ∀ y, u c' y = 0 := by
   intro E _ _ _ r U C _ _ _ _ M hLH s hs hsb c x hNC hx
   classical
-  obtain ⟨g, hg, hgr, hUn⟩ := GlobalTheory.T.exists_totallySplitPrime_upperLevel_unipotent E r U C M hLH
-  obtain ⟨G, hG, hΓG⟩ := GlobalTheory.T.exists_upperLevel_subgroup_component E r U C M c
+  obtain ⟨g, hg, hgr, hUn⟩ := _root_.GlobalTheory.levelHyp_totallySplit_unipotent E r U C M hLH
+  obtain ⟨G, hG, hΓG⟩ := _root_.GlobalTheory.upperLevel_isSubgroup E r U C M c
   have hΨ : (M.comp c).Ψ = M.Ψ := M.comp_Ψ c
   have hx' : castFrame hΨ.symm x ∈ (M.comp c).dom := by
     have := castFrame_mem_GG hΨ M.Gm M.p0 x hx
@@ -136,7 +137,7 @@ theorem exists_form_one_lift : ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
   have hsb' : 2 * r + 50 * r ^ 2 * ((M.comp c).Ψ.card * ((M.comp c).p0 * (r - (M.comp c).p0))) + 1 ≤ s := by
     rw [hΨ, M.comp_basePoint c]; exact hsb
   obtain ⟨P, hP, hP0, hPγ⟩ := comp_interp (M.comp c) (M.χ_one c) G g hg hgr hΓG
-    (fun β hβ => (GlobalTheory.T.upperLevel_isUnitaryStabiliser_both_lattices E r U C M c β ((hG β).1 hβ)).1) (fun β hβ => (GlobalTheory.T.upperLevel_isUnitaryStabiliser_both_lattices E r U C M c β ((hG β).1 hβ)).2)
+    (fun β hβ => (_root_.GlobalTheory.UpperStab.upper_isUStab E r U C M c β ((hG β).1 hβ)).1) (fun β hβ => (_root_.GlobalTheory.UpperStab.upper_isUStab E r U C M c β ((hG β).1 hβ)).2)
     (fun β hβ => hUn c β ((hG β).1 hβ)) s hs hsb' _ hx' hNC
   let u : C → Frame M.Ψ r → ℂ := fun c' y => if c' = c then P (castFrame hΨ.symm y) else 0
   refine ⟨u, ?_, ?_, ?_, ?_⟩

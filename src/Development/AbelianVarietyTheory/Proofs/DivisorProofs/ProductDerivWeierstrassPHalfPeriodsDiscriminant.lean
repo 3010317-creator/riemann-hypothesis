@@ -1,8 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsVariableChangeEqLatticeCurve
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CubicThreeRootsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivWeierstrassPAddHalfPeriodStatement
+public import Mathlib.Basic.Complex.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CubicThreeRoots
+public import Mathlib.Analysis.SpecialFunctions.Elliptic.Weierstrass
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivWeierstrassPAddHalfPeriod
 import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.WeierstrassPAddOfNeOfDerivNeZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -88,11 +90,11 @@ theorem prod_derivWeierstrassP_translates_eq_Δ : ∀ (L : PeriodPair) (a b t : 
     intro h; apply ha
     have := L.lattice.sub_mem h h2b
     convert this using 1; ring)
-  obtain ⟨hfac, hdisc⟩ := GlobalTheory.T.cubic_factor_and_discriminant_of_three_distinct_roots L.g₂ L.g₃ _ _ _ (hroot a ha h2a) (hroot b hb h2b)
+  obtain ⟨hfac, hdisc⟩ := _root_.GlobalTheory.CMModel.cubic_three_roots L.g₂ L.g₃ _ _ _ (hroot a ha h2a) (hroot b hb h2b)
     (hroot _ hc h2c) h12 h13 h23
-  have e1 := GlobalTheory.T.derivWeierstrassP_add_half_period' L a t ha h2a ht (hshift a h2a)
-  have e2 := GlobalTheory.T.derivWeierstrassP_add_half_period' L b t hb h2b ht (hshift b h2b)
-  have e3 := GlobalTheory.T.derivWeierstrassP_add_half_period' L (a + b) t hc h2c ht (hshift _ h2c)
+  have e1 := _root_.GlobalTheory.derivWeierstrassP_add_half_period L a t ha h2a ht (hshift a h2a)
+  have e2 := _root_.GlobalTheory.derivWeierstrassP_add_half_period L b t hb h2b ht (hshift b h2b)
+  have e3 := _root_.GlobalTheory.derivWeierstrassP_add_half_period L (a + b) t hc h2c ht (hshift _ h2c)
   have hsq := L.derivWeierstrassP_sq t ht
   rw [hfac] at hsq
   have hd : L.derivWeierstrassP t ≠ 0 := fun h =>

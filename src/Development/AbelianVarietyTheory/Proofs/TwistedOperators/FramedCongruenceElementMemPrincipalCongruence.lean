@@ -4,15 +4,15 @@ public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFr
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.OffQOfSizeRows
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsAuxiliaryVectorWittDec
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AdelicPointComponentsAtPlacesLatticesVacua
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PlaceIdempotentActsOnSupportedAndOffStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PlaceIdempotentActsOnSupportedAndOff
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceHermitianFrameProperties
-import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlaces
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemHyperspecialIffGIntOfSuppAtSplit
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjPlaceIdealMulLatticeCompletionEqStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FrameCongruentSubOneMulVecMemIdealLatticeCompletStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GridModulusExactOrderWitnessStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IntegerOutsidePrimePowDvdMaximalIdealPowStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SubMemLatticeCompletionOfSupportedPlacesStatement
+import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LevelHyperspecialTrivialCharacterSplitsOffPlaces
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -127,7 +127,7 @@ theorem gl_mem_lev : All fun {D} _ _ {sc} {G} _ _ => ∀ (X : Node), IsSelfDualC
         (fun i => cA D p.e * ((mt (G.V X) g - 1) *ᵥ y) i) := by
       funext i
       rw [Pi.add_apply, ← add_mul, hsum]
-      exact (((GlobalTheory.T.placeIdempotent_acts_on_supportedAndOff D p.v ε hε).1 _).1 (hsupp _ hz i)).symm
+      exact (((_root_.GlobalTheory.FinPl.placeIdem_acts D p.v ε hε).1 _).1 (hsupp _ hz i)).symm
     rw [hsplit]
     exact add_mem (GlobalTheory.T.frameCongruent_sub_one_mulVec_mem_idealLatticeCompletion D k p (G.V X) (G.Λ X) n β hlat G.modul (G.pl.depth sc v)
       ⟨m, hm, GlobalTheory.T.integer_outside_prime_pow_dvd_maximal_ideal_pow D k p (G.pl.w v) hid _ m hm'⟩ k₀ hk₀ y hy) (GlobalTheory.T.cA_smul_mem_latV_ideal_smul_of_conj_place D k p (G.pl.w v) hid (G.V X) (G.Λ X) G.modul ⟨m₂, hm₂, hm₂'⟩ _ hz)

@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.ComponentMassSum
 public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FramePointsOverComponentOpenSetStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsProbabilityMeasureMuPart
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FramePointsOverComponentOpenSet
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFinPartMat
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -60,7 +61,7 @@ theorem nullMeasurableSet_classesOver_framesOn : ∀ (D : D7) (H : ReciprocityTh
     · intro h
       exact ⟨(dict σ g).2, h⟩
     · rintro ⟨y, hy⟩
-      exact GlobalTheory.T.framePointsOverComponent_open_set D.host.E H Dw l Xo c r U σ hU Z _ y _ (d4 g) hy
+      exact _root_.GlobalTheory.FramesUnion.framesOn_of_mem D.host.E H Dw l Xo c r U σ hU Z _ y _ (d4 g) hy
   have hP : IsOpen {g : GA D (V σ) | (dict σ g).1 ∈ S} := by
     rw [isOpen_iff_mem_nhds]
     intro g₀ hg₀

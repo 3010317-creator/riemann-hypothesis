@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.OverExtAlgebraMap
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIntegralBasisUnramifiedInvolutionExt
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsUniformizerCompatibleUnramifiedExtStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsUniformizerCompatibleUnramifiedExt
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsLocalRingOfIdem
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsUnitTraceFormDiscrUnramifiedExt
 import Mathlib.Algebra.Order.Floor.Extended
@@ -101,7 +101,7 @@ theorem GlobalTheory.UnitLemma.Unr.exists_basis_trace_conj_unit :
       exact (IntBasis.adicVal_le_one_iff K _).2 (hall m)
   obtain ⟨w, hw⟩ := hbasis
   refine ⟨w, ?_⟩
-  obtain ⟨π, π', hππ, hm, hm'⟩ := GlobalTheory.T.exists_uniformizer_compatible_unramifiedExt K K' d φ h
+  obtain ⟨π, π', hππ, hm, hm'⟩ := _root_.GlobalTheory.UnitLemma.Unr.exists_unif K K' d φ h
   have hw1 : ∀ k, ∃ y : K'.O, algebraMap K'.O K'.E y = w k := by
     intro k
     apply (hw _).2

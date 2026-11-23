@@ -1,11 +1,18 @@
 module
 
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.LevelCoverSt
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsFiniteNormalModelOfResidueFiniteStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsFullLevelFiniteExtensionStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FullLevelGenericCoverStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericPointNormalCoordsStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProjectiveOverRestrictIntStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GlueApplyOfNotInFibre
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsGenOfIsVBOne
+public import Mathlib.AlgebraicGeometry.Morphisms.Finite
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsFiniteNormalModelOfResidueFinite
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsFullLevelAt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PushInvertible
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsFullLevelFiniteExtension
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.MemEigSpOfMemHtDual
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FullLevelGenericCover
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericPointNormalCoords
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProjectiveOverRestrictInt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -104,13 +111,13 @@ theorem finite_descResidueField_spMap_comp {X : Scheme.{0}} {K Ω : Type} [Field
 
 theorem levelCover : LevelCoverSt := by
   intro E _ _ _ H D l Xo c Y e he N hN
-  obtain ⟨K, _, _, n0, x0, y0, htie, -, hgen⟩ := GlobalTheory.T.generic_point_normal_coords E H D l Xo c Y e he
-  obtain ⟨Ω, _, _, z, ev, hfd, hfull⟩ := GlobalTheory.T.exists_full_level_finite_extension E H D l Xo c _ _ Y K y0 N hN
+  obtain ⟨K, _, _, n0, x0, y0, htie, -, hgen⟩ := _root_.GlobalTheory.CompanionTheory.Ar.XR.exists_cpt_of_genericPoint E H D l Xo c Y e he
+  obtain ⟨Ω, _, _, z, ev, hfd, hfull⟩ := _root_.GlobalTheory.CompanionTheory.Ar.XR.exists_fullLevel_finite E H D l Xo c _ _ Y K y0 N hN
   haveI : CharZero Ω := charZero_of_injective_algebraMap (algebraMap K Ω).injective
   haveI : NumberField c.F :=
     { to_charZero := inferInstance, to_finiteDimensional := c.fin }
   have hproj : IsProjOver (Y.s ≫ spMap (Int.castRingHom (𝓞 c.F))) :=
-    GlobalTheory.T.projective_over_restrict_int _ Y.X Y.s Y.proj
+    _root_.GlobalTheory.CompanionTheory.Ar.XR.isProjOver_comp_spMap_int _ Y.X Y.s Y.proj
   have hsurj : Function.Surjective (Scheme.stalkClosedPointTo (y0 ≫ Y.j)).hom := by
     obtain ⟨hg, -, -, -⟩ := htie
     obtain ⟨hb, -⟩ := hg
@@ -121,12 +128,12 @@ theorem levelCover : LevelCoverSt := by
     | exact hfd
   have hfin := finite_descResidueField_spMap_comp (algebraMap K Ω) hi (y0 ≫ Y.j) hsurj
   obtain ⟨n, x, M, π, hMn, hπ, hMπ⟩ :=
-    GlobalTheory.T.exists_finite_normal_model_of_residue_finite Y.X _ hproj Ω (spMap (algebraMap K Ω) ≫ (y0 ≫ Y.j)) hfin
+    _root_.GlobalTheory.CompanionTheory.Relay.exists_finite_normal_model_of_residue_finite Y.X _ hproj Ω (spMap (algebraMap K Ω) ≫ (y0 ≫ Y.j)) hfin
   have hMg : IsCptGen M.ξ := by
     obtain ⟨hg, -, -, -⟩ := M.tie
     exact hg
   obtain ⟨t, hx, ev', h1, h2, h3⟩ :=
-    GlobalTheory.T.full_level_generic_cover E H D l Xo c Y K Ω (algebraMap K Ω) y0 N z ev hN hfull M.X M.ξ hMg hMn π hMπ
+    _root_.GlobalTheory.CompanionTheory.Ar.XR.exists_full_level_over E H D l Xo c Y K Ω (algebraMap K Ω) y0 N z ev hN hfull M.X M.ξ hMg hMn π hMπ
   refine ⟨Ω, inferInstance, inferInstance, n, x, M, π, spMap (algebraMap K Ω) ≫ y0, t, hx, z, ev',
     hMn, hπ, ?_, ?_, h1, h2, h3⟩
   · show genPt (M.ξ ≫ π) = e

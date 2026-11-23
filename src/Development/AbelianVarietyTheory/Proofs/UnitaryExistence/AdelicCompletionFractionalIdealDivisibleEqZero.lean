@@ -2,9 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.Hat1
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicCompletionFractionalIdealProperties
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicCompletionLatticeSeparatedCompleteStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicCompletionLatticeSeparatedComplete
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicCompletionRationalPointsAndApproximation
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicCompletionRationalPointsAndApproximationStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -171,7 +170,7 @@ theorem adelicCompletionFractionalIdeal_divisible_eq_zero (J : FractionalIdeal (
     | zero => exact zero_mem _
     | add x y _ _ hx hy => exact add_mem hx hy
     | neg x _ hx => exact neg_mem hx
-  have := (GlobalTheory.T.adelicCompletion_lattice_separated_complete F E 1 _ hfg).1 (fun _ => z) (fun N hN => by
+  have := (_root_.GlobalTheory.AdLat.Complete.hat_separated_complete F E 1 _ hfg).1 (fun _ => z) (fun N hN => by
     obtain ⟨w, hw, rfl⟩ := h N hN
     exact ⟨_, hm w hw, rfl⟩)
   exact congrFun this 0
@@ -179,7 +178,7 @@ theorem adelicCompletionFractionalIdeal_divisible_eq_zero (J : FractionalIdeal (
 theorem lim_eq_of_congr (L : Submodule (𝓞 E) (Fin n → E)) (hL : L.FG) (x y : Fin n → RA F E)
     (h : ∀ N : ℕ, 0 < N → ∃ w ∈ hat F (L : Set (Fin n → E)), x = y + N • w) : x = y := by
   rw [← sub_eq_zero]
-  refine (GlobalTheory.T.adelicCompletion_lattice_separated_complete F E n L hL).1 _ fun N hN => ?_
+  refine (_root_.GlobalTheory.AdLat.Complete.hat_separated_complete F E n L hL).1 _ fun N hN => ?_
   obtain ⟨w, hw, rfl⟩ := h N hN
   exact ⟨w, hw, by abel⟩
 
@@ -237,7 +236,7 @@ theorem exists_adelic_matrix_of_tower : ∀ (F E : Type) [Field F] [NumberField 
   have hlim : ∀ a : L, ∃ z ∈ hat F (Λ : Set (Fin n → E)), ∀ N : ℕ, 0 < N →
       ∃ w ∈ hat F (Λ : Set (Fin n → E)), z = fv F (f N a : Fin n → E) + N • w := by
     intro a
-    refine (GlobalTheory.T.adelicCompletion_lattice_separated_complete F E n Λ hΛ).2 (fun N => fv F (f N a : Fin n → E)) (fun N => hfv Λ _) ?_
+    refine (_root_.GlobalTheory.AdLat.Complete.hat_separated_complete F E n Λ hΛ).2 (fun N => fv F (f N a : Fin n → E)) (fun N => hfv Λ _) ?_
     intro N m hN hm
     obtain ⟨v, hv⟩ := hcomp N m hN hm a
     refine ⟨_, hfv Λ v, ?_⟩
@@ -283,7 +282,7 @@ theorem exists_adelic_matrix_of_tower : ∀ (F E : Type) [Field F] [NumberField 
         exact ⟨a, fun _ => ⟨v, h⟩⟩
       · exact ⟨0, fun h => absurd h hN⟩
     choose h hh using hex
-    obtain ⟨z, hz, hzN⟩ := (GlobalTheory.T.adelicCompletion_lattice_separated_complete F E n L hL).2 (fun N => fv F (h N : Fin n → E))
+    obtain ⟨z, hz, hzN⟩ := (_root_.GlobalTheory.AdLat.Complete.hat_separated_complete F E n L hL).2 (fun N => fv F (h N : Fin n → E))
       (fun N => hfv L _) (by
         intro N m hN hm
         obtain ⟨v₁, e₁⟩ := hh N hN
@@ -321,7 +320,7 @@ theorem exists_adelic_matrix_of_tower : ∀ (F E : Type) [Field F] [NumberField 
   have hunit : IsUnit g := by
     rw [← Matrix.mulVec_surjective_iff_isUnit]
     intro y
-    obtain ⟨d, hd, hy⟩ := (GlobalTheory.T.adelicCompletion_rational_points_and_approximation F E n Λ hΛ hΛsp).2.2.2 y
+    obtain ⟨d, hd, hy⟩ := (_root_.GlobalTheory.AdLat.hat_rational_points_and_approx F E n Λ hΛ hΛsp).2.2.2 y
     obtain ⟨z, -, e⟩ := hsurj _ hy
     refine ⟨(d : F)⁻¹ • z, ?_⟩
     rw [Matrix.mulVec_smul, e, ← Nat.cast_smul_eq_nsmul F, smul_smul,
@@ -378,8 +377,8 @@ theorem exists_adelic_matrix_of_tower : ∀ (F E : Type) [Field F] [NumberField 
     intro b hb y hy
     rw [map_smul, map_smul, LinearMap.smul_apply, hB0 ⟨x, hx⟩ ⟨y, hy⟩, smul_zero, smul_zero]
   intro x y
-  obtain ⟨d, hd, hx⟩ := (GlobalTheory.T.adelicCompletion_rational_points_and_approximation F E n L hL hLsp).2.2.2 x
-  obtain ⟨e, he, hy⟩ := (GlobalTheory.T.adelicCompletion_rational_points_and_approximation F E n L hL hLsp).2.2.2 y
+  obtain ⟨d, hd, hx⟩ := (_root_.GlobalTheory.AdLat.hat_rational_points_and_approx F E n L hL hLsp).2.2.2 x
+  obtain ⟨e, he, hy⟩ := (_root_.GlobalTheory.AdLat.hat_rational_points_and_approx F E n L hL hLsp).2.2.2 y
   have h1 := hB1 _ hx _ hy
   rw [map_nsmul, map_nsmul, LinearMap.smul_apply, smul_smul, ← smul_zero (e * d)] at h1
   have h2 := lim_nsmul_cancel F (Nat.mul_pos he hd) h1

@@ -1,13 +1,15 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.LimitIdempotentRangeLeSumEigenspaces
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.LimitIdempotentRangeLeSumEigenspaces
 public import Formalism.LocalToGlobal.CharacterGerms.RowTieSelf
 public import Development.AbelianVarietyTheory.Definitions.TeichmullerDepth.HasTeich
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsIntegralEndOfLadicActionLimitStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.GaugeAdjointEndPairElementaryBlockStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IsGaugeAdjointIntegralEndPairAddStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IsIntegralGaugedFormalGroupLawSelfConjugateSquarStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.LimitIdempotentRangeLeSumEigenspacesStatement
+public import Formalism.LocalToGlobal.CharacterGerms.RowTieFB
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsIntegralEndOfLadicActionLimit
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.GaugeAdjointEndPairElementaryBlock
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IsGaugeAdjointIntegralEndPairAdd
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IsIntegralGaugedFormalGroupLawSelfConjugateSquar
+public import Formalism.LocalToGlobal.CharacterGerms.Interface
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.BiextCoeffSecondLinear
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +51,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.BiextCoeffSecondLinear
 import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
@@ -324,10 +325,10 @@ noncomputable def rawOne : RawChart C 0 (fun _ => Empty) (Fin dd) where
 
 theorem isEnd_blks (M M' : Fin 2 → Fin 2 → Matrix (Fin dd) (Fin dd) C)
     (h : ∀ r s, IsEnd (rawOne Y) V (M r s) (M' s r)) : IsEnd (Y.rawSelf p) V (blks M) (blks M') := by
-  have hR := GlobalTheory.T.isIntegralGaugedFormalGroupLaw_selfConjugateSquare C V O dd Y d I0 p
+  have hR := _root_.GlobalTheory.RowLawSquare.rlaw_rawSelf C V O dd Y d I0 p
   have hb : ∀ r s, IsEnd (Y.rawSelf p) V (blk r s (M r s)) (blk s r (M' s r)) := fun r s =>
-    GlobalTheory.T.gaugeAdjointEndPair_elementaryBlock C V O dd Y d I0 p 0 _ (rawOne Y) rfl rfl rfl r s _ _ (h r s)
-  have ha := GlobalTheory.T.isGaugeAdjointIntegralEndPair_add C V d _ _ (Y.rawSelf p) hR
+    _root_.GlobalTheory.RowLaw.EndBlock.isEnd_block C V O dd Y d I0 p 0 _ (rawOne Y) rfl rfl rfl r s _ _ (h r s)
+  have ha := _root_.GlobalTheory.RowLaw.EndSum.isEnd_add C V d _ _ (Y.rawSelf p) hR
   have := ha _ _ _ _ (ha _ _ _ _ (hb 0 0) (hb 0 1)) (ha _ _ _ _ (hb 1 0) (hb 1 1))
   have e : blks M' = blk 0 0 (M' 0 0) + blk 1 0 (M' 1 0) + (blk 0 1 (M' 0 1) + blk 1 1 (M' 1 1)) := by
     unfold blks
@@ -343,12 +344,12 @@ theorem exists_pair : ∃ b : (Fin dd → C) → I0 → C, ∀ φ : ZMod d → C
   have := Y.algClosed
   obtain ⟨L, hL, hLi⟩ := exists_lin Y
   obtain ⟨ε, h0, h1, hP⟩ := p.em_unr
-  obtain ⟨E, -, -, -, hE, -⟩ := GlobalTheory.T.exists_integralEnd_of_ladic_action_limit C V O dd Y 0 _ (rawOne Y) rfl rfl rfl (fun n => ε ^ (V.l ^ n))
+  obtain ⟨E, -, -, -, hE, -⟩ := _root_.GlobalTheory.ActionLimit.exists_isEnd_of_limit_raw C V O dd Y 0 _ (rawOne Y) rfl rfl rfl (fun n => ε ^ (V.l ^ n))
     (idem_cauchy h0)
   simp only [← hL] at hE
   have hb : ∀ v, ∃ b : I0 → C, E.mulVec v = ∑ c, b c • p.e c := by
     intro v
-    obtain ⟨w, hw, hv⟩ := GlobalTheory.T.limitIdempotent_range_le_sum_eigenspaces C V O (Fin dd) L hLi d p.em p.em_int p.em_frob ε h0 hP E hE v
+    obtain ⟨w, hw, hv⟩ := _root_.GlobalTheory.IdemRange.limit_idempotent_range C V O (Fin dd) L hLi d p.em p.em_int p.em_frob ε h0 hP E hE v
     choose b _ hb using fun a => p.e_full a (w a) fun x => by rw [← hL, hw]
     refine ⟨fun c => ∑ a, b a c, ?_⟩
     rw [hv]
@@ -358,7 +359,7 @@ theorem exists_pair : ∃ b : (Fin dd → C) → I0 → C, ∀ φ : ZMod d → C
   choose b hb using hb
   refine ⟨b, fun φ hφ => ?_⟩
   obtain ⟨s, hs, hsd, hsl⟩ := exists_seq p.em p.em_int h0 h1 hP φ hφ
-  obtain ⟨M, M', e1, e2, hM, hM'⟩ := GlobalTheory.T.exists_integralEnd_of_ladic_action_limit C V O dd Y 0 _ (rawOne Y) rfl rfl rfl s hs
+  obtain ⟨M, M', e1, e2, hM, hM'⟩ := _root_.GlobalTheory.ActionLimit.exists_isEnd_of_limit_raw C V O dd Y 0 _ (rawOne Y) rfl rfl rfl s hs
   simp only [← hL] at hM hM'
   have hst : (V.l : O) ∣ ε * star ε - star ε := by
     obtain ⟨y, hy⟩ := hP (1 - star ε) fun a => by

@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DividedWeightUnique
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedWeightEntriesSignsSizes
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedWeightGapsBlockAndBarStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightDivisionL1BoundStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightDivisionL1Bound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -151,7 +151,7 @@ theorem entry_le (hW : W.Hyp) (hD : W.IsDiv) (τ : ι) (i : Fin N) :
     |reWt W.u' τ i| ≤ 2 * W.b / W.T := by
   have hT := T_pos W hW
   have h1 := (GlobalTheory.MeanTop.divided_entries ι N W hW hD τ i).1
-  have h2 := (GlobalTheory.T.weight_division_l1_bound ι N W hW hD).2.2 τ i
+  have h2 := (_root_.GlobalTheory.MeanTop.divided_weight_size ι N W hW hD).2.2 τ i
   have h3 := hW.h5 τ i
   have h1' : ((W.T : ℝ) + W.Dd + 1) * |(W.u1 τ i : ℝ)| ≤ |(W.u τ i : ℝ)| + W.c0 + 4 * N := by exact_mod_cast h1
   have h2' : |(W.u' τ i : ℝ)| ≤ |(W.u1 τ i : ℝ)| := by exact_mod_cast h2

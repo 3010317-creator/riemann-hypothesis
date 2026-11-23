@@ -3,11 +3,12 @@ module
 public import Formalism.LocalToGlobal.Columns.KOneCharacterTrivialNearOne
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.CongruenceLevelEqDepthSucc
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.AbsNormEqOfSplitFactor
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.BlockExtMemTwistedK1Statement
+public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.RedPEqZeroOfDiv
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.BlockExtMemTwistedK1
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PhiTopTargetTwist
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PrincipalCongruenceLeTwistedK1Statement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RowTypeCharacterBlockSumOneEqStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TwistedK1BlockDecompositionStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PrincipalCongruenceLeTwistedK1
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RowTypeCharacterBlockSumOneEq
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.TwistedK1BlockDecomposition
 public import Formalism.LocalToGlobal.Columns.DiagUnitMemAndNormalizesKOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -78,22 +79,22 @@ theorem level_congruence_eq_twisted_k1 (P : HeightOneSpectrum (𝓞 E)) (hu : ((
     levCong hN P c ⟨HQ (𝓞 E ⧸ P.asIdeal) n r b, (lamQ ξ n r b)⁻¹⟩ = kOneLevel P N r (c + 1) ξ := by
   set l : Lev (𝓞 E ⧸ P.asIdeal) K n := ⟨HQ (𝓞 E ⧸ P.asIdeal) n r b, (lamQ ξ n r b)⁻¹⟩
   have hH : (levCong hN P c l).H = twK1H P N r (c + 1) := by
-    refine le_antisymm (sup_le ?_ (GlobalTheory.T.principal_congruence_le_twisted_k1 P r (c + 1) c.succ_pos)) fun g hg => ?_
+    refine le_antisymm (sup_le ?_ (_root_.GlobalTheory.PrincipalCongruenceLevelK1.principal_congruence_le_level_k1 P r (c + 1) c.succ_pos)) fun g hg => ?_
     · rintro _ ⟨j, hj, rfl⟩
-      exact GlobalTheory.T.block_ext_mem_twisted_k1 P hu hN r b (c + 1) hn j hj
-    · obtain ⟨j, hj, hb⟩ := GlobalTheory.T.twisted_k1_block_decomposition P hN r b c hn g hg
+      exact _root_.GlobalTheory.TopStep.ext_mem_twisted_k1_level P hu hN r b (c + 1) hn j hj
+    · obtain ⟨j, hj, hb⟩ := _root_.GlobalTheory.BlockDecompositionK1.exists_block_of_twisted_k1 P hN r b c hn g hg
       exact (mem_levCong hN c l g).2 ⟨j, hj, hb⟩
   refine levI_ext hH fun k h1 h2 => ?_
   obtain ⟨j, hj, hb⟩ := (mem_levCong hN c l k).1 h1
   rw [levCong_lam hN c l h1 hj hb]
   apply Units.ext
-  have hjK : extI hN P j ∈ twK1H P N r (c + 1) := GlobalTheory.T.block_ext_mem_twisted_k1 P hu hN r b (c + 1) hn j hj
-  have hbK : (extI hN P j)⁻¹ * k ∈ twK1H P N r (c + 1) := GlobalTheory.T.principal_congruence_le_twisted_k1 P r (c + 1) c.succ_pos hb
+  have hjK : extI hN P j ∈ twK1H P N r (c + 1) := _root_.GlobalTheory.TopStep.ext_mem_twisted_k1_level P hu hN r b (c + 1) hn j hj
+  have hbK : (extI hN P j)⁻¹ * k ∈ twK1H P N r (c + 1) := _root_.GlobalTheory.PrincipalCongruenceLevelK1.principal_congruence_le_level_k1 P r (c + 1) c.succ_pos hb
   have hk : (⟨k, h2⟩ : twK1H P N r (c + 1)) = ⟨_, hjK⟩ * ⟨_, hbK⟩ := Subtype.ext (mul_inv_cancel_left _ _).symm
   show _ = ((kOneCharacter P N r (c + 1) ξ).toHomUnits ⟨k, h2⟩ : K)
   rw [MonoidHom.coe_toHomUnits, hk, map_mul]
   show _ = LocE.lamQB ξ r N (extI hN P j).1.toLinearMap * LocE.lamQB ξ r N ((extI hN P j)⁻¹ * k).1.toLinearMap
-  rw [lamQB_prinCong P ξ r (c + 1) c.succ_pos _ hb, mul_one, extI_val, GlobalTheory.T.rowTypeCharacter_blockSumOne_eq P ξ hN r (by omega) j.1,
+  rw [lamQB_prinCong P ξ r (c + 1) c.succ_pos _ hb, mul_one, extI_val, _root_.GlobalTheory.SumRowType.lamQB_sumE P ξ hN r (by omega) j.1,
     GlobalTheory.TopLaw.lamQB_eq_red ξ hn j hj]
   rfl
 

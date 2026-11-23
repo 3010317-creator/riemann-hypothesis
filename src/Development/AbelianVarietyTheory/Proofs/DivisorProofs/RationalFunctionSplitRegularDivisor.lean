@@ -3,8 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsEqnIffGeneratesAtInv
 public import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.HdimEqZeroOfSubsingleton
 public import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.PreservesFiniteColimitsTwistFunctor
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRationalFunctionMapsOfCartierTwistSectionsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MayerVietorisSectionsSplitStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRationalFunctionMapsOfCartierTwistSections
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MayerVietorisSectionsSplit
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,12 +65,12 @@ theorem ratsec_split_of_H1 : ∀ (Y : Scheme.{0}) [IsIntegral Y] (D : CartierDiv
     ∃ h₁ h₂ : Y.functionField, f = h₂ - h₁ ∧ (∀ y ∈ W₁, D.RegularAt y h₁) ∧
       ∀ y ∈ W₂, D.RegularAt y h₂ := by
   intro Y _ D W₁ W₂ hH f hf
-  obtain ⟨ρ, hreg, hsurj, hres⟩ := GlobalTheory.T.exists_rationalFunction_maps_of_cartierTwistSections Y D
+  obtain ⟨ρ, hreg, hsurj, hres⟩ := _root_.GlobalTheory.Cartier.exists_ratOn_twist Y D
   by_cases g1 : genericPoint Y ∈ W₁
   · by_cases g2 : genericPoint Y ∈ W₂
     · have g12 : genericPoint Y ∈ W₁ ⊓ W₂ := ⟨g1, g2⟩
       obtain ⟨t, ht⟩ := hsurj (W₁ ⊓ W₂) f g12 hf
-      obtain ⟨a, b, hab⟩ := GlobalTheory.T.mayer_vietoris_sections_split Y _ W₁ W₂ hH t
+      obtain ⟨a, b, hab⟩ := _root_.GlobalTheory.TwoOpens.sections_inter_eq_sub_of_subsingleton_cohOn Y _ W₁ W₂ hH t
       refine ⟨ρ W₁ a, ρ W₂ b, ?_, fun y hy => hreg W₁ a y hy, fun y hy => hreg W₂ b y hy⟩
       rw [← ht, hab, map_sub, hres W₂ (W₁ ⊓ W₂) inf_le_right b g12,
         hres W₁ (W₁ ⊓ W₂) inf_le_left a g12]

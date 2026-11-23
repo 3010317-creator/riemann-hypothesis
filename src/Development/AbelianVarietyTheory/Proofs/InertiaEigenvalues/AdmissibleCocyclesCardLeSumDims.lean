@@ -1,14 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ResBound
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardCocyclesIndependentModCoboundariesLeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsLargestModelStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPhiGammaModelExtensionCocyclePairStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TwistedModelAdmissibleCocycles
+public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.OnePlusPowerAssembly
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardCocyclesIndependentModCoboundariesLe
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsLargestModel
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPhiGammaModelExtensionCocyclePair
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemCoboundariesOfHerrPairCoboundary
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SmulAdd
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistedPhiGammaModelSenWeightCount
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MapAevalNab
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemCoboundariesOfHerrPairCoboundaryStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModelObjAndAbcStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SmulAddStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistedPhiGammaModelSenWeightCountStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ModelObjAndAbc
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -69,11 +71,11 @@ theorem repr_sum {k G : Type} [Field k] [Group G] {l n : ℕ} [Fact l.Prime] [Ch
   classical
   induction t using Finset.induction_on with
   | empty =>
-    have h0 := GlobalTheory.T.repr_smul_add F A (-1) (z a₀) (z a₀) (b a₀) (g a₀) (b a₀) (g a₀) (h a₀) (h a₀)
+    have h0 := _root_.GlobalTheory.TopSteps.Repr.smul_add F A (-1) (z a₀) (z a₀) (b a₀) (g a₀) (b a₀) (g a₀) (h a₀) (h a₀)
     simpa only [neg_one_smul, neg_add_cancel, Finset.sum_empty] using h0
   | insert a t ha ih =>
     rw [Finset.sum_insert ha, Finset.sum_insert ha, Finset.sum_insert ha]
-    exact GlobalTheory.T.repr_smul_add F A (c a) (z a) _ (b a) (g a) _ _ (h a) ih
+    exact _root_.GlobalTheory.TopSteps.Repr.smul_add F A (c a) (z a) _ (b a) (g a) _ _ (h a) ih
 
 theorem indep_pairs {k G : Type} [Field k] [Group G] {l n : ℕ} [Fact l.Prime] [CharP k l] [NeZero n]
     {R : RingPG k l} (F : DFun R n G) (A : Ob k G) {s : ℕ} (z : Fin s → G → Fin A.m → k)
@@ -90,7 +92,7 @@ theorem indep_pairs {k G : Type} [Field k] [Group G] {l n : ℕ} [Fact l.Prime] 
 
     simp only [map_sum, map_smul]
   rw [e1, Submodule.mkQ_apply, Submodule.Quotient.mk_eq_zero] at hc
-  have hcob := GlobalTheory.T.mem_coboundaries_of_herrPair_coboundary F A _ _ _ (repr_sum F A z b g h a c t) hc
+  have hcob := _root_.GlobalTheory.TopSteps.mem_cob_of_repr_mem_herrB F A _ _ _ (repr_sum F A z b g h a c t) hc
   refine hz t c ?_ a ha
   have e2 : ∑ a ∈ t, c a • (cob A).mkQ (z a) = (cob A).mkQ (∑ a ∈ t, c a • z a) := by
 
@@ -109,14 +111,14 @@ private theorem exists_ne_zero_smul_mem_of_mem_span' (hψ : GlobalTheory.Indefin
     (s : ℕ) (z : Fin s → (ZMod n → Vc k m) × (ZMod n → Vc k m)) (hz : ∀ a, InZZ D Dt N (z a).1 (z a).2)
     (hind : LinearIndependent k (fun a => (herrB D).mkQ (z a))) : s ≤ Dt.dsum := by
   subst hr
-  exact GlobalTheory.T.card_cocycles_independent_mod_coboundaries_le hψ D ι Dt N hc h1 h2 h3 habc hsen s z hz hind
+  exact _root_.GlobalTheory.Models.PolarBound.main hψ D ι Dt N hc h1 h2 h3 habc hsen s z hz hind
 
 theorem main : GlobalTheory.IndefiniteRowSideFullHecke.OnePlusPowerCharacters.LemmaPsi → ∀ {k G : Type} [Field k] [Group G] {l n : ℕ} [Fact l.Prime] [CharP k l] [NeZero n] {R : RingPG k l} (F : DFun R n G) {r : ℕ} {Dt : TopData n r} (M : ModTh F Dt) (ι : k⸨X⸩ →ₐ[k] k⸨X⸩), GlobalTheory.IndefiniteRowSideFullHecke.OnePlusPowerCharacters.IsCyclotomic R ι → Dt.T1 l → Dt.T2 l → Dt.T3 l → ∀ (s : ℕ) (z : Fin s → G → Fin M.T.m → k), (∀ a, z a ∈ M.twistedModelAdmissibleCocycles M.T) → LinearIndependent k (fun a => (cob M.T).mkQ (z a)) → s ≤ Dt.dsum := by
   intro hψ k G _ _ l n _ _ _ R F r Dt M ι hc h1 h2 h3 s z hz hind
-  choose N b g hN hR hZ using fun a => GlobalTheory.T.exists_phiGammaModel_extension_cocycle_pair F M h1 h2 h3 M.T (z a) (hz a)
-  obtain ⟨Nm, hNm, hmax⟩ := GlobalTheory.T.exists_largest_model' F M M.T M.Nstd M.std_model
-  have hS := GlobalTheory.T.twistedPhiGammaModel_sen_weight_count F M h1 h2 h3 Nm hNm (hmax _ M.std_model)
-  refine exists_ne_zero_smul_mem_of_mem_span' hψ (F.D M.T) ι Dt Nm M.T_m hc h1 h2 h3 (GlobalTheory.T.obj_and_abc_of_model F M M.T Nm hNm).2
+  choose N b g hN hR hZ using fun a => _root_.GlobalTheory.TopSteps.ExtPair.exists_model_repr_inZZ F M h1 h2 h3 M.T (z a) (hz a)
+  obtain ⟨Nm, hNm, hmax⟩ := _root_.GlobalTheory.Models.exists_largest_model F M M.T M.Nstd M.std_model
+  have hS := _root_.GlobalTheory.ModelCount.count F M h1 h2 h3 Nm hNm (hmax _ M.std_model)
+  refine exists_ne_zero_smul_mem_of_mem_span' hψ (F.D M.T) ι Dt Nm M.T_m hc h1 h2 h3 (_root_.GlobalTheory.Models.model_obj_and_abc F M M.T Nm hNm).2
     (fun i => ⟨(hS i).1, (hS i).2.1, fun hB => ⟨(hS i).2.2 hB,
       GlobalTheory.Models.EPolyModel.model_ePoly F M h1 h3 M.T Nm hNm i hB⟩⟩)
     s (fun a => (b a, g a)) (fun a => inZZ_mono _ _ (hmax _ (hN a)) (hZ a)) (indep_pairs F M.T z b g hR hind)

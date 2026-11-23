@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTranspOfMovesAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCandidateBorelMoveOpenFramesBaireStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ScalarOfBorelMovesOpenFramesStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.Signature
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCandidateBorelMoveOpenFramesBaire
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ScalarOfBorelMovesOpenFrames
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.FrameBorelGroupoidProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -88,11 +89,11 @@ theorem movesAt_of_movesAt_open : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies
   have hborc : ∀ b ∈ Bor ((uAt r v i).X k'').Ψ D.R.r, castFrame hma.psi.symm b ∈ Bor ((uAt r v i).X k).Ψ D.R.r := by
     intro b hb τ
     exact hb ⟨τ.1, hma.psi ▸ τ.2⟩
-  obtain ⟨γ', hγ', V, hVo, hVn, hVd, hV⟩ := GlobalTheory.T.exists_candidate_borel_move_open_frames_baire ((uAt r v i).X k) ((uAt r v i).X k'').Γ a c W hWo ⟨z₀, hz₀⟩ hWd
+  obtain ⟨γ', hγ', V, hVo, hVn, hVd, hV⟩ := _root_.GlobalTheory.baire_one_candidate ((uAt r v i).X k) ((uAt r v i).X k'').Γ a c W hWo ⟨z₀, hz₀⟩ hWd
     (fun z hz => by
       obtain ⟨γ', hγ', b, hb, e⟩ := step z (hWd hz) hz
       exact ⟨γ', hγ', _, hborc b hb, hcast z b γ' (eq_of_heq (Sigma.mk.inj_iff.1 e).2)⟩)
-  obtain ⟨s, hs⟩ := GlobalTheory.T.scalar_of_borel_moves_open_frames ((uAt r v i).X k) _ V hVo hVn hVd hV
+  obtain ⟨s, hs⟩ := _root_.GlobalTheory.scalar_of_triangular_moves_open ((uAt r v i).X k) _ V hVo hVn hVd hV
   set m : GL (Fin D.R.r) D.host.E := (γ' * a)⁻¹ * c with hm_def
   have hcm : (c : Matrix (Fin D.R.r) (Fin D.R.r) D.host.E) =
       (γ' : Matrix (Fin D.R.r) (Fin D.R.r) D.host.E) * (a : Matrix _ _ _) * (m : Matrix _ _ _) := by

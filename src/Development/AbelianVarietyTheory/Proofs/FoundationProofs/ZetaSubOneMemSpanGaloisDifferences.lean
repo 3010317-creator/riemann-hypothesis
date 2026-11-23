@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KummerTowerQqPowLevelEqQ
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIntegralTraceEqZetaSubOneTopStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NotCoboundaryConstantOne
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsIntegralTraceEqZetaSubOneTop
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OneSubPrimeDivZetaSubOneMulIsUnitStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -80,7 +81,7 @@ theorem zeta_sub_one_mem_span : ∀ (p : ℕ) [Fact p.Prime], p ≠ 2 → ∀ (�
   set I := Submodule.span C {y : Ω | ∃ x ∈ C, y = g x - x} with hI
   have hr0 : r ≠ 0 := by rintro rfl; exact hgr (map_zero g)
   obtain ⟨y, E, hy, hE, huniq, hsum⟩ :=
-    GlobalTheory.T.exists_integral_sum_conj_eq_zeta_sub_one p hp2 Ω hΩ T {r} (by simpa using hr) j hj
+    _root_.GlobalTheory.exists_integral_trace_eq_zeta_sub_one_top p hp2 Ω hΩ T {r} (by simpa using hr) j hj
   have hE' : ∀ e ∈ E, e ∈ Hinf T := hE
   have huniq' : ∀ h ∈ Hinf T, ∃! e, e ∈ E ∧ h y = e y ∧ h r = e r := by
     intro h hh; simpa using huniq h hh

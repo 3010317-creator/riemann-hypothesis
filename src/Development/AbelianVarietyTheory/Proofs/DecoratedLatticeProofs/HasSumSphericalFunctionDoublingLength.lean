@@ -2,10 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.PairwiseDisjointCell
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasBoundedSumsOne
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HasSumHeckeSeriesSphericalEigenfunction
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HasSumHeckeSeriesSphericalIntegralInverse
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeckeSeriesCellHasSum
 import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HasSumHeckeSeriesSphericalEigenfunctionStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HasSumHeckeSeriesSphericalIntegralInverseStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeckeSeriesCellHasSumStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -130,7 +131,7 @@ theorem hasSum_pairTerm_fiber {γ : Fin n → ℂ} {φ : GL (Fin n) k → ℂ} (
     refine hasSum_of_subtype (P := fun c : GL (Fin n) k ⧸ KO k (Fin n) => ∀ i j, (c.out : GL (Fin n) k).1 i j ∈ 𝒪[k])
       (fun c => X ^ (ord k (Matrix.GeneralLinearGroup.det c.out)).toNat * φ (h.out * c.out))
       (X ^ (-ord k (Matrix.GeneralLinearGroup.det h.out)).toNat)
-      (GlobalTheory.T.hasSum_hecke_series_spherical_eigenfunction k n γ φ hφ hγ X hX h.out) (fun c hB => ?_) (fun c hB => ?_) (by ring)
+      (_root_.GlobalTheory.HeckeShift.hasSum_hecke_shift k n γ φ hφ hγ X hX h.out) (fun c hB => ?_) (fun c hB => ?_) (by ring)
     · rw [pairTerm, if_pos ⟨hA, hB⟩]
       ring
     · rw [pairTerm, if_neg fun H => hB H.2]
@@ -151,7 +152,7 @@ theorem hasSum_pairTerm_total {γ : Fin n → ℂ} {φ : GL (Fin n) k → ℂ} (
   exact hasSum_of_subtype
     (P := fun c : GL (Fin n) k ⧸ KO k (Fin n) => ∀ i j, (c.out⁻¹ : GL (Fin n) k).1 i j ∈ 𝒪[k])
     (fun c => X ^ (-ord k (Matrix.GeneralLinearGroup.det c.out)).toNat * φ c.out) a
-    (GlobalTheory.T.hasSum_hecke_series_spherical_integral_inverse k n γ φ hφ hγ X hX) (fun c hB => if_pos hB) (fun c hB => if_neg hB) (mul_comm _ _)
+    (_root_.GlobalTheory.HeckeDual.hasSum_dual k n γ φ hφ hγ X hX) (fun c hB => if_pos hB) (fun c hB => if_neg hB) (mul_comm _ _)
 
 theorem norm_pairTerm (X : ℂ) (φ : GL (Fin n) k → ℂ)
     (p : (GL (Fin n) k ⧸ KO k (Fin n)) × (GL (Fin n) k ⧸ KO k (Fin n))) :
@@ -226,7 +227,7 @@ theorem hasSum_pairTerm_pairEquiv {γ : Fin n → ℂ} {φ : GL (Fin n) k → �
       (∀ i j, (h.out⁻¹ * g.out : GL (Fin n) k).1 i j ∈ 𝒪[k]))
     (fun h => X ^ ((-ord k (Matrix.GeneralLinearGroup.det h.out)).toNat +
       (ord k (Matrix.GeneralLinearGroup.det (h.out⁻¹ * g.out))).toNat)) (φ g.out)
-    (GlobalTheory.T.hecke_series_cell_has_sum k n ϖ hϖ e.1 g.out he X hX) (fun h hB => ?_) (fun h hB => ?_) rfl
+    (_root_.GlobalTheory.LatticePair.hasSum_pair k n ϖ hϖ e.1 g.out he X hX) (fun h hB => ?_) (fun h hB => ?_) rfl
   · rw [pairTerm_pairEquiv hφ, if_pos hB]
   · rw [pairTerm_pairEquiv hφ, if_neg hB]
 

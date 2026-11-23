@@ -3,18 +3,20 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrysActApply
 public import Development.AbelianVarietyTheory.Definitions.Divisors.InfUniv
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrystallinePull2SumCup
-import Development.AbelianVarietyTheory.Definitions.Divisors.IsLocalRingTrivSqZeroExt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualNumberGraphFiltrationExistsIsComplStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoords
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualNumberGraphFiltrationExistsIsCompl
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualNumberGraphFiltrationIsotropicOfSkewStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualNumberGraphFiltrationLieOfMapIntoHodgeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualNumberGraphFiltrationPushforwardMemStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualNumberGraphFiltrationPushforwardMem
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorExistsLiftOrderActionHodgeSummand
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorExistsPolarisationBundleLiftStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NotCompactOfMEqOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorExistsPolarisationBundleLift
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorLieMultiplicitySquareZeroLift
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorLiftLieOfHodgeSummandLieStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorPrimeToPLevelLiftSquareZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorPrimeToPLevelLiftSquareZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieConditionHodgeSubspaceLeHodgeFiltrationStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemHodgeFiltrationIffDualNumberGraphReductionStatement
+import Development.AbelianVarietyTheory.Definitions.Divisors.IsLocalRingTrivSqZeroExt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -102,10 +104,10 @@ private theorem lift_with_filtration
     GlobalTheory.HTDeform.exists_lift_oAct p D R b N C k π hπ hsq tR o₀ E hCompl hReduction hStable
   have hComm : IsCommMonObj A := hA.comm
   obtain ⟨P, φ₂, hP, r1, r2, hsym, hamp, hker, hros, hsq2, hpol⟩ :=
-    GlobalTheory.T.harrisTaylor_exists_polarisation_bundle_lift p D R b N C k π hπ hsq tR o₀ A i h
+    _root_.GlobalTheory.UPel.HT.PolLift.exists_pol_lift p D R b N C k π hπ hsq tR o₀ A i h
       hA act hact (fun φ' hφ' x hx y hy => hIsotropic φ' hφ' x (hE ▸ hx) y (hE ▸ hy))
   obtain ⟨eta, e1, e2, e3, e4, e5⟩ :=
-    GlobalTheory.T.harrisTaylor_primeToP_level_lift_squareZero p D R b N C k π hπ hsq tR o₀ A i h hA
+    _root_.GlobalTheory.HTLevelLift.level_lift p D R b N C k π hπ hsq tR o₀ A i h hA
       act hact hN P φ₂ hP hsq2 hpol
   rw [← hE] at hLie
   let o' : GlobalTheory.UPel.HT.Obj b N (spMap tR) :=
@@ -155,9 +157,9 @@ theorem realise_core (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.Datum p)
   have hπ : Function.Surjective (TrivSqZeroExt.fstHom k k k).toRingHom :=
     fun r => ⟨TrivSqZeroExt.inl r, rfl⟩
   have hA₀ := o₀.ab
-  have hCompl := @GlobalTheory.T.dualNumberGraphFiltration_exists_isCompl k _ o₀.A o₀.grp hA₀ f
+  have hCompl := @_root_.GlobalTheory.HTRealise.graphFil_exists_isCompl k _ o₀.A o₀.grp hA₀ f
   have hReduction := @GlobalTheory.T.mem_hodgeFiltration_iff_dualNumberGraph_reduction k _ o₀.A o₀.grp hA₀ f
-  have hStable (c : D.O) := @GlobalTheory.T.dualNumberGraphFiltration_pushforward_mem
+  have hStable (c : D.O) := @_root_.GlobalTheory.HTRealise.push_mem_graphFil
     k _ o₀.A o₀.grp (o₀.act.act c) (o₀.act.hom c) f (hf.1 c)
   have hIsotropic := @GlobalTheory.T.dualNumberGraphFiltration_isotropic_of_skew
     k _ o₀.A o₀.grp hA₀ o₀.P o₀.isLB φ hφ f hf.2.2

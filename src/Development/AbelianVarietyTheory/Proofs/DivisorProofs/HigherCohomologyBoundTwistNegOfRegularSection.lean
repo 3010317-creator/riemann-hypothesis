@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.EventuallyExistsFiniteSubsetNonzeroLocus
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LineBundleGlobalSectionsDimCongrPicardClass
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlobalSectionsPolynomialGrowth
 import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.IsFiniteLengthOfIsArtinianRingAnnihilator
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlobalSectionsPolynomialGrowthStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SheafCohomologyDimTwistCutInequalitiesStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SheafCohomologyDimTwistCutInequalities
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,7 +59,7 @@ theorem higherCohomology_bound_twist_neg_of_regular_section : ∀ (k : Type) [Fi
   have h1 : ∃ C : ℕ, ∀ m : ℕ,
       hdim k (twist (cut F hB s) (lbPow L m)) j ≤ C * ((d + 1) * (m + 1) ^ d) := by
     rcases Nat.eq_zero_or_pos j with rfl | hj
-    · obtain ⟨C, hC⟩ := GlobalTheory.T.global_sections_polynomial_growth k X hX d L hL (cut F hB s) hcut
+    · obtain ⟨C, hC⟩ := _root_.GlobalTheory.exists_hdim_twist_lbPow_zero_le k X hX d L hL (cut F hB s) hcut
       exact ⟨C, fun m => (hC m).trans
         (Nat.mul_le_mul_left _ (Nat.le_mul_of_pos_left _ (Nat.succ_pos d)))⟩
     · obtain ⟨C, hC⟩ := ih (cut F hB s) hcut j hj
@@ -72,7 +72,7 @@ theorem higherCohomology_bound_twist_neg_of_regular_section : ∀ (k : Type) [Fi
   have hB' := Twist.isLB_lbZPow hB (-1)
   obtain ⟨M', hM', e'⟩ := cls_surj (cls _ hB' + cls _ hM)
   obtain ⟨e⟩ := nonempty_twist_twist_iso_of_cls_eq F hB' hM hM' e'
-  have key := (GlobalTheory.T.sheafCohomologyDim_twist_cut_inequalities k X hX F B (lbPow L m) M' hB hM hM' s hs (by
+  have key := (_root_.GlobalTheory.hdim_twist_cut_inequalities k X hX F B (lbPow L m) M' hB hM hM' s hs (by
     rw [e', cls_lbZPow hB (-1) hB']
     simp [add_comm, add_left_comm, add_assoc])).2.1 j
   have e2 : hdim k (twist (twistZ F B (-1)) (lbPow L m)) (j + 1) = hdim k (twist F M') (j + 1) :=

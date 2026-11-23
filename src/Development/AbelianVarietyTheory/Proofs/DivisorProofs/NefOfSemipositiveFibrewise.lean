@@ -2,10 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMemChart
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NefFibOfIsNef
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithmeticSurfaceFibreIsProjOverZmodDimLeOneStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CurveDegreeNonnegZmodFibreOfNefOnFiniteFieldFibrStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeNonnegOfCurveDegreeNonnegOverZmodStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EulerCharLineBundleFibreModpEqRatProjectiveStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsClosedImmersionGenericPoint
+public import Development.AbelianVarietyTheory.Definitions.Divisors.LineBundleGlobalSectionsDimCongrPicardClass
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithmeticSurfaceFibreIsProjOverZmodDimLeOne
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsTorsionFreeOfForallExists
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CurveDegreeNonnegZmodFibreOfNefOnFiniteFieldFibr
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeNonnegOfCurveDegreeNonnegOverZmod
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EulerCharLineBundleFibreModpEqRatProjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,12 +79,12 @@ theorem ratDeg_nonneg : ∀ (k : Type) [CommRing k] (W : Scheme.{0}) (q : W ⟶ 
     IsArithVar q 1 → ArInt.NefFib L → 0 ≤ ratDeg q L.B := by
   intro k _ W q L hW hL
   haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
-  obtain ⟨e1, e2⟩ := GlobalTheory.T.eulerChar_lineBundle_fibre_modp_eq_rat_projective k W q 1 hW 2 L.B L.isLB
-  obtain ⟨hproj, hdim⟩ := GlobalTheory.T.arithmeticSurface_fibre_isProjOver_zmod_dim_le_one k W q hW 2
+  obtain ⟨e1, e2⟩ := _root_.GlobalTheory.ChiFibre.chi_fibre_eq k W q 1 hW 2 L.B L.isLB
+  obtain ⟨hproj, hdim⟩ := _root_.GlobalTheory.FibreDim.fibre_isProjOver_and_dim_le k W q hW 2
   letI := GlobalTheory.algebraΓOfHom
     (pullback.snd (q ≫ spMap (Int.castRingHom k)) (spMap (Int.castRingHom (ZMod 2))))
-  have h := GlobalTheory.T.degree_nonneg_of_curveDegree_nonneg_over_zmod 2 _ hproj hdim _ (LB.isLB_pull L.isLB _)
-    (fun Z i _ _ _ hZ => GlobalTheory.T.curveDegree_nonneg_zmodFibre_of_nefOnFiniteFieldFibres k W q L 2 hL Z i hZ)
+  have h := _root_.GlobalTheory.CurveDevissage.degOfRank_nonneg 2 _ hproj hdim _ (LB.isLB_pull L.isLB _)
+    (fun Z i _ _ _ hZ => _root_.GlobalTheory.NefFibPrime.topSelf_nonneg_of_nefFib k W q L 2 hL Z i hZ)
   rw [ratDeg, degOfRank, ← e1, ← e2]
   simpa [degOfRank] using h
 

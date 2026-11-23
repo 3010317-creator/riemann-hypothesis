@@ -2,8 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IntegrandSZero
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.GaussianBinomialClosedForm
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.InvariantSphericalCoefficientEqZeroOrZonalStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SatakeTrivialBoundOfBoundedZonalSphericalUnitaryStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.InvariantSphericalCoefficientEqZeroOrZonal
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NotIsSplitOfIsInertAt
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.TrivialParameterBound
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SatakeTrivialBoundOfBoundedZonalSphericalUnitary
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsUniqueIsConjAt
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSatakeParametersBoundedEigenfunction
 import Mathlib.Algebra.Order.Floor.Extended
@@ -82,14 +84,14 @@ theorem paramBoundOn_nonsplit (hUDI : GlobalTheory.IndefiniteRowSideFullHecke.Sp
     exact hℓ _ hk' _
   have h1 : ℓ x ≠ 0 := by
     intro h0; apply hc1; rw [hcv, map_one]; exact h0
-  have hz := (GlobalTheory.T.invariant_sphericalCoefficient_eq_zero_or_zonal _ ϖu τ (qV D.host.F v) A.rank hU' V ρ' x α hsat ℓ hKinv).2 h1
+  have hz := (_root_.GlobalTheory.ZonalCoeff.coeff_zero_or_zonal _ ϖu τ (qV D.host.F v) A.rank hU' V ρ' x α hsat ℓ hKinv).2 h1
   have hbd : ∃ C' : ℝ, ∀ g, ‖ℓ (ρ' g x) / ℓ x‖ ≤ C' := by
     refine ⟨C / ‖ℓ x‖, fun g => ?_⟩
     rw [norm_div]
     have : ‖ℓ (ρ' g x)‖ ≤ C := by
       have := hC (e.symm g); rw [hcv] at this; exact this
     exact div_le_div_of_nonneg_right this (norm_nonneg _)
-  have htb := GlobalTheory.T.satakeTrivialBound_of_bounded_zonal_spherical_unitary hUDI _ ϖu τ (qV D.host.F v) A.rank hU' α _ hz hbd
+  have htb := _root_.GlobalTheory.ZonalBound.trivialBound_of_bounded hUDI _ ϖu τ (qV D.host.F v) A.rank hU' α _ hz hbd
   intro β hβ
   rw [hB] at hβ
   have hq2 : 2 ≤ qV D.host.F v := hU.2.2.2.2.2.1

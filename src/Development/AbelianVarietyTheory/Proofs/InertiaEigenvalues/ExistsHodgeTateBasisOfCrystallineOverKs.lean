@@ -1,18 +1,25 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExpStar
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamFilInvariantJumpDescendsFinExtStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamInvariantsCoordinatesFinrankEqStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamFilInvariantJumpDescendsFinExt
+public import Formalism.WeaklyAdmissibleFiltrations.Statement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamInvariantsCoordinatesFinrankEq
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsDeRhamFilGradedSymbolToTateTwistStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsDeRhamTensorCoordinatesOfBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFamilyAdaptedToSeparatedFiltrationStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPadicBasisGaloisLatticeSameMatricesStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsDeRhamTensorCoordinatesOfBasis
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFamilyAdaptedToSeparatedFiltration
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPadicBasisGaloisLatticeSameMatrices
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteJumpsInfFiltrationStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodCoefficientRingPadicIntegersFinExtStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsCrystallineCyclotomicLevelOfFinrankInvariantsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyThetaOnBdRPlusPeriodDataStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SerreTateLinearIndependentOfWeightwiseStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TateInvariantsCyclotomicTwistStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.LocCoh
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodCoefficientRingPadicIntegersFinExt
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsCrystallineCyclotomicLevelOfFinrankInvariants
+public import Formalism.SharpRestriction.LevelLetterCocycles.LocalSituation
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyThetaOnBdRPlusPeriodData
+public import Development.AbelianVarietyTheory.Definitions.Foundations.HTBasis
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SerreTateLinearIndependentOfWeightwise
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TateInvariantsCyclotomicTwist
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteDimensionalKsOfFinExt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -87,7 +94,7 @@ theorem basis_of_invariants (P : LocPrime l) (AI : LocAinf l P) (Θ : ThetaL P A
       have ht : ∀ j ∈ t, f j ∈ (P.PD E).Fil a := fun j h => hf j (Finset.mem_insert_of_mem h)
       rw [Finset.sum_insert hj, Finset.sum_insert hj,
         (hsy a).1 _ (hf j (Finset.mem_insert_self _ _)) _ (Submodule.sum_mem _ ht), ih ht]
-  obtain ⟨x, u, hx, hind⟩ := GlobalTheory.T.exists_family_adapted_to_separated_filtration ↥E.1 (Fin d → P.R.BdR) D
+  obtain ⟨x, u, hx, hind⟩ := _root_.GlobalTheory.exists_family_adapted_filtration ↥E.1 (Fin d → P.R.BdR) D
     (fun a => Submodule.pi Set.univ fun _ => (P.PD E).Fil a) d hfin hd
     (fun a y hy i hi => (P.PD E).Fil_anti a (hy i hi))
     (by
@@ -120,9 +127,9 @@ theorem basis_of_invariants (P : LocPrime l) (AI : LocAinf l P) (Θ : ThetaL P A
     rw [hc]
     exact mul_left_comm _ _ _
   refine ⟨fun k i => sy (u k) (x k i), u, ?_, fun k => ⟨x k, (hx k).1, hxF k, fun h => ?_⟩, hact⟩
-  · refine GlobalTheory.T.serreTate_linearIndependent_of_weightwise l AI.actC P.χQ (GK E) E.1 ?_ d d _ _ u hact ?_
+  · refine _root_.GlobalTheory.SerreTateIndep.linearIndependent_of_weightwise l AI.actC P.χQ (GK E) E.1 ?_ d d _ _ u hact ?_
     · intro i y hy
-      have := GlobalTheory.T.tate_invariants_cyclotomic_twist l AI.actC P.χQ ⟨AI.actC_ext, AI.actC_norm⟩ P.χQ_cyc K s hs i y
+      have := _root_.GlobalTheory.CyclotomicTowerSubgroupInclusions.invariants_twist l AI.actC P.χQ ⟨AI.actC_ext, AI.actC_norm⟩ P.χQ_cyc K s hs i y
         (by intro g hg; apply hy; unfold GK; rw [hE]; exact hg)
       rwa [hE]
     · intro a c hc h0
@@ -169,16 +176,16 @@ theorem htBasis_of_isCrys (P : LocPrime l) (AI : LocAinf l P) (Θ : ThetaL P AI)
       {a : ℤ | DdR (P.PD K) T'.ρ ⊓ FilV (P.PD K) (LL := ↥LL.1) (V := T'.V) (a + 1) ≠
         DdR (P.PD K) T'.ρ ⊓ FilV (P.PD K) (LL := ↥LL.1) (V := T'.V) a} := by
   have hLL : FiniteDimensional ℚ_[l] ↥LL.1 := LL.2
-  obtain ⟨bV, hbV⟩ := GlobalTheory.T.exists_padic_basis_galoisLattice_same_matrices l K LL T' d M A hM
+  obtain ⟨bV, hbV⟩ := _root_.GlobalTheory.Cyc.LatBasis.exists_basis_of_isMat l K LL T' d M A hM
   let ρ' : Representation ↥LL.1 ↥(GK E) T'.V := T'.ρ.comp (Subgroup.inclusion (GK_le hle))
   let AK : GRep ↥(GK K) ℚ_[l] ↥LL.1 ↥(OL LL) := { V := T'.V, ρ := T'.ρ, cont := T'.cont }
   let AE : GRep ↥(GK E) ℚ_[l] ↥LL.1 ↥(OL LL) :=
     { V := T'.V, ρ := ρ'
       cont := fun x => (T'.cont x).comp (continuous_inclusion (GK_le hle)) }
-  have hK := h7K _ _ (GlobalTheory.T.goodCoefficientRing_padicIntegers_finExt l LL) AK
-  have hE := h7E _ _ (GlobalTheory.T.goodCoefficientRing_padicIntegers_finExt l LL) AE
+  have hK := h7K _ _ (_root_.GlobalTheory.LocalIntegers.goodO_integers l LL) AK
+  have hE := h7E _ _ (_root_.GlobalTheory.LocalIntegers.goodO_integers l LL) AE
   have hanti : ∀ a, FilV (P.PD K) (LL := ↥LL.1) (V := T'.V) (a + 1) ≤ FilV (P.PD K) a := by
-    obtain ⟨Φ, h1, -⟩ := GlobalTheory.T.exists_deRham_tensor_coordinates_of_basis (P.PD K) T'.ρ bV
+    obtain ⟨Φ, h1, -⟩ := _root_.GlobalTheory.exists_coord_tensor_dR (P.PD K) T'.ρ bV
     intro a z hz
     exact (h1 a z).2 fun i => (P.PD K).Fil_anti a ((h1 _ z).1 hz i)
   refine ⟨GlobalTheory.T.finite_setOf_inf_filtration_ne_succ _ _ (DdR (P.PD K) T'.ρ) (fun a => FilV (P.PD K) a) hK.2.1.1 hanti, ?_⟩
@@ -200,8 +207,8 @@ theorem htBasis_of_isCrys (P : LocPrime l) (AI : LocAinf l P) (Θ : ThetaL P AI)
       exact LinearMap.congr_fun (map_mul T'.ρ ⟨g, hg⟩ ⟨g', hg'⟩) v
     rw [key, key, key, hcomp]
     exact LinearMap.toMatrix_comp bV bV bV _ _
-  obtain ⟨ΦE, -, hΦE⟩ := GlobalTheory.T.exists_deRham_tensor_coordinates_of_basis (P.PD E) ρ' bV
-  obtain ⟨DE, hDE, hfin, hdim⟩ := GlobalTheory.T.deRham_invariants_coordinates_finrank_eq (P.PD E) ρ' bV hLL hE.2.1.1 (hE.2.2 hcrys) ΦE hΦE
+  obtain ⟨ΦE, -, hΦE⟩ := _root_.GlobalTheory.exists_coord_tensor_dR (P.PD E) ρ' bV
+  obtain ⟨DE, hDE, hfin, hdim⟩ := _root_.GlobalTheory.deRham_invariants_coord_finrank (P.PD E) ρ' bV hLL hE.2.1.1 (hE.2.2 hcrys) ΦE hΦE
   have hinv : ∀ y ∈ DE, ∀ g ∈ GK E,
       ((M0 g).map (algebraMap ℚ_[l] P.R.BdR)).mulVec (fun i => P.actQdR g (y i)) = y := by
     intro y hy g hg
@@ -216,8 +223,8 @@ theorem htBasis_of_isCrys (P : LocPrime l) (AI : LocAinf l P) (Θ : ThetaL P AI)
   refine ⟨e, u, hli, fun k => ?_, fun σ hσ k => ?_⟩
   · obtain ⟨y, hy, hy1, hy2⟩ := hu k
     simp only [hFil] at hy1 hy2
-    obtain ⟨z, hz, hz1, hz2⟩ := GlobalTheory.T.deRhamFil_invariant_jump_descends_finExt l P K E hle d M0 hmul (u k) y (hinv y hy) hy1 hy2
-    obtain ⟨Φ, h1, h2⟩ := GlobalTheory.T.exists_deRham_tensor_coordinates_of_basis (P.PD K) T'.ρ bV
+    obtain ⟨z, hz, hz1, hz2⟩ := _root_.GlobalTheory.InvDescent.jump_descends l P K E hle d M0 hmul (u k) y (hinv y hy) hy1 hy2
+    obtain ⟨Φ, h1, h2⟩ := _root_.GlobalTheory.exists_coord_tensor_dR (P.PD K) T'.ρ bV
     intro heq
     have hmem : Φ.symm z ∈ DdR (P.PD K) T'.ρ ⊓ FilV (P.PD K) (u k) := by
       refine ⟨?_, (h1 _ _).2 (by simpa using hz1)⟩
@@ -254,12 +261,12 @@ theorem htBasis_of_isCrys (P : LocPrime l) (AI : LocAinf l P) (Θ : ThetaL P AI)
 
 theorem exists_htBasis : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW), adm7 D → ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (s : ℕ) (LL : FinExt l) (h : Good K s LL), let S := sit D.loc HW l (D.locA l) K s LL h; let E : S.Comparison₂ := ((F l).E K s LL h).tie; ∀ (T : LocLat S.G S.Qp S.LL S.O), IsCrysOn S S.W.GKs T → ∀ (d : ℕ) (M : GQ l → Matrix (Fin d) (Fin d) (PadicComplex l)) (A : ↥(OL LL) → Matrix (Fin d) (Fin d) (PadicComplex l)), IsMat K LL T M A → ∀ m : ℕ, s ≤ m → (Jset S T).Finite ∧ HTBasis (D.locA l).actC (D.loc l).χQ (Gj K m) M (Jset S T) := by
   intro D HW F h7 l _ K s LL h S E' T hcr d M A hM m hm
-  obtain ⟨Θ⟩ := GlobalTheory.T.nonempty_thetaOnBdRPlus_periodData D l
+  obtain ⟨Θ⟩ := _root_.GlobalTheory.ThetaTie.nonempty_thetaL D l
   obtain ⟨E, hEs⟩ : ∃ E : FinExt l, E.1 = Ks K s :=
     ⟨⟨Ks K s, GlobalTheory.MemLoc.finiteDimensional_Ks_of_finExt K s⟩, rfl⟩
   have hle : K.1 ≤ E.1 := hEs ▸ h.2.2.1
   exact htBasis_of_isCrys (D.loc l) (D.locA l) Θ K s ⟨h.1, h.2.1⟩ E hEs hle LL (h7 l K) (h7 l E) T
-    (GlobalTheory.T.isCrystalline_cyclotomicLevel_of_finrank_invariants l (D.loc l) K s LL _ ((HW l).W K s LL h) ((HW l).W_s K s LL h) E hEs hle T hcr)
+    (_root_.GlobalTheory.Cyc.isCrys_Ks_of_finrank l (D.loc l) K s LL _ ((HW l).W K s LL h) ((HW l).W_s K s LL h) E hEs hle T hcr)
     M A hM m hm
 
 end GlobalTheory.HTBasisEx

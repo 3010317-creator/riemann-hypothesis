@@ -1,14 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ImportsAlt
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusPolydiscWindowsSurjectiveBoundsZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LiftHasSumZeroOfSurjectiveModPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SumMulUntiltFrobeniusDoubleSeriesEqZeroStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MooreNorm
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusPolydiscWindowsSurjectiveBoundsZero
+public import Mathlib.Analysis.Normed.Field.Instances
+public import Mathlib.NumberTheory.Padics.Complex
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LiftHasSumZeroOfSurjectiveModPrime
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SumMulUntiltFrobeniusDoubleSeriesEqZero
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TiltComplexPadicIsAlgClosedUnitBall
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TiltOrthOfUntiltOrthStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TiltUntiltMultiplicativeExtensionSurjectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TiltOrthOfUntiltOrth
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TiltUntiltMultiplicativeExtensionSurjective
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TiltedSeriesRowSubUntiltTruncatedAdditiveRow
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TiltUntiltToComplexPAdicBasicLaws
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TiltedSeriesRowSubUntiltTruncatedAdditiveRowStatement
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UntiltFrobeniusLaurentSeriesHasSumBoundFrobenius
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -51,7 +54,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MooreNorm
 
 @[expose] public section
 
@@ -82,18 +84,18 @@ theorem core (l : ℕ) [Fact l.Prime] (F : Type) [NontriviallyNormedField F] [Is
   have hmu : ∀ j, sh (m j) = μ j := hm
   have horthF : GlobalTheory.PMonE.Orth l lamF := by
     intro c j hc
-    have := GlobalTheory.T.norm_sh_le_sh_int_sum_of_orthogonal l h m (fun i j => by rw [hmu, hmu]; exact hratio i j) (fun c j => by simp only [hmu]; exact horth c j) c j hc
+    have := _root_.GlobalTheory.tilt_orth_of_untilt_orth l h m (fun i j => by rw [hmu, hmu]; exact hratio i j) (fun c j => by simp only [hmu]; exact horth c j) c j hc
     have e : (∑ i, (c i : F) * lamF i) = ι (∑ i, (c i : Fl l) * m i) := by simp [lamF, map_sum]
     rw [e, hnι, hnι]; exact this
   have hpos : 0 < h := by omega
-  obtain ⟨ρ, τ, K, hρ, hτ, hW1, hW2, hW3⟩ := GlobalTheory.T.frobenius_polydisc_windows_surjective_bounds_zero F l h ϖ hpos hϖ lamF
+  obtain ⟨ρ, τ, K, hρ, hτ, hW1, hW2, hW3⟩ := _root_.GlobalTheory.PMonE.winThm F l h ϖ hpos hϖ lamF
     (fun j => by rw [← norm_pos_iff, hnl]; exact norm_pos_iff.2 (hμ j).1)
     (fun i j hij => by simp only [hnl]; exact hanti hij) horthF (fun i j => by simp only [hnl]; exact hratio i j)
   set S : Set (Fin h → Fl l) := {x | ∀ j, ‖sh (x j)‖ ≤ ρ j} with hSdef
   let η : (Fin h → Fl l) → Fin h → ℂ_[l] := fun x i => ∑ j, sh (m j) * lam h i (x j)
   have hE : ∀ x ∈ S, ∀ i, ‖η x i - tsh (GlobalTheory.PMonE.rowT l ϖ lamF K (fun j => ι (x j)) i)‖ ≤ ‖(l : ℂ_[l])‖ * τ i := by
     intro x hx i
-    exact GlobalTheory.T.tiltedSeriesRow_sub_untilt_truncatedAdditiveRow l F ι tsh hn hs hon h m x ϖ K τ i (by omega) hϖs (fun j => (hx j).trans_lt (hρ j).2)
+    exact _root_.GlobalTheory.PSer.row_lam_sub_untilt_rowT l F ι tsh hn hs hon h m x ϖ K τ i (by omega) hϖs (fun j => (hx j).trans_lt (hρ j).2)
       (fun j n => hW1 (fun j => ι (x j)) (fun j => by rw [hnι]; exact hx j) i j n)
   have hpre : ∀ z : Fin h → F, (∀ j, ‖z j‖ ≤ ρ j) → ∃ x ∈ S, (fun j => ι (x j)) = z := by
     intro z hz
@@ -102,7 +104,7 @@ theorem core (l : ℕ) [Fact l.Prime] (F : Type) [NontriviallyNormedField F] [Is
     rw [← hnι, hx]; exact hz j
   have hL1 : ∀ t : Fin h → ℂ_[l], (∀ i, ‖t i‖ ≤ τ i) → ∃ y ∈ S, ∀ i, ‖η y i - t i‖ ≤ ‖(l : ℂ_[l])‖ * τ i := by
     intro t ht
-    choose b hb using fun i => GlobalTheory.T.tiltUntilt_multiplicative_extension_surjective l F ι tsh hn hs hon (t i)
+    choose b hb using fun i => _root_.GlobalTheory.PSer.TshOnto.tsh_surjective l F ι tsh hn hs hon (t i)
     obtain ⟨z, hz, hrow⟩ := hW2 b (fun i => by rw [← hn, hb]; exact ht i)
     obtain ⟨x, hxS, hxz⟩ := hpre z hz
     refine ⟨x, hxS, fun i => ?_⟩
@@ -114,7 +116,7 @@ theorem core (l : ℕ) [Fact l.Prime] (F : Type) [NontriviallyNormedField F] [Is
     intro i
     have := hE x0 hx0S i
     rwa [hx0z, hrow0, map_zero, sub_zero] at this
-  obtain ⟨y, hy0, hyS, hysum⟩ := GlobalTheory.T.lift_hasSum_zero_of_surjective_mod_prime l (Fin h → Fl l) (Fin h) η τ S hL1 x0 hx0S hL2
+  obtain ⟨y, hy0, hyS, hysum⟩ := _root_.GlobalTheory.lift_hasSum_zero l (Fin h → Fl l) (Fin h) η τ S hL1 x0 hx0S hL2
   haveI : Nonempty (Fin h) := ⟨⟨0, hpos⟩⟩
   set R : ℝ := Finset.univ.sup' Finset.univ_nonempty ρ with hRdef
   have hρR : ∀ j, ρ j ≤ R := fun j => Finset.le_sup' ρ (Finset.mem_univ j)
@@ -126,7 +128,7 @@ theorem core (l : ℕ) [Fact l.Prime] (F : Type) [NontriviallyNormedField F] [Is
     have := congrFun hx0z j0
     rw [this]; exact hj0
   · intro i
-    refine GlobalTheory.T.sum_mul_untiltFrobeniusDoubleSeries_eq_zero l h μ i y R (by omega) hR1 (fun k j => (hyS k j).trans (hρR j)) ?_
+    refine _root_.GlobalTheory.PSer.sum_mul_Lam_eq_zero l h μ i y R (by omega) hR1 (fun k j => (hyS k j).trans (hρR j)) ?_
     have := hysum i
     simpa [η, hmu] using this
 

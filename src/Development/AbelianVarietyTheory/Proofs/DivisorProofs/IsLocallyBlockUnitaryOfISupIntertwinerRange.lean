@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ActAtApply
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsBlockUnitaryFiniteSubspaceMapIntertwinerStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocallyBlockUnitaryPiFinStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsBlockUnitaryFiniteSubspaceMapIntertwiner
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocallyBlockUnitaryPiFin
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,8 +77,8 @@ theorem locU_of_iSup_range_eq_top : ∀ (ι M : Type) [Fintype ι] [DecidableEq 
     · intro b _ hb; simp [Pi.single_apply, hb]
     · simp
   choose z hz using fun y hy => LinearMap.mem_range.1 (hrange y hy)
-  obtain ⟨U, hU, hUU⟩ := GlobalTheory.T.isLocallyBlockUnitary_pi_fin ι M s F hloc SS.card (t.attach.image fun y : {x // x ∈ t} => z y.1 y.2)
-  refine ⟨U.map g, ?_, GlobalTheory.T.isBlockUnitaryFiniteSubspace_map_intertwiner ι (Fin SS.card → M) s _ M' F' g U ?_ hUU⟩
+  obtain ⟨U, hU, hUU⟩ := _root_.GlobalTheory.HoweR.locU_pi_fin ι M s F hloc SS.card (t.attach.image fun y : {x // x ∈ t} => z y.1 y.2)
+  refine ⟨U.map g, ?_, _root_.GlobalTheory.HoweR.unitOn_map ι (Fin SS.card → M) s _ M' F' g U ?_ hUU⟩
   · intro y hy
     exact ⟨z y hy, hU _ (Finset.mem_image.2 ⟨⟨y, hy⟩, Finset.mem_attach _ _, rfl⟩), hz y hy⟩
   · intro a b hab x _

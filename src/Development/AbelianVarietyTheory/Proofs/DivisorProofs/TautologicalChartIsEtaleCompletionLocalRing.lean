@@ -1,16 +1,25 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasRigidCoords
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalHomAdicCompletionExtendStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteOfMaximalIdealLeRadicalCompleteNakayamaStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InjectiveOfFiniteOfRingKrullDimEqLocalDomainStatement
+public import Mathlib.RingTheory.AdicCompletion.Algebra
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalHomAdicCompletionExtend
+public import Mathlib.RingTheory.AdicCompletion.Basic
+public import Mathlib.RingTheory.LocalRing.ResidueField.Defs
+public import Mathlib.RingTheory.Noetherian.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteOfMaximalIdealLeRadicalCompleteNakayama
+public import Mathlib.RingTheory.KrullDimension.Basic
+public import Mathlib.RingTheory.LocalRing.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InjectiveOfFiniteOfRingKrullDimEqLocalDomain
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuasiFiniteTautologicalChartClosedPointStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SurjectiveFiniteOfUniqueEmbeddingCompleteNormalStatement
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SurjectiveFiniteOfUniqueEmbeddingCompleteNormal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TrdegResidueFieldOfIsOpenImmersion
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsDiscreteValuationRingIntegralClosure
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CompletionIsDomainAndIsIntegrallyClosedStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsNoetherianRingAdicCompletionOfNoetherian
+public import Mathlib.RingTheory.EssentialFiniteness
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CompletionIsDomainAndIsIntegrallyClosed
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebraHeight.GDimcpl
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsDiscreteValuationRingIntegralClosure
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsNoetherianRingAdicCompletionOfNoetherian
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -73,17 +82,17 @@ theorem isEtaleCompletion_of_forall_eq_inj (A R : Type) [CommRing A] [IsLocalRin
     GlobalTheory.Toroidal.IsEtaleCompletion φ := by
   let B := AdicCompletion (maximalIdeal A) A
   haveI : IsNoetherianRing B := GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion A _
-  obtain ⟨ψ, hψl, hψ⟩ := GlobalTheory.T.exists_isLocalHom_adicCompletion_extension_comp A R hR φ hφ
+  obtain ⟨ψ, hψl, hψ⟩ := _root_.GlobalTheory.LocalCompletion.exists_localHom_adicCompletion_extend A R hR φ hφ
   have hmap : (maximalIdeal B).map ψ = (maximalIdeal A).map φ := by
     rw [AdicCompletion.maximalIdeal_eq_map, Ideal.map_map, hψ]
   have hresψ : ((residue R).comp ψ).Finite := by
     have e : ((residue R).comp ψ).comp (algebraMap A B) = (residue R).comp φ := by
       rw [RingHom.comp_assoc, hψ]
     exact RingHom.Finite.of_comp_finite (e ▸ hres)
-  have hfin : ψ.Finite := GlobalTheory.T.finite_of_maximalIdeal_le_radical_complete_nakayama B R ψ inferInstance hψl (hmap ▸ hprim) hresψ
+  have hfin : ψ.Finite := _root_.GlobalTheory.CompleteNakayamaLocal.finite_of_maximalIdeal_le_radical B R ψ inferInstance hψl (hmap ▸ hprim) hresψ
   have hdB : ringKrullDim R = ringKrullDim B := by rw [hdim, UpperTheory.V.CA.g_dimcpl]
-  have hi : Function.Injective ψ := GlobalTheory.T.injective_of_finite_of_ringKrullDim_eq_localDomain B R ψ hfin hdB
-  have hs : Function.Surjective ψ := GlobalTheory.T.surjective_finite_of_unique_embedding_complete_normal B R ψ inferInstance hi hfin
+  have hi : Function.Injective ψ := _root_.GlobalTheory.injective_of_finite_of_ringKrullDim_eq_of_local_domain B R ψ hfin hdB
+  have hs : Function.Surjective ψ := _root_.GlobalTheory.DegreeOne.surjective_of_unique_injective_localHom B R ψ inferInstance hi hfin
     (fun R' _ _ _ _ _ _ hR' f g hf' hg' hf hg h => hinj R' hR' f g hf' hg' hf hg (by
       rw [← hψ, ← RingHom.comp_assoc, h, RingHom.comp_assoc]))
   refine ⟨?_, ?_, hres⟩
@@ -157,7 +166,7 @@ theorem tautB_isEtaleCompletion : ∀ {E : Type} [Field E] [NumberField E] [IsCM
   haveI := hc0
   haveI := hess
   haveI : IsNoetherianRing (S.presheaf.stalk x) := Algebra.EssFiniteType.isNoetherianRing ℤ _
-  obtain ⟨hAd, hAn⟩ := GlobalTheory.T.adicCompletion_isDomain_and_isIntegrallyClosed (S.presheaf.stalk x)
+  obtain ⟨hAd, hAn⟩ := _root_.GlobalTheory.AnalyticNormality.completion_isDomain_and_isIntegrallyClosed (S.presheaf.stalk x)
   set ψ := (Scheme.stalkClosedPointTo ξ).hom with hψ
   have eξ := Scheme.Spec_stalkClosedPointTo_fromSpecStalk ξ
   have hpt : ∀ p : Sp (ChartRing k m e), ξ p = S.fromSpecStalk x (Spec.map (Scheme.stalkClosedPointTo ξ) p) := by

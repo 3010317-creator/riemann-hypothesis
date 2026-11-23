@@ -1,11 +1,12 @@
 module
 
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.RealBands.BranchDefs
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FormalDegreeLeOfNeighbourhoodVolumeStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LowestKTypeLieWordNormBoundStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.OneMemNbh
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FormalDegreeLeOfNeighbourhoodVolume
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LowestKTypeLieWordNormBound
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealInputOfBranching
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryNearIdentityEqExpLogBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.VolumeOfBallBoundStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryNearIdentityEqExpLogBound
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.VolumeOfBallBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,7 +49,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.OneMemNbh
 
 @[expose] public section
 
@@ -142,8 +142,8 @@ private theorem vol_arith (n : ℕ) (B : ℝ) (hn : 3 ≤ n) (hB : 1 ≤ B) :
 
 theorem UpperTheory.Lit.Branch.volDeg :
     VolDeg := by
-  have hVol : VolBall := GlobalTheory.T.volume_of_ball_bound
-  have hDegU : DegUpper := GlobalTheory.T.formalDegree_le_of_neighbourhoodVolume GlobalTheory.T.unitary_near_identity_eq_exp_log_bound GlobalTheory.T.lowestKType_lieWord_normBound hVol
+  have hVol : VolBall := _root_.GlobalTheory.SepReal.volBall
+  have hDegU : DegUpper := _root_.GlobalTheory.SepReal.degUpper_of _root_.GlobalTheory.SepReal.logNear_holds _root_.GlobalTheory.SepReal.lieBound hVol
   refine ⟨11, by norm_num, ?_⟩
   intro n e ε lam ε' mu B hP H H' _ _ _ _ π σ hπ hσ d hd
   have hn := hP.three_le

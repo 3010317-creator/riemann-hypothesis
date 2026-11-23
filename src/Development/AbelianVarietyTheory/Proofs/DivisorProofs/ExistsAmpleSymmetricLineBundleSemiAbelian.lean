@@ -3,11 +3,13 @@ module
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsAmpleLBOfRelAmpleOfIsAffine
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ThickTransComp
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAffineNonzeroLocusDescendFlatBaseChangeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAffineNonzeroLocusFlatLocalBaseChangeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAffineNonzeroLocusUnitClosedFibreSemiAbStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAmpleSymmetricLineBundleGrpSchemeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTheoremOfSquareSemiAbelianGenericAbelianStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ThetaUnifAV
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAffineNonzeroLocusDescendFlatBaseChange
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAffineNonzeroLocusFlatLocalBaseChange
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAffineNonzeroLocusUnitClosedFibreSemiAb
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAmpleSymmetricLineBundleGrpScheme
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTheoremOfSquareSemiAbelianGenericAbelian
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,15 +66,15 @@ namespace GlobalTheory.SymAmple
 
 theorem exists_ample_symmetric : ∀ (R : Type) [CommRing R] [IsRegularLocalRing R] [IsDomain R] (G : Over (Sp R)) [GrpObj G], IsSemiAbelian G → IsAbelianScheme ((Over.pullback (jK R)).obj G) → ∃ M : LB G.left, IsAmpleLB M ∧ LBIso (M.pull (GrpObj.inv : G ⟶ G).left) M := by
   intro R _ _ _ G _ hG hab
-  obtain ⟨M₀, s₀, hM, ha, hy₀⟩ := GlobalTheory.T.exists_affine_nonzeroLocus_unit_closedFibre_semiAb R G hG hab
-  have hpt := GlobalTheory.T.exists_affine_nonzeroLocus_flat_local_baseChange GlobalTheory.T.exists_theorem_of_square_semiAbelian_genericAbelian R G hG hab M₀ hM s₀ ha hy₀
+  obtain ⟨M₀, s₀, hM, ha, hy₀⟩ := _root_.GlobalTheory.SemiAbAffineUnit.exists_affine_nonzeroLocus_unit R G hG hab
+  have hpt := _root_.GlobalTheory.AmplePt.exists_affine_nonzeroLocus_of_square _root_.GlobalTheory.SquareGeneric.exists_gen_square R G hG hab M₀ hM s₀ ha hy₀
   have := hG.quasiCompact
   have := hG.separated
   have hcs : CompactSpace G.left := QuasiCompact.compactSpace_of_compactSpace G.hom
   have hamp : IsAmpleLB M₀ := ⟨hM, hcs, fun y => by
     obtain ⟨R', _, ρ, hρ, x', hx', hs⟩ := hpt y
-    have h := GlobalTheory.T.exists_affine_nonzeroLocus_descend_flat_baseChange R R' ρ hρ G.left G.hom inferInstance inferInstance M₀ hM x' hs
+    have h := _root_.GlobalTheory.AmplePoint.exists_affine_locus R R' ρ hρ G.left G.hom inferInstance inferInstance M₀ hM x' hs
     rwa [hx'] at h⟩
-  exact GlobalTheory.T.exists_ample_symmetric_lineBundle_grpScheme (Sp R) G M₀ hamp
+  exact _root_.GlobalTheory.SymAmple.exists_isAmpleLB_symm (Sp R) G M₀ hamp
 
 end GlobalTheory.SymAmple

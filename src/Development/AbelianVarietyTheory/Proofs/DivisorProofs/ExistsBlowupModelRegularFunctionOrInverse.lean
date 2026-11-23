@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SmallFam
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithmeticModelAffineCoverRadical
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BirationalModelRegularUnitValuesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsBirationalModelOfIsIsoOverNonemptyOpenStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BirationalModelRegularUnitValues
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsBirationalModelOfIsIsoOverNonemptyOpen
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIdealSheafAwayFromP
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -156,8 +156,8 @@ theorem exists_model_regAt_or_regAt_inv : ∀ (k : Type) [CommRing k] (X : Schem
   obtain ⟨J, hJη, hJdiv⟩ := exists_idealSheaf_principalises_of_ne_zero X t.card U (fun _ => 2) A hU fun j => ⟨1, hb j⟩
   obtain ⟨Y, ρ, hY, hE, hiso⟩ := GlobalTheory.BlowArith.exists_isArithVar_effCartier_isIso k X p D hX J hJη
   have : IsIntegral Y := hY.isIntegral
-  obtain ⟨φ, hφ⟩ := GlobalTheory.T.isBirationalModel_of_isIso_over_nonempty_open X Y ρ J.support.compl ⟨genericPoint X, hJη⟩ (hiso _ fun _ hx => hx)
-  obtain ⟨-, -, hfn, -⟩ := GlobalTheory.T.birationalModel_regular_unit_values k X Y p (ρ ≫ p) ρ rfl φ hφ
+  obtain ⟨φ, hφ⟩ := _root_.GlobalTheory.HSNef.isModel_of_isIso_restrict X Y ρ J.support.compl ⟨genericPoint X, hJη⟩ (hiso _ fun _ hx => hx)
+  obtain ⟨-, -, hfn, -⟩ := _root_.GlobalTheory.HSNef.model_regAt_unitAt_values k X Y p (ρ ≫ p) ρ rfl φ hφ
   refine ⟨Y, inferInstance, ρ, φ, hY, hφ, fun y => ?_⟩
   obtain ⟨x, hxt, hyx⟩ : ∃ x ∈ t, ρ y ∈ V x := by
     simpa using ht (Set.mem_univ (ρ y))

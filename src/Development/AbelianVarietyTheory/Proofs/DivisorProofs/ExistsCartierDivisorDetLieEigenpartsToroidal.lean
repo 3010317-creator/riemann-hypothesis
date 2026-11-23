@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GapGeSubKapBase
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.FlagComponentFramedPointFrame
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EigenFrameCoordinatesLocallyConstantUpToUnitsStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.DualGramInterpGram
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EigenFrameCoordinatesLocallyConstantUpToUnits
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagSpacePullbackEigenDeterminantDivisorEqGradedStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FramesExist
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsStalkFactor
@@ -40,7 +41,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.DualGramInterpGram
 import Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings
 
 @[expose] public section
@@ -129,12 +129,12 @@ theorem exists_detDiv : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
     rw [← Units.val_div_eq_div_val (g fK) (g fK')]
     exact this
   obtain ⟨D, hD⟩ := exists_div (fun x => g (fK x)) fun x => by
-    obtain ⟨U, hxU, hU⟩ := GlobalTheory.T.eigenFrameCoordinates_locallyConstant_upToUnits E H Dw l Xo c TF Z x (φx x) (fx x) (hx x)
+    obtain ⟨U, hxU, hU⟩ := _root_.GlobalTheory.FrameSpread.unitAt_det_co E H Dw l Xo c TF Z x (φx x) (fx x) (hx x)
     exact ⟨U, hxU, fun y hy => key y _ _ (hU y hy (φx y) (fx y) φ₀ (fK x) (fK y) (hx y) h₀ (hfK x) (hfK y))⟩
   refine ⟨D, ?_, fun x => ⟨φx x, fx x, fun τ => (fK x |>.co f₀ τ).transpose,
     fun τ => (fK x |>.isUnit_det_co f₀ τ).unit, hx x, fun τ => (IsUnit.unit_spec _).trans (Matrix.det_transpose _).symm, fun τ i => ?_, hD x⟩⟩
   · refine GlobalTheory.T.flagSpacePullback_eigenDeterminantDivisor_eq_gradedLines E H Dw l Xo c TF Z φ₀ f₀ a D h₀ fun x φ f fK' hs hm => ?_
-    obtain ⟨U, hxU, hU⟩ := GlobalTheory.T.eigenFrameCoordinates_locallyConstant_upToUnits E H Dw l Xo c TF Z x φ f hs
+    obtain ⟨U, hxU, hU⟩ := _root_.GlobalTheory.FrameSpread.unitAt_det_co E H Dw l Xo c TF Z x φ f hs
     exact (hD x).iff_unitAt.2 (key x _ _ (hU x hxU (φx x) (fx x) φ₀ fK' (fK x) (hx x) h₀ hm (hfK x)))
   · have e : (fK x).v τ = fun k => spMap (dualMap (algebraMap ((X₀ TF.Y Z).presheaf.stalk x)
         (X₀ TF.Y Z).functionField)) ≫ (fx x).v τ k := funext (hfK x τ)

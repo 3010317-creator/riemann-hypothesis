@@ -2,10 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUSplittingInl
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchimedeanStandardCharEqExpRealLinearStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContDiffTsumOfLocallySummableBoundsStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContDiffTsumOfLocallySummableBounds
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DarbouxCoordsRealFamilyArchimedeanLinearStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormIteratedFDerivCexpPhaseLeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzShiftIteratedFDerivBoundStatement
+public import Mathlib.Analysis.Complex.Exponential
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormIteratedFDerivCexpPhaseLe
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzShiftIteratedFDerivBound
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SummableRationalSchwartzBruhatMulPolynomialDecayStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -67,8 +73,8 @@ theorem norm_iteratedFDeriv_exp_mul_schwartz_le {V E : Type} [NormedAddCommGroup
     (hre : ∀ y t, (B y t + h t).re = 0) (a : V) (p : E →L[ℝ] V) (n M : ℕ) (R : ℝ) :
     ∃ C : ℝ, ∀ y t, ‖t‖ ≤ R →
       ‖iteratedFDeriv ℝ n (fun t => Complex.exp (B y t + h t) * f (y + a + p t)) t‖ ≤ C * ((1 + ‖y‖) ^ M)⁻¹ := by
-  choose C1 hC1 using fun j => GlobalTheory.T.norm_iteratedFDeriv_cexp_phase_le' B h hh hre j R
-  choose C2 hC2 using fun j => GlobalTheory.T.schwartz_iteratedFDeriv_shift_le_inv_pow_of_norm_le f a p j (M + n) R
+  choose C1 hC1 using fun j => _root_.GlobalTheory.norm_iteratedFDeriv_cexp_phase_le B h hh hre j R
+  choose C2 hC2 using fun j => _root_.GlobalTheory.schwartz_shift_iteratedFDeriv_bound f a p j (M + n) R
   refine ⟨∑ j ∈ Finset.range (n + 1), (n.choose j : ℝ) * |C1 j| * |C2 (n - j)|, fun y t ht => ?_⟩
   have hy : 0 < 1 + ‖y‖ := by positivity
   have hy1 : 1 ≤ 1 + ‖y‖ := by linarith [norm_nonneg y]
@@ -272,7 +278,7 @@ theorem contDiff_thetaTr_real : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), I
     · have e : (fun t => GlobalTheory.WeilSchrodinger.thetaTr D.host.F co ψ (GlobalTheory.WeilM.pureA D.host.F f g) (w + L t)) =
           fun t => ∑' x, term x t := funext fun t => tsum_congr fun x => hid x t
       rw [e]
-      exact GlobalTheory.T.contDiff_tsum_of_summable_iteratedFDeriv_bounds term hsmooth hbd
+      exact _root_.GlobalTheory.contDiff_tsum_of_locally_summable_bounds term hsmooth hbd
   | zero =>
     intro w
     simp only [GlobalTheory.WeilSchrodinger.thetaTr, rho_zero, Pi.zero_apply]

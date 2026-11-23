@@ -1,10 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobTwistBaseChangeHomApp
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AppOneEqZeroOfKernelIdealOfCompEqPrimeSmulStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobeniusKernelIdealEqKernelRelativeFrobeniusStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemFrobeniusKernelIdealOfZeroDifferentialStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivCocycleMemRangeCobOfPullbackMulPStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ToSpanSingletonConstGenInjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AppOneEqZeroOfKernelIdealOfCompEqPrimeSmul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobKerIdealLeAugIdeal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobeniusKernelIdealEqKernelRelativeFrobenius
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqZeroOfCobOneEqZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemFrobeniusKernelIdealOfZeroDifferential
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivCocycleMemRangeCobOfPullbackMulP
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RigExtMapRelFrobCompRigOfOmega
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -46,7 +49,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobKerIdealLeAugIdeal
 
 @[expose] public section
 
@@ -162,20 +164,20 @@ theorem ker_rigExtMap_relFrob_le_range_rigOfOmega (p : ℕ) [Fact p.Prime] (K : 
     exact congrArg (fun z : G.omega => z.1 1) e
   have hcob : cobOne K (G.A 1) (B₁.1 1) = pullbackTwo ((relFrob h G).app 1) (c₁.1 1) :=
     congrArg (fun z : G.cocycles => z.1 1) hc₁
-  have hker := GlobalTheory.T.frobeniusKernelIdeal_eq_kernel_relativeFrobenius p K h G 1
+  have hker := _root_.GlobalTheory.PDiv.frobKerIdeal_eq_kerIdeal_relFrob p K h G 1
   have hmem : B₁.1 1 ∈ frobKerIdeal p K (G.A 1) := by
-    refine GlobalTheory.T.mem_frobeniusKernelIdeal_of_zero_differential p K (G.A 1) _ hb0 hbd ?_
+    refine _root_.GlobalTheory.PDiv.FrobKerPrim.mem_frobKerIdeal_of_cobOne p K (G.A 1) _ hb0 hbd ?_
     rw [hker]
     exact map_mk_cobOne_eq_zero ((relFrob h G).app 1) hb0 hcob
   rw [hker] at hmem
   have hV : (verschiebung h G).app 1 (B₁.1 1) = 0 :=
-    GlobalTheory.T.app_one_eq_zero_of_kernel_ideal_of_comp_eq_prime_smul p K G (frobTwist h G) (relFrob h G) (verschiebung h G)
+    _root_.GlobalTheory.PDivGroup.app_one_eq_zero_of_mem_kerIdeal_of_comp_eq_prime_smul p K G (frobTwist h G) (relFrob h G) (verschiebung h G)
       (verschiebung_comp_relFrob h G) _ hmem
   have hcomp : cocyclesMap (verschiebung h G) (cocyclesMap (relFrob h G) c₁) =
       cocyclesMap (verschiebung h G ≫ relFrob h G) c₁ :=
     Subtype.ext (funext fun n => (pullTwo_comp _ _ _).symm)
   obtain ⟨B', hB'⟩ : c₁ ∈ LinearMap.range (frobTwist h G).cob := by
-    refine GlobalTheory.T.pDivCocycle_mem_range_cob_of_pullback_mulP (frobTwist h G) c₁ (funsMap (verschiebung h G) B₁) ?_ hV
+    refine _root_.GlobalTheory.cocycle_mem_range_cob_of_pullback_mulP (frobTwist h G) c₁ (funsMap (verschiebung h G) B₁) ?_ hV
     rw [← cocyclesMap_cob, hc₁, hcomp, verschiebung_comp_relFrob]
   set B₀ : (frobTwist h G).funs := B' + t • oneFun (frobTwist h G) with hB₀
   have hc0 : (frobTwist h G).cob B₀ = c := by

@@ -6,13 +6,16 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatFram
 public import Mathlib.Analysis.SpecialFunctions.Log.Base
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdaptedBasis
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffPowEqZeroOfDegreeLt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DifferentialOperatorDepthIntegralCoordinatesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedPowerContentValuationDetPowBoundsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DifferentialOperatorDepthIntegralCoordinates
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedPowerContentValuationDetPowBounds
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSolutionOrdGeRadius
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupDeterminantPowDepthBasisChangeInvariaStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeFormalGroupDeterminantPowDepthOfRadiiStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogFGLDepthStagesLowAStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LowCountAllBoundsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupDeterminantPowDepthBasisChangeInvaria
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeFormalGroupDeterminantPowDepthOfRadii
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.RootStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogFGLDepthStagesLowA
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.FactorialWeightedSumBound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LowCountAllBounds
+public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.CauchyBinet
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TypicalCurvesTangentAndBases
 import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.TypicalBasisCoordinates
 import Mathlib.Algebra.Order.Floor.Extended
@@ -61,7 +64,6 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.TangentEqLcZero
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.WtSubOneLe
-public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.FormalDegree.CauchyBinet
 
 @[expose] public section
 
@@ -251,7 +253,7 @@ theorem detDepth_lower : ∀ (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (
   classical
   obtain ⟨K, hK1, hK2⟩ := exists_least_exponent (c := c) hp3
   obtain ⟨γ, dp, hB, hdp, -, hcard, hlc⟩ :=
-    GlobalTheory.T.logFGL_depth_stages_lowA C v p hp hp3 hvp d h hh hev ty G μ j K hj
+    _root_.GlobalTheory.DepthStages.lowA_statement C v p hp hp3 hvp d h hh hev ty G μ j K hj
   obtain ⟨cc, hcT, hc0, hcv, hcdp⟩ := coeff_in_tangent_basis hp hvp hB dp hlc
   obtain ⟨⟨Ψ, hΨint, hΨ0, hΨΦ, hΦΨ⟩, hlg⟩ :=
     (GlobalTheory.TypicalCurveBases.typical_curves_tangent_and_bases.2 C v p hp hvp d h hh ty G μ).2 γ hB
@@ -274,7 +276,7 @@ theorem detDepth_lower : ∀ (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (
     isSatFrame_of_mul hxint (fun a b => (hγ a b).2 1) hxT hu
   obtain ⟨g, cr, hcri, hcrS, hgint, hgdet, hgS⟩ :=
     GlobalTheory.LowU.adapted_basis C v i d x (Finset.univ.filter fun b => ty b = τ ∧ dp b < K) hxsat
-  obtain ⟨hcount, hKb⟩ := GlobalTheory.T.low_count_all_bounds.2.2 p i cr K c hp3 hc hcri hK1 hK2
+  obtain ⟨hcount, hKb⟩ := _root_.GlobalTheory.LowCount.lowC_all.2.2 p i cr K c hp3 hc hcri hK1 hK2
   refine ⟨cr, hcri, ?_, ?_⟩
   · have h1 : (cr : ℝ) ≤ ((K : ℝ) + 1) * j := by exact_mod_cast hcrS.trans (hcard τ hτ)
     rw [mul_comm]
@@ -319,15 +321,15 @@ theorem detDepth_lower : ∀ (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (
     simp only [hx', Finset.sum_apply, Pi.smul_apply, smul_eq_mul, hxT, Finset.mul_sum]
     rw [Finset.sum_comm]
     exact Finset.sum_congr rfl fun a' _ => Finset.sum_congr rfl fun b _ => by ring
-  rw [← GlobalTheory.T.formalGroupDeterminantPowDepth_basis_change_invariant C v i d c G u g hgdet,
-    GlobalTheory.T.differentialOperatorDepth_integral_coordinates C v i d c G _ (basisMap G γ) Ψ
+  rw [← _root_.GlobalTheory.DetDepthBasis.main C v i d c G u g hgdet,
+    _root_.GlobalTheory.FGDepth.Coord.depth_in_coords C v i d c G _ (basisMap G γ) Ψ
       (fun a => ⟨(hΦ a).2, (hΦ a).1, hΨint a, hΨ0 a⟩) (fun a => ⟨hΨΦ a, hΦΨ a⟩) t ht0 heq]
   refine le_iInf fun f => WithBot.coe_le_coe.2 ?_
-  refine GlobalTheory.T.le_formalGroupDeterminantPowDepth_of_radii C v i d c ρ t _ ht0
+  refine _root_.GlobalTheory.DepthCount.depth_count C v i d c ρ t _ ht0
     (fun a => ordGe_mono (htord a) (radius_nonneg hp3 _)) (fun α hα => ?_) f.1 f.2
   have hk : ((((i * c : ℝ) / (p - 1) - (i : ℝ) ^ 2 * Real.logb p (c + 1) : ℝ)) : EReal) ≤
       toE (v ((detPow C i c).coeff α * mfact α)) :=
-    (GlobalTheory.T.dividedPowerContentValuation_detPow_bounds C v p hp hvp i c).2.trans (iInf₂_le α hα)
+    (_root_.GlobalTheory.DetPowContent.content_detPow_bounds C v p hp hvp i c).2.trans (iInf₂_le α hα)
   refine le_trans (WithTop.coe_le_coe.2 ?_) (WithBot.coe_le_coe.1 hk)
   rw [hρ, sum_two_radii hcri]
   linarith

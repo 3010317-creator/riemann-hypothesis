@@ -6,19 +6,23 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdelicU
 public import Development.AbelianVarietyTheory.Definitions.Divisors.UnrOutside
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WhitMulLocGLDiagPowOfFixed
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CellDecompositionLatticeIntegralUnfoldingStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CellIdentityRankinSelbergTorusTranslateStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocFacOfNeg
+public import Development.AbelianVarietyTheory.Definitions.Divisors.MirSet
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CellIdentityRankinSelbergTorusTranslate
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CellLintegral
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspFormRapidKernelSmoothSpanLeftInvariantStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspFormRapidKernelSmoothSpanLeftInvariant
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CuspFormSmoothSpanNormLeShortRationalVector
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsArchimedeanBumpIdealRowOrbitStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsCuspRepBumpDataSatakeUnitaryStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsShiftedVectorShintaniFormulaRamifiedStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GlobalWhittakerCoefficientContinuousNormInvarianStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsUnitaryOfCharIff
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsShiftedVectorShintaniFormulaRamified
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GlobalWhittakerCoefficientContinuousNormInvarian
+public import GroundTheory.AutomorphicForms.ReductionMeasure
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LintegralUnipotentCellPosLtTopContinuous
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TsumSchurSquareCellProductEqEulerProduct
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnfoldedRankinSelbergIntegrandContinuousInvarian
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnfoldedRankinSelbergIntegrandNeZeroIdentity
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsOpenAdelicUnipotentTimesIntegralOutsideSet
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LintegralUnipotentCellPosLtTopContinuousStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TsumSchurSquareCellProductEqEulerProductStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnfoldedRankinSelbergIntegrandContinuousInvarianStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnfoldedRankinSelbergIntegrandNeZeroIdentityStatement
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOfIsOpenStab
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -94,14 +98,14 @@ theorem lintegral_unfolded_eq : ∀ (E : Type) [Field E] [NumberField E] [_root_
   obtain ⟨m, rfl⟩ : ∃ m, a = m + 1 := ⟨a - 1, by omega⟩
   obtain ⟨α, π₀, ω, hα, hmk, hωu, hω, hπ₀, hsat⟩ := GlobalTheory.T.exists_cuspRep_bump_data_satake_unitary E (m + 1) π hπ T hT
   obtain ⟨ϖ, hϖ⟩ := exists_isUnifV E
-  obtain ⟨F, hF, l₀, hl₀, ⟨U, hUo, hU⟩, hK, hW0, ⟨C, hC, hCp⟩, hprof⟩ := GlobalTheory.T.exists_shifted_vector_shintani_formula_ramified E m T π₀ hπ₀ α hsat ϖ hϖ
+  obtain ⟨F, hF, l₀, hl₀, ⟨U, hUo, hU⟩, hK, hW0, ⟨C, hC, hCp⟩, hprof⟩ := _root_.GlobalTheory.RamShift.exists_shifted_bump_shintani E m T π₀ hπ₀ α hsat ϖ hϖ
   have hSm : F ∈ Sm E (m + 1) := (GlobalTheory.MSpanDecay.mspanR_le_goodSub hπ₀ hF : GlobalTheory.MSpanDecay.Good F).mem_Sm
   let φ : Sm E (m + 1) := ⟨F, hSm⟩
   have hFc : Continuous F := by
     refine GlobalTheory.CuspRep.ContAut.continuous_of_isOpen_stab E (m + 1) φ
       (GlobalTheory.CuspRep.isOpen_stab_of_mem_nhds _ _ (Filter.mem_of_superset (hUo.mem_nhds U.one_mem) fun k hk => ?_))
     exact Subtype.ext (funext fun g => hU k hk g)
-  obtain ⟨hWc, hWN⟩ := GlobalTheory.T.globalWhittakerCoefficient_continuous_norm_invariant E (m + 1) F hFc (GlobalTheory.T.cuspFormRapidKernelSmoothSpan_left_invariant E (m + 1) π₀ F hF)
+  obtain ⟨hWc, hWN⟩ := _root_.GlobalTheory.JSW.WhitNorm.continuous_whit_and_norm_mul E (m + 1) F hFc (_root_.GlobalTheory.JSW.mspanR_left_invariant E (m + 1) π₀ F hF)
   obtain ⟨Φ, J, hΦs, hΦc, hΦr, hΦreal, hΦ1, hJ0, horb⟩ := GlobalTheory.T.exists_archimedeanBump_ideal_rowOrbit E (m + 1) (Fin.last m) T U hUo
   have hWU : ∀ u ∈ U, ∀ g, GlobalTheory.JSW.whit F (g * finGL E (m + 1) u) = GlobalTheory.JSW.whit F g := fun u hu g => by
     rw [GlobalTheory.JSW.whit_mul_right]
@@ -112,13 +116,13 @@ theorem lintegral_unfolded_eq : ∀ (E : Type) [Field E] [NumberField E] [_root_
       rw [GlobalTheory.JSW.whit_mul_right]
       exact congrArg (fun f => GlobalTheory.JSW.whit f g) (funext fun z => hK k hk h1 h2 z)
   let αc : {w : HeightOneSpectrum (𝓞 E) // w ∉ T} → Fin (m + 1) → ℂ := fun w i => ((α w i : ℂˣ) : ℂ)
-  have hpw := GlobalTheory.T.cell_identity_rankinSelberg_torus_translate E m T ϖ hϖ αc F l₀ U Φ J hl₀ hWU hWK hWN hprof hΦr hJ0
+  have hpw := _root_.GlobalTheory.CellPw.cell_identity E m T ϖ hϖ αc F l₀ U Φ J hl₀ hWU hWK hWN hprof hΦr hJ0
     (fun y hy => (horb y hy).imp fun κ hκ => ⟨hκ.1, hκ.2.2⟩)
   obtain ⟨K, hKc, hKp⟩ := GlobalTheory.T.cell_decomposition_lattice_integral_unfolding E m T ϖ hϖ F l₀ U Φ J C hC hl₀ hWU hWK hWN hCp hΦc hΦr hJ0 horb
-  obtain ⟨hBc, hBN, hBtop⟩ := GlobalTheory.T.unfoldedRankinSelbergIntegrand_continuous_invariant E (m + 1) (Fin.last m) (by simp) F Φ J (Pi.single (Fin.last m) 1) hWc hWN
+  obtain ⟨hBc, hBN, hBtop⟩ := _root_.GlobalTheory.RSCellB.bInt_continuous_invariant_finite E (m + 1) (Fin.last m) (by simp) F Φ J (Pi.single (Fin.last m) 1) hWc hWN
     hΦs.continuous hΦr
   have hΦ1' : Φ (Pi.single (Fin.last m) 1) ≠ 0 := fun h => by rw [h] at hΦ1; simp at hΦ1
-  have hone := GlobalTheory.T.unfoldedRankinSelbergIntegrand_ne_zero_identity E m T ϖ F Φ J l₀ hl₀ hW0 hΦ1'
+  have hone := _root_.GlobalTheory.RSCell.bInt_tl_last_ne_zero E m T ϖ F Φ J l₀ hl₀ hW0 hΦ1'
   refine ⟨α, Fin.last m, Φ, J, Pi.single (Fin.last m) 1, π₀, ω, φ, by simp, hα, hmk, hωu, hω, Or.inr hF, ?_, hΦs,
     hΦc, hΦr, hΦreal, fun h => hΦ1' (congrFun h _), ?_⟩
   · intro h
@@ -161,7 +165,7 @@ theorem lintegral_unfolded_eq : ∀ (E : Type) [Field E] [NumberField E] [_root_
   have hB5 : ∃ K : Set (GA E (m + 1)), IsCompact K ∧ ∀ x g, g ∈ GlobalTheory.CellDec.C0 E (m + 1) T → B x g ≠ 0 →
       ∃ u ∈ GlobalTheory.CellDec.NA E (m + 1), u * g ∈ K :=
     ⟨K, hKc, fun x g hg h => hKp x g hg fun h0 => h (by rw [hBdef]; simp only; rw [h0]; rfl)⟩
-  obtain ⟨hI, hIc⟩ := GlobalTheory.T.lintegral_unipotentCell_pos_lt_top_continuous E (m + 1) μ T 𝓕₀ h𝓕 B hB1 hB2 hB3 hB4 hB5
+  obtain ⟨hI, hIc⟩ := _root_.GlobalTheory.RSLocalPart.lintegral_cell_pos_lt_top_continuous E (m + 1) μ T 𝓕₀ h𝓕 B hB1 hB2 hB3 hB4 hB5
   have hd : 0 < GlobalTheory.CellDec.dinv (m + 1) l₀.1 := by
     unfold GlobalTheory.CellDec.dinv
     refine Finset.prod_pos fun w _ => zpow_pos ?_ _
@@ -182,7 +186,7 @@ theorem lintegral_unfolded_eq : ∀ (E : Type) [Field E] [NumberField E] [_root_
     have hmx : Measurable fun g => GlobalTheory.RSCell.bInt (Fin.last m) F Φ J (Pi.single (Fin.last m) 1) x g :=
       (hBg x (fun g => g) continuous_id).measurable
     rw [GlobalTheory.CellDec.cell_lintegral μ T ϖ hϖ 𝓕₀ h𝓕 _ hmx
-      (hBN x), ← GlobalTheory.T.tsum_schurSquareCellProduct_eq_eulerProduct E (m + 1) T αc x l₀, ← ENNReal.tsum_mul_right]
+      (hBN x), ← _root_.GlobalTheory.RSCellSum.tsum_cellProd_sub_eq_eulD E (m + 1) T αc x l₀, ← ENNReal.tsum_mul_right]
     refine tsum_congr fun l => ?_
     rw [← lintegral_const_mul' _ _ ENNReal.ofReal_ne_top]
     have e1 : ∫⁻ g in 𝓕₀ ∩ GlobalTheory.CellDec.C0 E (m + 1) T, ENNReal.ofReal (GlobalTheory.CellDec.dinv (m + 1) l.1) *

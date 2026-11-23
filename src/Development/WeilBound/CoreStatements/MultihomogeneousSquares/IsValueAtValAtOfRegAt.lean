@@ -1,11 +1,15 @@
 module
 
 public import Development.WeilBound.CoreStatements.MultihomogeneousSquares.SingSt
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointsIffCentresStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DominatingCoordsReindexedStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DominatingRegularPushStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComplexPointsIffCentres
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsSmoothHermTrivLine
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DominatingCoordsReindexed
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DominatingRegularPush
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.MemAbLocusIff
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ValAtIffValueAtStatement
+public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.CoordinateIdeals
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ValAtIffValueAt
 import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.CoordinateIdeals.MemMCoordIdealOfAevalEqZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -75,17 +79,17 @@ theorem isValueAt_valAt_of_regAt {K : Type} [Fintype K] {J : K → Type} [∀ k,
 theorem c0 : C0 := by
   intro E _ _ _ H D l Xo c Y S K _ ι _ Φ _ y M 𝔐 𝔐' pr j z w hO hw
   obtain ⟨hd, hf, -, -, -⟩ := hO
-  obtain ⟨-, -, hval⟩ := GlobalTheory.T.dominating_regular_push 𝔐'.X 𝔐.X Φ M.Ω 𝔐'.ξ 𝔐.ξ pr (algebraMap M.Ω Φ) hd 𝔐'.tie.gen
+  obtain ⟨-, -, hval⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Chg.Stalk.regular_along_dominant 𝔐'.X 𝔐.X Φ M.Ω 𝔐'.ξ 𝔐.ξ pr (algebraMap M.Ω Φ) hd 𝔐'.tie.gen
   have hval' : ∀ (a : M.Ω) (r : ℂ), ValAt 𝔐.ξ (z ≫ pr) a r → ValAt 𝔐'.ξ z (algebraMap M.Ω Φ a) r :=
     fun a r => hval z a r (𝔐'.all _)
   have hco : CoordsAt 𝔐.ξ M.x (z ≫ pr) (basePart M.blk w) :=
-    GlobalTheory.T.dominating_coords_reindexed 𝔐'.X 𝔐.X Φ M.Ω 𝔐'.ξ 𝔐.ξ pr (algebraMap M.Ω Φ) (NonPluckerBlocks M.blk) K (baseIdx ι M.blk) ι M.x y
+    _root_.GlobalTheory.CompanionTheory.Ar.Chg.coordsAt_blkV 𝔐'.X 𝔐.X Φ M.Ω 𝔐'.ξ 𝔐.ξ pr (algebraMap M.Ω Φ) (NonPluckerBlocks M.blk) K (baseIdx ι M.blk) ι M.x y
       Subtype.val (fun _ => Equiv.refl _) hd 𝔐.tie 𝔐'.all (fun k a => M.y_base ⟨k, a⟩)
       (fun z' a r h' => hval z' a r (𝔐'.all _) h') z w hw
   refine ⟨hco, GlobalTheory.CompanionTheory.Ar.Chg.mem_abLocus_iff 𝔐 𝔐' pr hf (centre z), hval', fun s hs => hval' _ _ ?_⟩
   have hm : basePart M.blk w ∈ mcPts (mCoordIdeal M.x) :=
-    (GlobalTheory.T.complex_points_iff_centres 𝔐.X M.Ω 𝔐.ξ (NonPluckerBlocks M.blk) (baseIdx ι M.blk) M.x 𝔐.tie _).2 ⟨z ≫ pr, 𝔐.all _, hco⟩
-  exact (GlobalTheory.T.valAt_iff_value_at 𝔐.X M.Ω 𝔐.ξ (NonPluckerBlocks M.blk) (baseIdx ι M.blk) M.x 𝔐.tie (z ≫ pr) _ (𝔐.all _) hco s _).2
+    (_root_.GlobalTheory.CompanionTheory.Ar.mem_mcPts_iff_exists_coordsAt 𝔐.X M.Ω 𝔐.ξ (NonPluckerBlocks M.blk) (baseIdx ι M.blk) M.x 𝔐.tie _).2 ⟨z ≫ pr, 𝔐.all _, hco⟩
+  exact (_root_.GlobalTheory.CompanionTheory.Ar.valAt_iff_isValueAt_coords 𝔐.X M.Ω 𝔐.ξ (NonPluckerBlocks M.blk) (baseIdx ι M.blk) M.x 𝔐.tie (z ≫ pr) _ (𝔐.all _) hco s _).2
     (isValueAt_valAt_of_regAt hm hs)
 
 end SquareStatements.Sing

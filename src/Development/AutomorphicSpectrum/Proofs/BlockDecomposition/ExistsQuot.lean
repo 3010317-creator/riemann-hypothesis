@@ -1,7 +1,7 @@
 module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.MapUSharp
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CrystallinePointUniversalLiftStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CrystallinePointUniversalLift
 import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.AcrisKummerUnits.ValuationOfValuationModSquare
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -72,7 +72,7 @@ theorem valU_val (𝒯 : Tower κ s) {T : (F.pt κ).Elements} (φ : 𝒯.obj ⟶
 
 theorem hom_ext (𝒯 : Tower κ s) {T : (F.pt κ).Elements} (φ ψ : 𝒯.obj ⟶ T)
     (h : ∀ k, val 𝒯 φ k = val 𝒯 ψ k) : φ = ψ := by
-  obtain ⟨g, -, hg, huniq⟩ := GlobalTheory.T.crystalline_point_universal_lift 𝒯 T
+  obtain ⟨g, -, hg, huniq⟩ := _root_.GlobalTheory.CompanionTheory.TowerHom.tower_hom 𝒯 T
   have hu : ∀ k, T.1.sharp (val 𝒯 φ k) = g (s.T k) := fun k => by
     rw [sharp_val]
     exact RingHom.congr_fun (hg φ) _
@@ -87,7 +87,7 @@ theorem sharp_mem (ε : Eps l) {T : (F.pt κ).Elements} (x : (epsU ε (F.pt κ))
 theorem exists_act (𝒯 : Tower κ s) (ε : Eps l) {T : (F.pt κ).Elements}
     (a : Fin d → (epsU ε (F.pt κ)).U T) (φ : 𝒯.obj ⟶ T) :
     ∃ ψ : 𝒯.obj ⟶ T, ∀ k, val 𝒯 ψ k = ((a k).1 : T.1.A) * val 𝒯 φ k := by
-  obtain ⟨g, -, hg, huniq⟩ := GlobalTheory.T.crystalline_point_universal_lift 𝒯 T
+  obtain ⟨g, -, hg, huniq⟩ := _root_.GlobalTheory.CompanionTheory.TowerHom.tower_hom 𝒯 T
   have hu : ∀ k, T.1.sharp (((a k).1 : T.1.A) * val 𝒯 φ k) = g (s.T k) := fun k => by
     rw [map_mul, sharp_mem ε (a k), one_mul, sharp_val]
     exact RingHom.congr_fun (hg φ) _
@@ -105,7 +105,7 @@ theorem act_val (𝒯 : Tower κ s) (ε : Eps l) {T : (F.pt κ).Elements}
 
 theorem exists_quot (𝒯 : Tower κ s) (ε : Eps l) {T : (F.pt κ).Elements} (φ ψ : 𝒯.obj ⟶ T) :
     ∃ a : Fin d → (epsU ε (F.pt κ)).U T, ∀ k, ((a k).1 : T.1.A) * val 𝒯 φ k = val 𝒯 ψ k := by
-  obtain ⟨g, -, hg, -⟩ := GlobalTheory.T.crystalline_point_universal_lift 𝒯 T
+  obtain ⟨g, -, hg, -⟩ := _root_.GlobalTheory.CompanionTheory.TowerHom.tower_hom 𝒯 T
   have hs : ∀ (χ : 𝒯.obj ⟶ T) k, T.1.sharp (val 𝒯 χ k) = g (s.T k) := fun χ k => by
     rw [sharp_val]
     exact RingHom.congr_fun (hg χ) _
@@ -139,7 +139,7 @@ theorem tower_act : ∀ {l : ℕ} [Fact l.Prime] {O : Type} [CommRing O] {F : Fn
               rw [val_comp, act_val, act_val, val_comp, map_mul]
               rfl
             ne := fun t => by
-              obtain ⟨g, -, -, huniq⟩ := GlobalTheory.T.crystalline_point_universal_lift 𝒯 ((jE (F.pt κ)).obj t)
+              obtain ⟨g, -, -, huniq⟩ := _root_.GlobalTheory.CompanionTheory.TowerHom.tower_hom 𝒯 ((jE (F.pt κ)).obj t)
               choose u hu using fun k => PAlg.IsTest.sharp_surjective t.1.property (g (s.T k))
               obtain ⟨χ, -, -⟩ := huniq u hu
               exact ⟨χ⟩

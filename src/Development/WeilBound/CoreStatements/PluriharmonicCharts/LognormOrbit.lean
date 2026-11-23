@@ -1,16 +1,17 @@
 module
 
 public import Development.WeilBound.CoreStatements.PluriharmonicCharts.LocalAnalyticSectionCoords
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.BlockDiagonalMinorVanishing
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverArithmeticFifth
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverArithmeticFirst
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverBasePointInPointsStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagModelBaseProjectionPoints
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagModelBaseProjectionPointsStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.LogPeriodStatement
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.MinorIJEqSubmatrix
 public import Development.WeilBound.CoreStatements.PluriharmonicCharts.BlockFnFieldCompLe
 public import Development.WeilBound.CoreStatements.PluriharmonicCharts.IsOpenHoloPreimage
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.BlockDiagonalMinorVanishing
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverArithmeticFifth
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverArithmeticFirst
+import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsPeriodOn
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverBasePointInPoints
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagModelBaseProjectionPoints
+import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GenericBlockMatrixIsBlockDiag
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.LogPeriodStatement
 import Development.WeilBound.CoreStatements.PluriharmonicCharts.PullDegSome
 import GroundTheory.HeightsAndTheta.Heights.HeightKernels.PCoordConeArithVar
 import Mathlib.Algebra.Order.Floor.Extended
@@ -276,7 +277,7 @@ theorem norm_pt (CR : CovReal FA Cv) (S' : Sw M' τ a b k₀' ca cb) (hy' : IsAr
       lognorm τ a k₀' g h CR.Re.ref z = normRhs M τ a F z₀ z₁ hm t := by
   have hz₀ := fst_mem hz
   have hz₁ := S'.snd_mem hy' hz
-  obtain ⟨F', hF', hg'⟩ := (GlobalTheory.T.flag_model_base_projection_points K' ι' Φ' y' Ψ N j M').2.1 _ (CPts.base_mem M' hz₀)
+  obtain ⟨F', hF', hg'⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.PB.CPts.main K' ι' Φ' y' Ψ N j M').2.1 _ (CPts.base_mem M' hz₀)
   obtain ⟨z', oz', H, t, fl₀, fl₁⟩ := S'.data hz₀ hz₁ hF' hg'
   obtain ⟨u₀, ou₀, bu₀, ex₀⟩ := exists_exact M' fl₀
   obtain ⟨u₁, ou₁, bu₁, ex₁⟩ := exists_exact M' fl₁
@@ -306,8 +307,8 @@ theorem norm_pt (CR : CovReal FA Cv) (S' : Sw M' τ a b k₀' ca cb) (hy' : IsAr
     (by rw [e₁]; simpa only [FlagModel.ExactAt, Function.update_self] using ex₁ (τ, a))
   rw [e₀] at hlc
   have ht : t ≠ 0 := fun e => g1 (by rw [hlc, e, zero_mul, zero_mul])
-  have hbv := (GlobalTheory.T.flag_cover_base_point_in_points K ι Φ y Ψ N j M K' ι' Φ' y' M' Cv _ hb).1
-  obtain ⟨F, hF, hG⟩ := (GlobalTheory.T.flag_model_base_projection_points K ι Φ y Ψ N j M).2.1 _ hbv
+  have hbv := (_root_.GlobalTheory.CompanionTheory.Ar.PB.CovMap.LocImg.Pt.main K ι Φ y Ψ N j M K' ι' Φ' y' M' Cv _ hb).1
+  obtain ⟨F, hF, hG⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.PB.CPts.main K ι Φ y Ψ N j M).2.1 _ hbv
   obtain ⟨x₀, ox₀, bx₀, fx₀⟩ := i₀ u₀ o₀ F' F hF' hF hG' hG H (flag_of_exact M' (τ, a) fl₀.2.1 ex₀)
   obtain ⟨x₁, ox₁, bx₁, fx₁⟩ := i₁ u₁ o₁ F' F hF' hF (by rw [bu]; exact hG') (by rw [bu]; exact hG) _
     (flag_of_exact M' (τ, a) fl₁.2.1 ex₁)

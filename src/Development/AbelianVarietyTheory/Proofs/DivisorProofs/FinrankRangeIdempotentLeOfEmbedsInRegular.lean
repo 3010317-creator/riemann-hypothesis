@@ -1,7 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.BadElt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankRangeMulLeftIdempotentGroupAlgebraStatement
+public import Mathlib.Algebra.MonoidAlgebra.Basic
+public import Mathlib.LinearAlgebra.Dimension.Finrank
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankRangeMulLeftIdempotentGroupAlgebra
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -84,7 +86,7 @@ theorem finrank_range_idem_le_of_embReg : ∀ (K Γ V : Type) [Field K] [CharZer
     | add b c hb hc => intro v i; simp [map_add (f := _), LinearMap.add_apply, hb, hc, add_mul]
     | smul r b hb => intro v i; simp [map_smul, LinearMap.smul_apply, hb, smul_mul_assoc]
   refine ⟨finrank K (LinearMap.range (LinearMap.mulLeft K a')), ?_, ?_⟩
-  · rw [GlobalTheory.T.finrank_range_mulLeft_idempotent_groupAlgebra K H a' hidem', hc1]
+  · rw [_root_.GlobalTheory.BadCount.finrank_range_mulLeft_idem K H a' hidem', hc1]
   · let R := LinearMap.range (LinearMap.mulLeft K a')
     let g : LinearMap.range (ρ.asAlgebraHom a) →ₗ[K] (Fin n → R) :=
       LinearMap.pi fun i => LinearMap.codRestrict R

@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqZeroOfCobOneEqZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CartierDualTangentModEqEvalAdditiveStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CartierDualTangentModEqEvalAdditive
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DUnitMemRangeOfMemKerIdeal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -79,7 +79,7 @@ theorem PDivGroup.dual_lie_exists_eval_mod_pow : ∀ (p : ℕ) (O : Type) [CommR
     change N.liftQ m hN ((G.dual.omegaQuotEquiv n).symm (w.1 n)) = _
     rw [← h, LinearEquiv.symm_apply_apply]
     rfl
-  obtain ⟨b, z, hb, hφ⟩ := GlobalTheory.T.cartierDual_tangent_mod_eq_eval_additive O (G.A n) ((p : O) ^ n) u
+  obtain ⟨b, z, hb, hφ⟩ := _root_.GlobalTheory.cartierDual_tangent_mod O (G.A n) ((p : O) ^ n) u
   refine ⟨b, z, hb, fun w φ hφw => ?_⟩
   have h1 := hφ φ
   rw [hφw, hu, Ideal.Quotient.eq] at h1

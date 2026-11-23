@@ -3,7 +3,7 @@ module
 public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
 public import Mathlib.MeasureTheory.Constructions.Pi
 public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TendstoProdSmallBallAsymptoticsStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TendstoProdSmallBallAsymptotics
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -91,7 +91,7 @@ theorem smallBall_pi_fin (n : ℕ) : ∀ (X : Fin n → Type) [∀ i, Measurable
     have hmeas2 : Measurable fun y : (∀ j : Fin n, X (Fin.succAbove 0 j)) =>
         ∑ j, ρ (Fin.succAbove 0 j) (y j) :=
       Finset.measurable_sum _ fun j _ => (hρm _).comp (measurable_pi_apply j)
-    have key := GlobalTheory.T.tendsto_prod_smallBall_asymptotics (X 0) (∀ j : Fin n, X (Fin.succAbove 0 j)) (ν 0)
+    have key := _root_.GlobalTheory.SmallBallProd.tendsto_prod_smallBall (X 0) (∀ j : Fin n, X (Fin.succAbove 0 j)) (ν 0)
       (Measure.pi fun j => ν (Fin.succAbove 0 j)) (ρ 0)
       (fun y => ∑ j, ρ (Fin.succAbove 0 j) (y j)) (d 0) (∑ j, d (Fin.succAbove 0 j))
       (C 0) (∏ j, C (Fin.succAbove 0 j)) (hρm 0) hmeas2 (hρ0 0)

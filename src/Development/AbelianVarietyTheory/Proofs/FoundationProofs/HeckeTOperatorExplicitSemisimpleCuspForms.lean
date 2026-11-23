@@ -1,13 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.PetEqRelIndexMulPetProd
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DiamondOperatorOfMatrixCuspFormGamma1InterGamma0Statement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeOperatorCommutesDiamondStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeTOperatorExplicitCuspFormStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PeterssonCosetIntegralSumDiamondOperatorUnitaryStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PeterssonCosetIntegralSumHeckeTAdjointStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PeterssonCosetIntegralSumSelfPosGamma1InterGammaStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PeterssonCosetIntegralSumSesquilinearHermitianStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DiamondOperatorOfMatrixCuspFormGamma1InterGamma0
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeOperatorCommutesDiamond
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeTOperatorExplicitCuspForm
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PeterssonCosetIntegralSumDiamondOperatorUnitary
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PeterssonCosetIntegralSumHeckeTAdjoint
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PeterssonCosetIntegralSumSelfPosGamma1InterGamma
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PeterssonCosetIntegralSumSesquilinearHermitian
+public import Mathlib.NumberTheory.ModularForms.CuspFormSubmodule
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -24,7 +25,6 @@ import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
-public import Mathlib.NumberTheory.ModularForms.CuspFormSubmodule
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.WittVector.IsPoly
@@ -74,26 +74,26 @@ local notation "P" => GlobalTheory.Hk.pet (GlobalTheory.Hk.lev N l) k
 
 theorem pet_zero_right (hN : 0 < N) (hl : 0 < l) (f : CuspForm (GlobalTheory.Hk.lev N l) k) :
     P ⇑f 0 = 0 := by
-  have h := (GlobalTheory.T.peterssonCosetIntegralSum_sesquilinear_hermitian N l k hN hl f 0 0 1).1
+  have h := (_root_.GlobalTheory.Hk.pet_sesq N l k hN hl f 0 0 1).1
   simp only [CuspForm.coe_zero, smul_zero, add_zero, one_mul] at h
   linear_combination -h
 
 theorem pet_smul_right (hN : 0 < N) (hl : 0 < l) (f h : CuspForm (GlobalTheory.Hk.lev N l) k) (c : ℂ) :
     P ⇑f (c • ⇑h) = c * P ⇑f ⇑h := by
-  have e := (GlobalTheory.T.peterssonCosetIntegralSum_sesquilinear_hermitian N l k hN hl f 0 h c).1
+  have e := (_root_.GlobalTheory.Hk.pet_sesq N l k hN hl f 0 h c).1
   simp only [CuspForm.coe_zero, zero_add] at e
   rw [e, pet_zero_right hN hl f, zero_add]
 
 theorem pet_lin_right (hN : 0 < N) (hl : 0 < l) (f g h : CuspForm (GlobalTheory.Hk.lev N l) k) (a b : ℂ) :
     P ⇑f (a • ⇑g - b • ⇑h) = a * P ⇑f ⇑g - b * P ⇑f ⇑h := by
-  have e := (GlobalTheory.T.peterssonCosetIntegralSum_sesquilinear_hermitian N l k hN hl f (a • g) h (-b)).1
+  have e := (_root_.GlobalTheory.Hk.pet_sesq N l k hN hl f (a • g) h (-b)).1
   rw [CuspForm.coe_smul, _root_.neg_smul, ← sub_eq_add_neg] at e
   rw [e, pet_smul_right hN hl]
   ring
 
 theorem pet_conj (hN : 0 < N) (hl : 0 < l) (f g : CuspForm (GlobalTheory.Hk.lev N l) k) :
     P ⇑g ⇑f = (starRingEnd ℂ) (P ⇑f ⇑g) :=
-  (GlobalTheory.T.peterssonCosetIntegralSum_sesquilinear_hermitian N l k hN hl f g 0 0).2
+  (_root_.GlobalTheory.Hk.pet_sesq N l k hN hl f g 0 0).2
 
 theorem pet_lin_left (hN : 0 < N) (hl : 0 < l) (f g h : CuspForm (GlobalTheory.Hk.lev N l) k) (a b : ℂ) :
     P (a • ⇑g - b • ⇑h) ⇑f = (starRingEnd ℂ) a * P ⇑g ⇑f - (starRingEnd ℂ) b * P ⇑h ⇑f := by
@@ -105,7 +105,7 @@ theorem pet_lin_left (hN : 0 < N) (hl : 0 < l) (f g h : CuspForm (GlobalTheory.H
 theorem eq_zero_of_pet_self (hN : 0 < N) (hl : 0 < l) (f : CuspForm (GlobalTheory.Hk.lev N l) k)
     (h : P ⇑f ⇑f = 0) : f = 0 := by
   by_contra hf
-  have := (GlobalTheory.T.peterssonCosetIntegralSum_self_pos_gamma1InterGamma0 N l k hN hl f hf).1
+  have := (_root_.GlobalTheory.Hk.pet_self_pos N l k hN hl f hf).1
   rw [h] at this
   simp at this
 
@@ -114,9 +114,9 @@ theorem eigen_dia (hN : 0 < N) (hl : 0 < l) {q : ℕ} {σ : SL(2, ℤ)} (hq : q.
     (hv : ⇑v = GlobalTheory.Hk.dia k σ ⇑u) (hu : GlobalTheory.Hk.heckeT k q σ ⇑u = c • ⇑u) :
     c • ⇑u = (starRingEnd ℂ) c • ⇑v := by
   have h1 : P ⇑v ⇑v = P ⇑u ⇑u := by
-    rw [hv]; exact GlobalTheory.T.peterssonCosetIntegralSum_diamondOperator_unitary N l k q σ hN hl hσ u u
+    rw [hv]; exact _root_.GlobalTheory.Hk.pet_dia_dia N l k q σ hN hl hσ u u
   have h2 : (starRingEnd ℂ) c * P ⇑u ⇑v = c * P ⇑u ⇑u := by
-    have h := GlobalTheory.T.peterssonCosetIntegralSum_heckeT_adjoint N l q k σ σ hN hl hq hqN hσ hσ u u
+    have h := _root_.GlobalTheory.Hk.pet_heckeT_adj N l q k σ σ hN hl hq hqN hσ hσ u u
     rw [hu, ← hv, pet_smul_right hN hl, ← CuspForm.coe_smul, pet_conj hN hl, CuspForm.coe_smul,
       pet_smul_right hN hl, map_mul, ← pet_conj hN hl] at h
     exact h
@@ -139,19 +139,19 @@ theorem ker_sq (hN : 0 < N) (hl : 0 < l) {q : ℕ} {σ : SL(2, ℤ)} (hq : q.Pri
     (hqN : ¬ q ∣ N * l) (hσ : GlobalTheory.Hk.IsDia N l q σ) (c : ℂ) (g u : CuspForm (GlobalTheory.Hk.lev N l) k)
     (hg : ⇑u = GlobalTheory.Hk.heckeT k q σ ⇑g - c • ⇑g) (hu : GlobalTheory.Hk.heckeT k q σ ⇑u = c • ⇑u) :
     u = 0 := by
-  obtain ⟨v, hv⟩ := GlobalTheory.T.diamondOperatorOfMatrix_cuspForm_gamma1InterGamma0 N l k q σ hN hσ u
-  obtain ⟨dg, hdg⟩ := GlobalTheory.T.diamondOperatorOfMatrix_cuspForm_gamma1InterGamma0 N l k q σ hN hσ g
-  obtain ⟨sdg, hsdg⟩ := GlobalTheory.T.heckeTOperatorExplicit_cuspForm N l q k σ hN hq hqN hσ dg
+  obtain ⟨v, hv⟩ := _root_.GlobalTheory.Hk.dia_cuspForm N l k q σ hN hσ u
+  obtain ⟨dg, hdg⟩ := _root_.GlobalTheory.Hk.dia_cuspForm N l k q σ hN hσ g
+  obtain ⟨sdg, hsdg⟩ := _root_.GlobalTheory.Hk.heckeT_cuspForm N l q k σ hN hq hqN hσ dg
   have hw := eigen_dia hN hl hq hqN hσ c u v hv hu
   have hcomm : GlobalTheory.Hk.heckeT k q σ (GlobalTheory.Hk.dia k σ ⇑g)
       = GlobalTheory.Hk.dia k σ (GlobalTheory.Hk.heckeT k q σ ⇑g) :=
-    GlobalTheory.T.hecke_operator_commutes_diamond N l q k q σ σ hN hq hqN hσ hσ (CuspForm.toModularFormₗ g)
+    _root_.GlobalTheory.Hk.heckeT_dia_comm N l q k q σ σ hN hq hqN hσ hσ (CuspForm.toModularFormₗ g)
   have hv' : ⇑v = (1 : ℂ) • ⇑sdg - c • ⇑dg := by
     rw [hv, hg, dia_sub_smul, ← hcomm, hsdg, hdg, one_smul]
   have h1 : P ⇑v ⇑v = P ⇑u ⇑u := by
-    rw [hv]; exact GlobalTheory.T.peterssonCosetIntegralSum_diamondOperator_unitary N l k q σ hN hl hσ u u
+    rw [hv]; exact _root_.GlobalTheory.Hk.pet_dia_dia N l k q σ hN hl hσ u u
   have h2 : P ⇑sdg ⇑v = (starRingEnd ℂ) c * P ⇑dg ⇑v := by
-    have h := GlobalTheory.T.peterssonCosetIntegralSum_heckeT_adjoint N l q k σ σ hN hl hq hqN hσ hσ dg u
+    have h := _root_.GlobalTheory.Hk.pet_heckeT_adj N l q k σ σ hN hl hq hqN hσ hσ dg u
     rw [← hsdg, ← hv, hu, hw, pet_smul_right hN hl] at h
     exact h
   apply eq_zero_of_pet_self hN hl
@@ -171,7 +171,7 @@ theorem heckeT_semisimple : ∀ (N l q : ℕ) (k : ℤ) (σ : SL(2, ℤ)) (c : �
     rw [hf', heckeT_zero, smul_zero]
   | succ n ih =>
     intro f hf
-    obtain ⟨sf, hsf⟩ := GlobalTheory.T.heckeTOperatorExplicit_cuspForm N l q k σ hN hq hqN hσ f
+    obtain ⟨sf, hsf⟩ := _root_.GlobalTheory.Hk.heckeT_cuspForm N l q k σ hN hq hqN hσ f
     have e : ⇑(sf - c • f) = GlobalTheory.Hk.heckeT k q σ ⇑f - c • ⇑f := by
       rw [CuspForm.coe_sub, CuspForm.coe_smul, hsf]
     rw [Function.iterate_succ_apply] at hf

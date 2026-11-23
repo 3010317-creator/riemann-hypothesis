@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.RealMetaplecticRepresentation
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjMemAdelicSchwartzSpaceNumberFieldOfMem
 public import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixCoeffContinuousRapidDecayStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixCoeffContinuousRapidDecay
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -139,7 +139,7 @@ theorem moyal_pointwise : ∀ (n : ℕ) (f g g' : Sch (Fin n)) (x : EuclideanSpa
     exact integrand_eq g g' f x w
   have hint : Integrable (fun w : Fin n ⊕ Fin n → ℝ =>
       starRingEnd ℂ (∫ t, rhoFun w ⇑g t * starRingEnd ℂ (g' t)) * rhoFun w ⇑f x) := by
-    obtain ⟨hc, hd⟩ := GlobalTheory.T.matrix_coeff_continuous_rapid_decay n g g'
+    obtain ⟨hc, hd⟩ := _root_.GlobalTheory.matrixCoeff_continuous_rapidDecay n g g'
     obtain ⟨C, hC⟩ := hd (2 * n + 1)
     have hr : (Module.finrank ℝ (Fin n ⊕ Fin n → ℝ) : ℝ) < ((2 * n + 1 : ℕ) : ℝ) := by
       rw [Module.finrank_fintype_fun_eq_card, Fintype.card_sum, Fintype.card_fin]

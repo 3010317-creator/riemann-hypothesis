@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DvdPowZeroIff
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IntegralWittUnitaryModUniformizerStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnitaryGroupHenselStepFamiliesStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IntegralWittUnitaryModUniformizer
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnitaryGroupHenselStepFamilies
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -164,14 +164,14 @@ theorem witt_mod_pow : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicat
     intro k hk
     induction k, hk using Nat.le_induction with
     | base =>
-      obtain ⟨h, hh, hc⟩ := GlobalTheory.T.integral_witt_unitary_mod_uniformizer L ϖ σ q hU hq n' JT hJT hJh ι z z' hz hz' hiz hiz'
+      obtain ⟨h, hh, hc⟩ := _root_.GlobalTheory.Hk3.IntWittBase.witt_mod_base L ϖ σ q hU hq n' JT hJT hJh ι z z' hz hz' hiz hiz'
         (fun i j => dvdPow_mono hϖ (le_min (ha i) (ha j)) (hG i j))
       refine ⟨h, hh, fun i r => ?_⟩
       rw [min_eq_right (ha i)]; exact hc i r
     | succ k hk ih =>
       obtain ⟨h, hh, hc⟩ := ih
       have hHint := glint_entry hh
-      obtain ⟨g, hg, hg1, hgc⟩ := GlobalTheory.T.unitaryGroup_hensel_step_families L ϖ σ q hU hq n' JT hJT hJh {i // k < a i}
+      obtain ⟨g, hg, hg1, hgc⟩ := _root_.GlobalTheory.Hk3.IntWitt.hensel_step L ϖ σ q hU hq n' JT hJT hJh {i // k < a i}
         (fun i => ((h : GL (Fin n') L) : Matrix (Fin n') (Fin n') L) *ᵥ z i.1) (fun i => z' i.1) k hk
         (fun i r => mulVec_int hHint (hz i.1) r) (fun i r => hz' i.1 r)
         (indepMod_sub (indepMod_mulVec hh hiz) (fun i => k < a i))

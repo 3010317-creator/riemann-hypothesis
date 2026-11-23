@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.Hermitian
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.MemRiemannRochSpaceIffRegularAtEverywhere
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DetJacMatCoordsEqTransitionJacobianDet
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsProperToroidalModelStructureMap
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPreconnectedComplexPointsOpenVarietyStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPreconnectedComplexPointsOpenVariety
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFrPtOfEigFrame
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLocallyHolomorphicPeriodsFamily
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLinearEquivLift
@@ -131,6 +131,6 @@ theorem index_eq : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : R
     exact Fu.disj _ _ Q' R hQ' hR (hQu'.trans (by rw [hwx, hxu]))
   obtain ⟨z, hz, rfl⟩ := hpt i P y hy hU hP hu
   obtain ⟨z', hz', rfl⟩ := hpt i' P' y' hy' hU' hP' hu'
-  exact (GlobalTheory.T.isPreconnected_complexPoints_open_variety c.F B e W).constant hcont hz hz'
+  exact (_root_.GlobalTheory.CxConn.isPreconnected_ptsIn c.F B e W).constant hcont hz hz'
 
 end GlobalTheory.DetLine.SameIndex

@@ -1,8 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqZeroOfCobOneEqZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCartierDualTangentOfCoboundaryOneEqSmulStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueDualOfCompatibleModPowStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCartierDualTangentOfCoboundaryOneEqSmul
+public import Mathlib.LinearAlgebra.Dual.Defs
+public import Mathlib.RingTheory.AdicCompletion.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueDualOfCompatibleModPow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,7 +59,7 @@ theorem existsUnique_lie_of_additive : ∀ (p : ℕ) (O : Type) [CommRing O] [Is
   have hu : ∀ n, ∃ u : Cot O (CartierDual O (G.A n)) →ₗ[O] O ⧸ Ideal.span {((p : O)) ^ n},
       ∀ φ : CartierDual O (G.A n), u (dUnit (R := O) φ) = Ideal.Quotient.mk _ (φ (b n)) := fun n => by
     obtain ⟨z, hz⟩ := hb n
-    exact GlobalTheory.T.exists_cartierDual_tangent_of_coboundaryOne_eq_smul O (G.A n) ((p : O) ^ n) (b n) z hz
+    exact _root_.GlobalTheory.PDiv.exists_tangent_of_cobOne_eq_smul O (G.A n) ((p : O) ^ n) (b n) z hz
   choose u hu using hu
   let U : ∀ n : ℕ, G.dual.omega →ₗ[O] O ⧸ Ideal.span {((p : O)) ^ n} := fun n =>
     (u n).comp ((LinearMap.proj n).comp G.dual.omegaSub.subtype)
@@ -79,7 +81,7 @@ theorem existsUnique_lie_of_additive : ∀ (p : ℕ) (O : Type) [CommRing O] [Is
     rw [hz, map_add (f := _), map_smul, smul_eq_mul] at hx
     obtain ⟨k, hk⟩ := hx
     exact ⟨(p : O) * k - φ z, by linear_combination hk⟩
-  obtain ⟨l, hl, huniq⟩ := GlobalTheory.T.existsUnique_dual_of_compatible_mod_pow_of_adicComplete O G.dual.omega (p : O) U key
+  obtain ⟨l, hl, huniq⟩ := _root_.GlobalTheory.PDiv.exists_unique_dual_of_compatible_mod_pow O G.dual.omega (p : O) U key
   refine ⟨l, fun n w φ h => ?_, fun l' hl' => huniq l' fun n w => ?_⟩
   · have := (hl n w).trans (hU n w φ h)
     rwa [Ideal.Quotient.eq, Ideal.mem_span_singleton] at this

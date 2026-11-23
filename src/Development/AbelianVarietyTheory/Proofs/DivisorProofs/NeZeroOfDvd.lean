@@ -1,12 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DivisorSupportCondition
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoefficientReductionFirstChernClassTateTwistStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PullHlComp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoefficientReductionFirstChernClassTateTwist
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCoefficientReductionCup
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCoefficientReductionUnitClassStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistReductionCohomologyMapUnique
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsImageCocycleSemilinearSheafComplexMapStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrimitiveRootPowUnitSubProdPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCoefficientReductionCupStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCoefficientReductionUnitClassStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistReductionCohomologyMapUniqueStatement
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistReductionResolutionMapGeneratorStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -109,14 +110,14 @@ namespace GlobalTheory.EtC.RedCoef
 theorem a11 : GlobalTheory.EtC.A11 := by
   intro Q q _ hqQ E
   haveI : NeZero q := neZero_of_dvd hqQ
-  refine ⟨fun a b => GlobalTheory.T.tateTwistCoefficientReduction_cup Q q hqQ E a b, fun hE => ⟨GlobalTheory.T.tateTwistCoefficientReduction_unitClass Q q hqQ E hE, fun L => GlobalTheory.T.red_c1_eq_c1_of_dvd Q q hqQ E hE L⟩,
+  refine ⟨fun a b => _root_.GlobalTheory.EtC.RedCup.reduction_cup Q q hqQ E a b, fun hE => ⟨GlobalTheory.T.tateTwistCoefficientReduction_unitClass Q q hqQ E hE, fun L => _root_.GlobalTheory.EtC.RedChern.coefficientReduction_firstChernClass_tateTwist Q q hqQ E hE L⟩,
     fun n i a => ?_, fun r hr n i a => ?_⟩
   · have hgen : ∀ (U : Scheme.{0}) (ζ : Prim Q Γ(U, ⊤)),
         (redMap Q Q i).app U 0 (resGen i ζ) = (semiId (res _ (tw Q i))).app U 0 (resGen i ζ) := by
       intro U ζ
       refine GlobalTheory.T.tateTwistReductionResolutionMap_generator Q Q dvd_rfl i U ζ ζ ?_
       rw [Nat.div_self (Nat.pos_of_ne_zero (NeZero.ne Q)), pow_one]
-    exact (GlobalTheory.T.tateTwistReduction_cohomology_map_unique Q Q dvd_rfl i _ _ hgen E n a).trans (semiId_op _ E n a)
+    exact (_root_.GlobalTheory.EtC.RedUniq.op_eq Q Q dvd_rfl i _ _ hgen E n a).trans (semiId_op _ E n a)
   · haveI : NeZero r := neZero_of_dvd hr
     have hrQ : r ∣ Q := hr.trans hqQ
     have hgen : ∀ (U : Scheme.{0}) (ζ : Prim Q Γ(U, ⊤)),
@@ -127,6 +128,6 @@ theorem a11 : GlobalTheory.EtC.A11 := by
       change (redMap q r i).app U 0 ((redMap Q q i).app U 0 (resGen i ζ)) = _
       rw [GlobalTheory.T.tateTwistReductionResolutionMap_generator Q q hqQ i U ζ η hη, GlobalTheory.T.tateTwistReductionResolutionMap_generator q r hr i U η ξ hξ,
         GlobalTheory.T.tateTwistReductionResolutionMap_generator Q r hrQ i U ζ ξ (by rw [hξ, hη, ← pow_mul, div_mul_div hqQ hr])]
-    exact (semiComp_op _ _ E n a).symm.trans (GlobalTheory.T.tateTwistReduction_cohomology_map_unique Q r hrQ i _ _ hgen E n a)
+    exact (semiComp_op _ _ E n a).symm.trans (_root_.GlobalTheory.EtC.RedUniq.op_eq Q r hrQ i _ _ hgen E n a)
 
 end GlobalTheory.EtC.RedCoef

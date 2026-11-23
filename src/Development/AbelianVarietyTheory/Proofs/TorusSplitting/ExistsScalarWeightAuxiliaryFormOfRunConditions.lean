@@ -3,7 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.HeightFunctions.GrowthConstantBoundGcR
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ThetaRunParametersAtTypePrimesProduct
 public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.EtValIntegral
-public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.EtaleExtensionDegreeTwoConstantsStatement
+public import Development.AbelianVarietyTheory.Definitions.TorusSections.IsTorusOf
+public import Formalism.LocalToGlobal.ProjectiveLattices.EtArch
+public import Formalism.LocalToGlobal.ProjectiveLattices.Adm3OfExtension
+public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.EtaleExtensionDegreeTwoConstants
 public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.PageRows
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -81,7 +84,7 @@ theorem exists_etaOK : ∀ (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (hj : In
     have b0 := what₂.2.2.2.2.1 0
     have b1 := what₂.2.2.2.2.1 1
     linarith [what₂.1]
-  obtain ⟨i, hi, η, ha, hb, hc, hd⟩ := GlobalTheory.T.etaleExtension_degreeTwo_constants D T h large₂ what₂ _ _ _ hrun hq1 hlog j hj.1 hjm
+  obtain ⟨i, hi, η, ha, hb, hc, hd⟩ := _root_.GlobalTheory.EtaAn.etEx_deg_two D T h large₂ what₂ _ _ _ hrun hq1 hlog j hj.1 hjm
   exact ⟨i, η, hi, ha, hb, hc, hd, ((GlobalTheory.EtaInt.etVal_integral D T h j hj i η).2.2 hb).2⟩
 
 end GlobalTheory.EtaBoundForm

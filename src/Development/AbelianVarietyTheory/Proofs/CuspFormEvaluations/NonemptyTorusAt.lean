@@ -5,8 +5,8 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegra
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FundamentalDomainPointBound
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsGeneratorsLattice
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FirstMinimumSqMulIInfHeightLeCard
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.LeviLogThetaSumStatement
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.LogThetaSumInvariantSmoothStatement
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.LeviLogThetaSum
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.LogThetaSumInvariantSmooth
 public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.TorusAtExists
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -80,8 +80,8 @@ theorem exists_weight : TStatement → ∀ (E : Type) [Field E] [NumberField E] 
       · exact ⟨0, fun h => absurd h hx⟩
     choose ps hps using h
     exact ⟨ps, hps⟩
-  obtain ⟨h1, h2⟩ := GlobalTheory.T.log_theta_sum_invariant_smooth_alt E r X hiso hw ps hps
-  refine ⟨ps, h1, h2, GlobalTheory.T.levi_log_theta_sum_alt E r X hiso hw ps hps, ?_⟩
+  obtain ⟨h1, h2⟩ := _root_.GlobalTheory.ThetaLogSum.log_theta_sum_invariant_smooth E r X hiso hw ps hps
+  refine ⟨ps, h1, h2, _root_.GlobalTheory.ThetaSumLevi.levi_log_theta_sum E r X hiso hw ps hps, ?_⟩
   obtain ⟨C, A', -, hC⟩ := GlobalTheory.ThetaSumBound.growth_decay hT E r X hiso hf1 hf2 hrd hm
   refine ⟨⟨C, A', fun x hx => ?_⟩, fun η hη _ => ⟨C, A', fun x hx ξ hξ ht => ?_⟩⟩
   · obtain ⟨A, hA⟩ := hps x hx

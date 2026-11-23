@@ -16,10 +16,11 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNeg
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalCharacterNormOneUnitStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalNormUnramifiedFactorizationStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedProjectionPreservesSchwartzAdmStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductFunctionOnSumCoordsMemAdelicSchwartzSpace
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchrodingerPreservesSchwartzBruhat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatPartialEvaluationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaActionExistsStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaActionExists
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductFunctionOnSumCoordsMemAdelicSchwartzSpace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -514,7 +515,7 @@ theorem char_eq_local : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [F
     rfl
   obtain ⟨g'', e, hact⟩ := hν g hg
   obtain rfl : g' = g'' := Units.ext (g1.symm.trans e)
-  obtain ⟨φ₁, ⟨hφ₁, hA⟩, -⟩ := (GlobalTheory.T.theta_action_exists hP F E σ B _ _ _ _ G.M _ _ om _ _ _ _
+  obtain ⟨φ₁, ⟨hφ₁, hA⟩, -⟩ := (_root_.GlobalTheory.ThK.LocalOps.actsEx hP F E σ B _ _ _ _ G.M _ _ om _ _ _ _
     (GlobalTheory.ThK.Check.isPair_of_isTriple hT).1 v).1 g hg 1 (fun u _ => by
       rw [show mat (1 : UA σ G.W.J) = 1 from rfl, sub_self, smul_zero]) φ hφ
   have k1 := lin_zero h G.M B.ψ hT.base.std _ _ om hT.weil t ι hι g hg _ g2 φ φ₁ hφ hA

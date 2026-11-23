@@ -5,9 +5,12 @@ public import GroundTheory.LocalFields.LocalArtinBaseChange
 public import GroundTheory.ProfiniteCohomology.GlobalEulerCharacteristic.GlobalEulerFormulaInf
 public import ReciprocityTheory.Hypotheses.GalCohDefs
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.CohomologicalDimensionTopologicalIso
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.GaloisUnramifiedOutsideCohomologyStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.NormalSubgroupLeUnramifiedFixingStatement
+public import GroundTheory.ProfiniteCohomology.RestrictedRamification.MaxUnramifiedOutside
+public import ReciprocityTheory.GaloisValuations.Global
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.GaloisUnramifiedOutsideCohomology
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.NormalSubgroupLeUnramifiedFixing
 public import Development.WeilBound.CoreStatements.EulerCharacteristicCounts.GcohCmp
+public import ReciprocityTheory.NeutralLocalFields.LocalFieldComparison.Transport
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +55,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Connected.Separation
-public import ReciprocityTheory.NeutralLocalFields.LocalFieldComparison.Transport
 import ReciprocityTheory.NeutralLocalFields.LocalFieldComparison.TransportA
 
 @[expose] public section
@@ -79,7 +81,7 @@ noncomputable def gsIso (S : Set (HeightOneSpectrum (𝓞 F))) :
   let φ : G F Ω →* Gal(E/F) := AlgEquiv.restrictNormalHom E
   have hφs : Function.Surjective φ := AlgEquiv.restrictNormalHom_surjective Ω
   have hNS : NS Ω S = (maxUnramifiedOutside F Ω S).fixingSubgroup :=
-    le_antisymm (GlobalTheory.T.normal_subgroup_le_unramified_fixing F Ω S) (GlobalTheory.T.galois_unramified_outside_cohomology F Ω S)
+    le_antisymm (_root_.GlobalTheory.CompanionTheory.GlobalFiniteness.NS_le_fixingSubgroup F Ω S) (_root_.GlobalTheory.CompanionTheory.Glob.InertiaLift.fixingSubgroup_le_NS F Ω S)
   have hker : φ.ker = NS Ω S := by
     rw [hNS]
     ext σ

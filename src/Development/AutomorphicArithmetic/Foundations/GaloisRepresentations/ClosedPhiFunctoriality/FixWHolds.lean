@@ -1,10 +1,11 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ClosedPhiFunctoriality.IntBasisAlt
-import Development.AbelianVarietyTheory.CrystallinePeriods.RingBasics
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisTorsionFreeCompleteFrobeniusPropertiesStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisTorsionFreeCompleteFrobeniusProperties
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FrobeniusPeriodRingInjective
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PeriodRingsGaloisActionLawsFrobeniusComm
+import Development.AbelianVarietyTheory.CrystallinePeriods.RingBasics
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,7 +56,7 @@ theorem UpperTheory.Gal.ClosedPhiFromClosedTrace.fixW_holds :
     hact.2.2.2.2.2.2.2.2.2.2.2.1
   have hφB : ∀ y : Per.Acris l, Per.φB l (iB l y) = iB l (phiA l y) :=
     hact.2.2.2.2.2.2.2.2.2.2.2.2
-  obtain ⟨-, -, -, -, hσι⟩ := GlobalTheory.T.acris_torsionFree_complete_frobenius_properties l K bk
+  obtain ⟨-, -, -, -, hσι⟩ := _root_.GlobalTheory.AcrisFrobE.main l K bk
   have hfix : ∀ g : ↥(GK K), sigA (g : GQ l) x = x := by
     intro g
     have hxe : x = iA l (WittVector.frobenius (bk.ev (PowerSeries.C (PowerSeries.constantCoeff s)))) := by

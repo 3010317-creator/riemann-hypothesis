@@ -5,7 +5,8 @@ public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.Defini
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ExistsConjIsAutFormU
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ConjugatesAutomorphicFormSpanFiniteDimensionalStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DefiniteUnitaryRationalHeckeCommuteComplexAutomoStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteAutomorphismOrbitMemFiniteExtensionPadicStatement
+public import Formalism.ConjugateSelfDual.Statement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteAutomorphismOrbitMemFiniteExtensionPadic
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LinearIndependentJointEigenvectors
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -112,7 +113,7 @@ theorem finU_holds : FinU := by
     have hli' : LinearIndependent ℂ v' := LinearIndependent.of_comp M.subtype hli
     have : Finite S := hli'.finite
     exact Set.toFinite S
-  obtain ⟨L, hL, hLmem⟩ := GlobalTheory.T.finite_automorphism_orbit_mem_finite_extension_padic l ι J (η U) hfin
+  obtain ⟨L, hL, hLmem⟩ := _root_.GlobalTheory.orbit_finite_mem_finite_ext l ι J (η U) hfin
   exact ⟨⟨L, hL⟩, hLmem⟩
 
 end GlobalTheory.Cong

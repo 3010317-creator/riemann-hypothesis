@@ -4,7 +4,10 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnifAt
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ContinuousMapPFin
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteDimensionalArchRestrictionSpaceOfWeiStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FixedVectorsIrreducibleSubrepDecompositionStatement
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.RepresentationTheory.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FixedVectorsIrreducibleSubrepDecomposition
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenProductOfLocalLevelsUnitaryStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteDimensionalDefiniteUnitaryLevelForms
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DefiniteUnitaryClassSetFinite
@@ -72,7 +75,7 @@ theorem GlobalTheory.BCT.forms_decomp : ∀ (E : Type) [Field E] [NumberField E]
     exact congrFun ((hmemF φ).1 hφ.2 k hk) g
   haveI : FiniteDimensional ℂ (forms S lam K') := Submodule.finiteDimensional_of_le hle
   refine ⟨inferInstance, ?_⟩
-  obtain ⟨ι, hι, π, h1, h2, h3, h4⟩ := GlobalTheory.T.fixed_vectors_irreducible_subrep_decomposition (RU E n) {x | ∃ k ∈ globLev S K', x = ((k : finU (E := E) (n := n)) : UA E n)}
+  obtain ⟨ι, hι, π, h1, h2, h3, h4⟩ := _root_.GlobalTheory.AbsDec.fixed_decomposition (RU E n) {x | ∃ k ∈ globLev S K', x = ((k : finU (E := E) (n := n)) : UA E n)}
     (fixed (RF E n) (globLev S K')) (fun φ => by
       rw [hmemF]
       exact ⟨fun h x ⟨k, hk, e⟩ => e ▸ h k hk, fun h k hk => h _ ⟨k, hk, rfl⟩⟩)

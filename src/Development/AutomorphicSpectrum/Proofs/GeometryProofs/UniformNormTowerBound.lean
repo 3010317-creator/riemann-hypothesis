@@ -4,9 +4,7 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ModelSm
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.IsMultiHomogXpow
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousOnReadingIntegerExponentSection
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegerExponentSectionEqZeroOfIncreasingFlagStatement
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsGenericComponentPointsOffMeagre
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DifferentiableOnRdUFlat
 public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.OfRealRpowNegLe
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IntMemModelSmall
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AevalMemWeightZeroSections
@@ -15,6 +13,10 @@ public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComponentNor
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodEmbeddingComponentSectionsStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodOriginComponentSectionsStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TowerWeightOfZeroStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.ArakelovInstances.PointwiseNormInvarianceHolds
+import Development.AbelianVarietyTheory.Definitions.Foundations.IsProbabilityMeasureMuPart
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegerExponentSectionEqZeroOfIncreasingFlag
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DifferentiableOnRdUFlat
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +54,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Baire.LocallyCompactRegular
 import Mathlib.Topology.UniformSpace.Uniformizable
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.IsHomogeneousGrL
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.ArakelovInstances.PointwiseNormInvarianceHolds
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.ExtFStatementPfB
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.OntoStatementPfS
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.BoundedSectionAlgebra
@@ -246,7 +247,7 @@ theorem homN_eq_of_frBor {σ : c.F →+* ℂ} (U : Unf Xo c σ r) (hσ : GoodEmb
   · push_neg at hanti
     obtain ⟨τ, i, j, hij, hlt⟩ := hanti
     have hij' : i < j := lt_of_le_of_ne hij (by rintro rfl; exact lt_irrefl _ hlt)
-    have h0 := GlobalTheory.T.integerExponentSection_eq_zero_of_increasing_flag E H Dw l Xo c _ τ i j hij' hlt f hf
+    have h0 := _root_.GlobalTheory.IncrZero.secZ_eq_zero_of_lt E H Dw l Xo c _ τ i j hij' hlt f hf
     subst h0
     simp [GlobalTheory.AllWt.homN, GlobalTheory.AllWt.ptN, Data.pnorm]
 
@@ -264,7 +265,7 @@ theorem continuousOn_homN {σ : c.F →+* ℂ} (U : Unf Xo c σ r) (hU : IsUnf U
     · push_neg at hanti
       obtain ⟨τ, i, j, hij, hlt⟩ := hanti
       have hij' : i < j := lt_of_le_of_ne hij (by rintro rfl; exact lt_irrefl _ hlt)
-      rw [GlobalTheory.T.integerExponentSection_eq_zero_of_increasing_flag E H Dw l Xo c _ τ i j hij' hlt f hf, map_zero]
+      rw [_root_.GlobalTheory.IncrZero.secZ_eq_zero_of_lt E H Dw l Xo c _ τ i j hij' hlt f hf, map_zero]
       exact continuousOn_const
   have h2 : ContinuousOn (fun y => GlobalTheory.AllWt.lieFacZ Dw x (GlobalTheory.AllWt.wtOf Dw u 0) * (‖rdU U f k y‖ *
       (U.X k).nfac (GlobalTheory.AllWt.modelWt U (GlobalTheory.AllWt.wtOf Dw u 0) k) y)) (U.X k).dom :=

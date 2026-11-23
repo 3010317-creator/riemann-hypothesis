@@ -3,9 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LieGramEqGramOf
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.InterPolyProdSum
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LinearIndependentOfCutSec
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EigenMetricGramSmoothInFamilyFramesStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EigenMetricGramSmoothInFamilyFrames
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIsLieBase
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HodgeMetricUniformisationSmoothOnInterior
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsStalkFactor
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HodgeMetricUniformisationSmoothOnInteriorStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -154,4 +155,4 @@ theorem GlobalTheory.LieBase.isMetricOn_lieGram : ∀ (E : Type) [Field E] [Numb
   obtain ⟨hoi, -, hT⟩ := hL
   rw [lieGram_eq_gramOf]
   exact isMetricOn_gramOf (hodgeMet T.Z U) hj hT _
-    (GlobalTheory.T.eigenMetricGram_smooth_in_familyFrames E H Dw l Xo c O β T.Z σ _ (GlobalTheory.T.hodgeMetric_uniformisation_smoothOn_interior E H Dw l Xo c O β T.Z σ U hσ hU) F e X j f₀ Eb A₀ hj hoi hT)
+    (_root_.GlobalTheory.LieBase.cInfAt_gramOf E H Dw l Xo c O β T.Z σ _ (_root_.GlobalTheory.LieBase.hodgeMet_smoothOn E H Dw l Xo c O β T.Z σ U hσ hU) F e X j f₀ Eb A₀ hj hoi hT)

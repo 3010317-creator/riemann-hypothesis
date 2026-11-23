@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsRationalUnitaryDeterminantMapRationalUnitaryTo
 public import Development.AutomorphicArithmetic.WeightCongruences.ProdNegOneZpow
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CompletelySplitPrimeHostPlacePropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHeckeCharTrivOnRealSubfieldInfinityTypeStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CompletelySplitPrimeHostPlaceProperties
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHeckeCharTrivOnRealSubfieldInfinityType
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HostCmEmbeddingProperties
 public import Development.AutomorphicArithmetic.WeightCongruences.ProdResidueCharNormOneUnitEqOne
 import Formalism.LocalToGlobal.UnitaryNorms.CharUniq
@@ -105,7 +105,7 @@ theorem exists_unitary_mu_zero_characters_of_split_type_primes : ∀ (R : Ranks)
   haveI : IsGalois H.K H.E := IsGalois.tower_top_of_isGalois ℚ H.K H.E
   obtain ⟨c, hc, hcm, -⟩ := GlobalTheory.Mem.HostCM.host_cm R H
   have hce : c.toRingEquiv = H.conj.toRingEquiv := RingEquiv.ext hc
-  have hsp := fun k => GlobalTheory.T.completelySplitPrime_host_place_properties R H (H.g k) (H.g_prime k) (hs k)
+  have hsp := fun k => _root_.GlobalTheory.Mem.Chr.splitsC_main R H (H.g k) (H.g_prime k) (hs k)
   have hθ : ∀ w : HeightOneSpectrum (𝓞 H.E), ∃ θ : (𝓞 H.E ⧸ w.asIdeal)ˣ →* ℂˣ, θ (-1) = 1 ∧
       ∀ k, P.Div k w → ∀ (a : ℕ) (ha : a.Coprime (H.g k)),
         ∃ b : (𝓞 H.E ⧸ w.asIdeal)ˣ, (b : 𝓞 H.E ⧸ w.asIdeal) = Ideal.Quotient.mk w.asIdeal (a : 𝓞 H.E) ∧
@@ -138,7 +138,7 @@ theorem exists_unitary_mu_zero_characters_of_split_type_primes : ∀ (R : Ranks)
     intro k _ k' _ hkk'
     refine Finset.disjoint_left.2 fun w hw hw' => hkk' ?_
     exact eq_of_overP (P.overP ((hmem k w).1 hw)) (P.overP ((hmem k' w).1 hw'))
-  obtain ⟨χ, hu, ht, hi, htame, hunr, hloc, -⟩ := GlobalTheory.T.exists_heckeChar_trivOn_realSubfield_infinityType H.F H.E c (R.Psi) (embPsi H) hcm z S θ
+  obtain ⟨χ, hu, ht, hi, htame, hunr, hloc, -⟩ := _root_.GlobalTheory.Mem.Chr.AntiExist.exists_hecke_trivOn H.F H.E c (R.Psi) (embPsi H) hcm z S θ
     (by
       intro w hw w' hcj hw'
       obtain ⟨k, hk⟩ := (hS w).1 hw

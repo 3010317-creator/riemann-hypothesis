@@ -2,13 +2,20 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.TorsTransport
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ExistsEqOfNatCastMulMem
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCmCurveTorsionTransportSecondPeriodStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsContinuousBijectiveAbelianizationOfAlgEquiStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdeleClassIdentityComponentIffArtinKernelStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertiaRestrictFiniteAbelianUnramifiedEqOneStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFrobAtRestrictFiniteAbelianSubextensionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCmCurveTorsionTransportSecondPeriod
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsContinuousBijectiveAbelianizationOfAlgEqui
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdeleClassIdentityComponentIffArtinKernel
+public import ReciprocityTheory.GaloisValuations.Global
+public import ReciprocityTheory.NeutralLocalFields.Reciprocity
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertiaRestrictFiniteAbelianUnramifiedEqOne
+public import Formalism.ConjugateSelfDual.Statement
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFrobAtRestrictFiniteAbelianSubextension
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUniformiserAtIffAdicCompletionIsUnifAtStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SupportedIdeleEqLocalIdeleStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SupportedIdeleEqLocalIdele
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,7 +72,7 @@ theorem exists_uniformisation_torsTransport {K : Type} [Field K] [NumberField K]
       GlobalTheory.EllipticCM.IsAnalyticIso ξ ∧ ∀ (σ : ℂ ≃ₐ[K] ℂ) (t : (Af K)ˣ),
         GlobalTheory.EllipticCM.Transports σ t one_ne_zero ξ →
         ∃ (Λ₁ : PeriodPair) (Ω₁ : ℂ), TorsTransport ι σ.toRingEquiv t Λ₀ Λ₁ Ω₀ Ω₁ :=
-  GlobalTheory.T.exists_cmCurve_torsionTransport_secondPeriod h2 ι Λ₀ Ω₀ hΛ hΩ
+  _root_.GlobalTheory.LatVal.CurveTransport.exists_curve_torsTransport h2 ι Λ₀ Ω₀ hΛ hΩ
 
 theorem exists_globalArtinMap {K : Type} [Field K] [NumberField K] [_root_.NumberField.IsTotallyComplex K] {Ω : Type}
     [Field Ω] [Algebra K Ω] [IsAlgClosure K Ω] {art : Ideles K →* GlobalTheory.HeckeGal.Gab K Ω}
@@ -73,7 +80,7 @@ theorem exists_globalArtinMap {K : Type} [Field K] [NumberField K] [_root_.Numbe
     ∃ Art : IdeleClassGroup K →* Field.absoluteGaloisGroupAbelianization K, IsGlobalArtinMap K Art ∧
       ∀ (s : Ideles K) (σ : Formalism.ConjugateSelfDual.G K Ω), (art s)⁻¹ = GlobalTheory.HeckeGal.toAb K Ω σ →
         Art (QuotientGroup.mk s) = Neutral.B1.toAb K ((e.symm.trans σ).trans e) := by
-  obtain ⟨φ, hφc, hφb, hφ⟩ := GlobalTheory.T.exists_continuous_bijective_abelianization_of_algEquiv e
+  obtain ⟨φ, hφc, hφb, hφ⟩ := _root_.GlobalTheory.HeckeGal.exists_abMap_of_algEquiv e
   let ψ : Ideles K →* Field.absoluteGaloisGroupAbelianization K := φ.comp art⁻¹
   have hψ : ∀ s, ψ s = φ (art s)⁻¹ := fun s => rfl
   have hle : (diagUnits K).range ≤ ψ.ker := by
@@ -96,10 +103,10 @@ theorem exists_globalArtinMap {K : Type} [Field K] [NumberField K] [_root_.Numbe
     exact ⟨QuotientGroup.mk x⁻¹, by rw [hArt, map_inv art, inv_inv]⟩
   · ext c
     obtain ⟨s, rfl⟩ := QuotientGroup.mk_surjective c
-    rw [SetLike.mem_coe, MonoidHom.mem_ker, hArt, GlobalTheory.T.ideleClass_identityComponent_iff_artin_kernel ha,
+    rw [SetLike.mem_coe, MonoidHom.mem_ker, hArt, _root_.GlobalTheory.ArtinKernel.idele_class_mem_identity_component_iff ha,
       ← map_one φ, hφb.1.eq_iff, inv_eq_one]
   · intro L h v hv a hsupp
-    obtain ⟨x, hx, rfl⟩ := GlobalTheory.T.supportedIdele_eq_localIdele hsupp
+    obtain ⟨x, hx, rfl⟩ := _root_.GlobalTheory.Div.SuppIdele.supported_eq_localIdele hsupp
     obtain ⟨A, hA⟩ := ReciprocityTheory.Gal.exists_isPlaceOver Ω v
     constructor
     · intro hu Q hQ hQv
@@ -107,12 +114,12 @@ theorem exists_globalArtinMap {K : Type} [Field K] [NumberField K] [_root_.Numbe
       obtain ⟨σ, hσ, hσe⟩ := (ha.frob v A hA (art (localIdele K v x))).1
         ⟨x, (GlobalTheory.T.isUniformiserAt_iff_adicCompletion_isUnifAt v x).1 hu, rfl⟩
       rw [hArtσ _ σ (by rw [← hσe, map_inv, inv_inv]), abRestrict_mk]
-      exact GlobalTheory.T.isFrobAt_restrict_finiteAbelian_subextension e L h v A hA σ hσ Q hQ hQv
+      exact _root_.GlobalTheory.FrobRestrict.isFrobAt_restrict e L h v A hA σ hσ Q hQ hQv
     · intro hu
       rw [← hx] at hu
       obtain ⟨σ, hσ, hσe⟩ := (ha.ine v A hA (art (localIdele K v x))).1 ⟨x, hu, rfl⟩
       rw [hArtσ _ σ⁻¹ (by rw [← hσe, map_inv]), abRestrict_mk]
-      exact GlobalTheory.T.inertia_restrict_finiteAbelian_unramified_eq_one e L h v hv A hA σ⁻¹ ((ReciprocityTheory.Gal.Ine A).inv_mem hσ)
+      exact _root_.GlobalTheory.InertiaRestrict.restrict_eq_one e L h v hv A hA σ⁻¹ ((ReciprocityTheory.Gal.Ine A).inv_mem hσ)
   · intro L h w hw
     exact absurd hw (InfinitePlace.not_isReal_iff_isComplex.mpr (IsTotallyComplex.isComplex w))
 

@@ -6,14 +6,14 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousFa
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfConstOfTendsto
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCompactCentOfConj
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCutFnIteratedDerivScale
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MaximalCompactPseudoCoefficientDataStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MaximalCompactPseudoCoefficientData
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MuPowLambdaProductCoeffMuVariablePencilEmbedding
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrbIntAdSpanEqZero
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PseudoCoeffShapeSmoothCompactSupport
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StOrbCpt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StProfileHolds
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StTrAd
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumInnerIntegralEq
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PseudoCoeffShapeSmoothCompactSupport
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,6 +60,6 @@ theorem localPC_holds : LocalPC :=
   GlobalTheory.PsCo.Pc1.localPC_of_steps GlobalTheory.PsCo.Pc1.A.stAlg GlobalTheory.PsCo.Pc1.stProfile_holds
     GlobalTheory.PsCo.Pc1.stFam GlobalTheory.PsCo.Pc1.Homot.stHomot GlobalTheory.PsCo.Pcd.stLim
     GlobalTheory.ShapeSmoothFinite.stShape GlobalTheory.PsCo.Pc1.orbInt_adSpan_eq_zero GlobalTheory.PsCo.Pc1.stOrbCpt
-    GlobalTheory.PsCo.NonEll.stNonEll GlobalTheory.PsCo.Pc3.stTr GlobalTheory.PsCo.Pc3.stTrAd GlobalTheory.T.maximalCompact_pseudoCoefficientData
+    GlobalTheory.PsCo.NonEll.stNonEll GlobalTheory.PsCo.Pc3.stTr GlobalTheory.PsCo.Pc3.stTrAd _root_.GlobalTheory.PsCo.Pc1.maximalCompact_pseudoCoefficientData'
 
 end GlobalTheory.PsCo.Pc

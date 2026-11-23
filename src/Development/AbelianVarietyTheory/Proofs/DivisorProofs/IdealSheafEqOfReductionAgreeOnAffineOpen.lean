@@ -2,13 +2,17 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.BaseIdealIdeal
 public import Mathlib.AlgebraicGeometry.IdealSheaf.Functorial
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseIdealSheafOfIdealComapSpecMapSupportStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseIdealSheafOfIdealSpecBijectiveCalculusStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdicCompletionNoetherianFlatCompleteStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IInfSupPowEqOfAdicCompatibleIdealsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdealSheafDataComapInfOfFlatStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapComapFlatStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapInfEqOfReductionsJacobsonInductionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseIdealSheafOfIdealComapSpecMapSupport
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseIdealSheafOfIdealSpecBijectiveCalculus
+public import Mathlib.RingTheory.AdicCompletion.Basic
+public import Mathlib.RingTheory.RingHom.Flat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdicCompletionNoetherianFlatComplete
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IInfSupPowEq
+public import Mathlib.AlgebraicGeometry.Morphisms.Flat
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdealSheafDataComapInfOfFlat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapComapFlat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapInfEqOfReductionsJacobsonInduction
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ComapMulIdealSheaf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -105,10 +109,10 @@ theorem ideal_eq_of_reduces_affine : ∀ (R : Type) [CommRing R] (I : Ideal R) (
     Reduces (π ≫ f) I T' (fun e => (t e).comap π) → Reduces f I T'' (fun e => t e ⊔ K ^ k) →
     ∀ e, ((T'.map π ⊓ T'') ⊔ baseIdeal f (I ^ (e + 1))).ideal V = (t e).ideal V := by
   intro R _ I W W' _ f π U hπ hU K hK t ht V
-  obtain ⟨hbc, hbs, -⟩ := GlobalTheory.T.baseIdealSheafOfIdeal_comap_specMap_support
-  obtain ⟨hbC, hloc⟩ := GlobalTheory.T.baseIdealSheafOfIdeal_spec_bijective_calculus
+  obtain ⟨hbc, hbs, -⟩ := _root_.GlobalTheory.FormalAlg.baseIdeal_calculus
+  obtain ⟨hbC, hloc⟩ := _root_.GlobalTheory.FormalAlg.specIdeal
   haveI : IsNoetherianRing Γ(W, V.1) := IsLocallyNoetherian.component_noetherian V
-  obtain ⟨C, _, φ, hCn, hφ, hC, hfaith⟩ := GlobalTheory.T.exists_adicCompletion_noetherian_flat_complete Γ(W, V.1) (I.map (cst f V.1))
+  obtain ⟨C, _, φ, hCn, hφ, hC, hfaith⟩ := _root_.GlobalTheory.AdicPackage.adicCompletion_package Γ(W, V.1) (I.map (cst f V.1))
   haveI := hCn
   haveI := hπ
   have hJjac : (I.map (cst f V.1)).map φ ≤ Ideal.jacobson ⊥ := by
@@ -134,7 +138,7 @@ theorem ideal_eq_of_reduces_affine : ∀ (R : Type) [CommRing R] (I : Ideal R) (
     conv_lhs => rw [ht e]
     rw [← Ideal.map_pow, ← F2 e, ← Ideal.map_sup]
     rfl
-  have F6 := GlobalTheory.T.iInf_sup_pow_eq_of_adic_compatible_ideals C ((I.map (cst f V.1)).map φ) hC (fun e => ((t e).ideal V).map φ) F5
+  have F6 := _root_.GlobalTheory.InfimumSupPowerIdeal.iInf_sup_pow_eq C ((I.map (cst f V.1)).map φ) hC (fun e => ((t e).ideal V).map φ) F5
   have F7 : ∀ e : ℕ, (t e).comap (Spec.map (CommRingCat.ofHom φ) ≫ V.2.fromSpec) =
       baseIdeal (𝟙 (Spec (CommRingCat.of C))) (⨅ l, ((t l).ideal V).map φ) ⊔
         baseIdeal (𝟙 (Spec (CommRingCat.of C))) (((I.map (cst f V.1)).map φ) ^ (e + 1)) := by
@@ -158,7 +162,7 @@ theorem ideal_eq_of_reduces_affine : ∀ (R : Type) [CommRing R] (I : Ideal R) (
     rw [Scheme.IdealSheafData.support_comap]
     exact h
   have hπC : IsProper (pullback.snd π (Spec.map (CommRingCat.ofHom φ) ≫ V.2.fromSpec)) := inferInstance
-  obtain ⟨k₀, hk₀⟩ := GlobalTheory.T.map_inf_eq_of_reductions_jacobson_induction C ((I.map (cst f V.1)).map φ) hJjac _
+  obtain ⟨k₀, hk₀⟩ := _root_.GlobalTheory.FormalAlg.map_inf_eq_of_reductions C ((I.map (cst f V.1)).map φ) hJjac _
     (pullback.snd π (Spec.map (CommRingCat.ofHom φ) ≫ V.2.fromSpec)) _ hπC
     (isIso_pullbackSnd_restrict_preimage π _ U hU) _
     (baseIdeal (𝟙 (Spec (CommRingCat.of C))) (⨅ l, ((t l).ideal V).map φ)) hKC
@@ -186,8 +190,8 @@ theorem ideal_eq_of_reduces_affine : ∀ (R : Type) [CommRing R] (I : Ideal R) (
   have hX : ((T'.map π ⊓ T'') ⊔ baseIdeal f (I ^ (e + 1))).comap
       (Spec.map (CommRingCat.ofHom φ) ≫ V.2.fromSpec) =
       (t e).comap (Spec.map (CommRingCat.ofHom φ) ≫ V.2.fromSpec) := by
-    rw [Scheme.IdealSheafData.comap_sup, GlobalTheory.T.idealSheafData_comap_inf_of_flat _ _ _ hgF,
-      GlobalTheory.T.map_comap_eq_comap_map_of_flat W W' _ _ π _ (pullback.fst π _) (pullback.snd π _) (IsPullback.of_hasPullback π _) hgF
+    rw [Scheme.IdealSheafData.comap_sup, _root_.GlobalTheory.FlatInf.comap_inf_of_flat _ _ _ hgF,
+      _root_.GlobalTheory.FlatBaseChangeIdeal.map_comap_flat W W' _ _ π _ (pullback.fst π _) (pullback.snd π _) (IsPullback.of_hasPullback π _) hgF
         inferInstance, hmain, F4 e, F7 e]
   rw [F1, F1] at hX
   have hX' := (hbC C).1.1 hX

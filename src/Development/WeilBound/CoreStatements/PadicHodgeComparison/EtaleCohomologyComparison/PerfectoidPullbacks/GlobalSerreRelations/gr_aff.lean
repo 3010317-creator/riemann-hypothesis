@@ -1,7 +1,7 @@
 module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.GlobalSerreRelations.GlobSerreSt
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AffineGradedCohomologyVanishingStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AffineGradedCohomologyVanishing
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.GlobalSerreRelations.GlobSerreStH
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -53,6 +53,6 @@ open CategoryTheory AlgebraicGeometry TensorProduct GlobalTheory.LogCris Divided
 namespace CrystallineSemistableComparison.Pb
 
 theorem gr_aff_pf : KH.GrAff :=
-  GlobalTheory.T.affine_graded_cohomology_vanishing locGr_h locVan_h polyTf_h globSerreSt_h globVanSt_h
+  _root_.GlobalTheory.CompanionTheory.GrForm.gr_aff locGr_h locVan_h polyTf_h globSerreSt_h globVanSt_h
 
 end CrystallineSemistableComparison.Pb

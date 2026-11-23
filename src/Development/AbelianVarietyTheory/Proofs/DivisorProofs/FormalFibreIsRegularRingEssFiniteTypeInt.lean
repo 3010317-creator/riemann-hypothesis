@@ -4,8 +4,10 @@ public import Mathlib.Algebra.Field.ZMod
 public import Mathlib.FieldTheory.Perfect
 public import Mathlib.RingTheory.AdicCompletion.Algebra
 public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdicCompletionTensorQuotientRingEquivStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalFibreIsRegularRingOfEssFiniteTypeStatement
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Defs
+public import Mathlib.RingTheory.TensorProduct.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdicCompletionTensorQuotientRingEquiv
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalFibreIsRegularRingOfEssFiniteType
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -94,13 +96,13 @@ theorem formalFibre_isRegularRing_of_essFiniteType_int :
     have hinj : ∀ a : ZMod p, algebraMap (R ⧸ I) K (algebraMap (ZMod p) (R ⧸ I) a) = 0 → a = 0 :=
       fun a ha => ((algebraMap (R ⧸ I) K).comp (algebraMap (ZMod p) (R ⧸ I))).injective
         (by simpa using ha)
-    have hreg := GlobalTheory.T.isRegularRing_formalFibre_of_essFiniteType (ZMod p) (R ⧸ I) K hinj
-    obtain ⟨e⟩ := GlobalTheory.T.nonempty_adicCompletion_tensor_ringEquiv_of_surjective R (R ⧸ I) K Ideal.Quotient.mk_surjective
+    have hreg := _root_.GlobalTheory.formalFibre_isRegularRing_of_essFiniteType (ZMod p) (R ⧸ I) K hinj
+    obtain ⟨e⟩ := _root_.GlobalTheory.adicCompletion_tensor_quotient_ringEquiv R (R ⧸ I) K Ideal.Quotient.mk_surjective
     exact IsRegularRing.of_ringEquiv e
   ·
     haveI : CharP K 0 := by rw [← h0]; exact ringChar.charP K
     haveI : CharZero K := CharP.charP_to_charZero K
-    refine GlobalTheory.T.isRegularRing_formalFibre_of_essFiniteType ℤ R K ?_
+    refine _root_.GlobalTheory.formalFibre_isRegularRing_of_essFiniteType ℤ R K ?_
     intro a ha
     rw [eq_intCast (algebraMap ℤ R), map_intCast] at ha
     exact_mod_cast ha

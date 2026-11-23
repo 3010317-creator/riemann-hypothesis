@@ -1,13 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.CuspDiscreteDecompositionGL
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.T2SpaceAdelicGeneralLinearGroupNumberField
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalOfL2CuspidalMem
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IrreducibleCuspidalSmoothModule
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IrreducibleSmoothModuleUnique
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KFiniteL2SmoothRepresentative
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KFiniteVectorsDense
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothKFiniteCenter
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOfIsOpenStab
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalOfL2CuspidalMemStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IrreducibleCuspidalSmoothModuleStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IrreducibleSmoothModuleUniqueStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KFiniteL2SmoothRepresentativeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KFiniteVectorsDenseStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothKFiniteCenterStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,17 +62,17 @@ theorem mem_of_stable {H : Submodule ℂ (L2 (latticeGL E a) μ)} (hH : H ≤ L2
       ∃ h : MemL2Quotient (latticeGL E a) μ φ.1, h.toL2 ∈ H) (φ : Sm E a)
     (hφ : IsCuspForm φ ∧ (∀ t g, φ.1 (splitCentre E a t * g) = φ.1 g) ∧
       ∃ h : MemL2Quotient (latticeGL E a) μ φ.1, h.toL2 ∈ H) : φ ∈ W :=
-  GlobalTheory.T.irreducible_smooth_module_unique E a μ H hH hi W hs h0 hW φ hφ
+  _root_.GlobalTheory.CompanionTheory.CuspIrred.irred_module E a μ H hH hi W hs h0 hW φ hφ
 
 theorem exists_cusp_form_of_K_finite {H : Submodule ℂ (L2 (latticeGL E a) μ)} (hH : H ≤ L2cusp μ)
     (hi : IsIrredSubrep (R (latticeGL E a) μ) H) {F : L2 (latticeGL E a) μ} (hF : F ∈ H) (hk : IsKFinL2 μ F) :
     ∃ φ : Sm E a, lift (latticeGL E a) F =ᵐ[μ] φ.1 ∧ IsCuspForm φ ∧ (∀ t g, φ.1 (splitCentre E a t * g) = φ.1 g) ∧
       ∃ h : MemL2Quotient (latticeGL E a) μ φ.1, h.toL2 ∈ H := by
-  obtain ⟨φ, e, hm, hl, hz, hlev, hkf, hzf⟩ := GlobalTheory.T.K_finite_L2_smooth_representative E a μ H hH hi F hF hk
+  obtain ⟨φ, e, hm, hl, hz, hlev, hkf, hzf⟩ := _root_.GlobalTheory.CompanionTheory.SmoothRep.smoothRep E a μ H hH hi F hF hk
   have hc : Continuous φ.1 := ContAut.continuous_of_isOpen_stab E a φ hlev
   have hFe : hm.toL2 = F := l2DiscreteQuotient_ext_iff_lift_ae_eq.2 (hm.lift_toL2_ae_eq.trans e.symm)
-  have hcusp : IsCuspidal φ.1 := GlobalTheory.T.cuspidal_of_L2_cuspidal_mem E a μ φ.1 hc hl hz hm (by rw [hFe]; exact hH hF)
-  exact ⟨φ, e, ⟨⟨hl, hlev, hkf, hzf, GlobalTheory.T.smooth_K_finite_center E a μ φ hl hz hlev hkf hzf hm⟩, hcusp⟩, hz, hm,
+  have hcusp : IsCuspidal φ.1 := _root_.GlobalTheory.CompanionTheory.CuspL2.isCuspidal_of_toL2_mem E a μ φ.1 hc hl hz hm (by rw [hFe]; exact hH hF)
+  exact ⟨φ, e, ⟨⟨hl, hlev, hkf, hzf, _root_.GlobalTheory.CompanionTheory.Growth.moderate_growth E a μ φ hl hz hlev hkf hzf hm⟩, hcusp⟩, hz, hm,
     by rw [hFe]; exact hF⟩
 
 end GlobalTheory.CompanionTheory.CuspFinite
@@ -82,7 +83,7 @@ namespace GlobalTheory.CompanionTheory.Published
 open GlobalTheory.CompanionTheory.CuspFinite in
 theorem cuspFiniteVectorsGL : GlobalTheory.Published.CuspFiniteVectorsGL := by
   intro E _ _ _ a μ _ _ H hH hi
-  obtain ⟨V, hV, hs⟩ := GlobalTheory.T.irreducible_cuspidal_smooth_module E a μ H hH hi
+  obtain ⟨V, hV, hs⟩ := _root_.GlobalTheory.CompanionTheory.StableMod.exists_stable E a μ H hH hi
   have hkf : ∀ F ∈ H, IsKFinL2 μ F → F ∈ classes V μ := fun F hF hk => by
     obtain ⟨φ, e, h1, h2, h3⟩ := exists_cusp_form_of_K_finite hH hi hF hk
     exact ⟨φ, (hV φ).2 ⟨h1, h2, h3⟩, e⟩
@@ -92,7 +93,7 @@ theorem cuspFiniteVectorsGL : GlobalTheory.Published.CuspFiniteVectorsGL := by
     have : F = h.toL2 := l2DiscreteQuotient_ext_iff_lift_ae_eq.2 (e.trans h.lift_toL2_ae_eq.symm)
     exact this ▸ hH'
   have hdense : H ≤ (classes V μ).topologicalClosure :=
-    (GlobalTheory.T.K_finite_vectors_dense E a μ H hi.1).trans (Submodule.topologicalClosure_mono
+    (_root_.GlobalTheory.CompanionTheory.DenseKFin.le_closure_span_K_finite E a μ H hi.1).trans (Submodule.topologicalClosure_mono
       (Submodule.span_le.2 fun F hF => hkf F hF.1 hF.2))
   have hne : V ≠ ⊥ := by
     intro hb

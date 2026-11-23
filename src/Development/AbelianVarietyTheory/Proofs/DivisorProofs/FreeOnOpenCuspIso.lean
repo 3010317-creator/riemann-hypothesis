@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.Gro
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CuspIso
 public import Development.AbelianVarietyTheory.Definitions.Divisors.P22
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NonemptyCuspFrame
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CanonicalIdealWeightSectionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CanonicalIdealWeightSection
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -82,7 +82,7 @@ theorem GlobalTheory.HSApp.sandwich : GlobalTheory.CovTop.Hypotheses₂ → Glob
     (∀ j, CuspIso TF.X Z U (P.wt j) → adjGlobal R j ≤ LinearMap.range (adjSec R ω h₁ j)) ∧
     (CuspIso TF.X Z U (P.wt 0) → LinearMap.range (adjSec R ω h₁ 0) ≤ adjGlobal R 0) := by
   intro hP hG E _ _ _ H Dw l Xo c TF Z r U P R ω hF h₁
-  have key := fun (j : ℕ) m => GlobalTheory.T.canonical_ideal_weight_section hP hG E H Dw l Xo c TF Z hF R.toModif ω _ _ (P.kap_add j) m
+  have key := fun (j : ℕ) m => _root_.GlobalTheory.LogCanon.logCanon_iff hP hG E H Dw l Xo c TF Z hF R.toModif ω _ _ (P.kap_add j) m
   refine ⟨fun j hj => ?_, fun hj => ?_⟩
   · rintro _ ⟨f, rfl⟩
     let e := R.adjEquiv ω.ω ω.unit h₁ j (P.kap_add j)

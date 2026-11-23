@@ -1,14 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DivPowerCompatTwoFormDerivativeCompOneForm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeRhamAlgebraQuotientRingSurjectiveAndKernelStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.OneFormMapEqKaehlerDifferentialMap
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DeRhamAlgebraQuotientRingSurjectiveAndKernel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerLinEMulE
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivationHomotopyOperatorFiltrationPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedPowerPolyAlgebraHomotopyIdentityStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivationHomotopyOperatorFiltrationProperties
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DividedPowerPolyAlgebraHomotopyIdentity
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLiftAndAugmentationMap
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FilProperties
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsDPMorphismOfIsStd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuotientDividedPowerFiltrationCompatibleFormsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuotientDividedPowerFiltrationCompatibleForms
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FilProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -142,14 +143,14 @@ theorem GlobalTheory.PDForm.rq_truncPoly : ∀ (R B : Type) [CommRing R] [CommRi
   have he : ∀ k, Q.e k ∈ fil η k := fun k ↦ by
     rw [← hstd.var k]
     exact (GlobalTheory.PDA.fil_properties Q.P (Q.ext J) η).2.2.2.2.1 k _ (Q.e_one_mem_ext J)
-  have hht := GlobalTheory.T.derivationHomotopyOperator_filtration_properties R Q.P (Q.ext J) η v Q.e (n + 1) hv2 he
-  have kq := GlobalTheory.T.quotient_dividedPowerFiltration_compatibleForms R Q.P (Q.ext J) η G J' δ' q hq n hqd hqs hJ' hker
-  have kdr := GlobalTheory.T.deRhamAlgebra_quotientRing_surjective_and_kernel R Q.P G q hq hqs
+  have hht := _root_.GlobalTheory.PDForm.HotFil.hot_fil R Q.P (Q.ext J) η v Q.e (n + 1) hv2 he
+  have kq := _root_.GlobalTheory.PDForm.quot_fil_rel R Q.P (Q.ext J) η G J' δ' q hq n hqd hqs hJ' hker
+  have kdr := _root_.GlobalTheory.CechDR.semiHom_quotient_surjective_ker R Q.P G q hq hqs
   have key : ∀ X : DR R Q.P, hq.mDR (dDR R Q.P X) ∈ rel R δ' →
       hq.mDR X - h.mDR (hεs.mDR X) - dDR R G (hq.mDR (hot v Q.e (n + 1) X)) ∈ rel R δ' := by
     intro X hX
     have hT := hht.2.2.2.2 n _ (kq.1 _ hX)
-    have hH := GlobalTheory.T.dividedPowerPolyAlgebra_homotopy_identity R B J δ Q η v hi hstd hv0 hv1 hv2 ε hεs hεd hεb hεe (n + 1) X
+    have hH := _root_.GlobalTheory.PDForm.homotopy_identity R B J δ Q η v hi hstd hv0 hv1 hv2 ε hεs hεd hεb hεe (n + 1) X
     have h3 := add_mem hH hT
     rw [sub_add_cancel] at h3
     have := kq.2 _ h3

@@ -3,12 +3,14 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InstMeasurableSpaceRealSU
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.TamagawaSpecialUnitary
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianGramDiagonalSignatureUnitaryStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealUnitaryCovolumeSumStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RiemannianHaarIndependentOfOrthonormalFrameStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualLatticeCongruenceSubgroupsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualLatticeRealCompletionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SignatureUnitaryLatticeFamilyStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianGramDiagonalSignatureUnitary
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealUnitaryCovolumeSum
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RiemannianHaarIndependentOfOrthonormalFrame
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EmbGLMemRealSU
+public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.DefiniteBound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualLatticeCongruenceSubgroups
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SelfDualLatticeRealCompletion
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SignatureUnitaryLatticeFamily
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,8 +66,8 @@ theorem GlobalTheory.ClassSum.sum_covolume_le : GlobalTheory.Published.TamagawaS
   obtain ⟨hG0, hΨ0, -, -, hO0⟩ := hX i0 hi0
   subst hG0
   subst hΨ0
-  obtain ⟨L, hLset, hLhat, hL⟩ := GlobalTheory.T.self_dual_lattice_real_completion E r (X i0).Gm Λ g0 hΛ hg0
-  obtain ⟨γ, s, hγs, hpair⟩ := GlobalTheory.T.self_dual_lattice_congruence_subgroups E r M m (X i0).Gm Λ L g g0 S (fun i => (X i).Γ) (fun i => (X i).Λ)
+  obtain ⟨L, hLset, hLhat, hL⟩ := _root_.GlobalTheory.UCls.selfDual_latOf_translate E r (X i0).Gm Λ g0 hΛ hg0
+  obtain ⟨γ, s, hγs, hpair⟩ := _root_.GlobalTheory.UCls.exists_special_reduction E r M m (X i0).Gm Λ L g g0 S (fun i => (X i).Γ) (fun i => (X i).Λ)
     (by omega) hΛ hg0 hLset hLhat hg hT (fun i hi => ⟨(hX i hi).2.2.1, (hX i hi).2.2.2.1⟩)
   have hherm : ∀ a b, cc ((X i0).Gm a b) = (X i0).Gm b a := (X i0).Gm_herm
   have tr : ∀ (Ψ1 : Finset (E →+* ℂ)) (G1 : Matrix (Fin r) (Fin r) E) (x1 : Frame Ψ1 r) (p1 : ℕ)
@@ -75,7 +77,7 @@ theorem GlobalTheory.ClassSum.sum_covolume_le : GlobalTheory.Published.TamagawaS
         covolume (inReal (X i0).Ψ (X i0).Gm H) (realSU (X i0).Ψ (X i0).Gm) (riemHaar (X i0).Ψ (X i0).Gm (x0 i0)) := by
     intro Ψ1 G1 x1 p1 H h1 h2 h3
     subst h1 h2
-    rw [GlobalTheory.T.riemannianHaar_independent_of_orthonormal_frame E r p1 (X i0).p0 _ _ x1 (x0 i0) hherm h3 hO0]
+    rw [_root_.GlobalTheory.FrameIndep.riemHaar_frame_indep E r p1 (X i0).p0 _ _ x1 (x0 i0) hherm h3 hO0]
   set Δ : Fin m → Subgroup (GL (Fin r) E) := fun i => ((X i).Γ).map (MulAut.conj (γ i)⁻¹).toMonoidHom with hΔ
   have hback : ∀ i, (Δ i).map (MulAut.conj (γ i)).toMonoidHom = (X i).Γ := by
     intro i
@@ -90,11 +92,11 @@ theorem GlobalTheory.ClassSum.sum_covolume_le : GlobalTheory.Published.TamagawaS
     intro i hi
     obtain ⟨hGi, hΨi, -, -, hOi⟩ := hX i hi
     rw [tr (X i).Ψ (X i).Gm (x0 i) (X i).p0 (X i).Γ hΨi hGi hOi, ← hback i]
-    exact GlobalTheory.T.hermitian_gram_diagonal_signature_unitary E r (X i0).p0 (X i0).Ψ (X i0).Gm (x0 i0) (γ i) (Δ i) hherm hO0 (hγs i hi).1
-  obtain ⟨J, t, ht, hcount⟩ := GlobalTheory.T.signature_unitary_lattice_family E r M (X i0).p0 (X i0).Gm L (X i0).Ψ (x0 i0) (Fin m) S s Δ hr
+    exact _root_.GlobalTheory.SUCovolConj.covolume_inReal_conj E r (X i0).p0 (X i0).Ψ (X i0).Gm (x0 i0) (γ i) (Δ i) hherm hO0 (hγs i hi).1
+  obtain ⟨J, t, ht, hcount⟩ := _root_.GlobalTheory.SUCount.sum_covolume_le_pow_mul_tsum E r M (X i0).p0 (X i0).Gm L (X i0).Ψ (x0 i0) (Fin m) S s Δ hr
     (by omega) hL (X i0).cmType hO0 (fun i hi => (hγs i hi).2.1)
     (fun i hi j hj h => hUE i hi j hj (hpair i hi j hj h)) (fun i hi => (hγs i hi).2.2)
-  have hV := GlobalTheory.T.real_unitary_covolume_sum hP E r (X i0) L (x0 i0) J t hr hU hL hO0 ht
+  have hV := _root_.GlobalTheory.SUVolBound.sum_covolume_le hP E r (X i0) L (x0 i0) J t hr hU hL hO0 ht
   rw [Finset.sum_congr rfl hterm]
   refine hcount.trans ?_
   calc (M : ℝ≥0∞) ^ (2 * fdeg E * r ^ 2) * ∑' j, covolume (inReal (X i0).Ψ (X i0).Gm (ratStab (X i0).Gm (L : Set (Fin r → E)) (t j))) (realSU (X i0).Ψ (X i0).Gm) (riemHaar (X i0).Ψ (X i0).Gm (x0 i0))

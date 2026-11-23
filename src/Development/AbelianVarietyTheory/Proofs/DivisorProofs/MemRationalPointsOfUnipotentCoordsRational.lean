@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsLv
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemUnitaryRationalPointsOfFrameImagesRationalStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemUnitaryRationalPointsOfFrameImagesRational
+public import Development.AbelianVarietyTheory.Definitions.Divisors.LocallyCompactSpaceAxis
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -37,7 +38,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.Divisors.LocallyCompactSpaceAxis
 import Development.AbelianVarietyTheory.Definitions.Divisors.LocallyCompactUnipFlag
 
 @[expose] public section
@@ -62,7 +62,7 @@ theorem mem_ratPts_of_crd_rat : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
   have hsub : ∀ {a b : ℕ} (X Y : Matrix (Fin a) (Fin b) E),
       adMat F (X - Y) = adMat F X - adMat F Y := fun X Y => by
     ext i k; simp [adMat]
-  refine GlobalTheory.T.mem_unitaryRationalPoints_of_frameImages_rational F E σ n J j m C D Z J₀ hF u C
+  refine _root_.GlobalTheory.SphEis.mem_ratPts_of_cols_rat F E σ n J j m C D Z J₀ hF u C
     (D - Z * (J₀⁻¹ * cT (σ : E →+* E) b₀) + C * c₀) (Z + C * b₀) h.onC ?_ ?_
   · rw [h.onZ, hadd, hmul]
   · rw [h.onD, hadd, hsub, hmul, hmul, hmul]

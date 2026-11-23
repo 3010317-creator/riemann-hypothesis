@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HopfLaurent
 public import Mathlib.Tactic.ENatToNat
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalizationPreservesRingPullbackSquareStatement
+public import Mathlib.RingTheory.Localization.Away.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalizationPreservesRingPullbackSquare
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpMapFstSurjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -261,7 +262,7 @@ theorem exists_extend_basicOpen : ∀ (R : Type) [CommRing R] (B M : Type) [Comm
     isLocalization_away_of_eq _ _ (by rw [Scheme.preimage_basicOpen _ s, Scheme.preimage_basicOpen]; rfl)
   haveI : IsLocalization.Away s Γ(Sp (TrivSqZeroExt R M), (Sp (TrivSqZeroExt R M)).basicOpen s) :=
     (isAffineOpen_top _).isLocalization_basicOpen s
-  have key := GlobalTheory.T.localization_preserves_ring_pullback_square _ _ _ _ hcomm hinj0 hsurj0 s
+  have key := _root_.GlobalTheory.locPullback _ _ _ _ hcomm hinj0 hsurj0 s
     Γ(Sp (TrivSqZeroExt R M), (Sp (TrivSqZeroExt R M)).basicOpen s)
     Γ(Sp R, spMap (TrivSqZeroExt.fstHom R R M).toRingHom ⁻¹ᵁ (Sp (TrivSqZeroExt R M)).basicOpen s)
     Γ(Sp (TrivSqZeroExt B M), spMap β ⁻¹ᵁ (Sp (TrivSqZeroExt R M)).basicOpen s)

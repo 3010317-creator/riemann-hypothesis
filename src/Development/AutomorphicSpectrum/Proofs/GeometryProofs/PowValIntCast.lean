@@ -6,8 +6,11 @@ public import Development.AutomorphicSpectrum.Statements.GeometryStatements.HTCh
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.IsPolLatticePlane
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.OverZpOfInFibre
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsDualBC
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsHTAtIff
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HTChartExistsHolds
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeTateChartIntegral
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueAct
 import Development.WeilBound.CoreStatements.HodgeTatePoints.HtatLie
 import Mathlib.Algebra.Order.Floor.Extended
@@ -51,8 +54,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HTChartExistsHoldsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeTateChartIntegralStatement
 
 @[expose] public section
 
@@ -82,7 +83,7 @@ theorem cp_descend {A Ω : Type} [CommRing A] [Field Ω] [Algebra A Ω] (hinj : 
     rwa [map_add, map_one, h2, sub_add_cancel]
 
 theorem exists_chart (h876 : type_of% @GlobalTheory.T.section_eq_zero_of_values) (h450 : type_of% @GlobalTheory.T.torsion_embedding_geometric_points)
-    (h758 : type_of% @GlobalTheory.T.HTChartExists_holds) (h576 : type_of% @GlobalTheory.T.hodge_tate_chart_integral)
+    (h758 : type_of% @_root_.GlobalTheory.CompanionTheory.Ar.BT.ChartEx.htChartExists) (h576 : type_of% @_root_.GlobalTheory.CompanionTheory.Ar.HT.hasTestPoints_of_tate)
     {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} (D : Datum H) {X : Scheme.{0}}
     [IsLocallyNoetherian X] (t : SAB H X) {Ω : Type} [Field Ω] [CharZero Ω] (ξ : Sp Ω ⟶ X) (hξ : IsCptGen ξ)
     (hall : ∀ q : X, genPt ξ ⤳ q)

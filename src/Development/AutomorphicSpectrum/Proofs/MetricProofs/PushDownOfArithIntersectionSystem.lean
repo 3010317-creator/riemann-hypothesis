@@ -1,7 +1,9 @@
 module
 
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.StatementsPushDown
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.GenericDegreeOfArithSystemStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MixedFieldContraction.ContractMixedFieldStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.GenericDegreeOfArithSystem
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ProjectionFormulaOfArithSystem
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PHodgeFlagArith
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PHodgeFlagMinorTrdeg
@@ -63,6 +65,6 @@ theorem hodgeFlagArith : HodgeFlagArith.Statement :=
 theorem pushDown :
     ReciprocityTheory.ChartRestriction.G.Geo.ArithIntersectionSystemStatement →
       GroundTheory.Heights₂.Heights.LowerBoundFree.PushDown.Statement := fun h =>
-  GroundTheory.Heights₂.Heights.LowerBoundFree.PushDown.proof (GlobalTheory.T.generic_degree_of_arith_system h) GlobalTheory.CompanionTheory.Ar.Giv.ProjF.pfStep hodgeFlagArith
+  GroundTheory.Heights₂.Heights.LowerBoundFree.PushDown.proof (_root_.GlobalTheory.CompanionTheory.Ar.Giv.genDeg_of_system h) GlobalTheory.CompanionTheory.Ar.Giv.ProjF.pfStep hodgeFlagArith
 
 end GlobalTheory.CompanionTheory.Ar.Giv

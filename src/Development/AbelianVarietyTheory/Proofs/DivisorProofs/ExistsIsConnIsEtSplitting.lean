@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.WittOnFalse
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPerfectIdempotentStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivGroupIdempotentSplitFieldStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ToSpanSingletonConstGenInjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPerfectIdempotent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivGroupIdempotentSplitField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,13 +58,13 @@ theorem exists_isConn_isEt_splitting :
       ∃ (G₀ G₁ : PDivGroup p k) (i₀ : G₀ ⟶ G) (q₀ : G ⟶ G₀) (i₁ : G₁ ⟶ G) (q₁ : G ⟶ G₁),
         G₀.IsConn ∧ G₁.IsEt ∧ i₀ ≫ q₀ = 𝟙 G₀ ∧ i₁ ≫ q₁ = 𝟙 G₁ ∧ q₀ ≫ i₀ + q₁ ≫ i₁ = 𝟙 G := by
   intro p _ k _ _ _ G
-  obtain ⟨e, he, hnil, hred⟩ := GlobalTheory.T.exists_idempotent_nilpotent_complement_of_perfect p k G
+  obtain ⟨e, he, hnil, hred⟩ := _root_.GlobalTheory.PDivGroup.exists_perfect_idempotent p k G
   have h1 : e + (𝟙 G - e) = 𝟙 G := add_sub_cancel _ _
   have h1' : (𝟙 G - e) + e = 𝟙 G := sub_add_cancel _ _
   have h2 : e ≫ (𝟙 G - e) = 0 := by rw [Preadditive.comp_sub, Category.comp_id, he, sub_self]
   have h3 : (𝟙 G - e) ≫ e = 0 := by rw [Preadditive.sub_comp, Category.id_comp, he, sub_self]
-  obtain ⟨G₀, i₀, q₀, a₀, b₀, c₀⟩ := GlobalTheory.T.pDivGroup_idempotent_split_field p k G e (𝟙 G - e) h1 h2 h3
-  obtain ⟨G₁, i₁, q₁, a₁, b₁, c₁⟩ := GlobalTheory.T.pDivGroup_idempotent_split_field p k G (𝟙 G - e) e h1' h3 h2
+  obtain ⟨G₀, i₀, q₀, a₀, b₀, c₀⟩ := _root_.GlobalTheory.PDivGroup.idempotent_split p k G e (𝟙 G - e) h1 h2 h3
+  obtain ⟨G₁, i₁, q₁, a₁, b₁, c₁⟩ := _root_.GlobalTheory.PDivGroup.idempotent_split p k G (𝟙 G - e) e h1' h3 h2
   refine ⟨G₀, G₁, i₀, q₀, i₁, q₁, fun n x hx => ?_, fun n => ⟨fun x hx => ?_⟩, a₀, a₁,
     by rw [b₀, b₁, h1']⟩
   · obtain ⟨a, rfl⟩ := (c₀ n).1 x

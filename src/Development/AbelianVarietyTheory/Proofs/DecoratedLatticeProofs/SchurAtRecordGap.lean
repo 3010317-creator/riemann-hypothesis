@@ -1,9 +1,13 @@
 module
 
 public import Formalism.SharpRestriction.CuspSpanNormBounds.BranchingAndRankConstants
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AmplitudeSchurBoundUniformConstantsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ElementarySizeBoundsOfSizeHypothesesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeMultOneDecayOfLargeGapHypothesesStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DegVand
+public import Formalism.LocalRingCardinality.DataTies
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.AmplitudeSchurBoundUniformConstants
+public import Formalism.SharpRestriction.CuspSpanNormBounds.StandingNumericalData
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ElementarySizeBoundsOfSizeHypotheses
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UniqGapOfUniq
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeMultOneDecayOfLargeGapHypotheses
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselMultiplicityOneLargeGapAndWhittakerBessel
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HypOfUniqGap
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SchurAlongFamily
@@ -43,8 +47,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.LatticeFrames.VanishingGramTermsBoundParams
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DegVand
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UniqGapOfUniq
 
 @[expose] public section
 
@@ -56,10 +58,10 @@ namespace GlobalTheory.Amp
 theorem schur_at_record_gap : ∀ Cg cb Cu cT CT C0 : ℝ, ∃ C thr : ℝ, ∀ (D : D7) (large₂ : SizeData₂ D) (C' Cl : ℝ), thr ≤ C' → thr ≤ Cl → Ties D → VanishingOnXAndXPlusBranching.adm11 D large₂ C' Cl Cg cb Cu cT CT C0 1 C := by
   intro Cg cb Cu cT CT C0
   have hH : GlobalTheory.GapIn.Hyp := GlobalTheory.GapIn.hyp_of_uniqGap GlobalTheory.uniqGap_and_besselOfW.1
-  obtain ⟨C₀, hC⟩ := GlobalTheory.T.amplitudeSchurBound_uniform_constants Cg cb Cu cT CT 1
+  obtain ⟨C₀, hC⟩ := _root_.GlobalTheory.Amp.schurSt_of_big_tie_uniform Cg cb Cu cT CT 1
   obtain ⟨m₀, hm⟩ := hC C₀ le_rfl
-  obtain ⟨m₁, hL⟩ := GlobalTheory.T.amplitudeMultOneDecay_of_largeGapHypotheses hH Cg cb Cu cT CT C0
-  obtain ⟨thr, hthr⟩ := GlobalTheory.T.size_bounds_of_standingHypotheses (max (max m₀ m₁) 1)
+  obtain ⟨m₁, hL⟩ := _root_.GlobalTheory.Amp.LocalInputsGap.locIn_of_hypGap hH Cg cb Cu cT CT C0
+  obtain ⟨thr, hthr⟩ := _root_.GlobalTheory.Core.Deg.elementary_size_bounds_of_size_hypotheses (max (max m₀ m₁) 1)
   refine ⟨C₀, thr, fun D large₂ C' Cl h1 h2 hT => ?_⟩
   intro hZ
   obtain ⟨h1000, -, hmM, -, hrd, -⟩ := hthr D large₂ C' Cl Cg cb Cu cT CT h1 h2 hZ.1

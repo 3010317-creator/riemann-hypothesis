@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PointShiftSt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplexFibreLinearHomsPrincipalCMTripleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilPairingEqCmIntegerOfPureTypeStatement
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplexFibreLinearHomsPrincipalCMTriple
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilPairingEqCmIntegerOfPureType
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,8 +54,8 @@ theorem exists_weilEq_entry : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     Serre.IsLinearHom A.t.act B.t.act f₂ → ∃ g : 𝓞 E, WeilEq B.t.PP.L f₁ f₂ A.t.PP.L (A.t.act.act g) (𝟙 _)
       (spMap (σ₁.comp (algebraMap (𝓞 K) K))) := by
   intro E _ _ _ H K _ _ ρ σ₁ A B p q hρ hpq hA f₁ f₂ h₁ h₂
-  obtain ⟨A', B', f₁', f₂', p', q', hpq', hdet, h₁', h₂', hW⟩ := GlobalTheory.T.exists_complex_fibre_linear_homs_principalCMTriple E H K ρ σ₁ A B p q hρ hA f₁ f₂ h₁ h₂
-  obtain ⟨g, hg⟩ := GlobalTheory.T.exists_weil_pairing_eq_cm_integer_of_pure_type E H A' B' p' q' (hpq'.trans hpq) hdet f₁' f₂' h₁' h₂'
+  obtain ⟨A', B', f₁', f₂', p', q', hpq', hdet, h₁', h₂', hW⟩ := _root_.GlobalTheory.GramBaseChange.exists_complex_fibre E H K ρ σ₁ A B p q hρ hA f₁ f₂ h₁ h₂
+  obtain ⟨g, hg⟩ := _root_.GlobalTheory.CM.PureHom.exists_weilEq_smul_of_pure E H A' B' p' q' (hpq'.trans hpq) hdet f₁' f₂' h₁' h₂'
   exact ⟨g, hW g hg⟩
 
 theorem exists_isGram : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (K : Type) [Field K] [NumberField K] (ρ : 𝓞 K) (σ₁ : K →+* ℂ) (p q : ℕ) (X : CMObj H K ρ σ₁ p q), ∃ gP gQ, IsGram X gP gQ := by

@@ -1,10 +1,11 @@
 module
 
 public import Development.WeilBound.CoreStatements.VolumeEquality.BallVolDefs
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.BallAutomorphismInverseExists
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BallMobiusHolomorphicPotentialChangeStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BallMobiusMulStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IntEmbInjective
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BallMobiusHolomorphicPotentialChange
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BallMobiusMul
 public import Development.WeilBound.CoreStatements.EqualVolumeCompactOpens.Master
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.BallAutomorphismInverseExists
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -87,12 +88,12 @@ theorem moeb_one (q : Ψ × Fin j × Fin j' ≃ Fin n) (t : Fin n → ℂ) : moe
 
 theorem moeb_maps (q : Ψ × Fin j × Fin j' ≃ Fin n) {u : Ψ → Matrix (Sg j j') (Sg j j') ℂ} (hu : ∀ τ, IsSgU (u τ))
     {t : Fin n → ℂ} (ht : t ∈ ballDom q) : moebBall q u t ∈ ballDom q :=
-  (GlobalTheory.T.ball_mobius_holomorphic_potential_change Ψ j j' n q u hu).2.1 ht
+  (_root_.GlobalTheory.CompanionTheory.Ar.Cusp.Dict.Moeb.moebBall_props Ψ j j' n q u hu).2.1 ht
 
 theorem moeb_mul (q : Ψ × Fin j × Fin j' ≃ Fin n) {u v w : Ψ → Matrix (Sg j j') (Sg j j') ℂ} (hu : ∀ τ, IsSgU (u τ))
     (hv : ∀ τ, IsSgU (v τ)) (hw : ∀ τ, u τ * v τ = w τ) {t : Fin n → ℂ} (ht : t ∈ ballDom q) :
     moebBall q u (moebBall q v t) = moebBall q w t := by
-  rw [← GlobalTheory.T.ball_mobius_mul Ψ j j' n q u v hu hv t ht, funext hw]
+  rw [← _root_.GlobalTheory.CompanionTheory.Ar.Cusp.Dict.MoebAct.moebBall_mul Ψ j j' n q u v hu hv t ht, funext hw]
 
 theorem moeb_inv (q : Ψ × Fin j × Fin j' ≃ Fin n) {u v : Ψ → Matrix (Sg j j') (Sg j j') ℂ} (hu : ∀ τ, IsSgU (u τ))
     (hv : ∀ τ, IsSgU (v τ)) (hw : ∀ τ, u τ * v τ = 1) {t : Fin n → ℂ} (ht : t ∈ ballDom q) :
@@ -107,7 +108,7 @@ theorem moeb_injOn (q : Ψ × Fin j × Fin j' ≃ Fin n) {u : Ψ → Matrix (Sg 
 theorem moeb_meas (q : Ψ × Fin j × Fin j' ≃ Fin n) {u : Ψ → Matrix (Sg j j') (Sg j j') ℂ} (hu : ∀ τ, IsSgU (u τ))
     {S : Set (Fin n → ℂ)} (hS : MeasurableSet S) (hSD : S ⊆ ballDom q) :
     MeasurableSet (moebBall q u '' S) ∧ ballMeas q (moebBall q u '' S) = ballMeas q S := by
-  obtain ⟨h1, h2, G, h3, h4⟩ := GlobalTheory.T.ball_mobius_holomorphic_potential_change Ψ j j' n q u hu
+  obtain ⟨h1, h2, G, h3, h4⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.Dict.Moeb.moebBall_props Ψ j j' n q u hu
   exact ⟨hS.image_of_continuousOn_injOn (h1.continuousOn.mono hSD) ((moeb_injOn q hu).mono hSD),
     ballMeas_image q h1 h2 (moeb_injOn q hu) (fun t ht => ballDens_transform q h1 h3 h2 h4 ht) hS hSD⟩
 
@@ -157,7 +158,7 @@ theorem core (q : Ψ × Fin j × Fin j' ≃ Fin n) {G : Type} [Group G] [Countab
   have sm : ∀ (γ : U) (t : ballDom q), ((γ • t : ballDom q) : Fin n → ℂ) = moebBall q (ρ γ) t := fun _ _ => rfl
   haveI : MeasurableConstSMul U (ballDom q) := ⟨fun γ =>
     (Continuous.subtype_mk (continuousOn_iff_continuous_restrict.1
-      (GlobalTheory.T.ball_mobius_holomorphic_potential_change Ψ j j' n q (ρ γ) (hU γ γ.2)).1.continuousOn) _).measurable⟩
+      (_root_.GlobalTheory.CompanionTheory.Ar.Cusp.Dict.Moeb.moebBall_props Ψ j j' n q (ρ γ) (hU γ γ.2)).1.continuousOn) _).measurable⟩
   let μ : Measure (ballDom q) := (ballMeas q).comap Subtype.val
   have hμ : ∀ s, μ s = ballMeas q (Subtype.val '' s) := fun s => hemb.comap_apply _ s
   haveI : SMulInvariantMeasure U (ballDom q) μ := ⟨fun γ s hs => by

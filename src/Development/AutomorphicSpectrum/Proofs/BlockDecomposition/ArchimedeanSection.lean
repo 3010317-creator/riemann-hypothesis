@@ -2,15 +2,17 @@ module
 
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.UnitarySchrodingerModel.UnitarySchrodingerLemmas.UnramifiedSchwartzDensity.SchCut
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.InfiniteAdelesLocalRingTotallyReal
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRingStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.UnitsOpenEmbeddingLocalTensorStatement
+public import Formalism.UnipotentAdelicQuotients.SWXSDefs
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
+public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.UnitsOpenEmbeddingLocalTensor
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousBiadditiveBounded
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousOnRingInverseOfIsOpenEmbeddingUnits
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsRealCoords
+public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.FDeriv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
-public import Mathlib.Analysis.Calculus.InverseFunctionTheorem.FDeriv
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
@@ -324,13 +326,13 @@ theorem secInf : PositivityTheory.PfSWUS.SchInf.SecInf := by
   have hR : GlobalTheory.CompanionTheory.SW.IsLocR (Ainf F) := GlobalTheory.CompanionTheory.SW.isLocR_Ainf F hσ.1
   haveI : BorelSpace (Ainf F) := ⟨rfl⟩
   have hunits : IsOpenEmbedding (Units.val : (Ainf F ⊗[F] E)ˣ → Ainf F ⊗[F] E) :=
-    GlobalTheory.T.units_open_embedding_local_tensor F E σ hσ (Ainf F) hR
+    _root_.GlobalTheory.CompanionTheory.SW.KUnits.units_val_isOpenEmbedding F E σ hσ (Ainf F) hR
   obtain ⟨hTR, hLC, hSC, hT2, -, -, -, -⟩ := id hR
   haveI := hTR
   haveI := hLC
   haveI := hSC
   haveI := hT2
-  obtain ⟨iTR, -, -, -, hsig, -, -, -, -, -⟩ := GlobalTheory.T.tensor_locally_compact_ring F E σ hσ (Ainf F)
+  obtain ⟨iTR, -, -, -, hsig, -, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hσ (Ainf F)
   haveI := iTR
   obtain ⟨N, e₀, he₀, he₀'⟩ := GlobalTheory.CompanionTheory.SW.SchwartzFib.exists_real_coords F E n n
   have hinvol : ∀ b : Ainf F ⊗[F] E, sigR (Ainf F) σ (sigR (Ainf F) σ b) = b := by

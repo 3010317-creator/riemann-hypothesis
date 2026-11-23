@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SelfDualOne
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DualIntegralPreimageLeSumTransposeImageStatement
+public import Formalism.SatakeDualWeyl.StatementF
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DualIntegralPreimageLeSumTransposeImage
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnramifiedLocalDualPairSwapHermitianAdjoint
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -88,7 +89,7 @@ theorem hermDual_subset_of_gram_int : ∀ (L : Type) [Field L] [Valued L (WithZe
     intro z hz
     simp only [Formalism.UG.intL, Valuation.mem_integer_iff] at hz ⊢
     rwa [hv]
-  obtain ⟨l, w, hl, hw, hz⟩ := GlobalTheory.T.dual_integral_preimage_le_sum_transpose_image L n' n (x.map σ) ((JS : Matrix (Fin n) (Fin n) L) *ᵥ v) (by
+  obtain ⟨l, w, hl, hw, hz⟩ := _root_.GlobalTheory.LatticeDuality.dual_subset L n' n (x.map σ) ((JS : Matrix (Fin n) (Fin n) L) *ᵥ v) (by
     intro u hu hxu
     have e : x *ᵥ (fun i => σ (u i)) = fun i => σ ((x.map σ *ᵥ u) i) := by
       rw [dualA_conj_mulVec]

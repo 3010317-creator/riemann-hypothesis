@@ -3,7 +3,12 @@ module
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Mathlib.NumberTheory.Padics.PadicIntegers
 public import Mathlib.RingTheory.MvPolynomial.Homogeneous
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.EqOfNormResultantEqStatement
+public import Mathlib.NumberTheory.Padics.PadicNumbers
+public import Mathlib.RingTheory.Algebraic.Defs
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.EqOfNormResultantEq
+public import Mathlib.Algebra.MvPolynomial.Funext
+public import Mathlib.Topology.Algebra.Polynomial
+public import Mathlib.Topology.Instances.Matrix
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,9 +61,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Mathlib.Algebra.MvPolynomial.Funext
-public import Mathlib.Topology.Algebra.Polynomial
-public import Mathlib.Topology.Instances.Matrix
 
 @[expose] public section
 
@@ -367,7 +369,7 @@ theorem eq_det : ∀ (l : ℕ) [Fact l.Prime] (m : ℕ) (U : Matrix (Fin m) (Fin
   have hQm : (U.charpoly.map PadicInt.Coe.ringHom).map (algebraMap ℚ_[l] E) = V.charpoly := by
     rw [Polynomial.map_map, ← Matrix.charpoly_map]
   have hb := roots _ V.charpoly_monic
-  have key := GlobalTheory.T.eq_of_norm_prod_aeval_eq_moduli l E a V.charpoly.roots (P.map (Rat.castHom ℚ_[l]))
+  have key := _root_.GlobalTheory.eq_of_norm_resultant_eq l E a V.charpoly.roots (P.map (Rat.castHom ℚ_[l]))
     (U.charpoly.map PadicInt.Coe.ringHom) (hPm.trans ha) (hQm.trans hb) (fun F u v hu hv => by
       rw [← hNa] at hu
       rw [← hDb _ hb] at hv

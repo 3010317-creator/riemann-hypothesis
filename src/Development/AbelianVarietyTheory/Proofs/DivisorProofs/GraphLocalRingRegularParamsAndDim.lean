@@ -4,7 +4,11 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsLocM
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocalization
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMulKerMemSpanTrBasisDiff
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RingKrullDimAddEqOfTrBasis
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TrdegComplexBaseChangeEqStatement
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.RingTheory.AlgebraicIndependent.Basic
+public import Mathlib.RingTheory.TensorProduct.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TrdegComplexBaseChangeEq
+public import Mathlib.FieldTheory.FinTrdeg
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -16,7 +20,6 @@ import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
-public import Mathlib.FieldTheory.FinTrdeg
 import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
@@ -185,7 +188,7 @@ theorem ringKrullDim_loc (σ : K →ₐ[ℂ] κ') (n : ℕ) (x : Fin n → K)
   have hR : Algebra.trdeg ℂ ↥(loc L σ) = ((n + (Algebra.trdeg ℂ κ').toNat : ℕ) : Cardinal) := by
     have h0 : Algebra.trdeg (K ⊗[ℂ] κ') ↥(loc L σ) = 0 := trdeg_eq_zero
     rw [← trdeg_add_eq ℂ (K ⊗[ℂ] κ') (A := ↥(loc L σ)), h0, add_zero,
-      ← trdeg_add_eq ℂ K (A := K ⊗[ℂ] κ'), GlobalTheory.T.trdeg_tensor_complex_eq, hK, hm]
+      ← trdeg_add_eq ℂ K (A := K ⊗[ℂ] κ'), _root_.GlobalTheory.trdeg_complex_baseChange_eq, hK, hm]
     push_cast
     rfl
   exact ennreal_volume_ratio_step_cancel _ _ _

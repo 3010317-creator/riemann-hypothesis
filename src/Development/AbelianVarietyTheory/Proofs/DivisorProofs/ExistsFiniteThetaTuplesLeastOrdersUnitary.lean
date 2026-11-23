@@ -4,9 +4,10 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.SpecializesG
 public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.ImmersedBy
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FractionRingEqUniformiserZpowMulUnitStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralModelValueProdZpowLocalUnitsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeastIntCombinationMinimiserCellUnitaryStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.SumMulEqZeroOfSumToReal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeastIntCombinationMinimiserCellUnitary
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformiserZpowMulUnitExponentUniqueStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryComparisonLatticePeriodsAtPointStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryComparisonLatticePeriodsAtPoint
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,8 +61,8 @@ theorem GlobalTheory.UPoinc.exists_uLocTuples_theta : ∀ (E : Type) [Field E] [
   have hN2 := X₁.S.N_ge
   have hN3 : 3 ≤ X₁.S.N := by obtain ⟨j, hj⟩ := hNodd; omega
   haveI hN0 : NeZero X₁.S.N := ⟨by omega⟩
-  obtain ⟨m₁, m₂, hm₁, hm₂, hX⟩ := GlobalTheory.T.unitaryComparison_lattice_periods_at_point E H Dw hpq l Xo c C X₁
-  obtain ⟨B, ι₀, 𝓛, hι₀, hT⟩ := GlobalTheory.T.least_intCombination_minimiserCell_unitary E H (min Dw.p Dw.q) φ hφ X₁.S.N hN3 hNodd
+  obtain ⟨m₁, m₂, hm₁, hm₂, hX⟩ := _root_.GlobalTheory.unitaryStepA_at_point E H Dw hpq l Xo c C X₁
+  obtain ⟨B, ι₀, 𝓛, hι₀, hT⟩ := _root_.GlobalTheory.UPoinc.finite_types_unitary E H (min Dw.p Dw.q) φ hφ X₁.S.N hN3 hNodd
   haveI : NeZero (X₁.S.r * X₁.S.N) := ⟨Nat.mul_ne_zero (by have := X₁.S.r_pos; omega) (by omega)⟩
   haveI : NeZero ((X₁.S.r * X₁.S.N) ^ 2) := ⟨pow_ne_zero _ (NeZero.ne _)⟩
   haveI : Finite (AddSubgroup X₁.S.Gam) :=

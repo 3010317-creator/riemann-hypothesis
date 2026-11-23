@@ -1,13 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.SameKindIsometric
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AbsoluteHermitianVolumeBoundArithStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutInstDegreeRootDiscriminantRankStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSigmaFiniteHaarFiniteAdelicUnitaryStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermVolumeRatioSameKindOfVolumeRatioInductionStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RankTwoDefiniteUnimodularHermitianClassBoundStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RiemannianHaarGaugeExistsPosUniqueStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryGaugeVolumeLeClassNumberDefiniteStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsGaugeAll
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AbsoluteHermitianVolumeBoundArith
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DefClassNum
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutInstDegreeRootDiscriminantRank
+public import Formalism.SharpRestriction.CuspSpanNormBounds.GlobAut
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsSigmaFiniteHaarFiniteAdelicUnitary
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermVolumeRatioSameKindOfVolumeRatioInduction
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RankTwoDefiniteUnimodularHermitianClassBound
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryGaugeVolumeLeClassNumberDefinite
+import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LayerProd
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RiemannianHaarGaugeExistsPosUnique
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,7 +80,7 @@ theorem volU_nonneg (i : ℕ) : 0 ≤ volU i := by
 
 theorem absoluteVolume_of_volumeStep : VolumeStep → AbsoluteVolume := by
   intro hstep I p q hsig hq hn X hX hrd hfrd c μf _ _ hc
-  obtain ⟨hf, hv, -, -, -, hpq⟩ := GlobalTheory.T.autInst_degree_rootDiscriminant_rank I
+  obtain ⟨hf, hv, -, -, -, hpq⟩ := _root_.GlobalTheory.FlagMeas.instance_numbers I
   have hpq' := hpq p q hsig
   have hp : 2 ≤ p := by
     by_contra h
@@ -84,22 +88,22 @@ theorem absoluteVolume_of_volumeStep : VolumeStep → AbsoluteVolume := by
     have h2 : 7 * q ≤ q ^ 2 := by nlinarith
     omega
   obtain ⟨⟨I₀, hsame, hsig₀⟩, hrat⟩ :=
-    GlobalTheory.T.hermVolumeRatioSameKind_of_volumeRatioInduction hstep I p q 2 0 hsig hp (Nat.zero_le _) le_rfl
-  obtain ⟨μ₀, hH, hS⟩ := GlobalTheory.T.exists_sigmaFinite_haar_finiteAdelicUnitary I₀
-  choose c₀ _ hc₀ _ using fun v : InfinitePlace I₀.F => GlobalTheory.T.riemannianHaarGauge_exists_pos_unique I₀.n (I₀.ε v)
+    _root_.GlobalTheory.FlagMeas.VolRatio.volumeRatio_of_volumeStep hstep I p q 2 0 hsig hp (Nat.zero_le _) le_rfl
+  obtain ⟨μ₀, hH, hS⟩ := _root_.GlobalTheory.CongTop.exists_haar_sigmaFinite I₀
+  choose c₀ _ hc₀ _ using fun v : InfinitePlace I₀.F => _root_.GlobalTheory.GaugeConst.gauge_exists_pos_unique I₀.n (I₀.ε v)
   have hg₀ : IsGaugeAll I₀ c₀ := hc₀
   have hE := hrat I₀ hsame hsig₀ c μf c₀ μ₀ hc hg₀
-  have hD := GlobalTheory.T.unitaryGaugeVolume_le_classNumber_definite I₀ 2 hsig₀ c₀ μ₀ hg₀
-  have hV := GlobalTheory.T.rank_two_definite_unimodular_hermitian_class_bound I₀.E I₀.cm.cmUnram
+  have hD := _root_.GlobalTheory.DefiniteVolume.gaugeVol_le I₀ 2 hsig₀ c₀ μ₀ hg₀
+  have hV := _root_.GlobalTheory.RankTwoCount.rankTwoClasses I₀.E I₀.cm.cmUnram
   obtain ⟨e, -⟩ := hsame
-  obtain ⟨hf₀, -, -, -, -, -⟩ := GlobalTheory.T.autInst_degree_rootDiscriminant_rank I₀
+  obtain ⟨hf₀, -, -, -, -, -⟩ := _root_.GlobalTheory.FlagMeas.instance_numbers I₀
   rw [← hf₀, fDeg_congr e] at hD
   rw [fDeg_congr e, vInv_congr e] at hV
-  have hA := GlobalTheory.T.absolute_hermitian_volume_bound_arith I.E I.cm.cmUnram I.n X hn hX (hv ▸ hrd) (by rw [hf, hv]; exact hfrd)
+  have hA := _root_.GlobalTheory.VolArith.volume_bound_arith I.E I.cm.cmUnram I.n X hn hX (hv ▸ hrd) (by rw [hf, hv]; exact hfrd)
   have hv0 : 0 ≤ 2 * Formalism.HermitianLatticesTheory.vInv I.E := by
     unfold Formalism.HermitianLatticesTheory.vInv
     positivity
-  have hv1 : 1 ≤ 2 * Formalism.HermitianLatticesTheory.vInv I.E := hv ▸ (GlobalTheory.T.autInst_degree_rootDiscriminant_rank I).2.2.1
+  have hv1 : 1 ≤ 2 * Formalism.HermitianLatticesTheory.vInv I.E := hv ▸ (_root_.GlobalTheory.FlagMeas.instance_numbers I).2.2.1
   have hlog : 0 ≤ Real.log (2 * Formalism.HermitianLatticesTheory.vInv I.E) := Real.log_nonneg hv1
   have hU : 0 ≤ volU 2 ^ Formalism.HermitianLatticesTheory.fDeg I.E := pow_nonneg (volU_nonneg 2) _
   rw [hE, hpq', ← hf]

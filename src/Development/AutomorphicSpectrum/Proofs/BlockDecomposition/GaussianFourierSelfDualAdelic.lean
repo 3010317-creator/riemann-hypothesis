@@ -1,17 +1,17 @@
 module
 
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.CountData
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FiniteAdeleTopologyStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.LatticeFundamentalDomainVolumeStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.QuadraticLevelSetDensityStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FiniteAdeleTopology
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.LatticeFundamentalDomainVolume
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.QuadraticLevelSetDensity
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.RealQuadraticFormLemma
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.SchurFunctionSmoothRightInvariant
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.SchurFunctionWhittakerEquivariantStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.StandardAdelicCharacterStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ThetaAverageExpectedCountStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ThetaFunctionGrowthBoundStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.WeilOperatorIntegralInvarianceStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.SchurFunctionWhittakerEquivariant
 public import Development.WeilBound.CoreStatements.ThetaDilations.BoundedA
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.StandardAdelicCharacter
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ThetaAverageExpectedCount
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.ThetaFunctionGrowthBound
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.WeilOperatorIntegralInvariance
 import Development.WeilBound.CoreStatements.ThetaDilations.OrbitAdelic
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.StabilizerVolume.TopoAF
 import Mathlib.Algebra.Order.Floor.Extended
@@ -85,11 +85,11 @@ theorem fourier_coefficient_any : ∀ (F : Type) [Field F] [NumberField F], ∀ 
   haveI : Countable F := countable_field
   obtain ⟨hTR, -, -, -, hρ, -, -⟩ := id hQ
   obtain ⟨hprob, -, -, hOrth, -⟩ := id hC
-  obtain ⟨-, -, hT2, hOc, hOo, -, hmem, -, -, -⟩ := GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F
-  obtain ⟨-, -, -, hfd⟩ := GlobalTheory.T.lattice_fundamental_domain_volume F hTR ρ hρ N hN
+  obtain ⟨-, -, hT2, hOc, hOo, -, hmem, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
+  obtain ⟨-, -, -, hfd⟩ := _root_.GlobalTheory.CompanionTheory.SW.FD.main F hTR ρ hρ N hN
   obtain ⟨hvol, horth⟩ := hfd D hD
   have hsb : SB (indL a : (ι → A F) → ℂ) := sb_indL hT2 hOc hOo ha
-  obtain ⟨C, hCb⟩ := GlobalTheory.T.weighted_theta_average_le_of_countData F ι M B ρ P hQ Ω Pr gf gi hC (indL a) hsb 1 1 one_pos one_pos
+  obtain ⟨C, hCb⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.ThetaBound.theta_integral_bound F ι M B ρ P hQ Ω Pr gf gi hC (indL a) hsb 1 1 one_pos one_pos
   obtain ⟨hmeas, hbound⟩ := hCb (fun _ => Complex.I) (by simp) (by simp)
   set s : (ι → F) → Ω → ℂ :=
     fun z ω => thTerm B ρ P (gf ω) (gi ω) (indL a) (fun _ => Complex.I) z with hs
@@ -180,12 +180,12 @@ theorem fourier_coeff_eis_any : ∀ (F : Type) [Field F] [NumberField F] [Measur
   intro F _ _ _ _ lf hlf h1 ψ hψ ι _ _ M B ρ P hQ hM φ hφ hΦ hc β N hN hNβ hper D hD
   obtain ⟨hTR, -, -, -, hρ, -, -⟩ := id hQ
   have hcount : Countable F := (Module.finBasis ℚ F).equivFun.toEquiv.injective.countable
-  obtain ⟨-, hLcount, hLmem, hLD⟩ := GlobalTheory.T.lattice_fundamental_domain_volume F hTR ρ hρ N hN
+  obtain ⟨-, hLcount, hLmem, hLD⟩ := _root_.GlobalTheory.CompanionTheory.SW.FD.main F hTR ρ hρ N hN
   obtain ⟨hvol, -⟩ := hLD D hD
-  obtain ⟨-, -, -, -, hOopen, -, hOint, -, -, hWopen⟩ := GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F
-  obtain ⟨-, hψ'⟩ := GlobalTheory.T.standard_adelic_character F
+  obtain ⟨-, -, -, -, hOopen, -, hOint, -, -, hWopen⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
+  obtain ⟨-, hψ'⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.StdChar.main F
   obtain ⟨hψ1, hψO, -⟩ := hψ' ψ hψ
-  obtain ⟨C, hC⟩ := GlobalTheory.T.summable_norm_eiTerm_and_wt_mul_tsum_le F lf hlf h1 ψ hψ ι M B ρ P hQ hM φ hφ 1 one_pos
+  obtain ⟨C, hC⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.EiBound.ei_bound F lf hlf h1 ψ hψ ι M B ρ P hQ hM φ hφ 1 one_pos
   haveI := hLcount
   haveI : lf.IsAddHaarMeasure := hlf
 
@@ -424,19 +424,19 @@ theorem core_zero : ∀ (F : Type) [Field F] [NumberField F], IsTotallyReal F �
   intro F _ _ hF ι _ _ M hc hM B hB hdet ρ hρ P hP hPP _ _ lf hlf h1 Ω _ Pr _ gi gf m1 m2 o1 o2 hcnt
   have hQ : QSetup M B ρ P := ⟨hF, hc, hB, hdet, hρ, hP, hPP⟩
   have hC : CountData M B ρ Pr gf gi := ⟨inferInstance, m1, m2, fun ω => ⟨o2 ω, o1 ω⟩, hcnt⟩
-  obtain ⟨ψ, hψ⟩ := (GlobalTheory.T.standard_adelic_character F).1
+  obtain ⟨ψ, hψ⟩ := (_root_.GlobalTheory.CompanionTheory.SW.Core.StdChar.main F).1
   obtain ⟨C, hb⟩ := PositivityTheory.PlacePermOperatorBicommutantSpan.bounded_a F lf hlf h1 ψ hψ ι M B ρ P hQ hM Ω Pr gf gi hC
-  choose! Df d1 d2 d3 d4 d5 using GlobalTheory.T.schur_function_whittaker_equivariant F lf hlf h1 ψ hψ ι M B ρ P hQ hM
-  obtain ⟨Di, i1, i2, i3, i4, i5⟩ := GlobalTheory.T.quadratic_level_set_density F ι M B ρ P hQ hM
+  choose! Df d1 d2 d3 d4 d5 using _root_.GlobalTheory.CompanionTheory.SW.Core.Dens.density_main F lf hlf h1 ψ hψ ι M B ρ P hQ hM
+  obtain ⟨Di, i1, i2, i3, i4, i5⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.Dens.density_of_q F ι M B ρ P hQ hM
   refine ⟨C, Df, Di, fun a ha => ⟨d1 a ha, d2 a ha, d3 a ha⟩, ⟨i1, i2, i3⟩, fun a ha => ?_⟩
-  obtain ⟨-, -, -, -, -, -, hint, -, hK, -⟩ := GlobalTheory.T.mem_Oh_iff_and_nat_mul_properties F
+  obtain ⟨-, -, -, -, -, -, hint, -, hK, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.Core.AfTop.finiteAdele_topology F
   have hs := PositivityTheory.PlacePermOperatorBicommutantSpan.sb_indL (F := F) (ι := ι) ha
-  obtain ⟨N₁, p1, n1⟩ := GlobalTheory.T.weil_operator_integral_invariance F lf hlf h1 ψ hψ ι M B ρ P hQ _ hs
+  obtain ⟨N₁, p1, n1⟩ := _root_.GlobalTheory.CompanionTheory.SW.FstarPer.fstar_periodic F lf hlf h1 ψ hψ ι M B ρ P hQ _ hs
   have hq : Continuous (qf (hf F) (Bf B) : (ι → A F) → A F) := by unfold qf; fun_prop
   obtain ⟨N₂, p2, n2⟩ := hK _ ((hs.2.isCompact.image hq).insert (algebraMap F (A F) 0))
   have hN : 0 < N₁ * N₂ := Nat.mul_pos p1 p2
   have hβN : ∃ r : 𝓞 F, (r : F) = ((N₁ * N₂ : ℕ) : F) * 0 := ⟨0, by simp⟩
-  obtain ⟨⟨D, hD⟩, -, -, hvol⟩ := GlobalTheory.T.lattice_fundamental_domain_volume F hF ρ hρ _ hN
+  obtain ⟨⟨D, hD⟩, -, -, hvol⟩ := _root_.GlobalTheory.CompanionTheory.SW.FD.main F hF ρ hρ _ hN
   obtain ⟨I, e1, j1, e2⟩ := fourier_coefficient_any F ι M B ρ P hQ Ω Pr gf gi hC a ha 0 _ hN hβN (fun y hy => by
     rw [Nat.cast_mul, mul_assoc]
     refine PositivityTheory.PlacePermOperatorBicommutantSpan.oh_mul (PositivityTheory.PlacePermOperatorBicommutantSpan.oh_nat N₁) (n2 _ (Set.mem_insert_of_mem _ ⟨y, subset_tsupport _ ?_, rfl⟩))

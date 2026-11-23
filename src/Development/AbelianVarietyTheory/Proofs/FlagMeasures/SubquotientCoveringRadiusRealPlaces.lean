@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.SiegelWeilLocal.CenteredPerpendicularSets
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AutPointMajorantFramesGiveMajorants
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CoveringRadiusHomSubquotientSublatticeStatement
+public import Formalism.RealPlaceAnalysis.Complexify
+public import Formalism.HarderNarasimhan.StatementPl
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CoveringRadiusHomSubquotientSublattice
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -176,7 +178,7 @@ theorem subquot_frame : ∀ (I : AutInst) (x : I.GA) (A S R : Submodule (𝓞 I.
     refine Submodule.span_mono ?_ (map_mulVec_mem_span_image_of_mem_span (σ w) _ _ _ (hTA _ y hy))
     rintro _ ⟨_, ⟨r, hr, rfl⟩, rfl⟩
     exact ⟨r, hr, hco w r⟩
-  obtain ⟨Φ, hΦS, hΦA, D', hD', hnorm⟩ := GlobalTheory.T.coveringRadius_hom_subquotient_sublattice I.E I.n (frm I x) A S R lo hi
+  obtain ⟨Φ, hΦS, hΦA, D', hD', hnorm⟩ := _root_.GlobalTheory.SubquotCover.subquot_cover I.E I.n (frm I x) A S R lo hi
     (GlobalTheory.Count.FrameMajorant.frm_unit I x) hA hSat hR hlo hhi hsz hlg T' hT'S hT'A
   let wv : InfinitePlace I.F → InfinitePlace I.E := Function.surjInv hbij.2
   have hwv : ∀ w, wv (w.comap (algebraMap I.F I.E)) = w := fun w =>

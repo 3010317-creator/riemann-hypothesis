@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormDwLeSobNorm
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteDimensionalOfBoundedKorbitDimensionStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteDimensionalOfBoundedKorbitDimension
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InnerKAvgNeZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -103,7 +103,7 @@ theorem kAvg_finite_rank : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [Norme
     rintro _ ⟨w, rfl⟩
     have := KAvgRank.exists_stable hσ hc (fun φ hφ k₀ => (ht φ hφ k₀).1) heF w
     rwa [← hQ] at this
-  haveI : FiniteDimensional ℂ U := GlobalTheory.T.finiteDimensional_of_bounded_Korbit_dimension n ε H σ h U _ hU
+  haveI : FiniteDimensional ℂ U := _root_.GlobalTheory.TypeSum.finiteDimensional_of_bounded_orbits n ε H σ h U _ hU
   let b := stdOrthonormalBasis ℂ U
   refine ⟨_, fun j => (b j : H), fun j => ContinuousLinearMap.adjoint Q (b j), ?_, fun j => ?_, fun j => ?_,
     fun w => ?_⟩

@@ -4,18 +4,20 @@ public import Formalism.SharpRestriction.Divisibility.OrbitPlaces
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.StdBases
 public import Formalism.LocalToGlobal.KernelLattices.KerStd
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ThetaZJetsThree
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DualLocalBasesEigenframeAtRamifiedPrimeStatement
+public import Formalism.LocalToGlobal.TorsionIntegrality.GaussianEigenFrames.StatementJ
+public import Formalism.LocalToGlobal.InertKernelTheory.StatementIota
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DualLocalBasesEigenframeAtRamifiedPrime
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NormLeOfMemSq
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NormTwelveCubedEqOneOfFiveLePrime
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NormalisedThetaFamilyNormalisedAllPlacesStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.NormalisedThetaFamilyNormalisedAllPlaces
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PadicSeriesLinearCoordsEqFlatTaylor
+public import Formalism.LocalToGlobal.TorsionIntegrality.RamifiedCurveKernels.PairedSquareJets.Hurwitz
+public import Formalism.LocalToGlobal.TorsionIntegrality.RamifiedCurveKernels.PairedSquareJets.Several
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SpanRangeEmb4EqTop
 import Formalism.LocalToGlobal.InertKernelTheory.InertCoprimeLemmas.IntEasy
 import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.IsAdmissibleFlagPairOfUnitriangularLeftAutomorph
 import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.HalfPeriodStandardCM
 import Formalism.LocalToGlobal.KernelLattices.KernelLocalFactors.SelfDualLatticeNorms.LocNormAmbOfOf
-public import Formalism.LocalToGlobal.TorsionIntegrality.RamifiedCurveKernels.PairedSquareJets.Hurwitz
-public import Formalism.LocalToGlobal.TorsionIntegrality.RamifiedCurveKernels.PairedSquareJets.Several
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -132,7 +134,7 @@ theorem term_shape (hIn : GlobalTheory.ThLoc.Inputs) (hcc : TaylorLogMetric.IsCu
         Formalism.DworkPowerSeriesWeights.mvExp ((-jetS a₀ b₀ D.host.d ha hd lam hlam p ι) • Formalism.L2.Th1.G.betaPair (HH D) N N' u) * sg := by
   obtain ⟨M₀, hM0, hMc, hMm⟩ := (Formalism.L2.KerInert.pairing_fact D cc δ p N N' L L₁ L' L₁' hE hE').2 t ht
   obtain ⟨J, _, v, A, cE, sE, δE, emb, act, hEF, hfM⟩ := hfr
-  have hLat := GlobalTheory.T.normalisedThetaFamily_normalised_all_places D cc δ hcc hδ B χ hχ X s hs a₀ b₀ c₀ ha hd lam hlam hcm hlat N N' L₁ L₁' hA₁ p ι
+  have hLat := _root_.GlobalTheory.ThLoc.latAt_all D cc δ hcc hδ B χ hχ X s hs a₀ b₀ c₀ ha hd lam hlam hcm hlat N N' L₁ L₁' hA₁ p ι
   have hθ := hLat.mem_th.1
   have hEan : AnalyticOnNhd ℂ (B.eNat χ N N' L₁ L₁') Set.univ := by
     have h1 : AnalyticOnNhd ℂ (fun w : TaylorLogMetric.VC D N N' => (s.flatV N N').symm w) Set.univ :=
@@ -245,7 +247,7 @@ theorem GlobalTheory.Proof.shape_normalisedThetaCombinations_dualBases_at_d.shap
     exact B.lat
   have h5 : 5 ≤ p := by omega
   have hInt := GlobalTheory.GoodModelFive.goodModel_five hIn D cc δ hcc hδ a₀ b₀ c₀ ha hd lam hlam hcm hlat p h5 ι
-  obtain ⟨u, hu, hfr⟩ := GlobalTheory.T.dualLocalBases_eigenframe_at_ramifiedPrime D cc δ hcc hδ X s hs a₀ b₀ c₀ ha hd lam hlam hcm hlat N N' L L' hA p lm hpd ι hι cD hgen P P' κ hP hP' hκ
+  obtain ⟨u, hu, hfr⟩ := _root_.GlobalTheory.Proof.dualLocalBases_eigenframe_at_ramifiedPrime.eigenframe_at_d D cc δ hcc hδ X s hs a₀ b₀ c₀ ha hd lam hlam hcm hlat N N' L L' hA p lm hpd ι hι cD hgen P P' κ hP hP' hκ
   let M : D.what₂.Tau × Fin N' × Fin N → (Bool × HH D) × Fin N × Fin N' → ℂ_[p] :=
     fun k j => κ k.1 * TaylorLogMetric.chgB D lm P P' k ((0 : ZMod 1), (tauPl D j.1, j.2))
   have hterm := fun (L₁ : Submodule (𝓞 D.host.E) (Fin N → D.host.E)) (L₁' : Submodule (𝓞 D.host.E) (Fin N' → D.host.E)) (hA₁ : TaylorLogMetric.admitted D N N' L₁ L₁')

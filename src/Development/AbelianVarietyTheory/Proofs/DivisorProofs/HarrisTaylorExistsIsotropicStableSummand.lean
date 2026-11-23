@@ -4,12 +4,13 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.NotCompactOf
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CanonicalOfAbelianDeRham
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrystallinePull2SumCup
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BijectiveDeRham
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystalProjectiveOverTensorRingOfIntegersStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorModOfTmul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystalProjectiveOverTensorRingOfIntegers
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCrysForm
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCrystalReductionSquareZeroArtinian
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLagrangianLiftLieSquareZeroHarrisTaylorStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLagrangianLiftLieSquareZeroHarrisTaylor
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FilLagrangianOfLocal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorLieConditionModHodgeFiltration
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCrystalReductionSquareZeroArtinian
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.ConnectedSpaceSpecOfIsLocalRing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -80,7 +81,7 @@ theorem exists_summand : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.
   haveI : IsLocalRing C₀ := IsLocalRing.of_surjective' π hπ
   have hlagr := GlobalTheory.HTLagr.fil_lagrangian p D R b N C₀ _ o₀ φ' (GlobalTheory.AbelianDim.exists_relDim C₀ o₀.A o₀.ab) hφ'
   have hlie := GlobalTheory.HTSummand.lie_mod_fil p D R b N C₀ (π.comp tR) _ (GlobalTheory.Cris.spMap_comp tR π).symm o₀
-  have hprojF := GlobalTheory.T.crystal_projective_over_tensor_ringOfIntegers D.F C C₀ π hπ hsq o₀.A o₀.ab D.O o₀.act
+  have hprojF := _root_.GlobalTheory.HTSummand.crys_projective D.F C C₀ π hπ hsq o₀.A o₀.ab D.O o₀.act
   have hI2 : RingHom.ker π ^ 2 = ⊥ := hsq
   let F : Submodule C (Crys (divided₂ hsq) (spMap π) o₀.A) := (Fil o₀.A).comap red
   have hredI : ∀ x ∈ RingHom.ker π • (⊤ : Submodule C (Crys (divided₂ hsq) (spMap π) o₀.A)), red x = 0 := by
@@ -133,7 +134,7 @@ theorem exists_summand : ∀ (p : ℕ) [Fact p.Prime] (D : GlobalTheory.UPel.HT.
       rw [map_sub, map_sum]
       simp only [hw]
       exact hsum
-  obtain ⟨E, ⟨M, hEM⟩, hEF, hstab, hiso, hlieE⟩ := GlobalTheory.T.exists_lagrangian_lift_lie_squareZero_harrisTaylor p D R b C (RingHom.ker π) hI2 tR
+  obtain ⟨E, ⟨M, hEM⟩, hEF, hstab, hiso, hlieE⟩ := _root_.GlobalTheory.HTSummand.exists_lagrangian_lift_lie p D R b C (RingHom.ker π) hI2 tR
     (Crys (divided₂ hsq) (spMap π) o₀.A) (GlobalTheory.HTSummand.crysAct (divided₂ hsq) (spMap π) o₀.act) hprojF φ₀ hskew hbij hadj
     F hIF hFstab hFiso hFlagr ⟨E', M', hE'M', hE'F⟩ hFlie
   refine ⟨E, ⟨M, hEM⟩, fun y ↦ ⟨fun hy ↦ ?_, fun ⟨d, hd, hc⟩ ↦ ?_⟩, fun c d hd ↦ hstab c d hd,

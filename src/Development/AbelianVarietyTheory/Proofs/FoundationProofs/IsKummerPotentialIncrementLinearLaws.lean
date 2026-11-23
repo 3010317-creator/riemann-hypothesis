@@ -1,11 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsRootOne
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GlTwoPosRatMobiusBasicLawsStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegralConjugateSL2IntLawsStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsKummerCharacterAtLevelAddZeroCongrStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsKummerCharacterAtLevelIntegralMatrixConjStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsKummerCharacterAtLevelPadicIntSmulStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.ExpUpper
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GlTwoPosRatMobiusBasicLaws
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegralConjugateSL2IntLaws
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsKummerCharacterAtLevelAddZeroCongr
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsKummerCharacterAtLevelIntegralMatrixConj
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsKummerCharacterAtLevelPadicIntSmul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -75,7 +76,7 @@ theorem isKummerPotentialIncrement_linear_laws : ∀ (Ω : Type) [Field Ω] [Alg
   · intro x x' h h' hx hx' n
     obtain ⟨χ, hK, M, hM, hI⟩ := hx n
     obtain ⟨χ', hK', M', hM', hI'⟩ := hx' n
-    refine ⟨χ + χ', ((GlobalTheory.T.isKummerCharacterAtLevel_add_zero_congr Ω ε X l n).1 x x' χ χ' hK hK'), M * M', Nat.mul_pos hM hM', ?_⟩
+    refine ⟨χ + χ', ((_root_.GlobalTheory.KZ.H3.KumAdd.kum_add_zero_near Ω ε X l n).1 x x' χ χ' hK hK'), M * M', Nat.mul_pos hM hM', ?_⟩
     intro δ hδ z hz
     have e1 := hI δ (gamma_mem_of_dvd (dvd_mul_right M M') hδ) z hz
     have e2 := hI' δ (gamma_mem_of_dvd (dvd_mul_left M' M) hδ) z hz
@@ -83,24 +84,24 @@ theorem isKummerPotentialIncrement_linear_laws : ∀ (Ω : Type) [Field Ω] [Alg
       simp only [Pi.add_apply]; ring
     rw [this, map_add (f := _), e1, e2, Pi.add_apply]
   · intro n
-    refine ⟨0, (GlobalTheory.T.isKummerCharacterAtLevel_add_zero_congr Ω ε X l n).2.1, 1, Nat.one_pos, ?_⟩
+    refine ⟨0, (_root_.GlobalTheory.KZ.H3.KumAdd.kum_add_zero_near Ω ε X l n).2.1, 1, Nat.one_pos, ?_⟩
     intro δ _ z _
     simp
   · intro c x h hx n
     obtain ⟨χ, hK, M, hM, hI⟩ := hx n
-    refine ⟨fun δ => PadicInt.toZModPow n c * χ δ, GlobalTheory.T.isKummerCharacterAtLevel_padicInt_smul Ω ε X l n c x χ hK, M, hM, ?_⟩
+    refine ⟨fun δ => PadicInt.toZModPow n c * χ δ, _root_.GlobalTheory.KZ.H3.kum_smul Ω ε X l n c x χ hK, M, hM, ?_⟩
     intro δ hδ z hz
     have : (c • h) (mob (ofSL δ) z) - (c • h) z = c * (h (mob (ofSL δ) z) - h z) := by
       simp only [Pi.smul_apply, smul_eq_mul]; ring
     rw [this, map_mul, hI δ hδ z hz]
   · intro m x h hm hx n
     obtain ⟨χ, hK, M, hM, hI⟩ := hx n
-    refine ⟨fun δ => χ (cj m δ), GlobalTheory.T.isKummerCharacterAtLevel_integral_matrix_conj Ω ε X l n m x χ hm hK, M * m.det.natAbs,
+    refine ⟨fun δ => χ (cj m δ), _root_.GlobalTheory.KZ.H3.kum_kmap_sl Ω ε X l n m x χ hm hK, M * m.det.natAbs,
       Nat.mul_pos hM (Int.natAbs_pos.mpr hm.ne'), ?_⟩
     intro δ hδ z hz
-    obtain ⟨hc1, hc2⟩ := GlobalTheory.T.integralConjugateSL2Int_laws.1 m M hm δ hδ
-    have hmz : mob (toGQ m) z ∈ Hs := GlobalTheory.T.glTwoPosRatMobius_basic_laws.1 (toGQ m) z hz
-    have hcomm := GlobalTheory.T.integralConjugateSL2Int_laws.2.2 m δ (cj m δ) hm hc1 z hz
+    obtain ⟨hc1, hc2⟩ := _root_.GlobalTheory.KZ.cj_laws.1 m M hm δ hδ
+    have hmz : mob (toGQ m) z ∈ Hs := _root_.GlobalTheory.KZ.mob_laws.1 (toGQ m) z hz
+    have hcomm := _root_.GlobalTheory.KZ.cj_laws.2.2 m δ (cj m δ) hm hc1 z hz
     show PadicInt.toZModPow n (h (mob (toGQ m) (mob (ofSL δ) z)) - h (mob (toGQ m) z)) = χ (cj m δ)
     rw [hcomm]
     exact hI (cj m δ) hc2 (mob (toGQ m) z) hmz

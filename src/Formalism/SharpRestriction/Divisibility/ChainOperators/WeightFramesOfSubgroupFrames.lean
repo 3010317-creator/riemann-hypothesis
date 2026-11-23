@@ -1,7 +1,8 @@
 module
 
 public import Formalism.PeriodIntegrals.NablaSpans.MinorProdSpanHasCompl
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.MinorSpanCompl
+public import Formalism.PeriodIntegrals.MinorSpanCompl
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.MinorSpanComplement.RenameInitMinor
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,6 +50,6 @@ open Formalism.BasicNotions
 
 namespace Formalism.MainNotions.DIV.Lemmas
 
-theorem kw_of_cutSB (h : CutKW.KWsb) : CutKW.KW := h minor_span_complement
+theorem kw_of_cutSB (h : CutKW.KWsb) : CutKW.KW := h _root_.PI.MSC.minorSpanCompl
 
 end Formalism.MainNotions.DIV.Lemmas

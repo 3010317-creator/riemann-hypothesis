@@ -1,7 +1,7 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.TwistedFactors.LocalBaseChange.StrictDominanceCasselman.IsStrictlyDominant
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ModulusTrivialOnLeviCompactStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ModulusTrivialOnLeviCompact
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,7 +51,7 @@ theorem mk_mem_fixed_jac : ∀ (k : Type) [Field k] [ValuativeRel k] [Topologica
   have hx : leviEmb k (stdBlocks d hd) (x : Levi k (Bl d)) ∈ J := x.2
   have hv : π (leviEmb k (stdBlocks d hd) (x : Levi k (Bl d))) (v : V) = (v : V) := by
     simpa using v.2 ⟨_, hx⟩
-  have hδ : deltaHalf k (Bl d) (x : Levi k (Bl d)) = 1 := GlobalTheory.T.modulus_trivial_on_levi_compact k N h d hd J hc x x.2
+  have hδ : deltaHalf k (Bl d) (x : Levi k (Bl d)) = 1 := _root_.GlobalTheory.CompanionTheory.HalfModCompact.deltaHalf_eq_one_of_mem_KM k N h d hd J hc x x.2
   rw [jac_mk, hv, hδ]
   simp
 

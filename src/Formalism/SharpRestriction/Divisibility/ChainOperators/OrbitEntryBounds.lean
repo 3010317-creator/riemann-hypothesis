@@ -5,10 +5,13 @@ public import Formalism.PeriodIntegrals.OrbJetBase
 public import Development.AutomorphicArithmetic.OrbitLabellings.FInertSubEatILeOrbitAverageSubErrors
 public import Development.AutomorphicArithmetic.OrbitLabellings.KvalGeThetaOfShape
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.EntAtD
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.OrbAddOne
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.OrbAddUp
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.OrbBoundF
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.OrbRestr
+public import Formalism.PeriodIntegrals.OrbAddOne
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetLogarithm.OrbitsAddAtConjugate
+public import Formalism.PeriodIntegrals.OrbAddUp
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetDegreeBound.ConstantCoeffZeroOfBoundGeneral
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitValuationBounds.PrvFOfOrbitLetterBounds
+public import Formalism.PeriodIntegrals.OrbRestr
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.OrbitJetRestriction.OrbitRestriction
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.OrbRestrOne
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SumOrbC
 import Mathlib.Algebra.Order.Floor.Extended
@@ -58,14 +61,14 @@ def toEnt {D : D7} (E : OrbitPlaces.Ent D) : PI.OrbJet.Ent D :=
 
 theorem addition_bound_holds (D : D7) (E : OrbitPlaces.Ent D) : OrbitPlaces.OrbitsAddLowerBound E := by
   intro p _ h u i hi R hR ep sg be hbe β hβ Th hTh
-  exact PI.OrbAddUp D (toEnt E) p ⟨h.five, h.even, h.two⟩ u i hi R hR ep sg be hbe β hβ Th hTh
+  exact _root_.PI.OrbJet.AU.orbAddUp_main D (toEnt E) p ⟨h.five, h.even, h.two⟩ u i hi R hR ep sg be hbe β hβ Th hTh
 
 theorem orbitsAddAtConjugate_ent (D : D7) (E : OrbitPlaces.Ent D) : OrbitPlaces.OrbitsAddAtConjugate E :=
-  PI.OrbAddOne D (toEnt E)
+  _root_.PI.OrbJet.AO.orbitsAddAtConjugate D (toEnt E)
 
 theorem restriction_bound_holds (D : D7) (E : OrbitPlaces.Ent D) : OrbitPlaces.OrbitRestriction E := by
   intro p _ h u i R hR ep sg be hbe Th hTh r hr
-  exact PI.OrbRestr D (toEnt E) p ⟨h.five, h.even, h.two⟩ u i R hR ep sg be hbe Th hTh r hr
+  exact _root_.PI.OrbJet.OrbW.orbitRestriction D (toEnt E) p ⟨h.five, h.even, h.two⟩ u i R hR ep sg be hbe Th hTh r hr
 
 theorem orbit_restriction_at_conjugate (D : D7) (E : OrbitPlaces.Ent D) : OrbitPlaces.OrbitRestrictionAtConjugate E :=
   PI.OrbRestrOne D (toEnt E)
@@ -89,6 +92,6 @@ theorem orbit_entry_bounds_of_family (D : D7) (L : SizeData₂ D) (X : Inst D L)
 theorem orbit_entry_bounds_hold (D : D7) (L : SizeData₂ D) (X : Inst D L) (K : Consts) (Dx : DivX D) (E : OrbitPlaces.Ent D) (ce : ErrC) (C6 C : ℝ)
     (hA : OrbitPlaces.OrbitLetterBoundsAll C6 C) (hs : OrbitPlaces.ThetaKernelShapeAtD E Dx) (hS : OrbitPlaces.Shape D L X E) (hC : OrbitPlaces.CLarge C6 C K ce) :
     OrbitPlaces.Core D L X K Dx E ce C :=
-  orbit_entry_bounds_of_family D L X K Dx E ce C6 C (PI.OrbBoundF D L X K ce E C6 C hA hS hC) hs hS hC
+  orbit_entry_bounds_of_family D L X K Dx E ce C6 C (_root_.PI.OrbBoundFW.prvF_of_orbitLetterBounds D L X K ce E C6 C hA hS hC) hs hS hC
 
 end Formalism.MainNotions.DIV.Lemmas.OrbitEntryBounds

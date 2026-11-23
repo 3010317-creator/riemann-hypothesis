@@ -1,7 +1,8 @@
 module
 
 public import Formalism.LocalToGlobal.BesselHermitianTheta.DefsReal
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NonemptyFockModelOfUnitaryPairCoversStatement
+public import Formalism.LocalRingCardinality.DataTheta
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NonemptyFockModelOfUnitaryPairCovers
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NonemptyGrpData
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -104,6 +105,6 @@ theorem exists_provA_of_forall_exists_hasParam :
     · obtain ⟨R, -⟩ := H p q (grp p q) _ (realPlaceStdParam_isParam p q)
       exact ⟨R, fun h' => absurd h' h⟩
   choose ds hds using key
-  exact ⟨⟨grp, fun p q r s => Classical.choice (GlobalTheory.T.nonempty_fockModel_of_unitary_pair_covers p q r s _ _ _), ds⟩, hds⟩
+  exact ⟨⟨grp, fun p q r s => Classical.choice (_root_.GlobalTheory.nonempty_fockData_of_covers p q r s _ _ _), ds⟩, hds⟩
 
 end GlobalTheory

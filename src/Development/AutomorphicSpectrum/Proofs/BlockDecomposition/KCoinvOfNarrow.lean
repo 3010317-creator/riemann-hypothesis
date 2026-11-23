@@ -3,18 +3,18 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.MatchingOfParts
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FibRepApply
 public import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.ExistsFull
-import Development.AbelianVarietyTheory.Definitions.Foundations.SecondCountableAndT2LocalField
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsOpenNormalisedSubgroupSubset
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LeviIntegralFacts
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SmIndCoinvariants
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FibreRepresentationSmoothStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OmegaEquivInducedFibreStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FibreRepresentationSmooth
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OmegaEquivInducedFibre
 public import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.ContinuousFinId
 public import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.ExistsExtZ
-import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.LocConstChar
 public import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.PfSplit
 public import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.PfSurj
 public import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.SoStatement
+import Development.AbelianVarietyTheory.Definitions.Foundations.SecondCountableAndT2LocalField
+import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.LocConstChar
 import Development.WeilBound.CoreStatements.LocallyConstantCoinvariants.TopOfMap
 import GroundTheory.LocalFields.PadicLogSeries
 import Mathlib.Algebra.Module.StablyFree.Basic
@@ -158,7 +158,7 @@ theorem irr_ind_narrow (NB : Narrow) (n t : ℕ) {μ : kˣ →* ℂˣ} (hμ : Is
   let ξ : GL (Fin n) k →* ℂˣ := detChar (Fin n) (μ⁻¹ * absPow k (((Fintype.card (Fin n) : ℂ) + Fintype.card (Fin t)) / 2))
   have hξ : IsSmoothChar ξ := (hμ.inv.mul (isSmoothChar_of_isUnram (isUnram_absPow k _))).detChar
   obtain ⟨l, hs, hl, hk⟩ := exists_fun (k := k) (κ := n) (Fintype.card_fin n).symm hξ
-  have hτ : IsSmooth (τ.comp (MonoidHom.inr _ _)) := GlobalTheory.T.fibre_representation_smooth k _ _ _ μ hμ n
+  have hτ : IsSmooth (τ.comp (MonoidHom.inr _ _)) := _root_.GlobalTheory.CompanionTheory.ThetaGLLen.isSmooth_fibRep_inr k _ _ _ μ hμ n
   have hτl : ∀ g p₁ p₂ φ, l (τ (g, p₁, p₂) φ) = (μ (GeneralLinearGroup.det p₂) : ℂ) * l φ := by
     intro g p₁ p₂ φ
     change l ((fibChar (Fin n) (Fin n) (Fin t) μ (g, p₁, p₂) : ℂ) • fibBase (Fin n) (Fin n) n (g, p₁) φ) = _
@@ -214,7 +214,7 @@ theorem irrSt_narrow (NB : Narrow) : IrrStNe := by
   intro k _ _ _ _ n d ν α hnd hν h1 hα N hA hN
   obtain ⟨t, rfl⟩ := Nat.exists_eq_add_of_le hnd
   have hμ : IsSmoothChar ν⁻¹ := IsSmoothChar.inv hν.2
-  obtain ⟨E⟩ := GlobalTheory.T.omega_equiv_induced_fibre k (Fin n) (Fin (n + t)) (Fin n) (Fin t) (stdSum rfl) n (Fintype.card_fin n).symm ν⁻¹ hμ
+  obtain ⟨E⟩ := _root_.GlobalTheory.CompanionTheory.ThetaGLLen.fibStr k (Fin n) (Fin (n + t)) (Fin n) (Fin t) (stdSum rfl) n (Fintype.card_fin n).symm ν⁻¹ hμ
   have hR : twRel ((omegaOn (Fin n) (Fin (n + t)) ν⁻¹ {n}).comp (MonoidHom.inl _ _)) 1 ≤
       (aug n (n + t) ν α).comap extZ := Submodule.span_le.2 (by
     rintro _ ⟨g, φ, rfl⟩

@@ -2,14 +2,22 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WtRInjective
 public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualOperatorCommutesLieStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsCompactLieActionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HighestWeightAntitoneOfFiniteDimensionalStableStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HighestWeightIntegralOfUnitaryStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HighestWeightOfUnitaryDerivativeStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IntertwinerEqZeroOfVanishOnHighestStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualOperatorCommutesLie
+public import Formalism.RealPlaceAnalysis.StatementA
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.Normed.Algebra.Exponential
+public import Mathlib.LinearAlgebra.UnitaryGroup
+public import Mathlib.Topology.Instances.Matrix
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsCompactLieAction
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HighestWeightAntitoneOfFiniteDimensionalStable
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HighestWeightIntegralOfUnitary
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsCliff
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HighestWeightOfUnitaryDerivative
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.IsMultZero
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryEuclideanModel
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IntertwinerEqZeroOfVanishOnHighest
 import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SumMemOfStable
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryEuclideanModelStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -83,7 +91,7 @@ theorem core (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [Finite
       ∀ S : H →ₗ[ℂ] H, (∀ a b w, S (G a b w) = G a b (S w)) →
         ∀ (k : Matrix.unitaryGroup (Fin n) ℂ) (z : Fin n → ℂ), k.1 = diagonal z → Function.Injective z →
           LinearMap.trace ℂ H ((ρ k : H →ₗ[ℂ] H) ∘ₗ S ∘ₗ p) = trOn (hwOf G (wtR ν)) S * weylChar ν z :=
-    fun ν hν => GlobalTheory.T.highest_weight_integral_of_unitary H ρ G ν hg hh hd hν
+    fun ν hν => _root_.GlobalTheory.CompanionTheory.RealCountG.Isotypic.exists_isotypic_projection H ρ G ν hg hh hd hν
   choose! p hpG hpid hpkill hptr using hp
   obtain ⟨Fs, hFs⟩ : ∃ Fs : Set (Fin n → ℤ), ∀ ν, ν ∈ Fs ↔ Antitone ν ∧ hwOf G (wtR ν) ≠ ⊥ :=
     ⟨{ν | Antitone ν ∧ hwOf G (wtR ν) ≠ ⊥}, fun ν => Iff.rfl⟩
@@ -120,9 +128,9 @@ theorem core (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [Finite
     intro μ v hK
     by_cases hv0 : v = 0
     · rw [hv0, map_zero]
-    obtain ⟨ν₀, rfl⟩ := GlobalTheory.T.highest_weight_of_unitary_derivative H ρ G hd μ v hv0 hK.1
+    obtain ⟨ν₀, rfl⟩ := _root_.GlobalTheory.CompanionTheory.RealCountG.WtInt.weight_integral H ρ G hd μ v hv0 hK.1
     have hanti : Antitone ν₀ := by
-      have h := GlobalTheory.T.highest_weight_antitone_alt H G ⊤ (wtR ν₀) v hg inferInstance (fun _ _ _ _ => Submodule.mem_top)
+      have h := _root_.GlobalTheory.CompanionTheory.RealCount.highestWeight_antitone_of_finiteDimensional_stable H G ⊤ (wtR ν₀) v hg inferInstance (fun _ _ _ _ => Submodule.mem_top)
         Submodule.mem_top hv0 hK
       intro i j hij
       have := h hij
@@ -139,7 +147,7 @@ theorem core (H : Type) [NormedAddCommGroup H] [InnerProductSpace ℂ H] [Finite
     · intro h
       exact absurd hin h
   have hsum : ∑ ν ∈ hfin.toFinset, p ν = LinearMap.id :=
-    (sub_eq_zero.mp (GlobalTheory.T.intertwiner_eq_zero_of_vanish_on_highest H H G G hg hh _ hcomm hhigh)).symm
+    (sub_eq_zero.mp (_root_.GlobalTheory.CompanionTheory.RealCountG.intertwiner_eq_zero_of_highest H H G G hg hh _ hcomm hhigh)).symm
   refine ⟨hfin.toFinset, fun ν hν => ((hF ν).1 hν).1, fun ν hν hνF => ?_, ?_⟩
   · by_contra hne
     exact hνF ((hF ν).2 ⟨hν, hne⟩)
@@ -207,9 +215,9 @@ theorem main : ∀ {n : ℕ} (E : KMod n) (T : E.V →L[ℂ] E.V), (∀ k, T * E
         LinearMap.trace ℂ (E.V →L[ℂ] ℂ) (dualT E (E.ρ k⁻¹ * T) : (E.V →L[ℂ] ℂ) →ₗ[ℂ] (E.V →L[ℂ] ℂ)) =
           ∑ ν ∈ F, trOn (hwOf G (wtR ν)) (dualT E T : (E.V →L[ℂ] ℂ) →ₗ[ℂ] (E.V →L[ℂ] ℂ)) * weylChar ν z := by
   intro n E T hT G hG
-  obtain ⟨e, ρ', hρc, hρn, he⟩ := GlobalTheory.T.unitary_euclidean_model E
+  obtain ⟨e, ρ', hρc, hρn, he⟩ := _root_.GlobalTheory.CompanionTheory.RealCount.dualRep_exists E
   obtain ⟨G', hg', hh', hd'⟩ :=
-    GlobalTheory.T.exists_compact_lie_action (EuclideanSpace ℂ (Fin (Module.finrank ℂ E.V))) ρ' hρc hρn
+    _root_.GlobalTheory.CompanionTheory.RealCount.DerivRep.derivative_of_rep (EuclideanSpace ℂ (Fin (Module.finrank ℂ E.V))) ρ' hρc hρn
   have : FiniteDimensional ℂ (E.V →L[ℂ] ℂ) := LinearEquiv.finiteDimensional e.symm
   have hint : ∀ a b ξ, e (G a b ξ) = G' a b (e ξ) := by
     intro a b ξ
@@ -234,7 +242,7 @@ theorem main : ∀ {n : ℕ} (E : KMod n) (T : E.V →L[ℂ] E.V), (∀ k, T * E
     exact sub_eq_zero.mp (eq_zero_of_skew (fun i j => e (G i j ξ) - G' i j (e ξ)) hx a b)
   have hint2 : ∀ a b w, e.symm (G' a b w) = G a b (e.symm w) := fun a b w =>
     e.injective (by rw [hint, e.apply_symm_apply, e.apply_symm_apply])
-  have hcommT : ∀ a b ξ, dualT E T (G a b ξ) = G a b (dualT E T ξ) := GlobalTheory.T.dual_operator_commutes_lie E T hT G hG
+  have hcommT : ∀ a b ξ, dualT E T (G a b ξ) = G a b (dualT E T ξ) := _root_.GlobalTheory.CompanionTheory.RealCountG.DualComm.dualT_G E T hT G hG
   obtain ⟨S', hS'⟩ : ∃ S' : EuclideanSpace ℂ (Fin (Module.finrank ℂ E.V)) →ₗ[ℂ]
       EuclideanSpace ℂ (Fin (Module.finrank ℂ E.V)), ∀ w, S' w = e (dualT E T (e.symm w)) :=
     ⟨e.conj (dualT E T : (E.V →L[ℂ] ℂ) →ₗ[ℂ] (E.V →L[ℂ] ℂ)), fun w => by simp [LinearEquiv.conj_apply]⟩

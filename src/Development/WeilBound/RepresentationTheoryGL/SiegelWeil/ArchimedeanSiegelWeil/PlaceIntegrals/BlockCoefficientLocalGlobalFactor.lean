@@ -16,7 +16,9 @@ public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.Schwartz
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SiegelWeilConvergentRangeStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SiegelWeilOrbitalIntegralFormulaStatement
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SiegelWeilStabilizerIntegrableStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.EulerFactorStandardMeasureIdentityStatement
+public import Mathlib.Topology.Algebra.InfiniteSum.Defs
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.EulerFactorStandardMeasureIdentity
 public import Development.WeilBound.RepresentationTheoryGL.SiegelWeil.ArchimedeanSiegelWeil.PlaceIntegrals.AdelicSiegelWeilCoefficientEqStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -103,7 +105,7 @@ theorem pure_identity {F E : Type} [Field F] [NumberField F] [Field E] [NumberFi
   have hstar : Integrable (starN σ J ψ dx (pureN φ A)) db :=
     GlobalTheory.T.siegel_weil_convergent_range F E σ hCM M J hJ n hM ψ hψ dx hdx db hdb _ hΦSB
   have hlimC := GlobalTheory.T.siegel_weil_stabilizer_integrable F E σ hCM M J hJ n hn hM ψ hψ dx db d b _ hstar T
-  have htail := GlobalTheory.T.tendsto_tail_infinite_product_one _ hI.2.1
+  have htail := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.OneV.TailProduct.tendsto_tprod_compl_one _ hI.2.1
   have hev : ∀ᶠ S in Filter.atTop, S₀ ∪ S₁ ∪ S₂ ⊆ S := Filter.eventually_ge_atTop _
   obtain ⟨Sb, hSb⟩ : ∃ S, S₀ ∪ S₁ ∪ S₂ ⊆ S := ⟨_, subset_rfl⟩
   have hEu : ∀ S, S₀ ∪ S₁ ∪ S₂ ⊆ S → Integrable (pureN φ A) I ∧ ∫ X, pureN φ A X ∂I = ((1 : NNReal) : ℂ) * (∫ X, φ X ∂(minf (hermOf (Ainf F) σ T hT))) *

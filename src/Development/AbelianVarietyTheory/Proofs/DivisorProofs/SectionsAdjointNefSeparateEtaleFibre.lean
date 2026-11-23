@@ -3,20 +3,36 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ExistsAlgClosedBaseChange
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CommGroupMulMulEqMulInvMulMulMul
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsLogCanonicalMultipleCanonical
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechPicardClassCartierDivisorPullbackEqPullbackStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEffectiveCartierDivisorPullbackOfDominantStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsEqnIffGeneratesAtInv
+public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsValuationSubringDominatingSubring
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechPicardClassCartierDivisorPullbackEqPullback
+public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.LevelCarrying
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsCoprimeOfNatCast
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHomogeneousCompIdeal
+public import Development.AbelianVarietyTheory.Definitions.Divisors.MemLevEigenIffTransl
+public import Development.AbelianVarietyTheory.Definitions.Divisors.UnitaryWeightExponentVectorSignatureWeightMuZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEffectiveCartierDivisorPullbackOfDominant
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsolatedNonKltDivisorSmoothProjective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNefBigOfClassEqSmulAddSmul
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionSeparatingClosedPointStatement
+public import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.HdimEqZeroOfSubsingleton
+public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.IsGloballyGeneratedIffGeneratingSections
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSectionSeparatingClosedPoint
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntersectionNumberCurveOfClassEqSmulAdd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntersectionNumberPullbackProportionalOfProportiStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsClosedImageSectionProjectiveOverFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsolatedInFibreOfEtaleRestrictionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KawamataLogTerminalIffEtalePullbackStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleValueAtPointNeZeroIffMemNonzeroLocusStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NadelVanishingCanonicalAddBoundary
+public import Development.AbelianVarietyTheory.Definitions.Divisors.LineBundleGlobalSectionsDimCongrPicardClass
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntersectionNumberPullbackProportionalOfProporti
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsClosedImageSectionProjectiveOverField
+public import Mathlib.AlgebraicGeometry.Morphisms.Etale
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsolatedInFibreOfEtaleRestriction
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KawamataLogTerminalIffEtalePullback
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LineBundleValueAtPointNeZeroIffMemNonzeroLocus
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PowMulIntersectionLeOfNefClassOnClosed
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionOverFieldEqOfClosedPointImageEqStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionOverFieldEqOfClosedPointImageEq
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NadelVanishingCanonicalAddBoundary
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,13 +74,8 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.LevelCarrying
 import Development.AbelianVarietyTheory.Definitions.Divisors.CuspIso
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsCoprimeOfNatCast
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHomogeneousCompIdeal
-public import Development.AbelianVarietyTheory.Definitions.Divisors.MemLevEigenIffTransl
 import Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings
-public import Development.AbelianVarietyTheory.Definitions.Divisors.UnitaryWeightExponentVectorSignatureWeightMuZero
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GapGeSubKapBase
 
 @[expose] public section
@@ -103,7 +114,7 @@ theorem sections_separate_fibre : GlobalTheory.Published.NadelVanishingAndNonKlt
   have hrange : ∀ Z : Closeds W, x₀ ∈ Z → Set.range x ⊆ Z := by
     rintro Z h _ ⟨q, rfl⟩
     rwa [Subsingleton.elim q pt]
-  have hx₀c : IsClosed ({x₀} : Set W) := GlobalTheory.T.isClosed_image_section_projective_over_field ℂ W p x hp hxp
+  have hx₀c : IsClosed ({x₀} : Set W) := _root_.GlobalTheory.secClosed_closedPoint ℂ W p x hp hxp
   have hx₀U : x₀ ∈ U := hxU (Set.mem_univ pt)
 
   obtain ⟨N₀, h₀, hc₀, hn₀, hb₀⟩ := GlobalTheory.nef_big_of_cls_eq_smul_add_smul hNN ℂ W p hp N N hN hN (2 * c₀ + 1) 0
@@ -124,8 +135,8 @@ theorem sections_separate_fibre : GlobalTheory.Published.NadelVanishingAndNonKlt
       push_cast at h4 h3' ⊢
       linarith)
 
-  obtain ⟨D₁, hD₁, heq⟩ := GlobalTheory.T.exists_effective_cartierDivisorPullback_of_dominant M W f D₀ hD₀
-  have hcls := GlobalTheory.T.cechPicardClass_cartierDivisorPullback_eq_pullback M W f D₀ D₁ heq
+  obtain ⟨D₁, hD₁, heq⟩ := _root_.GlobalTheory.Cartier.exists_pull_dominant M W f D₀ hD₀
+  have hcls := _root_.GlobalTheory.PullCartier.cls_toLB_pull M W f D₀ D₁ heq
 
   obtain ⟨M₀, hM₀, hcM, hnM, hbM⟩ := GlobalTheory.nef_big_of_cls_eq_smul_add_smul hNN ℂ M (f ≫ p) hpM (N.pull f) N'
     (pull_isLB hN f) hN' (2 * m - 2 * c₀ - 1) 2 hNfn hNfb hN'n (by omega)
@@ -138,7 +149,7 @@ theorem sections_separate_fibre : GlobalTheory.Published.NadelVanishingAndNonKlt
         (2 * m - 2 * c₀ - 1) 2 C hC hcM
       have e3 := interNumRed_one_congr (k := ℂ) (isLB_toLB D₁) (pull_isLB (isLB_toLB D₀) f)
         (hcls.trans (cls_pull (isLB_toLB D₀) f _).symm) C
-      have e4 := GlobalTheory.T.intersectionNumber_pullback_proportional_of_proportional M W p f hp hpM (toLB D₀) N₀ (isLB_toLB D₀) h₀ 2 m' (fun C' hC' => by
+      have e4 := _root_.GlobalTheory.NumPull.interNumRed_pull_proportional M W p f hp hpM (toLB D₀) N₀ (isLB_toLB D₀) h₀ 2 m' (fun C' hC' => by
         have := hcur C' hC'
         have hm'0 : (m' : ℚ) ≠ 0 := by exact_mod_cast hm'.ne'
         rw [Nat.cast_ofNat, div_eq_div_iff hm'0 two_ne_zero] at this
@@ -170,7 +181,7 @@ theorem sections_separate_fibre : GlobalTheory.Published.NadelVanishingAndNonKlt
     have e : UM.ι ≫ f = M.homOfLE hle ≫ (f ∣_ U) ≫ U.ι := by
       rw [morphismRestrict_ι, ← Category.assoc, Scheme.homOfLE_ι]
     rw [e]; infer_instance
-  have hkl := GlobalTheory.T.kawamataLogTerminal_iff_etale_pullback M W p f n m' UM D₀ D₁ hEtM hm' heq
+  have hkl := _root_.GlobalTheory.EtaleKlt.kltAt_iff_etale M W p f n m' UM D₀ D₁ hEtM hm' heq
   have hsupp : ∀ y ∈ UM, (y ∈ Jd.support ↔ f y = x₀) := by
     intro y hy
     rw [hJ, hkl y hy]
@@ -186,12 +197,12 @@ theorem sections_separate_fibre : GlobalTheory.Published.NadelVanishingAndNonKlt
     rw [hfz j]; exact ⟨hx₀U, hxU'⟩
   have hzp : ∀ j, z j ≫ f ≫ p = 𝟙 _ := fun j => by rw [← Category.assoc, hz j, hxp]
   have hzne : ∀ i j, i ≠ j → z i pt ≠ z j pt := fun i j hij e =>
-    hij (hzi (GlobalTheory.T.section_over_field_eq_of_closedPoint_image_eq ℂ M (f ≫ p) (z i) (z j) (hzp i) (hzp j) e))
+    hij (hzi (_root_.GlobalTheory.section_eq_of_point_eq ℂ M (f ≫ p) (z i) (z j) (hzp i) (hzp j) e))
   funext j
   show a j = 0
-  obtain ⟨V, hzV, hV⟩ := GlobalTheory.T.isolated_in_fibre_of_etale_restriction M W f U hEt (z j pt) (by rw [hfz j]; exact hx₀U)
-  obtain ⟨s, hs, hs'⟩ := GlobalTheory.T.exists_section_separating_closed_point ℂ M (f ≫ p) hpM (tens K.bundle B) (isLB_tens K.isLB hB) Jd (z j pt) (V ⊓ UM)
-    (GlobalTheory.T.isClosed_image_section_projective_over_field ℂ M (f ≫ p) (z j) hpM (hzp j)) ⟨hzV, hzM j⟩ (fun y hy => by
+  obtain ⟨V, hzV, hV⟩ := _root_.GlobalTheory.isolated_in_fibre_of_etale_restrict M W f U hEt (z j pt) (by rw [hfz j]; exact hx₀U)
+  obtain ⟨s, hs, hs'⟩ := _root_.GlobalTheory.exists_sec_mem_nonzeroLocus_of_isolated_zero_else ℂ M (f ≫ p) hpM (tens K.bundle B) (isLB_tens K.isLB hB) Jd (z j pt) (V ⊓ UM)
+    (_root_.GlobalTheory.secClosed_closedPoint ℂ M (f ≫ p) (z j) hpM (hzp j)) ⟨hzV, hzM j⟩ (fun y hy => by
       rw [hsupp y hy.2, ← hfz j]
       exact ⟨hV y hy.1, fun e => e ▸ rfl⟩) (hvan 1 one_pos)
   have h1 := hrel (H0.ofSec (f ≫ p) ⊤ s)
@@ -199,8 +210,8 @@ theorem sections_separate_fibre : GlobalTheory.Published.NadelVanishingAndNonKlt
       have : H0.val (z i) (k i) le_top (hk i) (H0.ofSec (f ≫ p) ⊤ s) = 0 := by
         by_contra hne
         exact hs' _ ((hsupp _ (hzM i)).2 (hfz i)) (hzne i j hij)
-          ((GlobalTheory.T.lineBundleValueAtPoint_ne_zero_iff_mem_nonzeroLocus ℂ M (f ≫ p) _ s (z i) (k i) (hk i)).1 hne)
+          ((_root_.GlobalTheory.ValNe.val_ofSec_ne_zero_iff ℂ M (f ≫ p) _ s (z i) (k i) (hk i)).1 hne)
       rw [this, mul_zero]) (fun h => absurd (Finset.mem_univ j) h)] at h1
-  exact (mul_eq_zero.1 h1).resolve_right ((GlobalTheory.T.lineBundleValueAtPoint_ne_zero_iff_mem_nonzeroLocus ℂ M (f ≫ p) _ s (z j) (k j) (hk j)).2 hs)
+  exact (mul_eq_zero.1 h1).resolve_right ((_root_.GlobalTheory.ValNe.val_ofSec_ne_zero_iff ℂ M (f ≫ p) _ s (z j) (k j) (hk j)).2 hs)
 
 end GlobalTheory.EtaleSep

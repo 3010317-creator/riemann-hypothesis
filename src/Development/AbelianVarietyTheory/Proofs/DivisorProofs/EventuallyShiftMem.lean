@@ -2,8 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GaussManinPeriods
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EllFamNontrivial
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSliceTaylorAlgHomStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TaylorAddSquareZeroNilpotentStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.FderivFnCongr
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSliceTaylorAlgHom
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TaylorAddSquareZeroNilpotent
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TaylorPolynomialEvalAlgebraFormalProperties
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorHolomorphicExtOfValues
 import Mathlib.Algebra.Order.Floor.Extended
@@ -115,7 +116,7 @@ theorem GlobalTheory.AnPer.close_of_sliceTaylor : ∀ {I : Type} [Fintype I] [De
     rw [this]
     exact Relation.ReflTransGen.refl
   | succ r ih =>
-    obtain ⟨ρ', hρ'⟩ := GlobalTheory.T.tensorLift_ev_rho_eq_taylor_slice N (Sum.elim t fun b ↦ ∑ j : Fin r, n j.succ b)
+    obtain ⟨ρ', hρ'⟩ := _root_.GlobalTheory.AnPer.exists_sliceTaylor_algHom N (Sum.elim t fun b ↦ ∑ j : Fin r, n j.succ b)
       (fun s ↦ hJ _ fun c ↦ by
         rcases s c with i | b
         · exact ht i
@@ -130,7 +131,7 @@ theorem GlobalTheory.AnPer.close_of_sliceTaylor : ∀ {I : Type} [Fintype I] [De
       ext (i | b)
       · simp
       · simp [Fin.sum_univ_succ]
-    have hs := GlobalTheory.T.taylor_add_square_zero_nilpotent N (Sum.elim t fun b ↦ ∑ j, n j b) (Sum.elim (fun _ : I ↦ 0) fun b ↦ -n 0 b)
+    have hs := _root_.GlobalTheory.PeriodFamily.taylor_add_of_mul_eq_zero N (Sum.elim t fun b ↦ ∑ j, n j b) (Sum.elim (fun _ : I ↦ 0) fun b ↦ -n 0 b)
       (fun s hs ↦ hJ s fun c ↦ (Ideal.span_le.2 (by
         rintro _ (⟨i | b, rfl⟩ | ⟨i | b, rfl⟩)
         · exact ht i

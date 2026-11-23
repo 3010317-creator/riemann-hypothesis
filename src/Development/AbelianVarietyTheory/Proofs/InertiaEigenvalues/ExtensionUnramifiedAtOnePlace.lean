@@ -3,13 +3,20 @@ module
 public import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
 public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Completion
 public import ReciprocityTheory.GaloisValuations.Global
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardQuotientEqOfPowSubSelfMemStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqOfRootCongrOfDerivUnitStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusPowApplySubPowLtOneStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsTotallyComplexOfPrimitiveRootThreeLeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NotMemSqOfDerivativeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PadicRingEquivAdicCompletionPlaceUnramifiedDegreStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TotallyComplexOfRootQuadraticNegDiscStatement
+public import Mathlib.RingTheory.Ideal.Maximal
+public import Mathlib.RingTheory.Ideal.Quotient.Defs
+public import Mathlib.SetTheory.Cardinal.Finite
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CardQuotientEqOfPowSubSelfMem
+public import Mathlib.RingTheory.Valuation.ValuationSubring
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqOfRootCongrOfDerivUnit
+public import Formalism.ConjugateSelfDual.Statement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusPowApplySubPowLtOne
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsTotallyComplexOfPrimitiveRootThreeLe
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NotMemSqOfDerivative
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PadicRingEquivAdicCompletionPlaceUnramifiedDegre
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TotallyComplexOfRootQuadraticNegDisc
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -180,7 +187,7 @@ theorem core {E : Type} [Field E] [NumberField E] [Algebra E Ω] [IsAlgClosure E
     have hτA : A.valuation (τ β) ≤ 1 := by
       rw [A.valuation_le_one_iff, ReciprocityTheory.Gal.apply_mem_iff_of_mem_Dec hτ, ← A.valuation_le_one_iff]
       exact hβA
-    refine (GlobalTheory.T.eq_of_roots_congr_of_derivative_unit A f β (τ β) hβA hτA hfβ (aeval_apply_eq_zero τ f hfβ) hu ?_).symm
+    refine (_root_.GlobalTheory.eq_of_root_congr_of_deriv_unit A f β (τ β) hβA hτA hfβ (aeval_apply_eq_zero τ f hfβ) hu ?_).symm
     rw [Valuation.map_sub_swap]; exact hlt
 
   have hine : ∀ t ∈ Ine (F := E) A, ∀ e : E', t (algebraMap E' Ω e) = algebraMap E' Ω e := by
@@ -191,7 +198,7 @@ theorem core {E : Type} [Field E] [NumberField E] [Algebra E Ω] [IsAlgClosure E
   obtain ⟨σ, hσ⟩ := ReciprocityTheory.Gal.exists_isFrob (F := E) h
   rw [hN] at hσ
   have hσn : ∀ x : Ω, A.valuation x ≤ 1 → A.valuation ((σ ^ n) x - x ^ (g ^ n)) < 1 :=
-    GlobalTheory.T.frobenius_pow_apply_sub_pow_lt_one A g σ hσ n
+    _root_.GlobalTheory.frob_pow_apply_sub_lt_one A g σ hσ n
   have hσnD : σ ^ n ∈ ReciprocityTheory.Gal.Dec (F := E) A := Subgroup.pow_mem _ hσ.1 n
   have hσβ : (σ ^ n) β = β := by
     refine hroot _ hσnD ?_
@@ -224,8 +231,8 @@ theorem core {E : Type} [Field E] [NumberField E] [Algebra E Ω] [IsAlgClosure E
     ?_, ?_, ⟨ζE, hζE⟩, hine⟩
   ·
     rcases hTC with h3 | ⟨a, b, hab, hlt⟩
-    · exact GlobalTheory.T.isTotallyComplex_of_primitiveRoot_three_le E' ζE (g ^ n - 1) hζE h3
-    · refine GlobalTheory.T.isTotallyComplex_of_root_quadratic_neg_disc E' (AdjoinSimple.gen E β) a b ?_ hlt
+    · exact _root_.GlobalTheory.tcroot E' ζE (g ^ n - 1) hζE h3
+    · refine _root_.GlobalTheory.totallyComplex_of_root_quadratic_neg_disc E' (AdjoinSimple.gen E β) a b ?_ hlt
       apply (algebraMap E' Ω).injective
       simpa using hab
   ·
@@ -251,7 +258,7 @@ theorem core {E : Type} [Field E] [NumberField E] [Algebra E Ω] [IsAlgClosure E
         ← IsScalarTower.algebraMap_apply]
     have hder : aeval β' (derivative f) ∉ w'.asIdeal := fun hm => hu (by
       rw [← hmap]; exact hm)
-    have := GlobalTheory.T.algebraMap_not_mem_sq_of_derivative_not_mem E E' w w' β' f hf hfβ' (adjoin_gen_eq_top E β hβE) hover hder _ hg2
+    have := _root_.GlobalTheory.UnramSimpleGen.not_mem_sq_of_derivative E E' w w' β' f hf hfβ' (adjoin_gen_eq_top E β hβE) hover hder _ hg2
     simpa using this
   ·
     show Nat.card (𝓞 E' ⧸ w'.asIdeal) = g ^ n
@@ -265,7 +272,7 @@ theorem core {E : Type} [Field E] [NumberField E] [Algebra E Ω] [IsAlgClosure E
     have hζint : IsIntegral ℤ ζE := hζE.isIntegral (by omega)
     let ζ' : 𝓞 E' := ⟨ζE, hζint⟩
     haveI : w'.asIdeal.IsMaximal := w'.isMaximal
-    refine GlobalTheory.T.card_quotient_eq_of_pow_sub_self_mem' w'.asIdeal (g ^ n) ζ' hq2 ?_ ?_ ?_
+    refine _root_.GlobalTheory.card_quotient_eq_of_pow_sub_self_mem w'.asIdeal (g ^ n) ζ' hq2 ?_ ?_ ?_
     · apply RingOfIntegers.coe_injective
       rw [map_pow, map_one]
       exact hζE.pow_eq_one
@@ -291,7 +298,7 @@ theorem exists_unramified_ext : ∀ (E Ω : Type) [Field E] [NumberField E] [Fie
       normV w' = g ^ n ∧ (∃ ζ : E', IsPrimitiveRoot ζ (g ^ n - 1)) ∧
       ∀ t ∈ Ine (F := E) A, ∀ e : E', t (algebraMap E' Ω e) = algebraMap E' Ω e := by
   intro E Ω _ _ _ _ _ g _ A w h i hi n hn
-  obtain ⟨hg1, hg2, hN⟩ := GlobalTheory.T.padic_ringEquiv_adicCompletion_place_unramified_degree_one E g w i hi
+  obtain ⟨hg1, hg2, hN⟩ := _root_.GlobalTheory.LocalFieldIso.padic_iso_place E g w i hi
   have hAC : IsAlgClosed Ω := IsAlgClosure.isAlgClosed E
   have : CharZero Ω := charZero_of_injective_algebraMap (algebraMap E Ω).injective
   have hgp : g.Prime := Fact.out

@@ -4,7 +4,8 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsFlatA
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsGenOfIsVBOne
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericPointNormalCoords
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GermStalkClosedPointToBaseChange
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NumberFieldMapsLocalRingUniqueStatement
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.NumberFieldMapsLocalRingUnique
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -162,7 +163,7 @@ theorem exists_coef : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H 
   have ht : π.comp t = Z.inc := by
     ext a
     exact genMap_cst Z.ξ₀ (pullback.snd _ _) Z.inc Z.over_inc ⟨centre y, h0⟩ a
-  have est : s = t := GlobalTheory.T.number_field_maps_local_ring_unique c.F _ Z.Ω π s t (hs.trans ht.symm)
+  have est : s = t := _root_.GlobalTheory.CompanionTheory.Ggeo.TwoMaps.ringHom_eq_of_comp_eq c.F _ Z.Ω π s t (hs.trans ht.symm)
   have e1 : (Scheme.stalkClosedPointTo (y ≫ Y.j)).hom.comp κ = (Scheme.stalkClosedPointTo y).hom.comp s := by
     rw [Scheme.stalkClosedPointTo_comp]
     rfl

@@ -2,12 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqOfIsometricTrivShift
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NontrivialIsomClassInt
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.ToZIsArFunIffStatement
-import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.ToZIsArithHeightIffStatement
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.SheetUnsheet
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NefFibOfIsNef
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.ToZIsArFunIff
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ArchIntToZEq
+import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.ToZIsArithHeightIff
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsArithVarInt
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ArchIntToZEqStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.ToZPowCombIsometricStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.WZIsCInfStatement
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.ToZPowCombIsometric
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.WZIsCInf
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +47,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.SheetUnsheet
 
 @[expose] public section
 
@@ -61,16 +62,16 @@ theorem arMix_of_base_int : (∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoeth
   haveI := hX.finite
   let t : X ⟶ Sp ℤ := p ≫ spMap (Int.castRingHom k)
   have hX' : IsArithVar t D := isArithVar_int k X p t D hX
-  have Hc : ∀ (N : HermLB p) (τ : ℤ →+* ℂ), (wZ N t τ).IsCInf := fun N τ => GlobalTheory.T.wZ_isCInf' k X p t N τ
+  have Hc : ∀ (N : HermLB p) (τ : ℤ →+* ℂ), (wZ N t τ).IsCInf := fun N τ => _root_.GlobalTheory.CompanionTheory.Ar.BaseZ.wZ_isCInf k X p t N τ
   have hΦ' : IsArFun (fun o : Option ι => o.elim (toZ M t (Hc M)) fun i => toZ (L i) t (Hc (L i))) D Φ := by
-    have e := (GlobalTheory.T.toZ_isArFun_iff k X p t D hX (Option ι) (fun o : Option ι => o.elim M L)
+    have e := (_root_.GlobalTheory.CompanionTheory.Ar.BaseZ.isArFun_toZ_iff k X p t D hX (Option ι) (fun o : Option ι => o.elim M L)
       (fun o => Hc _) Φ).2 hΦ
     convert e using 2 with o
     cases o <;> rfl
   have iso : (toZ (comb L n) t (Hc _)).Isometric (comb (fun i => toZ (L i) t (Hc (L i))) n) :=
-    (GlobalTheory.T.toZ_pow_comb_isometric k X p t Hc).2 ι L n
+    (_root_.GlobalTheory.CompanionTheory.Ar.BaseZ.toZ_pow_comb k X p t Hc).2 ι L n
   have hh' : (comb (fun i => toZ (L i) t (Hc (L i))) n).IsArithHeight h :=
-    iso.isArithHeight hX' ((GlobalTheory.T.toZ_isArithHeight_iff k X p t D hX (comb L n) (Hc _) h).2 hh)
+    iso.isArithHeight hX' ((_root_.GlobalTheory.CompanionTheory.Ar.BaseZ.isArithHeight_toZ_iff k X p t D hX (comb L n) (Hc _) h).2 hh)
   obtain ⟨h₁, h₂⟩ := H X t D hX' ι (toZ M t (Hc M)) (fun i => toZ (L i) t (Hc (L i))) Φ hΦ' n h hh' r hr
   have hA : (toZ (comb L n) t (Hc _)).ArchIntegrable (toZ M t (Hc M)) D hr := fun τ => by
     rw [iso.chernIntegrableOn_eq]
@@ -78,7 +79,7 @@ theorem arMix_of_base_int : (∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoeth
   have hI : (comb (fun i => toZ (L i) t (Hc (L i))) n).archInt (toZ M t (Hc M)) D hr =
       (toZ (comb L n) t (Hc _)).archInt (toZ M t (Hc M)) D hr := by
     simp only [HermLB.archInt, iso.chernInt_eq]
-  obtain ⟨e₁, e₂⟩ := GlobalTheory.T.archInt_toZ_eq k X p t D hX (comb L n) M (Hc _) (Hc _) D r hr
+  obtain ⟨e₁, e₂⟩ := _root_.GlobalTheory.CompanionTheory.Ar.BaseZ.archInt_toZ k X p t D hX (comb L n) M (Hc _) (Hc _) D r hr
   have hB := e₁.1 hA
   refine ⟨hB, h₂.trans ?_⟩
   rw [hI, e₂ hB]

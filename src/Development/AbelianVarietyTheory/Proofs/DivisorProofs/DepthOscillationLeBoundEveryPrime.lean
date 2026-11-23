@@ -2,11 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ESmall
 public import Development.AutomorphicArithmetic.CMTraceForms.Places
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DepthOscillationLargeInertPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DepthOscillationLeAtSmallOddInertPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DepthOscillationLeAtTwoCmFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DepthOscillationLeOddSplitUnramifiedPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DepthOscillationZeroAboveAndDegreeBoundStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TypedPartSplitPrimes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DepthOscillationLargeInertPrime
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.BigBlockCharacters
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.FactorDepthInertBounds
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DepthOscillationLeAtSmallOddInertPrime
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DepthOscillationLeAtTwoCmField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DepthOscillationLeOddSplitUnramifiedPrime
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DepthOscillationZeroAboveAndDegreeBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -39,9 +42,6 @@ import Mathlib.Tactic.NormNum.NatSqrt
 import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.BigBlockCharacters
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.FactorDepthInertBounds
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TypedPartSplitPrimes
 
 @[expose] public section
 
@@ -54,7 +54,7 @@ namespace GlobalTheory.RefSum
 
 theorem oscLe_eOf : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (l : Level H) (Xo : Moduli Dw l) (c : Coeff l), ∀ (F k m M : ℕ) (Mb Sm : ℝ) (cx : Lt1 Dw → ℕ), Shape Dw F k m → ExpBd Dw k cx Mb Sm M → ∀ (vd : ℕ → ℝ) (S R : Finset ℕ), (∀ q, 0 ≤ vd q) → (∀ (q : ℕ) [Fact q.Prime], q ∈ S → UpperTheory.Depth.SplitPlaces q H F (vd q)) → 2 ∈ S → H.d ∈ R → (∀ q : ℕ, q.Prime → q ∉ S → q ∉ R → ¬ (q : ℤ) ∣ discr E) → ∀ (p : ℕ) [Fact p.Prime], OscLe Xo c p cx (eOf F (Dw.p + Dw.q) k m Mb Sm vd M S R p) := by
   intro E _ _ _ H Dw l Xo c F k m M Mb Sm cx hS hE vd S R hvd h2 h2S hdR hR p _
-  have hram := GlobalTheory.T.depthOscillation_zero_above_and_degreeBound E H Dw l Xo c F k m M Mb Sm cx hS hE p
+  have hram := _root_.GlobalTheory.RefSum.oscLe_zero_above_and_degree E H Dw l Xo c F k m M Mb Sm cx hS hE p
   have hMb : 0 ≤ Mb := hE.1
   have hp : p.Prime := Fact.out
   have hp2le : (2 : ℝ) ≤ p := by exact_mod_cast hp.two_le
@@ -65,7 +65,7 @@ theorem oscLe_eOf : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
   unfold eOf
   split_ifs with h1 hS' h3 h4
   · exact hram.1 h1
-  · exact GlobalTheory.T.depth_oscillation_le_at_two_cmField E H Dw l Xo c F k m M Mb Sm cx hS hE p (vd p) (hvd p) (h2 p hS')
+  · exact _root_.GlobalTheory.RefSum.oscLe_two E H Dw l Xo c F k m M Mb Sm cx hS hE p (vd p) (hvd p) (h2 p hS')
   · exact hram.2
   all_goals
     have hpM : p ≤ M := Nat.le_of_not_lt h1
@@ -81,7 +81,7 @@ theorem oscLe_eOf : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
         intro hdv
         have : p = H.d := (Nat.prime_dvd_prime_iff_eq hp H.d_prime).1 hdv
         exact h3 (this ▸ hdR)
-      have hs := GlobalTheory.T.depth_oscillation_le_odd_split_unramified_prime E H Dw l Xo c F k m M Mb Sm cx hS hE p h2' hpd ⟨hd0, hsq⟩
+      have hs := _root_.GlobalTheory.OscSplit.oscLe_split E H Dw l Xo c F k m M Mb Sm cx hS hE p h2' hpd ⟨hd0, hsq⟩
       refine OscLe.mono Xo hs ?_
       first
       | (unfold eSmall
@@ -95,7 +95,7 @@ theorem oscLe_eOf : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
            nlinarith
          linarith)
     · first
-      | exact GlobalTheory.T.depthOscillation_le_at_small_odd_inertPrime E H Dw l Xo c F k m M Mb Sm cx hS hE p h2' hpd hsq (by exact_mod_cast hM1)
-      | exact GlobalTheory.T.depthOscillation_large_inertPrime E H Dw l Xo c F k m M Mb Sm cx hS hE p hpd hsq (by omega)
+      | exact _root_.GlobalTheory.RefSum.oscLe_eSmall_of_inert E H Dw l Xo c F k m M Mb Sm cx hS hE p h2' hpd hsq (by exact_mod_cast hM1)
+      | exact _root_.GlobalTheory.RefSum.InertOsc.oscLe_inert_large E H Dw l Xo c F k m M Mb Sm cx hS hE p hpd hsq (by omega)
 
 end GlobalTheory.RefSum

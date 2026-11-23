@@ -8,13 +8,15 @@ public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NontrivialTwJacquetOfSurjective
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIrreducibleSubquotientTwoBlockConstituents
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsIrrRepInjective
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GenericHasGenericIrreducibleSubquotientStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductIrreducibleFiniteLengthStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductPreservesSubquotientStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ReversedProductSameSubquotientsStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GenericHasGenericIrreducibleSubquotient
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductIrreducibleFiniteLength
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsSubquotientDetRepParInd
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductPreservesSubquotient
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ReversedProductSameSubquotients
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerHeredityGenericProduct
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerRankExtensionBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerRankProductLeOneStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerRankExtensionBound
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerRankProductLeOne
 import GroundTheory.LocalFields.PadicLogSeries
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -95,9 +97,9 @@ theorem isSubquotient_of_generic_common {N : ℕ} {ψ : AddChar k Circle} (hψ :
     (hsq : IsSubquotient σ P) : IsSubquotient σ P' := by
   have hTs : IsSmooth T := hT.isSmooth hP
   have hTf : GlobalTheory.SmGL.HasFiniteLength T := GlobalTheory.CompanionTheory.IrrSub.hasFiniteLength_of_isSubquotient hT hfl
-  obtain ⟨A, B, -, hi', -, hg'⟩ := GlobalTheory.T.generic_has_generic_irreducible_subquotient k ψ hψ N T hTs hTf hTg
+  obtain ⟨A, B, -, hi', -, hg'⟩ := _root_.GlobalTheory.CompanionTheory.GenExists.exists_generic_subQuot k ψ hψ N T hTs hTf hTg
   have s₁ := GlobalTheory.ParIndExact.isSubquotient_subQuot A B
-  obtain ⟨e⟩ := GlobalTheory.T.whittaker_rank_extension_bound k ψ hψ N P σ (subQuot A B) hP hr hi hi' hsq (s₁.trans hT) hgσ hg'
+  obtain ⟨e⟩ := _root_.GlobalTheory.CompanionTheory.GenUniq.nonempty_equiv_of_generic_subquotients k ψ hψ N P σ (subQuot A B) hP hr hi hi' hsq (s₁.trans hT) hgσ hg'
   exact isSubquotient_of_equiv_left e.symm (s₁.trans hT')
 
 theorem isSubquotient_of_common {s N : ℕ} (hW : GlobalTheory.BZMir.Leib.WhitHeredity k) {ψ : AddChar k Circle}
@@ -120,8 +122,8 @@ theorem isSubquotient_of_common {s N : ℕ} (hW : GlobalTheory.BZMir.Leib.WhitHe
       (GlobalTheory.CompanionTheory.Leib.nontrivial_piTensorProduct_iff _).2 hg
     exact H.toEquiv.nontrivial
   exact isSubquotient_of_generic_common hψ _ P P'
-    (isSubquotient_of_equiv (GlobalTheory.T.product_preserves_subquotient k d N hN Z X τ π hπ hq) E)
-    (isSubquotient_of_equiv (GlobalTheory.T.product_preserves_subquotient k d N hN Z Y τ π' hπ' hq') E') hTg hP hfl hr σ hi hgσ hsq
+    (isSubquotient_of_equiv (_root_.GlobalTheory.CompanionTheory.GenMulti.multiProd_isSubquotient_of_forall k d N hN Z X τ π hπ hq) E)
+    (isSubquotient_of_equiv (_root_.GlobalTheory.CompanionTheory.GenMulti.multiProd_isSubquotient_of_forall k d N hN Z Y τ π' hπ' hq') E') hTg hP hfl hr σ hi hgσ hsq
 
 theorem isSubquotient_of_positions {s N : ℕ} (hW : GlobalTheory.BZMir.Leib.WhitHeredity k) {ψ : AddChar k Circle}
     (hψ : Continuous ψ) (h1 : ψ ≠ 1) (d : Fin s → ℕ) (hN : ∑ a, d a = N) {X Y : Fin s → Type}
@@ -138,7 +140,7 @@ theorem isSubquotient_of_positions {s N : ℕ} (hW : GlobalTheory.BZMir.Leib.Whi
     (hr : Module.rank ℂ (TwJacquet P (unipB k (Fin N)) (whitChar ψ N)) ≤ 1)
     (σ : Representation ℂ (GL (Fin N) k) W) (hi : σ.IsIrreducible) (hgσ : IsGenericFor ψ σ)
     (hsq : IsSubquotient σ P) : IsSubquotient σ P' := by
-  have ex := fun a => GlobalTheory.T.generic_has_generic_irreducible_subquotient k ψ hψ (d a) (π a) (hπ a) (hf a) (hg a)
+  have ex := fun a => _root_.GlobalTheory.CompanionTheory.GenExists.exists_generic_subQuot k ψ hψ (d a) (π a) (hπ a) (hf a) (hg a)
   choose A B _ hirr hsm hgen using ex
   have hq : ∀ a, IsSubquotient (subQuot (A a) (B a)) (π a) := fun a => GlobalTheory.ParIndExact.isSubquotient_subQuot _ _
   exact isSubquotient_of_common hW hψ h1 d hN π π' (fun a => subQuot (A a) (B a)) hπ hπ' hsm hq
@@ -170,7 +172,7 @@ theorem position_swap (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (hGK
     have hd2 : ∑ a, (fac hj x 1 (Fin.rev a)).1 = d 1 :=
       (Equiv.sum_comp Fin.revPerm fun b => (fac hj x 1 b).1).trans (s₁ 1)
     obtain ⟨E⟩ := prodIrr_congr rfl (fun a => fac hj x 1 (Fin.rev a)) (fac' hj x 1) (fun i => fac_rev hj x i) hd2 (s₂ 1)
-    exact isSubquotient_of_equiv (GlobalTheory.T.reversed_product_same_subquotients hA hGK (fac hj x 1) (s₁ 1) hd2 g hgs hgi hq) E
+    exact isSubquotient_of_equiv (_root_.GlobalTheory.CompanionTheory.GenRev.isSubquotient_prodIrr_rev hA hGK (fac hj x 1) (s₁ 1) hd2 g hgs hgi hq) E
   · intro W _ _ g _ _ hq
     obtain ⟨E⟩ := nonempty_equiv_of_eq (fac'_two hj x).symm (s₁ 2) (s₂ 2)
     exact isSubquotient_of_equiv hq E
@@ -194,9 +196,9 @@ theorem core (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (hGK : Zc.Cos
     (fun a => x (Equiv.swap (⟨j, hJ⟩ : Fin h) ⟨j + 1, hj⟩ a)) hkey hd'
   exact isSubquotient_of_positions hW hψ h1 d hN (fun a => prodIrr (fac hj x a) (s₁ a))
     (fun a => prodIrr (fac' hj x a) (s₂ a)) (fun _ => isSmooth_prodIrr _ _) (fun _ => isSmooth_prodIrr _ _)
-    (fun a => isGenericFor_prodIrr hW hC hψ h1 _ (fun _ => hc _) _) (fun _ => GlobalTheory.T.product_irreducible_finite_length hA _ _)
+    (fun a => isGenericFor_prodIrr hW hC hψ h1 _ (fun _ => hc _) _) (fun _ => _root_.GlobalTheory.CompanionTheory.ProdFL.main hA _ _)
     (position_swap hA hGK hj x d s₁ s₂) _ _ p q
-    (isSmooth_prodIrr _ _) (GlobalTheory.T.product_irreducible_finite_length hA _ _) (GlobalTheory.T.whittaker_rank_product_le_one k hW hR ψ hψ h1 h N x hd) σ hi hg hsq
+    (isSmooth_prodIrr _ _) (_root_.GlobalTheory.CompanionTheory.ProdFL.main hA _ _) (_root_.GlobalTheory.CompanionTheory.RgGu.rank_twJacquet_prodIrr_le_one k hW hR ψ hψ h1 h N x hd) σ hi hg hsq
 
 theorem isSubquotient_prodIrr_swap : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k], GlobalTheory.Published.IrreducibleAdmissibleGL → Zc.Cos.GKLocal k → GlobalTheory.BZMir.Leib.WhitHeredity k → GlobalTheory.BZSeg.WhitRankIrr k → GlobalTheory.BZSeg.CuspGeneric k → ∀ (ψ : AddChar k Circle), Continuous ψ → ψ ≠ 1 → ∀ {h N : ℕ} (x : Fin h → IrrGL (k := k)), (∀ a, (x a).IsCusp) → ∀ (hd : ∑ a, (x a).1 = N) (j : ℕ) (hj : j + 1 < h) (hd' : ∑ a, (x (Equiv.swap ⟨j, by omega⟩ ⟨j + 1, hj⟩ a)).1 = N) {W : Type} [AddCommGroup W] [Module ℂ W] (σ : Representation ℂ (GL (Fin N) k) W), IsSmooth σ → σ.IsIrreducible → IsGenericFor ψ σ → IsSubquotient σ (prodIrr x hd) → IsSubquotient σ (prodIrr (fun a => x (Equiv.swap ⟨j, by omega⟩ ⟨j + 1, hj⟩ a)) hd') := by
   intro k _ _ _ _ hA hGK hW hR hC ψ hψ h1 h N x hc hd j hj hd' W _ _ σ _ hi hg hsq

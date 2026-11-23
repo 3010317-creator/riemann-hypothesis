@@ -1,12 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.IsSelfOf
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmEmbeddingsIntegralAndDistinctModMaximalStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsIdempotentFrobeniusOrbitUnramifiedStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsMatrixStandardToHyperbolicInertPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SeparatedEmbeddingsDirectionsTypedBasisStatement
-import Formalism.LocalToGlobal.CharacterGerms.RowTieLab
+public import Formalism.LocalToGlobal.CharacterGerms.HostTraceIdentity
+public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmEmbeddingsIntegralAndDistinctModMaximal
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsIdempotentFrobeniusOrbitUnramified
+public import Formalism.LocalToGlobal.CharacterGerms.Interface
+public import Mathlib.Algebra.Field.ZMod
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsMatrixStandardToHyperbolicInertPlace
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SeparatedEmbeddingsDirectionsTypedBasis
 public import Formalism.LocalToGlobal.CharacterGerms.RowTieTop
+import Formalism.LocalToGlobal.CharacterGerms.RowTieLab
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -75,7 +79,7 @@ theorem card_sigma_fst_add {d : ℕ} [NeZero d] (m : ZMod d → ℕ) (h a : ZMod
 
 theorem exists_selfData : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (lv : Level H) (Xo : Moduli Dw lv) (c : Coeff lv) [StarRing (𝓞 E)], (∀ x : 𝓞 E, star x = H.bar x) → ∀ (T : CDVR) (io : c.F →+* T.Fr) (y : IntFr Xo c T io) (C3 : IntChart T io y) (C : Type) [Field C] [CharZero C] (V : VF C) (ι : T.Fr →+* C), EmbOK T V ι → ∀ (k : ℕ) (Y : FBChart C V (𝓞 E) (chD C3.ch)), IsBC C3 ι k Y → ∀ (Orb : Type) [Fintype Orb] (lab : LabS E Orb), ArithS V io ι lab → ∃ p : ∀ o, SelfData Y 2 (lab.II Dw o), IsSelfOf C3 ι Y lab p ∧ SelfSep Y p ∧ (lab.RankOK Dw → ∀ o, (Y.rawSelf (p o)).RankHyp ∧ (Y.rawSelf (p o)).AltC) := by
   intro E _ _ _ H Dw lv Xo c _ hstar T io y C3 C _ _ V ι hι k Y hY Orb _ lab ha
-  obtain ⟨hint, hsep⟩ := GlobalTheory.T.cmEmbeddings_integral_and_distinct_mod_maximal E H lv c T io C V ι hι ha.unr
+  obtain ⟨hint, hsep⟩ := _root_.GlobalTheory.EmbSep.cmEmbeddings_integral_and_distinct_mod_maximal' E H lv c T io C V ι hι ha.unr
   have hsep' : ∀ x x' : Orb × ZMod 2, x ≠ x' →
       ∃ a : 𝓞 E, V.v (emA3 io ι (lab.tau x.1 x.2) a - emA3 io ι (lab.tau x'.1 x'.2) a) = 0 :=
     fun x x' h => hsep _ _ fun e => h (ha.inj e)
@@ -85,9 +89,9 @@ theorem exists_selfData : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
   have hconj : ∀ o (a : ZMod 2) (x : 𝓞 E), emA3 io ι (lab.tau o a) (star x) = emA3 io ι (lab.tau o (a + 1)) x := by
     intro o a x
     rw [ha.conj o a, embedding_conjugate hstar]
-  have hgeo := fun o => GlobalTheory.T.separatedEmbeddings_directions_typedBasis E H Dw lv Xo c hstar T io y C3 C V ι hι k Y hY (ZMod 2) (lab.tau o) (hsep1 o)
+  have hgeo := fun o => _root_.GlobalTheory.SeparatedDirections.directions_typed_basis E H Dw lv Xo c hstar T io y C3 C V ι hι k Y hY (ZMod 2) (lab.tau o) (hsep1 o)
   have := Y.algClosed
-  have hgm := fun o => GlobalTheory.T.exists_matrix_standard_to_hyperbolic_inertPlace C V Y.l_odd Y.cpl (𝓞 E) (fun a => emA3 io ι (lab.tau o a))
+  have hgm := fun o => _root_.GlobalTheory.InertHyperbolic.main C V Y.l_odd Y.cpl (𝓞 E) (fun a => emA3 io ι (lab.tau o a))
     (fun a x => hint _ x) (ha.frob o) (hsep1 o 0 1 (by decide)) (hconj o)
   choose gm hlim hhyp using hgm
   let p : ∀ o, SelfData Y 2 (lab.II Dw o) := fun o =>
@@ -95,7 +99,7 @@ theorem exists_selfData : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
       em_int := fun a x => hint _ x
       em_frob := ha.frob o
       em_sep := hsep1 o
-      em_unr := GlobalTheory.T.exists_idempotent_frobeniusOrbit_unramified E H lv c T io C V ι hι ha.unr 2 (lab.tau o) (ha.frob o)
+      em_unr := _root_.GlobalTheory.exists_idempotent_of_unramified_place E H lv c T io C V ι hι ha.unr 2 (lab.tau o) (ha.frob o)
       hd := 1
       hd_ne := by decide
       hd_two := by decide

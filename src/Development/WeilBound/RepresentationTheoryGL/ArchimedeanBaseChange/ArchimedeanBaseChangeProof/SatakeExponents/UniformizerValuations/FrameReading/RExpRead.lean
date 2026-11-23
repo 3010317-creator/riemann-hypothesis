@@ -3,19 +3,19 @@ module
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.FrameReading.JoinType
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.FrameReading.CosetCount
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.FrameReading.ExpToSat
-import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsLocallyConstantOrbit
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IwahoriTraceOfBorelCasselman
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContractionFixedStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CosetCountTailStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExponentToSaturationStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeckeEigenFiniteStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SubEigenTailHeckeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TensorEigenRealStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TensorEigenStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TensorHeckeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TorusExponentTailStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContractionFixed
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CosetCountTail
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExponentToSaturation
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeckeEigenFinite
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SubEigenTailHecke
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TensorEigenReal
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TensorEigen
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TensorHecke
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TorusExponentTail
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.FrameReading.LeOfAddNegOne
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
 import GroundTheory.LocalFields.PadicLogSeries
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -201,8 +201,8 @@ theorem rExpRead_of (h0 : PExp.HkEFin) (h1 : PExp.TensHk) (h2 : PExp.TensEig) (h
 end R2
 
 theorem rExpRead' : RExpRead :=
-  R2.rExpRead_of GlobalTheory.T.hecke_eigen_finite GlobalTheory.T.tensor_hecke GlobalTheory.T.tensor_eigen GlobalTheory.T.tensor_eigen_real GlobalTheory.T.contraction_fixed GlobalTheory.T.sub_eigen_tail_hecke
-    GlobalTheory.T.coset_count_tail GlobalTheory.T.torus_exponent_tail PExp.dlBridge' GlobalTheory.T.exponent_to_saturation
+  R2.rExpRead_of _root_.GlobalTheory.CompanionTheory.HeckeEnd.hkE_fin _root_.GlobalTheory.CompanionTheory.TensHkSum.tensHk _root_.GlobalTheory.CompanionTheory.TensContr.tensEig _root_.GlobalTheory.CompanionTheory.TensEigSecond.tensEigR _root_.GlobalTheory.CompanionTheory.RepTensor.contrFix _root_.GlobalTheory.CompanionTheory.SubEigIrr.subEig
+    _root_.GlobalTheory.CompanionTheory.IwahoriCount.cosetCount _root_.GlobalTheory.CompanionTheory.TorusExpU.torusExp PExp.dlBridge' _root_.GlobalTheory.CompanionTheory.ExpProd.expToSat
 
 end PositivityTheory.Rg.BcB.F.Tail
 

@@ -3,11 +3,14 @@ module
 public import Formalism.SharpRestriction.GlobalSchurBounds.MassRatioUnfoldedOfTheoremTwo
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.ThmSOwn
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.TSelF
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselMultiplicityOneLargeGapAndWhittakerBesselStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UniqGapOfUniq
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.LocWSOf
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselMultiplicityOneLargeGapAndWhittakerBessel
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HypOfUniqGap
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LoopRowsOfLargeGapDiscreteSeriesStatement
+public import Development.AbelianVarietyTheory.Statements.DiscreteSeriesShifts.ThmBpDS
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LoopRowsOfLargeGapDiscreteSeries
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.WuDecayOfGap
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DiscreteSeriesCoefPointwiseBoundUnconditionalStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DiscreteSeriesCoefPointwiseBoundUnconditional
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RanksAndFrameOfTiedClass
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -54,7 +57,7 @@ theorem loopRows_of_rowsFinDim_alt :
     Formalism.L2.SG.RowsDef.RowsFinDim → (∀ D : D7, RT.MassRatioUnderVolume D) → ∀ (𝒞 : FamClass), _root_.Formalism.L2.TwistSelection 𝒞 →
       ∀ sel : SSel 𝒞, (∀ {eps : ℝ} (Fm : FamP eps), 𝒞 Fm → TuSize Fm) → LoopRowS 3 𝒞 sel := by
   intro hFin hUT 𝒞 hT sel hTu
-  exact GlobalTheory.T.loopRows_of_large_gap_discreteSeries (GlobalTheory.GapIn.hyp_of_uniqGap GlobalTheory.T.bessel_multiplicity_one_large_gap_and_whittaker_bessel.1) GlobalTheory.T.bessel_multiplicity_one_large_gap_and_whittaker_bessel.2 GlobalTheory.T.discreteSeriesCoef_pointwiseBound_unconditional
+  exact _root_.GlobalTheory.LoopRowsCloseGap.loop_rows_closed_gap (GlobalTheory.GapIn.hyp_of_uniqGap _root_.GlobalTheory.uniqGap_and_besselOfW.1) _root_.GlobalTheory.uniqGap_and_besselOfW.2 _root_.GlobalTheory.discreteSeriesCoef_pointwiseBound
     GlobalTheory.wuDecayOfGap hFin 𝒞 sel hTu (_root_.GlobalTheory.ranks_and_frame_of_tied_class_alt hUT 𝒞 hT).1
 end GlobalTheory.LoopRowsByName
 end

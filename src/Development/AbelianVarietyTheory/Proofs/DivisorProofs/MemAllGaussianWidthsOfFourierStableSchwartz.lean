@@ -3,7 +3,9 @@ module
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.Distribution.SchwartzSpace.Fourier
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSchwartzGaussWidth
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemOfClosedSubmoduleGaussianConvolutionStatement
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemOfClosedSubmoduleGaussianConvolution
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,4 +54,4 @@ theorem GlobalTheory.GaussWidths.all_widths : ∀ (E : Type) [NormedAddCommGroup
     (∀ f ∈ M, 𝓕 f ∈ M) →
     ∀ G : SchwartzMap E ℂ, (∀ y, G y = Complex.exp (-((Real.pi * ‖y‖ ^ 2 : ℝ) : ℂ))) → G ∈ M →
     ∀ (c : ℝ), 0 < c → ∀ g : SchwartzMap E ℂ, (∀ y, g y = Complex.exp (-((c * ‖y‖ ^ 2 : ℝ) : ℂ))) → g ∈ M :=
-  GlobalTheory.GaussWidths.all_widths_of_conv GlobalTheory.T.mem_of_closedSubmodule_gaussian_convolution
+  GlobalTheory.GaussWidths.all_widths_of_conv _root_.GlobalTheory.ConvSeries.mem_of_conv_gaussian

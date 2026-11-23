@@ -4,10 +4,13 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.RigidForFan
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualNumberUnitEqOfGermEqStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitPartOfPeriodTauMonomialStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GroupPullbackAbelianSchemeDualNumberEqStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAbelianSchemeAndRelDimOfIsGrpPullback
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinIndepIntBilinFormCharZeroCombinationEqZeroStatement
+public import Mathlib.LinearAlgebra.BilinearMap
+public import Mathlib.LinearAlgebra.LinearIndependent.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinIndepIntBilinFormCharZeroCombinationEqZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MonomialBoundaryFamilyParamNeZeroStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PulledBackLineBundleAutomorphismEqConstStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsLinearHomPull
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAbelianSchemeAndRelDimOfIsGrpPullback
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -43,7 +46,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsLinearHomPull
 import Development.AbelianVarietyTheory.Definitions.Divisors.HasDefect
 
 @[expose] public section
@@ -104,6 +106,6 @@ theorem dir_eq_zero_of_const : ∀ (R : Type) [CommRing R] [IsDomain R] [IsLocal
     have he := GlobalTheory.T.dualNumber_unit_eq_of_germ_eq k zz _ _ h'
     have := congrArg (fun u : (DualNumber k)ˣ => TrivSqZeroExt.snd (u : DualNumber k)) he
     simpa [e] using this
-  exact GlobalTheory.T.linIndep_intBilinForm_charZero_combination_eq_zero gam k a hli key
+  exact _root_.GlobalTheory.linIndep_intBilinForm_charZero_comb_eq_zero gam k a hli key
 
 end GlobalTheory.ConstPointCone

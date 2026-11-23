@@ -5,7 +5,10 @@ public import Mathlib.Analysis.Complex.Exponential
 public import Mathlib.RingTheory.FiniteType
 public import Mathlib.RingTheory.Localization.Defs
 public import Mathlib.RingTheory.TensorProduct.Maps
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalMaximumPrincipleWeightFiniteMvPolynomialStatement
+public import Mathlib.Algebra.MvPolynomial.Basic
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalMaximumPrincipleWeightFiniteMvPolynomial
+public import Mathlib.RingTheory.NoetherNormalization
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -24,7 +27,6 @@ import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
-public import Mathlib.RingTheory.NoetherNormalization
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Basify
@@ -110,7 +112,7 @@ theorem local_max_principle_int : ∀ (B : Type) [CommRing B] [IsDomain B] [Char
   have hcomp : ∀ x : B →+* ℂ, (ratExtPoint x).comp φ = x := fun x => by
     ext b
     simp [hφ', ratExtPoint_tmul]
-  obtain ⟨W, K, hW, hK, hKs, hb⟩ := GlobalTheory.T.local_maximum_principle_weight_finite_mvPolynomial d (ℚ ⊗[ℤ] B) hg (fun x => ψ (x.comp φ))
+  obtain ⟨W, K, hW, hK, hKs, hb⟩ := _root_.GlobalTheory.local_maximum_principle_weight_finite_mvPolynomial_algebra d (ℚ ⊗[ℤ] B) hg (fun x => ψ (x.comp φ))
     (hψ.comp hres) (φ s) (fun h => hs (hinj (h.trans (map_zero _).symm))) (ratExtPoint x₀) δ hδ
   refine ⟨(fun x => ratExtPoint x) ⁻¹' W, (fun x => x.comp φ) '' K,
     hext.continuousAt.preimage_mem_nhds hW, hK.image hres, ?_, ?_⟩

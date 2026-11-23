@@ -4,12 +4,13 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCohomologyBijectiveOfSupportBijectiveStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCocycleLiftingLineBundleTransitionUnitsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCocycleOfMapToDegreeOneTermStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwZ
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KummerCocycleSubChernClassCoboundary
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KummerLiftedCocycleImageEqPicardClassStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KummerSplittingDefectEqOfPowEq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KummerSplittingDefectGlueQthRoots
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GeneralLinearGroupDetMapFinOne
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsZeroChains
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KummerCocycleSubChernClassCoboundaryStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KummerLiftedCocycleImageEqPicardClassStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KummerSplittingDefectEqOfPowEqStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KummerSplittingDefectGlueQthRootsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -100,7 +101,7 @@ theorem kummer_boundary_picClass : ∀ (q : ℕ) [NeZero q] (κ : (restr (Int.ca
     rfl
   rw [hext]
   congr 1
-  refine GlobalTheory.T.kummerCocycle_sub_chernClass_coboundary q E L hE φ (GlobalTheory.T.kummerSplittingDefect_glue_qthRoots q φ (GlobalTheory.T.kummerSplittingDefect_eq_of_pow_eq q κ h2 φ hφ)) (cokernel κ) a w (fun U x v hv => ?_)
+  refine _root_.GlobalTheory.EtC.KumPic.Cobd.cobd q E L hE φ (_root_.GlobalTheory.EtC.KumPic.DvGlue.glue q φ (_root_.GlobalTheory.EtC.KumPic.dv_eq_of_pow_eq q κ h2 φ hφ)) (cokernel κ) a w (fun U x v hv => ?_)
   obtain ⟨c, hc, hac⟩ := ha U x
   have hU : IsUnit (q : Γ(U, ⊤)) := hE U ⟨x.face 0⟩
   have hpow : ∀ n : ℕ, unitSec (v ^ n) = (n : ℤ) • unitSec v := by

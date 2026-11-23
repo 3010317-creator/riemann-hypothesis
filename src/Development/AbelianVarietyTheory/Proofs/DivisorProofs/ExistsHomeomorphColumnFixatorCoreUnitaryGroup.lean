@@ -3,8 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsLv
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LocallyCompactUnipFlag
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfFrameCols
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsContinuousCoreUnitaryGroupEmbeddingStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoreIsometryOfFixesIsotropicFrameStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsContinuousCoreUnitaryGroupEmbedding
+public import Development.AbelianVarietyTheory.Definitions.Divisors.LocallyCompactSpaceAxis
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoreIsometryOfFixesIsotropicFrame
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -41,7 +42,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.Divisors.LocallyCompactSpaceAxis
 
 @[expose] public section
 
@@ -55,7 +55,7 @@ namespace GlobalTheory.SphEis
 
 theorem fixFrames_equiv_core : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E) (n : ℕ) (J : Matrix (Fin n) (Fin n) E) (j m : ℕ) (C D : Matrix (Fin n) (Fin j) E) (Z : Matrix (Fin n) (Fin m) E) (J₀ : Matrix (Fin m) (Fin m) E), Fr σ J C D Z J₀ → ∃ e : GAd σ J₀ ≃ₜ* (fixG σ J C ⊓ fixG σ J D : Subgroup (GAd σ J)), ∀ g, g ∈ ratPts σ J₀ ↔ (e g : GAd σ J) ∈ ratPts σ J := by
   intro F E _ _ _ _ _ σ n J j m C D Z J₀ hF
-  obtain ⟨e, econt, eprop, erat⟩ := GlobalTheory.T.exists_continuous_core_unitaryGroup_embedding F E σ n J j m C D Z J₀ hF
+  obtain ⟨e, econt, eprop, erat⟩ := _root_.GlobalTheory.SphEis.core_embeds F E σ n J j m C D Z J₀ hF
   have hJ₀ := GlobalTheory.UAut.det_isUnit hF.herm₀
   set p0 : Matrix (Fin m) (Fin n) (AF F ⊗[F] E) := adMat F (J₀⁻¹ * (cT (σ : E →+* E) Z * J)) with hp0
   have p0Z : p0 * adMat F Z = 1 := by
@@ -78,7 +78,7 @@ theorem fixFrames_equiv_core : ∀ (F E : Type) [Field F] [NumberField F] [Field
     intro x hx
     have hxC : (matHom _ σ J x).1 * adMat F C = adMat F C := (Subgroup.mem_inf.1 hx).1
     have hxD : (matHom _ σ J x).1 * adMat F D = adMat F D := (Subgroup.mem_inf.1 hx).2
-    obtain ⟨g₀, b, h1, h2, -, -⟩ := GlobalTheory.T.exists_coreIsometry_of_fixes_isotropicFrame F E σ n J j m C D Z J₀ hF x (Subgroup.mem_inf.1 hx).1
+    obtain ⟨g₀, b, h1, h2, -, -⟩ := _root_.GlobalTheory.SphEis.core_isom F E σ n J j m C D Z J₀ hF x (Subgroup.mem_inf.1 hx).1
     have hb : b = 0 := by
       rw [h2, DJx x (Subgroup.mem_inf.1 hx).2, ← Matrix.map_mul, hF.dz, Matrix.map_zero _ (map_zero _)]
     have aC : (matHom _ σ J (e g₀)).1 * adMat F C = adMat F C := (eprop g₀).1
@@ -117,7 +117,7 @@ theorem fixFrames_equiv_core : ∀ (F E : Type) [Field F] [NumberField F] [Field
   intro g
   change g ∈ ratPts σ J₀ ↔ e g ∈ ratPts σ J
   refine ⟨erat g, fun hg => ?_⟩
-  obtain ⟨g₀, b, -, -, h3, h4⟩ := GlobalTheory.T.exists_coreIsometry_of_fixes_isotropicFrame F E σ n J j m C D Z J₀ hF (e g) (eprop g).1
+  obtain ⟨g₀, b, -, -, h3, h4⟩ := _root_.GlobalTheory.SphEis.core_isom F E σ n J j m C D Z J₀ hF (e g) (eprop g).1
   have : g₀ = g := matHom_injective _ σ J₀ (Units.ext (h3.trans (hrec g).symm))
   exact this ▸ h4 hg
 

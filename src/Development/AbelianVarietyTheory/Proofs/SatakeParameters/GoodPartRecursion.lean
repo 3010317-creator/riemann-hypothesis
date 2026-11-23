@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.IsobaricDiscreteSelfDualStrongMultiplicityOne
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.RankOneUnitary
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalParameterLawsOfWeilDeligneIdentificationStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplitComponentsDeterminedByPointOfBaseChangeStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalParameterLawsOfWeilDeligneIdentification
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplitComponentsDeterminedByPointOfBaseChange
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplitPlaceGoodSignature
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -54,7 +54,7 @@ theorem goodPartRec_of_ties : ∀ (D : D7), GlobalTheory.RowTie.WDTie D.nd D.nau
     ∀ i, GlobalTheory.RowCopy.GoodPartRec D.nd D.naut i := by
   intro D hW h1 hlift hpt hbc hsp i
   exact GlobalTheory.Proof.SplitPlaceGoodSignature.goodPart_of_lifts D.nd D.naut i h1
-    (GlobalTheory.T.localParameterLaws_of_weilDeligneIdentification _ _ _ D.nd D.naut hW).1 (hlift i) (hpt i)
-    (GlobalTheory.T.splitComponentsDeterminedByPoint_of_baseChange _ _ _ D.nd D.naut i (hbc i) (hsp i))
+    (_root_.GlobalTheory.RowLaws.main _ _ _ D.nd D.naut hW).1 (hlift i) (hpt i)
+    (_root_.GlobalTheory.RowTie.locOfPt_of_splitBC _ _ _ D.nd D.naut i (hbc i) (hsp i))
 
 end GlobalTheory.Proof.GoodComponentRecursion

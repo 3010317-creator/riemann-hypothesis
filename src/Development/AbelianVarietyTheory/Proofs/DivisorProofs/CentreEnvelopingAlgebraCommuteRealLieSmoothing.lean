@@ -1,7 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqZeroOfMemWeakIn
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FderivIntegralMulKernelApplyStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FderivIntegralMulKernelApply
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CapCommuteRtInfGL
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -77,7 +81,7 @@ theorem fderiv_integral_mul (ν : Measure V) [ν.IsAddHaarMeasure] (hU : IsOpen 
     (hα : IsTest U α) {K : V × V → ℂ} (hK : ContDiffOn ℝ ∞ K (U ×ˢ U)) {x : V} (hx : x ∈ U) (v : V) :
     fderiv ℝ (fun x' => ∫ y, α y * K (x', y) ∂ν) x v =
       ∫ y, α y * fderiv ℝ (fun x' => K (x', y)) x v ∂ν :=
-  GlobalTheory.T.fderiv_integral_mul_kernel_apply' ν hU hα.1.continuous hα.2.1 hα.2.2 hK hx v
+  _root_.GlobalTheory.fderiv_integral_mul_kernel_apply ν hU hα.1.continuous hα.2.1 hα.2.2 hK hx v
 
 end Analytic
 

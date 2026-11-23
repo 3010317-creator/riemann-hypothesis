@@ -5,9 +5,10 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.TateProductR
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.TraceFormTwistIsoOfPullback
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLabelsFinExt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPullFib
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsDvrLiftFiniteCover
-import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.AdmissiblePadicIntMaximalIdeal
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsFieldExtension
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.GaloisHolds
+import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -72,7 +73,7 @@ theorem exists_labels_finExt_emb : ∀ (R : Type) [CommRing R] [IsDomain R] [IsL
   have c' : Compat ρ (Kb R₁) := fun r => congrArg (algebraMap (FractionRing R₁) (Kb R₁)) (hga r)
 
   obtain ⟨W, _, _, _, io, φ, hW, iio, lio, lφ, hc⟩ :=
-    GlobalTheory.LocExt.exists_cDvr_ext_of_finite R R₁ ρ hρ.2.1 hρ.2.2 W₀ hW₀ φ₀ l₀
+    _root_.GlobalTheory.FieldExtensionExists.exists_extension R R₁ ρ hρ.2.1 hρ.2.2 W₀ hW₀ φ₀ l₀
   have iφ : Function.Injective φ := by
     letI := ρ.toAlgebra
     haveI : Module.Finite R R₁ := hρ.2.2

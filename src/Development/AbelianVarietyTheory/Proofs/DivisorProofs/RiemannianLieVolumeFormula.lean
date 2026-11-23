@@ -2,10 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EmbGLMemRealSU
 public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.DefiniteBound
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieLatticeDualIndexStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormCmTypeProductSqStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormTraceFormDetIndexStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RiemannianVolumeLieBasisStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieLatticeDualIndex
+public import Mathlib.NumberTheory.NumberField.InfinitePlace.Embeddings
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormCmTypeProductSq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormTraceFormDetIndex
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.IsOrth
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RiemannianVolumeLieBasis
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,12 +56,12 @@ namespace GlobalTheory.LieCovol
 
 theorem riemLie_eq_sqrt_index_smul_formLie : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (X : Data E r) (Λ : Submodule (𝓞 E) (Fin r → E)) (x : Frame X.Ψ r) (e : Fin (r ^ 2 - 1) → Matrix (Fin r) (Fin r) E), 2 ≤ r → Unr E → SelfDualLat X.Gm Λ → IsOrth X x → (∀ i, e i ∈ lieLat X.Gm Λ) → LinearIndependent (maximalRealSubfield E) e → riemLie X.Ψ X.Gm x = ENNReal.ofReal (Real.sqrt r ^ fdeg E * ((Submodule.span (𝓞 (maximalRealSubfield E)) (Set.range e)).toAddSubgroup.relIndex (lieLat X.Gm Λ) : ℝ)) • formLie X.Ψ e := by
   intro E _ _ _ r X Λ x e hr hU hΛ hx he hli
-  rw [GlobalTheory.T.riemannian_volume_lie_basis E r X x e hr hx (fun i => ⟨(he i).1, (he i).2.1⟩) hli]
+  rw [_root_.GlobalTheory.SUVol.LieMeas.riemLie_eq_smul_formLie E r X x e hr hx (fun i => ⟨(he i).1, (he i).2.1⟩) hli]
   congr 1
   congr 1
-  have h1 := GlobalTheory.T.norm_cm_type_product_sq E X.Ψ X.cmType (Matrix.of fun i j => Matrix.trace (e i * e j)).det
-  have h2 := GlobalTheory.T.norm_trace_form_det_index E r X.Gm Λ e hr hΛ he hli
-  have h3 := GlobalTheory.T.lie_lattice_dual_index E r X.Gm Λ hr hU hΛ
+  have h1 := _root_.GlobalTheory.cm_type_normSq_prod_eq_abs_norm E X.Ψ X.cmType (Matrix.of fun i j => Matrix.trace (e i * e j)).det
+  have h2 := _root_.GlobalTheory.LieIndex.abs_norm_gram_eq_index E r X.Gm Λ e hr hΛ he hli
+  have h3 := _root_.GlobalTheory.lieLat_relIndex_dual E r X.Gm Λ hr hU hΛ
   rw [h3] at h2
   rw [h2] at h1
   push_cast at h1

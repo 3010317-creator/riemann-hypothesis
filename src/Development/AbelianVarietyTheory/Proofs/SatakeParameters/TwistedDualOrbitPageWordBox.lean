@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.Alternates
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FloorSizeBoundsAtThickEmbeddingStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FloorSizeBoundsNotThickEmbeddingStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MaxNonThickSizeShiftedValueAndBoundsStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ParametersRoundedSizeBoundWindowStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FloorSizeBoundsAtThickEmbedding
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FloorSizeBoundsNotThickEmbedding
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MaxNonThickSizeShiftedValueAndBounds
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RoundedSizeBoundWindow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,10 +53,10 @@ namespace GlobalTheory.HTW
 theorem pageWord_box : ∀ {D : D7} (L : SizeData₂ D) (C : ℝ) (j : Fin D.R.m) (ε : ℤˣ) (τ φ : D.R.GG),
     Roomy L C → (pageWord L j ε τ φ).Box := by
   intro D L C j ε τ φ hR
-  have hb := (GlobalTheory.T.roundedSizeBound_window L C hR).1
-  have hw := (GlobalTheory.T.maxNonThickSizeShifted_value_and_bounds L C hR).2.2
-  have hnt := fun g => GlobalTheory.T.floor_size_bounds_not_thick_embedding L C g j hR
-  have hth := fun g => GlobalTheory.T.floor_size_bounds_at_thick_embedding L g j
+  have hb := (_root_.GlobalTheory.HTW.bHat_window L C hR).1
+  have hw := (_root_.GlobalTheory.HTW.wHat_le L C hR).2.2
+  have hnt := fun g => _root_.GlobalTheory.HTW.size_not_thick L C g j hR
+  have hth := fun g => _root_.GlobalTheory.HTW.SizeThick.size_thick L g j
   obtain ⟨hC, h100, hroom, hwb, -, hCb⟩ := hR
   have hη := L.etaSz_pos
   have hS := L.Sc_pos

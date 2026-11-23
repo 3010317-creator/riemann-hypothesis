@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsStrictIff
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DicksonExistsFiniteSubfamilyBelowStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StrictlyConcavePolFanConeRealFormsStatement
+public import Mathlib.Data.Finset.Defs
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DicksonExistsFiniteSubfamilyBelow
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StrictlyConcavePolFanConeRealForms
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,7 +62,7 @@ theorem exists_finite_cover_rcone : ∀ (X : Type) [AddCommGroup X] [Module.Fini
     have : (0 : ℝ) ≤ (linW x.1.2.2 (P i) : ℝ) := le_trans (mul_nonneg (Nat.cast_nonneg _) h2) h1
     exact_mod_cast this
   let f : ι → Fin p → ℕ := fun x i => (linW x.1.2.2 (P i)).toNat
-  obtain ⟨F, hF⟩ := GlobalTheory.T.dickson_exists_finite_subfamily_below p f
+  obtain ⟨F, hF⟩ := _root_.GlobalTheory.dickson_finite_below_every p f
   let e := F.equivFin
   let g : Fin F.card → ι := fun k => (e.symm k : ι)
   refine ⟨F.card, fun k => (g k).1.1, fun k => (g k).1.2.1, fun k => (g k).1.2.2, fun k => (g k).2, ?_⟩
@@ -74,8 +75,8 @@ theorem exists_finite_cover_rcone : ∀ (X : Type) [AddCommGroup X] [Module.Fini
   show B ∈ rcone (g (e ⟨j, hjF⟩)).1.2.1
   rw [hg]
   obtain ⟨t, ht, rfl⟩ := hB
-  have A := (GlobalTheory.T.strictlyConcave_polFan_cone_real_forms X φ N m u w hφ hc hs).1 _ hBu
-  have C := (GlobalTheory.T.strictlyConcave_polFan_cone_real_forms X φ N j.1.1 j.1.2.1 j.1.2.2 hφ j.2.1 j.2.2).2 _ hBp
+  have A := (_root_.GlobalTheory.PolCell.strictWith_real X φ N m u w hφ hc hs).1 _ hBu
+  have C := (_root_.GlobalTheory.PolCell.strictWith_real X φ N j.1.1 j.1.2.1 j.1.2.2 hφ j.2.1 j.2.2).2 _ hBp
   apply C.2
   have hle : evalW j.1.2.2 (∑ i, t i • toReal (P i)) ≤ evalW w (∑ i, t i • toReal (P i)) := by
     rw [evalW_sum, evalW_sum]

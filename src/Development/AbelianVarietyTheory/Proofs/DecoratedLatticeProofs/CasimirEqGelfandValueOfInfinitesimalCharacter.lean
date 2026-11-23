@@ -2,8 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PosPartUnitaryMul
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsBlockOrd
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CoverFactoringRepresentationUnitaryGroupDictionaStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MatrixUnitDerivativeDiscreteSeriesMatrixCoeffStatement
+public import Formalism.SharpRestriction.Divisibility.SchurIrreducible
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CoverFactoringRepresentationUnitaryGroupDictiona
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MatrixUnitDerivativeDiscreteSeriesMatrixCoeff
+public import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.IsotypicSignedParameters
 public import Formalism.RealPlaceAnalysis.RealPlaceTaylor.IntegrableComplexContinuousBoundedSupport
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -43,7 +45,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.IsotypicSignedParameters
 
 @[expose] public section
 
@@ -63,7 +64,7 @@ theorem gelf_one_eq_sum {n : ℕ} (ε : Fin n → Bool) (f : Matrix (Fin n) (Fin
 
 theorem casimir_eq_gelfVal_of_hasInfChar : ∀ (p q n : ℕ) (e : Ix p q ≃ Fin n) (ε : Fin n → Bool) (T : GrpData p q) (R : DSRep T) (σ : Matrix (Fin n) (Fin n) ℂ → (R.U.H →L[ℂ] R.U.H)), BlockOrd e ε → Factors R.U e σ → ∀ χ : Fin n → ℂ, GlobalTheory.Dec.HasInfChar ε χ σ → ∀ v, casimir R.HK.act v = GlobalTheory.Dec.gelfVal χ 2 • v := by
   intro p q n e ε T R σ hb hf χ hχ v
-  obtain ⟨hU, -, hK, -⟩ := GlobalTheory.T.coverFactoringRepresentation_unitaryGroup_dictionary p q n e ε T R.U σ hb hf
+  obtain ⟨hU, -, hK, -⟩ := _root_.GlobalTheory.RealPar.CoverFactor.dictionary p q n e ε T R.U σ hb hf
   have hkf : ∀ u : R.HK.V, IsKFin ε σ (R.ι u) := fun u =>
     (hK _).1 ((R.ι_range _).1 ⟨u, rfl⟩)
   have h1 : (1 : Matrix (Fin n) (Fin n) ℂ) ∈ UJset ε := by
@@ -80,8 +81,8 @@ theorem casimir_eq_gelfVal_of_hasInfChar : ∀ (p q n : ℕ) (e : Ix p q ≃ Fin
         inner ℂ (R.ι u) (R.ι (R.HK.act (Eab a b) (R.HK.act (Eab b a) v))) := by
       intro a b
       rw [Formalism.REAL.lie_derivative_congr (e a) (e b)
-        (fun x hx => GlobalTheory.T.matrixUnitDerivative_discreteSeriesMatrixCoeff p q n e ε T R σ hb hf b a v (R.ι u) x hx) h1,
-        GlobalTheory.T.matrixUnitDerivative_discreteSeriesMatrixCoeff p q n e ε T R σ hb hf a b _ (R.ι u) 1 h1, hσ1]
+        (fun x hx => _root_.GlobalTheory.CoeffEab.eab_coeff p q n e ε T R σ hb hf b a v (R.ι u) x hx) h1,
+        _root_.GlobalTheory.CoeffEab.eab_coeff p q n e ε T R σ hb hf a b _ (R.ι u) 1 h1, hσ1]
       rfl
     have h3 : ∀ a : Ix p q, (∑ b : Fin n, Formalism.REAL.Eab ε (e a) b (Formalism.REAL.Eab ε b (e a)
           (fun g => inner ℂ (R.ι u) (σ g (R.ι v)))) 1) =

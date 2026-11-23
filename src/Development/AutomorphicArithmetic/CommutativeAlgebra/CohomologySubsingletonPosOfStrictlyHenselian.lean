@@ -1,8 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.GalMapMul
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PositiveDegreeClassesDieOnEtaleCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StrictlyHenselianIffStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DivisorSupportCondition
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PositiveDegreeClassesDieOnEtaleCover
+public import Mathlib.FieldTheory.IsSepClosed
+public import Mathlib.RingTheory.Etale.Basic
+public import Mathlib.RingTheory.Henselian
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StrictlyHenselianIff
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,7 +69,7 @@ private theorem exists_section_of_etale (O : Type) [CommRing O] [HenselianLocalR
     change f (U.f (U.idx y) x) = _
     rw [hx, hy]
   let p : PrimeSpectrum (U.X (U.idx y)) := x
-  obtain ⟨s, hs⟩ := (GlobalTheory.T.exists_etale_section_iff_henselian_and_isSepClosed O).mpr ⟨inferInstance, inferInstance⟩ (U.X (U.idx y)) p.asIdeal
+  obtain ⟨s, hs⟩ := (_root_.GlobalTheory.StrictHensel.strictlyHenselian_iff O).mpr ⟨inferInstance, inferInstance⟩ (U.X (U.idx y)) p.asIdeal
     (congrArg PrimeSpectrum.asIdeal h1)
   refine ⟨Spec.map (CommRingCat.ofHom s.toRingHom) ≫ U.f (U.idx y), ?_⟩
   rw [Category.assoc, ← hφ, ← Spec.map_comp, ← Spec.map_id]
@@ -78,7 +82,7 @@ theorem UpperTheory.cohomology_subsingleton_pos_of_strictly_henselian :
   intro R _ O _ hO F n hn
   obtain ⟨_, _⟩ := hO
   refine subsingleton_of_forall_eq 0 fun x => ?_
-  obtain ⟨Y, f, hf, hsurj, hx⟩ := GlobalTheory.T.positiveDegreeClasses_die_on_etaleCover R _ F n hn x
+  obtain ⟨Y, f, hf, hsurj, hx⟩ := _root_.GlobalTheory.EtC.classes_die_on_etale_cover R _ F n hn x
   obtain ⟨s, hs⟩ := exists_section_of_etale O f
   calc x = pull R (sch.map (s ≫ f)) F n x := by
         rw [hs, sch.map_id, pull_id]

@@ -1,16 +1,19 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInvolutiveAlgebraAdjoinRootSelfReciprocalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmallConjFixedOfValuationStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInvolutiveAlgebraAdjoinRootSelfReciprocal
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LinearDescent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmallConjFixedOfValuation
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnramifiedQuadraticDatumAtInertPlace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdentityOfPrincipalCongruenceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KappaOrbitalIntegralCongruenceInertLatticeCountStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StableTwistedOrbitalIntegralIntegralNormCongruenStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedOrbitalIntegralLevelFunctionInertEqLatticStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValResultantCharpolyShiftedUnitAdjoinRootStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetRallisUnitMatchAllRanksStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitLemmaLieAlgebraUnitaryGroupOfJacquetRallisStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdentityOfPrincipalCongruence
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KappaOrbitalIntegralCongruenceInertLatticeCount
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StableTwistedOrbitalIntegralIntegralNormCongruen
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedOrbitalIntegralLevelFunctionInertEqLattic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ValResultantCharpolyShiftedUnitAdjoinRoot
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FourierMatch
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JacquetRallisUnitMatchAllRanks
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitLemmaLieAlgebraUnitaryGroupOfJacquetRallis
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +53,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
 
 @[expose] public section
 
@@ -84,16 +86,16 @@ lemma unit_product_rescale_disjoint_finsets (q : ℕ) (hq : q ≠ 0) (v : ℤ) (
 theorem match_principal_congruence_inert : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E], Unr E → ∀ (w : Pl E), ¬ IsSplitAt w → ∀ (n a b k : ℕ), a + b = n → 1 ≤ k → Match n a b w 1 ((({γ : UL n w | γ.1 ∈ {g : GLw n w | g ∈ GlobalTheory.LFun.KGL w (n := n) ∧ ∀ i j, Valued.v (g.val i j - (1 : Matrix (Fin n) (Fin n) (w.adicCompletion E)) i j) ≤ WithZero.exp (-(k : ℤ))}} : Set (UL n w))).indicator 1) (fun y : GLw a w × GLw b w => ((-((Real.sqrt (qV E w : ℝ) : ℝ) : ℂ)) ^ (k * a * b))⁻¹ * (if y.1 ∈ GlobalTheory.LFun.KGL w (n := a) ∧ nrmL a w y.1 ∈ {g : GLw a w | g ∈ GlobalTheory.LFun.KGL w (n := a) ∧ ∀ i j, Valued.v (g.val i j - (1 : Matrix (Fin a) (Fin a) (w.adicCompletion E)) i j) ≤ WithZero.exp (-(k : ℤ))} ∧ y.2 ∈ GlobalTheory.LFun.KGL w (n := b) ∧ nrmL b w y.2 ∈ {g : GLw b w | g ∈ GlobalTheory.LFun.KGL w (n := b) ∧ ∀ i j, Valued.v (g.val i j - (1 : Matrix (Fin b) (Fin b) (w.adicCompletion E)) i j) ≤ WithZero.exp (-(k : ℤ))} then 1 else 0)) := by
   intro E _ _ _ hU w hw n a b k hab hk
   obtain ⟨K, e, he1, he2, he3, hq⟩ := GlobalTheory.InertUQ.exists_uq E hU w hw
-  obtain ⟨t, ht, htv⟩ := GlobalTheory.T.exists_small_conjFixed_of_valuation K k hk
+  obtain ⟨t, ht, htv⟩ := _root_.GlobalTheory.UnitLemma.exists_small_val K k hk
   intro Q₁ Q₂ hm₁ hm₂ hd₁ hd₂ hsep hc₁ hc₂
-  obtain ⟨B₁, h11, h12, h13, h14⟩ := GlobalTheory.T.exists_involutiveAlgebra_adjoinRoot_selfReciprocal E w hw K e he1 t ht.1 Q₁ hm₁ hc₁
-  obtain ⟨B₂, h21, h22, h23, h24⟩ := GlobalTheory.T.exists_involutiveAlgebra_adjoinRoot_selfReciprocal E w hw K e he1 t ht.1 Q₂ hm₂ hc₂
-  obtain ⟨hsB, hres⟩ := GlobalTheory.T.val_resultant_charpoly_shifted_unit_adjoinRoot E w K e he3 k t ht.1 htv a b Q₁ Q₂ B₁ B₂ hm₁ hm₂ hd₁ hd₂ hsep h11 h12 h13 h21 h22 h23
-  have hid := GlobalTheory.T.invAlg_identity_of_principal_congruence (GlobalTheory.T.unitLemma_lieAlgebra_unitaryGroup_of_jacquetRallis GlobalTheory.T.jacquetRallisUnitMatch_all_ranks).1 K t ht B₁ B₂ h14 h24 hsB
-  rw [GlobalTheory.T.stableTwistedOrbitalIntegral_integralNormCongruence_product E w hw a b k Q₁ Q₂ _ hm₁ hm₂ hd₁ hd₂ hsep,
-    GlobalTheory.T.twistedOrbitalIntegral_levelFunction_inert_eq_latticeCount E hU w hw K e he1 he2 he3 hq k t ht htv a Q₁ B₁ hm₁ hd₁ hsep.of_mul_left hc₁ h11 h12 h13 h14,
-    GlobalTheory.T.twistedOrbitalIntegral_levelFunction_inert_eq_latticeCount E hU w hw K e he1 he2 he3 hq k t ht htv b Q₂ B₂ hm₂ hd₂ hsep.of_mul_right hc₂ h21 h22 h23 h24,
-    GlobalTheory.T.kappaOrbitalIntegral_congruence_inert_latticeCount E hU w hw K e he1 he2 he3 hq k t ht htv n a b Q₁ Q₂ B₁ B₂ hab hm₁ hm₂ hd₁ hd₂ hsep hc₁ hc₂
+  obtain ⟨B₁, h11, h12, h13, h14⟩ := _root_.GlobalTheory.InvAlgConstr.exists_invAlg_adjoinRoot E w hw K e he1 t ht.1 Q₁ hm₁ hc₁
+  obtain ⟨B₂, h21, h22, h23, h24⟩ := _root_.GlobalTheory.InvAlgConstr.exists_invAlg_adjoinRoot E w hw K e he1 t ht.1 Q₂ hm₂ hc₂
+  obtain ⟨hsB, hres⟩ := _root_.GlobalTheory.UnitLemma.ShiftRes.val_resultant_shift E w K e he3 k t ht.1 htv a b Q₁ Q₂ B₁ B₂ hm₁ hm₂ hd₁ hd₂ hsep h11 h12 h13 h21 h22 h23
+  have hid := _root_.GlobalTheory.UnitLemma.CongruenceCayley.identity_of_principal_congruence (_root_.GlobalTheory.UnitLemma.unitLemma_lie_and_group _root_.GlobalTheory.JR.unitMatch_all).1 K t ht B₁ B₂ h14 h24 hsB
+  rw [_root_.GlobalTheory.BCT.StTwLevel.stTw2_lev E w hw a b k Q₁ Q₂ _ hm₁ hm₂ hd₁ hd₂ hsep,
+    _root_.GlobalTheory.TwOrbLevel.twOrb_level_eq_stSum E hU w hw K e he1 he2 he3 hq k t ht htv a Q₁ B₁ hm₁ hd₁ hsep.of_mul_left hc₁ h11 h12 h13 h14,
+    _root_.GlobalTheory.TwOrbLevel.twOrb_level_eq_stSum E hU w hw K e he1 he2 he3 hq k t ht htv b Q₂ B₂ hm₂ hd₂ hsep.of_mul_right hc₂ h21 h22 h23 h24,
+    _root_.GlobalTheory.KapLat.kapOrb_congruence_eq_kapSum E hU w hw K e he1 he2 he3 hq k t ht htv n a b Q₁ Q₂ B₁ B₂ hab hm₁ hm₂ hd₁ hd₂ hsep hc₁ hc₂
       h11 h12 h13 h14 h21 h22 h23 h24]
   unfold GlobalTheory.UnitLemma.InvAlg.Identity at hid
   rw [← Rat.cast_mul, ← hid, hres]

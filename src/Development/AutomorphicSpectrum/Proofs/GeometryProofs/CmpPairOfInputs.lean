@@ -3,12 +3,19 @@ module
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.CmpPair
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.CmpSt
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.HodgeComparisonCompatibility
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.RootFundamentalWeightDualityStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RootModelComparisonLimitStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BlockPullbackHermLineStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsoLineOnEquivalenceStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TwistedHodgeTieCompareStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RealisationFibreProductCompatibleStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.RootOnFund
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.RootFundamentalWeightDuality
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.MetricsProjectionFormulaNef
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RootModelComparisonLimit
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ConjugateHermitianLineIsometries
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MixedFieldContraction.GenericFibreKerTarget
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BlockPullbackHermLine
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.Birational
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsoLineOnEquivalence
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TwistedHodgeTieCompare
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsSncModel
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RealisationFibreProductCompatible
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -81,7 +88,7 @@ theorem degComb {Ψ : Type} [Fintype Ψ] [DecidableEq Ψ] {N : ℕ} {K : Type} [
     [∀ k, Fintype (ι k)] (sing ref line : Ψ × Fin N → HermLine ι) (hl : ∀ a, (line a).a = (ref a).a)
     (hr : ∀ a, (ref a).a = (Top.combLine sing (fundOnRoot a)).a) (r : Ψ × Fin N) :
     (Top.combLine line (rootOnFund r)).a = (sing r).a := by
-  have hfi := GlobalTheory.T.root_fundamental_weight_duality Ψ N
+  have hfi := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.rootOnFund_mul_fundOnRoot_inverse Ψ N
   simp only [Top.combLine] at hr ⊢
   simp_rw [hl, hr, Finset.smul_sum, smul_smul]
   rw [Finset.sum_comm]
@@ -115,24 +122,24 @@ theorem cmpPair : PB.Inputs → CmpSt → HodgeComparisonCompatibility → Theta
   intro hIn hC hT hU II hII E _ _ _ H D l Xo c O _ β Y g Φ hΦ π S n M M' T T' hβ hs hπ hA hR w
   classical
   obtain ⟨K, hK, ι, hι, κ, v, κ', v', Ω, hΩ, hΩ0, y, b, d, hbv, hbv', hP, hP', harith, hmh, hb, hne, hdeg, hiso⟩ :=
-    GlobalTheory.T.twisted_hodge_tie_compare hT hU E H D l Xo c O β Y g Φ hΦ π S n M M' T T' hβ hs hπ hA hR
-  have hJ := GlobalTheory.T.block_pullback_herm_line M.K M.ι K ι κ v hbv
-  have hJ' := GlobalTheory.T.block_pullback_herm_line M'.K M'.ι K ι κ' v' hbv'
+    _root_.GlobalTheory.CompanionTheory.Relay.twisted_hodge_tie_compare hT hU E H D l Xo c O β Y g Φ hΦ π S n M M' T T' hβ hs hπ hA hR
+  have hJ := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.hermLine_pull_blockMap M.K M.ι K ι κ v hbv
+  have hJ' := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.hermLine_pull_blockMap M'.K M'.ι K ι κ' v' hbv'
   have hmpp : IsMultiProjPrime (mCoordIdeal y) := harith.2.1
-  obtain ⟨hc1, -, -, hc4⟩ := GlobalTheory.T.iso_line_on_equivalence K ι (mCoordIdeal y)
+  obtain ⟨hc1, -, -, hc4⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.IsoLines.isoLineOn_comb_trans_symm_pull K ι (mCoordIdeal y)
     {z | z ∈ mcPts (mCoordIdeal y) ∧ evC z b ≠ 0} hmpp (fun z hz => hz.1)
   let f := relab π (D.p + D.q)
   let Lr : CMType H × Fin (D.p + D.q) → HermLine ι := fun r => (hJ.1 (T.sing r)).exists.choose
   let Lr' : CMType H × Fin (D.p + D.q) → HermLine ι := fun r => (hJ'.1 (T'.sing (f r))).exists.choose
   have hLr : ∀ r, IsPullHerm κ v (T.sing r) (Lr r) := fun r => (hJ.1 (T.sing r)).exists.choose_spec
   have hLr' : ∀ r, IsPullHerm κ' v' (T'.sing (f r)) (Lr' r) := fun r => (hJ'.1 (T'.sing (f r))).exists.choose_spec
-  have hfi := GlobalTheory.T.root_fundamental_weight_duality (CMType H) (D.p + D.q)
+  have hfi := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.rootOnFund_mul_fundOnRoot_inverse (CMType H) (D.p + D.q)
   have hfun : ∀ a, fundOnRoot (f a) ∘ f = fundOnRoot a := fun a => funext fun r => ((hfi a r).2 π).2
   have hsame : ∀ a, SameSing T.Re (T'.Re.comap f) (mCoordIdeal y) κ v κ' v' b a a := by
     intro a
     have e2 : Top.combLine T'.sing (fundOnRoot (f a)) = Top.combLine (T'.sing ∘ f) (fundOnRoot a) := by
       rw [← hfun a, combLine_equiv]
-    refine GlobalTheory.T.realisation_fibre_product_compatible K ι M.K M.ι M'.K M'.ι κ v κ' v' (mCoordIdeal y) M.P M'.P _ _ _ T.Sy (T'.Sy.comap f)
+    refine _root_.GlobalTheory.CompanionTheory.Ar.Cmp.sameSing_of_isoLine K ι M.K M.ι M'.K M'.ι κ v κ' v' (mCoordIdeal y) M.P M'.P _ _ _ T.Sy (T'.Sy.comap f)
       T.Re (T'.Re.comap f) b a a (Top.combLine T.sing (fundOnRoot a)) (Top.combLine T'.sing (fundOnRoot (f a)))
       (Top.combLine Lr (fundOnRoot a)) (Top.combLine Lr' (fundOnRoot a)) hbv hbv'
       (hc4 _ _ κ v _ _ _ (fundOnRoot a) hbv hLr) ?_ (T.ref_deg a) (T'.ref_deg (f a)) (T.sing_eq a)
@@ -170,7 +177,7 @@ theorem cmpPair : PB.Inputs → CmpSt → HodgeComparisonCompatibility → Theta
       refine ⟨?_, fun z hz => hl2 r z hz⟩
       rw [M'.x_deg, ← T'.sing_deg]
       exact (degComb T'.sing T'.Re.ref (fun a => T'.Re.line a t) (fun a => T'.Re.line_deg a t) T'.ref_deg _).symm
-  have hmain := GlobalTheory.T.root_model_comparison_limit hIn II hII (CMType H) (D.p + D.q) M M' (CMType H × Fin (D.p + D.q))
+  have hmain := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.Root.cmp_root hIn II hII (CMType H) (D.p + D.q) M M' (CMType H × Fin (D.p + D.q))
     (fun t a => T.Re.line a t) (fun t a => T'.Re.line (f a) t) (fun r => rootOnFund (f.symm r)) f.symm _ _
     hne hδ hev hword (f ∘ w)
   simp only [Function.comp_apply, Equiv.symm_apply_apply] at hmain

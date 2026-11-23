@@ -1,11 +1,12 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GoodConstOfAniso
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalConstantTermSmallStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GoodFunctionLineDerivativeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeightBoundSiegelTorusStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SiegelDomainOpenSubgroupBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SiegelSetUniformSmoothBoundStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.LocallyCompactUnipFlag
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalConstantTermSmall
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GoodFunctionLineDerivative
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HeightBoundSiegelTorus
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SiegelDomainOpenSubgroupBound
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SiegelSetUniformSmoothBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,12 +65,12 @@ theorem decay_step {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
     (ψ : GAd σ J → ℂ) (hψ : Good σ J U A ψ) (Cm : Set (GAd σ J)) (hCm : IsCompact Cm) :
     ∃ B : ℝ, ∀ p ∈ Ω, ∀ t ∈ cone r c, ∀ a, IsTorusElt σ J X Y t a → ∀ k ∈ Cm,
       ‖ψ (p * a * k)‖ * rbar t ^ (m + 1) ≤ B * rbar t ^ e := by
-  obtain ⟨q, b, Ω₀, Cv, δ₁, hb, hΩ₀, hδ₁, hCv, hmv⟩ := GlobalTheory.T.siegel_set_uniform_smooth_bound F E σ h n J hJ
+  obtain ⟨q, b, Ω₀, Cv, δ₁, hb, hΩ₀, hδ₁, hCv, hmv⟩ := _root_.GlobalTheory.CompanionTheory.RapidDecay.Mean.mean_value F E σ h n J hJ
   have hCm' : IsCompact ((fun x : GAd σ J × GAd σ J => x.1 * x.2) '' (Cm ×ˢ Ω₀)) :=
     (hCm.prod hΩ₀).image (by fun_prop)
-  choose B hB using fun i => hm _ (GlobalTheory.T.good_function_line_derivative F E σ h n J hJ U A ψ (b i) hψ (hb i)) _ hCm'
+  choose B hB using fun i => hm _ (_root_.GlobalTheory.CompanionTheory.RapidDecay.good_lineDer F E σ h n J hJ U A ψ (b i) hψ (hb i)) _ hCm'
   obtain ⟨B₀, hB₀⟩ := hm ψ hψ Cm hCm
-  obtain ⟨M, hM0, hM⟩ := GlobalTheory.T.siegel_domain_open_subgroup_bound F E σ h n J hJ r X Y hW Ω Cm c U hΩ hΩP hCm hc hU
+  obtain ⟨M, hM0, hM⟩ := _root_.GlobalTheory.CompanionTheory.RapidDecay.near_cusp F E σ h n J hJ r X Y hW Ω Cm c U hΩ hΩP hCm hc hU
   set R₀ := max 1 (M / δ₁) with hR₀
   have hR1 : 1 ≤ R₀ := le_max_left _ _
   have hSum : 0 ≤ ∑ i, |B i| := Finset.sum_nonneg fun _ _ => abs_nonneg _
@@ -104,7 +105,7 @@ theorem decay_step {F E : Type} [Field F] [NumberField F] [Field E] [NumberField
       rw [hcc, le_div_iff₀ hRm]
       exact this.trans (mul_le_mul_of_nonneg_right (le_abs_self _) hRe.le)
     have hvar : ‖ψ g‖ ≤ Cv * (M / rbar t) * ∑ i, cc i := by
-      refine GlobalTheory.T.cuspidal_constant_term_small F E σ h n J hJ ψ hψ.left hψ.cont hψ.cusp _ (pre X s) (Nat.succ_pos _)
+      refine _root_.GlobalTheory.CompanionTheory.RapidDecay.norm_le_of_unipRad_variation F E σ h n J hJ ψ hψ.left hψ.cont hψ.cusp _ (pre X s) (Nat.succ_pos _)
         (GlobalTheory.UAut.isIsoCols_of_isWittFrame hW (sigma_sigma h) hJ _) g _ fun m' hm' => ?_
       obtain ⟨γ, hγ, u, κ, hu, hκU, hκf, e'⟩ := hM p hp t ht a ha k hk s m' hm'
       rw [← hs] at hu
@@ -128,7 +129,7 @@ theorem rapid_decrease : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [N
   obtain ⟨U, hU, hlev⟩ := hs.level
   obtain ⟨A, hA⟩ := hs.growth
   have hG : Good σ J U A φ := ⟨hs.left, hlev, hs.cont, hs.smooth, hA, hcu⟩
-  obtain ⟨b, hb⟩ := GlobalTheory.T.height_bound_siegel_torus F E σ h n J hJ r X Y hW c hc
+  obtain ⟨b, hb⟩ := _root_.GlobalTheory.CompanionTheory.RapidDecay.height_le_rbar_pow F E σ h n J hJ r X Y hW c hc
   set e := b * A with he
   have hbase : ∀ ψ, Good σ J U A ψ → ∀ Cm : Set (GAd σ J), IsCompact Cm → ∃ B : ℝ, ∀ p ∈ Ω, ∀ t ∈ cone r c, ∀ a,
       IsTorusElt σ J X Y t a → ∀ k ∈ Cm, ‖ψ (p * a * k)‖ * rbar t ^ 0 ≤ B * rbar t ^ e := fun ψ hψ Cm hCm => by

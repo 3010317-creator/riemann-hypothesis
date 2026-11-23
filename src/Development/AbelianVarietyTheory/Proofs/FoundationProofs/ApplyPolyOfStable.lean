@@ -6,13 +6,20 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.ThNSpec
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
 public import Mathlib.RingTheory.AdicCompletion.Noetherian
 public import Development.AbelianVarietyTheory.Definitions.Foundations.EigenOfTwoStep
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsInertiaFixedNearAlmostFixedCoefficientsStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.HtCoIOfEq
+public import Development.AbelianVarietyTheory.Definitions.Foundations.FinalTheorems
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsInertiaFixedNearAlmostFixedCoefficients
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsRestrict
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalBMemKummerInvariantSet
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeOperatorCommGaloisActionModularTower
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsCuspFunctionalValueGalBEquivariant
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularTowerBAdmissibleHeckeCommute
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaLatticeDiamondActionStatement
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaLatticeDiamondAction
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeLetterPreservesBasisSet
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GalBMemKummerInvariantSet
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsCuspFunctionalValueGalBEquivariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,7 +58,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsEqSubOfMemCob
 import Development.AbelianVarietyTheory.Definitions.Foundations.Integral
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeckeLetterPreservesBasisSet
 
 @[expose] public section
 
@@ -80,7 +86,7 @@ theorem exists_fixed_near (c : Coef l) (y : ℂ_[l]) (C : ℝ)
       ∀ τ : Qbar l ≃ₐ[ℚ_[l]] Qbar l, (∀ b ∈ c.O, τ b = b) → (∀ z : Qbar l, ‖z‖ ≤ 1 → ‖τ z - z‖ < 1) →
         ‖τ x - x‖ ≤ C * ‖((l : ℕ) : Qbar l) ^ n‖) (δ : ℝ) (hδ : 0 < δ) :
     ∃ z : Qbar l, FixIc c z ∧ ‖(z : ℂ_[l]) - y‖ ≤ δ := by
-  obtain ⟨c₁, hc₁⟩ := GlobalTheory.T.exists_inertiaFixed_near_almostFixed_coefficients l c
+  obtain ⟨c₁, hc₁⟩ := _root_.GlobalTheory.PerFix.exists_fixed_near l c
   obtain ⟨k, hk⟩ := exists_le_l_pow l C
   have ht : Filter.Tendsto (fun n : ℕ => (l : ℝ) ^ k * (l : ℝ) ^ c₁ * ‖((l : ℕ) : Qbar l) ^ n‖) Filter.atTop (nhds 0) := by
     simp_rw [norm_pow]
@@ -240,7 +246,7 @@ theorem exists_pr_isLamFR : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsAlgCl
   have hhol : ∃ φ : ℂ → ℂ, DifferentiableOn ℂ φ Hs ∧ X.an X.jK = (φ : Mero) := hhol'.imp fun _ h => h.symm
   have hNl : Nat.Coprime N l := ((Nat.Prime.coprime_iff_not_dvd Fact.out).2 hlN).symm
   have hth : ∀ n, ∀ b ∈ X.B N l w, IsThB X A N l n b (thN X A N l n 1 b) := fun n b hb => by
-    have h := (GlobalTheory.T.theta_lattice_diamond_action Ω ε X A N l hhol' hl2 hlN hN hlA n w 1 hw (Nat.coprime_one_left N) b hb).1
+    have h := (_root_.GlobalTheory.CyclotomicQExpansion.thN_isThB Ω ε X A N l hhol' hl2 hlN hN hlA n w 1 hw (Nat.coprime_one_left N) b hb).1
     rwa [act_sgD_one X (by omega) hb] at h
   have hstB := GlobalTheory.KZ.B_stable_op ε X ε.injective hhol N l w hl2 hN hNl hw
   have hst : ∀ T, GlobalTheory.KZ.admitted N l T → ∀ b ∈ chiPart X N w χ, X.op N l T b ∈ chiPart X N w χ := fun T hT b hb =>

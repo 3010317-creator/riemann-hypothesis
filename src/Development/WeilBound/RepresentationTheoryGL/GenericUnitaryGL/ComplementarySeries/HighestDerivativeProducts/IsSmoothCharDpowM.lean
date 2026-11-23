@@ -1,13 +1,15 @@
 module
 
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FibreIntegralIntertwinesUnipotentStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsUMOfMem
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FibreIntegralIntertwinesUnipotent
 public import Development.WeilBound.RepresentationTheoryGL.GenericUnitaryGL.LeibnizOrders.LeibnizOrd
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousLeviUnipotentProjStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DerivativeOfProductInducedIsoStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FibreIntegralIntertwinesLeviStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousLeviUnipotentProj
+public import Development.WeilBound.RepresentationTheoryGL.GenericUnitaryGL.LeibnizOrders.ProdGPn
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DerivativeOfProductInducedIso
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FibreIntegralIntertwinesLevi
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MemTwKerOfFibIntEqZero
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothIntegralLinear
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothRightInv
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothIntegralLinear
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -124,7 +126,7 @@ theorem fibInt_smul (c : ℂ) (a : cIndSpace (HPG k i t) (hRep τ σ)) (g : GL (
   exact (congrArg (fun x => clT τ W (smInt μ x)) e).trans ((congrArg (clT τ W) h).trans (map_smul (clT τ W) c _))
 
 def phiInd (f : cIndSpace (HPG k i t) (hRep τ σ)) : indSpace (Qp k i t) (qRep τ σ) :=
-  ⟨fibInt μ f, fun q g => GlobalTheory.T.fibre_integral_intertwines_unipotent k i t τ σ hτ hσ μ f q g⟩
+  ⟨fibInt μ f, fun q g => _root_.GlobalTheory.CompanionTheory.BZPsiPG.FibQ.main k i t τ σ hτ hσ μ f q g⟩
 
 theorem phiInd_right (f : cIndSpace (HPG k i t) (hRep τ σ)) (s : GL (Fin (i + t)) k)
     (hs : prodPG τ σ (levi k (i + t) s) f = f) :
@@ -138,7 +140,7 @@ theorem phiInd_mem (f : cIndSpace (HPG k i t) (hRep τ σ)) :
   have h : IsOpen {g | ind (Qp k i t) (qRep τ σ) g (phiInd τ σ hτ hσ μ f) = phiInd τ σ hτ hσ μ f} :=
     isOpen_stab_of (ind (Qp k i t) (qRep τ σ)) _
       (levi k (i + t) ⁻¹' {p | prodPG τ σ p f = f})
-      ((isOpen_cInd_stab f).preimage (GlobalTheory.T.continuous_levi_unipotent_proj k _).1)
+      ((isOpen_cInd_stab f).preimage (_root_.GlobalTheory.CompanionTheory.BZPsiPG.continuous_levi_uM_mirProj k _).1)
       (by
         have h0 : levi k (i + t) (1 : GL (Fin (i + t)) k) = 1 := (levi k (i + t)).map_one
         have h1 : prodPG τ σ (1 : Mir k (i + t)) = 1 := (prodPG τ σ).map_one
@@ -161,7 +163,7 @@ theorem twKer_le_ker : twKer (prodPG τ σ) (MirUin k (i + t)) 1 ≤ LinearMap.k
   refine Submodule.span_le.2 ?_
   rintro _ ⟨u, w, rfl⟩
   have e : phiLin τ σ hτ hσ μ (prodPG τ σ (u : Mir k (i + t)) w) = phiLin τ σ hτ hσ μ w :=
-    Subtype.ext (Subtype.ext (funext fun g => GlobalTheory.T.fibre_integral_intertwines_levi k i t τ σ hτ hσ μ w (u : Mir k (i + t)) u.2 g))
+    Subtype.ext (Subtype.ext (funext fun g => _root_.GlobalTheory.CompanionTheory.BZPsiPG.FibUnip.fibInt_unip k i t τ σ hτ hσ μ w (u : Mir k (i + t)) u.2 g))
   have e2 : (((1 : MirUin k (i + t) →* ℂˣ) u : ℂˣ) : ℂ) • w = w := by simp
   show phiLin τ σ hτ hσ μ _ = 0
   exact (congrArg (fun x => phiLin τ σ hτ hσ μ (prodPG τ σ (u : Mir k (i + t)) w - x)) e2).trans
@@ -216,7 +218,7 @@ theorem isSmoothChar_dpowM (n : ℕ) (s : ℝ) : IsSmoothChar (dpowM (k := k) n 
 
 theorem psiPG : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k], PsiPG k := by
   intro k _ _ _ _ i t τ σ hτ hσ
-  exact GlobalTheory.T.derivative_of_product_induced_iso k i t τ σ hτ hσ
+  exact _root_.GlobalTheory.CompanionTheory.BZPsiPG.Norm.psiN_prodPGn_of_equiv k i t τ σ hτ hσ
     (core _ _ (isSmooth_twist hτ (isSmoothChar_dpowM _ _)) (isSmooth_twist hσ (isSmoothChar_dpow _ _)))
 
 end GlobalTheory.CompanionTheory.BZPsiPG.Hand

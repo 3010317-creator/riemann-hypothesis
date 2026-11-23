@@ -2,7 +2,8 @@ module
 
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdmissibleFormAdelicThetaSumStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdmissibleFormAdelicThetaSum
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ThetaPairModerateGrowth
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ThetaSumOmegaRational
 import Mathlib.Algebra.Order.Floor.Extended
@@ -50,7 +51,7 @@ namespace GlobalTheory.ThKBasic
 theorem theta_kernel_basic_properties : _root_.GlobalTheory.FunPr.ThetaLocalInputs → GlobalTheory.ThK.ThetaBasic := by
   intro hKP F E _ _ _ _ _ σ B n d X W M χX χW om r s r' s' hP
   have hS := hP.weil.isUSplitting
-  obtain ⟨l, hl, hlt⟩ := GlobalTheory.T.exists_admissibleForm_adelicThetaSum F (Fin n × Fin d)
+  obtain ⟨l, hl, hlt⟩ := _root_.GlobalTheory.WeilM.exists_adm_eq_thetaSum_of_locallyCompact F (Fin n × Fin d)
   refine ⟨fun Φ hΦ => ⟨?_, ?_, _root_.GlobalTheory.T.theta_pair_moderate_growth hKP F E σ B n d X W M χX χW om r s r' s' hP Φ hΦ⟩, ?_⟩
   · refine (hS.cont l hl Φ hΦ).congr fun x => ?_
     simp only [theta]

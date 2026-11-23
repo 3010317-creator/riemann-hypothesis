@@ -12,7 +12,9 @@ public import Mathlib.RingTheory.HopfAlgebra.Basic
 public import Mathlib.RingTheory.SimpleRing.Principal
 public import Development.AbelianVarietyTheory.Definitions.Foundations.HahnPowOrderLeadingCoeff
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrincipalCongruenceFunctionMemAdjoinJSiegelUnits
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SiegelInvarianceImpliesCongruenceStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.SgC
+import Mathlib.RingTheory.RegularLocalRing.Defs
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SiegelInvarianceImpliesCongruence
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,7 +57,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.Foundations.SgC
 import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.NormProducts.InvMod
 
 @[expose] public section
@@ -117,7 +118,7 @@ theorem UpperTheory.Kd.K4.faith :
     refine (congrArg (X.sl (ofSL γ⁻¹)) h1).trans ?_
     rw [← X.sl_mul, ← map_mul, mul_inv_cancel, map_one]
     exact X.sl_one _
-  rcases GlobalTheory.T.siegel_invariance_implies_congruence ε X M (6 * M + 1) (δ⁻¹ * γ⁻¹) hM hc1 hc6 hcM hfix with h | h
+  rcases _root_.GlobalTheory.SiegSep.fix_siegel_pm_one ε X M (6 * M + 1) (δ⁻¹ * γ⁻¹) hM hc1 hc6 hcM hfix with h | h
   · left
     have e : γ = (δ * (δ⁻¹ * γ⁻¹))⁻¹ := by group
     rw [e]

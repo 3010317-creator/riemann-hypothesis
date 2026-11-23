@@ -3,10 +3,13 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsEtCoord
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsRegularFnIffOfIsAffineOpen
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.IsAffineHomOfIsPullbackSpecMap
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsEtaleCoordinatesOnOpenRestrictAffineOpenStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KaehlerFibreEquivPushoutFormallyEtaleStatement
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.EtaleCoordinatesDifferentials
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.FinrankKaehlerAffineChartStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsEtaleCoordinatesOnOpenRestrictAffineOpen
+public import Mathlib.RingTheory.Etale.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ImportsMoreSide
+public import Mathlib.RingTheory.RingHom.Etale
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCoordinatesDifferentials
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.FinrankKaehlerAffineChart
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -128,9 +131,9 @@ theorem chart_desc : ∀ (R R' : Type) [CommRing R] [CommRing R'] (φ : R →+* 
     infer_instance
 
   let t : Fin d → Γ(X', W) := fun a => resG X' hWC (C'.t a)
-  have ht : IsEtCoord f' W t := GlobalTheory.T.isEtaleCoordinatesOnOpen_restrict_affineOpen R' X' f' C'.U W hWC d C'.t C'.affine hW C'.etale
-  have hbasis := GlobalTheory.T.etale_coordinates_differentials R' Γ(X', W) K d t ht
-  obtain ⟨ebc, hebc⟩ := GlobalTheory.T.exists_kaehler_fibre_equiv_D_compat R R' Γ(X, U) Γ(X', π ⁻¹ᵁ U) Γ(X', W) K (fun _ => rfl)
+  have ht : IsEtCoord f' W t := _root_.GlobalTheory.LogPair.isEtCoord_res R' X' f' C'.U W hWC d C'.t C'.affine hW C'.etale
+  have hbasis := _root_.GlobalTheory.EtaleCoordRank.finrank_and_linearIndependent_D_unit_mul R' Γ(X', W) K d t ht
+  obtain ⟨ebc, hebc⟩ := _root_.GlobalTheory.AuxiliaryLemmaFirst.main R R' Γ(X, U) Γ(X', π ⁻¹ᵁ U) Γ(X', W) K (fun _ => rfl)
   have key : ∀ i, algebraMap Γ(X', π ⁻¹ᵁ U) Γ(X', W)
       (algebraMap Γ(X, U) Γ(X', π ⁻¹ᵁ U) (resG X (hc i) ((σ i).f (c i)))) =
       ((Units.map (resG X' hWC).toMonoidHom (C'.u i) : Γ(X', W)ˣ) : Γ(X', W)) *
@@ -185,6 +188,6 @@ theorem chart_desc : ∀ (R R' : Type) [CommRing R] [CommRing R'] (φ : R →+* 
     convert hli using 1
     funext i
     exact hfam i
-  exact GlobalTheory.T.finrank_kaehler_affine_chart R X f d s L σ U c hc (π y) K hU hxU hres ⟨hrank, hlin⟩
+  exact _root_.GlobalTheory.LogPair.ChartPt.exists_chart R X f d s L σ U c hc (π y) K hU hxU hres ⟨hrank, hlin⟩
 
 end GlobalTheory.ChartDesc

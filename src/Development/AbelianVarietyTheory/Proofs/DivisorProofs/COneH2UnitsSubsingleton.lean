@@ -3,9 +3,12 @@ module
 public import Mathlib.FieldTheory.Galois.Basic
 public import Mathlib.RepresentationTheory.Homological.GroupCohomology.Basic
 public import Mathlib.RingTheory.MvPolynomial.Homogeneous
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.COnePropertyFiniteExtensionStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.C1FieldNormSurjectiveStatement
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.COnePropertyFiniteExtension
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsFirstChernClassOfLineBundle
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.C1FieldNormSurjective
 public import GroundTheory.TateCohomology.CohTrivial
+public import Mathlib.RepresentationTheory.Homological.GroupCohomology.Hilbert90
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -24,7 +27,6 @@ import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
-public import Mathlib.RepresentationTheory.Homological.GroupCohomology.Hilbert90
 import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.PicardGroup
 import Mathlib.RingTheory.Radical.NatInt
@@ -71,9 +73,9 @@ theorem c_one_h2_units_subsingleton : ∀ (K L : Type) [Field K] [Field L] [Alge
     refine isZero_tateCohomology_zero_of_forall _ fun m hm => ?_
     let u : Lˣ := Additive.toMul m
     have hu : (u : L) ∈ fixedField S := fun s => congrArg Units.val (hm s)
-    have hCF := GlobalTheory.T.c_one_property_finite_extension K (fixedField S) hC
+    have hCF := _root_.GlobalTheory.c_one_of_finite_extension K (fixedField S) hC
     have hne : (⟨(u : L), hu⟩ : fixedField S) ≠ 0 := fun h => u.ne_zero (congrArg Subtype.val h)
-    obtain ⟨x, hx⟩ := GlobalTheory.T.exists_algebra_norm_eq_of_isFirstChernClass (fixedField S) L hCF _ hne
+    obtain ⟨x, hx⟩ := _root_.GlobalTheory.norm_surjective_of_is_c1 (fixedField S) L hCF _ hne
     have hx0 : x ≠ 0 := by
       rintro rfl
       rw [Algebra.norm_zero] at hx

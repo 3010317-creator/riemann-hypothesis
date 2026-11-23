@@ -1,9 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ChernDegreeComplex
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChernIntegralOneEqMongeAmpereIntegralStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChernMassEqSelfIntersectionLineBundleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntersectionDivisorEqSelfIntersectionPresentedStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.AnalyticOnNhdFinChartIff
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.MemRiemannRochSpaceIffRegularAtEverywhere
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsClosedImmersionGenericPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChernIntegralOneEqMongeAmpereIntegral
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChernMassEqSelfIntersectionLineBundle
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.FinrankRiemannRochNsmulHyperplane
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntersectionDivisorEqSelfIntersectionPresented
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -47,7 +51,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 namespace GlobalTheory.ChernDegree
 
 theorem chernDegreeComplex : GlobalTheory.Published.ChernDegreeComplex := fun Y Δ L r hr φ hφ =>
-  ⟨(GlobalTheory.T.chernIntegral_one_eq_mongeAmpereIntegral Y L φ hφ).1, by
-    rw [GlobalTheory.T.chernMass_eq_selfIntersection_lineBundle Y L φ hφ, GlobalTheory.T.intersection_divisor_eq_selfIntersection_presented Y Δ L r φ.isLB hr]⟩
+  ⟨(_root_.GlobalTheory.chernInt_one_eq_mInt Y L φ hφ).1, by
+    rw [_root_.GlobalTheory.MassDegree.chernInt_eq_topSelf Y L φ hφ, _root_.GlobalTheory.ChernDegree.inter_const_eq_topSelf_of_presents Y Δ L r φ.isLB hr]⟩
 
 end GlobalTheory.ChernDegree

@@ -3,8 +3,9 @@ module
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.JacobianCoordinates
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsHaarMeasureOfSigmaFinite
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralFintypeProd
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RealPlaceFlagUnipotentRadicalIsUnipotentStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnipotentSubgroupUJHaarRightInvariantStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RealPlaceFlagUnipotentRadicalIsUnipotent
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.RealObj
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnipotentSubgroupUJHaarRightInvariant
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.EnergyCut
 import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.NGClosed
 import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.RankOneTensors
@@ -237,7 +238,7 @@ theorem oo_quot : ∀ (D : D7) (X : HidaSetting D) (u u' : D.what₂.Word) (γ :
     stG (X.B.I.ε v) (fun a => rv X.B.I v (X.eR a)) (rv X.B.I v (X.zR u)) (rv X.B.I v (X.zR u')) (γ v)
   have hRc : ∀ v, IsClosed (R v : Set (Formalism.REAL.UJ (X.B.I.ε v))) := fun v => stG_closed _ _ _ _ _
   have hr : ∀ v, ∀ s ∈ R v, (μl v).map (fun x => x * s) = μl v := fun v s hs =>
-    GlobalTheory.T.unipotent_subgroup_UJ_haar_right_invariant (X.B.I.ε v) (2 * D.R.rS + 1) (R v) (hRc v) (fun g hg => GlobalTheory.T.realPlaceFlagUnipotentRadical_isUnipotent _ _ _ g hg.1) (μl v)
+    _root_.GlobalTheory.UJUnimod.unimodular_of_unipotent (X.B.I.ε v) (2 * D.R.rS + 1) (R v) (hRc v) (fun g hg => _root_.GlobalTheory.unipRad_pow_eq_zero _ _ _ g hg.1) (μl v)
       (hH v) s hs
   have hq := quot_prod X.B.I.ε R μl νl ν hRc hH hr hQl hQ
   let ψ : ∀ v, Formalism.REAL.UJ (X.B.I.ε v) → (X.Vloc u' v →L[ℂ] X.Vloc u v) := fun v z =>

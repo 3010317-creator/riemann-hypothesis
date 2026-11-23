@@ -5,10 +5,12 @@ public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LabelSigBije
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GlueApplyOfNotInFibre
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ComponentSpecializationLatticeBasis
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsEigenOpDiscr
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeEvalAtLocalRingStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootModelFlagHeight
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootOriginFrameNonarchimedeanStatement
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
+import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeEvalAtLocalRing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -128,7 +130,7 @@ theorem fib_eq_lieEig_rf : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
     Lat.patch_of_not SS _ _ fun r hr hfr =>
       Lat.not_inFibre_of_coprime _ ((Nat.coprime_primes hp (Or.𝔐.S_prime r hr)).2
         fun hne => hpS (hne ▸ hr)) hF hfr
-  obtain ⟨ev', hev1, hev2, -⟩ := GlobalTheory.T.lie_lattice_eval_at_local_ring Or.𝔐.X Or.𝔐.t.G RM.Ω Or.𝔐.ξ Or.𝔐.Li Or.𝔐.M T.Fr (gen T zV) h₁ EC MC
+  obtain ⟨ev', hev1, hev2, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieLat_val Or.𝔐.X Or.𝔐.t.G RM.Ω Or.𝔐.ξ Or.𝔐.Li Or.𝔐.M T.Fr (gen T zV) h₁ EC MC
     hgen hsm
 
   have hσ' : ∀ a, ValAt Or.𝔐.ξ (gen T zV) (Or.𝔐.emb s a) (algebraMap T.V T.Fr (σ a)) := fun a =>

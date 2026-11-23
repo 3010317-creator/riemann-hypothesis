@@ -1,12 +1,18 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.IsUnifAt
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsH90EqOneOffOfNormOneAtSplitPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsNatCastCoprimeMemHeightOneSpectrumStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsNatMulDivPowMemIntegralFiniteAdeleStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteAdeleIsoComponentZeroOfInfinitelyDivisibleStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.SameOffRefl
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsH90EqOneOffOfNormOneAtSplitPlace
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsNatCastCoprimeMemHeightOneSpectrum
+public import Formalism.LocalToGlobal.Divisibility.Tuples
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsNatMulDivPowMemIntegralFiniteAdele
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ExistsMidLevIff
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteAdeleIsoComponentZeroOfInfinitelyDivisible
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GidxFacts
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeCharacterFiniteIdeleEqProdValuesZpowStatement
+public import Formalism.LocalToGlobal.UnitaryNorms.CharTied
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeCharacterFiniteIdeleEqProdValuesZpow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,7 +65,7 @@ theorem hchar_eq_prod_val {L : Type} [Field L] [NumberField L] (χ : Formalism.L
     (T : Finset (HeightOneSpectrum (𝓞 L))) (b : Neutral.B1.Ideles L) (hb : Formalism.L2.Host.IsFinIdele b)
     (h1 : ∀ P, P ∉ T → (b : AdeleRing (𝓞 L) L).2 P = 1) (hu : ∀ P ∈ T, χ.UnrAt P) :
     ∃ n : HeightOneSpectrum (𝓞 L) → ℤ, χ.1 b = ∏ P ∈ T, χ.val P ^ n P :=
-  GlobalTheory.T.heckeCharacter_finite_idele_eq_prod_values_zpow χ T b hb h1 hu
+  _root_.GlobalTheory.HeckeFinVal.eq_prod_val_zpow χ T b hb h1 hu
 
 theorem transfer_eq_zero {F E F' E' : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     [Field F'] [NumberField F'] [Field E'] [NumberField E'] [Algebra F' E']
@@ -70,13 +76,13 @@ theorem transfer_eq_zero {F E F' E' : Type} [Field F] [NumberField F] [Field E] 
     (hz : ∀ n : ℕ, (((D : E) / (ℓ : E) ^ n) ⊗ₜ[F] (1 : FiniteAdeleRing (𝓞 F) F)) * z ∈ RInt F E)
     (P : HeightOneSpectrum (𝓞 E')) (hP : ((ℓ : ℕ) : 𝓞 E') ∈ P.asIdeal) :
     ι (iA.symm z) P = 0 :=
-  GlobalTheory.T.finiteAdele_iso_component_zero_of_infinitely_divisible iE iA hrat hint ι hι z ℓ D hℓ hD hz P hP
+  _root_.GlobalTheory.TwV.Xc.adIso_comp_zero_of_div iE iA hrat hint ι hι z ℓ D hℓ hD hz P hP
 
 theorem exists_div_int {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (w : HeightOneSpectrum (𝓞 F)) (z : AfE F E) (hz : ∀ w', w' ≠ w → prV (E := E) w' z = 0)
     (ℓ : ℕ) (hℓ : ((ℓ : ℕ) : 𝓞 F) ∉ w.asIdeal) :
     ∃ D : ℕ, 0 < D ∧ ∀ n : ℕ, (((D : E) / (ℓ : E) ^ n) ⊗ₜ[F] (1 : FiniteAdeleRing (𝓞 F) F)) * z ∈ RInt F E :=
-  GlobalTheory.T.exists_nat_mul_div_pow_mem_integral_finiteAdele w z hz ℓ hℓ
+  _root_.GlobalTheory.DivInt.exists_nat_mul_div_pow_mem w z hz ℓ hℓ
 
 theorem exists_h90_oneOff_preimage_at_splitPlace {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
     (σ : E →ₐ[F] E) (w : HeightOneSpectrum (𝓞 F))
@@ -84,12 +90,12 @@ theorem exists_h90_oneOff_preimage_at_splitPlace {F E : Type} [Field F] [NumberF
     (hsig : ∀ x, spl (sigR σ (w.adicCompletion F) x) = swapR (w.adicCompletion F) (spl x))
     (π : (AfE F E)ˣ) (hπ : π ∈ U1 σ) (hoff : OneOff w π) :
     ∃ x : (AfE F E)ˣ, h90 σ x = π ∧ OneOff w x :=
-  GlobalTheory.T.hilbert90_normOne_oneOff_at_split_place_forall σ w spl hsig π hπ hoff
+  _root_.GlobalTheory.TwV.Xc.Unif.exists_h90_eq_oneOff_of_normOne_at_split_place σ w spl hsig π hπ hoff
 
 theorem exists_nat_mem_coprime {E : Type} [Field E] [NumberField E] (p : ℕ) (hp : p.Prime)
     (P : HeightOneSpectrum (𝓞 E)) (hP : ((p : ℕ) : 𝓞 E) ∉ P.asIdeal) :
     ∃ ℓ : ℕ, 0 < ℓ ∧ ((ℓ : ℕ) : 𝓞 E) ∈ P.asIdeal ∧ Nat.Coprime ℓ p :=
-  GlobalTheory.T.exists_natCast_coprime_mem_heightOneSpectrum p hp P hP
+  _root_.GlobalTheory.natCast_mem_heightOneSpectrum_coprime p hp P hP
 
 end GlobalTheory.TwV.Xc.MuLL
 

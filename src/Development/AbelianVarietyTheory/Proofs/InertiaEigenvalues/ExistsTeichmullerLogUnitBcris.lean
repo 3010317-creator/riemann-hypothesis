@@ -2,14 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AcrisTorsionFreeComplete
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisEqZeroOfForallDvd
-import Development.AbelianVarietyTheory.CrystallinePeriods.CrisMapsLoc
-import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
-import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsLogAExtends
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAcrisLogOneAddStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAcrisLogOneAdd
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsAcrisLogOneAddAddOfMulStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TiltUnitTeichmullerPrincipalUnitSplitStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AcrisGaloisActionFontaineTEqCyclotomic
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.KummerNotCoboundary
+import Development.AbelianVarietyTheory.CrystallinePeriods.CrisMapsLoc
+import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsLogAExtends
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -134,7 +134,7 @@ theorem map_inv_units {R : Type} [CommRing R] (f : R →+* R) (u : Rˣ) (h : f u
 theorem exists_log_unit : ∀ (l : ℕ) [Fact l.Prime] (C : Core l) (x : OCb l), IsUnit x → ∃ b : Per.Bcris l, Per.φB l b = (l : Per.Bcris l) * b ∧ ∀ (g : GQ l) (c : ℤ_[l]), (∀ m, rootT (Per.σF g x) m = rootT C.ε m ^ (PadicInt.toZModPow m c).val * rootT x m) → Per.σB g b = b + Per.zB l c * C.tB := by
   intro l _ C x hx
   obtain ⟨ω, x₁, N, hxω, hJ, hω⟩ := GlobalTheory.T.tilt_unit_teichmuller_principal_unit_split l x hx
-  obtain ⟨y, hy⟩ := GlobalTheory.T.exists_acris_log_one_add l _ hJ
+  obtain ⟨y, hy⟩ := _root_.GlobalTheory.LogU.exists_isLogJ l _ hJ
   have hpow := isLogJ_pow hJ hy
   obtain ⟨u, hu⟩ := (isUnit_l_Bcris l).pow N
   have hωu : IsUnit ω := isUnit_of_mul_isUnit_left (hxω ▸ hx)

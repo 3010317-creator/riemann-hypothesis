@@ -10,15 +10,17 @@ public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.MemNonze
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsProjectiveModel
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CmModelCoefficientSubringDedekindCompatibleEmbed
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsIdealOfLocally
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaConstantsLocallyOnBase
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaLevelAbelianSchemePullback
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.GenericPointsOpenIntegralCoverStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.GenericPointsOpenIntegralCover
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsIffOfThetaLevelPullback
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsRingBaseChangeStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaPointsVanishingIdealRadicalHomogeneous
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaConstantsLocallyOnBase
+import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.GoodClass
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HasThetaConstantsRingBaseChange
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsIsoStalkMapOfFlatOfSurjectiveOnStalks
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PolPull
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaConstantsUniqueUpToUnit
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaPointsVanishingIdealRadicalHomogeneous
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -188,7 +190,7 @@ theorem closure_ratios_eq_top (h₁ : Out.Laws) (h₂ : Out.Laws2) {o : Type} [C
   let ρ : R →+* Ω := R.val.toRingHom
   have hx : (spMap ρ ≫ i) ≫ F.s = spMap (algebraMap o Ω) := by
     rw [Category.assoc, hi, spMap_comp]; rfl
-  have hvΩ := T.hasThetaConstants_ring_baseChange h₂ o g N' J b _ _ F.univ R Ω ρ i v hv
+  have hvΩ := _root_.GlobalTheory.hasTh_baseChange h₂ o g N' J b _ _ F.univ R Ω ρ i v hv
   obtain ⟨v', hv', he, hc⟩ := F.loc Ω _ _ hx
   obtain ⟨u, hu⟩ := ThetaUniq.exists_unit_local h₁.globalFns F.univ _ hvΩ hv'
   obtain ⟨c₀, hc₀⟩ := hc ⊥ Ideal.isPrime_bot 0
@@ -216,7 +218,7 @@ theorem closure_ratios_eq_top (h₁ : Out.Laws) (h₂ : Out.Laws2) {o : Type} [C
   have hxy : spMap K.subtype ≫ y = spMap ρ ≫ i := by
     refine (F.pts Ω _ _ mΩ).unique ⟨?_, ?_⟩ ⟨hx, ThetaClosed.hasTh_unit_mul F.univ (Units.mk0 _ (inv_ne_zero ha₀)) hv'⟩
     · rw [Category.assoc, hy, spMap_comp, hβ]
-    · have := T.hasThetaConstants_ring_baseChange h₂ o g N' J b _ _ F.univ K Ω K.subtype y w hty
+    · have := _root_.GlobalTheory.hasTh_baseChange h₂ o g N' J b _ _ F.univ K Ω K.subtype y w hty
       simpa only [hw] using this
   have hle : Set.range y ⊆ Set.range i := by
     rintro _ ⟨p, rfl⟩
@@ -326,14 +328,14 @@ theorem nonempty_zOn_of_components (hcomp : Out.Laws → Out.Laws2 → GlobalThe
   have hq : QuasiCompact F.s := by rw [← hs]; infer_instance
   have hg := isGrpPullback_of_iso φ
   obtain ⟨hab, hamp, hk⟩ := pol_pull _ _ _ _ _ _ _ _ F.univ.isLB τ.PP.isLB F.univ.ab hg hL
-  refine T.generic_points_open_integral_cover E H _ _ F.s τ _ F.reduced hft hq (fun ξ hξ => ?_)
+  refine _root_.GlobalTheory.Models.nonempty_zOn_of_components E H _ _ F.s τ _ F.reduced hft hq (fun ξ hξ => ?_)
     ⟨_, (smoothOfRelativeDimension_isStableUnderBaseChange _).of_isPullback hg.1 F.univ.dim⟩ h₁ h₂ hab.proper
     (hamp F.univ.ample) (hk F.univ.ktriv)
   obtain ⟨R₀, _, x, v₀, hx, hξx, hv₀⟩ := ThetaLocal.exists_hasTh h₁ h₂ _ _ _ J b _ _ F.univ ho.pow ξ
   have := F.reduced
   have := F.flat
   obtain ⟨Ω, _, _, R, ψ, hi, hξi, his, hfg, hfr, hinj⟩ := exists_integral_chart F.s hξ x hξx
-  have hv := T.hasThetaConstants_ring_baseChange h₂ _ _ _ J b _ _ F.univ R₀ R ψ x v₀ hv₀
+  have hv := _root_.GlobalTheory.hasTh_baseChange h₂ _ _ _ J b _ _ F.univ R₀ R ψ x v₀ hv₀
   have : GlobalTheory.ZH.ArithBase (RZ H n ((n ^ j) ^ 2)) Ω :=
     ⟨hded, BaseRing.finiteType_RZ H _ _, charZero_of_injective_algebraMap hinj, hinj⟩
   obtain ⟨u, t₀, m, e, hu, he, hLe⟩ := exists_pull F.univ τ φ hL _ his

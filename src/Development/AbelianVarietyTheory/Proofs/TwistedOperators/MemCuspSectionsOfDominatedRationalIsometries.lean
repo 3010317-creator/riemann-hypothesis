@@ -2,8 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIsCan
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.IsStabiliserInvariantPullBoundedSection
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BoundedSectionTendstoConstantTermImaginaryFlowStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FiniteClassesRationalIsometriesBoundedDenominatoStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.ModerateCoefficientPositivity
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BoundedSectionTendstoConstantTermImaginaryFlow
+public import Development.AbelianVarietyTheory.Definitions.RegularCharts.BaseNorm
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsStabForm
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FiniteClassesRationalIsometriesBoundedDenominato
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,7 +54,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.BoundedSectionAlgebra
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.EmbeddingHermitianPairs
-public import Development.AbelianVarietyTheory.Definitions.RegularCharts.BaseNorm
 
 @[expose] public section
 
@@ -154,8 +156,8 @@ theorem GlobalTheory.HeckeEx.mem_SS_of_dom : ∀ (E : Type) [Field E] [NumberFie
   have hB : X.IsBddSec la P := ⟨hP, _, hbd⟩
   refine ⟨hB, fun ξ hξ x hx => ?_⟩
 
-  choose S hS hS' using fun j => GlobalTheory.T.finite_classes_rational_isometries_bounded_denominator E r X (X' j) N hN
-  obtain ⟨hmem, hlim⟩ := GlobalTheory.T.boundedSection_tendsto_constantTerm_imaginary_flow E r X la P hB ξ hξ x hx
+  choose S hS hS' using fun j => _root_.GlobalTheory.HeckeEx.QFin.finite_reps E r X (X' j) N hN
+  obtain ⟨hmem, hlim⟩ := _root_.GlobalTheory.HeckeEx.bddSec_tendsto_constTerm E r X la P hB ξ hξ x hx
   let xt : ℝ → Frame X.Ψ r := fun t => X.flow ξ (fun _ => Complex.I * (t : ℂ)) x
   let Bt : ℝ → ℝ := fun t => ∑ j, ∑ s ∈ (S j).attach,
     ‖Q j (lact s.1 (castFr (hS j s.1 s.2).psi (xt t)))‖
@@ -195,7 +197,7 @@ theorem GlobalTheory.HeckeEx.mem_SS_of_dom : ∀ (E : Type) [Field E] [NumberFie
         apply hξ.2.2
         rw [← GlobalTheory.Dict.Pull.inv_mulVec s.1 ξ, hv0, Matrix.mulVec_zero]
     have hy := h.mem_dom hx
-    obtain ⟨-, hl'⟩ := GlobalTheory.T.boundedSection_tendsto_constantTerm_imaginary_flow E r (X' j) (la' j) (Q j) (hQ j).1 v hv _ hy
+    obtain ⟨-, hl'⟩ := _root_.GlobalTheory.HeckeEx.bddSec_tendsto_constTerm E r (X' j) (la' j) (Q j) (hQ j).1 v hv _ hy
     rw [(hQ j).2 v hv _ hy] at hl'
     have hdiv : Filter.Tendsto (fun t : ℝ => t / (N : ℝ) ^ 2) Filter.atTop Filter.atTop :=
       Filter.tendsto_id.atTop_div_const (by positivity)

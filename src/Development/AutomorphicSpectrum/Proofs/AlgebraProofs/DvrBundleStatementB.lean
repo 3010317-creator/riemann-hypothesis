@@ -3,15 +3,19 @@ module
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.SameGenericSymm
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.BundleObjects
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MixedFieldContraction.GenericFibreKerTarget
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ChartBundleBaseExtensionStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ChartBundleBaseExtensionUniqueStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ChartBundleShortExactStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ChernClassOnFlagPairStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FlagPairBaseExtensionStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericBaseExtensionStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericBundleChainStatement
-import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericFlagComparisonStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SubQuotientStatementStatement
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.InstFintypeSumElim
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ChartBundleBaseExtension
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.TrivFlagMod
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ChartBundleBaseExtensionUnique
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ChartBundleShortExact
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.Inhabit
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ChernClassOnFlagPair
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FlagPairBaseExtension
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericBaseExtension
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericBundleChain
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.StatementsBundles
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SubQuotientStatement
+import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericFlagComparison
 import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.ClassListMapDomainPerm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -173,7 +177,7 @@ theorem HasFlag.pull {M : ℕ} {W : Type} [AddCommGroup W] [Module Ω W] {ϖ : O
     HasFlag ϖ (joinCoord x z) BB B'B := by
   obtain ⟨w, w', b, b', f, g, hf⟩ := h
   exact ⟨w, w', _, _, _, _,
-    (GlobalTheory.T.flag_pair_base_extension O Ω K ι x ϖ M W B B' w w' b b' f g hf).1 K' ι' z BB B'B hp hp'⟩
+    (_root_.GlobalTheory.CompanionTheory.Ar.Num.PullFlagPair.main O Ω K ι x ϖ M W B B' w w' b b' f g hf).1 K' ι' z BB B'B hp hp'⟩
 
 theorem exists_flag {M : ℕ} {W : Type} [AddCommGroup W] [Module Ω W] {ϖ : O} (hϖ : Irreducible ϖ)
     {x : (Σ k, ι k) → Ω} {d : ℕ}
@@ -186,7 +190,7 @@ theorem exists_flag {M : ℕ} {W : Type} [AddCommGroup W] [Module Ω W] {ϖ : O}
       fnField O (joinCoord x z) = fnField O x ∧ IsPull O x z B BB ∧ IsPull O x z B' B'B ∧
       HasFlag ϖ (joinCoord x z) BB B'B := by
   obtain ⟨K', _, _, ι', _, z, EB, w, b, hMB, hbir, hEB⟩ :=
-    GlobalTheory.T.same_generic_bundle_chain O Ω K ι x d hM M 1 W ![B, B'] (by
+    _root_.GlobalTheory.CompanionTheory.Ar.CommonFlag.main O Ω K ι x d hM M 1 W ![B, B'] (by
       intro j
       fin_cases j
       · exact sameGeneric_self B
@@ -198,8 +202,8 @@ theorem exists_flag {M : ℕ} {W : Type} [AddCommGroup W] [Module Ω W] {ϖ : O}
   have tri : ∀ i j : Fin M, i < j → w.repr (w i) j = 0 := by
     intro i j hij
     simp [Module.Basis.repr_self, Finsupp.single_apply, ne_of_lt hij]
-  have s01 := (GlobalTheory.T.chart_bundle_base_extension_unique O Ω K ι x M W B B' K' ι' z (EB 0) (EB 1) p0 p1).2.1 hs
-  obtain ⟨-, f, g, hf⟩ := GlobalTheory.T.same_generic_flag_comparison O Ω (K ⊕ K') (Sum.elim ι ι') (joinCoord x z) ϖ hϖ d hM' M W
+  have s01 := (_root_.GlobalTheory.CompanionTheory.Ar.Num.PullPreserve.pull_preserve O Ω K ι x M W B B' K' ι' z (EB 0) (EB 1) p0 p1).2.1 hs
+  obtain ⟨-, f, g, hf⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FlagPairOfFrames.main O Ω (K ⊕ K') (Sum.elim ι ι') (joinCoord x z) ϖ hϖ d hM' M W
     (EB 0) (EB 1) s01 w w (b 0) (b 1) (hEB 0).2 (hEB 1).2 tri
   exact ⟨K', _, _, ι', _, z, EB 0, EB 1, hMB, hbir, p0, p1, w, w, b 0, b 1, f, g, hf⟩
 
@@ -207,7 +211,7 @@ theorem exists_pull {M : ℕ} {W : Type} [AddCommGroup W] [Module Ω W] {x : (Σ
     (B : ChartBundle O (mseg x) M W) {K' : Type} [Fintype K'] [DecidableEq K'] {ι' : K' → Type}
     [∀ k, Fintype (ι' k)] (z : (Σ k, ι' k) → Ω) :
     ∃ BB : ChartBundle O (mseg (joinCoord x z)) M W, IsPull O x z B BB :=
-  (GlobalTheory.T.chart_bundle_base_extension O Ω K ι x M W B).1 K' ι' z
+  (_root_.GlobalTheory.CompanionTheory.Ar.Num.PullExists.main O Ω K ι x M W B).1 K' ι' z
 
 theorem descend {x : (Σ k, ι k) → Ω} {d : ℕ} {E E' : ChartBundle O (mseg x) N V}
     {i : V₁ →ₗ[Ω] V} {p : V →ₗ[Ω] V₂} {E₁ E₁' : ChartBundle O (mseg x) N₁ V₁}
@@ -227,15 +231,15 @@ theorem descend {x : (Σ k, ι k) → Ω} {d : ℕ} {E E' : ChartBundle O (mseg 
     CkAdd x d E E' E₁ E₁' E₂ E₂' := by
   obtain ⟨hM, hs, h, h'⟩ := hS
   have hS' : Setup (joinCoord x z) d EB E'B i p E₁B E₁'B E₂B E₂'B :=
-    ⟨hz, (GlobalTheory.T.chart_bundle_base_extension_unique O Ω K ι x N V E E' K' ι' z EB E'B p0 p0').2.1 hs,
-      GlobalTheory.T.chart_bundle_short_exact O Ω K ι x N N₁ N₂ V V₁ V₂ E i p E₁ E₂ h K' ι' z EB E₁B E₂B p0 p1 p2,
-      GlobalTheory.T.chart_bundle_short_exact O Ω K ι x N N₁ N₂ V V₁ V₂ E' i p E₁' E₂' h' K' ι' z E'B E₁'B E₂'B p0' p1' p2'⟩
+    ⟨hz, (_root_.GlobalTheory.CompanionTheory.Ar.Num.PullPreserve.pull_preserve O Ω K ι x N V E E' K' ι' z EB E'B p0 p0').2.1 hs,
+      _root_.GlobalTheory.CompanionTheory.Ar.Num.PullSubQuot.main O Ω K ι x N N₁ N₂ V V₁ V₂ E i p E₁ E₂ h K' ι' z EB E₁B E₂B p0 p1 p2,
+      _root_.GlobalTheory.CompanionTheory.Ar.Num.PullSubQuot.main O Ω K ι x N N₁ N₂ V V₁ V₂ E' i p E₁' E₂' h' K' ι' z E'B E₁'B E₂'B p0' p1' p2'⟩
   intro k hk1 hk2 q L Q hQ
   have e := H hS' k hk1 hk2 q (fun j => pullDeg (K' := K') (L j)) Q hQ
-  rw [(GlobalTheory.T.same_generic_base_extension O Ω K ι x d hM N V E E' hs K' ι' z hz hb EB E'B p0 p0').1 k hk1 hk2 q L Q hQ,
-    (GlobalTheory.T.same_generic_base_extension O Ω K ι x d hM N₁ V₁ E₁ E₁' (sameGeneric_sub hs h h') K' ι' z hz hb E₁B E₁'B
+  rw [(_root_.GlobalTheory.CompanionTheory.Ar.CkPullBirat.main O Ω K ι x d hM N V E E' hs K' ι' z hz hb EB E'B p0 p0').1 k hk1 hk2 q L Q hQ,
+    (_root_.GlobalTheory.CompanionTheory.Ar.CkPullBirat.main O Ω K ι x d hM N₁ V₁ E₁ E₁' (sameGeneric_sub hs h h') K' ι' z hz hb E₁B E₁'B
       p1 p1').1 k hk1 hk2 q L Q hQ,
-    (GlobalTheory.T.same_generic_base_extension O Ω K ι x d hM N₂ V₂ E₂ E₂' (sameGeneric_quot hs h h') K' ι' z hz hb E₂B E₂'B
+    (_root_.GlobalTheory.CompanionTheory.Ar.CkPullBirat.main O Ω K ι x d hM N₂ V₂ E₂ E₂' (sameGeneric_quot hs h h') K' ι' z hz hb E₂B E₂'B
       p2 p2').1 k hk1 hk2 q L Q hQ] at e
   exact e
 
@@ -258,17 +262,17 @@ theorem ckAdd_of_flags {ϖ : O} (hϖ : Irreducible ϖ) {x : (Σ k, ι k) → Ω}
   have s2 := (GroundTheory.Heights₂.Heights.NumbersDVR.BundleExamples.sameGeneric_iff hϖ x E₂ E₂').1
     (sameGeneric_quot hs h h')
   intro k hk1 hk2 q L Q hQ
-  have c0 := (GlobalTheory.T.chern_class_on_flag_pair O ϖ hϖ Ω K ι x d hK hM' N V E E' s0 w w' b b' f g hf).1 k hk1 hk2
+  have c0 := (_root_.GlobalTheory.CompanionTheory.ChernFlagPairRootPolynomial.main O ϖ hϖ Ω K ι x d hK hM' N V E E' s0 w w' b b' f g hf).1 k hk1 hk2
     (psumExpansion N k) (isPairExpansion_psum N k) q L Q hQ
-  have c1 := (GlobalTheory.T.chern_class_on_flag_pair O ϖ hϖ Ω K ι x d hK hM' N₁ V₁ E₁ E₁' s1 w₁ w₁' b₁ b₁' f₁ g₁ hf₁).1 k hk1
+  have c1 := (_root_.GlobalTheory.CompanionTheory.ChernFlagPairRootPolynomial.main O ϖ hϖ Ω K ι x d hK hM' N₁ V₁ E₁ E₁' s1 w₁ w₁' b₁ b₁' f₁ g₁ hf₁).1 k hk1
     hk2 (psumExpansion N₁ k) (isPairExpansion_psum N₁ k) q L Q hQ
-  have c2 := (GlobalTheory.T.chern_class_on_flag_pair O ϖ hϖ Ω K ι x d hK hM' (N - N₁) V₂ E₂ E₂' s2 w₂ w₂' b₂ b₂' f₂ g₂ hf₂).1
+  have c2 := (_root_.GlobalTheory.CompanionTheory.ChernFlagPairRootPolynomial.main O ϖ hϖ Ω K ι x d hK hM' (N - N₁) V₂ E₂ E₂' s2 w₂ w₂' b₂ b₂' f₂ g₂ hf₂).1
     k hk1 hk2 (psumExpansion (N - N₁) k) (isPairExpansion_psum (N - N₁) k) q L Q hQ
   rw [c0, c1, c2, ← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun μ hμ => ?_
   rw [← mul_add]
   congr 1
-  exact GlobalTheory.T.sub_quotient_statement O ϖ hϖ Ω K ι x d hM' N N₁ V V₁ V₂ E E' E₁ E₁' E₂ E₂' i p h.1 h.2.1 h.2.2.1 s0
+  exact _root_.GlobalTheory.CompanionTheory.Ar.Num.SubQuotFlags.main O ϖ hϖ Ω K ι x d hM' N N₁ V V₁ V₂ E E' E₁ E₁' E₂ E₂' i p h.1 h.2.1 h.2.2.1 s0
     (fun c hc => ⟨fun z => by rw [(h.2.2.2 c hc).1]; rfl, fun z => by rw [(h'.2.2.2 c hc).1]; rfl,
       fun q => by rw [(h.2.2.2 c hc).2]; rfl, fun q => by rw [(h'.2.2.2 c hc).2]; rfl⟩)
     w w' b b' f g hf w₁ w₁' b₁ b₁' f₁ g₁ hf₁ w₂ w₂' b₂ b₂' f₂ g₂ hf₂ k (psumExpansion N k)

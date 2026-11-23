@@ -1,7 +1,9 @@
 module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.AdmissibleParameterJ
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmDecompIffDecompStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.DecompositionData
+public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.ResidualConstruction
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmDecompIffDecomp
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineSummandAndDualFromInverseCharacterTwi
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.InducesWAndExistsEmb
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JumpIffMultNeZero
@@ -76,7 +78,7 @@ theorem main : ∀ D : D7, AdmissibleParameterJ.AdmRead D := by
     rw [show c - a - 1 = c - 1 - a by ring] at h
     exact h
   · intro ρπ _ hd a
-    have hd' := (GlobalTheory.T.admDecomp_iff_decomp D i r ρπ x).1 hd
+    have hd' := (_root_.GlobalTheory.DecompForms.main D i r ρπ x).1 hd
     have hw' := ((GlobalTheory.SummandJumps.main D i w hw (D.locT _) C.LL C.le r ρπ x hd').2 tw.1).2.2 τ a
     exact ⟨hw'.1, hw'.2, jm _ a, jm _ a⟩
 

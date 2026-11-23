@@ -1,10 +1,9 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.SheetUnsheet
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ChernPartSheetImageEqStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ChernPartSheetImageEq
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IntegrableOnAndSetIntegralOfEmbeddings
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.SheetIsOpenEmbeddingRange
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.SheetIsOpenEmbeddingRangeStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,20 +56,20 @@ namespace GlobalTheory.CompanionTheory.Metric
 theorem chernInt_eq_finsum_sheets : ∀ (k : Type) [CommRing k] [IsDomain k] [CharZero k] [Module.Finite ℤ k] (X : Scheme.{0}) (p : X ⟶ Sp k) (t : X ⟶ Sp ℤ) (τ : ℤ →+* ℂ), IsProjOver p → ∀ (D : ℕ) (B : LB X) (φ : ∀ σ : k →+* ℂ, Weight p σ B) (ψ : Weight t τ B), WOver φ ψ → (∀ σ, (φ σ).IsCInf) → ψ.IsCInf → ∀ (S : Set (CxPts t τ)), MeasurableSet S → ∀ f : CxPts t τ → ℝ, (ψ.ChernIntegrableOn D S f ↔ ∀ σ, (φ σ).ChernIntegrableOn D (sheet t τ ⁻¹' S) (fun z => f (sheet t τ z))) ∧ (ψ.ChernIntegrableOn D S f → ψ.chernInt D S f = ∑ᶠ σ, (φ σ).chernInt D (sheet t τ ⁻¹' S) (fun z => f (sheet t τ z))) := by
   intro k _ _ _ _ X p t τ hP D B φ ψ hW hφ hψ S hS f
   have hemb : ∀ σ : k →+* ℂ, MeasurableEmbedding (sheet (p := p) (σ := σ) t τ) := fun σ =>
-    (GlobalTheory.T.sheet_isOpenEmbedding_range k X p t τ σ).1.measurableEmbedding
+    (_root_.GlobalTheory.CompanionTheory.Ar.BaseZ.Sheet.isOpenEmbedding_and_range k X p t τ σ).1.measurableEmbedding
   have huniq : ∀ y : CxPts t τ, ∃! σ : k →+* ℂ, y ∈ Set.range (sheet (p := p) (σ := σ) t τ) := by
     intro y
     refine ⟨emb p y, ?_, ?_⟩
     · show y ∈ Set.range (sheet (p := p) (σ := emb p y) t τ)
-      rw [(GlobalTheory.T.sheet_isOpenEmbedding_range k X p t τ _).2]
+      rw [(_root_.GlobalTheory.CompanionTheory.Ar.BaseZ.Sheet.isOpenEmbedding_and_range k X p t τ _).2]
       rfl
     · intro σ hσ
-      rw [(GlobalTheory.T.sheet_isOpenEmbedding_range k X p t τ σ).2] at hσ
+      rw [(_root_.GlobalTheory.CompanionTheory.Ar.BaseZ.Sheet.isOpenEmbedding_and_range k X p t τ σ).2] at hσ
       exact hσ.symm
   have hfin : Finite (k →+* ℂ) := Sheet.finite_ringHom k
   have key := fun ε : ℤˣ => integrableOn_and_setIntegral_of_embeddings (k →+* ℂ) (CxPts t τ)
     (fun σ => CxPts p σ) (fun σ => sheet (p := p) (σ := σ) t τ) hemb huniq (ψ.chernPart D ε)
-    (fun σ => (φ σ).chernPart D ε) (fun σ S' hS' => GlobalTheory.T.chernPart_sheet_image_eq k X p t τ hP σ D B φ ψ hW hφ hψ ε S' hS') S hS f
+    (fun σ => (φ σ).chernPart D ε) (fun σ S' hS' => _root_.GlobalTheory.CompanionTheory.Ar.BaseZ.chernPart_sheet k X p t τ hP σ D B φ ψ hW hφ hψ ε S' hS') S hS f
   obtain ⟨h1, h1'⟩ := key 1
   obtain ⟨h2, h2'⟩ := key (-1)
   refine ⟨?_, ?_⟩

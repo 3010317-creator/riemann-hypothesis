@@ -2,7 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SharpOverIff
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtendCompletion
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IzumiBoundModPrincipalIdealStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NonUnitAt
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.ArithBase
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IzumiBoundModPrincipalIdeal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonUnitAtOfNotIsUnit
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsNoetherianRingAdicCompletionOfNoetherian
 import Mathlib.Algebra.Order.Floor.Extended
@@ -185,7 +187,7 @@ theorem dvd_of_norm_le_at_classical : ∀ (o' Ω : Type) [CommRing o'] [Field Ω
   haveI : IsNoetherianRing (M.Z.presheaf.stalk x) := isNoetherianRing_of_ringEquiv _ (M.stalkEquiv x).symm
   have hfO : M.stalkHom x b ∈ M.O x := (M.stalkEquiv x b).2
   have hf0 : M.stalkHom x b ≠ 0 := fun h => hb ((map_eq_zero_iff _ (M.stalkHom_injective x)).1 h)
-  obtain ⟨C, hC⟩ := GlobalTheory.T.izumi_bound_mod_principal_ideal o' Ω M hN U₀ hU₀ x hx _ hfO hf0
+  obtain ⟨C, hC⟩ := _root_.GlobalTheory.Izumi.small_mod_principal o' Ω M hN U₀ hU₀ x hx _ hfO hf0
   refine dvd_of_forall_mem_sup_pow _ _ j hj (j b) s fun e => ?_
   obtain ⟨t, ht⟩ := exists_sub_mem_map_pow _ _ j hj s (max e (C e))
   obtain ⟨a, c, hac, hc⟩ := hC e (M.stalkEquiv x t) (by

@@ -3,28 +3,33 @@ module
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ColHeightSharpWith
 public import Development.AbelianVarietyTheory.Definitions.Divisors.FactorBounds
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CosetRefinement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CardMatrixStepIndicesLeExpStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CardMatrixStepIndicesLeExp
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CardOrbitsLeExp
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NcardYbSetLe
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NormsMatrixStepsCoupledFactorBoundedAnyLevelPrimStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CosetIndicatorThetaRefinementProofStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.PaddedLastEntry
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.MeanPeriodLogarithms
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.NormsMatrixStepsCoupledFactorBoundedAnyLevelPrim
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CosetIndicatorThetaRefinementProof
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ErrorUnitExponentialEstimate
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNumberFieldContainingCoefficientDataStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TopPlaceLogTheta
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNumberFieldContainingCoefficientData
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FamIpAtNonneg
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankEqTwoMul
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KernelConstantExponentsFiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogNormConjVacuumEqRankProductMulStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeanLogMetricGeneratorEqMeanPeriodStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeanLogPeriodChowlaSelbergStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogNormConjVacuumEqRankProductMul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeanLogPeriodChowlaSelberg
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormFockLSqLe
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalisedFamilyEqTensorPowerVacuumStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalisedFamilyNonzeroThetaVectorsNumberFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalisedFamilyNormBoundAbsoluteConstantStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalisedFamilyPeriodLatticePropertiesHoldStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalisedFamilyStandardLatticesEqBaseVectorStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NumDatumNumbersEqHostOfCompatibleStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalisedFamilyNonzeroThetaVectorsNumberField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalisedFamilyNormBoundAbsoluteConstant
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalisedFamilyPeriodLatticePropertiesHold
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrimeWordLocalConstants
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeightSequenceGuards
+import Formalism.LocalToGlobal.KernelLattices.LateralTheory
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KernelConstantExponentsFinite
+import Formalism.LocalToGlobal.KernelLattices.ThDistC
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeanLogMetricGeneratorEqMeanPeriod
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalisedFamilyEqTensorPowerVacuum
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalisedFamilyStandardLatticesEqBaseVector
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NumDatumNumbersEqHostOfCompatible
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -266,21 +271,21 @@ theorem kerSide_of_meansS {J Emb α : Type} [Fintype J] [Fintype Emb] [Fintype �
 
 theorem kerSide_chainS : ∀ CY : ℝ, ∃ C : ℝ, 0 ≤ C ∧ ∀ (D : D7) (N : NumDatum) (X : Fields) [_root_.NumberField.IsTotallyComplex X.K] (s : Seam D X) (Pr : Primes X) (W : Wts X Pr.Word N.R) (Ch : Chars X Pr N.R.m) (G : ChGlob X N.R.m) (sel : HeightOneSpectrum (𝓞 X.F) → HeightOneSpectrum (𝓞 X.E)) (Sg : Set ℕ) (mu : Tup X.F X.E X.K Sg) (cst : LocCst X (rowSG Pr sel mu)) (I : ChIdx X Pr N.R (QE sel (mu : Chr X.F X.E X.K))) (dl : ℂ) (B : Base D D.host.ccK dl) (χ : TaylorLogMetric.IdE D → ℂ) (cD : D.what₂.Tau → ℂ) (pl : RPl N.R ≃ X.Tau) (u : Pr.Word) (δ : Code N) (b : I.β (N.R.m - 2 + 1)) (hY : YbHyp (R := N.R) sel mu cst I u (N.R.m - 2) b) (hK : KerEquivC W Ch sel mu cst I (ambOf s B χ cD) u (N.R.m - 2) b hY (rPsymF Ch)) (hF : ∀ j, (chF W sel mu I u j).Ok) (hE : (evGSD W Ch sel mu (rPsymF Ch) u).Ok) (J : Type) [Fintype J] (eJ : J ≃ Fin N.R.m) (R : RecNums J (RPl N.R)), HostTie N s Pr → WeightTie N W pl u δ → CharTie N s W Ch G sel → AnalyticTie D dl χ cD → mu = 1 → cst.sharp = true → I.Ok Ch sel mu cst G (N.R.m - 2) → FieldOfDefinition W sel mu cst u (ambOf s B χ cD) → Sizes Pr W N.sc.a → GlobalTheory.Core.Ht2.SizeRowsS CY N δ → Reads N eJ δ (Pr.T u) R → KerSide R (InfinitePlace X.K) C (FactorBounds (KerChain.ofCol W Ch sel mu cst I (chKerC W Ch sel mu cst I (ambOf s B χ cD) u (N.R.m - 2) b hY (rPsymF Ch) hK) hF hE) fun l => (eJ l).1) := by
   intro CY
-  obtain ⟨CK, hCK, hfac⟩ := GlobalTheory.T.norms_matrixSteps_coupledFactor_bounded_anyLevelPrime (GlobalTheory.Proof.WeightSequenceEntries.blockBound_iff.1 GlobalTheory.JetBlock.blockBound) GlobalTheory.T.normalisedFamily_eq_tensorPower_vacuum
-    GlobalTheory.T.normalisedFamily_nonzeroThetaVectors_numberField GlobalTheory.T.normalisedFamily_periodLattice_properties_hold GlobalTheory.T.cosetIndicatorThetaRefinement_proof GlobalTheory.T.meanLogPeriod_chowlaSelberg
+  obtain ⟨CK, hCK, hfac⟩ := _root_.GlobalTheory.Core.Ht2.factors_leS (GlobalTheory.Proof.WeightSequenceEntries.blockBound_iff.1 GlobalTheory.JetBlock.blockBound) _root_.GlobalTheory.FamilyTieProof.familyTie
+    _root_.GlobalTheory.ColNorms.familyVectors _root_.GlobalTheory.ColNorms.periodLattices _root_.GlobalTheory.ColNorms.coset_refinement _root_.GlobalTheory.MeanPeriodClosed.meanPeriod
   obtain ⟨Cc, hCc, hcl⟩ := GlobalTheory.ChainClassNumbersS.classNumbers_leS
-  obtain ⟨Ci, hCi, hidx⟩ := GlobalTheory.T.card_matrixStep_indices_le_exp
+  obtain ⟨Ci, hCi, hidx⟩ := _root_.GlobalTheory.Core.Ht2.IndexCountS.card_index_le_sharp
   obtain ⟨Cy, hCy, hyb⟩ := GlobalTheory.CouplingCosetsS.ncard_ybSet_le
-  obtain ⟨Ct, hth⟩ := GlobalTheory.T.normalisedFamily_normBound_absoluteConstant
-  have hP := GlobalTheory.T.meanLogPeriod_chowlaSelberg
-  have hV := GlobalTheory.T.normalisedFamily_nonzeroThetaVectors_numberField
+  obtain ⟨Ct, hth⟩ := _root_.GlobalTheory.ColNorms.FamilyBound.familyNorms
+  have hP := _root_.GlobalTheory.MeanPeriodClosed.meanPeriod
+  have hV := _root_.GlobalTheory.ColNorms.familyVectors
   refine ⟨CK + 2 * (Cc + Ci + Cy) + 2 * max Ct 0 + 20 + 2 * max CY 0, by positivity, ?_⟩
   intro D N X _ s Pr W Ch G sel Sg mu cst I dl B χ cD pl u δ b hY hK hF hE J _ eJ R h1 h2 h3 h4 h5 h6 h7 h8 h9 h10 hR
   have H : GlobalTheory.Core.Ht2.HypS CY N s W Ch G sel mu cst I dl χ cD pl u δ := ⟨h1, h2, h3, h4, h5, h6, h7, h9, h10⟩
-  obtain ⟨trd, tv, tL, tOm, tf, -, tE, -, tcc⟩ := GlobalTheory.T.numDatum_numbers_eq_host_of_compatible D N X s Pr h1
+  obtain ⟨trd, tv, tL, tOm, tf, -, tE, -, tcc⟩ := _root_.GlobalTheory.ColNorms.numbers_of_hostTie D N X s Pr h1
   obtain ⟨-, -, -, -, hpsi, hadm, hX, hs, -, hPr, -, -, hg, -⟩ := id h1
   have hcrv : StandardLatticesGL3.Crv D D.host.ccK dl := ⟨tcc, h4.1⟩
-  have hYf := GlobalTheory.T.kernelConstant_exponents_finite D B.γ₀ B.kc
+  have hYf := _root_.GlobalTheory.ExponentsFinite.yFinite D B.γ₀ B.kc
   have hVe : B.VecP χ := hV D _ dl B χ hadm hpsi tcc h4.1 h4.2.1 hYf
   have hev : ∀ l, Even (N.R.N l) := fun l => by
     unfold Ranks.N
@@ -320,16 +325,16 @@ theorem kerSide_chainS : ∀ CY : ℝ, ∃ C : ℝ, 0 ≤ C ∧ ∀ (D : D7) (N 
       gcongr
     · exact le_trans (hidx CY D N X s Pr W Ch G sel Sg mu cst I dl χ cD pl u δ H l (by omega)) m2
   obtain ⟨M, hfd, hM⟩ : ∃ M : IntermediateField ℚ ℂ, FiniteDimensional ℚ M ∧ ThetaFieldData B cD s.σ₀ N.R M := by
-    refine GlobalTheory.T.exists_numberField_containing_coefficientData D _ dl B cD X.K s.σ₀ N.R hcrv h4.2.2 fun i _ => ?_
-    obtain ⟨hAdm, hbase⟩ := GlobalTheory.T.normalisedFamily_standardLattices_eq_baseVector D _ dl B χ h4.2.1 hVe _ _ (hev i) (hev (i + 1))
+    refine _root_.GlobalTheory.ColNorms.ExField.exists_field_holdsData D _ dl B cD X.K s.σ₀ N.R hcrv h4.2.2 fun i _ => ?_
+    obtain ⟨hAdm, hbase⟩ := _root_.GlobalTheory.NatAtStd.eNat_std D _ dl B χ h4.2.1 hVe _ _ (hev i) (hev (i + 1))
     rw [← hbase]
     exact (hVe _ _ _ _ hAdm).2.2
   haveI := hfd
   have hfac := fun ρ => hfac CY D N X s Pr W Ch G sel Sg mu cst I dl χ cD pl u δ H B b hY hK hF hE h8 M hM ρ
   obtain ⟨wt, w0, w1, wup, wmean⟩ := GlobalTheory.PlaceWeights.exists_weights X.K s.σ₀ M hM.1
-  choose lt hlt using GlobalTheory.T.log_norm_conj_vacuum_eq_rank_product_mul D dl B χ cD X.K s.σ₀ N.R M hadm hpsi tcc h4.1 h4.2.1 hVe hM
+  choose lt hlt using _root_.GlobalTheory.ConjVacuumPower.logThAt_eq_mul D dl B χ cD X.K s.σ₀ N.R M hadm hpsi tcc h4.1 h4.2.1 hVe hM
   have hmean : (∑ ρ, lt ρ) / (Module.finrank ℚ M : ℝ) ≤ max Ct 0 * N.R.f * (2 * N.sc.L) := by
-    obtain ⟨hAdm, hbase⟩ := GlobalTheory.T.normalisedFamily_standardLattices_eq_baseVector D _ dl B χ h4.2.1 hVe _ _ (hev 0) (hev 1)
+    obtain ⟨hAdm, hbase⟩ := _root_.GlobalTheory.NatAtStd.eNat_std D _ dl B χ h4.2.1 hVe _ _ (hev 0) (hev 1)
     have hco : TaylorLogMetric.CoefIn D (B.thZero (N.R.N 0) (N.R.N 1)) M := hM.2.2.2 0 (by omega)
     have hL0 : 0 ≤ N.sc.L := (Real.rpow_pos_of_pos (by linarith [N.sc.one_lt_alt]) _).le
     have hLs : Real.log D.host.v + |TaylorLogMetric.logDerivativeAtOne D| ≤ 2 * N.sc.L := by
@@ -365,7 +370,7 @@ theorem kerSide_chainS : ∀ CY : ℝ, ∃ C : ℝ, 0 ≤ C ∧ ∀ (D : D7) (N 
     (classNumberAt W Ch sel mu I u) (indexCount sel mu cst I) hh hn _ ?_
   · intro z
     rw [tOm]
-    exact (GlobalTheory.T.mean_logMetric_generator_eq_meanPeriod D _ dl cD hcrv (hP D _ dl tcc h4.1) h4.2.2).2 M hM.2.1 hM.2.2.1 _
+    exact (_root_.GlobalTheory.MeanPeriodGenerator.mean_logMet_eq D _ dl cD hcrv (hP D _ dl tcc h4.1) h4.2.2).2 M hM.2.1 hM.2.2.1 _
   · intro t ht
     refine factorBounds_of_weights _ hm rfl eJ (fun ρ => placeUnder s.σ₀ hM.1 ρ) wt w0 w1 wup
       (fun ρ j => liftBound_sq N s W Ch sel mu cst I B cD pl u δ CK M ρ j)

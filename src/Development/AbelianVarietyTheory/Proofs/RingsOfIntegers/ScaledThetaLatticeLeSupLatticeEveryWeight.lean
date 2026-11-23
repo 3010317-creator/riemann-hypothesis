@@ -2,8 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.ExistsSecTieFOfTies
 public import Development.AbelianVarietyTheory.Definitions.ThetaValues.SWEqSOf
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.RamifiedPrimeLossLeValuationPrimePowerStatement
-public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ThetaGeneratorPlaceValuationBoundStatement
+public import Development.AbelianVarietyTheory.Statements.ShortVectorBound.ScaledLatticesInSupLattices
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.RamifiedPrimeLossLeValuationPrimePower
+public import Development.AbelianVarietyTheory.Proofs.RingsOfIntegers.ThetaGeneratorPlaceValuationBound
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.WeightAssemblyClause
 import Formalism.LocalToGlobal.ProjectiveLattices.CrudeVal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -41,7 +43,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.WeightAssemblyClause
 
 @[expose] public section
 
@@ -94,8 +95,8 @@ theorem thInt_of_oriented (D : D7) (T : Top D) (h : LawsP T) (j : ℕ) (hj : InR
   have hG' : G.1 ∈ Submodule.span (𝓞 T.Q.c.F) (T.th j w) := hG
   refine (Pf.le_val_of_mem_span (isVal_vAt (y : T.PtA j la)) (fun g hg => ?_) _ hG').trans
     (recPJ_vAt_inc h j hj la y w G).ge
-  refine le_trans (EReal.coe_le_coe_iff.2 ?_) (GlobalTheory.T.thetaGenerator_place_valuation_bound D T h j hj hinj EX hO w g hg la y)
-  have h1 := GlobalTheory.T.ramified_prime_loss_le_valuation_prime_power D T.Q.c.F la j w _ _ le_rfl le_rfl
+  refine le_trans (EReal.coe_le_coe_iff.2 ?_) (_root_.GlobalTheory.ThetaBound.thBound D T h j hj hinj EX hO w g hg la y)
+  have h1 := _root_.GlobalTheory.PlaceTop.ramLoss_le_vLa_pPow D T.Q.c.F la j w _ _ le_rfl le_rfl
   have h2 := vLa_int_mul_natCast (K := T.Q.c.F) la (nnW (recB h.toLawsCore) hinj EX w) _ hs
   have h3 : ((vAdd la ((GlobalTheory.RunIn.sOf (recB h.toLawsCore) hinj EX w : 𝓞 (recB h.toLawsCore).KO) :
       (recB h.toLawsCore).KO) : ℤ) : ℝ) = _ := congrArg (fun z : ℤ => (z : ℝ)) h2

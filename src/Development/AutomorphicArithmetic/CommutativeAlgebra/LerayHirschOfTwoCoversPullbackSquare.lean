@@ -2,9 +2,10 @@ module
 
 public import Development.AutomorphicArithmetic.CupPullbacks.ConstCompSingle
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CupHypercohomologyPullbackStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupProductAssocStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupProductGradedCommStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupUnitAndPrimitiveRootClassesStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PullHlComp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupProductAssoc
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupProductGradedComm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupUnitAndPrimitiveRootClasses
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.LerayHirschOfTwoElementCover
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.PullCupPowEqCupPowPull
 import Mathlib.Algebra.Order.Floor.Extended
@@ -93,9 +94,9 @@ variable [NeZero q]
 
 private theorem cup_one_r {E : Spc} (hE : Inv q E) {n i : ℤ} (a : Ht q E n i) :
     cup q a (one q E) = a.cast (by ring) (by ring) := by
-  rw [GlobalTheory.T.tateTwistCupProduct_graded_comm q E a (one q E)]
+  rw [_root_.GlobalTheory.EtC.cup_comm q E a (one q E)]
   simp only [mul_zero, Int.negOnePow_zero, one_smul]
-  rw [(GlobalTheory.T.tateTwistCup_unit_and_primitiveRoot_classes q).1 E hE a, c_cc]
+  rw [(_root_.GlobalTheory.EtC.CupGen.main q).1 E hE a, c_cc]
 
 private theorem cup_pow_zero {E : Spc} (hE : Inv q E) (ξ : Ht q E 2 1) {k : ℕ} (hk : k = 0) {n i : ℤ} (a : Ht q E n i) :
     cup q a (cpow q ξ k) = a.cast (by subst hk; simp) (by subst hk; simp) := by
@@ -105,7 +106,7 @@ private theorem cup_pow_zero {E : Spc} (hE : Inv q E) (ξ : Ht q E 2 1) {k : ℕ
 private theorem cpow_one' {E : Spc} (hE : Inv q E) (ξ : Ht q E 2 1) :
     cpow q ξ 1 = ξ.cast (by simp) (by simp) := by
   refine (cpow_succ q ξ 0).trans ?_
-  rw [cpow_zero, cup_cl, (GlobalTheory.T.tateTwistCup_unit_and_primitiveRoot_classes q).1 E hE ξ, c_cc, c_cc]
+  rw [cpow_zero, cup_cl, (_root_.GlobalTheory.EtC.CupGen.main q).1 E hE ξ, c_cc, c_cc]
 
 private theorem cpow_zero_one {E : Spc} : cpow q (0 : Ht q E 2 1) 1 = 0 := by
   refine (cpow_succ q (0 : Ht q E 2 1) 0).trans ?_
@@ -152,7 +153,7 @@ private theorem rel_term {E X Y B : Spc} (πX : X ⟶ E) (πY : Y ⟶ E) (p : B 
   have e1 : (pull _ p _ _ (pull _ πX _ _ b) : Ht q B m e) = pull _ β _ _ (pull _ πY _ _ b) := by
     rw [← pull_comp, ← pull_comp, hp]
   rw [pull_c, pull_u, pull_c, pull_u, UpperTheory.pull_cupPow_eq_cupPow_pull q p ξX k iX, UpperTheory.pull_cupPow_eq_cupPow_pull q β ξY (k + 1) iY, e1, hrel k,
-    cpow_one' iB, cup_cl, cup_cr, c_cc, GlobalTheory.T.tateTwistCupProduct_assoc, cup_cr, c_cc, c_cc, c_cc]
+    cpow_one' iB, cup_cl, cup_cr, c_cc, _root_.GlobalTheory.EtC.CupAssoc.main, cup_cr, c_cc, c_cc, c_cc]
 
 private theorem rel_sum {E X Y B : Spc} (πX : X ⟶ E) (πY : Y ⟶ E) (p : B ⟶ X) (β : B ⟶ Y) (hp : p ≫ πX = β ≫ πY)
     (ξX : Ht q X 2 1) (ξY : Ht q Y 2 1) (iX : Inv q X) (iY : Inv q Y) (iB : Inv q B)

@@ -4,18 +4,20 @@ public import Development.AbelianVarietyTheory.Statements.PrincipalLattices.Exis
 public import Development.AbelianVarietyTheory.PublishedTheorems.RelativeAmpleness.RelAmpleAndKTrivIff
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CmDatumFormSqrtNegDPurePeriod
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CubeLBPairingIsoIffWeilPairingCompatibleOverRing
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsCmTensorLatticeCurvePrincipalTripleStatement
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsGoodReductionModelCmPeriodFibreStatement
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsCmTensorLatticeCurvePrincipalTriple
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.ExistsIsThetaDegOfIsLocalModel
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsGoodReductionModelCmPeriodFibre
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsHermFormCurve
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsIsExpPush
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsPullback
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsTensorProductHomOfCmCurveHomFamily
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueCmHermitianLatticeForm
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueExtendRingOfIntegersHom
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.HasTypeBaseChange
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsTenBaseChange
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LieMultTensorOfFinrank
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.MapRtEqNegIff
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsPullback
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueCmHermitianLatticeForm
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPushEquiv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -124,7 +126,7 @@ theorem exists_ten_exp (hT : ThetaUnifAV) (hL : Out.Laws) {R : Type} [CommRing R
       have := congrArg Complex.im b
       simp at this
       rw [show H.rt0.im = -(2 * ω'.im) by linarith]; linarith)
-  obtain ⟨T, ⟨t⟩, -⟩ := GlobalTheory.T.exists_cm_tensor_lattice_curve_principal_triple hL E H R ω C D ε _ hh hpos
+  obtain ⟨T, ⟨t⟩, -⟩ := _root_.GlobalTheory.CM.exists_isTen hL E H R ω C D ε _ hh hpos
   obtain ⟨T', m, -⟩ := PAT.exists_pullback E H _ _ (spMap σ) T
   obtain ⟨t', ht'⟩ := isTen_baseChange E H R ω C D _ T t ℂ ω' C' σ π T' m hm
   obtain ⟨g, ty, P, e', hty, he', htie, hF⟩ := TenExp.exists_isExp_of_isTen hT hL E H ω' C' u₀ c D ε _ T' t' hc hu hε hh hD
@@ -151,7 +153,7 @@ theorem cmExists : CMCurve → CMPoint → ThetaUnifAV → Out.Laws → Out.Laws
   intro h1 h2 hT hL hL2 hH hK E _ _ _ H D l Xo g ty FU i Pe hP Z k hkf
   obtain ⟨⟨k₀, hk₀, hconj⟩, hsplit, -⟩ := splits_basic E
   obtain ⟨K₁, inst, hk, ω, C, ε, h, B, y, t₀, m, m', ψ, ω', C', π, u₀, c, hkK, hy, hyu, hb⟩ :=
-    GlobalTheory.T.exists_goodReduction_model_cmPeriod_fibre h1 h2 hT hL hL2 hH hK E H D l Xo g ty FU i Pe hP _ _ Z (k ⊔ k₀) inferInstance
+    _root_.GlobalTheory.CM.PeriodModel.exists_model h1 h2 hT hL hL2 hH hK E H D l Xo g ty FU i Pe hP _ _ Z (k ⊔ k₀) inferInstance
   choose hω hε hh hψ hm hc hu htie using hb
   set σ : 𝓞 K₁ →+* ℂ := (algebraMap K₁ ℂ).comp (algebraMap (𝓞 K₁) K₁) with hσ
   have hσi : Function.Injective σ := (algebraMap K₁ ℂ).injective.comp (FaithfulSMul.algebraMap_injective _ _)

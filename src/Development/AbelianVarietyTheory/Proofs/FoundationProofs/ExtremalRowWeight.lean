@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsUnitaryMulTriangular
 public import Formalism.RealPlaceAnalysis.RealPlaceTaylor.ProdFactorialSupportSubSingle
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DualWeylEqEvalAtOneSmulExtremalOfRowWeightStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DualWeylExtremalReproducingNormSqOneStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DualWeylEqEvalAtOneSmulExtremalOfRowWeight
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DualWeylExtremalReproducingNormSqOne
 import Formalism.GradedWeylDivisibility.FockSpaceTableaux.LDlatLemmas
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -114,7 +114,7 @@ theorem fock_extremal (hla : Antitone la) {f : Pol N ℂ} (hf : f ∈ nabla la �
   have hw' := weightedHomogeneousComponent_isWeightedHomogeneous (w := rowW N N) μ f
   by_cases hμ : μ = la
   · subst hμ
-    conv_lhs => rw [GlobalTheory.T.dualWeyl_eq_evalAt_one_smul_extremal_of_rowWeight ℂ N μ hla _ hmem hw']
+    conv_lhs => rw [_root_.GlobalTheory.DualWeyl.eq_evalAt_one_smul_extremal_of_rowWeight ℂ N μ hla _ hmem hw']
     rw [fock_smul_left]
   · rw [evalAt_one_of_ne hμ hmem hw', zero_mul]
     exact Formalism.GradedWeylDivisibility.fockWeightOrth _ _ _ μ la _ _ hμ hw' (extremal_rowWeight hla)
@@ -150,7 +150,7 @@ theorem form_eq_fock_div (N : ℕ) (la : Fin N → ℕ) (hla : Antitone la) :
       rw [← AlgHom.comp_apply, Formalism.GradedWeylDivisibility.rowActMul ℂ N N, h3, Formalism.GradedWeylDivisibility.ldlat_rowAct_one]
       rfl
     rw [← form_rowAct u, h2, Formalism.GradedWeylDivisibility.fockRowAdj, Matrix.conjTranspose_conjTranspose, ← conj_form,
-      (GlobalTheory.T.dualWeyl_extremal_reproducing_normSq_one N la hla).1 _ (hst _ _ hh), Formalism.GradedWeylDivisibility.fockHerm, fock_extremal hla (hst _ _ hf'),
+      (_root_.GlobalTheory.DualWeyl.Repro.extremal_reproducing N la hla).1 _ (hst _ _ hh), Formalism.GradedWeylDivisibility.fockHerm, fock_extremal hla (hst _ _ hf'),
       evalAt_rowAct, evalAt_rowAct, Matrix.mul_one, ← hc, ← starRingEnd_apply, map_mul, hcc,
       mul_div_cancel_right₀ _ hc0] at h1
     rw [map_sub, sub_eq_zero]

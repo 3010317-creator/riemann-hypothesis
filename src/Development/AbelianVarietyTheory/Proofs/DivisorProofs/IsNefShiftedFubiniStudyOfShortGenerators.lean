@@ -2,10 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsModelOf
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHomogeneousCompIdeal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNonzeroShortGeneratorSectionImageModelStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ImageModelMetricsSemiPositiveStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsNonzeroShortGeneratorSectionImageModel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ImageModelMetricsSemiPositive
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NontrivialIsomClassInt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ShortGeneratorSectionsSmallShiftedFubiniStudyStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ShortGeneratorSectionsSmallShiftedFubiniStudy
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NefFibOfIsGenerated
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -90,9 +90,9 @@ theorem isNef_shift_of_isShortGen : ∀ (K V Ω : Type) [Field K] [NumberField K
   intro K V Ω _ _ _ _ _ _ _ _ Nm W ev D X _ p L ψ s n w abelian₂ t hM hev hS ht
   have hw : ∀ j, w j ∈ W := fun j => (hS.gen _).2 (Submodule.subset_span ⟨j, rfl⟩)
   have hX : GlobalTheory.IsArithVar p D := hM.arith
-  have hg := GlobalTheory.T.exists_nonzero_shortGenerator_section_imageModel K V Ω Nm W ev D X p L ψ s hM hev n w abelian₂ hS
-  have hs := GlobalTheory.T.shortGenerator_sections_small_shifted_fubiniStudy K V Ω Nm W ev D X p L ψ s hM hev n w abelian₂ t hS ht
-  refine ⟨(GlobalTheory.T.imageModel_metrics_semiPositive K V Ω Nm W ev D X p L ψ s hM hev).shift _ _, ?_, ?_⟩
+  have hg := _root_.GlobalTheory.ImageModelGen.exists_mem_nonzeroLocus_of_isShortGen K V Ω Nm W ev D X p L ψ s hM hev n w abelian₂ hS
+  have hs := _root_.GlobalTheory.ImageModel.smallSec_shift_of_isShortGen K V Ω Nm W ev D X p L ψ s hM hev n w abelian₂ t hS ht
+  refine ⟨(_root_.GlobalTheory.ImageModelSemi.semiPos_of_isModelOf K V Ω Nm W ev D X p L ψ s hM hev).shift _ _, ?_, ?_⟩
   · refine GlobalTheory.TrueGeo.OfLattice.nefFib_of_isGenerated hX _ (GlobalTheory.isGenerated_of_finite (fun j => s ⟨w j, hw j⟩) ?_)
     refine top_le_iff.1 fun x _ => ?_
     obtain ⟨j, hj, hx⟩ := hg x

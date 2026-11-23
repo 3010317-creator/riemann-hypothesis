@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.PowerMatchingTraces.MatchPowAlt
-public import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.OccursBasics
+public import Development.AutomorphicArithmetic.Foundations.Convolution.PowerSumTraces.SummandFactor
+public import Development.WeilBound.CuspidalAdmissibility.OccursIff
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.RegularSemisimpleFibres.PowerMatchingTraces.TrBasic
 public import Development.AutomorphicArithmetic.TwistedTraces.ExistsUniqueEigenlineOfRankOneOccurs
 public import Development.AutomorphicArithmetic.TwistedTraces.IntegralOpEigenlineScalarOfTwist
@@ -129,7 +130,7 @@ theorem UpperTheory.Gal.InertialTypesAlt.G.baseTw :
     rw [hmm, smul_smul, ENNReal.mul_inv_cancel h0 ht, one_smul]
   obtain ⟨e, he0, he1, he2⟩ := UpperTheory.exists_unique_eigenline_of_rankOne_occurs E n μ V hV (T.mk' v).1 τ hocc (T.J (T.mk' v).1) (T.χ (T.mk' v).1)
     hco hch hrk hne
-  obtain ⟨-, -, h3⟩ := UpperTheory.ConvolutionTheory.C.occursBasics E n μ V (T.mk' v).1 mm hV
+  obtain ⟨-, -, h3⟩ := _root_.PositivityTheory.TfC.OccursBasics_holds E n μ V (T.mk' v).1 mm hV
   obtain ⟨_, A, hA, -⟩ := h3 τ hocc _ hT
   obtain ⟨t, ht0, htt⟩ := UpperTheory.integralOp_eigenline_scalar_of_twist (Gw n (T.mk' v).1) mm τ I s (T.J (T.mk' v).1) (T.χ (T.mk' v).1) A e hco hch
     hmm1 hA he0 he1 he2 (stabV T v hU hs) hI

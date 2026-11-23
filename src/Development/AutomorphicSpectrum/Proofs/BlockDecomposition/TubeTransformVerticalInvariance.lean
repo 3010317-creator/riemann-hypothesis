@@ -1,7 +1,11 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GaussTubeOfTubeGood
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContourShiftGaussianDecayStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContourShiftGaussianDecay
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -122,7 +126,7 @@ theorem phi_shift_snd (X : Type) [NormedAddCommGroup X] [NormedSpace ℂ X] [Com
   rw [hphi a (Set.left_mem_Icc.2 hab), hphi b (Set.right_mem_Icc.2 hab)]
   refine integral_congr_ae (Eventually.of_forall fun y₁ => ?_)
   simp only
-  refine GlobalTheory.T.contour_shift_gaussian_decay X (fun z => H (⟨c, y₁⟩, z)) a b (|B| * |M|) hab ?_ ?_
+  refine _root_.GlobalTheory.CompanionTheory.TubeFourier.ShiftLine.shift_vertical_line X (fun z => H (⟨c, y₁⟩, z)) a b (|B| * |M|) hab ?_ ?_
   · let p : ℂ × ℂ := (⟨c, y₁⟩, 0)
     let v : ℂ × ℂ := (0, 1)
     have e : ∀ τ : ℂ, p + τ • v = (⟨c, y₁⟩, τ) := by

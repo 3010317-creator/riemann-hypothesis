@@ -3,9 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FullRk
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnramifiedLinearBarDualStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FullRankCoinvariantInducedIsoStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InducedFullRankIrreducibleStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatLocalApproximationStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsUnitarisableOfCharIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FullRankCoinvariantInducedIso
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InducedFullRankIrreducible
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatLocalApproximation
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,8 +57,8 @@ theorem fullRk_irred : GlobalTheory.FunPr.Hypotheses₂ → ∀ (k : Type) [Fiel
       N ≤ GlobalTheory.FullRankCoinv.fullRk k n d → (∀ h : GL (Fin d) k, ∀ Ψ ∈ N, (fun Y => Ψ (Y * h.1)) ∈ N) →
       N = GlobalTheory.FullRankCoinv.augRk n d ν ∨ N = GlobalTheory.FullRankCoinv.fullRk k n d := by
   intro hP k _ _ _ _ n d ν hnd hs hu N hA hNF hN
-  obtain ⟨Z, hZ1, hZ2, hZ3, hZ4⟩ := GlobalTheory.T.full_rank_coinvariant_induced_iso k n d ν hnd hs
-  rcases GlobalTheory.T.induced_full_rank_irreducible hP k n d ν hnd hs hu (N.map Z) (by rintro _ ⟨Ψ, hΨ, rfl⟩; exact hZ1 Ψ (hNF hΨ)) (by
+  obtain ⟨Z, hZ1, hZ2, hZ3, hZ4⟩ := _root_.GlobalTheory.FullRankCoinv.fibre_coinvariants k n d ν hnd hs
+  rcases _root_.GlobalTheory.FullRankCoinv.indSp_irreducible hP k n d ν hnd hs hu (N.map Z) (by rintro _ ⟨Ψ, hΨ, rfl⟩; exact hZ1 Ψ (hNF hΨ)) (by
     rintro _ ⟨Ψ, hΨ, rfl⟩ h₀; exact ⟨_, hN h₀ Ψ hΨ, hZ4 Ψ (hNF hΨ) h₀⟩) with hE | hE
   · left
     refine le_antisymm (fun Ψ hΨ => hZ3 Ψ (hNF hΨ) ?_) hA
@@ -80,7 +81,7 @@ theorem irr_small : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Field
       N = augAt om' v ∨ N = SB _ := by
   intro hP F E _ _ _ _ _ σ B a a' G X om om' hT v hv hν N hAN hNS hN
   obtain ⟨t, ι, ν₀, hs, hu, hbij, hso, hg, hh⟩ := GlobalTheory.T.exists_unramified_linear_bar_dual hP F E σ B a a' G X om om' hT v hv
-  have hR := GlobalTheory.T.schwartz_bruhat_local_approximation hP F E σ B a a' G X om om' hT v hv hν t
+  have hR := _root_.GlobalTheory.RankCoinv.exists_soLoc_sub_mem_augAt hP F E σ B a a' G X om om' hT v hv hν t
   have haugSB : augAt om' v ≤ SB _ := Submodule.span_le.2 (by
     rintro _ ⟨g, -, φ, hφ, φ₁, hφ₁, -, rfl⟩
     exact Submodule.sub_mem _ hφ₁ hφ)

@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AvgEqOfLeRightStabiliserStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AvgEqOfLeRightStabiliser
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -68,7 +68,7 @@ theorem avg_prod : ∀ (H H' : Type) [Group H] [Group H'] (u : H → ℂ) (v : H
     rw [ha x.1, hb x.2]
   have hSi : S.index = (rStab u).index * (rStab v).index := Subgroup.index_prod _ _
   have hS0 : S.index ≠ 0 := by rw [hSi]; exact mul_ne_zero hu hv
-  rw [GlobalTheory.T.avg_eq_of_le_rightStabiliser _ _ S hle hS0]
+  rw [_root_.GlobalTheory.BCT.avg_eq_of_le_rStab _ _ S hle hS0]
   haveI : (rStab u).FiniteIndex := ⟨hu⟩
   haveI : (rStab v).FiniteIndex := ⟨hv⟩
   haveI : S.FiniteIndex := ⟨hS0⟩

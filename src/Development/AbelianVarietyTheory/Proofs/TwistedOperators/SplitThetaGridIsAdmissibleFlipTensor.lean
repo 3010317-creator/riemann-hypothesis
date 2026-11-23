@@ -4,12 +4,13 @@ public import Mathlib.Analysis.Matrix.MeasurableSpace
 public import Formalism.DoubleCosetMeasures.StatementZ
 public import Development.AbelianVarietyTheory.Definitions.Divisors.RankEqCardIffExistsFrameMatrixFirstColumnBlock
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SumOKEx
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FlipGridPathAtSquareSplitStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSplitThetaGridPathFlipGridPathAtSquareStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemGridPathInnerVerticesFlipGridPathAtSquareStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitThetaGridPathAvoidsOppositeCornerStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FlipGridPathAtSquareSplit
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSplitThetaGridPathFlipGridPathAtSquare
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemGridPathInnerVerticesFlipGridPathAtSquare
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SplitThetaGridPathAvoidsOppositeCorner
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SquareFlipEquivariantBlockDiagonalColumnSubstituStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SquareFlipRowsIntegralGLInvariantStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGivenStageEqOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +50,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsGivenStageEqOne
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PairPtsClasses
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ValuationGdetKapAt
 
@@ -64,18 +64,18 @@ noncomputable section
 namespace GlobalTheory.FlipAdm
 
 theorem isPath_flipPath {γ : List Edge} {i j : ℕ} (hγ : IsPath γ) (h : PassesThrough i j γ) :
-    IsPath (flipPath i j γ) := GlobalTheory.T.isSplitThetaGridPath_flipGridPathAtSquare hγ h
+    IsPath (flipPath i j γ) := _root_.GlobalTheory.SplitFlip.isPath_flipPath hγ h
 
 theorem exists_split {γ : List Edge} {i j : ℕ} (hγ : IsPath γ) (h : PassesThrough i j γ) :
     ∃ l₁ l₂ : List Edge, γ = l₁ ++ [Edge.theta i j, Edge.ex i j] ++ l₂ ∧
-      flipPath i j γ = l₁ ++ [Edge.ex i (j + 1), Edge.theta (i + 1) j] ++ l₂ := GlobalTheory.T.flipGridPathAtSquare_split hγ h
+      flipPath i j γ = l₁ ++ [Edge.ex i (j + 1), Edge.theta (i + 1) j] ++ l₂ := _root_.GlobalTheory.SplitFlip.flipPath_split hγ h
 
 theorem not_touch {γ : List Edge} {i j : ℕ} (hγ : IsPath γ) (h : PassesThrough i j γ) :
-    ∀ b ∈ γ, b.src ≠ (i + 1, j + 1) ∧ b.tgt ≠ (i + 1, j + 1) := GlobalTheory.T.splitThetaGridPath_avoids_opposite_corner hγ h
+    ∀ b ∈ γ, b.src ≠ (i + 1, j + 1) ∧ b.tgt ≠ (i + 1, j + 1) := _root_.GlobalTheory.SplitFlip.pathAvoid hγ h
 
 theorem innerVertices_flipPath {γ : List Edge} {i j : ℕ} (hγ : IsPath γ) (h : PassesThrough i j γ) :
     ∀ X ∈ innerVertices (flipPath i j γ), X ≠ (i, j) ∧ (X ≠ (i + 1, j + 1) → X ∈ innerVertices γ) :=
-  GlobalTheory.T.mem_gridPathInnerVertices_flipGridPathAtSquare hγ h
+  _root_.GlobalTheory.SplitFlip.mem_innerVertices_flipPath hγ h
 
 end GlobalTheory.FlipAdm
 

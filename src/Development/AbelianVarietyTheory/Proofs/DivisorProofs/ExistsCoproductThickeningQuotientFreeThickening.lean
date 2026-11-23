@@ -1,11 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DivPowerCompatTwoFormDerivativeCompOneForm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFreeThickeningLevelFinitelyManyElementsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsQuotientNilCrystallineThickeningOfSubDPIdeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomSpecPointsLevelsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFreeThickeningLevelFinitelyManyElements
+public import Development.AbelianVarietyTheory.Definitions.Divisors.RatBasisLinearIndependentInt
+public import Mathlib.RingTheory.DividedPowers.SubDPIdeal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsQuotientNilCrystallineThickeningOfSubDPIde
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomSpecPointsLevels
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.BijectiveCechDeRhamComparisonDegreeOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothSectionsMonoReductionAffineInf
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuotientSubDPIdeal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothSectionsMonoReductionAffineInfStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,13 +62,13 @@ theorem exists_cop : ∀ (D : Data) (Λ : Lift D) (n : ℕ) (U : AffOp D.X) (T :
       (KK D.κ D.t).QAt u ∧ IsLev F.δ (n + 1) ∧ Function.Surjective q.φ ∧ (∀ b, q.φ b ∈ G.J → b ∈ F.J) ∧
         IsCop (n + 1) (u ≫ q) r := by
   intro D Λ n U T hT hU
-  obtain ⟨h1, h2, h3, -⟩ := GlobalTheory.T.hom_spec_points_levels D Λ
-  haveI : Algebra.Smooth D.R (Sec D.s U.unop.1) := (GlobalTheory.T.smooth_sections_mono_reduction_affine_inf D).1 U.unop
+  obtain ⟨h1, h2, h3, -⟩ := _root_.GlobalTheory.PDForm.Lift.hom_spec D Λ
+  haveI : Algebra.Smooth D.R (Sec D.s U.unop.1) := (_root_.GlobalTheory.SmoothLift.Data.smooth_mono_inf D).1 U.unop
   obtain ⟨m, pres, hpres⟩ := Algebra.FiniteType.iff_quotient_mvPolynomial''.1
     (inferInstance : Algebra.FiniteType D.R (Sec D.s U.unop.1))
   obtain ⟨g, hgx, hgR⟩ := h2 U T hU
   choose bl hbl using fun i : Fin m ↦ T.surj (g (pres (MvPolynomial.X i)))
-  obtain ⟨F, u, τ, hfree, hQ⟩ := GlobalTheory.T.exists_freeThickening_level_finitelyMany_elements D.R D.I D.κ D.X₀ D.t n m T hT
+  obtain ⟨F, u, τ, hfree, hQ⟩ := _root_.GlobalTheory.PDForm.FreeFin.exists_free D.R D.I D.κ D.X₀ D.t n m T hT
   let ψ : MvPolynomial (Fin m) D.R →ₐ[D.R] F.B := MvPolynomial.aeval fun i ↦ u.φ (bl i) + τ i
   have hψX : ∀ i, ψ (MvPolynomial.X i) = u.φ (bl i) + τ i := fun i ↦ MvPolynomial.aeval_X _ _
 
@@ -87,7 +90,7 @@ theorem exists_cop : ∀ (D : Data) (Λ : Lift D) (n : ℕ) (U : AffOp D.X) (T :
     with h𝔟def
   have h𝔟 : F.δ.IsSubDPIdeal 𝔟 := (GlobalTheory.DPQuot.quotient_subDPIdeal F.B F.J F.δ).2 _ (by
     rintro _ ⟨k, hk, rfl⟩; exact hker k hk)
-  obtain ⟨G, q, hqs, hq0, hGJ, hGlev, hquniv⟩ := GlobalTheory.T.exists_quotient_nilCrystallineThickening_of_subDPIdeal D.R D.I D.κ D.X₀ D.t F 𝔟 h𝔟
+  obtain ⟨G, q, hqs, hq0, hGJ, hGlev, hquniv⟩ := _root_.GlobalTheory.ThickQuot.exists_quotient D.R D.I D.κ D.X₀ D.t F 𝔟 h𝔟
   have hψ𝔟 : ∀ k ∈ RingHom.ker pres, (q.φ.comp ψ) k = 0 := fun k hk ↦ (hq0 _).2
     (Ideal.subset_span ⟨1, one_ne_zero, ψ k, ⟨k, hk, rfl⟩, (F.δ.dpow_one (hker k hk)).symm⟩)
 

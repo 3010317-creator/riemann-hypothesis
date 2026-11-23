@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.DeRhamPotSemistable
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamPotSemistableOfMatrixMonodromyStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PAdicMonodromyTheoremMatrixFormStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.TwistStep
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamPotSemistableOfMatrixMonodromy
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PAdicMonodromyTheoremMatrixForm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,6 +50,6 @@ open scoped Formalism.Per
 namespace GlobalTheory
 
 theorem deRham_potentiallySemistable : GlobalTheory.Published.DeRhamPotSemistable :=
-  GlobalTheory.T.deRham_potSemistable_of_matrix_monodromy GlobalTheory.T.pAdicMonodromyTheorem_matrixForm
+  _root_.GlobalTheory.PMon.FromMat.deRhamPotSemistable_of_matThm _root_.GlobalTheory.PMon.matThm_holds
 
 end GlobalTheory

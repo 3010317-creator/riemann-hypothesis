@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsTestRep
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FourierEtaleKEqIntegralPartialFourierStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JHypUnipotentTorusEquivarianceStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PartialFourierEtaleKProdLocallyConstantCompactSuStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TestFunctionLocallyInvariantStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FourierEtaleKEqIntegralPartialFourier
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.JHypUnipotentTorusEquivariance
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PartialFourierEtaleKProdLocallyConstantCompactSu
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FourierMatch
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TestFunctionLocallyInvariant
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnifConst
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -61,9 +62,9 @@ theorem main : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedF
       ∀ h, A.jHyp μK ψ (A.fourK μK ψ φ') h = A.jHyp μK ψ φ' (h * wS A.K) := by
   intro F E _ _ _ _ _ A ψ hψ μK hsd φ' hφ
   have hH : μK.IsAddHaarMeasure := hsd.1
-  have hT := GlobalTheory.T.partialFourier_etaleKProd_locallyConstantCompactSupport F E A ψ hψ μK hH φ' hφ
-  refine ⟨⟨?_, fun z s g => GlobalTheory.T.jHyp_unipotent_torus_equivariance F E A μK hH ψ φ' z s g⟩, ?_⟩
-  · obtain ⟨U, hU, hk⟩ := GlobalTheory.T.test_function_locally_invariant A.K _ hT
+  have hT := _root_.GlobalTheory.JR.TildeTest.main F E A ψ hψ μK hH φ' hφ
+  refine ⟨⟨?_, fun z s g => _root_.GlobalTheory.JHypEquiv.jHyp_nm F E A μK hH ψ φ' z s g⟩, ?_⟩
+  · obtain ⟨U, hU, hk⟩ := _root_.GlobalTheory.RowSmooth.row_smooth A.K _ hT
     refine ⟨U, hU, fun g k hkU => ?_⟩
     unfold Et.jHyp
     refine integral_congr_ae (Filter.Eventually.of_forall fun t => ?_)
@@ -86,7 +87,7 @@ theorem main : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedF
       unfold Et.tilde fourB
       refine integral_congr_ae (Filter.Eventually.of_forall fun b => ?_)
       simp only
-      rw [GlobalTheory.T.fourierEtaleK_eq_integral_partialFourier F E A ψ hψ μK hH φ' hφ b c]
+      rw [_root_.GlobalTheory.FourKFub.fourK_eq_fourB_tilde F E A ψ hψ μK hH φ' hφ b c]
       unfold fourB Et.tilde Et.kerK
       rw [mul_comm u b]
     unfold Et.jHyp

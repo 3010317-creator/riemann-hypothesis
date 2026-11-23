@@ -1,12 +1,15 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ThetaParseval.HalfIndexLattices.SplitStab
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsUnitaryAdelicDecompositionSplitSupportStatement
-import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryMatrixEqProdQuasiReflections
+public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.IsHermForm
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsUnitaryAdelicDecompositionSplitSupport
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAdelicSplit
+public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.UnitaryCharEqOneOfTrivialRationalSplitPlace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryAdelicCharacterTrivialRatAndSplit
+public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.ExistsSplitAt
+import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryMatrixEqProdQuasiReflections
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TendstoSmulZeroOfCompact
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MemClosureUnitary
-public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.UnitaryCharEqOneOfTrivialRationalSplitPlace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -41,8 +44,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryAdelicCharacterTrivialRatAndSplit
-public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.ExistsSplitAt
 
 @[expose] public section
 
@@ -124,7 +125,7 @@ theorem PositivityTheory.ThKW.unitary_character_trivial_global : ∀ (F E : Type
   have hfg : L.FG := Submodule.fg_span (Set.finite_range _)
   have hsp : Submodule.span E (L : Set (Fin n → E)) = ⊤ := by
     rw [Submodule.span_span_of_tower, (Pi.basisFun E (Fin n)).span_eq]
-  choose γ h k u1 u2 u3 hg hsup hk hk' using fun N : ℕ => GlobalTheory.T.exists_unitary_adelic_decomposition_split_support F E c n Jᵀ hH hcm.2.2.1 L hfg hsp
+  choose γ h k u1 u2 u3 hg hsup hk hk' using fun N : ℕ => _root_.GlobalTheory.UnRep.exists_rep_suppSplit F E c n Jᵀ hH hcm.2.2.1 L hfg hsp
     (HA.mat _ _ J x) N.factorial ((isUnA_iff _).2 (show HR (Af F) (c : E →ₐ[F] E) J from x).2) N.factorial_pos
   let k' : ℕ → HA (Af F) (c : E →ₐ[F] E) J := fun N => (⟨k N, (isUnA_iff _).1 (u3 N)⟩ : HR (Af F) (c : E →ₐ[F] E) J)
   have h1 : ∀ N, μ x = μ (k' N) := fun N => by

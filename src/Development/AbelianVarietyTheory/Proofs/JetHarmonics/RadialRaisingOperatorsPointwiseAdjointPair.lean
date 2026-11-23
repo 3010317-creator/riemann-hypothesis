@@ -3,23 +3,23 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Jets.SameFns
 public import Formalism.HermitianCurvature.ActualZetaSmooth
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.DoubleCosetOfZetaEq
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormalFormActualOperatorsAlgebraicHypothesesStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NormalFormActualOperatorsAlgebraicHypotheses
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ProjRaisingProjEqSmul
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RadialPairConstantsPointwiseAdjointBounded
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.VanishAbstract
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.CsliceContinuous
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.ExistsFderivChiBound
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.HsInnerAddSmulRight
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.IsCompactZetaLe
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.MeasurableOfContinuousOnZero
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.NormalFormOrderZeroOfParts
-import Formalism.HermitianCurvature.HermitianCurvatureProofs.PairAtTAdjCpt
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.SumPairAtStarMul
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.UnipotentLevelZeroEqOne
+public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.IsCompactZetaLe
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.MeasurableOfContinuousOnZero
+import Formalism.HermitianCurvature.HermitianCurvatureProofs.PairAtTAdjCpt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
-public import Mathlib.Analysis.Calculus.BumpFunction.FiniteDimension
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
@@ -195,7 +195,7 @@ theorem ptAdj_SS : ∀ (Wp Wq : Type) [NormedAddCommGroup Wp] [InnerProductSpace
   intro Wp Wq _ _ _ _ _ _ P Bs X μ L st l0 d hD hNF l hl
   have hP := hD.1
   have hμ := hD.2.1
-  have hH := (GlobalTheory.T.normalForm_actualOperators_algebraicHypotheses Wp Wq P Bs X μ L st l0 d hD hNF).1
+  have hH := (_root_.GlobalTheory.HatNF.hatHyp_and_tie_of_isNF Wp Wq P Bs X μ L st l0 d hD hNF).1
   have hκ := fun f => (GlobalTheory.HatNF.kappa_ptAdj_ptB Wp Wq P Bs X μ L st l0 d hD hNF f).1
   obtain ⟨co, hco⟩ := GlobalTheory.HatNF.RaiseFormula.ss_formula P _ d hH l hl Complex.I
     (fun ρ => Formalism.FourierDecayAlt.P.NFx4.SX.xC_ne ρ _ (by simp))

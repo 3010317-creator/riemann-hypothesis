@@ -1,13 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.MatrixOfBesselTwoSidedAction
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselFormConvergesEquivariantHermitianStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselMatrixCoeffExtendsBoundedEquivariantStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselModelEqOnOfContinuousOnAeEqStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupRepTwistedIsUnitaryRepStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BoundedEquivariantMapSmoothContinuousSeminormBouStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsUnimodularBesselModelUnitaryGroupStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SmoothVectorsDenseInvariantStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselFormConvergesEquivariantHermitian
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselMatrixCoeffExtendsBoundedEquivariant
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselModelEqOnOfContinuousOnAeEq
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BoundedEquivariantMapSmoothContinuousSeminormBou
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselSubgroupRepTwistedIsUnitaryRep
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsUnimodularBesselModelUnitaryGroup
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SmoothVectorsDenseInvariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -121,13 +121,13 @@ end GlobalTheory.SgInf.BesselExt
 open GlobalTheory.SgInf.BesselExt in
 theorem GlobalTheory.SgInf.exists_besselExt : ∀ (k r : ℕ) {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H] {Wp : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [FiniteDimensional ℂ Wp] [CompleteSpace Wp] (σ : Mat k r → (H →L[ℂ] H)) (w : H) (a : ℝ) (μG : Measure (Mt k r)) (d : ℝ) (z : Fin (2 * r + k + 1) → ℂ) (c : Fin r → ℂ) (π : Mat k r → (Wp →L[ℂ] Wp)) (μS : Measure (Mt k r)) , Std σ w a μG d → Side z π μS → IsSmoothVec σ w → ∀ v ∈ DD σ w, ∀ ξ : Wp, ∃ l : H → Wp, IsBesselMapSm z (psiGen k r z c) σ π l ∧ ∀ u ∈ DD σ w, l u = be (psiGen k r z c) π μS σ u v ξ := by
   intro k r H _ _ _ Wp _ _ _ _ σ w a μG d z c π μS hStd hSide hw v hv ξ
-  obtain ⟨T, hTD, hadd, hsmul, hloc, hR, hL⟩ := GlobalTheory.T.besselMatrixCoeff_extends_bounded_equivariant k r σ w a μG d z c π μS hStd hSide v hv ξ
+  obtain ⟨T, hTD, hadd, hsmul, hloc, hR, hL⟩ := _root_.GlobalTheory.SgInf.bessel_ext_bounded k r σ w a μG d z c π μS hStd hSide v hv ξ
   have hrep : IsURepOn (GG k r) σ := hStd.2.1
   have hHaar : IsHaarOn (GG k r) μG := hStd.2.2.2.2.1
-  have hUni : IsUnimod (GG k r) μG := GlobalTheory.T.isUnimodular_besselModelUnitaryGroup k r μG hHaar
-  have hDDi := GlobalTheory.T.smooth_vectors_dense_invariant k r σ w hrep
-  have hPi := GlobalTheory.T.besselSubgroupRepTwisted_isUnitaryRep k r z c π hSide.1 hSide.2.1 hSide.2.2.1
-  obtain ⟨C, Ws, hWs, hreg⟩ := GlobalTheory.T.boundedEquivariantMap_smooth_continuous_seminorm_bound k r σ μG T hrep hHaar hadd hsmul hloc hR
+  have hUni : IsUnimod (GG k r) μG := _root_.GlobalTheory.SgInf.isUnimod_GG k r μG hHaar
+  have hDDi := _root_.GlobalTheory.SgInfDD.DD_stable_dense k r σ w hrep
+  have hPi := _root_.GlobalTheory.SgInf.PiUnitary.piS_unitary k r z c π hSide.1 hSide.2.1 hSide.2.2.1
+  obtain ⟨C, Ws, hWs, hreg⟩ := _root_.GlobalTheory.SgInf.reg_main k r σ μG T hrep hHaar hadd hsmul hloc hR
   classical
   let F : H → Mat k r → Wp := fun u => if h : IsSmoothVec σ u then (hreg u h).choose else 0
   have hF : ∀ u, IsSmoothVec σ u → ContinuousOn (F u) (GG k r) ∧
@@ -141,13 +141,13 @@ theorem GlobalTheory.SgInf.exists_besselExt : ∀ (k r : ℕ) {H : Type} [Normed
   refine ⟨fun u => F u 1, ⟨?_, ?_, ?_, ?_⟩, ?_⟩
   · intro u hu u' hu'
     have hs := smooth_add hu hu'
-    refine GlobalTheory.T.besselModel_eqOn_of_continuousOn_ae_eq k r μG (F (u + u')) (fun x => F u x + F u' x) hHaar (hF _ hs).1
+    refine _root_.GlobalTheory.SgInf.AeqCont.eqOn_of_ae k r μG (F (u + u')) (fun x => F u x + F u' x) hHaar (hF _ hs).1
       ((hF u hu).1.add (hF u' hu').1) ?_ 1 one_memG
     filter_upwards [(hF _ hs).2.1, hadd u u', (hF u hu).2.1, (hF u' hu').2.1] with x h1 h2 h3 h4
     rw [h1, h2, h3, h4]
   · intro b u hu
     have hs := smooth_smul b hu
-    refine GlobalTheory.T.besselModel_eqOn_of_continuousOn_ae_eq k r μG (F (b • u)) (fun x => b • F u x) hHaar (hF _ hs).1
+    refine _root_.GlobalTheory.SgInf.AeqCont.eqOn_of_ae k r μG (F (b • u)) (fun x => b • F u x) hHaar (hF _ hs).1
       ((hF u hu).1.const_smul b) ?_ 1 one_memG
     filter_upwards [(hF _ hs).2.1, hsmul b u, (hF u hu).2.1] with x h1 h2 h3
     rw [h1, h2, h3]
@@ -159,14 +159,14 @@ theorem GlobalTheory.SgInf.exists_besselExt : ∀ (k r : ℕ) {H : Type} [Normed
     have hsu : IsSmoothVec σ (σ (h * m) u) := ((hDDi.2.2.2.1 u hu).1 _ htG)
 
     have h1 : ∀ x ∈ GG k r, F (σ (h * m) u) x = F u (x * (h * m)) := by
-      refine GlobalTheory.T.besselModel_eqOn_of_continuousOn_ae_eq k r μG _ _ hHaar (hF _ hsu).1 ?_ ?_
+      refine _root_.GlobalTheory.SgInf.AeqCont.eqOn_of_ae k r μG _ _ hHaar (hF _ hsu).1 ?_ ?_
       · exact (hF u hu).1.comp ((continuous_id.mul continuous_const).continuousOn)
           (fun x hx => mul_memG hx htG)
       · filter_upwards [(hF _ hsu).2.1, hR _ htG u, ae_rtrans hUni htG (hF u hu).2.1] with x h1 h2 h3
         rw [h1, h2, h3]
 
     have h2 : ∀ x ∈ GG k r, F u ((h * m) * x) = PiS (psiGen k r z c) π (h * m) (F u x) := by
-      refine GlobalTheory.T.besselModel_eqOn_of_continuousOn_ae_eq k r μG (fun x => F u ((h * m) * x)) (fun x => PiS (psiGen k r z c) π (h * m) (F u x))
+      refine _root_.GlobalTheory.SgInf.AeqCont.eqOn_of_ae k r μG (fun x => F u ((h * m) * x)) (fun x => PiS (psiGen k r z c) π (h * m) (F u x))
         hHaar ?_ ?_ ?_
       · exact (hF u hu).1.comp ((continuous_const.mul continuous_id).continuousOn)
           (fun x hx => mul_memG htG hx)
@@ -180,9 +180,9 @@ theorem GlobalTheory.SgInf.exists_besselExt : ∀ (k r : ℕ) {H : Type} [Normed
   · intro u hu
     have hsu := hDDsm u hu
     have hcont : ContinuousOn (Afun (psiGen k r z c) π μS σ u v ξ) (GG k r) := by
-      have hD1 := GlobalTheory.T.besselForm_converges_equivariant_hermitian k r σ w a μG d z c π μS hStd hSide (DD σ w) hDDi.1 hStd.2.2.2.2.2.2.2.1 u hu v hv
+      have hD1 := _root_.GlobalTheory.SgInf.BeForm.be_converges_equivariant_hermitian_continuous k r σ w a μG d z c π μS hStd hSide (DD σ w) hDDi.1 hStd.2.2.2.2.2.2.2.1 u hu v hv
       exact (ContinuousLinearMap.apply ℂ Wp ξ).continuous.comp_continuousOn hD1.2.2.2
-    have := GlobalTheory.T.besselModel_eqOn_of_continuousOn_ae_eq k r μG (F u) _ hHaar (hF u hsu).1 hcont
+    have := _root_.GlobalTheory.SgInf.AeqCont.eqOn_of_ae k r μG (F u) _ hHaar (hF u hsu).1 hcont
       (by rw [← hTD u hu]; exact (hF u hsu).2.1) 1 one_memG
     show F u 1 = _
     rw [this]

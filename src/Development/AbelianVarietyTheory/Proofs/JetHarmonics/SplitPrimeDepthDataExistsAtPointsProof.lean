@@ -3,11 +3,13 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Jets.DepthNumbersThresholdEq
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors.StChartF
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmEmbeddingsIntegralAndDistinctModMaximal
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmTypeFrobeniusOrbitsLabelAtSplitPrimeStatement
+public import Development.AbelianVarietyTheory.Definitions.Jets.IsSelfOf
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmTypeFrobeniusOrbitsLabelAtSplitPrime
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsClosedCompleteFieldOverPlace
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsIdempotentFrobeniusOrbitUnramified
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RestDegAdd
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RowDataSuppliedAtPairsOfPlacesStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.ConjNeSelfOfCM
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RowDataSuppliedAtPairsOfPlaces
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SupplyExtend
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.CmHostIdempotentTraceEqOne
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IsCanonGaugeMapFB
@@ -48,7 +50,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Jets.IsSelfOf
 
 @[expose] public section
 
@@ -86,7 +87,7 @@ theorem pkgSplit : (∀ (p : ℕ) [Fact p.Prime], ReciprocityTheory.ChartRestric
     (by rw [hVl]; intro h; exact h2 (h ▸ N.H.two_mem_small)) (GlobalTheory.QuadTrace.cmHost_idempotent_trace_eq_one E H hstar) lv.M (hunit _ hM)
   have hunr : ¬ (V.l : ℤ) ∣ NumberField.discr E :=
     hpl.unr V.l V.l_prime (by rw [hVl]; exact h2) (by rw [hVl]; exact hq') (by rw [hVl]; exact hd')
-  obtain ⟨d, _, pos, Z, hZ, hne, hbij, hfr⟩ := GlobalTheory.T.cmType_frobenius_orbits_label_at_split_prime E H lv c N pl hpl la T io C V ι hι hVl hMM
+  obtain ⟨d, _, pos, Z, hZ, hne, hbij, hfr⟩ := _root_.GlobalTheory.LabSplit.labelling_split E H lv c N pl hpl la T io C V ι hι hVl hMM
     (by rw [hVl]; exact hsp) j
   have hpsi : ∀ z, InPsi H (pl z) := fun z => (hpl.psi _).2 ⟨z, rfl⟩
   have hmk := N.R.m_add_three_le_k
@@ -117,7 +118,7 @@ theorem pkgSplit : (∀ (p : ℕ) [Fact p.Prime], ReciprocityTheory.ChartRestric
       have : Dw.mult (ComplexEmbedding.conjugate (pl (pos o.1 s.val))) = Dw.q :=
         if_neg (not_inPsi_conjugate H (hpsi _))
       omega
-  have hsup := GlobalTheory.T.rowData_supplied_at_pairs_of_places hU E H Dw lv Xo c hstar T io y C3 C V ι hι lv.M Y hY hy hunr Z d lab harith hbij.2 hrank
+  have hsup := _root_.GlobalTheory.RowAt.supply_pairs hU E H Dw lv Xo c hstar T io y C3 C V ι hι lv.M Y hY hy hunr Z d lab harith hbij.2 hrank
     (by change N.R.m - j < N.R.k - 1; omega) (fun o => Or.inr fun _ => rfl) a hdom nW ν (hnu y C3 lv.M a nW ν hν)
   obtain ⟨I, J, fI, fJ, X, F, hn, hbig, hval⟩ := GlobalTheory.RowAt.supply_extend C V d (RPl N.R) Z (N.R.k - 1) (j + (N.R.m - j))
     (fun _ g _ => g = 0) (fun z g s => Dw.mult (tauSp N pl pos z g s))

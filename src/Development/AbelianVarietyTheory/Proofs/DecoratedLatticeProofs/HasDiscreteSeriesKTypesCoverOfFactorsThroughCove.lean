@@ -3,10 +3,14 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.AdmissibleDiscreteSeriesOfHasParam
 public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.DiscreteSpectrumKFiniteDecomposition
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.RhoCompactTwiceEqOfSignBlockOrdered
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CasimirEqGelfandValueOfInfinitesimalCharacterStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HighestWeightLineOfKTypeMultiplicityOneStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PosPartUnitaryMul
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsBlockOrd
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.CasimirEqGelfandValueOfInfinitesimalCharacter
+public import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.IsotypicSignedParameters
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HighestWeightLineOfKTypeMultiplicityOne
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.InConeOfKTypesAbove
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SecondGelfandInvariantValueEqStatement
+public import Formalism.LocalRingCardinality.DataTheta
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SecondGelfandInvariantValueEq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,12 +67,12 @@ theorem hasTypes_of_factors : GlobalTheory.Dec.LowKMultOne → GlobalTheory.Dec.
     rfl
   have hn : p + q = n := by simpa using Fintype.card_congr e
   refine ⟨?_, fun v => ?_, GlobalTheory.CoverCone.inCone_of_kTypesAbove h2 p q n e P T R σ hb hf hd⟩
-  · refine GlobalTheory.T.highestWeightLine_of_kTypeMultiplicityOne p q n e P.sgn T R σ hb hf _ ?_ ?_
+  · refine _root_.GlobalTheory.RealPar.HwLine.finrank_hwSub_eq_one p q n e P.sgn T R σ hb hf _ ?_ ?_
     · rw [hlow]
       exact hd.2.2.2.2.2.1
     · rw [hlow]
       exact h1 n P.sgn P.lam _ σ P.hc hd
-  · rw [GlobalTheory.T.casimir_eq_gelfandValue_of_infinitesimalCharacter p q n e P.sgn T R σ hb hf _ (h3 n P.sgn P.lam _ σ P.hc hd) v, GlobalTheory.T.secondGelfandInvariant_value_eq, hn]
+  · rw [_root_.GlobalTheory.CoverDS.casimir_eq_gelfVal_of_hasInfChar p q n e P.sgn T R σ hb hf _ (h3 n P.sgn P.lam _ σ P.hc hd) v, _root_.GlobalTheory.GelfandTwo.gelfVal_two, hn]
     congr 1
     have hc' : ∀ a, ((blockPar P e a : ℚ) : ℂ) = ((P.lam (e a) : ℝ) : ℂ) := fun a => by
       rw [← hc a]; simp

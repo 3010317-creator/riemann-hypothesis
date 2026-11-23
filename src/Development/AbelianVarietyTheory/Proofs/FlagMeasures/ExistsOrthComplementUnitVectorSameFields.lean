@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsFinEmb
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GaussDensDefinite
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GaugeVolumeEqOfSemilinearIsometryGenusStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsGaugeAll
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GaugeVolumeEqOfSemilinearIsometryGenus
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -167,7 +168,7 @@ theorem exists_sib : ∀ (I I' : AutInst) (e : I'.E ≃+* I.E) (s : Bool) (x : F
   · obtain ⟨y, rfl⟩ := exists_vec (n := I'.n) e y
     exact (mem_latMap e I'.L y).trans (hL y)
   · intro c μ _ _ c' μ' _ _ hc hc'
-    refine GlobalTheory.T.gaugeVolume_eq_of_semilinear_isometry_genus (sibOf I I' e he).inst I' e (1 : Matrix (Fin I'.n) (Fin I'.n) I.E) 1 he rfl ?_
+    refine _root_.GlobalTheory.GaugeTransport.gaugeVol_transport (sibOf I I' e he).inst I' e (1 : Matrix (Fin I'.n) (Fin I'.n) I.E) 1 he rfl ?_
       (fun y => ?_) c μ c' μ' hc hc'
     · show (1 : Matrix (Fin I'.n) (Fin I'.n) I.E)ᴴ * I'.J.map e * (1 : Matrix (Fin I'.n) (Fin I'.n) I.E) =
         I'.J.map e

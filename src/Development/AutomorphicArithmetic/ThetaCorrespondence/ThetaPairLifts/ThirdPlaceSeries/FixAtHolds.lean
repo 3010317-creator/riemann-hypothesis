@@ -2,11 +2,13 @@ module
 
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.ConjTwOfOne
 public import Development.AbelianVarietyTheory.PublishedTheorems.PublishedFoundations.NonemptyAlgHomOfIsRayOfDvd
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RingAutFixingSmallFieldFixesDeltaValuesStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.GoodSetupCountEqZeroOffBadPlaces
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RingAutFixingSmallFieldFixesDeltaValues
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TwistedConjFixAt
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FixesUntwistedTupleDataOfFixesSmallFieldStatement
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LowAtHolds
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.RatHyp0AtPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToRatHyp0
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -39,7 +41,6 @@ import Mathlib.Tactic.NormNum.NatSqrt
 import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToRatHyp0
 
 @[expose] public section
 
@@ -73,7 +74,7 @@ theorem fixAt_holds_alt : GlobalTheory.Published.RayClassFieldSt → _root_.Glob
     obtain ⟨σ, hσ⟩ := de_chi_eq hρ ((Fm.ex x hx k).nch.twI w) j ((Fm.ex x hx k).nch.sd w) y
     change τ (((ρ.B _ j _).de.chi y : Circle) : ℂ) = _
     rw [hσ]
-    refine GlobalTheory.T.ringAut_fixing_smallField_fixes_delta_values ρ hρ _ j _ (p.R.C.delAt ((Fm.D x k).ntw.l ((Fm.ex x hx k).nch.twI w))) (hp.delta _ j _) ?_ τ hτ σ
+    refine _root_.GlobalTheory.DeltaFixed.aut_fixes_delta_values ρ hρ _ j _ (p.R.C.delAt ((Fm.D x k).ntw.l ((Fm.ex x hx k).nch.twI w))) (hp.delta _ j _) ?_ τ hτ σ
     unfold Formalism.L2.Host.CharFrame.delAt
     split_ifs
     exacts [hR.small.val.del', hR.small.val.del]

@@ -2,11 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.SameKindIsometric
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FiniteAdelicUnitaryCongruenceTopology
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermVolumeRatioSameKindOfVolumeRatioInductionStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeftQuotientCovolumeEqFundamentalDomainInterStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RankTwoDefiniteUnimodularHermitianClassBoundStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RiemannianHaarGaugeExistsPosUniqueStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryGaugeVolumeLeClassNumberDefiniteStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermVolumeRatioSameKindOfVolumeRatioInduction
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DefClassNum
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeftQuotientCovolumeEqFundamentalDomainInter
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RankTwoDefiniteUnimodularHermitianClassBound
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsGaugeAll
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryGaugeVolumeLeClassNumberDefinite
+import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LayerProd
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RiemannianHaarGaugeExistsPosUnique
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,21 +57,21 @@ theorem fundDom_volume_pos_lt_top : VolumeStep → ∀ (I : AutInst) (μf : Meas
     [μf.IsHaarMeasure] (fund : Set I.GA), I.IsFundDom (I.muA μf) fund → ∀ p q : ℕ, HasSig I p q → 2 ≤ p →
     0 < I.muA μf fund ∧ I.muA μf fund < ⊤ := by
   intro hstep I μf _ _ fund hfund p q hsig hp
-  obtain ⟨hcov, hpos⟩ := GlobalTheory.T.leftQuotientCovolume_eq_fundamentalDomain_inter I μf fund Set.univ hfund MeasurableSet.univ
+  obtain ⟨hcov, hpos⟩ := _root_.GlobalTheory.CovolRat.covol_eq_inter_fund I μf fund Set.univ hfund MeasurableSet.univ
     (fun _ _ _ _ => Set.mem_univ _)
   rw [Set.univ_inter] at hcov
   refine ⟨hpos, ?_⟩
-  obtain ⟨⟨I₀, hsame, hsig₀⟩, hratio⟩ := GlobalTheory.T.hermVolumeRatioSameKind_of_volumeRatioInduction hstep I p q 2 0 hsig hp (Nat.zero_le _) le_rfl
-  choose c hc using fun v : InfinitePlace I.F => GlobalTheory.T.riemannianHaarGauge_exists_pos_unique I.n (I.ε v)
-  choose c₀ hc₀ using fun v : InfinitePlace I₀.F => GlobalTheory.T.riemannianHaarGauge_exists_pos_unique I₀.n (I₀.ε v)
+  obtain ⟨⟨I₀, hsame, hsig₀⟩, hratio⟩ := _root_.GlobalTheory.FlagMeas.VolRatio.volumeRatio_of_volumeStep hstep I p q 2 0 hsig hp (Nat.zero_le _) le_rfl
+  choose c hc using fun v : InfinitePlace I.F => _root_.GlobalTheory.GaugeConst.gauge_exists_pos_unique I.n (I.ε v)
+  choose c₀ hc₀ using fun v : InfinitePlace I₀.F => _root_.GlobalTheory.GaugeConst.gauge_exists_pos_unique I₀.n (I₀.ε v)
   obtain ⟨-, hlc, hsc, -⟩ := GlobalTheory.CongTop.adelic_topology I₀
   obtain ⟨-, -, -, hK, -⟩ := GlobalTheory.CongTop.adelic_topology I
   have hg : IsGaugeAll I c := fun v => (hc v).2.1
   have hg₀ : IsGaugeAll I₀ c₀ := fun v => (hc₀ v).2.1
   let μ₀ : Measure I₀.Gf := Measure.haar
   have heq := hratio I₀ hsame hsig₀ c μf c₀ μ₀ hg hg₀
-  have hdef := GlobalTheory.T.unitaryGaugeVolume_le_classNumber_definite I₀ 2 hsig₀ c₀ μ₀ hg₀
-  have hcl := GlobalTheory.T.rank_two_definite_unimodular_hermitian_class_bound I₀.E I₀.cm.cmUnram
+  have hdef := _root_.GlobalTheory.DefiniteVolume.gaugeVol_le I₀ 2 hsig₀ c₀ μ₀ hg₀
+  have hcl := _root_.GlobalTheory.RankTwoCount.rankTwoClasses I₀.E I₀.cm.cmUnram
   have h₀ : gaugeVol I₀ c₀ μ₀ < ⊤ :=
     hdef.trans_lt (ENNReal.mul_lt_top ENNReal.ofReal_lt_top (hcl.trans_lt ENNReal.ofReal_lt_top))
   have hfin : gaugeVol I c μf < ⊤ := by

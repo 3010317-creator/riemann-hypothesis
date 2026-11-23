@@ -8,12 +8,20 @@ public import CompanionTheory.AutomorphicTheory.HarishChandraMultiplicity.HCMult
 public import CompanionTheory.HarishChandraModules.KFiniteAnalyticVectors.AnalyticIntertwiners.SubquotientNontrivial
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HarishChandraModulesIndefiniteUnitaryGroup
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothVectorsUnitaryRepStableConjSkewAdjoint
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.InnerRepK
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DerivedRepConjMaxCompactIntertwinesStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GelfandTraceConjInvertibleScalarMatrixStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HasDRepIffHasDerivAt
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DerivedRepConjMaxCompactIntertwines
+public import Formalism.RealPlaceAnalysis.StatementB
+public import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GelfandTraceConjInvertibleScalarMatrix
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GlRelationsOnKFiniteVectors
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MaxCompactIrreducibleHasHighestWeightAndIsoStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MaxCompactIrreducibleHasHighestWeightAndIso
+public import Development.AbelianVarietyTheory.Definitions.Foundations.ContinuousOfMemCcSmooth
+public import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsAuxiliaryPlaceNotMemFinset
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermitianFormUnitaryOneOne
 public import Formalism.LocalToGlobal.IndefiniteReal.SmExpSmulContDiff
+public import CompanionTheory.HarishChandraModules.KFiniteAnalyticVectors.AnalyticIntertwiners.Clause1
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.InnerRepK
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,7 +69,6 @@ import ReciprocityTheory.ReductiveGroups.DiscreteSeries.AnalyticVectors.Closure
 import ReciprocityTheory.ReductiveGroups.DiscreteSeries.AnalyticVectors.Unitary
 import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.Bridge
 import ReciprocityTheory.ReductiveGroups.DiscreteSeries.DiscreteSeriesExistence.SmoothA
-public import CompanionTheory.HarishChandraModules.KFiniteAnalyticVectors.AnalyticIntertwiners.Clause1
 
 @[expose] public section
 
@@ -345,7 +352,7 @@ theorem le_iSup_vIso (hU : IsURepOn (Kset ε) ρ)
 theorem kType_exists [CompleteSpace H] (hU : IsURepOn (UJset ε) ρ) :
     ∀ S : Submodule ℂ H, FiniteDimensional ℂ S → S ≠ ⊥ → IsKStableOn ε ρ S →
       (∀ S' : Submodule ℂ H, S' ≤ S → IsKStableOn ε ρ S' → S' = ⊥ ∨ S' = S) → ∃ Λ, IsKTypeOf ε ρ Λ S :=
-  (GlobalTheory.T.maxCompact_irreducible_has_highest_weight_and_iso n ε H ρ hU.1 hU.2.2 fun k hk => hU.2.1 k (mem_UJset_of_mem_Kset hk)).1
+  (_root_.GlobalTheory.KTypeHighest.ktype_highest_weight n ε H ρ hU.1 hU.2.2 fun k hk => hU.2.1 k (mem_UJset_of_mem_Kset hk)).1
 
 theorem mem_of_mem_closure [CompleteSpace H] (hU : IsURepOn (UJset ε) ρ) (hV : IsGKSub ε ρ V)
     (hA : IsAdmissibleSub ε ρ V) {w : H} (hw : w ∈ V.topologicalClosure) (hk : IsKFin ε ρ w) : w ∈ V := by
@@ -400,8 +407,8 @@ theorem vAct_kconj (hρ : Formalism.QuantumDeterminants.IsCRepOn (UJset ε) ρ) 
   refine LinearMap.ext fun v => Subtype.ext ?_
   rw [Module.End.mul_apply, Module.End.mul_apply, vK_coe, vAct_coe, vAct_coe, vK_coe, dsigC_eq, dsigC_eq,
     cre_kconj hκ, cim_kconj hκ,
-    GlobalTheory.T.derivedRep_conj_maxCompact_intertwines n ε H ρ hρ κ hκ _ (cre_mem Y) v (hV.smooth v v.2),
-    GlobalTheory.T.derivedRep_conj_maxCompact_intertwines n ε H ρ hρ κ hκ _ (cim_mem Y) v (hV.smooth v v.2), map_add, map_smul]
+    _root_.GlobalTheory.GKLie.dRep_conj_Kset n ε H ρ hρ κ hκ _ (cre_mem Y) v (hV.smooth v v.2),
+    _root_.GlobalTheory.GKLie.dRep_conj_Kset n ε H ρ hρ κ hκ _ (cim_mem Y) v (hV.smooth v v.2), map_add, map_smul]
 
 theorem vAct_conj_etr (hρ : Formalism.QuantumDeterminants.IsCRepOn (UJset ε) ρ) (hV : IsGKSub ε ρ V)
     (P : Matrix (Fin n) (Fin n) ℂ) (hP : IsUnit P) (k : ℕ) :
@@ -413,7 +420,7 @@ theorem vAct_conj_etr (hρ : Formalism.QuantumDeterminants.IsCRepOn (UJset ε) �
 
     simp only [map_sum, map_smul]
   rw [this]
-  exact GlobalTheory.T.gelfandTrace_conj_invertible_scalarMatrix (fun a b => vAct hρ hV (single a b 1)) P hP k
+  exact _root_.GlobalTheory.etr_conj_scalar_matrix (fun a b => vAct hρ hV (single a b 1)) P hP k
 
 theorem casimir_kequiv (hρ : Formalism.QuantumDeterminants.IsCRepOn (UJset ε) ρ) (hV : IsGKSub ε ρ V)
     {κ : Matrix (Fin n) (Fin n) ℂ} (hκ : κ ∈ Kset ε) (v w : V) (hw : (w : H) = ρ κ v) :
@@ -567,7 +574,7 @@ theorem finiteDimensional_kIso' (hU : IsURepOn (UJset ε) ρ) (hI : IsIrredOn (U
   · obtain ⟨S₀, hS₀⟩ := hex
     have hfd := GlobalTheory.GKPort.KFinLink.isAdmissible_of hU hI S₀ (GlobalTheory.KFinVec.isIrrKSub_of_isKTypeOf hS₀)
     refine Submodule.finiteDimensional_of_le (sSup_le fun S hS => ?_ : _ ≤ GlobalTheory.KFinVec.kIsotypic ε ρ S₀)
-    obtain ⟨B, hB, hBS⟩ := (GlobalTheory.T.maxCompact_irreducible_has_highest_weight_and_iso n ε H ρ hU.1 hU.2.2 fun k hk =>
+    obtain ⟨B, hB, hBS⟩ := (_root_.GlobalTheory.KTypeHighest.ktype_highest_weight n ε H ρ hU.1 hU.2.2 fun k hk =>
       hU.2.1 k (mem_UJset_of_mem_Kset hk)).2 Λ S₀ S hS₀ hS
     have hT : GlobalTheory.KFinVec.IsKMapFrom ε ρ S₀ ((B : H →ₗ[ℂ] H) ∘ₗ S₀.subtype) := fun k hk s s' hs => by
       show B s' = ρ k (B s)

@@ -4,13 +4,14 @@ public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PeriodLattic
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCocharLie
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsAbLift
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NonDegAtOfSabMap
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.VerticalDerivativeInCoordinates
 public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.SmulPeriodMapMkZeroFstEqNegForm
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsDerivAt0OfIsPullback
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCocharLieLieModel
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLinearLiftOfAdditiveFamily
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsDerivAt0ZeroOfFixed
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PeriodLatticeDiscreteFreeStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExponentialFamilyPeriods
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PeriodLatticeDiscreteFree
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.VerticalDerivativeInCoordinates
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsDerivAt0OfIsPullback
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLinearLiftOfAdditiveFamily
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -261,7 +262,7 @@ theorem torus_lift (e : FamExp t.G M B ψ) {b : Fin n → ℂ} (hb : b ∈ B) (P
       fun y s hs => Over.OverMorphism.ext ((hρ' _).trans (hl y s ((hρ s).symm.trans (congrArg (·.left) hs))))
     constructor
     · intro hy
-      obtain ⟨Γ₀, hΓ, hd, -, -⟩ := GlobalTheory.T.period_lattice_discrete_free R t.G g n M B ψ e b hb
+      obtain ⟨Γ₀, hΓ, hd, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.FamExp.per_discrete R t.G g n M B ψ e b hb
       have hcount : (e.per b).Countable := by
         rw [← hΓ]
         haveI := hd

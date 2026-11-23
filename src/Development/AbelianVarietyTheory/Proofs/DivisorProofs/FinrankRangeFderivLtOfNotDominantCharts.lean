@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.AnalyticOnNhdFinChartIff
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankRangeFderivLtOfVolumeImageEqZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegrableOnSourceIffOfDensity
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VolumeComplexPointsProperClosedChartFieldStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DetJacMatCoordsEqTransitionJacobianDet
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VolumeComplexPointsProperClosedChartField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,7 +77,7 @@ theorem finrank_range_fderiv_lt_of_not_dominant : ∀ (k : Type) [Field k] (X Y 
     rw [hm]
     exact specializes_iff_mem_closure.1 this
   obtain ⟨c, hc⟩ := hA l
-  have hnull := GlobalTheory.T.volume_complexPoints_properClosed_chart_field k X p σ D Z hZc hZg c
+  have hnull := _root_.GlobalTheory.ChernNull.chart_null_field k X p σ D Z hZc hZg c
   have hsub : (A.chart l ∘ m ∘ (A'.chart j).symm) '' W ⊆
       FinChart.toV D ⁻¹' (c.e '' (c.e.source ∩ {x : CxPts p σ | x.1 (IsLocalRing.closedPoint ℂ) ∈ Z})) := by
     rintro _ ⟨z, hz, rfl⟩

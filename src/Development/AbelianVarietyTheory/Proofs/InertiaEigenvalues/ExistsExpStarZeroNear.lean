@@ -1,11 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExpStar
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DualExponentialExistsUniqueCyclotomicLevelStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DualExponentialImageContainsLatticeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormDualExponentialLeOfAinfValuedStatement
-import Mathlib.Algebra.Order.Floor.Extended
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DualExponentialExistsUniqueCyclotomicLevel
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DualExponentialImageContainsLattice
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormDualExponentialLeOfAinfValued
 public import Mathlib.Algebra.Order.Floor.Semifield
+import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
@@ -99,8 +99,8 @@ theorem exponent_le (s e : ℕ) :
 
 theorem exists_expStar_zero_near : ∀ (D : Formalism.BasicNotions.D7), adm2 D → ArchimedeanSignatureMatching D → ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (s : ℕ), Lev l s → ∀ (e : ℕ) (z : GQ l → ℚ_[l]), CocOn (Gj K s) (fun σ y => (((D.loc l).χQ σ ^ (-(e : ℤ)) : ℚ_[l]ˣ) : ℚ_[l]) * y) Set.univ z → (∃ b ∈ ((D.loc l).PD (botExt l)).Fil 0, ∀ σ ∈ Gj K s, ∃ a : Ainf l, algebraMap ℚ_[l] (D.loc l).R.BdR (z σ) - (algebraMap ℚ_[l] (D.loc l).R.BdR (((D.loc l).χQ σ ^ (-(e : ℤ)) : ℚ_[l]ˣ) : ℚ_[l]) * (D.loc l).actQdR σ b - b) - (D.loc l).ιB ((D.locA l).ιA a) ∈ ((D.loc l).PD (botExt l)).Fil ((e : ℤ) + 1)) → ∃ z' : GQ l → ℚ_[l], ExpStar D.loc (Gj K s) e z' 0 ∧ ∀ σ ∈ Gj K s, ‖z' σ - (l : ℚ_[l]) ^ ((e + 2) * s + padicValNat l e + e / (l - 1) + 1) * z σ‖ ≤ 1 := by
   intro D _ _ l _ K s hs e z hz hb
-  obtain ⟨α, hα, hE⟩ := (GlobalTheory.T.dualExponential_existsUnique_cyclotomicLevel D l K s hs e).1 z hz
-  have hN := GlobalTheory.T.norm_dualExponential_le_of_ainf_valued D l K s hs e z α hα hE hb
+  obtain ⟨α, hα, hE⟩ := (_root_.GlobalTheory.ExpDef.expStar_existsUnique D l K s hs e).1 z hz
+  have hN := _root_.GlobalTheory.Cyc.ExpBound.norm_expStar_le D l K s hs e z α hα hE hb
   have hx := exponent_le (l := l) s e
   set a : ℕ := (e + 2) * s + padicValNat l e + e / (l - 1) + 1 with ha
   have hl : (1 : ℝ) < l := by exact_mod_cast (Fact.out : l.Prime).one_lt
@@ -114,7 +114,7 @@ theorem exists_expStar_zero_near : ∀ (D : Formalism.BasicNotions.D7), adm2 D �
     rw [Real.rpow_intCast] at h1
     rw [norm_mul, norm_zpow, hnl, inv_zpow, inv_mul_le_iff₀ (zpow_pos (by linarith) _), mul_one]
     exact h1
-  obtain ⟨z1, hz1, hE1⟩ := GlobalTheory.T.dualExponential_image_contains_lattice D l K s hs e _ hmem hnorm
+  obtain ⟨z1, hz1, hE1⟩ := _root_.GlobalTheory.ExpImage.expStar_image D l K s hs e _ hmem hnorm
   refine ⟨fun σ => (l : ℚ_[l]) ^ a * z σ - z1 σ, ?_, fun σ hσ => ?_⟩
   · have := expStar_mul_sub D.loc (Gj K s) e ((l : ℚ_[l]) ^ a) hE hE1
     convert this using 1

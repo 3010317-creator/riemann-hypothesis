@@ -2,8 +2,8 @@ module
 
 public import Formalism.SharpRestriction.Divisibility.OrbitPlaces
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ModelsOK
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalModelBoundPlaceOverSecondEmbeddingStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LowTermLeSecondRealPlaceBoundsStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LocalModelBoundPlaceOverSecondEmbedding
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.LowTermLeSecondRealPlaceBounds
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PlacesOffFirstOrbits
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -94,11 +94,11 @@ theorem sysTw_sites : ∀ (D : D7) (L : SizeData₂ D) (hT : GatTies D) (X : Ins
     obtain ⟨-, -, -, a2c, -, -, -, -, -, -, -, -, a11⟩ := hA
     by_cases hp : ((D.what₂.places.resChar w : ℕ) : ℝ) ≤ L.sc.X'' D.R.n
     · simp only [if_pos hp]
-      exact GlobalTheory.T.local_model_bound_place_over_second_embedding D u w hg L hT X Y K ce E hty hfa hadm hSh hCL hp _ _ std vp unif eO eO_spec dG dG_spec om Y5 a2c v (r v)
+      exact _root_.GlobalTheory.TwU.LowF.lowAt_F D u w hg L hT X Y K ce E hty hfa hadm hSh hCL hp _ _ std vp unif eO eO_spec dG dG_spec om Y5 a2c v (r v)
         (hr1 v hv).1 (hr1 v hv).2.2 j hjm
     · simp only [if_neg hp]
       exact a11 v j (lt_of_lt_of_eq hjm (hty u w hg).1.symm)
-  · refine (GlobalTheory.T.low_term_le_second_real_place_bounds D u w hg L X K ce Xe dG hF h0 hj).trans (sub_le_sub_right (le_of_eq ?_) _)
+  · refine (_root_.GlobalTheory.TwU.LowTerm.lowS_le D u w hg L X K ce Xe dG hF h0 hj).trans (sub_le_sub_right (le_of_eq ?_) _)
     refine Finset.sum_congr rfl fun j _ => ?_
     refine (hr2 (fun t => if ((D.what₂.places.resChar w : ℕ) : ℝ) ≤ L.sc.X'' D.R.n then
       FOrb D j (D.what₂.places.resChar w) (true, t) - OrbitPlaces.errF L K ce j (D.what₂.places.resChar w) (true, t) else 0) ?_).symm

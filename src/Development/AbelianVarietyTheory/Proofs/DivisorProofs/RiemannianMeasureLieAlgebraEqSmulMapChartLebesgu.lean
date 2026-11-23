@@ -4,9 +4,13 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PhaseFrame
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EmbGLMemRealSU
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.IsOrth
 public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.NormDetStrongContragredientDomRestrictAnnihilato
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SkewFamilyEqOfStrictLowerOfDiagImStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SkewFamilyInnerReEqStrictLowerAddDiagImStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpecialUnitaryLieAlgebraEntriesOrthonormalFrameStatement
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.Data.Fintype.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SkewFamilyEqOfStrictLowerOfDiagIm
+public import Mathlib.Data.Fintype.Prod
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SkewFamilyInnerReEqStrictLowerAddDiagIm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpecialUnitaryLieAlgebraEntriesOrthonormalFrame
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -93,7 +97,7 @@ theorem skew_of_mem {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ}
     (x : Frame X.Ψ r) (hx : IsOrth X x) (Y : EuclideanSpace ℂ (X.Ψ × Fin r × Fin r))
     (hY : fromFrame x Y ∈ realLie X.Ψ X.Gm) :
     (∀ τ a b, Y (τ, b, a) = -((sgn X.p0 a * sgn X.p0 b : ℝ) : ℂ) * conj (Y (τ, a, b))) ∧
-      ∀ τ, ∑ a, Y (τ, a, a) = 0 := GlobalTheory.T.specialUnitaryLieAlgebra_entries_orthonormal_frame X x hx Y hY
+      ∀ τ, ∑ a, Y (τ, a, a) = 0 := _root_.GlobalTheory.SUVol.FrameSkew.entries_of_mem X x hx Y hY
 
 theorem re_inner_skew {ι : Type} [Fintype ι] {r : ℕ} (s : Fin r → ℝ) (hs : ∀ a, s a * s a = 1)
     (Y Y' : ι × Fin r × Fin r → ℂ)
@@ -102,7 +106,7 @@ theorem re_inner_skew {ι : Type} [Fintype ι] {r : ℕ} (s : Fin r → ℝ) (hs
     ∑ p, (conj (Y p) * Y' p).re =
       2 * ∑ q : ι × {p : Fin r × Fin r // p.2 < p.1},
         (conj (Y (q.1, q.2.1.1, q.2.1.2)) * Y' (q.1, q.2.1.1, q.2.1.2)).re +
-      ∑ τ, ∑ a, (Y (τ, a, a)).im * (Y' (τ, a, a)).im := GlobalTheory.T.skew_family_inner_re_eq_strictLower_add_diagIm s hs Y Y' hY hY'
+      ∑ τ, ∑ a, (Y (τ, a, a)).im * (Y' (τ, a, a)).im := _root_.GlobalTheory.skew_family_inner_re_split s hs Y Y' hY hY'
 
 theorem eq_of_skew {ι : Type} [Fintype ι] {r : ℕ} (s : Fin r → ℝ) (hs : ∀ a, s a * s a = 1)
     (Y Y' : ι × Fin r × Fin r → ℂ)
@@ -112,7 +116,7 @@ theorem eq_of_skew {ι : Type} [Fintype ι] {r : ℕ} (s : Fin r → ℝ) (hs : 
     (htY' : ∀ τ, ∑ a, Y' (τ, a, a) = 0)
     (hlow : ∀ τ a b, b < a → Y (τ, a, b) = Y' (τ, a, b))
     (hdiag : ∀ τ (a : Fin r), (a : ℕ) + 1 < r → (Y (τ, a, a)).im = (Y' (τ, a, a)).im) : Y = Y' :=
-  GlobalTheory.T.skew_family_eq_of_strictLower_of_diagIm s hs Y Y' hY htY hY' htY' hlow hdiag
+  _root_.GlobalTheory.skewFamily_eq_of_strictLower_of_diagIm s hs Y Y' hY htY hY' htY' hlow hdiag
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {r : ℕ}
 

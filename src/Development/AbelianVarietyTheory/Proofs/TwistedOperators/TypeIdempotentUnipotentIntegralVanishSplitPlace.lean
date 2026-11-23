@@ -4,8 +4,8 @@ public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.StandardMaximalParabolic
 public import Formalism.DoubleCosetMeasures.Statement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsParabolicIsotropicFlagStabilizerSplitPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TypeIdempotentConstantTermVanish
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.StdMaxParabolicRadicalLeBlockUnipotentRadical
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TypeIdempotentConstantTermVanishStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -325,6 +325,6 @@ theorem unip_integral_vanish : ∀ (D : D7) (V : HSp D) (T : TypeDataG V) (v : T
       (f = GlobalTheory.AutomorphicL2Unitary.conv μ ((T.frame v).idem μ (T.τ v)) φ ∨ f = GlobalTheory.AutomorphicL2Unitary.conv μ φ ((T.frame v).idem μ (T.τ v))) →
     ∀ (ν : Measure (NLoc 𝔉 v.1)) [ν.IsHaarMeasure] (x y : GLoc D.sp.cm.sig V.gram v.1),
       Integrable (fun n : NLoc 𝔉 v.1 => f (x * n * y)) ν ∧ ∫ n : NLoc 𝔉 v.1, f (x * n * y) ∂ν = 0 :=
-  unip_integral_vanish_of GlobalTheory.T.typeIdempotent_constantTerm_vanish GlobalTheory.T.isParabolic_isotropicFlag_stabilizer_split_place
+  unip_integral_vanish_of _root_.GlobalTheory.TypeConstTerm.typeConstTermVanish GlobalTheory.T.isParabolic_isotropicFlag_stabilizer_split_place
 
 end GlobalTheory.LocConst

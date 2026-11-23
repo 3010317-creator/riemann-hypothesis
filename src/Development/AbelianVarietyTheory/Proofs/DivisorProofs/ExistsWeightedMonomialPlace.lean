@@ -2,9 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsLocModelIsPrimeOf
 public import Development.AbelianVarietyTheory.Definitions.QuasicoherentCohomology.IsQuasiRegularSeqSelfIffLocalizationMaximal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffMemSpanOfWeightedHomogeneousRelationQuasiReStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DvrLocPrincipalPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeightedHomogenisationStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffMemSpanOfWeightedHomogeneousRelationQuasiRe
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Mathlib.RingTheory.Valuation.ValuationSubring
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DvrLocPrincipalPrime
+public import Mathlib.RingTheory.MvPolynomial.WeightedHomogeneous
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeightedHomogenisation
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -83,7 +86,7 @@ theorem exists_weightedMonomialPlace : ∀ {L : Type} [Field L] (c : ℂ →+* L
   have hz0 : (z 0 : L) ≠ 0 := by
     intro h
     have h1 : z 0 = 0 := Subtype.ext h
-    have := GlobalTheory.T.coeff_mem_span_of_weightedHomogeneous_relation_quasiRegular z wt hw hz (wt 0) (X 0) (isWeightedHomogeneous_X Q wt 0)
+    have := _root_.GlobalTheory.weightedRelation_coeff_mem_span z wt hw hz (wt 0) (X 0) (isWeightedHomogeneous_X Q wt 0)
       (by simp [h1]) (Finsupp.single 0 1)
     rw [coeff_X, if_pos rfl, hm] at this
     exact (IsLocalRing.maximalIdeal.isMaximal Q).ne_top ((Ideal.eq_top_iff_one _).mpr this)
@@ -91,10 +94,10 @@ theorem exists_weightedMonomialPlace : ∀ {L : Type} [Field L] (c : ℂ →+* L
   have key0 : ∀ P : MvPolynomial (Fin r) Q, eval₂ Q.subtype u P = 0 →
       ∀ α, P.coeff α ∈ IsLocalRing.maximalIdeal Q := by
     intro P hP α
-    obtain ⟨N, F, hF, hFe, hc⟩ := GlobalTheory.T.exists_weightedHomogeneous_homogenisation Q r z wt hw0 hz0 P
+    obtain ⟨N, F, hF, hFe, hc⟩ := _root_.GlobalTheory.exists_weightedHomogenisation Q r z wt hw0 hz0 P
     obtain ⟨β, hβ⟩ := hc α
     rw [← hβ, ← hm]
-    refine GlobalTheory.T.coeff_mem_span_of_weightedHomogeneous_relation_quasiRegular z wt hw hz N F hF ?_ β
+    refine _root_.GlobalTheory.weightedRelation_coeff_mem_span z wt hw hz N F hF ?_ β
     apply Subtype.ext
     rw [hFe, hP, mul_zero]
     rfl
@@ -153,7 +156,7 @@ theorem exists_weightedMonomialPlace : ∀ {L : Type} [Field L] (c : ℂ →+* L
     obtain ⟨a, ha, b, hb, hb0, hab⟩ := hQ.frac f
     exact ⟨a, hQA a ha, b, hQA b hb, hb0, hab⟩
   obtain ⟨V, hAV, hdvr, hirr, hunit, hfrV, hess⟩ :=
-    GlobalTheory.T.isDVR_of_principal_prime_localization A t hNA hz0 hprime hfracA
+    _root_.GlobalTheory.dvr_loc_principal_prime A t hNA hz0 hprime hfracA
   have hQAf : (Q.subtype.codRestrict A fun q => hQA _ q.2).FiniteType := by
     have h1 : (Q.subtype.codRestrict A fun q => hQA _ q.2) = eA.comp C := by
       ext q; simp [heA_val, he]

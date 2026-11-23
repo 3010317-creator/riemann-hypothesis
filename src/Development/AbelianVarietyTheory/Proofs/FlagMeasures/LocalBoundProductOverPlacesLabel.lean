@@ -1,12 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PerRowC
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsAdaptedNormalFormRelevantTermProofStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsAdaptedNormalFormRelevantTermProof
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagFramesSameGradedDefinitePartLatticeEq
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFlagPairLatticeSumDiscriminantEqNormMinor
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ProdMaxInvLeProdMax
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RealPointGramMinorsAgreeProofStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowLatticeTermAdaptedNormalFormStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowsMeanC
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RealPointGramMinorsAgreeProof
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowLatticeTermAdaptedNormalForm
 import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.RelevantSetZeroGNotIdentity
 import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.FamilySeparationBoundOfNorms
 import Mathlib.Algebra.Order.Floor.Extended
@@ -160,8 +161,8 @@ theorem one_le_nloc {D : D7} {large₂ : SizeData₂ D} {X : HidaSetting D} {Y :
   have hK : Formalism.HermitianLatticesTheory.IsCMUnram D.host.E := by
     obtain ⟨C', Cl, Cg, cb, Cw, cT, CT, C0, hH⟩ := hS
     exact hH.2.2.2.2.2.2.2
-  obtain ⟨N, hN, -, -⟩ := GlobalTheory.T.exists_adaptedNormalForm_relevantTerm D large₂ X Y u hS t ht
-  have hT : N.IsTerm (gS D) t.lam := GlobalTheory.T.rowLattice_term_adaptedNormalForm D large₂ X Y u hS t N hN
+  obtain ⟨N, hN, -, -⟩ := _root_.GlobalTheory.TypeAsm.nfExC_holds D large₂ X Y u hS t ht
+  have hT : N.IsTerm (gS D) t.lam := _root_.GlobalTheory.TermRow.termC_holds D large₂ X Y u hS t N hN
   obtain ⟨-, -, -, -, -, hDl, hz, -, -⟩ :=
     GlobalTheory.DegAsm.adapt_invariants D.host.E (VS D).V (HV D) hK D.R.rS (F0 X u) (Ft t) (dI D) N hN
   have hl' : l ≤ D.R.rS + 1 := by omega
@@ -211,7 +212,7 @@ theorem prodC_holds : ProdC := by
       Dm τ l = absReal D.host.rdE (embS D τ) D.R.rS l.val (Dl (lf D (X.Fu u)).fl (frq X t.rep).fl l.val) := by
     intro τ l
     rw [hDm]
-    exact ((GlobalTheory.T.realPointGramMinorsAgree_proof D X Y u C τ).2 t).2.2 l
+    exact ((_root_.GlobalTheory.TypeAsm.gramC_holds D X Y u C τ).2 t).2.2 l
   have hD : ∀ l : Fin (D.R.rS + 1), (∀ v, Dm v l = 0) ∨ ((∀ v, 0 < Dm v l) ∧ 1 ≤ ∏ v, Dm v l) := by
     intro l
     by_cases h0 : Dl (lf D (X.Fu u)).fl (frq X t.rep).fl l.val = 0

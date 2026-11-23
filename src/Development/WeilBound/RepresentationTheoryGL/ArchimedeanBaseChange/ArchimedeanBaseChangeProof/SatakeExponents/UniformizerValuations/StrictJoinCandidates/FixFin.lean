@@ -1,8 +1,10 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.StrictJoinCandidates.FrameExOf
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AdmissibleOfFiniteLengthSubquotientsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteLengthOfProductsStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsUnitarisableOfCharIff
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AdmissibleOfFiniteLengthSubquotients
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.SatakeExponents.UniformizerValuations.SubOfNonNil
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteLengthOfProducts
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.BernsteinZelevinskyGL.TopAdm
 import GroundTheory.LocalFields.PadicLogSeries
 import Mathlib.Algebra.Order.Floor.Extended
@@ -58,10 +60,10 @@ theorem fixFin : FixFin := by
   intro E _ _ _ n D w K hKo hKc
   have hs : IsSmooth (Tail.prodAt D w) := GlobalTheory.SmGL.isSmooth_parInd _ _
   have hfl : HasFiniteLength (Tail.prodAt D w) :=
-    GlobalTheory.T.finite_length_of_products (w.adicCompletion E) (Fin n) (Fin D.c) (fun i => Fin (D.N i)) (GlobalTheory.SmGL.stdBlocks D.N D.h)
+    _root_.GlobalTheory.CompanionTheory.ProdLen.prodFinLen (w.adicCompletion E) (Fin n) (Fin D.c) (fun i => Fin (D.N i)) (GlobalTheory.SmGL.stdBlocks D.N D.h)
       (fun i => (D.σ i w).V) (fun i => (D.σ i w).ρ) (fun i => (D.σ i w).smooth) (fun i => (D.σ i w).irred)
   have hadm : IsAdmissible (Tail.prodAt D w) :=
-    GlobalTheory.T.admissible_of_finite_length_subquotients (Tail.prodAt D w) hs hfl fun W _ _ σ hsub hirr =>
+    _root_.GlobalTheory.CompanionTheory.AdmFL.isAdmissible_of_hasFiniteLength (Tail.prodAt D w) hs hfl fun W _ _ σ hsub hirr =>
       PositivityTheory.Tls2.BZGL.irreducibleAdmissibleGL_top (w.adicCompletion E) n W σ (hsub.isSmooth hs) hirr
   exact hadm.2 K hKo hKc
 

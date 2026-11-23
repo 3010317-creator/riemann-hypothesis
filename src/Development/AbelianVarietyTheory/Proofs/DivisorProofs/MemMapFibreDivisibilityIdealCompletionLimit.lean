@@ -2,8 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonUnitAtOfNotIsUnit
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCorrectionApproximateIdealSections
+public import Mathlib.AlgebraicGeometry.Stalk
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpecializesLiftClosedFibreStalkBaseChange
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GermMemIdealSheafStalkOfClosedFibreUnivClosed
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpecializesLiftClosedFibreStalkBaseChangeStatement
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsNoetherianRingAdicCompletionOfNoetherian
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemIdealOfFlatStalkPullback
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PolarizationTransferWithFunction
@@ -94,7 +96,7 @@ theorem closed_of_closed {X Y : Scheme.{0}} (π : X ⟶ Y) [UniversallyClosed π
   have hy' : π y = z := by
     have : z ⤳ π y := hx ▸ hvy.map π.continuous
     exact (hz.closure_eq ▸ specializes_iff_mem_closure.1 this : π y ∈ ({z} : Set Y))
-  obtain ⟨w, hvw, hw⟩ := GlobalTheory.T.exists_specializes_lift_pullback_snd_fromSpecStalk π z R i hi v y h1 hvy hy'
+  obtain ⟨w, hvw, hw⟩ := _root_.GlobalTheory.specializes_lift_closedFibre_stalkBaseChange π z R i hi v y h1 hvy hy'
   have : w = v := (hv.closure_eq ▸ specializes_iff_mem_closure.1 hvw : w ∈ ({v} : Set _))
   rw [← hw, this]
   rfl

@@ -5,11 +5,14 @@ public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.LocallyO
 public import Mathlib.RingTheory.DiscreteValuationRing.Basic
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCocharLieLieModel
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.MemMaxSmulTopIff
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsCocharacterLieModelStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsCocharacterLieModel
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueSemilinear
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFiniteProjectiveStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorusInjectiveLieMapStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFiniteProjective
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorusInjectiveLieMap
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -87,8 +90,8 @@ theorem exists_div {R X : Type} [CommRing R] [IsDomain R] [IsDiscreteValuationRi
 
 theorem lie_torus_saturated : ∀ (R K : Type) [CommRing R] [IsDomain R] [IsDiscreteValuationRing R] [Field K] [Algebra R K] [IsFractionRing R K] (S : Scheme.{0}) (b : Sp R ⟶ S) (G : Over S) [GrpObj G] [IsCommMonObj G] [IsSeparated G.hom] [Smooth G.hom] (X : Type) [AddCommGroup X] [Module.Free ℤ X] [Module.Finite ℤ X] (u : splitTorus S X ⟶ G) [IsMonHom u], (∀ (A : Type) [CommRing A] (g : K →+* A) (t : Over.mk (spMap g ≫ spMap (algebraMap R K) ≫ b) ⟶ splitTorus S X), t ≫ u = 1 → t = 1) → ∀ (MT : LieModel (splitTorus S X) b (X →+ R)), IsCocharLie MT → ∀ (E : Type) [AddCommGroup E] [Module R E] (M : LieModel G b E) (A : (X →+ R) →ₗ[R] E), (∀ δ, M.pt (A δ) = MT.pt δ ≫ u) → Function.Injective A ∧ ∀ (a : R) (y : E), a ≠ 0 → a • y ∈ LinearMap.range A → y ∈ LinearMap.range A := by
   intro R K _ _ _ _ _ _ S b G _ _ _ _ X _ _ _ u _ hgen MT hMT E _ _ M A hA
-  obtain ⟨hEf, hEp⟩ := GlobalTheory.T.lie_model_finite_projective S G R b E M
-  obtain ⟨Mk, hMk⟩ := GlobalTheory.T.exists_cocharacter_lie_model S X (IsLocalRing.ResidueField R) (spMap (IsLocalRing.residue R) ≫ b)
+  obtain ⟨hEf, hEp⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_finite_projective S G R b E M
+  obtain ⟨Mk, hMk⟩ := _root_.GlobalTheory.CompanionTheory.Ar.TorusLie.exists_lieModel_splitTorus S X (IsLocalRing.ResidueField R) (spMap (IsLocalRing.residue R) ≫ b)
   obtain ⟨Ek, i1, i2, ⟨MG⟩⟩ := lieModel_exists S G (IsLocalRing.ResidueField R) (spMap (IsLocalRing.residue R) ≫ b)
   obtain ⟨j, hj, -⟩ := LieBaseChange.existsUnique_semilinear_lifts S G R _ (IsLocalRing.residue R) b E Ek M MG
   obtain ⟨jT, hjT, -⟩ := LieBaseChange.existsUnique_semilinear_lifts S (splitTorus S X) R _
@@ -110,7 +113,7 @@ theorem lie_torus_saturated : ∀ (R K : Type) [CommRing R] [IsDomain R] [IsDisc
     have h1 : Mk.pt (jT δ) ≫ u = 1 := by
       apply Over.OverMorphism.ext
       rw [Over.comp_left, a2, Category.assoc, a1]
-    have h2 : jT δ = 0 := GlobalTheory.T.torus_injective_lie_map R K S b G X u hgen Mk hMk _ h1
+    have h2 : jT δ = 0 := _root_.GlobalTheory.CompanionTheory.Ar.TsClosed.diff_injective_mod_pi R K S b G X u hgen Mk hMk _ h1
     have h3 : ∀ χ, IsLocalRing.residue R (δ χ) = 0 := by
       intro χ
       have e := GlobalTheory.CompanionTheory.Ar.TorusModel.charVal_comp (dualMap (IsLocalRing.residue R)) (MT.pt δ) (Mk.pt (jT δ)) a2 χ

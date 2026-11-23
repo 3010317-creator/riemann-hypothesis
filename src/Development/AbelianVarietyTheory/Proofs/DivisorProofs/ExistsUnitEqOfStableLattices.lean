@@ -4,10 +4,14 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemMatLat
 public import Mathlib.Algebra.Polynomial.Derivative
 public import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
 public import Mathlib.RingTheory.DiscreteValuationRing.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCyclicVectorOfSeparableCharpolyStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralAevalEqAevalMapOfCoprimeCharpolyStatement
+public import Mathlib.FieldTheory.Separable
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCyclicVectorOfSeparableCharpoly
+public import Mathlib.RingTheory.IntegralClosure.IsIntegral.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralAevalEqAevalMapOfCoprimeCharpoly
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqMulIntegralClosureOfSeparableInvolutionAlgebra
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EqSubmoduleMulLeftImageIntegralClosureOfSeparabl
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
+public import Mathlib.LinearAlgebra.Matrix.Charpoly.Minpoly
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,8 +57,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
-public import Mathlib.LinearAlgebra.Matrix.Charpoly.Minpoly
 
 @[expose] public section
 
@@ -100,7 +102,7 @@ theorem exists_unit_eq_matLat : ∀ {O K : Type} [CommRing O] [IsDomain O] [IsDi
     ∃ p : K[X], IsUnit (aeval γ p) ∧ M₂ = matLat O (aeval γ p) M₁ := by
   intro O K _ _ _ _ _ _ _ n P₀ hcop γ hchar M₁ M₂ hL₁ hL₂ hs₁ hs₂
   have hsep : γ.charpoly.Separable := by rw [hchar]; exact Polynomial.Separable.map hcop
-  obtain ⟨v₀, hv₀⟩ := GlobalTheory.T.exists_cyclicVector_of_separable_charpoly' n γ hsep
+  obtain ⟨v₀, hv₀⟩ := _root_.GlobalTheory.LatOrb.exists_cyclicVector_of_separable_charpoly n γ hsep
   obtain ⟨A, hA⟩ : ∃ A : Subalgebra K (Matrix (Fin n) (Fin n) K), A = Algebra.adjoin K {γ} :=
     ⟨_, rfl⟩
   have memA : ∀ a : Matrix (Fin n) (Fin n) K, a ∈ A ↔ ∃ p : K[X], aeval γ p = a := by
@@ -168,7 +170,7 @@ theorem exists_unit_eq_matLat : ∀ {O K : Type} [CommRing O] [IsDomain O] [IsDi
       (ha : IsIntegral O a).map (A.val.restrictScalars O)
     obtain ⟨p, hp⟩ := (memA _).1 a.2
     rw [← hp] at hint
-    obtain ⟨r, hr⟩ := GlobalTheory.T.integral_aeval_eq_aeval_map_of_coprime_charpoly n P₀ hcop γ hchar p hint
+    obtain ⟨r, hr⟩ := _root_.GlobalTheory.MaxOrder.isIntegral_aeval_eq_aeval_map n P₀ hcop γ hchar p hint
     rw [memJ] at hy ⊢
     change ((a : Matrix (Fin n) (Fin n) K) * (y : Matrix (Fin n) (Fin n) K)) *ᵥ v₀ ∈ M
     rw [← Matrix.mulVec_mulVec, ← hp, hr]

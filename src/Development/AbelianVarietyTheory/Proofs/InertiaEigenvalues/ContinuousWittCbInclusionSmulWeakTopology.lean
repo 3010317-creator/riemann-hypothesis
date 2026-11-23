@@ -1,10 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ZlTowerGen
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousOfTailStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousZlSmulStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPowInclRSmulMemStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LinearMapPiContinuousCoordStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousOfTail
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousZlSmul
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsPowInclRSmulMem
+public import Mathlib.NumberTheory.Padics.PadicIntegers
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LinearMapPiContinuousCoord
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -72,7 +74,7 @@ theorem continuous_io_smul_of {O RA RW M : Type} [CommRing O] [TopologicalSpace 
     { toFun := fun a => inc (io a) • y
       map_zero' := by simp only [map_zero, zero_smul]
       map_add' := fun a c => by simp only [map_add, add_smul] }
-  refine GlobalTheory.T.continuous_of_tail_small_of_monomial_continuous Φ ?_ ?_
+  refine _root_.GlobalTheory.WeakClosed.continuous_of_tail Φ ?_ ?_
   · intro U hU
     obtain ⟨k, hk⟩ := hsmall U hU
     refine ⟨k, fun r => ?_⟩
@@ -147,11 +149,11 @@ theorem continuous_inclR_io_smul : ∀ {l : ℕ} [Fact l.Prime] {P : LocPrime l}
   have ht := isTopologicalAddGroup_twTop T b
   have hn : NeZero (Module.finrank ℚ_[l] ↥(K0 K)) := ⟨(finrank_maxUnramifiedSubfield_pos K).ne'⟩
   have hTower := @tensorProduct_left_scalarTower ↥(OL LL) (RW LL) ↥T.L.T _ _ algW _ _
-  have hlin := @GlobalTheory.T.continuous_linearMap_pi_of_continuous_coord l hl
+  have hlin := @_root_.GlobalTheory.linearMap_pi_continuous_coord l hl
     ↥(OL LL) (TW (RW LL) T) (ZMod (Module.finrank ℚ_[l] ↥(K0 K)))
-    _ _ (ZMod.fintype _) _ modO tT ht e bO (GlobalTheory.T.continuous_padicInt_smul_latB T b)
+    _ _ (ZMod.fintype _) _ modO tT ht e bO (_root_.GlobalTheory.WeakClosed.continuous_zl_smul T b)
   exact @continuous_io_smul_of ↥(OL LL) (RA LL) (RW LL) (TW (RW LL) T)
     _ tO _ algA _ algW _ modRW modO hTower tT ht _
-    E.tie.io (inclR LL) y _ E.tie.io_π (GlobalTheory.T.exists_pow_inclR_smul_mem' AI s T b y) hlin
+    E.tie.io (inclR LL) y _ E.tie.io_π (_root_.GlobalTheory.WeakClosed.exists_pow_inclR_smul_mem AI s T b y) hlin
 
 end GlobalTheory.WeakClosed

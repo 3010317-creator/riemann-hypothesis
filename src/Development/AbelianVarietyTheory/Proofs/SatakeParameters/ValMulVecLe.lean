@@ -6,19 +6,20 @@ public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsEigenSy
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CommuteOfTrivOutside
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SphericalLabelOperatorsOnHyperspecialFixedVector
 public import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemSum
-import Development.AbelianVarietyTheory.Definitions.Foundations.EqPlaceIdemOfIsPrimeIdem
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsHeckeOpFullDualLab
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StableLatticeEqZpowStdInertCompletionStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsDualFamilyOfIsLattice
+public import Formalism.SatakeDualWeyl.Statement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StableLatticeEqZpowStdInertCompletion
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsUniqueIsConjAt
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CmDataIsCMExtAndGramIsHermND
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteInertHeckeSupportCosets
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemMaxCompactOfTrivOutsideLocalIntegral
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsNonsplitPlaceWithInertDatum
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsTrivOutsideInertDatumLocalEqStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertDatumLocalInjectiveOnTrivOutsideStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertDatumLocalStdLatticeStabilizerMemMaxCompactStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertDoubleCosetOperatorEqInertHeckeOperator
+import Development.AbelianVarietyTheory.Definitions.Foundations.EqPlaceIdemOfIsPrimeIdem
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsHeckeOpFullDualLab
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsDualFamilyOfIsLattice
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CmDataIsCMExtAndGramIsHermND
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteInertHeckeSupportCosets
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MemMaxCompactOfTrivOutsideLocalIntegral
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertPlaceHeckeDoubleCosetsInverseRepsLabel
 import Formalism.HermitianLattices.HermitianLatticesProofs.DualBasic
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Heckebasic
@@ -116,7 +117,7 @@ theorem exists_scalar {E : Type} [Field E] [NumberField E] {w : HeightOneSpectru
   obtain ⟨N, hN0, hN⟩ := exists_den (Valued.v : Valuation (w.adicCompletion E) _)
     (fun p : (Fin n × Fin n) ⊕ (Fin n × Fin n) => Sum.elim (fun a => g.1 a.1 a.2) (fun a => (g⁻¹).1 a.1 a.2) p)
   obtain ⟨x, hx1, hx2⟩ := hU.2.2.2.2.1
-  obtain ⟨k, hk⟩ := GlobalTheory.T.stable_lattice_eq_zpow_std_inert_completion E w σ hU.1 hU.2.1 ⟨x, hx1, hx2⟩ ϖ hϖ n L N hN0
+  obtain ⟨k, hk⟩ := _root_.GlobalTheory.LocLatInert.stable_lattice_eq_zpow_std E w σ hU.1 hU.2.1 ⟨x, hx1, hx2⟩ ϖ hϖ n L N hN0
     (fun a ha y hy => (hL _).2 fun i => by
       rw [Matrix.mulVec_smul, Pi.smul_apply, smul_eq_mul, map_mul]
       exact mul_le_one' ha (hy i))

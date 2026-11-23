@@ -7,9 +7,10 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceIsoComp
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrincipalCongruenceFixedVectorsNeBotTransportStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StableHopfOrderSubgroupRestriction
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChevalleyUnits
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalArtinExistsHolds
+public import Development.AutomorphicArithmetic.Foundations.LocalLanglands.LocalCentralUnits.RecTUnique
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ContinuousRingEquivLocalFieldPreservesValuationStatement
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsLanglandsDataTransportLocalFieldIsoStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalArtinExistsHolds
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalArtinMapUniqueTransportPlaceIso
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalArtinMapUniqueTransportPlaceIsoStatement
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalLanglandsTransport
@@ -20,9 +21,9 @@ import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TransportIrrGL
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TransportIrrGLBijectiveDegreeCharZeroStatement
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TransportKeepsCuspidalTwistsCharacters
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TransportKeepsCuspidalTwistsCharactersStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GlobalArtinReciprocityHolds
+import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
+import CompanionTheory.AutomorphicTheory.PlaceSeparation.IsOpenQuotientMapArt0
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsTheRecOfIsRecLit
-public import Development.AutomorphicArithmetic.Foundations.LocalLanglands.LocalCentralUnits.RecTUnique
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -151,7 +152,7 @@ private theorem typeLaw_fwd (P : PlaceIso A w A' w' φ j i) (rc : IrrGL (k := w.
     exact t.2
   have P'' : PlaceIso A' w'' A w'' φ.symm (RingHom.id E'') (RingEquiv.refl (w''.adicCompletion E'')) :=
     ⟨hm, fun _ => rfl, continuous_id, fun _ => rfl⟩
-  have hart := GlobalTheory.LocLanglands.isLocalArtin_transport GlobalTheory.globalArtinReciprocity_holds
+  have hart := GlobalTheory.LocLanglands.isLocalArtin_transport _root_.CompanionTheory.FamInh.globalArtin
     GlobalTheory.Published.chevalleyUnits' E'' Ω' A' w'' h'' E'' Ω A w'' h₃ φ.symm (RingHom.id E'')
     (RingEquiv.refl _) P'' a'' a₃ ha'' ha₃ (ineIncl h'' t) (ineIncl h₃ ⟨t₁, ht₁⟩) hrt
   have hv' : Valued.v ((a₃ (ineIncl h₃ ⟨t₁, ht₁⟩) : w''.adicCompletion E'') -
@@ -180,7 +181,7 @@ private theorem isRecT_fwd (P : PlaceIso A w A' w' φ j i) (rc : IrrGL (k := w.a
   obtain ⟨S, hS, hSd, hS0, hSs, hSc, hSt, hSp, hSi, hSo⟩ := GlobalTheory.T.place_over_transport_ring_iso_symm E Ω A w h E' Ω' A' w' h' φ j i P
   obtain ⟨c, hc, -⟩ := GlobalTheory.T.place_over_transport_ring_iso E Ω A w h E' Ω' A' w' h' φ j i P
   obtain ⟨a, ha, L⟩ := H
-  have hart := GlobalTheory.T.localArtinMap_unique_transport_placeIso GlobalTheory.globalArtinReciprocity_holds GlobalTheory.Published.chevalleyUnits'
+  have hart := GlobalTheory.T.localArtinMap_unique_transport_placeIso _root_.CompanionTheory.FamInh.globalArtin GlobalTheory.Published.chevalleyUnits'
     E Ω A w h E' Ω' A' w' h' φ j i P a a' ha ha'
   obtain ⟨rc', key⟩ : ∃ rc' : IrrGL (k := w'.adicCompletion E') → WD h', ∀ x', rc' x' = S (rc (T.symm x')) :=
     ⟨_, fun _ => rfl⟩

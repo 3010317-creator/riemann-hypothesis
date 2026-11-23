@@ -2,10 +2,14 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.AdelicGroupAlgebraActionInjective
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsCompatibleLieModelStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueEquivStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelIsoTransportStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TwistModelsCommonPointStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsCompatibleLieModel
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueEquiv
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.MemEigSpOfMemHtDual
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelIsoTransport
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PushInvertible
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TwistModelsCommonPoint
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -80,7 +84,7 @@ theorem tied_generic_fibre : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   intro E _ _ _ H D l Xo c O O' _ _ β β' Y Y' g Φ n S Ω _ K _ J _ y A A' e x x' _ _ _ h4 h5 h6 h7 _ _ _ _
   have hπ : A'.ξ ≫ (e.hom ≫ A.f) = x ≫ Y.j := by rw [← Category.assoc, h4, h5]
   obtain ⟨t, t', tΩ, a, a', m, m', u, u', E1, E2, E3⟩ :=
-    GlobalTheory.T.twist_models_common_point E H D l Xo c O O' β β' Y Y' g Φ n A'.X (e.hom ≫ A.f) A'.f Ω A'.ξ x x' hπ h6 h7
+    _root_.GlobalTheory.CompanionTheory.Ar.TwoModels.generic_fibre_twist E H D l Xo c O O' β β' Y Y' g Φ n A'.X (e.hom ≫ A.f) A'.f Ω A'.ξ x x' hπ h6 h7
   obtain ⟨k, hk⟩ := sabCancel pullCubCancel E H _ _ _ Y.t A.t t A.f e.hom A.m a
   obtain ⟨k', hk'⟩ := sabCancel pullCubCancel E H _ _ _ Y'.t A'.t t' A'.f (𝟙 _) A'.m
     (sabRebase a' (Category.id_comp A'.f).symm)
@@ -91,9 +95,9 @@ theorem tied_generic_fibre : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
   have hmA : mA.φ = m.φ ≫ k.φ := (sabRebase_φ n₁ h4).trans hn₁
   have hmA' : mA'.φ = m'.φ ≫ k'.φ := (sabRebase_φ n₂ _).trans hn₂
   rw [sabRebase_φ] at hk'
-  obtain ⟨M₁, P1, P2, -, P4⟩ := GlobalTheory.T.lie_model_iso_transport E H A.X A'.X e Ω A.ξ A'.ξ A.t t k A.Li A.M h4
-  obtain ⟨M₂, Q⟩ := GlobalTheory.T.exists_compatible_lie_model A'.X Ω A'.ξ t.G A'.t.G tΩ.G m.φ mA'.φ m.cart mA'.cart A.Li M₁
-  obtain ⟨φ, hφ, -⟩ := GlobalTheory.T.lie_model_existsUnique_equiv A'.X A'.t.G Ω A'.ξ A.Li A'.Li M₂ A'.M
+  obtain ⟨M₁, P1, P2, -, P4⟩ := _root_.GlobalTheory.CompanionTheory.Ar.IsoMove.lieModel_isoMove E H A.X A'.X e Ω A.ξ A'.ξ A.t t k A.Li A.M h4
+  obtain ⟨M₂, Q⟩ := _root_.GlobalTheory.CompanionTheory.Ar.FrameModelsGeometry.main A'.X Ω A'.ξ t.G A'.t.G tΩ.G m.φ mA'.φ m.cart mA'.cart A.Li M₁
+  obtain ⟨φ, hφ, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_existsUnique_equiv A'.X A'.t.G Ω A'.ξ A.Li A'.Li M₂ A'.M
   refine ⟨t, tΩ, k, m, mA, mA', u, u', M₁, φ, hmA, ?_, ?_, E3, P1, ?_, P2, P4⟩
   · rw [hmA, Category.assoc, ← hk, E1]
   · rw [hmA', Category.assoc, ← hk', E2]

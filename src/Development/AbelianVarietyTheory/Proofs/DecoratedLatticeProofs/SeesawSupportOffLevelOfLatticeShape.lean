@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.VacOfShape
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselToJacobiFirstStepFlatMapSupportAllStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.JacobiToBesselSecondStepFlatSupportRamifiedStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ValueDoubleExact
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselToJacobiFirstStepFlatMapSupportAll
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.JacobiToBesselSecondStepFlatSupportRamified
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -89,7 +90,7 @@ theorem offOfShape_of_supp (h1 : SuppFirst D) (h2 : SuppSecond D) : OffOfShape D
   rw [hS.ram] at hφ
   exact hφ
 
-theorem offOfShape_all : ∀ D : D7, OffOfShape D := fun D => offOfShape_of_supp (GlobalTheory.T.besselToJacobiFirstStepFlatMapSupport_all D) (GlobalTheory.T.jacobiToBessel_second_step_flat_support_ramified D)
+theorem offOfShape_all : ∀ D : D7, OffOfShape D := fun D => offOfShape_of_supp (_root_.GlobalTheory.FinPl.suppFirst_all D) (_root_.GlobalTheory.FinPl.suppSecond_holds D)
 
 end GlobalTheory.SeeSaw
 

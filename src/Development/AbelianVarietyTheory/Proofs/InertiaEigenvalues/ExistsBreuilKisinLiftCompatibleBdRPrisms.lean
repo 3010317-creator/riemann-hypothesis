@@ -1,12 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ApproxRootSubUniformizerMemFilPStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BezoutEisensteinDerivativePrimePowStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ApproxRootSubUniformizerMemFilP
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinApproxRootImageIndep
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinPrismHomsAgreeWittAndModIdealStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsApproxRootEisensteinAwayPrimeStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalPeriodRingsSectionEqAinfToBdRPlusStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinPrismHomsAgreeWittAndModIdeal
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsApproxRootEisensteinAwayPrime
+public import Mathlib.RingTheory.PowerSeries.WeierstrassPreparation
+public import Mathlib.RingTheory.Polynomial.Eisenstein.Distinguished
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BezoutEisensteinDerivativePrimePow
+import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsCrisP
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsAdicCompleteOfPowLe
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalPeriodRingsSectionEqAinfToBdRPlus
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -24,7 +28,6 @@ import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
-public import Mathlib.RingTheory.PowerSeries.WeierstrassPreparation
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.Tactic.Echelon.Zsqrtd
 import Mathlib.Tactic.Inclusion.Extension.Core.Core
@@ -46,7 +49,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.RingTheory.Polynomial.Eisenstein.Distinguished
 
 @[expose] public section
 
@@ -127,26 +129,26 @@ theorem good_C (w : Wq l bk.a) :
   · have h := bk.θ_ev (bk.str.symm (Ideal.Quotient.mk _ (PowerSeries.C w))) (PowerSeries.C w)
       (bk.str.apply_symm_apply _).symm
     rw [bk.ev_C] at h
-    have h2 := GlobalTheory.T.localPeriodRings_section_eq_ainfToBdRPlus l bk.a C w
+    have h2 := _root_.GlobalTheory.SeedSec.o_eq_aDp_wA l bk.a C w
       (((bk.str.symm (Ideal.Quotient.mk _ (PowerSeries.C w)) : ↥(OL K)) : ↥K.1) : Om l)
       (by rw [h]; exact coe_intToOC K _)
     have h3 : oK K C (bk.str.symm (Ideal.Quotient.mk _ (PowerSeries.C w))) = aDp l (wA l bk.a w) := h2
     rw [h3, RingHom.comp_apply, bk.ev_C, pow_zero, one_mul, sub_self]
     exact Ideal.zero_mem _
-  · rw [(GlobalTheory.T.breuilKisinPrism_homs_agree_witt_and_mod_ideal l K bk B f g).1 w, sub_self, mul_zero]
+  · rw [(_root_.GlobalTheory.BSP.IdealSubMembership.main l K bk B f g).1 w, sub_self, mul_zero]
     exact dvd_zero _
 
 theorem good_X : Good bk C n (bk.str.symm (Ideal.Quotient.mk _ X)) := by
-  obtain ⟨m, q, h1, h2⟩ := GlobalTheory.T.exists_approx_root_eisenstein_away_prime l K bk n
+  obtain ⟨m, q, h1, h2⟩ := _root_.GlobalTheory.BSP.BK.exists_approx_root l K bk n
   have hIndep (B : Obj l ↥(OL K)) (f g : Hom bk.prism B) :
       ∃ k : ℕ, BK.hf (bk := bk) f bk.E ^ n ∣
         (l : B.A) ^ k * (BK.hf (bk := bk) f q - BK.hf (bk := bk) g q) := by
-    obtain ⟨hC, hX, hI⟩ := GlobalTheory.T.breuilKisinPrism_homs_agree_witt_and_mod_ideal l K bk B f g
-    obtain ⟨-, -, hI'⟩ := GlobalTheory.T.breuilKisinPrism_homs_agree_witt_and_mod_ideal l K bk B g f
-    obtain ⟨c, a, b, hab⟩ := GlobalTheory.T.bezout_eisenstein_derivative_prime_pow l K bk
+    obtain ⟨hC, hX, hI⟩ := _root_.GlobalTheory.BSP.IdealSubMembership.main l K bk B f g
+    obtain ⟨-, -, hI'⟩ := _root_.GlobalTheory.BSP.IdealSubMembership.main l K bk B g f
+    obtain ⟨c, a, b, hab⟩ := _root_.GlobalTheory.BSP.bezout_Ep_derivative l K bk
     exact approxRoot_image_indep_general_rings l n m c bk.Ep a b hab q h1 h2 B.I
       (BK.hf (bk := bk) f) (BK.hf (bk := bk) g) hC hX hI hI'
-  exact ⟨m, q, GlobalTheory.T.approxRoot_sub_uniformizer_mem_filP l K bk C n m q h1 h2, hIndep⟩
+  exact ⟨m, q, _root_.GlobalTheory.BSP.approxRoot_sub_mem_fil l K bk C n m q h1 h2, hIndep⟩
 
 theorem good_poly (P : Polynomial (Wq l bk.a)) :
     Good bk C n (bk.str.symm (Ideal.Quotient.mk _ (P : bk.S))) := by

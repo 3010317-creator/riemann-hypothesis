@@ -6,10 +6,12 @@ public import Formalism.LocalToGlobal.IndefiniteReal.LinksLemmas
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjTranslatedRowEvaluationIntertwinesRealGroupStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjTranslatedRowEvaluationLevelProjectorFixedStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ConjTranslatedRowEvaluationMultilinearNormSqStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DenseSpanTensorOfDenseSubspacesStatement
+public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DenseSpanTensorOfDenseSubspaces
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiscreteSeriesTestDataLargeGapsIntegrableStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsClmOfGramEqSmulStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InnerMapEqConstMulProdInnerStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsClmOfGramEqSmul
+public import Mathlib.LinearAlgebra.Multilinear.Basic
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InnerMapEqConstMulProdInner
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TranslatedRowEvaluationSquareIntegrableNormStatement
 import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedVolumeStatements.LevelSubgroupProperties
 import Mathlib.Algebra.Order.Floor.Extended
@@ -65,14 +67,14 @@ theorem GlobalTheory.RowEvalHH.conj_eval_mem_HH : ∀ {D : D7} {G : Type} [Group
 
   let u : (∀ τ, ↥(Wsub R X c τ)) → X.B.Hs := fun y => tensT X (fun τ => (y τ : X.B.H (X.pl.symm τ)))
   obtain ⟨f, K, hfe, hfn⟩ := GlobalTheory.T.conjTranslatedRowEvaluation_multilinear_norm_sq R F X h hLev hGrp hMod t c ht S hS
-  have hfi := GlobalTheory.T.inner_multilinearMap_eq_mul_prod_inner f K hfn
+  have hfi := _root_.GlobalTheory.MultilinearMap.inner_map_eq_const_mul_prod_inner f K hfn
   have hgram : ∀ a b, ⟪evF R X h t c S a, evF R X h t c S b⟫_ℂ = (K : ℂ) * ⟪u a, u b⟫_ℂ := by
     intro a b
     rw [← hfe a, ← hfe b, hfi a b, tensT_inner]
     rfl
   have hdense : Dense (Submodule.span ℂ (Set.range u) : Set X.B.Hs) :=
-    GlobalTheory.T.dense_span_tensor_of_dense_subspaces' (tensT X) (Wsub R X c) (tensT_inner X) (tensT_dense X) (Wsub_dense R X c)
-  obtain ⟨Aop, hA⟩ := GlobalTheory.T.exists_clm_of_gram_eq_smul' u (evF R X h t c S) K hgram hdense
+    _root_.GlobalTheory.dense_span_tensor_of_dense_subspaces (tensT X) (Wsub R X c) (tensT_inner X) (tensT_dense X) (Wsub_dense R X c)
+  obtain ⟨Aop, hA⟩ := _root_.GlobalTheory.exists_clm_of_gram_eq_smul u (evF R X h t c S) K hgram hdense
   have hHom : Aop ∈ X.B.I.HomS X.B.σs X.B.μf X.B.fund X.B.R := by
     intro g
     apply ContinuousLinearMap.ext_on hdense

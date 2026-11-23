@@ -4,10 +4,10 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodge
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LevelSectionsExactKernelLocusOpen
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsPowSubMemSpanOfIsUnitModOfIsAlgClosed
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsGenOfIsVBOne
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BirationalLatticeHeightFormulaStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BirationalLatticeHeightFormula
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsPlaceOfNotMemGenFibre
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericPointNormalCoords
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptFlagDegreeStatement
+public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.HodgeComponentFlagDegree
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,9 +55,9 @@ theorem exists_flatHerm_hodgeCpt_const : ∀ (E : Type) [Field E] [NumberField E
   intro E _ _ _ H D l Xo c O _ β Y S Ω _ K _ J _ y 𝔐 Fl xdeg e τ F' _ _ ψ A c₀ r cinf hR hA hB hC hc₀ hgen hZ hcinf hnorm
   have hN : NormalCpt 𝔐.ξ := XR.normalCpt_of_isCptGen 𝔐.tie.gen 𝔐.normal
   have hO : OverInt y ψ := overInt_of_normalCpt 𝔐.tie hN ψ
-  have hD := GlobalTheory.T.hodge_cpt_flag_degree E H D l Xo c O β Y S Ω K J y 𝔐 Fl xdeg e τ hR
+  have hD := _root_.PositivityTheory.Xgn.hodge_component_flag_degree E H D l Xo c O β Y S Ω K J y 𝔐 Fl xdeg e τ hR
   rw [← hA] at hD
-  refine ⟨hO, GlobalTheory.T.birational_lattice_height_formula K J Ω F' y ψ 𝔐.X 𝔐.ξ Ω _ (∏ i, e (τ, i)) c₀ A r cinf hO hB hC 𝔐.tie hN hD hc₀
+  refine ⟨hO, _root_.GlobalTheory.CompanionTheory.Ar.Flat.exists_flatHerm_of_adelic K J Ω F' y ψ 𝔐.X 𝔐.ξ Ω _ (∏ i, e (τ, i)) c₀ A r cinf hO hB hC 𝔐.tie hN hD hc₀
     (fun p => ?_) hcinf hnorm⟩
   by_cases hp : p ∈ genFibre ℤ 𝔐.ξ
   · exact Or.inl ⟨cst_mem_regAt_of_genFibre hN ψ hp, orderAt_one_zero.2 (hgen p hp)⟩

@@ -1,9 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DatumOfIsIntegersLattice
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGaloisStableTorsionFamilyKerStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaloisStableLatticePointsSymmetricMemStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeierstrassPSubTwoMulUnitStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGaloisStableTorsionFamilyKer
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaloisStableLatticePointsSymmetricMem
+public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsVariableChangeEqLatticeCurve
+public import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.TranslateProduct
+public import Mathlib.RingTheory.Valuation.ValuationSubring
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeierstrassPSubTwoMulUnit
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,7 +57,7 @@ theorem exists_mem_valuation_cube_eq_Δ : ∀ (p : ℕ) (F : IntermediateField �
     p.Prime → p % 4 = 3 → 3 < p → Datum p F L t → ∀ V : ValuationSubring ℂ,
       ∃ A ∈ F, A ≠ 0 ∧ V.valuation A ^ 3 = V.valuation (latticeCurve L).Δ := by
   intro p F L t hp h4 h3 hD V
-  obtain ⟨N, ι, _, T, hNodd, hN3, hNv, hcard, hst, hT⟩ := GlobalTheory.T.exists_galoisStable_torsion_family_ker p F L t hp h4 h3 hD V
+  obtain ⟨N, ι, _, T, hNodd, hN3, hNv, hcard, hst, hT⟩ := _root_.GlobalTheory.CMModel.exists_stable_family_ker p F L t hp h4 h3 hD V
   have hΔ0 := latticeCurve_Δ_ne_zero L
   obtain ⟨u, hu⟩ := IsAlgClosed.exists_pow_nat_eq (latticeCurve L).Δ (by norm_num : 0 < 12)
   have hu0 : u ≠ 0 := by rintro rfl; exact hΔ0 (by rw [← hu]; simp)
@@ -64,9 +67,9 @@ theorem exists_mem_valuation_cube_eq_Δ : ∀ (p : ℕ) (F : IntermediateField �
     have : (0 : ℝ) < p := by exact_mod_cast hp.pos
     simp [sqrtNegNat, Real.sqrt_ne_zero'.2 this]
   have hN3' : ¬ 3 ∣ N := by omega
-  have hU := fun i => GlobalTheory.T.valuation_weierstrassP_sub_two_mul_eq_sq L (sqrtNegNat p) u V N hD.mul hβ hvΔ.symm hNv hNodd hN3' (T i)
+  have hU := fun i => _root_.GlobalTheory.CMModel.weierstrassP_sub_two_mul_unit L (sqrtNegNat p) u V N hD.mul hβ hvΔ.symm hNv hNodd hN3' (T i)
     (hT i).1 (hT i).2
-  have hmem := (GlobalTheory.T.galoisStable_lattice_points_symmetric_mem F L ι T hD.g₂_mem hD.g₃_mem hst (fun i => (hT i).1)).2.2.2
+  have hmem := (_root_.GlobalTheory.CMModel.stable_sym_mem F L ι T hD.g₂_mem hD.g₃_mem hst (fun i => (hT i).1)).2.2.2
     (fun i => (hU i).1)
   have hΔmem : (latticeCurve L).Δ ∈ F := by
     rw [latticeCurve_Δ]

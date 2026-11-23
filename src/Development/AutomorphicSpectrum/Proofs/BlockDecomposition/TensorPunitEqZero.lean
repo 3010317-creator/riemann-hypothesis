@@ -4,7 +4,8 @@ public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCoh
 public import Mathlib.Algebra.Order.PUnit
 public import Mathlib.Data.Nat.Prime.Defs
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeftCommLTensorNatural
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PerfectTensorProductStatement
+public import Mathlib.RingTheory.TensorProduct.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PerfectTensorProduct
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -115,7 +116,7 @@ theorem exact_succ {p : ℕ} [Fact p.Prime] {A : Type} [CommRing A] {B : Type} [
     obtain ⟨H₁, h0', _⟩ := GlobalTheory.CompanionTheory.Dblock.AmiBc.contraction_lTensor A B C K d H hH
     have hz : r k • w = 0 :=
       ker_zero hCov (fun n => C ⊗[A] K n) (fun n => (d n).lTensor C) H₁
-        (fun n => GlobalTheory.T.perfect_tensor_product p A C (K n) hA hC (hK n)) h0' w hw k
+        (fun n => _root_.GlobalTheory.CompanionTheory.PerfectRing.pf_tensor p A C (K n) hA hC (hK n)) h0' w hw k
     rw [hz]
     exact zero_mem _
   | succ n ih =>
@@ -124,7 +125,7 @@ theorem exact_succ {p : ℕ} [Fact p.Prime] {A : Type} [CommRing A] {B : Type} [
     intro C _ _ hC w hw k
     obtain ⟨H₁, h0', hS'⟩ := GlobalTheory.CompanionTheory.Dblock.AmiBc.contraction_lTensor A B C K d H hH
     obtain ⟨v, hv⟩ := ih (fun n => C ⊗[A] K n) (fun n => (d n).lTensor C) H₁
-      (fun n => GlobalTheory.T.perfect_tensor_product p A C (K n) hA hC (hK n))
+      (fun n => _root_.GlobalTheory.CompanionTheory.PerfectRing.pf_tensor p A C (K n) hA hC (hK n))
       (fun n z => lTensor_sq_zero d dd n z) ⟨h0', hS'⟩ w hw k
     refine ⟨((d n).codRestrict (LinearMap.ker (d (n + 1))) (fun z => dd n z)).lTensor C v, ?_⟩
     rw [← hv, ← LinearMap.comp_apply, ← LinearMap.lTensor_comp]

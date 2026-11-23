@@ -1,9 +1,12 @@
 module
 
 public import ReciprocityTheory.AnalyticForms.PlurisubharmonicFunctions.IsPshLocallyIntegrableStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PlurisubharmonicLocalStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PlurisubharmonicLocal
 public import GroundTheory.HeightsAndTheta.Heights.Regularisation.GlueCharts
 public import GroundTheory.HeightsAndTheta.Heights.StabilizerCovolume.PhiISemipositive
+public import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
+public import Mathlib.Topology.Algebra.Order.LiminfLimsup
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.PshShiftA
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -11,7 +14,6 @@ import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
-public import Mathlib.Analysis.SpecialFunctions.Complex.Analytic
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
@@ -48,12 +50,10 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
-public import Mathlib.Topology.Algebra.Order.LiminfLimsup
 import Mathlib.Topology.Sheaves.Init
 import ReciprocityTheory.AnalyticForms.PlurisubharmonicFunctions.PshBasic
 import ReciprocityTheory.AnalyticForms.PlurisubharmonicFunctions.PshExt
 import ReciprocityTheory.AnalyticForms.PlurisubharmonicFunctions.PshMoll
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.PshShiftA
 
 @[expose] public section
 
@@ -192,7 +192,7 @@ theorem isPsh_ext {n : ℕ} {T : Set (Fin n → ℂ)} (hT : IsOpen T) (hT1 : T �
     (h1 : ∀ v ∈ T \ coordDiv S, g' v = g v)
     (h2 : ∀ v ∈ T, v ∈ coordDiv S → g' v = limsup g (𝓝[T \ coordDiv S] v)) :
     IsPsh T fun v => q v + g' v := by
-  refine GlobalTheory.T.plurisubharmonic_local n T _ hT fun v₀ hv₀ => ?_
+  refine _root_.GlobalTheory.CompanionTheory.AnForm.PshLocal.isPsh_of_locally n T _ hT fun v₀ hv₀ => ?_
   obtain ⟨δ, hδ, hδT⟩ := nhds_basis_closedBall.mem_iff.1 (hT.mem_nhds hv₀)
   obtain ⟨Mq, hMq⟩ := (isCompact_closedBall v₀ δ).exists_bound_of_continuousOn (hq.mono hδT)
   have hUT : ball v₀ δ ⊆ T := ball_subset_closedBall.trans hδT

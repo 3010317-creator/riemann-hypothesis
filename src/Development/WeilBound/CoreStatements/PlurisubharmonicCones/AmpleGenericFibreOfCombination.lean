@@ -4,17 +4,20 @@ public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.MetricsP
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FlagIndices
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GenFibreExists
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.ArithIntersectionDivisorSupportStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.HermitianCombinationSmoothConjStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.LogIntegralMultilinearStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.DegreeGenericOfDegree
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.DegreeOfIsIntersectionSystem
-import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.AssemblyBridgeFull
-import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.ExistsLinearIndependentOfGenerates
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MultihomogeneousIdeals.ExistsUniqueStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovGeometry.KleimanNefness.KleimanSt
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.ArithIntersectionDivisorSupport
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.Birational
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.HermitianCombinationSmoothConj
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.LogIntegralMultilinear
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PStokesStep
 public import GroundTheory.HeightsAndTheta.Heights.Intersections.PSheetHessPSD
 public import GroundTheory.HeightsAndTheta.Heights.Intersections.StatementsAntisym
 public import GroundTheory.HeightsAndTheta.Heights.OrbitLimits.SegreAssembly
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.DegreeGenericOfDegree
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.DegreeOfIsIntersectionSystem
+import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.AssemblyBridgeFull
+import GroundTheory.HeightsAndTheta.Heights.HilbertSamuel.ExistsLinearIndependentOfGenerates
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -172,11 +175,11 @@ theorem LevelTowerAlt.ample_generic_fibre_of_combination : PB.Inputs → ∀ II 
       simp only [Pi.sub_apply, Pi.smul_apply, smul_eq_mul, Pi.one_apply]
       nlinarith
     · exact hfsn _ (fun _ => zero_le_one) W' h1
-  have e1 := (GlobalTheory.T.log_integral_multilinear II hII K J W d (Fin 3) ℓ (fun _ _ => 1) hW hℓ).1
-  have e2 := (GlobalTheory.T.log_integral_multilinear II hII K J W d Unit (fun _ => A) (fun _ _ => (m : ℤ)) hW fun _ => hA).1
-  have e3 := (GlobalTheory.T.log_integral_multilinear II hII K J W d Unit (fun _ => A) (fun _ _ => (m : ℤ)) hW fun _ => hA).2
+  have e1 := (_root_.GlobalTheory.CompanionTheory.Ar.Top.geo_multilin II hII K J W d (Fin 3) ℓ (fun _ _ => 1) hW hℓ).1
+  have e2 := (_root_.GlobalTheory.CompanionTheory.Ar.Top.geo_multilin II hII K J W d Unit (fun _ => A) (fun _ _ => (m : ℤ)) hW fun _ => hA).1
+  have e3 := (_root_.GlobalTheory.CompanionTheory.Ar.Top.geo_multilin II hII K J W d Unit (fun _ => A) (fun _ _ => (m : ℤ)) hW fun _ => hA).2
     (fun _ => Top.combLine ℓ fun _ => 1) (fun _ => Top.combLine (fun _ : Unit => A) fun _ => (m : ℤ)) (Equiv.refl _)
-    (fun _ => (GlobalTheory.T.hermitian_combination_smooth_conj K J _ ℓ _).1 hℓ) (fun _ => (GlobalTheory.T.hermitian_combination_smooth_conj K J _ _ _).1 fun _ => hA) fun _ => by
+    (fun _ => (_root_.GlobalTheory.CompanionTheory.Ar.Top.combLine_smooth_conj K J _ ℓ _).1 hℓ) (fun _ => (_root_.GlobalTheory.CompanionTheory.Ar.Top.combLine_smooth_conj K J _ _ _).1 fun _ => hA) fun _ => by
       show ∑ _ : Unit, (m : ℤ) • A.a = ∑ j, (1 : ℤ) • (ℓ j).a
       rw [Fin.sum_univ_three]
       simp only [Finset.univ_unique, Finset.sum_singleton, one_smul, heq]
@@ -187,7 +190,7 @@ theorem LevelTowerAlt.ample_generic_fibre_of_combination : PB.Inputs → ∀ II 
       ptsIntegral W (fun k z => Real.log ((ℓ (w k)).h z)) (fun _ => 1) := by
     simp only [Int.cast_one, Finset.prod_const_one, _root_.one_mul]
     refine Finset.sum_pos' (fun w _ => ?_) ⟨fun _ => 2, Finset.mem_univ _, ?_⟩
-    · exact GlobalTheory.T.ptsIntegral_log_nonneg hI.kleimanNefF (fun K _ J _ => (PB.Known.fieldNumbers ℚ K J).1) PB.Known.divSuppArith II hII K J W d (fun k => ℓ (w k)) hW
+    · exact _root_.GlobalTheory.CompanionTheory.Ar.Top.kleiman_generic_fibre_integral hI.kleimanNefF (fun K _ J _ => (PB.Known.fieldNumbers ℚ K J).1) PB.Known.divSuppArith II hII K J W d (fun k => ℓ (w k)) hW
         (fun k => hℓ _) fun k => hnef _
     · have h1 := hDG K J W d (fun _ => fs 1) hW fun _ => hfs _
       have h2 := (hPos _ d (GroundTheory.Heights₂.Heights.HilbertSamuel.isProjVarF_map_of_isArithVar hW)).2

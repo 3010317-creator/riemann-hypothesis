@@ -2,10 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.KerScheme
 public import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.IsOpenOfMemIrreducibleComponentsOfFinite
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsEtaleHasHeckeQuotientNoetherianDomainStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsEtaleHasHeckeQuotientNoetherianDomain
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSabCancel
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HeckeQuotientDescendsEtaleSurjectiveCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HeckeQuotientOfOpenCoverReducedBaseStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HeckeQuotientDescendsEtaleSurjectiveCover
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HeckeQuotientOfOpenCoverReducedBase
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsReducedIsNormalSchemeIsLocallyNoetherianOfSmoo
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ObjPull
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.RangeOfIsPullback
@@ -94,7 +94,7 @@ theorem hasQuot_image (Xo : Moduli D l) (𝔓 : Ideal (𝓞 E)) (p i : ℕ) {S S
   have hsur : Surjective g' := ⟨fun y => by
     obtain ⟨x, hx⟩ := hU (U.ι y) y.2
     exact ⟨x, U.ι.isOpenEmbedding.injective (by simpa using hx)⟩⟩
-  refine ⟨U, o₁, m₁, hqU, GlobalTheory.T.heckeQuotient_descends_etale_surjective_cover E H D l Xo 𝔓 p i _ _ _ g' o₁ o' m' _ hA
+  refine ⟨U, o₁, m₁, hqU, _root_.GlobalTheory.HkFam.hasQuot_descend E H D l Xo 𝔓 p i _ _ _ g' o₁ o' m' _ hA
     (GlobalTheory.HkSetPull.heckeSet_pull D 𝔓 p i m₁.toSABMap K hK) he hsur inferInstance ?_⟩
   rw [hm', Scheme.Hom.comp_base, TopCat.coe_comp, Set.preimage_comp] at hQ
   exact hQ
@@ -104,7 +104,7 @@ end GlobalTheory.HkSplit
 theorem GlobalTheory.hasQuot_of_lists_of_smooth : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (𝔓 : Ideal (𝓞 E)) (p i n : ℕ) (S : Scheme.{0}) (s : S ⟶ Sp (KA l)) (o : Ob D l s) (σ : Fin n → (𝟙_ (Over S) ⟶ o.t.G)) (K : Set o.t.G.left), 1 ≤ D.p + D.q → admitted l 𝔓 p → Smooth s → Lists (p ^ 2) σ K → HeckeSet D o.t 𝔓 p i K → HasQuot o p K := by
   intro E _ _ _ H D l Xo 𝔓 p i n S s o σ K hD hA hs hL hK
   obtain ⟨hr, hN, hn⟩ := GlobalTheory.isReduced_isNormalScheme_isLocallyNoetherian_of_smooth_over_field _ S s hs
-  refine GlobalTheory.T.heckeQuotient_of_open_cover_reduced_base E H D l Xo 𝔓 p i S s o K hA hK fun q => ?_
+  refine _root_.GlobalTheory.hasQuot_of_openCover E H D l Xo 𝔓 p i S s o K hA hK fun q => ?_
   obtain ⟨W, hW, hq, hd⟩ := GlobalTheory.HkSplit.exists_affine_isDomain hN q
   have hR : IsNoetherianRing Γ(S, W) := IsLocallyNoetherian.component_noetherian ⟨W, hW⟩
   let j : Sp Γ(S, W) ⟶ S := hW.fromSpec
@@ -113,7 +113,7 @@ theorem GlobalTheory.hasQuot_of_lists_of_smooth : ∀ (E : Type) [Field E] [Numb
     rw [show Set.range j = W from hW.range_fromSpec]; exact hq
   obtain ⟨o₁, ⟨m₁⟩⟩ := GlobalTheory.HkSplit.exists_pull s j o
   obtain ⟨σ', -, hL'⟩ := GlobalTheory.HkSetPull.lists_pull m₁.toSABMap.cart K _ n σ hL
-  obtain ⟨R', _, π, o', m, he, ⟨y, hy⟩, hQ⟩ := GlobalTheory.T.exists_etale_hasHeckeQuotient_noetherian_domain E H D l 𝔓 p i n Γ(S, W) (j ≫ s) o₁ σ' _ x hD hA hL'
+  obtain ⟨R', _, π, o', m, he, ⟨y, hy⟩, hQ⟩ := _root_.GlobalTheory.exists_etale_hasQuot_of_lists E H D l 𝔓 p i n Γ(S, W) (j ≫ s) o₁ σ' _ x hD hA hL'
     (GlobalTheory.HkSetPull.heckeSet_pull D 𝔓 p i m₁.toSABMap K hK)
   obtain ⟨m', hm'⟩ := ((GlobalTheory.ObjMaps.id_comp_cancel E H D l _ _ _ _ _ _ _ _ _ _ _ _ o o₁ o').2 j π m₁).1 m
   have : IsLocallyNoetherian (Sp R') := LocallyOfFiniteType.isLocallyNoetherian π

@@ -2,8 +2,8 @@ module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LevelChainValuations.LatDefs
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.SEqOne
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LatticeFiltrationComapSpanPowStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MemLatticeSubIffSumStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LatticeFiltrationComapSpanPow
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MemLatticeSubIffSum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -130,7 +130,7 @@ theorem exists_coeff {m : ℕ} (h : Lat.Hyp f ξ l m) {x : B} (hx : x ∈ Lat.su
     ∃ c : ℕ → W, (∀ i < j, c i = 0) ∧ x = ∑ i ∈ Finset.range m, f (c i) * Lat.dpE f ξ l M i := by
   induction j with
   | zero =>
-    obtain ⟨n, c, hc⟩ := (GlobalTheory.T.mem_lattice_sub_iff_sum f ξ l M x).1 hx
+    obtain ⟨n, c, hc⟩ := (_root_.GlobalTheory.CompanionTheory.LatSpan.mem_sub_iff f ξ l M x).1 hx
     refine ⟨fun i => if hi : i < n then c ⟨i, hi⟩ else 0, fun i hi => absurd hi (Nat.not_lt_zero i), ?_⟩
     set g : ℕ → B := fun i => f (if hi : i < n then c ⟨i, hi⟩ else 0) * Lat.dpE f ξ l M i with hg
     have h1 : x = ∑ i ∈ Finset.range n, g i := by
@@ -190,7 +190,7 @@ theorem dividedPowerFiltration_fg : ∀ {W B : Type} [CommRing W] [CommRing B] [
   intro W B _ _ _ f ξ l M m h hc r
   have key : pdP (Lat.γ f ξ l M hc) r =
       Ideal.span (Lat.dpA f ξ l M '' (↑(Finset.Ico r m) : Set ℕ)) := by
-    rw [GlobalTheory.T.lattice_filtration_comap_span_pow f ξ l M m h hc r]
+    rw [_root_.GlobalTheory.CompanionTheory.LatPdpEq.dividedPowerFiltration_eq f ξ l M m h hc r]
     apply le_antisymm
     · intro x hx
       have hxs : Lat.ι f ξ l M x ∈ Lat.sub f ξ l M := x.2

@@ -6,10 +6,11 @@ public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeRegularAtLocalPointStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeEvalAtLocalRingStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueSemilinearStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelIsBaseChangeStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeRegularAtLocalPoint
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeEvalAtLocalRing
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelExistsUniqueSemilinear
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelIsBaseChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -134,7 +135,7 @@ theorem exists_transport {S : Scheme.{0}} {G : Over S} [GrpObj G] {R R' : Type} 
     [AddCommGroup E'] [Module R' E'] (M : LieModel G x E) (M' : LieModel G x' E') :
     ∃ j : E →ₛₗ[c] E', ∀ e, ((M'.pt (j e)).left ≫ (𝟙 G.left) = ReciprocityTheory.ChartRestriction.G.Geo.Tor.spMap (GlobalTheory.CompanionTheory.Ar.dualMap c) ≫ (M.pt e).left) := by
   subst hx
-  exact (GlobalTheory.T.lie_model_existsUnique_semilinear S G R R' c x E E' M M').exists
+  exact (_root_.GlobalTheory.CompanionTheory.Ar.LieBaseChange.existsUnique_semilinear_lifts S G R R' c x E E' M M').exists
 
 end SlopeTestRemainingChoices
 
@@ -188,8 +189,8 @@ theorem exists_integral_form : ∀ (X : Scheme.{0}) (G : Over X) [GrpObj G] [IsC
     rw [Category.comp_id] at h1 h2 ⊢
     change (ML.pt (k (j x))).left = _
     rw [h1, h2, ← Category.assoc, spec_dualMap, ← IsScalarTower.algebraMap_eq]
-  have hbA : IsBaseChange A j := GlobalTheory.T.lie_model_isBaseChange X G (𝓞 L) A z B.carrier EA MB MA j hj
-  have hbL : IsBaseChange L jL := GlobalTheory.T.lie_model_isBaseChange X G (𝓞 L) L z B.carrier EL MB ML jL hjL
+  have hbA : IsBaseChange A j := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_isBaseChange X G (𝓞 L) A z B.carrier EA MB MA j hj
+  have hbL : IsBaseChange L jL := _root_.GlobalTheory.CompanionTheory.Ar.lieModel_isBaseChange X G (𝓞 L) L z B.carrier EL MB ML jL hjL
   haveI : IsLocalizedModule 𝔭.primeCompl j := (isLocalizedModule_iff_isBaseChange 𝔭.primeCompl A j).2 hbA
   haveI : IsLocalizedModule (nonZeroDivisors (𝓞 L)) jL :=
     (isLocalizedModule_iff_isBaseChange (nonZeroDivisors (𝓞 L)) L jL).2 hbL
@@ -198,9 +199,9 @@ theorem exists_integral_form : ∀ (X : Scheme.{0}) (G : Over X) [GrpObj G] [IsC
     exact smul_right_injective B.carrier (nonZeroDivisors.ne_zero c.2) hc
   have hL : genPt ξ ⤳ centre (spMap (algebraMap (𝓞 L) L) ≫ z) :=
     specializes_of_injective (p := ⟨_, h⟩) (hξ.inj _) (hzz ▸ centre_specializes (algebraMap A L) (spMap (algebraMap (𝓞 L) A) ≫ z))
-  obtain ⟨gA, hgA⟩ := GlobalTheory.T.lattice_regular_at_local_point X G Ω ξ Li M A _ h EA MA f hξ hreg
-  obtain ⟨gL, hgL⟩ := GlobalTheory.T.lattice_regular_at_local_point X G Ω ξ Li M L _ hL EL ML f hξ (hreg' hL)
-  obtain ⟨ev, hev, -, hspan⟩ := GlobalTheory.T.lie_lattice_eval_at_local_ring X G Ω ξ Li M A _ h EA MA hξ inferInstance
+  obtain ⟨gA, hgA⟩ := _root_.GlobalTheory.CompanionTheory.Ar.RootHt.exists_lieFunctional X G Ω ξ Li M A _ h EA MA f hξ hreg
+  obtain ⟨gL, hgL⟩ := _root_.GlobalTheory.CompanionTheory.Ar.RootHt.exists_lieFunctional X G Ω ξ Li M L _ hL EL ML f hξ (hreg' hL)
+  obtain ⟨ev, hev, -, hspan⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieLat_val X G Ω ξ Li M A _ h EA MA hξ inferInstance
   have hlift : ∀ (e : Li) (y : EA), M.ValAt (spMap (algebraMap (𝓞 L) A) ≫ z) e (MA.pt y) →
       M.ValAt (spMap (algebraMap (𝓞 L) L) ≫ z) e (ML.pt (k y)) := fun e y hv => by
     refine lieValAt_base M hξ (algebraMap A L) hzz hv ?_

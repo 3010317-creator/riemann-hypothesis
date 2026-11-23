@@ -4,7 +4,9 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.T2SpaceHa
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.RealIdemMulOfReal
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ThetaFunctionZeroOfInvariantFunctionals
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsOpenSubgroupHalfCharactersSeparateStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FourierUniquenessOfOpenSubgroupStatement
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FourierUniquenessOfOpenSubgroup
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.InfPartOneSubEInfSmul
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SymplecticRestrictionIsotropicPartEqPairingStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaRestrictIsotropicQuotientWittTowerPropertieStatement
@@ -83,7 +85,7 @@ theorem avgForm_ne_zero : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdCh
   push_neg at hall
   obtain ⟨L, Kc, hL, hKc, hz, hloc⟩ := GlobalTheory.T.thetaRestriction_complement_translates_locallyConstant D ψ hψ V V' W r C B hs μ 𝓨 hμ K hKC hKB e he _ hf₂
   obtain ⟨L', hL', hL'L, hsep⟩ := GlobalTheory.T.exists_open_subgroup_half_characters_separate D ψ hψ W r e he L hL
-  have hφ := GlobalTheory.T.eq_zero_of_integral_char_eq_zero_of_periodic_open (haarHalf (cA D e) W.rank r)
+  have hφ := _root_.GlobalTheory.fourier_uniqueness_of_openSubgroup (haarHalf (cA D e) W.rank r)
     (fun (a : halfMx e W.rank r) (t : halfMx (cA D e) W.rank r) => ψ (halfSympl W (a : Mx D W.rank r) (t : Mx D W.rank r)))
     (fun a s t => by simp only [AddSubgroup.coe_add, halfSympl_add_right, AddChar.map_add_eq_mul])
     (fun a => by simp only [ZeroMemClass.coe_zero, halfSympl_zero_right, AddChar.map_zero_eq_one])

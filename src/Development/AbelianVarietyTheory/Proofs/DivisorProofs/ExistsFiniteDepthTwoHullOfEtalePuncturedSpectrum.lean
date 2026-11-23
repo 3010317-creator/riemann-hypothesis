@@ -3,14 +3,20 @@ module
 public import ReciprocityTheory.CommutativeAlgebra.CohenMacaulay.ModDepthGE
 public import Mathlib.RingTheory.Etale.Basic
 public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleLocalizationOfInjectiveCokernelKilledStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowSmulMemOfForallExistsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FgOfSaturatedIdealPowerIntoImageStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegerOfMaximalIdealPowSmulIsIntegerStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSMulRegularOfEtalePuncturedOfDepthPosDomainStatement
+public import Mathlib.RingTheory.Localization.AtPrime.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleLocalizationOfInjectiveCokernelKilled
+public import Mathlib.Algebra.Algebra.Operations
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPowSmulMemOfForallExists
+public import Mathlib.RingTheory.Localization.FractionRing
+public import Mathlib.RingTheory.Localization.Integer
+public import Mathlib.RingTheory.Noetherian.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FgOfSaturatedIdealPowerIntoImage
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegerOfMaximalIdealPowSmulIsInteger
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSMulRegularOfEtalePuncturedOfDepthPosDomain
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemIdealTransformOfForallSmulMem
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModDepthGETwoOfIsIntegrallyClosedOfIsRegularLoca
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModDepthGETwoOfRegularQuotientNoSocleStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ModDepthGETwoOfRegularQuotientNoSocle
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RegularLocalRingNormalDomain
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -63,7 +69,7 @@ namespace GlobalTheory
 theorem exists_finite_depth_two_hull_of_etale_off_closed_point : ∀ (S : Type) [CommRing S] [IsRegularLocalRing S], 2 ≤ ringKrullDim S → ∀ (A : Type) [CommRing A] [Algebra S A] [Module.Finite S A], ReciprocityTheory.CA.ModDepthGE S A 1 → (∀ (p : Ideal S) [p.IsPrime], p ≠ maximalIdeal S → Algebra.Etale (Localization.AtPrime p) (TensorProduct S (Localization.AtPrime p) A)) → ∃ (A' : Type) (_ : CommRing A') (_ : Algebra S A'), Module.Finite S A' ∧ ∃ ι : A →ₐ[S] A', Function.Injective ι ∧ ReciprocityTheory.CA.ModDepthGE S A' 2 ∧ (∀ (p : Ideal S) [p.IsPrime], p ≠ maximalIdeal S → Algebra.Etale (Localization.AtPrime p) (TensorProduct S (Localization.AtPrime p) A')) ∧ ∃ k : ℕ, ∀ x ∈ maximalIdeal S ^ k, ∀ y : A', x • y ∈ ι.range := by
   intro S _ _ hdim A _ _ _ hdep het
   obtain ⟨hSd, hSic⟩ := isDomain_and_isIntegrallyClosed_of_isRegularLocalRing S
-  have htf : ∀ s : S, s ≠ 0 → IsSMulRegular A s := GlobalTheory.T.isSMulRegular_of_etale_punctured_of_depth_pos_domain' S A hdep het
+  have htf : ∀ s : S, s ≠ 0 → IsSMulRegular A s := _root_.GlobalTheory.isSMulRegular_of_etale_punctured_of_depth_pos_domain S A hdep het
   let K := FractionRing S
   let j : A →ₐ[S] K ⊗[S] A := Algebra.TensorProduct.includeRight
   have hj : ∀ a, j a = TensorProduct.mk S K A 1 a := fun a => rfl
@@ -93,13 +99,13 @@ theorem exists_finite_depth_two_hull_of_etale_off_closed_point : ∀ (S : Type) 
     · rintro ⟨a, ha⟩; exact ⟨a, Subtype.ext ha⟩
 
   have hfg : (Subalgebra.toSubmodule B).FG := by
-    refine GlobalTheory.T.fg_of_ideal_pow_smul_mem_range_tensor S (maximalIdeal S) (GlobalTheory.T.isInteger_of_maximalIdeal_pow_smul_isInteger' S hdim) A _ fun z hz => ?_
+    refine _root_.GlobalTheory.fg_of_saturated_ideal_power_into_image S (maximalIdeal S) (_root_.GlobalTheory.isInteger_of_maximalIdeal_pow_smul_isInteger S hdim) A _ fun z hz => ?_
     obtain ⟨k, hk⟩ := hz
     exact ⟨k, fun a ha => by obtain ⟨b, hb⟩ := hk a ha; exact ⟨b, hb⟩⟩
   haveI hfin : Module.Finite S B := Module.Finite.iff_fg.mpr hfg
 
   obtain ⟨k, hk⟩ : ∃ k : ℕ, ∀ a ∈ maximalIdeal S ^ k, ∀ y : B, a • y ∈ ι.range.toSubmodule := by
-    refine GlobalTheory.T.exists_pow_smul_mem_of_forall_exists' S (maximalIdeal S) B _ fun y => ?_
+    refine _root_.GlobalTheory.Submodule.exists_pow_smul_mem_of_forall_exists S (maximalIdeal S) B _ fun y => ?_
     obtain ⟨k, hk⟩ := y.2
     exact ⟨k, fun a ha => (hrange _).2 (hk a ha)⟩
   refine ⟨B, inferInstance, inferInstance, hfin, ι, hιinj, ?_, ?_, k, hk⟩
@@ -115,7 +121,7 @@ theorem exists_finite_depth_two_hull_of_etale_off_closed_point : ∀ (S : Type) 
     haveI : Nontrivial B := nontrivial_of_ne (ι 0) (ι 1) (hιinj.ne zero_ne_one)
     have hxreg : IsSMulRegular B x := fun u v h =>
       Subtype.ext (hVtf x hx0 _ _ (congrArg Subtype.val h))
-    refine GlobalTheory.T.modDepthGE_two_of_regular_quotient_no_socle S B x hxm hxreg fun u hu => ?_
+    refine _root_.GlobalTheory.modDepthGE_two_of_isSMulRegular_of_quotSMulTop S B x hxm hxreg fun u hu => ?_
     let w : K ⊗[S] A := (algebraMap S K x)⁻¹ • (u : K ⊗[S] A)
     have hxw : x • w = u := by
       simp only [w, ← algebraMap_smul K x, smul_smul]
@@ -136,6 +142,6 @@ theorem exists_finite_depth_two_hull_of_etale_off_closed_point : ∀ (S : Type) 
       hp ((maximalIdeal.isMaximal S).eq_of_le (Ideal.IsPrime.ne_top inferInstance)
         (Ideal.IsPrime.le_of_pow_le h)).symm
     obtain ⟨s, hs, hsp⟩ := Set.not_subset.mp hnot
-    exact GlobalTheory.T.etale_localization_of_injective_cokernel_killed S A B ι hιinj p s hsp (hk s hs) (het p hp)
+    exact _root_.GlobalTheory.etale_localization_of_cokernel_killed S A B ι hιinj p s hsp (hk s hs) (het p hp)
 
 end GlobalTheory

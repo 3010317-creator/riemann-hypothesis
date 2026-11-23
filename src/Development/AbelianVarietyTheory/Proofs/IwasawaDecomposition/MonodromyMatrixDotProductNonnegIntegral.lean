@@ -1,11 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PerValNeZero
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PeriodicLeftHalfPlaneShiftNonnegOfImPosStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PeriodicLeftHalfPlaneShiftNonnegOfImPos
+public import Mathlib.Analysis.Calculus.FDeriv.Pi
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
-public import Mathlib.Analysis.Calculus.FDeriv.Pi
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
@@ -120,6 +123,6 @@ theorem monodromy_dotProduct_nonneg : ∀ (n a g : ℕ) (ha : a ≤ n) (ρ₁ : 
     apply DifferentiableOn.fun_sum
     intro l _
     exact (hent i l).mul_const _
-  exact_mod_cast GlobalTheory.T.periodic_left_halfPlane_shift_nonneg_of_im_pos (Real.log ρ₁) f (v ⬝ᵥ (B k *ᵥ v)) hdf hper him
+  exact_mod_cast _root_.GlobalTheory.periodic_strip_shift_nonneg (Real.log ρ₁) f (v ⬝ᵥ (B k *ᵥ v)) hdf hper him
 
 end GlobalTheory

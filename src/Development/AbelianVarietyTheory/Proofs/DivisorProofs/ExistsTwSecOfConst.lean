@@ -3,7 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.MulSmulIdemMem
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHomogeneousCompIdeal
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.FlagComponentFramedPointFrame
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbsLogRootDiscSubLogHostPrimeLeStatement
+public import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.SchurLatticeConjugates
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbsLogRootDiscSubLogHostPrimeLe
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntOffOfUnramPts
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MulMemCuspFormsOfBoundedSectionComponent
 import Mathlib.Algebra.Order.Floor.Extended
@@ -148,7 +150,7 @@ theorem twSec_of_flat (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Re
       rw [lineDeg, finsum_sum_flDefect]; simp
     rw [TwSec.degLo, h2, h3, key, h1, ← hdeg, ConstSec.deg]; ring
   refine ⟨t, h5, hd, ?_⟩
-  have hA := GlobalTheory.T.abs_logRootDisc_sub_log_hostPrime_le E H
+  have hA := _root_.GlobalTheory.abs_lrd_sub_log_d_le_lrd E H
   have hs : (lrd E - Real.log H.d) * ∑ τ, (w τ : ℝ) ≤ lrd E * ∑ τ, |(w τ : ℝ)| := by
     rw [Finset.mul_sum, Finset.mul_sum]
     refine Finset.sum_le_sum fun τ _ => (le_abs_self _).trans ?_

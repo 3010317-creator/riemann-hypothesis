@@ -6,8 +6,9 @@ public import Formalism.SharpRestriction.GenusPolyhedralBounds.RelativeIndexClas
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.SupBoundPageRows
 public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.ThExprUniqOfChartIndep2
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsAuxiliaryWeightsAtRunWeights
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsIntegralThetaCombinationNonzeroOnComponentStatement
-public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.LogCardComponentsLeAtGoodEmbeddingStatement
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsIntegralThetaCombinationNonzeroOnComponent
+public import Formalism.LocalToGlobal.ProjectiveLattices.HasDataCondition
+public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.LogCardComponentsLeAtGoodEmbedding
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.PageRowsOfLe
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.PageTwoLeLAndSigns
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.WeightsBelow
@@ -120,7 +121,7 @@ theorem familyHypothesesI4_recPJ_of_supBound_thInt : Formalism.MainNotions.Modul
   set lN := Real.log (Fintype.card (T.U j T.σ₀).Comp) with hlN
   have hN0 : 0 ≤ lN := Real.log_natCast_nonneg _
   have hN : lN ≤ 41 * Zb D large₂ ^ 2 :=
-    GlobalTheory.T.log_card_components_le_at_good_embedding D T h large₂ j hj w2 hpr2 hL2 hr2 hf T.σ₀ (Formalism.L2.Pj.Core.good_σ₀ _)
+    _root_.GlobalTheory.RunIn.log_card_comp_le D T h large₂ j hj w2 hpr2 hL2 hr2 hf T.σ₀ (Formalism.L2.Pj.Core.good_σ₀ _)
   have hZ : 0 ≤ Zb D large₂ := by
     unfold Zb
     exact mul_nonneg (by positivity) (by linarith)
@@ -140,7 +141,7 @@ theorem familyHypothesesI4_recPJ_of_supBound_thInt : Formalism.MainNotions.Modul
     obtain ⟨hdf1, hn1, hsz1⟩ := hw1 w1 hg1
     have hpr1 := GlobalTheory.pageRows_of_le D large₂ j ka w1 (by linarith) hdf1 hn1 hR
     obtain ⟨th, hth, hnz, hb⟩ :=
-      GlobalTheory.T.exists_integral_theta_combination_nonzero_on_components hCI D T h hG large₂ j hj w1 hpr1 hL2 hr1 (hLast.2 w1 hg1) hq1 hinj EX (hT1 hjm w1 hg1)
+      _root_.GlobalTheory.ThetaComb.exists_integral_theta_nonzero_on_components hCI D T h hG large₂ j hj w1 hpr1 hL2 hr1 (hLast.2 w1 hg1) hq1 hinj EX (hT1 hjm w1 hg1)
     refine ⟨w1, hg1, th, hth, hnz, fun σ => ?_⟩
     have e : 2 * WeightAlgebra.PI4 D j (400 * Zb D large₂) lN * (WeightFamilies.dimY D j : ℝ) * wL.size =
         2 * (5 * (400 * Zb D large₂ + lamStar D) * WeightFamilies.dimY D j + 2 * lN) * wL.size := by
@@ -149,7 +150,7 @@ theorem familyHypothesesI4_recPJ_of_supBound_thInt : Formalism.MainNotions.Modul
     nlinarith [hb σ, mul_le_mul_of_nonneg_left hsz1 hA, mul_nonneg hAs (sub_nonneg.2 hdimR),
       mul_nonneg hN0 (sub_nonneg.2 hs)]
   · obtain ⟨th, hth, hnz, hb⟩ :=
-      GlobalTheory.T.exists_integral_theta_combination_nonzero_on_components hCI D T h hG large₂ j hj w2 hpr2 hL2 hr2 (hLast.1 w2 hg2) hq2 hinj EX (hT2 w2 hg2)
+      _root_.GlobalTheory.ThetaComb.exists_integral_theta_nonzero_on_components hCI D T h hG large₂ j hj w2 hpr2 hL2 hr2 (hLast.1 w2 hg2) hq2 hinj EX (hT2 w2 hg2)
     refine ⟨w2, hg2, th, hth, hnz, fun σ => ?_⟩
     have e : WeightAlgebra.PI4 D j (400 * Zb D large₂) lN * (WeightFamilies.dimY D j : ℝ) * wL.size =
         (5 * (400 * Zb D large₂ + lamStar D) * WeightFamilies.dimY D j + 2 * lN) * wL.size := by

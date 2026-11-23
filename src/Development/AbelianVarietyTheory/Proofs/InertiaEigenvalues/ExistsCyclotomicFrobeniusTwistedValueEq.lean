@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PowMulMemLatIff
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIntWeightsCompatibleRootsOfUnityLevelsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrKIsometricAndOneSubSurjectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIntWeightsCompatibleRootsOfUnityLevels
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrKIsometricAndOneSubSurjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -104,7 +104,7 @@ theorem exists_pre (k : ℕ) (y : ↥(K0 K)) :
     refine ⟨x, ?_, ?_⟩
     · rw [pow_succ', AlgHom.mul_apply, hx]
     · rw [hn]
-      exact ((GlobalTheory.T.norm_frK_eq_and_exists_sub_pow_smul_frK_eq l P K).1 z).symm
+      exact ((_root_.GlobalTheory.ExpImage.frK_isometric_and_one_sub_surjective l P K).1 z).symm
 
 theorem norm_int_mul {z : ℤ} {x : ↥(K0 K)} (hx : ‖(x : Om l)‖ ≤ 1) :
     ‖(((z : ↥(K0 K)) * x : ↥(K0 K)) : Om l)‖ ≤ 1 := by
@@ -137,7 +137,7 @@ theorem exists_minus_one {s : ℕ} (hs : 1 ≤ s) : ∃ ν : ℕ → ℤ,
     intro r
     by_cases hr : r ∈ Finset.Ico 1 l
     · have hr' := Finset.mem_Ico.mp hr
-      obtain ⟨μ, h1, h2⟩ := GlobalTheory.T.exists_int_weights_compatibleRootsOfUnity_levels l P.ζQ P.ζQ_zero P.ζQ_one P.ζQ_succ s 1 r le_rfl hs
+      obtain ⟨μ, h1, h2⟩ := _root_.GlobalTheory.LevelSums.exists_weights l P.ζQ P.ζQ_zero P.ζQ_one P.ζQ_succ s 1 r le_rfl hs
         (Nat.not_dvd_of_pos_of_lt hr'.1 hr'.2)
       exact ⟨μ, fun _ => ⟨by simpa using h1, by simpa using h2⟩⟩
     · exact ⟨0, fun h => absurd h hr⟩
@@ -159,13 +159,13 @@ theorem exists_cycVal_eq (l : ℕ) [Fact l.Prime] (P : LocPrime l) (K : FinExt l
       d - (l : ↥(K0 K)) ^ e * frK P K d = (frK P K ^ s) (∑ a ∈ primeTo l s, lam a) ∧
       cycVal P K s e lam d = (l : Om l) ^ ((e + 1) * (s - 1)) * (c * P.ζQ j ^ n) := by
   obtain ⟨c, rfl⟩ : ∃ c' : ↥(K0 K), (c' : Om l) = c := ⟨⟨c, hc⟩, rfl⟩
-  obtain ⟨μ, h1, h2⟩ := GlobalTheory.T.exists_int_weights_compatibleRootsOfUnity_levels l P.ζQ P.ζQ_zero P.ζQ_one P.ζQ_succ s j n hj hjs hn
+  obtain ⟨μ, h1, h2⟩ := _root_.GlobalTheory.LevelSums.exists_weights l P.ζQ P.ζQ_zero P.ζQ_one P.ζQ_succ s j n hj hjs hn
   by_cases hj1 : j = 1
   · subst hj1
     simp only [if_true] at h1 h2
     obtain ⟨ν, g1, g2⟩ := exists_minus_one P hjs
-    obtain ⟨d, hd, hdc⟩ := (GlobalTheory.T.norm_frK_eq_and_exists_sub_pow_smul_frK_eq l P K).2 (e + 1) (by omega) (frK P K c)
-      (by rw [(GlobalTheory.T.norm_frK_eq_and_exists_sub_pow_smul_frK_eq l P K).1]; exact hc1)
+    obtain ⟨d, hd, hdc⟩ := (_root_.GlobalTheory.ExpImage.frK_isometric_and_one_sub_surjective l P K).2 (e + 1) (by omega) (frK P K c)
+      (by rw [(_root_.GlobalTheory.ExpImage.frK_isometric_and_one_sub_surjective l P K).1]; exact hc1)
     obtain ⟨x, hx, hxn⟩ := exists_pre P K (s - 1) c
     obtain ⟨y, hy, hyn⟩ := exists_pre P K (s - 1) ((l : ↥(K0 K)) ^ e * d)
     obtain ⟨t, rfl⟩ : ∃ t, s = t + 1 := ⟨s - 1, by omega⟩

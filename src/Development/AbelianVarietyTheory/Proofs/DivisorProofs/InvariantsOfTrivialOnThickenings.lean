@@ -2,9 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.QuasiCompact
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletionGaloisInvariantsAgreeModMaxIdealPowStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitApproximationAdicCompletionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteTypeInvariantsFiniteGroupAndFiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorQuotientOntoAndInjectiveModIdealPowStatement
+public import Mathlib.RingTheory.Ideal.Maps
+public import Mathlib.RingTheory.Noetherian.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitApproximationAdicCompletion
+public import Mathlib.RingTheory.FiniteType
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteTypeInvariantsFiniteGroupAndFinite
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
+public import Mathlib.RingTheory.TensorProduct.Maps
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorQuotientOntoAndInjectiveModIdealPow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,12 +65,12 @@ theorem invariants_of_trivial_on_thickenings : ∀ (R : Type) [CommRing R] [IsDo
   haveI : IsNoetherianRing R := hR.1
   haveI : Finite (Gal (algebraMap R R')) := hGal.1
   haveI : Algebra.FiniteType R C' := Algebra.FiniteType.trans (S := R') inferInstance inferInstance
-  obtain ⟨hft, hfin⟩ := GlobalTheory.T.finiteType_invariants_finite_group_and_finite R C' (Gal (algebraMap R R')) act C hC
+  obtain ⟨hft, hfin⟩ := _root_.GlobalTheory.finiteType_invariants_and_finite R C' (Gal (algebraMap R R')) act C hC
   have hg := GlobalTheory.T.completion_galoisInvariants_agree_mod_maxIdeal_pow R hR R' hinj hGal C' act hact O i hi1 hi2 hi3 C hC hft hfin
   choose gm hgc using hg
-  obtain ⟨hs, hinj'⟩ := GlobalTheory.T.tensor_quotient_onto_and_injective_mod_ideal_pow R (maximalIdeal R) R' C' O i hi3 C gm hgc
+  obtain ⟨hs, hinj'⟩ := _root_.GlobalTheory.quot_tensor_level R (maximalIdeal R) R' C' O i hi3 C gm hgc
   haveI : IsNoetherianRing C := Algebra.FiniteType.isNoetherianRing R C
-  obtain ⟨f, hf1, hf2, hf3⟩ := GlobalTheory.T.exists_unit_approximation_adic_completion C ((maximalIdeal R).map (algebraMap R C)) (TensorProduct R C R') C' _ hs hinj'
+  obtain ⟨f, hf1, hf2, hf3⟩ := _root_.GlobalTheory.finite_alg_hom_ker_coker_killed_of_onto_mod_ideal C ((maximalIdeal R).map (algebraMap R C)) (TensorProduct R C R') C' _ hs hinj'
   have hL : ∀ t, Algebra.TensorProduct.lift (Algebra.ofId C C') (IsScalarTower.toAlgHom R R' C') (fun _ _ => Commute.all _ _) t = Algebra.TensorProduct.lift C.val (IsScalarTower.toAlgHom R R' C') (fun _ _ => Commute.all _ _) t := by
     intro t
     induction t using TensorProduct.induction_on with

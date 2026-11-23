@@ -5,13 +5,14 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.Emb
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.IsOrth
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FundamentalDomainPointBound
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexHermitianFormUnitaryChartSectionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjSkewMemProductSpecialUnitaryLieAlgebraStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContDiffOnGramSchmidtUpperTriangularFactorStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjSkewMemProductSpecialUnitaryLieAlgebra
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemDomOfOrth
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContDiffOnGramSchmidtUpperTriangularFactor
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetUnitaryChartSectionConjugatedMatrixStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryChartSectionFderivBelowDiagonalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryChartSectionFrameEntriesFDerivDiagImStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryChartSectionFrameEntriesFDerivDiagIm
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryChartSectionFrameEntriesFDerivSkewStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryChartSectionFrameEntriesHasStrictFDerivAtStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryChartSectionFrameEntriesHasStrictFDerivAt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -100,7 +101,7 @@ theorem exists_section : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   · rw [continuousOn_iff_continuous_restrict]
     have hg : ∀ τ, Continuous fun w : Metric.ball (0 : V (nd X)) R => gsB X w τ := fun τ => by
       refine continuous_pi fun a => continuous_pi fun b => ?_
-      exact ((GlobalTheory.T.contDiffOn_gramSchmidtUpperTriangularFactor X hx τ a b).continuousOn.mono (fun w hw => hball w hw)).restrict
+      exact ((_root_.GlobalTheory.SUChartSection.GSSmooth.gsB_contDiffOn X hx τ a b).continuousOn.mono (fun w hw => hball w hw)).restrict
     have hM : ∀ τ, Continuous fun w : Metric.ball (0 : V (nd X)) R => secM X x w τ := fun τ => by
       refine (continuous_const.matrix_mul ?_).matrix_mul continuous_const
       exact ((PoinPf.cont_nmatm X τ).comp continuous_subtype_val).matrix_mul (hg τ)
@@ -120,7 +121,7 @@ theorem exists_section : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
     show mat x τ * yM X z τ * (mat x τ)⁻¹ * mat x τ = mat x τ * mat (nmat X z) τ * gsB X z τ
     rw [Matrix.mul_assoc _ (mat x τ)⁻¹, Matrix.nonsing_inv_mul _ (hx0 τ), Matrix.mul_one, yM, Matrix.mul_assoc]
   · have h1 : HasStrictFDerivAt (fun z => C (yF X z)) (C.comp (dY X)) 0 :=
-      C.hasStrictFDerivAt.comp 0 (GlobalTheory.T.unitaryChartSectionFrameEntries_hasStrictFDerivAt X hx)
+      C.hasStrictFDerivAt.comp 0 (_root_.GlobalTheory.SUChartSection.yF_hasStrictFDerivAt X hx)
     refine h1.congr_of_eventuallyEq ?_
     filter_upwards [Metric.ball_mem_nhds (0 : V (nd X)) hR] with z hz
     funext τ a b
@@ -129,7 +130,7 @@ theorem exists_section : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   · intro z
     have hdiag : ∀ τ a, dY X z τ a a = 0 := fun τ a => by
       have h6 := congrArg Complex.re (GlobalTheory.T.unitaryChartSectionFrameEntriesFDeriv_skew X hx z τ a a)
-      have h7 := GlobalTheory.T.unitaryChartSectionFrameEntriesFDeriv_diag_im X hx z τ a
+      have h7 := _root_.GlobalTheory.SUChartSection.diagreal X hx z τ a
       simp only [Complex.add_re, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, Complex.conj_re,
         Complex.conj_im, h7, Complex.zero_re, mul_zero, sub_zero, zero_mul, neg_zero] at h6
       have hs := PoinPf.sgn_ne X.p0 (a : ℕ)
@@ -146,7 +147,7 @@ theorem exists_section : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
       rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, Matrix.nonsing_inv_mul _ (hx0 τ), Matrix.one_mul,
         Matrix.mul_assoc, Matrix.nonsing_inv_mul _ (hx0 τ), Matrix.mul_one]
     refine ⟨?_, fun τ a b h => ?_, fun τ a => ?_⟩
-    · exact GlobalTheory.T.conj_skew_mem_productSpecialUnitaryLieAlgebra X hx (fun τ => Matrix.of (dY X z τ)) (fun τ a b => GlobalTheory.T.unitaryChartSectionFrameEntriesFDeriv_skew X hx z τ a b) hdiag
+    · exact _root_.GlobalTheory.SUChartSection.conj_mem_realLie X hx (fun τ => Matrix.of (dY X z τ)) (fun τ a b => GlobalTheory.T.unitaryChartSectionFrameEntriesFDeriv_skew X hx z τ a b) hdiag
     · rw [hIF]; exact GlobalTheory.T.unitaryChartSection_fderiv_below_diagonal X hx z τ a b h
     · rw [hIF]; exact hdiag τ a
 end GlobalTheory.SUChartSection

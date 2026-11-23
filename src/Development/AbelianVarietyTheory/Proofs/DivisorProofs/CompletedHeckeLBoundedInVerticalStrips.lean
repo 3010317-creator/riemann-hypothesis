@@ -3,9 +3,10 @@ module
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.CompletedLStripBounds
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormWt
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.TsumIdealMulAbsNormCpowEqExpTsum
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHeckePartialLSeriesEntireBoundedStripsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeLSeriesEqSumPrincipalPartialSeriesStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIdealCharacterOfUnitaryHeckeCharStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompletedHeckePartialLSeriesEntireBoundedStrips
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeLSeriesEqSumPrincipalPartialSeries
+public import Formalism.LocalToGlobal.UnitaryNorms.IsUnitaryNormOf
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIdealCharacterOfUnitaryHeckeChar
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeckeLEntireAndNonzeroAtOneHolds
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -59,7 +60,7 @@ namespace GlobalTheory.HeckeStrip
 
 theorem completedLBoundedInStrips : GlobalTheory.IndefiniteRowSideFullHecke.CompletedLStripBounds.CompletedLBoundedInStrips := by
   intro E _ _ _ I _ φ hφ χ n hu hi hn
-  obtain ⟨m, X, hm, hX0, hX1, hXm, hXn, hXz, hXP, hXβ⟩ := GlobalTheory.T.exists_idealCharacter_of_unitary_heckeChar E χ hu
+  obtain ⟨m, X, hm, hX0, hX1, hXm, hXn, hXz, hXP, hXβ⟩ := _root_.GlobalTheory.exists_ideal_character_of_unitary_hchar E χ hu
   have hβ : ∀ β : 𝓞 E, β ≠ 0 → β - 1 ∈ m → X (Ideal.span {β}) = wt φ n (β : E) := by
     intro β h0 h1
     have h0' : (β : E) ≠ 0 := by exact_mod_cast h0
@@ -71,8 +72,8 @@ theorem completedLBoundedInStrips : GlobalTheory.IndefiniteRowSideFullHecke.Comp
     by_cases ha' : a ⊔ m = ⊤
     · exact (hXn a ha ha').le
     · simp [hXz a ha']
-  obtain ⟨r, c, B, M, F, hB, hM, hper, hinv, hdec⟩ := GlobalTheory.T.heckeLSeries_eq_sum_principalPartialSeries E I φ n m X hm hX0 hXm hXn hXz hβ
-  choose Λ hΛd hΛb hΛe using fun k => GlobalTheory.T.completed_heckePartialLSeries_entire_bounded_strips E I φ hφ n hn (M k) (F k) (hM k) (hper k) (hinv k)
+  obtain ⟨r, c, B, M, F, hB, hM, hper, hinv, hdec⟩ := _root_.GlobalTheory.HeckeStrip.heckeSeries_eq_sum_pSeries E I φ n m X hm hX0 hXm hXn hXz hβ
+  choose Λ hΛd hΛb hΛe using fun k => _root_.GlobalTheory.HeckeStrip.completed_pSeries_entire_bounded E I φ hφ n hn (M k) (F k) (hM k) (hper k) (hinv k)
   have hB0 : ∀ k, ((B k : ℕ) : ℂ) ≠ 0 := fun k => by exact_mod_cast (hB k).ne'
   refine ⟨fun s => ∑ k, c k * ((B k : ℕ) : ℂ) ^ s * Λ k s, ⟨?_, fun s hs => ?_⟩, ?_⟩
   · intro s

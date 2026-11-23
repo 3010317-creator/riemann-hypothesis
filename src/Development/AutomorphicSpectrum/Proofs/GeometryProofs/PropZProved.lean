@@ -1,7 +1,10 @@
 module
 
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.PropZ
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ConnectedSpecialFibreConstantStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsGenOfIsVBOne
+public import Mathlib.AlgebraicGeometry.Morphisms.Proper
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ConnectedSpecialFibreConstant
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsRegularSectionGenerator
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.StalkClosedPointToGermTop
 import Mathlib.Algebra.Order.Floor.Extended
@@ -120,7 +123,7 @@ theorem GlobalTheory.CompanionTheory.Ar.Flat.PropZ_holds : GlobalTheory.Companio
   have hu₀ : unitAt ξ p₀ ((fun p : Cpt ξ => algebraMap O Ω ϖ ^ a / (σ / t p) ^ M) p₀) := by
     have := ZUnit.inv ((orderAt_iff_div (htq p₀ hp₀).1 (htq p₀ hp₀).2).1 hord₀)
     rwa [inv_div] at this
-  have key := GlobalTheory.T.connected_special_fibre_constant X Ω ξ O s ϖ hϖ hinj hs hg hconn
+  have key := _root_.GlobalTheory.CompanionTheory.Ar.Flat.unitAt_of_localLifts_of_unitAt X Ω ξ O s ϖ hϖ hinj hs hg hconn
     (fun p : Cpt ξ => algebraMap O Ω ϖ ^ a / (σ / t p) ^ M) hloc ⟨p₀, hp₀, hu₀⟩
   refine ⟨M, a, hM, fun p => ?_⟩
   by_cases hp : unitAt ξ p (algebraMap O Ω ϖ)

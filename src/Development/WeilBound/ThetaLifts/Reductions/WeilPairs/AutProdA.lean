@@ -1,16 +1,21 @@
 module
 
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.AutDef
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergOperatorFPreservesIsThetaFunctionStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.DatumF
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergOperatorFPreservesIsThetaFunction
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeIntertwinerRepContinuousGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeIntertwinerRepNormalizesHeisenbergFiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeIntertwinerRepSplitPlacePositiveScalarStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeIntertwinerRepTrivialRealPointsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralSqLatticeModelRepFundamentalDomainStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardTraceAddCharIsStandardCharOfAdmissibleCMStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaFunctionHeisenbergInvariant
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryAdelicPointEqRealMulFiniteBothOrdersStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntAFSmulMemLatOF
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeIntertwinerRepNormalizesHeisenbergFinite
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeIntertwinerRepSplitPlacePositiveScalar
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeIntertwinerRepTrivialRealPoints
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralSqLatticeModelRepFundamentalDomain
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardTraceAddCharIsStandardCharOfAdmissibleCM
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InfPartFPlaceIdem
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryAdelicPointEqRealMulFiniteBothOrders
 public import Development.WeilBound.ThetaLifts.Reductions.WeilPairs.SumFourEqTrace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqSelfOfTrivial
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaFunctionHeisenbergInvariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +55,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqSelfOfTrivial
 
 @[expose] public section
 
@@ -84,11 +88,11 @@ theorem exists_fin_A (C : Ctx σ B JS JT ξ₀ θ ι) (hO : IsLatRepF σ JS JT �
     (h2 : ResEtaF η 1) (hε : IsHalfF σ ε) : ∃ of, IsFinWeilF σ JS JT ξ₀ B.ψ (η ^ nS) (η ^ nT) of ∧
       ∀ p (f : thetaSubF σ JS JT ξ₀ B.ψ), of p f = (zF σ JS JT η ε hε.idem p : ℂ) • (Om p f : WOF F E nS nT → ℂ) := by
   have hB := C.good
-  have hreal := GlobalTheory.T.latticeIntertwinerRep_trivial_realPoints F E σ B hB nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ hc Λ w lam Om hO
-  have hheis := GlobalTheory.T.latticeIntertwinerRep_normalizes_heisenberg_finite F E σ B hB nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ hc Λ w lam Om hO
+  have hreal := _root_.GlobalTheory.FinLatF.IsLatRepF.real_triv F E σ B hB nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ hc Λ w lam Om hO
+  have hheis := _root_.GlobalTheory.FinLatHeis.isLatRepF_heis F E σ B hB nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ hc Λ w lam Om hO
   have hcont := GlobalTheory.T.latticeIntertwinerRep_continuous_group F E σ B hB nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ hc Λ w lam Om hO
-  have hunit := GlobalTheory.T.lintegral_sq_latticeModelRep_fundamentalDomain F E σ B hB nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ hc Λ w lam Om hO
-  have hsplit := GlobalTheory.T.latticeIntertwinerRep_splitPlace_positive_scalar F E σ B hB nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ hc Λ w lam Om hO
+  have hunit := _root_.GlobalTheory.FinLatUnitF.lintegral_sq_Om F E σ B hB nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ hc Λ w lam Om hO
+  have hsplit := _root_.GlobalTheory.FinLatF.isLatRepF_split F E σ B hB nS nT JS JT C.hS C.hT ξ₀ C.h0 C.hξ hc Λ w lam Om hO
   let z : GAF σ JS × GAF σ JT → Circle := zF σ JS JT η ε hε.idem
   have z1 : z 1 = 1 := by simp [z, zF]
   have z2 : ∀ p q, z (p * q) = z p * z q := fun p q => by
@@ -119,7 +123,7 @@ theorem exists_fin_A (C : Ctx σ B JS JT ξ₀ θ ι) (hO : IsLatRepF σ JS JT �
   · rw [ho _ f hf, hreal g hg k hk, show z (g, k) = 1 by
       simp [z, zF, GlobalTheory.SplitDetCharF.cutDet_real ε hε.idem hε.fin g hg, GlobalTheory.SplitDetCharF.cutDet_real ε hε.idem hε.fin k hk],
       Circle.coe_one, one_smul]
-  · have hf' := GlobalTheory.T.heisenbergOperatorF_preserves_isThetaFunction F E σ nS nT JS JT ξ₀ B.ψ hB.std.1 u f hf
+  · have hf' := _root_.GlobalTheory.HeisKeepF.isThetaFunOF_heisOF F E σ nS nT JS JT ξ₀ B.ψ hB.std.1 u f hf
     rw [ho _ f hf, ho _ _ hf', heisOF_smul, hheis g hg k hk u ⟨f, hf⟩ ⟨_, hf'⟩ rfl]
   · obtain ⟨r, hr, h1⟩ := hsplit e he g k hg hk
     refine ⟨r, hr, fun ℓ hℓ f hf => ?_⟩
@@ -135,8 +139,8 @@ theorem fin_inf_comm_A (C : Ctx σ B JS JT ξ₀ θ ι) (hO : IsLatRepF σ JS JT
     (hf : IsThetaFunOF σ JS JT ξ₀ B.ψ f) : of p (oi q f) = oi q (of p f) := by
   obtain ⟨z, hz⟩ := hof p
   have hσ : ∀ x, σ (σ x) = x := LatA.sig_sig C.good
-  obtain ⟨a, ha, k, hk, e1, -⟩ := GlobalTheory.T.unitaryAdelicPoint_eq_real_mul_finite_both_orders F E σ nS JS q.1
-  obtain ⟨b, hb, l, hl, e2, -⟩ := GlobalTheory.T.unitaryAdelicPoint_eq_real_mul_finite_both_orders F E σ nT JT q.2
+  obtain ⟨a, ha, k, hk, e1, -⟩ := _root_.GlobalTheory.WeilPartsF.exists_real_finite_mul F E σ nS JS q.1
+  obtain ⟨b, hb, l, hl, e2, -⟩ := _root_.GlobalTheory.WeilPartsF.exists_real_finite_mul F E σ nT JT q.2
   have hoi : ∀ f, IsThetaFunOF σ JS JT ξ₀ B.ψ f → oi q f = oi (a, b) f := fun f h => by
     rw [show q = (a, b) * (k, l) from Prod.ext e1 e2, map_mul, Module.End.mul_apply, hi.triv k hk l hl f h]
   let L : thetaSubF σ JS JT ξ₀ B.ψ →ₗ[ℂ] thetaSubF σ JS JT ξ₀ B.ψ := (oi q).restrict fun f hf => hi.pres q f hf
@@ -194,12 +198,12 @@ theorem datum_of_aut_A (C : Ctx σ B JS JT ξ₀ θ ι) (hO : IsLatRepF σ JS JT
     (haut : ∀ γ ∈ GQF σ JS, ∀ γ' ∈ GQF σ JT, ∀ f, IsThetaFunOF σ JS JT ξ₀ B.ψ f → of (γ, γ') (oi (γ, γ') f) 0 = f 0) :
     ∃ ω, IsWeilDatumOF σ JS JT (fun w : InfinitePlace F => (B.emb w).1) ξ₀ B.ψ (η ^ nS) (η ^ nT) ω := by
   have hB := C.good
-  have hψ := GlobalTheory.T.standardTraceAddChar_isStandardChar_of_admissibleCMBase F E σ B hB
+  have hψ := _root_.GlobalTheory.StdCharWeilDatum.isStdCharF_of_isGood F E σ B hB
   have hcomm : ∀ p q f, IsThetaFunOF σ JS JT ξ₀ B.ψ f → of p (oi q f) = oi q (of p f) :=
     fun p q f h => fin_inf_comm_A C hO hof hi p q f h
   have hth : ∀ (w₀ : WOF F E nS nT) f, IsThetaFunOF σ JS JT ξ₀ B.ψ f →
       IsThetaFunOF σ JS JT ξ₀ B.ψ (heisOF σ JS JT ξ₀ B.ψ w₀ f) :=
-    fun w₀ f h => GlobalTheory.T.heisenbergOperatorF_preserves_isThetaFunction F E σ nS nT JS JT ξ₀ B.ψ hB.std.1 w₀ f h
+    fun w₀ f h => _root_.GlobalTheory.HeisKeepF.isThetaFunOF_heisOF F E σ nS nT JS JT ξ₀ B.ψ hB.std.1 w₀ f h
   let Th := thetaSubF σ JS JT ξ₀ B.ψ
   let Om2 : GAF σ JS × GAF σ JT →* Module.End ℂ Th :=
     { toFun := fun p => (of p * oi p).restrict (p := Th) (q := Th) fun f h1 => hf.pres p _ (hi.pres p f h1)
@@ -218,8 +222,8 @@ theorem datum_of_aut_A (C : Ctx σ B JS JT ξ₀ θ ι) (hO : IsLatRepF σ JS JT
   refine ⟨om, hψ, isHeckeCharF_pow hη _, isHeckeCharF_pow hη _, resEtaF_pow hres _, resEtaF_pow hres _, hp,
     fun g h w₀ f h1 => ?_, fun γ hγ γ' hγ' f h1 => ?_, fun f h1 w => ?_, fun μ 𝓕 hμ h𝓕 p f h1 => ?_,
     fun e he g h hg hh x y hx hy => ?_⟩
-  · obtain ⟨a, ha, k, hk, e1, e1'⟩ := GlobalTheory.T.unitaryAdelicPoint_eq_real_mul_finite_both_orders F E σ nS JS g
-    obtain ⟨b, hb, l, hl, e2, e2'⟩ := GlobalTheory.T.unitaryAdelicPoint_eq_real_mul_finite_both_orders F E σ nT JT h
+  · obtain ⟨a, ha, k, hk, e1, e1'⟩ := _root_.GlobalTheory.WeilPartsF.exists_real_finite_mul F E σ nS JS g
+    obtain ⟨b, hb, l, hl, e2, e2'⟩ := _root_.GlobalTheory.WeilPartsF.exists_real_finite_mul F E σ nT JT h
     have key : ∀ x, IsThetaFunOF σ JS JT ξ₀ B.ψ x → om (g, h) x = of (k, l) (oi (a, b) x) := fun x hx => by
       rw [ho _ x hx]
       have E1 : ((g, h) : GAF σ JS × GAF σ JT) = (a, b) * (k, l) := Prod.ext e1 e2

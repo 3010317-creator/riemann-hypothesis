@@ -5,13 +5,13 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDesc
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.AuxiliaryInertOddPrime
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CmModelCoefficientSubringDedekindCompatibleEmbed
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.DeeperLevelBaseModelFiniteOverShallowerStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.DeeperLevelBaseModelFiniteOverShallower
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsFiniteLiftComp
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsReducedIsNormalSchemeIsLocallyNoetherianOfSmoo
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LevelDescentCoefficientField
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.OpenImmersionCompStructureEqGeneric
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LevelMapFiniteEtaleSurjective
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.MapToUniversalObjectUnique
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.OpenImmersionCompStructureEqGeneric
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -98,7 +98,7 @@ theorem exists_isTransition : (∀ (T K : Type) [CommRing T] [IsDomain T] [IsDis
     hR hR₂
   obtain ⟨b₁, r₁, ν₁, hb₁, hl₁, ⟨a₁⟩⟩ := hR
   obtain ⟨b₂, r₂, ν₂, hb₂, hl₂, ⟨a₂⟩⟩ := hR₂
-  obtain ⟨b₀, r₀, ν₀, hb₀, hl₀, ⟨a₀⟩⟩ := GlobalTheory.T.deeper_level_base_model_finite_over_shallower hext L₁ L₂ L₃ E H D Xo n N T hN l₀ l₀' B B' hn hNe d₀
+  obtain ⟨b₀, r₀, ν₀, hb₀, hl₀, ⟨a₀⟩⟩ := _root_.GlobalTheory.BaseTransition.baseModel_above hext L₁ L₂ L₃ E H D Xo n N T hN l₀ l₀' B B' hn hNe d₀
   obtain ⟨k, r, ν, hr, hk, hl, -⟩ :=
     GlobalTheory.LevelMapField.exists_levelMap L₁ L₂ L₃ E H D Xo hN l l₂ c₂ Y₂.oF Y₂.m0 d
 

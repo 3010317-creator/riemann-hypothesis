@@ -3,7 +3,8 @@ module
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import Mathlib.RingTheory.DiscreteValuationRing.Basic
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsReducedOfSmoothOverFieldStatement
+public import Mathlib.RingTheory.Smooth.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsReducedOfSmoothOverField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,7 +65,7 @@ namespace UpperTheory.Gal.Ord
 private theorem radical_quot (R B : Type) [CommRing R] [CommRing B] [Algebra R B] [Algebra.Smooth R B]
     (m : Ideal R) [m.IsMaximal] : (m.map (algebraMap R B)).IsRadical := by
   letI : Field (R ⧸ m) := Ideal.Quotient.field m
-  haveI : _root_.IsReduced ((R ⧸ m) ⊗[R] B) := GlobalTheory.T.isReduced_of_smooth_over_field' (R ⧸ m) _
+  haveI : _root_.IsReduced ((R ⧸ m) ⊗[R] B) := _root_.GlobalTheory.isReduced_of_smooth_over_field (R ⧸ m) _
   have e := Algebra.TensorProduct.quotIdealMapEquivQuotTensor B m
   haveI : _root_.IsReduced (B ⧸ m.map (algebraMap R B)) :=
     isReduced_of_injective e.toRingEquiv.toRingHom e.injective

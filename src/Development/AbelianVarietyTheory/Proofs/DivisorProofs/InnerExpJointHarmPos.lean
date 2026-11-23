@@ -1,22 +1,27 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsFockIPOfFockData
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockActionPowAnalyticVectorNormLeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockDerivedActionsTensorMembersStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockLoweringPartEqSubFockOperatorsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockOperatorsLieRepresentationCommuteStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianSpectralPartsAnticommuteStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InnerFockOmegaActionAdjointLinesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PosOfPosMulInnerOnJointEigenvectorsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TotalDegreeOmActKronBlockDiagonalLeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockActionPowAnalyticVectorNormLe
+public import Formalism.LocalRingCardinality.DataTheta
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockDerivedActionsTensorMembers
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockLoweringPartEqSubFockOperators
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FockOperatorsLieRepresentationCommute
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.Matrix.Hermitian
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianSpectralPartsAnticommute
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InnerFockOmegaActionAdjointLines
+public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PosOfPosMulInnerOnJointEigenvectors
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TotalDegreeOmActKronBlockDiagonalLe
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AnalyticOnNhdOrbitOfDerivSeqNormEq
+public import Mathlib.Analysis.Analytic.Order
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
-public import Mathlib.Analysis.Analytic.Order
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-public import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
@@ -255,9 +260,9 @@ theorem inner_exp_jointHarm_pos : ∀ (p q r s : ℕ) (T0 : GrpData (p * r + q *
     have := congrArg (· * Jm p q) h1
     simp only [hJ'] at this
     exact this
-  obtain ⟨s₀, N, E, hsum, hNE, hEE⟩ := GlobalTheory.T.hermitian_spectral_projections_anticommute _ Y (Jm p q) hYh hJY
-  have lie := (GlobalTheory.T.fockOperators_lie_representation_commute p q r s).1
-  have adj := GlobalTheory.T.inner_fockOmegaAction_adjoint_lines p q r s F.H F.ι (isFockIsometry_of_fockData F)
+  obtain ⟨s₀, N, E, hsum, hNE, hEE⟩ := _root_.GlobalTheory.hermitian_spectral_parts_anticommute _ Y (Jm p q) hYh hJY
+  have lie := (_root_.GlobalTheory.FockAlg.fock_lie_and_commute p q r s).1
+  have adj := _root_.GlobalTheory.FockAdjLines.inner_omAct_adj p q r s F.H F.ι (isFockIsometry_of_fockData F)
   set ω := omAct p q r s with hω
   set J := Jm p q with hJdef
   set J₂ := Jm r s with hJ2def
@@ -275,7 +280,7 @@ theorem inner_exp_jointHarm_pos : ∀ (p q r s : ℕ) (T0 : GrpData (p * r + q *
     simp [u, U, T1.expt_zero, this]
   have hder : ∀ P t, HasDerivAt (fun t => u t P) (u t (ω (Y ⊗ₖ (1 : Mat r s)) P)) t := fun P t =>
     GlobalTheory.OrbitAnalytic.hasDerivAt_orbit U hU _ _
-      ((GlobalTheory.T.fock_derived_actions_tensor_members p q r s T0 T1 T2 F).2.1 Y hY.1 P) t
+      ((_root_.GlobalTheory.FockEmbExp.fock_derived p q r s T0 T1 T2 F).2.1 Y hY.1 P) t
   have han : ∀ P, AnalyticOnNhd ℝ (fun t => u t P) Set.univ := fun P a _ => by
     set Z : Matrix (Ln p q r s) (Ln p q r s) ℂ := Y ⊗ₖ (1 : Mat r s)
     set S : ℝ := 4 * ∑ l, ∑ l', ‖Z l l'‖ with hS
@@ -285,7 +290,7 @@ theorem inner_exp_jointHarm_pos : ∀ (p q r s : ℕ) (T0 : GrpData (p * r + q *
       ((2 : ℝ) ^ ((P.totalDegree : ℝ) / 2 + 1) * ‖F.ι P‖) (S + 1)⁻¹
       (by positivity) (fun k t => ?_) a
     · simpa using this
-    have hb := (GlobalTheory.T.fockAction_pow_analyticVector_norm_le p q r s F.H F.ι (isFockIsometry_of_fockData F) Z P.totalDegree k P le_rfl).2
+    have hb := (_root_.GlobalTheory.FockAnalytic.omAct_pow_norm_le p q r s F.H F.ι (isFockIsometry_of_fockData F) Z P.totalDegree k P le_rfl).2
     have e : ‖u t ((ω Z ^ k) P)‖ = ‖F.ι ((ω Z ^ k) P)‖ := F.isom _ _
     rw [e]
     refine hb.trans ?_
@@ -305,7 +310,7 @@ theorem inner_exp_jointHarm_pos : ∀ (p q r s : ℕ) (T0 : GrpData (p * r + q *
   have hfin : FiniteDimensional ℂ W := Submodule.finiteDimensional_of_le inf_le_right
   have hPW : P ∈ W := (memW P).2 ⟨fun Z hZ => by
     have hZ' := (isPC_iff Z).2 hZ
-    have := GlobalTheory.T.fockLoweringPart_eq_sub_fockOperators p q r s Z hZ' P
+    have := _root_.GlobalTheory.FockLowDiff.lowering_eq_diff p q r s Z hZ' P
     rw [hP.1 Z hZ', smul_zero] at this
     simpa only [L, map_sub, LinearMap.sub_apply] using this, le_rfl⟩
   have aK : ∀ ν x y, inner ℂ (F.ι (ω ((J * E ν) ⊗ₖ J₂) x)) (F.ι y) =
@@ -315,12 +320,12 @@ theorem inner_exp_jointHarm_pos : ∀ (p q r s : ℕ) (T0 : GrpData (p * r + q *
   have hNS : ∀ w ∈ W, ∀ ν, ω (N ν ⊗ₖ (1 : Mat r s)) w = ω ((J * N ν) ⊗ₖ J₂) w := fun w hw ν => by
     have := ((memW w).1 hw).1 (N ν) (hNE ν).2.2.2.2.2.2.1
     simpa only [L, map_sub, LinearMap.sub_apply, sub_eq_zero] using this
-  have key := GlobalTheory.T.inner_pos_of_pos_on_joint_eigenvectors _ F.H F.ι F.ι_inj W hfin ℝ (fun ν => ω ((J * E ν) ⊗ₖ J₂))
+  have key := _root_.GlobalTheory.pos_of_pos_mul_inner_on_joint_eigenvectors _ F.H F.ι F.ι_inj W hfin ℝ (fun ν => ω ((J * E ν) ⊗ₖ J₂))
     (fun ν w hw => ?_) aK (fun ν ν' => ?_) (u 1) (fun m y hy hm => ?_) P hPW hP0
   · simpa [u, U] using key
   · obtain ⟨h1, h2⟩ := (memW w).1 hw
     have hE : J * E ν = E ν * J := (hNE ν).2.2.2.2.2.2.2
-    refine (memW _).2 ⟨fun Z hZ => ?_, GlobalTheory.T.totalDegree_omAct_kron_blockDiagonal_le p q r s _ (isKC_of _ ?_) _ w h2⟩
+    refine (memW _).2 ⟨fun Z hZ => ?_, _root_.GlobalTheory.FockBlockDeg.totalDegree_omAct_kron_le p q r s _ (isKC_of _ ?_) _ w h2⟩
     · have hZ' : Z * J = -(J * Z) := by rw [hZ, neg_neg]
       have e : L Z * ((J * E ν) ⊗ₖ J₂) - ((J * E ν) ⊗ₖ J₂) * L Z = L (Z * E ν + E ν * Z) := by
         have e1 : Z * (J * E ν) = -(J * (Z * E ν)) := by

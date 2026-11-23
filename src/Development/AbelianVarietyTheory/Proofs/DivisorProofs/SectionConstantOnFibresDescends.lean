@@ -3,11 +3,20 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CongModRefl
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsUnconditional
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.FramedPointsLiftToLevelCover
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleFaithfullyFlatDescentGeometricPointsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteEtaleGoodCoverLevelMapStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLiftFiniteEtaleSurjectionTestRingStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLiftGeometricPointOfFaithfullyFlatFiniteTyStatement
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.RingTheory.Etale.Basic
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Mathlib.RingTheory.Jacobson.Ring
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleFaithfullyFlatDescentGeometricPoints
+public import Formalism.LocalToGlobal.ProjectiveLattices.ThShort
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteEtaleGoodCoverLevelMap
+public import Formalism.LocalToGlobal.ProjectiveLattices.AlgebraMapCAt
+public import Mathlib.AlgebraicGeometry.Morphisms.Etale
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLiftFiniteEtaleSurjectionTestRing
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLiftGeometricPointOfFaithfullyFlatFiniteTy
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionPullbackExistsUnique
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.FrMapComp
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemSuppOnIffIdemMulOfNatural
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.NoCommonZeroIffOfSec
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointBaseChangeUniqueReflIff
@@ -50,7 +59,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.EvNatPf
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.FrMapComp
 import Development.AbelianVarietyTheory.Definitions.Divisors.UnifOfSpaceEq
 import Development.AbelianVarietyTheory.Definitions.ThetaValues.LeCovCoeff
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.ArakelovInstances.IsStrictDom
@@ -67,24 +75,24 @@ open AlgebraicGeometry CategoryTheory Limits NumberField ReciprocityTheory.Chart
 
 theorem exists_lift_pt : ∀ (A B : Type) [CommRing A] [CommRing B] [Algebra A B], Module.FaithfullyFlat A B →
     Algebra.FiniteType A B → ∀ (k : Type) [Field k] [IsAlgClosed k] (φ : A →+* k),
-    ∃ φ' : B →+* k, φ'.comp (algebraMap A B) = φ := GlobalTheory.T.exists_lift_geometricPoint_of_faithfullyFlat_finiteType
+    ∃ φ' : B →+* k, φ'.comp (algebraMap A B) = φ := _root_.GlobalTheory.GeomPointLift.exists_lift
 
 theorem exists_eq_of_geom : ∀ (A B : Type) [CommRing A] [CommRing B] [Algebra A B] [IsReduced A] [IsJacobsonRing A],
     Module.FaithfullyFlat A B → Algebra.Etale A B → ∀ b : B,
     (∀ (k : Type) [Field k] [IsAlgClosed k] (φ ψ : B →+* k), φ.comp (algebraMap A B) = ψ.comp (algebraMap A B) →
-      φ b = ψ b) → ∃ a : A, algebraMap A B a = b := GlobalTheory.T.etale_faithfullyFlat_descent_geometric_points
+      φ b = ψ b) → ∃ a : A, algebraMap A B a = b := _root_.GlobalTheory.EtaleGeomDescent.descent
 
 theorem exists_etale_lift : ∀ (Y Z : Scheme.{0}) (π : Z ⟶ Y), IsFinite π → Etale π → Surjective π →
     ∀ (K : Type) [Field K] (p : TRing K) (x : Sp p.R ⟶ Y), ∃ (q : TRing K) (ι : p.R →ₐ[K] q.R),
       (letI := ι.toRingHom.toAlgebra; Module.FaithfullyFlat p.R q.R ∧ Algebra.Etale p.R q.R) ∧
-      ∃ z : Sp q.R ⟶ Z, z ≫ π = spMap ι.toRingHom ≫ x := GlobalTheory.T.exists_lift_finiteEtaleSurjection_testRing
+      ∃ z : Sp q.R ⟶ Z, z ≫ π = spMap ι.toRingHom ≫ x := _root_.GlobalTheory.exists_lift_finiteEtale_testRing
 
 theorem exists_good_cover : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H)
     (l : Level H) (Xo : Moduli Dw l) (c : Coeff l) (d : DeltaDat Xo c 0), 1 ≤ Dw.p + Dw.q → d.IsLev →
     ∃ (Z : Scheme.{0}) (π : Z ⟶ Xo.XF c) (z₂ : Z ⟶ d.Xo₂.X), IsFinite π ∧ Etale π ∧ Surjective π ∧
       z₂ ≫ d.r = π ≫ pullback.fst _ _ ∧
       z₂ ≫ d.Xo₂.s = π ≫ pullback.snd _ _ ≫
-        spMap ((d.eF.symm : d.c₂.F →+* c.F).comp (IntermediateField.inclusion d.c₂.le).toRingHom) := GlobalTheory.T.exists_finiteEtale_goodCover_levelMap
+        spMap ((d.eF.symm : d.c₂.F →+* c.F).comp (IntermediateField.inclusion d.c₂.le).toRingHom) := _root_.GlobalTheory.CoverGood.exists_good_cover
 
 end GlobalTheory.CoverDesc
 

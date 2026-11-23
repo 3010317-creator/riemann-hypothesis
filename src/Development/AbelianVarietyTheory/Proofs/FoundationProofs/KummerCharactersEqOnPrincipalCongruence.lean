@@ -1,9 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsRootOne
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GlTwoPosRatMobiusBasicLawsStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TowerUnitClassModPrimePowPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UpperHalfPlaneHolomorphicGermPropertiesStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.ExpUpper
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GlTwoPosRatMobiusBasicLaws
+public import Development.AbelianVarietyTheory.Definitions.Foundations.Letter
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TowerUnitClassModPrimePowProperties
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UpperHalfPlaneHolomorphicGermProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,13 +80,13 @@ open KumUniq
 theorem kum_near : ∀ (Ω : Type) [Field Ω] [Algebra ℚ Ω] (ε : Ω →+* ℂ) (X : Tower Ω ε) (l : ℕ) [Fact l.Prime],
     ∀ n : ℕ, ∀ (x : X.Khat l) (χ χ' : SL(2, ℤ) → ZMod (l ^ n)), Kum X l n x χ → Kum X l n x χ' → Near χ χ' := by
   intro Ω _ _ ε X l _ n x χ χ' hK hK'
-  obtain ⟨hH, hmul, hone, hdiff, -, -⟩ := GlobalTheory.T.glTwoPosRatMobius_basic_laws
-  obtain ⟨G1, G2, G3, -, G5⟩ := GlobalTheory.T.upperHalfPlane_holomorphic_germ_properties
+  obtain ⟨hH, hmul, hone, hdiff, -, -⟩ := _root_.GlobalTheory.KZ.mob_laws
+  obtain ⟨G1, G2, G3, -, G5⟩ := _root_.GlobalTheory.KZ.Germ.main
   obtain ⟨f, a, b, M, hM, hx, ⟨ha, hb, hb0, hab⟩, hχ⟩ := hK
   obtain ⟨f', a', b', M', hM', hx', ⟨ha', hb', hb0', hab'⟩, hχ'⟩ := hK'
   have hl : l.Prime := Fact.out
   have hm : 0 < l ^ n := pow_pos hl.pos n
-  obtain ⟨g, hfg⟩ := ((GlobalTheory.T.towerUnitClassModPrimePow_properties Ω ε X l n).2.1 f f').1 (hx.symm.trans hx')
+  obtain ⟨g, hfg⟩ := ((_root_.GlobalTheory.KZ.H3.cls_props Ω ε X l n).2.1 f f').1 (hx.symm.trans hx')
   obtain ⟨p, q, hp, hq, hq0, hpq⟩ := X.an_mero (g : X.K)
   obtain ⟨M'', hM'', hlev⟩ := X.level (g : X.K)
 

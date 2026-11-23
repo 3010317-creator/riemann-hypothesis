@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.SumIoPr
 public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.IsDSOfIsDG
-public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.DualTensorCapelliIntertwineStatement
+public import CompanionTheory.AutomorphicTheory.PieriRules.ThetaBesselIsometries.DualTensorCapelliIntertwine
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -177,7 +177,7 @@ theorem rawTens : PI.KFinSmooth → ∀ (k r : ℕ) (ε : Fin (2 * r + k + 1) �
       (by
         intro s a b y c
         apply Subtype.ext
-        rw [lm_coe, hF s a b y, GlobalTheory.T.dual_tensor_capelli_intertwine hK k r ε mu R hR RI muI io pr hRI hT s _ y y.2 c,
+        rw [lm_coe, hF s a b y, _root_.Gp91.GlobalTheory.dualTens_io_dC hK k r ε mu R hR RI muI io pr hRI hT s _ y y.2 c,
           Submodule.coe_sub, hE a b, Submodule.coe_sum]
         rfl)
       (by

@@ -1,9 +1,9 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsUMOfMem
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FibreFunctionLocallyConstantCompactStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FibreFunctionLocallyConstantCompact
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothIntegralLinear
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnipotentTopMemParabolicStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnipotentTopMemParabolic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -109,7 +109,7 @@ theorem fibV_prodPG (τ : Representation ℂ (Mir k i) V) (σ : Representation �
     (x : Fin i → k) (m v : Fin t → k)
     (hy : (g : Matrix (Fin (i + t)) (Fin (i + t)) k).mulVec y = topV k i t x + midV k i t m) :
     fibV (prodPG τ σ (uM k (i + t) y) f) g v = extTensor τ σ (uM k i x, 1) (fibV f g (v + m)) := by
-  refine Exists.elim (GlobalTheory.T.unipotent_top_mem_parabolic k i t x) fun hmem hproj => ?_
+  refine Exists.elim (_root_.GlobalTheory.CompanionTheory.BZPsiPG.TopCol.main k i t x) fun hmem hproj => ?_
   have e1 : fibV (prodPG τ σ (uM k (i + t) y) f) g v =
       f.1.1.1 (uM k (i + t) (midV k i t v) * levi k (i + t) g * uM k (i + t) y) := rfl
   have e2 := f.1.1.2 ⟨_, hmem⟩ (uM k (i + t) (midV k i t (v + m)) * levi k (i + t) g)
@@ -127,7 +127,7 @@ theorem fibInt_col (τ : Representation ℂ (Mir k i) V) (σ : Representation �
     (x : Fin i → k) (m : Fin t → k)
     (hxm : (g : Matrix (Fin (i + t)) (Fin (i + t)) k).mulVec y = topV k i t x + midV k i t m) :
     fibInt μ (prodPG τ σ (uM k (i + t) y) f) g = fibInt μ f g := by
-  have hlc := GlobalTheory.T.fibre_function_locally_constant_compact k i t τ σ hτ hσ f g
+  have hlc := _root_.GlobalTheory.CompanionTheory.BZPsiPG.FibCompact.fibV_main k i t τ σ hτ hσ f g
   have hfun : fibV (prodPG τ σ (uM k (i + t) y) f) g =
       fun v => (extTensor τ σ (uM k i x, 1)) (fibV f g (v + m)) :=
     funext fun v => fibV_prodPG τ σ f g y x m v hxm

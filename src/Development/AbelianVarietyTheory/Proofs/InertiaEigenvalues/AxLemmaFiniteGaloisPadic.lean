@@ -3,7 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NoTowerQ
 public import GroundTheory.PAdicHodge.AxLemma
 public import Mathlib.NumberTheory.Padics.ValuativeRel
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalFieldIntegerIffAlgebraicClosureNormStatement
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalFieldIntegerIffAlgebraicClosureNorm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -69,7 +71,7 @@ theorem axIn_padic : ∀ (l : ℕ) [Fact l.Prime] (L : Type) [Field L] [Valuativ
     [IsGalois ℚ_[l] L] [Algebra L (Om l)] [IsScalarTower ℚ_[l] L (Om l)], AxIn ℚ_[l] L l := by
   intro l _ L _ _ _ _ _ _ _ _ _ _
   intro J x hx
-  have hO := GlobalTheory.T.localFieldInteger_iff_algebraicClosureNorm l L
+  have hO := _root_.GlobalTheory.PMon.Ram.mem_integer_iff_norm_le_and_valuation_lt_one_iff_norm_lt l L
   let φ : L →ₐ[ℚ_[l]] Om l := IsScalarTower.toAlgHom ℚ_[l] L (Om l)
   have hφ : ∀ y : L, φ y = algebraMap L (Om l) y := fun y => rfl
   let F : IntermediateField ℚ_[l] L := IntermediateField.fixedField J

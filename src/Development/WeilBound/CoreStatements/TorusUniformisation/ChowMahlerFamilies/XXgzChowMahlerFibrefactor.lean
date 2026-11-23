@@ -2,7 +2,7 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.IsScaleStable
 public import GroundTheory.HeightsAndTheta.Heights.ArithmeticBezout.StatementsMahler
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ChowFormSpecializationProportionalStatement
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ChowFormSpecializationProportional
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -98,7 +98,7 @@ theorem PositivityTheory.Xgn.t_xgz_chow_mahler_fibrefactor : ∀ (n e δ : ℕ) 
   have hone : ∀ y ∈ fibrePts (coneSet h W) π,
       ∑ j, ((h.mat)⁻¹ *ᵥ π 0) j * h.pointOf y j = 1 := fun y hy => by
     rw [pair_eq, row_zero hy]
-  obtain ⟨c, hc0, hcu⟩ := GlobalTheory.T.chow_form_specialization_proportional n e δ W g (nrmGroups h e (coefRows h π))
+  obtain ⟨c, hc0, hcu⟩ := _root_.GlobalTheory.CompanionTheory.Relay.chow_form_specialization_proportional n e δ W g (nrmGroups h e (coefRows h π))
     (hfin.toFinset.image h.pointOf) u₀ hch hmh
     (by
       intro x hx

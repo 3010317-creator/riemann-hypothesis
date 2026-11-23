@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.ImmersedBy
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SemistableReductionPpavPadicFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ZarhinProjectiveModelOfSemistableReductionStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.SemistableReduction₂.SemistableReductionSt
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SemistableReductionPpavPadicField
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ZarhinProjectiveModelOfSemistableReduction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,6 +51,6 @@ open scoped CategoryTheory.Obj
 namespace GlobalTheory
 
 theorem zhSt_holds : GlobalTheory.ZH.ZHSt :=
-  GlobalTheory.T.zarhinProjectiveModel_of_semistableReduction GlobalTheory.T.semistableReduction_ppav_padicField
+  _root_.GlobalTheory.zh_of_semistableReduction _root_.GlobalTheory.SS.semistableReductionSt
 
 end GlobalTheory

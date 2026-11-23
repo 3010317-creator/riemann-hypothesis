@@ -4,11 +4,13 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsFlatA
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeAt
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DvrEigenTangentExtensionStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DvrSpecializationLieLatticeStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeEvalFractionFieldStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelPullbackCorrespondence
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeEvalFractionField
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SemiabelianExtensionOverDvrStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SemiabelianPullbackTangentMapStatement
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelPullbackCorrespondence
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -110,7 +112,7 @@ theorem span_eq_eigSub : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
       (ML.pt w).left ≫ m'.φ = spMap (dualMap (algebraMap V K)) ≫ a.left := by
     intro w
     have hA := GlobalTheory.T.semiabelian_extension_over_dvr V K Y.X Y.t.G T.G tK.G z m'.φ φ₁ Y.t.semi T.semi m'.cart (by rw [hz]; exact hφ₁) (ML.pt w) (ML.tan w)
-    have hF := GlobalTheory.T.lie_lattice_eval_fraction_field Y.X Y.t.G Z.Ω (Z.ξ₀ ≫ Y.j) Z.V Z.M V z K (Fin g → K) MC Z.gen hsm h₂ h₁' w
+    have hF := _root_.GlobalTheory.CompanionTheory.Ar.lieLat_fibAt_iff Y.X Y.t.G Z.Ω (Z.ξ₀ ≫ Y.j) Z.V Z.M V z K (Fin g → K) MC Z.gen hsm h₂ h₁' w
     rw [hfib] at hF
     rw [hF, hA]
     have e : (ML.pt w).left ≫ φ₁ = (MC.pt w).left := by

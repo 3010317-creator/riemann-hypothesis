@@ -1,7 +1,8 @@
 module
 
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.PoleLengthBound.PiBallFromAlt
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.BallQuotLen
+public import Formalism.PeriodIntegrals.BallQuotLen
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.BallQuotientLength.LengthBallQuotientEqSumMulFdeg
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,6 +45,6 @@ noncomputable section
 
 namespace PI.PoleLengthCount
 
-theorem pole_ballQuot : BallQuot := ball_quotient_length
+theorem pole_ballQuot : BallQuot := _root_.PI.UnitaryGroupMassFormula.BallQuotLen.ballQuotLen_main
 
 end PI.PoleLengthCount

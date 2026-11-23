@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormDwLeSobNorm
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SobolevEmbeddingDiscreteSeriesHilbertSchmidtStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SobolevEmbeddingDiscreteSeriesHilbertSchmidt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -99,7 +99,7 @@ theorem exists_word_clm (h : Std ε σ) (W : Submodule ℂ H) [CompleteSpace W] 
 
 theorem finiteDimensional_of_smooth (h : Std ε σ) (W : Submodule ℂ H) [CompleteSpace W]
     (hW : ∀ w ∈ W, Sm ε σ w) : FiniteDimensional ℂ W := by
-  obtain ⟨S, C, hS, hC, hts⟩ := GlobalTheory.T.sobolev_embedding_discrete_series_hilbertSchmidt n ε H σ h
+  obtain ⟨S, C, hS, hC, hts⟩ := _root_.GlobalTheory.TypeSum.SobHS.sobolev_hilbertSchmidt n ε H σ h
   choose A hA using fun l : {l // l ∈ S} => exists_word_clm h W hW (hS l.1 l.2)
   haveI : Finite {l // l ∈ S} := (List.finite_toSet S).to_subtype
   obtain ⟨B, hB⟩ := (Set.finite_range fun l => ‖A l‖ ^ 2).bddAbove

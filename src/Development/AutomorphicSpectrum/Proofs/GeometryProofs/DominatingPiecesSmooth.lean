@@ -3,7 +3,8 @@ module
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProdUpdateDiv
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenMapStalkMap
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GermGenPtInjectiveRangeRegAtStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCptGen
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GermGenPtInjectiveRangeRegAt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -101,8 +102,8 @@ theorem smooth_of_pieces : ∀ (X X' : Scheme.{0}) (Ω Ω' : Type) [Field Ω] [F
   have hUg : genPt ξ ∈ U := by
     have h1 : f (genPt ξ') ∈ U := e hWg
     rwa [RegAtDom.map_genPt hd] at h1
-  obtain ⟨injU, ranU⟩ := GlobalTheory.T.germ_genPt_injective_range_regAt X Ω ξ hg U hUg hU.spec
-  obtain ⟨injW, ranW⟩ := GlobalTheory.T.germ_genPt_injective_range_regAt X' Ω' ξ' hg' W hWg hW.spec
+  obtain ⟨injU, ranU⟩ := _root_.GlobalTheory.CompanionTheory.Ar.regAt_sections X Ω ξ hg U hUg hU.spec
+  obtain ⟨injW, ranW⟩ := _root_.GlobalTheory.CompanionTheory.Ar.regAt_sections X' Ω' ξ' hg' W hWg hW.spec
   have memR : ∀ t, (X.presheaf.germ U (genPt ξ) hUg ≫ Scheme.stalkClosedPointTo ξ).hom t ∈ R :=
     fun t => (hU.ring _).2 ((ranU _).1 ⟨t, rfl⟩)
   have memC : ∀ t, (X'.presheaf.germ W (genPt ξ') hWg ≫ Scheme.stalkClosedPointTo ξ').hom t ∈ C :=

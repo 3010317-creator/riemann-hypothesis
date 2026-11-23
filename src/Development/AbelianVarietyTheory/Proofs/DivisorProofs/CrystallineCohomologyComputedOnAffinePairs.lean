@@ -1,9 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DivPowerCompatTwoFormDerivativeCompOneForm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AffinePointPairsCommaAcyclicDegreeLeTwoStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlgebraCoefficientsRestrictionBijectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystallineCohomologyRestrictAffinePointPairsBijStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VanishingH1InvertingMorphisms
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AffinePointPairsCommaAcyclicDegreeLeTwo
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PullbackBijectiveDegreesOneTwo
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AlgebraCoefficientsRestrictionBijective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CrystallineCohomologyRestrictAffinePointPairsBij
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictUpwardClosedSubcategoryPull1Bijective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -113,9 +115,9 @@ theorem crystallineCohomology_computed_on_affinePairs : ∀ (R : Type) [CommRing
     (∀ U V : Y.Opens, IsAffineOpen U → IsAffineOpen V → IsAffineOpen (U ⊓ V)) →
     ((Cx.single (Coef.ofAlg (O κ t))).resMap (pE κ t i)).PullbackBijectiveDegreesOneTwo := by
   intro R _ I κ X t Y i hY
-  have ha := GlobalTheory.T.crystallineCohomology_restrict_affinePointPairs_bijective R I κ X t Y i
-  have hc := GlobalTheory.T.affinePointPairs_comma_acyclic_degree_le_two.1 R I κ X t Y i hY
-  have hc2 := GlobalTheory.T.affinePointPairs_comma_acyclic_degree_le_two.2 R I κ X t Y i hY
+  have ha := _root_.GlobalTheory.PDForm.pull_isSm_bijective R I κ X t Y i
+  have hc := _root_.GlobalTheory.PDForm.isSm_acyclic_two.1 R I κ X t Y i hY
+  have hc2 := _root_.GlobalTheory.PDForm.isSm_acyclic_two.2 R I κ X t Y i hY
   have h1 : Function.Bijective (CoefMap.restrict (coefSm κ t i) (smAff κ t i).ι).pull1 :=
     Desc.restrict_upwardClosed_subcategory_pull1_bijective R _ (coefSm κ t i) (smAff κ t i) (smAff_up κ t i)
       (fun T ↦ (hc T).1) (fun T ↦ (hc T).2.1) fun T ↦ (hc T).2.2
@@ -124,7 +126,7 @@ theorem crystallineCohomology_computed_on_affinePairs : ∀ (R : Type) [CommRing
       (fun T ↦ (hc T).1) (fun T ↦ (hc T).2.1) fun T ↦ (hc T).2.2,
     Desc.descent_H2_surjective (coefSm κ t i) (smAff κ t i) (smAff_up κ t i)
       (fun T ↦ (hc T).1) (fun T ↦ (hc T).2.1) (fun T ↦ (hc T).2.2) hc2⟩
-  refine GlobalTheory.T.algebra_coefficients_restriction_bijective R _ _ (O κ t) (pE κ t i) ?_ ?_
+  refine _root_.GlobalTheory.CxCoh.single_algebra_restriction_bijective R _ _ (O κ t) (pE κ t i) ?_ ?_
   · have h := (mapTo_pull1 κ t i).comp (h1.comp ha.1)
     have e : ⇑(CoefMap.restrict (O κ t) (pE κ t i)).pull1 = (mapTo κ t i).pull1 ∘
         (CoefMap.restrict (coefSm κ t i) (smAff κ t i).ι).pull1 ∘

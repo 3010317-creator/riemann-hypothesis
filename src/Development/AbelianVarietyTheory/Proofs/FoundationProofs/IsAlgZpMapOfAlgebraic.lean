@@ -7,9 +7,12 @@ public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsAlgClosureAutomorphismRestrictingLocal
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsAlgebraicNumberCongrModPrimePowStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsConjOverPrimeStatement
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Mathlib.RingTheory.Valuation.ValuationSubring
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsConjOverPrime
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLocalAutFixingTowerParamOfStabilizes
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsGaloisInvariantValuationIntegersEqIntegral
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLocalAutFixingTowerParamOfStabilizesStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -124,7 +127,7 @@ theorem exists_cusp_embedding : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsA
     · rw [Valuation.mem_valuationSubring_iff]
       exact hv (j0 x)
   obtain ⟨B, hBp, hB⟩ := hBexists
-  obtain ⟨σ, hσ⟩ := GlobalTheory.T.exists_algEquiv_map_valuationSubring_over_prime p A B hA hBp
+  obtain ⟨σ, hσ⟩ := _root_.GlobalTheory.ValConjClosure.exists_conj_over_prime p A B hA hBp
   let j : Ω →+* Ωl := j0.comp σ.toRingEquiv.toRingHom
   have hint : ∀ x, x ∈ A ↔ IsInt (p := p) (j x) := fun x => (hσ x).symm.trans (hB _)
   have hl : 0 < p := (Fact.out : p.Prime).pos
@@ -139,6 +142,6 @@ theorem exists_cusp_embedding : ∀ {Ω : Type} [Field Ω] [Algebra ℚ Ω] [IsA
   refine ⟨Ωl, inferInstance, inferInstance, hcl, T, j, ?_⟩
   exact { int := hint, alg := isAlgZp_map_of_algebraic p Ωl j, root := fun n => rfl,
           dense := GlobalTheory.T.exists_algebraicNumber_congr_mod_prime_pow p A Ωl hcl j hint, down := hdown,
-          up := fun n s hs => GlobalTheory.T.exists_local_aut_fixing_tower_param_of_stabilizes p A Ωl hcl j hint T n s hs }
+          up := fun n s hs => _root_.GlobalTheory.Glue.CuspUp.exists_gal_fix_qq_of_stab p A Ωl hcl j hint T n s hs }
 
 end GlobalTheory.Glue

@@ -1,11 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.EeProd
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CupKummerDlogModPrimePowLevelLStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EdgeClassCupProductGeometricStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NotCoboundaryConstantOne
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CupKummerDlogModPrimePowLevelL
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EdgeClassCupProductGeometric
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KummerCocycleValueExpansionEqLogDerivSmul
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsBasisOnZetaPowMulQPow
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GeometricLevelH1Coboundary
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.KummerCocycleValueExpansionEqLogDerivSmulStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -209,9 +210,9 @@ theorem edge_dlog : ∀ (p : ℕ) [Fact p.Prime], p ≠ 2 → ∃ c : ℕ, ∀ (
     κ ≠ 0 → IsAlgZp p κ → θ ^ (p ^ n) * b = κ * a → Ev ψ ca a a' → Ev ψ cb b b' → a ≠ 0 → IsInt (p := p) a⁻¹ → b ≠ 0 → IsInt (p := p) b⁻¹ →
     Cong (p := p) n ((p : Ω) ^ c * (a' / a - b' / b)) (σ⁻¹ o - o - (p : Ω) ^ c * ι (α * β' - β * α') * ((lz σ).val : Ω)) := by
   intro p _ hp2
-  obtain ⟨c₁, h53⟩ := GlobalTheory.T.cup_kummer_dlog_mod_primePow_levelL p hp2
-  obtain ⟨c₂, hed⟩ := GlobalTheory.T.edge_class_cup_product_geometric p hp2 c₁
-  obtain ⟨c₃, hgeo⟩ := GlobalTheory.T.kummerCocycle_value_expansion_eq_logDeriv_smul p hp2
+  obtain ⟨c₁, h53⟩ := _root_.GlobalTheory.K5.LevelDown.cup_kummer_dlog_mod p hp2
+  obtain ⟨c₂, hed⟩ := _root_.GlobalTheory.EdgeAlg.edge_class_cup p hp2 c₁
+  obtain ⟨c₃, hgeo⟩ := _root_.GlobalTheory.K5.GeoKummer.geo_cob p hp2
   have hlevel := GlobalTheory.K5.Reb.h1_geometric_level_coboundary p hp2
   obtain ⟨c₄, h71⟩ := hlevel
   refine ⟨c₂ + c₃ + c₄, ?_⟩

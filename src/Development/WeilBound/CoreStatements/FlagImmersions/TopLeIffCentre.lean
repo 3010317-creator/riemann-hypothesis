@@ -1,8 +1,10 @@
 module
 
 public import Development.WeilBound.CoreStatements.FlagImmersions.Transport
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspCorrespondenceBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SectionBoundaryClosedAndCodenseStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUniqueLeftBasisCoordsAdicCompletion
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspCorrespondenceBound
+public import ReciprocityTheory.AnalyticForms.LeviForms.IsRegFamilyInhabitStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SectionBoundaryClosedAndCodense
 public import Development.WeilBound.CoreStatements.VolumeEquality.BaseUnifVec
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -160,7 +162,7 @@ theorem locChart (hLP : LocPer) (hT : Transport) (hFV : FrameVals) (hPM : PerMat
   set ch := Sys.A.chart k with hch
   let t₀ := ch x₀
   have hs₀ : ch.symm t₀ = x₀ := ch.left_inv hk
-  have hop : IsOpen Sys.open' := (GlobalTheory.T.section_boundary_closed_and_codense _ _ Sys.A Sys.L Sys.s _ Sys.m Sys.W Sys.sec Sys.snc).1.isOpen_compl
+  have hop : IsOpen Sys.open' := (_root_.GlobalTheory.CompanionTheory.Ar.Bdry.bdry_isClosed_dense_compl _ _ Sys.A Sys.L Sys.s _ Sys.m Sys.W Sys.sec Sys.snc).1.isOpen_compl
   let V₁ := ch.target ∩ ch.symm ⁻¹' Sys.open'
   have hV₁ : IsOpen V₁ := ch.isOpen_inter_preimage_symm hop
   have ht₁ : t₀ ∈ V₁ := ⟨ch.map_source hk, by show ch.symm t₀ ∈ Sys.open'; rwa [hs₀]⟩
@@ -195,7 +197,7 @@ theorem locChart (hLP : LocPer) (hT : Transport) (hFV : FrameVals) (hPM : PerMat
     obtain ⟨h1, -, -, -, v, hv, hf⟩ := h3 t ht
     exact (hFV hG E H D l Xo c Y RM.Ω RM.K RM.ι RM.y Or.𝔐 (z' t) s (b s) hN (hint _ (h21 h1)) (hfr₃ t ht s)).2 g Λ (R t) σ
       _ (fun i => v ⟨s, i⟩) (hlab t h1) (fun i => hv ⟨s, i⟩) (fibreLatVec_comp hf fun i => ⟨s, i⟩)
-  obtain ⟨σ', -, hσu, -, -, -, hσ⟩ := GlobalTheory.T.cusp_correspondence_bound E H D l Xo c Y ∅ RM.Ω RM.K RM.ι RM.y Or.𝔐 ℂ (z' t₀)
+  obtain ⟨σ', -, hσu, -, -, -, hσ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.LabPt.exists_labVal E H D l Xo c Y ∅ RM.Ω RM.K RM.ι RM.y Or.𝔐 ℂ (z' t₀)
   obtain rfl := hσu σ (hlab _ ht₂)
   obtain ⟨hcm, -, hconj⟩ := hσ (RingHom.id ℂ)
   simp only [RingHom.id_comp] at hcm hconj

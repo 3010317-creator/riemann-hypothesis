@@ -5,7 +5,9 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GlueApp
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.RootOriginComparisonSubset
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenMapStalkMap
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeComponentTwistAutomorphism
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptFieldExtensionStatement
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+import Mathlib.NumberTheory.NumberField.Discriminant.Defs
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptFieldExtension
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.StalkSpecializesBijective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -131,7 +133,7 @@ theorem pull_on {Y : Model Xo c (algebraMap (𝓞 c.F) c.F)} {S : Finset ℕ} {�
       (∀ a, (A.M.pt (j a)).left ≫ m.φ = Spec.map (CommRingCat.ofHom (dualMap i)) ≫ (B.M.pt a).left) ∧
       ∀ s, A.V s = (B.V s).pull A.ξ g j := by
   obtain ⟨A', e, j', m', p1, p2, p3, p4, p5, p6, p7, -, p9⟩ :=
-    GlobalTheory.T.hodge_cpt_field_extension E H D l Xo c _ _ Y S Ω Ω' i K K' J J' y y' B x A.X A.ξ g hx hdisc hvb A.all A.tie A.normal hd
+    _root_.GlobalTheory.CompanionTheory.Ar.HcptPull.hodgeCpt_pull E H D l Xo c _ _ Y S Ω Ω' i K K' J J' y y' B x A.X A.ξ g hx hdisc hvb A.all A.tie A.normal hd
   have he : A.ξ ≫ e.symm.hom = A'.ξ := by
     rw [← p1]
     simp

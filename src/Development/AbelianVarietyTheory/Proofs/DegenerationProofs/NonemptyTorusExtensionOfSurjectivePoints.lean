@@ -3,7 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.OfDerivationFnOn
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsMonHomFactorOfFlatSurjective
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsTorusQuotientNoCocharacter
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SplitTorusHomEqOneOfNoCocharacterStatement
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.SplitTori.SplitTorusAff
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SplitTorusHomEqOneOfNoCocharacter
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,7 +68,7 @@ theorem nonempty_torusExtension_of_surjective_points : ∀ (k : Type) [Field k] 
   let _ := E.grpB
   have := E.i_hom
   have := E.q_hom
-  have hkill : E.i ≫ r ≫ q₁ = 1 := GlobalTheory.T.splitTorus_hom_eq_one_of_no_cocharacter' _ B₁ E.X hno _ inferInstance
+  have hkill : E.i ≫ r ≫ q₁ = 1 := _root_.GlobalTheory.SS.splitTorus_hom_eq_one_of_no_cocharacter _ B₁ E.X hno _ inferInstance
   obtain ⟨⟨ψ, -, hψ⟩, -⟩ := GlobalTheory.exists_monHom_factor_of_flat_surjective _ G E.B B₁ E.q (r ≫ q₁)
     E.q_hom inferInstance E.q_flat E.q_surjective E.q_quasiCompact (fun T x hx => by
       have h := E.isKernel.lift_fst x (toUnit T) hx

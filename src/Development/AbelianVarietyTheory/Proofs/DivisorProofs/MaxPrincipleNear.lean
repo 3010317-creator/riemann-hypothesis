@@ -1,9 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CharZeroFunctionField
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsContinuousReadOnAffineOpenRingHomsStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsClosedImmersionGenericPoint
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsContinuousReadOnAffineOpenRingHoms
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermLineBundlePairNormIndependentOfFramesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalMaxPrincipleWeightedFiniteTypeIntStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Complex.Exponential
+public import Mathlib.RingTheory.FiniteType
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalMaxPrincipleWeightedFiniteTypeInt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -91,15 +95,15 @@ theorem Pair.max_principle_near : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [
     intro M c hc σ' y hy
     exact ((M.cInf σ' c y (ptsIn_mono hc hy)).continuousAt.div_const 2).continuousWithinAt
   obtain ⟨ψ, hψc, hψv, hsurj, hnb⟩ :=
-    GlobalTheory.T.exists_continuous_read_on_affineOpen_ringHoms k X p D hX U hUa (fun σ' y => (P.L.φ σ').φ i y / 2) (hcont P.L i hUi)
+    _root_.GlobalTheory.ContRead.exists_continuous_read k X p D hX U hUa (fun σ' y => (P.L.φ σ').φ i y / 2) (hcont P.L i hUi)
   obtain ⟨ψ', hψ'c, hψ'v, -, -⟩ :=
-    GlobalTheory.T.exists_continuous_read_on_affineOpen_ringHoms k X p D hX U hUa (fun σ' y => (P.A.φ σ').φ j y / 2) (hcont P.A j hUj)
+    _root_.GlobalTheory.ContRead.exists_continuous_read k X p D hX U hUa (fun σ' y => (P.A.φ σ').φ j y / 2) (hcont P.A j hUj)
   have hsreg : ∀ x ∈ U, RegAt x (P.loc 0 1 s i j) := fun x hx => hs x i j (hUi hx) (hUj hx)
   obtain ⟨s', hs'⟩ := exists_fnOf_eq hgen hsreg
   have hs'0 : s' ≠ 0 := by
     rintro rfl
     simp [Pair.loc, hs0] at hs'
-  obtain ⟨W', K, hW', hK, hKs, hmain⟩ := GlobalTheory.T.local_max_principle_weighted_finiteType_int Γ(X, U) ψ hψc s' hs'0 (evHom hy₀U) δ hδ
+  obtain ⟨W', K, hW', hK, hKs, hmain⟩ := _root_.GlobalTheory.local_max_principle_int Γ(X, U) ψ hψc s' hs'0 (evHom hy₀U) δ hδ
   have hgc : Continuous (fun x : Γ(X, U) →+* ℂ => ‖x s'‖ * Real.exp (-ψ' x)) :=
     (((continuous_apply s').comp continuous_induced_dom).norm).mul (Real.continuous_exp.comp hψ'c.neg)
   obtain ⟨ρ, hρ, hρK⟩ : ∃ ρ : ℝ, 0 < ρ ∧ ∀ x ∈ K, ρ ≤ ‖x s'‖ * Real.exp (-ψ' x) := by

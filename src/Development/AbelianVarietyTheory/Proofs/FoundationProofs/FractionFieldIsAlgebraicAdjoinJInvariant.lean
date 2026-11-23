@@ -1,12 +1,13 @@
 module
 
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemModularFunctionRingOverIffHasSomeLevelOverStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.MemRingOfInR
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemModularFunctionRingOverIffHasSomeLevelOver
 public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
 public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
 public import Mathlib.RingTheory.SimpleRing.Principal
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegralOverJInvariantOfHasSomeLevelOverStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegralOverJInvariantOfHasSomeLevelOver
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,7 +54,7 @@ open ModularForm (E₄ E₆)
 namespace GlobalTheory.FN
 
 def constHom {Ω : Type} [Field Ω] (ε : Ω →+* ℂ) : Ω →+* ring ε.range where
-  toFun c := ⟨fun _ => ε c, mem_ring_of_inR ((GlobalTheory.T.mem_modularFunctionRingOver_iff_hasSomeLevelOver ε.range).2 _ ⟨c, rfl⟩)⟩
+  toFun c := ⟨fun _ => ε c, mem_ring_of_inR ((_root_.GlobalTheory.FN.mem_ring_iff_inR ε.range).2 _ ⟨c, rfl⟩)⟩
   map_one' := by ext; simp
   map_mul' x y := by ext; simp
   map_zero' := by ext; simp
@@ -75,7 +76,7 @@ theorem isIntegral_io_adjoin_j (Ω : Type) [Field Ω] [Algebra ℚ Ω] (ε : Ω 
     (a : ring ε.range) (ha : (a : ℍ → ℂ) = jT) (b : ring ε.range) :
     IsIntegral (IntermediateField.adjoin Ω {T.io a}) (T.io b) := by
   set L := IntermediateField.adjoin Ω {T.io a}
-  obtain ⟨n, c, hc, hrel⟩ := GlobalTheory.T.integral_over_jInvariant_of_hasSomeLevelOver ε.range b (((GlobalTheory.T.mem_modularFunctionRingOver_iff_hasSomeLevelOver ε.range).1 b).1 b.2)
+  obtain ⟨n, c, hc, hrel⟩ := _root_.GlobalTheory.FN.integral_over_jT ε.range b (((_root_.GlobalTheory.FN.mem_ring_iff_inR ε.range).1 b).1 b.2)
   have hl : ∀ i, c i ∈ Polynomial.lifts ε := fun i =>
     (Polynomial.lifts_iff_coeff_lifts _).2 fun k => RingHom.mem_range.1 (hc i k)
   choose d hd using fun i => (Polynomial.mem_lifts (c i)).1 (hl i)

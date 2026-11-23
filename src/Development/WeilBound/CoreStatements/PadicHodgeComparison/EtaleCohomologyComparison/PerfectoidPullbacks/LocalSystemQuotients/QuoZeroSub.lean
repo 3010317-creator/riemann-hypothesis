@@ -3,8 +3,10 @@ module
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LocalSystemQuotients.Functor
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.BocksteinBaseChange.IsUnitWitt
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LocalSystemQuotients.FlatL
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompareQuotientBijectiveStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PullEqOfNatTransStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LocalSystemQuotients.RedMk
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompareQuotientBijective
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.InstAddCommGroup
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PullEqOfNatTrans
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.LocalSystemQuotients.BijCov
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -145,14 +147,14 @@ variable {n : ℕ} (hn : n ≠ 0)
 variable (F ρ) in
 def psiP : Cx.Hom (Kt l F ρ n) (quo l (Kt l F ρ (n + 1)) n) (RingHom.id _) :=
   ((mq hn).o (IdF.span _ ((l : WittVector l k) ^ n)) (fun _ => le_rfl)).hom.comp
-    (hinv (cmpq (sW l F ρ (n + 1)).A l n) fun i => GlobalTheory.T.compare_quotient_bijective _ _ (sW l F ρ (n + 1)).A l n i)
+    (hinv (cmpq (sW l F ρ (n + 1)).A l n) fun i => _root_.GlobalTheory.CompanionTheory.LsCmp.cmpq_bijective _ _ (sW l F ρ (n + 1)).A l n i)
 
 theorem cmpq_psiP (j : ℕ) (y : (Kt l F ρ n).H j) :
     (cmpq (sW l F ρ (n + 1)).A l n).mapH j ((psiP F ρ hn).mapH j y) =
       ((mq hn).o (IdF.span _ ((l : WittVector l k) ^ n)) (fun _ => le_rfl)).pull j y := by
   rw [psiP, mapH_comp, ← mapH_comp]
   exact mapH_eq_self _ (fun i x =>
-    hinv_right (cmpq (sW l F ρ (n + 1)).A l n) (fun i => GlobalTheory.T.compare_quotient_bijective _ _ (sW l F ρ (n + 1)).A l n i) i x) j _
+    hinv_right (cmpq (sW l F ρ (n + 1)).A l n) (fun i => _root_.GlobalTheory.CompanionTheory.LsCmp.cmpq_bijective _ _ (sW l F ρ (n + 1)).A l n i) i x) j _
 
 theorem cmpq_prj (j : ℕ) (z : (Kt l F ρ (n + 1)).H j) :
     (cmpq (sW l F ρ (n + 1)).A l n).mapH j ((prj l (Kt l F ρ (n + 1)) n).mapH j z) =
@@ -169,9 +171,9 @@ def qαN : ((qM (sW l F ρ (n + 1)).A l n).G ⋙ (fl l F ρ (n + 1)).ι) ⟶
 theorem psiP_compat (j : ℕ) (x : (Wc.HS l F ρ j).M (n + 1)) :
     (psiP F ρ hn).mapH j (resF l F ρ n j ((Wc.HS l F ρ j).r n x)) =
       (prj l (Kt l F ρ (n + 1)) n).mapH j (resF l F ρ (n + 1) j x) := by
-  apply (mapH_bij _ (fun i => GlobalTheory.T.compare_quotient_bijective _ _ (sW l F ρ (n + 1)).A l n i) j).1
+  apply (mapH_bij _ (fun i => _root_.GlobalTheory.CompanionTheory.LsCmp.cmpq_bijective _ _ (sW l F ρ (n + 1)).A l n i) j).1
   rw [cmpq_psiP, cmpq_prj]
-  have key := GlobalTheory.T.pull_eq_of_nat_trans _ _ _ _ _
+  have key := _root_.GlobalTheory.CompanionTheory.CatPrism.pull_eq_target _ _ _ _ _
     ((CH.Mor.restrict (Wc.OM l F ρ (n + 1)) (fl l F ρ (n + 1)).ι).comp (qM (sW l F ρ (n + 1)).A l n))
     ((Wc.redMor l F ρ n).comp ((CH.Mor.restrict (Wc.OM l F ρ n) (fl l F ρ n).ι).comp
       ((mq hn).o (IdF.span _ ((l : WittVector l k) ^ n)) (fun _ => le_rfl))))
@@ -198,7 +200,7 @@ theorem seqflat0_pf : ∀ {l : ℕ} [Fact l.Prime] {K : IntermediateField ℚ_[l
       rw [dite_eq_right hn]
       have e : ∀ y, (psiP (B.schFn M.p) r.ρ hn).mapH j y =
           (hinv (cmpq (sW l (B.schFn M.p) r.ρ (n + 1)).A l n)
-            fun i => GlobalTheory.T.compare_quotient_bijective _ _ (sW l (B.schFn M.p) r.ρ (n + 1)).A l n i).mapH j
+            fun i => _root_.GlobalTheory.CompanionTheory.LsCmp.cmpq_bijective _ _ (sW l (B.schFn M.p) r.ρ (n + 1)).A l n i).mapH j
           (((mq hn).o (IdF.span _ ((l : WittVector l r.k) ^ n)) (fun _ => le_rfl)).pull j y) := fun y =>
         mapH_comp _ _ j y
       rw [show ⇑((psiP (B.schFn M.p) r.ρ hn).mapH j) = _ from funext e]

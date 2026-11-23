@@ -2,11 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SmallFam
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqOfIsometricTrivShift
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithHeightNonnegVerticalOfNefOnFibresStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithKleimanSelfIntersectionNonnegStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoheightAddPointClosureDimEqDim
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NefFibOfIsNef
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithHeightNonnegVerticalOfNefOnFibres
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithKleimanSelfIntersectionNonneg
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasPointClosureDimBasicProjArithAmbient
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianLineBundleIsNefPullbackStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HermitianLineBundleIsNefPullback
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAmbOfIsArithVar
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoheightAddPointClosureDimEqDim
 import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ResidueDegreeOfIsClosedImmersion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -46,7 +48,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAmbOfIsArithVar
 
 @[expose] public section
 
@@ -72,7 +73,7 @@ theorem htNef_of_isNef : GlobalTheory.Published.ArCalc → AmpleHS → SemiPull 
     intro C h hC hh z hz
     by_cases hcz : CharZero (X.residueField z)
     swap
-    · exact GlobalTheory.T.arithHeight_nonneg_vertical_of_nefOnFibres k X p D hX C h (nefFib_of_isNef hC) hh z hcz
+    · exact _root_.GlobalTheory.VertHeight.height_nonneg_of_vertical k X p D hX C h (nefFib_of_isNef hC) hh z hcz
     obtain ⟨Z, i, _, _, rfl⟩ := exists_isClosedImmersion_genericPoint z
     rcases hX.vertical_or_horizontal i with ⟨ℓ, hℓ, ⟨alg⟩⟩ | ⟨hc, e, he⟩
     · exfalso
@@ -105,7 +106,7 @@ theorem htNef_of_isNef : GlobalTheory.Published.ArCalc → AmpleHS → SemiPull 
         have : c + (e + 1) = D + 1 := by exact_mod_cast hco
         have : c ≠ 0 := by exact_mod_cast hne
         omega
-      have hnef : (C.pull i rfl).IsNef e := GlobalTheory.T.hermitianLineBundle_isNef_pullback hA hSP k X Z p (i ≫ p) D e hX hZ i rfl C hC
+      have hnef : (C.pull i rfl).IsNef e := _root_.GlobalTheory.HSNef.isNef_pull hA hSP k X Z p (i ≫ p) D e hX hZ i rfl C hC
       exact (ih e heD k Z (i ≫ p) hZ _ hnef).2 _ (hh.restrict hX i rfl) (genericPoint Z)
   refine ⟨hC.semiPos, fun h hh x => ?_⟩
   by_cases hx : x = genericPoint X
@@ -113,7 +114,7 @@ theorem htNef_of_isNef : GlobalTheory.Published.ArCalc → AmpleHS → SemiPull 
     rcases Nat.eq_zero_or_pos D with rfl | hD
     · have := ((hh.isNef_iff hX).1 hC).2 X (𝟙 X) (by simpa using hX.dim_eq)
       simpa using this
-    · exact GlobalTheory.T.arithKleiman_selfIntersection_nonneg hA hAmp k X p D hX hD hng C _ hC ⟨h, hh, rfl⟩
+    · exact _root_.GlobalTheory.KleimanStep.selfInter_nonneg hA hAmp k X p D hX hD hng C _ hC ⟨h, hh, rfl⟩
   · exact hng C h hC hh x hx
 
 end GlobalTheory.KleimanNef

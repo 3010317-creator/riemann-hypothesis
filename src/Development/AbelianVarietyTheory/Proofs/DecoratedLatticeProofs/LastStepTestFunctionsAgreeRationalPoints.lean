@@ -1,12 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ZPosIxSuccInl
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IteratedDepthOneLevelCharacterClosedFormStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemIntegralGLIffIsUnitDetAtPrimeStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ResiduesOfCompletionAtPrimeWithUniformizerStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymChainPatternIffPlaceConditionsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymmetricLevelChainPatternIteratedStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymmetricLevelCharacterAtRationalPointStatement
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.StandardOrderExtendedBasisApplyLowBlock
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IteratedDepthOneLevelCharacterClosedForm
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PhiTopAgree
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemIntegralGLIffIsUnitDetAtPrime
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymChainPatternIffPlaceConditions
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.OnesRepresent
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymmetricLevelChainPatternIterated
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymmetricLevelCharacterAtRationalPoint
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ResiduesOfCompletionAtPrimeWithUniformizer
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -100,7 +103,7 @@ theorem bottom_iff {P : HeightOneSpectrum (𝓞 E)} {q : ℕ} {ι : E →+* k} {
         Matrix (Ix (Fin κ ⊕ Fin l) (Fin τ) (j + 1)) (Ix (Fin κ ⊕ Fin l) (Fin τ) j) k).submatrix
           (ixSucc (Fin κ ⊕ Fin l) (Fin τ) j) id).toRows₂ ↔
       ∀ p p', κ + l + j * τ ≤ p → p < κ + l + (j + 1) * τ → p' < κ + l + j * τ → IntAt P (M p p' / (q : E)) := by
-  have res := GlobalTheory.T.residues_of_completionAtPrimeWithUniformizer E k P q ι ϖ hC hU
+  have res := _root_.GlobalTheory.SymBridge.ComplRes.residues E k P q ι ϖ hC hU
   constructor
   · intro h p p' hp hp' hp''
     have := h ⟨p - (κ + l + j * τ), by rw [Nat.add_mul] at hp'; omega⟩ ((zEquiv κ l τ j).symm ⟨p', hp''⟩)
@@ -118,7 +121,7 @@ theorem unit_char {P : HeightOneSpectrum (𝓞 E)} {q : ℕ} {ι : E →+* k} {�
     {χ : ℕ → (𝓞 E ⧸ P.asIdeal)ˣ →* Kˣ} {s κ : ℕ} {S : SymData k s κ} (hT : Comparison₂ P q ι σ₀ ψ₀ χ S) (i : ℕ) (d : E) (u : kˣ)
     (hd : IntAt P d) (hu : valuation k (u : k) = 1) (e : (u : k) = ι d) :
     (S.μ (i + 1) u : ℂ) = σ₀ (LocE.unitV (χ i) d) := by
-  have res := GlobalTheory.T.residues_of_completionAtPrimeWithUniformizer E k P q ι S.ϖ hT.compl S.unif
+  have res := _root_.GlobalTheory.SymBridge.ComplRes.residues E k P q ι S.ϖ hT.compl S.unif
   exact hT.chi i d u hd ((res.2.2.1 d hd).1 (e ▸ hu)) e
 
 theorem intAt_div {P : HeightOneSpectrum (𝓞 E)} {q : ℕ} {a : E} (h : IntAt P (a / (q : E))) (hq : (q : E) ≠ 0) :
@@ -133,9 +136,9 @@ theorem core (P : HeightOneSpectrum (𝓞 E)) (q : ℕ) (ι : E →+* k) (σ₀ 
       σ₀ (phiM q ψ₀ χ κ S.ρ (κ + s + 1) τ j N M) := by
   subst hN
   have hC := hT.compl
-  have res := GlobalTheory.T.residues_of_completionAtPrimeWithUniformizer E k P q ι S.ϖ hC S.unif
+  have res := _root_.GlobalTheory.SymBridge.ComplRes.residues E k P q ι S.ϖ hC S.unif
   have hq : (q : E) ≠ 0 := res.2.2.2.1
-  have hpat := GlobalTheory.T.symmetricLevelChain_pattern_iterated k s κ S (Fin τ) j
+  have hpat := _root_.GlobalTheory.SymChain.pattern_iter k s κ S (Fin τ) j
   set T : Matrix (Ix (Fin κ ⊕ Fin (s + 1)) (Fin τ) j) (Ix (Fin κ ⊕ Fin (s + 1)) (Fin τ) j) k :=
     Matrix.of fun a b => ι (M (zPos a) (zPos b)) with hTdef
   have hTop : ((Matrix.of fun a b => ι (M (zPos a) (zPos b)) :
@@ -144,8 +147,8 @@ theorem core (P : HeightOneSpectrum (𝓞 E)) (q : ℕ) (ι : E →+* k) (σ₀ 
     ext a b; simp [Matrix.toRows₁, hTdef, zPos_ixSucc_inl]
   have hB := bottom_iff hC S.unif κ (s + 1) τ j M
 
-  have hpatM := GlobalTheory.T.symChainPattern_iff_place_conditions E k P q ι S.ϖ hC S.unif κ (s + 1) S.ρ τ j M
-  have hKO := GlobalTheory.T.mem_integralGL_iff_isUnit_det_at_prime E k P q ι S.ϖ hC S.unif κ (s + 1) τ j M
+  have hpatM := _root_.GlobalTheory.PatResidue.pattern_iff_places E k P q ι S.ϖ hC S.unif κ (s + 1) S.ρ τ j M
+  have hKO := _root_.GlobalTheory.SymBridge.mem_KO_iff_intAt_isUnit_det E k P q ι S.ϖ hC S.unif κ (s + 1) τ j M
   simp only [TypeDatum.iterPhi, TypeDatum.Phi, hTop]
   unfold phiM
   by_cases hb : MaxM ((Matrix.of fun a b => ι (M (zPos a) (zPos b)) :
@@ -191,11 +194,11 @@ theorem core (P : HeightOneSpectrum (𝓞 E)) (q : ℕ) (ι : E →+* k) (σ₀ 
       · exact hint p p' hpa hp'
       · exact intAt_div (h2 p p' (by omega) hp hp') hq
     rw [if_pos hcond, ← hgT, extZ_coe _ _ ⟨g, hgJ⟩, TypeDatum.rho_apply]
-    obtain ⟨g₀, D, hg₀, hD, hlam⟩ := GlobalTheory.T.iteratedDepthOneLevel_character_closed_form k _ (Fin τ) S.P S.μ S.tame j ⟨g, hgJ⟩
+    obtain ⟨g₀, D, hg₀, hD, hlam⟩ := _root_.GlobalTheory.SymBridge.iter_lam_closed k _ (Fin τ) S.P S.μ S.tame j ⟨g, hgJ⟩
     rw [hlam]
     simp only [Units.val_mul, Units.coe_prod, Units.val_inv_eq_inv_val, LocE.lamGvS, map_mul, map_prod, map_inv₀]
     congr 2
-    · refine GlobalTheory.T.symmetricLevel_character_at_rational_point E K k P q ι σ₀ ψ₀ χ s κ S hT M (fun p p' hp hp' => hint p p' (by omega) (by omega)) g₀ ?_
+    · refine _root_.GlobalTheory.symLevel_lam_residue_elim E K k P q ι σ₀ ψ₀ χ s κ S hT M (fun p p' hp hp' => hint p p' (by omega) (by omega)) g₀ ?_
       rw [hg₀, hgT]
       ext (x | x) (y | y) <;> rfl
     · rw [← Fin.prod_univ_eq_prod_range]

@@ -2,12 +2,17 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.CommutativeAlgebra.AbByPOfComm
 public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.CharacterExtendScalarsRep
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.ExistsAbelianByPrimePowerNotDvdCardFixedByStatement
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.IndRestrictEqCardFixedByMulStatement
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.IsCharacterOverSubfieldInducedClassFunctionStatement
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.ExistsAbelianByPrimePowerNotDvdCardFixedBy
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.IndRestrictEqCardFixedByMul
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.IsCharacterOverSubfieldInducedClassFunction
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.MemVirtualCharactersIffSubCharacters
+public import Mathlib.Algebra.Group.Pi.Basic
+public import Mathlib.Algebra.Group.Subgroup.Defs
+public import Mathlib.Algebra.Ring.Int.Defs
+public import Mathlib.Basic.Finite.Defs
+public import Mathlib.Data.Nat.Prime.Defs
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.OneMemOfMulMemOfForallPrimeNotDvd
 import Development.AbelianVarietyTheory.Proofs.CharacterTheory.IsCharacterOverSubfieldRestrictClassFunctionOne
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.MemVirtualCharactersIffSubCharactersStatement
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.OneMemOfMulMemOfForallPrimeNotDvdStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -84,7 +89,7 @@ theorem mem_virt_of_forall_abByP (K L : Type) [Field K] [Field L] [Algebra K L] 
     intro f hf f' hf'
     rw [hS] at hf hf' ⊢
     intro χ hχ
-    obtain ⟨a, b, ha, hb, hab⟩ := (GlobalTheory.T.mem_virtualCharacters_iff_sub_characters K L G _).1 (hf' χ hχ)
+    obtain ⟨a, b, ha, hb, hab⟩ := (_root_.GlobalTheory.BI.mem_virt_iff_sub K L G _).1 (hf' χ hχ)
     have : (fun g => (((f * f') g : ℤ) : L) * χ g)
         = (fun g => (f g : L) * a g) - (fun g => (f g : L) * b g) := by
       funext g
@@ -101,16 +106,16 @@ theorem mem_virt_of_forall_abByP (K L : Type) [Field K] [Field L] [Algebra K L] 
     intro χ hχ
     obtain ⟨hres, hconj, -⟩ := GlobalTheory.isChar_restrict_conj_one L L G χ hχ
     have h1 : IsChar K L (fun h : H => χ h) := hH H hA _ (hres H H.subtype)
-    have h2 := GlobalTheory.T.isCharacterOverSubfield_inducedClassFunction K L G H _ h1
+    have h2 := _root_.GlobalTheory.BI.isChar_ind K L G H _ h1
     have : (fun g => (((Nat.card (MulAction.fixedBy (G ⧸ H) g) : ℤ)) : L) * χ g)
         = ind H (fun h : H => χ h) := by
       funext g
-      rw [GlobalTheory.T.ind_restrict_eq_card_fixedBy_mul_of_classFn L G H χ hconj g, Int.cast_natCast]
+      rw [_root_.GlobalTheory.BI.ind_restrict_eq_card_fixedBy_mul L G H χ hconj g, Int.cast_natCast]
     rw [this]
     exact AddSubgroup.subset_closure h2
   have hone : (1 : G → ℤ) ∈ S := by
-    refine GlobalTheory.T.one_mem_of_mul_mem_of_forall_prime_exists_not_dvd G S hmul fun x p hp => ?_
-    obtain ⟨H, hA, hp'⟩ := GlobalTheory.T.exists_abelianByPrimePower_not_dvd_card_fixedBy G x p hp
+    refine _root_.GlobalTheory.one_mem_of_mul_mem_of_forall_prime_not_dvd G S hmul fun x p hp => ?_
+    obtain ⟨H, hA, hp'⟩ := _root_.GlobalTheory.BI.exists_abelianByPrimePower_not_dvd_card_fixedBy₂ G x p hp
     exact ⟨_, hperm H hA, fun h => hp' (Int.natCast_dvd_natCast.1 h)⟩
   intro χ hχ
   simpa using (hS 1).1 hone χ hχ

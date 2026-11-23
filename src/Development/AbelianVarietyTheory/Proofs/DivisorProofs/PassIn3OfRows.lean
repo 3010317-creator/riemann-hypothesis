@@ -3,13 +3,17 @@ module
 public import Formalism.LocalToGlobal.IndefiniteReal.PrimitivePackageFullHecke
 public import Formalism.LocalToGlobal.NormalizedHeckeFactors.CoeffZeroNeOfMonicIrr
 public import Formalism.SharpRestriction.Divisibility.PrimeDegreeVariant
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGoodFamilyGivenCharactersMultiplicityOneStatement
+public import Formalism.LocalToGlobal.Divisibility.GoodPartHermitianSpec
+public import Formalism.LocalToGlobal.IndefiniteReal.IndefiniteEpsilonOperator
+public import Formalism.LocalToGlobal.IndefiniteReal.TransferStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGoodFamilyGivenCharactersMultiplicityOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GoodCharacterPlacewiseCuspidalParabolicProductStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCuspIndProdCharOfIsProdCuspChar
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MultiplicityLinearCharacterEqCharacterSumStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MultiplicityLinearCharacterEqCharacterSum
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RatMuPOfRowTest
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReordEqConj
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TypePlacesCardAndResidueLe
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.CuspidalProductMultiplicity
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsCuspIndProdCharOfIsProdCuspChar
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +49,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.CuspidalProductMultiplicity
 
 @[expose] public section
 
@@ -66,7 +69,7 @@ theorem passIn3_of_rows : ∀ (D : D7) [_root_.NumberField.IsTotallyComplex D.wh
   have hone : ∀ χ ∈ A3.A.X, ∑ h : F.P0, χ (h : G) * (((F.ψ0 h)⁻¹ : D.what₂.LLˣ) : D.what₂.LL) = (Fintype.card F.P0 : D.what₂.LL) :=
     @GlobalTheory.RealOneVector.typeSum_base_eq_card D G _ _ Pl0 T A3.A Ks _ _ _ R.toRealDat F.lv2 hlev hind i0
   obtain ⟨S, iS, Ws, iA, iM, iF, τ, hgood, hchars, hm1⟩ :=
-    GlobalTheory.T.exists_goodFamily_given_characters_multiplicityOne D.what₂.LL G A3.A.X hirr F.P0 F.ψ0 hone
+    _root_.GlobalTheory.GoodFamilyOfChars.exists_goodFamily D.what₂.LL G A3.A.X hirr F.P0 F.ψ0 hone
   obtain ⟨hcard, hres⟩ := GlobalTheory.typePlaces_card_and_residue_le D G Pl0 T A3.A Ks R.toRealDat hrec
   have hcol := @GlobalTheory.ColumnMultSum.columnMult D G _ _ Pl0 T A3.A Ks _ _ _ R.toRealDat F.lv2 hlev hcard hres hadm hirr hind i1
   refine ⟨S, iS, Ws, iA, iM, iF, τ, (GlobalTheory.IndefiniteRowSideFullHecke.CuspidalProductMultiplicity.nbar R.Pg D.R.k : ℝ), ?_⟩
@@ -74,7 +77,7 @@ theorem passIn3_of_rows : ∀ (D : D7) [_root_.NumberField.IsTotallyComplex D.wh
   · exact_mod_cast GlobalTheory.IndefiniteRowSideFullHecke.CuspidalProductMultiplicity.nbar_pos R.Pg D.R.k
   · intro s
     obtain ⟨n, hn, hb⟩ := hcol (Formalism.IndefR.TransferLatticeStatement.charOf (τ s)) ((hchars _).2 ⟨s, rfl⟩)
-    have hnOf := GlobalTheory.T.multiplicity_linearCharacter_eq_characterSum D.what₂.LL G (Ws s) (τ s) F.P1 F.ψ1
+    have hnOf := _root_.GlobalTheory.multiplicity_linearCharacter_eq_characterSum.nOf_eq_charSum D.what₂.LL G (Ws s) (τ s) F.P1 F.ψ1
     have heq : Formalism.IndefR.IndefiniteEpsilonOperator.nOf (τ s) ⟨F.P1, F.ψ1⟩ = n := by
       apply Nat.cast_injective (R := D.what₂.LL)
       rw [hnOf]

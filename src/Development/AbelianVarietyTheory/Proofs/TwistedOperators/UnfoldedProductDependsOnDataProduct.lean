@@ -1,11 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsRealFam
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LastSeesawLinearLeftLargeDepthStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LastSeesawLinearRightLargeDepthStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SumEqZeroOfMultilin
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LastSeesawLinearLeftLargeDepth
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LastSeesawLinearRightLargeDepth
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RealLineOfPeriodsOnLine
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaContractionLinearLeftLargeDepthStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaContractionLinearRightLargeDepthStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaContractionLinearLeftLargeDepth
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaContractionLinearRightLargeDepth
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,4 +51,4 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem GlobalTheory.RowVal.conLin_big : Big fun ch => ConLin ch :=
   GlobalTheory.RowReal.big_mono (fun ch h => GlobalTheory.ConnectionLinear.conLin_of_positions ch h.1.1.1 h.1.1.2 h.1.2 h.2)
-    (((GlobalTheory.T.thetaContraction_linear_left_largeDepth.and GlobalTheory.T.thetaContraction_linear_right_largeDepth).and GlobalTheory.T.lastSeesaw_linear_left_largeDepth).and GlobalTheory.T.lastSeesaw_linear_right_largeDepth)
+    (((GlobalTheory.T.thetaContraction_linear_left_largeDepth.and _root_.GlobalTheory.ConLinR.contrLin_one_big).and _root_.GlobalTheory.LastPositionLin.lastLin_zero).and _root_.GlobalTheory.ConnectionLinear.big_lastLin_one)

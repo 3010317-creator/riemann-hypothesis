@@ -2,20 +2,28 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsLatFamilyCongr
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsLatFlagPair
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyPrimeRelayStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderFlatBaseChangeStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ArithmeticHilbertSamuelLowerBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArithVarietyPrimeRelay
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.TranslateMemIndOrder
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUnitFormLocalizationEtaleNbhd
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderFlatBaseChange
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderValueEval
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsUniqueTangentDualNumberStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericTorsionNoetherianChartStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsUniqueTangentDualNumber
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericTorsionNoetherianChart
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeTateFunctionalBaseChange
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntegralPointsEqOfGenericStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntegralPointsEqOfGeneric
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsTensorOrderOfCover
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LemmaBTHoldsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelBaseChangeSpanStatement
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelBaseChangeSpan
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.MemEigSpOfMemHtDual
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SemiabelianTorsionInjective
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionSubgroupBaseChange
+import Development.AutomorphicSpectrum.Statements.GeometryStatements.NonemptyEquivOfCardHom
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LemmaBTHolds
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelFiniteProjectiveBis
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SemiabelianTorsionInjectiveStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionSubgroupBaseChangeStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -156,7 +164,7 @@ theorem der_compare {R R' : Type} [CommRing R] [IsDomain R] [CommRing R'] [IsDom
     congr 2
     ext a
     all_goals simp [GlobalTheory.CompanionTheory.Ar.dualMap, HTBaseChange.qmap, Ideal.quotientMap_mk, TrivSqZeroExt.algebraMap_eq_inl]
-  have huniq := (GlobalTheory.T.existsUnique_tangent_dual_number R' T Γ' S G _ N (F ≫ i) hi' L' M' (β e)).unique ⟨h2, h3⟩ ⟨hv'1, hv'2⟩
+  have huniq := (_root_.GlobalTheory.CompanionTheory.Ar.BT.TanLift.tangent_mod_torsion R' T Γ' S G _ N (F ≫ i) hi' L' M' (β e)).unique ⟨h2, h3⟩ ⟨hv'1, hv'2⟩
   rw [← huniq, hss, ← HTBaseChange.valAt_comp_top, h1, HTBaseChange.valAt_spec_map, hv3] at hv'3
   have h5 := congrArg TrivSqZeroExt.snd hv'3
   simp only [dualMap, HTBaseChange.qmap, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk, TrivSqZeroExt.snd_add,
@@ -177,8 +185,8 @@ theorem order_overlap {R₁ R₂ R' : Type} [CommRing R₁] [IsDomain R₁] [Com
     (fl₁ : Module.Flat R₁ R') (fl₂ : Module.Flat R₂ R') (h : R₂) [IsLocalization.Away h R'] {a : T → R₁}
     (ha : a ∈ Γ₁.btOrder ⊤) :
     ∃ (m : ℕ), ∃ b ∈ Γ₂.btOrder ⊤, ∀ t, algebraMap R₂ R' (b t) = algebraMap R₂ R' h ^ m * algebraMap R₁ R' (a t) := by
-  have e1 := GlobalTheory.T.btOrder_flat_base_change R₁ T Γ₁ R' Γ' F₁ hF₁ fl₁
-  have e2 := GlobalTheory.T.btOrder_flat_base_change R₂ T Γ₂ R' Γ' F₂ hF₂ fl₂
+  have e1 := _root_.GlobalTheory.CompanionTheory.Ar.BT.FlatBC.btOrder_flat_baseChange R₁ T Γ₁ R' Γ' F₁ hF₁ fl₁
+  have e2 := _root_.GlobalTheory.CompanionTheory.Ar.BT.FlatBC.btOrder_flat_baseChange R₂ T Γ₂ R' Γ' F₂ hF₂ fl₂
   have hz : (fun t => algebraMap R₁ R' (a t)) ∈ extOrder (algebraMap R₂ R') (Γ₂.btOrder ⊤) := by
     rw [← e2, e1]
     exact Algebra.subset_adjoin ⟨a, ha, rfl⟩
@@ -235,17 +243,17 @@ theorem der_overlap {R₁ R₂ R' : Type} [CommRing R₁] [IsDomain R₁] [CommR
   obtain ⟨m₀, b, hb, hbv⟩ := order_overlap Γ₁ Γ₂ Γ' hF₁ hF₂ fl₁ fl₂ h hf₁
   have b1 : b 1 = 0 := inj₂ (by rw [hbv, h1, map_zero, mul_zero, map_zero])
   have hwb : ∃ w, Γ₂.IsDerAtOne i₂ M₂ N b w := by
-    obtain ⟨-, -, -, -, -, hθ⟩ := GlobalTheory.T.LemmaBT_holds R₂ T Γ₂ S G x₂ N i₂ hi₂ hsm
+    obtain ⟨-, -, -, -, -, hθ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.BT.lemmaBT_holds R₂ T Γ₂ S G x₂ N i₂ hi₂ hsm
     obtain ⟨θ, ⟨hsurj, hiff⟩, -, -⟩ := hθ L₂ M₂
     let fa : augIdeal (Γ₂.btOrder ⊤) := ⟨⟨b, hb⟩, by simpa [augIdeal, evalAt, RingHom.mem_ker] using b1⟩
     obtain ⟨w, hw⟩ := hsurj ((augIdeal (Γ₂.btOrder ⊤)).toCotangent fa)
     exact ⟨w, (hiff fa w).1 hw⟩
   obtain ⟨w, hw⟩ := hwb
   have hz : (fun t => algebraMap R₁ R' (f₁ t)) ∈ Γ'.btOrder ⊤ := by
-    rw [GlobalTheory.T.btOrder_flat_base_change R₁ T Γ₁ R' Γ' F₁ hF₁ fl₁]
+    rw [_root_.GlobalTheory.CompanionTheory.Ar.BT.FlatBC.btOrder_flat_baseChange R₁ T Γ₁ R' Γ' F₁ hF₁ fl₁]
     exact Algebra.subset_adjoin ⟨f₁, hf₁, rfl⟩
   have hw₁ : ∃ w₁, Γ'.IsDerAtOne (F₁ ≫ i₁) M' N (fun t => algebraMap R₁ R' (f₁ t)) w₁ := by
-    obtain ⟨-, -, -, -, -, hθ⟩ := GlobalTheory.T.LemmaBT_holds R' T Γ' S G x' N (F₁ ≫ i₁) hi' hsm
+    obtain ⟨-, -, -, -, -, hθ⟩ := _root_.GlobalTheory.CompanionTheory.Ar.BT.lemmaBT_holds R' T Γ' S G x' N (F₁ ≫ i₁) hi' hsm
     obtain ⟨θ, ⟨hsurj, hiff⟩, -, -⟩ := hθ L' M'
     let fa : augIdeal (Γ'.btOrder ⊤) := ⟨⟨_, hz⟩, by simp [augIdeal, evalAt, RingHom.mem_ker, h1]⟩
     obtain ⟨w, hw⟩ := hsurj ((augIdeal (Γ'.btOrder ⊤)).toCotangent fa)
@@ -518,7 +526,7 @@ theorem tied_overlap (hs : mseg y s ≠ 0) (P₁ : ChartPack G O s) (P₂ : Char
     spMap (algebraMap (CR O y t) (ovl O y s t)) ≫ P₂.x = spMap (algebraMap (CR O y s) (ovl O y s t)) ≫ P₁.x := by
   have hr : ∀ c', mseg y c' / mseg y s ∈ (algebraMap (ovl O y s t) Ω).range := fun c' =>
     ⟨⟨_, (le_sup_left : CR O y s ≤ ovl O y s t) (ratio_mem c' s)⟩, rfl⟩
-  exact GlobalTheory.T.integral_points_eq_of_generic 𝔐.X Ω 𝔐.ξ (∀ k, J k) (mseg y) (tie' 𝔐) s hs (ovl O y s t) Subtype.val_injective hr _ _ h2 h1
+  exact _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.coordTie_points_eq 𝔐.X Ω 𝔐.ξ (∀ k, J k) (mseg y) (tie' 𝔐) s hs (ovl O y s t) Subtype.val_injective hr _ _ h2 h1
 
 theorem algL_coe (r : CR O y s) : ((algebraMap (CR O y s) (ovl O y s t) r : ovl O y s t) : Ω) = r :=
   Subalgebra.coe_inclusion le_sup_left r
@@ -537,7 +545,7 @@ theorem bc_of_pts (P : ChartPack G O s) (R' : Subalgebra O Ω) [Algebra (CR O y 
     (ha : ∀ t, (G.t₁.pt t).left = spMap (fracToField R') ≫ (Γ'.pt t).left ≫ i') :
     ∃ F : Γ'.G.left ⟶ P.Γ₁.G.left, F ≫ P.i₁ = i' ∧ Γ'.IsBaseChange P.Γ₁ (algebraMap _ R') F := by
   obtain ⟨a, ha1, ha2⟩ := exists_frac_map (CR O y s) R' hal
-  refine GlobalTheory.T.torsion_subgroup_base_change (CR O y s) R' _ P.Γ₁ Γ' 𝔐.X 𝔐.t.G P.x x' hx p P.i₁ i' P.tors₁ hi' a ha1 fun t => ?_
+  refine _root_.GlobalTheory.CompanionTheory.Ar.BT.BaseChange.torsion_isBaseChange (CR O y s) R' _ P.Γ₁ Γ' 𝔐.X 𝔐.t.G P.x x' hx p P.i₁ i' P.tors₁ hi' a ha1 fun t => ?_
   exact cancel_frac _ (fracToField_bijective R') _ a ha2 _ _ ((P.pts₁ t).symm.trans (ha t))
 
 theorem overlap_group (hp : p.Prime) (hpS : p ∈ S) (hs : mseg y s ≠ 0) [CharZero Ω]
@@ -551,7 +559,7 @@ theorem overlap_group (hp : p.Prime) (hpS : p ∈ S) (hs : mseg y s ≠ 0) [Char
   have h1 := point_comp P₁ (ovl O y s t) algL_coe
   have h2 := point_comp P₂ (ovl O y s t) algR_coe
   haveI : CharZero (ovl O y s t) := ovl_charZero
-  obtain ⟨Γ', i', hi', ha⟩ := GlobalTheory.T.semiabelian_torsion_injective (ovl O y s t) Ω (TorsT E (D.p + D.q) p) 𝔐.X 𝔐.t.G 𝔐.t.semi _ 𝔐.ξ h1 p
+  obtain ⟨Γ', i', hi', ha⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.exists_qfGroup_of_generic_fullTorsion (ovl O y s t) Ω (TorsT E (D.p + D.q) p) 𝔐.X 𝔐.t.G 𝔐.t.semi _ 𝔐.ξ h1 p
     hp.one_le G.t₁.pt G.t₁.inj G.t₁.onto (fullTorsion_prime hpS)
   have hz := tied_overlap hs P₁ P₂ h1 h2
   have ha' : ∀ u, (G.t₁.pt u).left = spMap (fracToField (ovl O y s t)) ≫ (Γ'.pt u).left ≫ i' :=
@@ -662,7 +670,7 @@ theorem form_overlap (hp : p.Prime) (hpS : p ∈ S) (hs : mseg y s ≠ 0) (ht : 
   obtain ⟨β₂, hβ₂⟩ := LieFin.exists_tr _ _ (algebraMap (CR O y t) (ovl O y s t)) hz P₂.M M'
   obtain ⟨τ, hτ⟩ := LieFin.exists_tr _ _ (algebraMap (ovl O y s t) Ω) hx M' 𝔐.M
   have hspan : Submodule.span (ovl O y s t) (Set.range β₁) = ⊤ :=
-    GlobalTheory.T.lie_model_base_change_span 𝔐.X 𝔐.t.G (CR O y s) (ovl O y s t) _ P₁.x P₁.L L' P₁.M M' β₁ hβ₁
+    _root_.GlobalTheory.CompanionTheory.Ar.LieSpan.span_range_pullback 𝔐.X 𝔐.t.G (CR O y s) (ovl O y s t) _ P₁.x P₁.L L' P₁.M M' β₁ hβ₁
   have c₁ := tr_toLi P₁ (ovl O y s t) algL_coe M' β₁ hβ₁ τ hτ
   have c₂ := tr_toLi P₂ (ovl O y s t) algR_coe M' β₂ hβ₂ τ hτ
   have hmem : ∀ e', P₁.j u (τ e') ∈ ovl O y s t := by
@@ -745,7 +753,7 @@ theorem thLat_overlap (hp : p.Prime) (hpS : p ∈ S) (hs : mseg y s ≠ 0) (ht :
     obtain ⟨h1, h0, f, u, hfv, hd, hv⟩ := hz
     have hfm : f ∈ P₁.Γ₁.btOrder ⊤ := by
       obtain ⟨a, ha, ea⟩ := h1
-      have := GlobalTheory.T.generic_torsion_noetherian_chart E H D l Xo c O₀ β Y S Ω K J y 𝔐 p G O s P₁ F pq sc hsurj hsec a ha
+      have := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamEx.btOrder_stable_of_section E H D l Xo c O₀ β Y S Ω K J y 𝔐 p G O s P₁ F pq sc hsurj hsec a ha
       convert this using 1
       funext u
       apply Subtype.ext
@@ -800,7 +808,7 @@ theorem funfam_holds : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
     _ _ _ _ _ t₀ Sg _ e φ' F _ _ _ pq sc w σ horb hsec G P i
   have hp : p.Prime := Fact.out
   have inst := fun (c' : ∀ k, J k) (h : mseg y c' ≠ 0) =>
-    GlobalTheory.T.arith_variety_prime_relay E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hvar p hpS A m hpm O c' h
+    _root_.GlobalTheory.CompanionTheory.Relay.arith_variety_prime_relay E H D l Xo c O₀ β Y S Ω K J y 𝔐 d hvar p hpS A m hpm O c' h
   haveI : Finite (𝓞 E ⧸ Ideal.span {(p : 𝓞 E)}) :=
     Ideal.finiteQuotientOfFreeOfNeBot _ (by simpa using hp.ne_zero)
   haveI : Finite (TorsT E (D.p + D.q) p) := inferInstanceAs (Finite (Multiplicative (Fin (D.p + D.q) → _)))

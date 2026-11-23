@@ -3,8 +3,13 @@ module
 public import ReciprocityTheory.ReductiveGroups.UnramifiedIntegrals.ModGDefs
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
 public import ReciprocityTheory.NeutralLocalFields.HilbertClassField
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIdeleClassGroupHomOpenKernelStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertiaElementEqOneOrLiesAboveFinitePlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsIdeleClassGroupHomOpenKernel
+public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertiaElementEqOneOrLiesAboveFinitePlace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,7 +67,7 @@ theorem exists_artinSymbol : GlobalTheory.Published.GlobalArtinReciprocity → �
         IsArithFrobenius A v φ → art φ = ClassGroup.mk0 ⟨v.asIdeal, mem_nonZeroDivisors_of_ne_zero v.ne_bot⟩ := by
   intro H E Ω _ _ _ _ _
   obtain ⟨art, ha⟩ := H E Ω
-  obtain ⟨cl, hclo, hclk, hunit, hunif⟩ := GlobalTheory.T.exists_ideleClassGroupHom_open_kernel E
+  obtain ⟨cl, hclo, hclk, hunit, hunif⟩ := _root_.GlobalTheory.exists_ideleClassHom E
   have hker : art.ker ≤ cl.ker := by
     rw [ha.ker]
     exact Subgroup.topologicalClosure_minimal _ hclk (Subgroup.isClosed_of_isOpen _ hclo)
@@ -83,7 +88,7 @@ theorem exists_artinSymbol : GlobalTheory.Published.GlobalArtinReciprocity → �
     rw [e]
     exact hρo.preimage QuotientGroup.continuous_mk
   · intro A g hg
-    rcases GlobalTheory.T.inertiaElement_eq_one_or_liesAbove_finitePlace E Ω A g hg with rfl | ⟨v, hv⟩
+    rcases _root_.GlobalTheory.inertiaEl_eq_one_or_liesAbove E Ω A g hg with rfl | ⟨v, hv⟩
     · exact map_one _
     have hI : g ∈ Ine (F := E) A := ⟨hg.1, fun x hx => by
       rw [← A.mem_nonunits_iff]

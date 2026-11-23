@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsRatPointOfFiniteType
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ApproxOrbitSumsOfGaloisClassSumsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryFourierClassSumsDeeperLevelStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ClassSums
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ApproxOrbitSumsOfGaloisClassSums
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryFourierClassSumsDeeperLevel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -71,11 +72,11 @@ theorem posW_one_one : PosW (!![1] : Matrix (Fin 1) (Fin 1) ℤ) := by
 theorem four_of_classical : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H), 1 ≤ Dw.p + Dw.q → ∀ (l : Geo.Tor.Level H) (Xo : Moduli Dw l) (c : Coeff l) (C : UCompact Xo c) (X₁ : USetup C) (p : ℕ) [Fact p.Prime] (z₁ : X₁.M.Z) (Φ : FPre (H.bar : 𝓞 E → 𝓞 E) (min Dw.p Dw.q) p (X₁.M.Z.presheaf.stalk z₁)), (∀ y, ∃ t : UCTrait X₁ p z₁, (∀ a, Φ.ev y a = t.val a) ∧ ∃ e : Φ.X y ≃ₗ[𝓞 E] t.T.P.D.toPre.X, ∀ a b, Φ.sc y * Φ.β y a b = t.sc * t.T.be (e a) (e b)) → Φ.Four !![(1 : ℤ)] (X₁.S.r * X₁.S.N) := by
   intro E _ _ _ H Dw hpq l Xo c C X₁ p _ z₁ Φ h y₀ N₀
   obtain ⟨N, hN, hd, k, Q, t, B, _, _, _, _, _, 𝔷, hinj, hfix, hmax, hk, hu, ht, hc⟩ :=
-    GlobalTheory.T.unitary_fourierClassSums_deeper_level E H Dw hpq l Xo c C X₁ p z₁ Φ h y₀ (N₀ + 1)
+    _root_.GlobalTheory.UPoinc.uclassSums_deeper E H Dw hpq l Xo c C X₁ p z₁ Φ h y₀ (N₀ + 1)
   have := X₁.normal.isDomain_stalk z₁
   have := X₁.normal.isIntegrallyClosed_stalk z₁
   have := X₁.isNoetherianRing_stalk z₁
   exact ⟨N, by omega, hd, k, Q, t, hk, hu, ht,
-    GlobalTheory.T.approx_orbitSums_of_galois_classSums (𝓞 E) H.bar (min Dw.p Dw.q) p _ Φ 1 !![(1 : ℤ)] _ N y₀ k Q t B hinj hfix 𝔷 hmax (by omega) posW_one_one hu hc⟩
+    _root_.GlobalTheory.Poinc.OrbTrace.orbitSums_of_classSums (𝓞 E) H.bar (min Dw.p Dw.q) p _ Φ 1 !![(1 : ℤ)] _ N y₀ k Q t B hinj hfix 𝔷 hmax (by omega) posW_one_one hu hc⟩
 
 end GlobalTheory.UPoinc

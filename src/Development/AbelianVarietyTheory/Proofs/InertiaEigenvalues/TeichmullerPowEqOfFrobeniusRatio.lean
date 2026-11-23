@@ -2,12 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsGauss
 public import Development.AbelianVarietyTheory.CrystallinePeriods.RingIface
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisMulEqZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisValuationRadiusLawsStatement
+public import Formalism.LocalRingCardinality.AdicCompletionLocal.InstIsAdicCompleteOCSpanSingletonSetCast
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisMulEqZero
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisValuationRadiusLaws
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ImportsTerFurther
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AlgebraMapAinfInvPrimeBdRPlusInjective
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AcrisToBdRPlusInjective
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AinfIsDomainAndAinfInvPInjective
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AlgebraMapAinfInvPrimeBdRPlusInjective
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCanonicalAcrisToBdRPlus
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -76,16 +77,16 @@ theorem tc_injective (l : ℕ) [Fact l.Prime] : Function.Injective (tc l) := by
 theorem teich_eq_of_phi_ratio : ∀ (l : ℕ) [Fact l.Prime] (w' : Formalism.Per.Acris l) (ζ : Formalism.Per.Fl l), w' ≠ 0 →
     φc l (tc l ζ * w') * w' = tc l ζ * w' * φc l w' → ζ ^ l = ζ := by
   intro l _ w' ζ hw h
-  have hφ : φc l w' ≠ 0 := ((GlobalTheory.T.acrisValuation_radius_laws l 1 one_pos le_rfl).2.1 w' hw).1
+  have hφ : φc l w' ≠ 0 := ((_root_.GlobalTheory.PMon.Gauss.vr_laws l 1 one_pos le_rfl).2.1 w' hw).1
   have hprod : w' * φc l w' ≠ 0 := by
     intro h0
-    rcases GlobalTheory.T.acris_eq_zero_or_eq_zero_of_mul_eq_zero l _ _ h0 with h0 | h0
+    rcases _root_.GlobalTheory.PMon.Gauss.acris_mul_eq_zero l _ _ h0 with h0 | h0
     · exact hw h0
     · exact hφ h0
   rw [map_mul, frob_teich] at h
   have h' : (tc l (ζ ^ l) - tc l ζ) * (w' * φc l w') = 0 := by
     linear_combination h
-  rcases GlobalTheory.T.acris_eq_zero_or_eq_zero_of_mul_eq_zero l _ _ h' with h0 | h0
+  rcases _root_.GlobalTheory.PMon.Gauss.acris_mul_eq_zero l _ _ h' with h0 | h0
   · exact tc_injective l (sub_eq_zero.1 h0)
   · exact absurd h0 hprod
 

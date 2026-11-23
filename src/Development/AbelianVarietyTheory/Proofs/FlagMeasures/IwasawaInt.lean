@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.DiscreteSpectrumKFiniteDecomposition
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IwasawaDecompComplexifiedMaxCompactStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IwasawaDecompComplexifiedMaxCompact
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralEquivariantLeftInvariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -44,6 +44,6 @@ import Mathlib.Topology.Sheaves.Init
 
 namespace GlobalTheory.IwaInt
 
-theorem iwasawaInt : GlobalTheory.Dec.IwasawaInt := iwasawaInt_of GlobalTheory.T.iwasawa_decomp_complexifiedMaxCompact
+theorem iwasawaInt : GlobalTheory.Dec.IwasawaInt := iwasawaInt_of _root_.GlobalTheory.Dec.iwasawaKC
 
 end GlobalTheory.IwaInt

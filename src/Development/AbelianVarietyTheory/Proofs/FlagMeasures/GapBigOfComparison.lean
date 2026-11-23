@@ -2,7 +2,7 @@ module
 
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.SettingBlocks
 public import Formalism.PeriodIntegrals.ScGapBig
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ScGapBig
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.SpectralGapLarge.ScGapBigMain
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -73,6 +73,6 @@ theorem gapBig_of_comparison (h : PI.ScGapBig.ScGapBig) (D : Formalism.BasicNoti
 
 theorem gapBigOfGapHyp : ∀ D : D7, GapBigOfGapHyp D := by
   intro D
-  exact gapBig_of_comparison scGapBig D
+  exact gapBig_of_comparison _root_.PI.UnitaryGroupMassFormula.ScGapBig.scGapBig_main D
 
 end GlobalTheory.GapAtRealPlaces

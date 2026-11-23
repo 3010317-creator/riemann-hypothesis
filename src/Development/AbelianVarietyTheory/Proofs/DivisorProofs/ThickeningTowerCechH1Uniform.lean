@@ -1,12 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ProjectiveNotIsUnit
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHomogeneousFormOfOverlapIdealPowThickeningStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomogeneousFormChartChangeCoeffIdealPowStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomogeneousFormKilledByPowerOfTripleChartProductStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LiftedRatiosEvalIdealMulEqZeroSuccStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThickeningTowerLiftedRatiosProjectiveRelationsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformSerreVanishingCechCocyclesStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsHomogeneousFormOfOverlapIdealPowThickening
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomogeneousFormKilledByPowerOfTripleChartProduct
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LiftedRatiosEvalIdealMulEqZeroSucc
+public import Mathlib.RingTheory.MvPolynomial.Homogeneous
+public import Mathlib.RingTheory.Noetherian.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UniformSerreVanishingCechCocycles
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomogeneousFormChartChangeCoeffIdealPow
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThickeningTowerLiftedRatiosProjectiveRelations
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -134,11 +136,11 @@ theorem GlobalTheory.FormalAlg.towerCech_h1_uniform : ∀ (R : Type) [CommRing R
   have hJ : ∀ e F, F ∈ J e ↔ ∀ i, C.ev e i F = 0 := by
     intro e F
     simp only [J, Ideal.mem_iInf, RingHom.mem_ker]
-  obtain ⟨d₀, hd₀⟩ := GlobalTheory.T.uniform_serre_vanishing_cech_cocycles R I n J (fun e t a F ha _ _ hF =>
-    (hJ _ _).2 fun i => GlobalTheory.T.liftedRatios_eval_ideal_mul_eq_zero_succ R I Y β hβ n C e a F i ha ((hJ e F).1 hF i))
+  obtain ⟨d₀, hd₀⟩ := _root_.GlobalTheory.uniformSerre_cocycle R I n J (fun e t a F ha _ _ hF =>
+    (hJ _ _).2 fun i => _root_.GlobalTheory.FormalAlg.JStep.ev_succ_C_mul_eq_zero R I Y β hβ n C e a F i ha ((hJ e F).1 hF i))
   refine ⟨d₀, fun k hk e c hc hcoc => ?_⟩
-  have lev := GlobalTheory.T.thickeningTower_liftedRatios_projective_relations R I Y β hβ n C
-  choose N₀ hN₀ using fun i j => GlobalTheory.T.exists_homogeneous_form_of_overlap_ideal_pow_thickening R I Y β hβ n C e i j (c i j) (hc i j)
+  have lev := _root_.GlobalTheory.FormalAlg.LiftRatios.lifted_ratios_mod R I Y β hβ n C
+  choose N₀ hN₀ using fun i j => _root_.GlobalTheory.FormalAlg.JFrac.exists_form R I Y β hβ n C e i j (c i j) (hc i j)
   let N := Finset.univ.sup (fun p : Fin (n + 1) × Fin (n + 1) => N₀ p.1 p.2)
   have hN : ∀ i j, N₀ i j ≤ N := fun i j =>
     Finset.le_sup (f := fun p : Fin (n + 1) × Fin (n + 1) => N₀ p.1 p.2) (Finset.mem_univ (i, j))
@@ -176,7 +178,7 @@ theorem GlobalTheory.FormalAlg.towerCech_h1_uniform : ∀ (R : Type) [CommRing R
         rs (Y e).left hTi (C.ρ e i j) ^ (k + 2 * N) * (rs (Y e).left hTj (C.ρ e j l) ^ N *
           rs (Y e).left hTjl (c j l)) := by
       have t1 := congrArg (rs (Y e).left hTij)
-        (GlobalTheory.T.homogeneousForm_chart_change_coeff_ideal_pow R I Y β hβ n C e (k + 2 * N) (F j l) (hFh j l) (hFc j l) i j).2.2
+        (_root_.GlobalTheory.FormalAlg.Charts.ev_change R I Y β hβ n C e (k + 2 * N) (F j l) (hFh j l) (hFc j l) i j).2.2
       have t2 := congrArg (rs (Y e).left hTjl) (hFe j l)
       simp only [rs_rs, map_mul, map_pow] at t1 t2
       rw [t1, t2]
@@ -198,11 +200,11 @@ theorem GlobalTheory.FormalAlg.towerCech_h1_uniform : ∀ (R : Type) [CommRing R
       linear_combination (rs (Y e).left hTi (C.ρ e i j) ^ (k + 2 * N) * rs (Y e).left hTj (C.ρ e j l) ^ N) * e1 -
         rs (Y e).left hTi (C.ρ e i j) ^ (k + N) * e2 +
         rs (Y e).left hTi (C.ρ e i j) ^ N * rs (Y e).left hTi (C.ρ e i l) ^ N * hyp
-    obtain ⟨L, hL⟩ := GlobalTheory.T.homogeneousForm_killed_by_power_of_tripleChart_product R I Y β hβ n C e _ _ hH hHc i j l hz
+    obtain ⟨L, hL⟩ := _root_.GlobalTheory.FormalAlg.TripleKill.ev_triple_kill R I Y β hβ n C e _ _ hH hHc i j l hz
     exact ⟨L, (hJ _ _).2 hL⟩
 
   obtain ⟨N', G, hGh, hGc, hrel⟩ := hd₀ k hk e N F hFh hFc htri
-  have tr := fun i j => GlobalTheory.T.homogeneousForm_chart_change_coeff_ideal_pow R I Y β hβ n C e (k + N') (G j) (hGh j) (hGc j) i j
+  have tr := fun i j => _root_.GlobalTheory.FormalAlg.Charts.ev_change R I Y β hβ n C e (k + N') (G j) (hGh j) (hGc j) i j
   refine ⟨fun i => C.ev e i (G i), fun i => (tr i i).1, fun i j => ?_⟩
   obtain ⟨L, hL⟩ := hrel i j
   have hl : C.D e i ⊓ C.D e j ≤ C.D e i := inf_le_left

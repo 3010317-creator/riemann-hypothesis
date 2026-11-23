@@ -10,7 +10,7 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFor
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSqIntCoeffOfIsSquareIntegrable
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ToroidalChartsForFanOfToroidalForFanKS
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CuspTraceClassOfFactorisation
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ZelevinskyGrothendieckPolynomialRingOfSegmentsStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ZelevinskyGrothendieckPolynomialRingOfSegments
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,7 +58,7 @@ theorem cuspTraceClass_of (h : GlobalTheory.Published.DixmierMalliavinFactorisat
 
 theorem zelevinskyPolynomialRing_of (h₁ : GlobalTheory.Published.BernsteinZelevinskyFiniteness) (h₂ : GlobalTheory.Published.SegmentRepresentation)
     (h₃ : GlobalTheory.Published.GrothendieckRingPolynomial) : GlobalTheory.Published.ZelevinskyPolynomialRing :=
-  GlobalTheory.T.zelevinskyGrothendieckPolynomialRing_of_segments h₁ h₂ h₃
+  _root_.GlobalTheory.zelevinskyPolynomialRing_of_parts h₁ h₂ h₃
 
 theorem toroidalChartsForFan_of (h : GlobalTheory.Published.ToroidalForFanKS) : GlobalTheory.Published.ToroidalChartsForFan :=
   GlobalTheory.toroidalChartsForFan_of_toroidalForFanKS h

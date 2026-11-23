@@ -3,8 +3,13 @@ module
 public import Formalism.LocalToGlobal.UnitaryNorms.CharTied
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.HeckeSplitOne
 public import Development.AbelianVarietyTheory.BlockTheory.ThetaLiftGeometry.AgreementAtAlmostAllSplitPrimes
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.EventuallyResidueDegreeOnePrimeMovedByGaloisStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeCharCmEqOneOfTrivialDegreeOneStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.DegOneIffSurjective
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.EventuallyResidueDegreeOnePrimeMovedByGalois
+public import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HeckeCharCmEqOneOfTrivialDegreeOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +50,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.DegOneIffSurjective
 
 @[expose] public section
 
@@ -92,8 +96,8 @@ theorem eq_one_of_split {R : Ranks} (H : Host R) (ν : HChar H.E)
     (h : ∀ᶠ w in Filter.cofinite, IsSplitPl H w → ν.UnrAt w ∧ ν.val w = 1) : ν = 1 := by
   have : IsCMField H.E := H.isCMField_hostE
   apply Subtype.ext
-  refine GlobalTheory.T.heckeChar_cm_eq_one_of_trivial_degree_one (maximalRealSubfield H.E) H.E ν.1 ν.2 ?_
-  filter_upwards [h, GlobalTheory.T.eventually_residueDegreeOne_prime_moved_by_galois (maximalRealSubfield H.E) H.E (IsCMField.complexConj H.E)
+  refine _root_.GlobalTheory.HeckeSplit.heckeChar_eq_one_of_degOne (maximalRealSubfield H.E) H.E ν.1 ν.2 ?_
+  filter_upwards [h, _root_.GlobalTheory.HeckeSplit.eventually_degOne_moved (maximalRealSubfield H.E) H.E (IsCMField.complexConj H.E)
     (IsCMField.complexConj_ne_one H.E)] with w hw hs hd
   obtain ⟨x, hx, hy⟩ := hs hd
   have hsp : IsSplitPl H w := ⟨x, hx, fun y hyx => hy y (by rw [complexConj_eq]; exact hyx)⟩

@@ -2,12 +2,17 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemMatLat
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitEqOfStableLatticesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryAdjoinLatticeImageEqStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFullRankLatticeImageStandardLatticeGLStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSelfDualImageStandardLatticeUnitaryStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixImageAdjointMulEqOfSelfDualLatticesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemGLintIffMatrixImageStandardLatticeEqStatement
+public import Mathlib.Algebra.Polynomial.Derivative
+public import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitEqOfStableLattices
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitaryAdjoinLatticeImageEq
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFullRankLatticeImageStandardLatticeGL
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSelfDualImageStandardLatticeUnitary
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixImageAdjointMulEqOfSelfDualLattices
+public import Formalism.SatakeDualWeyl.Statement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemGLintIffMatrixImageStandardLatticeEq
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.IsSquareOneAddFourMul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -93,7 +98,7 @@ theorem orbit_main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n :
   have hK : ∀ h : UL n w, h ∈ KL n w ↔ matLat (w.adicCompletionIntegers E) h.1.val
       (stdLat (w.adicCompletionIntegers E) n) = stdLat (w.adicCompletionIntegers E) n := by
     intro h
-    exact (Subgroup.mem_subgroupOf).trans (GlobalTheory.T.mem_GLint_iff_matrixImage_standardLattice_eq (w.adicCompletionIntegers E) n h.1)
+    exact (Subgroup.mem_subgroupOf).trans (_root_.GlobalTheory.LatOrb.mem_GLint_iff_matLat_std (w.adicCompletionIntegers E) n h.1)
   have st : ∀ g : UL n w, g⁻¹ * γ * g ∈ KL n w → ∀ v ∈ matLat (w.adicCompletionIntegers E) g.1.val
       (stdLat (w.adicCompletionIntegers E) n), γ.1.val *ᵥ v ∈ matLat (w.adicCompletionIntegers E) g.1.val
       (stdLat (w.adicCompletionIntegers E) n) := by
@@ -106,7 +111,7 @@ theorem orbit_main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n :
       matLat (w.adicCompletionIntegers E) t.val (matLat (w.adicCompletionIntegers E) g₁.1.val
         (stdLat (w.adicCompletionIntegers E) n)) = matLat (w.adicCompletionIntegers E) g₂.1.val
         (stdLat (w.adicCompletionIntegers E) n) := by
-    obtain ⟨p, hpu, hp⟩ := GlobalTheory.T.exists_unit_eq_of_stable_lattices n P₀ hcop γ.1.val hγ _ _ (GlobalTheory.T.isFullRankLattice_image_standardLattice_GL n g₁.1) (GlobalTheory.T.isFullRankLattice_image_standardLattice_GL n g₂.1) (st g₁ h₁) (st g₂ h₂)
+    obtain ⟨p, hpu, hp⟩ := _root_.GlobalTheory.LatOrb.Stab.exists_unit_eq_matLat n P₀ hcop γ.1.val hγ _ _ (_root_.GlobalTheory.LatOrb.matLat_stdLat_isLatV n g₁.1) (_root_.GlobalTheory.LatOrb.matLat_stdLat_isLatV n g₂.1) (st g₁ h₁) (st g₂ h₂)
     by_cases hs : IsSplitAt w
     · refine ⟨hpu.unit, by simp [UL, hs], ?_, hp.symm⟩
       ext : 1
@@ -121,9 +126,9 @@ theorem orbit_main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n :
         simpa [UJ, cT] using this
       have sd : ∀ g : UL n w, SelfDual (w.adicCompletionIntegers E) (cj w)
           (matLat (w.adicCompletionIntegers E) g.1.val (stdLat (w.adicCompletionIntegers E) n)) :=
-        fun g => GlobalTheory.T.isSelfDual_image_standardLattice_unitary (cj w) hcc hσO n _ (hUL g)
-      have hc := GlobalTheory.T.matrixImage_adjoint_mul_eq_of_selfDual_lattices (cj w) hcc n (aeval γ.1.val p) hpu _ (sd g₁) (hp ▸ sd g₂)
-      obtain ⟨t, ht1, htc, htM⟩ := GlobalTheory.T.exists_unitary_adjoin_lattice_image_eq n P₀ hcop γ.1.val hγ (cj w) hcc hσO (hUL γ) _ (GlobalTheory.T.isFullRankLattice_image_standardLattice_GL n g₁.1)
+        fun g => _root_.GlobalTheory.LatOrb.selfDual_matLat_stdLat (cj w) hcc hσO n _ (hUL g)
+      have hc := _root_.GlobalTheory.LatOrb.matLat_adj_mul_eq_of_selfDual (cj w) hcc n (aeval γ.1.val p) hpu _ (sd g₁) (hp ▸ sd g₂)
+      obtain ⟨t, ht1, htc, htM⟩ := _root_.GlobalTheory.LatOrb.exists_unitary_matLat_eq n P₀ hcop γ.1.val hγ (cj w) hcc hσO (hUL γ) _ (_root_.GlobalTheory.LatOrb.matLat_stdLat_isLatV n g₁.1)
         (st g₁ h₁) p hpu hc
       have htu : IsUnit t := (Matrix.isUnit_iff_isUnit_det _).2 (Matrix.isUnit_det_of_left_inverse ht1)
       refine ⟨htu.unit, ?_, ?_, by rw [hp]; exact htM⟩

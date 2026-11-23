@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsProjOverWeierstrass
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFactorFieldPointThroughGenericPointStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsToricRankOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFactorFieldPointThroughGenericPoint
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasSemiAbelianUniformisationOfLabelledCover
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralImageOfField
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RecognitionDegDataLabelsAtEveryTraitStatement
@@ -97,7 +98,7 @@ theorem GlobalTheory.Mum.UCover.labCover : ∀ (R : Type) [CommRing R] [IsDomain
     GlobalTheory.ThetaBaseChange.grp_generic U'.toUnifPre
   have hinj : Function.Injective ((algebraMap W' (FractionRing W')).comp (io.comp φ)) :=
     (IsFractionRing.injective W' _).comp (hio.comp hφ)
-  obtain ⟨ga, hga, hy⟩ := GlobalTheory.T.exists_factor_field_point_through_generic_point R C.toModif (FractionRing W') _ (jK W' ≫ spMap io ≫ ξ) hinj (by
+  obtain ⟨ga, hga, hy⟩ := _root_.GlobalTheory.Mum.Modif.factor_gp R C.toModif (FractionRing W') _ (jK W' ≫ spMap io ≫ ξ) hinj (by
     rw [Category.assoc, Category.assoc, hξ]
     simp only [jK, spMap, ← Spec.map_comp]
     rfl)

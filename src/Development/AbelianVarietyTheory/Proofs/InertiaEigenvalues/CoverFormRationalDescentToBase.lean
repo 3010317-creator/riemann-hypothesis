@@ -3,9 +3,11 @@ module
 public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.TwistSeries
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DictionaryCharacterTrivialOnPrincipalLevel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LevelFormCompatBaseEmbedding
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TameHeckeCharTrivialOnFiniteUnitsCongOne
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BoundedCuspidalHolomorphicLeSpanAlgebraicCuspSecStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.CuspFormsFiniteDimensionalOf
+public import Formalism.LocalToGlobal.ProjectiveLattices.FamilyUniformisationBasePointOrthogonalBis
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BoundedCuspidalHolomorphicLeSpanAlgebraicCuspSec
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HolomorphicSectionsSpanRestriction
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TameHeckeCharTrivialOnFiniteUnitsCongOne
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsAlgebraMapOfSigRFixed
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -98,7 +100,7 @@ theorem cover_desc_rat : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T0 :
     have := D.R.t_odd.pos
     omega
   exact GlobalTheory.CoverFormDesc.cover_form_desc D T hJ ((i : ℕ) + 1) (inR i) T.σ₀ T.toCore.good_σ₀ C hC.1 (wtA (κ i)) (κ i).n (dom_wtA (κ i)) hP
-    (GlobalTheory.T.boundedCuspidalHolomorphic_le_span_algebraicCuspSections D T hJ ((i : ℕ) + 1) (inR i) T.σ₀ T.toCore.good_σ₀ (κ i) (GlobalTheory.AdTh.lastPos_of_kapIs hT.kap i) hn)
+    (_root_.GlobalTheory.SmallWtSpan.holSub0_le_span_cuspSec D T hJ ((i : ℕ) + 1) (inR i) T.σ₀ T.toCore.good_σ₀ (κ i) (GlobalTheory.AdTh.lastPos_of_kapIs hT.kap i) hn)
     (mu_mul_level_of_tie D G Pl0 T0 A T R κ v₀ hJ hlev hT i) φ hφ hinv
 
 end GlobalTheory.CoverDescRat

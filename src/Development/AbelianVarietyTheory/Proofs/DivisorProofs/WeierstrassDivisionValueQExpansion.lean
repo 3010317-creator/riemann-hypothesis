@@ -1,9 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ZetaActRefl
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.G2AddWeierstrassPRowSumStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RowSumsTwoThreeClosedFormRealNonIntegerStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionPointRowsSumEqDivisorSeriesStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HasQIff
+public import Mathlib.NumberTheory.ModularForms.EisensteinSeries.E2.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.G2AddWeierstrassPRowSum
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RowSumsTwoThreeClosedFormRealNonInteger
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TorsionPointRowsSumEqDivisorSeries
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -68,7 +72,7 @@ theorem main : ∀ (N : ℕ) [NeZero N] (x : Fin 2 → ZMod N), x ≠ 0 → HasQ
   intro N _ x hx
   rw [hasQ_iff]
   intro τ
-  obtain ⟨T, hT, hS⟩ := GlobalTheory.T.torsionPoint_rows_sum_eq_divisor_series N 1 τ x _ le_rfl (GlobalTheory.T.G2_add_weierstrassP_row_sum τ (tors N τ x))
+  obtain ⟨T, hT, hS⟩ := _root_.GlobalTheory.WpFam.RowsSummed.main N 1 τ x _ le_rfl (_root_.GlobalTheory.WpFam.hasSum_rows_G2_add_weierstrassP τ (tors N τ x))
   have hc : (2 * (Real.pi : ℂ) * Complex.I) ≠ 0 := by
     simp [Real.pi_ne_zero]
   have hT' : HasSum (fun k : ℕ => cSum N 1 1 x k *
@@ -88,7 +92,7 @@ theorem main : ∀ (N : ℕ) [NeZero N] (x : Fin 2 → ZMod N), x ≠ 0 → HasQ
       have him : (((x 1).val : ℂ) / N).im = 0 := by
         have : (((x 1).val : ℂ) / N) = ((((x 1).val : ℝ) / N : ℝ) : ℂ) := by push_cast; rfl
         rw [this, Complex.ofReal_im]
-      have hr := (GlobalTheory.T.rowSums_two_three_closedForm_real_nonInteger _ him (val_div_ne_int N (x 1) h1)).1
+      have hr := (_root_.GlobalTheory.WpFam.RowReal.row_real _ him (val_div_ne_int N (x 1) h1)).1
       have hch : Complex.exp ((2 * (Real.pi : ℂ) * Complex.I) * (((x 1).val : ℂ) / N)) = ch N (x 1) := by
         rw [ch, mul_div_assoc]
       rw [hch] at hr

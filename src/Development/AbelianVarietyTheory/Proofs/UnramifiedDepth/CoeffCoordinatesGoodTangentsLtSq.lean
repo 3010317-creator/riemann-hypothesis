@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.TwoMulChainStartIndexAddOneOfOdd
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.FormalGroupCoordinatesPullbackLinearTangentBasisStatement
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.FormalGroupCoordinatesPullbackLinearTangentBasis
 public import Formalism.FrobeniusBaseCase.FrobeniusBaseCaseProofs.HasUniqueFixedPoint
 import Formalism.LocalToGlobal.CharacterGerms.CartesianBoundOnCurves
 import Mathlib.Algebra.Order.Floor.Extended
@@ -97,7 +97,7 @@ theorem coeff_low_good : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) (I J : Ty
   have hl : 2 ≤ V.l := V.l_prime.two_le
   let al : I → ℕ → I → C := fun c k b =>
     if k = 0 then (if c = b then 1 else 0) else S.co (S.cur c k) b
-  obtain ⟨h0, h1, h2⟩ := GlobalTheory.T.formalGroupCoordinates_pullback_linear_tangentBasis C V d I J G S t ht (Fin N) (fun δ => S.tan (em δ))
+  obtain ⟨h0, h1, h2⟩ := _root_.GlobalTheory.MainTerm.linPull_coords C V d I J G S t ht (Fin N) (fun δ => S.tan (em δ))
     (fun b j => if em j = b then 1 else 0) al
     (by intro j x; simp)
     (by intro c b; simp [al])

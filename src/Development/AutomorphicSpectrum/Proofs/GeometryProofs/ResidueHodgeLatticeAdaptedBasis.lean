@@ -2,7 +2,7 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeAt
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LinearIndependentEigProj
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HermitianSignatureBasisStatement
+public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.AdaptedEigenbasisExists
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AdaptedBasesChangeByBlockMatricesStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -119,7 +119,7 @@ theorem det_evaluated_frame : ∀ (E : Type) [Field E] [NumberField E] (C A : Ty
   intro E _ _ C A _ _ _ _ bar σ σ' g p q ρC ρHC HV tC b₁ v b₂ w u Ap P Q gm h1 h2 h3 h4 hA hfree had hvP hwQ hb₁
     hAp H hv hvspan hvA hw hwspan hwA
   obtain ⟨u', hu'ad, -, hu'span⟩ :=
-    GlobalTheory.T.hermitian_signature_basis E C (Fin g → C) ρC ρHC bar σ σ' p q v w h1 h2 h3 h4 hv hvspan hw hwspan
+    _root_.PositivityTheory.Xgn.adapted_eigenbasis_exists E C (Fin g → C) ρC ρHC bar σ σ' p q v w h1 h2 h3 h4 hv hvspan hw hwspan
   have hP := isUnit_det_of_linearIndependent_frame P v b₁ hvP hv
   have hQ := isUnit_det_of_linearIndependent_frame Q w b₂ hwQ hw
   obtain ⟨B0, hB0, hB0det⟩ := GlobalTheory.T.adapted_bases_change_by_block_matrices E C (Fin g → C) ρHC σ p q v b₁ w b₂ u' u P⁻¹ Q⁻¹ hu'ad had hv

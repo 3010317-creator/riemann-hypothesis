@@ -4,11 +4,14 @@ public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsIrreducibleSmoothQuotient
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ParabolicInductionTensorProductHasFiniteLength
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ParabolicProductHasFiniteLengthGL
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalIsGenericStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalIsGeneric
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FinrankEqProdOfNonemptyEquiv
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwKerWhitCharReflect
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerHeredityStatement
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MirabolicDerivatives.LeibnizDerivatives.GenericProdIff
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WhittakerHeredity
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.BernsteinZelevinskyFiniteness
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ExistsReadingLaws
 import GroundTheory.LocalFields.PadicLogSeries
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -47,7 +50,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ExistsReadingLaws
 import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.LSegJacquet
 
 @[expose] public section
@@ -152,7 +154,7 @@ theorem finrank_twJacquet_of_isCusp (hW : WhitRankIrr k) {ψ : AddChar k Circle}
     ext v
     rw [Subsingleton.elim v 0]
     exact ⟨fun _ => b.toSubmodule.zero_mem, fun _ => a.toSubmodule.zero_mem⟩
-  have hg : IsGenericFor ψ c.rep.ρ := GlobalTheory.T.cuspidal_is_generic k ψ hc h1 n _ c.rep.ρ hx.2 hV
+  have hg : IsGenericFor ψ c.rep.ρ := _root_.GlobalTheory.CompanionTheory.BZDeriv.isGenericFor_of_isCuspidal k ψ hc h1 n _ c.rep.ρ hx.2 hV
   have hle := hW ψ hc h1 (n + 1) _ c.rep.ρ c.rep.smooth c.rep.irr
   haveI : Nontrivial (TwJacquet c.rep.ρ (unipB k (Fin (n + 1))) (whitChar ψ (n + 1))) := hg
   exact Module.finrank_eq_of_rank_eq (le_antisymm hle (Cardinal.one_le_iff_pos.2 rank_pos))
@@ -164,7 +166,7 @@ theorem exists_nongeneric_subquotient : ∀ (k : Type) [Field k] [ValuativeRel k
       ∃ τ : IrrRep (GL (Fin N) k), IsSubquotient τ.ρ (prodIrr ![x, y] hd) ∧ ¬ IsGenericFor ψ τ.ρ := by
   intro k _ _ _ _ hW ψ hc h1 x y N hd hx hy hn
   have hcusp : ∀ a, (![x, y] a).IsCusp := Fin.forall_fin_two.2 ⟨hx, hy⟩
-  have hP := GlobalTheory.CompanionTheory.WhitRank.whitRankProd_of_heredity k (GlobalTheory.T.whittaker_heredity k) ψ hc h1 2 N ![x, y] hd
+  have hP := GlobalTheory.CompanionTheory.WhitRank.whitRankProd_of_heredity k (_root_.GlobalTheory.CompanionTheory.Rodier.whitHeredity k) ψ hc h1 2 N ![x, y] hd
   have hrank : Module.finrank ℂ (TwJacquet (prodIrr ![x, y] hd) (unipB k (Fin N)) (whitChar ψ N)) = 1 :=
     hP.trans (Finset.prod_eq_one fun a _ => finrank_twJacquet_of_isCusp hW hc h1 (hcusp a))
   have hf : HasFiniteLength (prodIrr ![x, y] hd) :=

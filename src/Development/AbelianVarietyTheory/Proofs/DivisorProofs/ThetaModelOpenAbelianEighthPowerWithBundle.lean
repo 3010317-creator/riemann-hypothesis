@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SharpOverIff
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsToricRankOne
-import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsNeronNeutralComponentFiniteLevel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsProperEighthFibrePowerOverStatement
+public import Mathlib.AlgebraicGeometry.Morphisms.Proper
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsProperEighthFibrePowerOver
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiAbelianFieldPointEqEighthPowerUniversalPullbStatement
+import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsNeronNeutralComponentFiniteLevel
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsThetaLevelAbelianSchemeGlueAffineCover
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -93,7 +95,7 @@ theorem main : ∀ (g n : ℕ) (o : Type) [CommRing o] (ζ : o) (F : SFam g n ζ
   refine ⟨lAb FinalForm.G V fun K _ _ t => ?_, ?_⟩
   · obtain ⟨c', pr', -, -, huniv, -, -⟩ := hK K t ((Over.pullback (t ≫ V.ι)).obj FinalForm.G) (pullback.fst _ _)
       (isGrpPullback_pullback _ _)
-    exact GlobalTheory.T.isProper_eighth_fibre_power_over pr' huniv c'.ab.proper
+    exact _root_.GlobalTheory.FibrePowerProper.isProper_eighth_fibre_power pr' huniv c'.ab.proper
   · intro R _ _ _ hB G' _ _ hsemi D' A' U' ξ gm hgm hLB ξ₀ hξ₀
     have hpb : IsGrpPullback A'.A FinalForm.G (ξ₀ ≫ V.ι) (U'.gen.inv.left ≫ pullback.fst G'.hom (jK R) ≫ gm) :=
       (lGen U' ξ gm hgm).congr hξ₀.symm rfl

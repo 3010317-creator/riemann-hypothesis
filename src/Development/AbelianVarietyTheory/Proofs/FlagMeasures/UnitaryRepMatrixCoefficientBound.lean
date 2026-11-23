@@ -2,11 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.HermitianFormUnitaryOneOne
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarBallGrowthUnitaryJ
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarSubgroupBiInvariantStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarSubgroupBiInvariant
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IntegrableExpNegMulOfSublevelGrowth
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormPosOfIsUnit
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnipotentRadicalVolumeGrowthStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.WeilFormulaWithCutoffSubgroupStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnipotentRadicalVolumeGrowth
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.WeilFormulaWithCutoffSubgroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -239,8 +239,8 @@ theorem constTerm_inner : ∀ (n : ℕ) (ε : Fin n → Bool) (W : Submodule ℂ
   intro n ε W ν hW hν β hβ hβt hβ1 H _ _ _ σ d c u v v' hσ hd hc hf hf' hvv
   obtain ⟨hD0, hDi, hDm, hDc⟩ := dOp_nonneg_inv_subadditive_continuous n ε
   obtain ⟨n1, nmul, ninv, ncl⟩ := nw_one_mem_mul_mem_inv_mem_isClosed ε W
-  have hr := GlobalTheory.T.haar_subgroup_bi_invariant n ε W ν hW hν
-  obtain ⟨-, hνi⟩ := GlobalTheory.T.unipotentRadical_volume_growth n ε W ν hW hν
+  have hr := _root_.GlobalTheory.UnipUnimod.unimodular_NW n ε W ν hW hν
+  obtain ⟨-, hνi⟩ := _root_.GlobalTheory.RadVol.radical_volume_growth n ε W ν hW hν
   haveI : IsFiniteMeasureOnCompacts ν := hν.2.1
   have hnr : (0 : ℝ) ≤ (n : ℝ) * (rkR ε : ℝ) := by positivity
   have hc0 : 0 ≤ c := by nlinarith
@@ -290,7 +290,7 @@ theorem constTerm_inner : ∀ (n : ℕ) (ε : Fin n → Bool) (W : Submodule ℂ
   let N : Subgroup (UJ ε) :=
     { carrier := NW ε W, mul_mem' := fun {a b} ha hb => nmul a ha b hb, one_mem' := n1,
       inv_mem' := fun {a} ha => ninv a ha }
-  obtain ⟨-, hU⟩ := GlobalTheory.T.weil_formula_with_cutoff_subgroup (UJ ε) (muG ε) N ν ncl hν β hβ hβt hβ1
+  obtain ⟨-, hU⟩ := _root_.GlobalTheory.weil_formula_cutoff (UJ ε) (muG ε) N ν ncl hν β hβ hβt hβ1
   obtain ⟨hUi, hUe⟩ := hU _ hhint
   have key : ∀ m : UJ ε, ∫ y, star ⟪v', σ (umat (m * y)) u⟫_ℂ * ⟪v, σ (umat y) u⟫_ℂ ∂(muG ε) =
       ⟪u, u⟫_ℂ * ⟪v, σ (umat m⁻¹) v'⟫_ℂ / (d : ℂ) := by

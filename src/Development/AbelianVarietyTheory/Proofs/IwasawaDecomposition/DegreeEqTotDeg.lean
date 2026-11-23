@@ -4,25 +4,26 @@ public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FinAlgOfFinite
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsIntMulMemInvHalfDifferent
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsPreHasLetters
-import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.IndexExponentDegree
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.OddnessConditionHolds
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaTranslationIntertwinerUnitary
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.WeilRepresentationVacuumSignInertPlaces
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AbsNormEqOfSplit
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.DeltaNeZero
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.InterTransport
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.NormalisedFamilyLatticeHypAndSmooth
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.NotDvdDifferent
-import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.QuadraticFormIntegralOfSelfDualPeriodLattices
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BaseFieldsPrimesOk
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DetIdLatGmap
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsWeilOThZeroTriv
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FinAlgJetSet
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GmapToAddSubgroup
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormalisedFamilySatisfiesEquivarianceLawsStatement
+public import Formalism.LocalToGlobal.KernelLattices.LateralTheory
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormalisedFamilySatisfiesEquivarianceLaws
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.OrdSubConjEqNeg
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SmulLatMatOf
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.VacuumEntireAndNormalizedJetsAlgebraicStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.VacuumEntireAndNormalizedJetsAlgebraic
+import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.IndexExponentDegree
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaTranslationIntertwinerUnitary
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.WeilRepresentationVacuumSignInertPlaces
+import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.InterTransport
+import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.QuadraticFormIntegralOfSelfDualPeriodLattices
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SpanRangeEmb4EqTop
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -256,8 +257,8 @@ theorem finAlg_step (hL : StagesInhab.HasLetters B.toPre) {I : ColIn B X} (h : I
     rw [hA]
     exact ⟨h0.1, h0.2.1, fun P hP => (bad P hP).1, fun P hP => GlobalTheory.PeriodIdealUnit.locP_AA_eq_one _ _ _ _ _ _ _ _ P
       (bad P hP).2.1 (bad P hP).2.2.1 (by rw [Ideal.absNorm_top]; exact Nat.coprime_one_left _), h0.2.2.2.2⟩
-  have hE := GlobalTheory.T.normalisedFamily_satisfies_equivarianceLaws _ _ _ (I.J.toRec B C W V S N G) _ hcc hδ hχ
-  have hJ := GlobalTheory.T.vacuum_entire_and_normalizedJets_algebraic _ _ (seamOf B C W V S N G) _ _ (I.J.toRec B C W V S N G) I.chi I.J.cD _ _ hX hs hcc hδ hχ hi hj
+  have hE := _root_.GlobalTheory.Mem.NatEqui.eqP _ _ _ (I.J.toRec B C W V S N G) _ hcc hδ hχ
+  have hJ := _root_.GlobalTheory.Mem.Col2.JetAlgebraic.esmooth_jetAlg _ _ (seamOf B C W V S N G) _ _ (I.J.toRec B C W V S N G) I.chi I.J.cD _ _ hX hs hcc hδ hχ hi hj
   rw [← hA] at hJ
   refine JetFin.finAlg_jetSet _ _ _ _ _ _ _ hX hM hJ.1 (IndEq.thIndEq_of_vacEq _ _ _ _ _ _ hX hLa hne hM ?_) ?_ (hJ.2 _ _)
     fun τ => ?_

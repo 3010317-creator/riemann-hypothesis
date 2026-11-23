@@ -3,15 +3,18 @@ module
 public import Formalism.SharpRestriction.CuspSpanNormBounds.CongruenceAtSplitFrobeniusHolds
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ChartGen
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CyclicDiscriminantLatticesFormOneGenus
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsOrthonormalLatticeOfUnimodularLandherrStatement
+public import Formalism.HermitianLattices.StatementMass
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsOrthonormalLatticeOfUnimodularLandherr
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianGenusMassEqOrbitStabilizerMass
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsLatticeLatIn
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LatInIsLattice
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassRowLatticeOrthogonalSplitPrimeStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MaximalHermitianLatticeMassRatioStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.CntPartners
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassRowLatticeOrthogonalSplitPrime
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PrimitiveSublatticeMeanCountBound
+import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesUnitary₂.MaxMass
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MaximalHermitianLatticeMassRatio
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MemOfPerpPerp
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrbitWeightedStabilizerSumMonoSubadditive
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PrimitiveSublatticeMeanCountBound
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PrimitiveSublatticesMoveWithIsometries
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StdLatIsOrthoLatticeAndMassProperties
 import Mathlib.Algebra.Order.Floor.Extended
@@ -195,7 +198,7 @@ theorem main : ∀ c₀ : ℝ, 0 < c₀ → ∃ C₀ : ℝ, ∀ C : ℝ, C₀ �
   have hrd' : Real.log D.host.rdE ≤ large₂.sc.L / c₀ := hrd.trans (by gcongr)
   obtain ⟨⟨hPD, hrk⟩, hrow⟩ := GlobalTheory.Mass.RowPerp.main D u F0 he hz
   obtain ⟨hint, hcyc⟩ := hrow Λ hΛ
-  have hM := (GlobalTheory.T.mass_rowLattice_orthogonal_split_prime D u F0 he hz hTp hTs Λ hΛ).2
+  have hM := (_root_.GlobalTheory.Mass.RowPerpMass.main D u F0 he hz hTp hTs Λ hΛ).2
   have hs := (D.sp.X 0).herm
   have hgen := (GlobalTheory.Mass.CyclicGenus.main _ _ _ hK hs (D.sp.X 0).nondeg _ hTp hTs).2
   generalize Lat.L0X D Λ (lf D F0) = L₀ at *
@@ -225,7 +228,7 @@ theorem main : ∀ c₀ : ℝ, 0 < c₀ → ∃ C₀ : ℝ, ∀ C : ℝ, C₀ �
   have hN : 1 ≤ Cnt.NT D u := one_le_pow₀ (by exact_mod_cast hTp.one_le)
   have hU := GlobalTheory.Mass.StdMass.main _ hK
   by_cases hmid : s ≤ D.R.k - 2
-  · have H := GlobalTheory.Mass.PrimMean.main GlobalTheory.T.maximalHermitianLattice_massRatio _ _ h hK hs hPD (GlobalTheory.T.exists_orthonormalLattice_of_unimodular_landherr _ hK) (D.R.k - s) s (by omega)
+  · have H := GlobalTheory.Mass.PrimMean.main _root_.GlobalTheory.Mass.MaxFormula.main _ _ h hK hs hPD (_root_.GlobalTheory.Mass.exists_orthoLattice_of_unimodular _ hK) (D.R.k - s) s (by omega)
       (by omega) (by omega) _ _ _ (hU (D.R.k - s)).1 (hU (D.R.k - s)).2.1 _ _ _ (hU s).1 (hU s).2.1 (de ^ 2) _ hde2
       (Nat.one_le_pow _ _ hTp.pos) _ hst hmem
     refine H.trans (ENNReal.ofReal_le_ofReal ?_)

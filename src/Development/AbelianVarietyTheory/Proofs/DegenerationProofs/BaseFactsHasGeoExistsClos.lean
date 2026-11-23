@@ -5,7 +5,8 @@ public import Development.AbelianVarietyTheory.Definitions.Degenerations.IsAffin
 public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.UTorsSt
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.BaseFactsOfIsEE
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ClosureTestsExistAndReductionIndependentStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FibreEqSpecialFibreOfReductionIndepStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.IsNormalSchemeSp
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FibreEqSpecialFibreOfReductionIndep
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.HasGeometricTestOfHasUniformisedTestStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.HasGradedChartsNearGenericPointClosureStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.NonemptyAbelianSchemeProjectiveClosureStatement
@@ -70,7 +71,7 @@ theorem baseFacts_hasGeo_exists_clos : GlobalTheory.UT.LL → UTorsSt → ∀ (o
   obtain ⟨Q⟩ := GlobalTheory.T.nonempty_abelianSchemeProjectiveClosure hL o Ω S ρ M U₀ EE hF
   obtain ⟨ex⟩ := GlobalTheory.T.nonempty_closureExtension_abelianScheme hL o Ω S ρ M U₀ EE hF Q
   obtain ⟨h₁, h₂⟩ := GlobalTheory.T.closure_tests_exist_and_reduction_independent hL o Ω S ρ M U₀ EE hF Q ex hB hG
-  have h₃ : ex.core.Fib := GlobalTheory.T.fibre_eq_specialFibre_of_reduction_indep ex.core h₂
+  have h₃ : ex.core.Fib := _root_.GlobalTheory.ZJ.Core.fib_of_indep ex.core h₂
   exact ⟨hF, hG, Q, ex, h₁, h₂, h₃, GlobalTheory.T.hasGradedCharts_near_generic_point_closure hL o Ω S ρ M U₀ EE hF Q ex hB hG h₃⟩
 
 end GlobalTheory.ZH

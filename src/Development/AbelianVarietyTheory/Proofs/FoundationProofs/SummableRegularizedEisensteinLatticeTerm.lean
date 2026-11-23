@@ -1,7 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.PetIPSmulRight
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SecondDifferenceInvPowBoundStatement
+public import Mathlib.Analysis.Complex.Norm
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SecondDifferenceInvPowBound
+public import Mathlib.NumberTheory.ModularForms.EisensteinSeries.Summable
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -17,7 +19,6 @@ import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
-public import Mathlib.NumberTheory.ModularForms.EisensteinSeries.Summable
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.WittVector.IsPoly
@@ -149,7 +150,7 @@ theorem difdif_bound (j L : ℕ) (v : ℤ × ℤ) (τ : ℍ) (hj : 1 ≤ j) (hL 
 theorem latsum_summable : ∀ (j L : ℕ) (v : ℤ × ℤ) (τ : ℍ), 1 ≤ j → 0 < L →
     Summable fun x => ‖dif L v (dif L v (fun y : ℤ × ℤ => trm j 0 ((y.1 : ℂ) * τ + y.2))) x‖ := by
   intro j L v τ hj hL
-  obtain ⟨C, hC⟩ := GlobalTheory.T.second_difference_inv_pow_bound j
+  obtain ⟨C, hC⟩ := _root_.GlobalTheory.EisM.SecondDiff.second_diff_inv_pow j
   set w : ℂ := (v.1 : ℂ) * τ + v.2 with hw
   set R : ℝ := max (4 * (L * ‖w‖)) 1 with hR
   have hrτ : 0 < EisensteinSeries.r τ := EisensteinSeries.r_pos τ

@@ -2,12 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompactOpenNormClosedBallQuadraticStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegralClosedBallAddCharEqZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomogeneousMeasureEqSmulAddHaarLocalFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapMulLeftEqNormSmulStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MulMemRangeNormStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuadExtTopologyStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompactOpenNormClosedBallQuadratic
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegralClosedBallAddCharEqZero
+public import Mathlib.MeasureTheory.Measure.Haar.DistribChar
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HomogeneousMeasureEqSmulAddHaarLocalField
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapMulLeftEqNormSmul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MulMemRangeNorm
+public import Development.AbelianVarietyTheory.Definitions.Divisors.UnipVal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuadExtTopology
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -95,24 +99,24 @@ theorem mul_mem_cball_iff {F : Type} [Field F] [ValuativeRel F] (a s : Fˣ) (x :
 theorem gauss_cancel : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] (E : Type) [Field E] [Algebra F E] [TopologicalSpace E] [IsModuleTopology F E] (c : E →ₐ[F] E) (δ : E) (hE : IsQuad c δ) (ψ : AddChar F ℂ) (hψ : Continuous ψ) (_ : ∀ t, ‖ψ t‖ = 1) (_ : ψ ≠ 1) [MeasurableSpace E] [BorelSpace E] (μ : Measure E) [μ.IsAddHaarMeasure] (t : Fˣ), t ∉ (Units.map (Algebra.norm F : E →* F)).range → ∃ s₀ : Fˣ, ∀ s : Fˣ, (s₀ : F) ∈ GlobalTheory.SplitWeil.cball s → (∫ z in {z : E | Algebra.norm F z ∈ GlobalTheory.SplitWeil.cball s}, ψ (Algebra.norm F z) ∂μ) + (nabs F t : ℂ) * ∫ z in {z : E | (t : F) * Algebra.norm F z ∈ GlobalTheory.SplitWeil.cball s}, ψ ((t : F) * Algebra.norm F z) ∂μ = 0 := by
   intro F _ _ _ _ _ E _ _ _ _ c δ hE ψ hψ hψ1 hψ0 _ _ μ _ t ht
   borelize F
-  obtain ⟨hfd, hring, -, ht2, -, hN, -, -⟩ := GlobalTheory.T.quadExt_topological_properties F E c δ hE
+  obtain ⟨hfd, hring, -, ht2, -, hN, -, -⟩ := _root_.GlobalTheory.quadExt_topology F E c δ hE
   haveI := GlobalTheory.SplitWeil.t2Space F
   haveI := punctured_neBot F
   haveI : ContinuousSMul F E := IsModuleTopology.toContinuousSMul F E
   haveI : (𝓝[≠] (0 : E)).NeBot := Module.punctured_nhds_neBot F E 0
   haveI : LocallyCompactSpace E := by
-    obtain ⟨L, -, h1, h2⟩ := GlobalTheory.T.exists_compactOpen_normClosedBall_quadratic F E c δ hE 1
+    obtain ⟨L, -, h1, h2⟩ := _root_.GlobalTheory.NormBall.exists_normBall F E c δ hE 1
     exact h1.locallyCompactSpace_of_mem_nhds_of_addGroup (h2.mem_nhds L.zero_mem)
   have hμ0 : μ {0} = 0 := measure_singleton 0
   obtain ⟨lam, hlam, -⟩ := GlobalTheory.SplitWeil.exists_isUnitVol F
-  obtain ⟨s₀, hs₀⟩ := GlobalTheory.T.exists_integral_closedBall_addChar_eq_zero F lam ψ hψ hψ1 hψ0
+  obtain ⟨s₀, hs₀⟩ := _root_.GlobalTheory.KSp.exists_integral_cball_char_eq_zero F lam ψ hψ hψ1 hψ0
   have hm : ∀ a : F, Measurable fun z : E => a * Algebra.norm F z := fun a =>
     (continuous_const.mul hN).measurable
   let m : Fˣ → Measure F := fun a => μ.map fun z : E => (a : F) * Algebra.norm F z
   let n : Fˣ → Measure F := fun a => distribHaarChar F a • m a
   have hmc : ∀ a, IsFiniteMeasureOnCompacts (m a) := fun a => ⟨fun K hK => by
     obtain ⟨s, hs⟩ := compact_subset_cball hK
-    obtain ⟨L, hL, h1, -⟩ := GlobalTheory.T.exists_compactOpen_normClosedBall_quadratic F E c δ hE (a⁻¹ * s)
+    obtain ⟨L, hL, h1, -⟩ := _root_.GlobalTheory.NormBall.exists_normBall F E c δ hE (a⁻¹ * s)
     rw [Measure.map_apply (hm a) hK.measurableSet]
     refine lt_of_le_of_lt (measure_mono ?_) (h1.measure_lt_top (μ := μ))
     intro z hz
@@ -128,7 +132,7 @@ theorem gauss_cancel : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRel F] [T
     rw [Measure.map_apply (hm a) (measurableSet_singleton 0), this, hμ0, smul_zero]
   have hn1 : ∀ (a : Fˣ) (b : Fˣ), b ∈ (Units.map (Algebra.norm F : E →* F)).range → n (b * a) = n a := by
     rintro a _ ⟨w, rfl⟩
-    have h1 := GlobalTheory.T.map_mul_left_eq_inv_norm_haarChar_smul F E c δ hE μ w
+    have h1 := _root_.GlobalTheory.KSp.map_mul_left_eq_norm_smul F E c δ hE μ w
     have h2 : m (Units.map (Algebra.norm F : E →* F) w * a) =
         (μ.map fun x => (w : E) * x).map fun z : E => (a : F) * Algebra.norm F z := by
       rw [Measure.map_map (hm a) (measurable_const_mul _)]
@@ -154,8 +158,8 @@ theorem gauss_cancel : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRel F] [T
     congr 1
     by_cases hu : u ∈ (Units.map (Algebra.norm F : E →* F)).range
     · rw [hn1 _ _ hu, hn1 _ _ hu]
-    · have h1 := GlobalTheory.T.mul_mem_range_norm_of_not_mem F E c δ hE u t hu ht
-      have h2 := GlobalTheory.T.mul_mem_range_norm_of_not_mem F E c δ hE t t ht ht
+    · have h1 := _root_.GlobalTheory.KSp.NormIndex.mul_mem_range_norm F E c δ hE u t hu ht
+      have h2 := _root_.GlobalTheory.KSp.NormIndex.mul_mem_range_norm F E c δ hE t t ht ht
       have h3 := hn1 1 _ h1
       have h4 := hn1 t _ (mul_mem h1 (inv_mem h2))
       rw [mul_one] at h3
@@ -167,7 +171,7 @@ theorem gauss_cancel : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRel F] [T
   haveI : IsFiniteMeasureOnCompacts (n 1 + n t) := ⟨fun K hK => by
     rw [Measure.add_apply]
     exact ENNReal.add_lt_top.mpr ⟨hK.measure_lt_top, hK.measure_lt_top⟩⟩
-  obtain ⟨r, hr⟩ := GlobalTheory.T.homogeneousMeasure_eq_smul_addHaar_localField F lam (n 1 + n t) (by rw [Measure.add_apply, hn0, hn0, add_zero]) hhom
+  obtain ⟨r, hr⟩ := _root_.GlobalTheory.KSp.Homog.eq_smul_haar_of_homog F lam (n 1 + n t) (by rw [Measure.add_apply, hn0, hn0, add_zero]) hhom
   refine ⟨s₀, fun s hs => ?_⟩
   have hB := GlobalTheory.SplitWeil.isCompact_cball s
   have hint : ∀ a : Fˣ, ∫ x in GlobalTheory.SplitWeil.cball s, ψ x ∂(n a) = (nabs F a : ℂ) *

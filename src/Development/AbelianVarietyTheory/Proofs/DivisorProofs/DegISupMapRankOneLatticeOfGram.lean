@@ -2,7 +2,9 @@ module
 
 public import Mathlib.Order.CompletePartialOrder
 public import ReciprocityTheory.GeometryOfNumbers.LatticeCovolumes.ConjSymm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexISupMapEqPowStatement
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RelIndexISupMapEqPow
+public import ReciprocityTheory.GeometryOfNumbers.LatticeCovolumes.ArakelovDegreeEqDegreeOfFamily
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +51,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.GeometryOfNumbers.LatticeCovolumes.ArakelovDegreeEqDegreeOfFamily
 import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
@@ -115,7 +116,7 @@ theorem deg_iSup_map_of_gram : ∀ (K : Type) [Field K] [NumberField K] (W V : T
       congr 1; funext a
       rw [Submodule.map_span, Set.image_singleton]; rfl
     rw [h1]
-    exact GlobalTheory.T.relIndex_iSup_map_eq_relIndex_pow K W V p M ℓ _ ((Submodule.span_singleton_le_iff_mem _ _).mpr hcℓ) hinj hind
+    exact _root_.GlobalTheory.SumIndex.relIndex_iSup_map_eq_pow K W V p M ℓ _ ((Submodule.span_singleton_le_iff_mem _ _).mpr hcℓ) hinj hind
   have hgr : ∀ s : K →+* ℂ, hV.gram s v = hW.form s c c • (s.mapMatrix y).transpose := by
     intro s; ext i j
     simp [HermFam.gram, v, hgram s j i c hcℓ, mul_comm]

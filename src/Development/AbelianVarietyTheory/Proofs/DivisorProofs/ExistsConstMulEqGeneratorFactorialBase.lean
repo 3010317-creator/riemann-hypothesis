@@ -4,7 +4,9 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ForallGeometricallyIntegralOfSmoothOfGeometrical
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ExistsUniqueLbIsoPullEqOfCoheightLeOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsConstMulEqUnitOnOpen
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsConstMulUnitAtCodimOneOfFactorialBaseStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsConstMulEqUnit
+public import Mathlib.AlgebraicGeometry.Geometrically.Integral
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsConstMulUnitAtCodimOneOfFactorialBase
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GeometricallyIntegralIffGeometricallyConnectedOf
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsDiscreteValuationRingStalkGeneric
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsIsoStalkMapOfFlatOfSurjectiveOnStalks
@@ -52,7 +54,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Definitions.Divisors.TorusExt
 import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.IsRegularFnIffOfIsAffineOpen
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsConstMulEqUnit
 import Development.AbelianVarietyTheory.Proofs.ToricGeometry.MemSpanOfCardLe
 import ReciprocityTheory.GeometryOfNumbers.LatticeCovolumes.ConjSymm
 
@@ -144,7 +145,7 @@ theorem exists_const_mul_eq_gen : ∀ (R K : Type) [CommRing R] [IsDomain R] [Is
   have hκR : ∀ b : R, κ (algebraMap R K b) = X.left.presheaf.germ ⊤ (genericPoint X.left) trivial (constFn X.hom ⊤ b) := fun b => hb.1 (by
     rw [hκ, ← app_constFn H.w, ← φ.appLE_eq_app]
     exact (ffMap_germ φ hφ ⊤ ⊤ le_top _).symm)
-  obtain ⟨a, ha⟩ := GlobalTheory.T.exists_const_mul_unitAt_codimOne_of_factorialBase R K X.left X.hom κ hκR M.ι M.U r (LB.mem_of_cover hM) (fun i x hx => hr0 i x hx) htr (fun x hx => by
+  obtain ⟨a, ha⟩ := _root_.GlobalTheory.VerticalUnit.exists_const_mul_unitAt_coheight_one R K X.left X.hom κ hκR M.ι M.U r (LB.mem_of_cover hM) (fun i x hx => hr0 i x hx) htr (fun x hx => by
     obtain ⟨y, rfl⟩ := lift x hx
     obtain ⟨i, hi⟩ := LB.mem_of_cover hM (φ y)
     have : Nonempty (M.U i) := ⟨⟨_, hi⟩⟩

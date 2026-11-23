@@ -3,16 +3,19 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasLatticesComplete
 public import Development.AutomorphicSpectrum.Statements.AlgebraStatements.IsPolarisationOfRelAmple
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PrismaticDieudonnePerfdIff
-import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.CubicalOfNormalised
-import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.GlobalFnsHolds
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualAbelianSchemeExistsBiduality
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsPullbackBaseChange
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMumfordBundlePullbackGrpPullback
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PdivisibleBaseChangeIsoSemiabelian
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TheoremOfCubeAbelianSchemeOverArbitraryBase
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilPairingAdjointEndomorphism
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilPairingExistsOfCubeTheorem
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.WeilIsIffOfIsGrpPullbackComm
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ConstGen
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.WeilIsGrpPullbackOfCommute
+import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.CubicalOfNormalised
+import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.GlobalFnsHolds
+import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CubeTheorem
+import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.CubeTheorem.CubeTheoremHolds
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -104,7 +107,7 @@ theorem weilIs_push {S S' : Scheme.{0}} {X : Over S} {X' : Over S'} [GrpObj X] [
     (k : ℤ) (x y : T ⟶ X') (x₀ y₀ : Over.mk g ⟶ X) (c : Γ(T.left, ⊤)ˣ) (ex : x₀.left = x.left ≫ φ)
     (ey : y₀.left = y.left ≫ φ) (h : Out.WeilIs X L k x₀ y₀ c) : Out.WeilIs X' L' k x y c := by
   subst hg
-  exact (weilIs_iff_of_isGrpPullback_comm _ _ _ _ _ _ _ _ hL hL' hp hw T k x y x₀ y₀ c ex ey).2 h
+  exact (_root_.GlobalTheory.weilIs_grpPullback_of_comm _ _ _ _ _ _ _ _ hL hL' hp hw T k x y x₀ y₀ c ex ey).2 h
 
 
 omit [Algebra R R₀] [GrpObj A] [GrpObj B] [GrpObj A₀] [GrpObj B₀] in
@@ -140,7 +143,7 @@ theorem exists_isWeilHom (hA : IsAbelianScheme A) {P : LB (A ⊗ B).left} (hP : 
       exact hP.additive.evc_one hP.isLB _)
     rw [AbDual.ev, e'] at e
     exact e
-  obtain ⟨τ, hτ⟩ := WeilHom.triv_theta CubeTop.cubeTheorem hAA hQ
+  obtain ⟨τ, hτ⟩ := WeilHom.triv_theta _root_.GlobalTheory.SpreadingModels.cubeTheorem_holds hAA hQ
   obtain ⟨τ', hτ', hn⟩ := AbLaw.Cube.exists_normalised hQ τ hτ
   exact WeilHom.exists_of_cubical hAA
     (AbLaw.Cube.cubicalOfNormalised globalFns_holds hAA ⟨polBundle P lam, r, hQ, hr⟩ τ' hτ' hn) t t

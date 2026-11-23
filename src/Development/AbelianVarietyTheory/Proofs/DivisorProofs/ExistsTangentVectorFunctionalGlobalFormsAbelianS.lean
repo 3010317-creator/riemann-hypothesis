@@ -3,13 +3,14 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.BijectiveCechDeRhamComparisonDegreeOne
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianHodgeDeRham
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.EigLatBasis
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AffinePairRestrictionInjectiveFirstCohomologyStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ComparisonMemCechHodgeFiltration
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AffinePairRestrictionInjectiveFirstCohomology
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechDeRhamComparisonBijectiveCupSmooth
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmpFormEqZeroOfTangent
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteProjectiveOfLocalBasis
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormValueOnTangentVectorEqZeroOfGlobalFormZeroStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTangentIffTanS
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StructureSheafComparisonInjectiveStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormValueOnTangentVectorEqZeroOfGlobalFormZeroStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StructureSheafComparisonInjective
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsAbelianSchemeOfIsGrpPullback
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsIsLieBasisBaseChange
 import Mathlib.Algebra.Order.Floor.Extended
@@ -173,7 +174,7 @@ theorem glob_surjective (hC : GlobalTheory.Published.CrystallineSmoothLift) (hH 
   have hF : clForm _ ωc ∈ CechHodgeFiltration (A.hom ≫ 𝟙 (Sp R)) := by rw [cechHodgeFiltration_eq_range]; exact ⟨ωc, rfl⟩
   have h1 : c ∈ F1 (A.hom ≫ 𝟙 (Sp R)) := by
     change toH1O _ c = 0
-    apply GlobalTheory.T.structure_sheaf_comparison_injective R A.left _
+    apply _root_.GlobalTheory.CechDR.cmpO_injective R A.left _
     rw [← structureSheaf_comparison_comm, map_zero, hc]
     exact hF
   rw [hodgeFiltration_eq_range] at h1
@@ -343,7 +344,7 @@ theorem exists_tangent_residue (hC : GlobalTheory.Published.CrystallineSmoothLif
       ∀ c, IsPullForm m.w c (e (1 ⊗ₜ c)) :=
     ((hH R A g hab hdim).2.2.2.2.2 K B.left B.hom φ hφ.1).2.1
   have hp : ∀ f, glob _ (m.pullForm f) = e (1 ⊗ₜ glob _ f) := fun f ↦
-    (GlobalTheory.T.affinePairRestriction_injective_firstCohomology φ (B.hom ≫ 𝟙 (Sp K))).2.1 ((isPullForm_glob m f).symm.trans (he _))
+    (_root_.GlobalTheory.CechDR.pairRes_injective φ (B.hom ≫ 𝟙 (Sp K))).2.1 ((isPullForm_glob m f).symm.trans (he _))
   obtain ⟨v', hv'⟩ := exists_tangent_field hC hH B g hab' hdim' hy
     (Module.Dual.baseChange K ψ ∘ₗ e.symm.toLinearMap)
   have hb : ∀ i, ∃ u : K, u ≠ 0 ∧ ∃ v, ∀ f,

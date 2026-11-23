@@ -2,8 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Statements.CuspidalUnitaryTwists.ExistsSmallSpherical
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ClassSumDenominatorBoundOfCmThetaHypothesesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmThetaNormBoundHypothesesSatisfiedStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaJetClassSumArchimedeanBoundOfCmThetaStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NormSumPairRankZeroOfCurveCoordNorm
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmThetaNormBoundHypothesesSatisfied
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaJetClassSumArchimedeanBoundOfCmTheta
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,6 +50,6 @@ open scoped BigOperators
 namespace GlobalTheory.NormSum
 
 theorem intSt_and_archSt : IntSt ∧ ArchSt :=
-  ⟨GlobalTheory.T.classSumDenominatorBound_of_cmThetaHypotheses GlobalTheory.T.cmThetaNormBoundHypotheses_satisfied, GlobalTheory.T.thetaJetClassSum_archimedeanBound_of_cmTheta GlobalTheory.T.cmThetaNormBoundHypotheses_satisfied⟩
+  ⟨GlobalTheory.T.classSumDenominatorBound_of_cmThetaHypotheses _root_.GlobalTheory.NormSum.inp_all, _root_.GlobalTheory.ArchTop.archSt_of_inp GlobalTheory.T.cmThetaNormBoundHypotheses_satisfied⟩
 
 end GlobalTheory.NormSum

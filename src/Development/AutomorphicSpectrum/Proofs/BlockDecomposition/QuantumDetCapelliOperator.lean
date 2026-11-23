@@ -1,7 +1,7 @@
 module
 
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ClozelPurity.EopV
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LieOperatorVectorEqStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LieOperatorVectorEq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -79,6 +79,6 @@ theorem qdet_EopV_val : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberF
     (τ : E →+* ℂ) (u : ℂ) (φ : π.V),
     (Formalism.REAL.qdet (EopV π τ) (u + ((a : ℂ) - 1) / 2) φ).1 = cap τ u φ.1 := by
   intro E _ _ _ a π τ u φ
-  exact qdet_restrict π.V (EopV π τ) (Eop τ) (fun i j x => GlobalTheory.T.lie_operator_vector_eq E a π τ i j x) _ φ
+  exact qdet_restrict π.V (EopV π τ) (Eop τ) (fun i j x => _root_.GlobalTheory.CompanionTheory.ClozelPurity.EopV_val E a π τ i j x) _ φ
 
 end GlobalTheory.CompanionTheory.Clozel

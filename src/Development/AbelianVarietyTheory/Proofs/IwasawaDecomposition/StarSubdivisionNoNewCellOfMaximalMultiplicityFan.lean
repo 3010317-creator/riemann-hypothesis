@@ -2,8 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MultCellsAmong
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsBaryStageStart
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StarSubdivisionNewCellMultiplicityLtStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StarSubdivisionOldCellMultiplicityLeStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NotIsPrimZero
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StarSubdivisionNewCellMultiplicityLt
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.StarSubdivisionOldCellMultiplicityLe
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,8 +59,8 @@ theorem GlobalTheory.PolFan.starMult : ∀ (E : Type) [Field E] [NumberField E] 
         Module.finrank (𝓞 E) X ≤ q → ∀ (m : ℕ) (δ : Fin m → LinearMap.BilinForm ℤ X), IsMultCell H.bar ψ' M δ →
           IsMultCell H.bar φ M δ ∧ ∀ β ∈ balForms H.bar X, (∀ y, 0 ≤ β y y) → InRCone δ β → w.evalZ β ≠ 1 := by
   intro E _ _ _ H q φ lab w ψ' hD hφ hSL hW hC hψ' hSub hStar M hM
-  have cI := GlobalTheory.T.starSubdivision_oldCell_multiplicity_le E H q φ lab w ψ' hD hφ hSL M hM
-  have cII := GlobalTheory.T.starSubdivision_newCell_multiplicity_lt E H q φ lab w ψ' hSL hW hC M hM
+  have cI := _root_.GlobalTheory.PolFan.starOld_cell_mult_le E H q φ lab w ψ' hD hφ hSL M hM
+  have cII := _root_.GlobalTheory.PolFan.cellMult_lt_of_star_new E H q φ lab w ψ' hSL hW hC M hM
   refine ⟨?_, ?_⟩
   · refine iSup_le fun X => iSup_le fun _ => iSup_le fun _ => iSup_le fun _ => iSup_le fun _ => iSup_le fun hX =>
       iSup_le fun n => iSup_le fun γ' => iSup_le fun hγ' => iSup_le fun hli => iSup_le fun hpr => ?_

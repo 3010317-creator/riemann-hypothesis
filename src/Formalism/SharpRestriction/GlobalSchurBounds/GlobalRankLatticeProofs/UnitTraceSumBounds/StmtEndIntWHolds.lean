@@ -2,7 +2,8 @@ module
 
 public import Formalism.SharpRestriction.GlobalSchurBounds.GlobalRankLatticeProofs.UnitTraceSumBounds.OkpInertOf
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.InertPrime
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.OkpInert
+public import Formalism.PeriodIntegrals.OkpInert
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.InertPrimeTeichmuller.OkpInertMain
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,7 +45,7 @@ import Mathlib.Topology.Sheaves.Init
 
 namespace Formalism.MainNotions.Ext
 
-theorem okpInertG_holds : OkpInertG := integers_inert_prime
+theorem okpInertG_holds : OkpInertG := _root_.PI.OkpW.okpInert_main
 
 theorem inertPrime_holds : InertPrime := isPrime_span_of_jacobi_neg_one
 

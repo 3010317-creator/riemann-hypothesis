@@ -5,19 +5,28 @@ public import Formalism.LocalToGlobal.ProjectiveLattices.EmbKCoe
 public import Formalism.LocalToGlobal.ProjectiveLattices.TowerOfAt
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.HeckeKer
 public import Development.AbelianVarietyTheory.Counterexamples.ModuliSurvey.ExistsGoodLevel
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SemistableReductionPpavPadicFieldStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.SemistableReduction₂.SemistableReductionSt
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SemistableReductionPpavPadicField
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsValuationSubringComapEqNonunits
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CmModuliConsequenceOfAbelianSchemeLawsStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsHolPeriods
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CmModuliConsequenceOfAbelianSchemeLaws
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.CoefficientFieldIntegersDedekindFractionField
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsFullLevelAmpleModelOfSemistableReductionStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLocalModelSystemAmpleFramesFullLevelStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsTransitionMapRaisedModelsStatement
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HomExtensionSemiAbelianDiscreteValuationRingStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ModuliSchemeLevelMapsHeckePointsStatement
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PrimeToPartLevelExistsUniqueMono
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.TopAmpExists
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsFullLevelAmpleModelOfSemistableReduction
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.HomExtSt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLocalModelSystemAmpleFramesFullLevel
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GtBaseChangeSt
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsTransitionMapRaisedModels
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ModuliSchemeLevelMapsHeckePoints
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHoldStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.SemiAbelianHomExtendsUniquelyOverDvrStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.TypeFnPeriodExistModuliNonemptyStatement
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.SemiAbelianHomExtendsUniquelyOverDvr
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.TypeFnPeriodExistModuliNonempty
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HomExtensionSemiAbelianDiscreteValuationRing
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.PrimeToPartLevelExistsUniqueMono
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -170,7 +179,7 @@ theorem exists_transition {Xo : ∀ l : Level H, Moduli D l} (S : System Xo) (hN
     ((IntermediateField.inclusion hc).toRingHom.comp (i.c.V W).subtype).codRestrict (i'.c.V W') fun x => by
       have hx : (x : i.c.F) ∈ i.c.V W' := he ▸ x.2
       exact hx
-  obtain ⟨π, hπ⟩ := GlobalTheory.T.exists_transition_map_raised_models GlobalTheory.T.semiAbelian_hom_extends_uniquely_over_dvr L1 L2 L3 E H D Xo _ _ (S.T (S.ch p)) hN l₀ l₀' _ _ i.l i.c _ _
+  obtain ⟨π, hπ⟩ := _root_.GlobalTheory.RaisedTransition.exists_isTransition _root_.GlobalTheory.semiAbelian_hom_extends_uniquely_dvr L1 L2 L3 E H D Xo _ _ (S.T (S.ch p)) hN l₀ l₀' _ _ i.l i.c _ _
     (S.Y p W hp hW i) i'.l i'.c _ _ (S.Y p W' hp hW' i') b (S.aux _).1.pos ⟨_, dvd_rfl⟩
     (hmono _ _ _ _ h₀ h₀' hl) (hsp _ _ h₀).1 (hsp _ _ h₀').1 hl hc
     ((GlobalTheory.CoeffRings.coeff_isDedFrac E H i.l i.c).2.2.2 p W hp hW).1
@@ -179,10 +188,10 @@ theorem exists_transition {Xo : ∀ l : Level H, Moduli D l} (S : System Xo) (hN
 
 theorem exists_towerAt {Xo : ∀ l : Level H, Moduli D l} (S : System Xo) (hD : 1 ≤ D.p + D.q) (l : Level H)
     (c : Coeff l) {p : ℕ} (hp : p.Prime) (hg : l.GoodAt p) : ∃ Tw : PointsOfFlagModel.Tower p (Xo l) c, PointsOfFlagModel.TowerAt Tw := by
-  have hN := (GlobalTheory.T.moduliScheme_levelMaps_heckePoints'.2 E H D hD).1
+  have hN := (_root_.GlobalTheory.moduliScheme_levelMaps_heckePoints.2 E H D hD).1
   have hne : ∀ (l : Level H) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model (Xo l) c β),
       Nonempty Y.X := fun l c O _ β Y =>
-    ((GlobalTheory.T.typeFn_period_exist_moduli_nonempty E H D).2.2 GlobalTheory.T.cmModuli_consequence_of_abelianSchemeLaws hD l (Xo l) c).map fun x => Y.j x
+    ((_root_.GlobalTheory.PeriodExists.typeFn_period_exist E H D).2.2 _root_.GlobalTheory.closing_of_abelianSchemeLaws hD l (Xo l) c).map fun x => Y.j x
   let lv : ℕ → Level H := fun n => deeper l (p ^ n) (pow_pos hp.pos n)
   choose cN hcN using fun n => exists_coeff_ge c (lv n)
   choose W hW hWe using fun v : PointsOfFlagModel.abelian₂ p c => exists_valuationSubring c p v.1 v.2
@@ -221,9 +230,9 @@ theorem exists_tower : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
   intro E _ _ _ H D l Xo c hD hg p
   classical
   obtain ⟨Xf, rfl⟩ : ∃ Xf : ∀ l : Level H, Moduli D l, Xf l = Xo :=
-    ⟨Function.update (fun l => (GlobalTheory.T.moduliScheme_levelMaps_heckePoints'.1 E H D l hD).some) l Xo, Function.update_self ..⟩
+    ⟨Function.update (fun l => (_root_.GlobalTheory.moduliScheme_levelMaps_heckePoints.1 E H D l hD).some) l Xo, Function.update_self ..⟩
   obtain ⟨L1, L2, L3, -⟩ := GlobalTheory.T.all_uniformization_laws_hold
-  obtain ⟨S, -⟩ := GlobalTheory.T.exists_localModelSystem_ampleFrames_fullLevel GlobalTheory.T.homExtension_semiAbelian_discreteValuationRing L1 L2 L3 (GlobalTheory.T.exists_fullLevelAmpleModel_of_semistableReduction GlobalTheory.T.semistableReduction_ppav_padicField) E H D Xf hD (GlobalTheory.T.moduliScheme_levelMaps_heckePoints'.2 E H D hD).1
+  obtain ⟨S, -⟩ := _root_.GlobalTheory.SystemAmple.exists_system_ampFrames _root_.GlobalTheory.homExtension_semiAbelian_dvr L1 L2 L3 (_root_.GlobalTheory.topAmpExists_of_semistableReduction _root_.GlobalTheory.SS.semistableReductionSt) E H D Xf hD (_root_.GlobalTheory.moduliScheme_levelMaps_heckePoints.2 E H D hD).1
   by_cases hp : p.Prime
   · obtain ⟨Tw, h⟩ := exists_towerAt S hD l c hp (hg p hp)
     exact ⟨Tw, fun _ => h⟩

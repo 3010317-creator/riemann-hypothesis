@@ -3,14 +3,17 @@ module
 public import Development.EtaleCohomology.KummerTheory.InjSlice
 public import Development.EtaleCohomology.WeilConjectures.AcycPf
 public import Development.EtaleCohomology.EtaleSheaves.LeafConsPf
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafPropertiesStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
+public import Mathlib.Algebra.Homology.HomotopyCategory.KInjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChosenInjectiveResolutionEtaleSheafProperties
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.ExistsCohomologyClassToDerivedHomBijectiveOfKInj
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.HomAcyclicFreePullbackYonedaOfInjectiveRestricti
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.HomAcyclicMappingConeChainsOfHomAcyclicFree
-import Development.AutomorphicArithmetic.CommutativeAlgebra.HomAcyclicOfIsoOfIsZeroOfBiproduct
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.NonemptyIsoRelativeEtaleFamilyBaseChange
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.TotalHomComplexIsKInjectiveOfBoundedInjective
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.TotalHomPresheafIsSheafInjectiveOfHomAcyclic
+public import Development.AutomorphicArithmetic.CommutativeAlgebra.EtaleCohomology.CompLeft
+import Development.AutomorphicArithmetic.CommutativeAlgebra.HomAcyclicOfIsoOfIsZeroOfBiproduct
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +52,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AutomorphicArithmetic.CommutativeAlgebra.EtaleCohomology.CompLeft
 
 @[expose] public section
 
@@ -136,7 +138,7 @@ private def bW {B Y W : Scheme.{0}} (p : Y ⟶ B) (ι : W ⟶ B) : gYW p ι ⟶ 
 theorem UpperTheory.leafLocalization_of_injective_slice_of_restriction_injective :
     LateralTheory.KummerTheory.InjSlice → LateralTheory.EWeil.AcycPf.RestrInj → LateralTheory.E.LeafConsPf.LeafLoc := by
   intro hS hR q _ i B W Y0 Y1 Y2 ι _ p g1 g2
-  obtain ⟨-, hinj, hGE, -⟩ := GlobalTheory.T.chosenInjectiveResolution_etaleSheaf_properties (ZMod q) (tw q i)
+  obtain ⟨-, hinj, hGE, -⟩ := _root_.GlobalTheory.EtC.ResBasic.res_basic (ZMod q) (tw q i)
   have key : ∀ {G₁ G₂ : B.Etale ⥤ Scheme.{0}} (F : G₁ ⟶ G₂), Good (G₁ ⋙ yoneda ⋙ free (ZMod q)) →
       Good (G₂ ⋙ yoneda ⋙ free (ZMod q)) →
       ∃ h, (TC (coneF F q) (res (ZMod q) (tw q i)) h).IsKInjective := by

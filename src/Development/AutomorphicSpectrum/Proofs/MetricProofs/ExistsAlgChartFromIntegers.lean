@@ -1,9 +1,10 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.SheetUnsheet
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.EtaleOverIntegersLocalizationStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.EtalePolynomialBaseChangeIffStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SheetIsOpenEmbeddingRangeStatement
+public import Mathlib.RingTheory.RingHom.Etale
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.EtaleOverIntegersLocalization
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.EtalePolynomialBaseChangeIff
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SheetIsOpenEmbeddingRange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -88,11 +89,11 @@ end GlobalTheory.CompanionTheory.Ar.BaseZ.ChartDown
 open GlobalTheory.CompanionTheory.Ar.BaseZ.ChartDown in
 theorem GlobalTheory.CompanionTheory.Ar.BaseZ.exists_chart_sheet : ∀ (k : Type) [CommRing k] [IsDomain k] [CharZero k] [Module.Finite ℤ k] (X : Scheme.{0}) (p : X ⟶ Sp k) (t : X ⟶ Sp ℤ) (τ : ℤ →+* ℂ) (σ : k →+* ℂ) (D : ℕ) (c' : AlgChart t τ D), Nonempty (CxPts p σ) → ∃ c : AlgChart p σ D, c.e.source = sheet t τ ⁻¹' c'.e.source ∧ ∀ y ∈ c.e.source, c'.e (sheet t τ y) = c.e y := by
   intro k _ _ _ _ X p t τ σ D c' hne
-  obtain ⟨N, hN0, hN⟩ := GlobalTheory.T.etale_over_integers_localization k
-  obtain ⟨hemb, -⟩ := GlobalTheory.T.sheet_isOpenEmbedding_range k X p t τ σ
+  obtain ⟨N, hN0, hN⟩ := _root_.GlobalTheory.CompanionTheory.CommAlg.OrderEtale.exists_etale_away k
+  obtain ⟨hemb, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.BaseZ.Sheet.isOpenEmbedding_and_range k X p t τ σ
   have hle := X.basicOpen_le (N : Γ(X, c'.U))
   have hetZ := etale_res_int t c'.affine (N : Γ(X, c'.U)) c'.x c'.etale
-  have hetk := (GlobalTheory.T.etale_polynomial_base_change_iff k _ N hN (algX p (X.basicOpen (N : Γ(X, c'.U))))
+  have hetk := (_root_.GlobalTheory.CompanionTheory.Ar.EtaleCoord.etale_eval₂Hom_iff_int k _ N hN (algX p (X.basicOpen (N : Γ(X, c'.U))))
     (isUnit_natCast_basicOpen c'.affine N) D _).2 hetZ
   let s := IsOpenEmbedding.toOpenPartialHomeomorph (sheet t τ : CxPts p σ → CxPts t τ) hemb
   have hs : (s : CxPts p σ → CxPts t τ) = sheet t τ := IsOpenEmbedding.toOpenPartialHomeomorph_apply _ hemb

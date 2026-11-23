@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsSpanFormsNeBot
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConstantTermFiniteOfSmallerStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GenericFiniteByInductionStatement
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.AffineGLForms.GenSpace
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConstantTermFiniteOfSmaller
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GenericFiniteByInduction
 public import Development.WeilBound.CoreStatements.PublishedTheorems.FiniteGLInvariants.AffineLieInvariants.InvariantOfLieOneLEqZero
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.AffineGLForms.TopEig
 import Mathlib.Algebra.Order.Floor.Extended
@@ -44,4 +45,4 @@ import Mathlib.Topology.Sheaves.Init
 @[expose] public section
 
 theorem CuspFormAutomorphicBounds.automorphicFormsFiniteGL : GlobalTheory.Published.AutomorphicFormsFiniteGL :=
-  PositivityTheory.Affgl.TopEig.top (GlobalTheory.T.generic_finite_by_induction CuspFormAutomorphicBounds.cuspFin GlobalTheory.T.constant_term_finite_of_smaller)
+  PositivityTheory.Affgl.TopEig.top (_root_.GlobalTheory.CompanionTheory.AffglAssembly.genFin_of_chapters CuspFormAutomorphicBounds.cuspFin _root_.GlobalTheory.CompanionTheory.CTFin.ctFin)

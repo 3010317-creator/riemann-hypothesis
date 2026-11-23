@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinAinfDiscIsDomainNormBoundsStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinAinfDiscIsDomainNormBounds
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ClosedDiscToDiscInjectiveOfAdicBasis
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineDiscPeriodsFrobeniusEqMulStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineLatticeFrobeniusInverseMatrixStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineDiscPeriodsFrobeniusEqMul
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallineLatticeFrobeniusInverseMatrix
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -102,7 +102,7 @@ theorem seed_coeff_recurrence : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk 
   intro l _ K bk τ hτ d ρ hρ s ι TB j hj cD hc hcm hsum hnorm Φ hΦ i₁ a b
   have h0 := seedRec_ρ₀_pos bk
   have h1 := seedRec_ρ₀_lt_one bk
-  obtain ⟨hdom, -, -⟩ := GlobalTheory.T.breuilKisin_ainfDisc_isDomain_norm_bounds l K bk bk.ρ₀ h0 h1
+  obtain ⟨hdom, -, -⟩ := _root_.GlobalTheory.BSP.discAinf_isDomain l K bk bk.ρ₀ h0 h1
   let ΦS := Disc.map (l := l) (u := (X : bk.S)) (ρ := bk.ρ₀) (u' := (X : bk.S)) (ρ' := bk.ρ₀)
     (frobS l bk.a) (seedRec_frobS_norm bk)
   have hΦS : IsDiscMap (l := _) (u := _) (ρ := _) (frobS l bk.a) ΦS := isDiscMap_map _ _
@@ -138,8 +138,8 @@ theorem seed_coeff_recurrence : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk 
     simp_rw [mul_assoc]
     exact (key (s.W' k b)).mul_left (Φ (s.W a k))
   haveI := hdom
-  have hphi := GlobalTheory.T.discPeriods_map_frobenius_eq_mul l K bk τ hτ d ρ hρ s Φ hΦ
-  have hwp := GlobalTheory.T.crystallineLattice_frobenius_inverse_matrix l K bk τ hτ d ρ hρ s Φ hΦ
+  have hphi := _root_.GlobalTheory.BSP.Seed.crystallineDiscPeriods_frobenius_eq_mul l K bk τ hτ d ρ hρ s Φ hΦ
+  have hwp := _root_.GlobalTheory.BSP.seed_frob_inverse l K bk τ hτ d ρ hρ s Φ hΦ
   have hmapL : ∀ (M : Matrix (Fin d) (Fin d) bk.S) (Y : Matrix (Fin d) (Fin d) (bk.DA bk.ρ₀)),
       (M.map bk.iS * Y).map L = M.map bk.iS * Y.map L := by
     intro M Y

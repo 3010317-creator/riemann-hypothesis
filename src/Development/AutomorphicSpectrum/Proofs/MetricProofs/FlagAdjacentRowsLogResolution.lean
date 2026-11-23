@@ -1,12 +1,13 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PullbackPullback
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwoPointFibreChartFourthStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwoPointFibreChartSecondStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwoPointFibreChartSeventhStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwoPointFibreChartSixthStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwoPointFibreChartThirdStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwoPointFibreTwistedResolutionStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsFibreChartIff
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwoPointFibreChartFourth
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwoPointFibreChartSecond
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwoPointFibreChartSeventh
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwoPointFibreChartSixth
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwoPointFibreChartThird
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwoPointFibreTwistedResolution
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +46,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsFibreChartIff
 
 @[expose] public section
 
@@ -60,9 +60,9 @@ theorem GlobalTheory.CompanionTheory.Ar.PB.WSq.fibre_potentials : ∀ (K : Type)
   have hC' := fun m => (isFibreChart_iff FA τ a ca cb q (U m) (G m) (ΦY m) (ΦW m)).1 (hC m)
   choose l H bp hD using hC'
   refine ⟨fun m => alphaOf BM (l m) (H m) (bp m), fun m => ?_, fun m => ?_, fun m => ?_, fun m => ?_, fun m => ?_, fun m => ?_⟩
-  · exact GlobalTheory.T.two_point_fibre_chart_second K ι Φ y Ψ N j M n d BM FA τ a b ca cb hb hcase hca hcb _ q (U m) (G m) (ΦY m) (ΦW m) (l m) (H m) (bp m) (hU m) (hD m)
-  · exact GlobalTheory.T.two_point_fibre_chart_third K ι Φ y Ψ N j M n d BM FA τ a b ca cb hb hcase hca hcb _ q (U m) (G m) (ΦY m) (ΦW m) (l m) (H m) (bp m) (hU m) (hD m)
-  · exact GlobalTheory.T.two_point_fibre_chart_fourth K ι Φ y Ψ N j M n d BM FA τ a b ca cb hb hcase hca hcb _ q (U m) (G m) (ΦY m) (ΦW m) (l m) (H m) (bp m) (hU m) (hD m)
-  · exact GlobalTheory.T.two_point_fibre_chart_sixth K ι Φ y Ψ N j M n d BM FA τ a b ca cb hb hcase hca hcb _ q (U m) (G m) (ΦY m) (ΦW m) (l m) (H m) (bp m) (hU m) (hD m)
-  · exact GlobalTheory.T.two_point_fibre_chart_seventh K ι Φ y Ψ N j M n d BM FA τ a b ca cb hb hcase hca hcb _ q (U m) (G m) (ΦY m) (ΦW m) (l m) (H m) (bp m) (hU m) (hD m)
-  · exact GlobalTheory.T.two_point_fibre_twisted_resolution K ι Φ y Ψ N j M n d BM FA τ a b ca cb hb hcase hca hcb k₀ hblk RW q h0 h1 _ hnorm (U m) (G m) (ΦY m) (ΦW m) (l m) (H m) (bp m) (hU m) (hD m)
+  · exact _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.Fib.gramPlane_posDef K ι Φ y Ψ N j M n d BM FA τ a b ca cb hb hcase hca hcb _ q (U m) (G m) (ΦY m) (ΦW m) (l m) (H m) (bp m) (hU m) (hD m)
+  · exact _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.Fib.contDiffOn_gram_plane K ι Φ y Ψ N j M n d BM FA τ a b ca cb hb hcase hca hcb _ q (U m) (G m) (ΦY m) (ΦW m) (l m) (H m) (bp m) (hU m) (hD m)
+  · exact _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.Fib.contDiffOn_alphaOf K ι Φ y Ψ N j M n d BM FA τ a b ca cb hb hcase hca hcb _ q (U m) (G m) (ΦY m) (ΦW m) (l m) (H m) (bp m) (hU m) (hD m)
+  · exact _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.Fib.fibre_xi_potential K ι Φ y Ψ N j M n d BM FA τ a b ca cb hb hcase hca hcb _ q (U m) (G m) (ΦY m) (ΦW m) (l m) (H m) (bp m) (hU m) (hD m)
+  · exact _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.Fib.fibre_base_member K ι Φ y Ψ N j M n d BM FA τ a b ca cb hb hcase hca hcb _ q (U m) (G m) (ΦY m) (ΦW m) (l m) (H m) (bp m) (hU m) (hD m)
+  · exact _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.Fib.NormFib.logNorm_add_weights_eq_logSin K ι Φ y Ψ N j M n d BM FA τ a b ca cb hb hcase hca hcb k₀ hblk RW q h0 h1 _ hnorm (U m) (G m) (ΦY m) (ΦW m) (l m) (H m) (bp m) (hU m) (hD m)

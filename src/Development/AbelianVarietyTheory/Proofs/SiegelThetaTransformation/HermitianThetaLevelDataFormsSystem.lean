@@ -1,15 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HMatMulVecPerCrd
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdmissibleDoubledHermitianThetaFamilyStatement
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LevelStructurePropertiesStatement
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LevelTestFunctionFiniteSumEquivariantStatement
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.AdmissibleDoubledHermitianThetaFamily
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.TailSumLtOne
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaTestFunctionNoCoinvariantsIsotropic
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaTestFunctionNormAndOverlapBound
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaTestFunctionOverlapEqZeroOutsideLevel
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LevelStructureProperties
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LevelTestFunctionFiniteSumEquivariant
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RationalSchwartzBruhatAlgebraIntegralLinear
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RelIndexDualSubmoduleInfOfSelfDual
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.TailSumLtOne
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaTestFunctionNoCoinvariantsIsotropicStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaTestFunctionNormAndOverlapBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaTestFunctionOverlapEqZeroOutsideLevelStatement
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.WeilActionPreservesThetaAndInnerProduct
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -183,9 +184,9 @@ open RecSys
 
 theorem isSystem_level : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (r : ℕ) (X : Data E r) (g : ℕ) (bas : (Fin g ⊕ Fin g → ℤ) ≃ₗ[ℤ] X.Λ) (idx : Fin g ≃ X.Ψ × Fin r) (n : ℕ), IsSympl X bas → Even n → 4 * (Module.finrank ℚ E * r) + 4 ≤ n → ∀ (D : Level X) (hn : r ≤ n) (M : ℕ), 0 < M → (M : 𝓞 E) ∈ D.𝔪 → ∀ v₀ : Lt E r → TF n g, (∀ L ∈ D.lats, IsVac X bas D.w (tens (stdL E n) (D.sh L)) (v₀ L)) → ∀ μ : GL (Fin r) E → Lt E r → ℂ, (∀ γ ∈ D.grp, ∀ L ∈ D.lats, ∀ k : D.J, D.Red (fun i => (γ : Matrix (Fin r) (Fin r) E) *ᵥ D.β i) k → wG X bas idx γ (v₀ L) = (μ γ L * (D.lam k : ℂˣ)) • v₀ (mapL γ L)) → IsSystem X bas idx M D.grp D.lats (D.phi bas hn v₀) μ := by
   intro E _ _ _ r X g bas idx n hs hn2 hnE D hn M hM0 hMm v₀ hv₀ μ hμ
-  obtain ⟨-, -, hgrp, hlats, hlam, -, -⟩ := GlobalTheory.T.level_structure_properties E r X g bas idx n hs hn2 D hn
-  have T4 := GlobalTheory.T.levelTestFunction_finite_sum_equivariant E r X g bas idx n hs hn2 D hn M hM0 hMm v₀ hv₀
-  have T5 := GlobalTheory.T.thetaTestFunction_norm_and_overlap_bound E r X g bas idx n hs hn2 D hn M hM0 hMm v₀ hv₀
+  obtain ⟨-, -, hgrp, hlats, hlam, -, -⟩ := _root_.GlobalTheory.SW.level_laws E r X g bas idx n hs hn2 D hn
+  have T4 := _root_.GlobalTheory.SW.RecSum.phi_sum_equivariant E r X g bas idx n hs hn2 D hn M hM0 hMm v₀ hv₀
+  have T5 := _root_.GlobalTheory.SW.PhiNorm.phi_norm_overlap E r X g bas idx n hs hn2 D hn M hM0 hMm v₀ hv₀
   have hfinQ : Finite (𝓞 E ⧸ D.𝔪) := D.𝔪.finiteQuotientOfFreeOfNeBot D.ne_bot
   have hfinM : Finite (Matrix (Fin r) (Fin r) (𝓞 E ⧸ D.𝔪)) :=
     inferInstanceAs (Finite (Fin r → Fin r → 𝓞 E ⧸ D.𝔪))
@@ -202,10 +203,10 @@ theorem isSystem_level : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
         fun L hL => RecSys.tail_le hs hnE D.lats (fun L' hL' => hL'.1) hL⟩
       mu := fun γ hγ L hL => ?_
       supp := fun γ hγ hγ' L hL L' hL' Λ hΛ =>
-        GlobalTheory.T.thetaTestFunction_overlap_eq_zero_outside_level E r X g bas idx n hs hn2 D hn M hM0 hMm v₀ hv₀ γ hγ hγ' L hL L' hL' Λ hΛ
+        _root_.GlobalTheory.SW.phi_overlap_eq_zero E r X g bas idx n hs hn2 D hn M hM0 hMm v₀ hv₀ γ hγ hγ' L hL L' hL' Λ hΛ
       cusp := fun ξ hξ hξ0 L hL Λ hΛ =>
-        GlobalTheory.T.thetaTestFunction_no_coinvariants_isotropic E r X g bas idx n hs hn2 D hn M hM0 hMm v₀ hv₀ ξ hξ hξ0 L hL Λ hΛ
-      adm := fun L hL L' hL' => GlobalTheory.T.admissible_doubledHermitianThetaFamily E r X g bas idx n hs hn2 D hn M hM0 hMm v₀ hv₀ L hL L' hL' }
+        _root_.GlobalTheory.SW.Coinv.phi_no_coinvariants E r X g bas idx n hs hn2 D hn M hM0 hMm v₀ hv₀ ξ hξ hξ0 L hL Λ hΛ
+      adm := fun L hL L' hL' => _root_.GlobalTheory.SW.DblAdm.adm_dbl_phi_of_isVac E r X g bas idx n hs hn2 D hn M hM0 hMm v₀ hv₀ L hL L' hL' }
   obtain ⟨hun, k, hkJ, hred⟩ := (hgrp γ).1 hγ
   have hmem := ((hlats L hL).2.2.2 γ hγ).1
   have hrel := hμ γ hγ L hL ⟨k, hkJ⟩ hred

@@ -2,7 +2,8 @@ module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.AcrisKummerUnits.TwistAcrisZeroPreservesFiltration
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsAdicCompleteOfPowEqZero
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PeriodRingBaseChangeFromUniversalStatement
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.ZariskiEtaleLifting.MapAcrFromBase
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PeriodRingBaseChangeFromUniversal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -129,8 +130,8 @@ namespace GlobalTheory.CompanionTheory.AcrUniv
 theorem maps_out : ∀ {l : ℕ} [Fact l.Prime] (A : PAlg l) (n : ℕ) (B : Type) [CommRing B] (h : (base l).Acr n →+* B), (∀ g : A.A →+* B ⧸ ((base l).PFil n).map h, (∀ a : Ob l, g (A.s a) = Ideal.Quotient.mk _ (h ((base l).toAcr n (WittVector.teichmuller l a)))) → ∃ f : A.Acr n →+* B, f.comp (mapAcr A.fromBase n) = h ∧ ∀ a, Ideal.Quotient.mk _ (f (A.toAcr n (WittVector.teichmuller l a))) = g a) ∧ ∀ f f' : A.Acr n →+* B, f.comp (mapAcr A.fromBase n) = h → f'.comp (mapAcr A.fromBase n) = h → (∀ a, f (A.toAcr n (WittVector.teichmuller l a)) - f' (A.toAcr n (WittVector.teichmuller l a)) ∈ ((base l).PFil n).map h) → f = f' := by
   intro l _ A n B _ h
   have hp : l.Prime := Fact.out
-  obtain ⟨⟨π, -, -⟩, hFil, -, -, -, -, -⟩ := GlobalTheory.T.period_ring_base_change_from_universal A n
-  obtain ⟨-, -, -, -, -, hpow, -⟩ := GlobalTheory.T.period_ring_base_change_from_universal (base l) n
+  obtain ⟨⟨π, -, -⟩, hFil, -, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.AcrMod.acr_modp A n
+  obtain ⟨-, -, -, -, -, hpow, -⟩ := _root_.GlobalTheory.CompanionTheory.AcrMod.acr_modp (base l) n
   have hlB : (l : B) ^ n = 0 := by
     rw [← map_natCast h, ← map_pow, pow_l_acr, map_zero]
   have hlJ : (l : B) ∈ ((base l).PFil n).map h := by

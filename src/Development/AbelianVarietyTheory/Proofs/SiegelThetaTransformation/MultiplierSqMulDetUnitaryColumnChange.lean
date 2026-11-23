@@ -4,12 +4,13 @@ public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IntM
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsStabForm
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.CanonicalThetaExponentSymplecticInvariant
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ComplexPhaseCalculusRootOfUnity
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DoubledRowTestFunctionPropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DoubledRowTestFunctionProperties
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.EqOfSiegelThetaSeriesRationalEq
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsRationalSymplecticUnitaryColumnsStatement
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsWeilOfSymplectic
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HeisenbergVacuumProjectionRootOfUnityPhasesStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RootOfUnityPhaseVacuumSiegelThetaTransformStatement
+public import Mathlib.LinearAlgebra.SymplecticGroup
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RootOfUnityPhaseVacuumSiegelThetaTransform
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -112,8 +113,8 @@ theorem isMu_of_fixed {n g : ℕ} {τ : Matrix (Fin g) (Fin g) ℂ} (hτ : τ �
   have hsb' : IsSB φ' := by
     obtain ⟨A, ε, hv⟩ := hφ'.1
     exact hv.sb
-  obtain ⟨hpvd, -, hsbd, -, hτB⟩ := GlobalTheory.T.doubledRowTestFunction_properties n g φ
-  obtain ⟨hpvd', hned', hsbd', -, hτB'⟩ := GlobalTheory.T.doubledRowTestFunction_properties n g φ'
+  obtain ⟨hpvd, -, hsbd, -, hτB⟩ := _root_.GlobalTheory.Phase.Doubling.doubling n g φ
+  obtain ⟨hpvd', hned', hsbd', -, hτB'⟩ := _root_.GlobalTheory.Phase.Doubling.doubling n g φ'
   obtain ⟨hBs, hthS, hImB⟩ := hτB τ hτ
   obtain ⟨-, hthS', -⟩ := hτB' τ hτ
 
@@ -183,7 +184,7 @@ theorem isMu_of_fixed {n g : ℕ} {τ : Matrix (Fin g) (Fin g) ℂ} (hτ : τ �
   have heq := eq_of_thS_eq (Fin 2) (Fin n × Fin g) (dup φ') ((t ^ 2 * d) • ω (dup φ))
     (hsbd' hsb') (isSB_smul' _ hsbω) B hBs hall
   have hpvω : PV (ω (dup φ)) :=
-    GlobalTheory.T.rootOfUnityPhaseVacuum_siegelThetaTransform (Fin 2) (Fin n × Fin g) heven s hs (dup φ) (ω (dup φ)) hsbω hTω (hpvd hφ)
+    _root_.GlobalTheory.Phase.WeilPV.pv_of_transS (Fin 2) (Fin n × Fin g) heven s hs (dup φ) (ω (dup φ)) hsbω hTω (hpvd hφ)
   obtain ⟨x, hx⟩ := Function.ne_iff.mp (hned' h0)
   have hxe : dup φ' x = (t ^ 2 * d) * ω (dup φ) x := by
     rw [heq]

@@ -1,7 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DivPowerCompatTwoFormDerivativeCompOneForm
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivationDividedPowerFiltrationSuccLeStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.RatBasisLinearIndependentInt
+public import Mathlib.RingTheory.Derivation.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DerivationDividedPowerFiltrationSuccLe
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -152,7 +154,7 @@ theorem dDR_mem_filDR (hv : ∀ n, ∀ a ∈ J, v (δ.dpow (n + 1) a) = δ.dpow 
   | mem y hy =>
     obtain ⟨b, hb, rfl⟩ := hy
     rw [dDR_algebraMap]
-    refine ι_mem_filDR δ n (GlobalTheory.T.derivation_dividedPowerFiltration_succ_le R B Ω[B⁄R] J δ (D R B) (N1 R δ) ?_ n b hb)
+    refine ι_mem_filDR δ n (_root_.GlobalTheory.DerFil.deriv_fil_succ_le R B Ω[B⁄R] J δ (D R B) (N1 R δ) ?_ n b hb)
     intro m a ha
     exact Ideal.subset_span ⟨m, a, ha, rfl⟩
   | zero => simp

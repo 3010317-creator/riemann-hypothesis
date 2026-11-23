@@ -3,9 +3,14 @@ module
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocRatio
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsAtSmul
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsLieModel
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GramDetChangeOfBasisStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeEvalAtLocalRingStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieMetricFrameProjectionStatement
+public import Mathlib.Analysis.InnerProductSpace.Defs
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GramDetChangeOfBasis
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieLatticeEvalAtLocalRing
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieMetricFrameProjection
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -131,7 +136,7 @@ theorem gram_val : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp Ω ⟶ X
           Real.log ‖(gramAt h z fun l : Fin i => B (Fin.castLE i.2.le l)).det‖) := by
   intro X Ω _ ξ K J y G _ _ _ Li _ _ M h z hz r b π B i hξ hd hreg hB f e v ve s hf he hv hve hs hs0 hdet
   obtain ⟨Vz, _, _, ⟨MR⟩⟩ := lieModel_exists X G ℂ z
-  obtain ⟨ev, hev1, hev2, -⟩ := GlobalTheory.T.lie_lattice_eval_at_local_ring X G Ω ξ Li M ℂ z hz Vz MR hξ inferInstance
+  obtain ⟨ev, hev1, hev2, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieLat_val X G Ω ξ Li M ℂ z hz Vz MR hξ inferInstance
   obtain ⟨core, hcore⟩ := h.herm z Vz MR
   have val : ∀ {e' : Li} {w : epsAt z ⟶ G}, M.ValAt z e' w →
       ∃ he' : e' ∈ M.lat ⟨centre z, hz⟩, MR.pt (ev ⟨e', he'⟩) = w := by
@@ -181,13 +186,13 @@ theorem gram_val : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : Sp Ω ⟶ X
     funext fun l => by rw [hβ, hbB]
   have e4 : (fun l : Fin i => B (Fin.castLE i.2.le l)) = fun l => MR.pt (β l.castSucc) :=
     funext fun l => by rw [hβ, hbB]; rfl
-  have hind := GlobalTheory.T.gramAt_det_ne_zero_of_dual_frame X Ω ξ K J y G Li M h z hz r b π B hξ hd hreg hB (i + 1) (Fin.castLE i.2)
+  have hind := _root_.GlobalTheory.CompanionTheory.Ar.RootHt.ArchB.gramAt_det_ne_zero X Ω ξ K J y G Li M h z hz r b π B hξ hd hreg hB (i + 1) (Fin.castLE i.2)
     (Fin.castLE_injective _)
   change (gramAt h z fun l : Fin (i + 1) => B (Fin.castLE i.2 l)).det ≠ 0 at hind
   rw [e3, gr] at hind
   rw [e1, gr] at hdet
   rw [e2, e3, e4, e1, gr, gr, gr, gr]
-  exact GlobalTheory.T.gram_det_change_of_basis Vz core i β x xe (Matrix.of fun j l => C j (Fin.castLE hi l))
+  exact _root_.GlobalTheory.CompanionTheory.Ar.RootHt.ArchB.gram_quot Vz core i β x xe (Matrix.of fun j l => C j (Fin.castLE hi l))
     (fun l => D (Fin.castLE hi l)) s hsum hsume hs0 hdet hind
 
 end GlobalTheory.CompanionTheory.Ar.RootHt.ArchB

@@ -4,11 +4,16 @@ public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLif
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPairingStdP
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPairingCoordinatesSchrodingerFolland
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSymplecticGroupMatrixOfPreservesPhaseSpace
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSymplecticLieEqExpOneParamStatement
+public import Mathlib.Algebra.Lie.Classical
+public import Mathlib.Analysis.Normed.Algebra.Exponential
+public import Mathlib.Topology.Instances.Matrix
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSymplecticLieEqExpOneParam
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OneParameterOperatorUnique
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilActionUnitaryCompact
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilLineGoodModelPolynomial
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.MetaplecticScalarDerivativeNonempty
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MulRealAdEqZero
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ArchimedeanLineIntertwinesRealSchrodinger
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,8 +51,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.MatchingAdjoints
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.HermitianOrthogonalExtensionData
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsVacFOfIsVacVec
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MulRealAdEqZero
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ArchimedeanLineIntertwinesRealSchrodinger
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.BlkGLMem
 
 @[expose] public section
@@ -96,7 +99,7 @@ theorem tendsto_slope_of_archimedean_pairing (hP : _root_.GlobalTheory.FunPr.The
       rw [ha, ha, hφ, hφ, hAo]
     rw [hext (g t) M fun v => by rw [hg, hM]]
     exact M.2
-  obtain ⟨Z, hZ, hgZ⟩ := GlobalTheory.T.exists_symplecticLie_eq_exp_oneParam (Fin n) g hgc hg0 hgm hgs
+  obtain ⟨Z, hZ, hgZ⟩ := _root_.GlobalTheory.SymplecticOneParam.exists_mem_sp_eq_exp (Fin n) g hgc hg0 hgm hgs
   let B : GlobalTheory.RealWeil.Sch (Fin n) →L[ℂ] 𝓢(V, ℂ) := SchwartzMap.compCLMOfContinuousLinearEquiv ℂ (F := ℂ) C
   let Bi : 𝓢(V, ℂ) →L[ℂ] GlobalTheory.RealWeil.Sch (Fin n) := SchwartzMap.compCLMOfContinuousLinearEquiv ℂ (F := ℂ) C.symm
   have hB : ∀ h, ⇑(B h) = ⇑h ∘ ⇑C := fun h => rfl

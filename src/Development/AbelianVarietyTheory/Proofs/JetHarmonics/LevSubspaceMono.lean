@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.SumIoPr
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CompactCasimirLeSubspaceMonotoneStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CompactCasimirLeSubspaceMonotone
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.WtNearLeOfAddDistLe
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -58,7 +58,7 @@ theorem lev_subspace_mono :
       (∀ j (a : ℂ) x, Lev ε E μ j x → Lev ε E μ j (a • x)) ∧
       ∀ j j' x, j ≤ j' → Lev ε E μ j x → Lev ε E μ j' x := by
   intro M _ _ n ε E μ _ hU
-  obtain ⟨h0, hadd, hsmul, hmono⟩ := GlobalTheory.T.compactCasimirLe_subspace_monotone M n ε E (isUnitary_kUnit ε E hU)
+  obtain ⟨h0, hadd, hsmul, hmono⟩ := _root_.GlobalTheory.casKLe_subspace_mono M n ε E (isUnitary_kUnit ε E hU)
   refine ⟨fun j => ⟨h0 _, Submodule.zero_mem _⟩,
     fun j x y hx hy => ⟨hadd _ _ _ hx.1 hy.1, Submodule.add_mem _ hx.2 hy.2⟩,
     fun j a x hx => ⟨hsmul _ _ _ hx.1, Submodule.smul_mem _ _ hx.2⟩, ?_⟩

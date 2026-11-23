@@ -1,13 +1,14 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalFormFlagLatticesNearUnderStabiliser
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NormalFormDualOrthogonalLast
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIntegerAddStarEqOneOfIsCMUnramStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagPairDefiniteThetaLatticeLeFixedIndexBoundStatement
+public import Formalism.HermitianLattices.StatementMass
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIntegerAddStarEqOneOfIsCMUnram
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagPairDefiniteThetaLatticeLeFixedIndexBound
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairCommonUnipotentStabiliserSummary
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairNormalFormGeometrySummaryStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.InvVolEqInfMulSupAndMono
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalFormTerminalDeterminantStatement
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalFormFlagLatticesNearUnderStabiliser
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairNormalFormGeometrySummary
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormalFormTerminalDeterminant
 import Formalism.FlagUnipotentLattices.MinkowskiFactorialBounds.ExistsHasLeadingCoeffOfMemSpanBelow
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
@@ -1036,10 +1037,10 @@ end Geometry
 theorem invVol_mid_layer_le : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCommGroup V] [Module K V] [FiniteDimensional K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] (H : HermSpace K V), Formalism.HermitianLatticesTheory.IsCMUnram K → ∀ (r : ℕ) (N : NF H r), ∀ (g : ℕ) (Λ : Submodule (𝓞 K) V), 1 ≤ g → N.IsTerm g Λ → N.Split Λ → GlobalTheory.HL.invVol ((N.Gam (N.Ref (latL N.F N.F' Λ)) ⊓ N.R1) ⊔ N.ZI) ((N.Gam Λ ⊓ N.R1) ⊔ N.ZI) ≤ (N.bI Λ : ℝ) ^ Module.finrank K N.Wt * ((N.gI g Λ : ℝ) * N.iI g Λ) ^ (r - N.j) := by
   intro K V _ _ _ _ _ _ _ _ H hK r N g Λ hg hterm hS
   classical
-  obtain ⟨-, hlift, hc, -, hn, huP, hw, -, -, -, -, hP⟩ := GlobalTheory.T.hermFramePairNormalForm_geometry_summary K V H hK r N
-  obtain ⟨hb0, -, -, -⟩ := GlobalTheory.T.normal_form_terminal_determinant K V H hK r N g Λ hg hterm
-  obtain ⟨hT, hg0, hi0, -, -, -, -, -⟩ := GlobalTheory.T.flagPairDefiniteThetaLattice_le_fixed_index_bound K V H hK r N g Λ hg hterm
-  obtain ⟨w₀, hw₀⟩ := GlobalTheory.T.exists_integer_add_star_eq_one_of_isCMUnram' K hK
+  obtain ⟨-, hlift, hc, -, hn, huP, hw, -, -, -, -, hP⟩ := _root_.GlobalTheory.DegCnt.NF.geometry K V H hK r N
+  obtain ⟨hb0, -, -, -⟩ := _root_.GlobalTheory.DegCnt.SplitIdx.main K V H hK r N g Λ hg hterm
+  obtain ⟨hT, hg0, hi0, -, -, -, -, -⟩ := _root_.GlobalTheory.DegCnt.FixIdx.main K V H hK r N g Λ hg hterm
+  obtain ⟨w₀, hw₀⟩ := _root_.GlobalTheory.exists_integer_add_star_eq_one_of_isCMUnram K hK
   obtain ⟨hU, hF, -⟩ := hterm.1
   have hΛ : ∀ x ∈ Λ, ∀ y ∈ Λ, H.B x y ∈ (1 : Submodule (𝓞 K) K) := by
     intro x hx y hy

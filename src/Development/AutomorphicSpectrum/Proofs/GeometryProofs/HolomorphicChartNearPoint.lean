@@ -3,7 +3,7 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExponentialFamilyPeriods
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.IsDomainAway
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolomorphicFamilyOfHomsStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HolomorphicFamilyOfHoms
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -137,7 +137,7 @@ theorem GlobalTheory.CompanionTheory.Ar.Flat.SmoothChart.exists_polydisc_chart :
     rw [hψ₀, hxs] at h
     have h' := Spec.map_injective h
     exact (congrArg CommRingCat.Hom.hom h').symm
-  obtain ⟨Ψ, hol, h0, hbase, hvan⟩ := GlobalTheory.T.holomorphic_family_of_homs K Γ(X, X.basicOpen f) d σ ψ₀ hσ
+  obtain ⟨Ψ, hol, h0, hbase, hvan⟩ := _root_.GlobalTheory.CompanionTheory.ChartRing.exists_polydisc_chart K Γ(X, X.basicOpen f) d σ ψ₀ hσ
   refine ⟨X.basicOpen f, hV, Ψ, (X.basicOpen_le f).trans hV₁W, hol, ?_, ?_, hvan⟩
   · rw [h0]; exact hψ₀
   · intro z hz

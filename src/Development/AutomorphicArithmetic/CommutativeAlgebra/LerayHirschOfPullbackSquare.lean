@@ -2,9 +2,10 @@ module
 
 public import Development.AutomorphicArithmetic.CupPullbacks.ConstCompSingle
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CupHypercohomologyPullbackStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupProductAssocStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupProductGradedCommStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupUnitAndPrimitiveRootClassesStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PullHlComp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupProductAssoc
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupProductGradedComm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistCupUnitAndPrimitiveRootClasses
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.PullCupPowEqCupPowPull
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -99,11 +100,11 @@ private theorem pull_cup {q : ℕ} {X Y : Spc} (f : X ⟶ Y) {n m i j : ℤ} (a 
 
 private theorem cup_one_right {q : ℕ} [NeZero q] {E : Spc} (hE : Inv q E) {n i : ℤ} (a : Ht q E n i) :
     cup q a (one q E) = Ht.cast (by ring) (by ring) a := by
-  rw [GlobalTheory.T.tateTwistCupProduct_graded_comm q E a (one q E), (GlobalTheory.T.tateTwistCup_unit_and_primitiveRoot_classes q).1 E hE a, ht_cast_cast, mul_zero, Int.negOnePow_zero, one_smul]
+  rw [_root_.GlobalTheory.EtC.cup_comm q E a (one q E), (_root_.GlobalTheory.EtC.CupGen.main q).1 E hE a, ht_cast_cast, mul_zero, Int.negOnePow_zero, one_smul]
 
 private theorem cup_assoc' {q : ℕ} [NeZero q] {E : Spc} {n m k i j l : ℤ} (a : Ht q E n i) (b : Ht q E m j) (c : Ht q E k l) :
     cup q a (cup q b c) = Ht.cast (by ring) (by ring) (cup q (cup q a b) c) := by
-  rw [GlobalTheory.T.tateTwistCupProduct_assoc q E a b c, ht_cast_cast]
+  rw [_root_.GlobalTheory.EtC.CupAssoc.main q E a b c, ht_cast_cast]
   rfl
 
 private theorem step_term {q : ℕ} [NeZero q] {X B : Spc} (p : B ⟶ X) (ξX : Ht q X 2 1) (ξ : Ht q B 2 1) (hX : Inv q X)

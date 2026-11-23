@@ -1,10 +1,10 @@
 module
 
 public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalComponentsNontrivialAdelicCharacterStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalComponentsNontrivialAdelicCharacter
+public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.IntegralCompContinuousLinearEquiv
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.T2SpaceNumberFieldInfiniteAdeles
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup
-public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.IntegralCompContinuousLinearEquiv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -231,7 +231,7 @@ theorem existsUnique_selfDual_inf : ∀ (F E : Type) [Field F] [NumberField F] [
     obtain ⟨φ⟩ : Nonempty (E →+* ℂ) := inferInstance
     apply φ.injective
     rw [hσ', hσ', star_star]
-  have hnd := (GlobalTheory.T.localComponents_nontrivial_adelic_character F ψ hψ).2.2
+  have hnd := (_root_.GlobalTheory.GaugeEx.CharLoc.char_local F ψ hψ).2.2
   obtain ⟨a, ha, ha'⟩ := exists_equiv_Ainf F
   have hpc : Continuous (psiInf F ψ) := hψ.1.comp (continuous_id.prodMk continuous_const)
   obtain ⟨L₀, hL₀c, hL₀a, hL₀⟩ := exists_log_char (fun u => psiInf F ψ (a.symm u)) (hpc.comp ha')

@@ -2,15 +2,17 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BasePartFlagPt
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PullbackPullback
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BaseChartHolomorphicCompositionStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.BaseVectorProperties
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAdjacentArithVarietyFirstStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAdjacentPluckerOrbit
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAdjacentTwistedResolutionThirdStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BaseChartHolomorphicComposition
+public import Mathlib.FieldTheory.RatFunc.AsPolynomial
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAdjacentArithVarietyFirst
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsPeriodOn
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAdjacentTwistedResolutionThird
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAnalyticProjectionBijective
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAnalyticSpaceNonempty
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagPointInMultiprojectivePoints
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LiftToLogResolutionAnalytic
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.BaseVectorProperties
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAdjacentPluckerOrbit
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagAnalyticSpaceNonempty
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.LogResolutionFunctorialHolomorphic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -247,7 +249,7 @@ theorem an_flagPt {M : FlagModel y Ψ N j} {n : ℕ} (BM : BaseMetric M n) (l : 
     (hh : ∀ τ' r s, AnalyticOnNhd ℂ (fun u => h u τ' r s) V) (q : Σ k, ι k) :
     AnalyticOnNhd ℂ (fun u => FC.flagPt M (BM.F l) (FC.bvec BM l (bp u)) (h u) q) V := by
   obtain ⟨k, m⟩ := q
-  have va := GlobalTheory.T.base_chart_holomorphic_composition K ι Φ y Ψ N j M n BM l e V bp hV hc ha hO
+  have va := _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.FC.bvec_val_analytic K ι Φ y Ψ N j M n BM l e V bp hV hc ha hO
   by_cases hk : ∀ p, M.blk p ≠ some k
   · have e1 : (fun u => FC.flagPt M (BM.F l) (FC.bvec BM l (bp u)) (h u) ⟨k, m⟩) =
         fun u => FC.bvec BM l (bp u) ⟨⟨k, hk⟩, m⟩ := funext fun u => dif_pos hk
@@ -272,7 +274,7 @@ theorem an_wVec {M : FlagModel y Ψ N j} {n : ℕ} (BM : BaseMetric M n) (l : Fi
   cases o with
   | some k => exact an_flagPt BM l hV hc ha hO h hh ⟨k, m⟩
   | none =>
-    have va := GlobalTheory.T.base_chart_holomorphic_composition K ι Φ y Ψ N j M n BM l e V bp hV hc ha hO
+    have va := _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.FC.bvec_val_analytic K ι Φ y Ψ N j M n BM l e V bp hV hc ha hO
     show AnalyticOnNhd ℂ (fun u => ∑ I, valAt M.x ((BM.F l).u ⟨k₀, m⟩ I) (FC.bvec BM l (bp u)) *
       minorIJ (h u τ * (1 + Matrix.single cb ca (t u))) I (stepCols N j a)) V
     exact an_sum fun I _ => (va.2 _ (reg_u BM l _ _)).mul
@@ -313,7 +315,7 @@ theorem charts : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (�
   haveI : Nonempty FA.Re.R.X := by
     obtain ⟨x⟩ := ‹Nonempty FA.S.X›
     exact (hbi.2 x).elim fun r _ => ⟨r⟩
-  haveI : Nonempty RW.X := GlobalTheory.T.flag_adjacent_twisted_resolution_third K ι Φ y Ψ N j M n d BM FA τ a b k₀ ca cb hba hab hk₀ hca hcb RW
+  haveI : Nonempty RW.X := _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.FibNonempty.anLogRes_W_nonempty K ι Φ y Ψ N j M n d BM FA τ a b k₀ ca cb hba hab hk₀ hca hcb RW
   have hO : ∀ w ∈ Un, bp w ∈ BM.O l := fun w hw => (hOk w hw).1.1
   have hfl : ∀ w ∈ Un, ∀ t τ', IsBlockDiag j (hfam H τ ca cb w t τ') ∧ (hfam H τ ca cb w t τ').det ≠ 0 :=
     fun w hw t => flags_ok (hOk w hw).2 τ hsb hne t
@@ -324,7 +326,7 @@ theorem charts : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fintype (�
   have exW : ∀ z : Fin (d + 2) → ℂ, Fin.tail (Fin.tail z) ∈ Un → ∃ x, SameOrbit (RW.lift x x)
       (FC.wVec M (BM.F l) (FC.bvec BM l (bp (Fin.tail (Fin.tail z)))) (hfam H τ ca cb (Fin.tail (Fin.tail z)) (z 0))
         τ a k₀ ca cb (z 1 - z 0)) := fun z hz =>
-    RW.surj _ (GlobalTheory.T.flag_adjacent_arith_variety_first K ι Φ y Ψ N j M n BM d τ a b k₀ ca cb hba hab hk₀ hca hcb FA.Re.arith l _ (hO _ hz) _ _
+    RW.surj _ (_root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.FC.WMem.main K ι Φ y Ψ N j M n BM d τ a b k₀ ca cb hba hab hk₀ hca hcb FA.Re.arith l _ (hO _ hz) _ _
       (hfl _ hz _)) (Proj.not_mem_mcPts_top _)
   choose! g hg using exY
   choose! ΦW hW using exW

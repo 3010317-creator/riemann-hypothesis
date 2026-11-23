@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsPullHermPullLine
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MixedPointLengthFormulaStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsSmoothHermCombLine
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MixedPointLengthFormula
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -39,7 +40,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Proportional
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsSmoothHermCombLine
 
 @[expose] public section
 
@@ -158,7 +158,7 @@ theorem chi_eq_geoNum : ∀ (m : ℕ) (n : Fin (m + 1) → ℕ) (Z : Scheme.{0})
     exact key _ hcomap
   have hcl : topologicalKrullDim (closure ({genericPoint Z} : Set Z)) = (0 : ℕ) :=
     (dim_closure_generic Z).trans hd
-  have hL := GlobalTheory.T.mixed_point_length_formula m n Z f (genericPoint Z) hcl a
+  have hL := _root_.GlobalTheory.CompanionTheory.MixZ.PtLenProof.ptLen m n Z f (genericPoint Z) hcl a
   rw [hchar] at hL
   have hcard : Nat.card (Z.residueField (genericPoint Z)) = Nat.card Γ(Z, ⊤) :=
     (Nat.card_eq_of_bijective _ hb).symm

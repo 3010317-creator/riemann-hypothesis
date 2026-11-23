@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.RealMetaplecticRepresentation
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousMatrixCoefficientStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixCoeffDecayFirstPartStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixCoeffDecaySecondPartStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixCoeffDecayFirstPart
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatrixCoeffDecaySecondPart
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -82,8 +82,8 @@ theorem matrixCoeff_continuous_rapidDecay : ∀ (n : ℕ) (g g' : Sch (Fin n)),
     ∀ N : ℕ, ∃ C : ℝ, ∀ w : Fin n ⊕ Fin n → ℝ, ‖∫ x, rhoFun w ⇑g x * starRingEnd ℂ (g' x)‖ * (1 + ‖w‖) ^ N ≤ C := by
   intro n g g'
   refine ⟨GlobalTheory.T.continuous_matrix_coefficient n g g', fun N => ?_⟩
-  obtain ⟨C1, h1⟩ := GlobalTheory.T.matrix_coeff_decay_first_part n g g' N
-  obtain ⟨C2, h2⟩ := GlobalTheory.T.matrix_coeff_decay_second_part n g g' N
+  obtain ⟨C1, h1⟩ := _root_.GlobalTheory.matrixCoeff_pPart_decay n g g' N
+  obtain ⟨C2, h2⟩ := _root_.GlobalTheory.RealWeil.coef_qDecay n g g' N
   refine ⟨C1 + C2, fun w => ?_⟩
   have := one_add_norm_pow_le_parts n N w
   have hn : 0 ≤ ‖∫ x, rhoFun w ⇑g x * starRingEnd ℂ (g' x)‖ := norm_nonneg _

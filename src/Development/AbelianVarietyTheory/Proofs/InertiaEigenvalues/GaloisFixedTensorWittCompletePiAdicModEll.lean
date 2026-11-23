@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoeffZeroEqZeroIff
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoeAlgebraMapOC
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGaloisFixedLiftOfFixedModPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NearPiSepCompleteStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGaloisFixedLiftOfFixedModPrime
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NearPiSepComplete
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -87,6 +87,6 @@ theorem fixSub_nearPi_complete : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (
   exact fixed_complete_generic H (fun g => (AI.gRW LL g : RW LL →+* RW LL)) (fixSub AI LL H)
     (fun _ => mem_fixSub) (τ := (1 : ↥(OL LL)) ⊗ₜ[ℤ_[l]] piW AI s) rfl
     (fun g a => ⟨GlobalTheory.Cyc.Decomp.gRA AI LL g a, GlobalTheory.Cyc.Decomp.inclR_gRA AI LL g a⟩)
-    (GlobalTheory.T.nearPi_sep_complete_alt l P AI LL s).1 (GlobalTheory.T.nearPi_sep_complete_alt l P AI LL s).2 (GlobalTheory.T.exists_galois_fixed_lift_of_fixed_mod_prime l P AI LL H)
+    (_root_.GlobalTheory.Decompl.nearPi_sep_complete l P AI LL s).1 (_root_.GlobalTheory.Decompl.nearPi_sep_complete l P AI LL s).2 (_root_.GlobalTheory.Decompl.exists_fix_lift_of_fix_mod l P AI LL H)
 
 end GlobalTheory.Decompl

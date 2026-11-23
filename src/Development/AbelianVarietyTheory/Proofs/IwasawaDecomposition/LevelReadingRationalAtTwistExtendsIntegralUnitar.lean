@@ -3,10 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RdLevOn
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.MemPrinCongOfSm
 public import Formalism.LocalToGlobal.HermitianForms.IsLocBasis
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CongruenceOneMatricesMemNhdsOneStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsRationalAtPrimesUnitaryCongruentOneStatement
-import Formalism.LocalToGlobal.Columns.AdelicLemmas
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CongruenceOneMatricesMemNhdsOne
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsRationalAtPrimesUnitaryCongruentOne
 public import Formalism.LocalToGlobal.Columns.RecLevelLocP
+import Formalism.LocalToGlobal.Columns.AdelicLemmas
 import Formalism.LocalToGlobal.Columns.RecLevelTop
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -138,7 +138,7 @@ theorem rd_all : ∀ {F E K : Type} [Field F] [NumberField F] [Field E] [NumberF
   have h1U : (1 : UPts hc.sig (1 : Matrix (Fin n) (Fin n) E) (FiniteAdeleRing (𝓞 F) F)) ∈
       {x : UPts hc.sig (1 : Matrix (Fin n) (Fin n) E) (FiniteAdeleRing (𝓞 F) F) | (x : GL _ _) ∈ S.U} := S.U.one_mem
   obtain ⟨V, hV, hVsub⟩ := (mem_nhds_subtype _ _ _).1 (S.U_open.mem_nhds h1U)
-  obtain ⟨m₀, hm₀, hm₀N⟩ := GlobalTheory.T.congruenceOne_matrices_mem_nhds_one (F := F) (E := E) n (V ∩ {u | ∀ κ : S.U, κ.1 = u → S.chi κ = 1})
+  obtain ⟨m₀, hm₀, hm₀N⟩ := _root_.GlobalTheory.Mem.ColAd.Nbhd.congOne_nhds (F := F) (E := E) n (V ∩ {u | ∀ κ : S.U, κ.1 = u → S.chi κ = 1})
     (Filter.inter_mem hV hO)
   set m : ℕ := m₀ * ∏ w ∈ SG ∪ Q, Ideal.absNorm w.asIdeal with hm
   have hmpos : 0 < m := Nat.mul_pos hm₀ (Finset.prod_pos fun w _ =>
@@ -149,7 +149,7 @@ theorem rd_all : ∀ {F E K : Type} [Field F] [NumberField F] [Field E] [NumberF
     rw [hk, Nat.cast_mul]
     exact Ideal.mul_mem_right _ _ (Ideal.absNorm_mem _)
   intro z _ hz hzU
-  obtain ⟨g, hgU, hgR, hc1, hc2⟩ := GlobalTheory.T.exists_rationalAtPrimes_unitary_congruentOne hc hQc m hmpos (fun P hP => hmw P (Finset.mem_union_right _ hP)) z hzU hz
+  obtain ⟨g, hgU, hgR, hc1, hc2⟩ := _root_.GlobalTheory.SeeSaw.TwLev.GlueApprox.exists_ratAt_congOne hc hQc m hmpos (fun P hP => hmw P (Finset.mem_union_right _ hP)) z hzU hz
   set u := z⁻¹ * g with hu
   have huU : u ∈ UAd hc n := mul_mem (inv_mem hzU) hgU
   have huN := hm₀N m (Dvd.intro _ rfl) hmpos u hc1 hc2

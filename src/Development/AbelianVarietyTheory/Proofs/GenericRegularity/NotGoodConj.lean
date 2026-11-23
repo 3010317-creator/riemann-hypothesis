@@ -4,13 +4,13 @@ public import Development.AbelianVarietyTheory.Definitions.RegularCharts.BaseNor
 public import Formalism.LocalToGlobal.ProjectiveLattices.CompOrd
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.LawsFieldsSeparately
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.CabsDiagEqOneStatement
-public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsUnitGramFrameBorelChangeStatement
+public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsUnitGramFrameBorelChange
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.UnitFramesGeneratorRatioModulusOneStatement
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFramedPointBaseChangeAlgebraMap
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointBaseChangeUniqueReflIff
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LowerTriIsUnitDet
 public import Formalism.LocalToGlobal.ProjectiveLattices.FrameCharts
 public import Formalism.LocalToGlobal.ProjectiveLattices.NormsFree
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LowerTriIsUnitDet
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -122,7 +122,7 @@ theorem exists_good {σ : c.F →+* ℂ} {r : ℕ} (U : Formalism.L2.PjFree.Unf 
     ∃ G : FrPt Xo c (CAt σ) → Ix Dw → ℝ, (∀ y i, 0 < G y i) ∧
       ∀ k (z : (U.X k).dom), IsUnitFr (U.X k) z.1 → ∀ (t : Ix Dw → (CAt σ)ˣ) (y : FrPt Xo c (CAt σ)),
         FrBor t (U.un k z) y → ∀ i, G y i = cabs (t i : CAt σ) * baseNorm Dw xR i := by
-  choose k x t hu hb using (GlobalTheory.T.exists_unit_gram_frame_borel_change E H Dw l Xo c σ r U hσ hU).2
+  choose k x t hu hb using (_root_.GlobalTheory.FrameNorm.exists_unitFr_frBor E H Dw l Xo c σ r U hσ hU).2
   refine ⟨fun y i => cabs (t y i : CAt σ) * baseNorm Dw xR i,
     fun y i => mul_pos (cabs_unit_pos _) (baseNorm_pos hx i), ?_⟩
   intro k' z hz t' y hy i

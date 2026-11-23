@@ -2,9 +2,11 @@ module
 
 public import Development.AutomorphicSpectrum.Statements.AlgebraStatements.OrdinaryCurveStatement
 public import Development.AutomorphicSpectrum.Statements.AlgebraStatements.PolarisedFlagStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FlagComparisonTheoremStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HopfOrderRetractElementaryStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HopfOrderRetractRestrictionStatement
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FlagComparisonTheorem
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.IsTight
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HopfOrderRetractElementary
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HopfOrderRetractRestriction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,10 +61,10 @@ theorem flagConcl_directFactor_of_subquotient :
     SubquotientStatement → ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (R : Type) [CommRing R] [Algebra R C], v.Integers R → v (p : C) < 1 → IsAdicComplete (Ideal.span {(p : R)}) R → ∀ (N : Type) [AddCommGroup N] [Fintype N] [DecidableEq N], ∀ AA : HopfOrder (C := C) R N, (∀ x : N, p • x = 0) → IsAbFactor p AA.carrier → IsTight v p AA.carrier → ∀ (F : Type) [Field F] [Fintype F] [DecidableEq F] [CharP F p] (Nw : Type) [AddCommGroup Nw] [Module F Nw] [Fintype Nw] [DecidableEq Nw] (i : Nw →+ N) (π : N →+ Nw), (∀ y, π (i y) = y) → (∀ h ∈ AA.carrier, (fun x => h (i (π x))) ∈ AA.carrier) → FStable F (AA.carrier.map (LinearMap.funLeft R C (i : Nw → N))) → ∀ (n : ℕ) (b : Module.Basis (Fin n) F Nw) (σ : MulChar F R), IsFund p σ → FlagConcl v p (AA.carrier.map (LinearMap.funLeft R C (i : Nw → N))) b σ := by
   intro hS p _ C _ _ _ v R _ _ hInt hp hcomp N _ _ _ AA hpN hab htight F _ _ _ _ Nw _ _ _ _ i π hπi
     hstab hFS n b σ hσ
-  obtain ⟨⟨A', hA'⟩, -, hgen⟩ := GlobalTheory.T.hopf_order_retract_restriction p C v R hInt hp N AA Nw i π hπi hstab
-  have ht' := GlobalTheory.T.hopf_order_retract_elementary p C v R hInt hp N hpN AA Nw i π hπi hstab htight
+  obtain ⟨⟨A', hA'⟩, -, hgen⟩ := _root_.GlobalTheory.CompanionTheory.Ar.GR.ret_hopf_factor p C v R hInt hp N AA Nw i π hπi hstab
+  have ht' := _root_.GlobalTheory.CompanionTheory.Relay.hopf_order_retract_elementary p C v R hInt hp N hpN AA Nw i π hπi hstab htight
   rw [← hA'] at hFS ht' ⊢
-  refine GlobalTheory.T.flag_comparison_theorem p C v R hInt hp F Nw A' hFS ht' n b ?_ σ hσ
+  refine _root_.GlobalTheory.CompanionTheory.Ar.GR.flagStatement_holds p C v R hInt hp F Nw A' hFS ht' n b ?_ σ hσ
   intro k
   rw [hA']
   exact hgen _ (hS p C v R hInt hp hcomp N AA.carrier hab _)

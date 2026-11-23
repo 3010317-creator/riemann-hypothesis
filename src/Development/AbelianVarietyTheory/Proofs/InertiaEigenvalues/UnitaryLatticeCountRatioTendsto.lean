@@ -1,13 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LinearDescent
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteAlgebraInvolutionRhoPowEqCardBoxStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FullLatticeSandwichBetweenIntegralElementsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelfDualStableLatticeUnitOrbitsFiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TendstoRatioBoxCountsProdOneStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TorusModIntegralUnitsStructureAndIntegralityStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TorusOrbitLatticeCountBoundedByRhoStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UUEqSumOverTorusOrbitsStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteAlgebraInvolutionRhoPowEqCardBox
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FullLatticeSandwichBetweenIntegralElements
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.UnitLemmaGroup
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelfDualStableLatticeUnitOrbitsFinite
+public import Mathlib.Algebra.BigOperators.Group.Finset.Defs
+public import Mathlib.Topology.MetricSpace.Pseudo.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TendstoRatioBoxCountsProdOne
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TorusModIntegralUnitsStructureAndIntegrality
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TorusOrbitLatticeCountBoundedByRho
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UUEqSumOverTorusOrbits
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,13 +61,13 @@ open GlobalTheory.UnitLemma Polynomial Filter Topology
 namespace GlobalTheory.UnitLemma
 
 theorem unitaryLimit : UnitaryLimit := by
-  have L0 := GlobalTheory.T.selfDual_stable_lattice_unit_orbits_finite
-  have S1 := GlobalTheory.T.fullLattice_sandwich_between_integral_elements
-  have S2 := GlobalTheory.T.torus_orbit_lattice_count_bounded_by_rho
-  have S3 := GlobalTheory.T.UU_eq_sum_over_torus_orbits
-  have S4 := GlobalTheory.T.torus_mod_integralUnits_structure_and_integrality
-  have S5 := GlobalTheory.T.finiteAlgebraInvolution_rho_pow_eq_card_box
-  have S6 := GlobalTheory.T.tendsto_ratio_box_counts_prod_one
+  have L0 := _root_.GlobalTheory.UnitLemma.OrbitFinite.orbits_finite
+  have S1 := _root_.GlobalTheory.UnitLemma.lattice_sandwich
+  have S2 := _root_.GlobalTheory.TorusOrbitLat.orbit_count
+  have S3 := _root_.GlobalTheory.UnitLemma.UU_eq_sum_orbits
+  have S4 := _root_.GlobalTheory.UnitLemma.torus_mod_intUnits_structure
+  have S5 := _root_.GlobalTheory.UnitLemma.rho_pow_eq_card_box
+  have S6 := _root_.GlobalTheory.ratio_box_counts_tendsto_one
 
   intro K B hB a ha x hx
   classical

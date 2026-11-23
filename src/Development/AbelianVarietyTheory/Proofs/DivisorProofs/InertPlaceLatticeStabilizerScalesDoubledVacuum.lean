@@ -3,18 +3,21 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AntiCols
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzRestrictFinitePlaceMemSchwartzBruhStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzSpaceTranslateMemOfMemStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjMemAdelicSchwartzSpaceNumberFieldOfMemStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledLatticeLocalImageFullAtInertPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledVacuumLatticeStabilizerPreservesDoubledSpStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConjMemAdelicSchwartzSpaceNumberFieldOfMem
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatAtVAtStable
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FromColsMemLatDbl
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledLatticeLocalImageFullAtInertPlace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledVacuumLatticeStabilizerPreservesDoubledSp
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplementaryAdelicSchwartzRestFunctionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergEigenDoubledCoordsProductFunctionStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergEigenDoubledCoordsProductFunction
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeisenbergEigenProportionalLocalFieldStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsStdCharNegOneOfStandardTraceAdelicAddChar
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsometryCommutingHeisenbergActsFibrewiseStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalIdentityOfTensorHeisenbergEigenStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalIdentityOfTensorHeisenbergEigen
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductFunctionOnSumCoordsMemAdelicSchwartzSpace
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardAdelicAddCharNontrivialFinitePlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceSymplecticFormUnitaryGroupActionInvariantStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TraceSymplecticFormUnitaryGroupActionInvariant
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationLocalityUnitaryGroupV
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -184,7 +187,7 @@ theorem eigen_box : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
     funext x
     simp only [hS, hvd, hR, hV₀, boxFun, tens, star_mul', Function.comp_def]
     ring
-  have hSA : S ∈ schA F _ := GlobalTheory.SchwartzBox.boxFun_mem_schA F _ _ V₀ hr.2 _ (GlobalTheory.T.conj_mem_adelicSchwartzSpaceNumberField_of_mem _ V₀ hr.2)
+  have hSA : S ∈ schA F _ := GlobalTheory.SchwartzBox.boxFun_mem_schA F _ _ V₀ hr.2 _ (_root_.GlobalTheory.star_mem_schA_main _ V₀ hr.2)
   have hRinv : ∀ x z, At (evFin F v) z → R (x + z) = R x := by
     intro x z hz
     have hl : At (evFin F v) (z ∘ Sum.inl) := fun u hu => by funext i; exact congrFun (hz u hu) (Sum.inl i)
@@ -236,12 +239,12 @@ theorem eigen_box : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
       simp [tens, mul_assoc, cA, incM]
   have hSeig : ∀ γ ∈ latDbl G.V G.W v, dd.rho B.ψ γ S =
       B.ψ (⅟(2 : AF F) * symp (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) (inclR (F := F) (AF F) (θ : E)) ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) G.V.J) (dbl ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) G.W.J)) γ γ) • S :=
-    fun γ hγ => GlobalTheory.T.heisenbergEigen_doubledCoords_productFunction (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) (-1) (inclR (F := F) (AF F) (θ : E)) _ _ G.M.co dd hdc B.ψ hψ1 _ V₀ hV₀eig γ hγ.1 hγ.2
+    fun γ hγ => _root_.GlobalTheory.DblBoxRho.boxrho (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) (-1) (inclR (F := F) (AF F) (θ : E)) _ _ G.M.co dd hdc B.ψ hψ1 _ V₀ hV₀eig γ hγ.1 hγ.2
 
   have hgSeig : ∀ γ ∈ latDbl G.V G.W v, dd.rho B.ψ γ (omd g S) =
       B.ψ (⅟(2 : AF F) * symp (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) (inclR (F := F) (AF F) (θ : E)) ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) G.V.J) (dbl ((_root_.Matrix.map · (_root_.Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes.inclR (F := F) (AF F))) G.W.J)) γ γ) • omd g S := by
     intro γ hγ
-    have hK := (GlobalTheory.T.doubledVacuumLatticeStabilizer_preserves_doubledSpaceLattice F E σ G.V G.W v g hg γ hγ).2
+    have hK := (_root_.GlobalTheory.DblVac.kD_stab_latDbl F E σ G.V G.W v g hg γ hγ).2
     have h1 := hspl.impl g (actB (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) g⁻¹ γ) S hSA
     have h2 : actB (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) g (actB (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) g⁻¹ γ) = γ := by
       simp only [actB, Matrix.mul_assoc, ← Matrix.transpose_mul]
@@ -256,7 +259,7 @@ theorem eigen_box : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
       rw [h2] at h1
     refine h1.symm.trans ?_
     set_option backward.isDefEq.respectTransparency false in
-      rw [hSeig (actB (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) g⁻¹ γ) hK, map_smul, GlobalTheory.T.traceSymplecticForm_unitaryGroupAction_invariant]
+      rw [hSeig (actB (_root_.Algebra.TensorProduct.map (_root_.AlgHom.id (AF F) (AF F)) σ) g⁻¹ γ) hK, map_smul, _root_.GlobalTheory.DblVacEigen.SympAct.symp_actB]
     rfl
 
   let Λd := (latDbl G.V G.W v).map (GlobalTheory.LatVac.locCo dd v)
@@ -271,7 +274,7 @@ theorem eigen_box : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
       ∀ l ∈ Λd, ∀ ξ, GlobalTheory.LatVac.psiAt B.ψ v (ξ ⬝ᵥ l.2 + (2 : Fv F v)⁻¹ * (l.1 ⬝ᵥ l.2)) * f (ξ + l.1) = χ l * f ξ := by
     intro f hf l hl ξ
     have h : ∃ γ ∈ latDbl G.V G.W v, GlobalTheory.LatVac.locCo dd v γ = l := AddSubgroup.mem_map.mp hl
-    have key := GlobalTheory.T.localIdentity_of_tensorHeisenbergEigen v dd B.ψ h.choose f R _ (at_of_mem_latDbl _ _ _ h.choose_spec.1) hRinv
+    have key := _root_.GlobalTheory.DblVacEigen.local_identity_of_tens_eigen v dd B.ψ h.choose f R _ (at_of_mem_latDbl _ _ _ h.choose_spec.1) hRinv
       (Sum.elim x₀ x₀) hRx (hf _ h.choose_spec.1) ξ
     simp only [χ, dif_pos h]
     rw [h.choose_spec.2] at key
@@ -279,7 +282,7 @@ theorem eigen_box : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
   have hloc1 := loc vd (fun γ hγ => hSt ▸ hSeig γ hγ)
   have hloc2 := loc (Tl vd) (fun γ hγ => hgS ▸ hgSeig γ hγ)
   obtain ⟨c, hc⟩ := GlobalTheory.T.heisenbergEigen_proportional_localField (GlobalTheory.LatVac.psiAt B.ψ v) Λd χ vd (Tl vd) hloc1 hloc2 hvd0
-    (GlobalTheory.T.doubled_lattice_local_image_full_at_inert_place F E σ B a a' G X om om' hT v w hw dd hdc)
+    (_root_.GlobalTheory.DblFill.latDbl_fill F E σ B a a' G X om om' hT v w hw dd hdc)
   refine ⟨c, ?_⟩
   rw [hgS, hc, hSt]
   funext x

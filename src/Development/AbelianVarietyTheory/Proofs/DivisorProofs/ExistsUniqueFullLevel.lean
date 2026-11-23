@@ -1,10 +1,10 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.UnitOnInjectiveOfCommRing
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSympLevel
 public import Development.AbelianVarietyTheory.Counterexamples.AbelianLawCounterexamples.WeilIsUniqueOfLocal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFullSymplecticLevelStructureOfTateIsoStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFullSymplecticLevelStructureUniqueOfLevelsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFullSymplecticLevelStructureOfTateIso
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFullSymplecticLevelStructureUniqueOfLevels
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.UnitOnInjectiveOfCommRing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,12 +76,12 @@ theorem exists_unique_fullLevel {D : Datum H} {l : Level H} {B : Type} [CommRing
         Induces l (fun a => toUnit _ ≫ o.etaA a) (fun a => toUnit _ ≫ o.eta a) ev := by
   obtain ⟨-, I, hIA, hetaA, heta⟩ := o.geom k x β hx
   have hzA' : z ^ (l.M' / l.A) = I.ζ l.A := Units.ext (by rw [Units.val_pow_eq_pow_val, hzA, hIA])
-  obtain ⟨ev, hev, hA, hM⟩ := GlobalTheory.T.exists_fullSymplecticLevelStructure_of_tateIso l I hz hzA'
+  obtain ⟨ev, hev, hA, hM⟩ := _root_.GlobalTheory.FullLevel.exists_sympLevel_of_tate l I hz hzA'
   have hi : Induces l (fun a => toUnit _ ≫ o.etaA a) (fun a => toUnit _ ≫ o.eta a) ev :=
     ⟨fun a => (hA a).trans (hetaA a).symm, fun a ha => (hM a ha).trans (heta a ha).symm⟩
   refine ⟨ev, ⟨hev, hi⟩, ?_⟩
   rintro ev' ⟨h1, h2⟩
-  have := GlobalTheory.T.isFullSymplecticLevelStructure_unique_of_levels l (fun g g' c c' => weilIs_unitOn_unique o.t.G o.t.PP.isLB x _ g g' c c') hz
+  have := _root_.GlobalTheory.FullLevel.isSympLevel_unique l (fun g g' c c' => weilIs_unitOn_unique o.t.G o.t.PP.isLB x _ g g' c c') hz
     hev hi h1 h2
   exact this.symm
 

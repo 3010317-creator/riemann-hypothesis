@@ -1,11 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.CyclotomicDvdExpandOfCoprime
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ColemanNormOperatorIterateSuccCongrFrobeniusStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EvNormOpEqNrmStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsColemanLevelRingBasisOneAddXPowStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.XMulMemSpanOfColemanLevelsStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ColemanNormOperatorIterateSuccCongrFrobenius
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EvNormOpEqNrm
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsColemanLevelRingBasisOneAddXPow
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.XMulMemSpanOfColemanLevels
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsAdicCompleteComapConstantCoeff
+public import Mathlib.RingTheory.Polynomial.Cyclotomic.Eval
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +50,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.RingTheory.Polynomial.Cyclotomic.Eval
 
 @[expose] public section
 
@@ -63,7 +63,7 @@ theorem iter_cong : ∀ (R : Type) [CommRing R] (p : ℕ) [Fact p.Prime] (σ : R
   | zero => exact ⟨0, by simp⟩
   | succ i ih =>
     obtain ⟨r, hr⟩ := ih
-    obtain ⟨r', hr'⟩ := GlobalTheory.T.colemanNormOperator_iterate_succ_congr_frobenius R p σ hF h hh (j + i)
+    obtain ⟨r', hr'⟩ := _root_.GlobalTheory.normOp_iterate_congr R p σ hF h hh (j + i)
     refine ⟨smap σ r + (p : PowerSeries R) ^ i * r', ?_⟩
     rw [show j + (i + 1) = (j + i) + 1 by omega, hr', hr, Function.iterate_succ_apply' (smap σ), map_add (f := _), map_mul, map_pow, map_natCast]
     ring
@@ -76,7 +76,7 @@ theorem norm_tower : ∀ (R : Type) [CommRing R] (p : ℕ) [Fact p.Prime], IsAdi
     intro h hh
     rw [Function.iterate_succ_apply]
     apply ih
-    rw [GlobalTheory.T.ev_normOp_eq_nrm_ev_succ R p (m + i + 1) (by omega) hR h, ← hu (m + i)]
+    rw [_root_.GlobalTheory.Col.ev_normOp_eq_nrm R p (m + i + 1) (by omega) hR h, ← hu (m + i)]
     congr 1
 
 theorem ev_map_congr : ∀ (R : Type) [CommRing R] (p m : ℕ) (τ : R →+* R) (g g' : PowerSeries R), ev R p m g = ev R p m g' → ev R p m (PowerSeries.map τ g) = ev R p m (PowerSeries.map τ g') := by
@@ -188,7 +188,7 @@ theorem ev_of_mem_pow : ∀ (R : Type) [CommRing R] (p m N : ℕ) [Fact p.Prime]
 theorem lev_sep : ∀ (R : Type) [CommRing R] (p m : ℕ) [Fact p.Prime], IsAdicComplete (Ideal.span {(p : R)}) R → ∀ x : lev R p m, (∀ N : ℕ, ∃ y : PowerSeries R, x = ev R p m ((p : PowerSeries R) ^ N * y)) → x = 0 := by
   intro R _ p m _ hR x hx
   haveI := hR
-  obtain ⟨b, -⟩ := GlobalTheory.T.exists_colemanLevelRing_basis_one_add_X_pow R p m hR
+  obtain ⟨b, -⟩ := _root_.GlobalTheory.Col.lev_basis R p m hR
   apply b.repr.injective
   rw [map_zero]
   ext i
@@ -294,7 +294,7 @@ theorem exists_coleman_series : ∀ (R : Type) [CommRing R] (p : ℕ) [hp : Fact
       have := GlobalTheory.ColEx.ev_map_congr R p (m + 1) (((σ : R ≃+* R) : R →+* R) ^ (m + 1)) _ _ hD
       rw [hinv, map_mul, map_pow, map_natCast] at this
       exact ⟨_, this⟩
-    have hI := GlobalTheory.T.X_mul_mem_span_of_colemanLevels R p hF.dom hF.prime hR (F (k + 1) - F k) (k + 1) (k + 2) hsmall ((k + 1) / 2)
+    have hI := _root_.GlobalTheory.Col.X_mul_mem_span_of_levels R p hF.dom hF.prime hR (F (k + 1) - F k) (k + 1) (k + 2) hsmall ((k + 1) / 2)
       (by omega) (by omega)
     apply hdivX
     refine (Ideal.span_le.2 ?_) hI

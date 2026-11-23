@@ -2,7 +2,8 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ColFlags
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.DetT
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsJoinBlocksStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsJoinBlocks
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FrameCoeffsRegularInChart
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -177,7 +178,7 @@ theorem coordTie_seg_equiv {K₀ K' K : Type} [Fintype K₀] [Fintype K'] [Finty
     (h₂ : ∀ k i, y ⟨e (.inr k), F (.inr k) i⟩ = w ⟨k, i⟩)
     (h : CoordTie ℤ ξ (seg x₀)) (hw : ∀ (k : K') (p : Cpt ξ), ∃ i, InChart ξ (fun i' : J' k => w ⟨k, i'⟩) i p) :
     CoordTie ℤ ξ (seg y) := by
-  have h2 := GlobalTheory.T.coords_join_blocks X Ω ξ K₀ J₀ x₀ K' J' w h hw
+  have h2 := _root_.GlobalTheory.CompanionTheory.Ar.AddBlockMulti.add_block_multi X Ω ξ K₀ J₀ x₀ K' J' w h hw
   have h3 := GlobalTheory.CompanionTheory.Ar.FlagBun.coordTie_comp_equiv h2 (Equiv.piCongr e F).symm
   convert h3 using 1
   funext c'

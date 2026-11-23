@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.SqSubLeNormSub
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsTwoPlacesOverOfIsSquareLocalStatement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsTwoPlacesOverOfIsSquareLocal
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HeightOneSpectrumPlacesOverFiniteSet
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -64,7 +64,7 @@ theorem two_mul_card_le_card_over : ∀ (F E : Type) [Field F] [NumberField F] [
   rw [h1, h2, ← Finset.sum_add_distrib, mul_comm, ← smul_eq_mul, ← Finset.sum_const]
   refine Finset.sum_le_sum (fun v hv => ?_)
   by_cases hs : IsSquare (algebraMap F (v.adicCompletion F) δ)
-  · obtain ⟨w, w', hne, hw, hw'⟩ := GlobalTheory.T.exists_two_places_over_of_isSquare_local F E δ θ σ hq v hs
+  · obtain ⟨w, w', hne, hw, hw'⟩ := _root_.GlobalTheory.QNorm.two_places_of_isSquare F E δ θ σ hq v hs
     have : 1 < (SE.filter (fun w => w.under (𝓞 F) = v)).card :=
       Finset.one_lt_card.2 ⟨w, Finset.mem_filter.2 ⟨(hSE w).2 (hw ▸ hv), hw⟩,
         w', Finset.mem_filter.2 ⟨(hSE w').2 (hw' ▸ hv), hw'⟩, hne⟩

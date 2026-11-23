@@ -3,8 +3,10 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.UnifOfSpaceEq
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.LminorSubmatrixCastSucc
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.ExistsThickPointHyperbolic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EncardSelfDualLatticeBoundedMajorantLeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MajorantChartPointCentreFactorTwoStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FundamentalDomainPointBound
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EncardSelfDualLatticeBoundedMajorantLe
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.IsOrth
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MajorantChartPointCentreFactorTwo
 public import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.MajLactRmul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -178,9 +180,9 @@ theorem maj_le_four {r : ℕ} (X : DataX E r) {x : Frame X.Ψ r} (hx : IsOrth X.
   have hr2 : (0 : ℝ) ≤ (r : ℝ) ^ 2 := by positivity
   have hs : ∀ w : V (nd X.toData), ‖w‖ ≤ ρ → (r : ℝ) ^ 2 * ‖w‖ ≤ 1 / 100 := fun w hw =>
     (mul_le_mul_of_nonneg_left hw hr2).trans hρ
-  have h1 := (GlobalTheory.T.majorant_chart_point_centre_factor_two E r X.toData x z' hx (hs z' hz') τ
+  have h1 := (_root_.GlobalTheory.ChartGraph.maj_cpt_le_two E r X.toData x z' hx (hs z' hz') τ
     (Data.emb τ.1 ((γ : Matrix (Fin r) (Fin r) E) *ᵥ v))).2
-  have h2 := (GlobalTheory.T.majorant_chart_point_centre_factor_two E r X.toData x z hx (hs z hz) τ (Data.emb τ.1 v)).1
+  have h2 := (_root_.GlobalTheory.ChartGraph.maj_cpt_le_two E r X.toData x z hx (hs z hz) τ (Data.emb τ.1 v)).1
   have e1 : X.maj (cpt X.toData x z') τ (Data.emb τ.1 ((γ : Matrix (Fin r) (Fin r) E) *ᵥ v)) =
       X.maj (cpt X.toData x z) τ (Data.emb τ.1 v) := by
     rw [← maj_rmul_any X.toData _ hb, ← heq, emb_mulVec',
@@ -203,7 +205,7 @@ theorem chart_mult_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (
   have hd : 0 ≤ dE E := abs_nonneg _
   have hBd0 : 0 ≤ Bd := by positivity
   set T : Set (Fin r → E) := {v | v ∈ X.L' ∧ ∑ τ, X.maj x τ (Data.emb τ.1 v) ≤ 4 * Bd} with hT
-  have hTc := GlobalTheory.T.encard_selfDualLattice_bounded_majorant_le E r X x ε (4 * Bd) hdom hε (by positivity) hmin
+  have hTc := _root_.GlobalTheory.LatCount.encard_le E r X x ε (4 * Bd) hdom hε (by positivity) hmin
   have hTfin : T.Finite := by
     rw [← Set.encard_ne_top_iff]
     intro htop

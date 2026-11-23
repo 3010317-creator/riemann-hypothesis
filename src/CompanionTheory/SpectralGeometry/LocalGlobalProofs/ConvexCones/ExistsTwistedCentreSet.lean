@@ -3,11 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MultCellsAmong
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.VoronoiMeans.VorFunEvalEqFineMean
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EqZeroOfIsOrbFormConst
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.EqOfOrbitMarkInCellConeStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.OrbitMarkCoordinateLtOneStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CarriesExistsMarkedFormInConeStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsPrimitiveBalancedFormFracCoordsOfCellMultStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MarkedOrbitFormPrimitiveStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NotIsPrimZero
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.EqOfOrbitMarkInCellCone
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.OrbitMarkCoordinateLtOne
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CarriesExistsMarkedFormInCone
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsPrimitiveBalancedFormFracCoordsOfCellMult
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MarkedOrbitFormPrimitive
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -88,7 +89,7 @@ theorem centres_exists : ∀ (O : Type) [CommRing O] [IsDedekindDomain O] [CharZ
       (_ : Module.Projective O X), Module.finrank O X ≤ q ∧
       ∃ (m : ℕ) (δ : Fin m → LinearMap.BilinForm ℤ X), IsMultCell bar φ M δ ∧ c.Carries δ
   · obtain ⟨X₀, _, _, _, _, -, m₀, δ₀, hM₀, hc₀⟩ := hex
-    obtain ⟨v, hv, hvp, hvn, t, ht, htv⟩ := GlobalTheory.T.exists_primitiveBalancedForm_fracCoords_of_cellMult bar φ M δ₀ hM₀ hM
+    obtain ⟨v, hv, hvp, hvn, t, ht, htv⟩ := _root_.GlobalTheory.PolFan.CentreChoice.exists_isPrim_frac bar φ M δ₀ hM₀ hM
     obtain ⟨h₀, hli, hpr, -⟩ := hM₀
     have hv0 : v ≠ 0 := fun h => by
       have e : (⟨v, hv⟩ : balForms bar X₀) = 0 := Subtype.ext h
@@ -96,14 +97,14 @@ theorem centres_exists : ∀ (O : Type) [CommRing O] [IsDedekindDomain O] [CharZ
       exact not_isPrim_zero hvp
     refine ⟨OrbMark.orbFun O w0 v, isTwG_orbFun w0 v,
       fun X _ _ _ _ hX => ⟨fun β _ _ => OrbMark.orbFun_eval_eq_zero_or_one _ _ _,
-        fun β _ _ h1 => GlobalTheory.T.markedOrbit_form_primitive bar w0 v hv hvp β h1,
+        fun β _ _ h1 => _root_.GlobalTheory.PolFan.OrbMark.eq_one_of_smul_eq_of_orbFun_evalZ_eq_one bar w0 v hv hvp β h1,
         fun m γ hγ β hβ hβp β' hβ' hβp' h1 h1' hc hc' =>
-          GlobalTheory.T.eq_of_orbit_mark_in_cell_cone O bar w0 hb q φ lab hφ hlab hsl δ₀ h₀ hli hpr v t hv0 (fun i => (ht i).1) htv X hX m γ hγ β hβ hβp β' hβ' hβp'
+          _root_.GlobalTheory.CompanionTheory.Ar.Fan.OrbitMarkUniqueInCell.eq_of_orbMark_of_inRCone_cell O bar w0 hb q φ lab hφ hlab hsl δ₀ h₀ hli hpr v t hv0 (fun i => (ht i).1) htv X hX m γ hγ β hβ hβp β' hβ' hβp'
             h1 h1' hc hc'⟩,
       fun X _ _ _ _ _ m δ _ hδ => ?_,
       fun X _ _ _ _ _ m δ h hδ hδp β hβ hβp h1 c' hc' hβc =>
-        GlobalTheory.T.orbit_mark_coordinate_lt_one O bar w0 hb φ hφ δ₀ h₀ hli hpr v t hv0 ht htv X m δ h hδ hδp β hβ hβp h1 c' hc' hβc⟩
-    obtain ⟨β, hβ, hβp, h1, hin⟩ := GlobalTheory.T.carries_exists_marked_form_in_cone bar w0 c δ₀ v t hv hv0 hvn hc₀ (fun i => (ht i).1) htv X m δ hδ
+        _root_.GlobalTheory.CompanionTheory.Ar.Fan.OrbitMarkCoordinateBound.orbMark_coord_lt_one O bar w0 hb φ hφ δ₀ h₀ hli hpr v t hv0 ht htv X m δ h hδ hδp β hβ hβp h1 c' hc' hβc⟩
+    obtain ⟨β, hβ, hβp, h1, hin⟩ := _root_.GlobalTheory.PolFan.carries_exists_marked bar w0 c δ₀ v t hv hv0 hvn hc₀ (fun i => (ht i).1) htv X m δ hδ
     exact ⟨β, hβ, hβp, h1, hin⟩
   · refine ⟨GlobalTheory.PolFan.zeroFun O, fun _ _ _ _ => rfl, fun X _ _ _ _ _ =>
       ⟨fun β _ _ => Or.inl (zeroFun_evalZ β), fun β _ _ h => by simp at h,

@@ -2,7 +2,8 @@ module
 
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FundamentalEquivalence.AdBridge
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.BridgeFinK
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.BridgeRealK
+public import Formalism.PeriodIntegrals.AdBridgeSteps
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.RealFieldComparison.JmMulApply
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.MaximalCompactConjugacy.Assembly
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -45,4 +46,4 @@ import Mathlib.Topology.Sheaves.Init
 @[expose] public section
 
 theorem adelic_maximal_compact : ∀ I : Formalism.MainNotions.S.AutInst, Formalism.L2.SG.AdBridge.AdBridgeK I :=
-  PI.BridgeMaxCptWork.bridgeMaxCpt_of adelic_compact_real_places adelic_compact_finite_places
+  PI.BridgeMaxCptWork.bridgeMaxCpt_of _root_.PI.UnitaryGroupMassFormula.BridgeRealK.realK adelic_compact_finite_places

@@ -1,13 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CubeTheorem
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CubeTheoremOfPerfectStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HasModelOfSpreadingStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsProperSpreadsOutStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LbSpreadsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PerfectOfModelsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SchemeModelsSpreadStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothSpreadsOutStatement
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.CubeTheorem.LBSpreads
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CubeTheoremOfPerfect
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HasModelOfSpreading
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.CubeTheorem.SchemeModels
+public import Mathlib.AlgebraicGeometry.Morphisms.Proper
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsProperSpreadsOut
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LbSpreads
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PerfectOfModels
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SchemeModelsSpread
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SmoothSpreadsOut
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,6 +58,6 @@ set_option autoImplicit false
 namespace GlobalTheory.SpreadingModels
 
 theorem cubeTheorem_holds : GlobalTheory.Published.CubeTheorem :=
-  GlobalTheory.T.cube_theorem_of_perfect (GlobalTheory.T.perfect_of_models (GlobalTheory.T.has_model_of_spreading GlobalTheory.T.scheme_models_spread GlobalTheory.T.smooth_spreads_out GlobalTheory.T.isProper_spreads_out GlobalTheory.T.line_bundle_spreads_out'))
+  _root_.GlobalTheory.CompanionTheory.CubePerf.cubeTheorem_of_perfAll (_root_.GlobalTheory.CompanionTheory.SpreadingModels.perfAll_of_hasModel (_root_.GlobalTheory.CompanionTheory.CubeModels.hasModel_of_spreads _root_.GlobalTheory.CompanionTheory.NoethApprox.schemeModels _root_.GlobalTheory.CompanionTheory.SmoothSpread.smooth_spreads _root_.GlobalTheory.CompanionTheory.SpreadingModels.properSpreads _root_.GlobalTheory.CompanionTheory.LBLimit.lbSpreads))
 
 end GlobalTheory.SpreadingModels

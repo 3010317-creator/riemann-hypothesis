@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.VecPairApply
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TameInertiaElementActsByScalar
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistedRepresentationKillsSmallSubgroupStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwoMulCocycleValuesZeroOnSmallSubgroupStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistedRepresentationKillsSmallSubgroup
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwoMulCocycleValuesZeroOnSmallSubgroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -88,7 +88,7 @@ theorem exists_bform_ne_zero : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.
   apply hy
   obtain ⟨d, hd, hd2, hd1, he⟩ := GlobalTheory.TwSys.TameScalar.exists_scalar_tmat_of_tame_inertia D N X bkP i s z hS.1.1 hz
   obtain ⟨x, hx, -⟩ := (hU A).1 x₀ hx₀
-  have hcl := GlobalTheory.T.two_mul_cocycle_values_zero_on_small_subgroup D N X bkP i s hl M L z hM hz hL A κ Q ρ hS hK hρ hanti hκz hκL x y
+  have hcl := _root_.GlobalTheory.NewPrime.FormVanish.two_mul_values_eq_zero D N X bkP i s hl M L z hM hz hL A κ Q ρ hS hK hρ hanti hκz hκL x y
     (fun h hh => by rw [hx]; exact hcon h hh)
   let I : Ideal A := Ideal.span {t | ∃ h ∈ L, ∃ b, t = x.1 h b}
   have hjI : x₀ j ∈ I := by
@@ -104,7 +104,7 @@ theorem exists_bform_ne_zero : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.
       rw [← hx']
       refine cob_of_vanish _ L (fun h hh m => ?_) z (algebraMap (X.O0 i) A d) (by simpa using hd1.map (algebraMap (X.O0 i) A))
         (repOn_scalar _ _ _ z _ hκz (by rw [Tgl_coe, hd])) hL.1.2.2.2.1 _ x'.2.2 (fun h hh => ?_)
-      · rw [(GlobalTheory.T.twisted_representation_kills_small_subgroup D N X i s hl M L z hM hL A κ ρ hK hρ (A ⧸ I) h hh).1, hκL h hh, Units.val_one, one_smul]
+      · rw [(_root_.GlobalTheory.NewPrime.SmallActs.small_acts D N X i s hl M L z hM hL A κ ρ hK hρ (A ⧸ I) h hh).1, hκL h hh, Units.val_one, one_smul]
       · funext b
         have e : x'.1 h b = I.mkQ (x.1 h b) := by
           rw [hx, hx']
@@ -135,7 +135,7 @@ theorem exists_bform_ne_zero : ∀ (D : Formalism.BasicNotions.D7) (N : NData D.
   refine cob_of_vanish _ L (fun h hh m => ?_) z (algebraMap (X.O0 i) A ((d⁻¹ : (X.O0 i)ˣ) : X.O0 i))
     (by simpa only [map_sub, map_one] using hdi.map (algebraMap (X.O0 i) A))
     (repOn_scalar _ _ _ z _ (by simp [hκz]) hρz) hL.1.2.2.2.1 _ (fun g h => ?_) (fun h hh => ?_)
-  · rw [(GlobalTheory.T.twisted_representation_kills_small_subgroup D N X i s hl M L z hM hL A κ⁻¹ ρ hK hρ A h hh).2.1]
+  · rw [(_root_.GlobalTheory.NewPrime.SmallActs.small_acts D N X i s hl M L z hM hL A κ⁻¹ ρ hK hρ A h hh).2.1]
     simp [hκL h hh]
   · rw [y.2.2, smul_add, map_smul]
   · funext b

@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Foundations.SamePartIffOfNeZero
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CardCycleTypeConsMul
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CentralBinomLePowCardPrimesBetween
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MassDegTypeLeCycleTypeStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MassDegTypeLeCycleType
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -106,7 +106,7 @@ theorem mass_not_hasPrimeFactor_le : ∀ (g : ℕ) [Fact g.Prime], ∀ N : ℕ, 
     unfold mass
     convert Finset.sum_le_sum_of_subset_of_nonneg (f := fun f => ((torusCard g f : ℝ))⁻¹) hsub
       (fun f _ _ => by positivity)
-  have hT := GlobalTheory.T.mass_degType_le_card_cycleType_div g N (fun m : Multiset ℕ => ∀ p ∈ S, p ∉ m)
+  have hT := _root_.GlobalTheory.BadShare.mass_degType_le_cycleType g N (fun m : Multiset ℕ => ∀ p ∈ S, p ∉ m)
   have hcount := card_perm_no_long_cycle N S hS
   have hlong : ∀ p ∈ S, ((Finset.univ.filter fun σ : Equiv.Perm (Fin N) =>
       p ∈ σ.partition.parts).card : ℝ) = N.factorial / p := by

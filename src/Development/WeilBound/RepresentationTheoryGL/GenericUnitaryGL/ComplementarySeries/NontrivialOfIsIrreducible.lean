@@ -9,12 +9,18 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.Unitarisa
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualClassInvolutive
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualClassTwistNeg
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsIrrRepInjectiveStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.NontrivialOfIrreducible
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Mathlib.Topology.Instances.Matrix
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsIrrRepInjective
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsSmoothIterPhi
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityOfEquiv
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LanglandsSocleOfOrderFree
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalLanglandsOfIrreducibleAdmissibleStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PairingTwistedDeterminantSubquotientStatement
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.ZelevinskyCosocles.GKLocal
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IrreducibleAdmissibleGL
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalLanglandsOfIrreducibleAdmissible
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.LSegJacquet
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PairingTwistedDeterminantSubquotient
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -125,13 +131,13 @@ theorem nuPair_of (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [Is
     (GlobalTheory.CompanionTheory.BZCuspPair.phi_vanish ψ hc hψ n j ω hs hlow)
   have hD := GlobalTheory.CompanionTheory.BZCuspPair.deriv_nontrivial ψ n j ω hnt2
   have hfl := h3 ψ hc hψ (n + 1) j V ω hs hi
-  obtain ⟨S, f, hf⟩ := GlobalTheory.T.exists_injective_irreducible_subrepresentation k (n + 1) _ _ _ _ (GlobalTheory.CompanionTheory.BZCuspPair.isSmooth_deriv ψ j hs) hD
+  obtain ⟨S, f, hf⟩ := _root_.GlobalTheory.CompanionTheory.IrrSub.exists_irrRep_injective k (n + 1) _ _ _ _ (GlobalTheory.CompanionTheory.BZCuspPair.isSmooth_deriv ψ j hs) hD
     (IsSubquotient.refl _) hfl
   have := nontrivial_of_irr S
   obtain ⟨w₀, hw₀⟩ := exists_ne (0 : S.V)
   have hw1 : f w₀ ≠ 0 := fun h => hw₀ (hf (by rw [h, map_zero]))
   obtain ⟨w', hw'⟩ := hn' (f w₀) hw1
-  obtain ⟨Q, hQ, hQcl⟩ := GlobalTheory.T.pairing_twisted_determinant_subquotient k (n + 1) j _ S (GlobalTheory.BZMir.deriv k ψ⁻¹ j (contra ω))
+  obtain ⟨Q, hQ, hQcl⟩ := _root_.GlobalTheory.CompanionTheory.DualQuot.exists_subquotient_dual_nu k (n + 1) j _ S (GlobalTheory.BZMir.deriv k ψ⁻¹ j (contra ω))
     (GlobalTheory.CompanionTheory.BZCuspPair.isSmooth_deriv ψ⁻¹ j (isSmooth_contra _)) (B'.comp f.toLinearMap)
     (fun g w v => by
       have := hB' g (f w) v
@@ -143,7 +149,7 @@ theorem nuPair_of (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [Is
   obtain ⟨β'', hd2, hβ'', hj2⟩ := h1 ψ⁻¹ hc' hψ' n j _ (contra ω) (isSmooth_contra _)
     (hasFiniteLength_of_isIrreducible hic) Q hQ
 
-  have hGK : Zc.Cos.GKLocal k := GlobalTheory.T.local_langlands_of_irreducible_admissible hA
+  have hGK : Zc.Cos.GKLocal k := _root_.GlobalTheory.CompanionTheory.GKLocalProof.gkLocal hA
   have hsθ : IsSmooth ((ω.comp (Zc.Cos.thetaW k (n + 1 + j + 1))).comp (Zc.Cos.thetaW k (n + 1 + j + 1))) := by
     rw [GlobalTheory.CompanionTheory.LSocle.comp_thetaW_thetaW]
     exact hs

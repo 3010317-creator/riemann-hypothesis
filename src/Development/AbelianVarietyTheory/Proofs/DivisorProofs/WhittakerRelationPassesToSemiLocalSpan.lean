@@ -1,9 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KerInfMemLocSpan
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicGLComplementarySupportsCommuteStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspFormModerateGrowthCompactStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlobalWhittakerCoefficientLinearArchimedeanKerneStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRapidInf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicGLComplementarySupportsCommute
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspFormModerateGrowthCompact
+public import Development.AbelianVarietyTheory.Definitions.Divisors.MeasurableCompInfGL
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GlobalWhittakerCoefficientLinearArchimedeanKerne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -74,10 +76,10 @@ theorem infGL_mem_supS' {E : Type} [Field E] [NumberField E] [_root_.NumberField
 
 theorem whit_rel_locSpan : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberField.IsTotallyComplex E] (a : ℕ) (S : Finset (HeightOneSpectrum (𝓞 E))) (π : CuspSub E a) (φ : Sm E a), φ ∈ π.V → ∀ (t : GA E a) (c : ℂ), GeneralLinearGroup.map (pInf E) t = 1 → (∀ w ∈ S, GeneralLinearGroup.map ((pLoc E w).comp (pFin E)) t = 1) → (∀ x ∈ GlobalTheory.JSW.supS (E := E) (a := a) S, GlobalTheory.JSW.whit φ.1 (x * t) = c * GlobalTheory.JSW.whit φ.1 x) → ∀ F ∈ GlobalTheory.JSW.MirSemi.locSpan S φ.1, ∀ x ∈ GlobalTheory.JSW.supS (E := E) (a := a) S, GlobalTheory.JSW.whit F (x * t) = c * GlobalTheory.JSW.whit F x := by
   intro E _ _ _ a S π φ hφ t c htInf htS hrel
-  have hreg := GlobalTheory.T.cusp_form_moderate_growth_compact E a S π φ hφ
+  have hreg := _root_.GlobalTheory.JSW.MirSemi.locSpan_continuous_moderate E a S π φ hφ
   have hlin : ∀ F ∈ locSpan S φ.1, ∀ G ∈ locSpan S φ.1, ∀ (c' : ℂ) (g : GA E a),
       whit (fun x => F x + c' * G x) g = whit F g + c' * whit G g := fun F hF G hG =>
-    (GlobalTheory.T.globalWhittakerCoefficient_linear_archimedeanKernel E a F G (hreg F hF).1 (hreg G hG).1 (hreg F hF).2 (hreg G hG).2).1
+    (_root_.GlobalTheory.JSW.WhitAlg.whit_linear_kerInf E a F G (hreg F hF).1 (hreg G hG).1 (hreg F hF).2 (hreg G hG).2).1
   let V : Submodule ℂ (GA E a → ℂ) :=
     { carrier := {F | F ∈ locSpan S φ.1 ∧ ∀ x ∈ supS (E := E) (a := a) S, whit F (x * t) = c * whit F x}
       add_mem' := by
@@ -96,15 +98,15 @@ theorem whit_rel_locSpan : ∀ (E : Type) [Field E] [NumberField E] [_root_.Numb
     refine locSpan_le ⟨self_mem_locSpan, hrel⟩ ?_ ?_
     · rintro F ⟨hF, hF'⟩ h hh
       refine ⟨rt_mem_locSpan hF hh, fun x hx => ?_⟩
-      rw [whit_rt_apply, whit_rt_apply, mul_assoc, ← GlobalTheory.T.adelicGL_complementary_supports_commute E a S h t hh htInf htS, ← mul_assoc]
+      rw [whit_rt_apply, whit_rt_apply, mul_assoc, ← _root_.GlobalTheory.JSW.MirSemi.supS_mul_comm E a S h t hh htInf htS, ← mul_assoc]
       exact hF' (x * h) (mul_mem_supS' hx hh)
     · rintro F ⟨hF, hF'⟩ X _ ν _ k γ hk
       refine ⟨kerInf_mem_locSpan hF ν hk, fun x hx => ?_⟩
-      have hker := (GlobalTheory.T.globalWhittakerCoefficient_linear_archimedeanKernel E a F F (hreg F hF).1 (hreg F hF).1 (hreg F hF).2 (hreg F hF).2).2 X ν k γ hk
+      have hker := (_root_.GlobalTheory.JSW.WhitAlg.whit_linear_kerInf E a F F (hreg F hF).1 (hreg F hF).1 (hreg F hF).2 (hreg F hF).2).2 X ν k γ hk
       rw [hker, hker, ← integral_const_mul]
       congr 1
       funext y
-      have hc := GlobalTheory.T.adelicGL_complementary_supports_commute E a S (infGL E a (γ y)) t (infGL_mem_supS' S (γ y)) htInf htS
+      have hc := _root_.GlobalTheory.JSW.MirSemi.supS_mul_comm E a S (infGL E a (γ y)) t (infGL_mem_supS' S (γ y)) htInf htS
       rw [mul_assoc x t, ← hc, ← mul_assoc, hF' _ (mul_mem_supS' hx (infGL_mem_supS' S (γ y)))]
       ring
   intro F hF x hx

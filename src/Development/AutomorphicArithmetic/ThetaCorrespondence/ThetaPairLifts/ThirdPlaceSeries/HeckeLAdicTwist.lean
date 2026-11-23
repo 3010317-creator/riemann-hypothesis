@@ -4,15 +4,19 @@ public import Formalism.SharpRestriction.LevelLetterCocycles.SumRepresentations
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.HeckeLAdicCharacterAboveIff
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.HeckeLAdicParameterAbove
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.CharacterChoiceData
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeCharExponentOfInfinityTypeStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ContinuousConjFin
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeCharExponentOfInfinityType
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsOpenKerOfInfConn
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DeRhamAndJumpsRankOneLAdicCharacterStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsAlgebraicHeckeCharOfWeightOfIntegerExpoStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.WdOfMono0L
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.CharAbove
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DeRhamAndJumpsRankOneLAdicCharacter
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.IsAlgebraicHeckeCharOfWeightOfIntegerExpo
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.AbsPowOneNotIsAlgRat
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.CgEqOfCharStatement
-import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.EventuallyUnr
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.LocParTwistAbsPow
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.WeilDeligneRankOneEqLocalStatement
+import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.EventuallyUnr
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -71,13 +75,13 @@ theorem heckeLAdicTwist_alt : GlobalTheory.Published.AutomorphicFormsFiniteGL �
     rw [CG.twist_ofChar, Multiset.map_singleton] at h
     have := h.infChar_eq
     rw [CG.infChar_ofChar] at this
-    rw [← (GlobalTheory.T.heckeChar_exponent_of_infinityType _ ν).2.1 s hν τ]
+    rw [← (_root_.GlobalTheory.CuspRep.InfType.expo_of_infType _ ν).2.1 s hν τ]
     simpa using this
   have hint' : ∀ τ, ∃ k : ℤ, expo (ψ * ν) τ = k := fun τ => by
     obtain ⟨k, hk⟩ := hint τ (expo ψ τ) (by rw [hinf]; exact Multiset.mem_singleton_self _)
     exact ⟨k, by rw [hexpo, hk]⟩
   choose n hn using hint'
-  have hAlg : IsAlgPos (ψ * ν) n := GlobalTheory.T.isAlgebraicHeckeCharOfWeight_of_integer_expo D.host.E (ψ * ν) n hn
+  have hAlg : IsAlgPos (ψ * ν) n := _root_.GlobalTheory.CuspRep.AlgExpo.isAlgPos_of_expo D.host.E (ψ * ν) n hn
   obtain ⟨art, ha⟩ := hGA D.host.E D.nd.Om
   obtain ⟨μ, hμc, hμ⟩ := ha.exists_isLAdicOf (D.naut.iotaQC i) hAlg
   have hpar : ∀ (w : PlE D.host) (u : ℝ), P.T.e w (D.naut.lpTw (D.naut.locG χ w) u) =
@@ -99,7 +103,7 @@ theorem heckeLAdicTwist_alt : GlobalTheory.Published.AutomorphicFormsFiniteGL �
         (Bw : LocBridge (D.nd.l i) D.host.E D.nd.Om (Dec (F := D.host.E) (D.nd.plOm.1 w)) O) (hj : Induces Bw) =>
       (GlobalTheory.Published.heckeLAdicCharacterAbove_iff.1 hCh) D.host.E D.nd.Om (D.nd.l i) (D.loc _) (D.locA _) ⟨D.locT _⟩
         (D.naut.iotaQC i) art ha (ψ * ν) n μ hAlg hμc hμ w (D.nd.plOm.1 w) (D.nd.plOm.2 w) O Bw hj
-    obtain ⟨hdR, hJ⟩ := GlobalTheory.T.deRham_jumps_of_continuous_lAdic_char D P.T P.wd (D.nd.l i) (D.naut.iotaQC i) μ hμc
+    obtain ⟨hdR, hJ⟩ := _root_.GlobalTheory.CharAboveRead.deRham_and_jumps_rankOne_lAdic_character D P.T P.wd (D.nd.l i) (D.naut.iotaQC i) μ hμc
       (fun τ => {-n ((D.naut.iotaQC i).toRingHom.comp τ)}) w hw
       (fun O _ _ _ Bw hj => ⟨(hab O Bw hj).1, (hab O Bw hj).2.2.2⟩)
     refine ⟨(P.wdOf i 1 (rk1 μ) w).2.2.2.1.2 hdR, ?_, fun τ hτ => ?_⟩

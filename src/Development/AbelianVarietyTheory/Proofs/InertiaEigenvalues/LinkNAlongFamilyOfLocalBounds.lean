@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.BoundAtTwoThreeFamily
 public import Formalism.SharpRestriction.GlobalTheoremInputs
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmittedStatementsOfLocalBoundsConclusionStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AdmittedStatementsOfLocalBoundsConclusion
 public import Formalism.SharpRestriction.LevelLetterCocycles.ExportBoundOfAdmissible
 public import Formalism.SharpRestriction.LevelLetterCocycles.ThetaScalarFamilyOfEigenvalue
 import Mathlib.Algebra.Order.Floor.Extended
@@ -52,7 +52,7 @@ theorem main : ∀ {eps : ℝ} (Fm : FamP eps), ConclF Fm → Formalism.MainNoti
   obtain ⟨C, x0, h⟩ := hC
   have hA : Formalism.MainNotions.TwistedPlaces.AdmF Fm := ⟨C, x0, fun x hx hx1 i hS => by
     obtain ⟨X, hX⟩ := h x hx hx1 i hS
-    exact GlobalTheory.T.admittedStatements_of_localBoundsConclusion_alt _ _ _ X C hX⟩
+    exact _root_.GlobalTheory.NLink.admittedStatements_of_localBoundsConclusion _ _ _ X C hX⟩
   exact Formalism.MainNotions.N.linkN_of Fm hA (Formalism.MainNotions.TwistedPlaces.stmtF_holds Fm)
 
 end GlobalTheory.LinkFam

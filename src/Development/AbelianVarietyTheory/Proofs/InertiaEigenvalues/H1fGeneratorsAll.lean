@@ -1,7 +1,8 @@
 module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.RamifiedCoefficientChains
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.H1fGeneratedLatticeStatement
+public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.H1fGeneratedLattice
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -47,6 +48,6 @@ namespace GlobalTheory
 
 theorem h1f_generators_of_record : ∀ D : D7, Formalism.MainNotions.RamifiedCoefficientChains.adm13 D := by
   intro D l _ K LL _ T _
-  exact GlobalTheory.T.h1f_generated_lattice l (D.loc l) (D.locA l) (D.locT l) K LL T
+  exact _root_.GlobalTheory.H1fGeneration.h1fGen_tied l (D.loc l) (D.locA l) (D.locT l) K LL T
 
 end GlobalTheory

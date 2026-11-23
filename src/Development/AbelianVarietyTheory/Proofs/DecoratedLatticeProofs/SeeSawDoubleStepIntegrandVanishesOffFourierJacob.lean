@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SeeSawDoubleStepFiniteIntegralCollapseTwistPlaceAlt
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapHandedFunctionVanishingPeriodInvariantStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapHandedFunctionVanishingPeriodInvariant
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HandBFSmul
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationDisjointPlacesCommuteVacua
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryFiniteAdelicGroupSplitFinitePlaceSetStatement
@@ -194,7 +195,7 @@ theorem main : ∀ (D : D7) (c : Comm D) (v : VCom c) (t : Tup c) (w : VTup t), 
       (t.om j (1, s) (comb c.ψ _ _ (v.eG j) (t.om j (g, y) (comb c.ψ _ _ (w.eQ j) Ψ₁)))) ≠ 0 := by
     intro h0
     apply hflat
-    have := ((GlobalTheory.T.flatMap_handedFunction_vanishing_period_invariant D c.ψ (offP v w)).1 _ _ _ (t.sBF j (σ + 1) h) _ th r hr hrP).2 h0
+    have := ((_root_.GlobalTheory.FlatRInv.vanish_invariant D c.ψ (offP v w)).1 _ _ _ (t.sBF j (σ + 1) h) _ th r hr hrP).2 h0
     rw [hom] at this
     rw [e₃]
     exact this

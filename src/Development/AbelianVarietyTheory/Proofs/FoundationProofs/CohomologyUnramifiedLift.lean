@@ -4,20 +4,20 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.FinalTheo
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.Brauer
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
 public import Mathlib.RingTheory.AdicCompletion.Noetherian
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CocyclePairingLocallyConstantStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CocyclePairingLocallyConstant
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ColRepApplyOfOne
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CupProductCoboundaryModStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CupProductUnramifiedClassesVanishesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsAuxiliaryPrimeFrobeniusNearCommutatorStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCharacterPrimeConductorDegreePrimePowStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CupProductCoboundaryMod
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CupProductUnramifiedClassesVanishes
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsAuxiliaryPrimeFrobeniusNearCommutator
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCharacterPrimeConductorDegreePrimePow
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.InertiaFixesRootOfUnity
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegralTwoCocycleReciprocityTrivialAtLastPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntegralTwoCocycleReciprocityTrivialAtLastPlace
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsOpenKerAndIsLocallyConstant
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LocalConditionsIndependentOfPlaceOverStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LocalHeightFrobeniusPlaceStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LocalConditionsIndependentOfPlaceOver
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LocalHeightFrobeniusPlace
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MemOfFinTwo
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NormAlgebraMapLeOne
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnramifiedCocycleKillsRootsStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnramifiedCocycleKillsRoots
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.CongruenceMulOfUnitFactor
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.EqOfNatCastMem
 import Mathlib.Algebra.Order.Floor.Extended
@@ -197,7 +197,7 @@ theorem ht_vanish_commutator : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀
   obtain ⟨U₂, hU₂o, hU₂⟩ := htc_open_near (fun s => (mat W s).det) hmatc.matrix_det σ _ hr2
   have hdtv : ∀ s, ((dt W s : (Qbar l)ˣ) : Qbar l) = (mat W s).det := fun s => rfl
   obtain ⟨w, B, τ, hwS, hwS', hB, hFrob, hτD, hστ, hdiv, hpow⟩ :=
-    GlobalTheory.T.exists_auxiliary_prime_frobenius_near_commutator l Ω n S S' (U₁ ⊓ U₂) σ (by rw [Subgroup.coe_inf]; exact hU₁o.inter hU₂o) hσcyc
+    _root_.GlobalTheory.Ord2.AuxiliaryInertOddPrime.exists_odd_prime_gt_two_bounds l Ω n S S' (U₁ ⊓ U₂) σ (by rw [Subgroup.coe_inf]; exact hU₁o.inter hU₂o) hσcyc
   have hdtτ : dt W τ = 1 := by
     have h := congrArg (fun f : G ℚ Ω →* (Qbar l)ˣ => f τ) hdet2
     simp only [pow_two, MonoidHom.mul_apply, MonoidHom.one_apply] at h
@@ -210,10 +210,10 @@ theorem ht_vanish_commutator : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀
       rw [← hdtv, ← hdtv, h1, hdtσ, Units.val_one, show (-1 : Qbar l) - 1 = -2 by ring, norm_neg] at h3
       exact lt_irrefl _ h3
   have hwl : ((l : ℕ) : 𝓞 ℚ) ∉ w.asIdeal := fun h => hwS (hAbove w h)
-  obtain ⟨ψ, hKill, hSurj, hIne1, hDecK⟩ := GlobalTheory.T.exists_character_primeConductor_degree_prime_pow l Ω n w hn hdiv
+  obtain ⟨ψ, hKill, hSurj, hIne1, hDecK⟩ := _root_.GlobalTheory.Ord2.PrimeChar.exists_prime_char l Ω n w hn hdiv
   have hT := hTame w hwS' hdiv ψ hKill hSurj
   obtain ⟨P, un, d, hPO, hun, hPfrob, hdc, hdO, hdrel, hdker, hdq⟩ :=
-    GlobalTheory.T.unramified_cocycle_kills_roots l Ω c n S W y w ψ hWc hO hAbove hW.unr hyO hKill hwS hT
+    _root_.GlobalTheory.Ord2.FirstDer.main l Ω c n S W y w ψ hWc hO hAbove hW.unr hyO hKill hwS hT
   obtain ⟨hNw, hNwv, hpl⟩ := htc_places w
   obtain ⟨hψo, hψlc⟩ := htc_killsMu_open _ (normV w) ψ hNw hKill
   have hψIne : ∀ v, v ≠ w → ∀ B' : ValuationSubring Ω, IsPlaceOver B' v → Ine (F := ℚ) B' ≤ ψ.ker :=
@@ -237,7 +237,7 @@ theorem ht_vanish_commutator : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀
       have hvl : ((l : ℕ) : 𝓞 ℚ) ∉ v.asIdeal := fun h => hv (hAbove v h)
       have hWs : W s = 1 := (hIneN0 v hv B' hB' hs).2
       obtain ⟨B0, hB0, hcob⟩ := hyU v hvl
-      obtain ⟨x, hx⟩ := (GlobalTheory.T.localConditions_independent_of_place_over l Ω W y hy v B0 B' hB0 hB').1 hcob
+      obtain ⟨x, hx⟩ := (_root_.GlobalTheory.Ord2.place_indep l Ω W y hy v B0 B' hB0 hB').1 hcob
       refine ⟨hIneN0 v hv B' hB' hs, ?_⟩
       rw [hx s hs, show mat W s = 1 by simp [mat, hWs], Matrix.one_mulVec, sub_self])
   have hNSz : ∀ a ∈ NS (F := ℚ) Ω (S : Set Pl), z a = 0 :=
@@ -257,7 +257,7 @@ theorem ht_vanish_commutator : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀
   have hker2 : (toGS Ω (S2 : Set Pl)).ker ≤ N0g W ⊓ ψ.ker := by
     rw [htc_ker_toGS]
     exact le_inf ((htc_NS_anti hsub).trans hNS_N0) hNSψ
-  have hxi := GlobalTheory.T.cocycle_pairing_locally_constant l Ω c n S2 W y z d u P ψ hWc hO hdet2 hker2 hψlc hPO hy hz hyO hzO
+  have hxi := _root_.GlobalTheory.Ord2.cup_product_two_cocycle l Ω c n S2 W y z d u P ψ hWc hO hdet2 hker2 hψlc hPO hy hz hyO hzO
     (fun a ha => by
       rw [htc_ker_toGS] at ha
       have ha' := htc_NS_anti hsub ha
@@ -296,17 +296,17 @@ theorem ht_vanish_commutator : GlobalTheory.Mem.LiteralAutomorphy.LitCoh → ∀
       subst hvv'
       refine ⟨A, hAv', hξDec v hvS A hAv' ?_⟩
       obtain ⟨x, hxO, hx⟩ := hzl
-      exact GlobalTheory.T.cup_product_coboundary_mod l Ω c n W (Dec (F := ℚ) A) d z hWc hO hdet2 (hCocd v hvS A hAv') (hCocz _)
+      exact _root_.GlobalTheory.Ord2.CupCob.cup_cob l Ω c n W (Dec (F := ℚ) A) d z hWc hO hdet2 (hCocd v hvS A hAv') (hCocz _)
         (Or.inr ⟨x, hxO, fun s hs => by rw [hx s hs]; exact hCv _⟩)
     · obtain ⟨B', hB', hcobd⟩ := hdq v hvS hvl
       obtain ⟨x, hxO, hx⟩ := hzq v hvl B' hB'
       refine ⟨B', hB', hξDec v hvS B' hB' ?_⟩
-      exact GlobalTheory.T.cupProduct_unramifiedClasses_vanishes hLit l Ω c n W v B' d z hWc hO hdet2 hB' hvl (hCocd v hvS B' hB') (hCocz _) hcobd
+      exact _root_.GlobalTheory.Ord2.UnrCup.cup_unr_cob hLit l Ω c n W v B' d z hWc hO hdet2 hB' hvl (hCocd v hvS B' hB') (hCocz _) hcobd
         ⟨x, hxO, fun s hs => by rw [hx s hs]; exact hCv _⟩
   have hAbove2 : ContainsAbove S2 l := fun v hv => Finset.mem_insert_of_mem (hAbove v hv)
-  have hCobw := GlobalTheory.T.integralTwoCocycle_reciprocity_trivial_at_last_place hLit l Ω c n S2 ξ w hW.l_odd hAbove2 hxi (Finset.mem_insert_self w S) hloc B hB
+  have hCobw := _root_.GlobalTheory.Ord2.Rec.reciprocity hLit l Ω c n S2 ξ w hW.l_odd hAbove2 hxi (Finset.mem_insert_self w S) hloc B hB
   have hIneB : Ine (F := ℚ) B ≤ NS (F := ℚ) Ω (S : Set Pl) := htc_Ine_le_NS (by exact_mod_cast hwS) hB
-  have hlocw := GlobalTheory.T.local_height_frobenius_place l Ω c n W y z d u P ψ w B τ hn hWc hO hdet2 hB hdiv hFrob hτD hdtτ (hW.unr w hwS B hB)
+  have hlocw := _root_.GlobalTheory.Ord2.LocW.local_height_at_frobenius l Ω c n W y z d u P ψ w B τ hn hWc hO hdet2 hB hdiv hFrob hτD hdtτ (hW.unr w hwS B hB)
     hψlc (hIne1 B hB) hPO hy hz hyO hzO (fun a ha => ⟨hNSy a (hIneB ha), hNSz a (hIneB ha)⟩) huc huO
     (fun s a ha => huS s a (by rw [htc_ker_toGS]; exact hIneB ha)) hcup hdc hdO hdrel hCobw
   have hFτ : Cg n (F τ) 0 := congruence_mul_of_unit_factor hlocw (hPfrob B τ hB hFrob) hun

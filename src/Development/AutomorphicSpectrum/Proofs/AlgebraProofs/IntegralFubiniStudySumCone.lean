@@ -1,13 +1,15 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.IsScaleStable
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.AeFibrePointsCardEqDegreeStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ConeBallLogGapIntegralStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.CroftonFormulaFibreSumStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FubiniStudyLogLeLogNormStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.GaussianMatrixMeasurePosFiniteStatement
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.AeFibrePointsCardEqDegree
+public import GroundTheory.HeightsAndTheta.Heights.ArithmeticBezout.ConeBall
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ConeBallLogGapIntegral
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.CroftonFormulaFibreSum
+public import GroundTheory.HeightsAndTheta.Heights.ArithmeticBezout.Statements
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FubiniStudyLogLeLogNorm
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.GaussianMatrixMeasurePosFinite
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LogGapMeasurableScaleStable
 import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.IsSigmaCompactConeInter
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LogGapMeasurableScaleStableStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -86,7 +88,7 @@ theorem fubini_study_sum_crofton {n e δ : ℕ} (h : HermNorm n) (u : Fin n → 
     intro y hy
     simp [logGap, hne0 y hy, hsum y hy]
   have hnn : ∀ y ∈ fibrePts S π, 0 ≤ Real.log (h.norm u) - fsLog h u (h.pointOf y) := fun y hy =>
-    sub_nonneg.2 (GlobalTheory.T.fubini_study_log_le_log_norm n h u y (hne0 y hy) (hsum y hy))
+    sub_nonneg.2 (_root_.GlobalTheory.CompanionTheory.Ar.Short.Crofton.fsLog_pointOf_le_log_norm n h u y (hne0 y hy) (hsum y hy))
   haveI : Fintype (fibrePts S π) := hfin.fintype
   have htsum : ∑' z : fibrePts S π, logGap h u z = ∑ y ∈ hfin.toFinset, logGap h u y := by
     rw [tsum_fintype]
@@ -122,16 +124,16 @@ theorem GlobalTheory.CompanionTheory.Ar.Short.Crofton.fsSum_crofton : ∀ (n e �
       ∫ π, fsSum h u (coneSet h W) π ∂(gaussM (e + 1) n) =
         (gaussM (e + 1) n Set.univ).toReal * coneIntegral h W e (fsLog h u) := by
   intro n e δ h W f u hW hf hδ hu
-  obtain ⟨hLGm, hLGo⟩ := GlobalTheory.T.log_gap_measurable_scale_stable n h u
-  obtain ⟨hGm, hGeq⟩ := GlobalTheory.T.crofton_formula_fibre_sum n e δ h W f hW hf hδ (logGap h u) hLGm hLGo
-  obtain ⟨hL, hLr⟩ := GlobalTheory.T.cone_ball_log_gap_integral n e h W f u hW hf hu
-  obtain ⟨hμ0, hμt⟩ := GlobalTheory.T.gaussian_matrix_measure_pos_finite (e + 1) n
+  obtain ⟨hLGm, hLGo⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Short.Crofton.logGap_basic n h u
+  obtain ⟨hGm, hGeq⟩ := _root_.GlobalTheory.CompanionTheory.Relay.crofton_formula_fibre_sum n e δ h W f hW hf hδ (logGap h u) hLGm hLGo
+  obtain ⟨hL, hLr⟩ := _root_.GlobalTheory.CompanionTheory.Relay.cone_ball_log_gap_integral n e h W f u hW hf hu
+  obtain ⟨hμ0, hμt⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Short.Crofton.gaussM_univ_pos_lt_top (e + 1) n
   obtain ⟨hpm0, hpmt⟩ : 0 < planeMass n e ∧ planeMass n e < ⊤ :=
     GroundTheory.Heights₂.Heights.coordBall_mass (chowGroups_le hW hf hδ)
   have hac : gaussM (e + 1) n ≪ (volume : Measure (Fin (e + 1) → Fin n → ℂ)) :=
     withDensity_absolutelyContinuous _ _
   have hcnt : ∀ᵐ π ∂(gaussM (e + 1) n), (fibrePts (coneSet h W) π).encard = δ :=
-    hac.ae_le (GlobalTheory.T.ae_fibre_points_card_eq_degree n e δ h W f hW hf hδ)
+    hac.ae_le (_root_.GlobalTheory.CompanionTheory.Relay.ae_fibre_points_card_eq_degree n e δ h W f hW hf hδ)
   have hd : (0 : ℝ) < ((2 * (e + 1) : ℕ) : ℝ) := by positivity
   haveI := MeasureTheory.Measure.nullSingletonClass_hausdorff (EuclideanSpace ℂ (Fin n)) hd
   have hφm : Measurable (({0}ᶜ : Set (EuclideanSpace ℂ (Fin n))).indicator (fun _ => (1 : ℝ≥0∞))) :=
@@ -157,7 +159,7 @@ theorem GlobalTheory.CompanionTheory.Ar.Short.Crofton.fsSum_crofton : ∀ (n e �
         · simp [Set.indicator_apply, hy, hs1]
       rw [hset]
       exact ⟨isOpen_empty, fun y hy => hy.elim⟩
-  obtain ⟨-, hCeq⟩ := GlobalTheory.T.crofton_formula_fibre_sum n e δ h W f hW hf hδ _ hφm hφo
+  obtain ⟨-, hCeq⟩ := _root_.GlobalTheory.CompanionTheory.Relay.crofton_formula_fibre_sum n e δ h W f hW hf hδ _ hφm hφo
   have hae1 : ∀ᵐ π ∂(gaussM (e + 1) n), ∑' y : fibrePts (coneSet h W) π,
       ({0}ᶜ : Set (EuclideanSpace ℂ (Fin n))).indicator (fun _ => (1 : ℝ≥0∞)) y = δ := by
     filter_upwards [hcnt] with π hπ

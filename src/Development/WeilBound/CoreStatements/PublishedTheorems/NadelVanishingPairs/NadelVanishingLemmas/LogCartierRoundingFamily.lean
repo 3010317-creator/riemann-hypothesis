@@ -1,13 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsEulerContraction
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogCoordinateWedgeLinearIndependentSpanEqTopStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogFrobeniusLiftSmulLogCoordinateWedgeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemSubringOfPthPowerTwistedMonomialMemStatement
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.CartierProjectionPropertiesStatement
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.ChartFormsDifferentialClosed
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.EulerContractionChartForms
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.MemChartFormsIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogCoordinateWedgeLinearIndependentSpanEqTop
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogFrobeniusLiftSmulLogCoordinateWedge
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemSubringOfPthPowerTwistedMonomialMem
+public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.CartierProjectionProperties
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChartFormsDifferentialClosed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EulerContractionChartForms
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemChartFormsIff
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,7 +65,7 @@ theorem logCartier_rounding_family : ∀ (K : Type) [Field K] (p : ℕ) [Fact p.
   obtain ⟨y0⟩ := ‹Nonempty Y›
   have hc : IsCoord x := (hA y0).coord
   have hp : 0 < p := (Fact.out : p.Prime).pos
-  obtain ⟨h, Q, π, hhom, hQw, hπ, -, -, hstab⟩ := GlobalTheory.T.cartier_projection_properties K p n x hc
+  obtain ⟨h, Q, π, hhom, hQw, hπ, -, -, hstab⟩ := _root_.GlobalTheory.CartierHomotopy.cartier_projector_homotopic K p n x hc
   have hT : ∀ y, (∀ q, ∀ η ∈ chartForms (A y) x J (t y ^ p * ∏ j ∈ J, x j ^ r y j) (q + 1),
         h η ∈ chartForms (A y) x J (t y ^ p * ∏ j ∈ J, x j ^ r y j) q) ∧
       (∀ η ∈ chartForms (A y) x J (t y ^ p * ∏ j ∈ J, x j ^ r y j) 0, h η = 0) ∧
@@ -73,9 +73,9 @@ theorem logCartier_rounding_family : ∀ (K : Type) [Field K] (p : ℕ) [Fact p.
         Q η ∈ chartForms (A y) x J (t y ^ p * ∏ j ∈ J, x j ^ r y j) q := by
     intro y
     exact hstab (fun q => chartForms (A y) x J (t y ^ p * ∏ j ∈ J, x j ^ r y j) q)
-      (GlobalTheory.T.chart_forms_differential_closed K p (A y) n x J (t y) (r y) (hA y))
-      (fun i θ hθ => GlobalTheory.T.euler_contraction_chart_forms K (A y) n x J _ i θ (hA y).mem hθ)
-  obtain ⟨hli, hsp⟩ := GlobalTheory.T.logCoordinateWedge_linearIndependent_span_eq_top K n x hc
+      (_root_.GlobalTheory.LogDR.extD_mem_chartForms_twist K p (A y) n x J (t y) (r y) (hA y))
+      (fun i θ hθ => _root_.GlobalTheory.LogDR.chartForms_stable_euler K (A y) n x J _ i θ (hA y).mem hθ)
+  obtain ⟨hli, hsp⟩ := _root_.GlobalTheory.LogDR.logWedge_basis K n x hc
   obtain ⟨c, hcη⟩ : ∃ c : Finset (Fin n) → K, ∑ I, c I • logWedge x I = η :=
     (Submodule.mem_span_range_iff_exists_fun K).mp (hsp ▸ Submodule.mem_top)
   choose g hg using fun I => hπ (c I)
@@ -87,7 +87,7 @@ theorem logCartier_rounding_family : ∀ (K : Type) [Field K] (p : ℕ) [Fact p.
   refine ⟨∑ I, g I • logWedge x I, h η, ?_, ?_, ?_, ?_⟩
   · intro y
     have hm := (hT y).2.2 a η (hη y)
-    rw [GlobalTheory.T.mem_chart_forms_iff] at hm
+    rw [_root_.GlobalTheory.LogDR.mem_chartForms_iff] at hm
     obtain ⟨c', hc'0, hc'A, hc'eq⟩ := hm
     have heq : ∀ I, c' I = g I ^ p := by
       have h0 : ∑ I, (c' I - g I ^ p) • logWedge x I = 0 := by
@@ -95,7 +95,7 @@ theorem logCartier_rounding_family : ∀ (K : Type) [Field K] (p : ℕ) [Fact p.
         rw [← hc'eq, ← hQη, sub_self]
       intro I
       exact sub_eq_zero.mp (Fintype.linearIndependent_iff.mp hli _ h0 I)
-    rw [GlobalTheory.T.mem_chart_forms_iff]
+    rw [_root_.GlobalTheory.LogDR.mem_chartForms_iff]
     refine ⟨g, ?_, ?_, rfl⟩
     · intro I hI
       have h1 := hc'0 I hI
@@ -104,7 +104,7 @@ theorem logCartier_rounding_family : ∀ (K : Type) [Field K] (p : ℕ) [Fact p.
     · intro I
       have h1 := hc'A I
       rw [heq] at h1
-      exact GlobalTheory.T.mem_subring_of_pthPower_twisted_monomial_mem K p (A y) n x I J (t y) (r y) (g I) hp (hA y) (hr y) h1
+      exact _root_.GlobalTheory.LogDR.round_coeff_mem K p (A y) n x I J (t y) (r y) (g I) hp (hA y) (hr y) h1
   · intro y q hq
     subst hq
     exact (hT y).1 q η (hη y)
@@ -113,7 +113,7 @@ theorem logCartier_rounding_family : ∀ (K : Type) [Field K] (p : ℕ) [Fact p.
     exact (hT y0).2.1 η (hη y0)
   · set_option synthInstance.maxHeartbeats 100000 in
       rw [map_sum]
-    simp_rw [GlobalTheory.T.logFrobeniusLift_smul_logCoordinateWedge K p n x γ hγ]
+    simp_rw [_root_.GlobalTheory.cartierMap_smul_logWedge K p n x γ hγ]
     rw [← hQη]
     have h2 := hhom η
     rw [hd, map_zero, add_zero] at h2

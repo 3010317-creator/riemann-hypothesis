@@ -6,12 +6,14 @@ public import CompanionTheory.RealGroups.DiscreteSeries.DiscreteSeriesClassifica
 public import CompanionTheory.RealGroups.DiscreteSeries.DiscreteSeriesClassification.DiscreteSeriesExhaustion.MatrixCoefficientDecay.HilbertSchmidtDecay.HilbertSchmidtNorms.AbsoluteL2Bound
 public import CompanionTheory.RealGroups.DiscreteSeries.DiscreteSeriesClassification.DiscreteSeriesExhaustion.MatrixCoefficientDecay.HilbertSchmidtDecay.RightKTypes.KrDom
 public import CompanionTheory.RealGroups.DiscreteSeries.DiscreteSeriesClassification.DiscreteSeriesExhaustion.MatrixCoefficientDecay.LineFormulas.LineFinal
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.GeometricStatementStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.GrowthStatementStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.NilpotentLeftRuleStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.NilpotentRightRuleStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.PolynomialNilpotentPathStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.ToL2CongrOnUnitaryBisStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.GeometricStatement
+public import CompanionTheory.RealGroups.DiscreteSeries.DiscreteSeriesClassification.DiscreteSeriesExhaustion.MatrixCoefficientDecay.HilbertSchmidtDecay.HaarExists
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.GrowthStatement
+public import CompanionTheory.RealGroups.DiscreteSeries.DiscreteSeriesClassification.DiscreteSeriesExhaustion.MatrixCoefficientDecay.LineFormulas.RightRule
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.NilpotentLeftRule
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.NilpotentRightRule
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.PolynomialNilpotentPath
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.ToL2CongrOnUnitaryBis
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,10 +56,10 @@ import Mathlib.Topology.Sheaves.Init
 namespace CompanionTheory.RgExh.Dec.L
 
 theorem back_of_inputs (hLF : LineFormula) (hPN : PolyNilPath) : Back :=
-  back_of CompanionTheory.RgExh.Dec.L.SA.assembly_of CompanionTheory.RgExh.Dec.L.AB.absolute_l2_bound GlobalTheory.T.GeometricStatement hLF GlobalTheory.T.HaarExistence hPN GlobalTheory.T.NilpotentRightRule GlobalTheory.T.NilpotentLeftRule
-    CompanionTheory.RgExh.Dec.L.WyKR.kRight GlobalTheory.T.GrowthStatement GlobalTheory.T.rgExh_pack
+  back_of CompanionTheory.RgExh.Dec.L.SA.assembly_of CompanionTheory.RgExh.Dec.L.AB.absolute_l2_bound _root_.GlobalTheory.CompanionTheory.UGeo.geo hLF GlobalTheory.T.HaarExistence hPN _root_.GlobalTheory.CompanionTheory.RightRule.rightRule _root_.GlobalTheory.CompanionTheory.PathCoef.leftRule
+    CompanionTheory.RgExh.Dec.L.WyKR.kRight _root_.GlobalTheory.CompanionTheory.PathGrowth.growth _root_.GlobalTheory.CompanionTheory.PackEmb.pack
 
-theorem back_of_lineFormula (hLF : LineFormula) : Back := back_of_inputs hLF GlobalTheory.T.PolynomialNilpotentPath
+theorem back_of_lineFormula (hLF : LineFormula) : Back := back_of_inputs hLF _root_.GlobalTheory.CompanionTheory.PolyNilGrad.polyNilPath
 
 theorem backward_of_line_formula : Back := back_of_lineFormula CompanionTheory.RgExh.Dec.N.S.line_formula
 

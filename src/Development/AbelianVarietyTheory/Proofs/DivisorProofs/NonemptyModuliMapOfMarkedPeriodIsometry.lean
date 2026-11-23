@@ -2,11 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.Uniformised
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsProjectiveModel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BirigidifiedBundleIsoOfWeilPairingEqStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueIsMonHomOfLinearMapKernelsStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHolPeriods
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BirigidifiedBundleIsoOfWeilPairingEq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueIsMonHomOfLinearMapKernels
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLinearEquivOfPeriod
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.WeilIsIffOfIsGrpPullbackComm
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.ExistsRigidTranslatePrincipalPolarisationOrderTw
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PullGenLBIsGen
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ConstGen
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.WeilIsGrpPullbackOfCommute
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -47,7 +51,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.BCTools
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PullGenLBIsGen
 
 @[expose] public section
 
@@ -125,7 +128,7 @@ theorem weil_pull_iso : ∀ (S : Scheme.{0}) (A A' : Over S) [GrpObj A] [IsCommM
   have iso := LBIso.trans (pull_isLB (pull_isLB hP _) _) (pull_isLB hP _) (pull_isLB (pull_isLB hP _) _) e₁.symm e₂
   let x₀ : Over.mk (T.hom ≫ 𝟙 S) ⟶ A' := Over.homMk (x.left ≫ F.hom.left) (by simp)
   let y₀ : Over.mk (T.hom ≫ 𝟙 S) ⟶ A' := Over.homMk (y.left ≫ F.hom.left) (by simp)
-  refine (GlobalTheory.weilIs_iff_of_isGrpPullback_comm S S A' A (𝟙 S) F.hom.left _ _ (pull_isLB hP _)
+  refine (_root_.GlobalTheory.weilIs_grpPullback_of_comm S S A' A (𝟙 S) F.hom.left _ _ (pull_isLB hP _)
     (pull_isLB (pull_isLB hP _) _) (isGrpPullback_of_iso F) iso T k x y x₀ y₀ c rfl rfl).2 ?_
   exact GlobalTheory.UnifPoint.weilIs_congr (Category.comp_id _).symm rfl rfl H
 
@@ -143,10 +146,10 @@ theorem nonempty_objMap_of_markedIsom : ∀ (p : ℕ) [Fact p.Prime] (D : Datum 
     refine (hk _).2 ⟨w.symm x, ?_⟩
     apply u.injective
     rw [u.apply_symm_apply, ← hu, w.apply_symm_apply]
-  obtain ⟨f, ⟨hf, hfe⟩, -⟩ := GlobalTheory.T.existsUnique_isMonHom_of_linear_map_kernels o.A o'.A D.g D.g o.ab o'.ab h h' e e' u.toLinearMap he he' k1
-  obtain ⟨f', ⟨hf', hfe'⟩, -⟩ := GlobalTheory.T.existsUnique_isMonHom_of_linear_map_kernels o'.A o.A D.g D.g o'.ab o.ab h' h e' e u.symm.toLinearMap he' he k2
-  obtain ⟨f₀, -, uid⟩ := GlobalTheory.T.existsUnique_isMonHom_of_linear_map_kernels o.A o.A D.g D.g o.ab o.ab h h e e LinearMap.id he he (fun z hz => hz)
-  obtain ⟨f₀', -, uid'⟩ := GlobalTheory.T.existsUnique_isMonHom_of_linear_map_kernels o'.A o'.A D.g D.g o'.ab o'.ab h' h' e' e' LinearMap.id he' he' (fun z hz => hz)
+  obtain ⟨f, ⟨hf, hfe⟩, -⟩ := _root_.GlobalTheory.HomAlgAny.existsUnique_isMonHom_of_map_ker o.A o'.A D.g D.g o.ab o'.ab h h' e e' u.toLinearMap he he' k1
+  obtain ⟨f', ⟨hf', hfe'⟩, -⟩ := _root_.GlobalTheory.HomAlgAny.existsUnique_isMonHom_of_map_ker o'.A o.A D.g D.g o'.ab o.ab h' h e' e u.symm.toLinearMap he' he k2
+  obtain ⟨f₀, -, uid⟩ := _root_.GlobalTheory.HomAlgAny.existsUnique_isMonHom_of_map_ker o.A o.A D.g D.g o.ab o.ab h h e e LinearMap.id he he (fun z hz => hz)
+  obtain ⟨f₀', -, uid'⟩ := _root_.GlobalTheory.HomAlgAny.existsUnique_isMonHom_of_map_ker o'.A o'.A D.g D.g o'.ab o'.ab h' h' e' e' LinearMap.id he' he' (fun z hz => hz)
   have hfe2 : ∀ z, e' (u z) = e z ≫ f := hfe
   have hfe2' : ∀ z, e (u.symm z) = e' z ≫ f' := hfe'
   haveI := hf
@@ -177,7 +180,7 @@ theorem nonempty_objMap_of_markedIsom : ∀ (p : ℕ) [Fact p.Prime] (D : Datum 
     intro c
     haveI := o.act.hom c
     haveI := o'.act.hom c
-    obtain ⟨fa, -, ua⟩ := GlobalTheory.T.existsUnique_isMonHom_of_linear_map_kernels o.A o'.A D.g D.g o.ab o'.ab h h' e e'
+    obtain ⟨fa, -, ua⟩ := _root_.GlobalTheory.HomAlgAny.existsUnique_isMonHom_of_map_ker o.A o'.A D.g D.g o.ab o'.ab h h' e e'
       (u.toLinearMap ∘ₗ Matrix.toLin' (ρ c)) he he' (fun z hz => by
         obtain ⟨x, rfl⟩ := (hk z).1 hz
         simp only [LinearMap.comp_apply, Matrix.toLin'_apply, LinearEquiv.coe_coe]
@@ -214,7 +217,7 @@ theorem nonempty_objMap_of_markedIsom : ∀ (p : ℕ) [Fact p.Prime] (D : Datum 
     intro k a
     rw [hu, ← u.map_smul]
     exact hfe2 _
-  have pol := GlobalTheory.T.birigidified_bundle_iso_of_weil_pairing_eq o.A D.g o.ab h o.P (o'.P.pull (lift (fst o.A o.A ≫ f) (snd o.A o.A ≫ f)).left)
+  have pol := _root_.GlobalTheory.biIso_of_weil o.A D.g o.ab h o.P (o'.P.pull (lift (fst o.A o.A ≫ f) (snd o.A o.A ≫ f)).left)
     o.isLB o.rig₁ o.rig₂ o.symm B1 B2 B3 B4 e D'.La Q D'.EF he hP.2.1 hk hw (fun k a a₂ c hk0 hc => by
       have W' := hw' k (w a) (w a₂) c hk0 (by rw [hiso]; exact hc)
       rw [ew, ew] at W'

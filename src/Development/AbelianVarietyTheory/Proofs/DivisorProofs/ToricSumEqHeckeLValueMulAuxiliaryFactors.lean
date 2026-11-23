@@ -4,11 +4,12 @@ public import Formalism.PairingDivisors.StatementA
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsFinSetSplitPlacesCoprimeConductor
 public import Mathlib.NumberTheory.NumberField.CMField
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasSumZeroOfTwoLe
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEntireLatticeSumOfHeckeLContinuationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLatticePointsIntegralIdelesEquivStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEntireLatticeSumOfHeckeLContinuation
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLatticePointsIntegralIdelesEquiv
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinPartEqOneOfLevel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteRingClassGroupOfConductorNeZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasSumIntegralIdelesEulerProductStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.EntireEqOfHalfPlane
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FiniteRingClassGroupOfConductorNeZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasSumIntegralIdelesEulerProduct
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -129,7 +130,7 @@ theorem hasSum_classes {E : Type} [Field E] [NumberField E] [IsCMField E] {I : T
     (hT : HasSum (fun z : {z : (Af E)ˣ ⧸ hatOUnits c // ∃ y : (Af E)ˣ,
       (QuotientGroup.mk y : (Af E)ˣ ⧸ hatOUnits c) = z ∧ (y : Af E) ∈ hatO c} => twistFin χ (s + σ) z.1.out) T) :
     HasSum (fun q : PicO c => (twistFin χ (s + σ) q.out)⁻¹ * S q) T := by
-  obtain ⟨e, he⟩ := GlobalTheory.T.exists_latticePoints_integralIdeles_equiv E 𝔣 c h𝔣 hd hc
+  obtain ⟨e, he⟩ := _root_.GlobalTheory.CMVal.LatBij.exists_equiv E 𝔣 c h𝔣 hd hc
   rw [← e.hasSum_iff] at hT
   refine HasSum.sigma hT fun q => ?_
   refine ((hS q).mul_left (twistFin χ (s + σ) q.out)⁻¹).congr_fun fun x => ?_
@@ -150,9 +151,9 @@ theorem toricSum_eq : (∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (I
   have hc : condQ 𝔣 Q ≠ ⊥ := mul_ne_zero h𝔣.1 (Finset.prod_ne_zero_iff.2 fun q _ => q.ne_bot)
   have hd : 𝔣 ∣ condQ 𝔣 Q := dvd_mul_right _ _
   have htriv := GlobalTheory.CMVal.OrderUnits.finPart_eq_one E I φ hφ s κ 𝔣 Q χ hU h𝔣 hQ hχ
-  have hfin := GlobalTheory.T.finite_ringClassGroup_of_conductor_ne_zero E _ hc
+  have hfin := _root_.GlobalTheory.CMVal.PicFin.finite_picO E _ hc
   choose S hS using fun q : PicO (condQ 𝔣 Q) =>
-    GlobalTheory.T.exists_entire_latticeSum_of_heckeL_continuation hH E I φ hφ s κ 𝔣 _ χ hU hs h𝔣 hd hc hχ.1 hχ.2.2.1 htriv q.out
+    _root_.GlobalTheory.CMVal.LatEnt.exists_isLatSum hH E I φ hφ s κ 𝔣 _ χ hU hs h𝔣 hd hc hχ.1 hχ.2.2.1 htriv q.out
   refine ⟨hfin, S, hS, ?_⟩
   have := Fintype.ofFinite (PicO (condQ 𝔣 Q))
   have key : (fun σ : ℂ => ∑ q : PicO (condQ 𝔣 Q), (twistFin χ (s + σ) q.out)⁻¹ * S q σ) = fun σ : ℂ =>
@@ -172,7 +173,7 @@ theorem toricSum_eq : (∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (I
         exact q.ne_bot
       fun_prop
     · have h1 : 1 < ((s : ℂ) + σ).re := by simp; linarith
-      have h2 := GlobalTheory.T.hasSum_integralIdeles_eulerProduct E I φ hφ s κ 𝔣 Q χ Pq (s + σ) _ hU h𝔣 hQ hχ hP h1 (hΛ.2 _ h1)
+      have h2 := _root_.GlobalTheory.CMVal.Euler.hasSum_euler E I φ hφ s κ 𝔣 Q χ Pq (s + σ) _ hU h𝔣 hQ hχ hP h1 (hΛ.2 _ h1)
       exact (hasSum_fintype _).unique (hasSum_classes hφ hχ.2.2.1 h𝔣 hd hc htriv
         (fun q => (hS q).2 σ (by push_cast; linarith)) h2)
   have h0 := congrFun key 0

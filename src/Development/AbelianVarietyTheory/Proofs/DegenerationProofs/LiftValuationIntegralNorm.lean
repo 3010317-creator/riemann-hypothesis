@@ -10,7 +10,8 @@ public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.Abelian
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.AbelianPartsIsoLabelsOfThetaPointAndValuesStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ArcDatumPullbackRescaledMatchesStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ArcTorsionValuesNormsIntegralPositiveStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationDataTorsionStructureAlgClosedStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.SepticCharacterInjective
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationDataTorsionStructureAlgClosed
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationIsoCommInducedLabelMapsStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationRecognitionOfAbelianPartsIsoLabelsStatement
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.DegenerationValuesIntOfAdmissibleBaseStatement
@@ -193,7 +194,7 @@ theorem data_of_model : HV → Laws6 → GlobalTheory.LN.UDvrSt → GlobalTheory
   refine ⟨N', ν', J, fun x y => ?_, fun j x p q' p' z h₁ h₂ h₃ h₄ h₅ => ?_,
     DW, mW, oW, φ, he, w, e, νW, hM, hX, hA, hGeo⟩
   · have key := GlobalTheory.T.degenerationIso_comm_induced_label_maps C _ N' D.La D.EF A.I.ζ I'.ζ lab lab' n hn.one_lt lT lM J hJ'
-      (fun j => (GlobalTheory.T.degenerationData_torsion_structure_algClosed C _ n _ hn0 tW j).2.2.1)
+      (fun j => (_root_.GlobalTheory.Ex.QStr.qStructure C _ n _ hn0 tW j).2.2.1)
       (A.ν.eX.symm.toAddMonoidHom.comp ((DistribSMul.toAddMonoidHom _ x).comp A.ν.eX.toAddMonoidHom))
       (ν'.eX.symm.toAddMonoidHom.comp ((DistribSMul.toAddMonoidHom _ x).comp ν'.eX.toAddMonoidHom)) (x • ·)
       (fun j v => by

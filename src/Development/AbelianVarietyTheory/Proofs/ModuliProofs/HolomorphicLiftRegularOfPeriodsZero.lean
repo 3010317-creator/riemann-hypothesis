@@ -3,10 +3,11 @@ module
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.LocDerRegularCoeff
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.AlgebraicCoboundaryOfHolomorphicCoboundary
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsDifferentiableOnVerticalVectorFieldStatement
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsFibreCoords
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsSymm
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsDifferentiableOnVerticalVectorField
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLocalDerivationAlongFibreOfSmooth
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsUniqueUniformisingVectorVerticalTangentStatement
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsFibreCoords
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsUniqueUniformisingVectorVerticalTangent
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.InvariantVectorFieldAbelianVarietyAlgebraic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -145,7 +146,7 @@ theorem exists_periodic_vector (hu : GoodU u Hm χ) (hp : Smooth p) (hm : IsPull
       ∀ r, s z ⊤ (constFn p ⊤ r) - ptOf V d (u.ex z).left ⊤ (constFn p ⊤ r) = 0 := fun z hz =>
     ⟨ptDer_sub (hs.der z) (ptDer_ptOf hd (u.ex z).left hz), fun r => by
       rw [hs.base z r, ptOf_const hd (u.ex z).left (hq z) hz r, sub_self]⟩
-  obtain ⟨w, hw, hrep⟩ := GlobalTheory.T.exists_differentiableOn_verticalVectorField P₀ u Hm χ hu R x₀ X p m hp hm P₀.g (dom u m V) id
+  obtain ⟨w, hw, hrep⟩ := _root_.GlobalTheory.KS.VertField.exists_differentiableOn_vertical P₀ u Hm χ hu R x₀ X p m hp hm P₀.g (dom u m V) id
     (fun z W f => s z W f - ptOf V d (u.ex z).left W f) hdomV differentiable_id hpt
     (by
       intro W f
@@ -162,7 +163,7 @@ theorem exists_periodic_vector (hu : GoodU u Hm χ) (hp : Smooth p) (hm : IsPull
       have e : (fun x => fn u m W f (x + l)) = fn u m W f := by
         funext x; simp only [fn, hex]
       rw [← fderiv_comp_add_right, e]
-    refine ((GlobalTheory.T.existsUnique_uniformising_vector_vertical_tangent P₀ u Hm χ hu R x₀ X p m hp hm z _ (hpt z hz).1 (hpt z hz).2).unique
+    refine ((_root_.GlobalTheory.KS.VertFamily.existsUnique_vector P₀ u Hm χ hu R x₀ X p m hp hm z _ (hpt z hz).1 (hpt z hz).2).unique
       (fun W f hzW => ?_) (fun W f hzW => ?_))
     · have hzlW : z + l ∈ dom u m W := by
         show ⊤ ≤ ((u.ex (z + l)).left ≫ m) ⁻¹ᵁ W

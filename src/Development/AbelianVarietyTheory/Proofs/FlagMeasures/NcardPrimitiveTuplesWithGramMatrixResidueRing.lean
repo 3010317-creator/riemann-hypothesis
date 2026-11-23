@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PrimOfIsUnitDet
 public import Mathlib.Basic.Real.Basic
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardPrimitiveTupleExtensionsLeStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardPrimitiveTupleExtensionsLe
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -166,7 +166,7 @@ theorem ncard_sols_eta [Fintype B] (c : B →+* B) (hc : ∀ u, c (c u) = u) (ω
             (Fin.cons y x : Fin (m + 1) → Fin n → B) ∈ sols c n G} : ℝ) ≤ (1 + 3 * η) * R := by
       intro x hx
       rw [Set.mem_toFinset] at hx
-      have := GlobalTheory.T.card_primitiveTuple_extensions_le c hc ω hω hf q hq hB m n (by omega) x hx.1 (fun i => G i.succ 0)
+      have := _root_.GlobalTheory.GramCount.ncard_extend_prim_one c hc ω hω hf q hq hB m n (by omega) x hx.1 (fun i => G i.succ 0)
         (G 0 0) (hG 0 0)
       simp only [cons_mem_sols c hc G hG x hx]
       rw [abs_le] at this

@@ -3,9 +3,11 @@ module
 public import Mathlib.FieldTheory.IsAlgClosed.Basic
 public import Mathlib.RingTheory.Etale.StandardEtale
 public import Mathlib.RingTheory.Spectrum.Prime.Topology
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HypersurfacePartGeometricIrreducibleSpreadsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PreirreducibleSpaceFibreHypersurfaceSpectrumIffStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardEtaleMvPolynomialHypersurfaceStatement
+public import Mathlib.Algebra.MvPolynomial.PDeriv
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HypersurfacePartGeometricIrreducibleSpreads
+public import Mathlib.RingTheory.MvPolynomial.IrreducibleQuadratic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PreirreducibleSpaceFibreHypersurfaceSpectrumIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.StandardEtaleMvPolynomialHypersurface
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -79,12 +81,12 @@ theorem preirreducibleSpace_tensor_congr_fibreChart (A B C k : Type) [CommRing A
 theorem preirreducibleSpace_fibre_standardEtale_spreads :
     ∀ (A B : Type) [CommRing A] [CommRing B] [Algebra A B] (n : ℕ) [Algebra (MvPolynomial (Fin n) A) B] [IsScalarTower A (MvPolynomial (Fin n) A) B], Algebra.IsStandardEtale (MvPolynomial (Fin n) A) B → ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] [Algebra A Ω], PreirreducibleSpace (PrimeSpectrum (Ω ⊗[A] B)) → ∃ (a : A) (I : Finset A), algebraMap A Ω a ≠ 0 ∧ (∀ c ∈ I, algebraMap A Ω c = 0) ∧ ∀ (k : Type) [Field k] [IsAlgClosed k] [Algebra A k], algebraMap A k a ≠ 0 → (∀ c ∈ I, algebraMap A k c = 0) → PreirreducibleSpace (PrimeSpectrum (k ⊗[A] B)) := by
   intro A B _ _ _ n _ _ hB Ω _ _ _ hΩ
-  obtain ⟨f, g, hf, hd, ⟨e⟩⟩ := GlobalTheory.T.standardEtale_localization_away_quotient_span A B n hB
-  have hΩ' := (GlobalTheory.T.preirreducibleSpace_fibreHypersurface_spectrum_iff A _ f g Ω).1 ((preirreducibleSpace_tensor_congr_fibreChart A _ _ Ω e).1 hΩ)
-  obtain ⟨a, I, ha, hI, hk⟩ := GlobalTheory.T.hypersurface_part_geometric_irreducible_spreads A (Option (Fin n)) f g none hf hd Ω (algebraMap A Ω) hΩ'
+  obtain ⟨f, g, hf, hd, ⟨e⟩⟩ := _root_.GlobalTheory.standardEtale_mvPolynomial_hypersurface A B n hB
+  have hΩ' := (_root_.GlobalTheory.FibreHyp.spectrum_fibre_preirreducible_iff A _ f g Ω).1 ((preirreducibleSpace_tensor_congr_fibreChart A _ _ Ω e).1 hΩ)
+  obtain ⟨a, I, ha, hI, hk⟩ := _root_.GlobalTheory.hypersurface_part_preirreducible_spreads A (Option (Fin n)) f g none hf hd Ω (algebraMap A Ω) hΩ'
   refine ⟨a, I, ha, hI, ?_⟩
   intro k _ _ _ hak hIk
   exact (preirreducibleSpace_tensor_congr_fibreChart A _ _ k e).2
-    ((GlobalTheory.T.preirreducibleSpace_fibreHypersurface_spectrum_iff A _ f g k).2 (hk k (algebraMap A k) hak hIk))
+    ((_root_.GlobalTheory.FibreHyp.spectrum_fibre_preirreducible_iff A _ f g k).2 (hk k (algebraMap A k) hak hIk))
 
 end GlobalTheory

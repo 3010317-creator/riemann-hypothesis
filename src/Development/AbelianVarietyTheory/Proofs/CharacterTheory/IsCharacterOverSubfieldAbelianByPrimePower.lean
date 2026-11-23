@@ -2,12 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.CommutativeAlgebra.AbByPOfComm
 public import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.IrreducibleCharacterLinearOrInducedAbelianByPrimStatement
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.IsAbelianByPrimePowerGroupSubgroupStatement
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.IsCharacterOverSubfieldInducedClassFunctionStatement
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.IsCharacterOverSubfieldInductionIrreducibleStatement
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.IsCharacterOverSubfieldLinearOfPrimitiveRootStatement
-public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.IsCharacterOverSubfieldZeroAndAddStatement
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.IrreducibleCharacterLinearOrInducedAbelianByPrim
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.IsAbelianByPrimePowerGroupSubgroup
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.IsCharacterOverSubfieldInducedClassFunction
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.IsCharacterOverSubfieldInductionIrreducible
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.IsCharacterOverSubfieldLinearOfPrimitiveRoot
+public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.IsCharacterOverSubfieldZeroAndAdd
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,18 +61,18 @@ theorem isChar_of_abByP : ∀ (K L : Type) [Field K] [Field L] [Algebra K L] [Ch
     induction n using Nat.strong_induction_on with
     | _ n ih =>
       intro G _ _ hn hG hA χ hχ
-      refine GlobalTheory.T.isCharacterOverSubfield_induction_irreducible L L G (fun a => IsChar K L a) (GlobalTheory.T.isCharacterOverSubfield_zero_and_add K L G).1 ?_ χ hχ
+      refine _root_.GlobalTheory.BI.isChar_induction L L G (fun a => IsChar K L a) (_root_.GlobalTheory.BI.isChar_zero_and_add K L G).1 ?_ χ hχ
       intro φ c hφ _ hc
-      refine (GlobalTheory.T.isCharacterOverSubfield_zero_and_add K L G).2 φ c ?_ hc
-      rcases GlobalTheory.T.irreducibleCharacter_linear_or_induced_abelianByPrimePower L G φ hA hφ with ⟨lam, hlam⟩ | ⟨T, hT, ψ, hψ, rfl⟩
+      refine (_root_.GlobalTheory.BI.isChar_zero_and_add K L G).2 φ c ?_ hc
+      rcases _root_.GlobalTheory.BI.irrChar_linear_or_induced L G φ hA hφ with ⟨lam, hlam⟩ | ⟨T, hT, ψ, hψ, rfl⟩
       · have : φ = fun g => (lam g : L) := funext hlam
         rw [this]
-        exact GlobalTheory.T.isCharacterOverSubfield_linear_of_primitiveRoot K L G m ζ lam hm hζ hG
+        exact _root_.GlobalTheory.BI.isChar_linear K L G m ζ lam hm hζ hG
       · have hlt : Nat.card T < n := by
           rw [← hn]
           exact lt_of_le_of_ne (Subgroup.card_le_card_group T)
             (fun h => hT (Subgroup.eq_top_of_card_eq T h))
-        refine GlobalTheory.T.isCharacterOverSubfield_inducedClassFunction K L G T ψ (ih _ hlt T rfl ?_ (GlobalTheory.T.isAbelianByPrimePowerGroup_subgroup G T hA) ψ hψ)
+        refine _root_.GlobalTheory.BI.isChar_ind K L G T ψ (ih _ hlt T rfl ?_ (_root_.GlobalTheory.BI.AbByP.subgroup G T hA) ψ hψ)
         intro g
         exact Subtype.ext (by simpa using hG g)
   intro G _ _

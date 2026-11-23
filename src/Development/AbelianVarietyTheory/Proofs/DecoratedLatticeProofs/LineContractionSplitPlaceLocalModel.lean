@@ -7,7 +7,7 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Bes
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LineRowTranslationHeisenbergSplitPlaceStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLineColumnTranslationHeisenbergStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ThetaContractionIsLocalModelSecondVariableStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilCharacterSplitPlaceExistsContinuousNontriviaStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilCharacterSplitPlaceExistsContinuousNontrivia
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,7 +61,7 @@ theorem contrLoc : ∀ (D : D7), GlobalTheory.LocFlat.ContrFactor → ContrLoc D
   have hL := GlobalTheory.T.besselLine_contraction_thetaFunction_isLocalModel
   have hR := GlobalTheory.T.thetaContraction_isLocalModel_secondVariable
   intro D hCF k _ _ _ _ _ _ p ν hν ψ hψ ψk hk ρ σ B B' l S vL s hs n n' n'' _ _ _ _ _ _ FA F₀ FS FA' F₀' hF hF' T₁ T₂ hT₁ hT₂
-  obtain ⟨-, hψk, -, -, -⟩ := GlobalTheory.T.weilCharacter_splitPlace_exists_continuous_nontrivial D k p ψ hψ
+  obtain ⟨-, hψk, -, -, -⟩ := _root_.GlobalTheory.LocChar.weil_char_split D k p ψ hψ
   obtain ⟨hψkc, hψk1⟩ := hψk ψk hk
   let Bm := contrBil hψ l S vL T₁ T₂ hT₁.theta hT₂.theta
   have inv1 : ∀ (u₀ : n → k) Ψ₁ Ψ₁' Ψ₂ Ψ₂',
@@ -108,7 +108,7 @@ theorem contrLoc : ∀ (D : D7), GlobalTheory.LocFlat.ContrFactor → ContrLoc D
         map_smul' := fun c a => by funext v; simp only [map_smul, Pi.smul_apply, RingHom.id_apply] }
     refine ⟨T, hR D k p ψ hψ ρ σ B B' l S vL (s * p.xi) ?_ n n'' FS FA' F₀' hF' T₂ hT₂ φ₀' _ (hT₁.theta _) u T
       fun Ξ₂ v => rfl, fun Ξ₂ Ξ hq v => ?_⟩
-    · obtain ⟨-, -, hxi, -, -⟩ := GlobalTheory.T.weilCharacter_splitPlace_exists_continuous_nontrivial D k p ψ hψ
+    · obtain ⟨-, -, hxi, -, -⟩ := _root_.GlobalTheory.LocChar.weil_char_split D k p ψ hψ
       exact mul_ne_zero hs hxi
     rw [hval Ξ₁ Ξ₂ Ξ hq]; rfl
 end GlobalTheory.ContrLocProof

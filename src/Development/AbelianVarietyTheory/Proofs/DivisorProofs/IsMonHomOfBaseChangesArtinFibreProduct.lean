@@ -1,7 +1,9 @@
 module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.SabComp
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatOverArtinFibreProductIsPushoutStatement
+public import Mathlib.AlgebraicGeometry.Morphisms.Flat
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatOverArtinFibreProductIsPushout
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsPullbackPowersCartesianGroupSquare
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsSchemeTheoreticallyDominantSpecOfInjective
 import Mathlib.Algebra.Order.Floor.Extended
@@ -95,7 +97,7 @@ theorem main : ∀ (P R₁ R₂ R₀ : CommRingCat.{0}) (f₁ : P ⟶ R₁) (f�
         reassoc_of% (sq_fst hi₂.1), hij]
     · rw [Category.assoc, sq_snd hj₁.1, reassoc_of% (sq_snd hi₁.1), Category.assoc, sq_snd hj₂.1,
         reassoc_of% (sq_snd hi₂.1), hij]
-  have po := GlobalTheory.T.flat_over_artinFibreProduct_isPushout P R₁ R₂ R₀ f₁ f₂ g₁ g₂ hP hloc hart hs₁ hs₂ (A' ⊗ A') (A₁ ⊗ A₁) (A₂ ⊗ A₂) (A₀ ⊗ A₀) _ _ _ _
+  have po := _root_.GlobalTheory.FlatPinch.main P R₁ R₂ R₀ f₁ f₂ g₁ g₂ hP hloc hart hs₁ hs₂ (A' ⊗ A') (A₁ ⊗ A₁) (A₂ ⊗ A₂) (A₀ ⊗ A₀) _ _ _ _
     hY (GlobalTheory.Mum.PowCart.isPullback_two hj₁.1) (GlobalTheory.Mum.PowCart.isPullback_two hj₂.1)
     (GlobalTheory.Mum.PowCart.isPullback_two hi₁.1) hcomp (GlobalTheory.Mum.PowCart.isPullback_two hi₂.1).w
 

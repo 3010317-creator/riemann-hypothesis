@@ -5,16 +5,20 @@ public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CardComa
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsPrimitiveRootOfIsAlgClosure
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FiniteDualAll
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GaloisCohomologyLocalGlobalDual
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GaloisCohomologyLocalizationExactStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GreenbergWilesFormulaStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.PoitouTateNineTermTransgressionZeroApply
+public import Mathlib.Algebra.Algebra.ZMod
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GaloisCohomologyLocalizationExact
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GreenbergWilesFormula
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalEulerPlaces
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PiPerpCondEqAnnihilatorSumPair
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PoitouTateEulerCharacteristic
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PoitouTateNineTermExactStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SelmerGroupDualExactStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SumLocalDegreesOverLStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PoitouTateNineTermExact
+public import ReciprocityTheory.Hypotheses.GalCohDefs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SelmerGroupDualExact
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SumLocalDegreesOverL
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SumPerfectApply
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TateShafarevichDualityH1Statement
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.PairSums.SumPair
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TateShafarevichDualityH1
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PoitouTateEulerCharacteristic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -95,7 +99,7 @@ theorem greenbergWiles_of_poitouTate : PoitouTateNormalised → GlobalEulerChar 
   haveI hfinD : Finite (TDual (ZMod (l ^ r)) M) := GlobalTheory.CompanionTheory.DualFin.finite_dual_all (ZMod (l ^ r)) M
   obtain ⟨inv, hinv, hnine, hsha⟩ :=
     GlobalTheory.CompanionTheory.GreenbergWiles.poitouTate_instance F Ω l r M S Av μ ρ hρ hμ hPT hl hr hS hAv
-  have hρ' : ContAction (twDual μ ρ) := GlobalTheory.T.selmer_group_dual_exact F Ω l r M S Av μ ρ hρ hμ
+  have hρ' : ContAction (twDual μ ρ) := _root_.GlobalTheory.CompanionTheory.GalDual.contAction_twDual F Ω l r M S Av μ ρ hρ hμ
   have hj : ∀ v, Function.Injective (invAt S Av μ hμ inv v) := fun v =>
     ((hinv _ _ (hAv v)).comp (toMuLoc_bijective S Av μ hμ v)).injective
   have hlf := GlobalTheory.CompanionTheory.Galois.PlacesOfS.localFinite_at_places F Ω l r M S Av μ ρ hρ hLF hr hAv
@@ -104,9 +108,9 @@ theorem greenbergWiles_of_poitouTate : PoitouTateNormalised → GlobalEulerChar 
   haveI : ∀ v : S, Finite (H1 (ρ.comp (locFam S Av v))) := fun v => (hlf v).2.1
   haveI : ∀ v : S, Finite (H2 (ρ.comp (locFam S Av v))) := fun v => (hlf v).2.2
   haveI : ∀ v : S, Finite (H1 ((twDual μ ρ).comp (locFam S Av v))) := fun v => (hlf' v).2.1
-  obtain ⟨hH0, hH1, hH2, hH0', hH1'⟩ := GlobalTheory.T.greenberg_wiles_formula F Ω l r M S Av μ ρ hρ
+  obtain ⟨hH0, hH1, hH2, hH0', hH1'⟩ := _root_.GlobalTheory.CompanionTheory.GaloisCoh.global_finite_of_poitouTate F Ω l r M S Av μ ρ hρ
     (invAt S Av μ hμ inv) hμ hfinD hLF hr hAv hnine hsha
-  have hloc := GlobalTheory.T.galois_cohomology_localization_exact F Ω l r M S Av μ ρ hρ hμ hLTD hr inv hinv hAv
+  have hloc := _root_.GlobalTheory.CompanionTheory.LocalPerfect.locPerfect F Ω l r M S Av μ ρ hρ hμ hLTD hr inv hinv hAv
   have hB := GlobalTheory.CompanionTheory.Pairing.sum_perfect (ZMod (l ^ r)) S (fun v => H1 (ρ.comp (locFam S Av v)))
     (fun v => H1 ((twDual μ ρ).comp (locFam S Av v)))
     (fun v => (cupH1H1TwistedDual μ ρ (locFam S Av v) (hρ.comp' (continuous_locFam S Av v))).compr₂
@@ -115,7 +119,7 @@ theorem greenbergWiles_of_poitouTate : PoitouTateNormalised → GlobalEulerChar 
     unfold sumPair; rw [LinearMap.coe_sum]; exact hB.1
   have hBf : Function.Injective (sumPair S Av μ (invAt S Av μ hμ inv) ρ hρ).flip := by
     unfold sumPair; exact hB.2
-  have hrange := GlobalTheory.T.tate_shafarevich_duality_h1 F Ω l r M S Av μ ρ hρ (invAt S Av μ hμ inv) hnine
+  have hrange := _root_.GlobalTheory.CompanionTheory.PoitouTateGlue.range_localization_eq_annihilator F Ω l r M S Av μ ρ hρ (invAt S Av μ hμ inv) hnine
   have count := GlobalTheory.CompanionTheory.Counting.card_comap_mul_card_ker_mul_card_eq (l ^ r) (H1 ρ)
     (H1 (twDual μ ρ)) (∀ v : S, H1 (ρ.comp (locFam S Av v)))
     (∀ v : S, H1 ((twDual μ ρ).comp (locFam S Av v)))
@@ -126,11 +130,11 @@ theorem greenbergWiles_of_poitouTate : PoitouTateNormalised → GlobalEulerChar 
     (twDual μ ρ) hρ'
   rw [← GlobalTheory.CompanionTheory.Duality.pi_perpCond_eq_annihilator_sumPair F Ω l r M S Av μ ρ hρ _ hj L,
     ← hsel.1 L, ← hsel'.1, ← hsel'.2.1, card_pi_submodule L, hsha.1.2.2.2] at count
-  have h5 := GlobalTheory.T.poitou_tate_nine_term_exact F Ω l r M S Av μ ρ hρ (invAt S Av μ hμ inv) hLF hr hAv hnine hH2 hH0'
+  have h5 := _root_.GlobalTheory.CompanionTheory.PoitouTateCount.card_sha2_mul_card_local_h2 F Ω l r M S Av μ ρ hρ (invAt S Av μ hμ inv) hLF hr hAv hnine hH2 hH0'
   have h7 := hGEC F Ω l r M S ρ hr hS hρ c hc
   have hdeg : ∑ v : S, (if ((l : ℕ) : 𝓞 F) ∈ v.1.asIdeal then locDeg v.1 else 0) =
       Module.finrank ℚ F := by
-    rw [← GlobalTheory.T.sum_local_degrees_over_l F l (S.filter fun v => ((l : ℕ) : 𝓞 F) ∈ v.asIdeal)
+    rw [← _root_.GlobalTheory.CompanionTheory.GreenbergWiles.sum_locDeg_eq_finrank F l (S.filter fun v => ((l : ℕ) : 𝓞 F) ∈ v.asIdeal)
       (fun v => by rw [Finset.mem_filter]; exact ⟨And.right, fun h => ⟨hS v h, h⟩⟩),
       Finset.sum_filter]
     exact Finset.sum_coe_sort S (fun v => if ((l : ℕ) : 𝓞 F) ∈ v.asIdeal then locDeg v else 0)

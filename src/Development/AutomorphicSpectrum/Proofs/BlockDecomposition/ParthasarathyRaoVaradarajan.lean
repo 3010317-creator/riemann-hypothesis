@@ -4,13 +4,16 @@ public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsCliff
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.RealDescent.RealLeviDescent.IsCoreMod
 public import ReciprocityTheory.ReductiveGroups.DiscreteSeries.HighestWeights.PRVComponents.TensorActionLieRelations
 public import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.DiscreteSeriesCharacters.DiscreteSeriesInfinitesimalCharacter
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CliffordVectorSpinWeightStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsCliffordLowestVectorStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsHighestWeightModuleStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CliffordVectorSpinWeight
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsCliffordLowestVector
+public import Formalism.RealPlaceAnalysis.StatementA
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsHighestWeightModule
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HighestWeightAntitoneOfFiniteDimensionalStable
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.Sl2SquareKillsVectorStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SpinGlRelationsAdjointStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SpinTensorHighestWeightStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.Sl2SquareKillsVector
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SpinGlRelationsAdjoint
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SpinTensorHighestWeight
+public import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.DiscreteSeriesCharacters.CapelliDeterminantBlockProduct
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,7 +58,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import CompanionTheory.HarishChandraModules.LowKTypeMultiplicity.DiscreteSeriesCharacters.CapelliDeterminantBlockProduct
 
 @[expose] public section
 
@@ -173,7 +175,7 @@ theorem assemble {n : ℕ} {ι : Type} [Fintype ι] [DecidableEq ι] (c : Fin n 
     linarith
   refine ⟨σ, hσ, ?_⟩
   obtain ⟨Z, iZ1, iZ2, iZ3, E, u, a0, hEgl, hEu, hu0, hu, hirr, ha0, haw, hah⟩ :=
-    GlobalTheory.T.exists_highest_weight_module (fun a => wtR ν (σ a) - rhoV n (σ a)) hσ (-(((n : ℝ) - 1) / 2))
+    _root_.GlobalTheory.CompanionTheory.RealCount.Extremal.extremal_module (fun a => wtR ν (σ a) - rhoV n (σ a)) hσ (-(((n : ℝ) - 1) / 2))
       (fun a => ⟨ν (σ a) + ((σ a : ℕ) : ℤ), by simp only [wtR, rhoV]; push_cast; ring⟩) σ
   have hay : ∀ y, E y y a0 = ((wtR ν y - rhoV n y : ℝ) : ℂ) • a0 := by
     intro y
@@ -183,7 +185,7 @@ theorem assemble {n : ℕ} {ι : Type} [Fintype ι] [DecidableEq ι] (c : Fin n 
     intro i j hij
     have hlt : i < j := by rw [Fin.lt_def]; omega
     have hne : i ≠ j := ne_of_lt hlt
-    refine GlobalTheory.T.sl2_square_kills_vector E hEgl hEu hne ha0 (hay i) (hay j) ⟨ν i - ν j - 1, ?_⟩ ?_ ?_
+    refine _root_.GlobalTheory.CompanionTheory.RealCount.sl2_square_kills E hEgl hEu hne ha0 (hay i) (hay j) ⟨ν i - ν j - 1, ?_⟩ ?_ ?_
     · simp only [wtR, rhoV]; rw [hij]; push_cast; ring
     · have := hdom hlt.le
       simp only [wtR, rhoV] at this ⊢
@@ -191,7 +193,7 @@ theorem assemble {n : ℕ} {ι : Type} [Fintype ι] [DecidableEq ι] (c : Fin n 
     · rcases lt_or_gt_of_ne (σ.symm.injective.ne hne) with h | h
       · left; simpa using hah _ _ h
       · right; simpa using hah _ _ h
-  obtain ⟨φ, hφq, hφup, hφdiag⟩ := GlobalTheory.T.spin_tensor_highest_weight c hc q hq0 hq1 hq2 E hEgl (wtR ν) a0 hay hadj
+  obtain ⟨φ, hφq, hφup, hφdiag⟩ := _root_.GlobalTheory.CompanionTheory.RealCount.SpinMap.exists_spin_map c hc q hq0 hq1 hq2 E hEgl (wtR ν) a0 hay hadj
   have hφsum : ∀ f : ι → ℂ, φ f = ∑ j, f j • φ (Pi.single j 1) := by
     intro f
     conv_lhs => rw [show f = ∑ j, f j • (Pi.single j 1 : ι → ℂ) by
@@ -228,13 +230,13 @@ theorem assemble {n : ℕ} {ι : Type} [Fintype ι] [DecidableEq ι] (c : Fin n 
   have hDstar : ∀ a b i j, star (ReciprocityTheory.ChartRestriction.DS.HW.matrixFamilyDual (spinM c) a b i j) =
       ReciprocityTheory.ChartRestriction.DS.HW.matrixFamilyDual (spinM c) b a j i := by
     intro a b i j
-    have := congrFun (congrFun ((GlobalTheory.T.spin_gl_relations_adjoint c hc).2 a b) i) j
+    have := congrFun (congrFun ((_root_.GlobalTheory.CompanionTheory.RealCount.SpinRel.spinRel c hc).2 a b) i) j
     simp only [ReciprocityTheory.ChartRestriction.DS.HW.matrixFamilyDual, Matrix.neg_apply, Matrix.transpose_apply, star_neg,
       Matrix.conjTranspose_apply] at this ⊢
     rw [this]
   obtain ⟨ψ, hψt, hψeq⟩ := CompanionTheory.D.DSIC.hHWMap n (fun _ => true) (PiLp 2 (fun _ : ι => Z)) V
     (ReciprocityTheory.ChartRestriction.DS.HW.tensAct E (ReciprocityTheory.ChartRestriction.DS.HW.matrixFamilyDual (spinM c))) Kf (wtR ν) t v S
-    (kRel_tensAct_of_glRel E _ hEgl (glRel_ext1Dual _ (GlobalTheory.T.spin_gl_relations_adjoint c hc).1))
+    (kRel_tensAct_of_glRel E _ hEgl (glRel_ext1Dual _ (_root_.GlobalTheory.CompanionTheory.RealCount.SpinRel.spinRel c hc).1))
     (kUnit_tensAct_of_adjoint E _ hEu hDstar) (fun a b c d _ _ => hK a b c d) (fun a b _ x y => hKu a b x y)
     ht0 hthigh hv hfd (fun a b _ w hw => hst a b w hw) hvS
   have hkey : ∀ a b (z : Z) (i : ι), ψ (WithLp.toLp 2 (Pi.single i (E a b z))) =
@@ -307,10 +309,10 @@ theorem spin_parthasarathy_rao_varadarajan : ∀ n : ℕ, ∃ (ι : Type) (_ : F
       ∃ w : Equiv.Perm (Fin n), Antitone (fun a => wtR ν (w a) - rhoV n (w a)) ∧ ∃ x : ι → V, x ≠ 0 ∧
         Formalism.REAL.KHighest (fun _ => true) (yF Kf c) (fun a => wtR ν (w a) - rhoV n (w a)) x := by
   intro n
-  obtain ⟨ι, hF, hD, c, hc, q, hq0, hq⟩ := GlobalTheory.T.exists_clifford_lowest_vector n
+  obtain ⟨ι, hF, hD, c, hc, q, hq0, hq⟩ := _root_.GlobalTheory.CompanionTheory.CliffModel.exists_cliff_model n
   letI := hF
   letI := hD
-  obtain ⟨h1, h2⟩ := GlobalTheory.T.clifford_vector_spin_weight c hc q hq
+  obtain ⟨h1, h2⟩ := _root_.GlobalTheory.CompanionTheory.RealCount.spinM_vacuum_lowest c hc q hq
   refine ⟨ι, hF, hD, c, hc, ?_⟩
   intro V _ _ Kf S ν v hK hKu hfd hst hvS hv0 hv
   exact assemble c hc q hq0 h1 h2 V Kf S ν v hK hKu hfd hst hvS hv0 hv

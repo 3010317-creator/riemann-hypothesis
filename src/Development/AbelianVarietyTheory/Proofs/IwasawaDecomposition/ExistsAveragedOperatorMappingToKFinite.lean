@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.NormDwLeSobNorm
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CompactAverageKFiniteFiniteRankStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InnerKAvgNeZero
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CompactAverageKFiniteFiniteRank
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsAvgClosure
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InnerKAvgNeZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -71,7 +71,7 @@ theorem exists_isAvg_apply_eq : ∀ (n : ℕ) (ε : Fin n → Bool) (H : Type) [
     dense_of_irred h.2.1 (fun g hg x hx => hA _ (a1 g hg) x hx) ((Submodule.ne_bot_iff _).2 ⟨a, haA, ha⟩)
   have hrange : ∀ e : KG ε → ℂ, KFinFun ε e → Continuous e → ∀ w, kAvg ε σ e w ∈ A := by
     intro e he hc w
-    obtain ⟨m, b, c, -, -, -, hbc⟩ := GlobalTheory.T.compactAverage_kFinite_finiteRank n ε H σ h e he
+    obtain ⟨m, b, c, -, -, -, hbc⟩ := _root_.GlobalTheory.TypeSum.kAvg_finite_rank n ε H σ h e he
     obtain ⟨Q, hQ⟩ := c3 e hc
     let F : Submodule ℂ H := Submodule.span ℂ (Set.range b)
     haveI : FiniteDimensional ℂ F := FiniteDimensional.span_of_finite ℂ (Set.finite_range b)

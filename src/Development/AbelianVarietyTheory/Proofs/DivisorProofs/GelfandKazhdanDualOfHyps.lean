@@ -4,8 +4,11 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry�
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.StrongMultiplicityOne
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsSpanFormsNeBot
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.CuspRapidDecaySiegelGL
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspRepPairedWithItselfStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTwistCuspidalTrivialOnSplitCentreStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.CuspDiscreteDecompositionGL
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.DualIsConjByOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspRepPairedWithItself
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.IsNormalisedOfIsDiscrete
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTwistCuspidalTrivialOnSplitCentre
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IdeleModuleDetDiagUnitsPosIdele
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.NotPairedId
 import Mathlib.Algebra.Order.Floor.Extended
@@ -54,8 +57,8 @@ theorem gelfandKazhdanDual_of_rapidDecay : GlobalTheory.Published.JacquetShalika
   intro hJS hAF hRD E _ _ _ n π
   rcases Nat.eq_zero_or_pos n with rfl | hn
   · exact GlobalTheory.Published.InvTransposeModel.rank_zero π
-  · obtain ⟨χ, hχ⟩ := GlobalTheory.T.exists_twist_cuspidal_trivial_on_splitCentre E n hn π
-    have hp := GlobalTheory.T.cusp_rep_paired_with_itself hJS.1 (GlobalTheory.CuspBoundSiegel.cuspFormsBounded_of_rapidDecay hRD) hAF E n hn (π.twist χ) hχ
+  · obtain ⟨χ, hχ⟩ := _root_.GlobalTheory.GKNorm.exists_twist_isNormalised E n hn π
+    have hp := _root_.GlobalTheory.GKPair.paired_invTOp hJS.1 (GlobalTheory.CuspBoundSiegel.cuspFormsBounded_of_rapidDecay hRD) hAF E n hn (π.twist χ) hχ
     have h := GlobalTheory.Published.InvTransposeModel.twist hp χ⁻¹
     rwa [← CuspSub.twist_mul, mul_inv_cancel, CuspSub.twist_one] at h
 

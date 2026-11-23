@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.MemRingOfInR
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DiagOneUnitConjLiftsSl2IntReductionModStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SlTwoDiagConjCongruenceIffDiagOneUnitMatrixEqStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ZetaActRefl
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DiagOneUnitConjLiftsSl2IntReductionMod
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SlTwoDiagConjCongruenceIffDiagOneUnitMatrixEq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -100,14 +101,14 @@ theorem cong_lift : ∀ (M N : ℕ) (d d' : ℤ), 0 < N → M ∣ N → (d : ZMo
     rw [hdd']; simpa using this
   have hdM' : (d' : ZMod M) = d := hdd'.symm
   obtain ⟨u, hu'⟩ := hu
-  obtain ⟨ex1, ex2⟩ := GlobalTheory.T.diagOneUnit_conj_lifts_sl2IntReductionMod N u
+  obtain ⟨ex1, ex2⟩ := _root_.GlobalTheory.FN.dg_conj_lift N u
   refine ⟨fun γ γ' hγ => ?_, fun δ' hδ' => ?_⟩
   · obtain ⟨γ'', hγ''⟩ := ex1 γ
-    have hc : Cong N d' γ γ'' := (GlobalTheory.T.slTwoDiagConjCongruence_iff_diagOneUnit_matrix_eq N d' u hu' γ γ'').2 hγ''
+    have hc : Cong N d' γ γ'' := (_root_.GlobalTheory.FNCong.cong_iff_dg N d' u hu' γ γ'').2 hγ''
     refine ⟨γ'', hc, mul_inv_mem_Gamma (en_eq_of_cong hdM hγ ?_)⟩
     exact cong_congr_d hdM' (cong_of_dvd hMN hc)
   · obtain ⟨δ, hδ⟩ := ex2 δ'
-    have hc : Cong N d' δ δ' := (GlobalTheory.T.slTwoDiagConjCongruence_iff_diagOneUnit_matrix_eq N d' u hu' δ δ').2 hδ
+    have hc : Cong N d' δ δ' := (_root_.GlobalTheory.FNCong.cong_iff_dg N d' u hu' δ δ').2 hδ
     refine ⟨δ, ?_, hc⟩
     have hcM := cong_congr_d hdM' (cong_of_dvd hMN hc)
     obtain ⟨c1, c2, c3, c4⟩ := hcM

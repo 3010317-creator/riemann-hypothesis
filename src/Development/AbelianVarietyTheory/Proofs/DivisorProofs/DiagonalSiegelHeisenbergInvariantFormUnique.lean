@@ -3,9 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaDiagInt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LagrInt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ReindexDblIncM
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagonalLagrangianInvariantFormUniqueStatement
-import Development.AbelianVarietyTheory.Proofs.HeightProofs.EmbeddingXiZeroNeZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DiagonalLagrangianInvariantFormUnique
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsGoodPlace
+import Development.AbelianVarietyTheory.Proofs.HeightProofs.EmbeddingXiZeroNeZero
 import Formalism.LocalToGlobal.IndefiniteReal.PHeisFC
 import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FrameTransport.InstIsModTopTens
@@ -140,7 +140,7 @@ theorem lubinTateSeries_eq_of_coeff_one_eq (D : D7) (ψ : AddChar (AF D.host.F) 
       τ := fun v => absurd v.2 (Finset.notMem_empty _), v₁ := v₁, τ₁ := τ₁ }
   have hB : B.IsGood D.sp.cm.sig :=
     GlobalTheory.TripleDarboux.base_isGood B hψ fun v hv => absurd hv (Finset.notMem_empty _)
-  exact GlobalTheory.T.diagonalLagrangian_invariantForm_unique D.host.F D.host.E D.sp.cm.sig B hB S.rank T.rank S.gram T.gram
+  exact _root_.GlobalTheory.LagrUniq.lagr_invariant_unique D.host.F D.host.E D.sp.cm.sig B hB S.rank T.rank S.gram T.gram
     (GlobalTheory.Doubling.isHermND_gram S) (GlobalTheory.Doubling.isHermND_gram T) D.host.xi0 (GlobalTheory.DualPairCompare.embedding_xi_zero_ne_zero D)
     (Formalism.L2.Pj.conj_xi0_alt D) JB ξ hξ κ co hrat ν' 𝓕' hν' h𝓕' l hl fun z Φ hΦ => by
       rw [← diagMat_eq_mul]

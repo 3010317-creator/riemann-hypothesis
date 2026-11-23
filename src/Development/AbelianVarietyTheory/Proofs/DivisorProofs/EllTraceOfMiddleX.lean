@@ -6,23 +6,21 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.TestFnConstT
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.CuspDiscreteDecompositionOfTraceClass
 public import Development.WeilBound.RepresentationTheoryGL.LimitMultiplicityWeights.RegularClassIntegrals.ArchUnimod
 public import CompanionTheory.AutomorphicTheory.PadicUnitaryWeights.UnitarySiegelSets.SiegelSetUnitaryHolds
-import Development.AbelianVarietyTheory.Definitions.Foundations.T2SpaceAdeleRing
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsConjMemStandardLeviOfReducibleCharpolyStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasSumConjClassesRegroupWithInvariantSelectionStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasSumConjClassesRegroupWithInvariantSelection
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HyperbolicTermsVanish
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralHasSumEqIntegralIndicatorHasSumStatement
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.MeasureTheory.Integral.Bochner.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralHasSumEqIntegralIndicatorHasSum
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonFieldTypeVanishingX
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCyclicOfFiniteQuotient
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsMulCommutativeCentRealUJ
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IwahoriEigenvalues
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CentralizerRegularLeviCommutativeNoncompactStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CuspidalOperatorsVanishingRadicalIntegralsUnitarStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsRegularSemisimpleOfTestFunctionNeZeroStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RegularCentralizerNoncompact
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RegularSemisimpleRationalClassKernelIntegralsStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RegularSemisimpleUnitaryGroupConcreteStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TypeHypothesisFormsAgreeStatement
-import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.MulMemRiemannRochSpaceAdd
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EllipticTraceFromLocalInputs
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SiegelImpliesRegularClassFiniteStatement
 public import Development.WeilBound.RepresentationTheoryGL.LimitMultiplicityWeights.RegularClassIntegrals.AevalConj
@@ -44,6 +42,12 @@ public import Development.WeilBound.RepresentationTheoryGL.LimitMultiplicityWeig
 public import Development.WeilBound.RepresentationTheoryGL.LimitMultiplicityWeights.RegularClassIntegrals.PWeight
 public import Development.WeilBound.RepresentationTheoryGL.LimitMultiplicityWeights.RegularClassIntegrals.PWeightDiag
 public import Development.WeilBound.RepresentationTheoryGL.LimitMultiplicityWeights.RegularClassIntegrals.RegClassIntHolds
+import Development.AbelianVarietyTheory.Definitions.Foundations.T2SpaceAdeleRing
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsCyclicOfFiniteQuotient
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsMulCommutativeCentRealUJ
+import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.CentralizerTensorForms
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RegularSemisimpleUnitaryGroupConcrete
+import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.MulMemRiemannRochSpaceAdd
 import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemElt
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicLocalCompactness.T2SpaceTensorProductFiniteExtension
 import Mathlib.Algebra.Order.Floor.Extended
@@ -206,7 +210,7 @@ theorem ellTrace_of_middleX : MainStatements.RegularCuspidalTrace.RegClassInt �
     fun δ x h => GlobalTheory.T.isRegularSemisimple_of_testFunction_ne_zero hIw D V T U μf ff hfin fa δ x h
   have hPc : ∀ a b : GF V, IsConj a b → Irreducible a.1.1.charpoly → Irreducible b.1.1.charpoly :=
     fun a b h ha => charpoly_eq_of_isConj h ▸ ha
-  refine GlobalTheory.T.integral_hasSum_eq_integral_indicator_hasSum' (autMeasure V μ) k hkint ?_
+  refine _root_.GlobalTheory.integral_hasSum_eq_integral_indicator_hasSum (autMeasure V μ) k hkint ?_
     {i : ι | ∀ δ ∈ i.1, Irreducible δ.1.1.charpoly} _ _ (fun q => ?_) (fun q => ?_) ?_
   · refine ((hFinC D V f hcc).preimage Subtype.val_injective.injOn).subset fun i hi => ⟨i.2, ?_⟩
     by_contra hno
@@ -220,12 +224,12 @@ theorem ellTrace_of_middleX : MainStatements.RegularCuspidalTrace.RegClassInt �
       simp [this]
     simp [hz]
   · obtain ⟨hsupp, hsum⟩ := kernel_diag_hasSum V hcc q.out
-    have := (GlobalTheory.T.hasSum_conjClasses_regroup_with_invariant_selection _ hsupp (fun δ => IsRegSS δ.1.1) (fun δ => Irreducible δ.1.1.charpoly)
+    have := (_root_.GlobalTheory.classSum_regroup _ hsupp (fun δ => IsRegSS δ.1.1) (fun δ => Irreducible δ.1.1.charpoly)
       (fun δ h => hreg δ _ h) hPc).1
     rw [hsum.tsum_eq] at this
     exact this
   · obtain ⟨hsupp, -⟩ := kernel_diag_hasSum V hcc q.out
-    have := (GlobalTheory.T.hasSum_conjClasses_regroup_with_invariant_selection _ hsupp (fun δ => IsRegSS δ.1.1) (fun δ => Irreducible δ.1.1.charpoly)
+    have := (_root_.GlobalTheory.classSum_regroup _ hsupp (fun δ => IsRegSS δ.1.1) (fun δ => Irreducible δ.1.1.charpoly)
       (fun δ h => hreg δ _ h) hPc).2
     have hfs : (Function.support fun δ : {δ : GF V // Irreducible δ.1.1.charpoly} =>
         f (q.out⁻¹ * rat V δ.1 * q.out)).Finite :=
@@ -262,7 +266,7 @@ attribute [local instance] Formalism.BasicNotions.Host.cmStar
 
 theorem GlobalTheory.PsCo.Plug.ellipticSideDirect : GlobalTheory.Published.CuspTraceClass → EllTraceX := fun tc =>
   GlobalTheory.PsCo.Plug.ellTrace_of_middleX MainStatements.WeightKernel.regClassInt_holds (GlobalTheory.T.siegel_implies_regular_class_finite CompanionTheory.Prw.siegelCore_holds) (GlobalTheory.T.cuspidalOperators_vanishingRadicalIntegrals_unitaryGroup tc)
-    GlobalTheory.PsCo.Plug.parabolicT GlobalTheory.IwahoriEigenObj.iwahoriEigenvalues GlobalTheory.T.regularSemisimple_unitaryGroup_concrete GlobalTheory.PsCo.Plug.nonFieldT
-    (GlobalTheory.PsCo.Plug.hyperZero_of_intX MainStatements.WeightKernel.regClassInt_holds GlobalTheory.T.regularSemisimple_unitaryGroup_concrete)
+    GlobalTheory.PsCo.Plug.parabolicT GlobalTheory.IwahoriEigenObj.iwahoriEigenvalues _root_.GlobalTheory.RegSSObj.regularSemisimple GlobalTheory.PsCo.Plug.nonFieldT
+    (GlobalTheory.PsCo.Plug.hyperZero_of_intX MainStatements.WeightKernel.regClassInt_holds _root_.GlobalTheory.RegSSObj.regularSemisimple)
 
 end

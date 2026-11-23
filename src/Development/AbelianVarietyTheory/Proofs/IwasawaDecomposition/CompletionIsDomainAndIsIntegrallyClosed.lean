@@ -3,13 +3,16 @@ module
 public import Mathlib.RingTheory.AdicCompletion.Algebra
 public import Mathlib.RingTheory.EssentialFiniteness
 public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdicCompletionQuotientRingEquivStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdicCompletionReducedOfJacobsonStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AssociatedPrimeLocalizationDvrStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsConductorAdicCompletionEssFiniteTypeStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsDomainOfIsIntegrallyClosedOfIsReducedStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsIntegrallyClosedOfConductorNonZeroDivisorOfAssStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsNoetherianRingAdicCompletionOfNoetherianStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdicCompletionQuotientRingEquiv
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AdicCompletionReducedOfJacobson
+public import Mathlib.RingTheory.Ideal.AssociatedPrime.Basic
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsConductorAdicCompletionEssFiniteType
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsDomainOfIsIntegrallyClosedOfIsReduced
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsIntegrallyClosedOfConductorNonZeroDivisorOfAss
+import Mathlib.RingTheory.DiscreteValuationRing.Basic
+import Mathlib.RingTheory.Flat.Basic
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AssociatedPrimeLocalizationDvr
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsNoetherianRingAdicCompletionOfNoetherian
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,13 +69,13 @@ theorem completion_isDomain_and_isIntegrallyClosed :
     ∀ (A : Type) [CommRing A] [IsDomain A] [IsLocalRing A] [IsIntegrallyClosed A] [CharZero A]
       [Algebra.EssFiniteType ℤ A], IsDomain (AdicCompletion (maximalIdeal A) A) ∧
         IsIntegrallyClosed (AdicCompletion (maximalIdeal A) A) := by
-  have hnoeth := GlobalTheory.T.isNoetherianRing_adicCompletion_of_noetherian
-  have hquot := GlobalTheory.T.nonempty_adicCompletion_quotient_ringEquiv
-  have hengine := GlobalTheory.T.associated_prime_localization_dvr
-  have hclosed := GlobalTheory.T.isIntegrallyClosed_of_integral_mul_mem_of_assocPrimes
-  have hdom := GlobalTheory.T.isDomain_of_isIntegrallyClosed_of_isReduced_local
-  have hred := GlobalTheory.T.adic_completion_reduced_of_jacobson
-  have hcond := GlobalTheory.T.exists_conductor_adicCompletion_essFiniteType
+  have hnoeth := _root_.GlobalTheory.AdicNoeth.isNoetherianRing_adicCompletion
+  have hquot := _root_.GlobalTheory.adicCompletion_quotient_ringEquiv
+  have hengine := _root_.GlobalTheory.exists_isDiscreteValuationRing_of_mem_associatedPrimes_quotient
+  have hclosed := _root_.GlobalTheory.isIntegrallyClosed_of_conductor_nonZeroDivisor_of_associatedPrimes
+  have hdom := _root_.GlobalTheory.isDomain_of_isIntegrallyClosed_of_isReduced
+  have hred := _root_.GlobalTheory.CompletionReduced.isReduced_adicCompletion
+  have hcond := _root_.GlobalTheory.exists_conductor_adicCompletion_of_essFiniteType
   intro A _ _ _ _ _ _
   haveI : IsNoetherianRing A := Algebra.EssFiniteType.isNoetherianRing ℤ A
   set m := maximalIdeal A with hm

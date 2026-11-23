@@ -1,10 +1,10 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SerreClassOfCechSpectralSequence
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DoubleComplexClassSurjectiveStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DoubleComplexClassZeroOfLeadZeroStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DoubleComplexLeadSurjectiveStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DoubleComplexLeadZeroOfClassZeroStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DoubleComplexClassSurjective
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DoubleComplexClassZeroOfLeadZero
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DoubleComplexLeadSurjective
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DoubleComplexLeadZeroOfClassZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,10 +62,10 @@ theorem row_iso_of_columns : ∀ {R : Type} [CommRing R] (K : DCx.{w} R) (a : �
   intro R _ K a hK j
   have hab : ∀ p q, a < q → Subsingleton ((K.col p).H q) := fun p q h => hK p q (ne_of_gt h)
   have hbe : ∀ p q, q < a → Subsingleton ((K.col p).H q) := fun p q h => hK p q (ne_of_lt h)
-  have hs := GlobalTheory.T.double_complex_class_surjective K a j hab
-  have hk := GlobalTheory.T.double_complex_lead_zero_of_class_zero K a j hab
-  have hi := GlobalTheory.T.double_complex_class_zero_of_lead_zero K a j hbe
-  have hl := GlobalTheory.T.double_complex_lead_surjective K a j hbe
+  have hs := _root_.GlobalTheory.CompanionTheory.CechSerre.clsZ_surjective_of_acyclic K a j hab
+  have hk := _root_.GlobalTheory.CompanionTheory.CechSerre.RowKer.leadE_eq_zero K a j hab
+  have hi := _root_.GlobalTheory.CompanionTheory.RowInj.clsZ_eq_zero_of_leadE K a j hbe
+  have hl := _root_.GlobalTheory.CompanionTheory.CechSerre.leadE_surjective K a j hbe
   let c := clsZ K (a + j) j
   let ψ : Zf K (a + j) j →ₗ[R] (colH K a).H j := leadE K j a
   have hle : LinearMap.ker c ≤ LinearMap.ker ψ := fun z hz => hk z hz

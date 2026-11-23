@@ -2,10 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.SingleIndexPlacesAreTwisted
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsCoprimeOfNatCast
-import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CardLatticeQuotientHalfLevel
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeCoordinatesModPrimeSelfDualStabilizerStatement
+public import Formalism.LocalToGlobal.IndefiniteReal.LinksDefs
+public import Formalism.LocalToGlobal.ProjectiveLattices.FamilyUniformisationBasePointOrthogonalBis
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeCoordinatesModPrimeSelfDualStabilizer
+public import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.LevelCuspCharacters
+public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.LevelCarrying
+public import Development.AbelianVarietyTheory.Definitions.Divisors.CongModRefl
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemLatPIffMulVec
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsDetOfMemSt
+import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.CardLatticeQuotientHalfLevel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -104,7 +109,7 @@ theorem levUnip_mod_place : ∀ {D : D7} {L : SizeData₂ D} {hT : GatTies D} {G
   have hrk : D.R.r = (p.T.Q.Dw ((i : ℕ) + 1)).p + (p.T.Q.Dw ((i : ℕ) + 1)).q :=
     (hL.j.unf _ ⟨Nat.le_add_left _ _, i.2⟩ _ (r.used v').full.toCore.good_σ₀).1
   set PPs := plg ⟨k, v⟩ with hPPs
-  obtain ⟨φ, hφs, hφk⟩ := GlobalTheory.T.lattice_coordinates_mod_prime_selfDual_stabilizer D (Wc D i) ((R2 p).βW i) ((R2 p).ΛW i) hβ _ _ hι PPs.1
+  obtain ⟨φ, hφs, hφk⟩ := _root_.GlobalTheory.LatCoordRed.coord_red D (Wc D i) ((R2 p).βW i) ((R2 p).ΛW i) hβ _ _ hι PPs.1
   obtain ⟨κ, hκ, hκa⟩ := hlev u
   have hMbP : p.T.Q.l.Mb ≤ PPs.1.asIdeal := by
     rw [hr.half]

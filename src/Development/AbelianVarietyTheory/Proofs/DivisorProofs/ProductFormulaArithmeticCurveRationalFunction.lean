@@ -1,12 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsClosedImmersionGenericPoint
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AffineArithmeticCurveFinsumOrdLogEqLocalLengthsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AffineArithmeticCurveSumComplexPointsLogEqRingHoStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithmeticCurveIsAffineAndFiniteIntStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AffineArithmeticCurveFinsumOrdLogEqLocalLengths
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AffineArithmeticCurveSumComplexPointsLogEqRingHo
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArithmeticCurveIsAffineAndFiniteInt
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.RingTheory.Length
+public import Mathlib.RingTheory.Localization.AtPrime.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogCardEqFinsumLengthLocalizedMaximal
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Mathlib.RingTheory.Ideal.Quotient.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogCardQuotSpanEqFinsumLogNormEmbeddings
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ChernPartSingleton
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogCardEqFinsumLengthLocalizedMaximalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogCardQuotSpanEqFinsumLogNormEmbeddingsStatement
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnderEqGenericPoint
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -64,7 +69,7 @@ namespace GlobalTheory.CurveProd
 
 theorem product_formula_curve : ∀ (k : Type) [CommRing k] (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoetherian Y] (q : Y ⟶ Sp k), IsArithVar q 0 → ∀ f : Y.functionField, f ≠ 0 → ∑ᶠ z, (Scheme.ord f z : ℝ) * Real.log (Nat.card (Y.residueField z)) = ∑ᶠ σ : k →+* ℂ, ∑ᶠ y : CxPts q σ, Real.log ‖ratVal f y‖ := by
   intro k _ Y _ _ q hq f hf
-  obtain ⟨hAff, hFin⟩ := GlobalTheory.T.arithmeticCurve_isAffine_and_finite_int k Y q hq
+  obtain ⟨hAff, hFin⟩ := _root_.GlobalTheory.ArithCurve.isAffine_and_finite k Y q hq
   have := hAff
   have := hFin
   have : Module.Finite ℤ k := hq.finite
@@ -135,7 +140,7 @@ theorem product_formula_curve : ∀ (k : Type) [CommRing k] (Y : Scheme.{0}) [Is
       (Scheme.ord (algebraMap Γ(Y, ⊤) Y.functionField c) z : ℝ) *
         Real.log (Nat.card (Y.residueField z))).Finite := by
     intro c hc
-    refine (finZero c (GlobalTheory.T.log_card_quot_span_eq_finsum_log_norm_embeddings Γ(Y, ⊤) c hc).1).subset ?_
+    refine (finZero c (_root_.GlobalTheory.IndexNormEmb.log_card_quot_span_eq_finsum_log_norm Γ(Y, ⊤) c hc).1).subset ?_
     intro z hz hzc
     apply hz
     have hu : UnitAt z (algebraMap Γ(Y, ⊤) Y.functionField c) :=
@@ -150,10 +155,10 @@ theorem product_formula_curve : ∀ (k : Type) [CommRing k] (Y : Scheme.{0}) [Is
         ∑ᶠ σ : k →+* ℂ, ∑ᶠ y : CxPts q σ,
           Real.log ‖ratVal (algebraMap Γ(Y, ⊤) Y.functionField c) y‖ := by
     intro c hc
-    obtain ⟨hfq, hlog⟩ := GlobalTheory.T.log_card_quot_span_eq_finsum_log_norm_embeddings Γ(Y, ⊤) c hc
+    obtain ⟨hfq, hlog⟩ := _root_.GlobalTheory.IndexNormEmb.log_card_quot_span_eq_finsum_log_norm Γ(Y, ⊤) c hc
     have := hfq
-    rw [GlobalTheory.T.affineArithmeticCurve_finsum_ord_log_eq_localLengths k Y q hq c hc, ← GlobalTheory.T.log_card_eq_finsum_length_localized_maximal Γ(Y, ⊤) (Γ(Y, ⊤) ⧸ Ideal.span {c}), hlog,
-      GlobalTheory.T.affineArithmeticCurve_sum_complexPoints_log_eq_ringHoms k Y q hq c]
+    rw [_root_.GlobalTheory.AffineCurveSum.finsum_ord_eq k Y q hq c hc, ← _root_.GlobalTheory.CardLength.log_card_eq_finsum_length Γ(Y, ⊤) (Γ(Y, ⊤) ⧸ Ideal.span {c}), hlog,
+      _root_.GlobalTheory.AffCurveSum.main k Y q hq c]
 
   obtain ⟨a, b, hb, rfl⟩ := IsFractionRing.div_surjective Γ(Y, ⊤) f
   have hb0 : b ≠ 0 := nonZeroDivisors.ne_zero hb

@@ -2,16 +2,17 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.CMLattices.ExistsIsThetaDegOfIsLocalModel
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CmCurveBaseChangeComp
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CmFamilyDescendsToNumberFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CmFamilyExtendsOverDedekindDomainStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CmFamilyDescendsToNumberField
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CmFamilyExtendsOverDedekindDomain
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.EllMapCancelAndSabMapCancel
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.EllPullExistsOAct
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsHomFamilyOfPureTypeComplexTripleStatement
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsPullbackStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsHomFamilyOfPureTypeComplexTriple
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsPullback
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.HasTypeBaseChange
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.NonemptyTensorOfOntoFullFamilyStatement
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSabCancel
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.NonemptyTensorOfOntoFullFamily
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsMulEquivOfIsGrpPullback
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsSabCancel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -92,9 +93,9 @@ theorem exists_isTen_of_hasType : ThetaUnifAV → Out.Laws → HomExtDvr → ∀
   have hB : Out.PolBaseChangeSt := hL.polBaseChange
 
   obtain ⟨Ck, φk, hCk⟩ := GlobalTheory.CM.exists_ellMap hB E H (𝓞 k) ω C k (algebraMap (𝓞 k) k)
-  obtain ⟨Tk, mk, -⟩ := GlobalTheory.T.exists_pat_pullback_g_eq E H _ _ (spMap (algebraMap (𝓞 k) k)) T
+  obtain ⟨Tk, mk, -⟩ := _root_.GlobalTheory.CM.PAT.exists_pullback E H _ _ (spMap (algebraMap (𝓞 k) k)) T
   obtain ⟨Cc, φc, hCc⟩ := GlobalTheory.CM.exists_ellMap hB E H k _ Ck ℂ (algebraMap k ℂ)
-  obtain ⟨Tc, mc, -⟩ := GlobalTheory.T.exists_pat_pullback_g_eq E H _ _ (spMap (algebraMap k ℂ)) Tk
+  obtain ⟨Tc, mc, -⟩ := _root_.GlobalTheory.CM.PAT.exists_pullback E H _ _ (spMap (algebraMap k ℂ)) Tk
   have hPk : Ck.IsPrincipalAt (algebraMap k ℂ) :=
     (GlobalTheory.CM.EllComp.ellMap_comp E H (𝓞 k) ω C k _ Ck (algebraMap (𝓞 k) k) φk hCk).2.1 _ hP
   have hPc : Cc.IsPrincipalAt (RingHom.id ℂ) :=
@@ -110,17 +111,17 @@ theorem exists_isTen_of_hasType : ThetaUnifAV → Out.Laws → HomExtDvr → ∀
     simp only [map_sub, map_mul, map_ofNat, map_one, RingHom.comp_apply]
   rw [hωc] at hTc
 
-  obtain ⟨D, ε, h, ψc, hpq, hK, hpos, hFc, hOc⟩ := GlobalTheory.T.exists_homFamily_of_pureType_complex_triple hU hL E H _ Cc Tc r hPc hTc
+  obtain ⟨D, ε, h, ψc, hpq, hK, hpos, hFc, hOc⟩ := _root_.GlobalTheory.CM.exists_isFam_of_pureType hU hL E H _ Cc Tc r hPc hTc
 
-  obtain ⟨k₁, hfin, hk, huniv⟩ := GlobalTheory.T.cmFamily_descends_to_numberField hU hL E H k _ Ck D h Tk ⊤ _ Cc φc Tc mc ψc hCc hFc
+  obtain ⟨k₁, hfin, hk, huniv⟩ := _root_.GlobalTheory.CM.isFam_descends_to_numberField hU hL E H k _ Ck D h Tk ⊤ _ Cc φc Tc mc ψc hCc hFc
   have : FiniteDimensional ℚ k₁ := hfin
   have : NumberField k₁ := ⟨⟩
   obtain ⟨C₁, φ₁, hC₁⟩ := GlobalTheory.CM.exists_ellMap hB E H (𝓞 k) ω C (𝓞 k₁)
     (RingOfIntegers.mapRingHom (IntermediateField.inclusion hk).toRingHom)
-  obtain ⟨T₁, m₁, -⟩ := GlobalTheory.T.exists_pat_pullback_g_eq E H _ _
+  obtain ⟨T₁, m₁, -⟩ := _root_.GlobalTheory.CM.PAT.exists_pullback E H _ _
     (spMap (RingOfIntegers.mapRingHom (IntermediateField.inclusion hk).toRingHom)) T
   obtain ⟨C₂, φa, hC₂⟩ := GlobalTheory.CM.exists_ellMap hB E H (𝓞 k₁) _ C₁ k₁ (algebraMap (𝓞 k₁) k₁)
-  obtain ⟨T₂, ma, -⟩ := GlobalTheory.T.exists_pat_pullback_g_eq E H _ _ (spMap (algebraMap (𝓞 k₁) k₁)) T₁
+  obtain ⟨T₂, ma, -⟩ := _root_.GlobalTheory.CM.PAT.exists_pullback E H _ _ (spMap (algebraMap (𝓞 k₁) k₁)) T₁
   have hring : (algebraMap (𝓞 k₁) k₁).comp
       (RingOfIntegers.mapRingHom (IntermediateField.inclusion hk).toRingHom) =
       (IntermediateField.inclusion hk).toRingHom.comp (algebraMap (𝓞 k) k) := by
@@ -141,7 +142,7 @@ theorem exists_isTen_of_hasType : ThetaUnifAV → Out.Laws → HomExtDvr → ∀
     (algebraMap k₁ ℂ)).2 _ _ _ Tk.t T₂.t Tc.t m₂ mc (by rw [spMap_comp_moduli_spaces, hring'])
   obtain ⟨ψ₂, hF₂, hψ₂⟩ := huniv k₁ hk le_rfl _ C₂ φ₂ φ₃ T₂ m₂ m₃ hφ₂ hφ₃ hφ₃c hm₃
 
-  obtain ⟨ψ₁, hF₁, hψ₁⟩ := GlobalTheory.T.cmFamily_extends_over_dedekindDomain hL hD E H (𝓞 k₁) k₁ _ C₁ D h T₁ ⊤ _ C₂ φa T₂ ma ψ₂ hC₂ hF₂
+  obtain ⟨ψ₁, hF₁, hψ₁⟩ := _root_.GlobalTheory.isFam_extends_dedekind hL hD E H (𝓞 k₁) k₁ _ C₁ D h T₁ ⊤ _ C₂ φa T₂ ma ψ₂ hC₂ hF₂
 
   obtain ⟨n1, hn1⟩ := GlobalTheory.ObjMaps.exists_sab_comp ma m₃
   obtain ⟨-, ⟨-, ⟨hsq3, -⟩, -⟩, -⟩ := hφ₃
@@ -155,7 +156,7 @@ theorem exists_isTen_of_hasType : ThetaUnifAV → Out.Laws → HomExtDvr → ∀
     rw [RingHom.coe_comp]
     exact (algebraMap k₁ ℂ).injective.comp (IsFractionRing.injective (𝓞 k₁) k₁)
   exact ⟨k₁, inferInstance, hk, _, C₁, φ₁, T₁, m₁, D, ε, h, hC₁, hpq, hK, hpos,
-    GlobalTheory.T.nonempty_tensor_of_onto_full_family hL E H (𝓞 k₁) _ _ C₁ D ε h T₁ ψ₁ hinj₁ hK hpos hF₁ hOnto⟩
+    _root_.GlobalTheory.CM.nonempty_isTen_of_isFam_top hL E H (𝓞 k₁) _ _ C₁ D ε h T₁ ψ₁ hinj₁ hK hpos hF₁ hOnto⟩
 
 end GlobalTheory.CM.Recog
 end

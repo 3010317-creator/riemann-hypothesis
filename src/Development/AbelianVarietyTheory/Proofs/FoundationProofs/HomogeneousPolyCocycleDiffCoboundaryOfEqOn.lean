@@ -1,9 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsRootOne
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CocycleIsCoboundaryOfNegCentralElementStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsScalarGamma1CapGamma0ModLevelStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TwoVarPolySubstMatrixBasicLawsStatement
+public import Mathlib.Algebra.Module.LinearMap.Defs
+public import Mathlib.Algebra.Module.Submodule.Defs
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CocycleIsCoboundaryOfNegCentralElement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.Letter
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsScalarGamma1CapGamma0ModLevel
+public import Development.AbelianVarietyTheory.Definitions.Foundations.OpLDOneSubMemTriv
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TwoVarPolySubstMatrixBasicLaws
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -91,8 +95,8 @@ theorem adj_of_near : ∀ (N l w n : ℕ), 0 < N → l.Prime → l ≠ 2 → ¬ 
     · subst h; simp at hMe; omega
     · exact h
   set a := max e n
-  obtain ⟨c, hcG, hcomm, hcmod⟩ := GlobalTheory.T.exists_scalar_gamma1CapGamma0_mod_level N l a M hN hl hl2 hlN hM hlM
-  obtain ⟨L1, L2, L3, -, -, L6, L7⟩ := GlobalTheory.T.twoVarPolySubstMatrix_basic_laws (ZMod (l ^ n))
+  obtain ⟨c, hcG, hcomm, hcmod⟩ := _root_.GlobalTheory.KZ.exists_scalar_mod_level N l a M hN hl hl2 hlN hM hlM
+  obtain ⟨L1, L2, L3, -, -, L6, L7⟩ := _root_.GlobalTheory.KZ.polySlash_laws (ZMod (l ^ n))
   let R := ZMod (l ^ n)
   let V := MvPolynomial (Fin 2) R
   let G := ↥(Gam N l)
@@ -160,7 +164,7 @@ theorem adj_of_near : ∀ (N l w n : ℕ), 0 < N → l.Prime → l ≠ 2 → ¬ 
     rw [Subgroup.mem_subgroupOf] at hδ
     simp only [zz]
     rw [hM'eq _ (gamma_le hM'K hδ), sub_self]
-  obtain ⟨p, hpS, hp⟩ := GlobalTheory.T.cocycle_isCoboundary_of_neg_central_element G R V ρ hρmul hρone h2 S hS Δ hΔn hΔ c' hc1 hc2 zz hzS hzc hzΔ
+  obtain ⟨p, hpS, hp⟩ := _root_.GlobalTheory.KZ.H3.cocycle_isCoboundary_of_neg_central G R V ρ hρmul hρone h2 S hS Δ hΔn hΔ c' hc1 hc2 zz hzS hzc hzΔ
   refine ⟨p, hpS, fun γ hγ => ?_⟩
   exact hp ⟨γ, hγ⟩
 

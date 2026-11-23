@@ -1,12 +1,16 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.IsLatticeFamily
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ChartBundleProductStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DualLatticeCoordinateGeneratorStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LatticeGoodBaseChangeStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LineBundleChartGenericComparisonStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericBundleFramesStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericLinearEquivStatement
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.TrivFlagMod
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ChartBundleProduct
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.LieLatticeData
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DualLatticeCoordinateGenerator
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LatticeGoodBaseChange
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LineBundleChartGenericComparison
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.BundleObjects
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericBundleFrames
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.InstFintypeSumElim
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.SameGenericLinearEquiv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -123,7 +127,7 @@ theorem chart_facts (D : LieLatticeData Ω F n Sg r s) (R : Subalgebra o Ω) (p 
       ∀ i : Fin n, (∀ t ∈ D.xId (χ τ) i, t ∈ R) ∧ (∀ a ∈ R, w * a ∈ D.xId (χ τ) i) ∧
         ∀ u : Ω, u ≠ 0 → (∀ c, c ∈ D.xId (χ τ) i ↔ ∃ a ∈ R, c = a * u) →
           ∀ t, (∃ v ∈ D.hh R p (χ τ), (∀ j, i < j → v j = 0) ∧ v i = t) ↔ ∃ a ∈ R, t = a * u⁻¹ := by
-  obtain ⟨hfree, -⟩ := GlobalTheory.T.lattice_good_base_change D R p w χ hcd hb h1
+  obtain ⟨hfree, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Num.LatticeGoodBaseChange.main D R p w χ hcd hb h1
   obtain ⟨hLF, -, hle, -⟩ := hfree τ
   have hle' : mulLat w (stdLat R _) ≤ D.af R p (χ τ) := hf.le_af τ
   refine ⟨std_le_dual R hle, fun v hv => smul_mem_of_dual R hle' hv, fun i => ⟨?_, ?_, ?_⟩⟩
@@ -134,7 +138,7 @@ theorem chart_facts (D : LieLatticeData Ω F n Sg r s) (R : Subalgebra o Ω) (p 
     rw [← hf.dx τ i]
     exact mul_mem_coord R hle' i ha
   · intro u hu hc t
-    refine GlobalTheory.T.dual_lattice_coordinate_generator R n (D.af R p (χ τ)) hLF (h2.ann τ) i u hu (fun c => ?_) t
+    refine _root_.GlobalTheory.CompanionTheory.Ar.Num.HhGraded.main R n (D.af R p (χ τ)) hLF (h2.ann τ) i u hu (fun c => ?_) t
     have := hc c
     rw [← hf.dx τ i] at this
     exact this
@@ -295,7 +299,7 @@ theorem relH_main : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuatio
     intro i j hij
     rw [hrepr]
     simp [(ne_of_lt hij).symm]
-  have ops := GlobalTheory.T.chart_bundle_product O Ω K ι x
+  have ops := _root_.GlobalTheory.CompanionTheory.Ar.BundleOps.main O Ω K ι x
   have e1 : ∀ i, ∃ A : ChartBundle O (mseg x) 1 Ω, IsLine O x 1 (-a τ i) A.lat :=
     fun i => ops.2.2.1 1 _ one_ne_zero
   have e2 : ∀ i, ∃ A : ChartBundle O (mseg x) 1 Ω, IsLine O x (u τ i) 0 A.lat :=
@@ -339,7 +343,7 @@ theorem relH_main : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuatio
       rw [chartMon_zero', smul_eq_mul, hwe]
       ring
   refine ⟨hSG, fun k hk1 hk2 q L Q hQ => ?_⟩
-  have hsum := GlobalTheory.T.ck_eq_sum_ck_line_summands O Ω K ι x d hmodel n (Fin n → Ω) H Tn hSG wB (Pi.basisFun Ω (Fin n))
+  have hsum := _root_.GlobalTheory.CompanionTheory.Ar.CkFlagSum.main O Ω K ι x d hmodel n (Fin n → Ω) H Tn hSG wB (Pi.basisFun Ω (Fin n))
     (fun i => -a τ i) 0 hflagH hflagT htri A1 A2
     (fun i => ⟨hA1 i, by
       have h1 : wB.repr (Pi.basisFun Ω (Fin n) i) i = u τ i := by
@@ -349,9 +353,9 @@ theorem relH_main : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuatio
       exact hA2 i⟩) k hk1 hk2 q L Q hQ
   rw [hsum, Finset.mul_sum]
   refine Finset.sum_congr rfl fun i _ => ?_
-  have hP := (GlobalTheory.T.line_bundle_chart_generic_comparison O Ω K ι x d hmodel (Xb τ i) T (A3 i) (u τ i) (a τ i) (-1) (hu τ i) (hlX i)
+  have hP := (_root_.GlobalTheory.CompanionTheory.Ar.CkLinePow.main O Ω K ι x d hmodel (Xb τ i) T (A3 i) (u τ i) (a τ i) (-1) (hu τ i) (hlX i)
     hT (hSGX i) (hA3 i)).2 k hk1 hk2 q L Q hQ
-  have hTr := (GlobalTheory.T.same_generic_linear_equiv O Ω K ι x d hmodel 1 Ω Ω
+  have hTr := (_root_.GlobalTheory.CompanionTheory.Ar.Num.CkTransport.main O Ω K ι x d hmodel 1 Ω Ω
     (LinearEquiv.smulOfNeZero Ω Ω (u τ i)⁻¹ (inv_ne_zero (hu τ i))) (A1 i) (A2 i) (A3 i) T (hSG12 i)
     (fun c hc v => ?_)).1 k hk1 hk2 q L Q hQ
   · rw [← hTr, hP]

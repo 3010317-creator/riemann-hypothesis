@@ -6,11 +6,13 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Dou
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalModelWeilOperatorTrivialAtPlaceIsModelStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RootExchangeEntriesMemSchwartzBruhatStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceDoubleStepTrilinearFormPropertiesStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLocalGroupClosedEmbeddingIntegralStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymmetricDoubleIntegralFiniteCombinationStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymmetricDoubleIntegralsPositionOneEqCellSumStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymmetricPositionsDoubleIntegralExistsUniqueStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ToOneSucc
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymmetricPositionsDoubleIntegralExistsUnique
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.FramePositiveSum
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilRepLinearModelGLPairApplyMemSchwartzBruhatFuStatement
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLocalGroupClosedEmbeddingIntegralStatement
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsIsSelfDualOfHasConductor
 import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.IdemElt
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicLocalCompactness.T2SpaceTensorProductFiniteExtension
@@ -146,7 +148,7 @@ theorem valOne_all : ∀ D : D7, ValOne D := by
   haveI i1 : Q.m₁.IsHaarMeasure := Q.haar₁
   haveI i2 : Q.m₂.IsHaarMeasure := Q.haar₂
   have t1 : Q.m₁.IsHaarMeasure := inferInstance
-  have t2 := @GlobalTheory.T.symmetricPositions_doubleIntegral_existsUnique Q.k _ _ _ _ _ _ Q.n₀ Q.n₁ Q.n₂ _ _ _ _ _ _ (Q.c+1) (σ+1) hcQ Q.ψk hψc hψ1 Q.ν hsd Q.μ₁ Q.μ₂ Q.open₁ Q.open₂ Q.m₁ Q.haar₁
+  have t2 := @_root_.GlobalTheory.PosOne.symDbl_existsUnique Q.k _ _ _ _ _ _ Q.n₀ Q.n₁ Q.n₂ _ _ _ _ _ _ (Q.c+1) (σ+1) hcQ Q.ψk hψc hψ1 Q.ν hsd Q.μ₁ Q.μ₂ Q.open₁ Q.open₂ Q.m₁ Q.haar₁
   haveI := hG₁
   haveI := hG₂
   have ex := fun a => @t2 G₁ hG₁ Q.m₂ Q.haar₂ G₂ hG₂ A _ _ τ hsm T htri F (Φa a 1) Q.Φ₂

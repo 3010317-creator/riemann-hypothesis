@@ -1,13 +1,18 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.PermutationWordGelfandPolynomialModShorter
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.BicommutantTensorFactorPermMemSpanStatement
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CommutantLiftModStableSelfAdjointStatement
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CommutatorGlGeneratorTensorWordMapMatrixUnitsStatement
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CommuteGelfandInvariantMatrixUnitsOfGlRelStatement
-public import Development.AbelianVarietyTheory.Proofs.HeightProofs.MemAdjoinGlActionOfCommuteTensorPermStatement
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.IsLieDataCircle
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.BicommutantTensorFactorPermMemSpan
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.Matrix.ConjTranspose
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CommutantLiftModStableSelfAdjoint
+public import Formalism.RealPlaceAnalysis.StatementA
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CommutatorGlGeneratorTensorWordMapMatrixUnits
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CommuteGelfandInvariantMatrixUnitsOfGlRel
+public import Development.AbelianVarietyTheory.Proofs.HeightProofs.MemAdjoinGlActionOfCommuteTensorPerm
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.PolarConjTranspose
 public import Formalism.LatticeRigidity.HeightMinimum.PowFinrankEqZeroOfTracePow
+public import Mathlib.RingTheory.MvPolynomial.Symmetric.NewtonIdentities
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -27,7 +32,6 @@ import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.Henselian
 import Mathlib.RingTheory.HopfAlgebra.Basic
-public import Mathlib.RingTheory.MvPolynomial.Symmetric.NewtonIdentities
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.RegularLocalRing.Defs
 import Mathlib.RingTheory.WittVector.IsPoly
@@ -244,29 +248,29 @@ theorem central_of_filt_low {E : Fin n → Fin n → A} (hE : Formalism.REAL.GlR
   | succ d ih =>
     intro z hz hc
     obtain ⟨_, ⟨M, rfl⟩, y, hy, rfl⟩ := Submodule.mem_sup.1 (filt_succ d hz)
-    obtain ⟨M₀, h1, h2⟩ := GlobalTheory.T.commutant_lift_mod_stable_selfAdjoint _ (Set.range fun p : Fin n × Fin n => polar n d p.1 p.2)
+    obtain ⟨M₀, h1, h2⟩ := _root_.GlobalTheory.matrix_commutant_lift_mod_stable _ (Set.range fun p : Fin n × Fin n => polar n d p.1 p.2)
       ((filt E d).comap (wordMap E d))
       (by rintro _ ⟨p, rfl⟩; exact ⟨(p.2, p.1), (polar_conjTranspose d p.1 p.2).symm⟩)
       (by
         rintro _ ⟨p, rfl⟩ N hN
-        rw [Submodule.mem_comap, ← GlobalTheory.T.commutator_glGenerator_tensorWordMapMatrixUnits A n E hE]
+        rw [Submodule.mem_comap, ← _root_.GlobalTheory.SmoothForms.commutator_wordMap A n E hE]
         exact filt_ad hE d _ _ hN) M
       (by
         rintro _ ⟨p, rfl⟩
-        rw [Submodule.mem_comap, ← GlobalTheory.T.commutator_glGenerator_tensorWordMapMatrixUnits A n E hE]
+        rw [Submodule.mem_comap, ← _root_.GlobalTheory.SmoothForms.commutator_wordMap A n E hE]
         have h3 := neg_mem (filt_ad hE d p.1 p.2 hy)
         have h4 := hc p.1 p.2
         rw [mul_add, add_mul] at h4
         convert h3 using 1
         rw [neg_sub, sub_eq_sub_iff_add_eq_add, h4, add_comm])
     have h3 : M₀ ∈ Submodule.span ℂ (Set.range (permMat n d)) := by
-      refine GlobalTheory.T.bicommutant_tensorFactorPerm_mem_span n d M₀ fun T hT => ?_
+      refine _root_.GlobalTheory.SmoothForms.bicomm_permMat n d M₀ fun T hT => ?_
       have : Algebra.adjoin ℂ (Set.range fun p : Fin n × Fin n => polar n d p.1 p.2) ≤
           Subalgebra.centralizer ℂ {M₀} := by
         refine Algebra.adjoin_le ?_
         rintro x hx _ rfl
         exact (h2 x hx).symm
-      exact this (GlobalTheory.T.mem_adjoin_glAction_of_commute_tensorPerm n d T hT) _ rfl
+      exact this (_root_.GlobalTheory.SymmTensor.mem_adjoin_polar n d T hT) _ rfl
     have h4 : Submodule.span ℂ (Set.range (permMat n d)) ≤
         (Subalgebra.toSubmodule (Algebra.adjoin ℂ (Set.range fun k : Fin n => gelfA E k.val)) ⊔
           filt E d).comap (wordMap E d) := by
@@ -295,6 +299,6 @@ theorem GlobalTheory.SmoothForms.gelfA_mem_adjoin_low : ∀ (A : Type) [Ring A] 
     Formalism.REAL.GlRel E → ∀ m : ℕ, gelfA E m ∈ Algebra.adjoin ℂ (Set.range fun k : Fin n => gelfA E k.val) := by
   intro A _ _ n E hE m
   exact GlobalTheory.SmoothForms.GelfGen.central_of_filt_low hE (m + 2) _ (GlobalTheory.SmoothForms.GelfGen.gelfA_mem_filt E m)
-    (GlobalTheory.T.commute_gelfandInvariantMatrixUnits_of_glRel A n E hE m)
+    (_root_.GlobalTheory.SmoothForms.commute_gelfA A n E hE m)
 
 end

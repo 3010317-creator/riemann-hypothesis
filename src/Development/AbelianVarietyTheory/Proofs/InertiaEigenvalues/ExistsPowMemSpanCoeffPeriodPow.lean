@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsUnitOfFrobeniusDvdEisensteinPowMulStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsUnitOfFrobeniusDvdEisensteinPowMul
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TopologicalBasisBasicFacts
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -203,5 +203,5 @@ theorem GlobalTheory.BSP.pow_l_mem_span_coeff : ∀ (l : ℕ) [Fact l.Prime] (K 
     refine ⟨w, mul_left_cancel₀ (pow_ne_zero r hpr.ne_zero) ?_⟩
     rw [mul_left_comm, hz, hw]
     ring
-  have hu := GlobalTheory.T.isUnit_of_frobenius_dvd_eisenstein_pow_mul l K bk g hlg M hfin
+  have hu := _root_.GlobalTheory.LemZ.isUnit_of_frob_dvd l K bk g hlg M hfin
   exact ⟨r, (I.mul_unit_mem_iff_mem hu).1 hr⟩

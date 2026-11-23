@@ -1,7 +1,9 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HermInf
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRingStatement
+public import Formalism.UnipotentAdelicQuotients.SWXSDefs
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ModerateGrowthSchwartz
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.LcscAdelicUnitaryGroup
 import Formalism.LocalRingCardinality.DataHost
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicLocalCompactness.AdeleLC
@@ -45,7 +47,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.ModerateGrowthSchwartz
 import Development.AbelianVarietyTheory.Definitions.Foundations.AestronglyMeasurableQuotMeasureIffLift
 import Development.AbelianVarietyTheory.Definitions.Foundations.EventuallyEqOfIsPreconnected
 import Development.AbelianVarietyTheory.Definitions.Foundations.IsIwasawaOfIsCompact
@@ -190,8 +191,8 @@ theorem continuous_tm {σ : E →ₐ[F] E} (hCM : IsCMExt F E σ) {R R' : Type} 
     [SecondCountableTopology R'] [T2Space R'] (f : R →ₐ[F] R') (hf : Continuous f) :
     Continuous (tm E f) := by
   haveI := finite_of_cm hCM
-  have h1 := (GlobalTheory.T.tensor_locally_compact_ring F E σ hCM R).2.2.2.2.2.2.1 _ (Module.finBasis F E)
-  have h2 := (GlobalTheory.T.tensor_locally_compact_ring F E σ hCM R').2.2.2.2.2.2.1 _ (Module.finBasis F E)
+  have h1 := (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R).2.2.2.2.2.2.1 _ (Module.finBasis F E)
+  have h2 := (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R').2.2.2.2.2.2.1 _ (Module.finBasis F E)
   rw [h2.isEmbedding.continuous_iff]
   refine continuous_pi fun k => ?_
   simp only [Function.comp_def, repr_tm]
@@ -202,9 +203,9 @@ theorem continuous_joinT {σ : E →ₐ[F] E} (hCM : IsCMExt F E σ) {d : ℕ} (
     (hf : Continuous f) (hg : Continuous g) : Continuous fun x => joinT b (f x) (g x) := by
   haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_adele F
   haveI := GlobalTheory.AdelicUnitaryTop.secondCountable_finiteAdele F
-  have h0 := (GlobalTheory.T.tensor_locally_compact_ring F E σ hCM (AF F)).2.2.2.2.2.2.1 _ b
-  have h1 := (GlobalTheory.T.tensor_locally_compact_ring F E σ hCM (Ainf F)).2.2.2.2.2.2.1 _ b
-  have h2 := (GlobalTheory.T.tensor_locally_compact_ring F E σ hCM (Af F)).2.2.2.2.2.2.1 _ b
+  have h0 := (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (AF F)).2.2.2.2.2.2.1 _ b
+  have h1 := (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Ainf F)).2.2.2.2.2.2.1 _ b
+  have h2 := (_root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM (Af F)).2.2.2.2.2.2.1 _ b
   rw [h0.isEmbedding.continuous_iff]
   refine continuous_pi fun k => ?_
   simp only [Function.comp_def, repr_joinT]
@@ -215,7 +216,7 @@ theorem herm_facts {σ : E →ₐ[F] E} (hCM : IsCMExt F E σ) (n : ℕ) (R : Ty
     [TopologicalSpace R] [IsTopologicalRing R] [LocallyCompactSpace R] [SecondCountableTopology R] [T2Space R] :
     IsTopologicalAddGroup (HermR R σ n) ∧ LocallyCompactSpace (HermR R σ n) ∧
       SecondCountableTopology (HermR R σ n) ∧ T2Space (HermR R σ n) := by
-  obtain ⟨h1, h2, h3, h4, -, -, -, -, h9, -⟩ := GlobalTheory.T.tensor_locally_compact_ring F E σ hCM R
+  obtain ⟨h1, h2, h3, h4, -, -, -, -, h9, -⟩ := _root_.GlobalTheory.CompanionTheory.SW.TopK.topTens_props F E σ hCM R
   haveI : IsTopologicalRing (R ⊗[F] E) := h1
   haveI : LocallyCompactSpace (R ⊗[F] E) := h2
   haveI : SecondCountableTopology (R ⊗[F] E) := h3

@@ -1,8 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ExistsReduction
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsMemKsetActsAsGLModSplitPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TrivialModChosenPrimesIffMemKgStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsMemKsetActsAsGLModSplitPrime
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TrivialModChosenPrimesIffMemKg
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -121,7 +121,7 @@ theorem exists_red_actsBy : ∀ (I : AutInst) (N : ℕ) (g : Fin 2 → ℕ) (Pl 
     fun x hx kv h => val_eq_lemma hρ hx kv (M := 1) (by rw [Units.val_one]; exact h)
   have : Fintype (Σ k, Pl k) := Fintype.ofFinite _
   refine ⟨⟨ρ, hmul, fun x hx => ?_, fun q => ?_⟩, hρ⟩
-  · rw [← GlobalTheory.T.trivial_mod_chosen_primes_iff_mem_Kg I N g Pl w fr hn hc x hx]
+  · rw [← _root_.GlobalTheory.RowLev.trivial_iff_mem_Kg I N g Pl w fr hn hc x hx]
     constructor
     · intro h1 k v y h
       rw [hρ x hx k v y h, h1]
@@ -135,7 +135,7 @@ theorem exists_red_actsBy : ∀ (I : AutInst) (N : ℕ) (g : Fin 2 → ℕ) (Pl 
       · exact ⟨1, hK1, funext fun kv => by simpa using hone 1 hK1 kv (fr kv.1 kv.2).actsAs_one⟩
       · intro a s ha ih
         obtain ⟨xs, hxs, es⟩ := ih
-        obtain ⟨xa, hxa, hact, hoth⟩ := GlobalTheory.T.exists_mem_Kset_acts_as_GL_mod_splitPrime I N (g a.1) (w a.1 a.2) (fr a.1 a.2) hn (hc.1 a.1)
+        obtain ⟨xa, hxa, hact, hoth⟩ := _root_.GlobalTheory.RowLev.exists_mem_Kset_actsAs_trivial_away I N (g a.1) (w a.1 a.2) (fr a.1 a.2) hn (hc.1 a.1)
           (hc.2.2.2.1 a.1 a.2).2 (hc.2.2.2.2.2.1 a.1 a.2 a.2) (q a)
         refine ⟨xa * xs, hKmul xa hxa xs hxs, ?_⟩
         rw [hmul xa hxa xs hxs, es]

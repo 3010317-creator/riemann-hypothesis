@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ExistsHasCls
 public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.DiscreteSeriesCharacter
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MeasurableEmbeddingEquiv
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompactUnitaryTorusRealPlaceTensorEqComplexPowStatement
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.EllipticPartTestData
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.CompactUnitaryTorusRealPlaceTensorEqComplexPow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -605,7 +606,7 @@ theorem real_classes : ∀ (D : D7) (V : HSp D) (S : D.what₂.Tau → SPar) (M 
   classical
   have hc := GlobalTheory.AdelicU.isCMExt_host D
   obtain ⟨Ψ, h1, h2, hα, h4, -, -⟩ :=
-    GlobalTheory.T.compact_unitaryTorus_real_place_tensor_eq_complex_pow D.host.F D.host.E D.sp.cm.sig hc V.rank P (placeOf D ρ) (embOverOf D ρ) hT
+    _root_.GlobalTheory.TrEll.realTorus_split D.host.F D.host.E D.sp.cm.sig hc V.rank P (placeOf D ρ) (embOverOf D ρ) hT
   have hfr := M.fr_gram ρ
   have hgram : gramAt D V ρ = V.gram.map (embOverOf D ρ).1 := rfl
   have hFu : IsUnit (M.fr ρ).det := (Matrix.isUnit_iff_isUnit_det _).1 (M.fr_unit ρ)

@@ -3,7 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsLv
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LocallyCompactUnipFlag
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.GodementSectionInvariantConvergent
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CompactAdelesRationalPointsFiniteEventuallyZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ValHalfInf
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CompactAdelesRationalPointsFiniteEventuallyZero
+public import Development.AbelianVarietyTheory.Definitions.Divisors.LocallyCompactSpaceAxis
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -39,7 +41,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.Divisors.LocallyCompactSpaceAxis
 import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EisensteinIsotropicLine
 
 @[expose] public section
@@ -73,7 +74,7 @@ theorem exists_bound_exponents : ∀ (F E : Type) [Field F] [NumberField F] [Fie
     continuous_const.matrix_mul (Units.continuous_val.comp (isEmbedding_matHom (AF F) σ J).continuous)
   have hb : GlobalTheory.Eis.Conv.Bdd fun w : W => (w : GAd σ J) := ⟨W, hW, fun w => w.2⟩
   obtain ⟨Ω, hΩ, hΩw⟩ := GlobalTheory.Eis.Conv.Bdd.entries (GlobalTheory.Eis.Conv.Bdd.map hb hc)
-  obtain ⟨m₀, hm₀⟩ := (GlobalTheory.T.compact_adeles_rational_points_finite_eventually_zero F E Ω hΩ).2
+  obtain ⟨m₀, hm₀⟩ := (_root_.GlobalTheory.Eis.Conv.Discr.finite_and_eventually_eq_zero F E Ω hΩ).2
   refine ⟨m₀, fun q hqm l w hw hg i => ?_⟩
   have ht : cT (sigR (AF F) σ) (tor F E l)⁻¹.1 = (tor F E l)⁻¹.1 :=
     congrArg Units.val (GlobalTheory.Eis.Conv.cti_dg (GlobalTheory.Eis.Conv.sigR_halfE σ) l)

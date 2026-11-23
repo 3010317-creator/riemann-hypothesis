@@ -3,8 +3,10 @@ module
 public import Mathlib.MeasureTheory.Group.FundamentalDomain
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AeMeasureSetOfSmulMemEqZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AeMeasureSmulPreimageFundamentalDomainEqStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralFundamentalDomainUnfoldRefoldMeasureStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralMulMeasureInterSmulPreimageOfInvariantStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralFundamentalDomainUnfoldRefoldMeasure
+public import Mathlib.MeasureTheory.Group.Defs
+public import Mathlib.MeasureTheory.Integral.Lebesgue.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LintegralMulMeasureInterSmulPreimageOfInvariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,7 +62,7 @@ theorem measure_mul_setLIntegral_eq [MeasurableInv S] (ν : Measure S) [SFinite 
     (hE : MeasurableSet E) (ψ : X → ℝ≥0∞) (hψ : Measurable ψ)
     (hinv : ∀ (s : S) (x : X), ψ (s • x) = ψ x) :
     ν E * ∫⁻ x in D, ψ x ∂μ = ∫⁻ y, ψ y * ν (E ∩ {s | s⁻¹ • y ∈ D}) ∂μ :=
-  GlobalTheory.T.lintegral_mul_measure_inter_smul_preimage_of_invariant S X ν μ D hD E hE ψ hψ hinv
+  _root_.GlobalTheory.lintegral_mul_measure_inter_smul_preimage S X ν μ D hD E hE ψ hψ hinv
 
 theorem lintegral_unfold_eq [MeasurableMul₂ S] [MeasurableInv S] (ν : Measure S) [SFinite ν]
     [ν.IsMulLeftInvariant] (μ : Measure X) [SFinite μ] [SMulInvariantMeasure S X μ]
@@ -69,7 +71,7 @@ theorem lintegral_unfold_eq [MeasurableMul₂ S] [MeasurableInv S] (ν : Measure
     (hEf : IsFundamentalDomain Γ E ν) (ψ : X → ℝ≥0∞) (hψ : Measurable ψ)
     (hinv : ∀ (s : S) (x : X), ψ (s • x) = ψ x) :
     ∫⁻ y, ψ y * ν (E ∩ {s | s⁻¹ • y ∈ D₁}) ∂μ = ∫⁻ y in D₂, ψ y * ν {s | s⁻¹ • y ∈ D₁} ∂μ :=
-  GlobalTheory.T.lintegral_fundamentalDomain_unfold_refold_measure S X ν μ Γ D₁ D₂ hD₁ hD₂ E hE hEf ψ hψ hinv
+  _root_.GlobalTheory.CovolIndep.lintegral_unfold_refold S X ν μ Γ D₁ D₂ hD₁ hD₂ E hE hEf ψ hψ hinv
 
 theorem ae_measure_setOf_smul_mem_eq [MeasurableMul₂ S] [MeasurableInv S] (ν : Measure S) [SFinite ν]
     [ν.IsMulLeftInvariant] (μ : Measure X) [SFinite μ] [SMulInvariantMeasure S X μ]

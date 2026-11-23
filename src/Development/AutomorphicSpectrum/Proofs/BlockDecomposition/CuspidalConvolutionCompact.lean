@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.T2SpaceAdelicGeneralLinearGroupNumberField
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalL2NormOneIsometryStatement
+public import GroundTheory.AutomorphicForms.CuspidalDiscreteness.CuspCompact
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalL2NormOneIsometry
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsCompactOperatorOfScaledIsometricIntertwiner
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsCompactOperatorRepOpRcuspZero
 public import GroundTheory.AutomorphicForms.CuspidalDiscreteness
@@ -56,7 +57,7 @@ theorem isCompactOperator_repOp_Rcusp (E : Type) [Field E] [NumberField E] [_roo
   · exact GlobalTheory.CompanionTheory.CuspRank.isCompactOperator_repOp_Rcusp_zero E μ f
   · let ν : Measure (GroundTheory.Automorphic.Reduction.normOneGL (K := E) (n := a)) := Measure.haar
     have : ν.IsHaarMeasure := Measure.isHaarMeasure_haarMeasure _
-    have htransfer := GlobalTheory.T.cuspidal_L2_norm_one_isometry E a ha μ ν
+    have htransfer := _root_.GlobalTheory.CompanionTheory.CuspTransfer.transfer E a ha μ ν
     obtain ⟨Φ, c, hc0, hΦ, hint⟩ := htransfer
     obtain ⟨f₁, hf₁⟩ := hint f hf hc
     exact GlobalTheory.CompanionTheory.CompactOperators.isCompactOperator_of_scaled_isometric_intertwiner (repOp (Rcusp μ) μ f) _ Φ c hc0 hΦ hf₁

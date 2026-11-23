@@ -1,11 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SubsetSpanBy
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseChangeSendsClosedFibreGenericPointDvrStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearlyDisjointFunctionFieldOfFlatBaseChangeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RegularAtPointFunctionFieldMapOfGenericPointCompStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiAbelianDvrClosedFibreStalkUniformiserStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaSpanVanishingEqUniformiserMulStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseChangeSendsClosedFibreGenericPointDvr
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearlyDisjointFunctionFieldOfFlatBaseChange
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RegularAtPointFunctionFieldMapOfGenericPointComp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemiAbelianDvrClosedFibreStalkUniformiser
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaSpanVanishingEqUniformiserMul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -139,17 +139,17 @@ theorem gauss_baseChange : ∀ (T D : Type) [CommRing T] [IsDomain T] [IsDiscret
   set c := cst H'.hom with hc
   set P := c (a ϖ) with hPdef
   have hP : P = θ (cst H.hom ϖ) := by rw [hPdef, ← RingHom.comp_apply, ← hcomp, RingHom.comp_apply]
-  obtain ⟨hϖ0, hfac⟩ := GlobalTheory.T.semiAbelian_dvr_closedFibre_stalk_uniformiser T H hH y hy hdy ϖ hmT
+  obtain ⟨hϖ0, hfac⟩ := _root_.GlobalTheory.Desc.GenFibre.unif T H hH y hy hdy ϖ hmT
   have hP0 : P ≠ 0 := by rw [hP]; exact (map_ne_zero θ).2 hϖ0
   have hPz : GlobalTheory.Cartier.ZeroAt y' P :=
     (cst_regAt_zeroAt D H'.left H'.hom y' hy' (a ϖ)).2 (by rw [hmD]; exact Ideal.subset_span rfl)
   have hreg : ∀ u, GlobalTheory.Cartier.RegAt y u → GlobalTheory.Cartier.RegAt y' (θ u) := by
     intro u hu
-    have hpt := GlobalTheory.T.baseChange_sends_closedFibre_genericPoint_dvr T D a ha hm H H' π θ hH hpb ⟨_, hff.choose_spec⟩ y y' hy hy' hdy hdy'
-    exact GlobalTheory.T.regularAtPoint_functionField_map_of_genericPoint_comp H.left H'.left π θ ⟨_, hff.choose_spec⟩ y' u (hpt ▸ hu)
+    have hpt := _root_.GlobalTheory.Desc.GaussBC.apply_eq_of_closedFibre_dim_one T D a ha hm H H' π θ hH hpb ⟨_, hff.choose_spec⟩ y y' hy hy' hdy hdy'
+    exact _root_.GlobalTheory.Desc.RegPull.regAt_map H.left H'.left π θ ⟨_, hff.choose_spec⟩ y' u (hpt ▸ hu)
   have hcreg : ∀ d, GlobalTheory.Cartier.RegAt y' (c d) := fun d => (cst_regAt_zeroAt D H'.left H'.hom y' hy' d).1
   have hc0reg : ∀ t, GlobalTheory.Cartier.RegAt y (cst H.hom t) := fun t => (cst_regAt_zeroAt T H.left H.hom y hy t).1
-  have hmod := GlobalTheory.T.thetaSpan_vanishing_eq_uniformiser_mul T D a ha hm H H' π θ hH hpb ⟨_, hff.choose_spec⟩ y y' hy hy' hdy hdy' ϖ hmT
+  have hmod := _root_.GlobalTheory.Desc.ModPi.modPi T D a ha hm H H' π θ hH hpb ⟨_, hff.choose_spec⟩ y y' hy hy' hdy hdy' ϖ hmT
   set S := spanBy c (θ '' regSet y) with hS
   have hSreg : ∀ v ∈ S, GlobalTheory.Cartier.RegAt y' v :=
     spanBy_induction c _ (regAt_zero y') (fun _ _ h h' => h.add h') (by
@@ -231,6 +231,6 @@ theorem gauss_baseChange : ∀ (T D : Type) [CommRing T] [IsDomain T] [IsDiscret
       have hPi : GlobalTheory.Cartier.RegAt y' P⁻¹ := by
         rw [e]; exact (h.mul hθw.inv.regAt).mul (regAt_pow hPz.regAt _)
       exact (zeroAt_iff.1 hPz).2 ((unitAt_iff hP0).2 ⟨hPz.regAt, hPi⟩)
-  · exact GlobalTheory.T.linearlyDisjoint_functionField_of_flat_baseChange T D a ha H H' π θ hpb ⟨_, hff.choose_spec⟩
+  · exact _root_.GlobalTheory.Desc.FlatLin.linDisj_of_flat T D a ha H H' π θ hpb ⟨_, hff.choose_spec⟩
 
 end GlobalTheory.Desc.GaussBC

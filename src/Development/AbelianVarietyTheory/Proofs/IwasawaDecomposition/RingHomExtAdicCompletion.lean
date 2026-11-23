@@ -1,13 +1,18 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RingSpecNormalisedCharacterEq
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitaryFiniteAdelesSplitPlaceDecompositionStatement
+public import Formalism.AlgebraicWeights.IsAlgWeight
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitaryFiniteAdelesSplitPlaceDecomposition
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GEquivIntL
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeAlgebraCompUnitaryGroupAntidiagTransportMem
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InertHeckeOperatorIndepOfInertDatum
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.Order.CompletePartialOrder
+public import Mathlib.RepresentationTheory.Irreducible
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IrreducibleRepIsotypicOfCentraliserFactor
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitarySatakeInvariantAntidiagTransport
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryTorusUnipotentCosetTransportIff
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEquivOfMapEq
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeAlgebraCompUnitaryGroupAntidiagTransportMemStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InertHeckeOperatorIndepOfInertDatumStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IrreducibleRepIsotypicOfCentraliserFactorStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitarySatakeInvariantAntidiagTransportStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.UnitaryTorusUnipotentCosetTransportIffStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,7 +49,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GEquivIntL
 
 @[expose] public section
 
@@ -64,10 +68,10 @@ theorem satAtS_indep {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ
   obtain ⟨f, hfS, hf0, U, hU, hUv, hH⟩ := hs
   refine ⟨f, hfS, hf0, U, hU, hUv, fun h' hh' => ?_⟩
   have hm : 2 * (n / 2) ≤ n := Nat.mul_div_le n 2
-  rw [GlobalTheory.T.inertHeckeOperator_indep_of_inertDatum L n v w Dv Dv' U _ h' hh'.1 f,
-    hH _ (GlobalTheory.T.heckeAlgebra_comp_unitaryGroupAntidiagTransport_mem (gEquiv Dv Dv') (gEquiv_comm Dv Dv') (gEquiv_intL Dv Dv') n h' hh'),
-    GlobalTheory.T.unitarySatake_invariant_antidiagTransport (gEquiv Dv Dv') (gEquiv_comm Dv Dv') (gEquiv_intL Dv Dv') Dv.ϖ Dv'.ϖ _ n (n / 2) h' hh'.1
-      (GlobalTheory.T.unitaryTorus_unipotent_coset_transport_iff (gEquiv Dv Dv') (gEquiv_comm Dv Dv') (gEquiv_intL Dv Dv') Dv.ϖ Dv'.ϖ _ _ n (n / 2)
+  rw [_root_.GlobalTheory.SatInd.heckeFunI_indepDatum L n v w Dv Dv' U _ h' hh'.1 f,
+    hH _ (_root_.GlobalTheory.SatInd.guMap_hecke_comap (gEquiv Dv Dv') (gEquiv_comm Dv Dv') (gEquiv_intL Dv Dv') n h' hh'),
+    _root_.GlobalTheory.SatInd.satU_guMap (gEquiv Dv Dv') (gEquiv_comm Dv Dv') (gEquiv_intL Dv Dv') Dv.ϖ Dv'.ϖ _ n (n / 2) h' hh'.1
+      (_root_.GlobalTheory.SatInd.cosetT_iff (gEquiv Dv Dv') (gEquiv_comm Dv Dv') (gEquiv_intL Dv Dv') Dv.ϖ Dv'.ϖ _ _ n (n / 2)
         Dv.unram Dv'.unram hm)]
 
 end Sat
@@ -121,7 +125,7 @@ theorem cl_eq_of_isLocS {L : Type} [Field L] [NumberField L] [IsCMField L] {n : 
   obtain ⟨i, T, hi, hix, hTi, hTS, hTe⟩ := hτ
   obtain ⟨i', T', hi', hix', hTi', hTS', hTe'⟩ := hτ'
   obtain rfl := (splitEmb_eq s.v s.w s.i s.i i' i hi' hi hix' hix).2
-  obtain ⟨hdec, hcom, huniq⟩ := GlobalTheory.T.unitaryFiniteAdeles_splitPlace_decomposition L n s
+  obtain ⟨hdec, hcom, huniq⟩ := _root_.GlobalTheory.SplitAdelic.main L n s
   choose sec hsec using fun A => (huniq A).exists
   have sec_eq : ∀ x : GAf L n, TrivOutside {s.v} x → sec (s.loc n x) = x := fun x hx =>
     (huniq _).unique (hsec _) ⟨hx, rfl⟩
@@ -183,7 +187,7 @@ theorem cl_eq_of_isLocS {L : Type} [Field L] [NumberField L] [IsCMField L] {n : 
     refine ⟨s.loc n x, fun B => ?_⟩
     rw [show sH (s.loc n x) = x from sec_eq x hx, inv_mul_cancel_left]
     exact (hcom _ _ (hsec B).1 hy).symm
-  obtain ⟨φ⟩ := (GlobalTheory.T.irreducibleRep_isotypic_of_centraliser_factor _ _ _ _ _ ρ sH (τ.ρ.comp e) (τ'.ρ.comp e) hρ
+  obtain ⟨φ⟩ := (_root_.GlobalTheory.CuspRep.CompUniq.isotypic _ _ _ _ _ ρ sH (τ.ρ.comp e) (τ'.ρ.comp e) hρ
     (GlobalTheory.CuspRep.ParLaws.isIrreducible_comp τ.irr e he) (GlobalTheory.CuspRep.ParLaws.isIrreducible_comp τ'.irr e he)
     hcomm f hf).2 f' hf'
   refine IrrRep.cl_eq_iff.2 ⟨Representation.Equiv.mk φ.toLinearEquiv fun B => ?_⟩

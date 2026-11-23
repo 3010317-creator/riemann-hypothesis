@@ -4,7 +4,7 @@ public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.C
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.Hat1
 public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryExistsWithPrescribedParts
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryExistsWithPrescribedPartsStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.EquivariantFiniteGroup
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CompletedLatticeEqAdelicCompletionAndGram
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ReindexUnitary
 import Mathlib.Algebra.Order.Floor.Extended
@@ -205,7 +205,7 @@ theorem conj_mem_of_cong : ∀ (D : D7) (V : Formalism.BasicNotions.TH.HSp D) (C
   intro D V Comp X dict Kf th M x0 hK hth hd hx0 hact _ k g hg Λk _ hhat γ' hγ'
   haveI : IsTotallyReal D.host.F := D.sp.cm.totReal
   obtain ⟨γ₀, hQ, hfin, harch⟩ := exists_rat V γ' hγ'.1.1
-  obtain ⟨hinj, -, -, hsur⟩ := (GlobalTheory.T.adelicUnitary_exists_with_prescribed_parts D V).2 (X k).Ψ (th k) (X k).cmType (hth k)
+  obtain ⟨hinj, -, -, hsur⟩ := (_root_.GlobalTheory.UnitaryGlue.adelic_glue D V).2 (X k).Ψ (th k) (X k).cmType (hth k)
   obtain ⟨h, hh, hhw⟩ := hsur (fun τ => archM V (th k τ) (g⁻¹ * γ₀ * g)) (fun τ =>
     GlobalTheory.MarkUnit.infMat_unitary D.sp.cm.sig V.gram τ.1
       (fun x => IsCMField.complexEmbedding_complexConj D.host.E τ.1 x) (th k τ) (hth k τ) _)

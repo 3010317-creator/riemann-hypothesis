@@ -5,11 +5,11 @@ public import Formalism.SharpRestriction.CuspSpanNormBounds.PExtra
 public import Formalism.SharpRestriction.CuspSpanNormBounds.BranchingAndRankConstants
 public import Development.AbelianVarietyTheory.Statements.DiscreteSeriesShifts.ThmBpDS
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DegVand
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeMultOneDecayOfLargeGapHypothesesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselMapMultipleIsometryLargeGapStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeMultOneDecayOfLargeGapHypotheses
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselMapMultipleIsometryLargeGap
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableBcWeight
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableEmbeddingLmul
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SizesLargeOfPowerBounds
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurableEmbeddingLmul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,7 +58,7 @@ theorem bessel_schur_gap (hH : GlobalTheory.GapIn.Hyp) (D : D7) (large₂ : Size
     (hCl : 1000 ≤ Cl) : BSch D large₂ C' Cl Cg cb Cu cT CT C0 := by
   intro hZ
   have hv1 : 1 ≤ D.host.v := hZ.1.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1
-  refine GlobalTheory.T.besselMap_multipleIsometry_largeGap hH D large₂ C' Cl Cg cb Cu cT CT C0 hCl
+  refine _root_.GlobalTheory.BesselSchurGap.bessel_schur hH D large₂ C' Cl Cg cb Cu cT CT C0 hCl
     (fun _ _ _ _ _ h => GlobalTheory.BesselSchur.theta_pos D (by linarith) h) (fun w => ?_) hZ
   unfold Tr
   exact_mod_cast (D.mem w).A.T_prime.pos
@@ -72,7 +72,7 @@ theorem schur_along_family : Formalism.HermitianLatticesTheory.SiegelMassRatio �
   intro _ hH _ Cg cb Cu cT CT C0 C1
   obtain ⟨C₀, hC⟩ := GlobalTheory.Amp.schurSt_of_big_tie Cg cb Cu cT CT C0 C1
   obtain ⟨m₀, hm⟩ := hC C₀ le_rfl
-  obtain ⟨m₁, hL⟩ := GlobalTheory.T.amplitudeMultOneDecay_of_largeGapHypotheses hH Cg cb Cu cT CT C0
+  obtain ⟨m₁, hL⟩ := _root_.GlobalTheory.Amp.LocalInputsGap.locIn_of_hypGap hH Cg cb Cu cT CT C0
   refine ⟨C₀, 1000, fun eps Fm _ h2 _ => ?_⟩
   obtain ⟨x0, hx⟩ := GlobalTheory.family_sizes_eventually_large eps Fm (max (max m₀ m₁) 1)
   refine ⟨x0, fun x hxx i => ?_⟩

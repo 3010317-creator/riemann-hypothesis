@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Foundations.PetIPSmulRight
 public import Development.AbelianVarietyTheory.Definitions.Foundations.RepL
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IsDCReps
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AtkinLehnerSlashInverseCharacterStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AtkinLehnerSlashInverseCharacter
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.Gamma1CharElementary
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsCuspidalAtAllCuspsSL2SlashIntMatrix
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularFormGammaOneOfCoeffSeq
@@ -120,7 +120,7 @@ end GlobalTheory.EisM.AtkinLehnerForm
 open GlobalTheory.EisM.AtkinLehnerForm in
 theorem GlobalTheory.EisM.atkinLehner_MF : ∀ (k N l : ℕ) (χ : DirichletCharacter ℂ N) (a : ℕ → ℂ) (a₀ b₀ c₀ d₀ : ℤ), N * a₀ * d₀ - l * b₀ * c₀ = 1 → 1 ≤ k → 0 < N → MF k (N * l) (ch χ) a → ∃ a' : ℕ → ℂ, MF k (N * l) (ch χ⁻¹) a' ∧ qs a' = slz k !![(N : ℤ) * a₀, b₀; N * l * c₀, N * d₀] (qs a) := by
   intro k N l χ a a₀ b₀ c₀ d₀ h hk hN ha
-  have hinv := GlobalTheory.T.atkinLehner_slash_inverse_character k N l χ (qs a) a₀ b₀ c₀ d₀ h hk hN ha.2
+  have hinv := _root_.GlobalTheory.EisM.inv_slz_atkinLehner k N l χ (qs a) a₀ b₀ c₀ d₀ h hk hN ha.2
   suffices hex : ∃ a' : ℕ → ℂ, PolyB a' ∧ qs a' = slz k !![(N : ℤ) * a₀, b₀; N * l * c₀, N * d₀] (qs a) by
     obtain ⟨a', h1, h2⟩ := hex
     exact ⟨a', ⟨h1, h2 ▸ hinv⟩, h2⟩

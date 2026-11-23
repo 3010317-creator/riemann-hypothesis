@@ -1,7 +1,7 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.HolomorphicDiscreteSeries.EmbeddedFrames.PfD
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PartialFractionDiagonalIdentityStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PartialFractionDiagonalIdentity
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,8 +54,8 @@ theorem pfOrth : ∀ {m : ℕ} (d : Fin (m + 1) → ℝ) (d' : Fin m → ℝ),
     Function.Injective (Sum.elim d d') → ∀ i k, i ≠ k →
       1 - ∑ j, pfR d d' j / ((d i - d' j) * (d k - d' j)) = 0 := by
   intro m d d' hinj i k hik
-  have hi := GlobalTheory.T.partial_fraction_diagonal_identity d d' hinj i
-  have hk := GlobalTheory.T.partial_fraction_diagonal_identity d d' hinj k
+  have hi := _root_.GlobalTheory.CompanionTheory.RgHe.Frame.pfZero d d' hinj i
+  have hk := _root_.GlobalTheory.CompanionTheory.RgHe.Frame.pfZero d d' hinj k
   have hne : d i - d k ≠ 0 := sub_ne_zero.mpr fun h => hik (Sum.inl.inj (@hinj (Sum.inl i) (Sum.inl k) h))
   have hij : ∀ j, d i - d' j ≠ 0 := fun j => sub_ne_zero.mpr fun h =>
     Sum.inl_ne_inr (@hinj (Sum.inl i) (Sum.inr j) h)

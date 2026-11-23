@@ -5,8 +5,8 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsGener
 public import Mathlib.AlgebraicGeometry.Morphisms.Proper
 public import Mathlib.AlgebraicGeometry.Noetherian
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GermStalkClosedPointToBaseChange
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LineBundleNormalProperPullback
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsVBOneOfChartGenerators
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LineBundleNormalProperPullbackStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -168,7 +168,7 @@ theorem gen_descends : ∀ (X₀ Xg X' : Scheme.{0}) (Ω : Type) [Field Ω] (ξ 
       exact x.2
     exact (e.isEmbedding.isInducing.specializes_iff).1 h3
   have hp : (L.pull ξg e (AddMonoidHom.id Ω)).IsGenAt ⟨z, hs⟩ t :=
-    GlobalTheory.T.line_bundle_normal_proper_pullback Xg Ω ξg X' Ω ξ' f (RingHom.id Ω) hD' Function.bijective_id (isCptGen_of h1 hgen)
+    _root_.GlobalTheory.CompanionTheory.Ar.Flat.lat_isGenAt_of_proper_birational Xg Ω ξg X' Ω ξ' f (RingHom.id Ω) hD' Function.bijective_id (isCptGen_of h1 hgen)
       (normalCpt_of hD hnorm) (L.pull ξg e (AddMonoidHom.id Ω)) Set.univ ⟨z, hs⟩ t (isVBOn_pull hD L hT hVB)
       (fun _ _ => trivial) (fun p' _ => by
         have h4 := hG p'

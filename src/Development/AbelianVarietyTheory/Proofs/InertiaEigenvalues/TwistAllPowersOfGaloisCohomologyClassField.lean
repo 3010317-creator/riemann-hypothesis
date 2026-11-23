@@ -9,10 +9,11 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsUnivC
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdmissibleIndexBoundAllPowers
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.HeckeSplitOne
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DualityDimOfLocalTheorem
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BoundModTwoUniformizerAtTwoOfChebotarevStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.GaloisSideTwistedSelmerAuxiliaryPrimes
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BoundModTwoUniformizerAtTwoOfChebotarev
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NotValuationNatCastLtOne
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ResidualSelmerBoundOfAuxiliaryPrimesOddStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelmerPresentationMatrixOfGaloisCohomologyStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ResidualSelmerBoundOfAuxiliaryPrimesOdd
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelmerPresentationMatrixOfGaloisCohomology
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TwistTheoremAllPowersOfSelmerSupLattice
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -62,9 +63,9 @@ theorem twistAllPowers_of_galoisCohomology_classField :
   intro hCh hPT hCD hTL hLF hLT hLE hGF hGE hUO h4 hGW hRC D E N0 h5 h1 h2 h8 hGood hSig h9 h10 hUniv hOff hRel
     hL3 hT4 hT hU hG hFull hHk hComm hHC hSS
   exact GlobalTheory.TwExportSup.twistTheorem_allPowers_of_selmer_supLattice D E N0
-    (GlobalTheory.T.selmerPresentationMatrix_of_galois_cohomology hCh hPT hCD hTL hLF hLT hLE hGF hGE hUO h4 D D.nd D.ntw (BlochKatoReduction.bk0 D))
-    (GlobalTheory.T.residualSelmerBound_of_auxiliaryPrimes_odd hCh hPT hCD hTL hLF hLT hLE hGF hGE hUO h4 hGW D D.nd D.ntw (BlochKatoReduction.bk0 D))
-    (GlobalTheory.T.boundModTwoUniformizerAtTwo_of_chebotarev hCh hPT hCD hTL hLF hLT hLE hGF hGE hUO h4 D D.nd D.ntw (BlochKatoReduction.bk0 D))
+    (_root_.GlobalTheory.SelFun.oneMatrix_of_galoisCohomology hCh hPT hCD hTL hLF hLT hLE hGF hGE hUO h4 D D.nd D.ntw (BlochKatoReduction.bk0 D))
+    (_root_.GlobalTheory.ResSel.residual_bound_of_parts hCh hPT hCD hTL hLF hLT hLE hGF hGE hUO h4 hGW D D.nd D.ntw (BlochKatoReduction.bk0 D))
+    (_root_.GlobalTheory.StepTwo.Dyadic.bound_mod_two_of_hypothesis hCh hPT hCD hTL hLF hLT hLE hGF hGE hUO h4 D D.nd D.ntw (BlochKatoReduction.bk0 D))
     ⟨h1, h2, (GlobalTheory.BlochKato₂.duality_dim_of_localTheorem D h5).1, h4, h9, h10⟩
     (GlobalTheory.UnivChar.delUTie_of_isUnivChar D.nexp (GlobalTheory.AdmChars.exists_admissible_family D.ntw hRC) hUniv)
     hRel hHC hOff hGood h8 hG hFull hHk hU hT hComm hT4 hL3 hSig hSS

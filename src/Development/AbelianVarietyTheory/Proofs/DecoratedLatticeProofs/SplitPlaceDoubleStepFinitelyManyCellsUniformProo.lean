@@ -1,21 +1,24 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsOneComb
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselFourierJacobiNormalFramesExistSplitPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapBesselToFourierJacobiLocalModelStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapFourierJacobiToBesselLocalModelStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapsPreserveSchwartzBruhatAndSurjectiveStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ExistsUnitarySupportedAtPlaceOfMulEqIdem
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.BesselFourierJacobiNormalFramesExistSplitPlace
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.PlacesToAdeles
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapBesselToFourierJacobiLocalModel
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapFourierJacobiToBesselLocalModel
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ContrFactor
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapsSatisfyFlatLawsFinitePlacesStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsConvergeThetaFunctionsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierJacobiFlatMapSupportFiniteCellsStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergInvariantFactorsContractionStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LineContractionSplitPlaceLocalModelStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalFlatMapContractionSupportFinitelyManyCellsStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FourierJacobiFlatMapSupportFiniteCells
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergInvariantFactorsContraction
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LineContractionSplitPlaceLocalModel
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalFlatMapContractionSupportFinitelyManyCells
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalModelWeilOperatorTrivialAtPlaceIsModel
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLocalGroupElementsJacobiBesselStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SupportLevelPlaceSymmetricChainSecondHalf
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilCharacterSplitPlaceExistsContinuousNontriviaStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumLocalModelFormulaStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilDatumLocalModelFormula
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatMapsPreserveSchwartzBruhatAndSurjective
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatThetaMapsConvergeThetaFunctionsStatement
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLocalGroupElementsJacobiBessel
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.WeilCharacterSplitPlaceExistsContinuousNontrivia
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -70,13 +73,13 @@ namespace GlobalTheory.QPl.FinOneProof
 
 theorem finOne : ∀ D : D7, FinOne D := by
   intro D ψ hstd σ S Q a
-  have hOm := GlobalTheory.T.weilDatum_localModel_formula D
+  have hOm := _root_.GlobalTheory.LocOm.omLoc D
   have hFL := GlobalTheory.T.flatThetaMaps_converge_thetaFunctions D
   have hFLs := GlobalTheory.T.flatMapsSatisfyFlatLaws_finitePlaces D
-  have hBF := GlobalTheory.T.flatMap_besselToFourierJacobi_localModel D hFL hFLs hOm
-  have hFB := GlobalTheory.T.flatMap_fourierJacobiToBessel_localModel D hFL hFLs hOm
-  have hCo := GlobalTheory.T.lineContraction_splitPlace_localModel D GlobalTheory.T.heisenbergInvariant_factors_contraction
-  obtain ⟨-, hchar, hxi, -, hcomp⟩ := GlobalTheory.T.weilCharacter_splitPlace_exists_continuous_nontrivial D Q.k (ofSplit Q.q) ψ hstd
+  have hBF := _root_.GlobalTheory.FlatBFLoc.flatBF_of_laws D hFL hFLs hOm
+  have hFB := _root_.GlobalTheory.LocMod.flatFB_holds D hFL hFLs hOm
+  have hCo := _root_.GlobalTheory.ContrLocProof.contrLoc D _root_.GlobalTheory.LocFlat.contrFactor
+  obtain ⟨-, hchar, hxi, -, hcomp⟩ := _root_.GlobalTheory.LocChar.weil_char_split D Q.k (ofSplit Q.q) ψ hstd
   obtain ⟨hψc, hψ1⟩ := hchar Q.ψk Q.char
   haveI := Q.unitVol.1
   have hsd : IsSelfDual Q.ψk Q.ν := isSelfDual_of_isUnitVol Q.ν Q.cond Q.unitVol
@@ -85,10 +88,10 @@ theorem finOne : ∀ D : D7, FinOne D := by
   obtain ⟨μW, hμW⟩ := hcomp S.s₁.χW
   obtain ⟨μV', hμV'⟩ := hcomp S.s₂.χV
   obtain ⟨μW', hμW'⟩ := hcomp S.s₂.χW
-  obtain ⟨C₀, hC₀⟩ := ((GlobalTheory.T.bessel_fourierJacobi_normalFrames_exist_splitPlace D Q.k (ofSplit Q.q) _ (σ + 1) Q.F.s Q.F.s_ne).1 S.B Q.F.F₀).1
-  obtain ⟨C₂, hC₂⟩ := ((GlobalTheory.T.bessel_fourierJacobi_normalFrames_exist_splitPlace D Q.k (ofSplit Q.q) _ σ (Q.F.s * (ofSplit Q.q).xi)
+  obtain ⟨C₀, hC₀⟩ := ((_root_.GlobalTheory.LocMod.normalFrames_exist D Q.k (ofSplit Q.q) _ (σ + 1) Q.F.s Q.F.s_ne).1 S.B Q.F.F₀).1
+  obtain ⟨C₂, hC₂⟩ := ((_root_.GlobalTheory.LocMod.normalFrames_exist D Q.k (ofSplit Q.q) _ σ (Q.F.s * (ofSplit Q.q).xi)
     (mul_ne_zero Q.F.s_ne hxi)).1 S.B' Q.F.F₂).1
-  have hsb := GlobalTheory.T.flatMaps_preserve_schwartzBruhat_and_surjective Q.k Q.ψk Q.ν hψc inferInstance
+  have hsb := _root_.GlobalTheory.LocFlat.flat_SB_onto Q.k Q.ψk Q.ν hψc inferInstance
   have hjac' : (ofSplit Q.q).IsJacFrame S.J Q.F.s (-(ofSplit Q.q).xi ^ 2 * (ofSplit Q.q).hz S.B') Q.F.F₁ Q.F.G₁ :=
     GlobalTheory.LocMod.GSuppTwo.hz_link (ofSplit Q.q) S.l ▸ Q.F.jac
 
@@ -146,7 +149,7 @@ theorem finOne : ∀ D : D7, FinOne D := by
       rw [← map_mul, Prod.mk_mul_mk]
     rw [hcomb, hm, Module.End.mul_apply, hloc]
     exact hflat Φ' Ψ hΨ
-  obtain ⟨T₁, hT₁⟩ := GlobalTheory.T.fourierJacobi_flatMap_support_finite_cells Q.k Q.ψk hψc hψ1 Q.ν inferInstance Q.n₁ Q.n₀ (Q.c + 1 + 1) (σ + 1 + 1) (by omega) (by omega)
+  obtain ⟨T₁, hT₁⟩ := _root_.GlobalTheory.LocFlat.flCol_support_finite_cells Q.k Q.ψk hψc hψ1 Q.ν inferInstance Q.n₁ Q.n₀ (Q.c + 1 + 1) (σ + 1 + 1) (by omega) (by omega)
     μV⁻¹ Q.L₁.J Q.co₁.1 Φa a
   refine ⟨T₁, ?_, ?_⟩
   · intro f₁ f₂ hvac g hg h₁ hh₁ x hne
@@ -161,10 +164,10 @@ theorem finOne : ∀ D : D7, FinOne D := by
       rw [this, map_zero]
     obtain ⟨β, r, hr, t, ht, j, hj, hx⟩ := hT₁ x hne'
     refine ⟨t, ht, colE (Q.c + 1 + 1) (σ + 1 + 1) β * r, ?_, j, hj, hx⟩
-    exact (GlobalTheory.T.splitPlace_localGroupElements_jacobi_bessel D Q.k (ofSplit Q.q)).2.1 Q.n₁ (Q.c + 1 + 1) (σ + 1) S.J Q.F.s _ Q.F.F₁ Q.F.G₁ Q.F.jac _ β r hr
+    exact (_root_.GlobalTheory.LocGrp.local_groups D Q.k (ofSplit Q.q)).2.1 Q.n₁ (Q.c + 1 + 1) (σ + 1) S.J Q.F.s _ Q.F.F₁ Q.F.G₁ Q.F.jac _ β r hr
       (Q.loc₁ _)
   · intro x
-    obtain ⟨T₂, hT₂⟩ := GlobalTheory.T.localFlatMapContraction_support_finitelyManyCells Q.k Q.ψk hψc hψ1 Q.ν hsd Q.n₀ Q.n₁ Q.n₂ (Q.c + 1) (σ + 1) (by omega) μV⁻¹ μV'⁻¹
+    obtain ⟨T₂, hT₂⟩ := _root_.GlobalTheory.LocFlat.contr_support_finite_cells Q.k Q.ψk hψc hψ1 Q.ν hsd Q.n₀ Q.n₁ Q.n₂ (Q.c + 1) (σ + 1) (by omega) μV⁻¹ μV'⁻¹
       Q.L₂.J Q.co₂.1 Φa (Φx x) a x
     refine ⟨T₂, ?_⟩
     intro f₁ f₂ hvac g hg h₁ hh₁ h₂ hh₂ y hne
@@ -186,7 +189,7 @@ theorem finOne : ∀ D : D7, FinOne D := by
       have : Ξ = 0 := Subtype.ext (hΞ.trans h0)
       rw [this, map_zero]
     obtain ⟨r, hr, t, ht, j, hj, hy⟩ := hT₂ y hne'
-    exact ⟨t, ht, r, (GlobalTheory.T.splitPlace_localGroupElements_jacobi_bessel D Q.k (ofSplit Q.q)).2.2 Q.n₂ (Q.c + 1) σ S.B' (Q.F.s * (ofSplit Q.q).xi) Q.F.F₂ Q.F.G₂
+    exact ⟨t, ht, r, (_root_.GlobalTheory.LocGrp.local_groups D Q.k (ofSplit Q.q)).2.2 Q.n₂ (Q.c + 1) σ S.B' (Q.F.s * (ofSplit Q.q).xi) Q.F.F₂ Q.F.G₂
       Q.F.bes' _ r hr (Q.loc₂ r), j, hj, hy⟩
 
 end GlobalTheory.QPl.FinOneProof

@@ -5,7 +5,7 @@ public import Mathlib.RingTheory.Flat.FaithfullyFlat.Basic
 public import Mathlib.RingTheory.Flat.TorsionFree
 public import Mathlib.RingTheory.Henselian
 public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsKummerPotentialRelationPadicStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsKummerPotentialRelationPadic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,5 +56,5 @@ theorem GlobalTheory.KZ.exists_pot_rel_of_mem_bSet : ∀ {Ω : Type} [Field Ω] 
   intro Ω _ _ _ ε X _ hj N l w hl h2 hN hc hw b hb
   haveI : IsAlgClosed Ω := IsAlgClosure.isAlgClosed ℚ
   obtain ⟨φ, hφ, hφ'⟩ := hj
-  exact GlobalTheory.T.exists_kummerPotentialRelation_padic Ω ε X l ⟨φ, hφ', hφ⟩ N w (by omega) h2
+  exact _root_.GlobalTheory.KZ.H3.exists_pot_rel Ω ε X l ⟨φ, hφ', hφ⟩ N w (by omega) h2
     ((Nat.Prime.coprime_iff_not_dvd hl.out).1 hc.symm) hw b (Submodule.subset_span hb)

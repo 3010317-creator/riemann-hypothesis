@@ -2,16 +2,19 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FullRankSB
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OmAOneApply
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoinvariantOfLocallyConstantTwistStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompactCoveredByOpenCosetsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoinvariantOfLocallyConstantTwist
+public import Mathlib.Algebra.Group.Subgroup.Defs
+public import Mathlib.Topology.Algebra.Group.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompactCoveredByOpenCosets
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousSliceSectionIntegralStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousSliceSectionMeasureStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFirstMaximalMinorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FirstMaximalMinorLocallyConstantStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FullRankIffNonzeroMinorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HaarIntegralOverCosetRepresentativesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrbitalIntegralVanishesOfFibreStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionInverseIntoSliceStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFirstMaximalMinor
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FirstMaximalMinorLocallyConstant
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FullRankIffNonzeroMinor
+public import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HaarIntegralOverCosetRepresentatives
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OrbitalIntegralVanishesOfFibre
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SectionInverseIntoSlice
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SliceSectionHaarDecompositionStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SliceStabilizerTrivialStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -84,19 +87,19 @@ theorem sec_val {a d : ℕ} {Y : Matrix (Fin a) (Fin d) k} {J : Fin a ↪ Fin d}
 
 theorem continuousOn_sec {a d : ℕ} : ContinuousOn (sec (k := k) (a := a) (d := d)) {Y | Y.rank = a} := by
   intro Y hY
-  obtain ⟨J, hJ⟩ := GlobalTheory.T.exists_first_maximal_minor k a d Y ((GlobalTheory.T.full_rank_iff_nonzero_minor k a d Y).1 hY)
+  obtain ⟨J, hJ⟩ := _root_.GlobalTheory.RankFibreKer.exists_isFirstMax k a d Y ((_root_.GlobalTheory.RankFibreKer.rank_eq_iff_exists_minor_ne_zero k a d Y).1 hY)
   rw [isEmbedding_val_GL.isInducing.continuousWithinAt_iff]
   refine ContinuousAt.continuousWithinAt ?_
   have hc : Continuous fun Y : Matrix (Fin a) (Fin d) k => Y.submatrix id J :=
     (continuous_id.matrix_submatrix id J)
   refine hc.continuousAt.congr ?_
-  filter_upwards [GlobalTheory.T.first_maximal_minor_locally_constant k a d Y J hJ] with Y' hY'
+  filter_upwards [_root_.GlobalTheory.RankFibreKer.isFirstMax_eventually k a d Y J hJ] with Y' hY'
   exact (sec_val hY').symm
 
 theorem sec_mem_slice {a d : ℕ} (Y : Matrix (Fin a) (Fin d) k) (hY : Y.rank = a) :
     ((sec Y)⁻¹).val * Y ∈ slice k a d := by
-  obtain ⟨J, hJ⟩ := GlobalTheory.T.exists_first_maximal_minor k a d Y ((GlobalTheory.T.full_rank_iff_nonzero_minor k a d Y).1 hY)
-  exact GlobalTheory.T.section_inverse_into_slice k a d Y J hJ
+  obtain ⟨J, hJ⟩ := _root_.GlobalTheory.RankFibreKer.exists_isFirstMax k a d Y ((_root_.GlobalTheory.RankFibreKer.rank_eq_iff_exists_minor_ne_zero k a d Y).1 hY)
+  exact _root_.GlobalTheory.RankFibreKer.sec_inv_mul_mem_slice k a d Y J hJ
 
 theorem vol_ne_zero [MeasurableSpace k] [BorelSpace k] {a : ℕ} (K : Subgroup (GL (Fin a) k))
     (hK : IsOpen (K : Set (GL (Fin a) k))) (hKO : K ≤ KO k (Fin a)) :
@@ -139,12 +142,12 @@ theorem fibre_ker : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace 
   have hright : ∀ (g x : GL (Fin a) k) (Z : Matrix (Fin a) (Fin (a + b)) k), x ∈ K → Z ∈ slice k a (a + b) →
       Φ (g.val * x.val * Z) = Φ (g.val * Z) := fun g x Z hx hZ => hx.2 g Z hZ
   obtain ⟨C, hC, hEC⟩ := GlobalTheory.T.continuous_slice_section_measure k a (a + b) Φ hΦ sec hsc hsl hun
-  obtain ⟨R, hRd, hRc⟩ := GlobalTheory.T.compact_covered_by_open_cosets (GL (Fin a) k) K hK C hC
+  obtain ⟨R, hRd, hRc⟩ := _root_.GlobalTheory.compact_finite_leftCoset_reps (GL (Fin a) k) K hK C hC
   set T : Set (Matrix (Fin a) (Fin (a + b)) k) := {Y | ∃ x ∈ K, ∃ Z ∈ slice k a (a + b), Y = x.val * Z} with hT
   have hrank : ∀ Y, Φ Y ≠ 0 → Y.rank = a := fun Y hY => by
     by_contra h; exact hY (hΦ.2 Y h)
-  refine GlobalTheory.T.coinvariant_of_locally_constant_twist k ν β a b Φ (T.indicator 1) R hΦ.1
-    (GlobalTheory.T.isLocallyConstant_indicator_mul_slice k a (a + b) K hK hKO (GlobalTheory.T.full_rank_iff_nonzero_minor k a (a + b)) sec hsc hsl hun) (fun Y => ?_) (fun Y => ?_)
+  refine _root_.GlobalTheory.RankFibreKer.mem_coinv_of_finset_sum k ν β a b Φ (T.indicator 1) R hΦ.1
+    (GlobalTheory.T.isLocallyConstant_indicator_mul_slice k a (a + b) K hK hKO (_root_.GlobalTheory.RankFibreKer.rank_eq_iff_exists_minor_ne_zero k a (a + b)) sec hsc hsl hun) (fun Y => ?_) (fun Y => ?_)
   · by_cases hY : Φ Y = 0
     · simp [hY]
     obtain ⟨g, hg⟩ : ∃ g : GL (Fin a) k, (g⁻¹).val * Y ∈ slice k a (a + b) := ⟨sec Y, hsl Y (hrank Y hY)⟩
@@ -179,13 +182,13 @@ theorem fibre_ker : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace 
       simp only [e1]
       have hZr : Z.rank = a := by
         obtain ⟨J, hJ, -⟩ := hZ
-        exact (GlobalTheory.T.full_rank_iff_nonzero_minor k a (a + b) Z).2 ⟨J, by simp [minor, hJ]⟩
-      have hint := GlobalTheory.T.haar_integral_over_coset_representatives k a K hK hKO (fun g => Φ (g.val * Z) * tw ν (a + b) g)
+        exact (_root_.GlobalTheory.RankFibreKer.rank_eq_iff_exists_minor_ne_zero k a (a + b) Z).2 ⟨J, by simp [minor, hJ]⟩
+      have hint := _root_.GlobalTheory.HaarCosetSum.integral_eq_vol_mul_sum_of_cosets k a K hK hKO (fun g => Φ (g.val * Z) * tw ν (a + b) g)
         (fun g x' hx' => by
           simp only [Units.val_mul, tw_mul, htw x' hx', mul_one]
           rw [hright g x' Z hx' hZ])
         R hRd (fun g hg => hRc g (hEC g Z hZ (left_ne_zero_of_mul hg)))
-      rw [GlobalTheory.T.orbital_integral_vanishes_of_fibre k ν β a b Φ hfib Z hZr] at hint
+      rw [_root_.GlobalTheory.RankFibreKer.integral_tw_eq_zero_of_fibre_eq_zero k ν β a b Φ hfib Z hZr] at hint
       have hv := vol_ne_zero K hK hKO
       have := (mul_eq_zero.1 hint.symm).resolve_left (by exact_mod_cast hv)
       rw [← this]

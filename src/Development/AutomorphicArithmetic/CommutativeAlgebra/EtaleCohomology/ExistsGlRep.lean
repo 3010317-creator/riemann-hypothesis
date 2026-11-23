@@ -3,7 +3,9 @@ module
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.EtaleCohomology.CrysCopy
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteDimensionalFilDR
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.CrystallineTowers.AdmCrys
-public import Development.AutomorphicArithmetic.ThetaCorrespondence.LocalComparison.LocTied6
+public import Development.WeilBound.CoreStatements.CrystallinePeriodRings.LocTied6
+public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
+public import Development.AutomorphicArithmetic.ThetaCorrespondence.CrystallineComparison.LocalComparisonFromAlternative
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,7 +68,7 @@ theorem UpperTheory.Ru.crystallineComparison.crysCopy :
     UpperTheory.Ru.crystallineComparison.CrysCopy := by
   intro hC l _ P AI hT K M hM j a b
   haveI := K.2
-  obtain ⟨FreeQuotientRank⟩ := UpperTheory.Lit.Cmp.locTied6 l P AI hT
+  obtain ⟨FreeQuotientRank⟩ := _root_.Formalism.BasicNotions.CmpTie.locTied6_F l P AI hT
   obtain ⟨T⟩ := hT
   have hadm := UpperTheory.Gal.Seam.isAdmP_of_isAdm FreeQuotientRank (hC l K.1 M hM.1 hM.2 j a b)
   obtain ⟨r, hr⟩ : ∃ r : ↥(GK K) →* GL (Fin a) ℚ_[l], ∀ g : ↥(GK K),

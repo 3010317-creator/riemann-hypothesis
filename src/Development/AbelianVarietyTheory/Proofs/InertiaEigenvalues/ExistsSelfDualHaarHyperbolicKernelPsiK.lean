@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WHyp
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleHermitianPairStructureFactsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelfDualMeasureExistsUniqueFourierInversionStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsTestRep
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleHermitianPairStructureFacts
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SelfDualMeasureExistsUniqueFourierInversion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,7 +64,7 @@ noncomputable def trxForm {F E : Type} [NontriviallyNormedField F] [Nontrivially
 
 theorem selfDual_kx_exists : ∀ (F E : Type) [NontriviallyNormedField F] [NontriviallyNormedField E] [NormedAlgebra F E] [StarRing E] [Unram F E] (A : Et F E) (ψ : AddChar F ℂ), IsStdChar ψ → ∀ x : A.Kˣ, ∃ ν : Measure A.K, SelfDual ν (Hyp.kx A ψ x) := by
   intro F E _ _ _ _ _ A ψ hψ x
-  have hT := (GlobalTheory.T.etaleHermitianPair_structure_facts F E A).2.2.1
+  have hT := (_root_.GlobalTheory.JR.EtFacts.main F E A).2.2.1
   obtain ⟨hL, -⟩ := hT
   have hsymm : (trxForm A (x : A.K)).IsSymm := by
     refine ⟨fun u b => ?_⟩
@@ -82,7 +83,7 @@ theorem selfDual_kx_exists : ∀ (F E : Type) [NontriviallyNormedField F] [Nontr
     simp only [trxForm, LinearMap.mk₂_apply] at this ⊢
     rw [show (x : A.K) * b * u = x * u * b by ring]
     exact this
-  obtain ⟨⟨μ, hμ, -⟩, -⟩ := GlobalTheory.T.selfDual_measure_exists_unique_fourier_inversion F E ψ hψ A.K (trxForm A (x : A.K)) hsymm hnd
+  obtain ⟨⟨μ, hμ, -⟩, -⟩ := _root_.GlobalTheory.JR.SelfDualUniq.selfDual_exists_unique_isTest F E ψ hψ A.K (trxForm A (x : A.K)) hsymm hnd
   refine ⟨μ, ?_⟩
   have hk : (fun u b => ψ (trxForm A (x : A.K) u b)) = Hyp.kx A ψ x := by
     funext u b

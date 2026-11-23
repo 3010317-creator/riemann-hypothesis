@@ -2,14 +2,15 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.NormalRepresentationLattice
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsUniqueCompletionMatrixOfRationalTwistAut
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnfoldingIntegralTwistPrimeEqDeepFiniteSumStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.EntryAgree
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnfoldingIntegralTwistPrimeEqDeepFiniteSum
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EntriesWellDefined
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsValuationEqZpow
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FlatNeZeroOfMemR
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsClosedEmbeddingAffPtUncurry
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LatticeBounds
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LatticeClasses
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsClosedEmbeddingAffPtUncurry
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.TwistSupportPeriodicLevels
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ZpowMulMemPow
 import Mathlib.Algebra.Order.Floor.Extended
@@ -258,7 +259,7 @@ theorem GlobalTheory.TwBridge.repsOnto : ∀ (X : Fields) (Pr : Primes X) (R : R
   obtain ⟨e, he⟩ := ordX_exists R (j + 1)
   obtain ⟨x, hx⟩ := exists_toLoc_ne_zero X.E k ι hA.compl.dense _ _ _ _ e e'
     (flat W.ψ ν ((W.T s R).mu (j + 1)) ((W.T s R).Phi j (c + 1) (by omega)) g g') hSB.1 hfl
-  obtain ⟨A₀, B₀, hAB⟩ := GlobalTheory.T.unfoldingIntegral_twistPrime_eq_deep_finite_sum X Pr R Ch sel S₀ mu cst σ₀ P k ι s W ν hν hc hA j c h (L.h j al P) γ g g' hg hgl
+  obtain ⟨A₀, B₀, hAB⟩ := _root_.GlobalTheory.TwSumAgree.sumAgree X Pr R Ch sel S₀ mu cst σ₀ P k ι s W ν hν hc hA j c h (L.h j al P) γ g g' hg hgl
     (hL.boundQ j al P hA.nmem) hbd' (hL.depthQ' P hA.nmem)
   refine ⟨A₀, B₀, fun A' B' h1 h2 hz => hx ?_⟩
   rw [hAB A' B' h1 h2 e' e he' he x]

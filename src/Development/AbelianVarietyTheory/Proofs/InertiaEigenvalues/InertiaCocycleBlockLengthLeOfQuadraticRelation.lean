@@ -3,10 +3,12 @@ module
 public import Formalism.SharpRestriction.LevelLetterCocycles.IdempotentChoiceDepthZero
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.GlobalCore
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MatKOSmulOne
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicCharUnramifiedAwayFromEllStatement
+public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
+public import Formalism.SharpRestriction.LevelLetterCocycles.QuotientHomNonvanishingBound
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicCharUnramifiedAwayFromEll
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FiniteQuotientCocycleSpansLeContinuousCocycles
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LengthInertiaRestrictionCocyclesLe
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WildInertiaKilledByAdditiveLocallyConstantStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WildInertiaKilledByAdditiveLocallyConstant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -70,7 +72,7 @@ theorem main : ∀ (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (GE D.nd →* GL (F
   intro D i r ρ π Xs S hr hS hπ v hv hq c
   have hl := D.nd.SQ_l i v hv
   have hchi : ∀ γ ∈ Ine (F := D.host.E) (D.nd.plOm.1 v), chiU D.nd i ((c : ℕ) + 1) γ = chiU D.nd i 1 γ :=
-    fun γ hγ => (GlobalTheory.T.cyclotomicChar_unramified_away_from_ell D i v hl γ hγ).2 _ (by omega) c.2
+    fun γ hγ => (_root_.GlobalTheory.CycUnram.main D i v hl γ hγ).2 _ (by omega) c.2
   have hγ0 := D.nd.locNd_chebotarevPlace_mem i v
   have htor : ∀ f ∈ cocChi i r S Xs c, (D.nd.zeta i v - 1) • f (D.nd.gam0 i v) = 0 := by
     intro f hf
@@ -92,7 +94,7 @@ theorem main : ∀ (D : D7) (i : D.nd.Loc) (r : D.nd.X i → (GE D.nd →* GL (F
           (1 : Matrix (Fin 1) (Fin 1) (D.nd.O i)) = _
         rw [hchi a ha, mul_inv_cancel, Units.val_one]
       rw [hz, Check.WKG_eq_matKO, e, Check.matKO_smul_one, one_smul]
-    exact GlobalTheory.Cut.Quad.eq_zero_of_tameGen (D.nd.restN_tameGenerator_generates i v hv) f hlc hadd (GlobalTheory.T.wildInertia_killed_by_additive_locallyConstant D i v hl f hlc hadd) h0
+    exact GlobalTheory.Cut.Quad.eq_zero_of_tameGen (D.nd.restN_tameGenerator_generates i v hv) f hlc hadd (_root_.GlobalTheory.WildAdditive.main D i v hl f hlc hadd) h0
   refine le_trans ?_ (GlobalTheory.Cut.Quad.length_torsionBy_le (D.nd.zeta i v - 1))
   refine Module.length_le_of_injective
     (LinearMap.restrict (LinearMap.proj (⟨D.nd.gam0 i v, hγ0⟩ : Ine (F := D.host.E) (D.nd.plOm.1 v))) ?_) ?_

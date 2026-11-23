@@ -2,14 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HtValOnSubset
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.IsotropicCoefficientSplitting
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsScalarCuspFormIndefiniteUnitaryShimuraStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FramesOnEqModel
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.GCauchyStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsScalarCuspFormIndefiniteUnitaryShimura
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsNumberFieldPoint
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ExistsEvenSecEvRNeZero
-import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.OrthonormalFramesBoundedOfDefinite
 public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.CuspAndSupCLeOfBounded
 public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.ExistsProductCuspFormNeZeroArchSupNormBounds
 public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.ExistsRunBound
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FundamentalDomainExtension.PointAssembly.Frames
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FramesOnEqModel
+import Development.AbelianVarietyTheory.Proofs.TorusHaarMeasure.OrthonormalFramesBoundedOfDefinite
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllUniformizationLawsHold
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FramedPointReducedFromTestRing
 import Formalism.LocalToGlobal.ProjectiveLattices.FreeBridge
@@ -48,7 +50,6 @@ import Mathlib.Tactic.NormNum.NatSqrt
 import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.FundamentalDomainExtension.PointAssembly.Frames
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.OrthonormalFlagTranslateHolds
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.SupAtUnit
 
@@ -140,6 +141,6 @@ theorem exists_scalar_cusp_ne_zero : ∀ (E : Type) [Field E] [NumberField E] [I
       refine ⟨2 * 5 ^ 4 * r * i, by positivity, ⟨5 ^ 4 * r * i, by ring⟩, f, hf', ⟨k, y⟩, ?_, hne⟩
       rw [hk]
       exact ⟨rfl, hy⟩
-    · exact GlobalTheory.T.exists_scalar_cuspForm_indefinite_unitaryShimura E H Dw l Xo c r U x hL hp hq hrun σ hσ Z
+    · exact _root_.GlobalTheory.ScalarCuspTwist.exists_scalar_cusp_indefinite E H Dw l Xo c r U x hL hp hq hrun σ hσ Z
 
 end GlobalTheory.ScalarCusp

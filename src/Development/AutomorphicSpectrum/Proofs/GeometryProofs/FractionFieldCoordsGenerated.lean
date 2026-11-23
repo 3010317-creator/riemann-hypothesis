@@ -2,7 +2,7 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BirationalOfTranscendenceDegree
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegAtIffChartLocalizationStatement
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RegAtIffChartLocalization
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,7 +53,7 @@ theorem exists_eq_div_chart : ∀ (X : Scheme.{0}) (Ω : Type) [Field Ω] (ξ : 
   intro X Ω _ ξ κ x h c hc a
   have hchart : InChart ξ x c (TieArith.genCpt ξ) :=
     ⟨hc, fun c' => TieArith.mem_regAt_genCpt ξ h.gen _⟩
-  obtain ⟨t, ht, hu, hta⟩ := (GlobalTheory.T.regAt_iff_chart_localization X Ω ξ ℤ κ x h c (TieArith.genCpt ξ) hchart a).mp
+  obtain ⟨t, ht, hu, hta⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.regAt_iff_exists_chart_fraction X Ω ξ ℤ κ x h c (TieArith.genCpt ξ) hchart a).mp
     (TieArith.mem_regAt_genCpt ξ h.gen a)
   exact ⟨t * a, hta, t, ht, hu.1, (mul_div_cancel_left₀ a hu.1).symm⟩
 

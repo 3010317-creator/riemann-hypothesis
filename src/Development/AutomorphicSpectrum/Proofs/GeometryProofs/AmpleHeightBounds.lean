@@ -1,15 +1,17 @@
 module
 
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalRatioProductFormula
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ArchBetween
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArchimedeanValueBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HeightLowerBoundChartNormStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.HasMultiplier
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ArchimedeanValueBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HeightLowerBoundChartNorm
+public import Mathlib.Analysis.InnerProductSpace.Calculus
+public import ReciprocityTheory.SemistableReduction.LogNormCoeffSubLeBlockSphereLogMean
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalRatioProductFormula
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Ring.IsFormallyReal
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-public import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
@@ -54,7 +56,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Presheaf
-public import ReciprocityTheory.SemistableReduction.LogNormCoeffSubLeBlockSphereLogMean
 import Std.Tactic.BVDecide.Normalize.Prop
 
 @[expose] public section
@@ -358,9 +359,9 @@ lemma lineHt_lower {y : (Σ k, ι k) → Ω} {d : ℕ} (hv : IsArithVar (mCoordI
     ∃ C : ℝ, ∀ (L : Type) [Field L] [NumberField L], ∀ w ∈ ptsOver L (mCoordIdeal y), ∀ val : L, val ≠ 0 →
       HasVal y M.a u w val → -C ≤ lineHt M L w := by
   have hu' : ((1 : ℕ) : Ω) * u ^ 1 ∈ chartLatNm y M.a 1 := by simpa using hu
-  obtain ⟨C, hC⟩ := GlobalTheory.T.archimedean_value_bound K ι Ω y d hv hb M 1 1 u hM one_pos one_pos hu'
+  obtain ⟨C, hC⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ArchBd.section_bound K ι Ω y d hv hb M 1 1 u hM one_pos one_pos hu'
   refine ⟨C, fun L _ _ w hw val hval hw' => ?_⟩
-  have h1 := GlobalTheory.T.height_lower_bound_chart_norm K ι Ω y d hv hb M.a u 1 1 one_pos one_pos hu' (fun z => Real.log (M.h z)) L w hw val hval hw'
+  have h1 := _root_.GlobalTheory.CompanionTheory.Ar.Ht.SecLow.height_ge_of_section K ι Ω y d hv hb M.a u 1 1 one_pos one_pos hu' (fun z => Real.log (M.h z)) L w hw val hval hw'
   simp only [Nat.cast_one, Real.log_one, div_one, sub_zero] at h1
   refine le_trans ?_ h1
   have hd : (0 : ℝ) < Module.finrank ℚ L := by exact_mod_cast Module.finrank_pos

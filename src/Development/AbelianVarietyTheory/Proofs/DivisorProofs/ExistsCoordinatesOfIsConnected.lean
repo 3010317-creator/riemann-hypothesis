@@ -2,14 +2,29 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd
 public import Development.AbelianVarietyTheory.Definitions.Divisors.GhostFrobenius
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AevalSurjectiveOfCotangentSpanTopStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffAnnihilatedOfAevalMemKerPowStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompatiblePDivGroupLevelCoordinatesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInvariantDerivationsQuotientBialgebraStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTruncationCongrOfPadicContinuousEvalEqZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAdicCompleteSpanNatCastFiniteProjectiveAlgebraStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MaximalIdealPowNatCastDvdFiniteIntegersAlgebraStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PadicContinuousEvaluationExistsUniqueSubstNaturaStatement
+public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.FinrankOfIsStandardSmoothOfRelativeDimension
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSpanSubMemSq
+public import Mathlib.Algebra.MvPolynomial.Eval
+public import Mathlib.Data.Finsupp.Weight
+public import Mathlib.RingTheory.Derivation.Basic
+public import Mathlib.RingTheory.Ideal.Maps
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CoeffAnnihilatedOfAevalMemKerPow
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ToSpanSingletonConstGenInjective
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompatiblePDivGroupLevelCoordinates
+public import Mathlib.RingTheory.Bialgebra.TensorProduct
+public import Mathlib.RingTheory.HopfAlgebra.Basic
+public import Mathlib.RingTheory.Ideal.Quotient.Operations
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInvariantDerivationsQuotientBialgebra
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTruncationCongrOfPadicContinuousEvalEqZero
+public import Mathlib.Algebra.Module.Projective
+public import Mathlib.RingTheory.AdicCompletion.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAdicCompleteSpanNatCastFiniteProjectiveAlgebra
+public import Mathlib.Basic.NNReal.Defs
+public import Mathlib.RingTheory.Finiteness.Defs
+public import Mathlib.RingTheory.LocalRing.MaximalIdeal.Defs
+public import Mathlib.RingTheory.Valuation.Integers
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MaximalIdealPowNatCastDvdFiniteIntegersAlgebra
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PadicContinuousEvaluationExistsUniqueSubstNatura
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,7 +74,7 @@ open scoped TensorProduct
 
 theorem GlobalTheory.PDivGroup.exists_coords_of_isConn : ∀ (p : ℕ) [Fact p.Prime] (C : Type) [Field C] [IsAlgClosed C] [CharZero C] (v : Valuation C NNReal) (O : Type) [CommRing O] [Algebra O C] [Fact ¬IsUnit (p : O)] [IsAdicComplete (Ideal.span {(p : O)}) O] [IsDomain O], v.Integers O → ∀ G : PDivGroup p O, IsConn G → ∃ (d : ℕ) (x : ∀ n, Fin d → G.A n) (ev : ∀ n, MvPowerSeries (Fin d) O →ₐ[O] G.A n), (∀ n i, ∃ N : ℕ, (p : G.A n) ∣ x n i ^ N) ∧ (∀ n, IsEval p (x n) (ev n)) ∧ (∀ n i, G.res n (x (n + 1) i) = x n i) ∧ (∀ n i, Coalgebra.counit (R := O) (x n i) = 0) ∧ (∀ n, Function.Surjective (ev n)) ∧ ∀ m N : ℕ, ∃ n, ∀ f, ev n f = 0 → ∀ α : Fin d →₀ ℕ, α.degree < N → (p : O) ^ m ∣ coeff α f := by
   intro p _ C _ _ _ v O _ _ _ _ _ hv G hG
-  obtain ⟨d, x, hcou, hres, hspan, hl⟩ := GlobalTheory.T.exists_compatible_pDivGroup_level_coordinates p C v O hv G
+  obtain ⟨d, x, hcou, hres, hspan, hl⟩ := _root_.GlobalTheory.PDiv.exists_compatible_coordinates p C v O hv G
   have hp0 : p ≠ 0 := (Fact.out : p.Prime).ne_zero
   haveI : ValuationRing O := ValuationRing.of_integers v hv
   have hpm : (p : O) ∈ IsLocalRing.maximalIdeal O :=
@@ -71,10 +86,10 @@ theorem GlobalTheory.PDivGroup.exists_coords_of_isConn : ∀ (p : ℕ) [Fact p.P
     exact not_isUnit_zero h1
   have hnil : ∀ n i, ∃ N : ℕ, (p : G.A n) ∣ x n i ^ N := fun n i => by
     haveI := hG n
-    exact GlobalTheory.T.maximalIdeal_pow_natCast_dvd_finite_integers_algebra p hp0 C v O hv (G.A n) (x n i) ((IsLocalRing.mem_maximalIdeal _).2 (hmem n i))
+    exact _root_.GlobalTheory.maxIdeal_pow_dvd_natCast_of_integers p hp0 C v O hv (G.A n) (x n i) ((IsLocalRing.mem_maximalIdeal _).2 (hmem n i))
   have hex : ∀ n, ∃ E : MvPowerSeries (Fin d) O →ₐ[O] G.A n, IsEval p (x n) E := fun n => by
-    haveI := GlobalTheory.T.isAdicComplete_span_natCast_finite_projective_algebra p O (G.A n)
-    exact ((GlobalTheory.T.padicContinuousEvaluation_existsUnique_subst_natural p O (G.A n) (Fin d) (x n) (hnil n)).1).exists
+    haveI := _root_.GlobalTheory.FinProjComplete.isAdicComplete_span_natCast_of_finite_projective p O (G.A n)
+    exact ((_root_.GlobalTheory.CEval.continuous_eval p O (G.A n) (Fin d) (x n) (hnil n)).1).exists
   choose ev hev using hex
   have hpoly : ∀ n (P : MvPolynomial (Fin d) O),
       ev n (P : MvPowerSeries (Fin d) O) = MvPolynomial.aeval (x n) P := by
@@ -86,19 +101,19 @@ theorem GlobalTheory.PDivGroup.exists_coords_of_isConn : ∀ (p : ℕ) [Fact p.P
   refine ⟨d, x, ev, hnil, hev, hres, hcou, fun n => ?_, fun m N => ?_⟩
   · haveI := hG n
     intro a
-    obtain ⟨P, hP⟩ := GlobalTheory.T.aeval_surjective_of_cotangent_span_top O (G.A n) (p : O) hpm (Bialgebra.counitAlgHom O (G.A n)) d (x n)
+    obtain ⟨P, hP⟩ := _root_.GlobalTheory.PowerIdealSurjectivity.aeval_surjective O (G.A n) (p : O) hpm (Bialgebra.counitAlgHom O (G.A n)) d (x n)
       (fun i => by rw [Bialgebra.counitAlgHom_apply]; exact hcou n i)
       (fun i => by simpa [map_natCast] using hnil n i) (hspan n) a
     exact ⟨P, (hpoly n P).trans hP⟩
-  · obtain ⟨K, hK0, hK⟩ := GlobalTheory.T.coeff_annihilated_of_aeval_mem_ker_pow d N
+  · obtain ⟨K, hK0, hK⟩ := _root_.GlobalTheory.TriangularityLowCoeff.exists_mul_coeff_eq_zero d N
     obtain ⟨e, u, hu, hKu⟩ := Nat.exists_eq_pow_mul_and_not_dvd hK0.ne' p (Fact.out : p.Prime).ne_one
     refine ⟨m + e, fun f hf α hα => ?_⟩
-    obtain ⟨P, hPdeg, hPco, hPmem⟩ := GlobalTheory.T.exists_truncation_congr_of_padicContinuousEval_eq_zero p O (G.A (m + e)) d (x (m + e)) (ev (m + e)) (hev _) (m + e) N f hf
+    obtain ⟨P, hPdeg, hPco, hPmem⟩ := _root_.GlobalTheory.trunc_dec p O (G.A (m + e)) d (x (m + e)) (ev (m + e)) (hev _) (m + e) N f hf
     obtain ⟨l, hlx⟩ := hl (m + e)
     let I : Ideal O := Ideal.span {(p : O) ^ (m + e)}
     let l' : Fin d → (G.A (m + e) →ₗ[O] O ⧸ I) :=
       fun i => l i ∘ₗ AugCot.d (Bialgebra.counitAlgHom O (G.A (m + e)))
-    obtain ⟨D, hD⟩ := GlobalTheory.T.exists_invariant_derivations_quotient_bialgebra O (G.A (m + e)) I d l' (fun i a b => by
+    obtain ⟨D, hD⟩ := _root_.GlobalTheory.quotient_base_change_invariant_derivations O (G.A (m + e)) I d l' (fun i a b => by
       simp only [l', LinearMap.comp_apply, AugCot.d_mul, map_add (f := _), map_smul, Bialgebra.counitAlgHom_apply])
     let φ : G.A (m + e) →ₐ[O] (O ⧸ I) ⊗[O] G.A (m + e) := Algebra.TensorProduct.includeRight
     have hy0 : ∀ j, Bialgebra.counitAlgHom (O ⧸ I) ((O ⧸ I) ⊗[O] G.A (m + e)) (φ (x (m + e) j)) = 0 := by

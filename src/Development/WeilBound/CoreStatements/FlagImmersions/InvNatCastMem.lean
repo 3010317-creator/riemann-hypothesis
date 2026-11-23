@@ -4,14 +4,20 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.Integra
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.TowerOrigin
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DiscriminantEigenProjector
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DualMapComp
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagCoefficientRatioIntegralStatement
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsGenericFlag
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagCoefficientRatioIntegral
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlagLabelBasesExist
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompCompareFlagStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompCompareGenericStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeSpanProjectionBoundStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LogDenominatorBoundPrimesStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootLinesFlagDegreeStatement
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ValuationRingCentreInChartStatement
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GlueApplyOfNotInFibre
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompCompareFlag
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DomBy
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCompCompareGeneric
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeSpanProjectionBound
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LogDenominatorBoundPrimes
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.RootLinesFlagDegree
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+import Mathlib.RingTheory.Valuation.ValuationSubring
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ValuationRingCentreInChart
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -226,13 +232,13 @@ theorem unit_off (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E)
       ((∏ k, M.y ⟨k, cM k⟩ ^ M.xdeg r k) * o.e r) / i ((∏ k, R.y ⟨k, cR k⟩ ^ R.xdeg r k) * o₀.e r) ∈ W := by
   haveI : CharZero M.Ω := Sandwich.charZero_of_hodgeCpt o.𝔐
   haveI : CharZero R.Ω := Sandwich.charZero_of_hodgeCpt o₀.𝔐
-  obtain ⟨q, hqc, hq⟩ := GlobalTheory.T.valuation_ring_centre_in_chart M.K M.ι M.Ω M.Ω M.y o.𝔐.X o.𝔐.ξ o.𝔐.all o.𝔐.tie (RingHom.id _) W cM h1 h3
-  obtain ⟨q₀, hqc₀, hq₀⟩ := GlobalTheory.T.valuation_ring_centre_in_chart R.K R.ι R.Ω M.Ω R.y o₀.𝔐.X o₀.𝔐.ξ o₀.𝔐.all o₀.𝔐.tie i W cR h2 h4
+  obtain ⟨q, hqc, hq⟩ := _root_.GlobalTheory.CompanionTheory.Ar.OrVert.exists_domBy_chart M.K M.ι M.Ω M.Ω M.y o.𝔐.X o.𝔐.ξ o.𝔐.all o.𝔐.tie (RingHom.id _) W cM h1 h3
+  obtain ⟨q₀, hqc₀, hq₀⟩ := _root_.GlobalTheory.CompanionTheory.Ar.OrVert.exists_domBy_chart R.K R.ι R.Ω M.Ω R.y o₀.𝔐.X o₀.𝔐.ξ o₀.𝔐.all o₀.𝔐.tie i W cR h2 h4
   have hξ : o.𝔐.ξ ≫ o.𝔐.f = spMap i ≫ o₀.𝔐.ξ ≫ o₀.𝔐.f := by
     rw [o.g_over, o₀.g_over, ← hi, OrVert.spMap_comp', Category.assoc]
-  have hy := GlobalTheory.T.hodge_comp_compare_generic E H D l Xo c Y S ∅ M.Ω R.Ω M.K R.K M.ι R.ι M.y R.y o.𝔐 o₀.𝔐 i hξ W q q₀ hq hq₀
+  have hy := _root_.GlobalTheory.CompanionTheory.Ar.OrVert.image_eq_of_domBy E H D l Xo c Y S ∅ M.Ω R.Ω M.K R.K M.ι R.ι M.y R.y o.𝔐 o₀.𝔐 i hξ W q q₀ hq hq₀
   obtain ⟨ι, hext, hspan, hpt, hW⟩ :=
-    GlobalTheory.T.hodge_comp_compare_flag E H D l Xo c Y S ∅ M.Ω R.Ω M.K R.K M.ι R.ι M.y R.y o.𝔐 o₀.𝔐 o₀.Fl i hξ
+    _root_.GlobalTheory.CompanionTheory.Ar.OrVert.LieCmp.lie_cmp E H D l Xo c Y S ∅ M.Ω R.Ω M.K R.K M.ι R.ι M.y R.y o.𝔐 o₀.𝔐 o₀.Fl i hξ
   have hsl := hext.1
   have hspanW := hW W.toSubring q q₀ hq.1 hq₀.1 hy
   have hFl : ∀ s j, o.Fl.b s j = ι (o₀.Fl.b s j) := fun s j => (hpt _ _).1 (by
@@ -275,7 +281,7 @@ theorem unit_off (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E)
       flag_mem_eig o.𝔐 o.Fl s (hf' _ ▸ top_flag (fun a => ι (b₀ a)) j)
     have hbin : ∀ j, b j ∈ Submodule.span M.Ω (Set.range fun a => ι (b₀ a)) := fun j =>
       mem_span_of_flag _ (labelRk D s) (by rw [hf', ← hf]; exact top_flag b j)
-    obtain ⟨C1, C2⟩ := GlobalTheory.T.lattice_span_projection_bound M.Ω R.Ω i _ _ ι hext hspan W.toSubring (o₀.𝔐.M.lat q₀ : Set o₀.𝔐.Li)
+    obtain ⟨C1, C2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Frames.two_frames M.Ω R.Ω i _ _ ι hext hspan W.toSubring (o₀.𝔐.M.lat q₀ : Set o₀.𝔐.Li)
       (o.𝔐.M.lat q : Set o.𝔐.Li) _ b b₀ (fun a => (φ a).comp T₀) T 1 1 1 hspanW
       (fun e he => by
         have h := hTq e he
@@ -306,14 +312,14 @@ theorem unit_off (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E)
       rw [map_sub, hsl] at h
       rw [hbF]
       exact h
-    have c1 := GlobalTheory.T.flag_coefficient_ratio_integral M.Ω _ W.toSubring _ (o.Fl.b s) b (fun a => ι (b₀ a)) _ k t (i t₀) hfr.1 hf hf' C1 ht ht'
-    have c2 := GlobalTheory.T.flag_coefficient_ratio_integral M.Ω _ W.toSubring _ (o.Fl.b s) (fun a => ι (b₀ a)) b _ k (i t₀) t
+    have c1 := _root_.GlobalTheory.CompanionTheory.Ar.leadCoef_ratio_mem M.Ω _ W.toSubring _ (o.Fl.b s) b (fun a => ι (b₀ a)) _ k t (i t₀) hfr.1 hf hf' C1 ht ht'
+    have c2 := _root_.GlobalTheory.CompanionTheory.Ar.leadCoef_ratio_mem M.Ω _ W.toSubring _ (o.Fl.b s) (fun a => ι (b₀ a)) b _ k (i t₀) t
       (hext.2 _ b₀ hfr₀.1) hf' hf C2 ht' ht
     simp only [map_one, one_mul] at c1 c2
     exact ⟨b, b₀, t, t₀, hf, hfr, hf₀, hfr₀, ht, ht₀, c1, c2⟩
   obtain ⟨b, b₀, t, t₀, hf, hfr, hf₀, hfr₀, ht, ht₀, x1, x2⟩ := key (rootIdx D r).1 (rootIdx D r).2
-  have u1 := GlobalTheory.T.root_lines_flag_degree E H D l Xo c Y S M.Ω M.K M.ι M.y o.𝔐 o.Fl M.xdeg o.e r q cM b t o.lines hqc hf hfr ht
-  have u0 := GlobalTheory.T.root_lines_flag_degree E H D l Xo c Y ∅ R.Ω R.K R.ι R.y o₀.𝔐 o₀.Fl R.xdeg o₀.e r q₀ cR b₀ t₀ o₀.lines hqc₀ hf₀
+  have u1 := _root_.GlobalTheory.CompanionTheory.Ar.OrVert.rootLine_unitAt E H D l Xo c Y S M.Ω M.K M.ι M.y o.𝔐 o.Fl M.xdeg o.e r q cM b t o.lines hqc hf hfr ht
+  have u0 := _root_.GlobalTheory.CompanionTheory.Ar.OrVert.rootLine_unitAt E H D l Xo c Y ∅ R.Ω R.K R.ι R.y o₀.𝔐 o₀.Fl R.xdeg o₀.e r q₀ cR b₀ t₀ o₀.lines hqc₀ hf₀
     hfr₀ ht₀
   generalize (∏ k, M.y ⟨k, cM k⟩ ^ M.xdeg r k) * o.e r = A at u1 ⊢
   generalize (∏ k, R.y ⟨k, cR k⟩ ^ R.xdeg r k) * o₀.e r = A₀ at u0 ⊢
@@ -349,7 +355,7 @@ theorem val_bound (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E
   refine ⟨Real.log m₀, ?_⟩
   intro S M o i hi hdisc hS
   haveI : CharZero M.Ω := Sandwich.charZero_of_hodgeCpt o.𝔐
-  obtain ⟨q, m, hq, hm, hlog, hnum⟩ := GlobalTheory.T.log_denominator_bound_primes S m₀ o.𝔐.S_prime hm₀
+  obtain ⟨q, m, hq, hm, hlog, hnum⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ClearConstants.clear_constants S m₀ o.𝔐.S_prime hm₀
   obtain ⟨a, b, e, ha, hb⟩ := exists_split S m hm
   have ha0 : 0 < a := Nat.pos_of_mul_pos_right (e ▸ hm)
   have hb0 : 0 < b := Nat.pos_of_mul_pos_left (e ▸ hm)

@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHolPeriods
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexUniformisationOfComplexBaseChangeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexUniformisationOfMarkedPeriodsFamilyStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplexBaseChangePolarizedAbelianFamilyStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFineModuliAtComplexEmbeddingComplexBaseChangeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexUniformisationOfComplexBaseChange
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComplexUniformisationOfMarkedPeriodsFamily
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsComplexBaseChangePolarizedAbelianFamily
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFineModuliAtComplexEmbeddingComplexBaseChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -85,14 +85,14 @@ namespace GlobalTheory.PELU
 
 theorem nonempty_unif : ∀ (O : Type) [Ring O] (bar : O → O) (g : ℕ) (ρ : O →+* Matrix (Fin g) (Fin g) ℂ) (R : Type) [CommRing R] (σ : R →+* ℂ) (Λ : Type) (F : Fam R O Λ g) (N : ℕ) (C : ∀ D' : PLat O bar, (Λ → D'.La) → Prop) (d : ℕ), 3 ≤ N → (∀ a, F.eta a ^ N = 1) → SmoothOfRelativeDimension d F.s → QuasiCompact F.s → (∀ D' t, C D' t → FullMark N D' t) → FineAt F σ ρ N C → Nonempty (Unif F σ ρ N C) := by
   intro O _ bar g ρ R _ σ Λ F N C d hN heta hsm hqc hfull hfine
-  obtain ⟨F', hbc⟩ := GlobalTheory.T.exists_complexBaseChange_polarizedAbelianFamily O g R σ Λ F
+  obtain ⟨F', hbc⟩ := _root_.GlobalTheory.PELU.exists_isBC O g R σ Λ F
   obtain ⟨f, φ, hX, hA, -, -, heta'⟩ := id hbc
   have e' : ∀ a, F'.eta a ^ N = 1 := fun a =>
     pow_eq_one_of_isGrpPullback f φ hA (F.eta a) (F'.eta a) (heta' a) N (heta a)
   have s' : SmoothOfRelativeDimension d F'.s :=
     (smoothOfRelativeDimension_isStableUnderBaseChange d).of_isPullback hX hsm
   have q' : QuasiCompact F'.s := MorphismProperty.of_isPullback hX hqc
-  exact GlobalTheory.T.complexUniformisation_of_complexBaseChange O bar g ρ R σ Λ F N C F' hbc
-    (GlobalTheory.T.complexUniformisation_of_markedPeriods_family O bar g ρ Λ F' N C d hN e' s' q' hfull (GlobalTheory.T.isFineModuliAtComplexEmbedding_complexBaseChange O bar g ρ R σ Λ F N C F' hbc hfine))
+  exact _root_.GlobalTheory.PELU.unif_of_isBC O bar g ρ R σ Λ F N C F' hbc
+    (_root_.GlobalTheory.PELU.unif_of_fineAt O bar g ρ Λ F' N C d hN e' s' q' hfull (_root_.GlobalTheory.PELU.fineAt_of_isBC O bar g ρ R σ Λ F N C F' hbc hfine))
 
 end GlobalTheory.PELU

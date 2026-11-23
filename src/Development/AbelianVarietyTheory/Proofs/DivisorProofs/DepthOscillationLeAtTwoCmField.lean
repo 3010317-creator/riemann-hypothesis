@@ -2,8 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ESmall
 public import Development.AutomorphicArithmetic.CMTraceForms.Places
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FactorDepthBetweenZeroAndBoundStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeanUpperBoundBigFactorsPlaceAboveTwoStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.FactorDepthInertBounds
+public import Development.AbelianVarietyTheory.Definitions.Divisors.EightDvdNCol
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FactorDepthBetweenZeroAndBound
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.BigBlockCharacters
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TypedPartSplitPrimes
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NonemptyValExtOfOverLa
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MeanUpperBoundBigFactorsPlaceAboveTwo
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -38,9 +43,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.BigBlockCharacters
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.FactorDepthInertBounds
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TypedPartSplitPrimes
 
 @[expose] public section
 
@@ -71,14 +73,14 @@ theorem oscLe_two : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : 
   refine ⟨0, fun T io e ho y => ?_⟩
   have hfall : ∀ f : Lt1 Dw, letI := H.starRing
       (((0 : ℝ) : EReal) ≤ nuFac p y f (cx f) ∧ (y.IsAlg → nuFac p y f (cx f) ≤ ((boundAll p (rk f) (cx f) : ℝ) : EReal))) :=
-    fun f => ((GlobalTheory.T.factorDepth_between_zero_and_bound E H Dw l Xo c p la f (cx f)).1 T io e ho y)
+    fun f => ((_root_.GlobalTheory.RefSum.facBetween_zero_boundAll E H Dw l Xo c p la f (cx f)).1 T io e ho y)
   have hnu : letI := H.starRing; nuP p y cx = ∑ f, nuFac p y f (cx f) := rfl
   refine ⟨?_, fun hy => ?_⟩
   · simp only [Nat.cast_zero, EReal.coe_zero] at hfall ⊢
     rw [hnu]
     exact Finset.sum_nonneg fun f _ => (hfall f).1
   · obtain ⟨len, hlen0, -, hlenS, hlen⟩ :=
-      GlobalTheory.T.meanUpperBound_bigFactors_placeAboveTwo E H Dw l Xo c p F vd hT T io y (not_isUnit_of_overLa la ho) hy
+      _root_.GlobalTheory.RefSum.mean_bound_big_factors_at_two E H Dw l Xo c p F vd hT T io y (not_isUnit_of_overLa la ho) hy
     set b : Lt1 Dw → ℝ := fun f => if IsBig k f then (cx f : ℝ) * len f.1 else (rk f : ℝ) * cx f with hb
     have hfb : ∀ f, letI := H.starRing; nuFac p y f (cx f) ≤ ((b f : ℝ) : EReal) := by
       intro f

@@ -3,7 +3,7 @@ module
 public import Formalism.LocalToGlobal.Divisibility.GoodPartHermitianSpec
 public import Formalism.SharpRestriction.Divisibility.PrimeDegreeVariant
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CuspidalIdempotentCharacters
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRepRealisingCharOfMultiplicityOneStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRepRealisingCharOfMultiplicityOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -68,7 +68,7 @@ theorem exists_goodSet (K : Type) [Field K] [CharZero K] (G : Type) [Group G] [F
   classical
   have key : ∀ s : X, ∃ (n : ℕ) (τ : Representation K G (Fin n → K)), 0 < n ∧
       Function.Surjective τ.asAlgebraHom ∧ ∀ g, LinearMap.trace K (Fin n → K) (τ g) = (s : G → K) g :=
-    fun s => GlobalTheory.T.exists_rep_realising_char_of_multiplicity_one K G s (hX s s.2) P0.H P0.chi (h1 s s.2)
+    fun s => _root_.GlobalTheory.MultOneRealised.exists_rep_of_mult_one K G s (hX s s.2) P0.H P0.chi (h1 s s.2)
   choose n τ hn hs ht using key
   have ht' : ∀ s : X, (fun g => LinearMap.trace K (Fin (n s) → K) (τ s g)) = (s : G → K) := fun s => funext (ht s)
   let T : Formalism.MainNotions.PrimeDegreeVariant.GoodSet K G :=

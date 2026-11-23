@@ -2,9 +2,12 @@ module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.FiltrationSaturationKiller
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.RationalDualityOfAllCoefficients
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ArcTheoremToolsOfWachModuleConclusionsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalConstantsFromAdmittedLocalGaloisStatementsStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeLaterClausesHoldStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ArcTheoremToolsOfWachModuleConclusions
+public import Formalism.SharpRestriction.LevelLetterCocycles.LiftingTheory
+public import Formalism.GaloisCohomology.LocalTateDualityK
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalConstantsFromAdmittedLocalGaloisStatements
+import Formalism.SharpRestriction.LevelLetterCocycles.UsedLocalConclusion
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachLatticeLaterClausesHold
 import Formalism.SharpRestriction.LevelLetterCocycles.RelayGeneralCaseOfAdmissible
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -53,9 +56,9 @@ theorem relay_and_arc_inputs : GlobalTheory.Published.BlochKatoLocal → Formali
     Formalism.GaloisCohomology.LocalEulerCharK → ∀ (D : D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW)
     (Cm : CmpOf D.loc D.locA HW F), UnusedSlot80.RelayArcLifting D HW F ∧ UnusedSlot80.AdmArcA D HW F Cm := by
   intro hBK hTD hEC D HW F Cm
-  obtain ⟨_, _, p3, p4, p5, _, _, _, p9, _⟩ := GlobalTheory.T.wachLattice_laterClauses_hold D HW F Cm
-  obtain ⟨_, _, hW1, _, _, hH, hTr, _⟩ := GlobalTheory.T.localConstants_from_admitted_local_Galois_statements hBK hTD hEC D HW F Cm
-  obtain ⟨hSat, _, _, _, _, _, _, hF1, _, hF2, _⟩ := GlobalTheory.T.arcTheorem_tools_of_wachModuleConclusions D HW F Cm
+  obtain ⟨_, _, p3, p4, p5, _, _, _, p9, _⟩ := _root_.GlobalTheory.NL.wach_used_clauses D HW F Cm
+  obtain ⟨_, _, hW1, _, _, hH, hTr, _⟩ := _root_.GlobalTheory.localConstants_from_admitted_local_Galois_statements_alt hBK hTD hEC D HW F Cm
+  obtain ⟨hSat, _, _, _, _, _, _, hF1, _, hF2, _⟩ := _root_.GlobalTheory.ArcTools.arc_tools_from_clauses D HW F Cm
   exact ⟨UnusedSlot80.relay_general_statement D HW F ⟨p5, p9, hH, hTr, hSat, hF1, hF2⟩,
     ⟨p3, p4, p5, p9, hH, hTr, hW1, hSat⟩⟩
 

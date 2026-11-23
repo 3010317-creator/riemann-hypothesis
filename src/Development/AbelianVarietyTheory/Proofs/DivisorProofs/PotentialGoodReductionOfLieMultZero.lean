@@ -2,15 +2,19 @@ module
 
 public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.SemistableFin
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyPotentialSemiAbelianSplitTorusStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLieCoordinatesOnFieldFibresLocalRingStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrimitiveAnnihilatorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRingActionPullbackCartesianGroupSchemesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankEqZeroOfDualKilledByTensorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAbelianSchemeSemiAbelianDvrNoSpecialTorusStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsGrpPullbackOfGroupSchemeModelBaseChangeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RingActExtendsSemiAbelianDvrStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToricPartFibreLieAlgebraCharactersStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyPotentialSemiAbelianSplitTorus
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLieCoordinatesOnFieldFibresLocalRing
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrimitiveAnnihilator
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRingActionPullbackCartesianGroupSchemes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankEqZeroOfDualKilledByTensor
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAbelianSchemeSemiAbelianDvrNoSpecialTorus
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsGrpPullbackOfGroupSchemeModelBaseChange
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RingActExtendsSemiAbelianDvr
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToricPartFibreLieAlgebraCharacters
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsPushEquiv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -157,7 +161,7 @@ theorem finrank_zero (W : Type) [CommRing W] [IsDomain W] [IsDiscreteValuationRi
   haveI := E.free
   haveI := E.finite
   haveI : IsCommMonObj G := hG.comm
-  obtain ⟨n, M, -, hT⟩ := GlobalTheory.T.exists_lie_coordinates_on_field_fibres_local_ring W G hG.smooth
+  obtain ⟨n, M, -, hT⟩ := _root_.GlobalTheory.exists_lie_coordinates_fibres W G hG.smooth
   obtain ⟨T, Tinj, Trange, Tadd, Tsc, Tact⟩ := hT Ω f
   obtain ⟨Mr, hMr⟩ := exists_ringHom a M f hf T Tinj Tadd Tact
   have T0 : T 0 = 1 := by simpa using Tadd 0 0
@@ -168,13 +172,13 @@ theorem finrank_zero (W : Type) [CommRing W] [IsDomain W] [IsDiscreteValuationRi
       rw [Tact _ (a.hom x), ← hMr, hc, Tsc]
     exact Tinj ((eq_one_of_lieMult_zero a _ σ h0 _ hE).trans T0.symm)
   let b := Module.Free.chooseBasis ℤ (𝓞 F)
-  obtain ⟨w, ⟨i0, hu⟩, hsum⟩ := GlobalTheory.T.exists_primitive_annihilator' F W Ω f hf n Mr σ hno _ b
-  obtain ⟨ρ, U, Uinj, Ufst, Uadd, Usc, Uact⟩ := GlobalTheory.T.toric_part_fibre_lie_algebra_characters (Sp W) G (𝓞 F) a.act a.hom a.one a.mul a.add
+  obtain ⟨w, ⟨i0, hu⟩, hsum⟩ := _root_.GlobalTheory.PrimAnnih.exists_primitive_annihilator F W Ω f hf n Mr σ hno _ b
+  obtain ⟨ρ, U, Uinj, Ufst, Uadd, Usc, Uact⟩ := _root_.GlobalTheory.torus_part_lie (Sp W) G (𝓞 F) a.act a.hom a.one a.mul a.add
     (ResidueField W) (spMap (residue W)) E
   obtain ⟨T', -, T'range, T'add, T'sc, T'act⟩ := hT (ResidueField W) (residue W)
   have T'0 : T' 0 = 1 := by simpa using T'add 0 0
   have U0 : U 0 = 1 := by simpa using Uadd 0 0
-  refine GlobalTheory.T.finrank_eq_zero_of_dual_killed_by_tensor F E.X ρ (ResidueField W) _ b (fun i => residue W (w i)) ?_ ?_
+  refine _root_.GlobalTheory.finrank_eq_zero_of_dual_killed F E.X ρ (ResidueField W) _ b (fun i => residue W (w i)) ?_ ?_
   · intro h
     exact (residue_ne_zero_iff_isUnit _).2 hu (congrFun h i0)
   · intro l χ
@@ -201,13 +205,13 @@ theorem finrank_zero (W : Type) [CommRing W] [IsDomain W] [IsDiscreteValuationRi
 theorem potGood_of_lieMult_zero : ∀ (V K : Type) [CommRing V] [IsDomain V] [IsDiscreteValuationRing V] [IsAdicComplete (maximalIdeal V) V] [Field K] [CharZero K] [Algebra V K] [IsFractionRing V K] (A : Over (Sp K)) [GrpObj A], IsAbelianScheme A → ∀ (F : Type) [Field F] [NumberField F] (act : OAct (𝓞 F) A) (Ω : Type) [Field Ω] [IsAlgClosed Ω] (g : K →+* Ω) (σ : 𝓞 F →+* Ω), LieMult act (spMap g) σ 0 → GlobalTheory.SS.PotModel V K A (fun _ _ _ G _ => IsAbelianScheme G) := by
   intro V K _ _ _ _ _ _ _ _ A _ hA F _ _ act Ω _ _ g σ hL
   obtain ⟨W, L, iW, iD, iDVR, iL, iVW, iWL, iKL, iFR, hc, hfin, hloc, hcpl, G, iG, hM, hsemi, ⟨E⟩⟩ :=
-    GlobalTheory.T.abelianVariety_potential_semiAbelian_splitTorus V K A hA
+    _root_.GlobalTheory.SS.potModel_semiAbelian_torusExtension V K A hA
   refine ⟨W, L, iW, iD, iDVR, iL, iVW, iWL, iKL, iFR, hc, hfin, hloc, hcpl, G, iG, hM, ?_⟩
   have hAL := isGrpPullback_pullback A (spMap (algebraMap K L))
-  obtain ⟨actL, ⟨h1, h2, h3, h4⟩, hLc⟩ := GlobalTheory.T.exists_ring_action_pullback_cartesian_group_schemes _ _ (spMap (algebraMap K L)) A
+  obtain ⟨actL, ⟨h1, h2, h3, h4⟩, hLc⟩ := _root_.GlobalTheory.ActPull.exists_act_pull _ _ (spMap (algebraMap K L)) A
     ((Over.pullback (spMap (algebraMap K L))).obj A) _ hAL (𝓞 F) act.act act.hom act.one act.mul act.add
-  obtain ⟨φ, hφ⟩ := GlobalTheory.T.isGrpPullback_of_group_scheme_model_base_change K W L A G hM _ _ hAL
-  obtain ⟨actG, ⟨g1, g2, g3, g4⟩, hGc⟩ := GlobalTheory.T.exists_ring_action_extension_compatible W L G _ φ hsemi hφ (𝓞 F) actL h1 h2 h3 h4
+  obtain ⟨φ, hφ⟩ := _root_.GlobalTheory.SS.exists_isGrpPullback_of_isModel K W L A G hM _ _ hAL
+  obtain ⟨actG, ⟨g1, g2, g3, g4⟩, hGc⟩ := _root_.GlobalTheory.ringAct_extends_semiAbelian_dvr W L G _ φ hsemi hφ (𝓞 F) actL h1 h2 h3 h4
   let aL : OAct (𝓞 F) ((Over.pullback (spMap (algebraMap K L))).obj A) := ⟨actL, h1, h2, h3, h4⟩
   let aG : OAct (𝓞 F) G := ⟨actG, g1, g2, g3, g4⟩
   obtain ⟨g', hg'⟩ := lift_ext V K W L Ω hc hfin g
@@ -220,7 +224,7 @@ theorem potGood_of_lieMult_zero : ∀ (V K : Type) [CommRing V] [IsDomain V] [Is
   haveI : CharZero Ω := charZero_of_injective_ringHom g.injective
   have hinj : Function.Injective (g'.comp (algebraMap W L)) :=
     g'.injective.comp (IsFractionRing.injective W L)
-  exact GlobalTheory.T.isAbelianScheme_semiAbelian_dvr_noSpecialTorus W L G hsemi (proper_pull A G hM hA) E
+  exact _root_.GlobalTheory.ToricRankZero.isAbelianScheme_of_finrank_eq_zero W L G hsemi (proper_pull A G hM hA) E
     (finrank_zero W G hsemi F aG Ω _ hinj σ hG0 E)
 
 end GlobalTheory.PotGoodLie

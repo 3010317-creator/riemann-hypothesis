@@ -1,8 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Statements.PlaceShiftStatements.TraceDefinitePairsEqAutomorphicTrace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BiInvariantConjugacyClassesFinite
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DefinitePairTermEqCentraliserOrbitSumStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.DiagHermitianTrivialOfSumFourSquares
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HaarConjugateSubgroupIndexRatio
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PointsNonemptyUnitaryRankOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DefinitePairTermEqCentraliserOrbitSum
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DformRelEquivalence
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlatZeroFromResolutionAndGaga
 import Mathlib.Algebra.Order.Floor.Extended
@@ -61,4 +63,4 @@ theorem GlobalTheory.LKDef.Regroup.regroup :
                   (Quot.out q).trivAf.choose_spec.choose_spec)
                 (GlobalTheory.LKCx.toP1 G (Quot.out q).β) (MonoidHom.id (Gr G 1)) L.K.toSubgroup K' 1 f f' (Quotient.out c)
           else 0 :=
-  GlobalTheory.LKDef.Regroup.regroup_main GlobalTheory.LKDef.DFormPos.sim_pos GlobalTheory.T.bi_invariant_conjugacy_classes_finite GlobalTheory.T.definitePair_term_eq_centraliser_orbit_sum
+  GlobalTheory.LKDef.Regroup.regroup_main GlobalTheory.LKDef.DFormPos.sim_pos _root_.GlobalTheory.LKDef.FinPairs.finite_classes_irr_term_ne_zero _root_.GlobalTheory.LKDef.TermPair.term_eq_centSum

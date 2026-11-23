@@ -4,12 +4,15 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ModelSm
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.OverLaUnique
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IntMemModelSmall
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ChartLatticeSpecializationValueStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.HasMultiplier
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ChartLatticeSpecializationValue
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CompleteDvrPadicEmbeddingStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GoodOriginModelComponentBoundStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IntegralFrameComponentValueStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TowerWeightOfZeroStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TraceIntegralSubringExtensionStatement
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.RingTheory.Trace.Defs
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TraceIntegralSubringExtension
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.UniformAllRootOriginBoundStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.WeightSectionComponentValueStatement
 import Development.AutomorphicSpectrum.Statements.GeometryStatements.ExistsAlgPtOff
@@ -92,7 +95,7 @@ theorem vs_fin : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
     letI := Rd.φ.toAlgebra
     exact Module.finite_of_finrank_pos hfinr
   haveI : CharZero (Om Z) := charZero_of_injective_algebraMap (algebraMap c.F (Om Z)).injective
-  obtain ⟨Btr, hTr⟩ := GlobalTheory.T.trace_integral_subring_extension (Om Z) RM.Ω Rd.φ (B₁ ∪ B₂) x hfin
+  obtain ⟨Btr, hTr⟩ := _root_.GlobalTheory.CompanionTheory.TraceSpec.trace_specialisation (Om Z) RM.Ω Rd.φ (B₁ ∪ B₂) x hfin
   obtain ⟨T', io', e', y', A', ev, ho', hy', hval, hB, -, halg, hreg⟩ :=
     GlobalTheory.T.weight_section_component_value hG E H Dw l Xo c r U h e hL Y Z u f hf (Btr ∪ B₃) la T₀ io e₀ ho y hy hon hy0
 
@@ -154,7 +157,7 @@ theorem vs_fin : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMFie
       (fun b hb => hB0 (Finset.mem_coe.2 (Finset.mem_union_right _ (Finset.mem_coe.1 hb)))) A' hB3 p (ev' j) (h2 j)
       la T' io' e' y' ι ev hla ho' hy' hι hreg (fun a' => ⟨hA a', h1 j a'⟩)
     have hHV' : ∀ b (hb : b ∈ B₁), Small.HasVal RM.y 0 b z (ev' j ⟨b, hAB1 b hb⟩) := fun b hb => hHV b _ hb
-    obtain ⟨w, hw, hwle⟩ := GlobalTheory.T.chart_lattice_specialization_value RM.K RM.ι RM.Ω RM.y (PadicAlgCl p) z hz.1 A (ev' j) (degOf RM u) s hs
+    obtain ⟨w, hw, hwle⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Rec.FinRd.ChartPt.exists_hasVal_norm_le_supMet RM.K RM.ι RM.Ω RM.y (PadicAlgCl p) z hz.1 A (ev' j) (degOf RM u) s hs
       (fun c' _ => ⟨fun k i => ⟨hAB1 _ (hmrt (c', ⟨k, i⟩)), hHV' _ (hmrt (c', ⟨k, i⟩))⟩,
         ⟨hAB1 _ (hmsc c'), hHV' _ (hmsc c')⟩⟩)
     obtain ⟨v, hv, hvn⟩ := hrd _ (nOf u) hn f hfsec

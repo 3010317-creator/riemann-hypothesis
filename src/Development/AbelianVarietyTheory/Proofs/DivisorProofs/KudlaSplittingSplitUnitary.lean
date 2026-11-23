@@ -1,12 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.UnipVal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilRepresentationSplitUnitarySchwartzBruhStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuadExtTopologyStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SplitUnitaryWeilRepresentationIsSmoothStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryCharacterAbsScalarBasicPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationIntertwinesHeisenbergStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationPreservesL2SpaceStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWeilRepresentationSplitUnitarySchwartzBruh
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SplitUnitaryWeilRepresentationIsSmooth
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationIntertwinesHeisenberg
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationPreservesL2Space
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuadExtTopology
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryCharacterAbsScalarBasicProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,24 +62,24 @@ theorem kudlaSplittingSplitUnitary : GlobalTheory.Published.KudlaSplittingSplitU
   intro F _ _ _ _ _ E _ _ _ _ c δ hE α ν _ _ _ _ Q hQ ψ hψ hψ1 hψne χ hχ hres
   letI : MeasurableSpace (Matrix α ν E) := borel _
   haveI : BorelSpace (Matrix α ν E) := ⟨rfl⟩
-  obtain ⟨-, -, -, -, -, -, -, hmat⟩ := GlobalTheory.T.quadExt_topological_properties F E c δ hE
+  obtain ⟨-, -, -, -, -, -, -, hmat⟩ := _root_.GlobalTheory.quadExt_topology F E c δ hE
   obtain ⟨-, hG⟩ := hmat α ν
   haveI := hG.grp
   haveI := hG.t2
   haveI := hG.lc
   haveI := hG.sc
-  obtain ⟨κ, ω, hKW⟩ := GlobalTheory.T.exists_weil_representation_split_unitary_schwartzBruhat F E c δ hE α ν Q hQ ψ hψ hψ1 hψne χ hχ hres (Measure.addHaar)
-  refine ⟨ω, GlobalTheory.T.splitUnitaryWeilRepresentation_isSmooth F E c δ hE α ν Q hQ ψ hψ hψ1 hψne χ hχ hres _ κ ω hKW, ?_,
-    GlobalTheory.T.weilRepresentation_intertwines_heisenberg F E c δ hE α ν Q hQ ψ hψ hψ1 hψne χ hχ hres _ κ ω hKW, ?_⟩
+  obtain ⟨κ, ω, hKW⟩ := _root_.GlobalTheory.KSp.Exist.exists_isKW F E c δ hE α ν Q hQ ψ hψ hψ1 hψne χ hχ hres (Measure.addHaar)
+  refine ⟨ω, _root_.GlobalTheory.KSp.isKW_isSmoothRep F E c δ hE α ν Q hQ ψ hψ hψ1 hψne χ hχ hres _ κ ω hKW, ?_,
+    _root_.GlobalTheory.KSp.weil_heis_intertwine F E c δ hE α ν Q hQ ψ hψ hψ1 hψne χ hχ hres _ κ ω hKW, ?_⟩
   · intro μ' hμ' g φ
-    exact GlobalTheory.T.weil_representation_preserves_L2_space F E c δ hE α ν Q hQ ψ hψ hψ1 hψne χ hχ hres _ κ ω hKW μ' g φ
+    exact _root_.GlobalTheory.KSp.weil_representation_preserves_L2 F E c δ hE α ν Q hQ ψ hψ hψ1 hψne χ hχ hres _ κ ω hKW μ' g φ
   · intro a φ x
     have hp : levi c hE.invol a ∈ sieg c ν := by
       rw [mem_sieg, mat, levi_val, toBlocks_fromBlocks₂₁]
     rw [hKW.par _ hp φ]
     have h0 : ∀ y : Matrix α ν E, pr c Q y 0 = 0 := fun y => by
       simp [pr, form, GlobalTheory.WeilM.hTens]
-    obtain ⟨-, -, hsc, -⟩ := GlobalTheory.T.unitaryCharacterAbsScalar_basic_properties F E c δ hE (Fintype.card α) χ hres
+    obtain ⟨-, -, hsc, -⟩ := _root_.GlobalTheory.KSp.sc_basic F E c δ hE (Fintype.card α) χ hres
     have hd := hsc (Matrix.GeneralLinearGroup.det a)
     rw [Matrix.GeneralLinearGroup.val_det_apply] at hd
     simp only [parFun, mat, levi_val, toBlocks_fromBlocks₁₁, toBlocks_fromBlocks₁₂, Matrix.mul_zero, h0,

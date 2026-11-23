@@ -2,11 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobTwistBaseChangeHomApp
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneRanksFieldCharP
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankRigidExtensionsEqHeightAndDimAddDualStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KerRigExtMapRelFrobLeRangeRigOfOmegaStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.EqZeroOfCobOneEqZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FinrankRigidExtensionsEqHeightAndDimAddDual
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KerRigExtMapRelFrobLeRangeRigOfOmega
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RangeRigOfOmegaLeRangeRigExtMapVerschiebungStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RigidifiedExtensionPullbackAddAndPrimeSmulId
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RigExtMapRelFrobCompRigOfOmega
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RigidifiedExtensionPullbackAddAndPrimeSmulIdStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -79,14 +80,14 @@ theorem rigExt_field_of_charP (p : ℕ) [Fact p.Prime] (K : Type)
     LinearMap.ker (rigExtMap (verschiebung h G)) = LinearMap.range (rigExtMap (relFrob h G)) ∧
     LinearMap.range (rigExtMap (relFrob h G)) =
       Submodule.span K (Set.range fun x : G.RigExt => SemiHom.rig (absFrob h G) x) := by
-  obtain ⟨-, f1, d1, d2⟩ := GlobalTheory.T.finrank_rigidExtensions_eq_height_and_dim_add_dual p K h G
-  obtain ⟨-, f2, d3, -⟩ := GlobalTheory.T.finrank_rigidExtensions_eq_height_and_dim_add_dual p K h (frobTwist h G)
+  obtain ⟨-, f1, d1, d2⟩ := _root_.GlobalTheory.PDivGroup.finrank_rigExt_omega p K h G
+  obtain ⟨-, f2, d3, -⟩ := _root_.GlobalTheory.PDivGroup.finrank_rigExt_omega p K h (frobTwist h G)
   have h4 := le_antisymm (range_rigExtMap_verschiebung_le h G) (GlobalTheory.T.range_rigOfOmega_le_range_rigExtMap_verschiebung' p K h G)
-  have h5 := le_antisymm (GlobalTheory.T.ker_rigExtMap_relFrob_le_range_rigOfOmega' p K h G)
+  have h5 := le_antisymm (_root_.GlobalTheory.PDivGroup.ker_rigExtMap_relFrob_le_range_rigOfOmega p K h G)
     (LinearMap.range_le_ker_iff.2 (rigExtMap_relFrob_comp_rigOfOmega h G))
   have h6 : rigExtMap (verschiebung h G) ∘ₗ rigExtMap (relFrob h G) = 0 := by
     rw [← rigExtMap_comp, verschiebung_comp_relFrob]
-    exact (GlobalTheory.T.rigidifiedExtensionPullback_add_and_prime_smul_id p K h
+    exact (_root_.GlobalTheory.PDivGroup.rigExtMap_add_and_natCast_smul_id p K h
       (frobTwist h G) (frobTwist h G)).2
   exact ⟨f1, d1, d2, h4, h5, ker_eq_range_of_range_eq_ker f2 f1 _ _
     (d3.trans ((frobTwist_height h G).trans d1.symm)) h6 (h4.trans h5.symm),

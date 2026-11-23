@@ -3,10 +3,12 @@ module
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.FamDefs
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BaseDataOfGlobalTermStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GlobalTermLiesOverLocalDatumAfterIsometryStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDataWithTermSingleOrbitPrimeToStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrbitRepsOver
+public import Formalism.SharpRestriction.CuspSpanNormBounds.IsTermOver
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDataWithTermSingleOrbitPrimeTo
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermsAtPointOfRelevantTermRelevantFiniteStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermsSameRowSameWeightSameLocalDataStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.AtBase
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OrbitRepsOver
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -43,7 +45,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.AtBase
 
 @[expose] public section
 
@@ -135,7 +136,7 @@ theorem exists_famTie : ∀ (D : D7) (X : HidaSetting D) (Y : Full X) (u u' : D.
       (Quot.out t.toTerm.cls).1 (Quot.out t.toTerm.cls).2 hGt w F00 F'0 hct hZ p (FP p) (hp p).1
     have hpr := (hnotP p hp').1
     have hrel' : LocNG.Datum.Rel (d0 p) d' :=
-      GlobalTheory.T.hermitianData_with_term_single_orbit_primeTo ((zOf Y).M p) ((zOf Y).agree p).1 (locH (zOf Y) p) D.R.rS D.R.k (FP p) (rank_Vp p) (hp p).2.1 hpr
+      _root_.GlobalTheory.HL.PrimeToOrbit.main ((zOf Y).M p) ((zOf Y).agree p).1 (locH (zOf Y) p) D.R.rS D.R.k (FP p) (rank_Vp p) (hp p).2.1 hpr
         (d0 p) d' _ _ (hp p).2.2.1 hto
     exact ⟨g, hg, d', hrel', hto⟩
   · intro c ν

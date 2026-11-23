@@ -1,17 +1,20 @@
 module
 
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeftSideFormula
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ThetaTestFunctionRayAsymptotic
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.OfE
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.FiniteAdeleHaarEqProductLocalMeasures
 public import Development.WeilBound.RepresentationTheoryGL.SiegelWeilProof.BaseOneSide.PsiSide
 public import GroundTheory.IdeleRoots.TorusPowers.HeckeTensor
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicTupleCompactSetsStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicTupleProjectionsStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CompletionIsLocalRingStatement
-import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRingStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IdeleModuleBoundedOnCompactStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IdeleModuleEqNormModuleStatement
+public import GroundTheory.GlobalFields.IdeleGroups.IdeleNorms
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IdeleModuleBoundedOnCompact
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IdeleModuleEqNormModule
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeftSideFormula
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ThetaTestFunctionRayAsymptotic
+import Formalism.UnipotentAdelicQuotients.SWXSDefs
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicTupleCompactSets
+import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.AdelicTupleProjections
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.CompletionIsLocalRing
+import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.TensorLocallyCompactRing
 import GroundTheory.GlobalFields.LocalFieldAtPlace
 import GroundTheory.LocalFields.PadicLogSeries
 import Mathlib.Algebra.Order.Floor.Extended
@@ -111,8 +114,8 @@ theorem exists_compact {F E : Type} [Field F] [NumberField F] [Field E] [NumberF
     ∃ K : Set (Fin 1 → Fin 1 → AF F ⊗[F] E), IsCompact K ∧
       ∀ Y : Fin 1 → Fin 1 → AF F ⊗[F] E, (∀ v, projV v (projFin Y) ∈ A v) → projInf Y ∈ tsupport φ → Y ∈ K := by
   obtain ⟨hφc, hφs, hφ0, -, hAS, hAoff⟩ := hT
-  obtain ⟨t1, t2, t3, t4, t5, t6, t7, t8, t9⟩ := GlobalTheory.T.adelic_tuple_projections F E σ hcm d b 1 1
-  obtain ⟨u1, u2⟩ := GlobalTheory.T.adelic_tuple_compact_sets F E σ hcm d b 1 1
+  obtain ⟨t1, t2, t3, t4, t5, t6, t7, t8, t9⟩ := _root_.GlobalTheory.CompanionTheory.SW.MeasProj.proj_props F E σ hcm d b 1 1
+  obtain ⟨u1, u2⟩ := _root_.GlobalTheory.CompanionTheory.SW.Cpt.compact_tuples F E σ hcm d b 1 1
   have hSc : ∀ v, ∃ N : ℕ, 0 < N ∧ (v ∈ S → ∀ Y ∈ A v, (fun a i => (N : Fv F v ⊗[F] E) * Y a i) ∈ latV b v) := fun v => by
     by_cases hv : v ∈ S
     · obtain ⟨N, h0, h1⟩ := scale_lat σ hcm b v (A v) (hAS v hv).1
@@ -185,7 +188,7 @@ end
 theorem th_eq_zero_of_large_module : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] (σ : E →ₐ[F] E), IsCMExt F E σ → ∀ (J : Matrix (Fin 1) (Fin 1) E), IsHermND σ J → ∀ (d : ℕ) (b : Module.Basis (Fin d) F E) (S : Finset (HeightOneSpectrum (𝓞 F))) (φ : (Fin 1 → Fin 1 → Ainf F ⊗[F] E) → ℝ) (A : ∀ v : HeightOneSpectrum (𝓞 F), Set (Fin 1 → Fin 1 → Fv F v ⊗[F] E)), IsTest σ J b S φ A → ∃ R : ℝ, ∀ (y : (AF F ⊗[F] E)ˣ) (n : (AF F)ˣ), IsNm σ y n → R < md n → Th φ A y = 0 := by
   intro F E _ _ _ _ _ σ hcm J hJ d b S φ A hT
   obtain ⟨K, hK, hmem⟩ := exists_compact σ hcm J b S φ A hT
-  obtain ⟨R, hR⟩ := GlobalTheory.T.idele_module_bounded_on_compact E _ (hK.image (cont_f (F := F) (E := E)))
+  obtain ⟨R, hR⟩ := _root_.GlobalTheory.CompanionTheory.IdeleModBdd.ideleModule_bounded_on_compact E _ (hK.image (cont_f (F := F) (E := E)))
   refine ⟨R, fun y n hn hlt => ?_⟩
   by_contra hne
   obtain ⟨X, hX0, hX⟩ := exists_term φ A y hne
@@ -194,7 +197,7 @@ theorem th_eq_zero_of_large_module : ∀ (F E : Type) [Field F] [NumberField F] 
   have ht := entry_ne hX0
   have hle := hR (GroundTheory.BlockD.ThmBHecke.ideleEquiv F E (y * ofE (Units.mk0 _ ht)))
     (by rw [coe_eq]; exact ⟨_, hYK, rfl⟩)
-  rw [mod_mul, GlobalTheory.T.idele_module_eq_norm_module F E σ hcm y n hn] at hle
+  rw [mod_mul, _root_.GlobalTheory.CompanionTheory.SW.RankOneSiegelWeil.ideleModule_eq_md_of_isNm F E σ hcm y n hn] at hle
   exact absurd hle (not_le.2 hlt)
 
 end GlobalTheory.CompanionTheory.SW.RankOneSiegelWeil.Vanish

@@ -1,8 +1,11 @@
 module
 
 public import Mathlib.MeasureTheory.Measure.Haar.DistribChar
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HaarInvariantUnderTransvectionStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.MatrixTransvectionDiagonalDecompositionStatement
+public import Mathlib.LinearAlgebra.Matrix.Transvection
+public import Mathlib.MeasureTheory.Group.Measure
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HaarInvariantUnderTransvection
+public import Mathlib.RingTheory.Artinian.Defs
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.MatrixTransvectionDiagonalDecomposition
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -109,7 +112,7 @@ theorem map_transvections {ι : Type} [Fintype ι] [DecidableEq ι] (μ : Measur
       funext x
       simp [Matrix.mulVec_mulVec]
     rw [e, ← Measure.map_map (hm _) (hm _), ih]
-    exact GlobalTheory.T.haar_invariant_under_transvection K ι μ t
+    exact _root_.GlobalTheory.CompanionTheory.SW.transvection_map_addHaar K ι μ t
 
 theorem det_transvections {ι : Type} [Fintype ι] [DecidableEq ι]
     (L : List (Matrix.TransvectionStruct ι K)) :
@@ -125,7 +128,7 @@ theorem map_mulVec_eq_smul : ∀ (K : Type) [CommRing K] [TopologicalSpace K] [I
     (A : Matrix ι ι K), IsUnit A.det → ∀ c : ℝ≥0,
       lam.map (fun y => A.det * y) = c • lam → μ.map (fun x => A *ᵥ x) = c • μ := by
   intro K _ _ _ _ _ _ _ _ _ _ ι _ _ μ _ lam _ A hA c hc
-  obtain ⟨L, L', D, hAeq⟩ := GlobalTheory.T.matrix_transvection_diagonal_decomposition K ι A
+  obtain ⟨L, L', D, hAeq⟩ := _root_.GlobalTheory.CompanionTheory.SW.artinian_reduced_list_transvec_mul_diagonal_mul_list_transvec K ι A
   have hdet : A.det = ∏ i, D i := by
     rw [hAeq, Matrix.det_mul, Matrix.det_mul, det_transvections, det_transvections,
       Matrix.det_diagonal, one_mul, mul_one]

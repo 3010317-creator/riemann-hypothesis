@@ -1,7 +1,7 @@
 module
 
 public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.ImportsTerTail
-public import Development.WeilBound.CoreStatements.TorusUniformisation.ChowMahlerFamilies.XSJoinvertdiv
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.PTwinJoinVertDiv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,6 +46,6 @@ import Mathlib.Topology.Sheaves.Init
 namespace GlobalTheory.CompanionTheory.Heights
 
 theorem join_vertical_divisor_statement : GroundTheory.Heights₂.Heights.NumbersDVR.JoinVerticalDivisor.Statement :=
-  PositivityTheory.Xgn.t_s_joinvertdiv
+  _root_.GroundTheory.Heights₂.Heights.NumbersDVR.JoinVerticalDivisor.proof
 
 end GlobalTheory.CompanionTheory.Heights

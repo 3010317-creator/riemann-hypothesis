@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NotOrdGeOfNotMem
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SharpOverIff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompleteDvrWithProportionalValuationsStatement
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDvrOfDimOne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLocalHomAdicCompletionExtend
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTraitModuliOfStalkCompleteDVRStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdlAlongEqTopOfNotMemSupport
@@ -177,7 +178,7 @@ theorem orders_extend : ∀ (g n : ℕ), 3 ≤ n → ∀ (F : SFam g n (zetaAway
   haveI := T.D.toPre.finX
   obtain ⟨N, b, hb⟩ := Module.Finite.exists_fin (R := ℤ) (M := T.D.toPre.X)
   obtain ⟨A, _, _, _, ϖ', ψ', m, m', k', hA, hϖ', ψ'inj, ψ'loc, hm, hm', hk''⟩ :=
-    GlobalTheory.T.exists_complete_dvr_with_proportional_valuations R T.V T.ϖ T.irr ψ ψloc (Option (Fin N × Fin N))
+    _root_.GlobalTheory.CompleteDiscreteValuationRing.main R T.V T.ϖ T.irr ψ ψloc (Option (Fin N × Fin N))
       (fun i => i.elim (j d) fun ii => p (e.symm (b ii.1 + b ii.2)))
       (fun i => i.elim a fun ii => k (e.symm (b ii.1 + b ii.2)))
       (by rintro (_ | ii); exacts [hda, hk' _])

@@ -4,7 +4,10 @@ public import Formalism.LocalToGlobal.ProjectiveLattices.OneLtAbsNormReal
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.CoordOfHasWeight
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.IsOpenOfRangeGenericSubset
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsFiniteDvrExtensionEmbeddingResidueFieldStatement
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Mathlib.RingTheory.DiscreteValuationRing.Basic
+public import Mathlib.RingTheory.LocalRing.ResidueField.Defs
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ExistsFiniteDvrExtensionEmbeddingResidueField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -73,7 +76,7 @@ theorem exists_split_baseChange (W : Type) [CommRing W] [IsDomain W] [IsDiscrete
         ((Over.pullback (spMap (algebraMap W W'))).obj G)) := by
   have h₀ : IsSemiAbelian ((Over.pullback (spMap (residue W))).obj G) := IsSemiAbelian.pullback _ G hG
   obtain ⟨k', _, _, hk, E, ⟨d⟩⟩ := exists_finite_split _ h₀
-  obtain ⟨W', i1, i2, i3, i4, i5, hf, hi, e, he⟩ := GlobalTheory.T.exists_finite_dvr_extension_embedding_residueField W k'
+  obtain ⟨W', i1, i2, i3, i4, i5, hf, hi, e, he⟩ := _root_.GlobalTheory.exists_finite_dvr_residueField_ringHom W k'
   refine ⟨W', i1, i2, i3, i4, i5, hf, hi, ?_⟩
   have key : (e.comp (algebraMap (ResidueField W) k')).comp (residue W) =
       (residue W').comp (algebraMap W W') := RingHom.ext he

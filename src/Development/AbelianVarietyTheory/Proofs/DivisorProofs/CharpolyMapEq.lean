@@ -6,12 +6,17 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsDimEqO
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianVarietyEndCharpolySpecStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegAevalEqProdArootsStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneFunctorBaseFunctorProperties
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneTheoryVEqVerschiebungInjectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DieudonneTheoryVEqVerschiebungInjective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfNormProdAevalEqStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCompEqZeroOfNotIsIsogeny
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPadicIntCharpolyCommuteFrobeniusSemilinearStatement
+public import Mathlib.LinearAlgebra.Charpoly.Basic
+public import Mathlib.NumberTheory.Padics.PadicIntegers
+public import Mathlib.RingTheory.WittVector.Frobenius
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPadicIntCharpolyCommuteFrobeniusSemilinear
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsTorsionTowerAndHeightEqTwoDimStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdAevalPadicRootsCharpolyEqDetStatement
+public import Mathlib.NumberTheory.Padics.Complex
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdAevalPadicRootsCharpolyEqDet
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -112,7 +117,7 @@ theorem charpoly_map_eq : ∀ (p : ℕ) [Fact p.Prime] (T : Theory p) (k : Type)
   have hfun := base_functor_props p (fun _ _ _ => True) T.base k G G G trivial trivial trivial
   have hFc : ∀ (g : End A) (x : T.M G), T.map (t.map t g.asHom.hom) (T.F G x) = T.F G (T.map (t.map t g.asHom.hom) x) :=
     fun g x => hfun.2.2.2.2.2.2.1 _ x
-  have hFinj : Function.Injective (T.F G) := (GlobalTheory.T.dieudonneTheory_V_eq_verschiebung_injective p T k G).1
+  have hFinj : Function.Injective (T.F G) := (_root_.GlobalTheory.Dieu.theory_V_verschiebung p T k G).1
   let ψ : ℤ_[p] →+* WittVector p k :=
     (WittVector.map (ZMod.castHom (dvd_refl p) k)).comp (WittVector.equiv p).symm.toRingHom
   have hψ : Function.Injective ψ := by
@@ -125,7 +130,7 @@ theorem charpoly_map_eq : ∀ (p : ℕ) [Fact p.Prime] (T : Theory p) (k : Type)
     exact hpn ((hu.mul_right_eq_zero).1 hx)
   have hrank : Module.finrank (WittVector p k) (T.M G) = 2 * A.dim :=
     hfun.2.2.2.2.2.2.2.1.trans ((GlobalTheory.T.exists_torsionTower_and_height_eq_two_dim p k A).2 G t)
-  obtain ⟨P, hPm, hP⟩ := GlobalTheory.T.exists_padicInt_charpoly_commute_frobeniusSemilinear p k (T.M G) (T.F G) ψ (T.map (t.map t f.asHom.hom)) hFinj (hFc f)
+  obtain ⟨P, hPm, hP⟩ := _root_.GlobalTheory.DieuCharpoly.exists_monic_map_eq_charpoly p k (T.M G) (T.F G) ψ (T.map (t.map t f.asHom.hom)) hFinj (hFc f)
   obtain ⟨⟨hQm, hQdeg, -⟩, -⟩ := GlobalTheory.T.abelianVarietyEndCharpoly_spec k A f
   have hPdeg : P.natDegree = 2 * A.dim := by
     rw [← hPm.natDegree_map ψ, hP, LinearMap.charpoly_natDegree, hrank]
@@ -133,7 +138,7 @@ theorem charpoly_map_eq : ∀ (p : ℕ) [Fact p.Prime] (T : Theory p) (k : Type)
     refine GlobalTheory.T.eq_of_norm_prod_aeval_eq' p _ _ (hPm.map _) (hQm.map _) ?_ ?_
     · rw [hPm.natDegree_map, hQm.natDegree_map, hPdeg, hQdeg]
     · intro R
-      obtain ⟨PR, -, hPR⟩ := GlobalTheory.T.exists_padicInt_charpoly_commute_frobeniusSemilinear p k (T.M G) (T.F G) ψ
+      obtain ⟨PR, -, hPR⟩ := _root_.GlobalTheory.DieuCharpoly.exists_monic_map_eq_charpoly p k (T.M G) (T.F G) ψ
         (T.map (t.map t (Polynomial.aeval f R).asHom.hom)) hFinj (hFc _)
       set d : ℤ_[p] := (-1) ^ Module.finrank (WittVector p k) (T.M G) * PR.coeff 0 with hd_def
       have hd : LinearMap.det (T.map (t.map t (Polynomial.aeval f R).asHom.hom)) = ψ d := by
@@ -142,7 +147,7 @@ theorem charpoly_map_eq : ∀ (p : ℕ) [Fact p.Prime] (T : Theory p) (k : Type)
       have habs := GlobalTheory.Dieu.AbsDet.norm_det_eq_norm_deg p T k A G t ψ (Polynomial.aeval f R) d hd
       have hd' : LinearMap.det (Polynomial.aeval (T.map (t.map t f.asHom.hom)) R) = ψ d := by
         rw [← hd]; exact congrArg LinearMap.det (rho_aeval T t f R).symm
-      rw [GlobalTheory.T.prod_aeval_padicRoots_charpoly_eq_det p (WittVector p k) (T.M G) ψ _ P R d hψ hP hd']
+      rw [_root_.GlobalTheory.prod_aeval_aroots_padic_eq_det p (WittVector p k) (T.M G) ψ _ P R d hψ hP hd']
       have hQ : (charpoly f).map (Int.castRingHom ℚ_[p]) =
           ((charpoly f).map (Int.castRingHom ℚ)).map (algebraMap ℚ ℚ_[p]) := by
         rw [Polynomial.map_map]; congr 1 <;> exact RingHom.ext_int _ _

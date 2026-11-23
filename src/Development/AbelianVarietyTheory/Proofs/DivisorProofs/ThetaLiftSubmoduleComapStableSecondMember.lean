@@ -4,8 +4,9 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.FramedDConst
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ActAtApply
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.HoweDualityReal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchActionReadingsCompatible
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIndefiniteUnitaryLieAlgAddISmulEqStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOneParameterSubgroupUnitaryOfRealPlaceLieAStatement
+public import Formalism.LocalRingCardinality.DataTheta
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIndefiniteUnitaryLieAlgAddISmulEq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsOneParameterSubgroupUnitaryOfRealPlaceLieA
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -89,7 +90,7 @@ theorem stab_comap_of_thetaSubInf : ∀ (F E : Type) [Field F] [NumberField F] [
       by_cases hv : v = w
       · subst hv; rw [hYw]; exact hZ
       · rw [hYv v hv]; simp [upq]
-    obtain ⟨γ, hγ, hgen⟩ := GlobalTheory.T.exists_oneParameterSubgroup_unitary_of_realPlace_lieAlg F E σ (Fin d) R S τ (incM F W.J) Complex.I C hCM hC Y hY
+    obtain ⟨γ, hγ, hgen⟩ := _root_.GlobalTheory.HoweD.exists_line_of_upqD F E σ (Fin d) R S τ (incM F W.J) Complex.I C hCM hC Y hY
     have hSD := hact γ hγ Y hgen y
     have hD := (actsLaws F (Fin n × Fin d) _ _ (Φ y)).1 _ (fun t => map_zero _) hSD
     have hmem := hN.2.2.2.1 γ hγ (Φ y) hy _ hD
@@ -98,7 +99,7 @@ theorem stab_comap_of_thetaSubInf : ∀ (F E : Type) [Field F] [NumberField F] [
       Module.End.one_apply, map_add, map_smul] at hmem
     exact (N.add_mem_iff_left (N.smul_mem _ hy)).1 hmem
   intro Z y hy
-  obtain ⟨A, hA, B, hB, rfl⟩ := GlobalTheory.T.exists_indefiniteUnitaryLieAlg_add_I_smul_eq _ _ Z
+  obtain ⟨A, hA, B, hB, rfl⟩ := _root_.GlobalTheory.HoweD.upq_span _ _ Z
   rw [map_add (f := _), map_smul, LinearMap.add_apply, LinearMap.smul_apply]
   exact add_mem (key A hA y hy) (Submodule.smul_mem _ _ (key B hB y hy))
 

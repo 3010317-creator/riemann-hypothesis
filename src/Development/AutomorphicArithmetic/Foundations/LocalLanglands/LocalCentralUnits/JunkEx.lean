@@ -5,7 +5,8 @@ public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.Chevall
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ConjLMemWeil
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExtensionUnramifiedAtOnePlace
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalArtinMapUniqueTransportPlaceIso
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GlobalArtinReciprocityHolds
+public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
+public import CompanionTheory.AutomorphicTheory.PlaceSeparation.IsOpenQuotientMapArt0
 public import Development.AutomorphicArithmetic.Foundations.LocalLanglands.LocalCentralUnits.ArtEx
 public import Development.AutomorphicArithmetic.WhittakerHecke.CardResidueFieldAdicCompletionIntegersEqAbsNorm
 public import Development.AutomorphicArithmetic.WhittakerHecke.ContinuousInertiaRestrictionOfCompat
@@ -13,10 +14,10 @@ public import Development.AutomorphicArithmetic.WhittakerHecke.ExistsAdicComplet
 public import Development.AutomorphicArithmetic.WhittakerHecke.ExistsNumberFieldExtensionPlaceFrobeniusDegree
 public import Development.AutomorphicArithmetic.WhittakerHecke.ExistsUnitResidueLogarithmOfRootsOfUnity
 public import Development.AutomorphicArithmetic.WhittakerHecke.TameInertiaCharacterFrobeniusConjEqPow
-import Development.DiscreteGroups.GlobalIrreducibility.DzApprox
 public import Development.DiscreteGroups.GlobalIrreducibility.DzGalRes
-import Development.DiscreteGroups.GlobalIrreducibility.DzNormV
 public import Development.DiscreteGroups.GlobalIrreducibility.ExistsIneOfVEqOne
+import Development.DiscreteGroups.GlobalIrreducibility.DzApprox
+import Development.DiscreteGroups.GlobalIrreducibility.DzNormV
 import Formalism.LocalRingCardinality.SpanPowerMembership.LocAtA
 import GroundTheory.LocalFields.PadicLogSeries
 import Mathlib.Algebra.Order.Floor.Extended
@@ -292,7 +293,7 @@ private theorem junkData (E Ω : Type) [Field E] [NumberField E] [Field Ω] [Alg
       simp [AlgEquiv.mul_apply]
     have hP : PlaceIso A u A u (frob h : G E Ω).toRingEquiv (s.toRingEquiv : L →+* L) i :=
       ⟨fun z => apply_mem_iff_of_mem_Dec hφ.1 z, hs, hic, hil⟩
-    have e := isLocalArtin_transport GlobalTheory.globalArtinReciprocity_holds GlobalTheory.Published.chevalleyUnits' L Ω A u hu L Ω A u hu
+    have e := isLocalArtin_transport _root_.CompanionTheory.FamInh.globalArtin GlobalTheory.Published.chevalleyUnits' L Ω A u hu L Ω A u hu
       _ _ i hP a a ha ha _ _ hW
     have hiϖ : i ϖ = ϖ := by
       rw [hϖdef, hil]

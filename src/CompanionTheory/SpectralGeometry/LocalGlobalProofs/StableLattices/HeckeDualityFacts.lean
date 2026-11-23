@@ -1,9 +1,10 @@
 module
 
 public import CompanionTheory.RealGroups.DiscreteSeries.DiscreteSeriesClassification.DiscreteSeriesExhaustion.HeckeAlgebraActions.BackStable
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.CayleyHamiltonStatementStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.HeckeNonVanishingStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.InfinitesimalCharacterStatementStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.CayleyHamiltonStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.HeckeNonVanishing
+public import CompanionTheory.RealGroups.DiscreteSeries.DiscreteSeriesClassification.DiscreteSeriesExhaustion.IsSimpleTriv
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.InfinitesimalCharacterStatement
 import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.QuantumDeterminantEquality
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -176,7 +177,7 @@ theorem stepSub_tw (X : GMod n) (z : ℂ) : stepSub (tw X) (-z) = backSub X z :=
 
 theorem dual_cayley (X : GMod n) (χ : Fin n → ℂ) (h : HasChar X χ) :
     ∃ K : ℕ, ((List.ofFn fun t : Fin n => omD X - (-χ t - cn n) • (1 : Module.End ℂ (Fin n → X.V))).prod) ^ K = 0 := by
-  obtain ⟨K, hK⟩ := GlobalTheory.T.CayleyHamiltonHk n (tw X) (-χ) (hasChar_tw h)
+  obtain ⟨K, hK⟩ := _root_.GlobalTheory.CompanionTheory.RgExhHecke.CayleyOm.cayleyHam n (tw X) (-χ) (hasChar_tw h)
   refine ⟨K, ?_⟩
   have e : (fun t : Fin n => om (tw X) - ((-χ) t - cn n) • (1 : Module.End ℂ (Fin n → (tw X).V))) =
       fun t : Fin n => omD X - (-χ t - cn n) • (1 : Module.End ℂ (Fin n → X.V)) := by
@@ -188,7 +189,7 @@ theorem dual_cayley (X : GMod n) (χ : Fin n → ℂ) (h : HasChar X χ) :
 
 theorem dual_nonvan (X : GMod n) (χ : Fin n → ℂ) (h : HasChar X χ) (s : Fin n) (hne : Nontrivial X.V)
     (hfree : ∀ r, χ r ≠ χ s - 1) : backSub X (χ s) ≠ ⊥ := by
-  have := GlobalTheory.T.HeckeNonVanishing n (tw X) (-χ) s (hasChar_tw h) hne (fun r e => hfree r (by
+  have := _root_.GlobalTheory.CompanionTheory.RgExhHecke.NonVanProof.nonVan n (tw X) (-χ) s (hasChar_tw h) hne (fun r e => hfree r (by
     simp only [Pi.neg_apply] at e
     linear_combination -e))
   have t : stepSub (tw X) (-χ s) ≠ ⊥ := this
@@ -222,7 +223,7 @@ theorem dual_char (X : GMod n) (χ : Fin n → ℂ) (h : HasChar X χ) (s : Fin 
     (hB : ∀ a b, ∀ x ∈ backSub X (χ s), (tensD X).E a b x ∈ backSub X (χ s)) :
     HasChar (back X (χ s) hB) (χ - Pi.single s 1) := by
   have hT : HasChar (tw (step (tw X) (-χ s))) (-(-χ + Pi.single s 1)) :=
-    hasChar_tw (GlobalTheory.T.InfinitesimalCharacterStatement n (tw X) (-χ) s (hasChar_tw h))
+    hasChar_tw (_root_.GlobalTheory.CompanionTheory.RgExhHecke.StepCharPf.stepChar n (tw X) (-χ) s (hasChar_tw h))
   have e : -(-χ + Pi.single s 1) = χ - Pi.single s 1 := by
     rw [neg_add, neg_neg, sub_eq_add_neg]
   rw [e] at hT

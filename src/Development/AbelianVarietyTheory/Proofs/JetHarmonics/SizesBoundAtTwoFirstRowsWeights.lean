@@ -3,11 +3,14 @@ module
 public import Formalism.LocalToGlobal.ProjectiveLattices.IsThRule
 public import Formalism.LocalToGlobal.ProjectiveLattices.PartitionExtendByZeroAntitone
 public import Formalism.SharpRestriction.Divisibility.AbelianOpenPart.OEOsInjective
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CloudSizesBetweenZeroAndTwiceBStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.KappaRowsEntriesLeSizesStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MulRowsScaledWeightLeKappaRowsStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RealPlaceLabelBijectiveCardEqFStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.WeightExponentsEmbeddingsDegreeStatement
+public import Development.AbelianVarietyTheory.Definitions.Jets.CmQuadraticFormEqAlternatingForm
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CloudSizesBetweenZeroAndTwiceB
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.KappaRowsEntriesLeSizes
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MulRowsScaledWeightLeKappaRows
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RealPlaceLabelBijectiveCardEqF
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors.StChartF
+public import Formalism.LocalToGlobal.ProjectiveLattices.ThProps
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.WeightExponentsEmbeddingsDegree
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,7 +47,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.Definitions.Jets.CmQuadraticFormEqAlternatingForm
 import Development.AbelianVarietyTheory.Definitions.Jets.TwoPlaces
 import Formalism.LocalToGlobal.IndefiniteForms.IndefiniteTree.DepthCond
 
@@ -82,9 +84,9 @@ theorem sizes_two_arith (T f q m v A S C b Sc η : ℝ) (hf : 0 ≤ f) (hq : 0 �
 theorem sizes_bound_two : ∀ (D : D7) (L : SizeData₂ D) (Pm : ParameterChoice' D L) (Tp : ParamsT D L Pm) (hK : DV.KapDef D) (Q : Par D), Q.Pins → 3 ≤ L.sc.x → (D.R.k : ℝ) * L.sc.b' ≤ L.sc.b → ∀ C : ℝ, 1 ≤ C → ∀ j, InR D j → ∃ Ap : ℝ, 0 ≤ Ap ∧ (∀ τ, InPsi Q.H τ → (wtA (lR Tp hK j) (τ, 0) : ℝ) ≤ Ap) ∧ (open Classical in (Tp.TO : ℝ) * ((D.R.f : ℝ) * (Q.Dw j).q * (1 + vd2 D / 2) * Ap + (Q.Dw j).q * ∑ τ ∈ Finset.univ.filter (fun τ => ¬ InPsi Q.H τ), (wtA (lR Tp hK j) (τ, 0) : ℝ)) ≤ C * D.R.m * (2 + vd2 D) * (2 * (D.R.f : ℝ) * L.sc.b + (D.R.f : ℝ) * (L.Sc + L.etaSz))) := by
   classical
   intro D L Pm Tp hK Q hQ hx hkb C hC j hj
-  obtain ⟨hSe, hw⟩ := GlobalTheory.T.cloudSizes_between_zero_and_twice_b D L Pm hx hkb
+  obtain ⟨hSe, hw⟩ := _root_.GlobalTheory.RunDepth.sizes_le_two_mul D L Pm hx hkb
   obtain ⟨hw1, -, -⟩ := hw j hj
-  obtain ⟨-, -, hP, hN, hwt⟩ := GlobalTheory.T.weightExponents_embeddings_degree D Q hQ j hj (lR Tp hK j)
+  obtain ⟨-, -, hP, hN, hwt⟩ := _root_.GlobalTheory.WeightExponents.weight_exponents D Q hQ j hj (lR Tp hK j)
   have hT : (0 : ℝ) < (Tp.TO : ℝ) := by exact_mod_cast TO_pos Tp
   have hb : 0 ≤ L.sc.b := (Real.exp_pos _).le
   have hSc := L.Sc_pos.le
@@ -94,8 +96,8 @@ theorem sizes_bound_two : ∀ (D : D7) (L : SizeData₂ D) (Pm : ParameterChoice
     unfold Formalism.L2.Pj.ext0
     split_ifs with h
     · have h1 : (Tp.TO : ℝ) * ((lR Tp hK j).aP t ⟨0, h⟩ : ℝ) ≤ ((kaR Tp hK j).aP t ⟨0, h⟩ : ℝ) := by
-        exact_mod_cast (GlobalTheory.T.mul_rows_scaledWeight_le_kappaRows D L Pm Tp hK j t).1 ⟨0, h⟩
-      obtain ⟨h2, h3, -⟩ := GlobalTheory.T.kappaRows_entries_le_sizes D L Pm Tp hK j hj t
+        exact_mod_cast (_root_.GlobalTheory.RunDepth.mul_rows_lR_le_kaR D L Pm Tp hK j t).1 ⟨0, h⟩
+      obtain ⟨h2, h3, -⟩ := _root_.GlobalTheory.WeightRows.kappa_entries_le D L Pm Tp hK j hj t
       rcases Nat.lt_or_ge 0 (D.R.k - 1) with hk | hk
       · have := h2 ⟨0, h⟩ hk
         have := (hw1 t).2
@@ -108,8 +110,8 @@ theorem sizes_bound_two : ∀ (D : D7) (L : SizeData₂ D) (Pm : ParameterChoice
     unfold Formalism.L2.Pj.ext0
     split_ifs with h
     · have h1 : (Tp.TO : ℝ) * ((lR Tp hK j).aM t ⟨0, h⟩ : ℝ) ≤ ((kaR Tp hK j).aM t ⟨0, h⟩ : ℝ) := by
-        exact_mod_cast (GlobalTheory.T.mul_rows_scaledWeight_le_kappaRows D L Pm Tp hK j t).2.1 ⟨0, h⟩
-      exact h1.trans ((GlobalTheory.T.kappaRows_entries_le_sizes D L Pm Tp hK j hj t).2.2 _)
+        exact_mod_cast (_root_.GlobalTheory.RunDepth.mul_rows_lR_le_kaR D L Pm Tp hK j t).2.1 ⟨0, h⟩
+      exact h1.trans ((_root_.GlobalTheory.WeightRows.kappa_entries_le D L Pm Tp hK j hj t).2.2 _)
     · simpa using hη
   refine ⟨(2 * L.sc.b + L.Sc) / Tp.TO, by positivity, ?_, ?_⟩
   · intro τ hτ
@@ -123,7 +125,7 @@ theorem sizes_bound_two : ∀ (D : D7) (L : SizeData₂ D) (Pm : ParameterChoice
       (vd2_nonneg_of_D7 D) hC hb hSc hη (by field_simp) ?_
     rw [Finset.mul_sum]
     have hcard : (Finset.univ.filter (fun τ => ¬ InPsi Q.H τ)).card ≤ D.R.f := by
-      rw [← (GlobalTheory.T.realPlaceLabel_bijective_card_eq_f D).2, ← Finset.card_univ]
+      rw [← (_root_.GlobalTheory.RunDepth.plOf_bijective_card D).2, ← Finset.card_univ]
       refine le_trans (Finset.card_le_card ?_)
         (Finset.card_image_le (f := fun t => ComplexEmbedding.conjugate (DV.tauEmb D t)))
       intro τ hτ

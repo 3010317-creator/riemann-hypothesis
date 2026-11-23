@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEquivOfBases
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RowFormClassSumPrincipalEqCardMulLevel
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsAbsIrrCharCompIff
 import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.LatAtLattice
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RowFormClassSumPrincipalEqCardMulLevelStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -38,7 +39,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsAbsIrrCharCompIff
 
 @[expose] public section
 
@@ -82,7 +82,7 @@ theorem ipLev_zOf (x y : Fin (dimP W Ch sel mu P hX) → X.K) :
       Formalism.DivisionValues.hform (HPm W Ch sel mu P hX) x y := by
   have hP : (Nat.card P.grp : X.K) ≠ 0 := Nat.cast_ne_zero.2 Nat.card_pos.ne'
   refine mul_left_cancel₀ hP ?_
-  rw [← GlobalTheory.T.rowFormClassSum_principal_eq_card_mul_level W Ch sel mu P hX, ipK_zOf]
+  rw [← _root_.GlobalTheory.Mem.ColTie.ipK_eq_card_mul_ipLev W Ch sel mu P hX, ipK_zOf]
   exact LiftForms.csum_lvlForm _ _ _ _ x y
 
 end Gen

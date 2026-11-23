@@ -2,18 +2,25 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.RingSpecNormalisedCharacterEq
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TypeIdempotentCoeffAcrossLayers
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DepthZeroLabelsOfLabelLaws
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BaseChangeNonempty
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CuspParamOfGreenParametrisationStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCoupledTameInertiaGeneratorStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEquivariantLabelMapTwistCuspidalLabelStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsPlaceIsTeichmullerLiftFbarStatement
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GoodTupleConditionOfIdempotentZero
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GreenSeriesIdempotentEqClassFunctionIdempotentStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InertiaTwoPlacesOverSamePrimeTrivialMeetStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MuZeroCharLocKCongruentRationalIntegerStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TameInertiaRepresentativeResidueStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.GreenCuspidalIff
+public import Formalism.LocalToGlobal.NormalizedHeckeFactors.CoeffZeroNeOfMonicIrr
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CuspParamOfGreenParametrisation
+public import Formalism.LocalToGlobal.NormalizedHeckeFactors.TypesDefs
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataN
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsCoupledTameInertiaGenerator
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEquivariantLabelMapTwistCuspidalLabel
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsPlaceIsTeichmullerLiftFbar
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GreenSeriesIdempotentEqClassFunctionIdempotent
+public import ReciprocityTheory.GaloisValuations.Global
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.InertiaTwoPlacesOverSamePrimeTrivialMeet
+public import Formalism.LocalToGlobal.UnitaryNorms.CharHost
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MuZeroCharLocKCongruentRationalInteger
+public import Formalism.LocalToGlobal.NormalizedHeckeFactors.RingHomOfBaseOrderToFraction
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TameInertiaRepresentativeResidue
 public import Formalism.SharpRestriction.GenusPolyhedralBounds.RelativeIndexClassSets.LevGapSplit
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DepthZeroLabelsOfLabelLaws
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GoodTupleConditionOfIdempotentZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -85,7 +92,7 @@ theorem exists_tame_generators_cuspidal_labelling : GlobalTheory.Published.Green
     intro k v
     haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
     haveI := D.nd.acOm
-    exact GlobalTheory.T.exists_coupled_tame_inertia_generator D.host.E D.nd.Om (D.nd.plOm.1 (D.naut.plGw k v)) (D.naut.plGw k v) (D.nd.plOm.2 _)
+    exact _root_.GlobalTheory.TameCoupledEx.exists_coupled_tame_generator D.host.E D.nd.Om (D.nd.plOm.1 (D.naut.plGw k v)) (D.naut.plGw k v) (D.nd.plOm.2 _)
       (D.host.g k) (D.naut.plGw_over k v)
       (Formalism.MainNotions.Gaps.LevGap.natCast_notMem_sq_of_split _ (D.host.g_prime k) (D.nd.g_split k) _ (D.naut.plGw_over k v))
       _ (isGenSys_gen _)
@@ -118,7 +125,7 @@ theorem exists_tame_generators_cuspidal_labelling : GlobalTheory.Published.Green
   refine ⟨L, hZ, hη, hE, ⟨hT.pl, hT.teich, hT.chi, hT.ser⟩, rfl, HEq.rfl, HEq.rfl, HEq.rfl, ?_, ?_, rfl,
     HEq.rfl, HEq.rfl, HEq.rfl, HEq.rfl⟩
   · have hteich := fun k => haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
-      GlobalTheory.T.exists_place_isTeichmuller_lift_Fbar (D.host.g k) (D.ntypes.teichC k) (D.ntypes.teichC_inj k)
+      _root_.GlobalTheory.TeichPlace.exists_place_isTeich (D.host.g k) (D.ntypes.teichC k) (D.ntypes.teichC_inj k)
     choose tA tκ hTe using hteich
     have hlab : ∀ k, haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
         ∃ O : Formalism.IrreducibleCountingLemmas.TYPES.LabelMap (ZMod (D.host.g k))
@@ -127,12 +134,12 @@ theorem exists_tame_generators_cuspidal_labelling : GlobalTheory.Published.Green
             ∀ f, D.ntypes.eSer k f = eSerO O D.R.r f := by
       intro k
       haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
-      obtain ⟨O, hO1, hO2, hO3⟩ := GlobalTheory.T.exists_equivariant_labelMap_twist_cuspidalLabel (ZMod (D.host.g k)) _
-        (GlobalTheory.T.cuspParam_of_greenParametrisation hG (D.host.g k) (D.ntypes.teichC k) (D.ntypes.teichC_inj k)
+      obtain ⟨O, hO1, hO2, hO3⟩ := _root_.GlobalTheory.CuspTwist.exists_labelMap_twist_cuspLabel (ZMod (D.host.g k)) _
+        (_root_.GlobalTheory.GreenParam.cuspParam_of_green hG (D.host.g k) (D.ntypes.teichC k) (D.ntypes.teichC_inj k)
           (GlobalTheory.Mem.TypePl.labDat (D.host.g k)).gen (isGenSys_gen _))
       have hr : 1 ≤ D.R.r := by unfold Ranks.r; have := D.R.two_le_m; omega
       exact ⟨O, hO1, hO2, fun f => (hT.ser k f).trans
-        (GlobalTheory.T.greenSeriesIdempotent_eq_classFunctionIdempotent hG _ _ _ _ _ (hT.teich k) O hO3 D.R.r f hr)⟩
+        (_root_.GlobalTheory.SerCmp.eSerC_eq_eSerO hG _ _ _ _ _ (hT.teich k) O hO3 D.R.r f hr)⟩
     choose O hOe hOt hOs using hlab
     exact ⟨{ tA := tA, tκ := tκ, teichC_def := hTe
              ζ := fun k => haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩; (GlobalTheory.Mem.TypePl.labDat (D.host.g k)).gen
@@ -142,17 +149,17 @@ theorem exists_tame_generators_cuspidal_labelling : GlobalTheory.Published.Green
     haveI : Fact (D.host.g k).Prime := ⟨D.host.g_prime k⟩
     haveI := D.nd.acOm
     have hP := D.nd.plOm.2 (D.naut.plGw k v)
-    obtain ⟨a, ha, hua, hga⟩ := GlobalTheory.T.tameInertia_representative_residue D.host.E D.nd.Om (D.nd.plOm.1 (D.naut.plGw k v)) (D.naut.plGw k v)
+    obtain ⟨a, ha, hua, hga⟩ := _root_.GlobalTheory.tameRep_residue D.host.E D.nd.Om (D.nd.plOm.1 (D.naut.plGw k v)) (D.naut.plGw k v)
       (D.host.g k) hP (GlobalTheory.TameLabels.normV_eq_of_split (D.host.g_prime k) (D.nd.g_split k) (D.naut.plGw_over k v))
       (D.naut.plGw_over k v)
       (Formalism.MainNotions.Gaps.LevGap.natCast_notMem_sq_of_split _ (D.host.g_prime k) (D.nd.g_split k) _ (D.naut.plGw_over k v))
       (kv k v) (tg k v) _ (tg_mem k v) (isGenSys_gen _) (tg_coup k v)
-      (fun A' hA' hσ hne => GlobalTheory.T.inertia_two_places_over_same_prime_trivial_meet D.host.E D.nd.Om _ _ _ hP hA' (tg k v) (tg_mem k v) hσ hne) u hrep
+      (fun A' hA' hσ hne => _root_.GlobalTheory.InertiaTwoPlaces.eq_of_mem_Ine_of_mem_Ine D.host.E D.nd.Om _ _ _ hP hA' (tg k v) (tg_mem k v) hσ hne) u hrep
     refine ⟨(D.nd.chiT k v j)⁻¹, Or.inr rfl, ?_⟩
     change ((((cf.mu0 j).locK (D.naut.plGw k v)) (Units.mk0 (((show 𝓞 D.host.E from u) : 𝓞 D.host.E) : D.host.E) hu) : ℂˣ) : ℂ) =
       (D.ntypes.teichC k) ((algebraMap (ZMod (D.host.g k)) (Formalism.CyclotomicNorms.Fbar (D.host.g k)))
         (((D.nd.chiT k v j)⁻¹ : (ZMod (D.host.g k))ˣ) : ZMod (D.host.g k)))
-    rw [GlobalTheory.T.muZeroChar_locK_congruent_rational_integer cf.P cf.W _ _ _ (cf.isMu0 j) k _ (hT.pl k v) u hu a ha hua, hT.teich k, hT.chi k v j]
+    rw [_root_.GlobalTheory.MuZeroCong.locK_eq_of_sub_mem cf.P cf.W _ _ _ (cf.isMu0 j) k _ (hT.pl k v) u hu a ha hua, hT.teich k, hT.chi k v j]
     have hlabel := (GlobalTheory.Mem.Top.isCharLab_omLab cf.W k).2 (ZMod.unitOfCoprime a ha) (by simpa using hga)
     have key : ∀ z : Formalism.CyclotomicNorms.Fbar (D.host.g k), z ≠ 0 →
         (GlobalTheory.Mem.TypePl.labDat (D.host.g k)).teich z⁻¹ = ((GlobalTheory.Mem.TypePl.labDat (D.host.g k)).teich z)⁻¹ :=

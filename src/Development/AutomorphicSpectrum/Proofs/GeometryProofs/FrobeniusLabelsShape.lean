@@ -3,9 +3,10 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsLatFlagPair
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.HeckeSectionsIsotropicCommutatorPairingPower
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FinrankFiniteFlatTorsionSubschemeEqCardPoints
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.AbelianFrobeniusLift
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FrobeniusShapeOfSidePreserving
 import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ImaginaryRootConj
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.AbelianFrobeniusLiftStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FrobeniusShapeOfSidePreservingStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -151,10 +152,10 @@ end Labels
 theorem exists_frob_labels : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] [IsGalois ℚ E], (∀ a b : E ≃ₐ[ℚ] E, a * b = b * a) → ∀ (H : Host E) (l : Level H) (c : Coeff l) [Fintype (CMType H)] [DecidableEq (CMType H)], ∃ φ : ℕ → Equiv.Perm (CMType H ⊕ CMType H), (∀ p : ℕ, p.Prime → IsFrobLabels c p (φ p)) ∧ FrobShape fun p τ n => (φ p ^ (n + 1)) (Sum.inl τ) := by
   intro E _ _ _ _ hab H l c _ _
   classical
-  have h := GlobalTheory.T.abelian_frobenius_lift E hab
+  have h := _root_.GlobalTheory.CompanionTheory.Ar.Num.exists_frobenius_all_primes E hab
   let φ : ℕ → Equiv.Perm (CMType H ⊕ CMType H) := fun p =>
     if hp : p.Prime then labelPerm H (h p hp).choose else 1
-  refine ⟨φ, fun p hp => ?_, GlobalTheory.T.frobenius_shape_of_side_preserving _ φ fun p => ?_⟩
+  refine ⟨φ, fun p hp => ?_, _root_.GlobalTheory.CompanionTheory.Ar.Num.frobShape_of_side _ φ fun p => ?_⟩
   · simp only [φ, dif_pos hp]
     exact labelPerm_isFrobLabels c p _ (h p hp).choose_spec
   · by_cases hp : p.Prime

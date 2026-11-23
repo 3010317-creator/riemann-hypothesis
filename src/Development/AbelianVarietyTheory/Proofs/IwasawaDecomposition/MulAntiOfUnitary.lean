@@ -4,19 +4,30 @@ public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.ExistsSigmaList
 public import Formalism.LocalToGlobal.BesselHermitianTheta.TiedDef
 public import Development.AbelianVarietyTheory.Counterexamples.HeightSurvey.ConjAtFixedIff
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
+public import Formalism.SatakeDualWeyl.Statement
+public import Formalism.FormalDegreeBessel.StatementG
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DefiniteHermitianEqPmGramUnitaryCompact
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DifferentiableOneP
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.InnerProductSpace.Basic
+public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+public import Mathlib.LinearAlgebra.Eigenspace.Basic
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteDimensionalEigenspaceSumSqInvariantFieldsA
+public import Mathlib.Basic.Complex.Basic
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteDimensionalKerAevalOfEigenspaces
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IntertwineAeval
+public import Development.AbelianVarietyTheory.BlockTheory.HeightDefect.WordDerivatives
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.QuadraticGelfandInvariantEqNegSumSqDefinite
+public import Mathlib.Analysis.Calculus.ContDiff.Defs
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SmoothOfFiniteDimensionalTranslationStable
+public import Formalism.LocalToGlobal.GlobalTheory.GL5.FamilyMassVolumeIdentityOfClassDecomp
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryActionAtRealPlace
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.AdelicUnitaryRealPointsStructureRealPlaces
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.RightDerivativeAlongLieSmoothAndLinear
 import Development.AbelianVarietyTheory.Proofs.HeightProofs.UnitaryLieGeneratorsRep
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOnAtTau
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DefiniteHermitianEqPmGramUnitaryCompactStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DifferentiableOneP
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteDimensionalEigenspaceSumSqInvariantFieldsAStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteDimensionalKerAevalOfEigenspacesStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IntertwineAeval
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.QuadraticGelfandInvariantEqNegSumSqDefiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SmoothOfFiniteDimensionalTranslationStableStatement
-public import Formalism.LocalToGlobal.GlobalTheory.GL5.FamilyMassVolumeIdentityOfClassDecomp
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -174,8 +185,8 @@ theorem finite_ker (H : IsLieData σ j s) (hl : HasLog σ j) (hc : IsCompact {a 
   have := compactSpace_uGrp H hc
   have : FiniteDimensional ℝ L := FiniteDimensional.of_injective j H.inj
   have H' := isLieData_toU H
-  refine GlobalTheory.T.finiteDimensional_ker_aeval_of_eigenspaces' _ _ (fun lam => ?_) p hp
-  refine GlobalTheory.T.finiteDimensional_eigenspace_sum_sq_invariantFields_alt (uGrp H) L _ (fun f hf => ?_) (expMap j (toU H)) (fun Y => ?_) ?_ (fun r hr => ?_) _
+  refine _root_.GlobalTheory.finiteDimensional_ker_aeval_of_eigenspaces _ _ (fun lam => ?_) p hp
+  refine _root_.GlobalTheory.finiteDimensional_eigenspace_sum_sq_invariantFields (uGrp H) L _ (fun f hf => ?_) (expMap j (toU H)) (fun Y => ?_) ?_ (fun r hr => ?_) _
     (derOp_add _ hl) (derOp_smul _ hl) (fun Y f x t => hasDerivAt_sm H' f.2 Y x t) ι X hX lam
   · refine ((continuousOn_of_sm H' hl hf 1).comp_continuous (continuous_val H) fun k => k.2).congr fun k => ?_
     simp only [Function.comp, one_mul, toU_coe]
@@ -268,7 +279,7 @@ variable {D : D7} {θ : InfF D} {V : HSp D}
 theorem frame_at (hs : V.SigOK) (hd : V.IsDefinite) (τ : D.what₂.Tau) :
     (∃ B : Matrix (Fin V.rank) (Fin V.rank) ℂ, IsUnit B.det ∧ (gramAt D V τ = Bᴴ * B ∨ gramAt D V τ = -(Bᴴ * B))) ∧
       IsCompact (Formalism.QuantumDeterminants.UH (gramAt D V τ)) :=
-  GlobalTheory.T.definite_hermitian_eq_pm_gram_unitary_compact _ _ _ _ (hs (tauE D τ)) (by rcases hd (tauE D τ) with h | h <;> simp [h])
+  _root_.GlobalTheory.DefiniteFrame.definite_frame _ _ _ _ (hs (tauE D τ)) (by rcases hd (tauE D τ) with h | h <;> simp [h])
 
 theorem isCompact_unitary (R : RealPoints θ V) (hs : V.SigOK) (hd : V.IsDefinite) :
     IsCompact {u : AlgInf V | sigInf V u * u = 1} := by
@@ -288,7 +299,7 @@ theorem gelf_one (R : RealPoints θ V) (hs : V.SigOK) (hd : V.IsDefinite) (τ : 
     ∃ X : Fin V.rank × Fin V.rank × Bool → LieAt V τ, Submodule.span ℝ (Set.range X) = ⊤ ∧ ∀ f : SmF θ V,
       ((∑ i, opInf R (atPlace V τ (X i)) * opInf R (atPlace V τ (X i))) f).1 = -gelf θ V τ 1 f.1 := by
   obtain ⟨B, hB, hJ⟩ := (frame_at hs hd τ).1
-  obtain ⟨X, hX, h⟩ := GlobalTheory.T.quadraticGelfandInvariant_eq_neg_sum_sq_definite _ _ B hB hJ
+  obtain ⟨X, hX, h⟩ := _root_.GlobalTheory.DefiniteUnitaryCasimir.casimir_eq_neg_sum_sq _ _ B hB hJ
   obtain ⟨P, Q, hPQ, -⟩ := GlobalTheory.UnitaryLieComplexification.glRel_and_span _ _ (R.1 τ).1 (R.1 τ).2
   have h1 := h P Q hPQ _ (fun Y => opInf R (atPlace V τ Y)) (opAt_add R τ) (opAt_smul R τ)
   refine ⟨X, hX, fun f => ?_⟩
@@ -366,7 +377,7 @@ theorem sm_of_kfin (hθ : IsInfFam θ) (hs : V.SigOK) (hd : V.IsDefinite) {φ : 
     | zero => exact zero_mem _
     | add x y _ _ hx hy => exact add_mem hx hy
     | smul c x _ hx => exact M.smul_mem c hx
-  obtain ⟨h1, h2⟩ := GlobalTheory.T.deriv_mem_and_contDiff_of_translation_stable (GA D V) M (Σ τ, LieAt V τ) (fun i t => oneP θ V i.1 i.2.1 t)
+  obtain ⟨h1, h2⟩ := _root_.GlobalTheory.smooth_of_finiteDimensional_translation_stable (GA D V) M (Σ τ, LieAt V τ) (fun i t => oneP θ V i.1 i.2.1 t)
     (fun i a b => by
       simp only [oneP_eq R]
       exact expMap_add (isLieData R) _ a b)

@@ -1,14 +1,15 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.IsMultZero
-import Aesop.Main
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DifferentiableAtOfSmooth
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.KernelActionEquivariantStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LengthFunctionFactsHoldStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RightDerivativeCalculusHoldsStatement
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.ArchimedeanGelfandKernels.WaveSt
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LengthFunctionFactsHold
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RightDerivativeCalculusHolds
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SecondCountableG
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WaveSolutionExistence
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.HeckeFubiniCompatibility.MultHasCompactSupport
+import Aesop.Main
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WaveSolutionExistence
 import GroundTheory.AutomorphicForms.RealGroups
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -205,7 +206,7 @@ theorem act_contDiffOn (M : KMod n)
     {k : Mat n → (M.V →L[ℂ] M.V)} (hk : ContDiffOn ℝ ∞ k (GLs n)) {R : ℝ} (hR : ∀ y ∈ GLs n, R < lg y → k y = 0)
     {F : Mat n → M.V} (hF : ContinuousOn F (GLs n)) : ContDiffOn ℝ ∞ (act μ M k F) (GLs n) := by
   haveI : ProperSpace (Mat n) := inferInstanceAs (ProperSpace (Fin n → Fin n → ℂ))
-  have hL := GlobalTheory.T.length_function_facts_hold
+  have hL := _root_.GlobalTheory.CompanionTheory.LengthGL.lgFacts
   have hCl := GlobalTheory.CompanionTheory.WaveK.Word.cl_kK hL hk hR
   have hG : Good (GLs n) lg (GlobalTheory.CompanionTheory.WaveK.Word.kK k) := ⟨hCl.smooth, hCl.supp⟩
   have hv : Continuous (fun y : G n => (y.val : Mat n)) := Units.continuous_val
@@ -218,7 +219,7 @@ theorem act_mem_CE (M : KMod n)
     {k : Mat n → (M.V →L[ℂ] M.V)} (hk : ContDiffOn ℝ ∞ k (GLs n)) {R : ℝ} (hR : ∀ y ∈ GLs n, R < lg y → k y = 0)
     (hkq : ∀ y ∈ GLs n, ∀ k₁ : Matrix.unitaryGroup (Fin n) ℂ, k (k₁.1 * y) = M.ρ k₁ * k y)
     {F : Mat n → M.V} (hF : ContinuousOn F (GLs n)) : act μ M k F ∈ CE M :=
-  ⟨act_contDiffOn μ M hk hR hF, (GlobalTheory.T.kernel_action_equivariant GlobalTheory.T.length_function_facts_hold n μ M k F ⟨hk.continuousOn, R, hR⟩ hF hkq).2⟩
+  ⟨act_contDiffOn μ M hk hR hF, (GlobalTheory.T.kernel_action_equivariant _root_.GlobalTheory.CompanionTheory.LengthGL.lgFacts n μ M k F ⟨hk.continuousOn, R, hR⟩ hF hkq).2⟩
 
 section Clm
 
@@ -251,7 +252,7 @@ theorem Epow_clm (T : V →L[ℂ] W) (s : Bool) {f : Mat n → V} (hf : ContDiff
     simp only [Epow, Finset.sum_apply, map_sum]
     refine Finset.sum_congr rfl fun c _ => ?_
     rw [GlobalTheory.CompanionTheory.WaveAll.Eu_congr GlobalTheory.CompanionTheory.WaveAll.isOpen_GLs (ih c b) s a c hx]
-    exact Eu_clm T s a c (GlobalTheory.CompanionTheory.WaveAll.Epow_smooth GlobalTheory.T.right_derivative_calculus_holds hf s m c b) hx
+    exact Eu_clm T s a c (GlobalTheory.CompanionTheory.WaveAll.Epow_smooth _root_.GlobalTheory.CompanionTheory.RCalc.rcalc hf s m c b) hx
 
 theorem gel_clm (T : V →L[ℂ] W) (s : Bool) (m : ℕ) {f : Mat n → V} (hf : ContDiffOn ℝ ∞ f (GLs n)) {x : Mat n}
     (hx : x ∈ GLs n) : gel s m (fun x => T (f x)) x = T (gel s m f x) := by

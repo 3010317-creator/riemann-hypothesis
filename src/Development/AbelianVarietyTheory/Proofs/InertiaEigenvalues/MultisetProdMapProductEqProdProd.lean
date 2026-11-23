@@ -2,10 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SchurEqJtDet
 public import Development.AbelianVarietyTheory.Definitions.Divisors.UnrOutside
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CauchyIdentitySchurFormalDegreeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EulerInversePowerSeriesEvalOneStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HasSumRegroupAntitonePartitionsByDegreeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MkSumProdHsymmMulProdOneSubStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CauchyIdentitySchurFormalDegree
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.RingTheory.PowerSeries.Basic
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EulerInversePowerSeriesEvalOne
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HasSumRegroupAntitonePartitionsByDegree
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.RingTheory.MvPolynomial.Symmetric.Defs
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MkSumProdHsymmMulProdOneSub
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,16 +66,16 @@ theorem cauchy_local {m n : ℕ} (hmn : m ≤ n) (α : Fin n → ℂ) (β : Fin 
   have hG : Summable fun l : {l : Fin m → ℕ // Antitone l} => ‖G l.1‖ := by
     refine hs.congr fun l => ?_
     simp [G, norm_pow]
-  obtain ⟨hsum, htrans⟩ := GlobalTheory.T.hasSum_regroup_antitonePartitions_by_degree G hG
+  obtain ⟨hsum, htrans⟩ := _root_.GlobalTheory.JSW.regroup_antiParts G hG
   have hc : (fun d => ∑ l ∈ antiParts m d, G l) = fun d => T ^ d * ∑ k ∈ Finset.Nat.antidiagonalTuple m d,
       ∏ j, MvPolynomial.eval₂ (Int.castRingHom ℂ) α (MvPolynomial.hsymm (Fin n) ℤ (k j)) * β j ^ (k j) := by
     funext d
-    rw [← GlobalTheory.T.cauchy_identity_schur_formal_degree hmn α β d, Finset.mul_sum]
+    rw [← _root_.GlobalTheory.JSW.CauchyGlue.cauchy_formal hmn α β d, Finset.mul_sum]
     refine Finset.sum_congr rfl fun l hl => ?_
     simp only [G]; rw [(mem_antiParts.1 hl).1]; ring
-  have h5 := GlobalTheory.T.mk_sum_hsymm_mul_prod_one_sub_eq_one α β T
+  have h5 := _root_.GlobalTheory.JSW.mk_sum_prod_hsymm_mul_prod_one_sub α β T
   rw [← hc] at h5
-  obtain ⟨hne, hhas⟩ := GlobalTheory.T.eulerInverse_powerSeries_eval_one _ hsum (fun p : Fin n × Fin m => α p.1 * β p.2 * T) h5
+  obtain ⟨hne, hhas⟩ := _root_.GlobalTheory.JSW.eulerInverse_eval_one _ hsum (fun p : Fin n × Fin m => α p.1 * β p.2 * T) h5
   refine ⟨fun i j => ?_, ?_⟩
   · rw [Fintype.prod_prod_type] at hne
     exact Finset.prod_ne_zero_iff.1 (Finset.prod_ne_zero_iff.1 hne i (mem_univ _)) j (mem_univ _)

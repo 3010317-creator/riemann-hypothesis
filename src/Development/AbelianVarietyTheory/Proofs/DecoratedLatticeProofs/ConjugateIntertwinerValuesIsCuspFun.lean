@@ -5,16 +5,18 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.DiscreteSeriesU
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PiCongrLeftUpdate
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DiscreteSeriesTestDataOfNoncompactGaps
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicTransportMeasureFirst
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicUnitaryHaarBiInvariantStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AestronglyMeasurableCompRep
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ConsequencesOfDsClass
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CuspidalSubspaceClosedRightTranslationStable
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsScaleNormalisedLocalReading
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FiniteAdelicUnitaryCongruenceTopology
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OneMemKg
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalUnitaryPointsDiscreteFundamentalDomainStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StrongApproximationUnitaryUnipotentRadicalStatement
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.EvalTIota
+public import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.InfFam
+import Formalism.SharpRestriction.CuspSpanNormBounds.GlobAut
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AdelicUnitaryHaarBiInvariant
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AestronglyMeasurableCompRep
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FiniteAdelicUnitaryCongruenceTopology
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalUnitaryPointsDiscreteFundamentalDomain
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.StrongApproximationUnitaryUnipotentRadical
 import Formalism.SharpRestriction.CuspSpanNormBounds.UnimodularSchurMeasures.RightRegularIsometricMultiplicative
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -52,7 +54,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.InfFam
 
 @[expose] public section
 
@@ -89,7 +90,7 @@ theorem mem_NI_iff_iota : ∀ (D : D7) {r : ℕ} (C : Matrix (Fin (D.sp.Y 0).ran
       exact hb.symm
   have hW : I.IsIsot (Submodule.span I.E (Set.range (C : Matrix (Fin I.n) (Fin r) I.E).col)) :=
     (GlobalTheory.CuspCompare.isIsot_iff I _).2 ⟨r, C, hC, rfl⟩
-  refine GlobalTheory.CuspCompare.mem_closure_iff_of_equiv T (GlobalTheory.T.strong_approximation_unitaryUnipotentRadical I _ hW).1 (fun g => ?_) g
+  refine GlobalTheory.CuspCompare.mem_closure_iff_of_equiv T (_root_.GlobalTheory.UnipApprox.strong_approximation I _ hW).1 (fun g => ?_) g
   rw [key]
   exact and_congr Iff.rfl (and_congr Iff.rfl (GlobalTheory.CuspCompare.perp_cond (incA D) hL hR _).2)
 
@@ -116,8 +117,8 @@ theorem isCuspFn_of_contRep {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSettin
   obtain ⟨hc, hi, he⟩ := hψ
   have hfund := X.B.fund_spec
   obtain ⟨hT, hL, hS, -⟩ := GlobalTheory.CongTop.adelic_topology X.B.I
-  obtain ⟨Γ, hΓ, hcΓ, -⟩ := GlobalTheory.T.rationalUnitaryPoints_discrete_fundamentalDomain X.B.I
-  obtain ⟨hl, -, -, -, hop⟩ := GlobalTheory.T.adelicUnitaryHaar_bi_invariant X.B.I X.B.μf
+  obtain ⟨Γ, hΓ, hcΓ, -⟩ := _root_.GlobalTheory.RatDiscrete.rational_points X.B.I
+  obtain ⟨hl, -, -, -, hop⟩ := _root_.GlobalTheory.AdelicUnimod.adelic_unimodular X.B.I X.B.μf
   have : BorelSpace X.B.I.GA := inferInstance
   have : (X.B.I.muA X.B.μf).IsMulLeftInvariant := ⟨hl⟩
   have : SFinite (X.B.I.muA X.B.μf) := by unfold Formalism.MainNotions.S.AutInst.muA; infer_instance

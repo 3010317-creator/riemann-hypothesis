@@ -1,8 +1,8 @@
 module
 
 public import Formalism.RealPlaceAnalysis.StatementE
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CapelliLeftComatrixStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.QminorCommOfCommColumnsStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CapelliLeftComatrix
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.QminorCommOfCommColumns
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,12 +57,12 @@ theorem qdet_mul_vector (A : Type) [Ring A] [Algebra ℂ A] (m : ℕ)
     (u : ℂ) (j : Fin (m + 1)) :
     qdet E u * x j = x j * qdet E u + ∑ a : Fin (m + 1), ((-1 : ℂ) ^ ((a : ℕ) + (j : ℕ))) •
       (x a * qminor E (Fin.succAbove a) (Fin.succAbove j) (u - 1)) := by
-  have h1 := GlobalTheory.T.capelli_left_comatrix_qminor_eq A m E hE u j j
+  have h1 := _root_.GlobalTheory.capelli_left_comatrix A m E hE u j j
   rw [if_pos rfl] at h1
   have h2 : ∀ a : Fin (m + 1), qminor E (Fin.succAbove a) (Fin.succAbove j) (u - 1) * x j
       = x j * qminor E (Fin.succAbove a) (Fin.succAbove j) (u - 1) := by
     intro a
-    refine GlobalTheory.T.qminor_commute_of_commute_columns A (m + 1) m E (x j) _ _ _ ?_
+    refine _root_.GlobalTheory.qminor_comm_of_comm_columns A (m + 1) m E (x j) _ _ _ ?_
     intro c i
     rw [hx, if_neg (Fin.succAbove_ne j i), add_zero]
   have h3 : ∀ a : Fin (m + 1), Tm E u a j * x j = x j * Tm E u a j + x a := by

@@ -2,8 +2,8 @@ module
 
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.AbelContinuation
 public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.PartialSum
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ConeTilingBySignRegionsStatement
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ConeValuesNegativeIntegerRationalStatement
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ConeTilingBySignRegions
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.ConeValuesNegativeIntegerRational
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,7 +56,7 @@ theorem series_value_rational : ∀ (ι : Type) [Fintype ι] (r : ℕ) (a : ι �
   by_cases hex : ∃ i, cs.count i = N
   · obtain ⟨i, hi⟩ := hex
     refine ⟨0, ?_⟩
-    have h0 := GlobalTheory.T.high_difference_vanishes_negative_integer ι r a b cs i N p hi hN
+    have h0 := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.Abel.DL_coneTerm_neg_natCast_eq_zero ι r a b cs i N p hi hN
     simp [h0]
   · have hsupp : ∀ m : Fin r → ℕ, m ≠ 0 → u m = 0 := by
       intro m hm
@@ -67,7 +67,7 @@ theorem series_value_rational : ∀ (ι : Type) [Fintype ι] (r : ℕ) (a : ι �
       rcases hcase i with h | h
       · exact absurd ⟨i, h⟩ hex
       · exact h m hi
-    obtain ⟨ρ, hρ⟩ := GlobalTheory.T.cone_values_negative_integer_rational ι r a b p hval cs
+    obtain ⟨ρ, hρ⟩ := _root_.GlobalTheory.CompanionTheory.Hypotheses₂.Shintani.Abel.DL_coneTerm_neg_nat_rational ι r a b p hval cs
     refine ⟨u 0 * ρ 0, ?_⟩
     rw [tsum_eq_single 0 (fun m hm => by simp [hsupp m hm]), hρ 0]
     push_cast

@@ -1,13 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.NotCoboundaryConstantOne
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DerivationEqZeroOfIsAlgebraicOverPadicIntegersStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsDerivationExtendPadicLaurentToClosureStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsEqPrimePowMulNotDvdCompletedLaurentStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsMulLinearIndependentAlgebraicOverPadicInteStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsMulMemSpanAlgebraicOverPadicIntegersStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsQDerivationCompletionZpStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrimeNatCastCompletedLaurentRingOfPrimeStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DerivationEqZeroOfIsAlgebraicOverPadicIntegers
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsDerivationExtendPadicLaurentToClosure
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsEqPrimePowMulNotDvdCompletedLaurent
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsMulLinearIndependentAlgebraicOverPadicInte
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsMulMemSpanAlgebraicOverPadicIntegers
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsQDerivationCompletionZp
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PrimeNatCastCompletedLaurentRingOfPrime
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,16 +64,16 @@ open GlobalTheory.K5
 namespace GlobalTheory.K5.NotPow
 
 theorem exists_derivation_fix_q_kill_padicInt (p : ℕ) [Fact p.Prime] : ∃ D : Derivation ℤ (O0 p) (O0 p), D (qO p) = qO p ∧
-    ∀ r : ℤ_[p], D (algebraMap ℤ_[p] (O0 p) r) = 0 := GlobalTheory.T.exists_qDerivation_completion_Zp p
+    ∀ r : ℤ_[p], D (algebraMap ℤ_[p] (O0 p) r) = 0 := _root_.GlobalTheory.K5.QDer.exists_qDer p
 
 theorem derExt (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Algebra (O0 p) Ω] (h : IsClo p Ω)
     (D : Derivation ℤ (O0 p) (O0 p)) :
     ∃ E : Derivation ℤ Ω Ω, ∀ x, E (algebraMap (O0 p) Ω x) = algebraMap (O0 p) Ω (D x) :=
-  GlobalTheory.T.exists_derivation_extend_padicLaurent_to_closure p Ω h D
+  _root_.GlobalTheory.K5.DerExt.derivation_extend p Ω h D
 
 theorem derAlg (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Algebra (O0 p) Ω] (h : IsClo p Ω)
     (E : Derivation ℤ Ω Ω) (hE : ∀ r : ℤ_[p], E (algebraMap (O0 p) Ω (algebraMap ℤ_[p] (O0 p) r)) = 0) :
-    ∀ x : Ω, IsAlgZp p x → E x = 0 := GlobalTheory.T.derivation_eq_zero_of_isAlgebraicOverPadicIntegers p Ω h E hE
+    ∀ x : Ω, IsAlgZp p x → E x = 0 := _root_.GlobalTheory.K5.DerAlg.der_algZp p Ω h E hE
 
 theorem repr (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Algebra (O0 p) Ω] (h : IsClo p Ω) :
     ∀ b ∈ Subfield.closure (Set.range (algebraMap (O0 p) Ω) ∪ {x | IsAlgZp p x}),
@@ -81,15 +81,15 @@ theorem repr (p : ℕ) [Fact p.Prime] (Ω : Type) [Field Ω] [Algebra (O0 p) Ω]
       LinearIndependent (O0 p) a ∧ g ≠ 0 ∧
       algebraMap (O0 p) Ω g * b = ∑ i, algebraMap (O0 p) Ω (f i) * a i := by
   intro b hb
-  obtain ⟨g₁, hg₁, hy⟩ := GlobalTheory.T.exists_mul_mem_span_algebraicOverPadicIntegers p Ω h b hb
-  obtain ⟨n, a, f, g₂, ha, hli, hg₂, he⟩ := GlobalTheory.T.exists_mul_linearIndependent_algebraicOverPadicIntegers p Ω h _ hy
+  obtain ⟨g₁, hg₁, hy⟩ := _root_.GlobalTheory.K5.ReprSpan.exists_mul_mem_span p Ω h b hb
+  obtain ⟨n, a, f, g₂, ha, hli, hg₂, he⟩ := _root_.GlobalTheory.K5.algSpan_reprInd p Ω h _ hy
   refine ⟨n, a, f, g₂ * g₁, ha, hli, mul_ne_zero hg₂ hg₁, ?_⟩
   rw [map_mul, mul_assoc, he]
 
-theorem primeP (p : ℕ) [Fact p.Prime] : Prime (p : O0 p) := GlobalTheory.T.prime_natCast_completed_laurent_ring p
+theorem primeP (p : ℕ) [Fact p.Prime] : Prime (p : O0 p) := _root_.GlobalTheory.K5.prime_natCast_completedLaurentRing_of_prime p
 
 theorem splitP (p : ℕ) [Fact p.Prime] : ∀ x : O0 p, x ≠ 0 →
-    ∃ (k : ℕ) (y : O0 p), x = (p : O0 p) ^ k * y ∧ ¬ (p : O0 p) ∣ y := GlobalTheory.T.exists_eq_prime_pow_mul_not_dvd_O0 p
+    ∃ (k : ℕ) (y : O0 p), x = (p : O0 p) ^ k * y ∧ ¬ (p : O0 p) ∣ y := _root_.GlobalTheory.K5.Basic.exists_eq_prime_pow_mul_not_dvd_completedLaurent p
 
 theorem not_eigen (p : ℕ) [Fact p.Prime] (D : Derivation ℤ (O0 p) (O0 p)) (f g : O0 p)
     (hf : f ≠ 0) (hg : g ≠ 0) : (p : O0 p) * (g * D f - f * D g) ≠ g * f := by

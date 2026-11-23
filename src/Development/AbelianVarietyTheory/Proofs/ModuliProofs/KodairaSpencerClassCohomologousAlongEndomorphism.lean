@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.IsInvDer
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsUniqueInvariantVectorFieldOfTangentStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.InvariantVectorFieldsAlongGroupHomStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.InvariantVectorFieldsBasisVerticalDerivationsStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsUniqueInvariantVectorFieldOfTangent
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.InvariantVectorFieldsAlongGroupHom
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.InvariantVectorFieldsBasisVerticalDerivations
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -469,10 +469,10 @@ theorem GlobalTheory.KS.cohom_ksCoc_of_endomorphism : ∀ (K : Type) [Field K] (
   have hT : ∀ a, IsTangent (v a) := by
     unfold IsLieBasis at hv
     exact hv.1
-  have hb : IsBasis A₀.hom p m dd := GlobalTheory.T.invariantVectorFields_basis_verticalDerivations K A₀ g v dd hs hv hdd R x₀ X p m hpb
+  have hb : IsBasis A₀.hom p m dd := _root_.GlobalTheory.InvFieldBasis.existsUnique_coeff K A₀ g v dd hs hv hdd R x₀ X p m hpb
   have hres : ∀ a O O' (s : Γ(A₀.left, O)), O' ≤ O → dd a O' (rsT s O') = rsT (dd a O s) O' :=
-    fun a O O' s h => ((GlobalTheory.T.exists_unique_invariantVectorField_of_tangent K A₀ (v a) (hT a)).2 (dd a) (hdd a)).2.2.1 O O' s h
+    fun a O O' s h => ((_root_.GlobalTheory.KS.InvField.main K A₀ (v a) (hT a)).2 (dd a) (hdd a)).2.2.1 O O' s h
   have hend : ∀ j (O : A₀.left.Opens) (s : Γ(A₀.left, O)), dd j (f₀.left ⁻¹ᵁ O) ((f₀.left.app O).hom s) =
       ∑ a, constFn A₀.hom _ (F a j) * (f₀.left.app O).hom (dd a O s) :=
-    fun j O s => GlobalTheory.T.invariantVectorFields_along_groupHom K A₀ A₀ f₀ g v dd (v j) (dd j) (fun i => F i j) hf₀ hT (hT j) hdd (hdd j) (hF j) O s
+    fun j O s => _root_.GlobalTheory.KS.InvHom.invDer_along_hom K A₀ A₀ f₀ g v dd (v j) (dd j) (fun i => F i j) hf₀ hT (hT j) hdd (hdd j) (hF j) O s
   exact cohom_of_basis hb hc f f₀.left hp (Over.w f₀) hm F hres hend x

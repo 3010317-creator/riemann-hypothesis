@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ZlTowerGen
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoordsOneTmulSmul
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TeichmullerRootPowIdealsTendstoZeroWeakTop
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IntegersCompleteDVR
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TeichmullerRootPowIdealsTendstoZeroWeakTopStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -109,7 +109,7 @@ theorem exists_pow_wittCoords_inclR_smul_mem_nhds {l : ℕ} [Fact l.Prime] {P : 
   rw [nhds_pi] at hFV
   obtain ⟨I, -, t, ht, hIt⟩ := Filter.mem_pi.1 hFV
   have hV0 : (⋂ α, t α) ∈ 𝓝 (0 : WCb l) := Filter.iInter_mem.2 ht
-  obtain ⟨k, hk⟩ := GlobalTheory.T.teichmullerRootPow_ideals_tendsto_zero_weakTop AI s (⋂ α, t α) hV0
+  obtain ⟨k, hk⟩ := _root_.GlobalTheory.WeakClosed.SmallW.main AI s (⋂ α, t α) hV0
   refine ⟨k, fun z => ?_⟩
   have key : GlobalTheory.WeakTop.coords (WCb l) ↥(OL LL) b
       (inclR LL (((1 : ↥(OL LL)) ⊗ₜ[ℤ_[l]] x : RA LL) ^ k * z) • y) =

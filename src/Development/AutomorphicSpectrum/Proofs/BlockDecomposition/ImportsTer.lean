@@ -5,14 +5,25 @@ public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChevalleyUnits
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GlobalArtinLocalIdeleInjective
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsUniformizerGaloisActionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GlobalArtinMapUniqueStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsSepClosureOfRangeEqStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalBridgeLubinTateFieldStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalEmbeddingRangeEqFieldStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalGlobalArtinCompatibleStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LubinTateUnramifiedDegreeOneStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ValuationLeIffNormEmbeddingStatement
+public import GroundTheory.PAdicHodge.FieldOfNormsCyclBase
+public import GroundTheory.LocalFields.LubinTateTorsion
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsUniformizerGaloisAction
+public import Development.WeilBound.CoreStatements.PlaceConnectedComponents.IsOpenQuotientMapArt0
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GlobalArtinMapUnique
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+public import Mathlib.FieldTheory.IsSepClosed
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsSepClosureOfRangeEq
+public import GroundTheory.LocalFields.MaximalUnramified
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalBridgeLubinTateField
+public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Completion
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalEmbeddingRangeEqField
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LocalGlobalArtinCompatible
+public import GroundTheory.LocalFields.LocalArtinMap
+public import GroundTheory.LocalFields.LubinTatePoints
+public import GroundTheory.LocalFields.UnramifiedHensel
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LubinTateUnramifiedDegreeOne
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ValuationLeIffNormEmbedding
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,14 +89,14 @@ theorem link : ∀ {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E
   letI algF : Algebra (w.adicCompletion E) (Om l) := φ.toAlgebra
   have hmap : ∀ y, algebraMap (w.adicCompletion E) (Om l) y = φ y := fun _ => rfl
   have hr : Set.range (algebraMap (w.adicCompletion E) (Om l)) = (Bw.Kw.1 : Set (Om l)) :=
-    GlobalTheory.T.local_embedding_range_eq_field Bw w φ hφ hφj
-  haveI hsep : IsSepClosure (w.adicCompletion E) (Om l) := GlobalTheory.T.is_sep_closure_of_range_eq Bw.Kw hr
+    _root_.GlobalTheory.CompanionTheory.LTHodge.CompletionRange.range_eq_Kw Bw w φ hφ hφj
+  haveI hsep : IsSepClosure (w.adicCompletion E) (Om l) := _root_.GlobalTheory.CompanionTheory.LTHodge.isSepClosure_Om_of_range Bw.Kw hr
   haveI hext : ValuativeExtension (w.adicCompletion E) (Om l) := ⟨fun {a b} => by
     rw [GroundTheory.PAdicHodge.CyclNorms.vle_iff_norm_le]
-    exact (GlobalTheory.T.valuation_le_iff_norm_embedding φ hφ a b).symm⟩
+    exact (_root_.GlobalTheory.CompanionTheory.LocalNorm.vle_iff_norm_le φ hφ a b).symm⟩
   haveI hclosed : IsSepClosed (Om l) := IsSepClosure.sep_closed (w.adicCompletion E)
   haveI halg : Algebra.IsAlgebraic (w.adicCompletion E) (Om l) := hsep.separable.isAlgebraic
-  obtain ⟨π, hπ, H⟩ := GlobalTheory.T.exists_uniformizer_galois_action hχ hr
+  obtain ⟨π, hπ, H⟩ := _root_.GlobalTheory.CompanionTheory.LTHodge.UnitAct.main hχ hr
   let g' := Bw.e σ
   have hfix : ∀ y, (g' : GQ l) (algebraMap (w.adicCompletion E) (Om l) y) = algebraMap (w.adicCompletion E) (Om l) y := by
     intro y
@@ -96,13 +107,13 @@ theorem link : ∀ {E Ω : Type} [Field E] [NumberField E] [Field Ω] [Algebra E
   let g : Om l ≃ₐ[w.adicCompletion E] Om l := { (g' : GQ l).toRingEquiv with commutes' := hfix }
   have hg : ∀ y, g y = (g' : GQ l) y := fun _ => rfl
   obtain ⟨u, hu, hact⟩ := H g g' hg
-  have hdeg : unramifiedDegree (w.adicCompletion E) (Om l) g = 1 := GlobalTheory.T.local_bridge_lubin_tate_field Bw hI σ hσ g hg
-  have hloc := GlobalTheory.T.lubin_tate_unramified_degree_one hπ (isLubinTateSeries_ltPoly π) u g hdeg hact
+  have hdeg : unramifiedDegree (w.adicCompletion E) (Om l) g = 1 := _root_.GlobalTheory.CompanionTheory.LTLink.unramifiedDegree_eq_one_of_mem_inertia Bw hI σ hσ g hg
+  have hloc := _root_.GlobalTheory.CompanionTheory.LTLink.lt_local_artin_inertia hπ (isLubinTateSeries_ltPoly π) u g hdeg hact
   have hres := fun (L : IntermediateField E Ω) [FiniteDimensional E L] [IsAbelianGalois E L] =>
-    GlobalTheory.T.local_global_artin_compatible w Bw.j (fun y => (hφj y).symm) (unitsIncl _ u⁻¹) (σ : G E Ω) g
+    _root_.GlobalTheory.CompanionTheory.LTLink.local_restriction_abelianization_artin w Bw.j (fun y => (hφj y).symm) (unitsIncl _ u⁻¹) (σ : G E Ω) g
       (fun z => by rw [hg]; exact Bw.e_comm σ z) hloc L
   have h1 : art (localIdele E w (unitsIncl _ u)) = toAb E Ω σ := by
-    rw [GlobalTheory.T.global_artin_map_unique art hart]
+    rw [_root_.GlobalTheory.CompanionTheory.ArtinMapUniq.eq_inv_arithmetic_artin_map art hart]
     have hb : ∀ a b : Gab E Ω, (∀ (L : IntermediateField E Ω) [FiniteDimensional E L] [IsAbelianGalois E L],
         PositivityTheory.FamInh.res L a = PositivityTheory.FamInh.res L b) → a = b := by
       intro a b h

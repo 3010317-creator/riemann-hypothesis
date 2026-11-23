@@ -1,10 +1,13 @@
 module
 
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverBasePointInPoints
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsSncModel
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BlockPullbackHermLineStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AlgebraicRealisationHolomorphicMapStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LogResolutionCoversComplexPointsStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ConjugateHermitianLineIsometries
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MixedFieldContraction.GenericFibreKerTarget
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BlockPullbackHermLine
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.AlgebraicRealisationHolomorphicMap
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRes
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LogResolutionCoversComplexPoints
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverBasePointInPoints
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -147,7 +150,7 @@ theorem side {κ₁ : K₁ → K} {v₁ : (Σ k, ι₁ k) → Σ k, ι k} (hb : 
       (∀ a t, 0 < t → t ≤ S.t₀ → ∀ x, Real.log ((Re.line a t).h fun p => R.lift x x (v₁ p)) =
         Real.log ((Re.ref a).h fun p => R.lift x x (v₁ p)) + S.phT a t (π x)) := by
   subst e
-  obtain ⟨π, hπ, h1, h2, h3, -⟩ := GlobalTheory.T.algebraic_realisation_holomorphic_map K ι K₁ ι₁ κ₁ v₁ P J D σ S Re R hb har alg
+  obtain ⟨π, hπ, h1, h2, h3, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Pull.realis_pullback K ι K₁ ι₁ κ₁ v₁ P J D σ S Re R hb har alg
   exact ⟨π, hπ, h1, h2, h3⟩
 
 theorem evC_bdry {κ₁ : K₁ → K} {v₁ : (Σ k, ι₁ k) → Σ k, ι k} (hb : IsBlockMap κ₁ v₁) {P J : Ideal (MRing ι)}
@@ -158,8 +161,8 @@ theorem evC_bdry {κ₁ : K₁ → K} {v₁ : (Σ k, ι₁ k) → Σ k, ι k} (h
     (hz : ∀ x, Re.π x ∈ bdry S.s → evC (Re.R.lift x x) γ = 0) (x : R.X) (hx : π x ∈ bdry S.s) :
     evC (R.lift x x) (rename v₁ γ) = 0 := by
   have hmem : (fun p => R.lift x x (v₁ p)) ∈ mcPts P₁ :=
-    e ▸ (GlobalTheory.T.block_pullback_herm_line K₁ ι₁ K ι κ₁ v₁ hb).2.2.1 P _ (R.mem x x (R.mem_U x))
-  obtain ⟨x₁, hx₁⟩ := GlobalTheory.T.log_resolution_covers_complex_points K₁ ι₁ P₁ _ D Re.R Re.arith _ hmem
+    e ▸ (_root_.GlobalTheory.CompanionTheory.Ar.Cmp.hermLine_pull_blockMap K₁ ι₁ K ι κ₁ v₁ hb).2.2.1 P _ (R.mem x x (R.mem_U x))
+  obtain ⟨x₁, hx₁⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cmp.resolution_onto_complex_points K₁ ι₁ P₁ _ D Re.R Re.arith _ hmem
   rw [evC_rename, ← evC_eq_zero_iff_of_sameOrbit hγ hx₁]
   exact hz x₁ (hπ x x₁ hx₁ ▸ hx)
 

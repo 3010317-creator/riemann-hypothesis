@@ -1,8 +1,12 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.LangPolynomials.FixedIntegersIsUnitOfNotMemPrimeSpan
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsKummerElementFixedFieldClosedSubgroupStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsClosedInertiaCyclotomicKernelStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.KumValUnique
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
+public import Mathlib.RingTheory.AdicCompletion.Noetherian
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsKummerElementFixedFieldClosedSubgroup
+public import ReciprocityTheory.GaloisValuations.Global
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsClosedInertiaCyclotomicKernel
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.LangPolynomials.DvdOfNormLe
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.LangPolynomials.FrobEx
 public import Development.AutomorphicArithmetic.Foundations.IwahoriReduction.LangPolynomials.KumAlg
@@ -146,7 +150,7 @@ theorem UpperTheory.Kd.C7.pKumEx :
   have hex : ∀ i, ∃ u : Ω, u ≠ 0 ∧ (∀ s ∈ Hm l A m, s u = u) ∧
       ∀ s ∈ Hm l A m, KumVal (l := l) m (ζ m) u s (χ i s) := by
     intro i
-    refine GlobalTheory.T.exists_kummer_element_fixed_field_closed_subgroup l Ω m (Hm l A m) (GlobalTheory.T.isClosed_inertia_cyclotomic_kernel l Ω A m) (ζ m) (hζ m).1
+    refine _root_.GlobalTheory.KumFix.exists_kumVal l Ω m (Hm l A m) (_root_.GlobalTheory.isClosed_Ine_inf_ker_cycMod l Ω A m) (ζ m) (hζ m).1
       (fun s hs => fix_of_cycMod le_rfl hs.2 (hζ m).1.pow_eq_one) (χ i) (fun s hs t ht => ?_) U hU (fun s hs hsU => ?_)
     · have e : w (s * t) = w s + w t := by
         apply Subtype.ext

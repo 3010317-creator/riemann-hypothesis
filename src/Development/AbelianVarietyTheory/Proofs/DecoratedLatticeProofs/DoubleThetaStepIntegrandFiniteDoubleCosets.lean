@@ -7,14 +7,15 @@ public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HasDer
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsLatticeStabilizerTwistAndLevelAway
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisOFinsetSum
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IdempotentMulEntryEqZeroOfCutInverse
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalSchrodingerModelUniqTransportExistsStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ExistsUnitarySupportedAtPlaceOfMulEqIdem
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.LocalSchrodingerModelUniqTransportExists
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.PeriodLocalGroupsNormalFramesSplitPlaceStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualSplitComponentIsLatticeStabilizerEq
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceDoubleStepFinitelyManyCellsUniformProoStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPlaceLocalGroupClosedEmbeddingIntegralStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryAdelicTrivialAtPlacesSubgroupAntitone
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryFiniteAdelicGroupSplitFinitePlaceSet
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitarySupportedSplitPlacesEqProdLocalParts
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualSplitComponentIsLatticeStabilizerEq
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryFiniteAdelicGroupSplitFinitePlaceSet
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -280,7 +281,7 @@ theorem model_comb (hψ : IsStdChar D ψ (-1)) {k : Type} [Field k] [ValuativeRe
     (h : ∀ u ∈ c.support, Off S T (p.e + cA D p.e) u) (f : WO S T → ℂ)
     (hf : ∃ M O, p.IsModel ψ FS FT M ∧ IsOne O ∧ M O = f) : ∃ M O, p.IsModel ψ FS FT M ∧ IsOne O ∧ M O = comb ψ S T c f := by
   obtain ⟨M, O, hM, hO, rfl⟩ := hf
-  refine ⟨combL ψ S T c ∘ₗ M, O, (GlobalTheory.T.localSchrodingerModel_uniq_transport_exists D k p Y Y' S T FS FT ψ hψ).2.1 M hM _ (fun f hf => ?_) (fun f _ y hy => ?_),
+  refine ⟨combL ψ S T c ∘ₗ M, O, (_root_.GlobalTheory.LocModU.localModel_uniq_transport_exist D k p Y Y' S T FS FT ψ hψ).2.1 M hM _ (fun f hf => ?_) (fun f _ y hy => ?_),
     hO, rfl⟩
   · exact (GlobalTheory.HeisComb.main D ψ S T).2.2.1 c f hf (fun u hu => (h u hu).2) hψ
   · change comb ψ S T c (heisO ψ S T y f) = heisO ψ S T y (comb ψ S T c f)

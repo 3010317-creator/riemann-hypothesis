@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRatioOfWeight
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsChernTopPowerVolumeDensityRatioStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicMorseSectionsMLAddAUniformStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogCardSupNormBallLeGramDetStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsChernTopPowerVolumeDensityRatio
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolomorphicMorseSectionsMLAddAUniform
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LogCardSupNormBallLeGramDet
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,7 +78,7 @@ theorem count_ball_asymp : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsInteg
   intro k _ X _ p D hX hS P hP ω r f hf hli g hg C hC hball t ht
   haveI := hX.finite_emb
   letI := Fintype.ofFinite (k →+* ℂ)
-  have hρ := fun σ => GlobalTheory.T.exists_chernTopPower_volumeDensity_ratio k X p D hX hS P.L hP σ (ω σ)
+  have hρ := fun σ => _root_.GlobalTheory.HSAmp.exists_isRatio_chernInt k X p D hX hS P.L hP σ (ω σ)
   choose ρ hρr hρ0 _ using hρ
   have hbd : ∀ σ, ∃ b : ℝ, ∀ y, ρ σ y ≤ b := fun σ => by
     haveI := hX.compactSpace σ
@@ -95,7 +95,7 @@ theorem count_ball_asymp : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsInteg
     linarith
   set V : ℝ := max 1 (∑ᶠ σ, ((ω σ).meas Set.univ).toReal) with hVdef
   have hV : 1 ≤ V := le_max_left _ _
-  have hmorse := GlobalTheory.T.holomorphicMorse_sections_mL_add_A_uniform k X p D hX hS P hP ω ρ hρr 1 one_pos
+  have hmorse := _root_.GlobalTheory.HSAmp.Morse.cmb_le k X p D hX hS P hP ω ρ hρr 1 one_pos
   have hr : ∀ᶠ m : ℕ in atTop, (r m : ℝ) ≤ (g + 1) * (m : ℝ) ^ D := by
     filter_upwards [hg.eventually (gt_mem_nhds (lt_add_one g)), eventually_ge_atTop 1] with m hm h1
     have h0 : (0 : ℝ) < (m : ℝ) ^ D := pow_pos (by exact_mod_cast h1) D
@@ -127,7 +127,7 @@ theorem count_ball_asymp : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsInteg
             nlinarith
         _ = 2 * (g + 1) * K * V * (m : ℝ) ^ (2 * D) * C ^ m := by ring
         _ ≤ _ := hem
-    have key := GlobalTheory.T.abs_log_card_ballIn_sub_gramVolume_le k X p D hX hS P ω (m : ℤ) 1 (r m) (f m) (hf m) (hli m) (K * (m : ℝ) ^ D) V (C ^ m)
+    have key := _root_.GlobalTheory.BallGram.count_ball_gram k X p D hX hS P ω (m : ℤ) 1 (r m) (f m) (hf m) (hli m) (K * (m : ℝ) ^ D) V (C ^ m)
       (Real.exp (t * m)) hM hV (le_max_right _ _) (by positivity) (Real.exp_pos _) hcmb (hball m h1) hR
     rw [Real.log_exp] at key
     have hlog : Real.log (2 * (K * (m : ℝ) ^ D * V)) = Real.log (2 * K * V) + D * Real.log m := by

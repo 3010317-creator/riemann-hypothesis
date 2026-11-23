@@ -1,12 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisGeometry₂.MoyPrasadJacquetIsoTrivial
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralTorusContractsLowerStatement
+public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.MetaplecticLowRank.LowC
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CentralTorusContractsLower
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsFixedMkEqOfCommute
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FixedInjSmooth
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsCompactParahoricSubgroupStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsCompactParahoricSubgroup
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsOpenGx
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParahoricLeviUnipotentLowerStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ParahoricLeviUnipotentLower
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,10 +67,10 @@ theorem moyPrasadJacquetIso : GlobalTheory.Published.MoyPrasadJacquetIso := by
     exact sub_eq_zero.1 (GlobalTheory.CompanionTheory.DepthZeroJac.fixed_inj_smooth k n s d e V π hπ.1 (v - w) (sub_mem hv hw) h0)
   · intro y hy
     obtain ⟨v, hv, hvy⟩ := GlobalTheory.CompanionTheory.JacquetCentral.exists_fixed_mk_eq_of_commute π hπ (Gx k e) (unipRad k e) (GlobalTheory.CompanionTheory.MoyPrasad.isOpen_Gx k n s d e)
-      (GlobalTheory.T.isCompact_parahoric_subgroup k n s d e) (leviEmb k e) (leviEmb_mem_normalizer k e) ((Gx k e).comap (leviEmb k e))
-      (fun _ hm => hm) (lowC k e) (GlobalTheory.T.parahoric_levi_unipotent_lower k n s d e)
+      (_root_.GlobalTheory.CompanionTheory.MoyPrasad.isCompact_Gx k n s d e) (leviEmb k e) (leviEmb_mem_normalizer k e) ((Gx k e).comap (leviEmb k e))
+      (fun _ hm => hm) (lowC k e) (_root_.GlobalTheory.CompanionTheory.MoyPrasad.factor_Gx k n s d e)
       (fun U hU => by
-        refine (GlobalTheory.T.central_torus_contracts_lower k n s d e U hU).imp ?_
+        refine (_root_.GlobalTheory.CompanionTheory.MoyPrasad.lowC_central_contract k n s d e U hU).imp ?_
         intro t ht
         exact ⟨fun m _ => ht.1 m, ht.2⟩) y hy
     exact ⟨v, hv, hvy⟩

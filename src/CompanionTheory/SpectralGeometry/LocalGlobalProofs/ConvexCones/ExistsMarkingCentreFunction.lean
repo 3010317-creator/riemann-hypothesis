@@ -2,9 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsBaryStageStart
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.VoronoiMeans.VorFunEvalEqFineMean
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.CarrierDimFanCellExistsStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.CarrierLabelMarkedFaceBoundStatement
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.MarkingValueGaloisInvariantStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MarkValEqZeroOrOne
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.CarrierDimFanCellExists
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.CarrierLabelMarkedFaceBound
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.MarkingValueGaloisInvariant
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.MarkedFormIndicatorZeroOneBarycentresPolyFan
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -64,15 +65,15 @@ theorem exists_markFun_props_gen : ∀ (O : Type) [CommRing O] [IsDedekindDomain
     split_ifs at h with h'
     · exact h'
     · norm_num at h
-  refine ⟨w, fun σ hσ n B => by rw [hw, hw]; exact GlobalTheory.T.marking_value_galois_invariant O bar w0 hb ψ lab i htψ htlab σ hσ n B, ?_⟩
+  refine ⟨w, fun σ hσ n B => by rw [hw, hw]; exact _root_.GlobalTheory.CompanionTheory.Ar.Fan.TwistedForm.markVal_twist O bar w0 hb ψ lab i htψ htlab σ hσ n B, ?_⟩
   intro X _ _ _ _ hX
   refine ⟨fun β _ _ => ?_, fun β _ _ h1 => (mk β h1).2.2.1, fun β _ _ h1 => (mk β h1).2.2.2.1,
     fun m v hv hle β _ _ β' _ _ h1 h1' hc hc' =>
-      GlobalTheory.T.isMarked_unique_of_inRCone O bar hb q ψ lab i hD hψ hlab X hX m v hv hle β β' (mk β h1) (mk β' h1') hc hc',
+      _root_.GlobalTheory.CompanionTheory.Ar.Fan.MarkedFaces.eq_of_isMarked_of_inRCone O bar hb q ψ lab i hD hψ hlab X hX m v hv hle β β' (mk β h1) (mk β' h1') hc hc',
     fun m v hv β hβ hp hc hl => ?_⟩
   · rw [ev]
     split_ifs <;> simp
-  · obtain ⟨β₀, h0, hc0⟩ := GlobalTheory.T.exists_isMarked_inRCone_of_isCell_of_evalZ_eq O bar hb q ψ lab i hD hψ hlab X hX m v hv β hβ hp hc hl
+  · obtain ⟨β₀, h0, hc0⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Fan.MarkedRayInCone.exists_isMarked_inRCone O bar hb q ψ lab i hD hψ hlab X hX m v hv β hβ hp hc hl
     exact ⟨β₀, h0.1, h0.2.1, by rw [ev, if_pos h0], hc0⟩
 
 end GlobalTheory.CompanionTheory.Ar.Fan.MarkingFunction

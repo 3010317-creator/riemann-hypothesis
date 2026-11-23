@@ -3,7 +3,9 @@ module
 public import Formalism.PeriodIntegrals.ExplicitFormula
 public import Formalism.PeriodIntegrals.ZerosWindow
 public import Formalism.PeriodIntegrals.ExplicitFormulaCounts.AnalyticInputs
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ExplicitFormula
+public import Formalism.PeriodIntegrals.ZerosWindowIn
+public import Formalism.PeriodIntegrals.DiscIn
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ExplicitFormula.LocalLemmaOfHelpers
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ZerosWindow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -49,5 +51,5 @@ theorem zerosWindow_closed : PI.ZerosWindow :=
   zerosWindow_of chk_lBoundRight chk_zetaBoundRight chk_lInvRight
 
 theorem explicitFormula_closed : PI.ExplicitFormula :=
-  explicitFormula_of zerosWindow_closed chk_discFactor chk_discLog chk_lBoundRight chk_zetaBoundRight
+  _root_.PI.EF.explicitFormula_main zerosWindow_closed chk_discFactor chk_discLog chk_lBoundRight chk_zetaBoundRight
     chk_lInvRight

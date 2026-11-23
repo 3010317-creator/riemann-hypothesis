@@ -3,7 +3,10 @@ module
 public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.Analysis.Calculus.ContDiff.Defs
 public import Mathlib.Analysis.InnerProductSpace.Basic
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DifferentiableAtLimitOfDirectionalDerivsConvergeStatement
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DifferentiableAtLimitOfDirectionalDerivsConverge
+public import Mathlib.Analysis.Calculus.ContDiff.Basic
+public import Mathlib.Analysis.Calculus.ContDiff.Operations
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,8 +47,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.Analysis.Calculus.ContDiff.Basic
-public import Mathlib.Analysis.Calculus.ContDiff.Operations
 
 @[expose] public section
 
@@ -61,7 +62,7 @@ theorem contDiff_of_class_tendstoLocallyUniformly : ∀ {E : Type} [NormedAddCom
     intro φ hφ
     obtain ⟨g, hg, hlim, hd⟩ := hP φ hφ
     choose α hα χ hχ hlim' using hd
-    have h := GlobalTheory.T.differentiableAt_limit_of_directional_derivs_converge v c hc φ g (fun a y => α a y * φ y + χ a y) hg hlim hlim'
+    have h := _root_.GlobalTheory.differentiableAt_of_tendstoLocallyUniformly_directional v c hc φ g (fun a y => α a y * φ y + χ a y) hg hlim hlim'
     refine ⟨fun y => (h y).1, α, χ, hα, hχ, ?_⟩
     funext y
     ext x

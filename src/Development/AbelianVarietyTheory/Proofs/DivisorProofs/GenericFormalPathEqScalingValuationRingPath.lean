@@ -1,11 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRatPath
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EvalSectionAtRingPointSpMapCompRestrictStalkStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFormalSquaringPathWithTangentVectorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalSquaringPathUniqueOfAgreeLowDegreesStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalSquaringPathsBaseChangeAndHomStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasTangentOfSingleAffineChartStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EvalSectionAtRingPointSpMapCompRestrictStalk
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFormalSquaringPathWithTangentVector
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalSquaringPathUniqueOfAgreeLowDegrees
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalSquaringPathsBaseChangeAndHom
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasTangentOfSingleAffineChart
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -118,13 +118,13 @@ theorem genPath_scaling : ∀ (k K E : Type) [Field k] [IsAlgClosed k] [CharZero
       _ ≤ (p.1 u)⁻¹ * p.1 u := by gcongr
       _ = 1 := inv_mul_cancel₀ hu0
   let e : Fin r → p.O := fun j => ⟨eE j, heO j⟩
-  obtain ⟨ζ, hζ, hζt⟩ := GlobalTheory.T.exists_formalSquaringPath_with_tangentVector C G p.O hsm hqs b r V (fun j => i.app V (t j)) e hbV
+  obtain ⟨ζ, hζ, hζt⟩ := _root_.GlobalTheory.Nef.exists_path_tan C G p.O hsm hqs b r V (fun j => i.app V (t j)) e hbV
   obtain ⟨U₀, hU₀a, hζU₀, -⟩ := Opens.isBasis_iff_nbhd.1 G.left.isBasis_affineOpens
     (Opens.mem_top (ζ (IsLocalRing.closedPoint (PowerSeries p.O))))
-  have hζU : ⊤ ≤ ζ ⁻¹ᵁ U₀ := (GlobalTheory.T.evalSectionAtRingPoint_spMap_comp_restrict_stalk.2.2.2.1 (PowerSeries p.O) G.left ζ U₀).2 hζU₀
+  have hζU : ⊤ ≤ ζ ⁻¹ᵁ U₀ := (_root_.GlobalTheory.Nef.evAt_calculus.2.2.2.1 (PowerSeries p.O) G.left ζ U₀).2 hζU₀
   have hξ'U : ⊤ ≤ (spMap (sc p u) ≫ ζ) ⁻¹ᵁ U₀ := top_le_comp_preimage _ _ hζU
   have hξ'path : IsPath G 2 xE (spMap (sc p u) ≫ ζ) := by
-    have := (GlobalTheory.T.formalSquaringPaths_baseChange_and_hom.1 C G p.O E φ 2 u b ζ hζ).1
+    have := (_root_.GlobalTheory.Nef.paths_bc.1 C G p.O E φ 2 u b ζ hζ).1
     rw [map_ofNat, hbx] at this
     exact this
 
@@ -143,13 +143,13 @@ theorem genPath_scaling : ∀ (k K E : Type) [Field k] [IsAlgClosed k] [CharZero
   have key : ∀ f : Γ(G.left, U₀), PowerSeries.coeff 1 (evAt (spMap (sc p u) ≫ ζ) hξ'U f) =
       ∑ j, w j * evAt xE hxs (dualApp (i.app V₀ (s j)) (inf_le_left.trans h₀) (dUnit G inf_le_right f)) := by
     intro f
-    have h1 := (GlobalTheory.T.formalSquaringPaths_baseChange_and_hom.1 C G p.O E φ 2 u b ζ hζ).2 r V (fun j => i.app V (t j)) e hbV U₀ hζU hζt hξ'U
+    have h1 := (_root_.GlobalTheory.Nef.paths_bc.1 C G p.O E φ 2 u b ζ hζ).2 r V (fun j => i.app V (t j)) e hbV U₀ hζU hζt hξ'U
       (V ⊓ unitSec G ⁻¹ᵁ U₀) inf_le_left inf_le_right hb'' f
     have hD : ∀ τ : Γ(Lie G, V), φ (evAt b hb'' (dualApp τ inf_le_left (dUnit G inf_le_right f))) =
         evAt xE hxs (dualApp τ (hsub.trans inf_le_left) (dUnit G (hsub.trans inf_le_right) f)) := by
       intro τ
-      rw [← GlobalTheory.T.evalSectionAtRingPoint_spMap_comp_restrict_stalk.1 p.O E C φ b _ hb'' (top_le_comp_preimage _ _ hb''), evAt_congr hbx _ hxE'',
-        ← GlobalTheory.T.evalSectionAtRingPoint_spMap_comp_restrict_stalk.2.2.1 E C xE _ _ hsub hxE'' hxs]
+      rw [← _root_.GlobalTheory.Nef.evAt_calculus.1 p.O E C φ b _ hb'' (top_le_comp_preimage _ _ hb''), evAt_congr hbx _ hxE'',
+        ← _root_.GlobalTheory.Nef.evAt_calculus.2.2.1 E C xE _ _ hsub hxE'' hxs]
       congr 1
       have := dualApp_resM τ (inf_le_left : V ⊓ unitSec G ⁻¹ᵁ U₀ ≤ V) hsub (dUnit G inf_le_right f)
       rw [resM_dUnit] at this
@@ -171,8 +171,8 @@ theorem genPath_scaling : ∀ (k K E : Type) [Field k] [IsAlgClosed k] [CharZero
       refine Finset.sum_congr rfl fun l _ => ?_
       rw [dualApp_smul, LinearMap.smul_apply, smul_eq_mul, map_mul, dualApp_res]
       congr 1
-      exact (GlobalTheory.T.evalSectionAtRingPoint_spMap_comp_restrict_stalk.2.2.1 E C xE Vf _ inf_le_left hxEf hxs (M l j)).trans
-        (GlobalTheory.T.evalSectionAtRingPoint_spMap_comp_restrict_stalk.1 K E C (algebraMap K E) x Vf hxf hxEf (M l j))
+      exact (_root_.GlobalTheory.Nef.evAt_calculus.2.2.1 E C xE Vf _ inf_le_left hxEf hxs (M l j)).trans
+        (_root_.GlobalTheory.Nef.evAt_calculus.1 K E C (algebraMap K E) x Vf hxf hxEf (M l j))
     have he' : ∀ l, u * φ (e l) = ∑ j, algebraMap K E (evAt x hxf (M l j)) * w j := by
       intro l
       show u * (u⁻¹ * y l) = _
@@ -184,7 +184,7 @@ theorem genPath_scaling : ∀ (k K E : Type) [Field k] [IsAlgClosed k] [CharZero
     refine Finset.sum_congr rfl fun j _ => Finset.sum_congr rfl fun l _ => ?_
     ring
   have htan' : HasTan G xE (spMap (sc p u) ≫ ζ) (fun j => i.app V₀ (s j)) w :=
-    GlobalTheory.T.hasTangent_of_single_affineChart C G E 2 xE _ hξ'path r V₀ _ w U₀ hU₀a hξ'U _ (inf_le_left.trans h₀) inf_le_right hxs key
+    _root_.GlobalTheory.Nef.hasTan_of_affine_chart C G E 2 xE _ hξ'path r V₀ _ w U₀ hU₀a hξ'U _ (inf_le_left.trans h₀) inf_le_right hxs key
   have hunit : ∀ j, 2 ≤ j → IsUnit ((2 : E) ^ j - 2) := by
     intro j hj
     refine isUnit_iff_ne_zero.2 fun h0 => ?_
@@ -196,7 +196,7 @@ theorem genPath_scaling : ∀ (k K E : Type) [Field k] [IsAlgClosed k] [CharZero
     rw [Nat.cast_eq_zero] at hc
     omega
   have heq : ξ = spMap (sc p u) ≫ ζ := by
-    refine GlobalTheory.T.formalSquaringPath_unique_of_agree_low_degrees C G E hqs 2 2 (by norm_num) hunit xE ξ _ hξ hξ'path ?_
+    refine _root_.GlobalTheory.Nef.path_unique C G E hqs 2 2 (by norm_num) hunit xE ξ _ hξ hξ'path ?_
     intro U h h' f j hj0 hj2
     obtain rfl : j = 1 := by omega
     have hb3 : ⊤ ≤ xE ⁻¹ᵁ (V₀ ⊓ unitSec G ⁻¹ᵁ U) := by

@@ -4,7 +4,8 @@ public import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegen
 public import Formalism.SharpRestriction.CuspSpanNormBounds.CongruenceAtSplitFrobeniusHolds
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CardMiddleLatticesOverGenusLatticeStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUnimodularGe
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassRowLatticeOrthogonalSplitPrimeStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.CntPartners
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MassRowLatticeOrthogonalSplitPrime
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowBaseLatticesMemSameHermitianGenusStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RowLatticesSameMiddleConjugateUnipotentStatement
 public import Formalism.SharpRestriction.CuspSpanNormBounds.CayleyDegreeNondegeneracy.GluingMassOfLiftNumberGenus
@@ -77,7 +78,7 @@ theorem main : ∀ (D : D7) (u : D.what₂.Word), UnitaryVolumeMass.stLem3L0 D u
     have : (3 : ℝ) ≤ (Tu D u : ℝ) := by exact_mod_cast h3
     linarith
 
-  have hm := fun Λ (hΛ : IsRowLat D F0 Λ) => GlobalTheory.T.mass_rowLattice_orthogonal_split_prime D u F0 he hz hp hs Λ hΛ
+  have hm := fun Λ (hΛ : IsRowLat D F0 Λ) => _root_.GlobalTheory.Mass.RowPerpMass.main D u F0 he hz hp hs Λ hΛ
 
   obtain ⟨Λ₀, hΛ₀⟩ := GlobalTheory.Mass.RowEx.main D u F0 he hz hp hs
   refine ⟨?_, fun Λ hΛ => ⟨?_, (hm Λ hΛ).2⟩⟩

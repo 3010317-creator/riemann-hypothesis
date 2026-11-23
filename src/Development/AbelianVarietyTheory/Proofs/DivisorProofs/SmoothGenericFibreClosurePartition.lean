@@ -3,7 +3,10 @@ module
 public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
 public import Mathlib.Combinatorics.Quiver.ReflQuiver
 public import Mathlib.Order.CompletePartialOrder
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosureGenericFibreClopenSplitStatement
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+public import Mathlib.RingTheory.Smooth.Basic
+public import Mathlib.RingTheory.Spectrum.Prime.Topology
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ClosureGenericFibreClopenSplit
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,7 +68,7 @@ theorem smooth_genericFibre_closure_partition : ∀ (R : Type) [CommRing R] [IsD
     have hcl : ∀ S : Set X, j ⁻¹' closure S = closure (j ⁻¹' S) := fun S =>
       j.isOpenEmbedding.isOpenMap.preimage_closure_eq_closure_preimage j.continuous S
     rw [hcl, hcl]
-    refine GlobalTheory.T.closure_generic_fibre_clopen_split_alt R A hA (j ⁻¹' C) (j ⁻¹' C') ?_ ?_ ?_
+    refine _root_.GlobalTheory.closure_generic_fibre_clopen_split R A hA (j ⁻¹' C) (j ⁻¹' C') ?_ ?_ ?_
     · have : j ⁻¹' C ∪ j ⁻¹' C' = (Spec.map φ) ⁻¹' {(⊥ : PrimeSpectrum R)} := by
         rw [← Set.preimage_union, hU, hφ, ← Set.preimage_comp, Scheme.Hom.comp_base]
         rfl

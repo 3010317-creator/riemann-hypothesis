@@ -7,14 +7,18 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GenWeil
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.MemEigSpOfMemHtDual
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.ThickTransComp
 public import Development.AbelianVarietyTheory.Counterexamples.AbelianLawCounterexamples.ExistsTwoTorsionWeilDegenerate
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ObjIsAbelianSchemeDimRigidifiedSym
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsGenericWeilPairing
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCptGen
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsStalkFractionOfGeneric
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUnitFormLocalizationEtaleNbhd
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsTorsionQuasiFiniteGroup
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.TwoWeightEqOneAddRoot
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.WeilPairingPullbackIff
+public import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.NatCastSmulMemHtLatK
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsWithoutCohomology
 import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.WeilIsAlternatingSkewNatural
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ObjIsAbelianSchemeDimRigidifiedSym
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsGenericWeilPairingStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsStalkFractionOfGenericStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsTorsionQuasiFiniteGroupStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.WeilPairingPullbackIffStatement
-public import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.NatCastSmulMemHtLatK
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -335,7 +339,7 @@ theorem genWeil_trivial (o : Obj D l b s) (t : SAB H X) (m : SABMap o.t t ξ) {n
       have h2 := congrArg (fun w => w.left) (push_one m.cart (Over.mk (spMap i)))
       rw [hz]
       exact h2.trans (congrArg (fun w => w.left) h1).symm
-    rw [← GlobalTheory.T.weil_pairing_pullback_iff E H X (Sp Ω) t o.t ξ m k (spMap i) 1 1 xk gk n c (e1 xk hxk) (e1 gk hgk)]
+    rw [← _root_.GlobalTheory.CompanionTheory.Ar.WeilPull.main E H X (Sp Ω) t o.t ξ m k (spMap i) 1 1 xk gk n c (e1 xk hxk) (e1 gk hgk)]
     have hx1 := hW _ (GlobalTheory.Obj.toPolAV o) n (Over.mk (spMap i))
     have h1 : WeilIs o.t.G o.t.PP.L n (1 : Over.mk (spMap i) ⟶ o.t.G) 1 (unitOn (1 : kˣ)) := by
       rw [GenWeilModel.unitOn_one]
@@ -358,7 +362,7 @@ theorem fullTorsion_frac {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ : Sp Ω ⟶
   let κ₀ : FractionRing (X.presheaf.stalk q.1) →+* Ω := IsFractionRing.lift (hξ.inj q)
   have hκ : ∀ r, κ₀ (algebraMap _ _ r) = genMap ξ q r := fun r => IsFractionRing.lift_algebraMap (hξ.inj q) r
   have hb : Function.Bijective κ₀ := ⟨κ₀.injective, fun a => by
-    obtain ⟨b, c, hc, h⟩ := GlobalTheory.T.exists_stalk_fraction_of_generic ξ hξ q a
+    obtain ⟨b, c, hc, h⟩ := _root_.GlobalTheory.CompanionTheory.Ar.exists_frac_genMap ξ hξ q a
     refine ⟨algebraMap _ _ b / algebraMap _ _ c, ?_⟩
     rw [map_div₀, hκ, hκ, ← h]
     field_simp⟩

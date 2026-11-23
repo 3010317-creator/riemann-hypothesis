@@ -1,9 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.EqOfLamEqStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.EqOfLamEq
+public import Mathlib.NumberTheory.NumberField.Basic
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.RingOfIntegersActionInjectiveOnAbelianScheme
 import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LbIsoCubeLBMulRightOf
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.RingOfIntegersActionInjectiveOnAbelianSchemeStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -67,6 +70,6 @@ theorem bar_eq_of_lamEq_multiplier : Out.Laws → ∀ (E : Type) [Field E] [Numb
     ((c P.A B.A P.A P.L B.L P.L P.isLB B.isLB P.isLB _ (𝟙 _) _ (𝟙 _) f f f f _ _).2.1 h₂).2.2.1 h₃
   have h₅ : LamEq P.L (act.act h) (𝟙 P.A) P.L (act.act (H.bar h)) (𝟙 P.A) :=
     ((c P.A P.A P.A P.L P.L P.L P.isLB P.isLB P.isLB _ (𝟙 _) _ (𝟙 _) _ (𝟙 _) _ (𝟙 _) (𝟙 _) (𝟙 _)).2.1 h₄).2.1
-  exact (GlobalTheory.T.ringOfIntegersAction_injective_on_abelianScheme hL E K P act hg (GlobalTheory.T.eq_of_lamEq_polAV hL _ P _ _ _ h₅)).symm
+  exact (_root_.GlobalTheory.LamF.Faithful.act_injective hL E K P act hg (_root_.GlobalTheory.CM.PairingInj.eq_of_lamEq hL _ P _ _ _ h₅)).symm
 
 end GlobalTheory.LamF

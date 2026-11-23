@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchActionReadingsCompatible
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsArchimedeanOperatorWeilRepPureTensorStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SmoothWeilOrbitRealPassesToHeisenbergDerivativesStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilOperatorOneParamGaussianVacuumSmoothPairStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsArchimedeanOperatorWeilRepPureTensor
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SmoothWeilOrbitRealPassesToHeisenbergDerivatives
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilOperatorOneParamGaussianVacuumSmoothPair
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,7 +62,7 @@ theorem lie_deriv_pol : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
           (∃ f₁ : SInf F (Fin n × Fin d), ActsD (evI F) (fun t => om (1, γ (Multiplicative.ofAdd t))) f f₁) ∧
           ∀ f₁ : SInf F (Fin n × Fin d), ActsD (evI F) (fun t => om (1, γ (Multiplicative.ofAdd t))) f f₁ → f₁ ∈ M.Pol ψ τ := by
   intro F E _ _ _ _ _ σ hcm n d X W M ψ χX χW om hψ hX hXd hW hWd hrX hrW hhX hhW hwe τ hcX hcW γ hγ
-  choose T hT' using fun t : ℝ => GlobalTheory.T.exists_archimedeanOperator_weilRep_pureTensor F E σ hcm n d X W M ψ χX χW om hψ hX hXd hW hWd hrX hrW hhX hhW hwe
+  choose T hT' using fun t : ℝ => _root_.GlobalTheory.ArchFactorPair.exists_archOperator_pair F E σ hcm n d X W M ψ χX χW om hψ hX hXd hW hWd hrX hrW hhX hhW hwe
     (γ (Multiplicative.ofAdd t)) (hγ.2 _)
   have hvac : ∀ f₀, M.IsGauss ψ τ f₀ → f₀ ∈ M.Pol ψ τ := fun f₀ h =>
     Submodule.mem_sInf.2 fun N hN => hN.1 f₀ h
@@ -87,10 +87,10 @@ theorem lie_deriv_pol : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
         simpa using (hf2 x).const_mul c }
   have hPN : M.Pol ψ τ ≤ N := by
     refine sInf_le ⟨fun f₀ h => ?_, fun u hu f hf f₁ h => ?_⟩
-    · exact ⟨hvac f₀ h, GlobalTheory.T.weilOperator_oneParam_gaussianVacuum_smooth_pair F E σ hcm n d X W M ψ χX χW om hψ hX hXd hW hWd hrX hrW hhX hhW hwe τ hcX hcW γ hγ T hT' f₀ h⟩
+    · exact ⟨hvac f₀ h, _root_.GlobalTheory.GaussLinePair.smooth_vacuum_line F E σ hcm n d X W M ψ χX χW om hψ hX hXd hW hWd hrX hrW hhX hhW hwe τ hcX hcW γ hγ T hT' f₀ h⟩
     · obtain ⟨hf0, hf1, hf2⟩ := hf
       exact ⟨hstab u hu f hf0 f₁ h,
-        GlobalTheory.T.smooth_weilOrbit_real_passes_to_heisenbergDerivatives F E σ hcm n d X W M ψ χX χW om hψ hX hXd hW hWd hrX hrW hhX hhW hwe τ hcX hcW γ hγ T hT' u hu f hf0 hf1 hf2 f₁ h⟩
+        _root_.GlobalTheory.HeisOrbitReal.orbit_heis_real F E σ hcm n d X W M ψ χX χW om hψ hX hXd hW hWd hrX hrW hhX hhW hwe τ hcX hcW γ hγ T hT' u hu f hf0 hf1 hf2 f₁ h⟩
   intro f hf
   obtain ⟨-, -, f', hf', hd⟩ := hPN hf
   have hA : ActsD (evI F) (fun t => om (1, γ (Multiplicative.ofAdd t))) f f' := by

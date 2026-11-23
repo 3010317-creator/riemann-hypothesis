@@ -5,7 +5,7 @@ public import Formalism.LocalToGlobal.ProjectiveLattices.CompHt
 public import Formalism.LocalToGlobal.ProjectiveLattices.ExistsParameterConditions
 public import Formalism.LocalToGlobal.ProjectiveLattices.ParCanon
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.CmCurveTorsionDefinedOverOfWeberValuesStatement
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CoeffFieldAlgClosedFunctionFieldOfTorsionDefinedStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CoeffFieldAlgClosedFunctionFieldOfTorsionDefined
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsDatumRankOne
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsLatticeEmbeddingLiftDatumHermitianSpace
 import Mathlib.Algebra.Order.Floor.Extended
@@ -71,7 +71,7 @@ theorem fnAlgClosed_of_pins : ∀ (D : D7) (Q : Par D), Q.Pins → Q.Canon → �
   have hc : CurveOver Q.H (FO D) l₂.M := by
     have h0 : CurveOver Q.H (FO D) n := by rw [hC.1]; exact hcurve
     exact (GlobalTheory.T.cmCurveTorsion_definedOver_of_weberValues _ Q.H (FO D) n hn).2 _ hM h0
-  refine GlobalTheory.T.coeffField_algClosed_functionField_of_torsionDefined _ Q.H (Q.Dw j) l₂ Xo₂ c₂ (by omega) hA (Or.inr (Or.inr ⟨by omega, h1⟩)) ?_
+  refine _root_.GlobalTheory.CompRat.fnAlgClosed_of_curveOver _ Q.H (Q.Dw j) l₂ Xo₂ c₂ (by omega) hA (Or.inr (Or.inr ⟨by omega, h1⟩)) ?_
   intro τ hτ
   exact hc τ fun x hx => hτ x (by rw [hF]; exact hle hx)
 

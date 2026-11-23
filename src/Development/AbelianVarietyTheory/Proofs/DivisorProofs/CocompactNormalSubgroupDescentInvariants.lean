@@ -1,8 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.ConstTermOnMulLeftOfNormalizer
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CocompactFibrationSectionMeasureStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CocompactNormalSubgroupFibrationStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdHomeoSymmApplySnd
+public import Mathlib.MeasureTheory.Group.FundamentalDomain
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CocompactFibrationSectionMeasure
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CocompactNormalSubgroupFibration
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -129,12 +131,12 @@ theorem integral_section_eq_constTermOn : ∀ (G : Type) [Group G] [TopologicalS
     Subtype.ext (hleft.injective (Subtype.ext (congrArg Subtype.val h : s a = s b)))
   let e := prodHomeo hle hs hsc hπc hπmul hπs hker
   let ν : Measure N := ((Measure.haar : Measure N').prod μ).map e
-  haveI : ν.IsHaarMeasure := GlobalTheory.T.cocompact_normal_subgroup_fibration G Γ N N' hle hn hc hc' V s π hs hsc hπc hπmul hπs hker hmul μ hμ
+  haveI : ν.IsHaarMeasure := _root_.GlobalTheory.Cusp.Shear.isHaarMeasure_map_prodHomeo G Γ N N' hle hn hc hc' V s π hs hsc hπc hπmul hπs hker hmul μ hμ
   obtain ⟨B, hBm, hB⟩ := exists_measurable_addSection G Γ N V Λ s π hsc hmul hs hπs hsΓ
   let A := stdDom (Γ.subgroupOf N')
   have hAm : MeasurableSet A := measurableSet_stdDom _
   have hD : IsFundamentalDomain (Γ.subgroupOf N) (e '' (A ×ˢ B)) ν :=
-    GlobalTheory.T.cocompact_fibration_section_measure G Γ N N' hle hn V Λ s π hs hsc hπc hπmul hπs hker hmul hsΓ hπΓ A B hAm hBm
+    _root_.GlobalTheory.Cusp.Shear.isFundamentalDomain_image_prod G Γ N N' hle hn V Λ s π hs hsc hπc hπmul hπs hker hmul hsΓ hπΓ A B hAm hBm
       (existsUnique_stdDom _) hB ν
   have hep : MeasurePreserving e ((Measure.haar : Measure N').prod μ) ν := ⟨e.continuous.measurable, rfl⟩
   have hemb' : MeasurableEmbedding e := e.toMeasurableEquiv.measurableEmbedding

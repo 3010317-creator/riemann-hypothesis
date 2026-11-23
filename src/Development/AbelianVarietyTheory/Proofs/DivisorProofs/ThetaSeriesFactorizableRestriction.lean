@@ -1,11 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzFinitePureTensorsStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicSchwartzFinitePureTensors
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfComponentTensorAdelicFunctionEq
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TripleLatticeInvariantSchwartzGlobal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TripleLatticeInvariantSchwartzLocal
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFactorPureTensorComponentAtPlace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TripleLatticeInvariantSchwartzGlobalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TripleLatticeInvariantSchwartzLocalStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -92,7 +93,7 @@ theorem factor : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Field F]
     refine hyp w hw γ hγ c ?_
     have hR : Rest (evFin F w) (G.M'.vac w) r := ⟨hr1, e ▸ GlobalTheory.TensUniq.pure_mem_schA f φ hφSB hstd⟩
     rw [e, hc r hR, tens_smul]
-  obtain ⟨T, m, f₀, φ₀, hSB₀, hstd₀, hsum₀⟩ := GlobalTheory.T.adelic_schwartz_finite_pure_tensors F _ Ψ hΨ
+  obtain ⟨T, m, f₀, φ₀, hSB₀, hstd₀, hsum₀⟩ := _root_.GlobalTheory.SchADecomp.exists_sum_pure F _ Ψ hΨ
   have hfin : {v | ¬ G.M'.vac v = Set.indicator {x | ∀ j, x j ∈ v.adicCompletionIntegers F} 1}.Finite :=
     Filter.eventually_cofinite.1 hvstd
   have key : ∀ U : Finset (Pl (F := F)), ∀ (f : Fin m → SInf F (Fin a' × Fin (a + a')))
@@ -116,8 +117,8 @@ theorem factor : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type) [Field F]
             φ i v = Set.indicator {x | ∀ j, x j ∈ v.adicCompletionIntegers F} 1 := fun i =>
           std_of_off G.M'.vac (φ i) hvstd (S ∪ insert w U) fun v hv =>
             h2 i v (fun h => hv (Finset.mem_union_left _ h)) (fun h => hv (Finset.mem_union_right _ h))
-        obtain ⟨g, hgSB, hgE, hgsum⟩ := GlobalTheory.T.triple_lattice_invariant_schwartz_global hP F E σ B a a' G X om om' hT w Ψ hΨ (hyp' w hwS) m f φ h1 hstd h3
-        choose r hr using fun i => GlobalTheory.T.triple_lattice_invariant_schwartz_local hP F E σ B a a' G X om om' hT w (g i) (hgSB i) (hgE i)
+        obtain ⟨g, hgSB, hgE, hgsum⟩ := _root_.GlobalTheory.VacAvg.avg_eigen hP F E σ B a a' G X om om' hT w Ψ hΨ (hyp' w hwS) m f φ h1 hstd h3
+        choose r hr using fun i => _root_.GlobalTheory.VacLine.eigen_line hP F E σ B a a' G X om om' hT w (g i) (hgSB i) (hgE i)
         refine ih (fun i => r i • f i) (fun i => Function.update (φ i) w (G.M'.vac w)) (fun i v => ?_)
           (fun i v hv hvU => ?_) ?_
         · by_cases hvw : v = w

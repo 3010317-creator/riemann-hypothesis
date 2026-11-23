@@ -2,10 +2,13 @@ module
 
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsGrpPullback
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.AbelianSchemeQuotients.IsAbelianScheme
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGluedCommGroupSchemeArtinFibreProductStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FerrandGlueFlatArtinianFibreProductStatement
+public import Mathlib.AlgebraicGeometry.Morphisms.Flat
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGluedCommGroupSchemeArtinFibreProduct
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FerrandGlueFlatArtinianFibreProduct
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsProperGeometricallyConnectedSmoothNilpotentLif
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocallyOfFinitePresentationOfNilpotentThickeningStatement
+public import Mathlib.AlgebraicGeometry.Morphisms.FinitePresentation
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocallyOfFinitePresentationOfNilpotentThickening
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.SmoothOfIsPullbackOfSurjectiveOfFlat
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -108,15 +111,15 @@ theorem main_of_nontrivial (P R₁ R₂ R₀ : CommRingCat.{0}) (f₁ : P ⟶ R�
         ψ₁ ≫ φ₁ = ψ₂ ≫ φ₂ := by
   haveI := h₁.smooth
   haveI := h₂.smooth
-  obtain ⟨Y, j₁, j₂, hj₁, hj₂, hY, hpo⟩ := GlobalTheory.T.ferrand_glue_flat_artinian_fibreProduct P R₁ R₂ R₀ f₁ f₂ g₁ g₂ hpb hl ha hg₁ hg₂
+  obtain ⟨Y, j₁, j₂, hj₁, hj₂, hY, hpo⟩ := _root_.GlobalTheory.FerrandGlue.ferrand_glue_artinian P R₁ R₂ R₀ f₁ f₂ g₁ g₂ hpb hl ha hg₁ hg₂
     A₁ A₂ A₀ ψ₁ ψ₂ hψ₁.1 hψ₂.1 inferInstance inferInstance
-  obtain ⟨G, hc, hG₁, hG₂⟩ := GlobalTheory.T.exists_glued_commGroupScheme_artinFibreProduct P R₁ R₂ R₀ f₁ f₂ g₁ g₂ hpb hl ha hg₁ hg₂ A₁ A₂ A₀ ψ₁ ψ₂
+  obtain ⟨G, hc, hG₁, hG₂⟩ := _root_.GlobalTheory.GlueGrpLaw.exists_glued_grp P R₁ R₂ R₀ f₁ f₂ g₁ g₂ hpb hl ha hg₁ hg₂ A₁ A₂ A₀ ψ₁ ψ₂
     h₁.comm h₂.comm hψ₁ hψ₂ Y j₁ j₂ hj₁ hj₂ hY hpo
   refine ⟨Y, G, j₁, j₂, ?_, hG₁, hG₂, hpo.w⟩
   have hf₁ : Function.Surjective f₁ := (pullback_elem hpb).2 hg₂
   have hN : IsNilpotent (RingHom.ker f₁.hom) := isNilpotent_ker f₁
   have hlfp : LocallyOfFinitePresentation Y.hom :=
-    GlobalTheory.T.locallyOfFinitePresentation_of_nilpotent_thickening_noetherian P R₁ f₁ hf₁ hN inferInstance Y A₁ j₁ hj₁ inferInstance
+    _root_.GlobalTheory.locallyOfFinitePresentation_of_nilpotent_thickening P R₁ f₁ hf₁ hN inferInstance Y A₁ j₁ hj₁ inferInstance
   have hsm : Smooth Y.hom := GlobalTheory.smooth_of_isPullback_of_surjective_of_flat _ _ _ _ (Spec.map f₁) j₁
     A₁.hom Y.hom hj₁ (surjective_spec_map f₁) hY hlfp h₁.smooth
   obtain ⟨hp, hgc⟩ := GlobalTheory.NilLift.isProper_and_geometricallyConnected_of_smooth_lift P R₁ f₁.hom hf₁ hN

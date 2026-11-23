@@ -14,10 +14,10 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DatumLeve
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsSatakeParametersBoundedEigenfunctionStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.FiniteLevelDatumVectorTransformsByLevelCharacterStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasProdLocalTwistedLFactorDivUnitaryLocalFactorStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasSumCosetsEulerProductStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasSumCosetsSmallerLevelRelIndexMulStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasSumCosetsEulerProduct
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasSumCosetsSmallerLevelRelIndexMul
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasSumLocalSphericalZetaUnramifiedStatement
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrame
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelFiniteDatumIsSchwartzBruhatHalfStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LevelVectorFiniteDatumIsThetaVacuumOffStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.LocalZetaSumsAbsolutelyConvergentUniformStatement
@@ -26,6 +26,7 @@ public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.Principal
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ThetaTranslateOrthogonalOfSupportMovedOffStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilMatrixCoefficientVacuaUnramifiedPlaceStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.WeilOperatorKeepsLatticeVacuumOfTrivialAtStatement
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsSelfDualCoordLatticeOfSelfDualFrame
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -173,7 +174,7 @@ theorem zeta_sum (hG : GlobalTheory.Published.UnramifiedDoublingGL) {ψ : AddCha
     rw [← (commute_emb D.sp.cm.sig T.gram a hg).eq, hmul]
     exact hφ' v a _ _ (GlobalTheory.T.weilOperator_keeps_latticeVacuum_of_trivialAt D ψ S T χS χT om hW v.1 g hg f (hvac v.1 v.2)) (hvac v.1 v.2)
   have hJH : J ≤ satur T J Sb := fun k hk => ⟨hJf hk, k, hk, fun _ _ => rfl⟩
-  have key := GlobalTheory.T.hasSum_cosets_eulerProduct_alt (fun v : {v : HeightOneSpectrum (𝓞 D.host.F) // v ∉ Sb} => embV T v.1) (fun v => projV T v.1)
+  have key := _root_.GlobalTheory.CosetEuler.hasSum_cosets_eulerProduct (fun v : {v : HeightOneSpectrum (𝓞 D.host.F) // v ∉ Sb} => embV T v.1) (fun v => projV T v.1)
     (fun v => Kv T v.1) J (satur T J Sb) hJH (fun v a => proj_emb_self _ _ _ _)
     (fun u v h a => proj_emb_ne _ _ (fun e => h (Subtype.ext e)) a)
     (fun v a => ⟨mem_finPts.2 (projInf_emb _ _ _ _), 1, one_mem _, fun u hu' => by
@@ -206,7 +207,7 @@ theorem zeta_sum (hG : GlobalTheory.Published.UnramifiedDoublingGL) {ψ : AddCha
       rw [co2 v g hg, norm_mul]
       ring)
     hA (GlobalTheory.T.hasProd_localTwistedLFactor_div_unitaryLocalFactor D Sb B χS hc)
-  have fin := GlobalTheory.T.hasSum_cosets_smaller_level_relIndex_mul_alt K J (satur T J Sb) (GfC T) hKJ hJH (fun g hg => hg.1) hidx Ψ _
+  have fin := _root_.GlobalTheory.hasSum_cosets_smaller_level_relIndex_mul K J (satur T J Sb) (GfC T) hKJ hJH (fun g hg => hg.1) hidx Ψ _
     (fun g hg hg' => by simp only [Ψ, co, hvan g hg hg', zero_mul]) (fun g _ => Ψ1 g) key
   refine hasSum_of_eq fin (fun y => ?_) ?_
   · simp only [Ψ, co, hℓ, coe_bddRep, FinCos.rep]

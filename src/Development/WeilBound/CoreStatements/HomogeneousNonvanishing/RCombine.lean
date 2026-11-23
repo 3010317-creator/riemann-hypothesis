@@ -3,12 +3,15 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ConjugateHermitianLineIsometries
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsTwiceDifferentiableAt
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRes
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SingularWeightMonotoneRegularizationStatement
+public import ReciprocityTheory.AnalyticForms.LeviForms.IsRegFamilyInhabitStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SingularWeightMonotoneRegularization
 public import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.ContinuousAtOfClosedRel
 public import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.FderivAffCoordZero
 public import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.IsOpenHoloPreimage
 public import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.REnlarge
 public import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.RSnc
+public import ReciprocityTheory.AnalyticForms.PotentialTheory.ContDiffAtOfIsPotential
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRedB
 import Development.WeilBound.CoreStatements.HomogeneousNonvanishing.SmoothContinuousAt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -49,8 +52,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.AnalyticForms.PotentialTheory.ContDiffAtOfIsPotential
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRedB
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRedC
 
 @[expose] public section
@@ -147,7 +148,7 @@ theorem one (hPull : PullbackStatement) {D : ℕ} [CompactSpace Y] [T2Space Y] {
   obtain ⟨C', t', h1, h2, h3⟩ := hPull S.A B π h S.Θ S.L Θ S.s S.m S.W m W S.potΘ S.posΘ hΘ hΘ' S.potL S.sec S.snc
     S.norm_le hsnc (S.th a) (S.ph a) (S.phT a) S.C₅ S.C S.t₀ (S.sing a) (S.reg a) (S.c2 a)
   have hn : ∀ y, logNormSec (S.L.pullback π h.1) (fun x y => S.s (π x) (π y)) y ≤ 0 := fun y => S.norm_le (π y)
-  obtain ⟨m1, m2, -⟩ := GlobalTheory.T.singular_weight_monotone_regularization D Y B Θ _ _ n m W (isPotentialPullback S.A B π h _ S.potL)
+  obtain ⟨m1, m2, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.enlarging_constants_smooth_members D Y B Θ _ _ n m W (isPotentialPullback S.A B π h _ S.potL)
     (section_pull h S.sec) hsnc hn hΘ hΘ'
   refine ⟨C', t', h2.1, fun C₅ C t₀ a1 a2 a3 a4 a5 a6 => ?_⟩
   exact r_enlarge D Y B Θ _ L _ s _ _ _ C₅ C t₀ a1 ((abs_nonneg _).trans a3) a6 hn hb hr (m1 _ _ _ _ a2 h1)

@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NotDominatesTopPlace
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEtaleCoordsLocalRingOfVarietyPointResidueCStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPlaceDominatingLocalDomainComplexStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPointLocalRingClosedPointCentreOfPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmoothFiniteTypeSubalgebraInRingStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsEtaleCoordsLocalRingOfVarietyPointResidueC
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsLocModelIsPrimeOf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPlaceDominatingLocalDomainComplex
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPointLocalRingClosedPointCentreOfPlace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmoothFiniteTypeSubalgebraInRing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -160,7 +161,7 @@ theorem normalise_at_smooth_point : ∀ {κ' : Type} [Field κ'] [Algebra ℂ κ
     rcases hn.2 with h | h
     · exact h0 h
     · exact h (inv_mem_of_isField hF hf h0)
-  · obtain ⟨F, hFO, hpos⟩ := GlobalTheory.T.exists_place_dominating_local_domain_complex O hO hF
+  · obtain ⟨F, hFO, hpos⟩ := _root_.GlobalTheory.DvrDom.exists_place_dominating O hO hF
     obtain ⟨j₀, hj₀, hdiv⟩ : ∃ j₀, a j₀ ≠ 0 ∧ ∀ i, a i / a j₀ ∈ F.ring := by
       obtain ⟨j₀, hj₀s, hmin⟩ := (Finset.univ.filter (fun i => a i ≠ 0)).exists_min_image
         (fun i => F.ord (a i)) ⟨j, by simpa using hj⟩
@@ -183,9 +184,9 @@ theorem normalise_at_smooth_point : ∀ {κ' : Type} [Field κ'] [Algebra ℂ κ
         exact hFO _ y.2
       · obtain ⟨i, -, rfl⟩ := Finset.mem_image.1 hx
         exact hdiv i
-    obtain ⟨A, hAs, hAF, hSA, hAfrac⟩ := GlobalTheory.T.exists_smooth_finiteType_subalgebra_in_ring F S hS
-    obtain ⟨B, hB, hRB, hAB, hBF, hsm⟩ := GlobalTheory.T.exists_pointLocalRing_closedPoint_centre_of_place F A hAs hAF hAfrac
-    obtain ⟨r, τ, hm, het, htr⟩ := GlobalTheory.T.exists_etaleCoords_localRingOfVarietyPoint_residueComplex B hB hRB hsm
+    obtain ⟨A, hAs, hAF, hSA, hAfrac⟩ := _root_.GlobalTheory.FieldPair.Place.exists_smooth_subalgebra F S hS
+    obtain ⟨B, hB, hRB, hAB, hBF, hsm⟩ := _root_.GlobalTheory.FieldPair.exists_locRing_closedPoint_centre F A hAs hAF hAfrac
+    obtain ⟨r, τ, hm, het, htr⟩ := _root_.GlobalTheory.EtaleCoordLocal.exists_etaleCoords B hB hRB hsm
     have hSB : ∀ x ∈ S, x ∈ B := fun x hx => hAB (hSA x hx)
     letI := hB.isLocalRing
     letI := hO.isLocalRing

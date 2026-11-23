@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.ContrFactor
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.AllPositions
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicIsNonarchimedeanLocalField
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatRowMapEqRootExchangeOperatorTranslateStatement
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FlatRowMapEqRootExchangeOperatorTranslate
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -329,7 +329,7 @@ theorem GlobalTheory.LocFlat.doubleStep_of_pureCol_pureRow : ∀ (k : Type) [Fie
     rw [hhat p u]
     by_cases hu : u ∈ box (XIx (Fin κ) t (j + 1)) (S.ϖ ^ (r + 1))
     · have e1 : (fromRows p.2 (Matrix.of fun _ => u)) (Sum.inr ()) = u := by funext a; simp
-      rw [GlobalTheory.T.flatRowMap_eq_rootExchangeOperator_translate k S.ψ ν S.cond.continuous hν.1 _ _ (c + 1) (r + 1) (by omega) (by omega) _
+      rw [_root_.GlobalTheory.LocFlat.flRow_eq_opE_rowE k S.ψ ν S.cond.continuous hν.1 _ _ (c + 1) (r + 1) (by omega) (by omega) _
         (om_mem_SB _ 1 h hΦ₂) _, e1, toRows₁_fromRows]
       obtain ⟨a, ha⟩ := GlobalTheory.LocFlat.DoubleStepProof.Phi_mul_rowE S t hP j c (by omega) r hc u hu
       have e2 : (fun z => om (S.μ (j + 1 + 1)) 1 h ((S.T t).Phi (j + 1) (c + 1) (by omega)) (z * (rowE (c + 1 + 1) (r + 1) u).val)) =

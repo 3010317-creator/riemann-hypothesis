@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.IsMirClass
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotypicTraceEqOfOneDoubleCosetStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PatternGroupSubgroupOrderCharacterStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LabelDatum
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsotypicTraceEqOfOneDoubleCoset
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.PatternGroupSubgroupOrderCharacter
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -236,10 +237,10 @@ theorem exchange (ψ : AddChar (ZMod g) ℂ) (hψ : ψ ≠ 1) (Φ₁ Φ₂ E : F
     (c2 : ∀ w, W w → ∀ x y, (x = w ∨ (Φ₁ x w ∨ Φ₂ x w)) → (q = y ∨ (Φ₁ q y ∨ Φ₂ q y)) →
       Φ₂ x y ∧ (E x y → x = p ∧ y = q))
     (χ : Gn g N → ℂ) (hχ : IsClass χ) : tr (ePat g N Φ₁ E ψ) χ = tr (ePat g N Φ₂ E ψ) χ := by
-  obtain ⟨⟨H₁, hH₁, hc₁⟩, hu₁, ha₁⟩ := GlobalTheory.T.patternGroup_subgroup_order_character g N Φ₁ i1 t1
-  obtain ⟨⟨H₂, hH₂, hc₂⟩, hu₂, ha₂⟩ := GlobalTheory.T.patternGroup_subgroup_order_character g N Φ₂ i2 t2
+  obtain ⟨⟨H₁, hH₁, hc₁⟩, hu₁, ha₁⟩ := _root_.GlobalTheory.GLm.Pattern.pattern_group g N Φ₁ i1 t1
+  obtain ⟨⟨H₂, hH₂, hc₂⟩, hu₂, ha₂⟩ := _root_.GlobalTheory.GLm.Pattern.pattern_group g N Φ₂ i2 t2
   obtain ⟨⟨H, hH, -⟩, -, -⟩ :=
-    GlobalTheory.T.patternGroup_subgroup_order_character g N (fun a b => Φ₁ a b ∨ Φ₂ a b) (fun a h => h.elim (i1 a) (i2 a)) t0
+    _root_.GlobalTheory.GLm.Pattern.pattern_group g N (fun a b => Φ₁ a b ∨ Φ₂ a b) (fun a h => h.elim (i1 a) (i2 a)) t0
   have hm₁ : ∀ x y : H₁, sumAt E (((x : Gn g N) : Mt g N) * ((y : Gn g N) : Mt g N)) =
       sumAt E ((x : Gn g N) : Mt g N) + sumAt E ((y : Gn g N) : Mt g N) :=
     fun x y => ha₁ E e1 hE _ _ ((hH₁ _).1 x.2) ((hH₁ _).1 y.2)
@@ -312,7 +313,7 @@ theorem exchange (ψ : AddChar (ZMod g) ℂ) (hψ : ψ ≠ 1) (Φ₁ Φ₂ E : F
     exact exists_conj (Φ := fun a b => Φ₁ a b ∨ Φ₂ a b) ψ hψ hE hpq (c2 w hw) hu₂
       (Or.inl fun e => hp (by rw [e]; exact hw)) H₂ hH₂ hm₂ h hA hB (by rw [hqq, mul_one]; exact hpw)
   rw [tr_ePat ψ Φ₁ E H₁ hH₁ χ, tr_ePat ψ Φ₂ E H₂ hH₂ χ]
-  have key := GlobalTheory.T.isotypic_trace_eq_of_one_double_coset (Gn g N) H H₁ H₂ (patChar ψ E hE H₁ hm₁) (patChar ψ E hE H₂ hm₂)
+  have key := _root_.GlobalTheory.GLm.OneDoubleCoset.isotypic_trace_eq (Gn g N) H H₁ H₂ (patChar ψ E hE H₁ hm₁) (patChar ψ E hE H₂ hm₂)
     hle₁ hle₂ hcard heq hx₁ hx₂ χ hχ
   simpa only [Units.val_inv_eq_inv_val, patChar_val] using key
 

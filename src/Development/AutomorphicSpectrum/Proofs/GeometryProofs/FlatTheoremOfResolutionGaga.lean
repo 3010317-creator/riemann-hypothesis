@@ -4,10 +4,13 @@ public import Development.AutomorphicSpectrum.Statements.GeometryStatements.ThmF
 public import Development.AutomorphicSpectrum.PublishedTheorems.Geometry₂.GagaSections
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.BlowupProjections.BlowupProjStatement
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.UniformisationConclusion
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteConstantHoldsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlatFirstFromResolutionAndGagaStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlatTheoremOfPartsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlatZeroFromResolutionAndGagaStatement
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.FinConstFor
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteConstantHolds
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.CardComapMulFinsumEqFinsumFibres
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlatFirstFromResolutionAndGaga
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.FlatLineGenerator
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlatTheoremOfParts
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlatZeroFromResolutionAndGaga
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,6 +54,6 @@ namespace GlobalTheory.CompanionTheory.Ar.Flat
 theorem thmFlatA_of_resK_gaga_partI :
     Geo.ResK.ResKStatement → GagaSections → PartI → ThmFlatA :=
   fun hR hG hP =>
-    GlobalTheory.T.flat_theorem_of_parts hP (GlobalTheory.T.flat_zero_from_resolution_and_gaga hR hG) (GlobalTheory.T.flat_first_from_resolution_and_gaga hR hG) GlobalTheory.T.finite_constant_holds
+    _root_.GlobalTheory.CompanionTheory.Ar.Flat.thmFlatA_of_parts hP (_root_.GlobalTheory.CompanionTheory.Ar.Flat.A0.flat_zero_of_resolution_gaga hR hG) (_root_.GlobalTheory.CompanionTheory.Ar.Flat.FlatFirstTheorem.flat_first_of_resolution_gaga hR hG) _root_.GlobalTheory.CompanionTheory.Ar.Flat.finConst_of_all_hosts
 
 end GlobalTheory.CompanionTheory.Ar.Flat

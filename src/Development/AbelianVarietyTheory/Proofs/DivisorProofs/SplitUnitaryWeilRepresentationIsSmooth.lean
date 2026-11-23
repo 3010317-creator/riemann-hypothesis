@@ -1,7 +1,7 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.UnipVal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenSubgroupOfSiegelAndOppositeNhdsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenSubgroupOfSiegelAndOppositeNhds
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatFixedNearOneSiegelParabolicStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -73,7 +73,7 @@ theorem isKW_isSmoothRep : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRel F
     rw [hKW.par g hs u]
     exact hg hs
   have hU : IsOpen (U : Set (UG c (stdJ ν E))) := by
-    refine GlobalTheory.T.isOpen_subgroup_of_siegel_and_opposite_nhds F E c δ hE ν U (key v) ?_
+    refine _root_.GlobalTheory.KSp.isOpen_of_sieg_of_opp F E c δ hE ν U (key v) ?_
     filter_upwards [key (ω (weyl c ν) v)] with g hg hs
     change ω ((weyl c ν)⁻¹ * g * weyl c ν) v = v
     rw [map_mul, map_mul, Module.End.mul_apply, Module.End.mul_apply, hg hs, ← Module.End.mul_apply, ← map_mul,

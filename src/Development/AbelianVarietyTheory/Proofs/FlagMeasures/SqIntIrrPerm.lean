@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PosPartUnitaryMul
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TraceTransposePow
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryGroupStructuresPermConjInvariantStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.RelevantZeroGramTerms
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryGroupStructuresPermConjInvariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -212,7 +213,7 @@ lemma sqIntIrr_perm {ε : Fin n → Bool} (s : Equiv.Perm (Fin n))
     have := hst (g.submatrix s s) (GlobalTheory.Dec.FormF.UJ_perm s hg) w hw
     simpa [Matrix.submatrix_submatrix] using this
   · intro v w
-    exact ((GlobalTheory.T.unitaryGroup_structures_perm_conj_invariant _ ε s).2 (fun x => ⟪w, σ x v⟫_ℂ) 2).1.mp (hsq v w)
+    exact ((_root_.GlobalTheory.Dec.PermGroup.permGroup _ ε s).2 (fun x => ⟪w, σ x v⟫_ℂ) 2).1.mp (hsq v w)
 
 private lemma eword_comp_perm_submatrix (ε : Fin n → Bool) (s : Equiv.Perm (Fin n)) (f : Matrix (Fin n) (Fin n) ℂ → ℂ)
     (w : List (Fin n × Fin n)) :

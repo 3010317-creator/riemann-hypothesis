@@ -2,8 +2,9 @@ module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.ClosedPhiFunctoriality.IntBasisAlt
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisFrobeniusMatrixEqZeroOfDvd
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisTorsionFreeCompleteFrobeniusPropertiesStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrimePowDvdTiltUniformizerPowAcrisEventuallyStatement
+import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AcrisTorsionFreeCompleteFrobeniusProperties
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrimePowDvdTiltUniformizerPowAcrisEventually
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,8 +50,8 @@ open UpperTheory.Gal.ClosedPhiFromClosedTrace
 theorem UpperTheory.Gal.ClosedPhiFromClosedTrace.zeroAp_holds :
     ZeroAp := by
   intro l _ K bk c M
-  obtain ⟨htor, -, -, hphi, -⟩ := GlobalTheory.T.acris_torsionFree_complete_frobenius_properties l K bk
-  obtain ⟨n₀, hn₀⟩ := GlobalTheory.T.primePow_dvd_tiltUniformizer_pow_acris_eventually l K bk c M
+  obtain ⟨htor, -, -, hphi, -⟩ := _root_.GlobalTheory.AcrisFrobE.main l K bk
+  obtain ⟨n₀, hn₀⟩ := _root_.GlobalTheory.AcrisPow.main l K bk c M
   refine ⟨c * n₀ + M, ?_⟩
   intro d d' D F F' hdiv hcong
   have hdiv' : ∀ i j, ((algebraMap (Ainf l) (Per.Acris l)).comp bk.ev) X ∣ D i j := hdiv

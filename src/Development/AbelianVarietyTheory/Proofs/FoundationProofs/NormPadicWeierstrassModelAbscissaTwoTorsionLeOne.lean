@@ -4,9 +4,14 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.NormSumPa
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DifferentiableSqTh
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AlgebraicTaylorTorsionTranslateEvenTheta
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmThetaFunctionsOverTwoUnitAndIntegral
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsBoundMeansPosLogAreaNormalisedTheta
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SubstMulLogEqNSer
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaOrderParameterSeriesBounded
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaTranslateProductSigmaStarPowLatticeLaw
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.Cval
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TorsionPointLocalHeightEqOne
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CmThetaTaylorCoeffAlgebraicAndConjugate
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EvenThetaTwoTorsionBasicProperties
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsBoundMeansPosLogAreaNormalisedTheta
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsTraceOneEvenNormUnitAtTwo
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FstMemClosureNatCast
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IdealPeriodLatticeOfCurveDatum
@@ -17,12 +22,8 @@ import Development.AbelianVarietyTheory.Proofs.FoundationProofs.MulByIntegralIsC
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PadicComplexIntegralBoundedSeriesLaws
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.PowerSeriesSupNormMulPadicComplex
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SigmaStarSquareQuotientInModelParameter
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SubstMulLogEqNSer
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TaylorSeriesInParameterRescaleOfAlgebraic
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaOrderParameterSeriesBoundedStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaTranslateProductSigmaStarPowLatticeLawStatement
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaTranslationCompEqCocycleMul
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TorsionPointLocalHeightEqOneStatement
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TorsionPointPadicAbscissaNormLeOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -160,7 +161,7 @@ theorem pull_back_split : ∀ (D : D7), Inp D → ∀ (p : ℕ) [Fact p.Prime] (
   intro D hI p _ cc δ g hg t0 ht0 y N hN hNy _ hsp
   have hθ := intSer_iff.1 ((GlobalTheory.ThetaParam.theta_param_integral D hI p cc δ g hg t0 ht0).2 hsp).1
   have hx0 := norm_padicWeierstrassModelAbscissa_twoTorsion_le_one D p cc δ g hg t0 ht0
-  have hht := GlobalTheory.T.torsionPoint_localHeight_eq_one D p cc δ g hg
+  have hht := _root_.GlobalTheory.TorsionHeight.height_one D p cc δ g hg
   obtain ⟨hcc, -, hδ, hΛ, hok⟩ := hg
   have hcrv : Crv D cc δ := ⟨hcc, hδ⟩
   have hG := (GlobalTheory.InducedType.induced_type D).1
@@ -223,8 +224,8 @@ theorem pull_back_split : ∀ (D : D7), Inp D → ∀ (p : ℕ) [Fact p.Prime] (
 
   have hFb : BddSer F := by
     obtain ⟨h1, h2'⟩ := atU_mul g hF hTa
-    obtain ⟨B, hB, hBe⟩ := GlobalTheory.T.thetaOrder_parameterSeries_bounded p g hok hlat' h2 h3 hdisc hσ t0 ht0n (hwp t0 hq0 ht0n).1 (2 * N ^ 2) _ h1
-      (GlobalTheory.T.thetaTranslateProduct_sigmaStarPow_lattice_law g.abelian₂ hlat' t0 ht0.1 y N hNy)
+    obtain ⟨B, hB, hBe⟩ := _root_.GlobalTheory.ThetaOrderBdd.order_bdd p g hok hlat' h2 h3 hdisc hσ t0 ht0n (hwp t0 hq0 ht0n).1 (2 * N ^ 2) _ h1
+      (_root_.GlobalTheory.ThetaLaw.pull_law g.abelian₂ hlat' t0 ht0.1 y N hNy)
     rw [h2', pow_mul] at hBe
     have := ((IntSer.pow hE2 (N ^ 2)).bdd.mul hB).mul hTinv.bdd
     rwa [← hBe, mul_assoc, mul_comm T, hTi, mul_one] at this

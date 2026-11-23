@@ -1,7 +1,7 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.InstBorelGL
-public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.LocalFieldUniformizerNormPropertiesStatement
+public import Development.AutomorphicSpectrum.Proofs.GlobalProofs.LocalFieldUniformizerNormProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -80,7 +80,7 @@ theorem mem_GLint_iff {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F]
     (hLF : LF O ϖ nrm q) (n : ℕ) (g : GL (Fin n) F) :
     g ∈ GLint O n ↔ (IsInt O (g : Matrix (Fin n) (Fin n) F) ∧
       nrm (g : Matrix (Fin n) (Fin n) F).det = 1) := by
-  obtain ⟨-, -, hO, -, -, -, -⟩ := GlobalTheory.T.localField_uniformizer_norm_properties hLF
+  obtain ⟨-, -, hO, -, -, -, -⟩ := _root_.GlobalTheory.CompanionTheory.QL.NormalisedValue.main hLF
   have hdet : (g : Matrix (Fin n) (Fin n) F).det * ((g⁻¹ : GL (Fin n) F) : Matrix (Fin n) (Fin n) F).det = 1 := by
     rw [← Matrix.det_mul, ← Units.val_mul, mul_inv_cancel, Units.val_one, Matrix.det_one]
   constructor

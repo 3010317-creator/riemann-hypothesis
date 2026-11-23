@@ -3,10 +3,10 @@ module
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CPoly
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsCliff
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.RealDescent.RealLeviDescent.IsCoreMod
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DominanceOfWeylCharacterCoeffStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualWeightSpacesSpanStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DominanceOfWeylCharacterCoeff
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DualWeightSpacesSpan
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TorCharInjective
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WeightPolynomialTraceIdentityStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.WeightPolynomialTraceIdentity
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -78,13 +78,13 @@ theorem trOn_dualT_id {n : ℕ} (E : KMod n) (S : Submodule ℂ (E.V →L[ℂ] �
 theorem topeG : ∀ {n : ℕ} (lam : Fin n → ℤ), Antitone lam → ∀ (E : KMod n) (T : E.V →L[ℂ] E.V), IsLefK lam E T →
     (⨆ μ, wtDual E μ) = ⊤ ∧ ∀ μ, wtDual E μ ≠ ⊥ → DomLE (wtR μ) (m0 lam) := by
   intro n lam hlam E T hT
-  have hspan := GlobalTheory.T.dual_weight_spaces_span E
+  have hspan := _root_.GlobalTheory.CompanionTheory.RealCount.Tope.iSup_wtDual_eq_top E
   have hind := GlobalTheory.CompanionTheory.RealCount.Tope.wtDual_iSupIndep E
   have hfin : Set.Finite {μ | wtDual E μ ≠ ⊥} := WellFoundedGT.finite_ne_bot_of_iSupIndep hind
   set s := hfin.toFinset with hs
   have hmem : ∀ μ, wtDual E μ ≠ ⊥ → μ ∈ s := fun μ h => by simpa [hs] using h
-  obtain ⟨h1, -⟩ := GlobalTheory.T.weight_polynomial_trace_identity lam E T hT hspan hind s hmem
-  refine ⟨hspan, fun μ hμ => GlobalTheory.T.dominance_of_weyl_character_coeff lam hlam _ h1 μ ?_⟩
+  obtain ⟨h1, -⟩ := _root_.GlobalTheory.CompanionTheory.RealCount.Tope.Ident.lefK_laurent_ident lam E T hT hspan hind s hmem
+  refine ⟨hspan, fun μ hμ => _root_.GlobalTheory.CompanionTheory.RealCountG.DomA.domLE_of_mul_eq lam hlam _ h1 μ ?_⟩
   rw [cPoly_coeff, if_pos (hmem μ hμ), trOn_dualT_id]
   have : Module.finrank ℂ (wtDual E μ) ≠ 0 := fun h0 => hμ (Submodule.finrank_eq_zero.1 h0)
   exact_mod_cast this

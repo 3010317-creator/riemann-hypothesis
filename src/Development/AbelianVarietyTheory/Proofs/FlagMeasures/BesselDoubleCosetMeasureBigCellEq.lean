@@ -2,14 +2,17 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.BlockAnti
 public import Formalism.HermitianCurvature.HermitianCurvatureProofs.RankOneEmbeddings
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniqueHaarDensityAtIdentityStatement
+public import Formalism.PeriodIntegrals.QuotInv
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UpperOff
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniqueHaarDensityAtIdentity
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HaarLieIsHaarOnUnipotentRadicalStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralBigCellHaarDensityConstantStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RankOneUnitaryIntegrationFormulaExactConstantStatement
+public import Formalism.HermitianCurvature.WeylElementCommutesLevelOne
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LintegralBigCellHaarDensityConstant
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RankOneUnitaryIntegrationFormulaExactConstant
+public import Formalism.HermitianCurvature.HermitianCurvatureProofs.BigCellHermitian
 import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IsHaarOnIffGroupsUnitaryUnipotent
 import Formalism.FormalDegreeBessel.FinalBF
 import Formalism.FormalDegreeBessel.FinalG
-public import Formalism.HermitianCurvature.HermitianCurvatureProofs.BigCellHermitian
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.CompactGroupHaarExists
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.ConjugationContinuousOnInvertible
 import Formalism.HermitianCurvature.HermitianCurvatureProofs.ConjugationInvarianceEverySetting
@@ -196,12 +199,12 @@ theorem isDis_bigCell : ∀ (k r : ℕ) (z z' : (Fin (2 * r + k + 1) → ℂ)) (
   have := hN.1
   have := hN1.1
   have hb : IsHaarOn (B2.UWb k r) μb := ⟨inferInstance, hbb.ne_zero, hbb.conc, hbb.left⟩
-  obtain ⟨cb, hcb, hdb, -⟩ := GlobalTheory.T.exists_unique_haarDensity_at_identity _ (B2.UWb k r) μb
+  obtain ⟨cb, hcb, hdb, -⟩ := _root_.GlobalTheory.MatHaarDensity.exists_hasDens _ (B2.UWb k r) μb
     ⟨hcl.closed, hcl.one_mem, hcl.mul_mem, fun a ha => ⟨hcl.inv_mem a ha, Matrix.mul_nonsing_inv a (hcl.unit a ha)⟩⟩ hb
   have hsec' := R1.secF_section hsec
   have hsmm := R1.secF_meas hsec
-  have h1 := GlobalTheory.T.lintegral_bigCell_haar_density_constant k r μG μb c cb hc hcb hG hd hb hdb
-  have h2 := GlobalTheory.T.rank_one_unitary_integration_formula_exact_constant k r z z' (R1.secF k r z z' μsec) μb μW μW' cb hk hz hz' hT hT' hsec' hcb hb hdb hW hW1 hW' hW1'
+  have h1 := _root_.GlobalTheory.CellDens.bigCell_integral k r μG μb c cb hc hcb hG hd hb hdb
+  have h2 := _root_.GlobalTheory.RankOneExact.rankOne_exact k r z z' (R1.secF k r z z' μsec) μb μW μW' cb hk hz hz' hT hT' hsec' hcb hb hdb hW hW1 hW' hW1'
   have hconj := b2_conjInvRaw_proof k r z μN hz hT hNb
   have hconj' := b2_conjInvRaw_proof k r z' μN hz' hT' hNb
   have UF := unipotent_weyl_properties

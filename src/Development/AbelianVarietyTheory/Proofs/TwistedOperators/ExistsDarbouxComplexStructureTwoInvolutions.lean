@@ -2,8 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TrPairApply
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ArchActionReadingsCompatible
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueArchimedeanMatrixAdeleExtensionOfComStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealScalarArchimedeanAdeleSmulMatrixRealPlaceStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUniqueArchimedeanMatrixAdeleExtensionOfCom
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RealScalarArchimedeanAdeleSmulMatrixRealPlace
 import Mathlib.Algebra.Order.Archimedean.Real.Hom
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -243,18 +244,18 @@ theorem exists_bridge : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Nu
         simp only [mk_add, Matrix.map_apply, Matrix.add_apply, map_add (f := _), Pi.add_apply]
       map_smul' := fun r y => by
         funext w
-        rw [mk_smul_real, GlobalTheory.T.realScalarArchimedeanAdele_smul_matrix_realPlace σ τ hcm (mk d y) r w]
+        rw [mk_smul_real, _root_.GlobalTheory.RealScalar.realAd_smul_map σ τ hcm (mk d y) r w]
         ext i j
         simp only [Matrix.smul_apply, smul_eq_mul, Complex.real_smul, RingHom.id_apply, Pi.smul_apply] }
   have hΨl : ∀ y w, Ψl y w = (mk d y).map (piInf (τ w)) := fun _ _ => rfl
   have hinj : Function.Injective Ψl := by
     intro y y' h
-    have hu := (GlobalTheory.T.existsUnique_archimedeanMatrix_adeleExtension_of_components σ τ hcm (Ψl y)).unique ⟨at_mk d y, fun w => rfl⟩
+    have hu := (_root_.GlobalTheory.ArchMatCoords.existsUnique_at_map_piInf σ τ hcm (Ψl y)).unique ⟨at_mk d y, fun w => rfl⟩
       ⟨at_mk d y', fun w => (congrFun h w).symm⟩
     rw [← coord_mk d y, ← coord_mk d y', hu]
   have hsurj : Function.Surjective Ψl := by
     intro M
-    obtain ⟨u, ⟨hu, hM⟩, -⟩ := GlobalTheory.T.existsUnique_archimedeanMatrix_adeleExtension_of_components σ τ hcm M
+    obtain ⟨u, ⟨hu, hM⟩, -⟩ := _root_.GlobalTheory.ArchMatCoords.existsUnique_at_map_piInf σ τ hcm M
     refine ⟨coord d u, funext fun w => ?_⟩
     rw [hΨl, mk_coord d hu]
     exact hM w

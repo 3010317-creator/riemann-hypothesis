@@ -5,11 +5,13 @@ public import Mathlib.Analysis.InnerProductSpace.Basic
 public import Mathlib.MeasureTheory.Group.FundamentalDomain
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.QuotientIntegrationFormulaDiscreteSubgroupLeft
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AeExistsPairGroupSmulMemShearedDomainStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AedisjointPairGroupSmulShearedDomainStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NullMeasurableSetShearImage
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AedisjointPairGroupSmulShearedDomain
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HaarMapConjNormalizingLatticeEqSelfStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HaarMapMulRightEqOfFiniteFundamentalDomainStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MapSwapShearedProductMeasureUnimodularStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SmulInvariantMeasureShearedProductPairGroupStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HaarMapMulRightEqOfFiniteFundamentalDomain
+public import Mathlib.MeasureTheory.Group.Measure
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.MapSwapShearedProductMeasureUnimodular
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.SmulInvariantMeasureShearedProductPairGroup
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -73,7 +75,7 @@ theorem unfold_zero_mean : ∀ (H : Type) [Group H] [TopologicalSpace H] [IsTopo
     intro a b hab
     apply Subtype.ext; apply Subtype.ext
     simpa using congrArg (fun y : Γ => (y : H)) hab
-  have hR : ∀ n₀ : N, κ.map (· * n₀) = κ := GlobalTheory.T.haar_map_mul_right_eq_of_finite_fundamentalDomain H Γ N hΓ hNc κ 𝓝 hκ h𝓝 h𝓝t
+  have hR : ∀ n₀ : N, κ.map (· * n₀) = κ := _root_.GlobalTheory.haar_map_mul_right_eq_of_fundamentalDomain H Γ N hΓ hNc κ 𝓝 hκ h𝓝 h𝓝t
   have hI : κ.map (fun n => n⁻¹) = κ := by
     haveI : κ.IsMulRightInvariant := ⟨hR⟩
     exact (GlobalTheory.QuotDiscrete.isInvInvariant_of_isMulRightInvariant κ).inv_eq_self
@@ -88,11 +90,11 @@ theorem unfold_zero_mean : ∀ (H : Type) [Group H] [TopologicalSpace H] [IsTopo
     simp only [Prod.mk.injEq, Subtype.mk.injEq] at hab
     exact Subtype.ext (Prod.ext hab.1 hab.2)
   haveI : MeasurableConstSMul G (H × H) := inferInstance
-  haveI : SMulInvariantMeasure G (H × H) μ := GlobalTheory.T.smulInvariantMeasure_sheared_product_pairGroup H ν Γ N hNc hN κ hκ hC
+  haveI : SMulInvariantMeasure G (H × H) μ := _root_.GlobalTheory.UnfoldNormal.smulInvariantMeasure_shear_map H ν Γ N hNc hN κ hκ hC
   have hS : IsFundamentalDomain G (shear N '' (𝓝 ×ˢ 𝓕)) μ :=
     ⟨nullMeasurableSet_shear_image hNc κ ν h𝓝.nullMeasurableSet h𝓕.nullMeasurableSet,
-      GlobalTheory.T.ae_exists_pairGroup_smul_mem_sheared_domain H ν Γ N hΓ hNc hN κ 𝓝 hκ h𝓝 hC 𝓕 h𝓕, GlobalTheory.T.aedisjoint_pairGroup_smul_sheared_domain H ν Γ N hΓ hNc hN κ 𝓝 hκ h𝓝 hC 𝓕 h𝓕⟩
-  have hsw : μ.map Prod.swap = μ := GlobalTheory.T.map_swap_sheared_product_measure_unimodular H ν N hNc κ hκ hI
+      GlobalTheory.T.ae_exists_pairGroup_smul_mem_sheared_domain H ν Γ N hΓ hNc hN κ 𝓝 hκ h𝓝 hC 𝓕 h𝓕, _root_.GlobalTheory.UnfoldNormal.aedisjoint_pairGroup_smul_shear_image H ν Γ N hΓ hNc hN κ 𝓝 hκ h𝓝 hC 𝓕 h𝓕⟩
+  have hsw : μ.map Prod.swap = μ := _root_.GlobalTheory.UnfoldNormal.map_swap_map_shear H ν N hNc κ hκ hI
   set S := shear N '' (𝓝 ×ˢ 𝓕) with hSdef
   set f : H → ℂ := fun x => K x * F x with hf
   have hmp : MeasurePreserving (shear N) (κ.prod ν) μ := ⟨hemb.measurable, rfl⟩

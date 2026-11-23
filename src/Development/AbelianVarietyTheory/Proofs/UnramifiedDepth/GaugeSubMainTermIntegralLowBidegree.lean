@@ -1,12 +1,18 @@
 module
 
 public import Formalism.LocalToGlobal.CharacterGerms.LatticeInclusionFormsInjective
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.CoeffCoordinatesGoodTangentsLtSqStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.CoeffIntegralOnExponentsSubstOfLowerSetStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.CoeffLeafGaugeSubMainTermEqZeroOnFirstAxisStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.HPullWUpGTwoGroupEmbeddingEqRenameStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.LinearSubstCoordinateIntegralOfDegreeLtStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.PderivLeafGaugeEqPairingAddIntegralStatement
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.TwoMulChainStartIndexAddOneOfOdd
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.CoeffCoordinatesGoodTangentsLtSq
+public import Formalism.LocalToGlobal.CharacterGerms.GeNatCast
+public import Mathlib.RingTheory.MvPowerSeries.Substitution
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.CoeffIntegralOnExponentsSubstOfLowerSet
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.CoeffLeafGaugeSubMainTermEqZeroOnFirstAxis
+public import Mathlib.RingTheory.MvPowerSeries.Rename
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.HPullWUpGTwoGroupEmbeddingEqRename
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.LinearSubstCoordinateIntegralOfDegreeLt
+public import Mathlib.RingTheory.MvPowerSeries.Derivative
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.PderivLeafGaugeEqPairingAddIntegral
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.PeriodValuation
 import Formalism.LocalToGlobal.CharacterGerms.CartesianBoundOnCurves
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -50,7 +56,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.WeightedSumBounds.PeriodValuation
 
 @[expose] public section
 
@@ -120,7 +125,7 @@ private theorem pderiv_inr_mainM_one {C : Type} [Field C] (V : VF C) {ι ι' : T
 theorem mPlus_of_good_tangents : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) [NeZero d] (I J : Fin 2 → Type) [∀ g, Fintype (I g)] [∀ g, Fintype (J g)] (X : RowData C V d I J), X.Alt → 1 < d → ∀ (g : Fin 2) (a : ZMod d) (S : ∀ g, Sys (X.G g)) (t : ∀ g, I g → MvPowerSeries (I g) C), (∀ g, (S g).IsT (t g)) → ∀ (N : ℕ) (em : Fin N ↪ I g) (v' : Fin X.n → I (1 - g) → C), (∀ δ, (X.G g).ty (Sum.inl (em δ)) = a) → (∀ δ x, (S g).al (em δ) 1 x = 0) → (∀ b k, V.Ge 0 (v' b k)) → (∀ b k, (X.G (1 - g)).ty (Sum.inl k) ≠ a + ((1 : ℕ) : ZMod d) → v' b k = 0) → X.MPlusConcl g a N (fun δ => (S g).tan (em δ)) v' (fun b c => ∑ κ : J g, ∑ k : I (1 - g), -((V.l : C) * (S g).be (em c) 1 κ) * X.pair g κ k * v' b k) := by
   intro C _ V d _ I J _ _ X hAlt hd g a S t hT N em v' hty hal hint hpure μ hμl hμr
   by_cases h0 : ∀ b, μ (Sum.inr b) = 0
-  · rw [GlobalTheory.T.coeff_leafGauge_sub_mainTerm_eq_zero_on_first_axis _ _ _ _ _ X g a 1 _ _ _ v' _ μ h0]
+  · rw [_root_.GlobalTheory.MainTerm.Axis.coeff_hM_sub_mainM_eq_zero _ _ _ _ _ X g a 1 _ _ _ v' _ μ h0]
     exact VF.Ge.zero 0
   simp only [not_forall] at h0
   obtain ⟨b, hb⟩ := h0
@@ -128,9 +133,9 @@ theorem mPlus_of_good_tangents : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) [
       (fun δ => (S g).tan (em δ)) c x = 0 := by
     intro c x hx
     exact tan_pure (S g) (em c) x (by rw [hty c]; exact hx)
-  obtain ⟨γ, hγ, hγeq⟩ := GlobalTheory.T.pderiv_leafGauge_eq_pairing_add_integral C V d I J X hAlt g a 1 odd_one hd S t hT (Fin N) (Fin X.n)
+  obtain ⟨γ, hγ, hγeq⟩ := _root_.GlobalTheory.GaugeDeriv.pderiv_hM C V d I J X hAlt g a 1 odd_one hd S t hT (Fin N) (Fin X.n)
     (fun δ => (S g).tan (em δ)) v' he_pure hint hpure b
-  have h91 := GlobalTheory.T.hPullW_upG_twoGroupEmbedding_eq_rename C I g (Fin N) (Fin X.n) (fun δ => (S g).tan (em δ)) v'
+  have h91 := _root_.GlobalTheory.MainTerm.hPullW_upG_toW C I g (Fin N) (Fin X.n) (fun δ => (S g).tan (em δ)) v'
   have hsingle : Finsupp.single (Sum.inr b) 1 ≤ μ :=
     Finsupp.single_le_iff.2 (Nat.one_le_iff_ne_zero.2 hb)
   obtain ⟨μ', rfl⟩ : ∃ μ', μ = μ' + Finsupp.single (Sum.inr b) 1 :=
@@ -176,7 +181,7 @@ theorem mPlus_of_good_tangents : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) [
   rw [hsplit, map_add (f := _)]
   refine VF.Ge.add ?_ ?_
   · have h2 : ∀ j g : Fin 2, j = g ∨ j = 1 - g := by decide
-    refine GlobalTheory.T.coeffIntegralOnExponents_subst_of_lower_set C V (Fin N ⊕ Fin X.n) (WV I)
+    refine _root_.GlobalTheory.LowerSubst.subst_int_on_lower C V (Fin N ⊕ Fin X.n) (WV I)
       (fun ν => ∑ c, ν (Sum.inl c) < V.l ^ 2 ∧ ∑ b', ν (Sum.inr b') < V.l) ?_ γ _ hγ ?_ ?_ μ' ⟨hl', hr'⟩
     · intro ν ν' hle hP
       exact ⟨lt_of_le_of_lt (Finset.sum_le_sum fun c _ => hle (Sum.inl c)) hP.1,
@@ -196,7 +201,7 @@ theorem mPlus_of_good_tangents : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) [
         apply ge_coeff_rename_inl V
         intro ν' hν'
 
-        rw [(GlobalTheory.T.coeff_coordinates_good_tangents_lt_sq C V d (I j) (J j) (X.G j) (S j) (t j) (hT j) N em hal ν'
+        rw [(_root_.GlobalTheory.MainTerm.coeff_low_good C V d (I j) (J j) (X.G j) (S j) (t j) (hT j) N em hal ν'
         (by rw [hν']; exact hP.1)).1 x, map_sum]
         apply VF.Ge.sum
         intro δ _
@@ -210,12 +215,12 @@ theorem mPlus_of_good_tangents : ∀ (C : Type) [Field C] (V : VF C) (d : ℕ) [
         rw [h91.2]
         apply ge_coeff_rename_inr V
         intro ν' hν'
-        exact GlobalTheory.T.linearSubst_coordinate_integral_of_degree_lt C V d (I (1 - g)) (J (1 - g)) (X.G (1 - g)) (S (1 - g)) (t (1 - g))
+        exact _root_.GlobalTheory.MainTerm.linPull_coord_int_of_degree_lt C V d (I (1 - g)) (J (1 - g)) (X.G (1 - g)) (S (1 - g)) (t (1 - g))
           (hT (1 - g)) X.n v' hint ν' (by rw [hν']; exact hP.2) x
   · apply ge_coeff_rename_inl V
     intro ν hν
     have hdeg : ν.degree < V.l ^ 2 := by rw [hν]; exact hl'
-    have h19 := (GlobalTheory.T.coeff_coordinates_good_tangents_lt_sq C V d (I g) (J g) (X.G g) (S g) (t g) (hT g) N em hal ν hdeg).2
+    have h19 := (_root_.GlobalTheory.MainTerm.coeff_low_good C V d (I g) (J g) (X.G g) (S g) (t g) (hT g) N em hal ν hdeg).2
     have hz : MvPowerSeries.coeff ν G = 0 := by
 
       rw [hG, map_sub, map_sum]

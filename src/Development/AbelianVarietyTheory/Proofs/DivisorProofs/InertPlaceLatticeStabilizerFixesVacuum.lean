@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.OneMemKAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceSchwartzBruhatVacuumConditionEqSmulStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryStabilizerPreservesVacuumConditionAtPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationLocalAtFinitePlaceUnitaryGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilVacuumScalarEqOneInertPlaceStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.InertPlaceSchwartzBruhatVacuumConditionEqSmul
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryStabilizerPreservesVacuumConditionAtPlace
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilRepresentationLocalAtFinitePlaceUnitaryGroup
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilVacuumScalarEqOneInertPlace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,10 +57,10 @@ theorem vac_fixed' : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Numbe
     ∀ k ∈ GlobalTheory.InertSph.KAt σ G.W v, Acts (evFin F v) (om' (1, k)) (G.M'.vac v) (G.M'.vac v) := by
   intro F E _ _ _ _ _ σ B a a' G X om om' hTr v w hw hv k hk
   obtain ⟨hSB, -, θ, hθ, hvac⟩ := hTr.geo.hM'.vac v
-  obtain ⟨φ₁, hφ₁, hact⟩ := GlobalTheory.T.weilRepresentation_localAtFinitePlace_unitaryGroupW F E σ B a a' G X om om' hTr v k hk.1 _ hSB
-  have h1 := GlobalTheory.T.unitaryStabilizer_preserves_vacuumCondition_at_place F E σ B a a' G X om om' hTr v θ hθ k hk _ hSB φ₁ hφ₁ hact hvac
-  obtain ⟨c, rfl⟩ := GlobalTheory.T.inertPlace_schwartzBruhat_vacuumCondition_eq_smul F E σ B a a' G X om om' hTr v w hw θ hθ hvac φ₁ hφ₁ h1
-  have hc := GlobalTheory.T.weil_vacuum_scalar_eq_one_inert_place F E σ B a a' G X om om' hTr v w hw hv k hk c hact
+  obtain ⟨φ₁, hφ₁, hact⟩ := _root_.GlobalTheory.WeilLocalityW'.locality F E σ B a a' G X om om' hTr v k hk.1 _ hSB
+  have h1 := _root_.GlobalTheory.InertSph.acts_vacCond_of_mem_KAt F E σ B a a' G X om om' hTr v θ hθ k hk _ hSB φ₁ hφ₁ hact hvac
+  obtain ⟨c, rfl⟩ := _root_.GlobalTheory.VacUniqInert.vac_unique F E σ B a a' G X om om' hTr v w hw θ hθ hvac φ₁ hφ₁ h1
+  have hc := _root_.GlobalTheory.InertScalar.scalar_eq_one F E σ B a a' G X om om' hTr v w hw hv k hk c hact
   rwa [hc, one_smul] at hact
 
 end GlobalTheory.InertSph

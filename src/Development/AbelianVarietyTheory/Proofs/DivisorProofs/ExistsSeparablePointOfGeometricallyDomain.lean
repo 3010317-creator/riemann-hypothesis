@@ -1,12 +1,20 @@
 module
 
 public import Mathlib.FieldTheory.PurelyInseparable.Basic
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdjoinHomExtendOfDenominatorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteSeparablePointOfSeparableClosurePoinStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrimitiveElementSeparabilityCertificateStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtendAlgHomAdjoinIntegralRootStatement
+public import Mathlib.Algebra.Algebra.Subalgebra.Lattice
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NonemptyAlgHomAdjoin
+public import Mathlib.FieldTheory.IsSepClosed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFiniteSeparablePointOfSeparableClosurePoin
+public import Mathlib.FieldTheory.IntermediateField.Adjoin.Defs
+public import Mathlib.FieldTheory.Separable
+public import Mathlib.RingTheory.AlgebraicIndependent.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrimitiveElementSeparabilityCertificate
+public import Mathlib.FieldTheory.Minpoly.Basic
+public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtendAlgHomAdjoinIntegralRoot
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearIndepOnPowOfIsDomainTensorPurelyInseparabl
+public import Mathlib.FieldTheory.SeparablyGenerated
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegrallyClosedAdjoin
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearIndepOnPowOfIsDomainTensorPurelyInseparablStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -19,7 +27,6 @@ import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
-public import Mathlib.FieldTheory.SeparablyGenerated
 import Mathlib.Geometry.Euclidean.Volume.Basic
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
@@ -85,7 +92,7 @@ theorem core (k F : Type) [Field k] [Field F] [Algebra k F] (s : Finset F)
     (B : Subalgebra k F) (hB : B.FG) : Nonempty (B →ₐ[k] SeparableClosure k) := by
   obtain ⟨T, rfl⟩ := hB
   haveI : IsIntegrallyClosed (Algebra.adjoin k (s : Set F)) := isIntegrallyClosed_adjoin k F s hs.1
-  obtain ⟨θ, hθ, H, hH0, U, V, hUV, hT⟩ := GlobalTheory.T.exists_primitive_element_separability_certificate k F s hs hsep T
+  obtain ⟨θ, hθ, H, hH0, U, V, hUV, hT⟩ := _root_.GlobalTheory.SepPoint.exists_primitive_sep_certificate k F s hs hsep T
   obtain ⟨ev, hev⟩ := exists_ev k F s hs.1 H hH0
   let R := Algebra.adjoin k (s : Set F)
   let f := minpoly R θ
@@ -103,10 +110,10 @@ theorem core (k F : Type) [Field k] [Field F] [Algebra k F] (s : Finset F)
   obtain ⟨r, hr⟩ := IsSepClosed.exists_root _ hdeg hsepa
   have hr' : Polynomial.eval₂ (ev : R →+* SeparableClosure k) r f = 0 := by
     rwa [Polynomial.IsRoot, Polynomial.eval_map] at hr
-  obtain ⟨ψ, hψ⟩ := GlobalTheory.T.exists_algHom_adjoin_extend_of_isIntegral_root k F (SeparableClosure k) R θ hθ ev r hr'
+  obtain ⟨ψ, hψ⟩ := _root_.GlobalTheory.extend_alg_hom_adjoin_integral_root k F (SeparableClosure k) R θ hθ ev r hr'
   have hHS : (H : F) ∈ Algebra.adjoin k (insert θ (R : Set F)) :=
     Algebra.subset_adjoin (Set.mem_insert_of_mem _ H.2)
-  exact GlobalTheory.T.nonempty_adjoin_algHom_of_mul_mem_of_map_ne_zero k F (SeparableClosure k) _ ψ ⟨H, hHS⟩
+  exact _root_.GlobalTheory.AdjoinAlgebraHomNonempty.nonempty_algHom_adjoin k F (SeparableClosure k) _ ψ ⟨H, hHS⟩
     (by rw [hψ _ H.2 hHS]; exact hev) (T : Set F) hT
 
 theorem exists_sepPoint : ∀ (k B : Type) [Field k] [CommRing B] [Algebra k B],
@@ -119,12 +126,12 @@ theorem exists_sepPoint : ∀ (k B : Type) [Field k] [CommRing B] [Algebra k B],
   haveI : IsDomain (k ⊗[k] B) := hK k inferInstance inferInstance
   haveI : IsDomain B := (Algebra.TensorProduct.lid k B).symm.toMulEquiv.isDomain
   obtain ⟨s, hs, hsep⟩ := exists_sepBasis k B hB
-    (fun p hp hpk => GlobalTheory.T.linearIndepOn_frob_pow_of_isDomain_tensor_insep k B p hp hpk hK)
+    (fun p hp hpk => _root_.GlobalTheory.linearIndepOn_pow_of_isDomain_tensor_purelyInseparable k B p hp hpk hK)
   let g : B →ₐ[k] FractionRing B := IsScalarTower.toAlgHom k B (FractionRing B)
   have hfg : g.range.FG := by
     rw [← Algebra.map_top]
     exact hB.out.map g
   obtain ⟨ψ⟩ := core k (FractionRing B) s hs hsep g.range hfg
-  exact GlobalTheory.T.exists_finite_separable_point_of_separableClosure_point' k B hB ⟨ψ.comp g.rangeRestrict⟩
+  exact _root_.GlobalTheory.exists_finite_separable_point_of_separableClosure_point k B hB ⟨ψ.comp g.rangeRestrict⟩
 
 end GlobalTheory.SepPoint

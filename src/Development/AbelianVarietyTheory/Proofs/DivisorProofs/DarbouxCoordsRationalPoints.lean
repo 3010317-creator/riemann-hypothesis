@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DarbouxCoordsGoodModelStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DarbouxCoordsGoodModel
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAdelicSchwartzThetaDistributionSumNeZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilEigenBijectiveSchwartzStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilEigenSchwartzSurjectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilEigenBijectiveSchwartz
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilEigenSchwartzSurjective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -67,7 +67,7 @@ theorem change_to_coordinates : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
         ∀ x, e (om x Φ) = om₁ x (e Φ) := by
   intro F E _ _ _ _ _ σ B n d X W M χX χW om r s r' s' hpair co hco
   obtain ⟨e, ei, ev, hei, hmaps, hheis, hSB, hvac, hstd, hpure, hbij⟩ :=
-    GlobalTheory.T.darboux_coords_good_model F E σ B n d X W M r s r' s' hpair.base hpair.herm hpair.skew hpair.good co hco
+    _root_.GlobalTheory.SympChangeBij.change_of_coordinates_bij F E σ B n d X W M r s r' s' hpair.base hpair.herm hpair.skew hpair.good co hco
   let M₁ : Model σ X W := ⟨co, fun v => ev v (M.vac v), M.μ, M.dom⟩
   have hM₁ : M₁.IsGood B.ψ := ⟨hco, hvac, hstd, hpair.good.haar, hpair.good.dom⟩
   have hne : ∃ f : SInf F (Fin n × Fin d), f ≠ 0 := by
@@ -93,8 +93,8 @@ theorem change_to_coordinates : ∀ (F E : Type) [Field F] [NumberField F] [Fiel
       obtain ⟨g, rfl⟩ := hei f
       intro h
       exact hf (by rw [h]; rfl)
-  obtain ⟨om₁, hW, hint⟩ := GlobalTheory.T.weil_eigen_bijective_schwartz F E σ B n d X W M χX χW om r s r' s' hpair M₁ hM₁ e hev hbij
-  obtain ⟨c₀, hc₀, hth⟩ := GlobalTheory.T.weil_eigen_schwartz_surjective F E σ B n d X W M χX χW om r s r' s' hpair M₁ hM₁ e hev hbij
+  obtain ⟨om₁, hW, hint⟩ := _root_.GlobalTheory.ModelTr.exists_isWeil_trans_of_bijOn F E σ B n d X W M χX χW om r s r' s' hpair M₁ hM₁ e hev hbij
+  obtain ⟨c₀, hc₀, hth⟩ := _root_.GlobalTheory.ThetaChange.main F E σ B n d X W M χX χW om r s r' s' hpair M₁ hM₁ e hev hbij
   exact ⟨M₁, om₁, e, c₀, rfl, ⟨hpair.base, hpair.herm, hpair.skew, hM₁, hpair.hX, hpair.hW, hpair.resX, hpair.resW, hW⟩,
     hc₀, fun Φ hΦ => ⟨hmaps Φ hΦ, hth Φ hΦ, fun x => hint x Φ hΦ⟩⟩
 

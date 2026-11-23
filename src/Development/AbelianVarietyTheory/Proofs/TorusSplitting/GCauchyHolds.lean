@@ -5,8 +5,13 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegra
 public import Development.AbelianVarietyTheory.Proofs.CuspFormEvaluations.SupLeL2PrincipalTorus
 public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.CharStatementHolds
 public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.ExtAllInputs
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.SplitSt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.GCauchyHolds
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.ColEmpty
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.HfNormLeTwo
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.LemmaN
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.PaThDiffLe
 import Development.AbelianVarietyTheory.Proofs.TorusSplitting.GaussTailOfCardLe
-public import Development.AbelianVarietyTheory.Proofs.TorusSplitting.GreedySplittingPrincipalTorusExistsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,12 +49,8 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.ColEmpty
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.ContDiffOfDifferentiableFd
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.HfNormLeTwo
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.LemmaN
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.LemmaS
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SquareIntegrability.PaThDiffLe
 
 @[expose] public section
 
@@ -64,7 +65,7 @@ theorem propA_holds : PropAStatement := propA GlobalTheory.packingCount GlobalTh
 theorem dim_holds : DimStatement := dim
 
 theorem J_holds : JStatement :=
-  jOf GlobalTheory.ext_all_inputs GlobalTheory.T.greedy_splitting_principal_torus_exists GlobalTheory.charStatement_holds
+  jOf GlobalTheory.ext_all_inputs _root_.ReciprocityTheory.ChartRestriction.G.I2.split_holds GlobalTheory.charStatement_holds
     (colTorus GlobalTheory.ext_all_inputs propA_holds gSup_holds)
     (colAbel GlobalTheory.ext_all_inputs propA_holds gSup_holds)
     (colEmpty GlobalTheory.ext_all_inputs propA_holds gSup_holds)

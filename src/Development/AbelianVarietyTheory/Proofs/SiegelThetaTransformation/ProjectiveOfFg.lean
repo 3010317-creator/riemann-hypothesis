@@ -3,11 +3,11 @@ module
 public import Development.AbelianVarietyTheory.BlockTheory.JetGauges.ThetaSpanAdjoint
 public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.IsHermForm
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.StandardHermitianFormHostFieldInhabitant
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryGroupWeakApproximationAtPrimesStatement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.UnitaryGroupWeakApproximationAtPrimes
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsLiftHermitianIsometryModLevelSelfDualStatement
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicCompletionFractionalIdealDivisibleEqZero
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicCompletionRationalPointsAndApproximation
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsMulMemOfMemSpan
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicCompletionRationalPointsAndApproximation
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -290,7 +290,7 @@ theorem repExists : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : 
   have hherm : GlobalTheory.UnRep.IsHermForm (IsCMField.complexConj E) (1 : Matrix (Fin n) (Fin n) E) :=
     ⟨IsCMField.complexConj_apply_apply E, IsCMField.complexConj_ne_one E, fun a b => by
       simp [Matrix.one_apply, eq_comm], by simp⟩
-  obtain ⟨γ, hγ, t, ht, hc⟩ := GlobalTheory.T.unitaryGroup_weak_approximation_at_primes (maximalRealSubfield E) E (IsCMField.complexConj E) n 1 hherm
+  obtain ⟨γ, hγ, t, ht, hc⟩ := _root_.GlobalTheory.UnRep.WeakApprox.weak_approximation (maximalRealSubfield E) E (IsCMField.complexConj E) n 1 hherm
     (Algebra.IsQuadraticExtension.finrank_eq_two _ _) (stdLat E n) std_fg std_span g⁻¹ (m * bad) m
     (fun x y => by rw [← hg2, hinv', hinv']) (Nat.mul_pos hm hbad) hm
   have hrat := (hat_rational_points_and_approx (maximalRealSubfield E) E n (stdLat E n) std_fg std_span).1

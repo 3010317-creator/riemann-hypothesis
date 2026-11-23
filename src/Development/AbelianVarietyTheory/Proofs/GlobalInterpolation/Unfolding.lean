@@ -1,11 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.LatticeTensorUnfolding
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AdelicUnitaryGroupHaarPropertiesProofStatement
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.AdelicUnitaryHaarMeasure
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.AdelicUnitaryGroupHaarPropertiesProof
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.FundamentalDomainNeZero
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.QuotientMeasureIntegrationFormulasUnimodularStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.StabSelfDualLatticeTransitiveOnLengthStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.UnitaryUnfoldingVolumeVectorStabilizerStatement
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.InvariantRadonFibre
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.QuotientMeasureIntegrationFormulasUnimodular
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.StabilizerLattices
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.StabSelfDualLatticeTransitiveOnLength
+public import Development.AbelianVarietyTheory.BlockTheory.GlobalSignature.InfiniteCoordinateUnfold
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.UnitaryUnfoldingVolumeVectorStabilizer
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -47,6 +51,6 @@ import Mathlib.Topology.Sheaves.Init
 namespace GlobalTheory.UnfoldingObj
 
 theorem unfolding : ∀ D : Formalism.BasicNotions.D7, GlobalTheory.IndefiniteRowSideFullHecke.LatticeTensorUnfolding.Unfolding D := fun D =>
-  (GlobalTheory.UnfoldingCompare.unfolding_iff D).1 (GlobalTheory.T.unitaryUnfolding_volume_vectorStabilizer GlobalTheory.T.quotientMeasure_integration_formulas_unimodular GlobalTheory.T.adelicUnitaryGroupHaarProperties_proof GlobalTheory.T.stabSelfDualLattice_transitive_on_length D)
+  (GlobalTheory.UnfoldingCompare.unfolding_iff D).1 (_root_.GlobalTheory.VolumeUnfolding.unfolding _root_.GlobalTheory.Proof.quotientMeasure_integration_formulas_unimodular.quotientMeasures _root_.GlobalTheory.adelicUnitaryHaar_holds _root_.GlobalTheory.StabOrbit.stabTransitive D)
 
 end GlobalTheory.UnfoldingObj

@@ -2,17 +2,24 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SquareIntegrableSmoothSubmoduleGL
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.InfinitesimalCharacterLimits.AllLeaves
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOfIsOpenStab
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CompactSpaceMaximalCompactUnitaryInfinite
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AdmissibleDiscreteSpaces
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsFiniteDimCompactStableStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsInvariantProjectionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsOpenCompactSubgroupLeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HaarRightInvariantStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IntegralEqL2InnerStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LieSkewAdjointBisStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RepresentationUnitaryAverageStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RightTranslateIsometryStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BaseChangeDefiniteUnitary
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsFiniteDimCompactStable
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsInvariantProjection
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.DifferentiableAtChart
+public import Mathlib.NumberTheory.NumberField.CMField
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsOpenCompactSubgroupLe
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.T2SpaceAdelicGeneralLinearGroupNumberField
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HaarRightInvariant
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IntegralEqL2Inner
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LieSkewAdjointBis
+public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
+public import Mathlib.MeasureTheory.Group.Measure
+public import Mathlib.RepresentationTheory.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RepresentationUnitaryAverage
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RightTranslateIsometry
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOfIsOpenStab
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -98,22 +105,22 @@ def stabS (x : Sm E N) : Subgroup (GL (Fin N) (Af E)) where
 theorem exists_repr (μ : Measure (GA E N)) [μ.IsHaarMeasure] [μ.IsMulRightInvariant] {V V' : Submodule ℂ (Sm E N)}
     (hV : IsDiscrete V) (hV' : IsDiscrete V') {x : Sm E N} (hx : x ∈ V) :
     ∃ y ∈ V', ∀ z ∈ V', ⟪l2Map μ z, l2Map μ x⟫_ℂ = ⟪l2Map μ z, l2Map μ y⟫_ℂ := by
-  obtain ⟨L, hLS, hLo, hLc⟩ := GlobalTheory.T.exists_open_compact_subgroup_le E N (stabS x) (hV.aut x hx).level
+  obtain ⟨L, hLS, hLo, hLc⟩ := _root_.GlobalTheory.CompanionTheory.FinDiscOrth.exists_compact_open_level_le E N (stabS x) (hV.aut x hx).level
   have hunit : ∀ (k : Kinf E N) {W W' : Submodule ℂ (Sm E N)}, IsDiscrete W → IsDiscrete W' → ∀ a ∈ W, ∀ b ∈ W',
       ⟪l2Map μ (cptRep E N k a), l2Map μ (cptRep E N k b)⟫_ℂ = ⟪l2Map μ a, l2Map μ b⟫_ℂ :=
-    fun k _ _ h h' a ha b hb => (GlobalTheory.T.right_translate_isometry E N μ _ a b (mem_l2_of_discrete μ h ha) (mem_l2_of_discrete μ h' hb)).2
+    fun k _ _ h h' a ha b hb => (_root_.GlobalTheory.CompanionTheory.FinDiscOrth.rt_mem_l2Sub_and_inner_eq E N μ _ a b (mem_l2_of_discrete μ h ha) (mem_l2_of_discrete μ h' hb)).2
   letI : MeasurableSpace (Kinf E N) := borel _
   haveI : BorelSpace (Kinf E N) := ⟨rfl⟩
   haveI : CompactSpace (Kinf E N) := GlobalTheory.KinfCompactness.compactSpace_Kinf E N
-  have key := GlobalTheory.T.representation_unitary_average (Measure.haar : Measure (Kinf E N)) (cptRep E N) (l2Map μ) (fixS V L) (fixS V' L)
+  have key := _root_.GlobalTheory.CompanionTheory.FinDiscRepr.representing_vector (Measure.haar : Measure (Kinf E N)) (cptRep E N) (l2Map μ) (fixS V L) (fixS V' L)
     (fun g : GA E N => (LinearMap.proj g).comp (Sm E N).subtype)
     (fun k a ha b hb => hunit k hV' hV a ha.1 b hb.1)
     (fun k a ha b hb => hunit k hV' hV' a ha.1 b hb.1)
     (fun a ha => by
-      obtain ⟨A, h1, h2, h3, h4, h5⟩ := GlobalTheory.T.exists_finite_dim_compact_stable E N V hV L a ha.1 ha.2
+      obtain ⟨A, h1, h2, h3, h4, h5⟩ := _root_.GlobalTheory.CompanionTheory.FinDiscKfin.exists_kfin_subspace E N V hV L a ha.1 ha.2
       exact ⟨A, h1, h2, fun b hb => h3 b hb, h4, h5⟩)
     (fun a ha => by
-      obtain ⟨A, h1, h2, h3, h4, h5⟩ := GlobalTheory.T.exists_finite_dim_compact_stable E N V' hV' L a ha.1 ha.2
+      obtain ⟨A, h1, h2, h3, h4, h5⟩ := _root_.GlobalTheory.CompanionTheory.FinDiscKfin.exists_kfin_subspace E N V' hV' L a ha.1 ha.2
       exact ⟨A, h1, h2, fun b hb => h3 b hb, h4, h5⟩)
     (fun W hW => by
       haveI := GlobalTheory.CompanionTheory.AdmDiscFin.admissible_discrete_spaces E N L W hLo hW V' hV'
@@ -123,7 +130,7 @@ theorem exists_repr (μ : Measure (GA E N)) [μ.IsHaarMeasure] [μ.IsMulRightInv
   have hfx : ∀ u ∈ L, finRep E N u x = x := fun u hu => hLS hu
   obtain ⟨y, hy, hyz⟩ := key x ⟨hx, hfx⟩
   refine ⟨y, hy.1, fun z hz => ?_⟩
-  obtain ⟨z', hz', hfix, e⟩ := GlobalTheory.T.exists_invariant_projection E N μ V' hV' L hLc z hz
+  obtain ⟨z', hz', hfix, e⟩ := _root_.GlobalTheory.CompanionTheory.FinDiscAvg.exists_avg E N μ V' hV' L hLc z hz
   rw [e x (mem_l2_of_discrete μ hV hx) hfx, e y (mem_l2_of_discrete μ hV' hy.1) hy.2]
   exact hyz z' ⟨hz', hfix⟩
 
@@ -133,14 +140,14 @@ theorem exists_adj (μ : Measure (GA E N)) [μ.IsHaarMeasure] [μ.IsMulRightInva
   cases o with
   | fin k =>
     refine ⟨.fin k⁻¹, fun {V W} hV hW x hx y hy => ?_⟩
-    have h := (GlobalTheory.T.right_translate_isometry E N μ (finGL E N k) (act (.fin k⁻¹) x) y (mem_l2_of_discrete μ hV (hV.stable _ x hx)) (mem_l2_of_discrete μ hW hy)).2
+    have h := (_root_.GlobalTheory.CompanionTheory.FinDiscOrth.rt_mem_l2Sub_and_inner_eq E N μ (finGL E N k) (act (.fin k⁻¹) x) y (mem_l2_of_discrete μ hV (hV.stable _ x hx)) (mem_l2_of_discrete μ hW hy)).2
     rw [← h]
     congr 2
     change x = finRep E N k (finRep E N k⁻¹ x)
     rw [← Module.End.mul_apply, ← map_mul, mul_inv_cancel, map_one, Module.End.one_apply]
   | cpt k =>
     refine ⟨.cpt k⁻¹, fun {V W} hV hW x hx y hy => ?_⟩
-    have h := (GlobalTheory.T.right_translate_isometry E N μ (infGL E N (Unitary.toUnits k)) (act (.cpt k⁻¹) x) y (mem_l2_of_discrete μ hV (hV.stable _ x hx)) (mem_l2_of_discrete μ hW hy)).2
+    have h := (_root_.GlobalTheory.CompanionTheory.FinDiscOrth.rt_mem_l2Sub_and_inner_eq E N μ (infGL E N (Unitary.toUnits k)) (act (.cpt k⁻¹) x) y (mem_l2_of_discrete μ hV (hV.stable _ x hx)) (mem_l2_of_discrete μ hW hy)).2
     rw [← h]
     congr 2
     change x = cptRep E N k (cptRep E N k⁻¹ x)
@@ -149,7 +156,7 @@ theorem exists_adj (μ : Measure (GA E N)) [μ.IsHaarMeasure] [μ.IsMulRightInva
     refine ⟨.lie (-X), fun {V W} hV hW x hx y hy => ?_⟩
     have hxX := hV.stable (.lie X) x hx
     have hyX := hW.stable (.lie X) y hy
-    have h := GlobalTheory.T.lie_skew_adjoint_l2' E N μ X x y (cont_of_mem hV hx) (cont_of_mem hW hy) (cont_of_mem hV hxX) (cont_of_mem hW hyX)
+    have h := _root_.GlobalTheory.CompanionTheory.FinDiscOrth.lie_skew_l2Map E N μ X x y (cont_of_mem hV hx) (cont_of_mem hW hy) (cont_of_mem hV hxX) (cont_of_mem hW hyX)
       (mem_l2_of_discrete μ hV hx) (mem_l2_of_discrete μ hW hy) (mem_l2_of_discrete μ hV hxX) (mem_l2_of_discrete μ hW hyX)
     have e : act (.lie (-X)) x = - lie E N X x := by
       change lie E N (-X) x = _
@@ -234,8 +241,8 @@ theorem GlobalTheory.CompanionTheory.FinDisc.integral_eq_zero_of_not_isoV :
     ∀ φ ∈ V, ∀ ψ ∈ V', ∫ x in F, φ.1 x * (starRingEnd ℂ) (ψ.1 x) ∂μ = 0 := by
   intro E _ _ _ N mG bG μ _ F hF V V' hV hV' hno φ hφ ψ hψ
   obtain rfl : mG = borel _ := bG.measurable_eq
-  haveI := GlobalTheory.T.haar_right_invariant E N μ
-  rw [GlobalTheory.T.integral_eq_l2_inner E N μ F hF φ ψ (mem_l2_of_discrete μ hV hφ) (mem_l2_of_discrete μ hV' hψ)]
+  haveI := _root_.GlobalTheory.CompanionTheory.AdelicUnimod.isMulRightInvariant_GA_CM E N μ
+  rw [_root_.GlobalTheory.CompanionTheory.FinDiscOrth.setIntegral_mul_conj_eq_inner E N μ F hF φ ψ (mem_l2_of_discrete μ hV hφ) (mem_l2_of_discrete μ hV' hψ)]
   by_contra hne
   exact hno (isoV_of_ne μ hV hV' hφ hψ hne)
 

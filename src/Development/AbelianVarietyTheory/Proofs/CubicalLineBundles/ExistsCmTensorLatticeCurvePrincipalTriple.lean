@@ -1,14 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CmTensorSmoothOfRelativeDimensionStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.CmTensorSmoothOfRelativeDimension
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsTensorBundle
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueCmHermitianLatticeFormStatement
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IntegersOfCmFieldConjStructure
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueCmHermitianLatticeForm
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsAbelianSchemeAndExtendOfGenericHoms
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.KTrivOfPerfect
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.RelAmpleLineBundleOfPositiveHermitianCmFormStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.RelAmpleLineBundleOfPositiveHermitianCmForm
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.TensorPairingIdentityOfPureTensors
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IntegersOfCmFieldConjStructure
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ObjIsAbelianSchemeDimRigidifiedSym
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -57,7 +57,7 @@ namespace GlobalTheory.CM
 
 theorem exists_isTen : Out.Laws → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (R : Type) [CommRing R] [IsNoetherianRing R] (ω : R) (C : Ell H R ω) (D : Datum H) (ε : ℤˣ) (h : D.La → D.La → OK H), IsKForm D ε h → (∀ x : D.La, x ≠ 0 → 0 < (ε : ℤ) * D.EF (H.w0 • x) x) → ∃ T : PAT H (Sp R), Nonempty (IsTen C D h T) ∧ T.g = Module.finrank ℚ E / 2 * (D.p + D.q) := by
   intro laws E _ _ _ H R _ _ ω C D ε h hK hpos
-  obtain ⟨h₀, -, huniq, hbar, hE, -, -, n, x, y, hxy⟩ := GlobalTheory.T.exists_unique_cmHermitianLatticeForm E H D ε
+  obtain ⟨h₀, -, huniq, hbar, hE, -, -, n, x, y, hxy⟩ := _root_.GlobalTheory.CM.exists_kForm E H D ε
   obtain rfl := huniq h hK
   obtain ⟨-, -, ⟨br, hbr, hw, hbb⟩, -, -, hM⟩ := OK_isDedekindDomain_and_projective E H
   obtain ⟨hfin, hproj, -⟩ := hM D.La D.fin D.proj
@@ -100,8 +100,8 @@ theorem exists_isTen : Out.Laws → ∀ (E : Type) [Field E] [NumberField E] [Is
   let s : SAB H (Sp R) :=
     { G := Serre.tensorObj D.La C.act, semi := GlobalTheory.isSemiAbelian_of_isAbelianScheme _ hA, act := c, PP := PP,
       cub := cub, sym := sym, adj := adj, prim := prim }
-  exact ⟨⟨s, hA, _, GlobalTheory.T.cmTensor_smoothOfRelativeDimension E H R ω C D _ _ ⟨τ⟩, ObjDim.sym,
-    GlobalTheory.T.relAmple_lineBundle_of_positive_hermitian_cm_form laws E H R ω C D ε _ _ _ τ PP.L hK hpos PP.isLB hθ' prim hp',
+  exact ⟨⟨s, hA, _, _root_.GlobalTheory.CM.tensor_smoothOfRelativeDimension E H R ω C D _ _ ⟨τ⟩, ObjDim.sym,
+    _root_.GlobalTheory.CM.relAmple_of_kForm_pos laws E H R ω C D ε _ _ _ τ PP.L hK hpos PP.isLB hθ' prim hp',
     GlobalTheory.PerfectTensorKernel.kTriv_of_perfect _ (OK H) C.P.A _ C.act _ D.La τ C.P.L PP.L h₀ n x y hxy C.P.isLB PP.isLB
       hθP hθ' hp' C.P.ktriv⟩, ⟨⟨τ, hc, hp'⟩⟩, rfl⟩
 

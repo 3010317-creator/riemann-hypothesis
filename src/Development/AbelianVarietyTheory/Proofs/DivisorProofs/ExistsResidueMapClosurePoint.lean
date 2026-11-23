@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NotDominatesTopPlace
-import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.RingKrullDimQuotientEqOfMemMinimalPrimes
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasRationalResidueFieldPointLocalRingClosedPointStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasRationalResidueFieldPointLocalRingClosedPoint
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLocModelLocRingAndExistsTrBasis
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpecializesOfPointLocalRingLeSeparatedStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsLocModelIsPrimeOf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpecializesOfPointLocalRingLeSeparated
+import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.RingKrullDimQuotientEqOfMemMinimalPrimes
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -136,7 +137,7 @@ theorem residueMap : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X]
     rw [hc]
     exact RingHom.congr_fun (fnOf_comp_algX q (i ⁻¹ᵁ ⊤) (gen_mem (x := genericPoint Z) trivial)) a
   · intro x h
-    have hs : i (genericPoint Z) ⤳ x := GlobalTheory.T.specializes_of_pointLocalRing_le_separated X x _ h
+    have hs : i (genericPoint Z) ⤳ x := _root_.GlobalTheory.specializes_of_locRing_le X x _ h
     obtain ⟨y, rfl⟩ : x ∈ Set.range i := by
       rw [hrange]; exact specializes_iff_mem_closure.mp hs
     have key : ∀ a : X.presheaf.stalk (i y),
@@ -178,6 +179,6 @@ theorem residueMap : ∀ (X : Scheme.{0}) [IsIntegral X] [IsLocallyNoetherian X]
           exact i.isClosedEmbedding.injective.eq_iff
         rw [← hpre]
         exact hx.preimage i.continuous
-      exact GlobalTheory.T.hasRationalResidueField_pointLocalRing_closedPoint Z q y hy
+      exact _root_.GlobalTheory.FieldPair.ratRes_locRing_of_isClosed Z q y hy
 
 end GlobalTheory.ResMap

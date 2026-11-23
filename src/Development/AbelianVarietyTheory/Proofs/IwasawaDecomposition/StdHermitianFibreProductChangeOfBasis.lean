@@ -2,11 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.T2SpaceNumberFieldInfiniteAdeles
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousDistribHaarCharUnits
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FibreMeasuresTransportUnitarySimilitudeStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FibreMeasuresTransportUnitarySimilitude
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsNiceLocalFieldProductRingInfiniteAdelesComplet
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsRestrictedProductTupleMeasureMapLeftRightActioStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ProductFormulaHaarModulusCmFieldElementStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RestrictedProductMeasureSmulFactorsEqSmulStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsRestrictedProductTupleMeasureMapLeftRightActio
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ProductFormulaHaarModulusCmFieldElement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.RestrictedProductMeasureSmulFactorsEqSmul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -125,7 +125,7 @@ theorem fibAt_basis (F E : Type) [Field F] [NumberField F] [Field E] [NumberFiel
   have hu : IsUnit ((P : Matrix (Fin M) (Fin M) E).map (inclR (F := F) R)).det := by
     rw [hdet]
     exact ((Matrix.isUnits_det_units P)).map _
-  have := GlobalTheory.T.fibreMeasures_transport_unitary_similitude F E σ R hR M _ J lam ν β 1 m _ hl hν hu isUnit_one
+  have := _root_.GlobalTheory.GaugeEx.fibAt_similitude F E σ R hR M _ J lam ν β 1 m _ hl hν hu isUnit_one
     (fun z => by rw [one_mul, qR_mulVec]) h
   rw [one_mul, (modu_basic R).2.2.1, inv_one, mul_one, hdet] at this
   exact this
@@ -135,10 +135,10 @@ theorem isStdX_basis : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
   subst hJ
   obtain ⟨hni, hnv⟩ := nice_ainf_fv F
   have hdet : (P : Matrix (Fin M) (Fin M) E).det ≠ 0 := (Matrix.isUnits_det_units P).ne_zero
-  obtain ⟨hfin, hone⟩ := GlobalTheory.T.product_formula_haarModulus_cmField_element F E σ hσ _ hdet
+  obtain ⟨hfin, hone⟩ := _root_.GlobalTheory.GaugeEx.prod_modu_inclR F E σ hσ _ hdet
   refine ⟨_, _, fibAt_basis F E σ (Ainf F) hni M J P _ _ _ _ s.haar_lamI s.haar_nuI hi,
     fun v => fibAt_basis F E σ (Fv F v) (hnv v) M J P _ _ _ _ (s.haar_lamV v) (s.haar_nuV v) (hv v), ?_⟩
-  have h1 := GlobalTheory.T.isRestrictedProductTupleMeasure_map_leftRightAction F E d b 1 M ν' mi mv
+  have h1 := _root_.GlobalTheory.GaugeEx.ProdTransport.isProd_map_lrAct F E d b 1 M ν' mi mv
     (Matrix.GeneralLinearGroup.map (inclR (F := F) (AF F)) P) 1 hp
   have hg : (Matrix.GeneralLinearGroup.map (inclR (F := F) (AF F)) P).val =
       (P : Matrix (Fin M) (Fin M) E).map (inclR (AF F)) := rfl
@@ -156,7 +156,7 @@ theorem isStdX_basis : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Num
   have h1V : ∀ v, (1 : Matrix (Fin 1) (Fin 1) (AF F ⊗[F] E)).map (prV v) = 1 := fun v =>
     Matrix.map_one _ (map_zero _) (map_one _)
   simp only [hg, Units.val_one, hI, hV, h1I, h1V] at h1
-  have h2 := GlobalTheory.T.restrictedProduct_measure_smul_factors_eq_smul F E d b 1 M _ _ _
+  have h2 := _root_.GlobalTheory.GaugeEx.ProdScale.isProd_smul F E d b 1 M _ _ _
     (modu (Ainf F ⊗[F] E) (inclR (Ainf F) (P : Matrix (Fin M) (Fin M) E).det)) _ h1 hfin
   rw [hone, one_smul] at h2
   exact h2

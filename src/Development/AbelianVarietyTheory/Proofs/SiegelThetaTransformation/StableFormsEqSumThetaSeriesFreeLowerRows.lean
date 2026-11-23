@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsStabForm
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ExistsFormExtendToAllLatticesStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HermitianThetaLevelDataFormsSystemStatement
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HermitianThetaLevelDataFormsSystem
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.LevelThetaSpan
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.ThetaSeriesLowerRowsZeroEqFreeLowerRowsStatement
 public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.VacuumMultiplierUnitaryCocycleStatement
@@ -78,7 +79,7 @@ theorem GlobalTheory.Dict.stabForms_eq_sum_thP : ∀ (E : Type) [Field E] [Numbe
 
   obtain ⟨hnorm, -, hcoc⟩ := GlobalTheory.T.vacuum_multiplier_unitary_cocycle E r X g bas idx n hS hE D v₀ hv mu hmu
 
-  have hsys := GlobalTheory.T.hermitianThetaLevelData_forms_system E r X g bas idx n hS hE hn4 D hn M hM hMm v₀ hv mu hmu
+  have hsys := _root_.GlobalTheory.SW.isSystem_level E r X g bas idx n hS hE hn4 D hn M hM hMm v₀ hv mu hmu
 
   obtain ⟨F, hF, hFL⟩ := GlobalTheory.T.exists_form_extend_to_all_lattices E r X D.grp D.lats mu (wtOf X hr k k' n) Jx L Q hsys.un
     (fun ga hga L' hL' => ⟨hsys.stab ga hga L' hL', hnorm ga hga L' hL'⟩) hcoc hL hinj hfix hQ

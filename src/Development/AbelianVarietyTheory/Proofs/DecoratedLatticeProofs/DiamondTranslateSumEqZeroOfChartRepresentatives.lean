@@ -8,9 +8,11 @@ public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.Cha
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ContinuousFinGL
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SelfDualSplitComponentIsLatticeStabilizerEq
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SplitPointsLieOverDistinctPlaces
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistLevelStabiliserAtLevelPrimeProofStatement
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryAdelicPointEqProdSplitComponentsMulOff
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.TwTransAlt
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.TwistLevelStabiliserAtLevelPrimeProof
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HermitianChartComplexRationalIntegralForms
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.StabOrd
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.UnitaryAdelicPointEqProdSplitComponentsMulOff
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,7 +50,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Tactic.TypeStar
-public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.StabOrd
 
 @[expose] public section
 
@@ -147,7 +148,7 @@ theorem GlobalTheory.AdForm.diaSum_eq_zero_of_reps : ∀ {B : Base} {X : PreX B.
   obtain ⟨e, -⟩ := hS.1
   haveI : Finite ι := Finite.of_equiv _ e.symm
   haveI : Fintype ι := Fintype.ofFinite ι
-  obtain ⟨hst, hdec⟩ := GlobalTheory.T.twistLevelStabiliserAtLevelPrime_proof I hok hpins l Z u a Ch A hA k ι p β Q L hS (Finset.univ.toList) (Finset.nodup_toList _)
+  obtain ⟨hst, hdec⟩ := _root_.GlobalTheory.AdForm.twLev_prime I hok hpins l Z u a Ch A hA k ι p β Q L hS (Finset.univ.toList) (Finset.nodup_toList _)
     (fun i => Finset.mem_toList.2 (Finset.mem_univ i)) j hj b
   obtain ⟨γ, hγ, c, r, hr, κ, hκ, rfl⟩ := (GlobalTheory.T.chartLevels_reps_represent_unitaryDoubleCosets I hok hpins l Z u a Ch A hA j hj b).1.dec x
   obtain ⟨g', hg', κ', hκ', hκe⟩ := hdec κ hκ

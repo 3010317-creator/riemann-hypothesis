@@ -7,7 +7,7 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearModelC
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearModelCompactIntertwinesStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearModelUnitaryConjugateStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearModelUnitaryIntertwinesStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaActionExistsStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaActionExists
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -55,7 +55,7 @@ theorem GlobalTheory.KSplit.om_linW_split : GlobalTheory.FunPr.Hypotheses₂ →
     ∀ g ∈ UAt σ X (evFin F v), ∀ h ∈ UAt σ W (evFin F v), ∀ φ ∈ SB (Fin n × Fin d → Fv F v), ∀ φ₁ ∈ SB (Fin n × Fin d → Fv F v),
       Acts (evFin F v) (om (g, h)) φ φ₁ → ι φ₁ = GlobalTheory.SplitFlip.omA (chrW χW t)⁻¹ (chrW χX t) (locMat t b g) (locMat t c h) (ι φ) := by
   intro hP F E _ _ _ _ _ σ B n d X W M χX χW om r s r' s' hp v t b c ι hι g hg h hh φ hφ φ₁ hφ₁ hA
-  obtain ⟨hex, -, -⟩ := GlobalTheory.T.theta_action_exists hP F E σ B n d X W M χX χW om r s r' s' hp v
+  obtain ⟨hex, -, -⟩ := _root_.GlobalTheory.ThK.LocalOps.actsEx hP F E σ B n d X W M χX χW om r s r' s' hp v
   have oneX : (1 : UA σ X.J) ∈ UAt σ X (evFin F v) := fun u _ => by
     show u • (mat (1 : UA σ X.J) - 1) = 0
     simp [mat]

@@ -1,9 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EtaleEmpty
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleIsLocalHomeomorphStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleLeviNonnegOfChartPlurisubharmonicStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothEtaleOfSmoothInChartsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleIsLocalHomeomorph
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleLeviNonnegOfChartPlurisubharmonic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SmoothEtaleOfSmoothInCharts
+public import ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.FlatLoc
+public import ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.LintegralBallRpowLtTop
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,8 +53,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import ReciprocityTheory.L2DbarEstimates.ChartDerivatives.HoloSmooth
-public import ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.FlatLoc
-public import ReciprocityTheory.L2DbarEstimates.PlurisubharmonicCharts.LintegralBallRpowLtTop
 import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.L2ExtensionLogCanonical
 
 @[expose] public section
@@ -177,12 +177,12 @@ theorem nzEtaleStein : ∀ (n : ℕ) (Y : Type) [TopologicalSpace Y] [T2Space Y]
     simp only at E1 E2 hp
     rw [E1, E2]
     linarith
-  have hLH : IsLocalHomeomorph (fun y : nz A τ => z y) := GlobalTheory.T.etale_isLocalHomeomorph' n Y ι La A _ z hE
+  have hLH : IsLocalHomeomorph (fun y : nz A τ => z y) := _root_.GlobalTheory.OTY.etale_isLocalHomeomorph n Y ι La A _ z hE
   have hSm : SmoothR n (fun y : nz A τ => z y) (fun y : nz A τ => -Real.log (A.nsq Λ τ y)) :=
-    (GlobalTheory.T.smooth_and_smoothR_of_contDiffAt_in_charts n Y ι La A _ z hE).2 (fun y => -Real.log (A.nsq Λ τ y))
+    (_root_.GlobalTheory.OTY.smooth_etale_of_smooth_in_charts n Y ι La A _ z hE).2 (fun y => -Real.log (A.nsq Λ τ y))
       (fun x hx => ⟨A.pick x, A.mem_pick x, hsm x hx⟩)
   have hLv : LeviNonneg n (fun y : nz A τ => z y) (fun y : nz A τ => -Real.log (A.nsq Λ τ y)) :=
-    GlobalTheory.T.etale_leviNonneg_of_chart_plurisubharmonic n Y ι La A _ z hE (fun y => -Real.log (A.nsq Λ τ y))
+    _root_.GlobalTheory.OTY.etale_leviNonneg n Y ι La A _ z hE (fun y => -Real.log (A.nsq Λ τ y))
       (fun x hx => ⟨A.pick x, A.mem_pick x, hsm x hx, hlev x hx⟩)
   have hC : ∀ a : ℝ, IsCompact {y : nz A τ | -Real.log (A.nsq Λ τ y) ≤ a} := by
     intro a

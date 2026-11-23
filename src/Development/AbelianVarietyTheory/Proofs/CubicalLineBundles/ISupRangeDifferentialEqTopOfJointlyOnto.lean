@@ -2,11 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.CMLattices.ExistsIsThetaDegOfIsLocalModel
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsLinearOfIsMonHom
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueDifferentialMonHomLieBasisStatement
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueDifferentialMonHomLieBasis
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.PolCountableAndTangentExt
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.PolFibreIdCompCancel
-import Development.AbelianVarietyTheory.Proofs.GenericRegularity.LieCombBaseChange
 public import Development.AbelianVarietyTheory.Proofs.ThetaLawProofs.SubsingletonPrimeSpectrum
+import Development.AbelianVarietyTheory.Proofs.GenericRegularity.LieCombBaseChange
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsIsLieBasisBaseChange
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -152,7 +153,7 @@ theorem iSup_range_diff_eq_top : ThetaUnifAV → Out.Laws → ∀ (K : Type) [Fi
   intro hU hL K _ _ P F σ I Q FQ f M _ hf hM ho
   obtain ⟨P', ψ, v, u, W, hP, tv, ov, hd, he, hW, bW⟩ := exists_fibre hU hL.polBaseChange σ F.P₀ F.basis
   choose Q' χ t r V hQ tt ot _ _ hV bV using fun i => exists_fibre hU hL.polBaseChange σ (FQ i).P₀ (FQ i).basis
-  choose f₀ hf₀ e₀ d₀ using fun i => (T.existsUnique_differential_monHom_lieBasis K (Q i) (FQ i) P F (f i) (hf i)).2
+  choose f₀ hf₀ e₀ d₀ using fun i => (_root_.GlobalTheory.CM.DiffCoord.existsUnique_isDiffOf K (Q i) (FQ i) P F (f i) (hf i)).2
   choose f' hf' e' using fun i => HomDescent.exists_isMonHom_pull (hQ i).2.1 hP.2.1 (f₀ i)
   choose Φ hΦ _ dΦ _ using fun i => HomLinear.exists_linear_of_isMonHom (Q' i).A P'.A (Q' i).isAb P'.isAb (Q' i).L P'.L
     _ _ (r i) u hd he (f' i) (hf' i)

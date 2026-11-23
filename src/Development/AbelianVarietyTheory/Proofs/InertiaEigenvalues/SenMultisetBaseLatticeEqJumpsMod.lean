@@ -4,10 +4,12 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.JSmu
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.LatticeMembershipByPowerSeries
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Saturated
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ExistsPresOfRealD
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GammaActionReductionStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GammaActionReduction
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GmultTransport
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NabBijectiveWindow
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WachDeltaInvariantsReductionIsLatticeStatement
+public import Mathlib.LinearAlgebra.Eigenspace.Zero
+public import Mathlib.LinearAlgebra.Charpoly.ToMatrix
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -19,7 +21,6 @@ import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.LinearAlgebra.Eigenspace.Zero
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -53,7 +54,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.LinearAlgebra.Charpoly.ToMatrix
 
 @[expose] public section
 
@@ -387,7 +387,7 @@ theorem sen_base : ∀ {l : ℕ} [Fact l.Prime] {P : LocPrime l} (H : LocHW l P)
   intro l _ P H S k _ _ _ hk R ι F τ γ p hι hτ hγ hQ T A q U hO hK hU N hN i x
   obtain ⟨N', hN', hL⟩ := GlobalTheory.T.wachDeltaInvariants_reduction_isLattice H S k hk ι F τ γ p hι hτ hγ hQ T A q U hO hK hU
   have hNN : N' i = N i := by ext y; rw [hN, hN']
-  obtain ⟨-, e, he⟩ := GlobalTheory.T.map_gamma_eq_deltaPi_teichmuller H S k
+  obtain ⟨-, e, he⟩ := _root_.GlobalTheory.RedAct.gamma_action_reduction H S k
   have hpl : (P.PD S.K).p = l := P.PD_p S.K
   have hp : (((P.PD S.K).p : ℕ) : k) = 0 := by rw [hpl]; exact CharP.cast_eq_zero k l
   have hτb : Function.Bijective τ := by

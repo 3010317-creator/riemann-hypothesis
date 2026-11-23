@@ -1,8 +1,8 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.IsScaleStable
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FibreCountRotationInvariantStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.MeasurableFibreCountOverStatement
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FibreCountRotationInvariant
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.MeasurableFibreCountOver
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,7 +62,7 @@ theorem PositivityTheory.Xgn.t_xgz_chow_mahler_e0reduce : ∀ (n e : ℕ) (S : S
     exact (by fun_prop : Continuous fun π : Fin (e + 1) → Fin n → ℂ =>
       Real.exp (-∑ i, ∑ j, ‖π i j‖ ^ 2)).measurable.ennreal_ofReal
   have hC : Measurable (fun p : (Fin (e + 1) → Fin n → ℂ) × EuclideanSpace ℂ (Fin (e + 1)) =>
-      T (cntOver S p.1 p.2)) := hT.comp (GlobalTheory.T.measurable_fibre_count_over n (e + 1) S hσ)
+      T (cntOver S p.1 p.2)) := hT.comp (_root_.GlobalTheory.CompanionTheory.Ar.Short.Crofton.measurable_cntOver n (e + 1) S hσ)
   have hF : Measurable (Function.uncurry fun (π : Fin (e + 1) → Fin n → ℂ)
       (w : EuclideanSpace ℂ (Fin (e + 1))) => matGauss π * T (cntOver S π w)) :=
     (hG.comp measurable_fst).mul hC
@@ -77,5 +77,5 @@ theorem PositivityTheory.Xgn.t_xgz_chow_mahler_e0reduce : ∀ (n e : ℕ) (S : S
     simp
   simp_rw [h1]
   rw [lintegral_lintegral_swap hF.aemeasurable]
-  rw [lintegral_congr_ae ((ae_restrict_of_ae h0).mono fun w hw => GlobalTheory.T.fibre_count_rotation_invariant n e S hS w hw T),
+  rw [lintegral_congr_ae ((ae_restrict_of_ae h0).mono fun w hw => _root_.GlobalTheory.CompanionTheory.Ar.Short.Crofton.CntInv.lintegral_matGauss_cntOver n e S hS w hw T),
     setLIntegral_const, mul_comm]

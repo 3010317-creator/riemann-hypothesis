@@ -7,11 +7,12 @@ public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsU
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IsFibreOfIffIsPolFibre
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LieMultOfEigenbasis
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LinearIndependentOfIsLieBasis
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.MemLieVectorLineIdealIffMemLieLatticeStatement
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.MemLieVectorLineIdealIffMemLieLattice
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.RingActIffOAct
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.RingHomExtRingOfIntegers
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.RosatiAdjIffLamEq
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.TwoMulDegEigenLatticePolarizedAbelianSchemeStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.TwoMulDegEigenLatticePolarizedAbelianScheme
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.VecLineNormSqEqForm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -97,7 +98,7 @@ theorem ndeg_vecLine_eq : DegSt → ThetaUnifAV → Out.Laws → ∀ (E : Type) 
     apply RingOfIntegers.ext
     rw [htv]
     exact (hS (τ i)).1 (τ i).2
-  have hdeg := GlobalTheory.T.two_mul_deg_eigenLattice_polarizedAbelianScheme hD hU hL E H χ hχ K ρ A act hlam hsplit hρ htype F h hh t hti
+  have hdeg := _root_.GlobalTheory.LamF.two_mul_deg_eigLat_of_polAV hD hU hL E H χ hχ K ρ A act hlam hsplit hρ htype F h hh t hti
   have hline : deg h (F.eigLat act t) = ℓ.ndeg := by
     refine GlobalTheory.LamF.deg_eq_ndeg_of_line K (Fin x.P.g → K) h (F.eigLat act t) (Pi.single i 1) ℓ ?_ hℓ.1 ?_ ?_
     · intro h0
@@ -108,14 +109,14 @@ theorem ndeg_vecLine_eq : DegSt → ThetaUnifAV → Out.Laws → ∀ (E : Type) 
       constructor
       · rintro ⟨hz, r, rfl⟩
         refine ⟨r, ?_, ?_⟩
-        · exact (GlobalTheory.T.mem_lieVector_line_ideal_iff_mem_lie_lattice K A x φ hf i ℓ hℓ r).2 hz
+        · exact (_root_.GlobalTheory.LamF.isVecLine_mem_iff_mem_lieLat K A x φ hf i ℓ hℓ r).2 hz
         · ext j
           by_cases hj : j = i
           · subst hj; simp
           · simp [hj]
       · rintro ⟨c, hc, rfl⟩
         refine ⟨?_, c, ?_⟩
-        · have := (GlobalTheory.T.mem_lieVector_line_ideal_iff_mem_lie_lattice K A x φ hf i ℓ hℓ c).1 hc
+        · have := (_root_.GlobalTheory.LamF.isVecLine_mem_iff_mem_lieLat K A x φ hf i ℓ hℓ c).1 hc
           convert this using 1
           ext j
           by_cases hj : j = i

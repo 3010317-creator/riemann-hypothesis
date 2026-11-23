@@ -3,14 +3,18 @@ module
 public import Formalism.UnipotentAdelicQuotients.WeylLatDual
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.StdLvPr
 public import Formalism.LocalToGlobal.KernelLattices.ColumnData.KerEntHyp
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AutomorphicFormFnInvIffTwistedSubstitutionMemStatement
+public import Formalism.LocalToGlobal.HermitianForms.IsLocBasis
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PolFunApply
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.AutomorphicFormFnInvIffTwistedSubstitutionMem
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ChainStepWeightArithmeticStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DetPowerProductMulMemDelWShiftIffStatement
+public import Mathlib.Analysis.Normed.Field.Instances
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DetPowerProductMulMemDelWShiftIff
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IntegralSpanIffPadicWeylDualLatticeStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LocalBasisChangeIntegralUnitDetStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TwistedEmbeddingMatrixSubstitutionMemRatSpanStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TwistedSourceValueReadInChangedBasesStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeylLatticeDualInvariantUnitStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.WeylLatticeDualInvariantUnit
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EvalTwSubK
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -45,7 +49,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.EvalTwSubK
 
 @[expose] public section
 
@@ -99,12 +102,12 @@ theorem lattice_iff_weyl : ∀ {B : Base} {X : PreX B.toPre} (I : TC B X), I.Ok 
     rw [hR]; exact GlobalTheory.T.twistedEmbeddingMatrixSubstitution_mem_ratSpan _ _ Bm _ P0 hP0
   have hν : nuT (I.rec7 l Z) u i = fun τ r => (((I.fm l u μ).lam i τ).natW r) + k τ :=
     funext fun τ => funext fun r => hk τ r
-  refine (GlobalTheory.T.automorphicFormFn_inv_iff_twistedSubstitution_mem (embT (I.rec7 l Z)) Bm _ _ P0 _ eY f hf).trans ?_
+  refine (_root_.GlobalTheory.IntegralityCompare.fnOf_inv_iff_twSub_mem (embT (I.rec7 l Z)) Bm _ _ P0 _ eY f hf).trans ?_
   rw [← hR]
   refine (GlobalTheory.T.integralSpan_iff_padic_weylDualLattice _ Pl w _ R hRat').trans ?_
   rw [hsrc, hν]
-  refine Iff.trans ?_ (GlobalTheory.T.weyl_lattice_dual_invariant_unit _ _ _ _ g c0 (fun y => (∏ τ, (y τ).det ^ k τ) * polFun (MvPolynomial.map (Pl.iL w) R) y) hc0 hg1 hg2).symm
-  exact (GlobalTheory.T.detPowerProduct_mul_mem_delW_shift_iff _ _ _ _ k _).symm
+  refine Iff.trans ?_ (_root_.GlobalTheory.WeylTensorSubst.subst_mem_iff _ _ _ _ g c0 (fun y => (∏ τ, (y τ).det ^ k τ) * polFun (MvPolynomial.map (Pl.iL w) R) y) hc0 hg1 hg2).symm
+  exact (_root_.GlobalTheory.DetShiftWeyl.detPow_mul_mem_delW_iff _ _ _ _ k _).symm
 
 end GlobalTheory.IntegralityCompare
 

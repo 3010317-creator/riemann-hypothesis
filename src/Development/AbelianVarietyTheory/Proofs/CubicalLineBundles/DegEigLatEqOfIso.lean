@@ -1,11 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueDifferentialMonHomLieBasisStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsUniqueDifferentialMonHomLieBasis
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.HermFamIsometryInjective
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.HermitianMetricDifferentialEqOfPairingRelationStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.HermitianMetricDifferentialEqOfPairingRelation
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.IntegralTangentVectorCoordinates
-import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LieLatticeFgAndSpanEqTopRingOfIntegersStatement
+import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.LieLatticeFgAndSpanEqTopRingOfIntegers
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -86,12 +86,12 @@ theorem deg_eigLat_eq_of_iso : ThetaUnifAV → Out.Laws → ∀ (K : Type) [Fiel
   intro hT hL K _ _ P P' F F' h h' O _ a a' e hh hh' hlin hlam τ
   have hm : IsMonHom e.hom := hlin.1
   have hm' : IsMonHom e.inv := inferInstance
-  obtain ⟨M, hM, -⟩ := (GlobalTheory.T.existsUnique_differential_monHom_lieBasis K P F P' F' e.hom hm).1
-  obtain ⟨M', hM', -⟩ := (GlobalTheory.T.existsUnique_differential_monHom_lieBasis K P' F' P F e.inv hm').1
+  obtain ⟨M, hM, -⟩ := (_root_.GlobalTheory.CM.DiffCoord.existsUnique_isDiffOf K P F P' F' e.hom hm).1
+  obtain ⟨M', hM', -⟩ := (_root_.GlobalTheory.CM.DiffCoord.existsUnique_isDiffOf K P' F' P F e.inv hm').1
   have hid : F.IsDiffOf F (𝟙 P.A) LinearMap.id := fun u c hu => by simpa using hu
-  have hiso := GlobalTheory.T.hermitianMetric_differential_eq_of_pairing_relation hT hL K P F P' F' h h' e.hom (𝟙 P.A) M LinearMap.id hh hh' hm inferInstance hlam hM hid
+  have hiso := _root_.GlobalTheory.HermHom.form_diff_eq hT hL K P F P' F' h h' e.hom (𝟙 P.A) M LinearMap.id hh hh' hm inferInstance hlam hM hid
   have hle : F.eigLat a τ ≤ F.lieLat := Submodule.span_mono fun c ⟨u, hu, _⟩ => ⟨u, hu⟩
-  have hfg : (F.eigLat a τ).FG := (GlobalTheory.T.lieLattice_fg_and_span_eq_top_ringOfIntegers K P F).1.of_le hle
+  have hfg : (F.eigLat a τ).FG := (_root_.GlobalTheory.CM.LieLattice.lieLat_fg_and_span_eq_top K P F).1.of_le hle
   rw [← map_eigLat_of_iso e hlin.2 hM hM' τ]
   exact (deg_map_isometry K _ _ h h' M _ hfg hiso).symm
 

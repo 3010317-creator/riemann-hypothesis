@@ -3,11 +3,13 @@ module
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.RealDescent.RealLeviDescent.InjectiveDecompositionAction
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.ExistsOrderedCreationList
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.FiniteDimInvariantSubspaceAdjointPair
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BoundaryProdCreationLeviChainsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsFiniteLeviStableChainsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeviAdjointOnChainsStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeviCommuteUnipotentBoundaryStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeviRaisingKillsTopChainStatement
+public import CompanionTheory.RealGroups.DiscreteSeries.DiscreteSeriesClassification.DiscreteSeriesExhaustion.FarRegularity.LKTExists
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TwLMulSelf
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BoundaryProdCreationLeviChains
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsFiniteLeviStableChains
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeviAdjointOnChains
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeviCommuteUnipotentBoundary
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LeviRaisingKillsTopChain
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -207,13 +209,13 @@ theorem injUU_of_injRL : InjRL → InjUU := by
   have hm : Monotone lev := hlev.1
   have hP : IsPairA E1 E2 := ⟨hA.gl1, hA.gl2, hA.comm⟩
   have hup : ∀ a b : Fin n, a < b → kA E1 E2 a b u = 0 := fun a b hab => hu.2 a b hab rfl
-  obtain ⟨T, hTf, hyT, hTS, hTs⟩ := GlobalTheory.T.exists_finite_levi_stable_chains n lev V E1 E2 _ y hA.locFin hy hd
-  have hC := GlobalTheory.T.levi_commute_unipotent_boundary n lev V E1 E2 hm hP
-  have hone := GlobalTheory.T.levi_raising_kills_top_chain n lev V E1 E2 u hup
+  obtain ⟨T, hTf, hyT, hTS, hTs⟩ := _root_.GlobalTheory.CompanionTheory.LvStableChains.exists_stable n lev V E1 E2 _ y hA.locFin hy hd
+  have hC := _root_.GlobalTheory.CompanionTheory.LvComm.lv_bd_comm n lev V E1 E2 hm hP
+  have hone := _root_.GlobalTheory.CompanionTheory.LvChain.Lv_single_omU n lev V E1 E2 u hup
   obtain ⟨y', hy'T, hy'0, hy'b⟩ := highest_preimage
     (ι := {pq : Fin n × Fin n // pq.1 < pq.2 ∧ lev pq.1 = lev pq.2}) T
     (fun i => Lv lev E1 E2 i.1.1 i.1.2) (fun i => Lv lev E1 E2 i.1.2 i.1.1) (bdL (inUU lev) E1 E2) y hTf
-    (fun i x z => GlobalTheory.T.levi_adjoint_on_chains n lev V E1 E2 hA.unitK _ _ i.2.2 x z)
+    (fun i x z => _root_.GlobalTheory.CompanionTheory.LvChainAdj.Lv_adjoint n lev V E1 E2 hA.unitK _ _ i.2.2 x z)
     (fun i t ht => hTs _ _ i.2.2 t ht)
     (fun i t ht => hTs _ _ i.2.2.symm t ht)
     (fun i t _ => (LinearMap.congr_fun (hC _ _ i.2.2) t).symm ▸ rfl)
@@ -226,7 +228,7 @@ theorem injUU_of_injRL : InjRL → InjUU := by
     refine le_antisymm (hm e.2.le) ?_
     by_contra h3
     exact h2 (Finset.mem_filter.2 ⟨Finset.mem_univ _, rfl, not_le.1 h3⟩)
-  have hbd := GlobalTheory.T.boundary_prod_creation_levi_chains n lev V E1 E2 l y' hlc hcl hy's
+  have hbd := _root_.GlobalTheory.CompanionTheory.LvChain.BdProdL.bd_prodL n lev V E1 E2 l y' hlc hcl hy's
     (fun e he => hy'0 ⟨e.1, e.2, hlc e he⟩)
   rw [bdL_inRR_eq E1 E2 hy's, hy'b, hb] at hbd
   set l' : List (Lt n) := l.map fun i => (false, i) with hl'

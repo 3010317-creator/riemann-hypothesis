@@ -3,12 +3,17 @@ module
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SumMulFG
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsThetaMeanSquareNorm
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.GlobalFnsHolds
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteGroupSchemeSumExtensionStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LineBundlePullbackGeneratorStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TheoremOfCubeSectionValueStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionValueLineBundleSectionStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionValueUniqueBaseChangeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ValuesIdentityPowerRelationStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteGroupSchemeSumExtension
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LineBundlePullbackGenerator
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TheoremOfCubeSectionValue
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.BCTools
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.ValCalc
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionValueLineBundleSection
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorsionValueUniqueBaseChange
+public import Mathlib.Algebra.Group.Nat.Defs
+public import Mathlib.Algebra.Group.Units.Defs
+public import Mathlib.Algebra.Ring.Defs
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ValuesIdentityPowerRelation
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -60,11 +65,11 @@ open GlobalTheory.CompanionTheory.Ar GlobalTheory.CompanionTheory.Ar.Sl GlobalTh
 
 namespace GlobalTheory.CompanionTheory.Ar.Sl.Transl
 
-alias torsVal_val := GlobalTheory.T.torsion_value_line_bundle_section
-alias exists_lin := GlobalTheory.T.theorem_of_cube_section_value
-alias exists_sec_of_gen := GlobalTheory.T.line_bundle_pullback_generator
-alias exists_root_gen := GlobalTheory.T.finite_group_scheme_sum_extension
-alias transl_algebra := GlobalTheory.T.values_identity_power_relation
+alias torsVal_val := _root_.GlobalTheory.CompanionTheory.Ar.Sl.Transl.torsVal_charts
+alias exists_lin := _root_.GlobalTheory.CompanionTheory.Ar.Sl.Transl.exists_lin_gen
+alias exists_sec_of_gen := _root_.GlobalTheory.CompanionTheory.Ar.Sl.Transl.exists_sec_cleared
+alias exists_root_gen := _root_.GlobalTheory.CompanionTheory.Ar.Sl.Transl.exists_gen_normalised
+alias transl_algebra := _root_.GlobalTheory.CompanionTheory.Ar.Sl.Transl.values_identity_units
 
 end GlobalTheory.CompanionTheory.Ar.Sl.Transl
 
@@ -75,7 +80,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {H : Host E} {L : Ty
 theorem exists_mulGen (D : PPData H L) (th : Out.H0 D.t.PP.L 1) (N : ℕ) (hN : 1 ≤ N) :
     ∃ w : LB.Gen (LB.LinComb D.t.PP.L (K := Fin 2) ![((𝟙 D.t.G : D.t.G ⟶ D.t.G) ^ N).left, 𝟙 D.t.G.left] ![1, -((N : ℤ) ^ 2)]),
       w.IsGen := by
-  obtain ⟨T, hT, -⟩ := (GlobalTheory.T.torsion_value_unique_base_change E H L D 1 th L (spMap (algebraMap (𝓞 L) L)) 1 N hN (one_pow N)).1
+  obtain ⟨T, hT, -⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.Sl.TorsExist.torsVal_existsUnique E H L D 1 th L (spMap (algebraMap (𝓞 L) L)) 1 N hN (one_pow N)).1
   obtain ⟨-, -, w, _, _, hw, -⟩ := hT
   exact ⟨w, hw⟩
 end GlobalTheory.CompanionTheory.Ar.Sl.Transl

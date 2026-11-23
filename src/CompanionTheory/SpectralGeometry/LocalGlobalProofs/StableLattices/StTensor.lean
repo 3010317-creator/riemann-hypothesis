@@ -3,13 +3,18 @@ module
 public import CompanionTheory.RealGroups.UnitaryAdmissibility.ArchimedeanUnitaryDual.StDefinite
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.StableLattices.ExistsFixedOfFinset
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LineOppositeParabolicUnitaryLeviSectionEq
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EventuallyAlgebraMapMemIntegers
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsOpenIsCompactLevelOffFinEmpty
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NonarchimedeanGroupOfIsCompactIsOpen
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.AdelicUnitaryClosureLocalComponentsOpen
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EventuallyExistsDoubleCosetAntiInvolutionUnitaryStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GelfandPairSphericalVectorUniqueStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryIrreducibleSmoothAdmissibleStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.HermitianSpaceBaseLatticeEqFrameLattice
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EventuallyExistsDoubleCosetAntiInvolutionUnitary
+public import Development.AbelianVarietyTheory.Definitions.Foundations.SmoothPartStable
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.RepresentationTheory.Irreducible
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.GelfandPairSphericalVectorUnique
+public import Development.AbelianVarietyTheory.Definitions.Foundations.ForallEventuallyFinLocIff
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.UnitaryIrreducibleSmoothAdmissible
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EventuallyAlgebraMapMemIntegers
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsOpenIsCompactLevelOffFinEmpty
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -115,12 +120,12 @@ theorem eventually_line (hAdm : GlobalTheory.Published.UnitaryIrreducibleAdmissi
     ∀ᶠ v in cofinite, ∀ (X : Type) [NormedAddCommGroup X] [InnerProductSpace ℂ X]
       (δ : GLoc σ J v →* (X →L[ℂ] X)), IsIrrUnitary δ → ∀ x : X, x ≠ 0 → (∀ k ∈ stabLoc σ J L v, δ k x = x) →
         ∀ y, (∀ k ∈ stabLoc σ J L v, δ k y = y) → ∃ c : ℂ, y = c • x := by
-  filter_upwards [GlobalTheory.T.eventually_exists_doubleCoset_antiInvolution_unitary F E σ hc n J hJ L hL] with v hθ X _ _ δ hδ x hx0 hx y hy
+  filter_upwards [_root_.GlobalTheory.AntiInvLoc.eventually_exists_antiInv F E σ hc n J hJ L hL] with v hθ X _ _ δ hδ x hx0 hx y hy
   obtain ⟨θ, hθ1, hθ2, hθ3⟩ := hθ
   haveI := GlobalTheory.Doubling.nonarchimedeanGroup_GLoc σ J v
   have hKo : IsOpen (stabLoc σ J L v : Set (GLoc σ J v)) := isOpen_stabLoc σ J L v
   have hKc : IsCompact (stabLoc σ J L v : Set (GLoc σ J v)) := isCompact_stabLoc σ J L v
-  have hirr := GlobalTheory.T.unitary_irreducible_smooth_admissible (GLoc σ J v) X δ hδ
+  have hirr := _root_.GlobalTheory.SmoothUnitary.isIrreducible_isAdmissible_smRep (GLoc σ J v) X δ hδ
     (fun K hK hK' => hAdm F E σ hc n J hJ v X δ hδ K hK hK')
   have sm : ∀ z, (∀ k ∈ stabLoc σ J L v, δ k z = z) → z ∈ GlobalTheory.PRep.smoothPart (toRep δ) := by
     intro z hz
@@ -143,7 +148,7 @@ theorem eventually_line (hAdm : GlobalTheory.Published.UnitaryIrreducibleAdmissi
   have hx' : x' ∈ fixed (smRep δ) (stabLoc σ J L v) :=
     GlobalTheory.LGrp.mem_fixed.2 fun k hk => Subtype.ext (hx k hk)
   have hx0' : x' ≠ 0 := fun e => hx0 (congrArg Subtype.val e)
-  have hline := GlobalTheory.T.gelfand_pair_spherical_vector_unique (GLoc σ J v) (stabLoc σ J L v) hKo hKc θ hθ1 hθ2 hθ3 _
+  have hline := _root_.GlobalTheory.fixed_eq_span_of_gelfandPair (GLoc σ J v) (stabLoc σ J L v) hKo hKc θ hθ1 hθ2 hθ3 _
     (smRep δ) hirr.1 hirr.2 x' hx' hx0'
   have hy' : (⟨y, sm y hy⟩ : GlobalTheory.PRep.smoothPart (toRep δ)) ∈ fixed (smRep δ) (stabLoc σ J L v) :=
     GlobalTheory.LGrp.mem_fixed.2 fun k hk => Subtype.ext (hy k hk)

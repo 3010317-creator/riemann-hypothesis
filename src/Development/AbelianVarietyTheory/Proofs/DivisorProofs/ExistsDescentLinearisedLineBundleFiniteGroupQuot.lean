@@ -2,11 +2,23 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GapGeSubKapBase
 public import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.IsDomainAndIsIntegrallyClosedLocalizationOfIsInv
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechPicardPullbackCartierDivisorBundleEqStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCartierDivisorGroupQuotientDescentStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFunctionFieldMapEqOfGroupInvariantStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInvariantLocalEquationCartierFiniteQuotienStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitOfCocycleRightActionCharZeroStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsEqnIffGeneratesAtInv
+public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsValuationSubringDominatingSubring
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechPicardPullbackCartierDivisorBundleEq
+public import Development.AbelianVarietyTheory.BlockTheory.TorsionBlocks.LevelCarrying
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsCoprimeOfNatCast
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHomogeneousCompIdeal
+public import Development.AbelianVarietyTheory.Definitions.Divisors.MemLevEigenIffTransl
+public import Development.AbelianVarietyTheory.Definitions.Divisors.UnitaryWeightExponentVectorSignatureWeightMuZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCartierDivisorGroupQuotientDescent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFunctionFieldMapEqOfGroupInvariant
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInvariantLocalEquationCartierFiniteQuotien
+public import Mathlib.Algebra.CharZero.Defs
+public import Mathlib.Algebra.Field.Defs
+public import Mathlib.Algebra.Group.Units.Defs
+public import Mathlib.Algebra.Ring.Hom.Defs
+public import Mathlib.Basic.Finite.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnitOfCocycleRightActionCharZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -168,7 +180,7 @@ theorem descent : ∀ (F : Type) [Field F] [NumberField F] (X W : Scheme.{0}) [I
       exact (zeroAt_iff.1 h0).2 (unitAt_genericPoint hne)
     rw [map_one, one_mul, inv_one, mul_one, sub_eq_zero, ← Units.val_one, Units.val_inj, inv_eq_one] at h1
     exact h1
-  obtain ⟨f, hf⟩ := GlobalTheory.T.hilbert90_finite_rightAction_charZero_field _ Γ σ hσ c hcoc' htriv
+  obtain ⟨f, hf⟩ := _root_.GlobalTheory.exists_unit_of_cocycle_rightAction_charZero _ Γ σ hσ c hcoc' htriv
   have hfu : ∀ γ, fnAct ρ γ f = c γ * f := fun γ => Units.ext (by rw [hσu, Units.val_mul]; exact hf γ)
   set D' := D - CartierDiv.principal f with hD'
   have hD : D' + CartierDiv.principal f = D := sub_add_cancel _ _
@@ -186,13 +198,13 @@ theorem descent : ∀ (F : Type) [Field F] [NumberField F] (X W : Scheme.{0}) [I
     have e : fnAct ρ γ g * g⁻¹ = fnAct ρ γ (g * f) * (c γ)⁻¹ * (g * f)⁻¹ := by
       rw [map_mul, hfu]; simp [mul_inv_rev, mul_comm, mul_assoc, mul_left_comm]
     rw [e]; exact h1
-  have hloc := GlobalTheory.T.exists_invariant_localEquation_cartier_finiteQuotient F X W (q ≫ sW) Γ ρ q hq D' hinv' hin'
+  have hloc := _root_.GlobalTheory.InvEqn.exists_invariant_isEqn F X W (q ≫ sW) Γ ρ q hq D' hinv' hin'
   have key : ∀ y : W, ∃ b : W.functionFieldˣ, ∀ x, q x = y →
       D'.IsEqn x (Units.map (functionFieldMap q).toMonoidHom b) := by
     intro y
     obtain ⟨x, rfl⟩ := q.surjective y
     obtain ⟨g, hg, hgx⟩ := hloc x
-    obtain ⟨b, hb⟩ := GlobalTheory.T.exists_functionFieldMap_eq_of_groupInvariant X W Γ ρ q hq g hg
+    obtain ⟨b, hb⟩ := _root_.GlobalTheory.OrbitSep.exists_functionFieldMap_eq_of_invariant X W Γ ρ q hq g hg
     refine ⟨b, fun x' hx' => ?_⟩
     obtain ⟨γ, rfl⟩ := (hq.apply_eq_iff x x').1 hx'.symm
     rw [hb]
@@ -201,9 +213,9 @@ theorem descent : ∀ (F : Type) [Field F] [NumberField F] (X W : Scheme.{0}) [I
       exact Scheme.inv_hom_apply _ _
     have := hinv' γ⁻¹ ((ρ γ).asIso.hom x) g (by rw [hp]; exact hgx)
     rwa [hg] at this
-  obtain ⟨E, hE⟩ := GlobalTheory.T.exists_cartierDivisor_group_quotient_descent X W Γ ρ q hq D' key
+  obtain ⟨E, hE⟩ := _root_.GlobalTheory.Cartier.Descent.exists_cartierDiv_descent X W Γ ρ q hq D' key
   refine ⟨toLB E, isLB_toLB E, ?_⟩
-  rw [GlobalTheory.T.cechPicardPullback_cartierDivisorBundle_eq X W q D' E hE]
+  rw [_root_.GlobalTheory.Cartier.PullPres.pull_cls_toLB X W q D' E hE]
   calc cls (toLB D') (isLB_toLB D') = toPic D' := (toPic_apply D').symm
     _ = toPic D := by rw [hD', map_sub, toPic_principal, sub_zero]
     _ = cls L hL := hcls

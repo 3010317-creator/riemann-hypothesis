@@ -1,8 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.BaseIdealIdeal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseIdealSheafOfIdealComapSpecMapSupportStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdealSheafDataMapSupComapClosedImmersionStatement
+public import Mathlib.AlgebraicGeometry.IdealSheaf.Functorial
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BaseIdealSheafOfIdealComapSpecMapSupport
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IdealSheafDataMapSupComapClosedImmersion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,8 +63,8 @@ theorem alg_of_closedSubscheme : ∀ (R : Type) [CommRing R] (I : Ideal R) (W : 
   intro R _ I W f a hA t ht hp
   set ι := a.subschemeι with hι
   have hbase : ∀ J : Ideal R, (baseIdeal f J).comap ι = baseIdeal (ι ≫ f) J :=
-    fun J => GlobalTheory.T.baseIdealSheafOfIdeal_comap_specMap_support.1 R W a.subscheme f ι J
-  have hms := GlobalTheory.T.idealSheafData_map_sup_comap_closedImmersion a.subscheme W ι inferInstance
+    fun J => _root_.GlobalTheory.FormalAlg.baseIdeal_calculus.1 R W a.subscheme f ι J
+  have hms := _root_.GlobalTheory.ClosedImmIdeal.map_sup_comap_and_comap_map a.subscheme W ι inferInstance
   let s : ℕ → a.subscheme.IdealSheafData := fun e => (t e).comap ι
   have hs : IsSystem (ι ≫ f) I s := fun e => by
     simp only [s]

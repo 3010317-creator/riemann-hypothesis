@@ -1,7 +1,8 @@
 module
 
 public import Formalism.LocalToGlobal.CharacterGerms.SelfConjugateRowData
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SeparatedEmbeddingsDirectionsTypedBasisStatement
+public import Formalism.LocalToGlobal.CharacterGerms.HostTraceIdentity
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SeparatedEmbeddingsDirectionsTypedBasis
 public import Formalism.LocalToGlobal.CharacterGerms.RowTieLab
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -71,7 +72,7 @@ theorem UpperTheory.labelSetGeo_of_labelSetArith :
   have hsep1 : ∀ o (s s' : ZMod d), s ≠ s' →
       ∃ a : 𝓞 E, V.v (emA3 io ι (lab.tau o s) a - emA3 io ι (lab.tau o s') a) = 0 :=
     fun o s s' h => ha.sep (o, s) (o, s') fun e => h (Prod.mk.inj e).2
-  have hgeo := fun o => GlobalTheory.T.separatedEmbeddings_directions_typedBasis E H Dw lv Xo c hstar T io y C3 C V ι hι k Y hY (ZMod d) (lab.tau o) (hsep1 o)
+  have hgeo := fun o => _root_.GlobalTheory.SeparatedDirections.directions_typed_basis E H Dw lv Xo c hstar T io y C3 C V ι hι k Y hY (ZMod d) (lab.tau o) (hsep1 o)
   refine { em_int := fun _ _ x => embedding_integral ι _ x
            em_conj := ?_
            e_int := fun _ _ i => a3uvec_int C3 hι _ i

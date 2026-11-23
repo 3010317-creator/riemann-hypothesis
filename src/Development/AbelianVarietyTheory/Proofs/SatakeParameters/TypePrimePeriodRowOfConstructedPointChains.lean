@@ -3,8 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.JetSplitAmb
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.ValidForConstructedPointClassesEventuallyWorking
 public import Formalism.LocalToGlobal.GroupLattices.AdmissibleAtGeneratorPlaces
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.JetTableBoundConstantOneOfChainAgreementStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.KernelDegreesSmallAgainstTypePrimesStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.JetTableBoundConstantOneOfChainAgreement
+public import Development.AbelianVarietyTheory.BlockTheory.ThetaLiftGeometry.BadPrimesPeriodBound
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.KernelDegreesSmallAgainstTypePrimes
 public import Formalism.SharpRestriction.AdmissibleParameterJoins.GandSaj
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -56,12 +57,12 @@ theorem row_atG_of_jetSplitAmb : JetSplitAmb → ∀ {Bd : BdT} (Q : V4.Slot) (L
   intro hJ Bd Q Lk hE
   refine ⟨_, hE, fun 𝒜 σ s => ?_⟩
   refine ⟨1 / 100, by norm_num, fun eps he hle => ?_⟩
-  obtain ⟨xs, hxs⟩ := GlobalTheory.T.kernelDegrees_small_against_typePrimes eps he (by linarith)
+  obtain ⟨xs, hxs⟩ := _root_.GlobalTheory.AtG.KernelSizes.sizeAt_of_params eps he (by linarith)
   refine ⟨⟨0, fun _ => 0, fun _ => 2, fun _ => 0⟩, fun Fm CH hc hL => ?_⟩
   have hg : (2 : ℝ) ≤ Fm.cX.err.g := hL.2.2.1 Fm.cX.err.g (by simp [FamP.cMid])
   obtain ⟨κ, -, -, t⟩ := s Fm (w3_a hc)
   refine ⟨1, ⟨xs, fun x hx hx0 i => ?_⟩, Formalism.MainNotions.J.family_type_prime_loss Fm zero_le_one (by linarith)⟩
-  refine GlobalTheory.T.propositionCOneUsedTuples_one_of_tiesAt_sizeAt hJ (Fm.D x i) (Fm.L x i) (Fm.ex x hx i).errX (Fm.X x i) (t x hx i).2 ?_
+  refine _root_.GlobalTheory.AtG.jetTableBound_constantOne_of_chainAgreement hJ (Fm.D x i) (Fm.L x i) (Fm.ex x hx i).errX (Fm.X x i) (t x hx i).2 ?_
   exact hxs (Fm.D x i) (Fm.L x i) (Fm.params x hx i) (Fm.sizes x hx i) (Fm.L_eps x i) (by rw [Fm.L_x x i hx]; exact hx0)
 
 end GlobalTheory.AtG

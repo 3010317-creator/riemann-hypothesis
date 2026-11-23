@@ -4,7 +4,8 @@ public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.NumberTheory.NumberField.AdeleRing
 public import Mathlib.NumberTheory.NumberField.InfinitePlace.TotallyRealComplex
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ContinuousSymmFinite
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInfiniteAdeleTensorEquivMixedSpaceStatement
+public import Mathlib.NumberTheory.NumberField.InfiniteAdeleRing
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsInfiniteAdeleTensorEquivMixedSpace
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsTensorFiniteAdeleEquiv
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsAdeleRingTensorEquivInfiniteProdFinite
 import Mathlib.Algebra.Order.Floor.Extended
@@ -63,7 +64,7 @@ theorem exists_adele_tensor_equiv : ∀ (F E : Type) [Field F] [NumberField F] [
   obtain ⟨e, he, -, hec⟩ := GlobalTheory.AdSplit.exists_adele_equiv F E
   obtain ⟨ι, hι1, hι2, hι3⟩ := GlobalTheory.AdeleBaseChange.exists_tensor_finiteAdele_equiv F E
   have hιc := GlobalTheory.AdeleBaseChange.continuous_symm_finite F E ι hι2
-  obtain ⟨θ, hθ1, hθc, hθ3⟩ := GlobalTheory.T.exists_infiniteAdele_tensor_equiv_mixedSpace F E σ hF hE h2 hσ
+  obtain ⟨θ, hθ1, hθc, hθ3⟩ := _root_.GlobalTheory.InfAdeleMixed.exists_equiv_mixedSpace F E σ hF hE h2 hσ
   have he1 : ∀ (a : AdeleRing (𝓞 F) F) (x : E), (e (a ⊗ₜ[F] x)).1 = a.1 ⊗ₜ[F] x :=
     fun a x => (he _).1.trans (Algebra.TensorProduct.map_tmul _ _ _ _)
   have he2 : ∀ (a : AdeleRing (𝓞 F) F) (x : E), (e (a ⊗ₜ[F] x)).2 = a.2 ⊗ₜ[F] x :=

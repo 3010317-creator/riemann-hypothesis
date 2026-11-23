@@ -3,7 +3,9 @@ module
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.MemEigSpOfMemHtDual
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PushInvertible
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsPrimitiveRootOfLevel
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LevelCoverStHoldsStatement
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.LevelCoverSt
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LevelCoverStHolds
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GlueApplyOfNotInFibre
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,7 +46,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GlueApplyOfNotInFibre
 
 @[expose] public section
 
@@ -123,7 +124,7 @@ theorem exists_field : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H
   have hN0 : (∏ p ∈ S, p ^ 4) ≠ 0 :=
     Finset.prod_ne_zero_iff.2 fun p hp => pow_ne_zero _ (hS p hp).ne_zero
   obtain ⟨Ω', _, _, n, x, M, f, y, t, m, z, ev, -, hfin, hfe, -, -, htor, -⟩ :=
-    GlobalTheory.T.LevelCoverSt_holds E H D l Xo c Y _ he (∏ p ∈ S, p ^ 4) (Nat.one_le_iff_ne_zero.2 hN0)
+    _root_.GlobalTheory.CompanionTheory.Ar.XR.levelCover E H D l Xo c Y _ he (∏ p ∈ S, p ^ 4) (Nat.one_le_iff_ne_zero.2 hN0)
   haveI := hfin
   obtain ⟨i₁, h₁⟩ := exists_factor ξ₁ _ rfl
   obtain ⟨i₂, h₂⟩ := exists_factor (M.ξ ≫ f) (genPt ξ₁) (by

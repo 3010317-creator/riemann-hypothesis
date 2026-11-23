@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AinfAdicTopologicalBasisOverBreuilKisinStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ClosedDiscCoefficientsTopologicallyFreeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBoundedOfPhiEquationDiscStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SeedCoeffRecurrenceStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AinfAdicTopologicalBasisOverBreuilKisin
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ClosedDiscCoefficientsTopologicallyFree
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsBoundedOfPhiEquationDisc
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SeedCoeffRecurrenceAlt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -79,7 +79,7 @@ theorem tendsto_cofinite_prod_of_finite {ι α E : Type} [Finite α] [Topologica
 
 theorem exists_bounded_periods : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (τ : Ainf l) (hτ : bk.IsPer τ) (d : ℕ) (ρ : ↥(GK K) → Matrix (Fin d) (Fin d) ℤ_[l]) (hρ : ∀ g, IsUnit (ρ g)) (s : Seed bk d ρ τ), ∃ (ι : Type) (TB : TopBasis bk.ev bk.J ι) (k : ℕ) (v : ι → Matrix (Fin d) (Fin d) (Ainf l)) (Z : ι → Matrix (Fin d) (Fin d) (bk.DS bk.ρ₀)), (∀ (n : ℕ) (a b : Fin d), {i | v i a b ∉ (bk.J ^ n).map bk.ev}.Finite) ∧ (∀ j : bk.DS bk.ρ₀ →+* bk.DA bk.ρ₀, IsDiscMap (l := _) (u := _) (ρ := _) bk.ev j → ∀ i, s.W * (Z i).map j = (v i).map bk.iA) ∧ ∀ a b : Fin d, HasSum (fun i => bk.iA (v i a b * TB.b i)) (bk.iA ((l : Ainf l) ^ k * τ ^ (2 * s.N) * if a = b then 1 else 0)) := by
   intro l _ K bk τ hτ d ρ hρ s
-  obtain ⟨ι, ⟨TB⟩⟩ := GlobalTheory.T.ainf_adicTopologicalBasis_over_breuilKisin l K bk
+  obtain ⟨ι, ⟨TB⟩⟩ := _root_.GlobalTheory.BSP.AinfTopBasis.main l K bk
   have hρ0 := bk.ρ₀_pos'
   have hρ1 := bk.ρ₀_lt_one'
   have hj0 : ‖toDisc l (bk.ev X) bk.ρ₀ (bk.ev X)‖ ≤ bk.ρ₀ := by
@@ -94,8 +94,8 @@ theorem exists_bounded_periods : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk
   let Φ : bk.DA bk.ρ₀ →+* bk.DA bk.ρ₀ :=
     Disc.map (l := l) (u := bk.ev X) (ρ := bk.ρ₀) (u' := bk.ev X) (ρ' := bk.ρ₀) WittVector.frobenius hΦ0
   have hΦ : IsDiscMap (l := _) (u := _) (ρ := _) WittVector.frobenius Φ := isDiscMap_map _ _
-  obtain ⟨cD, hc1, hc2, hc3, hc4, hc5, -, -, -⟩ := GlobalTheory.T.closedDisc_coefficients_topologicallyFree l K bk (Ainf l) bk.ev ι TB bk.ρ₀ hρ0 hρ1 j0 hj0d
-  have hrec := GlobalTheory.T.seed_coeff_recurrence_alt l K bk τ hτ d ρ hρ s ι TB j0 hj0d cD hc1 hc2 hc5 hc3 Φ hΦ
+  obtain ⟨cD, hc1, hc2, hc3, hc4, hc5, -, -, -⟩ := _root_.GlobalTheory.BSP.disc_coefficients l K bk (Ainf l) bk.ev ι TB bk.ρ₀ hρ0 hρ1 j0 hj0d
+  have hrec := _root_.GlobalTheory.BSP.seed_coeff_recurrence l K bk τ hτ d ρ hρ s ι TB j0 hj0d cD hc1 hc2 hc5 hc3 Φ hΦ
   let V : ι → Matrix (Fin d) (Fin d) (bk.DA bk.ρ₀) := fun i => s.W * (s.W'.map (cD i)).map j0
   let Vκ : ι × (Fin d × Fin d) → bk.DA bk.ρ₀ := fun p => V p.1 p.2.1 p.2.2
   let c : ι × (Fin d × Fin d) → ι × (Fin d × Fin d) → Ainf l := fun p q =>
@@ -128,7 +128,7 @@ theorem exists_bounded_periods : ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk
     · convert hrec i₁ a b using 1
       · funext i
         simp [c, Vκ, V]
-  obtain ⟨k, v, hv1, hv2⟩ := GlobalTheory.T.exists_bounded_of_phi_equation_disc l K bk (Ainf l) bk.ev ι TB WittVector.frobenius (frobenius_ev_X_eq bk)
+  obtain ⟨k, v, hv1, hv2⟩ := _root_.GlobalTheory.BSP.exists_bounded_of_phi_equation l K bk (Ainf l) bk.ev ι TB WittVector.frobenius (frobenius_ev_X_eq bk)
     Φ hΦ _ c hcfin (2 * s.N) Vκ hV hrecκ
   refine ⟨ι, TB, k, fun i => Matrix.of fun a b => v (i, (a, b)),
     fun i => (l : bk.DS bk.ρ₀) ^ k • s.W'.map (cD i), ?_, ?_, ?_⟩

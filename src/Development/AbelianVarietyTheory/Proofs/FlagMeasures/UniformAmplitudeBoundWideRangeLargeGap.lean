@@ -4,17 +4,20 @@ public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.UniqG
 public import Formalism.SharpRestriction.CuspSpanNormBounds.PExtra
 public import Formalism.SharpRestriction.CuspSpanNormBounds.BranchingAndRankConstants
 public import Development.AbelianVarietyTheory.Statements.DiscreteSeriesShifts.ThmBpDS
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeEqBesselFunctionLargeGapsStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselPointwiseBoundAtLargeGapsStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.SBridge
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.AmplitudeEqBesselFunctionLargeGaps
+public import Formalism.SharpRestriction.CuspSpanNormBounds.OnePlaceEstimates
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BesselPointwiseBoundAtLargeGaps
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NormSqLeadMinorTurnP
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OneBesselTorusTranslatesLargeGapStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.IsPtRepTrDat
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.OneBesselTorusTranslatesLargeGap
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SizesLargeOfPowerBounds
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.SzHypFam
 public import Formalism.SharpRestriction.CuspSpanNormBounds.AbsoluteAmplitudeSecondOfSource
-import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.CriticalLevelLowOfRefined
-import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.MinkowskiDividesFactorialOfBound
 public import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.StandardHypothesesOfScaleHyp
 public import Formalism.SharpRestriction.CuspSpanNormBounds.OnePlaceExpansion
+import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.CriticalLevelLowOfRefined
+import Formalism.SharpRestriction.CuspSpanNormBounds.BruhatCellsKronecker.MinkowskiDividesFactorialOfBound
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -81,10 +84,10 @@ theorem uniformPT_gap : Formalism.HermitianLatticesTheory.SiegelMassRatio → Gl
   have hT : CT ≤ Cβ * 1 := by rw [mul_one]; exact ((le_max_left _ _).trans (le_max_right _ _)).trans (le_max_right _ _)
   have hg : 1 / 8 + 2 * Cg ≤ Cβ * 1 := by
     rw [mul_one]; exact ((le_max_right _ _).trans (le_max_right _ _)).trans (le_max_right _ _)
-  obtain ⟨Cb, Cg₀, hBP⟩ := (GlobalTheory.T.besselPointwiseBound_at_largeGaps hH hBp 1).imp fun _ h => h.imp fun _ h Cg hCg => (h Cg hCg).2.2
-  obtain ⟨Cgf, hOB⟩ := GlobalTheory.T.oneBessel_torusTranslates_largeGap hH
+  obtain ⟨Cb, Cg₀, hBP⟩ := (_root_.GlobalTheory.bp_forms_of_gapIn_thmBpDS hH hBp 1).imp fun _ h => h.imp fun _ h Cg hCg => (h Cg hCg).2.2
+  obtain ⟨Cgf, hOB⟩ := _root_.GlobalTheory.AmpTKGapOne.oneBesselTor_of_gapHyp hH
   obtain ⟨Cf, hCf, hFrm⟩ := GlobalTheory.FrameTurn.frameChange_of_frames 1 Cgf 2 zero_le_one (by norm_num)
-  obtain ⟨Ca, hCa, hAmp⟩ := GlobalTheory.T.amplitude_eq_besselFunction_largeGaps hH Cg cb Cu cT CT C0 C1
+  obtain ⟨Ca, hCa, hAmp⟩ := _root_.GlobalTheory.AmpBesselGap.ampIsBessel hH Cg cb Cu cT CT C0 C1
   refine ⟨max (Ca + Cβ * (Cf + max Cb 0 + Cf * max Cb 0)) (max Cb 0), 1000, fun eps Fm _ hl hR Cn => ?_⟩
   obtain ⟨m₀, hA⟩ := hAmp Cn
   obtain ⟨x0, hx0⟩ := GlobalTheory.family_sizes_eventually_large eps Fm m₀

@@ -1,9 +1,15 @@
 module
 
 public import Development.AutomorphicSpectrum.Statements.TowerExistence.GoodTowerExistsX
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsSandwichOfHodgeTateFreeStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlatZeroFromResolutionAndGagaStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TowerIntersectionOfSandwichSplitStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IntegralClosureHeightEqOneOfLiesOver
+public import Development.AutomorphicSpectrum.PublishedTheorems.Algebra₂.FarguesHodgeTate
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsSandwichOfHodgeTateFree
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.FlatLineGenerator
+public import Development.AutomorphicSpectrum.PublishedTheorems.Geometry₂.GagaSections
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.BlowupProjections.BlowupProjStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FlatZeroFromResolutionAndGaga
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TowerIntersectionOfSandwichSplit
 public import Development.WeilBound.CoreStatements.FlagImmersions.EqOfSpecializesGenPt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -53,9 +59,9 @@ theorem global_model_tower_fifth_condition : Given → ∀ (E : Type) [Field E] 
   intro hG E _ _ _ _ H D Xo l c Y _ T o II _ _ hII hp _
   have hG' := hG
   obtain ⟨-, -, -, -, hRes, -, hF, hGaga, -⟩ := hG'
-  refine GlobalTheory.T.tower_intersection_of_sandwich_split hG (GlobalTheory.T.flat_zero_from_resolution_and_gaga hRes hGaga) E H D l (Xo l) c Y T o II hII.1
+  refine _root_.GlobalTheory.CompanionTheory.Ar.TopGood.tower_good_of_sandwich_split hG (_root_.GlobalTheory.CompanionTheory.Ar.Flat.A0.flat_zero_of_resolution_gaga hRes hGaga) E H D l (Xo l) c Y T o II hII.1
     (splitComps_of_origin o.toTowerOrigin) fun B a p hpS => ?_
   haveI : Fact p.Prime := ⟨(o.Or B a).𝔐.S_prime p hpS⟩
-  exact GlobalTheory.T.exists_sandwich_of_hodge_tate_free hF E H D l (Xo l) c _ _ Y (o.S B) _ _ _ _ (o.Or B a).𝔐 p hpS (by omega) (o.omVB B a p hpS)
+  exact _root_.GlobalTheory.CompanionTheory.Ar.HT.ModelSandwich.sandwich_of_htFree hF E H D l (Xo l) c _ _ Y (o.S B) _ _ _ _ (o.Or B a).𝔐 p hpS (by omega) (o.omVB B a p hpS)
 
 end RootFieldNumerics

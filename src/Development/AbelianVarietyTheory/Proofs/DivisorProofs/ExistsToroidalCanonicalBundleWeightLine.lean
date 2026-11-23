@@ -3,9 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GapGeSubKapBase
 public import Formalism.LocalToGlobal.ProjectiveLattices.CompHt
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CompactificationComponentIntegralSmoothProjectiv
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCartierDivisorDetLieEigenpartsToroidalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLogKodairaSpencerDivisorToroidalComponentStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.FlagComponentFramedPointFrame
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCartierDivisorDetLieEigenpartsToroidal
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LieModel
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLogKodairaSpencerDivisorToroidalComponent
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSecDivNonzeroLocusEq
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.CmHostUnitAddConjEqOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -40,7 +43,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.CmHostUnitAddConjEqOne
 import Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings
 
 @[expose] public section
@@ -85,14 +87,14 @@ theorem exists_kap_theta : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E
   intro E hE hNumber hCM H Dw l Xo c TF Z hpq hF hSmooth K
   obtain ⟨hI, -⟩ := GlobalTheory.BaseVar.isVariety_barComp E H Dw l Xo c TF Z hF
   letI : IsIntegral (X₀ TF.Y Z) := hI
-  obtain ⟨φ₀, f₀, hgen, hdiv⟩ := GlobalTheory.T.exists_cartierDivisor_det_lieEigenparts_toroidal E H Dw l Xo c TF Z
+  obtain ⟨φ₀, f₀, hgen, hdiv⟩ := _root_.GlobalTheory.EigDiv.exists_detDiv E H Dw l Xo c TF Z
   obtain ⟨D, hpull, hD⟩ := hdiv fun τ => if τ (H.rt : E) = H.rt0 then (Dw.q : ℤ) else Dw.p
   refine ⟨toLB D, isLB_toLB D, ?_, ?_⟩
   · rw [exOf_kapBase Dw] at hpull
     exact hpull
   · obtain ⟨i₀, hi₀⟩ := exists_chart K.isLB (genericPoint (X₀ TF.Y Z))
     have hP := presents_ofLB K.isLB i₀ hi₀
-    have hKS := @GlobalTheory.T.exists_logKodairaSpencer_divisor_toroidalComponent
+    have hKS := @_root_.GlobalTheory.LogKSDiv.exists_logKS_div
       E hE hNumber hCM H Dw l Xo c TF Z hpq hF hI hSmooth K
       (ofLB K.isLB i₀ hi₀) (frameRat K.bundle i₀ hi₀) hP φ₀ f₀ hgen D hD
     obtain ⟨h, hh⟩ := hKS

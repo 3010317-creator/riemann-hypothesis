@@ -3,9 +3,14 @@ module
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.FactorDepthInertBounds
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TypedPartSplitPrimes
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EightDvdNCol
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetDepthLowerBoundSaturatedEvenTypeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FactorDepthUpperBoundOddUnramifiedPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupRootsOfUnityTypedLieRanksStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.IsSatFrame
+public import Mathlib.Analysis.SpecialFunctions.Log.Base
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetDepthLowerBoundSaturatedEvenType
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FactorDepthUpperBoundOddUnramifiedPrime
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.BigBlockCharacters
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FormalGroupRootsOfUnityTypedLieRanks
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.CmHostUnitAddConjEqOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -39,9 +44,7 @@ import Mathlib.Tactic.NormNum.NatSqrt
 import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PullbackSections.HolomorphicFamilies.CmHostUnitAddConjEqOne
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.BigBlockCharacters
 
 @[expose] public section
 
@@ -77,8 +80,8 @@ theorem facBetween_fine : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
     k * (Dw.q / ((p : ℝ) - 1) + ((Dw.p : ℝ) - Dw.q) * p / ((p : ℝ) ^ 2 - 1)), ?_, ?_⟩
   · intro T io e ho y
     refine ⟨le_nuFac fun Ch X => ?_, fun halg =>
-      (GlobalTheory.T.factorDepth_upperBound_oddUnramifiedPrime E H Dw l Xo c p T io y (not_isUnit_of_overLa la ho) halg hp2 hdisc f k hf).2 hin⟩
-    obtain ⟨hfrob, hty⟩ := GlobalTheory.T.formalGroup_rootsOfUnity_typed_lieRanks E H Dw l Xo c (fun _ => rfl) p hdisc T io X
+      (_root_.GlobalTheory.FacUpOdd.nuFac_le_odd_unram E H Dw l Xo c p T io y (not_isUnit_of_overLa la ho) halg hp2 hdisc f k hf).2 hin⟩
+    obtain ⟨hfrob, hty⟩ := _root_.GlobalTheory.PrimePart.formalGroupTypes E H Dw l Xo c (fun _ => rfl) p hdisc T io X
     obtain ⟨h, hh0, -, lab, horb, d', G', ty, I, P, -, ⟨mu⟩, -, hcard, hfr⟩ := hty y Ch f.1
     have hstep : ∀ s, InPsi H (lab (s + 1)) ↔ ¬ InPsi H (lab s) := by
       intro s
@@ -96,7 +99,7 @@ theorem facBetween_fine : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E]
       rw [if_neg hn] at h2
       rw [← h2, Fintype.card_subtype]
     obtain ⟨hsat, hzero, hdep⟩ := hfr 0 f horb.1.symm
-    obtain ⟨cr, -, hcr, hlow⟩ := GlobalTheory.T.detDepth_lower_bound_saturated_even_type X.C (vX_vp X) p hp (vX_vp_p X) hp3 d' h hh0 hev ty G' mu Dw.q hodd
+    obtain ⟨cr, -, hcr, hlow⟩ := _root_.GlobalTheory.DepthLow.detDepth_lower X.C (vX_vp X) p hp (vX_vp_p X) hp3 d' h hh0 hev ty G' mu Dw.q hodd
       (0 : ZMod h) (by simp) (rk f) k hk (fun a => P.mulVec (frame Ch X f a)) hsat hzero
     rw [nuFacC, ← hdep] at *
     refine le_trans (EReal.coe_le_coe_iff.2 ?_) hlow

@@ -4,7 +4,8 @@ public import Mathlib.Analysis.CStarAlgebra.Classes
 public import Mathlib.NumberTheory.LSeries.Basic
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExpNormProductLeOne
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RootsNormLeOfBoundedTwoStepRecurrence
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TwoStepRecursionLocalEulerFactorsStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.TwoStepRecursionLocalEulerFactors
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +51,6 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Development.AbelianVarietyTheory.Definitions.Foundations.PetIPSmulRight
 import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.Newform
-public import Mathlib.FieldTheory.IsAlgClosed.Basic
 import Mathlib.NumberTheory.ModularForms.CongruenceSubgroups
 
 @[expose] public section
@@ -127,7 +127,7 @@ theorem local_positivity_eulerFactor : ∀ (b ω : ℕ → ℂ) (s C : ℝ) (p :
     nlinarith
   have hxT := hb x hroots.1
   have hyT := hb y hroots.2
-  obtain ⟨hL, hR⟩ := GlobalTheory.T.twoStepRecursion_localEulerFactors x y (fun r => b (p ^ r)) T hT0.le hT1 hxT hyT hc0 hc1 hcr
+  obtain ⟨hL, hR⟩ := _root_.GlobalTheory.LocSer.twoStep_eulerFactors x y (fun r => b (p ^ r)) T hT0.le hT1 hxT hyT hc0 hc1 hcr
   have hI := GlobalTheory.EisM.locineq x y T hT0.le hT1 hxT hyT
   rw [add_assoc, hxy] at hI
   rw [hxy', hω] at hR

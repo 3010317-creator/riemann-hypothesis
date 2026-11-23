@@ -1,7 +1,9 @@
 module
 
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.EtaleCohomology.IsChart
-public import Development.AutomorphicArithmetic.CommutativeAlgebra.EtaleCohomology.NoethSp
+public import Mathlib.Algebra.MvPolynomial.Eval
+public import Mathlib.RingTheory.Ideal.Prime
+public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ZariskiNoetherianInduction
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.ExistsFiniteSpanKummerSelmerRepresentatives
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.FiniteKummerSelmerOnPrimeStratum
 import Mathlib.Algebra.Order.Floor.Extended
@@ -58,7 +60,7 @@ theorem UpperTheory.finite_kummerSelmer_of_charts :
   let P : Set (Fin n → k) → Prop := fun s =>
     FinCls q {f | f ∈ SelAll k K q ∧ ∃ c, (f : K) = ∑ i, c i • v i ∧ c ∈ s}
   have hall : P Set.univ := by
-    apply UpperTheory.Et.noethSp k n P
+    apply _root_.UpperTheory.Reformulated.B.ZariskiNoetherianInduction.noetherian_induction_zariski k n P
     · refine ⟨∅, ?_⟩
       rintro f ⟨_, c, _, hc⟩
       exact absurd hc (by simp)

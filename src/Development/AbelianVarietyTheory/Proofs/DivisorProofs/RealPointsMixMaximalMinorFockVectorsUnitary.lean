@@ -5,9 +5,11 @@ public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.Total
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.PureTensorLIntertwine
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.OmPureTensorOReal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIdeleAt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MaximalMinorsMatrixMemUnitaryGroupStatement
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.UnitaryGroup
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MaximalMinorsMatrixMemUnitaryGroup
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SubstitutionMaximalMinorProductEqSumCauchyBinetStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryTensorPlacesSlotsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnitaryTensorPlacesSlots
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilDatumRealPlacesFockVacuumCharacterStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsUnramifiedHeckeCharHalfExponentRestrictQuaStatement
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FockPolynomialVectorBasisChangeEqSubstitutionStatement
@@ -70,7 +72,7 @@ theorem GlobalTheory.NormDict.RealB.subst_minorPol_unitary : ∀ (D : D7) {a d N
     simp only [Fin.cast_eq_self, Prod.mk.eta]
     exact MvPolynomial.rename_id
   simp only [hr, AlgHom.id_apply]
-  exact ⟨_, GlobalTheory.T.prod_unitary_mem_unitaryGroup_pi D.what₂.Tau {s : Fin n → Fin N // StrictMono s} m _ fun τ => GlobalTheory.T.maximalMinorsMatrix_mem_unitaryGroup (a := n) (K τ) (hK τ),
+  exact ⟨_, _root_.GlobalTheory.unitary_tensor_places_positions D.what₂.Tau {s : Fin n → Fin N // StrictMono s} m _ fun τ => _root_.GlobalTheory.minorsMatrix_mem_unitaryGroup (a := n) (K τ) (hK τ),
     fun T => by rw [GlobalTheory.T.substitution_maximalMinorProduct_eq_sum_cauchyBinet D K T]; rfl⟩
 
 namespace GlobalTheory.NormDict.RealB

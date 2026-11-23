@@ -1,13 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemAddValuationIntegerRingNormalizedIff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EigenSublatticeFreeLatticeIffEvalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EvalQuotientRingVectorAtPointsInjectiveStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HerbrandQuotientEigenDetStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieEigenSublatticeIffEvalFlatStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemFiltrationOfComponentsMemEigenSpanStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemFiltrationPreimageIffEvalMemStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemPolynomialEvalFreeLatticeIffExistsEvalStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EigenSublatticeFreeLatticeIffEval
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EvalQuotientRingVectorAtPointsInjective
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.MultiplicationKernelIdentity
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HerbrandQuotientEigenDet
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieEigenSublatticeIffEvalFlat
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.QuotientEigenDifference
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemFiltrationOfComponentsMemEigenSpan
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemFiltrationPreimageIffEvalMem
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemPolynomialEvalFreeLatticeIffExistsEval
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -67,19 +69,19 @@ theorem filPre_mem : ∀ (C : Type) [Field C] (w : Valuation C ℝ≥0) (v : Add
     (a : S → w.valuationSubring) (N : ℕ) (F : Submodule w.valuationSubring (S → Fin N → C)),
     (∀ x ∈ F, unif a x ∈ F) →
     ∀ x, x ∈ (Submodule.span (RS (liftA hv a)) {x : Fin _ → RS (liftA hv a) | (fun s i => ↑(ev (liftA hv a) s (x i))) ∈ F}) ↔ evalVec (liftA hv a) N x ∈ F :=
-  GlobalTheory.T.mem_filtrationPreimage_iff_eval_mem
+  _root_.GlobalTheory.FilPreMem.filPre_mem_iff
 
 theorem evalVec_range : ∀ (C : Type) [Field C] (w : Valuation C ℝ≥0) (v : AddValuation C (WithTop ℝ))
     (hv : ∀ x, x ∈ Int0 v ↔ x ∈ w.valuationSubring) (S : Type) [Fintype S] [DecidableEq S]
     (a : S → w.valuationSubring) (N : ℕ) (y : S → Fin N → C),
     y ∈ freeLattice a N ↔ ∃ x, evalVec (liftA hv a) N x = y :=
-  GlobalTheory.T.mem_polynomialEvalFreeLattice_iff_exists_eval
+  _root_.GlobalTheory.EvalVecRange.evalVec_range
 
 theorem evalVec_injective : ∀ (C : Type) [Field C] (w : Valuation C ℝ≥0) (v : AddValuation C (WithTop ℝ))
     (hv : ∀ x, x ∈ Int0 v ↔ x ∈ w.valuationSubring) (S : Type) [Fintype S] [DecidableEq S]
     (a : S → w.valuationSubring) (N : ℕ), Function.Injective a →
     Function.Injective (evalVec (liftA hv a) N) :=
-  GlobalTheory.T.evalQuotientRingVectorAtPoints_injective
+  _root_.GlobalTheory.HerbrandBridge.evalVec_injective_of_injective
 
 theorem eigenSub_iff : ∀ (C : Type) [Field C] (w : Valuation C ℝ≥0) (v : AddValuation C (WithTop ℝ))
     (hv : ∀ x, x ∈ Int0 v ↔ x ∈ w.valuationSubring) (S : Type) [Fintype S] [DecidableEq S]
@@ -89,13 +91,13 @@ theorem eigenSub_iff : ∀ (C : Type) [Field C] (w : Valuation C ℝ≥0) (v : A
     ∀ y : Fin N → C, y ∈ eigenSub (W := fun _ => Fin N → C) (freeLattice a N) τ ↔
       ∃ z ∈ GlobalTheory.IndefiniteRowSideFullHecke.MultiplicationKernelIdentity.eigSub (liftA hv a) τ (Fin N → RS (liftA hv a)),
         (fun i => ((GlobalTheory.IndefiniteRowSideFullHecke.MultiplicationKernelIdentity.comp (liftA hv a) N τ z i : Int0 v) : C)) = y :=
-  GlobalTheory.T.eigenSublattice_freeLattice_iff_eval
+  _root_.GlobalTheory.EigenSubEval.eigenSub_iff_eval
 
 theorem mem_of_components : ∀ (C : Type) [Field C] (w : Valuation C ℝ≥0) (S : Type) [Fintype S]
     [DecidableEq S] (a : S → w.valuationSubring) (N : ℕ)
     (F : Submodule w.valuationSubring (S → Fin N → C)), Function.Injective a → IsFiltration a F →
     ∀ x ∈ freeLattice a N, (∀ s, x s ∈ filSpace F s) → x ∈ F :=
-  GlobalTheory.T.mem_filtration_of_components_mem_eigenSpan
+  _root_.GlobalTheory.Div.KerFil.mem_of_components
 
 theorem lie_iff : ∀ (C : Type) [Field C] (w : Valuation C ℝ≥0) (v : AddValuation C (WithTop ℝ))
     (hv : ∀ x, x ∈ Int0 v ↔ x ∈ w.valuationSubring) (S : Type) [Fintype S] [DecidableEq S]
@@ -110,7 +112,7 @@ theorem lie_iff : ∀ (C : Type) [Field C] (w : Valuation C ℝ≥0) (v : AddVal
         proj (liftA hv a) ((Submodule.span (RS (liftA hv a)) {x : Fin _ → RS (liftA hv a) | (fun s i => ↑(ev (liftA hv a) s (x i))) ∈ F})) x ∈
           GlobalTheory.IndefiniteRowSideFullHecke.MultiplicationKernelIdentity.eigSub (liftA hv a) τ ((Fin N → RS (liftA hv a)) ⧸ (Submodule.span (RS (liftA hv a)) {x : Fin _ → RS (liftA hv a) | (fun s i => ↑(ev (liftA hv a) s (x i))) ∈ F})) ∧
         quotMap (w := w) (filSpace F τ) (fun i => ((GlobalTheory.IndefiniteRowSideFullHecke.MultiplicationKernelIdentity.comp (liftA hv a) N τ x i : Int0 v) : C)) = z :=
-  GlobalTheory.T.lieEigenSublattice_iff_eval_flat
+  _root_.GlobalTheory.lie_eigenSub_iff_flat
 
 end GlobalTheory.HerbrandBridge
 
@@ -309,7 +311,7 @@ theorem exForm : ∀ (C : Type) [Field C] (w : Valuation C ℝ≥0) (ℓ : C), 0
     eigRank_eq hv a (p + q) Fil hF.le hrange hmem s
   have hy := yExp_eq w ℓ h0 h1 hv a ha (N := p + q) P (filSpace Fil) hrk τ
   obtain ⟨⟨p', hp', ⟨h⟩, ⟨l⟩, ⟨f⟩, hDet⟩, -, -⟩ :=
-    GlobalTheory.T.herbrandQuotient_eigen_det C (toAddVal w ℓ h0 h1) S (liftA hv a) ha' (p + q) P hsat τ
+    _root_.GlobalTheory.HerbrandAlg.herbrandDet C (toAddVal w ℓ h0 h1) S (liftA hv a) ha' (p + q) P hsat τ
   have hq' : eigRank (toAddVal w ℓ h0 h1) (liftA hv a) P τ = q :=
     (hrk τ).trans hq
   have hpp : p = p' := by omega

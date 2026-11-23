@@ -1,14 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsPotential
-import Development.AbelianVarietyTheory.CrystallinePeriods.RingBasics
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoversActionStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoversOfActionStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGaloisPrescribedUnramifiedKummerStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FixingKunrMemInertiaModFieldInfStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisPowFrobeniusStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoversAction
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoversOfAction
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsAdicCompleteOfPowLe
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsGaloisPrescribedUnramifiedKummer
+public import Formalism.SharpRestriction.LevelLetterCocycles.ElementDenominator
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FixingKunrMemInertiaModFieldInf
+public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisPowFrobenius
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisQlEqGaloisKPrimeMulGaloisKinftyStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemKummerTowerUnramifiedOfCoversOneStatement
+import Development.AbelianVarietyTheory.CrystallinePeriods.RingBasics
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -137,14 +140,14 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (�
   refine ⟨GlobalTheory.T.galoisQl_eq_galoisKPrime_mul_galoisKinfty l a e ϖ hsucc, ?_, ?_, fun k γ γ' => covers_unique ϖ LL, fun k k' γ γ' => covers_mul ϖ LL,
     fun k => ⟨GlobalTheory.T.mem_kummerTowerUnramified_of_covers_one l a e ϖ LL k, covers_of_mem ϖ LL⟩, ?_⟩
   · intro k hk
-    obtain ⟨m, hm⟩ := GlobalTheory.T.exists_apply_eq_pow_of_pow_pow_eq l a k
+    obtain ⟨m, hm⟩ := _root_.GlobalTheory.FrobAction.galois_pow_frobenius l a k
     have hπ : ϖ.seq 0 ≠ 0 := ϖ.seq_ne_zero 0
     have hke : k (ϖ.seq 0 ^ e) = ϖ.seq 0 ^ e :=
       (IntermediateField.mem_fixingSubgroup_iff _ _).1 hk _ (IntermediateField.subset_adjoin _ _ ⟨0, rfl⟩)
     have hζ : (k (ϖ.seq 0) / ϖ.seq 0) ^ e = 1 := by
       rw [div_pow, ← map_pow, hke, div_self (pow_ne_zero _ hπ)]
     obtain ⟨ζK, hζK⟩ := lift_root LL a _ hζ
-    refine ⟨⟨ζK, Multiplicative.ofAdd m⟩, GlobalTheory.T.covers_of_action' l a e ϖ LL _ k hk hm ?_⟩
+    refine ⟨⟨ζK, Multiplicative.ofAdd m⟩, _root_.GlobalTheory.BKGal.covers_of_action l a e ϖ LL _ k hk hm ?_⟩
     change k (ϖ.seq 0) = (((ζK : (↥LL.1)ˣ) : ↥LL.1) : Om l) * ϖ.seq 0
     rw [hζK, div_mul_cancel₀ _ hπ]
   · intro γ
@@ -153,10 +156,10 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (�
         rw [← Units.val_pow_eq_pow_val, (mem_rootsOfUnity _ _).1 γ.left.2, Units.val_one]
       rw [← IntermediateField.coe_pow, h1]
       rfl
-    obtain ⟨g, hg1, hg2⟩ := GlobalTheory.T.exists_galois_prescribed_unramified_kummer l a e ϖ hsucc γ.shift _ hζ
+    obtain ⟨g, hg1, hg2⟩ := _root_.GlobalTheory.TameFrob.exists_cover l a e ϖ hsucc γ.shift _ hζ
     obtain ⟨h, hh, k, hk, rfl⟩ := GlobalTheory.T.galoisQl_eq_galoisKPrime_mul_galoisKinfty l a e ϖ hsucc g
     have hinj : Function.Injective h := h.injective
-    refine ⟨k, hk, GlobalTheory.T.covers_of_action' l a e ϖ LL γ k hk (fun x hx => hinj ?_) (hinj ?_)⟩
+    refine ⟨k, hk, _root_.GlobalTheory.BKGal.covers_of_action l a e ϖ LL γ k hk (fun x hx => hinj ?_) (hinj ?_)⟩
     · have h1 := hg1 x hx
       have h2 : (x ^ l ^ γ.shift.val) ^ l ^ a = x ^ l ^ γ.shift.val := by
         rw [← pow_mul, mul_comm, pow_mul, hx]
@@ -167,16 +170,16 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZero e] (�
       rw [hfix h hh _ (mul_mem (hroot_mem _ hz) (ϖ.pi_mem_field a))]
       exact hg2
   · intro k ζ hk
-    obtain ⟨hr, -⟩ := GlobalTheory.T.action_of_covers l a e ϖ LL k _ hk
+    obtain ⟨hr, -⟩ := _root_.GlobalTheory.BKGal.covers_action l a e ϖ LL k _ hk
     have hr' : ∀ x : Om l, x ^ l ^ a = x → k x = x := fun x hx => by
       rw [hr x hx]
       simp
-    obtain ⟨k', hk', h, hh, hkh⟩ := GlobalTheory.T.fixing_kunr_mem_inertia_mod_fieldInf l a e ϖ hsucc k hr'
+    obtain ⟨k', hk', h, hh, hkh⟩ := _root_.GlobalTheory.InertiaMod.main l a e ϖ hsucc k hr'
     have hc : Covers ↥LL.1 (thetaW a LL) ϖ (k' : GQ l) (TameGal.inertia ζ : TameGal ↥LL.1 l e a) := by
       have := covers_mul ϖ LL hk (covers_of_mem ϖ LL hh)
       rwa [mul_one, ← hkh] at this
     refine ⟨k', hk', hc, ?_⟩
-    rw [(GlobalTheory.T.action_of_covers l a e ϖ LL _ _ hc).2]
+    rw [(_root_.GlobalTheory.BKGal.covers_action l a e ϖ LL _ _ hc).2]
     rfl
 
 end GlobalTheory.TameCover

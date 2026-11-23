@@ -2,13 +2,16 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsFlatAnIffIsConstMul
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenLatticeConstantRank
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenLatticeVectorBundleStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenvectorComplexPointStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsActionComplexPointStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenLatticeVectorBundle
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EigenvectorComplexPoint
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsActionComplexPoint
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.EigLat
+public import Mathlib.AlgebraicGeometry.Morphisms.Smooth
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeFrameSpecializes
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalLieModelExtends
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsExcisionNbhdAway
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeFrameSpecializesStatement
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieOmegaLatticeVectorBundle
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalLieModelExtendsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -102,18 +105,18 @@ theorem isEigFrame_of_values {Y : Model Xo c β} {U : Set (Xo.XF c)} (Z : CptOve
     (hval : ∀ i, Z.M.ValAt (y ≫ Y.j) (e i) (v' i)) (hsame : ∀ i, SameVec Y y (v i) (v' i)) :
     IsEigFrame Xo.univ.t.act (under y) (σ.comp (tauIn c τ)) v := by
   haveI : Smooth Y.t.G.hom := Y.t.semi.smooth
-  obtain ⟨EC, _, _, N, ρ, hρ, hD⟩ := GlobalTheory.T.exists_action_complex_point E H D l Xo c O β Y y
+  obtain ⟨EC, _, _, N, ρ, hρ, hD⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.exists_lieModel_tied_isEigFrame E H D l Xo c O β Y y
   have hex : ∀ i, ∃ w, N.pt w = v' i := fun i => N.onto _ (hval i).isTanAt
   choose w hw using hex
   obtain ⟨g, b, hb, S, hS⟩ := h3
   have hval' : ∀ i, Z.M.ValAt (y ≫ Y.j) (e i) (N.pt (w i)) := fun i => by rw [hw]; exact hval i
   refine hD _ n v w hL (fun i => by rw [hw]; exact hsame i) ?_ fun i => ?_
-  · exact GlobalTheory.T.lattice_frame_specializes Y.X Y.t.G Z.Ω (Z.ξ₀ ≫ Y.j) Z.V Z.M ℂ (y ≫ Y.j) h EC N g n b S e (Z.eig τ) w Z.gen hb hS hf
+  · exact _root_.GlobalTheory.CompanionTheory.Ar.values_frame_sublattice_linearIndependent Y.X Y.t.G Z.Ω (Z.ξ₀ ≫ Y.j) Z.V Z.M ℂ (y ≫ Y.j) h EC N g n b S e (Z.eig τ) w Z.gen hb hS hf
       hval'
   · have hmem : e i ∈ Z.eig τ ⟨centre (y ≫ Y.j), h⟩ := by
       rw [hf.2]
       exact Submodule.subset_span ⟨i, rfl⟩
-    exact GlobalTheory.T.eigenvector_complex_point E H D l Xo c O β Y U Z σ y EC N ρ (tauIn c τ) (e i) (w i) hO hy hρ hmem.2 (hval' i)
+    exact _root_.GlobalTheory.CompanionTheory.Ar.FramesEig.mem_eigSp_of_valAt E H D l Xo c O β Y U Z σ y EC N ρ (tauIn c τ) (e i) (w i) hO hy hρ hmem.2 (hval' i)
 
 theorem ring_eq {X : Scheme.{0}} {R : Type} [CommRing R] (x : Sp R ⟶ X) [Mono x] (z : Sp ℂ ⟶ X)
     (ψ : R →+* X.presheaf.stalk (centre z)) (hψ : spMap ψ ≫ x = X.fromSpecStalk (centre z)) (f : R →+* ℂ)
@@ -163,7 +166,7 @@ theorem lieMult_at (y : Sp ℂ ⟶ Xo.XF c) (σ : c.F →+* ℂ) (τ : E →+* �
 
 theorem exists_local_eigenframes : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (D : Datum H) (l : Level H) (Xo : Moduli D l) (c : Coeff l) (O : Type) [CommRing O] (β : O →+* c.F) (Y : Model Xo c β) (U : Set (Xo.XF c)) (Z : CptOver Y U) (τ : E →+* ℂ) (σ : c.F →+* ℂ) (y₀ : Sp ℂ ⟶ Xo.XF c), (Function.Injective β ∧ IsNoetherianRing O ∧ ∀ x : c.F, ∃ a b : O, β b ≠ 0 ∧ x * β b = β a) → τ (H.rt : E) = H.rt0 → y₀ ≫ pullback.snd _ _ = spMap σ → Set.range y₀ ⊆ U → ∃ (V₀ : (Xo.XF c).Opens) (hV₀ : IsAffineOpen V₀) (c₁ : Fin D.p → Z.V) (c₂ : Fin D.q → Z.V) (vR : Fin D.p → (epsAt (under hV₀.fromSpec) ⟶ Xo.univ.t.G)) (wR : Fin D.q → (epsAt (under hV₀.fromSpec) ⟶ Xo.univ.t.G)), ⊤ ≤ y₀ ⁻¹ᵁ V₀ ∧ LinearIndependent Z.Ω c₁ ∧ Submodule.span Z.Ω (Set.range c₁) = eigSp Z.ρ (Z.inc.comp (tauIn c τ)) ∧ LinearIndependent Z.Ω c₂ ∧ Submodule.span Z.Ω (Set.range c₂) = eigSp Z.ρ (Z.inc.comp (tauIn c (ComplexEmbedding.conjugate τ))) ∧ ∀ (χ : Γ(Xo.XF c, V₀) →+* ℂ) (v : Vecs (spMap χ ≫ hV₀.fromSpec) D.p) (w : Vecs (spMap χ ≫ hV₀.fromSpec) D.q), (spMap χ ≫ hV₀.fromSpec) ≫ pullback.snd _ _ = spMap σ → Set.range (spMap χ ≫ hV₀.fromSpec) ⊆ U → (∀ a, (v a).left = spMap (dualMap χ) ≫ (vR a).left) → (∀ j, (w j).left = spMap (dualMap χ) ≫ (wR j).left) → IsFramed U τ σ (spMap χ ≫ hV₀.fromSpec) v w ∧ (∀ i, ∃ v', Z.M.ValAt ((spMap χ ≫ hV₀.fromSpec) ≫ Y.j) (c₁ i) v' ∧ SameVec Y (spMap χ ≫ hV₀.fromSpec) (v i) v') ∧ ∀ j, ∃ w', Z.M.ValAt ((spMap χ ≫ hV₀.fromSpec) ≫ Y.j) (c₂ j) w' ∧ SameVec Y (spMap χ ≫ hV₀.fromSpec) (w j) w' := by
   intro E _ _ _ H D l Xo c O _ β Y U Z τ σ y₀ hO hτ hy₀ hr₀
-  obtain ⟨hv1, hv2, h3, -⟩ := GlobalTheory.T.eigen_lattice_vector_bundle E H D l Xo c O β Y U Z τ hO hτ
+  obtain ⟨hv1, hv2, h3, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.isVBOn_eig_genFib E H D l Xo c O β Y U Z τ hO hτ
   haveI : Smooth Y.t.G.hom := Y.t.semi.smooth
   have hsp : ∀ y : Sp ℂ ⟶ Xo.XF c, Set.range y ⊆ U → genPt (Z.ξ₀ ≫ Y.j) ⤳ centre (y ≫ Y.j) := fun y hy => by
     have h1 : genPt Z.ξ₀ ⤳ y (IsLocalRing.closedPoint ℂ) := (Z.closure _).1 (hy ⟨_, rfl⟩)
@@ -187,7 +190,7 @@ theorem exists_local_eigenframes : ∀ (E : Type) [Field E] [NumberField E] [IsC
       rw [(hf₂ p₀ (hfib y₀ _) hp₂).2]
       exact Submodule.subset_span ⟨i, rfl⟩
     exact this.1
-  obtain ⟨R, _, x, _, F, _, _, MR, e, hpx, hxN, hext⟩ := GlobalTheory.T.local_lie_model_extends Y.X Y.t.G Z.Ω (Z.ξ₀ ≫ Y.j) Z.V Z.M p₀
+  obtain ⟨R, _, x, _, F, _, _, MR, e, hpx, hxN, hext⟩ := _root_.GlobalTheory.CompanionTheory.Ar.lieLat_germs_eq_sections Y.X Y.t.G Z.Ω (Z.ξ₀ ≫ Y.j) Z.V Z.M p₀
     (N₁ ⊓ N₂) (Fin D.p ⊕ Fin D.q) (Sum.elim c₁ c₂) ⟨hp₁, hp₂⟩ (by rintro (i | i); exacts [hc₁ i, hc₂ i])
   let W : (Xo.XF c).Opens := Y.j ⁻¹ᵁ x.opensRange
   have hW : y₀ (IsLocalRing.closedPoint ℂ) ∈ W := by

@@ -4,9 +4,11 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.BdryCha
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.NineGeoU
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeIPOfFibreLatVec
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspIntersectionPositive
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspIntersectionPositiveStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PshLogGrowthBoundedNearPunctureStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RiemannFormLowerBoundNearCuspStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.PotentialsBoundedRegSettingEqReference
+public import ReciprocityTheory.AnalyticForms.PlurisubharmonicFunctions.IsPshLocallyIntegrableStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.PshLogGrowthBoundedNearPuncture
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsEigFrames
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RiemannFormLowerBoundNearCusp
 public import Development.WeilBound.CoreStatements.PlurisubharmonicCones.ExistsPhiNormSq
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -184,7 +186,7 @@ theorem near_bdd (hG : Top.Given) (Or : CptOrigin Y S₀ Dc Hd) {U : ((Σ k, J k
     have := Dc.j_le
     have := Dc.two_le_N
     omega
-  obtain ⟨ρ₁, C₁, hρ₁, hul⟩ := GlobalTheory.T.riemann_form_lower_bound_near_cusp E _ a₀ g Λ (CMType H) L σ _ b hσ hm hb
+  obtain ⟨ρ₁, C₁, hρ₁, hul⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.uLogBound E _ a₀ g Λ (CMType H) L σ _ b hσ hm hb
   obtain ⟨δ₂, hδ₂, C₂, hlow⟩ := lower_centre L σ b hσ hm hb
   have hGc : ContinuousAt (fun u => |(G u).re|) 0 :=
     (Complex.continuous_re.continuousAt.comp (hGd.continuousOn.continuousAt (ball_mem_nhds _ hr))).abs
@@ -215,7 +217,7 @@ theorem near_bdd (hG : Top.Given) (Or : CptOrigin Y S₀ Dc Hd) {U : ((Σ k, J k
       (hGb _ (ball_subset_ball d4 hu'.1)).le⟩
   have hps : IsPsh (Flat.punct (Fintype.card (CMType H) * Dc.j * (Dc.N - Dc.j)) a₀ δ) fun u => corrW Hd U ((Dc.chart a).γ (aff t₀ ρ π u)) :=
     isPsh_comp_aff t₀ ρ π (hP a) fun u h => (hu u (hsub u h).1).2.2 (hsub u h)
-  obtain ⟨C₃, hC₃⟩ := GlobalTheory.T.psh_log_growth_bounded_near_puncture _ a₀ δ (B + |C₁|) _ hδ (d1.trans hr1) hps fun u h => by
+  obtain ⟨C₃, hC₃⟩ := _root_.GlobalTheory.CompanionTheory.Relay.psh_log_growth_bounded_near_puncture _ a₀ δ (B + |C₁|) _ hδ (d1.trans hr1) hps fun u h => by
     obtain ⟨ld, cw, gr, ℓ, h0, h1, e1, e2, b1, b2, -, b4⟩ := key u h
     simp only [corrW, e1, e2, ← h0]
     nlinarith [(abs_le.1 b2).2, (abs_le.1 b4).2]
@@ -258,7 +260,7 @@ theorem near_bdd (hG : Top.Given) (Or : CptOrigin Y S₀ Dc Hd) {U : ((Σ k, J k
 
 theorem corr_bdd : Top.Given → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] [IsAbelianGalois ℚ E] (H : Host E) (D : Datum H) (Xo : ∀ l : Tor.Level H, Moduli D l) (l : Tor.Level H) (c : Coeff l) (Y : Model (Xo l) c (algebraMap (𝓞 c.F) c.F)) (II : IntersectionSystem) (K : Type) [Fintype K] (J : K → Type) [∀ k, Fintype (J k)] (Ω : Type) [Field Ω] [Algebra ℚ Ω] (W : CMType H → Type) [∀ τ, AddCommGroup (W τ)] [∀ τ, Module Ω (W τ)] (Dc : ComponentData II (CMType H) K J Ω W) (Hd : HodgeData Dc) (S₀ : Finset ℕ) (Or : CptOrigin Y S₀ Dc Hd) (U : ((Σ k, J k) → ℂ) → ℝ), Or.𝔐.IsCuspWeight Or.sm U → ChartBdd Dc (corrW Hd U) ∧ ∀ a, ∀ t₀ ∈ Metric.ball (0 : Fin (Fintype.card (CMType H) * Dc.j * (Dc.N - Dc.j)) → ℂ) 1, ∃ ε > (0 : ℝ), ∃ C : ℝ, ∀ t ∈ offBd Dc a, ‖t - t₀‖ < ε → U ((Dc.chart a).γ t) ≤ C * Real.log ((Dc.chart a).logR t) ∧ |phMu Hd ((Dc.chart a).γ t)| ≤ C * Real.log ((Dc.chart a).logR t) := by
   intro hG E _ _ _ _ H D Xo l c Y II K _ J _ Ω _ _ W _ _ Dc Hd S₀ Or U hU
-  have hP := (GlobalTheory.T.cusp_intersection_positive hG E H D Xo l c Y II K J Ω W Dc Hd S₀ Or U hU).2.2.1
+  have hP := (_root_.GlobalTheory.CompanionTheory.Relay.cusp_intersection_positive hG E H D Xo l c Y II K J Ω W Dc Hd S₀ Or U hU).2.2.1
   refine ⟨fun a t₀ ht₀ => ?_, fun a t₀ ht₀ => ?_⟩
   · obtain ⟨ε, hε, C, h⟩ := near_bdd hG Or hU hP a t₀ ht₀
     exact ⟨ε, hε, C, fun t ht h' => (h t ht h').1⟩

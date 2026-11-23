@@ -3,10 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DensConst
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsAmbOfIsArithVar
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegrableLogNormSectionArithmeticVarietyStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearRelationMixedDensitiesIntegralsStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernFormSignedPartMeasureComplOpenGenericPStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolarisationTopChernDensityEqFactorialMixedStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegrableLogNormSectionArithmeticVariety
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearRelationMixedDensitiesIntegrals
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NefFibOfIsNef
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolEqMultiDiff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolarisationTopChernDensityEqFactorialMixed
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MixedChernFormSignedPartMeasureComplOpenGenericP
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,7 +78,7 @@ theorem chernInt_eq (h : IsArithVar p D) (N M : HermLB p) (s : M.B.Sec) (hs : ge
   have := h.isDomain
   have := h.finite
   have hnull (ε : ℤˣ) : (N.φ σ).chernPart D ε (ptsIn p σ (nonzeroLocus s))ᶜ = 0 := by
-    have := GlobalTheory.T.mixedChernFormSignedPartMeasure_compl_open_genericPoint_eq_zero k X p σ (injective_emb σ) h.isProjOver D (fun _ => MLine.ofHerm N σ) ε (nonzeroLocus s) hs
+    have := _root_.GlobalTheory.MixNull.part_compl_null k X p σ (injective_emb σ) h.isProjOver D (fun _ => MLine.ofHerm N σ) ε (nonzeroLocus s) hs
     rwa [part_const] at this
   have key (ε : ℤˣ) : ∫ y in offSupp p σ (M.div (isRatSec_ratOfSec s hs)), logNorm (M.φ σ) (ratOfSec s hs) y
       ∂(N.φ σ).chernPart D ε = ∫ y, (MLine.ofHerm M σ).logSec s y ∂(N.φ σ).chernPart D ε := by
@@ -107,15 +109,15 @@ theorem pol_int (hP : GlobalTheory.Published.Principalisation) (h : IsArithVar p
   let a : Option (Finset (Fin D)) → ℝ := fun j => j.elim (-(D.factorial : ℝ)) (fun S => (-1) ^ S.card)
   have hd : ∀ c : AlgChart p σ D, ∀ y ∈ c.e.source, ∑ j, a j * dens (Lj j) c y = 0 := by
     intro c y hy
-    have := GlobalTheory.T.polarisation_topChernDensity_eq_factorial_mixed k X p σ D L c y hy
+    have := _root_.GlobalTheory.Mix.pol_chernDens_comb k X p σ D L c y hy
     rw [← e] at this
     simp only [Fintype.sum_option, a, Lj, Option.elim, dens_const]
     beta_reduce at this
     simp only [MLine.ofHerm] at this ⊢
     linarith
   have hi : ∀ j, Intg (Lj j) ((MLine.ofHerm M σ).logSec s) := fun j =>
-    GlobalTheory.T.integrable_logNormSection_arithmeticVariety hP k X p D h σ (Lj j) (MLine.ofHerm M σ) s hs
-  have := GlobalTheory.T.linear_relation_mixed_densities_integrals k X p σ D _ a Lj hd _ hi
+    _root_.GlobalTheory.Mix.intg_logSec_of_arithVar hP k X p D h σ (Lj j) (MLine.ofHerm M σ) s hs
+  have := _root_.GlobalTheory.Mix.sum_int_eq_zero_of_dens k X p σ D _ a Lj hd _ hi
   simp only [Fintype.sum_option, a, Lj, Option.elim] at this
   rw [← e]
   beta_reduce

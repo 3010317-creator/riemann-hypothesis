@@ -1,7 +1,12 @@
 module
 
 public import Mathlib.FieldTheory.Separable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLargePrimeDvdIntPolynomialEvalStatement
+public import Mathlib.Algebra.Polynomial.Degree.Defs
+public import Mathlib.Algebra.Polynomial.Eval.Defs
+public import Mathlib.Data.Nat.Prime.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsPrimeGtDvdEval
+public import Mathlib.Data.Nat.Prime.Int
+public import Mathlib.RingTheory.Localization.Integral
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -42,8 +47,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Topology.Sheaves.Init
-public import Mathlib.Data.Nat.Prime.Int
-public import Mathlib.RingTheory.Localization.Integral
 
 @[expose] public section
 
@@ -83,7 +86,7 @@ theorem sep_int_poly_root_mod_prime_sq :
       ∀ n : ℕ, ∃ p : ℕ, p.Prime ∧ n < p ∧ ∃ x : ℤ, ((p : ℤ) ^ 2) ∣ f.eval x := by
   intro f hdeg hsep n
   obtain ⟨A, B, N, hN, hAB⟩ := int_bezout_derivative_of_separable f hsep
-  obtain ⟨p, hp, hnp, x, hx⟩ := GlobalTheory.T.exists_large_prime_dvd_int_polynomial_eval f hdeg (max n N.natAbs)
+  obtain ⟨p, hp, hnp, x, hx⟩ := _root_.GlobalTheory.PrimeDivisorOfPolynomialValue.exists_prime_gt_dvd_eval f hdeg (max n N.natAbs)
   refine ⟨p, hp, lt_of_le_of_lt (le_max_left _ _) hnp, ?_⟩
   have hpZ : Prime (p : ℤ) := Nat.prime_iff_prime_int.mp hp
   have hev : A.eval x * f.eval x + B.eval x * (derivative f).eval x = N := by

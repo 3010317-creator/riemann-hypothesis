@@ -1,8 +1,9 @@
 module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.AcrisKummerUnits.ConstantCoeffSurjective
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CrystallineFiltrationMultiplicativeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CrystallineFiltrationSaturatedStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CrystallineFiltrationMultiplicative
+public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.AcrisKummerUnits.MapUgAlgebraMap
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CrystallineFiltrationSaturated
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DividedPowerIdealTorsionFree
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -61,7 +62,7 @@ theorem exists_natCast_mul_eq_l_pow {n k : ℕ} (hn : n ≠ 0) (hk : n.factoriza
 
 theorem exists_divided_power_of_dividedXi {j k : ℕ} (hj : j ≠ 0) (hk : k ≠ 0) :
     ∃ y ∈ A.Fil0 1, (k.factorial : A.Acr0) * y = A.dxi0 j ^ k := by
-  obtain ⟨-, -, hf, -⟩ := GlobalTheory.T.crystalline_filtration_multiplicative A
+  obtain ⟨-, -, hf, -⟩ := _root_.GlobalTheory.CompanionTheory.FilMul.main A
   refine ⟨(Nat.uniformBell k j : A.Acr0) * A.dxi0 (k * j),
     Ideal.mul_mem_left _ _ (Ideal.subset_span ⟨k * j, Nat.mul_pos (Nat.pos_of_ne_zero hk)
       (Nat.pos_of_ne_zero hj), rfl⟩), ?_⟩
@@ -116,7 +117,7 @@ theorem pdI_pFil0 : R.PdI A.PFil0 := by
     exact ⟨y, (le_sup_right : _ ≤ A.PFil0) hy, e⟩
 
 theorem pow_mem_filtration_of_mem_one {x : A.Acr0} (hx : x ∈ A.Fil0 1) (k : ℕ) : x ^ k ∈ A.Fil0 k := by
-  obtain ⟨h0, -, -, hm, -⟩ := GlobalTheory.T.crystalline_filtration_multiplicative A
+  obtain ⟨h0, -, -, hm, -⟩ := _root_.GlobalTheory.CompanionTheory.FilMul.main A
   induction k with
   | zero => rw [h0]; exact Submodule.mem_top
   | succ k ih => rw [pow_succ]; exact hm k 1 (Ideal.mul_mem_mul ih hx)
@@ -126,7 +127,7 @@ theorem mem_filtration_of_prime_pow_mul_mem (r N : ℕ) (z : A.Acr0) (h : (l : A
   induction N with
   | zero => simpa using h
   | succ N ih =>
-    refine ih (GlobalTheory.T.crystalline_filtration_saturated A r _ ?_)
+    refine ih (_root_.GlobalTheory.CompanionTheory.PerfFil.crystalline_filtration_l_saturated A r _ ?_)
     rw [← mul_assoc, ← pow_succ']
     exact h
 

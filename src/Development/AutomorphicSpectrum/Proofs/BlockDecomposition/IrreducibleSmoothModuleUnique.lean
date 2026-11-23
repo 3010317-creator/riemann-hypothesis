@@ -1,12 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.T2SpaceAdelicGeneralLinearGroupNumberField
+public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
+public import Mathlib.Analysis.Calculus.Deriv.Basic
+public import Mathlib.Analysis.LocallyConvex.AbsConvexOpen
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AnalyticOrthogonalVanishing
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IrreducibleCuspidalFormL2Mem
+public import Development.AbelianVarietyTheory.Definitions.Foundations.AestronglyMeasurableQuotMeasureIffLift
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.L2InnerDerivativeTranslate
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LiePowerL2FactorialBound
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.DifferentiableAtChart
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SubgroupOneParameterClosedEqTop
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ContinuousOfIsOpenStab
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.AnalyticOrthogonalVanishingStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IrreducibleCuspidalFormL2MemStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.L2InnerDerivativeTranslateStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LiePowerL2FactorialBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SubgroupOneParameterClosedEqTopStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -88,9 +93,9 @@ theorem R_curve_mem {W : Submodule ℂ (Sm E a)} (hs : _root_.GlobalTheory.CuspR
   have hM : ∀ k, MemL2Quotient (latticeGL E a) μ (ψ k).1 := fun k => (hW _ (hmem k)).2
   have hcont : ∀ k, Continuous (ψ k).1 := fun k => ContAut.continuous_of_isOpen_stab E a _ (hW _ (hmem k)).1.level
   let F : ℕ → ℝ → L2 (latticeGL E a) μ := fun k t => R (latticeGL E a) μ (infGL E a (c t)) (hM k).toL2
-  obtain ⟨M, B, hb⟩ := GlobalTheory.T.lie_power_l2_factorial_bound E a μ W hs hW φ hφ X
+  obtain ⟨M, B, hb⟩ := _root_.GlobalTheory.CompanionTheory.AnalyticBound.factorial_bound E a μ W hs hW φ hφ X
   have hd : ∀ k t, HasDerivAt (F k) (F (k + 1) t) t := fun k t =>
-    GlobalTheory.T.hasDerivAt_right_translate_toL2 (GA E a) (latticeGL E a) μ (ψ k).1 (ψ (k + 1)).1 (hM k) (hM (k + 1)) (fun t => infGL E a (c t))
+    _root_.GlobalTheory.CompanionTheory.TransDeriv.hasDerivAt_R (GA E a) (latticeGL E a) μ (ψ k).1 (ψ (k + 1)).1 (hM k) (hM (k + 1)) (fun t => infGL E a (c t))
       (hcont k) (hcont (k + 1)) (continuous_infGL'.comp hc) (by simp [h0]) (fun s t => by simp [hadd])
       (fun g => by
         have := hasDerivAt_curve (ψ k) g c X h0 hX
@@ -102,7 +107,7 @@ theorem R_curve_mem {W : Submodule ℂ (Sm E a)} (hs : _root_.GlobalTheory.CuspR
     rw [this]
     exact Submodule.le_topologicalClosure _ (toL2_mem_classes (hmem k) (hM k))
   have hperp : F 0 t ∈ Cᗮᗮ := (Submodule.mem_orthogonal _ _).2 fun u hu =>
-    GlobalTheory.T.analytic_orthogonal_vanishing _ F M B u hd hn (fun k => (Submodule.mem_orthogonal' _ _).1 hu _ (hF0 k)) t
+    _root_.GlobalTheory.CompanionTheory.VectorTaylor.inner_eq_zero_of_factorial_bounds _ F M B u hd hn (fun k => (Submodule.mem_orthogonal' _ _).1 hu _ (hF0 k)) t
   rw [Submodule.orthogonal_orthogonal] at hperp
   have e : (hM 0).toL2 = h.toL2 := rfl
   exact e ▸ hperp
@@ -125,7 +130,7 @@ theorem isSubrep_closure {W : Submodule ℂ (Sm E a)} (hs : _root_.GlobalTheory.
           rw [map_mul, map_mul]; exact hx.1 _ (hy.1 v hv), fun v hv => by
           rw [_root_.mul_inv_rev, map_mul, map_mul]; exact hy.2 _ (hx.2 v hv)⟩
       inv_mem' := fun {x} hx => ⟨hx.2, by simpa using hx.1⟩ }
-  have hS : S = ⊤ := GlobalTheory.T.subgroup_one_parameter_closed_eq_top E a S fun c X hc h0 hadd hX t => by
+  have hS : S = ⊤ := _root_.GlobalTheory.CompanionTheory.GenOneParam.eq_top_of_oneParam_Cinf E a S fun c X hc h0 hadd hX t => by
     have key : ∀ t, ∀ v ∈ C, R (latticeGL E a) μ (infGL E a (c t)) v ∈ C := fun t v hv =>
       map_closure_le hCdef _ (fun F hF => by
         obtain ⟨φ, hφ, h, rfl⟩ := hcls F hF
@@ -157,6 +162,6 @@ theorem irred_module : ∀ (E : Type) [Field E] [NumberField E] [_root_.NumberFi
       Submodule.le_topologicalClosure _ (toL2_mem_classes hψ h')
     rw [h0] at this
     exact this
-  exact GlobalTheory.T.irreducible_cuspidal_form_l2_mem E a μ H hH hi W hs (fun ψ hψ => ⟨(hW ψ hψ).1.1, (hW ψ hψ).2.2⟩) hcl φ hφ.1 h hh
+  exact _root_.GlobalTheory.CompanionTheory.IrredMod.mem_of_toL2_mem E a μ H hH hi W hs (fun ψ hψ => ⟨(hW ψ hψ).1.1, (hW ψ hψ).2.2⟩) hcl φ hφ.1 h hh
 
 end GlobalTheory.CompanionTheory.CuspIrred

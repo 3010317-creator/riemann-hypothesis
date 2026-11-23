@@ -2,9 +2,9 @@ module
 
 public import CompanionTheory.SpectralGeometry.CountingDefinitions.AdelicEulerProducts.IsEulerProd
 public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdelicUnitaryOrbits.UnitChoice
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.GramRightMulActionLawsStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.GramRightMulActionLaws
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.HermitianFormDiagonalizesOverField
-public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.WittExtensionDiagonalGramTuplesStatement
+public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.AdelicAnalysis.WittExtensionDiagonalGramTuples
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -125,13 +125,13 @@ theorem trans_uc : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [NumberF
       simp [D', inclR_algebraMap]
     · simp [Matrix.diagonal_apply_ne _ hab, hab]
   have P := fun (Z : Fin n → Fin M → R ⊗[F] E) (H H' : Matrix (Fin n) (Fin n) (R ⊗[F] E)) =>
-    GlobalTheory.T.gram_right_mul_action_laws F E σ hCM R M n J Z H H'
+    _root_.GlobalTheory.CompanionTheory.SW.RMulGram.rmul_gram_facts F E σ hCM R M n J Z H H'
   have hX1 : gramR R σ J (rmul R (ratTup R X) G) =
       Matrix.diagonal (fun i => algebraMap R (R ⊗[F] E) (D' i : R)) := by
     rw [(P _ G G).1, gramR_ratTup, hdiag]
   have hY1 : gramR R σ J (rmul R Y G) = gramR R σ J (rmul R (ratTup R X) G) := by
     rw [hX1, (P _ G G).1, hY, hdiag]
-  obtain ⟨h, hh⟩ := GlobalTheory.T.witt_extension_diagonal_gram_tuples F E σ hCM R uc M J hJ n D' _ _ hX1 hY1
+  obtain ⟨h, hh⟩ := _root_.GlobalTheory.CompanionTheory.SW.WittDiag.trans_diag F E σ hCM R uc M J hJ n D' _ _ hX1 hY1
   refine ⟨h, ?_⟩
   have undo : ∀ Z : Fin n → Fin M → R ⊗[F] E, rmul R (rmul R Z G) G' = Z := by
     intro Z

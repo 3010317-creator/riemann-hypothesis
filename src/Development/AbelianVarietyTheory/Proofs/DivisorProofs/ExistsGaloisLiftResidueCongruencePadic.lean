@@ -2,8 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Degenerations.IsNormalSchemeSp
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.KbIsAlgClosedAndConj
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAlgEquivLiftResiduePadicAlgClStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRingEquivExtendingOfKerLeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsAlgEquivLiftResiduePadicAlgCl
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRingEquivExtendingOfKerLe
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.InducedModelMorphismCompStructureMap
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -42,7 +44,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Degenerations.InducedModelMorphismCompStructureMap
 
 @[expose] public section
 
@@ -84,8 +85,8 @@ theorem main : ∀ (l : ℕ) [Fact l.Prime] (L : IntermediateField ℚ_[l] (Padi
     rw [MvPolynomial.coeff_map]
     exact ⟨(AddMonoidAlgebra.coeff q n).2, (GlobalTheory.ZH.mem_OO_iff _).1 (((AddMonoidAlgebra.coeff q n : As) : O).2)⟩
   haveI := GlobalTheory.ZJ.isAlgClosed_kb (p := l)
-  obtain ⟨φ, hφR, hφ⟩ := GlobalTheory.T.exists_ringEquiv_extending_of_ker_le' _ GlobalTheory.ZJ.exists_pow_eq_one_kb R J _ _ hII
-  obtain ⟨g, hg⟩ := GlobalTheory.T.exists_algEquiv_lift_residue_padicAlgCl l L φ fun x hx => hφR _ ⟨⟨x, hx⟩, rfl⟩
+  obtain ⟨φ, hφR, hφ⟩ := _root_.GlobalTheory.exists_ringEquiv_extending_of_ker_le _ GlobalTheory.ZJ.exists_pow_eq_one_kb R J _ _ hII
+  obtain ⟨g, hg⟩ := _root_.GlobalTheory.ZJ.exists_algEquiv_lift_residue l L φ fun x hx => hφR _ ⟨⟨x, hx⟩, rfl⟩
   exact ⟨g, fun j => hg (a' j) (b' j) (hφ j).symm⟩
 
 end GlobalTheory.ResidueLift

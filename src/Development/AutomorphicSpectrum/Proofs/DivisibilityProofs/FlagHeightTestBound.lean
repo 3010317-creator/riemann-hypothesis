@@ -6,9 +6,13 @@ public import GroundTheory.HeightsAndTheta.Heights.Antisymmetric.Statements
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FlagIndices
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterNamed
 public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.DegreeTautologicalLineProjectiveLine
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagHeightPowerSumOneZeroStatement
-public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.TestPolynomialShiftTotalStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagVarietyBoundaryDimensionDropStatement
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.FlagHeightPowerSumOneZero
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.HeckeSectionsIsotropicCommutatorPairingPower
+public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.TestPolynomialShiftTotal
+public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.FlagIndices.InstFintypeFlIdx
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArithmeticIntersection.MixedFieldContraction.GenericFibreKerTarget
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagVarietyBoundaryDimensionDrop
+public import ReciprocityTheory.GeometryOfNumbers.LatticeCovolumes.GramSt
 import Formalism.DegreeFormula.PointDegree.PowSum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -53,7 +57,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import ReciprocityTheory.GeometryOfNumbers.LatticeCovolumes.GramSt
 
 @[expose] public section
 
@@ -401,12 +404,12 @@ theorem hhTestBound_hhFl : GroundTheory.Heights₂.Heights.LowerBoundFree.Grassm
       [Nonempty Ψ] (j : ℕ), 1 ≤ j → j < N → HhTestBound j (hhFl Ψ N II) := by
   intro hZ2 _ II hII Ψ _ _ N _ j hj hjN
   have hN : 2 ≤ N := by omega
-  obtain ⟨hT, hdeg, -, -⟩ := GlobalTheory.T.test_polynomial_shift_total Ψ N j hj hjN
+  obtain ⟨hT, hdeg, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Top.testPoly_facts Ψ N j hj hjN
   have hA : IsArithVar (GroundTheory.Heights₂.Heights.LowerBoundFree.PFl Ψ N) (dimFl Ψ N + 1) := by
-    have := (GlobalTheory.T.flag_variety_boundary_dimension_drop Ψ N hN).1
+    have := (_root_.GlobalTheory.CompanionTheory.Ar.PB.flag_isArithVar_and_image Ψ N hN).1
     rwa [GroundTheory.Heights₂.Heights.antisymDegree, Nat.choose_two_right] at this
   have hkill : ∀ τ (Q : RP Ψ N), Q.IsHomogeneous (dimFl Ψ N) → hhFl Ψ N II (pk τ 1 * Q) = 0 :=
-    fun τ Q hQ => GlobalTheory.T.flag_height_power_sum_one_zero II hII Ψ N τ Q hN hA hQ
+    fun τ Q hQ => _root_.GlobalTheory.CompanionTheory.Ar.Top.hhFl_pk_one_mul II hII Ψ N τ Q hN hA hQ
   have hn : dimX Ψ N j ≠ 0 := by
     have h1 : 0 < Fintype.card Ψ := Fintype.card_pos
     have h2 : 0 < N - j := by omega

@@ -1,18 +1,22 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GlobSet
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FrameDualUnipotentGroupActsUnitriangularOntoStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GenericLocalTermsSelfDualLatticesStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.AtBase
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FrameDualUnipotentGroupActsUnitriangularOnto
+public import Formalism.SharpRestriction.CuspSpanNormBounds.IsTermOver
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GenericLocalTermsSelfDualLattices
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GluedUnimodularLatticeIffLocalCompletionsStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDatumOfTermReadOnLatticeStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDatumOfTermReadOnLattice
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianLatticeLocalGlobalPrinciple
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianOrbitUniqueLatticeIntegralFramesStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianOrbitUniqueLatticeIntegralFrames
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LinearIndependentChangedRationalFramesOfUnitrianStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LocalTermLatticeOverInnerDatumFgSpanStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NumberFieldLatticeDeterminedByLocalLattices
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalIsometryExtendsLocalIsometryStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.RationalUnitriangularFrameChangeLocalScalingsStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryComplementMovesHermitianTermsStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GFrames
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PlacesOf
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.NumberFieldLatticeDeterminedByLocalLattices
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryComplementMovesHermitianTerms
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,8 +56,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.TypeStar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.GFrames
-public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PlacesOf
 import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.NGAnalytic
 import Formalism.LocalToGlobal.SiegelLatticeTheory.CokernelGLCounts.RankPointCounts.StepHeightOfNormOne
 
@@ -145,9 +147,9 @@ theorem orbit (Z : LocDat D) (FP : ∀ p : PlF D, LocNG.FPair (locH Z p) D.R.rS)
   have hfA : (FP p).A.f = scaled Z p (frame F) := (hB p).1
   have hfB : (FP p).B.f = scaled Z p (frame F') := (hB p).2.1
   refine ⟨?_, ?_⟩
-  · exact (GlobalTheory.T.frameDual_unipotentGroup_acts_unitriangular_onto (Z.M p) (Z.agree p).1 (locH Z p) D.R.rS (FP p).A hN.2.1).2.2 (scaled Z p (frame G))
+  · exact (_root_.GlobalTheory.LocOver.UnipOnto.unipotent_onto (Z.M p) (Z.agree p).1 (locH Z p) D.R.rS (FP p).A hN.2.1).2.2 (scaled Z p (frame G))
       (by rw [hfA]; exact ⟨Ap p, (hAp p).1, (hAp p).2⟩)
-  · exact (GlobalTheory.T.frameDual_unipotentGroup_acts_unitriangular_onto (Z.M p) (Z.agree p).1 (locH Z p) D.R.rS (FP p).B hN.2.2.2.1).2.2 (scaled Z p (frame G'))
+  · exact (_root_.GlobalTheory.LocOver.UnipOnto.unipotent_onto (Z.M p) (Z.agree p).1 (locH Z p) D.R.rS (FP p).B hN.2.2.2.1).2.2 (scaled Z p (frame G'))
       (by rw [hfB]; exact ⟨Ap' p, (hAp' p).1, (hAp' p).2⟩)
 
 theorem mem_iff_of_img {α : Type*} {S S' : Set α} {f : α → α} (hf : Function.Injective f) (hS : f '' S = S')
@@ -164,7 +166,7 @@ theorem GlobalTheory.GlueDat.glued_data : ∀ (D : D7) (Z : LocDat D) (FP : ∀ 
   have hR := hB.2.1
   have hO := fun p => orbit Z FP F G F' G' hB.1 hR hS.1 hS.2.1 p
   have hLM := fun p (L : Submodule (Z.M p).L.O (Vp D p)) =>
-    GlobalTheory.T.generic_local_terms_selfDual_lattices (Z.M p) (hOK p) (locH Z p) D.R.rS D.R.k (FP p) (finrank_loc p) (hR p)
+    _root_.GlobalTheory.HL.GenericTerm.generic_terms (Z.M p) (hOK p) (locH Z p) D.R.rS D.R.k (FP p) (finrank_loc p) (hR p)
       (scaled Z p (frame G)) (scaled Z p (frame G')) (hO p).1 (hO p).2 L
   refine ⟨?_, ?_, ?_, ?_⟩
   · rw [GlobalTheory.T.glued_unimodular_lattice_iff_local_completions D Z FP u u' G G' (GlobalTheory.T.linearIndependent_changedRationalFrames_of_unitriangular D Z FP _ _ F G F' G' hB.1 hR hS.1 hS.2.1) Λ]
@@ -184,7 +186,7 @@ theorem GlobalTheory.GlueDat.glued_data : ∀ (D : D7) (Z : LocDat D) (FP : ∀ 
   · intro y hy
     refine ⟨fun p hp => ?_, ?_⟩
     · obtain ⟨A, A', hA, hA', hint, hc, hc'⟩ := hS.2.2.2.2 p hp
-      have := GlobalTheory.T.hermitian_orbit_unique_lattice_integral_frames (Z.M p) (hOK p) (locH Z p) D.R.rS D.R.k (FP p) hk (finrank_loc p) (hR p)
+      have := _root_.GlobalTheory.HL.GoodFrames.main (Z.M p) (hOK p) (locH Z p) D.R.rS D.R.k (FP p) hk (finrank_loc p) (hR p)
         (hB.2.2.1 p hp) A A' (fun a b hab => ⟨hA.1 a b hab, hA'.1 a b hab⟩) (fun a => ⟨hA.2 a, hA'.2 a⟩) hint
         (scaled Z p (frame G)) (scaled Z p (frame G'))
         (fun j => by rw [(hB.1 p).1]; exact hc j) (fun j => by rw [(hB.1 p).2.1]; exact hc' j)
@@ -204,7 +206,7 @@ theorem GlobalTheory.GlueDat.glued_data : ∀ (D : D7) (Z : LocDat D) (FP : ∀ 
       by_contra hc
       simp only [Set.mem_union, Set.mem_setOf_eq, not_or, not_not, Finset.mem_coe] at hc
       apply hp
-      exact (GlobalTheory.T.hermitianDatum_of_term_read_on_lattice (Z.M p) (hOK p) (locH Z p) D.R.rS D.R.k (FP p) (finrank_loc p) (hR p)).2
+      exact (_root_.GlobalTheory.LocOver.TermLat.datum_of_lattice (Z.M p) (hOK p) (locH Z p) D.R.rS D.R.k (FP p) (finrank_loc p) (hR p)).2
         (y p) (d0 p) _ _ (hy.2 p).1 (hΛ₀p p hc.2) (by dsimp only [tm]; rw [hc.1]) (by dsimp only [tm]; rw [hc.1])
         (fun g _ => by dsimp only [tm]; rw [hc.1])
   · intro y y' h hh hmv
@@ -225,7 +227,7 @@ theorem GlobalTheory.GlueDat.glued_data : ∀ (D : D7) (Z : LocDat D) (FP : ∀ 
         rw [map_smul, hext', hh.2.2 b]
         rfl
     choose g hgU hgm hgimg using hloc
-    have hset := fun p => (GlobalTheory.T.unitaryComplement_moves_hermitianTerms (Z.M p) (hOK p) (locH Z p) D.R.rS D.R.k (FP p) (finrank_loc p) (hR p)
+    have hset := fun p => (_root_.GlobalTheory.HL.ComplMove.main (Z.M p) (hOK p) (locH Z p) D.R.rS D.R.k (FP p) (finrank_loc p) (hR p)
       (scaled Z p (frame G)) (scaled Z p (frame G')) (hO p).1 (hO p).2 (g p) (hgU p) (y p) (y' p) (hgm p)).2
     have hlat : Submodule.IsLattice D.host.E (Formalism.HermitianLatticesTheory.gmap h Λ) ↔ Submodule.IsLattice D.host.E Λ := by
       constructor

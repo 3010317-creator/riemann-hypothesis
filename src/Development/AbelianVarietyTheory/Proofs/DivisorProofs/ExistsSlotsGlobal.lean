@@ -4,18 +4,20 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RankOfMulEqO
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HasBlockOfOccurs
 public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BhattScholzeCrystallineLattices
 public import Formalism.LocalRingCardinality.SpanPowerMembership.NDLocE
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInvariantWachModuleBasisOfNonnegJumpsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnramifiedLocalSituationOfEmbeddingStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWachModuleMapMatrixReductionCommStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobeniusMatrixCofactorEqQPowFrameStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobeniusMatrixFrameAtPrimitiveRootFactorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsContinuousCrystallineMatrixRepOfIntertwinesDetStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatGoodOfBlockExtensionTwistStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RankReducedLetterMatrixEqRankModMaximalStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WachModuleMapMatrixCompMulStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WachRingFactsUnramifiedLevelOneStatement
+public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsInvariantWachModuleBasisOfNonnegJumps
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnramifiedLocalSituationOfEmbedding
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsWachModuleMapMatrixReductionComm
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobeniusMatrixCofactorEqQPowFrame
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FrobeniusMatrixFrameAtPrimitiveRootFactor
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsContinuousCrystallineMatrixRepOfIntertwinesDet
+public import Formalism.LocalRingCardinality.AdicCompletionLocal.LocTied
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatGoodOfBlockExtensionTwist
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RankReducedLetterMatrixEqRankModMaximal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WachModuleMapMatrixCompMul
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsHwFonCmpTies
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalGapNonemptyAndRecordNonempty
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WachRingFactsUnramifiedLevelOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -96,7 +98,7 @@ theorem exists_frame {n : ℕ} {r : ↥(GK K) →* GL (Fin n) ↥(OL LL)} {U : Z
       IsFrame ((HW l).W K 1 LL hA.2.2) (latOf r hr.1) γ b N := by
   have hn : Module.finrank ↥(OL LL) ↥(latOf r hr.1).L.T = n := by
     rw [Module.finrank_eq_card_basis (basisOf r hr.1), Fintype.card_fin]
-  exact GlobalTheory.T.exists_invariant_wachModule_basis_of_nonneg_jumps D HW F Cm l K LL hA (latOf r hr.1) U n hr.2 hU hn γ
+  exact _root_.GlobalTheory.WachFrame.exists_frame D HW F Cm l K LL hA (latOf r hr.1) U n hr.2 hU hn γ
 
 include F Cm in
 theorem latAt_of_frame {n h : ℕ} {r : ↥(GK K) →* GL (Fin n) ↥(OL LL)} {U : ZMod (Module.finrank ℚ_[l] ↥(K0 K)) → Fin n → ℤ}
@@ -107,7 +109,7 @@ theorem latAt_of_frame {n h : ℕ} {r : ↥(GK K) →* GL (Fin n) ↥(OL LL)} {U
     (hζ : IsPrimitiveRoot ζ l) (hjj : ∀ a ∈ Finset.Ioo 0 l, IsExpAt (OL LL).val.toRingHom (ζ ^ a) (jj a)) (i : ZMod (Module.finrank ℚ_[l] ↥(K0 K))) :
     LatAt l (N.P i) (N.D i) (N.Th i) h u (U i) (OL LL).val.toRingHom jj := by
   refine ⟨?_, hb.2.2.2 i, ?_⟩
-  · refine GlobalTheory.T.frobeniusMatrix_cofactor_eq_q_pow_frame D HW F Cm l K LL hA (latOf r hr.1) (fun i => Finset.univ.val.map (U i)) n h γ b N hr.2
+  · refine _root_.GlobalTheory.WachPlace.FrameHeight.frame_height D HW F Cm l K LL hA (latOf r hr.1) (fun i => Finset.univ.val.map (U i)) n h γ b N hr.2
       (fun i v hv => ?_) hb i
     obtain ⟨a, -, rfl⟩ := Multiset.mem_map.mp hv
     exact hU i a
@@ -116,7 +118,7 @@ theorem latAt_of_frame {n h : ℕ} {r : ↥(GK K) →* GL (Fin n) ↥(OL LL)} {U
     have hprim : IsPrimitiveRoot (ζ ^ a) l :=
       hζ.pow_of_coprime a (Nat.coprime_comm.mp
         ((Fact.out : l.Prime).coprime_iff_not_dvd.mpr (Nat.not_dvd_of_pos_of_lt ha0 hal)))
-    exact GlobalTheory.T.frobeniusMatrix_frame_at_primitiveRoot_factor D HW F Cm l K LL hA (latOf r hr.1) n U γ b N (u : ℤ_[l]) c (ζ ^ a) (jj a) hr.2
+    exact _root_.GlobalTheory.WachRoots.frame_at_root D HW F Cm l K LL hA (latOf r hr.1) n U γ b N (u : ℤ_[l]) c (ζ ^ a) (jj a) hr.2
       (fun i a => (hU i a).1) hb hγ hu hprim (hjj a ha) i
 
 private theorem coe_basisOf_eq_stdMap_single {n : ℕ} (r : ↥(GK K) →* GL (Fin n) ↥(OL LL)) (hr : Cont r) (k : Fin n) :
@@ -135,10 +137,10 @@ theorem exists_mapMat {n n' : ℕ} {r : ↥(GK K) →* GL (Fin n) ↥(OL LL)} {r
     ∃ A : ZMod (Module.finrank ℚ_[l] ↥(K0 K)) → Mx (↥(OL LL))⟦X⟧ n' n, IsMapMat ((HW l).W K 1 LL hA.2.2) (homOf hr.1 hr'.1 a ha) b b' A ∧
       (∀ i, RedHom l (PowerSeries.map (residue ↥(OL LL)) un) ((N.P i).map (PowerSeries.map (residue ↥(OL LL)))) ((N.D i).map (PowerSeries.map (residue ↥(OL LL)))) ((N'.P i).map (PowerSeries.map (residue ↥(OL LL)))) ((N'.D i).map (PowerSeries.map (residue ↥(OL LL)))) ((A i).map (PowerSeries.map (residue ↥(OL LL))))
         ((A (i - 1)).map (PowerSeries.map (residue ↥(OL LL))))) ∧ ∀ i, lrank ((A i).map (PowerSeries.map (residue ↥(OL LL)))) = (a.map (residue ↥(OL LL))).rank := by
-  obtain ⟨A, hA1, hA2⟩ := GlobalTheory.T.exists_wachModule_map_matrix_reduction_comm (HW l) K LL hA (latOf r hr.1) (latOf r' hr'.1) n n' γ b b' N N' u un
+  obtain ⟨A, hA1, hA2⟩ := _root_.GlobalTheory.WachMap.exists_mapMat_redHom (HW l) K LL hA (latOf r hr.1) (latOf r' hr'.1) n n' γ b b' N N' u un
     (homOf hr.1 hr'.1 a ha) hr.2.1 hr'.2.1 hb hb' hγ hun
   refine ⟨A, hA1, hA2, fun i => ?_⟩
-  refine GlobalTheory.T.rank_reduced_letter_matrix_eq_rank_mod_maximal D HW F l K LL hA (latOf r hr.1) (latOf r' hr'.1) n n' b b' (homOf hr.1 hr'.1 a ha) A
+  refine _root_.GlobalTheory.WachRank.main D HW F l K LL hA (latOf r hr.1) (latOf r' hr'.1) n n' b b' (homOf hr.1 hr'.1 a ha) A
     (basisOf r hr.1) (basisOf r' hr'.1) a hr.2.1 hr'.2.1 hA1 (fun k => ?_) i
   simp only [coe_basisOf_eq_stdMap_single]
   show (a.map (algebraMap ↥(OL LL) ↥LL.1)).mulVec (stdMap LL n (Pi.single k 1)) =
@@ -164,7 +166,7 @@ theorem mapMat_mul {n n' n'' : ℕ} {r : ↥(GK K) →* GL (Fin n) ↥(OL LL)} {
     show (a''.map (algebraMap ↥(OL LL) ↥LL.1)).mulVec v =
       (a'.map (algebraMap ↥(OL LL) ↥LL.1)).mulVec ((a.map (algebraMap ↥(OL LL) ↥LL.1)).mulVec v)
     rw [e, Matrix.map_mul, Matrix.mulVec_mulVec]
-  rw [GlobalTheory.T.wachModuleMapMatrix_comp_mul (HW l) K LL hA (latOf r hr) (latOf r' hr') (latOf r'' hr'') n n' n'' b b' b''
+  rw [_root_.GlobalTheory.WachPlace.isMapMat_comp_mul (HW l) K LL hA (latOf r hr) (latOf r' hr') (latOf r'' hr'') n n' n'' b b' b''
     (homOf hr hr' a ha) (homOf hr' hr'' a' ha') (homOf hr hr'' a'' ha'') A A' A'' h h' h'' hc i, Matrix.map_mul]
 
 
@@ -183,7 +185,7 @@ theorem exists_positions {n t h R : ℕ} {r : ↥(GK K) →* GL (Fin n) ↥(OL L
       (∀ s, LatAt l ((Nψ s).P i) ((Nψ s).D i) ((Nψ s).Th i) h u (fun _ => wt s i) (OL LL).val.toRingHom jj) ∧
       (y i).Chain (y (i - 1)) l (PowerSeries.map (residue ↥(OL LL)) un) ((N.P i).map (PowerSeries.map (residue ↥(OL LL)))) ((N.D i).map (PowerSeries.map (residue ↥(OL LL)))) (fun s => ((Nψ s).P i).map (PowerSeries.map (residue ↥(OL LL))))
         (fun s => ((Nψ s).D i).map (PowerSeries.map (residue ↥(OL LL)))) rs dim := by
-  obtain ⟨γ, hγ⟩ := (GlobalTheory.T.wachRingFacts_unramified_levelOne (HW l) K LL hA).2.2.2.1 u
+  obtain ⟨γ, hγ⟩ := (_root_.GlobalTheory.WachPlace.ringFacts_of_caseA (HW l) K LL hA).2.2.2.1 u
   have hU0 : ∀ i, ∀ v ∈ Finset.univ.val.map (U i), 0 ≤ v := fun i v hv => by
     obtain ⟨a, -, rfl⟩ := Multiset.mem_map.mp hv
     exact (hU i a).1
@@ -196,10 +198,10 @@ theorem exists_positions {n t h R : ℕ} {r : ↥(GK K) →* GL (Fin n) ↥(OL L
     rw [hv]
     exact (hwt s i).1
   have hrk : ∀ k, MatGood (D.loc l) ((HW l).W K 1 LL hA.2.2).emb (x.rk k) (fun i => Finset.univ.val.map (U i)) :=
-    fun k => GlobalTheory.T.isContinuousCrystallineMatrixRep_of_intertwines_det_ne_zero (D.loc l) K LL _ n _ r (x.rk k) _ (x.a k) hr (hx.1 k).1 (hx.1 k).2.1
+    fun k => _root_.GlobalTheory.WachPlace.matGood_of_tw (D.loc l) K LL _ n _ r (x.rk k) _ (x.a k) hr (hx.1 k).1 (hx.1 k).2.1
   have hr2 : ∀ s, MatGood (D.loc l) ((HW l).W K 1 LL hA.2.2).emb (x.r2 s)
       (fun i => Finset.univ.val.map (U i) + {wt s i}) :=
-    fun s => GlobalTheory.T.matGood_of_block_extension_twist (D.loc l) (D.locA l) (D.locT l) K LL _ n _ r (ψ s) (x.r2 s) _ _ (x.B s) (x.C s) hr (hψ s)
+    fun s => _root_.GlobalTheory.WachPlace.FullRankSum.matGood_sum (D.loc l) (D.locA l) (D.locT l) K LL _ n _ r (ψ s) (x.r2 s) _ _ (x.B s) (x.C s) hr (hψ s)
       (hx.2.2 s).1 (hx.2.2 s).2.2.1 (hx.2.2 s).2.2.2.2.2.2.2.2.2.2
   have hr20 : ∀ s i, ∀ v ∈ Finset.univ.val.map (U i) + {wt s i}, 0 ≤ v := fun s i v hv => by
     rcases Multiset.mem_add.mp hv with hv | hv
@@ -340,7 +342,7 @@ theorem exists_positions_global (hBS : GlobalTheory.Published.BhattScholzeCrysta
         (fun s => (d.2.1 s).2.1.map (PowerSeries.map (residue ↥(OL LL)))) rs dim)
     (fun i₀ => by
       obtain ⟨K, hA, ι, κ, hκ, hκσ, hi₀, hMG⟩ :=
-        GlobalTheory.T.exists_unramifiedLocalSituation_of_embedding (D.loc l) (D.locA l) (D.locT l) (HW l) E Ω hl hd σ hσ LL hz hE i₀
+        _root_.GlobalTheory.PlaceLetters.exists_place (D.loc l) (D.locA l) (D.locT l) (HW l) E Ω hl hd σ hσ LL hz hE i₀
       obtain ⟨N, Nψ, y, hy⟩ := exists_positions F Cm hA (U := fun i => J (κ i)) (wt := fun s i => wt s (κ i))
         (hMG n r _ hr) (fun i a => hJ (κ i) a) (fun s => hMG 1 (ψ s) _ (hψ s)) (fun s i => hwt s (κ i))
         (hx.res ι) hu hun hζ hjj

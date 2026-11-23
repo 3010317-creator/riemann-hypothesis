@@ -7,8 +7,9 @@ public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeo
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.PolBaseChangeOfRelAmpleLocal
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.AbelianProjectiveBaseChange
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsAmpleCubSpFibre
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsAmpleCubicalOfGroupSchemeIsoStatement
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsNeutralGroupModelStatement
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsAmpleCubicalOfGroupSchemeIso
+public import Development.AbelianVarietyTheory.Definitions.AbelianSchemeLaws.FirstCohomologyVanishesSpecOfIsLocalRing
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsNeutralGroupModel
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.SmConnModelDescends
 public import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.SmoothOfRelativeDimensionOfGeneric
 import Mathlib.Algebra.Order.Floor.Extended
@@ -90,7 +91,7 @@ theorem exists_ampleCub_fibre {S S' T : Scheme.{0}} {f : S' ⟶ S} (j : T ⟶ S'
     ∃ N : LB ((Over.pullback t).obj G).left, AmpleCub ((Over.pullback t).obj G) N := by
   obtain ⟨e, he, -⟩ := grpPullback_iso (isGrpPullback_pullback G t)
     (((isGrpPullback_pullback G' j).comp h).congr ht rfl)
-  exact GlobalTheory.T.exists_ampleCubical_of_groupScheme_iso _ _ _ e he L hL
+  exact _root_.GlobalTheory.SS.AmpIso.exists_ampleCub_of_iso _ _ _ e he L hL
 
 theorem smoothOfRelativeDimension_model {K W : Type} [Field K] [CommRing W] [IsDomain W]
     [Algebra K (FractionRing W)] (P : Out.PolAV (Sp K)) (G : Over (Sp W)) [GrpObj G] (hG : SmConn G)
@@ -127,7 +128,7 @@ theorem exists_level_model : ∀ (V K : Type) [CommRing V] [IsDomain V] [IsDiscr
       sym := PolBaseChange.sym_pull h P.sym
       ample := relAmple_pull h.1 P.isLB hL' hw ⊤ (isAffineOpen_top _) (fun _ => trivial) P.ample
       ktriv := kTriv_pull h P.isLB hL' hw P.ktriv }
-  obtain ⟨G', _, hG', he, c, hc1, hext⟩ := GlobalTheory.T.exists_neutral_group_model' R K' hR P'.A P'.isAb
+  obtain ⟨G', _, hG', he, c, hc1, hext⟩ := _root_.GlobalTheory.SS.exists_neutral_group_model R K' hR P'.A P'.isAb
     (GlobalTheory.AbProj.isProjBy_of_isPullback P' (IsPullback.id_horiz _))
   obtain ⟨L', hL'⟩ := GlobalTheory.SS.exists_ampleCub_spFibre R K' hR P' G'.Y hG' G'.e he
   obtain ⟨s, hs⟩ := GlobalTheory.smConn_model_descends V K R K' hc P.A P.isAb G'.Y hG' ⟨G'.e, he⟩

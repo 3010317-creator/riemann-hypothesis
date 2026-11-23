@@ -2,10 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NoLeak
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.BasisOfIsCompl
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EichlerLatticeLocallyConstantDataStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetTermBasicFactsStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.ComplementReferenceCompactSubgroup
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EichlerLatticeLocallyConstantData
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermitianDoubleCosetTermBasicFacts
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermExponentsNonnegAndDefectGroupBound
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsPrincipalIdealRingOfHenselian
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermExponentsNonnegAndDefectGroupBoundStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -296,7 +297,7 @@ theorem p_eq_th : ∃ e ∈ L.O, algebraMap F E S.ϖ = algebraMap F E S.th * e :
 theorem bound (d : S.Datum) (Λ : Submodule L.O S.V) (hT : S.IsTerm d Λ) (J : ℕ) (hJ : J ≤ r + 1)
     (x x' : S.V) (hx : x ∈ S.spanTo S.f J) (hx' : x' ∈ S.spanTo S.f' J) (hb : S.InTh Λ (x + x')) :
     algebraMap F E ((S.ϖ : F) ^ S.a) • x ∈ Λ ∧ algebraMap F E ((S.ϖ : F) ^ S.a) • x' ∈ Λ := by
-  obtain ⟨-, -, -, hf, hf', -⟩ := GlobalTheory.T.hermitian_double_coset_term_basic_facts L r k S d Λ hT
+  obtain ⟨-, -, -, hf, hf', -⟩ := _root_.GlobalTheory.HL.TermBasic.term_basic L r k S d Λ hT
   obtain ⟨y, hy, e⟩ := hb
   replace hx := spanTo_mono S _ hJ hx
   replace hx' := spanTo_mono S _ hJ hx'
@@ -306,7 +307,7 @@ theorem bound (d : S.Datum) (Λ : Submodule L.O S.V) (hT : S.IsTerm d Λ) (J : �
       rw [e, ← mul_smul, ← map_mul, inv_mul_cancel₀ (th_ne S), map_one, one_smul]
     rw [this]
     exact S.ME.smul_mem _ (Submodule.add_mem_sup hx hx')
-  have hm := (GlobalTheory.T.term_exponents_nonneg_and_defect_group_bound L r k S d Λ hT).2.2.2.2.2.2.2.2.1 y hyM
+  have hm := (_root_.GlobalTheory.HL.Defect.exponents_and_defect L r k S d Λ hT).2.2.2.2.2.2.2.2.1 y hyM
   obtain ⟨z, z', h1, h2, h3, h4, e'⟩ := split_Mof S Λ _ _ _ _
     (fun i => (hf (r + 1) le_rfl _).2 (Submodule.subset_span ⟨i, i.2, rfl⟩))
     (fun i => (hf' (r + 1) le_rfl _).2 (Submodule.subset_span ⟨i, i.2, rfl⟩)) (th_ne S) (thO S) _ hm
@@ -452,7 +453,7 @@ theorem Mv_add {J : ℕ} (hJ : J ≤ r + 1) {d : S.Datum} {Λ : Submodule L.O S.
     (hv : algebraMap F E S.ϖ ^ v * algebraMap F E 2⁻¹ ∈ L.O) (w y : S.MW) (hw : S.Mv J d Λ w)
     (hy : y ∈ intP S Λ) (hl : algebraMap F E S.ϖ ^ (n + A + 1 + v) • y ∈ lin S J) :
     S.Mv J d Λ (w + algebraMap F E S.ϖ ^ (n + A + 1 + v) • y) := by
-  obtain ⟨hΛ, -, -, hf, hf', -⟩ := GlobalTheory.T.hermitian_double_coset_term_basic_facts L r k S d Λ hT
+  obtain ⟨hΛ, -, -, hf, hf', -⟩ := _root_.GlobalTheory.HL.TermBasic.term_basic L r k S d Λ hT
   have hp := fun n => L.O.pow_mem (algO S S.ϖ) n
   have hl' := AddSubgroup.add_mem _ (Mv_lin S hw) hl
   obtain ⟨-, -, ⟨y0, hy0, e0⟩, hlev, hu, -, ⟨c, hc, es⟩, -⟩ := hw
@@ -488,7 +489,7 @@ theorem chi_add (j : Fin r) {d : S.Datum} {Λ : Submodule L.O S.V} (hT : S.IsTer
     (hw : S.Mv (j + 1) d Λ w) (hy : y ∈ intP S Λ) (hl : algebraMap F E S.ϖ ^ (n + A + 1) • y ∈ lin S (j + 1)) :
     S.chiM j d Λ (w + algebraMap F E S.ϖ ^ (n + A + 1) • y).1 (w + algebraMap F E S.ϖ ^ (n + A + 1) • y).2.1 =
       S.chiM j d Λ w.1 w.2.1 := by
-  obtain ⟨hΛ, hW, -, hf, hf', -⟩ := GlobalTheory.T.hermitian_double_coset_term_basic_facts L r k S d Λ hT
+  obtain ⟨hΛ, hW, -, hf, hf', -⟩ := _root_.GlobalTheory.HL.TermBasic.term_basic L r k S d Λ hT
   have hJ : (j : ℕ) + 1 ≤ r + 1 := by have := j.2; omega
   have hp := fun n => L.O.pow_mem (algO S S.ϖ) n
   have hi : ∀ x ∈ Λ, ∀ y ∈ Λ, S.h x y ∈ L.O := fun x hx y hy => (hΛ.2 y).2 hy x hx
@@ -525,11 +526,11 @@ end
 
 theorem main : ∀ {F : Type} [Field F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] [CharZero F] {E : Type} [CommRing E] [Algebra F E] [TopologicalSpace E] (L : LocE F E), ∀ (r k : ℕ) (S : Frames L r k), ∀ (j : Fin r) (β βJ : ℕ) (d : S.Datum) (Λ : Submodule L.O S.V), S.IsTerm d Λ → S.InFF β (j + 1) βJ d Λ → ∃ B : AddSubgroup S.MW, Fine (S.refA (j + 1) Λ) (ind (S.Mv (j + 1) d Λ)) B ∧ ∀ w, S.Mv (j + 1) d Λ w → ∀ b ∈ B, S.moved Λ (w + b).1.1 (w + b).2.1 (S.sOf (w + b)) = S.moved Λ w.1.1 w.2.1 (S.sOf w) ∧ S.chiM j d Λ (w + b).1 (w + b).2.1 = S.chiM j d Λ w.1 w.2.1 ∧ (S.NoLeak Λ (w + b).2.1 ↔ S.NoLeak Λ w.2.1) := by
   intro F _ _ _ _ _ E _ _ _ L r k S j β βJ d Λ hT _
-  have hΛ := (GlobalTheory.T.hermitian_double_coset_term_basic_facts L r k S d Λ hT).1
-  obtain ⟨A, hA0⟩ := Int.eq_ofNat_of_zero_le (GlobalTheory.T.term_exponents_nonneg_and_defect_group_bound L r k S d Λ hT).1
+  have hΛ := (_root_.GlobalTheory.HL.TermBasic.term_basic L r k S d Λ hT).1
+  obtain ⟨A, hA0⟩ := Int.eq_ofNat_of_zero_le (_root_.GlobalTheory.HL.Defect.exponents_and_defect L r k S d Λ hT).1
   have hA : algebraMap F E ((S.ϖ : F) ^ S.a) = algebraMap F E S.ϖ ^ A := by rw [hA0, zpow_natCast, map_pow]
   obtain ⟨v, hv⟩ := half_int S
-  obtain ⟨n, hn⟩ := GlobalTheory.T.eichlerLattice_locally_constant_data L r k S Λ hΛ A
+  obtain ⟨n, hn⟩ := _root_.GlobalTheory.HL.EichlerLocal.moved_locally_constant L r k S Λ hΛ A
   have hJ0 : (j : ℕ) + 1 ≤ r := j.2
   have hJ : (j : ℕ) + 1 ≤ r + 1 := by omega
   have hp := fun n => L.O.pow_mem (algO S S.ϖ) n

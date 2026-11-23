@@ -2,9 +2,11 @@ module
 
 public import Development.WeilBound.CoreStatements.MultihomogeneousSquares.AntisymmetryFibreSquares
 public import Development.AutomorphicSpectrum.Proofs.DivisibilityProofs.TowerOriginVectorBundle
-import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptInteriorGeneric
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.RootModelOriginCompatibilityStatement
 public import Development.WeilBound.CoreStatements.FlagImmersions.SumFundOnRoot
+import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HodgeCptInteriorGeneric
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsSncModel
+import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.TowerOrigin
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.RootModelOriginCompatibility
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,7 +66,7 @@ theorem sq_of (hT : StTie) (hCmp : StCmp) : StSq := by
   obtain ⟨M', t, d, S, K, _, ι, _, P, Re, hgen, hR, hdeg, hpos, hS, hF, hPB⟩ :=
     hT hG hW E H D l (Xo l) c Y (o.S B) _ (o.Or B a).𝔐.ξ₀ (o.Or B a).𝔐.gen₀ (o.Or B a).𝔐.S_prime hdisc hp hq
   obtain ⟨-, ⟨x, hx⟩, -⟩ := HodgeCpt.basic _ _ _ _ _ _ _ _ Y _ _ _ _ _ (o.Or B a).𝔐 RingOfIntegers.coe_injective
-  have hA := GlobalTheory.T.root_model_origin_compatibility E H D l (Xo l) c (𝓞 c.F) _ Y (o.S B) (T.M B a) (o.Sys a) (o.Fx a) (o.Or B a) x hx hmono (hX.1 a)
+  have hA := _root_.GlobalTheory.CompanionTheory.Ar.RootAlg.algOver_of_immersion E H D l (Xo l) c (𝓞 c.F) _ Y (o.S B) (T.M B a) (o.Sys a) (o.Fx a) (o.Or B a) x hx hmono (hX.1 a)
   obtain ⟨f₁, f₂⟩ := hCmp hIn hC II hII E H D l (Xo l) c _ _ Y _ _ _ _ t
     (RootFieldNumerics.Sq.tieOf (o.Or B a) ((o.Sys a).reg none).1 (o.omVB B a) t.discr hA) hmono hgen
     (fun p hp => (hX.2 B a p hp).trans (hR p hp).symm) hdeg (o.Or B a).Re_deg

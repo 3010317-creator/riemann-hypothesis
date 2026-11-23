@@ -9,19 +9,21 @@ public import Formalism.PeriodIntegrals.PairCorankPos
 public import Formalism.PadicSubsetSums.StableGradedCounts.MemBesselSetZeroIffUpperTriangular
 public import Formalism.PeriodIntegrals.ExplicitFormulaCounts.BetaIndep
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.DCRelEquiv
-import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.GGMatBound
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.GGMirBound
-import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.IdCellInS
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.MirabolicBound.MirabolicBound
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.InSClassConst
-import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.InSRelevant
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.PairCorankPos
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ScalEquivGen
-import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ScalRelRepFree
+public import Formalism.PeriodIntegrals.ScalPairs
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.ScalarEquivalenceGeneral.ScalarFactorEqOneOfLe
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ScalarPairDr
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.SplitRow
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.TermAttrConst
+public import Formalism.PeriodIntegrals.WhitFunctDual
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.WhittakerFunctionalDual.StableOfIrreducible
+import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.GGMatBound
+import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.IdCellInS
+import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.InSRelevant
+import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ScalRelRepFree
 import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.TermCarrierStable
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.WhitFunctDual
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,7 +79,7 @@ theorem TermInSFun_holds : Formalism.L2.SG.FourParts.TermInSFun D u u' := in_s_c
 theorem TermInSRel_holds : Formalism.L2.SG.FourParts.TermInSRel D u u' := in_s_relevant D u u'
 theorem TermIdIffInS_holds : Formalism.L2.SG.FourParts.TermIdIffInS D u u' := term_id_iff_in_s D u u'
 
-theorem ScalarEquiv_holds : Formalism.L2.SG.Corank.ScalarEquiv D u u' := Formalism.L2.SG.Corank.scalarEquiv_of_G (D := D) scalar_equiv_general u u'
+theorem ScalarEquiv_holds : Formalism.L2.SG.Corank.ScalarEquiv D u u' := Formalism.L2.SG.Corank.scalarEquiv_of_G (D := D) _root_.PI.UnitaryGroupMassFormula.ScalEquivGen.scalarEquivG_holds u u'
 theorem ScalarRepFree_holds : Formalism.L2.SG.Corank.ScalarRepFree D u u' := scalar_rep_free D u u'
 theorem BetaFree_holds : Formalism.L2.SG.Corank.BetaFree D u u' := scalPairs_betaFree D u u'
 
@@ -89,10 +91,10 @@ theorem ScalarDr_holds : Formalism.L2.SG.Corank.ScalarDr D u u' := by
 end Terms
 
 theorem CorankPosG_holds : PI.PairCorankPos.CorankPosG := pair_corank_pos
-theorem ScalarEquivG_holds : Formalism.L2.SG.Corank.ScalarEquivG := scalar_equiv_general
+theorem ScalarEquivG_holds : Formalism.L2.SG.Corank.ScalarEquivG := _root_.PI.UnitaryGroupMassFormula.ScalEquivGen.scalarEquivG_holds
 
-theorem GelfandGraevMultOne_holds : Formalism.L2.SG.GGMirabolic.GelfandGraevMultOne := whittaker_functional_dual Formalism.IrreducibleCountingLemmas.GaloisIrreducibility.gelfand_graev_multiplicity_one
-theorem MirabolicBound_holds : Formalism.L2.SG.GGMirabolic.MirabolicBound := mirabolic_bound
+theorem GelfandGraevMultOne_holds : Formalism.L2.SG.GGMirabolic.GelfandGraevMultOne := _root_.PI.WhitFunctDualWork.whitFunctDual_main Formalism.IrreducibleCountingLemmas.GaloisIrreducibility.gelfand_graev_multiplicity_one
+theorem MirabolicBound_holds : Formalism.L2.SG.GGMirabolic.MirabolicBound := _root_.PI.GGMirBoundW.mirabolicBound
 theorem GGMatrixBoundOfLit_holds : Formalism.L2.SG.GGMirabolic.GGMatrixBoundOfLit := gg_matrix_bound
 theorem GGMatrixBound_holds : Formalism.L2.SG.GGMirabolic.GGMatrixBound :=
   GGMatrixBoundOfLit_holds GelfandGraevMultOne_holds MirabolicBound_holds

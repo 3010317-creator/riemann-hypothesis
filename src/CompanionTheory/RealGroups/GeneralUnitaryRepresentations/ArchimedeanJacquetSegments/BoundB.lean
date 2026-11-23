@@ -6,9 +6,11 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.EqOfHasValue
 public import Development.AbelianVarietyTheory.Definitions.Divisors.LineOppositeParabolicUnitaryLeviSectionEq
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsIrreducibleSecondFactorOfIrreducibleProduct
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MemSpanOfFixedMemSpanTranslates
-import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormalizedAbsCharacterization
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EigenvectorLiftOfSurjectionStatement
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.LinearAlgebra.FiniteDimensional.Defs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.EigenvectorLiftOfSurjection
 public import GroundTheory.AutomorphicForms.IwahoriFactorization
+import Development.AbelianVarietyTheory.Proofs.TwistedOperators.NormalizedAbsCharacterization
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -416,7 +418,7 @@ theorem bound_main : Bound k := by
     intro h
     have h2 : ev f0 = 0 := congrArg Subtype.val h
     exact hu (hf01 ▸ h2)
-  obtain ⟨v, hv0, hTv⟩ := GlobalTheory.T.eigenvector_lift_of_surjection _ _ T S f' (LinearMap.surjective_rangeRestrict _) hcomm lam
+  obtain ⟨v, hv0, hTv⟩ := _root_.GlobalTheory.CompanionTheory.EigenLift.nonzero_eigenvalue_lifts _ _ T S f' (LinearMap.surjective_rangeRestrict _) hcomm lam
     (f' ⟨f0, hf0K⟩) hw' rfl hl0
   have hTv' : (Fintype.card (K ⧸ H) : ℂ)⁻¹ • avL (parInd (blk2 d) τ) K H (parInd (blk2 d) τ (Zt d t) v) =
       lam • (v : IndSp (blk2 d) τ) := congrArg Subtype.val hTv

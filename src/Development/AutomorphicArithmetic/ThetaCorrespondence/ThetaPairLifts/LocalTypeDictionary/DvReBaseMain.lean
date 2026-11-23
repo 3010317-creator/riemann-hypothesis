@@ -3,18 +3,19 @@ module
 public import Development.AutomorphicArithmetic.LocalEmbeddings.ReBaseMain
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
 public import Development.AutomorphicArithmetic.LocalEmbeddings.ReBaseReal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CartanInvolutionSystemsConjArchimedeanUnitaryStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.CTSmallCone
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CartanInvolutionSystemsConjArchimedeanUnitary
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRealmapsIsomorphism
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatchedDataRestrictionUnique
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatchedFiniteMapsRestriction
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatchedLocalIsomorphismScalars
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SkewHermitianCartanInvolutionSystemsConjugateArcStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SkewHermitianCartanInvolutionSystemsConjugateArc
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SplitPlaceCharacterComponentSmoothUnitaryConductStatement
 public import Development.AutomorphicArithmetic.LocalEmbeddings.ReBaseArch
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.DvReBaseReal
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.DvReBaseUniq
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.HoweReBase
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ThetaIntegralCompRightTranslate
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MatchedFiniteMapsRestriction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -171,9 +172,9 @@ theorem rebase_ratio_real_part (hP : _root_.GlobalTheory.FunPr.ThetaLocalInputs)
   have ta := m1.triple
   have tb := m2.triple
   have hB := ta.base
-  obtain ⟨g, hg, eg⟩ := GlobalTheory.T.cartan_involution_systems_conj_archimedean_unitary F E σ B a _ _ G.V V hB ta.geo.hV n1.triple.geo.hV
-  obtain ⟨g', hg', eg'⟩ := GlobalTheory.T.cartan_involution_systems_conj_archimedean_unitary F E σ B a' _ _ G.V' V' hB ta.geo.hV' n1.triple.geo.hV'
-  obtain ⟨h, hh, eh⟩ := GlobalTheory.T.skewHermitian_cartanInvolutionSystems_conjugate_archimedean F E σ B (a + a') _ _ G.W Z hB ta.geo.hW n1.triple.geo.hW
+  obtain ⟨g, hg, eg⟩ := _root_.GlobalTheory.ConjCartan.conj_cartan_arch F E σ B a _ _ G.V V hB ta.geo.hV n1.triple.geo.hV
+  obtain ⟨g', hg', eg'⟩ := _root_.GlobalTheory.ConjCartan.conj_cartan_arch F E σ B a' _ _ G.V' V' hB ta.geo.hV' n1.triple.geo.hV'
+  obtain ⟨h, hh, eh⟩ := _root_.GlobalTheory.CartanConjSkew.conj_skew F E σ B (a + a') _ _ G.W Z hB ta.geo.hW n1.triple.geo.hW
   obtain ⟨T, hTc, hT1, hT2⟩ := exists_op hB.std ta.weil hg hh
   obtain ⟨T', hTc', hT1', hT2'⟩ := exists_op hB.std ta.weil' hg' hh
   have hR₃ := _root_.GlobalTheory.ReBase.real_maps_transport hP ta R₂ hg hg' hh eg eg' eh hT1 hT2 hT1' hT2' n1.triple n1.real

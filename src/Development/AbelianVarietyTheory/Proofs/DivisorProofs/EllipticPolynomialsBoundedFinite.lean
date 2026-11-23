@@ -2,8 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SplitPlaceUnitaryLocalPointsEquivGL
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCommonDenominatorOfValuationLeCofiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MonicCoeffNatDegreeSubEqMulCmConjStatement
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Valuation
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCommonDenominatorOfValuationLeCofinite
+public import Mathlib.NumberTheory.NumberField.CMField
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MonicCoeffNatDegreeSubEqMulCmConj
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProductOfLocalLevelsUnitaryIsOpenIsCompactIsLeve
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.Levelaf
 import Mathlib.Algebra.Order.Floor.Extended
@@ -86,7 +90,7 @@ theorem valuation_coeff_le {n : ℕ} {S : Set (Pl E)} (hS : IsSection S) {γ : P
   split_ifs with hw
   · exact (hv w hw).1 i
   obtain ⟨hm, hd, -, hr⟩ := hP
-  have hrec := GlobalTheory.T.monic_coeff_natDegree_sub_eq_mul_cmConj E n P hm hd hr
+  have hrec := _root_.GlobalTheory.monic_coeff_natDegree_sub_eq_mul_complexConj E n P hm hd hr
   obtain ⟨u, ⟨hu, huw⟩, -⟩ := hS w
   rcases GlobLev.eq_or_eq_conjSrc huw with rfl | rfl
   · exact absurd hu hw
@@ -125,7 +129,7 @@ theorem finite_ell_bounded : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
     split_ifs
     · exact h1.le
     · rw [h2, one_pow]
-  obtain ⟨D, hD0, hD⟩ := GlobalTheory.T.exists_common_denominator_of_valuation_le_cofinite E β hβ1
+  obtain ⟨D, hD0, hD⟩ := _root_.GlobalTheory.ValBoundDenom.exists_common_denominator_of_valuation_le E β hβ1
   have hD0' : (D : E) ≠ 0 := by exact_mod_cast hD0
   set r : ℕ → ℝ := fun i => (∑ τ : E →+* ℂ, ‖τ (D : E)‖) * n.choose i with hr
   set X : Fin (n + 1) → Set E := fun i => {x | IsIntegral ℤ x ∧ ∀ φ : E →+* ℂ, ‖φ x‖ ≤ r i} with hXd

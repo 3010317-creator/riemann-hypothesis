@@ -3,7 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsUSplittingInl
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsContOnOfLocal
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DoubledUnitaryPartnerDiagStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzSeminormL2BoundStatement
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Distribution.SchwartzSpace.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzSeminormL2Bound
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WeilTransportArchimedeanSliceSobolevBoundsStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -75,7 +77,7 @@ theorem GlobalTheory.WeilCont.slice_bounds : ∀ (D : D7) (ψ : AddChar (AF D.ho
   haveI : MeasurableAdd (mixedEmbedding.mixedSpace D.host.F) := ContinuousAdd.measurableAdd
   haveI : (MeasureTheory.volume : MeasureTheory.Measure (κ → mixedEmbedding.mixedSpace D.host.F)).IsAddHaarMeasure :=
     MeasureTheory.Measure.pi.isAddHaarMeasure _
-  obtain ⟨N, C, hC, hsob⟩ := GlobalTheory.T.schwartz_seminorm_l2_bound (MeasureTheory.volume : MeasureTheory.Measure (κ → mixedEmbedding.mixedSpace D.host.F)) k n
+  obtain ⟨N, C, hC, hsob⟩ := _root_.GlobalTheory.schwartz_pow_mul_iteratedFDeriv_le_sqrt_sum_weighted_sq (MeasureTheory.volume : MeasureTheory.Measure (κ → mixedEmbedding.mixedSpace D.host.F)) k n
   choose B hB using fun i j => GlobalTheory.T.weilTransport_archimedeanSlice_sobolev_bounds D ψ hψ S T χS χT hS hT hrS hrT JA JB ξ hA hJB κ co hco ω hω om hom Φ hΦ y p0 i j
   have hev : ∀ᶠ p in nhds p0, ∀ i ∈ Finset.range (N + 1), ∀ j ∈ Finset.range (N + 1),
       ∫ x, (‖x‖ ^ i * ‖iteratedFDeriv ℝ j (fun x => om p Φ (GlobalTheory.WeilCont.adeleJoin D.host.F x y)) x‖) ^ 2 ≤ B i j :=

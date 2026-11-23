@@ -1,11 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ActAApply
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AdmissibleAtOfIrreducibleTameStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CompletedStandardAdelicLatticePropertiesStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLatticeOfAdelicPoint
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.AdmissibleAtOfIrreducibleTame
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CompletedStandardAdelicLatticeProperties
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RationalPointsIntegralPointsMembership
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ThetaSpaceSelfDualPairAtMostLine
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLatticeOfAdelicPoint
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.CsDual
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -89,8 +89,8 @@ theorem gamA_rat {D : D7} {cc : Ideal (𝓞 D.host.K)} {δ : ℂ} {ψ : AE D →
 theorem latA_selfDual (D : D7) (hG : admG1 D) (cc : Ideal (𝓞 D.host.K)) (δ : ℂ) (hC : Crv D cc δ) (ψ : AE D → ℂ)
     (hψ : IsPsi D cc δ ψ) (N N' : ℕ) : SelfDual (gamA ψ) (latA D cc N N') := by
   obtain ⟨hadd, -, hrat, -, m₀, hm₀, h₀⟩ := hψ
-  obtain ⟨l1, l2, l3, -, ⟨m₁, hm₁, h₁⟩, -⟩ := GlobalTheory.T.completedStandardAdelicLattice_properties D hG cc δ hC N N'
-  obtain ⟨w, -, hw⟩ := GlobalTheory.T.theta_point_additive_form D hG cc δ hC
+  obtain ⟨l1, l2, l3, -, ⟨m₁, hm₁, h₁⟩, -⟩ := _root_.GlobalTheory.CompletedLattice.completed_lattice D hG cc δ hC N N'
+  obtain ⟨w, -, hw⟩ := _root_.GlobalTheory.FinWeil.WdCocycle.wd_cocycle D hG cc δ hC
   have hSD : ∀ n, SD D (stdL D n) := fun n => by
     obtain ⟨Lt, hL, h1, -⟩ := GlobalTheory.NormSum.exists_lattice_of_adelic_point D n
     exact h1 ▸ (hL 1).2

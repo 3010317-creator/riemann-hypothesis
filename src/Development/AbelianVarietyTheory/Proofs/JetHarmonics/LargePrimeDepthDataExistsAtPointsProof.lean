@@ -3,13 +3,16 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Jets.IsSelfOf
 public import Development.AbelianVarietyTheory.Definitions.Jets.DepthNumbersThresholdEq
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.PlaceDivisors.StChartF
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmEmbeddingsIntegralAndDistinctModMaximalStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmTypeFrobeniusOrbitsLabelAtSplitPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsClosedCompleteFieldOverPlaceStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsIdempotentFrobeniusOrbitUnramifiedStatement
+public import Formalism.LocalToGlobal.CharacterGerms.HostTraceIdentity
+public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmEmbeddingsIntegralAndDistinctModMaximal
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.CmTypeFrobeniusOrbitsLabelAtSplitPrime
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsClosedCompleteFieldOverPlace
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsIdempotentFrobeniusOrbitUnramified
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.GapParts
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RealPlaceLabellingInertFrobeniusNotConjStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RowDataSuppliedAtPairsOfPlacesStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RealPlaceLabellingInertFrobeniusNotConj
+public import Formalism.LocalToGlobal.ProjectiveLattices.ConjNeSelfOfCM
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.RowDataSuppliedAtPairsOfPlaces
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SupplyExtend
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.CmHostIdempotentTraceEqOne
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IsCanonGaugeMapFB
@@ -131,8 +134,8 @@ theorem pkg_of_labels (hU : ∀ (p : ℕ) [Fact p.Prime], ReciprocityTheory.Char
     { inj := hbij.1
       conj := fun o s => hconj o.1 s
       frob := fun o g s x => hfrob o.1 g s x
-      sep := fun x x' hx => (GlobalTheory.T.cmEmbeddings_integral_and_distinct_mod_maximal E H lv c T io C V ι hι hunr).2 _ _ fun h => hx (hbij.1 h)
-      unr := fun o g => GlobalTheory.T.exists_idempotent_frobeniusOrbit_unramified E H lv c T io C V ι hι hunr d (tau o.1 g) (hfrob o.1 g) }
+      sep := fun x x' hx => (_root_.GlobalTheory.EmbSep.cmEmbeddings_integral_and_distinct_mod_maximal' E H lv c T io C V ι hι hunr).2 _ _ fun h => hx (hbij.1 h)
+      unr := fun o g => _root_.GlobalTheory.exists_idempotent_of_unramified_place E H lv c T io C V ι hι hunr d (tau o.1 g) (hfrob o.1 g) }
   have hR : lab.RankOK Dw := by
     intro o
     refine ⟨fun g s => ?_, fun g s h => ?_, fun g s h => ?_⟩
@@ -146,7 +149,7 @@ theorem pkg_of_labels (hU : ∀ (p : ℕ) [Fact p.Prime], ReciprocityTheory.Char
     · change Dw.mult (tau o.1 g s) = N.R.m - j
       rw [htau, if_neg (show ¬ g = sel s from h), Datum.mult]
       exact (if_neg (not_inPsi_conj H (hpsi _))).trans hq'
-  have h1 := GlobalTheory.T.rowData_supplied_at_pairs_of_places hU E H Dw lv Xo c hstar T io y C3 C V ι hι k Y hY hy hunr Z d lab hA hbij.2 hR
+  have h1 := _root_.GlobalTheory.RowAt.supply_pairs hU E H Dw lv Xo c hstar T io y C3 C V ι hι k Y hY hy hunr Z d lab hA hbij.2 hR
     (show N.R.m - j < N.R.k - 1 by omega) (fun _ => hsel) a ha nW ν hν
   have hm : lab.j + lab.j' = N.R.m := show j + (N.R.m - j) = N.R.m by omega
   rw [hm] at h1
@@ -169,7 +172,7 @@ theorem pkg_of_labels (hU : ∀ (p : ℕ) [Fact p.Prime], ReciprocityTheory.Char
 theorem pkgZero : (∀ (p : ℕ) [Fact p.Prime], ReciprocityTheory.ChartRestriction.G.Pdiv.ChartF.UpFSt p) → ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : ReciprocityTheory.ChartRestriction.G.Geo.Tor.Host E) (Dw : Datum H) (lv : Level H) (Xo : Moduli Dw lv) (c : Coeff lv) [StarRing (𝓞 E)], PkgZeroSt Xo c := by
   intro hU E _ _ _ H Dw lv Xo c _ hstar N j pl a hj1 hjm hT hp hq ha la h2 hlq hld hM _ T io e hO y hy C3 nW ν hν
     hphi hw s hs hrows
-  obtain ⟨C, _, _, V, ι, hV, hι, hac, hcpl, hla, hunit, hnu⟩ := GlobalTheory.T.exists_closedComplete_field_over_place E H Dw lv Xo c la T io e hO
+  obtain ⟨C, _, _, V, ι, hV, hι, hac, hcpl, hla, hunit, hnu⟩ := _root_.GlobalTheory.PlaceClosedField.exists_closed_field_over_place E H Dw lv Xo c la T io e hO
   obtain ⟨Y, hY⟩ := GlobalTheory.ChartBaseChange.exists_baseChange E H Dw lv Xo c T io y C3 C V ι hι hac hcpl (hV ▸ ne_two_of_not_small h2)
     (GlobalTheory.QuadTrace.cmHost_idempotent_trace_eq_one E H hstar) lv.M (hunit _ hM)
   have hν' := hnu y C3 lv.M a nW ν hν
@@ -177,7 +180,7 @@ theorem pkgZero : (∀ (p : ℕ) [Fact p.Prime], ReciprocityTheory.ChartRestrict
   have hunr := hT.unr V.l V.l_prime h2 hlq hld
   have hpsi : ∀ z, InPsi H (pl z) := fun z => (hT.psi _).2 ⟨z, rfl⟩
   by_cases hin : Inert N V.l
-  · obtain ⟨Z, hZ, hne, hev, hbij, hfr⟩ := GlobalTheory.T.realPlaceLabelling_inert_frobenius_not_conj E H lv c N pl hT la T io C V ι hι hV hla hin hphi j
+  · obtain ⟨Z, hZ, hne, hev, hbij, hfr⟩ := _root_.GlobalTheory.InertLabelling.main E H lv c N pl hT la T io C V ι hι hV hla hin hphi j
     refine ⟨N.ordP V.l, inferInstance, N.pos V.l, pkg_of_labels hU hstar N j pl a hj1 hjm hpsi hp hq ha hy C3 V ι hι Y hY
       hunr nW ν hν' (N.ordP V.l) (N.pos V.l) RF.bg (Or.inl ⟨hev, fun s => ?_⟩) (tauIn N pl V.l) (fun _ _ _ => rfl)
       Z hZ hne hbij (fun z g => (hfr z g).1) hw s hs hrows⟩
@@ -187,7 +190,7 @@ theorem pkgZero : (∀ (p : ℕ) [Fact p.Prime], ReciprocityTheory.ChartRestrict
       unfold Inert NumDatum.cls primeClass at *
       rw [if_neg h2, if_neg hlq, if_neg hld] at hin ⊢
       split_ifs at hin ⊢ <;> simp_all
-    obtain ⟨d, _, pos, Z, hZ, hne, hbij, hfr⟩ := GlobalTheory.T.cmType_frobenius_orbits_label_at_split_prime E H lv c N pl hT la T io C V ι hι hV hla hsp j
+    obtain ⟨d, _, pos, Z, hZ, hne, hbij, hfr⟩ := _root_.GlobalTheory.LabSplit.labelling_split E H lv c N pl hT la T io C V ι hι hV hla hsp j
     exact ⟨d, inferInstance, pos, pkg_of_labels hU hstar N j pl a hj1 hjm hpsi hp hq ha hy C3 V ι hι Y hY
       hunr nW ν hν' d pos (fun _ => 0) (Or.inr fun _ => rfl) (tauSp N pl pos) (fun _ _ _ => rfl)
       Z hZ hne hbij hfr hw s hs hrows⟩

@@ -3,8 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.AevalEqZeroOfMemConeIdeal
 public import Development.AbelianVarietyTheory.Definitions.Divisors.WellChosen
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeImageBirationalLinearSystemEqSelfInt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalisedImageHeightUniqueFrame
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LeOfRingKrullDimConeIdeal
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormalisedImageHeightUniqueFrameStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,4 +61,4 @@ theorem GlobalTheory.HSCore.isHeight_imageHeight : Quoted → ∀ (F : Type) [Fi
   obtain ⟨h, hh⟩ := GlobalTheory.Adelic.HeightExists.exists_isHeight F T.toHermSys hT.alg
     (GlobalTheory.ImageDegree.degree_image_eq_topSelf hQ F T.toLinSys hT.alg.variety hT.alg.bpf hB).1
   have h1 := hP.isImageHeight hh
-  rwa [GlobalTheory.T.normalisedImageHeight_unique_frame hQ F V Ω Nm W ev T.D _ h hF (CompHt.isImageHeight_imageHeight ⟨h, h1⟩) h1]
+  rwa [_root_.GlobalTheory.ImageHeightFrame.isImageHeight_unique hQ F V Ω Nm W ev T.D _ h hF (CompHt.isImageHeight_imageHeight ⟨h, h1⟩) h1]

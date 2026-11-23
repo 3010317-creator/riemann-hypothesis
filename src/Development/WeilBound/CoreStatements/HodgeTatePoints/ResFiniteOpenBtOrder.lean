@@ -4,7 +4,7 @@ public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.Tra
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUnitFormLocalizationEtaleNbhd
 public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.DualOrder
 public import Mathlib.RingTheory.IntegralClosure.IntegrallyClosed
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BaseChangePointsCompatStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BaseChangePointsCompat
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BtOrderComapHomStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteOpenHopfOrder
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.HtatBcPull
@@ -12,8 +12,9 @@ public import Development.WeilBound.CoreStatements.HodgeTatePoints.HtatDesc
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.HtatHens
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.HtatHopfFlat
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.HtatHopfTop
-import Development.WeilBound.CoreStatements.HodgeTatePoints.TwhopfFin
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.TwhopfInd
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsBaseChangeGroup
+import Development.WeilBound.CoreStatements.HodgeTatePoints.TwhopfFin
 import Development.WeilBound.CoreStatements.HodgeTatePoints.TwhopfSec
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -55,7 +56,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsBaseChangeGroupStatement
 
 @[expose] public section
 
@@ -64,7 +64,7 @@ open GlobalTheory.CompanionTheory.Ar.BT ReciprocityTheory.ChartRestriction.G.Sem
 
 namespace PositivityTheory.HtPt.Mk
 
-variable (hE : type_of% @GlobalTheory.T.exists_base_change_group)
+variable (hE : type_of% @_root_.GlobalTheory.CompanionTheory.Ar.BT.QFGroup.exists_isBaseChange_of_injective)
 include hE
 
 theorem sub_eq_top_of : ∀ (R : Type) [CommRing R] [IsDomain R] [IsIntegrallyClosed R] (T : Type) [CommGroup T] [Finite T] (Γ : QFGroup R T) (U : Γ.G.left.Opens), Γ.IsFinOpenSub U → Γ.btOrder U = Γ.btOrder ⊤ :=
@@ -232,8 +232,8 @@ theorem res_core {R : Type} [CommRing R] [IsDomain R] [IsIntegrallyClosed R] {T 
   have hα' : ∀ h, Γ₁'.pt h ≫ a' = Γ'.pt (α h) := by
     intro h
     apply hext
-    rw [Over.comp_left, Category.assoc, ha', ← Category.assoc, GlobalTheory.T.base_change_points_compat R H Γ₁ R' Γ₁' F₁ hF₁ κ hκ h,
-      GlobalTheory.T.base_change_points_compat R T Γ R' Γ' F hF κ hκ, Category.assoc, ← Over.comp_left, hα]
+    rw [Over.comp_left, Category.assoc, ha', ← Category.assoc, _root_.GlobalTheory.CompanionTheory.Ar.BT.genericPoint_baseChange R H Γ₁ R' Γ₁' F₁ hF₁ κ hκ h,
+      _root_.GlobalTheory.CompanionTheory.Ar.BT.genericPoint_baseChange R T Γ R' Γ' F hF κ hκ, Category.assoc, ← Over.comp_left, hα]
   haveI := Γ'.quasiFinite
   haveI := Γ'.separated
   haveI := Γ'.quasiCompact

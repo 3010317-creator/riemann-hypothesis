@@ -1,10 +1,11 @@
 module
 
 public import Formalism.LocalToGlobal.CharacterGerms.RowTieFB
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.GaugeDerivEqPairingOfIntegralGaugedLawStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.GaugedFormalGroupKernelSmallOfSecondStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IntegralGermsIndependentOfCurveSystemStatement
-public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IsIntegralGaugedFormalGroupLawPairDataStatement
+public import Development.AbelianVarietyTheory.Definitions.TeichmullerDepth.HasTeich
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.GaugeDerivEqPairingOfIntegralGaugedLaw
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.GaugedFormalGroupKernelSmallOfSecond
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IntegralGermsIndependentOfCurveSystem
+public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.IsIntegralGaugedFormalGroupLawPairData
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,10 +54,10 @@ namespace GlobalTheory.RowLaw
 
 theorem germs_deriv_kernel_of_formal : IntegralGermIndependentAllCharts ∧ CEqFBSt ∧ IndependenceBoundAllCharts :=
   ⟨fun C _ _ V O _ _ dd Y d _ I _ p H =>
-      GlobalTheory.T.integralGerms_independent_of_curveSystem C V d I (Fin dd) (Y.raw p) (GlobalTheory.T.isIntegralGaugedFormalGroupLaw_pairData C V O dd Y d I p) H,
+      _root_.GlobalTheory.RowLaw.intGerm_indep_of_rlaw C V d I (Fin dd) (Y.raw p) (_root_.GlobalTheory.RowLawPair.rLaw_pairData C V O dd Y d I p) H,
     fun C _ _ V O _ _ dd Y d _ I _ p _ H =>
-      GlobalTheory.T.gaugeDeriv_eq_pairing_of_integralGaugedLaw C V d I (Fin dd) (Y.raw p) (GlobalTheory.T.isIntegralGaugedFormalGroupLaw_pairData C V O dd Y d I p) H,
+      _root_.GlobalTheory.RowLaw.cEqSt_of_rLaw C V d I (Fin dd) (Y.raw p) (_root_.GlobalTheory.RowLawPair.rLaw_pairData C V O dd Y d I p) H,
     fun C _ _ V O _ _ dd Y d _ I _ p hr H h2 =>
-      GlobalTheory.T.gaugedFormalGroup_kernel_small_of_second C V d I (Fin dd) (Y.raw p) (GlobalTheory.T.isIntegralGaugedFormalGroupLaw_pairData C V O dd Y d I p) hr H h2⟩
+      _root_.GlobalTheory.RowKernel.independenceBoundCondition_of_rankMaximalCondition C V d I (Fin dd) (Y.raw p) (_root_.GlobalTheory.RowLawPair.rLaw_pairData C V O dd Y d I p) hr H h2⟩
 
 end GlobalTheory.RowLaw

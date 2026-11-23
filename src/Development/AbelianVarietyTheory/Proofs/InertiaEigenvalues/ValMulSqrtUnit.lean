@@ -2,13 +2,22 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdmissibleEmptyOfGood
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HasInfExpMulOfIsOpenKer
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HeckeCharLocPowEqOneOnLocalUnitsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ValuationEmbeddingGeneratorEqOneStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ValuationSqrtAbsNormEqOneStatement
+public import Formalism.LocalToGlobal.UnitaryNorms.IsUnitaryNormOf
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.HeckeCharLocPowEqOneOnLocalUnits
+public import Mathlib.Basic.Complex.Basic
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.DedekindDomain.Ideal.Lemmas
+public import Mathlib.RingTheory.Valuation.ValuationSubring
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ValuationEmbeddingGeneratorEqOne
+public import Mathlib.Analysis.Real.Sqrt
+public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ValuationSqrtAbsNormEqOne
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HasInfExpIffHasInfQ
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeCharacterUnramifiedAeAndExistsLevel
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HasInfExpOfOrder
 public import Formalism.LocalToGlobal.UnitaryNorms.CharProd
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IMemSiegel
+public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.HeckeCharacterUnramifiedAeAndExistsLevel
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,8 +59,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Development.AbelianVarietyTheory.Definitions.Divisors.PerCEmb
 import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.DatEqZero
-public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IMemSiegel
-public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsInertTop
 
 @[expose] public section
@@ -173,7 +180,7 @@ theorem val_mul_sqrt_unit : ∀ (D : D7) (V W : HSp D) (B : Base V W), B.Good �
   have hroot : ∀ (v : HeightOneSpectrum (𝓞 D.host.E)) (x : D.host.Eˣ), IsUnitAt v (atFin v x) →
       A.valuation ((χ.locK v x : ℂˣ) : ℂ) = 1 := by
     intro v x hx
-    obtain ⟨m, hm, hxm⟩ := GlobalTheory.T.heckeChar_loc_pow_eq_one_on_localUnits _ χ v _ hx
+    obtain ⟨m, hm, hxm⟩ := _root_.GlobalTheory.LocUnitPow.loc_pow_eq_one _ χ v _ hx
     apply val_eq_one_of_pow A hm.ne'
     rw [← Units.val_pow_eq_pow_val, show χ.locK v x = χ.loc v (atFin v x) from rfl, hxm, Units.val_one, map_one]
   have hw : ∀ τ, A.valuation (tauE D τ (k : D.host.E) / ((‖tauE D τ (k : D.host.E)‖ : ℝ) : ℂ)) = 1 := by
@@ -186,9 +193,9 @@ theorem val_mul_sqrt_unit : ∀ (D : D7) (V W : HSp D) (B : Base V W), B.Good �
     have e : (tauE D τ (k : D.host.E) / ((‖tauE D τ (k : D.host.E)‖ : ℝ) : ℂ)) ^ 2 =
         tauE D τ (k : D.host.E) / starRingEnd ℂ (tauE D τ (k : D.host.E)) := by
       rw [div_pow, hn]; field_simp
-    have h1 : A.valuation (tauE D τ (k : D.host.E)) = 1 := GlobalTheory.T.valuation_embedding_generator_eq_one' _ A p hp hpA P hpP α h hα (tauE D τ)
+    have h1 : A.valuation (tauE D τ (k : D.host.E)) = 1 := _root_.GlobalTheory.valuation_embedding_generator_eq_one _ A p hp hpA P hpP α h hα (tauE D τ)
     have h2 : A.valuation (starRingEnd ℂ (tauE D τ (k : D.host.E))) = 1 :=
-      GlobalTheory.T.valuation_embedding_generator_eq_one' _ A p hp hpA P hpP α h hα ((starRingEnd ℂ).comp (tauE D τ))
+      _root_.GlobalTheory.valuation_embedding_generator_eq_one _ A p hp hpA P hpP α h hα ((starRingEnd ℂ).comp (tauE D τ))
     rw [e, map_div₀, h1, h2, div_one]
   have hinfv : A.valuation ((χ.inf k : ℂˣ) : ℂ) = 1 := by
     rw [hχinf k, map_prod]
@@ -208,7 +215,7 @@ theorem val_mul_sqrt_unit : ∀ (D : D7) (V W : HSp D) (B : Base V W), B.Good �
     refine val_eq_one_of_pow A (m := M) (by have h3 := hN; rw [hM] at h3; omega) ?_
     rw [map_pow]; exact key
   have hfinal : A.valuation (((χ.val P : ℂˣ) : ℂ) * ((Real.sqrt (Ideal.absNorm P.asIdeal) : ℝ) : ℂ)) = 1 := by
-    rw [map_mul, hvalP, GlobalTheory.T.valuation_sqrt_absNorm_eq_one' _ A p hp hpA P hpP, one_mul]
+    rw [map_mul, hvalP, _root_.GlobalTheory.valuation_sqrt_absNorm_eq_one _ A p hp hpA P hpP, one_mul]
   exact ⟨(A.valuation_le_one_iff _).1 hfinal.le, (A.valuation_le_one_iff _).1 (by rw [map_inv₀, hfinal, inv_one])⟩
 
 end GlobalTheory.UnitOverP

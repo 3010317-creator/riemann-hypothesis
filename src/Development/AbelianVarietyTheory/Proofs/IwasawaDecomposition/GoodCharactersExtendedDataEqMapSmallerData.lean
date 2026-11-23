@@ -9,7 +9,8 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForm
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.DsExistsOfDiscreteSeriesExists
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HarishChandraFinite
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsAbsIrrCharMapRingHomStatement
+public import Formalism.LocalToGlobal.Divisibility.GoodPartHermitianSpec
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsAbsIrrCharMapRingHom
 import Formalism.LocalToGlobal.Divisibility.ProjLemmas
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -116,7 +117,7 @@ theorem good_transport {K K' G G' : Type} [Field K] [Field K'] [CharZero K] [Cha
   have sup : ∀ χ ∈ X, (fun g => φ (χ (e.symm g))) ∈ X' := by
     intro χ hχ
     obtain ⟨hirr, hsum⟩ := (hX χ).1 hχ
-    refine (hX' _).2 ⟨isAbsIrrChar_comp e.symm (GlobalTheory.T.isAbsIrrChar_map_ringHom φ χ hirr), ?_⟩
+    refine (hX' _).2 ⟨isAbsIrrChar_comp e.symm (_root_.GlobalTheory.AbsIrrMap.isAbsIrrChar_map φ χ hirr), ?_⟩
     rw [← Equiv.sum_comp e.toEquiv]
     simp only [MulEquiv.toEquiv_eq_coe, MulEquiv.coe_toEquiv, MulEquiv.symm_apply_apply, hc, hφ, map_one]
     exact hsum

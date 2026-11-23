@@ -1,14 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsPeriodHom
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegrationOverCyclesHomStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIntegrationOverCyclesHom
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FamUnifHolds
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FibrePeriodEqFamilyPeriodValueStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.GaussManinPeriodsOfParts
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegrationOverCyclesLiftsLieLatticeStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PchernOfStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeriodHomPushEndStatement
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeriodsExistAffineZeroSectionStatement
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PeriodsExistAffineZeroSection
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,7 +51,7 @@ import Mathlib.Tactic.NormNum.RealSqrt
 namespace GlobalTheory.AnPer
 
 theorem gaussManinPeriods_of_span_taylor : PSpan → PTaylor → GlobalTheory.Published.GaussManinPeriods :=
-  fun HS HT ↦ gaussManinPeriods_of_parts (-1) GlobalTheory.PeriodFamily.famUnif_holds GlobalTheory.T.periods_exist_affine_zero_section GlobalTheory.T.exists_integrationOverCyclesHom HS
+  fun HS HT ↦ gaussManinPeriods_of_parts (-1) GlobalTheory.PeriodFamily.famUnif_holds _root_.GlobalTheory.AnPer.periods_exist _root_.GlobalTheory.AnPer.pHom HS
     GlobalTheory.T.integrationOverCycles_lifts_lieLattice GlobalTheory.T.periodHom_push_end' GlobalTheory.T.pChern_neg_one GlobalTheory.T.fibrePeriod_eq_familyPeriod_value HT
 
 end GlobalTheory.AnPer

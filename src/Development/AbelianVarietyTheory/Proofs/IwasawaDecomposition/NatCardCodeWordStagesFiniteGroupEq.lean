@@ -4,7 +4,8 @@ public import Formalism.LocalToGlobal.HilbertRowConditions.KaTiedIffKapDef
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.HostPins
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsUniqueHcharOfFiniteOrder
 public import Development.AbelianVarietyTheory.PublishedTheorems.WeberRayClassFields.WeberRayFieldSt
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsSmallFieldClassFieldPiecesStatement
+public import Formalism.LocalToGlobal.HilbertRowConditions.IsHilbertCF
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsSmallFieldClassFieldPieces
 import Formalism.SharpRestriction.Divisibility.LiftErrorLocal
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -179,7 +180,7 @@ theorem oTied_of_ksExact : GlobalArtinReciprocity → WeberRayFieldSt → ∀ (X
     (δ : FieldDat X.B.toPre), X.B.KsExact δ f → ∀ T : HostTied X.toD7, ∃ O : OTied X.toD7 T (Fr.at X f),
       O.pieces.rcf = qb T.fr.ι δ.ray ∧ O.pieces.MDel = qb T.fr.ι δ.M' := by
   intro hA hW X f δ hx T
-  obtain ⟨P, -, hR, hM, hD, hK⟩ := GlobalTheory.T.exists_smallField_classFieldPieces hA hW X f δ T
+  obtain ⟨P, -, hR, hM, hD, hK⟩ := _root_.GlobalTheory.SmallFieldPieces.exists_pieces hA hW X f δ T
   have hq := ksQ_eq X f δ hx T P hR hM hD hK
   refine ⟨⟨P, X.B.OtoLL_injective, fun x => ?_⟩, hR, hD⟩
   rw [hq]

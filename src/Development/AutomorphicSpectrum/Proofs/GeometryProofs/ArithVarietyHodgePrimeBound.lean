@@ -3,9 +3,13 @@ module
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.IsLatFamilyCongr
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsLatFlagPair
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.UnramifiedPrimeIdempotent
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianSchemePointObjectStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.PushInvertible
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianSchemePointObject
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FullTorsionIntegrallyClosed
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.EqOfSpecializes
+public import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
+public import Mathlib.RingTheory.RootsOfUnity.CyclotomicUnits
+public import Mathlib.RingTheory.RootsOfUnity.Lemmas
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -19,15 +23,12 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.LinearAlgebra.FreeModule.IdealQuotient
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
 import Mathlib.RingTheory.Coalgebra.IsFrobenius
 import Mathlib.RingTheory.Radical.NatInt
-public import Mathlib.RingTheory.RootsOfUnity.CyclotomicUnits
-public import Mathlib.RingTheory.RootsOfUnity.Lemmas
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Echelon.Zsqrtd
 import Mathlib.Tactic.Inclusion.Extension.Core.Core
@@ -248,7 +249,7 @@ theorem exists_root (A : HodgeCpt Y S y) (hpq : 0 < D.p + D.q) {p : ℕ} (hp : p
     ∃ ζ : Ω, IsPrimitiveRoot ζ p := by
   haveI : CharZero Ω := charZero_of_injective_ringHom A.cst.injective
   obtain ⟨x, hx⟩ := exists_point A
-  obtain ⟨s0, o, ⟨m0⟩⟩ := GlobalTheory.T.abelian_scheme_point_object E H D l Xo c O₀ β Y A.X A.f A.t A.m Ω A.ξ x hx
+  obtain ⟨s0, o, ⟨m0⟩⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ObjAt.exists_obj_at E H D l Xo c O₀ β Y A.X A.f A.t A.m Ω A.ξ x hx
   have hN : 0 < p ^ A.R p := pow_pos hp.pos _
   obtain ⟨ζ, hζ⟩ := GlobalTheory.CompanionTheory.Ar.OmLink.root o A.t m0 (A.tors p hpS) hN hpq
   have hR : 1 ≤ A.R p := by have := A.R_ge p hpS; omega

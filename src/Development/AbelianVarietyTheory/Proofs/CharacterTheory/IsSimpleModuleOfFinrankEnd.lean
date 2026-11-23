@@ -3,6 +3,8 @@ module
 public import Mathlib.Basic.Complex.Basic
 public import Mathlib.LinearAlgebra.Dimension.Finrank
 public import Mathlib.RingTheory.SimpleModule.Basic
+public import Mathlib.LinearAlgebra.Dimension.Finite
+public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -44,10 +46,9 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-import Development.AbelianVarietyTheory.BlockTheory.IrreducibleCharacters.CuspidalCharacters
+import Mathlib.RepresentationTheory.Irreducible
+import Development.AbelianVarietyTheory.Proofs.CharacterTheory.ImportsAlt
 import Formalism.UnipotentAdelicQuotients.CuspEllipticValues
-public import Mathlib.LinearAlgebra.Dimension.Finite
-public import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 
 @[expose] public section
 

@@ -5,13 +5,14 @@ public import Formalism.LocalToGlobal.ProjectiveLattices.PetersonNormSubspace
 public import Formalism.LocalToGlobal.ProjectiveLattices.UnFree
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFullLevelGroupDataSameCovolume
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemFullLevelGroupIffCongruenceLcm
+public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.NormConst
+public import Formalism.LocalToGlobal.ProjectiveLattices.FreeBridge
 import Development.AbelianVarietyTheory.Proofs.GenericRegularity.ImNegOfFramePeriodVector
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsUnfFamily
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.FinrankEqOfInjectiveOfSpan
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.PrincipalGroupActsFreelyOnFlagsStatement
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.PrincipalLevelGroupFiniteIndexUnitaryStabiliserStatement
-import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.TransvectionMemPrincipalCongruenceGroupStatement
-public import Formalism.LocalToGlobal.ProjectiveLattices.FreeBridge
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.PrincipalGroupActsFreelyOnFlags
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.PrincipalLevelGroupFiniteIndexUnitaryStabiliser
+import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.TransvectionMemPrincipalCongruenceGroup
 import Formalism.LocalToGlobal.ProjectiveLattices.UnifDom
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -53,7 +54,6 @@ import Development.AbelianVarietyTheory.Definitions.Divisors.AevalEqZeroOfMemCon
 import Development.AbelianVarietyTheory.Definitions.Divisors.NormNegCmConstantEqAtAllEmbeddings
 import Development.AbelianVarietyTheory.Definitions.Divisors.SemiposAtOfPositive
 import Development.AbelianVarietyTheory.Definitions.Divisors.TupleReadBaseTupleEqFamily
-public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.NormConst
 import Development.AbelianVarietyTheory.Definitions.Foundations.IsProbabilityMeasureMuPart
 
 @[expose] public section
@@ -110,9 +110,9 @@ theorem selfDual_and_congr_free (E : Type) [Field E] [NumberField E] [IsCMField 
     obtain ⟨Pm, h1, h2, -⟩ := hun k ⟨x, hx⟩
     exact GlobalTheory.FrameSign.im_neg_of_isPeriod E H Dw l c σ g e _ r (U.X k) (φ k) hσ hr (hty k).1 (hty k).2 (hef k)
       x hx Pm h1 h2 (by omega)
-  obtain ⟨m, hm, ht⟩ := GlobalTheory.T.transvection_mem_principalCongruenceGroup E H l _ r _ _ φ0 hξ hlat
-  have hi := GlobalTheory.T.principalLevelGroup_finiteIndex_unitaryStabiliser E H l _ r _ _ φ0 hξ hlat
-  have hf := GlobalTheory.T.principalGroup_acts_freely_on_flags E H l _ r _ _ φ0 hξ hlat (U.X k).Ψ (U.X k).p0 (hty k).2
+  obtain ⟨m, hm, ht⟩ := _root_.GlobalTheory.PrincTransv.transv_mem_princ E H l _ r _ _ φ0 hξ hlat
+  have hi := _root_.GlobalTheory.FrameUnif.princ_finiteIndex E H l _ r _ _ φ0 hξ hlat
+  have hf := _root_.GlobalTheory.PrincFree.princ_free E H l _ r _ _ φ0 hξ hlat (U.X k).Ψ (U.X k).p0 (hty k).2
   have hmem : ∀ γ : GL (Fin r) E, γ ∈ princ l (U.X k).Gm (F.Di (ik k)) φ0 ↔ IsUStab (U.X k).Gm (U.X k).Λ γ ∧
       (∀ a ∈ l.Mb.map (H.bar : 𝓞 E →+* 𝓞 E) • (⊤ : Submodule (𝓞 E) (F.Di (ik k)).La), ∃ b : (F.Di (ik k)).La,
         (γ : Matrix (Fin r) (Fin r) E).mulVec (φ k a : Fin r → E) =

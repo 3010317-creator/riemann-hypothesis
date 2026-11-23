@@ -3,7 +3,8 @@ module
 public import Formalism.LocalToGlobal.GaloisLevelStructure.DefsAutLoc
 public import Development.AbelianVarietyTheory.Proofs.CharacterTheory.ExistsCharacterEigenvectorOfCommutingRepresentat
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HasSatakeGLOfIsSatVecGL
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteDoubleCosetsDefiniteUnitaryMaximalLevelStatement
+public import Formalism.AlgebraicWeights.IsAlgWeight
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteDoubleCosetsDefiniteUnitaryMaximalLevel
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.CongruenceElementDecomposeStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FiniteDimensionalForms
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertHeckeOperatorBilinearStatement
@@ -11,6 +12,7 @@ public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertHeck
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertHeckeOperatorPreservesLevelInvariantsStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertHeckeOperatorPreservesRightTranslationStablStatement
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InertHeckeOperatorSphericalUnitEqIdStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InvMemDoubleCosetAndComm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -52,7 +54,6 @@ import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.NStage
 import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ExistsReadingLaws
 import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.RankOneUnitary
 import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ThetaMod
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsContinuousPadic
 import Formalism.LocalToGlobal.NormalizedHeckeFactors.TypesDefs
 
 @[expose] public section
@@ -153,7 +154,7 @@ theorem exists_satAt : ∀ (L : Type) [Field L] [NumberField L] [IsCMField L] (n
       smul_mem' := fun c f hf => ⟨π.S.smul_mem c hf.1, fun κ hκ => by rw [map_smul, hf.2 κ hκ]⟩ }
   haveI : FiniteDimensional ℂ π.W := π.alg.1
   haveI : FiniteDimensional ℂ V := by
-    have := GlobalTheory.AlgFormsFin.fixedForms_finite L n π.ρ (GlobalTheory.T.finite_doubleCosets_definiteUnitary_maximalLevel L n) hN
+    have := GlobalTheory.AlgFormsFin.fixedForms_finite L n π.ρ (_root_.GlobalTheory.DefiniteClassFinite.exists_finset_double_cosets_Umax L n) hN
     refine Submodule.finiteDimensional_of_le (S₂ := GlobalTheory.AlgFormsFin.fixedForms L n π.ρ N) ?_
     rintro f ⟨hfS, hfU⟩
     exact ⟨(π.irrS.1.le hfS).1, fun κ hκ g => congrFun (hfU κ (hCU κ hκ)) g⟩

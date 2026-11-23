@@ -2,7 +2,7 @@ module
 
 public import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.TranslateProduct
 public import Development.AbelianVarietyTheory.Definitions.Divisors.EntireEqOfHalfPlane
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralWeierstrassPTorsionNonrealMultiplierStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegralWeierstrassPTorsionNonrealMultiplier
 public import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.AnalyticIdentityTheorems.MulStableIntegral
 public import Formalism.LocalToGlobal.TorsionIntegrality.EisensteinTranslationProducts.AnalyticIdentityTheorems.QuasiPeriodConstIsogeny
 import Mathlib.Algebra.Order.Floor.Extended
@@ -67,7 +67,7 @@ theorem main : ∀ (L : PeriodPair) (α β Ω P : ℂ) (M n : ℕ), MulStable L 
   have hcardn : S.card + 1 = n := by
     rw [hnorm] at hcard
     exact_mod_cast hcard
-  have hVL := (GlobalTheory.T.isIntegral_weierstrassP_torsion_nonreal_multiplier L β Ω (M * n) hβ hβim hΩ (Nat.mul_pos hM hn)).2
+  have hVL := (_root_.GlobalTheory.WpFam.LatTorsVal.main L β Ω (M * n) hβ hβim hΩ (Nat.mul_pos hM hn)).2
   have hnat : ∀ (k : ℕ) (x : ℂ), x ∈ L.lattice → (k : ℂ) * x ∈ L.lattice := by
     intro k x hx
     have := L.lattice.nsmul_mem hx k

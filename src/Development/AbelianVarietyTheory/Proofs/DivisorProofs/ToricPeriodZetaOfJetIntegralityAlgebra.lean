@@ -6,12 +6,15 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.Sie
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.HeckeTateFunctionalEquationCM
 public import Development.AbelianVarietyTheory.Definitions.Divisors.JetAnalytic
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HypothesisBundleConversions
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmLatticeDerivClassInvarianceOfHeckeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeWeightTwoContinuationOfFunctionalEquationStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeValueIntegralityRamifiedOfExpansionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeValueIntegralityUnramifiedOfJetIntegralitStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.DefiningCoordinates
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.OmegaFactorization
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CmLatticeDerivClassInvarianceOfHecke
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckeWeightTwoContinuationOfFunctionalEquation
+public import Development.AbelianVarietyTheory.Definitions.Divisors.TorsTransport
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeValueIntegralityRamifiedOfExpansion
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LatticeValueIntegralityUnramifiedOfJetIntegralit
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormFactorialInvLe
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToricPeriodZetaOfLatticeValueStatementsStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToricPeriodZetaOfLatticeValueStatements
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,6 +52,6 @@ import Mathlib.Tactic.NormNum.RealSqrt
 
 theorem GlobalTheory.JoinFun.joinOut_of_jetInt : GlobalTheory.Published.EllipticMainTheoremCM → GlobalTheory.Published.HilbertClassFieldJ → GlobalTheory.Published.SiegelKlingenDeligneRibet → GlobalTheory.Published.PartialZetaFunctionalEquation → GlobalTheory.Published.HeckeTateFunctionalEquation → GlobalTheory.LatJet.JetInt → GlobalTheory.LatVal.LatAlg → GlobalTheory.LatVal.LatConj → GlobalTheory.Mem.LiteralAutomorphy.JoinOut := by
   intro hEM hHCF hSKDR hPZ hHT hJetInt hLatAlg hLatConj
-  have hS44 := GlobalTheory.T.cmLattice_derivClassInvariance_of_hecke (GlobalTheory.T.heckeWeightTwoContinuation_of_functionalEquation hPZ)
-  exact GlobalTheory.T.toricPeriodZeta_of_latticeValue_statements hEM hHCF hSKDR hHT (GlobalTheory.T.latticeValueIntegrality_ramified_of_expansion hS44 (GlobalTheory.JetExp.expansion_of_jetInt hJetInt))
-    (GlobalTheory.T.latticeValueIntegrality_unramified_of_jetIntegrality hS44 hJetInt) hLatAlg hLatConj
+  have hS44 := _root_.GlobalTheory.DerivAtOrigin.statement (_root_.GlobalTheory.HeckeTwo.heckeWeightTwo_of_fe hPZ)
+  exact _root_.GlobalTheory.JoinFun.joinOut_of_lat hEM hHCF hSKDR hHT (_root_.GlobalTheory.LatValRam.latIntRam hS44 (GlobalTheory.JetExp.expansion_of_jetInt hJetInt))
+    (_root_.GlobalTheory.LatValUnr.latIntUnr hS44 hJetInt) hLatAlg hLatConj

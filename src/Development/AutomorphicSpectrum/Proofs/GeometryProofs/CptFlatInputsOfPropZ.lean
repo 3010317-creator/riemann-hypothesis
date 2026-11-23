@@ -4,11 +4,19 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.Generic
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.PropZ
 public import Mathlib.NumberTheory.NumberField.Basic
 public import Mathlib.RingTheory.DedekindDomain.AdicValuation.Valuation
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DvrModelOfNumberFieldPlaceStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsPrimeDividingUniformizerStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteTypeOverIntegersModelStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeGeneratorInvertConstantStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProperDvrModelLatticeValuationStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsGenOfIsVBOne
+public import Mathlib.AlgebraicGeometry.Morphisms.Proper
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.DvrModelOfNumberFieldPlace
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsPrimeDividingUniformizer
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.CoordsAt
+public import Mathlib.AlgebraicGeometry.Morphisms.FiniteType
+public import Mathlib.AlgebraicGeometry.Morphisms.QuasiCompact
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FiniteTypeOverIntegersModel
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.LevelSectionsExactKernelLocusOpen
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsGenericFlag
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LatticeGeneratorInvertConstant
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ProperDvrModelLatticeValuation
+public import Mathlib.RingTheory.DedekindDomain.FiniteAdeleRing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -27,7 +35,6 @@ import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
 import Mathlib.NumberTheory.LucasLehmer
 import Mathlib.NumberTheory.SelbergSieve
-public import Mathlib.RingTheory.DedekindDomain.FiniteAdeleRing
 import Mathlib.RingTheory.Radical.NatInt
 import Mathlib.RingTheory.WittVector.IsPoly
 import Mathlib.Tactic.Basify
@@ -100,8 +107,8 @@ theorem exists_orders (hZ : PropZ) {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ :
         OrderAt L σ (ψ π) M a p := by
     intro v π hπ
     obtain ⟨O, _, _, _, _, X', ξ', s, g, ϖ, hs, hϖ, hinj, hξs, hξg, hgen', hall', hϖπ, hrange, hreg, hsurj⟩ :=
-      GlobalTheory.T.dvr_model_of_number_field_place X Ω ξ κ x F' ψ v π hall ht hN hπ
-    obtain ⟨ℓ, hℓ, hℓv⟩ := GlobalTheory.T.exists_prime_dividing_uniformizer F' v π hπ
+      _root_.GlobalTheory.CompanionTheory.Ar.Flat.LocModel.exists_localisation X Ω ξ κ x F' ψ v π hall ht hN hπ
+    obtain ⟨ℓ, hℓ, hℓv⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Rescar.exists_prime_div_uniformiser F' v π hπ
     obtain ⟨u, hu⟩ : ∃ u : O, algebraMap O Ω u = ψ ((ℓ : F') / π) :=
       (hrange _).2 ⟨_, hℓv, rfl⟩
     have hπ0 : π ≠ 0 := by
@@ -142,13 +149,13 @@ theorem exists_orders (hZ : PropZ) {X : Scheme.{0}} {Ω : Type} [Field Ω] {ξ :
         · rw [hy₀, ← map_mul, mul_inv_cancel₀ hb0, map_one, map_one]
     have hℓu : (ℓ : Ω) = algebraMap O Ω (ϖ * u) := by
       rw [map_mul, hϖπ, hu, ← map_mul, mul_div_cancel₀ _ hπ0, map_natCast]
-    obtain ⟨M, a, hM, h⟩ := @GlobalTheory.T.proper_dvr_model_lattice_valuation X X' Ω _ _ ξ ξ' g O _ _ _ _ s hs ϖ L σ ℓ u hZ hϖ hinj hξs hξg ht.gen hgen' hall'
+    obtain ⟨M, a, hM, h⟩ := @_root_.GlobalTheory.CompanionTheory.Ar.Flat.PlaceOrd.order_at_place X X' Ω _ _ ξ ξ' g O _ _ _ _ s hs ϖ L σ ℓ u hZ hϖ hinj hξs hξg ht.gen hgen' hall'
       hN hcc hreg hL hg hℓu (hp ℓ hℓ)
     refine ⟨M, a, hM, fun p hv => ?_⟩
     have := h p (hsurj p hv)
     rwa [hϖπ] at this
-  obtain ⟨s, hs1, hs2, hs3⟩ := GlobalTheory.T.finite_type_over_integers_model X Ω ξ κ x hall ht
-  obtain ⟨n, hn, hgn⟩ := @GlobalTheory.T.lattice_generator_invert_constant X Ω _ ξ ℤ _ _ _ s _ hs1 hs2 hs3 (Int.cast_injective) ht.gen L Set.univ 1 σ
+  obtain ⟨s, hs1, hs2, hs3⟩ := _root_.GlobalTheory.CompanionTheory.Ar.ChartFType.main X Ω ξ κ x hall ht
+  obtain ⟨n, hn, hgn⟩ := @_root_.GlobalTheory.CompanionTheory.Ar.Flat.lattice_generator_spread X Ω _ ξ ℤ _ _ _ s _ hs1 hs2 hs3 (Int.cast_injective) ht.gen L Set.univ 1 σ
     one_ne_zero (fun _ _ => trivial) hL hg
   have hn' : ((n : F'))⁻¹ ≠ 0 := inv_ne_zero (by exact_mod_cast hn)
   have hfin := HeightOneSpectrum.Support.finite (𝓞 F') ((n : F'))⁻¹

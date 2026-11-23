@@ -1,7 +1,7 @@
 module
 
 public import Formalism.RealPlaceAnalysis.StatementE
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.QuantumMinorColumnExpansionUnderLinearMapStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.QuantumMinorColumnExpansionUnderLinearMap
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -107,7 +107,7 @@ theorem quantumMinor_columnSteps_partial (M Wp : Type) [AddCommGroup M] [Module 
       have := i.isLt
       rw [Fin.lt_def, ha, hbl]; omega
     have hq := fun i => hp (a i) (b (Fin.last _)) (hlt i) (by rw [hbl]; omega)
-    obtain ⟨e, he, heu⟩ := GlobalTheory.T.quantumMinor_column_expansion_under_linearMap M Wp _ (k + j) E l a b (fun i => a i.castSucc)
+    obtain ⟨e, he, heu⟩ := _root_.GlobalTheory.CapStepCol.cap_step_col M Wp _ (k + j) E l a b (fun i => a i.castSucc)
       (fun i => b i.castSucc) (a (Fin.last _)) (b (Fin.last _))
       (p (a (Fin.last _)) (b (Fin.last _))) hE hai hbi
       (hai.comp (Fin.castSucc_injective _)) (hbi.comp (Fin.castSucc_injective _))

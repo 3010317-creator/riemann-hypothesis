@@ -10,9 +10,10 @@ public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsA
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsCountableModel
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsRingHomComplexOfCountableOfRelations
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ExistsThetaPointComplexDegenerationSmallStatement
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.SepticCharacterInjective
+public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaConstantTermRepresentativeDependence
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.FamiliesValuesCorrespond
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.HomTransport
-public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.ThetaConstantTermRepresentativeDependenceStatement
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorsionPairingValuesOfFamiliesValues
 import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.TorusTorsionPointsCorrespondValues
 import Mathlib.Algebra.Order.Floor.Extended
@@ -89,7 +90,7 @@ theorem arcTx_qEq {O : Type} [CommRing O] (N : NumD O) (be : LinearMap.BilinForm
   have hx : p'.1.1.toAdd + m • χ = p.1.1.toAdd + m • (χ + m • z) := by
     rw [h1, smul_add, smul_smul, ← pow_two]
     abel
-  simp only [Equiv.coe_addRight, hx, (GlobalTheory.T.thetaConstantTerm_representative_dependence O N m ho p p' χ).1 z h1 h2]
+  simp only [Equiv.coe_addRight, hx, (_root_.GlobalTheory.Ex.txT_shift O N m ho p p' χ).1 z h1 h2]
 
 private theorem map_finsum_of_injective' {α M M' : Type*} [AddCommMonoid M] [AddCommMonoid M'] (φ : M →+ M')
     (hφ : Function.Injective φ) (g : α → M) : φ (∑ᶠ a, g a) = ∑ᶠ a, φ (g a) := by

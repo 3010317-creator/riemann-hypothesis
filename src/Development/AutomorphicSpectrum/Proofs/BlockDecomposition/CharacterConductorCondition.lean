@@ -3,7 +3,8 @@ module
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.SiegelWeilFormula.UnramifiedWhittaker.BasisSet
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ImportsExtraMore
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.FlagStabilizerTensors.RootLatticeThresholds.CompactCovering.NCovAd
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.IntAdCpctOpen
+public import Formalism.LocalToGlobal.AdelicCompactOpens.IntAdelesCompactOpen
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.AdicIntegersCompact.IsCompactAdicCompletionIntegers
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -164,7 +165,7 @@ theorem exists_int_kernel {ψ : AddChar (AF F) ℂ} (hψ : IsCharAF F ψ) :
   have h00 : ψ (pairA F 0 0) = 1 := by
     have : pairA F (0 : Ainf F) (0 : Af F) = 0 := rfl
     rw [this]; exact AddChar.map_zero_eq_one ψ
-  have hI : IsCompact (Formalism.UG.intAd F : Set (Af F)) := (finiteAdeleIntegers_compactOpen F).2
+  have hI : IsCompact (Formalism.UG.intAd F : Set (Af F)) := (_root_.PI.IntAdCpctOpenWork.main F).2
   obtain ⟨u, w, hu, -, h0u, hIw, huw⟩ := generalized_tube_lemma (isCompact_singleton (x := (0 : Af F))) hI hno
     (by
       rintro ⟨a, b⟩ ⟨ha, -⟩

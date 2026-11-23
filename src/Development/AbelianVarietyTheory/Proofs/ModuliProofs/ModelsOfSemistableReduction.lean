@@ -2,10 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Statements.SemistableTorsion.ArcFamSt
 public import Development.AbelianVarietyTheory.PublishedTheorems.SemistableReduction₂.SemistableReductionSt
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsFullLevelAmpleModelOfSemistableReductionStatement
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLocalModelSystemsAmpleFramesStatement
+public import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.TopAmpExists
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsFullLevelAmpleModelOfSemistableReduction
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.HeckeKer
+public import Development.AbelianVarietyTheory.Definitions.Degenerations.HomExtSt
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsLocalModelSystemsAmpleFrames
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ModuliSchemeLevelMapsHeckePoints
 import Development.AbelianVarietyTheory.Proofs.ModuliProofs.HomExtensionSemiAbelianDiscreteValuationRing
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ModuliSchemeLevelMapsHeckePointsStatement
 import Development.AbelianVarietyTheory.Proofs.UniformizationProofs.AllSixAbelianSchemeLawsHoldStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -54,7 +58,7 @@ open scoped CategoryTheory.Obj
 namespace GlobalTheory
 
 theorem modelsSt_of_semistableReduction : GlobalTheory.Published.SemistableReductionSt → GlobalTheory.LN.ModelsSt :=
-  fun S => GlobalTheory.T.exists_localModelSystems_ampleFrames GlobalTheory.homExtension_semiAbelian_dvr GlobalTheory.T.all_six_abelian_scheme_laws_hold.1 GlobalTheory.T.all_six_abelian_scheme_laws_hold.2.1
-    GlobalTheory.T.all_six_abelian_scheme_laws_hold.2.2.1 (GlobalTheory.T.exists_fullLevelAmpleModel_of_semistableReduction S) GlobalTheory.T.moduliScheme_levelMaps_heckePoints'
+  fun S => _root_.GlobalTheory.Models.exists_localSystems_ample GlobalTheory.homExtension_semiAbelian_dvr GlobalTheory.T.all_six_abelian_scheme_laws_hold.1 GlobalTheory.T.all_six_abelian_scheme_laws_hold.2.1
+    GlobalTheory.T.all_six_abelian_scheme_laws_hold.2.2.1 (_root_.GlobalTheory.topAmpExists_of_semistableReduction S) _root_.GlobalTheory.moduliScheme_levelMaps_heckePoints
 
 end GlobalTheory

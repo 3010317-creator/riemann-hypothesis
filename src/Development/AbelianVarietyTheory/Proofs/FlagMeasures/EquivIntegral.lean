@@ -2,7 +2,8 @@ module
 
 public import Formalism.SharpRestriction.CuspSpanNormBounds.CongruenceAtSplitFrobeniusHolds
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsUniquePlace
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsZEquivGramBoundedMinorsStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.FlagEEqHyperbolic
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsZEquivGramBoundedMinors
 import Mathlib.Algebra.AffineMonoid.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -571,7 +572,7 @@ theorem height_bounds : ∀ Cg cb Cu cT CT C0 A : ℝ, ∃ C : ℝ, 1 ≤ C ∧ 
       rw [← hτ, InfinitePlace.isComplex_mk_iff, ComplexEmbedding.isReal_iff]
       exact fun h => GlobalTheory.RealPlaces.ne_conj D τ τ h.symm
     obtain ⟨p, hp⟩ := hrel
-    obtain ⟨Z₂, hZ2, hbd⟩ := GlobalTheory.T.exists_zEquiv_gram_bounded_minors D.host.E hcx D.R.rS (ZhatL (lf D F0) F') p hp
+    obtain ⟨Z₂, hZ2, hbd⟩ := _root_.GlobalTheory.ReducedGram.exists_reduced D.host.E hcx D.R.rS (ZhatL (lf D F0) F') p hp
     refine ⟨Z₂, hZ2, fun j I J _ => ?_⟩
     have hfr : finrank ℚ D.host.E = 2 * D.R.f := GlobalTheory.RealPlaces.finrank_E D
     have hf1 : 1 ≤ D.R.f := le_trans (Nat.one_le_pow _ _ (by omega)) hmf

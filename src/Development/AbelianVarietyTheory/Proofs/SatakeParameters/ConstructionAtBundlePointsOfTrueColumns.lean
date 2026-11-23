@@ -3,8 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.HasPartAnd
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.JetSplitAmb
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.LevelPrimeColumnValuationsAtBundlePoints
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.JetTableBoundSplitPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PeriodValuationsTypePrimesOfJetTableSplitPrimeStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.JetTableBoundSplitPrime
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.PeriodValuationsTypePrimesOfJetTableSplitPrime
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,6 +48,6 @@ theorem row_aAtG_of_rowPin : ∀ {Bd : BdT} (Q : V4.Slot) (Lk : LkT Bd),
     (∀ K X f T c, Q K X f T c →
       (positionOf (HasPartAnd fun _ _ _ _ w Z => ∀ a, GlobalTheory.AtG.RowPin w.I w.ok w.l Z a)) K X f T c) →
     AllBundlePointProperties.ArithmeticConditionAtBundlePoints Q Lk :=
-  GlobalTheory.T.atGRows_bundlePoints_of_jetSplitAmbient GlobalTheory.T.jetTableBound_splitPrime
+  _root_.GlobalTheory.AtG.row_atG_pinned _root_.GlobalTheory.AtG.jetSplitAmb_holds
 
 end GlobalTheory.AtG

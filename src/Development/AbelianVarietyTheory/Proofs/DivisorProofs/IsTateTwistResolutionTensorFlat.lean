@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsFlipSheafComplexPairingStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsFlipSheafComplexPairing
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsIsTensorEtaleSheafComplexPairingStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsTensorUniversalPropertyStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistMulIsTensorPairingStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistMulIsTensorPairing
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TateTwistSheafIsLocallyFlat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TensorFlatComplexPreservesQuasiIsoStatement
 import Mathlib.Algebra.Order.Floor.Extended
@@ -106,13 +106,13 @@ theorem isTwRes_tensor : ∀ (q : ℕ) [NeZero q] (i j k : ℤ), i + j = k → �
   intro q _ i j k hk I J T e e' hI hJ hflat τ hτ
   obtain ⟨hIge, εI, hεI, heI⟩ := hI
   obtain ⟨hJge, εJ, hεJ, heJ⟩ := hJ
-  obtain ⟨μ, hμ, hμgen⟩ := GlobalTheory.T.tateTwist_mul_isTensorPairing q i j k hk
+  obtain ⟨μ, hμ, hμgen⟩ := _root_.GlobalTheory.EtC.TwMul.tw_mul_isTensor q i j k hk
   obtain ⟨T₁, τ₁, hτ₁⟩ := GlobalTheory.T.exists_isTensor_etaleSheafComplexPairing (ZMod q) (sgl (tw q i)) J
   have hTge : T.IsStrictlyGE 0 := (GlobalTheory.T.isTensor_universal_property (ZMod q) τ hτ).2.1 hIge hJge
   obtain ⟨u₁, hu₁, -⟩ := (GlobalTheory.T.isTensor_universal_property (ZMod q) μ hμ).1 τ₁ (𝟙 _) εJ
   obtain ⟨u₂, hu₂, -⟩ := (GlobalTheory.T.isTensor_universal_property (ZMod q) τ₁ hτ₁).1 τ εI (𝟙 J)
-  obtain ⟨ν, hμν, -, hνt⟩ := GlobalTheory.T.exists_isFlip_sheafComplexPairing (ZMod q) μ
-  obtain ⟨ν₁, hν₁, -, hν₁t⟩ := GlobalTheory.T.exists_isFlip_sheafComplexPairing (ZMod q) τ₁
+  obtain ⟨ν, hμν, -, hνt⟩ := _root_.GlobalTheory.EtC.Pair.exists_isFlip (ZMod q) μ
+  obtain ⟨ν₁, hν₁, -, hν₁t⟩ := _root_.GlobalTheory.EtC.Pair.exists_isFlip (ZMod q) τ₁
   have hflati : ∀ t, FlatS ((sgl (tw q i)).X t) := flatS_sgl (flatS_tw q i)
   have hid : ∀ {K : Cx (ZMod q)} (t : ℤ) {U : Scheme.{0}} (x : Sec (K.X t) U), Sec.map (HomologicalComplex.Hom.f (𝟙 K) t) x = x :=
     fun _ _ _ => rfl

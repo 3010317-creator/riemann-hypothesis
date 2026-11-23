@@ -2,12 +2,14 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Jets.PowerSeriesHasSumAt
 public import Mathlib.Topology.MetricSpace.Ultra.Basic
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsIntegralCoeffInterpolationBivariateSeriesStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsIntegralPolyOfCharacterStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FormalGroupNatMulSeriesEvalOpenDiscPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FormalGroupTorsionTowerExactOrderStatement
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MvPowerSeriesEvalTsumOpenPolydiscPropertiesStatement
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MvPowerSeriesIntegralBoundedClosureStatement
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsIntegralCoeffInterpolationBivariateSeries
+public import Mathlib.Algebra.Polynomial.Eval.Defs
+public import Mathlib.Analysis.Normed.Field.Basic
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsIntegralPolyOfCharacter
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FormalGroupNatMulSeriesEvalOpenDiscProperties
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.FormalGroupTorsionTowerExactOrder
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MvPowerSeriesEvalTsumOpenPolydiscProperties
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.MvPowerSeriesIntegralBoundedClosure
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -57,8 +59,8 @@ namespace GlobalTheory.ConvSer
 theorem ev_pow_of_intg (K : Type) [NormedField K] [IsUltrametricDist K] [CompleteSpace K]
     (σ : Type) [Fintype σ] (x : σ → K) (hx : ∀ i, ‖x i‖ < 1) (S : MvPowerSeries σ K)
     (hS : Intg S) (k : ℕ) : ev (S ^ k) x = ev S x ^ k := by
-  obtain ⟨-, halg, hC, -⟩ := GlobalTheory.T.mvPowerSeriesEvalTsum_openPolydisc_properties K σ x hx
-  obtain ⟨-, -, hpow, -⟩ := GlobalTheory.T.mvPowerSeries_integral_bounded_closure K σ
+  obtain ⟨-, halg, hC, -⟩ := _root_.GlobalTheory.ConvSer.ev_algebra K σ x hx
+  obtain ⟨-, -, hpow, -⟩ := _root_.GlobalTheory.BddAlg.bdd_alg K σ
   have hB : Bdd S := (hpow S 0).2.2 hS
   induction k with
   | zero => simpa using hC 1
@@ -72,8 +74,8 @@ theorem exists_intg_polynomial_level (K : Type) [NormedField K] [IsUltrametricDi
       ∀ j : ℕ, g.eval (ev1 (nMul F j) (t n)) = ζ ^ j := by
   classical
   haveI : NeZero (p ^ n) := ⟨pow_ne_zero _ (Fact.out : p.Prime).ne_zero⟩
-  have hord := (GlobalTheory.T.formalGroup_torsionTower_exact_order K p F hF t ht h0 h1 hp).2.2 n
-  obtain ⟨-, -, hnorm, hadd, -⟩ := (GlobalTheory.T.formalGroupNatMulSeries_eval_openDisc_properties K F hF).2 (t n) (ht n)
+  have hord := (_root_.GlobalTheory.ConvSer.tower_exact_order K p F hF t ht h0 h1 hp).2.2 n
+  obtain ⟨-, -, hnorm, hadd, -⟩ := (_root_.GlobalTheory.ConvSer.nMul_point K F hF).2 (t n) (ht n)
   set x : ZMod (p ^ n) → K := fun i => ev1 (nMul F i.val) (t n) with hx
   have hxlt : ∀ i, ‖x i‖ < 1 := fun i => (hnorm i.val).1.trans_lt (ht n)
   have hinj : Function.Injective x := by
@@ -91,14 +93,14 @@ theorem exists_intg_polynomial_level (K : Type) [NormedField K] [IsUltrametricDi
     rw [ZMod.val_add, ← pow_add, ← pow_eq_pow_mod _ hζ]
   have hcard : (Finset.univ.image x).card = Fintype.card (ZMod (p ^ n)) := by
     rw [Finset.card_image_of_injective _ hinj, Finset.card_univ]
-  obtain ⟨g, hg, hgx⟩ := GlobalTheory.T.exists_integral_poly_of_character' K (ZMod (p ^ n)) x (fun i => ζ ^ i.val) hinj hχ (by
+  obtain ⟨g, hg, hgx⟩ := _root_.GlobalTheory.ConvSer.exists_integral_poly_of_character K (ZMod (p ^ n)) x (fun i => ζ ^ i.val) hinj hχ (by
     intro k
-    have hc := GlobalTheory.T.exists_integral_coeff_interpolation_bivariate_series K (Finset.univ.image x) (F.toPowerSeries ^ (k : ℕ))
+    have hc := _root_.GlobalTheory.ConvSer.exists_integral_interpolation_two K (Finset.univ.image x) (F.toPowerSeries ^ (k : ℕ))
       (by
         intro y hy
         obtain ⟨i, -, rfl⟩ := Finset.mem_image.1 hy
         exact hxlt i)
-      (((GlobalTheory.T.mvPowerSeries_integral_bounded_closure K (Fin 2)).2.2.1 _ _).1 hF)
+      (((_root_.GlobalTheory.BddAlg.bdd_alg K (Fin 2)).2.2.1 _ _).1 hF)
     rw [hcard] at hc
     obtain ⟨c, hc1, hc2⟩ := hc
     refine ⟨c, hc1, fun i j => ?_⟩

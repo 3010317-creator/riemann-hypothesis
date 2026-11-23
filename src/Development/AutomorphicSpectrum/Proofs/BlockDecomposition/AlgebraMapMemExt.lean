@@ -1,9 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.RatBasisLinearIndependentInt
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConnectionOnDividedPowerBasisStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CyclotomicDividedPowerExpansionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DividedPowerPolynomialFiltrationStatement
+public import Mathlib.Algebra.Algebra.Operations
+public import Mathlib.LinearAlgebra.Basis.Defs
+public import Mathlib.LinearAlgebra.DFinsupp
+public import Mathlib.RingTheory.Ideal.Defs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConnectionOnDividedPowerBasis
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CyclotomicDividedPowerExpansion
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DividedPowerPolynomialFiltration
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -138,15 +142,15 @@ theorem main : ∀ {B : Type} [CommRing B] {J : Ideal B} (δ : DividedPowers J) 
   have hμ : x ^ p - 1 ∈ J := by
     rw [← mul_geom_sum]
     exact J.mul_mem_left _ hx
-  obtain ⟨hqn, ν, hν1, hνd, hνf, hνn, hνz⟩ := GlobalTheory.T.cyclotomic_divided_power_expansion δ p hp hpn x hx
-  obtain ⟨hfm, hfa, -, hfr⟩ := GlobalTheory.T.divided_power_polynomial_filtration δ Q η hS
+  obtain ⟨hqn, ν, hν1, hνd, hνf, hνn, hνz⟩ := _root_.GlobalTheory.CompanionTheory.QPd.dpow_pow_sub_one δ p hp hpn x hx
+  obtain ⟨hfm, hfa, -, hfr⟩ := _root_.GlobalTheory.CompanionTheory.PDFil.fil_pdPoly δ Q η hS
   have h1 : g (Q.e 1) = algebraMap B Q.P (x ^ p - 1) + algebraMap B Q.P (x ^ p) * Q.e 1 := by
     have := hg1
     rw [map_add (f := _), map_one, mul_add, mul_one, add_comm (1 : Q.P)] at this
     rw [_root_.map_sub, map_one (algebraMap B Q.P)]
     linear_combination this
   have hg := map_sub_self hS hμ hνd g hgB hgd h1
-  obtain ⟨hker, hsurj⟩ := GlobalTheory.T.connection_on_divided_power_basis Q.e (fil δ) p (x ^ p) ν (qDer Q (x ^ p) ν) hp.ne_zero hpn
+  obtain ⟨hker, hsurj⟩ := _root_.GlobalTheory.CompanionTheory.QDerivative.ker_and_surjective Q.e (fil δ) p (x ^ p) ν (qDer Q (x ^ p) ν) hp.ne_zero hpn
     hqn hfm hfa hν1 hνf hνn hνz (qDer_e Q (x ^ p) ν)
   refine ⟨fun a b hab ↦ by rw [← hrepr a, hab, hrepr], ?_, ?_⟩
   · intro r z hz hgz

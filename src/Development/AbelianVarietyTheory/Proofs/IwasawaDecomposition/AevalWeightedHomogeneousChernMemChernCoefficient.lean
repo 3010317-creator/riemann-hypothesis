@@ -1,9 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SumSumEqSumPair
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CoeffCharpolyRevMemTracePowerProductRealSpanStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TracePowerListProductMemChernCoefficientRealSpanStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TracePowerProductRealSpanMulMemStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CoeffCharpolyRevMemTracePowerProductRealSpan
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TracePowerListProductMemChernCoefficientRealSpan
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TracePowerProductRealSpanMulMem
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,7 +66,7 @@ theorem pow_mem_trSpan {ι : Type} (m : ι → ℕ) (S : Type) [CommRing S] [Alg
   | zero => simpa using one_mem_trSpan_zero m S
   | succ k ih =>
     rw [pow_succ, Nat.succ_mul]
-    exact GlobalTheory.T.tracePowerProductRealSpan_mul_mem m S (k * w) w _ _ ih hf
+    exact _root_.GlobalTheory.GoodMetric.ChernSpan.trSpan_mul m S (k * w) w _ _ ih hf
 
 theorem prod_mem_trSpan {ι κ : Type} (m : ι → ℕ) (S : Type) [CommRing S] [Algebra ℝ S] (s : Finset κ)
     (w : κ → ℕ) (f : κ → Mat m S → S) (hf : ∀ x ∈ s, f x ∈ TrSpan m (w x) S) :
@@ -78,7 +78,7 @@ theorem prod_mem_trSpan {ι κ : Type} (m : ι → ℕ) (S : Type) [CommRing S] 
     simpa using one_mem_trSpan_zero m S
   · intro a t ha ih hf
     rw [Finset.prod_insert ha, Finset.sum_insert ha]
-    exact GlobalTheory.T.tracePowerProductRealSpan_mul_mem m S _ _ _ _ (hf a (Finset.mem_insert_self a t))
+    exact _root_.GlobalTheory.GoodMetric.ChernSpan.trSpan_mul m S _ _ _ _ (hf a (Finset.mem_insert_self a t))
       (ih fun x hx => hf x (Finset.mem_insert_of_mem hx))
 
 theorem trSpan_le_reach {ι : Type} [Fintype ι] (m : ι → ℕ) (n : ℕ) (S : Type) [CommRing S] [Algebra ℝ S] :
@@ -86,7 +86,7 @@ theorem trSpan_le_reach {ι : Type} [Fintype ι] (m : ι → ℕ) (n : ℕ) (S :
   unfold TrSpan
   rw [Submodule.span_le]
   rintro f ⟨l, hl, hs, rfl⟩
-  exact GlobalTheory.T.tracePowerListProduct_mem_chernCoefficientRealSpan m n S l hl hs
+  exact _root_.GlobalTheory.GoodMetric.ChernSpan.trProd_mem_reach m n S l hl hs
 
 theorem aeval_chern_mem_reach {ι : Type} [Fintype ι] (m : ι → ℕ) (n : ℕ) (S : Type) [CommRing S] [Algebra ℝ S]
     (R : MvPolynomial (ι × ℕ) ℝ) (hR : R.IsWeightedHomogeneous (Prod.snd : ι × ℕ → ℕ) n) :
@@ -100,7 +100,7 @@ theorem aeval_chern_mem_reach {ι : Type} [Fintype ι] (m : ι → ℕ) (n : ℕ
     have hdeg : Finsupp.weight Prod.snd d = n := hR (mem_support_iff.mp hd)
     have hprod := prod_mem_trSpan m S d.support (fun x => d x * x.2)
       (fun x (A : Mat m S) => (Matrix.charpolyRev (-(A x.1))).coeff x.2 ^ d x)
-      (fun x _ => pow_mem_trSpan m S x.2 _ (GlobalTheory.T.coeff_charpolyRev_mem_tracePowerProductRealSpan m S x.1 x.2) (d x))
+      (fun x _ => pow_mem_trSpan m S x.2 _ (_root_.GlobalTheory.GoodMetric.ChernSpan.coeff_charpolyRev_mem_trSpan m S x.1 x.2) (d x))
     have hw : ∑ x ∈ d.support, d x * x.2 = n := by
       rw [← hdeg, Finsupp.weight_apply, Finsupp.sum]
       simp [smul_eq_mul]

@@ -1,9 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LocClosed
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagCoeffIdealOfLatticeFgAndMemIffStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.Ia
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagCoeffIdealOfLatticeFgAndMemIff
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FractionalIdealEqOfLocalSpansEqStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LatticeInfIsotropicEqSumFractionalIdealSmulStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.IsPrimitiveSub
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LatticeInfIsotropicEqSumFractionalIdealSmul
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SpanCoefficientIdealEqSpanFrameScaleStatement
 import Formalism.LocalToGlobal.SiegelLatticeTheory.ClosedLocalOrbits.GaugeLatticeShifts.LocFacts
 import Mathlib.Algebra.AffineMonoid.Basic
@@ -66,22 +68,22 @@ theorem xlam_eq_span_scaled : ∀ (D : D7) (T : D.host.E) (G : LFlag (D.sp.Y 0) 
       ((ddS D ^ (-((D.R.rS : ℤ) - (a : ℕ))) : FractionalIdeal (nonZeroDivisors (𝓞 D.host.E)) D.host.E) :
         Submodule (𝓞 D.host.E) D.host.E) := by
     intro a
-    refine GlobalTheory.T.fractional_ideal_eq_of_local_spans_eq D Z _ _ (GlobalTheory.T.flagCoeffIdealOfLattice_fg_and_mem_iff _ _ _ G.fl Λ a hΛ.fg).1
+    refine GlobalTheory.T.fractional_ideal_eq_of_local_spans_eq D Z _ _ (_root_.GlobalTheory.RowLatXS.Ia_fg_and_mem_iff _ _ _ G.fl Λ a hΛ.fg).1
       (FractionalIdeal.fg_of_isNoetherianRing le_rfl _) (fun p => ?_)
     rw [GlobalTheory.T.span_coefficientIdeal_eq_span_frameScale D T G Z A hA Λ hΛ hloc p a]
     have h := Formalism.L2.SG.Pf.locDiffC_holds D Z p a.castSucc
     simp only [Fin.coe_castSucc] at h
     exact h.symm
-  obtain ⟨e', he, hX⟩ := GlobalTheory.T.lattice_inf_isotropic_eq_sum_fractionalIdeal_smul (VS D) D.R.rS T G Λ
+  obtain ⟨e', he, hX⟩ := _root_.GlobalTheory.RowLatAssembly.xLam_eq_span (VS D) D.R.rS T G Λ
     (fun a => ddS D ^ (-((D.R.rS : ℤ) - (a : ℕ)))) (fun a => zpow_ne_zero _ hdd)
     (fun a x hx hxa => by
       have h1 : G.fl.coefX x a ∈ GlobalTheory.RowLatXS.Ia Λ G.fl a :=
-        ((GlobalTheory.T.flagCoeffIdealOfLattice_fg_and_mem_iff _ _ _ G.fl Λ a hΛ.fg).2 _).2 ⟨x, hx, hxa, rfl⟩
+        ((_root_.GlobalTheory.RowLatXS.Ia_fg_and_mem_iff _ _ _ G.fl Λ a hΛ.fg).2 _).2 ⟨x, hx, hxa, rfl⟩
       rw [hJ a] at h1
       exact h1)
     (fun a t ht => by
       have h1 : t ∈ GlobalTheory.RowLatXS.Ia Λ G.fl a := by rw [hJ a]; exact ht
-      exact ((GlobalTheory.T.flagCoeffIdealOfLattice_fg_and_mem_iff _ _ _ G.fl Λ a hΛ.fg).2 t).1 h1)
+      exact ((_root_.GlobalTheory.RowLatXS.Ia_fg_and_mem_iff _ _ _ G.fl Λ a hΛ.fg).2 t).1 h1)
   exact ⟨e', he, hX⟩
 
 end GlobalTheory.RowLatXS

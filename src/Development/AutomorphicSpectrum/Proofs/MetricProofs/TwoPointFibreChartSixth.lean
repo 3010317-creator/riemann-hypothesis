@@ -1,12 +1,16 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsFibreChartIff
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LogNormNonvanishingAnalyticHarmonicStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularFunctionAnalyticOnChartStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.StepFactorNeZeroStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwoByTwoMinorGramIdentityStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwoPointFibreChartFifthStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.UnipotentValueNeZeroStatement
+public import Mathlib.Analysis.Analytic.Basic
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LogNormNonvanishingAnalyticHarmonic
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GenericBlockMatrixIsBlockDiag
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularFunctionAnalyticOnChart
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.StepFactorNeZero
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwoByTwoMinorGramIdentity
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.TwoPointFibreChartFifth
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.UnipotentValueNeZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -96,7 +100,7 @@ theorem fibre_xi_potential : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k
   intro K _ ι _ Φ _ y Ψ _ _ N j M n d BM FA τ a b ca cb hb hab hca hcb X q Un Gn ΦYn ΦWn l H bp hUn hD z hz
   have hD' := hD
   obtain ⟨hH, hbc, hbk, hpt, hG, -, -⟩ := hD'
-  choose Hp hPa hPe using fun p => GlobalTheory.T.two_point_fibre_chart_fifth K ι Φ y Ψ N j M n d BM FA τ a b ca cb hb hab hca hcb X q Un Gn ΦYn
+  choose Hp hPa hPe using fun p => _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.Fib.fibre_member_potential K ι Φ y Ψ N j M n d BM FA τ a b ca cb hb hab hca hcb X q Un Gn ΦYn
     ΦWn l H bp hUn hD p z hz
   have htail : ∀ᶠ z' : Fin (d + 1) → ℂ in 𝓝 z, Fin.tail z' ∈ Un :=
     (analyticAt_fin_tail z).continuousAt.preimage_mem_nhds (hUn.mem_nhds hz)
@@ -107,9 +111,9 @@ theorem fibre_xi_potential : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k
     intro i
     by_cases hp : IsProperStep N j i
     · exact ⟨fun _ => 0, analyticAt_const, Eventually.of_forall fun z' => by simp [hp]⟩
-    · obtain ⟨A, hA, hAe⟩ := GlobalTheory.T.log_norm_nonvanishing_analytic_harmonic (d + 1) (fun u => facOf N j a (H τ (Fin.tail u)) i) z
+    · obtain ⟨A, hA, hAe⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.Fib.log_norm_eventually_eq_re_analyticAt (d + 1) (fun u => facOf N j a (H τ (Fin.tail u)) i) z
         (analyticAt_facOf j a i (fun u => H τ (Fin.tail u)) z (hHa τ))
-        (GlobalTheory.T.step_factor_ne_zero N j a i _ ((hpt _ hz).2 τ).1 ((hpt _ hz).2 τ).2)
+        (_root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.Fib.facOf_ne_zero N j a i _ ((hpt _ hz).2 τ).1 ((hpt _ hz).2 τ).2)
       exact ⟨A, hA, hAe.mono fun z' h => by simpa [hp] using h⟩
   have hups : ∀ i : Fin N, ∃ A : (Fin (d + 1) → ℂ) → ℂ, AnalyticAt ℂ A z ∧ ∀ᶠ z' in 𝓝 z,
       upsLogAt BM l (τ, i) (bp (Fin.tail z')) = (A z').re := by
@@ -117,13 +121,13 @@ theorem fibre_xi_potential : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k
     by_cases hp : M.blk (τ, i) = none
     · have hO : bp (Fin.tail z) ∈ BM.O l := (hpt _ hz).1.1
       have hreg := ((BM.good l _ hO).2.2 (τ, i) hp).2.1
-      have hv := GlobalTheory.T.regular_function_analytic_on_chart (NonPluckerBlocks M.blk) (baseIdx ι M.blk) M.Ω M.x ((BM.F l).υ (τ, i)) d n BM.Rb Un bp (Fin.tail z)
+      have hv := _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.Fib.analyticAt_valAt_lift_family (NonPluckerBlocks M.blk) (baseIdx ι M.blk) M.Ω M.x ((BM.F l).υ (τ, i)) d n BM.Rb Un bp (Fin.tail z)
         hUn hz hbc hbk hreg
       have hf : AnalyticAt ℂ (fun u => upsVal BM l (τ, i) (bp (Fin.tail u))) z :=
         AnalyticAt.comp (g := fun w => valAt M.x ((BM.F l).υ (τ, i)) (BM.Rb.lift (bp w) (bp w))) hv
           (analyticAt_fin_tail z)
-      obtain ⟨A, hA, hAe⟩ := GlobalTheory.T.log_norm_nonvanishing_analytic_harmonic (d + 1) _ z hf
-        (GlobalTheory.T.unipotent_value_ne_zero K ι Φ y Ψ N j M n d BM l (τ, i) _ hO hp)
+      obtain ⟨A, hA, hAe⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.Fib.log_norm_eventually_eq_re_analyticAt (d + 1) _ z hf
+        (_root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.Fib.UpsNe.upsVal_ne_zero K ι Φ y Ψ N j M n d BM l (τ, i) _ hO hp)
       exact ⟨A, hA, hAe.mono fun z' h => by simpa [upsLogAt, hp] using h⟩
     · exact ⟨fun _ => 0, analyticAt_const, Eventually.of_forall fun z' => by simp [upsLogAt, hp]⟩
   choose Lf hLa hLe using hfac
@@ -137,7 +141,7 @@ theorem fibre_xi_potential : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k
         xiPot (Gn (Fin.tail z')) (z' 0) - ∑ i : Fin N, (xiCoef τ a (τ, i) : ℝ) *
           ((if IsProperStep N j i then 0 else Real.log ‖facOf N j a (H τ (Fin.tail z')) i‖) +
             upsLogAt BM l (τ, i) (bp (Fin.tail z'))) :=
-      GlobalTheory.T.two_by_two_minor_gram_identity Ψ N j τ a b ca cb (fun τ' => BM.G l τ' (bp (Fin.tail z'))) (fun τ' => H τ' (Fin.tail z'))
+      _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.Fib.xi_sum_potentials Ψ N j τ a b ca cb (fun τ' => BM.G l τ' (bp (Fin.tail z'))) (fun τ' => H τ' (Fin.tail z'))
         (fun p => upsLogAt BM l p (bp (Fin.tail z'))) (z' 0) (Gn (Fin.tail z')) M.j_le hb hab hca hcb
         (BM.G_pos l τ _ (hpt _ hw).1).1 (BM.G_pos l τ _ (hpt _ hw).1).2 ((hpt _ hw).2 τ).1 ((hpt _ hw).2 τ).2
         (hG _ hw)

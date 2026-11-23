@@ -2,8 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdmSt
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FiltrationZeroMembership
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamPeriodRingFieldTPowFiltrationUnitsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedOfFrobeniusIterateFixedFilZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DeRhamPeriodRingFieldTPowFiltrationUnits
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedOfFrobeniusIterateFixedFilZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,7 +56,7 @@ namespace GlobalTheory.PMon
 
 theorem lt_period_conj_ratio : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocAinf l P) (T : LocTied l P AI) (s : ℕ), 0 < s → ∀ (x : P.R.B), IsUnit x → P.φB^[s] x = (l : P.R.B) * x → P.ιB x ∈ Fil P 1 → P.ιB x ∉ Fil P 2 → (∀ j, 0 < j → j < s → ev P j x ∈ Fil P 0 ∧ ev P j x ∉ Fil P 1) → ∀ g : GQ l, ∃ a : ↥(MaximalUnramifiedExtension l), fr l s a = a ∧ P.actQ g x = algebraMap ↥(MaximalUnramifiedExtension l) P.R.B a * x := by
   intro l _ P AI T s hs x hx hφ h1 h2 hj g
-  obtain ⟨-, -, hsh, hinv, -, -, -, htz, tadd, t0, -⟩ := GlobalTheory.T.deRhamPeriodRing_field_tPow_filtration_units l P AI T
+  obtain ⟨-, -, hsh, hinv, -, -, -, htz, tadd, t0, -⟩ := _root_.GlobalTheory.PMon.bdR_tied l P AI T
   have iter_mul : ∀ (m : ℕ) (a b : P.R.B), P.φB^[m] (a * b) = P.φB^[m] a * P.φB^[m] b := by
     intro m a b
     induction m generalizing a b with
@@ -119,7 +119,7 @@ theorem lt_period_conj_ratio : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI
     · obtain ⟨e0, e1⟩ := hj j hpos hjs
       obtain ⟨v, hv, huv⟩ := hinv _ e0 e1
       exact key 0 (ev P j x) (ev P j x) v _ (by rw [t0, one_mul]) huv e0 hv (hev j)
-  obtain ⟨a, ha, hya⟩ := GlobalTheory.T.unramified_of_frobeniusIterate_fixed_filZero l P AI T s hs y hfix hfil
+  obtain ⟨a, ha, hya⟩ := _root_.GlobalTheory.PMon.unr_of_iterate_fixed l P AI T s hs y hfix hfil
   exact ⟨a, ha, by rw [← hyx, hya]⟩
 
 end GlobalTheory.PMon

@@ -2,13 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsLogMult
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GeometricallyConnectedOfIsIsoRestrict
-import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CartierDivisorPullbackSupportAndEffectiveStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CartierDivisorPullbackSupportAndEffective
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KawamataViehwegVanishingNumberFieldTwist
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PullTopInjective
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.BigLineBundleKodairaOfIsProjOver
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.ExistsEmbeddedResolutionStatement
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.ExistsSmoothProjectiveModel
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsEqnIffGeneratesAtInv
+public import Development.AbelianVarietyTheory.Definitions.Divisors.LineBundleGlobalSectionsDimCongrPicardClass
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.BigLineBundleKodairaLemma
+public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.ExistsEmbeddedResolution
+public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.ExistsValuationSubringDominatingSubring
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsSmoothProjectiveModel
+import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IsProjOverIffIsProperAndExistsIsAmpleLB
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -76,13 +79,13 @@ theorem eff_nsmul {Y : Scheme.{0}} [IsIntegral Y] {D : CartierDiv Y} (hD : D.Eff
 theorem exists_logRes_smul_eq_ample_add_eff :
     GlobalTheory.Published.Principalisation → ∀ (k : Type) [Field k] [CharZero k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (n : ℕ), IsProjOver p → topologicalKrullDim X = n → ∀ (η : RatForms p n) (m : ℕ) (G : CartierDiv X), η ≠ 0 → ∀ Z : Closeds X, Z ≠ ⊤ → ∀ (M : LB X) (hM : M.IsLB), (letI := algebraΓOfHom p; IsBig k M) → ∃ (Y : Scheme.{0}) (_ : IsIntegral Y) (s : Y ⟶ X) (_ : IsDominant s) (K : CartierDiv Y) (B : Closeds Y), IsLogRes p n η m G s K B ∧ (∀ y, s y ∈ Z → y ∈ B) ∧ ∃ (a : ℕ) (Fd : CartierDiv Y) (A : LB Y) (hA : IsAmpleLB A), 0 < a ∧ Fd.Eff ∧ Fd.supp ≤ B ∧ a • CechPic.pull s (cls M hM) = cls A hA.isLB + toPic Fd := by
   intro hP k _ _ X _ p n hp hdim η m G hη Z hZ M hM hbig
-  obtain ⟨Y₀, _, s₀, _, hsm, hpr, hbir⟩ := GlobalTheory.T.exists_smooth_projective_birational_model hP k X p n hp hdim
+  obtain ⟨Y₀, _, s₀, _, hsm, hpr, hbir⟩ := _root_.GlobalTheory.BirModel.exists_smooth_projective_model hP k X p n hp hdim
   have hdim₀ : topologicalKrullDim Y₀ = topologicalKrullDim X := by
     rw [hdim]
     exact GlobalTheory.HSCore.VanishNumberField.topologicalKrullDim_eq_of_smooth (s₀ ≫ p) n hsm
   have hbig₀ := GlobalTheory.PullBig.isBig_pull k Y₀ X p s₀ hp hpr hdim₀ s₀.denseRange M hbig
   obtain ⟨A, hA⟩ := GlobalTheory.exists_isAmpleLB_of_isProjOver hpr
-  obtain ⟨a₀, D₀, ha₀, hD₀, e₀⟩ := GlobalTheory.T.big_line_bundle_kodaira_of_isProjOver k Y₀ (s₀ ≫ p) hpr (M.pull s₀) A hbig₀ hA
+  obtain ⟨a₀, D₀, ha₀, hD₀, e₀⟩ := _root_.GlobalTheory.KodairaLemma.exists_nsmul_cls_eq_add_toPic_of_isBig k Y₀ (s₀ ≫ p) hpr (M.pull s₀) A hbig₀ hA
   let Zp : Closeds Y₀ := ⟨s₀ ⁻¹' (Z : Set X), Z.isClosed.preimage s₀.continuous⟩
   have hZ' : Zp ⊔ D₀.supp ≠ ⊤ := by
     intro htop
@@ -101,21 +104,21 @@ theorem exists_logRes_smul_eq_ample_add_eff :
       exact Closeds.ext (Set.eq_univ_of_univ_subset hcl)
     · exact CartierDiv.genericPoint_notMem_supp D₀ hg
   obtain ⟨Y, _, t, _, K, B, hres, hB, c, E, A₁, hA₁, hc, hE, hEB, e₁⟩ :=
-    GlobalTheory.T.exists_embedded_resolution hP k X p n η m G hη Y₀ s₀ hsm hpr hbir (Zp ⊔ D₀.supp) hZ' A hA
+    _root_.GlobalTheory.exists_logRes_ample hP k X p n η m G hη Y₀ s₀ hsm hpr hbir (Zp ⊔ D₀.supp) hZ' A hA
   have hmem : ∀ y : Y, t y ∈ Zp ∨ t y ∈ D₀.supp → y ∈ B := fun y h => by
     apply hB y
     show t y ∈ ((Zp ⊔ D₀.supp : Closeds Y₀) : Set Y₀)
     rw [Closeds.coe_sup]
     exact h
   refine ⟨Y, inferInstance, t ≫ s₀, inferInstance, K, B, hres, ?_, c * a₀, E + c • pullCart t D₀, A₁, hA₁,
-    Nat.mul_pos hc ha₀, hE.add (eff_nsmul ((GlobalTheory.T.cartierDivisorPullback_support_and_effective Y₀ Y t D₀).2 hD₀) c), ?_, ?_⟩
+    Nat.mul_pos hc ha₀, hE.add (eff_nsmul ((_root_.GlobalTheory.Discrepancy.pullCart_supp_and_eff Y₀ Y t D₀).2 hD₀) c), ?_, ?_⟩
   · intro y hy
     refine hmem y (Or.inl ?_)
     show s₀ (t y) ∈ (Z : Set X)
     simpa using hy
   · refine (CartierDiv.supp_add_le _ _).trans (sup_le hEB ((supp_nsmul_le _ c).trans ?_))
     intro y hy
-    exact hmem y (Or.inr ((GlobalTheory.T.cartierDivisorPullback_support_and_effective Y₀ Y t D₀).1 y hy))
+    exact hmem y (Or.inr ((_root_.GlobalTheory.Discrepancy.pullCart_supp_and_eff Y₀ Y t D₀).1 y hy))
   · have e₀' : a₀ • CechPic.pull s₀ (cls M hM) = cls A hA.isLB + toPic D₀ := e₀
     rw [map_add (f := _), map_nsmul, toPic_pullCart, GlobalTheory.CechPic.pull_comp, mul_smul,
       ← map_nsmul (CechPic.pull t) a₀, e₀', map_add, smul_add, e₁, add_assoc]

@@ -4,8 +4,10 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.MemRingOf
 public import Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative.LeviCivita
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EisensteinDeltaQExpansionIntegrality
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QExpansionCoeffsInSubringRingClosed
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GammaLeOfDvdStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.QExpansionAllCoeffsRangeOfMonicRootStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GammaLeOfDvd
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HasQIff
+public import Mathlib.Analysis.Complex.UpperHalfPlane.Manifold
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.QExpansionAllCoeffsRangeOfMonicRoot
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -73,7 +75,7 @@ theorem exists_common_lv {E : Subring ℂ} {n : ℕ} (M : ℕ) (hM : 0 < M) (r :
   choose Nj wj hNj hLv using hr
   have hpos : 0 < M * ∏ j, Nj j := Nat.mul_pos hM (Finset.prod_pos fun j _ => hNj j)
   refine ⟨M * ∏ j, Nj j, ∑ j, wj j, hpos, dvd_mul_right _ _, fun j => ?_⟩
-  exact GlobalTheory.T.lv_mono_of_dvd_of_le E (Nj j) _ (wj j) _ (r j) hpos
+  exact _root_.GlobalTheory.FN.lv_mono E (Nj j) _ (wj j) _ (r j) hpos
     (Dvd.dvd.mul_left (Finset.dvd_prod_of_mem _ (Finset.mem_univ j)) M)
     (Finset.single_le_sum (fun i _ => Nat.zero_le (wj i)) (Finset.mem_univ j)) (hLv j)
 
@@ -147,6 +149,6 @@ theorem inR_of_integral : ∀ (Ω : Type) [Field Ω] [IsAlgClosed Ω] (ε : Ω �
             simp only [s]
             rw [e2, pow_add, mul_pow, ← pow_mul]; ring
       _ = 0 := by rw [e, mul_zero]
-  exact GlobalTheory.T.qExpansionAllCoeffs_range_of_monic_root Ω ε N n _ s hN hH hper hs heqH
+  exact _root_.GlobalTheory.FN.qAll_range_of_monic_root Ω ε N n _ s hN hH hper hs heqH
 
 end GlobalTheory.FN

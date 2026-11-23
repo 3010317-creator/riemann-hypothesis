@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsOpenScaledInt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ScaledLatticeCharacterTrivialStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ScaledLatticeCharacterTrivial
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -81,7 +81,7 @@ theorem main : ∀ (F : Type) [Field F] [NumberField F] (ψ : AddChar (AF F) ℂ
         (fun i => x i * algebraMap F (AF F) (b i)) Finset.univ).trans
         (Finset.sum_congr rfl fun i _ => rfl)
     have hfin : ψ (show AF F from (0, u.2)) = 1 := by
-      have := GlobalTheory.T.scaled_lattice_character_trivial F ψ hψ κ a ha b hb _ hz
+      have := _root_.GlobalTheory.TraceDualChar.psi_trivial_on_scaledInt F ψ hψ κ a ha b hb _ hz
       rw [← hu2] at this
       exact this
     have hAt : At (evI F) (show AF F from (u.1, 0)) := by

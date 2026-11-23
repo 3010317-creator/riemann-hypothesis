@@ -1,7 +1,9 @@
 module
 
 public import Development.AutomorphicArithmetic.Foundations.GaloisRepresentations.IntegralStructures.GeometricFlagBases.FinModel
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsProjOverCompFiniteStatement
+public import Mathlib.AlgebraicGeometry.Morphisms.Finite
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.IsProjOverCompFinite
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,7 +65,7 @@ theorem UpperTheory.site_exists_of_splitting_and_power_projector :
   have hMproj : IsProjOver M.s := hM.proj q (datAt hat sp) (Ow w) b N₀ h3 hcq hSc.cpt M
   have hYproj : IsProjOver Y.s := by
     rw [← hov]
-    exact GlobalTheory.T.isProjOver_comp_finite (Ow w) M.X Y.X π M.s hfin hMproj
+    exact _root_.GlobalTheory.isProjOver_comp_of_finite (Ow w) M.X Y.X π M.s hfin hMproj
   have hYsm : SmoothOfRelativeDimension (0 + (datAt hat sp).a * ((datAt hat sp).n - 1)) Y.s := by
     rw [← hov]
     haveI : SmoothOfRelativeDimension 0 π := by

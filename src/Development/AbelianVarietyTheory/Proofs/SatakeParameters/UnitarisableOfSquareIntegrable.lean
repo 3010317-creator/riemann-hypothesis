@@ -4,11 +4,14 @@ public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.IsTemp
 public import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsUnitarisableOfCharIff
 public import Mathlib.Topology.Algebra.Group.Units
-import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.NotInSupportOfSubsingleton
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.AlgebraMapIntertwiningMapBijectiveOfIsSmooth
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GlHomNnrealTrivialOfScalarTrivialStatement
+public import Mathlib.Basic.NNReal.Defs
+public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.GlHomNnrealTrivialOfScalarTrivial
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SmoothContragredientIrreducibleAndReflexive
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsOpenNormalisedSubgroupSubset
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
+import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.NotInSupportOfSubsingleton
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -58,7 +61,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
 
 @[expose] public section
 
@@ -86,7 +88,7 @@ theorem modularCharacterFun_eq_one (g : AdGL k N) : Measure.modularCharacterFun 
   obtain ⟨g, rfl⟩ := QuotientGroup.mk_surjective g
   let φ : GL (Fin N) k →* NNReal :=
     Measure.modularCharacter.comp (QuotientGroup.mk' (Subgroup.center (GL (Fin N) k)))
-  refine GlobalTheory.T.gl_hom_nnreal_trivial_of_scalar_trivial k (exists_ne_zero_ne_one k) N φ (fun z => ?_) g
+  refine _root_.GlobalTheory.gl_hom_nnreal_trivial_of_scalar k (exists_ne_zero_ne_one k) N φ (fun z => ?_) g
   have hz : Matrix.GeneralLinearGroup.scalar (Fin N) z ∈ Subgroup.center (GL (Fin N) k) :=
     Subgroup.mem_center_iff.2 fun h => (Matrix.GeneralLinearGroup.scalar_commute z h).symm
   show Measure.modularCharacter (QuotientGroup.mk' _ _) = 1

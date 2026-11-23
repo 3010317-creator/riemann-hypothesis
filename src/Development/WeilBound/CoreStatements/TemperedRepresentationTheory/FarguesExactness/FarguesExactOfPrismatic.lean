@@ -2,12 +2,13 @@ module
 
 public import Development.AutomorphicSpectrum.PublishedTheorems.Algebra₂.FarguesExact
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.InjectiveOfSmulMemRange
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConvEqOneOfForallPairing
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HodgeTatePairingSandwich
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HodgeTateSandwichOfPrismaticDieudonneStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.EpsilonPairingZeta
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HodgeTateSandwichOfPrismaticDieudonne
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsIntegrallyClosedInOfIntegers
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivGroupOmegaFiniteFreeAndPSqMemDlogSpanStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivGroupOmegaFiniteFreeAndPSqMemDlogSpan
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ExistsCobOneOfIntegral
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ConvEqOneOfForallPairing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -51,7 +52,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import ReciprocityTheory.DualLattices.ExistsPrimitiveRoot
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.EpsilonPairingZeta
 
 @[expose] public section
 
@@ -114,12 +114,12 @@ theorem farguesExact_of_hodge (hP : GlobalTheory.Published.PrismaticDieudonneHod
     exact Nat.cast_ne_zero.2 (Fact.out : p.Prime).ne_zero h5
   obtain ⟨ε, hε₁⟩ := ReciprocityTheory.PGsh.exists_eps (p := p) C _ O hv
   have hε : GlobalTheory.IndefiniteRowSideFullHecke.EpsilonPairingZeta.IsPrimitiveSystem ε := GlobalTheory.PrismModel.isPrimitiveSystem_of_one hε₁
-  have hS := GlobalTheory.T.hodgeTateSandwich_of_prismaticDieudonne hP p C v O hv ε hε
+  have hS := _root_.GlobalTheory.DieudonneSandwich.hodgeTateSandwich_of_prismaticDieudonne₂ hP p C v O hv ε hε
   have hζ : Function.Bijective fun a : ℤ_[p] => a • muTate O ζ h0 h :=
     smul_muTate_bijective ζ h0 h (primitive h0 h h1)
   obtain ⟨B₀, hB₀, -, -⟩ := GlobalTheory.PointGroup.exists_form hv G _ hζ
   have hk := (GlobalTheory.DetInv.HTKer.ker_hodgeTateLinear p C v O ε hε hS G _ B₀ hv hζ hB₀).1 x
-  obtain ⟨-, -, hc⟩ := GlobalTheory.T.pDivGroup_omega_finite_free_and_p_sq_mem_dlog_span p C v O ε hε hv hS G
+  obtain ⟨-, -, hc⟩ := _root_.GlobalTheory.DlogSpan.finite_free_and_sq_smul_mem_span p C v O ε hε hv hS G
   have hBB : ∀ (z : O ⊗[ℤ_[p]] G.Tate) (χ : G.dual.Tate),
       (TensorProduct.rid ℤ_[p] O) ((B₀.flip χ).baseChange O z) = B z (1 ⊗ₜ χ) := fun z χ => by
     induction z using TensorProduct.induction_on with

@@ -3,10 +3,12 @@ module
 public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.FinLocalCutAt
 public import Development.AbelianVarietyTheory.Definitions.RegularCharts.ModelAt
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.SecBaseChangeAnySt
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArcFramedPointValueIsHomogeneousLettersStatement
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArcLetterRingOverDVRPolynomialDenominatorsStatement
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsEvalArcLetterRingOverDVRDiscStatement
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.FramedPointEvalNaturalWeightScalingStatement
+public import Development.AbelianVarietyTheory.Definitions.ArchimedeanThetaValues.IsFramedPointChangedByLetters
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArcFramedPointValueIsHomogeneousLetters
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ArcLetterRingOverDVRPolynomialDenominators
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.ExistsEvalArcLetterRingOverDVRDisc
+public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.UnivFrame
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.FramedPointEvalNaturalWeightScaling
 import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.IsIntegralElemOfIsAlgebraicInt
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -158,15 +160,15 @@ theorem frameBound_of_cut (hL : Out.Laws) (hL2 : Out.Laws2) {l : Level H} {Xo : 
   intro F hF t ht Y hY hdet
   obtain ⟨φ, ψ, z₁, z₂, tγ, hφC, hφX, hψC, hψX, htγ, htγ', hm1, hm2, hb⟩ := hBc
   have hϖ : Dv.ϖ ≠ 0 := Dv.ϖ_irr.ne_zero
-  obtain ⟨hdomR, -, -, -, hdiv⟩ := GlobalTheory.T.arcLetterRingOverDVR_polynomial_denominators E H Dw Dv.Tv Dv.ϖ hϖ
+  obtain ⟨hdomR, -, -, -, hdiv⟩ := _root_.GlobalTheory.LetterDenom.main E H Dw Dv.Tv Dv.ϖ hϖ
   have hdom1 := GlobalTheory.ArcConst.isDomain Dw K₁
   have hdom2 := GlobalTheory.ArcConst.isDomain Dw Dv.Tv.Fr
   have hinj := GlobalTheory.ArcConst.algebraMap_injective Dw Dv.Tv.Fr
   have hsec := hFs F hF
-  obtain ⟨P, hP, -⟩ := GlobalTheory.T.arcFramedPoint_value_isHomogeneous_letters hL hL2 E H Dw l Xo c hev K₁ d a n F hsec
-  have e1 := (GlobalTheory.T.framedPoint_eval_natural_weight_scaling E H Dw l Xo c hev a n F hsec (ArcS Dw K₁)).1 _ φ _ _ hm1
-  have e2 := (GlobalTheory.T.framedPoint_eval_natural_weight_scaling E H Dw l Xo c hev a n F hsec (ArcSR Dw Dv.Tv.V Dv.ϖ)).1 _ ψ _ _ hm2
-  have e3 := ((GlobalTheory.T.framedPoint_eval_natural_weight_scaling E H Dw l Xo c hev a n F hsec (ArcS Dw Dv.Tv.Fr)).2 hdom2).1 tγ _ _ hb
+  obtain ⟨P, hP, -⟩ := _root_.GlobalTheory.ArcQ.evR_arc_isHomogeneous hL hL2 E H Dw l Xo c hev K₁ d a n F hsec
+  have e1 := (_root_.GlobalTheory.ArcQ.evR_natural_weight_scaling E H Dw l Xo c hev a n F hsec (ArcS Dw K₁)).1 _ φ _ _ hm1
+  have e2 := (_root_.GlobalTheory.ArcQ.evR_natural_weight_scaling E H Dw l Xo c hev a n F hsec (ArcSR Dw Dv.Tv.V Dv.ϖ)).1 _ ψ _ _ hm2
+  have e3 := ((_root_.GlobalTheory.ArcQ.evR_natural_weight_scaling E H Dw l Xo c hev a n F hsec (ArcS Dw Dv.Tv.Fr)).2 hdom2).1 tγ _ _ hb
   rw [wchar_gen a n tγ htγ', e1, e2, htγ, ← hP] at e3
   set f := evR Xo c F Dv.yR with hf
   let q : ArcLt Dw → MvPolynomial (ArcLt Dw) Dv.Tv.Fr := fun x =>
@@ -212,7 +214,7 @@ theorem frameBound_of_cut (hL : Out.Laws) (hL2 : Out.Laws2) {l : Level H} {Xo : 
     intro h0
     rw [h0, norm_zero] at hdet
     exact zero_ne_one hdet
-  obtain ⟨ev, hevC, hevX, hevf⟩ := GlobalTheory.T.exists_eval_arcLetterRingOverDVR_disc E H Dw Dv.Tv Dv.ϖ Z.K Dv.ιT hϖ Dv.norm_le t Y
+  obtain ⟨ev, hevC, hevX, hevf⟩ := _root_.GlobalTheory.LetterEval.exists_eval E H Dw Dv.Tv Dv.ϖ Z.K Dv.ιT hϖ Dv.norm_le t Y
     (Z.S_disc t ht).1 (Z.S_disc t ht).2 hdet0
   obtain ⟨hT, hS⟩ := hevf f N G P₂ hG hPG
   have hbd := hRec F hF t ht Y hY hdet ev hevC hevX

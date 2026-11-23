@@ -6,7 +6,6 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFinite
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BaseChangeSpehOfDiscreteSeries
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ChebotarevDegreeOne
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DiscreteSpectrumOfResidual
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAlgebraicWeightOfAutomorphicDefiniteUnitarStatement
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsEquivOfIsSubquotient
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteDimensionalAdjoinRange
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.FiniteDimensionalFilDR
@@ -18,10 +17,7 @@ public import Development.AutomorphicArithmetic.AutomorphicVarieties.Automorphic
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.SatOfFixed
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.TemperedLocalComponents.CompatCsd
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.TemperedLocalComponents.GalUnitary
-import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.TemperedLocalComponents.LocCompC
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.TemperedLocalComponents.LocFixed
-import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.TemperedLocalComponents.SatFrob
-import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.TemperedLocalComponents.SatLoc
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.TemperedLocalComponents.WDAway
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.EqOneOfTraceTranslationInvariantSemisimple
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsResidueChars.IsSplitAtOfDecompositionLeRestrictionRange
@@ -31,12 +27,17 @@ public import Development.AutomorphicArithmetic.AutomorphicVarieties.BuildingsRe
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.EqOfTwist
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.IsSubquotientOfHasSupport
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.UpU
-import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.WtBridge
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.SemisimpleLevels.FlagAb
-import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.EpsArt
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.FlagWD
-import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.OrdCharIff
 public import Development.AutomorphicArithmetic.Foundations.BaseChangeIdentities.SplitComp
+import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BaseChangeDefiniteUnitary
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsAlgebraicWeightOfAutomorphicDefiniteUnitar
+import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.TemperedLocalComponents.LocCompC
+import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.TemperedLocalComponents.SatFrob
+import Development.AutomorphicArithmetic.AutomorphicVarieties.AutomorphicForms.TemperedLocalComponents.SatLoc
+import Development.AutomorphicArithmetic.AutomorphicVarieties.HeckeAlgebras.OrdinaryHeckeCharacters.WtBridge
+import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.EpsArt
+import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.OrdCharIff
 import Formalism.SharpRestriction.LevelLetterCocycles.ExistsInertiaCharpolyFactorOfTameType
 import GroundTheory.GlobalFields.CompletionAtPlace.Integers
 import Mathlib.Algebra.Order.Floor.Extended
@@ -435,7 +436,7 @@ theorem UpperTheory.V.Z.Desc.jPTw :
     (hLG' _ (hsp _ (hin _ (hlv v))) _ (hbc _ (hsp _ (hin _ (hlv v))))) lam (hψ v) (hfl' v) (hfl v).2
   refine upU PH l L Ω s n hn V Q c r ι B Λ R K hS J hJ x h lam hx hlam σ ρ' hσ hc' hs' hρ' hLG'
     (fun y => ?_) (fun w hw => ?_) ?_ fun v => ?_
-  · obtain ⟨ν, h1⟩ := GlobalTheory.T.exists_algebraicWeight_of_automorphic_definiteUnitary L n hn σ hσ (ι.toRingHom.comp y.res)
+  · obtain ⟨ν, h1⟩ := _root_.GlobalTheory.DefU.exists_hasWeightAt_of_isAutRepU L n hn σ hσ (ι.toRingHom.comp y.res)
     have h3 := hwt y.res ν h1
     rw [show HT' y.res = _ from (hab y.1).2 y.2] at h3
     rwa [← dual_of_weights (lam y.res) ν h3]

@@ -1,12 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
-public import Development.AutomorphicSpectrum.Proofs.MembershipProofs.AdelicCharacterRationalDualStatement
-public import Development.AutomorphicSpectrum.Proofs.MembershipProofs.RationalUnitsHaarCharacterOneStatement
-public import Development.AutomorphicSpectrum.Proofs.MembershipProofs.SplitQuadraticAlgebraOrderStatement
-public import Development.AutomorphicSpectrum.Proofs.MembershipProofs.ThetaDistributionNonzeroAdmissibleStatement
-public import Development.AutomorphicSpectrum.Proofs.MembershipProofs.ThetaHeisenbergTranslatesSeparateStatement
-public import Development.AutomorphicSpectrum.Proofs.MembershipProofs.ThetaSumAdmissibilityStatement
+public import Development.AutomorphicSpectrum.Proofs.MembershipProofs.AdelicCharacterRationalDual
+public import Development.AutomorphicSpectrum.Proofs.MembershipProofs.RationalUnitsHaarCharacterOne
+public import Development.AutomorphicSpectrum.Proofs.MembershipProofs.SplitQuadraticAlgebraOrder
+public import Development.AutomorphicSpectrum.Proofs.MembershipProofs.ThetaDistributionNonzeroAdmissible
+public import Mathlib.MeasureTheory.Measure.Haar.DistribChar
+public import Mathlib.NumberTheory.NumberField.AdeleRing
+public import Development.AutomorphicSpectrum.Proofs.MembershipProofs.ThetaHeisenbergTranslatesSeparate
+public import Development.AutomorphicSpectrum.Proofs.MembershipProofs.ThetaSumAdmissibility
+public import Mathlib.LinearAlgebra.Charpoly.BaseChange
 import Mathlib.Algebra.Module.StablyFree.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -21,7 +24,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.LinearAlgebra.Charpoly.BaseChange
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -248,8 +250,8 @@ theorem theta_split_inc : ∀ (F : Type) [Field F] [NumberField F] [LocallyCompa
     exact Module.Finite.of_basis b
   letI : Invertible (2 : F) := invertibleOfNonzero two_ne_zero
   obtain ⟨g₀, rfl⟩ := exists_ratPt (AdeleRing (𝓞 F) F) c JB g γ hγ
-  obtain ⟨-, ⟨l₀, hl₀, hl₀Θ⟩, Φ₀, hΦ₀, hΦ₀ne⟩ := GlobalTheory.T.theta_distribution_nonzero_admissible F κ
-  obtain ⟨hpres, hrat⟩ := GlobalTheory.T.theta_distribution_heisenberg_invariant F κ ψ hψc hψ1 hψF
+  obtain ⟨-, ⟨l₀, hl₀, hl₀Θ⟩, Φ₀, hΦ₀, hΦ₀ne⟩ := _root_.GlobalTheory.CompanionTheory.ThetaAdm.theta_adm F κ
+  obtain ⟨hpres, hrat⟩ := _root_.GlobalTheory.CompanionTheory.AdelicHeis.schr_mem_and_thetaSum F κ ψ hψc hψ1 hψF
   have hact : ∀ (p : UG c JB) (x : Matrix α β E),
       actB (cA (AdeleRing (𝓞 F) F) c) (ratPt (AdeleRing (𝓞 F) F) c JB p) (x.map (inc (F := F) (AdeleRing (𝓞 F) F))) =
       (x * ((p : GL β E) : Matrix β β E)ᵀ).map (inc (F := F) (AdeleRing (𝓞 F) F)) := fun p x => by
@@ -259,7 +261,7 @@ theorem theta_split_inc : ∀ (F : Type) [Field F] [NumberField F] [LocallyCompa
         fun i => algebraMap F (AdeleRing (𝓞 F) F) ((d₀ x).2 i)) := hd
   have hex : ∀ p : UG c JB, ∃ a : ℂ, ∀ Φ ∈ schA F κ,
       thetaSum F (om (ratPt (AdeleRing (𝓞 F) F) c JB p) Φ) = a * thetaSum F Φ := fun p => by
-    obtain ⟨a, ha⟩ := GlobalTheory.T.admissible_functional_rational_invariance F κ ψ hψc hψ1 hψF _ (hS.adm (ratPt (AdeleRing (𝓞 F) F) c JB p) l₀ hl₀) (by
+    obtain ⟨a, ha⟩ := _root_.GlobalTheory.CompanionTheory.ThetaUniq.theta_unique F κ ψ hψc hψ1 hψF _ (hS.adm (ratPt (AdeleRing (𝓞 F) F) c JB p) l₀ hl₀) (by
       intro w Φ hΦ
       obtain ⟨x, rfl⟩ := d₀.surjective w
       have h1 := hS.impl (ratPt (AdeleRing (𝓞 F) F) c JB p) (x.map (inc (F := F) (AdeleRing (𝓞 F) F))) Φ hΦ
@@ -309,7 +311,7 @@ theorem theta_split_inc : ∀ (F : Type) [Field F] [NumberField F] [LocallyCompa
     · intro h z
       rw [hform, sub_eq_zero]
       exact h _ ⟨z, rfl⟩
-  obtain ⟨l, hl, ⟨Φ₁, hΦ₁, hΦ₁ne⟩, hinv, heig⟩ := GlobalTheory.T.lagrangian_invariant_functional_exists F κ ψ hψc hψ1 hψF L hLag
+  obtain ⟨l, hl, ⟨Φ₁, hΦ₁, hΦ₁ne⟩, hinv, heig⟩ := _root_.GlobalTheory.CompanionTheory.ThetaAvg.theta_mean F κ ψ hψc hψ1 hψF L hLag
   have hinv' : ∀ z : Matrix α ν (AdeleRing (𝓞 F) F ⊗[F] E), ∀ φ ∈ (adeleClass F).sp κ,
       l (d.rho ψ (z * (Cy.map (inc (F := F) (AdeleRing (𝓞 F) F)))ᵀ) φ) = l φ := fun z φ hφ => by
     refine hinv _ ?_ φ hφ
@@ -322,7 +324,7 @@ theorem theta_split_inc : ∀ (F : Type) [Field F] [NumberField F] [LocallyCompa
     | zero => rw [Matrix.zero_mul, map_zero]; exact zero_mem _
     | add x y _ _ hx hy => rw [Matrix.add_mul, map_add (f := _)]; exact add_mem hx hy
     | smul r x _ hx => rw [Matrix.smul_mul, map_smul]; exact Submodule.smul_mem _ _ hx
-  have hlam := GlobalTheory.T.lagrangian_stabilizer_character_trivial F E c ξ β ν JB Cy hq hB hL lam.toHomUnits (by
+  have hlam := _root_.GlobalTheory.CompanionTheory.SiegelChar.char_trivial F E c ξ β ν JB Cy hq hB hL lam.toHomUnits (by
     intro p t hpt
     have h1 := hR l hl hinv' (ratPt (AdeleRing (𝓞 F) F) c JB p)
       (Matrix.GeneralLinearGroup.map (inc (F := F) (AdeleRing (𝓞 F) F)) t) (by
@@ -342,7 +344,7 @@ theorem theta_split_inc : ∀ (F : Type) [Field F] [NumberField F] [LocallyCompa
       rw [Units.coe_map, hdet, norm_inc]
       rfl
     have hm : (adeleClass F).modu = distribHaarChar (AdeleRing (𝓞 F) F) := rfl
-    rw [hχ _ _ hdet, hn, hm, GlobalTheory.T.rational_units_haar_character_one F] at h1
+    rw [hχ _ _ hdet, hn, hm, _root_.GlobalTheory.CompanionTheory.AdeleModule.distribHaarChar_principal F] at h1
     have h2 := heig ((d₀.symm.trans (rmul F α (p : GL β E))).trans d₀)
       ((d.e.symm.trans (rmul (AdeleRing (𝓞 F) F) α
         (ratPt (AdeleRing (𝓞 F) F) c JB p : GL β (AdeleRing (𝓞 F) F ⊗[F] E)))).trans d.e).toLinearMap

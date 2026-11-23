@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.AdelicHermitianForms.MemPowSub
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.CyclicKummerNormFixedHilbert90Statement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.CyclicKummerNormFixedHilbert90
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsIsKum
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HerbrandPrimeOrderStatement
-public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.PIdxUnitsFiniteExtensionAdicCompletionStatement
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.HerbrandPrimeOrder
+public import Mathlib.RingTheory.Ideal.Norm.AbsNorm
+public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.PIdxUnitsFiniteExtensionAdicCompletion
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -95,7 +96,7 @@ theorem exists_local_nonnorm : ∀ (p : ℕ) (F : Type) [Field F] [NumberField F
   have hζ' : IsPrimitiveRoot (algebraMap F (v.adicCompletion F) ζ) p :=
     hζ.map_of_injective (algebraMap F (v.adicCompletion F)).injective
   obtain ⟨L, _, _, θ, σ, hK⟩ := exists_isKum p (v.adicCompletion F) _ _ hp hζ' hδ
-  obtain ⟨hfd, hrk, hσp, hfix, -, -, hnorm⟩ := GlobalTheory.T.cyclic_hilbert90_kummer_and_mem_kNorm_iff p _ L _ _ θ σ hK
+  obtain ⟨hfd, hrk, hσp, hfix, -, -, hnorm⟩ := _root_.GlobalTheory.CNorm.kummer_basic p _ L _ _ θ σ hK
   obtain ⟨e, he⟩ : ∃ e : ℕ, v.valuation F (p : F) = WithZero.exp (-(e : ℤ)) := by
     have h0 : v.valuation F (p : F) ≠ 0 := by
       rw [Valuation.ne_zero_iff]
@@ -108,8 +109,8 @@ theorem exists_local_nonnorm : ∀ (p : ℕ) (F : Type) [Field F] [NumberField F
       exact h1
     refine ⟨(-WithZero.log (v.valuation F (p : F))).toNat, ?_⟩
     rw [Int.toNat_of_nonneg (by omega), neg_neg, WithZero.exp_log h0]
-  obtain ⟨htL, hiL⟩ := GlobalTheory.T.pIdx_units_finite_extension_adicCompletion' p F v e L hp.pos he
-  obtain ⟨htK, hiK⟩ := GlobalTheory.T.pIdx_units_finite_extension_adicCompletion' p F v e (v.adicCompletion F) hp.pos he
+  obtain ⟨htL, hiL⟩ := _root_.GlobalTheory.CNorm.pIdx_units_finite_extension_adicCompletion p F v e L hp.pos he
+  obtain ⟨htK, hiK⟩ := _root_.GlobalTheory.CNorm.pIdx_units_finite_extension_adicCompletion p F v e (v.adicCompletion F) hp.pos he
   rw [hrk] at hiL
   rw [Module.finrank_self, pow_one] at hiK
   have hQ : Ideal.absNorm v.asIdeal ^ e ≠ 0 :=
@@ -143,7 +144,7 @@ theorem exists_local_nonnorm : ∀ (p : ℕ) (F : Type) [Field F] [NumberField F
   have hiL0 : pIdx p (⊤ : Subgroup Lˣ) ≠ 0 := by
     rw [hiL]
     exact mul_ne_zero (mul_ne_zero hp.ne_zero (pow_ne_zero _ hQ)) htL
-  obtain ⟨-, h1, -, -, hH⟩ := GlobalTheory.T.herbrand_prime_order' p Lˣ s hp
+  obtain ⟨-, h1, -, -, hH⟩ := _root_.GlobalTheory.CNorm.herbrand_prime_order p Lˣ s hp
     (fun a => Units.ext (by rw [hs, hσp])) hiL0 htL
   have h0 : (nrm s p).range.relIndex (fix s) = 1 := by
     rw [Subgroup.relIndex_eq_one, hfx]

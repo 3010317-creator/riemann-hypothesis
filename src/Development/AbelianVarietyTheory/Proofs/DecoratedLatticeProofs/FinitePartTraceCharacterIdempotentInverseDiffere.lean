@@ -2,15 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.StandardCharacterConductorAlmostAll
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HomLatticeCompletionSelfAnnihilatorAtPlaces
+public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FractionalIdealGeneratedByOneAlmostEverywhere
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FractionalIdealLocalGeneratorAtBasePrime
+public import Formalism.SharpRestriction.GlobalSchurBounds.Joints
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.AddCharTrivialIntegralFiniteAdeleMul
 import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.SelfDualLatticePairingDual
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FractionalIdealGeneratedByOneAlmostEverywhereStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.FractionalIdealLocalGeneratorAtBasePrimeStatement
 import Formalism.LocalRingCardinality.SpanPowerMembership.ExampleLayerExistsGenerators
 import Formalism.LocalRingCardinality.SpanPowerMembership.LocAtA
 import Formalism.LocalToGlobal.IndefiniteReal.FinitePlaces.FactPrincipalDatum
 import Formalism.LocalToGlobal.ProjectiveLattices.HostInt
-public import Formalism.SharpRestriction.GlobalSchurBounds.Joints
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -542,8 +543,8 @@ variable {D : D7}
 theorem exists_idele_AA : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar D ψ (-1) → ∃ α : (AE D)ˣ, ∀ x : Pl D, (∀ (S : HSp D) (L : Lat S) (y : Fin S.rank → AE D), y ∈ latA S L (· = x) ↔ ((α⁻¹ : (AE D)ˣ) : AE D) • y ∈ latV S L (· = x)) ∧ ∀ s ∈ idAt D (· = x), ((∀ o ∈ intAt D (· = x), psiE ψ (s * o) = 1) ↔ incA D D.host.xi0⁻¹ * ((α⁻¹ : (AE D)ˣ) : AE D) * cA D ((α⁻¹ : (AE D)ˣ) : AE D) * s ∈ intAt D (· = x)) := by
   intro D ψ hψ
   have hAA := Formalism.L2.Pj.AA_ne_zero Formalism.IndefR.Fin.factPrincipalDatum D
-  have hloc := GlobalTheory.T.fractionalIdeal_localGenerator_at_basePrime D D.host.AA hAA
-  obtain ⟨S, hS⟩ := GlobalTheory.T.fractionalIdeal_generated_by_one_almostEverywhere D D.host.AA hAA
+  have hloc := _root_.GlobalTheory.fracIdeal_locGen D D.host.AA hAA
+  obtain ⟨S, hS⟩ := _root_.GlobalTheory.IdeleGen.aeGen D D.host.AA hAA
   let a : Pl D → D.host.E := fun v => if v ∈ S then (hloc v).choose else 1
   have hpos : ∀ v ∈ S, a v = (hloc v).choose := fun v hv => if_pos hv
   have ha : ∀ v ∉ S, a v = 1 := fun v hv => if_neg hv

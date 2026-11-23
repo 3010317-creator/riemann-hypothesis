@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.DifferentiableOddTheta
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.JacobiTripleFiniteProductStatement
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.JacobiTripleProductLimitStatement
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.MultipliableTpFactor
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.JacobiTripleFiniteProduct
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.JacobiTripleProductLimit
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,14 +63,14 @@ theorem tripleProduct : GlobalTheory.ThetaWeberRoad.TripleProduct := by
   have ht1 : ‖s ^ 2‖ < 1 := by
     rw [norm_pow]; nlinarith [norm_nonneg s]
   obtain ⟨hP, hP0, -⟩ := qPoch_tendsto (s ^ 2) ht1
-  have hT := GlobalTheory.T.jacobi_triple_product_limit (τ : ℂ) z hτ
+  have hT := _root_.GlobalTheory.JacobiTriple.tendsto_finCoeff_sum_jacobiTheta₂ (τ : ℂ) z hτ
   rw [(multipliable_tpFactor τ z).hasProd_iff_tendsto_nat]
   have key : ∀ n : ℕ, ∏ k ∈ Finset.range n, GlobalTheory.ThetaWeberRoad.tpFactor τ z k =
       qPoch (s ^ 2) n * ∑ j ∈ Finset.Icc (-(n : ℤ)) n,
         finCoeff (cexp (π * I * (τ : ℂ)) ^ 2) n j * jacobiTheta₂_term j z τ := by
     intro n
     rw [Finset.prod_congr rfl (fun k _ => tpFactor_eq τ z k), Finset.prod_mul_distrib]
-    have hf := GlobalTheory.T.jacobiTriple_finite_product s x hs0 hs1 hx0 n
+    have hf := _root_.GlobalTheory.JacobiTriple.finTriple s x hs0 hs1 hx0 n
     simp only [hs, hx] at hf
     simp only [hf, jacobiTheta₂_term_eq_zpow]
     rfl

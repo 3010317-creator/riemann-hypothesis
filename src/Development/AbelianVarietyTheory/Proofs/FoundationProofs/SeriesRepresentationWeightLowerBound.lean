@@ -1,13 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.StandardFiveNontrivial
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CardGeneralLinearGroupPrimeFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CardLevelDatumGroupMulPowStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CentralIdempotentIrreducibleCharacterPropsStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LevelDatumSubgroupCharacterPropertiesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RankLevelIdempotentLowerBoundGenericStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SquarefreeLabelTorusCardBoundsAndMulStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SubgroupCharacterIdempotentPropertiesStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CardGeneralLinearGroupPrimeField
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CardLevelDatumGroupMulPow
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CentralIdempotentIrreducibleCharacterProps
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LevelDatumSubgroupCharacterProperties
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RankLevelIdempotentLowerBoundGeneric
+public import Development.AbelianVarietyTheory.Definitions.Foundations.SamePartIffOfNeZero
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SquarefreeLabelTorusCardBoundsAndMul
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SubgroupCharacterIdempotentProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -62,13 +63,13 @@ namespace GlobalTheory.BadShare
 theorem series_weight_lower_bound : ∀ (g : ℕ) [Fact g.Prime] (N : ℕ), ∀ (L : Lev g N) (τ : (ZMod g)[X] → GG g N → ℂ), IsSeries τ → ∀ f ∈ sqSet g N, ∃ w : ℝ, conv (zc (τ f)) L.e 1 = (w : ℂ) * L.e 1 ∧ (1 - 1 / (g : ℝ)) * ((torusCard g f : ℝ))⁻¹ ≤ w := by
   intro g hg N L τ hτ f hf
   obtain ⟨V, hV, hchar, hgen, hdim⟩ := hτ.2 f hf
-  obtain ⟨h1, hmul, hc1, hcmul, -⟩ := GlobalTheory.T.levelDatum_submonoid_chi_mul_unipotent g N L
-  obtain ⟨hproj, he1, -, -⟩ := GlobalTheory.T.subgroupCharacterIdempotent_properties (GG g N) V V.ρ L.Mem L.chi h1 hmul hc1 hcmul
-  have hz := (GlobalTheory.T.centralIdempotent_irreducible_character_props (GG g N) V).2.2.2 L.e hproj.1
-  have hT : 0 < torusCard g f := ((GlobalTheory.T.squarefreeLabelTorusCard_bounds_and_mul g).1 N f hf).1
-  have hr := GlobalTheory.T.rank_levelIdempotent_lower_bound_generic g N V V.ρ hgen L
-  have hJ := GlobalTheory.T.card_levelDatum_group_mul_pow g N L
-  have hG := GlobalTheory.T.card_generalLinearGroup_primeField g N
+  obtain ⟨h1, hmul, hc1, hcmul, -⟩ := _root_.GlobalTheory.BadShare.LevGroup.lev_group g N L
+  obtain ⟨hproj, he1, -, -⟩ := _root_.GlobalTheory.BadShare.EpsProj.eps_spec (GG g N) V V.ρ L.Mem L.chi h1 hmul hc1 hcmul
+  have hz := (_root_.GlobalTheory.BadShare.ZCalc.zc_calc (GG g N) V).2.2.2 L.e hproj.1
+  have hT : 0 < torusCard g f := ((_root_.GlobalTheory.BadShare.torusCard_bounds_mul g).1 N f hf).1
+  have hr := _root_.GlobalTheory.BadShare.rk_lev_lower g N V V.ρ hgen L
+  have hJ := _root_.GlobalTheory.BadShare.lev_card g N L
+  have hG := _root_.GlobalTheory.BadShare.card_GG_eq g N
   have hGpos : 0 < Fintype.card (GG g N) := Fintype.card_pos
   have hgpos : 0 < g := hg.out.pos
   set k : ℕ := (if L.sharp = true then L.k else 0) with hk

@@ -1,13 +1,15 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ClsOmNonneg
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EquivFramesSameSecondLatticeFiberProofStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsAdaptedNormalFormRelevantTermProofStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FrameClassTermCountLeCardAutStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.RowsMeanC
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EquivFramesSameSecondLatticeFiberProof
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PerRowC
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsAdaptedNormalFormRelevantTermProof
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FrameClassTermCountLeCardAut
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SumPairsWeightMulClassLeMulSum
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermDeterminedByFrameClassAndIsometryStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermsOverRowCompatibleStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryHostFieldArithmeticConditionsProofStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermDeterminedByFrameClassAndIsometry
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TermsOverRowCompatible
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.UnitaryHostFieldArithmeticConditionsProof
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,10 +65,10 @@ theorem sum_pairs_le_classes_pf : ∀ (D : D7) (large₂ : SizeData₂ D) (X : H
     ∑ p ∈ Sf, wRow D (X.Fu u) p.1.lam' * (omT p.1 * omT p.2) ≤
       (∑ b ∈ Sf.image (fun p => frCls Λ p.1), clsOm Y u Λ b) * ∑ b ∈ Sf.image (fun p => frCls Λ p.2), clsOm Y u Λ b := by
   intro D large₂ X Y u hS W HW he Λ h hh Sf hSf hη
-  obtain ⟨hK, -⟩ := GlobalTheory.T.unitaryHostFieldArithmeticConditions D large₂ hS
+  obtain ⟨hK, -⟩ := _root_.GlobalTheory.TypeAsm.hostC D large₂ hS
   have hlam : ∀ p ∈ Sf, p.2.lam = Λ ∧ p.2.lam' = p.1.lam' := by
     intro p hp
-    obtain ⟨hl, hl', -⟩ := GlobalTheory.T.termsOverRow_compatible D X Y u p ⟨trivial, trivial, (hSf p hp).1.2.2⟩
+    obtain ⟨hl, hl', -⟩ := _root_.GlobalTheory.TypeAsm.CompatPf.compatC D X Y u p ⟨trivial, trivial, (hSf p hp).1.2.2⟩
     exact ⟨hl.symm.trans (hSf p hp).2, hl'.symm⟩
   have hL : ∑ p ∈ Sf, wRow D (X.Fu u) p.1.lam' * (omT p.1 * omT p.2) =
       ∑ p ∈ Sf, wRow D (X.Fu u) p.1.lam' * (clsOm Y u Λ (frCls Λ p.1) * clsOm Y u Λ (frCls Λ p.2)) := by
@@ -94,9 +96,9 @@ theorem sum_pairs_le_classes_pf : ∀ (D : D7) (large₂ : SizeData₂ D) (X : H
       exact inv_injective e2
     have hfe := (frCls_eq_iff hK Λ p.2 q.2).1 hc
     have hl : p.2.lam = q.2.lam := ((hlam p hp).1).trans ((hlam q hq).1).symm
-    obtain ⟨N, hN, -⟩ := GlobalTheory.T.exists_adaptedNormalForm_relevantTerm D large₂ X Y u hS p.2 hrel2
+    obtain ⟨N, hN, -⟩ := _root_.GlobalTheory.TypeAsm.nfExC_holds D large₂ X Y u hS p.2 hrel2
     have hfe' : GlobalTheory.DegAsm.FrEqv (F0 X u) p.2.lam (Ft p.2) (Ft q.2) := by rw [(hlam p hp).1]; exact hfe
-    have := GlobalTheory.T.term_determined_by_frameClass_and_isometry D large₂ X Y u hS W HW he p.2 q.2 ⟨N, hN⟩ hl hfe' (h p.2) (hh p.2 hrel2)
+    have := _root_.GlobalTheory.TypeAsm.InjProof.injC D large₂ X Y u hS W HW he p.2 q.2 ⟨N, hN⟩ hl hfe' (h p.2) (hh p.2 hrel2)
       (by rw [hhe]; exact hh q.2 hrelq)
     exact Prod.ext h1 this
   · intro b
@@ -115,9 +117,9 @@ theorem sum_pairs_le_classes_pf : ∀ (D : D7) (large₂ : SizeData₂ D) (X : H
       have hw : ∀ t ∈ s, wRow D (X.Fu u) t.lam' = wRow D (X.Fu u) t₀.lam' := by
         intro t ht
         obtain ⟨hl, hf⟩ := hrel t ht
-        rw [(GlobalTheory.T.equivFramesSameSecondLatticeFiber_proof D large₂ X Y u hS t₀ t hl hf).1]
+        rw [(_root_.GlobalTheory.TypeAsm.FibProof.fibC D large₂ X Y u hS t₀ t hl hf).1]
       rw [Finset.sum_congr rfl hw, Finset.sum_const, nsmul_eq_mul]
-      exact GlobalTheory.T.frameClass_termCount_le_card_aut D large₂ X Y u hS t₀ s hrel
+      exact _root_.GlobalTheory.TypeAsm.FibCard.fibCardC D large₂ X Y u hS t₀ s hrel
     refine gen _ fun t ht => ?_
     simp only [Finset.mem_filter, Finset.mem_image] at ht
     obtain ⟨⟨p, hp, rfl⟩, ht2⟩ := ht

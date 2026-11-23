@@ -1,7 +1,7 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsEigFrames
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RiemannLatticeEigenProjectionStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RiemannLatticeEigenProjection
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -106,7 +106,7 @@ theorem eigComp_eq_sum : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] 
   obtain ⟨N, a, c, h⟩ := exists_coeffs s
   refine ⟨N, a, c, ?_⟩
   intro g Λ _ _ R z
-  obtain ⟨-, -, hs, hsum, -⟩ := GlobalTheory.T.riemann_lattice_eigen_projection E g Λ Unit R
+  obtain ⟨-, -, hs, hsum, -⟩ := _root_.GlobalTheory.CompanionTheory.Relay.riemann_lattice_eigen_projection E g Λ Unit R
   have hB : ∀ (b : 𝓞 E) (t : E →+* ℂ), R.B b (eigComp R.B (t.comp (algebraMap (𝓞 E) E)) z) =
       t (algebraMap (𝓞 E) E b) • eigComp R.B (t.comp (algebraMap (𝓞 E) E)) z := by
     intro b t

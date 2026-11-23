@@ -2,14 +2,14 @@ module
 
 public import Development.WeilBound.CoreStatements.GaussianSeminormBounds.RealSeminormFiltration.CoreDefs
 public import Development.WeilBound.CoreStatements.GaussianSeminormBounds.RealSeminormFiltration.CoreHarm
-import Development.WeilBound.CoreStatements.GaussianSeminormBounds.RealSeminormFiltration.CoreLie
 public import Development.WeilBound.CoreStatements.GaussianSeminormBounds.RealSeminormFiltration.CoreSplit
-import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.FockHarmSplit
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.FockJointMult
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.FockOneDeg
+import Development.WeilBound.CoreStatements.GaussianSeminormBounds.RealSeminormFiltration.CoreLie
+import Formalism.PeriodIntegrals.FockDegreeTwoParts
+import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FockHarmonicSplitting.MinusPartOfMem
 import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.FockRaiseLow
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FockHarmonicSplitting.ConjTransposeOneKronecker
-import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FockHarmonicSplitting.MinusPartOfMem
 import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.FockJointMultiplicity.MinDeg
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -101,7 +101,7 @@ theorem th_gen_harm (c τ : ℂ) (c0 : ℚ) (hc : c = c0) (N : Submodule ℂ (Th
           · obtain ⟨e', rfl⟩ : ∃ e', e = e' + 2 := ⟨e - 2, by omega⟩
             rw [PI.FHS.minusPart_of_mem hQ]
             exact ih e' (by omega) _ (homogeneousComponent_mem e' _)
-        have hs := harmonicSplitting_holds p q r s true true rfl e
+        have hs := _root_.PI.FHS.harmSplit p q r s true true rfl e
         rw [hs] at hg
         obtain ⟨y, hy, z, hz, rfl⟩ := Submodule.mem_sup.1 hg
         rw [map_add (f := _)]

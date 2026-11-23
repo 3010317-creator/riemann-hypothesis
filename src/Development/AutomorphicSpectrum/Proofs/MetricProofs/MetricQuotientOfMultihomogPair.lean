@@ -2,7 +2,9 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsTwiceDifferentiableAt
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterRes
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LojasiewiczInequalityAnalyticStatement
+public import Mathlib.Analysis.Analytic.Basic
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.LojasiewiczInequalityAnalytic
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.SumFundCoMulSumIic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -208,7 +210,7 @@ theorem local_decay : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Finty
       exact hyp _ hG0 hHy hs
     show (aeval (R.lift x₀ ((R.A.chart j).symm z)) G : ℂ) / _ = 0
     rw [hlt, aeval_scale hG, hGy, mul_zero, zero_div]
-  obtain ⟨N, C₀, hN, hloj⟩ := GlobalTheory.T.lojasiewicz_inequality_analytic e f g _ hf hg hzero
+  obtain ⟨N, C₀, hN, hloj⟩ := _root_.GlobalTheory.CompanionTheory.Loj.lojasiewicz e f g _ hf hg hzero
   have hloj' : ∀ᶠ y in 𝓝 x₀, ‖f (R.A.chart j y)‖ ^ N ≤ C₀ * ‖g (R.A.chart j y)‖ :=
     ((R.A.chart j).continuousAt hj).eventually hloj
 

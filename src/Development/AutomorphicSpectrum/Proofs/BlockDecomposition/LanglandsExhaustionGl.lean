@@ -6,7 +6,7 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomolog
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.LSegJacquet
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.PropsCos
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LanglandsInjectiveOfSocleStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LanglandsSumSubquotientProductStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.LanglandsSumSubquotientProduct
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,7 +59,7 @@ theorem langlandsMultisegments_of_clauses (hA : GlobalTheory.Published.Irreducib
   intro k _ _ _ _ _
   exact ⟨GlobalTheory.T.langlands_injective_of_socle hA (hSoc k) (hSeg k),
     fun 𝔪 𝔫 x y hd h₀ h₁ hy =>
-      GlobalTheory.T.langlands_sum_subquotient_product hA (hSoc k) (hSeg k)
+      _root_.GlobalTheory.CompanionTheory.LangSumSub.main hA (hSoc k) (hSeg k)
         (hFree k) (hE k) 𝔪 𝔫 x y hd h₀ h₁ hy⟩
 
 end GlobalTheory.CompanionTheory.LanglandsMultiseg

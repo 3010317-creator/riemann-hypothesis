@@ -1,12 +1,14 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsFibreChartIff
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BlockDiagonalMinorVanishingStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BlockTriangularOfProportionalMinorsStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ElementaryTwistMinorOtherStepsStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ElementaryTwistMinorScalarStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.GenericBlockMatrixIsBlockDiag
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BlockDiagonalMinorVanishing
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.BlockTriangularOfProportionalMinors
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ElementaryTwistMinorOtherSteps
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ElementaryTwistMinorScalar
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagCoverTwoFramesComparison
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.FlagModelBaseProjectionPoints
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsBlkCover
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,7 +55,6 @@ import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ExistsBlkCover
 import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsLocSec
 
 @[expose] public section
@@ -336,7 +337,7 @@ theorem exists_minor_ne (hj : j ≤ N) (i : Fin N) {h : Matrix (Fin N) (Fin N) �
     ∃ I, minorIJ h I (stepCols N j i) ≠ 0 := by
   by_contra hc
   push_neg at hc
-  have e := (GlobalTheory.T.block_diagonal_minor_vanishing ℂ N j i hj).1 h⁻¹ h (stepCols N j i) (stepCols N j i)
+  have e := (_root_.GlobalTheory.CompanionTheory.Ar.PB.MinorCalc.minors_main ℂ N j i hj).1 h⁻¹ h (stepCols N j i) (stepCols N j i)
   rw [Matrix.nonsing_inv_mul _ hd.isUnit, minor_one, Finset.sum_eq_zero fun I _ => by rw [hc I, mul_zero]] at e
   exact one_ne_zero e
 
@@ -346,7 +347,7 @@ theorem scal_eq (hj : j ≤ N) (i : Fin N) {h B : Matrix (Fin N) (Fin N) ℂ} (h
     c = ∏ x ∈ stepCols N j i, B x x := by
   obtain ⟨I, hI⟩ := exists_minor_ne hj i hd
   have a := e I
-  rw [(GlobalTheory.T.block_diagonal_minor_vanishing ℂ N j i hj).2.2.1 h B I hB hBt] at a
+  rw [(_root_.GlobalTheory.CompanionTheory.Ar.PB.MinorCalc.minors_main ℂ N j i hj).2.2.1 h B I hB hBt] at a
   apply mul_right_cancel₀ hI
   rw [← a, mul_comm]
 
@@ -423,7 +424,7 @@ theorem normRhs_same : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fint
     fun i k hk I => minors_prop M hbp hF hG hk q1 hb1 bz1 (hh.mul (hT t)) (hh'.mul (hT t')) (e1 i) (e1' i) I
   have hsome : ∀ i, IsProperStep N j i → ∃ k, M.blk (τ, i) = some k := fun i hi =>
     Option.ne_none_iff_exists'.1 fun e => (M.blk_none _).1 e hi
-  have tri : (h⁻¹ * h').BlockTriangular id := GlobalTheory.T.block_triangular_of_proportional_minors N j h h' hj hh hh' hd hd' fun i hi => by
+  have tri : (h⁻¹ * h').BlockTriangular id := _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.Sec.TriStep.triangular_of_minors_proportional N j h h' hj hh hh' hd hd' fun i hi => by
     obtain ⟨k, hk⟩ := hsome i hi
     exact ⟨c0 k, m0 i k hk⟩
   obtain ⟨B, hBd⟩ : ∃ B, B = h⁻¹ * h' := ⟨_, rfl⟩
@@ -440,10 +441,10 @@ theorem normRhs_same : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fint
   have s1 : ∀ i k, M.blk (τ, i) = some k → i ≠ a → c1 k = ∏ x ∈ stepCols N j i, B x x := fun i k hk hi =>
     scal_eq hj i hd hBb hBt fun I => by
       have e := m1 i k hk I
-      rw [GlobalTheory.T.elementary_twist_minor_other_steps N j a b ca cb hj hb hcase hca hcb h' t' i hi I,
-        GlobalTheory.T.elementary_twist_minor_other_steps N j a b ca cb hj hb hcase hca hcb h t i hi I, hhB] at e
+      rw [_root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.Sec.TransvOther.minorIJ_other_step N j a b ca cb hj hb hcase hca hcb h' t' i hi I,
+        _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.Sec.TransvOther.minorIJ_other_step N j a b ca cb hj hb hcase hca hcb h t i hi I, hhB] at e
       exact e
-  obtain ⟨-, p2⟩ := GlobalTheory.T.elementary_twist_minor_scalar N j a b ca cb hj hb hcase hca hcb h B t t' (c1 k₀) hd hBb hBt fun I => by
+  obtain ⟨-, p2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.PB.WSq.Sec.Plane.param_relation N j a b ca cb hj hb hcase hca hcb h B t t' (c1 k₀) hd hBb hBt fun I => by
     rw [← hhB]; exact m1 a k₀ hk₀ I
   have hv : ∀ i, ¬ IsProperStep N j i → valAt M.x (F.υ (τ, i)) (basePart M.blk z₀) ≠ 0 := fun i hi =>
     val_ups_ne M hbp hG ((M.blk_none _).2 hi)
@@ -490,7 +491,7 @@ theorem normRhs_same : ∀ (K : Type) [Fintype K] (ι : K → Type) [∀ k, Fint
     · have hbl := (M.blk_none (τ, b)).2 hp
       have e : Fib.facOf N j a h' b = Fib.facOf N j a h b * ∏ x ∈ stepCols N j b, B x x := by
         rw [fac_next hj hb hcase hp, fac_next hj hb hcase hp, hhB]
-        exact (GlobalTheory.T.block_diagonal_minor_vanishing ℂ N j b hj).2.2.1 h B _ hBb hBt
+        exact (_root_.GlobalTheory.CompanionTheory.Ar.PB.MinorCalc.minors_main ℂ N j b hj).2.2.1 h B _ hBb hBt
       rw [hD]
       simp only [wt, if_neg hp]
       rw [dy_sum_none M hbl ob0, dy_sum_none M hbl ob1, e, ← mul_assoc, norm_mul _ (∏ x ∈ stepCols N j b, B x x),

@@ -2,11 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CstSApply
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NatCastNeZeroPs
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DividedPowerMonomialFrobeniusCongrPowStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DividedPowerSeriesGeneratorSetEqSumAddMulStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DividedPowerMonomialFrobeniusCongrPow
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DividedPowerSeriesGeneratorSetEqSumAddMul
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DividedPowerSeriesSubringEqGeneratorSet
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusMapsDividedPowerSeriesGeneratorSetStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WittTiltFrobeniusEqPowAddMulStatement
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsAdicCompleteOfPowLe
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.WittTiltFrobeniusEqPowAddMul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -98,12 +99,12 @@ theorem frob_sd_congr : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZ
   have gcst : ∀ w, G (cstS t K w) := by
     intro w
     obtain ⟨hm, hf⟩ := cstS_mem_frob l a e O K t w
-    obtain ⟨x, hx⟩ := GlobalTheory.T.wittTiltFrobenius_eq_pow_add_mul l a w
+    obtain ⟨x, hx⟩ := _root_.GlobalTheory.FrobCong.sigma_eq_pow_add l a w
     refine ⟨memS hm, cstS t K x, memS (cstS_mem_frob l a e O K t x).1, ?_⟩
     rw [hf, hx, map_add (f := _), map_pow, map_mul, map_natCast]
   have gdp : ∀ n, G (dpS a e n) := by
     intro n
-    obtain ⟨hm, B, hB, eB⟩ := GlobalTheory.T.dividedPowerMonomial_frobenius_congr_pow l a e O K t n
+    obtain ⟨hm, B, hB, eB⟩ := _root_.GlobalTheory.CrysPrism.dpS_frob_good l a e O K t n
     exact ⟨memS hm, B, memS hB, eB⟩
   have gsum : ∀ (N : ℕ) (v : ℕ → Wq l a), G (∑ n ∈ Finset.range N, cstS t K (v n) * dpS a e n) := by
     intro N v
@@ -111,7 +112,7 @@ theorem frob_sd_congr : ∀ (l : ℕ) [Fact l.Prime] (a e : ℕ) [NeZero a] [NeZ
     rw [map_zero, zero_pow hl0, mul_zero, add_zero]
   intro F hF
   refine ⟨GlobalTheory.T.frobenius_maps_dividedPowerSeriesGeneratorSet l a e O K t F hF, ?_⟩
-  obtain ⟨N, v, y, hy, hFe⟩ := GlobalTheory.T.dividedPowerSeriesGeneratorSet_eq_sum_add_mul l a e O K t F hF
+  obtain ⟨N, v, y, hy, hFe⟩ := _root_.GlobalTheory.CrysPrism.sdSet_eq_sum_add_mul l a e O K t F hF
   obtain ⟨hg, Bg, hBg, eg⟩ := gsum N v
   set g := ∑ n ∈ Finset.range N, cstS t K (v n) * dpS a e n
   set L : ZMod a → K⟦X⟧ := (l : ZMod a → K⟦X⟧)

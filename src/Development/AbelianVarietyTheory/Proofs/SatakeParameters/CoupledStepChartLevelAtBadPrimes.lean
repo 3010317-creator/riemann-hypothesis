@@ -4,13 +4,17 @@ public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.UnderT
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SmulCompSmul
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsLevelGroupModTypePrime
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TameHeckeCharLocalEqInvTypeCharacter
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.BlockDetResidueCharEqOneOfCongModQStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ConjExtendPrincipalCongruenceCongOneModQStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FieldIsoMatrixCongruenceAutomorphismCongruenceStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemIntegralGLPrincipalCongruenceOfColsCongStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemParahoricOfCongOneModQStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RationalApproximationsDifferByCongruentToOneStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RowCharacterIdAddQSmulLatticePreservingEqOneStatement
+public import Formalism.LocalToGlobal.Columns.FiniteSumNonzeroLargeDepth
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.BlockDetResidueCharEqOneOfCongModQ
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemParahoricOfTrivialReduction
+public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.RedPEqZeroOfDiv
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ConjExtendPrincipalCongruenceCongOneModQ
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ExistsMidLevIff
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.FieldIsoMatrixCongruenceAutomorphismCongruence
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemIntegralGLPrincipalCongruenceOfColsCong
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.MemParahoricOfCongOneModQ
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RationalApproximationsDifferByCongruentToOne
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RowCharacterIdAddQSmulLatticePreservingEqOne
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -63,14 +67,14 @@ theorem cong_of_nearAt {F E : Type} [Field F] [NumberField F] [Field E] [NumberF
     (P : HeightOneSpectrum (𝓞 E)) (n : ℕ) (x : GL (Fin N) (E ⊗[F] FiniteAdeleRing (𝓞 F) F)) (g₁ g₂ : GL (Fin N) E)
     (hn : 0 < n) (h₁ : NearAt P n x g₁) (h₂ : NearAt P n x g₂) (a b : Fin N) :
     IntAt P ((((qOf P : ℕ) : E) ^ n)⁻¹ * (((g₁⁻¹ * g₂ : GL (Fin N) E) : Matrix (Fin N) (Fin N) E) - 1) a b) :=
-  GlobalTheory.T.rationalApproximations_differ_by_congruent_to_one P n x g₁ g₂ hn h₁ h₂ a b
+  _root_.GlobalTheory.TwU.CongTwo.intAt_inv_mul_of_nearAt P n x g₁ g₂ hn h₁ h₂ a b
 
 theorem cong_seam {D : D7} {X : Fields} (s : Seam D X) {N : ℕ} (P : HeightOneSpectrum (𝓞 X.E)) (n : ℕ)
     (g : Sp X.E N ≃ₗ[X.E] Sp X.E N)
     (h : ∀ a b, IntAt (seamP s P) ((((qOf (seamP s P) : ℕ) : D.host.E) ^ n)⁻¹ *
       (((seamGL s g : GL (Fin N) D.host.E) : Matrix (Fin N) (Fin N) D.host.E) - 1) a b)) :
     ∀ s' l, IntAt P (((qOf P : X.E) ^ n)⁻¹ * (g (Pi.single s' (1 : X.E)) l - (Pi.single s' (1 : X.E) : Sp X.E N) l)) :=
-  GlobalTheory.T.fieldIso_matrixCongruence_automorphismCongruence s P n g h
+  _root_.GlobalTheory.SeamCong.cong_seam s P n g h
 
 section Cong1
 
@@ -85,7 +89,7 @@ theorem cong_mem_level_chr_one : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (C
       (∀ x, r (Loc.inX X.E (R.N j) (cOf R j) x) = Loc.inX X.E (R.N j) (cOf R j) (k x)) ∧ chiInv Ch sel mu cst j P (L.h j b P) r = 1 := by
   intro X Pr R Ch sel S mu cst L G m2 hX hPr hL j hj b P k hk
   classical
-  obtain ⟨hkG, hkC⟩ := GlobalTheory.T.mem_integralGL_principalCongruence_of_cols_cong P.1 (cst.D P) k (hL.cst_ok.D_pos P) hk
+  obtain ⟨hkG, hkC⟩ := _root_.GlobalTheory.CongOne.mem_glint_prinCong_of_cols P.1 (cst.D P) k (hL.cst_ok.D_pos P) hk
   set κ : GLint X.E (R.N j) P.1 := ⟨k, hkG⟩ with hκdef
   have hψ : cst.psi P (Loc.n1Arg (GlobalTheory.CongLevel.extE (cOf R j) k)) = 1 := by
     rw [GlobalTheory.Mem.Col2.LevMod.unipotentArg_extendByIdOnLastCoords]
@@ -109,7 +113,7 @@ theorem cong_mem_level_chr_one : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (C
     rw [if_pos hP] at hh'
     have hcong := GlobalTheory.CongLevel.conj_cong (qOf P.1) _ _ (L.h j b P) hh'
       (GlobalTheory.CongLevel.extE_cong P.1 (qOf P.1) (cOf R j) (fun i => i + 1) hd k hkG hred)
-    have h1 := GlobalTheory.T.rowCharacter_id_add_q_smul_latticePreserving_eq_one Ch mu cst.sharp j P.1 hP ((qOf P.1 : X.E)⁻¹ •
+    have h1 := _root_.GlobalTheory.LamRowCong.lamRow_one_add_q Ch mu cst.sharp j P.1 hP ((qOf P.1 : X.E)⁻¹ •
       (((L.h j b P)⁻¹ * GlobalTheory.CongLevel.extE (cOf R j) k * L.h j b P : AutY X R j).toLinearMap - LinearMap.id))
       fun x hx => by
         have hx' := hx
@@ -137,8 +141,8 @@ theorem cong_mem_level_chr_one : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (C
       have h1 := hL.depthQ' P hP
       have h2 := hL.hm
       omega
-    have hg := GlobalTheory.T.conj_extend_principalCongruence_cong_one_mod_q P.1 (cOf R j) j (cst.D P) (L.h j b P) κ hkC hjD hbd'
-    have hginv := GlobalTheory.T.conj_extend_principalCongruence_cong_one_mod_q P.1 (cOf R j) j (cst.D P) (L.h j b P) κ⁻¹ (inv_mem hkC) hjD hbd'
+    have hg := _root_.GlobalTheory.QCong.conj_extE_cong P.1 (cOf R j) j (cst.D P) (L.h j b P) κ hkC hjD hbd'
+    have hginv := _root_.GlobalTheory.QCong.conj_extE_cong P.1 (cOf R j) j (cst.D P) (L.h j b P) κ⁻¹ (inv_mem hkC) hjD hbd'
     have einv : ((L.h j b P)⁻¹ * GlobalTheory.CongLevel.extE (cOf R j) κ.1 * L.h j b P)⁻¹ =
         (L.h j b P)⁻¹ * GlobalTheory.CongLevel.extE (cOf R j) (κ⁻¹).1 * L.h j b P := by
       rw [mul_inv_rev, mul_inv_rev, inv_inv, GlobalTheory.CongLevel.extE_inv, mul_assoc]
@@ -150,14 +154,14 @@ theorem cong_mem_level_chr_one : ∀ {X : Fields} {Pr : Primes X} {R : Ranks} (C
       rw [e]
       unfold Jat
       rw [if_neg hP]
-      refine GlobalTheory.T.mem_parahoric_of_cong_one_mod_q P.1 (R.k + j) (R.N j) (cOf R j) _ hg ?_
+      refine _root_.GlobalTheory.ParahoricOfCong.mem_JQ_of_cong P.1 (R.k + j) (R.N j) (cOf R j) _ hg ?_
       rw [einv]
       exact hginv
     · unfold chiInv
       rw [hψ, inv_one, one_mul]
       unfold lamRow
       rw [if_neg hP]
-      exact GlobalTheory.T.blockDetResidueChar_eq_one_of_cong_mod_q P.1 _ (R.k + j) (R.N j) (R.N j + cOf R j) _ (by omega) hg
+      exact _root_.GlobalTheory.LamQBCong.lamQB_eq_one_of_cong P.1 _ (R.k + j) (R.N j) (R.N j + cOf R j) _ (by omega) hg
 
 end Cong1
 

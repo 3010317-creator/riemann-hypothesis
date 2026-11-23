@@ -3,16 +3,20 @@ module
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.FlatDegree
 public import Development.AutomorphicSpectrum.Statements.GeometryStatements.NineGeoU
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CoordsAtComplexEmbedding
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspCorrespondenceBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspIntersectionFiniteStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspIntersectionHeightStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HeightOfZeroDimVarietyStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LineHeightInvariantScalingStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PhiDegFibLatLeOfIsOFamilyOfIsAdaptedStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SmallPointsOverNumberFieldStatement
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.AdaptedFamilyExistsOnEigenspaceStatement
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUniqueLeftBasisCoordsAdicCompletion
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspCorrespondenceBound
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspIntersectionFinite
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CuspIntersectionHeight
+public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ArchBetween
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.HeightOfZeroDimVariety
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LineHeightInvariantScaling
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.PhiDegFibLatLeOfIsOFamilyOfIsAdapted
+public import Development.AutomorphicSpectrum.Definitions.DivisibilityTowers.GoodOrigin
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.SmallPointsOverNumberField
 public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RegularizedWeightDominatesEventuallyStatement
 public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.PZhangLowerX
+import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsAdapted
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.AdaptedFamilyExistsOnEigenspace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -163,7 +167,7 @@ theorem htU_of_given : Top.Given → Fl.FlatDegree → ∃ Ch : ℝ, ∀ (E : Ty
     (S' : BoundedRegularisationSetting M Dc.Xo Hd.aMu (corrW Hd U)), IsFullIntersectionSystem II → admitted Xo l c Y Or B₁ →
       Or.𝔐.IsCuspWeight Or.sm U → S'.IsTied → HtU S' Ch (hostRd E) (hostLval H) := by
   intro hG hF
-  obtain ⟨C, -, hU4⟩ := GlobalTheory.T.phiDeg_fibLat_le_of_isOFamily_of_isAdapted hG hF
+  obtain ⟨C, -, hU4⟩ := _root_.GlobalTheory.CompanionTheory.Relay.phiDeg_fibLat_le_of_isOFamily_of_isAdapted hG hF
   refine ⟨C, ?_⟩
   intro E _ _ _ _ H D Xo l c Y II K _ J _ Ω _ _ W _ _ Dc Hd S₀ Or B₁ U M S' hII hAdm hU hTied
   intro B p q hB hp hpq
@@ -174,7 +178,7 @@ theorem htU_of_given : Top.Given → Fl.FlatDegree → ∃ Ch : ℝ, ∀ (E : Ty
   refine ⟨u / 2, half_pos hu, fun t' ht' ht'u P hP hyP => ?_⟩
   obtain ⟨hge, -, hreg⟩ := hsub ⟨ht', by linarith⟩
   obtain ⟨hsm, hdeg, hlog⟩ := hreg B p q
-  obtain ⟨L₀, _, _, w, -, hw, hII'⟩ := GlobalTheory.T.height_of_zero_dim_variety K J II hII.1 P hP
+  obtain ⟨L₀, _, _, w, -, hw, hII'⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Ht.height_eq_intersection_number K J II hII.1 P hP
   have hdeg0 : (0 : ℝ) < degC P := Nat.cast_pos.2 (degC_pos_of_isArithVar_one hP)
   have hMU : htMUc Hd S' B p q t' P = Ht.lineHt (MUc Hd S' B p q t') L₀ w / q := by
     unfold htMUc
@@ -189,10 +193,10 @@ theorem htU_of_given : Top.Given → Fl.FlatDegree → ∃ Ch : ℝ, ∀ (E : Ty
     have h2 := Dc.two_le_N
     omega
   obtain ⟨L, _, _, e, z, Pa, V, _, _, _, _, MV, A, hco, hlin, hrk, hBq⟩ :=
-    GlobalTheory.T.small_points_over_number_field hG E H D l (Xo l) c Y S₀ Ω K J Dc.y Or.𝔐 L₀ hpq1 w hwy
+    _root_.GlobalTheory.CompanionTheory.Relay.small_points_over_number_field hG E H D l (Xo l) c Y S₀ Ω K J Dc.y Or.𝔐 L₀ hpq1 w hwy
   obtain ⟨-, -, -, -, -, hcard, -⟩ :=
-    GlobalTheory.T.cusp_correspondence_bound E H D l (Xo l) c Y S₀ Ω K J Dc.y Or.𝔐 L (spMap (algebraMap (𝓞 L) L) ≫ z)
-  obtain ⟨⟨r, v, hv⟩, hadp⟩ := GlobalTheory.T.adapted_family_exists_on_eigenspace E L (CMType H) V A hcard
+    _root_.GlobalTheory.CompanionTheory.Ar.Cusp.LabPt.exists_labVal E H D l (Xo l) c Y S₀ Ω K J Dc.y Or.𝔐 L (spMap (algebraMap (𝓞 L) L) ≫ z)
+  obtain ⟨⟨r, v, hv⟩, hadp⟩ := _root_.GlobalTheory.CompanionTheory.Relay.adapted_family_exists_on_eigenspace E L (CMType H) V A hcard
   have hne : Nonempty (CMType H) := by
     have h1 : 0 < Module.finrank ℚ E := Module.finrank_pos
     rw [← hcard] at h1
@@ -214,7 +218,7 @@ theorem htU_of_given : Top.Given → Fl.FlatDegree → ∃ Ch : ℝ, ∀ (E : Ty
     subst hk'
     exact ⟨qq, h1, h2⟩
   choose qq hqq1 hqq2 using hk
-  obtain ⟨x, hx, hht⟩ := GlobalTheory.T.cusp_intersection_height hG E H D Xo l c Y II K J Ω W Dc Hd S₀ Or B L z Pa V MV A
+  obtain ⟨x, hx, hht⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.PtHt.g_height hG E H D Xo l c Y II K J Ω W Dc Hd S₀ Or B L z Pa V MV A
     (fun p => e (w p)) r (Dc.j' - r) v qq hAdm.2.1 hco hlin hv (fun τ => ⟨hqq2 τ, hqq1 τ⟩)
   have hu4 := hU4 E H D Xo l c Y II K J Ω W Dc Hd S₀ Or B₁ B L z Pa V MV A r (Dc.j' - r) v qq hAdm hB hlin hBq
     hrj hv (fun τ => ⟨hqq2 τ, hqq1 τ⟩)
@@ -226,11 +230,11 @@ theorem htU_of_given : Top.Given → Fl.FlatDegree → ∃ Ch : ℝ, ∀ (E : Ty
       rw [← Category.assoc, ← Spec.map_comp]
       rfl
     rw [e1] at hc
-    have h1 := GlobalTheory.T.cusp_intersection_finite hG E H D Xo l c Y II K J Ω W Dc Hd S₀ Or U M S' _ _ (x σ) hU hc (hx σ)
+    have h1 := _root_.GlobalTheory.CompanionTheory.Relay.cusp_intersection_finite hG E H D Xo l c Y II K J Ω W Dc Hd S₀ Or U M S' _ _ (x σ) hU hc (hx σ)
     linarith [hge (M.proj fun p => σ (e (w p)))]
   have hext : ∀ A₀ : HermLine J, Ht.lineHt A₀ L (fun p => e (w p)) = Ht.lineHt A₀ L₀ w := by
     intro A₀
-    have h1 := GlobalTheory.T.line_height_invariant_scaling K J A₀ L₀ L e w (fun _ => 1) hw.1 (fun _ => one_ne_zero)
+    have h1 := _root_.GlobalTheory.CompanionTheory.Ar.Ht.lineHt_map_scale K J A₀ L₀ L e w (fun _ => 1) hw.1 (fun _ => one_ne_zero)
     simpa using h1
   have hw' : ∀ k, ∃ i, e (w ⟨k, i⟩) ≠ 0 := fun k => by
     obtain ⟨i, hi⟩ := hw.1 k

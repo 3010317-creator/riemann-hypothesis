@@ -4,17 +4,19 @@ public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.Coef
 public import Formalism.LocalToGlobal.NormalizedHeckeFactors.GlobalDatumRegularityOfTypesCompatibility
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.StepJumpDirect
 public import Formalism.SharpRestriction.LevelLetterCocycles.FourthHypothesisOfLifting
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CentralActsOnHeckeEigenspaceOfTypeSectionsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DepthZeroAdmissibleAllPendingDataStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFiniteGroupDataSeriesIdempotentsLabelSumsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsLabelInertiaEigenvaluesStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSplitPlaceOfOverTypePrimeStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CentralActsOnHeckeEigenspaceOfTypeSections
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DepthZeroAdmissibleAllPendingData
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFiniteGroupDataSeriesIdempotentsLabelSums
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsLabelInertiaEigenvalues
+public import Formalism.LocalRingCardinality.RhoDetPrimeEqMuTildeMulChiPow
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSplitPlaceOfOverTypePrime
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LabelTwistMultipliesRootsOfTameLabelsStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyGroupAlgebraCentreLatticeActionStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyLocalisedFormsTypeSectionHeckeStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PointParameterIsTypeParameterOfTameStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SphericalHeckeScalarOnTypeSpacesAllPlacesStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TypeSpaceProjectionEigenOfLocalisedFormsSectionStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyGroupAlgebraCentreLatticeAction
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyLocalisedFormsTypeSectionHecke
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PointParameterIsTypeParameterOfTame
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.RowsExhaust
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SphericalHeckeScalarOnTypeSpacesAllPlaces
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.TypeSpaceProjectionEigenOfLocalisedFormsSection
 import Development.AbelianVarietyTheory.Proofs.SatakeParameters.SplitExEveryDatum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -65,16 +67,16 @@ theorem main : ∀ (D : D7) (M : MtFam D), HeckeTied D M → HeckeRational D M �
   intro D M hT hR hA hPar h0 h5 hIne hDep hGen hZL hCI hCT hSer hZeta hDZ hAdm
   have hSU : GlobalTheory.EtaJoin.SplitUnif D := GlobalTheory.SplitConjPlace.splitEx_all D
   have hSec : ∀ i, Nonempty (Sec D i) := fun i =>
-    GlobalTheory.T.nonempty_localised_forms_type_section_hecke D M i hT hR hA hSU (GlobalTheory.T.sphericalHeckeScalarOnTypeSpaces_all_places D M hT hA i)
-  obtain ⟨lz, hlz⟩ := GlobalTheory.T.exists_finiteGroupData_seriesIdempotentsLabelSums D
-  obtain ⟨Ω, hΩ⟩ := GlobalTheory.T.exists_label_inertia_eigenvalues D hIne hDep hGen
+    _root_.GlobalTheory.PendOf.SecProof.main D M i hT hR hA hSU (_root_.GlobalTheory.HeckeScalarAll.heckeScalar_all D M hT hA i)
+  obtain ⟨lz, hlz⟩ := _root_.GlobalTheory.LzExist.exists_lz_serEq D
+  obtain ⟨Ω, hΩ⟩ := _root_.GlobalTheory.PendOf.LabIneAll.main D hIne hDep hGen
   have hChar : LabChar D := GlobalTheory.T.labelTwistMultipliesRoots_of_tame_labels D h0 hIne hDep hGen
-  obtain ⟨Z⟩ := GlobalTheory.T.nonempty_groupAlgebraCentreLatticeAction D hSec hZL hCI hCT
-  have hPr : PrType D := GlobalTheory.T.typeSpaceProjectionEigen_of_localisedFormsSection D hSec
+  obtain ⟨Z⟩ := _root_.GlobalTheory.CenOAct.cenO_nonempty D hSec hZL hCI hCT
+  have hPr : PrType D := _root_.GlobalTheory.PendOf.PrTypeProof.main D hSec
   have hSplit : ∀ (k : Fin 2) (v : D.nd.PlG k), IsSplitPl D.host (D.naut.plGw k v) := fun k v =>
-    GlobalTheory.T.isSplitPlace_of_over_type_prime D k _ (D.naut.plGw_over k v)
-  have hPS : ParSurj D := GlobalTheory.T.pointParameterIsTypeParameter_of_tame D hPar h0 h5 hSplit hDep hDZ
+    _root_.GlobalTheory.TypeSplit.main D k _ (D.naut.plGw_over k v)
+  have hPS : ParSurj D := _root_.GlobalTheory.ParOfPoint.main D hPar h0 h5 hSplit hDep hDZ
   let P : PairedCharacterCondition.Pend D := mk lz hlz hSer hZeta Ω hΩ hChar Z hZL hPr hPS
-  exact ⟨P, GlobalTheory.T.depthZeroAdmissible_all_pending_data D P hAdm, GlobalTheory.T.centralActsOnHeckeEigenspace_of_typeSections D P hSec hCT⟩
+  exact ⟨P, _root_.GlobalTheory.AdmDepthZero.main D P hAdm, _root_.GlobalTheory.PendOf.EigSpanProof.main D P hSec hCT⟩
 
 end GlobalTheory.PendClose

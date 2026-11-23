@@ -2,8 +2,9 @@ module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.KatoQuadraticCharacters.FrobeniusHodgeTateLaws.ChiQuadAlt
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsModularFormCoeffSeqHeckeTOfPrimeNotDvdStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsModularFormCoeffSeqHeckeUAndDepletionStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularFormCoeffSeqLinearStructureStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.PetIPSmulRight
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsModularFormCoeffSeqHeckeUAndDepletion
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ModularFormCoeffSeqLinearStructure
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -95,7 +96,7 @@ theorem UpperTheory.V.Z.Kato.Joint.LocFacts₂ :
       have hf : (fop k l χE GlobalTheory.KZ.Letter.U) a = GlobalTheory.EisM.Uo l a := rfl
       have hcomm : (fun i => ι (GlobalTheory.EisM.Uo l a i)) = GlobalTheory.EisM.Uo l (fun i => ι (a i)) := rfl
       rw [hf, hcomm]
-      refine ⟨(GlobalTheory.T.isModularFormCoeffSeq_heckeU_and_depletion k (N * l) l _ (fun i => ι (a i)) hk hℓ (dvd_mul_left l N) ?_ ha).1, ?_⟩
+      refine ⟨(_root_.GlobalTheory.depletion_mf k (N * l) l _ (fun i => ι (a i)) hk hℓ (dvd_mul_left l N) ?_ ha).1, ?_⟩
       · intro d
         simp [GlobalTheory.EisM.ch]
       · rw [hE.U _ ha, hU]
@@ -106,7 +107,7 @@ theorem UpperTheory.V.Z.Kato.Joint.LocFacts₂ :
         funext i
         simp
       rw [hf, hcomm, formP_lam_smul, hD d hd]
-      exact ⟨((GlobalTheory.T.modularFormCoeffSeq_linear_structure k (N * l) _).2.2.1 _ _ ha).1, rfl⟩
+      exact ⟨((_root_.GlobalTheory.EisM.mf_linear k (N * l) _).2.2.1 _ _ ha).1, rfl⟩
   | algebraMap r =>
     intro a ha
     have hf : (FreeAlgebra.lift (Formalism.ConjugateSelfDual.Qbar l) (fop k l χE)) (algebraMap (Formalism.ConjugateSelfDual.Qbar l) _ r) a = r • a := by
@@ -115,7 +116,7 @@ theorem UpperTheory.V.Z.Kato.Joint.LocFacts₂ :
       funext i
       simp
     rw [hf, hcomm, formP_lam_smul, AlgHom.commutes]
-    exact ⟨((GlobalTheory.T.modularFormCoeffSeq_linear_structure k (N * l) _).2.2.1 _ _ ha).1, rfl⟩
+    exact ⟨((_root_.GlobalTheory.EisM.mf_linear k (N * l) _).2.2.1 _ _ ha).1, rfl⟩
   | add x y _ _ hx hy =>
     intro a ha
     obtain ⟨h1, h2⟩ := hx a ha
@@ -126,7 +127,7 @@ theorem UpperTheory.V.Z.Kato.Joint.LocFacts₂ :
       funext i
       simp
     rw [hcomm, formP_lam_add, h2, h4, map_add (f := _), map_add (f := _), add_mul]
-    exact ⟨((GlobalTheory.T.modularFormCoeffSeq_linear_structure k (N * l) _).2.1 _ _ h1 h3).1, rfl⟩
+    exact ⟨((_root_.GlobalTheory.EisM.mf_linear k (N * l) _).2.1 _ _ h1 h3).1, rfl⟩
   | mul x y _ _ hx hy =>
     intro a ha
     obtain ⟨h3, h4⟩ := hy a ha

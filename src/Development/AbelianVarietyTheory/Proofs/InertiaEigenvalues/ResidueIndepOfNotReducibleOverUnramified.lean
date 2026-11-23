@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.AdmSt
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FiltrationZeroMembership
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ReducibleOfStableRationalRowSubspaceStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ReducibleOfStableRationalRowSubspace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -145,7 +145,7 @@ theorem residue_indep_of_not_splits : ∀ (l : ℕ) [Fact l.Prime] (P : LocPrime
   by_contra hc0
   apply hNS
   have hbij := fr_bijective l m
-  refine GlobalTheory.T.reducible_of_stable_rational_rowSubspace l n K r ρ hR (resW P r m u) (fun d hd => hd.1) ?_ ?_ ?_ ?_
+  refine _root_.GlobalTheory.PMon.splits_of_stable_rat_subspace l n K r ρ hR (resW P r m u) (fun d hd => hd.1) ?_ ?_ ?_ ?_
   · intro e he d hd
     refine ⟨fun i => ?_, ?_⟩
     · simp [Pi.smul_apply, smul_eq_mul, map_mul, he, hd.1 i]

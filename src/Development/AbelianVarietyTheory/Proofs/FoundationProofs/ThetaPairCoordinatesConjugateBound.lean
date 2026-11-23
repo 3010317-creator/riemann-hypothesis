@@ -1,12 +1,12 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.NormSumPairRankZeroOfCurveCoordNorm
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ApplyAtOriginMinorProductLinearStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ApplyAtOriginMinorProductLinear
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DefiniteThetaPairTestVectorExpansionStatement
-import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLatticeOfAdelicPointStatement
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IntertwinerSelfDualVacuumIsVacuumStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitaryDoubleCosetClassesFiniteCardLeStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.UnitaryDoubleCosetClassesFiniteCardLe
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.VacuumTranslateConjugateJetBoundStatement
+import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsLatticeOfAdelicPoint
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -80,13 +80,13 @@ theorem applyAt0_comb {D : D7} {a d : ℕ} {ι : Type} (s : Finset ι) (c : ι �
     GL3Theta.applyAt0 D p (∑ i ∈ s, c i • G i) = ∑ i ∈ s, c i * GL3Theta.applyAt0 D p (G i) := by
   induction s using Finset.induction_on with
   | empty =>
-    have h := (GlobalTheory.T.applyAtOrigin_minorProduct_linear D a d (fun _ => 0) 0 (differentiable_const 0)).2.2.1 0 p
+    have h := (_root_.GlobalTheory.NormSum.applyAt0_minorPol_linear D a d (fun _ => 0) 0 (differentiable_const 0)).2.2.1 0 p
     simpa using h
   | insert i s hi ih =>
     rw [Finset.sum_insert hi, Finset.sum_insert hi,
-      (GlobalTheory.T.applyAtOrigin_minorProduct_linear D a d (fun _ => 0) _ ((hG i).const_smul (c i))).2.2.2 _ p
+      (_root_.GlobalTheory.NormSum.applyAt0_minorPol_linear D a d (fun _ => 0) _ ((hG i).const_smul (c i))).2.2.2 _ p
         (Differentiable.sum fun j _ => (hG j).const_smul (c j)), ih,
-      (GlobalTheory.T.applyAtOrigin_minorProduct_linear D a d (fun _ => 0) _ (hG i)).2.2.1]
+      (_root_.GlobalTheory.NormSum.applyAt0_minorPol_linear D a d (fun _ => 0) _ (hG i)).2.2.1]
 
 theorem comb_bound {ι : Type} [Fintype ι] (ρ : Qbar →ₐ[ℚ] ℂ) (r : ι → Qbar) (t : ι → ℂ) (S M : ℝ) (hM : 0 ≤ M)
     (hr : (∑ i, ‖ρ (r i)‖) ^ 2 ≤ S) (ht : ∀ i, t i ∈ Qbar ∧ ‖cj Qbar ρ (t i)‖ ^ 2 ≤ M) :
@@ -113,8 +113,8 @@ theorem coord_conj_le : ∀ (D : D7), Inp D → ∀ (cc : Ideal (𝓞 D.host.K))
   intro D hI cc δ t0 Q hc ht0 P hQ B hB hn ρ t0' ht0' h T
   generalize hM : (((P.a.factorial : ℝ) ^ (∑ τ, P.n τ)) ^ 2 * (3 * (2 * ((fF D * P.a * P.d : ℕ) : ℝ) * D.host.rdE + 1) ^ (fF D * P.a * P.d) * nrm1Sq (lamConj Qbar ρ (lamOf D cc δ)) (GL3Theta.th0 (lamConj Qbar ρ (lamOf D cc δ)) t0') ^ (fF D * P.a * P.d) * (2 * Real.exp 1 * Real.pi * B / area (lamConj Qbar ρ (lamOf D cc δ))) ^ (P.a * ∑ τ, P.n τ))) = M
   have hev : Even (P.a * P.d) := P.d_even.mul_left _
-  obtain ⟨Lt, hL, hL1, -⟩ := GlobalTheory.T.Lt_eq_iff_inv_mul_mem_intG_and_transport D P.a
-  obtain ⟨Lt', hL', hL1', -⟩ := GlobalTheory.T.Lt_eq_iff_inv_mul_mem_intG_and_transport D P.d
+  obtain ⟨Lt, hL, hL1, -⟩ := _root_.GlobalTheory.NormSum.exists_lattice_of_adelic_point D P.a
+  obtain ⟨Lt', hL', hL1', -⟩ := _root_.GlobalTheory.NormSum.exists_lattice_of_adelic_point D P.d
   have hs : SD D (stdL D P.a) := hL1 ▸ (hL 1).2
   have hs' : SD D (stdL D P.d) := hL1' ▸ (hL' 1).2
   have hjet : ∀ L L', SD D L → SD D L' → ∀ G, ThetaVectorUpToUnits D (tor0 D cc δ) t0 L L' G →
@@ -148,7 +148,7 @@ theorem coord_conj_le : ∀ (D : D7), Inp D → ∀ (cc : Ideal (𝓞 D.host.K))
     have h1 : ‖ρ ⟨c, hcQ⟩‖ = 1 := hc1 (ρ : Qbar →+* ℂ)
     simp only [map_mul, norm_mul, h1, one_mul]
     exact hr (ρ : Qbar →+* ℂ)
-  haveI := (GlobalTheory.T.unitaryDoubleCosetClasses_finite_card_le D P.a).1
+  haveI := (_root_.GlobalTheory.NormSum.cls_finite_card_le D P.a).1
   haveI := Fintype.ofFinite (Cls D P.a (intG D P.a))
   have e : P.coord h T = ∑ x : Cls D P.a (intG D P.a),
       ((((gam D (intG D P.a) x.out : Qbar))⁻¹ : Qbar) : ℂ) * P.term x.out h T := by

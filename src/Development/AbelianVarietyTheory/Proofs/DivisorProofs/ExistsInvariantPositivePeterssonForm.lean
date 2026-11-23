@@ -5,12 +5,14 @@ public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership
 public import Development.AbelianVarietyTheory.Proofs.AdelicLatticeProofs.ExistsIsOpenIsCompact
 public import Development.AbelianVarietyTheory.Proofs.CovolumeBounds.IntegralConjInnerMulInnerOfIsEmptyEquiv
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UnimodularOfIsFundamentalDomainFinite
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ArchimedeanUnitaryPointsEquivUnitaryGroupStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.GaloisCohomology₂.BaseChangeDefiniteUnitary
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ArchimedeanUnitaryPointsEquivUnitaryGroup
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DefiniteUnitaryClassSetFiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DefiniteUnitaryInfinitePointEqListProdPlacePartsStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.DefiniteUnitaryInfinitePointEqListProdPlaceParts
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsAdmissibleLocalComponentDefiniteUnitary
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.EqZeroOfAeFundamentalDomainOfLeftInvariant
-public import Formalism.LocalToGlobal.IndefiniteReal.LevelTypeEquivalence.FdomExistsAll
+public import Mathlib.MeasureTheory.Group.FundamentalDomain
+public import Lemmata.MiscLemmasB.Imports
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -115,7 +117,7 @@ theorem exists_compact_cover (E : Type) [Field E] [NumberField E] [IsCMField E] 
   obtain ⟨S, hS⟩ := GlobalTheory.T.definiteUnitary_classSet_finite E n K hKo
   haveI : CompactSpace (Matrix.unitaryGroup (Fin n) ℂ) := GlobalTheory.compactSpace_unitaryGroup (Fin n) ℂ
   haveI : ∀ v : InfinitePlace E, CompactSpace (embU n v.embedding) := fun v => by
-    obtain ⟨e, -⟩ := GlobalTheory.T.archimedeanUnitaryPoints_equiv_unitaryGroup E n v.embedding
+    obtain ⟨e, -⟩ := _root_.GlobalTheory.EmbUnitary.exists_equiv_unitaryGroup E n v.embedding
     exact e.toHomeomorph.symm.compactSpace
   let P : (∀ v : InfinitePlace E, embU n v.embedding) → UA E n :=
     fun y => (Finset.univ.toList.map fun v => (y v : UA E n)).prod
@@ -125,7 +127,7 @@ theorem exists_compact_cover (E : Type) [Field E] [NumberField E] [IsCMField E] 
   have hKc' : IsCompact (Subtype.val '' (K : Set (finU (E := E) (n := n)))) := hKc.image continuous_subtype_val
   refine ⟨_, (S.finite_toSet.isCompact.mul hPc).mul hKc', fun g => ?_⟩
   obtain ⟨γ, hγ, s, hs, x, hx, k, hk, e⟩ := hS g
-  obtain ⟨y, hy, -, hyx⟩ := GlobalTheory.T.definiteUnitaryInfinitePoint_eq_list_prod_placeParts E n x hx
+  obtain ⟨y, hy, -, hyx⟩ := _root_.GlobalTheory.DefU.infU_eq_list_prod_embU E n x hx
   refine ⟨γ, hγ, s * x * k, Set.mul_mem_mul (Set.mul_mem_mul hs ⟨fun v => ⟨y v, hy v⟩, hyx⟩) ⟨k, hk, rfl⟩, ?_⟩
   rw [e, mul_assoc, mul_assoc, mul_assoc]
 
@@ -149,7 +151,7 @@ theorem exists_invariant_pos_form : ∀ (E : Type) [Field E] [NumberField E] [Is
   haveI : TopologicalSpace.SeparableSpace (ratU E n) := inferInstance
   haveI : Countable (ratU E n) := TopologicalSpace.separableSpace_iff_countable.1 inferInstance
   obtain ⟨μ, hμ⟩ : ∃ μ : Measure (UA E n), μ.IsHaarMeasure := ⟨Measure.haar, inferInstance⟩
-  obtain ⟨𝓕, -, h𝓕'⟩ := Formalism.IndefR.Eqv.G5.fdom_exists_all (ratU E n)
+  obtain ⟨𝓕, -, h𝓕'⟩ := _root_.Bl.SecondBlockLemmaC.goal1 (ratU E n)
   have h𝓕 := h𝓕' μ
   have hfin : μ 𝓕 < ⊤ := by
     refine lt_of_le_of_lt ?_ (hC.measure_lt_top (μ := μ))

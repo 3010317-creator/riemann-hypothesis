@@ -2,11 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.IsSystem
 public import Mathlib.Data.Matrix.ColumnRowPartitioned
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DoubledHermitianTestFunctionSpecStatement
-public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DoubledThetaTestFunctionSesquilinearHeisenbergStatement
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DoubledHermitianTestFunctionSpec
+public import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.DoubledThetaTestFunctionSesquilinearHeisenberg
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HMatMulVecPerCrd
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HermitianHeisenbergOperatorLawsStatement
-import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HermitianWeilActionUnitaryGroupTestFunctionsStatement
+import Development.AbelianVarietyTheory.Definitions.SpanningFamilies.FirstCoordinateAdmissible
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HermitianHeisenbergOperatorLaws
+import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.HermitianWeilActionUnitaryGroupTestFunctions
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.RationalSchwartzBruhatAlgebraIntegralLinear
 import Development.AbelianVarietyTheory.Proofs.SiegelThetaTransformation.UnitaryActHalfSpace
 import Mathlib.Algebra.Order.Floor.Extended
@@ -106,18 +107,18 @@ theorem weil_dbl_zero_eq_zero : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   have hγu : IsUnit γ.det := (HAct.group_part hγ).1
 
   have hSBd : ∀ ψ : TF n g, IsSB ψ → IsSB (dbl X bas idx ψ φ₂) := fun ψ hψ =>
-    (GlobalTheory.T.doubledHermitianTestFunction_spec E r X g bas idx n hs hn ψ φ₂ hψ h₂).1
+    (_root_.GlobalTheory.SW.DblEx.dbl_spec E r X g bas idx n hs hn ψ φ₂ hψ h₂).1
   have hΦ := hSBd φ₁ h₁
   have hG := (heisG_laws E r X g bas idx n hs hn).2.2.2
   have hwadd : ∀ f f' : Matrix (Fin n) (Fin r) E → ℂ, IsSB f → IsSB f' →
       weil X.Ψ γ (f + f') = weil X.Ψ γ f + weil X.Ψ γ f' := fun f f' hf hf' =>
-    ((GlobalTheory.T.hermitianWeilAction_unitaryGroup_testFunctions E X.Ψ hΨ n r hn γ hγ f hf).2.2.2.1 f' hf').2
+    ((_root_.GlobalTheory.SW.weil_action E X.Ψ hΨ n r hn γ hγ f hf).2.2.2.1 f' hf').2
   have hwsmul : ∀ (c : ℂ) (f : Matrix (Fin n) (Fin r) E → ℂ), IsSB f →
       weil X.Ψ γ (c • f) = c • weil X.Ψ γ f := fun c f hf =>
-    (GlobalTheory.T.hermitianWeilAction_unitaryGroup_testFunctions E X.Ψ hΨ n r hn γ hγ f hf).2.2.2.2.1 c
+    (_root_.GlobalTheory.SW.weil_action E X.Ψ hΨ n r hn γ hγ f hf).2.2.2.2.1 c
 
   have hdbl0 : dbl X bas idx (0 : TF n g) φ₂ = 0 := by
-    have h := (GlobalTheory.T.doubledThetaTestFunction_sesquilinear_heisenberg E r X g bas idx n hs hn φ₁ φ₂ h₁ h₂).2.1 0 1
+    have h := (_root_.GlobalTheory.SW.DblLin.dbl_lin E r X g bas idx n hs hn φ₁ φ₂ h₁ h₂).2.1 0 1
     rwa [zero_smul, one_smul, zero_mul, zero_smul] at h
   have hw0 : weil X.Ψ γ (0 : Matrix (Fin n) (Fin r) E → ℂ) = 0 := by
     have h := hwsmul 0 _ hΦ
@@ -126,9 +127,9 @@ theorem weil_dbl_zero_eq_zero : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
   have hone : ∀ v : Fin n → E, weil X.Ψ γ (dbl X bas idx (heisG X bas (vecMulVec v ξ) φ₁) φ₂) 0 =
       weil X.Ψ γ (dbl X bas idx φ₁ φ₂) 0 := by
     intro v
-    have h3 := (GlobalTheory.T.doubledThetaTestFunction_sesquilinear_heisenberg E r X g bas idx n hs hn φ₁ φ₂ h₁ h₂).2.2 (vecMulVec v ξ) 0
+    have h3 := (_root_.GlobalTheory.SW.DblLin.dbl_lin E r X g bas idx n hs hn φ₁ φ₂ h₁ h₂).2.2 (vecMulVec v ξ) 0
     rw [(hG 0 φ₂ h₂).2.1] at h3
-    rw [h3, (GlobalTheory.T.hermitianHeisenbergOperator_laws E X.Ψ hΨ n r hn _ _ _ hΦ).2.2 γ hγ, Matrix.fromCols_toCols,
+    rw [h3, (_root_.GlobalTheory.SW.heisH_laws E X.Ψ hΨ n r hn _ _ _ hΦ).2.2 γ hγ, Matrix.fromCols_toCols,
       DblVan.toCols_eq_zero hγu hξ v, DblVan.heisH_zero_apply_zero]
 
   have hlin : ∀ t : Finset (Fin n → E),
@@ -144,8 +145,8 @@ theorem weil_dbl_zero_eq_zero : ∀ (E : Type) [Field E] [NumberField E] [IsCMFi
       have hcGw := (isSB_algebra_haar_linear ℚ (Fin n) (Fin g) _ _ hGw hGw).2.1 (a w)
       rw [Finset.sum_insert hw, Finset.sum_insert hw]
       refine ⟨(isSB_algebra_haar_linear ℚ (Fin n) (Fin g) _ _ hcGw hS).1, ?_⟩
-      have hI := GlobalTheory.T.doubledThetaTestFunction_sesquilinear_heisenberg E r X g bas idx n hs hn _ φ₂ hcGw h₂
-      have hJ := GlobalTheory.T.doubledThetaTestFunction_sesquilinear_heisenberg E r X g bas idx n hs hn _ φ₂ hGw h₂
+      have hI := _root_.GlobalTheory.SW.DblLin.dbl_lin E r X g bas idx n hs hn _ φ₂ hcGw h₂
+      have hJ := _root_.GlobalTheory.SW.DblLin.dbl_lin E r X g bas idx n hs hn _ φ₂ hGw h₂
       have hsm : dbl X bas idx (a w • heisG X bas (vecMulVec w ξ) φ₁) φ₂ =
           a w • dbl X bas idx (heisG X bas (vecMulVec w ξ) φ₁) φ₂ := by
         have h := hJ.2.1 (a w) 1

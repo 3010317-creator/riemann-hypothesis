@@ -3,8 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsHilbRep
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ComapEqKerIff
 public import Mathlib.AlgebraicGeometry.Sites.BigZariski
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertFunctorLocalRepresentingDataOfRestrictStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertPointEqOfOpenCoverStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertFunctorLocalRepresentingDataOfRestrict
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertPointEqOfOpenCover
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HilbertPointGlueOpenCoverStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsProperOfRepresentsHilbertFunctorOfLocalStatement
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IsRepresentableOfCover
@@ -61,7 +61,7 @@ theorem GlobalTheory.HilbGlue.isSheaf_hilbFunctor {S Z : Scheme.{0}} (z : Z ⟶ 
   rw [Presieve.isSheafFor_arrows_iff]
   intro x hx
   exact existsUnique_of_exists_of_unique (GlobalTheory.T.hilbert_point_glue_open_cover z r Y 𝒰 x fun i j R b c h => hx i j R b c h)
-    fun y y' h h' => GlobalTheory.T.hilbert_point_eq_of_open_cover z r Y 𝒰 y y' fun i => (h i).trans (h' i).symm
+    fun y y' h h' => _root_.GlobalTheory.HilbGlue.HPt.ext_openCover z r Y 𝒰 y y' fun i => (h i).trans (h' i).symm
 
 theorem GlobalTheory.HilbGlue.isHilbRep_of_cover : ∀ (S Z : Scheme.{0}) (z : Z ⟶ S), IsFinite z → Flat z →
     LocallyOfFinitePresentation z → ∀ r : ℕ, (∀ s : S, ∃ W : S.Opens, s ∈ W ∧ IsHilbRep (z ∣_ W) r) →
@@ -71,7 +71,7 @@ theorem GlobalTheory.HilbGlue.isHilbRep_of_cover : ∀ (S Z : Scheme.{0}) (z : Z
       IsProper π ∧ y.1 = π ≫ W.ι ∧ ∀ (Y : Scheme.{0}) (x : HPt z r Y) (b : Y ⟶ W.toScheme),
         x.1 = b ≫ W.ι → ∃! c : Y ⟶ T, HPt.map c y = x := fun s => by
     obtain ⟨W, hs, hW⟩ := hS s
-    exact ⟨W, hs, GlobalTheory.T.hilbertFunctor_local_representing_data_of_restrict z r W hW⟩
+    exact ⟨W, hs, _root_.GlobalTheory.HilbGlue.isHilbRep_restrict_local z r W hW⟩
   have hloc' := hloc
   choose W hsW T y π _ hπ huniq using hloc
   have hrep : (hilbFunctor z r).IsRepresentable :=

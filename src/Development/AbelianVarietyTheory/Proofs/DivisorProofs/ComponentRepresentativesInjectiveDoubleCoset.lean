@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsKMOne
 public import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.CoeSelfDualLatticeInFrameCoordinatesEq
 public import Formalism.LocalToGlobal.ProjectiveLattices.HalfOneAddSqrtNegIsIntegral
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryExistsWithPrescribedPartsStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.EquivariantFiniteGroup
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.AdelicUnitaryExistsWithPrescribedParts
 public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.CompletedLatticeEqAdelicCompletionAndGram
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -156,7 +157,7 @@ theorem kf_of_isKM (D : D7) (V : Formalism.BasicNotions.TH.HSp D) (M : ℕ) (Kf 
   have hu := unitary_of_isUA _ _ _ h.1
   let κu : GL (Fin V.rank) (Af D.host.F ⊗[D.host.F] D.host.E) := ((Matrix.isUnit_iff_isUnit_det κ).2 h.1.1).unit
   have hmem : κu ∈ HR (Af D.host.F) D.sp.cm.sig V.gram := hu
-  obtain ⟨κA, hG, hf⟩ := (GlobalTheory.T.adelicUnitary_exists_with_prescribed_parts D V).1 κu hmem
+  obtain ⟨κA, hG, hf⟩ := (_root_.GlobalTheory.UnitaryGlue.adelic_glue D V).1 κu hmem
   refine ⟨κA, (hK κA).2 ⟨hG, ?_⟩, by rw [hf]; rfl⟩
   intro z hz
   rw [(GlobalTheory.Member.latHat_eq_hat_and_gram D V).1] at hz ⊢

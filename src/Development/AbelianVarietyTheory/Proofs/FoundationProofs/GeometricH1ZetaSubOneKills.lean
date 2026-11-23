@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Foundations.IntegralLocallyConstCochainModPow
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FiniteGaloisApproximationStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SmallTracesSubgroupGaloisTowerTopStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.NotCoboundaryConstantOne
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.FiniteGaloisApproximation
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SmallTracesSubgroupGaloisTowerTop
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -138,7 +139,7 @@ theorem uniform_lc_on (hΩ : IsClo p Ω) (T : Tower p Ω) {k : ℕ} {c : Gal p �
       rw [ha h hh] at this
       exact hga this.symm
   choose S hS1 hS2 using hS
-  obtain ⟨F, hF⟩ := GlobalTheory.T.finite_galois_approximation p Ω hΩ S
+  obtain ⟨F, hF⟩ := _root_.GlobalTheory.K5.gal_finite_subcover p Ω hΩ S
   refine ⟨F.biUnion S, fun g hg h hh hgh => ?_⟩
   obtain ⟨g0, hg0F, hg0⟩ := hF g
   have hg0H : g0 ∈ H := by
@@ -179,7 +180,7 @@ theorem h1_killed_by_zeta_sub_one_geo : ∀ (p : ℕ) [Fact p.Prime], p ≠ 2 �
   set H := Ggeo p Ω ⊓ ⨅ n, Gn T n with hHdef
   obtain ⟨S₁, hS₁int, hS₁⟩ := uniform_lc_on_int hΩ T hc
   obtain ⟨y, E, hy, hEH, hu, hsum⟩ :=
-    GlobalTheory.T.smallTraces_subgroup_galois_towerTop p Ω hp2 hΩ T H inf_le_right S₁ j hj
+    _root_.GlobalTheory.K5.small_traces_subgroup p Ω hp2 hΩ T H inf_le_right S₁ j hj
   set x : Ω := ∑ g ∈ E, g y * c g with hx
   have hxint : IsInt (p := p) x := by
     refine IsIntegral.sum _ fun g hg => ?_

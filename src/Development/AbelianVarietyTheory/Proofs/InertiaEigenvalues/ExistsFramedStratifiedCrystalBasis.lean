@@ -1,10 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.IsStratHom
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinHomEisensteinSpanAndNonZeroDivisorStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFrobeniusMatrixFCrystalBreuilKisinStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSemilinearBaseChangeExistsBasisEqImageOfBasisStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrismaticFCrystalFrobeniusPullbackBasisStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.BreuilKisinHomEisensteinSpanAndNonZeroDivisor
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsFrobeniusMatrixFCrystalBreuilKisin
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.InvertibleSpanSingleton
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSemilinearBaseChangeExistsBasisEqImageOfBasis
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PrismaticFCrystalFrobeniusPullbackBasis
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -98,14 +99,14 @@ theorem frame_matrix_φ (M : FCrys l ↥(OL K)) (e : Module.Basis (Fin d) bk.pri
     (hc : ∀ i, c i = M.tr f (e i)) (ε : Matrix (Fin d) (Fin d) B.A)
     (htr : ∀ j, M.tr g (e j) = ∑ i, ε i j • M.tr f (e i)) :
     BK.hf g bk.E ^ a • (A.map (BK.hf f) * ε.map B.D.φ) = BK.hf f bk.E ^ a • (ε * A.map (BK.hf g)) := by
-  obtain ⟨hI, ht⟩ := GlobalTheory.T.breuilKisinHom_eisenstein_span_and_nonZeroDivisor l K bk B f
+  obtain ⟨hI, ht⟩ := _root_.GlobalTheory.BSP.hf_E_span_and_regular l K bk B f
   let t : ↥B.I := ⟨BK.hf f bk.E, hI.ge (Ideal.mem_span_singleton_self _)⟩
   ext i j
   obtain ⟨m, k, hm⟩ := exists_isFrac (t : B.A) (M.Φ B t (M.tr g (e j)))
-  obtain ⟨r, hr⟩ := GlobalTheory.T.prismaticFCrystal_frobenius_pullback_basis l K bk d M e a A hΦ B g t (Pi.single j 1) m k
+  obtain ⟨r, hr⟩ := _root_.GlobalTheory.BSP.frob_tr_basis l K bk d M e a A hΦ B g t (Pi.single j 1) m k
     (Eq.subst (motive := fun z => IsFrac (t : B.A) (M.Φ B t z) m k)
       (frame_sum_single (fun i => M.tr g (e i)) j).symm hm)
-  obtain ⟨s, hs⟩ := GlobalTheory.T.prismaticFCrystal_frobenius_pullback_basis l K bk d M e a A hΦ B f t (fun i => ε i j) m k
+  obtain ⟨s, hs⟩ := _root_.GlobalTheory.BSP.frob_tr_basis l K bk d M e a A hΦ B f t (fun i => ε i j) m k
     (Eq.subst (motive := fun z => IsFrac (t : B.A) (M.Φ B t z) m k) (htr j) hm)
   have h1 := frame_sum_mulVec B.D.φ (A.map (BK.hf g)) ε (fun i => M.tr g (e i)) c
     (fun x => (htr x).trans (Finset.sum_congr rfl fun i _ => congrArg (fun z => ε i x • z) (hc i).symm)) j
@@ -120,7 +121,7 @@ theorem exists_frame_matrices (M : FCrys l ↥(OL K)) (e : Module.Basis (Fin d) 
       (∀ {B} (f g h : Hom bk.prism B), ε f g * ε g h = ε f h) ∧
       (∀ {B B'} (k : Hom B B') (f g : Hom bk.prism B), (ε f g).map k.f = ε (k.comp f) (k.comp g)) := by
   have hb : ∀ {B : Obj l ↥(OL K)} (f : Hom bk.prism B), ∃ c : Module.Basis (Fin d) B.A (M.M B),
-      ∀ i, c i = M.tr f (e i) := fun f => GlobalTheory.T.isSemilinearBaseChange_exists_basis_eq_image_of_basis _ _ _ _ _ _ (M.tr_bc f) _ e
+      ∀ i, c i = M.tr f (e i) := fun f => _root_.GlobalTheory.Prism.semiBC_basis _ _ _ _ _ _ (M.tr_bc f) _ e
   choose c hc using @hb
   have htr : ∀ {B : Obj l ↥(OL K)} (f g : Hom bk.prism B) (j : Fin d),
       M.tr g (e j) = ∑ i, (c f).toMatrix (c g) i j • M.tr f (e i) := fun f g j => by
@@ -149,10 +150,10 @@ theorem exists_framed (l : ℕ) [Fact l.Prime] (K : FinExt l) (bk : BK K) (M : F
   have : Module.Free bk.prism.A (M.M bk.prism) := Module.free_of_flat_of_isLocalRing
   obtain ⟨d, ⟨e⟩⟩ : ∃ d, Nonempty (Module.Basis (Fin d) bk.prism.A (M.M bk.prism)) :=
     ⟨_, ⟨Module.finBasis bk.prism.A (M.M bk.prism)⟩⟩
-  obtain ⟨a, b, A, A', hA, hΦ⟩ := GlobalTheory.T.exists_frobenius_matrix_fCrystal_breuilKisin l K bk d M e
+  obtain ⟨a, b, A, A', hA, hΦ⟩ := _root_.GlobalTheory.BSP.frob_matrix_bk l K bk d M e
   obtain ⟨ε, htr, h1, h2, h3⟩ := exists_frame_matrices M e
   refine ⟨d, ⟨a, b, A, A', hA, ε, h1, h2, h3, fun f g => ?_⟩, e, htr, hΦ⟩
-  obtain ⟨c, hc⟩ := GlobalTheory.T.isSemilinearBaseChange_exists_basis_eq_image_of_basis _ _ _ _ _ _ (M.tr_bc f) _ e
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.Prism.semiBC_basis _ _ _ _ _ _ (M.tr_bc f) _ e
   exact frame_matrix_φ M e a A hΦ f g c hc (ε f g) (htr f g)
 
 end GlobalTheory.BSP

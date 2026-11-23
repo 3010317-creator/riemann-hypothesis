@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsHeisTrivial
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.HeisenbergIntertwiningSumsCompEqIndex
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SumOpTransversal
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergVacuumUniqueOfSelfDualStatement
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.HeisenbergVacuumUniqueOfSelfDual
+public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalThetaInertPlace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,7 +49,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.BlockTheory.TwistedDiscreteSeries.SphericalThetaInertPlace
 import Development.AbelianVarietyTheory.Definitions.Divisors.EqOfHasValueAtInfinite
 import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NormalFam
 import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsPairingSingleNe
@@ -116,7 +116,7 @@ theorem sumOp_vacuum_lift : ∀ {R X M : Type} [CommRing R] [AddCommGroup X] [Mo
     rintro _ ⟨x, rfl⟩
     exact hmem x
   refine ⟨⟨hne, hs'fix, hspan'⟩, fun e he1 he v hv => ?_⟩
-  obtain ⟨c, rfl⟩ := GlobalTheory.T.heisenbergVacuum_unique_of_selfDual h Λ' hΛ' _ hne hs'fix hspan' v hv
+  obtain ⟨c, rfl⟩ := _root_.GlobalTheory.SphTheta.vacuum_unique_of_selfDual h Λ' hΛ' _ hne hs'fix hspan' v hv
   have hes' : e (sumOp W Λ Λ' s) = 1 := by
 
     rw [((sumOp_transversal h Λ Λ' hΛ').1 s hs (Fin n) f hf ht).1, map_sum]

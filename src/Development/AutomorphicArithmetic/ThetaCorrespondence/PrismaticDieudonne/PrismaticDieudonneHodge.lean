@@ -6,9 +6,12 @@ public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqSumEpsPair
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsBFrame
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasDatumBiconnOf
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HasPeriodIntegral
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroupDatumOfConnectedDualConnectedStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrismaticDieudonneHodgeOfHodgeTateDatumStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WindowLiftToFontaineAinfMatricesStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.GhostFrobenius
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PDivisibleGroupDatumOfConnectedDualConnected
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PrismaticDieudonneHodgeOfHodgeTateDatum
+public import Development.AbelianVarietyTheory.Definitions.Divisors.EqZeroOfForallPowDvd
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.EpsilonPairingZeta
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.WindowLiftToFontaineAinfMatrices
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.FarguesExactness.FarguesExactOfPrismatic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -50,7 +53,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.EpsilonPairingZeta
 
 @[expose] public section
 
@@ -66,8 +68,8 @@ theorem prismaticDieudonneHodge : GlobalTheory.Published.PrismaticDieudonneHodge
   intro p _ C _ _ _ v O _ _ hv _ _ ε hε
   haveI : IsDomain O := hv.hom_inj.isDomain (algebraMap O C)
   have hs : IsPrimitiveSystem ε := fun n => GlobalTheory.Dieudonne.isPrimitiveRoot_untilt_root hε n
-  exact GlobalTheory.T.prismaticDieudonneHodge_of_hodgeTateDatum p C v O hv ε hs (GlobalTheory.T.pDivisibleGroup_datum_of_connected_dual_connected p C v O hv ε hs
-    (hasDatum_biconn_of GlobalTheory.BRing.exists_bFrame GlobalTheory.QLog.WindowMat.window_matrices GlobalTheory.T.window_lift_to_fontaineAinf_matrices
+  exact _root_.GlobalTheory.PDivLat.prismaticDieudonneHodgeAt_of_hasDatum p C v O hv ε hs (_root_.GlobalTheory.PDivLat.hasDatum_of_conn_dual_conn p C v O hv ε hs
+    (hasDatum_biconn_of GlobalTheory.BRing.exists_bFrame GlobalTheory.QLog.WindowMat.window_matrices _root_.GlobalTheory.WinLift.Top.window_lift
       GlobalTheory.DatumOfMatrices.hasDatum_of_matrices p C v O hv ε hs))
 
 theorem farguesExact : GlobalTheory.CompanionTheory.Ar.HT.FarguesExact :=

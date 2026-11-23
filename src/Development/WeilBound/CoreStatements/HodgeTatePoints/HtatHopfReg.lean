@@ -1,8 +1,8 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.ExistsUnitFormLocalizationEtaleNbhd
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BaseChangePointsCompatStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsDenominatorRegularStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.BaseChangePointsCompat
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExistsDenominatorRegular
 public import Development.WeilBound.CoreStatements.HodgeTatePoints.TwhopfSec
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -171,7 +171,7 @@ end valAt
 theorem regularAt_of_baseChange : ∀ (R : Type) [CommRing R] [IsDomain R] (T : Type) [CommGroup T] [Finite T] (Γ : QFGroup R T) (R' : Type) [CommRing R'] [IsDomain R'] [Algebra R R'] (Γ' : QFGroup R' T) (F : Γ'.G.left ⟶ Γ.G.left), Γ'.IsBaseChange Γ (algebraMap R R') F → Module.Flat R R' → ∀ κ : FractionRing R →+* FractionRing R', κ.comp (algebraMap R _) = (algebraMap R' _).comp (algebraMap R R') → ∀ (f : T → FractionRing R) (g' : Γ'.G.left), Γ'.RegularAt (fun t => κ (f t)) g' → Γ.RegularAt f (F g') := by
   intro R _ _ T _ _ Γ R' _ _ _ Γ' F hbc hfl κ hκ f g' hreg
   obtain ⟨U', hgU', s', hs'⟩ := hreg
-  obtain ⟨d, hd0, U, hgU, s, hs⟩ := GlobalTheory.T.exists_denominator_regular R T Γ f (F g')
+  obtain ⟨d, hd0, U, hgU, s, hs⟩ := _root_.GlobalTheory.CompanionTheory.Ar.BT.RegDenom.exists_denom_regularAt R T Γ f (F g')
   have hφ : Flat (Spec.map (CommRingCat.ofHom (algebraMap R R'))) :=
     Flat.SpecMap_iff.mpr (RingHom.flat_algebraMap_iff.mpr hfl)
   have hF : Flat F := MorphismProperty.of_isPullback (P := @Flat) hbc.cart.flip hφ
@@ -185,7 +185,7 @@ theorem regularAt_of_baseChange : ∀ (R : Type) [CommRing R] [IsDomain R] (T : 
     refine sub_eq_zero.mp (PositivityTheory.HtPt.Twhopf.sec_inj R' T Γ' W' _ fun t h => ?_)
     have h₁ : ⊤ ≤ (Γ'.pt t).left ⁻¹ᵁ (F ⁻¹ᵁ U) := fun x hx => (h hx).1
     have h₂ : ⊤ ≤ (Γ'.pt t).left ⁻¹ᵁ U' := fun x hx => (h hx).2
-    have hpt := GlobalTheory.T.base_change_points_compat R T Γ R' Γ' F hbc κ hκ t
+    have hpt := _root_.GlobalTheory.CompanionTheory.Ar.BT.genericPoint_baseChange R T Γ R' Γ' F hbc κ hκ t
     have h₃ : ⊤ ≤ (Spec.map (CommRingCat.ofHom κ) ≫ (Γ.pt t).left) ⁻¹ᵁ U := by
       rw [← hpt]; exact h₁
     have h₄ : ⊤ ≤ (Γ.pt t).left ⁻¹ᵁ U := top_le_of_spec_comp κ _ U h₃

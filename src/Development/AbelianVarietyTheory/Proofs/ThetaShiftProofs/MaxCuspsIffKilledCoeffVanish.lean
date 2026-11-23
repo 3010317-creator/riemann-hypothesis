@@ -1,8 +1,8 @@
 module
 
 public import Formalism.LocalToGlobal.ProjectiveLattices.ArchimedeanQuadraticData.MaximalCuspKernels.MaxCuspsSt
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.MaxCuspKilledCoefficientEqZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.MaxCuspMemCuspFormsOfKilledCoefZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.MaxCuspKilledCoefficientEqZero
+public import Development.AbelianVarietyTheory.Proofs.ThetaShiftProofs.MaxCuspMemCuspFormsOfKilledCoefZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,7 +50,7 @@ namespace GlobalTheory
 
 theorem maxCusps_iff_killed_coeff_vanish : MaxCuspsStatement := by
   intro E _ _ _ r ρ X hspan hbas la hχ c P hP
-  exact ⟨fun h => GlobalTheory.T.maxCusp_killedCoefficient_eq_zero E r ρ X hbas la hχ c P h,
-    fun h => GlobalTheory.T.maxCusp_mem_cuspForms_of_killedCoef_zero E r ρ X hspan hbas la hχ c P hP h⟩
+  exact ⟨fun h => _root_.GlobalTheory.MaxCuspKilled.coefFn_eq_zero_of_killed E r ρ X hbas la hχ c P h,
+    fun h => _root_.GlobalTheory.maxCusps_mem_SSgt_of_coef_eq_zero E r ρ X hspan hbas la hχ c P hP h⟩
 
 end GlobalTheory

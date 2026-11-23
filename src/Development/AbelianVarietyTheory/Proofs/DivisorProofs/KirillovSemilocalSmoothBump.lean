@@ -2,9 +2,11 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.IsRapidInf
 public import Development.AbelianVarietyTheory.Definitions.Divisors.MirSet
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousGlobalWhittakerCoefficientArchimedeanStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFieldUnitMemOpenArchimedeanUnitsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMirabolicScalarUnitaryDecompositionArchimeStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ContinuousGlobalWhittakerCoefficientArchimedean
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.DifferentiableAtChart
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFieldUnitMemOpenArchimedeanUnits
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.ExpoConjOfIsCsd
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMirabolicScalarUnitaryDecompositionArchime
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KirillovSemilocalMirabolicWhittakerStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -105,7 +107,7 @@ theorem exists_mirabolic_nonzero : ∀ (E : Type) [Field E] [NumberField E] [_ro
   intro E _ _ _ m S π φ hφ ⟨x, hxS, hx⟩
   have haut : IsAutForm φ := (π.cusp φ hφ).1
   set xf := GeneralLinearGroup.map (pFin E) x with hxf
-  obtain ⟨p0, ρ, k, hp0, hy⟩ := GlobalTheory.T.exists_mirabolic_scalar_unitary_decomposition_archimedean E m (GeneralLinearGroup.map (pInf E) x)
+  obtain ⟨p0, ρ, k, hp0, hy⟩ := _root_.GlobalTheory.IwasawaLast.iwasawa_lastRow E m (GeneralLinearGroup.map (pInf E) x)
   let sc : (Cinf E)ˣ →* GL (Fin (m + 1)) (Cinf E) :=
     Units.map (Matrix.scalar (Fin (m + 1)) : Cinf E →+* Matrix (Fin (m + 1)) (Fin (m + 1)) (Cinf E)).toMonoidHom
   have hsc : Continuous sc := by
@@ -116,7 +118,7 @@ theorem exists_mirabolic_nonzero : ∀ (E : Type) [Field E] [NumberField E] [_ro
   let ζ : (Cinf E)ˣ → ℂ := fun c =>
     whit φ.1 (infGL E (m + 1) p0 * infGL E (m + 1) (sc c * Unitary.toUnits k) * finGL E (m + 1) xf)
   have hζc : Continuous ζ :=
-    (GlobalTheory.T.continuous_globalWhittakerCoefficient_archimedean E (m + 1) φ haut _ _).comp (hsc.mul continuous_const)
+    (_root_.GlobalTheory.JSW.continuous_whit_infGL E (m + 1) φ haut _ _).comp (hsc.mul continuous_const)
   have hζρ : ζ ρ ≠ 0 := by
     have hx' : infGL E (m + 1) p0 * infGL E (m + 1) (sc ρ * Unitary.toUnits k) * finGL E (m + 1) xf = x := by
       rw [← map_mul, ← mul_assoc]
@@ -125,7 +127,7 @@ theorem exists_mirabolic_nonzero : ∀ (E : Type) [Field E] [NumberField E] [_ro
     show whit φ.1 _ ≠ 0
     rw [hx']
     exact hx
-  obtain ⟨β, hβ⟩ := GlobalTheory.T.exists_field_unit_mem_open_archimedean_units E {c | ζ c ≠ 0} (isOpen_ne_fun hζc continuous_const) ⟨ρ, hζρ⟩
+  obtain ⟨β, hβ⟩ := _root_.GlobalTheory.UnitsDense.exists_unit_mem_open E {c | ζ c ≠ 0} (isOpen_ne_fun hζc continuous_const) ⟨ρ, hζρ⟩
   set c := Units.map ((pInf E).comp (algebraMap E (Ad E))).toMonoidHom β with hc
   let zE : GL (Fin (m + 1)) E := Units.map (Matrix.scalar (Fin (m + 1)) : E →+* Matrix (Fin (m + 1)) (Fin (m + 1)) E).toMonoidHom β⁻¹
   set s := infGL E (m + 1) (sc c * Unitary.toUnits k) * finGL E (m + 1) xf with hs

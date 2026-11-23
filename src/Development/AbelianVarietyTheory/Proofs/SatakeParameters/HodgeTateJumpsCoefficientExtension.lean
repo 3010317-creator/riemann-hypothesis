@@ -4,8 +4,10 @@ public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ThickL
 public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.HodgeTateJumpsAtModulesForSign
 public import Formalism.SharpRestriction.LevelLetterCocycles.LocalSituation
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsBaseReads
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.JumpsOfCrystallineTwistBlockDecompositionStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RationalJumpSetsEqIntegerMultisetsTwistedDualStatement
+public import Development.AbelianVarietyTheory.Definitions.GaloisGeometry.NotDvdCondN
+public import Development.AbelianVarietyTheory.BlockTheory.ThetaLiftGeometry.CrystallineAtPlaces
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.JumpsOfCrystallineTwistBlockDecomposition
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.RationalJumpSetsEqIntegerMultisetsTwistedDual
 public import Formalism.SharpRestriction.LevelLetterCocycles.JointConditionsZpowers.LiftingConditionOfWindows
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -82,13 +84,13 @@ theorem hodgeTateJumps_coefficientExtension : ∀ {D : D7} (L : SizeData₂ D) (
       rw [e]
       exact (D.nd.chi_cont i 1).comp continuous_inv
     exact h1.smul hP.contρ
-  refine GlobalTheory.T.jumps_of_crystalline_twist_block_decomposition L C₀ i w hw C r ρ π _ κ hR h7 (hF i w hw Cx).2.2.1
+  refine _root_.GlobalTheory.HTW.Rec.jumpIn_of_reads L C₀ i w hw C r ρ π _ κ hR h7 (hF i w hw Cx).2.2.1
     (fun z => (IntermediateField.inclusion Cx.le).commutes z)
     (fun x => hc _ (rTwO_cont D i r hP.cont x)) (hc _ hW) (fun x => hP.crys w hw Cx x) hP.dec ?_
   intro τ
   obtain ⟨g, ρ', hrd, hx, hπ⟩ := hep i r hP.good w hw Cx τ
   have hup : (decide (LJ.TypeU D ep g) = true ↔ LJ.TypeU D ep g) := decide_eq_true_iff
-  have hs := GlobalTheory.T.rationalJumpSets_eq_integerMultisets_twistedDual D i ρ' g ep _ hrd.2 hup
+  have hs := _root_.GlobalTheory.HTW.Rec.rat_jump_sets_eq_int_multisets D i ρ' g ep _ hrd.2 hup
   refine ⟨g, hκ τ g hrd.1, ?_, ?_⟩
   · intro x a ha
     exact ((hs a).1).1 (((hx x a).2.2.1).1 ha)

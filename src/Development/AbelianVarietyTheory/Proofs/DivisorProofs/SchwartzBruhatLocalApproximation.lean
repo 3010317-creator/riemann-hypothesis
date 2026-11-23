@@ -3,7 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLinearBarGoodPlaceStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsUnramifiedCharacterGoodStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatFullRankModuloTranslatesStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.RankEqCardIffExistsFrameMatrixFirstColumnBlock
+public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SchwartzBruhatFullRankModuloTranslates
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -64,7 +66,7 @@ theorem exists_soLoc_sub_mem_augAt : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F
     obtain ⟨φ₁, hφ₁, hA, hE⟩ := hact φ' hφ'
     refine ⟨φ₁ - φ', ⟨Submodule.subset_span ⟨g, hg, φ', hφ', φ₁, hφ₁, hA, rfl⟩, Submodule.sub_mem _ hφ₁ hφ'⟩, ?_⟩
     simp [map_sub, hE]
-  obtain ⟨Ψ₀, -, hrk, hmem⟩ := GlobalTheory.T.schwartzBruhat_full_rank_modulo_translates (Fv F v) a' (a + a') ν₀ (unifAt v)
+  obtain ⟨Ψ₀, -, hrk, hmem⟩ := _root_.GlobalTheory.RankStrata.exists_fullRank_sub_mem_span (Fv F v) a' (a + a') ν₀ (unifAt v)
     (GlobalTheory.SplitFlip.exists_isUnif (k := Fv F v)).choose_spec hν₀ (ι φ) (hι.bij.mapsTo hφ)
   obtain ⟨n, ⟨hnA, hnSB⟩, hn⟩ := hspan hmem
   refine ⟨φ - n, ⟨Submodule.sub_mem _ hφ hnSB, ι, hι, fun Y hY => ?_⟩, by simpa using hnA⟩

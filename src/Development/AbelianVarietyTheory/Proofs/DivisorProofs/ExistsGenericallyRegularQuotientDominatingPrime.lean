@@ -2,8 +2,10 @@ module
 
 public import Mathlib.FieldTheory.Perfect
 public import Mathlib.RingTheory.RegularLocalRing.Defs
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGenericJacobianDataOfPrimeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsRegularLocalRingQuotientOfDetDerivationUnitStatement
+public import Mathlib.Algebra.MvPolynomial.PDeriv
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsGenericJacobianDataOfPrime
+public import Mathlib.RingTheory.Derivation.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsRegularLocalRingQuotientOfDetDerivationUnit
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LocalizationQuotientComapEquiv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -68,7 +70,7 @@ theorem prime_generically_regular_quotient :
     apply hp a
     have : φ (MvPolynomial.C a) ∈ p := ha
     rwa [MvPolynomial.algHom_C] at this
-  obtain ⟨h, f, s, g₀, hg₀, hfQ, hgQ, hdet⟩ := GlobalTheory.T.exists_local_generators_jacobian_det_not_mem Λ (Fin n) Q hQ
+  obtain ⟨h, f, s, g₀, hg₀, hfQ, hgQ, hdet⟩ := _root_.GlobalTheory.exists_generic_jacobian_data_of_prime Λ (Fin n) Q hQ
   set δ := (Matrix.of fun i j => MvPolynomial.pderiv (s i) (f j)).det with hδ
   refine ⟨φ (g₀ * δ), ?_, ?_⟩
   · intro hmem
@@ -87,7 +89,7 @@ theorem prime_generically_regular_quotient :
       fun i => (MvPolynomial.pderiv (s i)).restrictScalars ℤ
     have hdetD : (Matrix.of fun i j => D i (f j)).det ∉ N := by
       simpa [D] using hδN
-    have hreg := GlobalTheory.T.isRegularLocalRing_quotient_of_det_derivation_unit (MvPolynomial (Fin n) Λ) h f D N (fun j => hQN (hfQ j)) hdetD
+    have hreg := _root_.GlobalTheory.JacobianDerivation.isRegularLocalRing_quotient (MvPolynomial (Fin n) Λ) h f D N (fun j => hQN (hfQ j)) hdetD
     have heq : (Ideal.span (Set.range f)).map
           (algebraMap (MvPolynomial (Fin n) Λ) (Localization.AtPrime N)) =
         Q.map (algebraMap (MvPolynomial (Fin n) Λ) (Localization.AtPrime N)) := by

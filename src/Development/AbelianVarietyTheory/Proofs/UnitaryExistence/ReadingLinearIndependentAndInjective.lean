@@ -2,7 +2,7 @@ module
 
 public import Formalism.LocalToGlobal.ProjectiveLattices.UnFree
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ExtensionDescent.GlobalSectionsRankAlgClosed
-public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.TestPointValueEqConstMulReadingStatement
+public import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.TestPointValueEqConstMulReading
 public import Formalism.LocalToGlobal.ProjectiveLattices.ReadAlg
 import Formalism.LocalToGlobal.ProjectiveLattices.RulInst
 import Mathlib.Algebra.Module.StablyFree.Basic
@@ -61,7 +61,7 @@ theorem reading_linearIndependent_and_injective : Out.SecBaseChangeSt → ∀ (E
   have h : ∀ (p : TRing c.F) (y : FrPt Xo c p.R) (ψ : p.R →ₐ[c.F] CAt σ),
       ∃ (k : U.Comp) (x : (U.X k).dom) (u : ℂ), ∀ f ∈ sec Xo c a n,
         cvalR σ (ψ (f p y)) = u * rdU U f k x.1 :=
-    fun p y ψ => GlobalTheory.T.test_point_value_eq_const_mul_reading hS E H Dw l Xo c σ r U hU a n p y ψ
+    fun p y ψ => _root_.GlobalTheory.FrameUnif.test_value_eq_const_mul_reading hS E H Dw l Xo c σ r U hU a n p y ψ
   have : CharZero c.F := RingHom.charZero σ
   refine ⟨fun m b hb hli => ?_, fun f hf h0 => ?_⟩
   · rw [Fintype.linearIndependent_iff]

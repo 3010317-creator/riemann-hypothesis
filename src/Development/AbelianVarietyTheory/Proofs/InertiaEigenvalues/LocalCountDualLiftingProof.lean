@@ -1,13 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.StepJumpDirect
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.IsSummandTw
+public import Formalism.SharpRestriction.LevelLetterCocycles.PairedCharacterCondition
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallinePotentialFamily
+public import Formalism.SharpRestriction.LevelLetterCocycles.BlochKatoDuality
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LengthModuloSpanLeOfForallFinset
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.CentralIdemCoeff
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LiftAllSubSumsOfLiftFamilyMatrixFamily
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalCocyclesMemSpanPushoutSummandLattice
 import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.MkMemAdmissibleAtIffCocycle
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CrystallinePotentialFamilyStatement
 import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GoodORingOfIntegers
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LengthModuloSpanLeOfForallFinsetStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LiftAllSubSumsOfLiftFamilyMatrixFamilyStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LocalCocyclesMemSpanPushoutSummandLatticeStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PotentialFamilySummandRestrictionStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.PotentialFamilySummandRestriction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -70,12 +74,12 @@ theorem T2 {O M : Type} [CommRing O] [AddCommGroup M] [Module O M] {S S' : Submo
 theorem main : StepLocDual := by
   intro D hLOC hBK hFont hPot i r hr Xs w hw hdeg n e hPF hLF k M hSub
   unfold LocBoundP
-  apply GlobalTheory.T.lengthModulo_span_le_of_forall_finset
+  apply _root_.GlobalTheory.Pass.LocDual.lenMod_span_le_of_finset
   intro F hF
-  obtain ⟨X, hX, hle⟩ := GlobalTheory.T.localCocycles_mem_span_pushout_summandLattice D hFont i r hr Xs w hw n hPF k M hSub F hF
-  obtain ⟨hdrX, X', PX, hdX, hsX⟩ := GlobalTheory.T.potential_family_summand_restriction D hFont hPot i r hr Xs w hw n hPF X hX
-  obtain ⟨hdrU, U', PU, hsU, LT', hdU, hrk⟩ := GlobalTheory.T.crystalline_potential_family D hFont hPot hBK i r hr Xs w hw hdeg n hPF k M hSub
-  have hLift := GlobalTheory.T.liftAll_subSums_of_liftFamily_matrixFamily (Br.PD D.loc D.nbr i w hw) _ e X' U' hLF hsX hsU
+  obtain ⟨X, hX, hle⟩ := _root_.GlobalTheory.Pass.LocDual.OneX.main D hFont i r hr Xs w hw n hPF k M hSub F hF
+  obtain ⟨hdrX, X', PX, hdX, hsX⟩ := _root_.GlobalTheory.SummandDual.xdual D hFont hPot i r hr Xs w hw n hPF X hX
+  obtain ⟨hdrU, U', PU, hsU, LT', hdU, hrk⟩ := _root_.GlobalTheory.Pass.LocDualU.main D hFont hPot hBK i r hr Xs w hw hdeg n hPF k M hSub
+  have hLift := _root_.GlobalTheory.Pass.LocDual.liftAll_of_liftFam (Br.PD D.loc D.nbr i w hw) _ e X' U' hLF hsX hsU
   have hTw : IsTwistRep (1 : Br.G D.nbr i w hw →* (Br.LL D.nbr i w hw)ˣ)⁻¹ X.ρ X.ρ :=
     ⟨LinearEquiv.refl _ _, fun g x => by simp⟩
   have hHyp : BlochKatoDuality.Hyp (Br.PD D.loc D.nbr i w hw) X X (locU i w hw M hSub.1) X' U' 1 PX PU

@@ -2,8 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsLinearHomProd
 public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.EigenvectorLieDegree
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCmHomGramMatrixDetNeZeroDefiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRosatiCoordinatesDivisibleOfPowStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PointShiftSt
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCmHomGramMatrixDetNeZeroDefinite
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsRosatiCoordinatesDivisibleOfPow
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -61,13 +62,13 @@ theorem lat_fg : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Rec
     (X : GlobalTheory.CM.CMObj H K ρ σ₁ p 0),
     (GlobalTheory.FlatCM.HomLat.lat X).FG := by
   intro E _ _ _ H hH K _ _ ρ σ₁ p X
-  obtain ⟨gP, gQ, hG, hdet⟩ := GlobalTheory.T.exists_cmHomGramMatrix_det_ne_zero_definite E H hH K ρ σ₁ p X
+  obtain ⟨gP, gQ, hG, hdet⟩ := _root_.GlobalTheory.FlatCM.HomLat.exists_isGram_det_ne_zero E H hH K ρ σ₁ p X
   set N : 𝓞 E := H.bar.symm gP.det with hNdef
   have hN0 : N ≠ 0 := fun h => hdet (by simpa [hNdef] using congrArg H.bar h)
   have hN : (N : E) ≠ 0 := by exact_mod_cast hN0
   have key : ∀ c ∈ GlobalTheory.FlatCM.HomLat.coords X, ∀ b, ∃ z : 𝓞 E, (z : E) = (N : E) * c b := by
     rintro c ⟨n, hn, x, hx, f, hf, hfx⟩ b
-    choose y hy using GlobalTheory.T.exists_rosatiCoordinates_divisible_of_pow E H hH K ρ σ₁ p 0 X gP gQ hG n x f hn hf hfx
+    choose y hy using _root_.GlobalTheory.FlatCM.RosatiCoord.exists_mul_eq_gram_sum E H hH K ρ σ₁ p 0 X gP gQ hG n x f hn hf hfx
     have hmv : gP.mulVec (fun b => H.bar (x b)) = fun a => (n : 𝓞 E) * y a := by
       funext a; simp [Matrix.mulVec, dotProduct, hy]
     have hadj : gP.det • (fun b => H.bar (x b)) = fun a => (n : 𝓞 E) * gP.adjugate.mulVec y a := by

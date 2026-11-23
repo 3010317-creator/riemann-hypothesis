@@ -6,16 +6,19 @@ public import Development.AutomorphicSpectrum.PublishedTheorems.Algebra₂.Zarhi
 public import GroundTheory.HeightsAndTheta.Heights.KernelsLattice
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.SmallGeneratedCountUpperOfUse
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExactKeyFormulaProof
-import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaUniformisationComplexAbelianVarieties
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.NumericalSegreClosed
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.TopAvoid
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AnalyticProvisionHoldsStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FinalTheoremOfInputsRightStatement
+public import Development.AutomorphicSpectrum.Statements.GeometryStatements.ZhangDimensionPushDownGrassmannianHeightBounds
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AnalyticProvisionHolds
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.FinalTheoremOfInputsRight
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ModelClauseHolds
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.PointsIntegrableOfResolutionStatementStatement
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.InputsOfUse
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.NineFreeOfUse
 public import Development.WeilBound.CoreStatements.AutomorphicKernels.MoriwakiBigness.HilbertSamuelApplications.ProvHSOfUse
+import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaUniformisationComplexAbelianVarieties
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.BlowupProjections.BlowupProjStatement
+import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.InterSt
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.PointsIntegrableOfResolutionStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -66,13 +69,13 @@ theorem good_tower_volume_theorem_bis :
     GroundTheory.Heights₂.Heights.LineOfLargeDegree.Statement → GR.QuotientByFiniteFlatStatement → GR.ZarhinStatement →
     Top.GoodTowerExistsX ∧ Top.VolumeTheoremX := by
   intro hAI hU hBig hResK hSA hFHT hGaga hLine hQ hZ
-  exact GlobalTheory.T.final_theorem_of_inputs_right
+  exact _root_.GlobalTheory.CompanionTheory.Ar.Top.goodTower_volume_of_reduced
     GlobalTheory.CompanionTheory.Ar.Top.modelClause_holds GlobalTheory.KeyFam.keyFormula_holds hSA
     GlobalTheory.CompanionTheory.Segre.numericalSegre_closed hResK hFHT hGaga hLine
     (GlobalTheory.CompanionTheory.Ar.Giv.inputs_of_use hAI hU hBig hResK)
-    (provHS_of_use hAI hU hBig hResK) GlobalTheory.T.analytic_provision_holds
+    (provHS_of_use hAI hU hBig hResK) _root_.GlobalTheory.CompanionTheory.Ar.Link.prov_an
     (nineFree_of_use hAI hU hBig hResK)
-    (GlobalTheory.T.points_integrable_of_resolution_statement hResK)
+    (_root_.GlobalTheory.CompanionTheory.Ar.Giv.ptsIntegrable_of_resK hResK)
     GlobalTheory.CompanionTheory.Ar.Giv.topAvoid hQ hZ GlobalTheory.thetaUnifAV_closed
 
 end GlobalTheory.CompanionTheory.Ar.Link

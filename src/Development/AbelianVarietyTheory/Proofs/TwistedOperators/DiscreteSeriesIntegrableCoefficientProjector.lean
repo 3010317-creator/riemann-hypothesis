@@ -1,15 +1,15 @@
 module
 
 public import Formalism.SharpRestriction.Divisibility.SchurIrreducible
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolarJacLeExpStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProjectorOfIntegrableDiscreteSeriesCoefficientStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PolarJacLeExp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProjectorOfIntegrableDiscreteSeriesCoefficient
 public import Development.AbelianVarietyTheory.Proofs.HeightProofs.HighestWeightGeneratedWeightsBelow
+public import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
-public import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
@@ -316,7 +316,7 @@ theorem integrable_eFun (X : ProvA) (h2 : DiscreteSeriesPositivity X) (h6 : Cove
     have e2 : polJ Y = polJ (aOf p q t) := by
       rw [ht]; exact hinv k hk _ (pOf_mem _)
     rw [e1, e2, hJ]
-    exact GlobalTheory.T.polarJac_le_exp_hsNorm p q t
+    exact _root_.GlobalTheory.PolarJacBound.polarJac_le_exp p q t
   refine le_trans (mul_le_mul' b1 (ENNReal.ofReal_le_ofReal b2)) ?_
   rw [← ENNReal.ofReal_mul (by positivity), Real.enorm_of_nonneg (by positivity)]
   refine ENNReal.ofReal_le_ofReal ?_
@@ -331,7 +331,7 @@ theorem discreteSeriesHighestVector_of_positivity : ∀ X : ProvA, DiscreteSerie
   have hi := integrable_eFun X h2 h6 lam hl h hg hh v hv
   haveI := secondCountable_grp (X.grp p q)
   refine ⟨hi, fun πU => ?_⟩
-  obtain ⟨hD1, hπ⟩ := GlobalTheory.T.projector_of_integrable_discreteSeries_coefficient p q (X.grp p q) (X.ds p q lam) v hv.2 hi
+  obtain ⟨hD1, hπ⟩ := _root_.GlobalTheory.CoefProjector.projector_of_integrable_coefficient p q (X.grp p q) (X.ds p q lam) v hv.2 hi
   obtain ⟨hsa, hPP, hio⟩ := hπ πU
   have hvv : inner ℂ ((X.ds p q lam).ι v) ((X.ds p q lam).ι v) = 1 := by
     rw [inner_self_eq_norm_sq_to_K, hv.2]; simp

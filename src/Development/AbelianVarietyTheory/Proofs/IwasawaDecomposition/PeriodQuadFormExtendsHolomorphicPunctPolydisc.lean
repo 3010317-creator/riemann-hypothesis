@@ -1,8 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.PerValNeZero
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHolomorphicDescentPunctPolydiscLogCoverStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExtensionAcrossCoordinateHyperplanesStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsHolomorphicDescentPunctPolydiscLogCover
+public import Mathlib.Analysis.CStarAlgebra.Classes
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExtensionAcrossCoordinateHyperplanes
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -114,7 +117,7 @@ theorem periodVec_extends : ∀ (n a g : ℕ) (ha : a ≤ n) (ρ₁ : ℝ) (τ :
         Finset.sum_ite_eq', Finset.mem_univ, if_true]
       field_simp
     rw [hsum]; ring
-  obtain ⟨H, hHd, hHe⟩ := GlobalTheory.T.exists_holomorphic_descent_punctPolydisc_logCover n a ρ₁ h hρ0 hρ1 hdh hinv
+  obtain ⟨H, hHd, hHe⟩ := _root_.GlobalTheory.LogDescent.descent n a ρ₁ h hρ0 hρ1 hdh hinv
   let m' : Fin n → ℕ := fun j => if hj : (j : ℕ) < a then (m ⟨j, hj⟩).toNat else 0
   have hm0 : ∀ k, (((m k).toNat : ℕ) : ℂ) = ((m k : ℤ) : ℂ) := fun k => by
     have := Int.toNat_of_nonneg (hm k)
@@ -164,7 +167,7 @@ theorem periodVec_extends : ∀ (n a g : ℕ) (ha : a ≤ n) (ρ₁ : ℝ) (τ :
           rw [mul_sub, Finset.mul_sum, Finset.sum_congr rfl (fun k _ => hcd _)]
           ring
       _ ≤ 1 := periodVec_norm_exp_le _ (hpos s hsD hb').2 v
-  obtain ⟨F, hFd, hFe⟩ := GlobalTheory.T.exists_holomorphic_extension_across_coordinate_hyperplanes n a ρ₁ H m' hρ0 hHd hbound
+  obtain ⟨F, hFd, hFe⟩ := _root_.GlobalTheory.HyperplaneExt.extension_across_coordinate_hyperplanes n a ρ₁ H m' hρ0 hHd hbound
   refine ⟨F, hFd, fun s hs hb => ?_⟩
   rw [hFe _ hb (fun k hk => by simp [logExp, hk, Complex.exp_ne_zero])]
   exact hHe s hs hb

@@ -4,12 +4,15 @@ public import Development.AbelianVarietyTheory.Definitions.Foundations.FinalTheo
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.Brauer
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebra.ResMapBijective
 public import Mathlib.RingTheory.AdicCompletion.Noetherian
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CoboundaryOfOrthogonalDualCharacterModPrimePowStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CoboundaryOfUniformLimitCoboundariesStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsAnnihilatorDepthOfNotCoboundaryStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsMulScalarClassEqSmulAddCoboundaryModPrimePStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsUnitCharacterOfIntegralCyclotomicProductStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NormLePowIffDvdStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CoboundaryOfOrthogonalDualCharacterModPrimePow
+public import Mathlib.Analysis.Normed.Field.Basic
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.CoboundaryOfUniformLimitCoboundaries
+public import Formalism.ConjugateSelfDual.Statement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsAnnihilatorDepthOfNotCoboundary
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsMulScalarClassEqSmulAddCoboundaryModPrimeP
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.ExistsUnitCharacterOfIntegralCyclotomicProduct
+public import Development.AutomorphicArithmetic.AutomorphicVarieties.HeightAndVanishing.DirichletPrimeToLPartMulLPowerPart
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.NormLePowIffDvd
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -56,12 +59,12 @@ theorem GlobalTheory.Ord2.localDuality_char : GlobalTheory.Mem.LiteralAutomorphy
   by_cases hac : ∃ x : Qbar l, ∀ s ∈ Dec (F := ℚ) A, a s = k' s * x - x
   · exact Or.inr hac
   left
-  obtain ⟨θ, hθc, hθ⟩ := GlobalTheory.T.exists_unitCharacter_of_integral_cyclotomic_product l Ω c A k k' hk
+  obtain ⟨θ, hθc, hθ⟩ := _root_.GlobalTheory.LocChar.unit_of_integral l Ω c A k k' hk
     (fun s hs => ⟨(hint s hs).1, (hint s hs).2.1, (hint s hs).2.2.2.2⟩) (fun s hs t ht => (hmul s hs t ht).1)
-  obtain ⟨θ', hθ'c, hθ'⟩ := GlobalTheory.T.exists_unitCharacter_of_integral_cyclotomic_product l Ω c A k' k hk'
+  obtain ⟨θ', hθ'c, hθ'⟩ := _root_.GlobalTheory.LocChar.unit_of_integral l Ω c A k' k hk'
     (fun s hs => ⟨(hint s hs).2.1, (hint s hs).1, by rw [mul_comm]; exact (hint s hs).2.2.2.2⟩)
     (fun s hs t ht => (hmul s hs t ht).2.1)
-  have hN := GlobalTheory.T.norm_le_pow_iff_dvd l c
+  have hN := _root_.GlobalTheory.Coef.norm_le_norm_pow_iff_dvd l c
   have hchi : ∀ s : G ℚ Ω, ((((UpperTheory.V.Base.chiO ℚ Ω l c.O) s : c.Oˣ) : c.O) : Qbar l) = eps l s := by
     intro s; rfl
   have hcyc : θ * θ' = (UpperTheory.V.Base.chiO ℚ Ω l c.O).comp (Dec (F := ℚ) A).subtype := by
@@ -95,7 +98,7 @@ theorem GlobalTheory.Ord2.localDuality_char : GlobalTheory.Mem.LiteralAutomorphy
     exact (hmul s.1 s.2 t.1 t.2).2.2.1)
   have hnorm1 : ∀ x : c.O, ‖((x : c.O) : Qbar l)‖ ≤ 1 := fun x => by
     have := (hN 0 x).2 (by simp); simpa using this
-  obtain ⟨r, hr⟩ := GlobalTheory.T.exists_annihilatorDepth_of_not_coboundary l (Set.univ : Set ↥(Dec (F := ℚ) A)) (fun s => k' s) (fun s => a s)
+  obtain ⟨r, hr⟩ := _root_.GlobalTheory.LocCharAnn.exists_depth_of_not_coboundary l (Set.univ : Set ↥(Dec (F := ℚ) A)) (fun s => k' s) (fun s => a s)
     (by obtain ⟨s, hs, hne⟩ := hk'1; exact ⟨⟨s, hs⟩, trivial, hne⟩)
     (fun ⟨X, hX⟩ => hac ⟨X, fun s hs => hX ⟨s, hs⟩ trivial⟩)
   have hann : ∀ n : ℕ, ∀ x y : c.O, (∀ s, p ^ n ∣ x * aO s - (((θ' s : c.Oˣ) : c.O) * y - y)) → p ^ (n - r) ∣ x := by
@@ -103,10 +106,10 @@ theorem GlobalTheory.Ord2.localDuality_char : GlobalTheory.Mem.LiteralAutomorphy
     refine (hN (n - r) x).1 (hr n x y (hnorm1 x) fun s _ => ?_)
     have := (hN n _).2 (h s)
     simpa [aO, hθ'] using this
-  obtain ⟨m, hm0, hAF⟩ := GlobalTheory.T.exists_mul_scalarClass_eq_smul_add_coboundary_modPrimePow hL.lf hL.lt hL.le l Ω c A hA θ' hθ'c hθ'1 hθ'ne r
+  obtain ⟨m, hm0, hAF⟩ := _root_.GlobalTheory.LocCharSpan.span hL.lf hL.lt hL.le l Ω c A hA θ' hθ'c hθ'1 hθ'ne r
   have key : ∀ n : ℕ, 1 ≤ n → ∃ x : c.O, ∀ s, p ^ n ∣ (m : c.O) * bO s - (((θ s : c.Oˣ) : c.O) * x - x) := by
     intro n hn
-    refine GlobalTheory.T.coboundary_of_orthogonal_dualCharacter_modPrimePow hL.lf hL.lt l Ω c A hA θ θ' hθc hθ'c hcyc n hn (fun s => (m : c.O) * bO s)
+    refine _root_.GlobalTheory.Ord2.LocCharPerfect.perfect hL.lf hL.lt l Ω c A hA θ θ' hθc hθ'c hcyc n hn (fun s => (m : c.O) * bO s)
       (continuous_const.mul hbO) (fun s t => ?_) (fun a' ha' hca' => ?_)
     · rw [hbOc s t]; ring_nf; exact dvd_zero _
     obtain ⟨x, y, hxy⟩ := hAF n hn aO haO (fun s t => by rw [haOc s t, sub_self]; exact dvd_zero _)
@@ -136,7 +139,7 @@ theorem GlobalTheory.Ord2.localDuality_char : GlobalTheory.Mem.LiteralAutomorphy
     rw [hbOc s t, map_mul θ' s t, Units.val_mul]
     linear_combination (bO s * ((θ' s : c.Oˣ) : c.O)) * hq1 + x * hq2
   obtain ⟨s0, hs0, hne0⟩ := hk1
-  refine GlobalTheory.T.coboundary_of_uniform_limit_coboundaries (Dec (F := ℚ) A : Set (G ℚ Ω)) k b ⟨s0, hs0, hne0⟩ fun ε hε => ?_
+  refine _root_.GlobalTheory.coboundary_closed_of_uniform_approx (Dec (F := ℚ) A : Set (G ℚ Ω)) k b ⟨s0, hs0, hne0⟩ fun ε hε => ?_
   have hl1 : ‖((l : ℕ) : Qbar l)‖ < 1 := by
     have e : ((l : ℕ) : Qbar l) = algebraMap ℚ_[l] (Qbar l) (l : ℚ_[l]) := by simp
     rw [e, norm_algebraMap', Padic.norm_p]

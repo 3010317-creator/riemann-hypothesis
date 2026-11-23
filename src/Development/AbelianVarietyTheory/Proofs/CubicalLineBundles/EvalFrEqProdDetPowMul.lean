@@ -1,7 +1,7 @@
 module
 
 public import Formalism.LocalToGlobal.CMDeterminantIdeals.StatementG
-public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.DetDvdEquivariantFramePolynomialStatement
+public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.DetDvdEquivariantFramePolynomial
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -94,7 +94,7 @@ theorem exists_eq_prod_blockDetPoly_pow_mul (K : Type) [Field K] [Infinite K] (B
     intro n hn P hP
     obtain ⟨b₀, -, hb₀⟩ : ∃ b ∈ (Finset.univ : Finset B), n b ≠ 0 :=
       Finset.exists_ne_zero_of_sum_ne_zero (by omega)
-    obtain ⟨Q, hQ⟩ := GlobalTheory.T.det_dvd_equivariant_framePolynomial K B m P (fun b i => a b i + n b) hP b₀ (fun i => by omega)
+    obtain ⟨Q, hQ⟩ := _root_.GlobalTheory.FrameDet.det_dvd_of_equivariant K B m P (fun b i => a b i + n b) hP b₀ (fun i => by omega)
     change P = blockDetPoly K m b₀ * Q at hQ
     set n' : B → ℕ := Function.update n b₀ (n b₀ - 1) with hn'
     have hn'0 : n' b₀ + 1 = n b₀ := by simp only [hn', Function.update_self]; omega

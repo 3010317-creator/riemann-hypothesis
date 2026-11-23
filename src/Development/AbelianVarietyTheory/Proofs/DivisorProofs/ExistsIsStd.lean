@@ -1,9 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.RatBasisLinearIndependentInt
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDividedPowersDividedPowerPolyAlgebraAugIdeStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDividedPowersSplitAugmentationExtensionStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLiftAndAugmentationMapStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDividedPowersDividedPowerPolyAlgebraAugIde
+public import Mathlib.RingTheory.DividedPowers.DPMorphism
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsDividedPowersSplitAugmentationExtension
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsLiftAndAugmentationMap
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -53,9 +54,9 @@ namespace GlobalTheory.PDA
 theorem PDPoly.exists_isStd : ∀ (B : Type) [CommRing B] (J : Ideal B) (δ : DividedPowers J) (Q : PDPoly B),
     ∃ η : DividedPowers (Q.ext J), Q.IsStd δ η := by
   intro B _ J δ Q
-  obtain ⟨η, hη⟩ := GlobalTheory.T.exists_dividedPowers_dividedPowerPolyAlgebra_augIdeal B Q
-  obtain ⟨ε, hε⟩ := (GlobalTheory.T.exists_lift_and_augmentation_map B Q).2
-  obtain ⟨θ, hθ, hθη⟩ := GlobalTheory.T.exists_dividedPowers_split_augmentation_extension B J δ Q.P ε Q.aug η hε
+  obtain ⟨η, hη⟩ := _root_.GlobalTheory.PDA.exists_dividedPowers_aug B Q
+  obtain ⟨ε, hε⟩ := (_root_.GlobalTheory.PDA.PDPoly.exists_lift_and_aug B Q).2
+  obtain ⟨θ, hθ, hθη⟩ := _root_.GlobalTheory.SplitDP.exists_dp_ext B J δ Q.P ε Q.aug η hε
   refine ⟨θ, ⟨hθ, fun n ↦ ?_⟩⟩
   rw [hθη n _ (Q.e_succ_mem_aug 0), hη]
 

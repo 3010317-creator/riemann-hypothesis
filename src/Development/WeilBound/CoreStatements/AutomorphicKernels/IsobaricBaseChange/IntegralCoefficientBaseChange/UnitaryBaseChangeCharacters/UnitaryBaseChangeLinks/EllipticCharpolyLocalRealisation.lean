@@ -2,7 +2,7 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.SimpleTwistedTraceFormulaStable
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.ExistsOrthonormalBasisUnimodularHermitianLocalRi
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMatrixCharpolyPreservingHermitianFormCMStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsMatrixCharpolyPreservingHermitianFormCM
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PlaceConjugationPropertiesCmField
 public import Formalism.LocalToGlobal.IndefiniteReal.LocalNormSurjectivity.MemMaxVAIff
 public import Formalism.LocalToGlobal.IndefiniteReal.LocalNormSurjectivity.WittFN
@@ -57,7 +57,7 @@ namespace GlobalTheory.IntUnitaryPoly
 theorem lemGlobal : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (n : ℕ) (P : E[X]), P ∈ Ell E n →
     ∃ C H : Matrix (Fin n) (Fin n) E, C.charpoly = P ∧ C.det ≠ 0 ∧ H.det ≠ 0 ∧
       cT (IsCMField.complexConj E).toRingEquiv.toRingHom H = H ∧
-      cT (IsCMField.complexConj E).toRingEquiv.toRingHom C * H * C = H := GlobalTheory.T.exists_matrix_charpoly_preserving_hermitian_form_CM
+      cT (IsCMField.complexConj E).toRingEquiv.toRingHom C * H * C = H := _root_.GlobalTheory.GlobHerm.exists_mat_herm
 
 theorem lemLocal : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplicative ℤ))] [CompleteSpace L] (ϖ : L) (σ : L →+* L) (q : ℕ),
     IsUnramInv ϖ σ q → Odd q → ∀ (n : ℕ) (H : Matrix (Fin n) (Fin n) L), (∀ i j, H i j ∈ intL L) →

@@ -3,12 +3,13 @@ module
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.ZelevinskyCosocles.LUnlinkedComm
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IrreducibleAdmissibleGL
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsEquivProdIrrTw
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CanonicalShuffleCountProductStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CanonicalShuffleCountProduct
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityOfEquiv
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityTransitiveLeStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductIrreducibleAppendEquivStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetMultiplicityTransitiveLe
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductIrreducibleAppendEquiv
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ProductIrreducibleFiniteLength
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegmentProductJacquetShuffleCountStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SegmentProductJacquetShuffleCount
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -201,8 +202,8 @@ theorem append_equiv {p q p' q' r t : ℕ} (y' : Fin p → IrrGL (k := k)) (y'' 
     (e₂ : Nonempty ((prodIrr y'' hy'').Equiv (prodIrr w hw))) (hd : ∑ a, (Fin.append y' y'' a).1 = r + t)
     (hz : ∑ a, (Fin.append z' w a).1 = r + t) :
     Nonempty ((prodIrr (Fin.append y' y'') hd).Equiv (prodIrr (Fin.append z' w) hz)) :=
-  ⟨(GlobalTheory.T.product_irreducible_append_equiv k p q r t y' y'' hy' hy'' hd).some.symm.trans
-    ((ae2 y' y'' z' w hy' hy'' hz' hw e₁ e₂).some.trans (GlobalTheory.T.product_irreducible_append_equiv k p' q' r t z' w hz' hw hz).some)⟩
+  ⟨(_root_.GlobalTheory.CompanionTheory.ProdStage.prod₂_prodIrr_append k p q r t y' y'' hy' hy'' hd).some.symm.trans
+    ((ae2 y' y'' z' w hy' hy'' hz' hw e₁ e₂).some.trans (_root_.GlobalTheory.CompanionTheory.ProdStage.prod₂_prodIrr_append k p' q' r t z' w hz' hw hz).some)⟩
 
 def blockCl {q : ℕ} (y'' : Fin q → IrrGL (k := k)) (hirr : (prodIrr y'' rfl).IsIrreducible) : IrrGL (k := k) :=
   IrrGL.of (prodIrr y'' rfl) (isSmooth_prodIrr _ _) hirr
@@ -256,7 +257,7 @@ theorem inv_append (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) (hU : L
       exact (sum_flat Γ'' y'' hL).trans rfl
   · have hb : jmL (List.ofFn fun i => decWord (Γ'' i)).flatten (blockCl y'' hirr).rep = ((∏ r, (Finset.univ.filter fun j => j ≤ r ∧ Γ'' j = Γ'' r).card : ℕ) : ℕ∞) := by
       refine (jmL_congr _ ⟨χ⟩).symm.trans ?_
-      rw [GlobalTheory.T.segment_product_jacquet_shuffle_count hA hJ Γ'' y'' rfl hL _ (cusp_flat Γ''), GlobalTheory.T.canonical_shuffle_count_product Γ'' hc]
+      rw [_root_.GlobalTheory.CompanionTheory.FineProd.jmL_prodIrr hA hJ Γ'' y'' rfl hL _ (cusp_flat Γ''), _root_.GlobalTheory.CompanionTheory.WordCount.shuffleCount_canon Γ'' hc]
     have e1 : ∀ x, jmL (Fin.append Wb' (fun _ : Fin 1 => (List.ofFn fun i => decWord (Γ'' i)).flatten) (Fin.castAdd 1 x))
         (Fin.append z' (fun _ : Fin 1 => blockCl y'' hirr) (Fin.castAdd 1 x)).rep = jmL (Wb' x) (z' x).rep := fun x => by
       rw [Fin.append_left, Fin.append_left]
@@ -299,11 +300,11 @@ theorem groupCount : ∀ {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace
   intro k _ _ _ _ hA hJ hU h N Γ y hd hc hL
   obtain ⟨g, z, hz, e, Wb, hfl, hdeg, hpr⟩ := inv_of_canon hA hU hJ h Γ y hc hL _ hd
   refine ⟨g, z, hz, e, ?_⟩
-  have hst := GlobalTheory.T.jacquet_multiplicity_transitive_le hA z hz Wb (prodIrr z hz) (isSmooth_prodIrr z hz)
+  have hst := _root_.GlobalTheory.CompanionTheory.CsStages.jm_mul_prod_jmL_le hA z hz Wb (prodIrr z hz) (isSmooth_prodIrr z hz)
     (GlobalTheory.CompanionTheory.ProdFL.hasFiniteLength_prodIrr hA z hz) hdeg
   have hW : jmL (List.ofFn Wb).flatten (prodIrr z hz) =
       ((∏ i, (Finset.univ.filter fun j => j ≤ i ∧ Γ j = Γ i).card : ℕ) : ℕ∞) := by
-    rw [hfl, ← jmL_congr _ e, GlobalTheory.T.segment_product_jacquet_shuffle_count hA hJ Γ y hd hL _ (cusp_flat Γ), GlobalTheory.T.canonical_shuffle_count_product Γ hc]
+    rw [hfl, ← jmL_congr _ e, _root_.GlobalTheory.CompanionTheory.FineProd.jmL_prodIrr hA hJ Γ y hd hL _ (cusp_flat Γ), _root_.GlobalTheory.CompanionTheory.WordCount.shuffleCount_canon Γ hc]
   rw [hpr, hW] at hst
   refine le_one_of_mul_le (Finset.prod_pos fun i _ => Finset.card_pos.2 ⟨i, by simp⟩) hst
 

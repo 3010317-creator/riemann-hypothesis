@@ -1,14 +1,17 @@
 module
 
 public import Development.AbelianVarietyTheory.Statements.CuspFrameWeights.DiscreteSpectrumKFiniteDecomposition
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EqZeroOnKCOfEqZeroOnKsetStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HolomorphicExtensionCompactRepStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LowestWeightVectorFixedByLowerUnitriangularStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.PosPartUnitaryMul
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.EqZeroOnKCOfEqZeroOnKset
+public import Formalism.RealPlaceAnalysis.Complexify
+public import Mathlib.Analysis.Calculus.FDeriv.Defs
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HolomorphicExtensionCompactRep
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LowestWeightVectorFixedByLowerUnitriangular
+public import Mathlib.Analysis.Calculus.FDeriv.Star
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
 import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
-public import Mathlib.Analysis.Calculus.FDeriv.Star
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
@@ -123,11 +126,11 @@ theorem mul_on_KC
   have hd' : DifferentiableOn ℂ (fun y : Fin n → Fin n → ℂ => τ (Matrix.of y)) {y | Matrix.of y ∈ KC ε} :=
     hd.mono fun y hy => hy.1
   have h1 : ∀ a ∈ Kset ε, ∀ b ∈ KC ε, τ (a * b * 1) - τ a * τ b = 0 := fun a ha =>
-    GlobalTheory.T.eq_zero_on_KC_of_eq_zero_on_Kset' n ε B (fun y => τ (a * y * 1) - τ a * τ y)
+    _root_.GlobalTheory.Dec.KCIdent.eq_zero_on_KC_of_eq_zero_on_Kset n ε B (fun y => τ (a * y * 1) - τ a * τ y)
       ((differentiableOn_mul hd (mem_KC ha).1 isUnit_one).sub (hd'.const_mul _))
       fun k hk => by rw [Matrix.mul_one, hm a ha k hk, sub_self]
   intro a ha b hb
-  have h2 := GlobalTheory.T.eq_zero_on_KC_of_eq_zero_on_Kset' n ε B (fun y => τ (1 * y * b) - τ y * τ b)
+  have h2 := _root_.GlobalTheory.Dec.KCIdent.eq_zero_on_KC_of_eq_zero_on_Kset n ε B (fun y => τ (1 * y * b) - τ y * τ b)
     ((differentiableOn_mul hd isUnit_one hb.1).sub (hd'.mul_const _))
     (fun k hk => by simpa using h1 k hk b hb) a ha
   simpa [sub_eq_zero] using h2
@@ -152,7 +155,7 @@ theorem adj_on_KC {W : Type} [NormedAddCommGroup W] [InnerProductSpace ℂ W]
     have h2 := (((hc u v).differentiableAt (isOpen_units.mem_nhds hz')).comp (star z) (ht (star z))).star_star
     rw [star_star] at h2
     exact h2.differentiableWithinAt
-  have h3 := GlobalTheory.T.eq_zero_on_KC_of_eq_zero_on_Kset' n ε ℂ (fun y => ⟪v, τ y u⟫_ℂ - star ⟪u, τ yᴴ v⟫_ℂ)
+  have h3 := _root_.GlobalTheory.Dec.KCIdent.eq_zero_on_KC_of_eq_zero_on_Kset n ε ℂ (fun y => ⟪v, τ y u⟫_ℂ - star ⟪u, τ yᴴ v⟫_ℂ)
     (((hc v u).mono fun y (hy : Matrix.of y ∈ KC ε) => hy.1).sub h1)
     (fun k hk => by rw [← hK k hk, Complex.star_def, inner_conj_symm, sub_self]) y hy
   rw [← inner_conj_symm, sub_eq_zero.1 h3, Complex.star_def, Complex.conj_conj]
@@ -180,7 +183,7 @@ theorem tauExists : TauExists := by
     rw [Topology.IsInducing.subtypeVal.continuousOn_iff]
     refine ContinuousOn.congr ((hcont v).comp ?_ fun k hk => conj_mem hk) fun k hk => hπ k hk v
     exact (continuous_id.matrix_map continuous_star).continuousOn
-  obtain ⟨τ, hd, hτ⟩ := GlobalTheory.T.holomorphic_extension_compact_rep n ε (S →L[ℂ] S) π hπ1 hπm hπc
+  obtain ⟨τ, hd, hτ⟩ := _root_.GlobalTheory.HolExt.exists_holomorphic_extension n ε (S →L[ℂ] S) π hπ1 hπm hπc
   have hτσ : ∀ k ∈ Kset ε, ∀ v : S, (τ k v : H) = σ (k.map star) v := fun k hk v => by
     rw [hτ k hk, hπ k hk]
   have hτ1 : τ 1 = 1 := by rw [hτ 1 one_mem_K, hπ1]
@@ -224,7 +227,7 @@ theorem tauExists : TauExists := by
       exact Submodule.map_injective_of_injective S.injective_subtype (by rw [h, Submodule.map_bot])
     · right
       exact Submodule.map_injective_of_injective S.injective_subtype (by rw [h, Submodule.map_subtype_top])
-  · refine GlobalTheory.T.lowest_weight_vector_fixed_by_lower_unitriangular n ε abelian₂ S τ w hrep (hd.differentiableAt (isOpen_units.mem_nhds ?_))
+  · refine _root_.GlobalTheory.Dec.LowFix.lowest_fixed n ε abelian₂ S τ w hrep (hd.differentiableAt (isOpen_units.mem_nhds ?_))
       ((hwτ abelian₂ w).2 hwt) fun μ v hv h => hdom μ v v.2 (fun e => hv (Subtype.ext e)) ((hwτ μ v).1 h)
     exact (isUnit_one : IsUnit (1 : Matrix (Fin n) (Fin n) ℂ))
 

@@ -1,8 +1,10 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.HodgeXD
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ShiftSumDifferentialCompatStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TensorDirectSumBasisEquivStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ShiftSumDifferentialCompat
+public import Mathlib.Algebra.DirectSum.Module
+public import Mathlib.LinearAlgebra.TensorProduct.Defs
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TensorDirectSumBasisEquiv
 import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.CechPairings.TotPairing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -165,7 +167,7 @@ theorem prodR_cls {C D E : Cx.{1} K} (p : CxPairing C D E) {i j n : ℕ} (h : i 
 theorem kun_iff_mv {P Q T : ℕ → Cx.{1} K} (pr : ∀ {a a' c : ℕ}, a + a' = c → CxPairing (P a) (Q a') (T c)) (c n : ℕ) :
     KunC pr c n ↔ MvC (I := Tup P c) (fun u => u.i) (fun u => Q u.a') (T c) (fun u {m n} h => gmap pr c u h) n := by
   classical
-  obtain ⟨e₁, he₁⟩ := GlobalTheory.T.tensor_direct_sum_basis_equiv (K := K) (J := Idx c n) (fun t => (P t.a).H t.i) (fun t => (Q t.a').H t.j)
+  obtain ⟨e₁, he₁⟩ := _root_.GlobalTheory.CompanionTheory.KunGlue.tensBasis (K := K) (J := Idx c n) (fun t => (P t.a).H t.i) (fun t => (Q t.a').H t.j)
     (fun t => Bi (P t.a) t.i) (fun t => bas (P t.a) t.i)
   obtain ⟨r, hr⟩ := reidx (K := K) (tupEquiv P c n) (fun u : (Σ t : Idx c n, Bi (P t.a) t.i) => (Q u.1.a').H u.1.j)
   constructor
@@ -213,7 +215,7 @@ end GlobalTheory.CompanionTheory.KunGlue.Glue
 open GlobalTheory.CompanionTheory.KunGlue.Glue in
 theorem GlobalTheory.CompanionTheory.KunGlue.kun_glue : MVBij → ∀ {K : Type} [Field K] {ι : Type} [DecidableEq ι] [Fintype ι] (P : ℕ → Cx.{1} K) (Q T : ℕ → Sy.{1} K ι) (pr : ∀ (S : Finset ι) {a a' c : ℕ}, a + a' = c → CxPairing (P a) ((Q a').K S) ((T c).K S)), (∀ {S S' : Finset ι} (h : S ⊆ S') {a a' c : ℕ} (ha : a + a' = c) {i j n : ℕ} (hn : i + j = n) (x : (P a).X i) (y : ((Q a').K S).X j), ((T c).res h).f n ((pr S ha).μ hn x y) = (pr S' ha).μ hn x (((Q a').res h).f j y)) → (∀ a, (Q a).Desc) → (∀ c, (T c).Desc) → (∀ S : Finset ι, S.Nonempty → KunE (P := P) (Q := fun a => (Q a).K S) (T := fun c => (T c).K S) (fun {a a' c} ha => pr S ha)) → KunE (P := P) (Q := fun a => (Q a).K ∅) (T := fun c => (T c).K ∅) (fun {a a' c} ha => pr ∅ ha) := by
   intro hmv K _ ι _ _ P Q T pr hnat hQ hT hK c n
-  have main := GlobalTheory.T.mvE_empty_of_mvE_nonempty hmv (K := K) (ι := ι) (I := Tup P c) (fun u => u.i) (fun u => (-1 : ℤˣ) ^ u.i)
+  have main := _root_.GlobalTheory.CompanionTheory.KunGlue.MvSum.mvSum hmv (K := K) (ι := ι) (I := Tup P c) (fun u => u.i) (fun u => (-1 : ℤˣ) ^ u.i)
     (fun u => Q u.a') (T c) (fun u S {m n} h => gmap (Q := fun a => (Q a).K S) (T := fun c => (T c).K S) (fun {a a' c} ha => pr S ha) c u h)
     ?_ ?_ (fun u => hQ _) (hT c)
     (fun S hS n => (kun_iff_mv (Q := fun a => (Q a).K S) (T := fun c => (T c).K S) (fun {a a' c} ha => pr S ha) c n).1 (hK S hS c n)) n

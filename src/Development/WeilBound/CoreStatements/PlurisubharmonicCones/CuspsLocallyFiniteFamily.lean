@@ -2,9 +2,10 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsEigFrames
 public import Development.WeilBound.CoreStatements.PlurisubharmonicCones.FiniteSat
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HolomorphicFamilySmoothEntriesStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsotropicSublatticeCovolumePositiveStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsotropicSublatticeGramDeterminantStatement
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.HolomorphicFamilySmoothEntries
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsotropicSublatticeCovolumePositive
+public import Mathlib.NumberTheory.NumberField.Discriminant.Defs
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsotropicSublatticeGramDeterminant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -141,7 +142,7 @@ theorem LevelTowerAlt.cusps_locally_finite_family : ∀ (E : Type) [Field E] [Nu
   let e := Module.finBasis ℤ Λ
   have hHm : ∀ i j, ContinuousOn (fun t => (R t).Hm i j) U := by
     intro i j
-    obtain ⟨h1, h2⟩ := (GlobalTheory.T.holomorphic_family_smooth_entries E g Λ Ψ n U R hU hHol).1 i j
+    obtain ⟨h1, h2⟩ := (_root_.GlobalTheory.CompanionTheory.Relay.holomorphic_family_smooth_entries E g Λ Ψ n U R hU hHol).1 i j
     have e : (fun t => (R t).Hm i j) = fun t => (((R t).Hm i j).re : ℂ) + (((R t).Hm i j).im : ℂ) * Complex.I := by
       funext t; exact (Complex.re_add_im _).symm
     rw [e]
@@ -176,8 +177,8 @@ theorem LevelTowerAlt.cusps_locally_finite_family : ∀ (E : Type) [Field E] [Nu
   let b := Module.finBasis ℤ I
   have hli : LinearIndependent ℤ fun i => (b i : Λ) :=
     b.linearIndependent.map' (I.subtype.toAddMonoidHom.toIntLinearMap) (LinearMap.ker_eq_bot.2 hinj)
-  obtain ⟨hm, hdet⟩ := GlobalTheory.T.isotropic_sublattice_gram_determinant E g Λ Ψ (R t) σ I hCM hI.2.2 hI.1 _ b
-  obtain ⟨⟨r, v, hv⟩, hN⟩ := GlobalTheory.T.isotropic_sublattice_covolume_positive E g Λ Ψ (R t) σ I hCM hI.2.2 hI.1
+  obtain ⟨hm, hdet⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Cusp.IsoCovol.det_re_gram_eq E g Λ Ψ (R t) σ I hCM hI.2.2 hI.1 _ b
+  obtain ⟨⟨r, v, hv⟩, hN⟩ := _root_.GlobalTheory.CompanionTheory.Relay.isotropic_sublattice_covolume_positive E g Λ Ψ (R t) σ I hCM hI.2.2 hI.1
   have hnz0 := (hN r v hv).2.1
   obtain ⟨hd0, hd1⟩ := det_bound (coords e fun i => (b i : Λ)) (det_ne_zero e hli) (rg (R t) e)
     (rg_symm _ _) hc (hball t ht.2)

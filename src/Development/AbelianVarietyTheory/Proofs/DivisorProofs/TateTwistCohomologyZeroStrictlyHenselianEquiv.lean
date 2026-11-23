@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.PullHlComp
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeZeroSectionClassPropertiesStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DegreeZeroSectionClassProperties
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HZeroPullbackTwistBijective
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -47,7 +48,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.SecClass
 
 @[expose] public section
 
@@ -97,8 +97,8 @@ theorem GlobalTheory.EtC.tateTwistCohomology_zero_strictlyHenselian_equiv : ∀ 
   haveI := hH
   let e : Sec (tw q j) (Spec (CommRingCat.of A)) ≃+ Ht q (sp A) 0 j :=
     AddEquiv.ofBijective (AddMonoidHom.mk' (secClass (tw q j))
-      (GlobalTheory.T.degreeZeroSectionClass_properties (ZMod q) (tw q j) _).2.2.1)
-      (GlobalTheory.T.degreeZeroSectionClass_properties (ZMod q) (tw q j) _).2.1
+      (_root_.GlobalTheory.EtC.secClass_props (ZMod q) (tw q j) _).2.2.1)
+      (_root_.GlobalTheory.EtC.secClass_props (ZMod q) (tw q j) _).2.1
   haveI : Nonempty (Spec (CommRingCat.of A)) := inferInstance
   let ζ : Prim q Γ(Spec (CommRingCat.of A), ⊤) :=
     Prim.map (Scheme.ΓSpecIso (CommRingCat.of A)).inv.hom ⟨ζ0, hq, hζ0⟩

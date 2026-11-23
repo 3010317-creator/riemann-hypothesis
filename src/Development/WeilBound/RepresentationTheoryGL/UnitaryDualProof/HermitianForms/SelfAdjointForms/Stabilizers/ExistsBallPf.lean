@@ -1,9 +1,10 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.UnitaryDualProof.HermitianForms.SelfAdjointForms.Stabilizers.AnnAnti
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MatrixIntegralOfAddCharTraceDual
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CharacterAnnihilatorIntegerLattice
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactScaledIntoNhdsStatement
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactScaledIntoNhds
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MatrixIntegralOfAddCharTraceDual
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -96,7 +97,7 @@ theorem exists_ball_n {n : ℕ} {A : AddSubgroup (Fin n → k)} (hA : IsCompact 
     have h := hx i (Set.mem_univ i)
     simp only [Set.mem_ofPred_eq] at h
     simpa using h.le
-  obtain ⟨l, hl⟩ := GlobalTheory.T.compact_scaled_into_nhds k n _ hA _ hU ϖ hϖ1
+  obtain ⟨l, hl⟩ := _root_.GlobalTheory.CompanionTheory.CompactScaling.exists_pow_smul_mem k n _ hA _ hU ϖ hϖ1
   have hpl : ϖ ^ l ≠ 0 := pow_ne_zero _ hϖ0
   have hne : valuation k (ϖ ^ l) ≠ 0 := (Valuation.ne_zero_iff _).2 hpl
   refine ⟨Units.mk0 ((ϖ ^ l)⁻¹) (inv_ne_zero hpl), fun x hx i => ?_⟩
@@ -118,7 +119,7 @@ theorem ann_isLat_pf {ψ : AddChar k Circle} (hψ : Continuous ψ) (hψ1 : ψ �
   refine ⟨?_, ?_⟩
   · obtain ⟨ϖ, hϖ0, hϖ1⟩ := exists_unif' (k := k)
     have hAn : (A : Set (Fin n → k)) ∈ nhds 0 := hA.2.mem_nhds A.zero_mem
-    obtain ⟨l, hl⟩ := GlobalTheory.T.compact_scaled_into_nhds k n _ (ball_isLat (n := n) 1).1 _ hAn ϖ hϖ1
+    obtain ⟨l, hl⟩ := _root_.GlobalTheory.CompanionTheory.CompactScaling.exists_pow_smul_mem k n _ (ball_isLat (n := n) 1).1 _ hAn ϖ hϖ1
     have hb : ϖ ^ l ≠ 0 := pow_ne_zero _ hϖ0
     have hsub : (ann ψ A : Set (Fin n → k)) ⊆
         {x : Fin n → k | ∀ t : Fin n → k, (∀ j, t j ∈ 𝒪[k]) → ψ (ϖ ^ l * (t ⬝ᵥ x)) = 1} := by
@@ -159,7 +160,7 @@ theorem exists_big_pf {ψ : AddChar k Circle} (hψ : Continuous ψ) (hψ1 : ψ �
     ∃ A₁, IsLat A₁ ∧ A₀ ≤ A₁ ∧ (ann ψ A₁ : Set (Fin (m + 1) → k)) ⊆ D := by
   obtain ⟨ϖ, hϖ0, hϖ1⟩ := exists_unif' (k := k)
   have hC := ann_isLat_pf hψ hψ1 (ball_isLat (n := m + 1) (1 : kˣ))
-  obtain ⟨l, hl⟩ := GlobalTheory.T.compact_scaled_into_nhds k (m + 1) _ hC.1 D hD ϖ hϖ1
+  obtain ⟨l, hl⟩ := _root_.GlobalTheory.CompanionTheory.CompactScaling.exists_pow_smul_mem k (m + 1) _ hC.1 D hD ϖ hϖ1
   have hb : ϖ ^ l ≠ 0 := pow_ne_zero _ hϖ0
   set u : kˣ := Units.mk0 ((ϖ ^ l)⁻¹) (inv_ne_zero hb) with hu
   obtain ⟨s₀, hs₀⟩ := exists_ball_n (n := m + 1) hA₀.1

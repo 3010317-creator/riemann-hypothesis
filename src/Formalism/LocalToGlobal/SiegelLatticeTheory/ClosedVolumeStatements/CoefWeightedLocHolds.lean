@@ -13,15 +13,16 @@ public import Formalism.LocalToGlobal.SiegelLatticeTheory.BesselDiscreteSeries.B
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.BunExists
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.LocalWeightCharts.ScWlocExists
 public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.SplitPrimeCounts.LsSetresInt
-import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.SplitPrimeCounts.LsSetresSplit
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ScMuExists
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ScPiBuild
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ScPiFrame
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ScPsiExists
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.TensorFrameConstruction.InnerOfNorm
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.HermitianFrameExistence.FrameHolds
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.EmbeddingTraceSumAlt.NormUnitsOfCalculation
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ScRefExists
 public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.ScXuExists
 public import Formalism.SharpRestriction.CuspSpanNormBounds.BridgeHW
 public import Formalism.SharpRestriction.CuspSpanNormBounds.HCFiniteKMultiplicityGapped
+public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.HCReprodM
+import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.SplitPrimeCounts.LsSetresSplit
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,7 +60,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Formalism.LocalToGlobal.SiegelLatticeTheory.HaarTransversals.UnitaryHaarProducts.HCReprodM
 
 @[expose] public section
 
@@ -434,7 +434,7 @@ namespace Formalism.L2.SG.Closed
 
 open Formalism.BasicNotions Formalism.MainNotions.S Formalism.L2.SG.SplitPrimeNormLemmas
 
-theorem PsiExists_holds (D : D7) : PsiExists D := ScPsi.chkScPsiExists sc_psi_exists D
+theorem PsiExists_holds (D : D7) : PsiExists D := ScPsi.chkScPsiExists _root_.PI.ScPsiExists.UnitaryGroupMassFormula.norm_units_of_calculation D
 
 theorem MuExists_holds (D : D7) : MuExists D := ScMu.ChkScMu.chkScMuExists PI.sc_mu_exists D
 
@@ -448,7 +448,7 @@ theorem XuExists_holds (D : D7) : XuExists D :=
 
 variable [Fact Formalism.MainNotions.DiscreteSeriesWeylDimension.HighestWeightExists] in
 theorem PiExists_holds (D : D7) : PiExists D :=
-  ScPi.ChkScPi.chkScPiExists Formalism.MainNotions.BridgeHW.highest_weight_exists_bis sc_pi_frame sc_pi_construction D
+  ScPi.ChkScPi.chkScPiExists Formalism.MainNotions.BridgeHW.highest_weight_exists_bis _root_.PI.ScPiFrameW.frame_holds _root_.PI.ScPiBuildW.Asm.build D
 
 variable [Fact Formalism.MainNotions.DiscreteSeriesWeylDimension.DiscreteSeriesExistsG] in
 theorem BunExists_holds (D : D7) : BunExists D :=

@@ -2,8 +2,9 @@ module
 
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsOrthFull
 public import Mathlib.Order.CompletePartialOrder
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.NormalizedDegreeFullRankSublatticeStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.NormalizedDegreeOrthogonalSumStatement
+public import GroundTheory.HeightsAndTheta.Heights.HeightsOfSets.Slopes
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.NormalizedDegreeFullRankSublattice
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.NormalizedDegreeOrthogonalSum
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -59,7 +60,7 @@ theorem iSup_part_degree_rank {K : Type} [Field K] [NumberField K] {E : Hermitia
       E.rank (⨆ a, A.part a) = Module.finrank (𝓞 K) E.carrier := by
   unfold GlobalTheory.CompanionTheory.Ar.FlagPair.IsOrthFull at h
   obtain ⟨hort, hcard⟩ := h
-  obtain ⟨hdeg, hrk⟩ := GlobalTheory.T.normalized_degree_orthogonal_sum K E (Ψ ⊕ Ψ) A.part hort
+  obtain ⟨hdeg, hrk⟩ := _root_.GlobalTheory.CompanionTheory.Ar.OrthSum.normDegree_rank_iSup K E (Ψ ⊕ Ψ) A.part hort
   refine ⟨?_, ?_⟩
   · rw [hdeg, Fintype.sum_sum_type]
     rfl
@@ -82,7 +83,7 @@ theorem two_sum_neg_degree_W : ∀ (K : Type) [Field K] [NumberField K] (E : Her
             Module.finrank (𝓞 K) E.carrier * Real.log |(d : ℝ)| := by
   intro K _ _ E Ψ _ j k A h
   obtain ⟨hdeg, hrk⟩ := iSup_part_degree_rank A h
-  obtain ⟨hle, hge⟩ := GlobalTheory.T.normalized_degree_full_rank_sublattice K E (⨆ a, A.part a) hrk
+  obtain ⟨hle, hge⟩ := _root_.GlobalTheory.CompanionTheory.Ar.IndexBound.full_sublattice_normDegree_bounds K E (⨆ a, A.part a) hrk
   have hflat : ∑ τ, A.flatDeg τ =
       ∑ τ, E.normDegree (A.W τ).top - ∑ τ, E.normDegree (A.S τ).top := by
     simp only [GlobalTheory.CompanionTheory.Ar.FlagPair.flatDeg, Finset.sum_sub_distrib]

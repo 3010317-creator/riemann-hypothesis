@@ -4,8 +4,8 @@ public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCoh
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.CapOComp
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CechVanishingForUpwardClosedCover
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FlatBaseChangeCohomologyFamily
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InOpenFiniteInfIffStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InOpenOfThickeningMorphismStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InOpenFiniteInfIff
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.InOpenOfThickeningMorphism
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SerreClassOfUpwardClosedCover
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -63,7 +63,7 @@ theorem st_single_rel (α : ι) ⦃T T' : Thick (nlFun γ p X q κ)⦄ (φ : T �
   obtain ⟨β, hQ, -⟩ := h'
   rw [Set.mem_singleton_iff] at hV
   subst hV
-  exact ⟨hQ, _, rfl, GlobalTheory.T.inOpen_of_thickening_morphism _ φ hi⟩
+  exact ⟨hQ, _, rfl, _root_.GlobalTheory.CompanionTheory.ThickPt.inU_map _ φ hi⟩
 
 theorem st_single_union : (fun T => ∃ α, St Q {U α} T) = St Q (Set.range U) := by
   funext T
@@ -80,7 +80,7 @@ theorem st_single_capS (S : Finset ι) (hS : S.Nonempty) :
   funext T
   refine propext ⟨fun h => ?_, ?_⟩
   · obtain ⟨a, ha⟩ := hS
-    refine ⟨(h a ha).1, _, rfl, (GlobalTheory.T.inOpen_finite_inf_iff U S T).2 fun α hα => ?_⟩
+    refine ⟨(h a ha).1, _, rfl, (_root_.GlobalTheory.CompanionTheory.Thick.inU_iInf_finset U S T).2 fun α hα => ?_⟩
     obtain ⟨-, V, hV, hi⟩ := h α hα
     rw [Set.mem_singleton_iff] at hV
     subst hV
@@ -88,7 +88,7 @@ theorem st_single_capS (S : Finset ι) (hS : S.Nonempty) :
   · rintro ⟨hQ, V, hV, hi⟩ α hα
     rw [Set.mem_singleton_iff] at hV
     subst hV
-    exact ⟨hQ, _, rfl, (GlobalTheory.T.inOpen_finite_inf_iff U S T).1 hi α hα⟩
+    exact ⟨hQ, _, rfl, (_root_.GlobalTheory.CompanionTheory.Thick.inU_iInf_finset U S T).1 hi α hα⟩
 
 end St
 

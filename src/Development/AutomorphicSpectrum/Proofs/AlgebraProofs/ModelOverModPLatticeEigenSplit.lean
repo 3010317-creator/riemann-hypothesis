@@ -1,15 +1,19 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.IsLatticeFamily
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ChartBundleProductStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DvrBundleStatementDStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HodgeLieBundleIntersectionStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.InjectiveModPLatticeCharacterBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LatticeFamiliesGlueToBundleStatement
-import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LatticeFamilyInjectiveModelFactsStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LatticeGoodBaseChangeStatement
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.TrivFlagMod
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ChartBundleProduct
+public import GroundTheory.HeightsAndTheta.Heights.DiscreteValuationNumbers.SameGenericSymm
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.DvrBundleStatementD
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HodgeLieBundleIntersection
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.InjectiveModPLatticeCharacterBound
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.FlagMinor
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LatticeFamiliesGlueToBundle
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.LieLatticeData
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LatticeGoodBaseChange
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ModelOverModPLatticeCharacterStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ModelOverModPLatticePermutedStatement
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ModelOverModPLatticePermuted
+import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LatticeFamilyInjectiveModelFacts
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -158,11 +162,11 @@ theorem relations : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuatio
         _ = v * w ^ (p - 2) * w := by rw [this, mul_assoc]
     · simp [(hχ τ).1]
     · simp [(hχ τ).2]
-  have hfc := GlobalTheory.T.lattice_family_injective_model_facts O Ω K ι x inj p hp w χ φ D hD
+  have hfc := _root_.GlobalTheory.CompanionTheory.Ar.Num.FamConstr.main O Ω K ι x inj p hp w χ φ D hD
   have hgb := fun c (hc : mseg x c ≠ 0) =>
-    GlobalTheory.T.lattice_good_base_change (D c) (chartRing O (mseg x) c) p _ _ (hCD c) (hD.base c hc) (hG1 c hc)
-  have hbf := GlobalTheory.T.lattice_families_glue_to_bundle O Ω K ι x
-  have hbo := GlobalTheory.T.chart_bundle_product O Ω K ι x
+    _root_.GlobalTheory.CompanionTheory.Ar.Num.LatticeGoodBaseChange.main (D c) (chartRing O (mseg x) c) p _ _ (hCD c) (hD.base c hc) (hG1 c hc)
+  have hbf := _root_.GlobalTheory.CompanionTheory.Ar.Num.BundleOfFamily.main O Ω K ι x
+  have hbo := _root_.GlobalTheory.CompanionTheory.Ar.BundleOps.main O Ω K ι x
   have hXb : ∀ τ i, ∃ E : ChartBundle O (mseg x) 1 Ω, ∀ c, mseg x c ≠ 0 →
       E.lat c = (D c).xId (fun a => algebraMap O Ω (χ τ a)) i := fun τ i =>
     (hbf 1 Ω).1 _ ((hfc.2 τ).2.1 i).1 (fun c hc => ((hgb c hc).1 τ).2.2.2 i)
@@ -224,7 +228,7 @@ theorem relations : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuatio
     (fun τ i c hc => hXb τ i c hc) hT τ (H τ) Tn (fun c hc => ⟨hH τ c hc, hTn' c hc⟩)
   have hSeq : ∀ τ, QuotExact O x (La τ).lat (W τ).lat (H τ).lat Tn.lat (Om τ).lat (OmHT τ).lat := by
     intro τ
-    refine quotExact_congr ?_ ?_ ?_ ?_ ?_ ?_ (GlobalTheory.T.injective_mod_p_lattice_character_bound O Ω K ι x inj p hp w χ φ D hD hG1 hF τ)
+    refine quotExact_congr ?_ ?_ ?_ ?_ ?_ ?_ (_root_.GlobalTheory.CompanionTheory.Ar.Num.RelSeq.relSeq O Ω K ι x inj p hp w χ φ D hD hG1 hF τ)
     · intro c hc; rw [hLa' τ c hc, (hB τ c hc).1]
     · intro c hc; rw [(hB τ c hc).2.1]
     · intro c hc; rw [hH τ c hc]
@@ -234,14 +238,14 @@ theorem relations : ∀ (O : Type) [CommRing O] [IsDomain O] [IsDiscreteValuatio
   intro k hk1 hk2 q L Q hQ
   refine ⟨fun τ => (((-1) ^ k * ∑ i, ck O x d 1 (Xb τ i) T k L Q : ℤ) : ℝ), fun τ => ?_, fun τ => ?_⟩
   · obtain ⟨Ew, hEw⟩ := hbo.2.1 _ _ (Lie τ) _ hwΩ
-    have bd := ((GlobalTheory.T.dvr_bundle_statement_d O Ω K ι) x d (r τ) _ (Lie τ) Ew w hw0 hM hEw k hk1 hk2 q L Q hQ).2
+    have bd := ((_root_.GlobalTheory.CompanionTheory.Ar.Num.Constants.main O Ω K ι) x d (r τ) _ (Lie τ) Ew w hw0 hM hEw k hk1 hk2 q L Q hQ).2
       (p - 1) 1 (p : O) u hu (by omega) (by rw [pow_one]; exact hwu)
-    have l61 := GlobalTheory.T.hodge_lie_bundle_intersection O Ω K ι x d (r τ) (s τ) n _ _ _ (Lie τ) (W τ) (La τ) (Om τ) (OmHT τ) Tn (H τ)
+    have l61 := _root_.GlobalTheory.CompanionTheory.Ar.Num.HodgeTate.main O Ω K ι x d (r τ) (s τ) n _ _ _ (Lie τ) (W τ) (La τ) (Om τ) (OmHT τ) Tn (H τ)
       w hw0 hM (hLW τ) (hWLa τ) (hSc τ) (hOm τ) (hRH τ).1 (hSeq τ) k hk1 hk2 q L Q hQ
     rw [(hRH τ).2 k hk1 hk2 q L Q hQ] at l61
     exact arith_first _ _ _ _ _ p k hp2 l61 bd
   · exact arith_second _ _ _ p k hk1
-      (GlobalTheory.T.model_over_mod_p_lattice_permuted O Ω K ι x d hM p hp w χ φ D hD hG1 hG2 hF hX Xb T
+      (_root_.GlobalTheory.CompanionTheory.Ar.Num.RelK.main O Ω K ι x d hM p hp w χ φ D hD hG1 hG2 hF hX Xb T
         (fun τ i c hc => hXb τ i c hc) hT Lie W Om OmHT hB τ k hk1 hk2 q L Q hQ)
 
 end GlobalTheory.CompanionTheory.Ar.Num.GoodModel

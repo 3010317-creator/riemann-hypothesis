@@ -1,9 +1,14 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.GermSys
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FormalHermitianActionPairingStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.KernelRankBoundNormValuationStatement
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LatticeKernelRankBoundNormStatement
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.GermComp1ZeroPointLeft
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.FormalHermitianActionPairing
+public import Mathlib.LinearAlgebra.Charpoly.Basic
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Mathlib.RingTheory.Flat.TorsionFree
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.KernelRankBoundNormValuation
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.LatticeKernelRankBoundNorm
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianQuotientBilinearStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianQuotientLatticeStatement
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.AbelianQuotientOfPowerFnsStatement
@@ -279,12 +284,12 @@ theorem hfree_geom : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H :
   obtain ⟨d', ⟨gB⟩⟩ := GlobalTheory.T.exists_formal_germ_local E H hbar (Sp k) Q.tB (GlobalTheory.T.proper_has_power_fns E H k Q.tB Q.proper) k (𝟙 (Sp k))
   obtain ⟨Λ, _, _, _, _, P, j, hD, hs, hi, hk, hρ, hj⟩ := GlobalTheory.T.abelian_quotient_lattice E H hbar X t k p x Q d d' g gB
   obtain ⟨Z, hZ⟩ := GlobalTheory.T.abelian_quotient_bilinear E H hbar X t k p x Q d d' g gB P hD
-  obtain ⟨⟨ρH, hρH⟩, -, -⟩ := GlobalTheory.T.formal_hermitian_action_pairing k d (𝓞 E) g.B
+  obtain ⟨⟨ρH, hρH⟩, -, -⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Conj.rhoH_hom_adjoint k d (𝓞 E) g.B
   let S : 𝓞 E → Module.End k (TensorProduct ℤ k Λ) := fun a =>
     LinearMap.baseChange k ((LinearMap.lsmul (𝓞 E) Λ a).restrictScalars ℤ)
   have hn : 0 < Module.finrank ℚ E := Module.finrank_pos
   have hN : Module.finrank k (TensorProduct ℤ k Λ) = Module.finrank ℚ E * Module.finrank (𝓞 E) Λ := by
-    have h := (GlobalTheory.T.lattice_kernel_rank_bound_norm E k p Λ (1 : 𝓞 E) one_ne_zero).2
+    have h := (_root_.GlobalTheory.CompanionTheory.Ar.Flat.free_extension_kernel_bound_charpoly E k p Λ (1 : 𝓞 E) one_ne_zero).2
     have h' := congrArg Polynomial.natDegree h
     rwa [LinearMap.charpoly_natDegree, natDegree_charpoly_pow] at h'
   have h2d : 2 * d = Module.finrank ℚ E * r := by
@@ -320,8 +325,8 @@ theorem hfree_geom : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H :
     obtain ⟨⟨A, _, _, _, i, hpb⟩, hdeg⟩ := GlobalTheory.T.exists_finite_kernel_nonzero E H hbar k Q.tB Q.proper d' gB a ha
     have e3 := GlobalTheory.T.proper_multiplication_kernel E H hbar k p Q.tB Q.proper Q.ktriv d' gB a A i hpb
     have e5 := numeric (p := p) hn hN hdd h2d (hdeg A i hpb) hM e3
-    have e6 := (GlobalTheory.T.lattice_kernel_rank_bound_norm E k p Λ a ha).1
-    have e7 := (GlobalTheory.T.lattice_kernel_rank_bound_norm E k p Λ (star a) hba).1
+    have e6 := (_root_.GlobalTheory.CompanionTheory.Ar.Flat.free_extension_kernel_bound_charpoly E k p Λ a ha).1
+    have e7 := (_root_.GlobalTheory.CompanionTheory.Ar.Flat.free_extension_kernel_bound_charpoly E k p Λ (star a) hba).1
     rw [hnorm] at e7
     have e8 : Module.finrank k (LinearMap.ker (Tm (rho gB.B a) (rho gB.B (star a)) (bil (gB.B.ad a) 1 1))) =
       Module.finrank k (LinearMap.ker (rhoH gB.B a)) := rfl
@@ -330,7 +335,7 @@ theorem hfree_geom : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H :
     have e10 : Module.finrank k (LinearMap.ker (S (star a))) ≤ _ := e7
     rw [e1]
     exact e2.trans ((add_le_add (add_le_add e10 le_rfl) e9).trans e5)
-  obtain ⟨y, hy1, hy2⟩ := GlobalTheory.T.exists_free_basis_of_kernel_rank_le_norm_valuation E k ((Fin d → k) × (Fin d → k)) p r ρH
+  obtain ⟨y, hy1, hy2⟩ := _root_.GlobalTheory.CompanionTheory.Ar.Flat.lemF_algebra E k ((Fin d → k) × (Fin d → k)) p r ρH
     (fun a => by rw [hρH]; exact hc a) (fun a ha => by rw [hρH]; exact hb a ha)
   simp only [hρH] at hy1 hy2
   exact ⟨y, hy1, hy2⟩

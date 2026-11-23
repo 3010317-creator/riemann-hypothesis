@@ -1,15 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KFacDifferentiable
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckePhiFourierConstantAtZeroDifferentiableOnStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckePhiFourierConstantAtZeroZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckePhiFourierConstantAtZeroDifferentiableOn
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HeckePhiFourierConstantAtZeroZero
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsSmoothHolomorphicInSigmaFamilyMulLeft
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdImIteratedWirtingerDerivWordDifferentiableOnStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UpperHalfPlaneProductProdImRpowContDiffOnStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.OmegaFactorization
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ProdImIteratedWirtingerDerivWordDifferentiableOn
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.UpperHalfPlaneProductProdImRpowContDiffOn
+public import Mathlib.Analysis.Complex.RemovableSingularity
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
-public import Mathlib.Analysis.Complex.RemovableSingularity
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
 import Mathlib.Analysis.SpecialFunctions.Bernstein
@@ -93,8 +94,8 @@ theorem _root_.GlobalTheory.HeckeTwo.bZero_isGood (F : Type) [Field F] [NumberFi
     simp only [hE, hG]
     split_ifs with h0
     · subst h0
-      rw [GlobalTheory.T.heckePhiFourierConstantAtZero_zero, zero_pow (by omega), mul_zero]
-    · rw [dslope_of_ne _ h0, slope_def_field, GlobalTheory.T.heckePhiFourierConstantAtZero_zero, hZ _ (by
+      rw [_root_.GlobalTheory.HeckeTwo.cConst_zero, zero_pow (by omega), mul_zero]
+    · rw [dslope_of_ne _ h0, slope_def_field, _root_.GlobalTheory.HeckeTwo.cConst_zero, hZ _ (by
           intro h; apply h0; linear_combination h / 2)]
       have hf1 : f = (f - 1) + 1 := by omega
       rw [hf1, pow_succ]
@@ -116,8 +117,8 @@ theorem _root_.GlobalTheory.HeckeTwo.bZero_isGood (F : Type) [Field F] [NumberFi
     have h2 : DifferentiableAt ℂ (fun σ : ℂ => R (1 + 2 * σ)) σ :=
       (hR _).comp σ ((differentiableAt_const _).add (differentiableAt_id.const_mul _))
     have h3 : DifferentiableWithinAt ℂ (dslope cConst 0) halfPlane σ :=
-      ((differentiableOn_dslope halfPlane_mem_nhds_zero).2 GlobalTheory.T.heckePhiFourierConstantAtZero_differentiableOn) σ hσ
-    have h4 : DifferentiableWithinAt ℂ cConst halfPlane σ := GlobalTheory.T.heckePhiFourierConstantAtZero_differentiableOn σ hσ
+      ((differentiableOn_dslope halfPlane_mem_nhds_zero).2 _root_.GlobalTheory.HeckeTwo.cConst_differentiableOn) σ hσ
+    have h4 : DifferentiableWithinAt ℂ cConst halfPlane σ := _root_.GlobalTheory.HeckeTwo.cConst_differentiableOn σ hσ
     exact ((((kFac_differentiable σ).differentiableWithinAt.mul (differentiableWithinAt_const _)).mul
       h1.differentiableWithinAt).mul (h2.differentiableWithinAt.div_const _)).mul h3 |>.mul (h4.pow _)
   have hB : bZero Zb 𝔞 𝔟 = fun σ z => E σ * ∏ τ : Emb F, (((z τ).im : ℝ) : ℂ) ^ (-1 - 2 * σ) := by
@@ -128,7 +129,7 @@ theorem _root_.GlobalTheory.HeckeTwo.bZero_isGood (F : Type) [Field F] [NumberFi
     · rw [Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ]
       ring
   rw [hB]
-  exact GlobalTheory.HeckeTwoMul.isGood_mul F E _ (hEG ▸ hGd) ⟨fun σ _ => GlobalTheory.T.upperHalfPlaneProduct_prod_im_rpow_contDiffOn F σ, fun w z hz => GlobalTheory.T.prodIm_iteratedWirtingerDerivWord_differentiableOn F w z hz⟩
+  exact GlobalTheory.HeckeTwoMul.isGood_mul F E _ (hEG ▸ hGd) ⟨fun σ _ => _root_.GlobalTheory.upperHalf_prodImPow_contDiffOn F σ, fun w z hz => _root_.GlobalTheory.HeckeTwo.prodIm_wirtWord_differentiableOn F w z hz⟩
 
 end BZeroGood
 

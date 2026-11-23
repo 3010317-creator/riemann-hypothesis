@@ -1,10 +1,12 @@
 module
 
 public import Development.WeilBound.RepresentationTheoryGL.TwistedFactors.LocalBaseChange.StrictDominanceCasselman.IsStrictlyDominant
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FixedVectorZeroOfDualStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.SmoothPartStable
+public import Mathlib.Basic.Complex.Basic
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FixedVectorZeroOfDual
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsDominantOneAndMul
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetFixedFirstConditionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StrictlyDominantContractsUnipotentStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetFixedFirstCondition
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StrictlyDominantContractsUnipotent
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -73,7 +75,7 @@ theorem heckeOp_nilpotent_on_ker :
       simp
     | succ r ih =>
       rw [pow_succ, pow_succ T]
-      exact GlobalTheory.T.jacquet_fixed_first_condition k N h d hd J hJo hJc hJf hpos V π hπ _ _ (hdom r) ht.1 _ _ ih hT
+      exact _root_.GlobalTheory.CompanionTheory.Lbc.hecke_dominant_mul k N h d hd J hJo hJc hJf hpos V π hπ _ _ (hdom r) ht.1 _ _ ih hT
 
   have key : ∀ u ∈ twKer π (unipRad k (stdBlocks d hd)) 1, ∃ R : ℕ, ∀ r ≥ R,
       ∀ l : Module.Dual ℂ V, (∀ x ∈ J, l ∘ₗ π x = l) → l (π (e t ^ r) u) = 0 := by
@@ -81,7 +83,7 @@ theorem heckeOp_nilpotent_on_ker :
     induction hu using Submodule.span_induction with
     | mem u hu =>
       obtain ⟨n, w, rfl⟩ := hu
-      obtain ⟨R, hR⟩ := GlobalTheory.T.strictly_dominant_contracts_unipotent k N h d hd J hJo hJc hJf hpos t ht (n : GL (Fin N) k) n.2
+      obtain ⟨R, hR⟩ := _root_.GlobalTheory.CompanionTheory.ExpandN.exists_pow_conj_mem_KN k N h d hd J hJo hJc hJf hpos t ht (n : GL (Fin N) k) n.2
       refine ⟨R, fun r hr l hl => ?_⟩
       obtain ⟨j, rfl⟩ := Nat.exists_eq_add_of_le hr
       have hmem : e t ^ (R + j) * (n : GL (Fin N) k) * (e t ^ (R + j))⁻¹ ∈ KN k N J d hd := by
@@ -115,7 +117,7 @@ theorem heckeOp_nilpotent_on_ker :
   obtain ⟨R, hR⟩ := key _ ((Submodule.Quotient.mk_eq_zero _).1 hv)
   refine ⟨R, ?_⟩
   have h0 : (((T ^ R) v : fixed π J) : V) = 0 := by
-    refine GlobalTheory.T.fixed_vector_zero_of_dual _ J hJc V π hπ _ ((T ^ R) v).2 fun l hl => ?_
+    refine _root_.GlobalTheory.CompanionTheory.CompactAvg.invariant_forms_separate_fixed _ J hJc V π hπ _ ((T ^ R) v).2 fun l hl => ?_
     rw [← hecke R v l hl, map_pow]
     exact hR R le_rfl l hl
   exact Subtype.ext h0

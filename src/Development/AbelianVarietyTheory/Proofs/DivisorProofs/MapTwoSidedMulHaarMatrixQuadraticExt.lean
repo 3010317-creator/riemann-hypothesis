@@ -1,9 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.HilbertNinetyQuotientHomEqIff
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetRestrictScalarsTwoSidedMatrixMulStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapLinearEquivAddHaarLocalFieldStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuadExtTopologyStatement
+public import Mathlib.RingTheory.Norm.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetRestrictScalarsTwoSidedMatrixMul
+public import Mathlib.MeasureTheory.Measure.Haar.DistribChar
+public import Mathlib.NumberTheory.LocalField.Basic
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapLinearEquivAddHaarLocalField
+public import Development.AbelianVarietyTheory.Definitions.Divisors.UnipVal
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.QuadExtTopology
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -74,7 +78,7 @@ noncomputable def twoSidedEquiv (F : Type) [Field F] (E : Type) [Field E] [Algeb
 
 theorem map_twoSided_haar : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRel F] [TopologicalSpace F] [IsNonarchimedeanLocalField F] (E : Type) [Field E] [Algebra F E] [TopologicalSpace E] [IsModuleTopology F E] (c : E →ₐ[F] E) (δ : E) (hE : IsQuad c δ) (α : Type) [Fintype α] [DecidableEq α] (ν : Type) [Fintype ν] [DecidableEq ν] [MeasurableSpace (Matrix α ν E)] [BorelSpace (Matrix α ν E)] (μ : Measure (Matrix α ν E)) [μ.IsAddHaarMeasure] (u : GL α E) (a : GL ν E), μ.map (fun x => (u : Matrix α α E) * x * (a : Matrix ν ν E)) = (distribHaarChar F ((Units.map (Algebra.norm F : E →* F)) (Matrix.GeneralLinearGroup.det u)) ^ Fintype.card ν * distribHaarChar F ((Units.map (Algebra.norm F : E →* F)) (Matrix.GeneralLinearGroup.det a)) ^ Fintype.card α)⁻¹ • μ := by
   intro F _ _ _ _ _ E _ _ _ _ c δ hE α _ _ ν _ _ _ _ μ _ u a
-  obtain ⟨hfd, -, -, -, -, -, -, hmat⟩ := GlobalTheory.T.quadExt_topological_properties F E c δ hE
+  obtain ⟨hfd, -, -, -, -, -, -, hmat⟩ := _root_.GlobalTheory.quadExt_topology F E c δ hE
   have := hfd
   have := (hmat α ν).1
   let T := twoSidedEquiv F E u a
@@ -84,10 +88,10 @@ theorem map_twoSided_haar : ∀ (F : Type) [Field F] [CharZero F] [ValuativeRel 
         (Units.map (Algebra.norm F : E →* F)) (Matrix.GeneralLinearGroup.det a) ^
           Fintype.card α := by
     ext
-    rw [LinearEquiv.coe_det, GlobalTheory.T.det_restrictScalars_twoSidedMatrixMul F E α ν (u : Matrix α α E) (a : Matrix ν ν E)
+    rw [LinearEquiv.coe_det, _root_.GlobalTheory.KSp.det_restrictScalars_twoSidedMul F E α ν (u : Matrix α α E) (a : Matrix ν ν E)
       (T : Matrix α ν E →ₗ[F] Matrix α ν E) (fun x ↦ rfl)]
     simp
   have hT : (fun x ↦ (u : Matrix α α E) * x * (a : Matrix ν ν E)) = ⇑T := rfl
-  rw [hT, GlobalTheory.T.map_linearEquiv_addHaar_localField F (Matrix α ν E) μ T, hdet, map_mul, map_pow, map_pow]
+  rw [hT, _root_.GlobalTheory.KSp.map_linearEquiv_haar F (Matrix α ν E) μ T, hdet, map_mul, map_pow, map_pow]
 
 end GlobalTheory.KSp

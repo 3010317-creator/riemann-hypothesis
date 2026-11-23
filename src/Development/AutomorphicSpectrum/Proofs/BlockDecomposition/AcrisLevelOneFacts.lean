@@ -2,9 +2,9 @@ module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.AcrisKummerUnits.ConstantCoeffSurjective
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.WittExactSequences.ObFacts
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExpansionEqZeroIffCoeffsMemStatement
-import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExpansionSurjectiveAdditiveLinearStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FunctorialityOfPeriodRingMapsStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExpansionEqZeroIffCoeffsMem
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FunctorialityOfPeriodRingMaps
+import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExpansionSurjectiveAdditiveLinear
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -79,7 +79,7 @@ theorem mulDxi_apply (A : PAlg l) (k : ℕ) (a : A.A) : mulDxi A k a = A.aTo1 a 
 
 theorem pow_smul_mulDxi (A : PAlg l) (k : ℕ) : pFlat l ^ l • mulDxi A k = 0 := by
   ext a
-  have h := (GlobalTheory.T.expansion_surjective_additive_linear A).2.2.2 (l * k)
+  have h := (_root_.GlobalTheory.CompanionTheory.PerfFil.Expand.main A).2.2.2 (l * k)
   rw [LinearMap.smul_apply, smul_acr, mulDxi_apply, LinearMap.zero_apply, map_pow, mul_left_comm]
   have e : A.aTo1 (A.s (pFlat l) ^ l) * A.dxi 1 (l * k) = 0 := h
   rw [e, mul_zero]
@@ -159,8 +159,8 @@ theorem tauL_bijective (A : PAlg l) : Function.Bijective (tauL A) := by
   refine ⟨(injective_iff_map_eq_zero _).2 fun x hx => ?_, fun y => ?_⟩
   · obtain ⟨c, rfl⟩ := exists_gen A x
     rw [tauL_gen] at hx
-    exact gen_eq_zero A c ((GlobalTheory.T.expansion_eq_zero_iff_coeffs_mem A c).1 hx)
-  · obtain ⟨c, rfl⟩ := (GlobalTheory.T.expansion_surjective_additive_linear A).1 y
+    exact gen_eq_zero A c ((_root_.GlobalTheory.CompanionTheory.ExpandKer.expand_eq_zero_iff A c).1 hx)
+  · obtain ⟨c, rfl⟩ := (_root_.GlobalTheory.CompanionTheory.PerfFil.Expand.main A).1 y
     exact ⟨gen A c, tauL_gen A c⟩
 
 def tau (A : PAlg l) : Nm l ⊗[Ob l] A.A ≃+ A.Acr 1 :=
@@ -179,7 +179,7 @@ theorem pow_smul_Nm (x : Nm l) : pFlat l ^ l • x = 0 :=
 
 theorem algebraMap_eq (A : PAlg l) (a : Ainf l) (y : A.Acr 1) :
     algebraMap (Ainf l) (A.Acr 1) a * y = a.coeff 0 • y := by
-  rw [(GlobalTheory.T.functoriality_of_period_ring_maps A A (𝟙 A)).2.2.2.2.2 a]
+  rw [(_root_.GlobalTheory.CompanionTheory.PAlgNat.expand_nat A A (𝟙 A)).2.2.2.2.2 a]
   rfl
 
 theorem tau_smul (A : PAlg l) (a : Ainf l) (x : Nm l ⊗[Ob l] A.A) :
@@ -190,7 +190,7 @@ theorem tau_map (A B : PAlg l) (f : A ⟶ B) (x : Nm l ⊗[Ob l] A.A) :
     tau B (((D.toPf l ⋙ D.tensF l (Ob l) (Nm l)).map f).hom x) = mapAcr f 1 (tau A x) := by
   obtain ⟨c, rfl⟩ := exists_gen A x
   rw [tau_apply, tau_apply, map_gen, tauL_gen, tauL_gen]
-  exact ((GlobalTheory.T.functoriality_of_period_ring_maps A B f).2.1 c).symm
+  exact ((_root_.GlobalTheory.CompanionTheory.PAlgNat.expand_nat A B f).2.1 c).symm
 
 theorem acr1 (l : ℕ) [Fact l.Prime] : CrystallineSemistableComparison.D.RAcr1 l :=
   ⟨Nm l, inferInstance, inferInstance, l, tau, pow_smul_Nm, tau_smul, tau_map⟩

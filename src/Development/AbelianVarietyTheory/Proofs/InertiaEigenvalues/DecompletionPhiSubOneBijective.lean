@@ -2,16 +2,17 @@ module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.LocalSituation
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CoeffZeroEqZeroIff
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicTowerFixesEpsilonRootsResGammaTrivialStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DecWOfMatrixStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleEmbeddingFrobeniusGaloisCompatStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleRingImageAddEllPiAdicClosedStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleRingImageSaturatedAdicClosedStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusConstantsPiAdicFiltrationModEllStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisFixedSubringTensorWittSaturatedCompleteStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisFixedTensorWittApproxFrobeniusPerfectionStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisFixedTensorWittCompletePiAdicModEllStatement
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MatrixFrobeniusSubOneBijectiveModSubringStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.HTBasis
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CyclotomicTowerFixesEpsilonRootsResGammaTrivial
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.DecWOfMatrix
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleEmbeddingFrobeniusGaloisCompat
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleRingImageAddEllPiAdicClosed
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.EtaleRingImageSaturatedAdicClosed
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.FrobeniusConstantsPiAdicFiltrationModEll
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisFixedSubringTensorWittSaturatedComplete
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisFixedTensorWittApproxFrobeniusPerfection
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.GaloisFixedTensorWittCompletePiAdicModEll
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.MatrixFrobeniusSubOneBijectiveModSubring
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -48,7 +49,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Topology.Sheaves.Init
-public import Development.AbelianVarietyTheory.Definitions.Foundations.HTBasis
 
 @[expose] public section
 
@@ -70,21 +70,21 @@ theorem decompletion_matrix (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocA
     (∀ z : Fin d → RW LL, (∀ i, z i ∈ fixSub AI LL H) →
       (∀ i, ∃ e, ∑ k, E.tie.ioE (Pm i k) * φRW LL (z k) - z i = E.tie.ioE e) →
         ∀ i, ∃ e, z i = E.tie.ioE e) := by
-  obtain ⟨c1, c2, c3, c4⟩ := GlobalTheory.T.etaleEmbedding_frobenius_galois_compat l P AI K s LL h W E
-  obtain ⟨f1, f2, f3⟩ := GlobalTheory.T.galoisFixedSubringTensorWitt_saturated_complete l P AI LL H
-  obtain ⟨p1, p2, -, -⟩ := GlobalTheory.T.frobenius_constants_piAdic_filtration_modEll l P AI LL s
-  obtain ⟨s1, s2⟩ := GlobalTheory.T.etaleRing_image_saturated_adicClosed l P AI K s LL h W E
+  obtain ⟨c1, c2, c3, c4⟩ := _root_.GlobalTheory.Decompl.ioE_compat l P AI K s LL h W E
+  obtain ⟨f1, f2, f3⟩ := _root_.GlobalTheory.Decompl.FixL.fixSub_ladic l P AI LL H
+  obtain ⟨p1, p2, -, -⟩ := _root_.GlobalTheory.DecomplFrob.frobenius_and_constants l P AI LL s
+  obtain ⟨s1, s2⟩ := _root_.GlobalTheory.Decompl.Sat.ioE_saturated_closed l P AI K s LL h W E
   have hE : ∀ e, E.tie.ioE e ∈ fixSub AI LL H := fun e => mem_fixSub.2 fun g hg => by
     obtain ⟨hg, hg1⟩ := (hH g).1 hg
     exact c2 ⟨g, hg⟩ hg1 e
   have hsub : ∀ y ∈ fixSub AI LL H, y ∈ fixSub AI LL (Hinf K : Set (GQ l)) := fun y hy =>
     mem_fixSub.2 fun g hg => mem_fixSub.1 hy g
-      ((hH g).2 ((GlobalTheory.T.cyclotomicTower_fixes_epsilonRoots_resGamma_trivial l P AI K).2 s LL h W g hg))
+      ((hH g).2 ((_root_.GlobalTheory.Decompl.hinf_fixes_εroot_and_resΓ_eq_one l P AI K).2 s LL h W g hg))
   have hπ : piR AI LL s ∈ fixSub AI LL H := by rw [← c3]; exact hE _
-  have q1 := GlobalTheory.T.galoisFixedTensorWitt_complete_piAdic_modEll l P AI LL s H hπ
-  have q2 := GlobalTheory.T.etaleRing_image_add_ell_pi_adic_closed l P AI K s LL h W E
-  have q3 := fun y hy => GlobalTheory.T.galoisFixedTensorWitt_approx_frobeniusPerfection l P AI K s LL h W E y (hsub y hy)
-  have q4 := GlobalTheory.T.matrix_frobenius_sub_one_bijective_mod_subring (RW LL) W.EE (RA LL) (E.tie.ioE : W.EE →+* RW LL) (inclR LL : RA LL →+* RW LL)
+  have q1 := _root_.GlobalTheory.Decompl.fixSub_nearPi_complete l P AI LL s H hπ
+  have q2 := _root_.GlobalTheory.Decompl.ioE_closed l P AI K s LL h W E
+  have q3 := fun y hy => _root_.GlobalTheory.DecomplDense.fixSub_approx_perfection l P AI K s LL h W E y (hsub y hy)
+  have q4 := _root_.GlobalTheory.DecomplMat.matrix_frob_sub_one_bijective (RW LL) W.EE (RA LL) (E.tie.ioE : W.EE →+* RW LL) (inclR LL : RA LL →+* RW LL)
     (φRW LL : RW LL →+* RW LL) (fixSub AI LL H) l (piR AI LL s)
     ((1 : ↥(OL LL)) ⊗ₜ[ℤ_[l]] piW AI s) rfl
   simp only [RingHom.coe_coe] at q4
@@ -94,7 +94,7 @@ theorem decompletion_matrix (l : ℕ) [Fact l.Prime] (P : LocPrime l) (AI : LocA
 
 theorem decompletion : ∀ (D : Formalism.BasicNotions.D7) (HW : HWOf D.loc) (F : FonOf D.loc D.locA HW), ∀ (l : ℕ) [Fact l.Prime] (K : FinExt l) (s : ℕ) (LL : FinExt l) (h : Good K s LL), let S := sit D.loc HW l (D.locA l) K s LL h; let E : S.Comparison₂ := ((F l).E K s LL h).tie; DecW S E := by
   intro D HW F l _ K s LL h S E
-  refine GlobalTheory.T.decW_of_matrix_criterion S E fun d Pm => ?_
+  refine _root_.GlobalTheory.DecomplRed.decW_of_matrix S E fun d Pm => ?_
   have hm := decompletion_matrix l (D.loc l) (D.locA l) K s LL h ((HW l).W K s LL h)
     ((F l).E K s LL h) {g | ∃ hg : g ∈ GK K, ((HW l).W K s LL h).resΓ ⟨g, hg⟩ = 1}
     (fun _ => Iff.rfl) d Pm

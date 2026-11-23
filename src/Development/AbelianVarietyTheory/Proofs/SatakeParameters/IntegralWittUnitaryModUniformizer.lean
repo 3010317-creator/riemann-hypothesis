@@ -2,10 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.DvdPowZeroIff
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.EqZeroOfForallDvdPow
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsLimitDvdUniformizerPowCauchyStatement
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HermitianIntegralVectorsPairingStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.ExistsLimitDvdUniformizerPowCauchy
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.HermitianIntegralVectorsPairing
 public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.InvMemDoubleCosetAndComm
-public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnitaryGroupNewtonLiftStepStatement
+public import Development.AbelianVarietyTheory.Proofs.SatakeParameters.UnitaryGroupNewtonLiftStep
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -69,8 +69,8 @@ theorem witt_mod_base : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplica
       ∀ i r, GlobalTheory.Hk3.IntWitt.DvdPow ϖ 1 ((((h : GL (Fin n') L) : Matrix (Fin n') (Fin n') L) *ᵥ z i) r - z' i r) := by
   intro L _ _ _ ϖ σ q hU hq n' JT hJ hJh ι _ z z' hz hz' hi hi' hgr
   classical
-  obtain ⟨g₀, hg₀i, hg₀u, hg₀z⟩ := GlobalTheory.T.hermitian_integral_vectors_pairing L ϖ σ q hU hq n' JT hJ hJh ι z z' hz hz' hi hi' hgr
-  have hstep := GlobalTheory.T.unitaryGroup_newton_lift_step L ϖ σ q hU hq n' JT hJ hJh
+  obtain ⟨g₀, hg₀i, hg₀u, hg₀z⟩ := _root_.GlobalTheory.Hk3.ResWitt.exists_int_unitary_mod_of_gram_mod L ϖ σ q hU hq n' JT hJ hJh ι z z' hz hz' hi hi' hgr
+  have hstep := _root_.GlobalTheory.Hk3.UnitaryNewton.newton_step L ϖ σ q hU hq n' JT hJ hJh
   obtain ⟨hσσ, hσv, hσϖ, hϖv, -, -, -⟩ := hU
   set J : Matrix (Fin n') (Fin n') L := (JT : Matrix (Fin n') (Fin n') L) with hJdef
   have hJi : ∀ i j, J i j ∈ intL L := by
@@ -98,7 +98,7 @@ theorem witt_mod_base : ∀ (L : Type) [Field L] [Valued L (WithZero (Multiplica
   have hclose : ∀ k i j, DvdPow ϖ (k + 1) (f (k + 1) i j - f k i j) := by
     intro k i j; rw [hfs]; exact (hF k (f k) (hfP k)).2 i j
 
-  have hlim := fun i j => GlobalTheory.T.exists_limit_dvdUniformizerPow_cauchy L ϖ hϖv (fun k => f k i j) (fun k => hclose k i j)
+  have hlim := fun i j => _root_.GlobalTheory.Hk3.IntWittBase.exists_limit_dvdPow L ϖ hϖv (fun k => f k i j) (fun k => hclose k i j)
   choose b hb using hlim
   let h : Matrix (Fin n') (Fin n') L := Matrix.of b
   have hhk : ∀ k i j, DvdPow ϖ (k + 1) ((h - f k) i j) := fun k i j => hb i j k

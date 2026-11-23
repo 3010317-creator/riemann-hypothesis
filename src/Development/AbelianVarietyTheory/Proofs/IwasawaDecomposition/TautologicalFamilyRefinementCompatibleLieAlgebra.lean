@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.TriIff
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LieEigenspaceFrameCoordinatesComp
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LieEigenspaceFrameCoordinatesUniqueInvertibleStatement
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LieEigenspaceFrameStableOfIsLocalRingStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.LieEigenspaceFrameStableOfIsLocalRing
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -77,7 +77,7 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Recip
     rw [Category.assoc, ← Category.assoc, hgen, Category.assoc]
   have hc : constF e Y = (φ : B.Fn →+* Y.Fn).comp (constF e B) :=
     RingHom.ext fun a => (φ.commutes _).symm
-  have hst₀ : f₀.Stable := GlobalTheory.T.lie_eigenspace_frame_stable_of_isLocalRing E H Dw l Xo c O β Z _ _ _ f₀ inferInstance
+  have hst₀ : f₀.Stable := _root_.GlobalTheory.ShFam.EigStable.stable_of_isLocalRing E H Dw l Xo c O β Z _ _ _ f₀ inferInstance
   obtain ⟨g₀, hg₀⟩ := (GlobalTheory.T.lie_eigenspace_frame_coordinates_unique_invertible E H Dw l Xo c O β Z _ _ _ f₀ Y.Fn (constF e Y)
     (genericPt Y ≫ (f ≫ j) ≫ genι Z) (φ : B.Fn →+* Y.Fn) inferInstance hst₀ hx hc).2
     (A₁ * (A₀.map (φ : B.Fn →+* Y.Fn))⁻¹) fun τ => by
@@ -95,13 +95,13 @@ theorem main : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Recip
     RingHom.ext fun a => map_algebraMap_stalk hR.hom y a
   obtain ⟨G, hG, hGd⟩ := exists_lift aY (IsFractionRing.injective (Y.X.presheaf.stalk y) Y.X.functionField)
     (fun x hx => mem_O_ratOf.1 hx) (hR.sub y A' hA' A hA)
-  have hstA : fA.Stable := GlobalTheory.T.lie_eigenspace_frame_stable_of_isLocalRing E H Dw l Xo c O β Z _ _ _ fA inferInstance
+  have hstA : fA.Stable := _root_.GlobalTheory.ShFam.EigStable.stable_of_isLocalRing E H Dw l Xo c O β Z _ _ _ fA inferInstance
   have hσ : spMap σ ≫ stalkPt B (f y) = stalkPt Y y ≫ f := Scheme.SpecMap_stalkMap_fromSpecStalk f
   have hx' : stalkPt Y y ≫ (f ≫ j) ≫ genι Z = spMap σ ≫ stalkPt B (f y) ≫ j ≫ genι Z := by
     rw [Category.assoc, ← Category.assoc, ← hσ, Category.assoc]
   obtain ⟨f', hf'⟩ := (GlobalTheory.T.lie_eigenspace_frame_coordinates_unique_invertible E H Dw l Xo c O β Z _ _ _ fA (Y.X.presheaf.stalk y) (σ.comp φ₁)
     (stalkPt Y y ≫ (f ≫ j) ≫ genι Z) σ inferInstance hstA hx' rfl).2 G hGd
-  have hst' : f'.Stable := GlobalTheory.T.lie_eigenspace_frame_stable_of_isLocalRing E H Dw l Xo c O β Z _ _ _ f' inferInstance
+  have hst' : f'.Stable := _root_.GlobalTheory.ShFam.EigStable.stable_of_isLocalRing E H Dw l Xo c O β Z _ _ _ f' inferInstance
   have haY : spMap aY ≫ stalkPt Y y = genericPt Y :=
     Scheme.SpecMap_stalkSpecializes_fromSpecStalk (genericPoint_specializes y)
   have hx'' : genericPt Y ≫ (f ≫ j) ≫ genι Z = spMap aY ≫ stalkPt Y y ≫ (f ≫ j) ≫ genι Z := by

@@ -2,8 +2,10 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LocClosed
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsIsometryExtendOrthogonalByIdentityStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FiniteIsometryClassesDefiniteHermitianBoundedScaStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FiniteLatticesBetweenOfSmulLeStatement
+public import Formalism.HermitianLattices.StatementLat
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FiniteIsometryClassesDefiniteHermitianBoundedSca
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FiniteLatticesBetweenOfSmulLe
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsComplHermitianOrthogonalOfTotallyPositiveStatement
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsLatticeComapSubspaceRingOfIntegersStatement
 import Formalism.HermitianLattices.HermitianLatticesProofs.GenusBasic
@@ -84,7 +86,7 @@ theorem classes_fin : ∀ (D : D7) {T T' : D.host.E} (F : LFlag (D.sp.Y 0) D.R.r
   have hWs : hW.IsSymm := (VS D).herm.domRestrict W
   have hWp : ∀ x : ↥W, x ≠ 0 → 0 < Algebra.trace ℚ D.host.E (hW x x) := fun x hx =>
     hpos x.1 x.2 (fun h => hx (Subtype.ext h))
-  obtain ⟨s, hslat, hs⟩ := GlobalTheory.T.finite_isometryClasses_definiteHermitian_boundedScale hW hWs hWp d c hd hc
+  obtain ⟨s, hslat, hs⟩ := _root_.GlobalTheory.hermLat_boundedScaleDual_finite hW hWs hWp d c hd hc
   let ι : ↥W →ₗ[𝓞 D.host.E] (VS D).V := W.subtype.restrictScalars (𝓞 D.host.E)
   let Mof : Submodule (𝓞 D.host.E) ↥W → LV D := fun L => A ⊔ L.map ι
   let Sset : Set (LV D) :=
@@ -93,7 +95,7 @@ theorem classes_fin : ∀ (D : D7) {T T' : D.host.E} (F : LFlag (D.sp.Y 0) D.R.r
     refine Set.Finite.biUnion s.finite_toSet fun L _ => ?_
     by_cases hA : A.FG
     · by_cases hL : L.FG
-      · refine (GlobalTheory.T.finite_lattices_between_of_smul_le' (Mof L) (hA.sup (hL.map ι)) N hN).subset ?_
+      · refine (_root_.GlobalTheory.finite_lattices_between_of_smul_le (Mof L) (hA.sup (hL.map ι)) N hN).subset ?_
         rintro Λ' ⟨-, -, h1, h2⟩
         exact ⟨h1, h2⟩
       · exact Set.finite_empty.subset (by rintro Λ' ⟨-, h, -⟩; exact absurd h hL)

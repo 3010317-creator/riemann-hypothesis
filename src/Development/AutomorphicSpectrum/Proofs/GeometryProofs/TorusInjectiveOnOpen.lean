@@ -5,9 +5,9 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCocha
 public import Mathlib.RingTheory.DiscreteValuationRing.Basic
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsSchemeTheoreticallyDominantSpecOfInjective
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCocharLieLieModel
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.KillsOverOfAdicCompletionStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.KillsOverSquareZeroLiftStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorusKernelPrimeQuotientStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.KillsOverOfAdicCompletion
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.KillsOverSquareZeroLift
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.TorusKernelPrimeQuotient
 public import GroundTheory.HeightsAndTheta.Heights.IntegralModels.PDominatingDVRScheme
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -129,7 +129,7 @@ theorem false_of_killsOver {u : splitTorus S X ⟶ G} {K : Type} [Field K] (b : 
 theorem killsOver_of_residue [IsSeparated G.hom] {u : splitTorus S X ⟶ G} [IsMonHom u] {Y : AddSubgroup X}
     {R : Type} [CommRing R] [IsDomain R] [IsDiscreteValuationRing R] (b : Sp R ⟶ S)
     (h : KillsOver u Y (spMap (IsLocalRing.residue R) ≫ b)) : KillsOver u Y b := by
-  refine GlobalTheory.T.killsOver_of_adic_completion S G X u Y R b fun n => ?_
+  refine _root_.GlobalTheory.CompanionTheory.Ar.KillsAdic.killsOver_of_forall_pow S G X u Y R b fun n => ?_
   induction n with
   | zero =>
     let e : IsLocalRing.ResidueField R →+* R ⧸ (IsLocalRing.maximalIdeal R ^ (0 + 1)) :=
@@ -151,7 +151,7 @@ theorem killsOver_of_residue [IsSeparated G.hom] {u : splitTorus S X ⟶ G} [IsM
     have hI : I ^ 2 = ⊥ := by
       rw [← Ideal.map_pow, Ideal.map_eq_bot_iff_le_ker, Ideal.mk_ker, ← pow_mul]
       exact Ideal.pow_le_pow_right (by omega)
-    refine GlobalTheory.T.killsOver_square_zero_lift S G X u Y _ (spMap q ≫ b) I hI ?_
+    refine _root_.GlobalTheory.CompanionTheory.Ar.killsOver_of_sq_zero S G X u Y _ (spMap q ≫ b) I hI ?_
     let e : R ⧸ m ^ (n + 1) →+* (R ⧸ m ^ (n + 1 + 1)) ⧸ I :=
       Ideal.Quotient.lift _ ((Ideal.Quotient.mk I).comp q) fun a ha =>
         Ideal.Quotient.eq_zero_iff_mem.2 (Ideal.mem_map_of_mem _ ha)
@@ -164,7 +164,7 @@ theorem killsOver_of_residue [IsSeparated G.hom] {u : splitTorus S X ⟶ G} [IsM
 theorem lie_injective : ∀ (Z : Scheme.{0}) [IsIntegral Z] [IsLocallyNoetherian Z] (G : Over Z) [GrpObj G] [IsSeparated G.hom] (X : Type) [AddCommGroup X] [Module.Finite ℤ X] (u : splitTorus Z X ⟶ G) [IsMonHom u] (U : Z.Opens), (U : Set Z).Nonempty → (∀ (k : Type) [Field k] (x : Sp k ⟶ Z), ⊤ ≤ x ⁻¹ᵁ U → ∀ (A : Type) [CommRing A] (g : k →+* A) (t : Over.mk (spMap g ≫ x) ⟶ splitTorus Z X), t ≫ u = 1 → t = 1) → ∀ (k : Type) [Field k] (x : Sp k ⟶ Z) (M : LieModel (splitTorus Z X) x (X →+ k)), IsCocharLie M → ∀ δ, M.pt δ ≫ u = 1 → δ = 0 := by
   intro Z _ _ G _ _ X _ _ u _ U hU hinj k _ x M hM δ hδ
   by_contra hne
-  obtain ⟨l, hl, ψ, hψ, hk⟩ := GlobalTheory.T.torus_kernel_prime_quotient Z G X u k x M hM δ hne hδ
+  obtain ⟨l, hl, ψ, hψ, hk⟩ := _root_.GlobalTheory.CompanionTheory.Ar.TsField.exists_mu_killed Z G X u k x M hM δ hne hδ
   obtain ⟨z, f, hx⟩ : ∃ (z : Z) (f : Z.residueField z ⟶ CommRingCat.of k),
       x = Spec.map f ≫ Z.fromSpecResidueField z :=
     ⟨_, _, ((Scheme.SpecToEquivOfField k Z).symm_apply_apply x).symm⟩

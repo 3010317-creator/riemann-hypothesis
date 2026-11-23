@@ -4,8 +4,9 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsCocha
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.LocallyOfFinitePresentationDiagMap
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.ExistsPullbackCompIsoMonHom
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.IsSemiAbelianOfProperGenericTorusExtensionSpecialFiber
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CharValMultiplicativeStatement
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.CharValMultiplicative
 public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LieModelPullbackEquivalence
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.BCTools
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -49,7 +50,6 @@ import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.Polynomial.Basic
 import Mathlib.Tactic.ReduceModChar
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.BCTools
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.SemiabelianSchemes.PrecompleteBases.PsaRos
 import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ToXQFst
 
@@ -159,19 +159,19 @@ variable {S : Scheme.{0}} {X : Type} [AddCommGroup X] {A : Type} [CommRing A]
 
 noncomputable def cv {a : Sp A ⟶ S} (t : Over.mk a ⟶ splitTorus S X) : Multiplicative X →* A where
   toFun χ := charVal t χ.toAdd
-  map_one' := ((GlobalTheory.T.charVal_multiplicative S X A a).2.2.2.1 t).1
-  map_mul' χ χ' := ((GlobalTheory.T.charVal_multiplicative S X A a).2.2.2.1 t).2 _ _
+  map_one' := ((_root_.GlobalTheory.CompanionTheory.Ar.TorusPoints.main S X A a).2.2.2.1 t).1
+  map_mul' χ χ' := ((_root_.GlobalTheory.CompanionTheory.Ar.TorusPoints.main S X A a).2.2.2.1 t).2 _ _
 
 theorem cv_inj {a : Sp A ⟶ S} {t t' : Over.mk a ⟶ splitTorus S X} (h : cv t = cv t') : t = t' :=
-  (GlobalTheory.T.charVal_multiplicative S X A a).1 t t' fun χ =>
+  (_root_.GlobalTheory.CompanionTheory.Ar.TorusPoints.main S X A a).1 t t' fun χ =>
     congrArg (fun f : Multiplicative X →* A => f (Multiplicative.ofAdd χ)) h
 
 theorem cv_surj (a : Sp A ⟶ S) (θ : Multiplicative X →* A) : ∃ t : Over.mk a ⟶ splitTorus S X, cv t = θ := by
-  obtain ⟨t, ht⟩ := (GlobalTheory.T.charVal_multiplicative S X A a).2.2.2.2.1 θ
+  obtain ⟨t, ht⟩ := (_root_.GlobalTheory.CompanionTheory.Ar.TorusPoints.main S X A a).2.2.2.2.1 θ
   exact ⟨t, MonoidHom.ext fun χ => ht χ.toAdd⟩
 
 theorem cv_one (a : Sp A ⟶ S) : cv (1 : Over.mk a ⟶ splitTorus S X) = 1 :=
-  MonoidHom.ext fun χ => (GlobalTheory.T.charVal_multiplicative S X A a).2.2.1 χ.toAdd
+  MonoidHom.ext fun χ => (_root_.GlobalTheory.CompanionTheory.Ar.TorusPoints.main S X A a).2.2.1 χ.toAdd
 
 theorem cv_nat {a : Sp A ⟶ S} {B : Type} [CommRing B] (h : A →+* B) {b : Sp B ⟶ S} (hb : spMap h ≫ a = b)
     (t : Over.mk a ⟶ splitTorus S X) :
@@ -179,7 +179,7 @@ theorem cv_nat {a : Sp A ⟶ S} {B : Type} [CommRing B] (h : A →+* B) {b : Sp 
   subst hb
   let t' : Over.mk (spMap h ≫ a) ⟶ splitTorus S X :=
     Over.homMk (spMap h ≫ t.left) (by rw [Category.assoc, Over.w t]; rfl)
-  exact ⟨t', rfl, MonoidHom.ext fun χ => (GlobalTheory.T.charVal_multiplicative S X A a).2.2.2.2.2 B h t t' rfl χ.toAdd⟩
+  exact ⟨t', rfl, MonoidHom.ext fun χ => (_root_.GlobalTheory.CompanionTheory.Ar.TorusPoints.main S X A a).2.2.2.2.2 B h t t' rfl χ.toAdd⟩
 
 end Pts
 

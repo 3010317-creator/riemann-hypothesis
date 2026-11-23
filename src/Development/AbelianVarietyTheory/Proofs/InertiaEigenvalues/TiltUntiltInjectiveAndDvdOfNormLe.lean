@@ -1,7 +1,8 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.ImportsAlt
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsTiltIntegersCpEquivCompatibleUntiltStatement
+public import GroundTheory.PAdicHodge.PerfectoidField
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsTiltIntegersCpEquivCompatibleUntilt
 public import GroundTheory.PAdicHodge.TiltValuation
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -54,7 +55,7 @@ theorem untilt_injective_zero_and_dvd_of_norm_sh_le :
     ∀ (l : ℕ) [Fact l.Prime], (∀ x : Fl l, sh x = 0 → x = 0) ∧
       ∀ x y : Fl l, ‖sh x‖ ≤ ‖sh y‖ → y ∣ x := by
   intro l _
-  obtain ⟨e, he⟩ := GlobalTheory.T.exists_tiltIntegersCpEquiv_compatible_untilt l
+  obtain ⟨e, he⟩ := _root_.GlobalTheory.PSer.exists_flEquiv_untilt l
   refine ⟨fun x hx => ?_, fun x y hxy => ?_⟩
   · have h0 : e x = 0 := GroundTheory.PAdicHodge.untilt_eq_zero_iff.1 (by rw [he]; exact hx)
     exact e.injective (by rw [h0, map_zero])

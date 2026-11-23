@@ -1,7 +1,7 @@
 module
 
 public import Development.WeilBound.CoreStatements.PadicHodgeComparison.EtaleCohomologyComparison.PerfectoidPullbacks.ConeSectionRestriction.CechDefs
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GradedCoverVanishingInductionStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.GradedCoverVanishingInduction
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -69,6 +69,6 @@ theorem cech_top_rel : ∀ {R : Type} [CommRing R] {C : Type 1} [Category.{0} C]
         (f : CH.Cn (CH.modF ((capS W Finset.univ).ι ⋙ Φ.A)) n),
         (∀ σ, f σ ∈ (Fil n).S _) ∧ (∀ σ, CH.d _ n f σ ∈ (Fil ((n : ℤ) + 1)).S _) ∧
         Rep ((Fil ((n : ℤ) + 1)).res (capS W Finset.univ).ι) ((Fil ((n : ℤ) + 1 + 1)).res (capS W Finset.univ).ι)
-          (CH.d _ n f) (c - ∑ i, ((resU (gr Fil ((n : ℤ) + 1)) (capS_univ_le W (Finset.univ.erase i))).pull (n + 1)) (ω i)) := GlobalTheory.T.graded_cover_vanishing_induction
+          (CH.d _ n f) (c - ∑ i, ((resU (gr Fil ((n : ℤ) + 1)) (capS_univ_le W (Finset.univ.erase i))).pull (n + 1)) (ω i)) := _root_.GlobalTheory.CompanionTheory.ConeZig.cech_top_cup_power
 
 end CrystallineSemistableComparison.Pb

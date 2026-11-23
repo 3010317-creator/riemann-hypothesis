@@ -3,7 +3,11 @@ module
 public import Formalism.LocalToGlobal.ProjectiveLattices.IsCombAt
 public import Mathlib.Tactic.ENatToNat
 public import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsReducedAlgebraOfSmoothOfIsNoetherianRing
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFunctionOfSmoothLocalDescentReducedStatement
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Mathlib.RingTheory.Smooth.Basic
+public import Mathlib.RingTheory.Spectrum.Prime.RingHom
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.ExistsFunctionOfSmoothLocalDescentReduced
+public import Development.AbelianVarietyTheory.BlockTheory.ExistenceTori.FibrePushforward
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +50,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.BlockTheory.ExistenceTori.FibrePushforward
 import Development.AbelianVarietyTheory.Definitions.ExistenceOfLattices.UnivFrame
 import Development.AbelianVarietyTheory.Definitions.ModuliSpaces.KerScheme
 import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsPointedOfIsHkIsog
@@ -188,7 +191,7 @@ theorem GlobalTheory.ratio_descends : ∀ (T : Type) [CommRing T] [IsReduced T] 
       (h : ⊤ ≤ w ⁻¹ᵁ U j), w ≫ q = spMap χ.toRingHom →
       (w.appLE (U j) ⊤ h).hom (t j) = toΓ Ω (F Ω χ) * (w.appLE (U j) ⊤ h).hom (t₀ j) :=
     fun Ω _ _ _ χ => (Classical.choose_spec (H Ω χ.toRingHom)).1
-  refine (GlobalTheory.T.exists_function_of_smooth_local_descent_reduced ℤ T F ?_).elim ?_
+  refine (_root_.GlobalTheory.SmoothLocalDescent.exists_of_smooth_locally ℤ T F ?_).elim ?_
   · intro p
     let κ := p.asIdeal.ResidueField
     let Ω := AlgebraicClosure κ

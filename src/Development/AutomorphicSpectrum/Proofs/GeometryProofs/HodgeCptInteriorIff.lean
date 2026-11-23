@@ -1,10 +1,20 @@
 module
 
 public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.IsHodgeLine
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EpiRingHomFieldClosureStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExtendToFractionFieldStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericVanishingStalkVanishingStatement
-public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalHomCharZeroUnitsStatement
+public import Mathlib.Algebra.Field.Subfield.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.EpiRingHomFieldClosure
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.ExtendToFractionField
+public import Mathlib.AlgebraicGeometry.Properties
+public import Mathlib.AlgebraicGeometry.Stalk
+public import Mathlib.Combinatorics.Quiver.ReflQuiver
+public import Mathlib.RingTheory.Henselian
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Mathlib.RingTheory.SimpleRing.Principal
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.GenericVanishingStalkVanishing
+public import Mathlib.NumberTheory.NumberField.Basic
+public import Development.AutomorphicSpectrum.Proofs.GeometryProofs.LocalHomCharZeroUnits
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbProj
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -43,8 +53,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.AbProj
-public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.OneArc
 
 @[expose] public section
 
@@ -90,10 +98,10 @@ theorem interior_iff_factor : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     let g : Spec (A.X.presheaf.stalk (centre z)) ⟶ Sp O := A.X.fromSpecStalk (centre z) ≫ A.f ≫ Y.s
     let θ : O →+* A.X.presheaf.stalk (centre z) := (Spec.preimage g).hom
     have hk : ∀ a, β a = 0 → θ a = 0 := fun a ha =>
-      GlobalTheory.T.generic_vanishing_stalk_vanishing A.X Ω O A.ξ A.all (A.f ≫ Y.s) (A.cst.comp β) A.cst_over (centre z) a (by simp [ha])
+      _root_.GlobalTheory.CompanionTheory.Ggeo.germ_vanish_of_generic_dominated A.X Ω O A.ξ A.all (A.f ≫ Y.s) (A.cst.comp β) A.cst_over (centre z) a (by simp [ha])
     have hu : ∀ b, β b ≠ 0 → IsUnit (θ b) := fun b hb =>
-      GlobalTheory.T.local_hom_char_zero_units O c.F _ ℂ β θ (Scheme.stalkClosedPointTo z).hom (Scheme.isLocalHom_stalkClosedPointTo' z) hk b hb
-    obtain ⟨χ, hχ⟩ := GlobalTheory.T.extend_to_fraction_field O c.F _ β θ (GlobalTheory.T.epi_ring_hom_field_closure O c.F β (fun T _ g₁ g₂ e => epi_of_mono_spMap β hβ g₁ g₂ e)) hu hk
+      _root_.GlobalTheory.CompanionTheory.Ggeo.unit_of_local_hom_charZero_nf O c.F _ ℂ β θ (Scheme.stalkClosedPointTo z).hom (Scheme.isLocalHom_stalkClosedPointTo' z) hk b hb
+    obtain ⟨χ, hχ⟩ := _root_.GlobalTheory.CompanionTheory.Ggeo.extend_to_fraction_field_relay O c.F _ β θ (_root_.GlobalTheory.CompanionTheory.Ggeo.epi_subfield_closure_range_eq_top O c.F β (fun T _ g₁ g₂ e => epi_of_mono_spMap β hβ g₁ g₂ e)) hu hk
     have w : (A.X.fromSpecStalk (centre z) ≫ A.f) ≫ Y.s = spMap χ ≫ spMap β := by
       rw [← spMap_comp, hχ, Category.assoc]
       change g = _

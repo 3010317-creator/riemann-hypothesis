@@ -3,10 +3,13 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GrothendieckDeformation
 public import Development.AbelianVarietyTheory.Definitions.Divisors.P22
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NonemptyCuspFrame
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsExtendMulSimplePoleOfVanishingStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SimplePoleAlong
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsoOverOfIsOpenImmersion
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsExtendMulSimplePoleOfVanishing
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExtendsVanishingOfSimplePoleMulExtendsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KodairaSpencerCanonicalDivisorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToroidalBoundaryLocalEquationStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.KodairaSpencerCanonicalDivisor
+public import Development.AbelianVarietyTheory.Definitions.Divisors.BarCompSubsetClosure
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ToroidalBoundaryLocalEquation
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -65,9 +68,9 @@ theorem logCanon_refl : GlobalTheory.CovTop.Hypotheses₂ → GlobalTheory.Publi
   have hpole : SimplePoleAlong (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).off (((common₀ TF.X Z).pull (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).σ).canChart (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).K.isLB hs) ω₀.ω := by
     intro y hy
     have hy' : y ∉ U₀ TF.X Z := fun h => hy ((hoff y).2 h)
-    obtain ⟨V, hyV, t, h1, h2⟩ := GlobalTheory.T.toroidal_boundary_local_equation hP E H Dw l Xo c TF Z hF hV y hy'
+    obtain ⟨V, hyV, t, h1, h2⟩ := _root_.GlobalTheory.BdEquation.exists_reduced_equation hP E H Dw l Xo c TF Z hF hV y hy'
     obtain ⟨V', hyV', hle, i, j, u, hi, hj, hu, hpl⟩ :=
-      GlobalTheory.T.kodaira_spencer_canonical_divisor hP hG E H Dw l Xo c TF Z hF hKS hV ω₀ y hy' V hyV t h1 h2
+      _root_.GlobalTheory.LogPole.simple_pole hP hG E H Dw l Xo c TF Z hF hKS hV ω₀ y hy' V hyV t h1 h2
     refine ⟨V', hyV', (i, j), fun z hz => ⟨hi hz, (((common₀ TF.X Z).pull (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).σ).mem _ _ _).2 (hj hz)⟩,
       fun z hz => (((common₀ TF.X Z).pull (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).σ).mem _ _ _).2 (hj hz),
       fun z hz => ⟨hi hz, (((common₀ TF.X Z).pull (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).σ).mem _ _ _).2 (hj hz)⟩,
@@ -77,7 +80,7 @@ theorem logCanon_refl : GlobalTheory.CovTop.Hypotheses₂ → GlobalTheory.Publi
       exact h2 W (hW.trans hle) f (fun z hz hz' => hf z hz fun h => hz' ((hoff z).1 h)) z hz
     · erw [ger_resG]; exact hpl z hz ho _
   refine ⟨fun ⟨g, hg, e⟩ => ?_, fun ⟨G, hG⟩ => ?_⟩
-  · obtain ⟨G, hG'⟩ := GlobalTheory.T.exists_extend_mul_simplePole_of_vanishing hdense _ ω₀.ω hpole (H0.pull (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).σ le_top g) (fun y hy i hi => by
+  · obtain ⟨G, hG'⟩ := _root_.GlobalTheory.LogCanonicalReflexive.exists_extend_mul_of_simplePole hdense _ ω₀.ω hpole (H0.pull (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).σ le_top g) (fun y hy i hi => by
       have e := H0.germ_pull (p := str₀ TF.X Z) (B := L₀ TF.X Z s) (Modif.refl hV.1 hV.2.1 (dense_U₀ TF.X Z)).σ le_top i y (memTop y) hi g
       rw [e]
       have h := hg y (fun h => hy ((hoff y).2 h)) (i PUnit.unit) (mem_pull.1 hi)

@@ -2,12 +2,13 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.IsAuxiliaryVectorWittDec
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HeisenbergCombinationDisjointPlacesCommuteVacua
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HomLatticeCompletionSelfAnnihilatorAtPlacesStatement
+public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.IsSumFrame
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.HomLatticeCompletionSelfAnnihilatorAtPlaces
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IntegralOfAddCharTrivialOnHomLatticeLineStatement
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.InvDiagTorusIntegralBesselJacobiUnramified
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.IsTameFinitePlaceHermitianAllStatement
 import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.JacobiToBesselFlatMapSupportProof
-import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemHomLatticeCompletionIffSupportedMapsStatement
+import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.MemHomLatticeCompletionIffSupportedMaps
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -125,10 +126,10 @@ theorem inv_int_of_pt : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar
     rw [← hτ, symplO_off dV hab _ hYm, AddChar.map_zero_eq_one]
   have k3 : ψ (Algebra.trace (AF D.host.F) (AE D) (incA D D.host.xi0 * pairS W b₀ (dW.jY ⬝ Matrix.single i i b))) = 1 := by
     rw [← hτ]
-    exact (GlobalTheory.T.homLatticeCompletion_self_annihilator_atPlaces D ψ hψ V W LV LW hG.sdV hG.sdW (· = v) _ (LatMem.latO_mxAt hb₀)).1 hb₀ _ hY
+    exact (_root_.GlobalTheory.SelfDualAt.latO_ann_at D ψ hψ V W LV LW hG.sdV hG.sdW (· = v) _ (LatMem.latO_mxAt hb₀)).1 hb₀ _ hY
   have hlat : SelfDualAt.cP (· = v) • dV.extX W (dW.jX ⬝ (Matrix.single i i 1 : Mx D ρ ρ)) ∈
       latO V W (LV : Set _) (LW : Set _) (· = v) := by
-    refine (GlobalTheory.T.mem_homLatticeCompletion_iff_supported_maps D V W LV LW hG.sdV hG.sdW (· = v) _).2 ⟨fun k l => ?_, fun y hy => ?_⟩
+    refine (_root_.GlobalTheory.FinPl.LatMem.mem_latO_iff D V W LV LW hG.sdV hG.sdW (· = v) _).2 ⟨fun k l => ?_, fun y hy => ?_⟩
     · rw [Matrix.smul_apply, Algebra.smul_def]
       exact Ideal.mul_mem_right _ _ (SuppShift.eps_idAt v)
     · have e0 : SelfDualAt.cP (· = v) • dV.extX W (dW.jX ⬝ (Matrix.single i i 1 : Mx D ρ ρ)) =
@@ -151,7 +152,7 @@ theorem inv_int_of_pt : ∀ (D : D7) (ψ : AddChar (AF D.host.F) ℂ), IsStdChar
       rw [Matrix.smul_apply, Algebra.smul_def]
       exact SuppShift.eps_mul (hYm k l)
     rw [← hτ, ← hfix, SelfDualAt.symplO_smul_swap]
-    exact (GlobalTheory.T.homLatticeCompletion_self_annihilator_atPlaces D ψ hψ V W LV LW hG.sdV hG.sdW (· = v) _ (LatMem.latO_mxAt hlat)).1 hlat _ hY
+    exact (_root_.GlobalTheory.SelfDualAt.latO_ann_at D ψ hψ V W LV LW hG.sdV hG.sdW (· = v) _ (LatMem.latO_mxAt hlat)).1 hlat _ hY
   have hadd : ∀ x y : AE D, ψ (Algebra.trace (AF D.host.F) (AE D) (incA D D.host.xi0 * (x + y))) =
       ψ (Algebra.trace (AF D.host.F) (AE D) (incA D D.host.xi0 * x)) *
         ψ (Algebra.trace (AF D.host.F) (AE D) (incA D D.host.xi0 * y)) := fun x y => by

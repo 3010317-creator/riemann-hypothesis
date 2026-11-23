@@ -3,9 +3,11 @@ module
 public import Formalism.LocalToGlobal.ProjectiveLattices.CompHt
 public import Mathlib.Tactic.ENatToNat
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IrreducibleSpacePullbackAffineOpenOfIsDomainTensStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IrreducibleSpacePullbackFieldOfIrreducibleCoverStatement
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IrreducibleSpacePullbackFieldOfIrreducibleCover
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.GeometricallyIntegralIffGeometricallyConnectedOf
 public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.LinearDisjointAlgebraicClosure
+public import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.IsOpenOfMemIrreducibleComponentsOfFinite
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +48,6 @@ import Development.AbelianVarietyTheory.Definitions.Divisors.HtValOnSubset
 import Development.AbelianVarietyTheory.Definitions.Divisors.LogAbsVpOfNormalised
 import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsFlatSecRankZero
 import Development.AbelianVarietyTheory.Definitions.Foundations.IsProbabilityMeasureMuPart
-public import Development.AbelianVarietyTheory.Definitions.ShimuraVarieties.IsOpenOfMemIrreducibleComponentsOfFinite
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsAdicCompleteDualNumber
 import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MapPairDetCovec
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsFlagFrame
@@ -102,7 +103,7 @@ theorem irreducibleSpace_pullback_of_cover {F : Type} [Field F] {X : Scheme.{0}}
     (k : Type) [Field k] (f : F →+* k) (U : X.Opens) (hU : IsIrreducible (U : Set X))
     (hV : ∀ y ∈ U, ∃ V : X.Opens, V ≤ U ∧ y ∈ V ∧ IrreducibleSpace ↑(pullback (V.ι ≫ h) (spMap f))) :
     IrreducibleSpace ↑(pullback (U.ι ≫ h) (spMap f)) :=
-  GlobalTheory.T.irreducibleSpace_pullback_field_of_irreducible_cover h k f U hU hV
+  _root_.GlobalTheory.irreducibleSpace_pullback_of_cover h k f U hU hV
 
 theorem irreducibleSpace_pullback_affine {F : Type} [Field F] [CharZero F] {X : Scheme.{0}} [IsReduced X]
     (g : X ⟶ Sp F) [LocallyOfFiniteType g] (x : X)

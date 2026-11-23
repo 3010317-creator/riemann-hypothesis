@@ -5,10 +5,14 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.HtValOnSubse
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.LawsFieldsSeparately
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ChartCoverFOfSecBaseChange
 public import Development.AbelianVarietyTheory.Proofs.CubicalLineBundles.ExistsOrthonormalFrameBorelChangeComplexFramedPo
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieAlgebraMetricConjEmbeddingEqConjStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormFactorFlatLineEqGramOrthonormalFrameStatement
+public import Development.AbelianVarietyTheory.Definitions.CMLattices.IsDiffOf
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LieAlgebraMetricConjEmbeddingEqConj
+public import Development.AbelianVarietyTheory.Definitions.Divisors.VolMeasureOfAdd
+public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.FundamentalDomains.IsotropicCoefficientSplitting
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormFactorFlatLineEqGramOrthonormalFrame
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.TestValueEqConstMulReadingSecZ
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsAlgebraicOfNormConst
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHomogeneousCompIdeal
 import Development.AbelianVarietyTheory.Proofs.UnitaryExistence.ExistsFramedPointBaseChangeAlgebraMap
 import Formalism.LocalToGlobal.ProjectiveLattices.FamilyUniformisationBasePointOrthogonal
 import Mathlib.Algebra.Order.Floor.Extended
@@ -44,8 +48,6 @@ import Mathlib.Tactic.NormNum.NatSqrt
 import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.IsHomogeneousCompIdeal
-public import Development.AbelianVarietyTheory.Definitions.Divisors.VolMeasureOfAdd
 
 @[expose] public section
 
@@ -74,7 +76,7 @@ theorem good_case (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Recipr
   rw [GlobalTheory.CompHS.homN_eq_homFac] at h1
   have h2 := GlobalTheory.evR_frBor_of_mem_secZ GlobalTheory.lawsFieldsSeparately.2.1 Xo c _ s.sig_mem (CAt σ₀) t _ _ hb
   have h3 := GlobalTheory.FrameEval.evR_frMap_of_isReduced E H Dw l Xo c s.sig s.sig_mem.1 φ y z hz
-  have h4 := GlobalTheory.T.normFactor_flatLine_eq_gram_orthonormal_frame E H Dw l Xo c r U x hL τ K y B t₀ m1 m2 F h hh u u' hu hu' σ hσ φ (fun _ => rfl) z hz k w t ho hb
+  have h4 := _root_.GlobalTheory.PtDegOrtho.homFac_eq_gram_ortho E H Dw l Xo c r U x hL τ K y B t₀ m1 m2 F h hh u u' hu hu' σ hσ φ (fun _ => rfl) z hz k w t ho hb
   rw [← h1, h4]
   have h5 : ‖σ (evR Xo c s.sig y)‖ = ‖GlobalTheory.CompHS.diagChar (exOf Dw (flatWt Dw τ) 0) t‖ * ‖toC (evR Xo c s.sig ((U σ₀).un k w))‖ := by
     rw [← norm_mul]
@@ -104,7 +106,7 @@ theorem cInf_eq_frame_norm : ∀ (E : Type) [Field E] [NumberField E] [IsCMField
       have : h.gram σ' v = (h.gram σ v).map (starRingEnd ℂ) := by
         ext i j
         simp only [ReciprocityTheory.GeometryOfNumbersTheory.HermFam.gram, Matrix.of_apply, Matrix.map_apply]
-        exact GlobalTheory.T.lieAlgebraMetric_conjEmbedding_eq_conj K B.pol F h hh σ (v i) (v j)
+        exact _root_.GlobalTheory.CM.LieMetricConj.form_conj K B.pol F h hh σ (v i) (v j)
       rw [this]
       change ((starRingEnd ℂ).mapMatrix (h.gram σ v)).det.re = _
       rw [← RingHom.map_det, Complex.conj_re]

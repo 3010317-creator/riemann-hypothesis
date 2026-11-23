@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.ModularityArgument.ThresholdArguments.DenseThresholdCases.AutomorphicPointGalois
-public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.DeterminantRepresentations.IrrIffSpan
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.IrrIffSpan
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.AlgebraTools.DeterminantRepresentations.RepApi
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.CommutativeAlgebraHeight.DGext
 public import Development.AutomorphicArithmetic.AutomorphicVarieties.PadicHodgeTheory.BkAbove
@@ -142,7 +143,7 @@ private theorem adL_triv {l : ℕ} [Fact l.Prime] {L Ω : Type} [Field L] [Numbe
     [IsAlgClosure L Ω] {s : W.HidaSetting l L Ω} {V : s.Lev} {c : Coef l} {n : ℕ} {r : W.Resid V.frame c.O n} {B : W.UniversalOrdinaryDeterminantRing r}
     {ι : Qbar l ≃+* ℂ} {x : B.Pt} {ρ : V.frame.G₀ →* GL (Fin n) (Qbar l)} (H : _root_.UpperTheory.V.Th.AutomorphicPointLocallyGeneric ι x ρ) :
     ∀ u, ∀ g ∈ r.Ip u, ρ g = 1 :=
-  (Ws.Eb.relKill B x ρ ((AlgebraTools.Det.irrIffSpan (W.mat ρ)).1 fun N hN => H.irr N fun g _ v hv => hN g v hv)
+  (Ws.Eb.relKill B x ρ ((_root_.UpperTheory.Reformulated.B.Qe4.irrIffSpan (W.mat ρ)).1 fun N hN => H.irr N fun g _ v hv => hN g v hv)
     (adL_desc x.D V.pr (adL_pr V) ρ H.rep)).2
 theorem UpperTheory.V.Th.adjointLiftingTheorem_of_locPrints_of_core :
     Loc.LocalPublishedTheorems → _root_.UpperTheory.V.Th.DenseThresholdMainCase → _root_.UpperTheory.V.Th.AdjointLiftingTheorem := by

@@ -7,13 +7,15 @@ public import Development.AbelianVarietyTheory.Proofs.GenericRegularity.Numerica
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.EmbEqOfInPsi
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsProductDataCopiesTrivialisationValuation
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsShortBasisUniformizationLattice
-public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsUniformisedModelIntegralChartAtPointStatement
+public import Formalism.LocalToGlobal.ProjectiveLattices.ChartDirectionsIntegral
+public import Formalism.SharpRestriction.Divisibility.GeneratorPowers.GermCut
+public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsUniformisedModelIntegralChartAtPoint
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.HalfPrincipalAndSplit
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.SplitsInLevelPrime
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.StarRingExtOfStar
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ThetaDepthLeScaledRuleValue
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ThetaGeneratorsLeastValueOverLevelPrimeStatement
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.WeightOnDatum
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.StarRingExtOfStar
 import Formalism.LocalToGlobal.ProjectiveLattices.CrudeVal
 import Formalism.LocalToGlobal.ProjectiveLattices.DepthTie
 import Formalism.SharpRestriction.Divisibility.GeneratorPowers.RPfVal
@@ -161,7 +163,7 @@ theorem depth_le_over_level : (∀ (p : ℕ) [Fact p.Prime], Pdiv.ChartF.HTFSt p
   intro hHT D T h j hj hinj EX w c hO hR la i hg y
   letI := T.Q.H.starRing
   obtain ⟨hlast, hn, hDg, hc0, hc⟩ := hR
-  obtain ⟨S, io, e, ho, z, hz, hl, C, Pu, hC, hPu, hval⟩ := GlobalTheory.T.exists_uniformisedModel_integralChart_at_point D T h j hj la y
+  obtain ⟨S, io, e, ho, z, hz, hl, C, Pu, hC, hPu, hval⟩ := _root_.GlobalTheory.UnifPoint.exists_uniformised_chart D T h j hj la y
   obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible S.V
   obtain ⟨⟨Q, hQ⟩, -⟩ := GlobalTheory.PowData.exists_powData _ T.Q.H (T.Q.Dw j) T.Q.l (T.Q.Xo j) T.Q.c S io z C Pu ϖ hϖ
   obtain ⟨r, Φ, M0, ⟨hΦ, b, hb1, hb2⟩, hr, hM0, hjm, hΦe⟩ :=

@@ -4,7 +4,8 @@ public import Development.AutomorphicSpectrum.Definitions.GlobalGeometry.Potenti
 public import Development.WeilBound.CoreStatements.PlurisubharmonicCones.ContinuousAtOfHolo
 public import Mathlib.Logic.Equiv.Bool
 public import Mathlib.Order.CompletePartialOrder
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ChartLocalAnalyticTrivializationStatement
+public import GroundTheory.HeightsAndTheta.Heights.HodgeLowerBound.CoordinateIdeals
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.ChartLocalAnalyticTrivialization
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -178,7 +179,7 @@ noncomputable def famCharts {N : ℕ} (γ : Fin N → (Fin D.n → ℂ) → (Σ 
 
 theorem good_chart (D : ComponentData II Ψ K J Ω W) (a : Fin D.nCharts) :
     Good (n := D.n) (mCoordIdeal D.y) (D.chart a).γ :=
-  ⟨(D.chart a).analytic, (D.chart a).mem, (D.chart a).injective, GlobalTheory.T.chart_local_analytic_trivialization K J II Ψ Ω W D a⟩
+  ⟨(D.chart a).analytic, (D.chart a).mem, (D.chart a).injective, _root_.GlobalTheory.CompanionTheory.Ar.Cusp.chart_torus_open K J II Ψ Ω W D a⟩
 
 theorem exists_eps {n : ℕ} (t₀ : Fin n → ℂ) {r : ℝ} (hr : 0 < r) :
     ∃ ε : ℝ, 0 < ε ∧ 2 * ε ≤ r ∧ ε ≤ 1 / 4 ∧ ∀ i, t₀ i ≠ 0 → 2 * ε ≤ ‖t₀ i‖ := by

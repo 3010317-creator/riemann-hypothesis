@@ -3,7 +3,7 @@ module
 public import Development.AbelianVarietyTheory.BlockTheory.NonGaloisCusps.SplitPlaceTypes
 public import Development.AbelianVarietyTheory.Counterexamples.NonGaloisSurvey.SplitRowIffOfIsEmpty
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.CmHalfTypePlacesMeetConjugatePairsAndCount
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SplitPrimePlaceCmTypeConjugateStatement
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.SplitPrimePlaceCmTypeConjugate
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -54,7 +54,7 @@ theorem _root_.GlobalTheory.T.cmHalfTypePlaces_meet_conjugatePairs_and_count : �
     have hw' := mem_placesOver_of_conj D.host hw h
     have n1 := GlobalTheory.SplitRowProbe.not_both_columns D i w hw
     have n2 := GlobalTheory.SplitRowProbe.not_both_columns D i w' hw'
-    rcases GlobalTheory.T.splitPrime_place_cmType_conjugate D i hl w w' hw hw' h with
+    rcases _root_.GlobalTheory.SplitType.place_type_conj D i hl w w' hw hw' h with
       ⟨h1, h2⟩ | ⟨h1, h2⟩ <;> cases s
     · exact Or.inr ⟨⟨hw', h2⟩, fun ⟨_, h3⟩ => n1 ⟨h1, h3⟩⟩
     · exact Or.inl ⟨⟨hw, h1⟩, fun ⟨_, h3⟩ => n2 ⟨h3, h2⟩⟩

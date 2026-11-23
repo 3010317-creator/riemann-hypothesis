@@ -4,7 +4,8 @@ public import CompanionTheory.SpectralGeometry.CountingDefinitions.VoronoiMeans.
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsBaryStageStart
 public import CompanionTheory.SpectralGeometry.LocalGlobalProofs.ConvexCones.IsStarOfFiniteCover
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsPolyFanOfStarSubdivisionCells
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SuperadditiveOfCellsCoverConeStatement
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsEqAddOfRedVEq
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.SuperadditiveOfCellsCoverCone
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -52,7 +53,7 @@ theorem isPolyFan_star : ∀ (O : Type) [CommRing O] [IsDedekindDomain O] [CharZ
   unfold GlobalTheory.PolFan.IsPolyFan
   intro X _ _ _ _ hX
   obtain ⟨S, hSf, hS⟩ := GlobalTheory.CompanionTheory.Ar.Fan.StarFiniteCover.isStarOf_finite_cover O bar hO q ψ w ψ' hψ hc hs X hX
-  refine ⟨GlobalTheory.PolFan.StarFan.homog_of_cover O bar ψ' X ?_, GlobalTheory.T.superadditive_of_cells_cover_cone O bar ψ' X ?_, hint X hX, hpos X hX,
+  refine ⟨GlobalTheory.PolFan.StarFan.homog_of_cover O bar ψ' X ?_, _root_.GlobalTheory.PolFan.CoverSuper.superadd_of_cover O bar ψ' X ?_, hint X hX, hpos X hX,
     ⟨S, hSf, hS⟩⟩
   all_goals
     intro B hB

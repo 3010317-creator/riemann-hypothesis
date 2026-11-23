@@ -4,8 +4,10 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.IsKSValueOne
 public import Development.AbelianVarietyTheory.Proofs.AbelianSchemeLawProofs.AbelianSchemeLawsWithoutCohomology
 public import Development.AbelianVarietyTheory.Proofs.CoherentCohomologyProofs.ExistsIsGenOfUniqueFactorizationMonoid
 public import Development.AbelianVarietyTheory.Proofs.DegenerationProofs.MulEqZeroOfAppEqZero
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechPicardClassEqZeroOfSquareZeroRetractionStatement
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ClsLinCombSingle
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.CechPicardClassEqZeroOfSquareZeroRetraction
 public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ThetaLevelAbelianSchemeConstOverDualNumbers
+public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsHeckeQuotientTriple
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -46,7 +48,6 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Mathlib.Tactic.ReduceModChar
-public import Development.AbelianVarietyTheory.Proofs.ModuliProofs.ExistsHeckeQuotientTriple
 
 @[expose] public section
 
@@ -118,7 +119,7 @@ theorem lbIso_of_symmetric : ∀ (K : Type) [Field K] [CharZero K] (A : Over (Sp
     have hs' : s.fst = 0 := hs
     rw [Ideal.mem_bot]
     ext <;> simp [hr', hs']
-  have hc0 := GlobalTheory.T.cechPicardClass_eq_zero_of_squareZero_retraction i q e hiq h2 hsq c h0 htwo
+  have hc0 := _root_.GlobalTheory.CechPic.eq_zero_of_sqZero_retract i q e hiq h2 hsq c h0 htwo
   exact (cls_eq_iff hL hM).1 (sub_eq_zero.1 hc0)
 
 end GlobalTheory.SymFirstOrder

@@ -2,7 +2,8 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.OneMemH0WeightZero
 public import GroundTheory.GlobalFields.IdeleGroups.IdeleNorms
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicMinkowskiExistsShortRationalVectorStatement
+public import Formalism.SharpRestriction.GlobalSchurBounds.GeneralLinearActions.GenusMassVolumes
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AdelicMinkowskiExistsShortRationalVector
 import GroundTheory.AutomorphicForms.ReductionFinite
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -187,7 +188,7 @@ namespace GlobalTheory.QSA.FujisakiQ
 open GroundTheory.Global.IdeleGroup in
 theorem fujisaki_mod_centre : ∀ (F : Type) [Field F] [NumberField F] (a b : F), a ≠ 0 → b ≠ 0 → (∀ x : ℍ[F, a, b], nrm x = 0 → x = 0) → ∃ C : Set (DA F a b), IsCompact C ∧ ∀ y : DA F a b, IsUnit (nrm y) → ∃ (δ : ℍ[F, a, b]) (l : AF F) (c c' : DA F a b), nrm δ ≠ 0 ∧ IsUnit l ∧ c ∈ C ∧ c' ∈ C ∧ c * c' = 1 ∧ c' * c = 1 ∧ y = l • (rat δ * c) := by
   intro F _ _ a b _ _ hdiv
-  obtain ⟨B, hBc, hB⟩ := GlobalTheory.T.adelic_minkowski_exists_short_rational_vector F 4 (by norm_num)
+  obtain ⟨B, hBc, hB⟩ := _root_.GlobalTheory.AdelicMinkowski.exists_compact_mulVec_rat_mem F 4 (by norm_num)
   obtain ⟨B', hB'⟩ : ∃ B' : Set (DA F a b), B' = ofCoords '' B := ⟨_, rfl⟩
   have hB'c : IsCompact B' := hB' ▸ hBc.image continuous_ofCoords
   obtain ⟨S, hS⟩ : ∃ S : Set (DA F a b), S = (fun p : DA F a b × DA F a b => star p.1 * p.2) '' (B' ×ˢ B') := ⟨_, rfl⟩

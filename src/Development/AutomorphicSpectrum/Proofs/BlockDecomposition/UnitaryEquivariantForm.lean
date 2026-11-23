@@ -5,8 +5,9 @@ public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivOfRangeEq
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DominantUnipotentContraction
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsStrictDom
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IwahoriUnipotentDatumStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetLemmaHoldsStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IwahoriUnipotentDatum
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.StrictDominance.JointGeneralisedEigenvectors.IsJointGenEig
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.JacquetLemmaHolds
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -268,6 +269,6 @@ theorem eqFormU_of (hA4 : ∀ (G : Type) [Group G] [TopologicalSpace G] [IsTopol
     exact hlam ⟨s, (hT s).2 hs⟩ (Submodule.Quotient.mk v)
 
 theorem eqFormU : EqFormU :=
-  eqFormU_of (fun G _ _ _ => GlobalTheory.T.jacquet_lemma_holds G) GlobalTheory.T.iwahori_unipotent_datum GlobalTheory.CompanionTheory.DomUnitary.domU GlobalTheory.CompanionTheory.KUFactsU.kuFacts
+  eqFormU_of (fun G _ _ _ => _root_.GlobalTheory.CompanionTheory.Cass.sphericalProduct_A4 G) _root_.GlobalTheory.CompanionTheory.IwUnit.iwahoriU GlobalTheory.CompanionTheory.DomUnitary.domU GlobalTheory.CompanionTheory.KUFactsU.kuFacts
 
 end GlobalTheory.CompanionTheory.EqForm

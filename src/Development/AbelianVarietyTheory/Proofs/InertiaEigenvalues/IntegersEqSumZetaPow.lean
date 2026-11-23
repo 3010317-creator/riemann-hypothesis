@@ -1,8 +1,10 @@
 module
 
 public import Formalism.SharpRestriction.LevelLetterCocycles.DataNLoc
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormMemCyclotomicLayerPrimeRpowStatement
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormPrimitiveRootPrimePowSubOnePadicComplexStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormMemCyclotomicLayerPrimeRpow
+import Mathlib.NumberTheory.Padics.Complex
+import Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormPrimitiveRootPrimePowSubOnePadicComplex
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -82,14 +84,14 @@ theorem norm_term (K : FinExt l) (i : ℕ) (hi : 2 ≤ i) (ζ : Om l) (hζ : IsP
     ∃ n : ℤ, ‖z‖ = (l : ℝ) ^ (((n * l : ℤ) : ℝ) / ((l : ℝ) ^ (i - 1) * ((l : ℝ) - 1))) ∧
       ∀ a : ℕ, ‖z * (ζ - 1) ^ a‖ =
         (l : ℝ) ^ (((n * l - a : ℤ) : ℝ) / ((l : ℝ) ^ (i - 1) * ((l : ℝ) - 1))) := by
-  obtain ⟨n, hn⟩ := GlobalTheory.T.norm_mem_cyclotomic_layer_prime_rpow l K (i - 1) (by omega) z hz h0
+  obtain ⟨n, hn⟩ := _root_.GlobalTheory.Cyc.norm_of_mem_Ks l K (i - 1) (by omega) z hz h0
   have hl : (1 : ℝ) < l := by exact_mod_cast (Fact.out : l.Prime).one_lt
   have hl0 : (0 : ℝ) < l := by linarith
   have hζC : IsPrimitiveRoot (ζ : PadicComplex l) (l ^ i) := by
     have := hζ.map_of_injective (algebraMap (PadicAlgCl l) (PadicComplex l)).injective
     simpa [← PadicComplex.coe_eq] using this
   have hnorm1 : ‖ζ - 1‖ = (l : ℝ) ^ (-(1 : ℝ) / ((l : ℝ) ^ (i - 1) * ((l : ℝ) - 1))) := by
-    rw [← GlobalTheory.T.norm_primitiveRoot_primePow_sub_one_padicComplex l i (by omega) _ hζC, ← PadicComplex.norm_extends]
+    rw [← _root_.GlobalTheory.Cyc.norm_primitiveRoot_sub_one l i (by omega) _ hζC, ← PadicComplex.norm_extends]
     congr 1
     rw [PadicComplex.coe_eq, PadicComplex.coe_eq, map_sub, map_one]
   set D : ℝ := (l : ℝ) ^ (i - 1) * ((l : ℝ) - 1) with hD

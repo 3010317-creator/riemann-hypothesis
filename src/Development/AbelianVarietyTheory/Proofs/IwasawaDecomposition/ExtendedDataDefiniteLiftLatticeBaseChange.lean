@@ -9,7 +9,8 @@ public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForm
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.DsExistsOfDiscreteSeriesExists
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.HarishChandraFinite
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.ExistsNormLeHeightPow
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BlockDataLevelFormsTransportFieldMapStatement
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BlockBaseChange
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.BlockDataLevelFormsTransportFieldMap
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExtendedDataLiftBlockDatumEqBaseChangeStatement
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -75,7 +76,7 @@ theorem defLat0_baseChange : GlobalTheory.Published.DiscreteSeriesCover → Glob
   obtain ⟨e, he⟩ := H B f T w hE hff hPin hpx Z hX Wt z hG hGA hFine hHL Z' hX' hG' hGA' hVol z' hFine' hExt j j' hj φ hφ
   have hstar : ∀ x, φ (star x) = star (φ x) := fun x =>
     (w'.st Z').toD7.what₂.embLL.injective (by rw [hφ, (w.st Z).toD7.starLL_cx, (w'.st Z').toD7.starLL_cx, hφ])
-  exact GlobalTheory.T.block_data_level_forms_transport_field_map φ hstar e _ _ _ _ _ _ 1 (hHL.ok.ok2.lifts j _) he
+  exact _root_.GlobalTheory.Mem.R3.DefLatBC.defLat_of_blockBC φ hstar e _ _ _ _ _ _ 1 (hHL.ok.ok2.lifts j _) he
 
 end GlobalTheory.Mem.R3.TwistedPlaceExtensions
 

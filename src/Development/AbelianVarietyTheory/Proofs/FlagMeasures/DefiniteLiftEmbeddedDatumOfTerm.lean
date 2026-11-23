@@ -1,10 +1,10 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.NormalFormDualOrthogonalLast
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagPairDefinitePartLatticeDiscriminantEqQuotienStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagPairDefiniteThetaLatticeLeFixedIndexBoundStatement
-import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairNormalFormGeometrySummaryStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsHermIsometryGraphModScalarFlagPairIotaStatement
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagPairDefinitePartLatticeDiscriminantEqQuotien
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FlagPairDefiniteThetaLatticeLeFixedIndexBound
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IsHermIsometryGraphModScalarFlagPairIota
+import Development.AbelianVarietyTheory.Proofs.FlagMeasures.HermFramePairNormalFormGeometrySummary
 import Development.AbelianVarietyTheory.Proofs.FlagMeasures.LeOfLatMod
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -345,10 +345,10 @@ private theorem apply_mem_one_of_mem_flagPairDefinitePartLattice {H : HermSpace 
 
 theorem main : ∀ (K V : Type) [Field K] [NumberField K] [StarRing K] [AddCommGroup V] [Module K V] [FiniteDimensional K V] [Module (𝓞 K) V] [IsScalarTower (𝓞 K) K V] (H : HermSpace K V), Formalism.HermitianLatticesTheory.IsCMUnram K → ∀ (r : ℕ) (N : NF H r), ∀ (g : ℕ) (Λ : Submodule (𝓞 K) V), 1 ≤ g → N.IsTerm g Λ → ∃ H' : HermSpace K N.Wt, (∀ x y, H'.B x y = H.B x y) ∧ GlobalTheory.Mass.PD H'.B.flip ∧ GlobalTheory.Mass.IsIntLat H'.B.flip (GlobalTheory.Mass.latIn N.Wt (flagPairDefinitePartLattice N.F N.F' Λ)) ∧ (GlobalTheory.Mass.discN H'.B.flip (GlobalTheory.Mass.latIn N.Wt (flagPairDefinitePartLattice N.F N.F' Λ)) : ℝ) = N.NT ^ 2 ∧ GenBy (Formalism.HermitianLatticesTheory.dual H'.B.flip (GlobalTheory.Mass.latIn N.Wt (flagPairDefinitePartLattice N.F N.F' Λ))) (GlobalTheory.Mass.latIn N.Wt (flagPairDefinitePartLattice N.F N.F' Λ)) 1 ∧ IsDat H' g (GlobalTheory.Mass.latIn N.Wt (flagPairDefinitePartLattice N.F N.F' Λ)) N.j (N.gI g Λ) (GlobalTheory.Mass.latIn N.Wt (flagPairDefinitePartLattice N.F' N.F Λ), (iotaGraph N.F N.F' Λ (g : 𝓞 K)).comap ((N.Wt.subtype.prodMap N.Wt.subtype).restrictScalars (𝓞 K))) := by
   intro K V _ _ _ _ _ _ _ _ H hK r N g Λ hg hT
-  obtain ⟨-, hLift, -, -, -, -, hwS, -, hPD, -, -, -⟩ := GlobalTheory.T.hermFramePairNormalForm_geometry_summary K V H hK r N
-  obtain ⟨hdel, hdel', hgen, hM, hM', -⟩ := GlobalTheory.T.flagPairDefinitePartLattice_discriminant_eq_quotient K V H hK r N g Λ hg hT
-  have hiso := GlobalTheory.T.isHermIsometryGraphModScalar_flagPairIota K V H hK r N g Λ hg hT
-  obtain ⟨hThLa, -, -, -, -, hgenLa, -, hTh⟩ := GlobalTheory.T.flagPairDefiniteThetaLattice_le_fixed_index_bound K V H hK r N g Λ hg hT
+  obtain ⟨-, hLift, -, -, -, -, hwS, -, hPD, -, -, -⟩ := _root_.GlobalTheory.DegCnt.NF.geometry K V H hK r N
+  obtain ⟨hdel, hdel', hgen, hM, hM', -⟩ := _root_.GlobalTheory.DegCnt.PrimPerp.main K V H hK r N g Λ hg hT
+  have hiso := _root_.GlobalTheory.ModIdent.isModIso_iota K V H hK r N g Λ hg hT
+  obtain ⟨hThLa, -, -, -, -, hgenLa, -, hTh⟩ := _root_.GlobalTheory.DegCnt.FixIdx.main K V H hK r N g Λ hg hT
   obtain ⟨H', hH, hPD'⟩ := exists_res H hPD
   have hd : N.Wt ⊓ II N.F N.F' = ⊥ := hLift.2.1
   have ho : ∀ y ∈ wSp N.F N.F', ∀ i ∈ II N.F N.F', H.B y i = 0 := fun y hy i hi =>

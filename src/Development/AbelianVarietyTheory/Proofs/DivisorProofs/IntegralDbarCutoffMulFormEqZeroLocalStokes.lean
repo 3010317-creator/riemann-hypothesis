@@ -2,9 +2,9 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsTypeIsRealConst
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HolAtlasIsFormDelDbarSmoothStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralEqEuclideanIntegralOfSupportInChartStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralReTopDegreeDensityDbarEqZeroStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFormOneAddMulSmulStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralEqEuclideanIntegralOfSupportInChart
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralReTopDegreeDensityDbarEqZero
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IsFormOneAddMulSmul
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -95,7 +95,7 @@ theorem integral_dbar_fn_mul_eq_zero : ∀ {M : Type} [TopologicalSpace M] [Comp
   set K := tsupport χ with hKdef
   have hKc : IsCompact K := (isClosed_tsupport χ).isCompact
   have hP : A.IsForm (A.fn χ * γ) :=
-    ((GlobalTheory.T.isForm_one_add_mul_smul M n A).2 0 _ _ (A.isForm_fn hχ) hγ).2.1
+    ((_root_.GlobalTheory.CxForm.HolAtlas.isForm_algebra M n A).2 0 _ _ (A.isForm_fn hχ) hγ).2.1
   have hω : A.IsForm (A.dbar (A.fn χ * γ)) :=
     (GlobalTheory.T.holAtlas_isForm_del_dbar_smooth M n A _ hP).2
 
@@ -109,7 +109,7 @@ theorem integral_dbar_fn_mul_eq_zero : ∀ {M : Type} [TopologicalSpace M] [Comp
     intro x hx
     refine dbarAt_eq_zero_of_eventually (hnear _ _ (x.ch.map_source x.2) ?_)
     rwa [x.ch.left_inv x.2]
-  rw [GlobalTheory.T.integral_eq_euclidean_integral_of_support_in_chart A _ i K hω hKc hK hvan]
+  rw [_root_.GlobalTheory.CxForm.HolAtlas.integral_eq_integral_chart_of_support A _ i K hω hKc hK hvan]
 
   set F := A.loc (A.fn χ * γ) i with hFdef
   set B : Set (V n) := A.e i '' K with hBdef
@@ -139,6 +139,6 @@ theorem integral_dbar_fn_mul_eq_zero : ∀ {M : Type} [TopologicalSpace M] [Comp
       rfl
     · rw [HolAtlas.loc, dite_eq_right ht, dbarAt_eq_zero_of_eventually (hF0 v fun h => ht (hBt h))]
   rw [hloc]
-  exact GlobalTheory.T.integral_re_topDegreeDensity_dbar_eq_zero F hFC hFs
+  exact _root_.GlobalTheory.CxForm.integral_re_dens_dbarAt_eq_zero F hFC hFs
 
 end GlobalTheory.CxForm.DbarLocStokes

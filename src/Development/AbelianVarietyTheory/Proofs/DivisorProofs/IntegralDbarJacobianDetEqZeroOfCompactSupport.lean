@@ -1,8 +1,13 @@
 module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.InterPolyProdSum
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetWirtingerAntiholomorphicDerivEqSumStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralAntiholomorphicDerivCompactSupportEqZeroStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetWirtingerAntiholomorphicDerivEqSum
+public import Development.AbelianVarietyTheory.Definitions.ThetaMetrics.EventuallyDifferentiableAtOfContDiffAtTwo
+public import Mathlib.LinearAlgebra.Complex.FiniteDimensional
+public import Mathlib.MeasureTheory.Integral.IntegrableOn
+public import Mathlib.Topology.Separation.CompletelyRegular
+public import ReciprocityTheory.L2DbarEstimates.IsLocalHomeomorph
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.IntegralAntiholomorphicDerivCompactSupportEqZero
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -74,13 +79,13 @@ theorem integral_dbarJacobian_eq_zero : ∀ {n : ℕ} (U K : Set (V n)) (f : Fin
       (f j v * ∏ i ∈ Finset.univ.erase j, dbar (f i) v (coordVec (w i))) = 0 :=
     fun w v hv hvK => by rw [hz v hv hvK, zero_mul]
   have hT := fun w : Equiv.Perm (Fin n) =>
-    GlobalTheory.T.integral_antiholomorphicDeriv_compactSupport_eq_zero U K _ (coordVec (w j)) hU hK hKU (hgC w) (hg0 w)
+    _root_.GlobalTheory.GoodTop.setIntegral_dbar_eq_zero U K _ (coordVec (w j)) hU hK hKU (hgC w) (hg0 w)
   have hcongr : ∫ v in U, (Matrix.of fun i b => dbar (f i) v (coordVec b)).det =
       ∫ v in U, ∑ w : Equiv.Perm (Fin n), ((Equiv.Perm.sign w : ℤ) : ℂ) *
         dbar (fun x => f j x * ∏ i ∈ Finset.univ.erase j, dbar (f i) x (coordVec (w i))) v
           (coordVec (w j)) :=
     setIntegral_congr_fun hU.measurableSet fun v hv =>
-      GlobalTheory.T.det_wirtingerAntiholomorphicDeriv_eq_sum f j v fun i => (hf i).contDiffAt (hU.mem_nhds hv)
+      _root_.GlobalTheory.GoodTop.det_dbar_eq_sum_dbar f j v fun i => (hf i).contDiffAt (hU.mem_nhds hv)
   rw [hcongr, integral_finsetSum _ fun w _ => (hT w).1.const_mul _]
   refine Finset.sum_eq_zero fun w _ => ?_
   rw [integral_const_mul, (hT w).2, mul_zero]

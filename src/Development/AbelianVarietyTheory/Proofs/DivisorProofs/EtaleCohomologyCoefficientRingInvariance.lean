@@ -4,9 +4,10 @@ public import Development.AbelianVarietyTheory.Definitions.Divisors.DivisorSuppo
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrPreservesHomology
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EtaleCochainEvalOnSimplexBasicPropertiesStatement
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsImageCocycleSemilinearSheafComplexMapStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictScalarsResolutionComparisonStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.PullHlComp
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictScalarsResolutionComparison
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RestrictScalarsResolutionMapAugmentationSpecStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemilinearResolutionMapCohomologyEqZeroOfKillStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SemilinearResolutionMapCohomologyEqZeroOfKill
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -69,8 +70,8 @@ theorem SemiMap.sub_op {S R : Type} [CommRing S] [CommRing R] {I : Cx S} {J : Cx
 
 theorem a8 : A8 := by
   intro R S _ _ φ E F n
-  obtain ⟨ρ₀, h₀, hb⟩ := GlobalTheory.T.restrictScalars_resolution_comparison R S φ F
-  have hz := GlobalTheory.T.semilinearResolutionMap_cohomology_eq_zero_of_kill S R F ((restr φ).obj F) ((restrMap φ F).sub ρ₀) (fun U a => by
+  obtain ⟨ρ₀, h₀, hb⟩ := _root_.GlobalTheory.EtC.restrRes_comparison R S φ F
+  have hz := _root_.GlobalTheory.EtC.semiMap_op_eq_zero_of_kill S R F ((restr φ).obj F) ((restrMap φ F).sub ρ₀) (fun U a => by
     change (restrMap φ F).app U 0 _ - ρ₀.app U 0 _ = 0
     rw [GlobalTheory.T.restrictScalarsResolutionMap_augmentation_spec R S φ F U a, h₀ U a, sub_self])
   have he : restrH φ E F n = ρ₀.op.app E n := by

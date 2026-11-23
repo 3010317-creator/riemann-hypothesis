@@ -1,7 +1,11 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.GlobalTwisting.ZerosDisc
-public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ArithmeticLargeSieveOneResidueClassPerPrimeStatement
+public import Mathlib.Analysis.SpecialFunctions.Log.Basic
+public import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+public import Mathlib.Data.Nat.Totient
+public import Development.AbelianVarietyTheory.Proofs.GlobalInterpolation.ArithmeticLargeSieveOneResidueClassPerPrime
+public import Mathlib.Analysis.Real.Pi.Bounds
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -9,7 +13,6 @@ import Mathlib.Algebra.Order.Star.Int
 import Mathlib.Algebra.Order.Star.Real
 import Mathlib.Analysis.Complex.UpperHalfPlane.Basic
 import Mathlib.Analysis.Normed.Algebra.GelfandRadius
-public import Mathlib.Analysis.Real.Pi.Bounds
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp
 import Mathlib.Combinatorics.Enumerative.DyckWord
 import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
@@ -74,7 +77,7 @@ theorem card_large_primes_class_le (q a Q M N : ℕ) (P : Finset ℕ) (hq : 1 �
     intro p hp p' hp' h
     have h' : p / q = p' / q := by simpa using h
     rw [hdec p hp, hdec p' hp', h']
-  have key := GlobalTheory.T.arithmeticLargeSieve_one_residue_class_per_prime M N Q q (P.image fun p => p / q + 1) hQ hq ?_ ?_
+  have key := _root_.GlobalTheory.arithmetic_large_sieve_one_class M N Q q (P.image fun p => p / q + 1) hQ hq ?_ ?_
   · rwa [Finset.card_image_of_injOn hinj] at key
   · intro n hn
     obtain ⟨p, hp, rfl⟩ := Finset.mem_image.1 hn

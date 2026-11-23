@@ -4,7 +4,9 @@ public import Development.AutomorphicSpectrum.Statements.AlgebraStatements.Hodge
 public import Development.AutomorphicSpectrum.Statements.AlgebraStatements.OrdinaryCurveStatement
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.AbFactorProdRetract
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.ExistsAddEquiv
-public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HopfOrdersOfZmodPExtremesStatement
+public import Development.AutomorphicSpectrum.Definitions.CommutativeAlgebra.StepOrderRes
+public import Mathlib.FieldTheory.IsAlgClosed.Basic
+public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.HopfOrdersOfZmodPExtremes
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.TensorProductHopfOrdersStatement
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.TensorProductTightHopfOrdersStatement
 public import Development.AutomorphicSpectrum.Proofs.AlgebraProofs.TorsionPointsHopfOrderStatement
@@ -468,7 +470,7 @@ theorem good_zmod (hv : v.Integers R) (hp : v (p : C) < 1)
     (hc : IsAdicComplete (Ideal.span {(p : R)}) R) (hOC : OrdinaryCurveStatement) :
     Good p v (ZMod p) (charLat (C := C) R (ZMod p)) ∧ Good p v (ZMod p) (intFun (C := C) R (ZMod p)) := by
   obtain ⟨A, gA, L, ab, lb, am, T, pt, hpt, hE⟩ := hOC p C v R hv hp hc
-  obtain ⟨⟨Ae, ce, -, te, -⟩, ⟨Am, cm, -, -, tm, -⟩⟩ := GlobalTheory.T.hopf_orders_of_zmod_p_extremes p C v R hv hp
+  obtain ⟨⟨Ae, ce, -, te, -⟩, ⟨Am, cm, -, -, tm, -⟩⟩ := _root_.GlobalTheory.CompanionTheory.Relay.hopf_orders_of_zmod_p_extremes p C v R hv hp
   have cm' : Am.carrier = charLat (C := C) R (ZMod p) := cm
   obtain ⟨AA, hAA, hl, hr, hsl, hsr, -⟩ := GlobalTheory.T.tensor_product_hopf_orders p C v R hv hp (ZMod p) (ZMod p) Am Ae
   have hf : IsAbFactor p AA.carrier := by

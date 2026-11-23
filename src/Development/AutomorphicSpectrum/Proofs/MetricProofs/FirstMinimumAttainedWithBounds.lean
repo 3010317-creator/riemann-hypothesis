@@ -1,12 +1,13 @@
 module
 
-import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsotropicSublatticeGramDeterminant
 public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsFundSet
 public import Mathlib.Analysis.CStarAlgebra.Module.Constructions
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsotropicEigencomponentConjugateFormStatement
-public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RiemannLatticeEigenProjectionStatement
+public import Development.AutomorphicSpectrum.Definitions.MetricPeriods.IsEigFrames
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsotropicEigencomponentConjugateForm
+public import Development.AutomorphicSpectrum.Proofs.MetricProofs.RiemannLatticeEigenProjection
 public import GroundTheory.HeightsAndTheta.Heights.CountingLowerBound.Assembly
 public import GroundTheory.HeightsAndTheta.Heights.CountingLowerBound.PShortVectorsOrthogonal
+import Development.AutomorphicSpectrum.Proofs.MetricProofs.IsotropicSublatticeGramDeterminant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -286,7 +287,7 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {g : ℕ} {Λ : Type
 
 theorem norm_act_le (R : RiemLat E g Λ) {a : 𝓞 E} {vr : ℝ} (hvr : 0 < vr)
     (ha : ∀ s : E →+* ℂ, ‖s (a : E)‖ ≤ vr) (x : Λ) : ‖per R (a • x)‖ ≤ vr * ‖per R x‖ := by
-  obtain ⟨-, -, h3, h4, h5⟩ := GlobalTheory.T.riemann_lattice_eigen_projection E g Λ Unit R
+  obtain ⟨-, -, h3, h4, h5⟩ := _root_.GlobalTheory.CompanionTheory.Relay.riemann_lattice_eigen_projection E g Λ Unit R
   let u : (E →+* ℂ) → Tan R := fun s => eigComp R.B (s.comp (algebraMap (𝓞 E) E)) (R.P x)
   let w : (E →+* ℂ) → Tan R := fun s => eigComp R.B (s.comp (algebraMap (𝓞 E) E)) (R.B a (R.P x))
   have hu : ∑ s, u s = per R x := h4 (R.P x)
@@ -418,8 +419,8 @@ theorem exists_subspace (R : RiemLat E g Λ) {Ψ : Type} [Fintype Ψ] [Nonempty 
   let v : Fin r → Λ := fun i => ((e i : T) : Λ)
   have hv_ind : LinearIndependent (𝓞 E) v := hs1.comp e e.injective
   have hv_mem : ∀ i, v i ∈ Submodule.span (𝓞 E) T := fun i => Submodule.subset_span (e i : T).2
-  have hC := (GlobalTheory.T.isotropic_eigencomponent_conjugate_form E g Λ Ψ R (Submodule.span (𝓞 E) T) (isIso_span R hI) (σ τ₀)).2 r v hv_mem hv_ind
-  have hmem := ((GlobalTheory.T.riemann_lattice_eigen_projection E g Λ Ψ R).2.2.1 (σ τ₀)).1
+  have hC := (_root_.GlobalTheory.CompanionTheory.Relay.isotropic_eigencomponent_conjugate_form E g Λ Ψ R (Submodule.span (𝓞 E) T) (isIso_span R hI) (σ τ₀)).2 r v hv_mem hv_ind
+  have hmem := ((_root_.GlobalTheory.CompanionTheory.Relay.riemann_lattice_eigen_projection E g Λ Ψ R).2.2.1 (σ τ₀)).1
   have hr : r ≤ j' := by
     let w : Fin r → eigSp R.B (σ τ₀) := fun a => ⟨_, hmem (R.P (v a))⟩
     have hw : LinearIndependent ℂ w := LinearIndependent.of_comp (eigSp R.B (σ τ₀)).subtype hC

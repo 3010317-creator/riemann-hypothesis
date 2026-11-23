@@ -1,10 +1,10 @@
 module
 
-import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitaryOrbitNormalFormUnitInvariant
 public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.FourierMatch
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsMulStarEqOfNormOneUnramifiedQuadraticStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.ExistsMulStarEqOfNormOneUnramifiedQuadratic
 public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NormOneAddEqOne
-public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedQuadraticIntegralTraceFormPerfectStatement
+public import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnramifiedQuadraticIntegralTraceFormPerfect
+import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.UnitaryOrbitNormalFormUnitInvariant
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -273,14 +273,14 @@ theorem pivot {n : Type} [Fintype n] [DecidableEq n] [Nonempty n] (G : Matrix n 
     ∃ P : Matrix n n E, Intg P ∧ ‖P.det‖ = 1 ∧ ∃ k, (Pᴴ * G * P) k k = 1 := by
   haveI := Unram.ultraE (F := F) (E := E)
   have hs : ∀ y : E, ‖star y‖ = ‖y‖ := Unram.norm_star (F := F)
-  obtain ⟨-, ⟨e0, he0, he0'⟩, -⟩ := GlobalTheory.T.unramifiedQuadratic_integral_traceForm_perfect F E
+  obtain ⟨-, ⟨e0, he0, he0'⟩, -⟩ := _root_.GlobalTheory.NTr.traceForm_perfect F E
   obtain ⟨i, w, hw, hwi, hq⟩ := pivot_w hs e0 he0 he0' G hG hGi hGd
   have ha : star (star w ⬝ᵥ (G *ᵥ w)) = star w ⬝ᵥ (G *ᵥ w) := by
     calc star (star w ⬝ᵥ (G *ᵥ w)) = (star w ᵥ* Gᴴ) ⬝ᵥ w := by rw [star_dotProduct, star_mulVec, star_star]
       _ = star w ⬝ᵥ (G *ᵥ w) := by rw [← dotProduct_mulVec, hG.eq]
   obtain ⟨u, hu⟩ := fixed_mem (F := F) _ ha
   have hu1 : ‖u‖ = 1 := by rw [← norm_algebraMap' E u, hu]; exact hq
-  obtain ⟨v0, hv0⟩ := GlobalTheory.T.exists_mul_star_eq_of_norm_one_unramifiedQuadratic F E u hu1
+  obtain ⟨v0, hv0⟩ := _root_.GlobalTheory.NormUnits.norm_onto_units F E u hu1
   rw [hu] at hv0
   have hv0n : ‖v0‖ = 1 := by
     have h := congrArg norm hv0

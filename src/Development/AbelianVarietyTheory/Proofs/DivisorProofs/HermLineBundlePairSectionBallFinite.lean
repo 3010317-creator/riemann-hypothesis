@@ -1,8 +1,9 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.CharZeroFunctionField
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoeffBoundOfLinearIndependentSectionsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PairSectionsFgOfProjArithVarietyStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsCoeffBoundOfLinearIndependentSections
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PairSectionsFgOfProjArithVariety
+public import Mathlib.GroupTheory.FiniteAbelian.Basic
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -15,7 +16,6 @@ import Mathlib.Combinatorics.SimpleGraph.Triangle.Removal
 import Mathlib.Data.NNRat.Floor
 import Mathlib.Data.Nat.Choose.Multinomial
 import Mathlib.Geometry.Euclidean.Volume.Basic
-public import Mathlib.GroupTheory.FiniteAbelian.Basic
 import Mathlib.NumberTheory.Chebyshev
 import Mathlib.NumberTheory.Height.NumberField
 import Mathlib.NumberTheory.Height.Projectivization
@@ -88,10 +88,10 @@ theorem fg_addSubgroup_field_finite_or_basis {K : Type} [Field K] (H : AddSubgro
 theorem bl_finite : ∀ (k : Type) [CommRing k] (X : Scheme.{0}) [IsIntegral X] (p : X ⟶ Sp k) (D : ℕ),
     IsArithVar p D → ∀ (P : Pair p) (a b : ℤ) (R : ℝ), (P.Bl a b R).Finite := by
   intro k _ X _ p D hX P a b R
-  rcases fg_addSubgroup_field_finite_or_basis (P.H a b) (GlobalTheory.T.pairSections_fg_of_projArithVariety k X p D hX P a b) with
+  rcases fg_addSubgroup_field_finite_or_basis (P.H a b) (_root_.GlobalTheory.HSNef.PairFG.h_fg k X p D hX P a b) with
     hfin | ⟨r, f, hf, hli, hspan⟩
   · exact hfin.subset (fun x hx => hx.1)
-  · obtain ⟨C, -, hC⟩ := GlobalTheory.T.exists_coeff_bound_of_linearIndependent_sections k X p D hX P a b r f hf hli
+  · obtain ⟨C, -, hC⟩ := _root_.GlobalTheory.HSNef.exists_coeff_le_of_linearIndependent k X p D hX P a b r f hf hli
     have hS : {c : Fin r → ℤ | ∀ j, |(c j : ℝ)| ≤ C * R}.Finite := by
       refine (Set.Finite.pi (t := fun _ : Fin r => Set.Icc (-⌈C * R⌉) ⌈C * R⌉)
         (fun _ => Set.finite_Icc _ _)).subset ?_

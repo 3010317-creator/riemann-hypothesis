@@ -1,7 +1,8 @@
 module
 
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsSmoothHermCombLine
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ClosureDimIffArithmeticVarietyStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.IsPullHermPullLine
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ClosureDimIffArithmeticVariety
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PointIdealHorizontalIffCharZero
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.PointIdealMultiprojectivePrime
 import Mathlib.Algebra.Order.Floor.Extended
@@ -137,6 +138,6 @@ theorem ptDict : PtDict := by
     (ptIdeal_isHorizontal_iff m n _).mp h
   have hdim : topologicalKrullDim (closure ({j (genericPoint Z)} : Set (MP ℤ m n))) = (d : ℕ) := by
     rw [dim_closure_image_generic j, hd]
-  exact (GlobalTheory.T.closure_dim_iff_arithmetic_variety m n _ d hc).mp hdim
+  exact (_root_.GlobalTheory.CompanionTheory.MPDict.DimClosure.dim_closure_iff_isArithVar m n _ d hc).mp hdim
 
 end GlobalTheory.CompanionTheory.MixZ

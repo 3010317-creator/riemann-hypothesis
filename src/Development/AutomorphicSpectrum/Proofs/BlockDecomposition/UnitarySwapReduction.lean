@@ -2,13 +2,14 @@ module
 
 public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.StrictDominance.UnitaryExtremality.SatPowNonvan
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ConjTransposeAntidiagFixed
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousUnitaryRootMapStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsAdmissibleLinearFunctionalStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ReflectionRootDiagonalConjStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ReflectionRootUnipotentShiftStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RootMapMemCompactOfIntegralStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SimpleReflectionMemMaximalCompactStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SimpleReflectionRootBorelDecompStatement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ContinuousUnitaryRootMap
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsAdmissibleLinearFunctional
+public import Development.WeilBound.RepresentationTheoryGL.ArchimedeanBaseChange.ArchimedeanBaseChangeProof.IwahoriFactorisation.StrictDominance.UnitaryExtremality.IsStrictDom
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ReflectionRootDiagonalConj
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ReflectionRootUnipotentShift
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RootMapMemCompactOfIntegral
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SimpleReflectionMemMaximalCompact
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SimpleReflectionRootBorelDecomp
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.UnitaryBorelSplitting
 import Formalism.SatakeDualWeyl.AdelicIwasawaHecke.FIwasawa
 import Mathlib.Algebra.Order.Floor.Extended
@@ -78,30 +79,30 @@ theorem step_exists_int [CompleteSpace L] (hU : IsUnramInv ϖ σ q) (w : ℂ) (h
       (∀ (F : L → ℂ) (c : L), IsAdm w F → c ≠ 0 →
         IsAdm w (fun x => F (c * x)) ∧ I (fun x => F (c * x)) = (q : ℂ) ^ (2 * ordL c) * I F) ∧
       IsAdm w (sphFn (L := L) w) ∧ I (sphFn w) = (1 - w) / (1 - w * (q : ℂ) ^ 2) :=
-  GlobalTheory.T.exists_admissible_linear_functional L ϖ σ q hU w hw0 hw
+  _root_.GlobalTheory.CompanionTheory.SwapInt.exists_invariant_integral L ϖ σ q hU w hw0 hw
 
 theorem step_uR_continuous (hU : IsUnramInv ϖ σ q) (a : ℕ) (h : 2 * (a + 2) ≤ n) :
     Continuous (uR σ hU.1 a h : L → GU σ n) :=
-  GlobalTheory.T.continuous_unitary_root_map L ϖ σ q n hU a h
+  _root_.GlobalTheory.CompanionTheory.SwapRoot.continuous_uR L ϖ σ q n hU a h
 
 theorem step_factor (hU : IsUnramInv ϖ σ q) (a : ℕ) (h : 2 * (a + 2) ≤ n) (χ : Fin (n / 2) → ℂˣ) (i j : Fin (n / 2))
     (hi : i.val = a) (hj : j.val = a + 1) (x : L) (hx : x ≠ 0) :
     ∃ b : GU σ n, IsBorelU b ∧
       chiDeltaU q (fun k => (χ k : ℂ)) b = (((χ i : ℂ) / (χ j : ℂ)) / (q : ℂ) ^ 2) ^ (-ordL x) ∧
       sR σ hU.1 a h * uR σ hU.1 a h x = b * (sR σ hU.1 a h * uR σ hU.1 a h x⁻¹ * sR σ hU.1 a h) :=
-  GlobalTheory.T.simple_reflection_root_borel_decomp L ϖ σ q n hU a h χ i j hi hj x hx
+  _root_.GlobalTheory.CompanionTheory.SwapFactor.sR_uR_factor L ϖ σ q n hU a h χ i j hi hj x hx
 
 theorem step_sR_mem_KU (hU : IsUnramInv ϖ σ q) (a : ℕ) (h : 2 * (a + 2) ≤ n) : sR σ hU.1 a h ∈ KU σ n :=
-  GlobalTheory.T.simple_reflection_mem_maximal_compact L ϖ σ q n hU a h
+  _root_.GlobalTheory.CompanionTheory.SwapRoot.sR_mem_KU L ϖ σ q n hU a h
 
 theorem step_uR_mem_KU (hU : IsUnramInv ϖ σ q) (a : ℕ) (h : 2 * (a + 2) ≤ n) (x : L) (hx : Valued.v x ≤ 1) :
     uR σ hU.1 a h x ∈ KU σ n :=
-  GlobalTheory.T.root_map_mem_compact_of_integral L ϖ σ q n hU a h x hx
+  _root_.GlobalTheory.CompanionTheory.SwapRoot.uR_mem_KU L ϖ σ q n hU a h x hx
 
 theorem step_unip_shift (hσ : ∀ x, σ (σ x) = x) (a : ℕ) (h : 2 * (a + 2) ≤ n) (v : GU σ n) (hv : IsUnipU v) :
     ∃ y : L, ∀ x : L, ∃ b : GU σ n, IsUnipU b ∧
       sR σ hσ a h * uR σ hσ a h x * v = b * (sR σ hσ a h * uR σ hσ a h (x + y)) :=
-  GlobalTheory.T.reflection_root_unipotent_shift L σ n hσ a h v hv
+  _root_.GlobalTheory.CompanionTheory.SwapRoot.Unip.sR_uR_mul_unip L σ n hσ a h v hv
 
 theorem step_torus_shift (hU : IsUnramInv ϖ σ q) (a : ℕ) (h : 2 * (a + 2) ≤ n) (χ : Fin (n / 2) → ℂˣ) (i j : Fin (n / 2))
     (hi : i.val = a) (hj : j.val = a + 1) (t : GU σ n) (ht : IsDiagM (t : GL (Fin n) L)) :
@@ -109,7 +110,7 @@ theorem step_torus_shift (hU : IsUnramInv ϖ σ q) (a : ℕ) (h : 2 * (a + 2) �
       (∀ x : L, sR σ hU.1 a h * uR σ hU.1 a h x * t = t' * (sR σ hU.1 a h * uR σ hU.1 a h (c * x))) ∧
       chiDeltaU q (fun k => (χ k : ℂ)) t' * (q : ℂ) ^ (2 * ordL c) =
         chiDeltaU q (fun k => ((χ ∘ Equiv.swap i j) k : ℂ)) t :=
-  GlobalTheory.T.reflection_root_diagonal_conj L ϖ σ q n hU a h χ i j hi hj t ht
+  _root_.GlobalTheory.CompanionTheory.SwapRoot.Torus.torus_step L ϖ σ q n hU a h χ i j hi hj t ht
 
 end Lem
 

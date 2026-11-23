@@ -2,9 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IrreducibleAdmissibleGL
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.ZelevinskyJacquet.LSegJacquet
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PiExteriorTensorSmoothIrreducibleIsIrreducibleStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalCellMultiplicityOfSizeMatrixStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SizeMatrixPermutationEquivsExistStatement
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.HasFiniteLengthOfIsIrreducible
+public import Development.AbelianVarietyTheory.PublishedTheorems.TwistedTraceFormula.NontrivialOfIrreducible
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.PiExteriorTensorSmoothIrreducibleIsIrreducible
+public import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.NonemptyEquivMultiProdOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CuspidalCellMultiplicityOfSizeMatrix
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SizeMatrixPermutationEquivsExist
 import Development.AutomorphicSpectrum.Proofs.GlobalProofs.BernsteinZelevinskyFiniteness
 import Development.AutomorphicSpectrum.Proofs.GlobalProofs.GeometricLemma
 import GroundTheory.LocalFields.PadicLogSeries
@@ -84,7 +87,7 @@ theorem exists_choice (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) {l c
       (g : ∀ j, (Σ i, Fin (b.1 i j)) ≃ Fin (y j).1),
       jhMult (piTensor fun j => (y j).rep) (cellFunctor f g (piTensor fun i => (x i).rep)) = 1 := by
     rintro b ⟨e, he, hb⟩
-    exact GlobalTheory.T.size_matrix_permutation_equivs_exist hA x y e he b hb
+    exact _root_.GlobalTheory.CompanionTheory.CellBij.jhMult_cell_bij hA x y e he b hb
   have key' : ∀ b : SizeMatrix (fun i => Fin (x i).1) (fun j => Fin (y j).1), ∃ (f : ∀ i, (Σ j, Fin (b.1 i j)) ≃ Fin (x i).1) (g : ∀ j, (Σ i, Fin (b.1 i j)) ≃ Fin (y j).1),
       IsPermCell x y b → jhMult (piTensor fun j => (y j).rep) (cellFunctor f g (piTensor fun i => (x i).rep)) = 1 := by
     intro b
@@ -124,7 +127,7 @@ theorem main (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) {l c N : ℕ}
   haveI : Fintype (SizeMatrix (fun i => Fin (x i).1) (fun j => Fin (y j).1)) := Fintype.ofFinite _
   obtain ⟨f, g, hfg⟩ := exists_choice hA x y
   have hτ : (piTensor fun j => (y j).rep).IsIrreducible :=
-    GlobalTheory.T.piExteriorTensor_smoothIrreducible_isIrreducible GlobalTheory.CompanionTheory.Published.bernsteinZelevinskyFiniteness k _ _ fun j => (y j).2.rep
+    _root_.GlobalTheory.ExtTensorIrr.piTensor_isIrreducible GlobalTheory.CompanionTheory.Published.bernsteinZelevinskyFiniteness k _ _ fun j => (y j).2.rep
   have h1 := (GlobalTheory.CompanionTheory.GeoLink.geometricLemma k).1.jhMult_eq (stdBlocks (fun a => (x a).1) hx)
     (stdBlocks (fun a => (y a).1) hy) (isSmooth_piTensor fun i => (x i).2.rep.smooth) f g hτ
   have hterm : ∀ b : SizeMatrix (fun i => Fin (x i).1) (fun j => Fin (y j).1), jhMult (piTensor fun j => (y j).rep) (cellFunctor (f b) (g b) (piTensor fun i => (x i).rep)) =
@@ -133,7 +136,7 @@ theorem main (hA : GlobalTheory.Published.IrreducibleAdmissibleGL) {l c N : ℕ}
     split_ifs with h
     · exact hfg b h
     · by_contra hne
-      exact h (GlobalTheory.T.cuspidal_cell_multiplicity_of_size_matrix x y hxc hyc b (f b) (g b) hne)
+      exact h (_root_.GlobalTheory.CompanionTheory.CuspCell.exists_equiv_of_jhMult_cell_ne_zero x y hxc hyc b (f b) (g b) hne)
   have h2 : jm y hy (prodIrr x hx) = jhMult (piTensor fun j => (y j).rep)
       (jac (stdBlocks (fun a => (y a).1) hy) (parInd (stdBlocks (fun a => (x a).1) hx)
         (piTensor fun i => (x i).rep))) := rfl

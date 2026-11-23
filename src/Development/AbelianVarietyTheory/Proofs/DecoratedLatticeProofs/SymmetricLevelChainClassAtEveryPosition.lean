@@ -1,13 +1,16 @@
 module
 
 public import Development.AbelianVarietyTheory.Definitions.LatticeFrames.AllPositions
-import Development.AbelianVarietyTheory.Definitions.Foundations.SecondCountableAndT2LocalField
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleBlockTriangularMemIntegralMulLeviStatement
-public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RootExchangeBlockDiagonalTargetEntryConditionsStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.T2SpaceGeneralLinearGroup
+public import Development.AbelianVarietyTheory.Definitions.Foundations.SimpleSum
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.DoubleBlockTriangularMemIntegralMulLevi
+public import Development.AbelianVarietyTheory.Definitions.TwistedInnerProducts.ValuationDetOfMemKO
+public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.RootExchangeBlockDiagonalTargetEntryConditions
 public import Development.AbelianVarietyTheory.Proofs.DecoratedLatticeProofs.SymmetricLevelChainPhiSupportPeriodicStatement
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.DiagPartMulDiagPart
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.IwasawaBlockTriangular
 public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.OpEOmTargetUnipotent
+import Development.AbelianVarietyTheory.Definitions.Foundations.SecondCountableAndT2LocalField
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -124,8 +127,8 @@ theorem classAt_all : ∀ (k : Type) [Field k] [ValuativeRel k] [TopologicalSpac
   have sm1' : (m⁻¹⁻¹).val.BlockTriangular lv' := by rw [inv_inv]; exact sm1
   have sm2' : (m⁻¹⁻¹).val.BlockTriangular (fun r => OrderDual.toDual (lev p r)) := by rw [inv_inv]; exact sm2
   rw [hD'def] at hsup hper
-  obtain ⟨E1, E2⟩ := GlobalTheory.T.rootExchange_blockDiagonal_target_entry_conditions k S.ψ ν S.cond S.ϖ hlt _ _ c p hp1 hpc m⁻¹ si1 si2 sm1' sm2' _ hsup hper hE'
-  obtain ⟨γ, hK⟩ := GlobalTheory.T.doubleBlockTriangular_mem_integral_mul_levi k S.ϖ _ c p hp1 hpc m⁻¹ si1 si2 sm1' sm2' E1 E2
+  obtain ⟨E1, E2⟩ := _root_.GlobalTheory.PosEntries.entries k S.ψ ν S.cond S.ϖ hlt _ _ c p hp1 hpc m⁻¹ si1 si2 sm1' sm2' _ hsup hper hE'
+  obtain ⟨γ, hK⟩ := _root_.GlobalTheory.PClassAlg.blockDiag_mem_KO k S.ϖ _ c p hp1 hpc m⁻¹ si1 si2 sm1' sm2' E1 E2
   rw [← hDdef] at hK
   refine ⟨u * embX c γ, mul_mem (Subgroup.mem_sup_right hu) (Subgroup.mem_sup_left ⟨γ, rfl⟩),
     (u * embX c γ)⁻¹ * h, ?_, by group⟩

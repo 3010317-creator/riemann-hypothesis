@@ -3,22 +3,27 @@ module
 public import Development.WeilBound.CoreStatements.TemperedRepresentationTheory.RegularClassTraces.RegClassFin
 public import Development.WeilBound.ThetaLifts.Reductions.SiegelCore
 public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.StabUpTo
-import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CmDataIsCMExtAndGramIsHermND
 public import Development.AutomorphicArithmetic.IntegralCasts.CapelliIdentities.ImportsSideFurther
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanMatrixPreservesFormStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanRationalEmbeddingMapStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BoundedIntegralMatricesFiniteStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactArchimedeanEntriesBoundedStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactFiniteRationalDenominatorStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DeepConeWeightRatioBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsWittComplementFrameStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FrameStabilizerFlagConverseStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FrameStabilizerFlagCriterionStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MinimalParabolicArchimedeanStabilizesStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RationalPointsEqEmbeddingStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RegularSemisimpleFlagStabilizerStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SiegelCompactTranslateBoundStatement
-public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TorusArchimedeanFrameConjugationStatement
+public import Development.AbelianVarietyTheory.Definitions.Foundations.ExistsAuxiliaryPlaceNotMemFinset
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanMatrixPreservesForm
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ArchimedeanRationalEmbeddingMap
+public import Development.AbelianVarietyTheory.Definitions.Foundations.EventuallyNormFinLeOne
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.BoundedIntegralMatricesFinite
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactArchimedeanEntriesBounded
+public import Development.AbelianVarietyTheory.Definitions.Foundations.OfInfProjInfMulOfFinProjFin
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.CompactFiniteRationalDenominator
+public import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.IsSmoothModerateOfIsAutFunSm
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.DeepConeWeightRatioBound
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.ExistsWittComplementFrame
+public import Formalism.SatakeDualWeyl.Statement
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FrameStabilizerFlagConverse
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.FrameStabilizerFlagCriterion
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.MinimalParabolicArchimedeanStabilizes
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RationalPointsEqEmbedding
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.RegularSemisimpleFlagStabilizer
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.SiegelCompactTranslateBound
+public import Development.AutomorphicSpectrum.Proofs.BlockDecomposition.TorusArchimedeanFrameConjugation
+import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CmDataIsCMExtAndGramIsHermND
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -110,8 +115,8 @@ theorem bd_eq_self {L : Type} [Field L] (s : L →+* L) (hs : ∀ x, s (s x) = x
     rw [frm_swap, ← Matrix.submatrix_mul _ _ sw id sw Function.bijective_id, hl, Matrix.submatrix_one_equiv]
   have a2 : frm Y Z X * (Qi.submatrix sw id) = 1 := by
     rw [frm_swap, Matrix.submatrix_mul_equiv, hr]; rfl
-  have b1 := GlobalTheory.T.frame_stabilizer_flag_criterion L s hs n r m J X Y Z Qi hJ xx yy xy xz yz hl hr S g hg hu h1
-  have b2 := GlobalTheory.T.frame_stabilizer_flag_criterion L s hs n r m J Y X Z (Qi.submatrix sw id) hJ yy xx yx yz xz a1 a2 S g hg hu h2
+  have b1 := _root_.GlobalTheory.CompanionTheory.CFin.Tri.witt_blockTriangular L s hs n r m J X Y Z Qi hJ xx yy xy xz yz hl hr S g hg hu h1
+  have b2 := _root_.GlobalTheory.CompanionTheory.CFin.Tri.witt_blockTriangular L s hs n r m J Y X Z (Qi.submatrix sw id) hJ yy xx yx yz xz a1 a2 S g hg hu h2
   ext u v
   simp only [bd, Matrix.of_apply]
   split_ifs with h
@@ -151,8 +156,8 @@ theorem exists_conj_levi (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : IsWittF
   have hs : ∀ x, (σ : E →+* E) ((σ : E →+* E) x) = x := sigma_sigma h
   have hJ' : cT (σ : E →+* E) J = J := Matrix.ext fun i j => hJ.1 _ _
   have tri := fun (g : GRat σ J) (hg : ∀ j ∈ S, StabUpTo X g.1.1 j) =>
-    GlobalTheory.T.frame_stabilizer_flag_criterion E (σ : E →+* E) hs n r m J X Y Z Qi hJ' hW.xx hW.yy hW.xy xz yz hl hr S g.1.1 g.1.isUnit g.2 hg
-  obtain ⟨g, hg, hμ⟩ := GlobalTheory.T.regular_semisimple_flag_stabilizer F E σ h n J hJ r X Y hW S δ hδ hst
+    _root_.GlobalTheory.CompanionTheory.CFin.Tri.witt_blockTriangular E (σ : E →+* E) hs n r m J X Y Z Qi hJ' hW.xx hW.yy hW.xy xz yz hl hr S g.1.1 g.1.isUnit g.2 hg
+  obtain ⟨g, hg, hμ⟩ := _root_.GlobalTheory.CompanionTheory.LeviConj.conj_into_levi F E σ h n J hJ r X Y hW S δ hδ hst
   obtain ⟨μ, hμdef⟩ : ∃ μ : GRat σ J, μ = g⁻¹ * δ * g := ⟨_, rfl⟩
   rw [← hμdef] at hμ
   have hμb : bd (lev m S) (Qi * μ.1.1 * frm X Z Y) = Qi * μ.1.1 * frm X Z Y :=
@@ -168,7 +173,7 @@ theorem exists_conj_levi (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : IsWittF
     rw [← cm, ← cm, rel]
   have rel2 := congrArg (bd (lev m S)) rel'
   rw [bd_mul tδ tg, bd_mul tg tμ, hμb] at rel2
-  obtain ⟨hU, hUJ⟩ := GlobalTheory.T.frame_stabilizer_flag_converse E (σ : E →+* E) hs n r m J X Y Z Qi hJ' hW.xx hW.yy hW.xy xz yz hl hr S g.1.1
+  obtain ⟨hU, hUJ⟩ := _root_.GlobalTheory.CompanionTheory.CFin.BdU.bd_unitary E (σ : E →+* E) hs n r m J X Y Z Qi hJ' hW.xx hW.yy hW.xy xz yz hl hr S g.1.1
     g.1.isUnit g.2 tg
   obtain ⟨g', hg'def⟩ : ∃ g' : GRat σ J, g'.1.1 = frm X Z Y * bd (lev m S) (Qi * g.1.1 * frm X Z Y) * Qi :=
     ⟨⟨hU.unit, hUJ⟩, rfl⟩
@@ -291,11 +296,11 @@ theorem parabolic_triangular_frame : ∀ (F E : Type) [Field F] [NumberField F] 
     rw [hfrm, ← Matrix.map_mul, hl, one_map]
   have hr' : frm (X.map τ.1) (Z.map τ.1) (Y.map τ.1) * Qi.map τ.1 = 1 := by
     rw [hfrm, ← Matrix.map_mul, hr, one_map]
-  have t := GlobalTheory.T.frame_stabilizer_flag_criterion ℂ (starRingEnd ℂ) (fun x => star_star x) n r m (J.map τ.1) (X.map τ.1) (Y.map τ.1)
+  have t := _root_.GlobalTheory.CompanionTheory.CFin.Tri.witt_blockTriangular ℂ (starRingEnd ℂ) (fun x => star_star x) n r m (J.map τ.1) (X.map τ.1) (Y.map τ.1)
     (Z.map τ.1) (Qi.map τ.1) hJc ((rel X X 0 hW.xx).trans zero_map) ((rel Y Y 0 hW.yy).trans zero_map)
     ((rel X Y 1 hW.xy).trans one_map) ((rel X Z 0 xz).trans zero_map) ((rel Y Z 0 yz).trans zero_map) hl' hr' S
     (archMat σ J τ (projArch σ J w p)) ((Group.isUnit (projArch σ J w p)).map (archMat σ J τ))
-    (GlobalTheory.T.archimedean_matrix_preserves_form F E σ h n J p w τ) (fun j _ => GlobalTheory.T.minimal_parabolic_archimedean_stabilizes F E σ h n r J X p hp w τ j)
+    (_root_.GlobalTheory.CompanionTheory.CFin.archMat_projArch_unitary F E σ h n J p w τ) (fun j _ => _root_.GlobalTheory.CompanionTheory.CFin.stabUpTo_archMat_of_mem_minParOne F E σ h n r J X p hp w τ j)
   rwa [hfrm] at t
 
 theorem arch_bound (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : IsWittFrame σ J X Y)
@@ -307,9 +312,9 @@ theorem arch_bound (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : IsWittFrame �
       ∀ δ : GRat σ J, ratEmb σ J δ = p * a * y * a⁻¹ * p⁻¹ → (∀ j ∈ S, StabUpTo X δ.1.1 j) →
       ∀ (w : InfinitePlace F) (τ : EmbOver E w) (u v : Idx r m),
         ‖τ.1 (bd (lev m S) (Qi * δ.1.1 * frm X Z Y) u v)‖ ≤ B := by
-  obtain ⟨Bp, -, hBp⟩ := GlobalTheory.T.compact_archimedean_entries_bounded F E σ n J Ω hΩ
-  obtain ⟨Bpi, -, hBpi⟩ := GlobalTheory.T.compact_archimedean_entries_bounded F E σ n J (Inv.inv '' Ω) (hΩ.image continuous_inv)
-  obtain ⟨By, -, hBy⟩ := GlobalTheory.T.compact_archimedean_entries_bounded F E σ n J C₁ hC₁
+  obtain ⟨Bp, -, hBp⟩ := _root_.GlobalTheory.CompanionTheory.CFin.archMat_entries_bounded_of_isCompact F E σ n J Ω hΩ
+  obtain ⟨Bpi, -, hBpi⟩ := _root_.GlobalTheory.CompanionTheory.CFin.archMat_entries_bounded_of_isCompact F E σ n J (Inv.inv '' Ω) (hΩ.image continuous_inv)
+  obtain ⟨By, -, hBy⟩ := _root_.GlobalTheory.CompanionTheory.CFin.archMat_entries_bounded_of_isCompact F E σ n J C₁ hC₁
   have hs : ∀ x, (σ : E →+* E) ((σ : E →+* E) x) = x := sigma_sigma h
   have hJ' : cT (σ : E →+* E) J = J := Matrix.ext fun i j => hJ.1 _ _
   set q1 := ∑ ψ : E →+* ℂ, ∑ u, ∑ v, ‖ψ (Qi u v)‖ with hq1
@@ -336,11 +341,11 @@ theorem arch_bound (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : IsWittFrame �
       _ = _ := by simp only [Matrix.mul_assoc]
   have cone' : cd 1 = 1 := by simp only [hcd, Matrix.mul_one, hlc]
   have hD : (Qi * δ.1.1 * frm X Z Y).map φ = cd (am p) * cd (am a) * cd (am y) * cd (am a⁻¹) * cd (am p⁻¹) := by
-    have e : δ.1.1.map φ = am (ratEmb σ J δ) := (GlobalTheory.T.archimedean_rational_embedding_map F E σ n J δ w τ).symm
+    have e : δ.1.1.map φ = am (ratEmb σ J δ) := (_root_.GlobalTheory.CompanionTheory.CFin.archMat_projArch_ratEmb F E σ n J δ w τ).symm
     rw [Matrix.map_mul, Matrix.map_mul, e, hδ, amul, amul, amul, amul, ← hQic, ← hQc]
     change cd _ = _
     rw [cmul, cmul, cmul, cmul]
-  have htor : am a * Qc = Qc * diagonal (fun u => ((wt m t u : ℝ) : ℂ)) := GlobalTheory.T.torus_archimedean_frame_conjugation F E σ n r m J X Y Z xz yz t a ha w τ
+  have htor : am a * Qc = Qc * diagonal (fun u => ((wt m t u : ℝ) : ℂ)) := _root_.GlobalTheory.CompanionTheory.CFin.torus_diag_witt F E σ n r m J X Y Z xz yz t a ha w τ
   have wpos : ∀ u, 0 < wt m t u := fun u => by rcases u with i | k | i <;> simp [wt, ht]
   have dd : diagonal (fun u => ((wt m t u : ℝ) : ℂ)) * diagonal (fun u => (((wt m t u)⁻¹ : ℝ) : ℂ)) = 1 := by
     rw [diagonal_mul_diagonal, ← diagonal_one]
@@ -367,7 +372,7 @@ theorem arch_bound (h : IsCMExt F E σ) (hJ : IsHermND σ J) (hW : IsWittFrame �
   have b3 := bM y By (fun i j => hBy y hy w τ i j) ((le_max_right _ _).trans (le_max_right _ _))
   have tP := parabolic_triangular_frame F E σ h n r m J X Y Z Qi hJ hW xz yz hl hr p (hΩP hp) w τ S
   have tN : ((Qi * δ.1.1 * frm X Z Y).map φ).BlockTriangular (lev m S) := by
-    have t0 := GlobalTheory.T.frame_stabilizer_flag_criterion E (σ : E →+* E) hs n r m J X Y Z Qi hJ' hW.xx hW.yy hW.xy xz yz hl hr S δ.1.1
+    have t0 := _root_.GlobalTheory.CompanionTheory.CFin.Tri.witt_blockTriangular E (σ : E →+* E) hs n r m J X Y Z Qi hJ' hW.xx hW.yy hW.xy xz yz hl hr S δ.1.1
       δ.1.isUnit δ.2 hst
     intro i j hij
     simp only [Matrix.map_apply, t0 hij, map_zero]
@@ -399,19 +404,19 @@ theorem classes_finite (hS : PositivityTheory.ThKR.SiegelCore) (h : IsCMExt F E 
       ∃ (x : GAd σ J) (δ : GRat σ J), δ ∈ 𝔬 ∧ x⁻¹ * ratEmb σ J δ * x ∈ C}.Finite := by
   classical
   obtain ⟨r, X, Y, hW⟩ := exists_isWittFrame h hJ
-  obtain ⟨m, Z, Qi, xz, yz, hl, hr⟩ := GlobalTheory.T.exists_witt_complement_frame F E σ h n J hJ r X Y hW
+  obtain ⟨m, Z, Qi, xz, yz, hl, hr⟩ := _root_.GlobalTheory.CompanionTheory.CFin.exists_witt_basis F E σ h n J hJ r X Y hW
   obtain ⟨K, Ω, c, hK, hΩ, hΩP, hc, -, -, hcov, -, -, -⟩ := hS F E σ h n J hJ r X Y hW
   have hcont : Continuous fun q : GAd σ J × GAd σ J => q.1 * q.2 * q.1⁻¹ :=
     (continuous_fst.mul continuous_snd).mul continuous_fst.inv
   set C₁ : Set (GAd σ J) := (fun q : GAd σ J × GAd σ J => q.1 * q.2 * q.1⁻¹) '' ((K : Set (GAd σ J)) ×ˢ C) with hC₁d
   have hC₁ : IsCompact C₁ := (hK.prod hC).image hcont
-  obtain ⟨t0, ht0⟩ := GlobalTheory.T.siegel_compact_translate_bound F E σ h n J hJ r X Y hW Ω hΩ hΩP K hK c hc C hC
-  obtain ⟨R, -, hR⟩ := GlobalTheory.T.deep_cone_weight_ratio_bound r m c (max t0 1) hc (le_max_right _ _)
+  obtain ⟨t0, ht0⟩ := _root_.GlobalTheory.CompanionTheory.FlagKey.flag_key F E σ h n J hJ r X Y hW Ω hΩ hΩP K hK c hc C hC
+  obtain ⟨R, -, hR⟩ := _root_.GlobalTheory.CompanionTheory.CFin.Ratio.ratio_bounded r m c (max t0 1) hc (le_max_right _ _)
   obtain ⟨B, hB⟩ := arch_bound (Z := Z) h hJ hW xz yz hl hr hΩ hΩP hC₁ R
   set 𝒞 : Set (GFin σ J) := projFin σ J '' ((fun q : GAd σ J × GAd σ J => q.1 * q.2 * q.1⁻¹) '' (Ω ×ˢ C₁)) with h𝒞d
   have h𝒞 : IsCompact 𝒞 := ((hΩ.prod hC₁).image hcont).image (continuous_projFin σ J)
-  obtain ⟨dd, hdd, hint⟩ := GlobalTheory.T.compact_finite_rational_denominator F E σ n J 𝒞 h𝒞 Qi (frm X Z Y)
-  have hfin := GlobalTheory.T.bounded_integral_matrices_finite F E h.1 (ι := Idx r m) dd B hdd
+  obtain ⟨dd, hdd, hint⟩ := _root_.GlobalTheory.CompanionTheory.CFin.bounded_denominators F E σ n J 𝒞 h𝒞 Qi (frm X Z Y)
+  have hfin := _root_.GlobalTheory.CompanionTheory.CFin.matrices_bounded_denominator_finite F E h.1 (ι := Idx r m) dd B hdd
   have recon : ∀ M : Matrix (Fin n) (Fin n) E, frm X Z Y * (Qi * M * frm X Z Y) * Qi = M := fun M => by
     calc frm X Z Y * (Qi * M * frm X Z Y) * Qi = (frm X Z Y * Qi) * M * (frm X Z Y * Qi) := by simp only [Matrix.mul_assoc]
       _ = M := by rw [hr, Matrix.one_mul, Matrix.mul_one]
@@ -424,7 +429,7 @@ theorem classes_finite (hS : PositivityTheory.ThKR.SiegelCore) (h : IsCMExt F E 
   refine ((hfin.preimage hinj).image fun δ' => {δ | IsConj δ' δ}).subset ?_
   rintro 𝔬 ⟨⟨γ, hγ, rfl⟩, x, δ, hδ, hx⟩
   obtain ⟨η, hη, s, hs, rfl⟩ := hcov x
-  obtain ⟨η', rfl⟩ := GlobalTheory.T.rational_points_eq_embedding F E σ n J η hη
+  obtain ⟨η', rfl⟩ := _root_.GlobalTheory.CompanionTheory.CFin.exists_ratEmb_eq_of_mem_ratPts F E σ n J η hη
   obtain ⟨p, hp, t, ht, a, ha, k, hk, rfl⟩ := hs
   obtain ⟨δ₁, hδ₁d⟩ : ∃ δ₁ : GRat σ J, δ₁ = η'⁻¹ * δ * η' := ⟨_, rfl⟩
   have hδ₁ : (p * a * k)⁻¹ * ratEmb σ J δ₁ * (p * a * k) ∈ C := by

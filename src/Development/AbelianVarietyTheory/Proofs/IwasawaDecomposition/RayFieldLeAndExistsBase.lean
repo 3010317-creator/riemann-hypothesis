@@ -3,7 +3,8 @@ module
 public import Development.AbelianVarietyTheory.PublishedTheorems.AutomorphicForms₂.IsPrincipalMapOfAlgHom
 public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.CmQuadraticFormEqAlternatingForm
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ClassNumberDvdHstar
-public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CmTypeNormGeneratorOfKummerFieldLeStatement
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.FixedCoefficientFieldInComplex
+public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CmTypeNormGeneratorOfKummerFieldLe
 import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ExistsGaloisSubfieldConjStable
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -168,7 +169,7 @@ theorem exists_base_listField (hR : RayField) (hP : PrincipalIdealSt) (P : Pre) 
     (cycField_le_iff.1 ((le_sup_right.trans le_sup_left).trans (h6 1 le_rfl hm)))
     (fun 𝔞 => span_eq_of_isPrincipal _ _ _ 𝔞
       (hP.of_isRayFieldIn hR (natIdeal_ne_bot (modulus_ne_zero P)) δ.isRay h3 𝔞))
-    fun j hj hj' => GlobalTheory.T.cmTypeNorm_generator_of_kummerField_le P δ _ j (h6 j hj hj')⟩
+    fun j hj hj' => _root_.GlobalTheory.Mem.KPsiGen.typeNorm_gen_of_kPsi_le P δ _ j (h6 j hj hj')⟩
 
 end GlobalTheory.Mem.KsBase
 

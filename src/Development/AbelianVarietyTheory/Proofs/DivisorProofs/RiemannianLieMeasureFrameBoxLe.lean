@@ -1,12 +1,14 @@
 module
 
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PermMMulTranspose
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemRealLieIffTraceFreeSkewSignsStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormSkewHermitianBasisVectorEqSqrtTwoStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetNeZeroOfIsIdent
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.MemRealLieIffTraceFreeSkewSigns
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.NormSkewHermitianBasisVectorEqSqrtTwo
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.RiemannianLieMeasureFrameBoxGe
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SkewHermitianBasisVectorTraceFreeSkewCondStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SkewHermitianCoordinateDualBasisVectorStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VolumeCoordinateBoxLeHadamardStatement
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SkewHermitianBasisVectorTraceFreeSkewCond
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SkewHermitianCoordinateDualBasisVector
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.VolumeCoordinateBoxLeHadamard
 import Formalism.PadicSubsetSums.StableGradedCounts.ZBrauerNesbittAlg
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -49,7 +51,6 @@ import Mathlib.Tactic.ReduceModChar
 import Mathlib.Topology.Separation.CompletelyRegular
 import Mathlib.Topology.Sheaves.Init
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DetNeZeroOfIsIdent
 import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.ArakelovVolumes.UpperBounds.PolyGrowthStatementPfB
 
 @[expose] public section
@@ -74,10 +75,10 @@ theorem riemLie_frameBox_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     simp only [d, sgnR]; split_ifs <;> simp
   have hinv := det_ne_zero_of_isIdent hI
   have hvW : ∀ k, boxVec d z k ∈ W := fun k =>
-    (GlobalTheory.T.mem_realLie_iff_traceFree_skew_signs E r κ p q Ψ G x σ A e hI _).2 (GlobalTheory.T.skewHermitianBasisVector_traceFreeSkewCond E r Ψ d z hd k)
+    (_root_.GlobalTheory.CovTop.VolUp.FrameBox.mem_comap_realLie_iff_skewCond E r κ p q Ψ G x σ A e hI _).2 (_root_.GlobalTheory.CovTop.VolUp.FrameBox.skewCond_boxVec E r Ψ d z hd k)
   let K := Ψ × {ab : Fin r × Fin r // ab ≠ (z, z)}
   let w : K → W := fun k => ⟨boxVec d z k, hvW k⟩
-  have hdual := GlobalTheory.T.skewHermitianCoordinate_dual_basisVector E r Ψ d z hd
+  have hdual := _root_.GlobalTheory.CovTop.VolUp.FrameBox.boxCoord_boxVec E r Ψ d z hd
   have hcoord : ∀ (g : K → ℝ) j, boxCoord z j ((∑ k, g k • w k : W) : EuclideanSpace ℂ (Ψ × Fin r × Fin r)) = g j := by
     intro g j
 
@@ -144,8 +145,8 @@ theorem riemLie_frameBox_le : ∀ (E : Type) [Field E] [NumberField E] [IsCMFiel
     · exact (Complex.abs_re_le_norm _).trans (hY' _ _ _).le
     · exact (Complex.abs_im_le_norm _).trans (hY' _ _ _).le
     · exact (Complex.abs_im_le_norm _).trans (hY' _ _ _).le
-  refine (measure_mono hsub).trans ((GlobalTheory.T.volume_coordinateBox_le_hadamard W K w t ht.le hfin).trans (ENNReal.ofReal_le_ofReal ?_))
-  have hn : ∀ k, ‖w k‖ = √2 := fun k => GlobalTheory.T.norm_skewHermitianBasisVector_eq_sqrt_two E r Ψ d z hd k
+  refine (measure_mono hsub).trans ((_root_.GlobalTheory.CoordBox.volume_coordBox_le W K w t ht.le hfin).trans (ENNReal.ofReal_le_ofReal ?_))
+  have hn : ∀ k, ‖w k‖ = √2 := fun k => _root_.GlobalTheory.CovTop.VolUp.FrameBox.norm_boxVec E r Ψ d z hd k
   simp only [hn, Finset.prod_const, Finset.card_univ]
   rw [hcardK, ← mul_pow]
   have h2 : 2 * t * √2 ≤ 3 * t := by

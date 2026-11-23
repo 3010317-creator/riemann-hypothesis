@@ -3,14 +3,14 @@ module
 public import Development.AbelianVarietyTheory.Definitions.Foundations.PetIPSmulRight
 public import Development.AbelianVarietyTheory.Definitions.Foundations.RepL
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DirichletCharFiniteFourierTransformProperties
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DirichletFourierMixedTwistMultipleStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.DirichletFourierMixedTwistMultiple
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.EisensteinLatticeFunctionIsModularFormCoeffSeq
 public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.IsCuspFormCoeffSeqDirichletTwistLevelMulSq
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LatticeFunctionDivisibleFirstSubstitutionStatement
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RegularizedEisensteinLatticeSumDilateStatement
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.LatticeFunctionDivisibleFirstSubstitution
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RegularizedEisensteinLatticeSumDilate
+public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SlashIntMatrixPosDetProperties
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RegularizedEisensteinLatticeSumDirectionIndep
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.RegularizedEisensteinLatticeSumSlTwoSmul
-public import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SlashIntMatrixPosDetProperties
 import Development.AbelianVarietyTheory.Proofs.FoundationProofs.SummableRegularizedEisensteinLatticeTerm
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
@@ -229,7 +229,7 @@ theorem atkin_lehner_eis : ∀ (j N l : ℕ) (ω : DirichletCharacter ℂ l) (ν
   have hau : IsUnit (a : ZMod l) := isUnit_of_isCoprime a ⟨N * d, -(b * c), by linear_combination hdet⟩
   set φ₂ : ZMod (N * l) → ℂ := fun z => ν (-(c : ZMod N) * ZMod.castHom (Dvd.intro l rfl) (ZMod N) z) *
         φ ((a : ZMod l) * ZMod.castHom (Dvd.intro_left N rfl) (ZMod l) z) with hφ₂
-  obtain ⟨⟨C, hC0, hChat0⟩, hφ₂tw0⟩ := GlobalTheory.T.dirichletFourier_mixed_twist_multiple N l ν ω φ a c hN hl0 hcop hhat hφtw hcu hau
+  obtain ⟨⟨C, hC0, hChat0⟩, hφ₂tw0⟩ := _root_.GlobalTheory.EisM.hat_mix_twist N l ν ω φ a c hN hl0 hcop hhat hφtw hcu hau
   have hChat : ∀ x : ℤ, hat φ₂ x = C * (ch ω x * hat ν x) := hChat0
   have hφ₂tw : ∀ d : ℤ, IsCoprime d (N * l : ℕ) → ∀ y, φ₂ y = ch ω d * ch ν⁻¹ d * φ₂ (y * d) := hφ₂tw0
   have hhat0₂ : hat φ₂ 0 = 0 := by rw [hChat, hω0]; ring
@@ -291,9 +291,9 @@ theorem atkin_lehner_eis : ∀ (j N l : ℕ) (ω : DirichletCharacter ℂ l) (ν
   have hv : ((0 : ℤ) * γ₀ 0 0 + 1 * γ₀ 1 0, (0 : ℤ) * γ₀ 0 1 + 1 * γ₀ 1 1) = ((l : ℤ) * c, (N : ℤ) * d) := by
     simp [γ₀]
   simp only [Prod.fst, Prod.snd] at hv ⊢
-  rw [hv, GlobalTheory.T.regularizedEisensteinLatticeSum_dilate j l N _ Φ₁' τ τ' hN rfl]
+  rw [hv, _root_.GlobalTheory.EisM.lat_dilate j l N _ Φ₁' τ τ' hN rfl]
   have hrow : (fun y : ℤ × ℤ => if (N : ℤ) ∣ y.1 then Φ₁' (y.1 / N, y.2) else 0) = Ψ := by
-    funext y; exact GlobalTheory.T.latticeFunctionDivisibleFirst_substitution N l ν φ a b c d hdet hN hl0 y
+    funext y; exact _root_.GlobalTheory.latF_rows_subst N l ν φ a b c d hdet hN hl0 y
   rw [hrow]
   have hΨb : ∃ C : ℝ, ∀ x, ‖Ψ x‖ ≤ C := by
     refine ⟨∑ z, ‖φ₂ z‖, fun x => ?_⟩

@@ -2,12 +2,15 @@ module
 
 public import Development.AutomorphicArithmetic.CMTraceForms.Places
 public import Development.AbelianVarietyTheory.Definitions.Divisors.NonemptyValExtOfOverLa
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagStepCharactersOfColengthStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.BigBlockCharacters
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.FlagStepCharactersOfColength
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.FactorDepthInertBounds
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TypedPartSplitPrimes
 public import Development.AbelianVarietyTheory.Proofs.FormalGroupCharts.ExistsIntegralChartIntegralFramedPoint
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsFlagCharactersLeadingMinorsColength
 public import Development.AbelianVarietyTheory.Proofs.JetHarmonics.IntegralChartColengthBoundPrimeTwo
-import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NonemptyClosedValuedExtensionOfCDVR
 public import Development.AbelianVarietyTheory.Proofs.UnramifiedDepth.ColengthBoundSplitPlaceChart
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.ExistsFlagCharactersLeadingMinorsColength
+import Development.AbelianVarietyTheory.Proofs.JetHarmonics.NonemptyClosedValuedExtensionOfCDVR
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -43,9 +46,6 @@ import Mathlib.Tactic.NormNum.Ordinal
 import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.BigBlockCharacters
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.FactorDepthInertBounds
-public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.TypedPartSplitPrimes
 import Development.AbelianVarietyTheory.Definitions.Divisors.EightDvdNCol
 
 @[expose] public section
@@ -121,6 +121,6 @@ theorem mean_bound_big_factors_at_two : ∀ (E : Type) [Field E] [NumberField E]
     exact hlb
   · intro f k hf
     have hr : (X.v ((p : ℕ) : X.C) : ℝ) ^ len f.1 ≤ xs f.1 := (hlen_pow f.1 hf).le
-    exact (GlobalTheory.T.flagStep_characters_of_colength E H Dw l Xo c p T io y Ch X f (xs f.1) (len f.1) (hAF f.1 hf) hr).2 k
+    exact (_root_.GlobalTheory.RefSum.hasChars_frame_of_hasAF E H Dw l Xo c p T io y Ch X f (xs f.1) (len f.1) (hAF f.1 hf) hr).2 k
 
 end GlobalTheory.RefSum

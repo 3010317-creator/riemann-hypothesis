@@ -5,10 +5,15 @@ public import Mathlib.AlgebraicGeometry.OrderOfVanishing.Basic
 public import Mathlib.Basic.Complex.Basic
 public import ReciprocityTheory.AnalyticForms.RegularLocalRings.FinalTheorems
 public import ReciprocityTheory.ReductiveGroups.ArithmeticGeometry.BirationalGeometry.ToroidalCompactification.IsCompletedStrictHens
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearIndependentCotangentOfIsTopFormFrameOfVaniStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanPairIsPrimeHeightTwoOfCotangentIndependentStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.IsUnitMkOfFormallyUnramified
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.LinearIndependentCotangentOfIsTopFormFrameOfVani
+public import Mathlib.RingTheory.Ideal.Height
+public import Mathlib.RingTheory.RegularLocalRing.Defs
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.SpanPairIsPrimeHeightTwoOfCotangentIndependent
 public import Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.CodimOneGenerizationStalk
-public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.ExistsSncChartStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsLogMult
+public import Development.WeilBound.CoreStatements.PublishedTheorems.NadelVanishingPairs.NadelVanishingLemmas.ExistsSncChart
+public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsEqnIffGeneratesAtInv
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -50,9 +55,7 @@ import Mathlib.Tactic.NormNum.Parity
 import Mathlib.Tactic.NormNum.Prime
 import Mathlib.Tactic.NormNum.RealSqrt
 import Std.Tactic.BVDecide.Normalize.Prop
-public import Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.IsEqnIffGeneratesAtInv
 import Development.AbelianVarietyTheory.Definitions.Divisors.CentreAtOfIsAt
-public import Development.AbelianVarietyTheory.Definitions.Divisors.ExistsIsLogMult
 
 @[expose] public section
 
@@ -153,7 +156,7 @@ open IsLocalRing in
 theorem exists_meet_point : ∀ (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoetherian Y] (q : Y ⟶ Sp ℂ) (n : ℕ) [SmoothOfRelativeDimension n q], ∀ (B : Closeds Y), FinalTheorems.Snc (Scheme.IdealSheafData.vanishingIdeal B) → ∀ v σ w : Y, v ∈ B → σ ∈ B → Order.coheight v = 1 → Order.coheight σ = 1 → v ≠ σ → v ⤳ w → σ ⤳ w → ∃ (w' : Y) (t u : Y.presheaf.stalk w'), w' ⤳ w ∧ v ⤳ w' ∧ σ ⤳ w' ∧ ringKrullDim (Y.presheaf.stalk w') = 2 ∧ Ideal.span {t, u} = IsLocalRing.maximalIdeal (Y.presheaf.stalk w') ∧ Scheme.ord (algebraMap (Y.presheaf.stalk w') Y.functionField t) σ = 1 ∧ Scheme.ord (algebraMap (Y.presheaf.stalk w') Y.functionField u) v = 1 ∧ ∀ v' ∈ B, Order.coheight v' = 1 → v' ⤳ w' → v' = v ∨ v' = σ := by
   classical
   intro Y _ _ q n _ B hB v σ w hvB hσB hv hσ hvσ hvw hσw
-  obtain ⟨U, hwU, z, J, wf, uf, hc⟩ := GlobalTheory.T.exists_snc_chart ℂ Y q n B hB w
+  obtain ⟨U, hwU, z, J, wf, uf, hc⟩ := _root_.GlobalTheory.Discrepancy.exists_isSncChart ℂ Y q n B hB w
   obtain ⟨j', hj'J, rfl⟩ := (hc.mem v hvw hv).1 hvB
   obtain ⟨j, hjJ, rfl⟩ := (hc.mem σ hσw hσ).1 hσB
   have hjj : j ≠ j' := fun h => hvσ (by rw [h])
@@ -186,7 +189,7 @@ theorem exists_meet_point : ∀ (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoethe
     have hu' := hu.map (Y.presheaf.stalkSpecializes (hc.spec i hi)).hom
     rw [hgerm] at hu'
     exact (mem_maximalIdeal _).1 (hmy i hi) hu'
-  have hli := GlobalTheory.T.linearIndependent_cotangent_of_isTopFormFrame_of_vanishing Y q n U z hc.frame w hwU J (fun i => hm i.1 i.2)
+  have hli := _root_.GlobalTheory.CotIndep.linearIndependent_cotangent_of_isFrame Y q n U z hc.frame w hwU J (fun i => hm i.1 i.2)
 
   have hi2 : Function.Injective (![⟨j, hjJ⟩, ⟨j', hj'J⟩] : Fin 2 → J) := by
     intro k l hkl
@@ -196,7 +199,7 @@ theorem exists_meet_point : ∀ (Y : Scheme.{0}) [IsIntegral Y] [IsLocallyNoethe
     · exact (hjj (by simpa using (congrArg Subtype.val hkl).symm)).elim
     · rfl
   have hli2 := hli.comp _ hi2
-  obtain ⟨hPp, hPh⟩ := GlobalTheory.T.span_pair_isPrime_height_two_of_cotangent_independent (Y.presheaf.stalk w) (Y.presheaf.germ U w hwU (z j))
+  obtain ⟨hPp, hPh⟩ := _root_.GlobalTheory.PointSep.span_pair_isPrime_and_height_eq_two (Y.presheaf.stalk w) (Y.presheaf.germ U w hwU (z j))
     (Y.presheaf.germ U w hwU (z j')) (hm j hjJ) (hm j' hj'J) (by
       convert hli2 using 1
       funext k; fin_cases k <;> rfl)

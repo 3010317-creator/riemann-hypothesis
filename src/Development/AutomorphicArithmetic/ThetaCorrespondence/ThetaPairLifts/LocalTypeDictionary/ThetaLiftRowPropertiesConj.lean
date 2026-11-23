@@ -3,8 +3,9 @@ module
 public import Development.AbelianVarietyTheory.Statements.HeckeThetaIntegrals.FormulaAt
 public import Development.AbelianVarietyTheory.Statements.HeckeThetaIntegrals.ThetaIntegralsAgree
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.BernsteinUnitaryProductIrreducible
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RowTestLiftFormulaPrincipalLevelStatement
-public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RowTestRationalSumsOfFiniteSumsMeaningfulStatement
+public import Development.AbelianVarietyTheory.Statements.HeckeThetaIntegrals.StepUnfold
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RowTestLiftFormulaPrincipalLevel
+public import Development.AbelianVarietyTheory.Proofs.TwistedOperators.RowTestRationalSumsOfFiniteSumsMeaningful
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ConstK
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.RowSumOfHyp
 public import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.ThetaPairLiftCuspidalOfHypotheses
@@ -56,9 +57,9 @@ theorem thetaLift_row_properties_conj : _root_.GlobalTheory.FunPr.ThetaLocalInpu
   have cusp := _root_.GlobalTheory.T.twisted_thetaLift_cuspidal P
   have sum := _root_.GlobalTheory.T.sumOKK_of_theta_local_inputs P
   exact ⟨sum, c, _root_.GlobalTheory.T.twisted_characters_linearly_independent P cusp,
-    GlobalTheory.T.rowTestLiftFormula_principalLevel (_root_.GlobalTheory.T.twisted_period_identity P) (_root_.GlobalTheory.T.twisted_lift_flip_invariant P cusp s1 K c) (_root_.GlobalTheory.T.twisted_theta_integral_unfolds P cusp sum)
+    _root_.GlobalTheory.RowClaim.FormulaTwo.formula2K (_root_.GlobalTheory.T.twisted_period_identity P) (_root_.GlobalTheory.T.twisted_lift_flip_invariant P cusp s1 K c) (_root_.GlobalTheory.T.twisted_theta_integral_unfolds P cusp sum)
       (_root_.GlobalTheory.T.twisted_jets_assemble P sum) c sum,
-    GlobalTheory.T.rowTestRationalSums_of_finiteSumsMeaningful sum⟩
+    _root_.GlobalTheory.RowTest.sumRatK_of_sumOKK sum⟩
 end GlobalTheory.RowClaim.Join
 end
 

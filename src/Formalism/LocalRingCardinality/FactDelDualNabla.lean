@@ -3,7 +3,8 @@ module
 public import Formalism.LocalRingCardinality.DataForced
 public import Formalism.LocalRingCardinality.RankBoundMonotoneInDimension
 public import Formalism.LocalToGlobal.Columns.CoefficientsModP
-public import Formalism.PeriodIntegrals.OrbitalBoundsConclusion.LpLower
+public import Formalism.PeriodIntegrals.LpLower
+public import Formalism.PeriodIntegrals.UnitaryGroupMassFormula.LinearProgramLowerBound.LpFeasibleLe
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -80,7 +81,7 @@ theorem tauPl_bij (D : D7) : Function.Bijective (tauPl D) := by
 
 theorem lpF_ge_sum (l d : ℕ) [NeZero d] (Ds : ZMod d → ℝ) (hl : 2 ≤ l) (hD : ∀ s, 0 ≤ Ds s) :
     (∑ s, Ds s) / ((l : ℝ) ^ 2 - 1) ≤ lpF l d Ds :=
-  lp_lower_bound l d Ds hl hD
+  _root_.PI.lpLower_main l d Ds hl hD
 
 theorem fInertGe (D : D7) : FInertGe D := by
   intro j _ p hp _ hw

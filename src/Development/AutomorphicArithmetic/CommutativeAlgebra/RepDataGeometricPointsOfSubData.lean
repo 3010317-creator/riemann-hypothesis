@@ -1,10 +1,11 @@
 module
 
 public import Development.AutomorphicArithmetic.SpecialMaps.QuotObjDefs
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorPullbackAbelianMapUniqueOfBaseEqStatement
+public import Development.AbelianVarietyTheory.Definitions.Divisors.NotCompactOfMEqOne
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorPullbackAbelianMapUniqueOfBaseEq
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.HarrisTaylorTypeTjIsogeniesRepresentable
-import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsIsoIffBijectiveOverAlgClosed
 public import Development.AutomorphicArithmetic.CommutativeAlgebra.ExistsIsogenyWithKernelSubgroup
+import Development.AbelianVarietyTheory.Proofs.HomogeneousIdeals.IsIsoIffBijectiveOverAlgClosed
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -157,7 +158,7 @@ theorem UpperTheory.repData_geometric_points_of_subData :
   obtain ⟨mm, hmm⟩ := IsogRep.exists_comp m₀' Rd.m₀
   have hφ : m.φ = m₀'.φ ≫ Rd.m₀.φ := by
     rw [← hmm]
-    exact GlobalTheory.T.harrisTaylor_pullback_abelian_map_unique_of_base_eq p D R b N hN hNp _ _ _ _ o ox _ _ m mm rfl
+    exact _root_.GlobalTheory.UPel.HT.Rigid.objMap_phi_unique p D R b N hN hNp _ _ _ _ o ox _ _ m mm rfl
   obtain ⟨h, rfl⟩ : ∃ h, secEquiv hp₀ h = a₀ := ⟨(secEquiv hp₀).symm a₀, MulEquiv.apply_symm_apply _ _⟩
   have haa : a = secEquiv hp' h := by
     apply Over.OverMorphism.ext

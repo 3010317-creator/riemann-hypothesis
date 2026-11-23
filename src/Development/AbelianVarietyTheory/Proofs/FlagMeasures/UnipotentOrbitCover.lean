@@ -5,8 +5,9 @@ public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CanonicalFlag
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.CanonicalLatticeFlagIsotropicSelfDual
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsConsecutiveRatioLeRpow
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.FiniteAdelicUnitaryCongruenceTopology
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SmallFundamentalSetRealUnipotentStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SmallSizeCanonicalFlagPiecesPropertiesStatement
+public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.LayerProd
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SmallFundamentalSetRealUnipotent
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.SmallSizeCanonicalFlagPiecesProperties
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -95,7 +96,7 @@ theorem unipotent_orbit_cover : ∀ (I : AutInst) (x : I.GA) (g q : ℕ), 1 ≤ 
     rcases Nat.eq_zero_or_pos a with h | h
     · exact absurd (ha0.1 h) (not_le.2 hlt)
     · exact h
-  obtain ⟨hall, -, -, hstep⟩ := GlobalTheory.T.smallSizeCanonicalFlag_pieces_properties I x a S τ hF
+  obtain ⟨hall, -, -, hstep⟩ := _root_.GlobalTheory.FlagPieces.flag_pieces I x a S τ hF
   obtain ⟨-, -, hSlast, hτmono, hτ, -⟩ := hF
 
   obtain ⟨τ', hτ'⟩ : ∃ f : ℕ → ℝ, f = fun i => if h : i < a then τ ⟨i, h⟩ else 1 / 2 := ⟨_, rfl⟩
@@ -150,7 +151,7 @@ theorem unipotent_orbit_cover : ∀ (I : AutInst) (x : I.GA) (g q : ℕ), 1 ≤ 
     isIsot_span I x _ hne hRperp, ?_⟩
   intro ν hν
   obtain ⟨γ, ⟨hγF, -⟩, hk, A, Z, hAZ, heq, hbound, hst⟩ :=
-    GlobalTheory.T.small_fundamental_set_real_unipotent I x g (S (Fin.succ ⟨b, hb⟩)) (τ' (b + 1)) (τ ⟨b, hb⟩)
+    _root_.GlobalTheory.SmallFund.small_fundamental_set I x g (S (Fin.succ ⟨b, hb⟩)) (τ' (b + 1)) (τ ⟨b, hb⟩)
       ((2 * least I x) ^ ((1 : ℝ) / q)) hg hsat hne hRperp hi_pos hlarge hlo
       ((div_le_iff₀ hlo_pos).1 hratio) hsq ν hν
 

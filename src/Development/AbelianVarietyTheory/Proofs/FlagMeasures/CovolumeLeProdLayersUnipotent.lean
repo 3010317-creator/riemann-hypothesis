@@ -2,12 +2,16 @@ module
 
 public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.IpLEqZeroOfMemSpan
 public import Development.AbelianVarietyTheory.Definitions.SemilocalFrames.DefClassNum
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsOrthonormalLieCoordinatesStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GaugeMeasureMatrixAlgebraSubgroupLocalAsymptoticStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurePreservingTriangularShearStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TendstoVolumeSublevelDivPowStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TraceCoordSqSumLeHilbertSchmidtUnitaryGroupStatement
-public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.VolumeProductOverGradingLayersStatement
+public import Formalism.SharpRestriction.CuspSpanNormBounds.GlobAut
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.ExistsOrthonormalLieCoordinates
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.GaugeMeasureMatrixAlgebraSubgroupLocalAsymptotic
+public import Mathlib.MeasureTheory.Constructions.Pi
+public import Mathlib.MeasureTheory.Measure.Haar.OfBasis
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.MeasurePreservingTriangularShear
+public import Mathlib.Analysis.Normed.Lp.MeasurableSpace
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TendstoVolumeSublevelDivPow
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.TraceCoordSqSumLeHilbertSchmidtUnitaryGroup
+public import Development.AbelianVarietyTheory.Proofs.FlagMeasures.VolumeProductOverGradingLayers
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -93,7 +97,7 @@ theorem measurePreserving_coord {m : ℕ} {A : ℕ → Submodule ℝ (Matrix (Fi
   have hsp0 : ∀ X, (X ∈ A 0 ∧ inG ε X) ↔ X ∈ Submodule.span ℝ (Set.range E) := fun X => by
     simpa using hsp 0 X
   have hmul0 : ∀ X ∈ A 0, ∀ Y ∈ A 0, X * Y ∈ A 0 := fun X hX Y hY => hle 0 (hmul 0 X hX Y hY).1
-  obtain ⟨σ, hσc, hσ⟩ := GlobalTheory.T.exists_orthonormal_lie_coordinates n d m ε A E hm hmul hle hinv hE hE0
+  obtain ⟨σ, hσc, hσ⟩ := _root_.GlobalTheory.NilCovSec.exists_continuous_section n d m ε A E hm hmul hle hinv hE hE0
   have hσ2 : ∀ x i, ipL (E i) (uMat (σ x) - 1) = x i := fun x => (hσ x).2
   have hinj : ∀ g h : UJ ε, uMat g - 1 ∈ A 0 → uMat h - 1 ∈ A 0 →
       (∀ i, ipL (E i) (uMat g - 1) = ipL (E i) (uMat h - 1)) → g = h := by
@@ -110,7 +114,7 @@ theorem measurePreserving_coord {m : ℕ} {A : ℕ → Submodule ℝ (Matrix (Fi
       ext x
       simpa using (hσ x).1
     · have hs' : uMat s - 1 ∈ A 0 := hs
-      have hT := GlobalTheory.T.measurePreserving_add_of_triangular d deg (fun x i => ipL (E i) (uMat (s * σ x) - 1) - x i)
+      have hT := _root_.GlobalTheory.measurePreserving_triangular_shear d deg (fun x i => ipL (E i) (uMat (s * σ x) - 1) - x i)
         (((continuous_coord E).comp (continuous_const.mul hσc)).sub continuous_id).measurable (by
           intro x y i hxy
           have h1 := sub_mem_of_coord_eq hmul hinv hE hsp (hσ x).1 (hσ y).1 (deg i) fun k hk => by
@@ -132,19 +136,19 @@ theorem measurePreserving_coord {m : ℕ} {A : ℕ → Submodule ℝ (Matrix (Fi
           ring
       rw [Measure.map_map (measurable_const_mul s) hσc.measurable, he,
         ← Measure.map_map hσc.measurable hT.measurable, hT.map_eq]
-    · have hest := fun x => GlobalTheory.T.traceCoord_sq_sum_le_hilbertSchmidt_unitaryGroup n d ε E hE (fun i => (hE0 i).2) (σ x)
+    · have hest := fun x => _root_.GlobalTheory.NilCov.sum_coord_sq_le_hs_and_hs_le n d ε E hE (fun i => (hE0 i).2) (σ x)
         ((hsp0 _).1 ⟨(A 0).sub_mem (hσ x).1 (hinv 0 _ (hσ x).1), inG_sub_inv _⟩)
       simp only [(hσ _).2] at hest
       have h0 : σ 0 = 1 := hinj _ _ (hσ 0).1 (by simp [uMat]) fun i => by
         rw [hσ2]; simp [uMat]
-      have := GlobalTheory.T.tendsto_volume_sqrt_sublevel_div_pow_eq_volume_ball d (fun x => hs (uMat (σ x) - 1))
+      have := _root_.GlobalTheory.tendsto_volume_sublevel_div_pow d (fun x => hs (uMat (σ x) - 1))
         (continuous_hs_sub_one.comp hσc).continuousAt (by simp [h0, uMat, hs])
         (fun x => (hest x).1) (fun x => (hest x).2)
       refine this.congr fun r => ?_
       rw [Measure.map_apply hσc.measurable
         (isClosed_le continuous_hs_sub_one.sqrt continuous_const).measurableSet]
       rfl
-  have heq := (GlobalTheory.T.gaugeMeasure_matrixAlgebraSubgroup_local_asymptotics n ε (A 0) d E hmul0 hE hsp0 ν hν).2.2.1 _ hμ
+  have heq := (_root_.GlobalTheory.GaugeSubLoc.gauge_local_asymptotics n ε (A 0) d E hmul0 hE hsp0 ν hν).2.2.1 _ hμ
   refine ⟨(continuous_coord E).measurable, ?_⟩
   rw [← heq, Measure.map_map (continuous_coord E).measurable hσc.measurable]
   have : (fun (g : UJ ε) (i : Fin d) => ipL (E i) (uMat g - 1)) ∘ σ = id := by
@@ -175,7 +179,7 @@ theorem covol_le_prod_layers : ∀ (ι : Type) [Fintype ι] (n d m : ℕ) (ε : 
     refine MeasurableSet.iInter fun c => MeasurableSet.iInter fun _ => ?_
     exact (show Measurable fun (x : ι → Fin d → ℝ) v (i : {i : Fin d // deg i = c}) => x v i.1 by
       fun_prop) (hD c)
-  rw [← GlobalTheory.T.volume_product_over_grading_layers ι d m deg D hdeg hD]
+  rw [← _root_.GlobalTheory.LayerBox.volume_layer_box ι d m deg D hdeg hD]
   refine le_trans ?_ (hmp.measure_preimage hB.nullMeasurableSet).le
   refine iInf_le_of_le _ (iInf_le_of_le (hmp.measurable hB) (iInf_le_of_le ?_ le_rfl))
   intro x hx

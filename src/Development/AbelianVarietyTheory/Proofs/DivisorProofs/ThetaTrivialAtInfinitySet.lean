@@ -2,11 +2,12 @@ module
 
 public import Development.AbelianVarietyTheory.Definitions.Divisors.DiscreteSeriesHermitianUnique
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.EqOfComponentTensorAdelicFunctionEq
-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFactorPureTensorComponentAtPlace
 public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaActionExists
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaKernelArchimedeanUnipotentSupportStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaSeriesFactorizableRestrictionFiniteStatement
-public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaSeriesFactorizableRestrictionStatement
+public import Development.AbelianVarietyTheory.BlockTheory.DivisorBase.WeilTensorModels
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaKernelArchimedeanUnipotentSupport
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaSeriesFactorizableRestrictionFinite
+public import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ThetaSeriesFactorizableRestriction
+import Development.AbelianVarietyTheory.Proofs.DivisorProofs.ExistsFactorPureTensorComponentAtPlace
 import Mathlib.Algebra.Order.Floor.Extended
 import Mathlib.Algebra.Order.Floor.Semifield
 import Mathlib.Algebra.Order.Interval.Basic
@@ -170,9 +171,9 @@ theorem scalar_of_trivial : GlobalTheory.FunPr.Hypotheses₂ → ∀ (F E : Type
     · rw [hθ γ hγ] at hc
       rw [smul_left_injective ℂ hΦ0 hc]
   have hTΦ : om' (g, h) (pure f φ) ∈ schA F (Fin a' × Fin (a + a')) := hW.pres (g, h) _ hΦ
-  obtain ⟨m, f', φ', hSB', hvac', heq⟩ := GlobalTheory.T.theta_series_factorizable_restriction hP F E σ B a a' G X om om' hT S f φ hSB hvac _ hTΦ hi
-  have hco := GlobalTheory.T.theta_kernel_archimedean_unipotent_support F E σ B a a' G X om om' hT S g h hgI hhI hgS hhS (pure f φ) hΦ
-  obtain ⟨c, hc⟩ := GlobalTheory.T.theta_series_factorizable_restriction_finite hP F E σ B a a' G X om om' hT S f φ hSB hvac m f' φ' hSB' hvac'
+  obtain ⟨m, f', φ', hSB', hvac', heq⟩ := _root_.GlobalTheory.VacFactor.factor hP F E σ B a a' G X om om' hT S f φ hSB hvac _ hTΦ hi
+  have hco := _root_.GlobalTheory.CptCoeff.matrix_coeff F E σ B a a' G X om om' hT S g h hgI hhI hgS hhS (pure f φ) hΦ
+  obtain ⟨c, hc⟩ := _root_.GlobalTheory.SplitSvN.scalar_of_coeff hP F E σ B a a' G X om om' hT S f φ hSB hvac m f' φ' hSB' hvac'
     (fun u hu μ hμ => by rw [← heq]; exact hco u hu μ hμ)
   exact ⟨c, heq.trans hc⟩
 
